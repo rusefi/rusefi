@@ -9,26 +9,32 @@ import com.rusefi.ui.ConnectionStatus;
 import javax.swing.*;
 import java.awt.*;
 
-class BaseConfigField {
+abstract class BaseConfigField {
     protected final JLabel status = new JLabel("P");
     protected final JPanel panel = new JPanel(new BorderLayout());
 
     public BaseConfigField(final Field field) {
+        status.setToolTipText("Pending...");
         /**
          * This would request initial value
          */
-        ConnectionStatus.INSTANCE.addListener(new ConnectionStatus.Listener() {
-            @Override
-            public void onConnectionStatus(boolean isConnected) {
-                CommandQueue.getInstance().write(field.getCommand(),
-                        CommandQueue.DEFAULT_TIMEOUT,
-                        InvocationConfirmationListener.VOID,
-                        false);
-            }
-        });
+        if (ConnectionStatus.INSTANCE.isConnected()) {
+            requestInitialValue(field);
+        } else {
+            ConnectionStatus.INSTANCE.addListener(new ConnectionStatus.Listener() {
+                @Override
+                public void onConnectionStatus(boolean isConnected) {
+                    requestInitialValue(field);
+                }
+            });
+        }
+    }
 
-        status.setToolTipText("Pending...");
-
+    private void requestInitialValue(Field field) {
+        CommandQueue.getInstance().write(field.getCommand(),
+                CommandQueue.DEFAULT_TIMEOUT,
+                InvocationConfirmationListener.VOID,
+                false);
     }
 
     protected void onValueArrived() {

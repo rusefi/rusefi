@@ -1,0 +1,1704 @@
+###############################################################################
+#                                                                             #
+# IAR ANSI C/C++ Compiler V6.50.3.4676/W32 for ARM      30/Jun/2015  23:08:52 #
+# Copyright 1999-2013 IAR Systems AB.                                         #
+#                                                                             #
+#    Cpu mode        =  thumb                                                 #
+#    Endian          =  little                                                #
+#    Source file     =  F:\stuff\rusefi_sourceforge\firmware\controllers\sens #
+#                       ors\thermistors.cpp                                   #
+#    Command line    =  F:\stuff\rusefi_sourceforge\firmware\controllers\sens #
+#                       ors\thermistors.cpp -lCN F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\Debug\List\ -lA                          #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\  #
+#                       -o F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj #
+#                       \ --no_cse --no_unroll --no_inline --no_code_motion   #
+#                       --no_tbaa --no_clustering --no_scheduling --debug     #
+#                       --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp     #
+#                       --dlib_config "C:\Program Files (x86)\IAR             #
+#                       Systems\Embedded Workbench                            #
+#                       6.5\arm\INC\c\DLib_Config_Normal.h"                   #
+#                       --misrac2004=1.2-1.4,2.3,3.4,4.2,6.5-7,8.2-8.3,9.3,   #
+#                       12.3,13.6-13,15.5,17.3,19.17,20.7-20.9,20.11 -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\ -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\kernel\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\ports\common\ARMCMx\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\common\ARMCMx\CMSIS\include\ -I               #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\IAR\ARMCMx\ -I F:\stuff\rusefi_sourceforge\fi #
+#                       rmware\iar\..\chibios\os\ports\IAR\ARMCMx\STM32F4xx\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\chibio #
+#                       s\os\hal\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\hal\platforms\STM32\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\DMAv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\GPIOv2\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\I2Cv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\SPIv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\TIMv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\RTCv2\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\USARTv1\ -I                     #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\OTGv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32F4xx\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\various\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\chibios\os\various\devices_lib\accel\ -I         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\b #
+#                       oards\ST_STM32F4_DISCOVERY\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\co #
+#                       ntrollers\algo\ -I F:\stuff\rusefi_sourceforge\firmwa #
+#                       re\iar\..\controllers\core\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\system\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\controllers\sensors\ -I                          #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\math\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\controllers\trigger\ -I                            #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\config #
+#                       \ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\conf #
+#                       ig\engines\ -I F:\stuff\rusefi_sourceforge\firmware\i #
+#                       ar\..\config\stm32f4ems\ -I                           #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\b #
+#                       inary\ -I F:\stuff\rusefi_sourceforge\firmware\iar\.. #
+#                       \console_util\ -I F:\stuff\rusefi_sourceforge\firmwar #
+#                       e\iar\..\development\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\development\test\ -I                  #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\developme #
+#                       nt\hw_layer\ -I F:\stuff\rusefi_sourceforge\firmware\ #
+#                       iar\..\hw_layer\algo\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\hw_layer\lcd\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                       stm32f4\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\hw_layer\serial_over_usb\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                        -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext_al #
+#                       go\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\de #
+#                       velopment\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\development\hw_layer\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\util\     #
+#                       -On --eec++                                           #
+#    MISRA C version =  2004                                                  #
+#      Enabled       =  1.2-1.4 2.3 3.4 4.2 6.5 7 8.2 8.3 9.3 12.3 13.6 13.7  #
+#                       15.5 17.3 19.17 20.7-20.9 20.11                       #
+#      Checked       =  1.4 2.3 4.2 6.5 7 8.2 8.3 9.3 12.3 13.7 15.5          #
+#                       20.7-20.9 20.11                                       #
+#      Not checked   =  1.1-1.3 1.5-2.2 2.4-4.1 5-6.4 8.1 8.4-9.2 10-12.2     #
+#                       12.4-13.6 14-15.4 16-20.6 20.10 20.12 21              #
+#    List file       =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\t #
+#                       hermistors.lst                                        #
+#    Object file     =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\th #
+#                       ermistors.o                                           #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+F:\stuff\rusefi_sourceforge\firmware\controllers\sensors\thermistors.cpp
+      1          /**
+      2           * @file thermistors.cpp
+      3           *
+      4           * @date Feb 17, 2013
+      5           * @author Andrey Belomutskiy, (c) 2012-2015
+      6           */
+      7          
+      8          /**
+      9           * http://en.wikipedia.org/wiki/Thermistor
+     10           * http://en.wikipedia.org/wiki/Steinhart%E2%80%93Hart_equation
+     11           */
+     12          
+     13          #include "main.h"
+
+   \                                 In section .text, align 2
+   \   __intrinsic __nounwind __interwork __softfp void *memcpy(void *, void const *, size_t)
+   \                     memcpy:
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+   \   00000008   0x0032             MOVS     R2,R6
+   \   0000000A   0x0029             MOVS     R1,R5
+   \   0000000C   0x0020             MOVS     R0,R4
+   \   0000000E   0x.... 0x....      BL       __aeabi_memcpy
+   \   00000012   0x0020             MOVS     R0,R4
+   \   00000014   0xBD70             POP      {R4-R6,PC}       ;; return
+
+   \                                 In section .text, align 2
+   \   __intrinsic __nounwind __interwork __softfp void *memset(void *, int, size_t)
+   \                     memset:
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+   \   00000008   0x002A             MOVS     R2,R5
+   \   0000000A   0x0031             MOVS     R1,R6
+   \   0000000C   0x0020             MOVS     R0,R4
+   \   0000000E   0x.... 0x....      BL       __aeabi_memset
+   \   00000012   0x0020             MOVS     R0,R4
+   \   00000014   0xBD70             POP      {R4-R6,PC}       ;; return
+     14          #include "thermistors.h"
+     15          #include "adc_inputs.h"
+     16          #include "engine_configuration.h"
+     17          #include "engine_math.h"
+     18          
+     19          // Celsius
+     20          #define LIMPING_MODE_IAT_TEMPERATURE 30.0f
+     21          #define LIMPING_MODE_CLT_TEMPERATURE 70.0f
+     22          
+     23          EXTERN_ENGINE
+     24          ;
+     25          
+
+   \                                 In section .bss, align 4
+     26          static Logging *logger;
+   \                     logger:
+   \   00000000                      DS8 4
+     27          
+
+   \                                 In section .bss, align 1
+     28          static bool initialized = false;
+   \                     initialized:
+   \   00000000                      DS8 1
+     29          
+     30          /**
+     31           * http://en.wikipedia.org/wiki/Voltage_divider
+     32           */
+
+   \                                 In section .text, align 2, keep-with-next
+     33          float getR1InVoltageDividor(float Vout, float Vin, float r2) {
+     34          	return r2 * Vin / Vout - r2;
+   \                     _Z21getR1InVoltageDividorfff:
+   \   00000000   0xEE61 0x0A20      VMUL.F32 S1,S2,S1
+   \   00000004   0xEE80 0x0A80      VDIV.F32 S0,S1,S0
+   \   00000008   0xEE30 0x0A41      VSUB.F32 S0,S0,S2
+   \   0000000C   0x4770             BX       LR               ;; return
+     35          }
+     36          
+
+   \                                 In section .text, align 4, keep-with-next
+     37          float getR2InVoltageDividor(float Vout, float Vin, float r1) {
+   \                     _Z21getR2InVoltageDividorfff:
+   \   00000000   0xEEF0 0x1A40      VMOV.F32 S3,S0
+     38          	if (Vout == 0) {
+   \   00000004   0xEEF5 0x1A40      VCMP.F32 S3,#0.0
+   \   00000008   0xEEF1 0xFA10      FMSTAT   
+   \   0000000C   0xD102             BNE.N    ??getR2InVoltageDividor_0
+     39          		return NAN;
+   \   0000000E   0xED9F 0x....      VLDR.W   S0,??DataTable9  ;; 0x7fffffff
+   \   00000012   0xE007             B.N      ??getR2InVoltageDividor_1
+     40          	}
+     41          	return r1 / (Vin / Vout - 1);
+   \                     ??getR2InVoltageDividor_0:
+   \   00000014   0xEE80 0x0AA1      VDIV.F32 S0,S1,S3
+   \   00000018   0xEEFF 0x0A00      VMOV.F32 S1,#-1.0
+   \   0000001C   0xEE30 0x0A20      VADD.F32 S0,S0,S1
+   \   00000020   0xEE81 0x0A00      VDIV.F32 S0,S2,S0
+   \                     ??getR2InVoltageDividor_1:
+   \   00000024   0x4770             BX       LR               ;; return
+     42          }
+     43          
+
+   \                                 In section .text, align 2, keep-with-next
+     44          float getVoutInVoltageDividor(float Vin, float r1, float r2) {
+     45          	return r2 * Vin / (r1 + r2);
+   \                     _Z23getVoutInVoltageDividorfff:
+   \   00000000   0xEE21 0x0A00      VMUL.F32 S0,S2,S0
+   \   00000004   0xEE70 0x0A81      VADD.F32 S1,S1,S2
+   \   00000008   0xEE80 0x0A20      VDIV.F32 S0,S0,S1
+   \   0000000C   0x4770             BX       LR               ;; return
+     46          }
+     47          
+
+   \                                 In section .text, align 4, keep-with-next
+     48          float getKelvinTemperature(ThermistorConf *config, float resistance, ThermistorMath *tm) {
+   \                     _Z20getKelvinTemperatureP14ThermistorConffP14ThermistorMath:
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0xED2D 0x8B02      VPUSH    {D8}
+   \   00000006   0x0004             MOVS     R4,R0
+   \   00000008   0xEEB0 0x8A40      VMOV.F32 S16,S0
+   \   0000000C   0x000D             MOVS     R5,R1
+     49          	tm->init(&config->config); // implementation checks if config has changed or not
+   \   0000000E   0x0021             MOVS     R1,R4
+   \   00000010   0x0028             MOVS     R0,R5
+   \   00000012   0x.... 0x....      BL       _ZN14ThermistorMath4initEP17thermistor_conf_s
+     50          	thermistor_curve_s * curve = &tm->curve;
+   \   00000016   0x002E             MOVS     R6,R5
+     51          	efiAssert(curve != NULL, "thermistor pointer is NULL", NAN);
+   \   00000018   0x2E00             CMP      R6,#+0
+   \   0000001A   0xD106             BNE.N    ??getKelvinTemperature_0
+   \   0000001C   0x.... 0x....      LDR.W    R0,??DataTable15_12
+   \   00000020   0x.... 0x....      BL       firmwareError
+   \   00000024   0xED9F 0x....      VLDR.W   S0,??DataTable9  ;; 0x7fffffff
+   \   00000028   0xE01D             B.N      ??getKelvinTemperature_1
+     52          
+     53          	if (resistance <= 0) {
+   \                     ??getKelvinTemperature_0:
+   \   0000002A   0xEEB5 0x8A40      VCMP.F32 S16,#0.0
+   \   0000002E   0xEEF1 0xFA10      FMSTAT   
+   \   00000032   0xD802             BHI.N    ??getKelvinTemperature_2
+     54          		//warning("Invalid resistance in getKelvinTemperature=", resistance);
+     55          		return 0.0f;
+   \   00000034   0xED9F 0x....      VLDR.W   S0,??DataTable9_1  ;; 0x0
+   \   00000038   0xE015             B.N      ??getKelvinTemperature_1
+     56          	}
+     57          	float logR = logf(resistance);
+   \                     ??getKelvinTemperature_2:
+   \   0000003A   0xEEB0 0x0A48      VMOV.F32 S0,S16
+   \   0000003E   0x.... 0x....      BL       logf
+     58          	return 1 / (curve->s_h_a + curve->s_h_b * logR + curve->s_h_c * logR * logR * logR);
+   \   00000042   0xEDD6 0x0A01      VLDR     S1,[R6, #+4]
+   \   00000046   0xED96 0x1A00      VLDR     S2,[R6, #0]
+   \   0000004A   0xEE00 0x1A80      VMLA.F32 S2,S1,S0
+   \   0000004E   0xEDD6 0x0A02      VLDR     S1,[R6, #+8]
+   \   00000052   0xEE60 0x0A80      VMUL.F32 S1,S1,S0
+   \   00000056   0xEE60 0x0A80      VMUL.F32 S1,S1,S0
+   \   0000005A   0xEE00 0x1A80      VMLA.F32 S2,S1,S0
+   \   0000005E   0xEEB7 0x0A00      VMOV.F32 S0,#1.0
+   \   00000062   0xEE80 0x0A01      VDIV.F32 S0,S0,S2
+   \                     ??getKelvinTemperature_1:
+   \   00000066   0xECBD 0x8B02      VPOP     {D8}
+   \   0000006A   0xBD70             POP      {R4-R6,PC}       ;; return
+     59          }
+     60          
+
+   \                                 In section .text, align 4, keep-with-next
+     61          float convertCelsiustoF(float tempC) {
+     62          	return tempC * 9 / 5 + 32;
+   \                     _Z17convertCelsiustoFf:
+   \   00000000   0xEEF2 0x0A02      VMOV.F32 S1,#9.0
+   \   00000004   0xEE20 0x0A20      VMUL.F32 S0,S0,S1
+   \   00000008   0xEEF1 0x0A04      VMOV.F32 S1,#5.0
+   \   0000000C   0xEE80 0x0A20      VDIV.F32 S0,S0,S1
+   \   00000010   0xEDDF 0x....      VLDR.W   S1,??DataTable9_2  ;; 0x42000000
+   \   00000014   0xEE30 0x0A20      VADD.F32 S0,S0,S1
+   \   00000018   0x4770             BX       LR               ;; return
+     63          }
+     64          
+
+   \                                 In section .text, align 4, keep-with-next
+     65          float convertFtoCelsius(float tempF) {
+     66          	return (tempF - 32) / 9 * 5;
+   \                     _Z17convertFtoCelsiusf:
+   \   00000000   0xEDDF 0x....      VLDR.W   S1,??DataTable9_3  ;; 0xc2000000
+   \   00000004   0xEE30 0x0A20      VADD.F32 S0,S0,S1
+   \   00000008   0xEEF2 0x0A02      VMOV.F32 S1,#9.0
+   \   0000000C   0xEE80 0x0A20      VDIV.F32 S0,S0,S1
+   \   00000010   0xEEF1 0x0A04      VMOV.F32 S1,#5.0
+   \   00000014   0xEE20 0x0A20      VMUL.F32 S0,S0,S1
+   \   00000018   0x4770             BX       LR               ;; return
+     67          }
+     68          
+
+   \                                 In section .text, align 4, keep-with-next
+     69          float convertKelvinToFahrenheit(float kelvin) {
+   \                     _Z25convertKelvinToFahrenheitf:
+   \   00000000   0xB580             PUSH     {R7,LR}
+   \   00000002   0xED2D 0x8B02      VPUSH    {D8}
+   \   00000006   0xEEB0 0x8A40      VMOV.F32 S16,S0
+     70          	float tempC = convertKelvinToCelcius(kelvin);
+   \   0000000A   0xED9F 0x....      VLDR.W   S0,??DataTable9_4  ;; 0xc3889333
+   \   0000000E   0xEE78 0x8A00      VADD.F32 S17,S16,S0
+     71          	return convertCelsiustoF(tempC);
+   \   00000012   0xEEB0 0x0A68      VMOV.F32 S0,S17
+   \   00000016   0x.... 0x....      BL       _Z17convertCelsiustoFf
+   \   0000001A   0xECBD 0x8B02      VPOP     {D8}
+   \   0000001E   0xBD01             POP      {R0,PC}          ;; return
+     72          }
+     73          
+
+   \                                 In section .text, align 4, keep-with-next
+     74          float getResistance(ThermistorConf *config) {
+   \                     _Z13getResistanceP14ThermistorConf:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0xED2D 0x8B02      VPUSH    {D8}
+   \   00000006   0x0004             MOVS     R4,R0
+     75          	float voltage = getVoltageDivided("term", config->adcChannel);
+   \   00000008   0x69E1             LDR      R1,[R4, #+28]
+   \   0000000A   0x.... 0x....      LDR.W    R0,??DataTable15_13
+   \   0000000E   0x.... 0x....      BL       _Z19getInternalAdcValuePKc13adc_channel_e
+   \   00000012   0xEE00 0x0A10      VMOV     S0,R0
+   \   00000016   0xEEB8 0x0AC0      VCVT.F32.S32 S0,S0
+   \   0000001A   0xEDDF 0x....      VLDR.W   S1,??DataTable9_5  ;; 0x3a400c01
+   \   0000001E   0xEE20 0x0A20      VMUL.F32 S0,S0,S1
+   \   00000022   0x.... 0x....      LDR.W    R0,??DataTable15_14
+   \   00000026   0x6800             LDR      R0,[R0, #+0]
+   \   00000028   0xEDD0 0x0A74      VLDR     S1,[R0, #+464]
+   \   0000002C   0xEE20 0x8A20      VMUL.F32 S16,S0,S1
+     76          	efiAssert(config != NULL, "thermistor config is null", NAN);
+   \   00000030   0x2C00             CMP      R4,#+0
+   \   00000032   0xD106             BNE.N    ??getResistance_0
+   \   00000034   0x.... 0x....      LDR.W    R0,??DataTable15_15
+   \   00000038   0x.... 0x....      BL       firmwareError
+   \   0000003C   0xED9F 0x....      VLDR.W   S0,??DataTable9  ;; 0x7fffffff
+   \   00000040   0xE007             B.N      ??getResistance_1
+     77          	thermistor_conf_s *tc = &config->config;
+     78          
+     79          	float resistance = getR2InVoltageDividor(voltage, _5_VOLTS, tc->bias_resistor);
+   \                     ??getResistance_0:
+   \   00000042   0xED94 0x1A06      VLDR     S2,[R4, #+24]
+   \   00000046   0xEEF1 0x0A04      VMOV.F32 S1,#5.0
+   \   0000004A   0xEEB0 0x0A48      VMOV.F32 S0,S16
+   \   0000004E   0x.... 0x....      BL       _Z21getR2InVoltageDividorfff
+     80          	return resistance;
+   \                     ??getResistance_1:
+   \   00000052   0xECBD 0x8B02      VPOP     {D8}
+   \   00000056   0xBD10             POP      {R4,PC}          ;; return
+     81          }
+     82          
+
+   \                                 In section .text, align 4, keep-with-next
+     83          float getTemperatureC(ThermistorConf *config, ThermistorMath *tm) {
+   \                     _Z15getTemperatureCP14ThermistorConfP14ThermistorMath:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0xED2D 0x8B02      VPUSH    {D8}
+   \   00000006   0x0004             MOVS     R4,R0
+   \   00000008   0x000D             MOVS     R5,R1
+     84          	if (!initialized) {
+   \   0000000A   0x.... 0x....      LDR.W    R0,??DataTable15_16
+   \   0000000E   0x7800             LDRB     R0,[R0, #+0]
+   \   00000010   0x2800             CMP      R0,#+0
+   \   00000012   0xD106             BNE.N    ??getTemperatureC_0
+     85          		firmwareError("thermstr not initialized");
+   \   00000014   0x.... 0x....      LDR.W    R0,??DataTable15_17
+   \   00000018   0x.... 0x....      BL       firmwareError
+     86          		return NAN;
+   \   0000001C   0xED9F 0x....      VLDR.W   S0,??DataTable9  ;; 0x7fffffff
+   \   00000020   0xE00E             B.N      ??getTemperatureC_1
+     87          	}
+     88          	float resistance = getResistance(config);
+   \                     ??getTemperatureC_0:
+   \   00000022   0x0020             MOVS     R0,R4
+   \   00000024   0x.... 0x....      BL       _Z13getResistanceP14ThermistorConf
+   \   00000028   0xEEB0 0x8A40      VMOV.F32 S16,S0
+     89          
+     90          	float kelvinTemperature = getKelvinTemperature(config, resistance, tm);
+   \   0000002C   0x0029             MOVS     R1,R5
+   \   0000002E   0xEEB0 0x0A48      VMOV.F32 S0,S16
+   \   00000032   0x0020             MOVS     R0,R4
+   \   00000034   0x.... 0x....      BL       _Z20getKelvinTemperatureP14ThermistorConffP14ThermistorMath
+     91          	return convertKelvinToCelcius(kelvinTemperature);
+   \   00000038   0xEDDF 0x....      VLDR.W   S1,??DataTable9_4  ;; 0xc3889333
+   \   0000003C   0xEE30 0x0A20      VADD.F32 S0,S0,S1
+   \                     ??getTemperatureC_1:
+   \   00000040   0xECBD 0x8B02      VPOP     {D8}
+   \   00000044   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+     92          }
+     93          
+
+   \                                 In section .text, align 4, keep-with-next
+     94          bool isValidCoolantTemperature(float temperature) {
+   \                     _Z25isValidCoolantTemperaturef:
+   \   00000000   0xB580             PUSH     {R7,LR}
+   \   00000002   0xED2D 0x8B02      VPUSH    {D8}
+   \   00000006   0xEEB0 0x8A40      VMOV.F32 S16,S0
+     95          	// I hope magic constants are appropriate here
+     96          	return !cisnan(temperature) && temperature > -50 && temperature < 250;
+   \   0000000A   0xEEB0 0x0A48      VMOV.F32 S0,S16
+   \   0000000E   0x.... 0x....      BL       __iar_FDtest
+   \   00000012   0x2802             CMP      R0,#+2
+   \   00000014   0xD00F             BEQ.N    ??isValidCoolantTemperature_0
+   \   00000016   0xED9F 0x....      VLDR.W   S0,??DataTable9_6  ;; 0xc247ffff
+   \   0000001A   0xEEB4 0x8A40      VCMP.F32 S16,S0
+   \   0000001E   0xEEF1 0xFA10      FMSTAT   
+   \   00000022   0xDB08             BLT.N    ??isValidCoolantTemperature_0
+   \   00000024   0xED9F 0x....      VLDR.W   S0,??DataTable10  ;; 0x437a0000
+   \   00000028   0xEEB4 0x8A40      VCMP.F32 S16,S0
+   \   0000002C   0xEEF1 0xFA10      FMSTAT   
+   \   00000030   0xD501             BPL.N    ??isValidCoolantTemperature_0
+   \   00000032   0x2001             MOVS     R0,#+1
+   \   00000034   0xE000             B.N      ??isValidCoolantTemperature_1
+   \                     ??isValidCoolantTemperature_0:
+   \   00000036   0x2000             MOVS     R0,#+0
+   \                     ??isValidCoolantTemperature_1:
+   \   00000038   0xB2C0             UXTB     R0,R0            ;; ZeroExt  R0,R0,#+24,#+24
+   \   0000003A   0xECBD 0x8B02      VPOP     {D8}
+   \   0000003E   0xBD02             POP      {R1,PC}          ;; return
+     97          }
+     98          
+
+   \                                 In section .text, align 4, keep-with-next
+     99          bool isValidIntakeAirTemperature(float temperature) {
+   \                     _Z27isValidIntakeAirTemperaturef:
+   \   00000000   0xB580             PUSH     {R7,LR}
+   \   00000002   0xED2D 0x8B02      VPUSH    {D8}
+   \   00000006   0xEEB0 0x8A40      VMOV.F32 S16,S0
+    100          	// I hope magic constants are appropriate here
+    101          	return !cisnan(temperature) && temperature > -50 && temperature < 100;
+   \   0000000A   0xEEB0 0x0A48      VMOV.F32 S0,S16
+   \   0000000E   0x.... 0x....      BL       __iar_FDtest
+   \   00000012   0x2802             CMP      R0,#+2
+   \   00000014   0xD00F             BEQ.N    ??isValidIntakeAirTemperature_0
+   \   00000016   0xED9F 0x....      VLDR.W   S0,??DataTable9_6  ;; 0xc247ffff
+   \   0000001A   0xEEB4 0x8A40      VCMP.F32 S16,S0
+   \   0000001E   0xEEF1 0xFA10      FMSTAT   
+   \   00000022   0xDB08             BLT.N    ??isValidIntakeAirTemperature_0
+   \   00000024   0xED9F 0x....      VLDR.W   S0,??DataTable10_1  ;; 0x42c80000
+   \   00000028   0xEEB4 0x8A40      VCMP.F32 S16,S0
+   \   0000002C   0xEEF1 0xFA10      FMSTAT   
+   \   00000030   0xD501             BPL.N    ??isValidIntakeAirTemperature_0
+   \   00000032   0x2001             MOVS     R0,#+1
+   \   00000034   0xE000             B.N      ??isValidIntakeAirTemperature_1
+   \                     ??isValidIntakeAirTemperature_0:
+   \   00000036   0x2000             MOVS     R0,#+0
+   \                     ??isValidIntakeAirTemperature_1:
+   \   00000038   0xB2C0             UXTB     R0,R0            ;; ZeroExt  R0,R0,#+24,#+24
+   \   0000003A   0xECBD 0x8B02      VPOP     {D8}
+   \   0000003E   0xBD02             POP      {R1,PC}          ;; return
+    102          }
+    103          
+    104          /**
+    105           * @return coolant temperature, in Celsius
+    106           */
+
+   \                                 In section .text, align 4, keep-with-next
+    107          float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_F) {
+   \                     _Z21getCoolantTemperaturev:
+   \   00000000   0xB580             PUSH     {R7,LR}
+   \   00000002   0xED2D 0x8B02      VPUSH    {D8}
+    108          	float temperature = getTemperatureC(&engineConfiguration->clt, &engine->engineState.cltCurve);
+   \   00000006   0x.... 0x....      LDR.W    R0,??DataTable15_18
+   \   0000000A   0x6800             LDR      R0,[R0, #+0]
+   \   0000000C   0xF500 0x51F0      ADD      R1,R0,#+7680
+   \   00000010   0x3184             ADDS     R1,R1,#+132
+   \   00000012   0x.... 0x....      LDR.W    R0,??DataTable15_14
+   \   00000016   0x6800             LDR      R0,[R0, #+0]
+   \   00000018   0xF510 0x7080      ADDS     R0,R0,#+256
+   \   0000001C   0x.... 0x....      BL       _Z15getTemperatureCP14ThermistorConfP14ThermistorMath
+   \   00000020   0xEEB0 0x8A40      VMOV.F32 S16,S0
+    109          	if (!isValidCoolantTemperature(temperature)) {
+   \   00000024   0xEEB0 0x0A48      VMOV.F32 S0,S16
+   \   00000028   0x.... 0x....      BL       _Z25isValidCoolantTemperaturef
+   \   0000002C   0x2800             CMP      R0,#+0
+   \   0000002E   0xD124             BNE.N    ??getCoolantTemperature_0
+    110          		efiAssert(engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
+   \   00000030   0x.... 0x....      LDR.W    R0,??DataTable15_14
+   \   00000034   0x6800             LDR      R0,[R0, #+0]
+   \   00000036   0x2800             CMP      R0,#+0
+   \   00000038   0xD106             BNE.N    ??getCoolantTemperature_1
+   \   0000003A   0x.... 0x....      LDR.W    R0,??DataTable15_19
+   \   0000003E   0x.... 0x....      BL       firmwareError
+   \   00000042   0xED9F 0x....      VLDR.W   S0,??DataTable9  ;; 0x7fffffff
+   \   00000046   0xE01A             B.N      ??getCoolantTemperature_2
+    111          		if (engineConfiguration->hasCltSensor) {
+   \                     ??getCoolantTemperature_1:
+   \   00000048   0x.... 0x....      LDR.W    R0,??DataTable15_14
+   \   0000004C   0x6800             LDR      R0,[R0, #+0]
+   \   0000004E   0xF890 0x05D8      LDRB     R0,[R0, #+1496]
+   \   00000052   0xB2C0             UXTB     R0,R0            ;; ZeroExt  R0,R0,#+24,#+24
+   \   00000054   0x09C0             LSRS     R0,R0,#+7
+   \   00000056   0xB2C0             UXTB     R0,R0            ;; ZeroExt  R0,R0,#+24,#+24
+   \   00000058   0x2800             CMP      R0,#+0
+   \   0000005A   0xD00B             BEQ.N    ??getCoolantTemperature_3
+    112          			warning(OBD_PCM_Processor_Fault, "unrealistic CLT %f", temperature);
+   \   0000005C   0xEE18 0x0A10      VMOV     R0,S16
+   \   00000060   0x.... 0x....      BL       __aeabi_f2d
+   \   00000064   0x0002             MOVS     R2,R0
+   \   00000066   0x000B             MOVS     R3,R1
+   \   00000068   0x.... 0x....      LDR.W    R1,??DataTable15_20
+   \   0000006C   0xF240 0x205E      MOVW     R0,#+606
+   \   00000070   0x.... 0x....      BL       warning
+    113          		}
+    114          		return LIMPING_MODE_CLT_TEMPERATURE;
+   \                     ??getCoolantTemperature_3:
+   \   00000074   0xED9F 0x....      VLDR.W   S0,??DataTable13  ;; 0x428c0000
+   \   00000078   0xE001             B.N      ??getCoolantTemperature_2
+    115          	}
+    116          	return temperature;
+   \                     ??getCoolantTemperature_0:
+   \   0000007A   0xEEB0 0x0A48      VMOV.F32 S0,S16
+   \                     ??getCoolantTemperature_2:
+   \   0000007E   0xECBD 0x8B02      VPOP     {D8}
+   \   00000082   0xBD01             POP      {R0,PC}          ;; return
+    117          }
+    118          
+
+   \                                 In section .text, align 2, keep-with-next
+    119          void setThermistorConfiguration(ThermistorConf * thermistor, float tempC1, float r1, float tempC2, float r2, float tempC3,
+    120          		float r3) {
+    121          	thermistor_conf_s *tc = &thermistor->config;
+    122          	tc->tempC_1 = tempC1;
+   \                     _Z26setThermistorConfigurationP14ThermistorConfffffff:
+   \   00000000   0xED80 0x0A00      VSTR     S0,[R0, #0]
+    123          	tc->resistance_1 = r1;
+   \   00000004   0xEDC0 0x0A03      VSTR     S1,[R0, #+12]
+    124          
+    125          	tc->tempC_2 = tempC2;
+   \   00000008   0xED80 0x1A01      VSTR     S2,[R0, #+4]
+    126          	tc->resistance_2 = r2;
+   \   0000000C   0xEDC0 0x1A04      VSTR     S3,[R0, #+16]
+    127          
+    128          	tc->tempC_3 = tempC3;
+   \   00000010   0xED80 0x2A02      VSTR     S4,[R0, #+8]
+    129          	tc->resistance_3 = r3;
+   \   00000014   0xEDC0 0x2A05      VSTR     S5,[R0, #+20]
+    130          }
+   \   00000018   0x4770             BX       LR               ;; return
+    131          
+
+   \                                 In section .text, align 4, keep-with-next
+    132          static void prepareThermistorCurve(thermistor_conf_s *tc, thermistor_curve_s * curve) {
+   \                     _Z22prepareThermistorCurveP17thermistor_conf_sP18thermistor_curve_s:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0xED2D 0x8B0C      VPUSH    {D8-D13}
+   \   00000006   0xB084             SUB      SP,SP,#+16
+   \   00000008   0x0004             MOVS     R4,R0
+   \   0000000A   0x000D             MOVS     R5,R1
+    133          	float T1 = tc->tempC_1 + KELV;
+   \   0000000C   0xED94 0x0A00      VLDR     S0,[R4, #0]
+   \   00000010   0xEDDF 0x....      VLDR.W   S1,??DataTable12  ;; 0x43889333
+   \   00000014   0xEE30 0x8A20      VADD.F32 S16,S0,S1
+    134          	float T2 = tc->tempC_2 + KELV;
+   \   00000018   0xED94 0x0A01      VLDR     S0,[R4, #+4]
+   \   0000001C   0xEDDF 0x....      VLDR.W   S1,??DataTable12  ;; 0x43889333
+   \   00000020   0xEE70 0x8A20      VADD.F32 S17,S0,S1
+    135          	float T3 = tc->tempC_3 + KELV;
+   \   00000024   0xED94 0x0A02      VLDR     S0,[R4, #+8]
+   \   00000028   0xEDDF 0x....      VLDR.W   S1,??DataTable12  ;; 0x43889333
+   \   0000002C   0xEE30 0x9A20      VADD.F32 S18,S0,S1
+    136          	scheduleMsg(logger, "T1=%..100000f/T2=%..100000f/T3=%..100000f", T1, T2, T3);
+   \   00000030   0xEE19 0x0A10      VMOV     R0,S18
+   \   00000034   0x.... 0x....      BL       __aeabi_f2d
+   \   00000038   0xE9CD 0x0102      STRD     R0,R1,[SP, #+8]
+   \   0000003C   0xEE18 0x0A90      VMOV     R0,S17
+   \   00000040   0x.... 0x....      BL       __aeabi_f2d
+   \   00000044   0xE9CD 0x0100      STRD     R0,R1,[SP, #+0]
+   \   00000048   0xEE18 0x0A10      VMOV     R0,S16
+   \   0000004C   0x.... 0x....      BL       __aeabi_f2d
+   \   00000050   0x0002             MOVS     R2,R0
+   \   00000052   0x000B             MOVS     R3,R1
+   \   00000054   0x.... 0x....      LDR.W    R1,??DataTable15_21
+   \   00000058   0x.... 0x....      LDR.W    R0,??DataTable15_22
+   \   0000005C   0x6800             LDR      R0,[R0, #+0]
+   \   0000005E   0x.... 0x....      BL       scheduleMsg
+    137          
+    138          	float L1 = logf(tc->resistance_1);
+   \   00000062   0xED94 0x0A03      VLDR     S0,[R4, #+12]
+   \   00000066   0x.... 0x....      BL       logf
+   \   0000006A   0xEEF0 0x9A40      VMOV.F32 S19,S0
+    139          	if (L1 == tc->resistance_1) {
+   \   0000006E   0xED94 0x0A03      VLDR     S0,[R4, #+12]
+   \   00000072   0xEEF4 0x9A40      VCMP.F32 S19,S0
+   \   00000076   0xEEF1 0xFA10      FMSTAT   
+   \   0000007A   0xD102             BNE.N    ??prepareThermistorCurve_0
+    140          		firmwareError("log is broken?");
+   \   0000007C   0x....             LDR.N    R0,??DataTable15_23
+   \   0000007E   0x.... 0x....      BL       firmwareError
+    141          	}
+    142          	float L2 = logf(tc->resistance_2);
+   \                     ??prepareThermistorCurve_0:
+   \   00000082   0xED94 0x0A04      VLDR     S0,[R4, #+16]
+   \   00000086   0x.... 0x....      BL       logf
+   \   0000008A   0xEEB0 0xAA40      VMOV.F32 S20,S0
+    143          	float L3 = logf(tc->resistance_3);
+   \   0000008E   0xED94 0x0A05      VLDR     S0,[R4, #+20]
+   \   00000092   0x.... 0x....      BL       logf
+   \   00000096   0xEEF0 0xAA40      VMOV.F32 S21,S0
+    144          	scheduleMsg(logger, "R1=%..100000f/R2=%..100000f/R3=%..100000f", tc->resistance_1, tc->resistance_2,
+    145          			tc->resistance_3);
+   \   0000009A   0x6960             LDR      R0,[R4, #+20]
+   \   0000009C   0x.... 0x....      BL       __aeabi_f2d
+   \   000000A0   0xE9CD 0x0102      STRD     R0,R1,[SP, #+8]
+   \   000000A4   0x6920             LDR      R0,[R4, #+16]
+   \   000000A6   0x.... 0x....      BL       __aeabi_f2d
+   \   000000AA   0xE9CD 0x0100      STRD     R0,R1,[SP, #+0]
+   \   000000AE   0x68E0             LDR      R0,[R4, #+12]
+   \   000000B0   0x.... 0x....      BL       __aeabi_f2d
+   \   000000B4   0x0002             MOVS     R2,R0
+   \   000000B6   0x000B             MOVS     R3,R1
+   \   000000B8   0x....             LDR.N    R1,??DataTable15_24
+   \   000000BA   0x....             LDR.N    R0,??DataTable15_22
+   \   000000BC   0x6800             LDR      R0,[R0, #+0]
+   \   000000BE   0x.... 0x....      BL       scheduleMsg
+    146          	scheduleMsg(logger, "L1=%..100000f/L2=%..100000f/L3=%..100000f", L1, L2, L3);
+   \   000000C2   0xEE1A 0x0A90      VMOV     R0,S21
+   \   000000C6   0x.... 0x....      BL       __aeabi_f2d
+   \   000000CA   0xE9CD 0x0102      STRD     R0,R1,[SP, #+8]
+   \   000000CE   0xEE1A 0x0A10      VMOV     R0,S20
+   \   000000D2   0x.... 0x....      BL       __aeabi_f2d
+   \   000000D6   0xE9CD 0x0100      STRD     R0,R1,[SP, #+0]
+   \   000000DA   0xEE19 0x0A90      VMOV     R0,S19
+   \   000000DE   0x.... 0x....      BL       __aeabi_f2d
+   \   000000E2   0x0002             MOVS     R2,R0
+   \   000000E4   0x000B             MOVS     R3,R1
+   \   000000E6   0x....             LDR.N    R1,??DataTable15_25
+   \   000000E8   0x....             LDR.N    R0,??DataTable15_22
+   \   000000EA   0x6800             LDR      R0,[R0, #+0]
+   \   000000EC   0x.... 0x....      BL       scheduleMsg
+    147          
+    148          	float Y1 = 1 / T1;
+   \   000000F0   0xEEB7 0x0A00      VMOV.F32 S0,#1.0
+   \   000000F4   0xEE80 0xBA08      VDIV.F32 S22,S0,S16
+    149          	float Y2 = 1 / T2;
+   \   000000F8   0xEEB7 0x0A00      VMOV.F32 S0,#1.0
+   \   000000FC   0xEEC0 0xBA28      VDIV.F32 S23,S0,S17
+    150          	float Y3 = 1 / T3;
+   \   00000100   0xEEB7 0x0A00      VMOV.F32 S0,#1.0
+   \   00000104   0xEE80 0xCA09      VDIV.F32 S24,S0,S18
+    151          
+    152          	scheduleMsg(logger, "Y1=%..100000f/Y2=%..100000f/Y3=%..100000f", Y1, Y2, Y3);
+   \   00000108   0xEE1C 0x0A10      VMOV     R0,S24
+   \   0000010C   0x.... 0x....      BL       __aeabi_f2d
+   \   00000110   0xE9CD 0x0102      STRD     R0,R1,[SP, #+8]
+   \   00000114   0xEE1B 0x0A90      VMOV     R0,S23
+   \   00000118   0x.... 0x....      BL       __aeabi_f2d
+   \   0000011C   0xE9CD 0x0100      STRD     R0,R1,[SP, #+0]
+   \   00000120   0xEE1B 0x0A10      VMOV     R0,S22
+   \   00000124   0x.... 0x....      BL       __aeabi_f2d
+   \   00000128   0x0002             MOVS     R2,R0
+   \   0000012A   0x000B             MOVS     R3,R1
+   \   0000012C   0x....             LDR.N    R1,??DataTable15_26
+   \   0000012E   0x....             LDR.N    R0,??DataTable15_22
+   \   00000130   0x6800             LDR      R0,[R0, #+0]
+   \   00000132   0x.... 0x....      BL       scheduleMsg
+    153          
+    154          	float U2 = (Y2 - Y1) / (L2 - L1);
+   \   00000136   0xEE3B 0x0ACB      VSUB.F32 S0,S23,S22
+   \   0000013A   0xEE7A 0x0A69      VSUB.F32 S1,S20,S19
+   \   0000013E   0xEEC0 0xCA20      VDIV.F32 S25,S0,S1
+    155          	float U3 = (Y3 - Y1) / (L3 - L1);
+   \   00000142   0xEE3C 0x0A4B      VSUB.F32 S0,S24,S22
+   \   00000146   0xEE7A 0x0AE9      VSUB.F32 S1,S21,S19
+   \   0000014A   0xEE80 0xDA20      VDIV.F32 S26,S0,S1
+    156          
+    157          	scheduleMsg(logger, "U2=%..100000f/U3=%..100000f", U2, U3);
+   \   0000014E   0xEE1D 0x0A10      VMOV     R0,S26
+   \   00000152   0x.... 0x....      BL       __aeabi_f2d
+   \   00000156   0xE9CD 0x0100      STRD     R0,R1,[SP, #+0]
+   \   0000015A   0xEE1C 0x0A90      VMOV     R0,S25
+   \   0000015E   0x.... 0x....      BL       __aeabi_f2d
+   \   00000162   0x0002             MOVS     R2,R0
+   \   00000164   0x000B             MOVS     R3,R1
+   \   00000166   0x....             LDR.N    R1,??DataTable15_27
+   \   00000168   0x....             LDR.N    R0,??DataTable15_22
+   \   0000016A   0x6800             LDR      R0,[R0, #+0]
+   \   0000016C   0x.... 0x....      BL       scheduleMsg
+    158          
+    159          	curve->s_h_c = (U3 - U2) / (L3 - L2) * pow(L1 + L2 + L3, -1);
+   \   00000170   0xF05F 0x30FF      MOVS     R0,#-1
+   \   00000174   0xEE39 0x0A8A      VADD.F32 S0,S19,S20
+   \   00000178   0xEE30 0x0A2A      VADD.F32 S0,S0,S21
+   \   0000017C   0x0001             MOVS     R1,R0
+   \   0000017E   0x2800             CMP      R0,#+0
+   \   00000180   0xD500             BPL.N    ??prepareThermistorCurve_1
+   \   00000182   0x4249             RSBS     R1,R1,#+0
+   \                     ??prepareThermistorCurve_1:
+   \   00000184   0xEEF7 0x0A00      VMOV.F32 S1,#1.0
+   \                     ??prepareThermistorCurve_2:
+   \   00000188   0x07CA             LSLS     R2,R1,#+31
+   \   0000018A   0xD501             BPL.N    ??prepareThermistorCurve_3
+   \   0000018C   0xEE60 0x0A80      VMUL.F32 S1,S1,S0
+   \                     ??prepareThermistorCurve_3:
+   \   00000190   0x0849             LSRS     R1,R1,#+1
+   \   00000192   0x2900             CMP      R1,#+0
+   \   00000194   0xD002             BEQ.N    ??prepareThermistorCurve_4
+   \   00000196   0xEE20 0x0A00      VMUL.F32 S0,S0,S0
+   \   0000019A   0xE7F5             B.N      ??prepareThermistorCurve_2
+   \                     ??prepareThermistorCurve_4:
+   \   0000019C   0x2800             CMP      R0,#+0
+   \   0000019E   0xD50C             BPL.N    ??prepareThermistorCurve_5
+   \   000001A0   0xEEF5 0x0A40      VCMP.F32 S1,#0.0
+   \   000001A4   0xEEF1 0xFA10      FMSTAT   
+   \   000001A8   0xD102             BNE.N    ??prepareThermistorCurve_6
+   \   000001AA   0xEDDF 0x....      VLDR.W   S1,??DataTable15  ;; 0x7f800000
+   \   000001AE   0xE004             B.N      ??prepareThermistorCurve_7
+   \                     ??prepareThermistorCurve_6:
+   \   000001B0   0xEEB7 0x0A00      VMOV.F32 S0,#1.0
+   \   000001B4   0xEEC0 0x0A20      VDIV.F32 S1,S0,S1
+   \   000001B8   0xE7FF             B.N      ??prepareThermistorCurve_7
+   \                     ??prepareThermistorCurve_5:
+   \                     ??prepareThermistorCurve_7:
+   \   000001BA   0xEE3D 0x0A6C      VSUB.F32 S0,S26,S25
+   \   000001BE   0xEE3A 0x1ACA      VSUB.F32 S2,S21,S20
+   \   000001C2   0xEE80 0x0A01      VDIV.F32 S0,S0,S2
+   \   000001C6   0xEE20 0x0A20      VMUL.F32 S0,S0,S1
+   \   000001CA   0xED85 0x0A02      VSTR     S0,[R5, #+8]
+    160          	curve->s_h_b = U2 - curve->s_h_c * (L1 * L1 + L1 * L2 + L2 * L2);
+   \   000001CE   0xEE29 0x0AA9      VMUL.F32 S0,S19,S19
+   \   000001D2   0xEE09 0x0A8A      VMLA.F32 S0,S19,S20
+   \   000001D6   0xEE0A 0x0A0A      VMLA.F32 S0,S20,S20
+   \   000001DA   0xEDD5 0x0A02      VLDR     S1,[R5, #+8]
+   \   000001DE   0xEEB0 0x1A6C      VMOV.F32 S2,S25
+   \   000001E2   0xEE00 0x1A60      VMLS.F32 S2,S0,S1
+   \   000001E6   0xED85 0x1A01      VSTR     S2,[R5, #+4]
+    161          	curve->s_h_a = Y1 - (curve->s_h_b + L1 * L1 * curve->s_h_c) * L1;
+   \   000001EA   0xEE29 0x0AA9      VMUL.F32 S0,S19,S19
+   \   000001EE   0xEDD5 0x0A02      VLDR     S1,[R5, #+8]
+   \   000001F2   0xED95 0x1A01      VLDR     S2,[R5, #+4]
+   \   000001F6   0xEE00 0x1A20      VMLA.F32 S2,S0,S1
+   \   000001FA   0xEEB0 0x0A4B      VMOV.F32 S0,S22
+   \   000001FE   0xEE01 0x0A69      VMLS.F32 S0,S2,S19
+   \   00000202   0xED85 0x0A00      VSTR     S0,[R5, #0]
+    162          
+    163          	scheduleMsg(logger, "s_h_c=%..100000f/s_h_b=%..100000f/s_h_a=%..100000f", curve->s_h_c, curve->s_h_b,
+    164          			curve->s_h_a);
+   \   00000206   0x6828             LDR      R0,[R5, #+0]
+   \   00000208   0x.... 0x....      BL       __aeabi_f2d
+   \   0000020C   0xE9CD 0x0102      STRD     R0,R1,[SP, #+8]
+   \   00000210   0x6868             LDR      R0,[R5, #+4]
+   \   00000212   0x.... 0x....      BL       __aeabi_f2d
+   \   00000216   0xE9CD 0x0100      STRD     R0,R1,[SP, #+0]
+   \   0000021A   0x68A8             LDR      R0,[R5, #+8]
+   \   0000021C   0x.... 0x....      BL       __aeabi_f2d
+   \   00000220   0x0002             MOVS     R2,R0
+   \   00000222   0x000B             MOVS     R3,R1
+   \   00000224   0x....             LDR.N    R1,??DataTable15_28
+   \   00000226   0x....             LDR.N    R0,??DataTable15_22
+   \   00000228   0x6800             LDR      R0,[R0, #+0]
+   \   0000022A   0x.... 0x....      BL       scheduleMsg
+    165          }
+   \   0000022E   0xB004             ADD      SP,SP,#+16
+   \   00000230   0xECBD 0x8B0C      VPOP     {D8-D13}
+   \   00000234   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+    166          
+    167          /**
+    168           * @return Celsius value
+    169           */
+
+   \                                 In section .text, align 4, keep-with-next
+    170          float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_F) {
+   \                     _Z23getIntakeAirTemperaturev:
+   \   00000000   0xB580             PUSH     {R7,LR}
+   \   00000002   0xED2D 0x8B02      VPUSH    {D8}
+    171          	float temperature = getTemperatureC(&engineConfiguration->iat, &engine->engineState.iatCurve);
+   \   00000006   0x....             LDR.N    R0,??DataTable15_18
+   \   00000008   0x6800             LDR      R0,[R0, #+0]
+   \   0000000A   0xF500 0x51F0      ADD      R1,R0,#+7680
+   \   0000000E   0x315C             ADDS     R1,R1,#+92
+   \   00000010   0x....             LDR.N    R0,??DataTable15_14
+   \   00000012   0x6800             LDR      R0,[R0, #+0]
+   \   00000014   0xF510 0x7090      ADDS     R0,R0,#+288
+   \   00000018   0x.... 0x....      BL       _Z15getTemperatureCP14ThermistorConfP14ThermistorMath
+   \   0000001C   0xEEB0 0x8A40      VMOV.F32 S16,S0
+    172          	if (!isValidIntakeAirTemperature(temperature)) {
+   \   00000020   0xEEB0 0x0A48      VMOV.F32 S0,S16
+   \   00000024   0x.... 0x....      BL       _Z27isValidIntakeAirTemperaturef
+   \   00000028   0x2800             CMP      R0,#+0
+   \   0000002A   0xD121             BNE.N    ??getIntakeAirTemperature_0
+    173          		efiAssert(engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
+   \   0000002C   0x....             LDR.N    R0,??DataTable15_14
+   \   0000002E   0x6800             LDR      R0,[R0, #+0]
+   \   00000030   0x2800             CMP      R0,#+0
+   \   00000032   0xD105             BNE.N    ??getIntakeAirTemperature_1
+   \   00000034   0x....             LDR.N    R0,??DataTable15_19
+   \   00000036   0x.... 0x....      BL       firmwareError
+   \   0000003A   0xED9F 0x....      VLDR.W   S0,??DataTable15_1  ;; 0x7fffffff
+   \   0000003E   0xE019             B.N      ??getIntakeAirTemperature_2
+    174          		if (engineConfiguration->hasIatSensor) {
+   \                     ??getIntakeAirTemperature_1:
+   \   00000040   0x....             LDR.N    R0,??DataTable15_14
+   \   00000042   0x6800             LDR      R0,[R0, #+0]
+   \   00000044   0xF890 0x05D8      LDRB     R0,[R0, #+1496]
+   \   00000048   0xB2C0             UXTB     R0,R0            ;; ZeroExt  R0,R0,#+24,#+24
+   \   0000004A   0x0840             LSRS     R0,R0,#+1
+   \   0000004C   0xF010 0x0001      ANDS     R0,R0,#0x1
+   \   00000050   0x2800             CMP      R0,#+0
+   \   00000052   0xD00A             BEQ.N    ??getIntakeAirTemperature_3
+    175          			warning(OBD_PCM_Processor_Fault, "unrealistic IAT %f", temperature);
+   \   00000054   0xEE18 0x0A10      VMOV     R0,S16
+   \   00000058   0x.... 0x....      BL       __aeabi_f2d
+   \   0000005C   0x0002             MOVS     R2,R0
+   \   0000005E   0x000B             MOVS     R3,R1
+   \   00000060   0x....             LDR.N    R1,??DataTable15_29
+   \   00000062   0xF240 0x205E      MOVW     R0,#+606
+   \   00000066   0x.... 0x....      BL       warning
+    176          		}
+    177          		return LIMPING_MODE_IAT_TEMPERATURE;
+   \                     ??getIntakeAirTemperature_3:
+   \   0000006A   0xEEB3 0x0A0E      VMOV.F32 S0,#30.0
+   \   0000006E   0xE001             B.N      ??getIntakeAirTemperature_2
+    178          	}
+    179          	return temperature;
+   \                     ??getIntakeAirTemperature_0:
+   \   00000070   0xEEB0 0x0A48      VMOV.F32 S0,S16
+   \                     ??getIntakeAirTemperature_2:
+   \   00000074   0xECBD 0x8B02      VPOP     {D8}
+   \   00000078   0xBD01             POP      {R0,PC}          ;; return
+    180          }
+    181          
+
+   \                                 In section .text, align 4, keep-with-next
+    182          void setDodgeSensor(ThermistorConf *thermistorConf) {
+   \                     _Z14setDodgeSensorP14ThermistorConf:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    183          	setThermistorConfiguration(thermistorConf, -40, 336660, 30, 7550, 120, 390);
+   \   00000004   0xEDDF 0x....      VLDR.W   S5,??DataTable15_2  ;; 0x43c30000
+   \   00000008   0xED9F 0x....      VLDR.W   S4,??DataTable15_3  ;; 0x42f00000
+   \   0000000C   0xEDDF 0x....      VLDR.W   S3,??DataTable15_4  ;; 0x45ebf000
+   \   00000010   0xEEB3 0x1A0E      VMOV.F32 S2,#30.0
+   \   00000014   0xEDDF 0x....      VLDR.W   S1,??DataTable15_5  ;; 0x48a46280
+   \   00000018   0xED9F 0x....      VLDR.W   S0,??DataTable15_6  ;; 0xc2200000
+   \   0000001C   0x0020             MOVS     R0,R4
+   \   0000001E   0x.... 0x....      BL       _Z26setThermistorConfigurationP14ThermistorConfffffff
+    184          }
+   \   00000022   0xBD10             POP      {R4,PC}          ;; return
+    185          
+    186          // todo: better method name?
+
+   \                                 In section .text, align 4, keep-with-next
+    187          void setCommonNTCSensor(ThermistorConf *thermistorConf) {
+   \                     _Z18setCommonNTCSensorP14ThermistorConf:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    188          	/**
+    189          	 * 18K Ohm @ -20C
+    190          	 * 2.1K Ohm @ 24C
+    191          	 * 294 Ohm @ 80C
+    192          	 * http://www.rexbo.eu/hella/coolant-temperature-sensor-6pt009107121?c=100334&at=3130
+    193          	 */
+    194          	setThermistorConfiguration(thermistorConf, -20, 18000, 23.8889, 2100, 120.0, 100.0);
+   \   00000004   0xEDDF 0x....      VLDR.W   S5,??DataTable15_7  ;; 0x42c80000
+   \   00000008   0xED9F 0x....      VLDR.W   S4,??DataTable15_3  ;; 0x42f00000
+   \   0000000C   0xEDDF 0x....      VLDR.W   S3,??DataTable15_8  ;; 0x45034000
+   \   00000010   0xED9F 0x....      VLDR.W   S2,??DataTable15_9  ;; 0x41bf1c78
+   \   00000014   0xEDDF 0x....      VLDR.W   S1,??DataTable15_10  ;; 0x468ca000
+   \   00000018   0xEEBB 0x0A04      VMOV.F32 S0,#-20.0
+   \   0000001C   0x0020             MOVS     R0,R4
+   \   0000001E   0x.... 0x....      BL       _Z26setThermistorConfigurationP14ThermistorConfffffff
+    195          }
+   \   00000022   0xBD10             POP      {R4,PC}          ;; return
+    196          
+    197          #if EFI_PROD_CODE
+
+   \                                 In section .text, align 4, keep-with-next
+    198          static void testCltByR(float resistance) {
+   \                     _Z10testCltByRf:
+   \   00000000   0xB580             PUSH     {R7,LR}
+   \   00000002   0xED2D 0x8B02      VPUSH    {D8}
+   \   00000006   0xB082             SUB      SP,SP,#+8
+   \   00000008   0xEEB0 0x8A40      VMOV.F32 S16,S0
+    199          	float kTemp = getKelvinTemperature(&engineConfiguration->clt, resistance, &engine->engineState.cltCurve);
+   \   0000000C   0x....             LDR.N    R0,??DataTable15_18
+   \   0000000E   0x6800             LDR      R0,[R0, #+0]
+   \   00000010   0xF500 0x51F0      ADD      R1,R0,#+7680
+   \   00000014   0x3184             ADDS     R1,R1,#+132
+   \   00000016   0xEEB0 0x0A48      VMOV.F32 S0,S16
+   \   0000001A   0x....             LDR.N    R0,??DataTable15_14
+   \   0000001C   0x6800             LDR      R0,[R0, #+0]
+   \   0000001E   0xF510 0x7080      ADDS     R0,R0,#+256
+   \   00000022   0x.... 0x....      BL       _Z20getKelvinTemperatureP14ThermistorConffP14ThermistorMath
+   \   00000026   0xEEF0 0x8A40      VMOV.F32 S17,S0
+    200          	scheduleMsg(logger, "for R=%f we have %f", resistance, (kTemp - KELV));
+   \   0000002A   0xED9F 0x....      VLDR.W   S0,??DataTable15_11  ;; 0xc3889333
+   \   0000002E   0xEE38 0x0A80      VADD.F32 S0,S17,S0
+   \   00000032   0xEE10 0x0A10      VMOV     R0,S0
+   \   00000036   0x.... 0x....      BL       __aeabi_f2d
+   \   0000003A   0xE9CD 0x0100      STRD     R0,R1,[SP, #+0]
+   \   0000003E   0xEE18 0x0A10      VMOV     R0,S16
+   \   00000042   0x.... 0x....      BL       __aeabi_f2d
+   \   00000046   0x0002             MOVS     R2,R0
+   \   00000048   0x000B             MOVS     R3,R1
+   \   0000004A   0x....             LDR.N    R1,??DataTable15_30
+   \   0000004C   0x....             LDR.N    R0,??DataTable15_22
+   \   0000004E   0x6800             LDR      R0,[R0, #+0]
+   \   00000050   0x.... 0x....      BL       scheduleMsg
+    201          }
+   \   00000054   0xB002             ADD      SP,SP,#+8
+   \   00000056   0xECBD 0x8B02      VPOP     {D8}
+   \   0000005A   0xBD01             POP      {R0,PC}          ;; return
+    202          #endif
+    203          
+
+   \                                 In section .text, align 2, keep-with-next
+    204          void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
+   \                     _Z15initThermistorsP7Logging:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    205          	logger = sharedLogger;
+   \   00000004   0x....             LDR.N    R0,??DataTable15_22
+   \   00000006   0x6004             STR      R4,[R0, #+0]
+    206          	efiAssertVoid(engine!=NULL, "e NULL initThermistors");
+   \   00000008   0x....             LDR.N    R0,??DataTable15_18
+   \   0000000A   0x6800             LDR      R0,[R0, #+0]
+   \   0000000C   0x2800             CMP      R0,#+0
+   \   0000000E   0xD103             BNE.N    ??initThermistors_0
+   \   00000010   0x....             LDR.N    R0,??DataTable15_31
+   \   00000012   0x.... 0x....      BL       firmwareError
+   \   00000016   0xE00F             B.N      ??initThermistors_1
+    207          	efiAssertVoid(engine->engineConfiguration2!=NULL, "e2 NULL initThermistors");
+   \                     ??initThermistors_0:
+   \   00000018   0x....             LDR.N    R0,??DataTable15_18
+   \   0000001A   0x6800             LDR      R0,[R0, #+0]
+   \   0000001C   0x6A80             LDR      R0,[R0, #+40]
+   \   0000001E   0x2800             CMP      R0,#+0
+   \   00000020   0xD103             BNE.N    ??initThermistors_2
+   \   00000022   0x....             LDR.N    R0,??DataTable15_32
+   \   00000024   0x.... 0x....      BL       firmwareError
+   \   00000028   0xE006             B.N      ??initThermistors_1
+    208          
+    209          #if EFI_PROD_CODE
+    210          	addConsoleActionF("test_clt_by_r", testCltByR);
+   \                     ??initThermistors_2:
+   \   0000002A   0x....             LDR.N    R1,??DataTable15_33
+   \   0000002C   0x....             LDR.N    R0,??DataTable15_34
+   \   0000002E   0x.... 0x....      BL       addConsoleActionF
+    211          #endif
+    212          
+    213          	initialized = true;
+   \   00000032   0x....             LDR.N    R0,??DataTable15_16
+   \   00000034   0x2101             MOVS     R1,#+1
+   \   00000036   0x7001             STRB     R1,[R0, #+0]
+    214          }
+   \                     ??initThermistors_1:
+   \   00000038   0xBD10             POP      {R4,PC}          ;; return
+    215          
+
+   \                                 In section .text, align 2, keep-with-next
+   \   __code __interwork __softfp ThermistorMath::subobject ThermistorMath()
+   \                     _ZN14ThermistorMathC2Ev:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x0020             MOVS     R0,R4
+   \   00000006   0x.... 0x....      BL       _ZN14ThermistorMathC1Ev
+   \   0000000A   0xBD10             POP      {R4,PC}          ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+    216          ThermistorMath::ThermistorMath() {
+   \                     _ZN14ThermistorMathC1Ev:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    217          	memset(&currentConfig, 0, sizeof(currentConfig));
+   \   00000004   0x221C             MOVS     R2,#+28
+   \   00000006   0x2100             MOVS     R1,#+0
+   \   00000008   0xF114 0x000C      ADDS     R0,R4,#+12
+   \   0000000C   0x.... 0x....      BL       memset
+    218          	memset(&curve, 0, sizeof(curve));
+   \   00000010   0x220C             MOVS     R2,#+12
+   \   00000012   0x2100             MOVS     R1,#+0
+   \   00000014   0x0020             MOVS     R0,R4
+   \   00000016   0x.... 0x....      BL       memset
+    219          }
+   \   0000001A   0x0020             MOVS     R0,R4
+   \   0000001C   0xBD10             POP      {R4,PC}          ;; return
+    220          
+
+   \                                 In section .text, align 2, keep-with-next
+    221          void ThermistorMath::init(thermistor_conf_s *config) {
+   \                     _ZN14ThermistorMath4initEP17thermistor_conf_s:
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+    222          	bool_t isSameConfig = memcmp(config, &currentConfig, sizeof(currentConfig)) == 0;
+   \   00000006   0x221C             MOVS     R2,#+28
+   \   00000008   0xF114 0x010C      ADDS     R1,R4,#+12
+   \   0000000C   0x0028             MOVS     R0,R5
+   \   0000000E   0x.... 0x....      BL       memcmp
+   \   00000012   0x2800             CMP      R0,#+0
+   \   00000014   0xD101             BNE.N    ??init_0
+   \   00000016   0x2601             MOVS     R6,#+1
+   \   00000018   0xE000             B.N      ??init_1
+   \                     ??init_0:
+   \   0000001A   0x2600             MOVS     R6,#+0
+    223          	if (isSameConfig) {
+   \                     ??init_1:
+   \   0000001C   0xB2F6             UXTB     R6,R6            ;; ZeroExt  R6,R6,#+24,#+24
+   \   0000001E   0x2E00             CMP      R6,#+0
+   \   00000020   0xD109             BNE.N    ??init_2
+    224          		return;
+    225          	}
+    226          	memcpy(&currentConfig, config, sizeof(currentConfig));
+   \                     ??init_3:
+   \   00000022   0x221C             MOVS     R2,#+28
+   \   00000024   0x0029             MOVS     R1,R5
+   \   00000026   0xF114 0x000C      ADDS     R0,R4,#+12
+   \   0000002A   0x.... 0x....      BL       memcpy
+    227          	prepareThermistorCurve(config, &curve);
+   \   0000002E   0x0021             MOVS     R1,R4
+   \   00000030   0x0028             MOVS     R0,R5
+   \   00000032   0x.... 0x....      BL       _Z22prepareThermistorCurveP17thermistor_conf_sP18thermistor_curve_s
+    228          }
+   \                     ??init_2:
+   \   00000036   0xBD70             POP      {R4-R6,PC}       ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable9:
+   \   00000000   0x7FFFFFFF         DC32     0x7fffffff
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable9_1:
+   \   00000000   0x00000000         DC32     0x0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable9_2:
+   \   00000000   0x42000000         DC32     0x42000000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable9_3:
+   \   00000000   0xC2000000         DC32     0xc2000000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable9_4:
+   \   00000000   0xC3889333         DC32     0xc3889333
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable9_5:
+   \   00000000   0x3A400C01         DC32     0x3a400c01
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable9_6:
+   \   00000000   0xC247FFFF         DC32     0xc247ffff
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10:
+   \   00000000   0x437A0000         DC32     0x437a0000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_1:
+   \   00000000   0x42C80000         DC32     0x42c80000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12:
+   \   00000000   0x43889333         DC32     0x43889333
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable13:
+   \   00000000   0x428C0000         DC32     0x428c0000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15:
+   \   00000000   0x7F800000         DC32     0x7f800000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_1:
+   \   00000000   0x7FFFFFFF         DC32     0x7fffffff
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_2:
+   \   00000000   0x43C30000         DC32     0x43c30000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_3:
+   \   00000000   0x42F00000         DC32     0x42f00000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_4:
+   \   00000000   0x45EBF000         DC32     0x45ebf000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_5:
+   \   00000000   0x48A46280         DC32     0x48a46280
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_6:
+   \   00000000   0xC2200000         DC32     0xc2200000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_7:
+   \   00000000   0x42C80000         DC32     0x42c80000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_8:
+   \   00000000   0x45034000         DC32     0x45034000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_9:
+   \   00000000   0x41BF1C78         DC32     0x41bf1c78
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_10:
+   \   00000000   0x468CA000         DC32     0x468ca000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_11:
+   \   00000000   0xC3889333         DC32     0xc3889333
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_12:
+   \   00000000   0x........         DC32     `?<Constant "thermistor pointer is...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_13:
+   \   00000000   0x........         DC32     `?<Constant "term">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_14:
+   \   00000000   0x........         DC32     engineConfiguration
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_15:
+   \   00000000   0x........         DC32     `?<Constant "thermistor config is ...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_16:
+   \   00000000   0x........         DC32     initialized
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_17:
+   \   00000000   0x........         DC32     `?<Constant "thermstr not initialized">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_18:
+   \   00000000   0x........         DC32     engine
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_19:
+   \   00000000   0x........         DC32     `?<Constant "NULL engineConfiguration">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_20:
+   \   00000000   0x........         DC32     `?<Constant "unrealistic CLT %f">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_21:
+   \   00000000   0x........         DC32     `?<Constant "T1=%..100000f/T2=%..1...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_22:
+   \   00000000   0x........         DC32     logger
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_23:
+   \   00000000   0x........         DC32     `?<Constant "log is broken?">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_24:
+   \   00000000   0x........         DC32     `?<Constant "R1=%..100000f/R2=%..1...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_25:
+   \   00000000   0x........         DC32     `?<Constant "L1=%..100000f/L2=%..1...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_26:
+   \   00000000   0x........         DC32     `?<Constant "Y1=%..100000f/Y2=%..1...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_27:
+   \   00000000   0x........         DC32     `?<Constant "U2=%..100000f/U3=%..1...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_28:
+   \   00000000   0x........         DC32     `?<Constant "s_h_c=%..100000f/s_h_...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_29:
+   \   00000000   0x........         DC32     `?<Constant "unrealistic IAT %f">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_30:
+   \   00000000   0x........         DC32     `?<Constant "for R=%f we have %f">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_31:
+   \   00000000   0x........         DC32     `?<Constant "e NULL initThermistors">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_32:
+   \   00000000   0x........         DC32     `?<Constant "e2 NULL initThermistors">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_33:
+   \   00000000   0x........         DC32     _Z10testCltByRf
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable15_34:
+   \   00000000   0x........         DC32     `?<Constant "test_clt_by_r">`
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "thermistor pointer is...">`:
+   \   00000000   0x74 0x68          DC8 "thermistor pointer is NULL"
+   \              0x65 0x72    
+   \              0x6D 0x69    
+   \              0x73 0x74    
+   \              0x6F 0x72    
+   \              0x20 0x70    
+   \              0x6F 0x69    
+   \              0x6E 0x74    
+   \              0x65 0x72    
+   \              0x20 0x69    
+   \              0x73 0x20    
+   \              0x4E 0x55    
+   \              0x4C 0x4C    
+   \              0x00         
+   \   0000001B   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "term">`:
+   \   00000000   0x74 0x65          DC8 "term"
+   \              0x72 0x6D    
+   \              0x00         
+   \   00000005   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "thermistor config is ...">`:
+   \   00000000   0x74 0x68          DC8 "thermistor config is null"
+   \              0x65 0x72    
+   \              0x6D 0x69    
+   \              0x73 0x74    
+   \              0x6F 0x72    
+   \              0x20 0x63    
+   \              0x6F 0x6E    
+   \              0x66 0x69    
+   \              0x67 0x20    
+   \              0x69 0x73    
+   \              0x20 0x6E    
+   \              0x75 0x6C    
+   \              0x6C 0x00    
+   \   0000001A   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "thermstr not initialized">`:
+   \   00000000   0x74 0x68          DC8 "thermstr not initialized"
+   \              0x65 0x72    
+   \              0x6D 0x73    
+   \              0x74 0x72    
+   \              0x20 0x6E    
+   \              0x6F 0x74    
+   \              0x20 0x69    
+   \              0x6E 0x69    
+   \              0x74 0x69    
+   \              0x61 0x6C    
+   \              0x69 0x7A    
+   \              0x65 0x64    
+   \              0x00         
+   \   00000019   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "NULL engineConfiguration">`:
+   \   00000000   0x4E 0x55          DC8 "NULL engineConfiguration"
+   \              0x4C 0x4C    
+   \              0x20 0x65    
+   \              0x6E 0x67    
+   \              0x69 0x6E    
+   \              0x65 0x43    
+   \              0x6F 0x6E    
+   \              0x66 0x69    
+   \              0x67 0x75    
+   \              0x72 0x61    
+   \              0x74 0x69    
+   \              0x6F 0x6E    
+   \              0x00         
+   \   00000019   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "unrealistic CLT %f">`:
+   \   00000000   0x75 0x6E          DC8 "unrealistic CLT %f"
+   \              0x72 0x65    
+   \              0x61 0x6C    
+   \              0x69 0x73    
+   \              0x74 0x69    
+   \              0x63 0x20    
+   \              0x43 0x4C    
+   \              0x54 0x20    
+   \              0x25 0x66    
+   \              0x00         
+   \   00000013   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "T1=%..100000f/T2=%..1...">`:
+   \   00000000   0x54 0x31          DC8 "T1=%..100000f/T2=%..100000f/T3=%..100000f"
+   \              0x3D 0x25    
+   \              0x2E 0x2E    
+   \              0x31 0x30    
+   \              0x30 0x30    
+   \              0x30 0x30    
+   \              0x66 0x2F    
+   \              0x54 0x32    
+   \              0x3D 0x25    
+   \              0x2E 0x2E    
+   \              0x31 0x30    
+   \              0x30 0x30    
+   \              0x30 0x30    
+   \              0x66 0x2F    
+   \              0x54 0x33    
+   \              0x3D 0x25    
+   \              0x2E 0x2E    
+   \              0x31 0x30    
+   \              0x30 0x30    
+   \              0x30 0x30    
+   \              0x66 0x00    
+   \   0000002A   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "log is broken?">`:
+   \   00000000   0x6C 0x6F          DC8 "log is broken?"
+   \              0x67 0x20    
+   \              0x69 0x73    
+   \              0x20 0x62    
+   \              0x72 0x6F    
+   \              0x6B 0x65    
+   \              0x6E 0x3F    
+   \              0x00         
+   \   0000000F   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "R1=%..100000f/R2=%..1...">`:
+   \   00000000   0x52 0x31          DC8 "R1=%..100000f/R2=%..100000f/R3=%..100000f"
+   \              0x3D 0x25    
+   \              0x2E 0x2E    
+   \              0x31 0x30    
+   \              0x30 0x30    
+   \              0x30 0x30    
+   \              0x66 0x2F    
+   \              0x52 0x32    
+   \              0x3D 0x25    
+   \              0x2E 0x2E    
+   \              0x31 0x30    
+   \              0x30 0x30    
+   \              0x30 0x30    
+   \              0x66 0x2F    
+   \              0x52 0x33    
+   \              0x3D 0x25    
+   \              0x2E 0x2E    
+   \              0x31 0x30    
+   \              0x30 0x30    
+   \              0x30 0x30    
+   \              0x66 0x00    
+   \   0000002A   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "L1=%..100000f/L2=%..1...">`:
+   \   00000000   0x4C 0x31          DC8 "L1=%..100000f/L2=%..100000f/L3=%..100000f"
+   \              0x3D 0x25    
+   \              0x2E 0x2E    
+   \              0x31 0x30    
+   \              0x30 0x30    
+   \              0x30 0x30    
+   \              0x66 0x2F    
+   \              0x4C 0x32    
+   \              0x3D 0x25    
+   \              0x2E 0x2E    
+   \              0x31 0x30    
+   \              0x30 0x30    
+   \              0x30 0x30    
+   \              0x66 0x2F    
+   \              0x4C 0x33    
+   \              0x3D 0x25    
+   \              0x2E 0x2E    
+   \              0x31 0x30    
+   \              0x30 0x30    
+   \              0x30 0x30    
+   \              0x66 0x00    
+   \   0000002A   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "Y1=%..100000f/Y2=%..1...">`:
+   \   00000000   0x59 0x31          DC8 "Y1=%..100000f/Y2=%..100000f/Y3=%..100000f"
+   \              0x3D 0x25    
+   \              0x2E 0x2E    
+   \              0x31 0x30    
+   \              0x30 0x30    
+   \              0x30 0x30    
+   \              0x66 0x2F    
+   \              0x59 0x32    
+   \              0x3D 0x25    
+   \              0x2E 0x2E    
+   \              0x31 0x30    
+   \              0x30 0x30    
+   \              0x30 0x30    
+   \              0x66 0x2F    
+   \              0x59 0x33    
+   \              0x3D 0x25    
+   \              0x2E 0x2E    
+   \              0x31 0x30    
+   \              0x30 0x30    
+   \              0x30 0x30    
+   \              0x66 0x00    
+   \   0000002A   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "U2=%..100000f/U3=%..1...">`:
+   \   00000000   0x55 0x32          DC8 "U2=%..100000f/U3=%..100000f"
+   \              0x3D 0x25    
+   \              0x2E 0x2E    
+   \              0x31 0x30    
+   \              0x30 0x30    
+   \              0x30 0x30    
+   \              0x66 0x2F    
+   \              0x55 0x33    
+   \              0x3D 0x25    
+   \              0x2E 0x2E    
+   \              0x31 0x30    
+   \              0x30 0x30    
+   \              0x30 0x30    
+   \              0x66 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "s_h_c=%..100000f/s_h_...">`:
+   \   00000000   0x73 0x5F          DC8 73H, 5FH, 68H, 5FH, 63H, 3DH, 25H, 2EH
+   \              0x68 0x5F    
+   \              0x63 0x3D    
+   \              0x25 0x2E    
+   \   00000008   0x2E 0x31          DC8 2EH, 31H, 30H, 30H, 30H, 30H, 30H, 66H
+   \              0x30 0x30    
+   \              0x30 0x30    
+   \              0x30 0x66    
+   \   00000010   0x2F 0x73          DC8 2FH, 73H, 5FH, 68H, 5FH, 62H, 3DH, 25H
+   \              0x5F 0x68    
+   \              0x5F 0x62    
+   \              0x3D 0x25    
+   \   00000018   0x2E 0x2E          DC8 2EH, 2EH, 31H, 30H, 30H, 30H, 30H, 30H
+   \              0x31 0x30    
+   \              0x30 0x30    
+   \              0x30 0x30    
+   \   00000020   0x66 0x2F          DC8 66H, 2FH, 73H, 5FH, 68H, 5FH, 61H, 3DH
+   \              0x73 0x5F    
+   \              0x68 0x5F    
+   \              0x61 0x3D    
+   \   00000028   0x25 0x2E          DC8 25H, 2EH, 2EH, 31H, 30H, 30H, 30H, 30H
+   \              0x2E 0x31    
+   \              0x30 0x30    
+   \              0x30 0x30    
+   \   00000030   0x30 0x66          DC8 30H, 66H, 0
+   \              0x00         
+   \   00000033   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "unrealistic IAT %f">`:
+   \   00000000   0x75 0x6E          DC8 "unrealistic IAT %f"
+   \              0x72 0x65    
+   \              0x61 0x6C    
+   \              0x69 0x73    
+   \              0x74 0x69    
+   \              0x63 0x20    
+   \              0x49 0x41    
+   \              0x54 0x20    
+   \              0x25 0x66    
+   \              0x00         
+   \   00000013   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "for R=%f we have %f">`:
+   \   00000000   0x66 0x6F          DC8 "for R=%f we have %f"
+   \              0x72 0x20    
+   \              0x52 0x3D    
+   \              0x25 0x66    
+   \              0x20 0x77    
+   \              0x65 0x20    
+   \              0x68 0x61    
+   \              0x76 0x65    
+   \              0x20 0x25    
+   \              0x66 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "e NULL initThermistors">`:
+   \   00000000   0x65 0x20          DC8 "e NULL initThermistors"
+   \              0x4E 0x55    
+   \              0x4C 0x4C    
+   \              0x20 0x69    
+   \              0x6E 0x69    
+   \              0x74 0x54    
+   \              0x68 0x65    
+   \              0x72 0x6D    
+   \              0x69 0x73    
+   \              0x74 0x6F    
+   \              0x72 0x73    
+   \              0x00         
+   \   00000017   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "e2 NULL initThermistors">`:
+   \   00000000   0x65 0x32          DC8 "e2 NULL initThermistors"
+   \              0x20 0x4E    
+   \              0x55 0x4C    
+   \              0x4C 0x20    
+   \              0x69 0x6E    
+   \              0x69 0x74    
+   \              0x54 0x68    
+   \              0x65 0x72    
+   \              0x6D 0x69    
+   \              0x73 0x74    
+   \              0x6F 0x72    
+   \              0x73 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "test_clt_by_r">`:
+   \   00000000   0x74 0x65          DC8 "test_clt_by_r"
+   \              0x73 0x74    
+   \              0x5F 0x63    
+   \              0x6C 0x74    
+   \              0x5F 0x62    
+   \              0x79 0x5F    
+   \              0x72 0x00    
+   \   0000000E   0x00 0x00          DC8 0, 0
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   ThermistorMath::ThermistorMath()
+         8   -> memset
+      16   ThermistorMath::init(thermistor_conf_s *)
+        16   -> memcmp
+        16   -> memcpy
+        16   -> prepareThermistorCurve(thermistor_conf_s *, thermistor_curve_s *)
+       8   ThermistorMath::subobject ThermistorMath()
+         8   -> ThermistorMath::ThermistorMath()
+       0   convertCelsiustoF(float)
+       0   convertFtoCelsius(float)
+      16   convertKelvinToFahrenheit(float)
+        16   -> convertCelsiustoF(float)
+      16   getCoolantTemperature()
+        16   -> __aeabi_f2d
+        16   -> firmwareError
+        16   -> getTemperatureC(ThermistorConf *, ThermistorMath *)
+        16   -> isValidCoolantTemperature(float)
+        16   -> warning
+      16   getIntakeAirTemperature()
+        16   -> __aeabi_f2d
+        16   -> firmwareError
+        16   -> getTemperatureC(ThermistorConf *, ThermistorMath *)
+        16   -> isValidIntakeAirTemperature(float)
+        16   -> warning
+      24   getKelvinTemperature(ThermistorConf *, float, ThermistorMath *)
+        24   -> ThermistorMath::init(thermistor_conf_s *)
+        24   -> firmwareError
+        24   -> logf
+       0   getR1InVoltageDividor(float, float, float)
+       0   getR2InVoltageDividor(float, float, float)
+      16   getResistance(ThermistorConf *)
+        16   -> firmwareError
+        16   -> getInternalAdcValue(char const *, adc_channel_e)
+        16   -> getR2InVoltageDividor(float, float, float)
+      24   getTemperatureC(ThermistorConf *, ThermistorMath *)
+        24   -> firmwareError
+        24   -> getKelvinTemperature(ThermistorConf *, float, ThermistorMath *)
+        24   -> getResistance(ThermistorConf *)
+       0   getVoutInVoltageDividor(float, float, float)
+       8   initThermistors(Logging *)
+         8   -> addConsoleActionF
+         8   -> firmwareError
+      16   isValidCoolantTemperature(float)
+        16   -> __iar_FDtest
+      16   isValidIntakeAirTemperature(float)
+        16   -> __iar_FDtest
+      16   memcpy
+        16   -> __aeabi_memcpy
+      16   memset
+        16   -> __aeabi_memset
+      80   prepareThermistorCurve(thermistor_conf_s *, thermistor_curve_s *)
+        80   -> __aeabi_f2d
+        80   -> firmwareError
+        80   -> logf
+        80   -> scheduleMsg
+       8   setCommonNTCSensor(ThermistorConf *)
+         8   -> setThermistorConfiguration(ThermistorConf *, float, float, float, float, float, float)
+       8   setDodgeSensor(ThermistorConf *)
+         8   -> setThermistorConfiguration(ThermistorConf *, float, float, float, float, float, float)
+       0   setThermistorConfiguration(ThermistorConf *, float, float, float, float, float, float)
+      24   testCltByR(float)
+        24   -> __aeabi_f2d
+        24   -> getKelvinTemperature(ThermistorConf *, float, ThermistorMath *)
+        24   -> scheduleMsg
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      44  ?<Constant "L1=%..100000f/L2=%..1...">
+      28  ?<Constant "NULL engineConfiguration">
+      44  ?<Constant "R1=%..100000f/R2=%..1...">
+      44  ?<Constant "T1=%..100000f/T2=%..1...">
+      28  ?<Constant "U2=%..100000f/U3=%..1...">
+      44  ?<Constant "Y1=%..100000f/Y2=%..1...">
+      24  ?<Constant "e NULL initThermistors">
+      24  ?<Constant "e2 NULL initThermistors">
+      20  ?<Constant "for R=%f we have %f">
+      16  ?<Constant "log is broken?">
+      52  ?<Constant "s_h_c=%..100000f/s_h_...">
+       8  ?<Constant "term">
+      16  ?<Constant "test_clt_by_r">
+      28  ?<Constant "thermistor config is ...">
+      28  ?<Constant "thermistor pointer is...">
+      28  ?<Constant "thermstr not initialized">
+      20  ?<Constant "unrealistic CLT %f">
+      20  ?<Constant "unrealistic IAT %f">
+       4  ??DataTable10
+       4  ??DataTable10_1
+       4  ??DataTable12
+       4  ??DataTable13
+       4  ??DataTable15
+       4  ??DataTable15_1
+       4  ??DataTable15_10
+       4  ??DataTable15_11
+       4  ??DataTable15_12
+       4  ??DataTable15_13
+       4  ??DataTable15_14
+       4  ??DataTable15_15
+       4  ??DataTable15_16
+       4  ??DataTable15_17
+       4  ??DataTable15_18
+       4  ??DataTable15_19
+       4  ??DataTable15_2
+       4  ??DataTable15_20
+       4  ??DataTable15_21
+       4  ??DataTable15_22
+       4  ??DataTable15_23
+       4  ??DataTable15_24
+       4  ??DataTable15_25
+       4  ??DataTable15_26
+       4  ??DataTable15_27
+       4  ??DataTable15_28
+       4  ??DataTable15_29
+       4  ??DataTable15_3
+       4  ??DataTable15_30
+       4  ??DataTable15_31
+       4  ??DataTable15_32
+       4  ??DataTable15_33
+       4  ??DataTable15_34
+       4  ??DataTable15_4
+       4  ??DataTable15_5
+       4  ??DataTable15_6
+       4  ??DataTable15_7
+       4  ??DataTable15_8
+       4  ??DataTable15_9
+       4  ??DataTable9
+       4  ??DataTable9_1
+       4  ??DataTable9_2
+       4  ??DataTable9_3
+       4  ??DataTable9_4
+       4  ??DataTable9_5
+       4  ??DataTable9_6
+      30  ThermistorMath::ThermistorMath()
+      56  ThermistorMath::init(thermistor_conf_s *)
+      12  ThermistorMath::subobject ThermistorMath()
+      26  convertCelsiustoF(float)
+      26  convertFtoCelsius(float)
+      32  convertKelvinToFahrenheit(float)
+     132  getCoolantTemperature()
+     122  getIntakeAirTemperature()
+     108  getKelvinTemperature(ThermistorConf *, float, ThermistorMath *)
+      14  getR1InVoltageDividor(float, float, float)
+      38  getR2InVoltageDividor(float, float, float)
+      88  getResistance(ThermistorConf *)
+      70  getTemperatureC(ThermistorConf *, ThermistorMath *)
+      14  getVoutInVoltageDividor(float, float, float)
+      58  initThermistors(Logging *)
+       1  initialized
+      64  isValidCoolantTemperature(float)
+      64  isValidIntakeAirTemperature(float)
+       4  logger
+      22  memcpy
+      22  memset
+     566  prepareThermistorCurve(thermistor_conf_s *, thermistor_curve_s *)
+      36  setCommonNTCSensor(ThermistorConf *)
+      36  setDodgeSensor(ThermistorConf *)
+      26  setThermistorConfiguration(ThermistorConf *, float, float, float, float, float, float)
+      92  testCltByR(float)
+
+ 
+     5 bytes in section .bss
+   516 bytes in section .rodata
+ 1 938 bytes in section .text
+ 
+ 1 894 bytes of CODE  memory (+ 44 bytes shared)
+   516 bytes of CONST memory
+     5 bytes of DATA  memory
+
+Errors: none
+Warnings: 1

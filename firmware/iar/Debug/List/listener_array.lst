@@ -1,0 +1,430 @@
+###############################################################################
+#                                                                             #
+# IAR ANSI C/C++ Compiler V6.50.3.4676/W32 for ARM      30/Jun/2015  23:09:53 #
+# Copyright 1999-2013 IAR Systems AB.                                         #
+#                                                                             #
+#    Cpu mode        =  thumb                                                 #
+#    Endian          =  little                                                #
+#    Source file     =  F:\stuff\rusefi_sourceforge\firmware\util\listener_ar #
+#                       ray.cpp                                               #
+#    Command line    =  F:\stuff\rusefi_sourceforge\firmware\util\listener_ar #
+#                       ray.cpp -lCN F:\stuff\rusefi_sourceforge\firmware\iar #
+#                       \Debug\List\ -lA F:\stuff\rusefi_sourceforge\firmware #
+#                       \iar\Debug\List\ -o F:\stuff\rusefi_sourceforge\firmw #
+#                       are\iar\Debug\Obj\ --no_cse --no_unroll --no_inline   #
+#                       --no_code_motion --no_tbaa --no_clustering            #
+#                       --no_scheduling --debug --endian=little               #
+#                       --cpu=Cortex-M4 -e --fpu=VFPv4_sp --dlib_config       #
+#                       "C:\Program Files (x86)\IAR Systems\Embedded          #
+#                       Workbench 6.5\arm\INC\c\DLib_Config_Normal.h"         #
+#                       --misrac2004=1.2-1.4,2.3,3.4,4.2,6.5-7,8.2-8.3,9.3,   #
+#                       12.3,13.6-13,15.5,17.3,19.17,20.7-20.9,20.11 -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\ -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\kernel\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\ports\common\ARMCMx\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\common\ARMCMx\CMSIS\include\ -I               #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\IAR\ARMCMx\ -I F:\stuff\rusefi_sourceforge\fi #
+#                       rmware\iar\..\chibios\os\ports\IAR\ARMCMx\STM32F4xx\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\chibio #
+#                       s\os\hal\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\hal\platforms\STM32\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\DMAv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\GPIOv2\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\I2Cv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\SPIv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\TIMv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\RTCv2\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\USARTv1\ -I                     #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\OTGv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32F4xx\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\various\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\chibios\os\various\devices_lib\accel\ -I         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\b #
+#                       oards\ST_STM32F4_DISCOVERY\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\co #
+#                       ntrollers\algo\ -I F:\stuff\rusefi_sourceforge\firmwa #
+#                       re\iar\..\controllers\core\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\system\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\controllers\sensors\ -I                          #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\math\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\controllers\trigger\ -I                            #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\config #
+#                       \ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\conf #
+#                       ig\engines\ -I F:\stuff\rusefi_sourceforge\firmware\i #
+#                       ar\..\config\stm32f4ems\ -I                           #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\b #
+#                       inary\ -I F:\stuff\rusefi_sourceforge\firmware\iar\.. #
+#                       \console_util\ -I F:\stuff\rusefi_sourceforge\firmwar #
+#                       e\iar\..\development\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\development\test\ -I                  #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\developme #
+#                       nt\hw_layer\ -I F:\stuff\rusefi_sourceforge\firmware\ #
+#                       iar\..\hw_layer\algo\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\hw_layer\lcd\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                       stm32f4\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\hw_layer\serial_over_usb\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                        -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext_al #
+#                       go\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\de #
+#                       velopment\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\development\hw_layer\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\util\     #
+#                       -On --eec++                                           #
+#    MISRA C version =  2004                                                  #
+#      Enabled       =  1.2-1.4 2.3 3.4 4.2 6.5 7 8.2 8.3 9.3 12.3 13.6 13.7  #
+#                       15.5 17.3 19.17 20.7-20.9 20.11                       #
+#      Checked       =  1.4 2.3 4.2 6.5 7 8.2 8.3 9.3 12.3 13.7 15.5          #
+#                       20.7-20.9 20.11                                       #
+#      Not checked   =  1.1-1.3 1.5-2.2 2.4-4.1 5-6.4 8.1 8.4-9.2 10-12.2     #
+#                       12.4-13.6 14-15.4 16-20.6 20.10 20.12 21              #
+#    List file       =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\l #
+#                       istener_array.lst                                     #
+#    Object file     =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\li #
+#                       stener_array.o                                        #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+F:\stuff\rusefi_sourceforge\firmware\util\listener_array.cpp
+      1          /*
+      2           * @file listener_array.cpp
+      3           *
+      4           * @date Jan 1, 2013
+      5           * @author Andrey Belomutskiy, (c) 2012-2015
+      6           */
+      7          
+      8          #include "listener_array.h"
+      9          #include "main.h"
+
+   \                                 In section .text, align 2
+   \   __intrinsic __nounwind __interwork __softfp void *memset(void *, int, size_t)
+   \                     memset:
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+   \   00000008   0x002A             MOVS     R2,R5
+   \   0000000A   0x0031             MOVS     R1,R6
+   \   0000000C   0x0020             MOVS     R0,R4
+   \   0000000E   0x.... 0x....      BL       __aeabi_memset
+   \   00000012   0x0020             MOVS     R0,R4
+   \   00000014   0xBD70             POP      {R4-R6,PC}       ;; return
+     10          
+
+   \                                 In section .text, align 2, keep-with-next
+   \   __code __interwork __softfp IntListenerArray::subobject IntListenerArray()
+   \                     _ZN16IntListenerArrayC2Ev:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x0020             MOVS     R0,R4
+   \   00000006   0x.... 0x....      BL       _ZN16IntListenerArrayC1Ev
+   \   0000000A   0xBD10             POP      {R4,PC}          ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+     11          IntListenerArray::IntListenerArray() {
+   \                     _ZN16IntListenerArrayC1Ev:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+     12          	currentListenersCount = 0;
+   \   00000004   0x2000             MOVS     R0,#+0
+   \   00000006   0x6020             STR      R0,[R4, #+0]
+     13          	memset(&args, 0, sizeof(args));
+   \   00000008   0x223C             MOVS     R2,#+60
+   \   0000000A   0x2100             MOVS     R1,#+0
+   \   0000000C   0xF114 0x0040      ADDS     R0,R4,#+64
+   \   00000010   0x.... 0x....      BL       memset
+     14          	memset(&callbacks, 0, sizeof(callbacks));
+   \   00000014   0x223C             MOVS     R2,#+60
+   \   00000016   0x2100             MOVS     R1,#+0
+   \   00000018   0x1D20             ADDS     R0,R4,#+4
+   \   0000001A   0x.... 0x....      BL       memset
+     15          }
+   \   0000001E   0x0020             MOVS     R0,R4
+   \   00000020   0xBD10             POP      {R4,PC}          ;; return
+     16          
+
+   \                                 In section .text, align 2, keep-with-next
+     17          void IntListenerArray::registerCallback(VoidInt handler, void *arg) {
+   \                     _ZN16IntListenerArray16registerCallbackEPFviEPv:
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+     18          	efiAssertVoid(currentListenersCount < MAX_INT_LISTENER_COUNT, "Too many callbacks");
+   \   00000008   0x6820             LDR      R0,[R4, #+0]
+   \   0000000A   0x280F             CMP      R0,#+15
+   \   0000000C   0xDB03             BLT.N    ??registerCallback_0
+   \   0000000E   0x....             LDR.N    R0,??DataTable0
+   \   00000010   0x.... 0x....      BL       firmwareError
+   \   00000014   0xE008             B.N      ??registerCallback_1
+     19          	int index = currentListenersCount++;
+   \                     ??registerCallback_0:
+   \   00000016   0x6820             LDR      R0,[R4, #+0]
+   \   00000018   0x1C41             ADDS     R1,R0,#+1
+   \   0000001A   0x6021             STR      R1,[R4, #+0]
+     20          	callbacks[index] = handler;
+   \   0000001C   0xEB14 0x0180      ADDS     R1,R4,R0, LSL #+2
+   \   00000020   0x604D             STR      R5,[R1, #+4]
+     21          	args[index] = arg;
+   \   00000022   0xEB14 0x0180      ADDS     R1,R4,R0, LSL #+2
+   \   00000026   0x640E             STR      R6,[R1, #+64]
+     22          }
+   \                     ??registerCallback_1:
+   \   00000028   0xBD70             POP      {R4-R6,PC}       ;; return
+     23          
+
+   \                                 In section .text, align 2, keep-with-next
+     24          void IntListenerArray::registerCallback(Void listener) {
+   \                     _ZN16IntListenerArray16registerCallbackEPFvvE:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+     25          	registerCallback((VoidInt)listener, NULL);
+   \   00000006   0x2200             MOVS     R2,#+0
+   \   00000008   0x0029             MOVS     R1,R5
+   \   0000000A   0x0020             MOVS     R0,R4
+   \   0000000C   0x.... 0x....      BL       _ZN16IntListenerArray16registerCallbackEPFviEPv
+     26          }
+   \   00000010   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+     27          
+
+   \                                 In section .text, align 2, keep-with-next
+     28          void invokeCallbacks(IntListenerArray *array, int value) {
+   \                     _Z15invokeCallbacksP16IntListenerArrayi:
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+     29          	for (int i = 0; i < array->currentListenersCount; i++)
+   \   00000006   0x2600             MOVS     R6,#+0
+   \                     ??invokeCallbacks_0:
+   \   00000008   0x6820             LDR      R0,[R4, #+0]
+   \   0000000A   0x4286             CMP      R6,R0
+   \   0000000C   0xDA06             BGE.N    ??invokeCallbacks_1
+     30          		(array->callbacks[i])(value);
+   \   0000000E   0x0028             MOVS     R0,R5
+   \   00000010   0xEB14 0x0186      ADDS     R1,R4,R6, LSL #+2
+   \   00000014   0x6849             LDR      R1,[R1, #+4]
+   \   00000016   0x4788             BLX      R1
+   \   00000018   0x1C76             ADDS     R6,R6,#+1
+   \   0000001A   0xE7F5             B.N      ??invokeCallbacks_0
+     31          }
+   \                     ??invokeCallbacks_1:
+   \   0000001C   0xBD70             POP      {R4-R6,PC}       ;; return
+     32          
+
+   \                                 In section .text, align 2, keep-with-next
+     33          void IntListenerArray::invokeJustArgCallbacks() {
+   \                     _ZN16IntListenerArray22invokeJustArgCallbacksEv:
+   \   00000000   0xB5F8             PUSH     {R3-R7,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+     34          	for (int i = 0; i < currentListenersCount; i++) {
+   \   00000004   0x2500             MOVS     R5,#+0
+   \                     ??invokeJustArgCallbacks_0:
+   \   00000006   0x6820             LDR      R0,[R4, #+0]
+   \   00000008   0x4285             CMP      R5,R0
+   \   0000000A   0xDA09             BGE.N    ??invokeJustArgCallbacks_1
+     35          		VoidPtr listener = (VoidPtr)callbacks[i];
+   \   0000000C   0xEB14 0x0085      ADDS     R0,R4,R5, LSL #+2
+   \   00000010   0x6846             LDR      R6,[R0, #+4]
+     36          		void *arg = args[i];
+   \   00000012   0xEB14 0x0085      ADDS     R0,R4,R5, LSL #+2
+   \   00000016   0x6C07             LDR      R7,[R0, #+64]
+     37          		(listener)(arg);
+   \   00000018   0x0038             MOVS     R0,R7
+   \   0000001A   0x47B0             BLX      R6
+     38          	}
+   \   0000001C   0x1C6D             ADDS     R5,R5,#+1
+   \   0000001E   0xE7F2             B.N      ??invokeJustArgCallbacks_0
+     39          }
+   \                     ??invokeJustArgCallbacks_1:
+   \   00000020   0xBDF1             POP      {R0,R4-R7,PC}    ;; return
+     40          
+
+   \                                 In section .text, align 2, keep-with-next
+     41          void invokeArgIntCallbacks(IntListenerArray *array, int value) {
+   \                     _Z21invokeArgIntCallbacksP16IntListenerArrayi:
+   \   00000000   0xE92D 0x41F0      PUSH     {R4-R8,LR}
+   \   00000004   0x0004             MOVS     R4,R0
+   \   00000006   0x000D             MOVS     R5,R1
+     42          	for (int i = 0; i < array->currentListenersCount; i++) {
+   \   00000008   0x2600             MOVS     R6,#+0
+   \                     ??invokeArgIntCallbacks_0:
+   \   0000000A   0x6820             LDR      R0,[R4, #+0]
+   \   0000000C   0x4286             CMP      R6,R0
+   \   0000000E   0xDA0B             BGE.N    ??invokeArgIntCallbacks_1
+     43          		ArgIntListener listener = (ArgIntListener)array->callbacks[i];
+   \   00000010   0xEB14 0x0086      ADDS     R0,R4,R6, LSL #+2
+   \   00000014   0x6847             LDR      R7,[R0, #+4]
+     44          		void *arg = array->args[i];
+   \   00000016   0xEB14 0x0086      ADDS     R0,R4,R6, LSL #+2
+   \   0000001A   0xF8D0 0x8040      LDR      R8,[R0, #+64]
+     45          		(listener)(arg, value);
+   \   0000001E   0x0029             MOVS     R1,R5
+   \   00000020   0x4640             MOV      R0,R8
+   \   00000022   0x47B8             BLX      R7
+     46          	}
+   \   00000024   0x1C76             ADDS     R6,R6,#+1
+   \   00000026   0xE7F0             B.N      ??invokeArgIntCallbacks_0
+     47          }
+   \                     ??invokeArgIntCallbacks_1:
+   \   00000028   0xE8BD 0x81F0      POP      {R4-R8,PC}       ;; return
+     48          
+
+   \                                 In section .text, align 2, keep-with-next
+     49          void invokeIntIntCallbacks(IntListenerArray *array, int value, int value2) {
+   \                     _Z21invokeIntIntCallbacksP16IntListenerArrayii:
+   \   00000000   0xE92D 0x41F0      PUSH     {R4-R8,LR}
+   \   00000004   0x0004             MOVS     R4,R0
+   \   00000006   0x000D             MOVS     R5,R1
+   \   00000008   0x0016             MOVS     R6,R2
+     50          	for (int i = 0; i < array->currentListenersCount; i++) {
+   \   0000000A   0x2700             MOVS     R7,#+0
+   \                     ??invokeIntIntCallbacks_0:
+   \   0000000C   0x6820             LDR      R0,[R4, #+0]
+   \   0000000E   0x4287             CMP      R7,R0
+   \   00000010   0xDA08             BGE.N    ??invokeIntIntCallbacks_1
+     51          		VoidIntInt listener = (VoidIntInt)array->callbacks[i];
+   \   00000012   0xEB14 0x0087      ADDS     R0,R4,R7, LSL #+2
+   \   00000016   0xF8D0 0x8004      LDR      R8,[R0, #+4]
+     52          		(listener)(value, value2);
+   \   0000001A   0x0031             MOVS     R1,R6
+   \   0000001C   0x0028             MOVS     R0,R5
+   \   0000001E   0x47C0             BLX      R8
+     53          	}
+   \   00000020   0x1C7F             ADDS     R7,R7,#+1
+   \   00000022   0xE7F3             B.N      ??invokeIntIntCallbacks_0
+     54          }
+   \                     ??invokeIntIntCallbacks_1:
+   \   00000024   0xE8BD 0x81F0      POP      {R4-R8,PC}       ;; return
+     55          
+
+   \                                 In section .text, align 2, keep-with-next
+     56          void invokeIntIntVoidCallbacks(IntListenerArray *array, int value, int value2) {
+   \                     _Z25invokeIntIntVoidCallbacksP16IntListenerArrayii:
+   \   00000000   0xE92D 0x41F0      PUSH     {R4-R8,LR}
+   \   00000004   0x0004             MOVS     R4,R0
+   \   00000006   0x000D             MOVS     R5,R1
+   \   00000008   0x0016             MOVS     R6,R2
+     57          	for (int i = 0; i < array->currentListenersCount; i++) {
+   \   0000000A   0x2700             MOVS     R7,#+0
+   \                     ??invokeIntIntVoidCallbacks_0:
+   \   0000000C   0x6820             LDR      R0,[R4, #+0]
+   \   0000000E   0x4287             CMP      R7,R0
+   \   00000010   0xDA0B             BGE.N    ??invokeIntIntVoidCallbacks_1
+     58          		IntIntVoidListener listener = (IntIntVoidListener)array->callbacks[i];
+   \   00000012   0xEB14 0x0087      ADDS     R0,R4,R7, LSL #+2
+   \   00000016   0xF8D0 0x8004      LDR      R8,[R0, #+4]
+     59          		(listener)(value, value2, array->args[i]);
+   \   0000001A   0xEB14 0x0087      ADDS     R0,R4,R7, LSL #+2
+   \   0000001E   0x6C02             LDR      R2,[R0, #+64]
+   \   00000020   0x0031             MOVS     R1,R6
+   \   00000022   0x0028             MOVS     R0,R5
+   \   00000024   0x47C0             BLX      R8
+     60          	}
+   \   00000026   0x1C7F             ADDS     R7,R7,#+1
+   \   00000028   0xE7F0             B.N      ??invokeIntIntVoidCallbacks_0
+     61          }
+   \                     ??invokeIntIntVoidCallbacks_1:
+   \   0000002A   0xE8BD 0x81F0      POP      {R4-R8,PC}       ;; return
+     62          
+
+   \                                 In section .text, align 2, keep-with-next
+     63          void clearCallbacks(IntListenerArray *array) {
+     64          	array->currentListenersCount = 0;
+   \                     _Z14clearCallbacksP16IntListenerArray:
+   \   00000000   0x2100             MOVS     R1,#+0
+   \   00000002   0x6001             STR      R1,[R0, #+0]
+     65          }
+   \   00000004   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable0:
+   \   00000000   0x........         DC32     `?<Constant "Too many callbacks">`
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "Too many callbacks">`:
+   \   00000000   0x54 0x6F          DC8 "Too many callbacks"
+   \              0x6F 0x20    
+   \              0x6D 0x61    
+   \              0x6E 0x79    
+   \              0x20 0x63    
+   \              0x61 0x6C    
+   \              0x6C 0x62    
+   \              0x61 0x63    
+   \              0x6B 0x73    
+   \              0x00         
+   \   00000013   0x00               DC8 0
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   IntListenerArray::IntListenerArray()
+         8   -> memset
+      24   IntListenerArray::invokeJustArgCallbacks()
+        24   -- Indirect call
+      16   IntListenerArray::registerCallback(Void)
+        16   -> IntListenerArray::registerCallback(VoidInt, void *)
+      16   IntListenerArray::registerCallback(VoidInt, void *)
+        16   -> firmwareError
+       8   IntListenerArray::subobject IntListenerArray()
+         8   -> IntListenerArray::IntListenerArray()
+       0   clearCallbacks(IntListenerArray *)
+      24   invokeArgIntCallbacks(IntListenerArray *, int)
+        24   -- Indirect call
+      16   invokeCallbacks(IntListenerArray *, int)
+        16   -- Indirect call
+      24   invokeIntIntCallbacks(IntListenerArray *, int, int)
+        24   -- Indirect call
+      24   invokeIntIntVoidCallbacks(IntListenerArray *, int, int)
+        24   -- Indirect call
+      16   memset
+        16   -> __aeabi_memset
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      20  ?<Constant "Too many callbacks">
+       4  ??DataTable0
+      34  IntListenerArray::IntListenerArray()
+      34  IntListenerArray::invokeJustArgCallbacks()
+      18  IntListenerArray::registerCallback(Void)
+      42  IntListenerArray::registerCallback(VoidInt, void *)
+      12  IntListenerArray::subobject IntListenerArray()
+       6  clearCallbacks(IntListenerArray *)
+      44  invokeArgIntCallbacks(IntListenerArray *, int)
+      30  invokeCallbacks(IntListenerArray *, int)
+      40  invokeIntIntCallbacks(IntListenerArray *, int, int)
+      46  invokeIntIntVoidCallbacks(IntListenerArray *, int, int)
+      22  memset
+
+ 
+  20 bytes in section .rodata
+ 332 bytes in section .text
+ 
+ 310 bytes of CODE  memory (+ 22 bytes shared)
+  20 bytes of CONST memory
+
+Errors: none
+Warnings: none

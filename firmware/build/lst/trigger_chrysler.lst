@@ -1,0 +1,479 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUszs5A.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"trigger_chrysler.cpp"
+  16              		.section	.text._Z12initDodgeRamP12TriggerShape,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_Z12initDodgeRamP12TriggerShape
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_Z12initDodgeRamP12TriggerShape, %function
+  23              	_Z12initDodgeRamP12TriggerShape:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+  27 0004 0221     		movs	r1, #2
+  28 0006 86B0     		sub	sp, sp, #24
+  29 0008 0122     		movs	r2, #1
+  30 000a 0446     		mov	r4, r0
+  31 000c 4CF28F2A 		movw	r10, #49807
+  32 0010 FFF7FEFF 		bl	_ZN12TriggerShape5resetE16operation_mode_eb
+  33 0014 4FF00008 		mov	r8, #0
+  34 0018 0027     		movs	r7, #0
+  35 001a 0022     		movs	r2, #0
+  36 001c 0025     		movs	r5, #0
+  37 001e 0126     		movs	r6, #1
+  38 0020 C4F2B438 		movt	r8, 17332
+  39 0024 C4F23447 		movt	r7, 17460
+  40 0028 C3F6755A 		movt	r10, 15733
+  41 002c 4FF00009 		mov	r9, #0
+  42 0030 CCF2C812 		movt	r2, 49608
+  43 0034 84F8646B 		strb	r6, [r4, #2916]
+  44 0038 2570     		strb	r5, [r4]
+  45 003a 3046     		mov	r0, r6
+  46 003c 2146     		mov	r1, r4
+  47 003e 2B46     		mov	r3, r5
+  48 0040 0192     		str	r2, [sp, #4]	@ float
+  49 0042 CDF800A0 		str	r10, [sp]	@ float
+  50 0046 CDF80880 		str	r8, [sp, #8]	@ float
+  51 004a CDF80C90 		str	r9, [sp, #12]	@ float
+  52 004e 0497     		str	r7, [sp, #16]	@ float
+  53 0050 0822     		movs	r2, #8
+  54 0052 FFF7FEFF 		bl	_Z28addSkippedToothTriggerEvents15trigger_wheel_eP12TriggerShapeiifffff
+  55 0056 2046     		mov	r0, r4
+  56 0058 4146     		mov	r1, r8	@ float
+  57 005a 2A46     		mov	r2, r5
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUszs5A.s 			page 2
+
+
+  58 005c 3346     		mov	r3, r6
+  59 005e FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+  60 0062 4FF40042 		mov	r2, #32768
+  61 0066 C4F2A732 		movt	r2, 17319
+  62 006a 3046     		mov	r0, r6
+  63 006c 2146     		mov	r1, r4
+  64 006e 2B46     		mov	r3, r5
+  65 0070 0192     		str	r2, [sp, #4]	@ float
+  66 0072 CDF800A0 		str	r10, [sp]	@ float
+  67 0076 CDF80880 		str	r8, [sp, #8]	@ float
+  68 007a CDF80C90 		str	r9, [sp, #12]	@ float
+  69 007e 0497     		str	r7, [sp, #16]	@ float
+  70 0080 0822     		movs	r2, #8
+  71 0082 FFF7FEFF 		bl	_Z28addSkippedToothTriggerEvents15trigger_wheel_eP12TriggerShapeiifffff
+  72 0086 2046     		mov	r0, r4
+  73 0088 3946     		mov	r1, r7	@ float
+  74 008a 2A46     		mov	r2, r5
+  75 008c 2B46     		mov	r3, r5
+  76 008e 06B0     		add	sp, sp, #24
+  77              		@ sp needed
+  78 0090 BDE8F047 		pop	{r4, r5, r6, r7, r8, r9, r10, lr}
+  79 0094 FFF7FEBF 		b	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+  80              		.size	_Z12initDodgeRamP12TriggerShape, .-_Z12initDodgeRamP12TriggerShape
+  81 0098 AFF30080 		.section	.text._Z29configureNeon2003TriggerShapeP12TriggerShape,"ax",%progbits
+  81      AFF30080 
+  82              		.align	2
+  83              		.p2align 4,,15
+  84              		.global	_Z29configureNeon2003TriggerShapeP12TriggerShape
+  85              		.thumb
+  86              		.thumb_func
+  87              		.type	_Z29configureNeon2003TriggerShapeP12TriggerShape, %function
+  88              	_Z29configureNeon2003TriggerShapeP12TriggerShape:
+  89              		@ args = 0, pretend = 0, frame = 0
+  90              		@ frame_needed = 0, uses_anonymous_args = 0
+  91 0000 70B5     		push	{r4, r5, r6, lr}
+  92 0002 0221     		movs	r1, #2
+  93 0004 0446     		mov	r4, r0
+  94 0006 0022     		movs	r2, #0
+  95 0008 0125     		movs	r5, #1
+  96 000a FFF7FEFF 		bl	_ZN12TriggerShape5resetE16operation_mode_eb
+  97 000e 41F2CB01 		movw	r1, #4299
+  98 0012 44F69842 		movw	r2, #19608
+  99 0016 2046     		mov	r0, r4
+ 100 0018 84F8645B 		strb	r5, [r4, #2916]
+ 101 001c 84F8655B 		strb	r5, [r4, #2917]
+ 102 0020 C3F6FF71 		movt	r1, 16383
+ 103 0024 C4F2BF02 		movt	r2, 16575
+ 104 0028 FFF7FEFF 		bl	_ZN12TriggerShape29setTriggerSynchronizationGap2Eff
+ 105 002c 41F23D21 		movw	r1, #4669
+ 106 0030 2046     		mov	r0, r4
+ 107 0032 2B46     		mov	r3, r5
+ 108 0034 C4F20F31 		movt	r1, 17167
+ 109 0038 0022     		movs	r2, #0
+ 110 003a FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 111 003e 0022     		movs	r2, #0
+ 112 0040 4AF64E71 		movw	r1, #44878
+ 113 0044 2046     		mov	r0, r4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUszs5A.s 			page 3
+
+
+ 114 0046 1346     		mov	r3, r2
+ 115 0048 C4F23631 		movt	r1, 17206
+ 116 004c FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 117 0050 46F69641 		movw	r1, #27798
+ 118 0054 2046     		mov	r0, r4
+ 119 0056 2B46     		mov	r3, r5
+ 120 0058 C4F25731 		movt	r1, 17239
+ 121 005c 0022     		movs	r2, #0
+ 122 005e FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 123 0062 0022     		movs	r2, #0
+ 124 0064 41F6AB71 		movw	r1, #8107
+ 125 0068 2046     		mov	r0, r4
+ 126 006a 1346     		mov	r3, r2
+ 127 006c C4F28031 		movt	r1, 17280
+ 128 0070 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 129 0074 45F27B41 		movw	r1, #21627
+ 130 0078 2046     		mov	r0, r4
+ 131 007a 2B46     		mov	r3, r5
+ 132 007c C4F29031 		movt	r1, 17296
+ 133 0080 0022     		movs	r2, #0
+ 134 0082 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 135 0086 0022     		movs	r2, #0
+ 136 0088 46F29D31 		movw	r1, #25501
+ 137 008c 2046     		mov	r0, r4
+ 138 008e 1346     		mov	r3, r2
+ 139 0090 C4F2A331 		movt	r1, 17315
+ 140 0094 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 141 0098 4CF2D421 		movw	r1, #49876
+ 142 009c 2046     		mov	r0, r4
+ 143 009e 2B46     		mov	r3, r5
+ 144 00a0 C4F2B431 		movt	r1, 17332
+ 145 00a4 0022     		movs	r2, #0
+ 146 00a6 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 147 00aa 0022     		movs	r2, #0
+ 148 00ac 47F6EF21 		movw	r1, #31471
+ 149 00b0 2046     		mov	r0, r4
+ 150 00b2 1346     		mov	r3, r2
+ 151 00b4 C4F2FE31 		movt	r1, 17406
+ 152 00b8 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 153 00bc 46F6A401 		movw	r1, #26788
+ 154 00c0 2046     		mov	r0, r4
+ 155 00c2 2B46     		mov	r3, r5
+ 156 00c4 C4F20841 		movt	r1, 17416
+ 157 00c8 0022     		movs	r2, #0
+ 158 00ca FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 159 00ce 0022     		movs	r2, #0
+ 160 00d0 4BF64671 		movw	r1, #48966
+ 161 00d4 2046     		mov	r0, r4
+ 162 00d6 1346     		mov	r3, r2
+ 163 00d8 C4F21141 		movt	r1, 17425
+ 164 00dc FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 165 00e0 44F6B761 		movw	r1, #20151
+ 166 00e4 2046     		mov	r0, r4
+ 167 00e6 2B46     		mov	r3, r5
+ 168 00e8 C4F21A41 		movt	r1, 17434
+ 169 00ec 0022     		movs	r2, #0
+ 170 00ee FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUszs5A.s 			page 4
+
+
+ 171 00f2 0022     		movs	r2, #0
+ 172 00f4 45F6B801 		movw	r1, #22712
+ 173 00f8 2046     		mov	r0, r4
+ 174 00fa 1346     		mov	r3, r2
+ 175 00fc C4F22341 		movt	r1, 17443
+ 176 0100 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 177 0104 40F2E961 		movw	r1, #1769
+ 178 0108 2046     		mov	r0, r4
+ 179 010a 2B46     		mov	r3, r5
+ 180 010c C4F22B41 		movt	r1, 17451
+ 181 0110 0022     		movs	r2, #0
+ 182 0112 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 183 0116 0022     		movs	r2, #0
+ 184 0118 0021     		movs	r1, #0
+ 185 011a 2046     		mov	r0, r4
+ 186 011c 1346     		mov	r3, r2
+ 187 011e C4F23441 		movt	r1, 17460
+ 188 0122 BDE87040 		pop	{r4, r5, r6, lr}
+ 189 0126 FFF7FEBF 		b	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 190              		.size	_Z29configureNeon2003TriggerShapeP12TriggerShape, .-_Z29configureNeon2003TriggerShapeP12Trig
+ 191 012a 00BFAFF3 		.section	.text._Z29configureNeon1995TriggerShapeP12TriggerShape,"ax",%progbits
+ 191      0080
+ 192              		.align	2
+ 193              		.p2align 4,,15
+ 194              		.global	_Z29configureNeon1995TriggerShapeP12TriggerShape
+ 195              		.thumb
+ 196              		.thumb_func
+ 197              		.type	_Z29configureNeon1995TriggerShapeP12TriggerShape, %function
+ 198              	_Z29configureNeon1995TriggerShapeP12TriggerShape:
+ 199              		@ args = 0, pretend = 0, frame = 0
+ 200              		@ frame_needed = 0, uses_anonymous_args = 0
+ 201 0000 70B5     		push	{r4, r5, r6, lr}
+ 202 0002 0122     		movs	r2, #1
+ 203 0004 0221     		movs	r1, #2
+ 204 0006 0546     		mov	r5, r0
+ 205 0008 FFF7FEFF 		bl	_ZN12TriggerShape5resetE16operation_mode_eb
+ 206 000c 45F2EC11 		movw	r1, #20972
+ 207 0010 2846     		mov	r0, r5
+ 208 0012 C3F63871 		movt	r1, 16184
+ 209 0016 0124     		movs	r4, #1
+ 210 0018 0026     		movs	r6, #0
+ 211 001a FFF7FEFF 		bl	_ZN12TriggerShape28setTriggerSynchronizationGapEf
+ 212 001e 0021     		movs	r1, #0
+ 213 0020 2846     		mov	r0, r5
+ 214 0022 2246     		mov	r2, r4
+ 215 0024 2346     		mov	r3, r4
+ 216 0026 85F8646B 		strb	r6, [r5, #2916]
+ 217 002a C5F8804B 		str	r4, [r5, #2944]
+ 218 002e C4F22021 		movt	r1, 16928
+ 219 0032 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 220 0036 0021     		movs	r1, #0
+ 221 0038 2846     		mov	r0, r5
+ 222 003a 2246     		mov	r2, r4
+ 223 003c 3346     		mov	r3, r6
+ 224 003e C4F23021 		movt	r1, 16944
+ 225 0042 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 226 0046 0021     		movs	r1, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUszs5A.s 			page 5
+
+
+ 227 0048 2846     		mov	r0, r5
+ 228 004a 2246     		mov	r2, r4
+ 229 004c 2346     		mov	r3, r4
+ 230 004e C4F26021 		movt	r1, 16992
+ 231 0052 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 232 0056 0021     		movs	r1, #0
+ 233 0058 2846     		mov	r0, r5
+ 234 005a 2246     		mov	r2, r4
+ 235 005c 3346     		mov	r3, r6
+ 236 005e C4F27021 		movt	r1, 17008
+ 237 0062 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 238 0066 0021     		movs	r1, #0
+ 239 0068 2846     		mov	r0, r5
+ 240 006a 2246     		mov	r2, r4
+ 241 006c 2346     		mov	r3, r4
+ 242 006e C4F2A621 		movt	r1, 17062
+ 243 0072 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 244 0076 0021     		movs	r1, #0
+ 245 0078 2846     		mov	r0, r5
+ 246 007a 2246     		mov	r2, r4
+ 247 007c 3346     		mov	r3, r6
+ 248 007e C4F2B021 		movt	r1, 17072
+ 249 0082 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 250 0086 0021     		movs	r1, #0
+ 251 0088 2846     		mov	r0, r5
+ 252 008a 2246     		mov	r2, r4
+ 253 008c 2346     		mov	r3, r4
+ 254 008e C4F2DE21 		movt	r1, 17118
+ 255 0092 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 256 0096 0021     		movs	r1, #0
+ 257 0098 2846     		mov	r0, r5
+ 258 009a 2246     		mov	r2, r4
+ 259 009c 3346     		mov	r3, r6
+ 260 009e C4F2E821 		movt	r1, 17128
+ 261 00a2 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 262 00a6 0021     		movs	r1, #0
+ 263 00a8 2846     		mov	r0, r5
+ 264 00aa 3246     		mov	r2, r6
+ 265 00ac 3346     		mov	r3, r6
+ 266 00ae C4F22031 		movt	r1, 17184
+ 267 00b2 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 268 00b6 0021     		movs	r1, #0
+ 269 00b8 2846     		mov	r0, r5
+ 270 00ba 2246     		mov	r2, r4
+ 271 00bc 2346     		mov	r3, r4
+ 272 00be C4F23431 		movt	r1, 17204
+ 273 00c2 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 274 00c6 0021     		movs	r1, #0
+ 275 00c8 2846     		mov	r0, r5
+ 276 00ca 2246     		mov	r2, r4
+ 277 00cc 3346     		mov	r3, r6
+ 278 00ce C4F25C31 		movt	r1, 17244
+ 279 00d2 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 280 00d6 0021     		movs	r1, #0
+ 281 00d8 2846     		mov	r0, r5
+ 282 00da 2246     		mov	r2, r4
+ 283 00dc 2346     		mov	r3, r4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUszs5A.s 			page 6
+
+
+ 284 00de C4F26B31 		movt	r1, 17259
+ 285 00e2 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 286 00e6 0021     		movs	r1, #0
+ 287 00e8 2846     		mov	r0, r5
+ 288 00ea 2246     		mov	r2, r4
+ 289 00ec 3346     		mov	r3, r6
+ 290 00ee C4F26F31 		movt	r1, 17263
+ 291 00f2 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 292 00f6 4FF40041 		mov	r1, #32768
+ 293 00fa 2846     		mov	r0, r5
+ 294 00fc 2246     		mov	r2, r4
+ 295 00fe 2346     		mov	r3, r4
+ 296 0100 C4F28231 		movt	r1, 17282
+ 297 0104 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 298 0108 0021     		movs	r1, #0
+ 299 010a 2846     		mov	r0, r5
+ 300 010c 2246     		mov	r2, r4
+ 301 010e 3346     		mov	r3, r6
+ 302 0110 C4F28531 		movt	r1, 17285
+ 303 0114 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 304 0118 0021     		movs	r1, #0
+ 305 011a 2846     		mov	r0, r5
+ 306 011c 2246     		mov	r2, r4
+ 307 011e 2346     		mov	r3, r4
+ 308 0120 C4F29131 		movt	r1, 17297
+ 309 0124 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 310 0128 4FF40041 		mov	r1, #32768
+ 311 012c 2846     		mov	r0, r5
+ 312 012e 2246     		mov	r2, r4
+ 313 0130 3346     		mov	r3, r6
+ 314 0132 C4F29331 		movt	r1, 17299
+ 315 0136 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 316 013a 0021     		movs	r1, #0
+ 317 013c 2846     		mov	r0, r5
+ 318 013e 3246     		mov	r2, r6
+ 319 0140 2346     		mov	r3, r4
+ 320 0142 C4F2B431 		movt	r1, 17332
+ 321 0146 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 322 014a 0021     		movs	r1, #0
+ 323 014c 2846     		mov	r0, r5
+ 324 014e 2246     		mov	r2, r4
+ 325 0150 2346     		mov	r3, r4
+ 326 0152 C4F2C631 		movt	r1, 17350
+ 327 0156 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 328 015a 4FF40041 		mov	r1, #32768
+ 329 015e 2846     		mov	r0, r5
+ 330 0160 2246     		mov	r2, r4
+ 331 0162 3346     		mov	r3, r6
+ 332 0164 C4F2C731 		movt	r1, 17351
+ 333 0168 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 334 016c 0021     		movs	r1, #0
+ 335 016e 2846     		mov	r0, r5
+ 336 0170 2246     		mov	r2, r4
+ 337 0172 2346     		mov	r3, r4
+ 338 0174 C4F2CD31 		movt	r1, 17357
+ 339 0178 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 340 017c 4FF40041 		mov	r1, #32768
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUszs5A.s 			page 7
+
+
+ 341 0180 2846     		mov	r0, r5
+ 342 0182 2246     		mov	r2, r4
+ 343 0184 3346     		mov	r3, r6
+ 344 0186 C4F2CF31 		movt	r1, 17359
+ 345 018a FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 346 018e 4FF40041 		mov	r1, #32768
+ 347 0192 2846     		mov	r0, r5
+ 348 0194 2246     		mov	r2, r4
+ 349 0196 2346     		mov	r3, r4
+ 350 0198 C4F2DA31 		movt	r1, 17370
+ 351 019c FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 352 01a0 0021     		movs	r1, #0
+ 353 01a2 2846     		mov	r0, r5
+ 354 01a4 2246     		mov	r2, r4
+ 355 01a6 3346     		mov	r3, r6
+ 356 01a8 C4F2DD31 		movt	r1, 17373
+ 357 01ac FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 358 01b0 4FF40041 		mov	r1, #32768
+ 359 01b4 2846     		mov	r0, r5
+ 360 01b6 2246     		mov	r2, r4
+ 361 01b8 2346     		mov	r3, r4
+ 362 01ba C4F2E831 		movt	r1, 17384
+ 363 01be FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 364 01c2 0021     		movs	r1, #0
+ 365 01c4 2846     		mov	r0, r5
+ 366 01c6 2246     		mov	r2, r4
+ 367 01c8 3346     		mov	r3, r6
+ 368 01ca C4F2EB31 		movt	r1, 17387
+ 369 01ce FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 370 01d2 4FF40041 		mov	r1, #32768
+ 371 01d6 2846     		mov	r0, r5
+ 372 01d8 2246     		mov	r2, r4
+ 373 01da 2346     		mov	r3, r4
+ 374 01dc C4F20541 		movt	r1, 17413
+ 375 01e0 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 376 01e4 4FF44041 		mov	r1, #49152
+ 377 01e8 2846     		mov	r0, r5
+ 378 01ea 3246     		mov	r2, r6
+ 379 01ec 3346     		mov	r3, r6
+ 380 01ee C4F20A41 		movt	r1, 17418
+ 381 01f2 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 382 01f6 4FF40041 		mov	r1, #32768
+ 383 01fa 2846     		mov	r0, r5
+ 384 01fc 2246     		mov	r2, r4
+ 385 01fe 3346     		mov	r3, r6
+ 386 0200 C4F21041 		movt	r1, 17424
+ 387 0204 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 388 0208 0021     		movs	r1, #0
+ 389 020a 2846     		mov	r0, r5
+ 390 020c 2246     		mov	r2, r4
+ 391 020e 2346     		mov	r3, r4
+ 392 0210 C4F21541 		movt	r1, 17429
+ 393 0214 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 394 0218 4FF48041 		mov	r1, #16384
+ 395 021c 2846     		mov	r0, r5
+ 396 021e 2246     		mov	r2, r4
+ 397 0220 3346     		mov	r3, r6
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUszs5A.s 			page 8
+
+
+ 398 0222 C4F21641 		movt	r1, 17430
+ 399 0226 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 400 022a 4FF44041 		mov	r1, #49152
+ 401 022e 2846     		mov	r0, r5
+ 402 0230 2246     		mov	r2, r4
+ 403 0232 2346     		mov	r3, r4
+ 404 0234 C4F21B41 		movt	r1, 17435
+ 405 0238 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 406 023c 0021     		movs	r1, #0
+ 407 023e 2846     		mov	r0, r5
+ 408 0240 2246     		mov	r2, r4
+ 409 0242 3346     		mov	r3, r6
+ 410 0244 C4F21D41 		movt	r1, 17437
+ 411 0248 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 412 024c 0021     		movs	r1, #0
+ 413 024e 2846     		mov	r0, r5
+ 414 0250 2246     		mov	r2, r4
+ 415 0252 2346     		mov	r3, r4
+ 416 0254 C4F22341 		movt	r1, 17443
+ 417 0258 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 418 025c 4FF48041 		mov	r1, #16384
+ 419 0260 2846     		mov	r0, r5
+ 420 0262 2246     		mov	r2, r4
+ 421 0264 3346     		mov	r3, r6
+ 422 0266 C4F22441 		movt	r1, 17444
+ 423 026a FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 424 026e 0021     		movs	r1, #0
+ 425 0270 2846     		mov	r0, r5
+ 426 0272 3246     		mov	r2, r6
+ 427 0274 2346     		mov	r3, r4
+ 428 0276 C4F23441 		movt	r1, 17460
+ 429 027a BDE87040 		pop	{r4, r5, r6, lr}
+ 430 027e FFF7FEBF 		b	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 431              		.size	_Z29configureNeon1995TriggerShapeP12TriggerShape, .-_Z29configureNeon1995TriggerShapeP12Trig
+ 432 0282 00BFAFF3 		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ 432      0080AFF3 
+ 432      0080AFF3 
+ 432      0080
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUszs5A.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 trigger_chrysler.cpp
+C:\Users\pc\AppData\Local\Temp\ccUszs5A.s:17     .text._Z12initDodgeRamP12TriggerShape:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccUszs5A.s:23     .text._Z12initDodgeRamP12TriggerShape:00000000 _Z12initDodgeRamP12TriggerShape
+C:\Users\pc\AppData\Local\Temp\ccUszs5A.s:82     .text._Z29configureNeon2003TriggerShapeP12TriggerShape:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccUszs5A.s:88     .text._Z29configureNeon2003TriggerShapeP12TriggerShape:00000000 _Z29configureNeon2003TriggerShapeP12TriggerShape
+C:\Users\pc\AppData\Local\Temp\ccUszs5A.s:192    .text._Z29configureNeon1995TriggerShapeP12TriggerShape:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccUszs5A.s:198    .text._Z29configureNeon1995TriggerShapeP12TriggerShape:00000000 _Z29configureNeon1995TriggerShapeP12TriggerShape
+
+UNDEFINED SYMBOLS
+_ZN12TriggerShape5resetE16operation_mode_eb
+_Z28addSkippedToothTriggerEvents15trigger_wheel_eP12TriggerShapeiifffff
+_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+_ZN12TriggerShape29setTriggerSynchronizationGap2Eff
+_ZN12TriggerShape28setTriggerSynchronizationGapEf

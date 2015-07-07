@@ -1,0 +1,270 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"loggingcentral.cpp"
+  16              		.section	.text.scheduleLogging,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	scheduleLogging
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	scheduleLogging, %function
+  23              	scheduleLogging:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+  27 0004 0546     		mov	r5, r0
+  28 0006 C06A     		ldr	r0, [r0, #44]
+  29 0008 FFF7FEFF 		bl	efiStrlen
+  30 000c 40F20004 		movw	r4, #:lower16:.LANCHOR0
+  31 0010 C0F20004 		movt	r4, #:upper16:.LANCHOR0
+  32 0014 0746     		mov	r7, r0
+  33 0016 FFF7FEFF 		bl	lockOutputBuffer
+  34 001a 2368     		ldr	r3, [r4]
+  35 001c 41F65E12 		movw	r2, #6494
+  36 0020 FE18     		adds	r6, r7, r3
+  37 0022 9642     		cmp	r6, r2
+  38 0024 8046     		mov	r8, r0
+  39 0026 05D9     		bls	.L2
+  40 0028 90B1     		cbz	r0, .L3
+  41              	.L4:
+  42 002a 2846     		mov	r0, r5
+  43 002c BDE8F041 		pop	{r4, r5, r6, r7, r8, lr}
+  44 0030 FFF7FEBF 		b	resetLogging
+  45              	.L2:
+  46 0034 40F20001 		movw	r1, #:lower16:.LANCHOR1
+  47 0038 C0F20001 		movt	r1, #:upper16:.LANCHOR1
+  48 003c 7A1C     		adds	r2, r7, #1
+  49 003e 0868     		ldr	r0, [r1]
+  50 0040 E96A     		ldr	r1, [r5, #44]
+  51 0042 1844     		add	r0, r0, r3
+  52 0044 FFF7FEFF 		bl	memcpy
+  53 0048 2660     		str	r6, [r4]
+  54 004a B8F1000F 		cmp	r8, #0
+  55 004e ECD1     		bne	.L4
+  56              	.L3:
+  57 0050 FFF7FEFF 		bl	unlockOutputBuffer
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s 			page 2
+
+
+  58 0054 2846     		mov	r0, r5
+  59 0056 BDE8F041 		pop	{r4, r5, r6, r7, r8, lr}
+  60 005a FFF7FEBF 		b	resetLogging
+  61              		.size	scheduleLogging, .-scheduleLogging
+  62 005e 00BF     		.section	.text._Z17swapOutputBuffersPi,"ax",%progbits
+  63              		.align	2
+  64              		.p2align 4,,15
+  65              		.global	_Z17swapOutputBuffersPi
+  66              		.thumb
+  67              		.thumb_func
+  68              		.type	_Z17swapOutputBuffersPi, %function
+  69              	_Z17swapOutputBuffersPi:
+  70              		@ args = 0, pretend = 0, frame = 0
+  71              		@ frame_needed = 0, uses_anonymous_args = 0
+  72 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  73 0002 40F20004 		movw	r4, #:lower16:.LANCHOR2
+  74 0006 C0F20004 		movt	r4, #:upper16:.LANCHOR2
+  75 000a 0746     		mov	r7, r0
+  76 000c FFF7FEFF 		bl	lockOutputBuffer
+  77 0010 40F20003 		movw	r3, #:lower16:.LANCHOR1
+  78 0014 2268     		ldr	r2, [r4]
+  79 0016 C0F20003 		movt	r3, #:upper16:.LANCHOR1
+  80 001a 0025     		movs	r5, #0
+  81 001c 1968     		ldr	r1, [r3]
+  82 001e 1A60     		str	r2, [r3]
+  83 0020 40F20003 		movw	r3, #:lower16:.LANCHOR0
+  84 0024 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+  85 0028 1570     		strb	r5, [r2]
+  86 002a 1E68     		ldr	r6, [r3]
+  87 002c 2160     		str	r1, [r4]
+  88 002e 1D60     		str	r5, [r3]
+  89 0030 FFF7FEFF 		bl	unlockOutputBuffer
+  90 0034 2068     		ldr	r0, [r4]
+  91 0036 FFF7FEFF 		bl	efiStrlen
+  92 003a 8642     		cmp	r6, r0
+  93 003c 3860     		str	r0, [r7]
+  94 003e 01D1     		bne	.L13
+  95 0040 2068     		ldr	r0, [r4]
+  96 0042 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+  97              	.L13:
+  98 0044 40F20000 		movw	r0, #:lower16:.LC0
+  99 0048 C0F20000 		movt	r0, #:upper16:.LC0
+ 100 004c FFF7FEFF 		bl	firmwareError
+ 101 0050 2846     		mov	r0, r5
+ 102 0052 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 103              		.size	_Z17swapOutputBuffersPi, .-_Z17swapOutputBuffersPi
+ 104 0054 AFF30080 		.section	.text.printPending,"ax",%progbits
+ 104      AFF30080 
+ 104      AFF30080 
+ 105              		.align	2
+ 106              		.p2align 4,,15
+ 107              		.global	printPending
+ 108              		.thumb
+ 109              		.thumb_func
+ 110              		.type	printPending, %function
+ 111              	printPending:
+ 112              		@ args = 0, pretend = 0, frame = 8
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s 			page 3
+
+
+ 113              		@ frame_needed = 0, uses_anonymous_args = 0
+ 114 0000 00B5     		push	{lr}
+ 115 0002 40F20003 		movw	r3, #:lower16:consoleInBinaryMode
+ 116 0006 C0F20003 		movt	r3, #:upper16:consoleInBinaryMode
+ 117 000a 83B0     		sub	sp, sp, #12
+ 118 000c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 119 000e 13B1     		cbz	r3, .L18
+ 120              	.L14:
+ 121 0010 03B0     		add	sp, sp, #12
+ 122              		@ sp needed
+ 123 0012 5DF804FB 		ldr	pc, [sp], #4
+ 124              	.L18:
+ 125 0016 01A8     		add	r0, sp, #4
+ 126 0018 FFF7FEFF 		bl	_Z17swapOutputBuffersPi
+ 127 001c 019B     		ldr	r3, [sp, #4]
+ 128 001e 002B     		cmp	r3, #0
+ 129 0020 F6DD     		ble	.L14
+ 130 0022 FFF7FEFF 		bl	printWithLength
+ 131 0026 03B0     		add	sp, sp, #12
+ 132              		@ sp needed
+ 133 0028 5DF804FB 		ldr	pc, [sp], #4
+ 134              		.size	printPending, .-printPending
+ 135 002c AFF30080 		.section	.text._Z18initLoggingCentralv,"ax",%progbits
+ 136              		.align	2
+ 137              		.p2align 4,,15
+ 138              		.global	_Z18initLoggingCentralv
+ 139              		.thumb
+ 140              		.thumb_func
+ 141              		.type	_Z18initLoggingCentralv, %function
+ 142              	_Z18initLoggingCentralv:
+ 143              		@ args = 0, pretend = 0, frame = 0
+ 144              		@ frame_needed = 0, uses_anonymous_args = 0
+ 145              		@ link register save eliminated.
+ 146 0000 30B4     		push	{r4, r5}
+ 147 0002 40F20002 		movw	r2, #:lower16:.LANCHOR3
+ 148 0006 40F20003 		movw	r3, #:lower16:.LANCHOR4
+ 149 000a C0F20002 		movt	r2, #:upper16:.LANCHOR3
+ 150 000e C0F20003 		movt	r3, #:upper16:.LANCHOR4
+ 151 0012 40F20005 		movw	r5, #:lower16:.LANCHOR1
+ 152 0016 40F20004 		movw	r4, #:lower16:.LANCHOR0
+ 153 001a 40F20001 		movw	r1, #:lower16:.LANCHOR2
+ 154 001e 0020     		movs	r0, #0
+ 155 0020 C0F20005 		movt	r5, #:upper16:.LANCHOR1
+ 156 0024 C0F20004 		movt	r4, #:upper16:.LANCHOR0
+ 157 0028 C0F20001 		movt	r1, #:upper16:.LANCHOR2
+ 158 002c 1070     		strb	r0, [r2]
+ 159 002e 1870     		strb	r0, [r3]
+ 160 0030 2A60     		str	r2, [r5]
+ 161 0032 2060     		str	r0, [r4]
+ 162 0034 0B60     		str	r3, [r1]
+ 163 0036 30BC     		pop	{r4, r5}
+ 164 0038 7047     		bx	lr
+ 165              		.size	_Z18initLoggingCentralv, .-_Z18initLoggingCentralv
+ 166 003a 00BFAFF3 		.section	.bss._ZL15accumulatedSize,"aw",%nobits
+ 166      0080
+ 167              		.align	2
+ 168              		.set	.LANCHOR0,. + 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s 			page 4
+
+
+ 169              		.type	_ZL15accumulatedSize, %object
+ 170              		.size	_ZL15accumulatedSize, 4
+ 171              	_ZL15accumulatedSize:
+ 172 0000 00000000 		.space	4
+ 173              		.section	.ccm,"aw",%progbits
+ 174              		.align	2
+ 175              		.set	.LANCHOR3,. + 0
+ 176              		.type	_ZL15pendingBuffers0, %object
+ 177              		.size	_ZL15pendingBuffers0, 6500
+ 178              	_ZL15pendingBuffers0:
+ 179 0000 00000000 		.space	6500
+ 179      00000000 
+ 179      00000000 
+ 179      00000000 
+ 179      00000000 
+ 180              		.section	.bss._ZL18accumulationBuffer,"aw",%nobits
+ 181              		.align	2
+ 182              		.set	.LANCHOR1,. + 0
+ 183              		.type	_ZL18accumulationBuffer, %object
+ 184              		.size	_ZL18accumulationBuffer, 4
+ 185              	_ZL18accumulationBuffer:
+ 186 0000 00000000 		.space	4
+ 187              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 188              		.align	2
+ 189              	.LC0:
+ 190 0000 6F757420 		.ascii	"out constr\000"
+ 190      636F6E73 
+ 190      747200
+ 191 000b 00       		.section	.bss._ZL12outputBuffer,"aw",%nobits
+ 192              		.align	2
+ 193              		.set	.LANCHOR2,. + 0
+ 194              		.type	_ZL12outputBuffer, %object
+ 195              		.size	_ZL12outputBuffer, 4
+ 196              	_ZL12outputBuffer:
+ 197 0000 00000000 		.space	4
+ 198              		.section	.bss._ZL15pendingBuffers1,"aw",%nobits
+ 199              		.align	2
+ 200              		.set	.LANCHOR4,. + 0
+ 201              		.type	_ZL15pendingBuffers1, %object
+ 202              		.size	_ZL15pendingBuffers1, 6500
+ 203              	_ZL15pendingBuffers1:
+ 204 0000 00000000 		.space	6500
+ 204      00000000 
+ 204      00000000 
+ 204      00000000 
+ 204      00000000 
+ 205              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 loggingcentral.cpp
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:17     .text.scheduleLogging:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:23     .text.scheduleLogging:00000000 scheduleLogging
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:168    .bss._ZL15accumulatedSize:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:182    .bss._ZL18accumulationBuffer:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:63     .text._Z17swapOutputBuffersPi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:69     .text._Z17swapOutputBuffersPi:00000000 _Z17swapOutputBuffersPi
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:193    .bss._ZL12outputBuffer:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:189    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:105    .text.printPending:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:111    .text.printPending:00000000 printPending
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:136    .text._Z18initLoggingCentralv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:142    .text._Z18initLoggingCentralv:00000000 _Z18initLoggingCentralv
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:175    .ccm:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:200    .bss._ZL15pendingBuffers1:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:167    .bss._ZL15accumulatedSize:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:171    .bss._ZL15accumulatedSize:00000000 _ZL15accumulatedSize
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:174    .ccm:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:178    .ccm:00000000 _ZL15pendingBuffers0
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:181    .bss._ZL18accumulationBuffer:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:185    .bss._ZL18accumulationBuffer:00000000 _ZL18accumulationBuffer
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:188    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:192    .bss._ZL12outputBuffer:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:196    .bss._ZL12outputBuffer:00000000 _ZL12outputBuffer
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:199    .bss._ZL15pendingBuffers1:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3e7jdd.s:203    .bss._ZL15pendingBuffers1:00000000 _ZL15pendingBuffers1
+
+UNDEFINED SYMBOLS
+efiStrlen
+lockOutputBuffer
+resetLogging
+memcpy
+unlockOutputBuffer
+firmwareError
+consoleInBinaryMode
+printWithLength

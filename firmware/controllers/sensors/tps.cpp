@@ -99,6 +99,10 @@ static float getPrimatyRawTPS(DECLARE_ENGINE_PARAMETER_F) {
 
 #define NO_TPS_MAGIC_VALUE 66.611
 
+bool_t hasPedalPositionSensor(DECLARE_ENGINE_PARAMETER_F) {
+	return engineConfiguration->pedalPositionChannel != EFI_ADC_NONE;
+}
+
 percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_F) {
 	float voltage = getVoltageDivided("pPS", engineConfiguration->pedalPositionChannel);
 	float result = interpolate(engineConfiguration->pedalPositionMin, 0, engineConfiguration->pedalPositionMax, 100, voltage);

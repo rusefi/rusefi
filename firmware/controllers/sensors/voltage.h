@@ -15,5 +15,6 @@
 
 float getVRef(DECLARE_ENGINE_PARAMETER_F);
 float getVBatt(DECLARE_ENGINE_PARAMETER_F);
+bool_t hasVBatt(DECLARE_ENGINE_PARAMETER_F);
 
 #endif

@@ -254,7 +254,7 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 #endif /* EFI_PROD_CODE */
 
 	chThdCreateStatic(consoleThreadStack, sizeof(consoleThreadStack), NORMALPRIO, consoleThreadThreadEntryPoint, NULL);
-	addConsoleAction(BINARY_COMMAND, switchToBinaryProtocol);
+	addConsoleAction(SWITCH_TO_BINARY_COMMAND, switchToBinaryProtocol);
 }
 
 /**

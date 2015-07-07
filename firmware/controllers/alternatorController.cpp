@@ -32,6 +32,7 @@ static THD_WORKING_AREA(alternatorControlThreadStack, UTILITY_THREAD_STACK_SIZE)
 static float currentAltDuty;
 
 static msg_t AltCtrlThread(int param) {
+        UNUSED(param);
 	chRegSetThreadName("AlternatorController");
 	while (true) {
 		chThdSleepMilliseconds(engineConfiguration->alternatorDT);

@@ -57,10 +57,10 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 14 15
-Title "Electronic Industrial Temperature Interface (EITI)"
-Date "20 may 2015"
-Rev ".02"
-Comp "Mrk Industries"
+Title "Frankenso"
+Date "17 jun 2015"
+Rev ".05"
+Comp "rusEFI.com"
 Comment1 ""
 Comment2 ""
 Comment3 ""

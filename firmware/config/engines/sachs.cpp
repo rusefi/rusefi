@@ -24,7 +24,7 @@ void setSachs(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->engineChartSize = 400;
 
 	 // set_injection_offset 0
-	engineConfiguration->injectionAngle = 0;
+	engineConfiguration->injectionOffset = 0;
 
 
 	/**
@@ -79,7 +79,7 @@ void setSachs(DECLARE_ENGINE_PARAMETER_F) {
 	// Frankenstein: low side - out #12: PB9
 
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;
-	boardConfiguration->triggerInputPins[1] = GPIOC_6;
+	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 
 	boardConfiguration->injectionPins[0] = GPIOC_15;
 
@@ -90,4 +90,9 @@ void setSachs(DECLARE_ENGINE_PARAMETER_F) {
 	setTimingRpmBin(800, 15000 PASS_ENGINE_PARAMETER);
 	setTableBin2(config->veRpmBins, FUEL_RPM_COUNT, 15000, 7000, 1);
 	setTableBin2(config->afrRpmBins, FUEL_RPM_COUNT, 15000, 7000, 1);
+
+	engineConfiguration->hasFrequencyReportingMapSensor = true;
+	boardConfiguration->frequencyReportingMapInputPin = GPIOC_6;
+	boardConfiguration->mapFrequency100Kpa = 159;
+	boardConfiguration->mapFrequency0Kpa = 80;
 }

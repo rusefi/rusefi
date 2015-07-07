@@ -1,0 +1,2238 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"fsio_impl.cpp"
+  16              		.global	__aeabi_f2d
+  17              		.section	.text._ZL8showFsioPKcP9LEElement,"ax",%progbits
+  18              		.align	2
+  19              		.p2align 4,,15
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_ZL8showFsioPKcP9LEElement, %function
+  23              	_ZL8showFsioPKcP9LEElement:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+  27 0002 40F20007 		movw	r7, #:lower16:.LANCHOR0
+  28 0006 85B0     		sub	sp, sp, #20
+  29 0008 0C46     		mov	r4, r1
+  30 000a C0F20007 		movt	r7, #:upper16:.LANCHOR0
+  31 000e 38B1     		cbz	r0, .L12
+  32 0010 40F20001 		movw	r1, #:lower16:.LC0
+  33 0014 0246     		mov	r2, r0
+  34 0016 C0F20001 		movt	r1, #:upper16:.LC0
+  35 001a 3868     		ldr	r0, [r7]
+  36 001c FFF7FEFF 		bl	scheduleMsg
+  37              	.L12:
+  38 0020 9CB1     		cbz	r4, .L14
+  39              	.L5:
+  40 0022 6068     		ldr	r0, [r4, #4]	@ float
+  41 0024 2668     		ldr	r6, [r4]
+  42 0026 3D68     		ldr	r5, [r7]
+  43 0028 FFF7FEFF 		bl	__aeabi_f2d
+  44 002c CDE90001 		strd	r0, [sp]
+  45 0030 A368     		ldr	r3, [r4, #8]
+  46 0032 40F20001 		movw	r1, #:lower16:.LC2
+  47 0036 3246     		mov	r2, r6
+  48 0038 0293     		str	r3, [sp, #8]
+  49 003a 2846     		mov	r0, r5
+  50 003c C0F20001 		movt	r1, #:upper16:.LC2
+  51 0040 FFF7FEFF 		bl	scheduleMsg
+  52 0044 E468     		ldr	r4, [r4, #12]
+  53 0046 002C     		cmp	r4, #0
+  54 0048 EBD1     		bne	.L5
+  55              	.L14:
+  56 004a 40F20001 		movw	r1, #:lower16:.LC1
+  57 004e 3868     		ldr	r0, [r7]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 2
+
+
+  58 0050 C0F20001 		movt	r1, #:upper16:.LC1
+  59 0054 05B0     		add	sp, sp, #20
+  60              		@ sp needed
+  61 0056 BDE8F040 		pop	{r4, r5, r6, r7, lr}
+  62 005a FFF7FEBF 		b	scheduleMsg
+  63              		.size	_ZL8showFsioPKcP9LEElement, .-_ZL8showFsioPKcP9LEElement
+  64 005e 00BF     		.section	.text._ZL16setFsioFrequencyii,"ax",%progbits
+  65              		.align	2
+  66              		.p2align 4,,15
+  67              		.thumb
+  68              		.thumb_func
+  69              		.type	_ZL16setFsioFrequencyii, %function
+  70              	_ZL16setFsioFrequencyii:
+  71              		@ args = 0, pretend = 0, frame = 0
+  72              		@ frame_needed = 0, uses_anonymous_args = 0
+  73              		@ link register save eliminated.
+  74 0000 431E     		subs	r3, r0, #1
+  75 0002 0F2B     		cmp	r3, #15
+  76 0004 30B4     		push	{r4, r5}
+  77 0006 0A46     		mov	r2, r1
+  78 0008 15D8     		bhi	.L17
+  79 000a 40F20003 		movw	r3, #:lower16:boardConfiguration
+  80 000e C0F20003 		movt	r3, #:upper16:boardConfiguration
+  81 0012 40F20004 		movw	r4, #:lower16:.LANCHOR0
+  82 0016 00F23315 		addw	r5, r0, #307
+  83 001a 1B68     		ldr	r3, [r3]
+  84 001c C0F20004 		movt	r4, #:upper16:.LANCHOR0
+  85 0020 40F20001 		movw	r1, #:lower16:.LC4
+  86 0024 23F81520 		strh	r2, [r3, r5, lsl #1]	@ movhi
+  87 0028 C0F20001 		movt	r1, #:upper16:.LC4
+  88 002c 0346     		mov	r3, r0
+  89 002e 2068     		ldr	r0, [r4]
+  90 0030 30BC     		pop	{r4, r5}
+  91 0032 FFF7FEBF 		b	scheduleMsg
+  92              	.L17:
+  93 0036 40F20000 		movw	r0, #:lower16:.LANCHOR0
+  94 003a C0F20000 		movt	r0, #:upper16:.LANCHOR0
+  95 003e 40F20001 		movw	r1, #:lower16:.LC3
+  96 0042 1A46     		mov	r2, r3
+  97 0044 0068     		ldr	r0, [r0]
+  98 0046 C0F20001 		movt	r1, #:upper16:.LC3
+  99 004a 30BC     		pop	{r4, r5}
+ 100 004c FFF7FEBF 		b	scheduleMsg
+ 101              		.size	_ZL16setFsioFrequencyii, .-_ZL16setFsioFrequencyii
+ 102              		.section	.text._ZL12showFsioInfov,"ax",%progbits
+ 103              		.align	2
+ 104              		.p2align 4,,15
+ 105              		.thumb
+ 106              		.thumb_func
+ 107              		.type	_ZL12showFsioInfov, %function
+ 108              	_ZL12showFsioInfov:
+ 109              		@ args = 0, pretend = 0, frame = 8
+ 110              		@ frame_needed = 0, uses_anonymous_args = 0
+ 111 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 112 0004 40F20006 		movw	r6, #:lower16:.LANCHOR0
+ 113 0008 C0F20006 		movt	r6, #:upper16:.LANCHOR0
+ 114 000c 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 3
+
+
+ 115 0010 87B0     		sub	sp, sp, #28
+ 116 0012 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 117 0016 3568     		ldr	r5, [r6]
+ 118 0018 FFF7FEFF 		bl	_ZN13LEElementPool7getSizeEv
+ 119 001c 0446     		mov	r4, r0
+ 120 001e 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 121 0022 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 122 0026 FFF7FEFF 		bl	_ZN13LEElementPool7getSizeEv
+ 123 002a 40F20001 		movw	r1, #:lower16:.LC5
+ 124 002e 2246     		mov	r2, r4
+ 125 0030 0346     		mov	r3, r0
+ 126 0032 C0F20001 		movt	r1, #:upper16:.LC5
+ 127 0036 2846     		mov	r0, r5
+ 128 0038 FFF7FEFF 		bl	scheduleMsg
+ 129 003c 40F20003 		movw	r3, #:lower16:.LANCHOR3
+ 130 0040 C0F20003 		movt	r3, #:upper16:.LANCHOR3
+ 131 0044 40F20000 		movw	r0, #:lower16:.LC6
+ 132 0048 1968     		ldr	r1, [r3]
+ 133 004a C0F20000 		movt	r0, #:upper16:.LC6
+ 134 004e FFF7FEFF 		bl	_ZL8showFsioPKcP9LEElement
+ 135 0052 40F20003 		movw	r3, #:lower16:.LANCHOR4
+ 136 0056 C0F20003 		movt	r3, #:upper16:.LANCHOR4
+ 137 005a 40F20000 		movw	r0, #:lower16:.LC7
+ 138 005e 1968     		ldr	r1, [r3]
+ 139 0060 C0F20000 		movt	r0, #:upper16:.LC7
+ 140 0064 FFF7FEFF 		bl	_ZL8showFsioPKcP9LEElement
+ 141 0068 40F20003 		movw	r3, #:lower16:.LANCHOR5
+ 142 006c C0F20003 		movt	r3, #:upper16:.LANCHOR5
+ 143 0070 40F20000 		movw	r0, #:lower16:.LC8
+ 144 0074 1968     		ldr	r1, [r3]
+ 145 0076 C0F20000 		movt	r0, #:upper16:.LC8
+ 146 007a FFF7FEFF 		bl	_ZL8showFsioPKcP9LEElement
+ 147 007e 40F20003 		movw	r3, #:lower16:.LANCHOR6
+ 148 0082 C0F20003 		movt	r3, #:upper16:.LANCHOR6
+ 149 0086 40F20000 		movw	r0, #:lower16:.LC9
+ 150 008a 1968     		ldr	r1, [r3]
+ 151 008c C0F20000 		movt	r0, #:upper16:.LC9
+ 152 0090 FFF7FEFF 		bl	_ZL8showFsioPKcP9LEElement
+ 153 0094 40F20003 		movw	r3, #:lower16:.LANCHOR7
+ 154 0098 40F20007 		movw	r7, #:lower16:config
+ 155 009c 40F20005 		movw	r5, #:lower16:boardConfiguration
+ 156 00a0 40F20009 		movw	r9, #:lower16:engineConfiguration2
+ 157 00a4 C0F20003 		movt	r3, #:upper16:.LANCHOR7
+ 158 00a8 C0F20007 		movt	r7, #:upper16:config
+ 159 00ac C0F20005 		movt	r5, #:upper16:boardConfiguration
+ 160 00b0 C0F20009 		movt	r9, #:upper16:engineConfiguration2
+ 161 00b4 0593     		str	r3, [sp, #20]
+ 162 00b6 0024     		movs	r4, #0
+ 163 00b8 4FF0C80A 		mov	r10, #200
+ 164 00bc 02E0     		b	.L21
+ 165              	.L19:
+ 166 00be 0134     		adds	r4, r4, #1
+ 167 00c0 102C     		cmp	r4, #16
+ 168 00c2 36D0     		beq	.L37
+ 169              	.L21:
+ 170 00c4 0AFB04F3 		mul	r3, r10, r4
+ 171 00c8 03F6A803 		addw	r3, r3, #2216
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 4
+
+
+ 172 00cc 3A68     		ldr	r2, [r7]
+ 173 00ce D15C     		ldrb	r1, [r2, r3]	@ zero_extendqisi2
+ 174 00d0 02EB030B 		add	fp, r2, r3
+ 175 00d4 0029     		cmp	r1, #0
+ 176 00d6 F2D0     		beq	.L19
+ 177 00d8 2B68     		ldr	r3, [r5]
+ 178 00da D6F80080 		ldr	r8, [r6]
+ 179 00de 03EB8403 		add	r3, r3, r4, lsl #2
+ 180 00e2 D3F8C401 		ldr	r0, [r3, #452]
+ 181 00e6 FFF7FEFF 		bl	_Z10hwPortname11brain_pin_e
+ 182 00ea 2B68     		ldr	r3, [r5]
+ 183 00ec 0090     		str	r0, [sp]
+ 184 00ee 04F59A70 		add	r0, r4, #308
+ 185 00f2 D9F80010 		ldr	r1, [r9]
+ 186 00f6 33F91030 		ldrsh	r3, [r3, r0, lsl #1]
+ 187 00fa 04F6C430 		addw	r0, r4, #3012
+ 188 00fe 01EB8001 		add	r1, r1, r0, lsl #2
+ 189 0102 0193     		str	r3, [sp, #4]
+ 190 0104 0868     		ldr	r0, [r1]	@ float
+ 191 0106 FFF7FEFF 		bl	__aeabi_f2d
+ 192 010a CDE90201 		strd	r0, [sp, #8]
+ 193 010e 40F20001 		movw	r1, #:lower16:.LC10
+ 194 0112 2246     		mov	r2, r4
+ 195 0114 4046     		mov	r0, r8
+ 196 0116 5B46     		mov	r3, fp
+ 197 0118 C0F20001 		movt	r1, #:upper16:.LC10
+ 198 011c FFF7FEFF 		bl	scheduleMsg
+ 199 0120 059B     		ldr	r3, [sp, #20]
+ 200 0122 0020     		movs	r0, #0
+ 201 0124 53F82410 		ldr	r1, [r3, r4, lsl #2]
+ 202 0128 0134     		adds	r4, r4, #1
+ 203 012a FFF7FEFF 		bl	_ZL8showFsioPKcP9LEElement
+ 204 012e 102C     		cmp	r4, #16
+ 205 0130 C8D1     		bne	.L21
+ 206              	.L37:
+ 207 0132 0124     		movs	r4, #1
+ 208 0134 02E0     		b	.L24
+ 209              	.L22:
+ 210 0136 0134     		adds	r4, r4, #1
+ 211 0138 112C     		cmp	r4, #17
+ 212 013a 1AD0     		beq	.L38
+ 213              	.L24:
+ 214 013c 2B68     		ldr	r3, [r5]
+ 215 013e 03EB8403 		add	r3, r3, r4, lsl #2
+ 216 0142 D3F89072 		ldr	r7, [r3, #656]	@ float
+ 217 0146 3846     		mov	r0, r7	@ float
+ 218 0148 FFF7FEFF 		bl	__fpclassifyf
+ 219 014c 0028     		cmp	r0, #0
+ 220 014e F2D0     		beq	.L22
+ 221 0150 3846     		mov	r0, r7	@ float
+ 222 0152 FFF7FEFF 		bl	__aeabi_f2d
+ 223 0156 3368     		ldr	r3, [r6]
+ 224 0158 CDE90001 		strd	r0, [sp]
+ 225 015c 40F20001 		movw	r1, #:lower16:.LC11
+ 226 0160 2246     		mov	r2, r4
+ 227 0162 1846     		mov	r0, r3
+ 228 0164 C0F20001 		movt	r1, #:upper16:.LC11
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 5
+
+
+ 229 0168 0134     		adds	r4, r4, #1
+ 230 016a FFF7FEFF 		bl	scheduleMsg
+ 231 016e 112C     		cmp	r4, #17
+ 232 0170 E4D1     		bne	.L24
+ 233              	.L38:
+ 234 0172 0024     		movs	r4, #0
+ 235              	.L27:
+ 236 0174 2B68     		ldr	r3, [r5]
+ 237 0176 03EB8403 		add	r3, r3, r4, lsl #2
+ 238 017a D3F82433 		ldr	r3, [r3, #804]
+ 239 017e 502B     		cmp	r3, #80
+ 240 0180 1846     		mov	r0, r3
+ 241 0182 0BD0     		beq	.L25
+ 242 0184 3768     		ldr	r7, [r6]
+ 243 0186 FFF7FEFF 		bl	_Z10hwPortname11brain_pin_e
+ 244 018a 40F20001 		movw	r1, #:lower16:.LC12
+ 245 018e 0346     		mov	r3, r0
+ 246 0190 C0F20001 		movt	r1, #:upper16:.LC12
+ 247 0194 3846     		mov	r0, r7
+ 248 0196 2246     		mov	r2, r4
+ 249 0198 FFF7FEFF 		bl	scheduleMsg
+ 250              	.L25:
+ 251 019c 0134     		adds	r4, r4, #1
+ 252 019e 102C     		cmp	r4, #16
+ 253 01a0 E8D1     		bne	.L27
+ 254 01a2 07B0     		add	sp, sp, #28
+ 255              		@ sp needed
+ 256 01a4 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 257              		.size	_ZL12showFsioInfov, .-_ZL12showFsioInfov
+ 258 01a8 AFF30080 		.section	.text._ZL14setFsioSettingff,"ax",%progbits
+ 258      AFF30080 
+ 259              		.align	2
+ 260              		.p2align 4,,15
+ 261              		.thumb
+ 262              		.thumb_func
+ 263              		.type	_ZL14setFsioSettingff, %function
+ 264              	_ZL14setFsioSettingff:
+ 265              		@ args = 0, pretend = 0, frame = 0
+ 266              		@ frame_needed = 0, uses_anonymous_args = 0
+ 267              		@ link register save eliminated.
+ 268 0000 07EE900A 		fmsr	s15, r0
+ 269 0004 FDEEE77A 		ftosizs	s15, s15
+ 270 0008 17EE902A 		fmrs	r2, s15	@ int
+ 271 000c 0F2A     		cmp	r2, #15
+ 272 000e 0BD8     		bhi	.L41
+ 273 0010 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 274 0014 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 275 0018 02F5A072 		add	r2, r2, #320
+ 276 001c 1B68     		ldr	r3, [r3]
+ 277 001e 03EB8202 		add	r2, r3, r2, lsl #2
+ 278 0022 5160     		str	r1, [r2, #4]	@ float
+ 279 0024 FFF7FEBF 		b	_ZL12showFsioInfov
+ 280              	.L41:
+ 281 0028 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 282 002c C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 283 0030 40F20001 		movw	r1, #:lower16:.LC3
+ 284 0034 1868     		ldr	r0, [r3]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 6
+
+
+ 285 0036 C0F20001 		movt	r1, #:upper16:.LC3
+ 286 003a FFF7FEBF 		b	scheduleMsg
+ 287              		.size	_ZL14setFsioSettingff, .-_ZL14setFsioSettingff
+ 288 003e 00BF     		.section	.text._ZL11setPinStatePKcP9OutputPinP9LEElementP6Engine,"ax",%progbits
+ 289              		.align	2
+ 290              		.p2align 4,,15
+ 291              		.thumb
+ 292              		.thumb_func
+ 293              		.type	_ZL11setPinStatePKcP9OutputPinP9LEElementP6Engine, %function
+ 294              	_ZL11setPinStatePKcP9OutputPinP9LEElementP6Engine:
+ 295              		@ args = 0, pretend = 0, frame = 0
+ 296              		@ frame_needed = 0, uses_anonymous_args = 0
+ 297 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 298 0002 0646     		mov	r6, r0
+ 299 0004 2DED028B 		fstmfdd	sp!, {d8}
+ 300 0008 0D46     		mov	r5, r1
+ 301 000a 002A     		cmp	r2, #0
+ 302 000c 3CD0     		beq	.L54
+ 303 000e 40F20000 		movw	r0, #:lower16:.LANCHOR8
+ 304 0012 1146     		mov	r1, r2
+ 305 0014 C0F20000 		movt	r0, #:upper16:.LANCHOR8
+ 306 0018 1A46     		mov	r2, r3
+ 307 001a FFF7FEFF 		bl	_ZN12LECalculator9getValue2EP9LEElementP6Engine
+ 308 001e 08EE100A 		fmsr	s16, r0
+ 309 0022 2846     		mov	r0, r5
+ 310 0024 FFF7FEFF 		bl	_ZN9OutputPin13isInitializedEv
+ 311 0028 10B9     		cbnz	r0, .L55
+ 312              	.L42:
+ 313 002a BDEC028B 		fldmfdd	sp!, {d8}
+ 314 002e F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 315              	.L55:
+ 316 0030 2846     		mov	r0, r5
+ 317 0032 BDEEC88A 		ftosizs	s16, s16
+ 318 0036 FFF7FEFF 		bl	_ZN9OutputPin13getLogicValueEv
+ 319 003a 18EE104A 		fmrs	r4, s16	@ int
+ 320 003e A042     		cmp	r0, r4
+ 321 0040 F3D0     		beq	.L42
+ 322 0042 FFF7FEFF 		bl	_Z18isRunningBenchTestv
+ 323 0046 0028     		cmp	r0, #0
+ 324 0048 EFD1     		bne	.L42
+ 325 004a 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 326 004e C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 327 0052 40F20007 		movw	r7, #:lower16:.LC14
+ 328 0056 40F20003 		movw	r3, #:lower16:.LC13
+ 329 005a C0F20007 		movt	r7, #:upper16:.LC14
+ 330 005e C0F20003 		movt	r3, #:upper16:.LC13
+ 331 0062 40F20001 		movw	r1, #:lower16:.LC16
+ 332 0066 3246     		mov	r2, r6
+ 333 0068 0068     		ldr	r0, [r0]
+ 334 006a 002C     		cmp	r4, #0
+ 335 006c 08BF     		it	eq
+ 336 006e 3B46     		moveq	r3, r7
+ 337 0070 C0F20001 		movt	r1, #:upper16:.LC16
+ 338 0074 FFF7FEFF 		bl	scheduleMsg
+ 339 0078 BDEC028B 		fldmfdd	sp!, {d8}
+ 340 007c 2846     		mov	r0, r5
+ 341 007e 2146     		mov	r1, r4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 7
+
+
+ 342 0080 BDE8F840 		pop	{r3, r4, r5, r6, r7, lr}
+ 343 0084 FFF7FEBF 		b	_ZN9OutputPin8setValueEi
+ 344              	.L54:
+ 345 0088 BDEC028B 		fldmfdd	sp!, {d8}
+ 346 008c 40F20001 		movw	r1, #:lower16:.LC15
+ 347 0090 0246     		mov	r2, r0
+ 348 0092 C0F20001 		movt	r1, #:upper16:.LC15
+ 349 0096 40F25E20 		movw	r0, #606
+ 350 009a BDE8F840 		pop	{r3, r4, r5, r6, r7, lr}
+ 351 009e FFF7FEBF 		b	warning
+ 352              		.size	_ZL11setPinStatePKcP9OutputPinP9LEElementP6Engine, .-_ZL11setPinStatePKcP9OutputPinP9LEEleme
+ 353 00a2 00BFAFF3 		.section	.text._ZL4evalPcP6Engine,"ax",%progbits
+ 353      0080AFF3 
+ 353      0080AFF3 
+ 353      0080
+ 354              		.align	2
+ 355              		.p2align 4,,15
+ 356              		.thumb
+ 357              		.thumb_func
+ 358              		.type	_ZL4evalPcP6Engine, %function
+ 359              	_ZL4evalPcP6Engine:
+ 360              		@ args = 0, pretend = 0, frame = 0
+ 361              		@ frame_needed = 0, uses_anonymous_args = 0
+ 362 0000 70B5     		push	{r4, r5, r6, lr}
+ 363 0002 0E46     		mov	r6, r1
+ 364 0004 FFF7FEFF 		bl	unquote
+ 365 0008 40F20004 		movw	r4, #:lower16:.LANCHOR0
+ 366 000c C0F20004 		movt	r4, #:upper16:.LANCHOR0
+ 367 0010 0546     		mov	r5, r0
+ 368 0012 40F20001 		movw	r1, #:lower16:.LC17
+ 369 0016 2A46     		mov	r2, r5
+ 370 0018 C0F20001 		movt	r1, #:upper16:.LC17
+ 371 001c 2068     		ldr	r0, [r4]
+ 372 001e FFF7FEFF 		bl	scheduleMsg
+ 373 0022 40F20000 		movw	r0, #:lower16:.LANCHOR9
+ 374 0026 C0F20000 		movt	r0, #:upper16:.LANCHOR9
+ 375 002a FFF7FEFF 		bl	_ZN13LEElementPool5resetEv
+ 376 002e 40F20000 		movw	r0, #:lower16:.LANCHOR9
+ 377 0032 2946     		mov	r1, r5
+ 378 0034 C0F20000 		movt	r0, #:upper16:.LANCHOR9
+ 379 0038 FFF7FEFF 		bl	_ZN13LEElementPool15parseExpressionEPKc
+ 380 003c 0146     		mov	r1, r0
+ 381 003e A0B1     		cbz	r0, .L58
+ 382 0040 40F20000 		movw	r0, #:lower16:.LANCHOR10
+ 383 0044 3246     		mov	r2, r6
+ 384 0046 C0F20000 		movt	r0, #:upper16:.LANCHOR10
+ 385 004a FFF7FEFF 		bl	_ZN12LECalculator9getValue2EP9LEElementP6Engine
+ 386 004e FFF7FEFF 		bl	__aeabi_f2d
+ 387 0052 2468     		ldr	r4, [r4]
+ 388 0054 0B46     		mov	r3, r1
+ 389 0056 40F20001 		movw	r1, #:lower16:.LC19
+ 390 005a 0246     		mov	r2, r0
+ 391 005c C0F20001 		movt	r1, #:upper16:.LC19
+ 392 0060 2046     		mov	r0, r4
+ 393 0062 BDE87040 		pop	{r4, r5, r6, lr}
+ 394 0066 FFF7FEBF 		b	scheduleMsg
+ 395              	.L58:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 8
+
+
+ 396 006a 40F20001 		movw	r1, #:lower16:.LC18
+ 397 006e 2068     		ldr	r0, [r4]
+ 398 0070 C0F20001 		movt	r1, #:upper16:.LC18
+ 399 0074 BDE87040 		pop	{r4, r5, r6, lr}
+ 400 0078 FFF7FEBF 		b	scheduleMsg
+ 401              		.size	_ZL4evalPcP6Engine, .-_ZL4evalPcP6Engine
+ 402 007c AFF30080 		.section	.text._ZL15setFsioInputPinPKcS0_,"ax",%progbits
+ 403              		.align	2
+ 404              		.p2align 4,,15
+ 405              		.thumb
+ 406              		.thumb_func
+ 407              		.type	_ZL15setFsioInputPinPKcS0_, %function
+ 408              	_ZL15setFsioInputPinPKcS0_:
+ 409              		@ args = 0, pretend = 0, frame = 0
+ 410              		@ frame_needed = 0, uses_anonymous_args = 0
+ 411 0000 70B5     		push	{r4, r5, r6, lr}
+ 412 0002 0D46     		mov	r5, r1
+ 413 0004 FFF7FEFF 		bl	atoi
+ 414 0008 421E     		subs	r2, r0, #1
+ 415 000a 0F2A     		cmp	r2, #15
+ 416 000c 0446     		mov	r4, r0
+ 417 000e 1FD8     		bhi	.L62
+ 418 0010 2846     		mov	r0, r5
+ 419 0012 FFF7FEFF 		bl	_Z13parseBrainPinPKc
+ 420 0016 5128     		cmp	r0, #81
+ 421 0018 27D0     		beq	.L63
+ 422 001a 40F20002 		movw	r2, #:lower16:boardConfiguration
+ 423 001e C0F20002 		movt	r2, #:upper16:boardConfiguration
+ 424 0022 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 425 0026 1268     		ldr	r2, [r2]
+ 426 0028 02EB8402 		add	r2, r2, r4, lsl #2
+ 427 002c C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 428 0030 C2F82003 		str	r0, [r2, #800]
+ 429 0034 1D68     		ldr	r5, [r3]
+ 430 0036 FFF7FEFF 		bl	_Z10hwPortname11brain_pin_e
+ 431 003a 40F20001 		movw	r1, #:lower16:.LC21
+ 432 003e 0346     		mov	r3, r0
+ 433 0040 2246     		mov	r2, r4
+ 434 0042 2846     		mov	r0, r5
+ 435 0044 C0F20001 		movt	r1, #:upper16:.LC21
+ 436 0048 BDE87040 		pop	{r4, r5, r6, lr}
+ 437 004c FFF7FEBF 		b	scheduleMsg
+ 438              	.L62:
+ 439 0050 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 440 0054 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 441 0058 40F20001 		movw	r1, #:lower16:.LC3
+ 442 005c 1868     		ldr	r0, [r3]
+ 443 005e C0F20001 		movt	r1, #:upper16:.LC3
+ 444 0062 BDE87040 		pop	{r4, r5, r6, lr}
+ 445 0066 FFF7FEBF 		b	scheduleMsg
+ 446              	.L63:
+ 447 006a 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 448 006e C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 449 0072 40F20001 		movw	r1, #:lower16:.LC20
+ 450 0076 2A46     		mov	r2, r5
+ 451 0078 1868     		ldr	r0, [r3]
+ 452 007a C0F20001 		movt	r1, #:upper16:.LC20
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 9
+
+
+ 453 007e BDE87040 		pop	{r4, r5, r6, lr}
+ 454 0082 FFF7FEBF 		b	scheduleMsg
+ 455              		.size	_ZL15setFsioInputPinPKcS0_, .-_ZL15setFsioInputPinPKcS0_
+ 456 0086 00BFAFF3 		.section	.text._ZL16setFsioOutputPinPKcS0_,"ax",%progbits
+ 456      0080AFF3 
+ 456      0080
+ 457              		.align	2
+ 458              		.p2align 4,,15
+ 459              		.thumb
+ 460              		.thumb_func
+ 461              		.type	_ZL16setFsioOutputPinPKcS0_, %function
+ 462              	_ZL16setFsioOutputPinPKcS0_:
+ 463              		@ args = 0, pretend = 0, frame = 0
+ 464              		@ frame_needed = 0, uses_anonymous_args = 0
+ 465 0000 70B5     		push	{r4, r5, r6, lr}
+ 466 0002 0D46     		mov	r5, r1
+ 467 0004 FFF7FEFF 		bl	atoi
+ 468 0008 421E     		subs	r2, r0, #1
+ 469 000a 0F2A     		cmp	r2, #15
+ 470 000c 0446     		mov	r4, r0
+ 471 000e 1FD8     		bhi	.L67
+ 472 0010 2846     		mov	r0, r5
+ 473 0012 FFF7FEFF 		bl	_Z13parseBrainPinPKc
+ 474 0016 5128     		cmp	r0, #81
+ 475 0018 27D0     		beq	.L68
+ 476 001a 40F20002 		movw	r2, #:lower16:boardConfiguration
+ 477 001e C0F20002 		movt	r2, #:upper16:boardConfiguration
+ 478 0022 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 479 0026 1268     		ldr	r2, [r2]
+ 480 0028 02EB8402 		add	r2, r2, r4, lsl #2
+ 481 002c C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 482 0030 C2F8C001 		str	r0, [r2, #448]
+ 483 0034 1D68     		ldr	r5, [r3]
+ 484 0036 FFF7FEFF 		bl	_Z10hwPortname11brain_pin_e
+ 485 003a 40F20001 		movw	r1, #:lower16:.LC22
+ 486 003e 0346     		mov	r3, r0
+ 487 0040 2246     		mov	r2, r4
+ 488 0042 2846     		mov	r0, r5
+ 489 0044 C0F20001 		movt	r1, #:upper16:.LC22
+ 490 0048 BDE87040 		pop	{r4, r5, r6, lr}
+ 491 004c FFF7FEBF 		b	scheduleMsg
+ 492              	.L67:
+ 493 0050 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 494 0054 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 495 0058 40F20001 		movw	r1, #:lower16:.LC3
+ 496 005c 1868     		ldr	r0, [r3]
+ 497 005e C0F20001 		movt	r1, #:upper16:.LC3
+ 498 0062 BDE87040 		pop	{r4, r5, r6, lr}
+ 499 0066 FFF7FEBF 		b	scheduleMsg
+ 500              	.L68:
+ 501 006a 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 502 006e C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 503 0072 40F20001 		movw	r1, #:lower16:.LC20
+ 504 0076 2A46     		mov	r2, r5
+ 505 0078 1868     		ldr	r0, [r3]
+ 506 007a C0F20001 		movt	r1, #:upper16:.LC20
+ 507 007e BDE87040 		pop	{r4, r5, r6, lr}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 10
+
+
+ 508 0082 FFF7FEBF 		b	scheduleMsg
+ 509              		.size	_ZL16setFsioOutputPinPKcS0_, .-_ZL16setFsioOutputPinPKcS0_
+ 510 0086 00BFAFF3 		.section	.text._Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e,"ax",%progbits
+ 510      0080AFF3 
+ 510      0080
+ 511              		.align	2
+ 512              		.p2align 4,,15
+ 513              		.global	_Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e
+ 514              		.thumb
+ 515              		.thumb_func
+ 516              		.type	_Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e, %function
+ 517              	_Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e:
+ 518              		@ args = 0, pretend = 0, frame = 0
+ 519              		@ frame_needed = 0, uses_anonymous_args = 0
+ 520 0000 A2F16403 		sub	r3, r2, #100
+ 521 0004 10B5     		push	{r4, lr}
+ 522 0006 416A     		ldr	r1, [r0, #36]
+ 523 0008 0A2B     		cmp	r3, #10
+ 524 000a 38D8     		bhi	.L70
+ 525 000c DFE803F0 		tbb	[pc, r3]
+ 526              	.L72:
+ 527 0010 0F       		.byte	(.L71-.L72)/2
+ 528 0011 16       		.byte	(.L73-.L72)/2
+ 529 0012 1A       		.byte	(.L74-.L72)/2
+ 530 0013 22       		.byte	(.L75-.L72)/2
+ 531 0014 29       		.byte	(.L76-.L72)/2
+ 532 0015 2C       		.byte	(.L77-.L72)/2
+ 533 0016 37       		.byte	(.L70-.L72)/2
+ 534 0017 37       		.byte	(.L70-.L72)/2
+ 535 0018 2F       		.byte	(.L78-.L72)/2
+ 536 0019 33       		.byte	(.L79-.L72)/2
+ 537 001a 06       		.byte	(.L80-.L72)/2
+ 538 001b 00       		.align	1
+ 539              	.L80:
+ 540 001c FFF7FEFF 		bl	_Z11getAcTogglev
+ 541 0020 07EE100A 		fmsr	s14, r0	@ int
+ 542 0024 F8EE477A 		fuitos	s15, s14
+ 543              	.L81:
+ 544 0028 17EE900A 		fmrs	r0, s15
+ 545 002c 10BD     		pop	{r4, pc}
+ 546              	.L71:
+ 547 002e FFF7FEFF 		bl	_ZN13RpmCalculator3rpmEv
+ 548 0032 07EE100A 		fmsr	s14, r0	@ int
+ 549 0036 F8EEC77A 		fsitos	s15, s14
+ 550 003a F5E7     		b	.L81
+ 551              	.L73:
+ 552 003c BDE81040 		pop	{r4, lr}
+ 553 0040 FFF7FEBF 		b	_Z21getCoolantTemperaturev
+ 554              	.L74:
+ 555 0044 1348     		ldr	r0, .L82
+ 556 0046 FFF7FEFF 		bl	_ZN9OutputPin13getLogicValueEv
+ 557 004a 07EE100A 		fmsr	s14, r0	@ int
+ 558 004e F8EE477A 		fuitos	s15, s14
+ 559 0052 E9E7     		b	.L81
+ 560              	.L75:
+ 561 0054 FFF7FEFF 		bl	getTimeNowSeconds
+ 562 0058 07EE100A 		fmsr	s14, r0	@ int
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 11
+
+
+ 563 005c F8EEC77A 		fsitos	s15, s14
+ 564 0060 E2E7     		b	.L81
+ 565              	.L76:
+ 566 0062 D1ED777A 		flds	s15, [r1, #476]
+ 567 0066 DFE7     		b	.L81
+ 568              	.L77:
+ 569 0068 D1ED787A 		flds	s15, [r1, #480]
+ 570 006c DCE7     		b	.L81
+ 571              	.L78:
+ 572 006e BDE81040 		pop	{r4, lr}
+ 573 0072 FFF7FEBF 		b	_Z23getIntakeAirTemperaturev
+ 574              	.L79:
+ 575 0076 BDE81040 		pop	{r4, lr}
+ 576 007a FFF7FEBF 		b	_Z8getVBattv
+ 577              	.L70:
+ 578 007e 40F20001 		movw	r1, #:lower16:.LC23
+ 579 0082 C0F20001 		movt	r1, #:upper16:.LC23
+ 580 0086 40F25E20 		movw	r0, #606
+ 581 008a FFF7FEFF 		bl	warning
+ 582 008e DFED027A 		flds	s15, .L82+4
+ 583 0092 C9E7     		b	.L81
+ 584              	.L83:
+ 585              		.align	2
+ 586              	.L82:
+ 587 0094 10000000 		.word	enginePins+16
+ 588 0098 0000C07F 		.word	2143289344
+ 589              		.size	_Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e, .-_Z10getLEValueP6EngineP7FLStackIfLi3
+ 590 009c AFF30080 		.section	.text._Z10setFsioExti11brain_pin_ePKci,"ax",%progbits
+ 591              		.align	2
+ 592              		.p2align 4,,15
+ 593              		.global	_Z10setFsioExti11brain_pin_ePKci
+ 594              		.thumb
+ 595              		.thumb_func
+ 596              		.type	_Z10setFsioExti11brain_pin_ePKci, %function
+ 597              	_Z10setFsioExti11brain_pin_ePKci:
+ 598              		@ args = 0, pretend = 0, frame = 0
+ 599              		@ frame_needed = 0, uses_anonymous_args = 0
+ 600 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 601 0002 40F20004 		movw	r4, #:lower16:boardConfiguration
+ 602 0006 C0F20004 		movt	r4, #:upper16:boardConfiguration
+ 603 000a 0546     		mov	r5, r0
+ 604 000c 2068     		ldr	r0, [r4]
+ 605 000e 00EB8500 		add	r0, r0, r5, lsl #2
+ 606 0012 1646     		mov	r6, r2
+ 607 0014 C0F8C411 		str	r1, [r0, #452]
+ 608 0018 1046     		mov	r0, r2
+ 609 001a 1F46     		mov	r7, r3
+ 610 001c FFF7FEFF 		bl	strlen
+ 611 0020 C728     		cmp	r0, #199
+ 612 0022 15DC     		bgt	.L84
+ 613 0024 40F20002 		movw	r2, #:lower16:config
+ 614 0028 C0F20002 		movt	r2, #:upper16:config
+ 615 002c C823     		movs	r3, #200
+ 616 002e D2F800E0 		ldr	lr, [r2]
+ 617 0032 03FB05F3 		mul	r3, r3, r5
+ 618 0036 03F6A803 		addw	r3, r3, #2216
+ 619 003a 421C     		adds	r2, r0, #1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 12
+
+
+ 620 003c 3146     		mov	r1, r6
+ 621 003e 0EEB0300 		add	r0, lr, r3
+ 622 0042 FFF7FEFF 		bl	memcpy
+ 623 0046 05F59A75 		add	r5, r5, #308
+ 624 004a 2368     		ldr	r3, [r4]
+ 625 004c 23F81570 		strh	r7, [r3, r5, lsl #1]	@ movhi
+ 626              	.L84:
+ 627 0050 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 628              		.size	_Z10setFsioExti11brain_pin_ePKci, .-_Z10setFsioExti11brain_pin_ePKci
+ 629 0052 00BFAFF3 		.section	.text._Z7setFsioi11brain_pin_ePKc,"ax",%progbits
+ 629      0080AFF3 
+ 629      0080AFF3 
+ 629      0080
+ 630              		.align	2
+ 631              		.p2align 4,,15
+ 632              		.global	_Z7setFsioi11brain_pin_ePKc
+ 633              		.thumb
+ 634              		.thumb_func
+ 635              		.type	_Z7setFsioi11brain_pin_ePKc, %function
+ 636              	_Z7setFsioi11brain_pin_ePKc:
+ 637              		@ args = 0, pretend = 0, frame = 0
+ 638              		@ frame_needed = 0, uses_anonymous_args = 0
+ 639              		@ link register save eliminated.
+ 640 0000 0023     		movs	r3, #0
+ 641 0002 FFF7FEBF 		b	_Z10setFsioExti11brain_pin_ePKci
+ 642              		.size	_Z7setFsioi11brain_pin_ePKc, .-_Z7setFsioi11brain_pin_ePKc
+ 643 0006 00BFAFF3 		.section	.text._Z22applyFsioConfigurationv,"ax",%progbits
+ 643      0080AFF3 
+ 643      0080
+ 644              		.align	2
+ 645              		.p2align 4,,15
+ 646              		.global	_Z22applyFsioConfigurationv
+ 647              		.thumb
+ 648              		.thumb_func
+ 649              		.type	_Z22applyFsioConfigurationv, %function
+ 650              	_Z22applyFsioConfigurationv:
+ 651              		@ args = 0, pretend = 0, frame = 8
+ 652              		@ frame_needed = 0, uses_anonymous_args = 0
+ 653 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+ 654 0004 40F20007 		movw	r7, #:lower16:boardConfiguration
+ 655 0008 40F20008 		movw	r8, #:lower16:config
+ 656 000c 40F20006 		movw	r6, #:lower16:.LANCHOR7
+ 657 0010 83B0     		sub	sp, sp, #12
+ 658 0012 C0F20007 		movt	r7, #:upper16:boardConfiguration
+ 659 0016 C0F20008 		movt	r8, #:upper16:config
+ 660 001a C0F20006 		movt	r6, #:upper16:.LANCHOR7
+ 661 001e 0024     		movs	r4, #0
+ 662 0020 C825     		movs	r5, #200
+ 663              	.L91:
+ 664 0022 3B68     		ldr	r3, [r7]
+ 665 0024 03EB8403 		add	r3, r3, r4, lsl #2
+ 666 0028 05FB04F1 		mul	r1, r5, r4
+ 667 002c D3F8C431 		ldr	r3, [r3, #452]
+ 668 0030 502B     		cmp	r3, #80
+ 669 0032 01F6A801 		addw	r1, r1, #2216
+ 670 0036 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 671 003a 0CD0     		beq	.L88
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 13
+
+
+ 672 003c D8F80030 		ldr	r3, [r8]
+ 673 0040 03EB0109 		add	r9, r3, r1
+ 674 0044 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 675 0048 4946     		mov	r1, r9
+ 676 004a FFF7FEFF 		bl	_ZN13LEElementPool15parseExpressionEPKc
+ 677 004e 0346     		mov	r3, r0
+ 678 0050 38B1     		cbz	r0, .L95
+ 679              	.L89:
+ 680 0052 46F82430 		str	r3, [r6, r4, lsl #2]
+ 681              	.L88:
+ 682 0056 0134     		adds	r4, r4, #1
+ 683 0058 102C     		cmp	r4, #16
+ 684 005a E2D1     		bne	.L91
+ 685 005c 03B0     		add	sp, sp, #12
+ 686              		@ sp needed
+ 687 005e BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ 688              	.L95:
+ 689 0062 40F20001 		movw	r1, #:lower16:.LC24
+ 690 0066 4A46     		mov	r2, r9
+ 691 0068 C0F20001 		movt	r1, #:upper16:.LC24
+ 692 006c 40F25E20 		movw	r0, #606
+ 693 0070 0193     		str	r3, [sp, #4]
+ 694 0072 FFF7FEFF 		bl	warning
+ 695 0076 019B     		ldr	r3, [sp, #4]
+ 696 0078 EBE7     		b	.L89
+ 697              		.size	_Z22applyFsioConfigurationv, .-_Z22applyFsioConfigurationv
+ 698 007a 00BFAFF3 		.section	.text._ZL17setFsioExpressionPKcS0_P6Engine,"ax",%progbits
+ 698      0080
+ 699              		.align	2
+ 700              		.p2align 4,,15
+ 701              		.thumb
+ 702              		.thumb_func
+ 703              		.type	_ZL17setFsioExpressionPKcS0_P6Engine, %function
+ 704              	_ZL17setFsioExpressionPKcS0_P6Engine:
+ 705              		@ args = 0, pretend = 0, frame = 0
+ 706              		@ frame_needed = 0, uses_anonymous_args = 0
+ 707 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 708 0004 0E46     		mov	r6, r1
+ 709 0006 1746     		mov	r7, r2
+ 710 0008 FFF7FEFF 		bl	atoi
+ 711 000c 441E     		subs	r4, r0, #1
+ 712 000e 0F2C     		cmp	r4, #15
+ 713 0010 0546     		mov	r5, r0
+ 714 0012 32D8     		bhi	.L99
+ 715 0014 3046     		mov	r0, r6
+ 716 0016 FFF7FEFF 		bl	unquote
+ 717 001a 8046     		mov	r8, r0
+ 718 001c FFF7FEFF 		bl	strlen
+ 719 0020 C728     		cmp	r0, #199
+ 720 0022 1CD8     		bhi	.L100
+ 721 0024 40F20006 		movw	r6, #:lower16:.LANCHOR0
+ 722 0028 C0F20006 		movt	r6, #:upper16:.LANCHOR0
+ 723 002c 40F20001 		movw	r1, #:lower16:.LC26
+ 724 0030 2A46     		mov	r2, r5
+ 725 0032 3068     		ldr	r0, [r6]
+ 726 0034 4346     		mov	r3, r8
+ 727 0036 C0F20001 		movt	r1, #:upper16:.LC26
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 14
+
+
+ 728 003a FFF7FEFF 		bl	scheduleMsg
+ 729 003e C823     		movs	r3, #200
+ 730 0040 386A     		ldr	r0, [r7, #32]
+ 731 0042 03FB04F4 		mul	r4, r3, r4
+ 732 0046 04F6A804 		addw	r4, r4, #2216
+ 733 004a 4146     		mov	r1, r8
+ 734 004c 2044     		add	r0, r0, r4
+ 735 004e FFF7FEFF 		bl	strcpy
+ 736 0052 FFF7FEFF 		bl	_Z22applyFsioConfigurationv
+ 737 0056 BDE8F041 		pop	{r4, r5, r6, r7, r8, lr}
+ 738 005a FFF7FEBF 		b	_ZL12showFsioInfov
+ 739              	.L100:
+ 740 005e 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 741 0062 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 742 0066 40F20001 		movw	r1, #:lower16:.LC25
+ 743 006a 0246     		mov	r2, r0
+ 744 006c C0F20001 		movt	r1, #:upper16:.LC25
+ 745 0070 1868     		ldr	r0, [r3]
+ 746 0072 BDE8F041 		pop	{r4, r5, r6, r7, r8, lr}
+ 747 0076 FFF7FEBF 		b	scheduleMsg
+ 748              	.L99:
+ 749 007a 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 750 007e C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 751 0082 40F20001 		movw	r1, #:lower16:.LC3
+ 752 0086 2246     		mov	r2, r4
+ 753 0088 1868     		ldr	r0, [r3]
+ 754 008a C0F20001 		movt	r1, #:upper16:.LC3
+ 755 008e BDE8F041 		pop	{r4, r5, r6, r7, r8, lr}
+ 756 0092 FFF7FEBF 		b	scheduleMsg
+ 757              		.size	_ZL17setFsioExpressionPKcS0_P6Engine, .-_ZL17setFsioExpressionPKcS0_P6Engine
+ 758 0096 00BFAFF3 		.section	.text._Z7runFsiov,"ax",%progbits
+ 758      0080AFF3 
+ 758      0080
+ 759              		.align	2
+ 760              		.p2align 4,,15
+ 761              		.global	_Z7runFsiov
+ 762              		.thumb
+ 763              		.thumb_func
+ 764              		.type	_Z7runFsiov, %function
+ 765              	_Z7runFsiov:
+ 766              		@ args = 0, pretend = 0, frame = 0
+ 767              		@ frame_needed = 0, uses_anonymous_args = 0
+ 768 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 769 0004 40F20009 		movw	r9, #:lower16:boardConfiguration
+ 770 0008 C0F20009 		movt	r9, #:upper16:boardConfiguration
+ 771 000c 5C4F     		ldr	r7, .L127
+ 772 000e D9F80030 		ldr	r3, [r9]
+ 773 0012 40F20005 		movw	r5, #:lower16:.LANCHOR11
+ 774 0016 40F20008 		movw	r8, #:lower16:engine
+ 775 001a 81B0     		sub	sp, sp, #4
+ 776 001c A7F1400A 		sub	r10, r7, #64
+ 777 0020 C0F20005 		movt	r5, #:upper16:.LANCHOR11
+ 778 0024 C0F20008 		movt	r8, #:upper16:engine
+ 779 0028 0024     		movs	r4, #0
+ 780 002a 14E0     		b	.L106
+ 781              	.L103:
+ 782 002c FDEEE77A 		ftosizs	s15, s15
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 15
+
+
+ 783 0030 17EE906A 		fmrs	r6, s15	@ int
+ 784 0034 FFF7FEFF 		bl	_ZN9OutputPin13getLogicValueEv
+ 785 0038 8642     		cmp	r6, r0
+ 786 003a 03D0     		beq	.L124
+ 787 003c 3146     		mov	r1, r6
+ 788 003e 2846     		mov	r0, r5
+ 789 0040 FFF7FEFF 		bl	_ZN9OutputPin8setValueEi
+ 790              	.L124:
+ 791 0044 D9F80030 		ldr	r3, [r9]
+ 792              	.L102:
+ 793 0048 0134     		adds	r4, r4, #1
+ 794 004a 102C     		cmp	r4, #16
+ 795 004c 07F17007 		add	r7, r7, #112
+ 796 0050 05F11005 		add	r5, r5, #16
+ 797 0054 2FD0     		beq	.L125
+ 798              	.L106:
+ 799 0056 03EB8402 		add	r2, r3, r4, lsl #2
+ 800 005a D8F80060 		ldr	r6, [r8]
+ 801 005e D2F8C411 		ldr	r1, [r2, #452]
+ 802 0062 40F20000 		movw	r0, #:lower16:.LANCHOR8
+ 803 0066 5029     		cmp	r1, #80
+ 804 0068 04F59A7E 		add	lr, r4, #308
+ 805 006c 3246     		mov	r2, r6
+ 806 006e C0F20000 		movt	r0, #:upper16:.LANCHOR8
+ 807 0072 E9D0     		beq	.L102
+ 808 0074 5AF82410 		ldr	r1, [r10, r4, lsl #2]
+ 809 0078 33F81EB0 		ldrh	fp, [r3, lr, lsl #1]
+ 810 007c FFF7FEFF 		bl	_ZN12LECalculator9getValue2EP9LEElementP6Engine
+ 811 0080 B36A     		ldr	r3, [r6, #40]
+ 812 0082 07EE900A 		fmsr	s15, r0
+ 813 0086 04F6C432 		addw	r2, r4, #3012
+ 814 008a 03EB8203 		add	r3, r3, r2, lsl #2
+ 815 008e 2846     		mov	r0, r5
+ 816 0090 C3ED007A 		fsts	s15, [r3]
+ 817 0094 BBF1000F 		cmp	fp, #0
+ 818 0098 C8D0     		beq	.L103
+ 819 009a 3846     		mov	r0, r7
+ 820 009c 17EE901A 		fmrs	r1, s15
+ 821 00a0 0134     		adds	r4, r4, #1
+ 822 00a2 FFF7FEFF 		bl	_ZN9SimplePwm21setSimplePwmDutyCycleEf
+ 823 00a6 102C     		cmp	r4, #16
+ 824 00a8 D9F80030 		ldr	r3, [r9]
+ 825 00ac 07F17007 		add	r7, r7, #112
+ 826 00b0 05F11005 		add	r5, r5, #16
+ 827 00b4 CFD1     		bne	.L106
+ 828              	.L125:
+ 829 00b6 9A69     		ldr	r2, [r3, #24]
+ 830 00b8 502A     		cmp	r2, #80
+ 831 00ba 08D0     		beq	.L107
+ 832 00bc 40F20002 		movw	r2, #:lower16:engineConfiguration
+ 833 00c0 C0F20002 		movt	r2, #:upper16:engineConfiguration
+ 834 00c4 1268     		ldr	r2, [r2]
+ 835 00c6 92F8E425 		ldrb	r2, [r2, #1508]	@ zero_extendqisi2
+ 836 00ca D209     		lsrs	r2, r2, #7
+ 837 00cc 46D1     		bne	.L126
+ 838              	.L107:
+ 839 00ce D3F83431 		ldr	r3, [r3, #308]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 16
+
+
+ 840 00d2 502B     		cmp	r3, #80
+ 841 00d4 06D0     		beq	.L108
+ 842 00d6 40F20000 		movw	r0, #:lower16:enginePins
+ 843 00da C0F20000 		movt	r0, #:upper16:enginePins
+ 844 00de 0121     		movs	r1, #1
+ 845 00e0 FFF7FEFF 		bl	_ZN9OutputPin8setValueEi
+ 846              	.L108:
+ 847 00e4 D8F80000 		ldr	r0, [r8]
+ 848 00e8 FFF7FEFF 		bl	_ZN13RpmCalculator9isRunningEv
+ 849 00ec 0146     		mov	r1, r0
+ 850 00ee 2548     		ldr	r0, .L127+4
+ 851 00f0 FFF7FEFF 		bl	_ZN9OutputPin8setValueEi
+ 852 00f4 D9F80020 		ldr	r2, [r9]
+ 853 00f8 D2F86012 		ldr	r1, [r2, #608]
+ 854 00fc 40F20003 		movw	r3, #:lower16:engine
+ 855 0100 40F20004 		movw	r4, #:lower16:boardConfiguration
+ 856 0104 5029     		cmp	r1, #80
+ 857 0106 C0F20003 		movt	r3, #:upper16:engine
+ 858 010a C0F20004 		movt	r4, #:upper16:boardConfiguration
+ 859 010e 0DD0     		beq	.L109
+ 860 0110 40F20002 		movw	r2, #:lower16:.LANCHOR3
+ 861 0114 C0F20002 		movt	r2, #:upper16:.LANCHOR3
+ 862 0118 40F20000 		movw	r0, #:lower16:.LC28
+ 863 011c 1268     		ldr	r2, [r2]
+ 864 011e 1B68     		ldr	r3, [r3]
+ 865 0120 1949     		ldr	r1, .L127+8
+ 866 0122 C0F20000 		movt	r0, #:upper16:.LC28
+ 867 0126 FFF7FEFF 		bl	_ZL11setPinStatePKcP9OutputPinP9LEElementP6Engine
+ 868 012a 2268     		ldr	r2, [r4]
+ 869              	.L109:
+ 870 012c D2F89030 		ldr	r3, [r2, #144]
+ 871 0130 502B     		cmp	r3, #80
+ 872 0132 10D0     		beq	.L101
+ 873 0134 40F20002 		movw	r2, #:lower16:.LANCHOR5
+ 874 0138 C0F20002 		movt	r2, #:upper16:.LANCHOR5
+ 875 013c 40F20000 		movw	r0, #:lower16:.LC8
+ 876 0140 D8F80030 		ldr	r3, [r8]
+ 877 0144 1268     		ldr	r2, [r2]
+ 878 0146 1149     		ldr	r1, .L127+12
+ 879 0148 C0F20000 		movt	r0, #:upper16:.LC8
+ 880 014c 01B0     		add	sp, sp, #4
+ 881              		@ sp needed
+ 882 014e BDE8F04F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 883 0152 FFF7FEBF 		b	_ZL11setPinStatePKcP9OutputPinP9LEElementP6Engine
+ 884              	.L101:
+ 885 0156 01B0     		add	sp, sp, #4
+ 886              		@ sp needed
+ 887 0158 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 888              	.L126:
+ 889 015c 40F20003 		movw	r3, #:lower16:.LANCHOR4
+ 890 0160 C0F20003 		movt	r3, #:upper16:.LANCHOR4
+ 891 0164 40F20000 		movw	r0, #:lower16:.LC27
+ 892 0168 1A68     		ldr	r2, [r3]
+ 893 016a 0949     		ldr	r1, .L127+16
+ 894 016c D8F80030 		ldr	r3, [r8]
+ 895 0170 C0F20000 		movt	r0, #:upper16:.LC27
+ 896 0174 FFF7FEFF 		bl	_ZL11setPinStatePKcP9OutputPinP9LEElementP6Engine
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 17
+
+
+ 897 0178 D9F80030 		ldr	r3, [r9]
+ 898 017c A7E7     		b	.L107
+ 899              	.L128:
+ 900 017e 00BF     		.align	2
+ 901              	.L127:
+ 902 0180 40000000 		.word	.LANCHOR7+64
+ 903 0184 40000000 		.word	enginePins+64
+ 904 0188 20000000 		.word	enginePins+32
+ 905 018c 10000000 		.word	enginePins+16
+ 906 0190 30000000 		.word	enginePins+48
+ 907              		.size	_Z7runFsiov, .-_Z7runFsiov
+ 908 0194 AFF30080 		.section	.text._Z12initFsioImplP7LoggingP6Engine,"ax",%progbits
+ 908      AFF30080 
+ 908      AFF30080 
+ 909              		.align	2
+ 910              		.p2align 4,,15
+ 911              		.global	_Z12initFsioImplP7LoggingP6Engine
+ 912              		.thumb
+ 913              		.thumb_func
+ 914              		.type	_Z12initFsioImplP7LoggingP6Engine, %function
+ 915              	_Z12initFsioImplP7LoggingP6Engine:
+ 916              		@ args = 0, pretend = 0, frame = 8
+ 917              		@ frame_needed = 0, uses_anonymous_args = 0
+ 918 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 919 0004 2DED028B 		fstmfdd	sp!, {d8}
+ 920 0008 40F20002 		movw	r2, #:lower16:.LANCHOR0
+ 921 000c C0F20002 		movt	r2, #:upper16:.LANCHOR0
+ 922 0010 87B0     		sub	sp, sp, #28
+ 923 0012 834B     		ldr	r3, .L149
+ 924 0014 1060     		str	r0, [r2]
+ 925 0016 0591     		str	r1, [sp, #20]
+ 926 0018 0022     		movs	r2, #0
+ 927 001a 03F14001 		add	r1, r3, #64
+ 928              	.L131:
+ 929 001e 43F8042F 		str	r2, [r3, #4]!
+ 930 0022 8B42     		cmp	r3, r1
+ 931 0024 FBD1     		bne	.L131
+ 932 0026 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 933 002a 40F20001 		movw	r1, #:lower16:.LC29
+ 934 002e C0F20001 		movt	r1, #:upper16:.LC29
+ 935 0032 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 936 0036 FFF7FEFF 		bl	_ZN13LEElementPool15parseExpressionEPKc
+ 937 003a 40F20003 		movw	r3, #:lower16:.LANCHOR4
+ 938 003e C0F20003 		movt	r3, #:upper16:.LANCHOR4
+ 939 0042 40F20001 		movw	r1, #:lower16:.LC30
+ 940 0046 1860     		str	r0, [r3]
+ 941 0048 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 942 004c C0F20001 		movt	r1, #:upper16:.LC30
+ 943 0050 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 944 0054 FFF7FEFF 		bl	_ZN13LEElementPool15parseExpressionEPKc
+ 945 0058 40F20003 		movw	r3, #:lower16:.LANCHOR3
+ 946 005c C0F20003 		movt	r3, #:upper16:.LANCHOR3
+ 947 0060 40F20001 		movw	r1, #:lower16:.LC31
+ 948 0064 1860     		str	r0, [r3]
+ 949 0066 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 950 006a C0F20001 		movt	r1, #:upper16:.LC31
+ 951 006e C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 18
+
+
+ 952 0072 FFF7FEFF 		bl	_ZN13LEElementPool15parseExpressionEPKc
+ 953 0076 40F20003 		movw	r3, #:lower16:.LANCHOR5
+ 954 007a C0F20003 		movt	r3, #:upper16:.LANCHOR5
+ 955 007e 40F20001 		movw	r1, #:lower16:.LC32
+ 956 0082 1860     		str	r0, [r3]
+ 957 0084 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 958 0088 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 959 008c C0F20001 		movt	r1, #:upper16:.LC32
+ 960 0090 FFF7FEFF 		bl	_ZN13LEElementPool15parseExpressionEPKc
+ 961 0094 40F20009 		movw	r9, #:lower16:boardConfiguration
+ 962 0098 40F20003 		movw	r3, #:lower16:.LANCHOR6
+ 963 009c C0F20009 		movt	r9, #:upper16:boardConfiguration
+ 964 00a0 C0F20003 		movt	r3, #:upper16:.LANCHOR6
+ 965 00a4 40F20006 		movw	r6, #:lower16:.LANCHOR11
+ 966 00a8 40F2000B 		movw	fp, #:lower16:_Z13applyPinStateP9PwmConfigi
+ 967 00ac 40F2000A 		movw	r10, #:lower16:.LANCHOR12
+ 968 00b0 D9F80050 		ldr	r5, [r9]
+ 969 00b4 DFF86C81 		ldr	r8, .L149+4
+ 970 00b8 1860     		str	r0, [r3]
+ 971 00ba C0F20006 		movt	r6, #:upper16:.LANCHOR11
+ 972 00be C0F2000B 		movt	fp, #:upper16:_Z13applyPinStateP9PwmConfigi
+ 973 00c2 C0F2000A 		movt	r10, #:upper16:.LANCHOR12
+ 974 00c6 0024     		movs	r4, #0
+ 975 00c8 B6EE008A 		fconsts	s16, #96
+ 976 00cc 0CE0     		b	.L135
+ 977              	.L147:
+ 978 00ce 5AF82400 		ldr	r0, [r10, r4, lsl #2]
+ 979 00d2 FFF7FEFF 		bl	_Z21outputPinRegisterExt2PKcP9OutputPin11brain_pin_eP17pin_output_mode_e
+ 980 00d6 D9F80050 		ldr	r5, [r9]
+ 981              	.L132:
+ 982 00da 0134     		adds	r4, r4, #1
+ 983 00dc 102C     		cmp	r4, #16
+ 984 00de 08F17008 		add	r8, r8, #112
+ 985 00e2 06F11006 		add	r6, r6, #16
+ 986 00e6 2ED0     		beq	.L146
+ 987              	.L135:
+ 988 00e8 05EB8403 		add	r3, r5, r4, lsl #2
+ 989 00ec 04F59A72 		add	r2, r4, #308
+ 990 00f0 D3F8C471 		ldr	r7, [r3, #452]
+ 991 00f4 502F     		cmp	r7, #80
+ 992 00f6 F0D0     		beq	.L132
+ 993 00f8 35F81200 		ldrh	r0, [r5, r2, lsl #1]
+ 994 00fc 40F20003 		movw	r3, #:lower16:.LANCHOR13
+ 995 0100 3146     		mov	r1, r6
+ 996 0102 3A46     		mov	r2, r7
+ 997 0104 C0F20003 		movt	r3, #:upper16:.LANCHOR13
+ 998 0108 0028     		cmp	r0, #0
+ 999 010a E0D0     		beq	.L147
+ 1000 010c 00B2     		sxth	r0, r0
+ 1001 010e 07EE100A 		fmsr	s14, r0	@ int
+ 1002 0112 F8EEC77A 		fsitos	s15, s14
+ 1003 0116 40F20001 		movw	r1, #:lower16:.LC33
+ 1004 011a 4046     		mov	r0, r8
+ 1005 011c 3346     		mov	r3, r6
+ 1006 011e 8DED018A 		fsts	s16, [sp, #4]
+ 1007 0122 CDF808B0 		str	fp, [sp, #8]
+ 1008 0126 3A46     		mov	r2, r7
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 19
+
+
+ 1009 0128 CDED007A 		fsts	s15, [sp]
+ 1010 012c C0F20001 		movt	r1, #:upper16:.LC33
+ 1011 0130 0134     		adds	r4, r4, #1
+ 1012 0132 FFF7FEFF 		bl	_Z17startSimplePwmExtP9PwmConfigPKc11brain_pin_eP9OutputPinffPFvS0_iE
+ 1013 0136 102C     		cmp	r4, #16
+ 1014 0138 D9F80050 		ldr	r5, [r9]
+ 1015 013c 08F17008 		add	r8, r8, #112
+ 1016 0140 06F11006 		add	r6, r6, #16
+ 1017 0144 D0D1     		bne	.L135
+ 1018              	.L146:
+ 1019 0146 40F20006 		movw	r6, #:lower16:engineConfiguration
+ 1020 014a C0F20006 		movt	r6, #:upper16:engineConfiguration
+ 1021 014e 0024     		movs	r4, #0
+ 1022 0150 01E0     		b	.L138
+ 1023              	.L148:
+ 1024 0152 D9F80050 		ldr	r5, [r9]
+ 1025              	.L138:
+ 1026 0156 05EB8405 		add	r5, r5, r4, lsl #2
+ 1027 015a D5F82453 		ldr	r5, [r5, #804]
+ 1028 015e 502D     		cmp	r5, #80
+ 1029 0160 0ED0     		beq	.L136
+ 1030 0162 3368     		ldr	r3, [r6]
+ 1031 0164 03EB8403 		add	r3, r3, r4, lsl #2
+ 1032 0168 D3F81406 		ldr	r0, [r3, #1556]
+ 1033 016c FFF7FEFF 		bl	_Z12getInputMode16pin_input_mode_e
+ 1034 0170 0246     		mov	r2, r0
+ 1035 0172 40F20000 		movw	r0, #:lower16:.LC34
+ 1036 0176 2946     		mov	r1, r5
+ 1037 0178 C0F20000 		movt	r0, #:upper16:.LC34
+ 1038 017c FFF7FEFF 		bl	_Z13mySetPadMode2PKc11brain_pin_em
+ 1039              	.L136:
+ 1040 0180 0134     		adds	r4, r4, #1
+ 1041 0182 102C     		cmp	r4, #16
+ 1042 0184 E5D1     		bne	.L148
+ 1043 0186 40F20000 		movw	r0, #:lower16:.LC35
+ 1044 018a 40F20001 		movw	r1, #:lower16:_ZL17setFsioExpressionPKcS0_P6Engine
+ 1045 018e 059A     		ldr	r2, [sp, #20]
+ 1046 0190 C0F20000 		movt	r0, #:upper16:.LC35
+ 1047 0194 C0F20001 		movt	r1, #:upper16:_ZL17setFsioExpressionPKcS0_P6Engine
+ 1048 0198 FFF7FEFF 		bl	addConsoleActionSSP
+ 1049 019c 40F20000 		movw	r0, #:lower16:.LC36
+ 1050 01a0 40F20001 		movw	r1, #:lower16:_ZL16setFsioOutputPinPKcS0_
+ 1051 01a4 C0F20000 		movt	r0, #:upper16:.LC36
+ 1052 01a8 C0F20001 		movt	r1, #:upper16:_ZL16setFsioOutputPinPKcS0_
+ 1053 01ac FFF7FEFF 		bl	addConsoleActionSS
+ 1054 01b0 40F20000 		movw	r0, #:lower16:.LC37
+ 1055 01b4 40F20001 		movw	r1, #:lower16:_ZL16setFsioFrequencyii
+ 1056 01b8 C0F20000 		movt	r0, #:upper16:.LC37
+ 1057 01bc C0F20001 		movt	r1, #:upper16:_ZL16setFsioFrequencyii
+ 1058 01c0 FFF7FEFF 		bl	addConsoleActionII
+ 1059 01c4 40F20000 		movw	r0, #:lower16:.LC38
+ 1060 01c8 40F20001 		movw	r1, #:lower16:_ZL14setFsioSettingff
+ 1061 01cc C0F20000 		movt	r0, #:upper16:.LC38
+ 1062 01d0 C0F20001 		movt	r1, #:upper16:_ZL14setFsioSettingff
+ 1063 01d4 FFF7FEFF 		bl	addConsoleActionFF
+ 1064 01d8 40F20000 		movw	r0, #:lower16:.LC39
+ 1065 01dc 40F20001 		movw	r1, #:lower16:_ZL15setFsioInputPinPKcS0_
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 20
+
+
+ 1066 01e0 C0F20000 		movt	r0, #:upper16:.LC39
+ 1067 01e4 C0F20001 		movt	r1, #:upper16:_ZL15setFsioInputPinPKcS0_
+ 1068 01e8 FFF7FEFF 		bl	addConsoleActionSS
+ 1069 01ec 40F20000 		movw	r0, #:lower16:.LC40
+ 1070 01f0 40F20001 		movw	r1, #:lower16:_ZL12showFsioInfov
+ 1071 01f4 C0F20000 		movt	r0, #:upper16:.LC40
+ 1072 01f8 C0F20001 		movt	r1, #:upper16:_ZL12showFsioInfov
+ 1073 01fc FFF7FEFF 		bl	addConsoleAction
+ 1074 0200 40F20000 		movw	r0, #:lower16:.LC41
+ 1075 0204 40F20001 		movw	r1, #:lower16:_ZL4evalPcP6Engine
+ 1076 0208 059A     		ldr	r2, [sp, #20]
+ 1077 020a C0F20000 		movt	r0, #:upper16:.LC41
+ 1078 020e C0F20001 		movt	r1, #:upper16:_ZL4evalPcP6Engine
+ 1079 0212 07B0     		add	sp, sp, #28
+ 1080              		@ sp needed
+ 1081 0214 BDEC028B 		fldmfdd	sp!, {d8}
+ 1082 0218 BDE8F04F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 1083 021c FFF7FEBF 		b	addConsoleActionSP
+ 1084              	.L150:
+ 1085              		.align	2
+ 1086              	.L149:
+ 1087 0220 FCFFFFFF 		.word	.LANCHOR7-4
+ 1088 0224 40000000 		.word	.LANCHOR7+64
+ 1089              		.size	_Z12initFsioImplP7LoggingP6Engine, .-_Z12initFsioImplP7LoggingP6Engine
+ 1090 0228 AFF30080 		.section	.text.startup._GLOBAL__sub_I_sysPool,"ax",%progbits
+ 1090      AFF30080 
+ 1091              		.align	2
+ 1092              		.p2align 4,,15
+ 1093              		.thumb
+ 1094              		.thumb_func
+ 1095              		.type	_GLOBAL__sub_I_sysPool, %function
+ 1096              	_GLOBAL__sub_I_sysPool:
+ 1097              		@ args = 0, pretend = 0, frame = 0
+ 1098              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1099 0000 40F20000 		movw	r0, #:lower16:.LANCHOR14
+ 1100 0004 40F20002 		movw	r2, #:lower16:.LC42
+ 1101 0008 38B5     		push	{r3, r4, r5, lr}
+ 1102 000a C0F20002 		movt	r2, #:upper16:.LC42
+ 1103 000e 6421     		movs	r1, #100
+ 1104 0010 C0F20000 		movt	r0, #:upper16:.LANCHOR14
+ 1105 0014 FFF7FEFF 		bl	_ZN17LENameOrdinalPairC1E11le_action_ePKc
+ 1106 0018 40F20000 		movw	r0, #:lower16:.LANCHOR15
+ 1107 001c 40F20002 		movw	r2, #:lower16:.LC43
+ 1108 0020 C0F20002 		movt	r2, #:upper16:.LC43
+ 1109 0024 6A21     		movs	r1, #106
+ 1110 0026 C0F20000 		movt	r0, #:upper16:.LANCHOR15
+ 1111 002a FFF7FEFF 		bl	_ZN17LENameOrdinalPairC1E11le_action_ePKc
+ 1112 002e 40F20000 		movw	r0, #:lower16:.LANCHOR16
+ 1113 0032 40F20002 		movw	r2, #:lower16:.LC44
+ 1114 0036 C0F20002 		movt	r2, #:upper16:.LC44
+ 1115 003a 6B21     		movs	r1, #107
+ 1116 003c C0F20000 		movt	r0, #:upper16:.LANCHOR16
+ 1117 0040 FFF7FEFF 		bl	_ZN17LENameOrdinalPairC1E11le_action_ePKc
+ 1118 0044 40F20000 		movw	r0, #:lower16:.LANCHOR17
+ 1119 0048 40F20002 		movw	r2, #:lower16:.LC45
+ 1120 004c C0F20002 		movt	r2, #:upper16:.LC45
+ 1121 0050 6D21     		movs	r1, #109
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 21
+
+
+ 1122 0052 C0F20000 		movt	r0, #:upper16:.LANCHOR17
+ 1123 0056 FFF7FEFF 		bl	_ZN17LENameOrdinalPairC1E11le_action_ePKc
+ 1124 005a 40F20000 		movw	r0, #:lower16:.LANCHOR18
+ 1125 005e 40F20002 		movw	r2, #:lower16:.LC8
+ 1126 0062 C0F20002 		movt	r2, #:upper16:.LC8
+ 1127 0066 6621     		movs	r1, #102
+ 1128 0068 C0F20000 		movt	r0, #:upper16:.LANCHOR18
+ 1129 006c FFF7FEFF 		bl	_ZN17LENameOrdinalPairC1E11le_action_ePKc
+ 1130 0070 40F20000 		movw	r0, #:lower16:.LANCHOR19
+ 1131 0074 40F20002 		movw	r2, #:lower16:.LC46
+ 1132 0078 C0F20002 		movt	r2, #:upper16:.LC46
+ 1133 007c 6521     		movs	r1, #101
+ 1134 007e C0F20000 		movt	r0, #:upper16:.LANCHOR19
+ 1135 0082 FFF7FEFF 		bl	_ZN17LENameOrdinalPairC1E11le_action_ePKc
+ 1136 0086 40F20000 		movw	r0, #:lower16:.LANCHOR20
+ 1137 008a 40F20002 		movw	r2, #:lower16:.LC30
+ 1138 008e C0F20002 		movt	r2, #:upper16:.LC30
+ 1139 0092 6E21     		movs	r1, #110
+ 1140 0094 C0F20000 		movt	r0, #:upper16:.LANCHOR20
+ 1141 0098 FFF7FEFF 		bl	_ZN17LENameOrdinalPairC1E11le_action_ePKc
+ 1142 009c 40F20000 		movw	r0, #:lower16:.LANCHOR21
+ 1143 00a0 40F20002 		movw	r2, #:lower16:.LC47
+ 1144 00a4 C0F20002 		movt	r2, #:upper16:.LC47
+ 1145 00a8 6821     		movs	r1, #104
+ 1146 00aa C0F20000 		movt	r0, #:upper16:.LANCHOR21
+ 1147 00ae FFF7FEFF 		bl	_ZN17LENameOrdinalPairC1E11le_action_ePKc
+ 1148 00b2 40F20000 		movw	r0, #:lower16:.LANCHOR22
+ 1149 00b6 40F20002 		movw	r2, #:lower16:.LC48
+ 1150 00ba C0F20002 		movt	r2, #:upper16:.LC48
+ 1151 00be 6921     		movs	r1, #105
+ 1152 00c0 C0F20000 		movt	r0, #:upper16:.LANCHOR22
+ 1153 00c4 FFF7FEFF 		bl	_ZN17LENameOrdinalPairC1E11le_action_ePKc
+ 1154 00c8 40F20000 		movw	r0, #:lower16:.LANCHOR23
+ 1155 00cc 40F20002 		movw	r2, #:lower16:.LC49
+ 1156 00d0 C0F20002 		movt	r2, #:upper16:.LC49
+ 1157 00d4 6721     		movs	r1, #103
+ 1158 00d6 C0F20000 		movt	r0, #:upper16:.LANCHOR23
+ 1159 00da FFF7FEFF 		bl	_ZN17LENameOrdinalPairC1E11le_action_ePKc
+ 1160 00de 40F20000 		movw	r0, #:lower16:.LANCHOR24
+ 1161 00e2 40F20002 		movw	r2, #:lower16:.LC50
+ 1162 00e6 C0F20002 		movt	r2, #:upper16:.LC50
+ 1163 00ea 6F21     		movs	r1, #111
+ 1164 00ec C0F20000 		movt	r0, #:upper16:.LANCHOR24
+ 1165 00f0 FFF7FEFF 		bl	_ZN17LENameOrdinalPairC1E11le_action_ePKc
+ 1166 00f4 40F20000 		movw	r0, #:lower16:.LANCHOR25
+ 1167 00f8 40F20002 		movw	r2, #:lower16:.LC51
+ 1168 00fc C0F20002 		movt	r2, #:upper16:.LC51
+ 1169 0100 7021     		movs	r1, #112
+ 1170 0102 C0F20000 		movt	r0, #:upper16:.LANCHOR25
+ 1171 0106 FFF7FEFF 		bl	_ZN17LENameOrdinalPairC1E11le_action_ePKc
+ 1172 010a 40F20000 		movw	r0, #:lower16:.LANCHOR10
+ 1173 010e C0F20000 		movt	r0, #:upper16:.LANCHOR10
+ 1174 0112 40F20004 		movw	r4, #:lower16:.LANCHOR26
+ 1175 0116 FFF7FEFF 		bl	_ZN12LECalculatorC1Ev
+ 1176 011a C0F20004 		movt	r4, #:upper16:.LANCHOR26
+ 1177 011e 04F50075 		add	r5, r4, #512
+ 1178              	.L153:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 22
+
+
+ 1179 0122 2046     		mov	r0, r4
+ 1180 0124 1034     		adds	r4, r4, #16
+ 1181 0126 FFF7FEFF 		bl	_ZN9LEElementC1Ev
+ 1182 012a AC42     		cmp	r4, r5
+ 1183 012c F9D1     		bne	.L153
+ 1184 012e 40F20000 		movw	r0, #:lower16:.LANCHOR9
+ 1185 0132 40F20001 		movw	r1, #:lower16:.LANCHOR26
+ 1186 0136 C0F20000 		movt	r0, #:upper16:.LANCHOR9
+ 1187 013a C0F20001 		movt	r1, #:upper16:.LANCHOR26
+ 1188 013e 2022     		movs	r2, #32
+ 1189 0140 40F20004 		movw	r4, #:lower16:.LANCHOR27
+ 1190 0144 FFF7FEFF 		bl	_ZN13LEElementPoolC1EP9LEElementi
+ 1191 0148 C0F20004 		movt	r4, #:upper16:.LANCHOR27
+ 1192 014c 04F50065 		add	r5, r4, #2048
+ 1193              	.L155:
+ 1194 0150 2046     		mov	r0, r4
+ 1195 0152 1034     		adds	r4, r4, #16
+ 1196 0154 FFF7FEFF 		bl	_ZN9LEElementC1Ev
+ 1197 0158 AC42     		cmp	r4, r5
+ 1198 015a F9D1     		bne	.L155
+ 1199 015c 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 1200 0160 40F20001 		movw	r1, #:lower16:.LANCHOR27
+ 1201 0164 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 1202 0168 C0F20001 		movt	r1, #:upper16:.LANCHOR27
+ 1203 016c 8022     		movs	r2, #128
+ 1204 016e 40F20004 		movw	r4, #:lower16:.LANCHOR28
+ 1205 0172 FFF7FEFF 		bl	_ZN13LEElementPoolC1EP9LEElementi
+ 1206 0176 C0F20004 		movt	r4, #:upper16:.LANCHOR28
+ 1207 017a 04F50065 		add	r5, r4, #2048
+ 1208              	.L157:
+ 1209 017e 2046     		mov	r0, r4
+ 1210 0180 1034     		adds	r4, r4, #16
+ 1211 0182 FFF7FEFF 		bl	_ZN9LEElementC1Ev
+ 1212 0186 AC42     		cmp	r4, r5
+ 1213 0188 F9D1     		bne	.L157
+ 1214 018a 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 1215 018e 40F20001 		movw	r1, #:lower16:.LANCHOR28
+ 1216 0192 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 1217 0196 C0F20001 		movt	r1, #:upper16:.LANCHOR28
+ 1218 019a 8022     		movs	r2, #128
+ 1219 019c 0E4C     		ldr	r4, .L162
+ 1220 019e FFF7FEFF 		bl	_ZN13LEElementPoolC1EP9LEElementi
+ 1221 01a2 04F5E065 		add	r5, r4, #1792
+ 1222              	.L159:
+ 1223 01a6 2046     		mov	r0, r4
+ 1224 01a8 7034     		adds	r4, r4, #112
+ 1225 01aa FFF7FEFF 		bl	_ZN9SimplePwmC1Ev
+ 1226 01ae AC42     		cmp	r4, r5
+ 1227 01b0 F9D1     		bne	.L159
+ 1228 01b2 40F20000 		movw	r0, #:lower16:.LANCHOR8
+ 1229 01b6 C0F20000 		movt	r0, #:upper16:.LANCHOR8
+ 1230 01ba 40F20004 		movw	r4, #:lower16:.LANCHOR11
+ 1231 01be FFF7FEFF 		bl	_ZN12LECalculatorC1Ev
+ 1232 01c2 C0F20004 		movt	r4, #:upper16:.LANCHOR11
+ 1233 01c6 04F58075 		add	r5, r4, #256
+ 1234              	.L161:
+ 1235 01ca 2046     		mov	r0, r4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 23
+
+
+ 1236 01cc 1034     		adds	r4, r4, #16
+ 1237 01ce FFF7FEFF 		bl	_ZN9OutputPinC1Ev
+ 1238 01d2 AC42     		cmp	r4, r5
+ 1239 01d4 F9D1     		bne	.L161
+ 1240 01d6 38BD     		pop	{r3, r4, r5, pc}
+ 1241              	.L163:
+ 1242              		.align	2
+ 1243              	.L162:
+ 1244 01d8 40000000 		.word	.LANCHOR7+64
+ 1245              		.size	_GLOBAL__sub_I_sysPool, .-_GLOBAL__sub_I_sysPool
+ 1246 01dc AFF30080 		.section	.init_array,"aw",%init_array
+ 1247              		.align	2
+ 1248 0000 00000000 		.word	_GLOBAL__sub_I_sysPool(target1)
+ 1249              		.global	userPool
+ 1250              		.global	sysPool
+ 1251              		.section	.bss._ZL8evalCalc,"aw",%nobits
+ 1252              		.align	2
+ 1253              		.set	.LANCHOR10,. + 0
+ 1254              		.type	_ZL8evalCalc, %object
+ 1255              		.size	_ZL8evalCalc, 136
+ 1256              	_ZL8evalCalc:
+ 1257 0000 00000000 		.space	136
+ 1257      00000000 
+ 1257      00000000 
+ 1257      00000000 
+ 1257      00000000 
+ 1258              		.section	.bss._ZL13leFsioSetting,"aw",%nobits
+ 1259              		.align	2
+ 1260              		.set	.LANCHOR24,. + 0
+ 1261              		.type	_ZL13leFsioSetting, %object
+ 1262              		.size	_ZL13leFsioSetting, 12
+ 1263              	_ZL13leFsioSetting:
+ 1264 0000 00000000 		.space	12
+ 1264      00000000 
+ 1264      00000000 
+ 1265              		.section	.bss._ZL15alternatorLogic,"aw",%nobits
+ 1266              		.align	2
+ 1267              		.set	.LANCHOR6,. + 0
+ 1268              		.type	_ZL15alternatorLogic, %object
+ 1269              		.size	_ZL15alternatorLogic, 4
+ 1270              	_ZL15alternatorLogic:
+ 1271 0000 00000000 		.space	4
+ 1272              		.section	.bss._ZL11fsioOutputs,"aw",%nobits
+ 1273              		.align	2
+ 1274              		.set	.LANCHOR11,. + 0
+ 1275              		.type	_ZL11fsioOutputs, %object
+ 1276              		.size	_ZL11fsioOutputs, 256
+ 1277              	_ZL11fsioOutputs:
+ 1278 0000 00000000 		.space	256
+ 1278      00000000 
+ 1278      00000000 
+ 1278      00000000 
+ 1278      00000000 
+ 1279              		.section	.bss._ZL15leFanOffSetting,"aw",%nobits
+ 1280              		.align	2
+ 1281              		.set	.LANCHOR22,. + 0
+ 1282              		.type	_ZL15leFanOffSetting, %object
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 24
+
+
+ 1283              		.size	_ZL15leFanOffSetting, 12
+ 1284              	_ZL15leFanOffSetting:
+ 1285 0000 00000000 		.space	12
+ 1285      00000000 
+ 1285      00000000 
+ 1286              		.section	.bss._ZL12acRelayLogic,"aw",%nobits
+ 1287              		.align	2
+ 1288              		.set	.LANCHOR3,. + 0
+ 1289              		.type	_ZL12acRelayLogic, %object
+ 1290              		.size	_ZL12acRelayLogic, 4
+ 1291              	_ZL12acRelayLogic:
+ 1292 0000 00000000 		.space	4
+ 1293              		.section	.bss._ZL7leKnock,"aw",%nobits
+ 1294              		.align	2
+ 1295              		.set	.LANCHOR25,. + 0
+ 1296              		.type	_ZL7leKnock, %object
+ 1297              		.size	_ZL7leKnock, 12
+ 1298              	_ZL7leKnock:
+ 1299 0000 00000000 		.space	12
+ 1299      00000000 
+ 1299      00000000 
+ 1300              		.section	.bss._ZL16evalPoolElements,"aw",%nobits
+ 1301              		.align	2
+ 1302              		.set	.LANCHOR26,. + 0
+ 1303              		.type	_ZL16evalPoolElements, %object
+ 1304              		.size	_ZL16evalPoolElements, 512
+ 1305              	_ZL16evalPoolElements:
+ 1306 0000 00000000 		.space	512
+ 1306      00000000 
+ 1306      00000000 
+ 1306      00000000 
+ 1306      00000000 
+ 1307              		.section	.bss._ZL15leTimeSinceBoot,"aw",%nobits
+ 1308              		.align	2
+ 1309              		.set	.LANCHOR23,. + 0
+ 1310              		.type	_ZL15leTimeSinceBoot, %object
+ 1311              		.size	_ZL15leTimeSinceBoot, 12
+ 1312              	_ZL15leTimeSinceBoot:
+ 1313 0000 00000000 		.space	12
+ 1313      00000000 
+ 1313      00000000 
+ 1314              		.section	.bss._ZL12userElements,"aw",%nobits
+ 1315              		.align	2
+ 1316              		.set	.LANCHOR28,. + 0
+ 1317              		.type	_ZL12userElements, %object
+ 1318              		.size	_ZL12userElements, 2048
+ 1319              	_ZL12userElements:
+ 1320 0000 00000000 		.space	2048
+ 1320      00000000 
+ 1320      00000000 
+ 1320      00000000 
+ 1320      00000000 
+ 1321              		.section	.bss._ZL9leCoolant,"aw",%nobits
+ 1322              		.align	2
+ 1323              		.set	.LANCHOR19,. + 0
+ 1324              		.type	_ZL9leCoolant, %object
+ 1325              		.size	_ZL9leCoolant, 12
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 25
+
+
+ 1326              	_ZL9leCoolant:
+ 1327 0000 00000000 		.space	12
+ 1327      00000000 
+ 1327      00000000 
+ 1328              		.section	.bss._ZL16radiatorFanLogic,"aw",%nobits
+ 1329              		.align	2
+ 1330              		.set	.LANCHOR5,. + 0
+ 1331              		.type	_ZL16radiatorFanLogic, %object
+ 1332              		.size	_ZL16radiatorFanLogic, 4
+ 1333              	_ZL16radiatorFanLogic:
+ 1334 0000 00000000 		.space	4
+ 1335              		.section	.bss._ZL5leRpm,"aw",%nobits
+ 1336              		.align	2
+ 1337              		.set	.LANCHOR14,. + 0
+ 1338              		.type	_ZL5leRpm, %object
+ 1339              		.size	_ZL5leRpm, 12
+ 1340              	_ZL5leRpm:
+ 1341 0000 00000000 		.space	12
+ 1341      00000000 
+ 1341      00000000 
+ 1342              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 1343              		.align	2
+ 1344              	.LC0:
+ 1345 0000 25733A00 		.ascii	"%s:\000"
+ 1346              	.LC1:
+ 1347 0004 3C656E64 		.ascii	"<end>\000"
+ 1347      3E00
+ 1348 000a 0000     		.space	2
+ 1349              	.LC2:
+ 1350 000c 61637469 		.ascii	"action %d: fValue=%f iValue=%d\000"
+ 1350      6F6E2025 
+ 1350      643A2066 
+ 1350      56616C75 
+ 1350      653D2566 
+ 1351 002b 00       		.space	1
+ 1352              	.LC3:
+ 1353 002c 696E7661 		.ascii	"invalid index %d\000"
+ 1353      6C696420 
+ 1353      696E6465 
+ 1353      78202564 
+ 1353      00
+ 1354 003d 000000   		.space	3
+ 1355              	.LC4:
+ 1356 0040 53657474 		.ascii	"Setting FSIO frequency %d on #%d\000"
+ 1356      696E6720 
+ 1356      4653494F 
+ 1356      20667265 
+ 1356      7175656E 
+ 1357 0061 000000   		.space	3
+ 1358              	.LC5:
+ 1359 0064 73797320 		.ascii	"sys used %d/user used %d\000"
+ 1359      75736564 
+ 1359      2025642F 
+ 1359      75736572 
+ 1359      20757365 
+ 1360 007d 000000   		.space	3
+ 1361              	.LC6:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 26
+
+
+ 1362 0080 612F6300 		.ascii	"a/c\000"
+ 1363              	.LC7:
+ 1364 0084 6675656C 		.ascii	"fuel\000"
+ 1364      00
+ 1365 0089 000000   		.space	3
+ 1366              	.LC8:
+ 1367 008c 66616E00 		.ascii	"fan\000"
+ 1368              	.LC9:
+ 1369 0090 616C7400 		.ascii	"alt\000"
+ 1370              	.LC10:
+ 1371 0094 4653494F 		.ascii	"FSIO #%d [%s] at %s@%dHz value=%f\000"
+ 1371      20232564 
+ 1371      205B2573 
+ 1371      5D206174 
+ 1371      20257340 
+ 1372 00b6 0000     		.space	2
+ 1373              	.LC11:
+ 1374 00b8 75736572 		.ascii	"user property #%d: %f\000"
+ 1374      2070726F 
+ 1374      70657274 
+ 1374      79202325 
+ 1374      643A2025 
+ 1375 00ce 0000     		.space	2
+ 1376              	.LC12:
+ 1377 00d0 4653494F 		.ascii	"FSIO digital input #%d: %s\000"
+ 1377      20646967 
+ 1377      6974616C 
+ 1377      20696E70 
+ 1377      75742023 
+ 1378 00eb 00       		.space	1
+ 1379              	.LC13:
+ 1380 00ec 6F6E00   		.ascii	"on\000"
+ 1381 00ef 00       		.space	1
+ 1382              	.LC14:
+ 1383 00f0 6F666600 		.ascii	"off\000"
+ 1384              	.LC15:
+ 1385 00f4 696E7661 		.ascii	"invalid expression for %s\000"
+ 1385      6C696420 
+ 1385      65787072 
+ 1385      65737369 
+ 1385      6F6E2066 
+ 1386 010e 0000     		.space	2
+ 1387              	.LC16:
+ 1388 0110 73657450 		.ascii	"setPin %s %s\000"
+ 1388      696E2025 
+ 1388      73202573 
+ 1388      00
+ 1389 011d 000000   		.space	3
+ 1390              	.LC17:
+ 1391 0120 50617273 		.ascii	"Parsing [%s]\000"
+ 1391      696E6720 
+ 1391      5B25735D 
+ 1391      00
+ 1392 012d 000000   		.space	3
+ 1393              	.LC18:
+ 1394 0130 70617273 		.ascii	"parsing failed\000"
+ 1394      696E6720 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 27
+
+
+ 1394      6661696C 
+ 1394      656400
+ 1395 013f 00       		.space	1
+ 1396              	.LC19:
+ 1397 0140 4576616C 		.ascii	"Eval result: %f\000"
+ 1397      20726573 
+ 1397      756C743A 
+ 1397      20256600 
+ 1398              	.LC20:
+ 1399 0150 696E7661 		.ascii	"invalid pin name [%s]\000"
+ 1399      6C696420 
+ 1399      70696E20 
+ 1399      6E616D65 
+ 1399      205B2573 
+ 1400 0166 0000     		.space	2
+ 1401              	.LC21:
+ 1402 0168 4653494F 		.ascii	"FSIO input pin #%d [%s]\000"
+ 1402      20696E70 
+ 1402      75742070 
+ 1402      696E2023 
+ 1402      2564205B 
+ 1403              	.LC22:
+ 1404 0180 4653494F 		.ascii	"FSIO output pin #%d [%s]\000"
+ 1404      206F7574 
+ 1404      70757420 
+ 1404      70696E20 
+ 1404      23256420 
+ 1405 0199 000000   		.space	3
+ 1406              	.LC23:
+ 1407 019c 4653494F 		.ascii	"FSIO unexpected %d\000"
+ 1407      20756E65 
+ 1407      78706563 
+ 1407      74656420 
+ 1407      256400
+ 1408 01af 00       		.space	1
+ 1409              	.LC24:
+ 1410 01b0 70617273 		.ascii	"parsing [%s]\000"
+ 1410      696E6720 
+ 1410      5B25735D 
+ 1410      00
+ 1411 01bd 000000   		.space	3
+ 1412              	.LC25:
+ 1413 01c0 546F6F20 		.ascii	"Too long %d\000"
+ 1413      6C6F6E67 
+ 1413      20256400 
+ 1414              	.LC26:
+ 1415 01cc 73657474 		.ascii	"setting user out #%d to [%s]\000"
+ 1415      696E6720 
+ 1415      75736572 
+ 1415      206F7574 
+ 1415      20232564 
+ 1416 01e9 000000   		.space	3
+ 1417              	.LC27:
+ 1418 01ec 70756D70 		.ascii	"pump\000"
+ 1418      00
+ 1419 01f1 000000   		.space	3
+ 1420              	.LC28:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 28
+
+
+ 1421 01f4 412F4300 		.ascii	"A/C\000"
+ 1422              	.LC29:
+ 1423 01f8 74696D65 		.ascii	"time_since_boot 4 < rpm 0 > OR\000"
+ 1423      5F73696E 
+ 1423      63655F62 
+ 1423      6F6F7420 
+ 1423      34203C20 
+ 1424 0217 00       		.space	1
+ 1425              	.LC30:
+ 1426 0218 61635F6F 		.ascii	"ac_on_switch\000"
+ 1426      6E5F7377 
+ 1426      69746368 
+ 1426      00
+ 1427 0225 000000   		.space	3
+ 1428              	.LC31:
+ 1429 0228 66616E20 		.ascii	"fan coolant fan_off_setting > & coolant fan_on_sett"
+ 1429      636F6F6C 
+ 1429      616E7420 
+ 1429      66616E5F 
+ 1429      6F66665F 
+ 1430 025b 696E6720 		.ascii	"ing > OR\000"
+ 1430      3E204F52 
+ 1430      00
+ 1431              	.LC32:
+ 1432 0264 76626174 		.ascii	"vbatt 14.5 <\000"
+ 1432      74203134 
+ 1432      2E35203C 
+ 1432      00
+ 1433 0271 000000   		.space	3
+ 1434              	.LC33:
+ 1435 0274 4653494F 		.ascii	"FSIO\000"
+ 1435      00
+ 1436 0279 000000   		.space	3
+ 1437              	.LC34:
+ 1438 027c 4653494F 		.ascii	"FSIO input\000"
+ 1438      20696E70 
+ 1438      757400
+ 1439 0287 00       		.space	1
+ 1440              	.LC35:
+ 1441 0288 7365745F 		.ascii	"set_fsio_expression\000"
+ 1441      6673696F 
+ 1441      5F657870 
+ 1441      72657373 
+ 1441      696F6E00 
+ 1442              	.LC36:
+ 1443 029c 7365745F 		.ascii	"set_fsio_output_pin\000"
+ 1443      6673696F 
+ 1443      5F6F7574 
+ 1443      7075745F 
+ 1443      70696E00 
+ 1444              	.LC37:
+ 1445 02b0 7365745F 		.ascii	"set_fsio_output_frequency\000"
+ 1445      6673696F 
+ 1445      5F6F7574 
+ 1445      7075745F 
+ 1445      66726571 
+ 1446 02ca 0000     		.space	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 29
+
+
+ 1447              	.LC38:
+ 1448 02cc 7365745F 		.ascii	"set_fsio_setting\000"
+ 1448      6673696F 
+ 1448      5F736574 
+ 1448      74696E67 
+ 1448      00
+ 1449 02dd 000000   		.space	3
+ 1450              	.LC39:
+ 1451 02e0 7365745F 		.ascii	"set_fsio_input_pin\000"
+ 1451      6673696F 
+ 1451      5F696E70 
+ 1451      75745F70 
+ 1451      696E00
+ 1452 02f3 00       		.space	1
+ 1453              	.LC40:
+ 1454 02f4 6673696F 		.ascii	"fsioinfo\000"
+ 1454      696E666F 
+ 1454      00
+ 1455 02fd 000000   		.space	3
+ 1456              	.LC41:
+ 1457 0300 6576616C 		.ascii	"eval\000"
+ 1457      00
+ 1458 0305 000000   		.space	3
+ 1459              	.LC42:
+ 1460 0308 72706D00 		.ascii	"rpm\000"
+ 1461              	.LC43:
+ 1462 030c 74707300 		.ascii	"tps\000"
+ 1463              	.LC44:
+ 1464 0310 6D616600 		.ascii	"maf\000"
+ 1465              	.LC45:
+ 1466 0314 76626174 		.ascii	"vbatt\000"
+ 1466      7400
+ 1467 031a 0000     		.space	2
+ 1468              	.LC46:
+ 1469 031c 636F6F6C 		.ascii	"coolant\000"
+ 1469      616E7400 
+ 1470              	.LC47:
+ 1471 0324 66616E5F 		.ascii	"fan_on_setting\000"
+ 1471      6F6E5F73 
+ 1471      65747469 
+ 1471      6E6700
+ 1472 0333 00       		.space	1
+ 1473              	.LC48:
+ 1474 0334 66616E5F 		.ascii	"fan_off_setting\000"
+ 1474      6F66665F 
+ 1474      73657474 
+ 1474      696E6700 
+ 1475              	.LC49:
+ 1476 0344 74696D65 		.ascii	"time_since_boot\000"
+ 1476      5F73696E 
+ 1476      63655F62 
+ 1476      6F6F7400 
+ 1477              	.LC50:
+ 1478 0354 6673696F 		.ascii	"fsio_setting\000"
+ 1478      5F736574 
+ 1478      74696E67 
+ 1478      00
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 30
+
+
+ 1479 0361 000000   		.space	3
+ 1480              	.LC51:
+ 1481 0364 6B6E6F63 		.ascii	"knock\000"
+ 1481      6B00
+ 1482 036a 0000     		.space	2
+ 1483              	.LC52:
+ 1484 036c 4750494F 		.ascii	"GPIO_0\000"
+ 1484      5F3000
+ 1485 0373 00       		.space	1
+ 1486              	.LC53:
+ 1487 0374 4750494F 		.ascii	"GPIO_1\000"
+ 1487      5F3100
+ 1488 037b 00       		.space	1
+ 1489              	.LC54:
+ 1490 037c 4750494F 		.ascii	"GPIO_2\000"
+ 1490      5F3200
+ 1491 0383 00       		.space	1
+ 1492              	.LC55:
+ 1493 0384 4750494F 		.ascii	"GPIO_3\000"
+ 1493      5F3300
+ 1494 038b 00       		.space	1
+ 1495              	.LC56:
+ 1496 038c 4750494F 		.ascii	"GPIO_4\000"
+ 1496      5F3400
+ 1497 0393 00       		.space	1
+ 1498              	.LC57:
+ 1499 0394 4750494F 		.ascii	"GPIO_5\000"
+ 1499      5F3500
+ 1500 039b 00       		.space	1
+ 1501              	.LC58:
+ 1502 039c 4750494F 		.ascii	"GPIO_6\000"
+ 1502      5F3600
+ 1503 03a3 00       		.space	1
+ 1504              	.LC59:
+ 1505 03a4 4750494F 		.ascii	"GPIO_7\000"
+ 1505      5F3700
+ 1506 03ab 00       		.space	1
+ 1507              	.LC60:
+ 1508 03ac 4750494F 		.ascii	"GPIO_8\000"
+ 1508      5F3800
+ 1509 03b3 00       		.space	1
+ 1510              	.LC61:
+ 1511 03b4 4750494F 		.ascii	"GPIO_9\000"
+ 1511      5F3900
+ 1512 03bb 00       		.space	1
+ 1513              	.LC62:
+ 1514 03bc 4750494F 		.ascii	"GPIO_10\000"
+ 1514      5F313000 
+ 1515              	.LC63:
+ 1516 03c4 4750494F 		.ascii	"GPIO_11\000"
+ 1516      5F313100 
+ 1517              	.LC64:
+ 1518 03cc 4750494F 		.ascii	"GPIO_12\000"
+ 1518      5F313200 
+ 1519              	.LC65:
+ 1520 03d4 4750494F 		.ascii	"GPIO_13\000"
+ 1520      5F313300 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 31
+
+
+ 1521              	.LC66:
+ 1522 03dc 4750494F 		.ascii	"GPIO_14\000"
+ 1522      5F313400 
+ 1523              	.LC67:
+ 1524 03e4 4750494F 		.ascii	"GPIO_15\000"
+ 1524      5F313500 
+ 1525              		.section	.bss.sysPool,"aw",%nobits
+ 1526              		.align	2
+ 1527              		.set	.LANCHOR1,. + 0
+ 1528              		.type	sysPool, %object
+ 1529              		.size	sysPool, 12
+ 1530              	sysPool:
+ 1531 0000 00000000 		.space	12
+ 1531      00000000 
+ 1531      00000000 
+ 1532              		.section	.bss._ZL5leFan,"aw",%nobits
+ 1533              		.align	2
+ 1534              		.set	.LANCHOR18,. + 0
+ 1535              		.type	_ZL5leFan, %object
+ 1536              		.size	_ZL5leFan, 12
+ 1537              	_ZL5leFan:
+ 1538 0000 00000000 		.space	12
+ 1538      00000000 
+ 1538      00000000 
+ 1539              		.section	.bss._ZL14leFanOnSetting,"aw",%nobits
+ 1540              		.align	2
+ 1541              		.set	.LANCHOR21,. + 0
+ 1542              		.type	_ZL14leFanOnSetting, %object
+ 1543              		.size	_ZL14leFanOnSetting, 12
+ 1544              	_ZL14leFanOnSetting:
+ 1545 0000 00000000 		.space	12
+ 1545      00000000 
+ 1545      00000000 
+ 1546              		.section	.bss._ZL4calc,"aw",%nobits
+ 1547              		.align	2
+ 1548              		.set	.LANCHOR8,. + 0
+ 1549              		.type	_ZL4calc, %object
+ 1550              		.size	_ZL4calc, 136
+ 1551              	_ZL4calc:
+ 1552 0000 00000000 		.space	136
+ 1552      00000000 
+ 1552      00000000 
+ 1552      00000000 
+ 1552      00000000 
+ 1553              		.section	.bss._ZL11sysElements,"aw",%nobits
+ 1554              		.align	2
+ 1555              		.set	.LANCHOR27,. + 0
+ 1556              		.type	_ZL11sysElements, %object
+ 1557              		.size	_ZL11sysElements, 2048
+ 1558              	_ZL11sysElements:
+ 1559 0000 00000000 		.space	2048
+ 1559      00000000 
+ 1559      00000000 
+ 1559      00000000 
+ 1559      00000000 
+ 1560              		.section	.bss._ZL7leVBatt,"aw",%nobits
+ 1561              		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 32
+
+
+ 1562              		.set	.LANCHOR17,. + 0
+ 1563              		.type	_ZL7leVBatt, %object
+ 1564              		.size	_ZL7leVBatt, 12
+ 1565              	_ZL7leVBatt:
+ 1566 0000 00000000 		.space	12
+ 1566      00000000 
+ 1566      00000000 
+ 1567              		.section	.bss.userPool,"aw",%nobits
+ 1568              		.align	2
+ 1569              		.set	.LANCHOR2,. + 0
+ 1570              		.type	userPool, %object
+ 1571              		.size	userPool, 12
+ 1572              	userPool:
+ 1573 0000 00000000 		.space	12
+ 1573      00000000 
+ 1573      00000000 
+ 1574              		.section	.bss._ZL5leTps,"aw",%nobits
+ 1575              		.align	2
+ 1576              		.set	.LANCHOR15,. + 0
+ 1577              		.type	_ZL5leTps, %object
+ 1578              		.size	_ZL5leTps, 12
+ 1579              	_ZL5leTps:
+ 1580 0000 00000000 		.space	12
+ 1580      00000000 
+ 1580      00000000 
+ 1581              		.section	.bss._ZL8evalPool,"aw",%nobits
+ 1582              		.align	2
+ 1583              		.set	.LANCHOR9,. + 0
+ 1584              		.type	_ZL8evalPool, %object
+ 1585              		.size	_ZL8evalPool, 12
+ 1586              	_ZL8evalPool:
+ 1587 0000 00000000 		.space	12
+ 1587      00000000 
+ 1587      00000000 
+ 1588              		.section	.bss._ZL10leAcToggle,"aw",%nobits
+ 1589              		.align	2
+ 1590              		.set	.LANCHOR20,. + 0
+ 1591              		.type	_ZL10leAcToggle, %object
+ 1592              		.size	_ZL10leAcToggle, 12
+ 1593              	_ZL10leAcToggle:
+ 1594 0000 00000000 		.space	12
+ 1594      00000000 
+ 1594      00000000 
+ 1595              		.section	.bss._ZL13fuelPumpLogic,"aw",%nobits
+ 1596              		.align	2
+ 1597              		.set	.LANCHOR4,. + 0
+ 1598              		.type	_ZL13fuelPumpLogic, %object
+ 1599              		.size	_ZL13fuelPumpLogic, 4
+ 1600              	_ZL13fuelPumpLogic:
+ 1601 0000 00000000 		.space	4
+ 1602              		.section	.bss._ZL4defa,"aw",%nobits
+ 1603              		.align	2
+ 1604              		.set	.LANCHOR13,. + 0
+ 1605              		.type	_ZL4defa, %object
+ 1606              		.size	_ZL4defa, 4
+ 1607              	_ZL4defa:
+ 1608 0000 00000000 		.space	4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 33
+
+
+ 1609              		.section	.bss._ZL6logger,"aw",%nobits
+ 1610              		.align	2
+ 1611              		.set	.LANCHOR0,. + 0
+ 1612              		.type	_ZL6logger, %object
+ 1613              		.size	_ZL6logger, 4
+ 1614              	_ZL6logger:
+ 1615 0000 00000000 		.space	4
+ 1616              		.section	.bss._ZL5leMaf,"aw",%nobits
+ 1617              		.align	2
+ 1618              		.set	.LANCHOR16,. + 0
+ 1619              		.type	_ZL5leMaf, %object
+ 1620              		.size	_ZL5leMaf, 12
+ 1621              	_ZL5leMaf:
+ 1622 0000 00000000 		.space	12
+ 1622      00000000 
+ 1622      00000000 
+ 1623              		.section	.rodata.CSWTCH.56,"a",%progbits
+ 1624              		.align	2
+ 1625              		.set	.LANCHOR12,. + 0
+ 1626              		.type	CSWTCH.56, %object
+ 1627              		.size	CSWTCH.56, 64
+ 1628              	CSWTCH.56:
+ 1629 0000 6C030000 		.word	.LC52
+ 1630 0004 74030000 		.word	.LC53
+ 1631 0008 7C030000 		.word	.LC54
+ 1632 000c 84030000 		.word	.LC55
+ 1633 0010 8C030000 		.word	.LC56
+ 1634 0014 94030000 		.word	.LC57
+ 1635 0018 9C030000 		.word	.LC58
+ 1636 001c A4030000 		.word	.LC59
+ 1637 0020 AC030000 		.word	.LC60
+ 1638 0024 B4030000 		.word	.LC61
+ 1639 0028 BC030000 		.word	.LC62
+ 1640 002c C4030000 		.word	.LC63
+ 1641 0030 CC030000 		.word	.LC64
+ 1642 0034 D4030000 		.word	.LC65
+ 1643 0038 DC030000 		.word	.LC66
+ 1644 003c E4030000 		.word	.LC67
+ 1645              		.section	.ccm,"aw",%progbits
+ 1646              		.align	3
+ 1647              		.set	.LANCHOR7,. + 0
+ 1648              		.type	fsioLogics, %object
+ 1649              		.size	fsioLogics, 64
+ 1650              	fsioLogics:
+ 1651 0000 00000000 		.space	64
+ 1651      00000000 
+ 1651      00000000 
+ 1651      00000000 
+ 1651      00000000 
+ 1652              		.type	_ZL7fsioPwm, %object
+ 1653              		.size	_ZL7fsioPwm, 1792
+ 1654              	_ZL7fsioPwm:
+ 1655 0040 00000000 		.space	1792
+ 1655      00000000 
+ 1655      00000000 
+ 1655      00000000 
+ 1655      00000000 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 34
+
+
+ 1656              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 35
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 fsio_impl.cpp
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:18     .text._ZL8showFsioPKcP9LEElement:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:23     .text._ZL8showFsioPKcP9LEElement:00000000 _ZL8showFsioPKcP9LEElement
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1611   .bss._ZL6logger:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1344   .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1349   .rodata.str1.4:0000000c .LC2
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1346   .rodata.str1.4:00000004 .LC1
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:65     .text._ZL16setFsioFrequencyii:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:70     .text._ZL16setFsioFrequencyii:00000000 _ZL16setFsioFrequencyii
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1355   .rodata.str1.4:00000040 .LC4
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1352   .rodata.str1.4:0000002c .LC3
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:103    .text._ZL12showFsioInfov:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:108    .text._ZL12showFsioInfov:00000000 _ZL12showFsioInfov
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1527   .bss.sysPool:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1569   .bss.userPool:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1358   .rodata.str1.4:00000064 .LC5
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1288   .bss._ZL12acRelayLogic:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1361   .rodata.str1.4:00000080 .LC6
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1597   .bss._ZL13fuelPumpLogic:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1363   .rodata.str1.4:00000084 .LC7
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1330   .bss._ZL16radiatorFanLogic:00000000 .LANCHOR5
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1366   .rodata.str1.4:0000008c .LC8
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1267   .bss._ZL15alternatorLogic:00000000 .LANCHOR6
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1368   .rodata.str1.4:00000090 .LC9
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1647   .ccm:00000000 .LANCHOR7
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1370   .rodata.str1.4:00000094 .LC10
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1373   .rodata.str1.4:000000b8 .LC11
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1376   .rodata.str1.4:000000d0 .LC12
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:259    .text._ZL14setFsioSettingff:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:264    .text._ZL14setFsioSettingff:00000000 _ZL14setFsioSettingff
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:289    .text._ZL11setPinStatePKcP9OutputPinP9LEElementP6Engine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:294    .text._ZL11setPinStatePKcP9OutputPinP9LEElementP6Engine:00000000 _ZL11setPinStatePKcP9OutputPinP9LEElementP6Engine
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1548   .bss._ZL4calc:00000000 .LANCHOR8
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1382   .rodata.str1.4:000000f0 .LC14
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1379   .rodata.str1.4:000000ec .LC13
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1387   .rodata.str1.4:00000110 .LC16
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1384   .rodata.str1.4:000000f4 .LC15
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:354    .text._ZL4evalPcP6Engine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:359    .text._ZL4evalPcP6Engine:00000000 _ZL4evalPcP6Engine
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1390   .rodata.str1.4:00000120 .LC17
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1583   .bss._ZL8evalPool:00000000 .LANCHOR9
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1253   .bss._ZL8evalCalc:00000000 .LANCHOR10
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1396   .rodata.str1.4:00000140 .LC19
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1393   .rodata.str1.4:00000130 .LC18
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:403    .text._ZL15setFsioInputPinPKcS0_:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:408    .text._ZL15setFsioInputPinPKcS0_:00000000 _ZL15setFsioInputPinPKcS0_
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1401   .rodata.str1.4:00000168 .LC21
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1398   .rodata.str1.4:00000150 .LC20
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:457    .text._ZL16setFsioOutputPinPKcS0_:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:462    .text._ZL16setFsioOutputPinPKcS0_:00000000 _ZL16setFsioOutputPinPKcS0_
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1403   .rodata.str1.4:00000180 .LC22
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:511    .text._Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:517    .text._Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e:00000000 _Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:527    .text._Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e:00000010 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1406   .rodata.str1.4:0000019c .LC23
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:587    .text._Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e:00000094 $d
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 36
+
+
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:591    .text._Z10setFsioExti11brain_pin_ePKci:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:597    .text._Z10setFsioExti11brain_pin_ePKci:00000000 _Z10setFsioExti11brain_pin_ePKci
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:630    .text._Z7setFsioi11brain_pin_ePKc:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:636    .text._Z7setFsioi11brain_pin_ePKc:00000000 _Z7setFsioi11brain_pin_ePKc
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:644    .text._Z22applyFsioConfigurationv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:650    .text._Z22applyFsioConfigurationv:00000000 _Z22applyFsioConfigurationv
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1409   .rodata.str1.4:000001b0 .LC24
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:699    .text._ZL17setFsioExpressionPKcS0_P6Engine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:704    .text._ZL17setFsioExpressionPKcS0_P6Engine:00000000 _ZL17setFsioExpressionPKcS0_P6Engine
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1414   .rodata.str1.4:000001cc .LC26
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1412   .rodata.str1.4:000001c0 .LC25
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:759    .text._Z7runFsiov:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:765    .text._Z7runFsiov:00000000 _Z7runFsiov
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1274   .bss._ZL11fsioOutputs:00000000 .LANCHOR11
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1420   .rodata.str1.4:000001f4 .LC28
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1417   .rodata.str1.4:000001ec .LC27
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:902    .text._Z7runFsiov:00000180 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:909    .text._Z12initFsioImplP7LoggingP6Engine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:915    .text._Z12initFsioImplP7LoggingP6Engine:00000000 _Z12initFsioImplP7LoggingP6Engine
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1422   .rodata.str1.4:000001f8 .LC29
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1425   .rodata.str1.4:00000218 .LC30
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1428   .rodata.str1.4:00000228 .LC31
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1431   .rodata.str1.4:00000264 .LC32
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1625   .rodata.CSWTCH.56:00000000 .LANCHOR12
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1604   .bss._ZL4defa:00000000 .LANCHOR13
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1434   .rodata.str1.4:00000274 .LC33
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1437   .rodata.str1.4:0000027c .LC34
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1440   .rodata.str1.4:00000288 .LC35
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1442   .rodata.str1.4:0000029c .LC36
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1444   .rodata.str1.4:000002b0 .LC37
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1447   .rodata.str1.4:000002cc .LC38
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1450   .rodata.str1.4:000002e0 .LC39
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1453   .rodata.str1.4:000002f4 .LC40
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1456   .rodata.str1.4:00000300 .LC41
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1087   .text._Z12initFsioImplP7LoggingP6Engine:00000220 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1091   .text.startup._GLOBAL__sub_I_sysPool:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1096   .text.startup._GLOBAL__sub_I_sysPool:00000000 _GLOBAL__sub_I_sysPool
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1337   .bss._ZL5leRpm:00000000 .LANCHOR14
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1459   .rodata.str1.4:00000308 .LC42
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1576   .bss._ZL5leTps:00000000 .LANCHOR15
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1461   .rodata.str1.4:0000030c .LC43
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1618   .bss._ZL5leMaf:00000000 .LANCHOR16
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1463   .rodata.str1.4:00000310 .LC44
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1562   .bss._ZL7leVBatt:00000000 .LANCHOR17
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1465   .rodata.str1.4:00000314 .LC45
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1534   .bss._ZL5leFan:00000000 .LANCHOR18
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1323   .bss._ZL9leCoolant:00000000 .LANCHOR19
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1468   .rodata.str1.4:0000031c .LC46
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1590   .bss._ZL10leAcToggle:00000000 .LANCHOR20
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1541   .bss._ZL14leFanOnSetting:00000000 .LANCHOR21
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1470   .rodata.str1.4:00000324 .LC47
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1281   .bss._ZL15leFanOffSetting:00000000 .LANCHOR22
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1473   .rodata.str1.4:00000334 .LC48
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1309   .bss._ZL15leTimeSinceBoot:00000000 .LANCHOR23
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1475   .rodata.str1.4:00000344 .LC49
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1260   .bss._ZL13leFsioSetting:00000000 .LANCHOR24
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1477   .rodata.str1.4:00000354 .LC50
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 37
+
+
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1295   .bss._ZL7leKnock:00000000 .LANCHOR25
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1480   .rodata.str1.4:00000364 .LC51
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1302   .bss._ZL16evalPoolElements:00000000 .LANCHOR26
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1555   .bss._ZL11sysElements:00000000 .LANCHOR27
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1316   .bss._ZL12userElements:00000000 .LANCHOR28
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1244   .text.startup._GLOBAL__sub_I_sysPool:000001d8 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1247   .init_array:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1572   .bss.userPool:00000000 userPool
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1530   .bss.sysPool:00000000 sysPool
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1252   .bss._ZL8evalCalc:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1256   .bss._ZL8evalCalc:00000000 _ZL8evalCalc
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1259   .bss._ZL13leFsioSetting:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1263   .bss._ZL13leFsioSetting:00000000 _ZL13leFsioSetting
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1266   .bss._ZL15alternatorLogic:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1270   .bss._ZL15alternatorLogic:00000000 _ZL15alternatorLogic
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1273   .bss._ZL11fsioOutputs:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1277   .bss._ZL11fsioOutputs:00000000 _ZL11fsioOutputs
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1280   .bss._ZL15leFanOffSetting:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1284   .bss._ZL15leFanOffSetting:00000000 _ZL15leFanOffSetting
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1287   .bss._ZL12acRelayLogic:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1291   .bss._ZL12acRelayLogic:00000000 _ZL12acRelayLogic
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1294   .bss._ZL7leKnock:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1298   .bss._ZL7leKnock:00000000 _ZL7leKnock
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1301   .bss._ZL16evalPoolElements:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1305   .bss._ZL16evalPoolElements:00000000 _ZL16evalPoolElements
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1308   .bss._ZL15leTimeSinceBoot:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1312   .bss._ZL15leTimeSinceBoot:00000000 _ZL15leTimeSinceBoot
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1315   .bss._ZL12userElements:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1319   .bss._ZL12userElements:00000000 _ZL12userElements
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1322   .bss._ZL9leCoolant:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1326   .bss._ZL9leCoolant:00000000 _ZL9leCoolant
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1329   .bss._ZL16radiatorFanLogic:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1333   .bss._ZL16radiatorFanLogic:00000000 _ZL16radiatorFanLogic
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1336   .bss._ZL5leRpm:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1340   .bss._ZL5leRpm:00000000 _ZL5leRpm
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1343   .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1526   .bss.sysPool:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1533   .bss._ZL5leFan:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1537   .bss._ZL5leFan:00000000 _ZL5leFan
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1540   .bss._ZL14leFanOnSetting:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1544   .bss._ZL14leFanOnSetting:00000000 _ZL14leFanOnSetting
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1547   .bss._ZL4calc:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1551   .bss._ZL4calc:00000000 _ZL4calc
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1554   .bss._ZL11sysElements:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1558   .bss._ZL11sysElements:00000000 _ZL11sysElements
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1561   .bss._ZL7leVBatt:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1565   .bss._ZL7leVBatt:00000000 _ZL7leVBatt
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1568   .bss.userPool:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1575   .bss._ZL5leTps:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1579   .bss._ZL5leTps:00000000 _ZL5leTps
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1582   .bss._ZL8evalPool:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1586   .bss._ZL8evalPool:00000000 _ZL8evalPool
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1589   .bss._ZL10leAcToggle:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1593   .bss._ZL10leAcToggle:00000000 _ZL10leAcToggle
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1596   .bss._ZL13fuelPumpLogic:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1600   .bss._ZL13fuelPumpLogic:00000000 _ZL13fuelPumpLogic
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1603   .bss._ZL4defa:00000000 $d
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 38
+
+
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1607   .bss._ZL4defa:00000000 _ZL4defa
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1610   .bss._ZL6logger:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1614   .bss._ZL6logger:00000000 _ZL6logger
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1617   .bss._ZL5leMaf:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1621   .bss._ZL5leMaf:00000000 _ZL5leMaf
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1624   .rodata.CSWTCH.56:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1628   .rodata.CSWTCH.56:00000000 CSWTCH.56
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1646   .ccm:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1650   .ccm:00000000 fsioLogics
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1654   .ccm:00000040 _ZL7fsioPwm
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:590    .text._Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e:0000009c $t
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:908    .text._Z7runFsiov:00000194 $t
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1090   .text._Z12initFsioImplP7LoggingP6Engine:00000228 $t
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:1246   .text.startup._GLOBAL__sub_I_sysPool:000001dc $t
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:538    .text._Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e:0000001b $d
+C:\Users\pc\AppData\Local\Temp\cck4bFpX.s:538    .text._Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e:0000001c $t
+
+UNDEFINED SYMBOLS
+__aeabi_f2d
+scheduleMsg
+boardConfiguration
+_ZN13LEElementPool7getSizeEv
+config
+engineConfiguration2
+_Z10hwPortname11brain_pin_e
+__fpclassifyf
+engineConfiguration
+_ZN12LECalculator9getValue2EP9LEElementP6Engine
+_ZN9OutputPin13isInitializedEv
+_ZN9OutputPin13getLogicValueEv
+_Z18isRunningBenchTestv
+_ZN9OutputPin8setValueEi
+warning
+unquote
+_ZN13LEElementPool5resetEv
+_ZN13LEElementPool15parseExpressionEPKc
+atoi
+_Z13parseBrainPinPKc
+_Z11getAcTogglev
+_ZN13RpmCalculator3rpmEv
+_Z21getCoolantTemperaturev
+getTimeNowSeconds
+_Z23getIntakeAirTemperaturev
+_Z8getVBattv
+enginePins
+strlen
+memcpy
+strcpy
+engine
+_ZN9SimplePwm21setSimplePwmDutyCycleEf
+_ZN13RpmCalculator9isRunningEv
+_Z13applyPinStateP9PwmConfigi
+_Z21outputPinRegisterExt2PKcP9OutputPin11brain_pin_eP17pin_output_mode_e
+_Z17startSimplePwmExtP9PwmConfigPKc11brain_pin_eP9OutputPinffPFvS0_iE
+_Z12getInputMode16pin_input_mode_e
+_Z13mySetPadMode2PKc11brain_pin_em
+addConsoleActionSSP
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cck4bFpX.s 			page 39
+
+
+addConsoleActionSS
+addConsoleActionII
+addConsoleActionFF
+addConsoleAction
+addConsoleActionSP
+_ZN17LENameOrdinalPairC1E11le_action_ePKc
+_ZN12LECalculatorC1Ev
+_ZN9LEElementC1Ev
+_ZN13LEElementPoolC1EP9LEElementi
+_ZN9SimplePwmC1Ev
+_ZN9OutputPinC1Ev

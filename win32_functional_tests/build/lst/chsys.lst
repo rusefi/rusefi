@@ -1,0 +1,228 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc1dJi8s.s 			page 1
+
+
+   1              		.file	"chsys.c"
+   2              		.section .rdata,"dr"
+   3              	LC0:
+   4 0000 69646C65 		.ascii "idle\0"
+   4      00
+   5 0005 000000   		.section	.text$_idle_thread,"x"
+   6              		.p2align 4,,15
+   7              		.globl	__idle_thread
+   8              		.def	__idle_thread;	.scl	2;	.type	32;	.endef
+   9              	__idle_thread:
+  10              	LFB7:
+  11              		.cfi_startproc
+  12 0000 83EC0C   		subl	$12, %esp
+  13              		.cfi_def_cfa_offset 16
+  14 0003 A1180000 		movl	_rlist+24, %eax
+  14      00
+  15 0008 C7401800 		movl	$LC0, 24(%eax)
+  15      000000
+  16 000f 90       		.p2align 4,,7
+  17              	L2:
+  18 0010 E8000000 		call	_ChkIntSources
+  18      00
+  19 0015 EBF9     		jmp	L2
+  20              		.cfi_endproc
+  21              	LFE7:
+  22 0017 90909090 		.section	.text$chSysInit,"x"
+  22      90909090 
+  22      90
+  23              		.p2align 4,,15
+  24              		.globl	_chSysInit
+  25              		.def	_chSysInit;	.scl	2;	.type	32;	.endef
+  26              	_chSysInit:
+  27              	LFB8:
+  28              		.cfi_startproc
+  29 0000 83EC2C   		subl	$44, %esp
+  30              		.cfi_def_cfa_offset 48
+  31 0003 E8000000 		call	__scheduler_init
+  31      00
+  32 0008 E8000000 		call	__vt_init
+  32      00
+  33 000d E8000000 		call	__core_init
+  33      00
+  34              		.p2align 4,,5
+  35 0012 E8000000 		call	__heap_init
+  35      00
+  36 0017 C7442404 		movl	$64, 4(%esp)
+  36      40000000 
+  37 001f C7042400 		movl	$_mainthread.2030, (%esp)
+  37      000000
+  38 0026 E8000000 		call	__thread_init
+  38      00
+  39 002b C6401C01 		movb	$1, 28(%eax)
+  40 002f A3180000 		movl	%eax, _rlist+24
+  40      00
+  41 0034 E8000000 		call	_dbg_check_enable
+  41      00
+  42 0039 A1180000 		movl	_rlist+24, %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc1dJi8s.s 			page 2
+
+
+  42      00
+  43 003e C7401800 		movl	$_ch_debug, 24(%eax)
+  43      000000
+  44 0045 C7442410 		movl	$0, 16(%esp)
+  44      00000000 
+  45 004d C744240C 		movl	$__idle_thread, 12(%esp)
+  45      00000000 
+  46 0055 C7442408 		movl	$1, 8(%esp)
+  46      01000000 
+  47 005d C7442404 		movl	$16752, 4(%esp)
+  47      70410000 
+  48 0065 C7042400 		movl	$__idle_thread_wa, (%esp)
+  48      000000
+  49 006c E8000000 		call	_chThdCreateStatic
+  49      00
+  50 0071 83C42C   		addl	$44, %esp
+  51              		.cfi_def_cfa_offset 4
+  52 0074 C3       		ret
+  53              		.cfi_endproc
+  54              	LFE8:
+  55 0075 90909090 		.section	.text$chSysTimerHandlerI,"x"
+  55      90909090 
+  55      909090
+  56              		.p2align 4,,15
+  57              		.globl	_chSysTimerHandlerI
+  58              		.def	_chSysTimerHandlerI;	.scl	2;	.type	32;	.endef
+  59              	_chSysTimerHandlerI:
+  60              	LFB9:
+  61              		.cfi_startproc
+  62 0000 56       		pushl	%esi
+  63              		.cfi_def_cfa_offset 8
+  64              		.cfi_offset 6, -8
+  65 0001 53       		pushl	%ebx
+  66              		.cfi_def_cfa_offset 12
+  67              		.cfi_offset 3, -12
+  68 0002 83EC14   		subl	$20, %esp
+  69              		.cfi_def_cfa_offset 32
+  70 0005 E8000000 		call	_chDbgCheckClassI
+  70      00
+  71 000a A1180000 		movl	_rlist+24, %eax
+  71      00
+  72 000f 0FB6501F 		movzbl	31(%eax), %edx
+  73 0013 84D2     		testb	%dl, %dl
+  74 0015 7406     		je	L8
+  75 0017 83EA01   		subl	$1, %edx
+  76 001a 88501F   		movb	%dl, 31(%eax)
+  77              	L8:
+  78 001d 8B5020   		movl	32(%eax), %edx
+  79 0020 8B1D0000 		movl	_vtlist, %ebx
+  79      0000
+  80 0026 83C201   		addl	$1, %edx
+  81 0029 895020   		movl	%edx, 32(%eax)
+  82 002c A10C0000 		movl	_vtlist+12, %eax
+  82      00
+  83 0031 83C001   		addl	$1, %eax
+  84 0034 81FB0000 		cmpl	$_vtlist, %ebx
+  84      0000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc1dJi8s.s 			page 3
+
+
+  85 003a A30C0000 		movl	%eax, _vtlist+12
+  85      00
+  86 003f 743D     		je	L7
+  87 0041 836B0801 		subl	$1, 8(%ebx)
+  88 0045 7537     		jne	L7
+  89              		.p2align 4,,7
+  90              	L14:
+  91 0047 8B03     		movl	(%ebx), %eax
+  92 0049 8B730C   		movl	12(%ebx), %esi
+  93 004c C7430C00 		movl	$0, 12(%ebx)
+  93      000000
+  94 0053 C7400400 		movl	$_vtlist, 4(%eax)
+  94      000000
+  95 005a A3000000 		movl	%eax, _vtlist
+  95      00
+  96 005f E8000000 		call	_dbg_check_unlock_from_isr
+  96      00
+  97 0064 8B4310   		movl	16(%ebx), %eax
+  98 0067 890424   		movl	%eax, (%esp)
+  99 006a FFD6     		call	*%esi
+ 100 006c E8000000 		call	_dbg_check_lock_from_isr
+ 100      00
+ 101 0071 8B1D0000 		movl	_vtlist, %ebx
+ 101      0000
+ 102 0077 8B4308   		movl	8(%ebx), %eax
+ 103 007a 85C0     		testl	%eax, %eax
+ 104 007c 74C9     		je	L14
+ 105              	L7:
+ 106 007e 83C414   		addl	$20, %esp
+ 107              		.cfi_def_cfa_offset 12
+ 108 0081 5B       		popl	%ebx
+ 109              		.cfi_restore 3
+ 110              		.cfi_def_cfa_offset 8
+ 111 0082 5E       		popl	%esi
+ 112              		.cfi_restore 6
+ 113              		.cfi_def_cfa_offset 4
+ 114 0083 C3       		ret
+ 115              		.cfi_endproc
+ 116              	LFE9:
+ 117              		.globl	__idle_thread_wa
+ 118 0084 90909090 		.section	.data$_idle_thread_wa,"w"
+ 118      90909090 
+ 118      90909090 
+ 119              		.align 32
+ 120              	__idle_thread_wa:
+ 121 0000 00000000 		.space 16752
+ 121      00000000 
+ 121      00000000 
+ 121      00000000 
+ 121      00000000 
+ 122 4170 00000000 		.section	.data$mainthread.2030,"w"
+ 122      00000000 
+ 122      00000000 
+ 122      00000000 
+ 123              		.align 32
+ 124              	_mainthread.2030:
+ 125 0000 00000000 		.space 72
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc1dJi8s.s 			page 4
+
+
+ 125      00000000 
+ 125      00000000 
+ 125      00000000 
+ 125      00000000 
+ 126              		.def	_ChkIntSources;	.scl	2;	.type	32;	.endef
+ 127              		.def	__scheduler_init;	.scl	2;	.type	32;	.endef
+ 128              		.def	__vt_init;	.scl	2;	.type	32;	.endef
+ 129              		.def	__core_init;	.scl	2;	.type	32;	.endef
+ 130              		.def	__heap_init;	.scl	2;	.type	32;	.endef
+ 131              		.def	__thread_init;	.scl	2;	.type	32;	.endef
+ 132              		.def	_dbg_check_enable;	.scl	2;	.type	32;	.endef
+ 133              		.def	_chThdCreateStatic;	.scl	2;	.type	32;	.endef
+ 134              		.def	_chDbgCheckClassI;	.scl	2;	.type	32;	.endef
+ 135              		.def	_dbg_check_unlock_from_isr;	.scl	2;	.type	32;	.endef
+ 136 0048 00000000 		.def	_dbg_check_lock_from_isr;	.scl	2;	.type	32;	.endef
+ 136      00000000 
+ 136      00000000 
+ 136      00000000 
+ 136      00000000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc1dJi8s.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 chsys.c
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc1dJi8s.s:9      .text$_idle_thread:00000000 __idle_thread
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc1dJi8s.s:26     .text$chSysInit:00000000 _chSysInit
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc1dJi8s.s:124    .data$mainthread.2030:00000000 _mainthread.2030
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc1dJi8s.s:120    .data$_idle_thread_wa:00000000 __idle_thread_wa
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc1dJi8s.s:59     .text$chSysTimerHandlerI:00000000 _chSysTimerHandlerI
+
+UNDEFINED SYMBOLS
+_rlist
+_ch_debug
+_vtlist
+_ChkIntSources
+__scheduler_init
+__vt_init
+__core_init
+__heap_init
+__thread_init
+_dbg_check_enable
+_chThdCreateStatic
+_chDbgCheckClassI
+_dbg_check_unlock_from_isr
+_dbg_check_lock_from_isr

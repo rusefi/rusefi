@@ -1,0 +1,911 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"interpolation.cpp"
+  16              		.section	.text._ZN17FastInterpolationC2Ev,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_ZN17FastInterpolationC2Ev
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_ZN17FastInterpolationC2Ev, %function
+  23              	_ZN17FastInterpolationC2Ev:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 0021     		movs	r1, #0
+  28 0002 4FF07E52 		mov	r2, #1065353216
+  29 0006 4160     		str	r1, [r0, #4]	@ float
+  30 0008 0260     		str	r2, [r0]	@ float
+  31 000a 7047     		bx	lr
+  32              		.size	_ZN17FastInterpolationC2Ev, .-_ZN17FastInterpolationC2Ev
+  33              		.global	_ZN17FastInterpolationC1Ev
+  34              		.thumb_set _ZN17FastInterpolationC1Ev,_ZN17FastInterpolationC2Ev
+  35              		.global	__aeabi_f2d
+  36 000c AFF30080 		.section	.text._ZN17FastInterpolationC2Effff,"ax",%progbits
+  37              		.align	2
+  38              		.p2align 4,,15
+  39              		.global	_ZN17FastInterpolationC2Effff
+  40              		.thumb
+  41              		.thumb_func
+  42              		.type	_ZN17FastInterpolationC2Effff, %function
+  43              	_ZN17FastInterpolationC2Effff:
+  44              		@ args = 4, pretend = 0, frame = 0
+  45              		@ frame_needed = 0, uses_anonymous_args = 0
+  46 0000 70B5     		push	{r4, r5, r6, lr}
+  47 0002 07EE901A 		fmsr	s15, r1
+  48 0006 2DED028B 		fstmfdd	sp!, {d8}
+  49 000a 08EE103A 		fmsr	s16, r3
+  50 000e F4EE487A 		fcmps	s15, s16
+  51 0012 F1EE10FA 		fmstat
+  52 0016 82B0     		sub	sp, sp, #8
+  53 0018 0646     		mov	r6, r0
+  54 001a 07EE102A 		fmsr	s14, r2
+  55 001e 12D0     		beq	.L6
+  56 0020 9DED086A 		flds	s12, [sp, #32]
+  57 0024 37EEC88A 		fsubs	s16, s15, s16
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s 			page 2
+
+
+  58 0028 77EE466A 		fsubs	s13, s14, s12
+  59 002c C6EE886A 		fdivs	s13, s13, s16
+  60 0030 A7EEE67A 		vfms.f32	s14, s15, s13
+  61 0034 C0ED006A 		fsts	s13, [r0]
+  62 0038 80ED017A 		fsts	s14, [r0, #4]
+  63 003c 3046     		mov	r0, r6
+  64 003e 02B0     		add	sp, sp, #8
+  65              		@ sp needed
+  66 0040 BDEC028B 		fldmfdd	sp!, {d8}
+  67 0044 70BD     		pop	{r4, r5, r6, pc}
+  68              	.L6:
+  69 0046 0846     		mov	r0, r1	@ float
+  70 0048 FFF7FEFF 		bl	__aeabi_f2d
+  71 004c 0446     		mov	r4, r0
+  72 004e 18EE100A 		fmrs	r0, s16
+  73 0052 0D46     		mov	r5, r1
+  74 0054 FFF7FEFF 		bl	__aeabi_f2d
+  75 0058 CDE90001 		strd	r0, [sp]
+  76 005c 40F20000 		movw	r0, #:lower16:.LC0
+  77 0060 2246     		mov	r2, r4
+  78 0062 2B46     		mov	r3, r5
+  79 0064 C0F20000 		movt	r0, #:upper16:.LC0
+  80 0068 FFF7FEFF 		bl	firmwareError
+  81 006c 3046     		mov	r0, r6
+  82 006e 02B0     		add	sp, sp, #8
+  83              		@ sp needed
+  84 0070 BDEC028B 		fldmfdd	sp!, {d8}
+  85 0074 70BD     		pop	{r4, r5, r6, pc}
+  86              		.size	_ZN17FastInterpolationC2Effff, .-_ZN17FastInterpolationC2Effff
+  87              		.global	_ZN17FastInterpolationC1Effff
+  88              		.thumb_set _ZN17FastInterpolationC1Effff,_ZN17FastInterpolationC2Effff
+  89 0076 00BFAFF3 		.section	.text._ZN17FastInterpolation4initEffff,"ax",%progbits
+  89      0080AFF3 
+  89      0080
+  90              		.align	2
+  91              		.p2align 4,,15
+  92              		.global	_ZN17FastInterpolation4initEffff
+  93              		.thumb
+  94              		.thumb_func
+  95              		.type	_ZN17FastInterpolation4initEffff, %function
+  96              	_ZN17FastInterpolation4initEffff:
+  97              		@ args = 4, pretend = 0, frame = 0
+  98              		@ frame_needed = 0, uses_anonymous_args = 0
+  99 0000 30B5     		push	{r4, r5, lr}
+ 100 0002 07EE901A 		fmsr	s15, r1
+ 101 0006 2DED028B 		fstmfdd	sp!, {d8}
+ 102 000a 08EE103A 		fmsr	s16, r3
+ 103 000e F4EE487A 		fcmps	s15, s16
+ 104 0012 F1EE10FA 		fmstat
+ 105 0016 83B0     		sub	sp, sp, #12
+ 106 0018 07EE102A 		fmsr	s14, r2
+ 107 001c 11D0     		beq	.L10
+ 108 001e 9DED086A 		flds	s12, [sp, #32]
+ 109 0022 37EEC88A 		fsubs	s16, s15, s16
+ 110 0026 77EE466A 		fsubs	s13, s14, s12
+ 111 002a C6EE886A 		fdivs	s13, s13, s16
+ 112 002e A7EEE67A 		vfms.f32	s14, s15, s13
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s 			page 3
+
+
+ 113 0032 C0ED006A 		fsts	s13, [r0]
+ 114 0036 80ED017A 		fsts	s14, [r0, #4]
+ 115 003a 03B0     		add	sp, sp, #12
+ 116              		@ sp needed
+ 117 003c BDEC028B 		fldmfdd	sp!, {d8}
+ 118 0040 30BD     		pop	{r4, r5, pc}
+ 119              	.L10:
+ 120 0042 0846     		mov	r0, r1	@ float
+ 121 0044 FFF7FEFF 		bl	__aeabi_f2d
+ 122 0048 0446     		mov	r4, r0
+ 123 004a 18EE100A 		fmrs	r0, s16
+ 124 004e 0D46     		mov	r5, r1
+ 125 0050 FFF7FEFF 		bl	__aeabi_f2d
+ 126 0054 CDE90001 		strd	r0, [sp]
+ 127 0058 40F20000 		movw	r0, #:lower16:.LC0
+ 128 005c 2246     		mov	r2, r4
+ 129 005e 2B46     		mov	r3, r5
+ 130 0060 C0F20000 		movt	r0, #:upper16:.LC0
+ 131 0064 FFF7FEFF 		bl	firmwareError
+ 132 0068 03B0     		add	sp, sp, #12
+ 133              		@ sp needed
+ 134 006a BDEC028B 		fldmfdd	sp!, {d8}
+ 135 006e 30BD     		pop	{r4, r5, pc}
+ 136              		.size	_ZN17FastInterpolation4initEffff, .-_ZN17FastInterpolation4initEffff
+ 137              		.section	.text._ZN17FastInterpolation8getValueEf,"ax",%progbits
+ 138              		.align	2
+ 139              		.p2align 4,,15
+ 140              		.global	_ZN17FastInterpolation8getValueEf
+ 141              		.thumb
+ 142              		.thumb_func
+ 143              		.type	_ZN17FastInterpolation8getValueEf, %function
+ 144              	_ZN17FastInterpolation8getValueEf:
+ 145              		@ args = 0, pretend = 0, frame = 0
+ 146              		@ frame_needed = 0, uses_anonymous_args = 0
+ 147              		@ link register save eliminated.
+ 148 0000 90ED007A 		flds	s14, [r0]
+ 149 0004 D0ED017A 		flds	s15, [r0, #4]
+ 150 0008 06EE901A 		fmsr	s13, r1
+ 151 000c E7EE267A 		vfma.f32	s15, s14, s13
+ 152 0010 17EE900A 		fmrs	r0, s15
+ 153 0014 7047     		bx	lr
+ 154              		.size	_ZN17FastInterpolation8getValueEf, .-_ZN17FastInterpolation8getValueEf
+ 155 0016 00BFAFF3 		.section	.text._Z11interpolatefffff,"ax",%progbits
+ 155      0080AFF3 
+ 155      0080
+ 156              		.align	2
+ 157              		.p2align 4,,15
+ 158              		.global	_Z11interpolatefffff
+ 159              		.thumb
+ 160              		.thumb_func
+ 161              		.type	_Z11interpolatefffff, %function
+ 162              	_Z11interpolatefffff:
+ 163              		@ args = 4, pretend = 0, frame = 0
+ 164              		@ frame_needed = 0, uses_anonymous_args = 0
+ 165 0000 30B5     		push	{r4, r5, lr}
+ 166 0002 07EE900A 		fmsr	s15, r0
+ 167 0006 2DED028B 		fstmfdd	sp!, {d8}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s 			page 4
+
+
+ 168 000a 08EE102A 		fmsr	s16, r2
+ 169 000e F4EE487A 		fcmps	s15, s16
+ 170 0012 F1EE10FA 		fmstat
+ 171 0016 83B0     		sub	sp, sp, #12
+ 172 0018 07EE101A 		fmsr	s14, r1
+ 173 001c 06EE903A 		fmsr	s13, r3
+ 174 0020 13D0     		beq	.L15
+ 175 0022 37EEC88A 		fsubs	s16, s15, s16
+ 176 0026 77EE666A 		fsubs	s13, s14, s13
+ 177 002a C6EE886A 		fdivs	s13, s13, s16
+ 178 002e A6EEE77A 		vfms.f32	s14, s13, s15
+ 179 0032 F0EE477A 		fcpys	s15, s14
+ 180 0036 9DED087A 		flds	s14, [sp, #32]
+ 181 003a E6EE877A 		vfma.f32	s15, s13, s14
+ 182 003e 17EE900A 		fmrs	r0, s15
+ 183 0042 03B0     		add	sp, sp, #12
+ 184              		@ sp needed
+ 185 0044 BDEC028B 		fldmfdd	sp!, {d8}
+ 186 0048 30BD     		pop	{r4, r5, pc}
+ 187              	.L15:
+ 188 004a FFF7FEFF 		bl	__aeabi_f2d
+ 189 004e 0446     		mov	r4, r0
+ 190 0050 18EE100A 		fmrs	r0, s16
+ 191 0054 0D46     		mov	r5, r1
+ 192 0056 FFF7FEFF 		bl	__aeabi_f2d
+ 193 005a CDE90001 		strd	r0, [sp]
+ 194 005e 40F20001 		movw	r1, #:lower16:.LC1
+ 195 0062 2246     		mov	r2, r4
+ 196 0064 2B46     		mov	r3, r5
+ 197 0066 C0F20001 		movt	r1, #:upper16:.LC1
+ 198 006a 40F25E20 		movw	r0, #606
+ 199 006e FFF7FEFF 		bl	warning
+ 200 0072 DFED047A 		flds	s15, .L16
+ 201 0076 17EE900A 		fmrs	r0, s15
+ 202 007a 03B0     		add	sp, sp, #12
+ 203              		@ sp needed
+ 204 007c BDEC028B 		fldmfdd	sp!, {d8}
+ 205 0080 30BD     		pop	{r4, r5, pc}
+ 206              	.L17:
+ 207 0082 00BF     		.align	2
+ 208              	.L16:
+ 209 0084 0000C07F 		.word	2143289344
+ 210              		.size	_Z11interpolatefffff, .-_Z11interpolatefffff
+ 211 0088 AFF30080 		.section	.text._Z10findIndex2PKfjf,"ax",%progbits
+ 211      AFF30080 
+ 212              		.align	2
+ 213              		.p2align 4,,15
+ 214              		.global	_Z10findIndex2PKfjf
+ 215              		.thumb
+ 216              		.thumb_func
+ 217              		.type	_Z10findIndex2PKfjf, %function
+ 218              	_Z10findIndex2PKfjf:
+ 219              		@ args = 0, pretend = 0, frame = 0
+ 220              		@ frame_needed = 0, uses_anonymous_args = 0
+ 221 0000 38B5     		push	{r3, r4, r5, lr}
+ 222 0002 0546     		mov	r5, r0
+ 223 0004 2DED028B 		fstmfdd	sp!, {d8}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s 			page 5
+
+
+ 224 0008 1046     		mov	r0, r2	@ float
+ 225 000a 08EE102A 		fmsr	s16, r2
+ 226 000e 0C46     		mov	r4, r1
+ 227 0010 FFF7FEFF 		bl	__fpclassifyf
+ 228 0014 38B3     		cbz	r0, .L21
+ 229 0016 012C     		cmp	r4, #1
+ 230 0018 25D9     		bls	.L21
+ 231 001a 6308     		lsrs	r3, r4, #1
+ 232 001c B4EB430F 		cmp	r4, r3, lsl #1
+ 233 0020 08BF     		it	eq
+ 234 0022 0022     		moveq	r2, #0
+ 235 0024 29D1     		bne	.L29
+ 236              	.L26:
+ 237 0026 42EA0301 		orr	r1, r2, r3
+ 238 002a 05EB8104 		add	r4, r5, r1, lsl #2
+ 239 002e D4ED007A 		flds	s15, [r4]
+ 240 0032 B4EE678A 		fcmps	s16, s15
+ 241 0036 F1EE10FA 		fmstat
+ 242 003a A8BF     		it	ge
+ 243 003c 0A46     		movge	r2, r1
+ 244 003e 5B08     		lsrs	r3, r3, #1
+ 245 0040 F1D1     		bne	.L26
+ 246 0042 1046     		mov	r0, r2
+ 247 0044 12B1     		cbz	r2, .L30
+ 248              	.L20:
+ 249 0046 BDEC028B 		fldmfdd	sp!, {d8}
+ 250 004a 38BD     		pop	{r3, r4, r5, pc}
+ 251              	.L30:
+ 252 004c D5ED007A 		flds	s15, [r5]
+ 253 0050 B4EEE78A 		fcmpes	s16, s15
+ 254 0054 BDEC028B 		fldmfdd	sp!, {d8}
+ 255 0058 F1EE10FA 		fmstat
+ 256 005c ACBF     		ite	ge
+ 257 005e 0020     		movge	r0, #0
+ 258 0060 6FF00000 		mvnlt	r0, #0
+ 259 0064 38BD     		pop	{r3, r4, r5, pc}
+ 260              	.L21:
+ 261 0066 40F20000 		movw	r0, #:lower16:.LC2
+ 262 006a C0F20000 		movt	r0, #:upper16:.LC2
+ 263 006e FFF7FEFF 		bl	firmwareError
+ 264 0072 BDEC028B 		fldmfdd	sp!, {d8}
+ 265 0076 0020     		movs	r0, #0
+ 266 0078 38BD     		pop	{r3, r4, r5, pc}
+ 267              	.L29:
+ 268 007a 40F20000 		movw	r0, #:lower16:.LC3
+ 269 007e C0F20000 		movt	r0, #:upper16:.LC3
+ 270 0082 FFF7FEFF 		bl	firmwareError
+ 271 0086 4FF0FF30 		mov	r0, #-1
+ 272 008a DCE7     		b	.L20
+ 273              		.size	_Z10findIndex2PKfjf, .-_Z10findIndex2PKfjf
+ 274 008c AFF30080 		.section	.text._Z9findIndexPKfif,"ax",%progbits
+ 275              		.align	2
+ 276              		.p2align 4,,15
+ 277              		.global	_Z9findIndexPKfif
+ 278              		.thumb
+ 279              		.thumb_func
+ 280              		.type	_Z9findIndexPKfif, %function
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s 			page 6
+
+
+ 281              	_Z9findIndexPKfif:
+ 282              		@ args = 0, pretend = 0, frame = 0
+ 283              		@ frame_needed = 0, uses_anonymous_args = 0
+ 284 0000 70B5     		push	{r4, r5, r6, lr}
+ 285 0002 0546     		mov	r5, r0
+ 286 0004 2DED028B 		fstmfdd	sp!, {d8}
+ 287 0008 1046     		mov	r0, r2	@ float
+ 288 000a 08EE102A 		fmsr	s16, r2
+ 289 000e 0C46     		mov	r4, r1
+ 290 0010 FFF7FEFF 		bl	__fpclassifyf
+ 291 0014 0646     		mov	r6, r0
+ 292 0016 00B3     		cbz	r0, .L46
+ 293 0018 D5ED007A 		flds	s15, [r5]
+ 294 001c B4EEE78A 		fcmpes	s16, s15
+ 295 0020 F1EE10FA 		fmstat
+ 296 0024 23D4     		bmi	.L39
+ 297 0026 0022     		movs	r2, #0
+ 298 0028 07E0     		b	.L36
+ 299              	.L47:
+ 300 002a D1ED007A 		flds	s15, [r1]
+ 301 002e B4EEE78A 		fcmpes	s16, s15
+ 302 0032 F1EE10FA 		fmstat
+ 303 0036 0DD5     		bpl	.L44
+ 304 0038 1C46     		mov	r4, r3
+ 305              	.L36:
+ 306 003a A318     		adds	r3, r4, r2
+ 307 003c 03EBD373 		add	r3, r3, r3, lsr #31
+ 308 0040 5B10     		asrs	r3, r3, #1
+ 309 0042 9342     		cmp	r3, r2
+ 310 0044 05EB8301 		add	r1, r5, r3, lsl #2
+ 311 0048 EFD1     		bne	.L47
+ 312 004a 1646     		mov	r6, r2
+ 313              	.L33:
+ 314 004c BDEC028B 		fldmfdd	sp!, {d8}
+ 315 0050 3046     		mov	r0, r6
+ 316 0052 70BD     		pop	{r4, r5, r6, pc}
+ 317              	.L44:
+ 318 0054 0EDD     		ble	.L45
+ 319 0056 1A46     		mov	r2, r3
+ 320 0058 EFE7     		b	.L36
+ 321              	.L46:
+ 322 005a 40F20000 		movw	r0, #:lower16:.LC2
+ 323 005e C0F20000 		movt	r0, #:upper16:.LC2
+ 324 0062 FFF7FEFF 		bl	firmwareError
+ 325 0066 BDEC028B 		fldmfdd	sp!, {d8}
+ 326 006a 3046     		mov	r0, r6
+ 327 006c 70BD     		pop	{r4, r5, r6, pc}
+ 328              	.L39:
+ 329 006e 4FF0FF36 		mov	r6, #-1
+ 330 0072 EBE7     		b	.L33
+ 331              	.L45:
+ 332 0074 1E46     		mov	r6, r3
+ 333 0076 E9E7     		b	.L33
+ 334              		.size	_Z9findIndexPKfif, .-_Z9findIndexPKfif
+ 335 0078 AFF30080 		.section	.text._ZL10testBinaryv,"ax",%progbits
+ 335      AFF30080 
+ 336              		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s 			page 7
+
+
+ 337              		.p2align 4,,15
+ 338              		.thumb
+ 339              		.thumb_func
+ 340              		.type	_ZL10testBinaryv, %function
+ 341              	_ZL10testBinaryv:
+ 342              		@ args = 0, pretend = 0, frame = 8
+ 343              		@ frame_needed = 0, uses_anonymous_args = 0
+ 344 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 345 0004 0025     		movs	r5, #0
+ 346 0006 40F20008 		movw	r8, #:lower16:.LANCHOR1
+ 347 000a 4FF48056 		mov	r6, #4096
+ 348 000e 83B0     		sub	sp, sp, #12
+ 349 0010 A946     		mov	r9, r5
+ 350 0012 AA46     		mov	r10, r5
+ 351 0014 C0F20008 		movt	r8, #:upper16:.LANCHOR1
+ 352 0018 CEF20006 		movt	r6, 57344
+ 353              	.L54:
+ 354 001c 07EE905A 		fmsr	s15, r5	@ int
+ 355 0020 F8EEE77A 		fsitos	s15, s15
+ 356 0024 7768     		ldr	r7, [r6, #4]
+ 357 0026 17EE904A 		fmrs	r4, s15
+ 358 002a 42F2107B 		movw	fp, #10000
+ 359              	.L50:
+ 360 002e 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 361 0032 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 362 0036 1021     		movs	r1, #16
+ 363 0038 2246     		mov	r2, r4	@ float
+ 364 003a FFF7FEFF 		bl	_Z9findIndexPKfif
+ 365 003e BBF1010B 		subs	fp, fp, #1
+ 366 0042 F4D1     		bne	.L50
+ 367 0044 7368     		ldr	r3, [r6, #4]
+ 368 0046 7268     		ldr	r2, [r6, #4]
+ 369 0048 DF1B     		subs	r7, r3, r7
+ 370 004a 0192     		str	r2, [sp, #4]
+ 371 004c 42F2107B 		movw	fp, #10000
+ 372              	.L52:
+ 373 0050 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 374 0054 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 375 0058 1021     		movs	r1, #16
+ 376 005a 2246     		mov	r2, r4	@ float
+ 377 005c FFF7FEFF 		bl	_Z10findIndex2PKfjf
+ 378 0060 BBF1010B 		subs	fp, fp, #1
+ 379 0064 F4D1     		bne	.L52
+ 380 0066 019C     		ldr	r4, [sp, #4]
+ 381 0068 D6F804B0 		ldr	fp, [r6, #4]
+ 382 006c D8F80000 		ldr	r0, [r8]
+ 383 0070 40F20001 		movw	r1, #:lower16:.LC4
+ 384 0074 2A46     		mov	r2, r5
+ 385 0076 3B46     		mov	r3, r7
+ 386 0078 C0F20001 		movt	r1, #:upper16:.LC4
+ 387 007c FFF7FEFF 		bl	scheduleMsg
+ 388 0080 C4EB0B0B 		rsb	fp, r4, fp
+ 389 0084 40F20001 		movw	r1, #:lower16:.LC5
+ 390 0088 2A46     		mov	r2, r5
+ 391 008a 5B46     		mov	r3, fp
+ 392 008c C0F20001 		movt	r1, #:upper16:.LC5
+ 393 0090 D8F80000 		ldr	r0, [r8]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s 			page 8
+
+
+ 394 0094 0135     		adds	r5, r5, #1
+ 395 0096 40F20004 		movw	r4, #:lower16:.LANCHOR1
+ 396 009a FFF7FEFF 		bl	scheduleMsg
+ 397 009e 112D     		cmp	r5, #17
+ 398 00a0 BA44     		add	r10, r10, r7
+ 399 00a2 D944     		add	r9, r9, fp
+ 400 00a4 C0F20004 		movt	r4, #:upper16:.LANCHOR1
+ 401 00a8 B8D1     		bne	.L54
+ 402 00aa 40F20001 		movw	r1, #:lower16:.LC6
+ 403 00ae 5246     		mov	r2, r10
+ 404 00b0 2068     		ldr	r0, [r4]
+ 405 00b2 C0F20001 		movt	r1, #:upper16:.LC6
+ 406 00b6 FFF7FEFF 		bl	scheduleMsg
+ 407 00ba 40F20001 		movw	r1, #:lower16:.LC7
+ 408 00be 2068     		ldr	r0, [r4]
+ 409 00c0 4A46     		mov	r2, r9
+ 410 00c2 C0F20001 		movt	r1, #:upper16:.LC7
+ 411 00c6 03B0     		add	sp, sp, #12
+ 412              		@ sp needed
+ 413 00c8 BDE8F04F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 414 00cc FFF7FEBF 		b	scheduleMsg
+ 415              		.size	_ZL10testBinaryv, .-_ZL10testBinaryv
+ 416              		.section	.text._Z13interpolate2dfPfS_i,"ax",%progbits
+ 417              		.align	2
+ 418              		.p2align 4,,15
+ 419              		.global	_Z13interpolate2dfPfS_i
+ 420              		.thumb
+ 421              		.thumb_func
+ 422              		.type	_Z13interpolate2dfPfS_i, %function
+ 423              	_Z13interpolate2dfPfS_i:
+ 424              		@ args = 0, pretend = 0, frame = 0
+ 425              		@ frame_needed = 0, uses_anonymous_args = 0
+ 426 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 427 0004 0746     		mov	r7, r0	@ float
+ 428 0006 9046     		mov	r8, r2
+ 429 0008 0846     		mov	r0, r1
+ 430 000a 82B0     		sub	sp, sp, #8
+ 431 000c 0E46     		mov	r6, r1
+ 432 000e 3A46     		mov	r2, r7	@ float
+ 433 0010 1946     		mov	r1, r3
+ 434 0012 1D46     		mov	r5, r3
+ 435 0014 FFF7FEFF 		bl	_Z9findIndexPKfif
+ 436 0018 431C     		adds	r3, r0, #1
+ 437 001a 08BF     		it	eq
+ 438 001c D8F80000 		ldreq	r0, [r8]	@ float
+ 439 0020 0FD0     		beq	.L57
+ 440 0022 6B1E     		subs	r3, r5, #1
+ 441 0024 8342     		cmp	r3, r0
+ 442 0026 0FD0     		beq	.L59
+ 443 0028 8400     		lsls	r4, r0, #2
+ 444 002a 231D     		adds	r3, r4, #4
+ 445 002c F218     		adds	r2, r6, r3
+ 446 002e 2644     		add	r6, r6, r4
+ 447 0030 4344     		add	r3, r3, r8
+ 448 0032 4444     		add	r4, r4, r8
+ 449 0034 1268     		ldr	r2, [r2]	@ float
+ 450 0036 1B68     		ldr	r3, [r3]	@ float
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s 			page 9
+
+
+ 451 0038 3068     		ldr	r0, [r6]	@ float
+ 452 003a 2168     		ldr	r1, [r4]	@ float
+ 453 003c 0097     		str	r7, [sp]	@ float
+ 454 003e FFF7FEFF 		bl	_Z11interpolatefffff
+ 455              	.L57:
+ 456 0042 02B0     		add	sp, sp, #8
+ 457              		@ sp needed
+ 458 0044 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 459              	.L59:
+ 460 0048 08EB8505 		add	r5, r8, r5, lsl #2
+ 461 004c 55F8040C 		ldr	r0, [r5, #-4]	@ float
+ 462 0050 02B0     		add	sp, sp, #8
+ 463              		@ sp needed
+ 464 0052 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 465              		.size	_Z13interpolate2dfPfS_i, .-_Z13interpolate2dfPfS_i
+ 466 0056 00BFAFF3 		.section	.text._Z13interpolate3dfPfifS_iPS_,"ax",%progbits
+ 466      0080AFF3 
+ 466      0080
+ 467              		.align	2
+ 468              		.p2align 4,,15
+ 469              		.global	_Z13interpolate3dfPfifS_iPS_
+ 470              		.thumb
+ 471              		.thumb_func
+ 472              		.type	_Z13interpolate3dfPfifS_iPS_, %function
+ 473              	_Z13interpolate3dfPfifS_iPS_:
+ 474              		@ args = 12, pretend = 0, frame = 8
+ 475              		@ frame_needed = 0, uses_anonymous_args = 0
+ 476 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 477 0004 85B0     		sub	sp, sp, #20
+ 478 0006 8B46     		mov	fp, r1
+ 479 0008 9146     		mov	r9, r2
+ 480 000a 1C46     		mov	r4, r3	@ float
+ 481 000c 0546     		mov	r5, r0	@ float
+ 482 000e 0E9E     		ldr	r6, [sp, #56]
+ 483 0010 DDF83CA0 		ldr	r10, [sp, #60]
+ 484 0014 109F     		ldr	r7, [sp, #64]
+ 485 0016 FFF7FEFF 		bl	__fpclassifyf
+ 486 001a 0028     		cmp	r0, #0
+ 487 001c 70D0     		beq	.L73
+ 488 001e 2046     		mov	r0, r4	@ float
+ 489 0020 FFF7FEFF 		bl	__fpclassifyf
+ 490 0024 0028     		cmp	r0, #0
+ 491 0026 58D0     		beq	.L74
+ 492 0028 4946     		mov	r1, r9
+ 493 002a 2A46     		mov	r2, r5	@ float
+ 494 002c 5846     		mov	r0, fp
+ 495 002e FFF7FEFF 		bl	_Z9findIndexPKfif
+ 496 0032 2246     		mov	r2, r4	@ float
+ 497 0034 8046     		mov	r8, r0
+ 498 0036 5146     		mov	r1, r10
+ 499 0038 3046     		mov	r0, r6
+ 500 003a FFF7FEFF 		bl	_Z9findIndexPKfif
+ 501 003e 4FEAD873 		lsr	r3, r8, #31
+ 502 0042 C20F     		lsrs	r2, r0, #31
+ 503 0044 1A42     		tst	r2, r3
+ 504 0046 7ED1     		bne	.L75
+ 505 0048 002B     		cmp	r3, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s 			page 10
+
+
+ 506 004a 6CD1     		bne	.L76
+ 507 004c 002A     		cmp	r2, #0
+ 508 004e 40F09880 		bne	.L77
+ 509 0052 09F1FF33 		add	r3, r9, #-1
+ 510 0056 4345     		cmp	r3, r8
+ 511 0058 0AF1FF33 		add	r3, r10, #-1
+ 512 005c 00F08580 		beq	.L78
+ 513 0060 8342     		cmp	r3, r0
+ 514 0062 7BD0     		beq	.L79
+ 515 0064 4FEA8803 		lsl	r3, r8, #2
+ 516 0068 03F1040A 		add	r10, r3, #4
+ 517 006c 57F82820 		ldr	r2, [r7, r8, lsl #2]
+ 518 0070 57F80A10 		ldr	r1, [r7, r10]
+ 519 0074 5B44     		add	r3, r3, fp
+ 520 0076 D344     		add	fp, fp, r10
+ 521 0078 4FEA8009 		lsl	r9, r0, #2
+ 522 007c DBF800C0 		ldr	ip, [fp]	@ float
+ 523 0080 D3F800B0 		ldr	fp, [r3]	@ float
+ 524 0084 4944     		add	r1, r1, r9
+ 525 0086 4A44     		add	r2, r2, r9
+ 526 0088 0B68     		ldr	r3, [r1]	@ float
+ 527 008a 1168     		ldr	r1, [r2]	@ float
+ 528 008c 0095     		str	r5, [sp]	@ float
+ 529 008e 6246     		mov	r2, ip	@ float
+ 530 0090 5846     		mov	r0, fp	@ float
+ 531 0092 CDF808C0 		str	ip, [sp, #8]
+ 532 0096 FFF7FEFF 		bl	_Z11interpolatefffff
+ 533 009a 57F80A30 		ldr	r3, [r7, r10]
+ 534 009e 57F82820 		ldr	r2, [r7, r8, lsl #2]
+ 535 00a2 DDF808C0 		ldr	ip, [sp, #8]
+ 536 00a6 0390     		str	r0, [sp, #12]	@ float
+ 537 00a8 09F10407 		add	r7, r9, #4
+ 538 00ac 3A44     		add	r2, r2, r7
+ 539 00ae 3B44     		add	r3, r3, r7
+ 540 00b0 3744     		add	r7, r7, r6
+ 541 00b2 4E44     		add	r6, r6, r9
+ 542 00b4 1168     		ldr	r1, [r2]	@ float
+ 543 00b6 1B68     		ldr	r3, [r3]	@ float
+ 544 00b8 0095     		str	r5, [sp]	@ float
+ 545 00ba 6246     		mov	r2, ip	@ float
+ 546 00bc 5846     		mov	r0, fp	@ float
+ 547 00be 3F68     		ldr	r7, [r7]	@ float
+ 548 00c0 3568     		ldr	r5, [r6]	@ float
+ 549 00c2 FFF7FEFF 		bl	_Z11interpolatefffff
+ 550 00c6 0399     		ldr	r1, [sp, #12]	@ float
+ 551 00c8 0346     		mov	r3, r0	@ float
+ 552 00ca 3A46     		mov	r2, r7	@ float
+ 553 00cc 2846     		mov	r0, r5	@ float
+ 554              	.L72:
+ 555 00ce 0E94     		str	r4, [sp, #56]	@ float
+ 556 00d0 05B0     		add	sp, sp, #20
+ 557              		@ sp needed
+ 558 00d2 BDE8F04F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 559 00d6 FFF7FEBF 		b	_Z11interpolatefffff
+ 560              	.L74:
+ 561 00da 2046     		mov	r0, r4	@ float
+ 562 00dc FFF7FEFF 		bl	__aeabi_f2d
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s 			page 11
+
+
+ 563 00e0 0B46     		mov	r3, r1
+ 564 00e2 40F20001 		movw	r1, #:lower16:.LC9
+ 565 00e6 0246     		mov	r2, r0
+ 566 00e8 C0F20001 		movt	r1, #:upper16:.LC9
+ 567 00ec 40F25E20 		movw	r0, #606
+ 568 00f0 FFF7FEFF 		bl	warning
+ 569 00f4 0020     		movs	r0, #0
+ 570 00f6 C7F6C070 		movt	r0, 32704
+ 571              	.L62:
+ 572 00fa 05B0     		add	sp, sp, #20
+ 573              		@ sp needed
+ 574 00fc BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 575              	.L73:
+ 576 0100 2846     		mov	r0, r5	@ float
+ 577 0102 FFF7FEFF 		bl	__aeabi_f2d
+ 578 0106 0B46     		mov	r3, r1
+ 579 0108 40F20001 		movw	r1, #:lower16:.LC8
+ 580 010c 0246     		mov	r2, r0
+ 581 010e C0F20001 		movt	r1, #:upper16:.LC8
+ 582 0112 40F25E20 		movw	r0, #606
+ 583 0116 FFF7FEFF 		bl	warning
+ 584 011a 0020     		movs	r0, #0
+ 585 011c C7F6C070 		movt	r0, 32704
+ 586 0120 05B0     		add	sp, sp, #20
+ 587              		@ sp needed
+ 588 0122 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 589              	.L76:
+ 590 0126 0AF1FF3A 		add	r10, r10, #-1
+ 591 012a 8245     		cmp	r10, r0
+ 592 012c 10D0     		beq	.L80
+ 593 012e 8000     		lsls	r0, r0, #2
+ 594 0130 3B68     		ldr	r3, [r7]
+ 595 0132 021D     		adds	r2, r0, #4
+ 596 0134 1918     		adds	r1, r3, r0
+ 597 0136 B718     		adds	r7, r6, r2
+ 598 0138 9D18     		adds	r5, r3, r2
+ 599 013a 0644     		add	r6, r6, r0
+ 600 013c 3A68     		ldr	r2, [r7]	@ float
+ 601 013e 2B68     		ldr	r3, [r5]	@ float
+ 602 0140 3068     		ldr	r0, [r6]	@ float
+ 603 0142 0968     		ldr	r1, [r1]	@ float
+ 604 0144 C3E7     		b	.L72
+ 605              	.L75:
+ 606 0146 3B68     		ldr	r3, [r7]
+ 607 0148 1868     		ldr	r0, [r3]	@ float
+ 608 014a 05B0     		add	sp, sp, #20
+ 609              		@ sp needed
+ 610 014c BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 611              	.L80:
+ 612 0150 3B68     		ldr	r3, [r7]
+ 613 0152 03EB8A0A 		add	r10, r3, r10, lsl #2
+ 614 0156 DAF80000 		ldr	r0, [r10]	@ float
+ 615 015a CEE7     		b	.L62
+ 616              	.L79:
+ 617 015c 57F82830 		ldr	r3, [r7, r8, lsl #2]
+ 618              	.L71:
+ 619 0160 03EB8A0A 		add	r10, r3, r10, lsl #2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s 			page 12
+
+
+ 620 0164 5AF8040C 		ldr	r0, [r10, #-4]	@ float
+ 621 0168 C7E7     		b	.L62
+ 622              	.L78:
+ 623 016a 09F18049 		add	r9, r9, #1073741824
+ 624 016e 09F1FF39 		add	r9, r9, #-1
+ 625 0172 8342     		cmp	r3, r0
+ 626 0174 57F82930 		ldr	r3, [r7, r9, lsl #2]
+ 627 0178 F2D0     		beq	.L71
+ 628 017a 03EB8000 		add	r0, r3, r0, lsl #2
+ 629 017e 0068     		ldr	r0, [r0]	@ float
+ 630 0180 BBE7     		b	.L62
+ 631              	.L77:
+ 632 0182 57F82830 		ldr	r3, [r7, r8, lsl #2]
+ 633 0186 1868     		ldr	r0, [r3]	@ float
+ 634 0188 B7E7     		b	.L62
+ 635              		.size	_Z13interpolate3dfPfifS_iPS_, .-_Z13interpolate3dfPfifS_iPS_
+ 636 018a 00BFAFF3 		.section	.text._Z13setTableValuePfS_iff,"ax",%progbits
+ 636      0080
+ 637              		.align	2
+ 638              		.p2align 4,,15
+ 639              		.global	_Z13setTableValuePfS_iff
+ 640              		.thumb
+ 641              		.thumb_func
+ 642              		.type	_Z13setTableValuePfS_iff, %function
+ 643              	_Z13setTableValuePfS_iff:
+ 644              		@ args = 4, pretend = 0, frame = 0
+ 645              		@ frame_needed = 0, uses_anonymous_args = 0
+ 646 0000 38B5     		push	{r3, r4, r5, lr}
+ 647 0002 0C46     		mov	r4, r1
+ 648 0004 1146     		mov	r1, r2
+ 649 0006 1A46     		mov	r2, r3	@ float
+ 650 0008 049D     		ldr	r5, [sp, #16]	@ float
+ 651 000a FFF7FEFF 		bl	_Z9findIndexPKfif
+ 652 000e 421C     		adds	r2, r0, #1
+ 653 0010 14BF     		ite	ne
+ 654 0012 8000     		lslne	r0, r0, #2
+ 655 0014 0020     		moveq	r0, #0
+ 656 0016 0444     		add	r4, r4, r0
+ 657 0018 2560     		str	r5, [r4]	@ float
+ 658 001a 38BD     		pop	{r3, r4, r5, pc}
+ 659              		.size	_Z13setTableValuePfS_iff, .-_Z13setTableValuePfS_iff
+ 660 001c AFF30080 		.section	.text._Z17initInterpolationP7Logging,"ax",%progbits
+ 661              		.align	2
+ 662              		.p2align 4,,15
+ 663              		.global	_Z17initInterpolationP7Logging
+ 664              		.thumb
+ 665              		.thumb_func
+ 666              		.type	_Z17initInterpolationP7Logging, %function
+ 667              	_Z17initInterpolationP7Logging:
+ 668              		@ args = 0, pretend = 0, frame = 0
+ 669              		@ frame_needed = 0, uses_anonymous_args = 0
+ 670              		@ link register save eliminated.
+ 671 0000 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 672 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ 673 0008 40F20001 		movw	r1, #:lower16:_ZL10testBinaryv
+ 674 000c 1860     		str	r0, [r3]
+ 675 000e 40F20000 		movw	r0, #:lower16:.LC10
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s 			page 13
+
+
+ 676 0012 C0F20000 		movt	r0, #:upper16:.LC10
+ 677 0016 C0F20001 		movt	r1, #:upper16:_ZL10testBinaryv
+ 678 001a FFF7FEBF 		b	addConsoleAction
+ 679              		.size	_Z17initInterpolationP7Logging, .-_Z17initInterpolationP7Logging
+ 680              		.global	array16
+ 681              		.global	logger
+ 682              		.global	needInterpolationLogging
+ 683 001e 00BF     		.section	.bss.logger,"aw",%nobits
+ 684              		.align	2
+ 685              		.set	.LANCHOR1,. + 0
+ 686              		.type	logger, %object
+ 687              		.size	logger, 4
+ 688              	logger:
+ 689 0000 00000000 		.space	4
+ 690              		.section	.data.needInterpolationLogging,"aw",%progbits
+ 691              		.align	2
+ 692              		.type	needInterpolationLogging, %object
+ 693              		.size	needInterpolationLogging, 4
+ 694              	needInterpolationLogging:
+ 695 0000 01000000 		.word	1
+ 696              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 697              		.align	2
+ 698              	.LC0:
+ 699 0000 696E6974 		.ascii	"init: Same x1 and x2 in interpolate: %f/%f\000"
+ 699      3A205361 
+ 699      6D652078 
+ 699      3120616E 
+ 699      64207832 
+ 700 002b 00       		.space	1
+ 701              	.LC1:
+ 702 002c 696E7465 		.ascii	"interpolate: Same x1 and x2 in interpolate: %f/%f\000"
+ 702      72706F6C 
+ 702      6174653A 
+ 702      2053616D 
+ 702      65207831 
+ 703 005e 0000     		.space	2
+ 704              	.LC2:
+ 705 0060 4E614E20 		.ascii	"NaN in findIndex\000"
+ 705      696E2066 
+ 705      696E6449 
+ 705      6E646578 
+ 705      00
+ 706 0071 000000   		.space	3
+ 707              	.LC3:
+ 708 0074 53697A65 		.ascii	"Size not power of 2\000"
+ 708      206E6F74 
+ 708      20706F77 
+ 708      6572206F 
+ 708      66203200 
+ 709              	.LC4:
+ 710 0088 666F7220 		.ascii	"for v=%d old=%d ticks\000"
+ 710      763D2564 
+ 710      206F6C64 
+ 710      3D256420 
+ 710      7469636B 
+ 711 009e 0000     		.space	2
+ 712              	.LC5:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s 			page 14
+
+
+ 713 00a0 666F7220 		.ascii	"for v=%d new=%d ticks\000"
+ 713      763D2564 
+ 713      206E6577 
+ 713      3D256420 
+ 713      7469636B 
+ 714 00b6 0000     		.space	2
+ 715              	.LC6:
+ 716 00b8 746F7461 		.ascii	"totalOld=%d ticks\000"
+ 716      6C4F6C64 
+ 716      3D256420 
+ 716      7469636B 
+ 716      7300
+ 717 00ca 0000     		.space	2
+ 718              	.LC7:
+ 719 00cc 746F7461 		.ascii	"totalNew=%d ticks\000"
+ 719      6C4E6577 
+ 719      3D256420 
+ 719      7469636B 
+ 719      7300
+ 720 00de 0000     		.space	2
+ 721              	.LC8:
+ 722 00e0 25663A20 		.ascii	"%f: x is NaN in interpolate3d\000"
+ 722      78206973 
+ 722      204E614E 
+ 722      20696E20 
+ 722      696E7465 
+ 723 00fe 0000     		.space	2
+ 724              	.LC9:
+ 725 0100 25663A20 		.ascii	"%f: y is NaN in interpolate3d\000"
+ 725      79206973 
+ 725      204E614E 
+ 725      20696E20 
+ 725      696E7465 
+ 726 011e 0000     		.space	2
+ 727              	.LC10:
+ 728 0120 62696E61 		.ascii	"binarytest\000"
+ 728      72797465 
+ 728      737400
+ 729 012b 00       		.section	.data.array16,"aw",%progbits
+ 730              		.align	2
+ 731              		.set	.LANCHOR0,. + 0
+ 732              		.type	array16, %object
+ 733              		.size	array16, 64
+ 734              	array16:
+ 735 0000 0000803F 		.word	1065353216
+ 736 0004 00000040 		.word	1073741824
+ 737 0008 00004040 		.word	1077936128
+ 738 000c 00008040 		.word	1082130432
+ 739 0010 0000A040 		.word	1084227584
+ 740 0014 0000C040 		.word	1086324736
+ 741 0018 0000E040 		.word	1088421888
+ 742 001c 00000041 		.word	1090519040
+ 743 0020 00001041 		.word	1091567616
+ 744 0024 00002041 		.word	1092616192
+ 745 0028 00003041 		.word	1093664768
+ 746 002c 00004041 		.word	1094713344
+ 747 0030 00005041 		.word	1095761920
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s 			page 15
+
+
+ 748 0034 00006041 		.word	1096810496
+ 749 0038 00007041 		.word	1097859072
+ 750 003c 00008041 		.word	1098907648
+ 751              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s 			page 16
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 interpolation.cpp
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:17     .text._ZN17FastInterpolationC2Ev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:23     .text._ZN17FastInterpolationC2Ev:00000000 _ZN17FastInterpolationC2Ev
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:23     .text._ZN17FastInterpolationC2Ev:00000000 _ZN17FastInterpolationC1Ev
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:37     .text._ZN17FastInterpolationC2Effff:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:43     .text._ZN17FastInterpolationC2Effff:00000000 _ZN17FastInterpolationC2Effff
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:698    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:43     .text._ZN17FastInterpolationC2Effff:00000000 _ZN17FastInterpolationC1Effff
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:90     .text._ZN17FastInterpolation4initEffff:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:96     .text._ZN17FastInterpolation4initEffff:00000000 _ZN17FastInterpolation4initEffff
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:138    .text._ZN17FastInterpolation8getValueEf:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:144    .text._ZN17FastInterpolation8getValueEf:00000000 _ZN17FastInterpolation8getValueEf
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:156    .text._Z11interpolatefffff:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:162    .text._Z11interpolatefffff:00000000 _Z11interpolatefffff
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:701    .rodata.str1.4:0000002c .LC1
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:209    .text._Z11interpolatefffff:00000084 $d
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:212    .text._Z10findIndex2PKfjf:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:218    .text._Z10findIndex2PKfjf:00000000 _Z10findIndex2PKfjf
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:704    .rodata.str1.4:00000060 .LC2
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:707    .rodata.str1.4:00000074 .LC3
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:275    .text._Z9findIndexPKfif:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:281    .text._Z9findIndexPKfif:00000000 _Z9findIndexPKfif
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:336    .text._ZL10testBinaryv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:341    .text._ZL10testBinaryv:00000000 _ZL10testBinaryv
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:685    .bss.logger:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:731    .data.array16:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:709    .rodata.str1.4:00000088 .LC4
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:712    .rodata.str1.4:000000a0 .LC5
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:715    .rodata.str1.4:000000b8 .LC6
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:718    .rodata.str1.4:000000cc .LC7
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:417    .text._Z13interpolate2dfPfS_i:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:423    .text._Z13interpolate2dfPfS_i:00000000 _Z13interpolate2dfPfS_i
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:467    .text._Z13interpolate3dfPfifS_iPS_:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:473    .text._Z13interpolate3dfPfifS_iPS_:00000000 _Z13interpolate3dfPfifS_iPS_
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:724    .rodata.str1.4:00000100 .LC9
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:721    .rodata.str1.4:000000e0 .LC8
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:637    .text._Z13setTableValuePfS_iff:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:643    .text._Z13setTableValuePfS_iff:00000000 _Z13setTableValuePfS_iff
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:661    .text._Z17initInterpolationP7Logging:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:667    .text._Z17initInterpolationP7Logging:00000000 _Z17initInterpolationP7Logging
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:727    .rodata.str1.4:00000120 .LC10
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:734    .data.array16:00000000 array16
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:688    .bss.logger:00000000 logger
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:694    .data.needInterpolationLogging:00000000 needInterpolationLogging
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:684    .bss.logger:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:691    .data.needInterpolationLogging:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:697    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:730    .data.array16:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s:211    .text._Z11interpolatefffff:00000088 $t
+
+UNDEFINED SYMBOLS
+__aeabi_f2d
+firmwareError
+warning
+__fpclassifyf
+scheduleMsg
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchbJ9Ug.s 			page 17
+
+
+addConsoleAction

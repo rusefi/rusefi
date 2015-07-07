@@ -1,0 +1,330 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"poten.cpp"
+  16              		.section	.text._ZL9sendToPotP14Mcp42010Driverii,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	_ZL9sendToPotP14Mcp42010Driverii, %function
+  22              	_ZL9sendToPotP14Mcp42010Driverii:
+  23              		@ args = 0, pretend = 0, frame = 8
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25 0000 70B5     		push	{r4, r5, r6, lr}
+  26 0002 0446     		mov	r4, r0
+  27 0004 82B0     		sub	sp, sp, #8
+  28 0006 0020     		movs	r0, #0
+  29 0008 1646     		mov	r6, r2
+  30 000a 0D46     		mov	r5, r1
+  31 000c FFF7FEFF 		bl	_Z7lockSpi12spi_device_e
+  32 0010 2146     		mov	r1, r4
+  33 0012 1135     		adds	r5, r5, #17
+  34 0014 51F8040B 		ldr	r0, [r1], #4
+  35 0018 FFF7FEFF 		bl	spiStart
+  36 001c 2068     		ldr	r0, [r4]
+  37 001e FFF7FEFF 		bl	spiSelect
+  38 0022 02AA     		add	r2, sp, #8
+  39 0024 06EB0526 		add	r6, r6, r5, lsl #8
+  40 0028 42F8046D 		str	r6, [r2, #-4]!
+  41 002c 0121     		movs	r1, #1
+  42 002e 2068     		ldr	r0, [r4]
+  43 0030 FFF7FEFF 		bl	spiSend
+  44 0034 2068     		ldr	r0, [r4]
+  45 0036 FFF7FEFF 		bl	spiUnselect
+  46 003a 2068     		ldr	r0, [r4]
+  47 003c FFF7FEFF 		bl	spiStop
+  48 0040 FFF7FEFF 		bl	_Z9unlockSpiv
+  49 0044 02B0     		add	sp, sp, #8
+  50              		@ sp needed
+  51 0046 70BD     		pop	{r4, r5, r6, pc}
+  52              		.size	_ZL9sendToPotP14Mcp42010Driverii, .-_ZL9sendToPotP14Mcp42010Driverii
+  53 0048 AFF30080 		.section	.text._ZL12setPotValue1i,"ax",%progbits
+  53      AFF30080 
+  54              		.align	2
+  55              		.p2align 4,,15
+  56              		.thumb
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s 			page 2
+
+
+  57              		.thumb_func
+  58              		.type	_ZL12setPotValue1i, %function
+  59              	_ZL12setPotValue1i:
+  60              		@ args = 0, pretend = 0, frame = 0
+  61              		@ frame_needed = 0, uses_anonymous_args = 0
+  62              		@ link register save eliminated.
+  63 0000 0246     		mov	r2, r0
+  64 0002 40F20000 		movw	r0, #:lower16:.LANCHOR0
+  65 0006 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+  66 000a 0121     		movs	r1, #1
+  67 000c FFF7FEBF 		b	_ZL9sendToPotP14Mcp42010Driverii
+  68              		.size	_ZL12setPotValue1i, .-_ZL12setPotValue1i
+  69              		.section	.text._Z17initPotentiometerP14Mcp42010DriverP9SPIDriver11brain_pin_e,"ax",%progbits
+  70              		.align	2
+  71              		.p2align 4,,15
+  72              		.global	_Z17initPotentiometerP14Mcp42010DriverP9SPIDriver11brain_pin_e
+  73              		.thumb
+  74              		.thumb_func
+  75              		.type	_Z17initPotentiometerP14Mcp42010DriverP9SPIDriver11brain_pin_e, %function
+  76              	_Z17initPotentiometerP14Mcp42010DriverP9SPIDriver11brain_pin_e:
+  77              		@ args = 0, pretend = 0, frame = 0
+  78              		@ frame_needed = 0, uses_anonymous_args = 0
+  79              		@ link register save eliminated.
+  80 0000 0346     		mov	r3, r0
+  81 0002 10B4     		push	{r4}
+  82 0004 4FF40364 		mov	r4, #2096
+  83 0008 C481     		strh	r4, [r0, #14]	@ movhi
+  84 000a 43F8041B 		str	r1, [r3], #4
+  85 000e 5DF8044B 		ldr	r4, [sp], #4
+  86 0012 1146     		mov	r1, r2
+  87 0014 1846     		mov	r0, r3
+  88 0016 FFF7FEBF 		b	initSpiCs
+  89              		.size	_Z17initPotentiometerP14Mcp42010DriverP9SPIDriver11brain_pin_e, .-_Z17initPotentiometerP14Mc
+  90 001a 00BFAFF3 		.section	.text._Z16setPotResistanceP14Mcp42010Driverii,"ax",%progbits
+  90      0080
+  91              		.align	2
+  92              		.p2align 4,,15
+  93              		.global	_Z16setPotResistanceP14Mcp42010Driverii
+  94              		.thumb
+  95              		.thumb_func
+  96              		.type	_Z16setPotResistanceP14Mcp42010Driverii, %function
+  97              	_Z16setPotResistanceP14Mcp42010Driverii:
+  98              		@ args = 0, pretend = 0, frame = 0
+  99              		@ frame_needed = 0, uses_anonymous_args = 0
+ 100 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 101 0002 A2F13403 		sub	r3, r2, #52
+ 102 0006 48F6AD35 		movw	r5, #35757
+ 103 000a 40F20004 		movw	r4, #:lower16:.LANCHOR1
+ 104 000e 1B02     		lsls	r3, r3, #8
+ 105 0010 C0F20004 		movt	r4, #:upper16:.LANCHOR1
+ 106 0014 C6F6DB05 		movt	r5, 26843
+ 107 0018 85FB0365 		smull	r6, r5, r5, r3
+ 108 001c DB17     		asrs	r3, r3, #31
+ 109 001e 2768     		ldr	r7, [r4]
+ 110 0020 83B0     		sub	sp, sp, #12
+ 111 0022 A3EB2533 		sub	r3, r3, r5, asr #12
+ 112 0026 03F58074 		add	r4, r3, #256
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s 			page 3
+
+
+ 113 002a 0D46     		mov	r5, r1
+ 114 002c 40F20001 		movw	r1, #:lower16:.LC0
+ 115 0030 0092     		str	r2, [sp]
+ 116 0032 0646     		mov	r6, r0
+ 117 0034 2A46     		mov	r2, r5
+ 118 0036 3846     		mov	r0, r7
+ 119 0038 2346     		mov	r3, r4
+ 120 003a C0F20001 		movt	r1, #:upper16:.LC0
+ 121 003e FFF7FEFF 		bl	scheduleMsg
+ 122 0042 3046     		mov	r0, r6
+ 123 0044 2946     		mov	r1, r5
+ 124 0046 2246     		mov	r2, r4
+ 125 0048 03B0     		add	sp, sp, #12
+ 126              		@ sp needed
+ 127 004a BDE8F040 		pop	{r4, r5, r6, r7, lr}
+ 128 004e FFF7FEBF 		b	_ZL9sendToPotP14Mcp42010Driverii
+ 129              		.size	_Z16setPotResistanceP14Mcp42010Driverii, .-_Z16setPotResistanceP14Mcp42010Driverii
+ 130 0052 00BFAFF3 		.section	.text._ZL23setPotResistanceCommandii,"ax",%progbits
+ 130      0080AFF3 
+ 130      0080AFF3 
+ 130      0080
+ 131              		.align	2
+ 132              		.p2align 4,,15
+ 133              		.thumb
+ 134              		.thumb_func
+ 135              		.type	_ZL23setPotResistanceCommandii, %function
+ 136              	_ZL23setPotResistanceCommandii:
+ 137              		@ args = 0, pretend = 0, frame = 0
+ 138              		@ frame_needed = 0, uses_anonymous_args = 0
+ 139              		@ link register save eliminated.
+ 140 0000 30B4     		push	{r4, r5}
+ 141 0002 C40F     		lsrs	r4, r0, #31
+ 142 0004 0519     		adds	r5, r0, r4
+ 143 0006 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 144 000a 6810     		asrs	r0, r5, #1
+ 145 000c 0A46     		mov	r2, r1
+ 146 000e C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 147 0012 05F00101 		and	r1, r5, #1
+ 148 0016 091B     		subs	r1, r1, r4
+ 149 0018 03EB0010 		add	r0, r3, r0, lsl #4
+ 150 001c 30BC     		pop	{r4, r5}
+ 151 001e FFF7FEBF 		b	_Z16setPotResistanceP14Mcp42010Driverii
+ 152              		.size	_ZL23setPotResistanceCommandii, .-_ZL23setPotResistanceCommandii
+ 153 0022 00BFAFF3 		.section	.text._Z18initPotentiometersP7LoggingP21board_configuration_s,"ax",%progbits
+ 153      0080AFF3 
+ 153      0080AFF3 
+ 153      0080
+ 154              		.align	2
+ 155              		.p2align 4,,15
+ 156              		.global	_Z18initPotentiometersP7LoggingP21board_configuration_s
+ 157              		.thumb
+ 158              		.thumb_func
+ 159              		.type	_Z18initPotentiometersP7LoggingP21board_configuration_s, %function
+ 160              	_Z18initPotentiometersP7LoggingP21board_configuration_s:
+ 161              		@ args = 0, pretend = 0, frame = 0
+ 162              		@ frame_needed = 0, uses_anonymous_args = 0
+ 163 0000 2DE9F843 		push	{r3, r4, r5, r6, r7, r8, r9, lr}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s 			page 4
+
+
+ 164 0004 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 165 0008 C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ 166 000c D1F8D420 		ldr	r2, [r1, #212]
+ 167 0010 1860     		str	r0, [r3]
+ 168 0012 0F46     		mov	r7, r1
+ 169 0014 002A     		cmp	r2, #0
+ 170 0016 46D0     		beq	.L15
+ 171 0018 1046     		mov	r0, r2
+ 172 001a FFF7FEFF 		bl	_Z9turnOnSpi12spi_device_e
+ 173 001e 264D     		ldr	r5, .L16
+ 174 0020 3C46     		mov	r4, r7
+ 175 0022 07F11008 		add	r8, r7, #16
+ 176 0026 4FF40369 		mov	r9, #2096
+ 177              	.L10:
+ 178 002a D4F8D860 		ldr	r6, [r4, #216]
+ 179 002e 502E     		cmp	r6, #80
+ 180 0030 04F10404 		add	r4, r4, #4
+ 181 0034 0BD0     		beq	.L8
+ 182 0036 D7F8D400 		ldr	r0, [r7, #212]
+ 183 003a FFF7FEFF 		bl	_Z12getSpiDevice12spi_device_e
+ 184 003e 3146     		mov	r1, r6
+ 185 0040 45F8040C 		str	r0, [r5, #-4]
+ 186 0044 2846     		mov	r0, r5
+ 187 0046 A5F80A90 		strh	r9, [r5, #10]	@ movhi
+ 188 004a FFF7FEFF 		bl	initSpiCs
+ 189              	.L8:
+ 190 004e 4445     		cmp	r4, r8
+ 191 0050 05F11005 		add	r5, r5, #16
+ 192 0054 E9D1     		bne	.L10
+ 193 0056 40F20000 		movw	r0, #:lower16:.LC2
+ 194 005a 40F20001 		movw	r1, #:lower16:_ZL23setPotResistanceCommandii
+ 195 005e C0F20000 		movt	r0, #:upper16:.LC2
+ 196 0062 C0F20001 		movt	r1, #:upper16:_ZL23setPotResistanceCommandii
+ 197 0066 FFF7FEFF 		bl	addConsoleActionII
+ 198 006a 40F20000 		movw	r0, #:lower16:.LC3
+ 199 006e 40F20001 		movw	r1, #:lower16:_ZL12setPotValue1i
+ 200 0072 C0F20000 		movt	r0, #:upper16:.LC3
+ 201 0076 C0F20001 		movt	r1, #:upper16:_ZL12setPotValue1i
+ 202 007a FFF7FEFF 		bl	addConsoleActionI
+ 203 007e 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 204 0082 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 205 0086 0021     		movs	r1, #0
+ 206 0088 40F6B832 		movw	r2, #3000
+ 207 008c FFF7FEFF 		bl	_Z16setPotResistanceP14Mcp42010Driverii
+ 208 0090 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 209 0094 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 210 0098 0121     		movs	r1, #1
+ 211 009a 41F65832 		movw	r2, #7000
+ 212 009e BDE8F843 		pop	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 213 00a2 FFF7FEBF 		b	_Z16setPotResistanceP14Mcp42010Driverii
+ 214              	.L15:
+ 215 00a6 40F20001 		movw	r1, #:lower16:.LC1
+ 216 00aa C0F20001 		movt	r1, #:upper16:.LC1
+ 217 00ae BDE8F843 		pop	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 218 00b2 FFF7FEBF 		b	scheduleMsg
+ 219              	.L17:
+ 220 00b6 00BF     		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s 			page 5
+
+
+ 221              	.L16:
+ 222 00b8 04000000 		.word	.LANCHOR0+4
+ 223              		.size	_Z18initPotentiometersP7LoggingP21board_configuration_s, .-_Z18initPotentiometersP7LoggingP2
+ 224 00bc AFF30080 		.section	.rodata.str1.4,"aMS",%progbits,1
+ 225              		.align	2
+ 226              	.LC0:
+ 227 0000 53656E64 		.ascii	"Sending to potentiometer%d: %d for R=%d\000"
+ 227      696E6720 
+ 227      746F2070 
+ 227      6F74656E 
+ 227      74696F6D 
+ 228              	.LC1:
+ 229 0028 64696769 		.ascii	"digiPot spi disabled\000"
+ 229      506F7420 
+ 229      73706920 
+ 229      64697361 
+ 229      626C6564 
+ 230 003d 000000   		.space	3
+ 231              	.LC2:
+ 232 0040 706F7400 		.ascii	"pot\000"
+ 233              	.LC3:
+ 234 0044 706F7464 		.ascii	"potd1\000"
+ 234      3100
+ 235 004a 0000     		.section	.bss._ZL9potConfig,"aw",%nobits
+ 236              		.align	2
+ 237              		.set	.LANCHOR0,. + 0
+ 238              		.type	_ZL9potConfig, %object
+ 239              		.size	_ZL9potConfig, 64
+ 240              	_ZL9potConfig:
+ 241 0000 00000000 		.space	64
+ 241      00000000 
+ 241      00000000 
+ 241      00000000 
+ 241      00000000 
+ 242              		.section	.bss._ZL6logger,"aw",%nobits
+ 243              		.align	2
+ 244              		.set	.LANCHOR1,. + 0
+ 245              		.type	_ZL6logger, %object
+ 246              		.size	_ZL6logger, 4
+ 247              	_ZL6logger:
+ 248 0000 00000000 		.space	4
+ 249              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 poten.cpp
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:17     .text._ZL9sendToPotP14Mcp42010Driverii:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:22     .text._ZL9sendToPotP14Mcp42010Driverii:00000000 _ZL9sendToPotP14Mcp42010Driverii
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:54     .text._ZL12setPotValue1i:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:59     .text._ZL12setPotValue1i:00000000 _ZL12setPotValue1i
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:237    .bss._ZL9potConfig:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:70     .text._Z17initPotentiometerP14Mcp42010DriverP9SPIDriver11brain_pin_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:76     .text._Z17initPotentiometerP14Mcp42010DriverP9SPIDriver11brain_pin_e:00000000 _Z17initPotentiometerP14Mcp42010DriverP9SPIDriver11brain_pin_e
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:91     .text._Z16setPotResistanceP14Mcp42010Driverii:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:97     .text._Z16setPotResistanceP14Mcp42010Driverii:00000000 _Z16setPotResistanceP14Mcp42010Driverii
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:244    .bss._ZL6logger:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:226    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:131    .text._ZL23setPotResistanceCommandii:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:136    .text._ZL23setPotResistanceCommandii:00000000 _ZL23setPotResistanceCommandii
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:154    .text._Z18initPotentiometersP7LoggingP21board_configuration_s:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:160    .text._Z18initPotentiometersP7LoggingP21board_configuration_s:00000000 _Z18initPotentiometersP7LoggingP21board_configuration_s
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:231    .rodata.str1.4:00000040 .LC2
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:233    .rodata.str1.4:00000044 .LC3
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:228    .rodata.str1.4:00000028 .LC1
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:222    .text._Z18initPotentiometersP7LoggingP21board_configuration_s:000000b8 $d
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:225    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:236    .bss._ZL9potConfig:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:240    .bss._ZL9potConfig:00000000 _ZL9potConfig
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:243    .bss._ZL6logger:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:247    .bss._ZL6logger:00000000 _ZL6logger
+C:\Users\pc\AppData\Local\Temp\cc6MHxYv.s:224    .text._Z18initPotentiometersP7LoggingP21board_configuration_s:000000bc $t
+
+UNDEFINED SYMBOLS
+_Z7lockSpi12spi_device_e
+spiStart
+spiSelect
+spiSend
+spiUnselect
+spiStop
+_Z9unlockSpiv
+initSpiCs
+scheduleMsg
+_Z9turnOnSpi12spi_device_e
+_Z12getSpiDevice12spi_device_e
+addConsoleActionII
+addConsoleActionI

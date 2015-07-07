@@ -41,7 +41,7 @@ extern bool hasFirmwareErrorFlag;
  * Difference between current 1st trigger event and previous 1st trigger event.
  */
 static volatile uint32_t engineCycleDurationUs;
-static volatile uint64_t previousEngineCycleTimeUs = 0;
+static volatile efitime_t previousEngineCycleTimeUs = 0;
 
 static int waveReaderCount = 0;
 static WaveReader readers[MAX_ICU_COUNT];
@@ -123,7 +123,7 @@ static void initWave(const char *name, int index) {
 	WaveReader *reader = &readers[index];
 	reader->name = name;
 
-	reader->hw = initWaveAnalyzerDriver(brainPin);
+	reader->hw = initWaveAnalyzerDriver("wave input", brainPin);
 
 
 	reader->hw->widthListeners.registerCallback((VoidInt) waAnaWidthCallback, (void*) reader);
@@ -138,6 +138,7 @@ static void initWave(const char *name, int index) {
 
 WaveReader::WaveReader() {
 	hw = NULL;
+	last_wave_high_widthUs = 0;
 }
 
 static void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index DECLARE_ENGINE_PARAMETER_S) {
@@ -180,7 +181,7 @@ static float getSignalOnTime(int index) {
 	return reader->last_wave_high_widthUs / 1000.0f;
 }
 
-static uint64_t getWaveOffset(int index) {
+static efitime_t getWaveOffset(int index) {
 	WaveReader *reader = &readers[index];
 	ensureInitialized(reader);
 	return reader->waveOffsetUs;
@@ -192,7 +193,7 @@ static float getSignalPeriodMs(int index) {
 	return reader->signalPeriodUs / 1000.0f;
 }
 
-//static uint64_t getWidthEventTime(int index) {
+//static efitime_t getWidthEventTime(int index) {
 //	WaveReader *reader = &readers[index];
 //	ensureInitialized(reader);
 //	return reader->widthEventTimeUs;

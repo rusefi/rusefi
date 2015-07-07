@@ -123,7 +123,8 @@ extern "C"
  * @note    Requires @p CH_USE_MEMCORE.
  */
 #if !defined(CH_MEMCORE_SIZE) || defined(__DOXYGEN__)
-#define CH_MEMCORE_SIZE                 0
+// memory pool is used by ff.c which is used for file logging
+#define CH_MEMCORE_SIZE                 2048
 #endif
 
 /**

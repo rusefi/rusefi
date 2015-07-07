@@ -14,7 +14,7 @@ EXTERN_ENGINE;
 
 void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	initThermistors(sharedLogger PASS_ENGINE_PARAMETER);
-	initMapDecoder(PASS_ENGINE_PARAMETER_F);
+	initMapDecoder(sharedLogger PASS_ENGINE_PARAMETER);
 }
 
 // todo: move this somewhere else? maybe.

@@ -1,0 +1,650 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"adc.c"
+  16              		.section	.text.adcInit,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	adcInit
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	adcInit, %function
+  23              	adcInit:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 FFF7FEBF 		b	adc_lld_init
+  28              		.size	adcInit, .-adcInit
+  29 0004 AFF30080 		.section	.text.adcObjectInit,"ax",%progbits
+  29      AFF30080 
+  29      AFF30080 
+  30              		.align	2
+  31              		.p2align 4,,15
+  32              		.global	adcObjectInit
+  33              		.thumb
+  34              		.thumb_func
+  35              		.type	adcObjectInit, %function
+  36              	adcObjectInit:
+  37              		@ args = 0, pretend = 0, frame = 0
+  38              		@ frame_needed = 0, uses_anonymous_args = 0
+  39              		@ link register save eliminated.
+  40 0000 0023     		movs	r3, #0
+  41 0002 0122     		movs	r2, #1
+  42 0004 0270     		strb	r2, [r0]
+  43 0006 4360     		str	r3, [r0, #4]
+  44 0008 8360     		str	r3, [r0, #8]
+  45 000a C360     		str	r3, [r0, #12]
+  46 000c 0361     		str	r3, [r0, #16]
+  47 000e 4361     		str	r3, [r0, #20]
+  48 0010 1830     		adds	r0, r0, #24
+  49 0012 FFF7FEBF 		b	chMtxInit
+  50              		.size	adcObjectInit, .-adcObjectInit
+  51              		.section	.text.adcStart,"ax",%progbits
+  52              		.align	2
+  53              		.p2align 4,,15
+  54              		.global	adcStart
+  55              		.thumb
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s 			page 2
+
+
+  56              		.thumb_func
+  57              		.type	adcStart, %function
+  58              	adcStart:
+  59              		@ args = 0, pretend = 0, frame = 0
+  60              		@ frame_needed = 0, uses_anonymous_args = 0
+  61 0000 38B5     		push	{r3, r4, r5, lr}
+  62 0002 0446     		mov	r4, r0
+  63 0004 0D46     		mov	r5, r1
+  64 0006 D8B1     		cbz	r0, .L7
+  65              	.L4:
+  66 0008 2023     		movs	r3, #32
+  67              	@ 115 "chibios/os/hal/src/adc.c" 1
+  68 000a 83F31188 		msr     BASEPRI, r3
+  69              	@ 0 "" 2
+  70              		.thumb
+  71 000e FFF7FEFF 		bl	dbg_check_lock
+  72 0012 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+  73 0014 013B     		subs	r3, r3, #1
+  74 0016 DBB2     		uxtb	r3, r3
+  75 0018 012B     		cmp	r3, #1
+  76 001a 05D9     		bls	.L5
+  77 001c 40F20000 		movw	r0, #:lower16:.LC2
+  78 0020 C0F20000 		movt	r0, #:upper16:.LC2
+  79 0024 FFF7FEFF 		bl	chDbgPanic
+  80              	.L5:
+  81 0028 2046     		mov	r0, r4
+  82 002a 6560     		str	r5, [r4, #4]
+  83 002c FFF7FEFF 		bl	adc_lld_start
+  84 0030 0223     		movs	r3, #2
+  85 0032 2370     		strb	r3, [r4]
+  86 0034 FFF7FEFF 		bl	dbg_check_unlock
+  87 0038 0023     		movs	r3, #0
+  88              	@ 121 "chibios/os/hal/src/adc.c" 1
+  89 003a 83F31188 		msr     BASEPRI, r3
+  90              	@ 0 "" 2
+  91              		.thumb
+  92 003e 38BD     		pop	{r3, r4, r5, pc}
+  93              	.L7:
+  94 0040 40F20000 		movw	r0, #:lower16:.LC0
+  95 0044 40F20001 		movw	r1, #:lower16:.LC1
+  96 0048 C0F20000 		movt	r0, #:upper16:.LC0
+  97 004c C0F20001 		movt	r1, #:upper16:.LC1
+  98 0050 7122     		movs	r2, #113
+  99 0052 FFF7FEFF 		bl	chDbgPanic3
+ 100 0056 D7E7     		b	.L4
+ 101              		.size	adcStart, .-adcStart
+ 102 0058 AFF30080 		.section	.text.adcStop,"ax",%progbits
+ 102      AFF30080 
+ 103              		.align	2
+ 104              		.p2align 4,,15
+ 105              		.global	adcStop
+ 106              		.thumb
+ 107              		.thumb_func
+ 108              		.type	adcStop, %function
+ 109              	adcStop:
+ 110              		@ args = 0, pretend = 0, frame = 0
+ 111              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s 			page 3
+
+
+ 112 0000 10B5     		push	{r4, lr}
+ 113 0002 0446     		mov	r4, r0
+ 114 0004 D0B1     		cbz	r0, .L11
+ 115              	.L9:
+ 116 0006 2023     		movs	r3, #32
+ 117              	@ 135 "chibios/os/hal/src/adc.c" 1
+ 118 0008 83F31188 		msr     BASEPRI, r3
+ 119              	@ 0 "" 2
+ 120              		.thumb
+ 121 000c FFF7FEFF 		bl	dbg_check_lock
+ 122 0010 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 123 0012 013B     		subs	r3, r3, #1
+ 124 0014 DBB2     		uxtb	r3, r3
+ 125 0016 012B     		cmp	r3, #1
+ 126 0018 05D9     		bls	.L10
+ 127 001a 40F20000 		movw	r0, #:lower16:.LC4
+ 128 001e C0F20000 		movt	r0, #:upper16:.LC4
+ 129 0022 FFF7FEFF 		bl	chDbgPanic
+ 130              	.L10:
+ 131 0026 2046     		mov	r0, r4
+ 132 0028 FFF7FEFF 		bl	adc_lld_stop
+ 133 002c 0123     		movs	r3, #1
+ 134 002e 2370     		strb	r3, [r4]
+ 135 0030 FFF7FEFF 		bl	dbg_check_unlock
+ 136 0034 0023     		movs	r3, #0
+ 137              	@ 140 "chibios/os/hal/src/adc.c" 1
+ 138 0036 83F31188 		msr     BASEPRI, r3
+ 139              	@ 0 "" 2
+ 140              		.thumb
+ 141 003a 10BD     		pop	{r4, pc}
+ 142              	.L11:
+ 143 003c 40F20000 		movw	r0, #:lower16:.LC3
+ 144 0040 40F20001 		movw	r1, #:lower16:.LC1
+ 145 0044 C0F20000 		movt	r0, #:upper16:.LC3
+ 146 0048 C0F20001 		movt	r1, #:upper16:.LC1
+ 147 004c 8522     		movs	r2, #133
+ 148 004e FFF7FEFF 		bl	chDbgPanic3
+ 149 0052 D8E7     		b	.L9
+ 150              		.size	adcStop, .-adcStop
+ 151 0054 AFF30080 		.section	.text.adcStartConversionI,"ax",%progbits
+ 151      AFF30080 
+ 151      AFF30080 
+ 152              		.align	2
+ 153              		.p2align 4,,15
+ 154              		.global	adcStartConversionI
+ 155              		.thumb
+ 156              		.thumb_func
+ 157              		.type	adcStartConversionI, %function
+ 158              	adcStartConversionI:
+ 159              		@ args = 0, pretend = 0, frame = 0
+ 160              		@ frame_needed = 0, uses_anonymous_args = 0
+ 161 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 162 0002 0446     		mov	r4, r0
+ 163 0004 0E46     		mov	r6, r1
+ 164 0006 1746     		mov	r7, r2
+ 165 0008 1D46     		mov	r5, r3
+ 166 000a FFF7FEFF 		bl	chDbgCheckClassI
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s 			page 4
+
+
+ 167 000e 002E     		cmp	r6, #0
+ 168 0010 18BF     		it	ne
+ 169 0012 002C     		cmpne	r4, #0
+ 170 0014 1BD0     		beq	.L13
+ 171 0016 D7B1     		cbz	r7, .L13
+ 172 0018 012D     		cmp	r5, #1
+ 173 001a 01D0     		beq	.L14
+ 174 001c EB07     		lsls	r3, r5, #31
+ 175 001e 16D4     		bmi	.L13
+ 176              	.L14:
+ 177 0020 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 178 0022 1A1F     		subs	r2, r3, #4
+ 179 0024 D2B2     		uxtb	r2, r2
+ 180 0026 022B     		cmp	r3, #2
+ 181 0028 18BF     		it	ne
+ 182 002a 012A     		cmpne	r2, #1
+ 183 002c 05D9     		bls	.L15
+ 184 002e 40F20000 		movw	r0, #:lower16:.LC6
+ 185 0032 C0F20000 		movt	r0, #:upper16:.LC6
+ 186 0036 FFF7FEFF 		bl	chDbgPanic
+ 187              	.L15:
+ 188 003a 0323     		movs	r3, #3
+ 189 003c A760     		str	r7, [r4, #8]
+ 190 003e E560     		str	r5, [r4, #12]
+ 191 0040 2661     		str	r6, [r4, #16]
+ 192 0042 2370     		strb	r3, [r4]
+ 193 0044 2046     		mov	r0, r4
+ 194 0046 BDE8F840 		pop	{r3, r4, r5, r6, r7, lr}
+ 195 004a FFF7FEBF 		b	adc_lld_start_conversion
+ 196              	.L13:
+ 197 004e 40F20000 		movw	r0, #:lower16:.LC5
+ 198 0052 40F20001 		movw	r1, #:lower16:.LC1
+ 199 0056 C0F20000 		movt	r0, #:upper16:.LC5
+ 200 005a C0F20001 		movt	r1, #:upper16:.LC1
+ 201 005e C322     		movs	r2, #195
+ 202 0060 FFF7FEFF 		bl	chDbgPanic3
+ 203 0064 DCE7     		b	.L14
+ 204              		.size	adcStartConversionI, .-adcStartConversionI
+ 205 0066 00BFAFF3 		.section	.text.adcStartConversion,"ax",%progbits
+ 205      0080AFF3 
+ 205      0080
+ 206              		.align	2
+ 207              		.p2align 4,,15
+ 208              		.global	adcStartConversion
+ 209              		.thumb
+ 210              		.thumb_func
+ 211              		.type	adcStartConversion, %function
+ 212              	adcStartConversion:
+ 213              		@ args = 0, pretend = 0, frame = 0
+ 214              		@ frame_needed = 0, uses_anonymous_args = 0
+ 215 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 216 0002 1C46     		mov	r4, r3
+ 217 0004 0746     		mov	r7, r0
+ 218 0006 0E46     		mov	r6, r1
+ 219 0008 1546     		mov	r5, r2
+ 220 000a 2023     		movs	r3, #32
+ 221              	@ 164 "chibios/os/hal/src/adc.c" 1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s 			page 5
+
+
+ 222 000c 83F31188 		msr     BASEPRI, r3
+ 223              	@ 0 "" 2
+ 224              		.thumb
+ 225 0010 FFF7FEFF 		bl	dbg_check_lock
+ 226 0014 2346     		mov	r3, r4
+ 227 0016 3846     		mov	r0, r7
+ 228 0018 3146     		mov	r1, r6
+ 229 001a 2A46     		mov	r2, r5
+ 230 001c FFF7FEFF 		bl	adcStartConversionI
+ 231 0020 FFF7FEFF 		bl	dbg_check_unlock
+ 232 0024 0023     		movs	r3, #0
+ 233              	@ 166 "chibios/os/hal/src/adc.c" 1
+ 234 0026 83F31188 		msr     BASEPRI, r3
+ 235              	@ 0 "" 2
+ 236              		.thumb
+ 237 002a F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 238              		.size	adcStartConversion, .-adcStartConversion
+ 239 002c AFF30080 		.section	.text.adcStopConversion,"ax",%progbits
+ 240              		.align	2
+ 241              		.p2align 4,,15
+ 242              		.global	adcStopConversion
+ 243              		.thumb
+ 244              		.thumb_func
+ 245              		.type	adcStopConversion, %function
+ 246              	adcStopConversion:
+ 247              		@ args = 0, pretend = 0, frame = 0
+ 248              		@ frame_needed = 0, uses_anonymous_args = 0
+ 249 0000 10B5     		push	{r4, lr}
+ 250 0002 0446     		mov	r4, r0
+ 251 0004 30B3     		cbz	r0, .L39
+ 252              	.L30:
+ 253 0006 2023     		movs	r3, #32
+ 254              	@ 222 "chibios/os/hal/src/adc.c" 1
+ 255 0008 83F31188 		msr     BASEPRI, r3
+ 256              	@ 0 "" 2
+ 257              		.thumb
+ 258 000c FFF7FEFF 		bl	dbg_check_lock
+ 259 0010 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 260 0012 9A1E     		subs	r2, r3, #2
+ 261 0014 D2B2     		uxtb	r2, r2
+ 262 0016 012A     		cmp	r2, #1
+ 263 0018 06D9     		bls	.L31
+ 264 001a 40F20000 		movw	r0, #:lower16:.LC8
+ 265 001e C0F20000 		movt	r0, #:upper16:.LC8
+ 266 0022 FFF7FEFF 		bl	chDbgPanic
+ 267 0026 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 268              	.L31:
+ 269 0028 022B     		cmp	r3, #2
+ 270 002a 0DD0     		beq	.L33
+ 271 002c 2046     		mov	r0, r4
+ 272 002e FFF7FEFF 		bl	adc_lld_stop_conversion
+ 273 0032 6069     		ldr	r0, [r4, #20]
+ 274 0034 0023     		movs	r3, #0
+ 275 0036 0222     		movs	r2, #2
+ 276 0038 2361     		str	r3, [r4, #16]
+ 277 003a 2270     		strb	r2, [r4]
+ 278 003c 20B1     		cbz	r0, .L33
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s 			page 6
+
+
+ 279 003e 6361     		str	r3, [r4, #20]
+ 280 0040 6FF00101 		mvn	r1, #1
+ 281 0044 FFF7FEFF 		bl	chSchWakeupS
+ 282              	.L33:
+ 283 0048 FFF7FEFF 		bl	dbg_check_unlock
+ 284 004c 0023     		movs	r3, #0
+ 285              	@ 232 "chibios/os/hal/src/adc.c" 1
+ 286 004e 83F31188 		msr     BASEPRI, r3
+ 287              	@ 0 "" 2
+ 288              		.thumb
+ 289 0052 10BD     		pop	{r4, pc}
+ 290              	.L39:
+ 291 0054 40F20000 		movw	r0, #:lower16:.LC7
+ 292 0058 40F20001 		movw	r1, #:lower16:.LC1
+ 293 005c C0F20000 		movt	r0, #:upper16:.LC7
+ 294 0060 C0F20001 		movt	r1, #:upper16:.LC1
+ 295 0064 DC22     		movs	r2, #220
+ 296 0066 FFF7FEFF 		bl	chDbgPanic3
+ 297 006a CCE7     		b	.L30
+ 298              		.size	adcStopConversion, .-adcStopConversion
+ 299 006c AFF30080 		.section	.text.adcStopConversionI,"ax",%progbits
+ 300              		.align	2
+ 301              		.p2align 4,,15
+ 302              		.global	adcStopConversionI
+ 303              		.thumb
+ 304              		.thumb_func
+ 305              		.type	adcStopConversionI, %function
+ 306              	adcStopConversionI:
+ 307              		@ args = 0, pretend = 0, frame = 0
+ 308              		@ frame_needed = 0, uses_anonymous_args = 0
+ 309 0000 10B5     		push	{r4, lr}
+ 310 0002 0446     		mov	r4, r0
+ 311 0004 FFF7FEFF 		bl	chDbgCheckClassI
+ 312 0008 0CB3     		cbz	r4, .L50
+ 313              	.L41:
+ 314 000a 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 315 000c 9A1E     		subs	r2, r3, #2
+ 316 000e D2B2     		uxtb	r2, r2
+ 317 0010 022A     		cmp	r2, #2
+ 318 0012 14D8     		bhi	.L51
+ 319              	.L42:
+ 320 0014 022B     		cmp	r3, #2
+ 321 0016 11D0     		beq	.L40
+ 322 0018 2046     		mov	r0, r4
+ 323 001a FFF7FEFF 		bl	adc_lld_stop_conversion
+ 324 001e 6369     		ldr	r3, [r4, #20]
+ 325 0020 0022     		movs	r2, #0
+ 326 0022 0221     		movs	r1, #2
+ 327 0024 2261     		str	r2, [r4, #16]
+ 328 0026 2170     		strb	r1, [r4]
+ 329 0028 43B1     		cbz	r3, .L40
+ 330 002a 6FF00101 		mvn	r1, #1
+ 331 002e 6261     		str	r2, [r4, #20]
+ 332 0030 9962     		str	r1, [r3, #40]
+ 333 0032 1846     		mov	r0, r3
+ 334 0034 BDE81040 		pop	{r4, lr}
+ 335 0038 FFF7FEBF 		b	chSchReadyI
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s 			page 7
+
+
+ 336              	.L40:
+ 337 003c 10BD     		pop	{r4, pc}
+ 338              	.L51:
+ 339 003e 40F20000 		movw	r0, #:lower16:.LC10
+ 340 0042 C0F20000 		movt	r0, #:upper16:.LC10
+ 341 0046 FFF7FEFF 		bl	chDbgPanic
+ 342 004a 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 343 004c E2E7     		b	.L42
+ 344              	.L50:
+ 345 004e 40F20000 		movw	r0, #:lower16:.LC9
+ 346 0052 40F20001 		movw	r1, #:lower16:.LC1
+ 347 0056 C0F20000 		movt	r0, #:upper16:.LC9
+ 348 005a C0F20001 		movt	r1, #:upper16:.LC1
+ 349 005e F822     		movs	r2, #248
+ 350 0060 FFF7FEFF 		bl	chDbgPanic3
+ 351 0064 D1E7     		b	.L41
+ 352              		.size	adcStopConversionI, .-adcStopConversionI
+ 353 0066 00BFAFF3 		.section	.text.adcConvert,"ax",%progbits
+ 353      0080AFF3 
+ 353      0080
+ 354              		.align	2
+ 355              		.p2align 4,,15
+ 356              		.global	adcConvert
+ 357              		.thumb
+ 358              		.thumb_func
+ 359              		.type	adcConvert, %function
+ 360              	adcConvert:
+ 361              		@ args = 0, pretend = 0, frame = 0
+ 362              		@ frame_needed = 0, uses_anonymous_args = 0
+ 363 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 364 0004 1E46     		mov	r6, r3
+ 365 0006 0546     		mov	r5, r0
+ 366 0008 8846     		mov	r8, r1
+ 367 000a 1746     		mov	r7, r2
+ 368 000c 2023     		movs	r3, #32
+ 369              	@ 292 "chibios/os/hal/src/adc.c" 1
+ 370 000e 83F31188 		msr     BASEPRI, r3
+ 371              	@ 0 "" 2
+ 372              		.thumb
+ 373 0012 FFF7FEFF 		bl	dbg_check_lock
+ 374 0016 6B69     		ldr	r3, [r5, #20]
+ 375 0018 2BB1     		cbz	r3, .L53
+ 376 001a 40F20000 		movw	r0, #:lower16:.LC11
+ 377 001e C0F20000 		movt	r0, #:upper16:.LC11
+ 378 0022 FFF7FEFF 		bl	chDbgPanic
+ 379              	.L53:
+ 380 0026 40F20004 		movw	r4, #:lower16:rlist
+ 381 002a C0F20004 		movt	r4, #:upper16:rlist
+ 382 002e 4146     		mov	r1, r8
+ 383 0030 3A46     		mov	r2, r7
+ 384 0032 3346     		mov	r3, r6
+ 385 0034 2846     		mov	r0, r5
+ 386 0036 FFF7FEFF 		bl	adcStartConversionI
+ 387 003a A369     		ldr	r3, [r4, #24]
+ 388 003c 0220     		movs	r0, #2
+ 389 003e 6B61     		str	r3, [r5, #20]
+ 390 0040 FFF7FEFF 		bl	chSchGoSleepS
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s 			page 8
+
+
+ 391 0044 A369     		ldr	r3, [r4, #24]
+ 392 0046 9C6A     		ldr	r4, [r3, #40]
+ 393 0048 FFF7FEFF 		bl	dbg_check_unlock
+ 394 004c 0023     		movs	r3, #0
+ 395              	@ 298 "chibios/os/hal/src/adc.c" 1
+ 396 004e 83F31188 		msr     BASEPRI, r3
+ 397              	@ 0 "" 2
+ 398              		.thumb
+ 399 0052 2046     		mov	r0, r4
+ 400 0054 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 401              		.size	adcConvert, .-adcConvert
+ 402 0058 AFF30080 		.section	.text.adcAcquireBus,"ax",%progbits
+ 402      AFF30080 
+ 403              		.align	2
+ 404              		.p2align 4,,15
+ 405              		.global	adcAcquireBus
+ 406              		.thumb
+ 407              		.thumb_func
+ 408              		.type	adcAcquireBus, %function
+ 409              	adcAcquireBus:
+ 410              		@ args = 0, pretend = 0, frame = 0
+ 411              		@ frame_needed = 0, uses_anonymous_args = 0
+ 412 0000 10B5     		push	{r4, lr}
+ 413 0002 0446     		mov	r4, r0
+ 414 0004 28B1     		cbz	r0, .L59
+ 415 0006 04F11800 		add	r0, r4, #24
+ 416 000a BDE81040 		pop	{r4, lr}
+ 417 000e FFF7FEBF 		b	chMtxLock
+ 418              	.L59:
+ 419 0012 40F20000 		movw	r0, #:lower16:.LC12
+ 420 0016 40F20001 		movw	r1, #:lower16:.LC1
+ 421 001a C0F20000 		movt	r0, #:upper16:.LC12
+ 422 001e C0F20001 		movt	r1, #:upper16:.LC1
+ 423 0022 40F23D12 		movw	r2, #317
+ 424 0026 FFF7FEFF 		bl	chDbgPanic3
+ 425 002a 04F11800 		add	r0, r4, #24
+ 426 002e BDE81040 		pop	{r4, lr}
+ 427 0032 FFF7FEBF 		b	chMtxLock
+ 428              		.size	adcAcquireBus, .-adcAcquireBus
+ 429 0036 00BFAFF3 		.section	.text.adcReleaseBus,"ax",%progbits
+ 429      0080AFF3 
+ 429      0080
+ 430              		.align	2
+ 431              		.p2align 4,,15
+ 432              		.global	adcReleaseBus
+ 433              		.thumb
+ 434              		.thumb_func
+ 435              		.type	adcReleaseBus, %function
+ 436              	adcReleaseBus:
+ 437              		@ args = 0, pretend = 0, frame = 0
+ 438              		@ frame_needed = 0, uses_anonymous_args = 0
+ 439 0000 08B5     		push	{r3, lr}
+ 440 0002 18B1     		cbz	r0, .L62
+ 441 0004 BDE80840 		pop	{r3, lr}
+ 442 0008 FFF7FEBF 		b	chMtxUnlock
+ 443              	.L62:
+ 444 000c 40F20000 		movw	r0, #:lower16:.LC13
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s 			page 9
+
+
+ 445 0010 40F20001 		movw	r1, #:lower16:.LC1
+ 446 0014 C0F20000 		movt	r0, #:upper16:.LC13
+ 447 0018 C0F20001 		movt	r1, #:upper16:.LC1
+ 448 001c 40F25112 		movw	r2, #337
+ 449 0020 FFF7FEFF 		bl	chDbgPanic3
+ 450 0024 BDE80840 		pop	{r3, lr}
+ 451 0028 FFF7FEBF 		b	chMtxUnlock
+ 452              		.size	adcReleaseBus, .-adcReleaseBus
+ 453 002c AFF30080 		.section	.rodata.str1.4,"aMS",%progbits,1
+ 454              		.align	2
+ 455              	.LC0:
+ 456 0000 22616463 		.ascii	"\"adcStart\"()\000"
+ 456      53746172 
+ 456      74222829 
+ 456      00
+ 457 000d 000000   		.space	3
+ 458              	.LC1:
+ 459 0010 63686962 		.ascii	"chibios/os/hal/src/adc.c\000"
+ 459      696F732F 
+ 459      6F732F68 
+ 459      616C2F73 
+ 459      72632F61 
+ 460 0029 000000   		.space	3
+ 461              	.LC2:
+ 462 002c 61646353 		.ascii	"adcStart(), #1\000"
+ 462      74617274 
+ 462      28292C20 
+ 462      233100
+ 463 003b 00       		.space	1
+ 464              	.LC3:
+ 465 003c 22616463 		.ascii	"\"adcStop\"()\000"
+ 465      53746F70 
+ 465      22282900 
+ 466              	.LC4:
+ 467 0048 61646353 		.ascii	"adcStop(), #1\000"
+ 467      746F7028 
+ 467      292C2023 
+ 467      3100
+ 468 0056 0000     		.space	2
+ 469              	.LC5:
+ 470 0058 22616463 		.ascii	"\"adcStartConversionI\"()\000"
+ 470      53746172 
+ 470      74436F6E 
+ 470      76657273 
+ 470      696F6E49 
+ 471              	.LC6:
+ 472 0070 61646353 		.ascii	"adcStartConversionI(), #1\000"
+ 472      74617274 
+ 472      436F6E76 
+ 472      65727369 
+ 472      6F6E4928 
+ 473 008a 0000     		.space	2
+ 474              	.LC7:
+ 475 008c 22616463 		.ascii	"\"adcStopConversion\"()\000"
+ 475      53746F70 
+ 475      436F6E76 
+ 475      65727369 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s 			page 10
+
+
+ 475      6F6E2228 
+ 476 00a2 0000     		.space	2
+ 477              	.LC8:
+ 478 00a4 61646353 		.ascii	"adcStopConversion(), #1\000"
+ 478      746F7043 
+ 478      6F6E7665 
+ 478      7273696F 
+ 478      6E28292C 
+ 479              	.LC9:
+ 480 00bc 22616463 		.ascii	"\"adcStopConversionI\"()\000"
+ 480      53746F70 
+ 480      436F6E76 
+ 480      65727369 
+ 480      6F6E4922 
+ 481 00d3 00       		.space	1
+ 482              	.LC10:
+ 483 00d4 61646353 		.ascii	"adcStopConversionI(), #1\000"
+ 483      746F7043 
+ 483      6F6E7665 
+ 483      7273696F 
+ 483      6E492829 
+ 484 00ed 000000   		.space	3
+ 485              	.LC11:
+ 486 00f0 61646343 		.ascii	"adcConvert(), #1\000"
+ 486      6F6E7665 
+ 486      72742829 
+ 486      2C202331 
+ 486      00
+ 487 0101 000000   		.space	3
+ 488              	.LC12:
+ 489 0104 22616463 		.ascii	"\"adcAcquireBus\"()\000"
+ 489      41637175 
+ 489      69726542 
+ 489      75732228 
+ 489      2900
+ 490 0116 0000     		.space	2
+ 491              	.LC13:
+ 492 0118 22616463 		.ascii	"\"adcReleaseBus\"()\000"
+ 492      52656C65 
+ 492      61736542 
+ 492      75732228 
+ 492      2900
+ 493 012a 0000     		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s 			page 11
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 adc.c
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:17     .text.adcInit:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:23     .text.adcInit:00000000 adcInit
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:30     .text.adcObjectInit:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:36     .text.adcObjectInit:00000000 adcObjectInit
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:52     .text.adcStart:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:58     .text.adcStart:00000000 adcStart
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:461    .rodata.str1.4:0000002c .LC2
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:455    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:458    .rodata.str1.4:00000010 .LC1
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:103    .text.adcStop:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:109    .text.adcStop:00000000 adcStop
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:466    .rodata.str1.4:00000048 .LC4
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:464    .rodata.str1.4:0000003c .LC3
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:152    .text.adcStartConversionI:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:158    .text.adcStartConversionI:00000000 adcStartConversionI
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:471    .rodata.str1.4:00000070 .LC6
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:469    .rodata.str1.4:00000058 .LC5
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:206    .text.adcStartConversion:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:212    .text.adcStartConversion:00000000 adcStartConversion
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:240    .text.adcStopConversion:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:246    .text.adcStopConversion:00000000 adcStopConversion
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:477    .rodata.str1.4:000000a4 .LC8
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:474    .rodata.str1.4:0000008c .LC7
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:300    .text.adcStopConversionI:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:306    .text.adcStopConversionI:00000000 adcStopConversionI
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:482    .rodata.str1.4:000000d4 .LC10
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:479    .rodata.str1.4:000000bc .LC9
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:354    .text.adcConvert:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:360    .text.adcConvert:00000000 adcConvert
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:485    .rodata.str1.4:000000f0 .LC11
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:403    .text.adcAcquireBus:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:409    .text.adcAcquireBus:00000000 adcAcquireBus
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:488    .rodata.str1.4:00000104 .LC12
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:430    .text.adcReleaseBus:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:436    .text.adcReleaseBus:00000000 adcReleaseBus
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:491    .rodata.str1.4:00000118 .LC13
+C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s:454    .rodata.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+adc_lld_init
+chMtxInit
+dbg_check_lock
+chDbgPanic
+adc_lld_start
+dbg_check_unlock
+chDbgPanic3
+adc_lld_stop
+chDbgCheckClassI
+adc_lld_start_conversion
+adc_lld_stop_conversion
+chSchWakeupS
+chSchReadyI
+rlist
+chSchGoSleepS
+chMtxLock
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccI7PmoL.s 			page 12
+
+
+chMtxUnlock

@@ -1,0 +1,107 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccYdU9vc.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"allsensors.cpp"
+  16              		.section	.text._Z11initSensorsP7Logging,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_Z11initSensorsP7Logging
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_Z11initSensorsP7Logging, %function
+  23              	_Z11initSensorsP7Logging:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 10B5     		push	{r4, lr}
+  27 0002 0446     		mov	r4, r0
+  28 0004 FFF7FEFF 		bl	_Z15initThermistorsP7Logging
+  29 0008 2046     		mov	r0, r4
+  30 000a BDE81040 		pop	{r4, lr}
+  31 000e FFF7FEBF 		b	_Z14initMapDecoderP7Logging
+  32              		.size	_Z11initSensorsP7Logging, .-_Z11initSensorsP7Logging
+  33 0012 00BFAFF3 		.section	.text._Z11getAcTogglev,"ax",%progbits
+  33      0080AFF3 
+  33      0080AFF3 
+  33      0080
+  34              		.align	2
+  35              		.p2align 4,,15
+  36              		.global	_Z11getAcTogglev
+  37              		.thumb
+  38              		.thumb_func
+  39              		.type	_Z11getAcTogglev, %function
+  40              	_Z11getAcTogglev:
+  41              		@ args = 0, pretend = 0, frame = 0
+  42              		@ frame_needed = 0, uses_anonymous_args = 0
+  43 0000 08B5     		push	{r3, lr}
+  44 0002 40F20003 		movw	r3, #:lower16:engine
+  45 0006 C0F20003 		movt	r3, #:upper16:engine
+  46 000a 40F20000 		movw	r0, #:lower16:.LC0
+  47 000e 1B68     		ldr	r3, [r3]
+  48 0010 5B6A     		ldr	r3, [r3, #36]
+  49 0012 C0F20000 		movt	r0, #:upper16:.LC0
+  50 0016 D3F8F015 		ldr	r1, [r3, #1520]
+  51 001a FFF7FEFF 		bl	_Z19getInternalAdcValuePKc13adc_channel_e
+  52 001e 40F20003 		movw	r3, #:lower16:engineConfiguration
+  53 0022 07EE900A 		fmsr	s15, r0	@ int
+  54 0026 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccYdU9vc.s 			page 2
+
+
+  55 002a B8EEE77A 		fsitos	s14, s15
+  56 002e 1B68     		ldr	r3, [r3]
+  57 0030 DFED087A 		flds	s15, .L3
+  58 0034 27EE277A 		fmuls	s14, s14, s15
+  59 0038 D3ED747A 		flds	s15, [r3, #464]
+  60 003c 27EE277A 		fmuls	s14, s14, s15
+  61 0040 F0EE047A 		fconsts	s15, #4
+  62 0044 B4EEE77A 		fcmpes	s14, s15
+  63 0048 F1EE10FA 		fmstat
+  64 004c 54BF     		ite	pl
+  65 004e 0020     		movpl	r0, #0
+  66 0050 0120     		movmi	r0, #1
+  67 0052 08BD     		pop	{r3, pc}
+  68              	.L4:
+  69              		.align	2
+  70              	.L3:
+  71 0054 010C403A 		.word	977275905
+  72              		.size	_Z11getAcTogglev, .-_Z11getAcTogglev
+  73 0058 AFF30080 		.section	.rodata.str1.4,"aMS",%progbits,1
+  73      AFF30080 
+  74              		.align	2
+  75              	.LC0:
+  76 0000 412F4300 		.ascii	"A/C\000"
+  77              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccYdU9vc.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 allsensors.cpp
+C:\Users\pc\AppData\Local\Temp\ccYdU9vc.s:17     .text._Z11initSensorsP7Logging:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccYdU9vc.s:23     .text._Z11initSensorsP7Logging:00000000 _Z11initSensorsP7Logging
+C:\Users\pc\AppData\Local\Temp\ccYdU9vc.s:34     .text._Z11getAcTogglev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccYdU9vc.s:40     .text._Z11getAcTogglev:00000000 _Z11getAcTogglev
+C:\Users\pc\AppData\Local\Temp\ccYdU9vc.s:75     .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccYdU9vc.s:71     .text._Z11getAcTogglev:00000054 $d
+C:\Users\pc\AppData\Local\Temp\ccYdU9vc.s:74     .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccYdU9vc.s:73     .text._Z11getAcTogglev:00000058 $t
+
+UNDEFINED SYMBOLS
+_Z15initThermistorsP7Logging
+_Z14initMapDecoderP7Logging
+engine
+_Z19getInternalAdcValuePKc13adc_channel_e
+engineConfiguration

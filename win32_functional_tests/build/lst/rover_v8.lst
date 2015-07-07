@@ -1,0 +1,147 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccTIOo9H.s 			page 1
+
+
+   1              		.file	"rover_v8.cpp"
+   2              		.section	.text$_Z22setFrankenstein_01_LCDP21board_configuration_s,"x"
+   3              		.p2align 4,,15
+   4              		.globl	__Z22setFrankenstein_01_LCDP21board_configuration_s
+   5              		.def	__Z22setFrankenstein_01_LCDP21board_configuration_s;	.scl	2;	.type	32;	.endef
+   6              	__Z22setFrankenstein_01_LCDP21board_configuration_s:
+   7              	LFB85:
+   8              		.cfi_startproc
+   9 0000 8B442404 		movl	4(%esp), %eax
+  10 0004 C780B000 		movl	$73, 176(%eax)
+  10      00004900 
+  10      0000
+  11 000e C780B400 		movl	$75, 180(%eax)
+  11      00004B00 
+  11      0000
+  12 0018 C780B800 		movl	$77, 184(%eax)
+  12      00004D00 
+  12      0000
+  13 0022 C780BC00 		movl	$79, 188(%eax)
+  13      00004F00 
+  13      0000
+  14 002c C780C000 		movl	$27, 192(%eax)
+  14      00001B00 
+  14      0000
+  15 0036 C780C400 		movl	$29, 196(%eax)
+  15      00001D00 
+  15      0000
+  16 0040 C3       		ret
+  17              		.cfi_endproc
+  18              	LFE85:
+  19 0041 90909090 		.section	.text$_Z10setRoverv8v,"x"
+  19      90909090 
+  19      90909090 
+  19      909090
+  20              		.p2align 4,,15
+  21              		.globl	__Z10setRoverv8v
+  22              		.def	__Z10setRoverv8v;	.scl	2;	.type	32;	.endef
+  23              	__Z10setRoverv8v:
+  24              	LFB86:
+  25              		.cfi_startproc
+  26 0000 83EC1C   		subl	$28, %esp
+  27              		.cfi_def_cfa_offset 32
+  28 0003 A1000000 		movl	_engineConfiguration, %eax
+  28      00
+  29 0008 C7442404 		movl	$1, 4(%esp)
+  29      01000000 
+  30 0010 890424   		movl	%eax, (%esp)
+  31 0013 E8000000 		call	__Z16setOperationModeP22engine_configuration_s16operation_mode_e
+  31      00
+  32 0018 A1000000 		movl	_engineConfiguration, %eax
+  32      00
+  33 001d C7801802 		movl	$9, 536(%eax)
+  33      00000900 
+  33      0000
+  34 0027 C7809001 		movl	$0x4061cac1, 400(%eax)
+  34      0000C1CA 
+  34      6140
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccTIOo9H.s 			page 2
+
+
+  35 0031 C7809401 		movl	$8, 404(%eax)
+  35      00000800 
+  35      0000
+  36 003b C7809801 		movl	$5, 408(%eax)
+  36      00000500 
+  36      0000
+  37 0045 C780A401 		movl	$4000, 420(%eax)
+  37      0000A00F 
+  37      0000
+  38 004f 66C74060 		movw	$550, 96(%eax)
+  38      2602
+  39 0055 C7042400 		movl	$0x40400000, (%esp)
+  39      004040
+  40 005c E8000000 		call	__Z15setWholeFuelMapf
+  40      00
+  41 0061 A1000000 		movl	_boardConfiguration, %eax
+  41      00
+  42 0066 8B150000 		movl	_engineConfiguration, %edx
+  42      0000
+  43 006c C782AC01 		movl	$0, 428(%edx)
+  43      00000000 
+  43      0000
+  44 0076 C782B001 		movl	$1, 432(%edx)
+  44      00000100 
+  44      0000
+  45 0080 C782BC01 		movl	$2, 444(%edx)
+  45      00000200 
+  45      0000
+  46 008a C7402019 		movl	$25, 32(%eax)
+  46      000000
+  47 0091 C7402418 		movl	$24, 36(%eax)
+  47      000000
+  48 0098 C7402843 		movl	$67, 40(%eax)
+  48      000000
+  49 009f C7402C45 		movl	$69, 44(%eax)
+  49      000000
+  50 00a6 C740182D 		movl	$45, 24(%eax)
+  50      000000
+  51 00ad C7401C00 		movl	$0, 28(%eax)
+  51      000000
+  52 00b4 C7405000 		movl	$0, 80(%eax)
+  52      000000
+  53 00bb C7805801 		movl	$22, 344(%eax)
+  53      00001600 
+  53      0000
+  54 00c5 C7805C01 		movl	$28, 348(%eax)
+  54      00001C00 
+  54      0000
+  55 00cf 0FB682D9 		movzbl	1497(%edx), %eax
+  55      050000
+  56 00d6 808AD805 		orb	$64, 1496(%edx)
+  56      000040
+  57 00dd C782EC01 		movl	$3, 492(%edx)
+  57      00000300 
+  57      0000
+  58 00e7 83C802   		orl	$2, %eax
+  59 00ea 83E0FE   		andl	$-2, %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccTIOo9H.s 			page 3
+
+
+  60 00ed 8882D905 		movb	%al, 1497(%edx)
+  60      0000
+  61 00f3 83C41C   		addl	$28, %esp
+  62              		.cfi_def_cfa_offset 4
+  63 00f6 C3       		ret
+  64              		.cfi_endproc
+  65              	LFE86:
+  66              		.def	__Z16setOperationModeP22engine_configuration_s16operation_mode_e;	.scl	2;	.type	32;	.endef
+  67 00f7 90909090 		.def	__Z15setWholeFuelMapf;	.scl	2;	.type	32;	.endef
+  67      90909090 
+  67      90
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccTIOo9H.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 rover_v8.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccTIOo9H.s:6      .text$_Z22setFrankenstein_01_LCDP21board_configuration_s:00000000 __Z22setFrankenstein_01_LCDP21board_configuration_s
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccTIOo9H.s:23     .text$_Z10setRoverv8v:00000000 __Z10setRoverv8v
+
+UNDEFINED SYMBOLS
+_engineConfiguration
+_boardConfiguration
+__Z16setOperationModeP22engine_configuration_s16operation_mode_e
+__Z15setWholeFuelMapf

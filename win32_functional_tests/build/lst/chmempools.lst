@@ -1,0 +1,356 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc0yCsYW.s 			page 1
+
+
+   1              		.file	"chmempools.c"
+   2              		.section .rdata,"dr"
+   3              	LC0:
+   4 0000 22636850 		.ascii "\"chPoolInit\"()\0"
+   4      6F6F6C49 
+   4      6E697422 
+   4      282900
+   5              		.section	.text$chPoolInit,"x"
+   6              		.p2align 4,,15
+   7              		.globl	_chPoolInit
+   8              		.def	_chPoolInit;	.scl	2;	.type	32;	.endef
+   9              	_chPoolInit:
+  10              	LFB7:
+  11              		.cfi_startproc
+  12 0000 83EC1C   		subl	$28, %esp
+  13              		.cfi_def_cfa_offset 32
+  14 0003 89742418 		movl	%esi, 24(%esp)
+  15              		.cfi_offset 6, -8
+  16 0007 8B742424 		movl	36(%esp), %esi
+  17 000b 895C2414 		movl	%ebx, 20(%esp)
+  18              		.cfi_offset 3, -12
+  19 000f 8B5C2420 		movl	32(%esp), %ebx
+  20 0013 83FE03   		cmpl	$3, %esi
+  21 0016 7620     		jbe	L4
+  22 0018 85DB     		testl	%ebx, %ebx
+  23 001a 741C     		je	L4
+  24              	L2:
+  25 001c 8B442428 		movl	40(%esp), %eax
+  26 0020 897304   		movl	%esi, 4(%ebx)
+  27 0023 8B742418 		movl	24(%esp), %esi
+  28 0027 C7030000 		movl	$0, (%ebx)
+  28      0000
+  29 002d 894308   		movl	%eax, 8(%ebx)
+  30 0030 8B5C2414 		movl	20(%esp), %ebx
+  31 0034 83C41C   		addl	$28, %esp
+  32              		.cfi_remember_state
+  33              		.cfi_restore 6
+  34              		.cfi_restore 3
+  35              		.cfi_def_cfa_offset 4
+  36 0037 C3       		ret
+  37              		.p2align 4,,7
+  38              	L4:
+  39              		.cfi_restore_state
+  40 0038 C7042400 		movl	$LC0, (%esp)
+  40      000000
+  41 003f E8000000 		call	_chDbgPanic
+  41      00
+  42 0044 EBD6     		jmp	L2
+  43              		.cfi_endproc
+  44              	LFE7:
+  45 0046 90909090 		.section .rdata,"dr"
+  45      90909090 
+  45      9090
+  46              	LC1:
+  47 000f 22636850 		.ascii "\"chPoolAllocI\"()\0"
+  47      6F6F6C41 
+  47      6C6C6F63 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc0yCsYW.s 			page 2
+
+
+  47      49222829 
+  47      00
+  48              		.section	.text$chPoolAllocI,"x"
+  49              		.p2align 4,,15
+  50              		.globl	_chPoolAllocI
+  51              		.def	_chPoolAllocI;	.scl	2;	.type	32;	.endef
+  52              	_chPoolAllocI:
+  53              	LFB9:
+  54              		.cfi_startproc
+  55 0000 53       		pushl	%ebx
+  56              		.cfi_def_cfa_offset 8
+  57              		.cfi_offset 3, -8
+  58 0001 83EC18   		subl	$24, %esp
+  59              		.cfi_def_cfa_offset 32
+  60 0004 8B5C2420 		movl	32(%esp), %ebx
+  61 0008 E8000000 		call	_chDbgCheckClassI
+  61      00
+  62 000d 85DB     		testl	%ebx, %ebx
+  63 000f 7423     		je	L18
+  64              	L11:
+  65 0011 8B03     		movl	(%ebx), %eax
+  66 0013 85C0     		testl	%eax, %eax
+  67 0015 7409     		je	L12
+  68 0017 8B10     		movl	(%eax), %edx
+  69 0019 8913     		movl	%edx, (%ebx)
+  70              	L13:
+  71 001b 83C418   		addl	$24, %esp
+  72              		.cfi_remember_state
+  73              		.cfi_def_cfa_offset 8
+  74 001e 5B       		popl	%ebx
+  75              		.cfi_restore 3
+  76              		.cfi_def_cfa_offset 4
+  77 001f C3       		ret
+  78              		.p2align 4,,7
+  79              	L12:
+  80              		.cfi_restore_state
+  81 0020 8B5308   		movl	8(%ebx), %edx
+  82 0023 85D2     		testl	%edx, %edx
+  83 0025 74F4     		je	L13
+  84 0027 8B4304   		movl	4(%ebx), %eax
+  85 002a 89442420 		movl	%eax, 32(%esp)
+  86 002e 83C418   		addl	$24, %esp
+  87              		.cfi_remember_state
+  88              		.cfi_def_cfa_offset 8
+  89 0031 5B       		popl	%ebx
+  90              		.cfi_restore 3
+  91              		.cfi_def_cfa_offset 4
+  92 0032 FFE2     		jmp	*%edx
+  93              		.p2align 4,,7
+  94              	L18:
+  95              		.cfi_restore_state
+  96 0034 C704240F 		movl	$LC1, (%esp)
+  96      000000
+  97 003b E8000000 		call	_chDbgPanic
+  97      00
+  98 0040 EBCF     		jmp	L11
+  99              		.cfi_endproc
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc0yCsYW.s 			page 3
+
+
+ 100              	LFE9:
+ 101 0042 90909090 		.section	.text$chPoolAlloc,"x"
+ 101      90909090 
+ 101      90909090 
+ 101      9090
+ 102              		.p2align 4,,15
+ 103              		.globl	_chPoolAlloc
+ 104              		.def	_chPoolAlloc;	.scl	2;	.type	32;	.endef
+ 105              	_chPoolAlloc:
+ 106              	LFB10:
+ 107              		.cfi_startproc
+ 108 0000 53       		pushl	%ebx
+ 109              		.cfi_def_cfa_offset 8
+ 110              		.cfi_offset 3, -8
+ 111 0001 83EC18   		subl	$24, %esp
+ 112              		.cfi_def_cfa_offset 32
+ 113              	/APP
+ 114              	 # 131 "../firmware/chibios/os/kernel/src/chmempools.c" 1
+ 115 0004 90       		nop
+ 116              	 # 0 "" 2
+ 117              	/NO_APP
+ 118 0005 E8000000 		call	_dbg_check_lock
+ 118      00
+ 119 000a 8B442420 		movl	32(%esp), %eax
+ 120 000e 890424   		movl	%eax, (%esp)
+ 121 0011 E8000000 		call	_chPoolAllocI
+ 121      00
+ 122 0016 89C3     		movl	%eax, %ebx
+ 123 0018 E8000000 		call	_dbg_check_unlock
+ 123      00
+ 124              	/APP
+ 125              	 # 133 "../firmware/chibios/os/kernel/src/chmempools.c" 1
+ 126 001d 90       		nop
+ 127              	 # 0 "" 2
+ 128              	/NO_APP
+ 129 001e 83C418   		addl	$24, %esp
+ 130              		.cfi_def_cfa_offset 8
+ 131 0021 89D8     		movl	%ebx, %eax
+ 132 0023 5B       		popl	%ebx
+ 133              		.cfi_restore 3
+ 134              		.cfi_def_cfa_offset 4
+ 135 0024 C3       		ret
+ 136              		.cfi_endproc
+ 137              	LFE10:
+ 138 0025 90909090 		.section .rdata,"dr"
+ 138      90909090 
+ 138      909090
+ 139              	LC2:
+ 140 0020 22636850 		.ascii "\"chPoolFreeI\"()\0"
+ 140      6F6F6C46 
+ 140      72656549 
+ 140      22282900 
+ 141              		.section	.text$chPoolFreeI,"x"
+ 142              		.p2align 4,,15
+ 143              		.globl	_chPoolFreeI
+ 144              		.def	_chPoolFreeI;	.scl	2;	.type	32;	.endef
+ 145              	_chPoolFreeI:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc0yCsYW.s 			page 4
+
+
+ 146              	LFB11:
+ 147              		.cfi_startproc
+ 148 0000 83EC1C   		subl	$28, %esp
+ 149              		.cfi_def_cfa_offset 32
+ 150 0003 895C2414 		movl	%ebx, 20(%esp)
+ 151              		.cfi_offset 3, -12
+ 152 0007 8B5C2424 		movl	36(%esp), %ebx
+ 153 000b 89742418 		movl	%esi, 24(%esp)
+ 154              		.cfi_offset 6, -8
+ 155 000f 8B742420 		movl	32(%esp), %esi
+ 156 0013 E8000000 		call	_chDbgCheckClassI
+ 156      00
+ 157 0018 85DB     		testl	%ebx, %ebx
+ 158 001a 7416     		je	L24
+ 159 001c 85F6     		testl	%esi, %esi
+ 160 001e 7412     		je	L24
+ 161              	L22:
+ 162 0020 8B06     		movl	(%esi), %eax
+ 163 0022 8903     		movl	%eax, (%ebx)
+ 164 0024 891E     		movl	%ebx, (%esi)
+ 165 0026 8B5C2414 		movl	20(%esp), %ebx
+ 166 002a 8B742418 		movl	24(%esp), %esi
+ 167 002e 83C41C   		addl	$28, %esp
+ 168              		.cfi_remember_state
+ 169              		.cfi_restore 6
+ 170              		.cfi_restore 3
+ 171              		.cfi_def_cfa_offset 4
+ 172 0031 C3       		ret
+ 173              		.p2align 4,,7
+ 174              	L24:
+ 175              		.cfi_restore_state
+ 176 0032 C7042420 		movl	$LC2, (%esp)
+ 176      000000
+ 177 0039 E8000000 		call	_chDbgPanic
+ 177      00
+ 178 003e EBE0     		jmp	L22
+ 179              		.cfi_endproc
+ 180              	LFE11:
+ 181              		.section	.text$chPoolFree,"x"
+ 182              		.p2align 4,,15
+ 183              		.globl	_chPoolFree
+ 184              		.def	_chPoolFree;	.scl	2;	.type	32;	.endef
+ 185              	_chPoolFree:
+ 186              	LFB12:
+ 187              		.cfi_startproc
+ 188 0000 83EC1C   		subl	$28, %esp
+ 189              		.cfi_def_cfa_offset 32
+ 190              	/APP
+ 191              	 # 173 "../firmware/chibios/os/kernel/src/chmempools.c" 1
+ 192 0003 90       		nop
+ 193              	 # 0 "" 2
+ 194              	/NO_APP
+ 195 0004 E8000000 		call	_dbg_check_lock
+ 195      00
+ 196 0009 8B442424 		movl	36(%esp), %eax
+ 197 000d 89442404 		movl	%eax, 4(%esp)
+ 198 0011 8B442420 		movl	32(%esp), %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc0yCsYW.s 			page 5
+
+
+ 199 0015 890424   		movl	%eax, (%esp)
+ 200 0018 E8000000 		call	_chPoolFreeI
+ 200      00
+ 201 001d E8000000 		call	_dbg_check_unlock
+ 201      00
+ 202              	/APP
+ 203              	 # 175 "../firmware/chibios/os/kernel/src/chmempools.c" 1
+ 204 0022 90       		nop
+ 205              	 # 0 "" 2
+ 206              	/NO_APP
+ 207 0023 83C41C   		addl	$28, %esp
+ 208              		.cfi_def_cfa_offset 4
+ 209 0026 C3       		ret
+ 210              		.cfi_endproc
+ 211              	LFE12:
+ 212 0027 90909090 		.section .rdata,"dr"
+ 212      90909090 
+ 212      90
+ 213              	LC3:
+ 214 0030 22636850 		.ascii "\"chPoolLoadArray\"()\0"
+ 214      6F6F6C4C 
+ 214      6F616441 
+ 214      72726179 
+ 214      22282900 
+ 215              		.section	.text$chPoolLoadArray,"x"
+ 216              		.p2align 4,,15
+ 217              		.globl	_chPoolLoadArray
+ 218              		.def	_chPoolLoadArray;	.scl	2;	.type	32;	.endef
+ 219              	_chPoolLoadArray:
+ 220              	LFB8:
+ 221              		.cfi_startproc
+ 222 0000 57       		pushl	%edi
+ 223              		.cfi_def_cfa_offset 8
+ 224              		.cfi_offset 7, -8
+ 225 0001 56       		pushl	%esi
+ 226              		.cfi_def_cfa_offset 12
+ 227              		.cfi_offset 6, -12
+ 228 0002 53       		pushl	%ebx
+ 229              		.cfi_def_cfa_offset 16
+ 230              		.cfi_offset 3, -16
+ 231 0003 83EC10   		subl	$16, %esp
+ 232              		.cfi_def_cfa_offset 32
+ 233 0006 8B5C2428 		movl	40(%esp), %ebx
+ 234 000a 8B7C2420 		movl	32(%esp), %edi
+ 235 000e 8B742424 		movl	36(%esp), %esi
+ 236 0012 85DB     		testl	%ebx, %ebx
+ 237 0014 742A     		je	L36
+ 238 0016 85FF     		testl	%edi, %edi
+ 239 0018 7426     		je	L36
+ 240 001a 8DB60000 		.p2align 4,,7
+ 240      0000
+ 241              	L39:
+ 242 0020 89742404 		movl	%esi, 4(%esp)
+ 243 0024 893C24   		movl	%edi, (%esp)
+ 244 0027 E8000000 		call	_chPoolFree
+ 244      00
+ 245 002c 037704   		addl	4(%edi), %esi
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc0yCsYW.s 			page 6
+
+
+ 246 002f 83EB01   		subl	$1, %ebx
+ 247 0032 75EC     		jne	L39
+ 248              	L31:
+ 249 0034 83C410   		addl	$16, %esp
+ 250              		.cfi_remember_state
+ 251              		.cfi_def_cfa_offset 16
+ 252 0037 5B       		popl	%ebx
+ 253              		.cfi_restore 3
+ 254              		.cfi_def_cfa_offset 12
+ 255 0038 5E       		popl	%esi
+ 256              		.cfi_restore 6
+ 257              		.cfi_def_cfa_offset 8
+ 258 0039 5F       		popl	%edi
+ 259              		.cfi_restore 7
+ 260              		.cfi_def_cfa_offset 4
+ 261 003a C3       		ret
+ 262 003b 908D7426 		.p2align 4,,7
+ 262      00
+ 263              	L36:
+ 264              		.cfi_restore_state
+ 265 0040 C7042430 		movl	$LC3, (%esp)
+ 265      000000
+ 266 0047 E8000000 		call	_chDbgPanic
+ 266      00
+ 267 004c 85DB     		testl	%ebx, %ebx
+ 268 004e 75D0     		jne	L39
+ 269 0050 EBE2     		jmp	L31
+ 270              		.cfi_endproc
+ 271              	LFE8:
+ 272              		.def	_chDbgPanic;	.scl	2;	.type	32;	.endef
+ 273              		.def	_chDbgCheckClassI;	.scl	2;	.type	32;	.endef
+ 274              		.def	_dbg_check_lock;	.scl	2;	.type	32;	.endef
+ 275 0052 90909090 		.def	_dbg_check_unlock;	.scl	2;	.type	32;	.endef
+ 275      90909090 
+ 275      90909090 
+ 275      9090
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc0yCsYW.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 chmempools.c
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc0yCsYW.s:9      .text$chPoolInit:00000000 _chPoolInit
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc0yCsYW.s:52     .text$chPoolAllocI:00000000 _chPoolAllocI
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc0yCsYW.s:105    .text$chPoolAlloc:00000000 _chPoolAlloc
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc0yCsYW.s:145    .text$chPoolFreeI:00000000 _chPoolFreeI
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc0yCsYW.s:185    .text$chPoolFree:00000000 _chPoolFree
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc0yCsYW.s:219    .text$chPoolLoadArray:00000000 _chPoolLoadArray
+
+UNDEFINED SYMBOLS
+_chDbgPanic
+_chDbgCheckClassI
+_dbg_check_lock
+_dbg_check_unlock

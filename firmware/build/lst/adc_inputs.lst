@@ -1,0 +1,1796 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"adc_inputs.cpp"
+  16              		.section	.text._ZL20setAdcDebugReportingi,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	_ZL20setAdcDebugReportingi, %function
+  22              	_ZL20setAdcDebugReportingi:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25              		@ link register save eliminated.
+  26 0000 40F20003 		movw	r3, #:lower16:.LANCHOR0
+  27 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+  28 0008 10B4     		push	{r4}
+  29 000a 40F20001 		movw	r1, #:lower16:.LC0
+  30 000e 0446     		mov	r4, r0
+  31 0010 40F20000 		movw	r0, #:lower16:.LANCHOR1
+  32 0014 2246     		mov	r2, r4
+  33 0016 1C60     		str	r4, [r3]
+  34 0018 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+  35 001c C0F20001 		movt	r1, #:upper16:.LC0
+  36 0020 5DF8044B 		ldr	r4, [sp], #4
+  37 0024 FFF7FEBF 		b	scheduleMsg
+  38              		.size	_ZL20setAdcDebugReportingi, .-_ZL20setAdcDebugReportingi
+  39 0028 AFF30080 		.section	.text._ZL10addChannelPKc13adc_channel_e18adc_channel_mode_e,"ax",%progbits
+  39      AFF30080 
+  40              		.align	2
+  41              		.p2align 4,,15
+  42              		.thumb
+  43              		.thumb_func
+  44              		.type	_ZL10addChannelPKc13adc_channel_e18adc_channel_mode_e, %function
+  45              	_ZL10addChannelPKc13adc_channel_e18adc_channel_mode_e:
+  46              		@ args = 0, pretend = 0, frame = 0
+  47              		@ frame_needed = 0, uses_anonymous_args = 0
+  48 0000 B1F55E7F 		cmp	r1, #888
+  49 0004 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  50 0006 0C46     		mov	r4, r1
+  51 0008 0646     		mov	r6, r0
+  52 000a 1746     		mov	r7, r2
+  53 000c 0ED0     		beq	.L2
+  54 000e 40F20005 		movw	r5, #:lower16:.LANCHOR2
+  55 0012 C0F20005 		movt	r5, #:upper16:.LANCHOR2
+  56 0016 55F82130 		ldr	r3, [r5, r1, lsl #2]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 2
+
+
+  57 001a 43B9     		cbnz	r3, .L12
+  58              	.L4:
+  59 001c 40F20003 		movw	r3, #:lower16:.LANCHOR4
+  60 0020 C0F20003 		movt	r3, #:upper16:.LANCHOR4
+  61 0024 45F82470 		str	r7, [r5, r4, lsl #2]
+  62 0028 43F82460 		str	r6, [r3, r4, lsl #2]
+  63              	.L2:
+  64 002c F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+  65              	.L12:
+  66 002e 40F20001 		movw	r1, #:lower16:.LANCHOR3
+  67 0032 C0F20001 		movt	r1, #:upper16:.LANCHOR3
+  68 0036 2046     		mov	r0, r4
+  69 0038 FFF7FEFF 		bl	_Z22getPinNameByAdcChannel13adc_channel_ePc
+  70 003c 40F20000 		movw	r0, #:lower16:.LC1
+  71 0040 40F20001 		movw	r1, #:lower16:.LANCHOR3
+  72 0044 C0F20000 		movt	r0, #:upper16:.LC1
+  73 0048 C0F20001 		movt	r1, #:upper16:.LANCHOR3
+  74 004c 3246     		mov	r2, r6
+  75 004e FFF7FEFF 		bl	firmwareError
+  76 0052 E3E7     		b	.L4
+  77              		.size	_ZL10addChannelPKc13adc_channel_e18adc_channel_mode_e, .-_ZL10addChannelPKc13adc_channel_e18
+  78 0054 AFF30080 		.section	.text._ZL11pwmpcb_fastP9PWMDriver,"ax",%progbits
+  78      AFF30080 
+  78      AFF30080 
+  79              		.align	2
+  80              		.p2align 4,,15
+  81              		.thumb
+  82              		.thumb_func
+  83              		.type	_ZL11pwmpcb_fastP9PWMDriver, %function
+  84              	_ZL11pwmpcb_fastP9PWMDriver:
+  85              		@ args = 0, pretend = 0, frame = 0
+  86              		@ frame_needed = 0, uses_anonymous_args = 0
+  87 0000 40F20003 		movw	r3, #:lower16:rlist
+  88 0004 C0F20003 		movt	r3, #:upper16:rlist
+  89 0008 10B5     		push	{r4, lr}
+  90 000a 9869     		ldr	r0, [r3, #24]
+  91 000c FFF7FEFF 		bl	getRemainingStack
+  92 0010 2028     		cmp	r0, #32
+  93 0012 34DD     		ble	.L19
+  94 0014 2023     		movs	r3, #32
+  95              	@ 174 "./hw_layer/adc_inputs.cpp" 1
+  96 0016 83F31188 		msr     BASEPRI, r3
+  97              	@ 0 "" 2
+  98              		.thumb
+  99 001a FFF7FEFF 		bl	dbg_check_lock_from_isr
+ 100 001e 40F20000 		movw	r0, #:lower16:ADCD2
+ 101 0022 C0F20000 		movt	r0, #:upper16:ADCD2
+ 102 0026 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 103 0028 1A1F     		subs	r2, r3, #4
+ 104 002a D2B2     		uxtb	r2, r2
+ 105 002c 022B     		cmp	r3, #2
+ 106 002e 18BF     		it	ne
+ 107 0030 012A     		cmpne	r2, #1
+ 108 0032 94BF     		ite	ls
+ 109 0034 0024     		movls	r4, #0
+ 110 0036 0124     		movhi	r4, #1
+ 111 0038 0CD9     		bls	.L18
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 3
+
+
+ 112 003a 40F20003 		movw	r3, #:lower16:.LANCHOR5
+ 113 003e C0F20003 		movt	r3, #:upper16:.LANCHOR5
+ 114 0042 5A6D     		ldr	r2, [r3, #84]
+ 115 0044 0132     		adds	r2, r2, #1
+ 116 0046 5A65     		str	r2, [r3, #84]
+ 117 0048 FFF7FEFF 		bl	dbg_check_unlock_from_isr
+ 118 004c 0023     		movs	r3, #0
+ 119              	@ 181 "./hw_layer/adc_inputs.cpp" 1
+ 120 004e 83F31188 		msr     BASEPRI, r3
+ 121              	@ 0 "" 2
+ 122              		.thumb
+ 123 0052 10BD     		pop	{r4, pc}
+ 124              	.L18:
+ 125 0054 40F20001 		movw	r1, #:lower16:.LANCHOR6
+ 126 0058 C0F20001 		movt	r1, #:upper16:.LANCHOR6
+ 127 005c 0C4A     		ldr	r2, .L20
+ 128 005e 0123     		movs	r3, #1
+ 129 0060 FFF7FEFF 		bl	adcStartConversionI
+ 130 0064 FFF7FEFF 		bl	dbg_check_unlock_from_isr
+ 131 0068 2346     		mov	r3, r4
+ 132              	@ 186 "./hw_layer/adc_inputs.cpp" 1
+ 133 006a 83F31188 		msr     BASEPRI, r3
+ 134              	@ 0 "" 2
+ 135              		.thumb
+ 136 006e 40F20003 		movw	r3, #:lower16:.LANCHOR5
+ 137 0072 C0F20003 		movt	r3, #:upper16:.LANCHOR5
+ 138 0076 1A6D     		ldr	r2, [r3, #80]
+ 139 0078 0132     		adds	r2, r2, #1
+ 140 007a 1A65     		str	r2, [r3, #80]
+ 141 007c 10BD     		pop	{r4, pc}
+ 142              	.L19:
+ 143 007e 40F20000 		movw	r0, #:lower16:.LC2
+ 144 0082 C0F20000 		movt	r0, #:upper16:.LC2
+ 145 0086 BDE81040 		pop	{r4, lr}
+ 146 008a FFF7FEBF 		b	firmwareError
+ 147              	.L21:
+ 148 008e 00BF     		.align	2
+ 149              	.L20:
+ 150 0090 58000000 		.word	.LANCHOR5+88
+ 151              		.size	_ZL11pwmpcb_fastP9PWMDriver, .-_ZL11pwmpcb_fastP9PWMDriver
+ 152 0094 AFF30080 		.section	.text._ZL11pwmpcb_slowP9PWMDriver,"ax",%progbits
+ 152      AFF30080 
+ 152      AFF30080 
+ 153              		.align	2
+ 154              		.p2align 4,,15
+ 155              		.thumb
+ 156              		.thumb_func
+ 157              		.type	_ZL11pwmpcb_slowP9PWMDriver, %function
+ 158              	_ZL11pwmpcb_slowP9PWMDriver:
+ 159              		@ args = 0, pretend = 0, frame = 0
+ 160              		@ frame_needed = 0, uses_anonymous_args = 0
+ 161 0000 38B5     		push	{r3, r4, r5, lr}
+ 162 0002 40F20003 		movw	r3, #:lower16:rlist
+ 163 0006 C0F20003 		movt	r3, #:upper16:rlist
+ 164 000a 9869     		ldr	r0, [r3, #24]
+ 165 000c FFF7FEFF 		bl	getRemainingStack
+ 166 0010 2028     		cmp	r0, #32
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 4
+
+
+ 167 0012 30DD     		ble	.L28
+ 168 0014 40F20004 		movw	r4, #:lower16:.LANCHOR7
+ 169 0018 C0F20004 		movt	r4, #:upper16:.LANCHOR7
+ 170 001c 2023     		movs	r3, #32
+ 171 001e 226D     		ldr	r2, [r4, #80]
+ 172 0020 0132     		adds	r2, r2, #1
+ 173 0022 2265     		str	r2, [r4, #80]
+ 174              	@ 147 "./hw_layer/adc_inputs.cpp" 1
+ 175 0024 83F31188 		msr     BASEPRI, r3
+ 176              	@ 0 "" 2
+ 177              		.thumb
+ 178 0028 FFF7FEFF 		bl	dbg_check_lock_from_isr
+ 179 002c 40F20000 		movw	r0, #:lower16:ADCD1
+ 180 0030 C0F20000 		movt	r0, #:upper16:ADCD1
+ 181 0034 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 182 0036 1A1F     		subs	r2, r3, #4
+ 183 0038 D2B2     		uxtb	r2, r2
+ 184 003a 022B     		cmp	r3, #2
+ 185 003c 18BF     		it	ne
+ 186 003e 012A     		cmpne	r2, #1
+ 187 0040 94BF     		ite	ls
+ 188 0042 0025     		movls	r5, #0
+ 189 0044 0125     		movhi	r5, #1
+ 190 0046 08D9     		bls	.L27
+ 191 0048 636D     		ldr	r3, [r4, #84]
+ 192 004a 0133     		adds	r3, r3, #1
+ 193 004c 6365     		str	r3, [r4, #84]
+ 194 004e FFF7FEFF 		bl	dbg_check_unlock_from_isr
+ 195 0052 0023     		movs	r3, #0
+ 196              	@ 154 "./hw_layer/adc_inputs.cpp" 1
+ 197 0054 83F31188 		msr     BASEPRI, r3
+ 198              	@ 0 "" 2
+ 199              		.thumb
+ 200 0058 38BD     		pop	{r3, r4, r5, pc}
+ 201              	.L27:
+ 202 005a 40F20001 		movw	r1, #:lower16:.LANCHOR8
+ 203 005e C0F20001 		movt	r1, #:upper16:.LANCHOR8
+ 204 0062 094A     		ldr	r2, .L29
+ 205 0064 0123     		movs	r3, #1
+ 206 0066 FFF7FEFF 		bl	adcStartConversionI
+ 207 006a FFF7FEFF 		bl	dbg_check_unlock_from_isr
+ 208 006e 2B46     		mov	r3, r5
+ 209              	@ 159 "./hw_layer/adc_inputs.cpp" 1
+ 210 0070 83F31188 		msr     BASEPRI, r3
+ 211              	@ 0 "" 2
+ 212              		.thumb
+ 213 0074 38BD     		pop	{r3, r4, r5, pc}
+ 214              	.L28:
+ 215 0076 40F20000 		movw	r0, #:lower16:.LC3
+ 216 007a C0F20000 		movt	r0, #:upper16:.LC3
+ 217 007e BDE83840 		pop	{r3, r4, r5, lr}
+ 218 0082 FFF7FEBF 		b	firmwareError
+ 219              	.L30:
+ 220 0086 00BF     		.align	2
+ 221              	.L29:
+ 222 0088 58000000 		.word	.LANCHOR7+88
+ 223              		.size	_ZL11pwmpcb_slowP9PWMDriver, .-_ZL11pwmpcb_slowP9PWMDriver
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 5
+
+
+ 224 008c AFF30080 		.section	.text._ZL17adc_callback_slowP9ADCDriverPtj,"ax",%progbits
+ 225              		.align	2
+ 226              		.p2align 4,,15
+ 227              		.thumb
+ 228              		.thumb_func
+ 229              		.type	_ZL17adc_callback_slowP9ADCDriverPtj, %function
+ 230              	_ZL17adc_callback_slowP9ADCDriverPtj:
+ 231              		@ args = 0, pretend = 0, frame = 0
+ 232              		@ frame_needed = 0, uses_anonymous_args = 0
+ 233 0000 38B5     		push	{r3, r4, r5, lr}
+ 234 0002 40F20003 		movw	r3, #:lower16:rlist
+ 235 0006 C0F20003 		movt	r3, #:upper16:rlist
+ 236 000a 0446     		mov	r4, r0
+ 237 000c 9869     		ldr	r0, [r3, #24]
+ 238 000e FFF7FEFF 		bl	getRemainingStack
+ 239 0012 8028     		cmp	r0, #128
+ 240 0014 1FDD     		ble	.L38
+ 241 0016 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 242 0018 042B     		cmp	r3, #4
+ 243 001a 00D0     		beq	.L39
+ 244              	.L31:
+ 245 001c 38BD     		pop	{r3, r4, r5, pc}
+ 246              	.L39:
+ 247 001e 40F20003 		movw	r3, #:lower16:.LANCHOR9
+ 248 0022 40F20004 		movw	r4, #:lower16:.LANCHOR7
+ 249 0026 C0F20003 		movt	r3, #:upper16:.LANCHOR9
+ 250 002a C0F20004 		movt	r4, #:upper16:.LANCHOR7
+ 251 002e 1A68     		ldr	r2, [r3]
+ 252 0030 D4F89850 		ldr	r5, [r4, #152]
+ 253 0034 0132     		adds	r2, r2, #1
+ 254 0036 002D     		cmp	r5, #0
+ 255 0038 1A60     		str	r2, [r3]
+ 256 003a EFDD     		ble	.L31
+ 257 003c 04F15602 		add	r2, r4, #86
+ 258 0040 0023     		movs	r3, #0
+ 259              	.L36:
+ 260 0042 03F13C01 		add	r1, r3, #60
+ 261 0046 32F8020F 		ldrh	r0, [r2, #2]!
+ 262 004a 0133     		adds	r3, r3, #1
+ 263 004c AB42     		cmp	r3, r5
+ 264 004e 24F81100 		strh	r0, [r4, r1, lsl #1]	@ movhi
+ 265 0052 F6D1     		bne	.L36
+ 266 0054 38BD     		pop	{r3, r4, r5, pc}
+ 267              	.L38:
+ 268 0056 40F20000 		movw	r0, #:lower16:.LC4
+ 269 005a C0F20000 		movt	r0, #:upper16:.LC4
+ 270 005e BDE83840 		pop	{r3, r4, r5, lr}
+ 271 0062 FFF7FEBF 		b	firmwareError
+ 272              		.size	_ZL17adc_callback_slowP9ADCDriverPtj, .-_ZL17adc_callback_slowP9ADCDriverPtj
+ 273 0066 00BFAFF3 		.section	.text._ZN9AdcDeviceC2EP18ADCConversionGroup,"ax",%progbits
+ 273      0080AFF3 
+ 273      0080
+ 274              		.align	2
+ 275              		.p2align 4,,15
+ 276              		.global	_ZN9AdcDeviceC2EP18ADCConversionGroup
+ 277              		.thumb
+ 278              		.thumb_func
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 6
+
+
+ 279              		.type	_ZN9AdcDeviceC2EP18ADCConversionGroup, %function
+ 280              	_ZN9AdcDeviceC2EP18ADCConversionGroup:
+ 281              		@ args = 0, pretend = 0, frame = 0
+ 282              		@ frame_needed = 0, uses_anonymous_args = 0
+ 283 0000 38B5     		push	{r3, r4, r5, lr}
+ 284 0002 0446     		mov	r4, r0
+ 285 0004 0846     		mov	r0, r1
+ 286 0006 0023     		movs	r3, #0
+ 287 0008 5025     		movs	r5, #80
+ 288 000a C4F89C10 		str	r1, [r4, #156]
+ 289 000e C4F89830 		str	r3, [r4, #152]
+ 290 0012 2365     		str	r3, [r4, #80]
+ 291 0014 6365     		str	r3, [r4, #84]
+ 292 0016 1946     		mov	r1, r3
+ 293 0018 C361     		str	r3, [r0, #28]
+ 294 001a 0362     		str	r3, [r0, #32]
+ 295 001c 4362     		str	r3, [r0, #36]
+ 296 001e 2A46     		mov	r2, r5
+ 297 0020 04F1A000 		add	r0, r4, #160
+ 298 0024 FFF7FEFF 		bl	memset
+ 299 0028 2046     		mov	r0, r4
+ 300 002a 2A46     		mov	r2, r5
+ 301 002c 4FF0FF31 		mov	r1, #-1
+ 302 0030 FFF7FEFF 		bl	memset
+ 303 0034 2046     		mov	r0, r4
+ 304 0036 38BD     		pop	{r3, r4, r5, pc}
+ 305              		.size	_ZN9AdcDeviceC2EP18ADCConversionGroup, .-_ZN9AdcDeviceC2EP18ADCConversionGroup
+ 306              		.global	_ZN9AdcDeviceC1EP18ADCConversionGroup
+ 307              		.thumb_set _ZN9AdcDeviceC1EP18ADCConversionGroup,_ZN9AdcDeviceC2EP18ADCConversionGroup
+ 308 0038 AFF30080 		.section	.text._Z19getInternalAdcValuePKc13adc_channel_e,"ax",%progbits
+ 308      AFF30080 
+ 309              		.align	2
+ 310              		.p2align 4,,15
+ 311              		.global	_Z19getInternalAdcValuePKc13adc_channel_e
+ 312              		.thumb
+ 313              		.thumb_func
+ 314              		.type	_Z19getInternalAdcValuePKc13adc_channel_e, %function
+ 315              	_Z19getInternalAdcValuePKc13adc_channel_e:
+ 316              		@ args = 0, pretend = 0, frame = 0
+ 317              		@ frame_needed = 0, uses_anonymous_args = 0
+ 318 0000 B1F55E7F 		cmp	r1, #888
+ 319 0004 10B5     		push	{r4, lr}
+ 320 0006 0C46     		mov	r4, r1
+ 321 0008 28D0     		beq	.L49
+ 322 000a 40F20003 		movw	r3, #:lower16:.LANCHOR2
+ 323 000e C0F20003 		movt	r3, #:upper16:.LANCHOR2
+ 324 0012 53F82130 		ldr	r3, [r3, r1, lsl #2]
+ 325 0016 022B     		cmp	r3, #2
+ 326 0018 16D0     		beq	.L50
+ 327 001a 012B     		cmp	r3, #1
+ 328 001c 09D0     		beq	.L45
+ 329 001e 40F20001 		movw	r1, #:lower16:.LC6
+ 330 0022 0246     		mov	r2, r0
+ 331 0024 C0F20001 		movt	r1, #:upper16:.LC6
+ 332 0028 40F25E20 		movw	r0, #606
+ 333 002c 2346     		mov	r3, r4
+ 334 002e FFF7FEFF 		bl	warning
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 7
+
+
+ 335              	.L45:
+ 336 0032 40F20003 		movw	r3, #:lower16:.LANCHOR7
+ 337 0036 C0F20003 		movt	r3, #:upper16:.LANCHOR7
+ 338 003a 53F82420 		ldr	r2, [r3, r4, lsl #2]
+ 339 003e 3C32     		adds	r2, r2, #60
+ 340 0040 33F81200 		ldrh	r0, [r3, r2, lsl #1]
+ 341 0044 80B2     		uxth	r0, r0
+ 342 0046 10BD     		pop	{r4, pc}
+ 343              	.L50:
+ 344 0048 40F20003 		movw	r3, #:lower16:.LANCHOR5
+ 345 004c C0F20003 		movt	r3, #:upper16:.LANCHOR5
+ 346 0050 53F82120 		ldr	r2, [r3, r1, lsl #2]
+ 347 0054 2C32     		adds	r2, r2, #44
+ 348 0056 33F81200 		ldrh	r0, [r3, r2, lsl #1]
+ 349 005a 10BD     		pop	{r4, pc}
+ 350              	.L49:
+ 351 005c 40F20001 		movw	r1, #:lower16:.LC5
+ 352 0060 0246     		mov	r2, r0
+ 353 0062 C0F20001 		movt	r1, #:upper16:.LC5
+ 354 0066 40F25E20 		movw	r0, #606
+ 355 006a FFF7FEFF 		bl	warning
+ 356 006e 4FF0FF30 		mov	r0, #-1
+ 357 0072 10BD     		pop	{r4, pc}
+ 358              		.size	_Z19getInternalAdcValuePKc13adc_channel_e, .-_Z19getInternalAdcValuePKc13adc_channel_e
+ 359              		.global	__aeabi_f2d
+ 360              		.section	.text._ZL13printAdcValue13adc_channel_e,"ax",%progbits
+ 361              		.align	2
+ 362              		.p2align 4,,15
+ 363              		.thumb
+ 364              		.thumb_func
+ 365              		.type	_ZL13printAdcValue13adc_channel_e, %function
+ 366              	_ZL13printAdcValue13adc_channel_e:
+ 367              		@ args = 0, pretend = 0, frame = 0
+ 368              		@ frame_needed = 0, uses_anonymous_args = 0
+ 369 0000 0146     		mov	r1, r0
+ 370 0002 40F20000 		movw	r0, #:lower16:.LC7
+ 371 0006 10B5     		push	{r4, lr}
+ 372 0008 C0F20000 		movt	r0, #:upper16:.LC7
+ 373 000c FFF7FEFF 		bl	_Z19getInternalAdcValuePKc13adc_channel_e
+ 374 0010 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 375 0014 07EE900A 		fmsr	s15, r0	@ int
+ 376 0018 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 377 001c B8EEE77A 		fsitos	s14, s15
+ 378 0020 1B68     		ldr	r3, [r3]
+ 379 0022 DFED0D7A 		flds	s15, .L52
+ 380 0026 27EE277A 		fmuls	s14, s14, s15
+ 381 002a D3ED747A 		flds	s15, [r3, #464]
+ 382 002e 67EE277A 		fmuls	s15, s14, s15
+ 383 0032 17EE900A 		fmrs	r0, s15
+ 384 0036 FFF7FEFF 		bl	__aeabi_f2d
+ 385 003a 0246     		mov	r2, r0
+ 386 003c 0B46     		mov	r3, r1
+ 387 003e 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 388 0042 40F20001 		movw	r1, #:lower16:.LC8
+ 389 0046 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 390 004a C0F20001 		movt	r1, #:upper16:.LC8
+ 391 004e BDE81040 		pop	{r4, lr}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 8
+
+
+ 392 0052 FFF7FEBF 		b	scheduleMsg
+ 393              	.L53:
+ 394 0056 00BF     		.align	2
+ 395              	.L52:
+ 396 0058 010C403A 		.word	977275905
+ 397              		.size	_ZL13printAdcValue13adc_channel_e, .-_ZL13printAdcValue13adc_channel_e
+ 398 005c AFF30080 		.section	.text._Z13getAdcChannel11brain_pin_e,"ax",%progbits
+ 399              		.align	2
+ 400              		.p2align 4,,15
+ 401              		.global	_Z13getAdcChannel11brain_pin_e
+ 402              		.thumb
+ 403              		.thumb_func
+ 404              		.type	_Z13getAdcChannel11brain_pin_e, %function
+ 405              	_Z13getAdcChannel11brain_pin_e:
+ 406              		@ args = 0, pretend = 0, frame = 0
+ 407              		@ frame_needed = 0, uses_anonymous_args = 0
+ 408              		@ link register save eliminated.
+ 409 0000 2528     		cmp	r0, #37
+ 410 0002 9DBF     		ittte	ls
+ 411 0004 40F20003 		movwls	r3, #:lower16:.LANCHOR10
+ 412 0008 C0F20003 		movtls	r3, #:upper16:.LANCHOR10
+ 413 000c 33F81000 		ldrhls	r0, [r3, r0, lsl #1]
+ 414 0010 40F2E730 		movwhi	r0, #999
+ 415 0014 7047     		bx	lr
+ 416              		.size	_Z13getAdcChannel11brain_pin_e, .-_Z13getAdcChannel11brain_pin_e
+ 417 0016 00BFAFF3 		.section	.text._Z17getAdcChannelPort13adc_channel_e,"ax",%progbits
+ 417      0080AFF3 
+ 417      0080
+ 418              		.align	2
+ 419              		.p2align 4,,15
+ 420              		.global	_Z17getAdcChannelPort13adc_channel_e
+ 421              		.thumb
+ 422              		.thumb_func
+ 423              		.type	_Z17getAdcChannelPort13adc_channel_e, %function
+ 424              	_Z17getAdcChannelPort13adc_channel_e:
+ 425              		@ args = 0, pretend = 0, frame = 0
+ 426              		@ frame_needed = 0, uses_anonymous_args = 0
+ 427 0000 08B5     		push	{r3, lr}
+ 428 0002 0146     		mov	r1, r0
+ 429 0004 0F28     		cmp	r0, #15
+ 430 0006 17D8     		bhi	.L58
+ 431 0008 DFE800F0 		tbb	[pc, r0]
+ 432              	.L60:
+ 433 000c 12       		.byte	(.L59-.L60)/2
+ 434 000d 12       		.byte	(.L59-.L60)/2
+ 435 000e 12       		.byte	(.L59-.L60)/2
+ 436 000f 12       		.byte	(.L59-.L60)/2
+ 437 0010 12       		.byte	(.L59-.L60)/2
+ 438 0011 12       		.byte	(.L59-.L60)/2
+ 439 0012 12       		.byte	(.L59-.L60)/2
+ 440 0013 12       		.byte	(.L59-.L60)/2
+ 441 0014 0D       		.byte	(.L68-.L60)/2
+ 442 0015 0D       		.byte	(.L68-.L60)/2
+ 443 0016 08       		.byte	(.L67-.L60)/2
+ 444 0017 08       		.byte	(.L67-.L60)/2
+ 445 0018 08       		.byte	(.L67-.L60)/2
+ 446 0019 08       		.byte	(.L67-.L60)/2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 9
+
+
+ 447 001a 08       		.byte	(.L67-.L60)/2
+ 448 001b 08       		.byte	(.L67-.L60)/2
+ 449              		.align	1
+ 450              	.L67:
+ 451 001c 4FF40060 		mov	r0, #2048
+ 452 0020 C4F20200 		movt	r0, 16386
+ 453 0024 08BD     		pop	{r3, pc}
+ 454              	.L68:
+ 455 0026 4FF48060 		mov	r0, #1024
+ 456 002a C4F20200 		movt	r0, 16386
+ 457 002e 08BD     		pop	{r3, pc}
+ 458              	.L59:
+ 459 0030 0020     		movs	r0, #0
+ 460 0032 C4F20200 		movt	r0, 16386
+ 461 0036 08BD     		pop	{r3, pc}
+ 462              	.L58:
+ 463 0038 40F20000 		movw	r0, #:lower16:.LC9
+ 464 003c C0F20000 		movt	r0, #:upper16:.LC9
+ 465 0040 FFF7FEFF 		bl	firmwareError
+ 466 0044 0020     		movs	r0, #0
+ 467 0046 08BD     		pop	{r3, pc}
+ 468              		.size	_Z17getAdcChannelPort13adc_channel_e, .-_Z17getAdcChannelPort13adc_channel_e
+ 469 0048 AFF30080 		.section	.text._Z10getAdcMode13adc_channel_e,"ax",%progbits
+ 469      AFF30080 
+ 470              		.align	2
+ 471              		.p2align 4,,15
+ 472              		.global	_Z10getAdcMode13adc_channel_e
+ 473              		.thumb
+ 474              		.thumb_func
+ 475              		.type	_Z10getAdcMode13adc_channel_e, %function
+ 476              	_Z10getAdcMode13adc_channel_e:
+ 477              		@ args = 0, pretend = 0, frame = 0
+ 478              		@ frame_needed = 0, uses_anonymous_args = 0
+ 479              		@ link register save eliminated.
+ 480 0000 40F20002 		movw	r2, #:lower16:.LANCHOR7
+ 481 0004 C0F20002 		movt	r2, #:upper16:.LANCHOR7
+ 482 0008 10B4     		push	{r4}
+ 483 000a D2F89840 		ldr	r4, [r2, #152]
+ 484 000e 002C     		cmp	r4, #0
+ 485 0010 0DDD     		ble	.L70
+ 486 0012 D2F8A030 		ldr	r3, [r2, #160]
+ 487 0016 9842     		cmp	r0, r3
+ 488 0018 26D0     		beq	.L77
+ 489 001a A032     		adds	r2, r2, #160
+ 490 001c 0023     		movs	r3, #0
+ 491 001e 03E0     		b	.L72
+ 492              	.L73:
+ 493 0020 52F8041F 		ldr	r1, [r2, #4]!
+ 494 0024 8842     		cmp	r0, r1
+ 495 0026 1FD0     		beq	.L77
+ 496              	.L72:
+ 497 0028 0133     		adds	r3, r3, #1
+ 498 002a A342     		cmp	r3, r4
+ 499 002c F8D1     		bne	.L73
+ 500              	.L70:
+ 501 002e 40F20002 		movw	r2, #:lower16:.LANCHOR5
+ 502 0032 C0F20002 		movt	r2, #:upper16:.LANCHOR5
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 10
+
+
+ 503 0036 D2F89840 		ldr	r4, [r2, #152]
+ 504 003a 002C     		cmp	r4, #0
+ 505 003c 0DDD     		ble	.L78
+ 506 003e D2F8A030 		ldr	r3, [r2, #160]
+ 507 0042 9842     		cmp	r0, r3
+ 508 0044 17D0     		beq	.L80
+ 509 0046 A032     		adds	r2, r2, #160
+ 510 0048 0023     		movs	r3, #0
+ 511 004a 03E0     		b	.L74
+ 512              	.L75:
+ 513 004c 52F8041F 		ldr	r1, [r2, #4]!
+ 514 0050 8842     		cmp	r0, r1
+ 515 0052 10D0     		beq	.L80
+ 516              	.L74:
+ 517 0054 0133     		adds	r3, r3, #1
+ 518 0056 A342     		cmp	r3, r4
+ 519 0058 F8D1     		bne	.L75
+ 520              	.L78:
+ 521 005a 40F20000 		movw	r0, #:lower16:.LC11
+ 522 005e C0F20000 		movt	r0, #:upper16:.LC11
+ 523 0062 5DF8044B 		ldr	r4, [sp], #4
+ 524 0066 7047     		bx	lr
+ 525              	.L77:
+ 526 0068 40F20000 		movw	r0, #:lower16:.LC10
+ 527 006c C0F20000 		movt	r0, #:upper16:.LC10
+ 528 0070 5DF8044B 		ldr	r4, [sp], #4
+ 529 0074 7047     		bx	lr
+ 530              	.L80:
+ 531 0076 40F20000 		movw	r0, #:lower16:.LC12
+ 532 007a C0F20000 		movt	r0, #:upper16:.LC12
+ 533 007e 5DF8044B 		ldr	r4, [sp], #4
+ 534 0082 7047     		bx	lr
+ 535              		.size	_Z10getAdcMode13adc_channel_e, .-_Z10getAdcMode13adc_channel_e
+ 536 0084 AFF30080 		.section	.text._Z16getAdcChannelPin13adc_channel_e,"ax",%progbits
+ 536      AFF30080 
+ 536      AFF30080 
+ 537              		.align	2
+ 538              		.p2align 4,,15
+ 539              		.global	_Z16getAdcChannelPin13adc_channel_e
+ 540              		.thumb
+ 541              		.thumb_func
+ 542              		.type	_Z16getAdcChannelPin13adc_channel_e, %function
+ 543              	_Z16getAdcChannelPin13adc_channel_e:
+ 544              		@ args = 0, pretend = 0, frame = 0
+ 545              		@ frame_needed = 0, uses_anonymous_args = 0
+ 546 0000 08B5     		push	{r3, lr}
+ 547 0002 0146     		mov	r1, r0
+ 548 0004 0F28     		cmp	r0, #15
+ 549 0006 19D8     		bhi	.L82
+ 550 0008 DFE800F0 		tbb	[pc, r0]
+ 551              	.L84:
+ 552 000c 16       		.byte	(.L83-.L84)/2
+ 553 000d 08       		.byte	(.L96-.L84)/2
+ 554 000e 0C       		.byte	(.L92-.L84)/2
+ 555 000f 10       		.byte	(.L93-.L84)/2
+ 556 0010 0E       		.byte	(.L94-.L84)/2
+ 557 0011 0A       		.byte	(.L95-.L84)/2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 11
+
+
+ 558 0012 12       		.byte	(.L90-.L84)/2
+ 559 0013 14       		.byte	(.L91-.L84)/2
+ 560 0014 16       		.byte	(.L83-.L84)/2
+ 561 0015 08       		.byte	(.L96-.L84)/2
+ 562 0016 16       		.byte	(.L83-.L84)/2
+ 563 0017 08       		.byte	(.L96-.L84)/2
+ 564 0018 0C       		.byte	(.L92-.L84)/2
+ 565 0019 10       		.byte	(.L93-.L84)/2
+ 566 001a 0E       		.byte	(.L94-.L84)/2
+ 567 001b 0A       		.byte	(.L95-.L84)/2
+ 568              		.align	1
+ 569              	.L96:
+ 570 001c 0120     		movs	r0, #1
+ 571 001e 08BD     		pop	{r3, pc}
+ 572              	.L95:
+ 573 0020 0520     		movs	r0, #5
+ 574 0022 08BD     		pop	{r3, pc}
+ 575              	.L92:
+ 576 0024 0220     		movs	r0, #2
+ 577 0026 08BD     		pop	{r3, pc}
+ 578              	.L94:
+ 579 0028 0420     		movs	r0, #4
+ 580 002a 08BD     		pop	{r3, pc}
+ 581              	.L93:
+ 582 002c 0320     		movs	r0, #3
+ 583 002e 08BD     		pop	{r3, pc}
+ 584              	.L90:
+ 585 0030 0620     		movs	r0, #6
+ 586 0032 08BD     		pop	{r3, pc}
+ 587              	.L91:
+ 588 0034 0720     		movs	r0, #7
+ 589 0036 08BD     		pop	{r3, pc}
+ 590              	.L83:
+ 591 0038 0020     		movs	r0, #0
+ 592 003a 08BD     		pop	{r3, pc}
+ 593              	.L82:
+ 594 003c 40F20000 		movw	r0, #:lower16:.LC9
+ 595 0040 C0F20000 		movt	r0, #:upper16:.LC9
+ 596 0044 FFF7FEFF 		bl	firmwareError
+ 597 0048 4FF0FF30 		mov	r0, #-1
+ 598 004c 08BD     		pop	{r3, pc}
+ 599              		.size	_Z16getAdcChannelPin13adc_channel_e, .-_Z16getAdcChannelPin13adc_channel_e
+ 600 004e 00BF     		.section	.text._ZL18printFullAdcReportv,"ax",%progbits
+ 601              		.align	2
+ 602              		.p2align 4,,15
+ 603              		.thumb
+ 604              		.thumb_func
+ 605              		.type	_ZL18printFullAdcReportv, %function
+ 606              	_ZL18printFullAdcReportv:
+ 607              		@ args = 0, pretend = 0, frame = 0
+ 608              		@ frame_needed = 0, uses_anonymous_args = 0
+ 609 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+ 610 0004 40F20003 		movw	r3, #:lower16:.LANCHOR5
+ 611 0008 2DED028B 		fstmfdd	sp!, {d8}
+ 612 000c 40F20007 		movw	r7, #:lower16:.LANCHOR7
+ 613 0010 C0F20003 		movt	r3, #:upper16:.LANCHOR5
+ 614 0014 C0F20007 		movt	r7, #:upper16:.LANCHOR7
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 12
+
+
+ 615 0018 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 616 001c 40F20001 		movw	r1, #:lower16:.LC13
+ 617 0020 1A6D     		ldr	r2, [r3, #80]
+ 618 0022 3B6D     		ldr	r3, [r7, #80]
+ 619 0024 83B0     		sub	sp, sp, #12
+ 620 0026 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 621 002a C0F20001 		movt	r1, #:upper16:.LC13
+ 622 002e FFF7FEFF 		bl	scheduleMsg
+ 623 0032 D7F89830 		ldr	r3, [r7, #152]
+ 624 0036 002B     		cmp	r3, #0
+ 625 0038 5DDD     		ble	.L97
+ 626 003a 9FED318A 		flds	s16, .L101
+ 627 003e 07F19C08 		add	r8, r7, #156
+ 628 0042 0024     		movs	r4, #0
+ 629              	.L100:
+ 630 0044 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 631 0048 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 632 004c FFF7FEFF 		bl	appendMsgPrefix
+ 633 0050 58F8045F 		ldr	r5, [r8, #4]!
+ 634 0054 2846     		mov	r0, r5
+ 635 0056 FFF7FEFF 		bl	_Z17getAdcChannelPort13adc_channel_e
+ 636 005a 0646     		mov	r6, r0
+ 637 005c 2846     		mov	r0, r5
+ 638 005e FFF7FEFF 		bl	_Z16getAdcChannelPin13adc_channel_e
+ 639 0062 04F13C03 		add	r3, r4, #60
+ 640 0066 8146     		mov	r9, r0
+ 641 0068 3046     		mov	r0, r6
+ 642 006a 37F81360 		ldrh	r6, [r7, r3, lsl #1]
+ 643 006e FFF7FEFF 		bl	_Z8portnameP12GPIO_TypeDef
+ 644 0072 40F20001 		movw	r1, #:lower16:.LC14
+ 645 0076 0346     		mov	r3, r0
+ 646 0078 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 647 007c 2246     		mov	r2, r4
+ 648 007e C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 649 0082 C0F20001 		movt	r1, #:upper16:.LC14
+ 650 0086 CDF80090 		str	r9, [sp]
+ 651 008a FFF7FEFF 		bl	appendPrintf
+ 652 008e B6B2     		uxth	r6, r6
+ 653 0090 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 654 0094 40F20001 		movw	r1, #:lower16:.LC15
+ 655 0098 2A46     		mov	r2, r5
+ 656 009a 3346     		mov	r3, r6
+ 657 009c C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 658 00a0 C0F20001 		movt	r1, #:upper16:.LC15
+ 659 00a4 FFF7FEFF 		bl	appendPrintf
+ 660 00a8 07EE106A 		fmsr	s14, r6	@ int
+ 661 00ac F8EEC77A 		fsitos	s15, s14
+ 662 00b0 0134     		adds	r4, r4, #1
+ 663 00b2 67EE887A 		fmuls	s15, s15, s16
+ 664 00b6 17EE900A 		fmrs	r0, s15
+ 665 00ba FFF7FEFF 		bl	__aeabi_f2d
+ 666 00be 0B46     		mov	r3, r1
+ 667 00c0 0246     		mov	r2, r0
+ 668 00c2 40F20001 		movw	r1, #:lower16:.LC16
+ 669 00c6 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 670 00ca C0F20001 		movt	r1, #:upper16:.LC16
+ 671 00ce C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 13
+
+
+ 672 00d2 FFF7FEFF 		bl	appendPrintf
+ 673 00d6 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 674 00da C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 675 00de FFF7FEFF 		bl	appendMsgPostfix
+ 676 00e2 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 677 00e6 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 678 00ea FFF7FEFF 		bl	scheduleLogging
+ 679 00ee D7F89830 		ldr	r3, [r7, #152]
+ 680 00f2 9C42     		cmp	r4, r3
+ 681 00f4 A6DB     		blt	.L100
+ 682              	.L97:
+ 683 00f6 03B0     		add	sp, sp, #12
+ 684              		@ sp needed
+ 685 00f8 BDEC028B 		fldmfdd	sp!, {d8}
+ 686 00fc BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ 687              	.L102:
+ 688              		.align	2
+ 689              	.L101:
+ 690 0100 010C403A 		.word	977275905
+ 691              		.size	_ZL18printFullAdcReportv, .-_ZL18printFullAdcReportv
+ 692 0104 AFF30080 		.section	.text._ZN9AdcDevice4sizeEv,"ax",%progbits
+ 692      AFF30080 
+ 692      AFF30080 
+ 693              		.align	2
+ 694              		.p2align 4,,15
+ 695              		.global	_ZN9AdcDevice4sizeEv
+ 696              		.thumb
+ 697              		.thumb_func
+ 698              		.type	_ZN9AdcDevice4sizeEv, %function
+ 699              	_ZN9AdcDevice4sizeEv:
+ 700              		@ args = 0, pretend = 0, frame = 0
+ 701              		@ frame_needed = 0, uses_anonymous_args = 0
+ 702              		@ link register save eliminated.
+ 703 0000 D0F89800 		ldr	r0, [r0, #152]
+ 704 0004 7047     		bx	lr
+ 705              		.size	_ZN9AdcDevice4sizeEv, .-_ZN9AdcDevice4sizeEv
+ 706 0006 00BFAFF3 		.section	.text._ZN9AdcDevice22getAdcValueByHwChannelEi,"ax",%progbits
+ 706      0080AFF3 
+ 706      0080
+ 707              		.align	2
+ 708              		.p2align 4,,15
+ 709              		.global	_ZN9AdcDevice22getAdcValueByHwChannelEi
+ 710              		.thumb
+ 711              		.thumb_func
+ 712              		.type	_ZN9AdcDevice22getAdcValueByHwChannelEi, %function
+ 713              	_ZN9AdcDevice22getAdcValueByHwChannelEi:
+ 714              		@ args = 0, pretend = 0, frame = 0
+ 715              		@ frame_needed = 0, uses_anonymous_args = 0
+ 716              		@ link register save eliminated.
+ 717 0000 50F82130 		ldr	r3, [r0, r1, lsl #2]
+ 718 0004 3C33     		adds	r3, r3, #60
+ 719 0006 30F81300 		ldrh	r0, [r0, r3, lsl #1]
+ 720 000a 80B2     		uxth	r0, r0
+ 721 000c 7047     		bx	lr
+ 722              		.size	_ZN9AdcDevice22getAdcValueByHwChannelEi, .-_ZN9AdcDevice22getAdcValueByHwChannelEi
+ 723 000e 00BF     		.section	.text._ZN9AdcDevice18getAdcValueByIndexEi,"ax",%progbits
+ 724              		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 14
+
+
+ 725              		.p2align 4,,15
+ 726              		.global	_ZN9AdcDevice18getAdcValueByIndexEi
+ 727              		.thumb
+ 728              		.thumb_func
+ 729              		.type	_ZN9AdcDevice18getAdcValueByIndexEi, %function
+ 730              	_ZN9AdcDevice18getAdcValueByIndexEi:
+ 731              		@ args = 0, pretend = 0, frame = 0
+ 732              		@ frame_needed = 0, uses_anonymous_args = 0
+ 733              		@ link register save eliminated.
+ 734 0000 3C31     		adds	r1, r1, #60
+ 735 0002 30F81100 		ldrh	r0, [r0, r1, lsl #1]
+ 736 0006 80B2     		uxth	r0, r0
+ 737 0008 7047     		bx	lr
+ 738              		.size	_ZN9AdcDevice18getAdcValueByIndexEi, .-_ZN9AdcDevice18getAdcValueByIndexEi
+ 739 000a 00BFAFF3 		.section	.text._ZN9AdcDevice4initEv,"ax",%progbits
+ 739      0080
+ 740              		.align	2
+ 741              		.p2align 4,,15
+ 742              		.global	_ZN9AdcDevice4initEv
+ 743              		.thumb
+ 744              		.thumb_func
+ 745              		.type	_ZN9AdcDevice4initEv, %function
+ 746              	_ZN9AdcDevice4initEv:
+ 747              		@ args = 0, pretend = 0, frame = 0
+ 748              		@ frame_needed = 0, uses_anonymous_args = 0
+ 749              		@ link register save eliminated.
+ 750 0000 D0F89C30 		ldr	r3, [r0, #156]
+ 751 0004 D0F89820 		ldr	r2, [r0, #152]
+ 752 0008 D969     		ldr	r1, [r3, #28]
+ 753 000a 5A80     		strh	r2, [r3, #2]	@ movhi
+ 754 000c 013A     		subs	r2, r2, #1
+ 755 000e 01EB0251 		add	r1, r1, r2, lsl #20
+ 756 0012 D961     		str	r1, [r3, #28]
+ 757 0014 7047     		bx	lr
+ 758              		.size	_ZN9AdcDevice4initEv, .-_ZN9AdcDevice4initEv
+ 759 0016 00BFAFF3 		.section	.text._ZN9AdcDevice8isHwUsedE13adc_channel_e,"ax",%progbits
+ 759      0080AFF3 
+ 759      0080
+ 760              		.align	2
+ 761              		.p2align 4,,15
+ 762              		.global	_ZN9AdcDevice8isHwUsedE13adc_channel_e
+ 763              		.thumb
+ 764              		.thumb_func
+ 765              		.type	_ZN9AdcDevice8isHwUsedE13adc_channel_e, %function
+ 766              	_ZN9AdcDevice8isHwUsedE13adc_channel_e:
+ 767              		@ args = 0, pretend = 0, frame = 0
+ 768              		@ frame_needed = 0, uses_anonymous_args = 0
+ 769              		@ link register save eliminated.
+ 770 0000 10B4     		push	{r4}
+ 771 0002 D0F89840 		ldr	r4, [r0, #152]
+ 772 0006 002C     		cmp	r4, #0
+ 773 0008 0EDD     		ble	.L111
+ 774 000a D0F8A030 		ldr	r3, [r0, #160]
+ 775 000e 8B42     		cmp	r3, r1
+ 776 0010 0ED0     		beq	.L113
+ 777 0012 0023     		movs	r3, #0
+ 778 0014 03E0     		b	.L109
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 15
+
+
+ 779              	.L110:
+ 780 0016 D0F8A020 		ldr	r2, [r0, #160]
+ 781 001a 8A42     		cmp	r2, r1
+ 782 001c 08D0     		beq	.L113
+ 783              	.L109:
+ 784 001e 0133     		adds	r3, r3, #1
+ 785 0020 A342     		cmp	r3, r4
+ 786 0022 00F10400 		add	r0, r0, #4
+ 787 0026 F6D1     		bne	.L110
+ 788              	.L111:
+ 789 0028 0020     		movs	r0, #0
+ 790 002a 5DF8044B 		ldr	r4, [sp], #4
+ 791 002e 7047     		bx	lr
+ 792              	.L113:
+ 793 0030 0120     		movs	r0, #1
+ 794 0032 5DF8044B 		ldr	r4, [sp], #4
+ 795 0036 7047     		bx	lr
+ 796              		.size	_ZN9AdcDevice8isHwUsedE13adc_channel_e, .-_ZN9AdcDevice8isHwUsedE13adc_channel_e
+ 797 0038 AFF30080 		.section	.text._ZN9AdcDevice10addChannelE13adc_channel_e,"ax",%progbits
+ 797      AFF30080 
+ 798              		.align	2
+ 799              		.p2align 4,,15
+ 800              		.global	_ZN9AdcDevice10addChannelE13adc_channel_e
+ 801              		.thumb
+ 802              		.thumb_func
+ 803              		.type	_ZN9AdcDevice10addChannelE13adc_channel_e, %function
+ 804              	_ZN9AdcDevice10addChannelE13adc_channel_e:
+ 805              		@ args = 0, pretend = 0, frame = 0
+ 806              		@ frame_needed = 0, uses_anonymous_args = 0
+ 807 0000 D0F89830 		ldr	r3, [r0, #152]
+ 808 0004 70B5     		push	{r4, r5, r6, lr}
+ 809 0006 03F12802 		add	r2, r3, #40
+ 810 000a 0C46     		mov	r4, r1
+ 811 000c 052B     		cmp	r3, #5
+ 812 000e 03F10101 		add	r1, r3, #1
+ 813 0012 C0F89810 		str	r1, [r0, #152]
+ 814 0016 40F82430 		str	r3, [r0, r4, lsl #2]
+ 815 001a 40F82240 		str	r4, [r0, r2, lsl #2]
+ 816 001e D0F89C20 		ldr	r2, [r0, #156]
+ 817 0022 2FDD     		ble	.L118
+ 818 0024 0B2B     		cmp	r3, #11
+ 819 0026 24DD     		ble	.L119
+ 820 0028 0C3B     		subs	r3, r3, #12
+ 821 002a D169     		ldr	r1, [r2, #28]
+ 822 002c 03EB8303 		add	r3, r3, r3, lsl #2
+ 823 0030 04FA03F3 		lsl	r3, r4, r3
+ 824 0034 1944     		add	r1, r1, r3
+ 825 0036 D161     		str	r1, [r2, #28]
+ 826              	.L116:
+ 827 0038 2046     		mov	r0, r4
+ 828 003a FFF7FEFF 		bl	_Z17getAdcChannelPort13adc_channel_e
+ 829 003e 0546     		mov	r5, r0
+ 830 0040 2046     		mov	r0, r4
+ 831 0042 FFF7FEFF 		bl	_Z16getAdcChannelPin13adc_channel_e
+ 832 0046 40F20001 		movw	r1, #:lower16:.LC18
+ 833 004a 0446     		mov	r4, r0
+ 834 004c 40F20000 		movw	r0, #:lower16:.LC17
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 16
+
+
+ 835 0050 C0F20000 		movt	r0, #:upper16:.LC17
+ 836 0054 C0F20001 		movt	r1, #:upper16:.LC18
+ 837 0058 FFF7FEFF 		bl	print
+ 838 005c 40F20000 		movw	r0, #:lower16:.LC19
+ 839 0060 2946     		mov	r1, r5
+ 840 0062 2246     		mov	r2, r4
+ 841 0064 C0F20000 		movt	r0, #:upper16:.LC19
+ 842 0068 0323     		movs	r3, #3
+ 843 006a BDE87040 		pop	{r4, r5, r6, lr}
+ 844 006e FFF7FEBF 		b	_Z12mySetPadModePKcP12GPIO_TypeDefmm
+ 845              	.L119:
+ 846 0072 063B     		subs	r3, r3, #6
+ 847 0074 116A     		ldr	r1, [r2, #32]
+ 848 0076 03EB8303 		add	r3, r3, r3, lsl #2
+ 849 007a 04FA03F3 		lsl	r3, r4, r3
+ 850 007e 1944     		add	r1, r1, r3
+ 851 0080 1162     		str	r1, [r2, #32]
+ 852 0082 D9E7     		b	.L116
+ 853              	.L118:
+ 854 0084 516A     		ldr	r1, [r2, #36]
+ 855 0086 03EB8303 		add	r3, r3, r3, lsl #2
+ 856 008a 04FA03F3 		lsl	r3, r4, r3
+ 857 008e 1944     		add	r1, r1, r3
+ 858 0090 5162     		str	r1, [r2, #36]
+ 859 0092 D1E7     		b	.L116
+ 860              		.size	_ZN9AdcDevice10addChannelE13adc_channel_e, .-_ZN9AdcDevice10addChannelE13adc_channel_e
+ 861 0094 AFF30080 		.section	.text._ZN9AdcDevice34getAdcHardwareIndexByInternalIndexEi,"ax",%progbits
+ 861      AFF30080 
+ 861      AFF30080 
+ 862              		.align	2
+ 863              		.p2align 4,,15
+ 864              		.global	_ZN9AdcDevice34getAdcHardwareIndexByInternalIndexEi
+ 865              		.thumb
+ 866              		.thumb_func
+ 867              		.type	_ZN9AdcDevice34getAdcHardwareIndexByInternalIndexEi, %function
+ 868              	_ZN9AdcDevice34getAdcHardwareIndexByInternalIndexEi:
+ 869              		@ args = 0, pretend = 0, frame = 0
+ 870              		@ frame_needed = 0, uses_anonymous_args = 0
+ 871              		@ link register save eliminated.
+ 872 0000 2831     		adds	r1, r1, #40
+ 873 0002 50F82100 		ldr	r0, [r0, r1, lsl #2]
+ 874 0006 7047     		bx	lr
+ 875              		.size	_ZN9AdcDevice34getAdcHardwareIndexByInternalIndexEi, .-_ZN9AdcDevice34getAdcHardwareIndexByI
+ 876 0008 AFF30080 		.section	.text._Z13initAdcInputsb,"ax",%progbits
+ 876      AFF30080 
+ 877              		.align	2
+ 878              		.p2align 4,,15
+ 879              		.global	_Z13initAdcInputsb
+ 880              		.thumb
+ 881              		.thumb_func
+ 882              		.type	_Z13initAdcInputsb, %function
+ 883              	_Z13initAdcInputsb:
+ 884              		@ args = 0, pretend = 0, frame = 0
+ 885              		@ frame_needed = 0, uses_anonymous_args = 0
+ 886 0000 70B5     		push	{r4, r5, r6, lr}
+ 887 0002 40F20001 		movw	r1, #:lower16:.LC20
+ 888 0006 0646     		mov	r6, r0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 17
+
+
+ 889 0008 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 890 000c C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 891 0010 C0F20001 		movt	r1, #:upper16:.LC20
+ 892 0014 FFF7FEFF 		bl	printMsg
+ 893 0018 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 894 001c 0021     		movs	r1, #0
+ 895 001e 4022     		movs	r2, #64
+ 896 0020 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 897 0024 40F20004 		movw	r4, #:lower16:engineConfiguration
+ 898 0028 C0F20004 		movt	r4, #:upper16:engineConfiguration
+ 899 002c FFF7FEFF 		bl	memset
+ 900 0030 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 901 0034 0021     		movs	r1, #0
+ 902 0036 4022     		movs	r2, #64
+ 903 0038 C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 904 003c FFF7FEFF 		bl	memset
+ 905 0040 2368     		ldr	r3, [r4]
+ 906 0042 884D     		ldr	r5, .L139
+ 907 0044 D3F80C12 		ldr	r1, [r3, #524]
+ 908 0048 40F20000 		movw	r0, #:lower16:.LC21
+ 909 004c C0F20000 		movt	r0, #:upper16:.LC21
+ 910 0050 0222     		movs	r2, #2
+ 911 0052 FFF7FEFF 		bl	_ZL10addChannelPKc13adc_channel_e18adc_channel_mode_e
+ 912 0056 2368     		ldr	r3, [r4]
+ 913 0058 40F20000 		movw	r0, #:lower16:.LC22
+ 914 005c D3F8FC10 		ldr	r1, [r3, #252]
+ 915 0060 C0F20000 		movt	r0, #:upper16:.LC22
+ 916 0064 0222     		movs	r2, #2
+ 917 0066 FFF7FEFF 		bl	_ZL10addChannelPKc13adc_channel_e18adc_channel_mode_e
+ 918 006a 2368     		ldr	r3, [r4]
+ 919 006c 40F20000 		movw	r0, #:lower16:.LC23
+ 920 0070 D3F84412 		ldr	r1, [r3, #580]
+ 921 0074 C0F20000 		movt	r0, #:upper16:.LC23
+ 922 0078 0222     		movs	r2, #2
+ 923 007a FFF7FEFF 		bl	_ZL10addChannelPKc13adc_channel_e18adc_channel_mode_e
+ 924 007e 2368     		ldr	r3, [r4]
+ 925 0080 40F20000 		movw	r0, #:lower16:.LC24
+ 926 0084 D3F8DC15 		ldr	r1, [r3, #1500]
+ 927 0088 C0F20000 		movt	r0, #:upper16:.LC24
+ 928 008c 0222     		movs	r2, #2
+ 929 008e FFF7FEFF 		bl	_ZL10addChannelPKc13adc_channel_e18adc_channel_mode_e
+ 930 0092 2368     		ldr	r3, [r4]
+ 931 0094 40F20000 		movw	r0, #:lower16:.LC25
+ 932 0098 D3F8E411 		ldr	r1, [r3, #484]
+ 933 009c C0F20000 		movt	r0, #:upper16:.LC25
+ 934 00a0 0122     		movs	r2, #1
+ 935 00a2 FFF7FEFF 		bl	_ZL10addChannelPKc13adc_channel_e18adc_channel_mode_e
+ 936 00a6 2368     		ldr	r3, [r4]
+ 937 00a8 40F20000 		movw	r0, #:lower16:.LC26
+ 938 00ac D3F85C12 		ldr	r1, [r3, #604]
+ 939 00b0 C0F20000 		movt	r0, #:upper16:.LC26
+ 940 00b4 0122     		movs	r2, #1
+ 941 00b6 FFF7FEFF 		bl	_ZL10addChannelPKc13adc_channel_e18adc_channel_mode_e
+ 942 00ba 2368     		ldr	r3, [r4]
+ 943 00bc 40F20000 		movw	r0, #:lower16:.LC27
+ 944 00c0 D3F8D811 		ldr	r1, [r3, #472]
+ 945 00c4 C0F20000 		movt	r0, #:upper16:.LC27
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 18
+
+
+ 946 00c8 0122     		movs	r2, #1
+ 947 00ca FFF7FEFF 		bl	_ZL10addChannelPKc13adc_channel_e18adc_channel_mode_e
+ 948 00ce 2368     		ldr	r3, [r4]
+ 949 00d0 40F20000 		movw	r0, #:lower16:.LC28
+ 950 00d4 D3F80016 		ldr	r1, [r3, #1536]
+ 951 00d8 C0F20000 		movt	r0, #:upper16:.LC28
+ 952 00dc 0122     		movs	r2, #1
+ 953 00de FFF7FEFF 		bl	_ZL10addChannelPKc13adc_channel_e18adc_channel_mode_e
+ 954 00e2 2368     		ldr	r3, [r4]
+ 955 00e4 40F20000 		movw	r0, #:lower16:.LC29
+ 956 00e8 D3F81C11 		ldr	r1, [r3, #284]
+ 957 00ec C0F20000 		movt	r0, #:upper16:.LC29
+ 958 00f0 0122     		movs	r2, #1
+ 959 00f2 FFF7FEFF 		bl	_ZL10addChannelPKc13adc_channel_e18adc_channel_mode_e
+ 960 00f6 2368     		ldr	r3, [r4]
+ 961 00f8 40F20000 		movw	r0, #:lower16:.LC30
+ 962 00fc D3F83C11 		ldr	r1, [r3, #316]
+ 963 0100 C0F20000 		movt	r0, #:upper16:.LC30
+ 964 0104 0122     		movs	r2, #1
+ 965 0106 FFF7FEFF 		bl	_ZL10addChannelPKc13adc_channel_e18adc_channel_mode_e
+ 966 010a 2368     		ldr	r3, [r4]
+ 967 010c 40F20000 		movw	r0, #:lower16:.LC31
+ 968 0110 D3F84812 		ldr	r1, [r3, #584]
+ 969 0114 C0F20000 		movt	r0, #:upper16:.LC31
+ 970 0118 0122     		movs	r2, #1
+ 971 011a FFF7FEFF 		bl	_ZL10addChannelPKc13adc_channel_e18adc_channel_mode_e
+ 972 011e 2368     		ldr	r3, [r4]
+ 973 0120 40F20000 		movw	r0, #:lower16:.LC32
+ 974 0124 D3F8F015 		ldr	r1, [r3, #1520]
+ 975 0128 C0F20000 		movt	r0, #:upper16:.LC32
+ 976 012c 0122     		movs	r2, #1
+ 977 012e FFF7FEFF 		bl	_ZL10addChannelPKc13adc_channel_e18adc_channel_mode_e
+ 978 0132 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 979 0136 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 980 013a 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 981 013e 40F20001 		movw	r1, #:lower16:.LC0
+ 982 0142 1A68     		ldr	r2, [r3]
+ 983 0144 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 984 0148 C0F20001 		movt	r1, #:upper16:.LC0
+ 985 014c FFF7FEFF 		bl	scheduleMsg
+ 986 0150 40F20000 		movw	r0, #:lower16:.LC33
+ 987 0154 40F20001 		movw	r1, #:lower16:_ZL20setAdcDebugReportingi
+ 988 0158 C0F20000 		movt	r0, #:upper16:.LC33
+ 989 015c C0F20001 		movt	r1, #:upper16:_ZL20setAdcDebugReportingi
+ 990 0160 FFF7FEFF 		bl	addConsoleActionI
+ 991 0164 40F20000 		movw	r0, #:lower16:ADCD1
+ 992 0168 C0F20000 		movt	r0, #:upper16:ADCD1
+ 993 016c 0021     		movs	r1, #0
+ 994 016e FFF7FEFF 		bl	adcStart
+ 995 0172 40F20000 		movw	r0, #:lower16:ADCD2
+ 996 0176 C0F20000 		movt	r0, #:upper16:ADCD2
+ 997 017a 0021     		movs	r1, #0
+ 998 017c FFF7FEFF 		bl	adcStart
+ 999 0180 0024     		movs	r4, #0
+ 1000 0182 04E0     		b	.L126
+ 1001              	.L123:
+ 1002 0184 002B     		cmp	r3, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 19
+
+
+ 1003 0186 64D1     		bne	.L137
+ 1004              	.L124:
+ 1005 0188 0134     		adds	r4, r4, #1
+ 1006 018a 102C     		cmp	r4, #16
+ 1007 018c 12D0     		beq	.L138
+ 1008              	.L126:
+ 1009 018e 55F8043F 		ldr	r3, [r5, #4]!
+ 1010 0192 012B     		cmp	r3, #1
+ 1011 0194 04D0     		beq	.L122
+ 1012 0196 9A1E     		subs	r2, r3, #2
+ 1013 0198 5342     		rsbs	r3, r2, #0
+ 1014 019a 5341     		adcs	r3, r3, r2
+ 1015 019c 3342     		tst	r3, r6
+ 1016 019e F1D0     		beq	.L123
+ 1017              	.L122:
+ 1018 01a0 40F20000 		movw	r0, #:lower16:.LANCHOR7
+ 1019 01a4 2146     		mov	r1, r4
+ 1020 01a6 C0F20000 		movt	r0, #:upper16:.LANCHOR7
+ 1021 01aa 0134     		adds	r4, r4, #1
+ 1022 01ac FFF7FEFF 		bl	_ZN9AdcDevice10addChannelE13adc_channel_e
+ 1023 01b0 102C     		cmp	r4, #16
+ 1024 01b2 ECD1     		bne	.L126
+ 1025              	.L138:
+ 1026 01b4 40F20003 		movw	r3, #:lower16:.LANCHOR7
+ 1027 01b8 C0F20003 		movt	r3, #:upper16:.LANCHOR7
+ 1028 01bc 40F20000 		movw	r0, #:lower16:PWMD8
+ 1029 01c0 D3F89C20 		ldr	r2, [r3, #156]
+ 1030 01c4 D3F89830 		ldr	r3, [r3, #152]
+ 1031 01c8 D169     		ldr	r1, [r2, #28]
+ 1032 01ca 5380     		strh	r3, [r2, #2]	@ movhi
+ 1033 01cc 013B     		subs	r3, r3, #1
+ 1034 01ce 01EB0353 		add	r3, r1, r3, lsl #20
+ 1035 01d2 40F20001 		movw	r1, #:lower16:.LANCHOR11
+ 1036 01d6 D361     		str	r3, [r2, #28]
+ 1037 01d8 C0F20000 		movt	r0, #:upper16:PWMD8
+ 1038 01dc C0F20001 		movt	r1, #:upper16:.LANCHOR11
+ 1039 01e0 FFF7FEFF 		bl	pwmStart
+ 1040 01e4 40F20003 		movw	r3, #:lower16:boardConfiguration
+ 1041 01e8 C0F20003 		movt	r3, #:upper16:boardConfiguration
+ 1042 01ec 1B68     		ldr	r3, [r3]
+ 1043 01ee 93F88031 		ldrb	r3, [r3, #384]	@ zero_extendqisi2
+ 1044 01f2 DB06     		lsls	r3, r3, #27
+ 1045 01f4 17D5     		bpl	.L127
+ 1046 01f6 40F20003 		movw	r3, #:lower16:.LANCHOR5
+ 1047 01fa C0F20003 		movt	r3, #:upper16:.LANCHOR5
+ 1048 01fe 40F20000 		movw	r0, #:lower16:PWMD4
+ 1049 0202 D3F89C20 		ldr	r2, [r3, #156]
+ 1050 0206 D3F89830 		ldr	r3, [r3, #152]
+ 1051 020a D169     		ldr	r1, [r2, #28]
+ 1052 020c 5380     		strh	r3, [r2, #2]	@ movhi
+ 1053 020e 013B     		subs	r3, r3, #1
+ 1054 0210 01EB0353 		add	r3, r1, r3, lsl #20
+ 1055 0214 40F20001 		movw	r1, #:lower16:.LANCHOR12
+ 1056 0218 D361     		str	r3, [r2, #28]
+ 1057 021a C0F20000 		movt	r0, #:upper16:PWMD4
+ 1058 021e C0F20001 		movt	r1, #:upper16:.LANCHOR12
+ 1059 0222 FFF7FEFF 		bl	pwmStart
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 20
+
+
+ 1060              	.L127:
+ 1061 0226 40F20000 		movw	r0, #:lower16:.LC34
+ 1062 022a 40F20001 		movw	r1, #:lower16:_ZL13printAdcValue13adc_channel_e
+ 1063 022e C0F20000 		movt	r0, #:upper16:.LC34
+ 1064 0232 C0F20001 		movt	r1, #:upper16:_ZL13printAdcValue13adc_channel_e
+ 1065 0236 FFF7FEFF 		bl	addConsoleActionI
+ 1066 023a 40F20000 		movw	r0, #:lower16:.LC35
+ 1067 023e 40F20001 		movw	r1, #:lower16:_ZL18printFullAdcReportv
+ 1068 0242 C0F20000 		movt	r0, #:upper16:.LC35
+ 1069 0246 C0F20001 		movt	r1, #:upper16:_ZL18printFullAdcReportv
+ 1070 024a BDE87040 		pop	{r4, r5, r6, lr}
+ 1071 024e FFF7FEBF 		b	addConsoleAction
+ 1072              	.L137:
+ 1073 0252 40F20000 		movw	r0, #:lower16:.LANCHOR5
+ 1074 0256 C0F20000 		movt	r0, #:upper16:.LANCHOR5
+ 1075 025a 2146     		mov	r1, r4
+ 1076 025c FFF7FEFF 		bl	_ZN9AdcDevice10addChannelE13adc_channel_e
+ 1077 0260 92E7     		b	.L124
+ 1078              	.L140:
+ 1079 0262 00BF     		.align	2
+ 1080              	.L139:
+ 1081 0264 FCFFFFFF 		.word	.LANCHOR2-4
+ 1082              		.size	_Z13initAdcInputsb, .-_Z13initAdcInputsb
+ 1083 0268 AFF30080 		.section	.text._Z13pokeAdcInputsv,"ax",%progbits
+ 1083      AFF30080 
+ 1084              		.align	2
+ 1085              		.p2align 4,,15
+ 1086              		.global	_Z13pokeAdcInputsv
+ 1087              		.thumb
+ 1088              		.thumb_func
+ 1089              		.type	_Z13pokeAdcInputsv, %function
+ 1090              	_Z13pokeAdcInputsv:
+ 1091              		@ args = 0, pretend = 0, frame = 0
+ 1092              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1093              		@ link register save eliminated.
+ 1094 0000 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 1095 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 1096 0008 1B68     		ldr	r3, [r3]
+ 1097 000a 03B9     		cbnz	r3, .L143
+ 1098 000c 7047     		bx	lr
+ 1099              	.L143:
+ 1100 000e FFF7FEBF 		b	_ZL18printFullAdcReportv
+ 1101              		.size	_Z13pokeAdcInputsv, .-_Z13pokeAdcInputsv
+ 1102 0012 00BFAFF3 		.section	.text.startup._GLOBAL__sub_I__ZN9AdcDeviceC2EP18ADCConversionGroup,"ax",%progbits
+ 1102      0080AFF3 
+ 1102      0080AFF3 
+ 1102      0080
+ 1103              		.align	2
+ 1104              		.p2align 4,,15
+ 1105              		.thumb
+ 1106              		.thumb_func
+ 1107              		.type	_GLOBAL__sub_I__ZN9AdcDeviceC2EP18ADCConversionGroup, %function
+ 1108              	_GLOBAL__sub_I__ZN9AdcDeviceC2EP18ADCConversionGroup:
+ 1109              		@ args = 0, pretend = 0, frame = 0
+ 1110              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1111 0000 08B5     		push	{r3, lr}
+ 1112 0002 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 21
+
+
+ 1113 0006 40F20001 		movw	r1, #:lower16:.LC36
+ 1114 000a 40F20002 		movw	r2, #:lower16:.LANCHOR13
+ 1115 000e 4FF4FA73 		mov	r3, #500
+ 1116 0012 C0F20001 		movt	r1, #:upper16:.LC36
+ 1117 0016 C0F20002 		movt	r2, #:upper16:.LANCHOR13
+ 1118 001a C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 1119 001e FFF7FEFF 		bl	_ZN7LoggingC1EPKcPci
+ 1120 0022 40F20000 		movw	r0, #:lower16:.LANCHOR7
+ 1121 0026 40F20001 		movw	r1, #:lower16:.LANCHOR8
+ 1122 002a C0F20001 		movt	r1, #:upper16:.LANCHOR8
+ 1123 002e C0F20000 		movt	r0, #:upper16:.LANCHOR7
+ 1124 0032 FFF7FEFF 		bl	_ZN9AdcDeviceC1EP18ADCConversionGroup
+ 1125 0036 40F20000 		movw	r0, #:lower16:.LANCHOR5
+ 1126 003a 40F20001 		movw	r1, #:lower16:.LANCHOR6
+ 1127 003e C0F20000 		movt	r0, #:upper16:.LANCHOR5
+ 1128 0042 C0F20001 		movt	r1, #:upper16:.LANCHOR6
+ 1129 0046 BDE80840 		pop	{r3, lr}
+ 1130 004a FFF7FEBF 		b	_ZN9AdcDeviceC1EP18ADCConversionGroup
+ 1131              		.size	_GLOBAL__sub_I__ZN9AdcDeviceC2EP18ADCConversionGroup, .-_GLOBAL__sub_I__ZN9AdcDeviceC2EP18AD
+ 1132 004e 00BF     		.section	.init_array,"aw",%init_array
+ 1133              		.align	2
+ 1134 0000 00000000 		.word	_GLOBAL__sub_I__ZN9AdcDeviceC2EP18ADCConversionGroup(target1)
+ 1135              		.global	fastAdc
+ 1136              		.global	slowAdc
+ 1137              		.section	.bss._ZL17adcHwChannelUsage,"aw",%nobits
+ 1138              		.align	2
+ 1139              		.set	.LANCHOR4,. + 0
+ 1140              		.type	_ZL17adcHwChannelUsage, %object
+ 1141              		.size	_ZL17adcHwChannelUsage, 64
+ 1142              	_ZL17adcHwChannelUsage:
+ 1143 0000 00000000 		.space	64
+ 1143      00000000 
+ 1143      00000000 
+ 1143      00000000 
+ 1143      00000000 
+ 1144              		.section	.bss._ZL19adcHwChannelEnabled,"aw",%nobits
+ 1145              		.align	2
+ 1146              		.set	.LANCHOR2,. + 0
+ 1147              		.type	_ZL19adcHwChannelEnabled, %object
+ 1148              		.size	_ZL19adcHwChannelEnabled, 64
+ 1149              	_ZL19adcHwChannelEnabled:
+ 1150 0000 00000000 		.space	64
+ 1150      00000000 
+ 1150      00000000 
+ 1150      00000000 
+ 1150      00000000 
+ 1151              		.section	.data._ZL11pwmcfg_slow,"aw",%progbits
+ 1152              		.align	2
+ 1153              		.set	.LANCHOR11,. + 0
+ 1154              		.type	_ZL11pwmcfg_slow, %object
+ 1155              		.size	_ZL11pwmcfg_slow, 52
+ 1156              	_ZL11pwmcfg_slow:
+ 1157 0000 88130000 		.word	5000
+ 1158 0004 F401     		.short	500
+ 1159 0006 0000     		.space	2
+ 1160 0008 00000000 		.word	_ZL11pwmpcb_slowP9PWMDriver
+ 1161 000c 00000000 		.word	0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 22
+
+
+ 1162 0010 00000000 		.word	0
+ 1163 0014 00000000 		.word	0
+ 1164 0018 00000000 		.word	0
+ 1165 001c 00000000 		.word	0
+ 1166 0020 00000000 		.word	0
+ 1167 0024 00000000 		.word	0
+ 1168 0028 00000000 		.word	0
+ 1169 002c 00000000 		.word	0
+ 1170 0030 00000000 		.word	0
+ 1171              		.section	.data._ZL13adcgrpcfgSlow,"aw",%progbits
+ 1172              		.align	2
+ 1173              		.set	.LANCHOR8,. + 0
+ 1174              		.type	_ZL13adcgrpcfgSlow, %object
+ 1175              		.size	_ZL13adcgrpcfgSlow, 40
+ 1176              	_ZL13adcgrpcfgSlow:
+ 1177 0000 00       		.byte	0
+ 1178 0001 00       		.space	1
+ 1179 0002 0000     		.short	0
+ 1180 0004 00000000 		.word	_ZL17adc_callback_slowP9ADCDriverPtj
+ 1181 0008 00000000 		.word	0
+ 1182 000c 000F0000 		.word	3840
+ 1183 0010 00000040 		.word	1073741824
+ 1184 0014 FFFF0300 		.word	262143
+ 1185 0018 3FFEFF3F 		.word	1073741375
+ 1186 001c 00000000 		.word	0
+ 1187 0020 00000000 		.word	0
+ 1188 0024 00000000 		.word	0
+ 1189              		.section	.bss.fastAdc,"aw",%nobits
+ 1190              		.align	2
+ 1191              		.set	.LANCHOR5,. + 0
+ 1192              		.type	fastAdc, %object
+ 1193              		.size	fastAdc, 240
+ 1194              	fastAdc:
+ 1195 0000 00000000 		.space	240
+ 1195      00000000 
+ 1195      00000000 
+ 1195      00000000 
+ 1195      00000000 
+ 1196              		.section	.data._ZL11pwmcfg_fast,"aw",%progbits
+ 1197              		.align	2
+ 1198              		.set	.LANCHOR12,. + 0
+ 1199              		.type	_ZL11pwmcfg_fast, %object
+ 1200              		.size	_ZL11pwmcfg_fast, 52
+ 1201              	_ZL11pwmcfg_fast:
+ 1202 0000 A0860100 		.word	100000
+ 1203 0004 0A00     		.short	10
+ 1204 0006 0000     		.space	2
+ 1205 0008 00000000 		.word	_ZL11pwmpcb_fastP9PWMDriver
+ 1206 000c 00000000 		.word	0
+ 1207 0010 00000000 		.word	0
+ 1208 0014 00000000 		.word	0
+ 1209 0018 00000000 		.word	0
+ 1210 001c 00000000 		.word	0
+ 1211 0020 00000000 		.word	0
+ 1212 0024 00000000 		.word	0
+ 1213 0028 00000000 		.word	0
+ 1214 002c 00000000 		.word	0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 23
+
+
+ 1215 0030 00000000 		.word	0
+ 1216              		.section	.bss._ZL14LOGGING_BUFFER,"aw",%nobits
+ 1217              		.align	2
+ 1218              		.set	.LANCHOR13,. + 0
+ 1219              		.type	_ZL14LOGGING_BUFFER, %object
+ 1220              		.size	_ZL14LOGGING_BUFFER, 500
+ 1221              	_ZL14LOGGING_BUFFER:
+ 1222 0000 00000000 		.space	500
+ 1222      00000000 
+ 1222      00000000 
+ 1222      00000000 
+ 1222      00000000 
+ 1223              		.section	.bss._ZL17adcDebugReporting,"aw",%nobits
+ 1224              		.align	2
+ 1225              		.set	.LANCHOR0,. + 0
+ 1226              		.type	_ZL17adcDebugReporting, %object
+ 1227              		.size	_ZL17adcDebugReporting, 4
+ 1228              	_ZL17adcDebugReporting:
+ 1229 0000 00000000 		.space	4
+ 1230              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 1231              		.align	2
+ 1232              	.LC0:
+ 1233 0000 61646344 		.ascii	"adcDebug=%d\000"
+ 1233      65627567 
+ 1233      3D256400 
+ 1234              	.LC1:
+ 1235 000c 41444320 		.ascii	"ADC mapping error: input %s for %s already used?\000"
+ 1235      6D617070 
+ 1235      696E6720 
+ 1235      6572726F 
+ 1235      723A2069 
+ 1236 003d 000000   		.space	3
+ 1237              	.LC2:
+ 1238 0040 6C775374 		.ascii	"lwStAdcFast\000"
+ 1238      41646346 
+ 1238      61737400 
+ 1239              	.LC3:
+ 1240 004c 6C775374 		.ascii	"lwStAdcSlow\000"
+ 1240      41646353 
+ 1240      6C6F7700 
+ 1241              	.LC4:
+ 1242 0058 6C6F7773 		.ascii	"lowstck#9c\000"
+ 1242      74636B23 
+ 1242      396300
+ 1243 0063 00       		.space	1
+ 1244              	.LC5:
+ 1245 0064 4144433A 		.ascii	"ADC: should not be asking for NONE %s\000"
+ 1245      2073686F 
+ 1245      756C6420 
+ 1245      6E6F7420 
+ 1245      62652061 
+ 1246 008a 0000     		.space	2
+ 1247              	.LC6:
+ 1248 008c 41444320 		.ascii	"ADC is off [%s] index=%d\000"
+ 1248      6973206F 
+ 1248      6666205B 
+ 1248      25735D20 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 24
+
+
+ 1248      696E6465 
+ 1249 00a5 000000   		.space	3
+ 1250              	.LC7:
+ 1251 00a8 7072696E 		.ascii	"print\000"
+ 1251      7400
+ 1252 00ae 0000     		.space	2
+ 1253              	.LC8:
+ 1254 00b0 61646320 		.ascii	"adc voltage : %f\000"
+ 1254      766F6C74 
+ 1254      61676520 
+ 1254      3A202566 
+ 1254      00
+ 1255 00c1 000000   		.space	3
+ 1256              	.LC9:
+ 1257 00c4 556E6B6E 		.ascii	"Unknown hw channel %d\000"
+ 1257      6F776E20 
+ 1257      68772063 
+ 1257      68616E6E 
+ 1257      656C2025 
+ 1258 00da 0000     		.space	2
+ 1259              	.LC10:
+ 1260 00dc 736C6F77 		.ascii	"slow\000"
+ 1260      00
+ 1261 00e1 000000   		.space	3
+ 1262              	.LC11:
+ 1263 00e4 494E4143 		.ascii	"INACTIVE\000"
+ 1263      54495645 
+ 1263      00
+ 1264 00ed 000000   		.space	3
+ 1265              	.LC12:
+ 1266 00f0 66617374 		.ascii	"fast\000"
+ 1266      00
+ 1267 00f5 000000   		.space	3
+ 1268              	.LC13:
+ 1269 00f8 66617374 		.ascii	"fast %d slow %d\000"
+ 1269      20256420 
+ 1269      736C6F77 
+ 1269      20256400 
+ 1270              	.LC14:
+ 1271 0108 20636825 		.ascii	" ch%d %s%d\000"
+ 1271      64202573 
+ 1271      256400
+ 1272 0113 00       		.space	1
+ 1273              	.LC15:
+ 1274 0114 20414443 		.ascii	" ADC%d 12bit=%d\000"
+ 1274      25642031 
+ 1274      32626974 
+ 1274      3D256400 
+ 1275              	.LC16:
+ 1276 0124 20763D25 		.ascii	" v=%f\000"
+ 1276      6600
+ 1277 012a 0000     		.space	2
+ 1278              	.LC17:
+ 1279 012c 61646320 		.ascii	"adc %s\015\012\000"
+ 1279      25730D0A 
+ 1279      00
+ 1280 0135 000000   		.space	3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 25
+
+
+ 1281              	.LC18:
+ 1282 0138 687700   		.ascii	"hw\000"
+ 1283 013b 00       		.space	1
+ 1284              	.LC19:
+ 1285 013c 61646320 		.ascii	"adc input\000"
+ 1285      696E7075 
+ 1285      7400
+ 1286 0146 0000     		.space	2
+ 1287              	.LC20:
+ 1288 0148 696E6974 		.ascii	"initAdcInputs()\000"
+ 1288      41646349 
+ 1288      6E707574 
+ 1288      73282900 
+ 1289              	.LC21:
+ 1290 0158 54505300 		.ascii	"TPS\000"
+ 1291              	.LC22:
+ 1292 015c 4D415000 		.ascii	"MAP\000"
+ 1293              	.LC23:
+ 1294 0160 4D414600 		.ascii	"MAF\000"
+ 1295              	.LC24:
+ 1296 0164 68697000 		.ascii	"hip\000"
+ 1297              	.LC25:
+ 1298 0168 6675656C 		.ascii	"fuel\000"
+ 1298      00
+ 1299 016d 000000   		.space	3
+ 1300              	.LC26:
+ 1301 0170 70505300 		.ascii	"pPS\000"
+ 1302              	.LC27:
+ 1303 0174 56426174 		.ascii	"VBatt\000"
+ 1303      7400
+ 1304 017a 0000     		.space	2
+ 1305              	.LC28:
+ 1306 017c 56726566 		.ascii	"Vref\000"
+ 1306      00
+ 1307 0181 000000   		.space	3
+ 1308              	.LC29:
+ 1309 0184 434C5400 		.ascii	"CLT\000"
+ 1310              	.LC30:
+ 1311 0188 49415400 		.ascii	"IAT\000"
+ 1312              	.LC31:
+ 1313 018c 41465200 		.ascii	"AFR\000"
+ 1314              	.LC32:
+ 1315 0190 414300   		.ascii	"AC\000"
+ 1316 0193 00       		.space	1
+ 1317              	.LC33:
+ 1318 0194 61646344 		.ascii	"adcDebug\000"
+ 1318      65627567 
+ 1318      00
+ 1319 019d 000000   		.space	3
+ 1320              	.LC34:
+ 1321 01a0 61646300 		.ascii	"adc\000"
+ 1322              	.LC35:
+ 1323 01a4 66616463 		.ascii	"fadc\000"
+ 1323      00
+ 1324 01a9 000000   		.space	3
+ 1325              	.LC36:
+ 1326 01ac 41444300 		.ascii	"ADC\000"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 26
+
+
+ 1327              		.section	.bss.slowAdc,"aw",%nobits
+ 1328              		.align	2
+ 1329              		.set	.LANCHOR7,. + 0
+ 1330              		.type	slowAdc, %object
+ 1331              		.size	slowAdc, 240
+ 1332              	slowAdc:
+ 1333 0000 00000000 		.space	240
+ 1333      00000000 
+ 1333      00000000 
+ 1333      00000000 
+ 1333      00000000 
+ 1334              		.section	.data._ZL14adcgrpcfg_fast,"aw",%progbits
+ 1335              		.align	2
+ 1336              		.set	.LANCHOR6,. + 0
+ 1337              		.type	_ZL14adcgrpcfg_fast, %object
+ 1338              		.size	_ZL14adcgrpcfg_fast, 40
+ 1339              	_ZL14adcgrpcfg_fast:
+ 1340 0000 00       		.byte	0
+ 1341 0001 00       		.space	1
+ 1342 0002 0000     		.short	0
+ 1343 0004 00000000 		.word	_Z17adc_callback_fastP9ADCDriverPtj
+ 1344 0008 00000000 		.word	0
+ 1345 000c 00000000 		.word	0
+ 1346 0010 00000040 		.word	1073741824
+ 1347 0014 00000000 		.word	0
+ 1348 0018 02000000 		.word	2
+ 1349 001c 00000000 		.word	0
+ 1350 0020 00000000 		.word	0
+ 1351 0024 00000000 		.word	0
+ 1352              		.section	.bss._ZL12errorMsgBuff,"aw",%nobits
+ 1353              		.align	2
+ 1354              		.set	.LANCHOR3,. + 0
+ 1355              		.type	_ZL12errorMsgBuff, %object
+ 1356              		.size	_ZL12errorMsgBuff, 10
+ 1357              	_ZL12errorMsgBuff:
+ 1358 0000 00000000 		.space	10
+ 1358      00000000 
+ 1358      0000
+ 1359 000a 0000     		.section	.bss._ZL6logger,"aw",%nobits
+ 1360              		.align	2
+ 1361              		.set	.LANCHOR1,. + 0
+ 1362              		.type	_ZL6logger, %object
+ 1363              		.size	_ZL6logger, 60
+ 1364              	_ZL6logger:
+ 1365 0000 00000000 		.space	60
+ 1365      00000000 
+ 1365      00000000 
+ 1365      00000000 
+ 1365      00000000 
+ 1366              		.section	.bss._ZL23adcCallbackCounter_slow,"aw",%nobits
+ 1367              		.align	2
+ 1368              		.set	.LANCHOR9,. + 0
+ 1369              		.type	_ZL23adcCallbackCounter_slow, %object
+ 1370              		.size	_ZL23adcCallbackCounter_slow, 4
+ 1371              	_ZL23adcCallbackCounter_slow:
+ 1372 0000 00000000 		.space	4
+ 1373              		.section	.rodata.CSWTCH.40,"a",%progbits
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 27
+
+
+ 1374              		.align	2
+ 1375              		.set	.LANCHOR10,. + 0
+ 1376              		.type	CSWTCH.40, %object
+ 1377              		.size	CSWTCH.40, 76
+ 1378              	CSWTCH.40:
+ 1379 0000 0000     		.short	0
+ 1380 0002 0100     		.short	1
+ 1381 0004 0200     		.short	2
+ 1382 0006 0300     		.short	3
+ 1383 0008 0400     		.short	4
+ 1384 000a 0500     		.short	5
+ 1385 000c 0600     		.short	6
+ 1386 000e 0700     		.short	7
+ 1387 0010 E703     		.short	999
+ 1388 0012 E703     		.short	999
+ 1389 0014 E703     		.short	999
+ 1390 0016 E703     		.short	999
+ 1391 0018 E703     		.short	999
+ 1392 001a E703     		.short	999
+ 1393 001c E703     		.short	999
+ 1394 001e E703     		.short	999
+ 1395 0020 0800     		.short	8
+ 1396 0022 0900     		.short	9
+ 1397 0024 E703     		.short	999
+ 1398 0026 E703     		.short	999
+ 1399 0028 E703     		.short	999
+ 1400 002a E703     		.short	999
+ 1401 002c E703     		.short	999
+ 1402 002e E703     		.short	999
+ 1403 0030 E703     		.short	999
+ 1404 0032 E703     		.short	999
+ 1405 0034 E703     		.short	999
+ 1406 0036 E703     		.short	999
+ 1407 0038 E703     		.short	999
+ 1408 003a E703     		.short	999
+ 1409 003c E703     		.short	999
+ 1410 003e E703     		.short	999
+ 1411 0040 0A00     		.short	10
+ 1412 0042 0B00     		.short	11
+ 1413 0044 0C00     		.short	12
+ 1414 0046 0D00     		.short	13
+ 1415 0048 0E00     		.short	14
+ 1416 004a 0F00     		.short	15
+ 1417              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 28
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 adc_inputs.cpp
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:17     .text._ZL20setAdcDebugReportingi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:22     .text._ZL20setAdcDebugReportingi:00000000 _ZL20setAdcDebugReportingi
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1225   .bss._ZL17adcDebugReporting:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1232   .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1361   .bss._ZL6logger:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:40     .text._ZL10addChannelPKc13adc_channel_e18adc_channel_mode_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:45     .text._ZL10addChannelPKc13adc_channel_e18adc_channel_mode_e:00000000 _ZL10addChannelPKc13adc_channel_e18adc_channel_mode_e
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1146   .bss._ZL19adcHwChannelEnabled:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1139   .bss._ZL17adcHwChannelUsage:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1354   .bss._ZL12errorMsgBuff:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1234   .rodata.str1.4:0000000c .LC1
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:79     .text._ZL11pwmpcb_fastP9PWMDriver:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:84     .text._ZL11pwmpcb_fastP9PWMDriver:00000000 _ZL11pwmpcb_fastP9PWMDriver
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1191   .bss.fastAdc:00000000 .LANCHOR5
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1336   .data._ZL14adcgrpcfg_fast:00000000 .LANCHOR6
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1237   .rodata.str1.4:00000040 .LC2
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:150    .text._ZL11pwmpcb_fastP9PWMDriver:00000090 $d
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:153    .text._ZL11pwmpcb_slowP9PWMDriver:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:158    .text._ZL11pwmpcb_slowP9PWMDriver:00000000 _ZL11pwmpcb_slowP9PWMDriver
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1329   .bss.slowAdc:00000000 .LANCHOR7
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1173   .data._ZL13adcgrpcfgSlow:00000000 .LANCHOR8
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1239   .rodata.str1.4:0000004c .LC3
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:222    .text._ZL11pwmpcb_slowP9PWMDriver:00000088 $d
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:225    .text._ZL17adc_callback_slowP9ADCDriverPtj:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:230    .text._ZL17adc_callback_slowP9ADCDriverPtj:00000000 _ZL17adc_callback_slowP9ADCDriverPtj
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1368   .bss._ZL23adcCallbackCounter_slow:00000000 .LANCHOR9
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1241   .rodata.str1.4:00000058 .LC4
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:274    .text._ZN9AdcDeviceC2EP18ADCConversionGroup:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:280    .text._ZN9AdcDeviceC2EP18ADCConversionGroup:00000000 _ZN9AdcDeviceC2EP18ADCConversionGroup
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:280    .text._ZN9AdcDeviceC2EP18ADCConversionGroup:00000000 _ZN9AdcDeviceC1EP18ADCConversionGroup
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:309    .text._Z19getInternalAdcValuePKc13adc_channel_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:315    .text._Z19getInternalAdcValuePKc13adc_channel_e:00000000 _Z19getInternalAdcValuePKc13adc_channel_e
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1247   .rodata.str1.4:0000008c .LC6
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1244   .rodata.str1.4:00000064 .LC5
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:361    .text._ZL13printAdcValue13adc_channel_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:366    .text._ZL13printAdcValue13adc_channel_e:00000000 _ZL13printAdcValue13adc_channel_e
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1250   .rodata.str1.4:000000a8 .LC7
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1253   .rodata.str1.4:000000b0 .LC8
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:396    .text._ZL13printAdcValue13adc_channel_e:00000058 $d
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:399    .text._Z13getAdcChannel11brain_pin_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:405    .text._Z13getAdcChannel11brain_pin_e:00000000 _Z13getAdcChannel11brain_pin_e
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1375   .rodata.CSWTCH.40:00000000 .LANCHOR10
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:418    .text._Z17getAdcChannelPort13adc_channel_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:424    .text._Z17getAdcChannelPort13adc_channel_e:00000000 _Z17getAdcChannelPort13adc_channel_e
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:433    .text._Z17getAdcChannelPort13adc_channel_e:0000000c $d
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:449    .text._Z17getAdcChannelPort13adc_channel_e:0000001c $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1256   .rodata.str1.4:000000c4 .LC9
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:470    .text._Z10getAdcMode13adc_channel_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:476    .text._Z10getAdcMode13adc_channel_e:00000000 _Z10getAdcMode13adc_channel_e
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1262   .rodata.str1.4:000000e4 .LC11
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1259   .rodata.str1.4:000000dc .LC10
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1265   .rodata.str1.4:000000f0 .LC12
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:537    .text._Z16getAdcChannelPin13adc_channel_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:543    .text._Z16getAdcChannelPin13adc_channel_e:00000000 _Z16getAdcChannelPin13adc_channel_e
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:552    .text._Z16getAdcChannelPin13adc_channel_e:0000000c $d
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 29
+
+
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:568    .text._Z16getAdcChannelPin13adc_channel_e:0000001c $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:601    .text._ZL18printFullAdcReportv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:606    .text._ZL18printFullAdcReportv:00000000 _ZL18printFullAdcReportv
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1268   .rodata.str1.4:000000f8 .LC13
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1270   .rodata.str1.4:00000108 .LC14
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1273   .rodata.str1.4:00000114 .LC15
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1275   .rodata.str1.4:00000124 .LC16
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:690    .text._ZL18printFullAdcReportv:00000100 $d
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:693    .text._ZN9AdcDevice4sizeEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:699    .text._ZN9AdcDevice4sizeEv:00000000 _ZN9AdcDevice4sizeEv
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:707    .text._ZN9AdcDevice22getAdcValueByHwChannelEi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:713    .text._ZN9AdcDevice22getAdcValueByHwChannelEi:00000000 _ZN9AdcDevice22getAdcValueByHwChannelEi
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:724    .text._ZN9AdcDevice18getAdcValueByIndexEi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:730    .text._ZN9AdcDevice18getAdcValueByIndexEi:00000000 _ZN9AdcDevice18getAdcValueByIndexEi
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:740    .text._ZN9AdcDevice4initEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:746    .text._ZN9AdcDevice4initEv:00000000 _ZN9AdcDevice4initEv
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:760    .text._ZN9AdcDevice8isHwUsedE13adc_channel_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:766    .text._ZN9AdcDevice8isHwUsedE13adc_channel_e:00000000 _ZN9AdcDevice8isHwUsedE13adc_channel_e
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:798    .text._ZN9AdcDevice10addChannelE13adc_channel_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:804    .text._ZN9AdcDevice10addChannelE13adc_channel_e:00000000 _ZN9AdcDevice10addChannelE13adc_channel_e
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1281   .rodata.str1.4:00000138 .LC18
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1278   .rodata.str1.4:0000012c .LC17
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1284   .rodata.str1.4:0000013c .LC19
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:862    .text._ZN9AdcDevice34getAdcHardwareIndexByInternalIndexEi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:868    .text._ZN9AdcDevice34getAdcHardwareIndexByInternalIndexEi:00000000 _ZN9AdcDevice34getAdcHardwareIndexByInternalIndexEi
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:877    .text._Z13initAdcInputsb:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:883    .text._Z13initAdcInputsb:00000000 _Z13initAdcInputsb
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1287   .rodata.str1.4:00000148 .LC20
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1289   .rodata.str1.4:00000158 .LC21
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1291   .rodata.str1.4:0000015c .LC22
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1293   .rodata.str1.4:00000160 .LC23
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1295   .rodata.str1.4:00000164 .LC24
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1297   .rodata.str1.4:00000168 .LC25
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1300   .rodata.str1.4:00000170 .LC26
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1302   .rodata.str1.4:00000174 .LC27
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1305   .rodata.str1.4:0000017c .LC28
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1308   .rodata.str1.4:00000184 .LC29
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1310   .rodata.str1.4:00000188 .LC30
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1312   .rodata.str1.4:0000018c .LC31
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1314   .rodata.str1.4:00000190 .LC32
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1317   .rodata.str1.4:00000194 .LC33
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1153   .data._ZL11pwmcfg_slow:00000000 .LANCHOR11
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1198   .data._ZL11pwmcfg_fast:00000000 .LANCHOR12
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1320   .rodata.str1.4:000001a0 .LC34
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1322   .rodata.str1.4:000001a4 .LC35
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1081   .text._Z13initAdcInputsb:00000264 $d
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1084   .text._Z13pokeAdcInputsv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1090   .text._Z13pokeAdcInputsv:00000000 _Z13pokeAdcInputsv
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1103   .text.startup._GLOBAL__sub_I__ZN9AdcDeviceC2EP18ADCConversionGroup:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1108   .text.startup._GLOBAL__sub_I__ZN9AdcDeviceC2EP18ADCConversionGroup:00000000 _GLOBAL__sub_I__ZN9AdcDeviceC2EP18ADCConversionGroup
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1325   .rodata.str1.4:000001ac .LC36
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1218   .bss._ZL14LOGGING_BUFFER:00000000 .LANCHOR13
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1133   .init_array:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1194   .bss.fastAdc:00000000 fastAdc
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1332   .bss.slowAdc:00000000 slowAdc
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1138   .bss._ZL17adcHwChannelUsage:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1142   .bss._ZL17adcHwChannelUsage:00000000 _ZL17adcHwChannelUsage
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 30
+
+
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1145   .bss._ZL19adcHwChannelEnabled:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1149   .bss._ZL19adcHwChannelEnabled:00000000 _ZL19adcHwChannelEnabled
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1152   .data._ZL11pwmcfg_slow:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1156   .data._ZL11pwmcfg_slow:00000000 _ZL11pwmcfg_slow
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1172   .data._ZL13adcgrpcfgSlow:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1176   .data._ZL13adcgrpcfgSlow:00000000 _ZL13adcgrpcfgSlow
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1190   .bss.fastAdc:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1197   .data._ZL11pwmcfg_fast:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1201   .data._ZL11pwmcfg_fast:00000000 _ZL11pwmcfg_fast
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1217   .bss._ZL14LOGGING_BUFFER:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1221   .bss._ZL14LOGGING_BUFFER:00000000 _ZL14LOGGING_BUFFER
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1224   .bss._ZL17adcDebugReporting:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1228   .bss._ZL17adcDebugReporting:00000000 _ZL17adcDebugReporting
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1231   .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1328   .bss.slowAdc:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1335   .data._ZL14adcgrpcfg_fast:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1339   .data._ZL14adcgrpcfg_fast:00000000 _ZL14adcgrpcfg_fast
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1353   .bss._ZL12errorMsgBuff:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1357   .bss._ZL12errorMsgBuff:00000000 _ZL12errorMsgBuff
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1360   .bss._ZL6logger:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1364   .bss._ZL6logger:00000000 _ZL6logger
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1367   .bss._ZL23adcCallbackCounter_slow:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1371   .bss._ZL23adcCallbackCounter_slow:00000000 _ZL23adcCallbackCounter_slow
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1374   .rodata.CSWTCH.40:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1378   .rodata.CSWTCH.40:00000000 CSWTCH.40
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:152    .text._ZL11pwmpcb_fastP9PWMDriver:00000094 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:224    .text._ZL11pwmpcb_slowP9PWMDriver:0000008c $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:398    .text._ZL13printAdcValue13adc_channel_e:0000005c $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:692    .text._ZL18printFullAdcReportv:00000104 $t
+C:\Users\pc\AppData\Local\Temp\cc1eScgn.s:1083   .text._Z13initAdcInputsb:00000268 $t
+
+UNDEFINED SYMBOLS
+scheduleMsg
+_Z22getPinNameByAdcChannel13adc_channel_ePc
+firmwareError
+rlist
+getRemainingStack
+dbg_check_lock_from_isr
+ADCD2
+dbg_check_unlock_from_isr
+adcStartConversionI
+ADCD1
+memset
+warning
+__aeabi_f2d
+engineConfiguration
+appendMsgPrefix
+_Z8portnameP12GPIO_TypeDef
+appendPrintf
+appendMsgPostfix
+scheduleLogging
+print
+_Z12mySetPadModePKcP12GPIO_TypeDefmm
+printMsg
+addConsoleActionI
+adcStart
+PWMD8
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1eScgn.s 			page 31
+
+
+pwmStart
+boardConfiguration
+PWMD4
+addConsoleAction
+_ZN7LoggingC1EPKcPci
+_Z17adc_callback_fastP9ADCDriverPtj

@@ -1,0 +1,269 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccck1yoU.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"malfunction_central.c"
+  16              		.section	.text.initMalfunctionCentral,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	initMalfunctionCentral
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	initMalfunctionCentral, %function
+  23              	initMalfunctionCentral:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 40F20003 		movw	r3, #:lower16:.LANCHOR0
+  28 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+  29 0008 0022     		movs	r2, #0
+  30 000a 1A60     		str	r2, [r3]
+  31 000c 7047     		bx	lr
+  32              		.size	initMalfunctionCentral, .-initMalfunctionCentral
+  33 000e 00BF     		.section	.text.addError,"ax",%progbits
+  34              		.align	2
+  35              		.p2align 4,,15
+  36              		.global	addError
+  37              		.thumb
+  38              		.thumb_func
+  39              		.type	addError, %function
+  40              	addError:
+  41              		@ args = 0, pretend = 0, frame = 0
+  42              		@ frame_needed = 0, uses_anonymous_args = 0
+  43              		@ link register save eliminated.
+  44 0000 70B4     		push	{r4, r5, r6}
+  45 0002 40F20004 		movw	r4, #:lower16:.LANCHOR0
+  46 0006 C0F20004 		movt	r4, #:upper16:.LANCHOR0
+  47 000a 2568     		ldr	r5, [r4]
+  48 000c 092D     		cmp	r5, #9
+  49 000e 16DC     		bgt	.L2
+  50 0010 002D     		cmp	r5, #0
+  51 0012 D8BF     		it	le
+  52 0014 AE00     		lslle	r6, r5, #2
+  53 0016 0EDD     		ble	.L4
+  54 0018 6368     		ldr	r3, [r4, #4]
+  55 001a 9842     		cmp	r0, r3
+  56 001c 0FD0     		beq	.L2
+  57 001e 211F     		subs	r1, r4, #4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccck1yoU.s 			page 2
+
+
+  58 0020 AE00     		lsls	r6, r5, #2
+  59 0022 3144     		add	r1, r1, r6
+  60 0024 2346     		mov	r3, r4
+  61 0026 04E0     		b	.L5
+  62              	.L6:
+  63 0028 9A68     		ldr	r2, [r3, #8]
+  64 002a 9042     		cmp	r0, r2
+  65 002c 03F10403 		add	r3, r3, #4
+  66 0030 05D0     		beq	.L2
+  67              	.L5:
+  68 0032 8B42     		cmp	r3, r1
+  69 0034 F8D1     		bne	.L6
+  70              	.L4:
+  71 0036 2644     		add	r6, r6, r4
+  72 0038 0135     		adds	r5, r5, #1
+  73 003a 7060     		str	r0, [r6, #4]
+  74 003c 2560     		str	r5, [r4]
+  75              	.L2:
+  76 003e 70BC     		pop	{r4, r5, r6}
+  77 0040 7047     		bx	lr
+  78              		.size	addError, .-addError
+  79 0042 00BFAFF3 		.section	.text.removeError,"ax",%progbits
+  79      0080AFF3 
+  79      0080AFF3 
+  79      0080
+  80              		.align	2
+  81              		.p2align 4,,15
+  82              		.global	removeError
+  83              		.thumb
+  84              		.thumb_func
+  85              		.type	removeError, %function
+  86              	removeError:
+  87              		@ args = 0, pretend = 0, frame = 0
+  88              		@ frame_needed = 0, uses_anonymous_args = 0
+  89              		@ link register save eliminated.
+  90 0000 30B4     		push	{r4, r5}
+  91 0002 40F20005 		movw	r5, #:lower16:.LANCHOR0
+  92 0006 C0F20005 		movt	r5, #:upper16:.LANCHOR0
+  93 000a 2C68     		ldr	r4, [r5]
+  94 000c 002C     		cmp	r4, #0
+  95 000e 0DDD     		ble	.L10
+  96 0010 6B68     		ldr	r3, [r5, #4]
+  97 0012 9842     		cmp	r0, r3
+  98 0014 24D0     		beq	.L18
+  99 0016 2A46     		mov	r2, r5
+ 100 0018 0023     		movs	r3, #0
+ 101 001a 04E0     		b	.L13
+ 102              	.L15:
+ 103 001c 9168     		ldr	r1, [r2, #8]
+ 104 001e 8842     		cmp	r0, r1
+ 105 0020 02F10402 		add	r2, r2, #4
+ 106 0024 04D0     		beq	.L14
+ 107              	.L13:
+ 108 0026 0133     		adds	r3, r3, #1
+ 109 0028 A342     		cmp	r3, r4
+ 110 002a F7D1     		bne	.L15
+ 111              	.L10:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccck1yoU.s 			page 3
+
+
+ 112 002c 30BC     		pop	{r4, r5}
+ 113 002e 7047     		bx	lr
+ 114              	.L14:
+ 115 0030 002B     		cmp	r3, #0
+ 116 0032 FBDB     		blt	.L10
+ 117 0034 A342     		cmp	r3, r4
+ 118 0036 0BDA     		bge	.L16
+ 119              	.L12:
+ 120 0038 05EB8301 		add	r1, r5, r3, lsl #2
+ 121 003c E31A     		subs	r3, r4, r3
+ 122 003e 0431     		adds	r1, r1, #4
+ 123 0040 9B00     		lsls	r3, r3, #2
+ 124 0042 0022     		movs	r2, #0
+ 125              	.L17:
+ 126 0044 4868     		ldr	r0, [r1, #4]
+ 127 0046 0432     		adds	r2, r2, #4
+ 128 0048 9A42     		cmp	r2, r3
+ 129 004a 41F8040B 		str	r0, [r1], #4
+ 130 004e F9D1     		bne	.L17
+ 131              	.L16:
+ 132 0050 013C     		subs	r4, r4, #1
+ 133 0052 05EB8403 		add	r3, r5, r4, lsl #2
+ 134 0056 0022     		movs	r2, #0
+ 135 0058 2C60     		str	r4, [r5]
+ 136 005a 5A60     		str	r2, [r3, #4]
+ 137 005c 30BC     		pop	{r4, r5}
+ 138 005e 7047     		bx	lr
+ 139              	.L18:
+ 140 0060 0023     		movs	r3, #0
+ 141 0062 E9E7     		b	.L12
+ 142              		.size	removeError, .-removeError
+ 143 0064 AFF30080 		.section	.text.setError,"ax",%progbits
+ 143      AFF30080 
+ 143      AFF30080 
+ 144              		.align	2
+ 145              		.p2align 4,,15
+ 146              		.global	setError
+ 147              		.thumb
+ 148              		.thumb_func
+ 149              		.type	setError, %function
+ 150              	setError:
+ 151              		@ args = 0, pretend = 0, frame = 0
+ 152              		@ frame_needed = 0, uses_anonymous_args = 0
+ 153              		@ link register save eliminated.
+ 154 0000 10B9     		cbnz	r0, .L22
+ 155 0002 0846     		mov	r0, r1
+ 156 0004 FFF7FEBF 		b	removeError
+ 157              	.L22:
+ 158 0008 0846     		mov	r0, r1
+ 159 000a FFF7FEBF 		b	addError
+ 160              		.size	setError, .-setError
+ 161 000e 00BF     		.section	.text.getErrorCodes,"ax",%progbits
+ 162              		.align	2
+ 163              		.p2align 4,,15
+ 164              		.global	getErrorCodes
+ 165              		.thumb
+ 166              		.thumb_func
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccck1yoU.s 			page 4
+
+
+ 167              		.type	getErrorCodes, %function
+ 168              	getErrorCodes:
+ 169              		@ args = 0, pretend = 0, frame = 0
+ 170              		@ frame_needed = 0, uses_anonymous_args = 0
+ 171              		@ link register save eliminated.
+ 172 0000 30B4     		push	{r4, r5}
+ 173 0002 40F20004 		movw	r4, #:lower16:.LANCHOR0
+ 174 0006 C0F20004 		movt	r4, #:upper16:.LANCHOR0
+ 175 000a 2568     		ldr	r5, [r4]
+ 176 000c 002D     		cmp	r5, #0
+ 177 000e 0560     		str	r5, [r0]
+ 178 0010 08DD     		ble	.L23
+ 179 0012 AD00     		lsls	r5, r5, #2
+ 180 0014 0023     		movs	r3, #0
+ 181              	.L26:
+ 182 0016 E218     		adds	r2, r4, r3
+ 183 0018 C118     		adds	r1, r0, r3
+ 184 001a 5268     		ldr	r2, [r2, #4]
+ 185 001c 0433     		adds	r3, r3, #4
+ 186 001e AB42     		cmp	r3, r5
+ 187 0020 4A60     		str	r2, [r1, #4]
+ 188 0022 F8D1     		bne	.L26
+ 189              	.L23:
+ 190 0024 30BC     		pop	{r4, r5}
+ 191 0026 7047     		bx	lr
+ 192              		.size	getErrorCodes, .-getErrorCodes
+ 193 0028 AFF30080 		.section	.text.hasErrorCodes,"ax",%progbits
+ 193      AFF30080 
+ 194              		.align	2
+ 195              		.p2align 4,,15
+ 196              		.global	hasErrorCodes
+ 197              		.thumb
+ 198              		.thumb_func
+ 199              		.type	hasErrorCodes, %function
+ 200              	hasErrorCodes:
+ 201              		@ args = 0, pretend = 0, frame = 0
+ 202              		@ frame_needed = 0, uses_anonymous_args = 0
+ 203              		@ link register save eliminated.
+ 204 0000 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 205 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 206 0008 1868     		ldr	r0, [r3]
+ 207 000a 0028     		cmp	r0, #0
+ 208 000c D4BF     		ite	le
+ 209 000e 0020     		movle	r0, #0
+ 210 0010 0120     		movgt	r0, #1
+ 211 0012 7047     		bx	lr
+ 212              		.size	hasErrorCodes, .-hasErrorCodes
+ 213 0014 AFF30080 		.section	.bss.error_codes_set,"aw",%nobits
+ 213      AFF30080 
+ 213      AFF30080 
+ 214              		.align	2
+ 215              		.set	.LANCHOR0,. + 0
+ 216              		.type	error_codes_set, %object
+ 217              		.size	error_codes_set, 44
+ 218              	error_codes_set:
+ 219 0000 00000000 		.space	44
+ 219      00000000 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccck1yoU.s 			page 5
+
+
+ 219      00000000 
+ 219      00000000 
+ 219      00000000 
+ 220              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccck1yoU.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 malfunction_central.c
+C:\Users\pc\AppData\Local\Temp\ccck1yoU.s:17     .text.initMalfunctionCentral:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccck1yoU.s:23     .text.initMalfunctionCentral:00000000 initMalfunctionCentral
+C:\Users\pc\AppData\Local\Temp\ccck1yoU.s:215    .bss.error_codes_set:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccck1yoU.s:34     .text.addError:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccck1yoU.s:40     .text.addError:00000000 addError
+C:\Users\pc\AppData\Local\Temp\ccck1yoU.s:80     .text.removeError:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccck1yoU.s:86     .text.removeError:00000000 removeError
+C:\Users\pc\AppData\Local\Temp\ccck1yoU.s:144    .text.setError:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccck1yoU.s:150    .text.setError:00000000 setError
+C:\Users\pc\AppData\Local\Temp\ccck1yoU.s:162    .text.getErrorCodes:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccck1yoU.s:168    .text.getErrorCodes:00000000 getErrorCodes
+C:\Users\pc\AppData\Local\Temp\ccck1yoU.s:194    .text.hasErrorCodes:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccck1yoU.s:200    .text.hasErrorCodes:00000000 hasErrorCodes
+C:\Users\pc\AppData\Local\Temp\ccck1yoU.s:214    .bss.error_codes_set:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccck1yoU.s:218    .bss.error_codes_set:00000000 error_codes_set
+
+NO UNDEFINED SYMBOLS

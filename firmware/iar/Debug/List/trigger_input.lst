@@ -1,0 +1,731 @@
+###############################################################################
+#                                                                             #
+# IAR ANSI C/C++ Compiler V6.50.3.4676/W32 for ARM      30/Jun/2015  23:09:02 #
+# Copyright 1999-2013 IAR Systems AB.                                         #
+#                                                                             #
+#    Cpu mode        =  thumb                                                 #
+#    Endian          =  little                                                #
+#    Source file     =  F:\stuff\rusefi_sourceforge\firmware\hw_layer\trigger #
+#                       _input.cpp                                            #
+#    Command line    =  F:\stuff\rusefi_sourceforge\firmware\hw_layer\trigger #
+#                       _input.cpp -lCN F:\stuff\rusefi_sourceforge\firmware\ #
+#                       iar\Debug\List\ -lA F:\stuff\rusefi_sourceforge\firmw #
+#                       are\iar\Debug\List\ -o F:\stuff\rusefi_sourceforge\fi #
+#                       rmware\iar\Debug\Obj\ --no_cse --no_unroll            #
+#                       --no_inline --no_code_motion --no_tbaa                #
+#                       --no_clustering --no_scheduling --debug               #
+#                       --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp     #
+#                       --dlib_config "C:\Program Files (x86)\IAR             #
+#                       Systems\Embedded Workbench                            #
+#                       6.5\arm\INC\c\DLib_Config_Normal.h"                   #
+#                       --misrac2004=1.2-1.4,2.3,3.4,4.2,6.5-7,8.2-8.3,9.3,   #
+#                       12.3,13.6-13,15.5,17.3,19.17,20.7-20.9,20.11 -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\ -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\kernel\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\ports\common\ARMCMx\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\common\ARMCMx\CMSIS\include\ -I               #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\IAR\ARMCMx\ -I F:\stuff\rusefi_sourceforge\fi #
+#                       rmware\iar\..\chibios\os\ports\IAR\ARMCMx\STM32F4xx\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\chibio #
+#                       s\os\hal\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\hal\platforms\STM32\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\DMAv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\GPIOv2\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\I2Cv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\SPIv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\TIMv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\RTCv2\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\USARTv1\ -I                     #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\OTGv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32F4xx\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\various\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\chibios\os\various\devices_lib\accel\ -I         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\b #
+#                       oards\ST_STM32F4_DISCOVERY\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\co #
+#                       ntrollers\algo\ -I F:\stuff\rusefi_sourceforge\firmwa #
+#                       re\iar\..\controllers\core\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\system\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\controllers\sensors\ -I                          #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\math\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\controllers\trigger\ -I                            #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\config #
+#                       \ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\conf #
+#                       ig\engines\ -I F:\stuff\rusefi_sourceforge\firmware\i #
+#                       ar\..\config\stm32f4ems\ -I                           #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\b #
+#                       inary\ -I F:\stuff\rusefi_sourceforge\firmware\iar\.. #
+#                       \console_util\ -I F:\stuff\rusefi_sourceforge\firmwar #
+#                       e\iar\..\development\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\development\test\ -I                  #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\developme #
+#                       nt\hw_layer\ -I F:\stuff\rusefi_sourceforge\firmware\ #
+#                       iar\..\hw_layer\algo\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\hw_layer\lcd\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                       stm32f4\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\hw_layer\serial_over_usb\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                        -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext_al #
+#                       go\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\de #
+#                       velopment\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\development\hw_layer\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\util\     #
+#                       -On --eec++                                           #
+#    MISRA C version =  2004                                                  #
+#      Enabled       =  1.2-1.4 2.3 3.4 4.2 6.5 7 8.2 8.3 9.3 12.3 13.6 13.7  #
+#                       15.5 17.3 19.17 20.7-20.9 20.11                       #
+#      Checked       =  1.4 2.3 4.2 6.5 7 8.2 8.3 9.3 12.3 13.7 15.5          #
+#                       20.7-20.9 20.11                                       #
+#      Not checked   =  1.1-1.3 1.5-2.2 2.4-4.1 5-6.4 8.1 8.4-9.2 10-12.2     #
+#                       12.4-13.6 14-15.4 16-20.6 20.10 20.12 21              #
+#    List file       =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\t #
+#                       rigger_input.lst                                      #
+#    Object file     =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\tr #
+#                       igger_input.o                                         #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+F:\stuff\rusefi_sourceforge\firmware\hw_layer\trigger_input.cpp
+      1          /**
+      2           * @file	trigger_input.cpp
+      3           * @brief	Position sensor hardware layer
+      4           *
+      5           * @date Dec 30, 2012
+      6           * @author Andrey Belomutskiy, (c) 2012-2015
+      7           */
+      8          
+      9          #include "main.h"
+     10          
+     11          #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+     12          
+     13          #include "trigger_input.h"
+     14          #include "digital_input_hw.h"
+     15          #include "pin_repository.h"
+     16          #include "trigger_structure.h"
+     17          #include "trigger_central.h"
+     18          #include "engine_configuration.h"
+     19          
+     20          #define TRIGGER_SUPPORTED_CHANNELS 2
+     21          
+
+   \                                 In section .bss, align 4
+     22          static ICUDriver *primaryCrankDriver;
+   \                     primaryCrankDriver:
+   \   00000000                      DS8 4
+     23          
+     24          EXTERN_ENGINE
+     25          ;
+
+   \                                 In section .bss, align 4
+     26          static Logging *logger;
+   \                     logger:
+   \   00000000                      DS8 4
+     27          
+     28          /**
+     29           * that's hardware timer input capture IRQ entry point
+     30           * 'width' events happens before the 'period' event
+     31           */
+
+   \                                 In section .text, align 2, keep-with-next
+     32          static void shaft_icu_width_callback(ICUDriver *icup) {
+   \                     _Z24shaft_icu_width_callbackP9ICUDriver:
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+     33          // todo: support for 3rd trigger input channel
+     34          // todo: start using real event time from HW event, not just software timer?
+     35          	int isPrimary = icup == primaryCrankDriver;
+   \   00000004   0x....             LDR.N    R0,??DataTable7
+   \   00000006   0x6800             LDR      R0,[R0, #+0]
+   \   00000008   0x4284             CMP      R4,R0
+   \   0000000A   0xD101             BNE.N    ??shaft_icu_width_callback_0
+   \   0000000C   0x2501             MOVS     R5,#+1
+   \   0000000E   0xE000             B.N      ??shaft_icu_width_callback_1
+   \                     ??shaft_icu_width_callback_0:
+   \   00000010   0x2500             MOVS     R5,#+0
+   \                     ??shaft_icu_width_callback_1:
+   \   00000012   0xB2ED             UXTB     R5,R5            ;; ZeroExt  R5,R5,#+24,#+24
+     36          	if (!isPrimary && !engine->triggerShape.needSecondTriggerInput) {
+   \   00000014   0x2D00             CMP      R5,#+0
+   \   00000016   0xD105             BNE.N    ??shaft_icu_width_callback_2
+   \   00000018   0x....             LDR.N    R0,??DataTable7_1
+   \   0000001A   0x6800             LDR      R0,[R0, #+0]
+   \   0000001C   0xF890 0x0285      LDRB     R0,[R0, #+645]
+   \   00000020   0x2800             CMP      R0,#+0
+   \   00000022   0xD021             BEQ.N    ??shaft_icu_width_callback_3
+     37          		return;
+     38          	}
+     39          	//	icucnt_t last_width = icuGetWidth(icup); so far we are fine with system time
+     40          	// todo: add support for 3rd channel
+     41          	trigger_event_e signal = isPrimary ? SHAFT_PRIMARY_UP : SHAFT_SECONDARY_UP;
+   \                     ??shaft_icu_width_callback_2:
+   \   00000024   0x2D00             CMP      R5,#+0
+   \   00000026   0xD001             BEQ.N    ??shaft_icu_width_callback_4
+   \   00000028   0x2601             MOVS     R6,#+1
+   \   0000002A   0xE000             B.N      ??shaft_icu_width_callback_5
+   \                     ??shaft_icu_width_callback_4:
+   \   0000002C   0x2603             MOVS     R6,#+3
+     42          
+     43          	if (isLessImportant(signal) && CONFIG(useOnlyFrontForTrigger))
+   \                     ??shaft_icu_width_callback_5:
+   \   0000002E   0x....             LDR.N    R0,??DataTable7_2
+   \   00000030   0xF890 0x0DE8      LDRB     R0,[R0, #+3560]
+   \   00000034   0x2800             CMP      R0,#+0
+   \   00000036   0xD002             BEQ.N    ??shaft_icu_width_callback_6
+   \   00000038   0xB2F6             UXTB     R6,R6            ;; ZeroExt  R6,R6,#+24,#+24
+   \   0000003A   0x2E01             CMP      R6,#+1
+   \   0000003C   0xD107             BNE.N    ??shaft_icu_width_callback_7
+   \                     ??shaft_icu_width_callback_6:
+   \   0000003E   0x....             LDR.N    R0,??DataTable7_2
+   \   00000040   0xF890 0x0DE8      LDRB     R0,[R0, #+3560]
+   \   00000044   0x2800             CMP      R0,#+0
+   \   00000046   0xD10B             BNE.N    ??shaft_icu_width_callback_8
+   \   00000048   0xB2F6             UXTB     R6,R6            ;; ZeroExt  R6,R6,#+24,#+24
+   \   0000004A   0x2E00             CMP      R6,#+0
+   \   0000004C   0xD008             BEQ.N    ??shaft_icu_width_callback_8
+   \                     ??shaft_icu_width_callback_7:
+   \   0000004E   0x....             LDR.N    R0,??DataTable7_3
+   \   00000050   0xF890 0x05ED      LDRB     R0,[R0, #+1517]
+   \   00000054   0xB2C0             UXTB     R0,R0            ;; ZeroExt  R0,R0,#+24,#+24
+   \   00000056   0x0980             LSRS     R0,R0,#+6
+   \   00000058   0xF010 0x0001      ANDS     R0,R0,#0x1
+   \   0000005C   0x2800             CMP      R0,#+0
+   \   0000005E   0xD103             BNE.N    ??shaft_icu_width_callback_3
+     44          		return;
+     45          	hwHandleShaftSignal(signal);
+   \                     ??shaft_icu_width_callback_8:
+   \   00000060   0x0030             MOVS     R0,R6
+   \   00000062   0xB2C0             UXTB     R0,R0            ;; ZeroExt  R0,R0,#+24,#+24
+   \   00000064   0x.... 0x....      BL       _Z19hwHandleShaftSignal15trigger_event_e
+     46          }
+   \                     ??shaft_icu_width_callback_3:
+   \   00000068   0xBD70             POP      {R4-R6,PC}       ;; return
+     47          
+
+   \                                 In section .text, align 2, keep-with-next
+     48          static void shaft_icu_period_callback(ICUDriver *icup) {
+   \                     _Z25shaft_icu_period_callbackP9ICUDriver:
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+     49          	int isPrimary = icup == primaryCrankDriver;
+   \   00000004   0x....             LDR.N    R0,??DataTable7
+   \   00000006   0x6800             LDR      R0,[R0, #+0]
+   \   00000008   0x4284             CMP      R4,R0
+   \   0000000A   0xD101             BNE.N    ??shaft_icu_period_callback_0
+   \   0000000C   0x2501             MOVS     R5,#+1
+   \   0000000E   0xE000             B.N      ??shaft_icu_period_callback_1
+   \                     ??shaft_icu_period_callback_0:
+   \   00000010   0x2500             MOVS     R5,#+0
+   \                     ??shaft_icu_period_callback_1:
+   \   00000012   0xB2ED             UXTB     R5,R5            ;; ZeroExt  R5,R5,#+24,#+24
+     50          	if (!isPrimary && !engine->triggerShape.needSecondTriggerInput) {
+   \   00000014   0x2D00             CMP      R5,#+0
+   \   00000016   0xD105             BNE.N    ??shaft_icu_period_callback_2
+   \   00000018   0x....             LDR.N    R0,??DataTable7_1
+   \   0000001A   0x6800             LDR      R0,[R0, #+0]
+   \   0000001C   0xF890 0x0285      LDRB     R0,[R0, #+645]
+   \   00000020   0x2800             CMP      R0,#+0
+   \   00000022   0xD021             BEQ.N    ??shaft_icu_period_callback_3
+     51          		return;
+     52          	}
+     53          
+     54          	// todo: add support for 3rd channel
+     55          	//	icucnt_t last_period = icuGetPeriod(icup); so far we are fine with system time
+     56          	trigger_event_e signal = isPrimary ? SHAFT_PRIMARY_DOWN : SHAFT_SECONDARY_DOWN;
+   \                     ??shaft_icu_period_callback_2:
+   \   00000024   0x2D00             CMP      R5,#+0
+   \   00000026   0xD001             BEQ.N    ??shaft_icu_period_callback_4
+   \   00000028   0x2600             MOVS     R6,#+0
+   \   0000002A   0xE000             B.N      ??shaft_icu_period_callback_5
+   \                     ??shaft_icu_period_callback_4:
+   \   0000002C   0x2602             MOVS     R6,#+2
+     57          	if (isLessImportant(signal) && CONFIG(useOnlyFrontForTrigger))
+   \                     ??shaft_icu_period_callback_5:
+   \   0000002E   0x....             LDR.N    R0,??DataTable7_2
+   \   00000030   0xF890 0x0DE8      LDRB     R0,[R0, #+3560]
+   \   00000034   0x2800             CMP      R0,#+0
+   \   00000036   0xD002             BEQ.N    ??shaft_icu_period_callback_6
+   \   00000038   0xB2F6             UXTB     R6,R6            ;; ZeroExt  R6,R6,#+24,#+24
+   \   0000003A   0x2E01             CMP      R6,#+1
+   \   0000003C   0xD107             BNE.N    ??shaft_icu_period_callback_7
+   \                     ??shaft_icu_period_callback_6:
+   \   0000003E   0x....             LDR.N    R0,??DataTable7_2
+   \   00000040   0xF890 0x0DE8      LDRB     R0,[R0, #+3560]
+   \   00000044   0x2800             CMP      R0,#+0
+   \   00000046   0xD10B             BNE.N    ??shaft_icu_period_callback_8
+   \   00000048   0xB2F6             UXTB     R6,R6            ;; ZeroExt  R6,R6,#+24,#+24
+   \   0000004A   0x2E00             CMP      R6,#+0
+   \   0000004C   0xD008             BEQ.N    ??shaft_icu_period_callback_8
+   \                     ??shaft_icu_period_callback_7:
+   \   0000004E   0x....             LDR.N    R0,??DataTable7_3
+   \   00000050   0xF890 0x05ED      LDRB     R0,[R0, #+1517]
+   \   00000054   0xB2C0             UXTB     R0,R0            ;; ZeroExt  R0,R0,#+24,#+24
+   \   00000056   0x0980             LSRS     R0,R0,#+6
+   \   00000058   0xF010 0x0001      ANDS     R0,R0,#0x1
+   \   0000005C   0x2800             CMP      R0,#+0
+   \   0000005E   0xD103             BNE.N    ??shaft_icu_period_callback_3
+     58          		return;
+     59          	hwHandleShaftSignal(signal);
+   \                     ??shaft_icu_period_callback_8:
+   \   00000060   0x0030             MOVS     R0,R6
+   \   00000062   0xB2C0             UXTB     R0,R0            ;; ZeroExt  R0,R0,#+24,#+24
+   \   00000064   0x.... 0x....      BL       _Z19hwHandleShaftSignal15trigger_event_e
+     60          }
+   \                     ??shaft_icu_period_callback_3:
+   \   00000068   0xBD70             POP      {R4-R6,PC}       ;; return
+     61          
+     62          /**
+     63           * the main purpose of this configuration structure is to specify the input interrupt callbacks
+     64           */
+
+   \                                 In section .data, align 4
+     65          static ICUConfig shaft_icucfg = { ICU_INPUT_ACTIVE_LOW, 100000, /* 100kHz ICU clock frequency.   */
+   \                     shaft_icucfg:
+   \   00000000   0x01 0x00          DC8 1, 0, 0, 0
+   \              0x00 0x00    
+   \   00000004   0x000186A0         DC32 100000, _Z24shaft_icu_width_callbackP9ICUDriver
+   \              0x........   
+   \   0000000C   0x........         DC32 _Z25shaft_icu_period_callbackP9ICUDriver
+   \   00000010   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+     66          shaft_icu_width_callback, shaft_icu_period_callback };
+     67          
+
+   \                                 In section .text, align 2, keep-with-next
+     68          static ICUDriver *turnOnTriggerInputPin(brain_pin_e hwPin) {
+   \                     _Z21turnOnTriggerInputPin11brain_pin_e:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+     69          	// configure pin
+     70          	turnOnCapturePin("trigger", hwPin);
+   \   00000004   0x0021             MOVS     R1,R4
+   \   00000006   0x....             LDR.N    R0,??DataTable7_4
+   \   00000008   0x.... 0x....      BL       _Z16turnOnCapturePinPKc11brain_pin_e
+     71          	shaft_icucfg.channel = ICU_CHANNEL_1;
+   \   0000000C   0x....             LDR.N    R0,??DataTable7_5
+   \   0000000E   0x2100             MOVS     R1,#+0
+   \   00000010   0x7501             STRB     R1,[R0, #+20]
+     72          
+     73          	ICUDriver *driver = getInputCaptureDriver(hwPin);
+   \   00000012   0x0020             MOVS     R0,R4
+   \   00000014   0x.... 0x....      BL       _Z21getInputCaptureDriver11brain_pin_e
+   \   00000018   0x0005             MOVS     R5,R0
+     74          	scheduleMsg(logger, "turnOnTriggerInputPin %s", hwPortname(hwPin));
+   \   0000001A   0x0020             MOVS     R0,R4
+   \   0000001C   0x.... 0x....      BL       _Z10hwPortname11brain_pin_e
+   \   00000020   0x0002             MOVS     R2,R0
+   \   00000022   0x....             LDR.N    R1,??DataTable7_6
+   \   00000024   0x....             LDR.N    R0,??DataTable7_7
+   \   00000026   0x6800             LDR      R0,[R0, #+0]
+   \   00000028   0x.... 0x....      BL       scheduleMsg
+     75          	// todo: reuse 'setWaveReaderMode' method here?
+     76          	if (driver != NULL) {
+   \   0000002C   0x2D00             CMP      R5,#+0
+   \   0000002E   0xD011             BEQ.N    ??turnOnTriggerInputPin_0
+     77          		// todo: once http://forum.chibios.org/phpbb/viewtopic.php?f=16&t=1757 is fixed
+     78          //		bool_t needWidthCallback = !CONFIG(useOnlyFrontForTrigger) || TRIGGER_SHAPE(useRiseEdge);
+     79          //		shaft_icucfg.width_cb = needWidthCallback ? shaft_icu_width_callback : NULL;
+     80          
+     81          //		bool_t needPeriodCallback = !CONFIG(useOnlyFrontForTrigger) || !TRIGGER_SHAPE(useRiseEdge);
+     82          //		shaft_icucfg.period_cb = needPeriodCallback ? shaft_icu_period_callback : NULL;
+     83          
+     84          		efiIcuStart(driver, &shaft_icucfg);
+   \   00000030   0x....             LDR.N    R1,??DataTable7_5
+   \   00000032   0x0028             MOVS     R0,R5
+   \   00000034   0x.... 0x....      BL       _Z11efiIcuStartP9ICUDriverPK9ICUConfig
+     85          		if (driver->state == ICU_READY) {
+   \   00000038   0x7828             LDRB     R0,[R5, #+0]
+   \   0000003A   0x2802             CMP      R0,#+2
+   \   0000003C   0xD103             BNE.N    ??turnOnTriggerInputPin_1
+     86          			icuEnable(driver);
+   \   0000003E   0x0028             MOVS     R0,R5
+   \   00000040   0x.... 0x....      BL       icuEnable
+   \   00000044   0xE006             B.N      ??turnOnTriggerInputPin_0
+     87          		} else {
+     88          			// we would be here for example if same pin is used for multiple input capture purposes
+     89          			firmwareError("ICU unexpected state [%s]", hwPortname(hwPin));
+   \                     ??turnOnTriggerInputPin_1:
+   \   00000046   0x0020             MOVS     R0,R4
+   \   00000048   0x.... 0x....      BL       _Z10hwPortname11brain_pin_e
+   \   0000004C   0x0001             MOVS     R1,R0
+   \   0000004E   0x....             LDR.N    R0,??DataTable7_8
+   \   00000050   0x.... 0x....      BL       firmwareError
+     90          		}
+     91          	}
+     92          	return driver;
+   \                     ??turnOnTriggerInputPin_0:
+   \   00000054   0x0028             MOVS     R0,R5
+   \   00000056   0xBD32             POP      {R1,R4,R5,PC}    ;; return
+     93          }
+     94          
+
+   \                                 In section .text, align 2, keep-with-next
+     95          static void turnOffTriggerInputPin(brain_pin_e hwPin) {
+   \                     _Z22turnOffTriggerInputPin11brain_pin_e:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+     96          	ICUDriver *driver = getInputCaptureDriver(hwPin);
+   \   00000004   0x0020             MOVS     R0,R4
+   \   00000006   0x.... 0x....      BL       _Z21getInputCaptureDriver11brain_pin_e
+   \   0000000A   0x0005             MOVS     R5,R0
+     97          	if (driver != NULL) {
+   \   0000000C   0x2D00             CMP      R5,#+0
+   \   0000000E   0xD011             BEQ.N    ??turnOffTriggerInputPin_0
+     98          		icuDisable(driver);
+   \   00000010   0x0028             MOVS     R0,R5
+   \   00000012   0x.... 0x....      BL       icuDisable
+     99          		icuStop(driver);
+   \   00000016   0x0028             MOVS     R0,R5
+   \   00000018   0x.... 0x....      BL       icuStop
+    100          		scheduleMsg(logger, "turnOffTriggerInputPin %s", hwPortname(hwPin));
+   \   0000001C   0x0020             MOVS     R0,R4
+   \   0000001E   0x.... 0x....      BL       _Z10hwPortname11brain_pin_e
+   \   00000022   0x0002             MOVS     R2,R0
+   \   00000024   0x....             LDR.N    R1,??DataTable7_9
+   \   00000026   0x....             LDR.N    R0,??DataTable7_7
+   \   00000028   0x6800             LDR      R0,[R0, #+0]
+   \   0000002A   0x.... 0x....      BL       scheduleMsg
+    101          		unmarkPin(hwPin);
+   \   0000002E   0x0020             MOVS     R0,R4
+   \   00000030   0x.... 0x....      BL       _Z9unmarkPin11brain_pin_e
+    102          	}
+    103          }
+   \                     ??turnOffTriggerInputPin_0:
+   \   00000034   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+    104          
+
+   \                                 In section .text, align 2, keep-with-next
+    105          static void rememberPrimaryChannel(void) {
+   \                     _Z22rememberPrimaryChannelv:
+   \   00000000   0xB580             PUSH     {R7,LR}
+    106          	primaryCrankDriver = getInputCaptureDriver(boardConfiguration->triggerInputPins[0]);
+   \   00000002   0x....             LDR.N    R0,??DataTable7_10
+   \   00000004   0x6800             LDR      R0,[R0, #+0]
+   \   00000006   0xF8D0 0x0128      LDR      R0,[R0, #+296]
+   \   0000000A   0x.... 0x....      BL       _Z21getInputCaptureDriver11brain_pin_e
+   \   0000000E   0x....             LDR.N    R1,??DataTable7
+   \   00000010   0x6008             STR      R0,[R1, #+0]
+    107          }
+   \   00000012   0xBD01             POP      {R0,PC}          ;; return
+    108          
+
+   \                                 In section .text, align 2, keep-with-next
+    109          void turnOnTriggerInputPins(Logging *sharedLogger) {
+   \                     _Z22turnOnTriggerInputPinsP7Logging:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    110          	logger = sharedLogger;
+   \   00000004   0x....             LDR.N    R0,??DataTable7_7
+   \   00000006   0x6004             STR      R4,[R0, #+0]
+    111          	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
+   \   00000008   0x2500             MOVS     R5,#+0
+   \                     ??turnOnTriggerInputPins_0:
+   \   0000000A   0x2D02             CMP      R5,#+2
+   \   0000000C   0xDA09             BGE.N    ??turnOnTriggerInputPins_1
+    112          		turnOnTriggerInputPin(boardConfiguration->triggerInputPins[i]);
+   \   0000000E   0x....             LDR.N    R0,??DataTable7_10
+   \   00000010   0x6800             LDR      R0,[R0, #+0]
+   \   00000012   0xEB10 0x0085      ADDS     R0,R0,R5, LSL #+2
+   \   00000016   0xF8D0 0x0128      LDR      R0,[R0, #+296]
+   \   0000001A   0x.... 0x....      BL       _Z21turnOnTriggerInputPin11brain_pin_e
+    113          	}
+   \   0000001E   0x1C6D             ADDS     R5,R5,#+1
+   \   00000020   0xE7F3             B.N      ??turnOnTriggerInputPins_0
+    114          
+    115          	rememberPrimaryChannel();
+   \                     ??turnOnTriggerInputPins_1:
+   \   00000022   0x.... 0x....      BL       _Z22rememberPrimaryChannelv
+    116          }
+   \   00000026   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+    117          
+    118          extern engine_configuration_s activeConfiguration;
+    119          
+
+   \                                 In section .text, align 2, keep-with-next
+    120          void stopTriggerInputPins(void) {
+   \                     _Z20stopTriggerInputPinsv:
+   \   00000000   0xB510             PUSH     {R4,LR}
+    121          for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
+   \   00000002   0x2400             MOVS     R4,#+0
+   \                     ??stopTriggerInputPins_0:
+   \   00000004   0x2C02             CMP      R4,#+2
+   \   00000006   0xDA15             BGE.N    ??stopTriggerInputPins_1
+    122          	if (boardConfiguration->triggerInputPins[i] != activeConfiguration.bc.triggerInputPins[i]) {
+   \   00000008   0x....             LDR.N    R0,??DataTable7_10
+   \   0000000A   0x6800             LDR      R0,[R0, #+0]
+   \   0000000C   0xEB10 0x0084      ADDS     R0,R0,R4, LSL #+2
+   \   00000010   0xF8D0 0x0128      LDR      R0,[R0, #+296]
+   \   00000014   0x....             LDR.N    R1,??DataTable7_11
+   \   00000016   0xEB11 0x0184      ADDS     R1,R1,R4, LSL #+2
+   \   0000001A   0xF8D1 0x1398      LDR      R1,[R1, #+920]
+   \   0000001E   0x4288             CMP      R0,R1
+   \   00000020   0xD006             BEQ.N    ??stopTriggerInputPins_2
+    123          		turnOffTriggerInputPin(activeConfiguration.bc.triggerInputPins[i]);
+   \   00000022   0x....             LDR.N    R0,??DataTable7_11
+   \   00000024   0xEB10 0x0084      ADDS     R0,R0,R4, LSL #+2
+   \   00000028   0xF8D0 0x0398      LDR      R0,[R0, #+920]
+   \   0000002C   0x.... 0x....      BL       _Z22turnOffTriggerInputPin11brain_pin_e
+    124          	}
+    125          }
+   \                     ??stopTriggerInputPins_2:
+   \   00000030   0x1C64             ADDS     R4,R4,#+1
+   \   00000032   0xE7E7             B.N      ??stopTriggerInputPins_0
+    126          }
+   \                     ??stopTriggerInputPins_1:
+   \   00000034   0xBD10             POP      {R4,PC}          ;; return
+    127          
+
+   \                                 In section .text, align 2, keep-with-next
+    128          void applyNewTriggerInputPins(void) {
+   \                     _Z24applyNewTriggerInputPinsv:
+   \   00000000   0xB510             PUSH     {R4,LR}
+    129          // first we will turn off all the changed pins
+    130          stopTriggerInputPins();
+   \   00000002   0x.... 0x....      BL       _Z20stopTriggerInputPinsv
+    131          
+    132          // then we will enable all the changed pins
+    133          for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
+   \   00000006   0x2400             MOVS     R4,#+0
+   \                     ??applyNewTriggerInputPins_0:
+   \   00000008   0x2C02             CMP      R4,#+2
+   \   0000000A   0xDA16             BGE.N    ??applyNewTriggerInputPins_1
+    134          	if (boardConfiguration->triggerInputPins[i] != activeConfiguration.bc.triggerInputPins[i]) {
+   \   0000000C   0x....             LDR.N    R0,??DataTable7_10
+   \   0000000E   0x6800             LDR      R0,[R0, #+0]
+   \   00000010   0xEB10 0x0084      ADDS     R0,R0,R4, LSL #+2
+   \   00000014   0xF8D0 0x0128      LDR      R0,[R0, #+296]
+   \   00000018   0x....             LDR.N    R1,??DataTable7_11
+   \   0000001A   0xEB11 0x0184      ADDS     R1,R1,R4, LSL #+2
+   \   0000001E   0xF8D1 0x1398      LDR      R1,[R1, #+920]
+   \   00000022   0x4288             CMP      R0,R1
+   \   00000024   0xD007             BEQ.N    ??applyNewTriggerInputPins_2
+    135          		turnOnTriggerInputPin(boardConfiguration->triggerInputPins[i]);
+   \   00000026   0x....             LDR.N    R0,??DataTable7_10
+   \   00000028   0x6800             LDR      R0,[R0, #+0]
+   \   0000002A   0xEB10 0x0084      ADDS     R0,R0,R4, LSL #+2
+   \   0000002E   0xF8D0 0x0128      LDR      R0,[R0, #+296]
+   \   00000032   0x.... 0x....      BL       _Z21turnOnTriggerInputPin11brain_pin_e
+    136          	}
+    137          }
+   \                     ??applyNewTriggerInputPins_2:
+   \   00000036   0x1C64             ADDS     R4,R4,#+1
+   \   00000038   0xE7E6             B.N      ??applyNewTriggerInputPins_0
+    138          
+    139          rememberPrimaryChannel();
+   \                     ??applyNewTriggerInputPins_1:
+   \   0000003A   0x.... 0x....      BL       _Z22rememberPrimaryChannelv
+    140          }
+   \   0000003E   0xBD10             POP      {R4,PC}          ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7:
+   \   00000000   0x........         DC32     primaryCrankDriver
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_1:
+   \   00000000   0x........         DC32     engine
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_2:
+   \   00000000   0x........         DC32     _engine
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_3:
+   \   00000000   0x........         DC32     persistentState
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_4:
+   \   00000000   0x........         DC32     `?<Constant "trigger">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_5:
+   \   00000000   0x........         DC32     shaft_icucfg
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_6:
+   \   00000000   0x........         DC32     `?<Constant "turnOnTriggerInputPin %s">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_7:
+   \   00000000   0x........         DC32     logger
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_8:
+   \   00000000   0x........         DC32     `?<Constant "ICU unexpected state ...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_9:
+   \   00000000   0x........         DC32     `?<Constant "turnOffTriggerInputPi...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_10:
+   \   00000000   0x........         DC32     boardConfiguration
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_11:
+   \   00000000   0x........         DC32     activeConfiguration
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "trigger">`:
+   \   00000000   0x74 0x72          DC8 "trigger"
+   \              0x69 0x67    
+   \              0x67 0x65    
+   \              0x72 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "turnOnTriggerInputPin %s">`:
+   \   00000000   0x74 0x75          DC8 "turnOnTriggerInputPin %s"
+   \              0x72 0x6E    
+   \              0x4F 0x6E    
+   \              0x54 0x72    
+   \              0x69 0x67    
+   \              0x67 0x65    
+   \              0x72 0x49    
+   \              0x6E 0x70    
+   \              0x75 0x74    
+   \              0x50 0x69    
+   \              0x6E 0x20    
+   \              0x25 0x73    
+   \              0x00         
+   \   00000019   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "ICU unexpected state ...">`:
+   \   00000000   0x49 0x43          DC8 "ICU unexpected state [%s]"
+   \              0x55 0x20    
+   \              0x75 0x6E    
+   \              0x65 0x78    
+   \              0x70 0x65    
+   \              0x63 0x74    
+   \              0x65 0x64    
+   \              0x20 0x73    
+   \              0x74 0x61    
+   \              0x74 0x65    
+   \              0x20 0x5B    
+   \              0x25 0x73    
+   \              0x5D 0x00    
+   \   0000001A   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "turnOffTriggerInputPi...">`:
+   \   00000000   0x74 0x75          DC8 "turnOffTriggerInputPin %s"
+   \              0x72 0x6E    
+   \              0x4F 0x66    
+   \              0x66 0x54    
+   \              0x72 0x69    
+   \              0x67 0x67    
+   \              0x65 0x72    
+   \              0x49 0x6E    
+   \              0x70 0x75    
+   \              0x74 0x50    
+   \              0x69 0x6E    
+   \              0x20 0x25    
+   \              0x73 0x00    
+   \   0000001A   0x00 0x00          DC8 0, 0
+    141          
+    142          #endif /* EFI_SHAFT_POSITION_INPUT */
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   applyNewTriggerInputPins()
+         8   -> rememberPrimaryChannel()
+         8   -> stopTriggerInputPins()
+         8   -> turnOnTriggerInputPin(brain_pin_e)
+       8   rememberPrimaryChannel()
+         8   -> getInputCaptureDriver(brain_pin_e)
+      16   shaft_icu_period_callback(ICUDriver *)
+        16   -> hwHandleShaftSignal(trigger_event_e)
+      16   shaft_icu_width_callback(ICUDriver *)
+        16   -> hwHandleShaftSignal(trigger_event_e)
+       8   stopTriggerInputPins()
+         8   -> turnOffTriggerInputPin(brain_pin_e)
+      16   turnOffTriggerInputPin(brain_pin_e)
+        16   -> getInputCaptureDriver(brain_pin_e)
+        16   -> hwPortname(brain_pin_e)
+        16   -> icuDisable
+        16   -> icuStop
+        16   -> scheduleMsg
+        16   -> unmarkPin(brain_pin_e)
+      16   turnOnTriggerInputPin(brain_pin_e)
+        16   -> efiIcuStart(ICUDriver *, ICUConfig const *)
+        16   -> firmwareError
+        16   -> getInputCaptureDriver(brain_pin_e)
+        16   -> hwPortname(brain_pin_e)
+        16   -> icuEnable
+        16   -> scheduleMsg
+        16   -> turnOnCapturePin(char const *, brain_pin_e)
+      16   turnOnTriggerInputPins(Logging *)
+        16   -> rememberPrimaryChannel()
+        16   -> turnOnTriggerInputPin(brain_pin_e)
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      28  ?<Constant "ICU unexpected state ...">
+       8  ?<Constant "trigger">
+      28  ?<Constant "turnOffTriggerInputPi...">
+      28  ?<Constant "turnOnTriggerInputPin %s">
+       4  ??DataTable7
+       4  ??DataTable7_1
+       4  ??DataTable7_10
+       4  ??DataTable7_11
+       4  ??DataTable7_2
+       4  ??DataTable7_3
+       4  ??DataTable7_4
+       4  ??DataTable7_5
+       4  ??DataTable7_6
+       4  ??DataTable7_7
+       4  ??DataTable7_8
+       4  ??DataTable7_9
+      64  applyNewTriggerInputPins()
+       4  logger
+       4  primaryCrankDriver
+      20  rememberPrimaryChannel()
+     106  shaft_icu_period_callback(ICUDriver *)
+     106  shaft_icu_width_callback(ICUDriver *)
+      28  shaft_icucfg
+      54  stopTriggerInputPins()
+      54  turnOffTriggerInputPin(brain_pin_e)
+      88  turnOnTriggerInputPin(brain_pin_e)
+      40  turnOnTriggerInputPins(Logging *)
+
+ 
+   8 bytes in section .bss
+  28 bytes in section .data
+  92 bytes in section .rodata
+ 580 bytes in section .text
+ 
+ 580 bytes of CODE  memory
+  92 bytes of CONST memory
+  36 bytes of DATA  memory
+
+Errors: none
+Warnings: 1

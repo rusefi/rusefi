@@ -1,0 +1,484 @@
+###############################################################################
+#                                                                             #
+# IAR ANSI C/C++ Compiler V6.50.3.4676/W32 for ARM      30/Jun/2015  23:08:57 #
+# Copyright 1999-2013 IAR Systems AB.                                         #
+#                                                                             #
+#    Cpu mode        =  thumb                                                 #
+#    Endian          =  little                                                #
+#    Source file     =  F:\stuff\rusefi_sourceforge\firmware\hw_layer\vehicle #
+#                       _speed.cpp                                            #
+#    Command line    =  F:\stuff\rusefi_sourceforge\firmware\hw_layer\vehicle #
+#                       _speed.cpp -lCN F:\stuff\rusefi_sourceforge\firmware\ #
+#                       iar\Debug\List\ -lA F:\stuff\rusefi_sourceforge\firmw #
+#                       are\iar\Debug\List\ -o F:\stuff\rusefi_sourceforge\fi #
+#                       rmware\iar\Debug\Obj\ --no_cse --no_unroll            #
+#                       --no_inline --no_code_motion --no_tbaa                #
+#                       --no_clustering --no_scheduling --debug               #
+#                       --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp     #
+#                       --dlib_config "C:\Program Files (x86)\IAR             #
+#                       Systems\Embedded Workbench                            #
+#                       6.5\arm\INC\c\DLib_Config_Normal.h"                   #
+#                       --misrac2004=1.2-1.4,2.3,3.4,4.2,6.5-7,8.2-8.3,9.3,   #
+#                       12.3,13.6-13,15.5,17.3,19.17,20.7-20.9,20.11 -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\ -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\kernel\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\ports\common\ARMCMx\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\common\ARMCMx\CMSIS\include\ -I               #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\IAR\ARMCMx\ -I F:\stuff\rusefi_sourceforge\fi #
+#                       rmware\iar\..\chibios\os\ports\IAR\ARMCMx\STM32F4xx\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\chibio #
+#                       s\os\hal\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\hal\platforms\STM32\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\DMAv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\GPIOv2\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\I2Cv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\SPIv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\TIMv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\RTCv2\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\USARTv1\ -I                     #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\OTGv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32F4xx\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\various\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\chibios\os\various\devices_lib\accel\ -I         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\b #
+#                       oards\ST_STM32F4_DISCOVERY\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\co #
+#                       ntrollers\algo\ -I F:\stuff\rusefi_sourceforge\firmwa #
+#                       re\iar\..\controllers\core\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\system\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\controllers\sensors\ -I                          #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\math\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\controllers\trigger\ -I                            #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\config #
+#                       \ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\conf #
+#                       ig\engines\ -I F:\stuff\rusefi_sourceforge\firmware\i #
+#                       ar\..\config\stm32f4ems\ -I                           #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\b #
+#                       inary\ -I F:\stuff\rusefi_sourceforge\firmware\iar\.. #
+#                       \console_util\ -I F:\stuff\rusefi_sourceforge\firmwar #
+#                       e\iar\..\development\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\development\test\ -I                  #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\developme #
+#                       nt\hw_layer\ -I F:\stuff\rusefi_sourceforge\firmware\ #
+#                       iar\..\hw_layer\algo\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\hw_layer\lcd\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                       stm32f4\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\hw_layer\serial_over_usb\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                        -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext_al #
+#                       go\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\de #
+#                       velopment\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\development\hw_layer\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\util\     #
+#                       -On --eec++                                           #
+#    MISRA C version =  2004                                                  #
+#      Enabled       =  1.2-1.4 2.3 3.4 4.2 6.5 7 8.2 8.3 9.3 12.3 13.6 13.7  #
+#                       15.5 17.3 19.17 20.7-20.9 20.11                       #
+#      Checked       =  1.4 2.3 4.2 6.5 7 8.2 8.3 9.3 12.3 13.7 15.5          #
+#                       20.7-20.9 20.11                                       #
+#      Not checked   =  1.1-1.3 1.5-2.2 2.4-4.1 5-6.4 8.1 8.4-9.2 10-12.2     #
+#                       12.4-13.6 14-15.4 16-20.6 20.10 20.12 21              #
+#    List file       =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\v #
+#                       ehicle_speed.lst                                      #
+#    Object file     =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\ve #
+#                       hicle_speed.o                                         #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+F:\stuff\rusefi_sourceforge\firmware\hw_layer\vehicle_speed.cpp
+      1          /**
+      2           * @file vehicle_speed.cpp
+      3           *
+      4           * @date Dec 26, 2014
+      5           * @author Andrey Belomutskiy, (c) 2012-2015
+      6           */
+      7          
+      8          #include "vehicle_speed.h"
+      9          
+     10          #if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
+     11          
+     12          #include "engine.h"
+     13          #include "digital_input_hw.h"
+     14          #include "pin_repository.h"
+     15          
+     16          EXTERN_ENGINE
+     17          ;
+     18          
+
+   \                                 In section .bss, align 4
+     19          static Logging *logger;
+   \                     logger:
+   \   00000000                      DS8 4
+     20          
+
+   \                                 In section .bss, align 8
+     21          static efitick_t lastSignalTimeNt = 0;
+   \                     lastSignalTimeNt:
+   \   00000000                      DS8 8
+
+   \                                 In section .bss, align 8
+     22          static efitick_t vssDiff = 0;
+   \                     vssDiff:
+   \   00000000                      DS8 8
+
+   \                                 In section .bss, align 4
+     23          static int vssCounter = 0;
+   \                     vssCounter:
+   \   00000000                      DS8 4
+     24          
+     25          /**
+     26           * @return vehicle speed, in kilometers per hour
+     27           */
+
+   \                                 In section .text, align 4, keep-with-next
+     28          float getVehicleSpeed(void) {
+   \                     _Z15getVehicleSpeedv:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0xED2D 0x8B02      VPUSH    {D8}
+     29          	efitick_t nowNt = getTimeNowNt();
+   \   00000006   0x.... 0x....      BL       getTimeNowNt
+   \   0000000A   0x0004             MOVS     R4,R0
+   \   0000000C   0x000D             MOVS     R5,R1
+     30          	if (nowNt - lastSignalTimeNt > US2NT(US_PER_SECOND_LL))
+   \   0000000E   0x....             LDR.N    R0,??DataTable3_3
+   \   00000010   0xE9D0 0x2300      LDRD     R2,R3,[R0, #+0]
+   \   00000014   0x1AA0             SUBS     R0,R4,R2
+   \   00000016   0xEB75 0x0103      SBCS     R1,R5,R3
+   \   0000001A   0x....             LDR.N    R2,??DataTable3_4  ;; 0xa037a01
+   \   0000001C   0x2300             MOVS     R3,#+0
+   \   0000001E   0x4299             CMP      R1,R3
+   \   00000020   0xDB05             BLT.N    ??getVehicleSpeed_0
+   \   00000022   0xDC01             BGT.N    ??getVehicleSpeed_1
+   \   00000024   0x4290             CMP      R0,R2
+   \   00000026   0xD302             BCC.N    ??getVehicleSpeed_0
+     31          		return 0; // previous signal time is too long ago - we are stopped
+   \                     ??getVehicleSpeed_1:
+   \   00000028   0xED9F 0x....      VLDR.W   S0,??DataTable3  ;; 0x0
+   \   0000002C   0xE010             B.N      ??getVehicleSpeed_2
+     32          
+     33          	return engineConfiguration->vehicleSpeedCoef * US2NT(US_PER_SECOND_LL) / vssDiff;
+   \                     ??getVehicleSpeed_0:
+   \   0000002E   0x....             LDR.N    R0,??DataTable3_5
+   \   00000030   0x6800             LDR      R0,[R0, #+0]
+   \   00000032   0xED90 0x0A7A      VLDR     S0,[R0, #+488]
+   \   00000036   0xEDDF 0x....      VLDR.W   S1,??DataTable3_1  ;; 0x4d2037a0
+   \   0000003A   0xEE20 0x8A20      VMUL.F32 S16,S0,S1
+   \   0000003E   0x....             LDR.N    R2,??DataTable3_6
+   \   00000040   0xE9D2 0x0100      LDRD     R0,R1,[R2, #+0]
+   \   00000044   0x.... 0x....      BL       __aeabi_l2f
+   \   00000048   0xEE00 0x0A10      VMOV     S0,R0
+   \   0000004C   0xEE88 0x0A00      VDIV.F32 S0,S16,S0
+   \                     ??getVehicleSpeed_2:
+   \   00000050   0xECBD 0x8B02      VPOP     {D8}
+   \   00000054   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+     34          }
+     35          
+
+   \                                 In section .text, align 2, keep-with-next
+     36          static void vsAnaWidthCallback(void) {
+   \                     _Z18vsAnaWidthCallbackv:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+     37          	vssCounter++;
+   \   00000002   0x....             LDR.N    R0,??DataTable3_7
+   \   00000004   0x6800             LDR      R0,[R0, #+0]
+   \   00000006   0x1C40             ADDS     R0,R0,#+1
+   \   00000008   0x....             LDR.N    R1,??DataTable3_7
+   \   0000000A   0x6008             STR      R0,[R1, #+0]
+     38          	efitick_t nowNt = getTimeNowNt();
+   \   0000000C   0x.... 0x....      BL       getTimeNowNt
+     39          	vssDiff = nowNt - lastSignalTimeNt;
+   \   00000010   0x....             LDR.N    R2,??DataTable3_3
+   \   00000012   0xE9D2 0x4500      LDRD     R4,R5,[R2, #+0]
+   \   00000016   0x1B02             SUBS     R2,R0,R4
+   \   00000018   0xEB71 0x0305      SBCS     R3,R1,R5
+   \   0000001C   0x....             LDR.N    R4,??DataTable3_6
+   \   0000001E   0xE9C4 0x2300      STRD     R2,R3,[R4, #+0]
+     40          	lastSignalTimeNt = nowNt;
+   \   00000022   0x....             LDR.N    R2,??DataTable3_3
+   \   00000024   0xE9C2 0x0100      STRD     R0,R1,[R2, #+0]
+     41          }
+   \   00000028   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+     42          
+
+   \                                 In section .text, align 2, keep-with-next
+     43          static void speedInfo(void) {
+   \                     _Z9speedInfov:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0xED2D 0x8B02      VPUSH    {D8}
+   \   00000006   0xB086             SUB      SP,SP,#+24
+     44          	scheduleMsg(logger, "VSS@%s c=%f eventCounter=%d speed=%f",
+     45          			hwPortname(boardConfiguration->vehicleSpeedSensorInputPin),
+     46          			engineConfiguration->vehicleSpeedCoef,
+     47          			vssCounter,
+     48          			getVehicleSpeed());
+   \   00000008   0x.... 0x....      BL       _Z15getVehicleSpeedv
+   \   0000000C   0xEEB0 0x8A40      VMOV.F32 S16,S0
+   \   00000010   0x....             LDR.N    R0,??DataTable3_8
+   \   00000012   0x6800             LDR      R0,[R0, #+0]
+   \   00000014   0xF8D0 0x0318      LDR      R0,[R0, #+792]
+   \   00000018   0x.... 0x....      BL       _Z10hwPortname11brain_pin_e
+   \   0000001C   0x0004             MOVS     R4,R0
+   \   0000001E   0xEE18 0x0A10      VMOV     R0,S16
+   \   00000022   0x.... 0x....      BL       __aeabi_f2d
+   \   00000026   0xE9CD 0x0104      STRD     R0,R1,[SP, #+16]
+   \   0000002A   0x....             LDR.N    R0,??DataTable3_7
+   \   0000002C   0x6800             LDR      R0,[R0, #+0]
+   \   0000002E   0x9002             STR      R0,[SP, #+8]
+   \   00000030   0x....             LDR.N    R0,??DataTable3_5
+   \   00000032   0x6800             LDR      R0,[R0, #+0]
+   \   00000034   0xF8D0 0x01E8      LDR      R0,[R0, #+488]
+   \   00000038   0x.... 0x....      BL       __aeabi_f2d
+   \   0000003C   0xE9CD 0x0100      STRD     R0,R1,[SP, #+0]
+   \   00000040   0x0022             MOVS     R2,R4
+   \   00000042   0x....             LDR.N    R1,??DataTable3_9
+   \   00000044   0x....             LDR.N    R0,??DataTable3_10
+   \   00000046   0x6800             LDR      R0,[R0, #+0]
+   \   00000048   0x.... 0x....      BL       scheduleMsg
+     49          	scheduleMsg(logger, "vss diff %d", vssDiff);
+   \   0000004C   0x....             LDR.N    R0,??DataTable3_6
+   \   0000004E   0xE9D0 0x2300      LDRD     R2,R3,[R0, #+0]
+   \   00000052   0x....             LDR.N    R1,??DataTable3_11
+   \   00000054   0x....             LDR.N    R0,??DataTable3_10
+   \   00000056   0x6800             LDR      R0,[R0, #+0]
+   \   00000058   0x.... 0x....      BL       scheduleMsg
+     50          
+     51          }
+   \   0000005C   0xB006             ADD      SP,SP,#+24
+   \   0000005E   0xECBD 0x8B02      VPOP     {D8}
+   \   00000062   0xBD10             POP      {R4,PC}          ;; return
+     52          
+
+   \                                 In section .text, align 2, keep-with-next
+     53          void initVehicleSpeed(Logging *l) {
+   \                     _Z16initVehicleSpeedP7Logging:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+     54          	logger = l;
+   \   00000004   0x....             LDR.N    R0,??DataTable3_10
+   \   00000006   0x6004             STR      R4,[R0, #+0]
+     55          	if (boardConfiguration->vehicleSpeedSensorInputPin == GPIO_UNASSIGNED)
+   \   00000008   0x....             LDR.N    R0,??DataTable3_8
+   \   0000000A   0x6800             LDR      R0,[R0, #+0]
+   \   0000000C   0xF8D0 0x0318      LDR      R0,[R0, #+792]
+   \   00000010   0x2850             CMP      R0,#+80
+   \   00000012   0xD015             BEQ.N    ??initVehicleSpeed_0
+     56          		return;
+     57          	digital_input_s* vehicleSpeedInput = initWaveAnalyzerDriver("VSS", boardConfiguration->vehicleSpeedSensorInputPin);
+   \                     ??initVehicleSpeed_1:
+   \   00000014   0x....             LDR.N    R0,??DataTable3_8
+   \   00000016   0x6800             LDR      R0,[R0, #+0]
+   \   00000018   0xF8D0 0x1318      LDR      R1,[R0, #+792]
+   \   0000001C   0x....             ADR.N    R0,??DataTable3_2  ;; "VSS"
+   \   0000001E   0x.... 0x....      BL       _Z22initWaveAnalyzerDriverPKc11brain_pin_e
+   \   00000022   0x0005             MOVS     R5,R0
+     58          	startInputDriver(vehicleSpeedInput, true);
+   \   00000024   0x2101             MOVS     R1,#+1
+   \   00000026   0x0028             MOVS     R0,R5
+   \   00000028   0x.... 0x....      BL       _Z16startInputDriverP15digital_input_sb
+     59          
+     60          	vehicleSpeedInput->widthListeners.registerCallback((VoidInt) vsAnaWidthCallback, NULL);
+   \   0000002C   0x2200             MOVS     R2,#+0
+   \   0000002E   0x....             LDR.N    R1,??DataTable3_12
+   \   00000030   0xF115 0x0008      ADDS     R0,R5,#+8
+   \   00000034   0x.... 0x....      BL       _ZN16IntListenerArray16registerCallbackEPFviEPv
+     61          	addConsoleAction("speedinfo", speedInfo);
+   \   00000038   0x....             LDR.N    R1,??DataTable3_13
+   \   0000003A   0x....             LDR.N    R0,??DataTable3_14
+   \   0000003C   0x.... 0x....      BL       addConsoleAction
+     62          }
+   \                     ??initVehicleSpeed_0:
+   \   00000040   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable3:
+   \   00000000   0x00000000         DC32     0x0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable3_1:
+   \   00000000   0x4D2037A0         DC32     0x4d2037a0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable3_2:
+   \   00000000   0x56 0x53          DC8      "VSS"
+   \              0x53 0x00    
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable3_3:
+   \   00000000   0x........         DC32     lastSignalTimeNt
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable3_4:
+   \   00000000   0x0A037A01         DC32     0xa037a01
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable3_5:
+   \   00000000   0x........         DC32     engineConfiguration
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable3_6:
+   \   00000000   0x........         DC32     vssDiff
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable3_7:
+   \   00000000   0x........         DC32     vssCounter
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable3_8:
+   \   00000000   0x........         DC32     boardConfiguration
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable3_9:
+   \   00000000   0x........         DC32     `?<Constant "VSS@%s c=%f eventCoun...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable3_10:
+   \   00000000   0x........         DC32     logger
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable3_11:
+   \   00000000   0x........         DC32     `?<Constant "vss diff %d">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable3_12:
+   \   00000000   0x........         DC32     _Z18vsAnaWidthCallbackv
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable3_13:
+   \   00000000   0x........         DC32     _Z9speedInfov
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable3_14:
+   \   00000000   0x........         DC32     `?<Constant "speedinfo">`
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "VSS@%s c=%f eventCoun...">`:
+   \   00000000   0x56 0x53          DC8 "VSS@%s c=%f eventCounter=%d speed=%f"
+   \              0x53 0x40    
+   \              0x25 0x73    
+   \              0x20 0x63    
+   \              0x3D 0x25    
+   \              0x66 0x20    
+   \              0x65 0x76    
+   \              0x65 0x6E    
+   \              0x74 0x43    
+   \              0x6F 0x75    
+   \              0x6E 0x74    
+   \              0x65 0x72    
+   \              0x3D 0x25    
+   \              0x64 0x20    
+   \              0x73 0x70    
+   \              0x65 0x65    
+   \              0x64 0x3D    
+   \              0x25 0x66    
+   \              0x00         
+   \   00000025   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "vss diff %d">`:
+   \   00000000   0x76 0x73          DC8 "vss diff %d"
+   \              0x73 0x20    
+   \              0x64 0x69    
+   \              0x66 0x66    
+   \              0x20 0x25    
+   \              0x64 0x00    
+
+   \                                 In section .rodata, align 4
+   \   00000000   0x56 0x53          DC8 "VSS"
+   \              0x53 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "speedinfo">`:
+   \   00000000   0x73 0x70          DC8 "speedinfo"
+   \              0x65 0x65    
+   \              0x64 0x69    
+   \              0x6E 0x66    
+   \              0x6F 0x00    
+   \   0000000A   0x00 0x00          DC8 0, 0
+     63          
+     64          #endif /* EFI_VEHICLE_SPEED */
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      24   getVehicleSpeed()
+        24   -> __aeabi_l2f
+        24   -> getTimeNowNt
+      16   initVehicleSpeed(Logging *)
+        16   -> IntListenerArray::registerCallback(VoidInt, void *)
+        16   -> addConsoleAction
+        16   -> initWaveAnalyzerDriver(char const *, brain_pin_e)
+        16   -> startInputDriver(digital_input_s *, bool)
+      40   speedInfo()
+        40   -> __aeabi_f2d
+        40   -> getVehicleSpeed()
+        40   -> hwPortname(brain_pin_e)
+        40   -> scheduleMsg
+      16   vsAnaWidthCallback()
+        16   -> getTimeNowNt
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ?<Constant "VSS">
+      40  ?<Constant "VSS@%s c=%f eventCoun...">
+      12  ?<Constant "speedinfo">
+      12  ?<Constant "vss diff %d">
+       4  ??DataTable3
+       4  ??DataTable3_1
+       4  ??DataTable3_10
+       4  ??DataTable3_11
+       4  ??DataTable3_12
+       4  ??DataTable3_13
+       4  ??DataTable3_14
+       4  ??DataTable3_2
+       4  ??DataTable3_3
+       4  ??DataTable3_4
+       4  ??DataTable3_5
+       4  ??DataTable3_6
+       4  ??DataTable3_7
+       4  ??DataTable3_8
+       4  ??DataTable3_9
+      86  getVehicleSpeed()
+      66  initVehicleSpeed(Logging *)
+       8  lastSignalTimeNt
+       4  logger
+     100  speedInfo()
+      42  vsAnaWidthCallback()
+       4  vssCounter
+       8  vssDiff
+
+ 
+  24 bytes in section .bss
+  68 bytes in section .rodata
+ 354 bytes in section .text
+ 
+ 354 bytes of CODE  memory
+  68 bytes of CONST memory
+  24 bytes of DATA  memory
+
+Errors: none
+Warnings: 1

@@ -1,0 +1,186 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccmwm4tG.s 			page 1
+
+
+   1              		.file	"mazda_miata_nb.cpp"
+   2              		.section	.text$_Z34setMazdaMiataNbEngineConfigurationv,"x"
+   3              		.p2align 4,,15
+   4              		.globl	__Z34setMazdaMiataNbEngineConfigurationv
+   5              		.def	__Z34setMazdaMiataNbEngineConfigurationv;	.scl	2;	.type	32;	.endef
+   6              	__Z34setMazdaMiataNbEngineConfigurationv:
+   7              	LFB85:
+   8              		.cfi_startproc
+   9 0000 83EC3C   		subl	$60, %esp
+  10              		.cfi_def_cfa_offset 64
+  11 0003 A1000000 		movl	_engineConfiguration, %eax
+  11      00
+  12 0008 C780A401 		movl	$3000, 420(%eax)
+  12      0000B80B 
+  12      0000
+  13 0012 C7801802 		movl	$4, 536(%eax)
+  13      00000400 
+  13      0000
+  14 001c C780CC01 		movl	$0x438a0000, 460(%eax)
+  14      00000000 
+  14      8A43
+  15 0026 C780AC01 		movl	$0, 428(%eax)
+  15      00000000 
+  15      0000
+  16 0030 C780B001 		movl	$1, 432(%eax)
+  16      00000100 
+  16      0000
+  17 003a C780BC01 		movl	$2, 444(%eax)
+  17      00000200 
+  17      0000
+  18 0044 C7809801 		movl	$1, 408(%eax)
+  18      00000100 
+  18      0000
+  19 004e 05000100 		addl	$256, %eax
+  19      00
+  20 0053 890424   		movl	%eax, (%esp)
+  21 0056 C7442418 		movl	$0x442f0000, 24(%esp)
+  21      00002F44 
+  22 005e C7442414 		movl	$0x42c80000, 20(%esp)
+  22      0000C842 
+  23 0066 C7442410 		movl	$0x45ebf000, 16(%esp)
+  23      00F0EB45 
+  24 006e C744240C 		movl	$0x41f00000, 12(%esp)
+  24      0000F041 
+  25 0076 C7442408 		movl	$0x46fde800, 8(%esp)
+  25      00E8FD46 
+  26 007e C7442404 		movl	$0x00000000, 4(%esp)
+  26      00000000 
+  27 0086 E8000000 		call	__Z26setThermistorConfigurationP14ThermistorConfffffff
+  27      00
+  28 008b A1000000 		movl	_engineConfiguration, %eax
+  28      00
+  29 0090 D9050000 		flds	LC7
+  29      0000
+  30 0096 D9901801 		fsts	280(%eax)
+  30      0000
+  31 009c 05200100 		addl	$288, %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccmwm4tG.s 			page 2
+
+
+  31      00
+  32 00a1 890424   		movl	%eax, (%esp)
+  33 00a4 D95C2420 		fstps	32(%esp)
+  34 00a8 C7442418 		movl	$0x44938000, 24(%esp)
+  34      00809344 
+  35 00b0 C7442414 		movl	$0x42f00000, 20(%esp)
+  35      0000F042 
+  36 00b8 C7442410 		movl	$0x45f0a000, 16(%esp)
+  36      00A0F045 
+  37 00c0 C744240C 		movl	$0x42700000, 12(%esp)
+  37      00007042 
+  38 00c8 C7442408 		movl	$0x481c8d80, 8(%esp)
+  38      808D1C48 
+  39 00d0 C7442404 		movl	$0xc1200000, 4(%esp)
+  39      000020C1 
+  40 00d8 E8000000 		call	__Z26setThermistorConfigurationP14ThermistorConfffffff
+  40      00
+  41 00dd A1000000 		movl	_engineConfiguration, %eax
+  41      00
+  42 00e2 D9442420 		flds	32(%esp)
+  43 00e6 D9983801 		fstps	312(%eax)
+  43      0000
+  44 00ec C7800C02 		movl	$3, 524(%eax)
+  44      00000300 
+  44      0000
+  45 00f6 C780D801 		movl	$0, 472(%eax)
+  45      00000000 
+  45      0000
+  46 0100 C7804402 		movl	$1, 580(%eax)
+  46      00000100 
+  46      0000
+  47 010a C7801C01 		movl	$11, 284(%eax)
+  47      00000B00 
+  47      0000
+  48 0114 C7803C01 		movl	$13, 316(%eax)
+  48      00000D00 
+  48      0000
+  49 011e C7804802 		movl	$2, 584(%eax)
+  49      00000200 
+  49      0000
+  50 0128 A1000000 		movl	_boardConfiguration, %eax
+  50      00
+  51 012d C7004000 		movl	$64, (%eax)
+  51      0000
+  52 0133 C7400400 		movl	$0, 4(%eax)
+  52      000000
+  53 013a C740182E 		movl	$46, 24(%eax)
+  53      000000
+  54 0141 C7401C00 		movl	$0, 28(%eax)
+  54      000000
+  55 0148 C7402019 		movl	$25, 32(%eax)
+  55      000000
+  56 014f C7402418 		movl	$24, 36(%eax)
+  56      000000
+  57 0156 C7402843 		movl	$67, 40(%eax)
+  57      000000
+  58 015d C7402C45 		movl	$69, 44(%eax)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccmwm4tG.s 			page 3
+
+
+  58      000000
+  59 0164 C7403050 		movl	$80, 48(%eax)
+  59      000000
+  60 016b C7403450 		movl	$80, 52(%eax)
+  60      000000
+  61 0172 C7405000 		movl	$0, 80(%eax)
+  61      000000
+  62 0179 C740544A 		movl	$74, 84(%eax)
+  62      000000
+  63 0180 C7405850 		movl	$80, 88(%eax)
+  63      000000
+  64 0187 C7405C29 		movl	$41, 92(%eax)
+  64      000000
+  65 018e C7406050 		movl	$80, 96(%eax)
+  65      000000
+  66 0195 C7808400 		movl	$1, 132(%eax)
+  66      00000100 
+  66      0000
+  67 019f C7808800 		movl	$65, 136(%eax)
+  67      00004100 
+  67      0000
+  68 01a9 C7808C00 		movl	$0, 140(%eax)
+  68      00000000 
+  68      0000
+  69 01b3 C7809000 		movl	$70, 144(%eax)
+  69      00004600 
+  69      0000
+  70 01bd C7809400 		movl	$0, 148(%eax)
+  70      00000000 
+  70      0000
+  71 01c7 C780A000 		movl	$80, 160(%eax)
+  71      00005000 
+  71      0000
+  72 01d1 C7042400 		movl	$0x40400000, (%esp)
+  72      004040
+  73 01d8 E8000000 		call	__Z15setWholeFuelMapf
+  73      00
+  74 01dd 83C43C   		addl	$60, %esp
+  75              		.cfi_def_cfa_offset 4
+  76 01e0 C3       		ret
+  77              		.cfi_endproc
+  78              	LFE85:
+  79 01e1 90909090 		.section .rdata,"dr"
+  79      90909090 
+  79      90909090 
+  79      909090
+  80              		.align 4
+  81              	LC7:
+  82 0000 00C02845 		.long	1160298496
+  83              		.def	__Z26setThermistorConfigurationP14ThermistorConfffffff;	.scl	2;	.type	32;	.endef
+  84              		.def	__Z15setWholeFuelMapf;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccmwm4tG.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 mazda_miata_nb.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccmwm4tG.s:6      .text$_Z34setMazdaMiataNbEngineConfigurationv:00000000 __Z34setMazdaMiataNbEngineConfigurationv
+
+UNDEFINED SYMBOLS
+_engineConfiguration
+_boardConfiguration
+__Z26setThermistorConfigurationP14ThermistorConfffffff
+__Z15setWholeFuelMapf

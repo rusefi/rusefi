@@ -1,0 +1,826 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s 			page 1
+
+
+   1              		.file	"fsio_impl.cpp"
+   2              		.section .rdata,"dr"
+   3              	LC1:
+   4 0000 4653494F 		.ascii "FSIO unexpected %d\0"
+   4      20756E65 
+   4      78706563 
+   4      74656420 
+   4      256400
+   5              		.section	.text$_Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e,"x"
+   6              		.p2align 4,,15
+   7              		.globl	__Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e
+   8              		.def	__Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e;	.scl	2;	.type	32;	.endef
+   9              	__Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e:
+  10              	LFB85:
+  11              		.cfi_startproc
+  12 0000 53       		pushl	%ebx
+  13              		.cfi_def_cfa_offset 8
+  14              		.cfi_offset 3, -8
+  15 0001 83EC28   		subl	$40, %esp
+  16              		.cfi_def_cfa_offset 48
+  17 0004 8B542438 		movl	56(%esp), %edx
+  18 0008 8B4C2430 		movl	48(%esp), %ecx
+  19 000c 8D429C   		leal	-100(%edx), %eax
+  20 000f 83F80A   		cmpl	$10, %eax
+  21 0012 8B5924   		movl	36(%ecx), %ebx
+  22 0015 7629     		jbe	L16
+  23              	L2:
+  24 0017 89542408 		movl	%edx, 8(%esp)
+  25 001b C7442404 		movl	$LC1, 4(%esp)
+  25      00000000 
+  26 0023 C704245E 		movl	$606, (%esp)
+  26      020000
+  27 002a E8000000 		call	_warning
+  27      00
+  28 002f D905BC00 		flds	LC0
+  28      0000
+  29              		.p2align 4,,7
+  30              	L13:
+  31 0035 83C428   		addl	$40, %esp
+  32              		.cfi_remember_state
+  33              		.cfi_def_cfa_offset 8
+  34 0038 5B       		popl	%ebx
+  35              		.cfi_restore 3
+  36              		.cfi_def_cfa_offset 4
+  37 0039 C3       		ret
+  38 003a 8DB60000 		.p2align 4,,7
+  38      0000
+  39              	L16:
+  40              		.cfi_restore_state
+  41 0040 FF248514 		jmp	*L12(,%eax,4)
+  41      000000
+  42              		.section .rdata,"dr"
+  43 0013 00       		.align 4
+  44              	L12:
+  45 0014 60000000 		.long	L3
+  46 0018 70000000 		.long	L4
+  47 001c 80000000 		.long	L5
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s 			page 2
+
+
+  48 0020 98000000 		.long	L6
+  49 0024 A7000000 		.long	L7
+  50 0028 B0000000 		.long	L8
+  51 002c 17000000 		.long	L2
+  52 0030 17000000 		.long	L2
+  53 0034 C0000000 		.long	L9
+  54 0038 D0000000 		.long	L10
+  55 003c 47000000 		.long	L11
+  56              		.section	.text$_Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e,"x"
+  57              		.p2align 4,,7
+  58              	L11:
+  59 0047 E8000000 		call	__Z11getAcTogglev
+  59      00
+  60 004c 0FB6C0   		movzbl	%al, %eax
+  61 004f 66894424 		movw	%ax, 26(%esp)
+  61      1A
+  62 0054 DF44241A 		filds	26(%esp)
+  63 0058 EBDB     		jmp	L13
+  64 005a 8DB60000 		.p2align 4,,7
+  64      0000
+  65              	L3:
+  66 0060 E8000000 		call	__ZN13RpmCalculator3rpmEv
+  66      00
+  67 0065 8944241C 		movl	%eax, 28(%esp)
+  68 0069 DB44241C 		fildl	28(%esp)
+  69 006d EBC6     		jmp	L13
+  70 006f 90       		.p2align 4,,7
+  71              	L4:
+  72 0070 83C428   		addl	$40, %esp
+  73              		.cfi_remember_state
+  74              		.cfi_def_cfa_offset 8
+  75 0073 5B       		popl	%ebx
+  76              		.cfi_restore 3
+  77              		.cfi_def_cfa_offset 4
+  78 0074 E9000000 		jmp	__Z21getCoolantTemperaturev
+  78      00
+  79 0079 8DB42600 		.p2align 4,,7
+  79      000000
+  80              	L5:
+  81              		.cfi_restore_state
+  82 0080 B9080000 		movl	$_enginePins+8, %ecx
+  82      00
+  83 0085 E8000000 		call	__ZN9OutputPin13getLogicValueEv
+  83      00
+  84 008a 0FB6C0   		movzbl	%al, %eax
+  85 008d 66894424 		movw	%ax, 26(%esp)
+  85      1A
+  86 0092 DF44241A 		filds	26(%esp)
+  87 0096 EB9D     		jmp	L13
+  88              		.p2align 4,,7
+  89              	L6:
+  90 0098 E8000000 		call	_getTimeNowSeconds
+  90      00
+  91 009d 8944241C 		movl	%eax, 28(%esp)
+  92 00a1 DB44241C 		fildl	28(%esp)
+  93 00a5 EB8E     		jmp	L13
+  94              		.p2align 4,,7
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s 			page 3
+
+
+  95              	L7:
+  96 00a7 D983DC01 		flds	476(%ebx)
+  96      0000
+  97 00ad EB86     		jmp	L13
+  98 00af 90       		.p2align 4,,7
+  99              	L8:
+ 100 00b0 D983E001 		flds	480(%ebx)
+ 100      0000
+ 101 00b6 E97AFFFF 		jmp	L13
+ 101      FF
+ 102 00bb 908D7426 		.p2align 4,,7
+ 102      00
+ 103              	L9:
+ 104 00c0 83C428   		addl	$40, %esp
+ 105              		.cfi_remember_state
+ 106              		.cfi_def_cfa_offset 8
+ 107 00c3 5B       		popl	%ebx
+ 108              		.cfi_restore 3
+ 109              		.cfi_def_cfa_offset 4
+ 110 00c4 E9000000 		jmp	__Z23getIntakeAirTemperaturev
+ 110      00
+ 111 00c9 8DB42600 		.p2align 4,,7
+ 111      000000
+ 112              	L10:
+ 113              		.cfi_restore_state
+ 114 00d0 83C428   		addl	$40, %esp
+ 115              		.cfi_def_cfa_offset 8
+ 116 00d3 5B       		popl	%ebx
+ 117              		.cfi_restore 3
+ 118              		.cfi_def_cfa_offset 4
+ 119 00d4 E9000000 		jmp	__Z8getVBattv
+ 119      00
+ 120              		.cfi_endproc
+ 121              	LFE85:
+ 122 00d9 90909090 		.section	.text$_Z10setFsioExti11brain_pin_ePKci,"x"
+ 122      909090
+ 123              		.p2align 4,,15
+ 124              		.globl	__Z10setFsioExti11brain_pin_ePKci
+ 125              		.def	__Z10setFsioExti11brain_pin_ePKci;	.scl	2;	.type	32;	.endef
+ 126              	__Z10setFsioExti11brain_pin_ePKci:
+ 127              	LFB86:
+ 128              		.cfi_startproc
+ 129 0000 83EC1C   		subl	$28, %esp
+ 130              		.cfi_def_cfa_offset 32
+ 131 0003 A1000000 		movl	_boardConfiguration, %eax
+ 131      00
+ 132 0008 895C2414 		movl	%ebx, 20(%esp)
+ 133 000c 8B542424 		movl	36(%esp), %edx
+ 134 0010 89742418 		movl	%esi, 24(%esp)
+ 135              		.cfi_offset 3, -12
+ 136              		.cfi_offset 6, -8
+ 137 0014 8B5C2420 		movl	32(%esp), %ebx
+ 138 0018 8B742428 		movl	40(%esp), %esi
+ 139 001c 899498C4 		movl	%edx, 452(%eax,%ebx,4)
+ 139      010000
+ 140 0023 893424   		movl	%esi, (%esp)
+ 141 0026 E8000000 		call	_strlen
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s 			page 4
+
+
+ 141      00
+ 142 002b 3DC70000 		cmpl	$199, %eax
+ 142      00
+ 143 0030 7F37     		jg	L17
+ 144 0032 8B0D0000 		movl	_config, %ecx
+ 144      0000
+ 145 0038 69D3C800 		imull	$200, %ebx, %edx
+ 145      0000
+ 146 003e 83C001   		addl	$1, %eax
+ 147 0041 89442408 		movl	%eax, 8(%esp)
+ 148 0045 89742404 		movl	%esi, 4(%esp)
+ 149 0049 8D9411A8 		leal	2216(%ecx,%edx), %edx
+ 149      080000
+ 150 0050 891424   		movl	%edx, (%esp)
+ 151 0053 E8000000 		call	_memcpy
+ 151      00
+ 152 0058 A1000000 		movl	_boardConfiguration, %eax
+ 152      00
+ 153 005d 8B54242C 		movl	44(%esp), %edx
+ 154 0061 66899458 		movw	%dx, 616(%eax,%ebx,2)
+ 154      68020000 
+ 155              	L17:
+ 156 0069 8B5C2414 		movl	20(%esp), %ebx
+ 157 006d 8B742418 		movl	24(%esp), %esi
+ 158 0071 83C41C   		addl	$28, %esp
+ 159              		.cfi_restore 6
+ 160              		.cfi_restore 3
+ 161              		.cfi_def_cfa_offset 4
+ 162 0074 C3       		ret
+ 163              		.cfi_endproc
+ 164              	LFE86:
+ 165 0075 90909090 		.section	.text$_Z7setFsioi11brain_pin_ePKc,"x"
+ 165      90909090 
+ 165      909090
+ 166              		.p2align 4,,15
+ 167              		.globl	__Z7setFsioi11brain_pin_ePKc
+ 168              		.def	__Z7setFsioi11brain_pin_ePKc;	.scl	2;	.type	32;	.endef
+ 169              	__Z7setFsioi11brain_pin_ePKc:
+ 170              	LFB87:
+ 171              		.cfi_startproc
+ 172 0000 83EC1C   		subl	$28, %esp
+ 173              		.cfi_def_cfa_offset 32
+ 174 0003 8B442428 		movl	40(%esp), %eax
+ 175 0007 C744240C 		movl	$0, 12(%esp)
+ 175      00000000 
+ 176 000f 89442408 		movl	%eax, 8(%esp)
+ 177 0013 8B442424 		movl	36(%esp), %eax
+ 178 0017 89442404 		movl	%eax, 4(%esp)
+ 179 001b 8B442420 		movl	32(%esp), %eax
+ 180 001f 890424   		movl	%eax, (%esp)
+ 181 0022 E8000000 		call	__Z10setFsioExti11brain_pin_ePKci
+ 181      00
+ 182 0027 83C41C   		addl	$28, %esp
+ 183              		.cfi_def_cfa_offset 4
+ 184 002a C3       		ret
+ 185              		.cfi_endproc
+ 186              	LFE87:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s 			page 5
+
+
+ 187 002b 90909090 		.section .rdata,"dr"
+ 187      90
+ 188              	LC2:
+ 189 0040 70617273 		.ascii "parsing [%s]\0"
+ 189      696E6720 
+ 189      5B25735D 
+ 189      00
+ 190              		.section	.text$_Z22applyFsioConfigurationv,"x"
+ 191              		.p2align 4,,15
+ 192              		.globl	__Z22applyFsioConfigurationv
+ 193              		.def	__Z22applyFsioConfigurationv;	.scl	2;	.type	32;	.endef
+ 194              	__Z22applyFsioConfigurationv:
+ 195              	LFB88:
+ 196              		.cfi_startproc
+ 197 0000 57       		pushl	%edi
+ 198              		.cfi_def_cfa_offset 8
+ 199              		.cfi_offset 7, -8
+ 200 0001 56       		pushl	%esi
+ 201              		.cfi_def_cfa_offset 12
+ 202              		.cfi_offset 6, -12
+ 203 0002 53       		pushl	%ebx
+ 204              		.cfi_def_cfa_offset 16
+ 205              		.cfi_offset 3, -16
+ 206 0003 31DB     		xorl	%ebx, %ebx
+ 207 0005 83EC10   		subl	$16, %esp
+ 208              		.cfi_def_cfa_offset 32
+ 209              		.p2align 4,,7
+ 210              	L25:
+ 211 0008 A1000000 		movl	_boardConfiguration, %eax
+ 211      00
+ 212 000d 83BC98C4 		cmpl	$80, 452(%eax,%ebx,4)
+ 212      01000050 
+ 213 0015 7430     		je	L23
+ 214 0017 69C3C800 		imull	$200, %ebx, %eax
+ 214      0000
+ 215 001d 8B150000 		movl	_config, %edx
+ 215      0000
+ 216 0023 B9000000 		movl	$_userPool, %ecx
+ 216      00
+ 217 0028 8DBC02A8 		leal	2216(%edx,%eax), %edi
+ 217      080000
+ 218 002f 893C24   		movl	%edi, (%esp)
+ 219 0032 E8000000 		call	__ZN13LEElementPool15parseExpressionEPKc
+ 219      00
+ 220              		.cfi_def_cfa_offset 28
+ 221 0037 83EC04   		subl	$4, %esp
+ 222              		.cfi_def_cfa_offset 32
+ 223 003a 85C0     		testl	%eax, %eax
+ 224 003c 89C6     		movl	%eax, %esi
+ 225 003e 7416     		je	L28
+ 226              	L24:
+ 227 0040 89349D00 		movl	%esi, __ZL10fsioLogics(,%ebx,4)
+ 227      000000
+ 228              	L23:
+ 229 0047 83C301   		addl	$1, %ebx
+ 230 004a 83FB10   		cmpl	$16, %ebx
+ 231 004d 75B9     		jne	L25
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s 			page 6
+
+
+ 232 004f 83C410   		addl	$16, %esp
+ 233              		.cfi_remember_state
+ 234              		.cfi_def_cfa_offset 16
+ 235 0052 5B       		popl	%ebx
+ 236              		.cfi_restore 3
+ 237              		.cfi_def_cfa_offset 12
+ 238 0053 5E       		popl	%esi
+ 239              		.cfi_restore 6
+ 240              		.cfi_def_cfa_offset 8
+ 241 0054 5F       		popl	%edi
+ 242              		.cfi_restore 7
+ 243              		.cfi_def_cfa_offset 4
+ 244 0055 C3       		ret
+ 245              		.p2align 4,,7
+ 246              	L28:
+ 247              		.cfi_restore_state
+ 248 0056 897C2408 		movl	%edi, 8(%esp)
+ 249 005a C7442404 		movl	$LC2, 4(%esp)
+ 249      40000000 
+ 250 0062 C704245E 		movl	$606, (%esp)
+ 250      020000
+ 251 0069 E8000000 		call	_warning
+ 251      00
+ 252 006e EBD0     		jmp	L24
+ 253              		.cfi_endproc
+ 254              	LFE88:
+ 255              		.section .rdata,"dr"
+ 256              	LC3:
+ 257 004d 72706D00 		.ascii "rpm\0"
+ 258              	LC4:
+ 259 0051 74707300 		.ascii "tps\0"
+ 260              	LC5:
+ 261 0055 6D616600 		.ascii "maf\0"
+ 262              	LC6:
+ 263 0059 76626174 		.ascii "vbatt\0"
+ 263      7400
+ 264              	LC7:
+ 265 005f 66616E00 		.ascii "fan\0"
+ 266              	LC8:
+ 267 0063 636F6F6C 		.ascii "coolant\0"
+ 267      616E7400 
+ 268              	LC9:
+ 269 006b 61635F6F 		.ascii "ac_on_switch\0"
+ 269      6E5F7377 
+ 269      69746368 
+ 269      00
+ 270              	LC10:
+ 271 0078 66616E5F 		.ascii "fan_on_setting\0"
+ 271      6F6E5F73 
+ 271      65747469 
+ 271      6E6700
+ 272              	LC11:
+ 273 0087 66616E5F 		.ascii "fan_off_setting\0"
+ 273      6F66665F 
+ 273      73657474 
+ 273      696E6700 
+ 274              	LC12:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s 			page 7
+
+
+ 275 0097 74696D65 		.ascii "time_since_boot\0"
+ 275      5F73696E 
+ 275      63655F62 
+ 275      6F6F7400 
+ 276              	LC13:
+ 277 00a7 6673696F 		.ascii "fsio_setting\0"
+ 277      5F736574 
+ 277      74696E67 
+ 277      00
+ 278              	LC14:
+ 279 00b4 6B6E6F63 		.ascii "knock\0"
+ 279      6B00
+ 280              		.section	.text.startup._GLOBAL__sub_I_sysPool,"x"
+ 281              		.p2align 4,,15
+ 282              		.def	__GLOBAL__sub_I_sysPool;	.scl	3;	.type	32;	.endef
+ 283              	__GLOBAL__sub_I_sysPool:
+ 284              	LFB90:
+ 285              		.cfi_startproc
+ 286 0000 53       		pushl	%ebx
+ 287              		.cfi_def_cfa_offset 8
+ 288              		.cfi_offset 3, -8
+ 289 0001 B9000000 		movl	$__ZL5leRpm, %ecx
+ 289      00
+ 290 0006 83EC18   		subl	$24, %esp
+ 291              		.cfi_def_cfa_offset 32
+ 292 0009 BB000000 		movl	$__ZL16evalPoolElements, %ebx
+ 292      00
+ 293 000e C7442404 		movl	$LC3, 4(%esp)
+ 293      4D000000 
+ 294 0016 C7042464 		movl	$100, (%esp)
+ 294      000000
+ 295 001d E8000000 		call	__ZN17LENameOrdinalPairC1E11le_action_ePKc
+ 295      00
+ 296              		.cfi_def_cfa_offset 24
+ 297 0022 B9000000 		movl	$__ZL5leTps, %ecx
+ 297      00
+ 298 0027 83EC08   		subl	$8, %esp
+ 299              		.cfi_def_cfa_offset 32
+ 300 002a C7442404 		movl	$LC4, 4(%esp)
+ 300      51000000 
+ 301 0032 C704246A 		movl	$106, (%esp)
+ 301      000000
+ 302 0039 E8000000 		call	__ZN17LENameOrdinalPairC1E11le_action_ePKc
+ 302      00
+ 303              		.cfi_def_cfa_offset 24
+ 304 003e B9000000 		movl	$__ZL5leMaf, %ecx
+ 304      00
+ 305 0043 83EC08   		subl	$8, %esp
+ 306              		.cfi_def_cfa_offset 32
+ 307 0046 C7442404 		movl	$LC5, 4(%esp)
+ 307      55000000 
+ 308 004e C704246B 		movl	$107, (%esp)
+ 308      000000
+ 309 0055 E8000000 		call	__ZN17LENameOrdinalPairC1E11le_action_ePKc
+ 309      00
+ 310              		.cfi_def_cfa_offset 24
+ 311 005a B9000000 		movl	$__ZL7leVBatt, %ecx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s 			page 8
+
+
+ 311      00
+ 312 005f 83EC08   		subl	$8, %esp
+ 313              		.cfi_def_cfa_offset 32
+ 314 0062 C7442404 		movl	$LC6, 4(%esp)
+ 314      59000000 
+ 315 006a C704246D 		movl	$109, (%esp)
+ 315      000000
+ 316 0071 E8000000 		call	__ZN17LENameOrdinalPairC1E11le_action_ePKc
+ 316      00
+ 317              		.cfi_def_cfa_offset 24
+ 318 0076 B9000000 		movl	$__ZL5leFan, %ecx
+ 318      00
+ 319 007b 83EC08   		subl	$8, %esp
+ 320              		.cfi_def_cfa_offset 32
+ 321 007e C7442404 		movl	$LC7, 4(%esp)
+ 321      5F000000 
+ 322 0086 C7042466 		movl	$102, (%esp)
+ 322      000000
+ 323 008d E8000000 		call	__ZN17LENameOrdinalPairC1E11le_action_ePKc
+ 323      00
+ 324              		.cfi_def_cfa_offset 24
+ 325 0092 B9000000 		movl	$__ZL9leCoolant, %ecx
+ 325      00
+ 326 0097 83EC08   		subl	$8, %esp
+ 327              		.cfi_def_cfa_offset 32
+ 328 009a C7442404 		movl	$LC8, 4(%esp)
+ 328      63000000 
+ 329 00a2 C7042465 		movl	$101, (%esp)
+ 329      000000
+ 330 00a9 E8000000 		call	__ZN17LENameOrdinalPairC1E11le_action_ePKc
+ 330      00
+ 331              		.cfi_def_cfa_offset 24
+ 332 00ae B9000000 		movl	$__ZL10leAcToggle, %ecx
+ 332      00
+ 333 00b3 83EC08   		subl	$8, %esp
+ 334              		.cfi_def_cfa_offset 32
+ 335 00b6 C7442404 		movl	$LC9, 4(%esp)
+ 335      6B000000 
+ 336 00be C704246E 		movl	$110, (%esp)
+ 336      000000
+ 337 00c5 E8000000 		call	__ZN17LENameOrdinalPairC1E11le_action_ePKc
+ 337      00
+ 338              		.cfi_def_cfa_offset 24
+ 339 00ca B9000000 		movl	$__ZL14leFanOnSetting, %ecx
+ 339      00
+ 340 00cf 83EC08   		subl	$8, %esp
+ 341              		.cfi_def_cfa_offset 32
+ 342 00d2 C7442404 		movl	$LC10, 4(%esp)
+ 342      78000000 
+ 343 00da C7042468 		movl	$104, (%esp)
+ 343      000000
+ 344 00e1 E8000000 		call	__ZN17LENameOrdinalPairC1E11le_action_ePKc
+ 344      00
+ 345              		.cfi_def_cfa_offset 24
+ 346 00e6 B9000000 		movl	$__ZL15leFanOffSetting, %ecx
+ 346      00
+ 347 00eb 83EC08   		subl	$8, %esp
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s 			page 9
+
+
+ 348              		.cfi_def_cfa_offset 32
+ 349 00ee C7442404 		movl	$LC11, 4(%esp)
+ 349      87000000 
+ 350 00f6 C7042469 		movl	$105, (%esp)
+ 350      000000
+ 351 00fd E8000000 		call	__ZN17LENameOrdinalPairC1E11le_action_ePKc
+ 351      00
+ 352              		.cfi_def_cfa_offset 24
+ 353 0102 B9000000 		movl	$__ZL15leTimeSinceBoot, %ecx
+ 353      00
+ 354 0107 83EC08   		subl	$8, %esp
+ 355              		.cfi_def_cfa_offset 32
+ 356 010a C7442404 		movl	$LC12, 4(%esp)
+ 356      97000000 
+ 357 0112 C7042467 		movl	$103, (%esp)
+ 357      000000
+ 358 0119 E8000000 		call	__ZN17LENameOrdinalPairC1E11le_action_ePKc
+ 358      00
+ 359              		.cfi_def_cfa_offset 24
+ 360 011e B9000000 		movl	$__ZL13leFsioSetting, %ecx
+ 360      00
+ 361 0123 83EC08   		subl	$8, %esp
+ 362              		.cfi_def_cfa_offset 32
+ 363 0126 C7442404 		movl	$LC13, 4(%esp)
+ 363      A7000000 
+ 364 012e C704246F 		movl	$111, (%esp)
+ 364      000000
+ 365 0135 E8000000 		call	__ZN17LENameOrdinalPairC1E11le_action_ePKc
+ 365      00
+ 366              		.cfi_def_cfa_offset 24
+ 367 013a B9000000 		movl	$__ZL7leKnock, %ecx
+ 367      00
+ 368 013f 83EC08   		subl	$8, %esp
+ 369              		.cfi_def_cfa_offset 32
+ 370 0142 C7442404 		movl	$LC14, 4(%esp)
+ 370      B4000000 
+ 371 014a C7042470 		movl	$112, (%esp)
+ 371      000000
+ 372 0151 E8000000 		call	__ZN17LENameOrdinalPairC1E11le_action_ePKc
+ 372      00
+ 373              		.cfi_def_cfa_offset 24
+ 374 0156 B9000000 		movl	$__ZL8evalCalc, %ecx
+ 374      00
+ 375 015b 83EC08   		subl	$8, %esp
+ 376              		.cfi_def_cfa_offset 32
+ 377 015e E8000000 		call	__ZN12LECalculatorC1Ev
+ 377      00
+ 378              		.p2align 4,,7
+ 379              	L30:
+ 380 0163 89D9     		movl	%ebx, %ecx
+ 381 0165 83C310   		addl	$16, %ebx
+ 382 0168 E8000000 		call	__ZN9LEElementC1Ev
+ 382      00
+ 383 016d 81FB0002 		cmpl	$__ZL16evalPoolElements+512, %ebx
+ 383      0000
+ 384 0173 75EE     		jne	L30
+ 385 0175 C7442404 		movl	$32, 4(%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s 			page 10
+
+
+ 385      20000000 
+ 386 017d B9000000 		movl	$__ZL8evalPool, %ecx
+ 386      00
+ 387 0182 BB000000 		movl	$__ZL11sysElements, %ebx
+ 387      00
+ 388 0187 C7042400 		movl	$__ZL16evalPoolElements, (%esp)
+ 388      000000
+ 389 018e E8000000 		call	__ZN13LEElementPoolC1EP9LEElementi
+ 389      00
+ 390              		.cfi_def_cfa_offset 24
+ 391 0193 83EC08   		subl	$8, %esp
+ 392              		.cfi_def_cfa_offset 32
+ 393              		.p2align 4,,7
+ 394              	L31:
+ 395 0196 89D9     		movl	%ebx, %ecx
+ 396 0198 83C310   		addl	$16, %ebx
+ 397 019b E8000000 		call	__ZN9LEElementC1Ev
+ 397      00
+ 398 01a0 81FB0008 		cmpl	$__ZL11sysElements+2048, %ebx
+ 398      0000
+ 399 01a6 75EE     		jne	L31
+ 400 01a8 C7442404 		movl	$128, 4(%esp)
+ 400      80000000 
+ 401 01b0 B9000000 		movl	$_sysPool, %ecx
+ 401      00
+ 402 01b5 BB000000 		movl	$__ZL12userElements, %ebx
+ 402      00
+ 403 01ba C7042400 		movl	$__ZL11sysElements, (%esp)
+ 403      000000
+ 404 01c1 E8000000 		call	__ZN13LEElementPoolC1EP9LEElementi
+ 404      00
+ 405              		.cfi_def_cfa_offset 24
+ 406 01c6 83EC08   		subl	$8, %esp
+ 407              		.cfi_def_cfa_offset 32
+ 408 01c9 8DB42600 		.p2align 4,,7
+ 408      000000
+ 409              	L32:
+ 410 01d0 89D9     		movl	%ebx, %ecx
+ 411 01d2 83C310   		addl	$16, %ebx
+ 412 01d5 E8000000 		call	__ZN9LEElementC1Ev
+ 412      00
+ 413 01da 81FB0008 		cmpl	$__ZL12userElements+2048, %ebx
+ 413      0000
+ 414 01e0 75EE     		jne	L32
+ 415 01e2 C7442404 		movl	$128, 4(%esp)
+ 415      80000000 
+ 416 01ea B9000000 		movl	$_userPool, %ecx
+ 416      00
+ 417 01ef C7042400 		movl	$__ZL12userElements, (%esp)
+ 417      000000
+ 418 01f6 E8000000 		call	__ZN13LEElementPoolC1EP9LEElementi
+ 418      00
+ 419              		.cfi_def_cfa_offset 24
+ 420 01fb 83EC08   		subl	$8, %esp
+ 421              		.cfi_def_cfa_offset 32
+ 422 01fe 83C418   		addl	$24, %esp
+ 423              		.cfi_def_cfa_offset 8
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s 			page 11
+
+
+ 424 0201 5B       		popl	%ebx
+ 425              		.cfi_restore 3
+ 426              		.cfi_def_cfa_offset 4
+ 427 0202 C3       		ret
+ 428              		.cfi_endproc
+ 429              	LFE90:
+ 430 0203 90909090 		.section	.ctors,"w"
+ 430      90909090 
+ 430      90909090 
+ 430      90
+ 431              		.align 4
+ 432 0000 00000000 		.long	__GLOBAL__sub_I_sysPool
+ 433              		.globl	_userPool
+ 434              		.section	.data$userPool,"w"
+ 435              		.align 4
+ 436              	_userPool:
+ 437 0000 00000000 		.space 12
+ 437      00000000 
+ 437      00000000 
+ 438              		.globl	_sysPool
+ 439              		.section	.data$sysPool,"w"
+ 440              		.align 4
+ 441              	_sysPool:
+ 442 0000 00000000 		.space 12
+ 442      00000000 
+ 442      00000000 
+ 443              		.section	.data$_ZL10fsioLogics,"w"
+ 444              		.align 32
+ 445              	__ZL10fsioLogics:
+ 446 0000 00000000 		.space 64
+ 446      00000000 
+ 446      00000000 
+ 446      00000000 
+ 446      00000000 
+ 447              		.section	.data$_ZL5leRpm,"w"
+ 448              		.align 4
+ 449              	__ZL5leRpm:
+ 450 0000 00000000 		.space 12
+ 450      00000000 
+ 450      00000000 
+ 451              		.section	.data$_ZL5leTps,"w"
+ 452              		.align 4
+ 453              	__ZL5leTps:
+ 454 0000 00000000 		.space 12
+ 454      00000000 
+ 454      00000000 
+ 455              		.section	.data$_ZL5leMaf,"w"
+ 456              		.align 4
+ 457              	__ZL5leMaf:
+ 458 0000 00000000 		.space 12
+ 458      00000000 
+ 458      00000000 
+ 459              		.section	.data$_ZL7leVBatt,"w"
+ 460              		.align 4
+ 461              	__ZL7leVBatt:
+ 462 0000 00000000 		.space 12
+ 462      00000000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s 			page 12
+
+
+ 462      00000000 
+ 463              		.section	.data$_ZL5leFan,"w"
+ 464              		.align 4
+ 465              	__ZL5leFan:
+ 466 0000 00000000 		.space 12
+ 466      00000000 
+ 466      00000000 
+ 467              		.section	.data$_ZL9leCoolant,"w"
+ 468              		.align 4
+ 469              	__ZL9leCoolant:
+ 470 0000 00000000 		.space 12
+ 470      00000000 
+ 470      00000000 
+ 471              		.section	.data$_ZL10leAcToggle,"w"
+ 472              		.align 4
+ 473              	__ZL10leAcToggle:
+ 474 0000 00000000 		.space 12
+ 474      00000000 
+ 474      00000000 
+ 475              		.section	.data$_ZL14leFanOnSetting,"w"
+ 476              		.align 4
+ 477              	__ZL14leFanOnSetting:
+ 478 0000 00000000 		.space 12
+ 478      00000000 
+ 478      00000000 
+ 479              		.section	.data$_ZL15leFanOffSetting,"w"
+ 480              		.align 4
+ 481              	__ZL15leFanOffSetting:
+ 482 0000 00000000 		.space 12
+ 482      00000000 
+ 482      00000000 
+ 483              		.section	.data$_ZL15leTimeSinceBoot,"w"
+ 484              		.align 4
+ 485              	__ZL15leTimeSinceBoot:
+ 486 0000 00000000 		.space 12
+ 486      00000000 
+ 486      00000000 
+ 487              		.section	.data$_ZL13leFsioSetting,"w"
+ 488              		.align 4
+ 489              	__ZL13leFsioSetting:
+ 490 0000 00000000 		.space 12
+ 490      00000000 
+ 490      00000000 
+ 491              		.section	.data$_ZL7leKnock,"w"
+ 492              		.align 4
+ 493              	__ZL7leKnock:
+ 494 0000 00000000 		.space 12
+ 494      00000000 
+ 494      00000000 
+ 495              		.section	.data$_ZL8evalCalc,"w"
+ 496              		.align 32
+ 497              	__ZL8evalCalc:
+ 498 0000 00000000 		.space 652
+ 498      00000000 
+ 498      00000000 
+ 498      00000000 
+ 498      00000000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s 			page 13
+
+
+ 499 028c 00000000 		.section	.data$_ZL16evalPoolElements,"w"
+ 499      00000000 
+ 499      00000000 
+ 499      00000000 
+ 499      00000000 
+ 500              		.align 32
+ 501              	__ZL16evalPoolElements:
+ 502 0000 00000000 		.space 512
+ 502      00000000 
+ 502      00000000 
+ 502      00000000 
+ 502      00000000 
+ 503              		.section	.data$_ZL8evalPool,"w"
+ 504              		.align 4
+ 505              	__ZL8evalPool:
+ 506 0000 00000000 		.space 12
+ 506      00000000 
+ 506      00000000 
+ 507              		.section	.data$_ZL11sysElements,"w"
+ 508              		.align 32
+ 509              	__ZL11sysElements:
+ 510 0000 00000000 		.space 2048
+ 510      00000000 
+ 510      00000000 
+ 510      00000000 
+ 510      00000000 
+ 511              		.section	.data$_ZL12userElements,"w"
+ 512              		.align 32
+ 513              	__ZL12userElements:
+ 514 0000 00000000 		.space 2048
+ 514      00000000 
+ 514      00000000 
+ 514      00000000 
+ 514      00000000 
+ 515              		.section .rdata,"dr"
+ 516 00ba 0000     		.align 4
+ 517              	LC0:
+ 518 00bc 0000C07F 		.long	2143289344
+ 519              		.def	_warning;	.scl	2;	.type	32;	.endef
+ 520              		.def	__Z11getAcTogglev;	.scl	2;	.type	32;	.endef
+ 521              		.def	__ZN13RpmCalculator3rpmEv;	.scl	2;	.type	32;	.endef
+ 522              		.def	__Z21getCoolantTemperaturev;	.scl	2;	.type	32;	.endef
+ 523              		.def	__ZN9OutputPin13getLogicValueEv;	.scl	2;	.type	32;	.endef
+ 524              		.def	_getTimeNowSeconds;	.scl	2;	.type	32;	.endef
+ 525              		.def	__Z23getIntakeAirTemperaturev;	.scl	2;	.type	32;	.endef
+ 526              		.def	__Z8getVBattv;	.scl	2;	.type	32;	.endef
+ 527              		.def	_memcpy;	.scl	2;	.type	32;	.endef
+ 528              		.def	_strlen;	.scl	2;	.type	32;	.endef
+ 529              		.def	__ZN13LEElementPool15parseExpressionEPKc;	.scl	2;	.type	32;	.endef
+ 530              		.def	__ZN17LENameOrdinalPairC1E11le_action_ePKc;	.scl	2;	.type	32;	.endef
+ 531              		.def	__ZN12LECalculatorC1Ev;	.scl	2;	.type	32;	.endef
+ 532              		.def	__ZN9LEElementC1Ev;	.scl	2;	.type	32;	.endef
+ 533              		.def	__ZN13LEElementPoolC1EP9LEElementi;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s 			page 14
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 fsio_impl.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:9      .text$_Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e:00000000 __Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:126    .text$_Z10setFsioExti11brain_pin_ePKci:00000000 __Z10setFsioExti11brain_pin_ePKci
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:169    .text$_Z7setFsioi11brain_pin_ePKc:00000000 __Z7setFsioi11brain_pin_ePKc
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:194    .text$_Z22applyFsioConfigurationv:00000000 __Z22applyFsioConfigurationv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:436    .data$userPool:00000000 _userPool
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:445    .data$_ZL10fsioLogics:00000000 __ZL10fsioLogics
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:283    .text.startup._GLOBAL__sub_I_sysPool:00000000 __GLOBAL__sub_I_sysPool
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:449    .data$_ZL5leRpm:00000000 __ZL5leRpm
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:501    .data$_ZL16evalPoolElements:00000000 __ZL16evalPoolElements
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:453    .data$_ZL5leTps:00000000 __ZL5leTps
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:457    .data$_ZL5leMaf:00000000 __ZL5leMaf
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:461    .data$_ZL7leVBatt:00000000 __ZL7leVBatt
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:465    .data$_ZL5leFan:00000000 __ZL5leFan
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:469    .data$_ZL9leCoolant:00000000 __ZL9leCoolant
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:473    .data$_ZL10leAcToggle:00000000 __ZL10leAcToggle
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:477    .data$_ZL14leFanOnSetting:00000000 __ZL14leFanOnSetting
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:481    .data$_ZL15leFanOffSetting:00000000 __ZL15leFanOffSetting
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:485    .data$_ZL15leTimeSinceBoot:00000000 __ZL15leTimeSinceBoot
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:489    .data$_ZL13leFsioSetting:00000000 __ZL13leFsioSetting
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:493    .data$_ZL7leKnock:00000000 __ZL7leKnock
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:497    .data$_ZL8evalCalc:00000000 __ZL8evalCalc
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:505    .data$_ZL8evalPool:00000000 __ZL8evalPool
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:509    .data$_ZL11sysElements:00000000 __ZL11sysElements
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:441    .data$sysPool:00000000 _sysPool
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvEBwCh.s:513    .data$_ZL12userElements:00000000 __ZL12userElements
+
+UNDEFINED SYMBOLS
+_enginePins
+_boardConfiguration
+_config
+_warning
+__Z11getAcTogglev
+__ZN13RpmCalculator3rpmEv
+__Z21getCoolantTemperaturev
+__ZN9OutputPin13getLogicValueEv
+_getTimeNowSeconds
+__Z23getIntakeAirTemperaturev
+__Z8getVBattv
+_memcpy
+_strlen
+__ZN13LEElementPool15parseExpressionEPKc
+__ZN17LENameOrdinalPairC1E11le_action_ePKc
+__ZN12LECalculatorC1Ev
+__ZN9LEElementC1Ev
+__ZN13LEElementPoolC1EP9LEElementi

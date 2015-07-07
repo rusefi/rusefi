@@ -17,12 +17,15 @@
 
 package etch.util;
 
+import net.jcip.annotations.NotThreadSafe;
+
 import java.io.EOFException;
 import java.nio.BufferOverflowException;
 
 /**
  * Description of CircularByteBuffer.
  */
+@NotThreadSafe
 public class CircularByteBuffer extends ByteBuffer {
     /**
      * Constructs the CircularByteBuffer.

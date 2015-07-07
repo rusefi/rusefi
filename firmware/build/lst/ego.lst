@@ -1,0 +1,178 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccFslWkX.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"ego.cpp"
+  16              		.section	.text._Z6getAfrv,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_Z6getAfrv
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_Z6getAfrv, %function
+  23              	_Z6getAfrv:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 30B5     		push	{r4, r5, lr}
+  27 0002 40F20005 		movw	r5, #:lower16:engineConfiguration
+  28 0006 C0F20005 		movt	r5, #:upper16:engineConfiguration
+  29 000a 40F20000 		movw	r0, #:lower16:.LC0
+  30 000e 2C68     		ldr	r4, [r5]
+  31 0010 83B0     		sub	sp, sp, #12
+  32 0012 D4F84812 		ldr	r1, [r4, #584]
+  33 0016 C0F20000 		movt	r0, #:upper16:.LC0
+  34 001a FFF7FEFF 		bl	_Z19getInternalAdcValuePKc13adc_channel_e
+  35 001e 07EE900A 		fmsr	s15, r0	@ int
+  36 0022 2B68     		ldr	r3, [r5]
+  37 0024 D4F84C02 		ldr	r0, [r4, #588]	@ float
+  38 0028 D4F85012 		ldr	r1, [r4, #592]	@ float
+  39 002c D4F85422 		ldr	r2, [r4, #596]	@ float
+  40 0030 F8EEE76A 		fsitos	s13, s15
+  41 0034 DFED077A 		flds	s15, .L2
+  42 0038 93ED747A 		flds	s14, [r3, #464]
+  43 003c 66EEA77A 		fmuls	s15, s13, s15
+  44 0040 D4F85832 		ldr	r3, [r4, #600]	@ float
+  45 0044 67EE877A 		fmuls	s15, s15, s14
+  46 0048 CDED007A 		fsts	s15, [sp]
+  47 004c FFF7FEFF 		bl	_Z11interpolatefffff
+  48 0050 03B0     		add	sp, sp, #12
+  49              		@ sp needed
+  50 0052 30BD     		pop	{r4, r5, pc}
+  51              	.L3:
+  52              		.align	2
+  53              	.L2:
+  54 0054 010C403A 		.word	977275905
+  55              		.size	_Z6getAfrv, .-_Z6getAfrv
+  56 0058 AFF30080 		.section	.text._Z13initEgoSensorP12afr_sensor_s12ego_sensor_e,"ax",%progbits
+  56      AFF30080 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccFslWkX.s 			page 2
+
+
+  57              		.align	2
+  58              		.p2align 4,,15
+  59              		.global	_Z13initEgoSensorP12afr_sensor_s12ego_sensor_e
+  60              		.thumb
+  61              		.thumb_func
+  62              		.type	_Z13initEgoSensorP12afr_sensor_s12ego_sensor_e, %function
+  63              	_Z13initEgoSensorP12afr_sensor_s12ego_sensor_e:
+  64              		@ args = 0, pretend = 0, frame = 0
+  65              		@ frame_needed = 0, uses_anonymous_args = 0
+  66              		@ link register save eliminated.
+  67 0000 10B4     		push	{r4}
+  68 0002 0329     		cmp	r1, #3
+  69 0004 46D8     		bhi	.L5
+  70 0006 DFE801F0 		tbb	[pc, r1]
+  71              	.L7:
+  72 000a 34       		.byte	(.L6-.L7)/2
+  73 000b 2A       		.byte	(.L8-.L7)/2
+  74 000c 17       		.byte	(.L9-.L7)/2
+  75 000d 02       		.byte	(.L10-.L7)/2
+  76              		.align	1
+  77              	.L10:
+  78 000e 4CF6CD44 		movw	r4, #52429
+  79 0012 46F26661 		movw	r1, #26214
+  80 0016 0022     		movs	r2, #0
+  81 0018 0023     		movs	r3, #0
+  82 001a C3F6CC54 		movt	r4, 15820
+  83 001e C3F66671 		movt	r1, 16230
+  84 0022 C4F27012 		movt	r2, 16752
+  85 0026 C4F26013 		movt	r3, 16736
+  86 002a 4460     		str	r4, [r0, #4]	@ float
+  87 002c C160     		str	r1, [r0, #12]	@ float
+  88 002e 8260     		str	r2, [r0, #8]	@ float
+  89 0030 0361     		str	r3, [r0, #16]	@ float
+  90 0032 5DF8044B 		ldr	r4, [sp], #4
+  91 0036 7047     		bx	lr
+  92              	.L9:
+  93 0038 4EF69E71 		movw	r1, #61342
+  94 003c 4EF69E72 		movw	r2, #61342
+  95 0040 0024     		movs	r4, #0
+  96 0042 C4F21F11 		movt	r1, 16671
+  97 0046 C4F29F12 		movt	r2, 16799
+  98              	.L12:
+  99 004a 0023     		movs	r3, #0
+ 100 004c C4F2A003 		movt	r3, 16544
+ 101 0050 4460     		str	r4, [r0, #4]	@ float
+ 102 0052 8160     		str	r1, [r0, #8]	@ float
+ 103 0054 0261     		str	r2, [r0, #16]	@ float
+ 104 0056 C360     		str	r3, [r0, #12]	@ float
+ 105 0058 5DF8044B 		ldr	r4, [sp], #4
+ 106 005c 7047     		bx	lr
+ 107              	.L8:
+ 108 005e 43F23331 		movw	r1, #13107
+ 109 0062 41F6B862 		movw	r2, #7864
+ 110 0066 0024     		movs	r4, #0
+ 111 0068 C4F2EB01 		movt	r1, 16619
+ 112 006c C4F2B312 		movt	r2, 16819
+ 113 0070 EBE7     		b	.L12
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccFslWkX.s 			page 3
+
+
+ 114              	.L6:
+ 115 0072 0021     		movs	r1, #0
+ 116 0074 0022     		movs	r2, #0
+ 117 0076 0023     		movs	r3, #0
+ 118 0078 0024     		movs	r4, #0
+ 119 007a C4F21011 		movt	r1, 16656
+ 120 007e C4F2A002 		movt	r2, 16544
+ 121 0082 C4F29813 		movt	r3, 16792
+ 122 0086 4460     		str	r4, [r0, #4]	@ float
+ 123 0088 8160     		str	r1, [r0, #8]	@ float
+ 124 008a C260     		str	r2, [r0, #12]	@ float
+ 125 008c 0361     		str	r3, [r0, #16]	@ float
+ 126 008e 5DF8044B 		ldr	r4, [sp], #4
+ 127 0092 7047     		bx	lr
+ 128              	.L5:
+ 129 0094 40F20000 		movw	r0, #:lower16:.LC1
+ 130 0098 C0F20000 		movt	r0, #:upper16:.LC1
+ 131 009c 5DF8044B 		ldr	r4, [sp], #4
+ 132 00a0 FFF7FEBF 		b	firmwareError
+ 133              		.size	_Z13initEgoSensorP12afr_sensor_s12ego_sensor_e, .-_Z13initEgoSensorP12afr_sensor_s12ego_sens
+ 134 00a4 AFF30080 		.section	.rodata.str1.4,"aMS",%progbits,1
+ 134      AFF30080 
+ 134      AFF30080 
+ 135              		.align	2
+ 136              	.LC0:
+ 137 0000 65676F00 		.ascii	"ego\000"
+ 138              	.LC1:
+ 139 0004 556E6578 		.ascii	"Unexpected EGO %d\000"
+ 139      70656374 
+ 139      65642045 
+ 139      474F2025 
+ 139      6400
+ 140 0016 0000     		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccFslWkX.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 ego.cpp
+C:\Users\pc\AppData\Local\Temp\ccFslWkX.s:17     .text._Z6getAfrv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccFslWkX.s:23     .text._Z6getAfrv:00000000 _Z6getAfrv
+C:\Users\pc\AppData\Local\Temp\ccFslWkX.s:136    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccFslWkX.s:54     .text._Z6getAfrv:00000054 $d
+C:\Users\pc\AppData\Local\Temp\ccFslWkX.s:57     .text._Z13initEgoSensorP12afr_sensor_s12ego_sensor_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccFslWkX.s:63     .text._Z13initEgoSensorP12afr_sensor_s12ego_sensor_e:00000000 _Z13initEgoSensorP12afr_sensor_s12ego_sensor_e
+C:\Users\pc\AppData\Local\Temp\ccFslWkX.s:72     .text._Z13initEgoSensorP12afr_sensor_s12ego_sensor_e:0000000a $d
+C:\Users\pc\AppData\Local\Temp\ccFslWkX.s:76     .text._Z13initEgoSensorP12afr_sensor_s12ego_sensor_e:0000000e $t
+C:\Users\pc\AppData\Local\Temp\ccFslWkX.s:138    .rodata.str1.4:00000004 .LC1
+C:\Users\pc\AppData\Local\Temp\ccFslWkX.s:135    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccFslWkX.s:56     .text._Z6getAfrv:00000058 $t
+
+UNDEFINED SYMBOLS
+engineConfiguration
+_Z19getInternalAdcValuePKc13adc_channel_e
+_Z11interpolatefffff
+firmwareError

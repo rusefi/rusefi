@@ -1,0 +1,2684 @@
+###############################################################################
+#                                                                             #
+# IAR ANSI C/C++ Compiler V6.50.3.4676/W32 for ARM      30/Jun/2015  23:09:16 #
+# Copyright 1999-2013 IAR Systems AB.                                         #
+#                                                                             #
+#    Cpu mode        =  thumb                                                 #
+#    Endian          =  little                                                #
+#    Source file     =  F:\stuff\rusefi_sourceforge\firmware\hw_layer\adc_inp #
+#                       uts.cpp                                               #
+#    Command line    =  F:\stuff\rusefi_sourceforge\firmware\hw_layer\adc_inp #
+#                       uts.cpp -lCN F:\stuff\rusefi_sourceforge\firmware\iar #
+#                       \Debug\List\ -lA F:\stuff\rusefi_sourceforge\firmware #
+#                       \iar\Debug\List\ -o F:\stuff\rusefi_sourceforge\firmw #
+#                       are\iar\Debug\Obj\ --no_cse --no_unroll --no_inline   #
+#                       --no_code_motion --no_tbaa --no_clustering            #
+#                       --no_scheduling --debug --endian=little               #
+#                       --cpu=Cortex-M4 -e --fpu=VFPv4_sp --dlib_config       #
+#                       "C:\Program Files (x86)\IAR Systems\Embedded          #
+#                       Workbench 6.5\arm\INC\c\DLib_Config_Normal.h"         #
+#                       --misrac2004=1.2-1.4,2.3,3.4,4.2,6.5-7,8.2-8.3,9.3,   #
+#                       12.3,13.6-13,15.5,17.3,19.17,20.7-20.9,20.11 -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\ -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\kernel\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\ports\common\ARMCMx\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\common\ARMCMx\CMSIS\include\ -I               #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\IAR\ARMCMx\ -I F:\stuff\rusefi_sourceforge\fi #
+#                       rmware\iar\..\chibios\os\ports\IAR\ARMCMx\STM32F4xx\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\chibio #
+#                       s\os\hal\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\hal\platforms\STM32\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\DMAv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\GPIOv2\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\I2Cv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\SPIv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\TIMv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\RTCv2\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\USARTv1\ -I                     #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\OTGv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32F4xx\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\various\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\chibios\os\various\devices_lib\accel\ -I         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\b #
+#                       oards\ST_STM32F4_DISCOVERY\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\co #
+#                       ntrollers\algo\ -I F:\stuff\rusefi_sourceforge\firmwa #
+#                       re\iar\..\controllers\core\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\system\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\controllers\sensors\ -I                          #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\math\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\controllers\trigger\ -I                            #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\config #
+#                       \ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\conf #
+#                       ig\engines\ -I F:\stuff\rusefi_sourceforge\firmware\i #
+#                       ar\..\config\stm32f4ems\ -I                           #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\b #
+#                       inary\ -I F:\stuff\rusefi_sourceforge\firmware\iar\.. #
+#                       \console_util\ -I F:\stuff\rusefi_sourceforge\firmwar #
+#                       e\iar\..\development\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\development\test\ -I                  #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\developme #
+#                       nt\hw_layer\ -I F:\stuff\rusefi_sourceforge\firmware\ #
+#                       iar\..\hw_layer\algo\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\hw_layer\lcd\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                       stm32f4\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\hw_layer\serial_over_usb\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                        -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext_al #
+#                       go\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\de #
+#                       velopment\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\development\hw_layer\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\util\     #
+#                       -On --eec++                                           #
+#    MISRA C version =  2004                                                  #
+#      Enabled       =  1.2-1.4 2.3 3.4 4.2 6.5 7 8.2 8.3 9.3 12.3 13.6 13.7  #
+#                       15.5 17.3 19.17 20.7-20.9 20.11                       #
+#      Checked       =  1.4 2.3 4.2 6.5 7 8.2 8.3 9.3 12.3 13.7 15.5          #
+#                       20.7-20.9 20.11                                       #
+#      Not checked   =  1.1-1.3 1.5-2.2 2.4-4.1 5-6.4 8.1 8.4-9.2 10-12.2     #
+#                       12.4-13.6 14-15.4 16-20.6 20.10 20.12 21              #
+#    List file       =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\a #
+#                       dc_inputs.lst                                         #
+#    Object file     =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\ad #
+#                       c_inputs.o                                            #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+F:\stuff\rusefi_sourceforge\firmware\hw_layer\adc_inputs.cpp
+      1          /**
+      2           * @file	adc_inputs.cpp
+      3           * @brief	Low level ADC code
+      4           *
+      5           * @date Jan 14, 2013
+      6           * @author Andrey Belomutskiy, (c) 2012-2015
+      7           */
+      8          
+      9          #include "main.h"
+
+   \                                 In section .text, align 2
+   \   __intrinsic __nounwind __interwork __softfp void *memset(void *, int, size_t)
+   \                     memset:
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+   \   00000008   0x002A             MOVS     R2,R5
+   \   0000000A   0x0031             MOVS     R1,R6
+   \   0000000C   0x0020             MOVS     R0,R4
+   \   0000000E   0x.... 0x....      BL       __aeabi_memset
+   \   00000012   0x0020             MOVS     R0,R4
+   \   00000014   0xBD70             POP      {R4-R6,PC}       ;; return
+     10          
+     11          #if HAL_USE_ADC || defined(__DOXYGEN__)
+     12          
+     13          #include "engine_configuration.h"
+     14          #include "adc_inputs.h"
+     15          #include "AdcConfiguration.h"
+     16          #include "mpu_util.h"
+     17          
+     18          #include "pin_repository.h"
+     19          #include "engine_math.h"
+     20          #include "board_test.h"
+     21          #include "engine_controller.h"
+     22          
+
+   \                                 In section .bss, align 4
+     23          static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
+   \                     adcHwChannelEnabled:
+   \   00000000                      DS8 64
+
+   \                                 In section .bss, align 4
+     24          static const char * adcHwChannelUsage[HW_MAX_ADC_INDEX];
+   \                     adcHwChannelUsage:
+   \   00000000                      DS8 64
+     25          
+
+   \                                 In section .text, align 2, keep-with-next
+   \   __code __interwork __softfp AdcDevice::subobject AdcDevice(ADCConversionGroup *)
+   \                     _ZN9AdcDeviceC2EP18ADCConversionGroup:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x0020             MOVS     R0,R4
+   \   00000006   0x.... 0x....      BL       _ZN9AdcDeviceC1EP18ADCConversionGroup
+   \   0000000A   0xBD10             POP      {R4,PC}          ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+     26          AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
+   \                     _ZN9AdcDeviceC1EP18ADCConversionGroup:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+     27          	this->hwConfig = hwConfig;
+   \   00000006   0xF8C4 0x509C      STR      R5,[R4, #+156]
+     28          	channelCount = 0;
+   \   0000000A   0x2000             MOVS     R0,#+0
+   \   0000000C   0xF8C4 0x0098      STR      R0,[R4, #+152]
+     29          	conversionCount = 0;
+   \   00000010   0x2000             MOVS     R0,#+0
+   \   00000012   0x6520             STR      R0,[R4, #+80]
+     30          	errorsCount = 0;
+   \   00000014   0x2000             MOVS     R0,#+0
+   \   00000016   0x6560             STR      R0,[R4, #+84]
+     31          
+     32          	hwConfig->sqr1 = 0;
+   \   00000018   0x2000             MOVS     R0,#+0
+   \   0000001A   0x61E8             STR      R0,[R5, #+28]
+     33          	hwConfig->sqr2 = 0;
+   \   0000001C   0x2000             MOVS     R0,#+0
+   \   0000001E   0x6228             STR      R0,[R5, #+32]
+     34          	hwConfig->sqr3 = 0;
+   \   00000020   0x2000             MOVS     R0,#+0
+   \   00000022   0x6268             STR      R0,[R5, #+36]
+     35          	memset(hardwareIndexByIndernalAdcIndex, 0, sizeof(hardwareIndexByIndernalAdcIndex));
+   \   00000024   0x2250             MOVS     R2,#+80
+   \   00000026   0x2100             MOVS     R1,#+0
+   \   00000028   0xF114 0x00A0      ADDS     R0,R4,#+160
+   \   0000002C   0x.... 0x....      BL       memset
+     36          	memset(internalAdcIndexByHardwareIndex, 0xFFFFFFFF, sizeof(internalAdcIndexByHardwareIndex));
+   \   00000030   0x2250             MOVS     R2,#+80
+   \   00000032   0xF05F 0x31FF      MOVS     R1,#-1
+   \   00000036   0x0020             MOVS     R0,R4
+   \   00000038   0x.... 0x....      BL       memset
+     37          }
+   \   0000003C   0x0020             MOVS     R0,R4
+   \   0000003E   0xBD32             POP      {R1,R4,R5,PC}    ;; return
+     38          
+     39          // todo: migrate from hardware timer to software ADC conversion triggering
+     40          // todo: I guess we would have to use ChibiOS timer and not our own timer because
+     41          // todo: adcStartConversionI requires OS lock. currently slow ADC is 10Hz (?)
+     42          #define PWM_FREQ_SLOW 5000   /* PWM clock frequency. I wonder what does this setting mean?  */
+     43          #define PWM_PERIOD_SLOW 500  /* PWM period (in PWM ticks).    */
+     44          
+     45          /**
+     46           * 8000 RPM is 133Hz
+     47           * If we want to sample MAP once per 5 degrees we need 133Hz * (360 / 5) = 9576Hz of fast ADC
+     48           */
+     49          // todo: migrate to continues ADC mode? probably not - we cannot afford the callback in
+     50          // todo: continues mode. todo: look into our options
+     51          #define PWM_FREQ_FAST 100000   /* PWM clock frequency. I wonder what does this setting mean?  */
+     52          #define PWM_PERIOD_FAST 10  /* PWM period (in PWM ticks).    */
+     53          
+     54          // is there a reason to have this configurable?
+     55          #define ADC_SLOW_DEVICE ADCD1
+     56          
+     57          // is there a reason to have this configurable?
+     58          #define ADC_FAST_DEVICE ADCD2
+     59          
+
+   \                                 In section .bss, align 4
+     60          static char LOGGING_BUFFER[500];
+   \                     LOGGING_BUFFER:
+   \   00000000                      DS8 500
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __intrinsic __interwork __softfp void __sti__routine()
+   \                     __sti__routine:
+   \   00000000   0xB580             PUSH     {R7,LR}
+     61          static Logging logger("ADC", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
+   \   00000002   0xF44F 0x73FA      MOV      R3,#+500
+   \   00000006   0x.... 0x....      LDR.W    R2,??DataTable17_10
+   \   0000000A   0x....             ADR.N    R1,??DataTable4  ;; "ADC"
+   \   0000000C   0x.... 0x....      LDR.W    R0,??DataTable17_11
+   \   00000010   0x.... 0x....      BL       _ZN7LoggingC1EPKcPci
+   \   00000014   0x.... 0x....      LDR.W    R1,??DataTable17_12
+   \   00000018   0x.... 0x....      LDR.W    R0,??DataTable17_13
+   \   0000001C   0x.... 0x....      BL       _ZN9AdcDeviceC1EP18ADCConversionGroup
+   \   00000020   0x.... 0x....      LDR.W    R1,??DataTable17_14
+   \   00000024   0x.... 0x....      LDR.W    R0,??DataTable17_15
+   \   00000028   0x.... 0x....      BL       _ZN9AdcDeviceC1EP18ADCConversionGroup
+   \   0000002C   0xBD01             POP      {R0,PC}          ;; return
+
+   \                                 In section .bss, align 4
+   \                     logger:
+   \   00000000                      DS8 60
+
+   \                                 In section .bss, align 4
+     62          static int adcCallbackCounter_slow = 0;
+   \                     adcCallbackCounter_slow:
+   \   00000000                      DS8 4
+     63          
+
+   \                                 In section .bss, align 4
+     64          static int adcDebugReporting = FALSE;
+   \                     adcDebugReporting:
+   \   00000000                      DS8 4
+     65          
+     66          extern engine_configuration_s *engineConfiguration;
+     67          extern board_configuration_s *boardConfiguration;
+     68          
+
+   \                                 In section .text, align 2, keep-with-next
+     69          static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth, int numChannels) {
+   \                     _Z14getAvgAdcValueiPtii:
+   \   00000000   0xB470             PUSH     {R4-R6}
+   \   00000002   0x0004             MOVS     R4,R0
+     70          	adcsample_t result = 0;
+   \   00000004   0x2000             MOVS     R0,#+0
+     71          	int i;
+     72          	for (i = 0; i < bufDepth; i++) {
+   \   00000006   0x2600             MOVS     R6,#+0
+   \   00000008   0x0035             MOVS     R5,R6
+   \                     ??getAvgAdcValue_0:
+   \   0000000A   0x4295             CMP      R5,R2
+   \   0000000C   0xDA05             BGE.N    ??getAvgAdcValue_1
+     73          		result += samples[index];
+   \   0000000E   0xF831 0x6014      LDRH     R6,[R1, R4, LSL #+1]
+   \   00000012   0x1830             ADDS     R0,R6,R0
+     74          		index += numChannels;
+   \   00000014   0x191C             ADDS     R4,R3,R4
+     75          	}
+   \   00000016   0x1C6D             ADDS     R5,R5,#+1
+   \   00000018   0xE7F7             B.N      ??getAvgAdcValue_0
+     76          	return result / bufDepth;
+   \                     ??getAvgAdcValue_1:
+   \   0000001A   0xB280             UXTH     R0,R0            ;; ZeroExt  R0,R0,#+16,#+16
+   \   0000001C   0xFB90 0xF0F2      SDIV     R0,R0,R2
+   \   00000020   0xB280             UXTH     R0,R0            ;; ZeroExt  R0,R0,#+16,#+16
+   \   00000022   0xBC70             POP      {R4-R6}
+   \   00000024   0x4770             BX       LR               ;; return
+     77          }
+     78          
+     79          static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n);
+     80          
+     81          #define MY_SAMPLING_SLOW ADC_SAMPLE_480
+     82          #define MY_SAMPLING_FAST ADC_SAMPLE_28
+     83          
+     84          /*
+     85           * ADC conversion group.
+     86           */
+
+   \                                 In section .data, align 4
+     87          static ADCConversionGroup adcgrpcfgSlow = { FALSE, 0, adc_callback_slow, NULL,
+   \                     adcgrpcfgSlow:
+   \   00000000   0x00 0x00          DC8 0, 0
+   \   00000002   0x0000             DC16 0
+   \   00000004   0x........         DC32 _Z17adc_callback_slowP9ADCDriverPtj, 0H, 3840, 1073741824, 262143
+   \              0x00000000   
+   \              0x00000F00   
+   \              0x40000000   
+   \              0x0003FFFF   
+   \   00000018   0x3FFFFE3F         DC32 1073741375, 0, 0, 0
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+     88          /* HW dependent part.*/
+     89          ADC_TwoSamplingDelay_20Cycles,   // cr1
+     90          		ADC_CR2_SWSTART, // cr2
+     91          
+     92          		ADC_SMPR1_SMP_AN10(MY_SAMPLING_SLOW) |
+     93          		ADC_SMPR1_SMP_AN11(MY_SAMPLING_SLOW) |
+     94          		ADC_SMPR1_SMP_AN12(MY_SAMPLING_SLOW) |
+     95          		ADC_SMPR1_SMP_AN13(MY_SAMPLING_SLOW) |
+     96          		ADC_SMPR1_SMP_AN14(MY_SAMPLING_SLOW) |
+     97          		ADC_SMPR1_SMP_AN15(MY_SAMPLING_SLOW)
+     98          		, // sample times for channels 10...18
+     99          		ADC_SMPR2_SMP_AN0(MY_SAMPLING_SLOW) |
+    100          		ADC_SMPR2_SMP_AN1(MY_SAMPLING_SLOW) |
+    101          		ADC_SMPR2_SMP_AN3(MY_SAMPLING_SLOW) |
+    102          		ADC_SMPR2_SMP_AN4(MY_SAMPLING_SLOW) |
+    103          		ADC_SMPR2_SMP_AN5(MY_SAMPLING_SLOW) |
+    104          		ADC_SMPR2_SMP_AN6(MY_SAMPLING_SLOW) |
+    105          		ADC_SMPR2_SMP_AN7(MY_SAMPLING_SLOW) |
+    106          		ADC_SMPR2_SMP_AN8(MY_SAMPLING_SLOW) |
+    107          		ADC_SMPR2_SMP_AN9(MY_SAMPLING_SLOW)
+    108          
+    109          		, // In this field must be specified the sample times for channels 0...9
+    110          
+    111          		0, // Conversion group sequence 13...16 + sequence length
+    112          		0, // Conversion group sequence 7...12
+    113          		0  // Conversion group sequence 1...6
+    114          		};
+    115          
+
+   \                                 In section .bss, align 4
+    116          AdcDevice slowAdc(&adcgrpcfgSlow);
+   \                     slowAdc:
+   \   00000000                      DS8 240
+    117          
+
+   \                                 In section .data, align 4
+    118          static ADCConversionGroup adcgrpcfg_fast = { FALSE, 0 /* num_channels */, adc_callback_fast, NULL,
+   \                     adcgrpcfg_fast:
+   \   00000000   0x00 0x00          DC8 0, 0
+   \   00000002   0x0000             DC16 0
+   \   00000004   0x........         DC32 _Z17adc_callback_fastP9ADCDriverPtj, 0H, 0, 1073741824, 0, 2, 0, 0
+   \              0x00000000   
+   \              0x00000000   
+   \              0x40000000   
+   \              0x00000000   
+   \              0x00000002   
+   \              0x00000000   
+   \              0x00000000   
+   \   00000024   0x00000000         DC32 0
+    119          /* HW dependent part.*/
+    120          ADC_TwoSamplingDelay_5Cycles,   // cr1
+    121          		ADC_CR2_SWSTART, // cr2
+    122          
+    123          		0, // sample times for channels 10...18
+    124          		   // todo: IS SOMETHING MISSING HERE?
+    125          		ADC_SMPR2_SMP_AN0(MY_SAMPLING_FAST), // In this field must be specified the sample times for channels 0...9
+    126          
+    127          		0, // Conversion group sequence 13...16 + sequence length
+    128          
+    129          		0, // Conversion group sequence 7...12
+    130          		0
+    131          
+    132          // Conversion group sequence 1...6
+    133          		};
+    134          
+
+   \                                 In section .bss, align 4
+    135          AdcDevice fastAdc(&adcgrpcfg_fast);
+   \                     fastAdc:
+   \   00000000                      DS8 240
+    136          
+
+   \                                 In section .text, align 2, keep-with-next
+    137          static void pwmpcb_slow(PWMDriver *pwmp) {
+   \                     _Z11pwmpcb_slowP9PWMDriver:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    138          	efiAssertVoid(getRemainingStack(chThdSelf())> 32, "lwStAdcSlow");
+   \   00000004   0x.... 0x....      LDR.W    R0,??DataTable17_16
+   \   00000008   0x6980             LDR      R0,[R0, #+24]
+   \   0000000A   0x.... 0x....      BL       getRemainingStack
+   \   0000000E   0x2821             CMP      R0,#+33
+   \   00000010   0xDA04             BGE.N    ??pwmpcb_slow_0
+   \   00000012   0x.... 0x....      LDR.W    R0,??DataTable17_17
+   \   00000016   0x.... 0x....      BL       firmwareError
+   \   0000001A   0xE035             B.N      ??pwmpcb_slow_1
+    139          
+    140          #if EFI_INTERNAL_ADC
+    141          	(void) pwmp;
+    142          
+    143          	/* Starts an asynchronous ADC conversion operation, the conversion
+    144          	 will be executed in parallel to the current PWM cycle and will
+    145          	 terminate before the next PWM cycle.*/
+    146          	slowAdc.conversionCount++;
+   \                     ??pwmpcb_slow_0:
+   \   0000001C   0x.... 0x....      LDR.W    R0,??DataTable17_13
+   \   00000020   0x6D00             LDR      R0,[R0, #+80]
+   \   00000022   0x1C40             ADDS     R0,R0,#+1
+   \   00000024   0x.... 0x....      LDR.W    R1,??DataTable17_13
+   \   00000028   0x6508             STR      R0,[R1, #+80]
+    147          	chSysLockFromIsr()
+   \   0000002A   0x2020             MOVS     R0,#+32
+   \   0000002C   0xF380 0x8811      MSR      BASEPRI,R0
+   \   00000030   0x.... 0x....      BL       dbg_check_lock_from_isr
+    148          	;
+    149          	if (ADC_SLOW_DEVICE.state != ADC_READY &&
+    150          	ADC_SLOW_DEVICE.state != ADC_COMPLETE &&
+    151          	ADC_SLOW_DEVICE.state != ADC_ERROR) {
+   \   00000034   0x.... 0x....      LDR.W    R0,??DataTable17_18
+   \   00000038   0x7800             LDRB     R0,[R0, #+0]
+   \   0000003A   0x2802             CMP      R0,#+2
+   \   0000003C   0xD016             BEQ.N    ??pwmpcb_slow_2
+   \   0000003E   0x.... 0x....      LDR.W    R0,??DataTable17_18
+   \   00000042   0x7800             LDRB     R0,[R0, #+0]
+   \   00000044   0x2804             CMP      R0,#+4
+   \   00000046   0xD011             BEQ.N    ??pwmpcb_slow_2
+   \   00000048   0x.... 0x....      LDR.W    R0,??DataTable17_18
+   \   0000004C   0x7800             LDRB     R0,[R0, #+0]
+   \   0000004E   0x2805             CMP      R0,#+5
+   \   00000050   0xD00C             BEQ.N    ??pwmpcb_slow_2
+    152          		// todo: why and when does this happen? firmwareError("ADC slow not ready?");
+    153          		slowAdc.errorsCount++;
+   \   00000052   0x.... 0x....      LDR.W    R0,??DataTable17_13
+   \   00000056   0x6D40             LDR      R0,[R0, #+84]
+   \   00000058   0x1C40             ADDS     R0,R0,#+1
+   \   0000005A   0x.... 0x....      LDR.W    R1,??DataTable17_13
+   \   0000005E   0x6548             STR      R0,[R1, #+84]
+    154          		chSysUnlockFromIsr()
+   \   00000060   0x.... 0x....      BL       dbg_check_unlock_from_isr
+   \   00000064   0x2000             MOVS     R0,#+0
+   \   00000066   0xF380 0x8811      MSR      BASEPRI,R0
+    155          		;
+    156          		return;
+   \   0000006A   0xE00D             B.N      ??pwmpcb_slow_1
+    157          	}
+    158          	adcStartConversionI(&ADC_SLOW_DEVICE, &adcgrpcfgSlow, slowAdc.samples, ADC_BUF_DEPTH_SLOW);
+   \                     ??pwmpcb_slow_2:
+   \   0000006C   0x2301             MOVS     R3,#+1
+   \   0000006E   0x.... 0x....      LDR.W    R2,??DataTable17_19
+   \   00000072   0x.... 0x....      LDR.W    R1,??DataTable17_12
+   \   00000076   0x.... 0x....      LDR.W    R0,??DataTable17_18
+   \   0000007A   0x.... 0x....      BL       adcStartConversionI
+    159          	chSysUnlockFromIsr()
+   \   0000007E   0x.... 0x....      BL       dbg_check_unlock_from_isr
+   \   00000082   0x2000             MOVS     R0,#+0
+   \   00000084   0xF380 0x8811      MSR      BASEPRI,R0
+    160          	;
+    161          #endif
+    162          }
+   \                     ??pwmpcb_slow_1:
+   \   00000088   0xBD10             POP      {R4,PC}          ;; return
+    163          
+
+   \                                 In section .text, align 2, keep-with-next
+    164          static void pwmpcb_fast(PWMDriver *pwmp) {
+   \                     _Z11pwmpcb_fastP9PWMDriver:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    165          	efiAssertVoid(getRemainingStack(chThdSelf())> 32, "lwStAdcFast");
+   \   00000004   0x.... 0x....      LDR.W    R0,??DataTable17_16
+   \   00000008   0x6980             LDR      R0,[R0, #+24]
+   \   0000000A   0x.... 0x....      BL       getRemainingStack
+   \   0000000E   0x2821             CMP      R0,#+33
+   \   00000010   0xDA04             BGE.N    ??pwmpcb_fast_0
+   \   00000012   0x.... 0x....      LDR.W    R0,??DataTable17_20
+   \   00000016   0x.... 0x....      BL       firmwareError
+   \   0000001A   0xE035             B.N      ??pwmpcb_fast_1
+    166          #if EFI_INTERNAL_ADC
+    167          	(void) pwmp;
+    168          
+    169          	/*
+    170          	 * Starts an asynchronous ADC conversion operation, the conversion
+    171          	 * will be executed in parallel to the current PWM cycle and will
+    172          	 * terminate before the next PWM cycle.
+    173          	 */
+    174          	chSysLockFromIsr()
+   \                     ??pwmpcb_fast_0:
+   \   0000001C   0x2020             MOVS     R0,#+32
+   \   0000001E   0xF380 0x8811      MSR      BASEPRI,R0
+   \   00000022   0x.... 0x....      BL       dbg_check_lock_from_isr
+    175          	;
+    176          	if (ADC_FAST_DEVICE.state != ADC_READY &&
+    177          	ADC_FAST_DEVICE.state != ADC_COMPLETE &&
+    178          	ADC_FAST_DEVICE.state != ADC_ERROR) {
+   \   00000026   0x.... 0x....      LDR.W    R0,??DataTable17_21
+   \   0000002A   0x7800             LDRB     R0,[R0, #+0]
+   \   0000002C   0x2802             CMP      R0,#+2
+   \   0000002E   0xD016             BEQ.N    ??pwmpcb_fast_2
+   \   00000030   0x.... 0x....      LDR.W    R0,??DataTable17_21
+   \   00000034   0x7800             LDRB     R0,[R0, #+0]
+   \   00000036   0x2804             CMP      R0,#+4
+   \   00000038   0xD011             BEQ.N    ??pwmpcb_fast_2
+   \   0000003A   0x.... 0x....      LDR.W    R0,??DataTable17_21
+   \   0000003E   0x7800             LDRB     R0,[R0, #+0]
+   \   00000040   0x2805             CMP      R0,#+5
+   \   00000042   0xD00C             BEQ.N    ??pwmpcb_fast_2
+    179          		fastAdc.errorsCount++;
+   \   00000044   0x.... 0x....      LDR.W    R0,??DataTable17_15
+   \   00000048   0x6D40             LDR      R0,[R0, #+84]
+   \   0000004A   0x1C40             ADDS     R0,R0,#+1
+   \   0000004C   0x.... 0x....      LDR.W    R1,??DataTable17_15
+   \   00000050   0x6548             STR      R0,[R1, #+84]
+    180          		// todo: when? why? firmwareError("ADC fast not ready?");
+    181          		chSysUnlockFromIsr()
+   \   00000052   0x.... 0x....      BL       dbg_check_unlock_from_isr
+   \   00000056   0x2000             MOVS     R0,#+0
+   \   00000058   0xF380 0x8811      MSR      BASEPRI,R0
+    182          		;
+    183          		return;
+   \   0000005C   0xE014             B.N      ??pwmpcb_fast_1
+    184          	}
+    185          	adcStartConversionI(&ADC_FAST_DEVICE, &adcgrpcfg_fast, fastAdc.samples, ADC_BUF_DEPTH_FAST);
+   \                     ??pwmpcb_fast_2:
+   \   0000005E   0x2301             MOVS     R3,#+1
+   \   00000060   0x.... 0x....      LDR.W    R2,??DataTable17_22
+   \   00000064   0x.... 0x....      LDR.W    R1,??DataTable17_14
+   \   00000068   0x.... 0x....      LDR.W    R0,??DataTable17_21
+   \   0000006C   0x.... 0x....      BL       adcStartConversionI
+    186          	chSysUnlockFromIsr()
+   \   00000070   0x.... 0x....      BL       dbg_check_unlock_from_isr
+   \   00000074   0x2000             MOVS     R0,#+0
+   \   00000076   0xF380 0x8811      MSR      BASEPRI,R0
+    187          	;
+    188          	fastAdc.conversionCount++;
+   \   0000007A   0x.... 0x....      LDR.W    R0,??DataTable17_15
+   \   0000007E   0x6D00             LDR      R0,[R0, #+80]
+   \   00000080   0x1C40             ADDS     R0,R0,#+1
+   \   00000082   0x.... 0x....      LDR.W    R1,??DataTable17_15
+   \   00000086   0x6508             STR      R0,[R1, #+80]
+    189          #endif
+    190          }
+   \                     ??pwmpcb_fast_1:
+   \   00000088   0xBD10             POP      {R4,PC}          ;; return
+    191          
+
+   \                                 In section .text, align 2, keep-with-next
+    192          int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
+   \                     _Z19getInternalAdcValuePKc13adc_channel_e:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+    193          	if (hwChannel == EFI_ADC_NONE) {
+   \   00000006   0x2D10             CMP      R5,#+16
+   \   00000008   0xD109             BNE.N    ??getInternalAdcValue_0
+    194          		warning(OBD_PCM_Processor_Fault, "ADC: should not be asking for NONE %s", msg);
+   \   0000000A   0x0022             MOVS     R2,R4
+   \   0000000C   0x.... 0x....      LDR.W    R1,??DataTable17_23
+   \   00000010   0xF240 0x205E      MOVW     R0,#+606
+   \   00000014   0x.... 0x....      BL       warning
+    195          		return -1;
+   \   00000018   0xF05F 0x30FF      MOVS     R0,#-1
+   \   0000001C   0xE023             B.N      ??getInternalAdcValue_1
+    196          	}
+    197          
+    198          	if (adcHwChannelEnabled[hwChannel] == ADC_FAST) {
+   \                     ??getInternalAdcValue_0:
+   \   0000001E   0x.... 0x....      LDR.W    R0,??DataTable17_24
+   \   00000022   0xF850 0x0025      LDR      R0,[R0, R5, LSL #+2]
+   \   00000026   0x2802             CMP      R0,#+2
+   \   00000028   0xD10A             BNE.N    ??getInternalAdcValue_2
+    199          		int internalIndex = fastAdc.internalAdcIndexByHardwareIndex[hwChannel];
+   \   0000002A   0x.... 0x....      LDR.W    R0,??DataTable17_15
+   \   0000002E   0xF850 0x0025      LDR      R0,[R0, R5, LSL #+2]
+    200          		return fastAdc.samples[internalIndex];
+   \   00000032   0x.... 0x....      LDR.W    R1,??DataTable17_15
+   \   00000036   0xEB11 0x0040      ADDS     R0,R1,R0, LSL #+1
+   \   0000003A   0xF8B0 0x0058      LDRH     R0,[R0, #+88]
+   \   0000003E   0xE012             B.N      ??getInternalAdcValue_1
+    201          	}
+    202          	if (adcHwChannelEnabled[hwChannel] != ADC_SLOW) {
+   \                     ??getInternalAdcValue_2:
+   \   00000040   0x.... 0x....      LDR.W    R0,??DataTable17_24
+   \   00000044   0xF850 0x0025      LDR      R0,[R0, R5, LSL #+2]
+   \   00000048   0x2801             CMP      R0,#+1
+   \   0000004A   0xD007             BEQ.N    ??getInternalAdcValue_3
+    203          		warning(OBD_PCM_Processor_Fault, "ADC is off [%s] index=%d", msg, hwChannel);
+   \   0000004C   0x002B             MOVS     R3,R5
+   \   0000004E   0x0022             MOVS     R2,R4
+   \   00000050   0x.... 0x....      LDR.W    R1,??DataTable17_25
+   \   00000054   0xF240 0x205E      MOVW     R0,#+606
+   \   00000058   0x.... 0x....      BL       warning
+    204          	}
+    205          
+    206          	return slowAdc.getAdcValueByHwChannel(hwChannel);
+   \                     ??getInternalAdcValue_3:
+   \   0000005C   0x0029             MOVS     R1,R5
+   \   0000005E   0x.... 0x....      LDR.W    R0,??DataTable17_13
+   \   00000062   0x.... 0x....      BL       _ZN9AdcDevice22getAdcValueByHwChannelEi
+   \                     ??getInternalAdcValue_1:
+   \   00000066   0xBD32             POP      {R1,R4,R5,PC}    ;; return
+    207          }
+    208          
+
+   \                                 In section .data, align 4
+    209          static PWMConfig pwmcfg_slow = { PWM_FREQ_SLOW, PWM_PERIOD_SLOW, pwmpcb_slow, { {
+   \                     pwmcfg_slow:
+   \   00000000   0x00001388         DC32 5000
+   \   00000004   0x01F4             DC16 500
+   \   00000006   0x00 0x00          DC8 0, 0
+   \   00000008   0x........         DC32 _Z11pwmpcb_slowP9PWMDriver, 0, 0H, 0, 0H, 0, 0H, 0, 0H, 0, 0
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+    210          PWM_OUTPUT_DISABLED, NULL }, { PWM_OUTPUT_DISABLED, NULL }, {
+    211          PWM_OUTPUT_DISABLED, NULL }, { PWM_OUTPUT_DISABLED, NULL } },
+    212          /* HW dependent part.*/
+    213          0, 0 };
+    214          
+
+   \                                 In section .data, align 4
+    215          static PWMConfig pwmcfg_fast = { PWM_FREQ_FAST, PWM_PERIOD_FAST, pwmpcb_fast, { {
+   \                     pwmcfg_fast:
+   \   00000000   0x000186A0         DC32 100000
+   \   00000004   0x000A             DC16 10
+   \   00000006   0x00 0x00          DC8 0, 0
+   \   00000008   0x........         DC32 _Z11pwmpcb_fastP9PWMDriver, 0, 0H, 0, 0H, 0, 0H, 0, 0H, 0, 0
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+    216          PWM_OUTPUT_DISABLED, NULL }, { PWM_OUTPUT_DISABLED, NULL }, {
+    217          PWM_OUTPUT_DISABLED, NULL }, { PWM_OUTPUT_DISABLED, NULL } },
+    218          /* HW dependent part.*/
+    219          0, 0 };
+    220          
+
+   \                                 In section .text, align 2, keep-with-next
+    221          static void initAdcPin(ioportid_t port, int pin, const char *msg) {
+   \                     _Z10initAdcPinP12GPIO_TypeDefiPKc:
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+    222          	print("adc %s\r\n", msg);
+   \   00000008   0x0031             MOVS     R1,R6
+   \   0000000A   0x.... 0x....      LDR.W    R0,??DataTable17_26
+   \   0000000E   0x.... 0x....      BL       print
+    223          	mySetPadMode("adc input", port, pin, PAL_MODE_INPUT_ANALOG);
+   \   00000012   0x2303             MOVS     R3,#+3
+   \   00000014   0x002A             MOVS     R2,R5
+   \   00000016   0x0021             MOVS     R1,R4
+   \   00000018   0x.... 0x....      LDR.W    R0,??DataTable17_27
+   \   0000001C   0x.... 0x....      BL       _Z12mySetPadModePKcP12GPIO_TypeDefjj
+    224          }
+   \   00000020   0xBD70             POP      {R4-R6,PC}       ;; return
+    225          
+
+   \                                 In section .text, align 2, keep-with-next
+    226          adc_channel_e getAdcChannel(brain_pin_e pin) {
+   \                     _Z13getAdcChannel11brain_pin_e:
+   \   00000000   0x0001             MOVS     R1,R0
+    227          	switch (pin) {
+   \   00000002   0x0008             MOVS     R0,R1
+   \   00000004   0x2800             CMP      R0,#+0
+   \   00000006   0xD01E             BEQ.N    ??getAdcChannel_0
+   \   00000008   0x2801             CMP      R0,#+1
+   \   0000000A   0xD01E             BEQ.N    ??getAdcChannel_1
+   \   0000000C   0x2802             CMP      R0,#+2
+   \   0000000E   0xD01E             BEQ.N    ??getAdcChannel_2
+   \   00000010   0x2803             CMP      R0,#+3
+   \   00000012   0xD01E             BEQ.N    ??getAdcChannel_3
+   \   00000014   0x2804             CMP      R0,#+4
+   \   00000016   0xD01E             BEQ.N    ??getAdcChannel_4
+   \   00000018   0x2805             CMP      R0,#+5
+   \   0000001A   0xD01E             BEQ.N    ??getAdcChannel_5
+   \   0000001C   0x2806             CMP      R0,#+6
+   \   0000001E   0xD01E             BEQ.N    ??getAdcChannel_6
+   \   00000020   0x2807             CMP      R0,#+7
+   \   00000022   0xD01E             BEQ.N    ??getAdcChannel_7
+   \   00000024   0x2810             CMP      R0,#+16
+   \   00000026   0xD01E             BEQ.N    ??getAdcChannel_8
+   \   00000028   0x2811             CMP      R0,#+17
+   \   0000002A   0xD01E             BEQ.N    ??getAdcChannel_9
+   \   0000002C   0x2820             CMP      R0,#+32
+   \   0000002E   0xD01E             BEQ.N    ??getAdcChannel_10
+   \   00000030   0x2821             CMP      R0,#+33
+   \   00000032   0xD01E             BEQ.N    ??getAdcChannel_11
+   \   00000034   0x2822             CMP      R0,#+34
+   \   00000036   0xD01E             BEQ.N    ??getAdcChannel_12
+   \   00000038   0x2823             CMP      R0,#+35
+   \   0000003A   0xD01E             BEQ.N    ??getAdcChannel_13
+   \   0000003C   0x2824             CMP      R0,#+36
+   \   0000003E   0xD01E             BEQ.N    ??getAdcChannel_14
+   \   00000040   0x2825             CMP      R0,#+37
+   \   00000042   0xD01E             BEQ.N    ??getAdcChannel_15
+   \   00000044   0xE01F             B.N      ??getAdcChannel_16
+    228          	case GPIOA_0:
+    229          		return EFI_ADC_0;
+   \                     ??getAdcChannel_0:
+   \   00000046   0x2000             MOVS     R0,#+0
+   \   00000048   0xE01F             B.N      ??getAdcChannel_17
+    230          	case GPIOA_1:
+    231          		return EFI_ADC_1;
+   \                     ??getAdcChannel_1:
+   \   0000004A   0x2001             MOVS     R0,#+1
+   \   0000004C   0xE01D             B.N      ??getAdcChannel_17
+    232          	case GPIOA_2:
+    233          		return EFI_ADC_2;
+   \                     ??getAdcChannel_2:
+   \   0000004E   0x2002             MOVS     R0,#+2
+   \   00000050   0xE01B             B.N      ??getAdcChannel_17
+    234          	case GPIOA_3:
+    235          		return EFI_ADC_3;
+   \                     ??getAdcChannel_3:
+   \   00000052   0x2003             MOVS     R0,#+3
+   \   00000054   0xE019             B.N      ??getAdcChannel_17
+    236          	case GPIOA_4:
+    237          		return EFI_ADC_4;
+   \                     ??getAdcChannel_4:
+   \   00000056   0x2004             MOVS     R0,#+4
+   \   00000058   0xE017             B.N      ??getAdcChannel_17
+    238          	case GPIOA_5:
+    239          		return EFI_ADC_5;
+   \                     ??getAdcChannel_5:
+   \   0000005A   0x2005             MOVS     R0,#+5
+   \   0000005C   0xE015             B.N      ??getAdcChannel_17
+    240          	case GPIOA_6:
+    241          		return EFI_ADC_6;
+   \                     ??getAdcChannel_6:
+   \   0000005E   0x2006             MOVS     R0,#+6
+   \   00000060   0xE013             B.N      ??getAdcChannel_17
+    242          	case GPIOA_7:
+    243          		return EFI_ADC_7;
+   \                     ??getAdcChannel_7:
+   \   00000062   0x2007             MOVS     R0,#+7
+   \   00000064   0xE011             B.N      ??getAdcChannel_17
+    244          	case GPIOB_0:
+    245          		return EFI_ADC_8;
+   \                     ??getAdcChannel_8:
+   \   00000066   0x2008             MOVS     R0,#+8
+   \   00000068   0xE00F             B.N      ??getAdcChannel_17
+    246          	case GPIOB_1:
+    247          		return EFI_ADC_9;
+   \                     ??getAdcChannel_9:
+   \   0000006A   0x2009             MOVS     R0,#+9
+   \   0000006C   0xE00D             B.N      ??getAdcChannel_17
+    248          	case GPIOC_0:
+    249          		return EFI_ADC_10;
+   \                     ??getAdcChannel_10:
+   \   0000006E   0x200A             MOVS     R0,#+10
+   \   00000070   0xE00B             B.N      ??getAdcChannel_17
+    250          	case GPIOC_1:
+    251          		return EFI_ADC_11;
+   \                     ??getAdcChannel_11:
+   \   00000072   0x200B             MOVS     R0,#+11
+   \   00000074   0xE009             B.N      ??getAdcChannel_17
+    252          	case GPIOC_2:
+    253          		return EFI_ADC_12;
+   \                     ??getAdcChannel_12:
+   \   00000076   0x200C             MOVS     R0,#+12
+   \   00000078   0xE007             B.N      ??getAdcChannel_17
+    254          	case GPIOC_3:
+    255          		return EFI_ADC_13;
+   \                     ??getAdcChannel_13:
+   \   0000007A   0x200D             MOVS     R0,#+13
+   \   0000007C   0xE005             B.N      ??getAdcChannel_17
+    256          	case GPIOC_4:
+    257          		return EFI_ADC_14;
+   \                     ??getAdcChannel_14:
+   \   0000007E   0x200E             MOVS     R0,#+14
+   \   00000080   0xE003             B.N      ??getAdcChannel_17
+    258          	case GPIOC_5:
+    259          		return EFI_ADC_15;
+   \                     ??getAdcChannel_15:
+   \   00000082   0x200F             MOVS     R0,#+15
+   \   00000084   0xE001             B.N      ??getAdcChannel_17
+    260          	default:
+    261          		return EFI_ADC_ERROR;
+   \                     ??getAdcChannel_16:
+   \   00000086   0xF240 0x30E7      MOVW     R0,#+999
+   \                     ??getAdcChannel_17:
+   \   0000008A   0x4770             BX       LR               ;; return
+    262          	}
+    263          }
+    264          
+
+   \                                 In section .text, align 2, keep-with-next
+    265          GPIO_TypeDef* getAdcChannelPort(adc_channel_e hwChannel) {
+   \                     _Z17getAdcChannelPort13adc_channel_e:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    266          	// todo: replace this with an array :)
+    267          	switch (hwChannel) {
+   \   00000004   0x2C00             CMP      R4,#+0
+   \   00000006   0xD017             BEQ.N    ??getAdcChannelPort_0
+   \   00000008   0x2C02             CMP      R4,#+2
+   \   0000000A   0xD01B             BEQ.N    ??getAdcChannelPort_1
+   \   0000000C   0xD317             BCC.N    ??getAdcChannelPort_2
+   \   0000000E   0x2C04             CMP      R4,#+4
+   \   00000010   0xD01E             BEQ.N    ??getAdcChannelPort_3
+   \   00000012   0xD31A             BCC.N    ??getAdcChannelPort_4
+   \   00000014   0x2C06             CMP      R4,#+6
+   \   00000016   0xD021             BEQ.N    ??getAdcChannelPort_5
+   \   00000018   0xD31D             BCC.N    ??getAdcChannelPort_6
+   \   0000001A   0x2C08             CMP      R4,#+8
+   \   0000001C   0xD024             BEQ.N    ??getAdcChannelPort_7
+   \   0000001E   0xD320             BCC.N    ??getAdcChannelPort_8
+   \   00000020   0x2C0A             CMP      R4,#+10
+   \   00000022   0xD027             BEQ.N    ??getAdcChannelPort_9
+   \   00000024   0xD323             BCC.N    ??getAdcChannelPort_10
+   \   00000026   0x2C0C             CMP      R4,#+12
+   \   00000028   0xD02A             BEQ.N    ??getAdcChannelPort_11
+   \   0000002A   0xD326             BCC.N    ??getAdcChannelPort_12
+   \   0000002C   0x2C0E             CMP      R4,#+14
+   \   0000002E   0xD02D             BEQ.N    ??getAdcChannelPort_13
+   \   00000030   0xD329             BCC.N    ??getAdcChannelPort_14
+   \   00000032   0x2C0F             CMP      R4,#+15
+   \   00000034   0xD02D             BEQ.N    ??getAdcChannelPort_15
+   \   00000036   0xE02F             B.N      ??getAdcChannelPort_16
+    268          	case ADC_CHANNEL_IN0:
+    269          		return GPIOA;
+   \                     ??getAdcChannelPort_0:
+   \   00000038   0x.... 0x....      LDR.W    R0,??DataTable17_28  ;; 0x40020000
+   \   0000003C   0xE032             B.N      ??getAdcChannelPort_17
+    270          	case ADC_CHANNEL_IN1:
+    271          		return GPIOA;
+   \                     ??getAdcChannelPort_2:
+   \   0000003E   0x.... 0x....      LDR.W    R0,??DataTable17_28  ;; 0x40020000
+   \   00000042   0xE02F             B.N      ??getAdcChannelPort_17
+    272          	case ADC_CHANNEL_IN2:
+    273          		return GPIOA;
+   \                     ??getAdcChannelPort_1:
+   \   00000044   0x.... 0x....      LDR.W    R0,??DataTable17_28  ;; 0x40020000
+   \   00000048   0xE02C             B.N      ??getAdcChannelPort_17
+    274          	case ADC_CHANNEL_IN3:
+    275          		return GPIOA;
+   \                     ??getAdcChannelPort_4:
+   \   0000004A   0x.... 0x....      LDR.W    R0,??DataTable17_28  ;; 0x40020000
+   \   0000004E   0xE029             B.N      ??getAdcChannelPort_17
+    276          	case ADC_CHANNEL_IN4:
+    277          		return GPIOA;
+   \                     ??getAdcChannelPort_3:
+   \   00000050   0x.... 0x....      LDR.W    R0,??DataTable17_28  ;; 0x40020000
+   \   00000054   0xE026             B.N      ??getAdcChannelPort_17
+    278          	case ADC_CHANNEL_IN5:
+    279          		return GPIOA;
+   \                     ??getAdcChannelPort_6:
+   \   00000056   0x.... 0x....      LDR.W    R0,??DataTable17_28  ;; 0x40020000
+   \   0000005A   0xE023             B.N      ??getAdcChannelPort_17
+    280          	case ADC_CHANNEL_IN6:
+    281          		return GPIOA;
+   \                     ??getAdcChannelPort_5:
+   \   0000005C   0x.... 0x....      LDR.W    R0,??DataTable17_28  ;; 0x40020000
+   \   00000060   0xE020             B.N      ??getAdcChannelPort_17
+    282          	case ADC_CHANNEL_IN7:
+    283          		return GPIOA;
+   \                     ??getAdcChannelPort_8:
+   \   00000062   0x.... 0x....      LDR.W    R0,??DataTable17_28  ;; 0x40020000
+   \   00000066   0xE01D             B.N      ??getAdcChannelPort_17
+    284          	case ADC_CHANNEL_IN8:
+    285          		return GPIOB;
+   \                     ??getAdcChannelPort_7:
+   \   00000068   0x.... 0x....      LDR.W    R0,??DataTable17_29  ;; 0x40020400
+   \   0000006C   0xE01A             B.N      ??getAdcChannelPort_17
+    286          	case ADC_CHANNEL_IN9:
+    287          		return GPIOB;
+   \                     ??getAdcChannelPort_10:
+   \   0000006E   0x.... 0x....      LDR.W    R0,??DataTable17_29  ;; 0x40020400
+   \   00000072   0xE017             B.N      ??getAdcChannelPort_17
+    288          	case ADC_CHANNEL_IN10:
+    289          		return GPIOC;
+   \                     ??getAdcChannelPort_9:
+   \   00000074   0x.... 0x....      LDR.W    R0,??DataTable17_30  ;; 0x40020800
+   \   00000078   0xE014             B.N      ??getAdcChannelPort_17
+    290          	case ADC_CHANNEL_IN11:
+    291          		return GPIOC;
+   \                     ??getAdcChannelPort_12:
+   \   0000007A   0x.... 0x....      LDR.W    R0,??DataTable17_30  ;; 0x40020800
+   \   0000007E   0xE011             B.N      ??getAdcChannelPort_17
+    292          	case ADC_CHANNEL_IN12:
+    293          		return GPIOC;
+   \                     ??getAdcChannelPort_11:
+   \   00000080   0x.... 0x....      LDR.W    R0,??DataTable17_30  ;; 0x40020800
+   \   00000084   0xE00E             B.N      ??getAdcChannelPort_17
+    294          	case ADC_CHANNEL_IN13:
+    295          		return GPIOC;
+   \                     ??getAdcChannelPort_14:
+   \   00000086   0x.... 0x....      LDR.W    R0,??DataTable17_30  ;; 0x40020800
+   \   0000008A   0xE00B             B.N      ??getAdcChannelPort_17
+    296          	case ADC_CHANNEL_IN14:
+    297          		return GPIOC;
+   \                     ??getAdcChannelPort_13:
+   \   0000008C   0x.... 0x....      LDR.W    R0,??DataTable17_30  ;; 0x40020800
+   \   00000090   0xE008             B.N      ??getAdcChannelPort_17
+    298          	case ADC_CHANNEL_IN15:
+    299          		return GPIOC;
+   \                     ??getAdcChannelPort_15:
+   \   00000092   0x.... 0x....      LDR.W    R0,??DataTable17_30  ;; 0x40020800
+   \   00000096   0xE005             B.N      ??getAdcChannelPort_17
+    300          	default:
+    301          		firmwareError("Unknown hw channel %d", hwChannel);
+   \                     ??getAdcChannelPort_16:
+   \   00000098   0x0021             MOVS     R1,R4
+   \   0000009A   0x.... 0x....      LDR.W    R0,??DataTable17_31
+   \   0000009E   0x.... 0x....      BL       firmwareError
+    302          		return NULL;
+   \   000000A2   0x2000             MOVS     R0,#+0
+   \                     ??getAdcChannelPort_17:
+   \   000000A4   0xBD10             POP      {R4,PC}          ;; return
+    303          	}
+    304          }
+    305          
+
+   \                                 In section .text, align 2, keep-with-next
+    306          const char * getAdcMode(adc_channel_e hwChannel) {
+   \                     _Z10getAdcMode13adc_channel_e:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    307          	if (slowAdc.isHwUsed(hwChannel)) {
+   \   00000004   0x0021             MOVS     R1,R4
+   \   00000006   0x.... 0x....      LDR.W    R0,??DataTable17_13
+   \   0000000A   0x.... 0x....      BL       _ZN9AdcDevice8isHwUsedE13adc_channel_e
+   \   0000000E   0x2800             CMP      R0,#+0
+   \   00000010   0xD002             BEQ.N    ??getAdcMode_0
+    308          		return "slow";
+   \   00000012   0x.... 0x....      LDR.W    R0,??DataTable17_32
+   \   00000016   0xE00B             B.N      ??getAdcMode_1
+    309          	}
+    310          	if (fastAdc.isHwUsed(hwChannel)) {
+   \                     ??getAdcMode_0:
+   \   00000018   0x0021             MOVS     R1,R4
+   \   0000001A   0x.... 0x....      LDR.W    R0,??DataTable17_15
+   \   0000001E   0x.... 0x....      BL       _ZN9AdcDevice8isHwUsedE13adc_channel_e
+   \   00000022   0x2800             CMP      R0,#+0
+   \   00000024   0xD002             BEQ.N    ??getAdcMode_2
+    311          		return "fast";
+   \   00000026   0x.... 0x....      LDR.W    R0,??DataTable17_33
+   \   0000002A   0xE001             B.N      ??getAdcMode_1
+    312          	}
+    313          	return "INACTIVE";
+   \                     ??getAdcMode_2:
+   \   0000002C   0x.... 0x....      LDR.W    R0,??DataTable17_34
+   \                     ??getAdcMode_1:
+   \   00000030   0xBD10             POP      {R4,PC}          ;; return
+    314          }
+    315          
+
+   \                                 In section .text, align 2, keep-with-next
+    316          int getAdcChannelPin(adc_channel_e hwChannel) {
+   \                     _Z16getAdcChannelPin13adc_channel_e:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    317          	// todo: replace this with an array :)
+    318          	switch (hwChannel) {
+   \   00000004   0x2C00             CMP      R4,#+0
+   \   00000006   0xD017             BEQ.N    ??getAdcChannelPin_0
+   \   00000008   0x2C02             CMP      R4,#+2
+   \   0000000A   0xD019             BEQ.N    ??getAdcChannelPin_1
+   \   0000000C   0xD316             BCC.N    ??getAdcChannelPin_2
+   \   0000000E   0x2C04             CMP      R4,#+4
+   \   00000010   0xD01A             BEQ.N    ??getAdcChannelPin_3
+   \   00000012   0xD317             BCC.N    ??getAdcChannelPin_4
+   \   00000014   0x2C06             CMP      R4,#+6
+   \   00000016   0xD01B             BEQ.N    ??getAdcChannelPin_5
+   \   00000018   0xD318             BCC.N    ??getAdcChannelPin_6
+   \   0000001A   0x2C08             CMP      R4,#+8
+   \   0000001C   0xD01C             BEQ.N    ??getAdcChannelPin_7
+   \   0000001E   0xD319             BCC.N    ??getAdcChannelPin_8
+   \   00000020   0x2C0A             CMP      R4,#+10
+   \   00000022   0xD01D             BEQ.N    ??getAdcChannelPin_9
+   \   00000024   0xD31A             BCC.N    ??getAdcChannelPin_10
+   \   00000026   0x2C0C             CMP      R4,#+12
+   \   00000028   0xD01E             BEQ.N    ??getAdcChannelPin_11
+   \   0000002A   0xD31B             BCC.N    ??getAdcChannelPin_12
+   \   0000002C   0x2C0E             CMP      R4,#+14
+   \   0000002E   0xD01F             BEQ.N    ??getAdcChannelPin_13
+   \   00000030   0xD31C             BCC.N    ??getAdcChannelPin_14
+   \   00000032   0x2C0F             CMP      R4,#+15
+   \   00000034   0xD01E             BEQ.N    ??getAdcChannelPin_15
+   \   00000036   0xE01F             B.N      ??getAdcChannelPin_16
+    319          	case ADC_CHANNEL_IN0:
+    320          		return 0;
+   \                     ??getAdcChannelPin_0:
+   \   00000038   0x2000             MOVS     R0,#+0
+   \   0000003A   0xE024             B.N      ??getAdcChannelPin_17
+    321          	case ADC_CHANNEL_IN1:
+    322          		return 1;
+   \                     ??getAdcChannelPin_2:
+   \   0000003C   0x2001             MOVS     R0,#+1
+   \   0000003E   0xE022             B.N      ??getAdcChannelPin_17
+    323          	case ADC_CHANNEL_IN2:
+    324          		return 2;
+   \                     ??getAdcChannelPin_1:
+   \   00000040   0x2002             MOVS     R0,#+2
+   \   00000042   0xE020             B.N      ??getAdcChannelPin_17
+    325          	case ADC_CHANNEL_IN3:
+    326          		return 3;
+   \                     ??getAdcChannelPin_4:
+   \   00000044   0x2003             MOVS     R0,#+3
+   \   00000046   0xE01E             B.N      ??getAdcChannelPin_17
+    327          	case ADC_CHANNEL_IN4:
+    328          		return 4;
+   \                     ??getAdcChannelPin_3:
+   \   00000048   0x2004             MOVS     R0,#+4
+   \   0000004A   0xE01C             B.N      ??getAdcChannelPin_17
+    329          	case ADC_CHANNEL_IN5:
+    330          		return 5;
+   \                     ??getAdcChannelPin_6:
+   \   0000004C   0x2005             MOVS     R0,#+5
+   \   0000004E   0xE01A             B.N      ??getAdcChannelPin_17
+    331          	case ADC_CHANNEL_IN6:
+    332          		return 6;
+   \                     ??getAdcChannelPin_5:
+   \   00000050   0x2006             MOVS     R0,#+6
+   \   00000052   0xE018             B.N      ??getAdcChannelPin_17
+    333          	case ADC_CHANNEL_IN7:
+    334          		return 7;
+   \                     ??getAdcChannelPin_8:
+   \   00000054   0x2007             MOVS     R0,#+7
+   \   00000056   0xE016             B.N      ??getAdcChannelPin_17
+    335          	case ADC_CHANNEL_IN8:
+    336          		return 0;
+   \                     ??getAdcChannelPin_7:
+   \   00000058   0x2000             MOVS     R0,#+0
+   \   0000005A   0xE014             B.N      ??getAdcChannelPin_17
+    337          	case ADC_CHANNEL_IN9:
+    338          		return 1;
+   \                     ??getAdcChannelPin_10:
+   \   0000005C   0x2001             MOVS     R0,#+1
+   \   0000005E   0xE012             B.N      ??getAdcChannelPin_17
+    339          	case ADC_CHANNEL_IN10:
+    340          		return 0;
+   \                     ??getAdcChannelPin_9:
+   \   00000060   0x2000             MOVS     R0,#+0
+   \   00000062   0xE010             B.N      ??getAdcChannelPin_17
+    341          	case ADC_CHANNEL_IN11:
+    342          		return 1;
+   \                     ??getAdcChannelPin_12:
+   \   00000064   0x2001             MOVS     R0,#+1
+   \   00000066   0xE00E             B.N      ??getAdcChannelPin_17
+    343          	case ADC_CHANNEL_IN12:
+    344          		return 2;
+   \                     ??getAdcChannelPin_11:
+   \   00000068   0x2002             MOVS     R0,#+2
+   \   0000006A   0xE00C             B.N      ??getAdcChannelPin_17
+    345          	case ADC_CHANNEL_IN13:
+    346          		return 3;
+   \                     ??getAdcChannelPin_14:
+   \   0000006C   0x2003             MOVS     R0,#+3
+   \   0000006E   0xE00A             B.N      ??getAdcChannelPin_17
+    347          	case ADC_CHANNEL_IN14:
+    348          		return 4;
+   \                     ??getAdcChannelPin_13:
+   \   00000070   0x2004             MOVS     R0,#+4
+   \   00000072   0xE008             B.N      ??getAdcChannelPin_17
+    349          	case ADC_CHANNEL_IN15:
+    350          		return 5;
+   \                     ??getAdcChannelPin_15:
+   \   00000074   0x2005             MOVS     R0,#+5
+   \   00000076   0xE006             B.N      ??getAdcChannelPin_17
+    351          	default:
+    352          		firmwareError("Unknown hw channel %d", hwChannel);
+   \                     ??getAdcChannelPin_16:
+   \   00000078   0x0021             MOVS     R1,R4
+   \   0000007A   0x.... 0x....      LDR.W    R0,??DataTable17_31
+   \   0000007E   0x.... 0x....      BL       firmwareError
+    353          		return -1;
+   \   00000082   0xF05F 0x30FF      MOVS     R0,#-1
+   \                     ??getAdcChannelPin_17:
+   \   00000086   0xBD10             POP      {R4,PC}          ;; return
+    354          	}
+    355          }
+    356          
+
+   \                                 In section .text, align 2, keep-with-next
+    357          static void initAdcHwChannel(adc_channel_e hwChannel) {
+   \                     _Z16initAdcHwChannel13adc_channel_e:
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    358          	GPIO_TypeDef* port = getAdcChannelPort(hwChannel);
+   \   00000004   0x0020             MOVS     R0,R4
+   \   00000006   0x.... 0x....      BL       _Z17getAdcChannelPort13adc_channel_e
+   \   0000000A   0x0005             MOVS     R5,R0
+    359          	int pin = getAdcChannelPin(hwChannel);
+   \   0000000C   0x0020             MOVS     R0,R4
+   \   0000000E   0x.... 0x....      BL       _Z16getAdcChannelPin13adc_channel_e
+   \   00000012   0x0006             MOVS     R6,R0
+    360          
+    361          	initAdcPin(port, pin, "hw");
+   \   00000014   0x....             ADR.N    R2,??DataTable14  ;; 0x68, 0x77, 0x00, 0x00
+   \   00000016   0x0031             MOVS     R1,R6
+   \   00000018   0x0028             MOVS     R0,R5
+   \   0000001A   0x.... 0x....      BL       _Z10initAdcPinP12GPIO_TypeDefiPKc
+    362          }
+   \   0000001E   0xBD70             POP      {R4-R6,PC}       ;; return
+    363          
+
+   \                                 In section .text, align 2, keep-with-next
+    364          int AdcDevice::size() {
+    365          	return channelCount;
+   \                     _ZN9AdcDevice4sizeEv:
+   \   00000000   0xF8D0 0x0098      LDR      R0,[R0, #+152]
+   \   00000004   0x4770             BX       LR               ;; return
+    366          }
+    367          
+
+   \                                 In section .text, align 2, keep-with-next
+    368          int AdcDevice::getAdcValueByHwChannel(int hwChannel) {
+    369          	int internalIndex = internalAdcIndexByHardwareIndex[hwChannel];
+   \                     _ZN9AdcDevice22getAdcValueByHwChannelEi:
+   \   00000000   0xF850 0x2021      LDR      R2,[R0, R1, LSL #+2]
+    370          	return values.adc_data[internalIndex];
+   \   00000004   0xEB10 0x0042      ADDS     R0,R0,R2, LSL #+1
+   \   00000008   0xF8B0 0x0078      LDRH     R0,[R0, #+120]
+   \   0000000C   0x4770             BX       LR               ;; return
+    371          }
+    372          
+
+   \                                 In section .text, align 2, keep-with-next
+    373          int AdcDevice::getAdcValueByIndex(int internalIndex) {
+    374          	return values.adc_data[internalIndex];
+   \                     _ZN9AdcDevice18getAdcValueByIndexEi:
+   \   00000000   0xEB10 0x0041      ADDS     R0,R0,R1, LSL #+1
+   \   00000004   0xF8B0 0x0078      LDRH     R0,[R0, #+120]
+   \   00000008   0x4770             BX       LR               ;; return
+    375          }
+    376          
+
+   \                                 In section .text, align 2, keep-with-next
+    377          void AdcDevice::init(void) {
+   \                     _ZN9AdcDevice4initEv:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    378          	hwConfig->num_channels = size();
+   \   00000004   0x0020             MOVS     R0,R4
+   \   00000006   0x.... 0x....      BL       _ZN9AdcDevice4sizeEv
+   \   0000000A   0xF8D4 0x109C      LDR      R1,[R4, #+156]
+   \   0000000E   0x8048             STRH     R0,[R1, #+2]
+    379          	hwConfig->sqr1 += ADC_SQR1_NUM_CH(size());
+   \   00000010   0xF8D4 0x009C      LDR      R0,[R4, #+156]
+   \   00000014   0x69C5             LDR      R5,[R0, #+28]
+   \   00000016   0x0020             MOVS     R0,R4
+   \   00000018   0x.... 0x....      BL       _ZN9AdcDevice4sizeEv
+   \   0000001C   0x1E40             SUBS     R0,R0,#+1
+   \   0000001E   0xEB15 0x5000      ADDS     R0,R5,R0, LSL #+20
+   \   00000022   0xF8D4 0x109C      LDR      R1,[R4, #+156]
+   \   00000026   0x61C8             STR      R0,[R1, #+28]
+    380          }
+   \   00000028   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+    381          
+
+   \                                 In section .text, align 2, keep-with-next
+    382          bool AdcDevice::isHwUsed(adc_channel_e hwChannelIndex) {
+   \                     _ZN9AdcDevice8isHwUsedE13adc_channel_e:
+   \   00000000   0x0002             MOVS     R2,R0
+    383          	for (int i = 0; i < channelCount; i++) {
+   \   00000002   0x2300             MOVS     R3,#+0
+   \                     ??isHwUsed_0:
+   \   00000004   0xF8D2 0x0098      LDR      R0,[R2, #+152]
+   \   00000008   0x4283             CMP      R3,R0
+   \   0000000A   0xDA09             BGE.N    ??isHwUsed_1
+    384          		if (hardwareIndexByIndernalAdcIndex[i] == hwChannelIndex) {
+   \   0000000C   0xEB12 0x0083      ADDS     R0,R2,R3, LSL #+2
+   \   00000010   0xF8D0 0x00A0      LDR      R0,[R0, #+160]
+   \   00000014   0x4288             CMP      R0,R1
+   \   00000016   0xD101             BNE.N    ??isHwUsed_2
+    385          			return true;
+   \   00000018   0x2001             MOVS     R0,#+1
+   \   0000001A   0xE002             B.N      ??isHwUsed_3
+    386          		}
+    387          	}
+   \                     ??isHwUsed_2:
+   \   0000001C   0x1C5B             ADDS     R3,R3,#+1
+   \   0000001E   0xE7F1             B.N      ??isHwUsed_0
+    388          	return false;
+   \                     ??isHwUsed_1:
+   \   00000020   0x2000             MOVS     R0,#+0
+   \                     ??isHwUsed_3:
+   \   00000022   0x4770             BX       LR               ;; return
+    389          }
+    390          
+
+   \                                 In section .text, align 2, keep-with-next
+    391          void AdcDevice::addChannel(adc_channel_e hwChannel) {
+   \                     _ZN9AdcDevice10addChannelE13adc_channel_e:
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+    392          	int logicChannel = channelCount++;
+   \   00000006   0xF8D4 0x6098      LDR      R6,[R4, #+152]
+   \   0000000A   0x1C70             ADDS     R0,R6,#+1
+   \   0000000C   0xF8C4 0x0098      STR      R0,[R4, #+152]
+    393          
+    394          	internalAdcIndexByHardwareIndex[hwChannel] = logicChannel;
+   \   00000010   0xF844 0x6025      STR      R6,[R4, R5, LSL #+2]
+    395          	hardwareIndexByIndernalAdcIndex[logicChannel] = hwChannel;
+   \   00000014   0xEB14 0x0086      ADDS     R0,R4,R6, LSL #+2
+   \   00000018   0xF8C0 0x50A0      STR      R5,[R0, #+160]
+    396          	if (logicChannel < 6) {
+   \   0000001C   0x2E06             CMP      R6,#+6
+   \   0000001E   0xDA0C             BGE.N    ??addChannel_0
+    397          		hwConfig->sqr3 += (hwChannel) << (5 * logicChannel);
+   \   00000020   0xF8D4 0x009C      LDR      R0,[R4, #+156]
+   \   00000024   0x6A40             LDR      R0,[R0, #+36]
+   \   00000026   0x2105             MOVS     R1,#+5
+   \   00000028   0xFB01 0xF106      MUL      R1,R1,R6
+   \   0000002C   0xFA15 0xF101      LSLS     R1,R5,R1
+   \   00000030   0x1808             ADDS     R0,R1,R0
+   \   00000032   0xF8D4 0x109C      LDR      R1,[R4, #+156]
+   \   00000036   0x6248             STR      R0,[R1, #+36]
+   \   00000038   0xE01E             B.N      ??addChannel_1
+    398          	} else if (logicChannel < 12) {
+   \                     ??addChannel_0:
+   \   0000003A   0x2E0C             CMP      R6,#+12
+   \   0000003C   0xDA0E             BGE.N    ??addChannel_2
+    399          		hwConfig->sqr2 += (hwChannel) << (5 * (logicChannel - 6));
+   \   0000003E   0xF8D4 0x009C      LDR      R0,[R4, #+156]
+   \   00000042   0x6A00             LDR      R0,[R0, #+32]
+   \   00000044   0x0031             MOVS     R1,R6
+   \   00000046   0x1F89             SUBS     R1,R1,#+6
+   \   00000048   0x2205             MOVS     R2,#+5
+   \   0000004A   0xFB11 0xF102      SMULBB   R1,R1,R2
+   \   0000004E   0xFA15 0xF101      LSLS     R1,R5,R1
+   \   00000052   0x1808             ADDS     R0,R1,R0
+   \   00000054   0xF8D4 0x109C      LDR      R1,[R4, #+156]
+   \   00000058   0x6208             STR      R0,[R1, #+32]
+   \   0000005A   0xE00D             B.N      ??addChannel_1
+    400          	} else {
+    401          		hwConfig->sqr1 += (hwChannel) << (5 * (logicChannel - 12));
+   \                     ??addChannel_2:
+   \   0000005C   0xF8D4 0x009C      LDR      R0,[R4, #+156]
+   \   00000060   0x69C0             LDR      R0,[R0, #+28]
+   \   00000062   0x0031             MOVS     R1,R6
+   \   00000064   0x390C             SUBS     R1,R1,#+12
+   \   00000066   0x2205             MOVS     R2,#+5
+   \   00000068   0xFB11 0xF102      SMULBB   R1,R1,R2
+   \   0000006C   0xFA15 0xF101      LSLS     R1,R5,R1
+   \   00000070   0x1808             ADDS     R0,R1,R0
+   \   00000072   0xF8D4 0x109C      LDR      R1,[R4, #+156]
+   \   00000076   0x61C8             STR      R0,[R1, #+28]
+    402          	}
+    403          	// todo: support for more then 12 channels? not sure how needed it would be
+    404          
+    405          	initAdcHwChannel(hwChannel);
+   \                     ??addChannel_1:
+   \   00000078   0x0028             MOVS     R0,R5
+   \   0000007A   0x.... 0x....      BL       _Z16initAdcHwChannel13adc_channel_e
+    406          }
+   \   0000007E   0xBD70             POP      {R4-R6,PC}       ;; return
+    407          
+
+   \                                 In section .text, align 4, keep-with-next
+    408          static void printAdcValue(adc_channel_e channel) {
+   \                     _Z13printAdcValue13adc_channel_e:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0xED2D 0x8B02      VPUSH    {D8}
+   \   00000006   0x0004             MOVS     R4,R0
+    409          	int value = getAdcValue("print", channel);
+   \   00000008   0x0021             MOVS     R1,R4
+   \   0000000A   0x.... 0x....      LDR.W    R0,??DataTable17_35
+   \   0000000E   0x.... 0x....      BL       _Z19getInternalAdcValuePKc13adc_channel_e
+   \   00000012   0xEE08 0x0A10      VMOV     S16,R0
+    410          	float volts = adcToVoltsDivided(value);
+   \   00000016   0xEEB8 0x0AC8      VCVT.F32.S32 S0,S16
+   \   0000001A   0xEDDF 0x....      VLDR.W   S1,??DataTable14_1  ;; 0x3a400c01
+   \   0000001E   0xEE20 0x0A20      VMUL.F32 S0,S0,S1
+   \   00000022   0x.... 0x....      LDR.W    R0,??DataTable17_36
+   \   00000026   0x6800             LDR      R0,[R0, #+0]
+   \   00000028   0xEDD0 0x0A74      VLDR     S1,[R0, #+464]
+   \   0000002C   0xEE60 0x8A20      VMUL.F32 S17,S0,S1
+    411          	scheduleMsg(&logger, "adc voltage : %f", volts);
+   \   00000030   0xEE18 0x0A90      VMOV     R0,S17
+   \   00000034   0x.... 0x....      BL       __aeabi_f2d
+   \   00000038   0x0002             MOVS     R2,R0
+   \   0000003A   0x000B             MOVS     R3,R1
+   \   0000003C   0x.... 0x....      LDR.W    R1,??DataTable17_37
+   \   00000040   0x....             LDR.N    R0,??DataTable17_11
+   \   00000042   0x.... 0x....      BL       scheduleMsg
+    412          }
+   \   00000046   0xECBD 0x8B02      VPOP     {D8}
+   \   0000004A   0xBD10             POP      {R4,PC}          ;; return
+    413          
+
+   \                                 In section .text, align 2, keep-with-next
+    414          adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int index) {
+    415          	return hardwareIndexByIndernalAdcIndex[index];
+   \                     _ZN9AdcDevice34getAdcHardwareIndexByInternalIndexEi:
+   \   00000000   0xEB10 0x0081      ADDS     R0,R0,R1, LSL #+2
+   \   00000004   0xF8D0 0x00A0      LDR      R0,[R0, #+160]
+   \   00000008   0x4770             BX       LR               ;; return
+    416          }
+    417          
+
+   \                                 In section .text, align 4, keep-with-next
+    418          static void printFullAdcReport(void) {
+   \                     _Z18printFullAdcReportv:
+   \   00000000   0xB5F8             PUSH     {R3-R7,LR}
+   \   00000002   0xED2D 0x8B02      VPUSH    {D8}
+   \   00000006   0xB082             SUB      SP,SP,#+8
+    419          	scheduleMsg(&logger, "fast %d slow %d", fastAdc.conversionCount, slowAdc.conversionCount);
+   \   00000008   0x....             LDR.N    R0,??DataTable17_13
+   \   0000000A   0x6D03             LDR      R3,[R0, #+80]
+   \   0000000C   0x....             LDR.N    R0,??DataTable17_15
+   \   0000000E   0x6D02             LDR      R2,[R0, #+80]
+   \   00000010   0x.... 0x....      LDR.W    R1,??DataTable17_38
+   \   00000014   0x....             LDR.N    R0,??DataTable17_11
+   \   00000016   0x.... 0x....      BL       scheduleMsg
+    420          
+    421          	for (int index = 0; index < slowAdc.size(); index++) {
+   \   0000001A   0x2400             MOVS     R4,#+0
+   \                     ??printFullAdcReport_0:
+   \   0000001C   0x....             LDR.N    R0,??DataTable17_13
+   \   0000001E   0x.... 0x....      BL       _ZN9AdcDevice4sizeEv
+   \   00000022   0x4284             CMP      R4,R0
+   \   00000024   0xDA3E             BGE.N    ??printFullAdcReport_1
+    422          		appendMsgPrefix(&logger);
+   \   00000026   0x....             LDR.N    R0,??DataTable17_11
+   \   00000028   0x.... 0x....      BL       appendMsgPrefix
+    423          
+    424          		adc_channel_e hwIndex = slowAdc.getAdcHardwareIndexByInternalIndex(index);
+   \   0000002C   0x0021             MOVS     R1,R4
+   \   0000002E   0x....             LDR.N    R0,??DataTable17_13
+   \   00000030   0x.... 0x....      BL       _ZN9AdcDevice34getAdcHardwareIndexByInternalIndexEi
+   \   00000034   0x0005             MOVS     R5,R0
+    425          		GPIO_TypeDef* port = getAdcChannelPort(hwIndex);
+   \   00000036   0x0028             MOVS     R0,R5
+   \   00000038   0x.... 0x....      BL       _Z17getAdcChannelPort13adc_channel_e
+   \   0000003C   0x0006             MOVS     R6,R0
+    426          		int pin = getAdcChannelPin(hwIndex);
+   \   0000003E   0x0028             MOVS     R0,R5
+   \   00000040   0x.... 0x....      BL       _Z16getAdcChannelPin13adc_channel_e
+   \   00000044   0x0007             MOVS     R7,R0
+    427          
+    428          		int adcValue = slowAdc.getAdcValueByIndex(index);
+   \   00000046   0x0021             MOVS     R1,R4
+   \   00000048   0x....             LDR.N    R0,??DataTable17_13
+   \   0000004A   0x.... 0x....      BL       _ZN9AdcDevice18getAdcValueByIndexEi
+   \   0000004E   0xEE08 0x0A10      VMOV     S16,R0
+    429          		appendPrintf(&logger, " ch%d %s%d", index, portname(port), pin);
+   \   00000052   0x0030             MOVS     R0,R6
+   \   00000054   0x.... 0x....      BL       _Z8portnameP12GPIO_TypeDef
+   \   00000058   0x0003             MOVS     R3,R0
+   \   0000005A   0x9700             STR      R7,[SP, #+0]
+   \   0000005C   0x0022             MOVS     R2,R4
+   \   0000005E   0x....             LDR.N    R1,??DataTable17_39
+   \   00000060   0x....             LDR.N    R0,??DataTable17_11
+   \   00000062   0x.... 0x....      BL       appendPrintf
+    430          		appendPrintf(&logger, " ADC%d 12bit=%d", hwIndex, adcValue);
+   \   00000066   0xEE18 0x3A10      VMOV     R3,S16
+   \   0000006A   0x002A             MOVS     R2,R5
+   \   0000006C   0x....             LDR.N    R1,??DataTable17_40
+   \   0000006E   0x....             LDR.N    R0,??DataTable17_11
+   \   00000070   0x.... 0x....      BL       appendPrintf
+    431          		float volts = adcToVolts(adcValue);
+   \   00000074   0xEEB8 0x0AC8      VCVT.F32.S32 S0,S16
+   \   00000078   0xEDDF 0x....      VLDR.W   S1,??DataTable14_1  ;; 0x3a400c01
+   \   0000007C   0xEE60 0x8A20      VMUL.F32 S17,S0,S1
+    432          		appendPrintf(&logger, " v=%f", volts);
+   \   00000080   0xEE18 0x0A90      VMOV     R0,S17
+   \   00000084   0x.... 0x....      BL       __aeabi_f2d
+   \   00000088   0x0002             MOVS     R2,R0
+   \   0000008A   0x000B             MOVS     R3,R1
+   \   0000008C   0x....             LDR.N    R1,??DataTable17_41
+   \   0000008E   0x....             LDR.N    R0,??DataTable17_11
+   \   00000090   0x.... 0x....      BL       appendPrintf
+    433          
+    434          		appendMsgPostfix(&logger);
+   \   00000094   0x....             LDR.N    R0,??DataTable17_11
+   \   00000096   0x.... 0x....      BL       appendMsgPostfix
+    435          		scheduleLogging(&logger);
+   \   0000009A   0x....             LDR.N    R0,??DataTable17_11
+   \   0000009C   0x.... 0x....      BL       scheduleLogging
+    436          	}
+   \   000000A0   0x1C64             ADDS     R4,R4,#+1
+   \   000000A2   0xE7BB             B.N      ??printFullAdcReport_0
+    437          }
+   \                     ??printFullAdcReport_1:
+   \   000000A4   0xB002             ADD      SP,SP,#+8
+   \   000000A6   0xECBD 0x8B02      VPOP     {D8}
+   \   000000AA   0xBDF1             POP      {R0,R4-R7,PC}    ;; return
+    438          
+
+   \                                 In section .text, align 2, keep-with-next
+    439          static void printStatus(void) {
+   \                     _Z11printStatusv:
+   \   00000000   0xB580             PUSH     {R7,LR}
+    440          	scheduleMsg(&logger, "adcDebug=%d", adcDebugReporting);
+   \   00000002   0x....             LDR.N    R0,??DataTable17_42
+   \   00000004   0x6802             LDR      R2,[R0, #+0]
+   \   00000006   0x....             LDR.N    R1,??DataTable17_43
+   \   00000008   0x....             LDR.N    R0,??DataTable17_11
+   \   0000000A   0x.... 0x....      BL       scheduleMsg
+    441          }
+   \   0000000E   0xBD01             POP      {R0,PC}          ;; return
+    442          
+
+   \                                 In section .text, align 2, keep-with-next
+    443          static void setAdcDebugReporting(int value) {
+   \                     _Z20setAdcDebugReportingi:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    444          	adcDebugReporting = value;
+   \   00000004   0x....             LDR.N    R0,??DataTable17_42
+   \   00000006   0x6004             STR      R4,[R0, #+0]
+    445          	printStatus();
+   \   00000008   0x.... 0x....      BL       _Z11printStatusv
+    446          }
+   \   0000000C   0xBD10             POP      {R4,PC}          ;; return
+    447          
+
+   \                                 In section .text, align 2, keep-with-next
+    448          static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
+   \                     _Z17adc_callback_slowP9ADCDriverPtj:
+   \   00000000   0xB5F8             PUSH     {R3-R7,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+    449          	(void) buffer;
+    450          	(void) n;
+    451          	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#9c");
+   \   00000008   0x....             LDR.N    R0,??DataTable17_16
+   \   0000000A   0x6980             LDR      R0,[R0, #+24]
+   \   0000000C   0x.... 0x....      BL       getRemainingStack
+   \   00000010   0x2881             CMP      R0,#+129
+   \   00000012   0xDA03             BGE.N    ??adc_callback_slow_0
+   \   00000014   0x....             LDR.N    R0,??DataTable17_44
+   \   00000016   0x.... 0x....      BL       firmwareError
+   \   0000001A   0xE01D             B.N      ??adc_callback_slow_1
+    452          	/* Note, only in the ADC_COMPLETE state because the ADC driver fires
+    453          	 * an intermediate callback when the buffer is half full. */
+    454          	if (adcp->state == ADC_COMPLETE) {
+   \                     ??adc_callback_slow_0:
+   \   0000001C   0x7820             LDRB     R0,[R4, #+0]
+   \   0000001E   0x2804             CMP      R0,#+4
+   \   00000020   0xD11A             BNE.N    ??adc_callback_slow_2
+    455          		/* Calculates the average values from the ADC samples.*/
+    456          
+    457          		adcCallbackCounter_slow++;
+   \   00000022   0x....             LDR.N    R0,??DataTable17_45
+   \   00000024   0x6800             LDR      R0,[R0, #+0]
+   \   00000026   0x1C40             ADDS     R0,R0,#+1
+   \   00000028   0x....             LDR.N    R1,??DataTable17_45
+   \   0000002A   0x6008             STR      R0,[R1, #+0]
+    458          
+    459          //		newState.time = chimeNow();
+    460          		for (int i = 0; i < slowAdc.size(); i++) {
+   \   0000002C   0x2700             MOVS     R7,#+0
+   \                     ??adc_callback_slow_3:
+   \   0000002E   0x....             LDR.N    R0,??DataTable17_13
+   \   00000030   0x.... 0x....      BL       _ZN9AdcDevice4sizeEv
+   \   00000034   0x4287             CMP      R7,R0
+   \   00000036   0xDA0F             BGE.N    ??adc_callback_slow_2
+    461          			/**
+    462          			 * todo: No need to average since DEPTH is '1'
+    463          			 */
+    464          			int value = getAvgAdcValue(i, slowAdc.samples, ADC_BUF_DEPTH_SLOW, slowAdc.size());
+   \   00000038   0x....             LDR.N    R0,??DataTable17_13
+   \   0000003A   0x.... 0x....      BL       _ZN9AdcDevice4sizeEv
+   \   0000003E   0x0003             MOVS     R3,R0
+   \   00000040   0x2201             MOVS     R2,#+1
+   \   00000042   0x....             LDR.N    R1,??DataTable17_19
+   \   00000044   0x0038             MOVS     R0,R7
+   \   00000046   0x.... 0x....      BL       _Z14getAvgAdcValueiPtii
+    465          			slowAdc.values.adc_data[i] = value;
+   \   0000004A   0x....             LDR.N    R1,??DataTable17_13
+   \   0000004C   0xEB11 0x0147      ADDS     R1,R1,R7, LSL #+1
+   \   00000050   0xF8A1 0x0078      STRH     R0,[R1, #+120]
+    466          		}
+   \   00000054   0x1C7F             ADDS     R7,R7,#+1
+   \   00000056   0xE7EA             B.N      ??adc_callback_slow_3
+    467          	}
+    468          }
+   \                     ??adc_callback_slow_2:
+   \                     ??adc_callback_slow_1:
+   \   00000058   0xBDF1             POP      {R0,R4-R7,PC}    ;; return
+    469          
+
+   \                                 In section .bss, align 4
+    470          static char errorMsgBuff[10];
+   \                     errorMsgBuff:
+   \   00000000                      DS8 12
+    471          
+
+   \                                 In section .text, align 2, keep-with-next
+    472          static void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode) {
+   \                     _Z10addChannelPKc13adc_channel_e18adc_channel_mode_e:
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+    473          	if (setting == EFI_ADC_NONE) {
+   \   00000008   0x2D10             CMP      R5,#+16
+   \   0000000A   0xD013             BEQ.N    ??addChannel_3
+    474          		return;
+    475          	}
+    476          	if (adcHwChannelEnabled[setting] != ADC_OFF) {
+   \                     ??addChannel_4:
+   \   0000000C   0x....             LDR.N    R0,??DataTable17_24
+   \   0000000E   0xF850 0x0025      LDR      R0,[R0, R5, LSL #+2]
+   \   00000012   0x2800             CMP      R0,#+0
+   \   00000014   0xD008             BEQ.N    ??addChannel_5
+    477          		getPinNameByAdcChannel(setting, errorMsgBuff);
+   \   00000016   0x....             LDR.N    R1,??DataTable17_46
+   \   00000018   0x0028             MOVS     R0,R5
+   \   0000001A   0x.... 0x....      BL       _Z22getPinNameByAdcChannel13adc_channel_ePc
+    478          		firmwareError("ADC mapping error: input %s for %s already used?", errorMsgBuff, name);
+   \   0000001E   0x0022             MOVS     R2,R4
+   \   00000020   0x....             LDR.N    R1,??DataTable17_46
+   \   00000022   0x....             LDR.N    R0,??DataTable17_47
+   \   00000024   0x.... 0x....      BL       firmwareError
+    479          	}
+    480          
+    481          	adcHwChannelUsage[setting] = name;
+   \                     ??addChannel_5:
+   \   00000028   0x....             LDR.N    R0,??DataTable17_48
+   \   0000002A   0xF840 0x4025      STR      R4,[R0, R5, LSL #+2]
+    482          	adcHwChannelEnabled[setting] = mode;
+   \   0000002E   0x....             LDR.N    R0,??DataTable17_24
+   \   00000030   0xF840 0x6025      STR      R6,[R0, R5, LSL #+2]
+    483          }
+   \                     ??addChannel_3:
+   \   00000034   0xBD70             POP      {R4-R6,PC}       ;; return
+    484          
+
+   \                                 In section .text, align 2, keep-with-next
+    485          static void configureInputs(void) {
+   \                     _Z15configureInputsv:
+   \   00000000   0xB580             PUSH     {R7,LR}
+    486          	memset(adcHwChannelEnabled, 0, sizeof(adcHwChannelEnabled));
+   \   00000002   0x2240             MOVS     R2,#+64
+   \   00000004   0x2100             MOVS     R1,#+0
+   \   00000006   0x....             LDR.N    R0,??DataTable17_24
+   \   00000008   0x.... 0x....      BL       memset
+    487          	memset(adcHwChannelUsage, 0, sizeof(adcHwChannelUsage));
+   \   0000000C   0x2240             MOVS     R2,#+64
+   \   0000000E   0x2100             MOVS     R1,#+0
+   \   00000010   0x....             LDR.N    R0,??DataTable17_48
+   \   00000012   0x.... 0x....      BL       memset
+    488          
+    489          	addChannel("TPS", engineConfiguration->tpsAdcChannel, ADC_FAST);
+   \   00000016   0x2202             MOVS     R2,#+2
+   \   00000018   0x....             LDR.N    R0,??DataTable17_36
+   \   0000001A   0x6800             LDR      R0,[R0, #+0]
+   \   0000001C   0xF8D0 0x120C      LDR      R1,[R0, #+524]
+   \   00000020   0x....             ADR.N    R0,??DataTable17  ;; "TPS"
+   \   00000022   0x.... 0x....      BL       _Z10addChannelPKc13adc_channel_e18adc_channel_mode_e
+    490          	addChannel("MAP", engineConfiguration->map.sensor.hwChannel, ADC_FAST);
+   \   00000026   0x2202             MOVS     R2,#+2
+   \   00000028   0x....             LDR.N    R0,??DataTable17_36
+   \   0000002A   0x6800             LDR      R0,[R0, #+0]
+   \   0000002C   0xF8D0 0x10FC      LDR      R1,[R0, #+252]
+   \   00000030   0x....             ADR.N    R0,??DataTable17_1  ;; "MAP"
+   \   00000032   0x.... 0x....      BL       _Z10addChannelPKc13adc_channel_e18adc_channel_mode_e
+    491          	addChannel("MAF", engineConfiguration->mafAdcChannel, ADC_FAST);
+   \   00000036   0x2202             MOVS     R2,#+2
+   \   00000038   0x....             LDR.N    R0,??DataTable17_36
+   \   0000003A   0x6800             LDR      R0,[R0, #+0]
+   \   0000003C   0xF8D0 0x1244      LDR      R1,[R0, #+580]
+   \   00000040   0x....             ADR.N    R0,??DataTable17_2  ;; "MAF"
+   \   00000042   0x.... 0x....      BL       _Z10addChannelPKc13adc_channel_e18adc_channel_mode_e
+    492          	addChannel("hip", engineConfiguration->hipOutputChannel, ADC_FAST);
+   \   00000046   0x2202             MOVS     R2,#+2
+   \   00000048   0x....             LDR.N    R0,??DataTable17_36
+   \   0000004A   0x6800             LDR      R0,[R0, #+0]
+   \   0000004C   0xF8D0 0x15DC      LDR      R1,[R0, #+1500]
+   \   00000050   0x....             ADR.N    R0,??DataTable17_3  ;; "hip"
+   \   00000052   0x.... 0x....      BL       _Z10addChannelPKc13adc_channel_e18adc_channel_mode_e
+    493          
+    494          	addChannel("fuel", engineConfiguration->fuelLevelSensor, ADC_SLOW);
+   \   00000056   0x2201             MOVS     R2,#+1
+   \   00000058   0x....             LDR.N    R0,??DataTable17_36
+   \   0000005A   0x6800             LDR      R0,[R0, #+0]
+   \   0000005C   0xF8D0 0x11E4      LDR      R1,[R0, #+484]
+   \   00000060   0x....             LDR.N    R0,??DataTable17_49
+   \   00000062   0x.... 0x....      BL       _Z10addChannelPKc13adc_channel_e18adc_channel_mode_e
+    495          	addChannel("pPS", engineConfiguration->pedalPositionChannel, ADC_SLOW);
+   \   00000066   0x2201             MOVS     R2,#+1
+   \   00000068   0x....             LDR.N    R0,??DataTable17_36
+   \   0000006A   0x6800             LDR      R0,[R0, #+0]
+   \   0000006C   0xF8D0 0x125C      LDR      R1,[R0, #+604]
+   \   00000070   0x....             ADR.N    R0,??DataTable17_4  ;; "pPS"
+   \   00000072   0x.... 0x....      BL       _Z10addChannelPKc13adc_channel_e18adc_channel_mode_e
+    496          	addChannel("VBatt", engineConfiguration->vbattAdcChannel, ADC_SLOW);
+   \   00000076   0x2201             MOVS     R2,#+1
+   \   00000078   0x....             LDR.N    R0,??DataTable17_36
+   \   0000007A   0x6800             LDR      R0,[R0, #+0]
+   \   0000007C   0xF8D0 0x11D8      LDR      R1,[R0, #+472]
+   \   00000080   0x....             LDR.N    R0,??DataTable17_50
+   \   00000082   0x.... 0x....      BL       _Z10addChannelPKc13adc_channel_e18adc_channel_mode_e
+    497          	addChannel("Vref", engineConfiguration->vRefAdcChannel, ADC_SLOW);
+   \   00000086   0x2201             MOVS     R2,#+1
+   \   00000088   0x....             LDR.N    R0,??DataTable17_36
+   \   0000008A   0x6800             LDR      R0,[R0, #+0]
+   \   0000008C   0xF8D0 0x1600      LDR      R1,[R0, #+1536]
+   \   00000090   0x....             LDR.N    R0,??DataTable17_51
+   \   00000092   0x.... 0x....      BL       _Z10addChannelPKc13adc_channel_e18adc_channel_mode_e
+    498          	addChannel("CLT", engineConfiguration->clt.adcChannel, ADC_SLOW);
+   \   00000096   0x2201             MOVS     R2,#+1
+   \   00000098   0x....             LDR.N    R0,??DataTable17_36
+   \   0000009A   0x6800             LDR      R0,[R0, #+0]
+   \   0000009C   0xF8D0 0x111C      LDR      R1,[R0, #+284]
+   \   000000A0   0x....             ADR.N    R0,??DataTable17_5  ;; "CLT"
+   \   000000A2   0x.... 0x....      BL       _Z10addChannelPKc13adc_channel_e18adc_channel_mode_e
+    499          	addChannel("IAT", engineConfiguration->iat.adcChannel, ADC_SLOW);
+   \   000000A6   0x2201             MOVS     R2,#+1
+   \   000000A8   0x....             LDR.N    R0,??DataTable17_36
+   \   000000AA   0x6800             LDR      R0,[R0, #+0]
+   \   000000AC   0xF8D0 0x113C      LDR      R1,[R0, #+316]
+   \   000000B0   0x....             ADR.N    R0,??DataTable17_6  ;; "IAT"
+   \   000000B2   0x.... 0x....      BL       _Z10addChannelPKc13adc_channel_e18adc_channel_mode_e
+    500          	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);
+   \   000000B6   0x2201             MOVS     R2,#+1
+   \   000000B8   0x....             LDR.N    R0,??DataTable17_36
+   \   000000BA   0x6800             LDR      R0,[R0, #+0]
+   \   000000BC   0xF8D0 0x1248      LDR      R1,[R0, #+584]
+   \   000000C0   0x....             ADR.N    R0,??DataTable17_7  ;; "AFR"
+   \   000000C2   0x.... 0x....      BL       _Z10addChannelPKc13adc_channel_e18adc_channel_mode_e
+    501          	addChannel("AC", engineConfiguration->acSwitchAdc, ADC_SLOW);
+   \   000000C6   0x2201             MOVS     R2,#+1
+   \   000000C8   0x....             LDR.N    R0,??DataTable17_36
+   \   000000CA   0x6800             LDR      R0,[R0, #+0]
+   \   000000CC   0xF8D0 0x15F0      LDR      R1,[R0, #+1520]
+   \   000000D0   0x....             ADR.N    R0,??DataTable17_8  ;; 0x41, 0x43, 0x00, 0x00
+   \   000000D2   0x.... 0x....      BL       _Z10addChannelPKc13adc_channel_e18adc_channel_mode_e
+    502          }
+   \   000000D6   0xBD01             POP      {R0,PC}          ;; return
+    503          
+
+   \                                 In section .text, align 2, keep-with-next
+    504          void initAdcInputs(bool boardTestMode) {
+   \                     _Z13initAdcInputsb:
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    505          	printMsg(&logger, "initAdcInputs()");
+   \   00000004   0x....             LDR.N    R1,??DataTable17_52
+   \   00000006   0x....             LDR.N    R0,??DataTable17_11
+   \   00000008   0x.... 0x....      BL       printMsg
+    506          
+    507          	configureInputs();
+   \   0000000C   0x.... 0x....      BL       _Z15configureInputsv
+    508          
+    509          
+    510          	printStatus();
+   \   00000010   0x.... 0x....      BL       _Z11printStatusv
+    511          
+    512          	addConsoleActionI("adcDebug", &setAdcDebugReporting);
+   \   00000014   0x....             LDR.N    R1,??DataTable17_53
+   \   00000016   0x....             LDR.N    R0,??DataTable17_54
+   \   00000018   0x.... 0x....      BL       addConsoleActionI
+    513          
+    514          #if EFI_INTERNAL_ADC
+    515          	/*
+    516          	 * Initializes the ADC driver.
+    517          	 */
+    518          	adcStart(&ADC_SLOW_DEVICE, NULL);
+   \   0000001C   0x2100             MOVS     R1,#+0
+   \   0000001E   0x....             LDR.N    R0,??DataTable17_18
+   \   00000020   0x.... 0x....      BL       adcStart
+    519          	adcStart(&ADC_FAST_DEVICE, NULL);
+   \   00000024   0x2100             MOVS     R1,#+0
+   \   00000026   0x....             LDR.N    R0,??DataTable17_21
+   \   00000028   0x.... 0x....      BL       adcStart
+    520          
+    521          	for (int adc = 0; adc < HW_MAX_ADC_INDEX; adc++) {
+   \   0000002C   0x2500             MOVS     R5,#+0
+   \                     ??initAdcInputs_0:
+   \   0000002E   0x2D10             CMP      R5,#+16
+   \   00000030   0xDA16             BGE.N    ??initAdcInputs_1
+    522          		adc_channel_mode_e mode = adcHwChannelEnabled[adc];
+   \   00000032   0x....             LDR.N    R0,??DataTable17_24
+   \   00000034   0xF850 0x6025      LDR      R6,[R0, R5, LSL #+2]
+    523          
+    524          		/**
+    525          		 * in board test mode all currently enabled ADC channels are running in slow mode
+    526          		 */
+    527          		if (mode == ADC_SLOW || (boardTestMode && mode == ADC_FAST)) {
+   \   00000038   0x2E01             CMP      R6,#+1
+   \   0000003A   0xD004             BEQ.N    ??initAdcInputs_2
+   \   0000003C   0xB2E4             UXTB     R4,R4            ;; ZeroExt  R4,R4,#+24,#+24
+   \   0000003E   0x2C00             CMP      R4,#+0
+   \   00000040   0xD006             BEQ.N    ??initAdcInputs_3
+   \   00000042   0x2E02             CMP      R6,#+2
+   \   00000044   0xD104             BNE.N    ??initAdcInputs_3
+    528          			slowAdc.addChannel((adc_channel_e) (ADC_CHANNEL_IN0 + adc));
+   \                     ??initAdcInputs_2:
+   \   00000046   0x0029             MOVS     R1,R5
+   \   00000048   0x....             LDR.N    R0,??DataTable17_13
+   \   0000004A   0x.... 0x....      BL       _ZN9AdcDevice10addChannelE13adc_channel_e
+   \   0000004E   0xE005             B.N      ??initAdcInputs_4
+    529          		} else if (mode == ADC_FAST) {
+   \                     ??initAdcInputs_3:
+   \   00000050   0x2E02             CMP      R6,#+2
+   \   00000052   0xD103             BNE.N    ??initAdcInputs_4
+    530          			fastAdc.addChannel((adc_channel_e) (ADC_CHANNEL_IN0 + adc));
+   \   00000054   0x0029             MOVS     R1,R5
+   \   00000056   0x....             LDR.N    R0,??DataTable17_15
+   \   00000058   0x.... 0x....      BL       _ZN9AdcDevice10addChannelE13adc_channel_e
+    531          		}
+    532          	}
+   \                     ??initAdcInputs_4:
+   \   0000005C   0x1C6D             ADDS     R5,R5,#+1
+   \   0000005E   0xE7E6             B.N      ??initAdcInputs_0
+    533          
+    534          	slowAdc.init();
+   \                     ??initAdcInputs_1:
+   \   00000060   0x....             LDR.N    R0,??DataTable17_13
+   \   00000062   0x.... 0x....      BL       _ZN9AdcDevice4initEv
+    535          	pwmStart(EFI_INTERNAL_SLOW_ADC_PWM, &pwmcfg_slow);
+   \   00000066   0x....             LDR.N    R1,??DataTable17_55
+   \   00000068   0x....             LDR.N    R0,??DataTable17_56
+   \   0000006A   0x.... 0x....      BL       pwmStart
+    536          	if (boardConfiguration->isFastAdcEnabled) {
+   \   0000006E   0x....             LDR.N    R0,??DataTable17_57
+   \   00000070   0x6800             LDR      R0,[R0, #+0]
+   \   00000072   0xF890 0x0180      LDRB     R0,[R0, #+384]
+   \   00000076   0xB2C0             UXTB     R0,R0            ;; ZeroExt  R0,R0,#+24,#+24
+   \   00000078   0x0900             LSRS     R0,R0,#+4
+   \   0000007A   0xF010 0x0001      ANDS     R0,R0,#0x1
+   \   0000007E   0x2800             CMP      R0,#+0
+   \   00000080   0xD006             BEQ.N    ??initAdcInputs_5
+    537          		fastAdc.init();
+   \   00000082   0x....             LDR.N    R0,??DataTable17_15
+   \   00000084   0x.... 0x....      BL       _ZN9AdcDevice4initEv
+    538          		/*
+    539          		 * Initializes the PWM driver.
+    540          		 */
+    541          		pwmStart(EFI_INTERNAL_FAST_ADC_PWM, &pwmcfg_fast);
+   \   00000088   0x....             LDR.N    R1,??DataTable17_58
+   \   0000008A   0x....             LDR.N    R0,??DataTable17_59
+   \   0000008C   0x.... 0x....      BL       pwmStart
+    542          	}
+    543          
+    544          	// ADC_CHANNEL_IN0 // PA0
+    545          	// ADC_CHANNEL_IN1 // PA1
+    546          	// ADC_CHANNEL_IN2 // PA2
+    547          	// ADC_CHANNEL_IN3 // PA3
+    548          	// ADC_CHANNEL_IN4 // PA4
+    549          	// ADC_CHANNEL_IN5 // PA5 - this is also TIM2_CH1
+    550          	// ADC_CHANNEL_IN6 // PA6
+    551          	// ADC_CHANNEL_IN7 // PA7
+    552          	// ADC_CHANNEL_IN8 // PB0
+    553          	// ADC_CHANNEL_IN9 // PB1
+    554          	// ADC_CHANNEL_IN10 // PC0
+    555          	// ADC_CHANNEL_IN11 // PC1
+    556          	// ADC_CHANNEL_IN12 // PC2
+    557          	// ADC_CHANNEL_IN13 // PC3
+    558          	// ADC_CHANNEL_IN14 // PC4
+    559          	// ADC_CHANNEL_IN15 // PC5
+    560          
+    561          	//if(slowAdcChannelCount > ADC_MAX_SLOW_CHANNELS_COUNT) // todo: do we need this logic? do we need this check
+    562          
+    563          	addConsoleActionI("adc", (VoidInt) printAdcValue);
+   \                     ??initAdcInputs_5:
+   \   00000090   0x....             LDR.N    R1,??DataTable17_60
+   \   00000092   0x....             ADR.N    R0,??DataTable17_9  ;; "adc"
+   \   00000094   0x.... 0x....      BL       addConsoleActionI
+    564          	addConsoleAction("fadc", printFullAdcReport);
+   \   00000098   0x....             LDR.N    R1,??DataTable17_61
+   \   0000009A   0x....             LDR.N    R0,??DataTable17_62
+   \   0000009C   0x.... 0x....      BL       addConsoleAction
+    565          #else
+    566          	printMsg(&logger, "ADC disabled");
+    567          #endif
+    568          }
+   \   000000A0   0xBD70             POP      {R4-R6,PC}       ;; return
+    569          
+
+   \                                 In section .text, align 2, keep-with-next
+    570          void pokeAdcInputs() {
+   \                     _Z13pokeAdcInputsv:
+   \   00000000   0xB580             PUSH     {R7,LR}
+    571          	if (!adcDebugReporting)
+   \   00000002   0x....             LDR.N    R0,??DataTable17_42
+   \   00000004   0x6800             LDR      R0,[R0, #+0]
+   \   00000006   0x2800             CMP      R0,#+0
+   \   00000008   0xD001             BEQ.N    ??pokeAdcInputs_0
+    572          		return;
+    573          	printFullAdcReport();
+   \                     ??pokeAdcInputs_1:
+   \   0000000A   0x.... 0x....      BL       _Z18printFullAdcReportv
+    574          }
+   \                     ??pokeAdcInputs_0:
+   \   0000000E   0xBD01             POP      {R0,PC}          ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable4:
+   \   00000000   0x41 0x44          DC8      "ADC"
+   \              0x43 0x00    
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14:
+   \   00000000   0x68 0x77          DC8      0x68, 0x77, 0x00, 0x00
+   \              0x00 0x00    
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_1:
+   \   00000000   0x3A400C01         DC32     0x3a400c01
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17:
+   \   00000000   0x54 0x50          DC8      "TPS"
+   \              0x53 0x00    
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_1:
+   \   00000000   0x4D 0x41          DC8      "MAP"
+   \              0x50 0x00    
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_2:
+   \   00000000   0x4D 0x41          DC8      "MAF"
+   \              0x46 0x00    
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_3:
+   \   00000000   0x68 0x69          DC8      "hip"
+   \              0x70 0x00    
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_4:
+   \   00000000   0x70 0x50          DC8      "pPS"
+   \              0x53 0x00    
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_5:
+   \   00000000   0x43 0x4C          DC8      "CLT"
+   \              0x54 0x00    
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_6:
+   \   00000000   0x49 0x41          DC8      "IAT"
+   \              0x54 0x00    
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_7:
+   \   00000000   0x41 0x46          DC8      "AFR"
+   \              0x52 0x00    
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_8:
+   \   00000000   0x41 0x43          DC8      0x41, 0x43, 0x00, 0x00
+   \              0x00 0x00    
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_9:
+   \   00000000   0x61 0x64          DC8      "adc"
+   \              0x63 0x00    
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_10:
+   \   00000000   0x........         DC32     LOGGING_BUFFER
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_11:
+   \   00000000   0x........         DC32     logger
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_12:
+   \   00000000   0x........         DC32     adcgrpcfgSlow
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_13:
+   \   00000000   0x........         DC32     slowAdc
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_14:
+   \   00000000   0x........         DC32     adcgrpcfg_fast
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_15:
+   \   00000000   0x........         DC32     fastAdc
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_16:
+   \   00000000   0x........         DC32     rlist
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_17:
+   \   00000000   0x........         DC32     `?<Constant "lwStAdcSlow">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_18:
+   \   00000000   0x........         DC32     ADCD1
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_19:
+   \   00000000   0x........         DC32     slowAdc+0x58
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_20:
+   \   00000000   0x........         DC32     `?<Constant "lwStAdcFast">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_21:
+   \   00000000   0x........         DC32     ADCD2
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_22:
+   \   00000000   0x........         DC32     fastAdc+0x58
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_23:
+   \   00000000   0x........         DC32     `?<Constant "ADC: should not be as...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_24:
+   \   00000000   0x........         DC32     adcHwChannelEnabled
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_25:
+   \   00000000   0x........         DC32     `?<Constant "ADC is off [%s] index=%d">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_26:
+   \   00000000   0x........         DC32     `?<Constant "adc %s\\r\\n">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_27:
+   \   00000000   0x........         DC32     `?<Constant "adc input">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_28:
+   \   00000000   0x40020000         DC32     0x40020000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_29:
+   \   00000000   0x40020400         DC32     0x40020400
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_30:
+   \   00000000   0x40020800         DC32     0x40020800
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_31:
+   \   00000000   0x........         DC32     `?<Constant "Unknown hw channel %d">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_32:
+   \   00000000   0x........         DC32     `?<Constant "slow">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_33:
+   \   00000000   0x........         DC32     `?<Constant "fast">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_34:
+   \   00000000   0x........         DC32     `?<Constant "INACTIVE">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_35:
+   \   00000000   0x........         DC32     `?<Constant "print">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_36:
+   \   00000000   0x........         DC32     engineConfiguration
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_37:
+   \   00000000   0x........         DC32     `?<Constant "adc voltage : %f">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_38:
+   \   00000000   0x........         DC32     `?<Constant "fast %d slow %d">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_39:
+   \   00000000   0x........         DC32     `?<Constant " ch%d %s%d">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_40:
+   \   00000000   0x........         DC32     `?<Constant " ADC%d 12bit=%d">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_41:
+   \   00000000   0x........         DC32     `?<Constant " v=%f">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_42:
+   \   00000000   0x........         DC32     adcDebugReporting
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_43:
+   \   00000000   0x........         DC32     `?<Constant "adcDebug=%d">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_44:
+   \   00000000   0x........         DC32     `?<Constant "lowstck#9c">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_45:
+   \   00000000   0x........         DC32     adcCallbackCounter_slow
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_46:
+   \   00000000   0x........         DC32     errorMsgBuff
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_47:
+   \   00000000   0x........         DC32     `?<Constant "ADC mapping error: in...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_48:
+   \   00000000   0x........         DC32     adcHwChannelUsage
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_49:
+   \   00000000   0x........         DC32     `?<Constant "fuel">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_50:
+   \   00000000   0x........         DC32     `?<Constant "VBatt">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_51:
+   \   00000000   0x........         DC32     `?<Constant "Vref">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_52:
+   \   00000000   0x........         DC32     `?<Constant "initAdcInputs()">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_53:
+   \   00000000   0x........         DC32     _Z20setAdcDebugReportingi
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_54:
+   \   00000000   0x........         DC32     `?<Constant "adcDebug">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_55:
+   \   00000000   0x........         DC32     pwmcfg_slow
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_56:
+   \   00000000   0x........         DC32     PWMD8
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_57:
+   \   00000000   0x........         DC32     boardConfiguration
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_58:
+   \   00000000   0x........         DC32     pwmcfg_fast
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_59:
+   \   00000000   0x........         DC32     PWMD4
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_60:
+   \   00000000   0x........         DC32     _Z13printAdcValue13adc_channel_e
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_61:
+   \   00000000   0x........         DC32     _Z18printFullAdcReportv
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable17_62:
+   \   00000000   0x........         DC32     `?<Constant "fadc">`
+
+   \                                 In section .init_array, align 4, keep-with-next, root
+   \   00000000   0x........         DC32    RELOC_ARM_TARGET1 __sti__routine
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "lwStAdcSlow">`:
+   \   00000000   0x6C 0x77          DC8 "lwStAdcSlow"
+   \              0x53 0x74    
+   \              0x41 0x64    
+   \              0x63 0x53    
+   \              0x6C 0x6F    
+   \              0x77 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "lwStAdcFast">`:
+   \   00000000   0x6C 0x77          DC8 "lwStAdcFast"
+   \              0x53 0x74    
+   \              0x41 0x64    
+   \              0x63 0x46    
+   \              0x61 0x73    
+   \              0x74 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "ADC: should not be as...">`:
+   \   00000000   0x41 0x44          DC8 "ADC: should not be asking for NONE %s"
+   \              0x43 0x3A    
+   \              0x20 0x73    
+   \              0x68 0x6F    
+   \              0x75 0x6C    
+   \              0x64 0x20    
+   \              0x6E 0x6F    
+   \              0x74 0x20    
+   \              0x62 0x65    
+   \              0x20 0x61    
+   \              0x73 0x6B    
+   \              0x69 0x6E    
+   \              0x67 0x20    
+   \              0x66 0x6F    
+   \              0x72 0x20    
+   \              0x4E 0x4F    
+   \              0x4E 0x45    
+   \              0x20 0x25    
+   \              0x73 0x00    
+   \   00000026   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "ADC is off [%s] index=%d">`:
+   \   00000000   0x41 0x44          DC8 "ADC is off [%s] index=%d"
+   \              0x43 0x20    
+   \              0x69 0x73    
+   \              0x20 0x6F    
+   \              0x66 0x66    
+   \              0x20 0x5B    
+   \              0x25 0x73    
+   \              0x5D 0x20    
+   \              0x69 0x6E    
+   \              0x64 0x65    
+   \              0x78 0x3D    
+   \              0x25 0x64    
+   \              0x00         
+   \   00000019   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "adc %s\\r\\n">`:
+   \   00000000   0x61 0x64          DC8 "adc %s\015\012"
+   \              0x63 0x20    
+   \              0x25 0x73    
+   \              0x0D 0x0A    
+   \              0x00         
+   \   00000009   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "adc input">`:
+   \   00000000   0x61 0x64          DC8 "adc input"
+   \              0x63 0x20    
+   \              0x69 0x6E    
+   \              0x70 0x75    
+   \              0x74 0x00    
+   \   0000000A   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "Unknown hw channel %d">`:
+   \   00000000   0x55 0x6E          DC8 "Unknown hw channel %d"
+   \              0x6B 0x6E    
+   \              0x6F 0x77    
+   \              0x6E 0x20    
+   \              0x68 0x77    
+   \              0x20 0x63    
+   \              0x68 0x61    
+   \              0x6E 0x6E    
+   \              0x65 0x6C    
+   \              0x20 0x25    
+   \              0x64 0x00    
+   \   00000016   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "slow">`:
+   \   00000000   0x73 0x6C          DC8 "slow"
+   \              0x6F 0x77    
+   \              0x00         
+   \   00000005   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "fast">`:
+   \   00000000   0x66 0x61          DC8 "fast"
+   \              0x73 0x74    
+   \              0x00         
+   \   00000005   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "INACTIVE">`:
+   \   00000000   0x49 0x4E          DC8 "INACTIVE"
+   \              0x41 0x43    
+   \              0x54 0x49    
+   \              0x56 0x45    
+   \              0x00         
+   \   00000009   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \   00000000   0x68 0x77          DC8 "hw"
+   \              0x00         
+   \   00000003   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "print">`:
+   \   00000000   0x70 0x72          DC8 "print"
+   \              0x69 0x6E    
+   \              0x74 0x00    
+   \   00000006   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "adc voltage : %f">`:
+   \   00000000   0x61 0x64          DC8 "adc voltage : %f"
+   \              0x63 0x20    
+   \              0x76 0x6F    
+   \              0x6C 0x74    
+   \              0x61 0x67    
+   \              0x65 0x20    
+   \              0x3A 0x20    
+   \              0x25 0x66    
+   \              0x00         
+   \   00000011   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "fast %d slow %d">`:
+   \   00000000   0x66 0x61          DC8 "fast %d slow %d"
+   \              0x73 0x74    
+   \              0x20 0x25    
+   \              0x64 0x20    
+   \              0x73 0x6C    
+   \              0x6F 0x77    
+   \              0x20 0x25    
+   \              0x64 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant " ch%d %s%d">`:
+   \   00000000   0x20 0x63          DC8 " ch%d %s%d"
+   \              0x68 0x25    
+   \              0x64 0x20    
+   \              0x25 0x73    
+   \              0x25 0x64    
+   \              0x00         
+   \   0000000B   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant " ADC%d 12bit=%d">`:
+   \   00000000   0x20 0x41          DC8 " ADC%d 12bit=%d"
+   \              0x44 0x43    
+   \              0x25 0x64    
+   \              0x20 0x31    
+   \              0x32 0x62    
+   \              0x69 0x74    
+   \              0x3D 0x25    
+   \              0x64 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant " v=%f">`:
+   \   00000000   0x20 0x76          DC8 " v=%f"
+   \              0x3D 0x25    
+   \              0x66 0x00    
+   \   00000006   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "adcDebug=%d">`:
+   \   00000000   0x61 0x64          DC8 "adcDebug=%d"
+   \              0x63 0x44    
+   \              0x65 0x62    
+   \              0x75 0x67    
+   \              0x3D 0x25    
+   \              0x64 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "lowstck#9c">`:
+   \   00000000   0x6C 0x6F          DC8 "lowstck#9c"
+   \              0x77 0x73    
+   \              0x74 0x63    
+   \              0x6B 0x23    
+   \              0x39 0x63    
+   \              0x00         
+   \   0000000B   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "ADC mapping error: in...">`:
+   \   00000000   0x41 0x44          DC8 "ADC mapping error: input %s for %s already used?"
+   \              0x43 0x20    
+   \              0x6D 0x61    
+   \              0x70 0x70    
+   \              0x69 0x6E    
+   \              0x67 0x20    
+   \              0x65 0x72    
+   \              0x72 0x6F    
+   \              0x72 0x3A    
+   \              0x20 0x69    
+   \              0x6E 0x70    
+   \              0x75 0x74    
+   \              0x20 0x25    
+   \              0x73 0x20    
+   \              0x66 0x6F    
+   \              0x72 0x20    
+   \              0x25 0x73    
+   \              0x20 0x61    
+   \              0x6C 0x72    
+   \              0x65 0x61    
+   \              0x64 0x79    
+   \              0x20 0x75    
+   \              0x73 0x65    
+   \              0x64 0x3F    
+   \              0x00         
+   \   00000031   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \   00000000   0x54 0x50          DC8 "TPS"
+   \              0x53 0x00    
+
+   \                                 In section .rodata, align 4
+   \   00000000   0x4D 0x41          DC8 "MAP"
+   \              0x50 0x00    
+
+   \                                 In section .rodata, align 4
+   \   00000000   0x4D 0x41          DC8 "MAF"
+   \              0x46 0x00    
+
+   \                                 In section .rodata, align 4
+   \   00000000   0x68 0x69          DC8 "hip"
+   \              0x70 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "fuel">`:
+   \   00000000   0x66 0x75          DC8 "fuel"
+   \              0x65 0x6C    
+   \              0x00         
+   \   00000005   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \   00000000   0x70 0x50          DC8 "pPS"
+   \              0x53 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "VBatt">`:
+   \   00000000   0x56 0x42          DC8 "VBatt"
+   \              0x61 0x74    
+   \              0x74 0x00    
+   \   00000006   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "Vref">`:
+   \   00000000   0x56 0x72          DC8 "Vref"
+   \              0x65 0x66    
+   \              0x00         
+   \   00000005   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \   00000000   0x43 0x4C          DC8 "CLT"
+   \              0x54 0x00    
+
+   \                                 In section .rodata, align 4
+   \   00000000   0x49 0x41          DC8 "IAT"
+   \              0x54 0x00    
+
+   \                                 In section .rodata, align 4
+   \   00000000   0x41 0x46          DC8 "AFR"
+   \              0x52 0x00    
+
+   \                                 In section .rodata, align 4
+   \   00000000   0x41 0x43          DC8 "AC"
+   \              0x00         
+   \   00000003   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "initAdcInputs()">`:
+   \   00000000   0x69 0x6E          DC8 "initAdcInputs()"
+   \              0x69 0x74    
+   \              0x41 0x64    
+   \              0x63 0x49    
+   \              0x6E 0x70    
+   \              0x75 0x74    
+   \              0x73 0x28    
+   \              0x29 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "adcDebug">`:
+   \   00000000   0x61 0x64          DC8 "adcDebug"
+   \              0x63 0x44    
+   \              0x65 0x62    
+   \              0x75 0x67    
+   \              0x00         
+   \   00000009   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \   00000000   0x61 0x64          DC8 "adc"
+   \              0x63 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "fadc">`:
+   \   00000000   0x66 0x61          DC8 "fadc"
+   \              0x64 0x63    
+   \              0x00         
+   \   00000005   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \   00000000   0x41 0x44          DC8 "ADC"
+   \              0x43 0x00    
+    575          
+    576          #endif /* HAL_USE_ADC */
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      16   AdcDevice::AdcDevice(ADCConversionGroup *)
+        16   -> memset
+      16   AdcDevice::addChannel(adc_channel_e)
+        16   -> initAdcHwChannel(adc_channel_e)
+       0   AdcDevice::getAdcHardwareIndexByInternalIndex(int)
+       0   AdcDevice::getAdcValueByHwChannel(int)
+       0   AdcDevice::getAdcValueByIndex(int)
+      16   AdcDevice::init()
+        16   -> AdcDevice::size()
+       0   AdcDevice::isHwUsed(adc_channel_e)
+       0   AdcDevice::size()
+       8   AdcDevice::subobject AdcDevice(ADCConversionGroup *)
+         8   -> AdcDevice::AdcDevice(ADCConversionGroup *)
+       8   __sti__routine()
+         8   -> AdcDevice::AdcDevice(ADCConversionGroup *)
+         8   -> Logging::Logging(char const *, char *, int)
+      24   adc_callback_slow(ADCDriver *, uint16_t *, size_t)
+        24   -> AdcDevice::size()
+        24   -> firmwareError
+        24   -> getAvgAdcValue(int, uint16_t *, int, int)
+        24   -> getRemainingStack
+      16   addChannel(char const *, adc_channel_e, adc_channel_mode_e)
+        16   -> firmwareError
+        16   -> getPinNameByAdcChannel(adc_channel_e, char *)
+       8   configureInputs()
+         8   -> addChannel(char const *, adc_channel_e, adc_channel_mode_e)
+         8   -> memset
+       0   getAdcChannel(brain_pin_e)
+       8   getAdcChannelPin(adc_channel_e)
+         8   -> firmwareError
+       8   getAdcChannelPort(adc_channel_e)
+         8   -> firmwareError
+       8   getAdcMode(adc_channel_e)
+         8   -> AdcDevice::isHwUsed(adc_channel_e)
+      12   getAvgAdcValue(int, uint16_t *, int, int)
+      16   getInternalAdcValue(char const *, adc_channel_e)
+        16   -> AdcDevice::getAdcValueByHwChannel(int)
+        16   -> warning
+      16   initAdcHwChannel(adc_channel_e)
+        16   -> getAdcChannelPin(adc_channel_e)
+        16   -> getAdcChannelPort(adc_channel_e)
+        16   -> initAdcPin(ioportid_t, int, char const *)
+      16   initAdcInputs(bool)
+        16   -> AdcDevice::addChannel(adc_channel_e)
+        16   -> AdcDevice::init()
+        16   -> adcStart
+        16   -> addConsoleAction
+        16   -> addConsoleActionI
+        16   -> configureInputs()
+        16   -> printMsg
+        16   -> printStatus()
+        16   -> pwmStart
+      16   initAdcPin(ioportid_t, int, char const *)
+        16   -> mySetPadMode(char const *, ioportid_t, uint32_t, iomode_t)
+        16   -> print
+      16   memset
+        16   -> __aeabi_memset
+       8   pokeAdcInputs()
+         8   -> printFullAdcReport()
+      16   printAdcValue(adc_channel_e)
+        16   -> __aeabi_f2d
+        16   -> getInternalAdcValue(char const *, adc_channel_e)
+        16   -> scheduleMsg
+      40   printFullAdcReport()
+        40   -> AdcDevice::getAdcHardwareIndexByInternalIndex(int)
+        40   -> AdcDevice::getAdcValueByIndex(int)
+        40   -> AdcDevice::size()
+        40   -> __aeabi_f2d
+        40   -> appendMsgPostfix
+        40   -> appendMsgPrefix
+        40   -> appendPrintf
+        40   -> getAdcChannelPin(adc_channel_e)
+        40   -> getAdcChannelPort(adc_channel_e)
+        40   -> portname(GPIO_TypeDef *)
+        40   -> scheduleLogging
+        40   -> scheduleMsg
+       8   printStatus()
+         8   -> scheduleMsg
+       8   pwmpcb_fast(PWMDriver *)
+         8   -> adcStartConversionI
+         8   -> dbg_check_lock_from_isr
+         8   -> dbg_check_unlock_from_isr
+         8   -> firmwareError
+         8   -> getRemainingStack
+       8   pwmpcb_slow(PWMDriver *)
+         8   -> adcStartConversionI
+         8   -> dbg_check_lock_from_isr
+         8   -> dbg_check_unlock_from_isr
+         8   -> firmwareError
+         8   -> getRemainingStack
+       8   setAdcDebugReporting(int)
+         8   -> printStatus()
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      16  ?<Constant " ADC%d 12bit=%d">
+      12  ?<Constant " ch%d %s%d">
+       8  ?<Constant " v=%f">
+       4  ?<Constant "AC">
+      28  ?<Constant "ADC is off [%s] index=%d">
+      52  ?<Constant "ADC mapping error: in...">
+       4  ?<Constant "ADC">
+      40  ?<Constant "ADC: should not be as...">
+       4  ?<Constant "AFR">
+       4  ?<Constant "CLT">
+       4  ?<Constant "IAT">
+      12  ?<Constant "INACTIVE">
+       4  ?<Constant "MAF">
+       4  ?<Constant "MAP">
+       4  ?<Constant "TPS">
+      24  ?<Constant "Unknown hw channel %d">
+       8  ?<Constant "VBatt">
+       8  ?<Constant "Vref">
+      12  ?<Constant "adc %s\r\n">
+      12  ?<Constant "adc input">
+      20  ?<Constant "adc voltage : %f">
+       4  ?<Constant "adc">
+      12  ?<Constant "adcDebug">
+      12  ?<Constant "adcDebug=%d">
+       8  ?<Constant "fadc">
+      16  ?<Constant "fast %d slow %d">
+       8  ?<Constant "fast">
+       8  ?<Constant "fuel">
+       4  ?<Constant "hip">
+       4  ?<Constant "hw">
+      16  ?<Constant "initAdcInputs()">
+      12  ?<Constant "lowstck#9c">
+      12  ?<Constant "lwStAdcFast">
+      12  ?<Constant "lwStAdcSlow">
+       4  ?<Constant "pPS">
+       8  ?<Constant "print">
+       8  ?<Constant "slow">
+       4  ??DataTable14
+       4  ??DataTable14_1
+       4  ??DataTable17
+       4  ??DataTable17_1
+       4  ??DataTable17_10
+       4  ??DataTable17_11
+       4  ??DataTable17_12
+       4  ??DataTable17_13
+       4  ??DataTable17_14
+       4  ??DataTable17_15
+       4  ??DataTable17_16
+       4  ??DataTable17_17
+       4  ??DataTable17_18
+       4  ??DataTable17_19
+       4  ??DataTable17_2
+       4  ??DataTable17_20
+       4  ??DataTable17_21
+       4  ??DataTable17_22
+       4  ??DataTable17_23
+       4  ??DataTable17_24
+       4  ??DataTable17_25
+       4  ??DataTable17_26
+       4  ??DataTable17_27
+       4  ??DataTable17_28
+       4  ??DataTable17_29
+       4  ??DataTable17_3
+       4  ??DataTable17_30
+       4  ??DataTable17_31
+       4  ??DataTable17_32
+       4  ??DataTable17_33
+       4  ??DataTable17_34
+       4  ??DataTable17_35
+       4  ??DataTable17_36
+       4  ??DataTable17_37
+       4  ??DataTable17_38
+       4  ??DataTable17_39
+       4  ??DataTable17_4
+       4  ??DataTable17_40
+       4  ??DataTable17_41
+       4  ??DataTable17_42
+       4  ??DataTable17_43
+       4  ??DataTable17_44
+       4  ??DataTable17_45
+       4  ??DataTable17_46
+       4  ??DataTable17_47
+       4  ??DataTable17_48
+       4  ??DataTable17_49
+       4  ??DataTable17_5
+       4  ??DataTable17_50
+       4  ??DataTable17_51
+       4  ??DataTable17_52
+       4  ??DataTable17_53
+       4  ??DataTable17_54
+       4  ??DataTable17_55
+       4  ??DataTable17_56
+       4  ??DataTable17_57
+       4  ??DataTable17_58
+       4  ??DataTable17_59
+       4  ??DataTable17_6
+       4  ??DataTable17_60
+       4  ??DataTable17_61
+       4  ??DataTable17_62
+       4  ??DataTable17_7
+       4  ??DataTable17_8
+       4  ??DataTable17_9
+       4  ??DataTable4
+      64  AdcDevice::AdcDevice(ADCConversionGroup *)
+     128  AdcDevice::addChannel(adc_channel_e)
+      10  AdcDevice::getAdcHardwareIndexByInternalIndex(int)
+      14  AdcDevice::getAdcValueByHwChannel(int)
+      10  AdcDevice::getAdcValueByIndex(int)
+      42  AdcDevice::init()
+      36  AdcDevice::isHwUsed(adc_channel_e)
+       6  AdcDevice::size()
+      12  AdcDevice::subobject AdcDevice(ADCConversionGroup *)
+     500  LOGGING_BUFFER
+      46  __sti__routine()
+       4  adcCallbackCounter_slow
+       4  adcDebugReporting
+      64  adcHwChannelEnabled
+      64  adcHwChannelUsage
+      90  adc_callback_slow(ADCDriver *, uint16_t *, size_t)
+      40  adcgrpcfgSlow
+      40  adcgrpcfg_fast
+      54  addChannel(char const *, adc_channel_e, adc_channel_mode_e)
+     216  configureInputs()
+      12  errorMsgBuff
+     240  fastAdc
+     140  getAdcChannel(brain_pin_e)
+     136  getAdcChannelPin(adc_channel_e)
+     166  getAdcChannelPort(adc_channel_e)
+      50  getAdcMode(adc_channel_e)
+      38  getAvgAdcValue(int, uint16_t *, int, int)
+     104  getInternalAdcValue(char const *, adc_channel_e)
+      32  initAdcHwChannel(adc_channel_e)
+     162  initAdcInputs(bool)
+      34  initAdcPin(ioportid_t, int, char const *)
+      60  logger
+      22  memset
+      16  pokeAdcInputs()
+      76  printAdcValue(adc_channel_e)
+     172  printFullAdcReport()
+      16  printStatus()
+      52  pwmcfg_fast
+      52  pwmcfg_slow
+     138  pwmpcb_fast(PWMDriver *)
+     138  pwmpcb_slow(PWMDriver *)
+      14  setAdcDebugReporting(int)
+     240  slowAdc
+       4  -- Other
+
+ 
+ 1 188 bytes in section .bss
+   184 bytes in section .data
+     4 bytes in section .init_array
+   432 bytes in section .rodata
+ 2 446 bytes in section .text
+ 
+ 2 428 bytes of CODE  memory (+ 22 bytes shared)
+   432 bytes of CONST memory
+ 1 372 bytes of DATA  memory
+
+Errors: none
+Warnings: 1

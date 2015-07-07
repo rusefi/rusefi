@@ -1,0 +1,1716 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"fsio_core.cpp"
+  16              		.section	.text._ZN17LENameOrdinalPairC2E11le_action_ePKc,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_ZN17LENameOrdinalPairC2E11le_action_ePKc
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_ZN17LENameOrdinalPairC2E11le_action_ePKc, %function
+  23              	_ZN17LENameOrdinalPairC2E11le_action_ePKc:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 30B4     		push	{r4, r5}
+  28 0002 40F20003 		movw	r3, #:lower16:.LANCHOR0
+  29 0006 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+  30 000a 4160     		str	r1, [r0, #4]
+  31 000c 1D68     		ldr	r5, [r3]
+  32 000e 8260     		str	r2, [r0, #8]
+  33 0010 0560     		str	r5, [r0]
+  34 0012 1860     		str	r0, [r3]
+  35 0014 30BC     		pop	{r4, r5}
+  36 0016 7047     		bx	lr
+  37              		.size	_ZN17LENameOrdinalPairC2E11le_action_ePKc, .-_ZN17LENameOrdinalPairC2E11le_action_ePKc
+  38              		.global	_ZN17LENameOrdinalPairC1E11le_action_ePKc
+  39              		.thumb_set _ZN17LENameOrdinalPairC1E11le_action_ePKc,_ZN17LENameOrdinalPairC2E11le_action_ePKc
+  40 0018 AFF30080 		.section	.text._ZN9LEElementC2Ev,"ax",%progbits
+  40      AFF30080 
+  41              		.align	2
+  42              		.p2align 4,,15
+  43              		.global	_ZN9LEElementC2Ev
+  44              		.thumb
+  45              		.thumb_func
+  46              		.type	_ZN9LEElementC2Ev, %function
+  47              	_ZN9LEElementC2Ev:
+  48              		@ args = 0, pretend = 0, frame = 0
+  49              		@ frame_needed = 0, uses_anonymous_args = 0
+  50              		@ link register save eliminated.
+  51 0000 0021     		movs	r1, #0
+  52 0002 0022     		movs	r2, #0
+  53 0004 C7F6C071 		movt	r1, 32704
+  54 0008 4160     		str	r1, [r0, #4]	@ float
+  55 000a 0260     		str	r2, [r0]
+  56 000c C260     		str	r2, [r0, #12]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 2
+
+
+  57 000e 8260     		str	r2, [r0, #8]
+  58 0010 7047     		bx	lr
+  59              		.size	_ZN9LEElementC2Ev, .-_ZN9LEElementC2Ev
+  60              		.global	_ZN9LEElementC1Ev
+  61              		.thumb_set _ZN9LEElementC1Ev,_ZN9LEElementC2Ev
+  62 0012 00BFAFF3 		.section	.text._ZN9LEElement4initE11le_action_e,"ax",%progbits
+  62      0080AFF3 
+  62      0080AFF3 
+  62      0080
+  63              		.align	2
+  64              		.p2align 4,,15
+  65              		.global	_ZN9LEElement4initE11le_action_e
+  66              		.thumb
+  67              		.thumb_func
+  68              		.type	_ZN9LEElement4initE11le_action_e, %function
+  69              	_ZN9LEElement4initE11le_action_e:
+  70              		@ args = 0, pretend = 0, frame = 0
+  71              		@ frame_needed = 0, uses_anonymous_args = 0
+  72              		@ link register save eliminated.
+  73 0000 0160     		str	r1, [r0]
+  74 0002 7047     		bx	lr
+  75              		.size	_ZN9LEElement4initE11le_action_e, .-_ZN9LEElement4initE11le_action_e
+  76 0004 AFF30080 		.section	.text._ZN9LEElement4initE11le_action_ef,"ax",%progbits
+  76      AFF30080 
+  76      AFF30080 
+  77              		.align	2
+  78              		.p2align 4,,15
+  79              		.global	_ZN9LEElement4initE11le_action_ef
+  80              		.thumb
+  81              		.thumb_func
+  82              		.type	_ZN9LEElement4initE11le_action_ef, %function
+  83              	_ZN9LEElement4initE11le_action_ef:
+  84              		@ args = 0, pretend = 0, frame = 0
+  85              		@ frame_needed = 0, uses_anonymous_args = 0
+  86              		@ link register save eliminated.
+  87 0000 0160     		str	r1, [r0]
+  88 0002 4260     		str	r2, [r0, #4]	@ float
+  89 0004 7047     		bx	lr
+  90              		.size	_ZN9LEElement4initE11le_action_ef, .-_ZN9LEElement4initE11le_action_ef
+  91 0006 00BFAFF3 		.section	.text._ZN12LECalculatorC2Ev,"ax",%progbits
+  91      0080AFF3 
+  91      0080
+  92              		.align	2
+  93              		.p2align 4,,15
+  94              		.global	_ZN12LECalculatorC2Ev
+  95              		.thumb
+  96              		.thumb_func
+  97              		.type	_ZN12LECalculatorC2Ev, %function
+  98              	_ZN12LECalculatorC2Ev:
+  99              		@ args = 0, pretend = 0, frame = 0
+ 100              		@ frame_needed = 0, uses_anonymous_args = 0
+ 101 0000 38B5     		push	{r3, r4, r5, lr}
+ 102 0002 0025     		movs	r5, #0
+ 103 0004 0446     		mov	r4, r0
+ 104 0006 40F8045F 		str	r5, [r0, #4]!
+ 105 000a 2946     		mov	r1, r5
+ 106 000c 8022     		movs	r2, #128
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 3
+
+
+ 107 000e 0430     		adds	r0, r0, #4
+ 108 0010 FFF7FEFF 		bl	memset
+ 109 0014 2560     		str	r5, [r4]
+ 110 0016 6560     		str	r5, [r4, #4]
+ 111 0018 2046     		mov	r0, r4
+ 112 001a 38BD     		pop	{r3, r4, r5, pc}
+ 113              		.size	_ZN12LECalculatorC2Ev, .-_ZN12LECalculatorC2Ev
+ 114              		.global	_ZN12LECalculatorC1Ev
+ 115              		.thumb_set _ZN12LECalculatorC1Ev,_ZN12LECalculatorC2Ev
+ 116 001c AFF30080 		.section	.text._ZN12LECalculator5resetEv,"ax",%progbits
+ 117              		.align	2
+ 118              		.p2align 4,,15
+ 119              		.global	_ZN12LECalculator5resetEv
+ 120              		.thumb
+ 121              		.thumb_func
+ 122              		.type	_ZN12LECalculator5resetEv, %function
+ 123              	_ZN12LECalculator5resetEv:
+ 124              		@ args = 0, pretend = 0, frame = 0
+ 125              		@ frame_needed = 0, uses_anonymous_args = 0
+ 126              		@ link register save eliminated.
+ 127 0000 0023     		movs	r3, #0
+ 128 0002 0360     		str	r3, [r0]
+ 129 0004 4360     		str	r3, [r0, #4]
+ 130 0006 7047     		bx	lr
+ 131              		.size	_ZN12LECalculator5resetEv, .-_ZN12LECalculator5resetEv
+ 132 0008 AFF30080 		.section	.text._ZN12LECalculator5resetEP9LEElement,"ax",%progbits
+ 132      AFF30080 
+ 133              		.align	2
+ 134              		.p2align 4,,15
+ 135              		.global	_ZN12LECalculator5resetEP9LEElement
+ 136              		.thumb
+ 137              		.thumb_func
+ 138              		.type	_ZN12LECalculator5resetEP9LEElement, %function
+ 139              	_ZN12LECalculator5resetEP9LEElement:
+ 140              		@ args = 0, pretend = 0, frame = 0
+ 141              		@ frame_needed = 0, uses_anonymous_args = 0
+ 142              		@ link register save eliminated.
+ 143 0000 0023     		movs	r3, #0
+ 144 0002 80E80A00 		stmia	r0, {r1, r3}
+ 145 0006 7047     		bx	lr
+ 146              		.size	_ZN12LECalculator5resetEP9LEElement, .-_ZN12LECalculator5resetEP9LEElement
+ 147 0008 AFF30080 		.section	.text._ZN12LECalculator3addEP9LEElement,"ax",%progbits
+ 147      AFF30080 
+ 148              		.align	2
+ 149              		.p2align 4,,15
+ 150              		.global	_ZN12LECalculator3addEP9LEElement
+ 151              		.thumb
+ 152              		.thumb_func
+ 153              		.type	_ZN12LECalculator3addEP9LEElement, %function
+ 154              	_ZN12LECalculator3addEP9LEElement:
+ 155              		@ args = 0, pretend = 0, frame = 0
+ 156              		@ frame_needed = 0, uses_anonymous_args = 0
+ 157              		@ link register save eliminated.
+ 158 0000 0268     		ldr	r2, [r0]
+ 159 0002 0AB9     		cbnz	r2, .L12
+ 160 0004 05E0     		b	.L16
+ 161              	.L15:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 4
+
+
+ 162 0006 1A46     		mov	r2, r3
+ 163              	.L12:
+ 164 0008 D368     		ldr	r3, [r2, #12]
+ 165 000a 002B     		cmp	r3, #0
+ 166 000c FBD1     		bne	.L15
+ 167 000e D160     		str	r1, [r2, #12]
+ 168 0010 7047     		bx	lr
+ 169              	.L16:
+ 170 0012 0160     		str	r1, [r0]
+ 171 0014 7047     		bx	lr
+ 172              		.size	_ZN12LECalculator3addEP9LEElement, .-_ZN12LECalculator3addEP9LEElement
+ 173 0016 00BFAFF3 		.section	.text._ZN12LECalculator3popE11le_action_e,"ax",%progbits
+ 173      0080AFF3 
+ 173      0080
+ 174              		.align	2
+ 175              		.p2align 4,,15
+ 176              		.global	_ZN12LECalculator3popE11le_action_e
+ 177              		.thumb
+ 178              		.thumb_func
+ 179              		.type	_ZN12LECalculator3popE11le_action_e, %function
+ 180              	_ZN12LECalculator3popE11le_action_e:
+ 181              		@ args = 0, pretend = 0, frame = 0
+ 182              		@ frame_needed = 0, uses_anonymous_args = 0
+ 183 0000 08B5     		push	{r3, lr}
+ 184 0002 0346     		mov	r3, r0
+ 185 0004 4068     		ldr	r0, [r0, #4]
+ 186 0006 0A46     		mov	r2, r1
+ 187 0008 28B1     		cbz	r0, .L20
+ 188 000a 421E     		subs	r2, r0, #1
+ 189 000c 03EB8201 		add	r1, r3, r2, lsl #2
+ 190 0010 8868     		ldr	r0, [r1, #8]	@ float
+ 191 0012 5A60     		str	r2, [r3, #4]
+ 192 0014 08BD     		pop	{r3, pc}
+ 193              	.L20:
+ 194 0016 40F20001 		movw	r1, #:lower16:.LC0
+ 195 001a C0F20001 		movt	r1, #:upper16:.LC0
+ 196 001e 40F25E20 		movw	r0, #606
+ 197 0022 FFF7FEFF 		bl	warning
+ 198 0026 0020     		movs	r0, #0
+ 199 0028 C7F6C070 		movt	r0, 32704
+ 200 002c 08BD     		pop	{r3, pc}
+ 201              		.size	_ZN12LECalculator3popE11le_action_e, .-_ZN12LECalculator3popE11le_action_e
+ 202 002e 00BF     		.section	.text._ZN12LECalculator5doJobEP6EngineP9LEElement,"ax",%progbits
+ 203              		.align	2
+ 204              		.p2align 4,,15
+ 205              		.global	_ZN12LECalculator5doJobEP6EngineP9LEElement
+ 206              		.thumb
+ 207              		.thumb_func
+ 208              		.type	_ZN12LECalculator5doJobEP6EngineP9LEElement, %function
+ 209              	_ZN12LECalculator5doJobEP6EngineP9LEElement:
+ 210              		@ args = 0, pretend = 0, frame = 0
+ 211              		@ frame_needed = 0, uses_anonymous_args = 0
+ 212 0000 70B5     		push	{r4, r5, r6, lr}
+ 213 0002 40F20003 		movw	r3, #:lower16:rlist
+ 214 0006 C0F20003 		movt	r3, #:upper16:rlist
+ 215 000a 2DED028B 		fstmfdd	sp!, {d8}
+ 216 000e 0446     		mov	r4, r0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 5
+
+
+ 217 0010 9869     		ldr	r0, [r3, #24]
+ 218 0012 0E46     		mov	r6, r1
+ 219 0014 1546     		mov	r5, r2
+ 220 0016 FFF7FEFF 		bl	getRemainingStack
+ 221 001a 4028     		cmp	r0, #64
+ 222 001c 76DD     		ble	.L74
+ 223 001e 2A68     		ldr	r2, [r5]
+ 224 0020 702A     		cmp	r2, #112
+ 225 0022 00F21F82 		bhi	.L24
+ 226 0026 DFE812F0 		tbh	[pc, r2, lsl #1]
+ 227              	.L26:
+ 228 002a 8A01     		.2byte	(.L25-.L26)/2
+ 229 002c 8401     		.2byte	(.L27-.L26)/2
+ 230 002e 6801     		.2byte	(.L28-.L26)/2
+ 231 0030 4C01     		.2byte	(.L29-.L26)/2
+ 232 0032 3001     		.2byte	(.L30-.L26)/2
+ 233 0034 1401     		.2byte	(.L31-.L26)/2
+ 234 0036 F600     		.2byte	(.L32-.L26)/2
+ 235 0038 D300     		.2byte	(.L33-.L26)/2
+ 236 003a D001     		.2byte	(.L34-.L26)/2
+ 237 003c BC01     		.2byte	(.L35-.L26)/2
+ 238 003e A801     		.2byte	(.L36-.L26)/2
+ 239 0040 9401     		.2byte	(.L37-.L26)/2
+ 240 0042 F801     		.2byte	(.L38-.L26)/2
+ 241 0044 E601     		.2byte	(.L39-.L26)/2
+ 242 0046 0B02     		.2byte	(.L40-.L26)/2
+ 243 0048 AD00     		.2byte	(.L41-.L26)/2
+ 244 004a 1D02     		.2byte	(.L24-.L26)/2
+ 245 004c 1D02     		.2byte	(.L24-.L26)/2
+ 246 004e 1D02     		.2byte	(.L24-.L26)/2
+ 247 0050 1D02     		.2byte	(.L24-.L26)/2
+ 248 0052 1D02     		.2byte	(.L24-.L26)/2
+ 249 0054 1D02     		.2byte	(.L24-.L26)/2
+ 250 0056 1D02     		.2byte	(.L24-.L26)/2
+ 251 0058 1D02     		.2byte	(.L24-.L26)/2
+ 252 005a 1D02     		.2byte	(.L24-.L26)/2
+ 253 005c 1D02     		.2byte	(.L24-.L26)/2
+ 254 005e 1D02     		.2byte	(.L24-.L26)/2
+ 255 0060 1D02     		.2byte	(.L24-.L26)/2
+ 256 0062 1D02     		.2byte	(.L24-.L26)/2
+ 257 0064 1D02     		.2byte	(.L24-.L26)/2
+ 258 0066 1D02     		.2byte	(.L24-.L26)/2
+ 259 0068 1D02     		.2byte	(.L24-.L26)/2
+ 260 006a 1D02     		.2byte	(.L24-.L26)/2
+ 261 006c 1D02     		.2byte	(.L24-.L26)/2
+ 262 006e 1D02     		.2byte	(.L24-.L26)/2
+ 263 0070 1D02     		.2byte	(.L24-.L26)/2
+ 264 0072 1D02     		.2byte	(.L24-.L26)/2
+ 265 0074 1D02     		.2byte	(.L24-.L26)/2
+ 266 0076 1D02     		.2byte	(.L24-.L26)/2
+ 267 0078 1D02     		.2byte	(.L24-.L26)/2
+ 268 007a 1D02     		.2byte	(.L24-.L26)/2
+ 269 007c 1D02     		.2byte	(.L24-.L26)/2
+ 270 007e 1D02     		.2byte	(.L24-.L26)/2
+ 271 0080 1D02     		.2byte	(.L24-.L26)/2
+ 272 0082 1D02     		.2byte	(.L24-.L26)/2
+ 273 0084 1D02     		.2byte	(.L24-.L26)/2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 6
+
+
+ 274 0086 1D02     		.2byte	(.L24-.L26)/2
+ 275 0088 1D02     		.2byte	(.L24-.L26)/2
+ 276 008a 1D02     		.2byte	(.L24-.L26)/2
+ 277 008c 1D02     		.2byte	(.L24-.L26)/2
+ 278 008e 1D02     		.2byte	(.L24-.L26)/2
+ 279 0090 1D02     		.2byte	(.L24-.L26)/2
+ 280 0092 1D02     		.2byte	(.L24-.L26)/2
+ 281 0094 1D02     		.2byte	(.L24-.L26)/2
+ 282 0096 1D02     		.2byte	(.L24-.L26)/2
+ 283 0098 1D02     		.2byte	(.L24-.L26)/2
+ 284 009a 1D02     		.2byte	(.L24-.L26)/2
+ 285 009c 1D02     		.2byte	(.L24-.L26)/2
+ 286 009e 1D02     		.2byte	(.L24-.L26)/2
+ 287 00a0 1D02     		.2byte	(.L24-.L26)/2
+ 288 00a2 1D02     		.2byte	(.L24-.L26)/2
+ 289 00a4 1D02     		.2byte	(.L24-.L26)/2
+ 290 00a6 1D02     		.2byte	(.L24-.L26)/2
+ 291 00a8 1D02     		.2byte	(.L24-.L26)/2
+ 292 00aa 1D02     		.2byte	(.L24-.L26)/2
+ 293 00ac 1D02     		.2byte	(.L24-.L26)/2
+ 294 00ae 1D02     		.2byte	(.L24-.L26)/2
+ 295 00b0 1D02     		.2byte	(.L24-.L26)/2
+ 296 00b2 1D02     		.2byte	(.L24-.L26)/2
+ 297 00b4 1D02     		.2byte	(.L24-.L26)/2
+ 298 00b6 1D02     		.2byte	(.L24-.L26)/2
+ 299 00b8 1D02     		.2byte	(.L24-.L26)/2
+ 300 00ba 1D02     		.2byte	(.L24-.L26)/2
+ 301 00bc 1D02     		.2byte	(.L24-.L26)/2
+ 302 00be 1D02     		.2byte	(.L24-.L26)/2
+ 303 00c0 1D02     		.2byte	(.L24-.L26)/2
+ 304 00c2 1D02     		.2byte	(.L24-.L26)/2
+ 305 00c4 1D02     		.2byte	(.L24-.L26)/2
+ 306 00c6 1D02     		.2byte	(.L24-.L26)/2
+ 307 00c8 1D02     		.2byte	(.L24-.L26)/2
+ 308 00ca 1D02     		.2byte	(.L24-.L26)/2
+ 309 00cc 1D02     		.2byte	(.L24-.L26)/2
+ 310 00ce 1D02     		.2byte	(.L24-.L26)/2
+ 311 00d0 1D02     		.2byte	(.L24-.L26)/2
+ 312 00d2 1D02     		.2byte	(.L24-.L26)/2
+ 313 00d4 1D02     		.2byte	(.L24-.L26)/2
+ 314 00d6 1D02     		.2byte	(.L24-.L26)/2
+ 315 00d8 1D02     		.2byte	(.L24-.L26)/2
+ 316 00da 1D02     		.2byte	(.L24-.L26)/2
+ 317 00dc 1D02     		.2byte	(.L24-.L26)/2
+ 318 00de 1D02     		.2byte	(.L24-.L26)/2
+ 319 00e0 1D02     		.2byte	(.L24-.L26)/2
+ 320 00e2 1D02     		.2byte	(.L24-.L26)/2
+ 321 00e4 1D02     		.2byte	(.L24-.L26)/2
+ 322 00e6 1D02     		.2byte	(.L24-.L26)/2
+ 323 00e8 1D02     		.2byte	(.L24-.L26)/2
+ 324 00ea 1D02     		.2byte	(.L24-.L26)/2
+ 325 00ec 1D02     		.2byte	(.L24-.L26)/2
+ 326 00ee 1D02     		.2byte	(.L24-.L26)/2
+ 327 00f0 1D02     		.2byte	(.L24-.L26)/2
+ 328 00f2 1D02     		.2byte	(.L24-.L26)/2
+ 329 00f4 1D02     		.2byte	(.L24-.L26)/2
+ 330 00f6 1D02     		.2byte	(.L24-.L26)/2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 7
+
+
+ 331 00f8 1D02     		.2byte	(.L24-.L26)/2
+ 332 00fa 1D02     		.2byte	(.L24-.L26)/2
+ 333 00fc 1D02     		.2byte	(.L24-.L26)/2
+ 334 00fe 1D02     		.2byte	(.L24-.L26)/2
+ 335 0100 1D02     		.2byte	(.L24-.L26)/2
+ 336 0102 1D02     		.2byte	(.L24-.L26)/2
+ 337 0104 1D02     		.2byte	(.L24-.L26)/2
+ 338 0106 1D02     		.2byte	(.L24-.L26)/2
+ 339 0108 8E00     		.2byte	(.L42-.L26)/2
+ 340 010a 7B00     		.2byte	(.L43-.L26)/2
+ 341              	.L74:
+ 342 010c 40F20000 		movw	r0, #:lower16:.LC1
+ 343 0110 C0F20000 		movt	r0, #:upper16:.LC1
+ 344 0114 FFF7FEFF 		bl	firmwareError
+ 345 0118 0020     		movs	r0, #0
+ 346              	.L23:
+ 347 011a BDEC028B 		fldmfdd	sp!, {d8}
+ 348 011e 70BD     		pop	{r4, r5, r6, pc}
+ 349              	.L43:
+ 350 0120 6368     		ldr	r3, [r4, #4]
+ 351 0122 D6F86C22 		ldr	r2, [r6, #620]
+ 352 0126 1F2B     		cmp	r3, #31
+ 353 0128 48DC     		bgt	.L46
+ 354 012a 07EE102A 		fmsr	s14, r2	@ int
+ 355 012e F8EEC77A 		fsitos	s15, s14
+ 356              	.L70:
+ 357 0132 BDEC028B 		fldmfdd	sp!, {d8}
+ 358 0136 5A1C     		adds	r2, r3, #1
+ 359 0138 04EB8303 		add	r3, r4, r3, lsl #2
+ 360 013c 6260     		str	r2, [r4, #4]
+ 361 013e 0020     		movs	r0, #0
+ 362 0140 C3ED027A 		fsts	s15, [r3, #8]
+ 363 0144 70BD     		pop	{r4, r5, r6, pc}
+ 364              	.L42:
+ 365 0146 2046     		mov	r0, r4
+ 366 0148 6F21     		movs	r1, #111
+ 367 014a FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 368 014e 07EE100A 		fmsr	s14, r0
+ 369 0152 BDEEC77A 		ftosizs	s14, s14
+ 370 0156 17EE100A 		fmrs	r0, s14	@ int
+ 371 015a 0F28     		cmp	r0, #15
+ 372 015c 00F29181 		bhi	.L57
+ 373 0160 726A     		ldr	r2, [r6, #36]
+ 374 0162 6368     		ldr	r3, [r4, #4]
+ 375 0164 00F5A070 		add	r0, r0, #320
+ 376 0168 02EB8000 		add	r0, r2, r0, lsl #2
+ 377 016c 1F2B     		cmp	r3, #31
+ 378 016e 4268     		ldr	r2, [r0, #4]	@ float
+ 379 0170 24DC     		bgt	.L46
+ 380              	.L72:
+ 381 0172 BDEC028B 		fldmfdd	sp!, {d8}
+ 382 0176 591C     		adds	r1, r3, #1
+ 383 0178 04EB8303 		add	r3, r4, r3, lsl #2
+ 384 017c 6160     		str	r1, [r4, #4]
+ 385 017e 0020     		movs	r0, #0
+ 386 0180 9A60     		str	r2, [r3, #8]	@ float
+ 387 0182 70BD     		pop	{r4, r5, r6, pc}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 8
+
+
+ 388              	.L41:
+ 389 0184 0F21     		movs	r1, #15
+ 390 0186 2046     		mov	r0, r4
+ 391 0188 FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 392 018c 0F21     		movs	r1, #15
+ 393 018e 0646     		mov	r6, r0	@ float
+ 394 0190 2046     		mov	r0, r4
+ 395 0192 FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 396 0196 0F21     		movs	r1, #15
+ 397 0198 0546     		mov	r5, r0	@ float
+ 398 019a 2046     		mov	r0, r4
+ 399 019c FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 400 01a0 07EE900A 		fmsr	s15, r0
+ 401 01a4 6368     		ldr	r3, [r4, #4]
+ 402 01a6 F5EE407A 		fcmpzs	s15
+ 403 01aa F1EE10FA 		fmstat
+ 404 01ae 14BF     		ite	ne
+ 405 01b0 07EE905A 		fmsrne	s15, r5
+ 406 01b4 07EE906A 		fmsreq	s15, r6
+ 407 01b8 1F2B     		cmp	r3, #31
+ 408 01ba BADD     		ble	.L70
+ 409              	.L46:
+ 410 01bc 40F20000 		movw	r0, #:lower16:.LC2
+ 411 01c0 C0F20000 		movt	r0, #:upper16:.LC2
+ 412 01c4 FFF7FEFF 		bl	firmwareError
+ 413 01c8 BDEC028B 		fldmfdd	sp!, {d8}
+ 414 01cc 0020     		movs	r0, #0
+ 415 01ce 70BD     		pop	{r4, r5, r6, pc}
+ 416              	.L33:
+ 417 01d0 0721     		movs	r1, #7
+ 418 01d2 2046     		mov	r0, r4
+ 419 01d4 FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 420 01d8 0721     		movs	r1, #7
+ 421 01da 08EE100A 		fmsr	s16, r0
+ 422 01de 2046     		mov	r0, r4
+ 423 01e0 FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 424 01e4 B5EE408A 		fcmpzs	s16
+ 425 01e8 F1EE10FA 		fmstat
+ 426 01ec 07EE900A 		fmsr	s15, r0
+ 427 01f0 18BF     		it	ne
+ 428 01f2 F7EE007A 		fconstsne	s15, #112
+ 429 01f6 0AD1     		bne	.L47
+ 430 01f8 F5EE407A 		fcmpzs	s15
+ 431 01fc F1EE10FA 		fmstat
+ 432 0200 0CBF     		ite	eq
+ 433 0202 0022     		moveq	r2, #0
+ 434 0204 0122     		movne	r2, #1
+ 435 0206 07EE902A 		fmsr	s15, r2	@ int
+ 436 020a F8EE677A 		fuitos	s15, s15
+ 437              	.L47:
+ 438 020e 6368     		ldr	r3, [r4, #4]
+ 439 0210 1F2B     		cmp	r3, #31
+ 440 0212 8EDD     		ble	.L70
+ 441 0214 D2E7     		b	.L46
+ 442              	.L32:
+ 443 0216 0621     		movs	r1, #6
+ 444 0218 2046     		mov	r0, r4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 9
+
+
+ 445 021a FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 446 021e 0621     		movs	r1, #6
+ 447 0220 08EE100A 		fmsr	s16, r0
+ 448 0224 2046     		mov	r0, r4
+ 449 0226 FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 450 022a B5EE408A 		fcmpzs	s16
+ 451 022e F1EE10FA 		fmstat
+ 452 0232 07EE900A 		fmsr	s15, r0
+ 453 0236 00F03281 		beq	.L58
+ 454 023a F5EE407A 		fcmpzs	s15
+ 455 023e 9FED997A 		flds	s14, .L75
+ 456 0242 F1EE10FA 		fmstat
+ 457 0246 F7EE007A 		fconsts	s15, #112
+ 458 024a 08BF     		it	eq
+ 459 024c F0EE477A 		fcpyseq	s15, s14
+ 460 0250 DDE7     		b	.L47
+ 461              	.L31:
+ 462 0252 0521     		movs	r1, #5
+ 463 0254 2046     		mov	r0, r4
+ 464 0256 FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 465 025a 0521     		movs	r1, #5
+ 466 025c 08EE100A 		fmsr	s16, r0
+ 467 0260 2046     		mov	r0, r4
+ 468 0262 FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 469 0266 07EE100A 		fmsr	s14, r0
+ 470 026a DFED8E7A 		flds	s15, .L75
+ 471 026e B4EEC78A 		fcmpes	s16, s14
+ 472 0272 6368     		ldr	r3, [r4, #4]
+ 473 0274 F1EE10FA 		fmstat
+ 474 0278 B7EE007A 		fconsts	s14, #112
+ 475 027c 98BF     		it	ls
+ 476 027e F0EE477A 		fcpysls	s15, s14
+ 477 0282 1F2B     		cmp	r3, #31
+ 478 0284 7FF755AF 		ble	.L70
+ 479 0288 98E7     		b	.L46
+ 480              	.L30:
+ 481 028a 0421     		movs	r1, #4
+ 482 028c 2046     		mov	r0, r4
+ 483 028e FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 484 0292 0421     		movs	r1, #4
+ 485 0294 08EE100A 		fmsr	s16, r0
+ 486 0298 2046     		mov	r0, r4
+ 487 029a FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 488 029e 07EE100A 		fmsr	s14, r0
+ 489 02a2 DFED807A 		flds	s15, .L75
+ 490 02a6 B4EEC78A 		fcmpes	s16, s14
+ 491 02aa 6368     		ldr	r3, [r4, #4]
+ 492 02ac F1EE10FA 		fmstat
+ 493 02b0 B7EE007A 		fconsts	s14, #112
+ 494 02b4 A8BF     		it	ge
+ 495 02b6 F0EE477A 		fcpysge	s15, s14
+ 496 02ba 1F2B     		cmp	r3, #31
+ 497 02bc 7FF739AF 		ble	.L70
+ 498 02c0 7CE7     		b	.L46
+ 499              	.L29:
+ 500 02c2 0321     		movs	r1, #3
+ 501 02c4 2046     		mov	r0, r4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 10
+
+
+ 502 02c6 FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 503 02ca 0321     		movs	r1, #3
+ 504 02cc 08EE100A 		fmsr	s16, r0
+ 505 02d0 2046     		mov	r0, r4
+ 506 02d2 FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 507 02d6 07EE100A 		fmsr	s14, r0
+ 508 02da DFED727A 		flds	s15, .L75
+ 509 02de B4EEC78A 		fcmpes	s16, s14
+ 510 02e2 6368     		ldr	r3, [r4, #4]
+ 511 02e4 F1EE10FA 		fmstat
+ 512 02e8 B7EE007A 		fconsts	s14, #112
+ 513 02ec 48BF     		it	mi
+ 514 02ee F0EE477A 		fcpysmi	s15, s14
+ 515 02f2 1F2B     		cmp	r3, #31
+ 516 02f4 7FF71DAF 		ble	.L70
+ 517 02f8 60E7     		b	.L46
+ 518              	.L28:
+ 519 02fa 0221     		movs	r1, #2
+ 520 02fc 2046     		mov	r0, r4
+ 521 02fe FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 522 0302 0221     		movs	r1, #2
+ 523 0304 08EE100A 		fmsr	s16, r0
+ 524 0308 2046     		mov	r0, r4
+ 525 030a FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 526 030e 07EE100A 		fmsr	s14, r0
+ 527 0312 DFED647A 		flds	s15, .L75
+ 528 0316 B4EEC78A 		fcmpes	s16, s14
+ 529 031a 6368     		ldr	r3, [r4, #4]
+ 530 031c F1EE10FA 		fmstat
+ 531 0320 B7EE007A 		fconsts	s14, #112
+ 532 0324 C8BF     		it	gt
+ 533 0326 F0EE477A 		fcpysgt	s15, s14
+ 534 032a 1F2B     		cmp	r3, #31
+ 535 032c 7FF701AF 		ble	.L70
+ 536 0330 44E7     		b	.L46
+ 537              	.L27:
+ 538 0332 6368     		ldr	r3, [r4, #4]
+ 539 0334 6A68     		ldr	r2, [r5, #4]	@ float
+ 540 0336 1F2B     		cmp	r3, #31
+ 541 0338 7FF71BAF 		ble	.L72
+ 542 033c 3EE7     		b	.L46
+ 543              	.L25:
+ 544 033e 40F20001 		movw	r1, #:lower16:.LC3
+ 545 0342 C0F20001 		movt	r1, #:upper16:.LC3
+ 546 0346 40F25E20 		movw	r0, #606
+ 547 034a FFF7FEFF 		bl	warning
+ 548 034e 0120     		movs	r0, #1
+ 549 0350 E3E6     		b	.L23
+ 550              	.L37:
+ 551 0352 0321     		movs	r1, #3
+ 552 0354 2046     		mov	r0, r4
+ 553 0356 FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 554 035a 0321     		movs	r1, #3
+ 555 035c 08EE100A 		fmsr	s16, r0
+ 556 0360 2046     		mov	r0, r4
+ 557 0362 FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 558 0366 6368     		ldr	r3, [r4, #4]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 11
+
+
+ 559 0368 07EE900A 		fmsr	s15, r0
+ 560 036c 1F2B     		cmp	r3, #31
+ 561 036e D8BF     		it	le
+ 562 0370 67EE887A 		fmulsle	s15, s15, s16
+ 563 0374 7FF7DDAE 		ble	.L70
+ 564 0378 20E7     		b	.L46
+ 565              	.L36:
+ 566 037a 0321     		movs	r1, #3
+ 567 037c 2046     		mov	r0, r4
+ 568 037e FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 569 0382 0321     		movs	r1, #3
+ 570 0384 08EE100A 		fmsr	s16, r0
+ 571 0388 2046     		mov	r0, r4
+ 572 038a FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 573 038e 6368     		ldr	r3, [r4, #4]
+ 574 0390 07EE900A 		fmsr	s15, r0
+ 575 0394 1F2B     		cmp	r3, #31
+ 576 0396 D8BF     		it	le
+ 577 0398 77EEC87A 		fsubsle	s15, s15, s16
+ 578 039c 7FF7C9AE 		ble	.L70
+ 579 03a0 0CE7     		b	.L46
+ 580              	.L35:
+ 581 03a2 0321     		movs	r1, #3
+ 582 03a4 2046     		mov	r0, r4
+ 583 03a6 FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 584 03aa 0321     		movs	r1, #3
+ 585 03ac 08EE100A 		fmsr	s16, r0
+ 586 03b0 2046     		mov	r0, r4
+ 587 03b2 FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 588 03b6 6368     		ldr	r3, [r4, #4]
+ 589 03b8 07EE900A 		fmsr	s15, r0
+ 590 03bc 1F2B     		cmp	r3, #31
+ 591 03be D8BF     		it	le
+ 592 03c0 77EE887A 		faddsle	s15, s15, s16
+ 593 03c4 7FF7B5AE 		ble	.L70
+ 594 03c8 F8E6     		b	.L46
+ 595              	.L34:
+ 596 03ca 2046     		mov	r0, r4
+ 597 03cc 0821     		movs	r1, #8
+ 598 03ce FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 599 03d2 6368     		ldr	r3, [r4, #4]
+ 600 03d4 1F2B     		cmp	r3, #31
+ 601 03d6 07EE900A 		fmsr	s15, r0
+ 602 03da 3FF7EFAE 		bgt	.L46
+ 603 03de F5EE407A 		fcmpzs	s15
+ 604 03e2 F1EE10FA 		fmstat
+ 605 03e6 14BF     		ite	ne
+ 606 03e8 0022     		movne	r2, #0
+ 607 03ea 0122     		moveq	r2, #1
+ 608 03ec 07EE902A 		fmsr	s15, r2	@ int
+ 609 03f0 F8EE677A 		fuitos	s15, s15
+ 610 03f4 9DE6     		b	.L70
+ 611              	.L39:
+ 612 03f6 0D21     		movs	r1, #13
+ 613 03f8 2046     		mov	r0, r4
+ 614 03fa FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 615 03fe 0D21     		movs	r1, #13
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 12
+
+
+ 616 0400 0546     		mov	r5, r0	@ float
+ 617 0402 2046     		mov	r0, r4
+ 618 0404 FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 619 0408 2946     		mov	r1, r5	@ float
+ 620 040a FFF7FEFF 		bl	maxF
+ 621 040e 6368     		ldr	r3, [r4, #4]
+ 622 0410 1F2B     		cmp	r3, #31
+ 623 0412 0246     		mov	r2, r0	@ float
+ 624 0414 7FF7ADAE 		ble	.L72
+ 625 0418 D0E6     		b	.L46
+ 626              	.L38:
+ 627 041a 0321     		movs	r1, #3
+ 628 041c 2046     		mov	r0, r4
+ 629 041e FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 630 0422 0321     		movs	r1, #3
+ 631 0424 08EE100A 		fmsr	s16, r0
+ 632 0428 2046     		mov	r0, r4
+ 633 042a FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 634 042e 6368     		ldr	r3, [r4, #4]
+ 635 0430 1F2B     		cmp	r3, #31
+ 636 0432 07EE900A 		fmsr	s15, r0
+ 637 0436 3FF7C1AE 		bgt	.L46
+ 638 043a C7EE887A 		fdivs	s15, s15, s16
+ 639 043e 78E6     		b	.L70
+ 640              	.L40:
+ 641 0440 0E21     		movs	r1, #14
+ 642 0442 2046     		mov	r0, r4
+ 643 0444 FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 644 0448 0E21     		movs	r1, #14
+ 645 044a 0546     		mov	r5, r0	@ float
+ 646 044c 2046     		mov	r0, r4
+ 647 044e FFF7FEFF 		bl	_ZN12LECalculator3popE11le_action_e
+ 648 0452 2946     		mov	r1, r5	@ float
+ 649 0454 FFF7FEFF 		bl	minF
+ 650 0458 6368     		ldr	r3, [r4, #4]
+ 651 045a 1F2B     		cmp	r3, #31
+ 652 045c 0246     		mov	r2, r0	@ float
+ 653 045e 7FF788AE 		ble	.L72
+ 654 0462 ABE6     		b	.L46
+ 655              	.L24:
+ 656 0464 3046     		mov	r0, r6
+ 657 0466 211D     		adds	r1, r4, #4
+ 658 0468 FFF7FEFF 		bl	_Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e
+ 659 046c 6368     		ldr	r3, [r4, #4]
+ 660 046e 1F2B     		cmp	r3, #31
+ 661 0470 3FF7A4AE 		bgt	.L46
+ 662 0474 5A1C     		adds	r2, r3, #1
+ 663 0476 04EB8303 		add	r3, r4, r3, lsl #2
+ 664 047a 6260     		str	r2, [r4, #4]
+ 665 047c 9860     		str	r0, [r3, #8]	@ float
+ 666 047e 0020     		movs	r0, #0
+ 667 0480 4BE6     		b	.L23
+ 668              	.L57:
+ 669 0482 6368     		ldr	r3, [r4, #4]
+ 670 0484 1F2B     		cmp	r3, #31
+ 671 0486 3FF799AE 		bgt	.L46
+ 672 048a 5A1C     		adds	r2, r3, #1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 13
+
+
+ 673 048c 0021     		movs	r1, #0
+ 674 048e 04EB8303 		add	r3, r4, r3, lsl #2
+ 675 0492 C7F6C071 		movt	r1, 32704
+ 676 0496 6260     		str	r2, [r4, #4]
+ 677 0498 0020     		movs	r0, #0
+ 678 049a 9960     		str	r1, [r3, #8]	@ float
+ 679 049c 3DE6     		b	.L23
+ 680              	.L58:
+ 681 049e DFED017A 		flds	s15, .L75
+ 682 04a2 B4E6     		b	.L47
+ 683              	.L76:
+ 684              		.align	2
+ 685              	.L75:
+ 686 04a4 00000000 		.word	0
+ 687              		.size	_ZN12LECalculator5doJobEP6EngineP9LEElement, .-_ZN12LECalculator5doJobEP6EngineP9LEElement
+ 688 04a8 AFF30080 		.section	.text._ZN12LECalculator8getValueEP6Engine,"ax",%progbits
+ 688      AFF30080 
+ 689              		.align	2
+ 690              		.p2align 4,,15
+ 691              		.global	_ZN12LECalculator8getValueEP6Engine
+ 692              		.thumb
+ 693              		.thumb_func
+ 694              		.type	_ZN12LECalculator8getValueEP6Engine, %function
+ 695              	_ZN12LECalculator8getValueEP6Engine:
+ 696              		@ args = 0, pretend = 0, frame = 0
+ 697              		@ frame_needed = 0, uses_anonymous_args = 0
+ 698 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 699 0002 0468     		ldr	r4, [r0]
+ 700 0004 0646     		mov	r6, r0
+ 701 0006 0F46     		mov	r7, r1
+ 702 0008 74B3     		cbz	r4, .L85
+ 703 000a 0023     		movs	r3, #0
+ 704 000c 4360     		str	r3, [r0, #4]
+ 705 000e C825     		movs	r5, #200
+ 706 0010 01E0     		b	.L80
+ 707              	.L82:
+ 708 0012 013D     		subs	r5, r5, #1
+ 709 0014 1ED0     		beq	.L86
+ 710              	.L80:
+ 711 0016 3046     		mov	r0, r6
+ 712 0018 3946     		mov	r1, r7
+ 713 001a 2246     		mov	r2, r4
+ 714 001c FFF7FEFF 		bl	_ZN12LECalculator5doJobEP6EngineP9LEElement
+ 715 0020 40B9     		cbnz	r0, .L84
+ 716 0022 E468     		ldr	r4, [r4, #12]
+ 717 0024 002C     		cmp	r4, #0
+ 718 0026 F4D1     		bne	.L82
+ 719 0028 7268     		ldr	r2, [r6, #4]
+ 720 002a 012A     		cmp	r2, #1
+ 721 002c 06D1     		bne	.L87
+ 722 002e 7460     		str	r4, [r6, #4]
+ 723 0030 B068     		ldr	r0, [r6, #8]	@ float
+ 724 0032 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 725              	.L84:
+ 726 0034 0020     		movs	r0, #0
+ 727 0036 C7F6C070 		movt	r0, 32704
+ 728 003a F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 14
+
+
+ 729              	.L87:
+ 730 003c 40F20001 		movw	r1, #:lower16:.LC6
+ 731 0040 C0F20001 		movt	r1, #:upper16:.LC6
+ 732 0044 40F25E20 		movw	r0, #606
+ 733 0048 FFF7FEFF 		bl	warning
+ 734 004c 0020     		movs	r0, #0
+ 735 004e C7F6C070 		movt	r0, 32704
+ 736 0052 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 737              	.L86:
+ 738 0054 40F20000 		movw	r0, #:lower16:.LC5
+ 739 0058 C0F20000 		movt	r0, #:upper16:.LC5
+ 740 005c FFF7FEFF 		bl	firmwareError
+ 741 0060 0020     		movs	r0, #0
+ 742 0062 C7F6C070 		movt	r0, 32704
+ 743 0066 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 744              	.L85:
+ 745 0068 40F20001 		movw	r1, #:lower16:.LC4
+ 746 006c C0F20001 		movt	r1, #:upper16:.LC4
+ 747 0070 40F25E20 		movw	r0, #606
+ 748 0074 FFF7FEFF 		bl	warning
+ 749 0078 0020     		movs	r0, #0
+ 750 007a C7F6C070 		movt	r0, 32704
+ 751 007e F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 752              		.size	_ZN12LECalculator8getValueEP6Engine, .-_ZN12LECalculator8getValueEP6Engine
+ 753              		.section	.text._ZN12LECalculator9getValue2EP9LEElementP6Engine,"ax",%progbits
+ 754              		.align	2
+ 755              		.p2align 4,,15
+ 756              		.global	_ZN12LECalculator9getValue2EP9LEElementP6Engine
+ 757              		.thumb
+ 758              		.thumb_func
+ 759              		.type	_ZN12LECalculator9getValue2EP9LEElementP6Engine, %function
+ 760              	_ZN12LECalculator9getValue2EP9LEElementP6Engine:
+ 761              		@ args = 0, pretend = 0, frame = 0
+ 762              		@ frame_needed = 0, uses_anonymous_args = 0
+ 763              		@ link register save eliminated.
+ 764 0000 10B4     		push	{r4}
+ 765 0002 0024     		movs	r4, #0
+ 766 0004 80E81200 		stmia	r0, {r1, r4}
+ 767 0008 1146     		mov	r1, r2
+ 768 000a 5DF8044B 		ldr	r4, [sp], #4
+ 769 000e FFF7FEBF 		b	_ZN12LECalculator8getValueEP6Engine
+ 770              		.size	_ZN12LECalculator9getValue2EP9LEElementP6Engine, .-_ZN12LECalculator9getValue2EP9LEElementP6
+ 771 0012 00BFAFF3 		.section	.text._ZN13LEElementPoolC2EP9LEElementi,"ax",%progbits
+ 771      0080AFF3 
+ 771      0080AFF3 
+ 771      0080
+ 772              		.align	2
+ 773              		.p2align 4,,15
+ 774              		.global	_ZN13LEElementPoolC2EP9LEElementi
+ 775              		.thumb
+ 776              		.thumb_func
+ 777              		.type	_ZN13LEElementPoolC2EP9LEElementi, %function
+ 778              	_ZN13LEElementPoolC2EP9LEElementi:
+ 779              		@ args = 0, pretend = 0, frame = 0
+ 780              		@ frame_needed = 0, uses_anonymous_args = 0
+ 781              		@ link register save eliminated.
+ 782 0000 10B4     		push	{r4}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 15
+
+
+ 783 0002 0024     		movs	r4, #0
+ 784 0004 4460     		str	r4, [r0, #4]
+ 785 0006 0160     		str	r1, [r0]
+ 786 0008 8260     		str	r2, [r0, #8]
+ 787 000a 5DF8044B 		ldr	r4, [sp], #4
+ 788 000e 7047     		bx	lr
+ 789              		.size	_ZN13LEElementPoolC2EP9LEElementi, .-_ZN13LEElementPoolC2EP9LEElementi
+ 790              		.global	_ZN13LEElementPoolC1EP9LEElementi
+ 791              		.thumb_set _ZN13LEElementPoolC1EP9LEElementi,_ZN13LEElementPoolC2EP9LEElementi
+ 792              		.section	.text._ZN13LEElementPool5resetEv,"ax",%progbits
+ 793              		.align	2
+ 794              		.p2align 4,,15
+ 795              		.global	_ZN13LEElementPool5resetEv
+ 796              		.thumb
+ 797              		.thumb_func
+ 798              		.type	_ZN13LEElementPool5resetEv, %function
+ 799              	_ZN13LEElementPool5resetEv:
+ 800              		@ args = 0, pretend = 0, frame = 0
+ 801              		@ frame_needed = 0, uses_anonymous_args = 0
+ 802              		@ link register save eliminated.
+ 803 0000 0023     		movs	r3, #0
+ 804 0002 4360     		str	r3, [r0, #4]
+ 805 0004 7047     		bx	lr
+ 806              		.size	_ZN13LEElementPool5resetEv, .-_ZN13LEElementPool5resetEv
+ 807 0006 00BFAFF3 		.section	.text._ZN13LEElementPool7getSizeEv,"ax",%progbits
+ 807      0080AFF3 
+ 807      0080
+ 808              		.align	2
+ 809              		.p2align 4,,15
+ 810              		.global	_ZN13LEElementPool7getSizeEv
+ 811              		.thumb
+ 812              		.thumb_func
+ 813              		.type	_ZN13LEElementPool7getSizeEv, %function
+ 814              	_ZN13LEElementPool7getSizeEv:
+ 815              		@ args = 0, pretend = 0, frame = 0
+ 816              		@ frame_needed = 0, uses_anonymous_args = 0
+ 817              		@ link register save eliminated.
+ 818 0000 4068     		ldr	r0, [r0, #4]
+ 819 0002 7047     		bx	lr
+ 820              		.size	_ZN13LEElementPool7getSizeEv, .-_ZN13LEElementPool7getSizeEv
+ 821 0004 AFF30080 		.section	.text._ZN13LEElementPool4nextEv,"ax",%progbits
+ 821      AFF30080 
+ 821      AFF30080 
+ 822              		.align	2
+ 823              		.p2align 4,,15
+ 824              		.global	_ZN13LEElementPool4nextEv
+ 825              		.thumb
+ 826              		.thumb_func
+ 827              		.type	_ZN13LEElementPool4nextEv, %function
+ 828              	_ZN13LEElementPool4nextEv:
+ 829              		@ args = 0, pretend = 0, frame = 0
+ 830              		@ frame_needed = 0, uses_anonymous_args = 0
+ 831 0000 4268     		ldr	r2, [r0, #4]
+ 832 0002 8168     		ldr	r1, [r0, #8]
+ 833 0004 8A42     		cmp	r2, r1
+ 834 0006 08B5     		push	{r3, lr}
+ 835 0008 0346     		mov	r3, r0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 16
+
+
+ 836 000a 05DA     		bge	.L95
+ 837 000c 0068     		ldr	r0, [r0]
+ 838 000e 511C     		adds	r1, r2, #1
+ 839 0010 00EB0210 		add	r0, r0, r2, lsl #4
+ 840 0014 5960     		str	r1, [r3, #4]
+ 841 0016 08BD     		pop	{r3, pc}
+ 842              	.L95:
+ 843 0018 40F20000 		movw	r0, #:lower16:.LC7
+ 844 001c C0F20000 		movt	r0, #:upper16:.LC7
+ 845 0020 FFF7FEFF 		bl	firmwareError
+ 846 0024 0020     		movs	r0, #0
+ 847 0026 08BD     		pop	{r3, pc}
+ 848              		.size	_ZN13LEElementPool4nextEv, .-_ZN13LEElementPool4nextEv
+ 849 0028 AFF30080 		.section	.text._Z9isNumericPKc,"ax",%progbits
+ 849      AFF30080 
+ 850              		.align	2
+ 851              		.p2align 4,,15
+ 852              		.global	_Z9isNumericPKc
+ 853              		.thumb
+ 854              		.thumb_func
+ 855              		.type	_Z9isNumericPKc, %function
+ 856              	_Z9isNumericPKc:
+ 857              		@ args = 0, pretend = 0, frame = 0
+ 858              		@ frame_needed = 0, uses_anonymous_args = 0
+ 859              		@ link register save eliminated.
+ 860 0000 0078     		ldrb	r0, [r0]	@ zero_extendqisi2
+ 861 0002 3038     		subs	r0, r0, #48
+ 862 0004 C0B2     		uxtb	r0, r0
+ 863 0006 0928     		cmp	r0, #9
+ 864 0008 8CBF     		ite	hi
+ 865 000a 0020     		movhi	r0, #0
+ 866 000c 0120     		movls	r0, #1
+ 867 000e 7047     		bx	lr
+ 868              		.size	_Z9isNumericPKc, .-_Z9isNumericPKc
+ 869              		.section	.text._Z12getNextTokenPKcPci,"ax",%progbits
+ 870              		.align	2
+ 871              		.p2align 4,,15
+ 872              		.global	_Z12getNextTokenPKcPci
+ 873              		.thumb
+ 874              		.thumb_func
+ 875              		.type	_Z12getNextTokenPKcPci, %function
+ 876              	_Z12getNextTokenPKcPci:
+ 877              		@ args = 0, pretend = 0, frame = 0
+ 878              		@ frame_needed = 0, uses_anonymous_args = 0
+ 879 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 880 0004 0478     		ldrb	r4, [r0]	@ zero_extendqisi2
+ 881 0006 202C     		cmp	r4, #32
+ 882 0008 0546     		mov	r5, r0
+ 883 000a 0F46     		mov	r7, r1
+ 884 000c 9046     		mov	r8, r2
+ 885 000e 05D1     		bne	.L98
+ 886 0010 431C     		adds	r3, r0, #1
+ 887              	.L99:
+ 888 0012 1D46     		mov	r5, r3
+ 889 0014 13F8014B 		ldrb	r4, [r3], #1	@ zero_extendqisi2
+ 890 0018 202C     		cmp	r4, #32
+ 891 001a FAD0     		beq	.L99
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 17
+
+
+ 892              	.L98:
+ 893 001c C4B1     		cbz	r4, .L104
+ 894 001e 2846     		mov	r0, r5
+ 895 0020 2021     		movs	r1, #32
+ 896 0022 FFF7FEFF 		bl	indexOf
+ 897 0026 431C     		adds	r3, r0, #1
+ 898 0028 0646     		mov	r6, r0
+ 899 002a 14D0     		beq	.L105
+ 900              	.L101:
+ 901 002c 4645     		cmp	r6, r8
+ 902 002e 09DA     		bge	.L106
+ 903 0030 3846     		mov	r0, r7
+ 904 0032 2946     		mov	r1, r5
+ 905 0034 3246     		mov	r2, r6
+ 906 0036 FFF7FEFF 		bl	strncpy
+ 907 003a 0023     		movs	r3, #0
+ 908 003c BB55     		strb	r3, [r7, r6]
+ 909 003e A819     		adds	r0, r5, r6
+ 910 0040 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 911              	.L106:
+ 912 0044 40F20000 		movw	r0, #:lower16:.LC8
+ 913 0048 C0F20000 		movt	r0, #:upper16:.LC8
+ 914 004c FFF7FEFF 		bl	firmwareError
+ 915              	.L104:
+ 916 0050 0020     		movs	r0, #0
+ 917 0052 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 918              	.L105:
+ 919 0056 2846     		mov	r0, r5
+ 920 0058 FFF7FEFF 		bl	strlen
+ 921 005c 0646     		mov	r6, r0
+ 922 005e E5E7     		b	.L101
+ 923              		.size	_Z12getNextTokenPKcPci, .-_Z12getNextTokenPKcPci
+ 924              		.section	.text._Z11parseActionPKc,"ax",%progbits
+ 925              		.align	2
+ 926              		.p2align 4,,15
+ 927              		.global	_Z11parseActionPKc
+ 928              		.thumb
+ 929              		.thumb_func
+ 930              		.type	_Z11parseActionPKc, %function
+ 931              	_Z11parseActionPKc:
+ 932              		@ args = 0, pretend = 0, frame = 0
+ 933              		@ frame_needed = 0, uses_anonymous_args = 0
+ 934 0000 38B5     		push	{r3, r4, r5, lr}
+ 935 0002 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 936 0006 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 937 000a 0546     		mov	r5, r0
+ 938 000c 1C68     		ldr	r4, [r3]
+ 939 000e 14B9     		cbnz	r4, .L112
+ 940 0010 09E0     		b	.L111
+ 941              	.L110:
+ 942 0012 2468     		ldr	r4, [r4]
+ 943 0014 3CB1     		cbz	r4, .L111
+ 944              	.L112:
+ 945 0016 A068     		ldr	r0, [r4, #8]
+ 946 0018 2946     		mov	r1, r5
+ 947 001a FFF7FEFF 		bl	strEqualCaseInsensitive
+ 948 001e 0028     		cmp	r0, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 18
+
+
+ 949 0020 F7D0     		beq	.L110
+ 950 0022 6068     		ldr	r0, [r4, #4]
+ 951 0024 38BD     		pop	{r3, r4, r5, pc}
+ 952              	.L111:
+ 953 0026 0020     		movs	r0, #0
+ 954 0028 38BD     		pop	{r3, r4, r5, pc}
+ 955              		.size	_Z11parseActionPKc, .-_Z11parseActionPKc
+ 956 002a 00BFAFF3 		.section	.text._ZN13LEElementPool15parseExpressionEPKc,"ax",%progbits
+ 956      0080
+ 957              		.align	2
+ 958              		.p2align 4,,15
+ 959              		.global	_ZN13LEElementPool15parseExpressionEPKc
+ 960              		.thumb
+ 961              		.thumb_func
+ 962              		.type	_ZN13LEElementPool15parseExpressionEPKc, %function
+ 963              	_ZN13LEElementPool15parseExpressionEPKc:
+ 964              		@ args = 0, pretend = 0, frame = 8
+ 965              		@ frame_needed = 0, uses_anonymous_args = 0
+ 966 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 967 0004 0026     		movs	r6, #0
+ 968 0006 40F20008 		movw	r8, #:lower16:.LANCHOR1
+ 969 000a 82B0     		sub	sp, sp, #8
+ 970 000c 8146     		mov	r9, r0
+ 971 000e 0D46     		mov	r5, r1
+ 972 0010 3746     		mov	r7, r6
+ 973 0012 C0F20008 		movt	r8, #:upper16:.LANCHOR1
+ 974 0016 4FF0010A 		mov	r10, #1
+ 975              	.L117:
+ 976 001a 40F20001 		movw	r1, #:lower16:.LANCHOR1
+ 977 001e 2846     		mov	r0, r5
+ 978 0020 C0F20001 		movt	r1, #:upper16:.LANCHOR1
+ 979 0024 4022     		movs	r2, #64
+ 980 0026 FFF7FEFF 		bl	_Z12getNextTokenPKcPci
+ 981 002a 0546     		mov	r5, r0
+ 982 002c 4846     		mov	r0, r9
+ 983 002e 15B3     		cbz	r5, .L124
+ 984 0030 FFF7FEFF 		bl	_ZN13LEElementPool4nextEv
+ 985 0034 0446     		mov	r4, r0
+ 986 0036 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 987 003a C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 988 003e D4B1     		cbz	r4, .L124
+ 989 0040 98F80030 		ldrb	r3, [r8]	@ zero_extendqisi2
+ 990 0044 303B     		subs	r3, r3, #48
+ 991 0046 DBB2     		uxtb	r3, r3
+ 992 0048 092B     		cmp	r3, #9
+ 993 004a 08D8     		bhi	.L119
+ 994 004c FFF7FEFF 		bl	atoff
+ 995 0050 C4F800A0 		str	r10, [r4]
+ 996 0054 6060     		str	r0, [r4, #4]	@ float
+ 997 0056 67B1     		cbz	r7, .L125
+ 998              	.L127:
+ 999 0058 F460     		str	r4, [r6, #12]
+ 1000              	.L122:
+ 1001 005a 2646     		mov	r6, r4
+ 1002 005c DDE7     		b	.L117
+ 1003              	.L119:
+ 1004 005e 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 19
+
+
+ 1005 0062 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 1006 0066 FFF7FEFF 		bl	_Z11parseActionPKc
+ 1007 006a 40B1     		cbz	r0, .L126
+ 1008 006c 2060     		str	r0, [r4]
+ 1009 006e 002F     		cmp	r7, #0
+ 1010 0070 F2D1     		bne	.L127
+ 1011              	.L125:
+ 1012 0072 2746     		mov	r7, r4
+ 1013 0074 F1E7     		b	.L122
+ 1014              	.L124:
+ 1015 0076 3846     		mov	r0, r7
+ 1016 0078 02B0     		add	sp, sp, #8
+ 1017              		@ sp needed
+ 1018 007a BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 1019              	.L126:
+ 1020 007e 40F20001 		movw	r1, #:lower16:.LC9
+ 1021 0082 40F20002 		movw	r2, #:lower16:.LANCHOR1
+ 1022 0086 C0F20001 		movt	r1, #:upper16:.LC9
+ 1023 008a C0F20002 		movt	r2, #:upper16:.LANCHOR1
+ 1024 008e 0190     		str	r0, [sp, #4]
+ 1025 0090 FFF7FEFF 		bl	warning
+ 1026 0094 019B     		ldr	r3, [sp, #4]
+ 1027 0096 1846     		mov	r0, r3
+ 1028 0098 02B0     		add	sp, sp, #8
+ 1029              		@ sp needed
+ 1030 009a BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 1031              		.size	_ZN13LEElementPool15parseExpressionEPKc, .-_ZN13LEElementPool15parseExpressionEPKc
+ 1032 009e 00BF     		.section	.text.startup._GLOBAL__sub_I_LE_FIRST,"ax",%progbits
+ 1033              		.align	2
+ 1034              		.p2align 4,,15
+ 1035              		.thumb
+ 1036              		.thumb_func
+ 1037              		.type	_GLOBAL__sub_I_LE_FIRST, %function
+ 1038              	_GLOBAL__sub_I_LE_FIRST:
+ 1039              		@ args = 0, pretend = 0, frame = 8
+ 1040              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1041              		@ link register save eliminated.
+ 1042 0000 2DE9F00F 		push	{r4, r5, r6, r7, r8, r9, r10, fp}
+ 1043 0004 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 1044 0008 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 1045 000c 82B0     		sub	sp, sp, #8
+ 1046 000e 40F20002 		movw	r2, #:lower16:.LANCHOR2
+ 1047 0012 C0F20002 		movt	r2, #:upper16:.LANCHOR2
+ 1048 0016 0168     		ldr	r1, [r0]
+ 1049 0018 0190     		str	r0, [sp, #4]
+ 1050 001a 40F20003 		movw	r3, #:lower16:.LANCHOR3
+ 1051 001e 40F20000 		movw	r0, #:lower16:.LANCHOR12
+ 1052 0022 C0F20003 		movt	r3, #:upper16:.LANCHOR3
+ 1053 0026 1160     		str	r1, [r2]
+ 1054 0028 C0F20000 		movt	r0, #:upper16:.LANCHOR12
+ 1055 002c 40F20001 		movw	r1, #:lower16:.LC10
+ 1056 0030 0090     		str	r0, [sp]
+ 1057 0032 C0F20001 		movt	r1, #:upper16:.LC10
+ 1058 0036 0620     		movs	r0, #6
+ 1059 0038 40F2000A 		movw	r10, #:lower16:.LANCHOR4
+ 1060 003c C0F2000A 		movt	r10, #:upper16:.LANCHOR4
+ 1061 0040 9160     		str	r1, [r2, #8]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 20
+
+
+ 1062 0042 5060     		str	r0, [r2, #4]
+ 1063 0044 1A60     		str	r2, [r3]
+ 1064 0046 40F20002 		movw	r2, #:lower16:.LC11
+ 1065 004a C0F20002 		movt	r2, #:upper16:.LC11
+ 1066 004e 40F20009 		movw	r9, #:lower16:.LANCHOR5
+ 1067 0052 C0F20009 		movt	r9, #:upper16:.LANCHOR5
+ 1068 0056 5860     		str	r0, [r3, #4]
+ 1069 0058 9A60     		str	r2, [r3, #8]
+ 1070 005a CAF80030 		str	r3, [r10]
+ 1071 005e 40F20003 		movw	r3, #:lower16:.LC12
+ 1072 0062 0720     		movs	r0, #7
+ 1073 0064 C0F20003 		movt	r3, #:upper16:.LC12
+ 1074 0068 40F20008 		movw	r8, #:lower16:.LANCHOR6
+ 1075 006c C0F20008 		movt	r8, #:upper16:.LANCHOR6
+ 1076 0070 CAF80830 		str	r3, [r10, #8]
+ 1077 0074 CAF80400 		str	r0, [r10, #4]
+ 1078 0078 C9F800A0 		str	r10, [r9]
+ 1079 007c 40F2000A 		movw	r10, #:lower16:.LC13
+ 1080 0080 C0F2000A 		movt	r10, #:upper16:.LC13
+ 1081 0084 C9F80400 		str	r0, [r9, #4]
+ 1082 0088 C9F808A0 		str	r10, [r9, #8]
+ 1083 008c C8F80090 		str	r9, [r8]
+ 1084 0090 40F2000C 		movw	ip, #:lower16:.LANCHOR7
+ 1085 0094 4FF00809 		mov	r9, #8
+ 1086 0098 C0F2000C 		movt	ip, #:upper16:.LANCHOR7
+ 1087 009c C8F80490 		str	r9, [r8, #4]
+ 1088 00a0 40F20009 		movw	r9, #:lower16:.LC14
+ 1089 00a4 C0F20009 		movt	r9, #:upper16:.LC14
+ 1090 00a8 C8F80890 		str	r9, [r8, #8]
+ 1091 00ac CCF80080 		str	r8, [ip]
+ 1092 00b0 40F20007 		movw	r7, #:lower16:.LANCHOR8
+ 1093 00b4 4FF00908 		mov	r8, #9
+ 1094 00b8 C0F20007 		movt	r7, #:upper16:.LANCHOR8
+ 1095 00bc CCF80480 		str	r8, [ip, #4]
+ 1096 00c0 40F20008 		movw	r8, #:lower16:.LC15
+ 1097 00c4 C0F20008 		movt	r8, #:upper16:.LC15
+ 1098 00c8 40F20006 		movw	r6, #:lower16:.LANCHOR9
+ 1099 00cc C0F20006 		movt	r6, #:upper16:.LANCHOR9
+ 1100 00d0 CCF80880 		str	r8, [ip, #8]
+ 1101 00d4 C7F800C0 		str	ip, [r7]
+ 1102 00d8 40F20005 		movw	r5, #:lower16:.LANCHOR10
+ 1103 00dc 4FF00A0C 		mov	ip, #10
+ 1104 00e0 40F20008 		movw	r8, #:lower16:.LC16
+ 1105 00e4 C0F20005 		movt	r5, #:upper16:.LANCHOR10
+ 1106 00e8 C7F804C0 		str	ip, [r7, #4]
+ 1107 00ec C0F20008 		movt	r8, #:upper16:.LC16
+ 1108 00f0 40F20004 		movw	r4, #:lower16:.LANCHOR11
+ 1109 00f4 40F2000C 		movw	ip, #:lower16:.LC17
+ 1110 00f8 C0F20004 		movt	r4, #:upper16:.LANCHOR11
+ 1111 00fc C7F80880 		str	r8, [r7, #8]
+ 1112 0100 3760     		str	r7, [r6]
+ 1113 0102 C0F2000C 		movt	ip, #:upper16:.LC17
+ 1114 0106 0B27     		movs	r7, #11
+ 1115 0108 40F20008 		movw	r8, #:lower16:.LC18
+ 1116 010c 7760     		str	r7, [r6, #4]
+ 1117 010e C6F808C0 		str	ip, [r6, #8]
+ 1118 0112 2E60     		str	r6, [r5]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 21
+
+
+ 1119 0114 C0F20008 		movt	r8, #:upper16:.LC18
+ 1120 0118 0C26     		movs	r6, #12
+ 1121 011a 40F20007 		movw	r7, #:lower16:.LC19
+ 1122 011e 6E60     		str	r6, [r5, #4]
+ 1123 0120 C5F80880 		str	r8, [r5, #8]
+ 1124 0124 2560     		str	r5, [r4]
+ 1125 0126 C0F20007 		movt	r7, #:upper16:.LC19
+ 1126 012a 0325     		movs	r5, #3
+ 1127 012c 6560     		str	r5, [r4, #4]
+ 1128 012e 40F2000C 		movw	ip, #:lower16:.LC20
+ 1129 0132 A760     		str	r7, [r4, #8]
+ 1130 0134 0098     		ldr	r0, [sp]
+ 1131 0136 C0F2000C 		movt	ip, #:upper16:.LC20
+ 1132 013a 0527     		movs	r7, #5
+ 1133 013c 0460     		str	r4, [r0]
+ 1134 013e 4760     		str	r7, [r0, #4]
+ 1135 0140 C0F808C0 		str	ip, [r0, #8]
+ 1136 0144 40F2000B 		movw	fp, #:lower16:.LANCHOR17
+ 1137 0148 0198     		ldr	r0, [sp, #4]
+ 1138 014a C0F2000B 		movt	fp, #:upper16:.LANCHOR17
+ 1139 014e 40F20001 		movw	r1, #:lower16:.LANCHOR13
+ 1140 0152 C0F20001 		movt	r1, #:upper16:.LANCHOR13
+ 1141 0156 C0F800B0 		str	fp, [r0]
+ 1142 015a 40F20002 		movw	r2, #:lower16:.LANCHOR14
+ 1143 015e 0098     		ldr	r0, [sp]
+ 1144 0160 40F20003 		movw	r3, #:lower16:.LANCHOR15
+ 1145 0164 40F2000A 		movw	r10, #:lower16:.LANCHOR16
+ 1146 0168 40F20006 		movw	r6, #:lower16:.LC21
+ 1147 016c C0F20003 		movt	r3, #:upper16:.LANCHOR15
+ 1148 0170 C0F2000A 		movt	r10, #:upper16:.LANCHOR16
+ 1149 0174 C0F20002 		movt	r2, #:upper16:.LANCHOR14
+ 1150 0178 C0F20006 		movt	r6, #:upper16:.LC21
+ 1151 017c 0224     		movs	r4, #2
+ 1152 017e 40F20008 		movw	r8, #:lower16:.LC22
+ 1153 0182 40F20005 		movw	r5, #:lower16:.LC23
+ 1154 0186 40F20007 		movw	r7, #:lower16:.LC24
+ 1155 018a 40F2000C 		movw	ip, #:lower16:.LC25
+ 1156 018e C0F20008 		movt	r8, #:upper16:.LC22
+ 1157 0192 C0F20005 		movt	r5, #:upper16:.LC23
+ 1158 0196 C0F20007 		movt	r7, #:upper16:.LC24
+ 1159 019a C0F2000C 		movt	ip, #:upper16:.LC25
+ 1160 019e 4FF00409 		mov	r9, #4
+ 1161 01a2 0860     		str	r0, [r1]
+ 1162 01a4 4C60     		str	r4, [r1, #4]
+ 1163 01a6 0D20     		movs	r0, #13
+ 1164 01a8 0E24     		movs	r4, #14
+ 1165 01aa 8E60     		str	r6, [r1, #8]
+ 1166 01ac 0F26     		movs	r6, #15
+ 1167 01ae 82E80202 		stmia	r2, {r1, r9}
+ 1168 01b2 C2F80880 		str	r8, [r2, #8]
+ 1169 01b6 1A60     		str	r2, [r3]
+ 1170 01b8 5860     		str	r0, [r3, #4]
+ 1171 01ba 9D60     		str	r5, [r3, #8]
+ 1172 01bc CAF80030 		str	r3, [r10]
+ 1173 01c0 CBF800A0 		str	r10, [fp]
+ 1174 01c4 CAF80440 		str	r4, [r10, #4]
+ 1175 01c8 CAF80870 		str	r7, [r10, #8]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 22
+
+
+ 1176 01cc CBF80460 		str	r6, [fp, #4]
+ 1177 01d0 CBF808C0 		str	ip, [fp, #8]
+ 1178 01d4 02B0     		add	sp, sp, #8
+ 1179              		@ sp needed
+ 1180 01d6 BDE8F00F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp}
+ 1181 01da 7047     		bx	lr
+ 1182              		.size	_GLOBAL__sub_I_LE_FIRST, .-_GLOBAL__sub_I_LE_FIRST
+ 1183 01dc AFF30080 		.section	.init_array,"aw",%init_array
+ 1184              		.align	2
+ 1185 0000 00000000 		.word	_GLOBAL__sub_I_LE_FIRST(target1)
+ 1186              		.global	LE_FIRST
+ 1187              		.section	.bss._ZL6leLess,"aw",%nobits
+ 1188              		.align	2
+ 1189              		.set	.LANCHOR13,. + 0
+ 1190              		.type	_ZL6leLess, %object
+ 1191              		.size	_ZL6leLess, 12
+ 1192              	_ZL6leLess:
+ 1193 0000 00000000 		.space	12
+ 1193      00000000 
+ 1193      00000000 
+ 1194              		.section	.bss._ZL5leSub,"aw",%nobits
+ 1195              		.align	2
+ 1196              		.set	.LANCHOR8,. + 0
+ 1197              		.type	_ZL5leSub, %object
+ 1198              		.size	_ZL5leSub, 12
+ 1199              	_ZL5leSub:
+ 1200 0000 00000000 		.space	12
+ 1200      00000000 
+ 1200      00000000 
+ 1201              		.section	.bss._ZL6leAnd2,"aw",%nobits
+ 1202              		.align	2
+ 1203              		.set	.LANCHOR3,. + 0
+ 1204              		.type	_ZL6leAnd2, %object
+ 1205              		.size	_ZL6leAnd2, 12
+ 1206              	_ZL6leAnd2:
+ 1207 0000 00000000 		.space	12
+ 1207      00000000 
+ 1207      00000000 
+ 1208              		.section	.bss._ZL13leMoreOrEqual,"aw",%nobits
+ 1209              		.align	2
+ 1210              		.set	.LANCHOR12,. + 0
+ 1211              		.type	_ZL13leMoreOrEqual, %object
+ 1212              		.size	_ZL13leMoreOrEqual, 12
+ 1213              	_ZL13leMoreOrEqual:
+ 1214 0000 00000000 		.space	12
+ 1214      00000000 
+ 1214      00000000 
+ 1215              		.section	.bss._ZL4leOr,"aw",%nobits
+ 1216              		.align	2
+ 1217              		.set	.LANCHOR4,. + 0
+ 1218              		.type	_ZL4leOr, %object
+ 1219              		.size	_ZL4leOr, 12
+ 1220              	_ZL4leOr:
+ 1221 0000 00000000 		.space	12
+ 1221      00000000 
+ 1221      00000000 
+ 1222              		.section	.bss._ZL5leMin,"aw",%nobits
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 23
+
+
+ 1223              		.align	2
+ 1224              		.set	.LANCHOR16,. + 0
+ 1225              		.type	_ZL5leMin, %object
+ 1226              		.size	_ZL5leMin, 12
+ 1227              	_ZL5leMin:
+ 1228 0000 00000000 		.space	12
+ 1228      00000000 
+ 1228      00000000 
+ 1229              		.section	.bss._ZL5leAnd,"aw",%nobits
+ 1230              		.align	2
+ 1231              		.set	.LANCHOR2,. + 0
+ 1232              		.type	_ZL5leAnd, %object
+ 1233              		.size	_ZL5leAnd, 12
+ 1234              	_ZL5leAnd:
+ 1235 0000 00000000 		.space	12
+ 1235      00000000 
+ 1235      00000000 
+ 1236              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 1237              		.align	2
+ 1238              	.LC0:
+ 1239 0000 656D7074 		.ascii	"empty stack for %d\000"
+ 1239      79207374 
+ 1239      61636B20 
+ 1239      666F7220 
+ 1239      256400
+ 1240 0013 00       		.space	1
+ 1241              	.LC1:
+ 1242 0014 4653494F 		.ascii	"FSIO logic\000"
+ 1242      206C6F67 
+ 1242      696300
+ 1243 001f 00       		.space	1
+ 1244              	.LC2:
+ 1245 0020 464C7374 		.ascii	"FLstack overflow\000"
+ 1245      61636B20 
+ 1245      6F766572 
+ 1245      666C6F77 
+ 1245      00
+ 1246 0031 000000   		.space	3
+ 1247              	.LC3:
+ 1248 0034 4653494F 		.ascii	"FSIO undefined action\000"
+ 1248      20756E64 
+ 1248      6566696E 
+ 1248      65642061 
+ 1248      6374696F 
+ 1249 004a 0000     		.space	2
+ 1250              	.LC4:
+ 1251 004c 6E6F2046 		.ascii	"no FSIO code\000"
+ 1251      53494F20 
+ 1251      636F6465 
+ 1251      00
+ 1252 0059 000000   		.space	3
+ 1253              	.LC5:
+ 1254 005c 4653494F 		.ascii	"FSIOcount\000"
+ 1254      636F756E 
+ 1254      7400
+ 1255 0066 0000     		.space	2
+ 1256              	.LC6:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 24
+
+
+ 1257 0068 756E6578 		.ascii	"unexpected FSIO stack size: %d\000"
+ 1257      70656374 
+ 1257      65642046 
+ 1257      53494F20 
+ 1257      73746163 
+ 1258 0087 00       		.space	1
+ 1259              	.LC7:
+ 1260 0088 4C455F45 		.ascii	"LE_ELEMENT_POOL_SIZE overflow\000"
+ 1260      4C454D45 
+ 1260      4E545F50 
+ 1260      4F4F4C5F 
+ 1260      53495A45 
+ 1261 00a6 0000     		.space	2
+ 1262              	.LC8:
+ 1263 00a8 746F6B65 		.ascii	"token overflow\000"
+ 1263      6E206F76 
+ 1263      6572666C 
+ 1263      6F7700
+ 1264 00b7 00       		.space	1
+ 1265              	.LC9:
+ 1266 00b8 756E7265 		.ascii	"unrecognized [%s]\000"
+ 1266      636F676E 
+ 1266      697A6564 
+ 1266      205B2573 
+ 1266      5D00
+ 1267 00ca 0000     		.space	2
+ 1268              	.LC10:
+ 1269 00cc 616E6400 		.ascii	"and\000"
+ 1270              	.LC11:
+ 1271 00d0 2600     		.ascii	"&\000"
+ 1272 00d2 0000     		.space	2
+ 1273              	.LC12:
+ 1274 00d4 6F7200   		.ascii	"or\000"
+ 1275 00d7 00       		.space	1
+ 1276              	.LC13:
+ 1277 00d8 7C00     		.ascii	"|\000"
+ 1278 00da 0000     		.space	2
+ 1279              	.LC14:
+ 1280 00dc 6E6F7400 		.ascii	"not\000"
+ 1281              	.LC15:
+ 1282 00e0 2B00     		.ascii	"+\000"
+ 1283 00e2 0000     		.space	2
+ 1284              	.LC16:
+ 1285 00e4 2D00     		.ascii	"-\000"
+ 1286 00e6 0000     		.space	2
+ 1287              	.LC17:
+ 1288 00e8 2A00     		.ascii	"*\000"
+ 1289 00ea 0000     		.space	2
+ 1290              	.LC18:
+ 1291 00ec 2F00     		.ascii	"/\000"
+ 1292 00ee 0000     		.space	2
+ 1293              	.LC19:
+ 1294 00f0 3E00     		.ascii	">\000"
+ 1295 00f2 0000     		.space	2
+ 1296              	.LC20:
+ 1297 00f4 3E3D00   		.ascii	">=\000"
+ 1298 00f7 00       		.space	1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 25
+
+
+ 1299              	.LC21:
+ 1300 00f8 3C00     		.ascii	"<\000"
+ 1301 00fa 0000     		.space	2
+ 1302              	.LC22:
+ 1303 00fc 3C3D00   		.ascii	"<=\000"
+ 1304 00ff 00       		.space	1
+ 1305              	.LC23:
+ 1306 0100 6D617800 		.ascii	"max\000"
+ 1307              	.LC24:
+ 1308 0104 6D696E00 		.ascii	"min\000"
+ 1309              	.LC25:
+ 1310 0108 696600   		.ascii	"if\000"
+ 1311 010b 00       		.section	.bss._ZL5leMul,"aw",%nobits
+ 1312              		.align	2
+ 1313              		.set	.LANCHOR9,. + 0
+ 1314              		.type	_ZL5leMul, %object
+ 1315              		.size	_ZL5leMul, 12
+ 1316              	_ZL5leMul:
+ 1317 0000 00000000 		.space	12
+ 1317      00000000 
+ 1317      00000000 
+ 1318              		.section	.bss._ZL13parsingBuffer,"aw",%nobits
+ 1319              		.align	2
+ 1320              		.set	.LANCHOR1,. + 0
+ 1321              		.type	_ZL13parsingBuffer, %object
+ 1322              		.size	_ZL13parsingBuffer, 64
+ 1323              	_ZL13parsingBuffer:
+ 1324 0000 00000000 		.space	64
+ 1324      00000000 
+ 1324      00000000 
+ 1324      00000000 
+ 1324      00000000 
+ 1325              		.section	.bss._ZL5leNot,"aw",%nobits
+ 1326              		.align	2
+ 1327              		.set	.LANCHOR6,. + 0
+ 1328              		.type	_ZL5leNot, %object
+ 1329              		.size	_ZL5leNot, 12
+ 1330              	_ZL5leNot:
+ 1331 0000 00000000 		.space	12
+ 1331      00000000 
+ 1331      00000000 
+ 1332              		.section	.bss._ZL5leDiv,"aw",%nobits
+ 1333              		.align	2
+ 1334              		.set	.LANCHOR10,. + 0
+ 1335              		.type	_ZL5leDiv, %object
+ 1336              		.size	_ZL5leDiv, 12
+ 1337              	_ZL5leDiv:
+ 1338 0000 00000000 		.space	12
+ 1338      00000000 
+ 1338      00000000 
+ 1339              		.section	.bss._ZL5leMax,"aw",%nobits
+ 1340              		.align	2
+ 1341              		.set	.LANCHOR15,. + 0
+ 1342              		.type	_ZL5leMax, %object
+ 1343              		.size	_ZL5leMax, 12
+ 1344              	_ZL5leMax:
+ 1345 0000 00000000 		.space	12
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 26
+
+
+ 1345      00000000 
+ 1345      00000000 
+ 1346              		.section	.bss._ZL4leIf,"aw",%nobits
+ 1347              		.align	2
+ 1348              		.set	.LANCHOR17,. + 0
+ 1349              		.type	_ZL4leIf, %object
+ 1350              		.size	_ZL4leIf, 12
+ 1351              	_ZL4leIf:
+ 1352 0000 00000000 		.space	12
+ 1352      00000000 
+ 1352      00000000 
+ 1353              		.section	.bss._ZL6leMore,"aw",%nobits
+ 1354              		.align	2
+ 1355              		.set	.LANCHOR11,. + 0
+ 1356              		.type	_ZL6leMore, %object
+ 1357              		.size	_ZL6leMore, 12
+ 1358              	_ZL6leMore:
+ 1359 0000 00000000 		.space	12
+ 1359      00000000 
+ 1359      00000000 
+ 1360              		.section	.bss._ZL5leOr2,"aw",%nobits
+ 1361              		.align	2
+ 1362              		.set	.LANCHOR5,. + 0
+ 1363              		.type	_ZL5leOr2, %object
+ 1364              		.size	_ZL5leOr2, 12
+ 1365              	_ZL5leOr2:
+ 1366 0000 00000000 		.space	12
+ 1366      00000000 
+ 1366      00000000 
+ 1367              		.section	.bss._ZL5leAdd,"aw",%nobits
+ 1368              		.align	2
+ 1369              		.set	.LANCHOR7,. + 0
+ 1370              		.type	_ZL5leAdd, %object
+ 1371              		.size	_ZL5leAdd, 12
+ 1372              	_ZL5leAdd:
+ 1373 0000 00000000 		.space	12
+ 1373      00000000 
+ 1373      00000000 
+ 1374              		.section	.bss.LE_FIRST,"aw",%nobits
+ 1375              		.align	2
+ 1376              		.set	.LANCHOR0,. + 0
+ 1377              		.type	LE_FIRST, %object
+ 1378              		.size	LE_FIRST, 4
+ 1379              	LE_FIRST:
+ 1380 0000 00000000 		.space	4
+ 1381              		.section	.bss._ZL14leLessOrEquals,"aw",%nobits
+ 1382              		.align	2
+ 1383              		.set	.LANCHOR14,. + 0
+ 1384              		.type	_ZL14leLessOrEquals, %object
+ 1385              		.size	_ZL14leLessOrEquals, 12
+ 1386              	_ZL14leLessOrEquals:
+ 1387 0000 00000000 		.space	12
+ 1387      00000000 
+ 1387      00000000 
+ 1388              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 27
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 fsio_core.cpp
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:17     .text._ZN17LENameOrdinalPairC2E11le_action_ePKc:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:23     .text._ZN17LENameOrdinalPairC2E11le_action_ePKc:00000000 _ZN17LENameOrdinalPairC2E11le_action_ePKc
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1376   .bss.LE_FIRST:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:23     .text._ZN17LENameOrdinalPairC2E11le_action_ePKc:00000000 _ZN17LENameOrdinalPairC1E11le_action_ePKc
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:41     .text._ZN9LEElementC2Ev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:47     .text._ZN9LEElementC2Ev:00000000 _ZN9LEElementC2Ev
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:47     .text._ZN9LEElementC2Ev:00000000 _ZN9LEElementC1Ev
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:63     .text._ZN9LEElement4initE11le_action_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:69     .text._ZN9LEElement4initE11le_action_e:00000000 _ZN9LEElement4initE11le_action_e
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:77     .text._ZN9LEElement4initE11le_action_ef:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:83     .text._ZN9LEElement4initE11le_action_ef:00000000 _ZN9LEElement4initE11le_action_ef
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:92     .text._ZN12LECalculatorC2Ev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:98     .text._ZN12LECalculatorC2Ev:00000000 _ZN12LECalculatorC2Ev
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:98     .text._ZN12LECalculatorC2Ev:00000000 _ZN12LECalculatorC1Ev
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:117    .text._ZN12LECalculator5resetEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:123    .text._ZN12LECalculator5resetEv:00000000 _ZN12LECalculator5resetEv
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:133    .text._ZN12LECalculator5resetEP9LEElement:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:139    .text._ZN12LECalculator5resetEP9LEElement:00000000 _ZN12LECalculator5resetEP9LEElement
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:148    .text._ZN12LECalculator3addEP9LEElement:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:154    .text._ZN12LECalculator3addEP9LEElement:00000000 _ZN12LECalculator3addEP9LEElement
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:174    .text._ZN12LECalculator3popE11le_action_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:180    .text._ZN12LECalculator3popE11le_action_e:00000000 _ZN12LECalculator3popE11le_action_e
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1238   .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:203    .text._ZN12LECalculator5doJobEP6EngineP9LEElement:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:209    .text._ZN12LECalculator5doJobEP6EngineP9LEElement:00000000 _ZN12LECalculator5doJobEP6EngineP9LEElement
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:228    .text._ZN12LECalculator5doJobEP6EngineP9LEElement:0000002a $d
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1241   .rodata.str1.4:00000014 .LC1
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:342    .text._ZN12LECalculator5doJobEP6EngineP9LEElement:0000010c $t
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1244   .rodata.str1.4:00000020 .LC2
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1247   .rodata.str1.4:00000034 .LC3
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:686    .text._ZN12LECalculator5doJobEP6EngineP9LEElement:000004a4 $d
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:689    .text._ZN12LECalculator8getValueEP6Engine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:695    .text._ZN12LECalculator8getValueEP6Engine:00000000 _ZN12LECalculator8getValueEP6Engine
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1256   .rodata.str1.4:00000068 .LC6
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1253   .rodata.str1.4:0000005c .LC5
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1250   .rodata.str1.4:0000004c .LC4
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:754    .text._ZN12LECalculator9getValue2EP9LEElementP6Engine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:760    .text._ZN12LECalculator9getValue2EP9LEElementP6Engine:00000000 _ZN12LECalculator9getValue2EP9LEElementP6Engine
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:772    .text._ZN13LEElementPoolC2EP9LEElementi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:778    .text._ZN13LEElementPoolC2EP9LEElementi:00000000 _ZN13LEElementPoolC2EP9LEElementi
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:778    .text._ZN13LEElementPoolC2EP9LEElementi:00000000 _ZN13LEElementPoolC1EP9LEElementi
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:793    .text._ZN13LEElementPool5resetEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:799    .text._ZN13LEElementPool5resetEv:00000000 _ZN13LEElementPool5resetEv
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:808    .text._ZN13LEElementPool7getSizeEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:814    .text._ZN13LEElementPool7getSizeEv:00000000 _ZN13LEElementPool7getSizeEv
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:822    .text._ZN13LEElementPool4nextEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:828    .text._ZN13LEElementPool4nextEv:00000000 _ZN13LEElementPool4nextEv
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1259   .rodata.str1.4:00000088 .LC7
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:850    .text._Z9isNumericPKc:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:856    .text._Z9isNumericPKc:00000000 _Z9isNumericPKc
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:870    .text._Z12getNextTokenPKcPci:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:876    .text._Z12getNextTokenPKcPci:00000000 _Z12getNextTokenPKcPci
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1262   .rodata.str1.4:000000a8 .LC8
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:925    .text._Z11parseActionPKc:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:931    .text._Z11parseActionPKc:00000000 _Z11parseActionPKc
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 28
+
+
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:957    .text._ZN13LEElementPool15parseExpressionEPKc:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:963    .text._ZN13LEElementPool15parseExpressionEPKc:00000000 _ZN13LEElementPool15parseExpressionEPKc
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1320   .bss._ZL13parsingBuffer:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1265   .rodata.str1.4:000000b8 .LC9
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1033   .text.startup._GLOBAL__sub_I_LE_FIRST:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1038   .text.startup._GLOBAL__sub_I_LE_FIRST:00000000 _GLOBAL__sub_I_LE_FIRST
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1231   .bss._ZL5leAnd:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1203   .bss._ZL6leAnd2:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1210   .bss._ZL13leMoreOrEqual:00000000 .LANCHOR12
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1268   .rodata.str1.4:000000cc .LC10
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1217   .bss._ZL4leOr:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1270   .rodata.str1.4:000000d0 .LC11
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1362   .bss._ZL5leOr2:00000000 .LANCHOR5
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1273   .rodata.str1.4:000000d4 .LC12
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1327   .bss._ZL5leNot:00000000 .LANCHOR6
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1276   .rodata.str1.4:000000d8 .LC13
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1369   .bss._ZL5leAdd:00000000 .LANCHOR7
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1279   .rodata.str1.4:000000dc .LC14
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1196   .bss._ZL5leSub:00000000 .LANCHOR8
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1281   .rodata.str1.4:000000e0 .LC15
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1313   .bss._ZL5leMul:00000000 .LANCHOR9
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1334   .bss._ZL5leDiv:00000000 .LANCHOR10
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1284   .rodata.str1.4:000000e4 .LC16
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1355   .bss._ZL6leMore:00000000 .LANCHOR11
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1287   .rodata.str1.4:000000e8 .LC17
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1290   .rodata.str1.4:000000ec .LC18
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1293   .rodata.str1.4:000000f0 .LC19
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1296   .rodata.str1.4:000000f4 .LC20
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1348   .bss._ZL4leIf:00000000 .LANCHOR17
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1189   .bss._ZL6leLess:00000000 .LANCHOR13
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1383   .bss._ZL14leLessOrEquals:00000000 .LANCHOR14
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1341   .bss._ZL5leMax:00000000 .LANCHOR15
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1224   .bss._ZL5leMin:00000000 .LANCHOR16
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1299   .rodata.str1.4:000000f8 .LC21
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1302   .rodata.str1.4:000000fc .LC22
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1305   .rodata.str1.4:00000100 .LC23
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1307   .rodata.str1.4:00000104 .LC24
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1309   .rodata.str1.4:00000108 .LC25
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1184   .init_array:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1379   .bss.LE_FIRST:00000000 LE_FIRST
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1188   .bss._ZL6leLess:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1192   .bss._ZL6leLess:00000000 _ZL6leLess
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1195   .bss._ZL5leSub:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1199   .bss._ZL5leSub:00000000 _ZL5leSub
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1202   .bss._ZL6leAnd2:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1206   .bss._ZL6leAnd2:00000000 _ZL6leAnd2
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1209   .bss._ZL13leMoreOrEqual:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1213   .bss._ZL13leMoreOrEqual:00000000 _ZL13leMoreOrEqual
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1216   .bss._ZL4leOr:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1220   .bss._ZL4leOr:00000000 _ZL4leOr
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1223   .bss._ZL5leMin:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1227   .bss._ZL5leMin:00000000 _ZL5leMin
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1230   .bss._ZL5leAnd:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1234   .bss._ZL5leAnd:00000000 _ZL5leAnd
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1237   .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1312   .bss._ZL5leMul:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1316   .bss._ZL5leMul:00000000 _ZL5leMul
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc1CeGro.s 			page 29
+
+
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1319   .bss._ZL13parsingBuffer:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1323   .bss._ZL13parsingBuffer:00000000 _ZL13parsingBuffer
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1326   .bss._ZL5leNot:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1330   .bss._ZL5leNot:00000000 _ZL5leNot
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1333   .bss._ZL5leDiv:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1337   .bss._ZL5leDiv:00000000 _ZL5leDiv
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1340   .bss._ZL5leMax:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1344   .bss._ZL5leMax:00000000 _ZL5leMax
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1347   .bss._ZL4leIf:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1351   .bss._ZL4leIf:00000000 _ZL4leIf
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1354   .bss._ZL6leMore:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1358   .bss._ZL6leMore:00000000 _ZL6leMore
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1361   .bss._ZL5leOr2:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1365   .bss._ZL5leOr2:00000000 _ZL5leOr2
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1368   .bss._ZL5leAdd:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1372   .bss._ZL5leAdd:00000000 _ZL5leAdd
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1375   .bss.LE_FIRST:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1382   .bss._ZL14leLessOrEquals:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:1386   .bss._ZL14leLessOrEquals:00000000 _ZL14leLessOrEquals
+C:\Users\pc\AppData\Local\Temp\cc1CeGro.s:688    .text._ZN12LECalculator5doJobEP6EngineP9LEElement:000004a8 $t
+
+UNDEFINED SYMBOLS
+memset
+warning
+rlist
+getRemainingStack
+firmwareError
+maxF
+minF
+_Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e
+indexOf
+strncpy
+strlen
+strEqualCaseInsensitive
+atoff

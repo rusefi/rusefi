@@ -1,0 +1,1900 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"usb_lld.c"
+  16              		.section	.text.usb_lld_pump,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	usb_lld_pump, %function
+  22              	usb_lld_pump:
+  23              		@ args = 0, pretend = 0, frame = 16
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+  26 0004 40F20001 		movw	r1, #:lower16:rlist
+  27 0008 C0F20001 		movt	r1, #:upper16:rlist
+  28 000c 85B0     		sub	sp, sp, #20
+  29 000e 8A69     		ldr	r2, [r1, #24]
+  30 0010 046D     		ldr	r4, [r0, #80]
+  31 0012 0291     		str	r1, [sp, #8]
+  32 0014 40F20003 		movw	r3, #:lower16:.LC0
+  33 0018 C0F20003 		movt	r3, #:upper16:.LC0
+  34 001c 9361     		str	r3, [r2, #24]
+  35 001e 8146     		mov	r9, r0
+  36 0020 2023     		movs	r3, #32
+  37              	@ 720 "chibios/os/hal/platforms/STM32/OTGv1/usb_lld.c" 1
+  38 0022 83F31188 		msr     BASEPRI, r3
+  39              	@ 0 "" 2
+  40              		.thumb
+  41 0026 FFF7FEFF 		bl	dbg_check_lock
+  42 002a C846     		mov	r8, r9
+  43 002c A146     		mov	r9, r4
+  44              	.L64:
+  45 002e 98F80030 		ldrb	r3, [r8]	@ zero_extendqisi2
+  46 0032 012B     		cmp	r3, #1
+  47 0034 06D0     		beq	.L2
+  48 0036 D8F85C30 		ldr	r3, [r8, #92]
+  49 003a 83B9     		cbnz	r3, .L3
+  50 003c D9F81430 		ldr	r3, [r9, #20]
+  51 0040 DA06     		lsls	r2, r3, #27
+  52 0042 0CD4     		bmi	.L3
+  53              	.L2:
+  54 0044 0299     		ldr	r1, [sp, #8]
+  55 0046 D9F81820 		ldr	r2, [r9, #24]
+  56 004a 8B69     		ldr	r3, [r1, #24]
+  57 004c 42F01002 		orr	r2, r2, #16
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 2
+
+
+  58 0050 C9F81820 		str	r2, [r9, #24]
+  59 0054 0220     		movs	r0, #2
+  60 0056 C8F86430 		str	r3, [r8, #100]
+  61 005a FFF7FEFF 		bl	chSchGoSleepS
+  62              	.L3:
+  63 005e FFF7FEFF 		bl	dbg_check_unlock
+  64 0062 0023     		movs	r3, #0
+  65              	@ 732 "chibios/os/hal/platforms/STM32/OTGv1/usb_lld.c" 1
+  66 0064 83F31188 		msr     BASEPRI, r3
+  67              	@ 0 "" 2
+  68              		.thumb
+  69 0068 4FF0000A 		mov	r10, #0
+  70              	.L8:
+  71 006c D9F81430 		ldr	r3, [r9, #20]
+  72 0070 DB06     		lsls	r3, r3, #27
+  73 0072 23D5     		bpl	.L120
+  74              	.L32:
+  75 0074 D8F85070 		ldr	r7, [r8, #80]
+  76 0078 3D6A     		ldr	r5, [r7, #32]
+  77 007a 05F4F013 		and	r3, r5, #1966080
+  78 007e B3F5802F 		cmp	r3, #262144
+  79 0082 34D0     		beq	.L6
+  80 0084 B3F5402F 		cmp	r3, #786432
+  81 0088 F0D1     		bne	.L8
+  82 008a 05F00F02 		and	r2, r5, #15
+  83 008e 08EB8202 		add	r2, r8, r2, lsl #2
+  84 0092 C5F30A13 		ubfx	r3, r5, #4, #11
+  85 0096 D268     		ldr	r2, [r2, #12]
+  86 0098 0333     		adds	r3, r3, #3
+  87 009a 9B08     		lsrs	r3, r3, #2
+  88 009c 106A     		ldr	r0, [r2, #32]
+  89 009e E5D0     		beq	.L8
+  90 00a0 07F58057 		add	r7, r7, #4096
+  91 00a4 0222     		movs	r2, #2
+  92              	.L13:
+  93 00a6 3968     		ldr	r1, [r7]
+  94 00a8 12B1     		cbz	r2, .L11
+  95 00aa 40F8041B 		str	r1, [r0], #4
+  96 00ae 013A     		subs	r2, r2, #1
+  97              	.L11:
+  98 00b0 013B     		subs	r3, r3, #1
+  99 00b2 F8D1     		bne	.L13
+ 100 00b4 D9F81430 		ldr	r3, [r9, #20]
+ 101 00b8 DB06     		lsls	r3, r3, #27
+ 102 00ba DBD4     		bmi	.L32
+ 103              	.L120:
+ 104 00bc D8F85C30 		ldr	r3, [r8, #92]
+ 105 00c0 0121     		movs	r1, #1
+ 106 00c2 01FA0AF1 		lsl	r1, r1, r10
+ 107 00c6 1942     		tst	r1, r3
+ 108 00c8 0191     		str	r1, [sp, #4]
+ 109 00ca 08BF     		it	eq
+ 110 00cc 0AF1010B 		addeq	fp, r10, #1
+ 111 00d0 40F08780 		bne	.L121
+ 112              	.L33:
+ 113 00d4 D8F85430 		ldr	r3, [r8, #84]
+ 114 00d8 9B68     		ldr	r3, [r3, #8]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 3
+
+
+ 115 00da 5FFA8BFA 		uxtb	r10, fp
+ 116 00de 9A45     		cmp	r10, r3
+ 117 00e0 C4D9     		bls	.L8
+ 118 00e2 2023     		movs	r3, #32
+ 119              	@ 767 "chibios/os/hal/platforms/STM32/OTGv1/usb_lld.c" 1
+ 120 00e4 83F31188 		msr     BASEPRI, r3
+ 121              	@ 0 "" 2
+ 122              		.thumb
+ 123 00e8 FFF7FEFF 		bl	dbg_check_lock
+ 124 00ec 9FE7     		b	.L64
+ 125              	.L6:
+ 126 00ee 05F00F06 		and	r6, r5, #15
+ 127 00f2 08EB860B 		add	fp, r8, r6, lsl #2
+ 128 00f6 C5F30A15 		ubfx	r5, r5, #4, #11
+ 129 00fa DBF80C30 		ldr	r3, [fp, #12]
+ 130 00fe 9869     		ldr	r0, [r3, #24]
+ 131 0100 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 132 0102 E3B9     		cbnz	r3, .L122
+ 133 0104 021D     		adds	r2, r0, #4
+ 134 0106 1CCA     		ldmia	r2, {r2, r3, r4}
+ 135 0108 0332     		adds	r2, r2, #3
+ 136 010a D21A     		subs	r2, r2, r3
+ 137 010c EB1C     		adds	r3, r5, #3
+ 138 010e 9B08     		lsrs	r3, r3, #2
+ 139 0110 4FEA9202 		lsr	r2, r2, #2
+ 140 0114 1CBF     		itt	ne
+ 141 0116 07F58057 		addne	r7, r7, #4096
+ 142 011a A646     		movne	lr, r4
+ 143 011c 06D0     		beq	.L30
+ 144              	.L31:
+ 145 011e 3968     		ldr	r1, [r7]
+ 146 0120 12B1     		cbz	r2, .L29
+ 147 0122 4EF8041B 		str	r1, [lr], #4
+ 148 0126 013A     		subs	r2, r2, #1
+ 149              	.L29:
+ 150 0128 013B     		subs	r3, r3, #1
+ 151 012a F8D1     		bne	.L31
+ 152              	.L30:
+ 153 012c 2C44     		add	r4, r4, r5
+ 154 012e C460     		str	r4, [r0, #12]
+ 155              	.L26:
+ 156 0130 DBF80C30 		ldr	r3, [fp, #12]
+ 157 0134 9B69     		ldr	r3, [r3, #24]
+ 158 0136 9A68     		ldr	r2, [r3, #8]
+ 159 0138 2A44     		add	r2, r2, r5
+ 160 013a 9A60     		str	r2, [r3, #8]
+ 161 013c 96E7     		b	.L8
+ 162              	.L122:
+ 163 013e C468     		ldr	r4, [r0, #12]
+ 164 0140 07F58057 		add	r7, r7, #4096
+ 165 0144 2846     		mov	r0, r5
+ 166 0146 AE46     		mov	lr, r5
+ 167 0148 002D     		cmp	r5, #0
+ 168 014a 2BD0     		beq	.L21
+ 169              	.L25:
+ 170 014c 0328     		cmp	r0, #3
+ 171 014e 07D9     		bls	.L18
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 4
+
+
+ 172              	.L123:
+ 173 0150 6369     		ldr	r3, [r4, #20]
+ 174 0152 2269     		ldr	r2, [r4, #16]
+ 175 0154 9342     		cmp	r3, r2
+ 176 0156 42D3     		bcc	.L19
+ 177 0158 E368     		ldr	r3, [r4, #12]
+ 178 015a 0328     		cmp	r0, #3
+ 179 015c 6361     		str	r3, [r4, #20]
+ 180 015e F7D8     		bhi	.L123
+ 181              	.L18:
+ 182 0160 3E68     		ldr	r6, [r7]
+ 183 0162 F0B1     		cbz	r0, .L114
+ 184 0164 6369     		ldr	r3, [r4, #20]
+ 185              	.L65:
+ 186 0166 0022     		movs	r2, #0
+ 187 0168 00E0     		b	.L24
+ 188              	.L124:
+ 189 016a 6369     		ldr	r3, [r4, #20]
+ 190              	.L24:
+ 191 016c D100     		lsls	r1, r2, #3
+ 192 016e 26FA01F1 		lsr	r1, r6, r1
+ 193 0172 5D1C     		adds	r5, r3, #1
+ 194 0174 6561     		str	r5, [r4, #20]
+ 195 0176 1970     		strb	r1, [r3]
+ 196 0178 6369     		ldr	r3, [r4, #20]
+ 197 017a 2169     		ldr	r1, [r4, #16]
+ 198 017c 8B42     		cmp	r3, r1
+ 199 017e 24BF     		itt	cs
+ 200 0180 E368     		ldrcs	r3, [r4, #12]
+ 201 0182 6361     		strcs	r3, [r4, #20]
+ 202 0184 0138     		subs	r0, r0, #1
+ 203 0186 02F10102 		add	r2, r2, #1
+ 204 018a 0CBF     		ite	eq
+ 205 018c 0023     		moveq	r3, #0
+ 206 018e 0123     		movne	r3, #1
+ 207 0190 032A     		cmp	r2, #3
+ 208 0192 8CBF     		ite	hi
+ 209 0194 0023     		movhi	r3, #0
+ 210 0196 03F00103 		andls	r3, r3, #1
+ 211 019a 002B     		cmp	r3, #0
+ 212 019c E5D1     		bne	.L124
+ 213 019e 0028     		cmp	r0, #0
+ 214 01a0 D4D1     		bne	.L25
+ 215              	.L114:
+ 216 01a2 7546     		mov	r5, lr
+ 217              	.L21:
+ 218 01a4 2023     		movs	r3, #32
+ 219              	@ 437 "chibios/os/hal/platforms/STM32/OTGv1/usb_lld.c" 1
+ 220 01a6 83F31188 		msr     BASEPRI, r3
+ 221              	@ 0 "" 2
+ 222              		.thumb
+ 223 01aa FFF7FEFF 		bl	dbg_check_lock
+ 224 01ae A368     		ldr	r3, [r4, #8]
+ 225 01b0 2068     		ldr	r0, [r4]
+ 226 01b2 2B44     		add	r3, r3, r5
+ 227 01b4 A042     		cmp	r0, r4
+ 228 01b6 A360     		str	r3, [r4, #8]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 5
+
+
+ 229 01b8 09D0     		beq	.L17
+ 230              	.L27:
+ 231 01ba 0368     		ldr	r3, [r0]
+ 232 01bc 2360     		str	r3, [r4]
+ 233 01be 5C60     		str	r4, [r3, #4]
+ 234 01c0 FFF7FEFF 		bl	chSchReadyI
+ 235 01c4 0022     		movs	r2, #0
+ 236 01c6 8262     		str	r2, [r0, #40]
+ 237 01c8 2068     		ldr	r0, [r4]
+ 238 01ca A042     		cmp	r0, r4
+ 239 01cc F5D1     		bne	.L27
+ 240              	.L17:
+ 241 01ce FFF7FEFF 		bl	chSchRescheduleS
+ 242 01d2 FFF7FEFF 		bl	dbg_check_unlock
+ 243 01d6 0023     		movs	r3, #0
+ 244              	@ 442 "chibios/os/hal/platforms/STM32/OTGv1/usb_lld.c" 1
+ 245 01d8 83F31188 		msr     BASEPRI, r3
+ 246              	@ 0 "" 2
+ 247              		.thumb
+ 248 01dc A8E7     		b	.L26
+ 249              	.L19:
+ 250 01de 3E68     		ldr	r6, [r7]
+ 251 01e0 C1E7     		b	.L65
+ 252              	.L121:
+ 253 01e2 2023     		movs	r3, #32
+ 254              	@ 746 "chibios/os/hal/platforms/STM32/OTGv1/usb_lld.c" 1
+ 255 01e4 83F31188 		msr     BASEPRI, r3
+ 256              	@ 0 "" 2
+ 257              		.thumb
+ 258 01e8 FFF7FEFF 		bl	dbg_check_lock
+ 259 01ec D9F80820 		ldr	r2, [r9, #8]
+ 260 01f0 D8F85C30 		ldr	r3, [r8, #92]
+ 261 01f4 0199     		ldr	r1, [sp, #4]
+ 262 01f6 22F00102 		bic	r2, r2, #1
+ 263 01fa 23EA0103 		bic	r3, r3, r1
+ 264 01fe C9F80820 		str	r2, [r9, #8]
+ 265 0202 C8F85C30 		str	r3, [r8, #92]
+ 266 0206 FFF7FEFF 		bl	dbg_check_unlock
+ 267 020a 0023     		movs	r3, #0
+ 268              	@ 756 "chibios/os/hal/platforms/STM32/OTGv1/usb_lld.c" 1
+ 269 020c 83F31188 		msr     BASEPRI, r3
+ 270              	@ 0 "" 2
+ 271              		.thumb
+ 272 0210 08EB8A02 		add	r2, r8, r10, lsl #2
+ 273 0214 0092     		str	r2, [sp]
+ 274 0216 D168     		ldr	r1, [r2, #12]
+ 275 0218 4C69     		ldr	r4, [r1, #20]
+ 276 021a A368     		ldr	r3, [r4, #8]
+ 277 021c 6268     		ldr	r2, [r4, #4]
+ 278 021e 9A42     		cmp	r2, r3
+ 279 0220 40F2D480 		bls	.L125
+ 280 0224 D8F85000 		ldr	r0, [r8, #80]
+ 281 0228 098A     		ldrh	r1, [r1, #16]
+ 282 022a 4FEA4A17 		lsl	r7, r10, #5
+ 283 022e C519     		adds	r5, r0, r7
+ 284 0230 D21A     		subs	r2, r2, r3
+ 285 0232 D5F81839 		ldr	r3, [r5, #2328]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 6
+
+
+ 286 0236 8A42     		cmp	r2, r1
+ 287 0238 34BF     		ite	cc
+ 288 023a 1546     		movcc	r5, r2
+ 289 023c 0D46     		movcs	r5, r1
+ 290 023e 9BB2     		uxth	r3, r3
+ 291 0240 B5EB830F 		cmp	r5, r3, lsl #2
+ 292 0244 0AF1010B 		add	fp, r10, #1
+ 293 0248 9EBF     		ittt	ls
+ 294 024a 4FEA0B32 		lslls	r2, fp, #12
+ 295 024e CDF80C90 		strls	r9, [sp, #12]
+ 296 0252 9146     		movls	r9, r2
+ 297 0254 2DD8     		bhi	.L36
+ 298              	.L37:
+ 299 0256 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 300 0258 002B     		cmp	r3, #0
+ 301 025a 43D1     		bne	.L126
+ 302 025c EB1C     		adds	r3, r5, #3
+ 303 025e D4F80CE0 		ldr	lr, [r4, #12]
+ 304 0262 9B08     		lsrs	r3, r3, #2
+ 305 0264 4844     		add	r0, r0, r9
+ 306 0266 18BF     		it	ne
+ 307 0268 7246     		movne	r2, lr
+ 308 026a 04D0     		beq	.L57
+ 309              	.L58:
+ 310 026c 52F8041B 		ldr	r1, [r2], #4
+ 311 0270 013B     		subs	r3, r3, #1
+ 312 0272 0160     		str	r1, [r0]
+ 313 0274 FAD1     		bne	.L58
+ 314              	.L57:
+ 315 0276 0EEB0503 		add	r3, lr, r5
+ 316 027a E360     		str	r3, [r4, #12]
+ 317              	.L54:
+ 318 027c 009A     		ldr	r2, [sp]
+ 319 027e D168     		ldr	r1, [r2, #12]
+ 320 0280 4C69     		ldr	r4, [r1, #20]
+ 321 0282 A368     		ldr	r3, [r4, #8]
+ 322 0284 6268     		ldr	r2, [r4, #4]
+ 323 0286 2B44     		add	r3, r3, r5
+ 324 0288 9A42     		cmp	r2, r3
+ 325 028a A360     		str	r3, [r4, #8]
+ 326 028c 40F29A80 		bls	.L127
+ 327 0290 D8F85000 		ldr	r0, [r8, #80]
+ 328 0294 098A     		ldrh	r1, [r1, #16]
+ 329 0296 C519     		adds	r5, r0, r7
+ 330 0298 D21A     		subs	r2, r2, r3
+ 331 029a D5F81839 		ldr	r3, [r5, #2328]
+ 332 029e 8A42     		cmp	r2, r1
+ 333 02a0 34BF     		ite	cc
+ 334 02a2 1546     		movcc	r5, r2
+ 335 02a4 0D46     		movcs	r5, r1
+ 336 02a6 9BB2     		uxth	r3, r3
+ 337 02a8 B5EB830F 		cmp	r5, r3, lsl #2
+ 338 02ac D3D9     		bls	.L37
+ 339 02ae DDF80C90 		ldr	r9, [sp, #12]
+ 340              	.L36:
+ 341 02b2 0024     		movs	r4, #0
+ 342              	.L35:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 7
+
+
+ 343 02b4 2023     		movs	r3, #32
+ 344              	@ 760 "chibios/os/hal/platforms/STM32/OTGv1/usb_lld.c" 1
+ 345 02b6 83F31188 		msr     BASEPRI, r3
+ 346              	@ 0 "" 2
+ 347              		.thumb
+ 348 02ba FFF7FEFF 		bl	dbg_check_lock
+ 349 02be D9F80830 		ldr	r3, [r9, #8]
+ 350 02c2 43F00103 		orr	r3, r3, #1
+ 351 02c6 C9F80830 		str	r3, [r9, #8]
+ 352 02ca 2CB9     		cbnz	r4, .L61
+ 353 02cc D9F83438 		ldr	r3, [r9, #2100]
+ 354 02d0 0199     		ldr	r1, [sp, #4]
+ 355 02d2 0B43     		orrs	r3, r3, r1
+ 356 02d4 C9F83438 		str	r3, [r9, #2100]
+ 357              	.L61:
+ 358 02d8 FFF7FEFF 		bl	dbg_check_unlock
+ 359 02dc 0023     		movs	r3, #0
+ 360              	@ 764 "chibios/os/hal/platforms/STM32/OTGv1/usb_lld.c" 1
+ 361 02de 83F31188 		msr     BASEPRI, r3
+ 362              	@ 0 "" 2
+ 363              		.thumb
+ 364 02e2 F7E6     		b	.L33
+ 365              	.L126:
+ 366 02e4 00EB090A 		add	r10, r0, r9
+ 367 02e8 E468     		ldr	r4, [r4, #12]
+ 368 02ea 2A46     		mov	r2, r5
+ 369 02ec AE46     		mov	lr, r5
+ 370 02ee 15B3     		cbz	r5, .L48
+ 371              	.L53:
+ 372 02f0 9608     		lsrs	r6, r2, #2
+ 373 02f2 3DD0     		beq	.L42
+ 374 02f4 2569     		ldr	r5, [r4, #16]
+ 375 02f6 A169     		ldr	r1, [r4, #24]
+ 376 02f8 681A     		subs	r0, r5, r1
+ 377 02fa C31C     		adds	r3, r0, #3
+ 378 02fc 30EA2000 		bics	r0, r0, r0, asr #32
+ 379 0300 28BF     		it	cs
+ 380 0302 1846     		movcs	r0, r3
+ 381 0304 8310     		asrs	r3, r0, #2
+ 382 0306 9E42     		cmp	r6, r3
+ 383 0308 38BF     		it	cc
+ 384 030a 3346     		movcc	r3, r6
+ 385 030c 4FEA830C 		lsl	ip, r3, #2
+ 386 0310 CCEB0202 		rsb	r2, ip, r2
+ 387 0314 3BB1     		cbz	r3, .L43
+ 388 0316 0846     		mov	r0, r1
+ 389              	.L45:
+ 390 0318 50F8046B 		ldr	r6, [r0], #4
+ 391 031c 013B     		subs	r3, r3, #1
+ 392 031e CAF80060 		str	r6, [r10]
+ 393 0322 F9D1     		bne	.L45
+ 394 0324 6144     		add	r1, r1, ip
+ 395              	.L43:
+ 396 0326 A942     		cmp	r1, r5
+ 397 0328 A161     		str	r1, [r4, #24]
+ 398 032a 48D3     		bcc	.L46
+ 399 032c E368     		ldr	r3, [r4, #12]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 8
+
+
+ 400 032e A361     		str	r3, [r4, #24]
+ 401 0330 002A     		cmp	r2, #0
+ 402 0332 DDD1     		bne	.L53
+ 403              	.L117:
+ 404 0334 7546     		mov	r5, lr
+ 405              	.L48:
+ 406 0336 2023     		movs	r3, #32
+ 407              	@ 325 "chibios/os/hal/platforms/STM32/OTGv1/usb_lld.c" 1
+ 408 0338 83F31188 		msr     BASEPRI, r3
+ 409              	@ 0 "" 2
+ 410              		.thumb
+ 411 033c FFF7FEFF 		bl	dbg_check_lock
+ 412 0340 A368     		ldr	r3, [r4, #8]
+ 413 0342 2068     		ldr	r0, [r4]
+ 414 0344 2B44     		add	r3, r3, r5
+ 415 0346 A042     		cmp	r0, r4
+ 416 0348 A360     		str	r3, [r4, #8]
+ 417 034a 09D0     		beq	.L41
+ 418              	.L55:
+ 419 034c 0368     		ldr	r3, [r0]
+ 420 034e 2360     		str	r3, [r4]
+ 421 0350 5C60     		str	r4, [r3, #4]
+ 422 0352 FFF7FEFF 		bl	chSchReadyI
+ 423 0356 0023     		movs	r3, #0
+ 424 0358 8362     		str	r3, [r0, #40]
+ 425 035a 2068     		ldr	r0, [r4]
+ 426 035c A042     		cmp	r0, r4
+ 427 035e F5D1     		bne	.L55
+ 428              	.L41:
+ 429 0360 FFF7FEFF 		bl	chSchRescheduleS
+ 430 0364 FFF7FEFF 		bl	dbg_check_unlock
+ 431 0368 0023     		movs	r3, #0
+ 432              	@ 330 "chibios/os/hal/platforms/STM32/OTGv1/usb_lld.c" 1
+ 433 036a 83F31188 		msr     BASEPRI, r3
+ 434              	@ 0 "" 2
+ 435              		.thumb
+ 436 036e 85E7     		b	.L54
+ 437              	.L42:
+ 438 0370 1646     		mov	r6, r2
+ 439 0372 FAB1     		cbz	r2, .L50
+ 440 0374 2569     		ldr	r5, [r4, #16]
+ 441 0376 A169     		ldr	r1, [r4, #24]
+ 442              	.L51:
+ 443 0378 0026     		movs	r6, #0
+ 444 037a 3346     		mov	r3, r6
+ 445 037c 00E0     		b	.L49
+ 446              	.L128:
+ 447 037e A169     		ldr	r1, [r4, #24]
+ 448              	.L49:
+ 449 0380 481C     		adds	r0, r1, #1
+ 450 0382 A061     		str	r0, [r4, #24]
+ 451 0384 91F800C0 		ldrb	ip, [r1]	@ zero_extendqisi2
+ 452 0388 D900     		lsls	r1, r3, #3
+ 453 038a 0CFA01F1 		lsl	r1, ip, r1
+ 454 038e A842     		cmp	r0, r5
+ 455 0390 46EA0106 		orr	r6, r6, r1
+ 456 0394 24BF     		itt	cs
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 9
+
+
+ 457 0396 E168     		ldrcs	r1, [r4, #12]
+ 458 0398 A161     		strcs	r1, [r4, #24]
+ 459 039a 013A     		subs	r2, r2, #1
+ 460 039c 03F10103 		add	r3, r3, #1
+ 461 03a0 0CBF     		ite	eq
+ 462 03a2 0021     		moveq	r1, #0
+ 463 03a4 0121     		movne	r1, #1
+ 464 03a6 032B     		cmp	r3, #3
+ 465 03a8 8CBF     		ite	hi
+ 466 03aa 0021     		movhi	r1, #0
+ 467 03ac 01F00101 		andls	r1, r1, #1
+ 468 03b0 0029     		cmp	r1, #0
+ 469 03b2 E4D1     		bne	.L128
+ 470              	.L50:
+ 471 03b4 CAF80060 		str	r6, [r10]
+ 472 03b8 002A     		cmp	r2, #0
+ 473 03ba 99D1     		bne	.L53
+ 474 03bc BAE7     		b	.L117
+ 475              	.L46:
+ 476 03be 002A     		cmp	r2, #0
+ 477 03c0 DAD1     		bne	.L51
+ 478 03c2 B7E7     		b	.L117
+ 479              	.L127:
+ 480 03c4 DDF80C90 		ldr	r9, [sp, #12]
+ 481              	.L59:
+ 482 03c8 0124     		movs	r4, #1
+ 483 03ca 73E7     		b	.L35
+ 484              	.L125:
+ 485 03cc 0AF1010B 		add	fp, r10, #1
+ 486 03d0 FAE7     		b	.L59
+ 487              		.size	usb_lld_pump, .-usb_lld_pump
+ 488 03d2 00BFAFF3 		.section	.text.otg_disable_ep.isra.0,"ax",%progbits
+ 488      0080AFF3 
+ 488      0080AFF3 
+ 488      0080
+ 489              		.align	2
+ 490              		.p2align 4,,15
+ 491              		.thumb
+ 492              		.thumb_func
+ 493              		.type	otg_disable_ep.isra.0, %function
+ 494              	otg_disable_ep.isra.0:
+ 495              		@ args = 0, pretend = 0, frame = 0
+ 496              		@ frame_needed = 0, uses_anonymous_args = 0
+ 497              		@ link register save eliminated.
+ 498 0000 D1F808C0 		ldr	ip, [r1, #8]
+ 499 0004 0021     		movs	r1, #0
+ 500 0006 2DE9F001 		push	{r4, r5, r6, r7, r8}
+ 501 000a 0D46     		mov	r5, r1
+ 502 000c 4FF08048 		mov	r8, #1073741824
+ 503 0010 4FF0FF37 		mov	r7, #-1
+ 504 0014 13E0     		b	.L137
+ 505              	.L131:
+ 506 0016 0319     		adds	r3, r0, r4
+ 507 0018 C3F81059 		str	r5, [r3, #2320]
+ 508 001c C3F80879 		str	r7, [r3, #2312]
+ 509 0020 D2F8006B 		ldr	r6, [r2, #2816]
+ 510 0024 002E     		cmp	r6, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 10
+
+
+ 511 0026 A8BF     		it	ge
+ 512 0028 C2F8005B 		strge	r5, [r2, #2816]
+ 513 002c 18DB     		blt	.L138
+ 514              	.L134:
+ 515 002e 0444     		add	r4, r4, r0
+ 516 0030 0131     		adds	r1, r1, #1
+ 517 0032 6145     		cmp	r1, ip
+ 518 0034 C4F8105B 		str	r5, [r4, #2832]
+ 519 0038 C4F8087B 		str	r7, [r4, #2824]
+ 520 003c 18D8     		bhi	.L139
+ 521              	.L137:
+ 522 003e 4C01     		lsls	r4, r1, #5
+ 523 0040 0219     		adds	r2, r0, r4
+ 524 0042 D2F80039 		ldr	r3, [r2, #2304]
+ 525 0046 002B     		cmp	r3, #0
+ 526 0048 A8BF     		it	ge
+ 527 004a C2F80059 		strge	r5, [r2, #2304]
+ 528 004e E2DA     		bge	.L131
+ 529 0050 C2F80089 		str	r8, [r2, #2304]
+ 530 0054 1646     		mov	r6, r2
+ 531              	.L132:
+ 532 0056 D6F80839 		ldr	r3, [r6, #2312]
+ 533 005a 9B07     		lsls	r3, r3, #30
+ 534 005c FBD5     		bpl	.L132
+ 535 005e DAE7     		b	.L131
+ 536              	.L138:
+ 537 0060 C2F8008B 		str	r8, [r2, #2816]
+ 538 0064 1A46     		mov	r2, r3
+ 539              	.L135:
+ 540 0066 D2F8083B 		ldr	r3, [r2, #2824]
+ 541 006a DE06     		lsls	r6, r3, #27
+ 542 006c FBD5     		bpl	.L135
+ 543 006e DEE7     		b	.L134
+ 544              	.L139:
+ 545 0070 4FF00113 		mov	r3, #65537
+ 546 0074 C0F81C38 		str	r3, [r0, #2076]
+ 547 0078 BDE8F001 		pop	{r4, r5, r6, r7, r8}
+ 548 007c 7047     		bx	lr
+ 549              		.size	otg_disable_ep.isra.0, .-otg_disable_ep.isra.0
+ 550 007e 00BF     		.section	.text.usb_lld_init,"ax",%progbits
+ 551              		.align	2
+ 552              		.p2align 4,,15
+ 553              		.global	usb_lld_init
+ 554              		.thumb
+ 555              		.thumb_func
+ 556              		.type	usb_lld_init, %function
+ 557              	usb_lld_init:
+ 558              		@ args = 0, pretend = 0, frame = 0
+ 559              		@ frame_needed = 0, uses_anonymous_args = 0
+ 560 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 561 0002 40F20004 		movw	r4, #:lower16:.LANCHOR0
+ 562 0006 C0F20004 		movt	r4, #:upper16:.LANCHOR0
+ 563 000a 2046     		mov	r0, r4
+ 564 000c FFF7FEFF 		bl	usbObjectInit
+ 565 0010 04F1B405 		add	r5, r4, #180
+ 566 0014 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 567 0018 C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 11
+
+
+ 568 001c 2946     		mov	r1, r5
+ 569 001e 04F16800 		add	r0, r4, #104
+ 570 0022 0026     		movs	r6, #0
+ 571 0024 4FF0A047 		mov	r7, #1342177280
+ 572 0028 FF22     		movs	r2, #255
+ 573 002a 2765     		str	r7, [r4, #80]
+ 574 002c 6365     		str	r3, [r4, #84]
+ 575 002e 2666     		str	r6, [r4, #96]
+ 576 0030 6666     		str	r6, [r4, #100]
+ 577 0032 FFF7FEFF 		bl	_thread_memfill
+ 578 0036 2846     		mov	r0, r5
+ 579 0038 04F5B861 		add	r1, r4, #1472
+ 580 003c 5522     		movs	r2, #85
+ 581 003e BDE8F840 		pop	{r3, r4, r5, r6, r7, lr}
+ 582 0042 FFF7FEBF 		b	_thread_memfill
+ 583              		.size	usb_lld_init, .-usb_lld_init
+ 584 0046 00BFAFF3 		.section	.text.usb_lld_start,"ax",%progbits
+ 584      0080AFF3 
+ 584      0080
+ 585              		.align	2
+ 586              		.p2align 4,,15
+ 587              		.global	usb_lld_start
+ 588              		.thumb
+ 589              		.thumb_func
+ 590              		.type	usb_lld_start, %function
+ 591              	usb_lld_start:
+ 592              		@ args = 0, pretend = 0, frame = 0
+ 593              		@ frame_needed = 0, uses_anonymous_args = 0
+ 594 0000 70B5     		push	{r4, r5, r6, lr}
+ 595 0002 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 596 0004 066D     		ldr	r6, [r0, #80]
+ 597 0006 012B     		cmp	r3, #1
+ 598 0008 82B0     		sub	sp, sp, #8
+ 599 000a 0546     		mov	r5, r0
+ 600 000c 01D0     		beq	.L151
+ 601 000e 02B0     		add	sp, sp, #8
+ 602              		@ sp needed
+ 603 0010 70BD     		pop	{r4, r5, r6, pc}
+ 604              	.L151:
+ 605 0012 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 606 0016 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 607 001a 9842     		cmp	r0, r3
+ 608 001c 51D0     		beq	.L152
+ 609              	.L143:
+ 610 001e 2B6E     		ldr	r3, [r5, #96]
+ 611 0020 0022     		movs	r2, #0
+ 612 0022 EA65     		str	r2, [r5, #92]
+ 613 0024 002B     		cmp	r3, #0
+ 614 0026 3DD0     		beq	.L153
+ 615              	.L144:
+ 616 0028 4FF4A252 		mov	r2, #5184
+ 617 002c 0323     		movs	r3, #3
+ 618 002e C0F22023 		movt	r3, 544
+ 619 0032 C4F20002 		movt	r2, 16384
+ 620 0036 0020     		movs	r0, #0
+ 621 0038 4FF45021 		mov	r1, #851968
+ 622 003c F260     		str	r2, [r6, #12]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 12
+
+
+ 623 003e C6F80038 		str	r3, [r6, #2048]
+ 624 0042 C6F8000E 		str	r0, [r6, #3584]
+ 625 0046 B163     		str	r1, [r6, #56]
+ 626 0048 2C6D     		ldr	r4, [r5, #80]
+ 627 004a 2020     		movs	r0, #32
+ 628 004c FFF7FEFF 		bl	halPolledDelay
+ 629 0050 0123     		movs	r3, #1
+ 630 0052 2361     		str	r3, [r4, #16]
+ 631              	.L146:
+ 632 0054 2369     		ldr	r3, [r4, #16]
+ 633 0056 DA07     		lsls	r2, r3, #31
+ 634 0058 FCD4     		bmi	.L146
+ 635 005a 0C20     		movs	r0, #12
+ 636 005c FFF7FEFF 		bl	halPolledDelay
+ 637              	.L148:
+ 638 0060 2369     		ldr	r3, [r4, #16]
+ 639 0062 002B     		cmp	r3, #0
+ 640 0064 FCDA     		bge	.L148
+ 641 0066 0024     		movs	r4, #0
+ 642 0068 B460     		str	r4, [r6, #8]
+ 643 006a 286D     		ldr	r0, [r5, #80]
+ 644 006c 696D     		ldr	r1, [r5, #84]
+ 645 006e FFF7FEFF 		bl	otg_disable_ep.isra.0
+ 646 0072 6B68     		ldr	r3, [r5, #4]
+ 647 0074 C6F81048 		str	r4, [r6, #2064]
+ 648 0078 DB68     		ldr	r3, [r3, #12]
+ 649 007a C6F81448 		str	r4, [r6, #2068]
+ 650 007e C6F81C48 		str	r4, [r6, #2076]
+ 651 0082 5BB1     		cbz	r3, .L154
+ 652 0084 43F20803 		movw	r3, #12296
+ 653 0088 B361     		str	r3, [r6, #24]
+ 654              	.L150:
+ 655 008a 4FF0FF33 		mov	r3, #-1
+ 656 008e 7361     		str	r3, [r6, #20]
+ 657 0090 B368     		ldr	r3, [r6, #8]
+ 658 0092 43F00103 		orr	r3, r3, #1
+ 659 0096 B360     		str	r3, [r6, #8]
+ 660 0098 02B0     		add	sp, sp, #8
+ 661              		@ sp needed
+ 662 009a 70BD     		pop	{r4, r5, r6, pc}
+ 663              	.L154:
+ 664 009c 4FF44053 		mov	r3, #12288
+ 665 00a0 B361     		str	r3, [r6, #24]
+ 666 00a2 F2E7     		b	.L150
+ 667              	.L153:
+ 668 00a4 40F20003 		movw	r3, #:lower16:usb_lld_pump
+ 669 00a8 0095     		str	r5, [sp]
+ 670 00aa C0F20003 		movt	r3, #:upper16:usb_lld_pump
+ 671 00ae 05F16800 		add	r0, r5, #104
+ 672 00b2 4FF4AB61 		mov	r1, #1368
+ 673 00b6 0222     		movs	r2, #2
+ 674 00b8 FFF7FEFF 		bl	chThdCreateI
+ 675 00bc 6866     		str	r0, [r5, #100]
+ 676 00be 2866     		str	r0, [r5, #96]
+ 677 00c0 B2E7     		b	.L144
+ 678              	.L152:
+ 679 00c2 4FF46053 		mov	r3, #14336
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 13
+
+
+ 680 00c6 C4F20203 		movt	r3, 16386
+ 681 00ca 0022     		movs	r2, #0
+ 682 00cc 596B     		ldr	r1, [r3, #52]
+ 683 00ce 41F08001 		orr	r1, r1, #128
+ 684 00d2 5963     		str	r1, [r3, #52]
+ 685 00d4 5969     		ldr	r1, [r3, #20]
+ 686 00d6 41F08001 		orr	r1, r1, #128
+ 687 00da 5961     		str	r1, [r3, #20]
+ 688 00dc 4320     		movs	r0, #67
+ 689 00de 5A61     		str	r2, [r3, #20]
+ 690 00e0 E021     		movs	r1, #224
+ 691 00e2 FFF7FEFF 		bl	nvicEnableVector
+ 692 00e6 9AE7     		b	.L143
+ 693              		.size	usb_lld_start, .-usb_lld_start
+ 694 00e8 AFF30080 		.section	.text.usb_lld_stop,"ax",%progbits
+ 694      AFF30080 
+ 695              		.align	2
+ 696              		.p2align 4,,15
+ 697              		.global	usb_lld_stop
+ 698              		.thumb
+ 699              		.thumb_func
+ 700              		.type	usb_lld_stop, %function
+ 701              	usb_lld_stop:
+ 702              		@ args = 0, pretend = 0, frame = 0
+ 703              		@ frame_needed = 0, uses_anonymous_args = 0
+ 704 0000 38B5     		push	{r3, r4, r5, lr}
+ 705 0002 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 706 0004 056D     		ldr	r5, [r0, #80]
+ 707 0006 012B     		cmp	r3, #1
+ 708 0008 0446     		mov	r4, r0
+ 709 000a 09D0     		beq	.L155
+ 710 000c 2846     		mov	r0, r5
+ 711 000e 616D     		ldr	r1, [r4, #84]
+ 712 0010 FFF7FEFF 		bl	otg_disable_ep.isra.0
+ 713 0014 0023     		movs	r3, #0
+ 714 0016 E365     		str	r3, [r4, #92]
+ 715 0018 C5F81C38 		str	r3, [r5, #2076]
+ 716 001c AB60     		str	r3, [r5, #8]
+ 717 001e AB63     		str	r3, [r5, #56]
+ 718              	.L155:
+ 719 0020 38BD     		pop	{r3, r4, r5, pc}
+ 720              		.size	usb_lld_stop, .-usb_lld_stop
+ 721 0022 00BFAFF3 		.section	.text.usb_lld_reset,"ax",%progbits
+ 721      0080AFF3 
+ 721      0080AFF3 
+ 721      0080
+ 722              		.align	2
+ 723              		.p2align 4,,15
+ 724              		.global	usb_lld_reset
+ 725              		.thumb
+ 726              		.thumb_func
+ 727              		.type	usb_lld_reset, %function
+ 728              	usb_lld_reset:
+ 729              		@ args = 0, pretend = 0, frame = 0
+ 730              		@ frame_needed = 0, uses_anonymous_args = 0
+ 731 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 732 0002 046D     		ldr	r4, [r0, #80]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 14
+
+
+ 733 0004 2023     		movs	r3, #32
+ 734 0006 0746     		mov	r7, r0
+ 735 0008 2361     		str	r3, [r4, #16]
+ 736              	.L162:
+ 737 000a 2269     		ldr	r2, [r4, #16]
+ 738 000c 12F02005 		ands	r5, r2, #32
+ 739 0010 FBD1     		bne	.L162
+ 740 0012 0C20     		movs	r0, #12
+ 741 0014 FFF7FEFF 		bl	halPolledDelay
+ 742 0018 7B6D     		ldr	r3, [r7, #84]
+ 743 001a 9E68     		ldr	r6, [r3, #8]
+ 744 001c 2A46     		mov	r2, r5
+ 745 001e FF21     		movs	r1, #255
+ 746 0020 4FF00065 		mov	r5, #134217728
+ 747              	.L164:
+ 748 0024 04EB4213 		add	r3, r4, r2, lsl #5
+ 749 0028 0132     		adds	r2, r2, #1
+ 750 002a B242     		cmp	r2, r6
+ 751 002c C3F80059 		str	r5, [r3, #2304]
+ 752 0030 C3F8005B 		str	r5, [r3, #2816]
+ 753 0034 C3F80819 		str	r1, [r3, #2312]
+ 754 0038 C3F8081B 		str	r1, [r3, #2824]
+ 755 003c F2D9     		bls	.L164
+ 756 003e 4FF0FF32 		mov	r2, #-1
+ 757 0042 4FF00113 		mov	r3, #65537
+ 758 0046 C4F81828 		str	r2, [r4, #2072]
+ 759 004a C4F81C38 		str	r3, [r4, #2076]
+ 760 004e 7B6D     		ldr	r3, [r7, #84]
+ 761 0050 1A68     		ldr	r2, [r3]
+ 762 0052 BA65     		str	r2, [r7, #88]
+ 763 0054 1B68     		ldr	r3, [r3]
+ 764 0056 6362     		str	r3, [r4, #36]
+ 765 0058 3A6D     		ldr	r2, [r7, #80]
+ 766 005a 1023     		movs	r3, #16
+ 767 005c 1361     		str	r3, [r2, #16]
+ 768              	.L166:
+ 769 005e 1369     		ldr	r3, [r2, #16]
+ 770 0060 13F01005 		ands	r5, r3, #16
+ 771 0064 FBD1     		bne	.L166
+ 772 0066 0C20     		movs	r0, #12
+ 773 0068 FFF7FEFF 		bl	halPolledDelay
+ 774 006c D4F80038 		ldr	r3, [r4, #2048]
+ 775 0070 23F4FE63 		bic	r3, r3, #2032
+ 776 0074 C4F80038 		str	r3, [r4, #2048]
+ 777 0078 A069     		ldr	r0, [r4, #24]
+ 778 007a 40F20002 		movw	r2, #:lower16:.LANCHOR2
+ 779 007e 40F44020 		orr	r0, r0, #786432
+ 780 0082 48F24003 		movw	r3, #32832
+ 781 0086 C1F20003 		movt	r3, 4096
+ 782 008a 0921     		movs	r1, #9
+ 783 008c C0F20002 		movt	r2, #:upper16:.LANCHOR2
+ 784 0090 40F01000 		orr	r0, r0, #16
+ 785 0094 A061     		str	r0, [r4, #24]
+ 786 0096 C4F81018 		str	r1, [r4, #2064]
+ 787 009a C4F81418 		str	r1, [r4, #2068]
+ 788 009e FA60     		str	r2, [r7, #12]
+ 789 00a0 C4F8105B 		str	r5, [r4, #2832]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 15
+
+
+ 790 00a4 C4F8003B 		str	r3, [r4, #2816]
+ 791 00a8 C4F81059 		str	r5, [r4, #2320]
+ 792 00ac C4F80039 		str	r3, [r4, #2304]
+ 793 00b0 BD6D     		ldr	r5, [r7, #88]
+ 794 00b2 7A6D     		ldr	r2, [r7, #84]
+ 795 00b4 05F11003 		add	r3, r5, #16
+ 796 00b8 BB65     		str	r3, [r7, #88]
+ 797 00ba 5268     		ldr	r2, [r2, #4]
+ 798 00bc 9342     		cmp	r3, r2
+ 799 00be 05D9     		bls	.L167
+ 800 00c0 40F20000 		movw	r0, #:lower16:.LC1
+ 801 00c4 C0F20000 		movt	r0, #:upper16:.LC1
+ 802 00c8 FFF7FEFF 		bl	chDbgPanic
+ 803              	.L167:
+ 804 00cc 45F48015 		orr	r5, r5, #1048576
+ 805 00d0 A562     		str	r5, [r4, #40]
+ 806 00d2 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 807              		.size	usb_lld_reset, .-usb_lld_reset
+ 808 00d4 AFF30080 		.section	.text.usb_lld_set_address,"ax",%progbits
+ 808      AFF30080 
+ 808      AFF30080 
+ 809              		.align	2
+ 810              		.p2align 4,,15
+ 811              		.global	usb_lld_set_address
+ 812              		.thumb
+ 813              		.thumb_func
+ 814              		.type	usb_lld_set_address, %function
+ 815              	usb_lld_set_address:
+ 816              		@ args = 0, pretend = 0, frame = 0
+ 817              		@ frame_needed = 0, uses_anonymous_args = 0
+ 818              		@ link register save eliminated.
+ 819 0000 036D     		ldr	r3, [r0, #80]
+ 820 0002 90F84E10 		ldrb	r1, [r0, #78]	@ zero_extendqisi2
+ 821 0006 D3F80028 		ldr	r2, [r3, #2048]
+ 822 000a 22F4FE62 		bic	r2, r2, #2032
+ 823 000e 42EA0112 		orr	r2, r2, r1, lsl #4
+ 824 0012 C3F80028 		str	r2, [r3, #2048]
+ 825 0016 7047     		bx	lr
+ 826              		.size	usb_lld_set_address, .-usb_lld_set_address
+ 827 0018 AFF30080 		.section	.text.usb_lld_init_endpoint,"ax",%progbits
+ 827      AFF30080 
+ 828              		.align	2
+ 829              		.p2align 4,,15
+ 830              		.global	usb_lld_init_endpoint
+ 831              		.thumb
+ 832              		.thumb_func
+ 833              		.type	usb_lld_init_endpoint, %function
+ 834              	usb_lld_init_endpoint:
+ 835              		@ args = 0, pretend = 0, frame = 0
+ 836              		@ frame_needed = 0, uses_anonymous_args = 0
+ 837 0000 2DE9F84F 		push	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 838 0004 0FFA81F9 		sxth	r9, r1
+ 839 0008 00EB8907 		add	r7, r0, r9, lsl #2
+ 840 000c 4FF40048 		mov	r8, #32768
+ 841 0010 FB68     		ldr	r3, [r7, #12]
+ 842 0012 046D     		ldr	r4, [r0, #80]
+ 843 0014 1A68     		ldr	r2, [r3]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 16
+
+
+ 844 0016 02F00302 		and	r2, r2, #3
+ 845 001a 022A     		cmp	r2, #2
+ 846 001c 0D46     		mov	r5, r1
+ 847 001e 0646     		mov	r6, r0
+ 848 0020 08BF     		it	eq
+ 849 0022 C1F20808 		movteq	r8, 4104
+ 850 0026 0CD0     		beq	.L173
+ 851 0028 032A     		cmp	r2, #3
+ 852 002a 08BF     		it	eq
+ 853 002c C1F20C08 		movteq	r8, 4108
+ 854 0030 07D0     		beq	.L173
+ 855 0032 4146     		mov	r1, r8
+ 856 0034 C1F20001 		movt	r1, 4096
+ 857 0038 C1F20408 		movt	r8, 4100
+ 858 003c 012A     		cmp	r2, #1
+ 859 003e 18BF     		it	ne
+ 860 0040 8846     		movne	r8, r1
+ 861              	.L173:
+ 862 0042 6A01     		lsls	r2, r5, #5
+ 863 0044 A018     		adds	r0, r4, r2
+ 864 0046 D968     		ldr	r1, [r3, #12]
+ 865 0048 4FF0000E 		mov	lr, #0
+ 866 004c C0F810EB 		str	lr, [r0, #2832]
+ 867 0050 0029     		cmp	r1, #0
+ 868 0052 59D0     		beq	.L174
+ 869 0054 588A     		ldrh	r0, [r3, #18]
+ 870 0056 05F15801 		add	r1, r5, #88
+ 871 005a 4901     		lsls	r1, r1, #5
+ 872 005c 48EA0000 		orr	r0, r8, r0
+ 873 0060 6050     		str	r0, [r4, r1]
+ 874 0062 4FF0010E 		mov	lr, #1
+ 875 0066 D4F81C08 		ldr	r0, [r4, #2076]
+ 876 006a 05F11001 		add	r1, r5, #16
+ 877 006e 0EFA01F1 		lsl	r1, lr, r1
+ 878 0072 0143     		orrs	r1, r1, r0
+ 879 0074 C4F81C18 		str	r1, [r4, #2076]
+ 880 0078 2244     		add	r2, r2, r4
+ 881 007a 9968     		ldr	r1, [r3, #8]
+ 882 007c 0020     		movs	r0, #0
+ 883 007e C2F81009 		str	r0, [r2, #2320]
+ 884 0082 0029     		cmp	r1, #0
+ 885 0084 5BD0     		beq	.L176
+ 886              	.L186:
+ 887 0086 9A8B     		ldrh	r2, [r3, #28]
+ 888 0088 198A     		ldrh	r1, [r3, #16]
+ 889 008a D6F85890 		ldr	r9, [r6, #88]
+ 890 008e 8B08     		lsrs	r3, r1, #2
+ 891 0090 012A     		cmp	r2, #1
+ 892 0092 88BF     		it	hi
+ 893 0094 5343     		mulhi	r3, r2, r3
+ 894 0096 03EB0901 		add	r1, r3, r9
+ 895 009a 726D     		ldr	r2, [r6, #84]
+ 896 009c B165     		str	r1, [r6, #88]
+ 897 009e 5268     		ldr	r2, [r2, #4]
+ 898 00a0 9142     		cmp	r1, r2
+ 899 00a2 4FEA034A 		lsl	r10, r3, #16
+ 900 00a6 05F1FF3B 		add	fp, r5, #-1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 17
+
+
+ 901 00aa 26D8     		bhi	.L185
+ 902              	.L178:
+ 903 00ac 0BF1400B 		add	fp, fp, #64
+ 904 00b0 04EB8B0B 		add	fp, r4, fp, lsl #2
+ 905 00b4 4AEA0903 		orr	r3, r10, r9
+ 906 00b8 CBF80430 		str	r3, [fp, #4]
+ 907 00bc 326D     		ldr	r2, [r6, #80]
+ 908 00be AB01     		lsls	r3, r5, #6
+ 909 00c0 43F02003 		orr	r3, r3, #32
+ 910 00c4 1361     		str	r3, [r2, #16]
+ 911              	.L180:
+ 912 00c6 1369     		ldr	r3, [r2, #16]
+ 913 00c8 9806     		lsls	r0, r3, #26
+ 914 00ca FCD4     		bmi	.L180
+ 915 00cc 0C20     		movs	r0, #12
+ 916 00ce FFF7FEFF 		bl	halPolledDelay
+ 917 00d2 FB68     		ldr	r3, [r7, #12]
+ 918 00d4 1A8A     		ldrh	r2, [r3, #16]
+ 919 00d6 05F14803 		add	r3, r5, #72
+ 920 00da 42EA8552 		orr	r2, r2, r5, lsl #22
+ 921 00de 5B01     		lsls	r3, r3, #5
+ 922 00e0 42EA0802 		orr	r2, r2, r8
+ 923 00e4 E250     		str	r2, [r4, r3]
+ 924 00e6 0122     		movs	r2, #1
+ 925 00e8 D4F81C38 		ldr	r3, [r4, #2076]
+ 926 00ec 02FA05F5 		lsl	r5, r2, r5
+ 927 00f0 1D43     		orrs	r5, r5, r3
+ 928 00f2 C4F81C58 		str	r5, [r4, #2076]
+ 929 00f6 BDE8F88F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 930              	.L185:
+ 931 00fa 40F20000 		movw	r0, #:lower16:.LC1
+ 932 00fe C0F20000 		movt	r0, #:upper16:.LC1
+ 933 0102 FFF7FEFF 		bl	chDbgPanic
+ 934 0106 D1E7     		b	.L178
+ 935              	.L174:
+ 936 0108 04EB4911 		add	r1, r4, r9, lsl #5
+ 937 010c 05F11000 		add	r0, r5, #16
+ 938 0110 D1F800EB 		ldr	lr, [r1, #2816]
+ 939 0114 2EF4004E 		bic	lr, lr, #32768
+ 940 0118 C1F800EB 		str	lr, [r1, #2816]
+ 941 011c D4F81C18 		ldr	r1, [r4, #2076]
+ 942 0120 4FF0010E 		mov	lr, #1
+ 943 0124 0EFA00F0 		lsl	r0, lr, r0
+ 944 0128 21EA0001 		bic	r1, r1, r0
+ 945 012c C4F81C18 		str	r1, [r4, #2076]
+ 946 0130 2244     		add	r2, r2, r4
+ 947 0132 9968     		ldr	r1, [r3, #8]
+ 948 0134 0020     		movs	r0, #0
+ 949 0136 C2F81009 		str	r0, [r2, #2320]
+ 950 013a 0029     		cmp	r1, #0
+ 951 013c A3D1     		bne	.L186
+ 952              	.L176:
+ 953 013e 05F13F02 		add	r2, r5, #63
+ 954 0142 04EB8202 		add	r2, r4, r2, lsl #2
+ 955 0146 4FF48063 		mov	r3, #1024
+ 956 014a C0F20023 		movt	r3, 512
+ 957 014e 5360     		str	r3, [r2, #4]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 18
+
+
+ 958 0150 326D     		ldr	r2, [r6, #80]
+ 959 0152 AB01     		lsls	r3, r5, #6
+ 960 0154 43F02003 		orr	r3, r3, #32
+ 961 0158 1361     		str	r3, [r2, #16]
+ 962              	.L183:
+ 963 015a 1369     		ldr	r3, [r2, #16]
+ 964 015c 9906     		lsls	r1, r3, #26
+ 965 015e FCD4     		bmi	.L183
+ 966 0160 04EB4919 		add	r9, r4, r9, lsl #5
+ 967 0164 0C20     		movs	r0, #12
+ 968 0166 FFF7FEFF 		bl	halPolledDelay
+ 969 016a D9F80039 		ldr	r3, [r9, #2304]
+ 970 016e 23F40043 		bic	r3, r3, #32768
+ 971 0172 C9F80039 		str	r3, [r9, #2304]
+ 972 0176 D4F81C38 		ldr	r3, [r4, #2076]
+ 973 017a 0122     		movs	r2, #1
+ 974 017c 02FA05F5 		lsl	r5, r2, r5
+ 975 0180 23EA0503 		bic	r3, r3, r5
+ 976 0184 C4F81C38 		str	r3, [r4, #2076]
+ 977 0188 BDE8F88F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 978              		.size	usb_lld_init_endpoint, .-usb_lld_init_endpoint
+ 979 018c AFF30080 		.section	.text.usb_lld_disable_endpoints,"ax",%progbits
+ 980              		.align	2
+ 981              		.p2align 4,,15
+ 982              		.global	usb_lld_disable_endpoints
+ 983              		.thumb
+ 984              		.thumb_func
+ 985              		.type	usb_lld_disable_endpoints, %function
+ 986              	usb_lld_disable_endpoints:
+ 987              		@ args = 0, pretend = 0, frame = 0
+ 988              		@ frame_needed = 0, uses_anonymous_args = 0
+ 989              		@ link register save eliminated.
+ 990 0000 416D     		ldr	r1, [r0, #84]
+ 991 0002 0346     		mov	r3, r0
+ 992 0004 0A68     		ldr	r2, [r1]
+ 993 0006 006D     		ldr	r0, [r0, #80]
+ 994 0008 9A65     		str	r2, [r3, #88]
+ 995 000a FFF7FEBF 		b	otg_disable_ep.isra.0
+ 996              		.size	usb_lld_disable_endpoints, .-usb_lld_disable_endpoints
+ 997 000e 00BF     		.section	.text.usb_lld_get_status_out,"ax",%progbits
+ 998              		.align	2
+ 999              		.p2align 4,,15
+ 1000              		.global	usb_lld_get_status_out
+ 1001              		.thumb
+ 1002              		.thumb_func
+ 1003              		.type	usb_lld_get_status_out, %function
+ 1004              	usb_lld_get_status_out:
+ 1005              		@ args = 0, pretend = 0, frame = 0
+ 1006              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1007              		@ link register save eliminated.
+ 1008 0000 5831     		adds	r1, r1, #88
+ 1009 0002 036D     		ldr	r3, [r0, #80]
+ 1010 0004 4901     		lsls	r1, r1, #5
+ 1011 0006 5B58     		ldr	r3, [r3, r1]
+ 1012 0008 13F40040 		ands	r0, r3, #32768
+ 1013 000c 04D0     		beq	.L189
+ 1014 000e 13F4001F 		tst	r3, #2097152
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 19
+
+
+ 1015 0012 0CBF     		ite	eq
+ 1016 0014 0220     		moveq	r0, #2
+ 1017 0016 0120     		movne	r0, #1
+ 1018              	.L189:
+ 1019 0018 7047     		bx	lr
+ 1020              		.size	usb_lld_get_status_out, .-usb_lld_get_status_out
+ 1021 001a 00BFAFF3 		.section	.text.usb_lld_get_status_in,"ax",%progbits
+ 1021      0080
+ 1022              		.align	2
+ 1023              		.p2align 4,,15
+ 1024              		.global	usb_lld_get_status_in
+ 1025              		.thumb
+ 1026              		.thumb_func
+ 1027              		.type	usb_lld_get_status_in, %function
+ 1028              	usb_lld_get_status_in:
+ 1029              		@ args = 0, pretend = 0, frame = 0
+ 1030              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1031              		@ link register save eliminated.
+ 1032 0000 4831     		adds	r1, r1, #72
+ 1033 0002 036D     		ldr	r3, [r0, #80]
+ 1034 0004 4901     		lsls	r1, r1, #5
+ 1035 0006 5B58     		ldr	r3, [r3, r1]
+ 1036 0008 13F40040 		ands	r0, r3, #32768
+ 1037 000c 04D0     		beq	.L193
+ 1038 000e 13F4001F 		tst	r3, #2097152
+ 1039 0012 0CBF     		ite	eq
+ 1040 0014 0220     		moveq	r0, #2
+ 1041 0016 0120     		movne	r0, #1
+ 1042              	.L193:
+ 1043 0018 7047     		bx	lr
+ 1044              		.size	usb_lld_get_status_in, .-usb_lld_get_status_in
+ 1045 001a 00BFAFF3 		.section	.text.usb_lld_read_setup,"ax",%progbits
+ 1045      0080
+ 1046              		.align	2
+ 1047              		.p2align 4,,15
+ 1048              		.global	usb_lld_read_setup
+ 1049              		.thumb
+ 1050              		.thumb_func
+ 1051              		.type	usb_lld_read_setup, %function
+ 1052              	usb_lld_read_setup:
+ 1053              		@ args = 0, pretend = 0, frame = 0
+ 1054              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1055              		@ link register save eliminated.
+ 1056 0000 00EB8101 		add	r1, r0, r1, lsl #2
+ 1057 0004 CB68     		ldr	r3, [r1, #12]
+ 1058 0006 1B6A     		ldr	r3, [r3, #32]
+ 1059 0008 1968     		ldr	r1, [r3]	@ unaligned
+ 1060 000a 5B68     		ldr	r3, [r3, #4]	@ unaligned
+ 1061 000c 1160     		str	r1, [r2]	@ unaligned
+ 1062 000e 5360     		str	r3, [r2, #4]	@ unaligned
+ 1063 0010 7047     		bx	lr
+ 1064              		.size	usb_lld_read_setup, .-usb_lld_read_setup
+ 1065 0012 00BFAFF3 		.section	.text.usb_lld_prepare_receive,"ax",%progbits
+ 1065      0080AFF3 
+ 1065      0080AFF3 
+ 1065      0080
+ 1066              		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 20
+
+
+ 1067              		.p2align 4,,15
+ 1068              		.global	usb_lld_prepare_receive
+ 1069              		.thumb
+ 1070              		.thumb_func
+ 1071              		.type	usb_lld_prepare_receive, %function
+ 1072              	usb_lld_prepare_receive:
+ 1073              		@ args = 0, pretend = 0, frame = 0
+ 1074              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1075              		@ link register save eliminated.
+ 1076 0000 00EB8103 		add	r3, r0, r1, lsl #2
+ 1077 0004 30B4     		push	{r4, r5}
+ 1078 0006 DC68     		ldr	r4, [r3, #12]
+ 1079 0008 A269     		ldr	r2, [r4, #24]
+ 1080 000a 5368     		ldr	r3, [r2, #4]
+ 1081 000c 1361     		str	r3, [r2, #16]
+ 1082 000e 41B9     		cbnz	r1, .L201
+ 1083 0010 402B     		cmp	r3, #64
+ 1084 0012 06D9     		bls	.L201
+ 1085 0014 4025     		movs	r5, #64
+ 1086 0016 2B46     		mov	r3, r5
+ 1087 0018 5560     		str	r5, [r2, #4]
+ 1088 001a C6F20003 		movt	r3, 24576
+ 1089 001e 3F25     		movs	r5, #63
+ 1090 0020 02E0     		b	.L199
+ 1091              	.L201:
+ 1092 0022 5D1E     		subs	r5, r3, #1
+ 1093 0024 43F0C043 		orr	r3, r3, #1610612736
+ 1094              	.L199:
+ 1095 0028 628A     		ldrh	r2, [r4, #18]
+ 1096 002a 006D     		ldr	r0, [r0, #80]
+ 1097 002c AC18     		adds	r4, r5, r2
+ 1098 002e B4FBF2F2 		udiv	r2, r4, r2
+ 1099 0032 00EB4111 		add	r1, r0, r1, lsl #5
+ 1100 0036 43EAC243 		orr	r3, r3, r2, lsl #19
+ 1101 003a C1F8103B 		str	r3, [r1, #2832]
+ 1102 003e 30BC     		pop	{r4, r5}
+ 1103 0040 7047     		bx	lr
+ 1104              		.size	usb_lld_prepare_receive, .-usb_lld_prepare_receive
+ 1105 0042 00BFAFF3 		.section	.text.otg_epout_handler,"ax",%progbits
+ 1105      0080AFF3 
+ 1105      0080AFF3 
+ 1105      0080
+ 1106              		.align	2
+ 1107              		.p2align 4,,15
+ 1108              		.thumb
+ 1109              		.thumb_func
+ 1110              		.type	otg_epout_handler, %function
+ 1111              	otg_epout_handler:
+ 1112              		@ args = 0, pretend = 0, frame = 0
+ 1113              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1114 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 1115 0002 076D     		ldr	r7, [r0, #80]
+ 1116 0004 07EB4113 		add	r3, r7, r1, lsl #5
+ 1117 0008 0546     		mov	r5, r0
+ 1118 000a D3F8084B 		ldr	r4, [r3, #2824]
+ 1119 000e C3F8084B 		str	r4, [r3, #2824]
+ 1120 0012 2307     		lsls	r3, r4, #28
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 21
+
+
+ 1121 0014 0E46     		mov	r6, r1
+ 1122 0016 03D5     		bpl	.L203
+ 1123 0018 D7F81438 		ldr	r3, [r7, #2068]
+ 1124 001c 1A07     		lsls	r2, r3, #28
+ 1125 001e 19D4     		bmi	.L218
+ 1126              	.L203:
+ 1127 0020 E307     		lsls	r3, r4, #31
+ 1128 0022 16D5     		bpl	.L202
+ 1129 0024 D7F81438 		ldr	r3, [r7, #2068]
+ 1130 0028 DC07     		lsls	r4, r3, #31
+ 1131 002a 12D5     		bpl	.L202
+ 1132 002c 05EB8603 		add	r3, r5, r6, lsl #2
+ 1133 0030 DA68     		ldr	r2, [r3, #12]
+ 1134 0032 9369     		ldr	r3, [r2, #24]
+ 1135 0034 5968     		ldr	r1, [r3, #4]
+ 1136 0036 1869     		ldr	r0, [r3, #16]
+ 1137 0038 8142     		cmp	r1, r0
+ 1138 003a 11D3     		bcc	.L219
+ 1139 003c 6989     		ldrh	r1, [r5, #10]
+ 1140 003e D368     		ldr	r3, [r2, #12]
+ 1141 0040 0120     		movs	r0, #1
+ 1142 0042 00FA06F2 		lsl	r2, r0, r6
+ 1143 0046 21EA0202 		bic	r2, r1, r2
+ 1144 004a 6A81     		strh	r2, [r5, #10]	@ movhi
+ 1145 004c 3146     		mov	r1, r6
+ 1146 004e 2846     		mov	r0, r5
+ 1147 0050 9847     		blx	r3
+ 1148              	.L202:
+ 1149 0052 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 1150              	.L218:
+ 1151 0054 00EB8103 		add	r3, r0, r1, lsl #2
+ 1152 0058 DB68     		ldr	r3, [r3, #12]
+ 1153 005a 5B68     		ldr	r3, [r3, #4]
+ 1154 005c 9847     		blx	r3
+ 1155 005e DFE7     		b	.L203
+ 1156              	.L219:
+ 1157 0060 411A     		subs	r1, r0, r1
+ 1158 0062 0022     		movs	r2, #0
+ 1159 0064 5960     		str	r1, [r3, #4]
+ 1160 0066 9A60     		str	r2, [r3, #8]
+ 1161 0068 2846     		mov	r0, r5
+ 1162 006a 3146     		mov	r1, r6
+ 1163 006c FFF7FEFF 		bl	usb_lld_prepare_receive
+ 1164 0070 2023     		movs	r3, #32
+ 1165              	@ 623 "chibios/os/hal/platforms/STM32/OTGv1/usb_lld.c" 1
+ 1166 0072 83F31188 		msr     BASEPRI, r3
+ 1167              	@ 0 "" 2
+ 1168              		.thumb
+ 1169 0076 FFF7FEFF 		bl	dbg_check_lock_from_isr
+ 1170 007a 2B6D     		ldr	r3, [r5, #80]
+ 1171 007c 03EB4616 		add	r6, r3, r6, lsl #5
+ 1172 0080 D6F8003B 		ldr	r3, [r6, #2816]
+ 1173 0084 43F08063 		orr	r3, r3, #67108864
+ 1174 0088 C6F8003B 		str	r3, [r6, #2816]
+ 1175 008c FFF7FEFF 		bl	dbg_check_unlock_from_isr
+ 1176 0090 0023     		movs	r3, #0
+ 1177              	@ 625 "chibios/os/hal/platforms/STM32/OTGv1/usb_lld.c" 1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 22
+
+
+ 1178 0092 83F31188 		msr     BASEPRI, r3
+ 1179              	@ 0 "" 2
+ 1180              		.thumb
+ 1181 0096 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 1182              		.size	otg_epout_handler, .-otg_epout_handler
+ 1183 0098 AFF30080 		.section	.text.usb_lld_prepare_transmit,"ax",%progbits
+ 1183      AFF30080 
+ 1184              		.align	2
+ 1185              		.p2align 4,,15
+ 1186              		.global	usb_lld_prepare_transmit
+ 1187              		.thumb
+ 1188              		.thumb_func
+ 1189              		.type	usb_lld_prepare_transmit, %function
+ 1190              	usb_lld_prepare_transmit:
+ 1191              		@ args = 0, pretend = 0, frame = 0
+ 1192              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1193              		@ link register save eliminated.
+ 1194 0000 00EB8103 		add	r3, r0, r1, lsl #2
+ 1195 0004 30B4     		push	{r4, r5}
+ 1196 0006 DC68     		ldr	r4, [r3, #12]
+ 1197 0008 6269     		ldr	r2, [r4, #20]
+ 1198 000a 5368     		ldr	r3, [r2, #4]
+ 1199 000c 1361     		str	r3, [r2, #16]
+ 1200 000e A3B1     		cbz	r3, .L227
+ 1201 0010 69B1     		cbz	r1, .L223
+ 1202              	.L226:
+ 1203 0012 5D1E     		subs	r5, r3, #1
+ 1204              	.L224:
+ 1205 0014 228A     		ldrh	r2, [r4, #16]
+ 1206 0016 006D     		ldr	r0, [r0, #80]
+ 1207 0018 AC18     		adds	r4, r5, r2
+ 1208 001a B4FBF2F2 		udiv	r2, r4, r2
+ 1209 001e 00EB4111 		add	r1, r0, r1, lsl #5
+ 1210 0022 43EAC243 		orr	r3, r3, r2, lsl #19
+ 1211 0026 C1F81039 		str	r3, [r1, #2320]
+ 1212 002a 30BC     		pop	{r4, r5}
+ 1213 002c 7047     		bx	lr
+ 1214              	.L223:
+ 1215 002e 402B     		cmp	r3, #64
+ 1216 0030 EFD9     		bls	.L226
+ 1217 0032 4023     		movs	r3, #64
+ 1218 0034 5360     		str	r3, [r2, #4]
+ 1219 0036 3F25     		movs	r5, #63
+ 1220 0038 ECE7     		b	.L224
+ 1221              	.L227:
+ 1222 003a 036D     		ldr	r3, [r0, #80]
+ 1223 003c 03EB4111 		add	r1, r3, r1, lsl #5
+ 1224 0040 4FF40023 		mov	r3, #524288
+ 1225 0044 C1F81039 		str	r3, [r1, #2320]
+ 1226 0048 30BC     		pop	{r4, r5}
+ 1227 004a 7047     		bx	lr
+ 1228              		.size	usb_lld_prepare_transmit, .-usb_lld_prepare_transmit
+ 1229 004c AFF30080 		.section	.text.otg_epin_handler,"ax",%progbits
+ 1230              		.align	2
+ 1231              		.p2align 4,,15
+ 1232              		.thumb
+ 1233              		.thumb_func
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 23
+
+
+ 1234              		.type	otg_epin_handler, %function
+ 1235              	otg_epin_handler:
+ 1236              		@ args = 0, pretend = 0, frame = 0
+ 1237              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1238 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 1239 0002 056D     		ldr	r5, [r0, #80]
+ 1240 0004 05EB4113 		add	r3, r5, r1, lsl #5
+ 1241 0008 0646     		mov	r6, r0
+ 1242 000a D3F80849 		ldr	r4, [r3, #2312]
+ 1243 000e E207     		lsls	r2, r4, #31
+ 1244 0010 0F46     		mov	r7, r1
+ 1245 0012 C3F80849 		str	r4, [r3, #2312]
+ 1246 0016 03D5     		bpl	.L229
+ 1247 0018 D5F81038 		ldr	r3, [r5, #2064]
+ 1248 001c DB07     		lsls	r3, r3, #31
+ 1249 001e 08D4     		bmi	.L248
+ 1250              	.L229:
+ 1251 0020 2206     		lsls	r2, r4, #24
+ 1252 0022 05D5     		bpl	.L228
+ 1253 0024 0122     		movs	r2, #1
+ 1254 0026 D5F83438 		ldr	r3, [r5, #2100]
+ 1255 002a BA40     		lsls	r2, r2, r7
+ 1256 002c 1A42     		tst	r2, r3
+ 1257 002e 2ED1     		bne	.L249
+ 1258              	.L228:
+ 1259 0030 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 1260              	.L248:
+ 1261 0032 00EB8103 		add	r3, r0, r1, lsl #2
+ 1262 0036 DA68     		ldr	r2, [r3, #12]
+ 1263 0038 5369     		ldr	r3, [r2, #20]
+ 1264 003a D3F804E0 		ldr	lr, [r3, #4]
+ 1265 003e D3F810C0 		ldr	ip, [r3, #16]
+ 1266 0042 E645     		cmp	lr, ip
+ 1267 0044 40D2     		bcs	.L230
+ 1268 0046 CEEB0C0E 		rsb	lr, lr, ip
+ 1269 004a 0022     		movs	r2, #0
+ 1270 004c C3F804E0 		str	lr, [r3, #4]
+ 1271 0050 9A60     		str	r2, [r3, #8]
+ 1272 0052 FFF7FEFF 		bl	usb_lld_prepare_transmit
+ 1273 0056 2023     		movs	r3, #32
+ 1274              	@ 571 "chibios/os/hal/platforms/STM32/OTGv1/usb_lld.c" 1
+ 1275 0058 83F31188 		msr     BASEPRI, r3
+ 1276              	@ 0 "" 2
+ 1277              		.thumb
+ 1278 005c FFF7FEFF 		bl	dbg_check_lock_from_isr
+ 1279 0060 336D     		ldr	r3, [r6, #80]
+ 1280 0062 03EB4712 		add	r2, r3, r7, lsl #5
+ 1281 0066 0120     		movs	r0, #1
+ 1282 0068 D2F80019 		ldr	r1, [r2, #2304]
+ 1283 006c 41F00441 		orr	r1, r1, #-2080374784
+ 1284 0070 C2F80019 		str	r1, [r2, #2304]
+ 1285 0074 D3F83418 		ldr	r1, [r3, #2100]
+ 1286 0078 00FA07F2 		lsl	r2, r0, r7
+ 1287 007c 0A43     		orrs	r2, r2, r1
+ 1288 007e C3F83428 		str	r2, [r3, #2100]
+ 1289 0082 FFF7FEFF 		bl	dbg_check_unlock_from_isr
+ 1290 0086 0023     		movs	r3, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 24
+
+
+ 1291              	@ 573 "chibios/os/hal/platforms/STM32/OTGv1/usb_lld.c" 1
+ 1292 0088 83F31188 		msr     BASEPRI, r3
+ 1293              	@ 0 "" 2
+ 1294              		.thumb
+ 1295 008c C8E7     		b	.L229
+ 1296              	.L249:
+ 1297 008e 2023     		movs	r3, #32
+ 1298              	@ 583 "chibios/os/hal/platforms/STM32/OTGv1/usb_lld.c" 1
+ 1299 0090 83F31188 		msr     BASEPRI, r3
+ 1300              	@ 0 "" 2
+ 1301              		.thumb
+ 1302 0094 FFF7FEFF 		bl	dbg_check_lock_from_isr
+ 1303 0098 F36D     		ldr	r3, [r6, #92]
+ 1304 009a D5F83428 		ldr	r2, [r5, #2100]
+ 1305 009e 706E     		ldr	r0, [r6, #100]
+ 1306 00a0 0121     		movs	r1, #1
+ 1307 00a2 01FA07F7 		lsl	r7, r1, r7
+ 1308 00a6 3B43     		orrs	r3, r3, r7
+ 1309 00a8 22EA0707 		bic	r7, r2, r7
+ 1310 00ac F365     		str	r3, [r6, #92]
+ 1311 00ae C5F83478 		str	r7, [r5, #2100]
+ 1312 00b2 18B1     		cbz	r0, .L232
+ 1313 00b4 FFF7FEFF 		bl	chSchReadyI
+ 1314 00b8 0023     		movs	r3, #0
+ 1315 00ba 7366     		str	r3, [r6, #100]
+ 1316              	.L232:
+ 1317 00bc FFF7FEFF 		bl	dbg_check_unlock_from_isr
+ 1318 00c0 0023     		movs	r3, #0
+ 1319              	@ 587 "chibios/os/hal/platforms/STM32/OTGv1/usb_lld.c" 1
+ 1320 00c2 83F31188 		msr     BASEPRI, r3
+ 1321              	@ 0 "" 2
+ 1322              		.thumb
+ 1323 00c6 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 1324              	.L230:
+ 1325 00c8 B0F808E0 		ldrh	lr, [r0, #8]
+ 1326 00cc 9368     		ldr	r3, [r2, #8]
+ 1327 00ce 4FF0010C 		mov	ip, #1
+ 1328 00d2 0CFA01F2 		lsl	r2, ip, r1
+ 1329 00d6 2EEA0202 		bic	r2, lr, r2
+ 1330 00da 0281     		strh	r2, [r0, #8]	@ movhi
+ 1331 00dc 9847     		blx	r3
+ 1332 00de 9FE7     		b	.L229
+ 1333              		.size	otg_epin_handler, .-otg_epin_handler
+ 1334              		.section	.text.Vector14C,"ax",%progbits
+ 1335              		.align	2
+ 1336              		.p2align 4,,15
+ 1337              		.global	Vector14C
+ 1338              		.thumb
+ 1339              		.thumb_func
+ 1340              		.type	Vector14C, %function
+ 1341              	Vector14C:
+ 1342              		@ args = 0, pretend = 0, frame = 0
+ 1343              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1344 0000 70B5     		push	{r4, r5, r6, lr}
+ 1345 0002 40F20006 		movw	r6, #:lower16:.LANCHOR0
+ 1346 0006 C0F20006 		movt	r6, #:upper16:.LANCHOR0
+ 1347 000a FFF7FEFF 		bl	dbg_check_enter_isr
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 25
+
+
+ 1348 000e 356D     		ldr	r5, [r6, #80]
+ 1349 0010 6B69     		ldr	r3, [r5, #20]
+ 1350 0012 AC69     		ldr	r4, [r5, #24]
+ 1351 0014 1C40     		ands	r4, r4, r3
+ 1352 0016 E304     		lsls	r3, r4, #19
+ 1353 0018 6C61     		str	r4, [r5, #20]
+ 1354 001a 38D4     		bmi	.L312
+ 1355              	.L252:
+ 1356 001c A004     		lsls	r0, r4, #18
+ 1357 001e 48BF     		it	mi
+ 1358 0020 D5F80838 		ldrmi	r3, [r5, #2056]
+ 1359 0024 2107     		lsls	r1, r4, #28
+ 1360 0026 07D5     		bpl	.L255
+ 1361 0028 7368     		ldr	r3, [r6, #4]
+ 1362 002a DB68     		ldr	r3, [r3, #12]
+ 1363 002c 23B1     		cbz	r3, .L255
+ 1364 002e 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 1365 0032 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 1366 0036 9847     		blx	r3
+ 1367              	.L255:
+ 1368 0038 E206     		lsls	r2, r4, #27
+ 1369 003a 33D4     		bmi	.L313
+ 1370              	.L256:
+ 1371 003c 6303     		lsls	r3, r4, #13
+ 1372 003e D5F81858 		ldr	r5, [r5, #2072]
+ 1373 0042 07D5     		bpl	.L259
+ 1374 0044 EE07     		lsls	r6, r5, #31
+ 1375 0046 63D4     		bmi	.L314
+ 1376 0048 A807     		lsls	r0, r5, #30
+ 1377 004a 6AD4     		bmi	.L315
+ 1378              	.L261:
+ 1379 004c 6907     		lsls	r1, r5, #29
+ 1380 004e 71D4     		bmi	.L316
+ 1381              	.L262:
+ 1382 0050 2A07     		lsls	r2, r5, #28
+ 1383 0052 78D4     		bmi	.L317
+ 1384              	.L259:
+ 1385 0054 2303     		lsls	r3, r4, #12
+ 1386 0056 07D5     		bpl	.L265
+ 1387 0058 EE03     		lsls	r6, r5, #15
+ 1388 005a 46D4     		bmi	.L318
+ 1389 005c AC03     		lsls	r4, r5, #14
+ 1390 005e 4DD4     		bmi	.L319
+ 1391              	.L267:
+ 1392 0060 6803     		lsls	r0, r5, #13
+ 1393 0062 38D4     		bmi	.L320
+ 1394              	.L268:
+ 1395 0064 2903     		lsls	r1, r5, #12
+ 1396 0066 05D4     		bmi	.L321
+ 1397              	.L265:
+ 1398 0068 FFF7FEFF 		bl	dbg_check_leave_isr
+ 1399 006c BDE87040 		pop	{r4, r5, r6, lr}
+ 1400 0070 FFF7FEBF 		b	_port_irq_epilogue
+ 1401              	.L321:
+ 1402 0074 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 1403 0078 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 1404 007c 0321     		movs	r1, #3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 26
+
+
+ 1405 007e FFF7FEFF 		bl	otg_epout_handler
+ 1406 0082 FFF7FEFF 		bl	dbg_check_leave_isr
+ 1407 0086 BDE87040 		pop	{r4, r5, r6, lr}
+ 1408 008a FFF7FEBF 		b	_port_irq_epilogue
+ 1409              	.L312:
+ 1410 008e 3046     		mov	r0, r6
+ 1411 0090 FFF7FEFF 		bl	_usb_reset
+ 1412 0094 7368     		ldr	r3, [r6, #4]
+ 1413 0096 1B68     		ldr	r3, [r3]
+ 1414 0098 002B     		cmp	r3, #0
+ 1415 009a BFD0     		beq	.L252
+ 1416 009c 3046     		mov	r0, r6
+ 1417 009e 0021     		movs	r1, #0
+ 1418 00a0 9847     		blx	r3
+ 1419 00a2 BBE7     		b	.L252
+ 1420              	.L313:
+ 1421 00a4 2023     		movs	r3, #32
+ 1422              	@ 669 "chibios/os/hal/platforms/STM32/OTGv1/usb_lld.c" 1
+ 1423 00a6 83F31188 		msr     BASEPRI, r3
+ 1424              	@ 0 "" 2
+ 1425              		.thumb
+ 1426 00aa FFF7FEFF 		bl	dbg_check_lock_from_isr
+ 1427 00ae AB69     		ldr	r3, [r5, #24]
+ 1428 00b0 706E     		ldr	r0, [r6, #100]
+ 1429 00b2 23F01003 		bic	r3, r3, #16
+ 1430 00b6 40F20006 		movw	r6, #:lower16:.LANCHOR0
+ 1431 00ba AB61     		str	r3, [r5, #24]
+ 1432 00bc C0F20006 		movt	r6, #:upper16:.LANCHOR0
+ 1433 00c0 18B1     		cbz	r0, .L257
+ 1434 00c2 FFF7FEFF 		bl	chSchReadyI
+ 1435 00c6 0023     		movs	r3, #0
+ 1436 00c8 7366     		str	r3, [r6, #100]
+ 1437              	.L257:
+ 1438 00ca FFF7FEFF 		bl	dbg_check_unlock_from_isr
+ 1439 00ce 0023     		movs	r3, #0
+ 1440              	@ 672 "chibios/os/hal/platforms/STM32/OTGv1/usb_lld.c" 1
+ 1441 00d0 83F31188 		msr     BASEPRI, r3
+ 1442              	@ 0 "" 2
+ 1443              		.thumb
+ 1444 00d4 B2E7     		b	.L256
+ 1445              	.L320:
+ 1446 00d6 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 1447 00da 0221     		movs	r1, #2
+ 1448 00dc C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 1449 00e0 FFF7FEFF 		bl	otg_epout_handler
+ 1450 00e4 2903     		lsls	r1, r5, #12
+ 1451 00e6 BFD5     		bpl	.L265
+ 1452 00e8 C4E7     		b	.L321
+ 1453              	.L318:
+ 1454 00ea 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 1455 00ee C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 1456 00f2 0021     		movs	r1, #0
+ 1457 00f4 FFF7FEFF 		bl	otg_epout_handler
+ 1458 00f8 AC03     		lsls	r4, r5, #14
+ 1459 00fa B1D5     		bpl	.L267
+ 1460              	.L319:
+ 1461 00fc 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 27
+
+
+ 1462 0100 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 1463 0104 0121     		movs	r1, #1
+ 1464 0106 FFF7FEFF 		bl	otg_epout_handler
+ 1465 010a 6803     		lsls	r0, r5, #13
+ 1466 010c AAD5     		bpl	.L268
+ 1467 010e E2E7     		b	.L320
+ 1468              	.L314:
+ 1469 0110 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 1470 0114 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 1471 0118 0021     		movs	r1, #0
+ 1472 011a FFF7FEFF 		bl	otg_epin_handler
+ 1473 011e A807     		lsls	r0, r5, #30
+ 1474 0120 94D5     		bpl	.L261
+ 1475              	.L315:
+ 1476 0122 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 1477 0126 0121     		movs	r1, #1
+ 1478 0128 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 1479 012c FFF7FEFF 		bl	otg_epin_handler
+ 1480 0130 6907     		lsls	r1, r5, #29
+ 1481 0132 8DD5     		bpl	.L262
+ 1482              	.L316:
+ 1483 0134 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 1484 0138 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 1485 013c 0221     		movs	r1, #2
+ 1486 013e FFF7FEFF 		bl	otg_epin_handler
+ 1487 0142 2A07     		lsls	r2, r5, #28
+ 1488 0144 86D5     		bpl	.L259
+ 1489              	.L317:
+ 1490 0146 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 1491 014a C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 1492 014e 0321     		movs	r1, #3
+ 1493 0150 FFF7FEFF 		bl	otg_epin_handler
+ 1494 0154 7EE7     		b	.L259
+ 1495              		.size	Vector14C, .-Vector14C
+ 1496 0156 00BFAFF3 		.section	.text.usb_lld_start_out,"ax",%progbits
+ 1496      0080AFF3 
+ 1496      0080
+ 1497              		.align	2
+ 1498              		.p2align 4,,15
+ 1499              		.global	usb_lld_start_out
+ 1500              		.thumb
+ 1501              		.thumb_func
+ 1502              		.type	usb_lld_start_out, %function
+ 1503              	usb_lld_start_out:
+ 1504              		@ args = 0, pretend = 0, frame = 0
+ 1505              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1506              		@ link register save eliminated.
+ 1507 0000 036D     		ldr	r3, [r0, #80]
+ 1508 0002 03EB4111 		add	r1, r3, r1, lsl #5
+ 1509 0006 D1F8003B 		ldr	r3, [r1, #2816]
+ 1510 000a 43F08063 		orr	r3, r3, #67108864
+ 1511 000e C1F8003B 		str	r3, [r1, #2816]
+ 1512 0012 7047     		bx	lr
+ 1513              		.size	usb_lld_start_out, .-usb_lld_start_out
+ 1514 0014 AFF30080 		.section	.text.usb_lld_start_in,"ax",%progbits
+ 1514      AFF30080 
+ 1514      AFF30080 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 28
+
+
+ 1515              		.align	2
+ 1516              		.p2align 4,,15
+ 1517              		.global	usb_lld_start_in
+ 1518              		.thumb
+ 1519              		.thumb_func
+ 1520              		.type	usb_lld_start_in, %function
+ 1521              	usb_lld_start_in:
+ 1522              		@ args = 0, pretend = 0, frame = 0
+ 1523              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1524              		@ link register save eliminated.
+ 1525 0000 036D     		ldr	r3, [r0, #80]
+ 1526 0002 03EB4112 		add	r2, r3, r1, lsl #5
+ 1527 0006 10B4     		push	{r4}
+ 1528 0008 D2F80049 		ldr	r4, [r2, #2304]
+ 1529 000c 44F00444 		orr	r4, r4, #-2080374784
+ 1530 0010 C2F80049 		str	r4, [r2, #2304]
+ 1531 0014 D3F83428 		ldr	r2, [r3, #2100]
+ 1532 0018 5DF8044B 		ldr	r4, [sp], #4
+ 1533 001c 0120     		movs	r0, #1
+ 1534 001e 00FA01F1 		lsl	r1, r0, r1
+ 1535 0022 1143     		orrs	r1, r1, r2
+ 1536 0024 C3F83418 		str	r1, [r3, #2100]
+ 1537 0028 7047     		bx	lr
+ 1538              		.size	usb_lld_start_in, .-usb_lld_start_in
+ 1539 002a 00BFAFF3 		.section	.text.usb_lld_stall_out,"ax",%progbits
+ 1539      0080
+ 1540              		.align	2
+ 1541              		.p2align 4,,15
+ 1542              		.global	usb_lld_stall_out
+ 1543              		.thumb
+ 1544              		.thumb_func
+ 1545              		.type	usb_lld_stall_out, %function
+ 1546              	usb_lld_stall_out:
+ 1547              		@ args = 0, pretend = 0, frame = 0
+ 1548              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1549              		@ link register save eliminated.
+ 1550 0000 036D     		ldr	r3, [r0, #80]
+ 1551 0002 03EB4111 		add	r1, r3, r1, lsl #5
+ 1552 0006 D1F8003B 		ldr	r3, [r1, #2816]
+ 1553 000a 43F40013 		orr	r3, r3, #2097152
+ 1554 000e C1F8003B 		str	r3, [r1, #2816]
+ 1555 0012 7047     		bx	lr
+ 1556              		.size	usb_lld_stall_out, .-usb_lld_stall_out
+ 1557 0014 AFF30080 		.section	.text.usb_lld_stall_in,"ax",%progbits
+ 1557      AFF30080 
+ 1557      AFF30080 
+ 1558              		.align	2
+ 1559              		.p2align 4,,15
+ 1560              		.global	usb_lld_stall_in
+ 1561              		.thumb
+ 1562              		.thumb_func
+ 1563              		.type	usb_lld_stall_in, %function
+ 1564              	usb_lld_stall_in:
+ 1565              		@ args = 0, pretend = 0, frame = 0
+ 1566              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1567              		@ link register save eliminated.
+ 1568 0000 036D     		ldr	r3, [r0, #80]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 29
+
+
+ 1569 0002 03EB4111 		add	r1, r3, r1, lsl #5
+ 1570 0006 D1F80039 		ldr	r3, [r1, #2304]
+ 1571 000a 43F40013 		orr	r3, r3, #2097152
+ 1572 000e C1F80039 		str	r3, [r1, #2304]
+ 1573 0012 7047     		bx	lr
+ 1574              		.size	usb_lld_stall_in, .-usb_lld_stall_in
+ 1575 0014 AFF30080 		.section	.text.usb_lld_clear_out,"ax",%progbits
+ 1575      AFF30080 
+ 1575      AFF30080 
+ 1576              		.align	2
+ 1577              		.p2align 4,,15
+ 1578              		.global	usb_lld_clear_out
+ 1579              		.thumb
+ 1580              		.thumb_func
+ 1581              		.type	usb_lld_clear_out, %function
+ 1582              	usb_lld_clear_out:
+ 1583              		@ args = 0, pretend = 0, frame = 0
+ 1584              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1585              		@ link register save eliminated.
+ 1586 0000 036D     		ldr	r3, [r0, #80]
+ 1587 0002 03EB4111 		add	r1, r3, r1, lsl #5
+ 1588 0006 D1F8003B 		ldr	r3, [r1, #2816]
+ 1589 000a 23F40013 		bic	r3, r3, #2097152
+ 1590 000e C1F8003B 		str	r3, [r1, #2816]
+ 1591 0012 7047     		bx	lr
+ 1592              		.size	usb_lld_clear_out, .-usb_lld_clear_out
+ 1593 0014 AFF30080 		.section	.text.usb_lld_clear_in,"ax",%progbits
+ 1593      AFF30080 
+ 1593      AFF30080 
+ 1594              		.align	2
+ 1595              		.p2align 4,,15
+ 1596              		.global	usb_lld_clear_in
+ 1597              		.thumb
+ 1598              		.thumb_func
+ 1599              		.type	usb_lld_clear_in, %function
+ 1600              	usb_lld_clear_in:
+ 1601              		@ args = 0, pretend = 0, frame = 0
+ 1602              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1603              		@ link register save eliminated.
+ 1604 0000 036D     		ldr	r3, [r0, #80]
+ 1605 0002 03EB4111 		add	r1, r3, r1, lsl #5
+ 1606 0006 D1F80039 		ldr	r3, [r1, #2304]
+ 1607 000a 23F40013 		bic	r3, r3, #2097152
+ 1608 000e C1F80039 		str	r3, [r1, #2304]
+ 1609 0012 7047     		bx	lr
+ 1610              		.size	usb_lld_clear_in, .-usb_lld_clear_in
+ 1611              		.global	USBD1
+ 1612 0014 AFF30080 		.section	.rodata.fsparams,"a",%progbits
+ 1612      AFF30080 
+ 1612      AFF30080 
+ 1613              		.align	2
+ 1614              		.set	.LANCHOR1,. + 0
+ 1615              		.type	fsparams, %object
+ 1616              		.size	fsparams, 12
+ 1617              	fsparams:
+ 1618 0000 80000000 		.word	128
+ 1619 0004 40010000 		.word	320
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 30
+
+
+ 1620 0008 03000000 		.word	3
+ 1621              		.section	.bss.USBD1,"aw",%nobits
+ 1622              		.align	3
+ 1623              		.set	.LANCHOR0,. + 0
+ 1624              		.type	USBD1, %object
+ 1625              		.size	USBD1, 1472
+ 1626              	USBD1:
+ 1627 0000 00000000 		.space	1472
+ 1627      00000000 
+ 1627      00000000 
+ 1627      00000000 
+ 1627      00000000 
+ 1628              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 1629              		.align	2
+ 1630              	.LC0:
+ 1631 0000 7573625F 		.ascii	"usb_lld_pump\000"
+ 1631      6C6C645F 
+ 1631      70756D70 
+ 1631      00
+ 1632 000d 000000   		.space	3
+ 1633              	.LC1:
+ 1634 0010 6F74675F 		.ascii	"otg_fifo_alloc(), #1\000"
+ 1634      6669666F 
+ 1634      5F616C6C 
+ 1634      6F632829 
+ 1634      2C202331 
+ 1635 0025 000000   		.section	.rodata.ep0config,"a",%progbits
+ 1636              		.align	2
+ 1637              		.set	.LANCHOR2,. + 0
+ 1638              		.type	ep0config, %object
+ 1639              		.size	ep0config, 36
+ 1640              	ep0config:
+ 1641 0000 00000000 		.word	0
+ 1642 0004 00000000 		.word	_usb_ep0setup
+ 1643 0008 00000000 		.word	_usb_ep0in
+ 1644 000c 00000000 		.word	_usb_ep0out
+ 1645 0010 4000     		.short	64
+ 1646 0012 4000     		.short	64
+ 1647 0014 00000000 		.word	ep0_state
+ 1648 0018 00000000 		.word	ep0_state
+ 1649 001c 0100     		.short	1
+ 1650 001e 0000     		.space	2
+ 1651 0020 00000000 		.word	ep0setup_buffer
+ 1652              		.section	.bss.ep0_state,"aw",%nobits
+ 1653              		.align	2
+ 1654              		.type	ep0_state, %object
+ 1655              		.size	ep0_state, 20
+ 1656              	ep0_state:
+ 1657 0000 00000000 		.space	20
+ 1657      00000000 
+ 1657      00000000 
+ 1657      00000000 
+ 1657      00000000 
+ 1658              		.section	.bss.ep0setup_buffer,"aw",%nobits
+ 1659              		.align	2
+ 1660              		.type	ep0setup_buffer, %object
+ 1661              		.size	ep0setup_buffer, 8
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 31
+
+
+ 1662              	ep0setup_buffer:
+ 1663 0000 00000000 		.space	8
+ 1663      00000000 
+ 1664              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 32
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 usb_lld.c
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:17     .text.usb_lld_pump:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:22     .text.usb_lld_pump:00000000 usb_lld_pump
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1630   .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:489    .text.otg_disable_ep.isra.0:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:494    .text.otg_disable_ep.isra.0:00000000 otg_disable_ep.isra.0
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:551    .text.usb_lld_init:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:557    .text.usb_lld_init:00000000 usb_lld_init
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1623   .bss.USBD1:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1614   .rodata.fsparams:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:585    .text.usb_lld_start:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:591    .text.usb_lld_start:00000000 usb_lld_start
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:695    .text.usb_lld_stop:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:701    .text.usb_lld_stop:00000000 usb_lld_stop
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:722    .text.usb_lld_reset:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:728    .text.usb_lld_reset:00000000 usb_lld_reset
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1637   .rodata.ep0config:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1633   .rodata.str1.4:00000010 .LC1
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:809    .text.usb_lld_set_address:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:815    .text.usb_lld_set_address:00000000 usb_lld_set_address
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:828    .text.usb_lld_init_endpoint:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:834    .text.usb_lld_init_endpoint:00000000 usb_lld_init_endpoint
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:980    .text.usb_lld_disable_endpoints:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:986    .text.usb_lld_disable_endpoints:00000000 usb_lld_disable_endpoints
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:998    .text.usb_lld_get_status_out:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1004   .text.usb_lld_get_status_out:00000000 usb_lld_get_status_out
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1022   .text.usb_lld_get_status_in:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1028   .text.usb_lld_get_status_in:00000000 usb_lld_get_status_in
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1046   .text.usb_lld_read_setup:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1052   .text.usb_lld_read_setup:00000000 usb_lld_read_setup
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1066   .text.usb_lld_prepare_receive:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1072   .text.usb_lld_prepare_receive:00000000 usb_lld_prepare_receive
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1106   .text.otg_epout_handler:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1111   .text.otg_epout_handler:00000000 otg_epout_handler
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1184   .text.usb_lld_prepare_transmit:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1190   .text.usb_lld_prepare_transmit:00000000 usb_lld_prepare_transmit
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1230   .text.otg_epin_handler:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1235   .text.otg_epin_handler:00000000 otg_epin_handler
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1335   .text.Vector14C:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1341   .text.Vector14C:00000000 Vector14C
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1497   .text.usb_lld_start_out:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1503   .text.usb_lld_start_out:00000000 usb_lld_start_out
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1515   .text.usb_lld_start_in:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1521   .text.usb_lld_start_in:00000000 usb_lld_start_in
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1540   .text.usb_lld_stall_out:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1546   .text.usb_lld_stall_out:00000000 usb_lld_stall_out
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1558   .text.usb_lld_stall_in:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1564   .text.usb_lld_stall_in:00000000 usb_lld_stall_in
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1576   .text.usb_lld_clear_out:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1582   .text.usb_lld_clear_out:00000000 usb_lld_clear_out
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1594   .text.usb_lld_clear_in:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1600   .text.usb_lld_clear_in:00000000 usb_lld_clear_in
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1626   .bss.USBD1:00000000 USBD1
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1613   .rodata.fsparams:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1617   .rodata.fsparams:00000000 fsparams
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1622   .bss.USBD1:00000000 $d
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s 			page 33
+
+
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1629   .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1636   .rodata.ep0config:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1640   .rodata.ep0config:00000000 ep0config
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1656   .bss.ep0_state:00000000 ep0_state
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1662   .bss.ep0setup_buffer:00000000 ep0setup_buffer
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1653   .bss.ep0_state:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccnWG3xM.s:1659   .bss.ep0setup_buffer:00000000 $d
+
+UNDEFINED SYMBOLS
+rlist
+dbg_check_lock
+chSchGoSleepS
+dbg_check_unlock
+chSchReadyI
+chSchRescheduleS
+usbObjectInit
+_thread_memfill
+halPolledDelay
+chThdCreateI
+nvicEnableVector
+chDbgPanic
+dbg_check_lock_from_isr
+dbg_check_unlock_from_isr
+dbg_check_enter_isr
+dbg_check_leave_isr
+_port_irq_epilogue
+_usb_reset
+_usb_ep0setup
+_usb_ep0in
+_usb_ep0out

@@ -1,0 +1,2662 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 1
+
+
+   1              		.file	"tunerstudio.cpp"
+   2              		.section	.text$_ZL7resetTsv,"x"
+   3              		.p2align 4,,15
+   4              		.def	__ZL7resetTsv;	.scl	3;	.type	32;	.endef
+   5              	__ZL7resetTsv:
+   6              	LFB86:
+   7              		.cfi_startproc
+   8 0000 BA000000 		movl	$_tsState, %edx
+   8      00
+   9 0005 B90A0000 		movl	$10, %ecx
+   9      00
+  10 000a 57       		pushl	%edi
+  11              		.cfi_def_cfa_offset 8
+  12              		.cfi_offset 7, -8
+  13 000b 31C0     		xorl	%eax, %eax
+  14 000d 89D7     		movl	%edx, %edi
+  15 000f F3AB     		rep stosl
+  16 0011 5F       		popl	%edi
+  17              		.cfi_restore 7
+  18              		.cfi_def_cfa_offset 4
+  19 0012 C3       		ret
+  20              		.cfi_endproc
+  21              	LFE86:
+  22 0013 90909090 		.section	.text$_ZL13sendErrorCodeP12ts_channel_s,"x"
+  22      90909090 
+  22      90909090 
+  22      90
+  23              		.p2align 4,,15
+  24              		.def	__ZL13sendErrorCodeP12ts_channel_s;	.scl	3;	.type	32;	.endef
+  25              	__ZL13sendErrorCodeP12ts_channel_s:
+  26              	LFB98:
+  27              		.cfi_startproc
+  28 0000 83EC1C   		subl	$28, %esp
+  29              		.cfi_def_cfa_offset 32
+  30 0003 C744240C 		movl	$0, 12(%esp)
+  30      00000000 
+  31 000b C7442408 		movl	$0, 8(%esp)
+  31      00000000 
+  32 0013 C7442404 		movl	$130, 4(%esp)
+  32      82000000 
+  33 001b 890424   		movl	%eax, (%esp)
+  34 001e E8000000 		call	__Z25tunerStudioWriteCrcPacketP12ts_channel_shPKvt
+  34      00
+  35 0023 83C41C   		addl	$28, %esp
+  36              		.cfi_def_cfa_offset 4
+  37 0026 C3       		ret
+  38              		.cfi_endproc
+  39              	LFE98:
+  40 0027 90909090 		.section .rdata,"dr"
+  40      90909090 
+  40      90
+  41              		.align 4
+  42              	LC0:
+  43 0000 54756E65 		.ascii "TunerStudio size=%d / total=%d / errors=%d / H=%d / O=%d / P=%d / B=%d\0"
+  43      72537475 
+  43      64696F20 
+  43      73697A65 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 2
+
+
+  43      3D256420 
+  44 0047 00       		.align 4
+  45              	LC1:
+  46 0048 54756E65 		.ascii "TunerStudio W=%d / C=%d / P=%d / page=%d\0"
+  46      72537475 
+  46      64696F20 
+  46      573D2564 
+  46      202F2043 
+  47              		.section	.text$_ZL18printErrorCountersv,"x"
+  48              		.p2align 4,,15
+  49              		.def	__ZL18printErrorCountersv;	.scl	3;	.type	32;	.endef
+  50              	__ZL18printErrorCountersv:
+  51              	LFB87:
+  52              		.cfi_startproc
+  53 0000 83EC3C   		subl	$60, %esp
+  54              		.cfi_def_cfa_offset 64
+  55 0003 A10C0000 		movl	_tsState+12, %eax
+  55      00
+  56 0008 C7442408 		movl	$196, 8(%esp)
+  56      C4000000 
+  57 0010 C7442404 		movl	$LC0, 4(%esp)
+  57      00000000 
+  58 0018 C7042400 		movl	$_tsLogger, (%esp)
+  58      000000
+  59 001f 89442420 		movl	%eax, 32(%esp)
+  60 0023 A1080000 		movl	_tsState+8, %eax
+  60      00
+  61 0028 8944241C 		movl	%eax, 28(%esp)
+  62 002c A1040000 		movl	_tsState+4, %eax
+  62      00
+  63 0031 89442418 		movl	%eax, 24(%esp)
+  64 0035 A1000000 		movl	_tsState, %eax
+  64      00
+  65 003a 89442414 		movl	%eax, 20(%esp)
+  66 003e A1200000 		movl	_tsState+32, %eax
+  66      00
+  67 0043 89442410 		movl	%eax, 16(%esp)
+  68 0047 A1240000 		movl	_tsState+36, %eax
+  68      00
+  69 004c 8944240C 		movl	%eax, 12(%esp)
+  70 0050 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+  70      00
+  71 0055 0FBF0500 		movswl	_currentPageId, %eax
+  71      000000
+  72 005c C7442404 		movl	$LC1, 4(%esp)
+  72      48000000 
+  73 0064 C7042400 		movl	$_tsLogger, (%esp)
+  73      000000
+  74 006b 89442414 		movl	%eax, 20(%esp)
+  75 006f A1100000 		movl	_tsState+16, %eax
+  75      00
+  76 0074 89442410 		movl	%eax, 16(%esp)
+  77 0078 A11C0000 		movl	_tsState+28, %eax
+  77      00
+  78 007d 8944240C 		movl	%eax, 12(%esp)
+  79 0081 A1140000 		movl	_tsState+20, %eax
+  79      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 3
+
+
+  80 0086 89442408 		movl	%eax, 8(%esp)
+  81 008a E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+  81      00
+  82 008f 83C43C   		addl	$60, %esp
+  83              		.cfi_def_cfa_offset 4
+  84 0092 C3       		ret
+  85              		.cfi_endproc
+  86              	LFE87:
+  87 0093 90909090 		.section	.text$_Z12printTsStatsv,"x"
+  87      90909090 
+  87      90909090 
+  87      90
+  88              		.p2align 4,,15
+  89              		.globl	__Z12printTsStatsv
+  90              		.def	__Z12printTsStatsv;	.scl	2;	.type	32;	.endef
+  91              	__Z12printTsStatsv:
+  92              	LFB88:
+  93              		.cfi_startproc
+  94 0000 E9000000 		jmp	__ZL18printErrorCountersv
+  94      00
+  95              		.cfi_endproc
+  96              	LFE88:
+  97 0005 90909090 		.section	.text$_ZL10setTsSpeedi,"x"
+  97      90909090 
+  97      909090
+  98              		.p2align 4,,15
+  99              		.def	__ZL10setTsSpeedi;	.scl	3;	.type	32;	.endef
+ 100              	__ZL10setTsSpeedi:
+ 101              	LFB89:
+ 102              		.cfi_startproc
+ 103 0000 A1000000 		movl	_boardConfiguration, %eax
+ 103      00
+ 104 0005 8B542404 		movl	4(%esp), %edx
+ 105 0009 89904C01 		movl	%edx, 332(%eax)
+ 105      0000
+ 106 000f E9000000 		jmp	__ZL18printErrorCountersv
+ 106      00
+ 107              		.cfi_endproc
+ 108              	LFE89:
+ 109 0014 90909090 		.section	.text$_Z16tunerStudioDebugPKc,"x"
+ 109      90909090 
+ 109      90909090 
+ 110              		.p2align 4,,15
+ 111              		.globl	__Z16tunerStudioDebugPKc
+ 112              		.def	__Z16tunerStudioDebugPKc;	.scl	2;	.type	32;	.endef
+ 113              	__Z16tunerStudioDebugPKc:
+ 114              	LFB90:
+ 115              		.cfi_startproc
+ 116 0000 F3       		rep
+ 117 0001 C3       		ret
+ 118              		.cfi_endproc
+ 119              	LFE90:
+ 120 0002 90909090 		.section	.text$_Z18getWorkingPageAddri,"x"
+ 120      90909090 
+ 120      90909090 
+ 120      9090
+ 121              		.p2align 4,,15
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 4
+
+
+ 122              		.globl	__Z18getWorkingPageAddri
+ 123              		.def	__Z18getWorkingPageAddri;	.scl	2;	.type	32;	.endef
+ 124              	__Z18getWorkingPageAddri:
+ 125              	LFB91:
+ 126              		.cfi_startproc
+ 127 0000 8B542404 		movl	4(%esp), %edx
+ 128 0004 31C0     		xorl	%eax, %eax
+ 129 0006 85D2     		testl	%edx, %edx
+ 130 0008 BA000000 		movl	$_configWorkingCopy, %edx
+ 130      00
+ 131 000d 0F44C2   		cmove	%edx, %eax
+ 132 0010 C3       		ret
+ 133              		.cfi_endproc
+ 134              	LFE91:
+ 135 0011 90909090 		.section	.text$_Z22getTunerStudioPageSizei,"x"
+ 135      90909090 
+ 135      90909090 
+ 135      909090
+ 136              		.p2align 4,,15
+ 137              		.globl	__Z22getTunerStudioPageSizei
+ 138              		.def	__Z22getTunerStudioPageSizei;	.scl	2;	.type	32;	.endef
+ 139              	__Z22getTunerStudioPageSizei:
+ 140              	LFB92:
+ 141              		.cfi_startproc
+ 142 0000 837C2404 		cmpl	$1, 4(%esp)
+ 142      01
+ 143 0005 19C0     		sbbl	%eax, %eax
+ 144 0007 25B83B00 		andl	$15288, %eax
+ 144      00
+ 145 000c C3       		ret
+ 146              		.cfi_endproc
+ 147              	LFE92:
+ 148 000d 909090   		.section .rdata,"dr"
+ 149              	LC2:
+ 150 0071 50414745 		.ascii "PAGE %d\0"
+ 150      20256400 
+ 151              		.section	.text$_Z23handlePageSelectCommandP12ts_channel_s20ts_response_format_et,"x"
+ 152              		.p2align 4,,15
+ 153              		.globl	__Z23handlePageSelectCommandP12ts_channel_s20ts_response_format_et
+ 154              		.def	__Z23handlePageSelectCommandP12ts_channel_s20ts_response_format_et;	.scl	2;	.type	32;	.endef
+ 155              	__Z23handlePageSelectCommandP12ts_channel_s20ts_response_format_et:
+ 156              	LFB93:
+ 157              		.cfi_startproc
+ 158 0000 83EC1C   		subl	$28, %esp
+ 159              		.cfi_def_cfa_offset 32
+ 160 0003 8B442428 		movl	40(%esp), %eax
+ 161 0007 C7442404 		movl	$LC2, 4(%esp)
+ 161      71000000 
+ 162 000f C7042400 		movl	$_tsLogger, (%esp)
+ 162      000000
+ 163 0016 83051000 		addl	$1, _tsState+16
+ 163      000001
+ 164 001d 66A30000 		movw	%ax, _currentPageId
+ 164      0000
+ 165 0023 98       		cwtl
+ 166 0024 89442408 		movl	%eax, 8(%esp)
+ 167 0028 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 5
+
+
+ 167      00
+ 168 002d 8B442424 		movl	36(%esp), %eax
+ 169 0031 C744240C 		movl	$0, 12(%esp)
+ 169      00000000 
+ 170 0039 C7442408 		movl	$0, 8(%esp)
+ 170      00000000 
+ 171 0041 89442404 		movl	%eax, 4(%esp)
+ 172 0045 8B442420 		movl	32(%esp), %eax
+ 173 0049 890424   		movl	%eax, (%esp)
+ 174 004c E8000000 		call	__Z14tsSendResponseP12ts_channel_s20ts_response_format_ePKhi
+ 174      00
+ 175 0051 83C41C   		addl	$28, %esp
+ 176              		.cfi_def_cfa_offset 4
+ 177 0054 C3       		ret
+ 178              		.cfi_endproc
+ 179              	LFE93:
+ 180 0055 90909090 		.section .rdata,"dr"
+ 180      90909090 
+ 180      909090
+ 181 0079 000000   		.align 4
+ 182              	LC3:
+ 183 007c 6170706C 		.ascii "applying soft change from %d length %d\0"
+ 183      79696E67 
+ 183      20736F66 
+ 183      74206368 
+ 183      616E6765 
+ 184              		.section	.text$_Z11yellowMagiciii,"x"
+ 185              		.p2align 4,,15
+ 186              		.globl	__Z11yellowMagiciii
+ 187              		.def	__Z11yellowMagiciii;	.scl	2;	.type	32;	.endef
+ 188              	__Z11yellowMagiciii:
+ 189              	LFB94:
+ 190              		.cfi_startproc
+ 191 0000 83EC1C   		subl	$28, %esp
+ 192              		.cfi_def_cfa_offset 32
+ 193 0003 895C2414 		movl	%ebx, 20(%esp)
+ 194              		.cfi_offset 3, -12
+ 195 0007 8B5C2424 		movl	36(%esp), %ebx
+ 196 000b 89742418 		movl	%esi, 24(%esp)
+ 197              		.cfi_offset 6, -8
+ 198 000f 8B742428 		movl	40(%esp), %esi
+ 199 0013 81FB3818 		cmpl	$6200, %ebx
+ 199      0000
+ 200 0019 7F0C     		jg	L22
+ 201 001b 8B5C2414 		movl	20(%esp), %ebx
+ 202 001f 8B742418 		movl	24(%esp), %esi
+ 203 0023 83C41C   		addl	$28, %esp
+ 204              		.cfi_remember_state
+ 205              		.cfi_restore 6
+ 206              		.cfi_restore 3
+ 207              		.cfi_def_cfa_offset 4
+ 208 0026 C3       		ret
+ 209              		.p2align 4,,7
+ 210              	L22:
+ 211              		.cfi_restore_state
+ 212 0027 8974240C 		movl	%esi, 12(%esp)
+ 213 002b 895C2408 		movl	%ebx, 8(%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 6
+
+
+ 214 002f C7442404 		movl	$LC3, 4(%esp)
+ 214      7C000000 
+ 215 0037 C7042400 		movl	$_tsLogger, (%esp)
+ 215      000000
+ 216 003e E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 216      00
+ 217 0043 A1000000 		movl	_engineConfiguration, %eax
+ 217      00
+ 218 0048 89742428 		movl	%esi, 40(%esp)
+ 219 004c 8B742418 		movl	24(%esp), %esi
+ 220 0050 01D8     		addl	%ebx, %eax
+ 221 0052 81C30000 		addl	$_configWorkingCopy, %ebx
+ 221      0000
+ 222 0058 895C2424 		movl	%ebx, 36(%esp)
+ 223 005c 8B5C2414 		movl	20(%esp), %ebx
+ 224 0060 89442420 		movl	%eax, 32(%esp)
+ 225 0064 83C41C   		addl	$28, %esp
+ 226              		.cfi_restore 6
+ 227              		.cfi_restore 3
+ 228              		.cfi_def_cfa_offset 4
+ 229 0067 E9000000 		jmp	_memcpy
+ 229      00
+ 230              		.cfi_endproc
+ 231              	LFE94:
+ 232 006c 90909090 		.section .rdata,"dr"
+ 233 00a3 00       		.align 4
+ 234              	LC4:
+ 235 00a4 43524333 		.ascii "CRC32 request: pageId %d offset %d size %d\0"
+ 235      32207265 
+ 235      71756573 
+ 235      743A2070 
+ 235      61676549 
+ 236              	LC5:
+ 237 00cf 43524333 		.ascii "CRC32 response: %x\0"
+ 237      32207265 
+ 237      73706F6E 
+ 237      73653A20 
+ 237      257800
+ 238              		.section	.text$_Z16handleCrc32CheckP12ts_channel_s20ts_response_format_ettt,"x"
+ 239              		.p2align 4,,15
+ 240              		.globl	__Z16handleCrc32CheckP12ts_channel_s20ts_response_format_ettt
+ 241              		.def	__Z16handleCrc32CheckP12ts_channel_s20ts_response_format_ettt;	.scl	2;	.type	32;	.endef
+ 242              	__Z16handleCrc32CheckP12ts_channel_s20ts_response_format_ettt:
+ 243              	LFB96:
+ 244              		.cfi_startproc
+ 245 0000 83EC4C   		subl	$76, %esp
+ 246              		.cfi_def_cfa_offset 80
+ 247 0003 0FB74424 		movzwl	88(%esp), %eax
+ 247      58
+ 248 0008 0FB74C24 		movzwl	92(%esp), %ecx
+ 248      5C
+ 249 000d 83051800 		addl	$1, _tsState+24
+ 249      000001
+ 250 0014 6683F801 		cmpw	$1, %ax
+ 251 0018 896C2448 		movl	%ebp, 72(%esp)
+ 252              		.cfi_offset 5, -8
+ 253 001c 19ED     		sbbl	%ebp, %ebp
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 7
+
+
+ 254 001e 81E5B83B 		andl	$15288, %ebp
+ 254      0000
+ 255 0024 894C240C 		movl	%ecx, 12(%esp)
+ 256 0028 896C2410 		movl	%ebp, 16(%esp)
+ 257 002c 89442408 		movl	%eax, 8(%esp)
+ 258 0030 C7442404 		movl	$LC4, 4(%esp)
+ 258      A4000000 
+ 259 0038 C7042400 		movl	$_tsLogger, (%esp)
+ 259      000000
+ 260 003f 895C243C 		movl	%ebx, 60(%esp)
+ 261 0043 89742440 		movl	%esi, 64(%esp)
+ 262 0047 897C2444 		movl	%edi, 68(%esp)
+ 263              		.cfi_offset 3, -20
+ 264              		.cfi_offset 6, -16
+ 265              		.cfi_offset 7, -12
+ 266 004b E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 266      00
+ 267 0050 896C2404 		movl	%ebp, 4(%esp)
+ 268 0054 C7042400 		movl	$_configWorkingCopy, (%esp)
+ 268      000000
+ 269 005b E8000000 		call	_crc32
+ 269      00
+ 270 0060 896C2404 		movl	%ebp, 4(%esp)
+ 271 0064 C7042400 		movl	$_configWorkingCopy, (%esp)
+ 271      000000
+ 272 006b 89C7     		movl	%eax, %edi
+ 273 006d E8000000 		call	_crc32
+ 273      00
+ 274 0072 C1EF18   		shrl	$24, %edi
+ 275 0075 896C2404 		movl	%ebp, 4(%esp)
+ 276 0079 C7042400 		movl	$_configWorkingCopy, (%esp)
+ 276      000000
+ 277 0080 89C6     		movl	%eax, %esi
+ 278 0082 E8000000 		call	_crc32
+ 278      00
+ 279 0087 C1E608   		sall	$8, %esi
+ 280 008a 896C2404 		movl	%ebp, 4(%esp)
+ 281 008e 81E60000 		andl	$16711680, %esi
+ 281      FF00
+ 282 0094 C7042400 		movl	$_configWorkingCopy, (%esp)
+ 282      000000
+ 283 009b 89C3     		movl	%eax, %ebx
+ 284 009d E8000000 		call	_crc32
+ 284      00
+ 285 00a2 C1EB08   		shrl	$8, %ebx
+ 286 00a5 81E300FF 		andl	$65280, %ebx
+ 286      0000
+ 287 00ab C7442404 		movl	$LC5, 4(%esp)
+ 287      CF000000 
+ 288 00b3 C7042400 		movl	$_tsLogger, (%esp)
+ 288      000000
+ 289 00ba C1E018   		sall	$24, %eax
+ 290 00bd 09F8     		orl	%edi, %eax
+ 291 00bf 09F0     		orl	%esi, %eax
+ 292 00c1 09D8     		orl	%ebx, %eax
+ 293 00c3 89442408 		movl	%eax, 8(%esp)
+ 294 00c7 8944242C 		movl	%eax, 44(%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 8
+
+
+ 295 00cb E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 295      00
+ 296 00d0 8D44242C 		leal	44(%esp), %eax
+ 297 00d4 89442408 		movl	%eax, 8(%esp)
+ 298 00d8 8B442454 		movl	84(%esp), %eax
+ 299 00dc C744240C 		movl	$4, 12(%esp)
+ 299      04000000 
+ 300 00e4 89442404 		movl	%eax, 4(%esp)
+ 301 00e8 8B442450 		movl	80(%esp), %eax
+ 302 00ec 890424   		movl	%eax, (%esp)
+ 303 00ef E8000000 		call	__Z14tsSendResponseP12ts_channel_s20ts_response_format_ePKhi
+ 303      00
+ 304 00f4 8B5C243C 		movl	60(%esp), %ebx
+ 305 00f8 8B742440 		movl	64(%esp), %esi
+ 306 00fc 8B7C2444 		movl	68(%esp), %edi
+ 307 0100 8B6C2448 		movl	72(%esp), %ebp
+ 308 0104 83C44C   		addl	$76, %esp
+ 309              		.cfi_restore 5
+ 310              		.cfi_restore 7
+ 311              		.cfi_restore 6
+ 312              		.cfi_restore 3
+ 313              		.cfi_def_cfa_offset 4
+ 314 0107 C3       		ret
+ 315              		.cfi_endproc
+ 316              	LFE96:
+ 317 0108 90909090 		.section	.text$_Z11requestBurnv,"x"
+ 317      90909090 
+ 318              		.p2align 4,,15
+ 319              		.globl	__Z11requestBurnv
+ 320              		.def	__Z11requestBurnv;	.scl	2;	.type	32;	.endef
+ 321              	__Z11requestBurnv:
+ 322              	LFB100:
+ 323              		.cfi_startproc
+ 324 0000 E9000000 		jmp	__Z35incrementGlobalConfigurationVersionv
+ 324      00
+ 325              		.cfi_endproc
+ 326              	LFE100:
+ 327 0005 90909090 		.section .rdata,"dr"
+ 327      90909090 
+ 327      909090
+ 328              	LC6:
+ 329 00e2 43524300 		.ascii "CRC\0"
+ 330              	LC7:
+ 331 00e6 676F7420 		.ascii "got B (Burn) %s\0"
+ 331      42202842 
+ 331      75726E29 
+ 331      20257300 
+ 332              	LC8:
+ 333 00f6 4255524E 		.ascii "BURN in %dms\0"
+ 333      20696E20 
+ 333      25646D73 
+ 333      00
+ 334              	LC9:
+ 335 0103 706C6169 		.ascii "plain\0"
+ 335      6E00
+ 336              		.section	.text$_Z17handleBurnCommandP12ts_channel_s20ts_response_format_et,"x"
+ 337              		.p2align 4,,15
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 9
+
+
+ 338              		.globl	__Z17handleBurnCommandP12ts_channel_s20ts_response_format_et
+ 339              		.def	__Z17handleBurnCommandP12ts_channel_s20ts_response_format_et;	.scl	2;	.type	32;	.endef
+ 340              	__Z17handleBurnCommandP12ts_channel_s20ts_response_format_et:
+ 341              	LFB102:
+ 342              		.cfi_startproc
+ 343 0000 83EC2C   		subl	$44, %esp
+ 344              		.cfi_def_cfa_offset 48
+ 345 0003 895C241C 		movl	%ebx, 28(%esp)
+ 346              		.cfi_offset 3, -20
+ 347 0007 8B5C2434 		movl	52(%esp), %ebx
+ 348 000b 89742420 		movl	%esi, 32(%esp)
+ 349              		.cfi_offset 6, -16
+ 350 000f 8B742438 		movl	56(%esp), %esi
+ 351 0013 897C2424 		movl	%edi, 36(%esp)
+ 352 0017 896C2428 		movl	%ebp, 40(%esp)
+ 353              		.cfi_offset 7, -12
+ 354              		.cfi_offset 5, -8
+ 355 001b 8B6C2430 		movl	48(%esp), %ebp
+ 356 001f E8000000 		call	_currentTimeMillis
+ 356      00
+ 357 0024 83050C00 		addl	$1, _tsState+12
+ 357      000001
+ 358 002b 85DB     		testl	%ebx, %ebx
+ 359 002d 89C7     		movl	%eax, %edi
+ 360 002f 747F     		je	L29
+ 361 0031 C7442408 		movl	$LC6, 8(%esp)
+ 361      E2000000 
+ 362 0039 C7442404 		movl	$LC7, 4(%esp)
+ 362      E6000000 
+ 363 0041 C7042400 		movl	$_tsLogger, (%esp)
+ 363      000000
+ 364 0048 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 364      00
+ 365 004d C7442408 		movl	$15288, 8(%esp)
+ 365      B83B0000 
+ 366 0055 C7442404 		movl	$_configWorkingCopy, 4(%esp)
+ 366      00000000 
+ 367 005d C7042408 		movl	$_persistentState+8, (%esp)
+ 367      000000
+ 368 0064 66893500 		movw	%si, _currentPageId
+ 368      000000
+ 369 006b E8000000 		call	_memcpy
+ 369      00
+ 370 0070 E8000000 		call	__Z35incrementGlobalConfigurationVersionv
+ 370      00
+ 371 0075 83FB01   		cmpl	$1, %ebx
+ 372 0078 747C     		je	L32
+ 373              	L30:
+ 374              		.p2align 4,,5
+ 375 007a E8000000 		call	_currentTimeMillis
+ 375      00
+ 376 007f 8B5C241C 		movl	28(%esp), %ebx
+ 377 0083 8B742420 		movl	32(%esp), %esi
+ 378 0087 8B6C2428 		movl	40(%esp), %ebp
+ 379 008b C7442434 		movl	$LC8, 52(%esp)
+ 379      F6000000 
+ 380 0093 C7442430 		movl	$_tsLogger, 48(%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 10
+
+
+ 380      00000000 
+ 381 009b 29F8     		subl	%edi, %eax
+ 382 009d 8B7C2424 		movl	36(%esp), %edi
+ 383 00a1 89442438 		movl	%eax, 56(%esp)
+ 384 00a5 83C42C   		addl	$44, %esp
+ 385              		.cfi_remember_state
+ 386              		.cfi_restore 5
+ 387              		.cfi_restore 7
+ 388              		.cfi_restore 6
+ 389              		.cfi_restore 3
+ 390              		.cfi_def_cfa_offset 4
+ 391 00a8 E9000000 		jmp	__Z11scheduleMsgP7LoggingPKcz
+ 391      00
+ 392 00ad 8D7600   		.p2align 4,,7
+ 393              	L29:
+ 394              		.cfi_restore_state
+ 395 00b0 C7442408 		movl	$LC9, 8(%esp)
+ 395      03010000 
+ 396 00b8 C7442404 		movl	$LC7, 4(%esp)
+ 396      E6000000 
+ 397 00c0 C7042400 		movl	$_tsLogger, (%esp)
+ 397      000000
+ 398 00c7 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 398      00
+ 399 00cc C7442408 		movl	$15288, 8(%esp)
+ 399      B83B0000 
+ 400 00d4 C7442404 		movl	$_configWorkingCopy, 4(%esp)
+ 400      00000000 
+ 401 00dc C7042408 		movl	$_persistentState+8, (%esp)
+ 401      000000
+ 402 00e3 66893500 		movw	%si, _currentPageId
+ 402      000000
+ 403 00ea E8000000 		call	_memcpy
+ 403      00
+ 404 00ef E8000000 		call	__Z35incrementGlobalConfigurationVersionv
+ 404      00
+ 405 00f4 EB84     		jmp	L30
+ 406              		.p2align 4,,7
+ 407              	L32:
+ 408 00f6 C744240C 		movl	$0, 12(%esp)
+ 408      00000000 
+ 409 00fe C7442408 		movl	$0, 8(%esp)
+ 409      00000000 
+ 410 0106 C7442404 		movl	$4, 4(%esp)
+ 410      04000000 
+ 411 010e 892C24   		movl	%ebp, (%esp)
+ 412 0111 E8000000 		call	__Z25tunerStudioWriteCrcPacketP12ts_channel_shPKvt
+ 412      00
+ 413 0116 E95FFFFF 		jmp	L30
+ 413      FF
+ 414              		.cfi_endproc
+ 415              	LFE102:
+ 416 011b 90909090 		.section	.text$_Z19syncTunerStudioCopyv,"x"
+ 416      90
+ 417              		.p2align 4,,15
+ 418              		.globl	__Z19syncTunerStudioCopyv
+ 419              		.def	__Z19syncTunerStudioCopyv;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 11
+
+
+ 420              	__Z19syncTunerStudioCopyv:
+ 421              	LFB106:
+ 422              		.cfi_startproc
+ 423 0000 83EC1C   		subl	$28, %esp
+ 424              		.cfi_def_cfa_offset 32
+ 425 0003 C7442408 		movl	$15288, 8(%esp)
+ 425      B83B0000 
+ 426 000b C7442404 		movl	$_persistentState+8, 4(%esp)
+ 426      08000000 
+ 427 0013 C7042400 		movl	$_configWorkingCopy, (%esp)
+ 427      000000
+ 428 001a E8000000 		call	_memcpy
+ 428      00
+ 429 001f 83C41C   		addl	$28, %esp
+ 430              		.cfi_def_cfa_offset 4
+ 431 0022 C3       		ret
+ 432              		.cfi_endproc
+ 433              	LFE106:
+ 434 0023 90909090 		.section	.text$_Z16tunerStudioErrorPKc,"x"
+ 434      90909090 
+ 434      90909090 
+ 434      90
+ 435              		.p2align 4,,15
+ 436              		.globl	__Z16tunerStudioErrorPKc
+ 437              		.def	__Z16tunerStudioErrorPKc;	.scl	2;	.type	32;	.endef
+ 438              	__Z16tunerStudioErrorPKc:
+ 439              	LFB107:
+ 440              		.cfi_startproc
+ 441 0000 83EC0C   		subl	$12, %esp
+ 442              		.cfi_def_cfa_offset 16
+ 443 0003 E8000000 		call	__ZL18printErrorCountersv
+ 443      00
+ 444 0008 83052000 		addl	$1, _tsState+32
+ 444      000001
+ 445 000f 83C40C   		addl	$12, %esp
+ 446              		.cfi_def_cfa_offset 4
+ 447 0012 C3       		ret
+ 448              		.cfi_endproc
+ 449              	LFE107:
+ 450 0013 90909090 		.section .rdata,"dr"
+ 450      90909090 
+ 450      90909090 
+ 450      90
+ 451              	LC10:
+ 452 0109 4552524F 		.ascii "ERROR: invalid page number\0"
+ 452      523A2069 
+ 452      6E76616C 
+ 452      69642070 
+ 452      61676520 
+ 453              	LC11:
+ 454 0124 696E7661 		.ascii "invalid offset/count %d/%d\0"
+ 454      6C696420 
+ 454      6F666673 
+ 454      65742F63 
+ 454      6F756E74 
+ 455              		.section	.text$_Z21handlePageReadCommandP12ts_channel_s20ts_response_format_ettt,"x"
+ 456              		.p2align 4,,15
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 12
+
+
+ 457              		.globl	__Z21handlePageReadCommandP12ts_channel_s20ts_response_format_ettt
+ 458              		.def	__Z21handlePageReadCommandP12ts_channel_s20ts_response_format_ettt;	.scl	2;	.type	32;	.endef
+ 459              	__Z21handlePageReadCommandP12ts_channel_s20ts_response_format_ettt:
+ 460              	LFB99:
+ 461              		.cfi_startproc
+ 462 0000 83EC1C   		subl	$28, %esp
+ 463              		.cfi_def_cfa_offset 32
+ 464 0003 8B542428 		movl	40(%esp), %edx
+ 465 0007 83050800 		addl	$1, _tsState+8
+ 465      000001
+ 466 000e 8B442424 		movl	36(%esp), %eax
+ 467 0012 895C2414 		movl	%ebx, 20(%esp)
+ 468 0016 0FB74C24 		movzwl	48(%esp), %ecx
+ 468      30
+ 469 001b 6683FA00 		cmpw	$0, %dx
+ 470              		.cfi_offset 3, -12
+ 471 001f 8B5C2420 		movl	32(%esp), %ebx
+ 472 0023 89742418 		movl	%esi, 24(%esp)
+ 473              		.cfi_offset 6, -8
+ 474 0027 0FB77424 		movzwl	44(%esp), %esi
+ 474      2C
+ 475 002c 66891500 		movw	%dx, _currentPageId
+ 475      000000
+ 476 0033 7F3B     		jg	L45
+ 477 0035 755A     		jne	L46
+ 478 0037 8D140E   		leal	(%esi,%ecx), %edx
+ 479 003a 81FAB83B 		cmpl	$15288, %edx
+ 479      0000
+ 480 0040 7F56     		jg	L41
+ 481 0042 BA000000 		movl	$_configWorkingCopy, %edx
+ 481      00
+ 482              	L42:
+ 483 0047 01D6     		addl	%edx, %esi
+ 484 0049 89742428 		movl	%esi, 40(%esp)
+ 485 004d 8B742418 		movl	24(%esp), %esi
+ 486 0051 895C2420 		movl	%ebx, 32(%esp)
+ 487 0055 8B5C2414 		movl	20(%esp), %ebx
+ 488 0059 894C242C 		movl	%ecx, 44(%esp)
+ 489 005d 89442424 		movl	%eax, 36(%esp)
+ 490 0061 83C41C   		addl	$28, %esp
+ 491              		.cfi_remember_state
+ 492              		.cfi_restore 6
+ 493              		.cfi_restore 3
+ 494              		.cfi_def_cfa_offset 4
+ 495 0064 E9000000 		jmp	__Z14tsSendResponseP12ts_channel_s20ts_response_format_ePKhi
+ 495      00
+ 496 0069 8DB42600 		.p2align 4,,7
+ 496      000000
+ 497              	L45:
+ 498              		.cfi_restore_state
+ 499 0070 8B5C2414 		movl	20(%esp), %ebx
+ 500 0074 8B742418 		movl	24(%esp), %esi
+ 501 0078 66C70500 		movw	$0, _currentPageId
+ 501      00000000 
+ 501      00
+ 502 0081 C7442420 		movl	$LC10, 32(%esp)
+ 502      09010000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 13
+
+
+ 503 0089 83C41C   		addl	$28, %esp
+ 504              		.cfi_remember_state
+ 505              		.cfi_restore 6
+ 506              		.cfi_restore 3
+ 507              		.cfi_def_cfa_offset 4
+ 508 008c E9000000 		jmp	__Z16tunerStudioErrorPKc
+ 508      00
+ 509              	L46:
+ 510              		.cfi_restore_state
+ 511 0091 8D140E   		leal	(%esi,%ecx), %edx
+ 512 0094 85D2     		testl	%edx, %edx
+ 513 0096 74AF     		je	L42
+ 514              	L41:
+ 515 0098 89742408 		movl	%esi, 8(%esp)
+ 516 009c 894C240C 		movl	%ecx, 12(%esp)
+ 517 00a0 C7442404 		movl	$LC11, 4(%esp)
+ 517      24010000 
+ 518 00a8 C7042400 		movl	$_tsLogger, (%esp)
+ 518      000000
+ 519 00af E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 519      00
+ 520 00b4 89D8     		movl	%ebx, %eax
+ 521 00b6 8B742418 		movl	24(%esp), %esi
+ 522 00ba 8B5C2414 		movl	20(%esp), %ebx
+ 523 00be 83C41C   		addl	$28, %esp
+ 524              		.cfi_restore 6
+ 525              		.cfi_restore 3
+ 526              		.cfi_def_cfa_offset 4
+ 527 00c1 E9000000 		jmp	__ZL13sendErrorCodeP12ts_channel_s
+ 527      00
+ 528              		.cfi_endproc
+ 529              	LFE99:
+ 530 00c6 90909090 		.section .rdata,"dr"
+ 530      90909090 
+ 530      9090
+ 531              	LC12:
+ 532 013f 4552524F 		.ascii "ERROR: out of range2\0"
+ 532      523A206F 
+ 532      7574206F 
+ 532      66207261 
+ 532      6E676532 
+ 533              	LC13:
+ 534 0154 4552524F 		.ascii "ERROR offset %d\0"
+ 534      52206F66 
+ 534      66736574 
+ 534      20256400 
+ 535              	LC14:
+ 536 0164 70616765 		.ascii "page %d offset %d: value=%d\0"
+ 536      20256420 
+ 536      6F666673 
+ 536      65742025 
+ 536      643A2076 
+ 537              		.section	.text$_Z23handleWriteValueCommandP12ts_channel_s20ts_response_format_etth,"x"
+ 538              		.p2align 4,,15
+ 539              		.globl	__Z23handleWriteValueCommandP12ts_channel_s20ts_response_format_etth
+ 540              		.def	__Z23handleWriteValueCommandP12ts_channel_s20ts_response_format_etth;	.scl	2;	.type	32;	.ende
+ 541              	__Z23handleWriteValueCommandP12ts_channel_s20ts_response_format_etth:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 14
+
+
+ 542              	LFB97:
+ 543              		.cfi_startproc
+ 544 0000 56       		pushl	%esi
+ 545              		.cfi_def_cfa_offset 8
+ 546              		.cfi_offset 6, -8
+ 547 0001 53       		pushl	%ebx
+ 548              		.cfi_def_cfa_offset 12
+ 549              		.cfi_offset 3, -12
+ 550 0002 83EC24   		subl	$36, %esp
+ 551              		.cfi_def_cfa_offset 48
+ 552 0005 8B442438 		movl	56(%esp), %eax
+ 553 0009 0FB75C24 		movzwl	60(%esp), %ebx
+ 553      3C
+ 554 000e 83051400 		addl	$1, _tsState+20
+ 554      000001
+ 555 0015 0FB67424 		movzbl	64(%esp), %esi
+ 555      40
+ 556 001a 6683F801 		cmpw	$1, %ax
+ 557 001e 66A30000 		movw	%ax, _currentPageId
+ 557      0000
+ 558 0024 19C0     		sbbl	%eax, %eax
+ 559 0026 25B83B00 		andl	$15288, %eax
+ 559      00
+ 560 002b 39C3     		cmpl	%eax, %ebx
+ 561 002d 7F45     		jg	L55
+ 562 002f E8000000 		call	_currentTimeMillis
+ 562      00
+ 563 0034 89C2     		movl	%eax, %edx
+ 564 0036 2B150000 		subl	__ZL21previousWriteReportMs, %edx
+ 564      0000
+ 565 003c 83FA05   		cmpl	$5, %edx
+ 566 003f 775F     		ja	L56
+ 567              	L50:
+ 568 0041 0FBF1500 		movswl	_currentPageId, %edx
+ 568      000000
+ 569 0048 31C0     		xorl	%eax, %eax
+ 570 004a B9000000 		movl	$_configWorkingCopy, %ecx
+ 570      00
+ 571 004f 6685D2   		testw	%dx, %dx
+ 572 0052 0F44C1   		cmove	%ecx, %eax
+ 573 0055 89F1     		movl	%esi, %ecx
+ 574 0057 880C18   		movb	%cl, (%eax,%ebx)
+ 575 005a 895C2434 		movl	%ebx, 52(%esp)
+ 576 005e C7442438 		movl	$1, 56(%esp)
+ 576      01000000 
+ 577 0066 89542430 		movl	%edx, 48(%esp)
+ 578 006a 83C424   		addl	$36, %esp
+ 579              		.cfi_remember_state
+ 580              		.cfi_def_cfa_offset 12
+ 581 006d 5B       		popl	%ebx
+ 582              		.cfi_restore 3
+ 583              		.cfi_def_cfa_offset 8
+ 584 006e 5E       		popl	%esi
+ 585              		.cfi_restore 6
+ 586              		.cfi_def_cfa_offset 4
+ 587 006f E9000000 		jmp	__Z11yellowMagiciii
+ 587      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 15
+
+
+ 588              		.p2align 4,,7
+ 589              	L55:
+ 590              		.cfi_restore_state
+ 591 0074 C704243F 		movl	$LC12, (%esp)
+ 591      010000
+ 592 007b E8000000 		call	__Z16tunerStudioErrorPKc
+ 592      00
+ 593 0080 895C2438 		movl	%ebx, 56(%esp)
+ 594 0084 C7442434 		movl	$LC13, 52(%esp)
+ 594      54010000 
+ 595 008c C7442430 		movl	$_tsLogger, 48(%esp)
+ 595      00000000 
+ 596 0094 83C424   		addl	$36, %esp
+ 597              		.cfi_remember_state
+ 598              		.cfi_def_cfa_offset 12
+ 599 0097 5B       		popl	%ebx
+ 600              		.cfi_restore 3
+ 601              		.cfi_def_cfa_offset 8
+ 602 0098 5E       		popl	%esi
+ 603              		.cfi_restore 6
+ 604              		.cfi_def_cfa_offset 4
+ 605 0099 E9000000 		jmp	__Z11scheduleMsgP7LoggingPKcz
+ 605      00
+ 606 009e 6690     		.p2align 4,,7
+ 607              	L56:
+ 608              		.cfi_restore_state
+ 609 00a0 89F2     		movl	%esi, %edx
+ 610 00a2 A3000000 		movl	%eax, __ZL21previousWriteReportMs
+ 610      00
+ 611 00a7 0FB6C2   		movzbl	%dl, %eax
+ 612 00aa 89442410 		movl	%eax, 16(%esp)
+ 613 00ae 0FBF0500 		movswl	_currentPageId, %eax
+ 613      000000
+ 614 00b5 895C240C 		movl	%ebx, 12(%esp)
+ 615 00b9 C7442404 		movl	$LC14, 4(%esp)
+ 615      64010000 
+ 616 00c1 C7042400 		movl	$_tsLogger, (%esp)
+ 616      000000
+ 617 00c8 89442408 		movl	%eax, 8(%esp)
+ 618 00cc E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 618      00
+ 619 00d1 E96BFFFF 		jmp	L50
+ 619      FF
+ 620              		.cfi_endproc
+ 621              	LFE97:
+ 622 00d6 90909090 		.section .rdata,"dr"
+ 622      90909090 
+ 622      9090
+ 623              		.align 4
+ 624              	LC15:
+ 625 0180 57524954 		.ascii "WRITE CHUNK mode=%d p=%d o=%d s=%d\0"
+ 625      45204348 
+ 625      554E4B20 
+ 625      6D6F6465 
+ 625      3D256420 
+ 626              	LC16:
+ 627 01a3 4552524F 		.ascii "ERROR invalid offset %d\0"
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 16
+
+
+ 627      5220696E 
+ 627      76616C69 
+ 627      64206F66 
+ 627      66736574 
+ 628              	LC17:
+ 629 01bb 4552524F 		.ascii "ERROR: out of range\0"
+ 629      523A206F 
+ 629      7574206F 
+ 629      66207261 
+ 629      6E676500 
+ 630              	LC18:
+ 631 01cf 4552524F 		.ascii "ERROR: unexpected count\0"
+ 631      523A2075 
+ 631      6E657870 
+ 631      65637465 
+ 631      6420636F 
+ 632              	LC19:
+ 633 01e7 4552524F 		.ascii "ERROR unexpected count %d\0"
+ 633      5220756E 
+ 633      65787065 
+ 633      63746564 
+ 633      20636F75 
+ 634              		.section	.text$_Z23handleWriteChunkCommandP12ts_channel_s20ts_response_format_essPv,"x"
+ 635              		.p2align 4,,15
+ 636              		.globl	__Z23handleWriteChunkCommandP12ts_channel_s20ts_response_format_essPv
+ 637              		.def	__Z23handleWriteChunkCommandP12ts_channel_s20ts_response_format_essPv;	.scl	2;	.type	32;	.end
+ 638              	__Z23handleWriteChunkCommandP12ts_channel_s20ts_response_format_essPv:
+ 639              	LFB95:
+ 640              		.cfi_startproc
+ 641 0000 83EC4C   		subl	$76, %esp
+ 642              		.cfi_def_cfa_offset 80
+ 643 0003 8B542450 		movl	80(%esp), %edx
+ 644 0007 8B442460 		movl	96(%esp), %eax
+ 645 000b 89742440 		movl	%esi, 64(%esp)
+ 646              		.cfi_offset 6, -16
+ 647 000f 0FBF7424 		movswl	88(%esp), %esi
+ 647      58
+ 648 0014 897C2444 		movl	%edi, 68(%esp)
+ 649              		.cfi_offset 7, -12
+ 650 0018 8B7C2454 		movl	84(%esp), %edi
+ 651 001c 89542428 		movl	%edx, 40(%esp)
+ 652 0020 0FBF5424 		movswl	92(%esp), %edx
+ 652      5C
+ 653 0025 8944242C 		movl	%eax, 44(%esp)
+ 654 0029 0FBF0500 		movswl	_currentPageId, %eax
+ 654      000000
+ 655 0030 89742410 		movl	%esi, 16(%esp)
+ 656 0034 897C2408 		movl	%edi, 8(%esp)
+ 657 0038 89542414 		movl	%edx, 20(%esp)
+ 658 003c 8944240C 		movl	%eax, 12(%esp)
+ 659 0040 C7442404 		movl	$LC15, 4(%esp)
+ 659      80010000 
+ 660 0048 C7042400 		movl	$_tsLogger, (%esp)
+ 660      000000
+ 661 004f 895C243C 		movl	%ebx, 60(%esp)
+ 662 0053 896C2448 		movl	%ebp, 72(%esp)
+ 663              		.cfi_offset 3, -20
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 17
+
+
+ 664              		.cfi_offset 5, -8
+ 665 0057 89D5     		movl	%edx, %ebp
+ 666 0059 83051C00 		addl	$1, _tsState+28
+ 666      000001
+ 667 0060 89542420 		movl	%edx, 32(%esp)
+ 668 0064 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 668      00
+ 669 0069 0FBF1D00 		movswl	_currentPageId, %ebx
+ 669      000000
+ 670 0070 6683FB01 		cmpw	$1, %bx
+ 671 0074 19C0     		sbbl	%eax, %eax
+ 672 0076 25B83B00 		andl	$15288, %eax
+ 672      00
+ 673 007b 39C6     		cmpl	%eax, %esi
+ 674 007d 0F8F8D00 		jg	L59
+ 674      0000
+ 675 0083 89742424 		movl	%esi, 36(%esp)
+ 676              	L60:
+ 677 0087 6683FB01 		cmpw	$1, %bx
+ 678 008b 89EA     		movl	%ebp, %edx
+ 679 008d 19C0     		sbbl	%eax, %eax
+ 680 008f 25B83B00 		andl	$15288, %eax
+ 680      00
+ 681 0094 39C5     		cmpl	%eax, %ebp
+ 682 0096 0F8FB400 		jg	L69
+ 682      0000
+ 683              	L63:
+ 684 009c B9000000 		movl	$_configWorkingCopy, %ecx
+ 684      00
+ 685 00a1 31C0     		xorl	%eax, %eax
+ 686 00a3 89542408 		movl	%edx, 8(%esp)
+ 687 00a7 6685DB   		testw	%bx, %bx
+ 688 00aa 8B54242C 		movl	44(%esp), %edx
+ 689 00ae 0F44C1   		cmove	%ecx, %eax
+ 690 00b1 03442424 		addl	36(%esp), %eax
+ 691 00b5 89542404 		movl	%edx, 4(%esp)
+ 692 00b9 890424   		movl	%eax, (%esp)
+ 693 00bc E8000000 		call	_memcpy
+ 693      00
+ 694 00c1 8B542420 		movl	32(%esp), %edx
+ 695 00c5 89742404 		movl	%esi, 4(%esp)
+ 696 00c9 891C24   		movl	%ebx, (%esp)
+ 697 00cc 89542408 		movl	%edx, 8(%esp)
+ 698 00d0 E8000000 		call	__Z11yellowMagiciii
+ 698      00
+ 699 00d5 8B542428 		movl	40(%esp), %edx
+ 700 00d9 897C2454 		movl	%edi, 84(%esp)
+ 701 00dd 8B5C243C 		movl	60(%esp), %ebx
+ 702 00e1 8B742440 		movl	64(%esp), %esi
+ 703 00e5 8B7C2444 		movl	68(%esp), %edi
+ 704 00e9 8B6C2448 		movl	72(%esp), %ebp
+ 705 00ed C744245C 		movl	$0, 92(%esp)
+ 705      00000000 
+ 706 00f5 C7442458 		movl	$0, 88(%esp)
+ 706      00000000 
+ 707 00fd 89542450 		movl	%edx, 80(%esp)
+ 708 0101 83C44C   		addl	$76, %esp
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 18
+
+
+ 709              		.cfi_remember_state
+ 710              		.cfi_restore 5
+ 711              		.cfi_restore 7
+ 712              		.cfi_restore 6
+ 713              		.cfi_restore 3
+ 714              		.cfi_def_cfa_offset 4
+ 715 0104 E9000000 		jmp	__Z14tsSendResponseP12ts_channel_s20ts_response_format_ePKhi
+ 715      00
+ 716 0109 8DB42600 		.p2align 4,,7
+ 716      000000
+ 717              	L59:
+ 718              		.cfi_restore_state
+ 719 0110 89742408 		movl	%esi, 8(%esp)
+ 720 0114 31F6     		xorl	%esi, %esi
+ 721 0116 C7442404 		movl	$LC16, 4(%esp)
+ 721      A3010000 
+ 722 011e C7042400 		movl	$_tsLogger, (%esp)
+ 722      000000
+ 723 0125 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 723      00
+ 724 012a C70424BB 		movl	$LC17, (%esp)
+ 724      010000
+ 725 0131 E8000000 		call	__Z16tunerStudioErrorPKc
+ 725      00
+ 726 0136 0FBF1D00 		movswl	_currentPageId, %ebx
+ 726      000000
+ 727 013d C7442424 		movl	$0, 36(%esp)
+ 727      00000000 
+ 728 0145 E93DFFFF 		jmp	L60
+ 728      FF
+ 729 014a 8DB60000 		.p2align 4,,7
+ 729      0000
+ 730              	L69:
+ 731 0150 C70424CF 		movl	$LC18, (%esp)
+ 731      010000
+ 732 0157 E8000000 		call	__Z16tunerStudioErrorPKc
+ 732      00
+ 733 015c 896C2408 		movl	%ebp, 8(%esp)
+ 734 0160 C7442404 		movl	$LC19, 4(%esp)
+ 734      E7010000 
+ 735 0168 C7042400 		movl	$_tsLogger, (%esp)
+ 735      000000
+ 736 016f E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 736      00
+ 737 0174 0FBF1D00 		movswl	_currentPageId, %ebx
+ 737      000000
+ 738 017b 31D2     		xorl	%edx, %edx
+ 739 017d C7442420 		movl	$0, 32(%esp)
+ 739      00000000 
+ 740 0185 E912FFFF 		jmp	L63
+ 740      FF
+ 741              		.cfi_endproc
+ 742              	LFE95:
+ 743 018a 90909090 		.section .rdata,"dr"
+ 743      9090
+ 744              	LC20:
+ 745 0201 4D536869 		.ascii "MShift v0.01\0"
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 19
+
+
+ 745      66742076 
+ 745      302E3031 
+ 745      00
+ 746              		.section	.text$_Z18handleQueryCommandP12ts_channel_s20ts_response_format_e,"x"
+ 747              		.p2align 4,,15
+ 748              		.globl	__Z18handleQueryCommandP12ts_channel_s20ts_response_format_e
+ 749              		.def	__Z18handleQueryCommandP12ts_channel_s20ts_response_format_e;	.scl	2;	.type	32;	.endef
+ 750              	__Z18handleQueryCommandP12ts_channel_s20ts_response_format_e:
+ 751              	LFB108:
+ 752              		.cfi_startproc
+ 753 0000 83EC1C   		subl	$28, %esp
+ 754              		.cfi_def_cfa_offset 32
+ 755 0003 8B442424 		movl	36(%esp), %eax
+ 756 0007 C744240C 		movl	$13, 12(%esp)
+ 756      0D000000 
+ 757 000f C7442408 		movl	$LC20, 8(%esp)
+ 757      01020000 
+ 758 0017 83050000 		addl	$1, _tsState
+ 758      000001
+ 759 001e 89442404 		movl	%eax, 4(%esp)
+ 760 0022 8B442420 		movl	32(%esp), %eax
+ 761 0026 890424   		movl	%eax, (%esp)
+ 762 0029 E8000000 		call	__Z14tsSendResponseP12ts_channel_s20ts_response_format_ePKhi
+ 762      00
+ 763 002e 83C41C   		addl	$28, %esp
+ 764              		.cfi_def_cfa_offset 4
+ 765 0031 C3       		ret
+ 766              		.cfi_endproc
+ 767              	LFE108:
+ 768 0032 90909090 		.section	.text$_Z27handleOutputChannelsCommandP12ts_channel_s20ts_response_format_e,"x"
+ 768      90909090 
+ 768      90909090 
+ 768      9090
+ 769              		.p2align 4,,15
+ 770              		.globl	__Z27handleOutputChannelsCommandP12ts_channel_s20ts_response_format_e
+ 771              		.def	__Z27handleOutputChannelsCommandP12ts_channel_s20ts_response_format_e;	.scl	2;	.type	32;	.end
+ 772              	__Z27handleOutputChannelsCommandP12ts_channel_s20ts_response_format_e:
+ 773              	LFB109:
+ 774              		.cfi_startproc
+ 775 0000 83EC1C   		subl	$28, %esp
+ 776              		.cfi_def_cfa_offset 32
+ 777 0003 83050400 		addl	$1, _tsState+4
+ 777      000001
+ 778 000a E8000000 		call	__Z25prepareTunerStudioOutputsv
+ 778      00
+ 779 000f 8B442424 		movl	36(%esp), %eax
+ 780 0013 C744240C 		movl	$196, 12(%esp)
+ 780      C4000000 
+ 781 001b C7442408 		movl	$_tsOutputChannels, 8(%esp)
+ 781      00000000 
+ 782 0023 89442404 		movl	%eax, 4(%esp)
+ 783 0027 8B442420 		movl	32(%esp), %eax
+ 784 002b 890424   		movl	%eax, (%esp)
+ 785 002e E8000000 		call	__Z14tsSendResponseP12ts_channel_s20ts_response_format_ePKhi
+ 785      00
+ 786 0033 83C41C   		addl	$28, %esp
+ 787              		.cfi_def_cfa_offset 4
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 20
+
+
+ 788 0036 C3       		ret
+ 789              		.cfi_endproc
+ 790              	LFE109:
+ 791 0037 90909090 		.section .rdata,"dr"
+ 791      90909090 
+ 791      90
+ 792              	LC21:
+ 793 020e 73696D75 		.ascii "simulator\0"
+ 793      6C61746F 
+ 793      7200
+ 794              	LC22:
+ 795 0218 2074735F 		.ascii " ts_p_alive\15\12\0"
+ 795      705F616C 
+ 795      6976650D 
+ 795      0A00
+ 796              		.section	.text$_Z17handleTestCommandP12ts_channel_s,"x"
+ 797              		.p2align 4,,15
+ 798              		.globl	__Z17handleTestCommandP12ts_channel_s
+ 799              		.def	__Z17handleTestCommandP12ts_channel_s;	.scl	2;	.type	32;	.endef
+ 800              	__Z17handleTestCommandP12ts_channel_s:
+ 801              	LFB110:
+ 802              		.cfi_startproc
+ 803 0000 53       		pushl	%ebx
+ 804              		.cfi_def_cfa_offset 8
+ 805              		.cfi_offset 3, -8
+ 806 0001 83EC18   		subl	$24, %esp
+ 807              		.cfi_def_cfa_offset 32
+ 808 0004 8B5C2420 		movl	32(%esp), %ebx
+ 809 0008 C7442408 		movl	$10, 8(%esp)
+ 809      0A000000 
+ 810 0010 C7442404 		movl	$LC21, 4(%esp)
+ 810      0E020000 
+ 811 0018 891C24   		movl	%ebx, (%esp)
+ 812 001b E8000000 		call	__Z20tunerStudioWriteDataP12ts_channel_sPKhi
+ 812      00
+ 813 0020 891C24   		movl	%ebx, (%esp)
+ 814 0023 C7442408 		movl	$8, 8(%esp)
+ 814      08000000 
+ 815 002b C7442404 		movl	$LC22, 4(%esp)
+ 815      18020000 
+ 816 0033 E8000000 		call	__Z20tunerStudioWriteDataP12ts_channel_sPKhi
+ 816      00
+ 817 0038 83C418   		addl	$24, %esp
+ 818              		.cfi_def_cfa_offset 8
+ 819 003b 5B       		popl	%ebx
+ 820              		.cfi_restore 3
+ 821              		.cfi_def_cfa_offset 4
+ 822 003c C3       		ret
+ 823              		.cfi_endproc
+ 824              	LFE110:
+ 825 003d 909090   		.section .rdata,"dr"
+ 826              	LC23:
+ 827 0226 476F7420 		.ascii "Got naked Query command\0"
+ 827      6E616B65 
+ 827      64205175 
+ 827      65727920 
+ 827      636F6D6D 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 21
+
+
+ 828              	LC24:
+ 829 023e 4552524F 		.ascii "ERROR: not enough for PAGE\0"
+ 829      523A206E 
+ 829      6F742065 
+ 829      6E6F7567 
+ 829      6820666F 
+ 830              	LC25:
+ 831 0259 476F7420 		.ascii "Got naked BURN\0"
+ 831      6E616B65 
+ 831      64204255 
+ 831      524E00
+ 832              		.align 4
+ 833              	LC26:
+ 834 0268 4552524F 		.ascii "ERROR: Not enough for plain burn\0"
+ 834      523A204E 
+ 834      6F742065 
+ 834      6E6F7567 
+ 834      6820666F 
+ 835              	LC27:
+ 836 0289 476F7420 		.ascii "Got naked CHUNK_WRITE\0"
+ 836      6E616B65 
+ 836      64204348 
+ 836      554E4B5F 
+ 836      57524954 
+ 837 029f 00       		.align 4
+ 838              	LC28:
+ 839 02a0 4552524F 		.ascii "ERROR: Not enough for plain chunk write header: %d\0"
+ 839      523A204E 
+ 839      6F742065 
+ 839      6E6F7567 
+ 839      6820666F 
+ 840 02d3 00       		.align 4
+ 841              	LC29:
+ 842 02d4 4552524F 		.ascii "ERROR: Not enough for plain chunk write content: %d while expecting %d\0"
+ 842      523A204E 
+ 842      6F742065 
+ 842      6E6F7567 
+ 842      6820666F 
+ 843 031b 00       		.align 4
+ 844              	LC30:
+ 845 031c 4E6F7420 		.ascii "Not enough for plain read header\0"
+ 845      656E6F75 
+ 845      67682066 
+ 845      6F722070 
+ 845      6C61696E 
+ 846              	LC31:
+ 847 033d 30303100 		.ascii "001\0"
+ 848              		.section	.text$_Z18handlePlainCommandP12ts_channel_sh,"x"
+ 849              		.p2align 4,,15
+ 850              		.globl	__Z18handlePlainCommandP12ts_channel_sh
+ 851              		.def	__Z18handlePlainCommandP12ts_channel_sh;	.scl	2;	.type	32;	.endef
+ 852              	__Z18handlePlainCommandP12ts_channel_sh:
+ 853              	LFB113:
+ 854              		.cfi_startproc
+ 855 0000 56       		pushl	%esi
+ 856              		.cfi_def_cfa_offset 8
+ 857              		.cfi_offset 6, -8
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 22
+
+
+ 858 0001 53       		pushl	%ebx
+ 859              		.cfi_def_cfa_offset 12
+ 860              		.cfi_offset 3, -12
+ 861 0002 83EC34   		subl	$52, %esp
+ 862              		.cfi_def_cfa_offset 64
+ 863 0005 0FB65424 		movzbl	68(%esp), %edx
+ 863      44
+ 864 000a 8B5C2440 		movl	64(%esp), %ebx
+ 865 000e 80FA48   		cmpb	$72, %dl
+ 866 0011 745D     		je	L94
+ 867 0013 80FA53   		cmpb	$83, %dl
+ 868 0016 7458     		je	L94
+ 869 0018 89D0     		movl	%edx, %eax
+ 870 001a 83E0DF   		andl	$-33, %eax
+ 871 001d 3C54     		cmpb	$84, %al
+ 872 001f 0F84D100 		je	L96
+ 872      0000
+ 873 0025 80FA50   		cmpb	$80, %dl
+ 874 0028 0F84E200 		je	L97
+ 874      0000
+ 875 002e 80FA42   		cmpb	$66, %dl
+ 876 0031 746D     		je	L98
+ 877 0033 80FA43   		cmpb	$67, %dl
+ 878              		.p2align 4,,2
+ 879 0036 0F841501 		je	L99
+ 879      0000
+ 880 003c 80FA52   		cmpb	$82, %dl
+ 881 003f 90       		.p2align 4,,2
+ 882 0040 0F847A01 		je	L100
+ 882      0000
+ 883 0046 80FA4F   		cmpb	$79, %dl
+ 884              		.p2align 4,,2
+ 885 0049 0F847102 		je	L101
+ 885      0000
+ 886 004f 80FA51   		cmpb	$81, %dl
+ 887              		.p2align 4,,2
+ 888 0052 0F849300 		je	L92
+ 888      0000
+ 889 0058 31C0     		xorl	%eax, %eax
+ 890 005a 80FA46   		cmpb	$70, %dl
+ 891 005d 0F849E01 		je	L102
+ 891      0000
+ 892              	L79:
+ 893 0063 83C434   		addl	$52, %esp
+ 894              		.cfi_remember_state
+ 895              		.cfi_def_cfa_offset 12
+ 896 0066 5B       		popl	%ebx
+ 897              		.cfi_restore 3
+ 898              		.cfi_def_cfa_offset 8
+ 899 0067 5E       		popl	%esi
+ 900              		.cfi_restore 6
+ 901              		.cfi_def_cfa_offset 4
+ 902 0068 C3       		ret
+ 903 0069 8DB42600 		.p2align 4,,7
+ 903      000000
+ 904              	L94:
+ 905              		.cfi_restore_state
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 23
+
+
+ 906 0070 C7442404 		movl	$LC23, 4(%esp)
+ 906      26020000 
+ 907 0078 C7042400 		movl	$_tsLogger, (%esp)
+ 907      000000
+ 908 007f E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 908      00
+ 909 0084 891C24   		movl	%ebx, (%esp)
+ 910 0087 C7442404 		movl	$0, 4(%esp)
+ 910      00000000 
+ 911 008f E8000000 		call	__Z18handleQueryCommandP12ts_channel_s20ts_response_format_e
+ 911      00
+ 912 0094 83C434   		addl	$52, %esp
+ 913              		.cfi_remember_state
+ 914              		.cfi_def_cfa_offset 12
+ 915 0097 B8010000 		movl	$1, %eax
+ 915      00
+ 916 009c 5B       		popl	%ebx
+ 917              		.cfi_restore 3
+ 918              		.cfi_def_cfa_offset 8
+ 919 009d 5E       		popl	%esi
+ 920              		.cfi_restore 6
+ 921              		.cfi_def_cfa_offset 4
+ 922 009e C3       		ret
+ 923 009f 90       		.p2align 4,,7
+ 924              	L98:
+ 925              		.cfi_restore_state
+ 926 00a0 C7442404 		movl	$LC25, 4(%esp)
+ 926      59020000 
+ 927 00a8 C7042400 		movl	$_tsLogger, (%esp)
+ 927      000000
+ 928 00af E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 928      00
+ 929 00b4 8B03     		movl	(%ebx), %eax
+ 930 00b6 8D4C242E 		leal	46(%esp), %ecx
+ 931 00ba 8B10     		movl	(%eax), %edx
+ 932 00bc C744240C 		movl	$300000, 12(%esp)
+ 932      E0930400 
+ 933 00c4 C7442408 		movl	$2, 8(%esp)
+ 933      02000000 
+ 934 00cc 894C2404 		movl	%ecx, 4(%esp)
+ 935 00d0 890424   		movl	%eax, (%esp)
+ 936 00d3 FF521C   		call	*28(%edx)
+ 937 00d6 83F802   		cmpl	$2, %eax
+ 938 00d9 0F842602 		je	L84
+ 938      0000
+ 939 00df C7042468 		movl	$LC26, (%esp)
+ 939      020000
+ 940 00e6 E8000000 		call	__Z16tunerStudioErrorPKc
+ 940      00
+ 941              	L92:
+ 942 00eb 83C434   		addl	$52, %esp
+ 943              		.cfi_remember_state
+ 944              		.cfi_def_cfa_offset 12
+ 945 00ee B8010000 		movl	$1, %eax
+ 945      00
+ 946 00f3 5B       		popl	%ebx
+ 947              		.cfi_restore 3
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 24
+
+
+ 948              		.cfi_def_cfa_offset 8
+ 949 00f4 5E       		popl	%esi
+ 950              		.cfi_restore 6
+ 951              		.cfi_def_cfa_offset 4
+ 952 00f5 C3       		ret
+ 953              		.p2align 4,,7
+ 954              	L96:
+ 955              		.cfi_restore_state
+ 956 00f6 891C24   		movl	%ebx, (%esp)
+ 957 00f9 E8000000 		call	__Z17handleTestCommandP12ts_channel_s
+ 957      00
+ 958 00fe 83C434   		addl	$52, %esp
+ 959              		.cfi_remember_state
+ 960              		.cfi_def_cfa_offset 12
+ 961 0101 B8010000 		movl	$1, %eax
+ 961      00
+ 962 0106 5B       		popl	%ebx
+ 963              		.cfi_restore 3
+ 964              		.cfi_def_cfa_offset 8
+ 965 0107 5E       		popl	%esi
+ 966              		.cfi_restore 6
+ 967              		.cfi_def_cfa_offset 4
+ 968 0108 C3       		ret
+ 969 0109 8DB42600 		.p2align 4,,7
+ 969      000000
+ 970              	L97:
+ 971              		.cfi_restore_state
+ 972 0110 8B03     		movl	(%ebx), %eax
+ 973 0112 8B10     		movl	(%eax), %edx
+ 974 0114 C744240C 		movl	$300000, 12(%esp)
+ 974      E0930400 
+ 975 011c C7442408 		movl	$2, 8(%esp)
+ 975      02000000 
+ 976 0124 C7442404 		movl	$__ZL6pageIn, 4(%esp)
+ 976      00000000 
+ 977 012c 890424   		movl	%eax, (%esp)
+ 978 012f FF521C   		call	*28(%edx)
+ 979 0132 83F802   		cmpl	$2, %eax
+ 980 0135 0F84A501 		je	L82
+ 980      0000
+ 981 013b C704243E 		movl	$LC24, (%esp)
+ 981      020000
+ 982 0142 E8000000 		call	__Z16tunerStudioErrorPKc
+ 982      00
+ 983 0147 B8010000 		movl	$1, %eax
+ 983      00
+ 984 014c E912FFFF 		jmp	L79
+ 984      FF
+ 985              		.p2align 4,,7
+ 986              	L99:
+ 987 0151 C7442404 		movl	$LC27, 4(%esp)
+ 987      89020000 
+ 988 0159 C7042400 		movl	$_tsLogger, (%esp)
+ 988      000000
+ 989 0160 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 989      00
+ 990 0165 8B03     		movl	(%ebx), %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 25
+
+
+ 991 0167 8B10     		movl	(%eax), %edx
+ 992 0169 C744240C 		movl	$300000, 12(%esp)
+ 992      E0930400 
+ 993 0171 C7442408 		movl	$6, 8(%esp)
+ 993      06000000 
+ 994 0179 C7442404 		movl	$__ZL17writeChunkRequest, 4(%esp)
+ 994      00000000 
+ 995 0181 890424   		movl	%eax, (%esp)
+ 996 0184 FF521C   		call	*28(%edx)
+ 997 0187 83F806   		cmpl	$6, %eax
+ 998 018a 0F849300 		je	L87
+ 998      0000
+ 999 0190 89442408 		movl	%eax, 8(%esp)
+ 1000 0194 C7442404 		movl	$LC28, 4(%esp)
+ 1000      A0020000 
+ 1001 019c C7042400 		movl	$_tsLogger, (%esp)
+ 1001      000000
+ 1002 01a3 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1002      00
+ 1003 01a8 B8010000 		movl	$1, %eax
+ 1003      00
+ 1004 01ad 83052000 		addl	$1, _tsState+32
+ 1004      000001
+ 1005 01b4 E9AAFEFF 		jmp	L79
+ 1005      FF
+ 1006 01b9 8DB42600 		.p2align 4,,7
+ 1006      000000
+ 1007              	L100:
+ 1008 01c0 8B03     		movl	(%ebx), %eax
+ 1009 01c2 8B10     		movl	(%eax), %edx
+ 1010 01c4 C744240C 		movl	$300000, 12(%esp)
+ 1010      E0930400 
+ 1011 01cc C7442408 		movl	$6, 8(%esp)
+ 1011      06000000 
+ 1012 01d4 C7442404 		movl	$__ZL11readRequest, 4(%esp)
+ 1012      00000000 
+ 1013 01dc 890424   		movl	%eax, (%esp)
+ 1014 01df FF521C   		call	*28(%edx)
+ 1015 01e2 83F806   		cmpl	$6, %eax
+ 1016 01e5 0F849800 		je	L90
+ 1016      0000
+ 1017 01eb C704241C 		movl	$LC30, (%esp)
+ 1017      030000
+ 1018 01f2 E8000000 		call	__Z16tunerStudioErrorPKc
+ 1018      00
+ 1019 01f7 B8010000 		movl	$1, %eax
+ 1019      00
+ 1020 01fc E962FEFF 		jmp	L79
+ 1020      FF
+ 1021              		.p2align 4,,7
+ 1022              	L102:
+ 1023 0201 C7442408 		movl	$3, 8(%esp)
+ 1023      03000000 
+ 1024 0209 C7442404 		movl	$LC31, 4(%esp)
+ 1024      3D030000 
+ 1025 0211 891C24   		movl	%ebx, (%esp)
+ 1026 0214 E8000000 		call	__Z20tunerStudioWriteDataP12ts_channel_sPKhi
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 26
+
+
+ 1026      00
+ 1027 0219 B8010000 		movl	$1, %eax
+ 1027      00
+ 1028 021e E940FEFF 		jmp	L79
+ 1028      FF
+ 1029              		.p2align 4,,7
+ 1030              	L87:
+ 1031 0223 8B03     		movl	(%ebx), %eax
+ 1032 0225 8D7308   		leal	8(%ebx), %esi
+ 1033 0228 0FBF0D04 		movswl	__ZL17writeChunkRequest+4, %ecx
+ 1033      000000
+ 1034 022f 8B10     		movl	(%eax), %edx
+ 1035 0231 C744240C 		movl	$300000, 12(%esp)
+ 1035      E0930400 
+ 1036 0239 894C2408 		movl	%ecx, 8(%esp)
+ 1037 023d 89742404 		movl	%esi, 4(%esp)
+ 1038 0241 890424   		movl	%eax, (%esp)
+ 1039 0244 FF521C   		call	*28(%edx)
+ 1040 0247 0FBF1504 		movswl	__ZL17writeChunkRequest+4, %edx
+ 1040      000000
+ 1041 024e 39C2     		cmpl	%eax, %edx
+ 1042 0250 0F84CD00 		je	L88
+ 1042      0000
+ 1043 0256 89442408 		movl	%eax, 8(%esp)
+ 1044 025a 8954240C 		movl	%edx, 12(%esp)
+ 1045 025e C7442404 		movl	$LC29, 4(%esp)
+ 1045      D4020000 
+ 1046 0266 C7042400 		movl	$_tsLogger, (%esp)
+ 1046      000000
+ 1047 026d E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1047      00
+ 1048 0272 B8010000 		movl	$1, %eax
+ 1048      00
+ 1049 0277 83052000 		addl	$1, _tsState+32
+ 1049      000001
+ 1050 027e E9E0FDFF 		jmp	L79
+ 1050      FF
+ 1051              		.p2align 4,,7
+ 1052              	L90:
+ 1053 0283 0FB70504 		movzwl	__ZL11readRequest+4, %eax
+ 1053      000000
+ 1054 028a C7442404 		movl	$0, 4(%esp)
+ 1054      00000000 
+ 1055 0292 891C24   		movl	%ebx, (%esp)
+ 1056 0295 89442410 		movl	%eax, 16(%esp)
+ 1057 0299 0FB70502 		movzwl	__ZL11readRequest+2, %eax
+ 1057      000000
+ 1058 02a0 8944240C 		movl	%eax, 12(%esp)
+ 1059 02a4 0FB70500 		movzwl	__ZL11readRequest, %eax
+ 1059      000000
+ 1060 02ab 89442408 		movl	%eax, 8(%esp)
+ 1061 02af E8000000 		call	__Z21handlePageReadCommandP12ts_channel_s20ts_response_format_ettt
+ 1061      00
+ 1062 02b4 B8010000 		movl	$1, %eax
+ 1062      00
+ 1063 02b9 E9A5FDFF 		jmp	L79
+ 1063      FF
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 27
+
+
+ 1064 02be 6690     		.p2align 4,,7
+ 1065              	L101:
+ 1066 02c0 C7442404 		movl	$0, 4(%esp)
+ 1066      00000000 
+ 1067 02c8 891C24   		movl	%ebx, (%esp)
+ 1068 02cb E8000000 		call	__Z27handleOutputChannelsCommandP12ts_channel_s20ts_response_format_e
+ 1068      00
+ 1069 02d0 B8010000 		movl	$1, %eax
+ 1069      00
+ 1070 02d5 E989FDFF 		jmp	L79
+ 1070      FF
+ 1071 02da 8DB60000 		.p2align 4,,7
+ 1071      0000
+ 1072              	L82:
+ 1073 02e0 0FB70500 		movzwl	__ZL6pageIn, %eax
+ 1073      000000
+ 1074 02e7 C7442404 		movl	$0, 4(%esp)
+ 1074      00000000 
+ 1075 02ef 891C24   		movl	%ebx, (%esp)
+ 1076 02f2 89442408 		movl	%eax, 8(%esp)
+ 1077 02f6 E8000000 		call	__Z23handlePageSelectCommandP12ts_channel_s20ts_response_format_et
+ 1077      00
+ 1078 02fb B8010000 		movl	$1, %eax
+ 1078      00
+ 1079 0300 E95EFDFF 		jmp	L79
+ 1079      FF
+ 1080              		.p2align 4,,7
+ 1081              	L84:
+ 1082 0305 0FB74424 		movzwl	46(%esp), %eax
+ 1082      2E
+ 1083 030a C7442404 		movl	$0, 4(%esp)
+ 1083      00000000 
+ 1084 0312 891C24   		movl	%ebx, (%esp)
+ 1085 0315 89442408 		movl	%eax, 8(%esp)
+ 1086 0319 E8000000 		call	__Z17handleBurnCommandP12ts_channel_s20ts_response_format_et
+ 1086      00
+ 1087 031e E9C8FDFF 		jmp	L92
+ 1087      FF
+ 1088              	L88:
+ 1089 0323 0FB70500 		movzwl	__ZL17writeChunkRequest, %eax
+ 1089      000000
+ 1090 032a 89742410 		movl	%esi, 16(%esp)
+ 1091 032e 8954240C 		movl	%edx, 12(%esp)
+ 1092 0332 C7442404 		movl	$0, 4(%esp)
+ 1092      00000000 
+ 1093 033a 66A30000 		movw	%ax, _currentPageId
+ 1093      0000
+ 1094 0340 0FBF0502 		movswl	__ZL17writeChunkRequest+2, %eax
+ 1094      000000
+ 1095 0347 891C24   		movl	%ebx, (%esp)
+ 1096 034a 89442408 		movl	%eax, 8(%esp)
+ 1097 034e E8000000 		call	__Z23handleWriteChunkCommandP12ts_channel_s20ts_response_format_essPv
+ 1097      00
+ 1098 0353 B8010000 		movl	$1, %eax
+ 1098      00
+ 1099 0358 E906FDFF 		jmp	L79
+ 1099      FF
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 28
+
+
+ 1100              		.cfi_endproc
+ 1101              	LFE113:
+ 1102 035d 909090   		.section .rdata,"dr"
+ 1103 0341 000000   		.align 4
+ 1104              	LC32:
+ 1105 0344 4552524F 		.ascii "ERROR: ignoring unexpected command\0"
+ 1105      523A2069 
+ 1105      676E6F72 
+ 1105      696E6720 
+ 1105      756E6578 
+ 1106              		.section	.text$_Z27tunerStudioHandleCrcCommandP12ts_channel_sPci,"x"
+ 1107              		.p2align 4,,15
+ 1108              		.globl	__Z27tunerStudioHandleCrcCommandP12ts_channel_sPci
+ 1109              		.def	__Z27tunerStudioHandleCrcCommandP12ts_channel_sPci;	.scl	2;	.type	32;	.endef
+ 1110              	__Z27tunerStudioHandleCrcCommandP12ts_channel_sPci:
+ 1111              	LFB114:
+ 1112              		.cfi_startproc
+ 1113 0000 53       		pushl	%ebx
+ 1114              		.cfi_def_cfa_offset 8
+ 1115              		.cfi_offset 3, -8
+ 1116 0001 83EC38   		subl	$56, %esp
+ 1117              		.cfi_def_cfa_offset 64
+ 1118 0004 8B442444 		movl	68(%esp), %eax
+ 1119 0008 0FB610   		movzbl	(%eax), %edx
+ 1120 000b 80FA48   		cmpb	$72, %dl
+ 1121 000e 0F848300 		je	L119
+ 1121      0000
+ 1122 0014 80FA53   		cmpb	$83, %dl
+ 1123 0017 747E     		je	L119
+ 1124 0019 80FA47   		cmpb	$71, %dl
+ 1125 001c 0F849300 		je	L122
+ 1125      0000
+ 1126 0022 80FA45   		cmpb	$69, %dl
+ 1127              		.p2align 4,,2
+ 1128 0025 0F84D800 		je	L123
+ 1128      0000
+ 1129 002b 80FA4F   		cmpb	$79, %dl
+ 1130 002e 6690     		.p2align 4,,2
+ 1131 0030 0F841A01 		je	L124
+ 1131      0000
+ 1132 0036 80FA50   		cmpb	$80, %dl
+ 1133              		.p2align 4,,2
+ 1134 0039 0F843101 		je	L125
+ 1134      0000
+ 1135 003f 80FA43   		cmpb	$67, %dl
+ 1136              		.p2align 4,,2
+ 1137 0042 0F844E01 		je	L126
+ 1137      0000
+ 1138 0048 80FA57   		cmpb	$87, %dl
+ 1139              		.p2align 4,,2
+ 1140 004b 0F848501 		je	L127
+ 1140      0000
+ 1141 0051 80FA6B   		cmpb	$107, %dl
+ 1142              		.p2align 4,,2
+ 1143 0054 0F84B601 		je	L128
+ 1143      0000
+ 1144 005a 80FA42   		cmpb	$66, %dl
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 29
+
+
+ 1145              		.p2align 4,,2
+ 1146 005d 0F84E301 		je	L129
+ 1146      0000
+ 1147 0063 80FA52   		cmpb	$82, %dl
+ 1148              		.p2align 4,,2
+ 1149 0066 0F840402 		je	L130
+ 1149      0000
+ 1150 006c 89D0     		movl	%edx, %eax
+ 1151 006e 83E0DF   		andl	$-33, %eax
+ 1152 0071 3C54     		cmpb	$84, %al
+ 1153 0073 747B     		je	L131
+ 1154 0075 80FA51   		cmpb	$81, %dl
+ 1155 0078 B8010000 		movl	$1, %eax
+ 1155      00
+ 1156 007d 7413     		je	L106
+ 1157 007f 80FA46   		cmpb	$70, %dl
+ 1158 0082 740E     		je	L106
+ 1159 0084 C7042444 		movl	$LC32, (%esp)
+ 1159      030000
+ 1160 008b E8000000 		call	__Z16tunerStudioErrorPKc
+ 1160      00
+ 1161 0090 31C0     		xorl	%eax, %eax
+ 1162              		.p2align 4,,7
+ 1163              	L106:
+ 1164 0092 83C438   		addl	$56, %esp
+ 1165              		.cfi_remember_state
+ 1166              		.cfi_def_cfa_offset 8
+ 1167 0095 5B       		popl	%ebx
+ 1168              		.cfi_restore 3
+ 1169              		.cfi_def_cfa_offset 4
+ 1170 0096 C3       		ret
+ 1171              		.p2align 4,,7
+ 1172              	L119:
+ 1173              		.cfi_restore_state
+ 1174 0097 8B442440 		movl	64(%esp), %eax
+ 1175 009b C7442404 		movl	$1, 4(%esp)
+ 1175      01000000 
+ 1176 00a3 890424   		movl	%eax, (%esp)
+ 1177 00a6 E8000000 		call	__Z18handleQueryCommandP12ts_channel_s20ts_response_format_e
+ 1177      00
+ 1178 00ab 83C438   		addl	$56, %esp
+ 1179              		.cfi_remember_state
+ 1180              		.cfi_def_cfa_offset 8
+ 1181 00ae B8010000 		movl	$1, %eax
+ 1181      00
+ 1182 00b3 5B       		popl	%ebx
+ 1183              		.cfi_restore 3
+ 1184              		.cfi_def_cfa_offset 4
+ 1185 00b4 C3       		ret
+ 1186              		.p2align 4,,7
+ 1187              	L122:
+ 1188              		.cfi_restore_state
+ 1189 00b5 8D44242C 		leal	44(%esp), %eax
+ 1190 00b9 890424   		movl	%eax, (%esp)
+ 1191 00bc E8000000 		call	__Z17swapOutputBuffersPi
+ 1191      00
+ 1192 00c1 0FB75424 		movzwl	44(%esp), %edx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 30
+
+
+ 1192      2C
+ 1193 00c6 C7442404 		movl	$7, 4(%esp)
+ 1193      07000000 
+ 1194 00ce 8954240C 		movl	%edx, 12(%esp)
+ 1195 00d2 89442408 		movl	%eax, 8(%esp)
+ 1196 00d6 8B442440 		movl	64(%esp), %eax
+ 1197 00da 890424   		movl	%eax, (%esp)
+ 1198 00dd E8000000 		call	__Z25tunerStudioWriteCrcPacketP12ts_channel_shPKvt
+ 1198      00
+ 1199 00e2 B8010000 		movl	$1, %eax
+ 1199      00
+ 1200 00e7 EBA9     		jmp	L106
+ 1201 00e9 8DB42600 		.p2align 4,,7
+ 1201      000000
+ 1202              	L131:
+ 1203 00f0 8B442440 		movl	64(%esp), %eax
+ 1204 00f4 890424   		movl	%eax, (%esp)
+ 1205 00f7 E8000000 		call	__Z17handleTestCommandP12ts_channel_s
+ 1205      00
+ 1206 00fc B8010000 		movl	$1, %eax
+ 1206      00
+ 1207 0101 EB8F     		jmp	L106
+ 1208              		.p2align 4,,7
+ 1209              	L123:
+ 1210 0103 8D5801   		leal	1(%eax), %ebx
+ 1211 0106 8B442440 		movl	64(%esp), %eax
+ 1212 010a C744240C 		movl	$0, 12(%esp)
+ 1212      00000000 
+ 1213 0112 C7442408 		movl	$0, 8(%esp)
+ 1213      00000000 
+ 1214 011a C7442404 		movl	$7, 4(%esp)
+ 1214      07000000 
+ 1215 0122 890424   		movl	%eax, (%esp)
+ 1216 0125 E8000000 		call	__Z25tunerStudioWriteCrcPacketP12ts_channel_shPKvt
+ 1216      00
+ 1217 012a 8B442448 		movl	72(%esp), %eax
+ 1218 012e C64403FF 		movb	$0, -1(%ebx,%eax)
+ 1218      00
+ 1219 0133 891C24   		movl	%ebx, (%esp)
+ 1220 0136 E8000000 		call	_efiTrim
+ 1220      00
+ 1221 013b 890424   		movl	%eax, (%esp)
+ 1222 013e FF150000 		call	*_console_line_callback
+ 1222      0000
+ 1223 0144 B8010000 		movl	$1, %eax
+ 1223      00
+ 1224 0149 E944FFFF 		jmp	L106
+ 1224      FF
+ 1225 014e 6690     		.p2align 4,,7
+ 1226              	L124:
+ 1227 0150 8B442440 		movl	64(%esp), %eax
+ 1228 0154 C7442404 		movl	$1, 4(%esp)
+ 1228      01000000 
+ 1229 015c 890424   		movl	%eax, (%esp)
+ 1230 015f E8000000 		call	__Z27handleOutputChannelsCommandP12ts_channel_s20ts_response_format_e
+ 1230      00
+ 1231 0164 B8010000 		movl	$1, %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 31
+
+
+ 1231      00
+ 1232 0169 E924FFFF 		jmp	L106
+ 1232      FF
+ 1233 016e 6690     		.p2align 4,,7
+ 1234              	L125:
+ 1235 0170 0FB74001 		movzwl	1(%eax), %eax
+ 1236 0174 C7442404 		movl	$1, 4(%esp)
+ 1236      01000000 
+ 1237 017c 89442408 		movl	%eax, 8(%esp)
+ 1238 0180 8B442440 		movl	64(%esp), %eax
+ 1239 0184 890424   		movl	%eax, (%esp)
+ 1240 0187 E8000000 		call	__Z23handlePageSelectCommandP12ts_channel_s20ts_response_format_et
+ 1240      00
+ 1241 018c B8010000 		movl	$1, %eax
+ 1241      00
+ 1242 0191 E9FCFEFF 		jmp	L106
+ 1242      FF
+ 1243              		.p2align 4,,7
+ 1244              	L126:
+ 1245 0196 0FB75001 		movzwl	1(%eax), %edx
+ 1246 019a 66891500 		movw	%dx, _currentPageId
+ 1246      000000
+ 1247 01a1 8D5007   		leal	7(%eax), %edx
+ 1248 01a4 89542410 		movl	%edx, 16(%esp)
+ 1249 01a8 0FBF5005 		movswl	5(%eax), %edx
+ 1250 01ac 8954240C 		movl	%edx, 12(%esp)
+ 1251 01b0 0FBF4003 		movswl	3(%eax), %eax
+ 1252 01b4 C7442404 		movl	$1, 4(%esp)
+ 1252      01000000 
+ 1253 01bc 89442408 		movl	%eax, 8(%esp)
+ 1254 01c0 8B442440 		movl	64(%esp), %eax
+ 1255 01c4 890424   		movl	%eax, (%esp)
+ 1256 01c7 E8000000 		call	__Z23handleWriteChunkCommandP12ts_channel_s20ts_response_format_essPv
+ 1256      00
+ 1257 01cc B8010000 		movl	$1, %eax
+ 1257      00
+ 1258 01d1 E9BCFEFF 		jmp	L106
+ 1258      FF
+ 1259              		.p2align 4,,7
+ 1260              	L127:
+ 1261 01d6 0FB65005 		movzbl	5(%eax), %edx
+ 1262 01da 89542410 		movl	%edx, 16(%esp)
+ 1263 01de 0FB75003 		movzwl	3(%eax), %edx
+ 1264 01e2 8954240C 		movl	%edx, 12(%esp)
+ 1265 01e6 0FB74001 		movzwl	1(%eax), %eax
+ 1266 01ea C7442404 		movl	$1, 4(%esp)
+ 1266      01000000 
+ 1267 01f2 89442408 		movl	%eax, 8(%esp)
+ 1268 01f6 8B442440 		movl	64(%esp), %eax
+ 1269 01fa 890424   		movl	%eax, (%esp)
+ 1270 01fd E8000000 		call	__Z23handleWriteValueCommandP12ts_channel_s20ts_response_format_etth
+ 1270      00
+ 1271 0202 B8010000 		movl	$1, %eax
+ 1271      00
+ 1272 0207 E986FEFF 		jmp	L106
+ 1272      FF
+ 1273 020c 8D742600 		.p2align 4,,7
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 32
+
+
+ 1274              	L128:
+ 1275 0210 0FB75005 		movzwl	5(%eax), %edx
+ 1276 0214 89542410 		movl	%edx, 16(%esp)
+ 1277 0218 0FB75003 		movzwl	3(%eax), %edx
+ 1278 021c 8954240C 		movl	%edx, 12(%esp)
+ 1279 0220 0FB74001 		movzwl	1(%eax), %eax
+ 1280 0224 C7442404 		movl	$1, 4(%esp)
+ 1280      01000000 
+ 1281 022c 89442408 		movl	%eax, 8(%esp)
+ 1282 0230 8B442440 		movl	64(%esp), %eax
+ 1283 0234 890424   		movl	%eax, (%esp)
+ 1284 0237 E8000000 		call	__Z16handleCrc32CheckP12ts_channel_s20ts_response_format_ettt
+ 1284      00
+ 1285 023c B8010000 		movl	$1, %eax
+ 1285      00
+ 1286 0241 E94CFEFF 		jmp	L106
+ 1286      FF
+ 1287              		.p2align 4,,7
+ 1288              	L129:
+ 1289 0246 0FB74001 		movzwl	1(%eax), %eax
+ 1290 024a C7442404 		movl	$1, 4(%esp)
+ 1290      01000000 
+ 1291 0252 89442408 		movl	%eax, 8(%esp)
+ 1292 0256 8B442440 		movl	64(%esp), %eax
+ 1293 025a 890424   		movl	%eax, (%esp)
+ 1294 025d E8000000 		call	__Z17handleBurnCommandP12ts_channel_s20ts_response_format_et
+ 1294      00
+ 1295 0262 B8010000 		movl	$1, %eax
+ 1295      00
+ 1296 0267 E926FEFF 		jmp	L106
+ 1296      FF
+ 1297 026c 8D742600 		.p2align 4,,7
+ 1298              	L130:
+ 1299 0270 0FB75005 		movzwl	5(%eax), %edx
+ 1300 0274 89542410 		movl	%edx, 16(%esp)
+ 1301 0278 0FB75003 		movzwl	3(%eax), %edx
+ 1302 027c 8954240C 		movl	%edx, 12(%esp)
+ 1303 0280 0FB74001 		movzwl	1(%eax), %eax
+ 1304 0284 C7442404 		movl	$1, 4(%esp)
+ 1304      01000000 
+ 1305 028c 89442408 		movl	%eax, 8(%esp)
+ 1306 0290 8B442440 		movl	64(%esp), %eax
+ 1307 0294 890424   		movl	%eax, (%esp)
+ 1308 0297 E8000000 		call	__Z21handlePageReadCommandP12ts_channel_s20ts_response_format_ettt
+ 1308      00
+ 1309 029c B8010000 		movl	$1, %eax
+ 1309      00
+ 1310 02a1 E9ECFDFF 		jmp	L106
+ 1310      FF
+ 1311              		.cfi_endproc
+ 1312              	LFE114:
+ 1313 02a6 90909090 		.section .rdata,"dr"
+ 1313      90909090 
+ 1313      9090
+ 1314              	LC33:
+ 1315 0367 4552524F 		.ascii "ERROR: no second\0"
+ 1315      523A206E 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 33
+
+
+ 1315      6F207365 
+ 1315      636F6E64 
+ 1315      00
+ 1316              	LC34:
+ 1317 0378 54756E65 		.ascii "TunerStudio: invalid size: %d\0"
+ 1317      72537475 
+ 1317      64696F3A 
+ 1317      20696E76 
+ 1317      616C6964 
+ 1318              	LC35:
+ 1319 0396 4552524F 		.ascii "ERROR: CRC header size\0"
+ 1319      523A2043 
+ 1319      52432068 
+ 1319      65616465 
+ 1319      72207369 
+ 1320 03ad 000000   		.align 4
+ 1321              	LC36:
+ 1322 03b0 4552524F 		.ascii "ERROR: did not receive command\0"
+ 1322      523A2064 
+ 1322      6964206E 
+ 1322      6F742072 
+ 1322      65636569 
+ 1323 03cf 00       		.align 4
+ 1324              	LC37:
+ 1325 03d0 476F7420 		.ascii "Got only %d bytes while expecting %d for command %c\0"
+ 1325      6F6E6C79 
+ 1325      20256420 
+ 1325      62797465 
+ 1325      73207768 
+ 1326              		.align 4
+ 1327              	LC38:
+ 1328 0404 4552524F 		.ascii "ERROR: not enough bytes in stream\0"
+ 1328      523A206E 
+ 1328      6F742065 
+ 1328      6E6F7567 
+ 1328      68206279 
+ 1329              	LC39:
+ 1330 0426 54756E65 		.ascii "TunerStudio: CRC %x %x %x %x\0"
+ 1330      72537475 
+ 1330      64696F3A 
+ 1330      20435243 
+ 1330      20257820 
+ 1331 0443 00       		.align 4
+ 1332              	LC40:
+ 1333 0444 54756E65 		.ascii "TunerStudio: command %c actual CRC %x/expected %x\0"
+ 1333      72537475 
+ 1333      64696F3A 
+ 1333      20636F6D 
+ 1333      6D616E64 
+ 1334              	LC41:
+ 1335 0476 4552524F 		.ascii "ERROR: CRC issue\0"
+ 1335      523A2043 
+ 1335      52432069 
+ 1335      73737565 
+ 1335      00
+ 1336 0487 00       		.align 4
+ 1337              	LC42:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 34
+
+
+ 1338 0488 676F7420 		.ascii "got unexpected TunerStudio command %x:%c\15\12\0"
+ 1338      756E6578 
+ 1338      70656374 
+ 1338      65642054 
+ 1338      756E6572 
+ 1339              	LC43:
+ 1340 04b3 756E6578 		.ascii "unexpected command %x\0"
+ 1340      70656374 
+ 1340      65642063 
+ 1340      6F6D6D61 
+ 1340      6E642025 
+ 1341              		.section	.text$_Z21runBinaryProtocolLoopP12ts_channel_sb,"x"
+ 1342              		.p2align 4,,15
+ 1343              		.globl	__Z21runBinaryProtocolLoopP12ts_channel_sb
+ 1344              		.def	__Z21runBinaryProtocolLoopP12ts_channel_sb;	.scl	2;	.type	32;	.endef
+ 1345              	__Z21runBinaryProtocolLoopP12ts_channel_sb:
+ 1346              	LFB104:
+ 1347              		.cfi_startproc
+ 1348 0000 55       		pushl	%ebp
+ 1349              		.cfi_def_cfa_offset 8
+ 1350              		.cfi_offset 5, -8
+ 1351 0001 57       		pushl	%edi
+ 1352              		.cfi_def_cfa_offset 12
+ 1353              		.cfi_offset 7, -12
+ 1354 0002 56       		pushl	%esi
+ 1355              		.cfi_def_cfa_offset 16
+ 1356              		.cfi_offset 6, -16
+ 1357 0003 53       		pushl	%ebx
+ 1358              		.cfi_def_cfa_offset 20
+ 1359              		.cfi_offset 3, -20
+ 1360 0004 83EC3C   		subl	$60, %esp
+ 1361              		.cfi_def_cfa_offset 80
+ 1362 0007 8B5C2450 		movl	80(%esp), %ebx
+ 1363 000b 8D5309   		leal	9(%ebx), %edx
+ 1364 000e 8D7B08   		leal	8(%ebx), %edi
+ 1365 0011 8954242C 		movl	%edx, 44(%esp)
+ 1366              		.p2align 4,,7
+ 1367              	L148:
+ 1368 0015 8B13     		movl	(%ebx), %edx
+ 1369 0017 83052400 		addl	$1, _tsState+36
+ 1369      000001
+ 1370 001e 8B0A     		movl	(%edx), %ecx
+ 1371 0020 C744240C 		movl	$300000, 12(%esp)
+ 1371      E0930400 
+ 1372 0028 C7442408 		movl	$1, 8(%esp)
+ 1372      01000000 
+ 1373 0030 C7442404 		movl	$__ZL9firstByte, 4(%esp)
+ 1373      00000000 
+ 1374 0038 891424   		movl	%edx, (%esp)
+ 1375 003b FF511C   		call	*28(%ecx)
+ 1376 003e 83F801   		cmpl	$1, %eax
+ 1377 0041 75D2     		jne	L148
+ 1378 0043 0FB60500 		movzbl	__ZL9firstByte, %eax
+ 1378      000000
+ 1379 004a 891C24   		movl	%ebx, (%esp)
+ 1380 004d 89442404 		movl	%eax, 4(%esp)
+ 1381 0051 E8000000 		call	__Z18handlePlainCommandP12ts_channel_sh
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 35
+
+
+ 1381      00
+ 1382 0056 84C0     		testb	%al, %al
+ 1383 0058 75BB     		jne	L148
+ 1384 005a 8B03     		movl	(%ebx), %eax
+ 1385 005c 8B10     		movl	(%eax), %edx
+ 1386 005e C744240C 		movl	$300000, 12(%esp)
+ 1386      E0930400 
+ 1387 0066 C7442408 		movl	$1, 8(%esp)
+ 1387      01000000 
+ 1388 006e C7442404 		movl	$__ZL10secondByte, 4(%esp)
+ 1388      00000000 
+ 1389 0076 890424   		movl	%eax, (%esp)
+ 1390 0079 FF521C   		call	*28(%edx)
+ 1391 007c 83F801   		cmpl	$1, %eax
+ 1392 007f 740F     		je	L136
+ 1393 0081 C7042467 		movl	$LC33, (%esp)
+ 1393      030000
+ 1394 0088 E8000000 		call	__Z16tunerStudioErrorPKc
+ 1394      00
+ 1395 008d EB86     		jmp	L148
+ 1396 008f 90       		.p2align 4,,7
+ 1397              	L136:
+ 1398 0090 0FB60500 		movzbl	__ZL9firstByte, %eax
+ 1398      000000
+ 1399 0097 0FB63500 		movzbl	__ZL10secondByte, %esi
+ 1399      000000
+ 1400 009e C1E008   		sall	$8, %eax
+ 1401 00a1 01C6     		addl	%eax, %esi
+ 1402 00a3 81FE0A7E 		cmpl	$32266, %esi
+ 1402      0000
+ 1403 00a9 0F846101 		je	L152
+ 1403      0000
+ 1404 00af 8D46FF   		leal	-1(%esi), %eax
+ 1405 00b2 3D240100 		cmpl	$292, %eax
+ 1405      00
+ 1406 00b7 0F872301 		ja	L153
+ 1406      0000
+ 1407 00bd 8B03     		movl	(%ebx), %eax
+ 1408 00bf 8B10     		movl	(%eax), %edx
+ 1409 00c1 C744240C 		movl	$300000, 12(%esp)
+ 1409      E0930400 
+ 1410 00c9 C7442408 		movl	$1, 8(%esp)
+ 1410      01000000 
+ 1411 00d1 897C2404 		movl	%edi, 4(%esp)
+ 1412 00d5 890424   		movl	%eax, (%esp)
+ 1413 00d8 FF521C   		call	*28(%edx)
+ 1414 00db 83F801   		cmpl	$1, %eax
+ 1415 00de 7411     		je	L140
+ 1416 00e0 C70424B0 		movl	$LC36, (%esp)
+ 1416      030000
+ 1417 00e7 E8000000 		call	__Z16tunerStudioErrorPKc
+ 1417      00
+ 1418 00ec E924FFFF 		jmp	L148
+ 1418      FF
+ 1419              		.p2align 4,,7
+ 1420              	L140:
+ 1421 00f1 0FB64308 		movzbl	8(%ebx), %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 36
+
+
+ 1422 00f5 0FBED0   		movsbl	%al, %edx
+ 1423 00f8 89542428 		movl	%edx, 40(%esp)
+ 1424 00fc 8D50AE   		leal	-82(%eax), %edx
+ 1425 00ff 80FA01   		cmpb	$1, %dl
+ 1426 0102 765C     		jbe	L141
+ 1427 0104 3C4F     		cmpb	$79, %al
+ 1428 0106 7458     		je	L141
+ 1429 0108 3C42     		cmpb	$66, %al
+ 1430 010a 7454     		je	L141
+ 1431 010c 3C50     		cmpb	$80, %al
+ 1432 010e 6690     		.p2align 4,,5
+ 1433 0110 744E     		je	L141
+ 1434 0112 3C51     		cmpb	$81, %al
+ 1435              		.p2align 4,,5
+ 1436 0114 744A     		je	L141
+ 1437 0116 3C57     		cmpb	$87, %al
+ 1438              		.p2align 4,,5
+ 1439 0118 7446     		je	L141
+ 1440 011a 3C45     		cmpb	$69, %al
+ 1441 011c 8D742600 		.p2align 4,,5
+ 1442 0120 743E     		je	L141
+ 1443 0122 3C43     		cmpb	$67, %al
+ 1444              		.p2align 4,,5
+ 1445 0124 743A     		je	L141
+ 1446 0126 3C6B     		cmpb	$107, %al
+ 1447              		.p2align 4,,5
+ 1448 0128 7436     		je	L141
+ 1449 012a 3C47     		cmpb	$71, %al
+ 1450 012c 8D742600 		.p2align 4,,5
+ 1451 0130 742E     		je	L141
+ 1452 0132 8B542428 		movl	40(%esp), %edx
+ 1453 0136 C7442404 		movl	$LC43, 4(%esp)
+ 1453      B3040000 
+ 1454 013e C7042400 		movl	$_tsLogger, (%esp)
+ 1454      000000
+ 1455 0145 89542408 		movl	%edx, 8(%esp)
+ 1456 0149 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1456      00
+ 1457 014e 89D8     		movl	%ebx, %eax
+ 1458 0150 E8000000 		call	__ZL13sendErrorCodeP12ts_channel_s
+ 1458      00
+ 1459 0155 E9BBFEFF 		jmp	L148
+ 1459      FF
+ 1460 015a 8DB60000 		.p2align 4,,7
+ 1460      0000
+ 1461              	L141:
+ 1462 0160 8B03     		movl	(%ebx), %eax
+ 1463 0162 8D6E03   		leal	3(%esi), %ebp
+ 1464 0165 8B54242C 		movl	44(%esp), %edx
+ 1465 0169 8B08     		movl	(%eax), %ecx
+ 1466 016b C744240C 		movl	$300000, 12(%esp)
+ 1466      E0930400 
+ 1467 0173 896C2408 		movl	%ebp, 8(%esp)
+ 1468 0177 89542404 		movl	%edx, 4(%esp)
+ 1469 017b 890424   		movl	%eax, (%esp)
+ 1470 017e FF511C   		call	*28(%ecx)
+ 1471 0181 39E8     		cmpl	%ebp, %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 37
+
+
+ 1472 0183 89C1     		movl	%eax, %ecx
+ 1473 0185 0F84A200 		je	L154
+ 1473      0000
+ 1474 018b 8B542428 		movl	40(%esp), %edx
+ 1475 018f 894C2408 		movl	%ecx, 8(%esp)
+ 1476 0193 896C240C 		movl	%ebp, 12(%esp)
+ 1477 0197 C7442404 		movl	$LC37, 4(%esp)
+ 1477      D0030000 
+ 1478 019f 89542410 		movl	%edx, 16(%esp)
+ 1479 01a3 C7042400 		movl	$_tsLogger, (%esp)
+ 1479      000000
+ 1480 01aa E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1480      00
+ 1481 01af C7042404 		movl	$LC38, (%esp)
+ 1481      040000
+ 1482 01b6 E8000000 		call	__Z16tunerStudioErrorPKc
+ 1482      00
+ 1483 01bb C744240C 		movl	$0, 12(%esp)
+ 1483      00000000 
+ 1484 01c3 C7442408 		movl	$0, 8(%esp)
+ 1484      00000000 
+ 1485 01cb C7442404 		movl	$128, 4(%esp)
+ 1485      80000000 
+ 1486 01d3 891C24   		movl	%ebx, (%esp)
+ 1487 01d6 E8000000 		call	__Z25tunerStudioWriteCrcPacketP12ts_channel_shPKvt
+ 1487      00
+ 1488 01db E935FEFF 		jmp	L148
+ 1488      FF
+ 1489              		.p2align 4,,7
+ 1490              	L153:
+ 1491 01e0 89742408 		movl	%esi, 8(%esp)
+ 1492 01e4 C7442404 		movl	$LC34, 4(%esp)
+ 1492      78030000 
+ 1493 01ec C7042400 		movl	$_tsLogger, (%esp)
+ 1493      000000
+ 1494 01f3 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1494      00
+ 1495 01f8 C7042496 		movl	$LC35, (%esp)
+ 1495      030000
+ 1496 01ff E8000000 		call	__Z16tunerStudioErrorPKc
+ 1496      00
+ 1497 0204 89D8     		movl	%ebx, %eax
+ 1498 0206 E8000000 		call	__ZL13sendErrorCodeP12ts_channel_s
+ 1498      00
+ 1499 020b E905FEFF 		jmp	L148
+ 1499      FF
+ 1500              	L152:
+ 1501 0210 C7442408 		movl	$2, 8(%esp)
+ 1501      02000000 
+ 1502 0218 C7442404 		movl	$__ZL15BINARY_RESPONSE, 4(%esp)
+ 1502      00000000 
+ 1503 0220 891C24   		movl	%ebx, (%esp)
+ 1504 0223 E8000000 		call	__Z20tunerStudioWriteDataP12ts_channel_sPKhi
+ 1504      00
+ 1505 0228 E9E8FDFF 		jmp	L148
+ 1505      FF
+ 1506              	L154:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 38
+
+
+ 1507 022d 8B6C3308 		movl	8(%ebx,%esi), %ebp
+ 1508 0231 89742404 		movl	%esi, 4(%esp)
+ 1509 0235 893C24   		movl	%edi, (%esp)
+ 1510 0238 894C2424 		movl	%ecx, 36(%esp)
+ 1511 023c E8000000 		call	_crc32
+ 1511      00
+ 1512 0241 0FCD     		bswap	%ebp
+ 1513 0243 8B4C2424 		movl	36(%esp), %ecx
+ 1514 0247 39E8     		cmpl	%ebp, %eax
+ 1515 0249 7475     		je	L143
+ 1516 024b 0FBE4C0B 		movsbl	8(%ebx,%ecx), %ecx
+ 1516      08
+ 1517 0250 894C2414 		movl	%ecx, 20(%esp)
+ 1518 0254 0FBE4C33 		movsbl	10(%ebx,%esi), %ecx
+ 1518      0A
+ 1519 0259 894C2410 		movl	%ecx, 16(%esp)
+ 1520 025d 0FBE4C33 		movsbl	9(%ebx,%esi), %ecx
+ 1520      09
+ 1521 0262 894C240C 		movl	%ecx, 12(%esp)
+ 1522 0266 0FBE4C33 		movsbl	8(%ebx,%esi), %ecx
+ 1522      08
+ 1523 026b C7442404 		movl	$LC39, 4(%esp)
+ 1523      26040000 
+ 1524 0273 C7042400 		movl	$_tsLogger, (%esp)
+ 1524      000000
+ 1525 027a 89442424 		movl	%eax, 36(%esp)
+ 1526 027e 894C2408 		movl	%ecx, 8(%esp)
+ 1527 0282 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1527      00
+ 1528 0287 8B442424 		movl	36(%esp), %eax
+ 1529 028b 896C2410 		movl	%ebp, 16(%esp)
+ 1530 028f 8944240C 		movl	%eax, 12(%esp)
+ 1531 0293 0FBE4308 		movsbl	8(%ebx), %eax
+ 1532 0297 C7442404 		movl	$LC40, 4(%esp)
+ 1532      44040000 
+ 1533 029f C7042400 		movl	$_tsLogger, (%esp)
+ 1533      000000
+ 1534 02a6 89442408 		movl	%eax, 8(%esp)
+ 1535 02aa E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1535      00
+ 1536 02af C7042476 		movl	$LC41, (%esp)
+ 1536      040000
+ 1537 02b6 E8000000 		call	__Z16tunerStudioErrorPKc
+ 1537      00
+ 1538 02bb E955FDFF 		jmp	L148
+ 1538      FF
+ 1539              	L143:
+ 1540 02c0 89742408 		movl	%esi, 8(%esp)
+ 1541 02c4 897C2404 		movl	%edi, 4(%esp)
+ 1542 02c8 891C24   		movl	%ebx, (%esp)
+ 1543 02cb E8000000 		call	__Z27tunerStudioHandleCrcCommandP12ts_channel_sPci
+ 1543      00
+ 1544 02d0 85C0     		testl	%eax, %eax
+ 1545 02d2 0F853DFD 		jne	L148
+ 1545      FFFF
+ 1546 02d8 8B542428 		movl	40(%esp), %edx
+ 1547 02dc C7042488 		movl	$LC42, (%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 39
+
+
+ 1547      040000
+ 1548 02e3 89542408 		movl	%edx, 8(%esp)
+ 1549 02e7 89542404 		movl	%edx, 4(%esp)
+ 1550 02eb E8000000 		call	__Z5printPKcz
+ 1550      00
+ 1551 02f0 E920FDFF 		jmp	L148
+ 1551      FF
+ 1552              		.cfi_endproc
+ 1553              	LFE104:
+ 1554 02f5 90909090 		.section .rdata,"dr"
+ 1554      90909090 
+ 1554      909090
+ 1555              	LC44:
+ 1556 04c9 74756E65 		.ascii "tunerstudio thread\0"
+ 1556      72737475 
+ 1556      64696F20 
+ 1556      74687265 
+ 1556      616400
+ 1557              		.section	.text$_ZL18tsThreadEntryPointPv,"x"
+ 1558              		.p2align 4,,15
+ 1559              		.def	__ZL18tsThreadEntryPointPv;	.scl	3;	.type	32;	.endef
+ 1560              	__ZL18tsThreadEntryPointPv:
+ 1561              	LFB105:
+ 1562              		.cfi_startproc
+ 1563 0000 83EC1C   		subl	$28, %esp
+ 1564              		.cfi_def_cfa_offset 32
+ 1565 0003 A1180000 		movl	_rlist+24, %eax
+ 1565      00
+ 1566 0008 C74018C9 		movl	$LC44, 24(%eax)
+ 1566      040000
+ 1567 000f C7442404 		movl	$0, 4(%esp)
+ 1567      00000000 
+ 1568 0017 C7042400 		movl	$_tsChannel, (%esp)
+ 1568      000000
+ 1569 001e E8000000 		call	__Z21runBinaryProtocolLoopP12ts_channel_sb
+ 1569      00
+ 1570              		.cfi_endproc
+ 1571              	LFE105:
+ 1572 0023 90909090 		.section .rdata,"dr"
+ 1572      90909090 
+ 1572      90909090 
+ 1572      90
+ 1573              	LC45:
+ 1574 04dc 7473696E 		.ascii "tsinfo\0"
+ 1574      666F00
+ 1575              	LC46:
+ 1576 04e3 72657365 		.ascii "reset_ts\0"
+ 1576      745F7473 
+ 1576      00
+ 1577              	LC47:
+ 1578 04ec 7365745F 		.ascii "set_ts_speed\0"
+ 1578      74735F73 
+ 1578      70656564 
+ 1578      00
+ 1579              		.section	.text$_Z28startTunerStudioConnectivityv,"x"
+ 1580              		.p2align 4,,15
+ 1581              		.globl	__Z28startTunerStudioConnectivityv
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 40
+
+
+ 1582              		.def	__Z28startTunerStudioConnectivityv;	.scl	2;	.type	32;	.endef
+ 1583              	__Z28startTunerStudioConnectivityv:
+ 1584              	LFB115:
+ 1585              		.cfi_startproc
+ 1586 0000 BA000000 		movl	$_tsState, %edx
+ 1586      00
+ 1587 0005 31C0     		xorl	%eax, %eax
+ 1588 0007 57       		pushl	%edi
+ 1589              		.cfi_def_cfa_offset 8
+ 1590              		.cfi_offset 7, -8
+ 1591 0008 B90A0000 		movl	$10, %ecx
+ 1591      00
+ 1592 000d 89D7     		movl	%edx, %edi
+ 1593 000f 83EC28   		subl	$40, %esp
+ 1594              		.cfi_def_cfa_offset 48
+ 1595 0012 F3AB     		rep stosl
+ 1596 0014 C7442408 		movl	$15288, 8(%esp)
+ 1596      B83B0000 
+ 1597 001c C7442404 		movl	$_persistentState+8, 4(%esp)
+ 1597      08000000 
+ 1598 0024 C7042400 		movl	$_configWorkingCopy, (%esp)
+ 1598      000000
+ 1599 002b E8000000 		call	_memcpy
+ 1599      00
+ 1600 0030 C7442404 		movl	$__Z12printTsStatsv, 4(%esp)
+ 1600      00000000 
+ 1601 0038 C70424DC 		movl	$LC45, (%esp)
+ 1601      040000
+ 1602 003f E8000000 		call	_addConsoleAction
+ 1602      00
+ 1603 0044 C7442404 		movl	$__ZL7resetTsv, 4(%esp)
+ 1603      00000000 
+ 1604 004c C70424E3 		movl	$LC46, (%esp)
+ 1604      040000
+ 1605 0053 E8000000 		call	_addConsoleAction
+ 1605      00
+ 1606 0058 C7442404 		movl	$__ZL10setTsSpeedi, 4(%esp)
+ 1606      00000000 
+ 1607 0060 C70424EC 		movl	$LC47, (%esp)
+ 1607      040000
+ 1608 0067 E8000000 		call	_addConsoleActionI
+ 1608      00
+ 1609 006c E8000000 		call	__Z17getTsSerialDevicev
+ 1609      00
+ 1610 0071 C7442410 		movl	$0, 16(%esp)
+ 1610      00000000 
+ 1611 0079 C744240C 		movl	$__ZL18tsThreadEntryPointPv, 12(%esp)
+ 1611      00000000 
+ 1612 0081 C7442408 		movl	$64, 8(%esp)
+ 1612      40000000 
+ 1613 0089 C7442404 		movl	$20656, 4(%esp)
+ 1613      B0500000 
+ 1614 0091 C7042400 		movl	$__ZL13tsThreadStack, (%esp)
+ 1614      000000
+ 1615 0098 A3000000 		movl	%eax, _tsChannel
+ 1615      00
+ 1616 009d C7050400 		movl	$__ZL16tsCrcWriteBuffer, _tsChannel+4
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 41
+
+
+ 1616      00000000 
+ 1616      0000
+ 1617 00a7 E8000000 		call	_chThdCreateStatic
+ 1617      00
+ 1618 00ac 83C428   		addl	$40, %esp
+ 1619              		.cfi_def_cfa_offset 8
+ 1620 00af 5F       		popl	%edi
+ 1621              		.cfi_restore 7
+ 1622              		.cfi_def_cfa_offset 4
+ 1623 00b0 C3       		ret
+ 1624              		.cfi_endproc
+ 1625              	LFE115:
+ 1626 00b1 90909090 		.section .rdata,"dr"
+ 1626      90909090 
+ 1626      90909090 
+ 1626      909090
+ 1627              	LC48:
+ 1628 04f9 62696E61 		.ascii "binary\0"
+ 1628      727900
+ 1629              		.section	.text.startup._GLOBAL__sub_I_tsLogger,"x"
+ 1630              		.p2align 4,,15
+ 1631              		.def	__GLOBAL__sub_I_tsLogger;	.scl	3;	.type	32;	.endef
+ 1632              	__GLOBAL__sub_I_tsLogger:
+ 1633              	LFB117:
+ 1634              		.cfi_startproc
+ 1635 0000 83EC1C   		subl	$28, %esp
+ 1636              		.cfi_def_cfa_offset 32
+ 1637 0003 B9000000 		movl	$_tsLogger, %ecx
+ 1637      00
+ 1638 0008 C70424F9 		movl	$LC48, (%esp)
+ 1638      040000
+ 1639 000f E8000000 		call	__ZN18LoggingWithStorageC1EPKc
+ 1639      00
+ 1640              		.cfi_def_cfa_offset 28
+ 1641 0014 83EC04   		subl	$4, %esp
+ 1642              		.cfi_def_cfa_offset 32
+ 1643 0017 83C41C   		addl	$28, %esp
+ 1644              		.cfi_def_cfa_offset 4
+ 1645 001a C3       		ret
+ 1646              		.cfi_endproc
+ 1647              	LFE117:
+ 1648 001b 90909090 		.section	.ctors,"w"
+ 1648      90
+ 1649              		.align 4
+ 1650 0000 00000000 		.long	__GLOBAL__sub_I_tsLogger
+ 1651              		.globl	_currentPageId
+ 1652              		.section	.data$currentPageId,"w"
+ 1653              		.align 2
+ 1654              	_currentPageId:
+ 1655 0000 0000     		.space 2
+ 1656              		.globl	_configWorkingCopy
+ 1657 0002 0000     		.section	.data$configWorkingCopy,"w"
+ 1658              		.align 32
+ 1659              	_configWorkingCopy:
+ 1660 0000 00000000 		.space 15288
+ 1660      00000000 
+ 1660      00000000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 42
+
+
+ 1660      00000000 
+ 1660      00000000 
+ 1661              		.globl	_tsOutputChannels
+ 1662 3bb8 00000000 		.section	.data$tsOutputChannels,"w"
+ 1662      00000000 
+ 1663              		.align 32
+ 1664              	_tsOutputChannels:
+ 1665 0000 00000000 		.space 196
+ 1665      00000000 
+ 1665      00000000 
+ 1665      00000000 
+ 1665      00000000 
+ 1666              		.globl	_tsState
+ 1667 00c4 00000000 		.section	.data$tsState,"w"
+ 1667      00000000 
+ 1667      00000000 
+ 1667      00000000 
+ 1667      00000000 
+ 1668              		.align 32
+ 1669              	_tsState:
+ 1670 0000 00000000 		.space 40
+ 1670      00000000 
+ 1670      00000000 
+ 1670      00000000 
+ 1670      00000000 
+ 1671              		.globl	_tsChannel
+ 1672 0028 00000000 		.section	.data$tsChannel,"w"
+ 1672      00000000 
+ 1672      00000000 
+ 1672      00000000 
+ 1672      00000000 
+ 1673              		.align 32
+ 1674              	_tsChannel:
+ 1675 0000 00000000 		.space 308
+ 1675      00000000 
+ 1675      00000000 
+ 1675      00000000 
+ 1675      00000000 
+ 1676              		.globl	_tsLogger
+ 1677 0134 00000000 		.section	.data$tsLogger,"w"
+ 1677      00000000 
+ 1677      00000000 
+ 1678              		.align 32
+ 1679              	_tsLogger:
+ 1680 0000 00000000 		.space 260
+ 1680      00000000 
+ 1680      00000000 
+ 1680      00000000 
+ 1680      00000000 
+ 1681 0104 00000000 		.section	.data$_ZL21previousWriteReportMs,"w"
+ 1681      00000000 
+ 1681      00000000 
+ 1681      00000000 
+ 1681      00000000 
+ 1682              		.align 4
+ 1683              	__ZL21previousWriteReportMs:
+ 1684 0000 00000000 		.space 4
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 43
+
+
+ 1685              		.section	.data$_ZL9firstByte,"w"
+ 1686              	__ZL9firstByte:
+ 1687 0000 00       		.space 1
+ 1688 0001 000000   		.section	.data$_ZL10secondByte,"w"
+ 1689              	__ZL10secondByte:
+ 1690 0000 00       		.space 1
+ 1691 0001 000000   		.section	.data$_ZL15BINARY_RESPONSE,"w"
+ 1692              		.align 2
+ 1693              	__ZL15BINARY_RESPONSE:
+ 1694 0000 7E0A     		.word	2686
+ 1695 0002 0000     		.section	.data$_ZL6pageIn,"w"
+ 1696              		.align 2
+ 1697              	__ZL6pageIn:
+ 1698 0000 0000     		.space 2
+ 1699 0002 0000     		.section	.data$_ZL17writeChunkRequest,"w"
+ 1700              	__ZL17writeChunkRequest:
+ 1701 0000 00000000 		.space 6
+ 1701      0000
+ 1702 0006 0000     		.section	.data$_ZL11readRequest,"w"
+ 1703              	__ZL11readRequest:
+ 1704 0000 00000000 		.space 6
+ 1704      0000
+ 1705 0006 0000     		.section	.data$_ZL16tsCrcWriteBuffer,"w"
+ 1706              		.align 32
+ 1707              	__ZL16tsCrcWriteBuffer:
+ 1708 0000 00000000 		.space 300
+ 1708      00000000 
+ 1708      00000000 
+ 1708      00000000 
+ 1708      00000000 
+ 1709 012c 00000000 		.section	.data$_ZL13tsThreadStack,"w"
+ 1709      00000000 
+ 1709      00000000 
+ 1709      00000000 
+ 1709      00000000 
+ 1710              		.align 32
+ 1711              	__ZL13tsThreadStack:
+ 1712 0000 00000000 		.space 20656
+ 1712      00000000 
+ 1712      00000000 
+ 1712      00000000 
+ 1712      00000000 
+ 1713              		.def	__Z25tunerStudioWriteCrcPacketP12ts_channel_shPKvt;	.scl	2;	.type	32;	.endef
+ 1714              		.def	__Z11scheduleMsgP7LoggingPKcz;	.scl	2;	.type	32;	.endef
+ 1715              		.def	__Z14tsSendResponseP12ts_channel_s20ts_response_format_ePKhi;	.scl	2;	.type	32;	.endef
+ 1716              		.def	_memcpy;	.scl	2;	.type	32;	.endef
+ 1717              		.def	_crc32;	.scl	2;	.type	32;	.endef
+ 1718              		.def	__Z35incrementGlobalConfigurationVersionv;	.scl	2;	.type	32;	.endef
+ 1719              		.def	_currentTimeMillis;	.scl	2;	.type	32;	.endef
+ 1720              		.def	__Z25prepareTunerStudioOutputsv;	.scl	2;	.type	32;	.endef
+ 1721              		.def	__Z20tunerStudioWriteDataP12ts_channel_sPKhi;	.scl	2;	.type	32;	.endef
+ 1722              		.def	__Z17swapOutputBuffersPi;	.scl	2;	.type	32;	.endef
+ 1723              		.def	_efiTrim;	.scl	2;	.type	32;	.endef
+ 1724              		.def	__Z5printPKcz;	.scl	2;	.type	32;	.endef
+ 1725              		.def	_addConsoleAction;	.scl	2;	.type	32;	.endef
+ 1726              		.def	_addConsoleActionI;	.scl	2;	.type	32;	.endef
+ 1727              		.def	__Z17getTsSerialDevicev;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 44
+
+
+ 1728              		.def	_chThdCreateStatic;	.scl	2;	.type	32;	.endef
+ 1729 50b0 00000000 		.def	__ZN18LoggingWithStorageC1EPKc;	.scl	2;	.type	32;	.endef
+ 1729      00000000 
+ 1729      00000000 
+ 1729      00000000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 45
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 tunerstudio.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:5      .text$_ZL7resetTsv:00000000 __ZL7resetTsv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:1669   .data$tsState:00000000 _tsState
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:25     .text$_ZL13sendErrorCodeP12ts_channel_s:00000000 __ZL13sendErrorCodeP12ts_channel_s
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:50     .text$_ZL18printErrorCountersv:00000000 __ZL18printErrorCountersv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:1679   .data$tsLogger:00000000 _tsLogger
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:1654   .data$currentPageId:00000000 _currentPageId
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:91     .text$_Z12printTsStatsv:00000000 __Z12printTsStatsv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:100    .text$_ZL10setTsSpeedi:00000000 __ZL10setTsSpeedi
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:113    .text$_Z16tunerStudioDebugPKc:00000000 __Z16tunerStudioDebugPKc
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:124    .text$_Z18getWorkingPageAddri:00000000 __Z18getWorkingPageAddri
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:1659   .data$configWorkingCopy:00000000 _configWorkingCopy
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:139    .text$_Z22getTunerStudioPageSizei:00000000 __Z22getTunerStudioPageSizei
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:155    .text$_Z23handlePageSelectCommandP12ts_channel_s20ts_response_format_et:00000000 __Z23handlePageSelectCommandP12ts_channel_s20ts_response_format_et
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:188    .text$_Z11yellowMagiciii:00000000 __Z11yellowMagiciii
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:242    .text$_Z16handleCrc32CheckP12ts_channel_s20ts_response_format_ettt:00000000 __Z16handleCrc32CheckP12ts_channel_s20ts_response_format_ettt
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:321    .text$_Z11requestBurnv:00000000 __Z11requestBurnv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:340    .text$_Z17handleBurnCommandP12ts_channel_s20ts_response_format_et:00000000 __Z17handleBurnCommandP12ts_channel_s20ts_response_format_et
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:420    .text$_Z19syncTunerStudioCopyv:00000000 __Z19syncTunerStudioCopyv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:438    .text$_Z16tunerStudioErrorPKc:00000000 __Z16tunerStudioErrorPKc
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:459    .text$_Z21handlePageReadCommandP12ts_channel_s20ts_response_format_ettt:00000000 __Z21handlePageReadCommandP12ts_channel_s20ts_response_format_ettt
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:541    .text$_Z23handleWriteValueCommandP12ts_channel_s20ts_response_format_etth:00000000 __Z23handleWriteValueCommandP12ts_channel_s20ts_response_format_etth
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:1683   .data$_ZL21previousWriteReportMs:00000000 __ZL21previousWriteReportMs
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:638    .text$_Z23handleWriteChunkCommandP12ts_channel_s20ts_response_format_essPv:00000000 __Z23handleWriteChunkCommandP12ts_channel_s20ts_response_format_essPv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:750    .text$_Z18handleQueryCommandP12ts_channel_s20ts_response_format_e:00000000 __Z18handleQueryCommandP12ts_channel_s20ts_response_format_e
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:772    .text$_Z27handleOutputChannelsCommandP12ts_channel_s20ts_response_format_e:00000000 __Z27handleOutputChannelsCommandP12ts_channel_s20ts_response_format_e
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:1664   .data$tsOutputChannels:00000000 _tsOutputChannels
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:800    .text$_Z17handleTestCommandP12ts_channel_s:00000000 __Z17handleTestCommandP12ts_channel_s
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:852    .text$_Z18handlePlainCommandP12ts_channel_sh:00000000 __Z18handlePlainCommandP12ts_channel_sh
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:1697   .data$_ZL6pageIn:00000000 __ZL6pageIn
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:1700   .data$_ZL17writeChunkRequest:00000000 __ZL17writeChunkRequest
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:1703   .data$_ZL11readRequest:00000000 __ZL11readRequest
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:1110   .text$_Z27tunerStudioHandleCrcCommandP12ts_channel_sPci:00000000 __Z27tunerStudioHandleCrcCommandP12ts_channel_sPci
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:1345   .text$_Z21runBinaryProtocolLoopP12ts_channel_sb:00000000 __Z21runBinaryProtocolLoopP12ts_channel_sb
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:1686   .data$_ZL9firstByte:00000000 __ZL9firstByte
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:1689   .data$_ZL10secondByte:00000000 __ZL10secondByte
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:1693   .data$_ZL15BINARY_RESPONSE:00000000 __ZL15BINARY_RESPONSE
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:1560   .text$_ZL18tsThreadEntryPointPv:00000000 __ZL18tsThreadEntryPointPv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:1674   .data$tsChannel:00000000 _tsChannel
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:1583   .text$_Z28startTunerStudioConnectivityv:00000000 __Z28startTunerStudioConnectivityv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:1711   .data$_ZL13tsThreadStack:00000000 __ZL13tsThreadStack
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:1707   .data$_ZL16tsCrcWriteBuffer:00000000 __ZL16tsCrcWriteBuffer
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s:1632   .text.startup._GLOBAL__sub_I_tsLogger:00000000 __GLOBAL__sub_I_tsLogger
+
+UNDEFINED SYMBOLS
+_boardConfiguration
+_engineConfiguration
+_persistentState
+_console_line_callback
+_rlist
+__Z25tunerStudioWriteCrcPacketP12ts_channel_shPKvt
+__Z11scheduleMsgP7LoggingPKcz
+__Z14tsSendResponseP12ts_channel_s20ts_response_format_ePKhi
+_memcpy
+_crc32
+__Z35incrementGlobalConfigurationVersionv
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccgd2vdS.s 			page 46
+
+
+_currentTimeMillis
+__Z25prepareTunerStudioOutputsv
+__Z20tunerStudioWriteDataP12ts_channel_sPKhi
+__Z17swapOutputBuffersPi
+_efiTrim
+__Z5printPKcz
+_addConsoleAction
+_addConsoleActionI
+__Z17getTsSerialDevicev
+_chThdCreateStatic
+__ZN18LoggingWithStorageC1EPKc

@@ -1,0 +1,304 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"lcd_menu_tree.cpp"
+  16              		.section	.text._ZN8MenuTreeC2EP8MenuItem,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_ZN8MenuTreeC2EP8MenuItem
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_ZN8MenuTreeC2EP8MenuItem, %function
+  23              	_ZN8MenuTreeC2EP8MenuItem:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 0022     		movs	r2, #0
+  28 0002 0160     		str	r1, [r0]
+  29 0004 8260     		str	r2, [r0, #8]
+  30 0006 4260     		str	r2, [r0, #4]
+  31 0008 C260     		str	r2, [r0, #12]
+  32 000a 7047     		bx	lr
+  33              		.size	_ZN8MenuTreeC2EP8MenuItem, .-_ZN8MenuTreeC2EP8MenuItem
+  34              		.global	_ZN8MenuTreeC1EP8MenuItem
+  35              		.thumb_set _ZN8MenuTreeC1EP8MenuItem,_ZN8MenuTreeC2EP8MenuItem
+  36 000c AFF30080 		.section	.text._ZN8MenuTree4initEP8MenuItemi,"ax",%progbits
+  37              		.align	2
+  38              		.p2align 4,,15
+  39              		.global	_ZN8MenuTree4initEP8MenuItemi
+  40              		.thumb
+  41              		.thumb_func
+  42              		.type	_ZN8MenuTree4initEP8MenuItemi, %function
+  43              	_ZN8MenuTree4initEP8MenuItemi:
+  44              		@ args = 0, pretend = 0, frame = 0
+  45              		@ frame_needed = 0, uses_anonymous_args = 0
+  46              		@ link register save eliminated.
+  47 0000 4260     		str	r2, [r0, #4]
+  48 0002 8160     		str	r1, [r0, #8]
+  49 0004 C160     		str	r1, [r0, #12]
+  50 0006 7047     		bx	lr
+  51              		.size	_ZN8MenuTree4initEP8MenuItemi, .-_ZN8MenuTree4initEP8MenuItemi
+  52 0008 AFF30080 		.section	.text._ZN8MenuTree12enterSubMenuEv,"ax",%progbits
+  52      AFF30080 
+  53              		.align	2
+  54              		.p2align 4,,15
+  55              		.global	_ZN8MenuTree12enterSubMenuEv
+  56              		.thumb
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s 			page 2
+
+
+  57              		.thumb_func
+  58              		.type	_ZN8MenuTree12enterSubMenuEv, %function
+  59              	_ZN8MenuTree12enterSubMenuEv:
+  60              		@ args = 0, pretend = 0, frame = 0
+  61              		@ frame_needed = 0, uses_anonymous_args = 0
+  62 0000 8268     		ldr	r2, [r0, #8]
+  63 0002 08B5     		push	{r3, lr}
+  64 0004 5369     		ldr	r3, [r2, #20]
+  65 0006 13B1     		cbz	r3, .L4
+  66 0008 C360     		str	r3, [r0, #12]
+  67 000a 8360     		str	r3, [r0, #8]
+  68 000c 08BD     		pop	{r3, pc}
+  69              	.L4:
+  70 000e 136A     		ldr	r3, [r2, #32]
+  71 0010 03B1     		cbz	r3, .L3
+  72 0012 9847     		blx	r3
+  73              	.L3:
+  74 0014 08BD     		pop	{r3, pc}
+  75              		.size	_ZN8MenuTree12enterSubMenuEv, .-_ZN8MenuTree12enterSubMenuEv
+  76 0016 00BFAFF3 		.section	.text._ZN8MenuTree4backEv,"ax",%progbits
+  76      0080AFF3 
+  76      0080
+  77              		.align	2
+  78              		.p2align 4,,15
+  79              		.global	_ZN8MenuTree4backEv
+  80              		.thumb
+  81              		.thumb_func
+  82              		.type	_ZN8MenuTree4backEv, %function
+  83              	_ZN8MenuTree4backEv:
+  84              		@ args = 0, pretend = 0, frame = 0
+  85              		@ frame_needed = 0, uses_anonymous_args = 0
+  86              		@ link register save eliminated.
+  87 0000 8368     		ldr	r3, [r0, #8]
+  88 0002 0268     		ldr	r2, [r0]
+  89 0004 DB68     		ldr	r3, [r3, #12]
+  90 0006 9342     		cmp	r3, r2
+  91 0008 1EBF     		ittt	ne
+  92 000a 1B69     		ldrne	r3, [r3, #16]
+  93 000c C360     		strne	r3, [r0, #12]
+  94 000e 8360     		strne	r3, [r0, #8]
+  95 0010 7047     		bx	lr
+  96              		.size	_ZN8MenuTree4backEv, .-_ZN8MenuTree4backEv
+  97 0012 00BFAFF3 		.section	.text._ZN8MenuTree8nextItemEv,"ax",%progbits
+  97      0080AFF3 
+  97      0080AFF3 
+  97      0080
+  98              		.align	2
+  99              		.p2align 4,,15
+ 100              		.global	_ZN8MenuTree8nextItemEv
+ 101              		.thumb
+ 102              		.thumb_func
+ 103              		.type	_ZN8MenuTree8nextItemEv, %function
+ 104              	_ZN8MenuTree8nextItemEv:
+ 105              		@ args = 0, pretend = 0, frame = 0
+ 106              		@ frame_needed = 0, uses_anonymous_args = 0
+ 107              		@ link register save eliminated.
+ 108 0000 8268     		ldr	r2, [r0, #8]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s 			page 3
+
+
+ 109 0002 D369     		ldr	r3, [r2, #28]
+ 110 0004 30B4     		push	{r4, r5}
+ 111 0006 63B1     		cbz	r3, .L15
+ 112 0008 C268     		ldr	r2, [r0, #12]
+ 113 000a 9D68     		ldr	r5, [r3, #8]
+ 114 000c 9468     		ldr	r4, [r2, #8]
+ 115 000e 4168     		ldr	r1, [r0, #4]
+ 116 0010 8360     		str	r3, [r0, #8]
+ 117 0012 2B1B     		subs	r3, r5, r4
+ 118 0014 8B42     		cmp	r3, r1
+ 119 0016 08BF     		it	eq
+ 120 0018 D369     		ldreq	r3, [r2, #28]
+ 121 001a 30BC     		pop	{r4, r5}
+ 122 001c 08BF     		it	eq
+ 123 001e C360     		streq	r3, [r0, #12]
+ 124 0020 7047     		bx	lr
+ 125              	.L15:
+ 126 0022 1369     		ldr	r3, [r2, #16]
+ 127 0024 30BC     		pop	{r4, r5}
+ 128 0026 C360     		str	r3, [r0, #12]
+ 129 0028 8360     		str	r3, [r0, #8]
+ 130 002a 7047     		bx	lr
+ 131              		.size	_ZN8MenuTree8nextItemEv, .-_ZN8MenuTree8nextItemEv
+ 132 002c AFF30080 		.section	.text._ZN8MenuItem15baseConstructorEPS_10lcd_line_ePKcPFvvE,"ax",%progbits
+ 133              		.align	2
+ 134              		.p2align 4,,15
+ 135              		.global	_ZN8MenuItem15baseConstructorEPS_10lcd_line_ePKcPFvvE
+ 136              		.thumb
+ 137              		.thumb_func
+ 138              		.type	_ZN8MenuItem15baseConstructorEPS_10lcd_line_ePKcPFvvE, %function
+ 139              	_ZN8MenuItem15baseConstructorEPS_10lcd_line_ePKcPFvvE:
+ 140              		@ args = 4, pretend = 0, frame = 0
+ 141              		@ frame_needed = 0, uses_anonymous_args = 0
+ 142              		@ link register save eliminated.
+ 143 0000 10B4     		push	{r4}
+ 144 0002 019C     		ldr	r4, [sp, #4]
+ 145 0004 0271     		strb	r2, [r0, #4]
+ 146 0006 0022     		movs	r2, #0
+ 147 0008 0360     		str	r3, [r0]
+ 148 000a C160     		str	r1, [r0, #12]
+ 149 000c 0462     		str	r4, [r0, #32]
+ 150 000e 4261     		str	r2, [r0, #20]
+ 151 0010 8261     		str	r2, [r0, #24]
+ 152 0012 0261     		str	r2, [r0, #16]
+ 153 0014 C261     		str	r2, [r0, #28]
+ 154 0016 8260     		str	r2, [r0, #8]
+ 155 0018 51B1     		cbz	r1, .L16
+ 156 001a 4B69     		ldr	r3, [r1, #20]
+ 157 001c 5BB1     		cbz	r3, .L26
+ 158              	.L18:
+ 159 001e 8B69     		ldr	r3, [r1, #24]
+ 160 0020 2BB1     		cbz	r3, .L19
+ 161 0022 9C68     		ldr	r4, [r3, #8]
+ 162 0024 1A69     		ldr	r2, [r3, #16]
+ 163 0026 0134     		adds	r4, r4, #1
+ 164 0028 8460     		str	r4, [r0, #8]
+ 165 002a 0261     		str	r2, [r0, #16]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s 			page 4
+
+
+ 166 002c D861     		str	r0, [r3, #28]
+ 167              	.L19:
+ 168 002e 8861     		str	r0, [r1, #24]
+ 169              	.L16:
+ 170 0030 5DF8044B 		ldr	r4, [sp], #4
+ 171 0034 7047     		bx	lr
+ 172              	.L26:
+ 173 0036 0061     		str	r0, [r0, #16]
+ 174 0038 4861     		str	r0, [r1, #20]
+ 175 003a F0E7     		b	.L18
+ 176              		.size	_ZN8MenuItem15baseConstructorEPS_10lcd_line_ePKcPFvvE, .-_ZN8MenuItem15baseConstructorEPS_10
+ 177 003c AFF30080 		.section	.text._ZN8MenuItemC2EPS_PKcPFvvE,"ax",%progbits
+ 178              		.align	2
+ 179              		.p2align 4,,15
+ 180              		.global	_ZN8MenuItemC2EPS_PKcPFvvE
+ 181              		.thumb
+ 182              		.thumb_func
+ 183              		.type	_ZN8MenuItemC2EPS_PKcPFvvE, %function
+ 184              	_ZN8MenuItemC2EPS_PKcPFvvE:
+ 185              		@ args = 0, pretend = 0, frame = 0
+ 186              		@ frame_needed = 0, uses_anonymous_args = 0
+ 187 0000 10B5     		push	{r4, lr}
+ 188 0002 82B0     		sub	sp, sp, #8
+ 189 0004 0446     		mov	r4, r0
+ 190 0006 0093     		str	r3, [sp]
+ 191 0008 1346     		mov	r3, r2
+ 192 000a 0022     		movs	r2, #0
+ 193 000c FFF7FEFF 		bl	_ZN8MenuItem15baseConstructorEPS_10lcd_line_ePKcPFvvE
+ 194 0010 2046     		mov	r0, r4
+ 195 0012 02B0     		add	sp, sp, #8
+ 196              		@ sp needed
+ 197 0014 10BD     		pop	{r4, pc}
+ 198              		.size	_ZN8MenuItemC2EPS_PKcPFvvE, .-_ZN8MenuItemC2EPS_PKcPFvvE
+ 199              		.global	_ZN8MenuItemC1EPS_PKcPFvvE
+ 200              		.thumb_set _ZN8MenuItemC1EPS_PKcPFvvE,_ZN8MenuItemC2EPS_PKcPFvvE
+ 201 0016 00BFAFF3 		.section	.text._ZN8MenuItemC2EPS_PKc,"ax",%progbits
+ 201      0080AFF3 
+ 201      0080
+ 202              		.align	2
+ 203              		.p2align 4,,15
+ 204              		.global	_ZN8MenuItemC2EPS_PKc
+ 205              		.thumb
+ 206              		.thumb_func
+ 207              		.type	_ZN8MenuItemC2EPS_PKc, %function
+ 208              	_ZN8MenuItemC2EPS_PKc:
+ 209              		@ args = 0, pretend = 0, frame = 0
+ 210              		@ frame_needed = 0, uses_anonymous_args = 0
+ 211 0000 10B5     		push	{r4, lr}
+ 212 0002 82B0     		sub	sp, sp, #8
+ 213 0004 1346     		mov	r3, r2
+ 214 0006 0022     		movs	r2, #0
+ 215 0008 0092     		str	r2, [sp]
+ 216 000a 0446     		mov	r4, r0
+ 217 000c FFF7FEFF 		bl	_ZN8MenuItem15baseConstructorEPS_10lcd_line_ePKcPFvvE
+ 218 0010 2046     		mov	r0, r4
+ 219 0012 02B0     		add	sp, sp, #8
+ 220              		@ sp needed
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s 			page 5
+
+
+ 221 0014 10BD     		pop	{r4, pc}
+ 222              		.size	_ZN8MenuItemC2EPS_PKc, .-_ZN8MenuItemC2EPS_PKc
+ 223              		.global	_ZN8MenuItemC1EPS_PKc
+ 224              		.thumb_set _ZN8MenuItemC1EPS_PKc,_ZN8MenuItemC2EPS_PKc
+ 225 0016 00BFAFF3 		.section	.text._ZN8MenuItemC2EPS_10lcd_line_e,"ax",%progbits
+ 225      0080AFF3 
+ 225      0080
+ 226              		.align	2
+ 227              		.p2align 4,,15
+ 228              		.global	_ZN8MenuItemC2EPS_10lcd_line_e
+ 229              		.thumb
+ 230              		.thumb_func
+ 231              		.type	_ZN8MenuItemC2EPS_10lcd_line_e, %function
+ 232              	_ZN8MenuItemC2EPS_10lcd_line_e:
+ 233              		@ args = 0, pretend = 0, frame = 0
+ 234              		@ frame_needed = 0, uses_anonymous_args = 0
+ 235 0000 10B5     		push	{r4, lr}
+ 236 0002 82B0     		sub	sp, sp, #8
+ 237 0004 0023     		movs	r3, #0
+ 238 0006 0093     		str	r3, [sp]
+ 239 0008 0446     		mov	r4, r0
+ 240 000a FFF7FEFF 		bl	_ZN8MenuItem15baseConstructorEPS_10lcd_line_ePKcPFvvE
+ 241 000e 2046     		mov	r0, r4
+ 242 0010 02B0     		add	sp, sp, #8
+ 243              		@ sp needed
+ 244 0012 10BD     		pop	{r4, pc}
+ 245              		.size	_ZN8MenuItemC2EPS_10lcd_line_e, .-_ZN8MenuItemC2EPS_10lcd_line_e
+ 246              		.global	_ZN8MenuItemC1EPS_10lcd_line_e
+ 247              		.thumb_set _ZN8MenuItemC1EPS_10lcd_line_e,_ZN8MenuItemC2EPS_10lcd_line_e
+ 248 0014 AFF30080 		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ 248      AFF30080 
+ 248      AFF30080 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 lcd_menu_tree.cpp
+C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s:17     .text._ZN8MenuTreeC2EP8MenuItem:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s:23     .text._ZN8MenuTreeC2EP8MenuItem:00000000 _ZN8MenuTreeC2EP8MenuItem
+C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s:23     .text._ZN8MenuTreeC2EP8MenuItem:00000000 _ZN8MenuTreeC1EP8MenuItem
+C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s:37     .text._ZN8MenuTree4initEP8MenuItemi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s:43     .text._ZN8MenuTree4initEP8MenuItemi:00000000 _ZN8MenuTree4initEP8MenuItemi
+C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s:53     .text._ZN8MenuTree12enterSubMenuEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s:59     .text._ZN8MenuTree12enterSubMenuEv:00000000 _ZN8MenuTree12enterSubMenuEv
+C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s:77     .text._ZN8MenuTree4backEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s:83     .text._ZN8MenuTree4backEv:00000000 _ZN8MenuTree4backEv
+C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s:98     .text._ZN8MenuTree8nextItemEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s:104    .text._ZN8MenuTree8nextItemEv:00000000 _ZN8MenuTree8nextItemEv
+C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s:133    .text._ZN8MenuItem15baseConstructorEPS_10lcd_line_ePKcPFvvE:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s:139    .text._ZN8MenuItem15baseConstructorEPS_10lcd_line_ePKcPFvvE:00000000 _ZN8MenuItem15baseConstructorEPS_10lcd_line_ePKcPFvvE
+C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s:178    .text._ZN8MenuItemC2EPS_PKcPFvvE:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s:184    .text._ZN8MenuItemC2EPS_PKcPFvvE:00000000 _ZN8MenuItemC2EPS_PKcPFvvE
+C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s:184    .text._ZN8MenuItemC2EPS_PKcPFvvE:00000000 _ZN8MenuItemC1EPS_PKcPFvvE
+C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s:202    .text._ZN8MenuItemC2EPS_PKc:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s:208    .text._ZN8MenuItemC2EPS_PKc:00000000 _ZN8MenuItemC2EPS_PKc
+C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s:208    .text._ZN8MenuItemC2EPS_PKc:00000000 _ZN8MenuItemC1EPS_PKc
+C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s:226    .text._ZN8MenuItemC2EPS_10lcd_line_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s:232    .text._ZN8MenuItemC2EPS_10lcd_line_e:00000000 _ZN8MenuItemC2EPS_10lcd_line_e
+C:\Users\pc\AppData\Local\Temp\ccRCW7o9.s:232    .text._ZN8MenuItemC2EPS_10lcd_line_e:00000000 _ZN8MenuItemC1EPS_10lcd_line_e
+
+NO UNDEFINED SYMBOLS

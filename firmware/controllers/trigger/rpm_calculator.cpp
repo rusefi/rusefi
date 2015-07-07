@@ -35,7 +35,11 @@
 extern WaveChart waveChart;
 #endif /* EFI_WAVE_CHART */
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
+
+efitime_t notRunnintNow;
+efitime_t notRunningPrev;
 
 static Logging * logger;
 
@@ -47,7 +51,7 @@ RpmCalculator::RpmCalculator() {
 	setRpmValue(0);
 
 	// we need this initial to have not_running at first invocation
-	lastRpmEventTimeNt = (uint64_t) -10 * US2NT(US_PER_SECOND_LL);
+	lastRpmEventTimeNt = (efitime_t) -10 * US2NT(US_PER_SECOND_LL);
 	revolutionCounterSinceStart = 0;
 	revolutionCounterSinceBoot = 0;
 
@@ -61,12 +65,21 @@ RpmCalculator::RpmCalculator() {
 bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_F) {
 	efitick_t nowNt = getTimeNowNt();
 	if (engine->stopEngineRequestTimeNt != 0) {
-		if (nowNt - engine->stopEngineRequestTimeNt < 3 * US2NT(US_PER_SECOND_LL)) {
+		if (nowNt
+				- engine->stopEngineRequestTimeNt< 3 * US2NT(US_PER_SECOND_LL)) {
 			return false;
 		}
 	}
-
-	return nowNt - lastRpmEventTimeNt < US2NT(US_PER_SECOND_LL);
+	/**
+	 * note that the result of this subtraction could be negative, that would happen if
+	 * we have a trigger event between the time we've invoked 'getTimeNow' and here
+	 */
+	bool_t result = nowNt - lastRpmEventTimeNt < US2NT(US_PER_SECOND_LL);
+	if (!result) {
+		notRunnintNow = nowNt;
+		notRunningPrev = lastRpmEventTimeNt;
+	}
+	return result;
 }
 
 void RpmCalculator::setRpmValue(int value) {
@@ -110,7 +123,13 @@ int RpmCalculator::rpm(DECLARE_ENGINE_PARAMETER_F) {
 #endif
 	if (!isRunning(PASS_ENGINE_PARAMETER_F)) {
 		revolutionCounterSinceStart = 0;
-		rpmValue = 0;
+		if (rpmValue != 0) {
+			rpmValue = 0;
+			scheduleMsg(logger,
+					"templog rpm=0 since not running [%x][%x] [%x][%x]",
+					(int) (notRunnintNow >> 32), (int) notRunnintNow,
+					(int) (notRunningPrev >> 32), (int) notRunningPrev);
+		}
 	}
 	return rpmValue;
 }
@@ -136,7 +155,8 @@ bool isCranking(void) {
  * updated here.
  * This callback is invoked on interrupt thread.
  */
-void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECLARE_ENGINE_PARAMETER_S) {
+void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
+		uint32_t index DECLARE_ENGINE_PARAMETER_S) {
 	RpmCalculator *rpmState = &engine->rpmCalculator;
 	efitick_t nowNt = getTimeNowNt();
 	engine->m.beforeRpmCb = GET_TIMESTAMP();
@@ -147,7 +167,8 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECL
 	if (index != 0) {
 #if EFI_ANALOG_CHART || defined(__DOXYGEN__)
 		if (boardConfiguration->sensorChartMode == SC_TRIGGER)
-			scAddData(getCrankshaftAngleNt(nowNt PASS_ENGINE_PARAMETER), 1000 * ckpSignalType + index);
+			scAddData(getCrankshaftAngleNt(nowNt PASS_ENGINE_PARAMETER),
+					1000 * ckpSignalType + index);
 #endif
 		return;
 	}
@@ -155,7 +176,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECL
 	bool hadRpmRecently = rpmState->isRunning(PASS_ENGINE_PARAMETER_F);
 
 	if (hadRpmRecently) {
-		uint64_t diffNt = nowNt - rpmState->lastRpmEventTimeNt;
+		efitime_t diffNt = nowNt - rpmState->lastRpmEventTimeNt;
 		/**
 		 * Four stroke cycle is two crankshaft revolutions
 		 *
@@ -197,10 +218,12 @@ static void onTdcCallback(void) {
 /**
  * This trigger callback schedules the actual physical TDC callback in relation to trigger synchronization point.
  */
-static void tdcMarkCallback(trigger_event_e ckpSignalType, uint32_t index0 DECLARE_ENGINE_PARAMETER_S) {
+static void tdcMarkCallback(trigger_event_e ckpSignalType,
+		uint32_t index0 DECLARE_ENGINE_PARAMETER_S) {
 	(void) ckpSignalType;
 	bool isTriggerSynchronizationPoint = index0 == 0;
-	if (isTriggerSynchronizationPoint && engineConfiguration->isEngineChartEnabled) {
+	if (isTriggerSynchronizationPoint
+			&& engineConfiguration->isEngineChartEnabled) {
 		int revIndex2 = engine->rpmCalculator.getRevolutionCounter() % 2;
 		int rpm = getRpm();
 		// todo: use event-based scheduling, not just time-based scheduling
@@ -221,8 +244,9 @@ int getRevolutionCounter() {
 /**
  * @return Current crankshaft angle, 0 to 720 for four-stroke
  */
-float getCrankshaftAngleNt(uint64_t timeNt DECLARE_ENGINE_PARAMETER_S) {
-	uint64_t timeSinceZeroAngleNt = timeNt - engine->rpmCalculator.lastRpmEventTimeNt;
+float getCrankshaftAngleNt(efitime_t timeNt DECLARE_ENGINE_PARAMETER_S) {
+	efitime_t timeSinceZeroAngleNt = timeNt
+			- engine->rpmCalculator.lastRpmEventTimeNt;
 
 	/**
 	 * even if we use 'getOneDegreeTimeUs' macros here, it looks like the
@@ -233,7 +257,8 @@ float getCrankshaftAngleNt(uint64_t timeNt DECLARE_ENGINE_PARAMETER_S) {
 	return rpm == 0 ? NAN : timeSinceZeroAngleNt / getOneDegreeTimeNt(rpm);
 }
 
-void initRpmCalculator(Engine *engine) {
+void initRpmCalculator(Logging *sharedLogger, Engine *engine) {
+	logger = sharedLogger;
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 
 //	tdcScheduler[0].name = "tdc0";
@@ -250,7 +275,8 @@ void initRpmCalculator(Engine *engine) {
  * The callback would be executed once after the duration of time which
  * it takes the crankshaft to rotate to the specified angle.
  */
-void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle, schfunc_t callback, void *param, RpmCalculator *calc) {
+void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle,
+		schfunc_t callback, void *param, RpmCalculator *calc) {
 	efiAssertVoid(isValidRpm(rpm), "RPM check expected");
 	float delayUs = calc->oneDegreeUs * angle;
 	efiAssertVoid(!cisnan(delayUs), "NaN delay?");

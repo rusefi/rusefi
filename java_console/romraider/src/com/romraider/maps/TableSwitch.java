@@ -48,13 +48,13 @@ import com.romraider.Settings;
 
 public class TableSwitch extends Table {
 
+    public static final String TYPE_SWITCH = "Switch";
     private static final long serialVersionUID = -4887718305447362308L;
     private final ButtonGroup buttonGroup = new ButtonGroup();
     private final Map<String, byte[]> switchStates = new HashMap<String, byte[]>();
     private int dataSize = 0;
 
     public TableSwitch() {
-        super();
         storageType = 1;
         type = Settings.TABLE_SWITCH;
         locked = true;
@@ -63,8 +63,24 @@ public class TableSwitch extends Table {
     }
 
     @Override
+    public void horizontalInterpolate() {
+
+    }
+
+    @Override
+    public void increment(double increment) {
+
+    }
+
+    @Override
+    public void multiply(double factor) {
+
+    }
+
+    @Override
     public void setDataSize(int size) {
-        if (dataSize == 0) dataSize = size;
+        if (dataSize == 0)
+            dataSize = size;
     }
 
     @Override
@@ -73,7 +89,7 @@ public class TableSwitch extends Table {
     }
 
     @Override
-    public void populateTable(byte[] input, int romRamOffset) throws ArrayIndexOutOfBoundsException, IndexOutOfBoundsException  {
+    public void populateTable(byte[] input, int romRamOffset) {
         JPanel radioPanel = new JPanel(new GridLayout(0, 1));
         radioPanel.add(new JLabel("  " + getName()));
         for (String stateName : switchStates.keySet()) {
@@ -82,40 +98,6 @@ public class TableSwitch extends Table {
             radioPanel.add(button);
         }
         add(radioPanel, BorderLayout.CENTER);
-
-        // Validate the ROM image checksums.
-        // if the result is >0: position of failed checksum
-        // if the result is  0: all the checksums matched
-        // if the result is -1: all the checksums have been previously disabled
-        if (super.getName().contains("Checksum Fix")) {
-            int result = validateRomChecksum(input, getStorageAddress(), dataSize);
-            String message = String.format(
-                    "Checksum No. %d is invalid in table: %s%n" +
-                    "The ROM image may be corrupt or it has been %n" +
-                    "hex edited manually.%n" +
-                    "The checksum can be corrected when the ROM is saved.",
-                    result, super.getName());
-            if (result > 0) {
-                showMessageDialog(this,
-                        message,
-                        "ERROR - Checksums Failed",
-                        WARNING_MESSAGE);
-                setButtonsUnselected(buttonGroup);
-            }
-            else if (result == -1){
-                message = "All Checksums are disabled.";
-                showMessageDialog(this,
-                        message,
-                        "Warning - Checksum Status",
-                        INFORMATION_MESSAGE);
-                getButtonByText(buttonGroup, "on").setSelected(true);
-            }
-            else {
-                getButtonByText(buttonGroup, "off").setSelected(true);
-                locked = false;
-            }
-            return;
-        }
 
         // Validate XML switch definition data against the ROM data to select
         // the appropriate switch setting or throw an error if there is a
@@ -184,7 +166,7 @@ public class TableSwitch extends Table {
 
     @Override
     public byte[] saveFile(byte[] input) {
-        if (!super.getName().contains("Checksum Fix")) {
+
             if (!locked) {
                 JRadioButton selectedButton = getSelectedButton(buttonGroup);
                 System.arraycopy(
@@ -194,7 +176,7 @@ public class TableSwitch extends Table {
                         getStorageAddress() - ramOffset,
                         dataSize);
             }
-        }
+
         return input;
     }
 
@@ -206,7 +188,6 @@ public class TableSwitch extends Table {
         return switchStates.get(key);
     }
 
-    @Override
     public Dimension getFrameSize() {
         int height = verticalOverhead + 75;
         int width = horizontalOverhead;

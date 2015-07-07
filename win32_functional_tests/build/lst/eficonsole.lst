@@ -1,0 +1,765 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s 			page 1
+
+
+   1              		.file	"eficonsole.cpp"
+   2              		.section	.text$_ZL10sayNothingv,"x"
+   3              		.p2align 4,,15
+   4              		.def	__ZL10sayNothingv;	.scl	3;	.type	32;	.endef
+   5              	__ZL10sayNothingv:
+   6              	LFB58:
+   7              		.cfi_startproc
+   8 0000 F3       		rep
+   9 0001 C3       		ret
+  10              		.cfi_endproc
+  11              	LFE58:
+  12 0002 90909090 		.section .rdata,"dr"
+  12      90909090 
+  12      90909090 
+  12      9090
+  13              		.align 4
+  14              	LC0:
+  15 0000 20202020 		.ascii "    addr    stack prio refs     state time\0"
+  15      61646472 
+  15      20202020 
+  15      73746163 
+  15      6B207072 
+  16 002b 00       		.align 4
+  17              	LC1:
+  18 002c 252E386C 		.ascii "%.8lx [%.8lx] %4lu %4lu %9s %lu %s\0"
+  18      78205B25 
+  18      2E386C78 
+  18      5D202534 
+  18      6C752025 
+  19              		.section	.text$_ZL11cmd_threadsv,"x"
+  20              		.p2align 4,,15
+  21              		.def	__ZL11cmd_threadsv;	.scl	3;	.type	32;	.endef
+  22              	__ZL11cmd_threadsv:
+  23              	LFB60:
+  24              		.cfi_startproc
+  25 0000 53       		pushl	%ebx
+  26              		.cfi_def_cfa_offset 8
+  27              		.cfi_offset 3, -8
+  28 0001 83EC38   		subl	$56, %esp
+  29              		.cfi_def_cfa_offset 64
+  30 0004 C7442404 		movl	$LC0, 4(%esp)
+  30      00000000 
+  31 000c C7042400 		movl	$__ZL6logger, (%esp)
+  31      000000
+  32 0013 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+  32      00
+  33 0018 E8000000 		call	_chRegFirstThread
+  33      00
+  34 001d 85C0     		testl	%eax, %eax
+  35 001f 89C3     		movl	%eax, %ebx
+  36 0021 745A     		je	L2
+  37              		.p2align 4,,7
+  38              	L6:
+  39 0023 8B4320   		movl	32(%ebx), %eax
+  40 0026 8B5318   		movl	24(%ebx), %edx
+  41 0029 8944241C 		movl	%eax, 28(%esp)
+  42 002d 89542420 		movl	%edx, 32(%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s 			page 2
+
+
+  43 0031 0FB6431C 		movzbl	28(%ebx), %eax
+  44 0035 C7442414 		movl	$0, 20(%esp)
+  44      00000000 
+  45 003d 8B048500 		movl	__ZZL11cmd_threadsvE6states(,%eax,4), %eax
+  45      000000
+  46 0044 89442418 		movl	%eax, 24(%esp)
+  47 0048 8B4308   		movl	8(%ebx), %eax
+  48 004b 895C2408 		movl	%ebx, 8(%esp)
+  49 004f C744240C 		movl	$0, 12(%esp)
+  49      00000000 
+  50 0057 C7442404 		movl	$LC1, 4(%esp)
+  50      2C000000 
+  51 005f 89442410 		movl	%eax, 16(%esp)
+  52 0063 C7042400 		movl	$__ZL6logger, (%esp)
+  52      000000
+  53 006a E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+  53      00
+  54 006f 891C24   		movl	%ebx, (%esp)
+  55 0072 E8000000 		call	_chRegNextThread
+  55      00
+  56 0077 85C0     		testl	%eax, %eax
+  57 0079 89C3     		movl	%eax, %ebx
+  58 007b 75A6     		jne	L6
+  59              	L2:
+  60 007d 83C438   		addl	$56, %esp
+  61              		.cfi_def_cfa_offset 8
+  62 0080 5B       		popl	%ebx
+  63              		.cfi_restore 3
+  64              		.cfi_def_cfa_offset 4
+  65 0081 C3       		ret
+  66              		.cfi_endproc
+  67              	LFE60:
+  68 0082 90909090 		.section .rdata,"dr"
+  68      90909090 
+  68      90909090 
+  68      9090
+  69              	LC2:
+  70 004f 6669726D 		.ascii "firmwareError: %d\0"
+  70      77617265 
+  70      4572726F 
+  70      723A2025 
+  70      6400
+  71              		.section	.text$_ZL7myerrorv,"x"
+  72              		.p2align 4,,15
+  73              		.def	__ZL7myerrorv;	.scl	3;	.type	32;	.endef
+  74              	__ZL7myerrorv:
+  75              	LFB57:
+  76              		.cfi_startproc
+  77 0000 83EC1C   		subl	$28, %esp
+  78              		.cfi_def_cfa_offset 32
+  79 0003 E8000000 		call	_getRusEfiVersion
+  79      00
+  80 0008 C704244F 		movl	$LC2, (%esp)
+  80      000000
+  81 000f 89442404 		movl	%eax, 4(%esp)
+  82 0013 E8000000 		call	_firmwareError
+  82      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s 			page 3
+
+
+  83 0018 83C41C   		addl	$28, %esp
+  84              		.cfi_def_cfa_offset 4
+  85 001b C3       		ret
+  86              		.cfi_endproc
+  87              	LFE57:
+  88 001c 90909090 		.section .rdata,"dr"
+  89              	LC3:
+  90 0061 226D7920 		.ascii "\"my fatal\"()\0"
+  90      66617461 
+  90      6C222829 
+  90      00
+  91              		.section	.text$_ZL7myfatalv,"x"
+  92              		.p2align 4,,15
+  93              		.def	__ZL7myfatalv;	.scl	3;	.type	32;	.endef
+  94              	__ZL7myfatalv:
+  95              	LFB56:
+  96              		.cfi_startproc
+  97 0000 83EC1C   		subl	$28, %esp
+  98              		.cfi_def_cfa_offset 32
+  99 0003 C7042461 		movl	$LC3, (%esp)
+  99      000000
+ 100 000a E8000000 		call	_chDbgPanic
+ 100      00
+ 101 000f 83C41C   		addl	$28, %esp
+ 102              		.cfi_def_cfa_offset 4
+ 103 0012 C3       		ret
+ 104              		.cfi_endproc
+ 105              	LFE56:
+ 106 0013 90909090 		.section .rdata,"dr"
+ 106      90909090 
+ 106      90909090 
+ 106      90
+ 107 006e 0000     		.align 4
+ 108              	LC4:
+ 109 0070 2A2A2A20 		.ascii "*** rusEFI (c) Andrey Belomutskiy 2012-2015. All rights reserved.\0"
+ 109      72757345 
+ 109      46492028 
+ 109      63292041 
+ 109      6E647265 
+ 110              	LC5:
+ 111 00b2 73696D75 		.ascii "simulator\0"
+ 111      6C61746F 
+ 111      7200
+ 112              	LC6:
+ 113 00bc 72757345 		.ascii "rusEFI v%d@%s\0"
+ 113      46492076 
+ 113      25644025 
+ 113      7300
+ 114              	LC7:
+ 115 00ca 322E362E 		.ascii "2.6.8\0"
+ 115      3800
+ 116              	LC8:
+ 117 00d0 2A2A2A20 		.ascii "*** Chibios Kernel:       %s\0"
+ 117      43686962 
+ 117      696F7320 
+ 117      4B65726E 
+ 117      656C3A20 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s 			page 4
+
+
+ 118 00ed 000000   		.align 4
+ 119              	LC9:
+ 120 00f0 2A2A2A20 		.ascii "*** Compiled:     Jul  5 2015 - 12:44:22\0"
+ 120      436F6D70 
+ 120      696C6564 
+ 120      3A202020 
+ 120      20204A75 
+ 121              	LC10:
+ 122 0119 342E372E 		.ascii "4.7.3\0"
+ 122      3300
+ 123              	LC11:
+ 124 011f 434F4D50 		.ascii "COMPILER=%s\0"
+ 124      494C4552 
+ 124      3D257300 
+ 125              	LC12:
+ 126 012b 43485F46 		.ascii "CH_FREQUENCY=%d\0"
+ 126      52455155 
+ 126      454E4359 
+ 126      3D256400 
+ 127 013b 00       		.align 4
+ 128              	LC13:
+ 129 013c 504F5254 		.ascii "PORT_IDLE_THREAD_STACK_SIZE=%d\0"
+ 129      5F49444C 
+ 129      455F5448 
+ 129      52454144 
+ 129      5F535441 
+ 130              	LC14:
+ 131 015b 43485F44 		.ascii "CH_DBG_ENABLE_ASSERTS=%d\0"
+ 131      42475F45 
+ 131      4E41424C 
+ 131      455F4153 
+ 131      53455254 
+ 132              	LC15:
+ 133 0174 43485F44 		.ascii "CH_DBG_ENABLED=%d\0"
+ 133      42475F45 
+ 133      4E41424C 
+ 133      45443D25 
+ 133      6400
+ 134              	LC16:
+ 135 0186 43485F44 		.ascii "CH_DBG_SYSTEM_STATE_CHECK=%d\0"
+ 135      42475F53 
+ 135      59535445 
+ 135      4D5F5354 
+ 135      4154455F 
+ 136              	LC17:
+ 137 01a3 43485F44 		.ascii "CH_DBG_ENABLE_STACK_CHECK=%d\0"
+ 137      42475F45 
+ 137      4E41424C 
+ 137      455F5354 
+ 137      41434B5F 
+ 138              	LC18:
+ 139 01c0 4546495F 		.ascii "EFI_TUNER_STUDIO=%d\0"
+ 139      54554E45 
+ 139      525F5354 
+ 139      5544494F 
+ 139      3D256400 
+ 140              	LC19:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s 			page 5
+
+
+ 141 01d4 4546495F 		.ascii "EFI_SIGNAL_EXECUTOR_SLEEP=%d\0"
+ 141      5349474E 
+ 141      414C5F45 
+ 141      58454355 
+ 141      544F525F 
+ 142              	LC20:
+ 143 01f1 4546495F 		.ascii "EFI_SHAFT_POSITION_INPUT=%d\0"
+ 143      53484146 
+ 143      545F504F 
+ 143      53495449 
+ 143      4F4E5F49 
+ 144              	LC21:
+ 145 020d 4546495F 		.ascii "EFI_INTERNAL_ADC=%d\0"
+ 145      494E5445 
+ 145      524E414C 
+ 145      5F414443 
+ 145      3D256400 
+ 146              		.section	.text$_ZL8sayHellov,"x"
+ 147              		.p2align 4,,15
+ 148              		.def	__ZL8sayHellov;	.scl	3;	.type	32;	.endef
+ 149              	__ZL8sayHellov:
+ 150              	LFB59:
+ 151              		.cfi_startproc
+ 152 0000 83EC1C   		subl	$28, %esp
+ 153              		.cfi_def_cfa_offset 32
+ 154 0003 C7442404 		movl	$LC4, 4(%esp)
+ 154      70000000 
+ 155 000b C7042400 		movl	$__ZL6logger, (%esp)
+ 155      000000
+ 156 0012 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 156      00
+ 157 0017 E8000000 		call	_getRusEfiVersion
+ 157      00
+ 158 001c C744240C 		movl	$LC5, 12(%esp)
+ 158      B2000000 
+ 159 0024 C7442404 		movl	$LC6, 4(%esp)
+ 159      BC000000 
+ 160 002c C7042400 		movl	$__ZL6logger, (%esp)
+ 160      000000
+ 161 0033 89442408 		movl	%eax, 8(%esp)
+ 162 0037 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 162      00
+ 163 003c C7442408 		movl	$LC7, 8(%esp)
+ 163      CA000000 
+ 164 0044 C7442404 		movl	$LC8, 4(%esp)
+ 164      D0000000 
+ 165 004c C7042400 		movl	$__ZL6logger, (%esp)
+ 165      000000
+ 166 0053 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 166      00
+ 167 0058 C7442404 		movl	$LC9, 4(%esp)
+ 167      F0000000 
+ 168 0060 C7042400 		movl	$__ZL6logger, (%esp)
+ 168      000000
+ 169 0067 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 169      00
+ 170 006c C7442408 		movl	$LC10, 8(%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s 			page 6
+
+
+ 170      19010000 
+ 171 0074 C7442404 		movl	$LC11, 4(%esp)
+ 171      1F010000 
+ 172 007c C7042400 		movl	$__ZL6logger, (%esp)
+ 172      000000
+ 173 0083 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 173      00
+ 174 0088 C7442408 		movl	$100000, 8(%esp)
+ 174      A0860100 
+ 175 0090 C7442404 		movl	$LC12, 4(%esp)
+ 175      2B010000 
+ 176 0098 C7042400 		movl	$__ZL6logger, (%esp)
+ 176      000000
+ 177 009f E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 177      00
+ 178 00a4 C7442408 		movl	$256, 8(%esp)
+ 178      00010000 
+ 179 00ac C7442404 		movl	$LC13, 4(%esp)
+ 179      3C010000 
+ 180 00b4 C7042400 		movl	$__ZL6logger, (%esp)
+ 180      000000
+ 181 00bb E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 181      00
+ 182 00c0 C7442408 		movl	$1, 8(%esp)
+ 182      01000000 
+ 183 00c8 C7442404 		movl	$LC14, 4(%esp)
+ 183      5B010000 
+ 184 00d0 C7042400 		movl	$__ZL6logger, (%esp)
+ 184      000000
+ 185 00d7 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 185      00
+ 186 00dc C7442408 		movl	$1, 8(%esp)
+ 186      01000000 
+ 187 00e4 C7442404 		movl	$LC15, 4(%esp)
+ 187      74010000 
+ 188 00ec C7042400 		movl	$__ZL6logger, (%esp)
+ 188      000000
+ 189 00f3 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 189      00
+ 190 00f8 C7442408 		movl	$1, 8(%esp)
+ 190      01000000 
+ 191 0100 C7442404 		movl	$LC16, 4(%esp)
+ 191      86010000 
+ 192 0108 C7042400 		movl	$__ZL6logger, (%esp)
+ 192      000000
+ 193 010f E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 193      00
+ 194 0114 C7442408 		movl	$0, 8(%esp)
+ 194      00000000 
+ 195 011c C7442404 		movl	$LC17, 4(%esp)
+ 195      A3010000 
+ 196 0124 C7042400 		movl	$__ZL6logger, (%esp)
+ 196      000000
+ 197 012b E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 197      00
+ 198 0130 C7442408 		movl	$1, 8(%esp)
+ 198      01000000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s 			page 7
+
+
+ 199 0138 C7442404 		movl	$LC18, 4(%esp)
+ 199      C0010000 
+ 200 0140 C7042400 		movl	$__ZL6logger, (%esp)
+ 200      000000
+ 201 0147 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 201      00
+ 202 014c C7442408 		movl	$1, 8(%esp)
+ 202      01000000 
+ 203 0154 C7442404 		movl	$LC19, 4(%esp)
+ 203      D4010000 
+ 204 015c C7042400 		movl	$__ZL6logger, (%esp)
+ 204      000000
+ 205 0163 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 205      00
+ 206 0168 C7442408 		movl	$1, 8(%esp)
+ 206      01000000 
+ 207 0170 C7442404 		movl	$LC20, 4(%esp)
+ 207      F1010000 
+ 208 0178 C7042400 		movl	$__ZL6logger, (%esp)
+ 208      000000
+ 209 017f E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 209      00
+ 210 0184 C7442408 		movl	$0, 8(%esp)
+ 210      00000000 
+ 211 018c C7442404 		movl	$LC21, 4(%esp)
+ 211      0D020000 
+ 212 0194 C7042400 		movl	$__ZL6logger, (%esp)
+ 212      000000
+ 213 019b E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 213      00
+ 214 01a0 C70424F4 		movl	$500, (%esp)
+ 214      010000
+ 215 01a7 E8000000 		call	_chThdSleep
+ 215      00
+ 216 01ac 83C41C   		addl	$28, %esp
+ 217              		.cfi_def_cfa_offset 4
+ 218 01af C3       		ret
+ 219              		.cfi_endproc
+ 220              	LFE59:
+ 221              		.section	.text$_Z6fatal3PcS_i,"x"
+ 222              		.p2align 4,,15
+ 223              		.globl	__Z6fatal3PcS_i
+ 224              		.def	__Z6fatal3PcS_i;	.scl	2;	.type	32;	.endef
+ 225              	__Z6fatal3PcS_i:
+ 226              	LFB55:
+ 227              		.cfi_startproc
+ 228 0000 83EC1C   		subl	$28, %esp
+ 229              		.cfi_def_cfa_offset 32
+ 230 0003 8B442420 		movl	32(%esp), %eax
+ 231 0007 895C2414 		movl	%ebx, 20(%esp)
+ 232              		.cfi_offset 3, -12
+ 233 000b 8B5C2424 		movl	36(%esp), %ebx
+ 234 000f 89742418 		movl	%esi, 24(%esp)
+ 235              		.cfi_offset 6, -8
+ 236 0013 8B742428 		movl	40(%esp), %esi
+ 237 0017 C7442408 		movl	$199, 8(%esp)
+ 237      C7000000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s 			page 8
+
+
+ 238 001f 89442404 		movl	%eax, 4(%esp)
+ 239 0023 C7042400 		movl	$__ZL17fatalErrorMessage, (%esp)
+ 239      000000
+ 240 002a E8000000 		call	_strncpy
+ 240      00
+ 241 002f 89742428 		movl	%esi, 40(%esp)
+ 242 0033 8B742418 		movl	24(%esp), %esi
+ 243 0037 895C2424 		movl	%ebx, 36(%esp)
+ 244 003b 8B5C2414 		movl	20(%esp), %ebx
+ 245 003f C605C700 		movb	$0, __ZL17fatalErrorMessage+199
+ 245      000000
+ 246 0046 C7442420 		movl	$__ZL17fatalErrorMessage, 32(%esp)
+ 246      00000000 
+ 247 004e 83C41C   		addl	$28, %esp
+ 248              		.cfi_restore 6
+ 249              		.cfi_restore 3
+ 250              		.cfi_def_cfa_offset 4
+ 251 0051 E9000000 		jmp	_chDbgPanic3
+ 251      00
+ 252              		.cfi_endproc
+ 253              	LFE55:
+ 254 0056 90909090 		.section	.text$_Z5printPKcz,"x"
+ 254      90909090 
+ 254      9090
+ 255              		.p2align 4,,15
+ 256              		.globl	__Z5printPKcz
+ 257              		.def	__Z5printPKcz;	.scl	2;	.type	32;	.endef
+ 258              	__Z5printPKcz:
+ 259              	LFB61:
+ 260              		.cfi_startproc
+ 261 0000 53       		pushl	%ebx
+ 262              		.cfi_def_cfa_offset 8
+ 263              		.cfi_offset 3, -8
+ 264 0001 83EC18   		subl	$24, %esp
+ 265              		.cfi_def_cfa_offset 32
+ 266 0004 E8000000 		call	__Z14isConsoleReadyv
+ 266      00
+ 267 0009 84C0     		testb	%al, %al
+ 268 000b 7505     		jne	L24
+ 269 000d 83C418   		addl	$24, %esp
+ 270              		.cfi_remember_state
+ 271              		.cfi_def_cfa_offset 8
+ 272 0010 5B       		popl	%ebx
+ 273              		.cfi_restore 3
+ 274              		.cfi_def_cfa_offset 4
+ 275 0011 C3       		ret
+ 276              		.p2align 4,,7
+ 277              	L24:
+ 278              		.cfi_restore_state
+ 279 0012 E8000000 		call	__Z17getConsoleChannelv
+ 279      00
+ 280 0017 8B542420 		movl	32(%esp), %edx
+ 281 001b 8D5C2424 		leal	36(%esp), %ebx
+ 282 001f 895C2408 		movl	%ebx, 8(%esp)
+ 283 0023 89542404 		movl	%edx, 4(%esp)
+ 284 0027 890424   		movl	%eax, (%esp)
+ 285 002a E8000000 		call	_chvprintf
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s 			page 9
+
+
+ 285      00
+ 286 002f 83C418   		addl	$24, %esp
+ 287              		.cfi_def_cfa_offset 8
+ 288 0032 5B       		popl	%ebx
+ 289              		.cfi_restore 3
+ 290              		.cfi_def_cfa_offset 4
+ 291 0033 C3       		ret
+ 292              		.cfi_endproc
+ 293              	LFE61:
+ 294 0034 90909090 		.section .rdata,"dr"
+ 294      90909090 
+ 294      90909090 
+ 295              	LC22:
+ 296 0221 74657374 		.ascii "test\0"
+ 296      00
+ 297              	LC23:
+ 298 0226 68656C6C 		.ascii "hello\0"
+ 298      6F00
+ 299              	LC24:
+ 300 022c 66617461 		.ascii "fatal\0"
+ 300      6C00
+ 301              	LC25:
+ 302 0232 6572726F 		.ascii "error\0"
+ 302      7200
+ 303              	LC26:
+ 304 0238 74687265 		.ascii "threadsinfo\0"
+ 304      61647369 
+ 304      6E666F00 
+ 305              		.section	.text$_Z17initializeConsoleP7Logging,"x"
+ 306              		.p2align 4,,15
+ 307              		.globl	__Z17initializeConsoleP7Logging
+ 308              		.def	__Z17initializeConsoleP7Logging;	.scl	2;	.type	32;	.endef
+ 309              	__Z17initializeConsoleP7Logging:
+ 310              	LFB62:
+ 311              		.cfi_startproc
+ 312 0000 53       		pushl	%ebx
+ 313              		.cfi_def_cfa_offset 8
+ 314              		.cfi_offset 3, -8
+ 315 0001 83EC18   		subl	$24, %esp
+ 316              		.cfi_def_cfa_offset 32
+ 317 0004 8B5C2420 		movl	32(%esp), %ebx
+ 318 0008 E8000000 		call	__Z29initIntermediateLoggingBufferv
+ 318      00
+ 319 000d 891C24   		movl	%ebx, (%esp)
+ 320 0010 E8000000 		call	_initConsoleLogic
+ 320      00
+ 321 0015 891C24   		movl	%ebx, (%esp)
+ 322 0018 C7442404 		movl	$_handleConsoleLine, 4(%esp)
+ 322      00000000 
+ 323 0020 E8000000 		call	__Z12startConsoleP7LoggingPFvPcE
+ 323      00
+ 324 0025 E8000000 		call	__ZL8sayHellov
+ 324      00
+ 325 002a C7442404 		movl	$__ZL10sayNothingv, 4(%esp)
+ 325      00000000 
+ 326 0032 C7042421 		movl	$LC22, (%esp)
+ 326      020000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s 			page 10
+
+
+ 327 0039 E8000000 		call	_addConsoleAction
+ 327      00
+ 328 003e C7442404 		movl	$__ZL8sayHellov, 4(%esp)
+ 328      00000000 
+ 329 0046 C7042426 		movl	$LC23, (%esp)
+ 329      020000
+ 330 004d E8000000 		call	_addConsoleAction
+ 330      00
+ 331 0052 C7442404 		movl	$__ZL7myfatalv, 4(%esp)
+ 331      00000000 
+ 332 005a C704242C 		movl	$LC24, (%esp)
+ 332      020000
+ 333 0061 E8000000 		call	_addConsoleAction
+ 333      00
+ 334 0066 C7442404 		movl	$__ZL7myerrorv, 4(%esp)
+ 334      00000000 
+ 335 006e C7042432 		movl	$LC25, (%esp)
+ 335      020000
+ 336 0075 E8000000 		call	_addConsoleAction
+ 336      00
+ 337 007a C7442404 		movl	$__ZL11cmd_threadsv, 4(%esp)
+ 337      00000000 
+ 338 0082 C7042438 		movl	$LC26, (%esp)
+ 338      020000
+ 339 0089 E8000000 		call	_addConsoleAction
+ 339      00
+ 340 008e 83C418   		addl	$24, %esp
+ 341              		.cfi_def_cfa_offset 8
+ 342 0091 5B       		popl	%ebx
+ 343              		.cfi_restore 3
+ 344              		.cfi_def_cfa_offset 4
+ 345 0092 C3       		ret
+ 346              		.cfi_endproc
+ 347              	LFE62:
+ 348 0093 90909090 		.section .rdata,"dr"
+ 348      90909090 
+ 348      90909090 
+ 348      90
+ 349              	LC27:
+ 350 0244 636F6E73 		.ascii "console\0"
+ 350      6F6C6500 
+ 351              		.section	.text.startup._GLOBAL__sub_I__Z6fatal3PcS_i,"x"
+ 352              		.p2align 4,,15
+ 353              		.def	__GLOBAL__sub_I__Z6fatal3PcS_i;	.scl	3;	.type	32;	.endef
+ 354              	__GLOBAL__sub_I__Z6fatal3PcS_i:
+ 355              	LFB64:
+ 356              		.cfi_startproc
+ 357 0000 83EC1C   		subl	$28, %esp
+ 358              		.cfi_def_cfa_offset 32
+ 359 0003 B9000000 		movl	$__ZL6logger, %ecx
+ 359      00
+ 360 0008 C7042444 		movl	$LC27, (%esp)
+ 360      020000
+ 361 000f E8000000 		call	__ZN18LoggingWithStorageC1EPKc
+ 361      00
+ 362              		.cfi_def_cfa_offset 28
+ 363 0014 83EC04   		subl	$4, %esp
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s 			page 11
+
+
+ 364              		.cfi_def_cfa_offset 32
+ 365 0017 83C41C   		addl	$28, %esp
+ 366              		.cfi_def_cfa_offset 4
+ 367 001a C3       		ret
+ 368              		.cfi_endproc
+ 369              	LFE64:
+ 370 001b 90909090 		.section	.ctors,"w"
+ 370      90
+ 371              		.align 4
+ 372 0000 00000000 		.long	__GLOBAL__sub_I__Z6fatal3PcS_i
+ 373              		.section	.data$_ZL17fatalErrorMessage,"w"
+ 374              		.align 32
+ 375              	__ZL17fatalErrorMessage:
+ 376 0000 00000000 		.space 200
+ 376      00000000 
+ 376      00000000 
+ 376      00000000 
+ 376      00000000 
+ 377 00c8 00000000 		.section	.data$_ZL6logger,"w"
+ 377      00000000 
+ 377      00000000 
+ 377      00000000 
+ 377      00000000 
+ 378              		.align 32
+ 379              	__ZL6logger:
+ 380 0000 00000000 		.space 260
+ 380      00000000 
+ 380      00000000 
+ 380      00000000 
+ 380      00000000 
+ 381 0104 00000000 		.section .rdata,"dr"
+ 381      00000000 
+ 381      00000000 
+ 381      00000000 
+ 381      00000000 
+ 382              	LC28:
+ 383 024c 52454144 		.ascii "READY\0"
+ 383      5900
+ 384              	LC29:
+ 385 0252 43555252 		.ascii "CURRENT\0"
+ 385      454E5400 
+ 386              	LC30:
+ 387 025a 53555350 		.ascii "SUSPENDED\0"
+ 387      454E4445 
+ 387      4400
+ 388              	LC31:
+ 389 0264 57545345 		.ascii "WTSEM\0"
+ 389      4D00
+ 390              	LC32:
+ 391 026a 57544D54 		.ascii "WTMTX\0"
+ 391      5800
+ 392              	LC33:
+ 393 0270 5754434F 		.ascii "WTCOND\0"
+ 393      4E4400
+ 394              	LC34:
+ 395 0277 534C4545 		.ascii "SLEEPING\0"
+ 395      50494E47 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s 			page 12
+
+
+ 395      00
+ 396              	LC35:
+ 397 0280 57544558 		.ascii "WTEXIT\0"
+ 397      495400
+ 398              	LC36:
+ 399 0287 57544F52 		.ascii "WTOREVT\0"
+ 399      45565400 
+ 400              	LC37:
+ 401 028f 5754414E 		.ascii "WTANDEVT\0"
+ 401      44455654 
+ 401      00
+ 402              	LC38:
+ 403 0298 534E444D 		.ascii "SNDMSGQ\0"
+ 403      53475100 
+ 404              	LC39:
+ 405 02a0 534E444D 		.ascii "SNDMSG\0"
+ 405      534700
+ 406              	LC40:
+ 407 02a7 57544D53 		.ascii "WTMSG\0"
+ 407      4700
+ 408              	LC41:
+ 409 02ad 57545155 		.ascii "WTQUEUE\0"
+ 409      45554500 
+ 410              	LC42:
+ 411 02b5 46494E41 		.ascii "FINAL\0"
+ 411      4C00
+ 412 02bb 00       		.section	.rdata$_ZZL11cmd_threadsvE6states,"dr"
+ 413              		.align 32
+ 414              	__ZZL11cmd_threadsvE6states:
+ 415 0000 4C020000 		.long	LC28
+ 416 0004 52020000 		.long	LC29
+ 417 0008 5A020000 		.long	LC30
+ 418 000c 64020000 		.long	LC31
+ 419 0010 6A020000 		.long	LC32
+ 420 0014 70020000 		.long	LC33
+ 421 0018 77020000 		.long	LC34
+ 422 001c 80020000 		.long	LC35
+ 423 0020 87020000 		.long	LC36
+ 424 0024 8F020000 		.long	LC37
+ 425 0028 98020000 		.long	LC38
+ 426 002c A0020000 		.long	LC39
+ 427 0030 A7020000 		.long	LC40
+ 428 0034 AD020000 		.long	LC41
+ 429 0038 B5020000 		.long	LC42
+ 430              		.def	__Z11scheduleMsgP7LoggingPKcz;	.scl	2;	.type	32;	.endef
+ 431              		.def	_chRegFirstThread;	.scl	2;	.type	32;	.endef
+ 432              		.def	_chRegNextThread;	.scl	2;	.type	32;	.endef
+ 433              		.def	_getRusEfiVersion;	.scl	2;	.type	32;	.endef
+ 434              		.def	_firmwareError;	.scl	2;	.type	32;	.endef
+ 435              		.def	_chDbgPanic;	.scl	2;	.type	32;	.endef
+ 436              		.def	_chThdSleep;	.scl	2;	.type	32;	.endef
+ 437              		.def	_strncpy;	.scl	2;	.type	32;	.endef
+ 438              		.def	_chDbgPanic3;	.scl	2;	.type	32;	.endef
+ 439              		.def	__Z14isConsoleReadyv;	.scl	2;	.type	32;	.endef
+ 440              		.def	__Z17getConsoleChannelv;	.scl	2;	.type	32;	.endef
+ 441              		.def	_chvprintf;	.scl	2;	.type	32;	.endef
+ 442              		.def	_handleConsoleLine;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s 			page 13
+
+
+ 443              		.def	__Z29initIntermediateLoggingBufferv;	.scl	2;	.type	32;	.endef
+ 444              		.def	_initConsoleLogic;	.scl	2;	.type	32;	.endef
+ 445              		.def	__Z12startConsoleP7LoggingPFvPcE;	.scl	2;	.type	32;	.endef
+ 446              		.def	_addConsoleAction;	.scl	2;	.type	32;	.endef
+ 447 003c 00000000 		.def	__ZN18LoggingWithStorageC1EPKc;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s 			page 14
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 eficonsole.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s:5      .text$_ZL10sayNothingv:00000000 __ZL10sayNothingv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s:22     .text$_ZL11cmd_threadsv:00000000 __ZL11cmd_threadsv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s:379    .data$_ZL6logger:00000000 __ZL6logger
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s:414    .rdata$_ZZL11cmd_threadsvE6states:00000000 __ZZL11cmd_threadsvE6states
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s:74     .text$_ZL7myerrorv:00000000 __ZL7myerrorv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s:94     .text$_ZL7myfatalv:00000000 __ZL7myfatalv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s:149    .text$_ZL8sayHellov:00000000 __ZL8sayHellov
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s:225    .text$_Z6fatal3PcS_i:00000000 __Z6fatal3PcS_i
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s:375    .data$_ZL17fatalErrorMessage:00000000 __ZL17fatalErrorMessage
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s:258    .text$_Z5printPKcz:00000000 __Z5printPKcz
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s:309    .text$_Z17initializeConsoleP7Logging:00000000 __Z17initializeConsoleP7Logging
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccK2yyL3.s:354    .text.startup._GLOBAL__sub_I__Z6fatal3PcS_i:00000000 __GLOBAL__sub_I__Z6fatal3PcS_i
+
+UNDEFINED SYMBOLS
+__Z11scheduleMsgP7LoggingPKcz
+_chRegFirstThread
+_chRegNextThread
+_getRusEfiVersion
+_firmwareError
+_chDbgPanic
+_chThdSleep
+_strncpy
+_chDbgPanic3
+__Z14isConsoleReadyv
+__Z17getConsoleChannelv
+_chvprintf
+_handleConsoleLine
+__Z29initIntermediateLoggingBufferv
+_initConsoleLogic
+__Z12startConsoleP7LoggingPFvPcE
+_addConsoleAction
+__ZN18LoggingWithStorageC1EPKc

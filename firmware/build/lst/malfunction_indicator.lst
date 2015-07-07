@@ -1,0 +1,231 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cccVdFYd.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"malfunction_indicator.cpp"
+  16              		.section	.text._ZL7testMilv,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	_ZL7testMilv, %function
+  22              	_ZL7testMilv:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25 0000 08B5     		push	{r3, lr}
+  26 0002 7320     		movs	r0, #115
+  27 0004 FFF7FEFF 		bl	addError
+  28 0008 6E20     		movs	r0, #110
+  29 000a BDE80840 		pop	{r3, lr}
+  30 000e FFF7FEBF 		b	addError
+  31              		.size	_ZL7testMilv, .-_ZL7testMilv
+  32 0012 00BFAFF3 		.section	.text._ZL9mfiThreadv,"ax",%progbits
+  32      0080AFF3 
+  32      0080AFF3 
+  32      0080
+  33              		.align	2
+  34              		.p2align 4,,15
+  35              		.thumb
+  36              		.thumb_func
+  37              		.type	_ZL9mfiThreadv, %function
+  38              	_ZL9mfiThreadv:
+  39              		@ Volatile: function does not return.
+  40              		@ args = 0, pretend = 0, frame = 48
+  41              		@ frame_needed = 0, uses_anonymous_args = 0
+  42 0000 80B5     		push	{r7, lr}
+  43 0002 40F20002 		movw	r2, #:lower16:rlist
+  44 0006 C0F20002 		movt	r2, #:upper16:rlist
+  45 000a 40F20003 		movw	r3, #:lower16:.LC0
+  46 000e 9269     		ldr	r2, [r2, #24]
+  47 0010 C0F20003 		movt	r3, #:upper16:.LC0
+  48 0014 46F26768 		movw	r8, #26215
+  49 0018 8CB0     		sub	sp, sp, #48
+  50 001a 9361     		str	r3, [r2, #24]
+  51 001c C6F26668 		movt	r8, 26214
+  52              	.L21:
+  53 0020 42F21070 		movw	r0, #10000
+  54 0024 FFF7FEFF 		bl	chThdSleep
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cccVdFYd.s 			page 2
+
+
+  55 0028 01A8     		add	r0, sp, #4
+  56 002a FFF7FEFF 		bl	getErrorCodes
+  57 002e 019B     		ldr	r3, [sp, #4]
+  58 0030 002B     		cmp	r3, #0
+  59 0032 F5DD     		ble	.L21
+  60 0034 EA46     		mov	r10, sp
+  61 0036 4FF00009 		mov	r9, #0
+  62              	.L20:
+  63 003a 0AF1040A 		add	r10, r10, #4
+  64 003e DAF80440 		ldr	r4, [r10, #4]
+  65 0042 002C     		cmp	r4, #0
+  66 0044 C4BF     		itt	gt
+  67 0046 2346     		movgt	r3, r4
+  68 0048 0027     		movgt	r7, #0
+  69 004a 01DC     		bgt	.L9
+  70 004c 35E0     		b	.L15
+  71              	.L24:
+  72 004e 0F46     		mov	r7, r1
+  73              	.L9:
+  74 0050 88FB0312 		smull	r1, r2, r8, r3
+  75 0054 DB17     		asrs	r3, r3, #31
+  76 0056 D3EBA203 		rsbs	r3, r3, r2, asr #2
+  77 005a 07F10101 		add	r1, r7, #1
+  78 005e F6D1     		bne	.L24
+  79              	.L19:
+  80 0060 3846     		mov	r0, r7
+  81 0062 FFF7FEFF 		bl	efiPow10
+  82 0066 A042     		cmp	r0, r4
+  83 0068 4FF00105 		mov	r5, #1
+  84 006c 04DC     		bgt	.L10
+  85              	.L11:
+  86 006e 241A     		subs	r4, r4, r0
+  87 0070 A042     		cmp	r0, r4
+  88 0072 05F10105 		add	r5, r5, #1
+  89 0076 FADD     		ble	.L11
+  90              	.L10:
+  91 0078 17F00106 		ands	r6, r7, #1
+  92 007c 22D0     		beq	.L16
+  93 007e 0026     		movs	r6, #0
+  94              	.L18:
+  95 0080 40F20000 		movw	r0, #:lower16:checkEnginePin
+  96 0084 0021     		movs	r1, #0
+  97 0086 C0F20000 		movt	r0, #:upper16:checkEnginePin
+  98 008a FFF7FEFF 		bl	_ZN9OutputPin8setValueEi
+  99 008e 40F2DC50 		movw	r0, #1500
+ 100 0092 FFF7FEFF 		bl	chThdSleep
+ 101 0096 40F20000 		movw	r0, #:lower16:checkEnginePin
+ 102 009a 0121     		movs	r1, #1
+ 103 009c C0F20000 		movt	r0, #:upper16:checkEnginePin
+ 104 00a0 0E44     		add	r6, r6, r1
+ 105 00a2 FFF7FEFF 		bl	_ZN9OutputPin8setValueEi
+ 106 00a6 4FF4C870 		mov	r0, #400
+ 107 00aa FFF7FEFF 		bl	chThdSleep
+ 108 00ae B542     		cmp	r5, r6
+ 109 00b0 E6DC     		bgt	.L18
+ 110              	.L17:
+ 111 00b2 17F1FF37 		adds	r7, r7, #-1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cccVdFYd.s 			page 3
+
+
+ 112 00b6 D3D2     		bcs	.L19
+ 113 00b8 019B     		ldr	r3, [sp, #4]
+ 114              	.L15:
+ 115 00ba 09F10109 		add	r9, r9, #1
+ 116 00be 4B45     		cmp	r3, r9
+ 117 00c0 BBDC     		bgt	.L20
+ 118 00c2 ADE7     		b	.L21
+ 119              	.L16:
+ 120 00c4 40F20000 		movw	r0, #:lower16:checkEnginePin
+ 121 00c8 0021     		movs	r1, #0
+ 122 00ca C0F20000 		movt	r0, #:upper16:checkEnginePin
+ 123 00ce FFF7FEFF 		bl	_ZN9OutputPin8setValueEi
+ 124 00d2 4FF4C870 		mov	r0, #400
+ 125 00d6 FFF7FEFF 		bl	chThdSleep
+ 126 00da 40F20000 		movw	r0, #:lower16:checkEnginePin
+ 127 00de 0121     		movs	r1, #1
+ 128 00e0 C0F20000 		movt	r0, #:upper16:checkEnginePin
+ 129 00e4 0E44     		add	r6, r6, r1
+ 130 00e6 FFF7FEFF 		bl	_ZN9OutputPin8setValueEi
+ 131 00ea 4FF4C870 		mov	r0, #400
+ 132 00ee FFF7FEFF 		bl	chThdSleep
+ 133 00f2 AE42     		cmp	r6, r5
+ 134 00f4 E6DB     		blt	.L16
+ 135 00f6 DCE7     		b	.L17
+ 136              		.size	_ZL9mfiThreadv, .-_ZL9mfiThreadv
+ 137 00f8 AFF30080 		.section	.text._Z24initMalfunctionIndicatorv,"ax",%progbits
+ 137      AFF30080 
+ 138              		.align	2
+ 139              		.p2align 4,,15
+ 140              		.global	_Z24initMalfunctionIndicatorv
+ 141              		.thumb
+ 142              		.thumb_func
+ 143              		.type	_Z24initMalfunctionIndicatorv, %function
+ 144              	_Z24initMalfunctionIndicatorv:
+ 145              		@ args = 0, pretend = 0, frame = 0
+ 146              		@ frame_needed = 0, uses_anonymous_args = 0
+ 147 0000 00B5     		push	{lr}
+ 148 0002 83B0     		sub	sp, sp, #12
+ 149 0004 0022     		movs	r2, #0
+ 150 0006 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 151 000a 40F20003 		movw	r3, #:lower16:_ZL9mfiThreadv
+ 152 000e 0092     		str	r2, [sp]
+ 153 0010 C0F20003 		movt	r3, #:upper16:_ZL9mfiThreadv
+ 154 0014 4FF43A71 		mov	r1, #744
+ 155 0018 0222     		movs	r2, #2
+ 156 001a C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 157 001e FFF7FEFF 		bl	chThdCreateStatic
+ 158 0022 40F20000 		movw	r0, #:lower16:.LC1
+ 159 0026 40F20001 		movw	r1, #:lower16:_ZL7testMilv
+ 160 002a C0F20000 		movt	r0, #:upper16:.LC1
+ 161 002e C0F20001 		movt	r1, #:upper16:_ZL7testMilv
+ 162 0032 03B0     		add	sp, sp, #12
+ 163              		@ sp needed
+ 164 0034 5DF804EB 		ldr	lr, [sp], #4
+ 165 0038 FFF7FEBF 		b	addConsoleAction
+ 166              		.size	_Z24initMalfunctionIndicatorv, .-_Z24initMalfunctionIndicatorv
+ 167 003c AFF30080 		.section	.bss._ZL14mfiThreadStack,"aw",%nobits
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cccVdFYd.s 			page 4
+
+
+ 168              		.align	3
+ 169              		.set	.LANCHOR0,. + 0
+ 170              		.type	_ZL14mfiThreadStack, %object
+ 171              		.size	_ZL14mfiThreadStack, 744
+ 172              	_ZL14mfiThreadStack:
+ 173 0000 00000000 		.space	744
+ 173      00000000 
+ 173      00000000 
+ 173      00000000 
+ 173      00000000 
+ 174              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 175              		.align	2
+ 176              	.LC0:
+ 177 0000 4D46496E 		.ascii	"MFIndicator\000"
+ 177      64696361 
+ 177      746F7200 
+ 178              	.LC1:
+ 179 000c 74657374 		.ascii	"testmil\000"
+ 179      6D696C00 
+ 180              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cccVdFYd.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 malfunction_indicator.cpp
+C:\Users\pc\AppData\Local\Temp\cccVdFYd.s:17     .text._ZL7testMilv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cccVdFYd.s:22     .text._ZL7testMilv:00000000 _ZL7testMilv
+C:\Users\pc\AppData\Local\Temp\cccVdFYd.s:33     .text._ZL9mfiThreadv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cccVdFYd.s:38     .text._ZL9mfiThreadv:00000000 _ZL9mfiThreadv
+C:\Users\pc\AppData\Local\Temp\cccVdFYd.s:176    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\cccVdFYd.s:138    .text._Z24initMalfunctionIndicatorv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cccVdFYd.s:144    .text._Z24initMalfunctionIndicatorv:00000000 _Z24initMalfunctionIndicatorv
+C:\Users\pc\AppData\Local\Temp\cccVdFYd.s:169    .bss._ZL14mfiThreadStack:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\cccVdFYd.s:178    .rodata.str1.4:0000000c .LC1
+C:\Users\pc\AppData\Local\Temp\cccVdFYd.s:168    .bss._ZL14mfiThreadStack:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cccVdFYd.s:172    .bss._ZL14mfiThreadStack:00000000 _ZL14mfiThreadStack
+C:\Users\pc\AppData\Local\Temp\cccVdFYd.s:175    .rodata.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+addError
+rlist
+chThdSleep
+getErrorCodes
+efiPow10
+checkEnginePin
+_ZN9OutputPin8setValueEi
+chThdCreateStatic
+addConsoleAction

@@ -58,9 +58,15 @@ void EngineTestHelper::fireTriggerEvents() {
 }
 
 void EngineTestHelper::initTriggerShapeAndRpmCalculator() {
-	initializeTriggerShape(NULL, ec, &engine);
+	Engine *engine = &this->engine;
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+	persistent_config_s *config = engine->config;
+	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
+
+	engine->triggerShape.initializeTriggerShape(NULL PASS_ENGINE_PARAMETER);
+
 	incrementGlobalConfigurationVersion();
 
-	triggerCentral.addEventListener(rpmShaftPositionCallback, "rpm reporter", &engine);
+	triggerCentral.addEventListener(rpmShaftPositionCallback, "rpm reporter", engine);
 
 }

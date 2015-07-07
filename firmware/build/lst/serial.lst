@@ -1,0 +1,529 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"serial.c"
+  16              		.section	.text.readt,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	readt, %function
+  22              	readt:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25              		@ link register save eliminated.
+  26 0000 0C30     		adds	r0, r0, #12
+  27 0002 FFF7FEBF 		b	chIQReadTimeout
+  28              		.size	readt, .-readt
+  29 0006 00BFAFF3 		.section	.text.read,"ax",%progbits
+  29      0080AFF3 
+  29      0080
+  30              		.align	2
+  31              		.p2align 4,,15
+  32              		.thumb
+  33              		.thumb_func
+  34              		.type	read, %function
+  35              	read:
+  36              		@ args = 0, pretend = 0, frame = 0
+  37              		@ frame_needed = 0, uses_anonymous_args = 0
+  38              		@ link register save eliminated.
+  39 0000 0C30     		adds	r0, r0, #12
+  40 0002 4FF0FF33 		mov	r3, #-1
+  41 0006 FFF7FEBF 		b	chIQReadTimeout
+  42              		.size	read, .-read
+  43 000a 00BFAFF3 		.section	.text.writet,"ax",%progbits
+  43      0080
+  44              		.align	2
+  45              		.p2align 4,,15
+  46              		.thumb
+  47              		.thumb_func
+  48              		.type	writet, %function
+  49              	writet:
+  50              		@ args = 0, pretend = 0, frame = 0
+  51              		@ frame_needed = 0, uses_anonymous_args = 0
+  52              		@ link register save eliminated.
+  53 0000 3030     		adds	r0, r0, #48
+  54 0002 FFF7FEBF 		b	chOQWriteTimeout
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s 			page 2
+
+
+  55              		.size	writet, .-writet
+  56 0006 00BFAFF3 		.section	.text.write,"ax",%progbits
+  56      0080AFF3 
+  56      0080
+  57              		.align	2
+  58              		.p2align 4,,15
+  59              		.thumb
+  60              		.thumb_func
+  61              		.type	write, %function
+  62              	write:
+  63              		@ args = 0, pretend = 0, frame = 0
+  64              		@ frame_needed = 0, uses_anonymous_args = 0
+  65              		@ link register save eliminated.
+  66 0000 3030     		adds	r0, r0, #48
+  67 0002 4FF0FF33 		mov	r3, #-1
+  68 0006 FFF7FEBF 		b	chOQWriteTimeout
+  69              		.size	write, .-write
+  70 000a 00BFAFF3 		.section	.text.gett,"ax",%progbits
+  70      0080
+  71              		.align	2
+  72              		.p2align 4,,15
+  73              		.thumb
+  74              		.thumb_func
+  75              		.type	gett, %function
+  76              	gett:
+  77              		@ args = 0, pretend = 0, frame = 0
+  78              		@ frame_needed = 0, uses_anonymous_args = 0
+  79              		@ link register save eliminated.
+  80 0000 0C30     		adds	r0, r0, #12
+  81 0002 FFF7FEBF 		b	chIQGetTimeout
+  82              		.size	gett, .-gett
+  83 0006 00BFAFF3 		.section	.text.get,"ax",%progbits
+  83      0080AFF3 
+  83      0080
+  84              		.align	2
+  85              		.p2align 4,,15
+  86              		.thumb
+  87              		.thumb_func
+  88              		.type	get, %function
+  89              	get:
+  90              		@ args = 0, pretend = 0, frame = 0
+  91              		@ frame_needed = 0, uses_anonymous_args = 0
+  92              		@ link register save eliminated.
+  93 0000 0C30     		adds	r0, r0, #12
+  94 0002 4FF0FF31 		mov	r1, #-1
+  95 0006 FFF7FEBF 		b	chIQGetTimeout
+  96              		.size	get, .-get
+  97 000a 00BFAFF3 		.section	.text.putt,"ax",%progbits
+  97      0080
+  98              		.align	2
+  99              		.p2align 4,,15
+ 100              		.thumb
+ 101              		.thumb_func
+ 102              		.type	putt, %function
+ 103              	putt:
+ 104              		@ args = 0, pretend = 0, frame = 0
+ 105              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s 			page 3
+
+
+ 106              		@ link register save eliminated.
+ 107 0000 3030     		adds	r0, r0, #48
+ 108 0002 FFF7FEBF 		b	chOQPutTimeout
+ 109              		.size	putt, .-putt
+ 110 0006 00BFAFF3 		.section	.text.put,"ax",%progbits
+ 110      0080AFF3 
+ 110      0080
+ 111              		.align	2
+ 112              		.p2align 4,,15
+ 113              		.thumb
+ 114              		.thumb_func
+ 115              		.type	put, %function
+ 116              	put:
+ 117              		@ args = 0, pretend = 0, frame = 0
+ 118              		@ frame_needed = 0, uses_anonymous_args = 0
+ 119              		@ link register save eliminated.
+ 120 0000 3030     		adds	r0, r0, #48
+ 121 0002 4FF0FF32 		mov	r2, #-1
+ 122 0006 FFF7FEBF 		b	chOQPutTimeout
+ 123              		.size	put, .-put
+ 124 000a 00BFAFF3 		.section	.text.sdInit,"ax",%progbits
+ 124      0080
+ 125              		.align	2
+ 126              		.p2align 4,,15
+ 127              		.global	sdInit
+ 128              		.thumb
+ 129              		.thumb_func
+ 130              		.type	sdInit, %function
+ 131              	sdInit:
+ 132              		@ args = 0, pretend = 0, frame = 0
+ 133              		@ frame_needed = 0, uses_anonymous_args = 0
+ 134              		@ link register save eliminated.
+ 135 0000 FFF7FEBF 		b	sd_lld_init
+ 136              		.size	sdInit, .-sdInit
+ 137 0004 AFF30080 		.section	.text.sdObjectInit,"ax",%progbits
+ 137      AFF30080 
+ 137      AFF30080 
+ 138              		.align	2
+ 139              		.p2align 4,,15
+ 140              		.global	sdObjectInit
+ 141              		.thumb
+ 142              		.thumb_func
+ 143              		.type	sdObjectInit, %function
+ 144              	sdObjectInit:
+ 145              		@ args = 0, pretend = 0, frame = 0
+ 146              		@ frame_needed = 0, uses_anonymous_args = 0
+ 147 0000 70B5     		push	{r4, r5, r6, lr}
+ 148 0002 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 149 0006 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 150 000a 0446     		mov	r4, r0
+ 151 000c 82B0     		sub	sp, sp, #8
+ 152 000e 40F8043B 		str	r3, [r0], #4
+ 153 0012 0126     		movs	r6, #1
+ 154 0014 0094     		str	r4, [sp]
+ 155 0016 0B46     		mov	r3, r1
+ 156 0018 1546     		mov	r5, r2
+ 157 001a 6060     		str	r0, [r4, #4]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s 			page 4
+
+
+ 158 001c 04F15401 		add	r1, r4, #84
+ 159 0020 04F10C00 		add	r0, r4, #12
+ 160 0024 2672     		strb	r6, [r4, #8]
+ 161 0026 1022     		movs	r2, #16
+ 162 0028 FFF7FEFF 		bl	chIQInit
+ 163 002c 0094     		str	r4, [sp]
+ 164 002e 2B46     		mov	r3, r5
+ 165 0030 04F13000 		add	r0, r4, #48
+ 166 0034 04F16401 		add	r1, r4, #100
+ 167 0038 1022     		movs	r2, #16
+ 168 003a FFF7FEFF 		bl	chOQInit
+ 169 003e 02B0     		add	sp, sp, #8
+ 170              		@ sp needed
+ 171 0040 70BD     		pop	{r4, r5, r6, pc}
+ 172              		.size	sdObjectInit, .-sdObjectInit
+ 173 0042 00BFAFF3 		.section	.text.sdStart,"ax",%progbits
+ 173      0080AFF3 
+ 173      0080AFF3 
+ 173      0080
+ 174              		.align	2
+ 175              		.p2align 4,,15
+ 176              		.global	sdStart
+ 177              		.thumb
+ 178              		.thumb_func
+ 179              		.type	sdStart, %function
+ 180              	sdStart:
+ 181              		@ args = 0, pretend = 0, frame = 0
+ 182              		@ frame_needed = 0, uses_anonymous_args = 0
+ 183 0000 38B5     		push	{r3, r4, r5, lr}
+ 184 0002 0446     		mov	r4, r0
+ 185 0004 0D46     		mov	r5, r1
+ 186 0006 D8B1     		cbz	r0, .L15
+ 187              	.L12:
+ 188 0008 2023     		movs	r3, #32
+ 189              	@ 163 "chibios/os/hal/src/serial.c" 1
+ 190 000a 83F31188 		msr     BASEPRI, r3
+ 191              	@ 0 "" 2
+ 192              		.thumb
+ 193 000e FFF7FEFF 		bl	dbg_check_lock
+ 194 0012 237A     		ldrb	r3, [r4, #8]	@ zero_extendqisi2
+ 195 0014 013B     		subs	r3, r3, #1
+ 196 0016 DBB2     		uxtb	r3, r3
+ 197 0018 012B     		cmp	r3, #1
+ 198 001a 05D9     		bls	.L13
+ 199 001c 40F20000 		movw	r0, #:lower16:.LC2
+ 200 0020 C0F20000 		movt	r0, #:upper16:.LC2
+ 201 0024 FFF7FEFF 		bl	chDbgPanic
+ 202              	.L13:
+ 203 0028 2946     		mov	r1, r5
+ 204 002a 2046     		mov	r0, r4
+ 205 002c FFF7FEFF 		bl	sd_lld_start
+ 206 0030 0223     		movs	r3, #2
+ 207 0032 2372     		strb	r3, [r4, #8]
+ 208 0034 FFF7FEFF 		bl	dbg_check_unlock
+ 209 0038 0023     		movs	r3, #0
+ 210              	@ 169 "chibios/os/hal/src/serial.c" 1
+ 211 003a 83F31188 		msr     BASEPRI, r3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s 			page 5
+
+
+ 212              	@ 0 "" 2
+ 213              		.thumb
+ 214 003e 38BD     		pop	{r3, r4, r5, pc}
+ 215              	.L15:
+ 216 0040 40F20000 		movw	r0, #:lower16:.LC0
+ 217 0044 40F20001 		movw	r1, #:lower16:.LC1
+ 218 0048 C0F20000 		movt	r0, #:upper16:.LC0
+ 219 004c C0F20001 		movt	r1, #:upper16:.LC1
+ 220 0050 A122     		movs	r2, #161
+ 221 0052 FFF7FEFF 		bl	chDbgPanic3
+ 222 0056 D7E7     		b	.L12
+ 223              		.size	sdStart, .-sdStart
+ 224              		.section	.text.sdStop,"ax",%progbits
+ 225              		.align	2
+ 226              		.p2align 4,,15
+ 227              		.global	sdStop
+ 228              		.thumb
+ 229              		.thumb_func
+ 230              		.type	sdStop, %function
+ 231              	sdStop:
+ 232              		@ args = 0, pretend = 0, frame = 0
+ 233              		@ frame_needed = 0, uses_anonymous_args = 0
+ 234 0000 10B5     		push	{r4, lr}
+ 235 0002 0446     		mov	r4, r0
+ 236 0004 20B3     		cbz	r0, .L19
+ 237              	.L17:
+ 238 0006 2023     		movs	r3, #32
+ 239              	@ 185 "chibios/os/hal/src/serial.c" 1
+ 240 0008 83F31188 		msr     BASEPRI, r3
+ 241              	@ 0 "" 2
+ 242              		.thumb
+ 243 000c FFF7FEFF 		bl	dbg_check_lock
+ 244 0010 237A     		ldrb	r3, [r4, #8]	@ zero_extendqisi2
+ 245 0012 013B     		subs	r3, r3, #1
+ 246 0014 DBB2     		uxtb	r3, r3
+ 247 0016 012B     		cmp	r3, #1
+ 248 0018 05D9     		bls	.L18
+ 249 001a 40F20000 		movw	r0, #:lower16:.LC4
+ 250 001e C0F20000 		movt	r0, #:upper16:.LC4
+ 251 0022 FFF7FEFF 		bl	chDbgPanic
+ 252              	.L18:
+ 253 0026 2046     		mov	r0, r4
+ 254 0028 FFF7FEFF 		bl	sd_lld_stop
+ 255 002c 0123     		movs	r3, #1
+ 256 002e 2372     		strb	r3, [r4, #8]
+ 257 0030 04F13000 		add	r0, r4, #48
+ 258 0034 FFF7FEFF 		bl	chOQResetI
+ 259 0038 04F10C00 		add	r0, r4, #12
+ 260 003c FFF7FEFF 		bl	chIQResetI
+ 261 0040 FFF7FEFF 		bl	chSchRescheduleS
+ 262 0044 FFF7FEFF 		bl	dbg_check_unlock
+ 263 0048 0023     		movs	r3, #0
+ 264              	@ 194 "chibios/os/hal/src/serial.c" 1
+ 265 004a 83F31188 		msr     BASEPRI, r3
+ 266              	@ 0 "" 2
+ 267              		.thumb
+ 268 004e 10BD     		pop	{r4, pc}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s 			page 6
+
+
+ 269              	.L19:
+ 270 0050 40F20000 		movw	r0, #:lower16:.LC3
+ 271 0054 40F20001 		movw	r1, #:lower16:.LC1
+ 272 0058 C0F20000 		movt	r0, #:upper16:.LC3
+ 273 005c C0F20001 		movt	r1, #:upper16:.LC1
+ 274 0060 B722     		movs	r2, #183
+ 275 0062 FFF7FEFF 		bl	chDbgPanic3
+ 276 0066 CEE7     		b	.L17
+ 277              		.size	sdStop, .-sdStop
+ 278 0068 AFF30080 		.section	.text.sdIncomingDataI,"ax",%progbits
+ 278      AFF30080 
+ 279              		.align	2
+ 280              		.p2align 4,,15
+ 281              		.global	sdIncomingDataI
+ 282              		.thumb
+ 283              		.thumb_func
+ 284              		.type	sdIncomingDataI, %function
+ 285              	sdIncomingDataI:
+ 286              		@ args = 0, pretend = 0, frame = 0
+ 287              		@ frame_needed = 0, uses_anonymous_args = 0
+ 288 0000 38B5     		push	{r3, r4, r5, lr}
+ 289 0002 0446     		mov	r4, r0
+ 290 0004 0D46     		mov	r5, r1
+ 291 0006 FFF7FEFF 		bl	chDbgCheckClassI
+ 292 000a D4B1     		cbz	r4, .L24
+ 293              	.L21:
+ 294 000c 6369     		ldr	r3, [r4, #20]
+ 295 000e 3BB1     		cbz	r3, .L25
+ 296 0010 2946     		mov	r1, r5
+ 297 0012 04F10C00 		add	r0, r4, #12
+ 298 0016 FFF7FEFF 		bl	chIQPutI
+ 299 001a 0028     		cmp	r0, #0
+ 300 001c 0BDB     		blt	.L26
+ 301              	.L20:
+ 302 001e 38BD     		pop	{r3, r4, r5, pc}
+ 303              	.L25:
+ 304 0020 201D     		adds	r0, r4, #4
+ 305 0022 0421     		movs	r1, #4
+ 306 0024 FFF7FEFF 		bl	chEvtBroadcastFlagsI
+ 307 0028 2946     		mov	r1, r5
+ 308 002a 04F10C00 		add	r0, r4, #12
+ 309 002e FFF7FEFF 		bl	chIQPutI
+ 310 0032 0028     		cmp	r0, #0
+ 311 0034 F3DA     		bge	.L20
+ 312              	.L26:
+ 313 0036 201D     		adds	r0, r4, #4
+ 314 0038 8021     		movs	r1, #128
+ 315 003a BDE83840 		pop	{r3, r4, r5, lr}
+ 316 003e FFF7FEBF 		b	chEvtBroadcastFlagsI
+ 317              	.L24:
+ 318 0042 40F20000 		movw	r0, #:lower16:.LC5
+ 319 0046 40F20001 		movw	r1, #:lower16:.LC1
+ 320 004a C0F20000 		movt	r0, #:upper16:.LC5
+ 321 004e C0F20001 		movt	r1, #:upper16:.LC1
+ 322 0052 D822     		movs	r2, #216
+ 323 0054 FFF7FEFF 		bl	chDbgPanic3
+ 324 0058 D8E7     		b	.L21
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s 			page 7
+
+
+ 325              		.size	sdIncomingDataI, .-sdIncomingDataI
+ 326 005a 00BFAFF3 		.section	.text.sdRequestDataI,"ax",%progbits
+ 326      0080
+ 327              		.align	2
+ 328              		.p2align 4,,15
+ 329              		.global	sdRequestDataI
+ 330              		.thumb
+ 331              		.thumb_func
+ 332              		.type	sdRequestDataI, %function
+ 333              	sdRequestDataI:
+ 334              		@ args = 0, pretend = 0, frame = 0
+ 335              		@ frame_needed = 0, uses_anonymous_args = 0
+ 336 0000 38B5     		push	{r3, r4, r5, lr}
+ 337 0002 0446     		mov	r4, r0
+ 338 0004 FFF7FEFF 		bl	chDbgCheckClassI
+ 339 0008 6CB1     		cbz	r4, .L30
+ 340              	.L28:
+ 341 000a 04F13000 		add	r0, r4, #48
+ 342 000e FFF7FEFF 		bl	chOQGetI
+ 343 0012 051E     		subs	r5, r0, #0
+ 344 0014 01DB     		blt	.L31
+ 345 0016 2846     		mov	r0, r5
+ 346 0018 38BD     		pop	{r3, r4, r5, pc}
+ 347              	.L31:
+ 348 001a 201D     		adds	r0, r4, #4
+ 349 001c 0821     		movs	r1, #8
+ 350 001e FFF7FEFF 		bl	chEvtBroadcastFlagsI
+ 351 0022 2846     		mov	r0, r5
+ 352 0024 38BD     		pop	{r3, r4, r5, pc}
+ 353              	.L30:
+ 354 0026 40F20000 		movw	r0, #:lower16:.LC6
+ 355 002a 40F20001 		movw	r1, #:lower16:.LC1
+ 356 002e C0F20000 		movt	r0, #:upper16:.LC6
+ 357 0032 C0F20001 		movt	r1, #:upper16:.LC1
+ 358 0036 F322     		movs	r2, #243
+ 359 0038 FFF7FEFF 		bl	chDbgPanic3
+ 360 003c E5E7     		b	.L28
+ 361              		.size	sdRequestDataI, .-sdRequestDataI
+ 362 003e 00BF     		.section	.rodata.str1.4,"aMS",%progbits,1
+ 363              		.align	2
+ 364              	.LC0:
+ 365 0000 22736453 		.ascii	"\"sdStart\"()\000"
+ 365      74617274 
+ 365      22282900 
+ 366              	.LC1:
+ 367 000c 63686962 		.ascii	"chibios/os/hal/src/serial.c\000"
+ 367      696F732F 
+ 367      6F732F68 
+ 367      616C2F73 
+ 367      72632F73 
+ 368              	.LC2:
+ 369 0028 73645374 		.ascii	"sdStart(), #1\000"
+ 369      61727428 
+ 369      292C2023 
+ 369      3100
+ 370 0036 0000     		.space	2
+ 371              	.LC3:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s 			page 8
+
+
+ 372 0038 22736453 		.ascii	"\"sdStop\"()\000"
+ 372      746F7022 
+ 372      282900
+ 373 0043 00       		.space	1
+ 374              	.LC4:
+ 375 0044 73645374 		.ascii	"sdStop(), #1\000"
+ 375      6F702829 
+ 375      2C202331 
+ 375      00
+ 376 0051 000000   		.space	3
+ 377              	.LC5:
+ 378 0054 22736449 		.ascii	"\"sdIncomingDataI\"()\000"
+ 378      6E636F6D 
+ 378      696E6744 
+ 378      61746149 
+ 378      22282900 
+ 379              	.LC6:
+ 380 0068 22736452 		.ascii	"\"sdRequestDataI\"()\000"
+ 380      65717565 
+ 380      73744461 
+ 380      74614922 
+ 380      282900
+ 381 007b 00       		.section	.rodata.vmt,"a",%progbits
+ 382              		.align	2
+ 383              		.set	.LANCHOR0,. + 0
+ 384              		.type	vmt, %object
+ 385              		.size	vmt, 32
+ 386              	vmt:
+ 387 0000 00000000 		.word	write
+ 388 0004 00000000 		.word	read
+ 389 0008 00000000 		.word	put
+ 390 000c 00000000 		.word	get
+ 391 0010 00000000 		.word	putt
+ 392 0014 00000000 		.word	gett
+ 393 0018 00000000 		.word	writet
+ 394 001c 00000000 		.word	readt
+ 395              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 serial.c
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:17     .text.readt:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:22     .text.readt:00000000 readt
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:30     .text.read:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:35     .text.read:00000000 read
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:44     .text.writet:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:49     .text.writet:00000000 writet
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:57     .text.write:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:62     .text.write:00000000 write
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:71     .text.gett:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:76     .text.gett:00000000 gett
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:84     .text.get:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:89     .text.get:00000000 get
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:98     .text.putt:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:103    .text.putt:00000000 putt
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:111    .text.put:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:116    .text.put:00000000 put
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:125    .text.sdInit:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:131    .text.sdInit:00000000 sdInit
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:138    .text.sdObjectInit:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:144    .text.sdObjectInit:00000000 sdObjectInit
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:383    .rodata.vmt:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:174    .text.sdStart:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:180    .text.sdStart:00000000 sdStart
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:368    .rodata.str1.4:00000028 .LC2
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:364    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:366    .rodata.str1.4:0000000c .LC1
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:225    .text.sdStop:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:231    .text.sdStop:00000000 sdStop
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:374    .rodata.str1.4:00000044 .LC4
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:371    .rodata.str1.4:00000038 .LC3
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:279    .text.sdIncomingDataI:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:285    .text.sdIncomingDataI:00000000 sdIncomingDataI
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:377    .rodata.str1.4:00000054 .LC5
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:327    .text.sdRequestDataI:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:333    .text.sdRequestDataI:00000000 sdRequestDataI
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:379    .rodata.str1.4:00000068 .LC6
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:363    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:382    .rodata.vmt:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s:386    .rodata.vmt:00000000 vmt
+
+UNDEFINED SYMBOLS
+chIQReadTimeout
+chOQWriteTimeout
+chIQGetTimeout
+chOQPutTimeout
+sd_lld_init
+chIQInit
+chOQInit
+dbg_check_lock
+chDbgPanic
+sd_lld_start
+dbg_check_unlock
+chDbgPanic3
+sd_lld_stop
+chOQResetI
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc5jLEi6.s 			page 10
+
+
+chIQResetI
+chSchRescheduleS
+chDbgCheckClassI
+chIQPutI
+chEvtBroadcastFlagsI
+chOQGetI

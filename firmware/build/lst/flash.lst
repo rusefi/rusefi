@@ -1,0 +1,676 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"flash.c"
+  16              		.section	.text.flashSectorSize,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	flashSectorSize
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	flashSectorSize, %function
+  23              	flashSectorSize:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 0328     		cmp	r0, #3
+  28 0002 02D8     		bhi	.L8
+  29 0004 4FF48040 		mov	r0, #16384
+  30 0008 7047     		bx	lr
+  31              	.L8:
+  32 000a 0428     		cmp	r0, #4
+  33 000c 07D0     		beq	.L5
+  34 000e 0538     		subs	r0, r0, #5
+  35 0010 C0B2     		uxtb	r0, r0
+  36 0012 0628     		cmp	r0, #6
+  37 0014 94BF     		ite	ls
+  38 0016 4FF40030 		movls	r0, #131072
+  39 001a 0020     		movhi	r0, #0
+  40 001c 7047     		bx	lr
+  41              	.L5:
+  42 001e 4FF48030 		mov	r0, #65536
+  43 0022 7047     		bx	lr
+  44              		.size	flashSectorSize, .-flashSectorSize
+  45 0024 AFF30080 		.section	.text.flashSectorBegin,"ax",%progbits
+  45      AFF30080 
+  45      AFF30080 
+  46              		.align	2
+  47              		.p2align 4,,15
+  48              		.global	flashSectorBegin
+  49              		.thumb
+  50              		.thumb_func
+  51              		.type	flashSectorBegin, %function
+  52              	flashSectorBegin:
+  53              		@ args = 0, pretend = 0, frame = 0
+  54              		@ frame_needed = 0, uses_anonymous_args = 0
+  55              		@ link register save eliminated.
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s 			page 2
+
+
+  56 0000 0246     		mov	r2, r0
+  57 0002 4FF00060 		mov	r0, #134217728
+  58 0006 CAB1     		cbz	r2, .L10
+  59 0008 531E     		subs	r3, r2, #1
+  60 000a DBB2     		uxtb	r3, r3
+  61 000c 032B     		cmp	r3, #3
+  62 000e 11D9     		bls	.L11
+  63              	.L21:
+  64 0010 042B     		cmp	r3, #4
+  65 0012 08BF     		it	eq
+  66 0014 4FF48032 		moveq	r2, #65536
+  67 0018 06D0     		beq	.L12
+  68 001a 063A     		subs	r2, r2, #6
+  69 001c D2B2     		uxtb	r2, r2
+  70 001e 062A     		cmp	r2, #6
+  71 0020 94BF     		ite	ls
+  72 0022 4FF40032 		movls	r2, #131072
+  73 0026 0022     		movhi	r2, #0
+  74              	.L12:
+  75 0028 1044     		add	r0, r0, r2
+  76              	.L13:
+  77 002a 1A46     		mov	r2, r3
+  78 002c 531E     		subs	r3, r2, #1
+  79 002e DBB2     		uxtb	r3, r3
+  80 0030 032B     		cmp	r3, #3
+  81 0032 EDD8     		bhi	.L21
+  82              	.L11:
+  83 0034 00F58040 		add	r0, r0, #16384
+  84 0038 002B     		cmp	r3, #0
+  85 003a F6D1     		bne	.L13
+  86              	.L10:
+  87 003c 7047     		bx	lr
+  88              		.size	flashSectorBegin, .-flashSectorBegin
+  89 003e 00BF     		.section	.text.flashSectorEnd,"ax",%progbits
+  90              		.align	2
+  91              		.p2align 4,,15
+  92              		.global	flashSectorEnd
+  93              		.thumb
+  94              		.thumb_func
+  95              		.type	flashSectorEnd, %function
+  96              	flashSectorEnd:
+  97              		@ args = 0, pretend = 0, frame = 0
+  98              		@ frame_needed = 0, uses_anonymous_args = 0
+  99              		@ link register save eliminated.
+ 100 0000 0130     		adds	r0, r0, #1
+ 101 0002 C0B2     		uxtb	r0, r0
+ 102 0004 FFF7FEBF 		b	flashSectorBegin
+ 103              		.size	flashSectorEnd, .-flashSectorEnd
+ 104 0008 AFF30080 		.section	.text.flashSectorAt,"ax",%progbits
+ 104      AFF30080 
+ 105              		.align	2
+ 106              		.p2align 4,,15
+ 107              		.global	flashSectorAt
+ 108              		.thumb
+ 109              		.thumb_func
+ 110              		.type	flashSectorAt, %function
+ 111              	flashSectorAt:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s 			page 3
+
+
+ 112              		@ args = 0, pretend = 0, frame = 0
+ 113              		@ frame_needed = 0, uses_anonymous_args = 0
+ 114 0000 38B5     		push	{r3, r4, r5, lr}
+ 115 0002 0546     		mov	r5, r0
+ 116 0004 0024     		movs	r4, #0
+ 117 0006 00E0     		b	.L25
+ 118              	.L26:
+ 119 0008 0C46     		mov	r4, r1
+ 120              	.L25:
+ 121 000a 611C     		adds	r1, r4, #1
+ 122 000c C9B2     		uxtb	r1, r1
+ 123 000e 0846     		mov	r0, r1
+ 124 0010 FFF7FEFF 		bl	flashSectorBegin
+ 125 0014 8542     		cmp	r5, r0
+ 126 0016 F7D2     		bcs	.L26
+ 127 0018 2046     		mov	r0, r4
+ 128 001a 38BD     		pop	{r3, r4, r5, pc}
+ 129              		.size	flashSectorAt, .-flashSectorAt
+ 130 001c AFF30080 		.section	.text.flashSectorErase,"ax",%progbits
+ 131              		.align	2
+ 132              		.p2align 4,,15
+ 133              		.global	flashSectorErase
+ 134              		.thumb
+ 135              		.thumb_func
+ 136              		.type	flashSectorErase, %function
+ 137              	flashSectorErase:
+ 138              		@ args = 0, pretend = 0, frame = 0
+ 139              		@ frame_needed = 0, uses_anonymous_args = 0
+ 140 0000 4FF47053 		mov	r3, #15360
+ 141 0004 C4F20203 		movt	r3, 16386
+ 142 0008 70B5     		push	{r4, r5, r6, lr}
+ 143 000a 1A69     		ldr	r2, [r3, #16]
+ 144 000c 002A     		cmp	r2, #0
+ 145 000e 0646     		mov	r6, r0
+ 146 0010 C0F28D80 		blt	.L28
+ 147              	.L31:
+ 148 0014 4FF47051 		mov	r1, #15360
+ 149 0018 C4F20201 		movt	r1, 16386
+ 150              	.L29:
+ 151 001c CA68     		ldr	r2, [r1, #12]
+ 152 001e 4FF47053 		mov	r3, #15360
+ 153 0022 D403     		lsls	r4, r2, #15
+ 154 0024 C4F20203 		movt	r3, 16386
+ 155 0028 F8D4     		bmi	.L29
+ 156 002a 1A69     		ldr	r2, [r3, #16]
+ 157 002c 22F48072 		bic	r2, r2, #256
+ 158 0030 1A61     		str	r2, [r3, #16]
+ 159 0032 1A69     		ldr	r2, [r3, #16]
+ 160 0034 42F40072 		orr	r2, r2, #512
+ 161 0038 1A61     		str	r2, [r3, #16]
+ 162 003a 1A69     		ldr	r2, [r3, #16]
+ 163 003c 22F07802 		bic	r2, r2, #120
+ 164 0040 1A61     		str	r2, [r3, #16]
+ 165 0042 F007     		lsls	r0, r6, #31
+ 166 0044 42BF     		ittt	mi
+ 167 0046 1A69     		ldrmi	r2, [r3, #16]
+ 168 0048 42F00802 		orrmi	r2, r2, #8
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s 			page 4
+
+
+ 169 004c 1A61     		strmi	r2, [r3, #16]
+ 170 004e B107     		lsls	r1, r6, #30
+ 171 0050 41BF     		itttt	mi
+ 172 0052 4FF47053 		movmi	r3, #15360
+ 173 0056 C4F20203 		movtmi	r3, 16386
+ 174 005a 1A69     		ldrmi	r2, [r3, #16]
+ 175 005c 42F01002 		orrmi	r2, r2, #16
+ 176 0060 48BF     		it	mi
+ 177 0062 1A61     		strmi	r2, [r3, #16]
+ 178 0064 7207     		lsls	r2, r6, #29
+ 179 0066 41BF     		itttt	mi
+ 180 0068 4FF47053 		movmi	r3, #15360
+ 181 006c C4F20203 		movtmi	r3, 16386
+ 182 0070 1A69     		ldrmi	r2, [r3, #16]
+ 183 0072 42F02002 		orrmi	r2, r2, #32
+ 184 0076 48BF     		it	mi
+ 185 0078 1A61     		strmi	r2, [r3, #16]
+ 186 007a 3307     		lsls	r3, r6, #28
+ 187 007c 41BF     		itttt	mi
+ 188 007e 4FF47053 		movmi	r3, #15360
+ 189 0082 C4F20203 		movtmi	r3, 16386
+ 190 0086 1A69     		ldrmi	r2, [r3, #16]
+ 191 0088 42F04002 		orrmi	r2, r2, #64
+ 192 008c 48BF     		it	mi
+ 193 008e 1A61     		strmi	r2, [r3, #16]
+ 194 0090 4FF47053 		mov	r3, #15360
+ 195 0094 C4F20203 		movt	r3, 16386
+ 196 0098 1C46     		mov	r4, r3
+ 197 009a 1A69     		ldr	r2, [r3, #16]
+ 198 009c 42F00202 		orr	r2, r2, #2
+ 199 00a0 1A61     		str	r2, [r3, #16]
+ 200 00a2 1A69     		ldr	r2, [r3, #16]
+ 201 00a4 42F48032 		orr	r2, r2, #65536
+ 202 00a8 1A61     		str	r2, [r3, #16]
+ 203              	.L38:
+ 204 00aa E368     		ldr	r3, [r4, #12]
+ 205 00ac 4FF47051 		mov	r1, #15360
+ 206 00b0 13F48035 		ands	r5, r3, #65536
+ 207 00b4 C4F20201 		movt	r1, 16386
+ 208 00b8 F7D1     		bne	.L38
+ 209 00ba 0B69     		ldr	r3, [r1, #16]
+ 210 00bc 23F00203 		bic	r3, r3, #2
+ 211 00c0 0B61     		str	r3, [r1, #16]
+ 212 00c2 0B69     		ldr	r3, [r1, #16]
+ 213 00c4 43F00043 		orr	r3, r3, #-2147483648
+ 214 00c8 0B61     		str	r3, [r1, #16]
+ 215 00ca 3046     		mov	r0, r6
+ 216 00cc FFF7FEFF 		bl	flashSectorBegin
+ 217 00d0 032E     		cmp	r6, #3
+ 218 00d2 15D9     		bls	.L46
+ 219 00d4 042E     		cmp	r6, #4
+ 220 00d6 27D0     		beq	.L47
+ 221 00d8 053E     		subs	r6, r6, #5
+ 222 00da F6B2     		uxtb	r6, r6
+ 223 00dc 062E     		cmp	r6, #6
+ 224 00de 98BF     		it	ls
+ 225 00e0 4FF40032 		movls	r2, #131072
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s 			page 5
+
+
+ 226 00e4 06D9     		bls	.L42
+ 227              	.L67:
+ 228 00e6 0020     		movs	r0, #0
+ 229 00e8 70BD     		pop	{r4, r5, r6, pc}
+ 230              	.L69:
+ 231 00ea 043A     		subs	r2, r2, #4
+ 232 00ec 032A     		cmp	r2, #3
+ 233 00ee 00F10400 		add	r0, r0, #4
+ 234 00f2 08D9     		bls	.L68
+ 235              	.L42:
+ 236 00f4 0168     		ldr	r1, [r0]
+ 237 00f6 0131     		adds	r1, r1, #1
+ 238 00f8 F7D0     		beq	.L69
+ 239              	.L53:
+ 240 00fa 6FF00A00 		mvn	r0, #10
+ 241 00fe 70BD     		pop	{r4, r5, r6, pc}
+ 242              	.L46:
+ 243 0100 4FF48042 		mov	r2, #16384
+ 244 0104 F6E7     		b	.L42
+ 245              	.L68:
+ 246 0106 002A     		cmp	r2, #0
+ 247 0108 EDD0     		beq	.L67
+ 248 010a 0178     		ldrb	r1, [r0]	@ zero_extendqisi2
+ 249 010c FF29     		cmp	r1, #255
+ 250 010e F4D1     		bne	.L53
+ 251 0110 0244     		add	r2, r2, r0
+ 252 0112 013A     		subs	r2, r2, #1
+ 253 0114 0346     		mov	r3, r0
+ 254 0116 03E0     		b	.L43
+ 255              	.L44:
+ 256 0118 13F8011F 		ldrb	r1, [r3, #1]!	@ zero_extendqisi2
+ 257 011c FF29     		cmp	r1, #255
+ 258 011e ECD1     		bne	.L53
+ 259              	.L43:
+ 260 0120 9342     		cmp	r3, r2
+ 261 0122 F9D1     		bne	.L44
+ 262 0124 0020     		movs	r0, #0
+ 263 0126 70BD     		pop	{r4, r5, r6, pc}
+ 264              	.L47:
+ 265 0128 4FF48032 		mov	r2, #65536
+ 266 012c E2E7     		b	.L42
+ 267              	.L28:
+ 268 012e 40F22311 		movw	r1, #291
+ 269 0132 48F6AB12 		movw	r2, #35243
+ 270 0136 C4F26751 		movt	r1, 17767
+ 271 013a CCF6EF52 		movt	r2, 52719
+ 272 013e 5960     		str	r1, [r3, #4]
+ 273 0140 5A60     		str	r2, [r3, #4]
+ 274 0142 1B69     		ldr	r3, [r3, #16]
+ 275 0144 002B     		cmp	r3, #0
+ 276 0146 BFF665AF 		bge	.L31
+ 277 014a 4FF0FF30 		mov	r0, #-1
+ 278 014e 70BD     		pop	{r4, r5, r6, pc}
+ 279              		.size	flashSectorErase, .-flashSectorErase
+ 280              		.section	.text.flashErase,"ax",%progbits
+ 281              		.align	2
+ 282              		.p2align 4,,15
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s 			page 6
+
+
+ 283              		.global	flashErase
+ 284              		.thumb
+ 285              		.thumb_func
+ 286              		.type	flashErase, %function
+ 287              	flashErase:
+ 288              		@ args = 0, pretend = 0, frame = 0
+ 289              		@ frame_needed = 0, uses_anonymous_args = 0
+ 290 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 291 0002 8C46     		mov	ip, r1
+ 292 0004 0746     		mov	r7, r0
+ 293 0006 39B3     		cbz	r1, .L77
+ 294              	.L78:
+ 295 0008 0025     		movs	r5, #0
+ 296 000a 00E0     		b	.L74
+ 297              	.L86:
+ 298 000c 2546     		mov	r5, r4
+ 299              	.L74:
+ 300 000e 6C1C     		adds	r4, r5, #1
+ 301 0010 E4B2     		uxtb	r4, r4
+ 302 0012 2046     		mov	r0, r4
+ 303 0014 FFF7FEFF 		bl	flashSectorBegin
+ 304 0018 B842     		cmp	r0, r7
+ 305 001a 0646     		mov	r6, r0
+ 306 001c F6D9     		bls	.L86
+ 307 001e 2846     		mov	r0, r5
+ 308 0020 FFF7FEFF 		bl	flashSectorErase
+ 309 0024 B8B9     		cbnz	r0, .L72
+ 310 0026 032D     		cmp	r5, #3
+ 311 0028 98BF     		it	ls
+ 312 002a 4FF48043 		movls	r3, #16384
+ 313 002e 0BD9     		bls	.L75
+ 314 0030 042D     		cmp	r5, #4
+ 315 0032 08BF     		it	eq
+ 316 0034 4FF48033 		moveq	r3, #65536
+ 317 0038 06D0     		beq	.L75
+ 318 003a 6B1F     		subs	r3, r5, #5
+ 319 003c DBB2     		uxtb	r3, r3
+ 320 003e 062B     		cmp	r3, #6
+ 321 0040 94BF     		ite	ls
+ 322 0042 4FF40033 		movls	r3, #131072
+ 323 0046 0023     		movhi	r3, #0
+ 324              	.L75:
+ 325 0048 6345     		cmp	r3, ip
+ 326 004a 05D2     		bcs	.L77
+ 327 004c BCEB030C 		subs	ip, ip, r3
+ 328 0050 02D0     		beq	.L77
+ 329 0052 3746     		mov	r7, r6
+ 330 0054 D8E7     		b	.L78
+ 331              	.L72:
+ 332 0056 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 333              	.L77:
+ 334 0058 0020     		movs	r0, #0
+ 335 005a F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 336              		.size	flashErase, .-flashErase
+ 337 005c AFF30080 		.section	.text.flashIsErased,"ax",%progbits
+ 338              		.align	2
+ 339              		.p2align 4,,15
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s 			page 7
+
+
+ 340              		.global	flashIsErased
+ 341              		.thumb
+ 342              		.thumb_func
+ 343              		.type	flashIsErased, %function
+ 344              	flashIsErased:
+ 345              		@ args = 0, pretend = 0, frame = 0
+ 346              		@ frame_needed = 0, uses_anonymous_args = 0
+ 347              		@ link register save eliminated.
+ 348 0000 04E0     		b	.L99
+ 349              	.L91:
+ 350 0002 0368     		ldr	r3, [r0]
+ 351 0004 0133     		adds	r3, r3, #1
+ 352 0006 12D1     		bne	.L98
+ 353 0008 0439     		subs	r1, r1, #4
+ 354 000a 0430     		adds	r0, r0, #4
+ 355              	.L99:
+ 356 000c 0329     		cmp	r1, #3
+ 357 000e F8D8     		bhi	.L91
+ 358 0010 59B1     		cbz	r1, .L96
+ 359 0012 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 360 0014 FF2B     		cmp	r3, #255
+ 361 0016 0AD1     		bne	.L98
+ 362 0018 0144     		add	r1, r1, r0
+ 363 001a 0139     		subs	r1, r1, #1
+ 364 001c 03E0     		b	.L92
+ 365              	.L93:
+ 366 001e 10F8013F 		ldrb	r3, [r0, #1]!	@ zero_extendqisi2
+ 367 0022 FF2B     		cmp	r3, #255
+ 368 0024 03D1     		bne	.L98
+ 369              	.L92:
+ 370 0026 8842     		cmp	r0, r1
+ 371 0028 F9D1     		bne	.L93
+ 372              	.L96:
+ 373 002a 0120     		movs	r0, #1
+ 374 002c 7047     		bx	lr
+ 375              	.L98:
+ 376 002e 0020     		movs	r0, #0
+ 377 0030 7047     		bx	lr
+ 378              		.size	flashIsErased, .-flashIsErased
+ 379 0032 00BFAFF3 		.section	.text.flashCompare,"ax",%progbits
+ 379      0080AFF3 
+ 379      0080AFF3 
+ 379      0080
+ 380              		.align	2
+ 381              		.p2align 4,,15
+ 382              		.global	flashCompare
+ 383              		.thumb
+ 384              		.thumb_func
+ 385              		.type	flashCompare, %function
+ 386              	flashCompare:
+ 387              		@ args = 0, pretend = 0, frame = 0
+ 388              		@ frame_needed = 0, uses_anonymous_args = 0
+ 389              		@ link register save eliminated.
+ 390 0000 032A     		cmp	r2, #3
+ 391 0002 10B4     		push	{r4}
+ 392 0004 11D9     		bls	.L101
+ 393 0006 0468     		ldr	r4, [r0]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s 			page 8
+
+
+ 394 0008 0B68     		ldr	r3, [r1]
+ 395 000a 9C42     		cmp	r4, r3
+ 396 000c 22D1     		bne	.L111
+ 397 000e 0B1D     		adds	r3, r1, #4
+ 398 0010 03E0     		b	.L103
+ 399              	.L104:
+ 400 0012 0968     		ldr	r1, [r1]
+ 401 0014 0468     		ldr	r4, [r0]
+ 402 0016 8C42     		cmp	r4, r1
+ 403 0018 1CD1     		bne	.L111
+ 404              	.L103:
+ 405 001a 043A     		subs	r2, r2, #4
+ 406 001c 032A     		cmp	r2, #3
+ 407 001e 1946     		mov	r1, r3
+ 408 0020 00F10400 		add	r0, r0, #4
+ 409 0024 03F10403 		add	r3, r3, #4
+ 410 0028 F3D8     		bhi	.L104
+ 411              	.L101:
+ 412 002a 7AB1     		cbz	r2, .L109
+ 413 002c 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 414 002e 0C78     		ldrb	r4, [r1]	@ zero_extendqisi2
+ 415 0030 9C42     		cmp	r4, r3
+ 416 0032 0FD1     		bne	.L111
+ 417 0034 013A     		subs	r2, r2, #1
+ 418 0036 0A44     		add	r2, r2, r1
+ 419 0038 04E0     		b	.L105
+ 420              	.L106:
+ 421 003a 0478     		ldrb	r4, [r0]	@ zero_extendqisi2
+ 422 003c 11F8013F 		ldrb	r3, [r1, #1]!	@ zero_extendqisi2
+ 423 0040 9C42     		cmp	r4, r3
+ 424 0042 07D1     		bne	.L111
+ 425              	.L105:
+ 426 0044 9142     		cmp	r1, r2
+ 427 0046 00F10100 		add	r0, r0, #1
+ 428 004a F6D1     		bne	.L106
+ 429              	.L109:
+ 430 004c 0120     		movs	r0, #1
+ 431 004e 5DF8044B 		ldr	r4, [sp], #4
+ 432 0052 7047     		bx	lr
+ 433              	.L111:
+ 434 0054 0020     		movs	r0, #0
+ 435 0056 5DF8044B 		ldr	r4, [sp], #4
+ 436 005a 7047     		bx	lr
+ 437              		.size	flashCompare, .-flashCompare
+ 438 005c AFF30080 		.section	.text.flashRead,"ax",%progbits
+ 439              		.align	2
+ 440              		.p2align 4,,15
+ 441              		.global	flashRead
+ 442              		.thumb
+ 443              		.thumb_func
+ 444              		.type	flashRead, %function
+ 445              	flashRead:
+ 446              		@ args = 0, pretend = 0, frame = 0
+ 447              		@ frame_needed = 0, uses_anonymous_args = 0
+ 448 0000 08B5     		push	{r3, lr}
+ 449 0002 0346     		mov	r3, r0
+ 450 0004 0846     		mov	r0, r1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s 			page 9
+
+
+ 451 0006 1946     		mov	r1, r3
+ 452 0008 FFF7FEFF 		bl	memcpy
+ 453 000c 0020     		movs	r0, #0
+ 454 000e 08BD     		pop	{r3, pc}
+ 455              		.size	flashRead, .-flashRead
+ 456              		.section	.text.flashWrite,"ax",%progbits
+ 457              		.align	2
+ 458              		.p2align 4,,15
+ 459              		.global	flashWrite
+ 460              		.thumb
+ 461              		.thumb_func
+ 462              		.type	flashWrite, %function
+ 463              	flashWrite:
+ 464              		@ args = 0, pretend = 0, frame = 8
+ 465              		@ frame_needed = 0, uses_anonymous_args = 0
+ 466 0000 4FF47053 		mov	r3, #15360
+ 467 0004 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+ 468 0008 C4F20203 		movt	r3, 16386
+ 469 000c 0546     		mov	r5, r0
+ 470 000e 1869     		ldr	r0, [r3, #16]
+ 471 0010 0028     		cmp	r0, #0
+ 472 0012 83B0     		sub	sp, sp, #12
+ 473 0014 0F46     		mov	r7, r1
+ 474 0016 1646     		mov	r6, r2
+ 475 0018 C0F29780 		blt	.L114
+ 476              	.L117:
+ 477 001c 4FF47052 		mov	r2, #15360
+ 478 0020 C4F20202 		movt	r2, 16386
+ 479              	.L115:
+ 480 0024 D368     		ldr	r3, [r2, #12]
+ 481 0026 4FF47054 		mov	r4, #15360
+ 482 002a D803     		lsls	r0, r3, #15
+ 483 002c C4F20204 		movt	r4, 16386
+ 484 0030 F8D4     		bmi	.L115
+ 485 0032 2369     		ldr	r3, [r4, #16]
+ 486 0034 23F48073 		bic	r3, r3, #256
+ 487 0038 2361     		str	r3, [r4, #16]
+ 488 003a 2369     		ldr	r3, [r4, #16]
+ 489 003c 43F40073 		orr	r3, r3, #512
+ 490 0040 2361     		str	r3, [r4, #16]
+ 491 0042 15F00303 		ands	r3, r5, #3
+ 492 0046 38D1     		bne	.L139
+ 493              	.L119:
+ 494 0048 032E     		cmp	r6, #3
+ 495 004a 40F28F80 		bls	.L131
+ 496 004e A6F1040C 		sub	ip, r6, #4
+ 497 0052 05F10408 		add	r8, r5, #4
+ 498 0056 2846     		mov	r0, r5
+ 499 0058 4FEA9C0C 		lsr	ip, ip, #2
+ 500 005c 4FF47055 		mov	r5, #15360
+ 501 0060 08EB8C08 		add	r8, r8, ip, lsl #2
+ 502 0064 391A     		subs	r1, r7, r0
+ 503 0066 C4F20205 		movt	r5, 16386
+ 504              	.L126:
+ 505 006a 2A69     		ldr	r2, [r5, #16]
+ 506 006c 0B58     		ldr	r3, [r1, r0]
+ 507 006e 42F00102 		orr	r2, r2, #1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s 			page 10
+
+
+ 508 0072 2A61     		str	r2, [r5, #16]
+ 509 0074 40F8043B 		str	r3, [r0], #4
+ 510              	.L124:
+ 511 0078 EC68     		ldr	r4, [r5, #12]
+ 512 007a 4FF47053 		mov	r3, #15360
+ 513 007e E203     		lsls	r2, r4, #15
+ 514 0080 C4F20203 		movt	r3, 16386
+ 515 0084 F8D4     		bmi	.L124
+ 516 0086 1C69     		ldr	r4, [r3, #16]
+ 517 0088 4045     		cmp	r0, r8
+ 518 008a 24F00104 		bic	r4, r4, #1
+ 519 008e 1C61     		str	r4, [r3, #16]
+ 520 0090 EBD1     		bne	.L126
+ 521 0092 0CF1010C 		add	ip, ip, #1
+ 522 0096 07EB8C07 		add	r7, r7, ip, lsl #2
+ 523 009a 06F00306 		and	r6, r6, #3
+ 524              	.L122:
+ 525 009e 002E     		cmp	r6, #0
+ 526 00a0 33D1     		bne	.L140
+ 527              	.L127:
+ 528 00a2 4FF47053 		mov	r3, #15360
+ 529 00a6 C4F20203 		movt	r3, 16386
+ 530 00aa 0020     		movs	r0, #0
+ 531 00ac 1A69     		ldr	r2, [r3, #16]
+ 532 00ae 42F00042 		orr	r2, r2, #-2147483648
+ 533 00b2 1A61     		str	r2, [r3, #16]
+ 534              	.L116:
+ 535 00b4 03B0     		add	sp, sp, #12
+ 536              		@ sp needed
+ 537 00b6 BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ 538              	.L139:
+ 539 00ba C3EB0509 		rsb	r9, r3, r5
+ 540 00be 02A8     		add	r0, sp, #8
+ 541 00c0 D9F80020 		ldr	r2, [r9]
+ 542 00c4 C3F10408 		rsb	r8, r3, #4
+ 543 00c8 40F8042D 		str	r2, [r0, #-4]!
+ 544 00cc B045     		cmp	r8, r6
+ 545 00ce 28BF     		it	cs
+ 546 00d0 B046     		movcs	r8, r6
+ 547 00d2 1844     		add	r0, r0, r3
+ 548 00d4 4246     		mov	r2, r8
+ 549 00d6 3946     		mov	r1, r7
+ 550 00d8 FFF7FEFF 		bl	memcpy
+ 551 00dc 2269     		ldr	r2, [r4, #16]
+ 552 00de 019B     		ldr	r3, [sp, #4]
+ 553 00e0 42F00102 		orr	r2, r2, #1
+ 554 00e4 2261     		str	r2, [r4, #16]
+ 555 00e6 C9F80030 		str	r3, [r9]
+ 556              	.L121:
+ 557 00ea E168     		ldr	r1, [r4, #12]
+ 558 00ec 4FF47053 		mov	r3, #15360
+ 559 00f0 C903     		lsls	r1, r1, #15
+ 560 00f2 C4F20203 		movt	r3, 16386
+ 561 00f6 F8D4     		bmi	.L121
+ 562 00f8 1A69     		ldr	r2, [r3, #16]
+ 563 00fa 22F00102 		bic	r2, r2, #1
+ 564 00fe 4544     		add	r5, r5, r8
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s 			page 11
+
+
+ 565 0100 4744     		add	r7, r7, r8
+ 566 0102 C8EB0606 		rsb	r6, r8, r6
+ 567 0106 1A61     		str	r2, [r3, #16]
+ 568 0108 9EE7     		b	.L119
+ 569              	.L140:
+ 570 010a D8F80030 		ldr	r3, [r8]
+ 571 010e 02A8     		add	r0, sp, #8
+ 572 0110 3946     		mov	r1, r7
+ 573 0112 40F8043D 		str	r3, [r0, #-4]!
+ 574 0116 3246     		mov	r2, r6
+ 575 0118 FFF7FEFF 		bl	memcpy
+ 576 011c 4FF47051 		mov	r1, #15360
+ 577 0120 C4F20201 		movt	r1, 16386
+ 578 0124 019B     		ldr	r3, [sp, #4]
+ 579 0126 0A69     		ldr	r2, [r1, #16]
+ 580 0128 42F00102 		orr	r2, r2, #1
+ 581 012c 0A61     		str	r2, [r1, #16]
+ 582 012e C8F80030 		str	r3, [r8]
+ 583              	.L129:
+ 584 0132 CA68     		ldr	r2, [r1, #12]
+ 585 0134 4FF47053 		mov	r3, #15360
+ 586 0138 D503     		lsls	r5, r2, #15
+ 587 013a C4F20203 		movt	r3, 16386
+ 588 013e F8D4     		bmi	.L129
+ 589 0140 1A69     		ldr	r2, [r3, #16]
+ 590 0142 22F00102 		bic	r2, r2, #1
+ 591 0146 1A61     		str	r2, [r3, #16]
+ 592 0148 ABE7     		b	.L127
+ 593              	.L114:
+ 594 014a 40F22311 		movw	r1, #291
+ 595 014e 48F6AB12 		movw	r2, #35243
+ 596 0152 C4F26751 		movt	r1, 17767
+ 597 0156 CCF6EF52 		movt	r2, 52719
+ 598 015a 5960     		str	r1, [r3, #4]
+ 599 015c 5A60     		str	r2, [r3, #4]
+ 600 015e 1B69     		ldr	r3, [r3, #16]
+ 601 0160 002B     		cmp	r3, #0
+ 602 0162 BFF65BAF 		bge	.L117
+ 603 0166 4FF0FF30 		mov	r0, #-1
+ 604 016a A3E7     		b	.L116
+ 605              	.L131:
+ 606 016c A846     		mov	r8, r5
+ 607 016e 96E7     		b	.L122
+ 608              		.size	flashWrite, .-flashWrite
+ 609              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s 			page 12
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 flash.c
+C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s:17     .text.flashSectorSize:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s:23     .text.flashSectorSize:00000000 flashSectorSize
+C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s:46     .text.flashSectorBegin:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s:52     .text.flashSectorBegin:00000000 flashSectorBegin
+C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s:90     .text.flashSectorEnd:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s:96     .text.flashSectorEnd:00000000 flashSectorEnd
+C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s:105    .text.flashSectorAt:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s:111    .text.flashSectorAt:00000000 flashSectorAt
+C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s:131    .text.flashSectorErase:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s:137    .text.flashSectorErase:00000000 flashSectorErase
+C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s:281    .text.flashErase:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s:287    .text.flashErase:00000000 flashErase
+C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s:338    .text.flashIsErased:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s:344    .text.flashIsErased:00000000 flashIsErased
+C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s:380    .text.flashCompare:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s:386    .text.flashCompare:00000000 flashCompare
+C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s:439    .text.flashRead:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s:445    .text.flashRead:00000000 flashRead
+C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s:457    .text.flashWrite:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccL6OwwM.s:463    .text.flashWrite:00000000 flashWrite
+
+UNDEFINED SYMBOLS
+memcpy

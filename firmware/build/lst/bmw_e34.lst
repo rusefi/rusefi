@@ -1,0 +1,249 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccC7JHUl.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"bmw_e34.cpp"
+  16              		.section	.text._Z9setBmwE34v,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_Z9setBmwE34v
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_Z9setBmwE34v, %function
+  23              	_Z9setBmwE34v:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+  27 0004 40F20005 		movw	r5, #:lower16:engineConfiguration
+  28 0008 C0F20005 		movt	r5, #:upper16:engineConfiguration
+  29 000c 2DED028B 		fstmfdd	sp!, {d8}
+  30 0010 2868     		ldr	r0, [r5]
+  31 0012 90F8E535 		ldrb	r3, [r0, #1509]	@ zero_extendqisi2
+  32 0016 43F67157 		movw	r7, #15729
+  33 001a 40F20006 		movw	r6, #:lower16:boardConfiguration
+  34 001e C0F20006 		movt	r6, #:upper16:boardConfiguration
+  35 0022 4FF0020A 		mov	r10, #2
+  36 0026 0422     		movs	r2, #4
+  37 0028 43F06003 		orr	r3, r3, #96
+  38 002c 0624     		movs	r4, #6
+  39 002e C4F23A07 		movt	r7, 16442
+  40 0032 4FF4E171 		mov	r1, #450
+  41 0036 85B0     		sub	sp, sp, #20
+  42 0038 C0F8E815 		str	r1, [r0, #1512]
+  43 003c C0F89071 		str	r7, [r0, #400]	@ float
+  44 0040 C0F89821 		str	r2, [r0, #408]
+  45 0044 80F8E535 		strb	r3, [r0, #1509]
+  46 0048 C0F89441 		str	r4, [r0, #404]
+  47 004c C0F8B0A1 		str	r10, [r0, #432]
+  48 0050 C0F8BCA1 		str	r10, [r0, #444]
+  49 0054 0121     		movs	r1, #1
+  50 0056 FFF7FEFF 		bl	_Z16setOperationModeP22engine_configuration_s16operation_mode_e
+  51 005a 4FF0000B 		mov	fp, #0
+  52 005e 2B68     		ldr	r3, [r5]
+  53 0060 3268     		ldr	r2, [r6]
+  54 0062 43F2333C 		movw	ip, #13107
+  55 0066 4FF4004E 		mov	lr, #32768
+  56 006a 4FF00008 		mov	r8, #0
+  57 006e 4FF00109 		mov	r9, #1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccC7JHUl.s 			page 2
+
+
+  58 0072 C3F6937C 		movt	ip, 16275
+  59 0076 C4F23B4E 		movt	lr, 17467
+  60 007a 41F65831 		movw	r1, #7000
+  61 007e C4F2A82B 		movt	fp, 17064
+  62 0082 1E20     		movs	r0, #30
+  63 0084 4FF46147 		mov	r7, #57600
+  64 0088 C3F80CC0 		str	ip, [r3, #12]	@ float
+  65 008c C3F808E0 		str	lr, [r3, #8]	@ float
+  66 0090 C3F8CCB1 		str	fp, [r3, #460]	@ float
+  67 0094 C3F82002 		str	r0, [r3, #544]
+  68 0098 C3F81882 		str	r8, [r3, #536]
+  69 009c C3F82492 		str	r9, [r3, #548]
+  70 00a0 0320     		movs	r0, #3
+  71 00a2 C2F84C71 		str	r7, [r2, #332]
+  72 00a6 C3F8A411 		str	r1, [r3, #420]
+  73 00aa FFF7FEFF 		bl	_Z12setAlgorithm18engine_load_mode_e
+  74 00ae 3268     		ldr	r2, [r6]
+  75 00b0 2B68     		ldr	r3, [r5]
+  76 00b2 C2F81083 		str	r8, [r2, #784]
+  77 00b6 93F8E415 		ldrb	r1, [r3, #1508]	@ zero_extendqisi2
+  78 00ba 93F8D825 		ldrb	r2, [r3, #1496]	@ zero_extendqisi2
+  79 00be 01F0FB01 		and	r1, r1, #251
+  80 00c2 68F34512 		bfi	r2, r8, #5, #1
+  81 00c6 41F00301 		orr	r1, r1, #3
+  82 00ca 0020     		movs	r0, #0
+  83 00cc 83F8E415 		strb	r1, [r3, #1508]
+  84 00d0 83F8D825 		strb	r2, [r3, #1496]
+  85 00d4 C4F24000 		movt	r0, 16448
+  86 00d8 FFF7FEFF 		bl	_Z16setConstantDwellf
+  87 00dc 2B68     		ldr	r3, [r5]
+  88 00de 3268     		ldr	r2, [r6]
+  89 00e0 93F8D875 		ldrb	r7, [r3, #1496]	@ zero_extendqisi2
+  90 00e4 C3F87046 		str	r4, [r3, #1648]
+  91 00e8 0E20     		movs	r0, #14
+  92 00ea C3F8F405 		str	r0, [r3, #1524]
+  93 00ee 4FF41671 		mov	r1, #600
+  94 00f2 47F01007 		orr	r7, r7, #16
+  95 00f6 0320     		movs	r0, #3
+  96 00f8 48F65C7C 		movw	ip, #36700
+  97 00fc 48F65C7E 		movw	lr, #36700
+  98 0100 4FF0000B 		mov	fp, #0
+  99 0104 F1EE0C7A 		fconsts	s15, #28
+ 100 0108 A3F86010 		strh	r1, [r3, #96]	@ movhi
+ 101 010c 83F8D875 		strb	r7, [r3, #1496]
+ 102 0110 C3F80C02 		str	r0, [r3, #524]
+ 103 0114 5027     		movs	r7, #80
+ 104 0116 C3F6C27C 		movt	ip, 16322
+ 105 011a C4F2AA0E 		movt	lr, 16554
+ 106 011e 0521     		movs	r1, #5
+ 107 0120 C4F2C00B 		movt	fp, 16576
+ 108 0124 0F24     		movs	r4, #15
+ 109 0126 0020     		movs	r0, #0
+ 110 0128 C3ED177A 		fsts	s15, [r3, #92]
+ 111 012c C3F8ACA1 		str	r10, [r3, #428]
+ 112 0130 C3F868B0 		str	fp, [r3, #104]	@ float
+ 113 0134 C3F8D0C1 		str	ip, [r3, #464]	@ float
+ 114 0138 C3F8D4E1 		str	lr, [r3, #468]	@ float
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccC7JHUl.s 			page 3
+
+
+ 115 013c C3F8D841 		str	r4, [r3, #472]
+ 116 0140 C4F2C810 		movt	r0, 16840
+ 117 0144 C2F82811 		str	r1, [r2, #296]
+ 118 0148 C2F82C71 		str	r7, [r2, #300]
+ 119 014c FFF7FEFF 		bl	_Z19setWholeTimingTablef
+ 120 0150 3368     		ldr	r3, [r6]
+ 121 0152 2C68     		ldr	r4, [r5]
+ 122 0154 93F88021 		ldrb	r2, [r3, #384]	@ zero_extendqisi2
+ 123 0158 C4F8C092 		str	r9, [r4, #704]
+ 124 015c 1821     		movs	r1, #24
+ 125 015e C4F89012 		str	r1, [r4, #656]
+ 126 0162 4FF0420C 		mov	ip, #66
+ 127 0166 4FF0430E 		mov	lr, #67
+ 128 016a 4420     		movs	r0, #68
+ 129 016c 4521     		movs	r1, #69
+ 130 016e C4F894C2 		str	ip, [r4, #660]
+ 131 0172 C4F898E2 		str	lr, [r4, #664]
+ 132 0176 C4F89C02 		str	r0, [r4, #668]
+ 133 017a C4F8A012 		str	r1, [r4, #672]
+ 134 017e 4FF0460C 		mov	ip, #70
+ 135 0182 4FF0150E 		mov	lr, #21
+ 136 0186 1620     		movs	r0, #22
+ 137 0188 1721     		movs	r1, #23
+ 138 018a 4FF0000B 		mov	fp, #0
+ 139 018e 02F0FD02 		and	r2, r2, #253
+ 140 0192 C4F8A4C2 		str	ip, [r4, #676]
+ 141 0196 C4F8C4E2 		str	lr, [r4, #708]
+ 142 019a C4F8CC02 		str	r0, [r4, #716]
+ 143 019e C4F8D412 		str	r1, [r4, #724]
+ 144 01a2 4FF0330C 		mov	ip, #51
+ 145 01a6 4FF0340E 		mov	lr, #52
+ 146 01aa 68F38202 		bfi	r2, r8, #2, #1
+ 147 01ae C4F2482B 		movt	fp, 16968
+ 148 01b2 2E20     		movs	r0, #46
+ 149 01b4 4FF49671 		mov	r1, #300
+ 150 01b8 C4F8F492 		str	r9, [r4, #756]
+ 151 01bc C4F8F872 		str	r7, [r4, #760]
+ 152 01c0 C4F8C874 		str	r7, [r4, #1224]
+ 153 01c4 C3F81CC3 		str	ip, [r3, #796]
+ 154 01c8 C3F818E0 		str	lr, [r3, #24]
+ 155 01cc C3F814B0 		str	fp, [r3, #20]	@ float
+ 156 01d0 C3F82093 		str	r9, [r3, #800]
+ 157 01d4 C3F80490 		str	r9, [r3, #4]
+ 158 01d8 C3F84471 		str	r7, [r3, #324]
+ 159 01dc C3F8C081 		str	r8, [r3, #448]
+ 160 01e0 1860     		str	r0, [r3]
+ 161 01e2 9960     		str	r1, [r3, #8]
+ 162 01e4 83F88021 		strb	r2, [r3, #384]
+ 163 01e8 94F8D835 		ldrb	r3, [r4, #1496]	@ zero_extendqisi2
+ 164 01ec C4F8F8A0 		str	r10, [r4, #248]
+ 165 01f0 9FED278A 		flds	s16, .L2
+ 166 01f4 43F08203 		orr	r3, r3, #130
+ 167 01f8 4FF4A048 		mov	r8, #20480
+ 168 01fc 4FF0000B 		mov	fp, #0
+ 169 0200 4FF4004A 		mov	r10, #32768
+ 170 0204 84F8D835 		strb	r3, [r4, #1496]
+ 171 0208 C4F21168 		movt	r8, 17937
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccC7JHUl.s 			page 4
+
+
+ 172 020c C4F2A02B 		movt	fp, 17056
+ 173 0210 C4F2A73A 		movt	r10, 17319
+ 174 0214 C822     		movs	r2, #200
+ 175 0216 0021     		movs	r1, #0
+ 176 0218 0023     		movs	r3, #0
+ 177 021a C4F84023 		str	r2, [r4, #832]
+ 178 021e 04F58070 		add	r0, r4, #256
+ 179 0222 4246     		mov	r2, r8	@ float
+ 180 0224 8DED008A 		fsts	s16, [sp]
+ 181 0228 CDF804B0 		str	fp, [sp, #4]	@ float
+ 182 022c CDF808A0 		str	r10, [sp, #8]	@ float
+ 183 0230 CCF22011 		movt	r1, 49440
+ 184 0234 C4F2A013 		movt	r3, 16800
+ 185 0238 FFF7FEFF 		bl	_Z26setThermistorConfigurationP14ThermistorConfffffff
+ 186 023c 4FF40049 		mov	r9, #32768
+ 187 0240 2868     		ldr	r0, [r5]
+ 188 0242 C4F20959 		movt	r9, 17673
+ 189 0246 0021     		movs	r1, #0
+ 190 0248 0023     		movs	r3, #0
+ 191 024a C0F83891 		str	r9, [r0, #312]	@ float
+ 192 024e 4246     		mov	r2, r8	@ float
+ 193 0250 CCF22011 		movt	r1, 49440
+ 194 0254 C4F2A013 		movt	r3, 16800
+ 195 0258 00F59070 		add	r0, r0, #288
+ 196 025c 8DED008A 		fsts	s16, [sp]
+ 197 0260 CDF804B0 		str	fp, [sp, #4]	@ float
+ 198 0264 CDF808A0 		str	r10, [sp, #8]	@ float
+ 199 0268 FFF7FEFF 		bl	_Z26setThermistorConfigurationP14ThermistorConfffffff
+ 200 026c 3368     		ldr	r3, [r6]
+ 201 026e 2868     		ldr	r0, [r5]
+ 202 0270 3121     		movs	r1, #49
+ 203 0272 3222     		movs	r2, #50
+ 204 0274 C0F81891 		str	r9, [r0, #280]	@ float
+ 205 0278 C3F86011 		str	r1, [r3, #352]
+ 206 027c C3F86421 		str	r2, [r3, #356]
+ 207 0280 C4F8D873 		str	r7, [r4, #984]
+ 208 0284 05B0     		add	sp, sp, #20
+ 209              		@ sp needed
+ 210 0286 BDEC028B 		fldmfdd	sp!, {d8}
+ 211 028a BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 212              	.L3:
+ 213 028e 00BF     		.align	2
+ 214              	.L2:
+ 215 0290 00401C45 		.word	1159479296
+ 216              		.size	_Z9setBmwE34v, .-_Z9setBmwE34v
+ 217 0294 AFF30080 		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ 217      AFF30080 
+ 217      AFF30080 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccC7JHUl.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 bmw_e34.cpp
+C:\Users\pc\AppData\Local\Temp\ccC7JHUl.s:17     .text._Z9setBmwE34v:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccC7JHUl.s:23     .text._Z9setBmwE34v:00000000 _Z9setBmwE34v
+C:\Users\pc\AppData\Local\Temp\ccC7JHUl.s:215    .text._Z9setBmwE34v:00000290 $d
+C:\Users\pc\AppData\Local\Temp\ccC7JHUl.s:217    .text._Z9setBmwE34v:00000294 $t
+
+UNDEFINED SYMBOLS
+engineConfiguration
+boardConfiguration
+_Z16setOperationModeP22engine_configuration_s16operation_mode_e
+_Z12setAlgorithm18engine_load_mode_e
+_Z16setConstantDwellf
+_Z19setWholeTimingTablef
+_Z26setThermistorConfigurationP14ThermistorConfffffff

@@ -1,0 +1,393 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccoLG07c.s 			page 1
+
+
+   1              		.file	"crc.c"
+   2              		.section	.text$calc_crc,"x"
+   3              		.p2align 4,,15
+   4              		.globl	_calc_crc
+   5              		.def	_calc_crc;	.scl	2;	.type	32;	.endef
+   6              	_calc_crc:
+   7              	LFB0:
+   8              		.cfi_startproc
+   9 0000 53       		pushl	%ebx
+  10              		.cfi_def_cfa_offset 8
+  11              		.cfi_offset 3, -8
+  12 0001 8B5C240C 		movl	12(%esp), %ebx
+  13 0005 85DB     		testl	%ebx, %ebx
+  14 0007 7E35     		jle	L7
+  15 0009 8B4C2408 		movl	8(%esp), %ecx
+  16 000d 31C0     		xorl	%eax, %eax
+  17 000f 01CB     		addl	%ecx, %ebx
+  18              		.p2align 4,,7
+  19              	L6:
+  20 0011 3201     		xorb	(%ecx), %al
+  21 0013 BA080000 		movl	$8, %edx
+  21      00
+  22 0018 EB0D     		jmp	L5
+  23 001a 8DB60000 		.p2align 4,,7
+  23      0000
+  24              	L3:
+  25 0020 01C0     		addl	%eax, %eax
+  26 0022 80EA01   		subb	$1, %dl
+  27 0025 740E     		je	L12
+  28              	L5:
+  29 0027 84C0     		testb	%al, %al
+  30 0029 79F5     		jns	L3
+  31 002b 01C0     		addl	%eax, %eax
+  32 002d 83F0D8   		xorl	$-40, %eax
+  33 0030 80EA01   		subb	$1, %dl
+  34 0033 75F2     		jne	L5
+  35              	L12:
+  36 0035 83C101   		addl	$1, %ecx
+  37 0038 39D9     		cmpl	%ebx, %ecx
+  38 003a 75D5     		jne	L6
+  39 003c 5B       		popl	%ebx
+  40              		.cfi_remember_state
+  41              		.cfi_restore 3
+  42              		.cfi_def_cfa_offset 4
+  43 003d C3       		ret
+  44              	L7:
+  45              		.cfi_restore_state
+  46 003e 31C0     		xorl	%eax, %eax
+  47 0040 5B       		popl	%ebx
+  48              		.cfi_restore 3
+  49              		.cfi_def_cfa_offset 4
+  50              		.p2align 4,,3
+  51 0041 C3       		ret
+  52              		.cfi_endproc
+  53              	LFE0:
+  54 0042 90909090 		.section	.text$crc32,"x"
+  54      90909090 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccoLG07c.s 			page 2
+
+
+  54      90909090 
+  54      9090
+  55              		.p2align 4,,15
+  56              		.globl	_crc32
+  57              		.def	_crc32;	.scl	2;	.type	32;	.endef
+  58              	_crc32:
+  59              	LFB1:
+  60              		.cfi_startproc
+  61 0000 53       		pushl	%ebx
+  62              		.cfi_def_cfa_offset 8
+  63              		.cfi_offset 3, -8
+  64 0001 8B5C240C 		movl	12(%esp), %ebx
+  65 0005 8B542408 		movl	8(%esp), %edx
+  66 0009 85DB     		testl	%ebx, %ebx
+  67 000b 7424     		je	L16
+  68 000d 01D3     		addl	%edx, %ebx
+  69 000f B8FFFFFF 		movl	$-1, %eax
+  69      FF
+  70              		.p2align 4,,7
+  71              	L15:
+  72 0014 0FB60A   		movzbl	(%edx), %ecx
+  73 0017 83C201   		addl	$1, %edx
+  74 001a 31C1     		xorl	%eax, %ecx
+  75 001c 0FB6C9   		movzbl	%cl, %ecx
+  76 001f C1E808   		shrl	$8, %eax
+  77 0022 33048D00 		xorl	_crc32_tab(,%ecx,4), %eax
+  77      000000
+  78 0029 39DA     		cmpl	%ebx, %edx
+  79 002b 75E7     		jne	L15
+  80 002d F7D0     		notl	%eax
+  81 002f 5B       		popl	%ebx
+  82              		.cfi_remember_state
+  83              		.cfi_restore 3
+  84              		.cfi_def_cfa_offset 4
+  85 0030 C3       		ret
+  86              	L16:
+  87              		.cfi_restore_state
+  88 0031 31C0     		xorl	%eax, %eax
+  89 0033 5B       		popl	%ebx
+  90              		.cfi_restore 3
+  91              		.cfi_def_cfa_offset 4
+  92 0034 C3       		ret
+  93              		.cfi_endproc
+  94              	LFE1:
+  95 0035 90909090 		.section	.rdata$crc32_tab,"dr"
+  95      90909090 
+  95      909090
+  96              		.align 32
+  97              	_crc32_tab:
+  98 0000 00000000 		.long	0
+  99 0004 96300777 		.long	1996959894
+ 100 0008 2C610EEE 		.long	-301047508
+ 101 000c BA510999 		.long	-1727442502
+ 102 0010 19C46D07 		.long	124634137
+ 103 0014 8FF46A70 		.long	1886057615
+ 104 0018 35A563E9 		.long	-379345611
+ 105 001c A395649E 		.long	-1637575261
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccoLG07c.s 			page 3
+
+
+ 106 0020 3288DB0E 		.long	249268274
+ 107 0024 A4B8DC79 		.long	2044508324
+ 108 0028 1EE9D5E0 		.long	-522852066
+ 109 002c 88D9D297 		.long	-1747789432
+ 110 0030 2B4CB609 		.long	162941995
+ 111 0034 BD7CB17E 		.long	2125561021
+ 112 0038 072DB8E7 		.long	-407360249
+ 113 003c 911DBF90 		.long	-1866523247
+ 114 0040 6410B71D 		.long	498536548
+ 115 0044 F220B06A 		.long	1789927666
+ 116 0048 4871B9F3 		.long	-205950648
+ 117 004c DE41BE84 		.long	-2067906082
+ 118 0050 7DD4DA1A 		.long	450548861
+ 119 0054 EBE4DD6D 		.long	1843258603
+ 120 0058 51B5D4F4 		.long	-187386543
+ 121 005c C785D383 		.long	-2083289657
+ 122 0060 56986C13 		.long	325883990
+ 123 0064 C0A86B64 		.long	1684777152
+ 124 0068 7AF962FD 		.long	-43845254
+ 125 006c ECC9658A 		.long	-1973040660
+ 126 0070 4F5C0114 		.long	335633487
+ 127 0074 D96C0663 		.long	1661365465
+ 128 0078 633D0FFA 		.long	-99664541
+ 129 007c F50D088D 		.long	-1928851979
+ 130 0080 C8206E3B 		.long	997073096
+ 131 0084 5E10694C 		.long	1281953886
+ 132 0088 E44160D5 		.long	-715111964
+ 133 008c 727167A2 		.long	-1570279054
+ 134 0090 D1E4033C 		.long	1006888145
+ 135 0094 47D4044B 		.long	1258607687
+ 136 0098 FD850DD2 		.long	-770865667
+ 137 009c 6BB50AA5 		.long	-1526024853
+ 138 00a0 FAA8B535 		.long	901097722
+ 139 00a4 6C98B242 		.long	1119000684
+ 140 00a8 D6C9BBDB 		.long	-608450090
+ 141 00ac 40F9BCAC 		.long	-1396901568
+ 142 00b0 E36CD832 		.long	853044451
+ 143 00b4 755CDF45 		.long	1172266101
+ 144 00b8 CF0DD6DC 		.long	-589951537
+ 145 00bc 593DD1AB 		.long	-1412350631
+ 146 00c0 AC30D926 		.long	651767980
+ 147 00c4 3A00DE51 		.long	1373503546
+ 148 00c8 8051D7C8 		.long	-925412992
+ 149 00cc 1661D0BF 		.long	-1076862698
+ 150 00d0 B5F4B421 		.long	565507253
+ 151 00d4 23C4B356 		.long	1454621731
+ 152 00d8 9995BACF 		.long	-809855591
+ 153 00dc 0FA5BDB8 		.long	-1195530993
+ 154 00e0 9EB80228 		.long	671266974
+ 155 00e4 0888055F 		.long	1594198024
+ 156 00e8 B2D90CC6 		.long	-972236366
+ 157 00ec 24E90BB1 		.long	-1324619484
+ 158 00f0 877C6F2F 		.long	795835527
+ 159 00f4 114C6858 		.long	1483230225
+ 160 00f8 AB1D61C1 		.long	-1050600021
+ 161 00fc 3D2D66B6 		.long	-1234817731
+ 162 0100 9041DC76 		.long	1994146192
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccoLG07c.s 			page 4
+
+
+ 163 0104 0671DB01 		.long	31158534
+ 164 0108 BC20D298 		.long	-1731059524
+ 165 010c 2A10D5EF 		.long	-271249366
+ 166 0110 8985B171 		.long	1907459465
+ 167 0114 1FB5B606 		.long	112637215
+ 168 0118 A5E4BF9F 		.long	-1614814043
+ 169 011c 33D4B8E8 		.long	-390540237
+ 170 0120 A2C90778 		.long	2013776290
+ 171 0124 34F9000F 		.long	251722036
+ 172 0128 8EA80996 		.long	-1777751922
+ 173 012c 18980EE1 		.long	-519137256
+ 174 0130 BB0D6A7F 		.long	2137656763
+ 175 0134 2D3D6D08 		.long	141376813
+ 176 0138 976C6491 		.long	-1855689577
+ 177 013c 015C63E6 		.long	-429695999
+ 178 0140 F4516B6B 		.long	1802195444
+ 179 0144 62616C1C 		.long	476864866
+ 180 0148 D8306585 		.long	-2056965928
+ 181 014c 4E0062F2 		.long	-228458418
+ 182 0150 ED95066C 		.long	1812370925
+ 183 0154 7BA5011B 		.long	453092731
+ 184 0158 C1F40882 		.long	-2113342271
+ 185 015c 57C40FF5 		.long	-183516073
+ 186 0160 C6D9B065 		.long	1706088902
+ 187 0164 50E9B712 		.long	314042704
+ 188 0168 EAB8BE8B 		.long	-1950435094
+ 189 016c 7C88B9FC 		.long	-54949764
+ 190 0170 DF1DDD62 		.long	1658658271
+ 191 0174 492DDA15 		.long	366619977
+ 192 0178 F37CD38C 		.long	-1932296973
+ 193 017c 654CD4FB 		.long	-69972891
+ 194 0180 5861B24D 		.long	1303535960
+ 195 0184 CE51B53A 		.long	984961486
+ 196 0188 7400BCA3 		.long	-1547960204
+ 197 018c E230BBD4 		.long	-725929758
+ 198 0190 41A5DF4A 		.long	1256170817
+ 199 0194 D795D83D 		.long	1037604311
+ 200 0198 6DC4D1A4 		.long	-1529756563
+ 201 019c FBF4D6D3 		.long	-740887301
+ 202 01a0 6AE96943 		.long	1131014506
+ 203 01a4 FCD96E34 		.long	879679996
+ 204 01a8 468867AD 		.long	-1385723834
+ 205 01ac D0B860DA 		.long	-631195440
+ 206 01b0 732D0444 		.long	1141124467
+ 207 01b4 E51D0333 		.long	855842277
+ 208 01b8 5F4C0AAA 		.long	-1442165665
+ 209 01bc C97C0DDD 		.long	-586318647
+ 210 01c0 3C710550 		.long	1342533948
+ 211 01c4 AA410227 		.long	654459306
+ 212 01c8 10100BBE 		.long	-1106571248
+ 213 01cc 86200CC9 		.long	-921952122
+ 214 01d0 25B56857 		.long	1466479909
+ 215 01d4 B3856F20 		.long	544179635
+ 216 01d8 09D466B9 		.long	-1184443383
+ 217 01dc 9FE461CE 		.long	-832445281
+ 218 01e0 0EF9DE5E 		.long	1591671054
+ 219 01e4 98C9D929 		.long	702138776
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccoLG07c.s 			page 5
+
+
+ 220 01e8 2298D0B0 		.long	-1328506846
+ 221 01ec B4A8D7C7 		.long	-942167884
+ 222 01f0 173DB359 		.long	1504918807
+ 223 01f4 810DB42E 		.long	783551873
+ 224 01f8 3B5CBDB7 		.long	-1212326853
+ 225 01fc AD6CBAC0 		.long	-1061524307
+ 226 0200 2083B8ED 		.long	-306674912
+ 227 0204 B6B3BF9A 		.long	-1698712650
+ 228 0208 0CE2B603 		.long	62317068
+ 229 020c 9AD2B174 		.long	1957810842
+ 230 0210 3947D5EA 		.long	-355121351
+ 231 0214 AF77D29D 		.long	-1647151185
+ 232 0218 1526DB04 		.long	81470997
+ 233 021c 8316DC73 		.long	1943803523
+ 234 0220 120B63E3 		.long	-480048366
+ 235 0224 843B6494 		.long	-1805370492
+ 236 0228 3E6A6D0D 		.long	225274430
+ 237 022c A85A6A7A 		.long	2053790376
+ 238 0230 0BCF0EE4 		.long	-468791541
+ 239 0234 9DFF0993 		.long	-1828061283
+ 240 0238 27AE000A 		.long	167816743
+ 241 023c B19E077D 		.long	2097651377
+ 242 0240 44930FF0 		.long	-267414716
+ 243 0244 D2A30887 		.long	-2029476910
+ 244 0248 68F2011E 		.long	503444072
+ 245 024c FEC20669 		.long	1762050814
+ 246 0250 5D5762F7 		.long	-144550051
+ 247 0254 CB676580 		.long	-2140837941
+ 248 0258 71366C19 		.long	426522225
+ 249 025c E7066B6E 		.long	1852507879
+ 250 0260 761BD4FE 		.long	-19653770
+ 251 0264 E02BD389 		.long	-1982649376
+ 252 0268 5A7ADA10 		.long	282753626
+ 253 026c CC4ADD67 		.long	1742555852
+ 254 0270 6FDFB9F9 		.long	-105259153
+ 255 0274 F9EFBE8E 		.long	-1900089351
+ 256 0278 43BEB717 		.long	397917763
+ 257 027c D58EB060 		.long	1622183637
+ 258 0280 E8A3D6D6 		.long	-690576408
+ 259 0284 7E93D1A1 		.long	-1580100738
+ 260 0288 C4C2D838 		.long	953729732
+ 261 028c 52F2DF4F 		.long	1340076626
+ 262 0290 F167BBD1 		.long	-776247311
+ 263 0294 6757BCA6 		.long	-1497606297
+ 264 0298 DD06B53F 		.long	1068828381
+ 265 029c 4B36B248 		.long	1219638859
+ 266 02a0 DA2B0DD8 		.long	-670225446
+ 267 02a4 4C1B0AAF 		.long	-1358292148
+ 268 02a8 F64A0336 		.long	906185462
+ 269 02ac 607A0441 		.long	1090812512
+ 270 02b0 C3EF60DF 		.long	-547295293
+ 271 02b4 55DF67A8 		.long	-1469587627
+ 272 02b8 EF8E6E31 		.long	829329135
+ 273 02bc 79BE6946 		.long	1181335161
+ 274 02c0 8CB361CB 		.long	-882789492
+ 275 02c4 1A8366BC 		.long	-1134132454
+ 276 02c8 A0D26F25 		.long	628085408
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccoLG07c.s 			page 6
+
+
+ 277 02cc 36E26852 		.long	1382605366
+ 278 02d0 95770CCC 		.long	-871598187
+ 279 02d4 03470BBB 		.long	-1156888829
+ 280 02d8 B9160222 		.long	570562233
+ 281 02dc 2F260555 		.long	1426400815
+ 282 02e0 BE3BBAC5 		.long	-977650754
+ 283 02e4 280BBDB2 		.long	-1296233688
+ 284 02e8 925AB42B 		.long	733239954
+ 285 02ec 046AB35C 		.long	1555261956
+ 286 02f0 A7FFD7C2 		.long	-1026031705
+ 287 02f4 31CFD0B5 		.long	-1244606671
+ 288 02f8 8B9ED92C 		.long	752459403
+ 289 02fc 1DAEDE5B 		.long	1541320221
+ 290 0300 B0C2649B 		.long	-1687895376
+ 291 0304 26F263EC 		.long	-328994266
+ 292 0308 9CA36A75 		.long	1969922972
+ 293 030c 0A936D02 		.long	40735498
+ 294 0310 A906099C 		.long	-1677130071
+ 295 0314 3F360EEB 		.long	-351390145
+ 296 0318 85670772 		.long	1913087877
+ 297 031c 13570005 		.long	83908371
+ 298 0320 824ABF95 		.long	-1782625662
+ 299 0324 147AB8E2 		.long	-491226604
+ 300 0328 AE2BB17B 		.long	2075208622
+ 301 032c 381BB60C 		.long	213261112
+ 302 0330 9B8ED292 		.long	-1831694693
+ 303 0334 0DBED5E5 		.long	-438977011
+ 304 0338 B7EFDC7C 		.long	2094854071
+ 305 033c 21DFDB0B 		.long	198958881
+ 306 0340 D4D2D386 		.long	-2032938284
+ 307 0344 42E2D4F1 		.long	-237706686
+ 308 0348 F8B3DD68 		.long	1759359992
+ 309 034c 6E83DA1F 		.long	534414190
+ 310 0350 CD16BE81 		.long	-2118248755
+ 311 0354 5B26B9F6 		.long	-155638181
+ 312 0358 E177B06F 		.long	1873836001
+ 313 035c 7747B718 		.long	414664567
+ 314 0360 E65A0888 		.long	-2012718362
+ 315 0364 706A0FFF 		.long	-15766928
+ 316 0368 CA3B0666 		.long	1711684554
+ 317 036c 5C0B0111 		.long	285281116
+ 318 0370 FF9E658F 		.long	-1889165569
+ 319 0374 69AE62F8 		.long	-127750551
+ 320 0378 D3FF6B61 		.long	1634467795
+ 321 037c 45CF6C16 		.long	376229701
+ 322 0380 78E20AA0 		.long	-1609899400
+ 323 0384 EED20DD7 		.long	-686959890
+ 324 0388 5483044E 		.long	1308918612
+ 325 038c C2B30339 		.long	956543938
+ 326 0390 612667A7 		.long	-1486412191
+ 327 0394 F71660D0 		.long	-799009033
+ 328 0398 4D476949 		.long	1231636301
+ 329 039c DB776E3E 		.long	1047427035
+ 330 03a0 4A6AD1AE 		.long	-1362007478
+ 331 03a4 DC5AD6D9 		.long	-640263460
+ 332 03a8 660BDF40 		.long	1088359270
+ 333 03ac F03BD837 		.long	936918000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccoLG07c.s 			page 7
+
+
+ 334 03b0 53AEBCA9 		.long	-1447252397
+ 335 03b4 C59EBBDE 		.long	-558129467
+ 336 03b8 7FCFB247 		.long	1202900863
+ 337 03bc E9FFB530 		.long	817233897
+ 338 03c0 1CF2BDBD 		.long	-1111625188
+ 339 03c4 8AC2BACA 		.long	-893730166
+ 340 03c8 3093B353 		.long	1404277552
+ 341 03cc A6A3B424 		.long	615818150
+ 342 03d0 0536D0BA 		.long	-1160759803
+ 343 03d4 9306D7CD 		.long	-841546093
+ 344 03d8 2957DE54 		.long	1423857449
+ 345 03dc BF67D923 		.long	601450431
+ 346 03e0 2E7A66B3 		.long	-1285129682
+ 347 03e4 B84A61C4 		.long	-1000256840
+ 348 03e8 021B685D 		.long	1567103746
+ 349 03ec 942B6F2A 		.long	711928724
+ 350 03f0 37BE0BB4 		.long	-1274298825
+ 351 03f4 A18E0CC3 		.long	-1022587231
+ 352 03f8 1BDF055A 		.long	1510334235
+ 353 03fc 8DEF022D 		.long	755167117
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccoLG07c.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 crc.c
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccoLG07c.s:6      .text$calc_crc:00000000 _calc_crc
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccoLG07c.s:58     .text$crc32:00000000 _crc32
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccoLG07c.s:97     .rdata$crc32_tab:00000000 _crc32_tab
+
+NO UNDEFINED SYMBOLS

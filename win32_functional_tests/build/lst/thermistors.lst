@@ -1,0 +1,1280 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s 			page 1
+
+
+   1              		.file	"thermistors.cpp"
+   2              		.section	.text$_Z21getR1InVoltageDividorfff,"x"
+   3              		.p2align 4,,15
+   4              		.globl	__Z21getR1InVoltageDividorfff
+   5              		.def	__Z21getR1InVoltageDividorfff;	.scl	2;	.type	32;	.endef
+   6              	__Z21getR1InVoltageDividorfff:
+   7              	LFB85:
+   8              		.cfi_startproc
+   9 0000 D944240C 		flds	12(%esp)
+  10 0004 D9442408 		flds	8(%esp)
+  11 0008 D8C9     		fmul	%st(1), %st
+  12 000a D8742404 		fdivs	4(%esp)
+  13 000e DEE1     		fsubp	%st, %st(1)
+  14 0010 C3       		ret
+  15              		.cfi_endproc
+  16              	LFE85:
+  17 0011 90909090 		.section	.text$_Z21getR2InVoltageDividorfff,"x"
+  17      90909090 
+  17      90909090 
+  17      909090
+  18              		.p2align 4,,15
+  19              		.globl	__Z21getR2InVoltageDividorfff
+  20              		.def	__Z21getR2InVoltageDividorfff;	.scl	2;	.type	32;	.endef
+  21              	__Z21getR2InVoltageDividorfff:
+  22              	LFB86:
+  23              		.cfi_startproc
+  24 0000 D9442404 		flds	4(%esp)
+  25 0004 D9EE     		fldz
+  26 0006 D9C9     		fxch	%st(1)
+  27 0008 DBE9     		fucomi	%st(1), %st
+  28 000a DDD9     		fstp	%st(1)
+  29 000c 7A04     		jp	L6
+  30 000e EB13     		jmp	L9
+  31              		.p2align 4,,7
+  32              	L10:
+  33 0010 DDD8     		fstp	%st(0)
+  34              	L6:
+  35 0012 D87C2408 		fdivrs	8(%esp)
+  36 0016 D825BC01 		fsubs	LC2
+  36      0000
+  37 001c D944240C 		flds	12(%esp)
+  38 0020 DEF1     		fdivp	%st, %st(1)
+  39 0022 C3       		ret
+  40              		.p2align 4,,7
+  41              	L9:
+  42 0023 D905B801 		flds	LC0
+  42      0000
+  43 0029 75E5     		jne	L10
+  44 002b DDD9     		fstp	%st(1)
+  45 002d C3       		ret
+  46              		.cfi_endproc
+  47              	LFE86:
+  48 002e 9090     		.section	.text$_Z23getVoutInVoltageDividorfff,"x"
+  49              		.p2align 4,,15
+  50              		.globl	__Z23getVoutInVoltageDividorfff
+  51              		.def	__Z23getVoutInVoltageDividorfff;	.scl	2;	.type	32;	.endef
+  52              	__Z23getVoutInVoltageDividorfff:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s 			page 2
+
+
+  53              	LFB87:
+  54              		.cfi_startproc
+  55 0000 D944240C 		flds	12(%esp)
+  56 0004 D9442404 		flds	4(%esp)
+  57 0008 D8C9     		fmul	%st(1), %st
+  58 000a D9C9     		fxch	%st(1)
+  59 000c D8442408 		fadds	8(%esp)
+  60 0010 DEF9     		fdivrp	%st, %st(1)
+  61 0012 C3       		ret
+  62              		.cfi_endproc
+  63              	LFE87:
+  64 0013 90909090 		.section	.text$_Z17convertCelsiustoFf,"x"
+  64      90909090 
+  64      90909090 
+  64      90
+  65              		.p2align 4,,15
+  66              		.globl	__Z17convertCelsiustoFf
+  67              		.def	__Z17convertCelsiustoFf;	.scl	2;	.type	32;	.endef
+  68              	__Z17convertCelsiustoFf:
+  69              	LFB89:
+  70              		.cfi_startproc
+  71 0000 D905C001 		flds	LC3
+  71      0000
+  72 0006 D84C2404 		fmuls	4(%esp)
+  73 000a D835C401 		fdivs	LC4
+  73      0000
+  74 0010 D805C801 		fadds	LC5
+  74      0000
+  75 0016 C3       		ret
+  76              		.cfi_endproc
+  77              	LFE89:
+  78 0017 90909090 		.section	.text$_Z17convertFtoCelsiusf,"x"
+  78      90909090 
+  78      90
+  79              		.p2align 4,,15
+  80              		.globl	__Z17convertFtoCelsiusf
+  81              		.def	__Z17convertFtoCelsiusf;	.scl	2;	.type	32;	.endef
+  82              	__Z17convertFtoCelsiusf:
+  83              	LFB90:
+  84              		.cfi_startproc
+  85 0000 D905C801 		flds	LC5
+  85      0000
+  86 0006 D86C2404 		fsubrs	4(%esp)
+  87 000a D835C001 		fdivs	LC3
+  87      0000
+  88 0010 D80DC401 		fmuls	LC4
+  88      0000
+  89 0016 C3       		ret
+  90              		.cfi_endproc
+  91              	LFE90:
+  92 0017 90909090 		.section	.text$_Z25convertKelvinToFahrenheitf,"x"
+  92      90909090 
+  92      90
+  93              		.p2align 4,,15
+  94              		.globl	__Z25convertKelvinToFahrenheitf
+  95              		.def	__Z25convertKelvinToFahrenheitf;	.scl	2;	.type	32;	.endef
+  96              	__Z25convertKelvinToFahrenheitf:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s 			page 3
+
+
+  97              	LFB91:
+  98              		.cfi_startproc
+  99 0000 D905CC01 		flds	LC6
+  99      0000
+ 100 0006 D86C2404 		fsubrs	4(%esp)
+ 101 000a D80DC001 		fmuls	LC3
+ 101      0000
+ 102 0010 D835C401 		fdivs	LC4
+ 102      0000
+ 103 0016 D805C801 		fadds	LC5
+ 103      0000
+ 104 001c C3       		ret
+ 105              		.cfi_endproc
+ 106              	LFE91:
+ 107 001d 909090   		.section .rdata,"dr"
+ 108              	LC7:
+ 109 0000 7465726D 		.ascii "term\0"
+ 109      00
+ 110              		.section	.text$_Z13getResistanceP14ThermistorConf,"x"
+ 111              		.p2align 4,,15
+ 112              		.globl	__Z13getResistanceP14ThermistorConf
+ 113              		.def	__Z13getResistanceP14ThermistorConf;	.scl	2;	.type	32;	.endef
+ 114              	__Z13getResistanceP14ThermistorConf:
+ 115              	LFB92:
+ 116              		.cfi_startproc
+ 117 0000 53       		pushl	%ebx
+ 118              		.cfi_def_cfa_offset 8
+ 119              		.cfi_offset 3, -8
+ 120 0001 83EC28   		subl	$40, %esp
+ 121              		.cfi_def_cfa_offset 48
+ 122 0004 8B5C2430 		movl	48(%esp), %ebx
+ 123 0008 8B431C   		movl	28(%ebx), %eax
+ 124 000b C7042400 		movl	$LC7, (%esp)
+ 124      000000
+ 125 0012 89442404 		movl	%eax, 4(%esp)
+ 126 0016 E8000000 		call	__Z11getAdcValuePKci
+ 126      00
+ 127 001b 8944241C 		movl	%eax, 28(%esp)
+ 128 001f A1000000 		movl	_engineConfiguration, %eax
+ 128      00
+ 129 0024 DB44241C 		fildl	28(%esp)
+ 130 0028 D80DD001 		fmuls	LC8
+ 130      0000
+ 131 002e D888D001 		fmuls	464(%eax)
+ 131      0000
+ 132 0034 D94318   		flds	24(%ebx)
+ 133 0037 D9EE     		fldz
+ 134 0039 D9CA     		fxch	%st(2)
+ 135 003b DBEA     		fucomi	%st(2), %st
+ 136 003d DDDA     		fstp	%st(2)
+ 137 003f 7A11     		jp	L21
+ 138 0041 D905B801 		flds	LC0
+ 138      0000
+ 139 0047 750D     		jne	L22
+ 140 0049 DDD9     		fstp	%st(1)
+ 141 004b DDD9     		fstp	%st(1)
+ 142 004d 83C428   		addl	$40, %esp
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s 			page 4
+
+
+ 143              		.cfi_remember_state
+ 144              		.cfi_def_cfa_offset 8
+ 145 0050 5B       		popl	%ebx
+ 146              		.cfi_restore 3
+ 147              		.cfi_def_cfa_offset 4
+ 148 0051 C3       		ret
+ 149              		.p2align 4,,7
+ 150              	L21:
+ 151              		.cfi_restore_state
+ 152 0052 D9C9     		fxch	%st(1)
+ 153 0054 EB04     		jmp	L19
+ 154              		.p2align 4,,7
+ 155              	L22:
+ 156 0056 DDD8     		fstp	%st(0)
+ 157 0058 D9C9     		fxch	%st(1)
+ 158              	L19:
+ 159 005a D83DC401 		fdivrs	LC4
+ 159      0000
+ 160 0060 D825BC01 		fsubs	LC2
+ 160      0000
+ 161 0066 83C428   		addl	$40, %esp
+ 162              		.cfi_def_cfa_offset 8
+ 163 0069 5B       		popl	%ebx
+ 164              		.cfi_restore 3
+ 165              		.cfi_def_cfa_offset 4
+ 166 006a DEF9     		fdivrp	%st, %st(1)
+ 167 006c C3       		ret
+ 168              		.cfi_endproc
+ 169              	LFE92:
+ 170 006d 909090   		.section	.text$_Z25isValidCoolantTemperaturef,"x"
+ 171              		.p2align 4,,15
+ 172              		.globl	__Z25isValidCoolantTemperaturef
+ 173              		.def	__Z25isValidCoolantTemperaturef;	.scl	2;	.type	32;	.endef
+ 174              	__Z25isValidCoolantTemperaturef:
+ 175              	LFB94:
+ 176              		.cfi_startproc
+ 177 0000 31C0     		xorl	%eax, %eax
+ 178 0002 817C2404 		cmpl	$2143289344, 4(%esp)
+ 178      0000C07F 
+ 179 000a 7426     		je	L24
+ 180 000c D905D401 		flds	LC9
+ 180      0000
+ 181 0012 D9442404 		flds	4(%esp)
+ 182 0016 DBE9     		fucomi	%st(1), %st
+ 183 0018 DDD9     		fstp	%st(1)
+ 184 001a 7614     		jbe	L29
+ 185 001c D905D801 		flds	LC10
+ 185      0000
+ 186 0022 DFE9     		fucomip	%st(1), %st
+ 187 0024 DDD8     		fstp	%st(0)
+ 188 0026 0F97C0   		seta	%al
+ 189 0029 EB07     		jmp	L24
+ 190 002b 908D7426 		.p2align 4,,7
+ 190      00
+ 191              	L29:
+ 192 0030 DDD8     		fstp	%st(0)
+ 193              	L24:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s 			page 5
+
+
+ 194 0032 F3       		rep
+ 195 0033 C3       		ret
+ 196              		.cfi_endproc
+ 197              	LFE94:
+ 198 0034 90909090 		.section	.text$_Z27isValidIntakeAirTemperaturef,"x"
+ 198      90909090 
+ 198      90909090 
+ 199              		.p2align 4,,15
+ 200              		.globl	__Z27isValidIntakeAirTemperaturef
+ 201              		.def	__Z27isValidIntakeAirTemperaturef;	.scl	2;	.type	32;	.endef
+ 202              	__Z27isValidIntakeAirTemperaturef:
+ 203              	LFB95:
+ 204              		.cfi_startproc
+ 205 0000 31C0     		xorl	%eax, %eax
+ 206 0002 817C2404 		cmpl	$2143289344, 4(%esp)
+ 206      0000C07F 
+ 207 000a 7426     		je	L31
+ 208 000c D905D401 		flds	LC9
+ 208      0000
+ 209 0012 D9442404 		flds	4(%esp)
+ 210 0016 DBE9     		fucomi	%st(1), %st
+ 211 0018 DDD9     		fstp	%st(1)
+ 212 001a 7614     		jbe	L36
+ 213 001c D905DC01 		flds	LC11
+ 213      0000
+ 214 0022 DFE9     		fucomip	%st(1), %st
+ 215 0024 DDD8     		fstp	%st(0)
+ 216 0026 0F97C0   		seta	%al
+ 217 0029 EB07     		jmp	L31
+ 218 002b 908D7426 		.p2align 4,,7
+ 218      00
+ 219              	L36:
+ 220 0030 DDD8     		fstp	%st(0)
+ 221              	L31:
+ 222 0032 F3       		rep
+ 223 0033 C3       		ret
+ 224              		.cfi_endproc
+ 225              	LFE95:
+ 226 0034 90909090 		.section	.text$_Z26setThermistorConfigurationP14ThermistorConfffffff,"x"
+ 226      90909090 
+ 226      90909090 
+ 227              		.p2align 4,,15
+ 228              		.globl	__Z26setThermistorConfigurationP14ThermistorConfffffff
+ 229              		.def	__Z26setThermistorConfigurationP14ThermistorConfffffff;	.scl	2;	.type	32;	.endef
+ 230              	__Z26setThermistorConfigurationP14ThermistorConfffffff:
+ 231              	LFB97:
+ 232              		.cfi_startproc
+ 233 0000 8B442404 		movl	4(%esp), %eax
+ 234 0004 D9442408 		flds	8(%esp)
+ 235 0008 D918     		fstps	(%eax)
+ 236 000a D944240C 		flds	12(%esp)
+ 237 000e D9580C   		fstps	12(%eax)
+ 238 0011 D9442410 		flds	16(%esp)
+ 239 0015 D95804   		fstps	4(%eax)
+ 240 0018 D9442414 		flds	20(%esp)
+ 241 001c D95810   		fstps	16(%eax)
+ 242 001f D9442418 		flds	24(%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s 			page 6
+
+
+ 243 0023 D95808   		fstps	8(%eax)
+ 244 0026 D944241C 		flds	28(%esp)
+ 245 002a D95814   		fstps	20(%eax)
+ 246 002d C3       		ret
+ 247              		.cfi_endproc
+ 248              	LFE97:
+ 249 002e 9090     		.section	.text$_Z14setDodgeSensorP14ThermistorConf,"x"
+ 250              		.p2align 4,,15
+ 251              		.globl	__Z14setDodgeSensorP14ThermistorConf
+ 252              		.def	__Z14setDodgeSensorP14ThermistorConf;	.scl	2;	.type	32;	.endef
+ 253              	__Z14setDodgeSensorP14ThermistorConf:
+ 254              	LFB100:
+ 255              		.cfi_startproc
+ 256 0000 8B442404 		movl	4(%esp), %eax
+ 257 0004 C7000000 		movl	$0xc2200000, (%eax)
+ 257      20C2
+ 258 000a C7400C80 		movl	$0x48a46280, 12(%eax)
+ 258      62A448
+ 259 0011 C7400400 		movl	$0x41f00000, 4(%eax)
+ 259      00F041
+ 260 0018 C7401000 		movl	$0x45ebf000, 16(%eax)
+ 260      F0EB45
+ 261 001f C7400800 		movl	$0x42f00000, 8(%eax)
+ 261      00F042
+ 262 0026 C7401400 		movl	$0x43c30000, 20(%eax)
+ 262      00C343
+ 263 002d C3       		ret
+ 264              		.cfi_endproc
+ 265              	LFE100:
+ 266 002e 9090     		.section	.text$_Z18setCommonNTCSensorP14ThermistorConf,"x"
+ 267              		.p2align 4,,15
+ 268              		.globl	__Z18setCommonNTCSensorP14ThermistorConf
+ 269              		.def	__Z18setCommonNTCSensorP14ThermistorConf;	.scl	2;	.type	32;	.endef
+ 270              	__Z18setCommonNTCSensorP14ThermistorConf:
+ 271              	LFB101:
+ 272              		.cfi_startproc
+ 273 0000 8B442404 		movl	4(%esp), %eax
+ 274 0004 C7000000 		movl	$0xc1a00000, (%eax)
+ 274      A0C1
+ 275 000a C7400C00 		movl	$0x468ca000, 12(%eax)
+ 275      A08C46
+ 276 0011 C7400478 		movl	$0x41bf1c78, 4(%eax)
+ 276      1CBF41
+ 277 0018 C7401000 		movl	$0x45034000, 16(%eax)
+ 277      400345
+ 278 001f C7400800 		movl	$0x42f00000, 8(%eax)
+ 278      00F042
+ 279 0026 C7401400 		movl	$0x42c80000, 20(%eax)
+ 279      00C842
+ 280 002d C3       		ret
+ 281              		.cfi_endproc
+ 282              	LFE101:
+ 283 002e 9090     		.section .rdata,"dr"
+ 284              	LC22:
+ 285 0005 65204E55 		.ascii "e NULL initThermistors\0"
+ 285      4C4C2069 
+ 285      6E697454 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s 			page 7
+
+
+ 285      6865726D 
+ 285      6973746F 
+ 286              	LC23:
+ 287 001c 6532204E 		.ascii "e2 NULL initThermistors\0"
+ 287      554C4C20 
+ 287      696E6974 
+ 287      54686572 
+ 287      6D697374 
+ 288              		.section	.text$_Z15initThermistorsP7Logging,"x"
+ 289              		.p2align 4,,15
+ 290              		.globl	__Z15initThermistorsP7Logging
+ 291              		.def	__Z15initThermistorsP7Logging;	.scl	2;	.type	32;	.endef
+ 292              	__Z15initThermistorsP7Logging:
+ 293              	LFB102:
+ 294              		.cfi_startproc
+ 295 0000 8B442404 		movl	4(%esp), %eax
+ 296 0004 A3000000 		movl	%eax, __ZL6logger
+ 296      00
+ 297 0009 A1000000 		movl	_engine, %eax
+ 297      00
+ 298 000e 85C0     		testl	%eax, %eax
+ 299 0010 740F     		je	L43
+ 300 0012 8B4028   		movl	40(%eax), %eax
+ 301 0015 85C0     		testl	%eax, %eax
+ 302 0017 7417     		je	L44
+ 303 0019 C6050000 		movb	$1, __ZL11initialized
+ 303      000001
+ 304 0020 C3       		ret
+ 305              		.p2align 4,,7
+ 306              	L43:
+ 307 0021 C7442404 		movl	$LC22, 4(%esp)
+ 307      05000000 
+ 308 0029 E9000000 		jmp	_firmwareError
+ 308      00
+ 309 002e 6690     		.p2align 4,,7
+ 310              	L44:
+ 311 0030 C7442404 		movl	$LC23, 4(%esp)
+ 311      1C000000 
+ 312 0038 E9000000 		jmp	_firmwareError
+ 312      00
+ 313              		.cfi_endproc
+ 314              	LFE102:
+ 315 003d 909090   		.section	.text$_ZN14ThermistorMathC2Ev,"x"
+ 316              		.align 2
+ 317              		.p2align 4,,15
+ 318              		.globl	__ZN14ThermistorMathC2Ev
+ 319              		.def	__ZN14ThermistorMathC2Ev;	.scl	2;	.type	32;	.endef
+ 320              	__ZN14ThermistorMathC2Ev:
+ 321              	LFB104:
+ 322              		.cfi_startproc
+ 323 0000 8D510C   		leal	12(%ecx), %edx
+ 324 0003 83EC08   		subl	$8, %esp
+ 325              		.cfi_def_cfa_offset 12
+ 326 0006 F6C201   		testb	$1, %dl
+ 327 0009 891C24   		movl	%ebx, (%esp)
+ 328              		.cfi_offset 3, -12
+ 329 000c BB1C0000 		movl	$28, %ebx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s 			page 8
+
+
+ 329      00
+ 330 0011 89742404 		movl	%esi, 4(%esp)
+ 331              		.cfi_offset 6, -8
+ 332 0015 7550     		jne	L66
+ 333 0017 F6C202   		testb	$2, %dl
+ 334 001a 7559     		jne	L67
+ 335              	L47:
+ 336 001c 89DE     		movl	%ebx, %esi
+ 337 001e 31C0     		xorl	%eax, %eax
+ 338 0020 83E6FC   		andl	$-4, %esi
+ 339              	L48:
+ 340 0023 C7040200 		movl	$0, (%edx,%eax)
+ 340      000000
+ 341 002a 83C004   		addl	$4, %eax
+ 342 002d 39F0     		cmpl	%esi, %eax
+ 343 002f 72F2     		jb	L48
+ 344 0031 01C2     		addl	%eax, %edx
+ 345 0033 F6C302   		testb	$2, %bl
+ 346 0036 7408     		je	L50
+ 347 0038 66C70200 		movw	$0, (%edx)
+ 347      00
+ 348 003d 83C202   		addl	$2, %edx
+ 349              	L50:
+ 350 0040 83E301   		andl	$1, %ebx
+ 351 0043 7403     		je	L51
+ 352 0045 C60200   		movb	$0, (%edx)
+ 353              	L51:
+ 354 0048 C7010000 		movl	$0, (%ecx)
+ 354      0000
+ 355 004e 8B1C24   		movl	(%esp), %ebx
+ 356 0051 C7410400 		movl	$0, 4(%ecx)
+ 356      000000
+ 357 0058 8B742404 		movl	4(%esp), %esi
+ 358 005c C7410800 		movl	$0, 8(%ecx)
+ 358      000000
+ 359 0063 83C408   		addl	$8, %esp
+ 360              		.cfi_remember_state
+ 361              		.cfi_restore 6
+ 362              		.cfi_restore 3
+ 363              		.cfi_def_cfa_offset 4
+ 364 0066 C3       		ret
+ 365              		.p2align 4,,7
+ 366              	L66:
+ 367              		.cfi_restore_state
+ 368 0067 8D510D   		leal	13(%ecx), %edx
+ 369 006a B31B     		movb	$27, %bl
+ 370 006c F6C202   		testb	$2, %dl
+ 371 006f C6410C00 		movb	$0, 12(%ecx)
+ 372 0073 74A7     		je	L47
+ 373              		.p2align 4,,7
+ 374              	L67:
+ 375 0075 66C70200 		movw	$0, (%edx)
+ 375      00
+ 376 007a 83EB02   		subl	$2, %ebx
+ 377 007d 83C202   		addl	$2, %edx
+ 378 0080 EB9A     		jmp	L47
+ 379              		.cfi_endproc
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s 			page 9
+
+
+ 380              	LFE104:
+ 381              		.globl	__ZN14ThermistorMathC1Ev
+ 382              		.def	__ZN14ThermistorMathC1Ev;	.scl	2;	.type	32;	.endef
+ 383              		.set	__ZN14ThermistorMathC1Ev,__ZN14ThermistorMathC2Ev
+ 384 0082 90909090 		.section .rdata,"dr"
+ 384      90909090 
+ 384      90909090 
+ 384      9090
+ 385              		.align 4
+ 386              	LC24:
+ 387 0034 54313D25 		.ascii "T1=%..100000f/T2=%..100000f/T3=%..100000f\0"
+ 387      2E2E3130 
+ 387      30303030 
+ 387      662F5432 
+ 387      3D252E2E 
+ 388              	LC25:
+ 389 005e 6C6F6720 		.ascii "log is broken?\0"
+ 389      69732062 
+ 389      726F6B65 
+ 389      6E3F00
+ 390 006d 000000   		.align 4
+ 391              	LC26:
+ 392 0070 52313D25 		.ascii "R1=%..100000f/R2=%..100000f/R3=%..100000f\0"
+ 392      2E2E3130 
+ 392      30303030 
+ 392      662F5232 
+ 392      3D252E2E 
+ 393 009a 0000     		.align 4
+ 394              	LC27:
+ 395 009c 4C313D25 		.ascii "L1=%..100000f/L2=%..100000f/L3=%..100000f\0"
+ 395      2E2E3130 
+ 395      30303030 
+ 395      662F4C32 
+ 395      3D252E2E 
+ 396 00c6 0000     		.align 4
+ 397              	LC28:
+ 398 00c8 59313D25 		.ascii "Y1=%..100000f/Y2=%..100000f/Y3=%..100000f\0"
+ 398      2E2E3130 
+ 398      30303030 
+ 398      662F5932 
+ 398      3D252E2E 
+ 399              	LC29:
+ 400 00f2 55323D25 		.ascii "U2=%..100000f/U3=%..100000f\0"
+ 400      2E2E3130 
+ 400      30303030 
+ 400      662F5533 
+ 400      3D252E2E 
+ 401 010e 0000     		.align 4
+ 402              	LC30:
+ 403 0110 735F685F 		.ascii "s_h_c=%..100000f/s_h_b=%..100000f/s_h_a=%..100000f\0"
+ 403      633D252E 
+ 403      2E313030 
+ 403      30303066 
+ 403      2F735F68 
+ 404              		.section	.text$_ZN14ThermistorMath4initEP17thermistor_conf_s,"x"
+ 405              		.align 2
+ 406              		.p2align 4,,15
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s 			page 10
+
+
+ 407              		.globl	__ZN14ThermistorMath4initEP17thermistor_conf_s
+ 408              		.def	__ZN14ThermistorMath4initEP17thermistor_conf_s;	.scl	2;	.type	32;	.endef
+ 409              	__ZN14ThermistorMath4initEP17thermistor_conf_s:
+ 410              	LFB106:
+ 411              		.cfi_startproc
+ 412 0000 57       		pushl	%edi
+ 413              		.cfi_def_cfa_offset 8
+ 414              		.cfi_offset 7, -8
+ 415 0001 89CF     		movl	%ecx, %edi
+ 416 0003 56       		pushl	%esi
+ 417              		.cfi_def_cfa_offset 12
+ 418              		.cfi_offset 6, -12
+ 419 0004 53       		pushl	%ebx
+ 420              		.cfi_def_cfa_offset 16
+ 421              		.cfi_offset 3, -16
+ 422 0005 81ECA000 		subl	$160, %esp
+ 422      0000
+ 423              		.cfi_def_cfa_offset 176
+ 424 000b 8B9C24B0 		movl	176(%esp), %ebx
+ 424      000000
+ 425 0012 8D710C   		leal	12(%ecx), %esi
+ 426 0015 C7442408 		movl	$28, 8(%esp)
+ 426      1C000000 
+ 427 001d 89742404 		movl	%esi, 4(%esp)
+ 428 0021 891C24   		movl	%ebx, (%esp)
+ 429 0024 E8000000 		call	_memcmp
+ 429      00
+ 430 0029 85C0     		testl	%eax, %eax
+ 431 002b 7513     		jne	L77
+ 432 002d 81C4A000 		addl	$160, %esp
+ 432      0000
+ 433              		.cfi_remember_state
+ 434              		.cfi_def_cfa_offset 16
+ 435 0033 5B       		popl	%ebx
+ 436              		.cfi_restore 3
+ 437              		.cfi_def_cfa_offset 12
+ 438 0034 5E       		popl	%esi
+ 439              		.cfi_restore 6
+ 440              		.cfi_def_cfa_offset 8
+ 441 0035 5F       		popl	%edi
+ 442              		.cfi_restore 7
+ 443              		.cfi_def_cfa_offset 4
+ 444 0036 C20400   		ret	$4
+ 445 0039 8DB42600 		.p2align 4,,7
+ 445      000000
+ 446              	L77:
+ 447              		.cfi_restore_state
+ 448 0040 8B03     		movl	(%ebx), %eax
+ 449 0042 D905CC01 		flds	LC6
+ 449      0000
+ 450 0048 89470C   		movl	%eax, 12(%edi)
+ 451 004b 8B4304   		movl	4(%ebx), %eax
+ 452 004e 894710   		movl	%eax, 16(%edi)
+ 453 0051 8B4308   		movl	8(%ebx), %eax
+ 454 0054 894714   		movl	%eax, 20(%edi)
+ 455 0057 8B430C   		movl	12(%ebx), %eax
+ 456 005a 894718   		movl	%eax, 24(%edi)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s 			page 11
+
+
+ 457 005d 8B4310   		movl	16(%ebx), %eax
+ 458 0060 89471C   		movl	%eax, 28(%edi)
+ 459 0063 8B4314   		movl	20(%ebx), %eax
+ 460 0066 894720   		movl	%eax, 32(%edi)
+ 461 0069 8B4318   		movl	24(%ebx), %eax
+ 462 006c 894724   		movl	%eax, 36(%edi)
+ 463 006f A1000000 		movl	__ZL6logger, %eax
+ 463      00
+ 464 0074 D903     		flds	(%ebx)
+ 465 0076 D8C1     		fadd	%st(1), %st
+ 466 0078 D9942490 		fsts	144(%esp)
+ 466      000000
+ 467 007f D94304   		flds	4(%ebx)
+ 468 0082 D8C2     		fadd	%st(2), %st
+ 469 0084 D9942494 		fsts	148(%esp)
+ 469      000000
+ 470 008b D9CA     		fxch	%st(2)
+ 471 008d D84308   		fadds	8(%ebx)
+ 472 0090 890424   		movl	%eax, (%esp)
+ 473 0093 C7442404 		movl	$LC24, 4(%esp)
+ 473      34000000 
+ 474 009b D9942498 		fsts	152(%esp)
+ 474      000000
+ 475 00a2 DD5C2418 		fstpl	24(%esp)
+ 476 00a6 D9C9     		fxch	%st(1)
+ 477 00a8 DD5C2410 		fstpl	16(%esp)
+ 478 00ac DD5C2408 		fstpl	8(%esp)
+ 479 00b0 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 479      00
+ 480 00b5 D9430C   		flds	12(%ebx)
+ 481 00b8 D91C24   		fstps	(%esp)
+ 482 00bb E8000000 		call	_logf
+ 482      00
+ 483 00c0 D9430C   		flds	12(%ebx)
+ 484 00c3 D9C9     		fxch	%st(1)
+ 485 00c5 DBE9     		fucomi	%st(1), %st
+ 486 00c7 DDD9     		fstp	%st(1)
+ 487 00c9 0F8BC101 		jnp	L78
+ 487      0000
+ 488              	L70:
+ 489 00cf D94310   		flds	16(%ebx)
+ 490 00d2 D91C24   		fstps	(%esp)
+ 491 00d5 D95C2420 		fstps	32(%esp)
+ 492 00d9 E8000000 		call	_logf
+ 492      00
+ 493 00de D94314   		flds	20(%ebx)
+ 494 00e1 D91C24   		fstps	(%esp)
+ 495 00e4 D95C2430 		fstps	48(%esp)
+ 496 00e8 E8000000 		call	_logf
+ 496      00
+ 497 00ed A1000000 		movl	__ZL6logger, %eax
+ 497      00
+ 498 00f2 D94314   		flds	20(%ebx)
+ 499 00f5 DD5C2418 		fstpl	24(%esp)
+ 500 00f9 D94310   		flds	16(%ebx)
+ 501 00fc DD5C2410 		fstpl	16(%esp)
+ 502 0100 D9430C   		flds	12(%ebx)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s 			page 12
+
+
+ 503 0103 DD5C2408 		fstpl	8(%esp)
+ 504 0107 890424   		movl	%eax, (%esp)
+ 505 010a C7442404 		movl	$LC26, 4(%esp)
+ 505      70000000 
+ 506 0112 D95C2440 		fstps	64(%esp)
+ 507 0116 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 507      00
+ 508 011b A1000000 		movl	__ZL6logger, %eax
+ 508      00
+ 509 0120 C7442404 		movl	$LC27, 4(%esp)
+ 509      9C000000 
+ 510 0128 890424   		movl	%eax, (%esp)
+ 511 012b D9442440 		flds	64(%esp)
+ 512 012f DD5C2418 		fstpl	24(%esp)
+ 513 0133 D9442430 		flds	48(%esp)
+ 514 0137 DD5C2410 		fstpl	16(%esp)
+ 515 013b D9442420 		flds	32(%esp)
+ 516 013f DD5C2408 		fstpl	8(%esp)
+ 517 0143 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 517      00
+ 518 0148 A1000000 		movl	__ZL6logger, %eax
+ 518      00
+ 519 014d C7442404 		movl	$LC28, 4(%esp)
+ 519      C8000000 
+ 520 0155 890424   		movl	%eax, (%esp)
+ 521 0158 D9E8     		fld1
+ 522 015a D9842490 		flds	144(%esp)
+ 522      000000
+ 523 0161 D8F9     		fdivr	%st(1), %st
+ 524 0163 D9842494 		flds	148(%esp)
+ 524      000000
+ 525 016a D8FA     		fdivr	%st(2), %st
+ 526 016c D9842498 		flds	152(%esp)
+ 526      000000
+ 527 0173 D8FB     		fdivr	%st(3), %st
+ 528 0175 DD542418 		fstl	24(%esp)
+ 529 0179 D9C9     		fxch	%st(1)
+ 530 017b DD542410 		fstl	16(%esp)
+ 531 017f D9CA     		fxch	%st(2)
+ 532 0181 DD542408 		fstl	8(%esp)
+ 533 0185 D9CA     		fxch	%st(2)
+ 534 0187 D95C2470 		fstps	112(%esp)
+ 535 018b D9CA     		fxch	%st(2)
+ 536 018d D95C2450 		fstps	80(%esp)
+ 537 0191 D99C2480 		fstps	128(%esp)
+ 537      000000
+ 538 0198 D95C2460 		fstps	96(%esp)
+ 539 019c E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 539      00
+ 540 01a1 A1000000 		movl	__ZL6logger, %eax
+ 540      00
+ 541 01a6 C7442404 		movl	$LC29, 4(%esp)
+ 541      F2000000 
+ 542 01ae 890424   		movl	%eax, (%esp)
+ 543 01b1 D9442470 		flds	112(%esp)
+ 544 01b5 D9842480 		flds	128(%esp)
+ 544      000000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s 			page 13
+
+
+ 545 01bc DCE9     		fsubr	%st, %st(1)
+ 546 01be D9442420 		flds	32(%esp)
+ 547 01c2 D9442430 		flds	48(%esp)
+ 548 01c6 D8E1     		fsub	%st(1), %st
+ 549 01c8 DEFB     		fdivrp	%st, %st(3)
+ 550 01ca D9442460 		flds	96(%esp)
+ 551 01ce DEE2     		fsubp	%st, %st(2)
+ 552 01d0 D9442440 		flds	64(%esp)
+ 553 01d4 DEE1     		fsubp	%st, %st(1)
+ 554 01d6 DEF9     		fdivrp	%st, %st(1)
+ 555 01d8 DD542410 		fstl	16(%esp)
+ 556 01dc D9C9     		fxch	%st(1)
+ 557 01de DD542408 		fstl	8(%esp)
+ 558 01e2 D95C2470 		fstps	112(%esp)
+ 559 01e6 D95C2460 		fstps	96(%esp)
+ 560 01ea E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 560      00
+ 561 01ef A1000000 		movl	__ZL6logger, %eax
+ 561      00
+ 562 01f4 C7442404 		movl	$LC30, 4(%esp)
+ 562      10010000 
+ 563 01fc 890424   		movl	%eax, (%esp)
+ 564 01ff D9442470 		flds	112(%esp)
+ 565 0203 D9442460 		flds	96(%esp)
+ 566 0207 D8E1     		fsub	%st(1), %st
+ 567 0209 D9442440 		flds	64(%esp)
+ 568 020d D9442430 		flds	48(%esp)
+ 569 0211 D9C1     		fld	%st(1)
+ 570 0213 D8E1     		fsub	%st(1), %st
+ 571 0215 DEFB     		fdivrp	%st, %st(3)
+ 572 0217 D9442420 		flds	32(%esp)
+ 573 021b D9C0     		fld	%st(0)
+ 574 021d D8C2     		fadd	%st(2), %st
+ 575 021f DEC3     		faddp	%st, %st(3)
+ 576 0221 D9442450 		flds	80(%esp)
+ 577 0225 DEF3     		fdivp	%st, %st(3)
+ 578 0227 D9CA     		fxch	%st(2)
+ 579 0229 DECB     		fmulp	%st, %st(3)
+ 580 022b D9CA     		fxch	%st(2)
+ 581 022d D99C249C 		fstps	156(%esp)
+ 581      000000
+ 582 0234 D984249C 		flds	156(%esp)
+ 582      000000
+ 583 023b D95708   		fsts	8(%edi)
+ 584 023e D9C1     		fld	%st(1)
+ 585 0240 D8CA     		fmul	%st(2), %st
+ 586 0242 D9C2     		fld	%st(2)
+ 587 0244 D8CC     		fmul	%st(4), %st
+ 588 0246 D8C1     		fadd	%st(1), %st
+ 589 0248 D9CC     		fxch	%st(4)
+ 590 024a D8C8     		fmul	%st(0), %st
+ 591 024c DEC4     		faddp	%st, %st(4)
+ 592 024e D9CB     		fxch	%st(3)
+ 593 0250 D8C9     		fmul	%st(1), %st
+ 594 0252 DEEC     		fsubrp	%st, %st(4)
+ 595 0254 D9CB     		fxch	%st(3)
+ 596 0256 D95704   		fsts	4(%edi)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s 			page 14
+
+
+ 597 0259 D9C3     		fld	%st(3)
+ 598 025b DECB     		fmulp	%st, %st(3)
+ 599 025d DCC2     		fadd	%st, %st(2)
+ 600 025f D9CA     		fxch	%st(2)
+ 601 0261 DEC9     		fmulp	%st, %st(1)
+ 602 0263 D9842480 		flds	128(%esp)
+ 602      000000
+ 603 026a DEE1     		fsubp	%st, %st(1)
+ 604 026c D917     		fsts	(%edi)
+ 605 026e DD5C2418 		fstpl	24(%esp)
+ 606 0272 DD5C2410 		fstpl	16(%esp)
+ 607 0276 DD5C2408 		fstpl	8(%esp)
+ 608 027a E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 608      00
+ 609 027f 81C4A000 		addl	$160, %esp
+ 609      0000
+ 610              		.cfi_remember_state
+ 611              		.cfi_def_cfa_offset 16
+ 612 0285 5B       		popl	%ebx
+ 613              		.cfi_restore 3
+ 614              		.cfi_def_cfa_offset 12
+ 615 0286 5E       		popl	%esi
+ 616              		.cfi_restore 6
+ 617              		.cfi_def_cfa_offset 8
+ 618 0287 5F       		popl	%edi
+ 619              		.cfi_restore 7
+ 620              		.cfi_def_cfa_offset 4
+ 621 0288 C20400   		ret	$4
+ 622 028b 908D7426 		.p2align 4,,7
+ 622      00
+ 623              	L78:
+ 624              		.cfi_restore_state
+ 625 0290 0F8539FE 		jne	L70
+ 625      FFFF
+ 626 0296 C704245E 		movl	$LC25, (%esp)
+ 626      000000
+ 627 029d D95C2420 		fstps	32(%esp)
+ 628 02a1 E8000000 		call	_firmwareError
+ 628      00
+ 629 02a6 D9442420 		flds	32(%esp)
+ 630 02aa E920FEFF 		jmp	L70
+ 630      FF
+ 631              		.cfi_endproc
+ 632              	LFE106:
+ 633 02af 90       		.section .rdata,"dr"
+ 634              	LC31:
+ 635 0143 74686572 		.ascii "thermistor pointer is NULL\0"
+ 635      6D697374 
+ 635      6F722070 
+ 635      6F696E74 
+ 635      65722069 
+ 636              		.section	.text$_Z20getKelvinTemperatureP14ThermistorConffP14ThermistorMath,"x"
+ 637              		.p2align 4,,15
+ 638              		.globl	__Z20getKelvinTemperatureP14ThermistorConffP14ThermistorMath
+ 639              		.def	__Z20getKelvinTemperatureP14ThermistorConffP14ThermistorMath;	.scl	2;	.type	32;	.endef
+ 640              	__Z20getKelvinTemperatureP14ThermistorConffP14ThermistorMath:
+ 641              	LFB88:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s 			page 15
+
+
+ 642              		.cfi_startproc
+ 643 0000 53       		pushl	%ebx
+ 644              		.cfi_def_cfa_offset 8
+ 645              		.cfi_offset 3, -8
+ 646 0001 83EC18   		subl	$24, %esp
+ 647              		.cfi_def_cfa_offset 32
+ 648 0004 8B5C2428 		movl	40(%esp), %ebx
+ 649 0008 8B442420 		movl	32(%esp), %eax
+ 650 000c 89D9     		movl	%ebx, %ecx
+ 651 000e 890424   		movl	%eax, (%esp)
+ 652 0011 E8000000 		call	__ZN14ThermistorMath4initEP17thermistor_conf_s
+ 652      00
+ 653              		.cfi_def_cfa_offset 28
+ 654 0016 83EC04   		subl	$4, %esp
+ 655              		.cfi_def_cfa_offset 32
+ 656 0019 85DB     		testl	%ebx, %ebx
+ 657 001b 743A     		je	L84
+ 658 001d D9EE     		fldz
+ 659 001f D9442424 		flds	36(%esp)
+ 660 0023 D9C9     		fxch	%st(1)
+ 661 0025 DBE9     		fucomi	%st(1), %st
+ 662 0027 7327     		jae	L85
+ 663 0029 DDD8     		fstp	%st(0)
+ 664 002b D91C24   		fstps	(%esp)
+ 665 002e E8000000 		call	_logf
+ 665      00
+ 666 0033 D94304   		flds	4(%ebx)
+ 667 0036 D8C9     		fmul	%st(1), %st
+ 668 0038 D803     		fadds	(%ebx)
+ 669 003a D94308   		flds	8(%ebx)
+ 670 003d D8CA     		fmul	%st(2), %st
+ 671 003f D8CA     		fmul	%st(2), %st
+ 672 0041 DECA     		fmulp	%st, %st(2)
+ 673 0043 DEC1     		faddp	%st, %st(1)
+ 674 0045 D9E8     		fld1
+ 675 0047 DEF1     		fdivp	%st, %st(1)
+ 676 0049 EB07     		jmp	L81
+ 677 004b 908D7426 		.p2align 4,,7
+ 677      00
+ 678              	L85:
+ 679 0050 DDD9     		fstp	%st(1)
+ 680              	L81:
+ 681 0052 83C418   		addl	$24, %esp
+ 682              		.cfi_remember_state
+ 683              		.cfi_def_cfa_offset 8
+ 684 0055 5B       		popl	%ebx
+ 685              		.cfi_restore 3
+ 686              		.cfi_def_cfa_offset 4
+ 687 0056 C3       		ret
+ 688              		.p2align 4,,7
+ 689              	L84:
+ 690              		.cfi_restore_state
+ 691 0057 C7042443 		movl	$LC31, (%esp)
+ 691      010000
+ 692 005e E8000000 		call	_firmwareError
+ 692      00
+ 693 0063 D905B801 		flds	LC0
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s 			page 16
+
+
+ 693      0000
+ 694 0069 EBE7     		jmp	L81
+ 695              		.cfi_endproc
+ 696              	LFE88:
+ 697 006b 90909090 		.section .rdata,"dr"
+ 697      90
+ 698              	LC32:
+ 699 015e 74686572 		.ascii "thermstr not initialized\0"
+ 699      6D737472 
+ 699      206E6F74 
+ 699      20696E69 
+ 699      7469616C 
+ 700              		.section	.text$_Z15getTemperatureCP14ThermistorConfP14ThermistorMath,"x"
+ 701              		.p2align 4,,15
+ 702              		.globl	__Z15getTemperatureCP14ThermistorConfP14ThermistorMath
+ 703              		.def	__Z15getTemperatureCP14ThermistorConfP14ThermistorMath;	.scl	2;	.type	32;	.endef
+ 704              	__Z15getTemperatureCP14ThermistorConfP14ThermistorMath:
+ 705              	LFB93:
+ 706              		.cfi_startproc
+ 707 0000 53       		pushl	%ebx
+ 708              		.cfi_def_cfa_offset 8
+ 709              		.cfi_offset 3, -8
+ 710 0001 83EC18   		subl	$24, %esp
+ 711              		.cfi_def_cfa_offset 32
+ 712 0004 803D0000 		cmpb	$0, __ZL11initialized
+ 712      000000
+ 713 000b 8B5C2420 		movl	32(%esp), %ebx
+ 714 000f 7427     		je	L90
+ 715 0011 891C24   		movl	%ebx, (%esp)
+ 716 0014 E8000000 		call	__Z13getResistanceP14ThermistorConf
+ 716      00
+ 717 0019 8B442424 		movl	36(%esp), %eax
+ 718 001d 891C24   		movl	%ebx, (%esp)
+ 719 0020 89442408 		movl	%eax, 8(%esp)
+ 720 0024 D95C2404 		fstps	4(%esp)
+ 721 0028 E8000000 		call	__Z20getKelvinTemperatureP14ThermistorConffP14ThermistorMath
+ 721      00
+ 722 002d D825CC01 		fsubs	LC6
+ 722      0000
+ 723 0033 83C418   		addl	$24, %esp
+ 724              		.cfi_remember_state
+ 725              		.cfi_def_cfa_offset 8
+ 726 0036 5B       		popl	%ebx
+ 727              		.cfi_restore 3
+ 728              		.cfi_def_cfa_offset 4
+ 729 0037 C3       		ret
+ 730              		.p2align 4,,7
+ 731              	L90:
+ 732              		.cfi_restore_state
+ 733 0038 C704245E 		movl	$LC32, (%esp)
+ 733      010000
+ 734 003f E8000000 		call	_firmwareError
+ 734      00
+ 735 0044 D905B801 		flds	LC0
+ 735      0000
+ 736 004a 83C418   		addl	$24, %esp
+ 737              		.cfi_def_cfa_offset 8
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s 			page 17
+
+
+ 738 004d 5B       		popl	%ebx
+ 739              		.cfi_restore 3
+ 740              		.cfi_def_cfa_offset 4
+ 741 004e C3       		ret
+ 742              		.cfi_endproc
+ 743              	LFE93:
+ 744 004f 90       		.section .rdata,"dr"
+ 745              	LC33:
+ 746 0177 4E554C4C 		.ascii "NULL engineConfiguration\0"
+ 746      20656E67 
+ 746      696E6543 
+ 746      6F6E6669 
+ 746      67757261 
+ 747              	LC34:
+ 748 0190 756E7265 		.ascii "unrealistic IAT %f\0"
+ 748      616C6973 
+ 748      74696320 
+ 748      49415420 
+ 748      256600
+ 749              		.section	.text$_Z23getIntakeAirTemperaturev,"x"
+ 750              		.p2align 4,,15
+ 751              		.globl	__Z23getIntakeAirTemperaturev
+ 752              		.def	__Z23getIntakeAirTemperaturev;	.scl	2;	.type	32;	.endef
+ 753              	__Z23getIntakeAirTemperaturev:
+ 754              	LFB99:
+ 755              		.cfi_startproc
+ 756 0000 83EC2C   		subl	$44, %esp
+ 757              		.cfi_def_cfa_offset 48
+ 758 0003 A1000000 		movl	_engine, %eax
+ 758      00
+ 759 0008 055C1E00 		addl	$7772, %eax
+ 759      00
+ 760 000d 89442404 		movl	%eax, 4(%esp)
+ 761 0011 A1000000 		movl	_engineConfiguration, %eax
+ 761      00
+ 762 0016 05200100 		addl	$288, %eax
+ 762      00
+ 763 001b 890424   		movl	%eax, (%esp)
+ 764 001e E8000000 		call	__Z15getTemperatureCP14ThermistorConfP14ThermistorMath
+ 764      00
+ 765 0023 D95C241C 		fstps	28(%esp)
+ 766 0027 817C241C 		cmpl	$2143289344, 28(%esp)
+ 766      0000C07F 
+ 767 002f 7412     		je	L92
+ 768 0031 D905D401 		flds	LC9
+ 768      0000
+ 769 0037 D944241C 		flds	28(%esp)
+ 770 003b DBE9     		fucomi	%st(1), %st
+ 771 003d DDD9     		fstp	%st(1)
+ 772 003f 7726     		ja	L103
+ 773 0041 DDD8     		fstp	%st(0)
+ 774              	L92:
+ 775 0043 A1000000 		movl	_engineConfiguration, %eax
+ 775      00
+ 776 0048 85C0     		testl	%eax, %eax
+ 777 004a 7464     		je	L104
+ 778 004c F680D805 		testb	$2, 1496(%eax)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s 			page 18
+
+
+ 778      000002
+ 779 0053 752B     		jne	L105
+ 780 0055 D905E001 		flds	LC14
+ 780      0000
+ 781 005b D95C241C 		fstps	28(%esp)
+ 782              	L99:
+ 783 005f D944241C 		flds	28(%esp)
+ 784 0063 83C42C   		addl	$44, %esp
+ 785              		.cfi_remember_state
+ 786              		.cfi_def_cfa_offset 4
+ 787 0066 C3       		ret
+ 788              		.p2align 4,,7
+ 789              	L103:
+ 790              		.cfi_restore_state
+ 791 0067 D905DC01 		flds	LC11
+ 791      0000
+ 792 006d DFE9     		fucomip	%st(1), %st
+ 793 006f DDD8     		fstp	%st(0)
+ 794 0071 76D0     		jbe	L92
+ 795 0073 D944241C 		flds	28(%esp)
+ 796 0077 83C42C   		addl	$44, %esp
+ 797              		.cfi_remember_state
+ 798              		.cfi_def_cfa_offset 4
+ 799 007a C3       		ret
+ 800 007b 908D7426 		.p2align 4,,7
+ 800      00
+ 801              	L105:
+ 802              		.cfi_restore_state
+ 803 0080 D944241C 		flds	28(%esp)
+ 804 0084 DD5C2408 		fstpl	8(%esp)
+ 805 0088 C7442404 		movl	$LC34, 4(%esp)
+ 805      90010000 
+ 806 0090 C704245E 		movl	$606, (%esp)
+ 806      020000
+ 807 0097 E8000000 		call	_warning
+ 807      00
+ 808 009c D905E001 		flds	LC14
+ 808      0000
+ 809 00a2 D95C241C 		fstps	28(%esp)
+ 810 00a6 D944241C 		flds	28(%esp)
+ 811 00aa 83C42C   		addl	$44, %esp
+ 812              		.cfi_remember_state
+ 813              		.cfi_def_cfa_offset 4
+ 814 00ad C3       		ret
+ 815 00ae 6690     		.p2align 4,,7
+ 816              	L104:
+ 817              		.cfi_restore_state
+ 818 00b0 C7042477 		movl	$LC33, (%esp)
+ 818      010000
+ 819 00b7 E8000000 		call	_firmwareError
+ 819      00
+ 820 00bc D905B801 		flds	LC0
+ 820      0000
+ 821 00c2 D95C241C 		fstps	28(%esp)
+ 822 00c6 EB97     		jmp	L99
+ 823              		.cfi_endproc
+ 824              	LFE99:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s 			page 19
+
+
+ 825 00c8 90909090 		.section .rdata,"dr"
+ 825      90909090 
+ 826              	LC36:
+ 827 01a3 756E7265 		.ascii "unrealistic CLT %f\0"
+ 827      616C6973 
+ 827      74696320 
+ 827      434C5420 
+ 827      256600
+ 828              		.section	.text$_Z21getCoolantTemperaturev,"x"
+ 829              		.p2align 4,,15
+ 830              		.globl	__Z21getCoolantTemperaturev
+ 831              		.def	__Z21getCoolantTemperaturev;	.scl	2;	.type	32;	.endef
+ 832              	__Z21getCoolantTemperaturev:
+ 833              	LFB96:
+ 834              		.cfi_startproc
+ 835 0000 83EC2C   		subl	$44, %esp
+ 836              		.cfi_def_cfa_offset 48
+ 837 0003 A1000000 		movl	_engine, %eax
+ 837      00
+ 838 0008 05841E00 		addl	$7812, %eax
+ 838      00
+ 839 000d 89442404 		movl	%eax, 4(%esp)
+ 840 0011 A1000000 		movl	_engineConfiguration, %eax
+ 840      00
+ 841 0016 05000100 		addl	$256, %eax
+ 841      00
+ 842 001b 890424   		movl	%eax, (%esp)
+ 843 001e E8000000 		call	__Z15getTemperatureCP14ThermistorConfP14ThermistorMath
+ 843      00
+ 844 0023 D95C241C 		fstps	28(%esp)
+ 845 0027 817C241C 		cmpl	$2143289344, 28(%esp)
+ 845      0000C07F 
+ 846 002f 7412     		je	L107
+ 847 0031 D905D401 		flds	LC9
+ 847      0000
+ 848 0037 D944241C 		flds	28(%esp)
+ 849 003b DBE9     		fucomi	%st(1), %st
+ 850 003d DDD9     		fstp	%st(1)
+ 851 003f 7726     		ja	L118
+ 852 0041 DDD8     		fstp	%st(0)
+ 853              	L107:
+ 854 0043 A1000000 		movl	_engineConfiguration, %eax
+ 854      00
+ 855 0048 85C0     		testl	%eax, %eax
+ 856 004a 7464     		je	L119
+ 857 004c 80B8D805 		cmpb	$0, 1496(%eax)
+ 857      000000
+ 858 0053 782B     		js	L120
+ 859 0055 D905E401 		flds	LC35
+ 859      0000
+ 860 005b D95C241C 		fstps	28(%esp)
+ 861              	L114:
+ 862 005f D944241C 		flds	28(%esp)
+ 863 0063 83C42C   		addl	$44, %esp
+ 864              		.cfi_remember_state
+ 865              		.cfi_def_cfa_offset 4
+ 866 0066 C3       		ret
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s 			page 20
+
+
+ 867              		.p2align 4,,7
+ 868              	L118:
+ 869              		.cfi_restore_state
+ 870 0067 D905D801 		flds	LC10
+ 870      0000
+ 871 006d DFE9     		fucomip	%st(1), %st
+ 872 006f DDD8     		fstp	%st(0)
+ 873 0071 76D0     		jbe	L107
+ 874 0073 D944241C 		flds	28(%esp)
+ 875 0077 83C42C   		addl	$44, %esp
+ 876              		.cfi_remember_state
+ 877              		.cfi_def_cfa_offset 4
+ 878 007a C3       		ret
+ 879 007b 908D7426 		.p2align 4,,7
+ 879      00
+ 880              	L120:
+ 881              		.cfi_restore_state
+ 882 0080 D944241C 		flds	28(%esp)
+ 883 0084 DD5C2408 		fstpl	8(%esp)
+ 884 0088 C7442404 		movl	$LC36, 4(%esp)
+ 884      A3010000 
+ 885 0090 C704245E 		movl	$606, (%esp)
+ 885      020000
+ 886 0097 E8000000 		call	_warning
+ 886      00
+ 887 009c D905E401 		flds	LC35
+ 887      0000
+ 888 00a2 D95C241C 		fstps	28(%esp)
+ 889 00a6 D944241C 		flds	28(%esp)
+ 890 00aa 83C42C   		addl	$44, %esp
+ 891              		.cfi_remember_state
+ 892              		.cfi_def_cfa_offset 4
+ 893 00ad C3       		ret
+ 894 00ae 6690     		.p2align 4,,7
+ 895              	L119:
+ 896              		.cfi_restore_state
+ 897 00b0 C7042477 		movl	$LC33, (%esp)
+ 897      010000
+ 898 00b7 E8000000 		call	_firmwareError
+ 898      00
+ 899 00bc D905B801 		flds	LC0
+ 899      0000
+ 900 00c2 D95C241C 		fstps	28(%esp)
+ 901 00c6 EB97     		jmp	L114
+ 902              		.cfi_endproc
+ 903              	LFE96:
+ 904 00c8 90909090 		.section	.data$_ZL11initialized,"w"
+ 904      90909090 
+ 905              	__ZL11initialized:
+ 906 0000 00       		.space 1
+ 907 0001 000000   		.section	.data$_ZL6logger,"w"
+ 908              		.align 4
+ 909              	__ZL6logger:
+ 910 0000 00000000 		.space 4
+ 911              		.section .rdata,"dr"
+ 912 01b6 0000     		.align 4
+ 913              	LC0:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s 			page 21
+
+
+ 914 01b8 0000C07F 		.long	2143289344
+ 915              		.align 4
+ 916              	LC2:
+ 917 01bc 0000803F 		.long	1065353216
+ 918              		.align 4
+ 919              	LC3:
+ 920 01c0 00001041 		.long	1091567616
+ 921              		.align 4
+ 922              	LC4:
+ 923 01c4 0000A040 		.long	1084227584
+ 924              		.align 4
+ 925              	LC5:
+ 926 01c8 00000042 		.long	1107296256
+ 927              		.align 4
+ 928              	LC6:
+ 929 01cc 33938843 		.long	1133024051
+ 930              		.align 4
+ 931              	LC8:
+ 932 01d0 010C403A 		.long	977275905
+ 933              		.align 4
+ 934              	LC9:
+ 935 01d4 000048C2 		.long	-1035468800
+ 936              		.align 4
+ 937              	LC10:
+ 938 01d8 00007A43 		.long	1132068864
+ 939              		.align 4
+ 940              	LC11:
+ 941 01dc 0000C842 		.long	1120403456
+ 942              		.align 4
+ 943              	LC14:
+ 944 01e0 0000F041 		.long	1106247680
+ 945              		.align 4
+ 946              	LC35:
+ 947 01e4 00008C42 		.long	1116471296
+ 948              		.def	__Z11getAdcValuePKci;	.scl	2;	.type	32;	.endef
+ 949              		.def	_firmwareError;	.scl	2;	.type	32;	.endef
+ 950              		.def	_memcmp;	.scl	2;	.type	32;	.endef
+ 951              		.def	__Z11scheduleMsgP7LoggingPKcz;	.scl	2;	.type	32;	.endef
+ 952              		.def	_logf;	.scl	2;	.type	32;	.endef
+ 953              		.def	_warning;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s 			page 22
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 thermistors.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s:6      .text$_Z21getR1InVoltageDividorfff:00000000 __Z21getR1InVoltageDividorfff
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s:21     .text$_Z21getR2InVoltageDividorfff:00000000 __Z21getR2InVoltageDividorfff
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s:52     .text$_Z23getVoutInVoltageDividorfff:00000000 __Z23getVoutInVoltageDividorfff
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s:68     .text$_Z17convertCelsiustoFf:00000000 __Z17convertCelsiustoFf
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s:82     .text$_Z17convertFtoCelsiusf:00000000 __Z17convertFtoCelsiusf
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s:96     .text$_Z25convertKelvinToFahrenheitf:00000000 __Z25convertKelvinToFahrenheitf
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s:114    .text$_Z13getResistanceP14ThermistorConf:00000000 __Z13getResistanceP14ThermistorConf
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s:174    .text$_Z25isValidCoolantTemperaturef:00000000 __Z25isValidCoolantTemperaturef
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s:202    .text$_Z27isValidIntakeAirTemperaturef:00000000 __Z27isValidIntakeAirTemperaturef
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s:230    .text$_Z26setThermistorConfigurationP14ThermistorConfffffff:00000000 __Z26setThermistorConfigurationP14ThermistorConfffffff
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s:253    .text$_Z14setDodgeSensorP14ThermistorConf:00000000 __Z14setDodgeSensorP14ThermistorConf
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s:270    .text$_Z18setCommonNTCSensorP14ThermistorConf:00000000 __Z18setCommonNTCSensorP14ThermistorConf
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s:292    .text$_Z15initThermistorsP7Logging:00000000 __Z15initThermistorsP7Logging
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s:909    .data$_ZL6logger:00000000 __ZL6logger
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s:905    .data$_ZL11initialized:00000000 __ZL11initialized
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s:320    .text$_ZN14ThermistorMathC2Ev:00000000 __ZN14ThermistorMathC2Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s:320    .text$_ZN14ThermistorMathC2Ev:00000000 __ZN14ThermistorMathC1Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s:409    .text$_ZN14ThermistorMath4initEP17thermistor_conf_s:00000000 __ZN14ThermistorMath4initEP17thermistor_conf_s
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s:640    .text$_Z20getKelvinTemperatureP14ThermistorConffP14ThermistorMath:00000000 __Z20getKelvinTemperatureP14ThermistorConffP14ThermistorMath
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s:704    .text$_Z15getTemperatureCP14ThermistorConfP14ThermistorMath:00000000 __Z15getTemperatureCP14ThermistorConfP14ThermistorMath
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s:753    .text$_Z23getIntakeAirTemperaturev:00000000 __Z23getIntakeAirTemperaturev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccufhgPp.s:832    .text$_Z21getCoolantTemperaturev:00000000 __Z21getCoolantTemperaturev
+
+UNDEFINED SYMBOLS
+_engineConfiguration
+_engine
+__Z11getAdcValuePKci
+_firmwareError
+_memcmp
+__Z11scheduleMsgP7LoggingPKcz
+_logf
+_warning

@@ -46,7 +46,7 @@
 #define STM32_HSE_ENABLED                   TRUE
 
 // change this 'FALSE to TRUE if you have the LSE 32768 quarts
-#define STM32_LSE_ENABLED                   FALSE
+#define STM32_LSE_ENABLED                   TRUE
 
 #define STM32_CLOCK48_REQUIRED              TRUE
 #define STM32_SW                            STM32_SW_PLL

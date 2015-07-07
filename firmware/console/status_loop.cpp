@@ -148,11 +148,13 @@ static void printSensors(Logging *log, bool fileFormat) {
 	float sec = ((float) nowMs) / 1000;
 	reportSensorF(log, fileFormat, "time", "", sec, 3);
 
+	int rpm = 0;
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
-	reportSensorI(log, fileFormat, "rpm", "RPM", getRpmE(engine));
+	rpm = getRpmE(engine);
+	reportSensorI(log, fileFormat, "rpm", "RPM", rpm);
 
-	reportSensorF(log, fileFormat, "TRG_0_DUTY", "%", getTriggerDutyCycle(0), 2);
-	reportSensorF(log, fileFormat, "TRG_1_DUTY", "%", getTriggerDutyCycle(1), 2);
+//	reportSensorF(log, fileFormat, "TRG_0_DUTY", "%", getTriggerDutyCycle(0), 2);
+//	reportSensorF(log, fileFormat, "TRG_1_DUTY", "%", getTriggerDutyCycle(1), 2);
 #endif
 
 	if (hasMafSensor()) {
@@ -181,10 +183,22 @@ static void printSensors(Logging *log, bool fileFormat) {
 		reportSensorF(log, fileFormat, "vss", "kph", getVehicleSpeed(), 2);
 	}
 #endif /* EFI_PROD_CODE */
+
+	reportSensorF(log, fileFormat, "ks", "count", engine->knockCount, 0);
+
+
 //	reportSensorF(log, fileFormat, "vref", "V", getVRef(engineConfiguration), 2);
-	reportSensorF(log, fileFormat, "vbatt", "V", getVBatt(PASS_ENGINE_PARAMETER_F), 2);
+	if (hasVBatt(PASS_ENGINE_PARAMETER_F)) {
+		reportSensorF(log, fileFormat, "vbatt", "V", getVBatt(PASS_ENGINE_PARAMETER_F), 2);
+	}
 
 	reportSensorF(log, fileFormat, "TP", "%", getTPS(PASS_ENGINE_PARAMETER_F), 2);
+
+	if (fileFormat) {
+		reportSensorF(log, fileFormat, "tpsacc", "ms", engine->tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_F), 2);
+		reportSensorF(log, fileFormat, "advance", "deg", engine->tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_F), 2);
+		reportSensorF(log, fileFormat, "advance", "deg", getFuelMs(rpm PASS_ENGINE_PARAMETER), 2);
+	}
 
 	if (engineConfiguration->hasCltSensor) {
 		reportSensorF(log, fileFormat, "CLT", "C", getCoolantTemperature(PASS_ENGINE_PARAMETER_F), 2);
@@ -389,7 +403,7 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 	scheduleMsg(&logger2, "algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->algorithm),
 			boolToString(enginePins.fuelPumpRelay.getLogicValue()));
 
-	scheduleMsg(&logger2, "phase=%f correction=%f", getInjectionAngle(rpm), engineConfiguration->globalFuelCorrection);
+	scheduleMsg(&logger2, "phase=%f correction=%f", getinjectionOffset(rpm), engineConfiguration->globalFuelCorrection);
 
 	scheduleMsg(&logger2, "baro correction=%f", engine->engineState.baroCorrection);
 
@@ -555,11 +569,15 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->coolant_temperature = coolant;
 	tsOutputChannels->intakeAirTemperature = intake;
 	tsOutputChannels->throttlePositon = tps;
-	tsOutputChannels->massAirFlowVoltage = getMaf();
+	if (hasMafSensor()) {
+		tsOutputChannels->massAirFlowVoltage = getMaf();
+	}
 	tsOutputChannels->massAirFlowValue = getRealMaf();
 	tsOutputChannels->veValue = veMap.getValue(getMap(), rpm);
 	tsOutputChannels->airFuelRatio = getAfr();
-	tsOutputChannels->vBatt = getVBatt(PASS_ENGINE_PARAMETER_F);
+	if (hasVBatt(PASS_ENGINE_PARAMETER_F)) {
+		tsOutputChannels->vBatt = getVBatt(PASS_ENGINE_PARAMETER_F);
+	}
 	tsOutputChannels->tpsADC = getTPS10bitAdc(PASS_ENGINE_PARAMETER_F);
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	tsOutputChannels->baroPressure = getBaroPressure();
@@ -575,6 +593,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->pedalPosition = getPedalPosition(PASS_ENGINE_PARAMETER_F);
 	tsOutputChannels->knockCount = engine->knockCount;
 	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER);
+	tsOutputChannels->fuelLevel = engine->engineState.fuelLevel;
+	tsOutputChannels->hasFatalError = hasFirmwareError();
 
 	tsOutputChannels->checkEngine = hasErrorCodes();
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -606,7 +626,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->isIatError = !isValidIntakeAirTemperature(getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F));
 #endif /* EFI_PROD_CODE */
 
-	tsOutputChannels->knockNowIndicator = engine->knockNow;
+	tsOutputChannels->knockNowIndicator = engine->knockCount > 0;
 	tsOutputChannels->knockEverIndicator = engine->knockEver;
 
 	tsOutputChannels->clutchUpState = engine->clutchUpState;

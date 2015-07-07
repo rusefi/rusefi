@@ -55,7 +55,7 @@ public class Rom extends DefaultMutableTreeNode implements Serializable  {
     private static final Logger LOGGER = Logger.getLogger(Rom.class);
     private RomID romID = new RomID();
     private String fileName = "";
-    private final Vector<TableTreeNode> tableNodes = new Vector<TableTreeNode>();
+    private final Vector<TableTreeNode> tableNodes = new Vector<>();
     private byte[] binData;
     private boolean isAbstract = false;
 
@@ -112,35 +112,9 @@ public class Rom extends DefaultMutableTreeNode implements Serializable  {
         }
     }
 
-    public void addTableByName(Table table) {
-        boolean found = false;
-        String frameTitle = this.getFileName()+" - "+table.getName();
-
-        for (int i = 0; i < tableNodes.size(); i++) {
-            if (tableNodes.get(i).getTable().getName().equalsIgnoreCase(table.getName())) {
-                tableNodes.remove(i);
-                tableNodes.add(i, new TableTreeNode(new TableFrame(frameTitle, table)));
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            tableNodes.add(new TableTreeNode(new TableFrame(frameTitle, table)));
-        }
-    }
-
     public void removeTable(Table table) {
         for(int i = 0; i < tableNodes.size(); i++) {
             if(tableNodes.get(i).getTable().equals(table)) {
-                tableNodes.remove(i);
-                return;
-            }
-        }
-    }
-
-    public void removeTableByName(Table table) {
-        for(int i = 0; i < tableNodes.size(); i++) {
-            if(tableNodes.get(i).getTable().getName().equalsIgnoreCase(table.getName())) {
                 tableNodes.remove(i);
                 return;
             }
@@ -161,7 +135,7 @@ public class Rom extends DefaultMutableTreeNode implements Serializable  {
     }
 
     public List<Table> findTables(String regex) {
-        List<Table> result = new ArrayList<Table>();
+        List<Table> result = new ArrayList<>();
         for (TableTreeNode tableNode : tableNodes) {
             String name = tableNode.getTable().getName();
             if (name.matches(regex)) result.add(tableNode.getTable());
@@ -178,38 +152,27 @@ public class Rom extends DefaultMutableTreeNode implements Serializable  {
             progress.update("Populating tables...", 50 + currProgress);
 
             Table table = tableNodes.get(i).getTable();
-            try {
+//            try {
                 // if storageaddress has not been set (or is set to 0) omit table
                 if (table.getStorageAddress() != 0) {
-                    try {
+   //                 try {
                         table.populateTable(binData, this.getRomID().getRamOffset());
                         TableUpdateHandler.getInstance().registerTable(table);
 
                         if (null != table.getName() && table.getName().equalsIgnoreCase("Checksum Fix")){
                             setEditStamp(binData, table.getStorageAddress());
                         }
-                    } catch (ArrayIndexOutOfBoundsException ex) {
-
-                        LOGGER.error(table.getName() +
-                                " type " + table.getType() + " start " +
-                                table.getStorageAddress() + " " + binData.length + " filesize", ex);
-
-                        // table storage address extends beyond end of file
-                        JOptionPane.showMessageDialog(SwingUtilities.windowForComponent(table), "Storage address for table \"" + table.getName() +
-                                "\" is out of bounds.\nPlease check ECU definition file.", "ECU Definition Error", JOptionPane.ERROR_MESSAGE);
-                        tableNodes.removeElementAt(i);
-                        i--;
-                    } catch (IndexOutOfBoundsException iex) {
-                        LOGGER.error(table.getName() +
-                                " type " + table.getType() + " start " +
-                                table.getStorageAddress() + " " + binData.length + " filesize", iex);
-
-                        // table storage address extends beyond end of file
-                        JOptionPane.showMessageDialog(SwingUtilities.windowForComponent(table), "Storage address for table \"" + table.getName() +
-                                "\" is out of bounds.\nPlease check ECU definition file.", "ECU Definition Error", JOptionPane.ERROR_MESSAGE);
-                        tableNodes.removeElementAt(i);
-                        i--;
-                    }
+//                    } catch (IndexOutOfBoundsException iex) {
+//                        LOGGER.error(table.getName() +
+//                                " type " + table.getType() + " start " +
+//                                table.getStorageAddress() + " " + binData.length + " filesize", iex);
+//
+//                        // table storage address extends beyond end of file
+//                        JOptionPane.showMessageDialog(SwingUtilities.windowForComponent(table), "Storage address for table \"" + table.getName() +
+//                                "\" is out of bounds.\nPlease check ECU definition file.", "ECU Definition Error", JOptionPane.ERROR_MESSAGE);
+//                        tableNodes.removeElementAt(i);
+//                        i--;
+//                    }
 
                 } else {
                     tableNodes.removeElementAt(i);
@@ -217,12 +180,12 @@ public class Rom extends DefaultMutableTreeNode implements Serializable  {
                     i--;
                 }
 
-            } catch (NullPointerException ex) {
-                LOGGER.error("Error Populating Table", ex);
-                JOptionPane.showMessageDialog(SwingUtilities.windowForComponent(table), "There was an error loading table " + table.getName(), "ECU Definition Error", JOptionPane.ERROR_MESSAGE);
-                tableNodes.removeElementAt(i);
-                i--;
-            }
+//            } catch (NullPointerException ex) {
+//                LOGGER.error("Error Populating Table", ex);
+//                JOptionPane.showMessageDialog(SwingUtilities.windowForComponent(table), "There was an error loading table " + table.getName(), "ECU Definition Error", JOptionPane.ERROR_MESSAGE);
+//                tableNodes.removeElementAt(i);
+//                i--;
+//            }
         }
     }
 
@@ -260,8 +223,8 @@ public class Rom extends DefaultMutableTreeNode implements Serializable  {
     public String toString() {
         String output = "";
         output = output + "\n---- Rom ----" + romID.toString();
-        for (int i = 0; i < tableNodes.size(); i++) {
-            output = output + tableNodes.get(i).getTable();
+        for (TableTreeNode tableNode : tableNodes) {
+            output = output + tableNode.getTable();
         }
         output = output + "\n---- End Rom ----";
 
@@ -273,7 +236,7 @@ public class Rom extends DefaultMutableTreeNode implements Serializable  {
     }
 
     public Vector<Table> getTables() {
-        Vector<Table> tables = new Vector<Table>();
+        Vector<Table> tables = new Vector<>();
         for(TableTreeNode tableNode : tableNodes) {
             tables.add(tableNode.getTable());
         }
@@ -289,69 +252,10 @@ public class Rom extends DefaultMutableTreeNode implements Serializable  {
     }
 
     public byte[] saveFile() {
-        final List<TableTreeNode> checksumTables = new ArrayList<TableTreeNode>();
         for (TableTreeNode tableNode : tableNodes) {
             tableNode.getTable().saveFile(binData);
-            if (tableNode.getTable().getName().contains("Checksum Fix")) {
-                checksumTables.add(tableNode);
-            }
         }
 
-        if (checksumTables.size() == 1) {
-            final TableTreeNode checksum = checksumTables.get(0);
-            byte count = binData[checksum.getTable().getStorageAddress() + 207];
-            if (count == -1) {
-                count = 1;
-            }
-            else {
-                count++;
-            }
-            String currentDate = new SimpleDateFormat("yyMMdd").format(new Date());
-            String stamp = String.format("%s%02x", currentDate, count);
-            byte[] romStamp = asBytes(stamp);
-            System.arraycopy(
-                    romStamp,
-                    0,
-                    binData,
-                    checksum.getTable().getStorageAddress() + 204,
-                    4);
-            setEditStamp(binData, checksum.getTable().getStorageAddress());
-        }
-
-        for (TableTreeNode checksum : checksumTables) {
-            if (!checksum.getTable().isLocked()) {
-                calculateRomChecksum(
-                        binData,
-                        checksum.getTable().getStorageAddress(),
-                        checksum.getTable().getDataSize()
-                );
-            }
-            else if (checksum.getTable().isLocked() &&
-                    !checksum.getTable().isButtonSelected()) {
-                
-                Object[] options = {"Yes", "No"};
-                final String message = String.format(
-                        "One or more ROM image Checksums is invalid. " +
-                        "Calculate new Checksums?%n" +
-                        "(NOTE: this will only fix the Checksums it will NOT repair a corrupt ROM image)");
-                int answer = showOptionDialog(
-                        SwingUtilities.windowForComponent(checksum.getTable()),
-                        message,
-                        "Checksum Fix",
-                        DEFAULT_OPTION,
-                        QUESTION_MESSAGE,
-                        null,
-                        options,
-                        options[0]);
-                if (answer == 0) {
-                    calculateRomChecksum(
-                            binData,
-                            checksum.getTable().getStorageAddress(),
-                            checksum.getTable().getDataSize()
-                    );
-                }
-            }
-        }
         return binData;
     }
 

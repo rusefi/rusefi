@@ -14,10 +14,11 @@
 #if EFI_SUPPORT_FORD_FIESTA || defined(__DOXYGEN__)
 
 #include "ford_fiesta.h"
-#include "engine_configuration.h"
 #include "engine_math.h"
 
-void setFordFiestaDefaultEngineConfiguration(engine_configuration_s *engineConfiguration) {
+EXTERN_ENGINE;
+
+void setFordFiestaDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->rpmHardLimit = 7000;
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 
@@ -26,7 +27,17 @@ void setFordFiestaDefaultEngineConfiguration(engine_configuration_s *engineConfi
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->specs.firingOrder = FO_1_THEN_3_THEN_4_THEN2;
 	engineConfiguration->hasMafSensor = true;
-	engineConfiguration->mafAdcChannel = EFI_ADC_1;
+	engineConfiguration->mafAdcChannel = EFI_ADC_14;
+//	engineConfiguration->mafAdcChannel = EFI_ADC_NONE; this would kill functional tests
+
+
+	// etb testing
+//	boardConfiguration->clutchUpPin
+	boardConfiguration->etbControlPin1 = GPIOD_3;
+	engineConfiguration->pedalPositionChannel = EFI_ADC_1;
+
+	engineConfiguration->tpsMin = 337;
+	engineConfiguration->tpsMax = 896;
 }
 
 #endif /* EFI_SUPPORT_FORD_FIESTA */

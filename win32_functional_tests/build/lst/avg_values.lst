@@ -1,0 +1,385 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc2auCPO.s 			page 1
+
+
+   1              		.file	"avg_values.cpp"
+   2              		.section	.text$_Z7avgFillP8AvgTableif,"x"
+   3              		.p2align 4,,15
+   4              		.globl	__Z7avgFillP8AvgTableif
+   5              		.def	__Z7avgFillP8AvgTableif;	.scl	2;	.type	32;	.endef
+   6              	__Z7avgFillP8AvgTableif:
+   7              	LFB27:
+   8              		.cfi_startproc
+   9 0000 56       		pushl	%esi
+  10              		.cfi_def_cfa_offset 8
+  11              		.cfi_offset 6, -8
+  12 0001 53       		pushl	%ebx
+  13              		.cfi_def_cfa_offset 12
+  14              		.cfi_offset 3, -12
+  15 0002 8B74240C 		movl	12(%esp), %esi
+  16 0006 31DB     		xorl	%ebx, %ebx
+  17 0008 8B4C2410 		movl	16(%esp), %ecx
+  18 000c D9442414 		flds	20(%esp)
+  19 0010 8D96C024 		leal	9408(%esi), %edx
+  19      0000
+  20              		.p2align 4,,7
+  21              	L2:
+  22 0016 8D045B   		leal	(%ebx,%ebx,2), %eax
+  23 0019 C1E006   		sall	$6, %eax
+  24 001c 8D840600 		leal	9216(%esi,%eax), %eax
+  24      240000
+  25              		.p2align 4,,7
+  26              	L3:
+  27 0023 8908     		movl	%ecx, (%eax)
+  28 0025 D99000DC 		fsts	-9216(%eax)
+  28      FFFF
+  29 002b 83C004   		addl	$4, %eax
+  30 002e 39C2     		cmpl	%eax, %edx
+  31 0030 75F1     		jne	L3
+  32 0032 83C301   		addl	$1, %ebx
+  33 0035 81C2C000 		addl	$192, %edx
+  33      0000
+  34 003b 83FB30   		cmpl	$48, %ebx
+  35 003e 75D6     		jne	L2
+  36 0040 DDD8     		fstp	%st(0)
+  37 0042 5B       		popl	%ebx
+  38              		.cfi_restore 3
+  39              		.cfi_def_cfa_offset 8
+  40 0043 5E       		popl	%esi
+  41              		.cfi_restore 6
+  42              		.cfi_def_cfa_offset 4
+  43 0044 C3       		ret
+  44              		.cfi_endproc
+  45              	LFE27:
+  46 0045 90909090 		.section	.text$_Z8avgResetP8AvgTable,"x"
+  46      90909090 
+  46      909090
+  47              		.p2align 4,,15
+  48              		.globl	__Z8avgResetP8AvgTable
+  49              		.def	__Z8avgResetP8AvgTable;	.scl	2;	.type	32;	.endef
+  50              	__Z8avgResetP8AvgTable:
+  51              	LFB28:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc2auCPO.s 			page 2
+
+
+  52              		.cfi_startproc
+  53 0000 53       		pushl	%ebx
+  54              		.cfi_def_cfa_offset 8
+  55              		.cfi_offset 3, -8
+  56 0001 8B5C2408 		movl	8(%esp), %ebx
+  57 0005 31C9     		xorl	%ecx, %ecx
+  58 0007 8D93C024 		leal	9408(%ebx), %edx
+  58      0000
+  59 000d 8D7600   		.p2align 4,,7
+  60              	L9:
+  61 0010 8D0449   		leal	(%ecx,%ecx,2), %eax
+  62 0013 C1E006   		sall	$6, %eax
+  63 0016 8D840300 		leal	9216(%ebx,%eax), %eax
+  63      240000
+  64 001d 8D7600   		.p2align 4,,7
+  65              	L10:
+  66 0020 C7000000 		movl	$0, (%eax)
+  66      0000
+  67 0026 C78000DC 		movl	$0x00000000, -9216(%eax)
+  67      FFFF0000 
+  67      0000
+  68 0030 83C004   		addl	$4, %eax
+  69 0033 39C2     		cmpl	%eax, %edx
+  70 0035 75E9     		jne	L10
+  71 0037 83C101   		addl	$1, %ecx
+  72 003a 81C2C000 		addl	$192, %edx
+  72      0000
+  73 0040 83F930   		cmpl	$48, %ecx
+  74 0043 75CB     		jne	L9
+  75 0045 5B       		popl	%ebx
+  76              		.cfi_restore 3
+  77              		.cfi_def_cfa_offset 4
+  78 0046 C3       		ret
+  79              		.cfi_endproc
+  80              	LFE28:
+  81 0047 90909090 		.section	.text$_Z11avgAddValueP8AvgTableiff,"x"
+  81      90909090 
+  81      90
+  82              		.p2align 4,,15
+  83              		.globl	__Z11avgAddValueP8AvgTableiff
+  84              		.def	__Z11avgAddValueP8AvgTableiff;	.scl	2;	.type	32;	.endef
+  85              	__Z11avgAddValueP8AvgTableiff:
+  86              	LFB29:
+  87              		.cfi_startproc
+  88 0000 53       		pushl	%ebx
+  89              		.cfi_def_cfa_offset 8
+  90              		.cfi_offset 3, -8
+  91 0001 83EC08   		subl	$8, %esp
+  92              		.cfi_def_cfa_offset 16
+  93 0004 8B442414 		movl	20(%esp), %eax
+  94 0008 8B4C2410 		movl	16(%esp), %ecx
+  95 000c D9442418 		flds	24(%esp)
+  96 0010 3D3F1F00 		cmpl	$7999, %eax
+  96      00
+  97 0015 7F69     		jg	L17
+  98 0017 D9050400 		flds	LC2
+  98      0000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc2auCPO.s 			page 3
+
+
+  99 001d D9C9     		fxch	%st(1)
+ 100 001f DBE9     		fucomi	%st(1), %st
+ 101 0021 7361     		jae	L18
+ 102 0023 D80D0800 		fmuls	LC3
+ 102      0000
+ 103 0029 BAD34D62 		movl	$274877907, %edx
+ 103      10
+ 104 002e D97C2406 		fnstcw	6(%esp)
+ 105 0032 8D1C40   		leal	(%eax,%eax,2), %ebx
+ 106 0035 C1E304   		sall	$4, %ebx
+ 107 0038 89D8     		movl	%ebx, %eax
+ 108 003a F7EA     		imull	%edx
+ 109 003c 0FB74424 		movzwl	6(%esp), %eax
+ 109      06
+ 110 0041 DEF1     		fdivp	%st, %st(1)
+ 111 0043 C1FB1F   		sarl	$31, %ebx
+ 112 0046 B40C     		movb	$12, %ah
+ 113 0048 66894424 		movw	%ax, 4(%esp)
+ 113      04
+ 114 004d C1FA09   		sarl	$9, %edx
+ 115 0050 29DA     		subl	%ebx, %edx
+ 116 0052 8D0452   		leal	(%edx,%edx,2), %eax
+ 117 0055 C1E004   		sall	$4, %eax
+ 118 0058 D96C2404 		fldcw	4(%esp)
+ 119 005c DB1C24   		fistpl	(%esp)
+ 120 005f D96C2406 		fldcw	6(%esp)
+ 121 0063 8B1C24   		movl	(%esp), %ebx
+ 122 0066 D944241C 		flds	28(%esp)
+ 123 006a 01D8     		addl	%ebx, %eax
+ 124 006c D80481   		fadds	(%ecx,%eax,4)
+ 125 006f 83848100 		addl	$1, 9216(%ecx,%eax,4)
+ 125      24000001 
+ 126 0077 D91C81   		fstps	(%ecx,%eax,4)
+ 127 007a EB0C     		jmp	L14
+ 128 007c 8D742600 		.p2align 4,,7
+ 129              	L17:
+ 130 0080 DDD8     		fstp	%st(0)
+ 131 0082 EB04     		jmp	L14
+ 132              		.p2align 4,,7
+ 133              	L18:
+ 134 0084 DDD8     		fstp	%st(0)
+ 135 0086 DDD8     		fstp	%st(0)
+ 136              	L14:
+ 137 0088 83C408   		addl	$8, %esp
+ 138              		.cfi_def_cfa_offset 8
+ 139 008b 5B       		popl	%ebx
+ 140              		.cfi_restore 3
+ 141              		.cfi_def_cfa_offset 4
+ 142 008c C3       		ret
+ 143              		.cfi_endproc
+ 144              	LFE29:
+ 145 008d 909090   		.section	.text$_Z20avgGetValueByIndexesP8AvgTableii,"x"
+ 146              		.p2align 4,,15
+ 147              		.globl	__Z20avgGetValueByIndexesP8AvgTableii
+ 148              		.def	__Z20avgGetValueByIndexesP8AvgTableii;	.scl	2;	.type	32;	.endef
+ 149              	__Z20avgGetValueByIndexesP8AvgTableii:
+ 150              	LFB30:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc2auCPO.s 			page 4
+
+
+ 151              		.cfi_startproc
+ 152 0000 83EC04   		subl	$4, %esp
+ 153              		.cfi_def_cfa_offset 8
+ 154 0003 8B44240C 		movl	12(%esp), %eax
+ 155 0007 8B542408 		movl	8(%esp), %edx
+ 156 000b D9050000 		flds	LC0
+ 156      0000
+ 157 0011 8D0440   		leal	(%eax,%eax,2), %eax
+ 158 0014 C1E004   		sall	$4, %eax
+ 159 0017 03442410 		addl	16(%esp), %eax
+ 160 001b 8B8C8200 		movl	9216(%edx,%eax,4), %ecx
+ 160      240000
+ 161 0022 85C9     		testl	%ecx, %ecx
+ 162 0024 740B     		je	L20
+ 163 0026 DDD8     		fstp	%st(0)
+ 164 0028 890C24   		movl	%ecx, (%esp)
+ 165 002b DB0424   		fildl	(%esp)
+ 166 002e D83C82   		fdivrs	(%edx,%eax,4)
+ 167              	L20:
+ 168 0031 83C404   		addl	$4, %esp
+ 169              		.cfi_def_cfa_offset 4
+ 170 0034 C3       		ret
+ 171              		.cfi_endproc
+ 172              	LFE30:
+ 173 0035 90909090 		.section	.text$_Z11avgGetValueP8AvgTableif,"x"
+ 173      90909090 
+ 173      909090
+ 174              		.p2align 4,,15
+ 175              		.globl	__Z11avgGetValueP8AvgTableif
+ 176              		.def	__Z11avgGetValueP8AvgTableif;	.scl	2;	.type	32;	.endef
+ 177              	__Z11avgGetValueP8AvgTableif:
+ 178              	LFB31:
+ 179              		.cfi_startproc
+ 180 0000 83EC08   		subl	$8, %esp
+ 181              		.cfi_def_cfa_offset 12
+ 182 0003 8B442410 		movl	16(%esp), %eax
+ 183 0007 D9442414 		flds	20(%esp)
+ 184 000b D9050000 		flds	LC0
+ 184      0000
+ 185 0011 3D3F1F00 		cmpl	$7999, %eax
+ 185      00
+ 186 0016 7F68     		jg	L32
+ 187 0018 D9050400 		flds	LC2
+ 187      0000
+ 188 001e D9CA     		fxch	%st(2)
+ 189 0020 DBEA     		fucomi	%st(2), %st
+ 190 0022 7360     		jae	L33
+ 191 0024 D80D0800 		fmuls	LC3
+ 191      0000
+ 192 002a BAD34D62 		movl	$274877907, %edx
+ 192      10
+ 193 002f D97C2402 		fnstcw	2(%esp)
+ 194 0033 8D0C40   		leal	(%eax,%eax,2), %ecx
+ 195 0036 C1E104   		sall	$4, %ecx
+ 196 0039 89C8     		movl	%ecx, %eax
+ 197 003b F7EA     		imull	%edx
+ 198 003d 0FB74424 		movzwl	2(%esp), %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc2auCPO.s 			page 5
+
+
+ 198      02
+ 199 0042 DEF2     		fdivp	%st, %st(2)
+ 200 0044 D9C9     		fxch	%st(1)
+ 201 0046 C1F91F   		sarl	$31, %ecx
+ 202 0049 B40C     		movb	$12, %ah
+ 203 004b 66890424 		movw	%ax, (%esp)
+ 204 004f C1FA09   		sarl	$9, %edx
+ 205 0052 29CA     		subl	%ecx, %edx
+ 206 0054 8D0452   		leal	(%edx,%edx,2), %eax
+ 207 0057 C1E004   		sall	$4, %eax
+ 208 005a D92C24   		fldcw	(%esp)
+ 209 005d DB5C2404 		fistpl	4(%esp)
+ 210 0061 D96C2402 		fldcw	2(%esp)
+ 211 0065 8B4C2404 		movl	4(%esp), %ecx
+ 212 0069 01C8     		addl	%ecx, %eax
+ 213 006b 8B4C240C 		movl	12(%esp), %ecx
+ 214 006f 8B948100 		movl	9216(%ecx,%eax,4), %edx
+ 214      240000
+ 215 0076 85D2     		testl	%edx, %edx
+ 216 0078 7516     		jne	L31
+ 217 007a EB0C     		jmp	L25
+ 218 007c 8D742600 		.p2align 4,,7
+ 219              	L32:
+ 220 0080 DDD9     		fstp	%st(1)
+ 221 0082 EB04     		jmp	L25
+ 222              		.p2align 4,,7
+ 223              	L33:
+ 224 0084 DDD8     		fstp	%st(0)
+ 225 0086 DDD9     		fstp	%st(1)
+ 226              	L25:
+ 227 0088 83C408   		addl	$8, %esp
+ 228              		.cfi_remember_state
+ 229              		.cfi_def_cfa_offset 4
+ 230              		.p2align 4,,2
+ 231 008b C3       		ret
+ 232 008c 8D742600 		.p2align 4,,7
+ 233              	L31:
+ 234              		.cfi_restore_state
+ 235 0090 DDD8     		fstp	%st(0)
+ 236 0092 89542404 		movl	%edx, 4(%esp)
+ 237 0096 DB442404 		fildl	4(%esp)
+ 238 009a D83C81   		fdivrs	(%ecx,%eax,4)
+ 239 009d 83C408   		addl	$8, %esp
+ 240              		.cfi_def_cfa_offset 4
+ 241 00a0 C3       		ret
+ 242              		.cfi_endproc
+ 243              	LFE31:
+ 244 00a1 90909090 		.section	.text$_Z17avgGetValuesCountP8AvgTableif,"x"
+ 244      90909090 
+ 244      90909090 
+ 244      909090
+ 245              		.p2align 4,,15
+ 246              		.globl	__Z17avgGetValuesCountP8AvgTableif
+ 247              		.def	__Z17avgGetValuesCountP8AvgTableif;	.scl	2;	.type	32;	.endef
+ 248              	__Z17avgGetValuesCountP8AvgTableif:
+ 249              	LFB32:
+ 250              		.cfi_startproc
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc2auCPO.s 			page 6
+
+
+ 251 0000 83EC08   		subl	$8, %esp
+ 252              		.cfi_def_cfa_offset 12
+ 253 0003 31C0     		xorl	%eax, %eax
+ 254 0005 8B542410 		movl	16(%esp), %edx
+ 255 0009 D9442414 		flds	20(%esp)
+ 256 000d 81FA3F1F 		cmpl	$7999, %edx
+ 256      0000
+ 257 0013 7F5F     		jg	L39
+ 258 0015 D9050400 		flds	LC2
+ 258      0000
+ 259 001b D9C9     		fxch	%st(1)
+ 260 001d DBE9     		fucomi	%st(1), %st
+ 261 001f 7357     		jae	L40
+ 262 0021 D80D0800 		fmuls	LC3
+ 262      0000
+ 263 0027 D97C2406 		fnstcw	6(%esp)
+ 264 002b 8D0C52   		leal	(%edx,%edx,2), %ecx
+ 265 002e BAD34D62 		movl	$274877907, %edx
+ 265      10
+ 266 0033 C1E104   		sall	$4, %ecx
+ 267 0036 89C8     		movl	%ecx, %eax
+ 268 0038 F7EA     		imull	%edx
+ 269 003a 0FB74424 		movzwl	6(%esp), %eax
+ 269      06
+ 270 003f DEF1     		fdivp	%st, %st(1)
+ 271 0041 C1F91F   		sarl	$31, %ecx
+ 272 0044 B40C     		movb	$12, %ah
+ 273 0046 66894424 		movw	%ax, 4(%esp)
+ 273      04
+ 274 004b C1FA09   		sarl	$9, %edx
+ 275 004e 29CA     		subl	%ecx, %edx
+ 276 0050 8D0452   		leal	(%edx,%edx,2), %eax
+ 277 0053 C1E004   		sall	$4, %eax
+ 278 0056 D96C2404 		fldcw	4(%esp)
+ 279 005a DB1C24   		fistpl	(%esp)
+ 280 005d D96C2406 		fldcw	6(%esp)
+ 281 0061 8B0C24   		movl	(%esp), %ecx
+ 282 0064 8D940100 		leal	2304(%ecx,%eax), %edx
+ 282      090000
+ 283 006b 8B44240C 		movl	12(%esp), %eax
+ 284 006f 8B0490   		movl	(%eax,%edx,4), %eax
+ 285 0072 EB08     		jmp	L35
+ 286              		.p2align 4,,7
+ 287              	L39:
+ 288 0074 DDD8     		fstp	%st(0)
+ 289 0076 EB04     		jmp	L35
+ 290              		.p2align 4,,7
+ 291              	L40:
+ 292 0078 DDD8     		fstp	%st(0)
+ 293 007a DDD8     		fstp	%st(0)
+ 294              	L35:
+ 295 007c 83C408   		addl	$8, %esp
+ 296              		.cfi_def_cfa_offset 4
+ 297 007f C3       		ret
+ 298              		.cfi_endproc
+ 299              	LFE32:
+ 300              		.section .rdata,"dr"
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc2auCPO.s 			page 7
+
+
+ 301              		.align 4
+ 302              	LC0:
+ 303 0000 0000C07F 		.long	2143289344
+ 304              		.align 4
+ 305              	LC2:
+ 306 0004 0000A040 		.long	1084227584
+ 307              		.align 4
+ 308              	LC3:
+ 309 0008 00004042 		.long	1111490560
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc2auCPO.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 avg_values.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc2auCPO.s:6      .text$_Z7avgFillP8AvgTableif:00000000 __Z7avgFillP8AvgTableif
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc2auCPO.s:50     .text$_Z8avgResetP8AvgTable:00000000 __Z8avgResetP8AvgTable
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc2auCPO.s:85     .text$_Z11avgAddValueP8AvgTableiff:00000000 __Z11avgAddValueP8AvgTableiff
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc2auCPO.s:149    .text$_Z20avgGetValueByIndexesP8AvgTableii:00000000 __Z20avgGetValueByIndexesP8AvgTableii
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc2auCPO.s:177    .text$_Z11avgGetValueP8AvgTableif:00000000 __Z11avgGetValueP8AvgTableif
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc2auCPO.s:248    .text$_Z17avgGetValuesCountP8AvgTableif:00000000 __Z17avgGetValuesCountP8AvgTableif
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,113 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccTKSw1R.s 			page 1
+
+
+   1              		.file	"test_engine.cpp"
+   2              		.section	.text$_Z26setTestEngineConfigurationv,"x"
+   3              		.p2align 4,,15
+   4              		.globl	__Z26setTestEngineConfigurationv
+   5              		.def	__Z26setTestEngineConfigurationv;	.scl	2;	.type	32;	.endef
+   6              	__Z26setTestEngineConfigurationv:
+   7              	LFB85:
+   8              		.cfi_startproc
+   9 0000 83EC1C   		subl	$28, %esp
+  10              		.cfi_def_cfa_offset 32
+  11 0003 A1000000 		movl	_engineConfiguration, %eax
+  11      00
+  12 0008 C7442404 		movl	$2, 4(%esp)
+  12      02000000 
+  13 0010 890424   		movl	%eax, (%esp)
+  14 0013 E8000000 		call	__Z16setOperationModeP22engine_configuration_s16operation_mode_e
+  14      00
+  15 0018 A1000000 		movl	_engineConfiguration, %eax
+  15      00
+  16 001d 8088E505 		orb	$64, 1509(%eax)
+  16      000040
+  17 0024 C7801802 		movl	$16, 536(%eax)
+  17      00001000 
+  17      0000
+  18 002e C7802002 		movl	$60, 544(%eax)
+  18      00003C00 
+  18      0000
+  19 0038 C7802402 		movl	$0, 548(%eax)
+  19      00000000 
+  19      0000
+  20 0042 C7804402 		movl	$16, 580(%eax)
+  20      00001000 
+  20      0000
+  21 004c C780D801 		movl	$16, 472(%eax)
+  21      00001000 
+  21      0000
+  22 0056 C7042400 		movl	$0x00000000, (%esp)
+  22      000000
+  23 005d E8000000 		call	__Z26setWholeIatCorrTimingTablef
+  23      00
+  24 0062 A1000000 		movl	_engineConfiguration, %eax
+  24      00
+  25 0067 C780BC01 		movl	$0, 444(%eax)
+  25      00000000 
+  25      0000
+  26 0071 C7042400 		movl	$0x40400000, (%esp)
+  26      004040
+  27 0078 E8000000 		call	__Z16setConstantDwellf
+  27      00
+  28 007d A1000000 		movl	_engineConfiguration, %eax
+  28      00
+  29 0082 C780F802 		movl	$80, 760(%eax)
+  29      00005000 
+  29      0000
+  30 008c C780C402 		movl	$39, 708(%eax)
+  30      00002700 
+  30      0000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccTKSw1R.s 			page 2
+
+
+  31 0096 C780C802 		movl	$80, 712(%eax)
+  31      00005000 
+  31      0000
+  32 00a0 C780CC02 		movl	$80, 716(%eax)
+  32      00005000 
+  32      0000
+  33 00aa C780D002 		movl	$80, 720(%eax)
+  33      00005000 
+  33      0000
+  34 00b4 C780D402 		movl	$80, 724(%eax)
+  34      00005000 
+  34      0000
+  35 00be C780D802 		movl	$80, 728(%eax)
+  35      00005000 
+  35      0000
+  36 00c8 C780F403 		movl	$80, 1012(%eax)
+  36      00005000 
+  36      0000
+  37 00d2 C780F803 		movl	$80, 1016(%eax)
+  37      00005000 
+  37      0000
+  38 00dc C780FC03 		movl	$80, 1020(%eax)
+  38      00005000 
+  38      0000
+  39 00e6 C7800004 		movl	$80, 1024(%eax)
+  39      00005000 
+  39      0000
+  40 00f0 80A0D805 		andb	$125, 1496(%eax)
+  40      00007D
+  41 00f7 83C41C   		addl	$28, %esp
+  42              		.cfi_def_cfa_offset 4
+  43 00fa C3       		ret
+  44              		.cfi_endproc
+  45              	LFE85:
+  46              		.def	__Z16setOperationModeP22engine_configuration_s16operation_mode_e;	.scl	2;	.type	32;	.endef
+  47              		.def	__Z26setWholeIatCorrTimingTablef;	.scl	2;	.type	32;	.endef
+  48 00fb 90909090 		.def	__Z16setConstantDwellf;	.scl	2;	.type	32;	.endef
+  48      90
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccTKSw1R.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 test_engine.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccTKSw1R.s:6      .text$_Z26setTestEngineConfigurationv:00000000 __Z26setTestEngineConfigurationv
+
+UNDEFINED SYMBOLS
+_engineConfiguration
+__Z16setOperationModeP22engine_configuration_s16operation_mode_e
+__Z26setWholeIatCorrTimingTablef
+__Z16setConstantDwellf

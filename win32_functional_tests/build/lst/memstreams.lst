@@ -1,0 +1,192 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccuV4y9j.s 			page 1
+
+
+   1              		.file	"memstreams.c"
+   2              		.section	.text$put,"x"
+   3              		.p2align 4,,15
+   4              		.def	_put;	.scl	3;	.type	32;	.endef
+   5              	_put:
+   6              	LFB12:
+   7              		.cfi_startproc
+   8 0000 53       		pushl	%ebx
+   9              		.cfi_def_cfa_offset 8
+  10              		.cfi_offset 3, -8
+  11 0001 8B442408 		movl	8(%esp), %eax
+  12 0005 8B4C240C 		movl	12(%esp), %ecx
+  13 0009 8B500C   		movl	12(%eax), %edx
+  14 000c 395008   		cmpl	%edx, 8(%eax)
+  15 000f 740F     		je	L3
+  16 0011 8B5804   		movl	4(%eax), %ebx
+  17 0014 880C13   		movb	%cl, (%ebx,%edx)
+  18 0017 83400C01 		addl	$1, 12(%eax)
+  19 001b 31C0     		xorl	%eax, %eax
+  20 001d 5B       		popl	%ebx
+  21              		.cfi_remember_state
+  22              		.cfi_restore 3
+  23              		.cfi_def_cfa_offset 4
+  24 001e C3       		ret
+  25 001f 90       		.p2align 4,,7
+  26              	L3:
+  27              		.cfi_restore_state
+  28 0020 B8FEFFFF 		movl	$-2, %eax
+  28      FF
+  29 0025 5B       		popl	%ebx
+  30              		.cfi_restore 3
+  31              		.cfi_def_cfa_offset 4
+  32 0026 C3       		ret
+  33              		.cfi_endproc
+  34              	LFE12:
+  35 0027 90909090 		.section	.text$get,"x"
+  35      90909090 
+  35      90
+  36              		.p2align 4,,15
+  37              		.def	_get;	.scl	3;	.type	32;	.endef
+  38              	_get:
+  39              	LFB13:
+  40              		.cfi_startproc
+  41 0000 8B542404 		movl	4(%esp), %edx
+  42 0004 8B4A10   		movl	16(%edx), %ecx
+  43 0007 394A0C   		cmpl	%ecx, 12(%edx)
+  44 000a 7414     		je	L8
+  45 000c 8B4204   		movl	4(%edx), %eax
+  46 000f 0FB60408 		movzbl	(%eax,%ecx), %eax
+  47 0013 83C101   		addl	$1, %ecx
+  48 0016 894A10   		movl	%ecx, 16(%edx)
+  49 0019 C3       		ret
+  50 001a 8DB60000 		.p2align 4,,7
+  50      0000
+  51              	L8:
+  52 0020 B8FEFFFF 		movl	$-2, %eax
+  52      FF
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccuV4y9j.s 			page 2
+
+
+  53 0025 C3       		ret
+  54              		.cfi_endproc
+  55              	LFE13:
+  56 0026 90909090 		.section	.text$reads,"x"
+  56      90909090 
+  56      9090
+  57              		.p2align 4,,15
+  58              		.def	_reads;	.scl	3;	.type	32;	.endef
+  59              	_reads:
+  60              	LFB11:
+  61              		.cfi_startproc
+  62 0000 83EC1C   		subl	$28, %esp
+  63              		.cfi_def_cfa_offset 32
+  64 0003 895C2414 		movl	%ebx, 20(%esp)
+  65              		.cfi_offset 3, -12
+  66 0007 8B5C2420 		movl	32(%esp), %ebx
+  67 000b 89742418 		movl	%esi, 24(%esp)
+  68              		.cfi_offset 6, -8
+  69 000f 8B742428 		movl	40(%esp), %esi
+  70 0013 8B5310   		movl	16(%ebx), %edx
+  71 0016 8B430C   		movl	12(%ebx), %eax
+  72 0019 29D0     		subl	%edx, %eax
+  73 001b 39C6     		cmpl	%eax, %esi
+  74 001d 0F47F0   		cmova	%eax, %esi
+  75 0020 8B442424 		movl	36(%esp), %eax
+  76 0024 035304   		addl	4(%ebx), %edx
+  77 0027 89742408 		movl	%esi, 8(%esp)
+  78 002b 89542404 		movl	%edx, 4(%esp)
+  79 002f 890424   		movl	%eax, (%esp)
+  80 0032 E8000000 		call	_memcpy
+  80      00
+  81 0037 89F0     		movl	%esi, %eax
+  82 0039 017310   		addl	%esi, 16(%ebx)
+  83 003c 8B5C2414 		movl	20(%esp), %ebx
+  84 0040 8B742418 		movl	24(%esp), %esi
+  85 0044 83C41C   		addl	$28, %esp
+  86              		.cfi_restore 6
+  87              		.cfi_restore 3
+  88              		.cfi_def_cfa_offset 4
+  89 0047 C3       		ret
+  90              		.cfi_endproc
+  91              	LFE11:
+  92 0048 90909090 		.section	.text$writes,"x"
+  92      90909090 
+  93              		.p2align 4,,15
+  94              		.def	_writes;	.scl	3;	.type	32;	.endef
+  95              	_writes:
+  96              	LFB10:
+  97              		.cfi_startproc
+  98 0000 83EC1C   		subl	$28, %esp
+  99              		.cfi_def_cfa_offset 32
+ 100 0003 895C2414 		movl	%ebx, 20(%esp)
+ 101              		.cfi_offset 3, -12
+ 102 0007 8B5C2420 		movl	32(%esp), %ebx
+ 103 000b 89742418 		movl	%esi, 24(%esp)
+ 104              		.cfi_offset 6, -8
+ 105 000f 8B742428 		movl	40(%esp), %esi
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccuV4y9j.s 			page 3
+
+
+ 106 0013 8B530C   		movl	12(%ebx), %edx
+ 107 0016 8B4308   		movl	8(%ebx), %eax
+ 108 0019 29D0     		subl	%edx, %eax
+ 109 001b 39C6     		cmpl	%eax, %esi
+ 110 001d 0F47F0   		cmova	%eax, %esi
+ 111 0020 8B442424 		movl	36(%esp), %eax
+ 112 0024 035304   		addl	4(%ebx), %edx
+ 113 0027 89742408 		movl	%esi, 8(%esp)
+ 114 002b 89442404 		movl	%eax, 4(%esp)
+ 115 002f 891424   		movl	%edx, (%esp)
+ 116 0032 E8000000 		call	_memcpy
+ 116      00
+ 117 0037 89F0     		movl	%esi, %eax
+ 118 0039 01730C   		addl	%esi, 12(%ebx)
+ 119 003c 8B5C2414 		movl	20(%esp), %ebx
+ 120 0040 8B742418 		movl	24(%esp), %esi
+ 121 0044 83C41C   		addl	$28, %esp
+ 122              		.cfi_restore 6
+ 123              		.cfi_restore 3
+ 124              		.cfi_def_cfa_offset 4
+ 125 0047 C3       		ret
+ 126              		.cfi_endproc
+ 127              	LFE10:
+ 128 0048 90909090 		.section	.text$msObjectInit,"x"
+ 128      90909090 
+ 129              		.p2align 4,,15
+ 130              		.globl	_msObjectInit
+ 131              		.def	_msObjectInit;	.scl	2;	.type	32;	.endef
+ 132              	_msObjectInit:
+ 133              	LFB14:
+ 134              		.cfi_startproc
+ 135 0000 8B442404 		movl	4(%esp), %eax
+ 136 0004 8B542408 		movl	8(%esp), %edx
+ 137 0008 C7000000 		movl	$_vmt, (%eax)
+ 137      0000
+ 138 000e 895004   		movl	%edx, 4(%eax)
+ 139 0011 8B54240C 		movl	12(%esp), %edx
+ 140 0015 C7401000 		movl	$0, 16(%eax)
+ 140      000000
+ 141 001c 895008   		movl	%edx, 8(%eax)
+ 142 001f 8B542410 		movl	16(%esp), %edx
+ 143 0023 89500C   		movl	%edx, 12(%eax)
+ 144 0026 C3       		ret
+ 145              		.cfi_endproc
+ 146              	LFE14:
+ 147 0027 90909090 		.section	.rdata$vmt,"dr"
+ 147      90909090 
+ 147      90
+ 148              		.align 4
+ 149              	_vmt:
+ 150 0000 00000000 		.long	_writes
+ 151 0004 00000000 		.long	_reads
+ 152 0008 00000000 		.long	_put
+ 153 000c 00000000 		.long	_get
+ 154              		.def	_memcpy;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccuV4y9j.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 memstreams.c
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuV4y9j.s:5      .text$put:00000000 _put
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuV4y9j.s:38     .text$get:00000000 _get
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuV4y9j.s:59     .text$reads:00000000 _reads
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuV4y9j.s:95     .text$writes:00000000 _writes
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuV4y9j.s:132    .text$msObjectInit:00000000 _msObjectInit
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuV4y9j.s:149    .rdata$vmt:00000000 _vmt
+
+UNDEFINED SYMBOLS
+_memcpy

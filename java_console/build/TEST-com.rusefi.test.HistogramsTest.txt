@@ -1,0 +1,7 @@
+Testsuite: com.rusefi.test.HistogramsTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.243 sec
+
+------------- Standard Output ---------------
+BOUND_LENGTH=895
+[Invocation statistics for 239ms with 5% accuracy and 80% confidence:1,257,101,784,683,765 / 2342335 = 536,687,444 in (0 [0-0-1,718,261,297] 2,172,752,131), Invocation.TOTAL statistics for 239ms with 5% accuracy and 80% confidence:1,257,101,784,683,765 / 2342335 = 536,687,444 in (0 [0-0-1,718,261,297] 2,172,752,131)]
+------------- ---------------- ---------------

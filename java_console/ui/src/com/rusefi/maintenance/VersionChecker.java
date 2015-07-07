@@ -1,7 +1,7 @@
 package com.rusefi.maintenance;
 
 import com.rusefi.FileLog;
-import com.rusefi.io.tcp.TcpConnector;
+import com.rusefi.models.Utils;
 import com.rusefi.ui.util.URLLabel;
 
 import javax.swing.*;
@@ -81,7 +81,7 @@ public class VersionChecker {
     private int parseNotNull(String value, String reason) throws IOException {
         if (value == null)
             throw new IOException("Unexpected file format");
-        return TcpConnector.parseIntWithReason(value, reason);
+        return Utils.parseIntWithReason(value, reason);
     }
 
     private static void showUpdateWarningIfNeeded(final String componentName, final Integer latestVersion, final int currentVersion) {
@@ -112,7 +112,7 @@ public class VersionChecker {
             // no version file yet? nothing to bother about
             return;
         }
-        int latestVersion = TcpConnector.parseIntWithReason(suggestedFirmware, "VC value");
+        int latestVersion = Utils.parseIntWithReason(suggestedFirmware, "VC value");
         String[] tokens = firmwareString.split("[@\\s]");
         int version;
         try {

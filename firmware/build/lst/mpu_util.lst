@@ -1,0 +1,788 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciWnt92.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"mpu_util.cpp"
+  16              		.section	.text.getRemainingStack,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	getRemainingStack
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	getRemainingStack, %function
+  23              	getRemainingStack:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 40F20003 		movw	r3, #:lower16:dbg_isr_cnt
+  28 0004 C0F20003 		movt	r3, #:upper16:dbg_isr_cnt
+  29 0008 0246     		mov	r2, r0
+  30 000a 1B68     		ldr	r3, [r3]
+  31 000c C2F844D0 		str	sp, [r2, #68]
+  32 0010 002B     		cmp	r3, #0
+  33 0012 CDBF     		iteet	gt
+  34 0014 0548     		ldrgt	r0, .L4
+  35 0016 D369     		ldrle	r3, [r2, #28]
+  36 0018 ADF16400 		suble	r0, sp, #100
+  37 001c ADEB0000 		subgt	r0, sp, r0
+  38 0020 D8BF     		it	le
+  39 0022 C3EB0000 		rsble	r0, r3, r0
+  40 0026 9064     		str	r0, [r2, #72]
+  41 0028 7047     		bx	lr
+  42              	.L5:
+  43 002a 00BF     		.align	2
+  44              	.L4:
+  45 002c 64000000 		.word	__main_stack_base__+100
+  46              		.size	getRemainingStack, .-getRemainingStack
+  47              		.section	.text._Z16baseHardwareInitv,"ax",%progbits
+  48              		.align	2
+  49              		.p2align 4,,15
+  50              		.global	_Z16baseHardwareInitv
+  51              		.thumb
+  52              		.thumb_func
+  53              		.type	_Z16baseHardwareInitv, %function
+  54              	_Z16baseHardwareInitv:
+  55              		@ args = 0, pretend = 0, frame = 0
+  56              		@ frame_needed = 0, uses_anonymous_args = 0
+  57              		@ link register save eliminated.
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciWnt92.s 			page 2
+
+
+  58 0000 4FF48053 		mov	r3, #4096
+  59 0004 CEF20003 		movt	r3, 57344
+  60 0008 0022     		movs	r2, #0
+  61 000a 5A60     		str	r2, [r3, #4]
+  62 000c 7047     		bx	lr
+  63              		.size	_Z16baseHardwareInitv, .-_Z16baseHardwareInitv
+  64 000e 00BF     		.section	.text.DebugMonitorVector,"ax",%progbits
+  65              		.align	2
+  66              		.p2align 4,,15
+  67              		.global	DebugMonitorVector
+  68              		.thumb
+  69              		.thumb_func
+  70              		.type	DebugMonitorVector, %function
+  71              	DebugMonitorVector:
+  72              		@ Volatile: function does not return.
+  73              		@ args = 0, pretend = 0, frame = 0
+  74              		@ frame_needed = 0, uses_anonymous_args = 0
+  75 0000 40F20000 		movw	r0, #:lower16:.LC0
+  76 0004 40F20001 		movw	r1, #:lower16:.LC1
+  77 0008 08B5     		push	{r3, lr}
+  78 000a C0F20000 		movt	r0, #:upper16:.LC0
+  79 000e C0F20001 		movt	r1, #:upper16:.LC1
+  80 0012 4F22     		movs	r2, #79
+  81 0014 FFF7FEFF 		bl	chDbgPanic3
+  82              	.L8:
+  83 0018 FEE7     		b	.L8
+  84              		.size	DebugMonitorVector, .-DebugMonitorVector
+  85 001a 00BFAFF3 		.section	.text.UsageFaultVector,"ax",%progbits
+  85      0080
+  86              		.align	2
+  87              		.p2align 4,,15
+  88              		.global	UsageFaultVector
+  89              		.thumb
+  90              		.thumb_func
+  91              		.type	UsageFaultVector, %function
+  92              	UsageFaultVector:
+  93              		@ Volatile: function does not return.
+  94              		@ args = 0, pretend = 0, frame = 0
+  95              		@ frame_needed = 0, uses_anonymous_args = 0
+  96 0000 40F20000 		movw	r0, #:lower16:.LC2
+  97 0004 40F20001 		movw	r1, #:lower16:.LC1
+  98 0008 08B5     		push	{r3, lr}
+  99 000a C0F20000 		movt	r0, #:upper16:.LC2
+ 100 000e C0F20001 		movt	r1, #:upper16:.LC1
+ 101 0012 5722     		movs	r2, #87
+ 102 0014 FFF7FEFF 		bl	chDbgPanic3
+ 103              	.L11:
+ 104 0018 FEE7     		b	.L11
+ 105              		.size	UsageFaultVector, .-UsageFaultVector
+ 106 001a 00BFAFF3 		.section	.text.BusFaultVector,"ax",%progbits
+ 106      0080
+ 107              		.align	2
+ 108              		.p2align 4,,15
+ 109              		.global	BusFaultVector
+ 110              		.thumb
+ 111              		.thumb_func
+ 112              		.type	BusFaultVector, %function
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciWnt92.s 			page 3
+
+
+ 113              	BusFaultVector:
+ 114              		@ Volatile: function does not return.
+ 115              		@ args = 0, pretend = 0, frame = 0
+ 116              		@ frame_needed = 0, uses_anonymous_args = 0
+ 117 0000 40F20000 		movw	r0, #:lower16:.LC3
+ 118 0004 40F20001 		movw	r1, #:lower16:.LC1
+ 119 0008 08B5     		push	{r3, lr}
+ 120 000a C0F20000 		movt	r0, #:upper16:.LC3
+ 121 000e C0F20001 		movt	r1, #:upper16:.LC1
+ 122 0012 5F22     		movs	r2, #95
+ 123 0014 FFF7FEFF 		bl	chDbgPanic3
+ 124              	.L13:
+ 125 0018 FEE7     		b	.L13
+ 126              		.size	BusFaultVector, .-BusFaultVector
+ 127 001a 00BFAFF3 		.section	.text.prvGetRegistersFromStack,"ax",%progbits
+ 127      0080
+ 128              		.align	2
+ 129              		.p2align 4,,15
+ 130              		.global	prvGetRegistersFromStack
+ 131              		.thumb
+ 132              		.thumb_func
+ 133              		.type	prvGetRegistersFromStack, %function
+ 134              	prvGetRegistersFromStack:
+ 135              		@ args = 0, pretend = 0, frame = 8
+ 136              		@ frame_needed = 0, uses_anonymous_args = 0
+ 137 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 138 0004 40F20003 		movw	r3, #:lower16:.LANCHOR7
+ 139 0008 83B0     		sub	sp, sp, #12
+ 140 000a C0F20003 		movt	r3, #:upper16:.LANCHOR7
+ 141 000e 40F2000E 		movw	lr, #:lower16:.LANCHOR0
+ 142 0012 40F20007 		movw	r7, #:lower16:.LANCHOR1
+ 143 0016 D0F804B0 		ldr	fp, [r0, #4]
+ 144 001a 0193     		str	r3, [sp, #4]
+ 145 001c C0F2000E 		movt	lr, #:upper16:.LANCHOR0
+ 146 0020 0368     		ldr	r3, [r0]
+ 147 0022 D0F808A0 		ldr	r10, [r0, #8]
+ 148 0026 CEF80030 		str	r3, [lr]
+ 149 002a C0F20007 		movt	r7, #:upper16:.LANCHOR1
+ 150 002e 40F20006 		movw	r6, #:lower16:.LANCHOR2
+ 151 0032 40F20005 		movw	r5, #:lower16:.LANCHOR3
+ 152 0036 40F20004 		movw	r4, #:lower16:.LANCHOR4
+ 153 003a 40F20001 		movw	r1, #:lower16:.LANCHOR5
+ 154 003e 40F20002 		movw	r2, #:lower16:.LANCHOR6
+ 155 0042 C7F800B0 		str	fp, [r7]
+ 156 0046 D0F80C90 		ldr	r9, [r0, #12]
+ 157 004a D0F81080 		ldr	r8, [r0, #16]
+ 158 004e D0F814C0 		ldr	ip, [r0, #20]
+ 159 0052 D0F818E0 		ldr	lr, [r0, #24]
+ 160 0056 019B     		ldr	r3, [sp, #4]
+ 161 0058 C069     		ldr	r0, [r0, #28]
+ 162 005a C0F20006 		movt	r6, #:upper16:.LANCHOR2
+ 163 005e C0F20001 		movt	r1, #:upper16:.LANCHOR5
+ 164 0062 C0F20002 		movt	r2, #:upper16:.LANCHOR6
+ 165 0066 C0F20005 		movt	r5, #:upper16:.LANCHOR3
+ 166 006a C0F20004 		movt	r4, #:upper16:.LANCHOR4
+ 167 006e 4EF62857 		movw	r7, #60712
+ 168 0072 CEF20007 		movt	r7, 57344
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciWnt92.s 			page 4
+
+
+ 169 0076 C6F800A0 		str	r10, [r6]
+ 170 007a C5F80090 		str	r9, [r5]
+ 171 007e 40F20006 		movw	r6, #:lower16:.LANCHOR8
+ 172 0082 C4F80080 		str	r8, [r4]
+ 173 0086 C1F800C0 		str	ip, [r1]
+ 174 008a C2F800E0 		str	lr, [r2]
+ 175 008e 1860     		str	r0, [r3]
+ 176 0090 3B68     		ldr	r3, [r7]
+ 177 0092 C0F20006 		movt	r6, #:upper16:.LANCHOR8
+ 178 0096 4EF62C52 		movw	r2, #60716
+ 179 009a CEF20002 		movt	r2, 57344
+ 180 009e 3360     		str	r3, [r6]
+ 181 00a0 40F20003 		movw	r3, #:lower16:.LANCHOR9
+ 182 00a4 1168     		ldr	r1, [r2]
+ 183 00a6 C0F20003 		movt	r3, #:upper16:.LANCHOR9
+ 184 00aa 4EF63052 		movw	r2, #60720
+ 185 00ae CEF20002 		movt	r2, 57344
+ 186 00b2 1960     		str	r1, [r3]
+ 187 00b4 40F20003 		movw	r3, #:lower16:.LANCHOR10
+ 188 00b8 1168     		ldr	r1, [r2]
+ 189 00ba C0F20003 		movt	r3, #:upper16:.LANCHOR10
+ 190 00be 4EF63C52 		movw	r2, #60732
+ 191 00c2 CEF20002 		movt	r2, 57344
+ 192 00c6 1960     		str	r1, [r3]
+ 193 00c8 40F20003 		movw	r3, #:lower16:.LANCHOR11
+ 194 00cc 1168     		ldr	r1, [r2]
+ 195 00ce C0F20003 		movt	r3, #:upper16:.LANCHOR11
+ 196 00d2 4EF63452 		movw	r2, #60724
+ 197 00d6 CEF20002 		movt	r2, 57344
+ 198 00da 1960     		str	r1, [r3]
+ 199 00dc 40F20003 		movw	r3, #:lower16:.LANCHOR12
+ 200 00e0 1168     		ldr	r1, [r2]
+ 201 00e2 C0F20003 		movt	r3, #:upper16:.LANCHOR12
+ 202 00e6 4EF63852 		movw	r2, #60728
+ 203 00ea CEF20002 		movt	r2, 57344
+ 204 00ee 1960     		str	r1, [r3]
+ 205 00f0 40F20003 		movw	r3, #:lower16:.LANCHOR13
+ 206 00f4 1168     		ldr	r1, [r2]
+ 207 00f6 C0F20003 		movt	r3, #:upper16:.LANCHOR13
+ 208 00fa 4FF46D42 		mov	r2, #60672
+ 209 00fe CEF20002 		movt	r2, 57344
+ 210 0102 1960     		str	r1, [r3]
+ 211 0104 40F20003 		movw	r3, #:lower16:.LANCHOR14
+ 212 0108 516A     		ldr	r1, [r2, #36]
+ 213 010a C0F20003 		movt	r3, #:upper16:.LANCHOR14
+ 214 010e 4EF6F052 		movw	r2, #60912
+ 215 0112 CEF20002 		movt	r2, 57344
+ 216 0116 1960     		str	r1, [r3]
+ 217 0118 1368     		ldr	r3, [r2]
+ 218 011a DB07     		lsls	r3, r3, #31
+ 219 011c 00D4     		bmi	.L15
+ 220              	.L17:
+ 221              	.L18:
+ 222 011e FEE7     		b	.L18
+ 223              	.L15:
+ 224              	@ 163 "./hw_layer/stm32f4/mpu_util.cpp" 1
+ 225 0120 00BE     		BKPT #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciWnt92.s 			page 5
+
+
+ 226              	
+ 227              	@ 0 "" 2
+ 228              		.thumb
+ 229 0122 FCE7     		b	.L17
+ 230              		.size	prvGetRegistersFromStack, .-prvGetRegistersFromStack
+ 231 0124 AFF30080 		.section	.text.HardFaultVector,"ax",%progbits
+ 231      AFF30080 
+ 231      AFF30080 
+ 232              		.align	2
+ 233              		.p2align 4,,15
+ 234              		.global	HardFaultVector
+ 235              		.thumb
+ 236              		.thumb_func
+ 237              		.type	HardFaultVector, %function
+ 238              	HardFaultVector:
+ 239              		@ args = 0, pretend = 0, frame = 0
+ 240              		@ frame_needed = 0, uses_anonymous_args = 0
+ 241 0000 08B5     		push	{r3, lr}
+ 242 0002 4EF62853 		movw	r3, #60712
+ 243 0006 CEF20003 		movt	r3, 57344
+ 244 000a 1B68     		ldr	r3, [r3]
+ 245 000c D807     		lsls	r0, r3, #31
+ 246 000e 27D4     		bmi	.L26
+ 247 0010 D905     		lsls	r1, r3, #23
+ 248 0012 19D4     		bmi	.L27
+ 249 0014 9A03     		lsls	r2, r3, #14
+ 250 0016 0BD5     		bpl	.L23
+ 251 0018 40F20000 		movw	r0, #:lower16:.LC6
+ 252 001c 40F20001 		movw	r1, #:lower16:.LC1
+ 253 0020 C0F20000 		movt	r0, #:upper16:.LC6
+ 254 0024 C0F20001 		movt	r1, #:upper16:.LC1
+ 255 0028 C322     		movs	r2, #195
+ 256 002a FFF7FEFF 		bl	chDbgPanic3
+ 257              	.L21:
+ 258              	.L25:
+ 259 002e FEE7     		b	.L25
+ 260              	.L23:
+ 261 0030 40F20000 		movw	r0, #:lower16:.LC7
+ 262 0034 40F20001 		movw	r1, #:lower16:.LC1
+ 263 0038 C0F20000 		movt	r0, #:upper16:.LC7
+ 264 003c C0F20001 		movt	r1, #:upper16:.LC1
+ 265 0040 C522     		movs	r2, #197
+ 266 0042 FFF7FEFF 		bl	chDbgPanic3
+ 267 0046 F2E7     		b	.L21
+ 268              	.L27:
+ 269 0048 40F20000 		movw	r0, #:lower16:.LC5
+ 270 004c 40F20001 		movw	r1, #:lower16:.LC1
+ 271 0050 C0F20000 		movt	r0, #:upper16:.LC5
+ 272 0054 C0F20001 		movt	r1, #:upper16:.LC1
+ 273 0058 C122     		movs	r2, #193
+ 274 005a FFF7FEFF 		bl	chDbgPanic3
+ 275 005e E6E7     		b	.L21
+ 276              	.L26:
+ 277 0060 40F20000 		movw	r0, #:lower16:.LC4
+ 278 0064 40F20001 		movw	r1, #:lower16:.LC1
+ 279 0068 C0F20000 		movt	r0, #:upper16:.LC4
+ 280 006c C0F20001 		movt	r1, #:upper16:.LC1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciWnt92.s 			page 6
+
+
+ 281 0070 BF22     		movs	r2, #191
+ 282 0072 FFF7FEFF 		bl	chDbgPanic3
+ 283 0076 DAE7     		b	.L21
+ 284              		.size	HardFaultVector, .-HardFaultVector
+ 285 0078 AFF30080 		.section	.text.initSpiModule,"ax",%progbits
+ 285      AFF30080 
+ 286              		.align	2
+ 287              		.p2align 4,,15
+ 288              		.global	initSpiModule
+ 289              		.thumb
+ 290              		.thumb_func
+ 291              		.type	initSpiModule, %function
+ 292              	initSpiModule:
+ 293              		@ args = 0, pretend = 0, frame = 0
+ 294              		@ frame_needed = 0, uses_anonymous_args = 0
+ 295 0000 70B5     		push	{r4, r5, r6, lr}
+ 296 0002 40F20004 		movw	r4, #:lower16:SPID1
+ 297 0006 C0F20004 		movt	r4, #:upper16:SPID1
+ 298 000a A042     		cmp	r0, r4
+ 299 000c 1E46     		mov	r6, r3
+ 300 000e 1546     		mov	r5, r2
+ 301 0010 0B46     		mov	r3, r1
+ 302 0012 27D0     		beq	.L29
+ 303 0014 40F20004 		movw	r4, #:lower16:SPID2
+ 304 0018 C0F20004 		movt	r4, #:upper16:SPID2
+ 305 001c A042     		cmp	r0, r4
+ 306 001e 21D0     		beq	.L29
+ 307 0020 40F20004 		movw	r4, #:lower16:SPID3
+ 308 0024 C0F20004 		movt	r4, #:upper16:SPID3
+ 309 0028 A042     		cmp	r0, r4
+ 310 002a 30D0     		beq	.L34
+ 311 002c 40F20000 		movw	r0, #:lower16:.LC9
+ 312 0030 C0F20000 		movt	r0, #:upper16:.LC9
+ 313 0034 6FF07D02 		mvn	r2, #125
+ 314 0038 FFF7FEFF 		bl	_Z13mySetPadMode2PKc11brain_pin_em
+ 315 003c 40F20000 		movw	r0, #:lower16:.LC10
+ 316 0040 6FF07D02 		mvn	r2, #125
+ 317 0044 3146     		mov	r1, r6
+ 318 0046 C0F20000 		movt	r0, #:upper16:.LC10
+ 319 004a FFF7FEFF 		bl	_Z13mySetPadMode2PKc11brain_pin_em
+ 320 004e 6FF07D02 		mvn	r2, #125
+ 321              	.L32:
+ 322 0052 40F20000 		movw	r0, #:lower16:.LC8
+ 323 0056 2946     		mov	r1, r5
+ 324 0058 C0F20000 		movt	r0, #:upper16:.LC8
+ 325 005c BDE87040 		pop	{r4, r5, r6, lr}
+ 326 0060 FFF7FEBF 		b	_Z13mySetPadMode2PKc11brain_pin_em
+ 327              	.L29:
+ 328 0064 40F20000 		movw	r0, #:lower16:.LC9
+ 329 0068 1946     		mov	r1, r3
+ 330 006a C0F20000 		movt	r0, #:upper16:.LC9
+ 331 006e 40F28222 		movw	r2, #642
+ 332 0072 FFF7FEFF 		bl	_Z13mySetPadMode2PKc11brain_pin_em
+ 333 0076 40F20000 		movw	r0, #:lower16:.LC10
+ 334 007a 40F28222 		movw	r2, #642
+ 335 007e 3146     		mov	r1, r6
+ 336 0080 C0F20000 		movt	r0, #:upper16:.LC10
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciWnt92.s 			page 7
+
+
+ 337 0084 FFF7FEFF 		bl	_Z13mySetPadMode2PKc11brain_pin_em
+ 338 0088 40F28222 		movw	r2, #642
+ 339 008c E1E7     		b	.L32
+ 340              	.L34:
+ 341 008e 40F20000 		movw	r0, #:lower16:.LC9
+ 342 0092 C0F20000 		movt	r0, #:upper16:.LC9
+ 343 0096 40F20232 		movw	r2, #770
+ 344 009a FFF7FEFF 		bl	_Z13mySetPadMode2PKc11brain_pin_em
+ 345 009e 40F20000 		movw	r0, #:lower16:.LC10
+ 346 00a2 40F20232 		movw	r2, #770
+ 347 00a6 3146     		mov	r1, r6
+ 348 00a8 C0F20000 		movt	r0, #:upper16:.LC10
+ 349 00ac FFF7FEFF 		bl	_Z13mySetPadMode2PKc11brain_pin_em
+ 350 00b0 40F20232 		movw	r2, #770
+ 351 00b4 CDE7     		b	.L32
+ 352              		.size	initSpiModule, .-initSpiModule
+ 353 00b6 00BFAFF3 		.section	.text._Z9turnOnSpi12spi_device_e,"ax",%progbits
+ 353      0080AFF3 
+ 353      0080
+ 354              		.align	2
+ 355              		.p2align 4,,15
+ 356              		.global	_Z9turnOnSpi12spi_device_e
+ 357              		.thumb
+ 358              		.thumb_func
+ 359              		.type	_Z9turnOnSpi12spi_device_e, %function
+ 360              	_Z9turnOnSpi12spi_device_e:
+ 361              		@ args = 0, pretend = 0, frame = 0
+ 362              		@ frame_needed = 0, uses_anonymous_args = 0
+ 363              		@ link register save eliminated.
+ 364 0000 40F20003 		movw	r3, #:lower16:.LANCHOR15
+ 365 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR15
+ 366 0008 1A5C     		ldrb	r2, [r3, r0]	@ zero_extendqisi2
+ 367 000a 3AB9     		cbnz	r2, .L35
+ 368 000c 0122     		movs	r2, #1
+ 369 000e 9042     		cmp	r0, r2
+ 370 0010 1A54     		strb	r2, [r3, r0]
+ 371 0012 26D0     		beq	.L41
+ 372 0014 0228     		cmp	r0, #2
+ 373 0016 13D0     		beq	.L42
+ 374 0018 0328     		cmp	r0, #3
+ 375 001a 00D0     		beq	.L43
+ 376              	.L35:
+ 377 001c 7047     		bx	lr
+ 378              	.L43:
+ 379 001e 40F20003 		movw	r3, #:lower16:boardConfiguration
+ 380 0022 C0F20003 		movt	r3, #:upper16:boardConfiguration
+ 381 0026 40F20000 		movw	r0, #:lower16:SPID3
+ 382 002a 1B68     		ldr	r3, [r3]
+ 383 002c C0F20000 		movt	r0, #:upper16:SPID3
+ 384 0030 D3F8F412 		ldr	r1, [r3, #756]
+ 385 0034 D3F8F022 		ldr	r2, [r3, #752]
+ 386 0038 D3F8EC32 		ldr	r3, [r3, #748]
+ 387 003c FFF7FEBF 		b	initSpiModule
+ 388              	.L42:
+ 389 0040 40F20003 		movw	r3, #:lower16:boardConfiguration
+ 390 0044 C0F20003 		movt	r3, #:upper16:boardConfiguration
+ 391 0048 40F20000 		movw	r0, #:lower16:SPID2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciWnt92.s 			page 8
+
+
+ 392 004c 1B68     		ldr	r3, [r3]
+ 393 004e C0F20000 		movt	r0, #:upper16:SPID2
+ 394 0052 D3F8E812 		ldr	r1, [r3, #744]
+ 395 0056 D3F8E422 		ldr	r2, [r3, #740]
+ 396 005a D3F8E032 		ldr	r3, [r3, #736]
+ 397 005e FFF7FEBF 		b	initSpiModule
+ 398              	.L41:
+ 399 0062 40F20003 		movw	r3, #:lower16:boardConfiguration
+ 400 0066 C0F20003 		movt	r3, #:upper16:boardConfiguration
+ 401 006a 40F20000 		movw	r0, #:lower16:SPID1
+ 402 006e 1B68     		ldr	r3, [r3]
+ 403 0070 C0F20000 		movt	r0, #:upper16:SPID1
+ 404 0074 D3F8DC12 		ldr	r1, [r3, #732]
+ 405 0078 D3F8D822 		ldr	r2, [r3, #728]
+ 406 007c D3F8D432 		ldr	r3, [r3, #724]
+ 407 0080 FFF7FEBF 		b	initSpiModule
+ 408              		.size	_Z9turnOnSpi12spi_device_e, .-_Z9turnOnSpi12spi_device_e
+ 409 0084 AFF30080 		.section	.text.initSpiCs,"ax",%progbits
+ 409      AFF30080 
+ 409      AFF30080 
+ 410              		.align	2
+ 411              		.p2align 4,,15
+ 412              		.global	initSpiCs
+ 413              		.thumb
+ 414              		.thumb_func
+ 415              		.type	initSpiCs, %function
+ 416              	initSpiCs:
+ 417              		@ args = 0, pretend = 0, frame = 0
+ 418              		@ frame_needed = 0, uses_anonymous_args = 0
+ 419 0000 0023     		movs	r3, #0
+ 420 0002 70B5     		push	{r4, r5, r6, lr}
+ 421 0004 0446     		mov	r4, r0
+ 422 0006 0360     		str	r3, [r0]
+ 423 0008 0846     		mov	r0, r1
+ 424 000a 0E46     		mov	r6, r1
+ 425 000c FFF7FEFF 		bl	_Z9getHwPort11brain_pin_e
+ 426 0010 0546     		mov	r5, r0
+ 427 0012 3046     		mov	r0, r6
+ 428 0014 FFF7FEFF 		bl	_Z8getHwPin11brain_pin_e
+ 429 0018 0246     		mov	r2, r0
+ 430 001a 40F20000 		movw	r0, #:lower16:.LC11
+ 431 001e 6560     		str	r5, [r4, #4]
+ 432 0020 2281     		strh	r2, [r4, #8]	@ movhi
+ 433 0022 2946     		mov	r1, r5
+ 434 0024 C0F20000 		movt	r0, #:upper16:.LC11
+ 435 0028 0123     		movs	r3, #1
+ 436 002a BDE87040 		pop	{r4, r5, r6, lr}
+ 437 002e FFF7FEBF 		b	_Z12mySetPadModePKcP12GPIO_TypeDefmm
+ 438              		.size	initSpiCs, .-initSpiCs
+ 439              		.global	postmortem_SCB_SHCSR
+ 440              		.global	postmortem_MMAR
+ 441              		.global	postmortem_BFAR
+ 442              		.global	postmortem_AFSR
+ 443              		.global	postmortem_DFSR
+ 444              		.global	postmortem_HFSR
+ 445              		.global	postmortem_CFSR
+ 446              		.global	postmortem_psr
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciWnt92.s 			page 9
+
+
+ 447              		.global	postmortem_pc
+ 448              		.global	postmortem_lr
+ 449              		.global	postmortem_r12
+ 450              		.global	postmortem_r3
+ 451              		.global	postmortem_r2
+ 452              		.global	postmortem_r1
+ 453              		.global	postmortem_r0
+ 454 0032 00BFAFF3 		.section	.bss.postmortem_lr,"aw",%nobits
+ 454      0080AFF3 
+ 454      0080AFF3 
+ 454      0080
+ 455              		.align	2
+ 456              		.set	.LANCHOR5,. + 0
+ 457              		.type	postmortem_lr, %object
+ 458              		.size	postmortem_lr, 4
+ 459              	postmortem_lr:
+ 460 0000 00000000 		.space	4
+ 461              		.section	.bss.postmortem_SCB_SHCSR,"aw",%nobits
+ 462              		.align	2
+ 463              		.set	.LANCHOR14,. + 0
+ 464              		.type	postmortem_SCB_SHCSR, %object
+ 465              		.size	postmortem_SCB_SHCSR, 4
+ 466              	postmortem_SCB_SHCSR:
+ 467 0000 00000000 		.space	4
+ 468              		.section	.bss.postmortem_pc,"aw",%nobits
+ 469              		.align	2
+ 470              		.set	.LANCHOR6,. + 0
+ 471              		.type	postmortem_pc, %object
+ 472              		.size	postmortem_pc, 4
+ 473              	postmortem_pc:
+ 474 0000 00000000 		.space	4
+ 475              		.section	.bss.postmortem_r12,"aw",%nobits
+ 476              		.align	2
+ 477              		.set	.LANCHOR4,. + 0
+ 478              		.type	postmortem_r12, %object
+ 479              		.size	postmortem_r12, 4
+ 480              	postmortem_r12:
+ 481 0000 00000000 		.space	4
+ 482              		.section	.bss.postmortem_BFAR,"aw",%nobits
+ 483              		.align	2
+ 484              		.set	.LANCHOR13,. + 0
+ 485              		.type	postmortem_BFAR, %object
+ 486              		.size	postmortem_BFAR, 4
+ 487              	postmortem_BFAR:
+ 488 0000 00000000 		.space	4
+ 489              		.section	.bss.postmortem_psr,"aw",%nobits
+ 490              		.align	2
+ 491              		.set	.LANCHOR7,. + 0
+ 492              		.type	postmortem_psr, %object
+ 493              		.size	postmortem_psr, 4
+ 494              	postmortem_psr:
+ 495 0000 00000000 		.space	4
+ 496              		.section	.bss._ZL16isSpiInitialized,"aw",%nobits
+ 497              		.align	2
+ 498              		.set	.LANCHOR15,. + 0
+ 499              		.type	_ZL16isSpiInitialized, %object
+ 500              		.size	_ZL16isSpiInitialized, 5
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciWnt92.s 			page 10
+
+
+ 501              	_ZL16isSpiInitialized:
+ 502 0000 00000000 		.space	5
+ 502      00
+ 503 0005 000000   		.section	.rodata.str1.4,"aMS",%progbits,1
+ 504              		.align	2
+ 505              	.LC0:
+ 506 0000 44656275 		.ascii	"DebugMonitorVector\000"
+ 506      674D6F6E 
+ 506      69746F72 
+ 506      56656374 
+ 506      6F7200
+ 507 0013 00       		.space	1
+ 508              	.LC1:
+ 509 0014 2E2F6877 		.ascii	"./hw_layer/stm32f4/mpu_util.cpp\000"
+ 509      5F6C6179 
+ 509      65722F73 
+ 509      746D3332 
+ 509      66342F6D 
+ 510              	.LC2:
+ 511 0034 55736167 		.ascii	"UsageFaultVector\000"
+ 511      65466175 
+ 511      6C745665 
+ 511      63746F72 
+ 511      00
+ 512 0045 000000   		.space	3
+ 513              	.LC3:
+ 514 0048 42757346 		.ascii	"BusFaultVector\000"
+ 514      61756C74 
+ 514      56656374 
+ 514      6F7200
+ 515 0057 00       		.space	1
+ 516              	.LC4:
+ 517 0058 48204941 		.ascii	"H IACCVIOL\000"
+ 517      43435649 
+ 517      4F4C00
+ 518 0063 00       		.space	1
+ 519              	.LC5:
+ 520 0064 48204942 		.ascii	"H IBUSERR\000"
+ 520      55534552 
+ 520      5200
+ 521 006e 0000     		.space	2
+ 522              	.LC6:
+ 523 0070 4820494E 		.ascii	"H INVSTATE\000"
+ 523      56535441 
+ 523      544500
+ 524 007b 00       		.space	1
+ 525              	.LC7:
+ 526 007c 48617264 		.ascii	"HardFaultVector\000"
+ 526      4661756C 
+ 526      74566563 
+ 526      746F7200 
+ 527              	.LC8:
+ 528 008c 53504920 		.ascii	"SPI master in \000"
+ 528      6D617374 
+ 528      65722069 
+ 528      6E2000
+ 529 009b 00       		.space	1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciWnt92.s 			page 11
+
+
+ 530              	.LC9:
+ 531 009c 53504920 		.ascii	"SPI clock\000"
+ 531      636C6F63 
+ 531      6B00
+ 532 00a6 0000     		.space	2
+ 533              	.LC10:
+ 534 00a8 53504920 		.ascii	"SPI master out\000"
+ 534      6D617374 
+ 534      6572206F 
+ 534      757400
+ 535 00b7 00       		.space	1
+ 536              	.LC11:
+ 537 00b8 63686970 		.ascii	"chip select\000"
+ 537      2073656C 
+ 537      65637400 
+ 538              		.section	.bss.postmortem_CFSR,"aw",%nobits
+ 539              		.align	2
+ 540              		.set	.LANCHOR8,. + 0
+ 541              		.type	postmortem_CFSR, %object
+ 542              		.size	postmortem_CFSR, 4
+ 543              	postmortem_CFSR:
+ 544 0000 00000000 		.space	4
+ 545              		.section	.bss.postmortem_DFSR,"aw",%nobits
+ 546              		.align	2
+ 547              		.set	.LANCHOR10,. + 0
+ 548              		.type	postmortem_DFSR, %object
+ 549              		.size	postmortem_DFSR, 4
+ 550              	postmortem_DFSR:
+ 551 0000 00000000 		.space	4
+ 552              		.section	.bss.postmortem_MMAR,"aw",%nobits
+ 553              		.align	2
+ 554              		.set	.LANCHOR12,. + 0
+ 555              		.type	postmortem_MMAR, %object
+ 556              		.size	postmortem_MMAR, 4
+ 557              	postmortem_MMAR:
+ 558 0000 00000000 		.space	4
+ 559              		.section	.bss.postmortem_HFSR,"aw",%nobits
+ 560              		.align	2
+ 561              		.set	.LANCHOR9,. + 0
+ 562              		.type	postmortem_HFSR, %object
+ 563              		.size	postmortem_HFSR, 4
+ 564              	postmortem_HFSR:
+ 565 0000 00000000 		.space	4
+ 566              		.section	.bss.postmortem_AFSR,"aw",%nobits
+ 567              		.align	2
+ 568              		.set	.LANCHOR11,. + 0
+ 569              		.type	postmortem_AFSR, %object
+ 570              		.size	postmortem_AFSR, 4
+ 571              	postmortem_AFSR:
+ 572 0000 00000000 		.space	4
+ 573              		.section	.bss.postmortem_r0,"aw",%nobits
+ 574              		.align	2
+ 575              		.set	.LANCHOR0,. + 0
+ 576              		.type	postmortem_r0, %object
+ 577              		.size	postmortem_r0, 4
+ 578              	postmortem_r0:
+ 579 0000 00000000 		.space	4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciWnt92.s 			page 12
+
+
+ 580              		.section	.bss.postmortem_r1,"aw",%nobits
+ 581              		.align	2
+ 582              		.set	.LANCHOR1,. + 0
+ 583              		.type	postmortem_r1, %object
+ 584              		.size	postmortem_r1, 4
+ 585              	postmortem_r1:
+ 586 0000 00000000 		.space	4
+ 587              		.section	.bss.postmortem_r2,"aw",%nobits
+ 588              		.align	2
+ 589              		.set	.LANCHOR2,. + 0
+ 590              		.type	postmortem_r2, %object
+ 591              		.size	postmortem_r2, 4
+ 592              	postmortem_r2:
+ 593 0000 00000000 		.space	4
+ 594              		.section	.bss.postmortem_r3,"aw",%nobits
+ 595              		.align	2
+ 596              		.set	.LANCHOR3,. + 0
+ 597              		.type	postmortem_r3, %object
+ 598              		.size	postmortem_r3, 4
+ 599              	postmortem_r3:
+ 600 0000 00000000 		.space	4
+ 601              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciWnt92.s 			page 13
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 mpu_util.cpp
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:17     .text.getRemainingStack:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:23     .text.getRemainingStack:00000000 getRemainingStack
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:45     .text.getRemainingStack:0000002c $d
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:48     .text._Z16baseHardwareInitv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:54     .text._Z16baseHardwareInitv:00000000 _Z16baseHardwareInitv
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:65     .text.DebugMonitorVector:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:71     .text.DebugMonitorVector:00000000 DebugMonitorVector
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:505    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:508    .rodata.str1.4:00000014 .LC1
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:86     .text.UsageFaultVector:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:92     .text.UsageFaultVector:00000000 UsageFaultVector
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:510    .rodata.str1.4:00000034 .LC2
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:107    .text.BusFaultVector:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:113    .text.BusFaultVector:00000000 BusFaultVector
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:513    .rodata.str1.4:00000048 .LC3
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:128    .text.prvGetRegistersFromStack:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:134    .text.prvGetRegistersFromStack:00000000 prvGetRegistersFromStack
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:491    .bss.postmortem_psr:00000000 .LANCHOR7
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:575    .bss.postmortem_r0:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:582    .bss.postmortem_r1:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:589    .bss.postmortem_r2:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:596    .bss.postmortem_r3:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:477    .bss.postmortem_r12:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:456    .bss.postmortem_lr:00000000 .LANCHOR5
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:470    .bss.postmortem_pc:00000000 .LANCHOR6
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:540    .bss.postmortem_CFSR:00000000 .LANCHOR8
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:561    .bss.postmortem_HFSR:00000000 .LANCHOR9
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:547    .bss.postmortem_DFSR:00000000 .LANCHOR10
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:568    .bss.postmortem_AFSR:00000000 .LANCHOR11
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:554    .bss.postmortem_MMAR:00000000 .LANCHOR12
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:484    .bss.postmortem_BFAR:00000000 .LANCHOR13
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:463    .bss.postmortem_SCB_SHCSR:00000000 .LANCHOR14
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:232    .text.HardFaultVector:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:238    .text.HardFaultVector:00000000 HardFaultVector
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:522    .rodata.str1.4:00000070 .LC6
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:525    .rodata.str1.4:0000007c .LC7
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:519    .rodata.str1.4:00000064 .LC5
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:516    .rodata.str1.4:00000058 .LC4
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:286    .text.initSpiModule:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:292    .text.initSpiModule:00000000 initSpiModule
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:530    .rodata.str1.4:0000009c .LC9
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:533    .rodata.str1.4:000000a8 .LC10
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:527    .rodata.str1.4:0000008c .LC8
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:354    .text._Z9turnOnSpi12spi_device_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:360    .text._Z9turnOnSpi12spi_device_e:00000000 _Z9turnOnSpi12spi_device_e
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:498    .bss._ZL16isSpiInitialized:00000000 .LANCHOR15
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:410    .text.initSpiCs:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:416    .text.initSpiCs:00000000 initSpiCs
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:536    .rodata.str1.4:000000b8 .LC11
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:466    .bss.postmortem_SCB_SHCSR:00000000 postmortem_SCB_SHCSR
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:557    .bss.postmortem_MMAR:00000000 postmortem_MMAR
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:487    .bss.postmortem_BFAR:00000000 postmortem_BFAR
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:571    .bss.postmortem_AFSR:00000000 postmortem_AFSR
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:550    .bss.postmortem_DFSR:00000000 postmortem_DFSR
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:564    .bss.postmortem_HFSR:00000000 postmortem_HFSR
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciWnt92.s 			page 14
+
+
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:543    .bss.postmortem_CFSR:00000000 postmortem_CFSR
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:494    .bss.postmortem_psr:00000000 postmortem_psr
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:473    .bss.postmortem_pc:00000000 postmortem_pc
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:459    .bss.postmortem_lr:00000000 postmortem_lr
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:480    .bss.postmortem_r12:00000000 postmortem_r12
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:599    .bss.postmortem_r3:00000000 postmortem_r3
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:592    .bss.postmortem_r2:00000000 postmortem_r2
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:585    .bss.postmortem_r1:00000000 postmortem_r1
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:578    .bss.postmortem_r0:00000000 postmortem_r0
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:455    .bss.postmortem_lr:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:462    .bss.postmortem_SCB_SHCSR:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:469    .bss.postmortem_pc:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:476    .bss.postmortem_r12:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:483    .bss.postmortem_BFAR:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:490    .bss.postmortem_psr:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:497    .bss._ZL16isSpiInitialized:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:501    .bss._ZL16isSpiInitialized:00000000 _ZL16isSpiInitialized
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:504    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:539    .bss.postmortem_CFSR:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:546    .bss.postmortem_DFSR:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:553    .bss.postmortem_MMAR:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:560    .bss.postmortem_HFSR:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:567    .bss.postmortem_AFSR:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:574    .bss.postmortem_r0:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:581    .bss.postmortem_r1:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:588    .bss.postmortem_r2:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cciWnt92.s:595    .bss.postmortem_r3:00000000 $d
+
+UNDEFINED SYMBOLS
+dbg_isr_cnt
+__main_stack_base__
+chDbgPanic3
+SPID1
+SPID2
+SPID3
+_Z13mySetPadMode2PKc11brain_pin_em
+boardConfiguration
+_Z9getHwPort11brain_pin_e
+_Z8getHwPin11brain_pin_e
+_Z12mySetPadModePKcP12GPIO_TypeDefmm

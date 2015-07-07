@@ -1,0 +1,310 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc4JczEf.s 			page 1
+
+
+   1              		.file	"EfiWave.cpp"
+   2              		.section	.text$_ZN13single_wave_sC2Ev,"x"
+   3              		.align 2
+   4              		.p2align 4,,15
+   5              		.globl	__ZN13single_wave_sC2Ev
+   6              		.def	__ZN13single_wave_sC2Ev;	.scl	2;	.type	32;	.endef
+   7              	__ZN13single_wave_sC2Ev:
+   8              	LFB55:
+   9              		.cfi_startproc
+  10 0000 C7010000 		movl	$0, (%ecx)
+  10      0000
+  11 0006 C3       		ret
+  12              		.cfi_endproc
+  13              	LFE55:
+  14              		.globl	__ZN13single_wave_sC1Ev
+  15              		.def	__ZN13single_wave_sC1Ev;	.scl	2;	.type	32;	.endef
+  16              		.set	__ZN13single_wave_sC1Ev,__ZN13single_wave_sC2Ev
+  17 0007 90909090 		.section	.text$_ZN13single_wave_sC2EPa,"x"
+  17      90909090 
+  17      90
+  18              		.align 2
+  19              		.p2align 4,,15
+  20              		.globl	__ZN13single_wave_sC2EPa
+  21              		.def	__ZN13single_wave_sC2EPa;	.scl	2;	.type	32;	.endef
+  22              	__ZN13single_wave_sC2EPa:
+  23              	LFB58:
+  24              		.cfi_startproc
+  25 0000 8B442404 		movl	4(%esp), %eax
+  26 0004 8901     		movl	%eax, (%ecx)
+  27 0006 C20400   		ret	$4
+  28              		.cfi_endproc
+  29              	LFE58:
+  30              		.globl	__ZN13single_wave_sC1EPa
+  31              		.def	__ZN13single_wave_sC1EPa;	.scl	2;	.type	32;	.endef
+  32              		.set	__ZN13single_wave_sC1EPa,__ZN13single_wave_sC2EPa
+  33 0009 90909090 		.section	.text$_ZN13single_wave_s4initEPa,"x"
+  33      909090
+  34              		.align 2
+  35              		.p2align 4,,15
+  36              		.globl	__ZN13single_wave_s4initEPa
+  37              		.def	__ZN13single_wave_s4initEPa;	.scl	2;	.type	32;	.endef
+  38              	__ZN13single_wave_s4initEPa:
+  39              	LFB60:
+  40              		.cfi_startproc
+  41 0000 8B442404 		movl	4(%esp), %eax
+  42 0004 8901     		movl	%eax, (%ecx)
+  43 0006 C20400   		ret	$4
+  44              		.cfi_endproc
+  45              	LFE60:
+  46 0009 90909090 		.section	.text$_ZN12multi_wave_s15baseConstructorEv,"x"
+  46      909090
+  47              		.align 2
+  48              		.p2align 4,,15
+  49              		.globl	__ZN12multi_wave_s15baseConstructorEv
+  50              		.def	__ZN12multi_wave_s15baseConstructorEv;	.scl	2;	.type	32;	.endef
+  51              	__ZN12multi_wave_s15baseConstructorEv:
+  52              	LFB61:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc4JczEf.s 			page 2
+
+
+  53              		.cfi_startproc
+  54 0000 C7410400 		movl	$0, 4(%ecx)
+  54      000000
+  55 0007 C7410800 		movl	$0, 8(%ecx)
+  55      000000
+  56 000e C7010000 		movl	$0, (%ecx)
+  56      0000
+  57 0014 C3       		ret
+  58              		.cfi_endproc
+  59              	LFE61:
+  60 0015 90909090 		.section	.text$_ZN12multi_wave_sC2Ev,"x"
+  60      90909090 
+  60      909090
+  61              		.align 2
+  62              		.p2align 4,,15
+  63              		.globl	__ZN12multi_wave_sC2Ev
+  64              		.def	__ZN12multi_wave_sC2Ev;	.scl	2;	.type	32;	.endef
+  65              	__ZN12multi_wave_sC2Ev:
+  66              	LFB63:
+  67              		.cfi_startproc
+  68 0000 C7410400 		movl	$0, 4(%ecx)
+  68      000000
+  69 0007 C7410800 		movl	$0, 8(%ecx)
+  69      000000
+  70 000e C7010000 		movl	$0, (%ecx)
+  70      0000
+  71 0014 C3       		ret
+  72              		.cfi_endproc
+  73              	LFE63:
+  74              		.globl	__ZN12multi_wave_sC1Ev
+  75              		.def	__ZN12multi_wave_sC1Ev;	.scl	2;	.type	32;	.endef
+  76              		.set	__ZN12multi_wave_sC1Ev,__ZN12multi_wave_sC2Ev
+  77 0015 90909090 		.section	.text$_ZN12multi_wave_sC2EPfP13single_wave_s,"x"
+  77      90909090 
+  77      909090
+  78              		.align 2
+  79              		.p2align 4,,15
+  80              		.globl	__ZN12multi_wave_sC2EPfP13single_wave_s
+  81              		.def	__ZN12multi_wave_sC2EPfP13single_wave_s;	.scl	2;	.type	32;	.endef
+  82              	__ZN12multi_wave_sC2EPfP13single_wave_s:
+  83              	LFB66:
+  84              		.cfi_startproc
+  85 0000 8B442404 		movl	4(%esp), %eax
+  86 0004 C7010000 		movl	$0, (%ecx)
+  86      0000
+  87 000a 894108   		movl	%eax, 8(%ecx)
+  88 000d 8B442408 		movl	8(%esp), %eax
+  89 0011 894104   		movl	%eax, 4(%ecx)
+  90 0014 C20800   		ret	$8
+  91              		.cfi_endproc
+  92              	LFE66:
+  93              		.globl	__ZN12multi_wave_sC1EPfP13single_wave_s
+  94              		.def	__ZN12multi_wave_sC1EPfP13single_wave_s;	.scl	2;	.type	32;	.endef
+  95              		.set	__ZN12multi_wave_sC1EPfP13single_wave_s,__ZN12multi_wave_sC2EPfP13single_wave_s
+  96 0017 90909090 		.section	.text$_ZN12multi_wave_s4initEPfP13single_wave_s,"x"
+  96      90909090 
+  96      90
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc4JczEf.s 			page 3
+
+
+  97              		.align 2
+  98              		.p2align 4,,15
+  99              		.globl	__ZN12multi_wave_s4initEPfP13single_wave_s
+ 100              		.def	__ZN12multi_wave_s4initEPfP13single_wave_s;	.scl	2;	.type	32;	.endef
+ 101              	__ZN12multi_wave_s4initEPfP13single_wave_s:
+ 102              	LFB68:
+ 103              		.cfi_startproc
+ 104 0000 8B442404 		movl	4(%esp), %eax
+ 105 0004 894108   		movl	%eax, 8(%ecx)
+ 106 0007 8B442408 		movl	8(%esp), %eax
+ 107 000b 894104   		movl	%eax, 4(%ecx)
+ 108 000e C20800   		ret	$8
+ 109              		.cfi_endproc
+ 110              	LFE68:
+ 111 0011 90909090 		.section	.text$_ZN12multi_wave_s5resetEv,"x"
+ 111      90909090 
+ 111      90909090 
+ 111      909090
+ 112              		.align 2
+ 113              		.p2align 4,,15
+ 114              		.globl	__ZN12multi_wave_s5resetEv
+ 115              		.def	__ZN12multi_wave_s5resetEv;	.scl	2;	.type	32;	.endef
+ 116              	__ZN12multi_wave_s5resetEv:
+ 117              	LFB69:
+ 118              		.cfi_startproc
+ 119 0000 C7010000 		movl	$0, (%ecx)
+ 119      0000
+ 120 0006 C3       		ret
+ 121              		.cfi_endproc
+ 122              	LFE69:
+ 123 0007 90909090 		.section	.text$_ZNK12multi_wave_s13getSwitchTimeEi,"x"
+ 123      90909090 
+ 123      90
+ 124              		.align 2
+ 125              		.p2align 4,,15
+ 126              		.globl	__ZNK12multi_wave_s13getSwitchTimeEi
+ 127              		.def	__ZNK12multi_wave_s13getSwitchTimeEi;	.scl	2;	.type	32;	.endef
+ 128              	__ZNK12multi_wave_s13getSwitchTimeEi:
+ 129              	LFB70:
+ 130              		.cfi_startproc
+ 131 0000 8B4108   		movl	8(%ecx), %eax
+ 132 0003 8B542404 		movl	4(%esp), %edx
+ 133 0007 D90490   		flds	(%eax,%edx,4)
+ 134 000a C20400   		ret	$4
+ 135              		.cfi_endproc
+ 136              	LFE70:
+ 137 000d 909090   		.section .rdata,"dr"
+ 138              		.align 4
+ 139              	LC2:
+ 140 0000 6C617374 		.ascii "last switch time has to be 1 not %f\0"
+ 140      20737769 
+ 140      74636820 
+ 140      74696D65 
+ 140      20686173 
+ 141              		.align 4
+ 142              	LC3:
+ 143 0024 696E7661 		.ascii "invalid switchTimes @%d: %f/%f\0"
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc4JczEf.s 			page 4
+
+
+ 143      6C696420 
+ 143      73776974 
+ 143      63685469 
+ 143      6D657320 
+ 144 0043 00       		.section	.text$_Z17checkSwitchTimes2iPf,"x"
+ 145              		.p2align 4,,15
+ 146              		.globl	__Z17checkSwitchTimes2iPf
+ 147              		.def	__Z17checkSwitchTimes2iPf;	.scl	2;	.type	32;	.endef
+ 148              	__Z17checkSwitchTimes2iPf:
+ 149              	LFB71:
+ 150              		.cfi_startproc
+ 151 0000 57       		pushl	%edi
+ 152              		.cfi_def_cfa_offset 8
+ 153              		.cfi_offset 7, -8
+ 154 0001 56       		pushl	%esi
+ 155              		.cfi_def_cfa_offset 12
+ 156              		.cfi_offset 6, -12
+ 157 0002 53       		pushl	%ebx
+ 158              		.cfi_def_cfa_offset 16
+ 159              		.cfi_offset 3, -16
+ 160 0003 83EC20   		subl	$32, %esp
+ 161              		.cfi_def_cfa_offset 48
+ 162 0006 8B7C2430 		movl	48(%esp), %edi
+ 163 000a 8B742434 		movl	52(%esp), %esi
+ 164 000e 83EF01   		subl	$1, %edi
+ 165 0011 D904BE   		flds	(%esi,%edi,4)
+ 166 0014 D9E8     		fld1
+ 167 0016 D9C9     		fxch	%st(1)
+ 168 0018 DBE9     		fucomi	%st(1), %st
+ 169 001a DDD9     		fstp	%st(1)
+ 170 001c 7A52     		jp	L11
+ 171 001e 7550     		jne	L11
+ 172 0020 DDD8     		fstp	%st(0)
+ 173 0022 31DB     		xorl	%ebx, %ebx
+ 174 0024 85FF     		testl	%edi, %edi
+ 175 0026 7F13     		jg	L19
+ 176              		.p2align 4,,5
+ 177 0028 EB3F     		jmp	L10
+ 178 002a 8DB60000 		.p2align 4,,7
+ 178      0000
+ 179              	L14:
+ 180 0030 DDD8     		fstp	%st(0)
+ 181 0032 DDD8     		fstp	%st(0)
+ 182 0034 83C301   		addl	$1, %ebx
+ 183 0037 39FB     		cmpl	%edi, %ebx
+ 184 0039 742E     		je	L10
+ 185              	L19:
+ 186 003b D9049E   		flds	(%esi,%ebx,4)
+ 187 003e D9449E04 		flds	4(%esi,%ebx,4)
+ 188 0042 D9C9     		fxch	%st(1)
+ 189 0044 DBE9     		fucomi	%st(1), %st
+ 190 0046 72E8     		jb	L14
+ 191 0048 D9C9     		fxch	%st(1)
+ 192 004a DD5C2410 		fstpl	16(%esp)
+ 193 004e 895C2404 		movl	%ebx, 4(%esp)
+ 194 0052 83C301   		addl	$1, %ebx
+ 195 0055 DD5C2408 		fstpl	8(%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc4JczEf.s 			page 5
+
+
+ 196 0059 C7042424 		movl	$LC3, (%esp)
+ 196      000000
+ 197 0060 E8000000 		call	_firmwareError
+ 197      00
+ 198 0065 39FB     		cmpl	%edi, %ebx
+ 199 0067 75D2     		jne	L19
+ 200              	L10:
+ 201 0069 83C420   		addl	$32, %esp
+ 202              		.cfi_remember_state
+ 203              		.cfi_def_cfa_offset 16
+ 204 006c 5B       		popl	%ebx
+ 205              		.cfi_restore 3
+ 206              		.cfi_def_cfa_offset 12
+ 207 006d 5E       		popl	%esi
+ 208              		.cfi_restore 6
+ 209              		.cfi_def_cfa_offset 8
+ 210 006e 5F       		popl	%edi
+ 211              		.cfi_restore 7
+ 212              		.cfi_def_cfa_offset 4
+ 213 006f C3       		ret
+ 214              		.p2align 4,,7
+ 215              	L11:
+ 216              		.cfi_restore_state
+ 217 0070 DD5C2404 		fstpl	4(%esp)
+ 218 0074 C7042400 		movl	$LC2, (%esp)
+ 218      000000
+ 219 007b E8000000 		call	_firmwareError
+ 219      00
+ 220 0080 83C420   		addl	$32, %esp
+ 221              		.cfi_def_cfa_offset 16
+ 222 0083 5B       		popl	%ebx
+ 223              		.cfi_restore 3
+ 224              		.cfi_def_cfa_offset 12
+ 225 0084 5E       		popl	%esi
+ 226              		.cfi_restore 6
+ 227              		.cfi_def_cfa_offset 8
+ 228 0085 5F       		popl	%edi
+ 229              		.cfi_restore 7
+ 230              		.cfi_def_cfa_offset 4
+ 231 0086 C3       		ret
+ 232              		.cfi_endproc
+ 233              	LFE71:
+ 234 0087 90909090 		.def	_firmwareError;	.scl	2;	.type	32;	.endef
+ 234      90909090 
+ 234      90
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc4JczEf.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 EfiWave.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4JczEf.s:7      .text$_ZN13single_wave_sC2Ev:00000000 __ZN13single_wave_sC2Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4JczEf.s:7      .text$_ZN13single_wave_sC2Ev:00000000 __ZN13single_wave_sC1Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4JczEf.s:22     .text$_ZN13single_wave_sC2EPa:00000000 __ZN13single_wave_sC2EPa
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4JczEf.s:22     .text$_ZN13single_wave_sC2EPa:00000000 __ZN13single_wave_sC1EPa
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4JczEf.s:38     .text$_ZN13single_wave_s4initEPa:00000000 __ZN13single_wave_s4initEPa
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4JczEf.s:51     .text$_ZN12multi_wave_s15baseConstructorEv:00000000 __ZN12multi_wave_s15baseConstructorEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4JczEf.s:65     .text$_ZN12multi_wave_sC2Ev:00000000 __ZN12multi_wave_sC2Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4JczEf.s:65     .text$_ZN12multi_wave_sC2Ev:00000000 __ZN12multi_wave_sC1Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4JczEf.s:82     .text$_ZN12multi_wave_sC2EPfP13single_wave_s:00000000 __ZN12multi_wave_sC2EPfP13single_wave_s
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4JczEf.s:82     .text$_ZN12multi_wave_sC2EPfP13single_wave_s:00000000 __ZN12multi_wave_sC1EPfP13single_wave_s
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4JczEf.s:101    .text$_ZN12multi_wave_s4initEPfP13single_wave_s:00000000 __ZN12multi_wave_s4initEPfP13single_wave_s
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4JczEf.s:116    .text$_ZN12multi_wave_s5resetEv:00000000 __ZN12multi_wave_s5resetEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4JczEf.s:128    .text$_ZNK12multi_wave_s13getSwitchTimeEi:00000000 __ZNK12multi_wave_s13getSwitchTimeEi
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4JczEf.s:148    .text$_Z17checkSwitchTimes2iPf:00000000 __Z17checkSwitchTimes2iPf
+
+UNDEFINED SYMBOLS
+_firmwareError

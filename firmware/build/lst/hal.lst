@@ -1,0 +1,171 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccTnY9zf.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"hal.c"
+  16              		.section	.text.halInit,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	halInit
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	halInit, %function
+  23              	halInit:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 08B5     		push	{r3, lr}
+  27 0002 FFF7FEFF 		bl	hal_lld_init
+  28 0006 40F20000 		movw	r0, #:lower16:pal_default_config
+  29 000a C0F20000 		movt	r0, #:upper16:pal_default_config
+  30 000e FFF7FEFF 		bl	_pal_lld_init
+  31 0012 FFF7FEFF 		bl	adcInit
+  32 0016 FFF7FEFF 		bl	canInit
+  33 001a FFF7FEFF 		bl	extInit
+  34 001e FFF7FEFF 		bl	gptInit
+  35 0022 FFF7FEFF 		bl	i2cInit
+  36 0026 FFF7FEFF 		bl	icuInit
+  37 002a FFF7FEFF 		bl	pwmInit
+  38 002e FFF7FEFF 		bl	sdInit
+  39 0032 FFF7FEFF 		bl	spiInit
+  40 0036 FFF7FEFF 		bl	usbInit
+  41 003a FFF7FEFF 		bl	mmcInit
+  42 003e FFF7FEFF 		bl	sduInit
+  43 0042 FFF7FEFF 		bl	rtcInit
+  44 0046 BDE80840 		pop	{r3, lr}
+  45 004a FFF7FEBF 		b	boardInit
+  46              		.size	halInit, .-halInit
+  47 004e 00BF     		.section	.text.halIsCounterWithin,"ax",%progbits
+  48              		.align	2
+  49              		.p2align 4,,15
+  50              		.global	halIsCounterWithin
+  51              		.thumb
+  52              		.thumb_func
+  53              		.type	halIsCounterWithin, %function
+  54              	halIsCounterWithin:
+  55              		@ args = 0, pretend = 0, frame = 0
+  56              		@ frame_needed = 0, uses_anonymous_args = 0
+  57              		@ link register save eliminated.
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccTnY9zf.s 			page 2
+
+
+  58 0000 4FF48053 		mov	r3, #4096
+  59 0004 CEF20003 		movt	r3, 57344
+  60 0008 8142     		cmp	r1, r0
+  61 000a 0246     		mov	r2, r0
+  62 000c 5B68     		ldr	r3, [r3, #4]
+  63 000e 09D8     		bhi	.L6
+  64 0010 8342     		cmp	r3, r0
+  65 0012 34BF     		ite	cc
+  66 0014 0022     		movcc	r2, #0
+  67 0016 0122     		movcs	r2, #1
+  68 0018 8B42     		cmp	r3, r1
+  69 001a 2CBF     		ite	cs
+  70 001c 1046     		movcs	r0, r2
+  71 001e 42F00100 		orrcc	r0, r2, #1
+  72 0022 7047     		bx	lr
+  73              	.L6:
+  74 0024 8B42     		cmp	r3, r1
+  75 0026 2CBF     		ite	cs
+  76 0028 0020     		movcs	r0, #0
+  77 002a 0120     		movcc	r0, #1
+  78 002c 9342     		cmp	r3, r2
+  79 002e 38BF     		it	cc
+  80 0030 0020     		movcc	r0, #0
+  81 0032 7047     		bx	lr
+  82              		.size	halIsCounterWithin, .-halIsCounterWithin
+  83 0034 AFF30080 		.section	.text.halPolledDelay,"ax",%progbits
+  83      AFF30080 
+  83      AFF30080 
+  84              		.align	2
+  85              		.p2align 4,,15
+  86              		.global	halPolledDelay
+  87              		.thumb
+  88              		.thumb_func
+  89              		.type	halPolledDelay, %function
+  90              	halPolledDelay:
+  91              		@ args = 0, pretend = 0, frame = 0
+  92              		@ frame_needed = 0, uses_anonymous_args = 0
+  93              		@ link register save eliminated.
+  94 0000 4FF48053 		mov	r3, #4096
+  95 0004 CEF20003 		movt	r3, 57344
+  96 0008 10B4     		push	{r4}
+  97 000a 5A68     		ldr	r2, [r3, #4]
+  98 000c 1C46     		mov	r4, r3
+  99 000e 1044     		add	r0, r0, r2
+ 100              	.L11:
+ 101 0010 8242     		cmp	r2, r0
+ 102 0012 6368     		ldr	r3, [r4, #4]
+ 103 0014 0BD2     		bcs	.L8
+ 104 0016 9842     		cmp	r0, r3
+ 105 0018 94BF     		ite	ls
+ 106 001a 0021     		movls	r1, #0
+ 107 001c 0121     		movhi	r1, #1
+ 108 001e 9A42     		cmp	r2, r3
+ 109 0020 88BF     		it	hi
+ 110 0022 0021     		movhi	r1, #0
+ 111 0024 0029     		cmp	r1, #0
+ 112 0026 F3D1     		bne	.L11
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccTnY9zf.s 			page 3
+
+
+ 113              	.L12:
+ 114 0028 5DF8044B 		ldr	r4, [sp], #4
+ 115 002c 7047     		bx	lr
+ 116              	.L8:
+ 117 002e 9A42     		cmp	r2, r3
+ 118 0030 8CBF     		ite	hi
+ 119 0032 0021     		movhi	r1, #0
+ 120 0034 0121     		movls	r1, #1
+ 121 0036 9842     		cmp	r0, r3
+ 122 0038 88BF     		it	hi
+ 123 003a 41F00101 		orrhi	r1, r1, #1
+ 124 003e 0029     		cmp	r1, #0
+ 125 0040 E6D1     		bne	.L11
+ 126 0042 F1E7     		b	.L12
+ 127              		.size	halPolledDelay, .-halPolledDelay
+ 128 0044 AFF30080 		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ 128      AFF30080 
+ 128      AFF30080 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccTnY9zf.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 hal.c
+C:\Users\pc\AppData\Local\Temp\ccTnY9zf.s:17     .text.halInit:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccTnY9zf.s:23     .text.halInit:00000000 halInit
+C:\Users\pc\AppData\Local\Temp\ccTnY9zf.s:48     .text.halIsCounterWithin:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccTnY9zf.s:54     .text.halIsCounterWithin:00000000 halIsCounterWithin
+C:\Users\pc\AppData\Local\Temp\ccTnY9zf.s:84     .text.halPolledDelay:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccTnY9zf.s:90     .text.halPolledDelay:00000000 halPolledDelay
+
+UNDEFINED SYMBOLS
+hal_lld_init
+pal_default_config
+_pal_lld_init
+adcInit
+canInit
+extInit
+gptInit
+i2cInit
+icuInit
+pwmInit
+sdInit
+spiInit
+usbInit
+mmcInit
+sduInit
+rtcInit
+boardInit

@@ -1,0 +1,1127 @@
+###############################################################################
+#                                                                             #
+# IAR ANSI C/C++ Compiler V6.50.3.4676/W32 for ARM      30/Jun/2015  23:09:17 #
+# Copyright 1999-2013 IAR Systems AB.                                         #
+#                                                                             #
+#    Cpu mode        =  thumb                                                 #
+#    Endian          =  little                                                #
+#    Source file     =  F:\stuff\rusefi_sourceforge\firmware\chibios\os\kerne #
+#                       l\src\chmboxes.c                                      #
+#    Command line    =  F:\stuff\rusefi_sourceforge\firmware\chibios\os\kerne #
+#                       l\src\chmboxes.c -lCN F:\stuff\rusefi_sourceforge\fir #
+#                       mware\iar\Debug\List\ -lA                             #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\  #
+#                       -o F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj #
+#                       \ --no_cse --no_unroll --no_inline --no_code_motion   #
+#                       --no_tbaa --no_clustering --no_scheduling --debug     #
+#                       --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp     #
+#                       --dlib_config "C:\Program Files (x86)\IAR             #
+#                       Systems\Embedded Workbench                            #
+#                       6.5\arm\INC\c\DLib_Config_Normal.h"                   #
+#                       --misrac2004=1.2-1.4,2.3,3.4,4.2,6.5-7,8.2-8.3,9.3,   #
+#                       12.3,13.6-13,15.5,17.3,19.17,20.7-20.9,20.11 -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\ -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\kernel\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\ports\common\ARMCMx\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\common\ARMCMx\CMSIS\include\ -I               #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\IAR\ARMCMx\ -I F:\stuff\rusefi_sourceforge\fi #
+#                       rmware\iar\..\chibios\os\ports\IAR\ARMCMx\STM32F4xx\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\chibio #
+#                       s\os\hal\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\hal\platforms\STM32\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\DMAv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\GPIOv2\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\I2Cv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\SPIv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\TIMv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\RTCv2\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\USARTv1\ -I                     #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\OTGv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32F4xx\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\various\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\chibios\os\various\devices_lib\accel\ -I         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\b #
+#                       oards\ST_STM32F4_DISCOVERY\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\co #
+#                       ntrollers\algo\ -I F:\stuff\rusefi_sourceforge\firmwa #
+#                       re\iar\..\controllers\core\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\system\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\controllers\sensors\ -I                          #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\math\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\controllers\trigger\ -I                            #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\config #
+#                       \ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\conf #
+#                       ig\engines\ -I F:\stuff\rusefi_sourceforge\firmware\i #
+#                       ar\..\config\stm32f4ems\ -I                           #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\b #
+#                       inary\ -I F:\stuff\rusefi_sourceforge\firmware\iar\.. #
+#                       \console_util\ -I F:\stuff\rusefi_sourceforge\firmwar #
+#                       e\iar\..\development\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\development\test\ -I                  #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\developme #
+#                       nt\hw_layer\ -I F:\stuff\rusefi_sourceforge\firmware\ #
+#                       iar\..\hw_layer\algo\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\hw_layer\lcd\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                       stm32f4\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\hw_layer\serial_over_usb\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                        -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext_al #
+#                       go\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\de #
+#                       velopment\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\development\hw_layer\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\util\ -On #
+#    MISRA C version =  2004                                                  #
+#      Enabled       =  1.2-1.4 2.3 3.4 4.2 6.5 7 8.2 8.3 9.3 12.3 13.6 13.7  #
+#                       15.5 17.3 19.17 20.7-20.9 20.11                       #
+#      Checked       =  1.4 2.3 4.2 6.5 7 8.2 8.3 9.3 12.3 13.7 15.5          #
+#                       20.7-20.9 20.11                                       #
+#      Not checked   =  1.1-1.3 1.5-2.2 2.4-4.1 5-6.4 8.1 8.4-9.2 10-12.2     #
+#                       12.4-13.6 14-15.4 16-20.6 20.10 20.12 21              #
+#    List file       =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\c #
+#                       hmboxes.lst                                           #
+#    Object file     =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\ch #
+#                       mboxes.o                                              #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+F:\stuff\rusefi_sourceforge\firmware\chibios\os\kernel\src\chmboxes.c
+      1          /*
+      2              ChibiOS/RT - Copyright (C) 2006,2007,2008,2009,2010,
+      3                           2011,2012,2013 Giovanni Di Sirio.
+      4          
+      5              This file is part of ChibiOS/RT.
+      6          
+      7              ChibiOS/RT is free software; you can redistribute it and/or modify
+      8              it under the terms of the GNU General Public License as published by
+      9              the Free Software Foundation; either version 3 of the License, or
+     10              (at your option) any later version.
+     11          
+     12              ChibiOS/RT is distributed in the hope that it will be useful,
+     13              but WITHOUT ANY WARRANTY; without even the implied warranty of
+     14              MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     15              GNU General Public License for more details.
+     16          
+     17              You should have received a copy of the GNU General Public License
+     18              along with this program.  If not, see <http://www.gnu.org/licenses/>.
+     19          
+     20                                                ---
+     21          
+     22              A special exception to the GPL can be applied should you wish to distribute
+     23              a combined work that includes ChibiOS/RT, without being obliged to provide
+     24              the source code for any proprietary components. See the file exception.txt
+     25              for full details of how and when the exception can be applied.
+     26          */
+     27          
+     28          /**
+     29           * @file    chmboxes.c
+     30           * @brief   Mailboxes code.
+     31           *
+     32           * @addtogroup mailboxes
+     33           * @details Asynchronous messages.
+     34           *          <h2>Operation mode</h2>
+     35           *          A mailbox is an asynchronous communication mechanism.<br>
+     36           *          Operations defined for mailboxes:
+     37           *          - <b>Post</b>: Posts a message on the mailbox in FIFO order.
+     38           *          - <b>Post Ahead</b>: Posts a message on the mailbox with urgent
+     39           *            priority.
+     40           *          - <b>Fetch</b>: A message is fetched from the mailbox and removed
+     41           *            from the queue.
+     42           *          - <b>Reset</b>: The mailbox is emptied and all the stored messages
+     43           *            are lost.
+     44           *          .
+     45           *          A message is a variable of type msg_t that is guaranteed to have
+     46           *          the same size of and be compatible with (data) pointers (anyway an
+     47           *          explicit cast is needed).
+     48           *          If larger messages need to be exchanged then a pointer to a
+     49           *          structure can be posted in the mailbox but the posting side has
+     50           *          no predefined way to know when the message has been processed. A
+     51           *          possible approach is to allocate memory (from a memory pool for
+     52           *          example) from the posting side and free it on the fetching side.
+     53           *          Another approach is to set a "done" flag into the structure pointed
+     54           *          by the message.
+     55           * @pre     In order to use the mailboxes APIs the @p CH_USE_MAILBOXES option
+     56           *          must be enabled in @p chconf.h.
+     57           * @{
+     58           */
+     59          
+     60          #include "ch.h"
+     61          
+     62          #if CH_USE_MAILBOXES || defined(__DOXYGEN__)
+     63          /**
+     64           * @brief   Initializes a Mailbox object.
+     65           *
+     66           * @param[out] mbp      the pointer to the Mailbox structure to be initialized
+     67           * @param[in] buf       pointer to the messages buffer as an array of @p msg_t
+     68           * @param[in] n         number of elements in the buffer array
+     69           *
+     70           * @init
+     71           */
+
+   \                                 In section .text, align 2, keep-with-next
+     72          void chMBInit(Mailbox *mbp, msg_t *buf, cnt_t n) {
+   \                     chMBInit:
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+     73          
+     74            chDbgCheck((mbp != NULL) && (buf != NULL) && (n > 0), "chMBInit");
+   \   00000008   0x2C00             CMP      R4,#+0
+   \   0000000A   0xD003             BEQ.N    ??chMBInit_0
+   \   0000000C   0x2D00             CMP      R5,#+0
+   \   0000000E   0xD001             BEQ.N    ??chMBInit_0
+   \   00000010   0x2E01             CMP      R6,#+1
+   \   00000012   0xDA04             BGE.N    ??chMBInit_1
+   \                     ??chMBInit_0:
+   \   00000014   0x224A             MOVS     R2,#+74
+   \   00000016   0x....             LDR.N    R1,??DataTable7
+   \   00000018   0x....             LDR.N    R0,??DataTable7_1
+   \   0000001A   0x.... 0x....      BL       chDbgPanic3
+     75          
+     76            mbp->mb_buffer = mbp->mb_wrptr = mbp->mb_rdptr = buf;
+   \                     ??chMBInit_1:
+   \   0000001E   0x60E5             STR      R5,[R4, #+12]
+   \   00000020   0x60A5             STR      R5,[R4, #+8]
+   \   00000022   0x6025             STR      R5,[R4, #+0]
+     77            mbp->mb_top = &buf[n];
+   \   00000024   0xEB15 0x0086      ADDS     R0,R5,R6, LSL #+2
+   \   00000028   0x6060             STR      R0,[R4, #+4]
+     78            chSemInit(&mbp->mb_emptysem, n);
+   \   0000002A   0x0031             MOVS     R1,R6
+   \   0000002C   0xF114 0x001C      ADDS     R0,R4,#+28
+   \   00000030   0x.... 0x....      BL       chSemInit
+     79            chSemInit(&mbp->mb_fullsem, 0);
+   \   00000034   0x2100             MOVS     R1,#+0
+   \   00000036   0xF114 0x0010      ADDS     R0,R4,#+16
+   \   0000003A   0x.... 0x....      BL       chSemInit
+     80          }
+   \   0000003E   0xBD70             POP      {R4-R6,PC}       ;; return
+     81          
+     82          /**
+     83           * @brief   Resets a Mailbox object.
+     84           * @details All the waiting threads are resumed with status @p RDY_RESET and
+     85           *          the queued messages are lost.
+     86           *
+     87           * @param[in] mbp       the pointer to an initialized Mailbox object
+     88           *
+     89           * @api
+     90           */
+
+   \                                 In section .text, align 2, keep-with-next
+     91          void chMBReset(Mailbox *mbp) {
+   \                     chMBReset:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+     92          
+     93            chDbgCheck(mbp != NULL, "chMBReset");
+   \   00000004   0x2C00             CMP      R4,#+0
+   \   00000006   0xD104             BNE.N    ??chMBReset_0
+   \   00000008   0x225D             MOVS     R2,#+93
+   \   0000000A   0x....             LDR.N    R1,??DataTable7
+   \   0000000C   0x....             LDR.N    R0,??DataTable7_2
+   \   0000000E   0x.... 0x....      BL       chDbgPanic3
+     94          
+     95            chSysLock();
+   \                     ??chMBReset_0:
+   \   00000012   0x2020             MOVS     R0,#+32
+   \   00000014   0xF380 0x8811      MSR      BASEPRI,R0
+   \   00000018   0x.... 0x....      BL       dbg_check_lock
+     96            mbp->mb_wrptr = mbp->mb_rdptr = mbp->mb_buffer;
+   \   0000001C   0x6820             LDR      R0,[R4, #+0]
+   \   0000001E   0x60E0             STR      R0,[R4, #+12]
+   \   00000020   0x60A0             STR      R0,[R4, #+8]
+     97            chSemResetI(&mbp->mb_emptysem, mbp->mb_top - mbp->mb_buffer);
+   \   00000022   0x6860             LDR      R0,[R4, #+4]
+   \   00000024   0x6821             LDR      R1,[R4, #+0]
+   \   00000026   0x1A40             SUBS     R0,R0,R1
+   \   00000028   0x1081             ASRS     R1,R0,#+2
+   \   0000002A   0xF114 0x001C      ADDS     R0,R4,#+28
+   \   0000002E   0x.... 0x....      BL       chSemResetI
+     98            chSemResetI(&mbp->mb_fullsem, 0);
+   \   00000032   0x2100             MOVS     R1,#+0
+   \   00000034   0xF114 0x0010      ADDS     R0,R4,#+16
+   \   00000038   0x.... 0x....      BL       chSemResetI
+     99            chSchRescheduleS();
+   \   0000003C   0x.... 0x....      BL       chSchRescheduleS
+    100            chSysUnlock();
+   \   00000040   0x.... 0x....      BL       dbg_check_unlock
+   \   00000044   0x2000             MOVS     R0,#+0
+   \   00000046   0xF380 0x8811      MSR      BASEPRI,R0
+    101          }
+   \   0000004A   0xBD10             POP      {R4,PC}          ;; return
+    102          
+    103          /**
+    104           * @brief   Posts a message into a mailbox.
+    105           * @details The invoking thread waits until a empty slot in the mailbox becomes
+    106           *          available or the specified time runs out.
+    107           *
+    108           * @param[in] mbp       the pointer to an initialized Mailbox object
+    109           * @param[in] msg       the message to be posted on the mailbox
+    110           * @param[in] time      the number of ticks before the operation timeouts,
+    111           *                      the following special values are allowed:
+    112           *                      - @a TIME_IMMEDIATE immediate timeout.
+    113           *                      - @a TIME_INFINITE no timeout.
+    114           *                      .
+    115           * @return              The operation status.
+    116           * @retval RDY_OK       if a message has been correctly posted.
+    117           * @retval RDY_RESET    if the mailbox has been reset while waiting.
+    118           * @retval RDY_TIMEOUT  if the operation has timed out.
+    119           *
+    120           * @api
+    121           */
+
+   \                                 In section .text, align 2, keep-with-next
+    122          msg_t chMBPost(Mailbox *mbp, msg_t msg, systime_t time) {
+   \                     chMBPost:
+   \   00000000   0xB5F8             PUSH     {R3-R7,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+    123            msg_t rdymsg;
+    124          
+    125            chSysLock();
+   \   00000008   0x2020             MOVS     R0,#+32
+   \   0000000A   0xF380 0x8811      MSR      BASEPRI,R0
+   \   0000000E   0x.... 0x....      BL       dbg_check_lock
+    126            rdymsg = chMBPostS(mbp, msg, time);
+   \   00000012   0x0032             MOVS     R2,R6
+   \   00000014   0x0029             MOVS     R1,R5
+   \   00000016   0x0020             MOVS     R0,R4
+   \   00000018   0x.... 0x....      BL       chMBPostS
+   \   0000001C   0x0007             MOVS     R7,R0
+    127            chSysUnlock();
+   \   0000001E   0x.... 0x....      BL       dbg_check_unlock
+   \   00000022   0x2000             MOVS     R0,#+0
+   \   00000024   0xF380 0x8811      MSR      BASEPRI,R0
+    128            return rdymsg;
+   \   00000028   0x0038             MOVS     R0,R7
+   \   0000002A   0xBDF2             POP      {R1,R4-R7,PC}    ;; return
+    129          }
+    130          
+    131          /**
+    132           * @brief   Posts a message into a mailbox.
+    133           * @details The invoking thread waits until a empty slot in the mailbox becomes
+    134           *          available or the specified time runs out.
+    135           *
+    136           * @param[in] mbp       the pointer to an initialized Mailbox object
+    137           * @param[in] msg       the message to be posted on the mailbox
+    138           * @param[in] time      the number of ticks before the operation timeouts,
+    139           *                      the following special values are allowed:
+    140           *                      - @a TIME_IMMEDIATE immediate timeout.
+    141           *                      - @a TIME_INFINITE no timeout.
+    142           *                      .
+    143           * @return              The operation status.
+    144           * @retval RDY_OK       if a message has been correctly posted.
+    145           * @retval RDY_RESET    if the mailbox has been reset while waiting.
+    146           * @retval RDY_TIMEOUT  if the operation has timed out.
+    147           *
+    148           * @sclass
+    149           */
+
+   \                                 In section .text, align 2, keep-with-next
+    150          msg_t chMBPostS(Mailbox *mbp, msg_t msg, systime_t time) {
+   \                     chMBPostS:
+   \   00000000   0xB5F8             PUSH     {R3-R7,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+    151            msg_t rdymsg;
+    152          
+    153            chDbgCheckClassS();
+   \   00000008   0x.... 0x....      BL       chDbgCheckClassS
+    154            chDbgCheck(mbp != NULL, "chMBPostS");
+   \   0000000C   0x2C00             CMP      R4,#+0
+   \   0000000E   0xD104             BNE.N    ??chMBPostS_0
+   \   00000010   0x229A             MOVS     R2,#+154
+   \   00000012   0x....             LDR.N    R1,??DataTable7
+   \   00000014   0x....             LDR.N    R0,??DataTable7_3
+   \   00000016   0x.... 0x....      BL       chDbgPanic3
+    155          
+    156            rdymsg = chSemWaitTimeoutS(&mbp->mb_emptysem, time);
+   \                     ??chMBPostS_0:
+   \   0000001A   0x0031             MOVS     R1,R6
+   \   0000001C   0xF114 0x001C      ADDS     R0,R4,#+28
+   \   00000020   0x.... 0x....      BL       chSemWaitTimeoutS
+   \   00000024   0x0007             MOVS     R7,R0
+    157            if (rdymsg == RDY_OK) {
+   \   00000026   0x2F00             CMP      R7,#+0
+   \   00000028   0xD10F             BNE.N    ??chMBPostS_1
+    158              *mbp->mb_wrptr++ = msg;
+   \   0000002A   0x68A0             LDR      R0,[R4, #+8]
+   \   0000002C   0x1D01             ADDS     R1,R0,#+4
+   \   0000002E   0x60A1             STR      R1,[R4, #+8]
+   \   00000030   0x6005             STR      R5,[R0, #+0]
+    159              if (mbp->mb_wrptr >= mbp->mb_top)
+   \   00000032   0x68A0             LDR      R0,[R4, #+8]
+   \   00000034   0x6861             LDR      R1,[R4, #+4]
+   \   00000036   0x4288             CMP      R0,R1
+   \   00000038   0xD301             BCC.N    ??chMBPostS_2
+    160                mbp->mb_wrptr = mbp->mb_buffer;
+   \   0000003A   0x6820             LDR      R0,[R4, #+0]
+   \   0000003C   0x60A0             STR      R0,[R4, #+8]
+    161              chSemSignalI(&mbp->mb_fullsem);
+   \                     ??chMBPostS_2:
+   \   0000003E   0xF114 0x0010      ADDS     R0,R4,#+16
+   \   00000042   0x.... 0x....      BL       chSemSignalI
+    162              chSchRescheduleS();
+   \   00000046   0x.... 0x....      BL       chSchRescheduleS
+    163            }
+    164            return rdymsg;
+   \                     ??chMBPostS_1:
+   \   0000004A   0x0038             MOVS     R0,R7
+   \   0000004C   0xBDF2             POP      {R1,R4-R7,PC}    ;; return
+    165          }
+    166          
+    167          /**
+    168           * @brief   Posts a message into a mailbox.
+    169           * @details This variant is non-blocking, the function returns a timeout
+    170           *          condition if the queue is full.
+    171           *
+    172           * @param[in] mbp       the pointer to an initialized Mailbox object
+    173           * @param[in] msg       the message to be posted on the mailbox
+    174           * @return              The operation status.
+    175           * @retval RDY_OK       if a message has been correctly posted.
+    176           * @retval RDY_TIMEOUT  if the mailbox is full and the message cannot be
+    177           *                      posted.
+    178           *
+    179           * @iclass
+    180           */
+
+   \                                 In section .text, align 2, keep-with-next
+    181          msg_t chMBPostI(Mailbox *mbp, msg_t msg) {
+   \                     chMBPostI:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+    182          
+    183            chDbgCheckClassI();
+   \   00000006   0x.... 0x....      BL       chDbgCheckClassI
+    184            chDbgCheck(mbp != NULL, "chMBPostI");
+   \   0000000A   0x2C00             CMP      R4,#+0
+   \   0000000C   0xD104             BNE.N    ??chMBPostI_0
+   \   0000000E   0x22B8             MOVS     R2,#+184
+   \   00000010   0x....             LDR.N    R1,??DataTable7
+   \   00000012   0x....             LDR.N    R0,??DataTable7_4
+   \   00000014   0x.... 0x....      BL       chDbgPanic3
+    185          
+    186            if (chSemGetCounterI(&mbp->mb_emptysem) <= 0)
+   \                     ??chMBPostI_0:
+   \   00000018   0x6A60             LDR      R0,[R4, #+36]
+   \   0000001A   0x2801             CMP      R0,#+1
+   \   0000001C   0xDA02             BGE.N    ??chMBPostI_1
+    187              return RDY_TIMEOUT;
+   \   0000001E   0xF05F 0x30FF      MOVS     R0,#-1
+   \   00000022   0xE011             B.N      ??chMBPostI_2
+    188            chSemFastWaitI(&mbp->mb_emptysem);
+   \                     ??chMBPostI_1:
+   \   00000024   0x6A60             LDR      R0,[R4, #+36]
+   \   00000026   0x1E40             SUBS     R0,R0,#+1
+   \   00000028   0x6260             STR      R0,[R4, #+36]
+    189            *mbp->mb_wrptr++ = msg;
+   \   0000002A   0x68A0             LDR      R0,[R4, #+8]
+   \   0000002C   0x1D01             ADDS     R1,R0,#+4
+   \   0000002E   0x60A1             STR      R1,[R4, #+8]
+   \   00000030   0x6005             STR      R5,[R0, #+0]
+    190            if (mbp->mb_wrptr >= mbp->mb_top)
+   \   00000032   0x68A0             LDR      R0,[R4, #+8]
+   \   00000034   0x6861             LDR      R1,[R4, #+4]
+   \   00000036   0x4288             CMP      R0,R1
+   \   00000038   0xD301             BCC.N    ??chMBPostI_3
+    191              mbp->mb_wrptr = mbp->mb_buffer;
+   \   0000003A   0x6820             LDR      R0,[R4, #+0]
+   \   0000003C   0x60A0             STR      R0,[R4, #+8]
+    192            chSemSignalI(&mbp->mb_fullsem);
+   \                     ??chMBPostI_3:
+   \   0000003E   0xF114 0x0010      ADDS     R0,R4,#+16
+   \   00000042   0x.... 0x....      BL       chSemSignalI
+    193            return RDY_OK;
+   \   00000046   0x2000             MOVS     R0,#+0
+   \                     ??chMBPostI_2:
+   \   00000048   0xBD32             POP      {R1,R4,R5,PC}    ;; return
+    194          }
+    195          
+    196          /**
+    197           * @brief   Posts an high priority message into a mailbox.
+    198           * @details The invoking thread waits until a empty slot in the mailbox becomes
+    199           *          available or the specified time runs out.
+    200           *
+    201           * @param[in] mbp       the pointer to an initialized Mailbox object
+    202           * @param[in] msg       the message to be posted on the mailbox
+    203           * @param[in] time      the number of ticks before the operation timeouts,
+    204           *                      the following special values are allowed:
+    205           *                      - @a TIME_IMMEDIATE immediate timeout.
+    206           *                      - @a TIME_INFINITE no timeout.
+    207           *                      .
+    208           * @return              The operation status.
+    209           * @retval RDY_OK       if a message has been correctly posted.
+    210           * @retval RDY_RESET    if the mailbox has been reset while waiting.
+    211           * @retval RDY_TIMEOUT  if the operation has timed out.
+    212           *
+    213           * @api
+    214           */
+
+   \                                 In section .text, align 2, keep-with-next
+    215          msg_t chMBPostAhead(Mailbox *mbp, msg_t msg, systime_t time) {
+   \                     chMBPostAhead:
+   \   00000000   0xB5F8             PUSH     {R3-R7,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+    216            msg_t rdymsg;
+    217          
+    218            chSysLock();
+   \   00000008   0x2020             MOVS     R0,#+32
+   \   0000000A   0xF380 0x8811      MSR      BASEPRI,R0
+   \   0000000E   0x.... 0x....      BL       dbg_check_lock
+    219            rdymsg = chMBPostAheadS(mbp, msg, time);
+   \   00000012   0x0032             MOVS     R2,R6
+   \   00000014   0x0029             MOVS     R1,R5
+   \   00000016   0x0020             MOVS     R0,R4
+   \   00000018   0x.... 0x....      BL       chMBPostAheadS
+   \   0000001C   0x0007             MOVS     R7,R0
+    220            chSysUnlock();
+   \   0000001E   0x.... 0x....      BL       dbg_check_unlock
+   \   00000022   0x2000             MOVS     R0,#+0
+   \   00000024   0xF380 0x8811      MSR      BASEPRI,R0
+    221            return rdymsg;
+   \   00000028   0x0038             MOVS     R0,R7
+   \   0000002A   0xBDF2             POP      {R1,R4-R7,PC}    ;; return
+    222          }
+    223          
+    224          /**
+    225           * @brief   Posts an high priority message into a mailbox.
+    226           * @details The invoking thread waits until a empty slot in the mailbox becomes
+    227           *          available or the specified time runs out.
+    228           *
+    229           * @param[in] mbp       the pointer to an initialized Mailbox object
+    230           * @param[in] msg       the message to be posted on the mailbox
+    231           * @param[in] time      the number of ticks before the operation timeouts,
+    232           *                      the following special values are allowed:
+    233           *                      - @a TIME_IMMEDIATE immediate timeout.
+    234           *                      - @a TIME_INFINITE no timeout.
+    235           *                      .
+    236           * @return              The operation status.
+    237           * @retval RDY_OK       if a message has been correctly posted.
+    238           * @retval RDY_RESET    if the mailbox has been reset while waiting.
+    239           * @retval RDY_TIMEOUT  if the operation has timed out.
+    240           *
+    241           * @sclass
+    242           */
+
+   \                                 In section .text, align 2, keep-with-next
+    243          msg_t chMBPostAheadS(Mailbox *mbp, msg_t msg, systime_t time) {
+   \                     chMBPostAheadS:
+   \   00000000   0xB5F8             PUSH     {R3-R7,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+    244            msg_t rdymsg;
+    245          
+    246            chDbgCheckClassS();
+   \   00000008   0x.... 0x....      BL       chDbgCheckClassS
+    247            chDbgCheck(mbp != NULL, "chMBPostAheadS");
+   \   0000000C   0x2C00             CMP      R4,#+0
+   \   0000000E   0xD104             BNE.N    ??chMBPostAheadS_0
+   \   00000010   0x22F7             MOVS     R2,#+247
+   \   00000012   0x....             LDR.N    R1,??DataTable7
+   \   00000014   0x....             LDR.N    R0,??DataTable7_5
+   \   00000016   0x.... 0x....      BL       chDbgPanic3
+    248          
+    249            rdymsg = chSemWaitTimeoutS(&mbp->mb_emptysem, time);
+   \                     ??chMBPostAheadS_0:
+   \   0000001A   0x0031             MOVS     R1,R6
+   \   0000001C   0xF114 0x001C      ADDS     R0,R4,#+28
+   \   00000020   0x.... 0x....      BL       chSemWaitTimeoutS
+   \   00000024   0x0007             MOVS     R7,R0
+    250            if (rdymsg == RDY_OK) {
+   \   00000026   0x2F00             CMP      R7,#+0
+   \   00000028   0xD110             BNE.N    ??chMBPostAheadS_1
+    251              if (--mbp->mb_rdptr < mbp->mb_buffer)
+   \   0000002A   0x68E0             LDR      R0,[R4, #+12]
+   \   0000002C   0x1F00             SUBS     R0,R0,#+4
+   \   0000002E   0x60E0             STR      R0,[R4, #+12]
+   \   00000030   0x6821             LDR      R1,[R4, #+0]
+   \   00000032   0x4288             CMP      R0,R1
+   \   00000034   0xD202             BCS.N    ??chMBPostAheadS_2
+    252                mbp->mb_rdptr = mbp->mb_top - 1;
+   \   00000036   0x6860             LDR      R0,[R4, #+4]
+   \   00000038   0x1F00             SUBS     R0,R0,#+4
+   \   0000003A   0x60E0             STR      R0,[R4, #+12]
+    253              *mbp->mb_rdptr = msg;
+   \                     ??chMBPostAheadS_2:
+   \   0000003C   0x68E0             LDR      R0,[R4, #+12]
+   \   0000003E   0x6005             STR      R5,[R0, #+0]
+    254              chSemSignalI(&mbp->mb_fullsem);
+   \   00000040   0xF114 0x0010      ADDS     R0,R4,#+16
+   \   00000044   0x.... 0x....      BL       chSemSignalI
+    255              chSchRescheduleS();
+   \   00000048   0x.... 0x....      BL       chSchRescheduleS
+    256            }
+    257            return rdymsg;
+   \                     ??chMBPostAheadS_1:
+   \   0000004C   0x0038             MOVS     R0,R7
+   \   0000004E   0xBDF2             POP      {R1,R4-R7,PC}    ;; return
+    258          }
+    259          
+    260          /**
+    261           * @brief   Posts an high priority message into a mailbox.
+    262           * @details This variant is non-blocking, the function returns a timeout
+    263           *          condition if the queue is full.
+    264           *
+    265           * @param[in] mbp       the pointer to an initialized Mailbox object
+    266           * @param[in] msg       the message to be posted on the mailbox
+    267           * @return              The operation status.
+    268           * @retval RDY_OK       if a message has been correctly posted.
+    269           * @retval RDY_TIMEOUT  if the mailbox is full and the message cannot be
+    270           *                      posted.
+    271           *
+    272           * @iclass
+    273           */
+
+   \                                 In section .text, align 2, keep-with-next
+    274          msg_t chMBPostAheadI(Mailbox *mbp, msg_t msg) {
+   \                     chMBPostAheadI:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+    275          
+    276            chDbgCheckClassI();
+   \   00000006   0x.... 0x....      BL       chDbgCheckClassI
+    277            chDbgCheck(mbp != NULL, "chMBPostAheadI");
+   \   0000000A   0x2C00             CMP      R4,#+0
+   \   0000000C   0xD105             BNE.N    ??chMBPostAheadI_0
+   \   0000000E   0xF240 0x1215      MOVW     R2,#+277
+   \   00000012   0x....             LDR.N    R1,??DataTable7
+   \   00000014   0x....             LDR.N    R0,??DataTable7_6
+   \   00000016   0x.... 0x....      BL       chDbgPanic3
+    278          
+    279            if (chSemGetCounterI(&mbp->mb_emptysem) <= 0)
+   \                     ??chMBPostAheadI_0:
+   \   0000001A   0x6A60             LDR      R0,[R4, #+36]
+   \   0000001C   0x2801             CMP      R0,#+1
+   \   0000001E   0xDA02             BGE.N    ??chMBPostAheadI_1
+    280              return RDY_TIMEOUT;
+   \   00000020   0xF05F 0x30FF      MOVS     R0,#-1
+   \   00000024   0xE012             B.N      ??chMBPostAheadI_2
+    281            chSemFastWaitI(&mbp->mb_emptysem);
+   \                     ??chMBPostAheadI_1:
+   \   00000026   0x6A60             LDR      R0,[R4, #+36]
+   \   00000028   0x1E40             SUBS     R0,R0,#+1
+   \   0000002A   0x6260             STR      R0,[R4, #+36]
+    282            if (--mbp->mb_rdptr < mbp->mb_buffer)
+   \   0000002C   0x68E0             LDR      R0,[R4, #+12]
+   \   0000002E   0x1F00             SUBS     R0,R0,#+4
+   \   00000030   0x60E0             STR      R0,[R4, #+12]
+   \   00000032   0x6821             LDR      R1,[R4, #+0]
+   \   00000034   0x4288             CMP      R0,R1
+   \   00000036   0xD202             BCS.N    ??chMBPostAheadI_3
+    283              mbp->mb_rdptr = mbp->mb_top - 1;
+   \   00000038   0x6860             LDR      R0,[R4, #+4]
+   \   0000003A   0x1F00             SUBS     R0,R0,#+4
+   \   0000003C   0x60E0             STR      R0,[R4, #+12]
+    284            *mbp->mb_rdptr = msg;
+   \                     ??chMBPostAheadI_3:
+   \   0000003E   0x68E0             LDR      R0,[R4, #+12]
+   \   00000040   0x6005             STR      R5,[R0, #+0]
+    285            chSemSignalI(&mbp->mb_fullsem);
+   \   00000042   0xF114 0x0010      ADDS     R0,R4,#+16
+   \   00000046   0x.... 0x....      BL       chSemSignalI
+    286            return RDY_OK;
+   \   0000004A   0x2000             MOVS     R0,#+0
+   \                     ??chMBPostAheadI_2:
+   \   0000004C   0xBD32             POP      {R1,R4,R5,PC}    ;; return
+    287          }
+    288          
+    289          /**
+    290           * @brief   Retrieves a message from a mailbox.
+    291           * @details The invoking thread waits until a message is posted in the mailbox
+    292           *          or the specified time runs out.
+    293           *
+    294           * @param[in] mbp       the pointer to an initialized Mailbox object
+    295           * @param[out] msgp     pointer to a message variable for the received message
+    296           * @param[in] time      the number of ticks before the operation timeouts,
+    297           *                      the following special values are allowed:
+    298           *                      - @a TIME_IMMEDIATE immediate timeout.
+    299           *                      - @a TIME_INFINITE no timeout.
+    300           *                      .
+    301           * @return              The operation status.
+    302           * @retval RDY_OK       if a message has been correctly fetched.
+    303           * @retval RDY_RESET    if the mailbox has been reset while waiting.
+    304           * @retval RDY_TIMEOUT  if the operation has timed out.
+    305           *
+    306           * @api
+    307           */
+
+   \                                 In section .text, align 2, keep-with-next
+    308          msg_t chMBFetch(Mailbox *mbp, msg_t *msgp, systime_t time) {
+   \                     chMBFetch:
+   \   00000000   0xB5F8             PUSH     {R3-R7,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+    309            msg_t rdymsg;
+    310          
+    311            chSysLock();
+   \   00000008   0x2020             MOVS     R0,#+32
+   \   0000000A   0xF380 0x8811      MSR      BASEPRI,R0
+   \   0000000E   0x.... 0x....      BL       dbg_check_lock
+    312            rdymsg = chMBFetchS(mbp, msgp, time);
+   \   00000012   0x0032             MOVS     R2,R6
+   \   00000014   0x0029             MOVS     R1,R5
+   \   00000016   0x0020             MOVS     R0,R4
+   \   00000018   0x.... 0x....      BL       chMBFetchS
+   \   0000001C   0x0007             MOVS     R7,R0
+    313            chSysUnlock();
+   \   0000001E   0x.... 0x....      BL       dbg_check_unlock
+   \   00000022   0x2000             MOVS     R0,#+0
+   \   00000024   0xF380 0x8811      MSR      BASEPRI,R0
+    314            return rdymsg;
+   \   00000028   0x0038             MOVS     R0,R7
+   \   0000002A   0xBDF2             POP      {R1,R4-R7,PC}    ;; return
+    315          }
+    316          
+    317          /**
+    318           * @brief   Retrieves a message from a mailbox.
+    319           * @details The invoking thread waits until a message is posted in the mailbox
+    320           *          or the specified time runs out.
+    321           *
+    322           * @param[in] mbp       the pointer to an initialized Mailbox object
+    323           * @param[out] msgp     pointer to a message variable for the received message
+    324           * @param[in] time      the number of ticks before the operation timeouts,
+    325           *                      the following special values are allowed:
+    326           *                      - @a TIME_IMMEDIATE immediate timeout.
+    327           *                      - @a TIME_INFINITE no timeout.
+    328           *                      .
+    329           * @return              The operation status.
+    330           * @retval RDY_OK       if a message has been correctly fetched.
+    331           * @retval RDY_RESET    if the mailbox has been reset while waiting.
+    332           * @retval RDY_TIMEOUT  if the operation has timed out.
+    333           *
+    334           * @sclass
+    335           */
+
+   \                                 In section .text, align 2, keep-with-next
+    336          msg_t chMBFetchS(Mailbox *mbp, msg_t *msgp, systime_t time) {
+   \                     chMBFetchS:
+   \   00000000   0xB5F8             PUSH     {R3-R7,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+    337            msg_t rdymsg;
+    338          
+    339            chDbgCheckClassS();
+   \   00000008   0x.... 0x....      BL       chDbgCheckClassS
+    340            chDbgCheck((mbp != NULL) && (msgp != NULL), "chMBFetchS");
+   \   0000000C   0x2C00             CMP      R4,#+0
+   \   0000000E   0xD001             BEQ.N    ??chMBFetchS_0
+   \   00000010   0x2D00             CMP      R5,#+0
+   \   00000012   0xD105             BNE.N    ??chMBFetchS_1
+   \                     ??chMBFetchS_0:
+   \   00000014   0xF44F 0x72AA      MOV      R2,#+340
+   \   00000018   0x....             LDR.N    R1,??DataTable7
+   \   0000001A   0x....             LDR.N    R0,??DataTable7_7
+   \   0000001C   0x.... 0x....      BL       chDbgPanic3
+    341          
+    342            rdymsg = chSemWaitTimeoutS(&mbp->mb_fullsem, time);
+   \                     ??chMBFetchS_1:
+   \   00000020   0x0031             MOVS     R1,R6
+   \   00000022   0xF114 0x0010      ADDS     R0,R4,#+16
+   \   00000026   0x.... 0x....      BL       chSemWaitTimeoutS
+   \   0000002A   0x0007             MOVS     R7,R0
+    343            if (rdymsg == RDY_OK) {
+   \   0000002C   0x2F00             CMP      R7,#+0
+   \   0000002E   0xD110             BNE.N    ??chMBFetchS_2
+    344              *msgp = *mbp->mb_rdptr++;
+   \   00000030   0x68E0             LDR      R0,[R4, #+12]
+   \   00000032   0x1D01             ADDS     R1,R0,#+4
+   \   00000034   0x60E1             STR      R1,[R4, #+12]
+   \   00000036   0x6800             LDR      R0,[R0, #+0]
+   \   00000038   0x6028             STR      R0,[R5, #+0]
+    345              if (mbp->mb_rdptr >= mbp->mb_top)
+   \   0000003A   0x68E0             LDR      R0,[R4, #+12]
+   \   0000003C   0x6861             LDR      R1,[R4, #+4]
+   \   0000003E   0x4288             CMP      R0,R1
+   \   00000040   0xD301             BCC.N    ??chMBFetchS_3
+    346                mbp->mb_rdptr = mbp->mb_buffer;
+   \   00000042   0x6820             LDR      R0,[R4, #+0]
+   \   00000044   0x60E0             STR      R0,[R4, #+12]
+    347              chSemSignalI(&mbp->mb_emptysem);
+   \                     ??chMBFetchS_3:
+   \   00000046   0xF114 0x001C      ADDS     R0,R4,#+28
+   \   0000004A   0x.... 0x....      BL       chSemSignalI
+    348              chSchRescheduleS();
+   \   0000004E   0x.... 0x....      BL       chSchRescheduleS
+    349            }
+    350            return rdymsg;
+   \                     ??chMBFetchS_2:
+   \   00000052   0x0038             MOVS     R0,R7
+   \   00000054   0xBDF2             POP      {R1,R4-R7,PC}    ;; return
+    351          }
+    352          
+    353          /**
+    354           * @brief   Retrieves a message from a mailbox.
+    355           * @details This variant is non-blocking, the function returns a timeout
+    356           *          condition if the queue is empty.
+    357           *
+    358           * @param[in] mbp       the pointer to an initialized Mailbox object
+    359           * @param[out] msgp     pointer to a message variable for the received message
+    360           * @return              The operation status.
+    361           * @retval RDY_OK       if a message has been correctly fetched.
+    362           * @retval RDY_TIMEOUT  if the mailbox is empty and a message cannot be
+    363           *                      fetched.
+    364           *
+    365           * @iclass
+    366           */
+
+   \                                 In section .text, align 2, keep-with-next
+    367          msg_t chMBFetchI(Mailbox *mbp, msg_t *msgp) {
+   \                     chMBFetchI:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+    368          
+    369            chDbgCheckClassI();
+   \   00000006   0x.... 0x....      BL       chDbgCheckClassI
+    370            chDbgCheck((mbp != NULL) && (msgp != NULL), "chMBFetchI");
+   \   0000000A   0x2C00             CMP      R4,#+0
+   \   0000000C   0xD001             BEQ.N    ??chMBFetchI_0
+   \   0000000E   0x2D00             CMP      R5,#+0
+   \   00000010   0xD105             BNE.N    ??chMBFetchI_1
+   \                     ??chMBFetchI_0:
+   \   00000012   0xF44F 0x72B9      MOV      R2,#+370
+   \   00000016   0x....             LDR.N    R1,??DataTable7
+   \   00000018   0x....             LDR.N    R0,??DataTable7_8
+   \   0000001A   0x.... 0x....      BL       chDbgPanic3
+    371          
+    372            if (chSemGetCounterI(&mbp->mb_fullsem) <= 0)
+   \                     ??chMBFetchI_1:
+   \   0000001E   0x69A0             LDR      R0,[R4, #+24]
+   \   00000020   0x2801             CMP      R0,#+1
+   \   00000022   0xDA02             BGE.N    ??chMBFetchI_2
+    373              return RDY_TIMEOUT;
+   \   00000024   0xF05F 0x30FF      MOVS     R0,#-1
+   \   00000028   0xE012             B.N      ??chMBFetchI_3
+    374            chSemFastWaitI(&mbp->mb_fullsem);
+   \                     ??chMBFetchI_2:
+   \   0000002A   0x69A0             LDR      R0,[R4, #+24]
+   \   0000002C   0x1E40             SUBS     R0,R0,#+1
+   \   0000002E   0x61A0             STR      R0,[R4, #+24]
+    375            *msgp = *mbp->mb_rdptr++;
+   \   00000030   0x68E0             LDR      R0,[R4, #+12]
+   \   00000032   0x1D01             ADDS     R1,R0,#+4
+   \   00000034   0x60E1             STR      R1,[R4, #+12]
+   \   00000036   0x6800             LDR      R0,[R0, #+0]
+   \   00000038   0x6028             STR      R0,[R5, #+0]
+    376            if (mbp->mb_rdptr >= mbp->mb_top)
+   \   0000003A   0x68E0             LDR      R0,[R4, #+12]
+   \   0000003C   0x6861             LDR      R1,[R4, #+4]
+   \   0000003E   0x4288             CMP      R0,R1
+   \   00000040   0xD301             BCC.N    ??chMBFetchI_4
+    377              mbp->mb_rdptr = mbp->mb_buffer;
+   \   00000042   0x6820             LDR      R0,[R4, #+0]
+   \   00000044   0x60E0             STR      R0,[R4, #+12]
+    378            chSemSignalI(&mbp->mb_emptysem);
+   \                     ??chMBFetchI_4:
+   \   00000046   0xF114 0x001C      ADDS     R0,R4,#+28
+   \   0000004A   0x.... 0x....      BL       chSemSignalI
+    379            return RDY_OK;
+   \   0000004E   0x2000             MOVS     R0,#+0
+   \                     ??chMBFetchI_3:
+   \   00000050   0xBD32             POP      {R1,R4,R5,PC}    ;; return
+    380          }
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7:
+   \   00000000   0x........         DC32     `?<Constant "F:\\\\stuff\\\\rusefi_sourc...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_1:
+   \   00000000   0x........         DC32     `?<Constant "\\"chMBInit\\"()">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_2:
+   \   00000000   0x........         DC32     `?<Constant "\\"chMBReset\\"()">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_3:
+   \   00000000   0x........         DC32     `?<Constant "\\"chMBPostS\\"()">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_4:
+   \   00000000   0x........         DC32     `?<Constant "\\"chMBPostI\\"()">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_5:
+   \   00000000   0x........         DC32     `?<Constant "\\"chMBPostAheadS\\"()">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_6:
+   \   00000000   0x........         DC32     `?<Constant "\\"chMBPostAheadI\\"()">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_7:
+   \   00000000   0x........         DC32     `?<Constant "\\"chMBFetchS\\"()">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_8:
+   \   00000000   0x........         DC32     `?<Constant "\\"chMBFetchI\\"()">`
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "\\"chMBInit\\"()">`:
+   \   00000000   0x22 0x63          DC8 "\"chMBInit\"()"
+   \              0x68 0x4D    
+   \              0x42 0x49    
+   \              0x6E 0x69    
+   \              0x74 0x22    
+   \              0x28 0x29    
+   \              0x00         
+   \   0000000D   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "F:\\\\stuff\\\\rusefi_sourc...">`:
+   \   00000000   0x46 0x3A          DC8 46H, 3AH, 5CH, 73H, 74H, 75H, 66H, 66H
+   \              0x5C 0x73    
+   \              0x74 0x75    
+   \              0x66 0x66    
+   \   00000008   0x5C 0x72          DC8 5CH, 72H, 75H, 73H, 65H, 66H, 69H, 5FH
+   \              0x75 0x73    
+   \              0x65 0x66    
+   \              0x69 0x5F    
+   \   00000010   0x73 0x6F          DC8 73H, 6FH, 75H, 72H, 63H, 65H, 66H, 6FH
+   \              0x75 0x72    
+   \              0x63 0x65    
+   \              0x66 0x6F    
+   \   00000018   0x72 0x67          DC8 72H, 67H, 65H, 5CH, 66H, 69H, 72H, 6DH
+   \              0x65 0x5C    
+   \              0x66 0x69    
+   \              0x72 0x6D    
+   \   00000020   0x77 0x61          DC8 77H, 61H, 72H, 65H, 5CH, 63H, 68H, 69H
+   \              0x72 0x65    
+   \              0x5C 0x63    
+   \              0x68 0x69    
+   \   00000028   0x62 0x69          DC8 62H, 69H, 6FH, 73H, 5CH, 6FH, 73H, 5CH
+   \              0x6F 0x73    
+   \              0x5C 0x6F    
+   \              0x73 0x5C    
+   \   00000030   0x6B 0x65          DC8 6BH, 65H, 72H, 6EH, 65H, 6CH, 5CH, 73H
+   \              0x72 0x6E    
+   \              0x65 0x6C    
+   \              0x5C 0x73    
+   \   00000038   0x72 0x63          DC8 72H, 63H, 5CH, 63H, 68H, 6DH, 62H, 6FH
+   \              0x5C 0x63    
+   \              0x68 0x6D    
+   \              0x62 0x6F    
+   \   00000040   0x78 0x65          DC8 78H, 65H, 73H, 2EH, 63H, 0
+   \              0x73 0x2E    
+   \              0x63 0x00    
+   \   00000046   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "\\"chMBReset\\"()">`:
+   \   00000000   0x22 0x63          DC8 "\"chMBReset\"()"
+   \              0x68 0x4D    
+   \              0x42 0x52    
+   \              0x65 0x73    
+   \              0x65 0x74    
+   \              0x22 0x28    
+   \              0x29 0x00    
+   \   0000000E   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "\\"chMBPostS\\"()">`:
+   \   00000000   0x22 0x63          DC8 "\"chMBPostS\"()"
+   \              0x68 0x4D    
+   \              0x42 0x50    
+   \              0x6F 0x73    
+   \              0x74 0x53    
+   \              0x22 0x28    
+   \              0x29 0x00    
+   \   0000000E   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "\\"chMBPostI\\"()">`:
+   \   00000000   0x22 0x63          DC8 "\"chMBPostI\"()"
+   \              0x68 0x4D    
+   \              0x42 0x50    
+   \              0x6F 0x73    
+   \              0x74 0x49    
+   \              0x22 0x28    
+   \              0x29 0x00    
+   \   0000000E   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "\\"chMBPostAheadS\\"()">`:
+   \   00000000   0x22 0x63          DC8 "\"chMBPostAheadS\"()"
+   \              0x68 0x4D    
+   \              0x42 0x50    
+   \              0x6F 0x73    
+   \              0x74 0x41    
+   \              0x68 0x65    
+   \              0x61 0x64    
+   \              0x53 0x22    
+   \              0x28 0x29    
+   \              0x00         
+   \   00000013   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "\\"chMBPostAheadI\\"()">`:
+   \   00000000   0x22 0x63          DC8 "\"chMBPostAheadI\"()"
+   \              0x68 0x4D    
+   \              0x42 0x50    
+   \              0x6F 0x73    
+   \              0x74 0x41    
+   \              0x68 0x65    
+   \              0x61 0x64    
+   \              0x49 0x22    
+   \              0x28 0x29    
+   \              0x00         
+   \   00000013   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "\\"chMBFetchS\\"()">`:
+   \   00000000   0x22 0x63          DC8 "\"chMBFetchS\"()"
+   \              0x68 0x4D    
+   \              0x42 0x46    
+   \              0x65 0x74    
+   \              0x63 0x68    
+   \              0x53 0x22    
+   \              0x28 0x29    
+   \              0x00         
+   \   0000000F   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "\\"chMBFetchI\\"()">`:
+   \   00000000   0x22 0x63          DC8 "\"chMBFetchI\"()"
+   \              0x68 0x4D    
+   \              0x42 0x46    
+   \              0x65 0x74    
+   \              0x63 0x68    
+   \              0x49 0x22    
+   \              0x28 0x29    
+   \              0x00         
+   \   0000000F   0x00               DC8 0
+    381          #endif /* CH_USE_MAILBOXES */
+    382          
+    383          /** @} */
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      24   chMBFetch
+        24   -> chMBFetchS
+        24   -> dbg_check_lock
+        24   -> dbg_check_unlock
+      16   chMBFetchI
+        16   -> chDbgCheckClassI
+        16   -> chDbgPanic3
+        16   -> chSemSignalI
+      24   chMBFetchS
+        24   -> chDbgCheckClassS
+        24   -> chDbgPanic3
+        24   -> chSchRescheduleS
+        24   -> chSemSignalI
+        24   -> chSemWaitTimeoutS
+      16   chMBInit
+        16   -> chDbgPanic3
+        16   -> chSemInit
+      24   chMBPost
+        24   -> chMBPostS
+        24   -> dbg_check_lock
+        24   -> dbg_check_unlock
+      24   chMBPostAhead
+        24   -> chMBPostAheadS
+        24   -> dbg_check_lock
+        24   -> dbg_check_unlock
+      16   chMBPostAheadI
+        16   -> chDbgCheckClassI
+        16   -> chDbgPanic3
+        16   -> chSemSignalI
+      24   chMBPostAheadS
+        24   -> chDbgCheckClassS
+        24   -> chDbgPanic3
+        24   -> chSchRescheduleS
+        24   -> chSemSignalI
+        24   -> chSemWaitTimeoutS
+      16   chMBPostI
+        16   -> chDbgCheckClassI
+        16   -> chDbgPanic3
+        16   -> chSemSignalI
+      24   chMBPostS
+        24   -> chDbgCheckClassS
+        24   -> chDbgPanic3
+        24   -> chSchRescheduleS
+        24   -> chSemSignalI
+        24   -> chSemWaitTimeoutS
+       8   chMBReset
+         8   -> chDbgPanic3
+         8   -> chSchRescheduleS
+         8   -> chSemResetI
+         8   -> dbg_check_lock
+         8   -> dbg_check_unlock
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      72  ?<Constant "F:\\stuff\\rusefi_sourc...">
+      16  ?<Constant "\"chMBFetchI\"()">
+      16  ?<Constant "\"chMBFetchS\"()">
+      16  ?<Constant "\"chMBInit\"()">
+      20  ?<Constant "\"chMBPostAheadI\"()">
+      20  ?<Constant "\"chMBPostAheadS\"()">
+      16  ?<Constant "\"chMBPostI\"()">
+      16  ?<Constant "\"chMBPostS\"()">
+      16  ?<Constant "\"chMBReset\"()">
+       4  ??DataTable7
+       4  ??DataTable7_1
+       4  ??DataTable7_2
+       4  ??DataTable7_3
+       4  ??DataTable7_4
+       4  ??DataTable7_5
+       4  ??DataTable7_6
+       4  ??DataTable7_7
+       4  ??DataTable7_8
+      44  chMBFetch
+      82  chMBFetchI
+      86  chMBFetchS
+      64  chMBInit
+      44  chMBPost
+      44  chMBPostAhead
+      78  chMBPostAheadI
+      80  chMBPostAheadS
+      74  chMBPostI
+      78  chMBPostS
+      76  chMBReset
+
+ 
+ 208 bytes in section .rodata
+ 786 bytes in section .text
+ 
+ 786 bytes of CODE  memory
+ 208 bytes of CONST memory
+
+Errors: none
+Warnings: none

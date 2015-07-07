@@ -1,0 +1,252 @@
+###############################################################################
+#                                                                             #
+# IAR ANSI C/C++ Compiler V6.50.3.4676/W32 for ARM      30/Jun/2015  23:10:07 #
+# Copyright 1999-2013 IAR Systems AB.                                         #
+#                                                                             #
+#    Cpu mode        =  thumb                                                 #
+#    Endian          =  little                                                #
+#    Source file     =  F:\stuff\rusefi_sourceforge\firmware\controllers\sens #
+#                       ors\voltage.cpp                                       #
+#    Command line    =  F:\stuff\rusefi_sourceforge\firmware\controllers\sens #
+#                       ors\voltage.cpp -lCN F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\Debug\List\ -lA F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\Debug\List\ -o                           #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\   #
+#                       --no_cse --no_unroll --no_inline --no_code_motion     #
+#                       --no_tbaa --no_clustering --no_scheduling --debug     #
+#                       --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp     #
+#                       --dlib_config "C:\Program Files (x86)\IAR             #
+#                       Systems\Embedded Workbench                            #
+#                       6.5\arm\INC\c\DLib_Config_Normal.h"                   #
+#                       --misrac2004=1.2-1.4,2.3,3.4,4.2,6.5-7,8.2-8.3,9.3,   #
+#                       12.3,13.6-13,15.5,17.3,19.17,20.7-20.9,20.11 -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\ -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\kernel\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\ports\common\ARMCMx\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\common\ARMCMx\CMSIS\include\ -I               #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\IAR\ARMCMx\ -I F:\stuff\rusefi_sourceforge\fi #
+#                       rmware\iar\..\chibios\os\ports\IAR\ARMCMx\STM32F4xx\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\chibio #
+#                       s\os\hal\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\hal\platforms\STM32\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\DMAv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\GPIOv2\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\I2Cv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\SPIv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\TIMv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\RTCv2\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\USARTv1\ -I                     #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\OTGv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32F4xx\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\various\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\chibios\os\various\devices_lib\accel\ -I         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\b #
+#                       oards\ST_STM32F4_DISCOVERY\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\co #
+#                       ntrollers\algo\ -I F:\stuff\rusefi_sourceforge\firmwa #
+#                       re\iar\..\controllers\core\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\system\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\controllers\sensors\ -I                          #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\math\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\controllers\trigger\ -I                            #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\config #
+#                       \ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\conf #
+#                       ig\engines\ -I F:\stuff\rusefi_sourceforge\firmware\i #
+#                       ar\..\config\stm32f4ems\ -I                           #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\b #
+#                       inary\ -I F:\stuff\rusefi_sourceforge\firmware\iar\.. #
+#                       \console_util\ -I F:\stuff\rusefi_sourceforge\firmwar #
+#                       e\iar\..\development\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\development\test\ -I                  #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\developme #
+#                       nt\hw_layer\ -I F:\stuff\rusefi_sourceforge\firmware\ #
+#                       iar\..\hw_layer\algo\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\hw_layer\lcd\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                       stm32f4\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\hw_layer\serial_over_usb\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                        -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext_al #
+#                       go\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\de #
+#                       velopment\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\development\hw_layer\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\util\     #
+#                       -On --eec++                                           #
+#    MISRA C version =  2004                                                  #
+#      Enabled       =  1.2-1.4 2.3 3.4 4.2 6.5 7 8.2 8.3 9.3 12.3 13.6 13.7  #
+#                       15.5 17.3 19.17 20.7-20.9 20.11                       #
+#      Checked       =  1.4 2.3 4.2 6.5 7 8.2 8.3 9.3 12.3 13.7 15.5          #
+#                       20.7-20.9 20.11                                       #
+#      Not checked   =  1.1-1.3 1.5-2.2 2.4-4.1 5-6.4 8.1 8.4-9.2 10-12.2     #
+#                       12.4-13.6 14-15.4 16-20.6 20.10 20.12 21              #
+#    List file       =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\v #
+#                       oltage.lst                                            #
+#    Object file     =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\vo #
+#                       ltage.o                                               #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+F:\stuff\rusefi_sourceforge\firmware\controllers\sensors\voltage.cpp
+      1          /**
+      2           * @file    voltage.cpp
+      3           * @brief
+      4           *
+      5           *
+      6           * @date Nov 15, 2013
+      7           * @author Andrey Belomutskiy, (c) 2012-2015
+      8           */
+      9          
+     10          #include "main.h"
+     11          #include "engine.h"
+     12          #include "adc_inputs.h"
+     13          #include "voltage.h"
+     14          
+     15          EXTERN_ENGINE;
+     16          
+
+   \                                 In section .text, align 4, keep-with-next
+     17          float getVRef(DECLARE_ENGINE_PARAMETER_F) {
+   \                     _Z7getVRefv:
+   \   00000000   0xB580             PUSH     {R7,LR}
+     18          	return getVoltageDivided("vref", engineConfiguration->vRefAdcChannel);
+   \   00000002   0x....             LDR.N    R0,??DataTable2_1
+   \   00000004   0x6800             LDR      R0,[R0, #+0]
+   \   00000006   0xF8D0 0x1600      LDR      R1,[R0, #+1536]
+   \   0000000A   0x....             LDR.N    R0,??DataTable2_2
+   \   0000000C   0x.... 0x....      BL       _Z19getInternalAdcValuePKc13adc_channel_e
+   \   00000010   0xEE00 0x0A10      VMOV     S0,R0
+   \   00000014   0xEEB8 0x0AC0      VCVT.F32.S32 S0,S0
+   \   00000018   0xEDDF 0x....      VLDR.W   S1,??DataTable2  ;; 0x3a400c01
+   \   0000001C   0xEE20 0x0A20      VMUL.F32 S0,S0,S1
+   \   00000020   0x....             LDR.N    R0,??DataTable2_1
+   \   00000022   0x6800             LDR      R0,[R0, #+0]
+   \   00000024   0xEDD0 0x0A74      VLDR     S1,[R0, #+464]
+   \   00000028   0xEE20 0x0A20      VMUL.F32 S0,S0,S1
+   \   0000002C   0xBD01             POP      {R0,PC}          ;; return
+     19          }
+     20          
+
+   \                                 In section .text, align 2, keep-with-next
+     21          bool_t hasVBatt(DECLARE_ENGINE_PARAMETER_F) {
+     22          	return engineConfiguration->vbattAdcChannel != EFI_ADC_NONE;
+   \                     _Z8hasVBattv:
+   \   00000000   0x....             LDR.N    R0,??DataTable2_1
+   \   00000002   0x6800             LDR      R0,[R0, #+0]
+   \   00000004   0xF8D0 0x01D8      LDR      R0,[R0, #+472]
+   \   00000008   0x2810             CMP      R0,#+16
+   \   0000000A   0xD001             BEQ.N    ??hasVBatt_0
+   \   0000000C   0x2001             MOVS     R0,#+1
+   \   0000000E   0xE000             B.N      ??hasVBatt_1
+   \                     ??hasVBatt_0:
+   \   00000010   0x2000             MOVS     R0,#+0
+   \                     ??hasVBatt_1:
+   \   00000012   0xB2C0             UXTB     R0,R0            ;; ZeroExt  R0,R0,#+24,#+24
+   \   00000014   0x4770             BX       LR               ;; return
+     23          }
+     24          
+
+   \                                 In section .text, align 4, keep-with-next
+     25          float getVBatt(DECLARE_ENGINE_PARAMETER_F) {
+   \                     _Z8getVBattv:
+   \   00000000   0xB580             PUSH     {R7,LR}
+     26          	return getVoltage("vbatt", engineConfiguration->vbattAdcChannel) * engineConfiguration->vbattDividerCoeff;
+   \   00000002   0x....             LDR.N    R0,??DataTable2_1
+   \   00000004   0x6800             LDR      R0,[R0, #+0]
+   \   00000006   0xF8D0 0x11D8      LDR      R1,[R0, #+472]
+   \   0000000A   0x....             LDR.N    R0,??DataTable2_3
+   \   0000000C   0x.... 0x....      BL       _Z19getInternalAdcValuePKc13adc_channel_e
+   \   00000010   0xEE00 0x0A10      VMOV     S0,R0
+   \   00000014   0xEEB8 0x0AC0      VCVT.F32.S32 S0,S0
+   \   00000018   0xEDDF 0x....      VLDR.W   S1,??DataTable2  ;; 0x3a400c01
+   \   0000001C   0xEE20 0x0A20      VMUL.F32 S0,S0,S1
+   \   00000020   0x....             LDR.N    R0,??DataTable2_1
+   \   00000022   0x6800             LDR      R0,[R0, #+0]
+   \   00000024   0xEDD0 0x0A75      VLDR     S1,[R0, #+468]
+   \   00000028   0xEE20 0x0A20      VMUL.F32 S0,S0,S1
+   \   0000002C   0xBD01             POP      {R0,PC}          ;; return
+     27          }
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2:
+   \   00000000   0x3A400C01         DC32     0x3a400c01
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_1:
+   \   00000000   0x........         DC32     engineConfiguration
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_2:
+   \   00000000   0x........         DC32     `?<Constant "vref">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_3:
+   \   00000000   0x........         DC32     `?<Constant "vbatt">`
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "vref">`:
+   \   00000000   0x76 0x72          DC8 "vref"
+   \              0x65 0x66    
+   \              0x00         
+   \   00000005   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "vbatt">`:
+   \   00000000   0x76 0x62          DC8 "vbatt"
+   \              0x61 0x74    
+   \              0x74 0x00    
+   \   00000006   0x00 0x00          DC8 0, 0
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   getVBatt()
+         8   -> getInternalAdcValue(char const *, adc_channel_e)
+       8   getVRef()
+         8   -> getInternalAdcValue(char const *, adc_channel_e)
+       0   hasVBatt()
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       8  ?<Constant "vbatt">
+       8  ?<Constant "vref">
+       4  ??DataTable2
+       4  ??DataTable2_1
+       4  ??DataTable2_2
+       4  ??DataTable2_3
+      46  getVBatt()
+      46  getVRef()
+      22  hasVBatt()
+
+ 
+  16 bytes in section .rodata
+ 130 bytes in section .text
+ 
+ 130 bytes of CODE  memory
+  16 bytes of CONST memory
+
+Errors: none
+Warnings: 1

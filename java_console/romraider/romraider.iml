@@ -13,5 +13,6 @@
     <orderEntry type="library" name="swing-layout-1.0" level="project" />
     <orderEntry type="module" module-name="ui" />
     <orderEntry type="module" module-name="io" />
+    <orderEntry type="module" module-name="models" />
   </component>
 </module>

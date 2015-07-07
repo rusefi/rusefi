@@ -1,0 +1,241 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0a673c.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"chsys.c"
+  16              		.section	.text._idle_thread,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_idle_thread
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_idle_thread, %function
+  23              	_idle_thread:
+  24              		@ Volatile: function does not return.
+  25              		@ args = 0, pretend = 0, frame = 0
+  26              		@ frame_needed = 0, uses_anonymous_args = 0
+  27              		@ link register save eliminated.
+  28 0000 40F20002 		movw	r2, #:lower16:rlist
+  29 0004 C0F20002 		movt	r2, #:upper16:rlist
+  30 0008 40F20003 		movw	r3, #:lower16:.LC0
+  31 000c 9269     		ldr	r2, [r2, #24]
+  32 000e C0F20003 		movt	r3, #:upper16:.LC0
+  33 0012 9361     		str	r3, [r2, #24]
+  34              	.L2:
+  35 0014 FEE7     		b	.L2
+  36              		.size	_idle_thread, .-_idle_thread
+  37 0016 00BFAFF3 		.section	.text.chSysInit,"ax",%progbits
+  37      0080AFF3 
+  37      0080
+  38              		.align	2
+  39              		.p2align 4,,15
+  40              		.global	chSysInit
+  41              		.thumb
+  42              		.thumb_func
+  43              		.type	chSysInit, %function
+  44              	chSysInit:
+  45              		@ args = 0, pretend = 0, frame = 0
+  46              		@ frame_needed = 0, uses_anonymous_args = 0
+  47 0000 10B5     		push	{r4, lr}
+  48 0002 82B0     		sub	sp, sp, #8
+  49 0004 FFF7FEFF 		bl	_port_init
+  50 0008 FFF7FEFF 		bl	_scheduler_init
+  51 000c FFF7FEFF 		bl	_vt_init
+  52 0010 FFF7FEFF 		bl	_core_init
+  53 0014 FFF7FEFF 		bl	_heap_init
+  54 0018 FFF7FEFF 		bl	_trace_init
+  55 001c 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0a673c.s 			page 2
+
+
+  56 0020 4021     		movs	r1, #64
+  57 0022 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+  58 0026 FFF7FEFF 		bl	_thread_init
+  59 002a 40F20002 		movw	r2, #:lower16:__main_thread_stack_base__
+  60 002e 40F20003 		movw	r3, #:lower16:rlist
+  61 0032 0121     		movs	r1, #1
+  62 0034 C0F20002 		movt	r2, #:upper16:__main_thread_stack_base__
+  63 0038 C0F20003 		movt	r3, #:upper16:rlist
+  64 003c 80F82010 		strb	r1, [r0, #32]
+  65 0040 C261     		str	r2, [r0, #28]
+  66 0042 9861     		str	r0, [r3, #24]
+  67 0044 FFF7FEFF 		bl	dbg_check_enable
+  68 0048 0023     		movs	r3, #0
+  69              	@ 111 "chibios/os/kernel/src/chsys.c" 1
+  70 004a 83F31188 		msr     BASEPRI, r3                    
+  71 004e 62B6     		cpsie   i
+  72              	@ 0 "" 2
+  73              		.thumb
+  74 0050 40F20003 		movw	r3, #:lower16:rlist
+  75 0054 C0F20003 		movt	r3, #:upper16:rlist
+  76 0058 40F20002 		movw	r2, #:lower16:ch_debug
+  77 005c 9C69     		ldr	r4, [r3, #24]
+  78 005e C0F20002 		movt	r2, #:upper16:ch_debug
+  79 0062 0021     		movs	r1, #0
+  80 0064 40F20000 		movw	r0, #:lower16:.LANCHOR1
+  81 0068 40F20003 		movw	r3, #:lower16:_idle_thread
+  82 006c A261     		str	r2, [r4, #24]
+  83 006e C0F20003 		movt	r3, #:upper16:_idle_thread
+  84 0072 0091     		str	r1, [sp]
+  85 0074 0122     		movs	r2, #1
+  86 0076 4FF4AB61 		mov	r1, #1368
+  87 007a C0F20000 		movt	r0, #:upper16:.LANCHOR1
+  88 007e FFF7FEFF 		bl	chThdCreateStatic
+  89 0082 02B0     		add	sp, sp, #8
+  90              		@ sp needed
+  91 0084 10BD     		pop	{r4, pc}
+  92              		.size	chSysInit, .-chSysInit
+  93 0086 00BFAFF3 		.section	.text.chSysTimerHandlerI,"ax",%progbits
+  93      0080AFF3 
+  93      0080
+  94              		.align	2
+  95              		.p2align 4,,15
+  96              		.global	chSysTimerHandlerI
+  97              		.thumb
+  98              		.thumb_func
+  99              		.type	chSysTimerHandlerI, %function
+ 100              	chSysTimerHandlerI:
+ 101              		@ args = 0, pretend = 0, frame = 0
+ 102              		@ frame_needed = 0, uses_anonymous_args = 0
+ 103 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 104 0002 FFF7FEFF 		bl	chDbgCheckClassI
+ 105 0006 40F20003 		movw	r3, #:lower16:rlist
+ 106 000a C0F20003 		movt	r3, #:upper16:rlist
+ 107 000e 9A69     		ldr	r2, [r3, #24]
+ 108 0010 92F82230 		ldrb	r3, [r2, #34]	@ zero_extendqisi2
+ 109 0014 13B1     		cbz	r3, .L6
+ 110 0016 013B     		subs	r3, r3, #1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0a673c.s 			page 3
+
+
+ 111 0018 82F82230 		strb	r3, [r2, #34]
+ 112              	.L6:
+ 113 001c 516A     		ldr	r1, [r2, #36]
+ 114 001e 40F20003 		movw	r3, #:lower16:vtlist
+ 115 0022 C0F20003 		movt	r3, #:upper16:vtlist
+ 116 0026 0131     		adds	r1, r1, #1
+ 117 0028 5162     		str	r1, [r2, #36]
+ 118 002a DA68     		ldr	r2, [r3, #12]
+ 119 002c 1C68     		ldr	r4, [r3]
+ 120 002e 0132     		adds	r2, r2, #1
+ 121 0030 9C42     		cmp	r4, r3
+ 122 0032 DA60     		str	r2, [r3, #12]
+ 123 0034 1DD0     		beq	.L5
+ 124 0036 A768     		ldr	r7, [r4, #8]
+ 125 0038 013F     		subs	r7, r7, #1
+ 126 003a A760     		str	r7, [r4, #8]
+ 127 003c CFB9     		cbnz	r7, .L5
+ 128 003e 1E46     		mov	r6, r3
+ 129              	.L9:
+ 130 0040 2268     		ldr	r2, [r4]
+ 131 0042 E568     		ldr	r5, [r4, #12]
+ 132 0044 E760     		str	r7, [r4, #12]
+ 133 0046 5360     		str	r3, [r2, #4]
+ 134 0048 1A60     		str	r2, [r3]
+ 135 004a FFF7FEFF 		bl	dbg_check_unlock_from_isr
+ 136 004e 0023     		movs	r3, #0
+ 137              	@ 150 "chibios/os/kernel/src/chsys.c" 1
+ 138 0050 83F31188 		msr     BASEPRI, r3
+ 139              	@ 0 "" 2
+ 140              		.thumb
+ 141 0054 2069     		ldr	r0, [r4, #16]
+ 142 0056 A847     		blx	r5
+ 143 0058 2023     		movs	r3, #32
+ 144              	@ 150 "chibios/os/kernel/src/chsys.c" 1
+ 145 005a 83F31188 		msr     BASEPRI, r3
+ 146              	@ 0 "" 2
+ 147              		.thumb
+ 148 005e FFF7FEFF 		bl	dbg_check_lock_from_isr
+ 149 0062 3468     		ldr	r4, [r6]
+ 150 0064 A268     		ldr	r2, [r4, #8]
+ 151 0066 40F20003 		movw	r3, #:lower16:vtlist
+ 152 006a C0F20003 		movt	r3, #:upper16:vtlist
+ 153 006e 002A     		cmp	r2, #0
+ 154 0070 E6D0     		beq	.L9
+ 155              	.L5:
+ 156 0072 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 157              		.size	chSysTimerHandlerI, .-chSysTimerHandlerI
+ 158              		.global	_idle_thread_wa
+ 159 0074 AFF30080 		.section	.bss.mainthread.4820,"aw",%nobits
+ 159      AFF30080 
+ 159      AFF30080 
+ 160              		.align	2
+ 161              		.set	.LANCHOR0,. + 0
+ 162              		.type	mainthread.4820, %object
+ 163              		.size	mainthread.4820, 76
+ 164              	mainthread.4820:
+ 165 0000 00000000 		.space	76
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0a673c.s 			page 4
+
+
+ 165      00000000 
+ 165      00000000 
+ 165      00000000 
+ 165      00000000 
+ 166              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 167              		.align	2
+ 168              	.LC0:
+ 169 0000 69646C65 		.ascii	"idle\000"
+ 169      00
+ 170 0005 000000   		.section	.bss._idle_thread_wa,"aw",%nobits
+ 171              		.align	3
+ 172              		.set	.LANCHOR1,. + 0
+ 173              		.type	_idle_thread_wa, %object
+ 174              		.size	_idle_thread_wa, 1368
+ 175              	_idle_thread_wa:
+ 176 0000 00000000 		.space	1368
+ 176      00000000 
+ 176      00000000 
+ 176      00000000 
+ 176      00000000 
+ 177              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0a673c.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 chsys.c
+C:\Users\pc\AppData\Local\Temp\cc0a673c.s:17     .text._idle_thread:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc0a673c.s:23     .text._idle_thread:00000000 _idle_thread
+C:\Users\pc\AppData\Local\Temp\cc0a673c.s:168    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\cc0a673c.s:38     .text.chSysInit:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc0a673c.s:44     .text.chSysInit:00000000 chSysInit
+C:\Users\pc\AppData\Local\Temp\cc0a673c.s:161    .bss.mainthread.4820:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\cc0a673c.s:172    .bss._idle_thread_wa:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\cc0a673c.s:94     .text.chSysTimerHandlerI:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc0a673c.s:100    .text.chSysTimerHandlerI:00000000 chSysTimerHandlerI
+C:\Users\pc\AppData\Local\Temp\cc0a673c.s:175    .bss._idle_thread_wa:00000000 _idle_thread_wa
+C:\Users\pc\AppData\Local\Temp\cc0a673c.s:160    .bss.mainthread.4820:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc0a673c.s:164    .bss.mainthread.4820:00000000 mainthread.4820
+C:\Users\pc\AppData\Local\Temp\cc0a673c.s:167    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc0a673c.s:171    .bss._idle_thread_wa:00000000 $d
+
+UNDEFINED SYMBOLS
+rlist
+_port_init
+_scheduler_init
+_vt_init
+_core_init
+_heap_init
+_trace_init
+_thread_init
+__main_thread_stack_base__
+dbg_check_enable
+ch_debug
+chThdCreateStatic
+chDbgCheckClassI
+vtlist
+dbg_check_unlock_from_isr
+dbg_check_lock_from_isr

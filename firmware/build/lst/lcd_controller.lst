@@ -1,0 +1,1555 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"lcd_controller.cpp"
+  16              		.section	.text._ZL9lcdPrintfPKcz,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	_ZL9lcdPrintfPKcz, %function
+  22              	_ZL9lcdPrintfPKcz:
+  23              		@ args = 4, pretend = 16, frame = 8
+  24              		@ frame_needed = 0, uses_anonymous_args = 1
+  25 0000 0FB4     		push	{r0, r1, r2, r3}
+  26 0002 30B5     		push	{r4, r5, lr}
+  27 0004 83B0     		sub	sp, sp, #12
+  28 0006 06AB     		add	r3, sp, #24
+  29 0008 40F20004 		movw	r4, #:lower16:.LANCHOR0
+  30 000c 53F8041B 		ldr	r1, [r3], #4
+  31 0010 C0F20004 		movt	r4, #:upper16:.LANCHOR0
+  32 0014 1A46     		mov	r2, r3
+  33 0016 2046     		mov	r0, r4
+  34 0018 0025     		movs	r5, #0
+  35 001a 0193     		str	r3, [sp, #4]
+  36 001c E560     		str	r5, [r4, #12]
+  37 001e FFF7FEFF 		bl	chvprintf
+  38 0022 6268     		ldr	r2, [r4, #4]
+  39 0024 E368     		ldr	r3, [r4, #12]
+  40 0026 40F20000 		movw	r0, #:lower16:.LANCHOR1
+  41 002a D554     		strb	r5, [r2, r3]
+  42 002c C0F20000 		movt	r0, #:upper16:.LANCHOR1
+  43 0030 FFF7FEFF 		bl	lcd_HD44780_print_string
+  44 0034 03B0     		add	sp, sp, #12
+  45              		@ sp needed
+  46 0036 BDE83040 		pop	{r4, r5, lr}
+  47 003a 04B0     		add	sp, sp, #16
+  48 003c 7047     		bx	lr
+  49              		.size	_ZL9lcdPrintfPKcz, .-_ZL9lcdPrintfPKcz
+  50 003e 00BF     		.section	.text._ZL14fillWithSpacesv,"ax",%progbits
+  51              		.align	2
+  52              		.p2align 4,,15
+  53              		.thumb
+  54              		.thumb_func
+  55              		.type	_ZL14fillWithSpacesv, %function
+  56              	_ZL14fillWithSpacesv:
+  57              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 2
+
+
+  58              		@ frame_needed = 0, uses_anonymous_args = 0
+  59 0000 10B5     		push	{r4, lr}
+  60 0002 FFF7FEFF 		bl	getCurrentHD44780column
+  61 0006 1328     		cmp	r0, #19
+  62 0008 0446     		mov	r4, r0
+  63 000a 05DC     		bgt	.L2
+  64              	.L5:
+  65 000c 0134     		adds	r4, r4, #1
+  66 000e 2020     		movs	r0, #32
+  67 0010 FFF7FEFF 		bl	lcd_HD44780_print_char
+  68 0014 142C     		cmp	r4, #20
+  69 0016 F9D1     		bne	.L5
+  70              	.L2:
+  71 0018 10BD     		pop	{r4, pc}
+  72              		.size	_ZL14fillWithSpacesv, .-_ZL14fillWithSpacesv
+  73 001a 00BFAFF3 		.section	.text._Z10onJoystick17joystick_button_e,"ax",%progbits
+  73      0080
+  74              		.align	2
+  75              		.p2align 4,,15
+  76              		.global	_Z10onJoystick17joystick_button_e
+  77              		.thumb
+  78              		.thumb_func
+  79              		.type	_Z10onJoystick17joystick_button_e, %function
+  80              	_Z10onJoystick17joystick_button_e:
+  81              		@ args = 0, pretend = 0, frame = 0
+  82              		@ frame_needed = 0, uses_anonymous_args = 0
+  83              		@ link register save eliminated.
+  84 0000 20B1     		cbz	r0, .L14
+  85 0002 0428     		cmp	r0, #4
+  86 0004 0ED0     		beq	.L15
+  87 0006 0128     		cmp	r0, #1
+  88 0008 06D0     		beq	.L16
+  89 000a 7047     		bx	lr
+  90              	.L14:
+  91 000c 40F20000 		movw	r0, #:lower16:.LANCHOR2
+  92 0010 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+  93 0014 FFF7FEBF 		b	_ZN8MenuTree12enterSubMenuEv
+  94              	.L16:
+  95 0018 40F20000 		movw	r0, #:lower16:.LANCHOR2
+  96 001c C0F20000 		movt	r0, #:upper16:.LANCHOR2
+  97 0020 FFF7FEBF 		b	_ZN8MenuTree4backEv
+  98              	.L15:
+  99 0024 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 100 0028 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 101 002c FFF7FEBF 		b	_ZN8MenuTree8nextItemEv
+ 102              		.size	_Z10onJoystick17joystick_button_e, .-_Z10onJoystick17joystick_button_e
+ 103              		.section	.text._Z9appendStrPcPKc,"ax",%progbits
+ 104              		.align	2
+ 105              		.p2align 4,,15
+ 106              		.global	_Z9appendStrPcPKc
+ 107              		.thumb
+ 108              		.thumb_func
+ 109              		.type	_Z9appendStrPcPKc, %function
+ 110              	_Z9appendStrPcPKc:
+ 111              		@ args = 0, pretend = 0, frame = 0
+ 112              		@ frame_needed = 0, uses_anonymous_args = 0
+ 113 0000 70B5     		push	{r4, r5, r6, lr}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 3
+
+
+ 114 0002 0546     		mov	r5, r0
+ 115 0004 0E46     		mov	r6, r1
+ 116 0006 0024     		movs	r4, #0
+ 117 0008 03E0     		b	.L18
+ 118              	.L19:
+ 119 000a 335D     		ldrb	r3, [r6, r4]	@ zero_extendqisi2
+ 120 000c 05F8013B 		strb	r3, [r5], #1
+ 121 0010 0134     		adds	r4, r4, #1
+ 122              	.L18:
+ 123 0012 3046     		mov	r0, r6
+ 124 0014 FFF7FEFF 		bl	efiStrlen
+ 125 0018 8442     		cmp	r4, r0
+ 126 001a F6D3     		bcc	.L19
+ 127 001c 2846     		mov	r0, r5
+ 128 001e 70BD     		pop	{r4, r5, r6, pc}
+ 129              		.size	_Z9appendStrPcPKc, .-_Z9appendStrPcPKc
+ 130              		.section	.text._Z17initLcdControllerv,"ax",%progbits
+ 131              		.align	2
+ 132              		.p2align 4,,15
+ 133              		.global	_Z17initLcdControllerv
+ 134              		.thumb
+ 135              		.thumb_func
+ 136              		.type	_Z17initLcdControllerv, %function
+ 137              	_Z17initLcdControllerv:
+ 138              		@ args = 0, pretend = 0, frame = 0
+ 139              		@ frame_needed = 0, uses_anonymous_args = 0
+ 140 0000 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 141 0004 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 142 0008 10B5     		push	{r4, lr}
+ 143 000a 1B68     		ldr	r3, [r3]
+ 144 000c D3F80822 		ldr	r2, [r3, #520]
+ 145 0010 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 146 0014 40F20001 		movw	r1, #:lower16:.LANCHOR3
+ 147 0018 013A     		subs	r2, r2, #1
+ 148 001a C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 149 001e C0F20001 		movt	r1, #:upper16:.LANCHOR3
+ 150 0022 FFF7FEFF 		bl	_ZN8MenuTree4initEP8MenuItemi
+ 151 0026 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 152 002a 40F20001 		movw	r1, #:lower16:.LANCHOR1
+ 153 002e C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 154 0032 C0F20001 		movt	r1, #:upper16:.LANCHOR1
+ 155 0036 1E22     		movs	r2, #30
+ 156 0038 0023     		movs	r3, #0
+ 157 003a BDE81040 		pop	{r4, lr}
+ 158 003e FFF7FEBF 		b	msObjectInit
+ 159              		.size	_Z17initLcdControllerv, .-_Z17initLcdControllerv
+ 160              		.global	__aeabi_f2d
+ 161 0042 00BFAFF3 		.section	.text._Z16updateHD44780lcdP6Engine,"ax",%progbits
+ 161      0080AFF3 
+ 161      0080AFF3 
+ 161      0080
+ 162              		.align	2
+ 163              		.p2align 4,,15
+ 164              		.global	_Z16updateHD44780lcdP6Engine
+ 165              		.thumb
+ 166              		.thumb_func
+ 167              		.type	_Z16updateHD44780lcdP6Engine, %function
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 4
+
+
+ 168              	_Z16updateHD44780lcdP6Engine:
+ 169              		@ args = 0, pretend = 0, frame = 0
+ 170              		@ frame_needed = 0, uses_anonymous_args = 0
+ 171 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 172 0002 40F20006 		movw	r6, #:lower16:.LANCHOR2
+ 173 0006 C0F20006 		movt	r6, #:upper16:.LANCHOR2
+ 174 000a 40F20007 		movw	r7, #:lower16:engineConfiguration
+ 175 000e 7368     		ldr	r3, [r6, #4]
+ 176 0010 F568     		ldr	r5, [r6, #12]
+ 177 0012 002B     		cmp	r3, #0
+ 178 0014 D8BF     		it	le
+ 179 0016 C0F20007 		movtle	r7, #:upper16:engineConfiguration
+ 180 001a 45DD     		ble	.L54
+ 181 001c 002D     		cmp	r5, #0
+ 182 001e 36D0     		beq	.L55
+ 183 0020 C0F20007 		movt	r7, #:upper16:engineConfiguration
+ 184 0024 0024     		movs	r4, #0
+ 185 0026 0AE0     		b	.L51
+ 186              	.L71:
+ 187 0028 2868     		ldr	r0, [r5]
+ 188 002a FFF7FEFF 		bl	lcd_HD44780_print_string
+ 189              	.L26:
+ 190 002e FFF7FEFF 		bl	_ZL14fillWithSpacesv
+ 191 0032 7368     		ldr	r3, [r6, #4]
+ 192 0034 ED69     		ldr	r5, [r5, #28]
+ 193 0036 0134     		adds	r4, r4, #1
+ 194 0038 A342     		cmp	r3, r4
+ 195 003a 35DD     		ble	.L54
+ 196 003c 55B3     		cbz	r5, .L53
+ 197              	.L51:
+ 198 003e E0B2     		uxtb	r0, r4
+ 199 0040 0021     		movs	r1, #0
+ 200 0042 FFF7FEFF 		bl	lcd_HD44780_set_position
+ 201 0046 B368     		ldr	r3, [r6, #8]
+ 202 0048 AB42     		cmp	r3, r5
+ 203 004a 18BF     		it	ne
+ 204 004c 2020     		movne	r0, #32
+ 205 004e 4AD0     		beq	.L70
+ 206              	.L24:
+ 207 0050 FFF7FEFF 		bl	lcd_HD44780_print_char
+ 208 0054 2B79     		ldrb	r3, [r5, #4]	@ zero_extendqisi2
+ 209 0056 002B     		cmp	r3, #0
+ 210 0058 E6D0     		beq	.L71
+ 211 005a 013B     		subs	r3, r3, #1
+ 212 005c 132B     		cmp	r3, #19
+ 213 005e 00F24381 		bhi	.L27
+ 214 0062 DFE813F0 		tbh	[pc, r3, lsl #1]
+ 215              	.L29:
+ 216 0066 3601     		.2byte	(.L28-.L29)/2
+ 217 0068 2A01     		.2byte	(.L30-.L29)/2
+ 218 006a 2201     		.2byte	(.L31-.L29)/2
+ 219 006c 1A01     		.2byte	(.L32-.L29)/2
+ 220 006e 1201     		.2byte	(.L33-.L29)/2
+ 221 0070 0501     		.2byte	(.L34-.L29)/2
+ 222 0072 E800     		.2byte	(.L35-.L29)/2
+ 223 0074 E100     		.2byte	(.L36-.L29)/2
+ 224 0076 DA00     		.2byte	(.L37-.L29)/2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 5
+
+
+ 225 0078 CD00     		.2byte	(.L38-.L29)/2
+ 226 007a C000     		.2byte	(.L39-.L29)/2
+ 227 007c AD00     		.2byte	(.L40-.L29)/2
+ 228 007e A000     		.2byte	(.L41-.L29)/2
+ 229 0080 9300     		.2byte	(.L42-.L29)/2
+ 230 0082 4101     		.2byte	(.L27-.L29)/2
+ 231 0084 8000     		.2byte	(.L43-.L29)/2
+ 232 0086 6E00     		.2byte	(.L44-.L29)/2
+ 233 0088 5C00     		.2byte	(.L45-.L29)/2
+ 234 008a 4101     		.2byte	(.L27-.L29)/2
+ 235 008c 4A00     		.2byte	(.L46-.L29)/2
+ 236              	.L55:
+ 237 008e 2C46     		mov	r4, r5
+ 238 0090 C0F20007 		movt	r7, #:upper16:engineConfiguration
+ 239              	.L53:
+ 240 0094 E0B2     		uxtb	r0, r4
+ 241 0096 0021     		movs	r1, #0
+ 242 0098 FFF7FEFF 		bl	lcd_HD44780_set_position
+ 243 009c FFF7FEFF 		bl	_ZL14fillWithSpacesv
+ 244 00a0 7368     		ldr	r3, [r6, #4]
+ 245 00a2 0134     		adds	r4, r4, #1
+ 246 00a4 A342     		cmp	r3, r4
+ 247 00a6 F5DC     		bgt	.L53
+ 248              	.L54:
+ 249 00a8 FFF7FEFF 		bl	getWarninig
+ 250 00ac 40F20004 		movw	r4, #:lower16:.LANCHOR4
+ 251 00b0 3D68     		ldr	r5, [r7]
+ 252 00b2 C0F20004 		movt	r4, #:upper16:.LANCHOR4
+ 253 00b6 0146     		mov	r1, r0
+ 254 00b8 D5F80422 		ldr	r2, [r5, #516]
+ 255 00bc 2046     		mov	r0, r4
+ 256 00be FFF7FEFF 		bl	memcpy
+ 257 00c2 D5F80802 		ldr	r0, [r5, #520]
+ 258 00c6 D5F80422 		ldr	r2, [r5, #516]
+ 259 00ca 0023     		movs	r3, #0
+ 260 00cc 0138     		subs	r0, r0, #1
+ 261 00ce 1946     		mov	r1, r3
+ 262 00d0 C0B2     		uxtb	r0, r0
+ 263 00d2 A354     		strb	r3, [r4, r2]
+ 264 00d4 FFF7FEFF 		bl	lcd_HD44780_set_position
+ 265 00d8 2046     		mov	r0, r4
+ 266 00da FFF7FEFF 		bl	lcd_HD44780_print_string
+ 267 00de BDE8F840 		pop	{r3, r4, r5, r6, r7, lr}
+ 268 00e2 FFF7FEBF 		b	_ZL14fillWithSpacesv
+ 269              	.L70:
+ 270 00e6 2B6A     		ldr	r3, [r5, #32]
+ 271 00e8 2120     		movs	r0, #33
+ 272 00ea 002B     		cmp	r3, #0
+ 273 00ec B0D1     		bne	.L24
+ 274 00ee 6869     		ldr	r0, [r5, #20]
+ 275 00f0 0028     		cmp	r0, #0
+ 276 00f2 14BF     		ite	ne
+ 277 00f4 3E20     		movne	r0, #62
+ 278 00f6 2A20     		moveq	r0, #42
+ 279 00f8 AAE7     		b	.L24
+ 280              	.L46:
+ 281 00fa FFF7FEFF 		bl	_Z13hasBaroSensorv
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 6
+
+
+ 282 00fe 0028     		cmp	r0, #0
+ 283 0100 00F00E81 		beq	.L47
+ 284 0104 FFF7FEFF 		bl	_Z15getBaroPressurev
+ 285 0108 FFF7FEFF 		bl	__aeabi_f2d
+ 286 010c 0246     		mov	r2, r0
+ 287 010e 40F20000 		movw	r0, #:lower16:.LC10
+ 288 0112 0B46     		mov	r3, r1
+ 289 0114 C0F20000 		movt	r0, #:upper16:.LC10
+ 290 0118 FFF7FEFF 		bl	_ZL9lcdPrintfPKcz
+ 291 011c 87E7     		b	.L26
+ 292              	.L45:
+ 293 011e FFF7FEFF 		bl	_Z12hasMafSensorv
+ 294 0122 0028     		cmp	r0, #0
+ 295 0124 00F0E780 		beq	.L50
+ 296 0128 FFF7FEFF 		bl	_Z10getRealMafv
+ 297 012c FFF7FEFF 		bl	__aeabi_f2d
+ 298 0130 0246     		mov	r2, r0
+ 299 0132 40F20000 		movw	r0, #:lower16:.LC18
+ 300 0136 0B46     		mov	r3, r1
+ 301 0138 C0F20000 		movt	r0, #:upper16:.LC18
+ 302 013c FFF7FEFF 		bl	_ZL9lcdPrintfPKcz
+ 303 0140 75E7     		b	.L26
+ 304              	.L44:
+ 305 0142 FFF7FEFF 		bl	_Z12hasMafSensorv
+ 306 0146 0028     		cmp	r0, #0
+ 307 0148 00F0D580 		beq	.L50
+ 308 014c FFF7FEFF 		bl	_Z6getMafv
+ 309 0150 FFF7FEFF 		bl	__aeabi_f2d
+ 310 0154 0246     		mov	r2, r0
+ 311 0156 40F20000 		movw	r0, #:lower16:.LC16
+ 312 015a 0B46     		mov	r3, r1
+ 313 015c C0F20000 		movt	r0, #:upper16:.LC16
+ 314 0160 FFF7FEFF 		bl	_ZL9lcdPrintfPKcz
+ 315 0164 63E7     		b	.L26
+ 316              	.L43:
+ 317 0166 3B68     		ldr	r3, [r7]
+ 318 0168 93F8D835 		ldrb	r3, [r3, #1496]	@ zero_extendqisi2
+ 319 016c DB07     		lsls	r3, r3, #31
+ 320 016e 40F1D080 		bpl	.L49
+ 321 0172 FFF7FEFF 		bl	_Z6getMapv
+ 322 0176 FFF7FEFF 		bl	__aeabi_f2d
+ 323 017a 0246     		mov	r2, r0
+ 324 017c 40F20000 		movw	r0, #:lower16:.LC14
+ 325 0180 0B46     		mov	r3, r1
+ 326 0182 C0F20000 		movt	r0, #:upper16:.LC14
+ 327 0186 FFF7FEFF 		bl	_ZL9lcdPrintfPKcz
+ 328 018a 50E7     		b	.L26
+ 329              	.L42:
+ 330 018c FFF7FEFF 		bl	_Z8getVBattv
+ 331 0190 FFF7FEFF 		bl	__aeabi_f2d
+ 332 0194 0246     		mov	r2, r0
+ 333 0196 40F20000 		movw	r0, #:lower16:.LC9
+ 334 019a 0B46     		mov	r3, r1
+ 335 019c C0F20000 		movt	r0, #:upper16:.LC9
+ 336 01a0 FFF7FEFF 		bl	_ZL9lcdPrintfPKcz
+ 337 01a4 43E7     		b	.L26
+ 338              	.L41:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 7
+
+
+ 339 01a6 FFF7FEFF 		bl	_Z6getTPSv
+ 340 01aa FFF7FEFF 		bl	__aeabi_f2d
+ 341 01ae 0246     		mov	r2, r0
+ 342 01b0 40F20000 		movw	r0, #:lower16:.LC8
+ 343 01b4 0B46     		mov	r3, r1
+ 344 01b6 C0F20000 		movt	r0, #:upper16:.LC8
+ 345 01ba FFF7FEFF 		bl	_ZL9lcdPrintfPKcz
+ 346 01be 36E7     		b	.L26
+ 347              	.L40:
+ 348 01c0 3B68     		ldr	r3, [r7]
+ 349 01c2 93F8D835 		ldrb	r3, [r3, #1496]	@ zero_extendqisi2
+ 350 01c6 1A07     		lsls	r2, r3, #28
+ 351 01c8 40F19C80 		bpl	.L48
+ 352 01cc FFF7FEFF 		bl	_Z6getAfrv
+ 353 01d0 FFF7FEFF 		bl	__aeabi_f2d
+ 354 01d4 0246     		mov	r2, r0
+ 355 01d6 40F20000 		movw	r0, #:lower16:.LC12
+ 356 01da 0B46     		mov	r3, r1
+ 357 01dc C0F20000 		movt	r0, #:upper16:.LC12
+ 358 01e0 FFF7FEFF 		bl	_ZL9lcdPrintfPKcz
+ 359 01e4 23E7     		b	.L26
+ 360              	.L39:
+ 361 01e6 FFF7FEFF 		bl	_Z23getIntakeAirTemperaturev
+ 362 01ea FFF7FEFF 		bl	__aeabi_f2d
+ 363 01ee 0246     		mov	r2, r0
+ 364 01f0 40F20000 		movw	r0, #:lower16:.LC6
+ 365 01f4 0B46     		mov	r3, r1
+ 366 01f6 C0F20000 		movt	r0, #:upper16:.LC6
+ 367 01fa FFF7FEFF 		bl	_ZL9lcdPrintfPKcz
+ 368 01fe 16E7     		b	.L26
+ 369              	.L38:
+ 370 0200 FFF7FEFF 		bl	_Z21getCoolantTemperaturev
+ 371 0204 FFF7FEFF 		bl	__aeabi_f2d
+ 372 0208 0246     		mov	r2, r0
+ 373 020a 40F20000 		movw	r0, #:lower16:.LC5
+ 374 020e 0B46     		mov	r3, r1
+ 375 0210 C0F20000 		movt	r0, #:upper16:.LC5
+ 376 0214 FFF7FEFF 		bl	_ZL9lcdPrintfPKcz
+ 377 0218 09E7     		b	.L26
+ 378              	.L37:
+ 379 021a 40F20000 		movw	r0, #:lower16:.LC20
+ 380 021e C0F20000 		movt	r0, #:upper16:.LC20
+ 381 0222 FFF7FEFF 		bl	_ZL9lcdPrintfPKcz
+ 382 0226 02E7     		b	.L26
+ 383              	.L36:
+ 384 0228 40F20000 		movw	r0, #:lower16:.LC19
+ 385 022c C0F20000 		movt	r0, #:upper16:.LC19
+ 386 0230 FFF7FEFF 		bl	_ZL9lcdPrintfPKcz
+ 387 0234 FBE6     		b	.L26
+ 388              	.L35:
+ 389 0236 40F20003 		movw	r3, #:lower16:engine
+ 390 023a C0F20003 		movt	r3, #:upper16:engine
+ 391 023e 1868     		ldr	r0, [r3]
+ 392 0240 FFF7FEFF 		bl	_ZN13RpmCalculator3rpmEv
+ 393 0244 0146     		mov	r1, r0
+ 394 0246 40F20000 		movw	r0, #:lower16:.LC3
+ 395 024a C0F20000 		movt	r0, #:upper16:.LC3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 8
+
+
+ 396 024e FFF7FEFF 		bl	_ZL9lcdPrintfPKcz
+ 397 0252 FFF7FEFF 		bl	getTimeNowSeconds
+ 398 0256 42F20F73 		movw	r3, #9999
+ 399 025a 9842     		cmp	r0, r3
+ 400 025c 0146     		mov	r1, r0
+ 401 025e 3FF7E6AE 		bgt	.L26
+ 402 0262 40F20000 		movw	r0, #:lower16:.LC4
+ 403 0266 C0F20000 		movt	r0, #:upper16:.LC4
+ 404 026a FFF7FEFF 		bl	_ZL9lcdPrintfPKcz
+ 405 026e DEE6     		b	.L26
+ 406              	.L34:
+ 407 0270 3B68     		ldr	r3, [r7]
+ 408 0272 9868     		ldr	r0, [r3, #8]	@ float
+ 409 0274 FFF7FEFF 		bl	__aeabi_f2d
+ 410 0278 0246     		mov	r2, r0
+ 411 027a 40F20000 		movw	r0, #:lower16:.LC7
+ 412 027e 0B46     		mov	r3, r1
+ 413 0280 C0F20000 		movt	r0, #:upper16:.LC7
+ 414 0284 FFF7FEFF 		bl	_ZL9lcdPrintfPKcz
+ 415 0288 D1E6     		b	.L26
+ 416              	.L33:
+ 417 028a 3B68     		ldr	r3, [r7]
+ 418 028c D3F8BC01 		ldr	r0, [r3, #444]
+ 419 0290 FFF7FEFF 		bl	_Z18getIgnition_mode_e15ignition_mode_e
+ 420 0294 FFF7FEFF 		bl	_ZL9lcdPrintfPKcz
+ 421 0298 C9E6     		b	.L26
+ 422              	.L32:
+ 423 029a 3B68     		ldr	r3, [r7]
+ 424 029c D3F8B001 		ldr	r0, [r3, #432]
+ 425 02a0 FFF7FEFF 		bl	_Z19getInjection_mode_e16injection_mode_e
+ 426 02a4 FFF7FEFF 		bl	_ZL9lcdPrintfPKcz
+ 427 02a8 C1E6     		b	.L26
+ 428              	.L31:
+ 429 02aa 3B68     		ldr	r3, [r7]
+ 430 02ac D3F8A801 		ldr	r0, [r3, #424]
+ 431 02b0 FFF7FEFF 		bl	_Z21getEngine_load_mode_e18engine_load_mode_e
+ 432 02b4 FFF7FEFF 		bl	_ZL9lcdPrintfPKcz
+ 433 02b8 B9E6     		b	.L26
+ 434              	.L30:
+ 435 02ba 3B68     		ldr	r3, [r7]
+ 436 02bc 1868     		ldr	r0, [r3]
+ 437 02be FFF7FEFF 		bl	_Z20getConfigurationName13engine_type_e
+ 438 02c2 0146     		mov	r1, r0
+ 439 02c4 40F20000 		movw	r0, #:lower16:.LC2
+ 440 02c8 C0F20000 		movt	r0, #:upper16:.LC2
+ 441 02cc FFF7FEFF 		bl	_ZL9lcdPrintfPKcz
+ 442 02d0 ADE6     		b	.L26
+ 443              	.L28:
+ 444 02d2 40F20000 		movw	r0, #:lower16:.LC0
+ 445 02d6 40F20001 		movw	r1, #:lower16:.LC1
+ 446 02da C0F20000 		movt	r0, #:upper16:.LC0
+ 447 02de C0F20001 		movt	r1, #:upper16:.LC1
+ 448 02e2 FFF7FEFF 		bl	_ZL9lcdPrintfPKcz
+ 449 02e6 A2E6     		b	.L26
+ 450              	.L27:
+ 451 02e8 40F20000 		movw	r0, #:lower16:.LC21
+ 452 02ec C0F20000 		movt	r0, #:upper16:.LC21
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 9
+
+
+ 453 02f0 FFF7FEFF 		bl	_ZL9lcdPrintfPKcz
+ 454 02f4 9BE6     		b	.L26
+ 455              	.L50:
+ 456 02f6 40F20000 		movw	r0, #:lower16:.LC17
+ 457 02fa C0F20000 		movt	r0, #:upper16:.LC17
+ 458 02fe FFF7FEFF 		bl	_ZL9lcdPrintfPKcz
+ 459 0302 94E6     		b	.L26
+ 460              	.L48:
+ 461 0304 40F20000 		movw	r0, #:lower16:.LC13
+ 462 0308 C0F20000 		movt	r0, #:upper16:.LC13
+ 463 030c FFF7FEFF 		bl	_ZL9lcdPrintfPKcz
+ 464 0310 8DE6     		b	.L26
+ 465              	.L49:
+ 466 0312 40F20000 		movw	r0, #:lower16:.LC15
+ 467 0316 C0F20000 		movt	r0, #:upper16:.LC15
+ 468 031a FFF7FEFF 		bl	_ZL9lcdPrintfPKcz
+ 469 031e 86E6     		b	.L26
+ 470              	.L47:
+ 471 0320 40F20000 		movw	r0, #:lower16:.LC11
+ 472 0324 C0F20000 		movt	r0, #:upper16:.LC11
+ 473 0328 FFF7FEFF 		bl	_ZL9lcdPrintfPKcz
+ 474 032c 7FE6     		b	.L26
+ 475              		.size	_Z16updateHD44780lcdP6Engine, .-_Z16updateHD44780lcdP6Engine
+ 476 032e 00BF     		.section	.text.startup._GLOBAL__sub_I__Z10onJoystick17joystick_button_e,"ax",%progbits
+ 477              		.align	2
+ 478              		.p2align 4,,15
+ 479              		.thumb
+ 480              		.thumb_func
+ 481              		.type	_GLOBAL__sub_I__Z10onJoystick17joystick_button_e, %function
+ 482              	_GLOBAL__sub_I__Z10onJoystick17joystick_button_e:
+ 483              		@ args = 0, pretend = 0, frame = 0
+ 484              		@ frame_needed = 0, uses_anonymous_args = 0
+ 485 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 486 0004 40F20004 		movw	r4, #:lower16:.LANCHOR5
+ 487 0008 C0F20004 		movt	r4, #:upper16:.LANCHOR5
+ 488 000c 0021     		movs	r1, #0
+ 489 000e 40F20007 		movw	r7, #:lower16:.LANCHOR2
+ 490 0012 C0F20007 		movt	r7, #:upper16:.LANCHOR2
+ 491 0016 0A46     		mov	r2, r1
+ 492 0018 2046     		mov	r0, r4
+ 493 001a 40F20008 		movw	r8, #:lower16:.LANCHOR3
+ 494 001e FFF7FEFF 		bl	_ZN8MenuItemC1EPS_PKc
+ 495 0022 C0F20008 		movt	r8, #:upper16:.LANCHOR3
+ 496 0026 2146     		mov	r1, r4
+ 497 0028 3846     		mov	r0, r7
+ 498 002a FFF7FEFF 		bl	_ZN8MenuTreeC1EP8MenuItem
+ 499 002e 40F20005 		movw	r5, #:lower16:.LANCHOR6
+ 500 0032 3968     		ldr	r1, [r7]
+ 501 0034 4046     		mov	r0, r8
+ 502 0036 0722     		movs	r2, #7
+ 503 0038 C0F20005 		movt	r5, #:upper16:.LANCHOR6
+ 504 003c FFF7FEFF 		bl	_ZN8MenuItemC1EPS_10lcd_line_e
+ 505 0040 40F20002 		movw	r2, #:lower16:.LC22
+ 506 0044 3968     		ldr	r1, [r7]
+ 507 0046 2846     		mov	r0, r5
+ 508 0048 C0F20002 		movt	r2, #:upper16:.LC22
+ 509 004c 40F20004 		movw	r4, #:lower16:.LANCHOR7
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 10
+
+
+ 510 0050 C0F20004 		movt	r4, #:upper16:.LANCHOR7
+ 511 0054 FFF7FEFF 		bl	_ZN8MenuItemC1EPS_PKc
+ 512 0058 40F20002 		movw	r2, #:lower16:.LC23
+ 513 005c 3968     		ldr	r1, [r7]
+ 514 005e 2046     		mov	r0, r4
+ 515 0060 C0F20002 		movt	r2, #:upper16:.LC23
+ 516 0064 40F20006 		movw	r6, #:lower16:.LANCHOR8
+ 517 0068 C0F20006 		movt	r6, #:upper16:.LANCHOR8
+ 518 006c FFF7FEFF 		bl	_ZN8MenuItemC1EPS_PKc
+ 519 0070 40F20002 		movw	r2, #:lower16:.LC24
+ 520 0074 3968     		ldr	r1, [r7]
+ 521 0076 3046     		mov	r0, r6
+ 522 0078 C0F20002 		movt	r2, #:upper16:.LC24
+ 523 007c FFF7FEFF 		bl	_ZN8MenuItemC1EPS_PKc
+ 524 0080 40F20000 		movw	r0, #:lower16:.LANCHOR9
+ 525 0084 4146     		mov	r1, r8
+ 526 0086 0822     		movs	r2, #8
+ 527 0088 C0F20000 		movt	r0, #:upper16:.LANCHOR9
+ 528 008c FFF7FEFF 		bl	_ZN8MenuItemC1EPS_10lcd_line_e
+ 529 0090 40F20000 		movw	r0, #:lower16:.LANCHOR10
+ 530 0094 4146     		mov	r1, r8
+ 531 0096 0922     		movs	r2, #9
+ 532 0098 C0F20000 		movt	r0, #:upper16:.LANCHOR10
+ 533 009c FFF7FEFF 		bl	_ZN8MenuItemC1EPS_10lcd_line_e
+ 534 00a0 40F20000 		movw	r0, #:lower16:.LANCHOR11
+ 535 00a4 2946     		mov	r1, r5
+ 536 00a6 0A22     		movs	r2, #10
+ 537 00a8 C0F20000 		movt	r0, #:upper16:.LANCHOR11
+ 538 00ac FFF7FEFF 		bl	_ZN8MenuItemC1EPS_10lcd_line_e
+ 539 00b0 40F20000 		movw	r0, #:lower16:.LANCHOR12
+ 540 00b4 2946     		mov	r1, r5
+ 541 00b6 0B22     		movs	r2, #11
+ 542 00b8 C0F20000 		movt	r0, #:upper16:.LANCHOR12
+ 543 00bc FFF7FEFF 		bl	_ZN8MenuItemC1EPS_10lcd_line_e
+ 544 00c0 40F20000 		movw	r0, #:lower16:.LANCHOR13
+ 545 00c4 2946     		mov	r1, r5
+ 546 00c6 0D22     		movs	r2, #13
+ 547 00c8 C0F20000 		movt	r0, #:upper16:.LANCHOR13
+ 548 00cc FFF7FEFF 		bl	_ZN8MenuItemC1EPS_10lcd_line_e
+ 549 00d0 40F20000 		movw	r0, #:lower16:.LANCHOR14
+ 550 00d4 2946     		mov	r1, r5
+ 551 00d6 0E22     		movs	r2, #14
+ 552 00d8 C0F20000 		movt	r0, #:upper16:.LANCHOR14
+ 553 00dc FFF7FEFF 		bl	_ZN8MenuItemC1EPS_10lcd_line_e
+ 554 00e0 40F20000 		movw	r0, #:lower16:.LANCHOR15
+ 555 00e4 2946     		mov	r1, r5
+ 556 00e6 1022     		movs	r2, #16
+ 557 00e8 C0F20000 		movt	r0, #:upper16:.LANCHOR15
+ 558 00ec FFF7FEFF 		bl	_ZN8MenuItemC1EPS_10lcd_line_e
+ 559 00f0 40F20000 		movw	r0, #:lower16:.LANCHOR16
+ 560 00f4 2946     		mov	r1, r5
+ 561 00f6 0C22     		movs	r2, #12
+ 562 00f8 C0F20000 		movt	r0, #:upper16:.LANCHOR16
+ 563 00fc FFF7FEFF 		bl	_ZN8MenuItemC1EPS_10lcd_line_e
+ 564 0100 40F20000 		movw	r0, #:lower16:.LANCHOR17
+ 565 0104 2946     		mov	r1, r5
+ 566 0106 1422     		movs	r2, #20
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 11
+
+
+ 567 0108 C0F20000 		movt	r0, #:upper16:.LANCHOR17
+ 568 010c FFF7FEFF 		bl	_ZN8MenuItemC1EPS_10lcd_line_e
+ 569 0110 40F20000 		movw	r0, #:lower16:.LANCHOR18
+ 570 0114 2946     		mov	r1, r5
+ 571 0116 1122     		movs	r2, #17
+ 572 0118 C0F20000 		movt	r0, #:upper16:.LANCHOR18
+ 573 011c FFF7FEFF 		bl	_ZN8MenuItemC1EPS_10lcd_line_e
+ 574 0120 40F20000 		movw	r0, #:lower16:.LANCHOR19
+ 575 0124 2946     		mov	r1, r5
+ 576 0126 1222     		movs	r2, #18
+ 577 0128 C0F20000 		movt	r0, #:upper16:.LANCHOR19
+ 578 012c FFF7FEFF 		bl	_ZN8MenuItemC1EPS_10lcd_line_e
+ 579 0130 40F20000 		movw	r0, #:lower16:.LANCHOR20
+ 580 0134 40F20002 		movw	r2, #:lower16:.LC25
+ 581 0138 40F20003 		movw	r3, #:lower16:_Z10stopEnginev
+ 582 013c 2146     		mov	r1, r4
+ 583 013e C0F20002 		movt	r2, #:upper16:.LC25
+ 584 0142 C0F20003 		movt	r3, #:upper16:_Z10stopEnginev
+ 585 0146 C0F20000 		movt	r0, #:upper16:.LANCHOR20
+ 586 014a FFF7FEFF 		bl	_ZN8MenuItemC1EPS_PKcPFvvE
+ 587 014e 40F20000 		movw	r0, #:lower16:.LANCHOR21
+ 588 0152 40F20002 		movw	r2, #:lower16:.LC26
+ 589 0156 40F20003 		movw	r3, #:lower16:_Z8fanBenchv
+ 590 015a 2146     		mov	r1, r4
+ 591 015c C0F20002 		movt	r2, #:upper16:.LC26
+ 592 0160 C0F20003 		movt	r3, #:upper16:_Z8fanBenchv
+ 593 0164 C0F20000 		movt	r0, #:upper16:.LANCHOR21
+ 594 0168 FFF7FEFF 		bl	_ZN8MenuItemC1EPS_PKcPFvvE
+ 595 016c 40F20000 		movw	r0, #:lower16:.LANCHOR22
+ 596 0170 40F20002 		movw	r2, #:lower16:.LC27
+ 597 0174 40F20003 		movw	r3, #:lower16:_Z13fuelPumpBenchv
+ 598 0178 C0F20003 		movt	r3, #:upper16:_Z13fuelPumpBenchv
+ 599 017c 2146     		mov	r1, r4
+ 600 017e C0F20002 		movt	r2, #:upper16:.LC27
+ 601 0182 C0F20000 		movt	r0, #:upper16:.LANCHOR22
+ 602 0186 FFF7FEFF 		bl	_ZN8MenuItemC1EPS_PKcPFvvE
+ 603 018a 40F20000 		movw	r0, #:lower16:.LANCHOR23
+ 604 018e 40F20002 		movw	r2, #:lower16:.LC28
+ 605 0192 2146     		mov	r1, r4
+ 606 0194 C0F20002 		movt	r2, #:upper16:.LC28
+ 607 0198 C0F20000 		movt	r0, #:upper16:.LANCHOR23
+ 608 019c FFF7FEFF 		bl	_ZN8MenuItemC1EPS_PKc
+ 609 01a0 40F20000 		movw	r0, #:lower16:.LANCHOR24
+ 610 01a4 40F20002 		movw	r2, #:lower16:.LC29
+ 611 01a8 2146     		mov	r1, r4
+ 612 01aa C0F20002 		movt	r2, #:upper16:.LC29
+ 613 01ae C0F20000 		movt	r0, #:upper16:.LANCHOR24
+ 614 01b2 FFF7FEFF 		bl	_ZN8MenuItemC1EPS_PKc
+ 615 01b6 40F20000 		movw	r0, #:lower16:.LANCHOR25
+ 616 01ba 40F20002 		movw	r2, #:lower16:.LC30
+ 617 01be 2146     		mov	r1, r4
+ 618 01c0 C0F20002 		movt	r2, #:upper16:.LC30
+ 619 01c4 C0F20000 		movt	r0, #:upper16:.LANCHOR25
+ 620 01c8 FFF7FEFF 		bl	_ZN8MenuItemC1EPS_PKc
+ 621 01cc 40F20000 		movw	r0, #:lower16:.LANCHOR26
+ 622 01d0 40F20002 		movw	r2, #:lower16:.LC31
+ 623 01d4 2146     		mov	r1, r4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 12
+
+
+ 624 01d6 C0F20002 		movt	r2, #:upper16:.LC31
+ 625 01da C0F20000 		movt	r0, #:upper16:.LANCHOR26
+ 626 01de FFF7FEFF 		bl	_ZN8MenuItemC1EPS_PKc
+ 627 01e2 40F20000 		movw	r0, #:lower16:.LANCHOR27
+ 628 01e6 40F20002 		movw	r2, #:lower16:.LC32
+ 629 01ea 2146     		mov	r1, r4
+ 630 01ec C0F20002 		movt	r2, #:upper16:.LC32
+ 631 01f0 C0F20000 		movt	r0, #:upper16:.LANCHOR27
+ 632 01f4 FFF7FEFF 		bl	_ZN8MenuItemC1EPS_PKc
+ 633 01f8 40F20000 		movw	r0, #:lower16:.LANCHOR28
+ 634 01fc 40F20002 		movw	r2, #:lower16:.LC33
+ 635 0200 2146     		mov	r1, r4
+ 636 0202 C0F20002 		movt	r2, #:upper16:.LC33
+ 637 0206 C0F20000 		movt	r0, #:upper16:.LANCHOR28
+ 638 020a FFF7FEFF 		bl	_ZN8MenuItemC1EPS_PKc
+ 639 020e 40F20000 		movw	r0, #:lower16:.LANCHOR29
+ 640 0212 40F20002 		movw	r2, #:lower16:.LC34
+ 641 0216 2146     		mov	r1, r4
+ 642 0218 C0F20002 		movt	r2, #:upper16:.LC34
+ 643 021c C0F20000 		movt	r0, #:upper16:.LANCHOR29
+ 644 0220 FFF7FEFF 		bl	_ZN8MenuItemC1EPS_PKc
+ 645 0224 40F20000 		movw	r0, #:lower16:.LANCHOR30
+ 646 0228 40F20002 		movw	r2, #:lower16:.LC35
+ 647 022c 2146     		mov	r1, r4
+ 648 022e C0F20002 		movt	r2, #:upper16:.LC35
+ 649 0232 C0F20000 		movt	r0, #:upper16:.LANCHOR30
+ 650 0236 FFF7FEFF 		bl	_ZN8MenuItemC1EPS_PKc
+ 651 023a 40F20000 		movw	r0, #:lower16:.LANCHOR31
+ 652 023e 3146     		mov	r1, r6
+ 653 0240 0122     		movs	r2, #1
+ 654 0242 C0F20000 		movt	r0, #:upper16:.LANCHOR31
+ 655 0246 FFF7FEFF 		bl	_ZN8MenuItemC1EPS_10lcd_line_e
+ 656 024a 40F20000 		movw	r0, #:lower16:.LANCHOR32
+ 657 024e 3146     		mov	r1, r6
+ 658 0250 0222     		movs	r2, #2
+ 659 0252 C0F20000 		movt	r0, #:upper16:.LANCHOR32
+ 660 0256 FFF7FEFF 		bl	_ZN8MenuItemC1EPS_10lcd_line_e
+ 661 025a 40F20000 		movw	r0, #:lower16:.LANCHOR33
+ 662 025e 3146     		mov	r1, r6
+ 663 0260 0322     		movs	r2, #3
+ 664 0262 C0F20000 		movt	r0, #:upper16:.LANCHOR33
+ 665 0266 FFF7FEFF 		bl	_ZN8MenuItemC1EPS_10lcd_line_e
+ 666 026a 40F20000 		movw	r0, #:lower16:.LANCHOR34
+ 667 026e 3146     		mov	r1, r6
+ 668 0270 0422     		movs	r2, #4
+ 669 0272 C0F20000 		movt	r0, #:upper16:.LANCHOR34
+ 670 0276 FFF7FEFF 		bl	_ZN8MenuItemC1EPS_10lcd_line_e
+ 671 027a 40F20000 		movw	r0, #:lower16:.LANCHOR35
+ 672 027e 3146     		mov	r1, r6
+ 673 0280 0522     		movs	r2, #5
+ 674 0282 C0F20000 		movt	r0, #:upper16:.LANCHOR35
+ 675 0286 FFF7FEFF 		bl	_ZN8MenuItemC1EPS_10lcd_line_e
+ 676 028a 40F20000 		movw	r0, #:lower16:.LANCHOR36
+ 677 028e 3146     		mov	r1, r6
+ 678 0290 C0F20000 		movt	r0, #:upper16:.LANCHOR36
+ 679 0294 0622     		movs	r2, #6
+ 680 0296 BDE8F041 		pop	{r4, r5, r6, r7, r8, lr}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 13
+
+
+ 681 029a FFF7FEBF 		b	_ZN8MenuItemC1EPS_10lcd_line_e
+ 682              		.size	_GLOBAL__sub_I__Z10onJoystick17joystick_button_e, .-_GLOBAL__sub_I__Z10onJoystick17joystick_
+ 683 029e 00BF     		.section	.init_array,"aw",%init_array
+ 684              		.align	2
+ 685 0000 00000000 		.word	_GLOBAL__sub_I__Z10onJoystick17joystick_button_e(target1)
+ 686              		.section	.bss._ZL7miVBatt,"aw",%nobits
+ 687              		.align	2
+ 688              		.set	.LANCHOR14,. + 0
+ 689              		.type	_ZL7miVBatt, %object
+ 690              		.size	_ZL7miVBatt, 36
+ 691              	_ZL7miVBatt:
+ 692 0000 00000000 		.space	36
+ 692      00000000 
+ 692      00000000 
+ 692      00000000 
+ 692      00000000 
+ 693              		.section	.bss._ZL8miConfig,"aw",%nobits
+ 694              		.align	2
+ 695              		.set	.LANCHOR32,. + 0
+ 696              		.type	_ZL8miConfig, %object
+ 697              		.size	_ZL8miConfig, 36
+ 698              	_ZL8miConfig:
+ 699 0000 00000000 		.space	36
+ 699      00000000 
+ 699      00000000 
+ 699      00000000 
+ 699      00000000 
+ 700              		.section	.bss._ZL10miTestInj2,"aw",%nobits
+ 701              		.align	2
+ 702              		.set	.LANCHOR28,. + 0
+ 703              		.type	_ZL10miTestInj2, %object
+ 704              		.size	_ZL10miTestInj2, 36
+ 705              	_ZL10miTestInj2:
+ 706 0000 00000000 		.space	36
+ 706      00000000 
+ 706      00000000 
+ 706      00000000 
+ 706      00000000 
+ 707              		.section	.bss._ZL4tree,"aw",%nobits
+ 708              		.align	2
+ 709              		.set	.LANCHOR2,. + 0
+ 710              		.type	_ZL4tree, %object
+ 711              		.size	_ZL4tree, 16
+ 712              	_ZL4tree:
+ 713 0000 00000000 		.space	16
+ 713      00000000 
+ 713      00000000 
+ 713      00000000 
+ 714              		.section	.bss._ZL5miIat,"aw",%nobits
+ 715              		.align	2
+ 716              		.set	.LANCHOR12,. + 0
+ 717              		.type	_ZL5miIat, %object
+ 718              		.size	_ZL5miIat, 36
+ 719              	_ZL5miIat:
+ 720 0000 00000000 		.space	36
+ 720      00000000 
+ 720      00000000 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 14
+
+
+ 720      00000000 
+ 720      00000000 
+ 721              		.section	.bss._ZL6buffer,"aw",%nobits
+ 722              		.align	2
+ 723              		.set	.LANCHOR4,. + 0
+ 724              		.type	_ZL6buffer, %object
+ 725              		.size	_ZL6buffer, 24
+ 726              	_ZL6buffer:
+ 727 0000 00000000 		.space	24
+ 727      00000000 
+ 727      00000000 
+ 727      00000000 
+ 727      00000000 
+ 728              		.section	.bss._ZL12miTestSpark3,"aw",%nobits
+ 729              		.align	2
+ 730              		.set	.LANCHOR25,. + 0
+ 731              		.type	_ZL12miTestSpark3, %object
+ 732              		.size	_ZL12miTestSpark3, 36
+ 733              	_ZL12miTestSpark3:
+ 734 0000 00000000 		.space	36
+ 734      00000000 
+ 734      00000000 
+ 734      00000000 
+ 734      00000000 
+ 735              		.section	.bss._ZL12miTestSpark1,"aw",%nobits
+ 736              		.align	2
+ 737              		.set	.LANCHOR23,. + 0
+ 738              		.type	_ZL12miTestSpark1, %object
+ 739              		.size	_ZL12miTestSpark1, 36
+ 740              	_ZL12miTestSpark1:
+ 741 0000 00000000 		.space	36
+ 741      00000000 
+ 741      00000000 
+ 741      00000000 
+ 741      00000000 
+ 742              		.section	.bss._ZL12miTestSpark2,"aw",%nobits
+ 743              		.align	2
+ 744              		.set	.LANCHOR24,. + 0
+ 745              		.type	_ZL12miTestSpark2, %object
+ 746              		.size	_ZL12miTestSpark2, 36
+ 747              	_ZL12miTestSpark2:
+ 748 0000 00000000 		.space	36
+ 748      00000000 
+ 748      00000000 
+ 748      00000000 
+ 748      00000000 
+ 749              		.section	.bss._ZL9miSensors,"aw",%nobits
+ 750              		.align	2
+ 751              		.set	.LANCHOR6,. + 0
+ 752              		.type	_ZL9miSensors, %object
+ 753              		.size	_ZL9miSensors, 36
+ 754              	_ZL9miSensors:
+ 755 0000 00000000 		.space	36
+ 755      00000000 
+ 755      00000000 
+ 755      00000000 
+ 755      00000000 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 15
+
+
+ 756              		.section	.bss._ZL12miTestSpark4,"aw",%nobits
+ 757              		.align	2
+ 758              		.set	.LANCHOR26,. + 0
+ 759              		.type	_ZL12miTestSpark4, %object
+ 760              		.size	_ZL12miTestSpark4, 36
+ 761              	_ZL12miTestSpark4:
+ 762 0000 00000000 		.space	36
+ 762      00000000 
+ 762      00000000 
+ 762      00000000 
+ 762      00000000 
+ 763              		.section	.bss._ZL10miIgnition,"aw",%nobits
+ 764              		.align	2
+ 765              		.set	.LANCHOR35,. + 0
+ 766              		.type	_ZL10miIgnition, %object
+ 767              		.size	_ZL10miIgnition, 36
+ 768              	_ZL10miIgnition:
+ 769 0000 00000000 		.space	36
+ 769      00000000 
+ 769      00000000 
+ 769      00000000 
+ 769      00000000 
+ 770              		.section	.bss._ZL9miTestFan,"aw",%nobits
+ 771              		.align	2
+ 772              		.set	.LANCHOR21,. + 0
+ 773              		.type	_ZL9miTestFan, %object
+ 774              		.size	_ZL9miTestFan, 36
+ 775              	_ZL9miTestFan:
+ 776 0000 00000000 		.space	36
+ 776      00000000 
+ 776      00000000 
+ 776      00000000 
+ 776      00000000 
+ 777              		.section	.bss._ZL7miAbout,"aw",%nobits
+ 778              		.align	2
+ 779              		.set	.LANCHOR8,. + 0
+ 780              		.type	_ZL7miAbout, %object
+ 781              		.size	_ZL7miAbout, 36
+ 782              	_ZL7miAbout:
+ 783 0000 00000000 		.space	36
+ 783      00000000 
+ 783      00000000 
+ 783      00000000 
+ 783      00000000 
+ 784              		.section	.bss._ZL10miTestInj1,"aw",%nobits
+ 785              		.align	2
+ 786              		.set	.LANCHOR27,. + 0
+ 787              		.type	_ZL10miTestInj1, %object
+ 788              		.size	_ZL10miTestInj1, 36
+ 789              	_ZL10miTestInj1:
+ 790 0000 00000000 		.space	36
+ 790      00000000 
+ 790      00000000 
+ 790      00000000 
+ 790      00000000 
+ 791              		.section	.bss._ZL5miTps,"aw",%nobits
+ 792              		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 16
+
+
+ 793              		.set	.LANCHOR13,. + 0
+ 794              		.type	_ZL5miTps, %object
+ 795              		.size	_ZL5miTps, 36
+ 796              	_ZL5miTps:
+ 797 0000 00000000 		.space	36
+ 797      00000000 
+ 797      00000000 
+ 797      00000000 
+ 797      00000000 
+ 798              		.section	.bss._ZL10miTestInj3,"aw",%nobits
+ 799              		.align	2
+ 800              		.set	.LANCHOR29,. + 0
+ 801              		.type	_ZL10miTestInj3, %object
+ 802              		.size	_ZL10miTestInj3, 36
+ 803              	_ZL10miTestInj3:
+ 804 0000 00000000 		.space	36
+ 804      00000000 
+ 804      00000000 
+ 804      00000000 
+ 804      00000000 
+ 805              		.section	.bss._ZL10miTestInj4,"aw",%nobits
+ 806              		.align	2
+ 807              		.set	.LANCHOR30,. + 0
+ 808              		.type	_ZL10miTestInj4, %object
+ 809              		.size	_ZL10miTestInj4, 36
+ 810              	_ZL10miTestInj4:
+ 811 0000 00000000 		.space	36
+ 811      00000000 
+ 811      00000000 
+ 811      00000000 
+ 811      00000000 
+ 812              		.section	.bss._ZL13lcdLineStream,"aw",%nobits
+ 813              		.align	2
+ 814              		.set	.LANCHOR0,. + 0
+ 815              		.type	_ZL13lcdLineStream, %object
+ 816              		.size	_ZL13lcdLineStream, 20
+ 817              	_ZL13lcdLineStream:
+ 818 0000 00000000 		.space	20
+ 818      00000000 
+ 818      00000000 
+ 818      00000000 
+ 818      00000000 
+ 819              		.section	.bss._ZL5miMap,"aw",%nobits
+ 820              		.align	2
+ 821              		.set	.LANCHOR15,. + 0
+ 822              		.type	_ZL5miMap, %object
+ 823              		.size	_ZL5miMap, 36
+ 824              	_ZL5miMap:
+ 825 0000 00000000 		.space	36
+ 825      00000000 
+ 825      00000000 
+ 825      00000000 
+ 825      00000000 
+ 826              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 827              		.align	2
+ 828              	.LC0:
+ 829 0000 76657273 		.ascii	"version %s\000"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 17
+
+
+ 829      696F6E20 
+ 829      257300
+ 830 000b 00       		.space	1
+ 831              	.LC1:
+ 832 000c 38323230 		.ascii	"8220\000"
+ 832      00
+ 833 0011 000000   		.space	3
+ 834              	.LC2:
+ 835 0014 636F6E66 		.ascii	"config %s\000"
+ 835      69672025 
+ 835      7300
+ 836 001e 0000     		.space	2
+ 837              	.LC3:
+ 838 0020 52504D20 		.ascii	"RPM %d\000"
+ 838      256400
+ 839 0027 00       		.space	1
+ 840              	.LC4:
+ 841 0028 20202564 		.ascii	"  %d\000"
+ 841      00
+ 842 002d 000000   		.space	3
+ 843              	.LC5:
+ 844 0030 436F6F6C 		.ascii	"Coolant %f\000"
+ 844      616E7420 
+ 844      256600
+ 845 003b 00       		.space	1
+ 846              	.LC6:
+ 847 003c 496E7461 		.ascii	"Intake Air %f\000"
+ 847      6B652041 
+ 847      69722025 
+ 847      6600
+ 848 004a 0000     		.space	2
+ 849              	.LC7:
+ 850 004c 496E6A20 		.ascii	"Inj %fcc\000"
+ 850      25666363 
+ 850      00
+ 851 0055 000000   		.space	3
+ 852              	.LC8:
+ 853 0058 5468726F 		.ascii	"Throttle %f%%\000"
+ 853      74746C65 
+ 853      20256625 
+ 853      2500
+ 854 0066 0000     		.space	2
+ 855              	.LC9:
+ 856 0068 42617474 		.ascii	"Battery %fv\000"
+ 856      65727920 
+ 856      25667600 
+ 857              	.LC10:
+ 858 0074 4261726F 		.ascii	"Baro: %f\000"
+ 858      3A202566 
+ 858      00
+ 859 007d 000000   		.space	3
+ 860              	.LC11:
+ 861 0080 4261726F 		.ascii	"Baro: none\000"
+ 861      3A206E6F 
+ 861      6E6500
+ 862 008b 00       		.space	1
+ 863              	.LC12:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 18
+
+
+ 864 008c 4146523A 		.ascii	"AFR: %f\000"
+ 864      20256600 
+ 865              	.LC13:
+ 866 0094 4146523A 		.ascii	"AFR: none\000"
+ 866      206E6F6E 
+ 866      6500
+ 867 009e 0000     		.space	2
+ 868              	.LC14:
+ 869 00a0 4D415020 		.ascii	"MAP %f\000"
+ 869      256600
+ 870 00a7 00       		.space	1
+ 871              	.LC15:
+ 872 00a8 4D41503A 		.ascii	"MAP: none\000"
+ 872      206E6F6E 
+ 872      6500
+ 873 00b2 0000     		.space	2
+ 874              	.LC16:
+ 875 00b4 4D41463A 		.ascii	"MAF: %fv\000"
+ 875      20256676 
+ 875      00
+ 876 00bd 000000   		.space	3
+ 877              	.LC17:
+ 878 00c0 4D41463A 		.ascii	"MAF: none\000"
+ 878      206E6F6E 
+ 878      6500
+ 879 00ca 0000     		.space	2
+ 880              	.LC18:
+ 881 00cc 4D41463A 		.ascii	"MAF: %f kg/hr\000"
+ 881      20256620 
+ 881      6B672F68 
+ 881      7200
+ 882 00da 0000     		.space	2
+ 883              	.LC19:
+ 884 00dc 4572726F 		.ascii	"Errors\000"
+ 884      727300
+ 885 00e3 00       		.space	1
+ 886              	.LC20:
+ 887 00e4 44757479 		.ascii	"Duty\000"
+ 887      00
+ 888 00e9 000000   		.space	3
+ 889              	.LC21:
+ 890 00ec 282900   		.ascii	"()\000"
+ 891 00ef 00       		.space	1
+ 892              	.LC22:
+ 893 00f0 73656E73 		.ascii	"sensors\000"
+ 893      6F727300 
+ 894              	.LC23:
+ 895 00f8 62656E63 		.ascii	"bench test\000"
+ 895      68207465 
+ 895      737400
+ 896 0103 00       		.space	1
+ 897              	.LC24:
+ 898 0104 61626F75 		.ascii	"about\000"
+ 898      7400
+ 899 010a 0000     		.space	2
+ 900              	.LC25:
+ 901 010c 73746F70 		.ascii	"stop engine\000"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 19
+
+
+ 901      20656E67 
+ 901      696E6500 
+ 902              	.LC26:
+ 903 0118 74657374 		.ascii	"test fan\000"
+ 903      2066616E 
+ 903      00
+ 904 0121 000000   		.space	3
+ 905              	.LC27:
+ 906 0124 74657374 		.ascii	"test pump\000"
+ 906      2070756D 
+ 906      7000
+ 907 012e 0000     		.space	2
+ 908              	.LC28:
+ 909 0130 74657374 		.ascii	"test spark1\000"
+ 909      20737061 
+ 909      726B3100 
+ 910              	.LC29:
+ 911 013c 74657374 		.ascii	"test spark2\000"
+ 911      20737061 
+ 911      726B3200 
+ 912              	.LC30:
+ 913 0148 74657374 		.ascii	"test spark3\000"
+ 913      20737061 
+ 913      726B3300 
+ 914              	.LC31:
+ 915 0154 74657374 		.ascii	"test spark4\000"
+ 915      20737061 
+ 915      726B3400 
+ 916              	.LC32:
+ 917 0160 74657374 		.ascii	"test injector1\000"
+ 917      20696E6A 
+ 917      6563746F 
+ 917      723100
+ 918 016f 00       		.space	1
+ 919              	.LC33:
+ 920 0170 74657374 		.ascii	"test injector2\000"
+ 920      20696E6A 
+ 920      6563746F 
+ 920      723200
+ 921 017f 00       		.space	1
+ 922              	.LC34:
+ 923 0180 74657374 		.ascii	"test injector3\000"
+ 923      20696E6A 
+ 923      6563746F 
+ 923      723300
+ 924 018f 00       		.space	1
+ 925              	.LC35:
+ 926 0190 74657374 		.ascii	"test injector4\000"
+ 926      20696E6A 
+ 926      6563746F 
+ 926      723400
+ 927 019f 00       		.section	.bss._ZL6miBaro,"aw",%nobits
+ 928              		.align	2
+ 929              		.set	.LANCHOR17,. + 0
+ 930              		.type	_ZL6miBaro, %object
+ 931              		.size	_ZL6miBaro, 36
+ 932              	_ZL6miBaro:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 20
+
+
+ 933 0000 00000000 		.space	36
+ 933      00000000 
+ 933      00000000 
+ 933      00000000 
+ 933      00000000 
+ 934              		.section	.bss._ZL9miVersion,"aw",%nobits
+ 935              		.align	2
+ 936              		.set	.LANCHOR31,. + 0
+ 937              		.type	_ZL9miVersion, %object
+ 938              		.size	_ZL9miVersion, 36
+ 939              	_ZL9miVersion:
+ 940 0000 00000000 		.space	36
+ 940      00000000 
+ 940      00000000 
+ 940      00000000 
+ 940      00000000 
+ 941              		.section	.bss._ZL15miTriggerErrors,"aw",%nobits
+ 942              		.align	2
+ 943              		.set	.LANCHOR9,. + 0
+ 944              		.type	_ZL15miTriggerErrors, %object
+ 945              		.size	_ZL15miTriggerErrors, 36
+ 946              	_ZL15miTriggerErrors:
+ 947 0000 00000000 		.space	36
+ 947      00000000 
+ 947      00000000 
+ 947      00000000 
+ 947      00000000 
+ 948              		.section	.bss._ZL9miInjFlow,"aw",%nobits
+ 949              		.align	2
+ 950              		.set	.LANCHOR36,. + 0
+ 951              		.type	_ZL9miInjFlow, %object
+ 952              		.size	_ZL9miInjFlow, 36
+ 953              	_ZL9miInjFlow:
+ 954 0000 00000000 		.space	36
+ 954      00000000 
+ 954      00000000 
+ 954      00000000 
+ 954      00000000 
+ 955              		.section	.bss._ZL11miInjection,"aw",%nobits
+ 956              		.align	2
+ 957              		.set	.LANCHOR34,. + 0
+ 958              		.type	_ZL11miInjection, %object
+ 959              		.size	_ZL11miInjection, 36
+ 960              	_ZL11miInjection:
+ 961 0000 00000000 		.space	36
+ 961      00000000 
+ 961      00000000 
+ 961      00000000 
+ 961      00000000 
+ 962              		.section	.bss._ZL12miStopEngine,"aw",%nobits
+ 963              		.align	2
+ 964              		.set	.LANCHOR20,. + 0
+ 965              		.type	_ZL12miStopEngine, %object
+ 966              		.size	_ZL12miStopEngine, 36
+ 967              	_ZL12miStopEngine:
+ 968 0000 00000000 		.space	36
+ 968      00000000 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 21
+
+
+ 968      00000000 
+ 968      00000000 
+ 968      00000000 
+ 969              		.section	.bss._ZL14miTestFuelPump,"aw",%nobits
+ 970              		.align	2
+ 971              		.set	.LANCHOR22,. + 0
+ 972              		.type	_ZL14miTestFuelPump, %object
+ 973              		.size	_ZL14miTestFuelPump, 36
+ 974              	_ZL14miTestFuelPump:
+ 975 0000 00000000 		.space	36
+ 975      00000000 
+ 975      00000000 
+ 975      00000000 
+ 975      00000000 
+ 976              		.section	.bss._ZL7miBench,"aw",%nobits
+ 977              		.align	2
+ 978              		.set	.LANCHOR7,. + 0
+ 979              		.type	_ZL7miBench, %object
+ 980              		.size	_ZL7miBench, 36
+ 981              	_ZL7miBench:
+ 982 0000 00000000 		.space	36
+ 982      00000000 
+ 982      00000000 
+ 982      00000000 
+ 982      00000000 
+ 983              		.section	.bss._ZL5miClt,"aw",%nobits
+ 984              		.align	2
+ 985              		.set	.LANCHOR11,. + 0
+ 986              		.type	_ZL5miClt, %object
+ 987              		.size	_ZL5miClt, 36
+ 988              	_ZL5miClt:
+ 989 0000 00000000 		.space	36
+ 989      00000000 
+ 989      00000000 
+ 989      00000000 
+ 989      00000000 
+ 990              		.section	.bss._ZL13miTriggerDuty,"aw",%nobits
+ 991              		.align	2
+ 992              		.set	.LANCHOR10,. + 0
+ 993              		.type	_ZL13miTriggerDuty, %object
+ 994              		.size	_ZL13miTriggerDuty, 36
+ 995              	_ZL13miTriggerDuty:
+ 996 0000 00000000 		.space	36
+ 996      00000000 
+ 996      00000000 
+ 996      00000000 
+ 996      00000000 
+ 997              		.section	.bss._ZL4ROOT,"aw",%nobits
+ 998              		.align	2
+ 999              		.set	.LANCHOR5,. + 0
+ 1000              		.type	_ZL4ROOT, %object
+ 1001              		.size	_ZL4ROOT, 36
+ 1002              	_ZL4ROOT:
+ 1003 0000 00000000 		.space	36
+ 1003      00000000 
+ 1003      00000000 
+ 1003      00000000 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 22
+
+
+ 1003      00000000 
+ 1004              		.section	.bss._ZL6miAlgo,"aw",%nobits
+ 1005              		.align	2
+ 1006              		.set	.LANCHOR33,. + 0
+ 1007              		.type	_ZL6miAlgo, %object
+ 1008              		.size	_ZL6miAlgo, 36
+ 1009              	_ZL6miAlgo:
+ 1010 0000 00000000 		.space	36
+ 1010      00000000 
+ 1010      00000000 
+ 1010      00000000 
+ 1010      00000000 
+ 1011              		.section	.bss._ZL5miRpm,"aw",%nobits
+ 1012              		.align	2
+ 1013              		.set	.LANCHOR3,. + 0
+ 1014              		.type	_ZL5miRpm, %object
+ 1015              		.size	_ZL5miRpm, 36
+ 1016              	_ZL5miRpm:
+ 1017 0000 00000000 		.space	36
+ 1017      00000000 
+ 1017      00000000 
+ 1017      00000000 
+ 1017      00000000 
+ 1018              		.section	.bss._ZL13lcdLineBuffer,"aw",%nobits
+ 1019              		.align	2
+ 1020              		.set	.LANCHOR1,. + 0
+ 1021              		.type	_ZL13lcdLineBuffer, %object
+ 1022              		.size	_ZL13lcdLineBuffer, 30
+ 1023              	_ZL13lcdLineBuffer:
+ 1024 0000 00000000 		.space	30
+ 1024      00000000 
+ 1024      00000000 
+ 1024      00000000 
+ 1024      00000000 
+ 1025 001e 0000     		.section	.bss._ZL9miMapKgHr,"aw",%nobits
+ 1026              		.align	2
+ 1027              		.set	.LANCHOR19,. + 0
+ 1028              		.type	_ZL9miMapKgHr, %object
+ 1029              		.size	_ZL9miMapKgHr, 36
+ 1030              	_ZL9miMapKgHr:
+ 1031 0000 00000000 		.space	36
+ 1031      00000000 
+ 1031      00000000 
+ 1031      00000000 
+ 1031      00000000 
+ 1032              		.section	.bss._ZL6miMapV,"aw",%nobits
+ 1033              		.align	2
+ 1034              		.set	.LANCHOR18,. + 0
+ 1035              		.type	_ZL6miMapV, %object
+ 1036              		.size	_ZL6miMapV, 36
+ 1037              	_ZL6miMapV:
+ 1038 0000 00000000 		.space	36
+ 1038      00000000 
+ 1038      00000000 
+ 1038      00000000 
+ 1038      00000000 
+ 1039              		.section	.bss._ZL5miAfr,"aw",%nobits
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 23
+
+
+ 1040              		.align	2
+ 1041              		.set	.LANCHOR16,. + 0
+ 1042              		.type	_ZL5miAfr, %object
+ 1043              		.size	_ZL5miAfr, 36
+ 1044              	_ZL5miAfr:
+ 1045 0000 00000000 		.space	36
+ 1045      00000000 
+ 1045      00000000 
+ 1045      00000000 
+ 1045      00000000 
+ 1046              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 24
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 lcd_controller.cpp
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:17     .text._ZL9lcdPrintfPKcz:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:22     .text._ZL9lcdPrintfPKcz:00000000 _ZL9lcdPrintfPKcz
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:814    .bss._ZL13lcdLineStream:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:1020   .bss._ZL13lcdLineBuffer:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:51     .text._ZL14fillWithSpacesv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:56     .text._ZL14fillWithSpacesv:00000000 _ZL14fillWithSpacesv
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:74     .text._Z10onJoystick17joystick_button_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:80     .text._Z10onJoystick17joystick_button_e:00000000 _Z10onJoystick17joystick_button_e
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:709    .bss._ZL4tree:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:104    .text._Z9appendStrPcPKc:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:110    .text._Z9appendStrPcPKc:00000000 _Z9appendStrPcPKc
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:131    .text._Z17initLcdControllerv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:137    .text._Z17initLcdControllerv:00000000 _Z17initLcdControllerv
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:1013   .bss._ZL5miRpm:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:162    .text._Z16updateHD44780lcdP6Engine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:168    .text._Z16updateHD44780lcdP6Engine:00000000 _Z16updateHD44780lcdP6Engine
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:216    .text._Z16updateHD44780lcdP6Engine:00000066 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:237    .text._Z16updateHD44780lcdP6Engine:0000008e $t
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:723    .bss._ZL6buffer:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:857    .rodata.str1.4:00000074 .LC10
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:880    .rodata.str1.4:000000cc .LC18
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:874    .rodata.str1.4:000000b4 .LC16
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:868    .rodata.str1.4:000000a0 .LC14
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:855    .rodata.str1.4:00000068 .LC9
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:852    .rodata.str1.4:00000058 .LC8
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:863    .rodata.str1.4:0000008c .LC12
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:846    .rodata.str1.4:0000003c .LC6
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:843    .rodata.str1.4:00000030 .LC5
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:886    .rodata.str1.4:000000e4 .LC20
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:883    .rodata.str1.4:000000dc .LC19
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:837    .rodata.str1.4:00000020 .LC3
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:840    .rodata.str1.4:00000028 .LC4
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:849    .rodata.str1.4:0000004c .LC7
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:834    .rodata.str1.4:00000014 .LC2
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:828    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:831    .rodata.str1.4:0000000c .LC1
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:889    .rodata.str1.4:000000ec .LC21
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:877    .rodata.str1.4:000000c0 .LC17
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:865    .rodata.str1.4:00000094 .LC13
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:871    .rodata.str1.4:000000a8 .LC15
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:860    .rodata.str1.4:00000080 .LC11
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:477    .text.startup._GLOBAL__sub_I__Z10onJoystick17joystick_button_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:482    .text.startup._GLOBAL__sub_I__Z10onJoystick17joystick_button_e:00000000 _GLOBAL__sub_I__Z10onJoystick17joystick_button_e
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:999    .bss._ZL4ROOT:00000000 .LANCHOR5
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:751    .bss._ZL9miSensors:00000000 .LANCHOR6
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:892    .rodata.str1.4:000000f0 .LC22
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:978    .bss._ZL7miBench:00000000 .LANCHOR7
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:894    .rodata.str1.4:000000f8 .LC23
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:779    .bss._ZL7miAbout:00000000 .LANCHOR8
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:897    .rodata.str1.4:00000104 .LC24
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:943    .bss._ZL15miTriggerErrors:00000000 .LANCHOR9
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:992    .bss._ZL13miTriggerDuty:00000000 .LANCHOR10
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:985    .bss._ZL5miClt:00000000 .LANCHOR11
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:716    .bss._ZL5miIat:00000000 .LANCHOR12
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:793    .bss._ZL5miTps:00000000 .LANCHOR13
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 25
+
+
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:688    .bss._ZL7miVBatt:00000000 .LANCHOR14
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:821    .bss._ZL5miMap:00000000 .LANCHOR15
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:1041   .bss._ZL5miAfr:00000000 .LANCHOR16
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:929    .bss._ZL6miBaro:00000000 .LANCHOR17
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:1034   .bss._ZL6miMapV:00000000 .LANCHOR18
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:1027   .bss._ZL9miMapKgHr:00000000 .LANCHOR19
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:964    .bss._ZL12miStopEngine:00000000 .LANCHOR20
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:900    .rodata.str1.4:0000010c .LC25
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:772    .bss._ZL9miTestFan:00000000 .LANCHOR21
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:902    .rodata.str1.4:00000118 .LC26
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:971    .bss._ZL14miTestFuelPump:00000000 .LANCHOR22
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:905    .rodata.str1.4:00000124 .LC27
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:737    .bss._ZL12miTestSpark1:00000000 .LANCHOR23
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:908    .rodata.str1.4:00000130 .LC28
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:744    .bss._ZL12miTestSpark2:00000000 .LANCHOR24
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:910    .rodata.str1.4:0000013c .LC29
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:730    .bss._ZL12miTestSpark3:00000000 .LANCHOR25
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:912    .rodata.str1.4:00000148 .LC30
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:758    .bss._ZL12miTestSpark4:00000000 .LANCHOR26
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:914    .rodata.str1.4:00000154 .LC31
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:786    .bss._ZL10miTestInj1:00000000 .LANCHOR27
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:916    .rodata.str1.4:00000160 .LC32
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:702    .bss._ZL10miTestInj2:00000000 .LANCHOR28
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:919    .rodata.str1.4:00000170 .LC33
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:800    .bss._ZL10miTestInj3:00000000 .LANCHOR29
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:922    .rodata.str1.4:00000180 .LC34
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:807    .bss._ZL10miTestInj4:00000000 .LANCHOR30
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:925    .rodata.str1.4:00000190 .LC35
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:936    .bss._ZL9miVersion:00000000 .LANCHOR31
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:695    .bss._ZL8miConfig:00000000 .LANCHOR32
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:1006   .bss._ZL6miAlgo:00000000 .LANCHOR33
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:957    .bss._ZL11miInjection:00000000 .LANCHOR34
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:765    .bss._ZL10miIgnition:00000000 .LANCHOR35
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:950    .bss._ZL9miInjFlow:00000000 .LANCHOR36
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:684    .init_array:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:687    .bss._ZL7miVBatt:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:691    .bss._ZL7miVBatt:00000000 _ZL7miVBatt
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:694    .bss._ZL8miConfig:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:698    .bss._ZL8miConfig:00000000 _ZL8miConfig
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:701    .bss._ZL10miTestInj2:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:705    .bss._ZL10miTestInj2:00000000 _ZL10miTestInj2
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:708    .bss._ZL4tree:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:712    .bss._ZL4tree:00000000 _ZL4tree
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:715    .bss._ZL5miIat:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:719    .bss._ZL5miIat:00000000 _ZL5miIat
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:722    .bss._ZL6buffer:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:726    .bss._ZL6buffer:00000000 _ZL6buffer
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:729    .bss._ZL12miTestSpark3:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:733    .bss._ZL12miTestSpark3:00000000 _ZL12miTestSpark3
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:736    .bss._ZL12miTestSpark1:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:740    .bss._ZL12miTestSpark1:00000000 _ZL12miTestSpark1
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:743    .bss._ZL12miTestSpark2:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:747    .bss._ZL12miTestSpark2:00000000 _ZL12miTestSpark2
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:750    .bss._ZL9miSensors:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:754    .bss._ZL9miSensors:00000000 _ZL9miSensors
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:757    .bss._ZL12miTestSpark4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:761    .bss._ZL12miTestSpark4:00000000 _ZL12miTestSpark4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 26
+
+
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:764    .bss._ZL10miIgnition:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:768    .bss._ZL10miIgnition:00000000 _ZL10miIgnition
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:771    .bss._ZL9miTestFan:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:775    .bss._ZL9miTestFan:00000000 _ZL9miTestFan
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:778    .bss._ZL7miAbout:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:782    .bss._ZL7miAbout:00000000 _ZL7miAbout
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:785    .bss._ZL10miTestInj1:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:789    .bss._ZL10miTestInj1:00000000 _ZL10miTestInj1
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:792    .bss._ZL5miTps:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:796    .bss._ZL5miTps:00000000 _ZL5miTps
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:799    .bss._ZL10miTestInj3:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:803    .bss._ZL10miTestInj3:00000000 _ZL10miTestInj3
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:806    .bss._ZL10miTestInj4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:810    .bss._ZL10miTestInj4:00000000 _ZL10miTestInj4
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:813    .bss._ZL13lcdLineStream:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:817    .bss._ZL13lcdLineStream:00000000 _ZL13lcdLineStream
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:820    .bss._ZL5miMap:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:824    .bss._ZL5miMap:00000000 _ZL5miMap
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:827    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:928    .bss._ZL6miBaro:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:932    .bss._ZL6miBaro:00000000 _ZL6miBaro
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:935    .bss._ZL9miVersion:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:939    .bss._ZL9miVersion:00000000 _ZL9miVersion
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:942    .bss._ZL15miTriggerErrors:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:946    .bss._ZL15miTriggerErrors:00000000 _ZL15miTriggerErrors
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:949    .bss._ZL9miInjFlow:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:953    .bss._ZL9miInjFlow:00000000 _ZL9miInjFlow
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:956    .bss._ZL11miInjection:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:960    .bss._ZL11miInjection:00000000 _ZL11miInjection
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:963    .bss._ZL12miStopEngine:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:967    .bss._ZL12miStopEngine:00000000 _ZL12miStopEngine
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:970    .bss._ZL14miTestFuelPump:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:974    .bss._ZL14miTestFuelPump:00000000 _ZL14miTestFuelPump
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:977    .bss._ZL7miBench:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:981    .bss._ZL7miBench:00000000 _ZL7miBench
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:984    .bss._ZL5miClt:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:988    .bss._ZL5miClt:00000000 _ZL5miClt
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:991    .bss._ZL13miTriggerDuty:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:995    .bss._ZL13miTriggerDuty:00000000 _ZL13miTriggerDuty
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:998    .bss._ZL4ROOT:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:1002   .bss._ZL4ROOT:00000000 _ZL4ROOT
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:1005   .bss._ZL6miAlgo:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:1009   .bss._ZL6miAlgo:00000000 _ZL6miAlgo
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:1012   .bss._ZL5miRpm:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:1016   .bss._ZL5miRpm:00000000 _ZL5miRpm
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:1019   .bss._ZL13lcdLineBuffer:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:1023   .bss._ZL13lcdLineBuffer:00000000 _ZL13lcdLineBuffer
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:1026   .bss._ZL9miMapKgHr:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:1030   .bss._ZL9miMapKgHr:00000000 _ZL9miMapKgHr
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:1033   .bss._ZL6miMapV:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:1037   .bss._ZL6miMapV:00000000 _ZL6miMapV
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:1040   .bss._ZL5miAfr:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s:1044   .bss._ZL5miAfr:00000000 _ZL5miAfr
+
+UNDEFINED SYMBOLS
+chvprintf
+lcd_HD44780_print_string
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXOaMpt.s 			page 27
+
+
+getCurrentHD44780column
+lcd_HD44780_print_char
+_ZN8MenuTree12enterSubMenuEv
+_ZN8MenuTree4backEv
+_ZN8MenuTree8nextItemEv
+efiStrlen
+engineConfiguration
+_ZN8MenuTree4initEP8MenuItemi
+msObjectInit
+__aeabi_f2d
+lcd_HD44780_set_position
+getWarninig
+memcpy
+_Z13hasBaroSensorv
+_Z15getBaroPressurev
+_Z12hasMafSensorv
+_Z10getRealMafv
+_Z6getMafv
+_Z6getMapv
+_Z8getVBattv
+_Z6getTPSv
+_Z6getAfrv
+_Z23getIntakeAirTemperaturev
+_Z21getCoolantTemperaturev
+engine
+_ZN13RpmCalculator3rpmEv
+getTimeNowSeconds
+_Z18getIgnition_mode_e15ignition_mode_e
+_Z19getInjection_mode_e16injection_mode_e
+_Z21getEngine_load_mode_e18engine_load_mode_e
+_Z20getConfigurationName13engine_type_e
+_ZN8MenuItemC1EPS_PKc
+_ZN8MenuTreeC1EP8MenuItem
+_ZN8MenuItemC1EPS_10lcd_line_e
+_Z10stopEnginev
+_ZN8MenuItemC1EPS_PKcPFvvE
+_Z8fanBenchv
+_Z13fuelPumpBenchv

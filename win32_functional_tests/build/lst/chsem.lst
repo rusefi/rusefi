@@ -1,0 +1,1024 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s 			page 1
+
+
+   1              		.file	"chsem.c"
+   2              		.section .rdata,"dr"
+   3              	LC0:
+   4 0000 22636853 		.ascii "\"chSemInit\"()\0"
+   4      656D496E 
+   4      69742228 
+   4      2900
+   5              		.section	.text$chSemInit,"x"
+   6              		.p2align 4,,15
+   7              		.globl	_chSemInit
+   8              		.def	_chSemInit;	.scl	2;	.type	32;	.endef
+   9              	_chSemInit:
+  10              	LFB7:
+  11              		.cfi_startproc
+  12 0000 83EC1C   		subl	$28, %esp
+  13              		.cfi_def_cfa_offset 32
+  14 0003 89742418 		movl	%esi, 24(%esp)
+  15              		.cfi_offset 6, -8
+  16 0007 8B742424 		movl	36(%esp), %esi
+  17 000b 895C2414 		movl	%ebx, 20(%esp)
+  18              		.cfi_offset 3, -12
+  19 000f 8B5C2420 		movl	32(%esp), %ebx
+  20 0013 85F6     		testl	%esi, %esi
+  21 0015 7819     		js	L4
+  22 0017 85DB     		testl	%ebx, %ebx
+  23 0019 7415     		je	L4
+  24              	L2:
+  25 001b 897308   		movl	%esi, 8(%ebx)
+  26 001e 8B742418 		movl	24(%esp), %esi
+  27 0022 895B04   		movl	%ebx, 4(%ebx)
+  28 0025 891B     		movl	%ebx, (%ebx)
+  29 0027 8B5C2414 		movl	20(%esp), %ebx
+  30 002b 83C41C   		addl	$28, %esp
+  31              		.cfi_remember_state
+  32              		.cfi_restore 6
+  33              		.cfi_restore 3
+  34              		.cfi_def_cfa_offset 4
+  35 002e C3       		ret
+  36 002f 90       		.p2align 4,,7
+  37              	L4:
+  38              		.cfi_restore_state
+  39 0030 C7042400 		movl	$LC0, (%esp)
+  39      000000
+  40 0037 E8000000 		call	_chDbgPanic
+  40      00
+  41 003c EBDD     		jmp	L2
+  42              		.cfi_endproc
+  43              	LFE7:
+  44 003e 9090     		.section .rdata,"dr"
+  45              	LC1:
+  46 000e 22636853 		.ascii "\"chSemResetI\"()\0"
+  46      656D5265 
+  46      73657449 
+  46      22282900 
+  47              	LC2:
+  48 001e 63685365 		.ascii "chSemResetI(), #1\0"
+  48      6D526573 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s 			page 2
+
+
+  48      65744928 
+  48      292C2023 
+  48      3100
+  49              		.section	.text$chSemResetI,"x"
+  50              		.p2align 4,,15
+  51              		.globl	_chSemResetI
+  52              		.def	_chSemResetI;	.scl	2;	.type	32;	.endef
+  53              	_chSemResetI:
+  54              	LFB9:
+  55              		.cfi_startproc
+  56 0000 57       		pushl	%edi
+  57              		.cfi_def_cfa_offset 8
+  58              		.cfi_offset 7, -8
+  59 0001 56       		pushl	%esi
+  60              		.cfi_def_cfa_offset 12
+  61              		.cfi_offset 6, -12
+  62 0002 53       		pushl	%ebx
+  63              		.cfi_def_cfa_offset 16
+  64              		.cfi_offset 3, -16
+  65 0003 83EC10   		subl	$16, %esp
+  66              		.cfi_def_cfa_offset 32
+  67 0006 8B7C2424 		movl	36(%esp), %edi
+  68 000a 8B5C2420 		movl	32(%esp), %ebx
+  69 000e E8000000 		call	_chDbgCheckClassI
+  69      00
+  70 0013 89F8     		movl	%edi, %eax
+  71 0015 C1E81F   		shrl	$31, %eax
+  72 0018 84C0     		testb	%al, %al
+  73 001a 755A     		jne	L19
+  74 001c 85DB     		testl	%ebx, %ebx
+  75 001e 7456     		je	L19
+  76              	L11:
+  77 0020 8B7308   		movl	8(%ebx), %esi
+  78 0023 85F6     		testl	%esi, %esi
+  79 0025 7849     		js	L13
+  80 0027 391B     		cmpl	%ebx, (%ebx)
+  81              		.p2align 4,,2
+  82 0029 740F     		je	L15
+  83              	L14:
+  84 002b C704241E 		movl	$LC2, (%esp)
+  84      000000
+  85 0032 E8000000 		call	_chDbgPanic
+  85      00
+  86 0037 8B7308   		movl	8(%ebx), %esi
+  87              	L15:
+  88 003a 83C601   		addl	$1, %esi
+  89 003d 85F6     		testl	%esi, %esi
+  90 003f 897B08   		movl	%edi, 8(%ebx)
+  91 0042 7F22     		jg	L10
+  92              		.p2align 4,,7
+  93              	L22:
+  94 0044 8B4304   		movl	4(%ebx), %eax
+  95 0047 83C601   		addl	$1, %esi
+  96 004a 8B5004   		movl	4(%eax), %edx
+  97 004d 895304   		movl	%edx, 4(%ebx)
+  98 0050 891A     		movl	%ebx, (%edx)
+  99 0052 890424   		movl	%eax, (%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s 			page 3
+
+
+ 100 0055 E8000000 		call	_chSchReadyI
+ 100      00
+ 101 005a 83FE01   		cmpl	$1, %esi
+ 102 005d C74024FE 		movl	$-2, 36(%eax)
+ 102      FFFFFF
+ 103 0064 75DE     		jne	L22
+ 104              	L10:
+ 105 0066 83C410   		addl	$16, %esp
+ 106              		.cfi_remember_state
+ 107              		.cfi_def_cfa_offset 16
+ 108 0069 5B       		popl	%ebx
+ 109              		.cfi_restore 3
+ 110              		.cfi_def_cfa_offset 12
+ 111 006a 5E       		popl	%esi
+ 112              		.cfi_restore 6
+ 113              		.cfi_def_cfa_offset 8
+ 114 006b 5F       		popl	%edi
+ 115              		.cfi_restore 7
+ 116              		.cfi_def_cfa_offset 4
+ 117 006c C3       		ret
+ 118 006d 8D7600   		.p2align 4,,7
+ 119              	L13:
+ 120              		.cfi_restore_state
+ 121 0070 391B     		cmpl	%ebx, (%ebx)
+ 122 0072 75C6     		jne	L15
+ 123              		.p2align 4,,4
+ 124 0074 EBB5     		jmp	L14
+ 125              		.p2align 4,,7
+ 126              	L19:
+ 127 0076 C704240E 		movl	$LC1, (%esp)
+ 127      000000
+ 128 007d E8000000 		call	_chDbgPanic
+ 128      00
+ 129 0082 EB9C     		jmp	L11
+ 130              		.cfi_endproc
+ 131              	LFE9:
+ 132 0084 90909090 		.section	.text$chSemReset,"x"
+ 132      90909090 
+ 132      90909090 
+ 133              		.p2align 4,,15
+ 134              		.globl	_chSemReset
+ 135              		.def	_chSemReset;	.scl	2;	.type	32;	.endef
+ 136              	_chSemReset:
+ 137              	LFB8:
+ 138              		.cfi_startproc
+ 139 0000 83EC1C   		subl	$28, %esp
+ 140              		.cfi_def_cfa_offset 32
+ 141              	/APP
+ 142              	 # 111 "../firmware/chibios/os/kernel/src/chsem.c" 1
+ 143 0003 90       		nop
+ 144              	 # 0 "" 2
+ 145              	/NO_APP
+ 146 0004 E8000000 		call	_dbg_check_lock
+ 146      00
+ 147 0009 8B442424 		movl	36(%esp), %eax
+ 148 000d 89442404 		movl	%eax, 4(%esp)
+ 149 0011 8B442420 		movl	32(%esp), %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s 			page 4
+
+
+ 150 0015 890424   		movl	%eax, (%esp)
+ 151 0018 E8000000 		call	_chSemResetI
+ 151      00
+ 152 001d E8000000 		call	_chSchRescheduleS
+ 152      00
+ 153 0022 E8000000 		call	_dbg_check_unlock
+ 153      00
+ 154              	/APP
+ 155              	 # 114 "../firmware/chibios/os/kernel/src/chsem.c" 1
+ 156 0027 90       		nop
+ 157              	 # 0 "" 2
+ 158              	/NO_APP
+ 159 0028 83C41C   		addl	$28, %esp
+ 160              		.cfi_def_cfa_offset 4
+ 161              		.p2align 4,,2
+ 162 002b C3       		ret
+ 163              		.cfi_endproc
+ 164              	LFE8:
+ 165 002c 90909090 		.section .rdata,"dr"
+ 166              	LC3:
+ 167 0030 22636853 		.ascii "\"chSemWaitS\"()\0"
+ 167      656D5761 
+ 167      69745322 
+ 167      282900
+ 168              	LC4:
+ 169 003f 63685365 		.ascii "chSemWaitS(), #1\0"
+ 169      6D576169 
+ 169      74532829 
+ 169      2C202331 
+ 169      00
+ 170              		.section	.text$chSemWaitS,"x"
+ 171              		.p2align 4,,15
+ 172              		.globl	_chSemWaitS
+ 173              		.def	_chSemWaitS;	.scl	2;	.type	32;	.endef
+ 174              	_chSemWaitS:
+ 175              	LFB11:
+ 176              		.cfi_startproc
+ 177 0000 53       		pushl	%ebx
+ 178              		.cfi_def_cfa_offset 8
+ 179              		.cfi_offset 3, -8
+ 180 0001 83EC18   		subl	$24, %esp
+ 181              		.cfi_def_cfa_offset 32
+ 182 0004 8B5C2420 		movl	32(%esp), %ebx
+ 183 0008 E8000000 		call	_chDbgCheckClassS
+ 183      00
+ 184 000d 85DB     		testl	%ebx, %ebx
+ 185 000f 746F     		je	L37
+ 186              	L29:
+ 187 0011 8B4308   		movl	8(%ebx), %eax
+ 188 0014 85C0     		testl	%eax, %eax
+ 189 0016 7828     		js	L30
+ 190 0018 391B     		cmpl	%ebx, (%ebx)
+ 191              		.p2align 4,,2
+ 192 001a 740F     		je	L32
+ 193              	L31:
+ 194 001c C704243F 		movl	$LC4, (%esp)
+ 194      000000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s 			page 5
+
+
+ 195 0023 E8000000 		call	_chDbgPanic
+ 195      00
+ 196 0028 8B4308   		movl	8(%ebx), %eax
+ 197              	L32:
+ 198 002b 8D50FF   		leal	-1(%eax), %edx
+ 199 002e 31C0     		xorl	%eax, %eax
+ 200 0030 85D2     		testl	%edx, %edx
+ 201 0032 895308   		movl	%edx, 8(%ebx)
+ 202 0035 7819     		js	L38
+ 203              	L33:
+ 204 0037 83C418   		addl	$24, %esp
+ 205              		.cfi_remember_state
+ 206              		.cfi_def_cfa_offset 8
+ 207 003a 5B       		popl	%ebx
+ 208              		.cfi_restore 3
+ 209              		.cfi_def_cfa_offset 4
+ 210 003b C3       		ret
+ 211 003c 8D742600 		.p2align 4,,7
+ 212              	L30:
+ 213              		.cfi_restore_state
+ 214 0040 391B     		cmpl	%ebx, (%ebx)
+ 215 0042 74D8     		je	L31
+ 216 0044 8D50FF   		leal	-1(%eax), %edx
+ 217 0047 31C0     		xorl	%eax, %eax
+ 218 0049 85D2     		testl	%edx, %edx
+ 219 004b 895308   		movl	%edx, 8(%ebx)
+ 220 004e 79E7     		jns	L33
+ 221              	L38:
+ 222 0050 A1180000 		movl	_rlist+24, %eax
+ 222      00
+ 223 0055 895824   		movl	%ebx, 36(%eax)
+ 224 0058 8B5304   		movl	4(%ebx), %edx
+ 225 005b 8918     		movl	%ebx, (%eax)
+ 226 005d 895004   		movl	%edx, 4(%eax)
+ 227 0060 894304   		movl	%eax, 4(%ebx)
+ 228 0063 8902     		movl	%eax, (%edx)
+ 229 0065 C7042403 		movl	$3, (%esp)
+ 229      000000
+ 230 006c E8000000 		call	_chSchGoSleepS
+ 230      00
+ 231 0071 A1180000 		movl	_rlist+24, %eax
+ 231      00
+ 232 0076 8B4024   		movl	36(%eax), %eax
+ 233 0079 83C418   		addl	$24, %esp
+ 234              		.cfi_remember_state
+ 235              		.cfi_def_cfa_offset 8
+ 236 007c 5B       		popl	%ebx
+ 237              		.cfi_restore 3
+ 238              		.cfi_def_cfa_offset 4
+ 239 007d C3       		ret
+ 240 007e 6690     		.p2align 4,,7
+ 241              	L37:
+ 242              		.cfi_restore_state
+ 243 0080 C7042430 		movl	$LC3, (%esp)
+ 243      000000
+ 244 0087 E8000000 		call	_chDbgPanic
+ 244      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s 			page 6
+
+
+ 245 008c EB83     		jmp	L29
+ 246              		.cfi_endproc
+ 247              	LFE11:
+ 248 008e 9090     		.section	.text$chSemWait,"x"
+ 249              		.p2align 4,,15
+ 250              		.globl	_chSemWait
+ 251              		.def	_chSemWait;	.scl	2;	.type	32;	.endef
+ 252              	_chSemWait:
+ 253              	LFB10:
+ 254              		.cfi_startproc
+ 255 0000 53       		pushl	%ebx
+ 256              		.cfi_def_cfa_offset 8
+ 257              		.cfi_offset 3, -8
+ 258 0001 83EC18   		subl	$24, %esp
+ 259              		.cfi_def_cfa_offset 32
+ 260              	/APP
+ 261              	 # 167 "../firmware/chibios/os/kernel/src/chsem.c" 1
+ 262 0004 90       		nop
+ 263              	 # 0 "" 2
+ 264              	/NO_APP
+ 265 0005 E8000000 		call	_dbg_check_lock
+ 265      00
+ 266 000a 8B442420 		movl	32(%esp), %eax
+ 267 000e 890424   		movl	%eax, (%esp)
+ 268 0011 E8000000 		call	_chSemWaitS
+ 268      00
+ 269 0016 89C3     		movl	%eax, %ebx
+ 270 0018 E8000000 		call	_dbg_check_unlock
+ 270      00
+ 271              	/APP
+ 272              	 # 169 "../firmware/chibios/os/kernel/src/chsem.c" 1
+ 273 001d 90       		nop
+ 274              	 # 0 "" 2
+ 275              	/NO_APP
+ 276 001e 83C418   		addl	$24, %esp
+ 277              		.cfi_def_cfa_offset 8
+ 278 0021 89D8     		movl	%ebx, %eax
+ 279 0023 5B       		popl	%ebx
+ 280              		.cfi_restore 3
+ 281              		.cfi_def_cfa_offset 4
+ 282 0024 C3       		ret
+ 283              		.cfi_endproc
+ 284              	LFE10:
+ 285 0025 90909090 		.section .rdata,"dr"
+ 285      90909090 
+ 285      909090
+ 286              	LC5:
+ 287 0050 22636853 		.ascii "\"chSemWaitTimeoutS\"()\0"
+ 287      656D5761 
+ 287      69745469 
+ 287      6D656F75 
+ 287      74532228 
+ 288              	LC6:
+ 289 0066 63685365 		.ascii "chSemWaitTimeoutS(), #1\0"
+ 289      6D576169 
+ 289      7454696D 
+ 289      656F7574 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s 			page 7
+
+
+ 289      5328292C 
+ 290              		.section	.text$chSemWaitTimeoutS,"x"
+ 291              		.p2align 4,,15
+ 292              		.globl	_chSemWaitTimeoutS
+ 293              		.def	_chSemWaitTimeoutS;	.scl	2;	.type	32;	.endef
+ 294              	_chSemWaitTimeoutS:
+ 295              	LFB13:
+ 296              		.cfi_startproc
+ 297 0000 56       		pushl	%esi
+ 298              		.cfi_def_cfa_offset 8
+ 299              		.cfi_offset 6, -8
+ 300 0001 53       		pushl	%ebx
+ 301              		.cfi_def_cfa_offset 12
+ 302              		.cfi_offset 3, -12
+ 303 0002 83EC14   		subl	$20, %esp
+ 304              		.cfi_def_cfa_offset 32
+ 305 0005 8B5C2420 		movl	32(%esp), %ebx
+ 306 0009 8B742424 		movl	36(%esp), %esi
+ 307 000d E8000000 		call	_chDbgCheckClassS
+ 307      00
+ 308 0012 85DB     		testl	%ebx, %ebx
+ 309 0014 746C     		je	L51
+ 310              	L42:
+ 311 0016 8B5308   		movl	8(%ebx), %edx
+ 312 0019 85D2     		testl	%edx, %edx
+ 313 001b 7826     		js	L43
+ 314 001d 391B     		cmpl	%ebx, (%ebx)
+ 315 001f 90       		.p2align 4,,2
+ 316 0020 740F     		je	L45
+ 317              	L44:
+ 318 0022 C7042466 		movl	$LC6, (%esp)
+ 318      000000
+ 319 0029 E8000000 		call	_chDbgPanic
+ 319      00
+ 320 002e 8B5308   		movl	8(%ebx), %edx
+ 321              	L45:
+ 322 0031 8D4AFF   		leal	-1(%edx), %ecx
+ 323 0034 31C0     		xorl	%eax, %eax
+ 324 0036 85C9     		testl	%ecx, %ecx
+ 325 0038 894B08   		movl	%ecx, 8(%ebx)
+ 326 003b 7816     		js	L52
+ 327              	L46:
+ 328 003d 83C414   		addl	$20, %esp
+ 329              		.cfi_remember_state
+ 330              		.cfi_def_cfa_offset 12
+ 331 0040 5B       		popl	%ebx
+ 332              		.cfi_restore 3
+ 333              		.cfi_def_cfa_offset 8
+ 334 0041 5E       		popl	%esi
+ 335              		.cfi_restore 6
+ 336              		.cfi_def_cfa_offset 4
+ 337 0042 C3       		ret
+ 338              		.p2align 4,,7
+ 339              	L43:
+ 340              		.cfi_restore_state
+ 341 0043 391B     		cmpl	%ebx, (%ebx)
+ 342 0045 74DB     		je	L44
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s 			page 8
+
+
+ 343 0047 8D4AFF   		leal	-1(%edx), %ecx
+ 344 004a 31C0     		xorl	%eax, %eax
+ 345 004c 85C9     		testl	%ecx, %ecx
+ 346 004e 894B08   		movl	%ecx, 8(%ebx)
+ 347 0051 79EA     		jns	L46
+ 348              	L52:
+ 349 0053 85F6     		testl	%esi, %esi
+ 350 0055 7439     		je	L53
+ 351 0057 A1180000 		movl	_rlist+24, %eax
+ 351      00
+ 352 005c 895824   		movl	%ebx, 36(%eax)
+ 353 005f 8B5304   		movl	4(%ebx), %edx
+ 354 0062 8918     		movl	%ebx, (%eax)
+ 355 0064 895004   		movl	%edx, 4(%eax)
+ 356 0067 894304   		movl	%eax, 4(%ebx)
+ 357 006a 8902     		movl	%eax, (%edx)
+ 358 006c 89742424 		movl	%esi, 36(%esp)
+ 359 0070 C7442420 		movl	$3, 32(%esp)
+ 359      03000000 
+ 360 0078 83C414   		addl	$20, %esp
+ 361              		.cfi_remember_state
+ 362              		.cfi_def_cfa_offset 12
+ 363 007b 5B       		popl	%ebx
+ 364              		.cfi_restore 3
+ 365              		.cfi_def_cfa_offset 8
+ 366 007c 5E       		popl	%esi
+ 367              		.cfi_restore 6
+ 368              		.cfi_def_cfa_offset 4
+ 369 007d E9000000 		jmp	_chSchGoSleepTimeoutS
+ 369      00
+ 370              		.p2align 4,,7
+ 371              	L51:
+ 372              		.cfi_restore_state
+ 373 0082 C7042450 		movl	$LC5, (%esp)
+ 373      000000
+ 374 0089 E8000000 		call	_chDbgPanic
+ 374      00
+ 375 008e EB86     		jmp	L42
+ 376              		.p2align 4,,7
+ 377              	L53:
+ 378 0090 895308   		movl	%edx, 8(%ebx)
+ 379 0093 B8FFFFFF 		movl	$-1, %eax
+ 379      FF
+ 380 0098 EBA3     		jmp	L46
+ 381              		.cfi_endproc
+ 382              	LFE13:
+ 383 009a 90909090 		.section	.text$chSemWaitTimeout,"x"
+ 383      9090
+ 384              		.p2align 4,,15
+ 385              		.globl	_chSemWaitTimeout
+ 386              		.def	_chSemWaitTimeout;	.scl	2;	.type	32;	.endef
+ 387              	_chSemWaitTimeout:
+ 388              	LFB12:
+ 389              		.cfi_startproc
+ 390 0000 53       		pushl	%ebx
+ 391              		.cfi_def_cfa_offset 8
+ 392              		.cfi_offset 3, -8
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s 			page 9
+
+
+ 393 0001 83EC18   		subl	$24, %esp
+ 394              		.cfi_def_cfa_offset 32
+ 395              	/APP
+ 396              	 # 225 "../firmware/chibios/os/kernel/src/chsem.c" 1
+ 397 0004 90       		nop
+ 398              	 # 0 "" 2
+ 399              	/NO_APP
+ 400 0005 E8000000 		call	_dbg_check_lock
+ 400      00
+ 401 000a 8B442424 		movl	36(%esp), %eax
+ 402 000e 89442404 		movl	%eax, 4(%esp)
+ 403 0012 8B442420 		movl	32(%esp), %eax
+ 404 0016 890424   		movl	%eax, (%esp)
+ 405 0019 E8000000 		call	_chSemWaitTimeoutS
+ 405      00
+ 406 001e 89C3     		movl	%eax, %ebx
+ 407 0020 E8000000 		call	_dbg_check_unlock
+ 407      00
+ 408              	/APP
+ 409              	 # 227 "../firmware/chibios/os/kernel/src/chsem.c" 1
+ 410 0025 90       		nop
+ 411              	 # 0 "" 2
+ 412              	/NO_APP
+ 413 0026 83C418   		addl	$24, %esp
+ 414              		.cfi_def_cfa_offset 8
+ 415 0029 89D8     		movl	%ebx, %eax
+ 416 002b 5B       		popl	%ebx
+ 417              		.cfi_restore 3
+ 418              		.cfi_def_cfa_offset 4
+ 419 002c C3       		ret
+ 420              		.cfi_endproc
+ 421              	LFE12:
+ 422 002d 909090   		.section .rdata,"dr"
+ 423              	LC7:
+ 424 007e 22636853 		.ascii "\"chSemSignal\"()\0"
+ 424      656D5369 
+ 424      676E616C 
+ 424      22282900 
+ 425              	LC8:
+ 426 008e 63685365 		.ascii "chSemSignal(), #1\0"
+ 426      6D536967 
+ 426      6E616C28 
+ 426      292C2023 
+ 426      3100
+ 427              		.section	.text$chSemSignal,"x"
+ 428              		.p2align 4,,15
+ 429              		.globl	_chSemSignal
+ 430              		.def	_chSemSignal;	.scl	2;	.type	32;	.endef
+ 431              	_chSemSignal:
+ 432              	LFB14:
+ 433              		.cfi_startproc
+ 434 0000 53       		pushl	%ebx
+ 435              		.cfi_def_cfa_offset 8
+ 436              		.cfi_offset 3, -8
+ 437 0001 83EC18   		subl	$24, %esp
+ 438              		.cfi_def_cfa_offset 32
+ 439 0004 8B5C2420 		movl	32(%esp), %ebx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s 			page 10
+
+
+ 440 0008 85DB     		testl	%ebx, %ebx
+ 441 000a 7456     		je	L63
+ 442              	L57:
+ 443 000c 8B4308   		movl	8(%ebx), %eax
+ 444 000f 85C0     		testl	%eax, %eax
+ 445 0011 782E     		js	L58
+ 446 0013 391B     		cmpl	%ebx, (%ebx)
+ 447 0015 740C     		je	L60
+ 448              	L59:
+ 449 0017 C704248E 		movl	$LC8, (%esp)
+ 449      000000
+ 450 001e E8000000 		call	_chDbgPanic
+ 450      00
+ 451              	L60:
+ 452              	/APP
+ 453              	 # 286 "../firmware/chibios/os/kernel/src/chsem.c" 1
+ 454 0023 90       		nop
+ 455              	 # 0 "" 2
+ 456              	/NO_APP
+ 457 0024 E8000000 		call	_dbg_check_lock
+ 457      00
+ 458 0029 8B4308   		movl	8(%ebx), %eax
+ 459 002c 83C001   		addl	$1, %eax
+ 460 002f 85C0     		testl	%eax, %eax
+ 461 0031 894308   		movl	%eax, 8(%ebx)
+ 462 0034 7E11     		jle	L64
+ 463              	L61:
+ 464 0036 E8000000 		call	_dbg_check_unlock
+ 464      00
+ 465              	/APP
+ 466              	 # 289 "../firmware/chibios/os/kernel/src/chsem.c" 1
+ 467 003b 90       		nop
+ 468              	 # 0 "" 2
+ 469              	/NO_APP
+ 470 003c 83C418   		addl	$24, %esp
+ 471              		.cfi_remember_state
+ 472              		.cfi_def_cfa_offset 8
+ 473 003f 5B       		popl	%ebx
+ 474              		.cfi_restore 3
+ 475              		.cfi_def_cfa_offset 4
+ 476 0040 C3       		ret
+ 477              		.p2align 4,,7
+ 478              	L58:
+ 479              		.cfi_restore_state
+ 480 0041 391B     		cmpl	%ebx, (%ebx)
+ 481 0043 75DE     		jne	L60
+ 482              		.p2align 4,,6
+ 483 0045 EBD0     		jmp	L59
+ 484              		.p2align 4,,7
+ 485              	L64:
+ 486 0047 8B03     		movl	(%ebx), %eax
+ 487 0049 8B10     		movl	(%eax), %edx
+ 488 004b 8913     		movl	%edx, (%ebx)
+ 489 004d 895A04   		movl	%ebx, 4(%edx)
+ 490 0050 C7442404 		movl	$0, 4(%esp)
+ 490      00000000 
+ 491 0058 890424   		movl	%eax, (%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s 			page 11
+
+
+ 492 005b E8000000 		call	_chSchWakeupS
+ 492      00
+ 493 0060 EBD4     		jmp	L61
+ 494              		.p2align 4,,7
+ 495              	L63:
+ 496 0062 C704247E 		movl	$LC7, (%esp)
+ 496      000000
+ 497 0069 E8000000 		call	_chDbgPanic
+ 497      00
+ 498 006e EB9C     		jmp	L57
+ 499              		.cfi_endproc
+ 500              	LFE14:
+ 501              		.section .rdata,"dr"
+ 502              	LC9:
+ 503 00a0 22636853 		.ascii "\"chSemSignalI\"()\0"
+ 503      656D5369 
+ 503      676E616C 
+ 503      49222829 
+ 503      00
+ 504              	LC10:
+ 505 00b1 63685365 		.ascii "chSemSignalI(), #1\0"
+ 505      6D536967 
+ 505      6E616C49 
+ 505      28292C20 
+ 505      233100
+ 506              		.section	.text$chSemSignalI,"x"
+ 507              		.p2align 4,,15
+ 508              		.globl	_chSemSignalI
+ 509              		.def	_chSemSignalI;	.scl	2;	.type	32;	.endef
+ 510              	_chSemSignalI:
+ 511              	LFB15:
+ 512              		.cfi_startproc
+ 513 0000 53       		pushl	%ebx
+ 514              		.cfi_def_cfa_offset 8
+ 515              		.cfi_offset 3, -8
+ 516 0001 83EC18   		subl	$24, %esp
+ 517              		.cfi_def_cfa_offset 32
+ 518 0004 8B5C2420 		movl	32(%esp), %ebx
+ 519 0008 E8000000 		call	_chDbgCheckClassI
+ 519      00
+ 520 000d 85DB     		testl	%ebx, %ebx
+ 521 000f 745F     		je	L73
+ 522              	L66:
+ 523 0011 8B4308   		movl	8(%ebx), %eax
+ 524 0014 85C0     		testl	%eax, %eax
+ 525 0016 7828     		js	L67
+ 526 0018 391B     		cmpl	%ebx, (%ebx)
+ 527              		.p2align 4,,2
+ 528 001a 740F     		je	L69
+ 529              	L68:
+ 530 001c C70424B1 		movl	$LC10, (%esp)
+ 530      000000
+ 531 0023 E8000000 		call	_chDbgPanic
+ 531      00
+ 532 0028 8B4308   		movl	8(%ebx), %eax
+ 533              	L69:
+ 534 002b 83C001   		addl	$1, %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s 			page 12
+
+
+ 535 002e 85C0     		testl	%eax, %eax
+ 536 0030 894308   		movl	%eax, 8(%ebx)
+ 537 0033 7E19     		jle	L74
+ 538              	L65:
+ 539 0035 83C418   		addl	$24, %esp
+ 540              		.cfi_remember_state
+ 541              		.cfi_def_cfa_offset 8
+ 542 0038 5B       		popl	%ebx
+ 543              		.cfi_restore 3
+ 544              		.cfi_def_cfa_offset 4
+ 545 0039 C3       		ret
+ 546 003a 8DB60000 		.p2align 4,,7
+ 546      0000
+ 547              	L67:
+ 548              		.cfi_restore_state
+ 549 0040 391B     		cmpl	%ebx, (%ebx)
+ 550 0042 74D8     		je	L68
+ 551 0044 83C001   		addl	$1, %eax
+ 552 0047 85C0     		testl	%eax, %eax
+ 553 0049 894308   		movl	%eax, 8(%ebx)
+ 554 004c 7FE7     		jg	L65
+ 555              	L74:
+ 556 004e 8B03     		movl	(%ebx), %eax
+ 557 0050 8B10     		movl	(%eax), %edx
+ 558 0052 8913     		movl	%edx, (%ebx)
+ 559 0054 895A04   		movl	%ebx, 4(%edx)
+ 560 0057 C7402400 		movl	$0, 36(%eax)
+ 560      000000
+ 561 005e 89442420 		movl	%eax, 32(%esp)
+ 562 0062 83C418   		addl	$24, %esp
+ 563              		.cfi_remember_state
+ 564              		.cfi_def_cfa_offset 8
+ 565 0065 5B       		popl	%ebx
+ 566              		.cfi_restore 3
+ 567              		.cfi_def_cfa_offset 4
+ 568 0066 E9000000 		jmp	_chSchReadyI
+ 568      00
+ 569 006b 908D7426 		.p2align 4,,7
+ 569      00
+ 570              	L73:
+ 571              		.cfi_restore_state
+ 572 0070 C70424A0 		movl	$LC9, (%esp)
+ 572      000000
+ 573 0077 E8000000 		call	_chDbgPanic
+ 573      00
+ 574 007c EB93     		jmp	L66
+ 575              		.cfi_endproc
+ 576              	LFE15:
+ 577 007e 9090     		.section .rdata,"dr"
+ 578              	LC11:
+ 579 00c4 22636853 		.ascii "\"chSemAddCounterI\"()\0"
+ 579      656D4164 
+ 579      64436F75 
+ 579      6E746572 
+ 579      49222829 
+ 580              	LC12:
+ 581 00d9 63685365 		.ascii "chSemAddCounterI(), #1\0"
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s 			page 13
+
+
+ 581      6D416464 
+ 581      436F756E 
+ 581      74657249 
+ 581      28292C20 
+ 582              		.section	.text$chSemAddCounterI,"x"
+ 583              		.p2align 4,,15
+ 584              		.globl	_chSemAddCounterI
+ 585              		.def	_chSemAddCounterI;	.scl	2;	.type	32;	.endef
+ 586              	_chSemAddCounterI:
+ 587              	LFB16:
+ 588              		.cfi_startproc
+ 589 0000 56       		pushl	%esi
+ 590              		.cfi_def_cfa_offset 8
+ 591              		.cfi_offset 6, -8
+ 592 0001 53       		pushl	%ebx
+ 593              		.cfi_def_cfa_offset 12
+ 594              		.cfi_offset 3, -12
+ 595 0002 83EC14   		subl	$20, %esp
+ 596              		.cfi_def_cfa_offset 32
+ 597 0005 8B5C2424 		movl	36(%esp), %ebx
+ 598 0009 8B742420 		movl	32(%esp), %esi
+ 599 000d E8000000 		call	_chDbgCheckClassI
+ 599      00
+ 600 0012 85DB     		testl	%ebx, %ebx
+ 601 0014 7E6A     		jle	L85
+ 602 0016 85F6     		testl	%esi, %esi
+ 603 0018 7466     		je	L85
+ 604              	L76:
+ 605 001a 8B5608   		movl	8(%esi), %edx
+ 606 001d 85D2     		testl	%edx, %edx
+ 607 001f 90       		.p2align 4,,2
+ 608 0020 7854     		js	L78
+ 609 0022 3936     		cmpl	%esi, (%esi)
+ 610              		.p2align 4,,2
+ 611 0024 740C     		je	L80
+ 612              	L79:
+ 613 0026 C70424D9 		movl	$LC12, (%esp)
+ 613      000000
+ 614 002d E8000000 		call	_chDbgPanic
+ 614      00
+ 615              	L80:
+ 616 0032 85DB     		testl	%ebx, %ebx
+ 617 0034 7F0C     		jg	L88
+ 618 0036 EB38     		jmp	L75
+ 619              		.p2align 4,,7
+ 620              	L82:
+ 621 0038 83EB01   		subl	$1, %ebx
+ 622 003b 908D7426 		.p2align 4,,6
+ 622      00
+ 623 0040 742E     		je	L75
+ 624              	L88:
+ 625 0042 8B4608   		movl	8(%esi), %eax
+ 626 0045 83C001   		addl	$1, %eax
+ 627 0048 85C0     		testl	%eax, %eax
+ 628 004a 894608   		movl	%eax, 8(%esi)
+ 629 004d 7FE9     		jg	L82
+ 630 004f 8B06     		movl	(%esi), %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s 			page 14
+
+
+ 631 0051 8B10     		movl	(%eax), %edx
+ 632 0053 8916     		movl	%edx, (%esi)
+ 633 0055 897204   		movl	%esi, 4(%edx)
+ 634 0058 890424   		movl	%eax, (%esp)
+ 635 005b E8000000 		call	_chSchReadyI
+ 635      00
+ 636 0060 83EB01   		subl	$1, %ebx
+ 637 0063 C7402400 		movl	$0, 36(%eax)
+ 637      000000
+ 638 006a 75D6     		jne	L88
+ 639 006c 8D742600 		.p2align 4,,7
+ 640              	L75:
+ 641 0070 83C414   		addl	$20, %esp
+ 642              		.cfi_remember_state
+ 643              		.cfi_def_cfa_offset 12
+ 644 0073 5B       		popl	%ebx
+ 645              		.cfi_restore 3
+ 646              		.cfi_def_cfa_offset 8
+ 647 0074 5E       		popl	%esi
+ 648              		.cfi_restore 6
+ 649              		.cfi_def_cfa_offset 4
+ 650 0075 C3       		ret
+ 651              		.p2align 4,,7
+ 652              	L78:
+ 653              		.cfi_restore_state
+ 654 0076 3936     		cmpl	%esi, (%esi)
+ 655 0078 75B8     		jne	L80
+ 656              		.p2align 4,,5
+ 657 007a EBAA     		jmp	L79
+ 658 007c 8D742600 		.p2align 4,,7
+ 659              	L85:
+ 660 0080 C70424C4 		movl	$LC11, (%esp)
+ 660      000000
+ 661 0087 E8000000 		call	_chDbgPanic
+ 661      00
+ 662 008c EB8C     		jmp	L76
+ 663              		.cfi_endproc
+ 664              	LFE16:
+ 665 008e 9090     		.section .rdata,"dr"
+ 666              	LC13:
+ 667 00f0 22636853 		.ascii "\"chSemSignalWait\"()\0"
+ 667      656D5369 
+ 667      676E616C 
+ 667      57616974 
+ 667      22282900 
+ 668              	LC14:
+ 669 0104 63685365 		.ascii "chSemSignalWait(), #1\0"
+ 669      6D536967 
+ 669      6E616C57 
+ 669      61697428 
+ 669      292C2023 
+ 670              	LC15:
+ 671 011a 63685365 		.ascii "chSemSignalWait(), #2\0"
+ 671      6D536967 
+ 671      6E616C57 
+ 671      61697428 
+ 671      292C2023 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s 			page 15
+
+
+ 672              		.section	.text$chSemSignalWait,"x"
+ 673              		.p2align 4,,15
+ 674              		.globl	_chSemSignalWait
+ 675              		.def	_chSemSignalWait;	.scl	2;	.type	32;	.endef
+ 676              	_chSemSignalWait:
+ 677              	LFB17:
+ 678              		.cfi_startproc
+ 679 0000 56       		pushl	%esi
+ 680              		.cfi_def_cfa_offset 8
+ 681              		.cfi_offset 6, -8
+ 682 0001 53       		pushl	%ebx
+ 683              		.cfi_def_cfa_offset 12
+ 684              		.cfi_offset 3, -12
+ 685 0002 83EC14   		subl	$20, %esp
+ 686              		.cfi_def_cfa_offset 32
+ 687 0005 8B5C2424 		movl	36(%esp), %ebx
+ 688 0009 8B742420 		movl	32(%esp), %esi
+ 689 000d 85DB     		testl	%ebx, %ebx
+ 690 000f 7473     		je	L104
+ 691 0011 85F6     		testl	%esi, %esi
+ 692 0013 746F     		je	L104
+ 693              	L93:
+ 694 0015 8B4608   		movl	8(%esi), %eax
+ 695 0018 85C0     		testl	%eax, %eax
+ 696 001a 7857     		js	L95
+ 697 001c 3936     		cmpl	%esi, (%esi)
+ 698 001e 6690     		.p2align 4,,2
+ 699 0020 740C     		je	L97
+ 700              	L96:
+ 701 0022 C7042404 		movl	$LC14, (%esp)
+ 701      010000
+ 702 0029 E8000000 		call	_chDbgPanic
+ 702      00
+ 703              	L97:
+ 704 002e 8B4B08   		movl	8(%ebx), %ecx
+ 705 0031 85C9     		testl	%ecx, %ecx
+ 706 0033 7849     		js	L98
+ 707              	L112:
+ 708 0035 391B     		cmpl	%ebx, (%ebx)
+ 709 0037 740C     		je	L100
+ 710              	L99:
+ 711 0039 C704241A 		movl	$LC15, (%esp)
+ 711      010000
+ 712 0040 E8000000 		call	_chDbgPanic
+ 712      00
+ 713              	L100:
+ 714              	/APP
+ 715              	 # 379 "../firmware/chibios/os/kernel/src/chsem.c" 1
+ 716 0045 90       		nop
+ 717              	 # 0 "" 2
+ 718              	/NO_APP
+ 719 0046 E8000000 		call	_dbg_check_lock
+ 719      00
+ 720 004b 8B4608   		movl	8(%esi), %eax
+ 721 004e 83C001   		addl	$1, %eax
+ 722 0051 85C0     		testl	%eax, %eax
+ 723 0053 894608   		movl	%eax, 8(%esi)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s 			page 16
+
+
+ 724 0056 7E68     		jle	L110
+ 725              	L101:
+ 726 0058 836B0801 		subl	$1, 8(%ebx)
+ 727 005c 7834     		js	L111
+ 728 005e E8000000 		call	_chSchRescheduleS
+ 728      00
+ 729 0063 31DB     		xorl	%ebx, %ebx
+ 730              	L103:
+ 731 0065 E8000000 		call	_dbg_check_unlock
+ 731      00
+ 732              	/APP
+ 733              	 # 393 "../firmware/chibios/os/kernel/src/chsem.c" 1
+ 734 006a 90       		nop
+ 735              	 # 0 "" 2
+ 736              	/NO_APP
+ 737 006b 83C414   		addl	$20, %esp
+ 738              		.cfi_remember_state
+ 739              		.cfi_def_cfa_offset 12
+ 740 006e 89D8     		movl	%ebx, %eax
+ 741 0070 5B       		popl	%ebx
+ 742              		.cfi_restore 3
+ 743              		.cfi_def_cfa_offset 8
+ 744 0071 5E       		popl	%esi
+ 745              		.cfi_restore 6
+ 746              		.cfi_def_cfa_offset 4
+ 747 0072 C3       		ret
+ 748              		.p2align 4,,7
+ 749              	L95:
+ 750              		.cfi_restore_state
+ 751 0073 3936     		cmpl	%esi, (%esi)
+ 752 0075 74AB     		je	L96
+ 753 0077 8B4B08   		movl	8(%ebx), %ecx
+ 754 007a 85C9     		testl	%ecx, %ecx
+ 755 007c 79B7     		jns	L112
+ 756              	L98:
+ 757 007e 391B     		cmpl	%ebx, (%ebx)
+ 758              		.p2align 4,,2
+ 759 0080 75C3     		jne	L100
+ 760              		.p2align 4,,4
+ 761 0082 EBB5     		jmp	L99
+ 762              		.p2align 4,,7
+ 763              	L104:
+ 764 0084 C70424F0 		movl	$LC13, (%esp)
+ 764      000000
+ 765 008b E8000000 		call	_chDbgPanic
+ 765      00
+ 766 0090 EB83     		jmp	L93
+ 767              		.p2align 4,,7
+ 768              	L111:
+ 769 0092 8B351800 		movl	_rlist+24, %esi
+ 769      0000
+ 770 0098 8B4304   		movl	4(%ebx), %eax
+ 771 009b 891E     		movl	%ebx, (%esi)
+ 772 009d 894604   		movl	%eax, 4(%esi)
+ 773 00a0 897304   		movl	%esi, 4(%ebx)
+ 774 00a3 895E24   		movl	%ebx, 36(%esi)
+ 775 00a6 8930     		movl	%esi, (%eax)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s 			page 17
+
+
+ 776 00a8 C7042403 		movl	$3, (%esp)
+ 776      000000
+ 777 00af E8000000 		call	_chSchGoSleepS
+ 777      00
+ 778 00b4 8B5E24   		movl	36(%esi), %ebx
+ 779 00b7 EBAC     		jmp	L103
+ 780 00b9 8DB42600 		.p2align 4,,7
+ 780      000000
+ 781              	L110:
+ 782 00c0 8B06     		movl	(%esi), %eax
+ 783 00c2 8B10     		movl	(%eax), %edx
+ 784 00c4 8916     		movl	%edx, (%esi)
+ 785 00c6 897204   		movl	%esi, 4(%edx)
+ 786 00c9 890424   		movl	%eax, (%esp)
+ 787 00cc E8000000 		call	_chSchReadyI
+ 787      00
+ 788 00d1 C7402400 		movl	$0, 36(%eax)
+ 788      000000
+ 789 00d8 E97BFFFF 		jmp	L101
+ 789      FF
+ 790              		.cfi_endproc
+ 791              	LFE17:
+ 792              		.def	_chDbgPanic;	.scl	2;	.type	32;	.endef
+ 793              		.def	_chDbgCheckClassI;	.scl	2;	.type	32;	.endef
+ 794              		.def	_chSchReadyI;	.scl	2;	.type	32;	.endef
+ 795              		.def	_dbg_check_lock;	.scl	2;	.type	32;	.endef
+ 796              		.def	_chSchRescheduleS;	.scl	2;	.type	32;	.endef
+ 797              		.def	_dbg_check_unlock;	.scl	2;	.type	32;	.endef
+ 798              		.def	_chDbgCheckClassS;	.scl	2;	.type	32;	.endef
+ 799              		.def	_chSchGoSleepS;	.scl	2;	.type	32;	.endef
+ 800              		.def	_chSchGoSleepTimeoutS;	.scl	2;	.type	32;	.endef
+ 801 00dd 909090   		.def	_chSchWakeupS;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s 			page 18
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 chsem.c
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s:9      .text$chSemInit:00000000 _chSemInit
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s:53     .text$chSemResetI:00000000 _chSemResetI
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s:136    .text$chSemReset:00000000 _chSemReset
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s:174    .text$chSemWaitS:00000000 _chSemWaitS
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s:252    .text$chSemWait:00000000 _chSemWait
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s:294    .text$chSemWaitTimeoutS:00000000 _chSemWaitTimeoutS
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s:387    .text$chSemWaitTimeout:00000000 _chSemWaitTimeout
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s:431    .text$chSemSignal:00000000 _chSemSignal
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s:510    .text$chSemSignalI:00000000 _chSemSignalI
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s:586    .text$chSemAddCounterI:00000000 _chSemAddCounterI
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccvECuDh.s:676    .text$chSemSignalWait:00000000 _chSemSignalWait
+
+UNDEFINED SYMBOLS
+_rlist
+_chDbgPanic
+_chDbgCheckClassI
+_chSchReadyI
+_dbg_check_lock
+_chSchRescheduleS
+_dbg_check_unlock
+_chDbgCheckClassS
+_chSchGoSleepS
+_chSchGoSleepTimeoutS
+_chSchWakeupS

@@ -1,0 +1,3073 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 1
+
+
+   1              		.file	"trigger_structure.cpp"
+   2              		.section	.text$_ZN20trigger_shape_helperC2Ev,"x"
+   3              		.align 2
+   4              		.p2align 4,,15
+   5              		.globl	__ZN20trigger_shape_helperC2Ev
+   6              		.def	__ZN20trigger_shape_helperC2Ev;	.scl	2;	.type	32;	.endef
+   7              	__ZN20trigger_shape_helperC2Ev:
+   8              	LFB86:
+   9              		.cfi_startproc
+  10 0000 57       		pushl	%edi
+  11              		.cfi_def_cfa_offset 8
+  12              		.cfi_offset 7, -8
+  13 0001 56       		pushl	%esi
+  14              		.cfi_def_cfa_offset 12
+  15              		.cfi_offset 6, -12
+  16 0002 89CE     		movl	%ecx, %esi
+  17 0004 53       		pushl	%ebx
+  18              		.cfi_def_cfa_offset 16
+  19              		.cfi_offset 3, -16
+  20 0005 83EC10   		subl	$16, %esp
+  21              		.cfi_def_cfa_offset 32
+  22 0008 E8000000 		call	__ZN13single_wave_sC1Ev
+  22      00
+  23 000d 8D4E04   		leal	4(%esi), %ecx
+  24 0010 E8000000 		call	__ZN13single_wave_sC1Ev
+  24      00
+  25 0015 8D7E0C   		leal	12(%esi), %edi
+  26 0018 8D4E08   		leal	8(%esi), %ecx
+  27 001b E8000000 		call	__ZN13single_wave_sC1Ev
+  27      00
+  28 0020 F7C70100 		testl	$1, %edi
+  28      0000
+  29 0026 BAF40200 		movl	$756, %edx
+  29      00
+  30 002b 7557     		jne	L22
+  31 002d F7C70200 		testl	$2, %edi
+  31      0000
+  32 0033 7560     		jne	L23
+  33              	L3:
+  34 0035 89D1     		movl	%edx, %ecx
+  35 0037 31C0     		xorl	%eax, %eax
+  36 0039 C1E902   		shrl	$2, %ecx
+  37 003c F6C202   		testb	$2, %dl
+  38 003f F3AB     		rep stosl
+  39 0041 7408     		je	L4
+  40 0043 66C70700 		movw	$0, (%edi)
+  40      00
+  41 0048 83C702   		addl	$2, %edi
+  42              	L4:
+  43 004b 83E201   		andl	$1, %edx
+  44 004e 7403     		je	L5
+  45 0050 C60700   		movb	$0, (%edi)
+  46              	L5:
+  47 0053 31DB     		xorl	%ebx, %ebx
+  48              	L6:
+  49 0055 89D8     		movl	%ebx, %eax
+  50 0057 8D149D00 		leal	0(,%ebx,4), %edx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 2
+
+
+  50      000000
+  51 005e 83C301   		addl	$1, %ebx
+  52 0061 C1E008   		sall	$8, %eax
+  53 0064 29D0     		subl	%edx, %eax
+  54 0066 8D44060C 		leal	12(%esi,%eax), %eax
+  55 006a 8D0C16   		leal	(%esi,%edx), %ecx
+  56 006d 890424   		movl	%eax, (%esp)
+  57 0070 E8000000 		call	__ZN13single_wave_s4initEPa
+  57      00
+  58              		.cfi_def_cfa_offset 28
+  59 0075 83EC04   		subl	$4, %esp
+  60              		.cfi_def_cfa_offset 32
+  61 0078 83FB03   		cmpl	$3, %ebx
+  62 007b 75D8     		jne	L6
+  63 007d 83C410   		addl	$16, %esp
+  64              		.cfi_remember_state
+  65              		.cfi_def_cfa_offset 16
+  66 0080 5B       		popl	%ebx
+  67              		.cfi_restore 3
+  68              		.cfi_def_cfa_offset 12
+  69 0081 5E       		popl	%esi
+  70              		.cfi_restore 6
+  71              		.cfi_def_cfa_offset 8
+  72 0082 5F       		popl	%edi
+  73              		.cfi_restore 7
+  74              		.cfi_def_cfa_offset 4
+  75 0083 C3       		ret
+  76              		.p2align 4,,7
+  77              	L22:
+  78              		.cfi_restore_state
+  79 0084 8D7E0D   		leal	13(%esi), %edi
+  80 0087 B2F3     		movb	$-13, %dl
+  81 0089 F7C70200 		testl	$2, %edi
+  81      0000
+  82 008f C6460C00 		movb	$0, 12(%esi)
+  83 0093 74A0     		je	L3
+  84              		.p2align 4,,7
+  85              	L23:
+  86 0095 66C70700 		movw	$0, (%edi)
+  86      00
+  87 009a 83EA02   		subl	$2, %edx
+  88 009d 83C702   		addl	$2, %edi
+  89 00a0 EB93     		jmp	L3
+  90              		.cfi_endproc
+  91              	LFE86:
+  92              		.globl	__ZN20trigger_shape_helperC1Ev
+  93              		.def	__ZN20trigger_shape_helperC1Ev;	.scl	2;	.type	32;	.endef
+  94              		.set	__ZN20trigger_shape_helperC1Ev,__ZN20trigger_shape_helperC2Ev
+  95 00a2 90909090 		.section	.text$_ZNK12TriggerShape7getSizeEv,"x"
+  95      90909090 
+  95      90909090 
+  95      9090
+  96              		.align 2
+  97              		.p2align 4,,15
+  98              		.globl	__ZNK12TriggerShape7getSizeEv
+  99              		.def	__ZNK12TriggerShape7getSizeEv;	.scl	2;	.type	32;	.endef
+ 100              	__ZNK12TriggerShape7getSizeEv:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 3
+
+
+ 101              	LFB91:
+ 102              		.cfi_startproc
+ 103 0000 8B816C14 		movl	5228(%ecx), %eax
+ 103      0000
+ 104 0006 C3       		ret
+ 105              		.cfi_endproc
+ 106              	LFE91:
+ 107 0007 90909090 		.section	.text$_ZN12TriggerShape30getTriggerShapeSynchPointIndexEv,"x"
+ 107      90909090 
+ 107      90
+ 108              		.align 2
+ 109              		.p2align 4,,15
+ 110              		.globl	__ZN12TriggerShape30getTriggerShapeSynchPointIndexEv
+ 111              		.def	__ZN12TriggerShape30getTriggerShapeSynchPointIndexEv;	.scl	2;	.type	32;	.endef
+ 112              	__ZN12TriggerShape30getTriggerShapeSynchPointIndexEv:
+ 113              	LFB92:
+ 114              		.cfi_startproc
+ 115 0000 8B817017 		movl	6000(%ecx), %eax
+ 115      0000
+ 116 0006 C3       		ret
+ 117              		.cfi_endproc
+ 118              	LFE92:
+ 119 0007 90909090 		.section	.text$_ZN12TriggerShape5clearEv,"x"
+ 119      90909090 
+ 119      90
+ 120              		.align 2
+ 121              		.p2align 4,,15
+ 122              		.globl	__ZN12TriggerShape5clearEv
+ 123              		.def	__ZN12TriggerShape5clearEv;	.scl	2;	.type	32;	.endef
+ 124              	__ZN12TriggerShape5clearEv:
+ 125              	LFB94:
+ 126              		.cfi_startproc
+ 127 0000 C781600B 		movl	$0x00000000, 2912(%ecx)
+ 127      00000000 
+ 127      0000
+ 128 000a C60101   		movb	$1, (%ecx)
+ 129 000d C781580B 		movl	$0x3fc00000, 2904(%ecx)
+ 129      00000000 
+ 129      C03F
+ 130 0017 C7815C0B 		movl	$0x40200000, 2908(%ecx)
+ 130      00000000 
+ 130      2040
+ 131 0021 C681640B 		movb	$1, 2916(%ecx)
+ 131      000001
+ 132 0028 C6816814 		movb	$0, 5224(%ecx)
+ 132      000000
+ 133 002f C681650B 		movb	$0, 2917(%ecx)
+ 133      000000
+ 134 0036 C3       		ret
+ 135              		.cfi_endproc
+ 136              	LFE94:
+ 137 0037 90909090 		.section	.text$_ZN12TriggerShape5resetE16operation_mode_eb,"x"
+ 137      90909090 
+ 137      90
+ 138              		.align 2
+ 139              		.p2align 4,,15
+ 140              		.globl	__ZN12TriggerShape5resetE16operation_mode_eb
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 4
+
+
+ 141              		.def	__ZN12TriggerShape5resetE16operation_mode_eb;	.scl	2;	.type	32;	.endef
+ 142              	__ZN12TriggerShape5resetE16operation_mode_eb:
+ 143              	LFB95:
+ 144              		.cfi_startproc
+ 145 0000 57       		pushl	%edi
+ 146              		.cfi_def_cfa_offset 8
+ 147              		.cfi_offset 7, -8
+ 148 0001 BAF00300 		movl	$1008, %edx
+ 148      00
+ 149 0006 53       		pushl	%ebx
+ 150              		.cfi_def_cfa_offset 12
+ 151              		.cfi_offset 3, -12
+ 152 0007 89CB     		movl	%ecx, %ebx
+ 153 0009 83EC04   		subl	$4, %esp
+ 154              		.cfi_def_cfa_offset 16
+ 155 000c 8B442410 		movl	16(%esp), %eax
+ 156 0010 8DB97417 		leal	6004(%ecx), %edi
+ 156      0000
+ 157 0016 F7C70100 		testl	$1, %edi
+ 157      0000
+ 158 001c C7816C14 		movl	$0, 5228(%ecx)
+ 158      00000000 
+ 158      0000
+ 159 0026 8981681B 		movl	%eax, 7016(%ecx)
+ 159      0000
+ 160 002c 8B442414 		movl	20(%esp), %eax
+ 161 0030 C7817017 		movl	$0, 6000(%ecx)
+ 161      00000000 
+ 161      0000
+ 162 003a C781800B 		movl	$0, 2944(%ecx)
+ 162      00000000 
+ 162      0000
+ 163 0044 C781840B 		movl	$0, 2948(%ecx)
+ 163      00000000 
+ 163      0000
+ 164 004e 884101   		movb	%al, 1(%ecx)
+ 165 0051 C781880B 		movl	$0, 2952(%ecx)
+ 165      00000000 
+ 165      0000
+ 166 005b 7563     		jne	L45
+ 167 005d F7C70200 		testl	$2, %edi
+ 167      0000
+ 168 0063 7572     		jne	L46
+ 169              	L29:
+ 170 0065 89D1     		movl	%edx, %ecx
+ 171 0067 31C0     		xorl	%eax, %eax
+ 172 0069 C1E902   		shrl	$2, %ecx
+ 173 006c F6C202   		testb	$2, %dl
+ 174 006f F3AB     		rep stosl
+ 175 0071 7408     		je	L30
+ 176 0073 66C70700 		movw	$0, (%edi)
+ 176      00
+ 177 0078 83C702   		addl	$2, %edi
+ 178              	L30:
+ 179 007b 83E201   		andl	$1, %edx
+ 180 007e 7403     		je	L31
+ 181 0080 C60700   		movb	$0, (%edi)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 5
+
+
+ 182              	L31:
+ 183 0083 C783680B 		movl	$0, 2920(%ebx)
+ 183      00000000 
+ 183      0000
+ 184 008d 8D8B740B 		leal	2932(%ebx), %ecx
+ 184      0000
+ 185 0093 C7836C0B 		movl	$0, 2924(%ebx)
+ 185      00000000 
+ 185      0000
+ 186 009d C783700B 		movl	$0, 2928(%ebx)
+ 186      00000000 
+ 186      0000
+ 187 00a7 E8000000 		call	__ZN12multi_wave_s5resetEv
+ 187      00
+ 188 00ac C783641B 		movl	$0x00000000, 7012(%ebx)
+ 188      00000000 
+ 188      0000
+ 189 00b6 83C404   		addl	$4, %esp
+ 190              		.cfi_remember_state
+ 191              		.cfi_def_cfa_offset 12
+ 192 00b9 5B       		popl	%ebx
+ 193              		.cfi_restore 3
+ 194              		.cfi_def_cfa_offset 8
+ 195 00ba 5F       		popl	%edi
+ 196              		.cfi_restore 7
+ 197              		.cfi_def_cfa_offset 4
+ 198 00bb C20800   		ret	$8
+ 199 00be 6690     		.p2align 4,,7
+ 200              	L45:
+ 201              		.cfi_restore_state
+ 202 00c0 8DB97517 		leal	6005(%ecx), %edi
+ 202      0000
+ 203 00c6 B2EF     		movb	$-17, %dl
+ 204 00c8 F7C70200 		testl	$2, %edi
+ 204      0000
+ 205 00ce C6817417 		movb	$0, 6004(%ecx)
+ 205      000000
+ 206 00d5 748E     		je	L29
+ 207              		.p2align 4,,7
+ 208              	L46:
+ 209 00d7 66C70700 		movw	$0, (%edi)
+ 209      00
+ 210 00dc 83EA02   		subl	$2, %edx
+ 211 00df 83C702   		addl	$2, %edi
+ 212 00e2 EB81     		jmp	L29
+ 213              		.cfi_endproc
+ 214              	LFE95:
+ 215 00e4 90909090 		.section	.text$_ZN12TriggerShapeC2Ev,"x"
+ 215      90909090 
+ 215      90909090 
+ 216              		.align 2
+ 217              		.p2align 4,,15
+ 218              		.globl	__ZN12TriggerShapeC2Ev
+ 219              		.def	__ZN12TriggerShapeC2Ev;	.scl	2;	.type	32;	.endef
+ 220              	__ZN12TriggerShapeC2Ev:
+ 221              	LFB89:
+ 222              		.cfi_startproc
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 6
+
+
+ 223 0000 57       		pushl	%edi
+ 224              		.cfi_def_cfa_offset 8
+ 225              		.cfi_offset 7, -8
+ 226 0001 53       		pushl	%ebx
+ 227              		.cfi_def_cfa_offset 12
+ 228              		.cfi_offset 3, -12
+ 229 0002 89CB     		movl	%ecx, %ebx
+ 230 0004 83EC14   		subl	$20, %esp
+ 231              		.cfi_def_cfa_offset 32
+ 232 0007 8D837417 		leal	6004(%ebx), %eax
+ 232      0000
+ 233 000d 890424   		movl	%eax, (%esp)
+ 234 0010 8D89740B 		leal	2932(%ecx), %ecx
+ 234      0000
+ 235 0016 C7442404 		movl	$0, 4(%esp)
+ 235      00000000 
+ 236 001e 8DBB7014 		leal	5232(%ebx), %edi
+ 236      0000
+ 237 0024 E8000000 		call	__ZN12multi_wave_sC1EPfP13single_wave_s
+ 237      00
+ 238              		.cfi_def_cfa_offset 24
+ 239 0029 89F9     		movl	%edi, %ecx
+ 240 002b 83EC08   		subl	$8, %esp
+ 241              		.cfi_def_cfa_offset 32
+ 242 002e E8000000 		call	__ZN20trigger_shape_helperC1Ev
+ 242      00
+ 243 0033 89D9     		movl	%ebx, %ecx
+ 244 0035 C7442404 		movl	$0, 4(%esp)
+ 244      00000000 
+ 245 003d C7042400 		movl	$0, (%esp)
+ 245      000000
+ 246 0044 E8000000 		call	__ZN12TriggerShape5resetE16operation_mode_eb
+ 246      00
+ 247              		.cfi_def_cfa_offset 24
+ 248 0049 BAF00300 		movl	$1008, %edx
+ 248      00
+ 249 004e 89BB780B 		movl	%edi, 2936(%ebx)
+ 249      0000
+ 250 0054 8DBB8C0B 		leal	2956(%ebx), %edi
+ 250      0000
+ 251 005a C683640B 		movb	$0, 2916(%ebx)
+ 251      000000
+ 252 0061 C683650B 		movb	$0, 2917(%ebx)
+ 252      000000
+ 253 0068 C60300   		movb	$0, (%ebx)
+ 254 006b C6836814 		movb	$0, 5224(%ebx)
+ 254      000000
+ 255 0072 83EC08   		subl	$8, %esp
+ 256              		.cfi_def_cfa_offset 32
+ 257 0075 F7C70100 		testl	$1, %edi
+ 257      0000
+ 258 007b C783600B 		movl	$0x00000000, 2912(%ebx)
+ 258      00000000 
+ 258      0000
+ 259 0085 C7430400 		movl	$0, 4(%ebx)
+ 259      000000
+ 260 008c C7430800 		movl	$0, 8(%ebx)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 7
+
+
+ 260      000000
+ 261 0093 C7835C0B 		movl	$0x00000000, 2908(%ebx)
+ 261      00000000 
+ 261      0000
+ 262 009d C783580B 		movl	$0x00000000, 2904(%ebx)
+ 262      00000000 
+ 262      0000
+ 263 00a7 0F85F300 		jne	L113
+ 263      0000
+ 264 00ad F7C70200 		testl	$2, %edi
+ 264      0000
+ 265 00b3 0F850701 		jne	L114
+ 265      0000
+ 266              	L49:
+ 267 00b9 89D1     		movl	%edx, %ecx
+ 268 00bb 31C0     		xorl	%eax, %eax
+ 269 00bd C1E902   		shrl	$2, %ecx
+ 270 00c0 F6C202   		testb	$2, %dl
+ 271 00c3 F3AB     		rep stosl
+ 272 00c5 7408     		je	L50
+ 273 00c7 66C70700 		movw	$0, (%edi)
+ 273      00
+ 274 00cc 83C702   		addl	$2, %edi
+ 275              	L50:
+ 276 00cf 83E201   		andl	$1, %edx
+ 277 00d2 7403     		je	L51
+ 278 00d4 C60700   		movb	$0, (%edi)
+ 279              	L51:
+ 280 00d7 8DBB7810 		leal	4216(%ebx), %edi
+ 280      0000
+ 281 00dd BAF00300 		movl	$1008, %edx
+ 281      00
+ 282 00e2 F7C70100 		testl	$1, %edi
+ 282      0000
+ 283 00e8 0F85E200 		jne	L115
+ 283      0000
+ 284 00ee F7C70200 		testl	$2, %edi
+ 284      0000
+ 285 00f4 0F85F600 		jne	L116
+ 285      0000
+ 286              	L53:
+ 287 00fa 89D1     		movl	%edx, %ecx
+ 288 00fc 31C0     		xorl	%eax, %eax
+ 289 00fe C1E902   		shrl	$2, %ecx
+ 290 0101 F6C202   		testb	$2, %dl
+ 291 0104 F3AB     		rep stosl
+ 292 0106 7408     		je	L54
+ 293 0108 66C70700 		movw	$0, (%edi)
+ 293      00
+ 294 010d 83C702   		addl	$2, %edi
+ 295              	L54:
+ 296 0110 83E201   		andl	$1, %edx
+ 297 0113 7403     		je	L55
+ 298 0115 C60700   		movb	$0, (%edi)
+ 299              	L55:
+ 300 0118 8DBB7C0F 		leal	3964(%ebx), %edi
+ 300      0000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 8
+
+
+ 301 011e BAFC0000 		movl	$252, %edx
+ 301      00
+ 302 0123 F7C70100 		testl	$1, %edi
+ 302      0000
+ 303 0129 0F85D100 		jne	L117
+ 303      0000
+ 304 012f F7C70200 		testl	$2, %edi
+ 304      0000
+ 305 0135 0F85E500 		jne	L118
+ 305      0000
+ 306              	L57:
+ 307 013b 89D1     		movl	%edx, %ecx
+ 308 013d 31C0     		xorl	%eax, %eax
+ 309 013f C1E902   		shrl	$2, %ecx
+ 310 0142 F6C202   		testb	$2, %dl
+ 311 0145 F3AB     		rep stosl
+ 312 0147 7408     		je	L58
+ 313 0149 66C70700 		movw	$0, (%edi)
+ 313      00
+ 314 014e 83C702   		addl	$2, %edi
+ 315              	L58:
+ 316 0151 83E201   		andl	$1, %edx
+ 317 0154 7403     		je	L59
+ 318 0156 C60700   		movb	$0, (%edi)
+ 319              	L59:
+ 320 0159 8D7B18   		leal	24(%ebx), %edi
+ 321 015c BA400B00 		movl	$2880, %edx
+ 321      00
+ 322 0161 F7C70100 		testl	$1, %edi
+ 322      0000
+ 323 0167 0F85C300 		jne	L119
+ 323      0000
+ 324 016d F7C70200 		testl	$2, %edi
+ 324      0000
+ 325 0173 0F85CC00 		jne	L120
+ 325      0000
+ 326              	L61:
+ 327 0179 89D1     		movl	%edx, %ecx
+ 328 017b 31C0     		xorl	%eax, %eax
+ 329 017d C1E902   		shrl	$2, %ecx
+ 330 0180 F6C202   		testb	$2, %dl
+ 331 0183 F3AB     		rep stosl
+ 332 0185 7408     		je	L62
+ 333 0187 66C70700 		movw	$0, (%edi)
+ 333      00
+ 334 018c 83C702   		addl	$2, %edi
+ 335              	L62:
+ 336 018f 83E201   		andl	$1, %edx
+ 337 0192 7403     		je	L47
+ 338 0194 C60700   		movb	$0, (%edi)
+ 339              	L47:
+ 340 0197 83C414   		addl	$20, %esp
+ 341              		.cfi_remember_state
+ 342              		.cfi_def_cfa_offset 12
+ 343 019a 5B       		popl	%ebx
+ 344              		.cfi_restore 3
+ 345              		.cfi_def_cfa_offset 8
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 9
+
+
+ 346 019b 5F       		popl	%edi
+ 347              		.cfi_restore 7
+ 348              		.cfi_def_cfa_offset 4
+ 349 019c C3       		ret
+ 350 019d 8D7600   		.p2align 4,,7
+ 351              	L113:
+ 352              		.cfi_restore_state
+ 353 01a0 8DBB8D0B 		leal	2957(%ebx), %edi
+ 353      0000
+ 354 01a6 B2EF     		movb	$-17, %dl
+ 355 01a8 F7C70200 		testl	$2, %edi
+ 355      0000
+ 356 01ae C6838C0B 		movb	$0, 2956(%ebx)
+ 356      000000
+ 357 01b5 0F84FEFE 		je	L49
+ 357      FFFF
+ 358 01bb 908D7426 		.p2align 4,,7
+ 358      00
+ 359              	L114:
+ 360 01c0 66C70700 		movw	$0, (%edi)
+ 360      00
+ 361 01c5 83EA02   		subl	$2, %edx
+ 362 01c8 83C702   		addl	$2, %edi
+ 363 01cb E9E9FEFF 		jmp	L49
+ 363      FF
+ 364              		.p2align 4,,7
+ 365              	L115:
+ 366 01d0 8DBB7910 		leal	4217(%ebx), %edi
+ 366      0000
+ 367 01d6 B2EF     		movb	$-17, %dl
+ 368 01d8 F7C70200 		testl	$2, %edi
+ 368      0000
+ 369 01de C6837810 		movb	$0, 4216(%ebx)
+ 369      000000
+ 370 01e5 0F840FFF 		je	L53
+ 370      FFFF
+ 371 01eb 908D7426 		.p2align 4,,7
+ 371      00
+ 372              	L116:
+ 373 01f0 66C70700 		movw	$0, (%edi)
+ 373      00
+ 374 01f5 83EA02   		subl	$2, %edx
+ 375 01f8 83C702   		addl	$2, %edi
+ 376 01fb E9FAFEFF 		jmp	L53
+ 376      FF
+ 377              		.p2align 4,,7
+ 378              	L117:
+ 379 0200 8DBB7D0F 		leal	3965(%ebx), %edi
+ 379      0000
+ 380 0206 B2FB     		movb	$-5, %dl
+ 381 0208 F7C70200 		testl	$2, %edi
+ 381      0000
+ 382 020e C6837C0F 		movb	$0, 3964(%ebx)
+ 382      000000
+ 383 0215 0F8420FF 		je	L57
+ 383      FFFF
+ 384 021b 908D7426 		.p2align 4,,7
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 10
+
+
+ 384      00
+ 385              	L118:
+ 386 0220 66C70700 		movw	$0, (%edi)
+ 386      00
+ 387 0225 83EA02   		subl	$2, %edx
+ 388 0228 83C702   		addl	$2, %edi
+ 389 022b E90BFFFF 		jmp	L57
+ 389      FF
+ 390              		.p2align 4,,7
+ 391              	L119:
+ 392 0230 8D7B19   		leal	25(%ebx), %edi
+ 393 0233 B23F     		movb	$63, %dl
+ 394 0235 F7C70200 		testl	$2, %edi
+ 394      0000
+ 395 023b C6431800 		movb	$0, 24(%ebx)
+ 396 023f 0F8434FF 		je	L61
+ 396      FFFF
+ 397              		.p2align 4,,7
+ 398              	L120:
+ 399 0245 66C70700 		movw	$0, (%edi)
+ 399      00
+ 400 024a 83EA02   		subl	$2, %edx
+ 401 024d 83C702   		addl	$2, %edi
+ 402 0250 E924FFFF 		jmp	L61
+ 402      FF
+ 403              		.cfi_endproc
+ 404              	LFE89:
+ 405              		.globl	__ZN12TriggerShapeC1Ev
+ 406              		.def	__ZN12TriggerShapeC1Ev;	.scl	2;	.type	32;	.endef
+ 407              		.set	__ZN12TriggerShapeC1Ev,__ZN12TriggerShapeC2Ev
+ 408 0255 90909090 		.section	.text$_ZNK12multi_wave_s15getChannelStateEii,"x"
+ 408      90909090 
+ 408      909090
+ 409              		.align 2
+ 410              		.p2align 4,,15
+ 411              		.globl	__ZNK12multi_wave_s15getChannelStateEii
+ 412              		.def	__ZNK12multi_wave_s15getChannelStateEii;	.scl	2;	.type	32;	.endef
+ 413              	__ZNK12multi_wave_s15getChannelStateEii:
+ 414              	LFB96:
+ 415              		.cfi_startproc
+ 416 0000 8B4104   		movl	4(%ecx), %eax
+ 417 0003 8B542404 		movl	4(%esp), %edx
+ 418 0007 8B1490   		movl	(%eax,%edx,4), %edx
+ 419 000a 8B442408 		movl	8(%esp), %eax
+ 420 000e 0FBE0402 		movsbl	(%edx,%eax), %eax
+ 421 0012 C20800   		ret	$8
+ 422              		.cfi_endproc
+ 423              	LFE96:
+ 424 0015 90909090 		.section	.text$_ZNK12multi_wave_s18waveIndertionAngleEfi,"x"
+ 424      90909090 
+ 424      909090
+ 425              		.align 2
+ 426              		.p2align 4,,15
+ 427              		.globl	__ZNK12multi_wave_s18waveIndertionAngleEfi
+ 428              		.def	__ZNK12multi_wave_s18waveIndertionAngleEfi;	.scl	2;	.type	32;	.endef
+ 429              	__ZNK12multi_wave_s18waveIndertionAngleEfi:
+ 430              	LFB97:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 11
+
+
+ 431              		.cfi_startproc
+ 432 0000 8B442408 		movl	8(%esp), %eax
+ 433 0004 D9442404 		flds	4(%esp)
+ 434 0008 83E801   		subl	$1, %eax
+ 435 000b 782A     		js	L131
+ 436 000d 8B5108   		movl	8(%ecx), %edx
+ 437 0010 D90482   		flds	(%edx,%eax,4)
+ 438 0013 D9C9     		fxch	%st(1)
+ 439 0015 DBE9     		fucomi	%st(1), %st
+ 440 0017 DDD9     		fstp	%st(1)
+ 441 0019 7610     		jbe	L130
+ 442 001b DDD8     		fstp	%st(0)
+ 443 001d EB28     		jmp	L124
+ 444 001f 90       		.p2align 4,,7
+ 445              	L128:
+ 446 0020 D90482   		flds	(%edx,%eax,4)
+ 447 0023 D9C9     		fxch	%st(1)
+ 448 0025 DBE9     		fucomi	%st(1), %st
+ 449 0027 DDD9     		fstp	%st(1)
+ 450 0029 771A     		ja	L132
+ 451              	L130:
+ 452 002b 83E801   		subl	$1, %eax
+ 453 002e 83F8FF   		cmpl	$-1, %eax
+ 454 0031 75ED     		jne	L128
+ 455 0033 DDD8     		fstp	%st(0)
+ 456 0035 EB09     		jmp	L129
+ 457              	L131:
+ 458 0037 DDD8     		fstp	%st(0)
+ 459 0039 8DB42600 		.p2align 4,,7
+ 459      000000
+ 460              	L129:
+ 461 0040 31C0     		xorl	%eax, %eax
+ 462 0042 C20800   		ret	$8
+ 463              		.p2align 4,,7
+ 464              	L132:
+ 465 0045 DDD8     		fstp	%st(0)
+ 466              	L124:
+ 467 0047 83C001   		addl	$1, %eax
+ 468 004a C20800   		ret	$8
+ 469              		.cfi_endproc
+ 470              	LFE97:
+ 471 004d 909090   		.section	.text$_ZNK12multi_wave_s14findAngleMatchEfi,"x"
+ 472              		.align 2
+ 473              		.p2align 4,,15
+ 474              		.globl	__ZNK12multi_wave_s14findAngleMatchEfi
+ 475              		.def	__ZNK12multi_wave_s14findAngleMatchEfi;	.scl	2;	.type	32;	.endef
+ 476              	__ZNK12multi_wave_s14findAngleMatchEfi:
+ 477              	LFB98:
+ 478              		.cfi_startproc
+ 479 0000 57       		pushl	%edi
+ 480              		.cfi_def_cfa_offset 8
+ 481              		.cfi_offset 7, -8
+ 482 0001 89CF     		movl	%ecx, %edi
+ 483 0003 56       		pushl	%esi
+ 484              		.cfi_def_cfa_offset 12
+ 485              		.cfi_offset 6, -12
+ 486 0004 53       		pushl	%ebx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 12
+
+
+ 487              		.cfi_def_cfa_offset 16
+ 488              		.cfi_offset 3, -16
+ 489 0005 31DB     		xorl	%ebx, %ebx
+ 490 0007 83EC10   		subl	$16, %esp
+ 491              		.cfi_def_cfa_offset 32
+ 492 000a 8B742424 		movl	36(%esp), %esi
+ 493 000e 85F6     		testl	%esi, %esi
+ 494 0010 7F09     		jg	L138
+ 495 0012 EB2C     		jmp	L136
+ 496              		.p2align 4,,7
+ 497              	L141:
+ 498 0014 83C301   		addl	$1, %ebx
+ 499 0017 39F3     		cmpl	%esi, %ebx
+ 500 0019 7425     		je	L136
+ 501              	L138:
+ 502 001b 8B4708   		movl	8(%edi), %eax
+ 503 001e D9442420 		flds	32(%esp)
+ 504 0022 D95C2404 		fstps	4(%esp)
+ 505 0026 D90498   		flds	(%eax,%ebx,4)
+ 506 0029 D91C24   		fstps	(%esp)
+ 507 002c E8000000 		call	_isSameF
+ 507      00
+ 508 0031 84C0     		testb	%al, %al
+ 509 0033 74DF     		je	L141
+ 510 0035 83C410   		addl	$16, %esp
+ 511              		.cfi_remember_state
+ 512              		.cfi_def_cfa_offset 16
+ 513 0038 89D8     		movl	%ebx, %eax
+ 514 003a 5B       		popl	%ebx
+ 515              		.cfi_restore 3
+ 516              		.cfi_def_cfa_offset 12
+ 517 003b 5E       		popl	%esi
+ 518              		.cfi_restore 6
+ 519              		.cfi_def_cfa_offset 8
+ 520 003c 5F       		popl	%edi
+ 521              		.cfi_restore 7
+ 522              		.cfi_def_cfa_offset 4
+ 523 003d C20800   		ret	$8
+ 524              		.p2align 4,,7
+ 525              	L136:
+ 526              		.cfi_restore_state
+ 527 0040 83C410   		addl	$16, %esp
+ 528              		.cfi_def_cfa_offset 16
+ 529 0043 BBFFFFFF 		movl	$-1, %ebx
+ 529      FF
+ 530 0048 89D8     		movl	%ebx, %eax
+ 531 004a 5B       		popl	%ebx
+ 532              		.cfi_restore 3
+ 533              		.cfi_def_cfa_offset 12
+ 534 004b 5E       		popl	%esi
+ 535              		.cfi_restore 6
+ 536              		.cfi_def_cfa_offset 8
+ 537 004c 5F       		popl	%edi
+ 538              		.cfi_restore 7
+ 539              		.cfi_def_cfa_offset 4
+ 540 004d C20800   		ret	$8
+ 541              		.cfi_endproc
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 13
+
+
+ 542              	LFE98:
+ 543              		.section	.text$_ZN12multi_wave_s13setSwitchTimeEif,"x"
+ 544              		.align 2
+ 545              		.p2align 4,,15
+ 546              		.globl	__ZN12multi_wave_s13setSwitchTimeEif
+ 547              		.def	__ZN12multi_wave_s13setSwitchTimeEif;	.scl	2;	.type	32;	.endef
+ 548              	__ZN12multi_wave_s13setSwitchTimeEif:
+ 549              	LFB99:
+ 550              		.cfi_startproc
+ 551 0000 8B4108   		movl	8(%ecx), %eax
+ 552 0003 8B542404 		movl	4(%esp), %edx
+ 553 0007 D9442408 		flds	8(%esp)
+ 554 000b D91C90   		fstps	(%eax,%edx,4)
+ 555 000e C20800   		ret	$8
+ 556              		.cfi_endproc
+ 557              	LFE99:
+ 558 0011 90909090 		.section	.text$_ZN12TriggerState15getCurrentIndexEv,"x"
+ 558      90909090 
+ 558      90909090 
+ 558      909090
+ 559              		.align 2
+ 560              		.p2align 4,,15
+ 561              		.globl	__ZN12TriggerState15getCurrentIndexEv
+ 562              		.def	__ZN12TriggerState15getCurrentIndexEv;	.scl	2;	.type	32;	.endef
+ 563              	__ZN12TriggerState15getCurrentIndexEv:
+ 564              	LFB103:
+ 565              		.cfi_startproc
+ 566 0000 8B414C   		movl	76(%ecx), %eax
+ 567 0003 C3       		ret
+ 568              		.cfi_endproc
+ 569              	LFE103:
+ 570 0004 90909090 		.section	.text$_ZN12TriggerState25getStartOfRevolutionIndexEv,"x"
+ 570      90909090 
+ 570      90909090 
+ 571              		.align 2
+ 572              		.p2align 4,,15
+ 573              		.globl	__ZN12TriggerState25getStartOfRevolutionIndexEv
+ 574              		.def	__ZN12TriggerState25getStartOfRevolutionIndexEv;	.scl	2;	.type	32;	.endef
+ 575              	__ZN12TriggerState25getStartOfRevolutionIndexEv:
+ 576              	LFB104:
+ 577              		.cfi_startproc
+ 578 0000 8B819800 		movl	152(%ecx), %eax
+ 578      0000
+ 579 0006 8B919C00 		movl	156(%ecx), %edx
+ 579      0000
+ 580 000c C3       		ret
+ 581              		.cfi_endproc
+ 582              	LFE104:
+ 583 000d 909090   		.section	.text$_ZN12TriggerState20resetRunningCountersEv,"x"
+ 584              		.align 2
+ 585              		.p2align 4,,15
+ 586              		.globl	__ZN12TriggerState20resetRunningCountersEv
+ 587              		.def	__ZN12TriggerState20resetRunningCountersEv;	.scl	2;	.type	32;	.endef
+ 588              	__ZN12TriggerState20resetRunningCountersEv:
+ 589              	LFB105:
+ 590              		.cfi_startproc
+ 591 0000 C7415000 		movl	$0, 80(%ecx)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 14
+
+
+ 591      000000
+ 592 0007 C7414000 		movl	$0, 64(%ecx)
+ 592      000000
+ 593 000e C7414800 		movl	$0, 72(%ecx)
+ 593      000000
+ 594 0015 C3       		ret
+ 595              		.cfi_endproc
+ 596              	LFE105:
+ 597 0016 90909090 		.section	.text$_ZN12TriggerState20getTotalEventCounterEv,"x"
+ 597      90909090 
+ 597      9090
+ 598              		.align 2
+ 599              		.p2align 4,,15
+ 600              		.globl	__ZN12TriggerState20getTotalEventCounterEv
+ 601              		.def	__ZN12TriggerState20getTotalEventCounterEv;	.scl	2;	.type	32;	.endef
+ 602              	__ZN12TriggerState20getTotalEventCounterEv:
+ 603              	LFB106:
+ 604              		.cfi_startproc
+ 605 0000 8B414C   		movl	76(%ecx), %eax
+ 606 0003 31D2     		xorl	%edx, %edx
+ 607 0005 03819800 		addl	152(%ecx), %eax
+ 607      0000
+ 608 000b 13919C00 		adcl	156(%ecx), %edx
+ 608      0000
+ 609 0011 C3       		ret
+ 610              		.cfi_endproc
+ 611              	LFE106:
+ 612 0012 90909090 		.section	.text$_ZN12TriggerState25getTotalRevolutionCounterEv,"x"
+ 612      90909090 
+ 612      90909090 
+ 612      9090
+ 613              		.align 2
+ 614              		.p2align 4,,15
+ 615              		.globl	__ZN12TriggerState25getTotalRevolutionCounterEv
+ 616              		.def	__ZN12TriggerState25getTotalRevolutionCounterEv;	.scl	2;	.type	32;	.endef
+ 617              	__ZN12TriggerState25getTotalRevolutionCounterEv:
+ 618              	LFB107:
+ 619              		.cfi_startproc
+ 620 0000 8B81A000 		movl	160(%ecx), %eax
+ 620      0000
+ 621 0006 C3       		ret
+ 622              		.cfi_endproc
+ 623              	LFE107:
+ 624 0007 90909090 		.section	.text$_ZN12TriggerState5clearEv,"x"
+ 624      90909090 
+ 624      90
+ 625              		.align 2
+ 626              		.p2align 4,,15
+ 627              		.globl	__ZN12TriggerState5clearEv
+ 628              		.def	__ZN12TriggerState5clearEv;	.scl	2;	.type	32;	.endef
+ 629              	__ZN12TriggerState5clearEv:
+ 630              	LFB108:
+ 631              		.cfi_startproc
+ 632 0000 8D5168   		leal	104(%ecx), %edx
+ 633 0003 56       		pushl	%esi
+ 634              		.cfi_def_cfa_offset 8
+ 635              		.cfi_offset 6, -8
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 15
+
+
+ 636 0004 F6C201   		testb	$1, %dl
+ 637 0007 53       		pushl	%ebx
+ 638              		.cfi_def_cfa_offset 12
+ 639              		.cfi_offset 3, -12
+ 640 0008 BB180000 		movl	$24, %ebx
+ 640      00
+ 641 000d C7415400 		movl	$0, 84(%ecx)
+ 641      000000
+ 642 0014 C7415800 		movl	$0, 88(%ecx)
+ 642      000000
+ 643 001b C7415C00 		movl	$0, 92(%ecx)
+ 643      000000
+ 644 0022 0F859900 		jne	L188
+ 644      0000
+ 645 0028 F6C202   		testb	$2, %dl
+ 646 002b 0F85A200 		jne	L189
+ 646      0000
+ 647              	L150:
+ 648 0031 89DE     		movl	%ebx, %esi
+ 649 0033 31C0     		xorl	%eax, %eax
+ 650 0035 83E6FC   		andl	$-4, %esi
+ 651              	L151:
+ 652 0038 C7040200 		movl	$0, (%edx,%eax)
+ 652      000000
+ 653 003f 83C004   		addl	$4, %eax
+ 654 0042 39F0     		cmpl	%esi, %eax
+ 655 0044 72F2     		jb	L151
+ 656 0046 01C2     		addl	%eax, %edx
+ 657 0048 F6C302   		testb	$2, %bl
+ 658 004b 7408     		je	L153
+ 659 004d 66C70200 		movw	$0, (%edx)
+ 659      00
+ 660 0052 83C202   		addl	$2, %edx
+ 661              	L153:
+ 662 0055 83E301   		andl	$1, %ebx
+ 663 0058 7403     		je	L154
+ 664 005a C60200   		movb	$0, (%edx)
+ 665              	L154:
+ 666 005d 8D918000 		leal	128(%ecx), %edx
+ 666      0000
+ 667 0063 BB180000 		movl	$24, %ebx
+ 667      00
+ 668 0068 F6C201   		testb	$1, %dl
+ 669 006b 0F857F00 		jne	L190
+ 669      0000
+ 670              	L155:
+ 671 0071 F6C202   		testb	$2, %dl
+ 672 0074 756D     		jne	L191
+ 673              	L156:
+ 674 0076 89DE     		movl	%ebx, %esi
+ 675 0078 31C0     		xorl	%eax, %eax
+ 676 007a 83E6FC   		andl	$-4, %esi
+ 677              	L157:
+ 678 007d C7040200 		movl	$0, (%edx,%eax)
+ 678      000000
+ 679 0084 83C004   		addl	$4, %eax
+ 680 0087 39F0     		cmpl	%esi, %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 16
+
+
+ 681 0089 72F2     		jb	L157
+ 682 008b 01C2     		addl	%eax, %edx
+ 683 008d F6C302   		testb	$2, %bl
+ 684 0090 7408     		je	L159
+ 685 0092 66C70200 		movw	$0, (%edx)
+ 685      00
+ 686 0097 83C202   		addl	$2, %edx
+ 687              	L159:
+ 688 009a 83E301   		andl	$1, %ebx
+ 689 009d 7403     		je	L160
+ 690 009f C60200   		movb	$0, (%edx)
+ 691              	L160:
+ 692 00a2 5B       		popl	%ebx
+ 693              		.cfi_remember_state
+ 694              		.cfi_restore 3
+ 695              		.cfi_def_cfa_offset 8
+ 696 00a3 C7411800 		movl	$0, 24(%ecx)
+ 696      000000
+ 697 00aa C7411C00 		movl	$0, 28(%ecx)
+ 697      000000
+ 698 00b1 C7412000 		movl	$0, 32(%ecx)
+ 698      000000
+ 699 00b8 C7414C00 		movl	$0, 76(%ecx)
+ 699      000000
+ 700 00bf 5E       		popl	%esi
+ 701              		.cfi_restore 6
+ 702              		.cfi_def_cfa_offset 4
+ 703 00c0 C3       		ret
+ 704              		.p2align 4,,7
+ 705              	L188:
+ 706              		.cfi_restore_state
+ 707 00c1 8D5169   		leal	105(%ecx), %edx
+ 708 00c4 B317     		movb	$23, %bl
+ 709 00c6 F6C202   		testb	$2, %dl
+ 710 00c9 C6416800 		movb	$0, 104(%ecx)
+ 711 00cd 0F845EFF 		je	L150
+ 711      FFFF
+ 712              		.p2align 4,,7
+ 713              	L189:
+ 714 00d3 66C70200 		movw	$0, (%edx)
+ 714      00
+ 715 00d8 83EB02   		subl	$2, %ebx
+ 716 00db 83C202   		addl	$2, %edx
+ 717 00de E94EFFFF 		jmp	L150
+ 717      FF
+ 718              		.p2align 4,,7
+ 719              	L191:
+ 720 00e3 66C70200 		movw	$0, (%edx)
+ 720      00
+ 721 00e8 83EB02   		subl	$2, %ebx
+ 722 00eb 83C202   		addl	$2, %edx
+ 723 00ee EB86     		jmp	L156
+ 724              		.p2align 4,,7
+ 725              	L190:
+ 726 00f0 C6818000 		movb	$0, 128(%ecx)
+ 726      000000
+ 727 00f7 8D918100 		leal	129(%ecx), %edx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 17
+
+
+ 727      0000
+ 728 00fd B317     		movb	$23, %bl
+ 729 00ff E96DFFFF 		jmp	L155
+ 729      FF
+ 730              		.cfi_endproc
+ 731              	LFE108:
+ 732 0104 90909090 		.section	.text$_ZN12TriggerStateC2Ev,"x"
+ 732      90909090 
+ 732      90909090 
+ 733              		.align 2
+ 734              		.p2align 4,,15
+ 735              		.globl	__ZN12TriggerStateC2Ev
+ 736              		.def	__ZN12TriggerStateC2Ev;	.scl	2;	.type	32;	.endef
+ 737              	__ZN12TriggerStateC2Ev:
+ 738              	LFB101:
+ 739              		.cfi_startproc
+ 740 0000 53       		pushl	%ebx
+ 741              		.cfi_def_cfa_offset 8
+ 742              		.cfi_offset 3, -8
+ 743 0001 89CB     		movl	%ecx, %ebx
+ 744 0003 C7010000 		movl	$0, (%ecx)
+ 744      0000
+ 745 0009 C6410400 		movb	$0, 4(%ecx)
+ 746 000d C7411000 		movl	$0, 16(%ecx)
+ 746      000000
+ 747 0014 C7411400 		movl	$0, 20(%ecx)
+ 747      000000
+ 748 001b C7410800 		movl	$0, 8(%ecx)
+ 748      000000
+ 749 0022 C781A000 		movl	$0, 160(%ecx)
+ 749      00000000 
+ 749      0000
+ 750 002c C7413C00 		movl	$0, 60(%ecx)
+ 750      000000
+ 751 0033 C7414400 		movl	$0, 68(%ecx)
+ 751      000000
+ 752 003a C7410C00 		movl	$0, 12(%ecx)
+ 752      000000
+ 753 0041 C7416000 		movl	$0, 96(%ecx)
+ 753      000000
+ 754 0048 C7416400 		movl	$0, 100(%ecx)
+ 754      000000
+ 755 004f C781A800 		movl	$0, 168(%ecx)
+ 755      00000000 
+ 755      0000
+ 756 0059 C781AC00 		movl	$0, 172(%ecx)
+ 756      00000000 
+ 756      0000
+ 757 0063 C781B000 		movl	$0, 176(%ecx)
+ 757      00000000 
+ 757      0000
+ 758 006d C781B400 		movl	$0, 180(%ecx)
+ 758      00000000 
+ 758      0000
+ 759 0077 C7415000 		movl	$0, 80(%ecx)
+ 759      000000
+ 760 007e C7414000 		movl	$0, 64(%ecx)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 18
+
+
+ 760      000000
+ 761 0085 C7414800 		movl	$0, 72(%ecx)
+ 761      000000
+ 762 008c E8000000 		call	__ZN12TriggerState5clearEv
+ 762      00
+ 763 0091 C7433000 		movl	$0, 48(%ebx)
+ 763      000000
+ 764 0098 C7433400 		movl	$0, 52(%ebx)
+ 764      000000
+ 765 009f C7433800 		movl	$0, 56(%ebx)
+ 765      000000
+ 766 00a6 C7839800 		movl	$0, 152(%ebx)
+ 766      00000000 
+ 766      0000
+ 767 00b0 C7839C00 		movl	$0, 156(%ebx)
+ 767      00000000 
+ 767      0000
+ 768 00ba C683A400 		movb	$1, 164(%ebx)
+ 768      000001
+ 769 00c1 5B       		popl	%ebx
+ 770              		.cfi_restore 3
+ 771              		.cfi_def_cfa_offset 4
+ 772 00c2 C3       		ret
+ 773              		.cfi_endproc
+ 774              	LFE101:
+ 775              		.globl	__ZN12TriggerStateC1Ev
+ 776              		.def	__ZN12TriggerStateC1Ev;	.scl	2;	.type	32;	.endef
+ 777              		.set	__ZN12TriggerStateC1Ev,__ZN12TriggerStateC2Ev
+ 778 00c3 90909090 		.section	.text$_ZNK12TriggerShape9getLengthEv,"x"
+ 778      90909090 
+ 778      90909090 
+ 778      90
+ 779              		.align 2
+ 780              		.p2align 4,,15
+ 781              		.globl	__ZNK12TriggerShape9getLengthEv
+ 782              		.def	__ZNK12TriggerShape9getLengthEv;	.scl	2;	.type	32;	.endef
+ 783              	__ZNK12TriggerShape9getLengthEv:
+ 784              	LFB109:
+ 785              		.cfi_startproc
+ 786 0000 83B9681B 		cmpl	$2, 7016(%ecx)
+ 786      000002
+ 787 0007 8B816C14 		movl	5228(%ecx), %eax
+ 787      0000
+ 788 000d 7403     		je	L197
+ 789 000f 01C0     		addl	%eax, %eax
+ 790 0011 C3       		ret
+ 791              		.p2align 4,,7
+ 792              	L197:
+ 793 0012 F3       		rep
+ 794 0013 C3       		ret
+ 795              		.cfi_endproc
+ 796              	LFE109:
+ 797 0014 90909090 		.section	.text$_ZN12TriggerShape16getOperationModeEv,"x"
+ 797      90909090 
+ 797      90909090 
+ 798              		.align 2
+ 799              		.p2align 4,,15
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 19
+
+
+ 800              		.globl	__ZN12TriggerShape16getOperationModeEv
+ 801              		.def	__ZN12TriggerShape16getOperationModeEv;	.scl	2;	.type	32;	.endef
+ 802              	__ZN12TriggerShape16getOperationModeEv:
+ 803              	LFB112:
+ 804              		.cfi_startproc
+ 805 0000 8B81681B 		movl	7016(%ecx), %eax
+ 805      0000
+ 806 0006 C3       		ret
+ 807              		.cfi_endproc
+ 808              	LFE112:
+ 809 0007 90909090 		.section .rdata,"dr"
+ 809      90909090 
+ 809      90
+ 810              	LC4:
+ 811 0000 6F706572 		.ascii "operationMode not set\0"
+ 811      6174696F 
+ 811      6E4D6F64 
+ 811      65206E6F 
+ 811      74207365 
+ 812              	LC5:
+ 813 0016 7365636F 		.ascii "secondary needed or not?\0"
+ 813      6E646172 
+ 813      79206E65 
+ 813      65646564 
+ 813      206F7220 
+ 814              	LC6:
+ 815 002f 616E676C 		.ascii "angle should be positive\0"
+ 815      65207368 
+ 815      6F756C64 
+ 815      20626520 
+ 815      706F7369 
+ 816              		.align 4
+ 817              	LC7:
+ 818 0048 696E7661 		.ascii "invalid angle order: %f and %f\0"
+ 818      6C696420 
+ 818      616E676C 
+ 818      65206F72 
+ 818      6465723A 
+ 819              	LC8:
+ 820 0067 77617665 		.ascii "wave pinStates is NULL\0"
+ 820      2070696E 
+ 820      53746174 
+ 820      65732069 
+ 820      73204E55 
+ 821              	LC9:
+ 822 007e 73616D65 		.ascii "same angle: not supported\0"
+ 822      20616E67 
+ 822      6C653A20 
+ 822      6E6F7420 
+ 822      73757070 
+ 823              	LC10:
+ 824 0098 61726520 		.ascii "are we ever here?\0"
+ 824      77652065 
+ 824      76657220 
+ 824      68657265 
+ 824      3F00
+ 825              		.section	.text$_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e,"x"
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 20
+
+
+ 826              		.align 2
+ 827              		.p2align 4,,15
+ 828              		.globl	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 829              		.def	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e;	.scl	2;	.type	32;	.endef
+ 830              	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e:
+ 831              	LFB113:
+ 832              		.cfi_startproc
+ 833 0000 55       		pushl	%ebp
+ 834              		.cfi_def_cfa_offset 8
+ 835              		.cfi_offset 5, -8
+ 836 0001 57       		pushl	%edi
+ 837              		.cfi_def_cfa_offset 12
+ 838              		.cfi_offset 7, -12
+ 839 0002 56       		pushl	%esi
+ 840              		.cfi_def_cfa_offset 16
+ 841              		.cfi_offset 6, -16
+ 842 0003 53       		pushl	%ebx
+ 843              		.cfi_def_cfa_offset 20
+ 844              		.cfi_offset 3, -20
+ 845 0004 89CB     		movl	%ecx, %ebx
+ 846 0006 83EC5C   		subl	$92, %esp
+ 847              		.cfi_def_cfa_offset 112
+ 848 0009 8B81681B 		movl	7016(%ecx), %eax
+ 848      0000
+ 849 000f 85C0     		testl	%eax, %eax
+ 850 0011 0F84F901 		je	L234
+ 850      0000
+ 851 0017 837C2474 		cmpl	$1, 116(%esp)
+ 851      01
+ 852 001c 0F84D401 		je	L235
+ 852      0000
+ 853              	L202:
+ 854 0022 8B542478 		movl	120(%esp), %edx
+ 855 0026 80BB6814 		cmpb	$0, 5224(%ebx)
+ 855      000000
+ 856 002d 8954243C 		movl	%edx, 60(%esp)
+ 857 0031 0F85AE01 		jne	L236
+ 857      0000
+ 858              	L203:
+ 859 0037 890424   		movl	%eax, (%esp)
+ 860 003a E8000000 		call	__Z14getEngineCycle16operation_mode_e
+ 860      00
+ 861 003f D9442470 		flds	112(%esp)
+ 862 0043 DEF1     		fdivp	%st, %st(1)
+ 863 0045 D9EE     		fldz
+ 864 0047 D9C9     		fxch	%st(1)
+ 865 0049 DBE9     		fucomi	%st(1), %st
+ 866 004b DDD9     		fstp	%st(1)
+ 867 004d 0F867002 		jbe	L237
+ 867      0000
+ 868 0053 8B836C14 		movl	5228(%ebx), %eax
+ 868      0000
+ 869 0059 83F800   		cmpl	$0, %eax
+ 870 005c 0F8EC401 		jle	L205
+ 870      0000
+ 871 0062 D983641B 		flds	7012(%ebx)
+ 871      0000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 21
+
+
+ 872 0068 DBE9     		fucomi	%st(1), %st
+ 873 006a 0F833502 		jae	L238
+ 873      0000
+ 874 0070 DDD8     		fstp	%st(0)
+ 875 0072 D993641B 		fsts	7012(%ebx)
+ 875      0000
+ 876              	L208:
+ 877 0078 8DB3740B 		leal	2932(%ebx), %esi
+ 877      0000
+ 878 007e D91424   		fsts	(%esp)
+ 879 0081 89F1     		movl	%esi, %ecx
+ 880 0083 89442404 		movl	%eax, 4(%esp)
+ 881 0087 D95C2430 		fstps	48(%esp)
+ 882 008b 89742444 		movl	%esi, 68(%esp)
+ 883 008f E8000000 		call	__ZNK12multi_wave_s14findAngleMatchEfi
+ 883      00
+ 884              		.cfi_def_cfa_offset 104
+ 885 0094 83EC08   		subl	$8, %esp
+ 886              		.cfi_def_cfa_offset 112
+ 887 0097 83F8FF   		cmpl	$-1, %eax
+ 888 009a D9442430 		flds	48(%esp)
+ 889 009e 0F85EE01 		jne	L239
+ 889      0000
+ 890 00a4 8BAB6C14 		movl	5228(%ebx), %ebp
+ 890      0000
+ 891 00aa 89EE     		movl	%ebp, %esi
+ 892 00ac 83EE01   		subl	$1, %esi
+ 893 00af 0F885502 		js	L225
+ 893      0000
+ 894 00b5 8B937C0B 		movl	2940(%ebx), %edx
+ 894      0000
+ 895 00bb 89F0     		movl	%esi, %eax
+ 896 00bd D904B2   		flds	(%edx,%esi,4)
+ 897 00c0 D9C9     		fxch	%st(1)
+ 898 00c2 DBE9     		fucomi	%st(1), %st
+ 899 00c4 DDD9     		fstp	%st(1)
+ 900 00c6 7617     		jbe	L215
+ 901 00c8 E9090200 		jmp	L213
+ 901      00
+ 902 00cd 8D7600   		.p2align 4,,7
+ 903              	L218:
+ 904 00d0 D90482   		flds	(%edx,%eax,4)
+ 905 00d3 D9C9     		fxch	%st(1)
+ 906 00d5 DBE9     		fucomi	%st(1), %st
+ 907 00d7 DDD9     		fstp	%st(1)
+ 908 00d9 0F87F701 		ja	L213
+ 908      0000
+ 909              	L215:
+ 910 00df 83E801   		subl	$1, %eax
+ 911 00e2 83F8FF   		cmpl	$-1, %eax
+ 912 00e5 75E9     		jne	L218
+ 913 00e7 C744244C 		movl	$0, 76(%esp)
+ 913      00000000 
+ 914 00ef 31FF     		xorl	%edi, %edi
+ 915 00f1 C7442448 		movl	$-1, 72(%esp)
+ 915      FFFFFFFF 
+ 916 00f9 C7442440 		movl	$0, 64(%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 22
+
+
+ 916      00000000 
+ 917              	L223:
+ 918 0101 C1E502   		sall	$2, %ebp
+ 919              		.p2align 4,,7
+ 920              	L219:
+ 921 0104 8D4E01   		leal	1(%esi), %ecx
+ 922 0107 31C0     		xorl	%eax, %eax
+ 923 0109 89742428 		movl	%esi, 40(%esp)
+ 924 010d 894C242C 		movl	%ecx, 44(%esp)
+ 925              	L220:
+ 926 0111 8B93780B 		movl	2936(%ebx), %edx
+ 926      0000
+ 927 0117 8B74242C 		movl	44(%esp), %esi
+ 928 011b 8B1402   		movl	(%edx,%eax), %edx
+ 929 011e 83C004   		addl	$4, %eax
+ 930 0121 83F80C   		cmpl	$12, %eax
+ 931 0124 0FB60C3A 		movzbl	(%edx,%edi), %ecx
+ 932 0128 880C32   		movb	%cl, (%edx,%esi)
+ 933 012b 75E4     		jne	L220
+ 934 012d 8B742428 		movl	40(%esp), %esi
+ 935 0131 D95C2430 		fstps	48(%esp)
+ 936 0135 8B4C2444 		movl	68(%esp), %ecx
+ 937 0139 893424   		movl	%esi, (%esp)
+ 938 013c 83EE01   		subl	$1, %esi
+ 939 013f E8000000 		call	__ZNK12multi_wave_s13getSwitchTimeEi
+ 939      00
+ 940              		.cfi_def_cfa_offset 108
+ 941 0144 8B837C0B 		movl	2940(%ebx), %eax
+ 941      0000
+ 942 014a 83EC04   		subl	$4, %esp
+ 943              		.cfi_def_cfa_offset 112
+ 944 014d D91C28   		fstps	(%eax,%ebp)
+ 945 0150 83ED04   		subl	$4, %ebp
+ 946 0153 3B742440 		cmpl	64(%esp), %esi
+ 947 0157 D9442430 		flds	48(%esp)
+ 948 015b 7DA7     		jge	L219
+ 949 015d 8BAB6C14 		movl	5228(%ebx), %ebp
+ 949      0000
+ 950              	L212:
+ 951 0163 8B442440 		movl	64(%esp), %eax
+ 952 0167 837C2478 		cmpl	$1, 120(%esp)
+ 952      01
+ 953 016c 0F948403 		sete	3964(%ebx,%eax)
+ 953      7C0F0000 
+ 954 0174 39E8     		cmpl	%ebp, %eax
+ 955 0176 741A     		je	L221
+ 956 0178 C7042498 		movl	$LC10, (%esp)
+ 956      000000
+ 957 017f D95C2430 		fstps	48(%esp)
+ 958 0183 E8000000 		call	_firmwareError
+ 958      00
+ 959 0188 8BAB6C14 		movl	5228(%ebx), %ebp
+ 959      0000
+ 960 018e D9442430 		flds	48(%esp)
+ 961              	L221:
+ 962 0192 8B742448 		movl	72(%esp), %esi
+ 963 0196 83C501   		addl	$1, %ebp
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 23
+
+
+ 964 0199 31C0     		xorl	%eax, %eax
+ 965 019b 89AB6C14 		movl	%ebp, 5228(%ebx)
+ 965      0000
+ 966              	L222:
+ 967 01a1 8B93780B 		movl	2936(%ebx), %edx
+ 967      0000
+ 968 01a7 8B1402   		movl	(%edx,%eax), %edx
+ 969 01aa 83C004   		addl	$4, %eax
+ 970 01ad 83F80C   		cmpl	$12, %eax
+ 971 01b0 0FB60C32 		movzbl	(%edx,%esi), %ecx
+ 972 01b4 880C3A   		movb	%cl, (%edx,%edi)
+ 973 01b7 75E8     		jne	L222
+ 974 01b9 8B837C0B 		movl	2940(%ebx), %eax
+ 974      0000
+ 975 01bf 8B54244C 		movl	76(%esp), %edx
+ 976 01c3 8B742474 		movl	116(%esp), %esi
+ 977 01c7 D91C10   		fstps	(%eax,%edx)
+ 978 01ca 8B83780B 		movl	2936(%ebx), %eax
+ 978      0000
+ 979 01d0 0FB65424 		movzbl	60(%esp), %edx
+ 979      3C
+ 980 01d5 8B04B0   		movl	(%eax,%esi,4), %eax
+ 981 01d8 881438   		movb	%dl, (%eax,%edi)
+ 982 01db 83C45C   		addl	$92, %esp
+ 983              		.cfi_remember_state
+ 984              		.cfi_def_cfa_offset 20
+ 985 01de 5B       		popl	%ebx
+ 986              		.cfi_restore 3
+ 987              		.cfi_def_cfa_offset 16
+ 988 01df 5E       		popl	%esi
+ 989              		.cfi_restore 6
+ 990              		.cfi_def_cfa_offset 12
+ 991 01e0 5F       		popl	%edi
+ 992              		.cfi_restore 7
+ 993              		.cfi_def_cfa_offset 8
+ 994 01e1 5D       		popl	%ebp
+ 995              		.cfi_restore 5
+ 996              		.cfi_def_cfa_offset 4
+ 997 01e2 C20C00   		ret	$12
+ 998              		.p2align 4,,7
+ 999              	L236:
+ 1000              		.cfi_restore_state
+ 1001 01e5 85D2     		testl	%edx, %edx
+ 1002 01e7 0F94C2   		sete	%dl
+ 1003 01ea 0FB6D2   		movzbl	%dl, %edx
+ 1004 01ed 8954243C 		movl	%edx, 60(%esp)
+ 1005 01f1 E941FEFF 		jmp	L203
+ 1005      FF
+ 1006              		.p2align 4,,7
+ 1007              	L235:
+ 1008 01f6 80790100 		cmpb	$0, 1(%ecx)
+ 1009 01fa 0F8522FE 		jne	L202
+ 1009      FFFF
+ 1010 0200 C7042416 		movl	$LC5, (%esp)
+ 1010      000000
+ 1011 0207 E8000000 		call	_firmwareError
+ 1011      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 24
+
+
+ 1012 020c EB0E     		jmp	L199
+ 1013 020e 6690     		.p2align 4,,7
+ 1014              	L234:
+ 1015 0210 C7042400 		movl	$LC4, (%esp)
+ 1015      000000
+ 1016 0217 E8000000 		call	_firmwareError
+ 1016      00
+ 1017              	L199:
+ 1018 021c 83C45C   		addl	$92, %esp
+ 1019              		.cfi_remember_state
+ 1020              		.cfi_def_cfa_offset 20
+ 1021 021f 5B       		popl	%ebx
+ 1022              		.cfi_restore 3
+ 1023              		.cfi_def_cfa_offset 16
+ 1024 0220 5E       		popl	%esi
+ 1025              		.cfi_restore 6
+ 1026              		.cfi_def_cfa_offset 12
+ 1027 0221 5F       		popl	%edi
+ 1028              		.cfi_restore 7
+ 1029              		.cfi_def_cfa_offset 8
+ 1030 0222 5D       		popl	%ebp
+ 1031              		.cfi_restore 5
+ 1032              		.cfi_def_cfa_offset 4
+ 1033 0223 C20C00   		ret	$12
+ 1034              		.p2align 4,,7
+ 1035              	L205:
+ 1036              		.cfi_restore_state
+ 1037 0226 D993641B 		fsts	7012(%ebx)
+ 1037      0000
+ 1038 022c 0F8546FE 		jne	L208
+ 1038      FFFF
+ 1039 0232 C7836C14 		movl	$1, 5228(%ebx)
+ 1039      00000100 
+ 1039      0000
+ 1040 023c 31C0     		xorl	%eax, %eax
+ 1041              	L210:
+ 1042 023e 8B93780B 		movl	2936(%ebx), %edx
+ 1042      0000
+ 1043 0244 8B1402   		movl	(%edx,%eax), %edx
+ 1044 0247 85D2     		testl	%edx, %edx
+ 1045 0249 0F84A800 		je	L240
+ 1045      0000
+ 1046 024f 8B8C0380 		movl	2944(%ebx,%eax), %ecx
+ 1046      0B0000
+ 1047 0256 83C004   		addl	$4, %eax
+ 1048 0259 83F80C   		cmpl	$12, %eax
+ 1049 025c 880A     		movb	%cl, (%edx)
+ 1050 025e 75DE     		jne	L210
+ 1051 0260 8B837C0B 		movl	2940(%ebx), %eax
+ 1051      0000
+ 1052 0266 837C2478 		cmpl	$1, 120(%esp)
+ 1052      01
+ 1053 026b 8B742474 		movl	116(%esp), %esi
+ 1054 026f 0FB65424 		movzbl	60(%esp), %edx
+ 1054      3C
+ 1055 0274 0F94837C 		sete	3964(%ebx)
+ 1055      0F0000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 25
+
+
+ 1056 027b D918     		fstps	(%eax)
+ 1057 027d 8B83780B 		movl	2936(%ebx), %eax
+ 1057      0000
+ 1058 0283 8B04B0   		movl	(%eax,%esi,4), %eax
+ 1059 0286 8810     		movb	%dl, (%eax)
+ 1060 0288 83C45C   		addl	$92, %esp
+ 1061              		.cfi_remember_state
+ 1062              		.cfi_def_cfa_offset 20
+ 1063 028b 5B       		popl	%ebx
+ 1064              		.cfi_restore 3
+ 1065              		.cfi_def_cfa_offset 16
+ 1066 028c 5E       		popl	%esi
+ 1067              		.cfi_restore 6
+ 1068              		.cfi_def_cfa_offset 12
+ 1069 028d 5F       		popl	%edi
+ 1070              		.cfi_restore 7
+ 1071              		.cfi_def_cfa_offset 8
+ 1072 028e 5D       		popl	%ebp
+ 1073              		.cfi_restore 5
+ 1074              		.cfi_def_cfa_offset 4
+ 1075 028f C20C00   		ret	$12
+ 1076              		.p2align 4,,7
+ 1077              	L239:
+ 1078              		.cfi_restore_state
+ 1079 0292 DDD8     		fstp	%st(0)
+ 1080 0294 C704247E 		movl	$LC9, (%esp)
+ 1080      000000
+ 1081 029b E8000000 		call	_firmwareError
+ 1081      00
+ 1082 02a0 E977FFFF 		jmp	L199
+ 1082      FF
+ 1083              		.p2align 4,,7
+ 1084              	L238:
+ 1085 02a5 DD5C240C 		fstpl	12(%esp)
+ 1086 02a9 C7042448 		movl	$LC7, (%esp)
+ 1086      000000
+ 1087 02b0 DD5C2404 		fstpl	4(%esp)
+ 1088 02b4 E8000000 		call	_firmwareError
+ 1088      00
+ 1089 02b9 83C45C   		addl	$92, %esp
+ 1090              		.cfi_remember_state
+ 1091              		.cfi_def_cfa_offset 20
+ 1092 02bc 5B       		popl	%ebx
+ 1093              		.cfi_restore 3
+ 1094              		.cfi_def_cfa_offset 16
+ 1095 02bd 5E       		popl	%esi
+ 1096              		.cfi_restore 6
+ 1097              		.cfi_def_cfa_offset 12
+ 1098 02be 5F       		popl	%edi
+ 1099              		.cfi_restore 7
+ 1100              		.cfi_def_cfa_offset 8
+ 1101 02bf 5D       		popl	%ebp
+ 1102              		.cfi_restore 5
+ 1103              		.cfi_def_cfa_offset 4
+ 1104 02c0 C20C00   		ret	$12
+ 1105              		.p2align 4,,7
+ 1106              	L237:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 26
+
+
+ 1107              		.cfi_restore_state
+ 1108 02c3 DDD8     		fstp	%st(0)
+ 1109 02c5 C704242F 		movl	$LC6, (%esp)
+ 1109      000000
+ 1110 02cc E8000000 		call	_firmwareError
+ 1110      00
+ 1111 02d1 E946FFFF 		jmp	L199
+ 1111      FF
+ 1112              		.p2align 4,,7
+ 1113              	L213:
+ 1114 02d6 8D5001   		leal	1(%eax), %edx
+ 1115 02d9 89D7     		movl	%edx, %edi
+ 1116 02db 89542440 		movl	%edx, 64(%esp)
+ 1117 02df C1E202   		sall	$2, %edx
+ 1118 02e2 39FE     		cmpl	%edi, %esi
+ 1119 02e4 89442448 		movl	%eax, 72(%esp)
+ 1120 02e8 8954244C 		movl	%edx, 76(%esp)
+ 1121 02ec 0F8D0FFE 		jge	L223
+ 1121      FFFF
+ 1122 02f2 E96CFEFF 		jmp	L212
+ 1122      FF
+ 1123              		.p2align 4,,7
+ 1124              	L240:
+ 1125 02f7 DDD8     		fstp	%st(0)
+ 1126 02f9 C7042467 		movl	$LC8, (%esp)
+ 1126      000000
+ 1127 0300 E8000000 		call	_firmwareError
+ 1127      00
+ 1128 0305 E912FFFF 		jmp	L199
+ 1128      FF
+ 1129              	L225:
+ 1130 030a C744244C 		movl	$0, 76(%esp)
+ 1130      00000000 
+ 1131 0312 31FF     		xorl	%edi, %edi
+ 1132 0314 C7442448 		movl	$-1, 72(%esp)
+ 1132      FFFFFFFF 
+ 1133 031c C7442440 		movl	$0, 64(%esp)
+ 1133      00000000 
+ 1134 0324 E93AFEFF 		jmp	L212
+ 1134      FF
+ 1135              		.cfi_endproc
+ 1136              	LFE113:
+ 1137 0329 90909090 		.section	.text$_ZL14addAccordPair3P12TriggerShapef,"x"
+ 1137      909090
+ 1138              		.p2align 4,,15
+ 1139              		.def	__ZL14addAccordPair3P12TriggerShapef;	.scl	3;	.type	32;	.endef
+ 1140              	__ZL14addAccordPair3P12TriggerShapef:
+ 1141              	LFB122:
+ 1142              		.cfi_startproc
+ 1143 0000 53       		pushl	%ebx
+ 1144              		.cfi_def_cfa_offset 8
+ 1145              		.cfi_offset 3, -8
+ 1146 0001 89C1     		movl	%eax, %ecx
+ 1147 0003 83EC38   		subl	$56, %esp
+ 1148              		.cfi_def_cfa_offset 64
+ 1149 0006 89C3     		movl	%eax, %ebx
+ 1150 0008 D905D000 		flds	LC11
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 27
+
+
+ 1150      0000
+ 1151 000e D9442440 		flds	64(%esp)
+ 1152 0012 D8C1     		fadd	%st(1), %st
+ 1153 0014 C7442408 		movl	$1, 8(%esp)
+ 1153      01000000 
+ 1154 001c C7442404 		movl	$2, 4(%esp)
+ 1154      02000000 
+ 1155 0024 D91424   		fsts	(%esp)
+ 1156 0027 D9C9     		fxch	%st(1)
+ 1157 0029 D95C2410 		fstps	16(%esp)
+ 1158 002d D95C2420 		fstps	32(%esp)
+ 1159 0031 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 1159      00
+ 1160              		.cfi_def_cfa_offset 52
+ 1161 0036 89D9     		movl	%ebx, %ecx
+ 1162 0038 83EC0C   		subl	$12, %esp
+ 1163              		.cfi_def_cfa_offset 64
+ 1164 003b D9442410 		flds	16(%esp)
+ 1165 003f D9442420 		flds	32(%esp)
+ 1166 0043 DEC1     		faddp	%st, %st(1)
+ 1167 0045 C7442408 		movl	$0, 8(%esp)
+ 1167      00000000 
+ 1168 004d C7442404 		movl	$2, 4(%esp)
+ 1168      02000000 
+ 1169 0055 D91424   		fsts	(%esp)
+ 1170 0058 D95C2410 		fstps	16(%esp)
+ 1171 005c E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 1171      00
+ 1172              		.cfi_def_cfa_offset 52
+ 1173 0061 83EC0C   		subl	$12, %esp
+ 1174              		.cfi_def_cfa_offset 64
+ 1175 0064 D9442410 		flds	16(%esp)
+ 1176 0068 D805D400 		fadds	LC12
+ 1176      0000
+ 1177 006e 83C438   		addl	$56, %esp
+ 1178              		.cfi_def_cfa_offset 8
+ 1179 0071 5B       		popl	%ebx
+ 1180              		.cfi_restore 3
+ 1181              		.cfi_def_cfa_offset 4
+ 1182 0072 C3       		ret
+ 1183              		.cfi_endproc
+ 1184              	LFE122:
+ 1185 0073 90909090 		.section	.text$_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_eff,"x"
+ 1185      90909090 
+ 1185      90909090 
+ 1185      90
+ 1186              		.align 2
+ 1187              		.p2align 4,,15
+ 1188              		.globl	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_eff
+ 1189              		.def	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_eff;	.scl	2;	.type	32;	.endef
+ 1190              	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_eff:
+ 1191              	LFB111:
+ 1192              		.cfi_startproc
+ 1193 0000 83EC1C   		subl	$28, %esp
+ 1194              		.cfi_def_cfa_offset 32
+ 1195 0003 D9442420 		flds	32(%esp)
+ 1196 0007 D944242C 		flds	44(%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 28
+
+
+ 1197 000b D9C9     		fxch	%st(1)
+ 1198 000d DBE9     		fucomi	%st(1), %st
+ 1199 000f DDD9     		fstp	%st(1)
+ 1200 0011 760D     		jbe	L251
+ 1201 0013 D9442430 		flds	48(%esp)
+ 1202 0017 DFE9     		fucomip	%st(1), %st
+ 1203 0019 770D     		ja	L250
+ 1204 001b DDD8     		fstp	%st(0)
+ 1205 001d EB03     		jmp	L243
+ 1206 001f 90       		.p2align 4,,7
+ 1207              	L251:
+ 1208 0020 DDD8     		fstp	%st(0)
+ 1209              	L243:
+ 1210 0022 83C41C   		addl	$28, %esp
+ 1211              		.cfi_remember_state
+ 1212              		.cfi_def_cfa_offset 4
+ 1213 0025 C21400   		ret	$20
+ 1214              		.p2align 4,,7
+ 1215              	L250:
+ 1216              		.cfi_restore_state
+ 1217 0028 8B442428 		movl	40(%esp), %eax
+ 1218 002c D91C24   		fstps	(%esp)
+ 1219 002f 89442408 		movl	%eax, 8(%esp)
+ 1220 0033 8B442424 		movl	36(%esp), %eax
+ 1221 0037 89442404 		movl	%eax, 4(%esp)
+ 1222 003b E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 1222      00
+ 1223              		.cfi_def_cfa_offset 20
+ 1224 0040 83EC0C   		subl	$12, %esp
+ 1225              		.cfi_def_cfa_offset 32
+ 1226 0043 83C41C   		addl	$28, %esp
+ 1227              		.cfi_def_cfa_offset 4
+ 1228 0046 C21400   		ret	$20
+ 1229              		.cfi_endproc
+ 1230              	LFE111:
+ 1231 0049 90909090 		.section	.text$_ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0,"x"
+ 1231      909090
+ 1232              		.p2align 4,,15
+ 1233              		.def	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0;	.scl	3;	.type	32;	.endef
+ 1234              	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0:
+ 1235              	LFB125:
+ 1236              		.cfi_startproc
+ 1237 0000 53       		pushl	%ebx
+ 1238              		.cfi_def_cfa_offset 8
+ 1239              		.cfi_offset 3, -8
+ 1240 0001 89C1     		movl	%eax, %ecx
+ 1241 0003 83EC38   		subl	$56, %esp
+ 1242              		.cfi_def_cfa_offset 64
+ 1243 0006 89C3     		movl	%eax, %ebx
+ 1244 0008 D9442440 		flds	64(%esp)
+ 1245 000c D91424   		fsts	(%esp)
+ 1246 000f C7442408 		movl	$1, 8(%esp)
+ 1246      01000000 
+ 1247 0017 D95C2410 		fstps	16(%esp)
+ 1248 001b C7442404 		movl	$1, 4(%esp)
+ 1248      01000000 
+ 1249 0023 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 29
+
+
+ 1249      00
+ 1250              		.cfi_def_cfa_offset 52
+ 1251 0028 89D9     		movl	%ebx, %ecx
+ 1252 002a 83EC0C   		subl	$12, %esp
+ 1253              		.cfi_def_cfa_offset 64
+ 1254 002d D905D400 		flds	LC12
+ 1254      0000
+ 1255 0033 D9442410 		flds	16(%esp)
+ 1256 0037 D8C1     		fadd	%st(1), %st
+ 1257 0039 C7442408 		movl	$0, 8(%esp)
+ 1257      00000000 
+ 1258 0041 C7442404 		movl	$1, 4(%esp)
+ 1258      01000000 
+ 1259 0049 D91424   		fsts	(%esp)
+ 1260 004c D9C9     		fxch	%st(1)
+ 1261 004e D95C2420 		fstps	32(%esp)
+ 1262 0052 D95C2410 		fstps	16(%esp)
+ 1263 0056 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 1263      00
+ 1264              		.cfi_def_cfa_offset 52
+ 1265 005b 83EC0C   		subl	$12, %esp
+ 1266              		.cfi_def_cfa_offset 64
+ 1267 005e D9442420 		flds	32(%esp)
+ 1268 0062 D9442410 		flds	16(%esp)
+ 1269 0066 83C438   		addl	$56, %esp
+ 1270              		.cfi_def_cfa_offset 8
+ 1271 0069 DEC1     		faddp	%st, %st(1)
+ 1272 006b 5B       		popl	%ebx
+ 1273              		.cfi_restore 3
+ 1274              		.cfi_def_cfa_offset 4
+ 1275 006c C3       		ret
+ 1276              		.cfi_endproc
+ 1277              	LFE125:
+ 1278 006d 909090   		.section	.text$_ZNK12TriggerShape16getCycleDurationEv,"x"
+ 1279              		.align 2
+ 1280              		.p2align 4,,15
+ 1281              		.globl	__ZNK12TriggerShape16getCycleDurationEv
+ 1282              		.def	__ZNK12TriggerShape16getCycleDurationEv;	.scl	2;	.type	32;	.endef
+ 1283              	__ZNK12TriggerShape16getCycleDurationEv:
+ 1284              	LFB114:
+ 1285              		.cfi_startproc
+ 1286 0000 83B9681B 		cmpl	$2, 7016(%ecx)
+ 1286      000002
+ 1287 0007 BA680100 		movl	$360, %edx
+ 1287      00
+ 1288 000c B8D00200 		movl	$720, %eax
+ 1288      00
+ 1289 0011 0F45C2   		cmovne	%edx, %eax
+ 1290 0014 C3       		ret
+ 1291              		.cfi_endproc
+ 1292              	LFE114:
+ 1293 0015 90909090 		.section	.text$_ZNK12TriggerShape14getSwitchAngleEi,"x"
+ 1293      90909090 
+ 1293      909090
+ 1294              		.align 2
+ 1295              		.p2align 4,,15
+ 1296              		.globl	__ZNK12TriggerShape14getSwitchAngleEi
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 30
+
+
+ 1297              		.def	__ZNK12TriggerShape14getSwitchAngleEi;	.scl	2;	.type	32;	.endef
+ 1298              	__ZNK12TriggerShape14getSwitchAngleEi:
+ 1299              	LFB115:
+ 1300              		.cfi_startproc
+ 1301 0000 53       		pushl	%ebx
+ 1302              		.cfi_def_cfa_offset 8
+ 1303              		.cfi_offset 3, -8
+ 1304 0001 B8680100 		movl	$360, %eax
+ 1304      00
+ 1305 0006 83EC28   		subl	$40, %esp
+ 1306              		.cfi_def_cfa_offset 48
+ 1307 0009 BBD00200 		movl	$720, %ebx
+ 1307      00
+ 1308 000e 83B9681B 		cmpl	$2, 7016(%ecx)
+ 1308      000002
+ 1309 0015 0F45D8   		cmovne	%eax, %ebx
+ 1310 0018 8B442430 		movl	48(%esp), %eax
+ 1311 001c 81C1740B 		addl	$2932, %ecx
+ 1311      0000
+ 1312 0022 890424   		movl	%eax, (%esp)
+ 1313 0025 E8000000 		call	__ZNK12multi_wave_s13getSwitchTimeEi
+ 1313      00
+ 1314              		.cfi_def_cfa_offset 44
+ 1315 002a 83EC04   		subl	$4, %esp
+ 1316              		.cfi_def_cfa_offset 48
+ 1317 002d 895C241C 		movl	%ebx, 28(%esp)
+ 1318 0031 DB44241C 		fildl	28(%esp)
+ 1319 0035 83C428   		addl	$40, %esp
+ 1320              		.cfi_def_cfa_offset 8
+ 1321 0038 DEC9     		fmulp	%st, %st(1)
+ 1322 003a 5B       		popl	%ebx
+ 1323              		.cfi_restore 3
+ 1324              		.cfi_def_cfa_offset 4
+ 1325 003b C20400   		ret	$4
+ 1326              		.cfi_endproc
+ 1327              	LFE115:
+ 1328 003e 9090     		.section	.text$_ZNK12TriggerShape8getAngleEi,"x"
+ 1329              		.align 2
+ 1330              		.p2align 4,,15
+ 1331              		.globl	__ZNK12TriggerShape8getAngleEi
+ 1332              		.def	__ZNK12TriggerShape8getAngleEi;	.scl	2;	.type	32;	.endef
+ 1333              	__ZNK12TriggerShape8getAngleEi:
+ 1334              	LFB110:
+ 1335              		.cfi_startproc
+ 1336 0000 83EC1C   		subl	$28, %esp
+ 1337              		.cfi_def_cfa_offset 32
+ 1338 0003 83B9681B 		cmpl	$2, 7016(%ecx)
+ 1338      000002
+ 1339 000a 8B442420 		movl	32(%esp), %eax
+ 1340 000e 7427     		je	L265
+ 1341 0010 8B916C14 		movl	5228(%ecx), %edx
+ 1341      0000
+ 1342 0016 39D0     		cmpl	%edx, %eax
+ 1343 0018 7C19     		jl	L266
+ 1344 001a 29D0     		subl	%edx, %eax
+ 1345 001c 890424   		movl	%eax, (%esp)
+ 1346 001f E8000000 		call	__ZNK12TriggerShape14getSwitchAngleEi
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 31
+
+
+ 1346      00
+ 1347              		.cfi_def_cfa_offset 28
+ 1348 0024 83EC04   		subl	$4, %esp
+ 1349              		.cfi_def_cfa_offset 32
+ 1350 0027 D805D800 		fadds	LC13
+ 1350      0000
+ 1351 002d 83C41C   		addl	$28, %esp
+ 1352              		.cfi_remember_state
+ 1353              		.cfi_def_cfa_offset 4
+ 1354 0030 C20400   		ret	$4
+ 1355              		.p2align 4,,7
+ 1356              	L266:
+ 1357              		.cfi_restore_state
+ 1358 0033 89442420 		movl	%eax, 32(%esp)
+ 1359              	L265:
+ 1360 0037 83C41C   		addl	$28, %esp
+ 1361              		.cfi_def_cfa_offset 4
+ 1362 003a E9000000 		jmp	__ZNK12TriggerShape14getSwitchAngleEi
+ 1362      00
+ 1363              		.cfi_def_cfa_offset 0
+ 1364              		.cfi_endproc
+ 1365              	LFE110:
+ 1366 003f 90       		.section .rdata,"dr"
+ 1367              	LC14:
+ 1368 00aa 7A65726F 		.ascii "zero engineCycle\0"
+ 1368      20656E67 
+ 1368      696E6543 
+ 1368      79636C65 
+ 1368      00
+ 1369              		.section	.text$_ZN12TriggerShape26calculateTriggerSynchPointEv,"x"
+ 1370              		.align 2
+ 1371              		.p2align 4,,15
+ 1372              		.globl	__ZN12TriggerShape26calculateTriggerSynchPointEv
+ 1373              		.def	__ZN12TriggerShape26calculateTriggerSynchPointEv;	.scl	2;	.type	32;	.endef
+ 1374              	__ZN12TriggerShape26calculateTriggerSynchPointEv:
+ 1375              	LFB93:
+ 1376              		.cfi_startproc
+ 1377 0000 55       		pushl	%ebp
+ 1378              		.cfi_def_cfa_offset 8
+ 1379              		.cfi_offset 5, -8
+ 1380 0001 57       		pushl	%edi
+ 1381              		.cfi_def_cfa_offset 12
+ 1382              		.cfi_offset 7, -12
+ 1383 0002 56       		pushl	%esi
+ 1384              		.cfi_def_cfa_offset 16
+ 1385              		.cfi_offset 6, -16
+ 1386 0003 89CE     		movl	%ecx, %esi
+ 1387 0005 53       		pushl	%ebx
+ 1388              		.cfi_def_cfa_offset 20
+ 1389              		.cfi_offset 3, -20
+ 1390 0006 83EC3C   		subl	$60, %esp
+ 1391              		.cfi_def_cfa_offset 80
+ 1392 0009 A1000000 		movl	_engineConfiguration, %eax
+ 1392      00
+ 1393 000e 890C24   		movl	%ecx, (%esp)
+ 1394 0011 05180200 		addl	$536, %eax
+ 1394      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 32
+
+
+ 1395 0016 89442404 		movl	%eax, 4(%esp)
+ 1396 001a E8000000 		call	__Z25findTriggerZeroEventIndexP12TriggerShapePK16trigger_config_s
+ 1396      00
+ 1397 001f 8B0D0000 		movl	_engine, %ecx
+ 1397      0000
+ 1398 0025 83BE681B 		cmpl	$2, 7016(%esi)
+ 1398      000002
+ 1399 002c 8B966C14 		movl	5228(%esi), %edx
+ 1399      0000
+ 1400 0032 89867017 		movl	%eax, 6000(%esi)
+ 1400      0000
+ 1401 0038 7402     		je	L269
+ 1402 003a 01D2     		addl	%edx, %edx
+ 1403              	L269:
+ 1404 003c 8991FC1E 		movl	%edx, 7932(%ecx)
+ 1404      0000
+ 1405 0042 89F1     		movl	%esi, %ecx
+ 1406 0044 890424   		movl	%eax, (%esp)
+ 1407 0047 E8000000 		call	__ZNK12TriggerShape8getAngleEi
+ 1407      00
+ 1408              		.cfi_def_cfa_offset 76
+ 1409 004c A1000000 		movl	_engine, %eax
+ 1409      00
+ 1410 0051 8B88FC1E 		movl	7932(%eax), %ecx
+ 1410      0000
+ 1411 0057 83EC04   		subl	$4, %esp
+ 1412              		.cfi_def_cfa_offset 80
+ 1413 005a D95C2428 		fstps	40(%esp)
+ 1414 005e 85C9     		testl	%ecx, %ecx
+ 1415 0060 0F8E0801 		jle	L267
+ 1415      0000
+ 1416 0066 8DBE7810 		leal	4216(%esi), %edi
+ 1416      0000
+ 1417 006c 31DB     		xorl	%ebx, %ebx
+ 1418 006e 31ED     		xorl	%ebp, %ebp
+ 1419 0070 EB32     		jmp	L283
+ 1420              		.p2align 4,,7
+ 1421              	L292:
+ 1422 0072 8B88FC1E 		movl	7932(%eax), %ecx
+ 1422      0000
+ 1423 0078 83C301   		addl	$1, %ebx
+ 1424 007b 83C704   		addl	$4, %edi
+ 1425 007e C7868C0B 		movl	$0x00000000, 2956(%esi)
+ 1425      00000000 
+ 1425      0000
+ 1426 0088 C786900B 		movl	$0x00000000, 2960(%esi)
+ 1426      00000000 
+ 1426      0000
+ 1427 0092 C7867810 		movl	$0, 4216(%esi)
+ 1427      00000000 
+ 1427      0000
+ 1428 009c 39D9     		cmpl	%ebx, %ecx
+ 1429 009e 0F8ECA00 		jle	L267
+ 1429      0000
+ 1430              	L283:
+ 1431 00a4 85DB     		testl	%ebx, %ebx
+ 1432 00a6 74CA     		je	L292
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 33
+
+
+ 1433 00a8 8B867017 		movl	6000(%esi), %eax
+ 1433      0000
+ 1434 00ae 01D8     		addl	%ebx, %eax
+ 1435 00b0 89C2     		movl	%eax, %edx
+ 1436 00b2 C1FA1F   		sarl	$31, %edx
+ 1437 00b5 F7F9     		idivl	%ecx
+ 1438 00b7 8B866C14 		movl	5228(%esi), %eax
+ 1438      0000
+ 1439 00bd 89D1     		movl	%edx, %ecx
+ 1440 00bf 29C1     		subl	%eax, %ecx
+ 1441 00c1 39C2     		cmpl	%eax, %edx
+ 1442 00c3 0F4CCA   		cmovl	%edx, %ecx
+ 1443 00c6 894C2424 		movl	%ecx, 36(%esp)
+ 1444 00ca 89F1     		movl	%esi, %ecx
+ 1445 00cc 891424   		movl	%edx, (%esp)
+ 1446 00cf E8000000 		call	__ZNK12TriggerShape8getAngleEi
+ 1446      00
+ 1447              		.cfi_def_cfa_offset 76
+ 1448 00d4 A1A80100 		movl	_persistentState+424, %eax
+ 1448      00
+ 1449 00d9 83EC04   		subl	$4, %esp
+ 1450              		.cfi_def_cfa_offset 80
+ 1451 00dc 85C0     		testl	%eax, %eax
+ 1452 00de D8642428 		fsubs	40(%esp)
+ 1453 00e2 0F849800 		je	L293
+ 1453      0000
+ 1454              	L274:
+ 1455 00e8 D9EE     		fldz
+ 1456 00ea 8944242C 		movl	%eax, 44(%esp)
+ 1457 00ee DBE9     		fucomi	%st(1), %st
+ 1458 00f0 DB44242C 		fildl	44(%esp)
+ 1459 00f4 7704     		ja	L277
+ 1460 00f6 EB1C     		jmp	L295
+ 1461              		.p2align 4,,7
+ 1462              	L296:
+ 1463 00f8 D9C9     		fxch	%st(1)
+ 1464              	L277:
+ 1465 00fa DCC2     		fadd	%st, %st(2)
+ 1466 00fc D9C9     		fxch	%st(1)
+ 1467 00fe DBEA     		fucomi	%st(2), %st
+ 1468 0100 77F6     		ja	L296
+ 1469 0102 DDD8     		fstp	%st(0)
+ 1470 0104 D9C9     		fxch	%st(1)
+ 1471 0106 DBE9     		fucomi	%st(1), %st
+ 1472 0108 7216     		jb	L297
+ 1473 010a 8DB60000 		.p2align 4,,7
+ 1473      0000
+ 1474              	L286:
+ 1475 0110 D8E1     		fsub	%st(1), %st
+ 1476 0112 EB04     		jmp	L291
+ 1477              	L295:
+ 1478 0114 DDD9     		fstp	%st(1)
+ 1479 0116 D9C9     		fxch	%st(1)
+ 1480              		.p2align 4,,7
+ 1481              	L291:
+ 1482 0118 DBE9     		fucomi	%st(1), %st
+ 1483 011a 73F4     		jae	L286
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 34
+
+
+ 1484 011c DDD9     		fstp	%st(1)
+ 1485 011e EB02     		jmp	L294
+ 1486              	L297:
+ 1487 0120 DDD9     		fstp	%st(1)
+ 1488              		.p2align 4,,7
+ 1489              	L294:
+ 1490 0122 A1000000 		movl	_engineConfiguration, %eax
+ 1490      00
+ 1491 0127 F680E505 		testb	$64, 1509(%eax)
+ 1491      000040
+ 1492 012e 7446     		je	L281
+ 1493 0130 8B442424 		movl	36(%esp), %eax
+ 1494 0134 80BC067C 		cmpb	$0, 3964(%esi,%eax)
+ 1494      0F000000 
+ 1495 013c 7413     		je	L298
+ 1496 013e D994AE94 		fsts	2964(%esi,%ebp,4)
+ 1496      0B0000
+ 1497 0145 D99CAE98 		fstps	2968(%esi,%ebp,4)
+ 1497      0B0000
+ 1498 014c 83C502   		addl	$2, %ebp
+ 1499 014f EB02     		jmp	L282
+ 1500              		.p2align 4,,7
+ 1501              	L298:
+ 1502 0151 DDD8     		fstp	%st(0)
+ 1503              	L282:
+ 1504 0153 A1000000 		movl	_engine, %eax
+ 1504      00
+ 1505 0158 83C301   		addl	$1, %ebx
+ 1506 015b 892F     		movl	%ebp, (%edi)
+ 1507 015d 83C704   		addl	$4, %edi
+ 1508 0160 8B88FC1E 		movl	7932(%eax), %ecx
+ 1508      0000
+ 1509 0166 39D9     		cmpl	%ebx, %ecx
+ 1510 0168 0F8F36FF 		jg	L283
+ 1510      FFFF
+ 1511              	L267:
+ 1512 016e 83C43C   		addl	$60, %esp
+ 1513              		.cfi_remember_state
+ 1514              		.cfi_def_cfa_offset 20
+ 1515 0171 5B       		popl	%ebx
+ 1516              		.cfi_restore 3
+ 1517              		.cfi_def_cfa_offset 16
+ 1518 0172 5E       		popl	%esi
+ 1519              		.cfi_restore 6
+ 1520              		.cfi_def_cfa_offset 12
+ 1521 0173 5F       		popl	%edi
+ 1522              		.cfi_restore 7
+ 1523              		.cfi_def_cfa_offset 8
+ 1524 0174 5D       		popl	%ebp
+ 1525              		.cfi_restore 5
+ 1526              		.cfi_def_cfa_offset 4
+ 1527 0175 C3       		ret
+ 1528              		.p2align 4,,7
+ 1529              	L281:
+ 1530              		.cfi_restore_state
+ 1531 0176 D99F14FB 		fstps	-1260(%edi)
+ 1531      FFFF
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 35
+
+
+ 1532 017c EBD5     		jmp	L282
+ 1533 017e 6690     		.p2align 4,,7
+ 1534              	L293:
+ 1535 0180 C70424AA 		movl	$LC14, (%esp)
+ 1535      000000
+ 1536 0187 D95C2410 		fstps	16(%esp)
+ 1537 018b E8000000 		call	_firmwareError
+ 1537      00
+ 1538 0190 A1A80100 		movl	_persistentState+424, %eax
+ 1538      00
+ 1539 0195 D9442410 		flds	16(%esp)
+ 1540 0199 E94AFFFF 		jmp	L274
+ 1540      FF
+ 1541              		.cfi_endproc
+ 1542              	LFE93:
+ 1543 019e 9090     		.section	.text$_ZN12multi_wave_s16checkSwitchTimesEi,"x"
+ 1544              		.align 2
+ 1545              		.p2align 4,,15
+ 1546              		.globl	__ZN12multi_wave_s16checkSwitchTimesEi
+ 1547              		.def	__ZN12multi_wave_s16checkSwitchTimesEi;	.scl	2;	.type	32;	.endef
+ 1548              	__ZN12multi_wave_s16checkSwitchTimesEi:
+ 1549              	LFB116:
+ 1550              		.cfi_startproc
+ 1551 0000 83EC1C   		subl	$28, %esp
+ 1552              		.cfi_def_cfa_offset 32
+ 1553 0003 8B4108   		movl	8(%ecx), %eax
+ 1554 0006 89442404 		movl	%eax, 4(%esp)
+ 1555 000a 8B442420 		movl	32(%esp), %eax
+ 1556 000e 890424   		movl	%eax, (%esp)
+ 1557 0011 E8000000 		call	__Z17checkSwitchTimes2iPf
+ 1557      00
+ 1558 0016 83C41C   		addl	$28, %esp
+ 1559              		.cfi_def_cfa_offset 4
+ 1560 0019 C20400   		ret	$4
+ 1561              		.cfi_endproc
+ 1562              	LFE116:
+ 1563 001c 90909090 		.section .rdata,"dr"
+ 1564              	LC15:
+ 1565 00bb 54726967 		.ascii "TriggerShape is NULL\0"
+ 1565      67657253 
+ 1565      68617065 
+ 1565      20697320 
+ 1565      4E554C4C 
+ 1566              		.section	.text$_Z18setVwConfigurationP12TriggerShape,"x"
+ 1567              		.p2align 4,,15
+ 1568              		.globl	__Z18setVwConfigurationP12TriggerShape
+ 1569              		.def	__Z18setVwConfigurationP12TriggerShape;	.scl	2;	.type	32;	.endef
+ 1570              	__Z18setVwConfigurationP12TriggerShape:
+ 1571              	LFB117:
+ 1572              		.cfi_startproc
+ 1573 0000 53       		pushl	%ebx
+ 1574              		.cfi_def_cfa_offset 8
+ 1575              		.cfi_offset 3, -8
+ 1576 0001 83EC48   		subl	$72, %esp
+ 1577              		.cfi_def_cfa_offset 80
+ 1578 0004 8B5C2450 		movl	80(%esp), %ebx
+ 1579 0008 85DB     		testl	%ebx, %ebx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 36
+
+
+ 1580 000a 0F843101 		je	L304
+ 1580      0000
+ 1581 0010 C683640B 		movb	$1, 2916(%ebx)
+ 1581      000001
+ 1582 0017 891C24   		movl	%ebx, (%esp)
+ 1583 001a C744240C 		movl	$1, 12(%esp)
+ 1583      01000000 
+ 1584 0022 C7442408 		movl	$2, 8(%esp)
+ 1584      02000000 
+ 1585 002a C7442404 		movl	$60, 4(%esp)
+ 1585      3C000000 
+ 1586 0032 E8000000 		call	__Z37initializeSkippedToothTriggerShapeExtP12TriggerShapeii16operation_mode_e
+ 1586      00
+ 1587 0037 89D9     		movl	%ebx, %ecx
+ 1588 0039 C60301   		movb	$1, (%ebx)
+ 1589 003c C7442404 		movl	$0, 4(%esp)
+ 1589      00000000 
+ 1590 0044 C7042401 		movl	$1, (%esp)
+ 1590      000000
+ 1591 004b E8000000 		call	__ZN12TriggerShape5resetE16operation_mode_eb
+ 1591      00
+ 1592              		.cfi_def_cfa_offset 72
+ 1593 0050 83EC08   		subl	$8, %esp
+ 1594              		.cfi_def_cfa_offset 80
+ 1595 0053 C7042401 		movl	$1, (%esp)
+ 1595      000000
+ 1596 005a E8000000 		call	__Z14getEngineCycle16operation_mode_e
+ 1596      00
+ 1597 005f 895C2404 		movl	%ebx, 4(%esp)
+ 1598 0063 C7442420 		movl	$0x442c8000, 32(%esp)
+ 1598      00802C44 
+ 1599 006b C744241C 		movl	$0xbf800000, 28(%esp)
+ 1599      000080BF 
+ 1600 0073 C7442414 		movl	$0x00000000, 20(%esp)
+ 1600      00000000 
+ 1601 007b C7442410 		movl	$0x3f000000, 16(%esp)
+ 1601      0000003F 
+ 1602 0083 D9542418 		fsts	24(%esp)
+ 1603 0087 C744240C 		movl	$2, 12(%esp)
+ 1603      02000000 
+ 1604 008f D95C2430 		fstps	48(%esp)
+ 1605 0093 C7442408 		movl	$60, 8(%esp)
+ 1605      3C000000 
+ 1606 009b C7042400 		movl	$0, (%esp)
+ 1606      000000
+ 1607 00a2 E8000000 		call	__Z28addSkippedToothTriggerEvents15trigger_wheel_eP12TriggerShapeiifffff
+ 1607      00
+ 1608 00a7 89D9     		movl	%ebx, %ecx
+ 1609 00a9 C7442410 		movl	$0x447a0000, 16(%esp)
+ 1609      00007A44 
+ 1610 00b1 C744240C 		movl	$0xbf800000, 12(%esp)
+ 1610      000080BF 
+ 1611 00b9 C7442408 		movl	$1, 8(%esp)
+ 1611      01000000 
+ 1612 00c1 C7442404 		movl	$0, 4(%esp)
+ 1612      00000000 
+ 1613 00c9 D9442430 		flds	48(%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 37
+
+
+ 1614 00cd D905DC00 		flds	LC20
+ 1614      0000
+ 1615 00d3 DEF9     		fdivrp	%st, %st(1)
+ 1616 00d5 D80DE000 		fmuls	LC21
+ 1616      0000
+ 1617 00db D9EE     		fldz
+ 1618 00dd DEC1     		faddp	%st, %st(1)
+ 1619 00df D805E400 		fadds	LC22
+ 1619      0000
+ 1620 00e5 D91C24   		fstps	(%esp)
+ 1621 00e8 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_eff
+ 1621      00
+ 1622              		.cfi_def_cfa_offset 60
+ 1623 00ed 89D9     		movl	%ebx, %ecx
+ 1624 00ef 83EC14   		subl	$20, %esp
+ 1625              		.cfi_def_cfa_offset 80
+ 1626 00f2 D9442430 		flds	48(%esp)
+ 1627 00f6 D9EE     		fldz
+ 1628 00f8 DEC1     		faddp	%st, %st(1)
+ 1629 00fa C7442410 		movl	$0x447a0000, 16(%esp)
+ 1629      00007A44 
+ 1630 0102 C744240C 		movl	$0xbf800000, 12(%esp)
+ 1630      000080BF 
+ 1631 010a C7442408 		movl	$0, 8(%esp)
+ 1631      00000000 
+ 1632 0112 D91C24   		fstps	(%esp)
+ 1633 0115 C7442404 		movl	$0, 4(%esp)
+ 1633      00000000 
+ 1634 011d E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_eff
+ 1634      00
+ 1635              		.cfi_def_cfa_offset 60
+ 1636 0122 C60301   		movb	$1, (%ebx)
+ 1637 0125 C783580B 		movl	$0x3fcccccd, 2904(%ebx)
+ 1637      0000CDCC 
+ 1637      CC3F
+ 1638 012f C7835C0B 		movl	$0x40800000, 2908(%ebx)
+ 1638      00000000 
+ 1638      8040
+ 1639 0139 83EC14   		subl	$20, %esp
+ 1640              		.cfi_def_cfa_offset 80
+ 1641 013c 83C448   		addl	$72, %esp
+ 1642              		.cfi_remember_state
+ 1643              		.cfi_def_cfa_offset 8
+ 1644 013f 5B       		popl	%ebx
+ 1645              		.cfi_restore 3
+ 1646              		.cfi_def_cfa_offset 4
+ 1647 0140 C3       		ret
+ 1648              		.p2align 4,,7
+ 1649              	L304:
+ 1650              		.cfi_restore_state
+ 1651 0141 C7442450 		movl	$LC15, 80(%esp)
+ 1651      BB000000 
+ 1652 0149 83C448   		addl	$72, %esp
+ 1653              		.cfi_def_cfa_offset 8
+ 1654 014c 5B       		popl	%ebx
+ 1655              		.cfi_restore 3
+ 1656              		.cfi_def_cfa_offset 4
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 38
+
+
+ 1657 014d E9000000 		jmp	_firmwareError
+ 1657      00
+ 1658              		.cfi_endproc
+ 1659              	LFE117:
+ 1660 0152 90909090 		.section	.text$_Z28setToothedWheelConfigurationP12TriggerShapeii16operation_mode_e,"x"
+ 1660      90909090 
+ 1660      90909090 
+ 1660      9090
+ 1661              		.p2align 4,,15
+ 1662              		.globl	__Z28setToothedWheelConfigurationP12TriggerShapeii16operation_mode_e
+ 1663              		.def	__Z28setToothedWheelConfigurationP12TriggerShapeii16operation_mode_e;	.scl	2;	.type	32;	.ende
+ 1664              	__Z28setToothedWheelConfigurationP12TriggerShapeii16operation_mode_e:
+ 1665              	LFB118:
+ 1666              		.cfi_startproc
+ 1667 0000 8B442404 		movl	4(%esp), %eax
+ 1668 0004 C680640B 		movb	$1, 2916(%eax)
+ 1668      000001
+ 1669 000b E9000000 		jmp	__Z37initializeSkippedToothTriggerShapeExtP12TriggerShapeii16operation_mode_e
+ 1669      00
+ 1670              		.cfi_endproc
+ 1671              	LFE118:
+ 1672              		.section	.text$_ZN12TriggerShape29setTriggerSynchronizationGap2Eff,"x"
+ 1673              		.align 2
+ 1674              		.p2align 4,,15
+ 1675              		.globl	__ZN12TriggerShape29setTriggerSynchronizationGap2Eff
+ 1676              		.def	__ZN12TriggerShape29setTriggerSynchronizationGap2Eff;	.scl	2;	.type	32;	.endef
+ 1677              	__ZN12TriggerShape29setTriggerSynchronizationGap2Eff:
+ 1678              	LFB119:
+ 1679              		.cfi_startproc
+ 1680 0000 D9442404 		flds	4(%esp)
+ 1681 0004 D999580B 		fstps	2904(%ecx)
+ 1681      0000
+ 1682 000a D9442408 		flds	8(%esp)
+ 1683 000e C60101   		movb	$1, (%ecx)
+ 1684 0011 D9995C0B 		fstps	2908(%ecx)
+ 1684      0000
+ 1685 0017 C20800   		ret	$8
+ 1686              		.cfi_endproc
+ 1687              	LFE119:
+ 1688 001a 90909090 		.section	.text$_ZN12TriggerShape28setTriggerSynchronizationGapEf,"x"
+ 1688      9090
+ 1689              		.align 2
+ 1690              		.p2align 4,,15
+ 1691              		.globl	__ZN12TriggerShape28setTriggerSynchronizationGapEf
+ 1692              		.def	__ZN12TriggerShape28setTriggerSynchronizationGapEf;	.scl	2;	.type	32;	.endef
+ 1693              	__ZN12TriggerShape28setTriggerSynchronizationGapEf:
+ 1694              	LFB120:
+ 1695              		.cfi_startproc
+ 1696 0000 D9442404 		flds	4(%esp)
+ 1697 0004 D905E800 		flds	LC25
+ 1697      0000
+ 1698 000a D8C9     		fmul	%st(1), %st
+ 1699 000c C60101   		movb	$1, (%ecx)
+ 1700 000f D999580B 		fstps	2904(%ecx)
+ 1700      0000
+ 1701 0015 D80DEC00 		fmuls	LC26
+ 1701      0000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 39
+
+
+ 1702 001b D9995C0B 		fstps	2908(%ecx)
+ 1702      0000
+ 1703 0021 C20400   		ret	$4
+ 1704              		.cfi_endproc
+ 1705              	LFE120:
+ 1706 0024 90909090 		.section	.text$_Z25configureHondaAccordCDDipP12TriggerShape,"x"
+ 1706      90909090 
+ 1706      90909090 
+ 1707              		.p2align 4,,15
+ 1708              		.globl	__Z25configureHondaAccordCDDipP12TriggerShape
+ 1709              		.def	__Z25configureHondaAccordCDDipP12TriggerShape;	.scl	2;	.type	32;	.endef
+ 1710              	__Z25configureHondaAccordCDDipP12TriggerShape:
+ 1711              	LFB123:
+ 1712              		.cfi_startproc
+ 1713 0000 53       		pushl	%ebx
+ 1714              		.cfi_def_cfa_offset 8
+ 1715              		.cfi_offset 3, -8
+ 1716 0001 83EC28   		subl	$40, %esp
+ 1717              		.cfi_def_cfa_offset 48
+ 1718 0004 8B5C2430 		movl	48(%esp), %ebx
+ 1719 0008 C7442404 		movl	$1, 4(%esp)
+ 1719      01000000 
+ 1720 0010 C7042402 		movl	$2, (%esp)
+ 1720      000000
+ 1721 0017 89D9     		movl	%ebx, %ecx
+ 1722 0019 E8000000 		call	__ZN12TriggerShape5resetE16operation_mode_eb
+ 1722      00
+ 1723              		.cfi_def_cfa_offset 40
+ 1724 001e 89D8     		movl	%ebx, %eax
+ 1725 0020 C783840B 		movl	$1, 2948(%ebx)
+ 1725      00000100 
+ 1725      0000
+ 1726 002a 83EC08   		subl	$8, %esp
+ 1727              		.cfi_def_cfa_offset 48
+ 1728 002d C7042400 		movl	$0x00000000, (%esp)
+ 1728      000000
+ 1729 0034 E8000000 		call	__ZL14addAccordPair3P12TriggerShapef
+ 1729      00
+ 1730 0039 89D8     		movl	%ebx, %eax
+ 1731 003b D91C24   		fstps	(%esp)
+ 1732 003e E8000000 		call	__ZL14addAccordPair3P12TriggerShapef
+ 1732      00
+ 1733 0043 89D8     		movl	%ebx, %eax
+ 1734 0045 D91C24   		fstps	(%esp)
+ 1735 0048 E8000000 		call	__ZL14addAccordPair3P12TriggerShapef
+ 1735      00
+ 1736 004d DDD8     		fstp	%st(0)
+ 1737 004f 89D9     		movl	%ebx, %ecx
+ 1738 0051 C7442408 		movl	$0, 8(%esp)
+ 1738      00000000 
+ 1739 0059 C7442404 		movl	$1, 4(%esp)
+ 1739      01000000 
+ 1740 0061 D905F000 		flds	LC27
+ 1740      0000
+ 1741 0067 D91424   		fsts	(%esp)
+ 1742 006a D95C2410 		fstps	16(%esp)
+ 1743 006e E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 40
+
+
+ 1743      00
+ 1744              		.cfi_def_cfa_offset 36
+ 1745 0073 89D8     		movl	%ebx, %eax
+ 1746 0075 83EC0C   		subl	$12, %esp
+ 1747              		.cfi_def_cfa_offset 48
+ 1748 0078 D9442410 		flds	16(%esp)
+ 1749 007c D91C24   		fstps	(%esp)
+ 1750 007f E8000000 		call	__ZL14addAccordPair3P12TriggerShapef
+ 1750      00
+ 1751 0084 89D8     		movl	%ebx, %eax
+ 1752 0086 D91C24   		fstps	(%esp)
+ 1753 0089 E8000000 		call	__ZL14addAccordPair3P12TriggerShapef
+ 1753      00
+ 1754 008e 89D8     		movl	%ebx, %eax
+ 1755 0090 D91C24   		fstps	(%esp)
+ 1756 0093 E8000000 		call	__ZL14addAccordPair3P12TriggerShapef
+ 1756      00
+ 1757 0098 DDD8     		fstp	%st(0)
+ 1758 009a 89D9     		movl	%ebx, %ecx
+ 1759 009c C7442408 		movl	$1, 8(%esp)
+ 1759      01000000 
+ 1760 00a4 C7442404 		movl	$1, 4(%esp)
+ 1760      01000000 
+ 1761 00ac D905F400 		flds	LC28
+ 1761      0000
+ 1762 00b2 D91424   		fsts	(%esp)
+ 1763 00b5 D95C2410 		fstps	16(%esp)
+ 1764 00b9 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 1764      00
+ 1765              		.cfi_def_cfa_offset 36
+ 1766 00be 89D8     		movl	%ebx, %eax
+ 1767 00c0 83EC0C   		subl	$12, %esp
+ 1768              		.cfi_def_cfa_offset 48
+ 1769 00c3 D9442410 		flds	16(%esp)
+ 1770 00c7 D91C24   		fstps	(%esp)
+ 1771 00ca E8000000 		call	__ZL14addAccordPair3P12TriggerShapef
+ 1771      00
+ 1772 00cf 89D8     		movl	%ebx, %eax
+ 1773 00d1 D91C24   		fstps	(%esp)
+ 1774 00d4 E8000000 		call	__ZL14addAccordPair3P12TriggerShapef
+ 1774      00
+ 1775 00d9 89D8     		movl	%ebx, %eax
+ 1776 00db D91C24   		fstps	(%esp)
+ 1777 00de E8000000 		call	__ZL14addAccordPair3P12TriggerShapef
+ 1777      00
+ 1778 00e3 DDD8     		fstp	%st(0)
+ 1779 00e5 89D9     		movl	%ebx, %ecx
+ 1780 00e7 C7442408 		movl	$0, 8(%esp)
+ 1780      00000000 
+ 1781 00ef C7442404 		movl	$1, 4(%esp)
+ 1781      01000000 
+ 1782 00f7 D905F800 		flds	LC29
+ 1782      0000
+ 1783 00fd D91424   		fsts	(%esp)
+ 1784 0100 D95C2410 		fstps	16(%esp)
+ 1785 0104 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 1785      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 41
+
+
+ 1786              		.cfi_def_cfa_offset 36
+ 1787 0109 89D8     		movl	%ebx, %eax
+ 1788 010b 83EC0C   		subl	$12, %esp
+ 1789              		.cfi_def_cfa_offset 48
+ 1790 010e D9442410 		flds	16(%esp)
+ 1791 0112 D91C24   		fstps	(%esp)
+ 1792 0115 E8000000 		call	__ZL14addAccordPair3P12TriggerShapef
+ 1792      00
+ 1793 011a 89D8     		movl	%ebx, %eax
+ 1794 011c D91C24   		fstps	(%esp)
+ 1795 011f E8000000 		call	__ZL14addAccordPair3P12TriggerShapef
+ 1795      00
+ 1796 0124 89D8     		movl	%ebx, %eax
+ 1797 0126 D91C24   		fstps	(%esp)
+ 1798 0129 E8000000 		call	__ZL14addAccordPair3P12TriggerShapef
+ 1798      00
+ 1799 012e DDD8     		fstp	%st(0)
+ 1800 0130 89D9     		movl	%ebx, %ecx
+ 1801 0132 C7442408 		movl	$1, 8(%esp)
+ 1801      01000000 
+ 1802 013a C7442404 		movl	$0, 4(%esp)
+ 1802      00000000 
+ 1803 0142 C7042400 		movl	$0x43b04000, (%esp)
+ 1803      40B043
+ 1804 0149 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 1804      00
+ 1805              		.cfi_def_cfa_offset 36
+ 1806 014e 89D9     		movl	%ebx, %ecx
+ 1807 0150 83EC0C   		subl	$12, %esp
+ 1808              		.cfi_def_cfa_offset 48
+ 1809 0153 D905D800 		flds	LC13
+ 1809      0000
+ 1810 0159 D91424   		fsts	(%esp)
+ 1811 015c C7442408 		movl	$1, 8(%esp)
+ 1811      01000000 
+ 1812 0164 D95C2410 		fstps	16(%esp)
+ 1813 0168 C7442404 		movl	$1, 4(%esp)
+ 1813      01000000 
+ 1814 0170 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 1814      00
+ 1815              		.cfi_def_cfa_offset 36
+ 1816 0175 89D8     		movl	%ebx, %eax
+ 1817 0177 83EC0C   		subl	$12, %esp
+ 1818              		.cfi_def_cfa_offset 48
+ 1819 017a D9442410 		flds	16(%esp)
+ 1820 017e D91C24   		fstps	(%esp)
+ 1821 0181 E8000000 		call	__ZL14addAccordPair3P12TriggerShapef
+ 1821      00
+ 1822 0186 89D8     		movl	%ebx, %eax
+ 1823 0188 D91C24   		fstps	(%esp)
+ 1824 018b E8000000 		call	__ZL14addAccordPair3P12TriggerShapef
+ 1824      00
+ 1825 0190 89D8     		movl	%ebx, %eax
+ 1826 0192 D91C24   		fstps	(%esp)
+ 1827 0195 E8000000 		call	__ZL14addAccordPair3P12TriggerShapef
+ 1827      00
+ 1828 019a DDD8     		fstp	%st(0)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 42
+
+
+ 1829 019c 89D9     		movl	%ebx, %ecx
+ 1830 019e C7442408 		movl	$0, 8(%esp)
+ 1830      00000000 
+ 1831 01a6 C7442404 		movl	$1, 4(%esp)
+ 1831      01000000 
+ 1832 01ae D905FC00 		flds	LC31
+ 1832      0000
+ 1833 01b4 D91424   		fsts	(%esp)
+ 1834 01b7 D95C2410 		fstps	16(%esp)
+ 1835 01bb E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 1835      00
+ 1836              		.cfi_def_cfa_offset 36
+ 1837 01c0 89D8     		movl	%ebx, %eax
+ 1838 01c2 83EC0C   		subl	$12, %esp
+ 1839              		.cfi_def_cfa_offset 48
+ 1840 01c5 D9442410 		flds	16(%esp)
+ 1841 01c9 D91C24   		fstps	(%esp)
+ 1842 01cc E8000000 		call	__ZL14addAccordPair3P12TriggerShapef
+ 1842      00
+ 1843 01d1 89D8     		movl	%ebx, %eax
+ 1844 01d3 D91C24   		fstps	(%esp)
+ 1845 01d6 E8000000 		call	__ZL14addAccordPair3P12TriggerShapef
+ 1845      00
+ 1846 01db 89D8     		movl	%ebx, %eax
+ 1847 01dd D91C24   		fstps	(%esp)
+ 1848 01e0 E8000000 		call	__ZL14addAccordPair3P12TriggerShapef
+ 1848      00
+ 1849 01e5 DDD8     		fstp	%st(0)
+ 1850 01e7 89D9     		movl	%ebx, %ecx
+ 1851 01e9 C7442408 		movl	$1, 8(%esp)
+ 1851      01000000 
+ 1852 01f1 C7442404 		movl	$1, 4(%esp)
+ 1852      01000000 
+ 1853 01f9 D9050001 		flds	LC32
+ 1853      0000
+ 1854 01ff D91424   		fsts	(%esp)
+ 1855 0202 D95C2410 		fstps	16(%esp)
+ 1856 0206 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 1856      00
+ 1857              		.cfi_def_cfa_offset 36
+ 1858 020b 89D8     		movl	%ebx, %eax
+ 1859 020d 83EC0C   		subl	$12, %esp
+ 1860              		.cfi_def_cfa_offset 48
+ 1861 0210 D9442410 		flds	16(%esp)
+ 1862 0214 D91C24   		fstps	(%esp)
+ 1863 0217 E8000000 		call	__ZL14addAccordPair3P12TriggerShapef
+ 1863      00
+ 1864 021c 89D8     		movl	%ebx, %eax
+ 1865 021e D91C24   		fstps	(%esp)
+ 1866 0221 E8000000 		call	__ZL14addAccordPair3P12TriggerShapef
+ 1866      00
+ 1867 0226 89D8     		movl	%ebx, %eax
+ 1868 0228 D91C24   		fstps	(%esp)
+ 1869 022b E8000000 		call	__ZL14addAccordPair3P12TriggerShapef
+ 1869      00
+ 1870 0230 DDD8     		fstp	%st(0)
+ 1871 0232 89D9     		movl	%ebx, %ecx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 43
+
+
+ 1872 0234 C7442408 		movl	$0, 8(%esp)
+ 1872      00000000 
+ 1873 023c C7442404 		movl	$1, 4(%esp)
+ 1873      01000000 
+ 1874 0244 D9050401 		flds	LC33
+ 1874      0000
+ 1875 024a D91424   		fsts	(%esp)
+ 1876 024d D95C2410 		fstps	16(%esp)
+ 1877 0251 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 1877      00
+ 1878              		.cfi_def_cfa_offset 36
+ 1879 0256 89D8     		movl	%ebx, %eax
+ 1880 0258 83EC0C   		subl	$12, %esp
+ 1881              		.cfi_def_cfa_offset 48
+ 1882 025b D9442410 		flds	16(%esp)
+ 1883 025f D91C24   		fstps	(%esp)
+ 1884 0262 E8000000 		call	__ZL14addAccordPair3P12TriggerShapef
+ 1884      00
+ 1885 0267 89D8     		movl	%ebx, %eax
+ 1886 0269 D91C24   		fstps	(%esp)
+ 1887 026c E8000000 		call	__ZL14addAccordPair3P12TriggerShapef
+ 1887      00
+ 1888 0271 89D8     		movl	%ebx, %eax
+ 1889 0273 D91C24   		fstps	(%esp)
+ 1890 0276 E8000000 		call	__ZL14addAccordPair3P12TriggerShapef
+ 1890      00
+ 1891 027b DDD8     		fstp	%st(0)
+ 1892 027d 89D9     		movl	%ebx, %ecx
+ 1893 027f C7442408 		movl	$0, 8(%esp)
+ 1893      00000000 
+ 1894 0287 C7442404 		movl	$0, 4(%esp)
+ 1894      00000000 
+ 1895 028f C7042400 		movl	$0x44322000, (%esp)
+ 1895      203244
+ 1896 0296 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 1896      00
+ 1897              		.cfi_def_cfa_offset 36
+ 1898 029b 89D9     		movl	%ebx, %ecx
+ 1899 029d 83EC0C   		subl	$12, %esp
+ 1900              		.cfi_def_cfa_offset 48
+ 1901 02a0 C7442408 		movl	$1, 8(%esp)
+ 1901      01000000 
+ 1902 02a8 C7442404 		movl	$1, 4(%esp)
+ 1902      01000000 
+ 1903 02b0 C7042400 		movl	$0x44340000, (%esp)
+ 1903      003444
+ 1904 02b7 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 1904      00
+ 1905              		.cfi_def_cfa_offset 36
+ 1906 02bc C60300   		movb	$0, (%ebx)
+ 1907 02bf 83EC0C   		subl	$12, %esp
+ 1908              		.cfi_def_cfa_offset 48
+ 1909 02c2 83C428   		addl	$40, %esp
+ 1910              		.cfi_def_cfa_offset 8
+ 1911 02c5 5B       		popl	%ebx
+ 1912              		.cfi_restore 3
+ 1913              		.cfi_def_cfa_offset 4
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 44
+
+
+ 1914 02c6 C3       		ret
+ 1915              		.cfi_endproc
+ 1916              	LFE123:
+ 1917 02c7 90909090 		.section	.text$_Z22configureHondaAccordCDP12TriggerShapebb15trigger_wheel_eS1_f,"x"
+ 1917      90909090 
+ 1917      90
+ 1918              		.p2align 4,,15
+ 1919              		.globl	__Z22configureHondaAccordCDP12TriggerShapebb15trigger_wheel_eS1_f
+ 1920              		.def	__Z22configureHondaAccordCDP12TriggerShapebb15trigger_wheel_eS1_f;	.scl	2;	.type	32;	.endef
+ 1921              	__Z22configureHondaAccordCDP12TriggerShapebb15trigger_wheel_eS1_f:
+ 1922              	LFB124:
+ 1923              		.cfi_startproc
+ 1924 0000 55       		pushl	%ebp
+ 1925              		.cfi_def_cfa_offset 8
+ 1926              		.cfi_offset 5, -8
+ 1927 0001 57       		pushl	%edi
+ 1928              		.cfi_def_cfa_offset 12
+ 1929              		.cfi_offset 7, -12
+ 1930 0002 56       		pushl	%esi
+ 1931              		.cfi_def_cfa_offset 16
+ 1932              		.cfi_offset 6, -16
+ 1933 0003 53       		pushl	%ebx
+ 1934              		.cfi_def_cfa_offset 20
+ 1935              		.cfi_offset 3, -20
+ 1936 0004 83EC4C   		subl	$76, %esp
+ 1937              		.cfi_def_cfa_offset 96
+ 1938 0007 8B5C2460 		movl	96(%esp), %ebx
+ 1939 000b C7442404 		movl	$1, 4(%esp)
+ 1939      01000000 
+ 1940 0013 0FB67424 		movzbl	100(%esp), %esi
+ 1940      64
+ 1941 0018 C7042402 		movl	$2, (%esp)
+ 1941      000000
+ 1942 001f 8B6C2470 		movl	112(%esp), %ebp
+ 1943 0023 0FB67C24 		movzbl	104(%esp), %edi
+ 1943      68
+ 1944 0028 89D9     		movl	%ebx, %ecx
+ 1945 002a E8000000 		call	__ZN12TriggerShape5resetE16operation_mode_eb
+ 1945      00
+ 1946              		.cfi_def_cfa_offset 88
+ 1947 002f 89D8     		movl	%ebx, %eax
+ 1948 0031 C60300   		movb	$0, (%ebx)
+ 1949 0034 83EC08   		subl	$8, %esp
+ 1950              		.cfi_def_cfa_offset 96
+ 1951 0037 D9442474 		flds	116(%esp)
+ 1952 003b D8050801 		fadds	LC36
+ 1952      0000
+ 1953 0041 D91C24   		fstps	(%esp)
+ 1954 0044 E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 1954      00
+ 1955 0049 89F0     		movl	%esi, %eax
+ 1956 004b 84C0     		testb	%al, %al
+ 1957 004d 0F854D01 		jne	L321
+ 1957      0000
+ 1958 0053 89D8     		movl	%ebx, %eax
+ 1959 0055 D91C24   		fstps	(%esp)
+ 1960 0058 E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 45
+
+
+ 1960      00
+ 1961 005d 89D8     		movl	%ebx, %eax
+ 1962 005f D91C24   		fstps	(%esp)
+ 1963 0062 E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 1963      00
+ 1964              	L315:
+ 1965 0067 89D8     		movl	%ebx, %eax
+ 1966 0069 D91C24   		fstps	(%esp)
+ 1967 006c E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 1967      00
+ 1968 0071 89D8     		movl	%ebx, %eax
+ 1969 0073 D91C24   		fstps	(%esp)
+ 1970 0076 E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 1970      00
+ 1971 007b 89F8     		movl	%edi, %eax
+ 1972 007d 84C0     		testb	%al, %al
+ 1973 007f 0F859B01 		jne	L322
+ 1973      0000
+ 1974 0085 89D8     		movl	%ebx, %eax
+ 1975 0087 D91C24   		fstps	(%esp)
+ 1976 008a E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 1976      00
+ 1977 008f 89D8     		movl	%ebx, %eax
+ 1978 0091 D91C24   		fstps	(%esp)
+ 1979 0094 E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 1979      00
+ 1980 0099 89D8     		movl	%ebx, %eax
+ 1981 009b D91C24   		fstps	(%esp)
+ 1982 009e E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 1982      00
+ 1983 00a3 89D8     		movl	%ebx, %eax
+ 1984 00a5 D91C24   		fstps	(%esp)
+ 1985 00a8 E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 1985      00
+ 1986 00ad 89D8     		movl	%ebx, %eax
+ 1987 00af D91C24   		fstps	(%esp)
+ 1988 00b2 E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 1988      00
+ 1989 00b7 89D8     		movl	%ebx, %eax
+ 1990 00b9 D91C24   		fstps	(%esp)
+ 1991 00bc E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 1991      00
+ 1992 00c1 89D8     		movl	%ebx, %eax
+ 1993 00c3 D91C24   		fstps	(%esp)
+ 1994 00c6 E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 1994      00
+ 1995              	L316:
+ 1996 00cb BE030000 		movl	$3, %esi
+ 1996      00
+ 1997              	L314:
+ 1998 00d0 89D8     		movl	%ebx, %eax
+ 1999 00d2 D91C24   		fstps	(%esp)
+ 2000 00d5 E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 2000      00
+ 2001 00da 89D8     		movl	%ebx, %eax
+ 2002 00dc D91C24   		fstps	(%esp)
+ 2003 00df E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 46
+
+
+ 2003      00
+ 2004 00e4 89D8     		movl	%ebx, %eax
+ 2005 00e6 D91C24   		fstps	(%esp)
+ 2006 00e9 E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 2006      00
+ 2007 00ee 89D8     		movl	%ebx, %eax
+ 2008 00f0 D91C24   		fstps	(%esp)
+ 2009 00f3 E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 2009      00
+ 2010 00f8 89D8     		movl	%ebx, %eax
+ 2011 00fa D91C24   		fstps	(%esp)
+ 2012 00fd E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 2012      00
+ 2013 0102 89F8     		movl	%edi, %eax
+ 2014 0104 84C0     		testb	%al, %al
+ 2015 0106 751C     		jne	L323
+ 2016 0108 D91C24   		fstps	(%esp)
+ 2017 010b 89D8     		movl	%ebx, %eax
+ 2018 010d E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 2018      00
+ 2019              	L317:
+ 2020 0112 83C601   		addl	$1, %esi
+ 2021 0115 83FE05   		cmpl	$5, %esi
+ 2022 0118 75B6     		jne	L314
+ 2023 011a DDD8     		fstp	%st(0)
+ 2024 011c 83C44C   		addl	$76, %esp
+ 2025              		.cfi_remember_state
+ 2026              		.cfi_def_cfa_offset 20
+ 2027 011f 5B       		popl	%ebx
+ 2028              		.cfi_restore 3
+ 2029              		.cfi_def_cfa_offset 16
+ 2030 0120 5E       		popl	%esi
+ 2031              		.cfi_restore 6
+ 2032              		.cfi_def_cfa_offset 12
+ 2033 0121 5F       		popl	%edi
+ 2034              		.cfi_restore 7
+ 2035              		.cfi_def_cfa_offset 8
+ 2036 0122 5D       		popl	%ebp
+ 2037              		.cfi_restore 5
+ 2038              		.cfi_def_cfa_offset 4
+ 2039 0123 C3       		ret
+ 2040              		.p2align 4,,7
+ 2041              	L323:
+ 2042              		.cfi_restore_state
+ 2043 0124 8974243C 		movl	%esi, 60(%esp)
+ 2044 0128 89D9     		movl	%ebx, %ecx
+ 2045 012a DB44243C 		fildl	60(%esp)
+ 2046 012e D80DF400 		fmuls	LC28
+ 2046      0000
+ 2047 0134 C7442408 		movl	$1, 8(%esp)
+ 2047      01000000 
+ 2048 013c 896C2404 		movl	%ebp, 4(%esp)
+ 2049 0140 D8442474 		fadds	116(%esp)
+ 2050 0144 D9050C01 		flds	LC37
+ 2050      0000
+ 2051 014a D8E9     		fsubr	%st(1), %st
+ 2052 014c D91C24   		fstps	(%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 47
+
+
+ 2053 014f D9C9     		fxch	%st(1)
+ 2054 0151 D95C2420 		fstps	32(%esp)
+ 2055 0155 D95C2410 		fstps	16(%esp)
+ 2056 0159 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 2056      00
+ 2057              		.cfi_def_cfa_offset 84
+ 2058 015e 89D8     		movl	%ebx, %eax
+ 2059 0160 83EC0C   		subl	$12, %esp
+ 2060              		.cfi_def_cfa_offset 96
+ 2061 0163 D9442420 		flds	32(%esp)
+ 2062 0167 D91C24   		fstps	(%esp)
+ 2063 016a E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 2063      00
+ 2064 016f 89D9     		movl	%ebx, %ecx
+ 2065 0171 C7442408 		movl	$0, 8(%esp)
+ 2065      00000000 
+ 2066 0179 896C2404 		movl	%ebp, 4(%esp)
+ 2067 017d D9442410 		flds	16(%esp)
+ 2068 0181 D91C24   		fstps	(%esp)
+ 2069 0184 D95C2420 		fstps	32(%esp)
+ 2070 0188 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 2070      00
+ 2071              		.cfi_def_cfa_offset 84
+ 2072 018d 83EC0C   		subl	$12, %esp
+ 2073              		.cfi_def_cfa_offset 96
+ 2074 0190 D9442420 		flds	32(%esp)
+ 2075 0194 E979FFFF 		jmp	L317
+ 2075      FF
+ 2076 0199 8DB42600 		.p2align 4,,7
+ 2076      000000
+ 2077              	L321:
+ 2078 01a0 D905D000 		flds	LC11
+ 2078      0000
+ 2079 01a6 89D9     		movl	%ebx, %ecx
+ 2080 01a8 D9C1     		fld	%st(1)
+ 2081 01aa 8B44246C 		movl	108(%esp), %eax
+ 2082 01ae D8E1     		fsub	%st(1), %st
+ 2083 01b0 C7442408 		movl	$1, 8(%esp)
+ 2083      01000000 
+ 2084 01b8 D91C24   		fstps	(%esp)
+ 2085 01bb D9C9     		fxch	%st(1)
+ 2086 01bd 89442404 		movl	%eax, 4(%esp)
+ 2087 01c1 D95C2420 		fstps	32(%esp)
+ 2088 01c5 D95C2410 		fstps	16(%esp)
+ 2089 01c9 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 2089      00
+ 2090              		.cfi_def_cfa_offset 84
+ 2091 01ce 89D8     		movl	%ebx, %eax
+ 2092 01d0 83EC0C   		subl	$12, %esp
+ 2093              		.cfi_def_cfa_offset 96
+ 2094 01d3 D9442420 		flds	32(%esp)
+ 2095 01d7 D91C24   		fstps	(%esp)
+ 2096 01da E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 2096      00
+ 2097 01df 89D8     		movl	%ebx, %eax
+ 2098 01e1 D91C24   		fstps	(%esp)
+ 2099 01e4 E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 48
+
+
+ 2099      00
+ 2100 01e9 8B44246C 		movl	108(%esp), %eax
+ 2101 01ed 89D9     		movl	%ebx, %ecx
+ 2102 01ef C7442408 		movl	$0, 8(%esp)
+ 2102      00000000 
+ 2103 01f7 89442404 		movl	%eax, 4(%esp)
+ 2104 01fb D9442410 		flds	16(%esp)
+ 2105 01ff D8E9     		fsubr	%st(1), %st
+ 2106 0201 D91C24   		fstps	(%esp)
+ 2107 0204 D95C2420 		fstps	32(%esp)
+ 2108 0208 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 2108      00
+ 2109              		.cfi_def_cfa_offset 84
+ 2110 020d 83EC0C   		subl	$12, %esp
+ 2111              		.cfi_def_cfa_offset 96
+ 2112 0210 D9442420 		flds	32(%esp)
+ 2113 0214 E94EFEFF 		jmp	L315
+ 2113      FF
+ 2114 0219 8DB42600 		.p2align 4,,7
+ 2114      000000
+ 2115              	L322:
+ 2116 0220 D9442474 		flds	116(%esp)
+ 2117 0224 89D9     		movl	%ebx, %ecx
+ 2118 0226 D805F400 		fadds	LC28
+ 2118      0000
+ 2119 022c C7442408 		movl	$1, 8(%esp)
+ 2119      01000000 
+ 2120 0234 896C2404 		movl	%ebp, 4(%esp)
+ 2121 0238 D9050C01 		flds	LC37
+ 2121      0000
+ 2122 023e D9C1     		fld	%st(1)
+ 2123 0240 D8E1     		fsub	%st(1), %st
+ 2124 0242 D91C24   		fstps	(%esp)
+ 2125 0245 D9CA     		fxch	%st(2)
+ 2126 0247 D95C2420 		fstps	32(%esp)
+ 2127 024b D95C2410 		fstps	16(%esp)
+ 2128 024f D95C2430 		fstps	48(%esp)
+ 2129 0253 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 2129      00
+ 2130              		.cfi_def_cfa_offset 84
+ 2131 0258 89D8     		movl	%ebx, %eax
+ 2132 025a 83EC0C   		subl	$12, %esp
+ 2133              		.cfi_def_cfa_offset 96
+ 2134 025d D9442420 		flds	32(%esp)
+ 2135 0261 D91C24   		fstps	(%esp)
+ 2136 0264 E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 2136      00
+ 2137 0269 89D9     		movl	%ebx, %ecx
+ 2138 026b C7442408 		movl	$0, 8(%esp)
+ 2138      00000000 
+ 2139 0273 896C2404 		movl	%ebp, 4(%esp)
+ 2140 0277 D9442410 		flds	16(%esp)
+ 2141 027b D91C24   		fstps	(%esp)
+ 2142 027e D95C2420 		fstps	32(%esp)
+ 2143 0282 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 2143      00
+ 2144              		.cfi_def_cfa_offset 84
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 49
+
+
+ 2145 0287 89D8     		movl	%ebx, %eax
+ 2146 0289 83EC0C   		subl	$12, %esp
+ 2147              		.cfi_def_cfa_offset 96
+ 2148 028c D9442420 		flds	32(%esp)
+ 2149 0290 D91C24   		fstps	(%esp)
+ 2150 0293 E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 2150      00
+ 2151 0298 89D8     		movl	%ebx, %eax
+ 2152 029a D91C24   		fstps	(%esp)
+ 2153 029d E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 2153      00
+ 2154 02a2 89D8     		movl	%ebx, %eax
+ 2155 02a4 D91C24   		fstps	(%esp)
+ 2156 02a7 E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 2156      00
+ 2157 02ac 89D8     		movl	%ebx, %eax
+ 2158 02ae D91C24   		fstps	(%esp)
+ 2159 02b1 E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 2159      00
+ 2160 02b6 89D8     		movl	%ebx, %eax
+ 2161 02b8 D91C24   		fstps	(%esp)
+ 2162 02bb E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 2162      00
+ 2163 02c0 89D9     		movl	%ebx, %ecx
+ 2164 02c2 C7442408 		movl	$1, 8(%esp)
+ 2164      01000000 
+ 2165 02ca 896C2404 		movl	%ebp, 4(%esp)
+ 2166 02ce D9442474 		flds	116(%esp)
+ 2167 02d2 D805D800 		fadds	LC13
+ 2167      0000
+ 2168 02d8 D9442430 		flds	48(%esp)
+ 2169 02dc D8E9     		fsubr	%st(1), %st
+ 2170 02de D91C24   		fstps	(%esp)
+ 2171 02e1 D9C9     		fxch	%st(1)
+ 2172 02e3 D95C2420 		fstps	32(%esp)
+ 2173 02e7 D95C2410 		fstps	16(%esp)
+ 2174 02eb E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 2174      00
+ 2175              		.cfi_def_cfa_offset 84
+ 2176 02f0 89D8     		movl	%ebx, %eax
+ 2177 02f2 83EC0C   		subl	$12, %esp
+ 2178              		.cfi_def_cfa_offset 96
+ 2179 02f5 D9442420 		flds	32(%esp)
+ 2180 02f9 D91C24   		fstps	(%esp)
+ 2181 02fc E8000000 		call	__ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+ 2181      00
+ 2182 0301 89D9     		movl	%ebx, %ecx
+ 2183 0303 C7442408 		movl	$0, 8(%esp)
+ 2183      00000000 
+ 2184 030b 896C2404 		movl	%ebp, 4(%esp)
+ 2185 030f D9442410 		flds	16(%esp)
+ 2186 0313 D91C24   		fstps	(%esp)
+ 2187 0316 D95C2420 		fstps	32(%esp)
+ 2188 031a E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 2188      00
+ 2189              		.cfi_def_cfa_offset 84
+ 2190 031f 83EC0C   		subl	$12, %esp
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 50
+
+
+ 2191              		.cfi_def_cfa_offset 96
+ 2192 0322 D9442420 		flds	32(%esp)
+ 2193 0326 E9A0FDFF 		jmp	L316
+ 2193      FF
+ 2194              		.cfi_endproc
+ 2195              	LFE124:
+ 2196 032b 90909090 		.section .rdata,"dr"
+ 2196      90
+ 2197              		.align 4
+ 2198              	LC11:
+ 2199 00d0 0000F040 		.long	1089470464
+ 2200              		.align 4
+ 2201              	LC12:
+ 2202 00d4 00007041 		.long	1097859072
+ 2203              		.align 4
+ 2204              	LC13:
+ 2205 00d8 0000B443 		.long	1135869952
+ 2206              		.align 4
+ 2207              	LC20:
+ 2208 00dc 00007042 		.long	1114636288
+ 2209              		.align 4
+ 2210              	LC21:
+ 2211 00e0 00006642 		.long	1113980928
+ 2212              		.align 4
+ 2213              	LC22:
+ 2214 00e4 00004041 		.long	1094713344
+ 2215              		.align 4
+ 2216              	LC25:
+ 2217 00e8 0000403F 		.long	1061158912
+ 2218              		.align 4
+ 2219              	LC26:
+ 2220 00ec 0000A03F 		.long	1067450368
+ 2221              		.align 4
+ 2222              	LC27:
+ 2223 00f0 0000B442 		.long	1119092736
+ 2224              		.align 4
+ 2225              	LC28:
+ 2226 00f4 00003443 		.long	1127481344
+ 2227              		.align 4
+ 2228              	LC29:
+ 2229 00f8 00008743 		.long	1132920832
+ 2230              		.align 4
+ 2231              	LC31:
+ 2232 00fc 0000E143 		.long	1138819072
+ 2233              		.align 4
+ 2234              	LC32:
+ 2235 0100 00000744 		.long	1141309440
+ 2236              		.align 4
+ 2237              	LC33:
+ 2238 0104 00801D44 		.long	1142784000
+ 2239              		.align 4
+ 2240              	LC36:
+ 2241 0108 0000A040 		.long	1084227584
+ 2242              		.align 4
+ 2243              	LC37:
+ 2244 010c EE7C0542 		.long	1107655918
+ 2245              		.def	__ZN13single_wave_sC1Ev;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 51
+
+
+ 2246              		.def	__ZN13single_wave_s4initEPa;	.scl	2;	.type	32;	.endef
+ 2247              		.def	__ZN12multi_wave_s5resetEv;	.scl	2;	.type	32;	.endef
+ 2248              		.def	__ZN12multi_wave_sC1EPfP13single_wave_s;	.scl	2;	.type	32;	.endef
+ 2249              		.def	_isSameF;	.scl	2;	.type	32;	.endef
+ 2250              		.def	__Z14getEngineCycle16operation_mode_e;	.scl	2;	.type	32;	.endef
+ 2251              		.def	__ZNK12multi_wave_s13getSwitchTimeEi;	.scl	2;	.type	32;	.endef
+ 2252              		.def	_firmwareError;	.scl	2;	.type	32;	.endef
+ 2253              		.def	__Z25findTriggerZeroEventIndexP12TriggerShapePK16trigger_config_s;	.scl	2;	.type	32;	.endef
+ 2254              		.def	__Z17checkSwitchTimes2iPf;	.scl	2;	.type	32;	.endef
+ 2255              		.def	__Z37initializeSkippedToothTriggerShapeExtP12TriggerShapeii16operation_mode_e;	.scl	2;	.type	
+ 2256              		.def	__Z28addSkippedToothTriggerEvents15trigger_wheel_eP12TriggerShapeiifffff;	.scl	2;	.type	32;	.
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s 			page 52
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 trigger_structure.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:7      .text$_ZN20trigger_shape_helperC2Ev:00000000 __ZN20trigger_shape_helperC2Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:7      .text$_ZN20trigger_shape_helperC2Ev:00000000 __ZN20trigger_shape_helperC1Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:100    .text$_ZNK12TriggerShape7getSizeEv:00000000 __ZNK12TriggerShape7getSizeEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:112    .text$_ZN12TriggerShape30getTriggerShapeSynchPointIndexEv:00000000 __ZN12TriggerShape30getTriggerShapeSynchPointIndexEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:124    .text$_ZN12TriggerShape5clearEv:00000000 __ZN12TriggerShape5clearEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:142    .text$_ZN12TriggerShape5resetE16operation_mode_eb:00000000 __ZN12TriggerShape5resetE16operation_mode_eb
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:220    .text$_ZN12TriggerShapeC2Ev:00000000 __ZN12TriggerShapeC2Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:220    .text$_ZN12TriggerShapeC2Ev:00000000 __ZN12TriggerShapeC1Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:413    .text$_ZNK12multi_wave_s15getChannelStateEii:00000000 __ZNK12multi_wave_s15getChannelStateEii
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:429    .text$_ZNK12multi_wave_s18waveIndertionAngleEfi:00000000 __ZNK12multi_wave_s18waveIndertionAngleEfi
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:476    .text$_ZNK12multi_wave_s14findAngleMatchEfi:00000000 __ZNK12multi_wave_s14findAngleMatchEfi
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:548    .text$_ZN12multi_wave_s13setSwitchTimeEif:00000000 __ZN12multi_wave_s13setSwitchTimeEif
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:563    .text$_ZN12TriggerState15getCurrentIndexEv:00000000 __ZN12TriggerState15getCurrentIndexEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:575    .text$_ZN12TriggerState25getStartOfRevolutionIndexEv:00000000 __ZN12TriggerState25getStartOfRevolutionIndexEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:588    .text$_ZN12TriggerState20resetRunningCountersEv:00000000 __ZN12TriggerState20resetRunningCountersEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:602    .text$_ZN12TriggerState20getTotalEventCounterEv:00000000 __ZN12TriggerState20getTotalEventCounterEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:617    .text$_ZN12TriggerState25getTotalRevolutionCounterEv:00000000 __ZN12TriggerState25getTotalRevolutionCounterEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:629    .text$_ZN12TriggerState5clearEv:00000000 __ZN12TriggerState5clearEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:737    .text$_ZN12TriggerStateC2Ev:00000000 __ZN12TriggerStateC2Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:737    .text$_ZN12TriggerStateC2Ev:00000000 __ZN12TriggerStateC1Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:783    .text$_ZNK12TriggerShape9getLengthEv:00000000 __ZNK12TriggerShape9getLengthEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:802    .text$_ZN12TriggerShape16getOperationModeEv:00000000 __ZN12TriggerShape16getOperationModeEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:830    .text$_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e:00000000 __ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:1140   .text$_ZL14addAccordPair3P12TriggerShapef:00000000 __ZL14addAccordPair3P12TriggerShapef
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:1190   .text$_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_eff:00000000 __ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_eff
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:1234   .text$_ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0:00000000 __ZL13addAccordPairP12TriggerShapef15trigger_wheel_e.constprop.0
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:1283   .text$_ZNK12TriggerShape16getCycleDurationEv:00000000 __ZNK12TriggerShape16getCycleDurationEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:1298   .text$_ZNK12TriggerShape14getSwitchAngleEi:00000000 __ZNK12TriggerShape14getSwitchAngleEi
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:1333   .text$_ZNK12TriggerShape8getAngleEi:00000000 __ZNK12TriggerShape8getAngleEi
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:1374   .text$_ZN12TriggerShape26calculateTriggerSynchPointEv:00000000 __ZN12TriggerShape26calculateTriggerSynchPointEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:1548   .text$_ZN12multi_wave_s16checkSwitchTimesEi:00000000 __ZN12multi_wave_s16checkSwitchTimesEi
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:1570   .text$_Z18setVwConfigurationP12TriggerShape:00000000 __Z18setVwConfigurationP12TriggerShape
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:1664   .text$_Z28setToothedWheelConfigurationP12TriggerShapeii16operation_mode_e:00000000 __Z28setToothedWheelConfigurationP12TriggerShapeii16operation_mode_e
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:1677   .text$_ZN12TriggerShape29setTriggerSynchronizationGap2Eff:00000000 __ZN12TriggerShape29setTriggerSynchronizationGap2Eff
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:1693   .text$_ZN12TriggerShape28setTriggerSynchronizationGapEf:00000000 __ZN12TriggerShape28setTriggerSynchronizationGapEf
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:1710   .text$_Z25configureHondaAccordCDDipP12TriggerShape:00000000 __Z25configureHondaAccordCDDipP12TriggerShape
+/cygdrive/c/Users/pc/AppData/Local/Temp/cceNmDIX.s:1921   .text$_Z22configureHondaAccordCDP12TriggerShapebb15trigger_wheel_eS1_f:00000000 __Z22configureHondaAccordCDP12TriggerShapebb15trigger_wheel_eS1_f
+
+UNDEFINED SYMBOLS
+_engineConfiguration
+_engine
+_persistentState
+__ZN13single_wave_sC1Ev
+__ZN13single_wave_s4initEPa
+__ZN12multi_wave_s5resetEv
+__ZN12multi_wave_sC1EPfP13single_wave_s
+_isSameF
+__Z14getEngineCycle16operation_mode_e
+__ZNK12multi_wave_s13getSwitchTimeEi
+_firmwareError
+__Z25findTriggerZeroEventIndexP12TriggerShapePK16trigger_config_s
+__Z17checkSwitchTimes2iPf
+__Z37initializeSkippedToothTriggerShapeExtP12TriggerShapeii16operation_mode_e
+__Z28addSkippedToothTriggerEvents15trigger_wheel_eP12TriggerShapeiifffff

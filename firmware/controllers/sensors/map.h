@@ -4,7 +4,7 @@
 #include "engine_configuration.h"
 #include "sensor_types.h"
 
-void initMapDecoder(DECLARE_ENGINE_PARAMETER_F);
+void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S);
 
 /**
  * @return Raw MAP sensor value right now

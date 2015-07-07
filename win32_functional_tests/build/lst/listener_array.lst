@@ -1,0 +1,509 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccD2u8dc.s 			page 1
+
+
+   1              		.file	"listener_array.cpp"
+   2              		.section	.text$_ZN16IntListenerArrayC2Ev,"x"
+   3              		.align 2
+   4              		.p2align 4,,15
+   5              		.globl	__ZN16IntListenerArrayC2Ev
+   6              		.def	__ZN16IntListenerArrayC2Ev;	.scl	2;	.type	32;	.endef
+   7              	__ZN16IntListenerArrayC2Ev:
+   8              	LFB55:
+   9              		.cfi_startproc
+  10 0000 57       		pushl	%edi
+  11              		.cfi_def_cfa_offset 8
+  12              		.cfi_offset 7, -8
+  13 0001 89CA     		movl	%ecx, %edx
+  14 0003 8D7940   		leal	64(%ecx), %edi
+  15 0006 F7C70100 		testl	$1, %edi
+  15      0000
+  16 000c 53       		pushl	%ebx
+  17              		.cfi_def_cfa_offset 12
+  18              		.cfi_offset 3, -12
+  19 000d BB3C0000 		movl	$60, %ebx
+  19      00
+  20 0012 C7010000 		movl	$0, (%ecx)
+  20      0000
+  21 0018 7566     		jne	L36
+  22 001a F7C70200 		testl	$2, %edi
+  22      0000
+  23 0020 756F     		jne	L37
+  24              	L3:
+  25 0022 89D9     		movl	%ebx, %ecx
+  26 0024 31C0     		xorl	%eax, %eax
+  27 0026 C1E902   		shrl	$2, %ecx
+  28 0029 F6C302   		testb	$2, %bl
+  29 002c F3AB     		rep stosl
+  30 002e 7408     		je	L4
+  31 0030 66C70700 		movw	$0, (%edi)
+  31      00
+  32 0035 83C702   		addl	$2, %edi
+  33              	L4:
+  34 0038 83E301   		andl	$1, %ebx
+  35 003b 7403     		je	L5
+  36 003d C60700   		movb	$0, (%edi)
+  37              	L5:
+  38 0040 8D7A04   		leal	4(%edx), %edi
+  39 0043 BB3C0000 		movl	$60, %ebx
+  39      00
+  40 0048 F7C70100 		testl	$1, %edi
+  40      0000
+  41 004e 7550     		jne	L38
+  42 0050 F7C70200 		testl	$2, %edi
+  42      0000
+  43 0056 7559     		jne	L39
+  44              	L7:
+  45 0058 89D9     		movl	%ebx, %ecx
+  46 005a 31C0     		xorl	%eax, %eax
+  47 005c C1E902   		shrl	$2, %ecx
+  48 005f F6C302   		testb	$2, %bl
+  49 0062 F3AB     		rep stosl
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccD2u8dc.s 			page 2
+
+
+  50 0064 7408     		je	L8
+  51 0066 66C70700 		movw	$0, (%edi)
+  51      00
+  52 006b 83C702   		addl	$2, %edi
+  53              	L8:
+  54 006e 83E301   		andl	$1, %ebx
+  55 0071 7403     		je	L1
+  56 0073 C60700   		movb	$0, (%edi)
+  57              	L1:
+  58 0076 5B       		popl	%ebx
+  59              		.cfi_remember_state
+  60              		.cfi_restore 3
+  61              		.cfi_def_cfa_offset 8
+  62 0077 5F       		popl	%edi
+  63              		.cfi_restore 7
+  64              		.cfi_def_cfa_offset 4
+  65 0078 C3       		ret
+  66 0079 8DB42600 		.p2align 4,,7
+  66      000000
+  67              	L36:
+  68              		.cfi_restore_state
+  69 0080 8D7941   		leal	65(%ecx), %edi
+  70 0083 B33B     		movb	$59, %bl
+  71 0085 F7C70200 		testl	$2, %edi
+  71      0000
+  72 008b C6414000 		movb	$0, 64(%ecx)
+  73 008f 7491     		je	L3
+  74              		.p2align 4,,7
+  75              	L37:
+  76 0091 66C70700 		movw	$0, (%edi)
+  76      00
+  77 0096 83EB02   		subl	$2, %ebx
+  78 0099 83C702   		addl	$2, %edi
+  79 009c EB84     		jmp	L3
+  80 009e 6690     		.p2align 4,,7
+  81              	L38:
+  82 00a0 8D7A05   		leal	5(%edx), %edi
+  83 00a3 B33B     		movb	$59, %bl
+  84 00a5 F7C70200 		testl	$2, %edi
+  84      0000
+  85 00ab C6420400 		movb	$0, 4(%edx)
+  86 00af 74A7     		je	L7
+  87              		.p2align 4,,7
+  88              	L39:
+  89 00b1 66C70700 		movw	$0, (%edi)
+  89      00
+  90 00b6 83EB02   		subl	$2, %ebx
+  91 00b9 83C702   		addl	$2, %edi
+  92 00bc EB9A     		jmp	L7
+  93              		.cfi_endproc
+  94              	LFE55:
+  95              		.globl	__ZN16IntListenerArrayC1Ev
+  96              		.def	__ZN16IntListenerArrayC1Ev;	.scl	2;	.type	32;	.endef
+  97              		.set	__ZN16IntListenerArrayC1Ev,__ZN16IntListenerArrayC2Ev
+  98 00be 9090     		.section .rdata,"dr"
+  99              	LC0:
+ 100 0000 546F6F20 		.ascii "Too many callbacks\0"
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccD2u8dc.s 			page 3
+
+
+ 100      6D616E79 
+ 100      2063616C 
+ 100      6C626163 
+ 100      6B7300
+ 101 0013 00       		.section	.text$_ZN16IntListenerArray16registerCallbackEPFviEPv,"x"
+ 102              		.align 2
+ 103              		.p2align 4,,15
+ 104              		.globl	__ZN16IntListenerArray16registerCallbackEPFviEPv
+ 105              		.def	__ZN16IntListenerArray16registerCallbackEPFviEPv;	.scl	2;	.type	32;	.endef
+ 106              	__ZN16IntListenerArray16registerCallbackEPFviEPv:
+ 107              	LFB57:
+ 108              		.cfi_startproc
+ 109 0000 83EC1C   		subl	$28, %esp
+ 110              		.cfi_def_cfa_offset 32
+ 111 0003 8B01     		movl	(%ecx), %eax
+ 112 0005 83F80E   		cmpl	$14, %eax
+ 113 0008 7F1B     		jg	L44
+ 114 000a 8D5001   		leal	1(%eax), %edx
+ 115 000d 8911     		movl	%edx, (%ecx)
+ 116 000f 8B542420 		movl	32(%esp), %edx
+ 117 0013 89548104 		movl	%edx, 4(%ecx,%eax,4)
+ 118 0017 8B542424 		movl	36(%esp), %edx
+ 119 001b 89548140 		movl	%edx, 64(%ecx,%eax,4)
+ 120 001f 83C41C   		addl	$28, %esp
+ 121              		.cfi_remember_state
+ 122              		.cfi_def_cfa_offset 4
+ 123 0022 C20800   		ret	$8
+ 124              		.p2align 4,,7
+ 125              	L44:
+ 126              		.cfi_restore_state
+ 127 0025 C7042400 		movl	$LC0, (%esp)
+ 127      000000
+ 128 002c E8000000 		call	_firmwareError
+ 128      00
+ 129 0031 83C41C   		addl	$28, %esp
+ 130              		.cfi_def_cfa_offset 4
+ 131 0034 C20800   		ret	$8
+ 132              		.cfi_endproc
+ 133              	LFE57:
+ 134 0037 90909090 		.section	.text$_ZN16IntListenerArray16registerCallbackEPFvvE,"x"
+ 134      90909090 
+ 134      90
+ 135              		.align 2
+ 136              		.p2align 4,,15
+ 137              		.globl	__ZN16IntListenerArray16registerCallbackEPFvvE
+ 138              		.def	__ZN16IntListenerArray16registerCallbackEPFvvE;	.scl	2;	.type	32;	.endef
+ 139              	__ZN16IntListenerArray16registerCallbackEPFvvE:
+ 140              	LFB58:
+ 141              		.cfi_startproc
+ 142 0000 83EC1C   		subl	$28, %esp
+ 143              		.cfi_def_cfa_offset 32
+ 144 0003 8B442420 		movl	32(%esp), %eax
+ 145 0007 C7442404 		movl	$0, 4(%esp)
+ 145      00000000 
+ 146 000f 890424   		movl	%eax, (%esp)
+ 147 0012 E8000000 		call	__ZN16IntListenerArray16registerCallbackEPFviEPv
+ 147      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccD2u8dc.s 			page 4
+
+
+ 148              		.cfi_def_cfa_offset 24
+ 149 0017 83EC08   		subl	$8, %esp
+ 150              		.cfi_def_cfa_offset 32
+ 151 001a 83C41C   		addl	$28, %esp
+ 152              		.cfi_def_cfa_offset 4
+ 153 001d C20400   		ret	$4
+ 154              		.cfi_endproc
+ 155              	LFE58:
+ 156              		.section	.text$_Z15invokeCallbacksP16IntListenerArrayi,"x"
+ 157              		.p2align 4,,15
+ 158              		.globl	__Z15invokeCallbacksP16IntListenerArrayi
+ 159              		.def	__Z15invokeCallbacksP16IntListenerArrayi;	.scl	2;	.type	32;	.endef
+ 160              	__Z15invokeCallbacksP16IntListenerArrayi:
+ 161              	LFB59:
+ 162              		.cfi_startproc
+ 163 0000 57       		pushl	%edi
+ 164              		.cfi_def_cfa_offset 8
+ 165              		.cfi_offset 7, -8
+ 166 0001 56       		pushl	%esi
+ 167              		.cfi_def_cfa_offset 12
+ 168              		.cfi_offset 6, -12
+ 169 0002 53       		pushl	%ebx
+ 170              		.cfi_def_cfa_offset 16
+ 171              		.cfi_offset 3, -16
+ 172 0003 31DB     		xorl	%ebx, %ebx
+ 173 0005 83EC10   		subl	$16, %esp
+ 174              		.cfi_def_cfa_offset 32
+ 175 0008 8B742420 		movl	32(%esp), %esi
+ 176 000c 8B7C2424 		movl	36(%esp), %edi
+ 177 0010 8B06     		movl	(%esi), %eax
+ 178 0012 85C0     		testl	%eax, %eax
+ 179 0014 7E0E     		jle	L47
+ 180              		.p2align 4,,7
+ 181              	L51:
+ 182 0016 893C24   		movl	%edi, (%esp)
+ 183 0019 FF549E04 		call	*4(%esi,%ebx,4)
+ 184 001d 83C301   		addl	$1, %ebx
+ 185 0020 391E     		cmpl	%ebx, (%esi)
+ 186 0022 7FF2     		jg	L51
+ 187              	L47:
+ 188 0024 83C410   		addl	$16, %esp
+ 189              		.cfi_def_cfa_offset 16
+ 190 0027 5B       		popl	%ebx
+ 191              		.cfi_restore 3
+ 192              		.cfi_def_cfa_offset 12
+ 193 0028 5E       		popl	%esi
+ 194              		.cfi_restore 6
+ 195              		.cfi_def_cfa_offset 8
+ 196 0029 5F       		popl	%edi
+ 197              		.cfi_restore 7
+ 198              		.cfi_def_cfa_offset 4
+ 199 002a C3       		ret
+ 200              		.cfi_endproc
+ 201              	LFE59:
+ 202 002b 90909090 		.section	.text$_ZN16IntListenerArray22invokeJustArgCallbacksEv,"x"
+ 202      90
+ 203              		.align 2
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccD2u8dc.s 			page 5
+
+
+ 204              		.p2align 4,,15
+ 205              		.globl	__ZN16IntListenerArray22invokeJustArgCallbacksEv
+ 206              		.def	__ZN16IntListenerArray22invokeJustArgCallbacksEv;	.scl	2;	.type	32;	.endef
+ 207              	__ZN16IntListenerArray22invokeJustArgCallbacksEv:
+ 208              	LFB60:
+ 209              		.cfi_startproc
+ 210 0000 57       		pushl	%edi
+ 211              		.cfi_def_cfa_offset 8
+ 212              		.cfi_offset 7, -8
+ 213 0001 89CF     		movl	%ecx, %edi
+ 214 0003 56       		pushl	%esi
+ 215              		.cfi_def_cfa_offset 12
+ 216              		.cfi_offset 6, -12
+ 217 0004 31F6     		xorl	%esi, %esi
+ 218 0006 53       		pushl	%ebx
+ 219              		.cfi_def_cfa_offset 16
+ 220              		.cfi_offset 3, -16
+ 221 0007 89CB     		movl	%ecx, %ebx
+ 222 0009 83EC10   		subl	$16, %esp
+ 223              		.cfi_def_cfa_offset 32
+ 224 000c 8B11     		movl	(%ecx), %edx
+ 225 000e 85D2     		testl	%edx, %edx
+ 226 0010 7E13     		jle	L54
+ 227              		.p2align 4,,7
+ 228              	L58:
+ 229 0012 8B4340   		movl	64(%ebx), %eax
+ 230 0015 83C601   		addl	$1, %esi
+ 231 0018 890424   		movl	%eax, (%esp)
+ 232 001b FF5304   		call	*4(%ebx)
+ 233 001e 83C304   		addl	$4, %ebx
+ 234 0021 3937     		cmpl	%esi, (%edi)
+ 235 0023 7FED     		jg	L58
+ 236              	L54:
+ 237 0025 83C410   		addl	$16, %esp
+ 238              		.cfi_def_cfa_offset 16
+ 239 0028 5B       		popl	%ebx
+ 240              		.cfi_restore 3
+ 241              		.cfi_def_cfa_offset 12
+ 242 0029 5E       		popl	%esi
+ 243              		.cfi_restore 6
+ 244              		.cfi_def_cfa_offset 8
+ 245 002a 5F       		popl	%edi
+ 246              		.cfi_restore 7
+ 247              		.cfi_def_cfa_offset 4
+ 248 002b C3       		ret
+ 249              		.cfi_endproc
+ 250              	LFE60:
+ 251 002c 90909090 		.section	.text$_Z21invokeArgIntCallbacksP16IntListenerArrayi,"x"
+ 252              		.p2align 4,,15
+ 253              		.globl	__Z21invokeArgIntCallbacksP16IntListenerArrayi
+ 254              		.def	__Z21invokeArgIntCallbacksP16IntListenerArrayi;	.scl	2;	.type	32;	.endef
+ 255              	__Z21invokeArgIntCallbacksP16IntListenerArrayi:
+ 256              	LFB61:
+ 257              		.cfi_startproc
+ 258 0000 55       		pushl	%ebp
+ 259              		.cfi_def_cfa_offset 8
+ 260              		.cfi_offset 5, -8
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccD2u8dc.s 			page 6
+
+
+ 261 0001 57       		pushl	%edi
+ 262              		.cfi_def_cfa_offset 12
+ 263              		.cfi_offset 7, -12
+ 264 0002 56       		pushl	%esi
+ 265              		.cfi_def_cfa_offset 16
+ 266              		.cfi_offset 6, -16
+ 267 0003 31F6     		xorl	%esi, %esi
+ 268 0005 53       		pushl	%ebx
+ 269              		.cfi_def_cfa_offset 20
+ 270              		.cfi_offset 3, -20
+ 271 0006 83EC1C   		subl	$28, %esp
+ 272              		.cfi_def_cfa_offset 48
+ 273 0009 8B7C2430 		movl	48(%esp), %edi
+ 274 000d 8B6C2434 		movl	52(%esp), %ebp
+ 275 0011 8B0F     		movl	(%edi), %ecx
+ 276 0013 89FB     		movl	%edi, %ebx
+ 277 0015 85C9     		testl	%ecx, %ecx
+ 278 0017 7E1E     		jle	L61
+ 279 0019 8DB42600 		.p2align 4,,7
+ 279      000000
+ 280              	L65:
+ 281 0020 896C2404 		movl	%ebp, 4(%esp)
+ 282 0024 8B4340   		movl	64(%ebx), %eax
+ 283 0027 83C601   		addl	$1, %esi
+ 284 002a 890424   		movl	%eax, (%esp)
+ 285 002d FF5304   		call	*4(%ebx)
+ 286 0030 83C304   		addl	$4, %ebx
+ 287 0033 3937     		cmpl	%esi, (%edi)
+ 288 0035 7FE9     		jg	L65
+ 289              	L61:
+ 290 0037 83C41C   		addl	$28, %esp
+ 291              		.cfi_def_cfa_offset 20
+ 292 003a 5B       		popl	%ebx
+ 293              		.cfi_restore 3
+ 294              		.cfi_def_cfa_offset 16
+ 295 003b 5E       		popl	%esi
+ 296              		.cfi_restore 6
+ 297              		.cfi_def_cfa_offset 12
+ 298 003c 5F       		popl	%edi
+ 299              		.cfi_restore 7
+ 300              		.cfi_def_cfa_offset 8
+ 301 003d 5D       		popl	%ebp
+ 302              		.cfi_restore 5
+ 303              		.cfi_def_cfa_offset 4
+ 304 003e C3       		ret
+ 305              		.cfi_endproc
+ 306              	LFE61:
+ 307 003f 90       		.section	.text$_Z21invokeIntIntCallbacksP16IntListenerArrayii,"x"
+ 308              		.p2align 4,,15
+ 309              		.globl	__Z21invokeIntIntCallbacksP16IntListenerArrayii
+ 310              		.def	__Z21invokeIntIntCallbacksP16IntListenerArrayii;	.scl	2;	.type	32;	.endef
+ 311              	__Z21invokeIntIntCallbacksP16IntListenerArrayii:
+ 312              	LFB62:
+ 313              		.cfi_startproc
+ 314 0000 55       		pushl	%ebp
+ 315              		.cfi_def_cfa_offset 8
+ 316              		.cfi_offset 5, -8
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccD2u8dc.s 			page 7
+
+
+ 317 0001 57       		pushl	%edi
+ 318              		.cfi_def_cfa_offset 12
+ 319              		.cfi_offset 7, -12
+ 320 0002 56       		pushl	%esi
+ 321              		.cfi_def_cfa_offset 16
+ 322              		.cfi_offset 6, -16
+ 323 0003 53       		pushl	%ebx
+ 324              		.cfi_def_cfa_offset 20
+ 325              		.cfi_offset 3, -20
+ 326 0004 31DB     		xorl	%ebx, %ebx
+ 327 0006 83EC1C   		subl	$28, %esp
+ 328              		.cfi_def_cfa_offset 48
+ 329 0009 8B742430 		movl	48(%esp), %esi
+ 330 000d 8B6C2434 		movl	52(%esp), %ebp
+ 331 0011 8B7C2438 		movl	56(%esp), %edi
+ 332 0015 8B06     		movl	(%esi), %eax
+ 333 0017 85C0     		testl	%eax, %eax
+ 334 0019 7E17     		jle	L68
+ 335 001b 908D7426 		.p2align 4,,7
+ 335      00
+ 336              	L72:
+ 337 0020 897C2404 		movl	%edi, 4(%esp)
+ 338 0024 892C24   		movl	%ebp, (%esp)
+ 339 0027 FF549E04 		call	*4(%esi,%ebx,4)
+ 340 002b 83C301   		addl	$1, %ebx
+ 341 002e 391E     		cmpl	%ebx, (%esi)
+ 342 0030 7FEE     		jg	L72
+ 343              	L68:
+ 344 0032 83C41C   		addl	$28, %esp
+ 345              		.cfi_def_cfa_offset 20
+ 346 0035 5B       		popl	%ebx
+ 347              		.cfi_restore 3
+ 348              		.cfi_def_cfa_offset 16
+ 349 0036 5E       		popl	%esi
+ 350              		.cfi_restore 6
+ 351              		.cfi_def_cfa_offset 12
+ 352 0037 5F       		popl	%edi
+ 353              		.cfi_restore 7
+ 354              		.cfi_def_cfa_offset 8
+ 355 0038 5D       		popl	%ebp
+ 356              		.cfi_restore 5
+ 357              		.cfi_def_cfa_offset 4
+ 358 0039 C3       		ret
+ 359              		.cfi_endproc
+ 360              	LFE62:
+ 361 003a 90909090 		.section	.text$_Z25invokeIntIntVoidCallbacksP16IntListenerArrayii,"x"
+ 361      9090
+ 362              		.p2align 4,,15
+ 363              		.globl	__Z25invokeIntIntVoidCallbacksP16IntListenerArrayii
+ 364              		.def	__Z25invokeIntIntVoidCallbacksP16IntListenerArrayii;	.scl	2;	.type	32;	.endef
+ 365              	__Z25invokeIntIntVoidCallbacksP16IntListenerArrayii:
+ 366              	LFB63:
+ 367              		.cfi_startproc
+ 368 0000 55       		pushl	%ebp
+ 369              		.cfi_def_cfa_offset 8
+ 370              		.cfi_offset 5, -8
+ 371 0001 57       		pushl	%edi
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccD2u8dc.s 			page 8
+
+
+ 372              		.cfi_def_cfa_offset 12
+ 373              		.cfi_offset 7, -12
+ 374 0002 31FF     		xorl	%edi, %edi
+ 375 0004 56       		pushl	%esi
+ 376              		.cfi_def_cfa_offset 16
+ 377              		.cfi_offset 6, -16
+ 378 0005 53       		pushl	%ebx
+ 379              		.cfi_def_cfa_offset 20
+ 380              		.cfi_offset 3, -20
+ 381 0006 83EC1C   		subl	$28, %esp
+ 382              		.cfi_def_cfa_offset 48
+ 383 0009 8B742430 		movl	48(%esp), %esi
+ 384 000d 8B6C2434 		movl	52(%esp), %ebp
+ 385 0011 8B06     		movl	(%esi), %eax
+ 386 0013 89F3     		movl	%esi, %ebx
+ 387 0015 85C0     		testl	%eax, %eax
+ 388 0017 7E26     		jle	L75
+ 389 0019 8DB42600 		.p2align 4,,7
+ 389      000000
+ 390              	L79:
+ 391 0020 8B5340   		movl	64(%ebx), %edx
+ 392 0023 83C701   		addl	$1, %edi
+ 393 0026 8B442438 		movl	56(%esp), %eax
+ 394 002a 892C24   		movl	%ebp, (%esp)
+ 395 002d 89542408 		movl	%edx, 8(%esp)
+ 396 0031 89442404 		movl	%eax, 4(%esp)
+ 397 0035 FF5304   		call	*4(%ebx)
+ 398 0038 83C304   		addl	$4, %ebx
+ 399 003b 393E     		cmpl	%edi, (%esi)
+ 400 003d 7FE1     		jg	L79
+ 401              	L75:
+ 402 003f 83C41C   		addl	$28, %esp
+ 403              		.cfi_def_cfa_offset 20
+ 404 0042 5B       		popl	%ebx
+ 405              		.cfi_restore 3
+ 406              		.cfi_def_cfa_offset 16
+ 407 0043 5E       		popl	%esi
+ 408              		.cfi_restore 6
+ 409              		.cfi_def_cfa_offset 12
+ 410 0044 5F       		popl	%edi
+ 411              		.cfi_restore 7
+ 412              		.cfi_def_cfa_offset 8
+ 413 0045 5D       		popl	%ebp
+ 414              		.cfi_restore 5
+ 415              		.cfi_def_cfa_offset 4
+ 416 0046 C3       		ret
+ 417              		.cfi_endproc
+ 418              	LFE63:
+ 419 0047 90909090 		.section	.text$_Z14clearCallbacksP16IntListenerArray,"x"
+ 419      90909090 
+ 419      90
+ 420              		.p2align 4,,15
+ 421              		.globl	__Z14clearCallbacksP16IntListenerArray
+ 422              		.def	__Z14clearCallbacksP16IntListenerArray;	.scl	2;	.type	32;	.endef
+ 423              	__Z14clearCallbacksP16IntListenerArray:
+ 424              	LFB64:
+ 425              		.cfi_startproc
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccD2u8dc.s 			page 9
+
+
+ 426 0000 8B442404 		movl	4(%esp), %eax
+ 427 0004 C7000000 		movl	$0, (%eax)
+ 427      0000
+ 428 000a C3       		ret
+ 429              		.cfi_endproc
+ 430              	LFE64:
+ 431 000b 90909090 		.def	_firmwareError;	.scl	2;	.type	32;	.endef
+ 431      90
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccD2u8dc.s 			page 10
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 listener_array.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccD2u8dc.s:7      .text$_ZN16IntListenerArrayC2Ev:00000000 __ZN16IntListenerArrayC2Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccD2u8dc.s:7      .text$_ZN16IntListenerArrayC2Ev:00000000 __ZN16IntListenerArrayC1Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccD2u8dc.s:106    .text$_ZN16IntListenerArray16registerCallbackEPFviEPv:00000000 __ZN16IntListenerArray16registerCallbackEPFviEPv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccD2u8dc.s:139    .text$_ZN16IntListenerArray16registerCallbackEPFvvE:00000000 __ZN16IntListenerArray16registerCallbackEPFvvE
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccD2u8dc.s:160    .text$_Z15invokeCallbacksP16IntListenerArrayi:00000000 __Z15invokeCallbacksP16IntListenerArrayi
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccD2u8dc.s:207    .text$_ZN16IntListenerArray22invokeJustArgCallbacksEv:00000000 __ZN16IntListenerArray22invokeJustArgCallbacksEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccD2u8dc.s:255    .text$_Z21invokeArgIntCallbacksP16IntListenerArrayi:00000000 __Z21invokeArgIntCallbacksP16IntListenerArrayi
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccD2u8dc.s:311    .text$_Z21invokeIntIntCallbacksP16IntListenerArrayii:00000000 __Z21invokeIntIntCallbacksP16IntListenerArrayii
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccD2u8dc.s:365    .text$_Z25invokeIntIntVoidCallbacksP16IntListenerArrayii:00000000 __Z25invokeIntIntVoidCallbacksP16IntListenerArrayii
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccD2u8dc.s:423    .text$_Z14clearCallbacksP16IntListenerArray:00000000 __Z14clearCallbacksP16IntListenerArray
+
+UNDEFINED SYMBOLS
+_firmwareError

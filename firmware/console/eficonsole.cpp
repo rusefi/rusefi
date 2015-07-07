@@ -34,7 +34,8 @@ static LoggingWithStorage logger("console");
 static char fatalErrorMessage[200];
 
 void fatal3(char *msg, char *file, int line) {
-	strcpy(fatalErrorMessage, msg);
+	strncpy(fatalErrorMessage, msg, sizeof(fatalErrorMessage) - 1);
+	fatalErrorMessage[sizeof(fatalErrorMessage) - 1] = 0; // just to be sure
 #if EFI_CUSTOM_PANIC_METHOD
 	chDbgPanic3(fatalErrorMessage, file, line);
 #else
@@ -59,59 +60,59 @@ static void sayNothing(void) {
 }
 
 static void sayHello(void) {
-	printMsg(&logger, "*** rusEFI (c) Andrey Belomutskiy, 2012-2015. All rights reserved.");
-	printMsg(&logger, "rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
-	printMsg(&logger, "*** Chibios Kernel:       %s", CH_KERNEL_VERSION);
-	printMsg(&logger, "*** Compiled:     " __DATE__ " - " __TIME__ "");
-	printMsg(&logger, "COMPILER=%s", __VERSION__);
-	printMsg(&logger, "CH_FREQUENCY=%d", CH_FREQUENCY);
+	scheduleMsg(&logger, "*** rusEFI (c) Andrey Belomutskiy 2012-2015. All rights reserved.");
+	scheduleMsg(&logger, "rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
+	scheduleMsg(&logger, "*** Chibios Kernel:       %s", CH_KERNEL_VERSION);
+	scheduleMsg(&logger, "*** Compiled:     " __DATE__ " - " __TIME__ "");
+	scheduleMsg(&logger, "COMPILER=%s", __VERSION__);
+	scheduleMsg(&logger, "CH_FREQUENCY=%d", CH_FREQUENCY);
 #ifdef SERIAL_SPEED
-	printMsg(&logger, "SERIAL_SPEED=%d", SERIAL_SPEED);
+	scheduleMsg(&logger, "SERIAL_SPEED=%d", SERIAL_SPEED);
 #endif
 
 #ifdef CORTEX_MAX_KERNEL_PRIORITY
-	printMsg(&logger, "CORTEX_MAX_KERNEL_PRIORITY=%d", CORTEX_MAX_KERNEL_PRIORITY);
+	scheduleMsg(&logger, "CORTEX_MAX_KERNEL_PRIORITY=%d", CORTEX_MAX_KERNEL_PRIORITY);
 #endif
 
 #ifdef STM32_ADCCLK
-	printMsg(&logger, "STM32_ADCCLK=%d", STM32_ADCCLK);
-	printMsg(&logger, "STM32_TIMCLK1=%d", STM32_TIMCLK1);
-	printMsg(&logger, "STM32_TIMCLK2=%d", STM32_TIMCLK2);
+	scheduleMsg(&logger, "STM32_ADCCLK=%d", STM32_ADCCLK);
+	scheduleMsg(&logger, "STM32_TIMCLK1=%d", STM32_TIMCLK1);
+	scheduleMsg(&logger, "STM32_TIMCLK2=%d", STM32_TIMCLK2);
 #endif
 #ifdef STM32_PCLK1
-	printMsg(&logger, "STM32_PCLK1=%d", STM32_PCLK1);
-	printMsg(&logger, "STM32_PCLK2=%d", STM32_PCLK2);
+	scheduleMsg(&logger, "STM32_PCLK1=%d", STM32_PCLK1);
+	scheduleMsg(&logger, "STM32_PCLK2=%d", STM32_PCLK2);
 #endif
 
-	printMsg(&logger, "PORT_IDLE_THREAD_STACK_SIZE=%d", PORT_IDLE_THREAD_STACK_SIZE);
+	scheduleMsg(&logger, "PORT_IDLE_THREAD_STACK_SIZE=%d", PORT_IDLE_THREAD_STACK_SIZE);
 
-	printMsg(&logger, "CH_DBG_ENABLE_ASSERTS=%d", CH_DBG_ENABLE_ASSERTS);
-	printMsg(&logger, "CH_DBG_ENABLED=%d", CH_DBG_ENABLED);
-	printMsg(&logger, "CH_DBG_SYSTEM_STATE_CHECK=%d", CH_DBG_SYSTEM_STATE_CHECK);
-	printMsg(&logger, "CH_DBG_ENABLE_STACK_CHECK=%d", CH_DBG_ENABLE_STACK_CHECK);
+	scheduleMsg(&logger, "CH_DBG_ENABLE_ASSERTS=%d", CH_DBG_ENABLE_ASSERTS);
+	scheduleMsg(&logger, "CH_DBG_ENABLED=%d", CH_DBG_ENABLED);
+	scheduleMsg(&logger, "CH_DBG_SYSTEM_STATE_CHECK=%d", CH_DBG_SYSTEM_STATE_CHECK);
+	scheduleMsg(&logger, "CH_DBG_ENABLE_STACK_CHECK=%d", CH_DBG_ENABLE_STACK_CHECK);
 
 #ifdef EFI_WAVE_ANALYZER
-	printMsg(&logger, "EFI_WAVE_ANALYZER=%d", EFI_WAVE_ANALYZER);
+	scheduleMsg(&logger, "EFI_WAVE_ANALYZER=%d", EFI_WAVE_ANALYZER);
 #endif
 #ifdef EFI_TUNER_STUDIO
-	printMsg(&logger, "EFI_TUNER_STUDIO=%d", EFI_TUNER_STUDIO);
+	scheduleMsg(&logger, "EFI_TUNER_STUDIO=%d", EFI_TUNER_STUDIO);
 #else
-	printMsg(&logger, "EFI_TUNER_STUDIO=%d", 0);
+	scheduleMsg(&logger, "EFI_TUNER_STUDIO=%d", 0);
 #endif
 
 #ifdef EFI_SIGNAL_EXECUTOR_SLEEP
-	printMsg(&logger, "EFI_SIGNAL_EXECUTOR_SLEEP=%d", EFI_SIGNAL_EXECUTOR_SLEEP);
+	scheduleMsg(&logger, "EFI_SIGNAL_EXECUTOR_SLEEP=%d", EFI_SIGNAL_EXECUTOR_SLEEP);
 #endif
 
 #ifdef EFI_SIGNAL_EXECUTOR_HW_TIMER
-	printMsg(&logger, "EFI_SIGNAL_EXECUTOR_HW_TIMER=%d", EFI_SIGNAL_EXECUTOR_HW_TIMER);
+	scheduleMsg(&logger, "EFI_SIGNAL_EXECUTOR_HW_TIMER=%d", EFI_SIGNAL_EXECUTOR_HW_TIMER);
 #endif
 
 #if defined(EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
-	printMsg(&logger, "EFI_SHAFT_POSITION_INPUT=%d", EFI_SHAFT_POSITION_INPUT);
+	scheduleMsg(&logger, "EFI_SHAFT_POSITION_INPUT=%d", EFI_SHAFT_POSITION_INPUT);
 #endif
 #ifdef EFI_INTERNAL_ADC
-	printMsg(&logger, "EFI_INTERNAL_ADC=%d", EFI_INTERNAL_ADC);
+	scheduleMsg(&logger, "EFI_INTERNAL_ADC=%d", EFI_INTERNAL_ADC);
 #endif
 
 //	printSimpleMsg(&logger, "", );
@@ -128,16 +129,19 @@ static void sayHello(void) {
  */
 static void cmd_threads(void) {
 #if CH_DBG_THREADS_PROFILING || defined(__DOXYGEN__)
-	static const char *states[] = { THD_STATE_NAMES };
-	Thread *tp;
-
-	print("    addr    stack prio refs     state time\r\n");
-	tp = chRegFirstThread();
-	do {
-		print("%.8lx [%.8lx] %4lu %4lu %9s %lu %s\r\n", (uint32_t) tp, 0, (uint32_t) tp->p_prio,
-				(uint32_t) (0), states[tp->p_state], (uint32_t) tp->p_time, tp->p_name);
-		tp = chRegNextThread(tp);
-	} while (tp != NULL);
+  static const char *states[] = { THD_STATE_NAMES };
+  Thread *tp;
+  
+  scheduleMsg(&logger, "    addr    stack prio refs     state time");
+  tp = chRegFirstThread();
+  while (tp != NULL) {    
+    scheduleMsg(&logger, "%.8lx [%.8lx] %4lu %4lu %9s %lu %s", (uint32_t) tp, 0, (uint32_t) tp->p_prio,
+		(uint32_t) (0), states[tp->p_state], (uint32_t) tp->p_time, tp->p_name);
+    tp = chRegNextThread(tp);
+  } 
+  
+#else
+  scheduleMsg(&logger, "CH_DBG_THREADS_PROFILING is not enabled");
 #endif
 }
 

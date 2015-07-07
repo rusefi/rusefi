@@ -1,0 +1,892 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s 			page 1
+
+
+   1              		.file	"pwm_generator_logic.cpp"
+   2              		.section	.text$_ZN9PwmConfig15baseConstructorEv,"x"
+   3              		.align 2
+   4              		.p2align 4,,15
+   5              		.globl	__ZN9PwmConfig15baseConstructorEv
+   6              		.def	__ZN9PwmConfig15baseConstructorEv;	.scl	2;	.type	32;	.endef
+   7              	__ZN9PwmConfig15baseConstructorEv:
+   8              	LFB57:
+   9              		.cfi_startproc
+  10 0000 57       		pushl	%edi
+  11              		.cfi_def_cfa_offset 8
+  12              		.cfi_offset 7, -8
+  13 0001 BA300000 		movl	$48, %edx
+  13      00
+  14 0006 8D7920   		leal	32(%ecx), %edi
+  15 0009 F7C70100 		testl	$1, %edi
+  15      0000
+  16 000f 53       		pushl	%ebx
+  17              		.cfi_def_cfa_offset 12
+  18              		.cfi_offset 3, -12
+  19 0010 89CB     		movl	%ecx, %ebx
+  20 0012 0F85AA00 		jne	L39
+  20      0000
+  21 0018 F7C70200 		testl	$2, %edi
+  21      0000
+  22 001e 0F85B300 		jne	L40
+  22      0000
+  23              	L3:
+  24 0024 89D1     		movl	%edx, %ecx
+  25 0026 31C0     		xorl	%eax, %eax
+  26 0028 C1E902   		shrl	$2, %ecx
+  27 002b F6C202   		testb	$2, %dl
+  28 002e F3AB     		rep stosl
+  29 0030 7408     		je	L4
+  30 0032 66C70700 		movw	$0, (%edi)
+  30      00
+  31 0037 83C702   		addl	$2, %edi
+  32              	L4:
+  33 003a 83E201   		andl	$1, %edx
+  34 003d 7403     		je	L5
+  35 003f C60700   		movb	$0, (%edi)
+  36              	L5:
+  37 0042 8D5350   		leal	80(%ebx), %edx
+  38 0045 B9180000 		movl	$24, %ecx
+  38      00
+  39 004a F6C201   		testb	$1, %dl
+  40 004d 0F859400 		jne	L41
+  40      0000
+  41 0053 F6C202   		testb	$2, %dl
+  42 0056 0F85A400 		jne	L42
+  42      0000
+  43              	L7:
+  44 005c 89CF     		movl	%ecx, %edi
+  45 005e 31C0     		xorl	%eax, %eax
+  46 0060 83E7FC   		andl	$-4, %edi
+  47              	L8:
+  48 0063 C7040200 		movl	$0, (%edx,%eax)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s 			page 2
+
+
+  48      000000
+  49 006a 83C004   		addl	$4, %eax
+  50 006d 39F8     		cmpl	%edi, %eax
+  51 006f 72F2     		jb	L8
+  52 0071 01C2     		addl	%eax, %edx
+  53 0073 F6C102   		testb	$2, %cl
+  54 0076 7408     		je	L10
+  55 0078 66C70200 		movw	$0, (%edx)
+  55      00
+  56 007d 83C202   		addl	$2, %edx
+  57              	L10:
+  58 0080 83E101   		andl	$1, %ecx
+  59 0083 7403     		je	L11
+  60 0085 C60200   		movb	$0, (%edx)
+  61              	L11:
+  62 0088 C7431C00 		movl	$0, 28(%ebx)
+  62      000000
+  63 008f C7431800 		movl	$0x7fc00000, 24(%ebx)
+  63      00C07F
+  64 0096 C7030000 		movl	$0, (%ebx)
+  64      0000
+  65 009c C7430400 		movl	$0, 4(%ebx)
+  65      000000
+  66 00a3 C7430800 		movl	$0, 8(%ebx)
+  66      000000
+  67 00aa C7436800 		movl	$0, 104(%ebx)
+  67      000000
+  68 00b1 C7436C00 		movl	$0, 108(%ebx)
+  68      000000
+  69 00b8 C7437000 		movl	$0, 112(%ebx)
+  69      000000
+  70 00bf 5B       		popl	%ebx
+  71              		.cfi_remember_state
+  72              		.cfi_restore 3
+  73              		.cfi_def_cfa_offset 8
+  74 00c0 5F       		popl	%edi
+  75              		.cfi_restore 7
+  76              		.cfi_def_cfa_offset 4
+  77 00c1 C3       		ret
+  78              		.p2align 4,,7
+  79              	L39:
+  80              		.cfi_restore_state
+  81 00c2 8D7921   		leal	33(%ecx), %edi
+  82 00c5 B22F     		movb	$47, %dl
+  83 00c7 F7C70200 		testl	$2, %edi
+  83      0000
+  84 00cd C6412000 		movb	$0, 32(%ecx)
+  85 00d1 0F844DFF 		je	L3
+  85      FFFF
+  86              		.p2align 4,,7
+  87              	L40:
+  88 00d7 66C70700 		movw	$0, (%edi)
+  88      00
+  89 00dc 83EA02   		subl	$2, %edx
+  90 00df 83C702   		addl	$2, %edi
+  91 00e2 E93DFFFF 		jmp	L3
+  91      FF
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s 			page 3
+
+
+  92              		.p2align 4,,7
+  93              	L41:
+  94 00e7 8D5351   		leal	81(%ebx), %edx
+  95 00ea B117     		movb	$23, %cl
+  96 00ec F6C202   		testb	$2, %dl
+  97 00ef C6435000 		movb	$0, 80(%ebx)
+  98 00f3 0F8463FF 		je	L7
+  98      FFFF
+  99 00f9 8DB42600 		.p2align 4,,7
+  99      000000
+ 100              	L42:
+ 101 0100 66C70200 		movw	$0, (%edx)
+ 101      00
+ 102 0105 83E902   		subl	$2, %ecx
+ 103 0108 83C202   		addl	$2, %edx
+ 104 010b E94CFFFF 		jmp	L7
+ 104      FF
+ 105              		.cfi_endproc
+ 106              	LFE57:
+ 107              		.section	.text$_ZN9PwmConfigC2Ev,"x"
+ 108              		.align 2
+ 109              		.p2align 4,,15
+ 110              		.globl	__ZN9PwmConfigC2Ev
+ 111              		.def	__ZN9PwmConfigC2Ev;	.scl	2;	.type	32;	.endef
+ 112              	__ZN9PwmConfigC2Ev:
+ 113              	LFB59:
+ 114              		.cfi_startproc
+ 115 0000 53       		pushl	%ebx
+ 116              		.cfi_def_cfa_offset 8
+ 117              		.cfi_offset 3, -8
+ 118 0001 89CB     		movl	%ecx, %ebx
+ 119 0003 83EC08   		subl	$8, %esp
+ 120              		.cfi_def_cfa_offset 16
+ 121 0006 8D490C   		leal	12(%ecx), %ecx
+ 122 0009 E8000000 		call	__ZN12multi_wave_sC1Ev
+ 122      00
+ 123 000e 8D4B20   		leal	32(%ebx), %ecx
+ 124 0011 E8000000 		call	__ZN12scheduling_sC1Ev
+ 124      00
+ 125 0016 83C408   		addl	$8, %esp
+ 126              		.cfi_def_cfa_offset 8
+ 127 0019 89D9     		movl	%ebx, %ecx
+ 128 001b 5B       		popl	%ebx
+ 129              		.cfi_restore 3
+ 130              		.cfi_def_cfa_offset 4
+ 131 001c E9000000 		jmp	__ZN9PwmConfig15baseConstructorEv
+ 131      00
+ 132              		.cfi_endproc
+ 133              	LFE59:
+ 134              		.globl	__ZN9PwmConfigC1Ev
+ 135              		.def	__ZN9PwmConfigC1Ev;	.scl	2;	.type	32;	.endef
+ 136              		.set	__ZN9PwmConfigC1Ev,__ZN9PwmConfigC2Ev
+ 137 0021 90909090 		.section	.text$_ZN9PwmConfigC2EPfP13single_wave_s,"x"
+ 137      90909090 
+ 137      90909090 
+ 137      909090
+ 138              		.align 2
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s 			page 4
+
+
+ 139              		.p2align 4,,15
+ 140              		.globl	__ZN9PwmConfigC2EPfP13single_wave_s
+ 141              		.def	__ZN9PwmConfigC2EPfP13single_wave_s;	.scl	2;	.type	32;	.endef
+ 142              	__ZN9PwmConfigC2EPfP13single_wave_s:
+ 143              	LFB62:
+ 144              		.cfi_startproc
+ 145 0000 83EC1C   		subl	$28, %esp
+ 146              		.cfi_def_cfa_offset 32
+ 147 0003 89742410 		movl	%esi, 16(%esp)
+ 148              		.cfi_offset 6, -16
+ 149 0007 8D710C   		leal	12(%ecx), %esi
+ 150 000a 895C240C 		movl	%ebx, 12(%esp)
+ 151              		.cfi_offset 3, -20
+ 152 000e 89CB     		movl	%ecx, %ebx
+ 153 0010 89F1     		movl	%esi, %ecx
+ 154 0012 897C2414 		movl	%edi, 20(%esp)
+ 155              		.cfi_offset 7, -12
+ 156 0016 8B7C2420 		movl	32(%esp), %edi
+ 157 001a 896C2418 		movl	%ebp, 24(%esp)
+ 158              		.cfi_offset 5, -8
+ 159 001e 8B6C2424 		movl	36(%esp), %ebp
+ 160 0022 E8000000 		call	__ZN12multi_wave_sC1Ev
+ 160      00
+ 161 0027 8D4B20   		leal	32(%ebx), %ecx
+ 162 002a E8000000 		call	__ZN12scheduling_sC1Ev
+ 162      00
+ 163 002f 89D9     		movl	%ebx, %ecx
+ 164 0031 E8000000 		call	__ZN9PwmConfig15baseConstructorEv
+ 164      00
+ 165 0036 89F1     		movl	%esi, %ecx
+ 166 0038 8B5C240C 		movl	12(%esp), %ebx
+ 167 003c 896C2424 		movl	%ebp, 36(%esp)
+ 168 0040 8B742410 		movl	16(%esp), %esi
+ 169 0044 897C2420 		movl	%edi, 32(%esp)
+ 170 0048 8B6C2418 		movl	24(%esp), %ebp
+ 171 004c 8B7C2414 		movl	20(%esp), %edi
+ 172 0050 83C41C   		addl	$28, %esp
+ 173              		.cfi_restore 5
+ 174              		.cfi_restore 7
+ 175              		.cfi_restore 6
+ 176              		.cfi_restore 3
+ 177              		.cfi_def_cfa_offset 4
+ 178 0053 E9000000 		jmp	__ZN12multi_wave_s4initEPfP13single_wave_s
+ 178      00
+ 179              		.cfi_def_cfa_offset -4
+ 180              		.cfi_endproc
+ 181              	LFE62:
+ 182              		.globl	__ZN9PwmConfigC1EPfP13single_wave_s
+ 183              		.def	__ZN9PwmConfigC1EPfP13single_wave_s;	.scl	2;	.type	32;	.endef
+ 184              		.set	__ZN9PwmConfigC1EPfP13single_wave_s,__ZN9PwmConfigC2EPfP13single_wave_s
+ 185 0058 90909090 		.section	.text$_ZN9PwmConfig4initEPfP13single_wave_s,"x"
+ 185      90909090 
+ 186              		.align 2
+ 187              		.p2align 4,,15
+ 188              		.globl	__ZN9PwmConfig4initEPfP13single_wave_s
+ 189              		.def	__ZN9PwmConfig4initEPfP13single_wave_s;	.scl	2;	.type	32;	.endef
+ 190              	__ZN9PwmConfig4initEPfP13single_wave_s:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s 			page 5
+
+
+ 191              	LFB64:
+ 192              		.cfi_startproc
+ 193 0000 83C10C   		addl	$12, %ecx
+ 194 0003 E9000000 		jmp	__ZN12multi_wave_s4initEPfP13single_wave_s
+ 194      00
+ 195              		.cfi_def_cfa_offset -4
+ 196              		.cfi_endproc
+ 197              	LFE64:
+ 198 0008 90909090 		.section	.text$_ZN9SimplePwmC2Ev,"x"
+ 198      90909090 
+ 199              		.align 2
+ 200              		.p2align 4,,15
+ 201              		.globl	__ZN9SimplePwmC2Ev
+ 202              		.def	__ZN9SimplePwmC2Ev;	.scl	2;	.type	32;	.endef
+ 203              	__ZN9SimplePwmC2Ev:
+ 204              	LFB55:
+ 205              		.cfi_startproc
+ 206 0000 83EC1C   		subl	$28, %esp
+ 207              		.cfi_def_cfa_offset 32
+ 208 0003 895C2410 		movl	%ebx, 16(%esp)
+ 209              		.cfi_offset 3, -16
+ 210 0007 89CB     		movl	%ecx, %ebx
+ 211 0009 89742414 		movl	%esi, 20(%esp)
+ 212              		.cfi_offset 6, -12
+ 213 000d 8D7378   		leal	120(%ebx), %esi
+ 214 0010 897C2418 		movl	%edi, 24(%esp)
+ 215              		.cfi_offset 7, -8
+ 216 0014 8DBB8400 		leal	132(%ebx), %edi
+ 216      0000
+ 217 001a E8000000 		call	__ZN9PwmConfigC2Ev
+ 217      00
+ 218 001f 89F1     		movl	%esi, %ecx
+ 219 0021 E8000000 		call	__ZN13single_wave_sC1Ev
+ 219      00
+ 220 0026 89F9     		movl	%edi, %ecx
+ 221 0028 E8000000 		call	__ZN13single_wave_sC1Ev
+ 221      00
+ 222 002d 8D4374   		leal	116(%ebx), %eax
+ 223 0030 89F9     		movl	%edi, %ecx
+ 224 0032 890424   		movl	%eax, (%esp)
+ 225 0035 E8000000 		call	__ZN13single_wave_s4initEPa
+ 225      00
+ 226              		.cfi_def_cfa_offset 28
+ 227 003a 8B838400 		movl	132(%ebx), %eax
+ 227      0000
+ 228 0040 89D9     		movl	%ebx, %ecx
+ 229 0042 894378   		movl	%eax, 120(%ebx)
+ 230 0045 8D437C   		leal	124(%ebx), %eax
+ 231 0048 83EC04   		subl	$4, %esp
+ 232              		.cfi_def_cfa_offset 32
+ 233 004b 89742404 		movl	%esi, 4(%esp)
+ 234 004f 890424   		movl	%eax, (%esp)
+ 235 0052 E8000000 		call	__ZN9PwmConfig4initEPfP13single_wave_s
+ 235      00
+ 236              		.cfi_def_cfa_offset 24
+ 237 0057 83EC08   		subl	$8, %esp
+ 238              		.cfi_def_cfa_offset 32
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s 			page 6
+
+
+ 239 005a 8B5C2410 		movl	16(%esp), %ebx
+ 240 005e 8B742414 		movl	20(%esp), %esi
+ 241 0062 8B7C2418 		movl	24(%esp), %edi
+ 242 0066 83C41C   		addl	$28, %esp
+ 243              		.cfi_restore 7
+ 244              		.cfi_restore 6
+ 245              		.cfi_restore 3
+ 246              		.cfi_def_cfa_offset 4
+ 247 0069 C3       		ret
+ 248              		.cfi_endproc
+ 249              	LFE55:
+ 250              		.globl	__ZN9SimplePwmC1Ev
+ 251              		.def	__ZN9SimplePwmC1Ev;	.scl	2;	.type	32;	.endef
+ 252              		.set	__ZN9SimplePwmC1Ev,__ZN9SimplePwmC2Ev
+ 253 006a 90909090 		.section	.text$_ZN9SimplePwm21setSimplePwmDutyCycleEf,"x"
+ 253      9090
+ 254              		.align 2
+ 255              		.p2align 4,,15
+ 256              		.globl	__ZN9SimplePwm21setSimplePwmDutyCycleEf
+ 257              		.def	__ZN9SimplePwm21setSimplePwmDutyCycleEf;	.scl	2;	.type	32;	.endef
+ 258              	__ZN9SimplePwm21setSimplePwmDutyCycleEf:
+ 259              	LFB65:
+ 260              		.cfi_startproc
+ 261 0000 83EC1C   		subl	$28, %esp
+ 262              		.cfi_def_cfa_offset 32
+ 263 0003 83C10C   		addl	$12, %ecx
+ 264 0006 D9442420 		flds	32(%esp)
+ 265 000a D95C2404 		fstps	4(%esp)
+ 266 000e C7042400 		movl	$0, (%esp)
+ 266      000000
+ 267 0015 E8000000 		call	__ZN12multi_wave_s13setSwitchTimeEif
+ 267      00
+ 268              		.cfi_def_cfa_offset 24
+ 269 001a 83EC08   		subl	$8, %esp
+ 270              		.cfi_def_cfa_offset 32
+ 271 001d 83C41C   		addl	$28, %esp
+ 272              		.cfi_def_cfa_offset 4
+ 273 0020 C20400   		ret	$4
+ 274              		.cfi_endproc
+ 275              	LFE65:
+ 276 0023 90909090 		.section .rdata,"dr"
+ 276      90909090 
+ 276      90909090 
+ 276      90
+ 277              	LC2:
+ 278 0000 70657269 		.ascii "period not initialized\0"
+ 278      6F64206E 
+ 278      6F742069 
+ 278      6E697469 
+ 278      616C697A 
+ 279              		.section	.text$_ZN9PwmConfig16handleCycleStartEv,"x"
+ 280              		.align 2
+ 281              		.p2align 4,,15
+ 282              		.globl	__ZN9PwmConfig16handleCycleStartEv
+ 283              		.def	__ZN9PwmConfig16handleCycleStartEv;	.scl	2;	.type	32;	.endef
+ 284              	__ZN9PwmConfig16handleCycleStartEv:
+ 285              	LFB67:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s 			page 7
+
+
+ 286              		.cfi_startproc
+ 287 0000 53       		pushl	%ebx
+ 288              		.cfi_def_cfa_offset 8
+ 289              		.cfi_offset 3, -8
+ 290 0001 89CB     		movl	%ecx, %ebx
+ 291 0003 83EC18   		subl	$24, %esp
+ 292              		.cfi_def_cfa_offset 32
+ 293 0006 8B4160   		movl	96(%ecx), %eax
+ 294 0009 85C0     		testl	%eax, %eax
+ 295 000b 752F     		jne	L52
+ 296 000d 8B416C   		movl	108(%ecx), %eax
+ 297 0010 85C0     		testl	%eax, %eax
+ 298 0012 7405     		je	L55
+ 299 0014 890C24   		movl	%ecx, (%esp)
+ 300 0017 FFD0     		call	*%eax
+ 301              	L55:
+ 302 0019 D94318   		flds	24(%ebx)
+ 303 001c D9EE     		fldz
+ 304 001e D9C9     		fxch	%st(1)
+ 305 0020 DBE9     		fucomi	%st(1), %st
+ 306 0022 DDD9     		fstp	%st(1)
+ 307 0024 7B3A     		jnp	L65
+ 308              	L56:
+ 309 0026 D94350   		flds	80(%ebx)
+ 310 0029 D9C9     		fxch	%st(1)
+ 311 002b DFE9     		fucomip	%st(1), %st
+ 312 002d DDD8     		fstp	%st(0)
+ 313 002f 7A10     		jp	L58
+ 314 0031 750E     		jne	L58
+ 315 0033 817B54E8 		cmpl	$1000, 84(%ebx)
+ 315      030000
+ 316 003a 7405     		je	L58
+ 317              	L52:
+ 318 003c 83C418   		addl	$24, %esp
+ 319              		.cfi_remember_state
+ 320              		.cfi_def_cfa_offset 8
+ 321 003f 5B       		popl	%ebx
+ 322              		.cfi_restore 3
+ 323              		.cfi_def_cfa_offset 4
+ 324 0040 C3       		ret
+ 325              		.p2align 4,,7
+ 326              	L58:
+ 327              		.cfi_restore_state
+ 328 0041 E8000000 		call	_getTimeNowNt
+ 328      00
+ 329 0046 C7435400 		movl	$0, 84(%ebx)
+ 329      000000
+ 330 004d D94318   		flds	24(%ebx)
+ 331 0050 894358   		movl	%eax, 88(%ebx)
+ 332 0053 D95B50   		fstps	80(%ebx)
+ 333 0056 89535C   		movl	%edx, 92(%ebx)
+ 334 0059 83C418   		addl	$24, %esp
+ 335              		.cfi_remember_state
+ 336              		.cfi_def_cfa_offset 8
+ 337 005c 5B       		popl	%ebx
+ 338              		.cfi_restore 3
+ 339              		.cfi_def_cfa_offset 4
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s 			page 8
+
+
+ 340 005d C3       		ret
+ 341 005e 6690     		.p2align 4,,7
+ 342              	L65:
+ 343              		.cfi_restore_state
+ 344 0060 75C4     		jne	L56
+ 345 0062 DDD8     		fstp	%st(0)
+ 346 0064 C7042400 		movl	$LC2, (%esp)
+ 346      000000
+ 347 006b E8000000 		call	_firmwareError
+ 347      00
+ 348 0070 83C418   		addl	$24, %esp
+ 349              		.cfi_def_cfa_offset 8
+ 350 0073 5B       		popl	%ebx
+ 351              		.cfi_restore 3
+ 352              		.cfi_def_cfa_offset 4
+ 353 0074 C3       		ret
+ 354              		.cfi_endproc
+ 355              	LFE67:
+ 356 0075 90909090 		.section .rdata,"dr"
+ 356      90909090 
+ 356      909090
+ 357              	LC3:
+ 358 0017 50574D20 		.ascii "PWM nesting issue\0"
+ 358      6E657374 
+ 358      696E6720 
+ 358      69737375 
+ 358      6500
+ 359              	LC4:
+ 360 0029 70686173 		.ascii "phaseIndex range\0"
+ 360      65496E64 
+ 360      65782072 
+ 360      616E6765 
+ 360      00
+ 361              		.def	___divdi3;	.scl	2;	.type	32;	.endef
+ 362              	LC5:
+ 363 003a 70776D00 		.ascii "pwm\0"
+ 364              		.section	.text$_ZL13timerCallbackP9PwmConfig,"x"
+ 365              		.p2align 4,,15
+ 366              		.def	__ZL13timerCallbackP9PwmConfig;	.scl	3;	.type	32;	.endef
+ 367              	__ZL13timerCallbackP9PwmConfig:
+ 368              	LFB69:
+ 369              		.cfi_startproc
+ 370 0000 56       		pushl	%esi
+ 371              		.cfi_def_cfa_offset 8
+ 372              		.cfi_offset 6, -8
+ 373 0001 53       		pushl	%ebx
+ 374              		.cfi_def_cfa_offset 12
+ 375              		.cfi_offset 3, -12
+ 376 0002 83EC34   		subl	$52, %esp
+ 377              		.cfi_def_cfa_offset 64
+ 378 0005 8B5C2440 		movl	64(%esp), %ebx
+ 379 0009 8B431C   		movl	28(%ebx), %eax
+ 380 000c 83C001   		addl	$1, %eax
+ 381 000f 83F818   		cmpl	$24, %eax
+ 382 0012 89431C   		movl	%eax, 28(%ebx)
+ 383 0015 0F8FE500 		jg	L75
+ 383      0000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s 			page 9
+
+
+ 384 001b 817B1800 		cmpl	$2143289344, 24(%ebx)
+ 384      00C07F
+ 385 0022 0F84EA00 		je	L76
+ 385      0000
+ 386 0028 89D9     		movl	%ebx, %ecx
+ 387 002a E8000000 		call	__ZN9PwmConfig16handleCycleStartEv
+ 387      00
+ 388 002f 8B4360   		movl	96(%ebx), %eax
+ 389 0032 85C0     		testl	%eax, %eax
+ 390 0034 8D50FF   		leal	-1(%eax), %edx
+ 391 0037 7506     		jne	L71
+ 392 0039 8B5368   		movl	104(%ebx), %edx
+ 393 003c 83EA01   		subl	$1, %edx
+ 394              	L71:
+ 395 003f 89542404 		movl	%edx, 4(%esp)
+ 396 0043 891C24   		movl	%ebx, (%esp)
+ 397 0046 FF5370   		call	*112(%ebx)
+ 398 0049 8B4360   		movl	96(%ebx), %eax
+ 399 004c 3DFB0000 		cmpl	$251, %eax
+ 399      00
+ 400 0051 0F8FCA00 		jg	L77
+ 400      0000
+ 401 0057 8B7354   		movl	84(%ebx), %esi
+ 402 005a 8D4B0C   		leal	12(%ebx), %ecx
+ 403 005d 890424   		movl	%eax, (%esp)
+ 404 0060 E8000000 		call	__ZNK12multi_wave_s13getSwitchTimeEi
+ 404      00
+ 405              		.cfi_def_cfa_offset 60
+ 406 0065 83EC04   		subl	$4, %esp
+ 407              		.cfi_def_cfa_offset 64
+ 408 0068 8974242C 		movl	%esi, 44(%esp)
+ 409 006c DB44242C 		fildl	44(%esp)
+ 410 0070 DEC1     		faddp	%st, %st(1)
+ 411 0072 D84B50   		fmuls	80(%ebx)
+ 412 0075 D97C242A 		fnstcw	42(%esp)
+ 413 0079 0FB74424 		movzwl	42(%esp), %eax
+ 413      2A
+ 414 007e B40C     		movb	$12, %ah
+ 415 0080 66894424 		movw	%ax, 40(%esp)
+ 415      28
+ 416 0085 D96C2428 		fldcw	40(%esp)
+ 417 0089 DF7C2420 		fistpq	32(%esp)
+ 418 008d D96C242A 		fldcw	42(%esp)
+ 419 0091 8B442420 		movl	32(%esp), %eax
+ 420 0095 8B542424 		movl	36(%esp), %edx
+ 421 0099 034358   		addl	88(%ebx), %eax
+ 422 009c 13535C   		adcl	92(%ebx), %edx
+ 423 009f C7442408 		movl	$100, 8(%esp)
+ 423      64000000 
+ 424 00a7 C744240C 		movl	$0, 12(%esp)
+ 424      00000000 
+ 425 00af 890424   		movl	%eax, (%esp)
+ 426 00b2 89542404 		movl	%edx, 4(%esp)
+ 427 00b6 E8000000 		call	___divdi3
+ 427      00
+ 428 00bb 8B4B60   		movl	96(%ebx), %ecx
+ 429 00be 83C101   		addl	$1, %ecx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s 			page 10
+
+
+ 430 00c1 3B4B68   		cmpl	104(%ebx), %ecx
+ 431 00c4 894B60   		movl	%ecx, 96(%ebx)
+ 432 00c7 7476     		je	L78
+ 433              	L69:
+ 434 00c9 89442408 		movl	%eax, 8(%esp)
+ 435 00cd 8D4320   		leal	32(%ebx), %eax
+ 436 00d0 895C2414 		movl	%ebx, 20(%esp)
+ 437 00d4 C7442410 		movl	$__ZL13timerCallbackP9PwmConfig, 16(%esp)
+ 437      00000000 
+ 438 00dc 8954240C 		movl	%edx, 12(%esp)
+ 439 00e0 89442404 		movl	%eax, 4(%esp)
+ 440 00e4 C704243A 		movl	$LC5, (%esp)
+ 440      000000
+ 441 00eb E8000000 		call	__Z14scheduleByTimePKcP12scheduling_sxPFvPvES3_
+ 441      00
+ 442 00f0 836B1C01 		subl	$1, 28(%ebx)
+ 443 00f4 83C434   		addl	$52, %esp
+ 444              		.cfi_remember_state
+ 445              		.cfi_def_cfa_offset 12
+ 446 00f7 5B       		popl	%ebx
+ 447              		.cfi_restore 3
+ 448              		.cfi_def_cfa_offset 8
+ 449 00f8 5E       		popl	%esi
+ 450              		.cfi_restore 6
+ 451              		.cfi_def_cfa_offset 4
+ 452 00f9 C3       		ret
+ 453 00fa 8DB60000 		.p2align 4,,7
+ 453      0000
+ 454              	L75:
+ 455              		.cfi_restore_state
+ 456 0100 C7442440 		movl	$LC3, 64(%esp)
+ 456      17000000 
+ 457 0108 83C434   		addl	$52, %esp
+ 458              		.cfi_remember_state
+ 459              		.cfi_def_cfa_offset 12
+ 460 010b 5B       		popl	%ebx
+ 461              		.cfi_restore 3
+ 462              		.cfi_def_cfa_offset 8
+ 463 010c 5E       		popl	%esi
+ 464              		.cfi_restore 6
+ 465              		.cfi_def_cfa_offset 4
+ 466 010d E9000000 		jmp	_firmwareError
+ 466      00
+ 467              		.p2align 4,,7
+ 468              	L76:
+ 469              		.cfi_restore_state
+ 470 0112 E8000000 		call	_getTimeNowUs
+ 470      00
+ 471 0117 05A08601 		addl	$100000, %eax
+ 471      00
+ 472 011c 83D200   		adcl	$0, %edx
+ 473 011f EBA8     		jmp	L69
+ 474              		.p2align 4,,7
+ 475              	L77:
+ 476 0121 C7042429 		movl	$LC4, (%esp)
+ 476      000000
+ 477 0128 E8000000 		call	_firmwareError
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s 			page 11
+
+
+ 477      00
+ 478 012d 8B4B60   		movl	96(%ebx), %ecx
+ 479 0130 31C0     		xorl	%eax, %eax
+ 480 0132 31D2     		xorl	%edx, %edx
+ 481 0134 83C101   		addl	$1, %ecx
+ 482 0137 3B4B68   		cmpl	104(%ebx), %ecx
+ 483 013a 894B60   		movl	%ecx, 96(%ebx)
+ 484 013d 758A     		jne	L69
+ 485              	L78:
+ 486 013f C7436000 		movl	$0, 96(%ebx)
+ 486      000000
+ 487 0146 83435401 		addl	$1, 84(%ebx)
+ 488 014a E97AFFFF 		jmp	L69
+ 488      FF
+ 489              		.cfi_endproc
+ 490              	LFE69:
+ 491 014f 90       		.section	.text$_Z17copyPwmParametersP9PwmConfigiPfiPPa,"x"
+ 492              		.p2align 4,,15
+ 493              		.globl	__Z17copyPwmParametersP9PwmConfigiPfiPPa
+ 494              		.def	__Z17copyPwmParametersP9PwmConfigiPfiPPa;	.scl	2;	.type	32;	.endef
+ 495              	__Z17copyPwmParametersP9PwmConfigiPfiPPa:
+ 496              	LFB70:
+ 497              		.cfi_startproc
+ 498 0000 55       		pushl	%ebp
+ 499              		.cfi_def_cfa_offset 8
+ 500              		.cfi_offset 5, -8
+ 501 0001 57       		pushl	%edi
+ 502              		.cfi_def_cfa_offset 12
+ 503              		.cfi_offset 7, -12
+ 504 0002 56       		pushl	%esi
+ 505              		.cfi_def_cfa_offset 16
+ 506              		.cfi_offset 6, -16
+ 507 0003 53       		pushl	%ebx
+ 508              		.cfi_def_cfa_offset 20
+ 509              		.cfi_offset 3, -20
+ 510 0004 31DB     		xorl	%ebx, %ebx
+ 511 0006 83EC2C   		subl	$44, %esp
+ 512              		.cfi_def_cfa_offset 64
+ 513 0009 8B742440 		movl	64(%esp), %esi
+ 514 000d 8B442444 		movl	68(%esp), %eax
+ 515 0011 8B7C244C 		movl	76(%esp), %edi
+ 516 0015 8B4C2444 		movl	68(%esp), %ecx
+ 517 0019 8B6C2450 		movl	80(%esp), %ebp
+ 518 001d 894668   		movl	%eax, 104(%esi)
+ 519 0020 8D460C   		leal	12(%esi), %eax
+ 520 0023 C1E702   		sall	$2, %edi
+ 521 0026 85C9     		testl	%ecx, %ecx
+ 522 0028 8944241C 		movl	%eax, 28(%esp)
+ 523 002c 7E47     		jle	L79
+ 524 002e 6690     		.p2align 4,,7
+ 525              	L86:
+ 526 0030 8B442448 		movl	72(%esp), %eax
+ 527 0034 8B4C241C 		movl	28(%esp), %ecx
+ 528 0038 D90498   		flds	(%eax,%ebx,4)
+ 529 003b D95C2404 		fstps	4(%esp)
+ 530 003f 891C24   		movl	%ebx, (%esp)
+ 531 0042 E8000000 		call	__ZN12multi_wave_s13setSwitchTimeEif
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s 			page 12
+
+
+ 531      00
+ 532              		.cfi_def_cfa_offset 56
+ 533 0047 31C0     		xorl	%eax, %eax
+ 534 0049 83EC08   		subl	$8, %esp
+ 535              		.cfi_def_cfa_offset 64
+ 536 004c 8B54244C 		movl	76(%esp), %edx
+ 537 0050 85D2     		testl	%edx, %edx
+ 538 0052 7E18     		jle	L84
+ 539              		.p2align 4,,7
+ 540              	L87:
+ 541 0054 8B540500 		movl	0(%ebp,%eax), %edx
+ 542 0058 0FB60C1A 		movzbl	(%edx,%ebx), %ecx
+ 543 005c 8B5610   		movl	16(%esi), %edx
+ 544 005f 8B1402   		movl	(%edx,%eax), %edx
+ 545 0062 83C004   		addl	$4, %eax
+ 546 0065 39F8     		cmpl	%edi, %eax
+ 547 0067 880C1A   		movb	%cl, (%edx,%ebx)
+ 548 006a 75E8     		jne	L87
+ 549              	L84:
+ 550 006c 83C301   		addl	$1, %ebx
+ 551 006f 3B5C2444 		cmpl	68(%esp), %ebx
+ 552 0073 75BB     		jne	L86
+ 553              	L79:
+ 554 0075 83C42C   		addl	$44, %esp
+ 555              		.cfi_def_cfa_offset 20
+ 556 0078 5B       		popl	%ebx
+ 557              		.cfi_restore 3
+ 558              		.cfi_def_cfa_offset 16
+ 559 0079 5E       		popl	%esi
+ 560              		.cfi_restore 6
+ 561              		.cfi_def_cfa_offset 12
+ 562 007a 5F       		popl	%edi
+ 563              		.cfi_restore 7
+ 564              		.cfi_def_cfa_offset 8
+ 565 007b 5D       		popl	%ebp
+ 566              		.cfi_restore 5
+ 567              		.cfi_def_cfa_offset 4
+ 568 007c C3       		ret
+ 569              		.cfi_endproc
+ 570              	LFE70:
+ 571 007d 909090   		.section .rdata,"dr"
+ 572              	LC6:
+ 573 003e 70657269 		.ascii "period is not initialized\0"
+ 573      6F642069 
+ 573      73206E6F 
+ 573      7420696E 
+ 573      69746961 
+ 574              	LC7:
+ 575 0058 7369676E 		.ascii "signal length cannot be zero\0"
+ 575      616C206C 
+ 575      656E6774 
+ 575      68206361 
+ 575      6E6E6F74 
+ 576              	LC8:
+ 577 0075 746F6F20 		.ascii "too many phases in PWM\0"
+ 577      6D616E79 
+ 577      20706861 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s 			page 13
+
+
+ 577      73657320 
+ 577      696E2050 
+ 578              	LC9:
+ 579 008c 77617665 		.ascii "waveCount should be positive\0"
+ 579      436F756E 
+ 579      74207368 
+ 579      6F756C64 
+ 579      20626520 
+ 580 00a9 000000   		.section	.text$_ZN9PwmConfig13weComplexInitEPKciPfiPPaPFvPS_EPFvS5_iE,"x"
+ 581              		.align 2
+ 582              		.p2align 4,,15
+ 583              		.globl	__ZN9PwmConfig13weComplexInitEPKciPfiPPaPFvPS_EPFvS5_iE
+ 584              		.def	__ZN9PwmConfig13weComplexInitEPKciPfiPPaPFvPS_EPFvS5_iE;	.scl	2;	.type	32;	.endef
+ 585              	__ZN9PwmConfig13weComplexInitEPKciPfiPPaPFvPS_EPFvS5_iE:
+ 586              	LFB71:
+ 587              		.cfi_startproc
+ 588 0000 83EC2C   		subl	$44, %esp
+ 589              		.cfi_def_cfa_offset 48
+ 590 0003 D94118   		flds	24(%ecx)
+ 591 0006 D9EE     		fldz
+ 592 0008 D9C9     		fxch	%st(1)
+ 593 000a DFE9     		fucomip	%st(1), %st
+ 594 000c DDD8     		fstp	%st(0)
+ 595 000e 895C2420 		movl	%ebx, 32(%esp)
+ 596              		.cfi_offset 3, -16
+ 597 0012 89CB     		movl	%ecx, %ebx
+ 598 0014 89742424 		movl	%esi, 36(%esp)
+ 599              		.cfi_offset 6, -12
+ 600 0018 8B742434 		movl	52(%esp), %esi
+ 601 001c 897C2428 		movl	%edi, 40(%esp)
+ 602              		.cfi_offset 7, -8
+ 603 0020 8B7C243C 		movl	60(%esp), %edi
+ 604 0024 0F8B8C00 		jnp	L101
+ 604      0000
+ 605              	L93:
+ 606 002a 85F6     		testl	%esi, %esi
+ 607 002c 0F84AE00 		je	L102
+ 607      0000
+ 608 0032 81FEFC00 		cmpl	$252, %esi
+ 608      0000
+ 609 0038 0F8F9200 		jg	L103
+ 609      0000
+ 610 003e 85FF     		testl	%edi, %edi
+ 611 0040 0F8EAA00 		jle	L104
+ 611      0000
+ 612 0046 8B442438 		movl	56(%esp), %eax
+ 613 004a 893424   		movl	%esi, (%esp)
+ 614 004d 89442404 		movl	%eax, 4(%esp)
+ 615 0051 E8000000 		call	__Z17checkSwitchTimes2iPf
+ 615      00
+ 616 0056 8B442444 		movl	68(%esp), %eax
+ 617 005a 897B0C   		movl	%edi, 12(%ebx)
+ 618 005d 897C240C 		movl	%edi, 12(%esp)
+ 619 0061 89742404 		movl	%esi, 4(%esp)
+ 620 0065 89436C   		movl	%eax, 108(%ebx)
+ 621 0068 8B442448 		movl	72(%esp), %eax
+ 622 006c 891C24   		movl	%ebx, (%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s 			page 14
+
+
+ 623 006f 894370   		movl	%eax, 112(%ebx)
+ 624 0072 8B442440 		movl	64(%esp), %eax
+ 625 0076 89442410 		movl	%eax, 16(%esp)
+ 626 007a 8B442438 		movl	56(%esp), %eax
+ 627 007e 89442408 		movl	%eax, 8(%esp)
+ 628 0082 E8000000 		call	__Z17copyPwmParametersP9PwmConfigiPfiPPa
+ 628      00
+ 629 0087 C7436000 		movl	$0, 96(%ebx)
+ 629      000000
+ 630 008e C7435000 		movl	$0xbf800000, 80(%ebx)
+ 630      0080BF
+ 631 0095 C74354FF 		movl	$-1, 84(%ebx)
+ 631      FFFFFF
+ 632 009c 891C24   		movl	%ebx, (%esp)
+ 633 009f E8000000 		call	__ZL13timerCallbackP9PwmConfig
+ 633      00
+ 634              	L92:
+ 635 00a4 8B5C2420 		movl	32(%esp), %ebx
+ 636 00a8 8B742424 		movl	36(%esp), %esi
+ 637 00ac 8B7C2428 		movl	40(%esp), %edi
+ 638 00b0 83C42C   		addl	$44, %esp
+ 639              		.cfi_remember_state
+ 640              		.cfi_restore 7
+ 641              		.cfi_restore 6
+ 642              		.cfi_restore 3
+ 643              		.cfi_def_cfa_offset 4
+ 644 00b3 C21C00   		ret	$28
+ 645              		.p2align 4,,7
+ 646              	L101:
+ 647              		.cfi_restore_state
+ 648 00b6 0F856EFF 		jne	L93
+ 648      FFFF
+ 649 00bc C704243E 		movl	$LC6, (%esp)
+ 649      000000
+ 650 00c3 E8000000 		call	_firmwareError
+ 650      00
+ 651 00c8 EBDA     		jmp	L92
+ 652 00ca 8DB60000 		.p2align 4,,7
+ 652      0000
+ 653              	L103:
+ 654 00d0 C7042475 		movl	$LC8, (%esp)
+ 654      000000
+ 655 00d7 E8000000 		call	_firmwareError
+ 655      00
+ 656 00dc EBC6     		jmp	L92
+ 657 00de 6690     		.p2align 4,,7
+ 658              	L102:
+ 659 00e0 C7042458 		movl	$LC7, (%esp)
+ 659      000000
+ 660 00e7 E8000000 		call	_firmwareError
+ 660      00
+ 661 00ec EBB6     		jmp	L92
+ 662 00ee 6690     		.p2align 4,,7
+ 663              	L104:
+ 664 00f0 C704248C 		movl	$LC9, (%esp)
+ 664      000000
+ 665 00f7 E8000000 		call	_firmwareError
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s 			page 15
+
+
+ 665      00
+ 666 00fc EBA6     		jmp	L92
+ 667              		.cfi_endproc
+ 668              	LFE71:
+ 669              		.def	__ZN12multi_wave_sC1Ev;	.scl	2;	.type	32;	.endef
+ 670              		.def	__ZN12scheduling_sC1Ev;	.scl	2;	.type	32;	.endef
+ 671              		.def	__ZN12multi_wave_s4initEPfP13single_wave_s;	.scl	2;	.type	32;	.endef
+ 672              		.def	__ZN13single_wave_sC1Ev;	.scl	2;	.type	32;	.endef
+ 673              		.def	__ZN13single_wave_s4initEPa;	.scl	2;	.type	32;	.endef
+ 674              		.def	__ZN12multi_wave_s13setSwitchTimeEif;	.scl	2;	.type	32;	.endef
+ 675              		.def	_getTimeNowNt;	.scl	2;	.type	32;	.endef
+ 676              		.def	_firmwareError;	.scl	2;	.type	32;	.endef
+ 677              		.def	__ZNK12multi_wave_s13getSwitchTimeEi;	.scl	2;	.type	32;	.endef
+ 678              		.def	__Z14scheduleByTimePKcP12scheduling_sxPFvPvES3_;	.scl	2;	.type	32;	.endef
+ 679              		.def	_getTimeNowUs;	.scl	2;	.type	32;	.endef
+ 680 00fe 9090     		.def	__Z17checkSwitchTimes2iPf;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s 			page 16
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 pwm_generator_logic.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s:7      .text$_ZN9PwmConfig15baseConstructorEv:00000000 __ZN9PwmConfig15baseConstructorEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s:112    .text$_ZN9PwmConfigC2Ev:00000000 __ZN9PwmConfigC2Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s:112    .text$_ZN9PwmConfigC2Ev:00000000 __ZN9PwmConfigC1Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s:142    .text$_ZN9PwmConfigC2EPfP13single_wave_s:00000000 __ZN9PwmConfigC2EPfP13single_wave_s
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s:142    .text$_ZN9PwmConfigC2EPfP13single_wave_s:00000000 __ZN9PwmConfigC1EPfP13single_wave_s
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s:190    .text$_ZN9PwmConfig4initEPfP13single_wave_s:00000000 __ZN9PwmConfig4initEPfP13single_wave_s
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s:203    .text$_ZN9SimplePwmC2Ev:00000000 __ZN9SimplePwmC2Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s:203    .text$_ZN9SimplePwmC2Ev:00000000 __ZN9SimplePwmC1Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s:258    .text$_ZN9SimplePwm21setSimplePwmDutyCycleEf:00000000 __ZN9SimplePwm21setSimplePwmDutyCycleEf
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s:284    .text$_ZN9PwmConfig16handleCycleStartEv:00000000 __ZN9PwmConfig16handleCycleStartEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s:367    .text$_ZL13timerCallbackP9PwmConfig:00000000 __ZL13timerCallbackP9PwmConfig
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s:495    .text$_Z17copyPwmParametersP9PwmConfigiPfiPPa:00000000 __Z17copyPwmParametersP9PwmConfigiPfiPPa
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccHw1IKI.s:585    .text$_ZN9PwmConfig13weComplexInitEPKciPfiPPaPFvPS_EPFvS5_iE:00000000 __ZN9PwmConfig13weComplexInitEPKciPfiPPaPFvPS_EPFvS5_iE
+
+UNDEFINED SYMBOLS
+___divdi3
+__ZN12multi_wave_sC1Ev
+__ZN12scheduling_sC1Ev
+__ZN12multi_wave_s4initEPfP13single_wave_s
+__ZN13single_wave_sC1Ev
+__ZN13single_wave_s4initEPa
+__ZN12multi_wave_s13setSwitchTimeEif
+_getTimeNowNt
+_firmwareError
+__ZNK12multi_wave_s13getSwitchTimeEi
+__Z14scheduleByTimePKcP12scheduling_sxPFvPvES3_
+_getTimeNowUs
+__Z17checkSwitchTimes2iPf

@@ -1,0 +1,389 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXiDcoC.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"chrtclib.c"
+  16              		.section	.text.stm32_rtc_bcd2tm.isra.0,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	stm32_rtc_bcd2tm.isra.0, %function
+  22              	stm32_rtc_bcd2tm.isra.0:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25              		@ link register save eliminated.
+  26 0000 C2F38053 		ubfx	r3, r2, #22, #1
+  27 0004 2DE9F00F 		push	{r4, r5, r6, r7, r8, r9, r10, fp}
+  28 0008 C1F30036 		ubfx	r6, r1, #12, #1
+  29 000c 5F00     		lsls	r7, r3, #1
+  30 000e C1F30354 		ubfx	r4, r1, #20, #4
+  31 0012 4FEA8608 		lsl	r8, r6, #2
+  32 0016 1F44     		add	r7, r7, r3
+  33 0018 C2F30153 		ubfx	r3, r2, #20, #2
+  34 001c 04EB8409 		add	r9, r4, r4, lsl #2
+  35 0020 03EB830A 		add	r10, r3, r3, lsl #2
+  36 0024 C1F30115 		ubfx	r5, r1, #4, #2
+  37 0028 4644     		add	r6, r6, r8
+  38 002a C1F3034C 		ubfx	ip, r1, #16, #4
+  39 002e C1F30328 		ubfx	r8, r1, #8, #4
+  40 0032 C2F30214 		ubfx	r4, r2, #4, #3
+  41 0036 C2F30233 		ubfx	r3, r2, #12, #3
+  42 003a BF00     		lsls	r7, r7, #2
+  43 003c 08EB4606 		add	r6, r8, r6, lsl #1
+  44 0040 0CEB490C 		add	ip, ip, r9, lsl #1
+  45 0044 01F00F08 		and	r8, r1, #15
+  46 0048 02F00F09 		and	r9, r2, #15
+  47 004c C1F3423B 		ubfx	fp, r1, #13, #3
+  48 0050 07EB4A07 		add	r7, r7, r10, lsl #1
+  49 0054 0021     		movs	r1, #0
+  50 0056 C2F3032A 		ubfx	r10, r2, #8, #4
+  51 005a 05EB8505 		add	r5, r5, r5, lsl #2
+  52 005e 04EB8404 		add	r4, r4, r4, lsl #2
+  53 0062 03EB8303 		add	r3, r3, r3, lsl #2
+  54 0066 C2F30342 		ubfx	r2, r2, #16, #4
+  55 006a 08EB4505 		add	r5, r8, r5, lsl #1
+  56 006e BBF1070F 		cmp	fp, #7
+  57 0072 08BF     		it	eq
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXiDcoC.s 			page 2
+
+
+  58 0074 8B46     		moveq	fp, r1
+  59 0076 013E     		subs	r6, r6, #1
+  60 0078 09EB4404 		add	r4, r9, r4, lsl #1
+  61 007c 4FF0FF38 		mov	r8, #-1
+  62 0080 0AEB4303 		add	r3, r10, r3, lsl #1
+  63 0084 1744     		add	r7, r7, r2
+  64 0086 0CF1640C 		add	ip, ip, #100
+  65 008a C0F82080 		str	r8, [r0, #32]
+  66 008e C0F818B0 		str	fp, [r0, #24]
+  67 0092 C560     		str	r5, [r0, #12]
+  68 0094 0661     		str	r6, [r0, #16]
+  69 0096 0460     		str	r4, [r0]
+  70 0098 8760     		str	r7, [r0, #8]
+  71 009a C161     		str	r1, [r0, #28]
+  72 009c C0F814C0 		str	ip, [r0, #20]
+  73 00a0 4360     		str	r3, [r0, #4]
+  74 00a2 BDE8F00F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp}
+  75 00a6 7047     		bx	lr
+  76              		.size	stm32_rtc_bcd2tm.isra.0, .-stm32_rtc_bcd2tm.isra.0
+  77 00a8 AFF30080 		.section	.text.stm32_rtc_tm2bcd.isra.1,"ax",%progbits
+  77      AFF30080 
+  78              		.align	2
+  79              		.p2align 4,,15
+  80              		.thumb
+  81              		.thumb_func
+  82              		.type	stm32_rtc_tm2bcd.isra.1, %function
+  83              	stm32_rtc_tm2bcd.isra.1:
+  84              		@ args = 0, pretend = 0, frame = 8
+  85              		@ frame_needed = 0, uses_anonymous_args = 0
+  86              		@ link register save eliminated.
+  87 0000 2DE9F00F 		push	{r4, r5, r6, r7, r8, r9, r10, fp}
+  88 0004 4369     		ldr	r3, [r0, #20]
+  89 0006 8569     		ldr	r5, [r0, #24]
+  90 0008 4CF6CD49 		movw	r9, #52429
+  91 000c 643B     		subs	r3, r3, #100
+  92 000e CCF6CC49 		movt	r9, 52428
+  93 0012 A9FB0349 		umull	r4, r9, r9, r3
+  94 0016 4FEAD909 		lsr	r9, r9, #3
+  95 001a 09EB890A 		add	r10, r9, r9, lsl #2
+  96 001e 82B0     		sub	sp, sp, #8
+  97 0020 4FEA0959 		lsl	r9, r9, #20
+  98 0024 0024     		movs	r4, #0
+  99 0026 A3EB4A0A 		sub	r10, r3, r10, lsl #1
+ 100 002a 09F47009 		and	r9, r9, #15728640
+ 101 002e 0C60     		str	r4, [r1]
+ 102 0030 4FEA0A4A 		lsl	r10, r10, #16
+ 103 0034 CDF80090 		str	r9, [sp]
+ 104 0038 1460     		str	r4, [r2]
+ 105 003a 002D     		cmp	r5, #0
+ 106 003c 5DD0     		beq	.L6
+ 107 003e 6D03     		lsls	r5, r5, #13
+ 108 0040 ADB2     		uxth	r5, r5
+ 109 0042 0195     		str	r5, [sp, #4]
+ 110              	.L5:
+ 111 0044 0669     		ldr	r6, [r0, #16]
+ 112 0046 D0F80480 		ldr	r8, [r0, #4]
+ 113 004a C568     		ldr	r5, [r0, #12]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXiDcoC.s 			page 3
+
+
+ 114 004c D0F808C0 		ldr	ip, [r0, #8]
+ 115 0050 0768     		ldr	r7, [r0]
+ 116 0052 4CF6CD43 		movw	r3, #52429
+ 117 0056 CCF6CC43 		movt	r3, 52428
+ 118 005a 0136     		adds	r6, r6, #1
+ 119 005c A3FB0694 		umull	r9, r4, r3, r6
+ 120 0060 E408     		lsrs	r4, r4, #3
+ 121 0062 A3FB08B0 		umull	fp, r0, r3, r8
+ 122 0066 04EB840B 		add	fp, r4, r4, lsl #2
+ 123 006a A6EB4B0B 		sub	fp, r6, fp, lsl #1
+ 124 006e A3FB0596 		umull	r9, r6, r3, r5
+ 125 0072 F608     		lsrs	r6, r6, #3
+ 126 0074 4AEA0B2B 		orr	fp, r10, fp, lsl #8
+ 127 0078 06EB860A 		add	r10, r6, r6, lsl #2
+ 128 007c C008     		lsrs	r0, r0, #3
+ 129 007e A5EB4A0A 		sub	r10, r5, r10, lsl #1
+ 130 0082 A3FB0C95 		umull	r9, r5, r3, ip
+ 131 0086 ED08     		lsrs	r5, r5, #3
+ 132 0088 4BEA0A0A 		orr	r10, fp, r10
+ 133 008c 00EB800B 		add	fp, r0, r0, lsl #2
+ 134 0090 A3FB0793 		umull	r9, r3, r3, r7
+ 135 0094 A8EB4B08 		sub	r8, r8, fp, lsl #1
+ 136 0098 05EB850B 		add	fp, r5, r5, lsl #2
+ 137 009c ACEB4B0C 		sub	ip, ip, fp, lsl #1
+ 138 00a0 DB08     		lsrs	r3, r3, #3
+ 139 00a2 4FEA0828 		lsl	r8, r8, #8
+ 140 00a6 48EA0C48 		orr	r8, r8, ip, lsl #16
+ 141 00aa 3601     		lsls	r6, r6, #4
+ 142 00ac 03EB830C 		add	ip, r3, r3, lsl #2
+ 143 00b0 A7EB4C07 		sub	r7, r7, ip, lsl #1
+ 144 00b4 06F03006 		and	r6, r6, #48
+ 145 00b8 DDF800B0 		ldr	fp, [sp]
+ 146 00bc 2D05     		lsls	r5, r5, #20
+ 147 00be 4AEA060A 		orr	r10, r10, r6
+ 148 00c2 2403     		lsls	r4, r4, #12
+ 149 00c4 0603     		lsls	r6, r0, #12
+ 150 00c6 05F44015 		and	r5, r5, #3145728
+ 151 00ca 48EA0700 		orr	r0, r8, r7
+ 152 00ce 04F4805C 		and	ip, r4, #4096
+ 153 00d2 06F4E046 		and	r6, r6, #28672
+ 154 00d6 4AEA0B04 		orr	r4, r10, fp
+ 155 00da 2843     		orrs	r0, r0, r5
+ 156 00dc 1B01     		lsls	r3, r3, #4
+ 157 00de 019D     		ldr	r5, [sp, #4]
+ 158 00e0 44EA0C04 		orr	r4, r4, ip
+ 159 00e4 3043     		orrs	r0, r0, r6
+ 160 00e6 03F07003 		and	r3, r3, #112
+ 161 00ea 2C43     		orrs	r4, r4, r5
+ 162 00ec 0343     		orrs	r3, r3, r0
+ 163 00ee 0C60     		str	r4, [r1]
+ 164 00f0 1360     		str	r3, [r2]
+ 165 00f2 02B0     		add	sp, sp, #8
+ 166              		@ sp needed
+ 167 00f4 BDE8F00F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp}
+ 168 00f8 7047     		bx	lr
+ 169              	.L6:
+ 170 00fa 4FF46045 		mov	r5, #57344
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXiDcoC.s 			page 4
+
+
+ 171 00fe 0195     		str	r5, [sp, #4]
+ 172 0100 A0E7     		b	.L5
+ 173              		.size	stm32_rtc_tm2bcd.isra.1, .-stm32_rtc_tm2bcd.isra.1
+ 174 0102 00BFAFF3 		.section	.text.rtcGetTimeTm,"ax",%progbits
+ 174      0080AFF3 
+ 174      0080AFF3 
+ 174      0080
+ 175              		.align	2
+ 176              		.p2align 4,,15
+ 177              		.global	rtcGetTimeTm
+ 178              		.thumb
+ 179              		.thumb_func
+ 180              		.type	rtcGetTimeTm, %function
+ 181              	rtcGetTimeTm:
+ 182              		@ args = 0, pretend = 0, frame = 16
+ 183              		@ frame_needed = 0, uses_anonymous_args = 0
+ 184 0000 10B5     		push	{r4, lr}
+ 185 0002 84B0     		sub	sp, sp, #16
+ 186 0004 0023     		movs	r3, #0
+ 187 0006 0C46     		mov	r4, r1
+ 188 0008 6946     		mov	r1, sp
+ 189 000a 0093     		str	r3, [sp]
+ 190 000c 0193     		str	r3, [sp, #4]
+ 191 000e 8DF80830 		strb	r3, [sp, #8]
+ 192 0012 0393     		str	r3, [sp, #12]
+ 193 0014 FFF7FEFF 		bl	rtcGetTime
+ 194 0018 2046     		mov	r0, r4
+ 195 001a 9DE80600 		ldmia	sp, {r1, r2}
+ 196 001e FFF7FEFF 		bl	stm32_rtc_bcd2tm.isra.0
+ 197 0022 04B0     		add	sp, sp, #16
+ 198              		@ sp needed
+ 199 0024 10BD     		pop	{r4, pc}
+ 200              		.size	rtcGetTimeTm, .-rtcGetTimeTm
+ 201 0026 00BFAFF3 		.section	.text.rtcSetTimeTm,"ax",%progbits
+ 201      0080AFF3 
+ 201      0080
+ 202              		.align	2
+ 203              		.p2align 4,,15
+ 204              		.global	rtcSetTimeTm
+ 205              		.thumb
+ 206              		.thumb_func
+ 207              		.type	rtcSetTimeTm, %function
+ 208              	rtcSetTimeTm:
+ 209              		@ args = 0, pretend = 0, frame = 16
+ 210              		@ frame_needed = 0, uses_anonymous_args = 0
+ 211 0000 10B5     		push	{r4, lr}
+ 212 0002 84B0     		sub	sp, sp, #16
+ 213 0004 0023     		movs	r3, #0
+ 214 0006 0446     		mov	r4, r0
+ 215 0008 01AA     		add	r2, sp, #4
+ 216 000a 0846     		mov	r0, r1
+ 217 000c 6946     		mov	r1, sp
+ 218 000e 0093     		str	r3, [sp]
+ 219 0010 0193     		str	r3, [sp, #4]
+ 220 0012 8DF80830 		strb	r3, [sp, #8]
+ 221 0016 0393     		str	r3, [sp, #12]
+ 222 0018 FFF7FEFF 		bl	stm32_rtc_tm2bcd.isra.1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXiDcoC.s 			page 5
+
+
+ 223 001c 2046     		mov	r0, r4
+ 224 001e 6946     		mov	r1, sp
+ 225 0020 FFF7FEFF 		bl	rtcSetTime
+ 226 0024 04B0     		add	sp, sp, #16
+ 227              		@ sp needed
+ 228 0026 10BD     		pop	{r4, pc}
+ 229              		.size	rtcSetTimeTm, .-rtcSetTimeTm
+ 230 0028 AFF30080 		.section	.text.rtcGetTimeUnixSec,"ax",%progbits
+ 230      AFF30080 
+ 231              		.align	2
+ 232              		.p2align 4,,15
+ 233              		.global	rtcGetTimeUnixSec
+ 234              		.thumb
+ 235              		.thumb_func
+ 236              		.type	rtcGetTimeUnixSec, %function
+ 237              	rtcGetTimeUnixSec:
+ 238              		@ args = 0, pretend = 0, frame = 64
+ 239              		@ frame_needed = 0, uses_anonymous_args = 0
+ 240 0000 00B5     		push	{lr}
+ 241 0002 91B0     		sub	sp, sp, #68
+ 242 0004 0023     		movs	r3, #0
+ 243 0006 01A9     		add	r1, sp, #4
+ 244 0008 0193     		str	r3, [sp, #4]
+ 245 000a 0293     		str	r3, [sp, #8]
+ 246 000c 8DF80C30 		strb	r3, [sp, #12]
+ 247 0010 0493     		str	r3, [sp, #16]
+ 248 0012 FFF7FEFF 		bl	rtcGetTime
+ 249 0016 05A8     		add	r0, sp, #20
+ 250 0018 0199     		ldr	r1, [sp, #4]
+ 251 001a 029A     		ldr	r2, [sp, #8]
+ 252 001c FFF7FEFF 		bl	stm32_rtc_bcd2tm.isra.0
+ 253 0020 05A8     		add	r0, sp, #20
+ 254 0022 FFF7FEFF 		bl	mktime
+ 255 0026 11B0     		add	sp, sp, #68
+ 256              		@ sp needed
+ 257 0028 5DF804FB 		ldr	pc, [sp], #4
+ 258              		.size	rtcGetTimeUnixSec, .-rtcGetTimeUnixSec
+ 259 002c AFF30080 		.section	.text.rtcSetTimeUnixSec,"ax",%progbits
+ 260              		.align	2
+ 261              		.p2align 4,,15
+ 262              		.global	rtcSetTimeUnixSec
+ 263              		.thumb
+ 264              		.thumb_func
+ 265              		.type	rtcSetTimeUnixSec, %function
+ 266              	rtcSetTimeUnixSec:
+ 267              		@ args = 0, pretend = 0, frame = 72
+ 268              		@ frame_needed = 0, uses_anonymous_args = 0
+ 269 0000 10B5     		push	{r4, lr}
+ 270 0002 92B0     		sub	sp, sp, #72
+ 271 0004 0023     		movs	r3, #0
+ 272 0006 0446     		mov	r4, r0
+ 273 0008 0191     		str	r1, [sp, #4]
+ 274 000a 01A8     		add	r0, sp, #4
+ 275 000c 07A9     		add	r1, sp, #28
+ 276 000e 0393     		str	r3, [sp, #12]
+ 277 0010 0493     		str	r3, [sp, #16]
+ 278 0012 8DF81430 		strb	r3, [sp, #20]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXiDcoC.s 			page 6
+
+
+ 279 0016 0693     		str	r3, [sp, #24]
+ 280 0018 FFF7FEFF 		bl	localtime_r
+ 281 001c 07A8     		add	r0, sp, #28
+ 282 001e 03A9     		add	r1, sp, #12
+ 283 0020 04AA     		add	r2, sp, #16
+ 284 0022 FFF7FEFF 		bl	stm32_rtc_tm2bcd.isra.1
+ 285 0026 2046     		mov	r0, r4
+ 286 0028 03A9     		add	r1, sp, #12
+ 287 002a FFF7FEFF 		bl	rtcSetTime
+ 288 002e 12B0     		add	sp, sp, #72
+ 289              		@ sp needed
+ 290 0030 10BD     		pop	{r4, pc}
+ 291              		.size	rtcSetTimeUnixSec, .-rtcSetTimeUnixSec
+ 292 0032 00BFAFF3 		.section	.text.rtcGetTimeUnixUsec,"ax",%progbits
+ 292      0080AFF3 
+ 292      0080AFF3 
+ 292      0080
+ 293              		.align	2
+ 294              		.p2align 4,,15
+ 295              		.global	rtcGetTimeUnixUsec
+ 296              		.thumb
+ 297              		.thumb_func
+ 298              		.type	rtcGetTimeUnixUsec, %function
+ 299              	rtcGetTimeUnixUsec:
+ 300              		@ args = 0, pretend = 0, frame = 64
+ 301              		@ frame_needed = 0, uses_anonymous_args = 0
+ 302 0000 30B5     		push	{r4, r5, lr}
+ 303 0002 91B0     		sub	sp, sp, #68
+ 304 0004 0023     		movs	r3, #0
+ 305 0006 01A9     		add	r1, sp, #4
+ 306 0008 0193     		str	r3, [sp, #4]
+ 307 000a 0293     		str	r3, [sp, #8]
+ 308 000c 8DF80C30 		strb	r3, [sp, #12]
+ 309 0010 0493     		str	r3, [sp, #16]
+ 310 0012 FFF7FEFF 		bl	rtcGetTime
+ 311 0016 0199     		ldr	r1, [sp, #4]
+ 312 0018 029A     		ldr	r2, [sp, #8]
+ 313 001a 05A8     		add	r0, sp, #20
+ 314 001c FFF7FEFF 		bl	stm32_rtc_bcd2tm.isra.0
+ 315 0020 05A8     		add	r0, sp, #20
+ 316 0022 FFF7FEFF 		bl	mktime
+ 317 0026 049B     		ldr	r3, [sp, #16]
+ 318 0028 4FF47A72 		mov	r2, #1000
+ 319 002c 02FB03F2 		mul	r2, r2, r3
+ 320 0030 44F24021 		movw	r1, #16960
+ 321 0034 0023     		movs	r3, #0
+ 322 0036 C0F20F01 		movt	r1, 15
+ 323 003a 1446     		mov	r4, r2
+ 324 003c 1D46     		mov	r5, r3
+ 325 003e C1FB0045 		smlal	r4, r5, r1, r0
+ 326 0042 2046     		mov	r0, r4
+ 327 0044 2946     		mov	r1, r5
+ 328 0046 11B0     		add	sp, sp, #68
+ 329              		@ sp needed
+ 330 0048 30BD     		pop	{r4, r5, pc}
+ 331              		.size	rtcGetTimeUnixUsec, .-rtcGetTimeUnixUsec
+ 332 004a 00BFAFF3 		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXiDcoC.s 			page 7
+
+
+ 332      0080
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXiDcoC.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 chrtclib.c
+C:\Users\pc\AppData\Local\Temp\ccXiDcoC.s:17     .text.stm32_rtc_bcd2tm.isra.0:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXiDcoC.s:22     .text.stm32_rtc_bcd2tm.isra.0:00000000 stm32_rtc_bcd2tm.isra.0
+C:\Users\pc\AppData\Local\Temp\ccXiDcoC.s:78     .text.stm32_rtc_tm2bcd.isra.1:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXiDcoC.s:83     .text.stm32_rtc_tm2bcd.isra.1:00000000 stm32_rtc_tm2bcd.isra.1
+C:\Users\pc\AppData\Local\Temp\ccXiDcoC.s:175    .text.rtcGetTimeTm:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXiDcoC.s:181    .text.rtcGetTimeTm:00000000 rtcGetTimeTm
+C:\Users\pc\AppData\Local\Temp\ccXiDcoC.s:202    .text.rtcSetTimeTm:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXiDcoC.s:208    .text.rtcSetTimeTm:00000000 rtcSetTimeTm
+C:\Users\pc\AppData\Local\Temp\ccXiDcoC.s:231    .text.rtcGetTimeUnixSec:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXiDcoC.s:237    .text.rtcGetTimeUnixSec:00000000 rtcGetTimeUnixSec
+C:\Users\pc\AppData\Local\Temp\ccXiDcoC.s:260    .text.rtcSetTimeUnixSec:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXiDcoC.s:266    .text.rtcSetTimeUnixSec:00000000 rtcSetTimeUnixSec
+C:\Users\pc\AppData\Local\Temp\ccXiDcoC.s:293    .text.rtcGetTimeUnixUsec:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXiDcoC.s:299    .text.rtcGetTimeUnixUsec:00000000 rtcGetTimeUnixUsec
+
+UNDEFINED SYMBOLS
+rtcGetTime
+rtcSetTime
+mktime
+localtime_r

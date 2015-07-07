@@ -1,0 +1,617 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s 			page 1
+
+
+   1              		.file	"map_averaging.cpp"
+   2              		.section .rdata,"dr"
+   3              	LC0:
+   4 0000 70657220 		.ascii "per revolution %d\0"
+   4      7265766F 
+   4      6C757469 
+   4      6F6E2025 
+   4      6400
+   5              		.section	.text$_ZL12showMapStatsv,"x"
+   6              		.p2align 4,,15
+   7              		.def	__ZL12showMapStatsv;	.scl	3;	.type	32;	.endef
+   8              	__ZL12showMapStatsv:
+   9              	LFB88:
+  10              		.cfi_startproc
+  11 0000 83EC1C   		subl	$28, %esp
+  12              		.cfi_def_cfa_offset 32
+  13 0003 A1000000 		movl	__ZL13perRevolution, %eax
+  13      00
+  14 0008 C7442404 		movl	$LC0, 4(%esp)
+  14      00000000 
+  15 0010 89442408 		movl	%eax, 8(%esp)
+  16 0014 A1000000 		movl	__ZL6logger, %eax
+  16      00
+  17 0019 890424   		movl	%eax, (%esp)
+  18 001c E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+  18      00
+  19 0021 83C41C   		addl	$28, %esp
+  20              		.cfi_def_cfa_offset 4
+  21 0024 C3       		ret
+  22              		.cfi_endproc
+  23              	LFE88:
+  24 0025 90909090 		.section .rdata,"dr"
+  24      90909090 
+  24      909090
+  25              	LC1:
+  26 0012 7A65726F 		.ascii "zero engineCycle\0"
+  26      20656E67 
+  26      696E6543 
+  26      79636C65 
+  26      00
+  27 0023 00       		.align 4
+  28              	LC3:
+  29 0024 6D617020 		.ascii "map sampling angle should be positive\0"
+  29      73616D70 
+  29      6C696E67 
+  29      20616E67 
+  29      6C652073 
+  30              		.section	.text$_ZL20mapAveragingCallback15trigger_event_ej,"x"
+  31              		.p2align 4,,15
+  32              		.def	__ZL20mapAveragingCallback15trigger_event_ej;	.scl	3;	.type	32;	.endef
+  33              	__ZL20mapAveragingCallback15trigger_event_ej:
+  34              	LFB87:
+  35              		.cfi_startproc
+  36 0000 56       		pushl	%esi
+  37              		.cfi_def_cfa_offset 8
+  38              		.cfi_offset 6, -8
+  39 0001 53       		pushl	%ebx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s 			page 2
+
+
+  40              		.cfi_def_cfa_offset 12
+  41              		.cfi_offset 3, -12
+  42 0002 83EC44   		subl	$68, %esp
+  43              		.cfi_def_cfa_offset 80
+  44 0005 A1000000 		movl	_engine, %eax
+  44      00
+  45 000a 8B157806 		movl	_persistentState+1656, %edx
+  45      0000
+  46 0010 3B542454 		cmpl	84(%esp), %edx
+  47 0014 C780F823 		movl	$0, 9208(%eax)
+  47      00000000 
+  47      0000
+  48 001e 7504     		jne	L3
+  49 0020 EB0E     		jmp	L35
+  50              		.p2align 4,,7
+  51              	L44:
+  52 0022 DDD8     		fstp	%st(0)
+  53              		.p2align 4,,7
+  54              	L3:
+  55 0024 83C444   		addl	$68, %esp
+  56              		.cfi_remember_state
+  57              		.cfi_def_cfa_offset 12
+  58 0027 5B       		popl	%ebx
+  59              		.cfi_restore 3
+  60              		.cfi_def_cfa_offset 8
+  61 0028 5E       		popl	%esi
+  62              		.cfi_restore 6
+  63              		.cfi_def_cfa_offset 4
+  64 0029 C3       		ret
+  65 002a 8DB60000 		.p2align 4,,7
+  65      0000
+  66              	L35:
+  67              		.cfi_restore_state
+  68 0030 8B5804   		movl	4(%eax), %ebx
+  69 0033 8D4BFF   		leal	-1(%ebx), %ecx
+  70 0036 81F92E75 		cmpl	$29998, %ecx
+  70      0000
+  71 003c 77E6     		ja	L3
+  72 003e D980AC1E 		flds	7852(%eax)
+  72      0000
+  73 0044 D8A49010 		fsubs	3600(%eax,%edx,4)
+  73      0E0000
+  74 004b 8B15A801 		movl	_persistentState+424, %edx
+  74      0000
+  75 0051 8B0D0000 		movl	__ZL20perRevolutionCounter, %ecx
+  75      0000
+  76 0057 85D2     		testl	%edx, %edx
+  77 0059 890D0000 		movl	%ecx, __ZL13perRevolution
+  77      0000
+  78 005f C7050000 		movl	$0, __ZL20perRevolutionCounter
+  78      00000000 
+  78      0000
+  79 0069 0F844101 		je	L36
+  79      0000
+  80              	L7:
+  81 006f D9EE     		fldz
+  82 0071 8954243C 		movl	%edx, 60(%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s 			page 3
+
+
+  83 0075 DBE9     		fucomi	%st(1), %st
+  84 0077 DB44243C 		fildl	60(%esp)
+  85 007b 7705     		ja	L10
+  86 007d EB17     		jmp	L40
+  87 007f 90       		.p2align 4,,7
+  88              	L41:
+  89 0080 D9C9     		fxch	%st(1)
+  90              	L10:
+  91 0082 DCC2     		fadd	%st, %st(2)
+  92 0084 D9C9     		fxch	%st(1)
+  93 0086 DBEA     		fucomi	%st(2), %st
+  94 0088 77F6     		ja	L41
+  95 008a DDD8     		fstp	%st(0)
+  96 008c D9C9     		fxch	%st(1)
+  97 008e DBE9     		fucomi	%st(1), %st
+  98 0090 7212     		jb	L37
+  99              		.p2align 4,,7
+ 100              	L26:
+ 101 0092 D8E1     		fsub	%st(1), %st
+ 102 0094 EB0A     		jmp	L33
+ 103              	L40:
+ 104 0096 DDD9     		fstp	%st(1)
+ 105 0098 D9C9     		fxch	%st(1)
+ 106 009a 8DB60000 		.p2align 4,,7
+ 106      0000
+ 107              	L33:
+ 108 00a0 DBE9     		fucomi	%st(1), %st
+ 109 00a2 73EE     		jae	L26
+ 110              	L37:
+ 111 00a4 D980B01E 		flds	7856(%eax)
+ 111      0000
+ 112 00aa D9EE     		fldz
+ 113 00ac DFE9     		fucomip	%st(1), %st
+ 114 00ae 0F834101 		jae	L38
+ 114      0000
+ 115 00b4 D8C1     		fadd	%st(1), %st
+ 116 00b6 85D2     		testl	%edx, %edx
+ 117 00b8 D95C2438 		fstps	56(%esp)
+ 118 00bc 0F841201 		je	L39
+ 118      0000
+ 119              	L16:
+ 120 00c2 D9EE     		fldz
+ 121 00c4 D9442438 		flds	56(%esp)
+ 122 00c8 D9C9     		fxch	%st(1)
+ 123 00ca DBE9     		fucomi	%st(1), %st
+ 124 00cc DDD9     		fstp	%st(1)
+ 125 00ce 7616     		jbe	L42
+ 126              		.p2align 4,,7
+ 127              	L25:
+ 128 00d0 D9442438 		flds	56(%esp)
+ 129 00d4 D8C3     		fadd	%st(3), %st
+ 130 00d6 D9542438 		fsts	56(%esp)
+ 131 00da D9C9     		fxch	%st(1)
+ 132 00dc DBE9     		fucomi	%st(1), %st
+ 133 00de DDD9     		fstp	%st(1)
+ 134 00e0 77EE     		ja	L25
+ 135 00e2 DDD8     		fstp	%st(0)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s 			page 4
+
+
+ 136 00e4 EB02     		jmp	L17
+ 137              	L42:
+ 138 00e6 DDD8     		fstp	%st(0)
+ 139              		.p2align 4,,7
+ 140              	L17:
+ 141 00e8 D9442438 		flds	56(%esp)
+ 142 00ec DFEA     		fucomip	%st(2), %st
+ 143 00ee 7212     		jb	L43
+ 144              		.p2align 4,,7
+ 145              	L24:
+ 146 00f0 D9442438 		flds	56(%esp)
+ 147 00f4 D8E2     		fsub	%st(2), %st
+ 148 00f6 D9542438 		fsts	56(%esp)
+ 149 00fa DFEA     		fucomip	%st(2), %st
+ 150 00fc 73F2     		jae	L24
+ 151 00fe DDD9     		fstp	%st(1)
+ 152 0100 EB02     		jmp	L20
+ 153              	L43:
+ 154 0102 DDD9     		fstp	%st(1)
+ 155              		.p2align 4,,7
+ 156              	L20:
+ 157 0104 817C2438 		cmpl	$2143289344, 56(%esp)
+ 157      0000C07F 
+ 158 010c 0F8410FF 		je	L44
+ 158      FFFF
+ 159 0112 D95C2420 		fstps	32(%esp)
+ 160 0116 E8000000 		call	__Z20getRevolutionCounterv
+ 160      00
+ 161 011b 891C24   		movl	%ebx, (%esp)
+ 162 011e C7442410 		movl	$0, 16(%esp)
+ 162      00000000 
+ 163 0126 C744240C 		movl	$__ZL14startAveragingPv, 12(%esp)
+ 163      00000000 
+ 164 012e 89C2     		movl	%eax, %edx
+ 165 0130 D9442420 		flds	32(%esp)
+ 166 0134 C1EA1F   		shrl	$31, %edx
+ 167 0137 01D0     		addl	%edx, %eax
+ 168 0139 83E001   		andl	$1, %eax
+ 169 013c 29D0     		subl	%edx, %eax
+ 170 013e 8B150000 		movl	_engine, %edx
+ 170      0000
+ 171 0144 8D3440   		leal	(%eax,%eax,2), %esi
+ 172 0147 C1E604   		sall	$4, %esi
+ 173 014a 8D860000 		leal	__ZL10startTimer(%esi), %eax
+ 173      0000
+ 174 0150 81C60000 		addl	$__ZL8endTimer, %esi
+ 174      0000
+ 175 0156 89542414 		movl	%edx, 20(%esp)
+ 176 015a D95C2408 		fstps	8(%esp)
+ 177 015e 89442404 		movl	%eax, 4(%esp)
+ 178 0162 E8000000 		call	__Z15scheduleByAngleiP12scheduling_sfPFvPvES1_P13RpmCalculator
+ 178      00
+ 179 0167 A1000000 		movl	_engine, %eax
+ 179      00
+ 180 016c 89742404 		movl	%esi, 4(%esp)
+ 181 0170 891C24   		movl	%ebx, (%esp)
+ 182 0173 C7442410 		movl	$0, 16(%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s 			page 5
+
+
+ 182      00000000 
+ 183 017b 89442414 		movl	%eax, 20(%esp)
+ 184 017f C744240C 		movl	$__ZL12endAveragingPv, 12(%esp)
+ 184      00000000 
+ 185 0187 D9442438 		flds	56(%esp)
+ 186 018b D95C2408 		fstps	8(%esp)
+ 187 018f E8000000 		call	__Z15scheduleByAngleiP12scheduling_sfPFvPvES1_P13RpmCalculator
+ 187      00
+ 188 0194 8B150000 		movl	_engine, %edx
+ 188      0000
+ 189 019a 8B82F823 		movl	9208(%edx), %eax
+ 189      0000
+ 190 01a0 F7D8     		negl	%eax
+ 191 01a2 8982FC23 		movl	%eax, 9212(%edx)
+ 191      0000
+ 192 01a8 83C444   		addl	$68, %esp
+ 193              		.cfi_remember_state
+ 194              		.cfi_def_cfa_offset 12
+ 195 01ab 5B       		popl	%ebx
+ 196              		.cfi_restore 3
+ 197              		.cfi_def_cfa_offset 8
+ 198 01ac 5E       		popl	%esi
+ 199              		.cfi_restore 6
+ 200              		.cfi_def_cfa_offset 4
+ 201 01ad C3       		ret
+ 202 01ae 6690     		.p2align 4,,7
+ 203              	L36:
+ 204              		.cfi_restore_state
+ 205 01b0 C7042412 		movl	$LC1, (%esp)
+ 205      000000
+ 206 01b7 D95C2420 		fstps	32(%esp)
+ 207 01bb E8000000 		call	_firmwareError
+ 207      00
+ 208 01c0 8B15A801 		movl	_persistentState+424, %edx
+ 208      0000
+ 209 01c6 A1000000 		movl	_engine, %eax
+ 209      00
+ 210 01cb D9442420 		flds	32(%esp)
+ 211 01cf E99BFEFF 		jmp	L7
+ 211      FF
+ 212              		.p2align 4,,7
+ 213              	L39:
+ 214 01d4 DDD9     		fstp	%st(1)
+ 215 01d6 C7042412 		movl	$LC1, (%esp)
+ 215      000000
+ 216 01dd D95C2420 		fstps	32(%esp)
+ 217 01e1 E8000000 		call	_firmwareError
+ 217      00
+ 218 01e6 DB05A801 		fildl	_persistentState+424
+ 218      0000
+ 219 01ec D9442420 		flds	32(%esp)
+ 220 01f0 E9CDFEFF 		jmp	L16
+ 220      FF
+ 221              	L38:
+ 222 01f5 DDD8     		fstp	%st(0)
+ 223 01f7 DDD8     		fstp	%st(0)
+ 224 01f9 DDD8     		fstp	%st(0)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s 			page 6
+
+
+ 225 01fb C7442450 		movl	$LC3, 80(%esp)
+ 225      24000000 
+ 226 0203 83C444   		addl	$68, %esp
+ 227              		.cfi_def_cfa_offset 12
+ 228 0206 5B       		popl	%ebx
+ 229              		.cfi_restore 3
+ 230              		.cfi_def_cfa_offset 8
+ 231 0207 5E       		popl	%esi
+ 232              		.cfi_restore 6
+ 233              		.cfi_def_cfa_offset 4
+ 234 0208 E9000000 		jmp	_firmwareError
+ 234      00
+ 235              		.cfi_endproc
+ 236              	LFE87:
+ 237 020d 909090   		.section	.text$_ZL12endAveragingPv,"x"
+ 238              		.p2align 4,,15
+ 239              		.def	__ZL12endAveragingPv;	.scl	3;	.type	32;	.endef
+ 240              	__ZL12endAveragingPv:
+ 241              	LFB86:
+ 242              		.cfi_startproc
+ 243 0000 83EC0C   		subl	$12, %esp
+ 244              		.cfi_def_cfa_offset 16
+ 245 0003 E8000000 		call	_lockAnyContext
+ 245      00
+ 246 0008 C6050000 		movb	$0, __ZL11isAveraging
+ 246      000000
+ 247 000f 84C0     		testb	%al, %al
+ 248 0011 7505     		jne	L46
+ 249 0013 E8000000 		call	_dbg_check_unlock_from_isr
+ 249      00
+ 250              	L46:
+ 251 0018 C7442410 		movl	$__ZL15mapAveragingPin, 16(%esp)
+ 251      00000000 
+ 252 0020 83C40C   		addl	$12, %esp
+ 253              		.cfi_def_cfa_offset 4
+ 254 0023 E9000000 		jmp	__Z10turnPinLowP14NamedOutputPin
+ 254      00
+ 255              		.cfi_endproc
+ 256              	LFE86:
+ 257 0028 90909090 		.section .rdata,"dr"
+ 257      90909090 
+ 258              	LC5:
+ 259 004a 6C6F7773 		.ascii "lowstck#9\0"
+ 259      74636B23 
+ 259      3900
+ 260              		.section	.text$_ZL14startAveragingPv,"x"
+ 261              		.p2align 4,,15
+ 262              		.def	__ZL14startAveragingPv;	.scl	3;	.type	32;	.endef
+ 263              	__ZL14startAveragingPv:
+ 264              	LFB85:
+ 265              		.cfi_startproc
+ 266 0000 83EC1C   		subl	$28, %esp
+ 267              		.cfi_def_cfa_offset 32
+ 268 0003 A1180000 		movl	_rlist+24, %eax
+ 268      00
+ 269 0008 890424   		movl	%eax, (%esp)
+ 270 000b E8000000 		call	_getRemainingStack
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s 			page 7
+
+
+ 270      00
+ 271 0010 83C080   		addl	$-128, %eax
+ 272 0013 7E3B     		jle	L52
+ 273 0015 E8000000 		call	_lockAnyContext
+ 273      00
+ 274 001a C7050000 		movl	$0x00000000, __ZL14mapAccumulator
+ 274      00000000 
+ 274      0000
+ 275 0024 C6050000 		movb	$1, __ZL11isAveraging
+ 275      000001
+ 276 002b C7050000 		movl	$0, __ZL22mapMeasurementsCounter
+ 276      00000000 
+ 276      0000
+ 277 0035 84C0     		testb	%al, %al
+ 278 0037 7427     		je	L53
+ 279 0039 C7442420 		movl	$__ZL15mapAveragingPin, 32(%esp)
+ 279      00000000 
+ 280 0041 83C41C   		addl	$28, %esp
+ 281              		.cfi_remember_state
+ 282              		.cfi_def_cfa_offset 4
+ 283 0044 E9000000 		jmp	__Z11turnPinHighP14NamedOutputPin
+ 283      00
+ 284 0049 8DB42600 		.p2align 4,,7
+ 284      000000
+ 285              	L52:
+ 286              		.cfi_restore_state
+ 287 0050 C7442420 		movl	$LC5, 32(%esp)
+ 287      4A000000 
+ 288 0058 83C41C   		addl	$28, %esp
+ 289              		.cfi_remember_state
+ 290              		.cfi_def_cfa_offset 4
+ 291 005b E9000000 		jmp	_firmwareError
+ 291      00
+ 292              		.p2align 4,,7
+ 293              	L53:
+ 294              		.cfi_restore_state
+ 295 0060 E8000000 		call	_dbg_check_unlock_from_isr
+ 295      00
+ 296 0065 C7442420 		movl	$__ZL15mapAveragingPin, 32(%esp)
+ 296      00000000 
+ 297 006d 83C41C   		addl	$28, %esp
+ 298              		.cfi_def_cfa_offset 4
+ 299 0070 E9000000 		jmp	__Z11turnPinHighP14NamedOutputPin
+ 299      00
+ 300              		.cfi_endproc
+ 301              	LFE85:
+ 302 0075 90909090 		.section	.text$_Z13getMapVoltagev,"x"
+ 302      90909090 
+ 302      909090
+ 303              		.p2align 4,,15
+ 304              		.globl	__Z13getMapVoltagev
+ 305              		.def	__Z13getMapVoltagev;	.scl	2;	.type	32;	.endef
+ 306              	__Z13getMapVoltagev:
+ 307              	LFB89:
+ 308              		.cfi_startproc
+ 309 0000 D9EE     		fldz
+ 310 0002 C3       		ret
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s 			page 8
+
+
+ 311              		.cfi_endproc
+ 312              	LFE89:
+ 313 0003 90909090 		.section .rdata,"dr"
+ 313      90909090 
+ 313      90909090 
+ 313      90
+ 314              	LC6:
+ 315 0054 4D415020 		.ascii "MAP averaging\0"
+ 315      61766572 
+ 315      6167696E 
+ 315      6700
+ 316              	LC7:
+ 317 0062 66617374 		.ascii "faststat\0"
+ 317      73746174 
+ 317      00
+ 318              		.section	.text$_Z16initMapAveragingP7LoggingP6Engine,"x"
+ 319              		.p2align 4,,15
+ 320              		.globl	__Z16initMapAveragingP7LoggingP6Engine
+ 321              		.def	__Z16initMapAveragingP7LoggingP6Engine;	.scl	2;	.type	32;	.endef
+ 322              	__Z16initMapAveragingP7LoggingP6Engine:
+ 323              	LFB90:
+ 324              		.cfi_startproc
+ 325 0000 83EC1C   		subl	$28, %esp
+ 326              		.cfi_def_cfa_offset 32
+ 327 0003 8B442420 		movl	32(%esp), %eax
+ 328 0007 C7442404 		movl	$LC6, 4(%esp)
+ 328      54000000 
+ 329 000f C7042400 		movl	$__ZL20mapAveragingCallback15trigger_event_ej, (%esp)
+ 329      000000
+ 330 0016 A3000000 		movl	%eax, __ZL6logger
+ 330      00
+ 331 001b 8B442424 		movl	36(%esp), %eax
+ 332 001f 89442408 		movl	%eax, 8(%esp)
+ 333 0023 E8000000 		call	__Z23addTriggerEventListenerPFv15trigger_event_ejEPKcP6Engine
+ 333      00
+ 334 0028 C7442424 		movl	$__ZL12showMapStatsv, 36(%esp)
+ 334      00000000 
+ 335 0030 C7442420 		movl	$LC7, 32(%esp)
+ 335      62000000 
+ 336 0038 83C41C   		addl	$28, %esp
+ 337              		.cfi_def_cfa_offset 4
+ 338 003b E9000000 		jmp	_addConsoleAction
+ 338      00
+ 339              		.cfi_endproc
+ 340              	LFE90:
+ 341              		.section .rdata,"dr"
+ 342              	LC8:
+ 343 006b 6D617000 		.ascii "map\0"
+ 344 006f 00       		.section	.text.startup._GLOBAL__sub_I__Z13getMapVoltagev,"x"
+ 345              		.p2align 4,,15
+ 346              		.def	__GLOBAL__sub_I__Z13getMapVoltagev;	.scl	3;	.type	32;	.endef
+ 347              	__GLOBAL__sub_I__Z13getMapVoltagev:
+ 348              	LFB92:
+ 349              		.cfi_startproc
+ 350 0000 83EC1C   		subl	$28, %esp
+ 351              		.cfi_def_cfa_offset 32
+ 352 0003 B9000000 		movl	$__ZL15mapAveragingPin, %ecx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s 			page 9
+
+
+ 352      00
+ 353 0008 C704246B 		movl	$LC8, (%esp)
+ 353      000000
+ 354 000f E8000000 		call	__ZN14NamedOutputPinC1EPKc
+ 354      00
+ 355              		.cfi_def_cfa_offset 28
+ 356 0014 B9000000 		movl	$__ZL10startTimer, %ecx
+ 356      00
+ 357 0019 83EC04   		subl	$4, %esp
+ 358              		.cfi_def_cfa_offset 32
+ 359 001c E8000000 		call	__ZN12scheduling_sC1Ev
+ 359      00
+ 360 0021 B9300000 		movl	$__ZL10startTimer+48, %ecx
+ 360      00
+ 361 0026 E8000000 		call	__ZN12scheduling_sC1Ev
+ 361      00
+ 362 002b B9000000 		movl	$__ZL8endTimer, %ecx
+ 362      00
+ 363 0030 E8000000 		call	__ZN12scheduling_sC1Ev
+ 363      00
+ 364 0035 B9300000 		movl	$__ZL8endTimer+48, %ecx
+ 364      00
+ 365 003a 83C41C   		addl	$28, %esp
+ 366              		.cfi_def_cfa_offset 4
+ 367 003d E9000000 		jmp	__ZN12scheduling_sC1Ev
+ 367      00
+ 368              		.cfi_endproc
+ 369              	LFE92:
+ 370 0042 90909090 		.section	.ctors,"w"
+ 370      90909090 
+ 370      90909090 
+ 370      9090
+ 371              		.align 4
+ 372 0000 00000000 		.long	__GLOBAL__sub_I__Z13getMapVoltagev
+ 373              		.section	.data$_ZL22mapMeasurementsCounter,"w"
+ 374              		.align 4
+ 375              	__ZL22mapMeasurementsCounter:
+ 376 0000 00000000 		.space 4
+ 377              		.section	.data$_ZL14mapAccumulator,"w"
+ 378              		.align 4
+ 379              	__ZL14mapAccumulator:
+ 380 0000 00000000 		.space 4
+ 381              		.section	.data$_ZL13perRevolution,"w"
+ 382              		.align 4
+ 383              	__ZL13perRevolution:
+ 384 0000 00000000 		.space 4
+ 385              		.section	.data$_ZL20perRevolutionCounter,"w"
+ 386              		.align 4
+ 387              	__ZL20perRevolutionCounter:
+ 388 0000 00000000 		.space 4
+ 389              		.section	.data$_ZL6logger,"w"
+ 390              		.align 4
+ 391              	__ZL6logger:
+ 392 0000 00000000 		.space 4
+ 393              		.section	.data$_ZL10startTimer,"w"
+ 394              		.align 32
+ 395              	__ZL10startTimer:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s 			page 10
+
+
+ 396 0000 00000000 		.space 96
+ 396      00000000 
+ 396      00000000 
+ 396      00000000 
+ 396      00000000 
+ 397              		.section	.data$_ZL8endTimer,"w"
+ 398              		.align 32
+ 399              	__ZL8endTimer:
+ 400 0000 00000000 		.space 96
+ 400      00000000 
+ 400      00000000 
+ 400      00000000 
+ 400      00000000 
+ 401              		.section	.data$_ZL11isAveraging,"w"
+ 402              	__ZL11isAveraging:
+ 403 0000 00       		.space 1
+ 404 0001 000000   		.section	.data$_ZL15mapAveragingPin,"w"
+ 405              		.align 4
+ 406              	__ZL15mapAveragingPin:
+ 407 0000 00000000 		.space 12
+ 407      00000000 
+ 407      00000000 
+ 408              		.def	__Z11scheduleMsgP7LoggingPKcz;	.scl	2;	.type	32;	.endef
+ 409              		.def	__Z20getRevolutionCounterv;	.scl	2;	.type	32;	.endef
+ 410              		.def	__Z15scheduleByAngleiP12scheduling_sfPFvPvES1_P13RpmCalculator;	.scl	2;	.type	32;	.endef
+ 411              		.def	_firmwareError;	.scl	2;	.type	32;	.endef
+ 412              		.def	_lockAnyContext;	.scl	2;	.type	32;	.endef
+ 413              		.def	_dbg_check_unlock_from_isr;	.scl	2;	.type	32;	.endef
+ 414              		.def	__Z10turnPinLowP14NamedOutputPin;	.scl	2;	.type	32;	.endef
+ 415              		.def	_getRemainingStack;	.scl	2;	.type	32;	.endef
+ 416              		.def	__Z11turnPinHighP14NamedOutputPin;	.scl	2;	.type	32;	.endef
+ 417              		.def	__Z23addTriggerEventListenerPFv15trigger_event_ejEPKcP6Engine;	.scl	2;	.type	32;	.endef
+ 418              		.def	_addConsoleAction;	.scl	2;	.type	32;	.endef
+ 419              		.def	__ZN14NamedOutputPinC1EPKc;	.scl	2;	.type	32;	.endef
+ 420              		.def	__ZN12scheduling_sC1Ev;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s 			page 11
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 map_averaging.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s:8      .text$_ZL12showMapStatsv:00000000 __ZL12showMapStatsv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s:383    .data$_ZL13perRevolution:00000000 __ZL13perRevolution
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s:391    .data$_ZL6logger:00000000 __ZL6logger
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s:33     .text$_ZL20mapAveragingCallback15trigger_event_ej:00000000 __ZL20mapAveragingCallback15trigger_event_ej
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s:387    .data$_ZL20perRevolutionCounter:00000000 __ZL20perRevolutionCounter
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s:395    .data$_ZL10startTimer:00000000 __ZL10startTimer
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s:399    .data$_ZL8endTimer:00000000 __ZL8endTimer
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s:240    .text$_ZL12endAveragingPv:00000000 __ZL12endAveragingPv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s:402    .data$_ZL11isAveraging:00000000 __ZL11isAveraging
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s:406    .data$_ZL15mapAveragingPin:00000000 __ZL15mapAveragingPin
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s:263    .text$_ZL14startAveragingPv:00000000 __ZL14startAveragingPv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s:379    .data$_ZL14mapAccumulator:00000000 __ZL14mapAccumulator
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s:375    .data$_ZL22mapMeasurementsCounter:00000000 __ZL22mapMeasurementsCounter
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s:306    .text$_Z13getMapVoltagev:00000000 __Z13getMapVoltagev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s:322    .text$_Z16initMapAveragingP7LoggingP6Engine:00000000 __Z16initMapAveragingP7LoggingP6Engine
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccIUyz4c.s:347    .text.startup._GLOBAL__sub_I__Z13getMapVoltagev:00000000 __GLOBAL__sub_I__Z13getMapVoltagev
+
+UNDEFINED SYMBOLS
+_engine
+_persistentState
+_rlist
+__Z11scheduleMsgP7LoggingPKcz
+__Z20getRevolutionCounterv
+__Z15scheduleByAngleiP12scheduling_sfPFvPvES1_P13RpmCalculator
+_firmwareError
+_lockAnyContext
+_dbg_check_unlock_from_isr
+__Z10turnPinLowP14NamedOutputPin
+_getRemainingStack
+__Z11turnPinHighP14NamedOutputPin
+__Z23addTriggerEventListenerPFv15trigger_event_ejEPKcP6Engine
+_addConsoleAction
+__ZN14NamedOutputPinC1EPKc
+__ZN12scheduling_sC1Ev

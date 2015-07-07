@@ -215,7 +215,7 @@ void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 
 ThermistorMath::ThermistorMath() {
 	memset(&currentConfig, 0, sizeof(currentConfig));
-
+	memset(&curve, 0, sizeof(curve));
 }
 
 void ThermistorMath::init(thermistor_conf_s *config) {

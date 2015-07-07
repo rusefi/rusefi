@@ -40,4 +40,12 @@ public class Utils {
         map.put(key, result);
         return result;
     }
+
+    public static int parseIntWithReason(String number, String reason) {
+        try {
+            return Integer.parseInt(number);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Unexpected [" + number + "] for " + reason, e);
+        }
+    }
 }

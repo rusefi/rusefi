@@ -1,0 +1,285 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccU14FfE.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"pal_lld.c"
+  16              		.section	.text._pal_lld_init,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_pal_lld_init
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_pal_lld_init, %function
+  23              	_pal_lld_init:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 4FF46053 		mov	r3, #14336
+  28 0004 C4F20203 		movt	r3, 16386
+  29 0008 1A6B     		ldr	r2, [r3, #48]
+  30 000a 6FEA5222 		mvn	r2, r2, lsr #9
+  31 000e 6FEA4222 		mvn	r2, r2, lsl #9
+  32 0012 1A63     		str	r2, [r3, #48]
+  33 0014 1A6D     		ldr	r2, [r3, #80]
+  34 0016 6FEA5222 		mvn	r2, r2, lsr #9
+  35 001a 6FEA4222 		mvn	r2, r2, lsl #9
+  36 001e 1A65     		str	r2, [r3, #80]
+  37 0020 0023     		movs	r3, #0
+  38 0022 4168     		ldr	r1, [r0, #4]
+  39 0024 C4F20203 		movt	r3, 16386
+  40 0028 4FF48062 		mov	r2, #1024
+  41 002c 5960     		str	r1, [r3, #4]
+  42 002e 8168     		ldr	r1, [r0, #8]
+  43 0030 9960     		str	r1, [r3, #8]
+  44 0032 C168     		ldr	r1, [r0, #12]
+  45 0034 D960     		str	r1, [r3, #12]
+  46 0036 0169     		ldr	r1, [r0, #16]
+  47 0038 5961     		str	r1, [r3, #20]
+  48 003a 4169     		ldr	r1, [r0, #20]
+  49 003c 1962     		str	r1, [r3, #32]
+  50 003e 8169     		ldr	r1, [r0, #24]
+  51 0040 5962     		str	r1, [r3, #36]
+  52 0042 0168     		ldr	r1, [r0]
+  53 0044 1960     		str	r1, [r3]
+  54 0046 016A     		ldr	r1, [r0, #32]
+  55 0048 C4F20202 		movt	r2, 16386
+  56 004c 4FF40063 		mov	r3, #2048
+  57 0050 5160     		str	r1, [r2, #4]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccU14FfE.s 			page 2
+
+
+  58 0052 416A     		ldr	r1, [r0, #36]
+  59 0054 9160     		str	r1, [r2, #8]
+  60 0056 816A     		ldr	r1, [r0, #40]
+  61 0058 D160     		str	r1, [r2, #12]
+  62 005a C16A     		ldr	r1, [r0, #44]
+  63 005c 5161     		str	r1, [r2, #20]
+  64 005e 016B     		ldr	r1, [r0, #48]
+  65 0060 1162     		str	r1, [r2, #32]
+  66 0062 416B     		ldr	r1, [r0, #52]
+  67 0064 5162     		str	r1, [r2, #36]
+  68 0066 C169     		ldr	r1, [r0, #28]
+  69 0068 1160     		str	r1, [r2]
+  70 006a C4F20203 		movt	r3, 16386
+  71 006e C16B     		ldr	r1, [r0, #60]
+  72 0070 5960     		str	r1, [r3, #4]
+  73 0072 016C     		ldr	r1, [r0, #64]
+  74 0074 9960     		str	r1, [r3, #8]
+  75 0076 416C     		ldr	r1, [r0, #68]
+  76 0078 D960     		str	r1, [r3, #12]
+  77 007a 816C     		ldr	r1, [r0, #72]
+  78 007c 5961     		str	r1, [r3, #20]
+  79 007e C16C     		ldr	r1, [r0, #76]
+  80 0080 1962     		str	r1, [r3, #32]
+  81 0082 016D     		ldr	r1, [r0, #80]
+  82 0084 5962     		str	r1, [r3, #36]
+  83 0086 816B     		ldr	r1, [r0, #56]
+  84 0088 4FF44062 		mov	r2, #3072
+  85 008c 1960     		str	r1, [r3]
+  86 008e 816D     		ldr	r1, [r0, #88]
+  87 0090 C4F20202 		movt	r2, 16386
+  88 0094 4FF48053 		mov	r3, #4096
+  89 0098 5160     		str	r1, [r2, #4]
+  90 009a C16D     		ldr	r1, [r0, #92]
+  91 009c 9160     		str	r1, [r2, #8]
+  92 009e 016E     		ldr	r1, [r0, #96]
+  93 00a0 D160     		str	r1, [r2, #12]
+  94 00a2 416E     		ldr	r1, [r0, #100]
+  95 00a4 5161     		str	r1, [r2, #20]
+  96 00a6 816E     		ldr	r1, [r0, #104]
+  97 00a8 1162     		str	r1, [r2, #32]
+  98 00aa C16E     		ldr	r1, [r0, #108]
+  99 00ac 5162     		str	r1, [r2, #36]
+ 100 00ae 416D     		ldr	r1, [r0, #84]
+ 101 00b0 1160     		str	r1, [r2]
+ 102 00b2 C4F20203 		movt	r3, 16386
+ 103 00b6 416F     		ldr	r1, [r0, #116]
+ 104 00b8 5960     		str	r1, [r3, #4]
+ 105 00ba 816F     		ldr	r1, [r0, #120]
+ 106 00bc 9960     		str	r1, [r3, #8]
+ 107 00be C16F     		ldr	r1, [r0, #124]
+ 108 00c0 D960     		str	r1, [r3, #12]
+ 109 00c2 D0F88010 		ldr	r1, [r0, #128]
+ 110 00c6 5961     		str	r1, [r3, #20]
+ 111 00c8 D0F88410 		ldr	r1, [r0, #132]
+ 112 00cc 1962     		str	r1, [r3, #32]
+ 113 00ce D0F88810 		ldr	r1, [r0, #136]
+ 114 00d2 5962     		str	r1, [r3, #36]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccU14FfE.s 			page 3
+
+
+ 115 00d4 016F     		ldr	r1, [r0, #112]
+ 116 00d6 4FF4A052 		mov	r2, #5120
+ 117 00da 1960     		str	r1, [r3]
+ 118 00dc D0F89010 		ldr	r1, [r0, #144]
+ 119 00e0 C4F20202 		movt	r2, 16386
+ 120 00e4 4FF4C053 		mov	r3, #6144
+ 121 00e8 5160     		str	r1, [r2, #4]
+ 122 00ea D0F89410 		ldr	r1, [r0, #148]
+ 123 00ee 9160     		str	r1, [r2, #8]
+ 124 00f0 D0F89810 		ldr	r1, [r0, #152]
+ 125 00f4 D160     		str	r1, [r2, #12]
+ 126 00f6 D0F89C10 		ldr	r1, [r0, #156]
+ 127 00fa 5161     		str	r1, [r2, #20]
+ 128 00fc D0F8A010 		ldr	r1, [r0, #160]
+ 129 0100 1162     		str	r1, [r2, #32]
+ 130 0102 D0F8A410 		ldr	r1, [r0, #164]
+ 131 0106 5162     		str	r1, [r2, #36]
+ 132 0108 D0F88C10 		ldr	r1, [r0, #140]
+ 133 010c 1160     		str	r1, [r2]
+ 134 010e D0F8AC10 		ldr	r1, [r0, #172]
+ 135 0112 C4F20203 		movt	r3, 16386
+ 136 0116 4FF4E052 		mov	r2, #7168
+ 137 011a 5960     		str	r1, [r3, #4]
+ 138 011c D0F8B010 		ldr	r1, [r0, #176]
+ 139 0120 9960     		str	r1, [r3, #8]
+ 140 0122 D0F8B410 		ldr	r1, [r0, #180]
+ 141 0126 D960     		str	r1, [r3, #12]
+ 142 0128 D0F8B810 		ldr	r1, [r0, #184]
+ 143 012c 5961     		str	r1, [r3, #20]
+ 144 012e D0F8BC10 		ldr	r1, [r0, #188]
+ 145 0132 1962     		str	r1, [r3, #32]
+ 146 0134 D0F8C010 		ldr	r1, [r0, #192]
+ 147 0138 5962     		str	r1, [r3, #36]
+ 148 013a D0F8A810 		ldr	r1, [r0, #168]
+ 149 013e C4F20202 		movt	r2, 16386
+ 150 0142 1960     		str	r1, [r3]
+ 151 0144 D0F8C830 		ldr	r3, [r0, #200]
+ 152 0148 5360     		str	r3, [r2, #4]
+ 153 014a D0F8CC30 		ldr	r3, [r0, #204]
+ 154 014e 9360     		str	r3, [r2, #8]
+ 155 0150 D0F8D030 		ldr	r3, [r0, #208]
+ 156 0154 D360     		str	r3, [r2, #12]
+ 157 0156 D0F8D430 		ldr	r3, [r0, #212]
+ 158 015a 5361     		str	r3, [r2, #20]
+ 159 015c D0F8D830 		ldr	r3, [r0, #216]
+ 160 0160 1362     		str	r3, [r2, #32]
+ 161 0162 D0F8DC30 		ldr	r3, [r0, #220]
+ 162 0166 5362     		str	r3, [r2, #36]
+ 163 0168 D0F8C410 		ldr	r1, [r0, #196]
+ 164 016c 4FF40053 		mov	r3, #8192
+ 165 0170 1160     		str	r1, [r2]
+ 166 0172 D0F8E420 		ldr	r2, [r0, #228]
+ 167 0176 C4F20203 		movt	r3, 16386
+ 168 017a 5A60     		str	r2, [r3, #4]
+ 169 017c D0F8E820 		ldr	r2, [r0, #232]
+ 170 0180 9A60     		str	r2, [r3, #8]
+ 171 0182 D0F8EC20 		ldr	r2, [r0, #236]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccU14FfE.s 			page 4
+
+
+ 172 0186 DA60     		str	r2, [r3, #12]
+ 173 0188 D0F8F020 		ldr	r2, [r0, #240]
+ 174 018c 5A61     		str	r2, [r3, #20]
+ 175 018e D0F8F420 		ldr	r2, [r0, #244]
+ 176 0192 1A62     		str	r2, [r3, #32]
+ 177 0194 D0F8F820 		ldr	r2, [r0, #248]
+ 178 0198 5A62     		str	r2, [r3, #36]
+ 179 019a D0F8E020 		ldr	r2, [r0, #224]
+ 180 019e 1A60     		str	r2, [r3]
+ 181 01a0 7047     		bx	lr
+ 182              		.size	_pal_lld_init, .-_pal_lld_init
+ 183 01a2 00BFAFF3 		.section	.text._pal_lld_setgroupmode,"ax",%progbits
+ 183      0080AFF3 
+ 183      0080AFF3 
+ 183      0080
+ 184              		.align	2
+ 185              		.p2align 4,,15
+ 186              		.global	_pal_lld_setgroupmode
+ 187              		.thumb
+ 188              		.thumb_func
+ 189              		.type	_pal_lld_setgroupmode, %function
+ 190              	_pal_lld_setgroupmode:
+ 191              		@ args = 0, pretend = 0, frame = 0
+ 192              		@ frame_needed = 0, uses_anonymous_args = 0
+ 193              		@ link register save eliminated.
+ 194 0000 2DE9F00F 		push	{r4, r5, r6, r7, r8, r9, r10, fp}
+ 195 0004 0023     		movs	r3, #0
+ 196 0006 02F00307 		and	r7, r2, #3
+ 197 000a C2F38006 		ubfx	r6, r2, #2, #1
+ 198 000e C2F3C105 		ubfx	r5, r2, #3, #2
+ 199 0012 C2F34114 		ubfx	r4, r2, #5, #2
+ 200 0016 4FF00F09 		mov	r9, #15
+ 201 001a C2F3C312 		ubfx	r2, r2, #7, #4
+ 202 001e 4FF0010A 		mov	r10, #1
+ 203 0022 04E0     		b	.L7
+ 204              	.L12:
+ 205 0024 7600     		lsls	r6, r6, #1
+ 206 0026 AD00     		lsls	r5, r5, #2
+ 207 0028 A400     		lsls	r4, r4, #2
+ 208 002a BF00     		lsls	r7, r7, #2
+ 209 002c 0133     		adds	r3, r3, #1
+ 210              	.L7:
+ 211 002e 03F0070C 		and	ip, r3, #7
+ 212 0032 4FEA8C0C 		lsl	ip, ip, #2
+ 213 0036 11F0010F 		tst	r1, #1
+ 214 003a 02FA0CF8 		lsl	r8, r2, ip
+ 215 003e 09FA0CFC 		lsl	ip, r9, ip
+ 216 0042 3CD0     		beq	.L3
+ 217 0044 072B     		cmp	r3, #7
+ 218 0046 95BF     		itete	ls
+ 219 0048 D0F820B0 		ldrls	fp, [r0, #32]
+ 220 004c D0F824B0 		ldrhi	fp, [r0, #36]
+ 221 0050 2BEA0C0C 		bicls	ip, fp, ip
+ 222 0054 2BEA0C0C 		bichi	ip, fp, ip
+ 223 0058 95BF     		itete	ls
+ 224 005a 4CEA0808 		orrls	r8, ip, r8
+ 225 005e 4CEA0808 		orrhi	r8, ip, r8
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccU14FfE.s 			page 5
+
+
+ 226 0062 C0F82080 		strls	r8, [r0, #32]
+ 227 0066 C0F82480 		strhi	r8, [r0, #36]
+ 228 006a D0F804C0 		ldr	ip, [r0, #4]
+ 229 006e 0AFA03F8 		lsl	r8, r10, r3
+ 230 0072 2CEA080C 		bic	ip, ip, r8
+ 231 0076 4CEA060C 		orr	ip, ip, r6
+ 232 007a C0F804C0 		str	ip, [r0, #4]
+ 233 007e 4FF0030B 		mov	fp, #3
+ 234 0082 4FEA430C 		lsl	ip, r3, #1
+ 235 0086 D0F80880 		ldr	r8, [r0, #8]
+ 236 008a 0BFA0CFC 		lsl	ip, fp, ip
+ 237 008e 6FEA0C0C 		mvn	ip, ip
+ 238 0092 0CEA0808 		and	r8, ip, r8
+ 239 0096 48EA0508 		orr	r8, r8, r5
+ 240 009a C0F80880 		str	r8, [r0, #8]
+ 241 009e D0F80C80 		ldr	r8, [r0, #12]
+ 242 00a2 0CEA0808 		and	r8, ip, r8
+ 243 00a6 48EA0408 		orr	r8, r8, r4
+ 244 00aa C0F80C80 		str	r8, [r0, #12]
+ 245 00ae D0F80080 		ldr	r8, [r0]
+ 246 00b2 0CEA080C 		and	ip, ip, r8
+ 247 00b6 4CEA070C 		orr	ip, ip, r7
+ 248 00ba C0F800C0 		str	ip, [r0]
+ 249              	.L3:
+ 250 00be 4908     		lsrs	r1, r1, #1
+ 251 00c0 B0D1     		bne	.L12
+ 252 00c2 BDE8F00F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp}
+ 253 00c6 7047     		bx	lr
+ 254              		.size	_pal_lld_setgroupmode, .-_pal_lld_setgroupmode
+ 255 00c8 AFF30080 		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ 255      AFF30080 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccU14FfE.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 pal_lld.c
+C:\Users\pc\AppData\Local\Temp\ccU14FfE.s:17     .text._pal_lld_init:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccU14FfE.s:23     .text._pal_lld_init:00000000 _pal_lld_init
+C:\Users\pc\AppData\Local\Temp\ccU14FfE.s:184    .text._pal_lld_setgroupmode:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccU14FfE.s:190    .text._pal_lld_setgroupmode:00000000 _pal_lld_setgroupmode
+
+NO UNDEFINED SYMBOLS

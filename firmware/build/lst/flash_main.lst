@@ -1,0 +1,606 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccExf3eT.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"flash_main.cpp"
+  16              		.section	.text._Z15writeToFlashNowv,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_Z15writeToFlashNowv
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_Z15writeToFlashNowv, %function
+  23              	_Z15writeToFlashNowv:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+  27 0004 40F20004 		movw	r4, #:lower16:.LANCHOR0
+  28 0008 C0F20004 		movt	r4, #:upper16:.LANCHOR0
+  29 000c 40F20005 		movw	r5, #:lower16:persistentState
+  30 0010 C0F20005 		movt	r5, #:upper16:persistentState
+  31 0014 40F20001 		movw	r1, #:lower16:.LC0
+  32 0018 2F46     		mov	r7, r5
+  33 001a 2068     		ldr	r0, [r4]
+  34 001c C0F20001 		movt	r1, #:upper16:.LC0
+  35 0020 FFF7FEFF 		bl	scheduleMsg
+  36 0024 42F2B202 		movw	r2, #8370
+  37 0028 47F8082B 		str	r2, [r7], #8
+  38 002c 40F20001 		movw	r1, #:lower16:.LC1
+  39 0030 43F6C436 		movw	r6, #15300
+  40 0034 2068     		ldr	r0, [r4]
+  41 0036 6E60     		str	r6, [r5, #4]
+  42 0038 C0F20001 		movt	r1, #:upper16:.LC1
+  43 003c FFF7FEFF 		bl	scheduleMsg
+  44 0040 3846     		mov	r0, r7
+  45 0042 43F6B831 		movw	r1, #15288
+  46 0046 FFF7FEFF 		bl	calc_crc
+  47 004a 0027     		movs	r7, #0
+  48 004c 05F56F53 		add	r3, r5, #15296
+  49 0050 40F20001 		movw	r1, #:lower16:.LC2
+  50 0054 8046     		mov	r8, r0
+  51 0056 3246     		mov	r2, r6
+  52 0058 2068     		ldr	r0, [r4]
+  53 005a 83F80080 		strb	r8, [r3]
+  54 005e C0F20001 		movt	r1, #:upper16:.LC2
+  55 0062 C0F60607 		movt	r7, 2054
+  56 0066 FFF7FEFF 		bl	scheduleMsg
+  57 006a 3146     		mov	r1, r6
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccExf3eT.s 			page 2
+
+
+  58 006c 3846     		mov	r0, r7
+  59 006e FFF7FEFF 		bl	flashErase
+  60 0072 40F20001 		movw	r1, #:lower16:.LC3
+  61 0076 4246     		mov	r2, r8
+  62 0078 C0F20001 		movt	r1, #:upper16:.LC3
+  63 007c 2068     		ldr	r0, [r4]
+  64 007e FFF7FEFF 		bl	scheduleMsg
+  65 0082 FFF7FEFF 		bl	currentTimeMillis
+  66 0086 2946     		mov	r1, r5
+  67 0088 3246     		mov	r2, r6
+  68 008a 8046     		mov	r8, r0
+  69 008c 3846     		mov	r0, r7
+  70 008e FFF7FEFF 		bl	flashWrite
+  71 0092 2568     		ldr	r5, [r4]
+  72 0094 0646     		mov	r6, r0
+  73 0096 FFF7FEFF 		bl	currentTimeMillis
+  74 009a 40F20001 		movw	r1, #:lower16:.LC4
+  75 009e C8EB0002 		rsb	r2, r8, r0
+  76 00a2 C0F20001 		movt	r1, #:upper16:.LC4
+  77 00a6 2846     		mov	r0, r5
+  78 00a8 FFF7FEFF 		bl	scheduleMsg
+  79 00ac 40F20001 		movw	r1, #:lower16:.LC5
+  80 00b0 F2B2     		uxtb	r2, r6
+  81 00b2 2068     		ldr	r0, [r4]
+  82 00b4 C0F20001 		movt	r1, #:upper16:.LC5
+  83 00b8 FFF7FEFF 		bl	scheduleMsg
+  84 00bc 40F20003 		movw	r3, #:lower16:maxLockTime
+  85 00c0 C0F20003 		movt	r3, #:upper16:maxLockTime
+  86 00c4 0022     		movs	r2, #0
+  87 00c6 1A60     		str	r2, [r3]
+  88 00c8 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+  89              		.size	_Z15writeToFlashNowv, .-_Z15writeToFlashNowv
+  90 00cc AFF30080 		.section	.text._ZL20doResetConfigurationv,"ax",%progbits
+  91              		.align	2
+  92              		.p2align 4,,15
+  93              		.thumb
+  94              		.thumb_func
+  95              		.type	_ZL20doResetConfigurationv, %function
+  96              	_ZL20doResetConfigurationv:
+  97              		@ args = 0, pretend = 0, frame = 0
+  98              		@ frame_needed = 0, uses_anonymous_args = 0
+  99              		@ link register save eliminated.
+ 100 0000 40F20002 		movw	r2, #:lower16:engineConfiguration
+ 101 0004 C0F20002 		movt	r2, #:upper16:engineConfiguration
+ 102 0008 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 103 000c 1268     		ldr	r2, [r2]
+ 104 000e C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 105 0012 1168     		ldr	r1, [r2]
+ 106 0014 1868     		ldr	r0, [r3]
+ 107 0016 FFF7FEBF 		b	_Z21resetConfigurationExtP7Logging13engine_type_e
+ 108              		.size	_ZL20doResetConfigurationv, .-_ZL20doResetConfigurationv
+ 109 001a 00BFAFF3 		.section	.text._ZL13rewriteConfigv,"ax",%progbits
+ 109      0080
+ 110              		.align	2
+ 111              		.p2align 4,,15
+ 112              		.thumb
+ 113              		.thumb_func
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccExf3eT.s 			page 3
+
+
+ 114              		.type	_ZL13rewriteConfigv, %function
+ 115              	_ZL13rewriteConfigv:
+ 116              		@ args = 0, pretend = 0, frame = 0
+ 117              		@ frame_needed = 0, uses_anonymous_args = 0
+ 118 0000 40F20002 		movw	r2, #:lower16:engineConfiguration
+ 119 0004 08B5     		push	{r3, lr}
+ 120 0006 C0F20002 		movt	r2, #:upper16:engineConfiguration
+ 121 000a 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 122 000e C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 123 0012 1268     		ldr	r2, [r2]
+ 124 0014 1868     		ldr	r0, [r3]
+ 125 0016 1168     		ldr	r1, [r2]
+ 126 0018 FFF7FEFF 		bl	_Z21resetConfigurationExtP7Logging13engine_type_e
+ 127 001c BDE80840 		pop	{r3, lr}
+ 128 0020 FFF7FEBF 		b	_Z15writeToFlashNowv
+ 129              		.size	_ZL13rewriteConfigv, .-_ZL13rewriteConfigv
+ 130 0024 AFF30080 		.section	.text._Z13readFromFlashv,"ax",%progbits
+ 130      AFF30080 
+ 130      AFF30080 
+ 131              		.align	2
+ 132              		.p2align 4,,15
+ 133              		.global	_Z13readFromFlashv
+ 134              		.thumb
+ 135              		.thumb_func
+ 136              		.type	_Z13readFromFlashv, %function
+ 137              	_Z13readFromFlashv:
+ 138              		@ args = 0, pretend = 0, frame = 0
+ 139              		@ frame_needed = 0, uses_anonymous_args = 0
+ 140 0000 38B5     		push	{r3, r4, r5, lr}
+ 141 0002 40F20005 		movw	r5, #:lower16:.LANCHOR0
+ 142 0006 C0F20005 		movt	r5, #:upper16:.LANCHOR0
+ 143 000a 40F20001 		movw	r1, #:lower16:.LC6
+ 144 000e 2868     		ldr	r0, [r5]
+ 145 0010 C0F20001 		movt	r1, #:upper16:.LC6
+ 146 0014 40F20004 		movw	r4, #:lower16:persistentState
+ 147 0018 FFF7FEFF 		bl	printMsg
+ 148 001c C0F20004 		movt	r4, #:upper16:persistentState
+ 149 0020 0020     		movs	r0, #0
+ 150 0022 2146     		mov	r1, r4
+ 151 0024 43F6C432 		movw	r2, #15300
+ 152 0028 C0F60600 		movt	r0, 2054
+ 153 002c FFF7FEFF 		bl	flashRead
+ 154 0030 04F10800 		add	r0, r4, #8
+ 155 0034 43F6B831 		movw	r1, #15288
+ 156 0038 FFF7FEFF 		bl	calc_crc
+ 157 003c 04F56F53 		add	r3, r4, #15296
+ 158 0040 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 159 0042 9842     		cmp	r0, r3
+ 160 0044 4AD1     		bne	.L13
+ 161 0046 2368     		ldr	r3, [r4]
+ 162 0048 42F2B202 		movw	r2, #8370
+ 163 004c 9342     		cmp	r3, r2
+ 164 004e 31D0     		beq	.L14
+ 165              	.L7:
+ 166 0050 40F20004 		movw	r4, #:lower16:engineConfiguration
+ 167 0054 C0F20004 		movt	r4, #:upper16:engineConfiguration
+ 168 0058 2368     		ldr	r3, [r4]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccExf3eT.s 			page 4
+
+
+ 169 005a 1A68     		ldr	r2, [r3]
+ 170 005c 202A     		cmp	r2, #32
+ 171 005e 10D9     		bls	.L15
+ 172              	.L8:
+ 173 0060 40F20001 		movw	r1, #:lower16:.LC10
+ 174 0064 C0F20001 		movt	r1, #:upper16:.LC10
+ 175 0068 2868     		ldr	r0, [r5]
+ 176 006a FFF7FEFF 		bl	printMsg
+ 177 006e 2868     		ldr	r0, [r5]
+ 178 0070 0021     		movs	r1, #0
+ 179 0072 FFF7FEFF 		bl	_Z21resetConfigurationExtP7Logging13engine_type_e
+ 180              	.L6:
+ 181 0076 2468     		ldr	r4, [r4]
+ 182 0078 FFF7FEFF 		bl	getRusEfiVersion
+ 183 007c C4F80002 		str	r0, [r4, #512]
+ 184 0080 38BD     		pop	{r3, r4, r5, pc}
+ 185              	.L15:
+ 186 0082 5968     		ldr	r1, [r3, #4]
+ 187 0084 41F23923 		movw	r3, #4665
+ 188 0088 C0F22213 		movt	r3, 290
+ 189 008c 9942     		cmp	r1, r3
+ 190 008e E7D1     		bne	.L8
+ 191 0090 40F20001 		movw	r1, #:lower16:.LC11
+ 192 0094 C0F20001 		movt	r1, #:upper16:.LC11
+ 193 0098 2868     		ldr	r0, [r5]
+ 194 009a FFF7FEFF 		bl	printMsg
+ 195 009e 2368     		ldr	r3, [r4]
+ 196 00a0 2868     		ldr	r0, [r5]
+ 197 00a2 1968     		ldr	r1, [r3]
+ 198 00a4 FFF7FEFF 		bl	_Z21resetConfigurationExtP7Logging13engine_type_e
+ 199 00a8 2468     		ldr	r4, [r4]
+ 200 00aa FFF7FEFF 		bl	getRusEfiVersion
+ 201 00ae C4F80002 		str	r0, [r4, #512]
+ 202 00b2 38BD     		pop	{r3, r4, r5, pc}
+ 203              	.L14:
+ 204 00b4 6268     		ldr	r2, [r4, #4]
+ 205 00b6 43F6C433 		movw	r3, #15300
+ 206 00ba 9A42     		cmp	r2, r3
+ 207 00bc C8D1     		bne	.L7
+ 208 00be 40F20001 		movw	r1, #:lower16:.LC9
+ 209 00c2 C0F20001 		movt	r1, #:upper16:.LC9
+ 210 00c6 2868     		ldr	r0, [r5]
+ 211 00c8 FFF7FEFF 		bl	printMsg
+ 212 00cc 40F20004 		movw	r4, #:lower16:engineConfiguration
+ 213 00d0 2868     		ldr	r0, [r5]
+ 214 00d2 FFF7FEFF 		bl	_Z31applyNonPersistentConfigurationP7Logging
+ 215 00d6 C0F20004 		movt	r4, #:upper16:engineConfiguration
+ 216 00da CCE7     		b	.L6
+ 217              	.L13:
+ 218 00dc 40F20001 		movw	r1, #:lower16:.LC7
+ 219 00e0 0246     		mov	r2, r0
+ 220 00e2 C0F20001 		movt	r1, #:upper16:.LC7
+ 221 00e6 2868     		ldr	r0, [r5]
+ 222 00e8 FFF7FEFF 		bl	scheduleMsg
+ 223 00ec 40F20004 		movw	r4, #:lower16:engineConfiguration
+ 224 00f0 40F20001 		movw	r1, #:lower16:.LC8
+ 225 00f4 C0F20001 		movt	r1, #:upper16:.LC8
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccExf3eT.s 			page 5
+
+
+ 226 00f8 2868     		ldr	r0, [r5]
+ 227 00fa C0F20004 		movt	r4, #:upper16:engineConfiguration
+ 228 00fe FFF7FEFF 		bl	printMsg
+ 229 0102 2868     		ldr	r0, [r5]
+ 230 0104 0021     		movs	r1, #0
+ 231 0106 FFF7FEFF 		bl	_Z21resetConfigurationExtP7Logging13engine_type_e
+ 232 010a 2468     		ldr	r4, [r4]
+ 233 010c FFF7FEFF 		bl	getRusEfiVersion
+ 234 0110 C4F80002 		str	r0, [r4, #512]
+ 235 0114 38BD     		pop	{r3, r4, r5, pc}
+ 236              		.size	_Z13readFromFlashv, .-_Z13readFromFlashv
+ 237 0116 00BFAFF3 		.section	.text._Z13flashStateCrcP29persistent_config_container_s,"ax",%progbits
+ 237      0080AFF3 
+ 237      0080
+ 238              		.align	2
+ 239              		.p2align 4,,15
+ 240              		.global	_Z13flashStateCrcP29persistent_config_container_s
+ 241              		.thumb
+ 242              		.thumb_func
+ 243              		.type	_Z13flashStateCrcP29persistent_config_container_s, %function
+ 244              	_Z13flashStateCrcP29persistent_config_container_s:
+ 245              		@ args = 0, pretend = 0, frame = 0
+ 246              		@ frame_needed = 0, uses_anonymous_args = 0
+ 247              		@ link register save eliminated.
+ 248 0000 0830     		adds	r0, r0, #8
+ 249 0002 43F6B831 		movw	r1, #15288
+ 250 0006 FFF7FEBF 		b	calc_crc
+ 251              		.size	_Z13flashStateCrcP29persistent_config_container_s, .-_Z13flashStateCrcP29persistent_config_c
+ 252 000a 00BFAFF3 		.section	.text._Z27setNeedToWriteConfigurationv,"ax",%progbits
+ 252      0080
+ 253              		.align	2
+ 254              		.p2align 4,,15
+ 255              		.global	_Z27setNeedToWriteConfigurationv
+ 256              		.thumb
+ 257              		.thumb_func
+ 258              		.type	_Z27setNeedToWriteConfigurationv, %function
+ 259              	_Z27setNeedToWriteConfigurationv:
+ 260              		@ args = 0, pretend = 0, frame = 0
+ 261              		@ frame_needed = 0, uses_anonymous_args = 0
+ 262 0000 08B5     		push	{r3, lr}
+ 263 0002 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 264 0006 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 265 000a 40F20001 		movw	r1, #:lower16:.LC12
+ 266 000e 1868     		ldr	r0, [r3]
+ 267 0010 C0F20001 		movt	r1, #:upper16:.LC12
+ 268 0014 FFF7FEFF 		bl	scheduleMsg
+ 269 0018 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 270 001c C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ 271 0020 0122     		movs	r2, #1
+ 272 0022 1A70     		strb	r2, [r3]
+ 273 0024 08BD     		pop	{r3, pc}
+ 274              		.size	_Z27setNeedToWriteConfigurationv, .-_Z27setNeedToWriteConfigurationv
+ 275 0026 00BFAFF3 		.section	.text._Z27getNeedToWriteConfigurationv,"ax",%progbits
+ 275      0080AFF3 
+ 275      0080
+ 276              		.align	2
+ 277              		.p2align 4,,15
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccExf3eT.s 			page 6
+
+
+ 278              		.global	_Z27getNeedToWriteConfigurationv
+ 279              		.thumb
+ 280              		.thumb_func
+ 281              		.type	_Z27getNeedToWriteConfigurationv, %function
+ 282              	_Z27getNeedToWriteConfigurationv:
+ 283              		@ args = 0, pretend = 0, frame = 0
+ 284              		@ frame_needed = 0, uses_anonymous_args = 0
+ 285              		@ link register save eliminated.
+ 286 0000 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 287 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ 288 0008 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 289 000a 7047     		bx	lr
+ 290              		.size	_Z27getNeedToWriteConfigurationv, .-_Z27getNeedToWriteConfigurationv
+ 291 000c AFF30080 		.section	.text._Z21writeToFlashIfPendingv,"ax",%progbits
+ 292              		.align	2
+ 293              		.p2align 4,,15
+ 294              		.global	_Z21writeToFlashIfPendingv
+ 295              		.thumb
+ 296              		.thumb_func
+ 297              		.type	_Z21writeToFlashIfPendingv, %function
+ 298              	_Z21writeToFlashIfPendingv:
+ 299              		@ args = 0, pretend = 0, frame = 0
+ 300              		@ frame_needed = 0, uses_anonymous_args = 0
+ 301 0000 08B5     		push	{r3, lr}
+ 302 0002 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 303 0006 C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ 304 000a 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 305 000c 02B9     		cbnz	r2, .L21
+ 306 000e 08BD     		pop	{r3, pc}
+ 307              	.L21:
+ 308 0010 40F20002 		movw	r2, #:lower16:.LANCHOR0
+ 309 0014 C0F20002 		movt	r2, #:upper16:.LANCHOR0
+ 310 0018 40F20001 		movw	r1, #:lower16:.LC13
+ 311 001c 1068     		ldr	r0, [r2]
+ 312 001e C0F20001 		movt	r1, #:upper16:.LC13
+ 313 0022 0022     		movs	r2, #0
+ 314 0024 1A70     		strb	r2, [r3]
+ 315 0026 FFF7FEFF 		bl	scheduleMsg
+ 316 002a BDE80840 		pop	{r3, lr}
+ 317 002e FFF7FEBF 		b	_Z15writeToFlashNowv
+ 318              		.size	_Z21writeToFlashIfPendingv, .-_Z21writeToFlashIfPendingv
+ 319 0032 00BFAFF3 		.section	.text._Z9initFlashP7Logging,"ax",%progbits
+ 319      0080AFF3 
+ 319      0080AFF3 
+ 319      0080
+ 320              		.align	2
+ 321              		.p2align 4,,15
+ 322              		.global	_Z9initFlashP7Logging
+ 323              		.thumb
+ 324              		.thumb_func
+ 325              		.type	_Z9initFlashP7Logging, %function
+ 326              	_Z9initFlashP7Logging:
+ 327              		@ args = 0, pretend = 0, frame = 0
+ 328              		@ frame_needed = 0, uses_anonymous_args = 0
+ 329 0000 08B5     		push	{r3, lr}
+ 330 0002 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 331 0006 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccExf3eT.s 			page 7
+
+
+ 332 000a 40F20001 		movw	r1, #:lower16:_Z13readFromFlashv
+ 333 000e 1860     		str	r0, [r3]
+ 334 0010 40F20000 		movw	r0, #:lower16:.LC14
+ 335 0014 C0F20000 		movt	r0, #:upper16:.LC14
+ 336 0018 C0F20001 		movt	r1, #:upper16:_Z13readFromFlashv
+ 337 001c FFF7FEFF 		bl	addConsoleAction
+ 338 0020 40F20000 		movw	r0, #:lower16:.LC15
+ 339 0024 40F20001 		movw	r1, #:lower16:_Z15writeToFlashNowv
+ 340 0028 C0F20000 		movt	r0, #:upper16:.LC15
+ 341 002c C0F20001 		movt	r1, #:upper16:_Z15writeToFlashNowv
+ 342 0030 FFF7FEFF 		bl	addConsoleAction
+ 343 0034 40F20000 		movw	r0, #:lower16:.LC16
+ 344 0038 40F20001 		movw	r1, #:lower16:_Z11requestBurnv
+ 345 003c C0F20000 		movt	r0, #:upper16:.LC16
+ 346 0040 C0F20001 		movt	r1, #:upper16:_Z11requestBurnv
+ 347 0044 FFF7FEFF 		bl	addConsoleAction
+ 348 0048 40F20000 		movw	r0, #:lower16:.LC17
+ 349 004c 40F20001 		movw	r1, #:lower16:_ZL20doResetConfigurationv
+ 350 0050 C0F20000 		movt	r0, #:upper16:.LC17
+ 351 0054 C0F20001 		movt	r1, #:upper16:_ZL20doResetConfigurationv
+ 352 0058 FFF7FEFF 		bl	addConsoleAction
+ 353 005c 40F20000 		movw	r0, #:lower16:.LC18
+ 354 0060 40F20001 		movw	r1, #:lower16:_ZL13rewriteConfigv
+ 355 0064 C0F20000 		movt	r0, #:upper16:.LC18
+ 356 0068 C0F20001 		movt	r1, #:upper16:_ZL13rewriteConfigv
+ 357 006c BDE80840 		pop	{r3, lr}
+ 358 0070 FFF7FEBF 		b	addConsoleAction
+ 359              		.size	_Z9initFlashP7Logging, .-_Z9initFlashP7Logging
+ 360 0074 AFF30080 		.section	.bss._ZL24needToWriteConfiguration,"aw",%nobits
+ 360      AFF30080 
+ 360      AFF30080 
+ 361              		.set	.LANCHOR1,. + 0
+ 362              		.type	_ZL24needToWriteConfiguration, %object
+ 363              		.size	_ZL24needToWriteConfiguration, 1
+ 364              	_ZL24needToWriteConfiguration:
+ 365 0000 00       		.space	1
+ 366              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 367              		.align	2
+ 368              	.LC0:
+ 369 0000 20212121 		.ascii	" !!!!!!!!!!!!!!!!!!!! BE SURE NOT WRITE WITH IGNITI"
+ 369      21212121 
+ 369      21212121 
+ 369      21212121 
+ 369      21212121 
+ 370 0033 4F4E204F 		.ascii	"ON ON !!!!!!!!!!!!!!!!!!!!\000"
+ 370      4E202121 
+ 370      21212121 
+ 370      21212121 
+ 370      21212121 
+ 371 004e 0000     		.space	2
+ 372              	.LC1:
+ 373 0050 666C6173 		.ascii	"flash compatible with %d\000"
+ 373      6820636F 
+ 373      6D706174 
+ 373      69626C65 
+ 373      20776974 
+ 374 0069 000000   		.space	3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccExf3eT.s 			page 8
+
+
+ 375              	.LC2:
+ 376 006c 52657365 		.ascii	"Reseting flash: size=%d\000"
+ 376      74696E67 
+ 376      20666C61 
+ 376      73683A20 
+ 376      73697A65 
+ 377              	.LC3:
+ 378 0084 466C6173 		.ascii	"Flashing with CRC=%d\000"
+ 378      68696E67 
+ 378      20776974 
+ 378      68204352 
+ 378      433D2564 
+ 379 0099 000000   		.space	3
+ 380              	.LC4:
+ 381 009c 466C6173 		.ascii	"Flash programmed in (ms): %d\000"
+ 381      68207072 
+ 381      6F677261 
+ 381      6D6D6564 
+ 381      20696E20 
+ 382 00b9 000000   		.space	3
+ 383              	.LC5:
+ 384 00bc 466C6173 		.ascii	"Flashing result: %d\000"
+ 384      68696E67 
+ 384      20726573 
+ 384      756C743A 
+ 384      20256400 
+ 385              	.LC6:
+ 386 00d0 72656164 		.ascii	"readFromFlash()\000"
+ 386      46726F6D 
+ 386      466C6173 
+ 386      68282900 
+ 387              	.LC7:
+ 388 00e0 43524320 		.ascii	"CRC got %d while %d expected\000"
+ 388      676F7420 
+ 388      25642077 
+ 388      68696C65 
+ 388      20256420 
+ 389 00fd 000000   		.space	3
+ 390              	.LC8:
+ 391 0100 4E656564 		.ascii	"Need to reset flash to default due to CRC\000"
+ 391      20746F20 
+ 391      72657365 
+ 391      7420666C 
+ 391      61736820 
+ 392 012a 0000     		.space	2
+ 393              	.LC9:
+ 394 012c 476F7420 		.ascii	"Got valid configuration from flash!\000"
+ 394      76616C69 
+ 394      6420636F 
+ 394      6E666967 
+ 394      75726174 
+ 395              	.LC10:
+ 396 0150 4E656564 		.ascii	"Need to reset flash to default due to version chang"
+ 396      20746F20 
+ 396      72657365 
+ 396      7420666C 
+ 396      61736820 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccExf3eT.s 			page 9
+
+
+ 397 0183 6500     		.ascii	"e\000"
+ 398 0185 000000   		.space	3
+ 399              	.LC11:
+ 400 0188 52657365 		.ascii	"Resetting but saving engine type [%d]\000"
+ 400      7474696E 
+ 400      67206275 
+ 400      74207361 
+ 400      76696E67 
+ 401 01ae 0000     		.space	2
+ 402              	.LC12:
+ 403 01b0 53636865 		.ascii	"Scheduling configuration write\000"
+ 403      64756C69 
+ 403      6E672063 
+ 403      6F6E6669 
+ 403      67757261 
+ 404 01cf 00       		.space	1
+ 405              	.LC13:
+ 406 01d0 57726974 		.ascii	"Writing pending configuration\000"
+ 406      696E6720 
+ 406      70656E64 
+ 406      696E6720 
+ 406      636F6E66 
+ 407 01ee 0000     		.space	2
+ 408              	.LC14:
+ 409 01f0 72656164 		.ascii	"readconfig\000"
+ 409      636F6E66 
+ 409      696700
+ 410 01fb 00       		.space	1
+ 411              	.LC15:
+ 412 01fc 77726974 		.ascii	"writeconfig\000"
+ 412      65636F6E 
+ 412      66696700 
+ 413              	.LC16:
+ 414 0208 6275726E 		.ascii	"burnconfig\000"
+ 414      636F6E66 
+ 414      696700
+ 415 0213 00       		.space	1
+ 416              	.LC17:
+ 417 0214 72657365 		.ascii	"resetconfig\000"
+ 417      74636F6E 
+ 417      66696700 
+ 418              	.LC18:
+ 419 0220 72657772 		.ascii	"rewriteconfig\000"
+ 419      69746563 
+ 419      6F6E6669 
+ 419      6700
+ 420 022e 0000     		.section	.bss._ZL6logger,"aw",%nobits
+ 421              		.align	2
+ 422              		.set	.LANCHOR0,. + 0
+ 423              		.type	_ZL6logger, %object
+ 424              		.size	_ZL6logger, 4
+ 425              	_ZL6logger:
+ 426 0000 00000000 		.space	4
+ 427              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccExf3eT.s 			page 10
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 flash_main.cpp
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:17     .text._Z15writeToFlashNowv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:23     .text._Z15writeToFlashNowv:00000000 _Z15writeToFlashNowv
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:422    .bss._ZL6logger:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:368    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:372    .rodata.str1.4:00000050 .LC1
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:375    .rodata.str1.4:0000006c .LC2
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:377    .rodata.str1.4:00000084 .LC3
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:380    .rodata.str1.4:0000009c .LC4
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:383    .rodata.str1.4:000000bc .LC5
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:91     .text._ZL20doResetConfigurationv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:96     .text._ZL20doResetConfigurationv:00000000 _ZL20doResetConfigurationv
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:110    .text._ZL13rewriteConfigv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:115    .text._ZL13rewriteConfigv:00000000 _ZL13rewriteConfigv
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:131    .text._Z13readFromFlashv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:137    .text._Z13readFromFlashv:00000000 _Z13readFromFlashv
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:385    .rodata.str1.4:000000d0 .LC6
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:395    .rodata.str1.4:00000150 .LC10
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:399    .rodata.str1.4:00000188 .LC11
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:393    .rodata.str1.4:0000012c .LC9
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:387    .rodata.str1.4:000000e0 .LC7
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:390    .rodata.str1.4:00000100 .LC8
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:238    .text._Z13flashStateCrcP29persistent_config_container_s:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:244    .text._Z13flashStateCrcP29persistent_config_container_s:00000000 _Z13flashStateCrcP29persistent_config_container_s
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:253    .text._Z27setNeedToWriteConfigurationv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:259    .text._Z27setNeedToWriteConfigurationv:00000000 _Z27setNeedToWriteConfigurationv
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:402    .rodata.str1.4:000001b0 .LC12
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:361    .bss._ZL24needToWriteConfiguration:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:276    .text._Z27getNeedToWriteConfigurationv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:282    .text._Z27getNeedToWriteConfigurationv:00000000 _Z27getNeedToWriteConfigurationv
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:292    .text._Z21writeToFlashIfPendingv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:298    .text._Z21writeToFlashIfPendingv:00000000 _Z21writeToFlashIfPendingv
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:405    .rodata.str1.4:000001d0 .LC13
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:320    .text._Z9initFlashP7Logging:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:326    .text._Z9initFlashP7Logging:00000000 _Z9initFlashP7Logging
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:408    .rodata.str1.4:000001f0 .LC14
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:411    .rodata.str1.4:000001fc .LC15
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:413    .rodata.str1.4:00000208 .LC16
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:416    .rodata.str1.4:00000214 .LC17
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:418    .rodata.str1.4:00000220 .LC18
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:364    .bss._ZL24needToWriteConfiguration:00000000 _ZL24needToWriteConfiguration
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:365    .bss._ZL24needToWriteConfiguration:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:367    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:421    .bss._ZL6logger:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccExf3eT.s:425    .bss._ZL6logger:00000000 _ZL6logger
+
+UNDEFINED SYMBOLS
+persistentState
+scheduleMsg
+calc_crc
+flashErase
+currentTimeMillis
+flashWrite
+maxLockTime
+engineConfiguration
+_Z21resetConfigurationExtP7Logging13engine_type_e
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccExf3eT.s 			page 11
+
+
+printMsg
+flashRead
+getRusEfiVersion
+_Z31applyNonPersistentConfigurationP7Logging
+addConsoleAction
+_Z11requestBurnv

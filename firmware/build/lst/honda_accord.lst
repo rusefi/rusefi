@@ -1,0 +1,261 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccEJ9KtO.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"honda_accord.cpp"
+  16              		.section	.text._ZL33setHondaAccordConfigurationCommonv,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	_ZL33setHondaAccordConfigurationCommonv, %function
+  22              	_ZL33setHondaAccordConfigurationCommonv:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25 0000 2DE9F84F 		push	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+  26 0004 40F20005 		movw	r5, #:lower16:engineConfiguration
+  27 0008 C0F20005 		movt	r5, #:upper16:engineConfiguration
+  28 000c 40F20007 		movw	r7, #:lower16:boardConfiguration
+  29 0010 C0F20007 		movt	r7, #:upper16:boardConfiguration
+  30 0014 2B68     		ldr	r3, [r5]
+  31 0016 3968     		ldr	r1, [r7]
+  32 0018 0126     		movs	r6, #1
+  33 001a C3F8F860 		str	r6, [r3, #248]
+  34 001e 91F88001 		ldrb	r0, [r1, #384]	@ zero_extendqisi2
+  35 0022 4FF6E738 		movw	r8, #64487
+  36 0026 4FF0000C 		mov	ip, #0
+  37 002a 0422     		movs	r2, #4
+  38 002c C4F2783C 		movt	ip, 17272
+  39 0030 4FF0020E 		mov	lr, #2
+  40 0034 0024     		movs	r4, #0
+  41 0036 C4F20908 		movt	r8, 16393
+  42 003a 40F01000 		orr	r0, r0, #16
+  43 003e 81F88001 		strb	r0, [r1, #384]
+  44 0042 C3F8E065 		str	r6, [r3, #1504]
+  45 0046 C3F89081 		str	r8, [r3, #400]	@ float
+  46 004a C3F808C0 		str	ip, [r3, #8]	@ float
+  47 004e C3F8BC41 		str	r4, [r3, #444]
+  48 0052 C3F80822 		str	r2, [r3, #520]
+  49 0056 C3F89421 		str	r2, [r3, #404]
+  50 005a C3F8B0E1 		str	lr, [r3, #432]
+  51 005e 3046     		mov	r0, r6
+  52 0060 FFF7FEFF 		bl	_Z12setAlgorithm18engine_load_mode_e
+  53 0064 0021     		movs	r1, #0
+  54 0066 C4F2C821 		movt	r1, 17096
+  55 006a 0020     		movs	r0, #0
+  56 006c FFF7FEFF 		bl	_Z14setFuelLoadBinff
+  57 0070 2868     		ldr	r0, [r5]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccEJ9KtO.s 			page 2
+
+
+  58 0072 00F58070 		add	r0, r0, #256
+  59 0076 FFF7FEFF 		bl	_Z18setCommonNTCSensorP14ThermistorConf
+  60 007a 4FF40048 		mov	r8, #32768
+  61 007e 2868     		ldr	r0, [r5]
+  62 0080 C4F2BB48 		movt	r8, 17595
+  63 0084 C0F81881 		str	r8, [r0, #280]	@ float
+  64 0088 00F59070 		add	r0, r0, #288
+  65 008c FFF7FEFF 		bl	_Z18setCommonNTCSensorP14ThermistorConf
+  66 0090 2968     		ldr	r1, [r5]
+  67 0092 3B68     		ldr	r3, [r7]
+  68 0094 C1F80C62 		str	r6, [r1, #524]
+  69 0098 4FF0000B 		mov	fp, #0
+  70 009c 4FF0000A 		mov	r10, #0
+  71 00a0 4FF00009 		mov	r9, #0
+  72 00a4 DFED307A 		flds	s15, .L2
+  73 00a8 C4F28C2B 		movt	fp, 17036
+  74 00ac CCF2342A 		movt	r10, 49716
+  75 00b0 C4F20829 		movt	r9, 16904
+  76 00b4 4FF47A6C 		mov	ip, #4000
+  77 00b8 0D27     		movs	r7, #13
+  78 00ba 0E26     		movs	r6, #14
+  79 00bc 0B25     		movs	r5, #11
+  80 00be 0C20     		movs	r0, #12
+  81 00c0 4FF4FA72 		mov	r2, #500
+  82 00c4 C1F83881 		str	r8, [r1, #312]	@ float
+  83 00c8 C1F8FC40 		str	r4, [r1, #252]
+  84 00cc C1F86CB0 		str	fp, [r1, #108]	@ float
+  85 00d0 C1F8B8A1 		str	r10, [r1, #440]	@ float
+  86 00d4 C1F8CC91 		str	r9, [r1, #460]	@ float
+  87 00d8 C1F8A4C1 		str	ip, [r1, #420]
+  88 00dc C1F84872 		str	r7, [r1, #584]
+  89 00e0 C1F8D861 		str	r6, [r1, #472]
+  90 00e4 C1F83C51 		str	r5, [r1, #316]
+  91 00e8 C1F81C01 		str	r0, [r1, #284]
+  92 00ec C1ED757A 		fsts	s15, [r1, #468]
+  93 00f0 A1F86020 		strh	r2, [r1, #96]	@ movhi
+  94 00f4 4FF02D0B 		mov	fp, #45
+  95 00f8 4FF0180A 		mov	r10, #24
+  96 00fc 4521     		movs	r1, #69
+  97 00fe 1927     		movs	r7, #25
+  98 0100 DC61     		str	r4, [r3, #28]
+  99 0102 1960     		str	r1, [r3]
+ 100 0104 C3F878B1 		str	fp, [r3, #376]
+ 101 0108 C3F820A0 		str	r10, [r3, #32]
+ 102 010c 5F62     		str	r7, [r3, #36]
+ 103 010e 4FF0500A 		mov	r10, #80
+ 104 0112 4FF04109 		mov	r9, #65
+ 105 0116 4FF01708 		mov	r8, #23
+ 106 011a 4FF0440C 		mov	ip, #68
+ 107 011e 4726     		movs	r6, #71
+ 108 0120 4925     		movs	r5, #73
+ 109 0122 4B20     		movs	r0, #75
+ 110 0124 4D24     		movs	r4, #77
+ 111 0126 4F21     		movs	r1, #79
+ 112 0128 4FF01A0B 		mov	fp, #26
+ 113 012c 4327     		movs	r7, #67
+ 114 012e C3F82890 		str	r9, [r3, #40]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccEJ9KtO.s 			page 3
+
+
+ 115 0132 C3F82C80 		str	r8, [r3, #44]
+ 116 0136 C3F854C0 		str	ip, [r3, #84]
+ 117 013a 9F61     		str	r7, [r3, #24]
+ 118 013c C3F8B060 		str	r6, [r3, #176]
+ 119 0140 C3F8B450 		str	r5, [r3, #180]
+ 120 0144 C3F8B800 		str	r0, [r3, #184]
+ 121 0148 C3F8BC40 		str	r4, [r3, #188]
+ 122 014c C3F8C010 		str	r1, [r3, #192]
+ 123 0150 C3F8C4B0 		str	fp, [r3, #196]
+ 124 0154 C3F858A0 		str	r10, [r3, #88]
+ 125 0158 C3F85CA0 		str	r10, [r3, #92]
+ 126 015c C3F860A0 		str	r10, [r3, #96]
+ 127 0160 9A60     		str	r2, [r3, #8]
+ 128 0162 BDE8F88F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 129              	.L3:
+ 130 0166 00BF     		.align	2
+ 131              	.L2:
+ 132 0168 CEC72041 		.word	1092667342
+ 133              		.size	_ZL33setHondaAccordConfigurationCommonv, .-_ZL33setHondaAccordConfigurationCommonv
+ 134              		.section	.text._Z19setFrankenso_01_LCDP21board_configuration_s,"ax",%progbits
+ 135              		.align	2
+ 136              		.p2align 4,,15
+ 137              		.global	_Z19setFrankenso_01_LCDP21board_configuration_s
+ 138              		.thumb
+ 139              		.thumb_func
+ 140              		.type	_Z19setFrankenso_01_LCDP21board_configuration_s, %function
+ 141              	_Z19setFrankenso_01_LCDP21board_configuration_s:
+ 142              		@ args = 0, pretend = 0, frame = 0
+ 143              		@ frame_needed = 0, uses_anonymous_args = 0
+ 144              		@ link register save eliminated.
+ 145 0000 70B4     		push	{r4, r5, r6}
+ 146 0002 4D21     		movs	r1, #77
+ 147 0004 4726     		movs	r6, #71
+ 148 0006 4925     		movs	r5, #73
+ 149 0008 4B24     		movs	r4, #75
+ 150 000a 4F22     		movs	r2, #79
+ 151 000c 1A23     		movs	r3, #26
+ 152 000e C0F8B060 		str	r6, [r0, #176]
+ 153 0012 C0F8B450 		str	r5, [r0, #180]
+ 154 0016 C0F8B840 		str	r4, [r0, #184]
+ 155 001a C0F8BC10 		str	r1, [r0, #188]
+ 156 001e C0F8C020 		str	r2, [r0, #192]
+ 157 0022 C0F8C430 		str	r3, [r0, #196]
+ 158 0026 70BC     		pop	{r4, r5, r6}
+ 159 0028 7047     		bx	lr
+ 160              		.size	_Z19setFrankenso_01_LCDP21board_configuration_s, .-_Z19setFrankenso_01_LCDP21board_configura
+ 161 002a 00BFAFF3 		.section	.text._Z35setHondaAccordConfigurationTwoWiresv,"ax",%progbits
+ 161      0080
+ 162              		.align	2
+ 163              		.p2align 4,,15
+ 164              		.global	_Z35setHondaAccordConfigurationTwoWiresv
+ 165              		.thumb
+ 166              		.thumb_func
+ 167              		.type	_Z35setHondaAccordConfigurationTwoWiresv, %function
+ 168              	_Z35setHondaAccordConfigurationTwoWiresv:
+ 169              		@ args = 0, pretend = 0, frame = 0
+ 170              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccEJ9KtO.s 			page 4
+
+
+ 171              		@ link register save eliminated.
+ 172 0000 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 173 0004 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 174 0008 1121     		movs	r1, #17
+ 175 000a 1B68     		ldr	r3, [r3]
+ 176 000c 0C22     		movs	r2, #12
+ 177 000e 1960     		str	r1, [r3]
+ 178 0010 C3F81822 		str	r2, [r3, #536]
+ 179 0014 FFF7FEBF 		b	_ZL33setHondaAccordConfigurationCommonv
+ 180              		.size	_Z35setHondaAccordConfigurationTwoWiresv, .-_Z35setHondaAccordConfigurationTwoWiresv
+ 181 0018 AFF30080 		.section	.text._Z37setHondaAccordConfigurationThreeWiresv,"ax",%progbits
+ 181      AFF30080 
+ 182              		.align	2
+ 183              		.p2align 4,,15
+ 184              		.global	_Z37setHondaAccordConfigurationThreeWiresv
+ 185              		.thumb
+ 186              		.thumb_func
+ 187              		.type	_Z37setHondaAccordConfigurationThreeWiresv, %function
+ 188              	_Z37setHondaAccordConfigurationThreeWiresv:
+ 189              		@ args = 0, pretend = 0, frame = 0
+ 190              		@ frame_needed = 0, uses_anonymous_args = 0
+ 191              		@ link register save eliminated.
+ 192 0000 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 193 0004 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 194 0008 0621     		movs	r1, #6
+ 195 000a 1B68     		ldr	r3, [r3]
+ 196 000c 0A22     		movs	r2, #10
+ 197 000e 1960     		str	r1, [r3]
+ 198 0010 C3F81822 		str	r2, [r3, #536]
+ 199 0014 FFF7FEBF 		b	_ZL33setHondaAccordConfigurationCommonv
+ 200              		.size	_Z37setHondaAccordConfigurationThreeWiresv, .-_Z37setHondaAccordConfigurationThreeWiresv
+ 201 0018 AFF30080 		.section	.text._Z30setHondaAccordConfigurationDipv,"ax",%progbits
+ 201      AFF30080 
+ 202              		.align	2
+ 203              		.p2align 4,,15
+ 204              		.global	_Z30setHondaAccordConfigurationDipv
+ 205              		.thumb
+ 206              		.thumb_func
+ 207              		.type	_Z30setHondaAccordConfigurationDipv, %function
+ 208              	_Z30setHondaAccordConfigurationDipv:
+ 209              		@ args = 0, pretend = 0, frame = 0
+ 210              		@ frame_needed = 0, uses_anonymous_args = 0
+ 211              		@ link register save eliminated.
+ 212 0000 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 213 0004 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 214 0008 1221     		movs	r1, #18
+ 215 000a 1B68     		ldr	r3, [r3]
+ 216 000c 0D22     		movs	r2, #13
+ 217 000e 1960     		str	r1, [r3]
+ 218 0010 C3F81822 		str	r2, [r3, #536]
+ 219 0014 FFF7FEBF 		b	_ZL33setHondaAccordConfigurationCommonv
+ 220              		.size	_Z30setHondaAccordConfigurationDipv, .-_Z30setHondaAccordConfigurationDipv
+ 221 0018 AFF30080 		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ 221      AFF30080 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccEJ9KtO.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 honda_accord.cpp
+C:\Users\pc\AppData\Local\Temp\ccEJ9KtO.s:17     .text._ZL33setHondaAccordConfigurationCommonv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccEJ9KtO.s:22     .text._ZL33setHondaAccordConfigurationCommonv:00000000 _ZL33setHondaAccordConfigurationCommonv
+C:\Users\pc\AppData\Local\Temp\ccEJ9KtO.s:132    .text._ZL33setHondaAccordConfigurationCommonv:00000168 $d
+C:\Users\pc\AppData\Local\Temp\ccEJ9KtO.s:135    .text._Z19setFrankenso_01_LCDP21board_configuration_s:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccEJ9KtO.s:141    .text._Z19setFrankenso_01_LCDP21board_configuration_s:00000000 _Z19setFrankenso_01_LCDP21board_configuration_s
+C:\Users\pc\AppData\Local\Temp\ccEJ9KtO.s:162    .text._Z35setHondaAccordConfigurationTwoWiresv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccEJ9KtO.s:168    .text._Z35setHondaAccordConfigurationTwoWiresv:00000000 _Z35setHondaAccordConfigurationTwoWiresv
+C:\Users\pc\AppData\Local\Temp\ccEJ9KtO.s:182    .text._Z37setHondaAccordConfigurationThreeWiresv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccEJ9KtO.s:188    .text._Z37setHondaAccordConfigurationThreeWiresv:00000000 _Z37setHondaAccordConfigurationThreeWiresv
+C:\Users\pc\AppData\Local\Temp\ccEJ9KtO.s:202    .text._Z30setHondaAccordConfigurationDipv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccEJ9KtO.s:208    .text._Z30setHondaAccordConfigurationDipv:00000000 _Z30setHondaAccordConfigurationDipv
+C:\Users\pc\AppData\Local\Temp\ccEJ9KtO.s:221    .text._ZL33setHondaAccordConfigurationCommonv:0000016c $t
+
+UNDEFINED SYMBOLS
+engineConfiguration
+boardConfiguration
+_Z12setAlgorithm18engine_load_mode_e
+_Z14setFuelLoadBinff
+_Z18setCommonNTCSensorP14ThermistorConf

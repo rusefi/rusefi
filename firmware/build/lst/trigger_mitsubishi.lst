@@ -1,0 +1,220 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccCSAKYa.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"trigger_mitsubishi.cpp"
+  16              		.section	.text._Z31configureFordAspireTriggerShapeP12TriggerShape,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_Z31configureFordAspireTriggerShapeP12TriggerShape
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_Z31configureFordAspireTriggerShapeP12TriggerShape, %function
+  23              	_Z31configureFordAspireTriggerShapeP12TriggerShape:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 70B5     		push	{r4, r5, r6, lr}
+  27 0002 0025     		movs	r5, #0
+  28 0004 0570     		strb	r5, [r0]
+  29 0006 0221     		movs	r1, #2
+  30 0008 0122     		movs	r2, #1
+  31 000a 0446     		mov	r4, r0
+  32 000c FFF7FEFF 		bl	_ZN12TriggerShape5resetE16operation_mode_eb
+  33 0010 0122     		movs	r2, #1
+  34 0012 4FF42461 		mov	r1, #2624
+  35 0016 2046     		mov	r0, r4
+  36 0018 1346     		mov	r3, r2
+  37 001a C4F25321 		movt	r1, 16979
+  38 001e FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+  39 0022 4CF6CD41 		movw	r1, #52429
+  40 0026 2046     		mov	r0, r4
+  41 0028 2B46     		mov	r3, r5
+  42 002a C4F2F321 		movt	r1, 17139
+  43 002e 0122     		movs	r2, #1
+  44 0030 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+  45 0034 0122     		movs	r2, #1
+  46 0036 4CF29021 		movw	r1, #49808
+  47 003a 2046     		mov	r0, r4
+  48 003c 1346     		mov	r3, r2
+  49 003e C4F26831 		movt	r1, 17256
+  50 0042 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+  51 0046 4FF23331 		movw	r1, #62259
+  52 004a 2046     		mov	r0, r4
+  53 004c 2B46     		mov	r3, r5
+  54 004e C4F29631 		movt	r1, 17302
+  55 0052 0122     		movs	r2, #1
+  56 0054 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+  57 0058 0021     		movs	r1, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccCSAKYa.s 			page 2
+
+
+  58 005a 2046     		mov	r0, r4
+  59 005c 2A46     		mov	r2, r5
+  60 005e C4F2B431 		movt	r1, 17332
+  61 0062 0123     		movs	r3, #1
+  62 0064 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+  63 0068 0122     		movs	r2, #1
+  64 006a 46F24811 		movw	r1, #24904
+  65 006e 2046     		mov	r0, r4
+  66 0070 1346     		mov	r3, r2
+  67 0072 C4F2CE31 		movt	r1, 17358
+  68 0076 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+  69 007a 4FF23331 		movw	r1, #62259
+  70 007e 2046     		mov	r0, r4
+  71 0080 2B46     		mov	r3, r5
+  72 0082 C4F2F031 		movt	r1, 17392
+  73 0086 0122     		movs	r2, #1
+  74 0088 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+  75 008c 0122     		movs	r2, #1
+  76 008e 43F2A401 		movw	r1, #12452
+  77 0092 2046     		mov	r0, r4
+  78 0094 1346     		mov	r3, r2
+  79 0096 C4F21441 		movt	r1, 17428
+  80 009a FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+  81 009e 47F69A11 		movw	r1, #31130
+  82 00a2 2046     		mov	r0, r4
+  83 00a4 2B46     		mov	r3, r5
+  84 00a6 C4F22541 		movt	r1, 17445
+  85 00aa 0122     		movs	r2, #1
+  86 00ac FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+  87 00b0 0021     		movs	r1, #0
+  88 00b2 2046     		mov	r0, r4
+  89 00b4 2A46     		mov	r2, r5
+  90 00b6 2B46     		mov	r3, r5
+  91 00b8 C4F23441 		movt	r1, 17460
+  92 00bc BDE87040 		pop	{r4, r5, r6, lr}
+  93 00c0 FFF7FEBF 		b	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+  94              		.size	_Z31configureFordAspireTriggerShapeP12TriggerShape, .-_Z31configureFordAspireTriggerShapeP12
+  95 00c4 AFF30080 		.section	.text._Z24initializeMitsubishi4g18P12TriggerShape,"ax",%progbits
+  95      AFF30080 
+  95      AFF30080 
+  96              		.align	2
+  97              		.p2align 4,,15
+  98              		.global	_Z24initializeMitsubishi4g18P12TriggerShape
+  99              		.thumb
+ 100              		.thumb_func
+ 101              		.type	_Z24initializeMitsubishi4g18P12TriggerShape, %function
+ 102              	_Z24initializeMitsubishi4g18P12TriggerShape:
+ 103              		@ args = 0, pretend = 0, frame = 0
+ 104              		@ frame_needed = 0, uses_anonymous_args = 0
+ 105 0000 70B5     		push	{r4, r5, r6, lr}
+ 106 0002 0122     		movs	r2, #1
+ 107 0004 0446     		mov	r4, r0
+ 108 0006 0221     		movs	r1, #2
+ 109 0008 0025     		movs	r5, #0
+ 110 000a FFF7FEFF 		bl	_ZN12TriggerShape5resetE16operation_mode_eb
+ 111 000e 45F22631 		movw	r1, #21286
+ 112 0012 2046     		mov	r0, r4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccCSAKYa.s 			page 3
+
+
+ 113 0014 84F8645B 		strb	r5, [r4, #2916]
+ 114 0018 C3F6D571 		movt	r1, 16341
+ 115 001c FFF7FEFF 		bl	_ZN12TriggerShape28setTriggerSynchronizationGapEf
+ 116 0020 0021     		movs	r1, #0
+ 117 0022 2046     		mov	r0, r4
+ 118 0024 2A46     		mov	r2, r5
+ 119 0026 C4F25821 		movt	r1, 16984
+ 120 002a 0123     		movs	r3, #1
+ 121 002c FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 122 0030 0122     		movs	r2, #1
+ 123 0032 0021     		movs	r1, #0
+ 124 0034 2046     		mov	r0, r4
+ 125 0036 1346     		mov	r3, r2
+ 126 0038 C4F2DC21 		movt	r1, 17116
+ 127 003c FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 128 0040 0021     		movs	r1, #0
+ 129 0042 2046     		mov	r0, r4
+ 130 0044 2B46     		mov	r3, r5
+ 131 0046 C4F23431 		movt	r1, 17204
+ 132 004a 0122     		movs	r2, #1
+ 133 004c FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 134 0050 0021     		movs	r1, #0
+ 135 0052 2046     		mov	r0, r4
+ 136 0054 2A46     		mov	r2, r5
+ 137 0056 2B46     		mov	r3, r5
+ 138 0058 C4F26A31 		movt	r1, 17258
+ 139 005c FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 140 0060 0122     		movs	r2, #1
+ 141 0062 0021     		movs	r1, #0
+ 142 0064 2046     		mov	r0, r4
+ 143 0066 1346     		mov	r3, r2
+ 144 0068 C4F29131 		movt	r1, 17297
+ 145 006c FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 146 0070 0021     		movs	r1, #0
+ 147 0072 2046     		mov	r0, r4
+ 148 0074 2B46     		mov	r3, r5
+ 149 0076 C4F2B431 		movt	r1, 17332
+ 150 007a 0122     		movs	r2, #1
+ 151 007c FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 152 0080 0021     		movs	r1, #0
+ 153 0082 2046     		mov	r0, r4
+ 154 0084 2A46     		mov	r2, r5
+ 155 0086 C4F2CF31 		movt	r1, 17359
+ 156 008a 0123     		movs	r3, #1
+ 157 008c FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 158 0090 0122     		movs	r2, #1
+ 159 0092 0021     		movs	r1, #0
+ 160 0094 2046     		mov	r0, r4
+ 161 0096 1346     		mov	r3, r2
+ 162 0098 C4F2EB31 		movt	r1, 17387
+ 163 009c FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 164 00a0 0021     		movs	r1, #0
+ 165 00a2 2046     		mov	r0, r4
+ 166 00a4 2A46     		mov	r2, r5
+ 167 00a6 2B46     		mov	r3, r5
+ 168 00a8 C4F2FC31 		movt	r1, 17404
+ 169 00ac FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccCSAKYa.s 			page 4
+
+
+ 170 00b0 0021     		movs	r1, #0
+ 171 00b2 2046     		mov	r0, r4
+ 172 00b4 2B46     		mov	r3, r5
+ 173 00b6 C4F20741 		movt	r1, 17415
+ 174 00ba 0122     		movs	r2, #1
+ 175 00bc FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 176 00c0 0122     		movs	r2, #1
+ 177 00c2 4FF40041 		mov	r1, #32768
+ 178 00c6 2046     		mov	r0, r4
+ 179 00c8 1346     		mov	r3, r2
+ 180 00ca C4F22241 		movt	r1, 17442
+ 181 00ce FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 182 00d2 0021     		movs	r1, #0
+ 183 00d4 2046     		mov	r0, r4
+ 184 00d6 2B46     		mov	r3, r5
+ 185 00d8 C4F23441 		movt	r1, 17460
+ 186 00dc 0122     		movs	r2, #1
+ 187 00de BDE87040 		pop	{r4, r5, r6, lr}
+ 188 00e2 FFF7FEBF 		b	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 189              		.size	_Z24initializeMitsubishi4g18P12TriggerShape, .-_Z24initializeMitsubishi4g18P12TriggerShape
+ 190 00e6 00BFAFF3 		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ 190      0080AFF3 
+ 190      0080
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccCSAKYa.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 trigger_mitsubishi.cpp
+C:\Users\pc\AppData\Local\Temp\ccCSAKYa.s:17     .text._Z31configureFordAspireTriggerShapeP12TriggerShape:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccCSAKYa.s:23     .text._Z31configureFordAspireTriggerShapeP12TriggerShape:00000000 _Z31configureFordAspireTriggerShapeP12TriggerShape
+C:\Users\pc\AppData\Local\Temp\ccCSAKYa.s:96     .text._Z24initializeMitsubishi4g18P12TriggerShape:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccCSAKYa.s:102    .text._Z24initializeMitsubishi4g18P12TriggerShape:00000000 _Z24initializeMitsubishi4g18P12TriggerShape
+
+UNDEFINED SYMBOLS
+_ZN12TriggerShape5resetE16operation_mode_eb
+_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+_ZN12TriggerShape28setTriggerSynchronizationGapEf

@@ -1,0 +1,90 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccxmT2wm.s 			page 1
+
+
+   1              		.file	"chcore.c"
+   2              		.section	.text$__dummy,"x"
+   3              		.p2align 4,,15
+   4              		.def	___dummy;	.scl	3;	.type	32;	.endef
+   5              	___dummy:
+   6              	LFB28:
+   7              		.cfi_startproc
+   8              	/APP
+   9              	 # 47 "../firmware/chibios/os/ports/GCC/SIMIA32/chcore.c" 1
+  10              		.globl @port_switch@8                          
+  11 0000 55       		@port_switch@8:push    %ebp                                   
+  12 0001 56       		push    %esi                                   
+  13 0002 57       		push    %edi                                   
+  14 0003 53       		push    %ebx                                   
+  15 0004 89620C   		movl    %esp, 12(%edx)                         
+  16 0007 8B610C   		movl    12(%ecx), %esp                         
+  17 000a 5B       		pop     %ebx                                   
+  18 000b 5F       		pop     %edi                                   
+  19 000c 5E       		pop     %esi                                   
+  20 000d 5D       		pop     %ebp                                   
+  21 000e C3       		ret
+  22              	 # 0 "" 2
+  23              	/NO_APP
+  24 000f C3       		ret
+  25              		.cfi_endproc
+  26              	LFE28:
+  27              		.section	.text$port_halt,"x"
+  28              		.p2align 4,,15
+  29              		.globl	@port_halt@0
+  30              		.def	@port_halt@0;	.scl	2;	.type	32;	.endef
+  31              	@port_halt@0:
+  32              	LFB29:
+  33              		.cfi_startproc
+  34 0000 83EC1C   		subl	$28, %esp
+  35              		.cfi_def_cfa_offset 32
+  36 0003 C7042402 		movl	$2, (%esp)
+  36      000000
+  37 000a E8000000 		call	_exit
+  37      00
+  38              		.cfi_endproc
+  39              	LFE29:
+  40 000f 90       		.section	.text$_port_thread_start,"x"
+  41              		.p2align 4,,15
+  42              		.globl	__port_thread_start
+  43              		.def	__port_thread_start;	.scl	2;	.type	32;	.endef
+  44              	__port_thread_start:
+  45              	LFB30:
+  46              		.cfi_startproc
+  47 0000 83EC1C   		subl	$28, %esp
+  48              		.cfi_def_cfa_offset 32
+  49 0003 E8000000 		call	_dbg_check_unlock
+  49      00
+  50              	/APP
+  51              	 # 88 "../firmware/chibios/os/ports/GCC/SIMIA32/chcore.c" 1
+  52 0008 90       		nop
+  53              	 # 0 "" 2
+  54              	/NO_APP
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccxmT2wm.s 			page 2
+
+
+  55 0009 8B442424 		movl	36(%esp), %eax
+  56 000d 890424   		movl	%eax, (%esp)
+  57 0010 FF542420 		call	*32(%esp)
+  58 0014 890424   		movl	%eax, (%esp)
+  59 0017 E8000000 		call	_chThdExit
+  59      00
+  60              	L5:
+  61 001c EBFE     		jmp	L5
+  62              		.cfi_endproc
+  63              	LFE30:
+  64              		.def	_exit;	.scl	2;	.type	32;	.endef
+  65              		.def	_dbg_check_unlock;	.scl	2;	.type	32;	.endef
+  66 001e 9090     		.def	_chThdExit;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccxmT2wm.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 chcore.c
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccxmT2wm.s:5      .text$__dummy:00000000 ___dummy
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccxmT2wm.s:11     .text$__dummy:00000000 @port_switch@8
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccxmT2wm.s:31     .text$port_halt:00000000 @port_halt@0
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccxmT2wm.s:44     .text$_port_thread_start:00000000 __port_thread_start
+
+UNDEFINED SYMBOLS
+_exit
+_dbg_check_unlock
+_chThdExit

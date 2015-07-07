@@ -33,8 +33,6 @@ public interface LoggerData {
 
     void selectConvertor(EcuDataConvertor convertor);
 
-    EcuDataType getDataType();
-
     boolean isSelected();
 
     void setSelected(boolean selected);

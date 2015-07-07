@@ -1,0 +1,1160 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s 			page 1
+
+
+   1              		.file	"chevents.c"
+   2              		.section .rdata,"dr"
+   3              	LC0:
+   4 0000 22636845 		.ascii "\"chEvtRegisterMask\"()\0"
+   4      76745265 
+   4      67697374 
+   4      65724D61 
+   4      736B2228 
+   5              		.section	.text$chEvtRegisterMask,"x"
+   6              		.p2align 4,,15
+   7              		.globl	_chEvtRegisterMask
+   8              		.def	_chEvtRegisterMask;	.scl	2;	.type	32;	.endef
+   9              	_chEvtRegisterMask:
+  10              	LFB7:
+  11              		.cfi_startproc
+  12 0000 83EC1C   		subl	$28, %esp
+  13              		.cfi_def_cfa_offset 32
+  14 0003 895C2414 		movl	%ebx, 20(%esp)
+  15              		.cfi_offset 3, -12
+  16 0007 8B5C2424 		movl	36(%esp), %ebx
+  17 000b 89742418 		movl	%esi, 24(%esp)
+  18              		.cfi_offset 6, -8
+  19 000f 8B742420 		movl	32(%esp), %esi
+  20 0013 85DB     		testl	%ebx, %ebx
+  21 0015 7439     		je	L4
+  22 0017 85F6     		testl	%esi, %esi
+  23 0019 7435     		je	L4
+  24              	L2:
+  25              	/APP
+  26              	 # 89 "../firmware/chibios/os/kernel/src/chevents.c" 1
+  27 001b 90       		nop
+  28              	 # 0 "" 2
+  29              	/NO_APP
+  30 001c E8000000 		call	_dbg_check_lock
+  30      00
+  31 0021 8B06     		movl	(%esi), %eax
+  32 0023 8903     		movl	%eax, (%ebx)
+  33 0025 A1180000 		movl	_rlist+24, %eax
+  33      00
+  34 002a 891E     		movl	%ebx, (%esi)
+  35 002c C7430C00 		movl	$0, 12(%ebx)
+  35      000000
+  36 0033 894304   		movl	%eax, 4(%ebx)
+  37 0036 8B442428 		movl	40(%esp), %eax
+  38 003a 894308   		movl	%eax, 8(%ebx)
+  39 003d E8000000 		call	_dbg_check_unlock
+  39      00
+  40              	/APP
+  41              	 # 95 "../firmware/chibios/os/kernel/src/chevents.c" 1
+  42 0042 90       		nop
+  43              	 # 0 "" 2
+  44              	/NO_APP
+  45 0043 8B5C2414 		movl	20(%esp), %ebx
+  46 0047 8B742418 		movl	24(%esp), %esi
+  47 004b 83C41C   		addl	$28, %esp
+  48              		.cfi_remember_state
+  49              		.cfi_restore 6
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s 			page 2
+
+
+  50              		.cfi_restore 3
+  51              		.cfi_def_cfa_offset 4
+  52 004e C3       		ret
+  53 004f 90       		.p2align 4,,7
+  54              	L4:
+  55              		.cfi_restore_state
+  56 0050 C7042400 		movl	$LC0, (%esp)
+  56      000000
+  57 0057 E8000000 		call	_chDbgPanic
+  57      00
+  58 005c EBBD     		jmp	L2
+  59              		.cfi_endproc
+  60              	LFE7:
+  61 005e 9090     		.section .rdata,"dr"
+  62              	LC1:
+  63 0016 22636845 		.ascii "\"chEvtUnregister\"()\0"
+  63      7674556E 
+  63      72656769 
+  63      73746572 
+  63      22282900 
+  64              		.section	.text$chEvtUnregister,"x"
+  65              		.p2align 4,,15
+  66              		.globl	_chEvtUnregister
+  67              		.def	_chEvtUnregister;	.scl	2;	.type	32;	.endef
+  68              	_chEvtUnregister:
+  69              	LFB8:
+  70              		.cfi_startproc
+  71 0000 56       		pushl	%esi
+  72              		.cfi_def_cfa_offset 8
+  73              		.cfi_offset 6, -8
+  74 0001 53       		pushl	%ebx
+  75              		.cfi_def_cfa_offset 12
+  76              		.cfi_offset 3, -12
+  77 0002 83EC14   		subl	$20, %esp
+  78              		.cfi_def_cfa_offset 32
+  79 0005 8B742424 		movl	36(%esp), %esi
+  80 0009 8B5C2420 		movl	32(%esp), %ebx
+  81 000d 85F6     		testl	%esi, %esi
+  82 000f 742F     		je	L17
+  83 0011 85DB     		testl	%ebx, %ebx
+  84 0013 742B     		je	L17
+  85              	L11:
+  86              	/APP
+  87              	 # 117 "../firmware/chibios/os/kernel/src/chevents.c" 1
+  88 0015 90       		nop
+  89              	 # 0 "" 2
+  90              	/NO_APP
+  91 0016 E8000000 		call	_dbg_check_lock
+  91      00
+  92 001b 89DA     		movl	%ebx, %edx
+  93 001d 8D7600   		.p2align 4,,4
+  94 0020 EB02     		jmp	L13
+  95              		.p2align 4,,7
+  96              	L16:
+  97 0022 89C2     		movl	%eax, %edx
+  98              	L13:
+  99 0024 8B02     		movl	(%edx), %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s 			page 3
+
+
+ 100 0026 39D8     		cmpl	%ebx, %eax
+ 101 0028 7408     		je	L14
+ 102 002a 39C6     		cmpl	%eax, %esi
+ 103 002c 75F4     		jne	L16
+ 104 002e 8B06     		movl	(%esi), %eax
+ 105 0030 8902     		movl	%eax, (%edx)
+ 106              	L14:
+ 107 0032 E8000000 		call	_dbg_check_unlock
+ 107      00
+ 108              	/APP
+ 109              	 # 125 "../firmware/chibios/os/kernel/src/chevents.c" 1
+ 110 0037 90       		nop
+ 111              	 # 0 "" 2
+ 112              	/NO_APP
+ 113 0038 83C414   		addl	$20, %esp
+ 114              		.cfi_remember_state
+ 115              		.cfi_def_cfa_offset 12
+ 116 003b 5B       		popl	%ebx
+ 117              		.cfi_restore 3
+ 118              		.cfi_def_cfa_offset 8
+ 119 003c 5E       		popl	%esi
+ 120              		.cfi_restore 6
+ 121              		.cfi_def_cfa_offset 4
+ 122 003d C3       		ret
+ 123 003e 6690     		.p2align 4,,7
+ 124              	L17:
+ 125              		.cfi_restore_state
+ 126 0040 C7042416 		movl	$LC1, (%esp)
+ 126      000000
+ 127 0047 E8000000 		call	_chDbgPanic
+ 127      00
+ 128 004c EBC7     		jmp	L11
+ 129              		.cfi_endproc
+ 130              	LFE8:
+ 131 004e 9090     		.section	.text$chEvtGetAndClearEvents,"x"
+ 132              		.p2align 4,,15
+ 133              		.globl	_chEvtGetAndClearEvents
+ 134              		.def	_chEvtGetAndClearEvents;	.scl	2;	.type	32;	.endef
+ 135              	_chEvtGetAndClearEvents:
+ 136              	LFB9:
+ 137              		.cfi_startproc
+ 138 0000 83EC0C   		subl	$12, %esp
+ 139              		.cfi_def_cfa_offset 16
+ 140 0003 891C24   		movl	%ebx, (%esp)
+ 141              		.cfi_offset 3, -16
+ 142 0006 8B5C2410 		movl	16(%esp), %ebx
+ 143 000a 89742404 		movl	%esi, 4(%esp)
+ 144 000e 897C2408 		movl	%edi, 8(%esp)
+ 145              		.cfi_offset 6, -12
+ 146              		.cfi_offset 7, -8
+ 147              	/APP
+ 148              	 # 139 "../firmware/chibios/os/kernel/src/chevents.c" 1
+ 149 0012 90       		nop
+ 150              	 # 0 "" 2
+ 151              	/NO_APP
+ 152 0013 E8000000 		call	_dbg_check_lock
+ 152      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s 			page 4
+
+
+ 153 0018 8B0D1800 		movl	_rlist+24, %ecx
+ 153      0000
+ 154 001e 89DA     		movl	%ebx, %edx
+ 155 0020 F7D2     		notl	%edx
+ 156 0022 89DF     		movl	%ebx, %edi
+ 157 0024 8B7138   		movl	56(%ecx), %esi
+ 158 0027 21F2     		andl	%esi, %edx
+ 159 0029 21F7     		andl	%esi, %edi
+ 160 002b 895138   		movl	%edx, 56(%ecx)
+ 161 002e E8000000 		call	_dbg_check_unlock
+ 161      00
+ 162              	/APP
+ 163              	 # 144 "../firmware/chibios/os/kernel/src/chevents.c" 1
+ 164 0033 90       		nop
+ 165              	 # 0 "" 2
+ 166              	/NO_APP
+ 167 0034 89F8     		movl	%edi, %eax
+ 168 0036 8B1C24   		movl	(%esp), %ebx
+ 169 0039 8B742404 		movl	4(%esp), %esi
+ 170 003d 8B7C2408 		movl	8(%esp), %edi
+ 171 0041 83C40C   		addl	$12, %esp
+ 172              		.cfi_restore 7
+ 173              		.cfi_restore 6
+ 174              		.cfi_restore 3
+ 175              		.cfi_def_cfa_offset 4
+ 176 0044 C3       		ret
+ 177              		.cfi_endproc
+ 178              	LFE9:
+ 179 0045 90909090 		.section	.text$chEvtAddEvents,"x"
+ 179      90909090 
+ 179      909090
+ 180              		.p2align 4,,15
+ 181              		.globl	_chEvtAddEvents
+ 182              		.def	_chEvtAddEvents;	.scl	2;	.type	32;	.endef
+ 183              	_chEvtAddEvents:
+ 184              	LFB10:
+ 185              		.cfi_startproc
+ 186 0000 53       		pushl	%ebx
+ 187              		.cfi_def_cfa_offset 8
+ 188              		.cfi_offset 3, -8
+ 189 0001 83EC08   		subl	$8, %esp
+ 190              		.cfi_def_cfa_offset 16
+ 191 0004 8B5C2410 		movl	16(%esp), %ebx
+ 192              	/APP
+ 193              	 # 159 "../firmware/chibios/os/kernel/src/chevents.c" 1
+ 194 0008 90       		nop
+ 195              	 # 0 "" 2
+ 196              	/NO_APP
+ 197 0009 E8000000 		call	_dbg_check_lock
+ 197      00
+ 198 000e A1180000 		movl	_rlist+24, %eax
+ 198      00
+ 199 0013 0B5838   		orl	56(%eax), %ebx
+ 200 0016 895838   		movl	%ebx, 56(%eax)
+ 201 0019 E8000000 		call	_dbg_check_unlock
+ 201      00
+ 202              	/APP
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s 			page 5
+
+
+ 203              	 # 163 "../firmware/chibios/os/kernel/src/chevents.c" 1
+ 204 001e 90       		nop
+ 205              	 # 0 "" 2
+ 206              	/NO_APP
+ 207 001f 83C408   		addl	$8, %esp
+ 208              		.cfi_def_cfa_offset 8
+ 209 0022 89D8     		movl	%ebx, %eax
+ 210 0024 5B       		popl	%ebx
+ 211              		.cfi_restore 3
+ 212              		.cfi_def_cfa_offset 4
+ 213 0025 C3       		ret
+ 214              		.cfi_endproc
+ 215              	LFE10:
+ 216 0026 90909090 		.section	.text$chEvtGetAndClearFlags,"x"
+ 216      90909090 
+ 216      9090
+ 217              		.p2align 4,,15
+ 218              		.globl	_chEvtGetAndClearFlags
+ 219              		.def	_chEvtGetAndClearFlags;	.scl	2;	.type	32;	.endef
+ 220              	_chEvtGetAndClearFlags:
+ 221              	LFB12:
+ 222              		.cfi_startproc
+ 223 0000 83EC0C   		subl	$12, %esp
+ 224              		.cfi_def_cfa_offset 16
+ 225 0003 895C2404 		movl	%ebx, 4(%esp)
+ 226              		.cfi_offset 3, -12
+ 227 0007 8B5C2410 		movl	16(%esp), %ebx
+ 228 000b 89742408 		movl	%esi, 8(%esp)
+ 229              		.cfi_offset 6, -8
+ 230              	/APP
+ 231              	 # 212 "../firmware/chibios/os/kernel/src/chevents.c" 1
+ 232 000f 90       		nop
+ 233              	 # 0 "" 2
+ 234              	/NO_APP
+ 235 0010 E8000000 		call	_dbg_check_lock
+ 235      00
+ 236 0015 8B730C   		movl	12(%ebx), %esi
+ 237 0018 C7430C00 		movl	$0, 12(%ebx)
+ 237      000000
+ 238 001f E8000000 		call	_dbg_check_unlock
+ 238      00
+ 239              	/APP
+ 240              	 # 217 "../firmware/chibios/os/kernel/src/chevents.c" 1
+ 241 0024 90       		nop
+ 242              	 # 0 "" 2
+ 243              	/NO_APP
+ 244 0025 89F0     		movl	%esi, %eax
+ 245 0027 8B5C2404 		movl	4(%esp), %ebx
+ 246 002b 8B742408 		movl	8(%esp), %esi
+ 247 002f 83C40C   		addl	$12, %esp
+ 248              		.cfi_restore 6
+ 249              		.cfi_restore 3
+ 250              		.cfi_def_cfa_offset 4
+ 251 0032 C3       		ret
+ 252              		.cfi_endproc
+ 253              	LFE12:
+ 254 0033 90909090 		.section .rdata,"dr"
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s 			page 6
+
+
+ 254      90909090 
+ 254      90909090 
+ 254      90
+ 255              	LC2:
+ 256 002a 22636845 		.ascii "\"chEvtSignalI\"()\0"
+ 256      76745369 
+ 256      676E616C 
+ 256      49222829 
+ 256      00
+ 257              		.section	.text$chEvtSignalI,"x"
+ 258              		.p2align 4,,15
+ 259              		.globl	_chEvtSignalI
+ 260              		.def	_chEvtSignalI;	.scl	2;	.type	32;	.endef
+ 261              	_chEvtSignalI:
+ 262              	LFB14:
+ 263              		.cfi_startproc
+ 264 0000 53       		pushl	%ebx
+ 265              		.cfi_def_cfa_offset 8
+ 266              		.cfi_offset 3, -8
+ 267 0001 83EC18   		subl	$24, %esp
+ 268              		.cfi_def_cfa_offset 32
+ 269 0004 8B5C2420 		movl	32(%esp), %ebx
+ 270 0008 E8000000 		call	_chDbgCheckClassI
+ 270      00
+ 271 000d 85DB     		testl	%ebx, %ebx
+ 272 000f 7455     		je	L35
+ 273              	L29:
+ 274 0011 0FB6431C 		movzbl	28(%ebx), %eax
+ 275 0015 8B542424 		movl	36(%esp), %edx
+ 276 0019 0B5338   		orl	56(%ebx), %edx
+ 277 001c 3C08     		cmpb	$8, %al
+ 278 001e 895338   		movl	%edx, 56(%ebx)
+ 279 0021 742D     		je	L36
+ 280 0023 3C09     		cmpb	$9, %al
+ 281 0025 7409     		je	L37
+ 282              	L28:
+ 283 0027 83C418   		addl	$24, %esp
+ 284              		.cfi_remember_state
+ 285              		.cfi_def_cfa_offset 8
+ 286 002a 5B       		popl	%ebx
+ 287              		.cfi_restore 3
+ 288              		.cfi_def_cfa_offset 4
+ 289 002b C3       		ret
+ 290 002c 8D742600 		.p2align 4,,7
+ 291              	L37:
+ 292              		.cfi_restore_state
+ 293 0030 8B4324   		movl	36(%ebx), %eax
+ 294 0033 21C2     		andl	%eax, %edx
+ 295 0035 39D0     		cmpl	%edx, %eax
+ 296 0037 75EE     		jne	L28
+ 297 0039 891C24   		movl	%ebx, (%esp)
+ 298 003c E8000000 		call	_chSchReadyI
+ 298      00
+ 299 0041 C7402400 		movl	$0, 36(%eax)
+ 299      000000
+ 300              	L38:
+ 301 0048 83C418   		addl	$24, %esp
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s 			page 7
+
+
+ 302              		.cfi_remember_state
+ 303              		.cfi_def_cfa_offset 8
+ 304 004b 5B       		popl	%ebx
+ 305              		.cfi_restore 3
+ 306              		.cfi_def_cfa_offset 4
+ 307 004c C3       		ret
+ 308 004d 8D7600   		.p2align 4,,7
+ 309              	L36:
+ 310              		.cfi_restore_state
+ 311 0050 855324   		testl	%edx, 36(%ebx)
+ 312 0053 74D2     		je	L28
+ 313 0055 891C24   		movl	%ebx, (%esp)
+ 314 0058 E8000000 		call	_chSchReadyI
+ 314      00
+ 315 005d C7402400 		movl	$0, 36(%eax)
+ 315      000000
+ 316 0064 EBE2     		jmp	L38
+ 317              		.p2align 4,,7
+ 318              	L35:
+ 319 0066 C704242A 		movl	$LC2, (%esp)
+ 319      000000
+ 320 006d E8000000 		call	_chDbgPanic
+ 320      00
+ 321 0072 EB9D     		jmp	L29
+ 322              		.cfi_endproc
+ 323              	LFE14:
+ 324 0074 90909090 		.section .rdata,"dr"
+ 324      90909090 
+ 324      90909090 
+ 325              	LC3:
+ 326 003b 22636845 		.ascii "\"chEvtSignal\"()\0"
+ 326      76745369 
+ 326      676E616C 
+ 326      22282900 
+ 327              		.section	.text$chEvtSignal,"x"
+ 328              		.p2align 4,,15
+ 329              		.globl	_chEvtSignal
+ 330              		.def	_chEvtSignal;	.scl	2;	.type	32;	.endef
+ 331              	_chEvtSignal:
+ 332              	LFB13:
+ 333              		.cfi_startproc
+ 334 0000 53       		pushl	%ebx
+ 335              		.cfi_def_cfa_offset 8
+ 336              		.cfi_offset 3, -8
+ 337 0001 83EC18   		subl	$24, %esp
+ 338              		.cfi_def_cfa_offset 32
+ 339 0004 8B5C2420 		movl	32(%esp), %ebx
+ 340 0008 85DB     		testl	%ebx, %ebx
+ 341 000a 7426     		je	L42
+ 342              	L40:
+ 343              	/APP
+ 344              	 # 233 "../firmware/chibios/os/kernel/src/chevents.c" 1
+ 345 000c 90       		nop
+ 346              	 # 0 "" 2
+ 347              	/NO_APP
+ 348 000d E8000000 		call	_dbg_check_lock
+ 348      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s 			page 8
+
+
+ 349 0012 8B442424 		movl	36(%esp), %eax
+ 350 0016 891C24   		movl	%ebx, (%esp)
+ 351 0019 89442404 		movl	%eax, 4(%esp)
+ 352 001d E8000000 		call	_chEvtSignalI
+ 352      00
+ 353 0022 E8000000 		call	_chSchRescheduleS
+ 353      00
+ 354 0027 E8000000 		call	_dbg_check_unlock
+ 354      00
+ 355              	/APP
+ 356              	 # 236 "../firmware/chibios/os/kernel/src/chevents.c" 1
+ 357 002c 90       		nop
+ 358              	 # 0 "" 2
+ 359              	/NO_APP
+ 360 002d 83C418   		addl	$24, %esp
+ 361              		.cfi_remember_state
+ 362              		.cfi_def_cfa_offset 8
+ 363 0030 5B       		popl	%ebx
+ 364              		.cfi_restore 3
+ 365              		.cfi_def_cfa_offset 4
+ 366              		.p2align 4,,1
+ 367 0031 C3       		ret
+ 368              		.p2align 4,,7
+ 369              	L42:
+ 370              		.cfi_restore_state
+ 371 0032 C704243B 		movl	$LC3, (%esp)
+ 371      000000
+ 372 0039 E8000000 		call	_chDbgPanic
+ 372      00
+ 373 003e EBCC     		jmp	L40
+ 374              		.cfi_endproc
+ 375              	LFE13:
+ 376              		.section .rdata,"dr"
+ 377              	LC4:
+ 378 004b 22636845 		.ascii "\"chEvtBroadcastMaskI\"()\0"
+ 378      76744272 
+ 378      6F616463 
+ 378      6173744D 
+ 378      61736B49 
+ 379              		.section	.text$chEvtBroadcastFlagsI,"x"
+ 380              		.p2align 4,,15
+ 381              		.globl	_chEvtBroadcastFlagsI
+ 382              		.def	_chEvtBroadcastFlagsI;	.scl	2;	.type	32;	.endef
+ 383              	_chEvtBroadcastFlagsI:
+ 384              	LFB11:
+ 385              		.cfi_startproc
+ 386 0000 57       		pushl	%edi
+ 387              		.cfi_def_cfa_offset 8
+ 388              		.cfi_offset 7, -8
+ 389 0001 56       		pushl	%esi
+ 390              		.cfi_def_cfa_offset 12
+ 391              		.cfi_offset 6, -12
+ 392 0002 53       		pushl	%ebx
+ 393              		.cfi_def_cfa_offset 16
+ 394              		.cfi_offset 3, -16
+ 395 0003 83EC10   		subl	$16, %esp
+ 396              		.cfi_def_cfa_offset 32
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s 			page 9
+
+
+ 397 0006 8B742420 		movl	32(%esp), %esi
+ 398 000a 8B7C2424 		movl	36(%esp), %edi
+ 399 000e E8000000 		call	_chDbgCheckClassI
+ 399      00
+ 400 0013 85F6     		testl	%esi, %esi
+ 401 0015 742B     		je	L51
+ 402              	L44:
+ 403 0017 8B1E     		movl	(%esi), %ebx
+ 404 0019 39DE     		cmpl	%ebx, %esi
+ 405 001b 741E     		je	L43
+ 406 001d 8D7600   		.p2align 4,,7
+ 407              	L48:
+ 408 0020 8B4308   		movl	8(%ebx), %eax
+ 409 0023 097B0C   		orl	%edi, 12(%ebx)
+ 410 0026 89442404 		movl	%eax, 4(%esp)
+ 411 002a 8B4304   		movl	4(%ebx), %eax
+ 412 002d 890424   		movl	%eax, (%esp)
+ 413 0030 E8000000 		call	_chEvtSignalI
+ 413      00
+ 414 0035 8B1B     		movl	(%ebx), %ebx
+ 415 0037 39DE     		cmpl	%ebx, %esi
+ 416 0039 75E5     		jne	L48
+ 417              	L43:
+ 418 003b 83C410   		addl	$16, %esp
+ 419              		.cfi_remember_state
+ 420              		.cfi_def_cfa_offset 16
+ 421 003e 5B       		popl	%ebx
+ 422              		.cfi_restore 3
+ 423              		.cfi_def_cfa_offset 12
+ 424 003f 5E       		popl	%esi
+ 425              		.cfi_restore 6
+ 426              		.cfi_def_cfa_offset 8
+ 427 0040 5F       		popl	%edi
+ 428              		.cfi_restore 7
+ 429              		.cfi_def_cfa_offset 4
+ 430 0041 C3       		ret
+ 431              	L51:
+ 432              		.cfi_restore_state
+ 433 0042 C704244B 		movl	$LC4, (%esp)
+ 433      000000
+ 434 0049 E8000000 		call	_chDbgPanic
+ 434      00
+ 435 004e EBC7     		jmp	L44
+ 436              		.cfi_endproc
+ 437              	LFE11:
+ 438              		.section	.text$chEvtBroadcastFlags,"x"
+ 439              		.p2align 4,,15
+ 440              		.globl	_chEvtBroadcastFlags
+ 441              		.def	_chEvtBroadcastFlags;	.scl	2;	.type	32;	.endef
+ 442              	_chEvtBroadcastFlags:
+ 443              	LFB15:
+ 444              		.cfi_startproc
+ 445 0000 83EC1C   		subl	$28, %esp
+ 446              		.cfi_def_cfa_offset 32
+ 447              	/APP
+ 448              	 # 280 "../firmware/chibios/os/kernel/src/chevents.c" 1
+ 449 0003 90       		nop
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s 			page 10
+
+
+ 450              	 # 0 "" 2
+ 451              	/NO_APP
+ 452 0004 E8000000 		call	_dbg_check_lock
+ 452      00
+ 453 0009 8B442424 		movl	36(%esp), %eax
+ 454 000d 89442404 		movl	%eax, 4(%esp)
+ 455 0011 8B442420 		movl	32(%esp), %eax
+ 456 0015 890424   		movl	%eax, (%esp)
+ 457 0018 E8000000 		call	_chEvtBroadcastFlagsI
+ 457      00
+ 458 001d E8000000 		call	_chSchRescheduleS
+ 458      00
+ 459 0022 E8000000 		call	_dbg_check_unlock
+ 459      00
+ 460              	/APP
+ 461              	 # 283 "../firmware/chibios/os/kernel/src/chevents.c" 1
+ 462 0027 90       		nop
+ 463              	 # 0 "" 2
+ 464              	/NO_APP
+ 465 0028 83C41C   		addl	$28, %esp
+ 466              		.cfi_def_cfa_offset 4
+ 467              		.p2align 4,,2
+ 468 002b C3       		ret
+ 469              		.cfi_endproc
+ 470              	LFE15:
+ 471 002c 90909090 		.section	.text$chEvtGetAndClearFlagsI,"x"
+ 472              		.p2align 4,,15
+ 473              		.globl	_chEvtGetAndClearFlagsI
+ 474              		.def	_chEvtGetAndClearFlagsI;	.scl	2;	.type	32;	.endef
+ 475              	_chEvtGetAndClearFlagsI:
+ 476              	LFB16:
+ 477              		.cfi_startproc
+ 478 0000 8B542404 		movl	4(%esp), %edx
+ 479 0004 8B420C   		movl	12(%edx), %eax
+ 480 0007 C7420C00 		movl	$0, 12(%edx)
+ 480      000000
+ 481 000e C3       		ret
+ 482              		.cfi_endproc
+ 483              	LFE16:
+ 484 000f 90       		.section .rdata,"dr"
+ 485              	LC5:
+ 486 0063 22636845 		.ascii "\"chEvtDispatch\"()\0"
+ 486      76744469 
+ 486      73706174 
+ 486      63682228 
+ 486      2900
+ 487              	LC6:
+ 488 0075 63684576 		.ascii "chEvtDispatch(), #1\0"
+ 488      74446973 
+ 488      70617463 
+ 488      6828292C 
+ 488      20233100 
+ 489 0089 000000   		.section	.text$chEvtDispatch,"x"
+ 490              		.p2align 4,,15
+ 491              		.globl	_chEvtDispatch
+ 492              		.def	_chEvtDispatch;	.scl	2;	.type	32;	.endef
+ 493              	_chEvtDispatch:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s 			page 11
+
+
+ 494              	LFB17:
+ 495              		.cfi_startproc
+ 496 0000 55       		pushl	%ebp
+ 497              		.cfi_def_cfa_offset 8
+ 498              		.cfi_offset 5, -8
+ 499 0001 57       		pushl	%edi
+ 500              		.cfi_def_cfa_offset 12
+ 501              		.cfi_offset 7, -12
+ 502 0002 56       		pushl	%esi
+ 503              		.cfi_def_cfa_offset 16
+ 504              		.cfi_offset 6, -16
+ 505 0003 53       		pushl	%ebx
+ 506              		.cfi_def_cfa_offset 20
+ 507              		.cfi_offset 3, -20
+ 508 0004 83EC2C   		subl	$44, %esp
+ 509              		.cfi_def_cfa_offset 64
+ 510 0007 8B6C2440 		movl	64(%esp), %ebp
+ 511 000b 8B742444 		movl	68(%esp), %esi
+ 512 000f 85ED     		testl	%ebp, %ebp
+ 513 0011 7457     		je	L68
+ 514              	L56:
+ 515 0013 31DB     		xorl	%ebx, %ebx
+ 516 0015 85F6     		testl	%esi, %esi
+ 517 0017 BF010000 		movl	$1, %edi
+ 517      00
+ 518 001c 7424     		je	L55
+ 519 001e 6690     		.p2align 4,,7
+ 520              	L64:
+ 521 0020 89F8     		movl	%edi, %eax
+ 522 0022 89D9     		movl	%ebx, %ecx
+ 523 0024 D3E0     		sall	%cl, %eax
+ 524 0026 85F0     		testl	%esi, %eax
+ 525 0028 7411     		je	L58
+ 526 002a 8B549D00 		movl	0(%ebp,%ebx,4), %edx
+ 527 002e 85D2     		testl	%edx, %edx
+ 528 0030 741E     		je	L69
+ 529              	L59:
+ 530 0032 F7D0     		notl	%eax
+ 531 0034 21C6     		andl	%eax, %esi
+ 532 0036 891C24   		movl	%ebx, (%esp)
+ 533 0039 FFD2     		call	*%edx
+ 534              	L58:
+ 535 003b 83C301   		addl	$1, %ebx
+ 536 003e 85F6     		testl	%esi, %esi
+ 537 0040 75DE     		jne	L64
+ 538              	L55:
+ 539 0042 83C42C   		addl	$44, %esp
+ 540              		.cfi_remember_state
+ 541              		.cfi_def_cfa_offset 20
+ 542 0045 5B       		popl	%ebx
+ 543              		.cfi_restore 3
+ 544              		.cfi_def_cfa_offset 16
+ 545 0046 5E       		popl	%esi
+ 546              		.cfi_restore 6
+ 547              		.cfi_def_cfa_offset 12
+ 548 0047 5F       		popl	%edi
+ 549              		.cfi_restore 7
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s 			page 12
+
+
+ 550              		.cfi_def_cfa_offset 8
+ 551 0048 5D       		popl	%ebp
+ 552              		.cfi_restore 5
+ 553              		.cfi_def_cfa_offset 4
+ 554 0049 C3       		ret
+ 555 004a 8DB60000 		.p2align 4,,7
+ 555      0000
+ 556              	L69:
+ 557              		.cfi_restore_state
+ 558 0050 C7042475 		movl	$LC6, (%esp)
+ 558      000000
+ 559 0057 8944241C 		movl	%eax, 28(%esp)
+ 560 005b E8000000 		call	_chDbgPanic
+ 560      00
+ 561 0060 8B549D00 		movl	0(%ebp,%ebx,4), %edx
+ 562 0064 8B44241C 		movl	28(%esp), %eax
+ 563 0068 EBC8     		jmp	L59
+ 564              	L68:
+ 565 006a C7042463 		movl	$LC5, (%esp)
+ 565      000000
+ 566 0071 E8000000 		call	_chDbgPanic
+ 566      00
+ 567 0076 EB9B     		jmp	L56
+ 568              		.cfi_endproc
+ 569              	LFE17:
+ 570 0078 90909090 		.section	.text$chEvtWaitOne,"x"
+ 570      90909090 
+ 571              		.p2align 4,,15
+ 572              		.globl	_chEvtWaitOne
+ 573              		.def	_chEvtWaitOne;	.scl	2;	.type	32;	.endef
+ 574              	_chEvtWaitOne:
+ 575              	LFB18:
+ 576              		.cfi_startproc
+ 577 0000 83EC1C   		subl	$28, %esp
+ 578              		.cfi_def_cfa_offset 32
+ 579 0003 895C2414 		movl	%ebx, 20(%esp)
+ 580              		.cfi_offset 3, -12
+ 581 0007 8B5C2420 		movl	32(%esp), %ebx
+ 582 000b 89742418 		movl	%esi, 24(%esp)
+ 583              		.cfi_offset 6, -8
+ 584 000f 8B351800 		movl	_rlist+24, %esi
+ 584      0000
+ 585              	/APP
+ 586              	 # 354 "../firmware/chibios/os/kernel/src/chevents.c" 1
+ 587 0015 90       		nop
+ 588              	 # 0 "" 2
+ 589              	/NO_APP
+ 590 0016 E8000000 		call	_dbg_check_lock
+ 590      00
+ 591 001b 8B4638   		movl	56(%esi), %eax
+ 592 001e 89DA     		movl	%ebx, %edx
+ 593 0020 21C2     		andl	%eax, %edx
+ 594 0022 7516     		jne	L71
+ 595 0024 895E24   		movl	%ebx, 36(%esi)
+ 596 0027 C7042408 		movl	$8, (%esp)
+ 596      000000
+ 597 002e E8000000 		call	_chSchGoSleepS
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s 			page 13
+
+
+ 597      00
+ 598 0033 8B4638   		movl	56(%esi), %eax
+ 599 0036 89DA     		movl	%ebx, %edx
+ 600 0038 21C2     		andl	%eax, %edx
+ 601              	L71:
+ 602 003a 89D3     		movl	%edx, %ebx
+ 603 003c F7DB     		negl	%ebx
+ 604 003e 21D3     		andl	%edx, %ebx
+ 605 0040 89DA     		movl	%ebx, %edx
+ 606 0042 F7D2     		notl	%edx
+ 607 0044 21C2     		andl	%eax, %edx
+ 608 0046 895638   		movl	%edx, 56(%esi)
+ 609 0049 E8000000 		call	_dbg_check_unlock
+ 609      00
+ 610              	/APP
+ 611              	 # 364 "../firmware/chibios/os/kernel/src/chevents.c" 1
+ 612 004e 90       		nop
+ 613              	 # 0 "" 2
+ 614              	/NO_APP
+ 615 004f 89D8     		movl	%ebx, %eax
+ 616 0051 8B742418 		movl	24(%esp), %esi
+ 617 0055 8B5C2414 		movl	20(%esp), %ebx
+ 618 0059 83C41C   		addl	$28, %esp
+ 619              		.cfi_restore 6
+ 620              		.cfi_restore 3
+ 621              		.cfi_def_cfa_offset 4
+ 622 005c C3       		ret
+ 623              		.cfi_endproc
+ 624              	LFE18:
+ 625 005d 909090   		.section	.text$chEvtWaitAny,"x"
+ 626              		.p2align 4,,15
+ 627              		.globl	_chEvtWaitAny
+ 628              		.def	_chEvtWaitAny;	.scl	2;	.type	32;	.endef
+ 629              	_chEvtWaitAny:
+ 630              	LFB19:
+ 631              		.cfi_startproc
+ 632 0000 83EC1C   		subl	$28, %esp
+ 633              		.cfi_def_cfa_offset 32
+ 634 0003 895C2410 		movl	%ebx, 16(%esp)
+ 635              		.cfi_offset 3, -16
+ 636 0007 8B5C2420 		movl	32(%esp), %ebx
+ 637 000b 89742414 		movl	%esi, 20(%esp)
+ 638              		.cfi_offset 6, -12
+ 639 000f 8B351800 		movl	_rlist+24, %esi
+ 639      0000
+ 640 0015 897C2418 		movl	%edi, 24(%esp)
+ 641              		.cfi_offset 7, -8
+ 642              	/APP
+ 643              	 # 383 "../firmware/chibios/os/kernel/src/chevents.c" 1
+ 644 0019 90       		nop
+ 645              	 # 0 "" 2
+ 646              	/NO_APP
+ 647 001a E8000000 		call	_dbg_check_lock
+ 647      00
+ 648 001f 8B5638   		movl	56(%esi), %edx
+ 649 0022 89DF     		movl	%ebx, %edi
+ 650 0024 21D7     		andl	%edx, %edi
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s 			page 14
+
+
+ 651 0026 7516     		jne	L74
+ 652 0028 895E24   		movl	%ebx, 36(%esi)
+ 653 002b 89DF     		movl	%ebx, %edi
+ 654 002d C7042408 		movl	$8, (%esp)
+ 654      000000
+ 655 0034 E8000000 		call	_chSchGoSleepS
+ 655      00
+ 656 0039 8B5638   		movl	56(%esi), %edx
+ 657 003c 21D7     		andl	%edx, %edi
+ 658              	L74:
+ 659 003e 89F9     		movl	%edi, %ecx
+ 660 0040 F7D1     		notl	%ecx
+ 661 0042 21D1     		andl	%edx, %ecx
+ 662 0044 894E38   		movl	%ecx, 56(%esi)
+ 663 0047 E8000000 		call	_dbg_check_unlock
+ 663      00
+ 664              	/APP
+ 665              	 # 392 "../firmware/chibios/os/kernel/src/chevents.c" 1
+ 666 004c 90       		nop
+ 667              	 # 0 "" 2
+ 668              	/NO_APP
+ 669 004d 89F8     		movl	%edi, %eax
+ 670 004f 8B5C2410 		movl	16(%esp), %ebx
+ 671 0053 8B742414 		movl	20(%esp), %esi
+ 672 0057 8B7C2418 		movl	24(%esp), %edi
+ 673 005b 83C41C   		addl	$28, %esp
+ 674              		.cfi_restore 7
+ 675              		.cfi_restore 6
+ 676              		.cfi_restore 3
+ 677              		.cfi_def_cfa_offset 4
+ 678 005e C3       		ret
+ 679              		.cfi_endproc
+ 680              	LFE19:
+ 681 005f 90       		.section	.text$chEvtWaitAll,"x"
+ 682              		.p2align 4,,15
+ 683              		.globl	_chEvtWaitAll
+ 684              		.def	_chEvtWaitAll;	.scl	2;	.type	32;	.endef
+ 685              	_chEvtWaitAll:
+ 686              	LFB20:
+ 687              		.cfi_startproc
+ 688 0000 83EC1C   		subl	$28, %esp
+ 689              		.cfi_def_cfa_offset 32
+ 690 0003 895C2414 		movl	%ebx, 20(%esp)
+ 691              		.cfi_offset 3, -12
+ 692 0007 8B5C2420 		movl	32(%esp), %ebx
+ 693 000b 89742418 		movl	%esi, 24(%esp)
+ 694              		.cfi_offset 6, -8
+ 695 000f 8B351800 		movl	_rlist+24, %esi
+ 695      0000
+ 696              	/APP
+ 697              	 # 410 "../firmware/chibios/os/kernel/src/chevents.c" 1
+ 698 0015 90       		nop
+ 699              	 # 0 "" 2
+ 700              	/NO_APP
+ 701 0016 E8000000 		call	_dbg_check_lock
+ 701      00
+ 702 001b 8B5638   		movl	56(%esi), %edx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s 			page 15
+
+
+ 703 001e 89D8     		movl	%ebx, %eax
+ 704 0020 21D0     		andl	%edx, %eax
+ 705 0022 39D8     		cmpl	%ebx, %eax
+ 706 0024 7412     		je	L77
+ 707 0026 895E24   		movl	%ebx, 36(%esi)
+ 708 0029 C7042409 		movl	$9, (%esp)
+ 708      000000
+ 709 0030 E8000000 		call	_chSchGoSleepS
+ 709      00
+ 710 0035 8B5638   		movl	56(%esi), %edx
+ 711              	L77:
+ 712 0038 89D8     		movl	%ebx, %eax
+ 713 003a F7D0     		notl	%eax
+ 714 003c 21D0     		andl	%edx, %eax
+ 715 003e 894638   		movl	%eax, 56(%esi)
+ 716 0041 E8000000 		call	_dbg_check_unlock
+ 716      00
+ 717              	/APP
+ 718              	 # 418 "../firmware/chibios/os/kernel/src/chevents.c" 1
+ 719 0046 90       		nop
+ 720              	 # 0 "" 2
+ 721              	/NO_APP
+ 722 0047 89D8     		movl	%ebx, %eax
+ 723 0049 8B742418 		movl	24(%esp), %esi
+ 724 004d 8B5C2414 		movl	20(%esp), %ebx
+ 725 0051 83C41C   		addl	$28, %esp
+ 726              		.cfi_restore 6
+ 727              		.cfi_restore 3
+ 728              		.cfi_def_cfa_offset 4
+ 729 0054 C3       		ret
+ 730              		.cfi_endproc
+ 731              	LFE20:
+ 732 0055 90909090 		.section	.text$chEvtWaitOneTimeout,"x"
+ 732      90909090 
+ 732      909090
+ 733              		.p2align 4,,15
+ 734              		.globl	_chEvtWaitOneTimeout
+ 735              		.def	_chEvtWaitOneTimeout;	.scl	2;	.type	32;	.endef
+ 736              	_chEvtWaitOneTimeout:
+ 737              	LFB21:
+ 738              		.cfi_startproc
+ 739 0000 83EC2C   		subl	$44, %esp
+ 740              		.cfi_def_cfa_offset 48
+ 741 0003 89742420 		movl	%esi, 32(%esp)
+ 742              		.cfi_offset 6, -16
+ 743 0007 8B742430 		movl	48(%esp), %esi
+ 744 000b 897C2424 		movl	%edi, 36(%esp)
+ 745              		.cfi_offset 7, -12
+ 746 000f 8B7C2434 		movl	52(%esp), %edi
+ 747 0013 896C2428 		movl	%ebp, 40(%esp)
+ 748              		.cfi_offset 5, -8
+ 749 0017 8B2D1800 		movl	_rlist+24, %ebp
+ 749      0000
+ 750 001d 895C241C 		movl	%ebx, 28(%esp)
+ 751              		.cfi_offset 3, -20
+ 752              	/APP
+ 753              	 # 450 "../firmware/chibios/os/kernel/src/chevents.c" 1
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s 			page 16
+
+
+ 754 0021 90       		nop
+ 755              	 # 0 "" 2
+ 756              	/NO_APP
+ 757 0022 E8000000 		call	_dbg_check_lock
+ 757      00
+ 758 0027 8B4538   		movl	56(%ebp), %eax
+ 759 002a 89F3     		movl	%esi, %ebx
+ 760 002c 21C3     		andl	%eax, %ebx
+ 761 002e 7522     		jne	L80
+ 762 0030 85FF     		testl	%edi, %edi
+ 763 0032 742D     		je	L85
+ 764 0034 897524   		movl	%esi, 36(%ebp)
+ 765 0037 897C2404 		movl	%edi, 4(%esp)
+ 766 003b C7042408 		movl	$8, (%esp)
+ 766      000000
+ 767 0042 E8000000 		call	_chSchGoSleepTimeoutS
+ 767      00
+ 768 0047 85C0     		testl	%eax, %eax
+ 769 0049 7816     		js	L85
+ 770 004b 8B4538   		movl	56(%ebp), %eax
+ 771 004e 89F3     		movl	%esi, %ebx
+ 772 0050 21C3     		andl	%eax, %ebx
+ 773              	L80:
+ 774 0052 89DA     		movl	%ebx, %edx
+ 775 0054 F7DA     		negl	%edx
+ 776 0056 21D3     		andl	%edx, %ebx
+ 777 0058 89DA     		movl	%ebx, %edx
+ 778 005a F7D2     		notl	%edx
+ 779 005c 21C2     		andl	%eax, %edx
+ 780 005e 895538   		movl	%edx, 56(%ebp)
+ 781              	L85:
+ 782 0061 E8000000 		call	_dbg_check_unlock
+ 782      00
+ 783              	/APP
+ 784              	 # 467 "../firmware/chibios/os/kernel/src/chevents.c" 1
+ 785 0066 90       		nop
+ 786              	 # 0 "" 2
+ 787              	/NO_APP
+ 788 0067 89D8     		movl	%ebx, %eax
+ 789 0069 8B742420 		movl	32(%esp), %esi
+ 790 006d 8B5C241C 		movl	28(%esp), %ebx
+ 791 0071 8B7C2424 		movl	36(%esp), %edi
+ 792 0075 8B6C2428 		movl	40(%esp), %ebp
+ 793 0079 83C42C   		addl	$44, %esp
+ 794              		.cfi_restore 5
+ 795              		.cfi_restore 7
+ 796              		.cfi_restore 6
+ 797              		.cfi_restore 3
+ 798              		.cfi_def_cfa_offset 4
+ 799 007c C3       		ret
+ 800              		.cfi_endproc
+ 801              	LFE21:
+ 802 007d 909090   		.section	.text$chEvtWaitAnyTimeout,"x"
+ 803              		.p2align 4,,15
+ 804              		.globl	_chEvtWaitAnyTimeout
+ 805              		.def	_chEvtWaitAnyTimeout;	.scl	2;	.type	32;	.endef
+ 806              	_chEvtWaitAnyTimeout:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s 			page 17
+
+
+ 807              	LFB22:
+ 808              		.cfi_startproc
+ 809 0000 83EC2C   		subl	$44, %esp
+ 810              		.cfi_def_cfa_offset 48
+ 811 0003 895C241C 		movl	%ebx, 28(%esp)
+ 812              		.cfi_offset 3, -20
+ 813 0007 8B5C2430 		movl	48(%esp), %ebx
+ 814 000b 897C2424 		movl	%edi, 36(%esp)
+ 815              		.cfi_offset 7, -12
+ 816 000f 8B7C2434 		movl	52(%esp), %edi
+ 817 0013 896C2428 		movl	%ebp, 40(%esp)
+ 818              		.cfi_offset 5, -8
+ 819 0017 8B2D1800 		movl	_rlist+24, %ebp
+ 819      0000
+ 820 001d 89742420 		movl	%esi, 32(%esp)
+ 821              		.cfi_offset 6, -16
+ 822              	/APP
+ 823              	 # 493 "../firmware/chibios/os/kernel/src/chevents.c" 1
+ 824 0021 90       		nop
+ 825              	 # 0 "" 2
+ 826              	/NO_APP
+ 827 0022 E8000000 		call	_dbg_check_lock
+ 827      00
+ 828 0027 8B5538   		movl	56(%ebp), %edx
+ 829 002a 89DE     		movl	%ebx, %esi
+ 830 002c 21D6     		andl	%edx, %esi
+ 831 002e 7522     		jne	L87
+ 832 0030 85FF     		testl	%edi, %edi
+ 833 0032 7427     		je	L92
+ 834 0034 895D24   		movl	%ebx, 36(%ebp)
+ 835 0037 897C2404 		movl	%edi, 4(%esp)
+ 836 003b C7042408 		movl	$8, (%esp)
+ 836      000000
+ 837 0042 E8000000 		call	_chSchGoSleepTimeoutS
+ 837      00
+ 838 0047 85C0     		testl	%eax, %eax
+ 839 0049 7810     		js	L92
+ 840 004b 8B5538   		movl	56(%ebp), %edx
+ 841 004e 89DE     		movl	%ebx, %esi
+ 842 0050 21D6     		andl	%edx, %esi
+ 843              	L87:
+ 844 0052 89F0     		movl	%esi, %eax
+ 845 0054 F7D0     		notl	%eax
+ 846 0056 21D0     		andl	%edx, %eax
+ 847 0058 894538   		movl	%eax, 56(%ebp)
+ 848              	L92:
+ 849 005b E8000000 		call	_dbg_check_unlock
+ 849      00
+ 850              	/APP
+ 851              	 # 509 "../firmware/chibios/os/kernel/src/chevents.c" 1
+ 852 0060 90       		nop
+ 853              	 # 0 "" 2
+ 854              	/NO_APP
+ 855 0061 89F0     		movl	%esi, %eax
+ 856 0063 8B5C241C 		movl	28(%esp), %ebx
+ 857 0067 8B742420 		movl	32(%esp), %esi
+ 858 006b 8B7C2424 		movl	36(%esp), %edi
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s 			page 18
+
+
+ 859 006f 8B6C2428 		movl	40(%esp), %ebp
+ 860 0073 83C42C   		addl	$44, %esp
+ 861              		.cfi_restore 5
+ 862              		.cfi_restore 7
+ 863              		.cfi_restore 6
+ 864              		.cfi_restore 3
+ 865              		.cfi_def_cfa_offset 4
+ 866 0076 C3       		ret
+ 867              		.cfi_endproc
+ 868              	LFE22:
+ 869 0077 90909090 		.section	.text$chEvtWaitAllTimeout,"x"
+ 869      90909090 
+ 869      90
+ 870              		.p2align 4,,15
+ 871              		.globl	_chEvtWaitAllTimeout
+ 872              		.def	_chEvtWaitAllTimeout;	.scl	2;	.type	32;	.endef
+ 873              	_chEvtWaitAllTimeout:
+ 874              	LFB23:
+ 875              		.cfi_startproc
+ 876 0000 83EC1C   		subl	$28, %esp
+ 877              		.cfi_def_cfa_offset 32
+ 878 0003 895C2410 		movl	%ebx, 16(%esp)
+ 879              		.cfi_offset 3, -16
+ 880 0007 8B5C2420 		movl	32(%esp), %ebx
+ 881 000b 89742414 		movl	%esi, 20(%esp)
+ 882              		.cfi_offset 6, -12
+ 883 000f 8B351800 		movl	_rlist+24, %esi
+ 883      0000
+ 884 0015 897C2418 		movl	%edi, 24(%esp)
+ 885              		.cfi_offset 7, -8
+ 886 0019 8B7C2424 		movl	36(%esp), %edi
+ 887              	/APP
+ 888              	 # 533 "../firmware/chibios/os/kernel/src/chevents.c" 1
+ 889 001d 90       		nop
+ 890              	 # 0 "" 2
+ 891              	/NO_APP
+ 892 001e E8000000 		call	_dbg_check_lock
+ 892      00
+ 893 0023 8B4638   		movl	56(%esi), %eax
+ 894 0026 89DA     		movl	%ebx, %edx
+ 895 0028 21C2     		andl	%eax, %edx
+ 896 002a 39DA     		cmpl	%ebx, %edx
+ 897 002c 741E     		je	L94
+ 898 002e 85FF     		testl	%edi, %edi
+ 899 0030 743E     		je	L97
+ 900 0032 895E24   		movl	%ebx, 36(%esi)
+ 901 0035 897C2404 		movl	%edi, 4(%esp)
+ 902 0039 C7042409 		movl	$9, (%esp)
+ 902      000000
+ 903 0040 E8000000 		call	_chSchGoSleepTimeoutS
+ 903      00
+ 904 0045 85C0     		testl	%eax, %eax
+ 905 0047 7827     		js	L97
+ 906 0049 8B4638   		movl	56(%esi), %eax
+ 907              	L94:
+ 908 004c 89DA     		movl	%ebx, %edx
+ 909 004e F7D2     		notl	%edx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s 			page 19
+
+
+ 910 0050 21C2     		andl	%eax, %edx
+ 911 0052 895638   		movl	%edx, 56(%esi)
+ 912 0055 E8000000 		call	_dbg_check_unlock
+ 912      00
+ 913              	/APP
+ 914              	 # 548 "../firmware/chibios/os/kernel/src/chevents.c" 1
+ 915 005a 90       		nop
+ 916              	 # 0 "" 2
+ 917              	/NO_APP
+ 918              	L96:
+ 919 005b 89D8     		movl	%ebx, %eax
+ 920 005d 8B742414 		movl	20(%esp), %esi
+ 921 0061 8B5C2410 		movl	16(%esp), %ebx
+ 922 0065 8B7C2418 		movl	24(%esp), %edi
+ 923 0069 83C41C   		addl	$28, %esp
+ 924              		.cfi_remember_state
+ 925              		.cfi_restore 7
+ 926              		.cfi_restore 6
+ 927              		.cfi_restore 3
+ 928              		.cfi_def_cfa_offset 4
+ 929 006c C3       		ret
+ 930 006d 8D7600   		.p2align 4,,7
+ 931              	L97:
+ 932              		.cfi_restore_state
+ 933 0070 E8000000 		call	_dbg_check_unlock
+ 933      00
+ 934              	/APP
+ 935              	 # 542 "../firmware/chibios/os/kernel/src/chevents.c" 1
+ 936 0075 90       		nop
+ 937              	 # 0 "" 2
+ 938              	/NO_APP
+ 939 0076 31DB     		xorl	%ebx, %ebx
+ 940 0078 EBE1     		jmp	L96
+ 941              		.cfi_endproc
+ 942              	LFE23:
+ 943              		.def	_dbg_check_lock;	.scl	2;	.type	32;	.endef
+ 944              		.def	_dbg_check_unlock;	.scl	2;	.type	32;	.endef
+ 945              		.def	_chDbgPanic;	.scl	2;	.type	32;	.endef
+ 946              		.def	_chDbgCheckClassI;	.scl	2;	.type	32;	.endef
+ 947              		.def	_chSchReadyI;	.scl	2;	.type	32;	.endef
+ 948              		.def	_chSchRescheduleS;	.scl	2;	.type	32;	.endef
+ 949              		.def	_chSchGoSleepS;	.scl	2;	.type	32;	.endef
+ 950 007a 90909090 		.def	_chSchGoSleepTimeoutS;	.scl	2;	.type	32;	.endef
+ 950      9090
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s 			page 20
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 chevents.c
+/cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s:9      .text$chEvtRegisterMask:00000000 _chEvtRegisterMask
+/cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s:68     .text$chEvtUnregister:00000000 _chEvtUnregister
+/cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s:135    .text$chEvtGetAndClearEvents:00000000 _chEvtGetAndClearEvents
+/cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s:183    .text$chEvtAddEvents:00000000 _chEvtAddEvents
+/cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s:220    .text$chEvtGetAndClearFlags:00000000 _chEvtGetAndClearFlags
+/cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s:261    .text$chEvtSignalI:00000000 _chEvtSignalI
+/cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s:331    .text$chEvtSignal:00000000 _chEvtSignal
+/cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s:383    .text$chEvtBroadcastFlagsI:00000000 _chEvtBroadcastFlagsI
+/cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s:442    .text$chEvtBroadcastFlags:00000000 _chEvtBroadcastFlags
+/cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s:475    .text$chEvtGetAndClearFlagsI:00000000 _chEvtGetAndClearFlagsI
+/cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s:493    .text$chEvtDispatch:00000000 _chEvtDispatch
+/cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s:574    .text$chEvtWaitOne:00000000 _chEvtWaitOne
+/cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s:629    .text$chEvtWaitAny:00000000 _chEvtWaitAny
+/cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s:685    .text$chEvtWaitAll:00000000 _chEvtWaitAll
+/cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s:736    .text$chEvtWaitOneTimeout:00000000 _chEvtWaitOneTimeout
+/cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s:806    .text$chEvtWaitAnyTimeout:00000000 _chEvtWaitAnyTimeout
+/cygdrive/c/Users/pc/AppData/Local/Temp/cchwxnW4.s:873    .text$chEvtWaitAllTimeout:00000000 _chEvtWaitAllTimeout
+
+UNDEFINED SYMBOLS
+_rlist
+_dbg_check_lock
+_dbg_check_unlock
+_chDbgPanic
+_chDbgCheckClassI
+_chSchReadyI
+_chSchRescheduleS
+_chSchGoSleepS
+_chSchGoSleepTimeoutS

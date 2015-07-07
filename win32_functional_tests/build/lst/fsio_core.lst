@@ -1,0 +1,2064 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 1
+
+
+   1              		.file	"fsio_core.cpp"
+   2              		.section	.text$_ZN17LENameOrdinalPairC2E11le_action_ePKc,"x"
+   3              		.align 2
+   4              		.p2align 4,,15
+   5              		.globl	__ZN17LENameOrdinalPairC2E11le_action_ePKc
+   6              		.def	__ZN17LENameOrdinalPairC2E11le_action_ePKc;	.scl	2;	.type	32;	.endef
+   7              	__ZN17LENameOrdinalPairC2E11le_action_ePKc:
+   8              	LFB86:
+   9              		.cfi_startproc
+  10 0000 8B442404 		movl	4(%esp), %eax
+  11 0004 894104   		movl	%eax, 4(%ecx)
+  12 0007 8B442408 		movl	8(%esp), %eax
+  13 000b 894108   		movl	%eax, 8(%ecx)
+  14 000e A1000000 		movl	_LE_FIRST, %eax
+  14      00
+  15 0013 8901     		movl	%eax, (%ecx)
+  16 0015 890D0000 		movl	%ecx, _LE_FIRST
+  16      0000
+  17 001b C20800   		ret	$8
+  18              		.cfi_endproc
+  19              	LFE86:
+  20              		.globl	__ZN17LENameOrdinalPairC1E11le_action_ePKc
+  21              		.def	__ZN17LENameOrdinalPairC1E11le_action_ePKc;	.scl	2;	.type	32;	.endef
+  22              		.set	__ZN17LENameOrdinalPairC1E11le_action_ePKc,__ZN17LENameOrdinalPairC2E11le_action_ePKc
+  23 001e 9090     		.section	.text$_ZN9LEElementC2Ev,"x"
+  24              		.align 2
+  25              		.p2align 4,,15
+  26              		.globl	__ZN9LEElementC2Ev
+  27              		.def	__ZN9LEElementC2Ev;	.scl	2;	.type	32;	.endef
+  28              	__ZN9LEElementC2Ev:
+  29              	LFB89:
+  30              		.cfi_startproc
+  31 0000 C7010000 		movl	$0, (%ecx)
+  31      0000
+  32 0006 C7410C00 		movl	$0, 12(%ecx)
+  32      000000
+  33 000d C7410400 		movl	$0x7fc00000, 4(%ecx)
+  33      00C07F
+  34 0014 C7410800 		movl	$0, 8(%ecx)
+  34      000000
+  35 001b C3       		ret
+  36              		.cfi_endproc
+  37              	LFE89:
+  38              		.globl	__ZN9LEElementC1Ev
+  39              		.def	__ZN9LEElementC1Ev;	.scl	2;	.type	32;	.endef
+  40              		.set	__ZN9LEElementC1Ev,__ZN9LEElementC2Ev
+  41 001c 90909090 		.section	.text$_ZN9LEElement4initE11le_action_e,"x"
+  42              		.align 2
+  43              		.p2align 4,,15
+  44              		.globl	__ZN9LEElement4initE11le_action_e
+  45              		.def	__ZN9LEElement4initE11le_action_e;	.scl	2;	.type	32;	.endef
+  46              	__ZN9LEElement4initE11le_action_e:
+  47              	LFB91:
+  48              		.cfi_startproc
+  49 0000 8B442404 		movl	4(%esp), %eax
+  50 0004 8901     		movl	%eax, (%ecx)
+  51 0006 C20400   		ret	$4
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 2
+
+
+  52              		.cfi_endproc
+  53              	LFE91:
+  54 0009 90909090 		.section	.text$_ZN9LEElement4initE11le_action_ef,"x"
+  54      909090
+  55              		.align 2
+  56              		.p2align 4,,15
+  57              		.globl	__ZN9LEElement4initE11le_action_ef
+  58              		.def	__ZN9LEElement4initE11le_action_ef;	.scl	2;	.type	32;	.endef
+  59              	__ZN9LEElement4initE11le_action_ef:
+  60              	LFB92:
+  61              		.cfi_startproc
+  62 0000 8B442404 		movl	4(%esp), %eax
+  63 0004 D9442408 		flds	8(%esp)
+  64 0008 D95904   		fstps	4(%ecx)
+  65 000b 8901     		movl	%eax, (%ecx)
+  66 000d C20800   		ret	$8
+  67              		.cfi_endproc
+  68              	LFE92:
+  69              		.section	.text$_ZN12LECalculatorC2Ev,"x"
+  70              		.align 2
+  71              		.p2align 4,,15
+  72              		.globl	__ZN12LECalculatorC2Ev
+  73              		.def	__ZN12LECalculatorC2Ev;	.scl	2;	.type	32;	.endef
+  74              	__ZN12LECalculatorC2Ev:
+  75              	LFB94:
+  76              		.cfi_startproc
+  77 0000 57       		pushl	%edi
+  78              		.cfi_def_cfa_offset 8
+  79              		.cfi_offset 7, -8
+  80 0001 89CA     		movl	%ecx, %edx
+  81 0003 8DB90C02 		leal	524(%ecx), %edi
+  81      0000
+  82 0009 F7C70100 		testl	$1, %edi
+  82      0000
+  83 000f 53       		pushl	%ebx
+  84              		.cfi_def_cfa_offset 12
+  85              		.cfi_offset 3, -12
+  86 0010 BB800000 		movl	$128, %ebx
+  86      00
+  87 0015 C7810802 		movl	$0, 520(%ecx)
+  87      00000000 
+  87      0000
+  88 001f 7547     		jne	L24
+  89 0021 F7C70200 		testl	$2, %edi
+  89      0000
+  90 0027 7557     		jne	L25
+  91              	L7:
+  92 0029 89D9     		movl	%ebx, %ecx
+  93 002b 31C0     		xorl	%eax, %eax
+  94 002d C1E902   		shrl	$2, %ecx
+  95 0030 F6C302   		testb	$2, %bl
+  96 0033 F3AB     		rep stosl
+  97 0035 7408     		je	L8
+  98 0037 66C70700 		movw	$0, (%edi)
+  98      00
+  99 003c 83C702   		addl	$2, %edi
+ 100              	L8:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 3
+
+
+ 101 003f 83E301   		andl	$1, %ebx
+ 102 0042 7403     		je	L9
+ 103 0044 C60700   		movb	$0, (%edi)
+ 104              	L9:
+ 105 0047 C7820402 		movl	$0, 516(%edx)
+ 105      00000000 
+ 105      0000
+ 106 0051 C7820802 		movl	$0, 520(%edx)
+ 106      00000000 
+ 106      0000
+ 107 005b C7820002 		movl	$0, 512(%edx)
+ 107      00000000 
+ 107      0000
+ 108 0065 5B       		popl	%ebx
+ 109              		.cfi_remember_state
+ 110              		.cfi_restore 3
+ 111              		.cfi_def_cfa_offset 8
+ 112 0066 5F       		popl	%edi
+ 113              		.cfi_restore 7
+ 114              		.cfi_def_cfa_offset 4
+ 115 0067 C3       		ret
+ 116              		.p2align 4,,7
+ 117              	L24:
+ 118              		.cfi_restore_state
+ 119 0068 8DB90D02 		leal	525(%ecx), %edi
+ 119      0000
+ 120 006e B37F     		movb	$127, %bl
+ 121 0070 F7C70200 		testl	$2, %edi
+ 121      0000
+ 122 0076 C6810C02 		movb	$0, 524(%ecx)
+ 122      000000
+ 123 007d 74AA     		je	L7
+ 124 007f 90       		.p2align 4,,7
+ 125              	L25:
+ 126 0080 66C70700 		movw	$0, (%edi)
+ 126      00
+ 127 0085 83EB02   		subl	$2, %ebx
+ 128 0088 83C702   		addl	$2, %edi
+ 129 008b EB9C     		jmp	L7
+ 130              		.cfi_endproc
+ 131              	LFE94:
+ 132              		.globl	__ZN12LECalculatorC1Ev
+ 133              		.def	__ZN12LECalculatorC1Ev;	.scl	2;	.type	32;	.endef
+ 134              		.set	__ZN12LECalculatorC1Ev,__ZN12LECalculatorC2Ev
+ 135 008d 909090   		.section	.text$_ZN12LECalculator5resetEv,"x"
+ 136              		.align 2
+ 137              		.p2align 4,,15
+ 138              		.globl	__ZN12LECalculator5resetEv
+ 139              		.def	__ZN12LECalculator5resetEv;	.scl	2;	.type	32;	.endef
+ 140              	__ZN12LECalculator5resetEv:
+ 141              	LFB96:
+ 142              		.cfi_startproc
+ 143 0000 C7810402 		movl	$0, 516(%ecx)
+ 143      00000000 
+ 143      0000
+ 144 000a C7810802 		movl	$0, 520(%ecx)
+ 144      00000000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 4
+
+
+ 144      0000
+ 145 0014 C7810002 		movl	$0, 512(%ecx)
+ 145      00000000 
+ 145      0000
+ 146 001e C3       		ret
+ 147              		.cfi_endproc
+ 148              	LFE96:
+ 149 001f 90       		.section	.text$_ZN12LECalculator5resetEP9LEElement,"x"
+ 150              		.align 2
+ 151              		.p2align 4,,15
+ 152              		.globl	__ZN12LECalculator5resetEP9LEElement
+ 153              		.def	__ZN12LECalculator5resetEP9LEElement;	.scl	2;	.type	32;	.endef
+ 154              	__ZN12LECalculator5resetEP9LEElement:
+ 155              	LFB97:
+ 156              		.cfi_startproc
+ 157 0000 8B442404 		movl	4(%esp), %eax
+ 158 0004 C7810802 		movl	$0, 520(%ecx)
+ 158      00000000 
+ 158      0000
+ 159 000e C7810002 		movl	$0, 512(%ecx)
+ 159      00000000 
+ 159      0000
+ 160 0018 89810402 		movl	%eax, 516(%ecx)
+ 160      0000
+ 161 001e C20400   		ret	$4
+ 162              		.cfi_endproc
+ 163              	LFE97:
+ 164 0021 90909090 		.section	.text$_ZN12LECalculator3addEP9LEElement,"x"
+ 164      90909090 
+ 164      90909090 
+ 164      909090
+ 165              		.align 2
+ 166              		.p2align 4,,15
+ 167              		.globl	__ZN12LECalculator3addEP9LEElement
+ 168              		.def	__ZN12LECalculator3addEP9LEElement;	.scl	2;	.type	32;	.endef
+ 169              	__ZN12LECalculator3addEP9LEElement:
+ 170              	LFB98:
+ 171              		.cfi_startproc
+ 172 0000 8B910402 		movl	516(%ecx), %edx
+ 172      0000
+ 173 0006 85D2     		testl	%edx, %edx
+ 174 0008 7508     		jne	L33
+ 175 000a EB17     		jmp	L35
+ 176 000c 8D742600 		.p2align 4,,7
+ 177              	L32:
+ 178 0010 89C2     		movl	%eax, %edx
+ 179              	L33:
+ 180 0012 8B420C   		movl	12(%edx), %eax
+ 181 0015 85C0     		testl	%eax, %eax
+ 182 0017 75F7     		jne	L32
+ 183 0019 8B442404 		movl	4(%esp), %eax
+ 184 001d 89420C   		movl	%eax, 12(%edx)
+ 185 0020 C20400   		ret	$4
+ 186              	L35:
+ 187 0023 8B442404 		movl	4(%esp), %eax
+ 188 0027 89810402 		movl	%eax, 516(%ecx)
+ 188      0000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 5
+
+
+ 189 002d C20400   		ret	$4
+ 190              		.cfi_endproc
+ 191              	LFE98:
+ 192              		.section .rdata,"dr"
+ 193              	LC1:
+ 194 0000 656D7074 		.ascii "empty stack for %d\0"
+ 194      79207374 
+ 194      61636B20 
+ 194      666F7220 
+ 194      256400
+ 195              		.section	.text$_ZN12LECalculator3popE11le_action_e,"x"
+ 196              		.align 2
+ 197              		.p2align 4,,15
+ 198              		.globl	__ZN12LECalculator3popE11le_action_e
+ 199              		.def	__ZN12LECalculator3popE11le_action_e;	.scl	2;	.type	32;	.endef
+ 200              	__ZN12LECalculator3popE11le_action_e:
+ 201              	LFB100:
+ 202              		.cfi_startproc
+ 203 0000 8B810802 		movl	520(%ecx), %eax
+ 203      0000
+ 204 0006 85C0     		testl	%eax, %eax
+ 205 0008 7416     		je	L41
+ 206 000a 83E801   		subl	$1, %eax
+ 207 000d 89810802 		movl	%eax, 520(%ecx)
+ 207      0000
+ 208 0013 D984810C 		flds	524(%ecx,%eax,4)
+ 208      020000
+ 209 001a C20400   		ret	$4
+ 210 001d 8D7600   		.p2align 4,,7
+ 211              	L41:
+ 212 0020 83EC1C   		subl	$28, %esp
+ 213              		.cfi_def_cfa_offset 32
+ 214 0023 8B442420 		movl	32(%esp), %eax
+ 215 0027 C7442404 		movl	$LC1, 4(%esp)
+ 215      00000000 
+ 216 002f C704245E 		movl	$606, (%esp)
+ 216      020000
+ 217 0036 89442408 		movl	%eax, 8(%esp)
+ 218 003a E8000000 		call	_warning
+ 218      00
+ 219 003f D905A402 		flds	LC0
+ 219      0000
+ 220 0045 83C41C   		addl	$28, %esp
+ 221              		.cfi_def_cfa_offset 4
+ 222 0048 C20400   		ret	$4
+ 223              		.cfi_endproc
+ 224              	LFE100:
+ 225 004b 90909090 		.section .rdata,"dr"
+ 225      90
+ 226              	LC2:
+ 227 0013 464C7374 		.ascii "FLstack overflow\0"
+ 227      61636B20 
+ 227      6F766572 
+ 227      666C6F77 
+ 227      00
+ 228              		.section	.text$_ZN12LECalculator4pushE11le_action_ef,"x"
+ 229              		.align 2
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 6
+
+
+ 230              		.p2align 4,,15
+ 231              		.globl	__ZN12LECalculator4pushE11le_action_ef
+ 232              		.def	__ZN12LECalculator4pushE11le_action_ef;	.scl	2;	.type	32;	.endef
+ 233              	__ZN12LECalculator4pushE11le_action_ef:
+ 234              	LFB101:
+ 235              		.cfi_startproc
+ 236 0000 83EC2C   		subl	$44, %esp
+ 237              		.cfi_def_cfa_offset 48
+ 238 0003 8B810802 		movl	520(%ecx), %eax
+ 238      0000
+ 239 0009 D9442434 		flds	52(%esp)
+ 240 000d 83F81F   		cmpl	$31, %eax
+ 241 0010 7F3E     		jg	L47
+ 242 0012 D994810C 		fsts	524(%ecx,%eax,4)
+ 242      020000
+ 243 0019 83C001   		addl	$1, %eax
+ 244 001c 89810802 		movl	%eax, 520(%ecx)
+ 244      0000
+ 245              	L44:
+ 246 0022 8B810002 		movl	512(%ecx), %eax
+ 246      0000
+ 247 0028 83F83F   		cmpl	$63, %eax
+ 248 002b 7F19     		jg	L48
+ 249 002d 8B542430 		movl	48(%esp), %edx
+ 250 0031 D99C8100 		fstps	256(%ecx,%eax,4)
+ 250      010000
+ 251 0038 891481   		movl	%edx, (%ecx,%eax,4)
+ 252 003b 83C001   		addl	$1, %eax
+ 253 003e 89810002 		movl	%eax, 512(%ecx)
+ 253      0000
+ 254 0044 EB02     		jmp	L42
+ 255              		.p2align 4,,7
+ 256              	L48:
+ 257 0046 DDD8     		fstp	%st(0)
+ 258              	L42:
+ 259 0048 83C42C   		addl	$44, %esp
+ 260              		.cfi_remember_state
+ 261              		.cfi_def_cfa_offset 4
+ 262 004b C20800   		ret	$8
+ 263 004e 6690     		.p2align 4,,7
+ 264              	L47:
+ 265              		.cfi_restore_state
+ 266 0050 C7042413 		movl	$LC2, (%esp)
+ 266      000000
+ 267 0057 D95C2410 		fstps	16(%esp)
+ 268 005b 894C241C 		movl	%ecx, 28(%esp)
+ 269 005f E8000000 		call	_firmwareError
+ 269      00
+ 270 0064 8B4C241C 		movl	28(%esp), %ecx
+ 271 0068 D9442410 		flds	16(%esp)
+ 272 006c EBB4     		jmp	L44
+ 273              		.cfi_endproc
+ 274              	LFE101:
+ 275 006e 9090     		.section .rdata,"dr"
+ 276              	LC5:
+ 277 0024 4653494F 		.ascii "FSIO undefined action\0"
+ 277      20756E64 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 7
+
+
+ 277      6566696E 
+ 277      65642061 
+ 277      6374696F 
+ 278              		.section	.text$_ZN12LECalculator5doJobEP6EngineP9LEElement,"x"
+ 279              		.align 2
+ 280              		.p2align 4,,15
+ 281              		.globl	__ZN12LECalculator5doJobEP6EngineP9LEElement
+ 282              		.def	__ZN12LECalculator5doJobEP6EngineP9LEElement;	.scl	2;	.type	32;	.endef
+ 283              	__ZN12LECalculator5doJobEP6EngineP9LEElement:
+ 284              	LFB102:
+ 285              		.cfi_startproc
+ 286 0000 56       		pushl	%esi
+ 287              		.cfi_def_cfa_offset 8
+ 288              		.cfi_offset 6, -8
+ 289 0001 53       		pushl	%ebx
+ 290              		.cfi_def_cfa_offset 12
+ 291              		.cfi_offset 3, -12
+ 292 0002 89CB     		movl	%ecx, %ebx
+ 293 0004 83EC34   		subl	$52, %esp
+ 294              		.cfi_def_cfa_offset 64
+ 295 0007 8B742444 		movl	68(%esp), %esi
+ 296 000b 8B06     		movl	(%esi), %eax
+ 297 000d 83F870   		cmpl	$112, %eax
+ 298 0010 763E     		jbe	L107
+ 299              	L50:
+ 300 0012 8B4C2440 		movl	64(%esp), %ecx
+ 301 0016 89442408 		movl	%eax, 8(%esp)
+ 302 001a 8D830802 		leal	520(%ebx), %eax
+ 302      0000
+ 303 0020 89442404 		movl	%eax, 4(%esp)
+ 304 0024 890C24   		movl	%ecx, (%esp)
+ 305 0027 E8000000 		call	__Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e
+ 305      00
+ 306 002c 8D742600 		.p2align 4,,7
+ 307              	L104:
+ 308 0030 D95C2404 		fstps	4(%esp)
+ 309              	L105:
+ 310 0034 8B06     		movl	(%esi), %eax
+ 311              	L103:
+ 312 0036 890424   		movl	%eax, (%esp)
+ 313 0039 89D9     		movl	%ebx, %ecx
+ 314 003b E8000000 		call	__ZN12LECalculator4pushE11le_action_ef
+ 314      00
+ 315              		.cfi_def_cfa_offset 56
+ 316 0040 31C0     		xorl	%eax, %eax
+ 317 0042 83EC08   		subl	$8, %esp
+ 318              		.cfi_def_cfa_offset 64
+ 319              	L70:
+ 320 0045 83C434   		addl	$52, %esp
+ 321              		.cfi_remember_state
+ 322              		.cfi_def_cfa_offset 12
+ 323 0048 5B       		popl	%ebx
+ 324              		.cfi_restore 3
+ 325              		.cfi_def_cfa_offset 8
+ 326 0049 5E       		popl	%esi
+ 327              		.cfi_restore 6
+ 328              		.cfi_def_cfa_offset 4
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 8
+
+
+ 329 004a C20800   		ret	$8
+ 330 004d 8D7600   		.p2align 4,,7
+ 331              	L107:
+ 332              		.cfi_restore_state
+ 333 0050 FF24853C 		jmp	*L69(,%eax,4)
+ 333      000000
+ 334              		.section .rdata,"dr"
+ 335 003a 0000     		.align 4
+ 336              	L69:
+ 337 003c 67000000 		.long	L51
+ 338 0040 82000000 		.long	L52
+ 339 0044 90000000 		.long	L53
+ 340 0048 D1000000 		.long	L54
+ 341 004c 14010000 		.long	L55
+ 342 0050 55010000 		.long	L56
+ 343 0054 98010000 		.long	L57
+ 344 0058 01020000 		.long	L58
+ 345 005c 43020000 		.long	L59
+ 346 0060 80020000 		.long	L60
+ 347 0064 B0020000 		.long	L61
+ 348 0068 E0020000 		.long	L62
+ 349 006c 10030000 		.long	L63
+ 350 0070 40030000 		.long	L64
+ 351 0074 80030000 		.long	L65
+ 352 0078 C0030000 		.long	L66
+ 353 007c 12000000 		.long	L50
+ 354 0080 12000000 		.long	L50
+ 355 0084 12000000 		.long	L50
+ 356 0088 12000000 		.long	L50
+ 357 008c 12000000 		.long	L50
+ 358 0090 12000000 		.long	L50
+ 359 0094 12000000 		.long	L50
+ 360 0098 12000000 		.long	L50
+ 361 009c 12000000 		.long	L50
+ 362 00a0 12000000 		.long	L50
+ 363 00a4 12000000 		.long	L50
+ 364 00a8 12000000 		.long	L50
+ 365 00ac 12000000 		.long	L50
+ 366 00b0 12000000 		.long	L50
+ 367 00b4 12000000 		.long	L50
+ 368 00b8 12000000 		.long	L50
+ 369 00bc 12000000 		.long	L50
+ 370 00c0 12000000 		.long	L50
+ 371 00c4 12000000 		.long	L50
+ 372 00c8 12000000 		.long	L50
+ 373 00cc 12000000 		.long	L50
+ 374 00d0 12000000 		.long	L50
+ 375 00d4 12000000 		.long	L50
+ 376 00d8 12000000 		.long	L50
+ 377 00dc 12000000 		.long	L50
+ 378 00e0 12000000 		.long	L50
+ 379 00e4 12000000 		.long	L50
+ 380 00e8 12000000 		.long	L50
+ 381 00ec 12000000 		.long	L50
+ 382 00f0 12000000 		.long	L50
+ 383 00f4 12000000 		.long	L50
+ 384 00f8 12000000 		.long	L50
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 9
+
+
+ 385 00fc 12000000 		.long	L50
+ 386 0100 12000000 		.long	L50
+ 387 0104 12000000 		.long	L50
+ 388 0108 12000000 		.long	L50
+ 389 010c 12000000 		.long	L50
+ 390 0110 12000000 		.long	L50
+ 391 0114 12000000 		.long	L50
+ 392 0118 12000000 		.long	L50
+ 393 011c 12000000 		.long	L50
+ 394 0120 12000000 		.long	L50
+ 395 0124 12000000 		.long	L50
+ 396 0128 12000000 		.long	L50
+ 397 012c 12000000 		.long	L50
+ 398 0130 12000000 		.long	L50
+ 399 0134 12000000 		.long	L50
+ 400 0138 12000000 		.long	L50
+ 401 013c 12000000 		.long	L50
+ 402 0140 12000000 		.long	L50
+ 403 0144 12000000 		.long	L50
+ 404 0148 12000000 		.long	L50
+ 405 014c 12000000 		.long	L50
+ 406 0150 12000000 		.long	L50
+ 407 0154 12000000 		.long	L50
+ 408 0158 12000000 		.long	L50
+ 409 015c 12000000 		.long	L50
+ 410 0160 12000000 		.long	L50
+ 411 0164 12000000 		.long	L50
+ 412 0168 12000000 		.long	L50
+ 413 016c 12000000 		.long	L50
+ 414 0170 12000000 		.long	L50
+ 415 0174 12000000 		.long	L50
+ 416 0178 12000000 		.long	L50
+ 417 017c 12000000 		.long	L50
+ 418 0180 12000000 		.long	L50
+ 419 0184 12000000 		.long	L50
+ 420 0188 12000000 		.long	L50
+ 421 018c 12000000 		.long	L50
+ 422 0190 12000000 		.long	L50
+ 423 0194 12000000 		.long	L50
+ 424 0198 12000000 		.long	L50
+ 425 019c 12000000 		.long	L50
+ 426 01a0 12000000 		.long	L50
+ 427 01a4 12000000 		.long	L50
+ 428 01a8 12000000 		.long	L50
+ 429 01ac 12000000 		.long	L50
+ 430 01b0 12000000 		.long	L50
+ 431 01b4 12000000 		.long	L50
+ 432 01b8 12000000 		.long	L50
+ 433 01bc 12000000 		.long	L50
+ 434 01c0 12000000 		.long	L50
+ 435 01c4 12000000 		.long	L50
+ 436 01c8 12000000 		.long	L50
+ 437 01cc 12000000 		.long	L50
+ 438 01d0 12000000 		.long	L50
+ 439 01d4 12000000 		.long	L50
+ 440 01d8 12000000 		.long	L50
+ 441 01dc 12000000 		.long	L50
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 10
+
+
+ 442 01e0 12000000 		.long	L50
+ 443 01e4 12000000 		.long	L50
+ 444 01e8 12000000 		.long	L50
+ 445 01ec 12000000 		.long	L50
+ 446 01f0 12000000 		.long	L50
+ 447 01f4 12000000 		.long	L50
+ 448 01f8 18040000 		.long	L67
+ 449 01fc 57000000 		.long	L68
+ 450              		.section	.text$_ZN12LECalculator5doJobEP6EngineP9LEElement,"x"
+ 451              		.p2align 4,,7
+ 452              	L68:
+ 453 0057 8B542440 		movl	64(%esp), %edx
+ 454 005b DB826C02 		fildl	620(%edx)
+ 454      0000
+ 455 0061 D95C2404 		fstps	4(%esp)
+ 456 0065 EBCF     		jmp	L103
+ 457              		.p2align 4,,7
+ 458              	L51:
+ 459 0067 C7442404 		movl	$LC5, 4(%esp)
+ 459      24000000 
+ 460 006f C704245E 		movl	$606, (%esp)
+ 460      020000
+ 461 0076 E8000000 		call	_warning
+ 461      00
+ 462 007b B8010000 		movl	$1, %eax
+ 462      00
+ 463 0080 EBC3     		jmp	L70
+ 464              		.p2align 4,,7
+ 465              	L52:
+ 466 0082 D94604   		flds	4(%esi)
+ 467 0085 D95C2404 		fstps	4(%esp)
+ 468 0089 EBAB     		jmp	L103
+ 469 008b 908D7426 		.p2align 4,,7
+ 469      00
+ 470              	L53:
+ 471 0090 C7042402 		movl	$2, (%esp)
+ 471      000000
+ 472 0097 E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 472      00
+ 473              		.cfi_def_cfa_offset 60
+ 474 009c 89D9     		movl	%ebx, %ecx
+ 475 009e 83EC04   		subl	$4, %esp
+ 476              		.cfi_def_cfa_offset 64
+ 477 00a1 C7042402 		movl	$2, (%esp)
+ 477      000000
+ 478 00a8 D95C2410 		fstps	16(%esp)
+ 479 00ac E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 479      00
+ 480              		.cfi_def_cfa_offset 60
+ 481 00b1 A1AC0200 		movl	LC4, %eax
+ 481      00
+ 482 00b6 83EC04   		subl	$4, %esp
+ 483              		.cfi_def_cfa_offset 64
+ 484 00b9 D9442410 		flds	16(%esp)
+ 485 00bd DFE9     		fucomip	%st(1), %st
+ 486 00bf DDD8     		fstp	%st(0)
+ 487 00c1 0F4705A8 		cmova	LC3, %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 11
+
+
+ 487      020000
+ 488 00c8 89442404 		movl	%eax, 4(%esp)
+ 489 00cc E963FFFF 		jmp	L105
+ 489      FF
+ 490              		.p2align 4,,7
+ 491              	L54:
+ 492 00d1 C7042403 		movl	$3, (%esp)
+ 492      000000
+ 493 00d8 E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 493      00
+ 494              		.cfi_def_cfa_offset 60
+ 495 00dd 89D9     		movl	%ebx, %ecx
+ 496 00df 83EC04   		subl	$4, %esp
+ 497              		.cfi_def_cfa_offset 64
+ 498 00e2 C7042403 		movl	$3, (%esp)
+ 498      000000
+ 499 00e9 D95C2410 		fstps	16(%esp)
+ 500 00ed E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 500      00
+ 501              		.cfi_def_cfa_offset 60
+ 502 00f2 A1AC0200 		movl	LC4, %eax
+ 502      00
+ 503 00f7 83EC04   		subl	$4, %esp
+ 504              		.cfi_def_cfa_offset 64
+ 505 00fa D9442410 		flds	16(%esp)
+ 506 00fe D9C9     		fxch	%st(1)
+ 507 0100 DFE9     		fucomip	%st(1), %st
+ 508 0102 DDD8     		fstp	%st(0)
+ 509 0104 0F4705A8 		cmova	LC3, %eax
+ 509      020000
+ 510 010b 89442404 		movl	%eax, 4(%esp)
+ 511 010f E920FFFF 		jmp	L105
+ 511      FF
+ 512              		.p2align 4,,7
+ 513              	L55:
+ 514 0114 C7042404 		movl	$4, (%esp)
+ 514      000000
+ 515 011b E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 515      00
+ 516              		.cfi_def_cfa_offset 60
+ 517 0120 89D9     		movl	%ebx, %ecx
+ 518 0122 83EC04   		subl	$4, %esp
+ 519              		.cfi_def_cfa_offset 64
+ 520 0125 C7042404 		movl	$4, (%esp)
+ 520      000000
+ 521 012c D95C2410 		fstps	16(%esp)
+ 522 0130 E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 522      00
+ 523              		.cfi_def_cfa_offset 60
+ 524 0135 A1AC0200 		movl	LC4, %eax
+ 524      00
+ 525 013a 83EC04   		subl	$4, %esp
+ 526              		.cfi_def_cfa_offset 64
+ 527 013d D9442410 		flds	16(%esp)
+ 528 0141 DFE9     		fucomip	%st(1), %st
+ 529 0143 DDD8     		fstp	%st(0)
+ 530 0145 0F4305A8 		cmovae	LC3, %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 12
+
+
+ 530      020000
+ 531 014c 89442404 		movl	%eax, 4(%esp)
+ 532 0150 E9DFFEFF 		jmp	L105
+ 532      FF
+ 533              		.p2align 4,,7
+ 534              	L56:
+ 535 0155 C7042405 		movl	$5, (%esp)
+ 535      000000
+ 536 015c E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 536      00
+ 537              		.cfi_def_cfa_offset 60
+ 538 0161 89D9     		movl	%ebx, %ecx
+ 539 0163 83EC04   		subl	$4, %esp
+ 540              		.cfi_def_cfa_offset 64
+ 541 0166 C7042405 		movl	$5, (%esp)
+ 541      000000
+ 542 016d D95C2410 		fstps	16(%esp)
+ 543 0171 E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 543      00
+ 544              		.cfi_def_cfa_offset 60
+ 545 0176 A1AC0200 		movl	LC4, %eax
+ 545      00
+ 546 017b 83EC04   		subl	$4, %esp
+ 547              		.cfi_def_cfa_offset 64
+ 548 017e D9442410 		flds	16(%esp)
+ 549 0182 D9C9     		fxch	%st(1)
+ 550 0184 DFE9     		fucomip	%st(1), %st
+ 551 0186 DDD8     		fstp	%st(0)
+ 552 0188 0F4305A8 		cmovae	LC3, %eax
+ 552      020000
+ 553 018f 89442404 		movl	%eax, 4(%esp)
+ 554 0193 E99CFEFF 		jmp	L105
+ 554      FF
+ 555              		.p2align 4,,7
+ 556              	L57:
+ 557 0198 C7042406 		movl	$6, (%esp)
+ 557      000000
+ 558 019f E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 558      00
+ 559              		.cfi_def_cfa_offset 60
+ 560 01a4 89D9     		movl	%ebx, %ecx
+ 561 01a6 83EC04   		subl	$4, %esp
+ 562              		.cfi_def_cfa_offset 64
+ 563 01a9 C7042406 		movl	$6, (%esp)
+ 563      000000
+ 564 01b0 D95C2410 		fstps	16(%esp)
+ 565 01b4 E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 565      00
+ 566              		.cfi_def_cfa_offset 60
+ 567 01b9 83EC04   		subl	$4, %esp
+ 568              		.cfi_def_cfa_offset 64
+ 569 01bc D9EE     		fldz
+ 570 01be D9442410 		flds	16(%esp)
+ 571 01c2 DFE9     		fucomip	%st(1), %st
+ 572 01c4 DDD8     		fstp	%st(0)
+ 573 01c6 7A06     		jp	L96
+ 574 01c8 0F84A902 		je	L101
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 13
+
+
+ 574      0000
+ 575              	L96:
+ 576 01ce D9EE     		fldz
+ 577 01d0 D9C9     		fxch	%st(1)
+ 578 01d2 B8010000 		movl	$1, %eax
+ 578      00
+ 579 01d7 DFE9     		fucomip	%st(1), %st
+ 580 01d9 DDD8     		fstp	%st(0)
+ 581 01db 7B61     		jnp	L106
+ 582 01dd EB11     		jmp	L74
+ 583 01df 90       		.p2align 4,,7
+ 584              	L108:
+ 585 01e0 DDD8     		fstp	%st(0)
+ 586 01e2 DDD8     		fstp	%st(0)
+ 587 01e4 EB0A     		jmp	L74
+ 588              		.p2align 4,,7
+ 589              	L109:
+ 590 01e6 DDD8     		fstp	%st(0)
+ 591 01e8 DDD8     		fstp	%st(0)
+ 592 01ea 8DB60000 		.p2align 4,,7
+ 592      0000
+ 593              	L74:
+ 594 01f0 0FB6C0   		movzbl	%al, %eax
+ 595 01f3 66894424 		movw	%ax, 38(%esp)
+ 595      26
+ 596 01f8 DF442426 		filds	38(%esp)
+ 597 01fc E92FFEFF 		jmp	L104
+ 597      FF
+ 598              		.p2align 4,,7
+ 599              	L58:
+ 600 0201 C7042407 		movl	$7, (%esp)
+ 600      000000
+ 601 0208 E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 601      00
+ 602              		.cfi_def_cfa_offset 60
+ 603 020d 89D9     		movl	%ebx, %ecx
+ 604 020f 83EC04   		subl	$4, %esp
+ 605              		.cfi_def_cfa_offset 64
+ 606 0212 C7042407 		movl	$7, (%esp)
+ 606      000000
+ 607 0219 D95C2410 		fstps	16(%esp)
+ 608 021d E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 608      00
+ 609              		.cfi_def_cfa_offset 60
+ 610 0222 B8010000 		movl	$1, %eax
+ 610      00
+ 611 0227 83EC04   		subl	$4, %esp
+ 612              		.cfi_def_cfa_offset 64
+ 613 022a D9EE     		fldz
+ 614 022c D9442410 		flds	16(%esp)
+ 615 0230 DFE9     		fucomip	%st(1), %st
+ 616 0232 7AAC     		jp	L108
+ 617 0234 75B0     		jne	L109
+ 618 0236 D9C9     		fxch	%st(1)
+ 619 0238 DFE9     		fucomip	%st(1), %st
+ 620 023a DDD8     		fstp	%st(0)
+ 621 023c 7AB2     		jp	L74
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 14
+
+
+ 622              	L106:
+ 623 023e 0F95C0   		setne	%al
+ 624              		.p2align 4,,4
+ 625 0241 EBAD     		jmp	L74
+ 626              		.p2align 4,,7
+ 627              	L59:
+ 628 0243 C7042408 		movl	$8, (%esp)
+ 628      000000
+ 629 024a E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 629      00
+ 630              		.cfi_def_cfa_offset 60
+ 631 024f B8010000 		movl	$1, %eax
+ 631      00
+ 632 0254 D9EE     		fldz
+ 633 0256 D9C9     		fxch	%st(1)
+ 634 0258 83EC04   		subl	$4, %esp
+ 635              		.cfi_def_cfa_offset 64
+ 636 025b DFE9     		fucomip	%st(1), %st
+ 637 025d DDD8     		fstp	%st(0)
+ 638 025f 0F8A0B02 		jp	L79
+ 638      0000
+ 639 0265 0F850502 		jne	L79
+ 639      0000
+ 640              	L78:
+ 641 026b 66894424 		movw	%ax, 38(%esp)
+ 641      26
+ 642 0270 DF442426 		filds	38(%esp)
+ 643 0274 E9B7FDFF 		jmp	L104
+ 643      FF
+ 644 0279 8DB42600 		.p2align 4,,7
+ 644      000000
+ 645              	L60:
+ 646 0280 C7042403 		movl	$3, (%esp)
+ 646      000000
+ 647 0287 E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 647      00
+ 648              		.cfi_def_cfa_offset 60
+ 649 028c 89D9     		movl	%ebx, %ecx
+ 650 028e 83EC04   		subl	$4, %esp
+ 651              		.cfi_def_cfa_offset 64
+ 652 0291 D95C2420 		fstps	32(%esp)
+ 653 0295 C7042403 		movl	$3, (%esp)
+ 653      000000
+ 654 029c E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 654      00
+ 655              		.cfi_def_cfa_offset 60
+ 656 02a1 83EC04   		subl	$4, %esp
+ 657              		.cfi_def_cfa_offset 64
+ 658 02a4 D8442420 		fadds	32(%esp)
+ 659 02a8 E983FDFF 		jmp	L104
+ 659      FF
+ 660 02ad 8D7600   		.p2align 4,,7
+ 661              	L61:
+ 662 02b0 C7042403 		movl	$3, (%esp)
+ 662      000000
+ 663 02b7 E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 663      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 15
+
+
+ 664              		.cfi_def_cfa_offset 60
+ 665 02bc 89D9     		movl	%ebx, %ecx
+ 666 02be 83EC04   		subl	$4, %esp
+ 667              		.cfi_def_cfa_offset 64
+ 668 02c1 D95C2420 		fstps	32(%esp)
+ 669 02c5 C7042403 		movl	$3, (%esp)
+ 669      000000
+ 670 02cc E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 670      00
+ 671              		.cfi_def_cfa_offset 60
+ 672 02d1 83EC04   		subl	$4, %esp
+ 673              		.cfi_def_cfa_offset 64
+ 674 02d4 D8642420 		fsubs	32(%esp)
+ 675 02d8 E953FDFF 		jmp	L104
+ 675      FF
+ 676 02dd 8D7600   		.p2align 4,,7
+ 677              	L62:
+ 678 02e0 C7042403 		movl	$3, (%esp)
+ 678      000000
+ 679 02e7 E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 679      00
+ 680              		.cfi_def_cfa_offset 60
+ 681 02ec 89D9     		movl	%ebx, %ecx
+ 682 02ee 83EC04   		subl	$4, %esp
+ 683              		.cfi_def_cfa_offset 64
+ 684 02f1 D95C2420 		fstps	32(%esp)
+ 685 02f5 C7042403 		movl	$3, (%esp)
+ 685      000000
+ 686 02fc E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 686      00
+ 687              		.cfi_def_cfa_offset 60
+ 688 0301 83EC04   		subl	$4, %esp
+ 689              		.cfi_def_cfa_offset 64
+ 690 0304 D84C2420 		fmuls	32(%esp)
+ 691 0308 E923FDFF 		jmp	L104
+ 691      FF
+ 692 030d 8D7600   		.p2align 4,,7
+ 693              	L63:
+ 694 0310 C7042403 		movl	$3, (%esp)
+ 694      000000
+ 695 0317 E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 695      00
+ 696              		.cfi_def_cfa_offset 60
+ 697 031c 89D9     		movl	%ebx, %ecx
+ 698 031e 83EC04   		subl	$4, %esp
+ 699              		.cfi_def_cfa_offset 64
+ 700 0321 D95C2420 		fstps	32(%esp)
+ 701 0325 C7042403 		movl	$3, (%esp)
+ 701      000000
+ 702 032c E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 702      00
+ 703              		.cfi_def_cfa_offset 60
+ 704 0331 83EC04   		subl	$4, %esp
+ 705              		.cfi_def_cfa_offset 64
+ 706 0334 D8742420 		fdivs	32(%esp)
+ 707 0338 E9F3FCFF 		jmp	L104
+ 707      FF
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 16
+
+
+ 708 033d 8D7600   		.p2align 4,,7
+ 709              	L64:
+ 710 0340 C704240D 		movl	$13, (%esp)
+ 710      000000
+ 711 0347 E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 711      00
+ 712              		.cfi_def_cfa_offset 60
+ 713 034c 89D9     		movl	%ebx, %ecx
+ 714 034e 83EC04   		subl	$4, %esp
+ 715              		.cfi_def_cfa_offset 64
+ 716 0351 C704240D 		movl	$13, (%esp)
+ 716      000000
+ 717 0358 D95C2410 		fstps	16(%esp)
+ 718 035c E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 718      00
+ 719              		.cfi_def_cfa_offset 60
+ 720 0361 83EC04   		subl	$4, %esp
+ 721              		.cfi_def_cfa_offset 64
+ 722 0364 D9442410 		flds	16(%esp)
+ 723 0368 D95C2404 		fstps	4(%esp)
+ 724 036c D91C24   		fstps	(%esp)
+ 725 036f E8000000 		call	_maxF
+ 725      00
+ 726 0374 E9B7FCFF 		jmp	L104
+ 726      FF
+ 727 0379 8DB42600 		.p2align 4,,7
+ 727      000000
+ 728              	L65:
+ 729 0380 C704240E 		movl	$14, (%esp)
+ 729      000000
+ 730 0387 E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 730      00
+ 731              		.cfi_def_cfa_offset 60
+ 732 038c 89D9     		movl	%ebx, %ecx
+ 733 038e 83EC04   		subl	$4, %esp
+ 734              		.cfi_def_cfa_offset 64
+ 735 0391 C704240E 		movl	$14, (%esp)
+ 735      000000
+ 736 0398 D95C2410 		fstps	16(%esp)
+ 737 039c E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 737      00
+ 738              		.cfi_def_cfa_offset 60
+ 739 03a1 83EC04   		subl	$4, %esp
+ 740              		.cfi_def_cfa_offset 64
+ 741 03a4 D9442410 		flds	16(%esp)
+ 742 03a8 D95C2404 		fstps	4(%esp)
+ 743 03ac D91C24   		fstps	(%esp)
+ 744 03af E8000000 		call	_minF
+ 744      00
+ 745 03b4 E977FCFF 		jmp	L104
+ 745      FF
+ 746 03b9 8DB42600 		.p2align 4,,7
+ 746      000000
+ 747              	L66:
+ 748 03c0 C704240F 		movl	$15, (%esp)
+ 748      000000
+ 749 03c7 E8000000 		call	__ZN12LECalculator3popE11le_action_e
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 17
+
+
+ 749      00
+ 750              		.cfi_def_cfa_offset 60
+ 751 03cc 89D9     		movl	%ebx, %ecx
+ 752 03ce 83EC04   		subl	$4, %esp
+ 753              		.cfi_def_cfa_offset 64
+ 754 03d1 D95C2420 		fstps	32(%esp)
+ 755 03d5 C704240F 		movl	$15, (%esp)
+ 755      000000
+ 756 03dc E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 756      00
+ 757              		.cfi_def_cfa_offset 60
+ 758 03e1 89D9     		movl	%ebx, %ecx
+ 759 03e3 83EC04   		subl	$4, %esp
+ 760              		.cfi_def_cfa_offset 64
+ 761 03e6 C704240F 		movl	$15, (%esp)
+ 761      000000
+ 762 03ed D95C2410 		fstps	16(%esp)
+ 763 03f1 E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 763      00
+ 764              		.cfi_def_cfa_offset 60
+ 765 03f6 D9EE     		fldz
+ 766 03f8 D9C9     		fxch	%st(1)
+ 767 03fa 83EC04   		subl	$4, %esp
+ 768              		.cfi_def_cfa_offset 64
+ 769 03fd DFE9     		fucomip	%st(1), %st
+ 770 03ff DDD8     		fstp	%st(0)
+ 771 0401 D9442410 		flds	16(%esp)
+ 772 0405 7A08     		jp	L86
+ 773 0407 D9442420 		flds	32(%esp)
+ 774 040b DBC9     		fcmovne	%st(1), %st
+ 775 040d DDD9     		fstp	%st(1)
+ 776              	L86:
+ 777 040f D95C2404 		fstps	4(%esp)
+ 778 0413 E91CFCFF 		jmp	L105
+ 778      FF
+ 779              		.p2align 4,,7
+ 780              	L67:
+ 781 0418 C704246F 		movl	$111, (%esp)
+ 781      000000
+ 782 041f E8000000 		call	__ZN12LECalculator3popE11le_action_e
+ 782      00
+ 783              		.cfi_def_cfa_offset 60
+ 784 0424 83EC04   		subl	$4, %esp
+ 785              		.cfi_def_cfa_offset 64
+ 786 0427 D97C242E 		fnstcw	46(%esp)
+ 787 042b 0FB74424 		movzwl	46(%esp), %eax
+ 787      2E
+ 788 0430 B40C     		movb	$12, %ah
+ 789 0432 66894424 		movw	%ax, 44(%esp)
+ 789      2C
+ 790 0437 D96C242C 		fldcw	44(%esp)
+ 791 043b DB5C2428 		fistpl	40(%esp)
+ 792 043f D96C242E 		fldcw	46(%esp)
+ 793 0443 8B442428 		movl	40(%esp), %eax
+ 794 0447 83F80F   		cmpl	$15, %eax
+ 795 044a 7714     		ja	L88
+ 796 044c 8B4C2440 		movl	64(%esp), %ecx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 18
+
+
+ 797 0450 8B5124   		movl	36(%ecx), %edx
+ 798 0453 D9848204 		flds	1284(%edx,%eax,4)
+ 798      050000
+ 799 045a E9D1FBFF 		jmp	L104
+ 799      FF
+ 800 045f 90       		.p2align 4,,7
+ 801              	L88:
+ 802 0460 C7442404 		movl	$0x7fc00000, 4(%esp)
+ 802      0000C07F 
+ 803 0468 E9C7FBFF 		jmp	L105
+ 803      FF
+ 804 046d 8D7600   		.p2align 4,,7
+ 805              	L79:
+ 806 0470 31C0     		xorl	%eax, %eax
+ 807 0472 E9F4FDFF 		jmp	L78
+ 807      FF
+ 808              		.p2align 4,,7
+ 809              	L101:
+ 810 0477 DDD8     		fstp	%st(0)
+ 811 0479 31C0     		xorl	%eax, %eax
+ 812 047b E970FDFF 		jmp	L74
+ 812      FF
+ 813              		.cfi_endproc
+ 814              	LFE102:
+ 815              		.section .rdata,"dr"
+ 816              	LC6:
+ 817 0200 6E6F2046 		.ascii "no FSIO code\0"
+ 817      53494F20 
+ 817      636F6465 
+ 817      00
+ 818              	LC7:
+ 819 020d 4653494F 		.ascii "FSIOcount\0"
+ 819      636F756E 
+ 819      7400
+ 820 0217 00       		.align 4
+ 821              	LC8:
+ 822 0218 756E6578 		.ascii "unexpected FSIO stack size: %d\0"
+ 822      70656374 
+ 822      65642046 
+ 822      53494F20 
+ 822      73746163 
+ 823              		.section	.text$_ZN12LECalculator8getValueEP6Engine,"x"
+ 824              		.align 2
+ 825              		.p2align 4,,15
+ 826              		.globl	__ZN12LECalculator8getValueEP6Engine
+ 827              		.def	__ZN12LECalculator8getValueEP6Engine;	.scl	2;	.type	32;	.endef
+ 828              	__ZN12LECalculator8getValueEP6Engine:
+ 829              	LFB104:
+ 830              		.cfi_startproc
+ 831 0000 55       		pushl	%ebp
+ 832              		.cfi_def_cfa_offset 8
+ 833              		.cfi_offset 5, -8
+ 834 0001 57       		pushl	%edi
+ 835              		.cfi_def_cfa_offset 12
+ 836              		.cfi_offset 7, -12
+ 837 0002 89CF     		movl	%ecx, %edi
+ 838 0004 56       		pushl	%esi
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 19
+
+
+ 839              		.cfi_def_cfa_offset 16
+ 840              		.cfi_offset 6, -16
+ 841 0005 53       		pushl	%ebx
+ 842              		.cfi_def_cfa_offset 20
+ 843              		.cfi_offset 3, -20
+ 844 0006 83EC1C   		subl	$28, %esp
+ 845              		.cfi_def_cfa_offset 48
+ 846 0009 8B990402 		movl	516(%ecx), %ebx
+ 846      0000
+ 847 000f 8B6C2430 		movl	48(%esp), %ebp
+ 848 0013 85DB     		testl	%ebx, %ebx
+ 849 0015 0F84AF00 		je	L119
+ 849      0000
+ 850 001b C7810802 		movl	$0, 520(%ecx)
+ 850      00000000 
+ 850      0000
+ 851 0025 BEC80000 		movl	$200, %esi
+ 851      00
+ 852 002a EB09     		jmp	L113
+ 853 002c 8D742600 		.p2align 4,,7
+ 854              	L114:
+ 855 0030 83EE01   		subl	$1, %esi
+ 856 0033 7479     		je	L120
+ 857              	L113:
+ 858 0035 895C2404 		movl	%ebx, 4(%esp)
+ 859 0039 89F9     		movl	%edi, %ecx
+ 860 003b 892C24   		movl	%ebp, (%esp)
+ 861 003e E8000000 		call	__ZN12LECalculator5doJobEP6EngineP9LEElement
+ 861      00
+ 862              		.cfi_def_cfa_offset 40
+ 863 0043 83EC08   		subl	$8, %esp
+ 864              		.cfi_def_cfa_offset 48
+ 865 0046 84C0     		testb	%al, %al
+ 866 0048 753A     		jne	L116
+ 867 004a 8B5B0C   		movl	12(%ebx), %ebx
+ 868 004d 85DB     		testl	%ebx, %ebx
+ 869 004f 75DF     		jne	L114
+ 870 0051 8B870802 		movl	520(%edi), %eax
+ 870      0000
+ 871 0057 83F801   		cmpl	$1, %eax
+ 872 005a 7438     		je	L115
+ 873 005c 89442408 		movl	%eax, 8(%esp)
+ 874 0060 C7442404 		movl	$LC8, 4(%esp)
+ 874      18020000 
+ 875 0068 C704245E 		movl	$606, (%esp)
+ 875      020000
+ 876 006f E8000000 		call	_warning
+ 876      00
+ 877 0074 D905A402 		flds	LC0
+ 877      0000
+ 878              	L112:
+ 879 007a 83C41C   		addl	$28, %esp
+ 880              		.cfi_remember_state
+ 881              		.cfi_def_cfa_offset 20
+ 882 007d 5B       		popl	%ebx
+ 883              		.cfi_restore 3
+ 884              		.cfi_def_cfa_offset 16
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 20
+
+
+ 885 007e 5E       		popl	%esi
+ 886              		.cfi_restore 6
+ 887              		.cfi_def_cfa_offset 12
+ 888 007f 5F       		popl	%edi
+ 889              		.cfi_restore 7
+ 890              		.cfi_def_cfa_offset 8
+ 891 0080 5D       		popl	%ebp
+ 892              		.cfi_restore 5
+ 893              		.cfi_def_cfa_offset 4
+ 894 0081 C20400   		ret	$4
+ 895              		.p2align 4,,7
+ 896              	L116:
+ 897              		.cfi_restore_state
+ 898 0084 D905A402 		flds	LC0
+ 898      0000
+ 899 008a 83C41C   		addl	$28, %esp
+ 900              		.cfi_remember_state
+ 901              		.cfi_def_cfa_offset 20
+ 902 008d 5B       		popl	%ebx
+ 903              		.cfi_restore 3
+ 904              		.cfi_def_cfa_offset 16
+ 905 008e 5E       		popl	%esi
+ 906              		.cfi_restore 6
+ 907              		.cfi_def_cfa_offset 12
+ 908 008f 5F       		popl	%edi
+ 909              		.cfi_restore 7
+ 910              		.cfi_def_cfa_offset 8
+ 911 0090 5D       		popl	%ebp
+ 912              		.cfi_restore 5
+ 913              		.cfi_def_cfa_offset 4
+ 914 0091 C20400   		ret	$4
+ 915              		.p2align 4,,7
+ 916              	L115:
+ 917              		.cfi_restore_state
+ 918 0094 D9870C02 		flds	524(%edi)
+ 918      0000
+ 919 009a C7870802 		movl	$0, 520(%edi)
+ 919      00000000 
+ 919      0000
+ 920 00a4 83C41C   		addl	$28, %esp
+ 921              		.cfi_remember_state
+ 922              		.cfi_def_cfa_offset 20
+ 923 00a7 5B       		popl	%ebx
+ 924              		.cfi_restore 3
+ 925              		.cfi_def_cfa_offset 16
+ 926 00a8 5E       		popl	%esi
+ 927              		.cfi_restore 6
+ 928              		.cfi_def_cfa_offset 12
+ 929 00a9 5F       		popl	%edi
+ 930              		.cfi_restore 7
+ 931              		.cfi_def_cfa_offset 8
+ 932 00aa 5D       		popl	%ebp
+ 933              		.cfi_restore 5
+ 934              		.cfi_def_cfa_offset 4
+ 935 00ab C20400   		ret	$4
+ 936              	L120:
+ 937              		.cfi_restore_state
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 21
+
+
+ 938 00ae C704240D 		movl	$LC7, (%esp)
+ 938      020000
+ 939 00b5 E8000000 		call	_firmwareError
+ 939      00
+ 940 00ba D905A402 		flds	LC0
+ 940      0000
+ 941 00c0 83C41C   		addl	$28, %esp
+ 942              		.cfi_remember_state
+ 943              		.cfi_def_cfa_offset 20
+ 944 00c3 5B       		popl	%ebx
+ 945              		.cfi_restore 3
+ 946              		.cfi_def_cfa_offset 16
+ 947 00c4 5E       		popl	%esi
+ 948              		.cfi_restore 6
+ 949              		.cfi_def_cfa_offset 12
+ 950 00c5 5F       		popl	%edi
+ 951              		.cfi_restore 7
+ 952              		.cfi_def_cfa_offset 8
+ 953 00c6 5D       		popl	%ebp
+ 954              		.cfi_restore 5
+ 955              		.cfi_def_cfa_offset 4
+ 956 00c7 C20400   		ret	$4
+ 957              	L119:
+ 958              		.cfi_restore_state
+ 959 00ca C7442404 		movl	$LC6, 4(%esp)
+ 959      00020000 
+ 960 00d2 C704245E 		movl	$606, (%esp)
+ 960      020000
+ 961 00d9 E8000000 		call	_warning
+ 961      00
+ 962 00de D905A402 		flds	LC0
+ 962      0000
+ 963 00e4 EB94     		jmp	L112
+ 964              		.cfi_endproc
+ 965              	LFE104:
+ 966 00e6 90909090 		.section	.text$_ZN12LECalculator9getValue2EP9LEElementP6Engine,"x"
+ 966      90909090 
+ 966      9090
+ 967              		.align 2
+ 968              		.p2align 4,,15
+ 969              		.globl	__ZN12LECalculator9getValue2EP9LEElementP6Engine
+ 970              		.def	__ZN12LECalculator9getValue2EP9LEElementP6Engine;	.scl	2;	.type	32;	.endef
+ 971              	__ZN12LECalculator9getValue2EP9LEElementP6Engine:
+ 972              	LFB103:
+ 973              		.cfi_startproc
+ 974 0000 83EC1C   		subl	$28, %esp
+ 975              		.cfi_def_cfa_offset 32
+ 976 0003 8B442420 		movl	32(%esp), %eax
+ 977 0007 C7810802 		movl	$0, 520(%ecx)
+ 977      00000000 
+ 977      0000
+ 978 0011 C7810002 		movl	$0, 512(%ecx)
+ 978      00000000 
+ 978      0000
+ 979 001b 89810402 		movl	%eax, 516(%ecx)
+ 979      0000
+ 980 0021 8B442424 		movl	36(%esp), %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 22
+
+
+ 981 0025 890424   		movl	%eax, (%esp)
+ 982 0028 E8000000 		call	__ZN12LECalculator8getValueEP6Engine
+ 982      00
+ 983              		.cfi_def_cfa_offset 28
+ 984 002d 83EC04   		subl	$4, %esp
+ 985              		.cfi_def_cfa_offset 32
+ 986 0030 83C41C   		addl	$28, %esp
+ 987              		.cfi_def_cfa_offset 4
+ 988 0033 C20800   		ret	$8
+ 989              		.cfi_endproc
+ 990              	LFE103:
+ 991 0036 90909090 		.section	.text$_ZN13LEElementPoolC2EP9LEElementi,"x"
+ 991      90909090 
+ 991      9090
+ 992              		.align 2
+ 993              		.p2align 4,,15
+ 994              		.globl	__ZN13LEElementPoolC2EP9LEElementi
+ 995              		.def	__ZN13LEElementPoolC2EP9LEElementi;	.scl	2;	.type	32;	.endef
+ 996              	__ZN13LEElementPoolC2EP9LEElementi:
+ 997              	LFB106:
+ 998              		.cfi_startproc
+ 999 0000 8B442404 		movl	4(%esp), %eax
+ 1000 0004 C7410400 		movl	$0, 4(%ecx)
+ 1000      000000
+ 1001 000b 8901     		movl	%eax, (%ecx)
+ 1002 000d 8B442408 		movl	8(%esp), %eax
+ 1003 0011 894108   		movl	%eax, 8(%ecx)
+ 1004 0014 C20800   		ret	$8
+ 1005              		.cfi_endproc
+ 1006              	LFE106:
+ 1007              		.globl	__ZN13LEElementPoolC1EP9LEElementi
+ 1008              		.def	__ZN13LEElementPoolC1EP9LEElementi;	.scl	2;	.type	32;	.endef
+ 1009              		.set	__ZN13LEElementPoolC1EP9LEElementi,__ZN13LEElementPoolC2EP9LEElementi
+ 1010 0017 90909090 		.section	.text$_ZN13LEElementPool5resetEv,"x"
+ 1010      90909090 
+ 1010      90
+ 1011              		.align 2
+ 1012              		.p2align 4,,15
+ 1013              		.globl	__ZN13LEElementPool5resetEv
+ 1014              		.def	__ZN13LEElementPool5resetEv;	.scl	2;	.type	32;	.endef
+ 1015              	__ZN13LEElementPool5resetEv:
+ 1016              	LFB108:
+ 1017              		.cfi_startproc
+ 1018 0000 C7410400 		movl	$0, 4(%ecx)
+ 1018      000000
+ 1019 0007 C3       		ret
+ 1020              		.cfi_endproc
+ 1021              	LFE108:
+ 1022 0008 90909090 		.section	.text$_ZN13LEElementPool7getSizeEv,"x"
+ 1022      90909090 
+ 1023              		.align 2
+ 1024              		.p2align 4,,15
+ 1025              		.globl	__ZN13LEElementPool7getSizeEv
+ 1026              		.def	__ZN13LEElementPool7getSizeEv;	.scl	2;	.type	32;	.endef
+ 1027              	__ZN13LEElementPool7getSizeEv:
+ 1028              	LFB109:
+ 1029              		.cfi_startproc
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 23
+
+
+ 1030 0000 8B4104   		movl	4(%ecx), %eax
+ 1031 0003 C3       		ret
+ 1032              		.cfi_endproc
+ 1033              	LFE109:
+ 1034 0004 90909090 		.section .rdata,"dr"
+ 1034      90909090 
+ 1034      90909090 
+ 1035              	LC9:
+ 1036 0237 4C455F45 		.ascii "LE_ELEMENT_POOL_SIZE overflow\0"
+ 1036      4C454D45 
+ 1036      4E545F50 
+ 1036      4F4F4C5F 
+ 1036      53495A45 
+ 1037              		.section	.text$_ZN13LEElementPool4nextEv,"x"
+ 1038              		.align 2
+ 1039              		.p2align 4,,15
+ 1040              		.globl	__ZN13LEElementPool4nextEv
+ 1041              		.def	__ZN13LEElementPool4nextEv;	.scl	2;	.type	32;	.endef
+ 1042              	__ZN13LEElementPool4nextEv:
+ 1043              	LFB110:
+ 1044              		.cfi_startproc
+ 1045 0000 8B5104   		movl	4(%ecx), %edx
+ 1046 0003 3B5108   		cmpl	8(%ecx), %edx
+ 1047 0006 7D0E     		jge	L131
+ 1048 0008 89D0     		movl	%edx, %eax
+ 1049 000a 83C201   		addl	$1, %edx
+ 1050 000d C1E004   		sall	$4, %eax
+ 1051 0010 895104   		movl	%edx, 4(%ecx)
+ 1052 0013 0301     		addl	(%ecx), %eax
+ 1053 0015 C3       		ret
+ 1054              		.p2align 4,,7
+ 1055              	L131:
+ 1056 0016 83EC1C   		subl	$28, %esp
+ 1057              		.cfi_def_cfa_offset 32
+ 1058 0019 C7042437 		movl	$LC9, (%esp)
+ 1058      020000
+ 1059 0020 E8000000 		call	_firmwareError
+ 1059      00
+ 1060 0025 31C0     		xorl	%eax, %eax
+ 1061 0027 83C41C   		addl	$28, %esp
+ 1062              		.cfi_def_cfa_offset 4
+ 1063 002a C3       		ret
+ 1064              		.cfi_endproc
+ 1065              	LFE110:
+ 1066 002b 90909090 		.section	.text$_Z9isNumericPKc,"x"
+ 1066      90
+ 1067              		.p2align 4,,15
+ 1068              		.globl	__Z9isNumericPKc
+ 1069              		.def	__Z9isNumericPKc;	.scl	2;	.type	32;	.endef
+ 1070              	__Z9isNumericPKc:
+ 1071              	LFB111:
+ 1072              		.cfi_startproc
+ 1073 0000 8B442404 		movl	4(%esp), %eax
+ 1074 0004 0FB600   		movzbl	(%eax), %eax
+ 1075 0007 83E830   		subl	$48, %eax
+ 1076 000a 3C09     		cmpb	$9, %al
+ 1077 000c 0F96C0   		setbe	%al
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 24
+
+
+ 1078 000f C3       		ret
+ 1079              		.cfi_endproc
+ 1080              	LFE111:
+ 1081              		.section .rdata,"dr"
+ 1082              	LC10:
+ 1083 0255 746F6B65 		.ascii "token overflow\0"
+ 1083      6E206F76 
+ 1083      6572666C 
+ 1083      6F7700
+ 1084              		.section	.text$_Z12getNextTokenPKcPci,"x"
+ 1085              		.p2align 4,,15
+ 1086              		.globl	__Z12getNextTokenPKcPci
+ 1087              		.def	__Z12getNextTokenPKcPci;	.scl	2;	.type	32;	.endef
+ 1088              	__Z12getNextTokenPKcPci:
+ 1089              	LFB112:
+ 1090              		.cfi_startproc
+ 1091 0000 57       		pushl	%edi
+ 1092              		.cfi_def_cfa_offset 8
+ 1093              		.cfi_offset 7, -8
+ 1094 0001 56       		pushl	%esi
+ 1095              		.cfi_def_cfa_offset 12
+ 1096              		.cfi_offset 6, -12
+ 1097 0002 53       		pushl	%ebx
+ 1098              		.cfi_def_cfa_offset 16
+ 1099              		.cfi_offset 3, -16
+ 1100 0003 83EC10   		subl	$16, %esp
+ 1101              		.cfi_def_cfa_offset 32
+ 1102 0006 8B5C2420 		movl	32(%esp), %ebx
+ 1103 000a 8B7C2424 		movl	36(%esp), %edi
+ 1104 000e 0FB613   		movzbl	(%ebx), %edx
+ 1105 0011 80FA20   		cmpb	$32, %dl
+ 1106 0014 750B     		jne	L134
+ 1107              		.p2align 4,,7
+ 1108              	L142:
+ 1109 0016 83C301   		addl	$1, %ebx
+ 1110 0019 0FB613   		movzbl	(%ebx), %edx
+ 1111 001c 80FA20   		cmpb	$32, %dl
+ 1112 001f 74F5     		je	L142
+ 1113              	L134:
+ 1114 0021 31C0     		xorl	%eax, %eax
+ 1115 0023 84D2     		testb	%dl, %dl
+ 1116 0025 7434     		je	L136
+ 1117 0027 C7442404 		movl	$32, 4(%esp)
+ 1117      20000000 
+ 1118 002f 891C24   		movl	%ebx, (%esp)
+ 1119 0032 E8000000 		call	_indexOf
+ 1119      00
+ 1120 0037 83F8FF   		cmpl	$-1, %eax
+ 1121 003a 89C6     		movl	%eax, %esi
+ 1122 003c 7424     		je	L147
+ 1123              	L137:
+ 1124 003e 3B742428 		cmpl	40(%esp), %esi
+ 1125 0042 7D2A     		jge	L148
+ 1126 0044 89742408 		movl	%esi, 8(%esp)
+ 1127 0048 895C2404 		movl	%ebx, 4(%esp)
+ 1128 004c 893C24   		movl	%edi, (%esp)
+ 1129 004f E8000000 		call	_strncpy
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 25
+
+
+ 1129      00
+ 1130 0054 8D0433   		leal	(%ebx,%esi), %eax
+ 1131 0057 C6043700 		movb	$0, (%edi,%esi)
+ 1132              	L136:
+ 1133 005b 83C410   		addl	$16, %esp
+ 1134              		.cfi_remember_state
+ 1135              		.cfi_def_cfa_offset 16
+ 1136 005e 5B       		popl	%ebx
+ 1137              		.cfi_restore 3
+ 1138              		.cfi_def_cfa_offset 12
+ 1139 005f 5E       		popl	%esi
+ 1140              		.cfi_restore 6
+ 1141              		.cfi_def_cfa_offset 8
+ 1142 0060 5F       		popl	%edi
+ 1143              		.cfi_restore 7
+ 1144              		.cfi_def_cfa_offset 4
+ 1145 0061 C3       		ret
+ 1146              		.p2align 4,,7
+ 1147              	L147:
+ 1148              		.cfi_restore_state
+ 1149 0062 891C24   		movl	%ebx, (%esp)
+ 1150 0065 E8000000 		call	_strlen
+ 1150      00
+ 1151 006a 89C6     		movl	%eax, %esi
+ 1152 006c EBD0     		jmp	L137
+ 1153              	L148:
+ 1154 006e C7042455 		movl	$LC10, (%esp)
+ 1154      020000
+ 1155 0075 E8000000 		call	_firmwareError
+ 1155      00
+ 1156 007a 31C0     		xorl	%eax, %eax
+ 1157 007c EBDD     		jmp	L136
+ 1158              		.cfi_endproc
+ 1159              	LFE112:
+ 1160              		.section	.text$_Z11parseActionPKc,"x"
+ 1161              		.p2align 4,,15
+ 1162              		.globl	__Z11parseActionPKc
+ 1163              		.def	__Z11parseActionPKc;	.scl	2;	.type	32;	.endef
+ 1164              	__Z11parseActionPKc:
+ 1165              	LFB113:
+ 1166              		.cfi_startproc
+ 1167 0000 56       		pushl	%esi
+ 1168              		.cfi_def_cfa_offset 8
+ 1169              		.cfi_offset 6, -8
+ 1170 0001 53       		pushl	%ebx
+ 1171              		.cfi_def_cfa_offset 12
+ 1172              		.cfi_offset 3, -12
+ 1173 0002 83EC14   		subl	$20, %esp
+ 1174              		.cfi_def_cfa_offset 32
+ 1175 0005 8B1D0000 		movl	_LE_FIRST, %ebx
+ 1175      0000
+ 1176 000b 8B742420 		movl	32(%esp), %esi
+ 1177 000f 85DB     		testl	%ebx, %ebx
+ 1178 0011 7508     		jne	L155
+ 1179 0013 EB22     		jmp	L154
+ 1180              		.p2align 4,,7
+ 1181              	L152:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 26
+
+
+ 1182 0015 8B1B     		movl	(%ebx), %ebx
+ 1183 0017 85DB     		testl	%ebx, %ebx
+ 1184 0019 741C     		je	L154
+ 1185              	L155:
+ 1186 001b 89742404 		movl	%esi, 4(%esp)
+ 1187 001f 8B4308   		movl	8(%ebx), %eax
+ 1188 0022 890424   		movl	%eax, (%esp)
+ 1189 0025 E8000000 		call	_strEqualCaseInsensitive
+ 1189      00
+ 1190 002a 84C0     		testb	%al, %al
+ 1191 002c 74E7     		je	L152
+ 1192 002e 8B4304   		movl	4(%ebx), %eax
+ 1193 0031 83C414   		addl	$20, %esp
+ 1194              		.cfi_remember_state
+ 1195              		.cfi_def_cfa_offset 12
+ 1196 0034 5B       		popl	%ebx
+ 1197              		.cfi_restore 3
+ 1198              		.cfi_def_cfa_offset 8
+ 1199 0035 5E       		popl	%esi
+ 1200              		.cfi_restore 6
+ 1201              		.cfi_def_cfa_offset 4
+ 1202 0036 C3       		ret
+ 1203              		.p2align 4,,7
+ 1204              	L154:
+ 1205              		.cfi_restore_state
+ 1206 0037 83C414   		addl	$20, %esp
+ 1207              		.cfi_def_cfa_offset 12
+ 1208 003a 31C0     		xorl	%eax, %eax
+ 1209 003c 5B       		popl	%ebx
+ 1210              		.cfi_restore 3
+ 1211              		.cfi_def_cfa_offset 8
+ 1212 003d 5E       		popl	%esi
+ 1213              		.cfi_restore 6
+ 1214              		.cfi_def_cfa_offset 4
+ 1215 003e C3       		ret
+ 1216              		.cfi_endproc
+ 1217              	LFE113:
+ 1218 003f 90       		.section .rdata,"dr"
+ 1219              	LC11:
+ 1220 0264 756E7265 		.ascii "unrecognized [%s]\0"
+ 1220      636F676E 
+ 1220      697A6564 
+ 1220      205B2573 
+ 1220      5D00
+ 1221              		.section	.text$_ZN13LEElementPool15parseExpressionEPKc,"x"
+ 1222              		.align 2
+ 1223              		.p2align 4,,15
+ 1224              		.globl	__ZN13LEElementPool15parseExpressionEPKc
+ 1225              		.def	__ZN13LEElementPool15parseExpressionEPKc;	.scl	2;	.type	32;	.endef
+ 1226              	__ZN13LEElementPool15parseExpressionEPKc:
+ 1227              	LFB114:
+ 1228              		.cfi_startproc
+ 1229 0000 55       		pushl	%ebp
+ 1230              		.cfi_def_cfa_offset 8
+ 1231              		.cfi_offset 5, -8
+ 1232 0001 57       		pushl	%edi
+ 1233              		.cfi_def_cfa_offset 12
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 27
+
+
+ 1234              		.cfi_offset 7, -12
+ 1235 0002 31FF     		xorl	%edi, %edi
+ 1236 0004 56       		pushl	%esi
+ 1237              		.cfi_def_cfa_offset 16
+ 1238              		.cfi_offset 6, -16
+ 1239 0005 31F6     		xorl	%esi, %esi
+ 1240 0007 53       		pushl	%ebx
+ 1241              		.cfi_def_cfa_offset 20
+ 1242              		.cfi_offset 3, -20
+ 1243 0008 83EC2C   		subl	$44, %esp
+ 1244              		.cfi_def_cfa_offset 64
+ 1245 000b 8B5C2440 		movl	64(%esp), %ebx
+ 1246 000f 894C241C 		movl	%ecx, 28(%esp)
+ 1247              		.p2align 4,,7
+ 1248              	L159:
+ 1249 0013 891C24   		movl	%ebx, (%esp)
+ 1250 0016 C7442408 		movl	$64, 8(%esp)
+ 1250      40000000 
+ 1251 001e C7442404 		movl	$__ZL13parsingBuffer, 4(%esp)
+ 1251      00000000 
+ 1252 0026 E8000000 		call	__Z12getNextTokenPKcPci
+ 1252      00
+ 1253 002b 85C0     		testl	%eax, %eax
+ 1254 002d 89C3     		movl	%eax, %ebx
+ 1255 002f 7473     		je	L160
+ 1256 0031 8B4C241C 		movl	28(%esp), %ecx
+ 1257 0035 E8000000 		call	__ZN13LEElementPool4nextEv
+ 1257      00
+ 1258 003a 85C0     		testl	%eax, %eax
+ 1259 003c 89C5     		movl	%eax, %ebp
+ 1260 003e 7464     		je	L160
+ 1261 0040 0FB60500 		movzbl	__ZL13parsingBuffer, %eax
+ 1261      000000
+ 1262 0047 C7042400 		movl	$__ZL13parsingBuffer, (%esp)
+ 1262      000000
+ 1263 004e 83E830   		subl	$48, %eax
+ 1264 0051 3C09     		cmpb	$9, %al
+ 1265 0053 771B     		ja	L161
+ 1266 0055 E8000000 		call	_atoff
+ 1266      00
+ 1267 005a 85FF     		testl	%edi, %edi
+ 1268 005c C7450001 		movl	$1, 0(%ebp)
+ 1268      000000
+ 1269 0063 D95D04   		fstps	4(%ebp)
+ 1270 0066 7418     		je	L165
+ 1271              	L174:
+ 1272 0068 896E0C   		movl	%ebp, 12(%esi)
+ 1273 006b 89EE     		movl	%ebp, %esi
+ 1274 006d EBA4     		jmp	L159
+ 1275 006f 90       		.p2align 4,,7
+ 1276              	L161:
+ 1277 0070 E8000000 		call	__Z11parseActionPKc
+ 1277      00
+ 1278 0075 85C0     		testl	%eax, %eax
+ 1279 0077 740D     		je	L173
+ 1280 0079 85FF     		testl	%edi, %edi
+ 1281 007b 894500   		movl	%eax, 0(%ebp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 28
+
+
+ 1282 007e 75E8     		jne	L174
+ 1283              	L165:
+ 1284 0080 89EF     		movl	%ebp, %edi
+ 1285 0082 89EE     		movl	%ebp, %esi
+ 1286 0084 EB8D     		jmp	L159
+ 1287              		.p2align 4,,7
+ 1288              	L173:
+ 1289 0086 C7442408 		movl	$__ZL13parsingBuffer, 8(%esp)
+ 1289      00000000 
+ 1290 008e 31FF     		xorl	%edi, %edi
+ 1291 0090 C7442404 		movl	$LC11, 4(%esp)
+ 1291      64020000 
+ 1292 0098 C7042400 		movl	$0, (%esp)
+ 1292      000000
+ 1293 009f E8000000 		call	_warning
+ 1293      00
+ 1294              		.p2align 4,,7
+ 1295              	L160:
+ 1296 00a4 83C42C   		addl	$44, %esp
+ 1297              		.cfi_def_cfa_offset 20
+ 1298 00a7 89F8     		movl	%edi, %eax
+ 1299 00a9 5B       		popl	%ebx
+ 1300              		.cfi_restore 3
+ 1301              		.cfi_def_cfa_offset 16
+ 1302 00aa 5E       		popl	%esi
+ 1303              		.cfi_restore 6
+ 1304              		.cfi_def_cfa_offset 12
+ 1305 00ab 5F       		popl	%edi
+ 1306              		.cfi_restore 7
+ 1307              		.cfi_def_cfa_offset 8
+ 1308 00ac 5D       		popl	%ebp
+ 1309              		.cfi_restore 5
+ 1310              		.cfi_def_cfa_offset 4
+ 1311 00ad C20400   		ret	$4
+ 1312              		.cfi_endproc
+ 1313              	LFE114:
+ 1314              		.section .rdata,"dr"
+ 1315              	LC12:
+ 1316 0276 616E6400 		.ascii "and\0"
+ 1317              	LC13:
+ 1318 027a 2600     		.ascii "&\0"
+ 1319              	LC14:
+ 1320 027c 6F7200   		.ascii "or\0"
+ 1321              	LC15:
+ 1322 027f 7C00     		.ascii "|\0"
+ 1323              	LC16:
+ 1324 0281 6E6F7400 		.ascii "not\0"
+ 1325              	LC17:
+ 1326 0285 2B00     		.ascii "+\0"
+ 1327              	LC18:
+ 1328 0287 2D00     		.ascii "-\0"
+ 1329              	LC19:
+ 1330 0289 2A00     		.ascii "*\0"
+ 1331              	LC20:
+ 1332 028b 2F00     		.ascii "/\0"
+ 1333              	LC21:
+ 1334 028d 3E00     		.ascii ">\0"
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 29
+
+
+ 1335              	LC22:
+ 1336 028f 3E3D00   		.ascii ">=\0"
+ 1337              	LC23:
+ 1338 0292 3C00     		.ascii "<\0"
+ 1339              	LC24:
+ 1340 0294 3C3D00   		.ascii "<=\0"
+ 1341              	LC25:
+ 1342 0297 6D617800 		.ascii "max\0"
+ 1343              	LC26:
+ 1344 029b 6D696E00 		.ascii "min\0"
+ 1345              	LC27:
+ 1346 029f 696600   		.ascii "if\0"
+ 1347              		.section	.text.startup._GLOBAL__sub_I_LE_FIRST,"x"
+ 1348              		.p2align 4,,15
+ 1349              		.def	__GLOBAL__sub_I_LE_FIRST;	.scl	3;	.type	32;	.endef
+ 1350              	__GLOBAL__sub_I_LE_FIRST:
+ 1351              	LFB123:
+ 1352              		.cfi_startproc
+ 1353 0000 A1000000 		movl	_LE_FIRST, %eax
+ 1353      00
+ 1354 0005 C7050400 		movl	$6, __ZL5leAnd+4
+ 1354      00000600 
+ 1354      0000
+ 1355 000f C7050800 		movl	$LC12, __ZL5leAnd+8
+ 1355      00007602 
+ 1355      0000
+ 1356 0019 C7050400 		movl	$6, __ZL6leAnd2+4
+ 1356      00000600 
+ 1356      0000
+ 1357 0023 A3000000 		movl	%eax, __ZL5leAnd
+ 1357      00
+ 1358 0028 C7050800 		movl	$LC13, __ZL6leAnd2+8
+ 1358      00007A02 
+ 1358      0000
+ 1359 0032 C7050000 		movl	$__ZL5leAnd, __ZL6leAnd2
+ 1359      00000000 
+ 1359      0000
+ 1360 003c C7050400 		movl	$7, __ZL4leOr+4
+ 1360      00000700 
+ 1360      0000
+ 1361 0046 C7050800 		movl	$LC14, __ZL4leOr+8
+ 1361      00007C02 
+ 1361      0000
+ 1362 0050 C7050000 		movl	$__ZL6leAnd2, __ZL4leOr
+ 1362      00000000 
+ 1362      0000
+ 1363 005a C7050400 		movl	$7, __ZL5leOr2+4
+ 1363      00000700 
+ 1363      0000
+ 1364 0064 C7050800 		movl	$LC15, __ZL5leOr2+8
+ 1364      00007F02 
+ 1364      0000
+ 1365 006e C7050000 		movl	$__ZL4leOr, __ZL5leOr2
+ 1365      00000000 
+ 1365      0000
+ 1366 0078 C7050400 		movl	$8, __ZL5leNot+4
+ 1366      00000800 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 30
+
+
+ 1366      0000
+ 1367 0082 C7050800 		movl	$LC16, __ZL5leNot+8
+ 1367      00008102 
+ 1367      0000
+ 1368 008c C7050000 		movl	$__ZL5leOr2, __ZL5leNot
+ 1368      00000000 
+ 1368      0000
+ 1369 0096 C7050400 		movl	$9, __ZL5leAdd+4
+ 1369      00000900 
+ 1369      0000
+ 1370 00a0 C7050800 		movl	$LC17, __ZL5leAdd+8
+ 1370      00008502 
+ 1370      0000
+ 1371 00aa C7050000 		movl	$__ZL5leNot, __ZL5leAdd
+ 1371      00000000 
+ 1371      0000
+ 1372 00b4 C7050400 		movl	$10, __ZL5leSub+4
+ 1372      00000A00 
+ 1372      0000
+ 1373 00be C7050800 		movl	$LC18, __ZL5leSub+8
+ 1373      00008702 
+ 1373      0000
+ 1374 00c8 C7050000 		movl	$__ZL5leAdd, __ZL5leSub
+ 1374      00000000 
+ 1374      0000
+ 1375 00d2 C7050400 		movl	$11, __ZL5leMul+4
+ 1375      00000B00 
+ 1375      0000
+ 1376 00dc C7050800 		movl	$LC19, __ZL5leMul+8
+ 1376      00008902 
+ 1376      0000
+ 1377 00e6 C7050000 		movl	$__ZL5leSub, __ZL5leMul
+ 1377      00000000 
+ 1377      0000
+ 1378 00f0 C7050400 		movl	$12, __ZL5leDiv+4
+ 1378      00000C00 
+ 1378      0000
+ 1379 00fa C7050800 		movl	$LC20, __ZL5leDiv+8
+ 1379      00008B02 
+ 1379      0000
+ 1380 0104 C7050000 		movl	$__ZL5leMul, __ZL5leDiv
+ 1380      00000000 
+ 1380      0000
+ 1381 010e C7050400 		movl	$3, __ZL6leMore+4
+ 1381      00000300 
+ 1381      0000
+ 1382 0118 C7050800 		movl	$LC21, __ZL6leMore+8
+ 1382      00008D02 
+ 1382      0000
+ 1383 0122 C7050000 		movl	$__ZL5leDiv, __ZL6leMore
+ 1383      00000000 
+ 1383      0000
+ 1384 012c C7050400 		movl	$5, __ZL13leMoreOrEqual+4
+ 1384      00000500 
+ 1384      0000
+ 1385 0136 C7050800 		movl	$LC22, __ZL13leMoreOrEqual+8
+ 1385      00008F02 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 31
+
+
+ 1385      0000
+ 1386 0140 C7050000 		movl	$__ZL6leMore, __ZL13leMoreOrEqual
+ 1386      00000000 
+ 1386      0000
+ 1387 014a C7050400 		movl	$2, __ZL6leLess+4
+ 1387      00000200 
+ 1387      0000
+ 1388 0154 C7050800 		movl	$LC23, __ZL6leLess+8
+ 1388      00009202 
+ 1388      0000
+ 1389 015e C7050000 		movl	$__ZL13leMoreOrEqual, __ZL6leLess
+ 1389      00000000 
+ 1389      0000
+ 1390 0168 C7050400 		movl	$4, __ZL14leLessOrEquals+4
+ 1390      00000400 
+ 1390      0000
+ 1391 0172 C7050800 		movl	$LC24, __ZL14leLessOrEquals+8
+ 1391      00009402 
+ 1391      0000
+ 1392 017c C7050000 		movl	$__ZL6leLess, __ZL14leLessOrEquals
+ 1392      00000000 
+ 1392      0000
+ 1393 0186 C7050400 		movl	$13, __ZL5leMax+4
+ 1393      00000D00 
+ 1393      0000
+ 1394 0190 C7050800 		movl	$LC25, __ZL5leMax+8
+ 1394      00009702 
+ 1394      0000
+ 1395 019a C7050000 		movl	$__ZL14leLessOrEquals, __ZL5leMax
+ 1395      00000000 
+ 1395      0000
+ 1396 01a4 C7050400 		movl	$14, __ZL5leMin+4
+ 1396      00000E00 
+ 1396      0000
+ 1397 01ae C7050800 		movl	$LC26, __ZL5leMin+8
+ 1397      00009B02 
+ 1397      0000
+ 1398 01b8 C7050000 		movl	$__ZL5leMax, __ZL5leMin
+ 1398      00000000 
+ 1398      0000
+ 1399 01c2 C7050400 		movl	$15, __ZL4leIf+4
+ 1399      00000F00 
+ 1399      0000
+ 1400 01cc C7050800 		movl	$LC27, __ZL4leIf+8
+ 1400      00009F02 
+ 1400      0000
+ 1401 01d6 C7050000 		movl	$__ZL5leMin, __ZL4leIf
+ 1401      00000000 
+ 1401      0000
+ 1402 01e0 C7050000 		movl	$__ZL4leIf, _LE_FIRST
+ 1402      00000000 
+ 1402      0000
+ 1403 01ea C3       		ret
+ 1404              		.cfi_endproc
+ 1405              	LFE123:
+ 1406 01eb 90909090 		.section	.ctors,"w"
+ 1406      90
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 32
+
+
+ 1407              		.align 4
+ 1408 0000 00000000 		.long	__GLOBAL__sub_I_LE_FIRST
+ 1409              		.globl	_LE_FIRST
+ 1410              		.section	.data$LE_FIRST,"w"
+ 1411              		.align 4
+ 1412              	_LE_FIRST:
+ 1413 0000 00000000 		.space 4
+ 1414              		.section	.data$_ZL13parsingBuffer,"w"
+ 1415              		.align 32
+ 1416              	__ZL13parsingBuffer:
+ 1417 0000 00000000 		.space 64
+ 1417      00000000 
+ 1417      00000000 
+ 1417      00000000 
+ 1417      00000000 
+ 1418              		.section	.data$_ZL5leAnd,"w"
+ 1419              		.align 4
+ 1420              	__ZL5leAnd:
+ 1421 0000 00000000 		.space 12
+ 1421      00000000 
+ 1421      00000000 
+ 1422              		.section	.data$_ZL6leAnd2,"w"
+ 1423              		.align 4
+ 1424              	__ZL6leAnd2:
+ 1425 0000 00000000 		.space 12
+ 1425      00000000 
+ 1425      00000000 
+ 1426              		.section	.data$_ZL4leOr,"w"
+ 1427              		.align 4
+ 1428              	__ZL4leOr:
+ 1429 0000 00000000 		.space 12
+ 1429      00000000 
+ 1429      00000000 
+ 1430              		.section	.data$_ZL5leOr2,"w"
+ 1431              		.align 4
+ 1432              	__ZL5leOr2:
+ 1433 0000 00000000 		.space 12
+ 1433      00000000 
+ 1433      00000000 
+ 1434              		.section	.data$_ZL5leNot,"w"
+ 1435              		.align 4
+ 1436              	__ZL5leNot:
+ 1437 0000 00000000 		.space 12
+ 1437      00000000 
+ 1437      00000000 
+ 1438              		.section	.data$_ZL5leAdd,"w"
+ 1439              		.align 4
+ 1440              	__ZL5leAdd:
+ 1441 0000 00000000 		.space 12
+ 1441      00000000 
+ 1441      00000000 
+ 1442              		.section	.data$_ZL5leSub,"w"
+ 1443              		.align 4
+ 1444              	__ZL5leSub:
+ 1445 0000 00000000 		.space 12
+ 1445      00000000 
+ 1445      00000000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 33
+
+
+ 1446              		.section	.data$_ZL5leMul,"w"
+ 1447              		.align 4
+ 1448              	__ZL5leMul:
+ 1449 0000 00000000 		.space 12
+ 1449      00000000 
+ 1449      00000000 
+ 1450              		.section	.data$_ZL5leDiv,"w"
+ 1451              		.align 4
+ 1452              	__ZL5leDiv:
+ 1453 0000 00000000 		.space 12
+ 1453      00000000 
+ 1453      00000000 
+ 1454              		.section	.data$_ZL6leMore,"w"
+ 1455              		.align 4
+ 1456              	__ZL6leMore:
+ 1457 0000 00000000 		.space 12
+ 1457      00000000 
+ 1457      00000000 
+ 1458              		.section	.data$_ZL13leMoreOrEqual,"w"
+ 1459              		.align 4
+ 1460              	__ZL13leMoreOrEqual:
+ 1461 0000 00000000 		.space 12
+ 1461      00000000 
+ 1461      00000000 
+ 1462              		.section	.data$_ZL6leLess,"w"
+ 1463              		.align 4
+ 1464              	__ZL6leLess:
+ 1465 0000 00000000 		.space 12
+ 1465      00000000 
+ 1465      00000000 
+ 1466              		.section	.data$_ZL14leLessOrEquals,"w"
+ 1467              		.align 4
+ 1468              	__ZL14leLessOrEquals:
+ 1469 0000 00000000 		.space 12
+ 1469      00000000 
+ 1469      00000000 
+ 1470              		.section	.data$_ZL5leMax,"w"
+ 1471              		.align 4
+ 1472              	__ZL5leMax:
+ 1473 0000 00000000 		.space 12
+ 1473      00000000 
+ 1473      00000000 
+ 1474              		.section	.data$_ZL5leMin,"w"
+ 1475              		.align 4
+ 1476              	__ZL5leMin:
+ 1477 0000 00000000 		.space 12
+ 1477      00000000 
+ 1477      00000000 
+ 1478              		.section	.data$_ZL4leIf,"w"
+ 1479              		.align 4
+ 1480              	__ZL4leIf:
+ 1481 0000 00000000 		.space 12
+ 1481      00000000 
+ 1481      00000000 
+ 1482              		.section .rdata,"dr"
+ 1483 02a2 0000     		.align 4
+ 1484              	LC0:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 34
+
+
+ 1485 02a4 0000C07F 		.long	2143289344
+ 1486              		.align 4
+ 1487              	LC3:
+ 1488 02a8 0000803F 		.long	1065353216
+ 1489              		.align 4
+ 1490              	LC4:
+ 1491 02ac 00000000 		.long	0
+ 1492              		.def	_warning;	.scl	2;	.type	32;	.endef
+ 1493              		.def	_firmwareError;	.scl	2;	.type	32;	.endef
+ 1494              		.def	__Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e;	.scl	2;	.type	32;	.endef
+ 1495              		.def	_maxF;	.scl	2;	.type	32;	.endef
+ 1496              		.def	_minF;	.scl	2;	.type	32;	.endef
+ 1497              		.def	_indexOf;	.scl	2;	.type	32;	.endef
+ 1498              		.def	_strncpy;	.scl	2;	.type	32;	.endef
+ 1499              		.def	_strlen;	.scl	2;	.type	32;	.endef
+ 1500              		.def	_strEqualCaseInsensitive;	.scl	2;	.type	32;	.endef
+ 1501              		.def	_atoff;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 35
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 fsio_core.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:7      .text$_ZN17LENameOrdinalPairC2E11le_action_ePKc:00000000 __ZN17LENameOrdinalPairC2E11le_action_ePKc
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1412   .data$LE_FIRST:00000000 _LE_FIRST
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:7      .text$_ZN17LENameOrdinalPairC2E11le_action_ePKc:00000000 __ZN17LENameOrdinalPairC1E11le_action_ePKc
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:28     .text$_ZN9LEElementC2Ev:00000000 __ZN9LEElementC2Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:28     .text$_ZN9LEElementC2Ev:00000000 __ZN9LEElementC1Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:46     .text$_ZN9LEElement4initE11le_action_e:00000000 __ZN9LEElement4initE11le_action_e
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:59     .text$_ZN9LEElement4initE11le_action_ef:00000000 __ZN9LEElement4initE11le_action_ef
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:74     .text$_ZN12LECalculatorC2Ev:00000000 __ZN12LECalculatorC2Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:74     .text$_ZN12LECalculatorC2Ev:00000000 __ZN12LECalculatorC1Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:140    .text$_ZN12LECalculator5resetEv:00000000 __ZN12LECalculator5resetEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:154    .text$_ZN12LECalculator5resetEP9LEElement:00000000 __ZN12LECalculator5resetEP9LEElement
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:169    .text$_ZN12LECalculator3addEP9LEElement:00000000 __ZN12LECalculator3addEP9LEElement
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:200    .text$_ZN12LECalculator3popE11le_action_e:00000000 __ZN12LECalculator3popE11le_action_e
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:233    .text$_ZN12LECalculator4pushE11le_action_ef:00000000 __ZN12LECalculator4pushE11le_action_ef
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:283    .text$_ZN12LECalculator5doJobEP6EngineP9LEElement:00000000 __ZN12LECalculator5doJobEP6EngineP9LEElement
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:828    .text$_ZN12LECalculator8getValueEP6Engine:00000000 __ZN12LECalculator8getValueEP6Engine
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:971    .text$_ZN12LECalculator9getValue2EP9LEElementP6Engine:00000000 __ZN12LECalculator9getValue2EP9LEElementP6Engine
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:996    .text$_ZN13LEElementPoolC2EP9LEElementi:00000000 __ZN13LEElementPoolC2EP9LEElementi
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:996    .text$_ZN13LEElementPoolC2EP9LEElementi:00000000 __ZN13LEElementPoolC1EP9LEElementi
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1015   .text$_ZN13LEElementPool5resetEv:00000000 __ZN13LEElementPool5resetEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1027   .text$_ZN13LEElementPool7getSizeEv:00000000 __ZN13LEElementPool7getSizeEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1042   .text$_ZN13LEElementPool4nextEv:00000000 __ZN13LEElementPool4nextEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1070   .text$_Z9isNumericPKc:00000000 __Z9isNumericPKc
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1088   .text$_Z12getNextTokenPKcPci:00000000 __Z12getNextTokenPKcPci
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1164   .text$_Z11parseActionPKc:00000000 __Z11parseActionPKc
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1226   .text$_ZN13LEElementPool15parseExpressionEPKc:00000000 __ZN13LEElementPool15parseExpressionEPKc
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1416   .data$_ZL13parsingBuffer:00000000 __ZL13parsingBuffer
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1350   .text.startup._GLOBAL__sub_I_LE_FIRST:00000000 __GLOBAL__sub_I_LE_FIRST
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1420   .data$_ZL5leAnd:00000000 __ZL5leAnd
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1424   .data$_ZL6leAnd2:00000000 __ZL6leAnd2
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1428   .data$_ZL4leOr:00000000 __ZL4leOr
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1432   .data$_ZL5leOr2:00000000 __ZL5leOr2
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1436   .data$_ZL5leNot:00000000 __ZL5leNot
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1440   .data$_ZL5leAdd:00000000 __ZL5leAdd
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1444   .data$_ZL5leSub:00000000 __ZL5leSub
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1448   .data$_ZL5leMul:00000000 __ZL5leMul
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1452   .data$_ZL5leDiv:00000000 __ZL5leDiv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1456   .data$_ZL6leMore:00000000 __ZL6leMore
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1460   .data$_ZL13leMoreOrEqual:00000000 __ZL13leMoreOrEqual
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1464   .data$_ZL6leLess:00000000 __ZL6leLess
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1468   .data$_ZL14leLessOrEquals:00000000 __ZL14leLessOrEquals
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1472   .data$_ZL5leMax:00000000 __ZL5leMax
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1476   .data$_ZL5leMin:00000000 __ZL5leMin
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s:1480   .data$_ZL4leIf:00000000 __ZL4leIf
+
+UNDEFINED SYMBOLS
+_warning
+_firmwareError
+__Z10getLEValueP6EngineP7FLStackIfLi32EE11le_action_e
+_maxF
+_minF
+_indexOf
+_strncpy
+_strlen
+_strEqualCaseInsensitive
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccq5cANr.s 			page 36
+
+
+_atoff

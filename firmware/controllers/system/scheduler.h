@@ -19,7 +19,7 @@ public:
 	VirtualTimer timer;
 #endif /* EFI_SIGNAL_EXECUTOR_SLEEP */
 
-	volatile uint64_t momentX;
+	volatile efitime_t momentX;
 	schfunc_t callback;
 	void *param;
 	scheduling_s *next;

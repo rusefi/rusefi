@@ -13,7 +13,7 @@
 
 typedef struct {
 	// todo: would probably be better to keep the high bits as 32 bit field to be sure
-	volatile uint64_t highBits;
+	volatile efitime_t highBits;
 	volatile uint32_t lowBits;
 } State64;
 
@@ -24,9 +24,9 @@ class Overflow64Counter
   public:
 	Overflow64Counter();
 
-	uint64_t get();
+	efitime_t get();
 #if EFI_UNIT_TEST
-	uint64_t update(uint32_t value);
+	efitime_t update(uint32_t value);
 #endif
 
 	State64 state;

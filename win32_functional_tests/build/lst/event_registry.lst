@@ -1,0 +1,144 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccCp96G2.s 			page 1
+
+
+   1              		.file	"event_registry.cpp"
+   2              		.section	.text$_ZN14InjectionEventC2Ev,"x"
+   3              		.align 2
+   4              		.p2align 4,,15
+   5              		.globl	__ZN14InjectionEventC2Ev
+   6              		.def	__ZN14InjectionEventC2Ev;	.scl	2;	.type	32;	.endef
+   7              	__ZN14InjectionEventC2Ev:
+   8              	LFB89:
+   9              		.cfi_startproc
+  10 0000 53       		pushl	%ebx
+  11              		.cfi_def_cfa_offset 8
+  12              		.cfi_offset 3, -8
+  13 0001 89CB     		movl	%ecx, %ebx
+  14 0003 D9EE     		fldz
+  15 0005 83EC08   		subl	$8, %esp
+  16              		.cfi_def_cfa_offset 16
+  17 0008 D95104   		fsts	4(%ecx)
+  18 000b D95908   		fstps	8(%ecx)
+  19 000e C7010000 		movl	$0, (%ecx)
+  19      0000
+  20 0014 8D4918   		leal	24(%ecx), %ecx
+  21 0017 E8000000 		call	__ZN12scheduling_sC1Ev
+  21      00
+  22 001c 8D4B48   		leal	72(%ebx), %ecx
+  23 001f E8000000 		call	__ZN12scheduling_sC1Ev
+  23      00
+  24 0024 8D4B78   		leal	120(%ebx), %ecx
+  25 0027 E8000000 		call	__ZN12scheduling_sC1Ev
+  25      00
+  26 002c 8D8BA800 		leal	168(%ebx), %ecx
+  26      0000
+  27 0032 E8000000 		call	__ZN12scheduling_sC1Ev
+  27      00
+  28 0037 C683D800 		movb	$0, 216(%ebx)
+  28      000000
+  29 003e 83C408   		addl	$8, %esp
+  30              		.cfi_def_cfa_offset 8
+  31 0041 5B       		popl	%ebx
+  32              		.cfi_restore 3
+  33              		.cfi_def_cfa_offset 4
+  34 0042 C3       		ret
+  35              		.cfi_endproc
+  36              	LFE89:
+  37              		.globl	__ZN14InjectionEventC1Ev
+  38              		.def	__ZN14InjectionEventC1Ev;	.scl	2;	.type	32;	.endef
+  39              		.set	__ZN14InjectionEventC1Ev,__ZN14InjectionEventC2Ev
+  40 0043 90909090 		.section	.text$_ZN24event_trigger_position_sC2Ev,"x"
+  40      90909090 
+  40      90909090 
+  40      90
+  41              		.align 2
+  42              		.p2align 4,,15
+  43              		.globl	__ZN24event_trigger_position_sC2Ev
+  44              		.def	__ZN24event_trigger_position_sC2Ev;	.scl	2;	.type	32;	.endef
+  45              	__ZN24event_trigger_position_sC2Ev:
+  46              	LFB92:
+  47              		.cfi_startproc
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccCp96G2.s 			page 2
+
+
+  48 0000 D9EE     		fldz
+  49 0002 D95104   		fsts	4(%ecx)
+  50 0005 C7010000 		movl	$0, (%ecx)
+  50      0000
+  51 000b D95908   		fstps	8(%ecx)
+  52 000e C3       		ret
+  53              		.cfi_endproc
+  54              	LFE92:
+  55              		.globl	__ZN24event_trigger_position_sC1Ev
+  56              		.def	__ZN24event_trigger_position_sC1Ev;	.scl	2;	.type	32;	.endef
+  57              		.set	__ZN24event_trigger_position_sC1Ev,__ZN24event_trigger_position_sC2Ev
+  58 000f 90       		.section	.text$_ZN13IgnitionEventC2Ev,"x"
+  59              		.align 2
+  60              		.p2align 4,,15
+  61              		.globl	__ZN13IgnitionEventC2Ev
+  62              		.def	__ZN13IgnitionEventC2Ev;	.scl	2;	.type	32;	.endef
+  63              	__ZN13IgnitionEventC2Ev:
+  64              	LFB95:
+  65              		.cfi_startproc
+  66 0000 53       		pushl	%ebx
+  67              		.cfi_def_cfa_offset 8
+  68              		.cfi_offset 3, -8
+  69 0001 89CB     		movl	%ecx, %ebx
+  70 0003 83EC08   		subl	$8, %esp
+  71              		.cfi_def_cfa_offset 16
+  72 0006 8D4908   		leal	8(%ecx), %ecx
+  73 0009 E8000000 		call	__ZN12scheduling_sC1Ev
+  73      00
+  74 000e 8D4B38   		leal	56(%ebx), %ecx
+  75 0011 E8000000 		call	__ZN12scheduling_sC1Ev
+  75      00
+  76 0016 C7436C00 		movl	$0, 108(%ebx)
+  76      000000
+  77 001d C7437800 		movl	$0, 120(%ebx)
+  77      000000
+  78 0024 C7838800 		movl	$0, 136(%ebx)
+  78      00000000 
+  78      0000
+  79 002e C7838400 		movl	$0, 132(%ebx)
+  79      00000000 
+  79      0000
+  80 0038 C7030000 		movl	$0, (%ebx)
+  80      0000
+  81 003e D9EE     		fldz
+  82 0040 D95370   		fsts	112(%ebx)
+  83 0043 D95374   		fsts	116(%ebx)
+  84 0046 D9537C   		fsts	124(%ebx)
+  85 0049 D99B8000 		fstps	128(%ebx)
+  85      0000
+  86 004f C7436800 		movl	$0x7fc00000, 104(%ebx)
+  86      00C07F
+  87 0056 83C408   		addl	$8, %esp
+  88              		.cfi_def_cfa_offset 8
+  89 0059 5B       		popl	%ebx
+  90              		.cfi_restore 3
+  91              		.cfi_def_cfa_offset 4
+  92 005a C3       		ret
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccCp96G2.s 			page 3
+
+
+  93              		.cfi_endproc
+  94              	LFE95:
+  95              		.globl	__ZN13IgnitionEventC1Ev
+  96              		.def	__ZN13IgnitionEventC1Ev;	.scl	2;	.type	32;	.endef
+  97              		.set	__ZN13IgnitionEventC1Ev,__ZN13IgnitionEventC2Ev
+  98 005b 90909090 		.def	__ZN12scheduling_sC1Ev;	.scl	2;	.type	32;	.endef
+  98      90
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccCp96G2.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 event_registry.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccCp96G2.s:7      .text$_ZN14InjectionEventC2Ev:00000000 __ZN14InjectionEventC2Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccCp96G2.s:7      .text$_ZN14InjectionEventC2Ev:00000000 __ZN14InjectionEventC1Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccCp96G2.s:45     .text$_ZN24event_trigger_position_sC2Ev:00000000 __ZN24event_trigger_position_sC2Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccCp96G2.s:45     .text$_ZN24event_trigger_position_sC2Ev:00000000 __ZN24event_trigger_position_sC1Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccCp96G2.s:63     .text$_ZN13IgnitionEventC2Ev:00000000 __ZN13IgnitionEventC2Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccCp96G2.s:63     .text$_ZN13IgnitionEventC2Ev:00000000 __ZN13IgnitionEventC1Ev
+
+UNDEFINED SYMBOLS
+__ZN12scheduling_sC1Ev

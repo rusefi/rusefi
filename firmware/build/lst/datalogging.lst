@@ -1,0 +1,1143 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"datalogging.cpp"
+  16              		.section	.text.resetLogging.part.0,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	resetLogging.part.0, %function
+  22              	resetLogging.part.0:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25              		@ link register save eliminated.
+  26 0000 0168     		ldr	r1, [r0]
+  27 0002 40F20000 		movw	r0, #:lower16:.LC0
+  28 0006 C0F20000 		movt	r0, #:upper16:.LC0
+  29 000a FFF7FEBF 		b	firmwareError
+  30              		.size	resetLogging.part.0, .-resetLogging.part.0
+  31 000e 00BF     		.section	.text.append,"ax",%progbits
+  32              		.align	2
+  33              		.p2align 4,,15
+  34              		.global	append
+  35              		.thumb
+  36              		.thumb_func
+  37              		.type	append, %function
+  38              	append:
+  39              		@ args = 0, pretend = 0, frame = 0
+  40              		@ frame_needed = 0, uses_anonymous_args = 0
+  41 0000 70B5     		push	{r4, r5, r6, lr}
+  42 0002 0D46     		mov	r5, r1
+  43 0004 0446     		mov	r4, r0
+  44 0006 F1B1     		cbz	r1, .L8
+  45 0008 0846     		mov	r0, r1
+  46 000a FFF7FEFF 		bl	efiStrlen
+  47 000e E36A     		ldr	r3, [r4, #44]
+  48 0010 0646     		mov	r6, r0
+  49 0012 03B3     		cbz	r3, .L9
+  50 0014 206B     		ldr	r0, [r4, #48]
+  51 0016 626B     		ldr	r2, [r4, #52]
+  52 0018 1B1A     		subs	r3, r3, r0
+  53 001a 1A44     		add	r2, r2, r3
+  54 001c 711C     		adds	r1, r6, #1
+  55 001e 8A42     		cmp	r2, r1
+  56 0020 06D3     		bcc	.L10
+  57 0022 2946     		mov	r1, r5
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s 			page 2
+
+
+  58 0024 FFF7FEFF 		bl	strcpy
+  59 0028 236B     		ldr	r3, [r4, #48]
+  60 002a 1E44     		add	r6, r6, r3
+  61 002c 2663     		str	r6, [r4, #48]
+  62 002e 70BD     		pop	{r4, r5, r6, pc}
+  63              	.L10:
+  64 0030 40F20001 		movw	r1, #:lower16:.LC3
+  65 0034 2268     		ldr	r2, [r4]
+  66 0036 C0F20001 		movt	r1, #:upper16:.LC3
+  67 003a 40F25E20 		movw	r0, #606
+  68 003e BDE87040 		pop	{r4, r5, r6, lr}
+  69 0042 FFF7FEBF 		b	warning
+  70              	.L8:
+  71 0046 40F20000 		movw	r0, #:lower16:.LC1
+  72 004a C0F20000 		movt	r0, #:upper16:.LC1
+  73 004e BDE87040 		pop	{r4, r5, r6, lr}
+  74 0052 FFF7FEBF 		b	firmwareError
+  75              	.L9:
+  76 0056 40F20000 		movw	r0, #:lower16:.LC2
+  77 005a 2168     		ldr	r1, [r4]
+  78 005c C0F20000 		movt	r0, #:upper16:.LC2
+  79 0060 BDE87040 		pop	{r4, r5, r6, lr}
+  80 0064 FFF7FEBF 		b	firmwareError
+  81              		.size	append, .-append
+  82 0068 AFF30080 		.section	.text.appendFast,"ax",%progbits
+  82      AFF30080 
+  83              		.align	2
+  84              		.p2align 4,,15
+  85              		.global	appendFast
+  86              		.thumb
+  87              		.thumb_func
+  88              		.type	appendFast, %function
+  89              	appendFast:
+  90              		@ args = 0, pretend = 0, frame = 0
+  91              		@ frame_needed = 0, uses_anonymous_args = 0
+  92              		@ link register save eliminated.
+  93 0000 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+  94 0002 30B4     		push	{r4, r5}
+  95 0004 9BB1     		cbz	r3, .L17
+  96 0006 4A1C     		adds	r2, r1, #1
+  97              	.L14:
+  98 0008 1446     		mov	r4, r2
+  99 000a 0132     		adds	r2, r2, #1
+ 100 000c 2578     		ldrb	r5, [r4]	@ zero_extendqisi2
+ 101 000e 002D     		cmp	r5, #0
+ 102 0010 FAD1     		bne	.L14
+ 103 0012 641A     		subs	r4, r4, r1
+ 104              	.L12:
+ 105 0014 026B     		ldr	r2, [r0, #48]
+ 106 0016 01E0     		b	.L16
+ 107              	.L18:
+ 108 0018 11F8013F 		ldrb	r3, [r1, #1]!	@ zero_extendqisi2
+ 109              	.L16:
+ 110 001c 02F8013B 		strb	r3, [r2], #1
+ 111 0020 002B     		cmp	r3, #0
+ 112 0022 F9D1     		bne	.L18
+ 113 0024 036B     		ldr	r3, [r0, #48]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s 			page 3
+
+
+ 114 0026 2344     		add	r3, r3, r4
+ 115 0028 0363     		str	r3, [r0, #48]
+ 116 002a 30BC     		pop	{r4, r5}
+ 117 002c 7047     		bx	lr
+ 118              	.L17:
+ 119 002e 1C46     		mov	r4, r3
+ 120 0030 F0E7     		b	.L12
+ 121              		.size	appendFast, .-appendFast
+ 122 0032 00BFAFF3 		.section	.text.vappendPrintf,"ax",%progbits
+ 122      0080AFF3 
+ 122      0080AFF3 
+ 122      0080
+ 123              		.align	2
+ 124              		.p2align 4,,15
+ 125              		.global	vappendPrintf
+ 126              		.thumb
+ 127              		.thumb_func
+ 128              		.type	vappendPrintf, %function
+ 129              	vappendPrintf:
+ 130              		@ args = 0, pretend = 0, frame = 0
+ 131              		@ frame_needed = 0, uses_anonymous_args = 0
+ 132 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 133 0004 40F20004 		movw	r4, #:lower16:rlist
+ 134 0008 C0F20004 		movt	r4, #:upper16:rlist
+ 135 000c 0646     		mov	r6, r0
+ 136 000e A069     		ldr	r0, [r4, #24]
+ 137 0010 8846     		mov	r8, r1
+ 138 0012 1746     		mov	r7, r2
+ 139 0014 FFF7FEFF 		bl	getRemainingStack
+ 140 0018 8028     		cmp	r0, #128
+ 141 001a 32DD     		ble	.L25
+ 142 001c 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 143 0020 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 144 0024 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 145 0026 23B3     		cbz	r3, .L26
+ 146 0028 FFF7FEFF 		bl	lockAnyContext
+ 147 002c 40F20005 		movw	r5, #:lower16:.LANCHOR1
+ 148 0030 C0F20005 		movt	r5, #:upper16:.LANCHOR1
+ 149 0034 8246     		mov	r10, r0
+ 150 0036 4FF00009 		mov	r9, #0
+ 151 003a A069     		ldr	r0, [r4, #24]
+ 152 003c C5F80C90 		str	r9, [r5, #12]
+ 153 0040 FFF7FEFF 		bl	getRemainingStack
+ 154 0044 8028     		cmp	r0, #128
+ 155 0046 24DD     		ble	.L27
+ 156 0048 4146     		mov	r1, r8
+ 157 004a 3A46     		mov	r2, r7
+ 158 004c 2846     		mov	r0, r5
+ 159 004e FFF7FEFF 		bl	chvprintf
+ 160 0052 6A68     		ldr	r2, [r5, #4]
+ 161 0054 EB68     		ldr	r3, [r5, #12]
+ 162 0056 40F20001 		movw	r1, #:lower16:.LANCHOR2
+ 163 005a 3046     		mov	r0, r6
+ 164 005c 02F80390 		strb	r9, [r2, r3]
+ 165 0060 C0F20001 		movt	r1, #:upper16:.LANCHOR2
+ 166 0064 FFF7FEFF 		bl	append
+ 167 0068 BAF1000F 		cmp	r10, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s 			page 4
+
+
+ 168 006c 1AD0     		beq	.L28
+ 169              	.L19:
+ 170 006e BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 171              	.L26:
+ 172 0072 40F20000 		movw	r0, #:lower16:.LC5
+ 173 0076 C0F20000 		movt	r0, #:upper16:.LC5
+ 174 007a BDE8F047 		pop	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 175 007e FFF7FEBF 		b	firmwareError
+ 176              	.L25:
+ 177 0082 40F20000 		movw	r0, #:lower16:.LC4
+ 178 0086 C0F20000 		movt	r0, #:upper16:.LC4
+ 179 008a BDE8F047 		pop	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 180 008e FFF7FEBF 		b	firmwareError
+ 181              	.L27:
+ 182 0092 40F20000 		movw	r0, #:lower16:.LC6
+ 183 0096 C0F20000 		movt	r0, #:upper16:.LC6
+ 184 009a FFF7FEFF 		bl	firmwareError
+ 185 009e BAF1000F 		cmp	r10, #0
+ 186 00a2 E4D1     		bne	.L19
+ 187              	.L28:
+ 188 00a4 BDE8F047 		pop	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 189 00a8 FFF7FEBF 		b	unlockAnyContext
+ 190              		.size	vappendPrintf, .-vappendPrintf
+ 191 00ac AFF30080 		.section	.text.appendPrintf,"ax",%progbits
+ 192              		.align	2
+ 193              		.p2align 4,,15
+ 194              		.global	appendPrintf
+ 195              		.thumb
+ 196              		.thumb_func
+ 197              		.type	appendPrintf, %function
+ 198              	appendPrintf:
+ 199              		@ args = 4, pretend = 12, frame = 8
+ 200              		@ frame_needed = 0, uses_anonymous_args = 1
+ 201 0000 0EB4     		push	{r1, r2, r3}
+ 202 0002 10B5     		push	{r4, lr}
+ 203 0004 40F20003 		movw	r3, #:lower16:rlist
+ 204 0008 C0F20003 		movt	r3, #:upper16:rlist
+ 205 000c 83B0     		sub	sp, sp, #12
+ 206 000e 0446     		mov	r4, r0
+ 207 0010 9869     		ldr	r0, [r3, #24]
+ 208 0012 FFF7FEFF 		bl	getRemainingStack
+ 209 0016 8028     		cmp	r0, #128
+ 210 0018 0BDD     		ble	.L32
+ 211 001a 06AB     		add	r3, sp, #24
+ 212 001c 2046     		mov	r0, r4
+ 213 001e 1A46     		mov	r2, r3
+ 214 0020 0599     		ldr	r1, [sp, #20]
+ 215 0022 0193     		str	r3, [sp, #4]
+ 216 0024 FFF7FEFF 		bl	vappendPrintf
+ 217 0028 03B0     		add	sp, sp, #12
+ 218              		@ sp needed
+ 219 002a BDE81040 		pop	{r4, lr}
+ 220 002e 03B0     		add	sp, sp, #12
+ 221 0030 7047     		bx	lr
+ 222              	.L32:
+ 223 0032 40F20000 		movw	r0, #:lower16:.LC7
+ 224 0036 C0F20000 		movt	r0, #:upper16:.LC7
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s 			page 5
+
+
+ 225 003a FFF7FEFF 		bl	firmwareError
+ 226 003e 03B0     		add	sp, sp, #12
+ 227              		@ sp needed
+ 228 0040 BDE81040 		pop	{r4, lr}
+ 229 0044 03B0     		add	sp, sp, #12
+ 230 0046 7047     		bx	lr
+ 231              		.size	appendPrintf, .-appendPrintf
+ 232 0048 AFF30080 		.section	.text.initLoggingExt,"ax",%progbits
+ 232      AFF30080 
+ 233              		.align	2
+ 234              		.p2align 4,,15
+ 235              		.global	initLoggingExt
+ 236              		.thumb
+ 237              		.thumb_func
+ 238              		.type	initLoggingExt, %function
+ 239              	initLoggingExt:
+ 240              		@ args = 0, pretend = 0, frame = 0
+ 241              		@ frame_needed = 0, uses_anonymous_args = 0
+ 242 0000 10B5     		push	{r4, lr}
+ 243 0002 C262     		str	r2, [r0, #44]
+ 244 0004 0446     		mov	r4, r0
+ 245 0006 0160     		str	r1, [r0]
+ 246 0008 4363     		str	r3, [r0, #52]
+ 247 000a 42B1     		cbz	r2, .L36
+ 248 000c 0023     		movs	r3, #0
+ 249 000e 0263     		str	r2, [r0, #48]
+ 250 0010 1370     		strb	r3, [r2]
+ 251              	.L35:
+ 252 0012 43F60913 		movw	r3, #14601
+ 253 0016 C0F2B223 		movt	r3, 690
+ 254 001a A363     		str	r3, [r4, #56]
+ 255 001c 10BD     		pop	{r4, pc}
+ 256              	.L36:
+ 257 001e FFF7FEFF 		bl	resetLogging.part.0
+ 258 0022 F6E7     		b	.L35
+ 259              		.size	initLoggingExt, .-initLoggingExt
+ 260 0024 AFF30080 		.section	.text.isInitialized,"ax",%progbits
+ 260      AFF30080 
+ 260      AFF30080 
+ 261              		.align	2
+ 262              		.p2align 4,,15
+ 263              		.global	isInitialized
+ 264              		.thumb
+ 265              		.thumb_func
+ 266              		.type	isInitialized, %function
+ 267              	isInitialized:
+ 268              		@ args = 0, pretend = 0, frame = 0
+ 269              		@ frame_needed = 0, uses_anonymous_args = 0
+ 270              		@ link register save eliminated.
+ 271 0000 806B     		ldr	r0, [r0, #56]
+ 272 0002 43F60913 		movw	r3, #14601
+ 273 0006 C0F2B223 		movt	r3, 690
+ 274 000a C31A     		subs	r3, r0, r3
+ 275 000c 5842     		rsbs	r0, r3, #0
+ 276 000e 5841     		adcs	r0, r0, r3
+ 277 0010 7047     		bx	lr
+ 278              		.size	isInitialized, .-isInitialized
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s 			page 6
+
+
+ 279 0012 00BFAFF3 		.section	.text.debugInt,"ax",%progbits
+ 279      0080AFF3 
+ 279      0080AFF3 
+ 279      0080
+ 280              		.align	2
+ 281              		.p2align 4,,15
+ 282              		.global	debugInt
+ 283              		.thumb
+ 284              		.thumb_func
+ 285              		.type	debugInt, %function
+ 286              	debugInt:
+ 287              		@ args = 0, pretend = 0, frame = 0
+ 288              		@ frame_needed = 0, uses_anonymous_args = 0
+ 289 0000 70B5     		push	{r4, r5, r6, lr}
+ 290 0002 40F20004 		movw	r4, #:lower16:.LC8
+ 291 0006 0546     		mov	r5, r0
+ 292 0008 C0F20004 		movt	r4, #:upper16:.LC8
+ 293 000c 1646     		mov	r6, r2
+ 294 000e FFF7FEFF 		bl	append
+ 295 0012 2146     		mov	r1, r4
+ 296 0014 2846     		mov	r0, r5
+ 297 0016 FFF7FEFF 		bl	append
+ 298 001a 40F20001 		movw	r1, #:lower16:.LC9
+ 299 001e 2846     		mov	r0, r5
+ 300 0020 2346     		mov	r3, r4
+ 301 0022 3246     		mov	r2, r6
+ 302 0024 C0F20001 		movt	r1, #:upper16:.LC9
+ 303 0028 BDE87040 		pop	{r4, r5, r6, lr}
+ 304 002c FFF7FEBF 		b	appendPrintf
+ 305              		.size	debugInt, .-debugInt
+ 306              		.global	__aeabi_f2d
+ 307              		.section	.text.appendFloat,"ax",%progbits
+ 308              		.align	2
+ 309              		.p2align 4,,15
+ 310              		.global	appendFloat
+ 311              		.thumb
+ 312              		.thumb_func
+ 313              		.type	appendFloat, %function
+ 314              	appendFloat:
+ 315              		@ args = 0, pretend = 0, frame = 0
+ 316              		@ frame_needed = 0, uses_anonymous_args = 0
+ 317 0000 013A     		subs	r2, r2, #1
+ 318 0002 10B5     		push	{r4, lr}
+ 319 0004 0446     		mov	r4, r0
+ 320 0006 0846     		mov	r0, r1	@ float
+ 321 0008 052A     		cmp	r2, #5
+ 322 000a 52D8     		bhi	.L40
+ 323 000c DFE802F0 		tbb	[pc, r2]
+ 324              	.L42:
+ 325 0010 10       		.byte	(.L41-.L42)/2
+ 326 0011 1D       		.byte	(.L43-.L42)/2
+ 327 0012 2A       		.byte	(.L44-.L42)/2
+ 328 0013 37       		.byte	(.L45-.L42)/2
+ 329 0014 44       		.byte	(.L46-.L42)/2
+ 330 0015 03       		.byte	(.L47-.L42)/2
+ 331              		.align	1
+ 332              	.L47:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s 			page 7
+
+
+ 333 0016 FFF7FEFF 		bl	__aeabi_f2d
+ 334 001a 0B46     		mov	r3, r1
+ 335 001c 40F20001 		movw	r1, #:lower16:.LC15
+ 336 0020 0246     		mov	r2, r0
+ 337 0022 C0F20001 		movt	r1, #:upper16:.LC15
+ 338 0026 2046     		mov	r0, r4
+ 339 0028 BDE81040 		pop	{r4, lr}
+ 340 002c FFF7FEBF 		b	appendPrintf
+ 341              	.L41:
+ 342 0030 FFF7FEFF 		bl	__aeabi_f2d
+ 343 0034 0B46     		mov	r3, r1
+ 344 0036 40F20001 		movw	r1, #:lower16:.LC10
+ 345 003a 0246     		mov	r2, r0
+ 346 003c C0F20001 		movt	r1, #:upper16:.LC10
+ 347 0040 2046     		mov	r0, r4
+ 348 0042 BDE81040 		pop	{r4, lr}
+ 349 0046 FFF7FEBF 		b	appendPrintf
+ 350              	.L43:
+ 351 004a FFF7FEFF 		bl	__aeabi_f2d
+ 352 004e 0B46     		mov	r3, r1
+ 353 0050 40F20001 		movw	r1, #:lower16:.LC11
+ 354 0054 0246     		mov	r2, r0
+ 355 0056 C0F20001 		movt	r1, #:upper16:.LC11
+ 356 005a 2046     		mov	r0, r4
+ 357 005c BDE81040 		pop	{r4, lr}
+ 358 0060 FFF7FEBF 		b	appendPrintf
+ 359              	.L44:
+ 360 0064 FFF7FEFF 		bl	__aeabi_f2d
+ 361 0068 0B46     		mov	r3, r1
+ 362 006a 40F20001 		movw	r1, #:lower16:.LC12
+ 363 006e 0246     		mov	r2, r0
+ 364 0070 C0F20001 		movt	r1, #:upper16:.LC12
+ 365 0074 2046     		mov	r0, r4
+ 366 0076 BDE81040 		pop	{r4, lr}
+ 367 007a FFF7FEBF 		b	appendPrintf
+ 368              	.L45:
+ 369 007e FFF7FEFF 		bl	__aeabi_f2d
+ 370 0082 0B46     		mov	r3, r1
+ 371 0084 40F20001 		movw	r1, #:lower16:.LC13
+ 372 0088 0246     		mov	r2, r0
+ 373 008a C0F20001 		movt	r1, #:upper16:.LC13
+ 374 008e 2046     		mov	r0, r4
+ 375 0090 BDE81040 		pop	{r4, lr}
+ 376 0094 FFF7FEBF 		b	appendPrintf
+ 377              	.L46:
+ 378 0098 FFF7FEFF 		bl	__aeabi_f2d
+ 379 009c 0B46     		mov	r3, r1
+ 380 009e 40F20001 		movw	r1, #:lower16:.LC14
+ 381 00a2 0246     		mov	r2, r0
+ 382 00a4 C0F20001 		movt	r1, #:upper16:.LC14
+ 383 00a8 2046     		mov	r0, r4
+ 384 00aa BDE81040 		pop	{r4, lr}
+ 385 00ae FFF7FEBF 		b	appendPrintf
+ 386              	.L40:
+ 387 00b2 FFF7FEFF 		bl	__aeabi_f2d
+ 388 00b6 0B46     		mov	r3, r1
+ 389 00b8 40F20001 		movw	r1, #:lower16:.LC16
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s 			page 8
+
+
+ 390 00bc 0246     		mov	r2, r0
+ 391 00be C0F20001 		movt	r1, #:upper16:.LC16
+ 392 00c2 2046     		mov	r0, r4
+ 393 00c4 BDE81040 		pop	{r4, lr}
+ 394 00c8 FFF7FEBF 		b	appendPrintf
+ 395              		.size	appendFloat, .-appendFloat
+ 396 00cc AFF30080 		.section	.text.debugFloat,"ax",%progbits
+ 397              		.align	2
+ 398              		.p2align 4,,15
+ 399              		.global	debugFloat
+ 400              		.thumb
+ 401              		.thumb_func
+ 402              		.type	debugFloat, %function
+ 403              	debugFloat:
+ 404              		@ args = 0, pretend = 0, frame = 0
+ 405              		@ frame_needed = 0, uses_anonymous_args = 0
+ 406 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 407 0002 40F20004 		movw	r4, #:lower16:.LC8
+ 408 0006 0546     		mov	r5, r0
+ 409 0008 C0F20004 		movt	r4, #:upper16:.LC8
+ 410 000c 1646     		mov	r6, r2	@ float
+ 411 000e 1F46     		mov	r7, r3
+ 412 0010 FFF7FEFF 		bl	append
+ 413 0014 2146     		mov	r1, r4
+ 414 0016 2846     		mov	r0, r5
+ 415 0018 FFF7FEFF 		bl	append
+ 416 001c 2846     		mov	r0, r5
+ 417 001e 3146     		mov	r1, r6	@ float
+ 418 0020 3A46     		mov	r2, r7
+ 419 0022 FFF7FEFF 		bl	appendFloat
+ 420 0026 2846     		mov	r0, r5
+ 421 0028 2146     		mov	r1, r4
+ 422 002a BDE8F840 		pop	{r3, r4, r5, r6, r7, lr}
+ 423 002e FFF7FEBF 		b	append
+ 424              		.size	debugFloat, .-debugFloat
+ 425 0032 00BFAFF3 		.section	.text.printWithLength,"ax",%progbits
+ 425      0080AFF3 
+ 425      0080AFF3 
+ 425      0080
+ 426              		.align	2
+ 427              		.p2align 4,,15
+ 428              		.global	printWithLength
+ 429              		.thumb
+ 430              		.thumb_func
+ 431              		.type	printWithLength, %function
+ 432              	printWithLength:
+ 433              		@ args = 0, pretend = 0, frame = 0
+ 434              		@ frame_needed = 0, uses_anonymous_args = 0
+ 435 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 436 0002 0646     		mov	r6, r0
+ 437 0004 FFF7FEFF 		bl	efiStrlen
+ 438 0008 40F20003 		movw	r3, #:lower16:.LC17
+ 439 000c C0F20003 		movt	r3, #:upper16:.LC17
+ 440 0010 0546     		mov	r5, r0
+ 441 0012 40F20004 		movw	r4, #:lower16:.LANCHOR3
+ 442 0016 93E80300 		ldmia	r3, {r0, r1}
+ 443 001a C0F20004 		movt	r4, #:upper16:.LANCHOR3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s 			page 9
+
+
+ 444 001e 7719     		adds	r7, r6, r5
+ 445 0020 2060     		str	r0, [r4]
+ 446 0022 A180     		strh	r1, [r4, #4]	@ movhi
+ 447 0024 2046     		mov	r0, r4
+ 448 0026 FFF7FEFF 		bl	efiStrlen
+ 449 002a 2946     		mov	r1, r5
+ 450 002c 2044     		add	r0, r0, r4
+ 451 002e FFF7FEFF 		bl	itoa10
+ 452 0032 4FF03A0E 		mov	lr, #58
+ 453 0036 0021     		movs	r1, #0
+ 454 0038 0D22     		movs	r2, #13
+ 455 003a 0A23     		movs	r3, #10
+ 456 003c 80F800E0 		strb	lr, [r0]
+ 457 0040 4170     		strb	r1, [r0, #1]
+ 458 0042 7255     		strb	r2, [r6, r5]
+ 459 0044 7B70     		strb	r3, [r7, #1]
+ 460 0046 FFF7FEFF 		bl	_Z14isConsoleReadyv
+ 461 004a 00B9     		cbnz	r0, .L51
+ 462 004c F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 463              	.L51:
+ 464 004e 2046     		mov	r0, r4
+ 465 0050 FFF7FEFF 		bl	strlen
+ 466 0054 0146     		mov	r1, r0
+ 467 0056 2046     		mov	r0, r4
+ 468 0058 FFF7FEFF 		bl	_Z19consoleOutputBufferPKhi
+ 469 005c B91C     		adds	r1, r7, #2
+ 470 005e 3046     		mov	r0, r6
+ 471 0060 891B     		subs	r1, r1, r6
+ 472 0062 BDE8F840 		pop	{r3, r4, r5, r6, r7, lr}
+ 473 0066 FFF7FEBF 		b	_Z19consoleOutputBufferPKhi
+ 474              		.size	printWithLength, .-printWithLength
+ 475 006a 00BFAFF3 		.section	.text.printLine,"ax",%progbits
+ 475      0080
+ 476              		.align	2
+ 477              		.p2align 4,,15
+ 478              		.global	printLine
+ 479              		.thumb
+ 480              		.thumb_func
+ 481              		.type	printLine, %function
+ 482              	printLine:
+ 483              		@ args = 0, pretend = 0, frame = 0
+ 484              		@ frame_needed = 0, uses_anonymous_args = 0
+ 485 0000 10B5     		push	{r4, lr}
+ 486 0002 0446     		mov	r4, r0
+ 487 0004 C06A     		ldr	r0, [r0, #44]
+ 488 0006 FFF7FEFF 		bl	printWithLength
+ 489 000a E36A     		ldr	r3, [r4, #44]
+ 490 000c 1BB1     		cbz	r3, .L54
+ 491 000e 0022     		movs	r2, #0
+ 492 0010 2363     		str	r3, [r4, #48]
+ 493 0012 1A70     		strb	r2, [r3]
+ 494 0014 10BD     		pop	{r4, pc}
+ 495              	.L54:
+ 496 0016 2046     		mov	r0, r4
+ 497 0018 BDE81040 		pop	{r4, lr}
+ 498 001c FFF7FEBF 		b	resetLogging.part.0
+ 499              		.size	printLine, .-printLine
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s 			page 10
+
+
+ 500              		.section	.text.appendMsgPrefix,"ax",%progbits
+ 501              		.align	2
+ 502              		.p2align 4,,15
+ 503              		.global	appendMsgPrefix
+ 504              		.thumb
+ 505              		.thumb_func
+ 506              		.type	appendMsgPrefix, %function
+ 507              	appendMsgPrefix:
+ 508              		@ args = 0, pretend = 0, frame = 0
+ 509              		@ frame_needed = 0, uses_anonymous_args = 0
+ 510              		@ link register save eliminated.
+ 511 0000 40F20001 		movw	r1, #:lower16:.LC18
+ 512 0004 C0F20001 		movt	r1, #:upper16:.LC18
+ 513 0008 FFF7FEBF 		b	append
+ 514              		.size	appendMsgPrefix, .-appendMsgPrefix
+ 515 000c AFF30080 		.section	.text.appendMsgPostfix,"ax",%progbits
+ 516              		.align	2
+ 517              		.p2align 4,,15
+ 518              		.global	appendMsgPostfix
+ 519              		.thumb
+ 520              		.thumb_func
+ 521              		.type	appendMsgPostfix, %function
+ 522              	appendMsgPostfix:
+ 523              		@ args = 0, pretend = 0, frame = 0
+ 524              		@ frame_needed = 0, uses_anonymous_args = 0
+ 525              		@ link register save eliminated.
+ 526 0000 40F20001 		movw	r1, #:lower16:.LC8
+ 527 0004 C0F20001 		movt	r1, #:upper16:.LC8
+ 528 0008 FFF7FEBF 		b	append
+ 529              		.size	appendMsgPostfix, .-appendMsgPostfix
+ 530 000c AFF30080 		.section	.text.resetLogging,"ax",%progbits
+ 531              		.align	2
+ 532              		.p2align 4,,15
+ 533              		.global	resetLogging
+ 534              		.thumb
+ 535              		.thumb_func
+ 536              		.type	resetLogging, %function
+ 537              	resetLogging:
+ 538              		@ args = 0, pretend = 0, frame = 0
+ 539              		@ frame_needed = 0, uses_anonymous_args = 0
+ 540              		@ link register save eliminated.
+ 541 0000 C36A     		ldr	r3, [r0, #44]
+ 542 0002 1BB1     		cbz	r3, .L59
+ 543 0004 0021     		movs	r1, #0
+ 544 0006 0363     		str	r3, [r0, #48]
+ 545 0008 1970     		strb	r1, [r3]
+ 546 000a 7047     		bx	lr
+ 547              	.L59:
+ 548 000c FFF7FEBF 		b	resetLogging.part.0
+ 549              		.size	resetLogging, .-resetLogging
+ 550              		.section	.text.printMsg,"ax",%progbits
+ 551              		.align	2
+ 552              		.p2align 4,,15
+ 553              		.global	printMsg
+ 554              		.thumb
+ 555              		.thumb_func
+ 556              		.type	printMsg, %function
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s 			page 11
+
+
+ 557              	printMsg:
+ 558              		@ args = 4, pretend = 12, frame = 8
+ 559              		@ frame_needed = 0, uses_anonymous_args = 1
+ 560 0000 0EB4     		push	{r1, r2, r3}
+ 561 0002 10B5     		push	{r4, lr}
+ 562 0004 40F20003 		movw	r3, #:lower16:rlist
+ 563 0008 C0F20003 		movt	r3, #:upper16:rlist
+ 564 000c 83B0     		sub	sp, sp, #12
+ 565 000e 0446     		mov	r4, r0
+ 566 0010 9869     		ldr	r0, [r3, #24]
+ 567 0012 FFF7FEFF 		bl	getRemainingStack
+ 568 0016 8028     		cmp	r0, #128
+ 569 0018 1CDD     		ble	.L63
+ 570 001a 40F20001 		movw	r1, #:lower16:.LC18
+ 571 001e 2046     		mov	r0, r4
+ 572 0020 C0F20001 		movt	r1, #:upper16:.LC18
+ 573 0024 FFF7FEFF 		bl	append
+ 574 0028 06AB     		add	r3, sp, #24
+ 575 002a 1A46     		mov	r2, r3
+ 576 002c 2046     		mov	r0, r4
+ 577 002e 0599     		ldr	r1, [sp, #20]
+ 578 0030 0193     		str	r3, [sp, #4]
+ 579 0032 FFF7FEFF 		bl	vappendPrintf
+ 580 0036 40F20001 		movw	r1, #:lower16:.LC8
+ 581 003a 2046     		mov	r0, r4
+ 582 003c C0F20001 		movt	r1, #:upper16:.LC8
+ 583 0040 FFF7FEFF 		bl	append
+ 584 0044 2046     		mov	r0, r4
+ 585 0046 FFF7FEFF 		bl	printLine
+ 586 004a 03B0     		add	sp, sp, #12
+ 587              		@ sp needed
+ 588 004c BDE81040 		pop	{r4, lr}
+ 589 0050 03B0     		add	sp, sp, #12
+ 590 0052 7047     		bx	lr
+ 591              	.L63:
+ 592 0054 40F20000 		movw	r0, #:lower16:.LC19
+ 593 0058 C0F20000 		movt	r0, #:upper16:.LC19
+ 594 005c FFF7FEFF 		bl	firmwareError
+ 595 0060 03B0     		add	sp, sp, #12
+ 596              		@ sp needed
+ 597 0062 BDE81040 		pop	{r4, lr}
+ 598 0066 03B0     		add	sp, sp, #12
+ 599 0068 7047     		bx	lr
+ 600              		.size	printMsg, .-printMsg
+ 601 006a 00BFAFF3 		.section	.text.scheduleMsg,"ax",%progbits
+ 601      0080
+ 602              		.align	2
+ 603              		.p2align 4,,15
+ 604              		.global	scheduleMsg
+ 605              		.thumb
+ 606              		.thumb_func
+ 607              		.type	scheduleMsg, %function
+ 608              	scheduleMsg:
+ 609              		@ args = 4, pretend = 12, frame = 8
+ 610              		@ frame_needed = 0, uses_anonymous_args = 1
+ 611 0000 0EB4     		push	{r1, r2, r3}
+ 612 0002 30B5     		push	{r4, r5, lr}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s 			page 12
+
+
+ 613 0004 0446     		mov	r4, r0
+ 614 0006 82B0     		sub	sp, sp, #8
+ 615 0008 0028     		cmp	r0, #0
+ 616 000a 2DD0     		beq	.L70
+ 617 000c FFF7FEFF 		bl	lockAnyContext
+ 618 0010 E36A     		ldr	r3, [r4, #44]
+ 619 0012 0546     		mov	r5, r0
+ 620 0014 002B     		cmp	r3, #0
+ 621 0016 32D0     		beq	.L71
+ 622 0018 0022     		movs	r2, #0
+ 623 001a 2363     		str	r3, [r4, #48]
+ 624 001c 1A70     		strb	r2, [r3]
+ 625              	.L68:
+ 626 001e 40F20001 		movw	r1, #:lower16:.LC18
+ 627 0022 C0F20001 		movt	r1, #:upper16:.LC18
+ 628 0026 2046     		mov	r0, r4
+ 629 0028 FFF7FEFF 		bl	append
+ 630 002c 06AB     		add	r3, sp, #24
+ 631 002e 1A46     		mov	r2, r3
+ 632 0030 2046     		mov	r0, r4
+ 633 0032 0599     		ldr	r1, [sp, #20]
+ 634 0034 0193     		str	r3, [sp, #4]
+ 635 0036 FFF7FEFF 		bl	vappendPrintf
+ 636 003a 40F20001 		movw	r1, #:lower16:.LC8
+ 637 003e 2046     		mov	r0, r4
+ 638 0040 C0F20001 		movt	r1, #:upper16:.LC8
+ 639 0044 FFF7FEFF 		bl	append
+ 640 0048 2046     		mov	r0, r4
+ 641 004a FFF7FEFF 		bl	scheduleLogging
+ 642 004e 25B1     		cbz	r5, .L72
+ 643 0050 02B0     		add	sp, sp, #8
+ 644              		@ sp needed
+ 645 0052 BDE83040 		pop	{r4, r5, lr}
+ 646 0056 03B0     		add	sp, sp, #12
+ 647 0058 7047     		bx	lr
+ 648              	.L72:
+ 649 005a FFF7FEFF 		bl	unlockAnyContext
+ 650 005e 02B0     		add	sp, sp, #8
+ 651              		@ sp needed
+ 652 0060 BDE83040 		pop	{r4, r5, lr}
+ 653 0064 03B0     		add	sp, sp, #12
+ 654 0066 7047     		bx	lr
+ 655              	.L70:
+ 656 0068 40F20000 		movw	r0, #:lower16:.LC20
+ 657 006c C0F20000 		movt	r0, #:upper16:.LC20
+ 658 0070 FFF7FEFF 		bl	firmwareError
+ 659 0074 02B0     		add	sp, sp, #8
+ 660              		@ sp needed
+ 661 0076 BDE83040 		pop	{r4, r5, lr}
+ 662 007a 03B0     		add	sp, sp, #12
+ 663 007c 7047     		bx	lr
+ 664              	.L71:
+ 665 007e 2046     		mov	r0, r4
+ 666 0080 FFF7FEFF 		bl	resetLogging.part.0
+ 667 0084 CBE7     		b	.L68
+ 668              		.size	scheduleMsg, .-scheduleMsg
+ 669 0086 00BFAFF3 		.section	.text.remainingSize,"ax",%progbits
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s 			page 13
+
+
+ 669      0080AFF3 
+ 669      0080
+ 670              		.align	2
+ 671              		.p2align 4,,15
+ 672              		.global	remainingSize
+ 673              		.thumb
+ 674              		.thumb_func
+ 675              		.type	remainingSize, %function
+ 676              	remainingSize:
+ 677              		@ args = 0, pretend = 0, frame = 0
+ 678              		@ frame_needed = 0, uses_anonymous_args = 0
+ 679              		@ link register save eliminated.
+ 680 0000 00F12C01 		add	r1, r0, #44
+ 681 0004 0EC9     		ldmia	r1, {r1, r2, r3}
+ 682 0006 881A     		subs	r0, r1, r2
+ 683 0008 1844     		add	r0, r0, r3
+ 684 000a 7047     		bx	lr
+ 685              		.size	remainingSize, .-remainingSize
+ 686 000c AFF30080 		.section	.text.initIntermediateLoggingBuffer,"ax",%progbits
+ 687              		.align	2
+ 688              		.p2align 4,,15
+ 689              		.global	initIntermediateLoggingBuffer
+ 690              		.thumb
+ 691              		.thumb_func
+ 692              		.type	initIntermediateLoggingBuffer, %function
+ 693              	initIntermediateLoggingBuffer:
+ 694              		@ args = 0, pretend = 0, frame = 0
+ 695              		@ frame_needed = 0, uses_anonymous_args = 0
+ 696 0000 08B5     		push	{r3, lr}
+ 697 0002 FFF7FEFF 		bl	_Z18initLoggingCentralv
+ 698 0006 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 699 000a 40F20001 		movw	r1, #:lower16:.LANCHOR2
+ 700 000e 4FF4FA62 		mov	r2, #2000
+ 701 0012 0023     		movs	r3, #0
+ 702 0014 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 703 0018 C0F20001 		movt	r1, #:upper16:.LANCHOR2
+ 704 001c FFF7FEFF 		bl	msObjectInit
+ 705 0020 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 706 0024 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 707 0028 0122     		movs	r2, #1
+ 708 002a 1A70     		strb	r2, [r3]
+ 709 002c 08BD     		pop	{r3, pc}
+ 710              		.size	initIntermediateLoggingBuffer, .-initIntermediateLoggingBuffer
+ 711 002e 00BF     		.section	.text._ZN7Logging15baseConstructorEv,"ax",%progbits
+ 712              		.align	2
+ 713              		.p2align 4,,15
+ 714              		.global	_ZN7Logging15baseConstructorEv
+ 715              		.thumb
+ 716              		.thumb_func
+ 717              		.type	_ZN7Logging15baseConstructorEv, %function
+ 718              	_ZN7Logging15baseConstructorEv:
+ 719              		@ args = 0, pretend = 0, frame = 0
+ 720              		@ frame_needed = 0, uses_anonymous_args = 0
+ 721              		@ link register save eliminated.
+ 722 0000 0023     		movs	r3, #0
+ 723 0002 0360     		str	r3, [r0]
+ 724 0004 C362     		str	r3, [r0, #44]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s 			page 14
+
+
+ 725 0006 0363     		str	r3, [r0, #48]
+ 726 0008 4363     		str	r3, [r0, #52]
+ 727 000a 8363     		str	r3, [r0, #56]
+ 728 000c 7047     		bx	lr
+ 729              		.size	_ZN7Logging15baseConstructorEv, .-_ZN7Logging15baseConstructorEv
+ 730 000e 00BF     		.section	.text._ZN7LoggingC2Ev,"ax",%progbits
+ 731              		.align	2
+ 732              		.p2align 4,,15
+ 733              		.global	_ZN7LoggingC2Ev
+ 734              		.thumb
+ 735              		.thumb_func
+ 736              		.type	_ZN7LoggingC2Ev, %function
+ 737              	_ZN7LoggingC2Ev:
+ 738              		@ args = 0, pretend = 0, frame = 0
+ 739              		@ frame_needed = 0, uses_anonymous_args = 0
+ 740              		@ link register save eliminated.
+ 741 0000 0022     		movs	r2, #0
+ 742 0002 0260     		str	r2, [r0]
+ 743 0004 C262     		str	r2, [r0, #44]
+ 744 0006 0263     		str	r2, [r0, #48]
+ 745 0008 4263     		str	r2, [r0, #52]
+ 746 000a 8263     		str	r2, [r0, #56]
+ 747 000c 7047     		bx	lr
+ 748              		.size	_ZN7LoggingC2Ev, .-_ZN7LoggingC2Ev
+ 749              		.global	_ZN7LoggingC1Ev
+ 750              		.thumb_set _ZN7LoggingC1Ev,_ZN7LoggingC2Ev
+ 751 000e 00BF     		.section	.text._ZN7LoggingC2EPKcPci,"ax",%progbits
+ 752              		.align	2
+ 753              		.p2align 4,,15
+ 754              		.global	_ZN7LoggingC2EPKcPci
+ 755              		.thumb
+ 756              		.thumb_func
+ 757              		.type	_ZN7LoggingC2EPKcPci, %function
+ 758              	_ZN7LoggingC2EPKcPci:
+ 759              		@ args = 0, pretend = 0, frame = 0
+ 760              		@ frame_needed = 0, uses_anonymous_args = 0
+ 761 0000 38B5     		push	{r3, r4, r5, lr}
+ 762 0002 0025     		movs	r5, #0
+ 763 0004 0446     		mov	r4, r0
+ 764 0006 C262     		str	r2, [r0, #44]
+ 765 0008 0160     		str	r1, [r0]
+ 766 000a 4363     		str	r3, [r0, #52]
+ 767 000c 0563     		str	r5, [r0, #48]
+ 768 000e 8563     		str	r5, [r0, #56]
+ 769 0010 42B1     		cbz	r2, .L80
+ 770 0012 0263     		str	r2, [r0, #48]
+ 771 0014 1570     		strb	r5, [r2]
+ 772              	.L79:
+ 773 0016 43F60913 		movw	r3, #14601
+ 774 001a C0F2B223 		movt	r3, 690
+ 775 001e A363     		str	r3, [r4, #56]
+ 776 0020 2046     		mov	r0, r4
+ 777 0022 38BD     		pop	{r3, r4, r5, pc}
+ 778              	.L80:
+ 779 0024 FFF7FEFF 		bl	resetLogging.part.0
+ 780 0028 F5E7     		b	.L79
+ 781              		.size	_ZN7LoggingC2EPKcPci, .-_ZN7LoggingC2EPKcPci
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s 			page 15
+
+
+ 782              		.global	_ZN7LoggingC1EPKcPci
+ 783              		.thumb_set _ZN7LoggingC1EPKcPci,_ZN7LoggingC2EPKcPci
+ 784 002a 00BFAFF3 		.section	.text._ZN18LoggingWithStorageC2EPKc,"ax",%progbits
+ 784      0080
+ 785              		.align	2
+ 786              		.p2align 4,,15
+ 787              		.global	_ZN18LoggingWithStorageC2EPKc
+ 788              		.thumb
+ 789              		.thumb_func
+ 790              		.type	_ZN18LoggingWithStorageC2EPKc, %function
+ 791              	_ZN18LoggingWithStorageC2EPKc:
+ 792              		@ args = 0, pretend = 0, frame = 0
+ 793              		@ frame_needed = 0, uses_anonymous_args = 0
+ 794 0000 38B5     		push	{r3, r4, r5, lr}
+ 795 0002 00F13C02 		add	r2, r0, #60
+ 796 0006 0023     		movs	r3, #0
+ 797 0008 C825     		movs	r5, #200
+ 798 000a 0446     		mov	r4, r0
+ 799 000c 0160     		str	r1, [r0]
+ 800 000e 4563     		str	r5, [r0, #52]
+ 801 0010 C262     		str	r2, [r0, #44]
+ 802 0012 0363     		str	r3, [r0, #48]
+ 803 0014 8363     		str	r3, [r0, #56]
+ 804 0016 4AB1     		cbz	r2, .L84
+ 805 0018 0263     		str	r2, [r0, #48]
+ 806 001a 80F83C30 		strb	r3, [r0, #60]
+ 807              	.L83:
+ 808 001e 43F60913 		movw	r3, #14601
+ 809 0022 C0F2B223 		movt	r3, 690
+ 810 0026 A363     		str	r3, [r4, #56]
+ 811 0028 2046     		mov	r0, r4
+ 812 002a 38BD     		pop	{r3, r4, r5, pc}
+ 813              	.L84:
+ 814 002c FFF7FEFF 		bl	resetLogging.part.0
+ 815 0030 F5E7     		b	.L83
+ 816              		.size	_ZN18LoggingWithStorageC2EPKc, .-_ZN18LoggingWithStorageC2EPKc
+ 817              		.global	_ZN18LoggingWithStorageC1EPKc
+ 818              		.thumb_set _ZN18LoggingWithStorageC1EPKc,_ZN18LoggingWithStorageC2EPKc
+ 819 0032 00BFAFF3 		.section	.ccm,"aw",%progbits
+ 819      0080AFF3 
+ 819      0080AFF3 
+ 819      0080
+ 820              		.align	2
+ 821              		.set	.LANCHOR2,. + 0
+ 822              		.type	_ZL29intermediateLoggingBufferData, %object
+ 823              		.size	_ZL29intermediateLoggingBufferData, 2000
+ 824              	_ZL29intermediateLoggingBufferData:
+ 825 0000 00000000 		.space	2000
+ 825      00000000 
+ 825      00000000 
+ 825      00000000 
+ 825      00000000 
+ 826              		.section	.bss._ZL25intermediateLoggingBuffer,"aw",%nobits
+ 827              		.align	2
+ 828              		.set	.LANCHOR1,. + 0
+ 829              		.type	_ZL25intermediateLoggingBuffer, %object
+ 830              		.size	_ZL25intermediateLoggingBuffer, 20
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s 			page 16
+
+
+ 831              	_ZL25intermediateLoggingBuffer:
+ 832 0000 00000000 		.space	20
+ 832      00000000 
+ 832      00000000 
+ 832      00000000 
+ 832      00000000 
+ 833              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 834              		.align	2
+ 835              	.LC0:
+ 836 0000 4E756C6C 		.ascii	"Null buffer: %s\000"
+ 836      20627566 
+ 836      6665723A 
+ 836      20257300 
+ 837              	.LC1:
+ 838 0010 61707065 		.ascii	"append NULL\000"
+ 838      6E64204E 
+ 838      554C4C00 
+ 839              	.LC2:
+ 840 001c 4C6F6767 		.ascii	"Logging not initialized: %s\000"
+ 840      696E6720 
+ 840      6E6F7420 
+ 840      696E6974 
+ 840      69616C69 
+ 841              	.LC3:
+ 842 0038 6F757470 		.ascii	"output overflow %s\000"
+ 842      7574206F 
+ 842      76657266 
+ 842      6C6F7720 
+ 842      257300
+ 843 004b 00       		.space	1
+ 844              	.LC4:
+ 845 004c 6C6F7773 		.ascii	"lowstck#5b\000"
+ 845      74636B23 
+ 845      356200
+ 846 0057 00       		.space	1
+ 847              	.LC5:
+ 848 0058 696E7465 		.ascii	"intermediateLoggingBufferInited not inited!\000"
+ 848      726D6564 
+ 848      69617465 
+ 848      4C6F6767 
+ 848      696E6742 
+ 849              	.LC6:
+ 850 0084 6C6F7773 		.ascii	"lowstck#1b\000"
+ 850      74636B23 
+ 850      316200
+ 851 008f 00       		.space	1
+ 852              	.LC7:
+ 853 0090 6C6F7773 		.ascii	"lowstck#4\000"
+ 853      74636B23 
+ 853      3400
+ 854 009a 0000     		.space	2
+ 855              	.LC8:
+ 856 009c 2C00     		.ascii	",\000"
+ 857 009e 0000     		.space	2
+ 858              	.LC9:
+ 859 00a0 25642573 		.ascii	"%d%s\000"
+ 859      00
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s 			page 17
+
+
+ 860 00a5 000000   		.space	3
+ 861              	.LC10:
+ 862 00a8 252E2E31 		.ascii	"%..10f\000"
+ 862      306600
+ 863 00af 00       		.space	1
+ 864              	.LC11:
+ 865 00b0 252E2E31 		.ascii	"%..100f\000"
+ 865      30306600 
+ 866              	.LC12:
+ 867 00b8 252E2E31 		.ascii	"%..1000f\000"
+ 867      30303066 
+ 867      00
+ 868 00c1 000000   		.space	3
+ 869              	.LC13:
+ 870 00c4 252E2E31 		.ascii	"%..10000f\000"
+ 870      30303030 
+ 870      6600
+ 871 00ce 0000     		.space	2
+ 872              	.LC14:
+ 873 00d0 252E2E31 		.ascii	"%..100000f\000"
+ 873      30303030 
+ 873      306600
+ 874 00db 00       		.space	1
+ 875              	.LC15:
+ 876 00dc 252E2E31 		.ascii	"%..1000000f\000"
+ 876      30303030 
+ 876      30306600 
+ 877              	.LC16:
+ 878 00e8 256600   		.ascii	"%f\000"
+ 879 00eb 00       		.space	1
+ 880              	.LC17:
+ 881 00ec 6C696E65 		.ascii	"line:\000"
+ 881      3A00
+ 882 00f2 0000     		.space	2
+ 883              	.LC18:
+ 884 00f4 6D73672C 		.ascii	"msg,\000"
+ 884      00
+ 885 00f9 000000   		.space	3
+ 886              	.LC19:
+ 887 00fc 6C6F7773 		.ascii	"lowstck#5o\000"
+ 887      74636B23 
+ 887      356F00
+ 888 0107 00       		.space	1
+ 889              	.LC20:
+ 890 0108 6C6F6767 		.ascii	"logging NULL\000"
+ 890      696E6720 
+ 890      4E554C4C 
+ 890      00
+ 891 0115 000000   		.section	.bss._ZL6header,"aw",%nobits
+ 892              		.align	2
+ 893              		.set	.LANCHOR3,. + 0
+ 894              		.type	_ZL6header, %object
+ 895              		.size	_ZL6header, 16
+ 896              	_ZL6header:
+ 897 0000 00000000 		.space	16
+ 897      00000000 
+ 897      00000000 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s 			page 18
+
+
+ 897      00000000 
+ 898              		.section	.bss._ZL31intermediateLoggingBufferInited,"aw",%nobits
+ 899              		.set	.LANCHOR0,. + 0
+ 900              		.type	_ZL31intermediateLoggingBufferInited, %object
+ 901              		.size	_ZL31intermediateLoggingBufferInited, 1
+ 902              	_ZL31intermediateLoggingBufferInited:
+ 903 0000 00       		.space	1
+ 904              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s 			page 19
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 datalogging.cpp
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:17     .text.resetLogging.part.0:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:22     .text.resetLogging.part.0:00000000 resetLogging.part.0
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:835    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:32     .text.append:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:38     .text.append:00000000 append
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:841    .rodata.str1.4:00000038 .LC3
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:837    .rodata.str1.4:00000010 .LC1
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:839    .rodata.str1.4:0000001c .LC2
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:83     .text.appendFast:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:89     .text.appendFast:00000000 appendFast
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:123    .text.vappendPrintf:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:129    .text.vappendPrintf:00000000 vappendPrintf
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:899    .bss._ZL31intermediateLoggingBufferInited:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:828    .bss._ZL25intermediateLoggingBuffer:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:821    .ccm:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:847    .rodata.str1.4:00000058 .LC5
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:844    .rodata.str1.4:0000004c .LC4
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:849    .rodata.str1.4:00000084 .LC6
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:192    .text.appendPrintf:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:198    .text.appendPrintf:00000000 appendPrintf
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:852    .rodata.str1.4:00000090 .LC7
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:233    .text.initLoggingExt:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:239    .text.initLoggingExt:00000000 initLoggingExt
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:261    .text.isInitialized:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:267    .text.isInitialized:00000000 isInitialized
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:280    .text.debugInt:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:286    .text.debugInt:00000000 debugInt
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:855    .rodata.str1.4:0000009c .LC8
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:858    .rodata.str1.4:000000a0 .LC9
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:308    .text.appendFloat:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:314    .text.appendFloat:00000000 appendFloat
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:325    .text.appendFloat:00000010 $d
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:331    .text.appendFloat:00000016 $t
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:875    .rodata.str1.4:000000dc .LC15
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:861    .rodata.str1.4:000000a8 .LC10
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:864    .rodata.str1.4:000000b0 .LC11
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:866    .rodata.str1.4:000000b8 .LC12
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:869    .rodata.str1.4:000000c4 .LC13
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:872    .rodata.str1.4:000000d0 .LC14
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:877    .rodata.str1.4:000000e8 .LC16
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:397    .text.debugFloat:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:403    .text.debugFloat:00000000 debugFloat
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:426    .text.printWithLength:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:432    .text.printWithLength:00000000 printWithLength
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:880    .rodata.str1.4:000000ec .LC17
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:893    .bss._ZL6header:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:476    .text.printLine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:482    .text.printLine:00000000 printLine
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:501    .text.appendMsgPrefix:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:507    .text.appendMsgPrefix:00000000 appendMsgPrefix
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:883    .rodata.str1.4:000000f4 .LC18
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:516    .text.appendMsgPostfix:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:522    .text.appendMsgPostfix:00000000 appendMsgPostfix
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:531    .text.resetLogging:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:537    .text.resetLogging:00000000 resetLogging
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s 			page 20
+
+
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:551    .text.printMsg:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:557    .text.printMsg:00000000 printMsg
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:886    .rodata.str1.4:000000fc .LC19
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:602    .text.scheduleMsg:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:608    .text.scheduleMsg:00000000 scheduleMsg
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:889    .rodata.str1.4:00000108 .LC20
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:670    .text.remainingSize:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:676    .text.remainingSize:00000000 remainingSize
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:687    .text.initIntermediateLoggingBuffer:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:693    .text.initIntermediateLoggingBuffer:00000000 initIntermediateLoggingBuffer
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:712    .text._ZN7Logging15baseConstructorEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:718    .text._ZN7Logging15baseConstructorEv:00000000 _ZN7Logging15baseConstructorEv
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:731    .text._ZN7LoggingC2Ev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:737    .text._ZN7LoggingC2Ev:00000000 _ZN7LoggingC2Ev
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:737    .text._ZN7LoggingC2Ev:00000000 _ZN7LoggingC1Ev
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:752    .text._ZN7LoggingC2EPKcPci:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:758    .text._ZN7LoggingC2EPKcPci:00000000 _ZN7LoggingC2EPKcPci
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:758    .text._ZN7LoggingC2EPKcPci:00000000 _ZN7LoggingC1EPKcPci
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:785    .text._ZN18LoggingWithStorageC2EPKc:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:791    .text._ZN18LoggingWithStorageC2EPKc:00000000 _ZN18LoggingWithStorageC2EPKc
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:791    .text._ZN18LoggingWithStorageC2EPKc:00000000 _ZN18LoggingWithStorageC1EPKc
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:820    .ccm:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:824    .ccm:00000000 _ZL29intermediateLoggingBufferData
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:827    .bss._ZL25intermediateLoggingBuffer:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:831    .bss._ZL25intermediateLoggingBuffer:00000000 _ZL25intermediateLoggingBuffer
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:834    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:892    .bss._ZL6header:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:896    .bss._ZL6header:00000000 _ZL6header
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:902    .bss._ZL31intermediateLoggingBufferInited:00000000 _ZL31intermediateLoggingBufferInited
+C:\Users\pc\AppData\Local\Temp\ccN4lFjo.s:903    .bss._ZL31intermediateLoggingBufferInited:00000000 $d
+
+UNDEFINED SYMBOLS
+firmwareError
+efiStrlen
+strcpy
+warning
+rlist
+getRemainingStack
+lockAnyContext
+chvprintf
+unlockAnyContext
+__aeabi_f2d
+itoa10
+_Z14isConsoleReadyv
+strlen
+_Z19consoleOutputBufferPKhi
+scheduleLogging
+_Z18initLoggingCentralv
+msObjectInit

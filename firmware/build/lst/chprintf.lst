@@ -1,0 +1,567 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUj4KMI.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"chprintf.c"
+  16              		.section	.text.long_to_string_with_divisor,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	long_to_string_with_divisor, %function
+  22              	long_to_string_with_divisor:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25              		@ link register save eliminated.
+  26 0000 F0B4     		push	{r4, r5, r6, r7}
+  27 0002 002B     		cmp	r3, #0
+  28 0004 08BF     		it	eq
+  29 0006 0B46     		moveq	r3, r1
+  30 0008 00F10B07 		add	r7, r0, #11
+  31 000c 00F10A05 		add	r5, r0, #10
+  32              	.L5:
+  33 0010 B1FBF2F6 		udiv	r6, r1, r2
+  34 0014 02FB1611 		mls	r1, r2, r6, r1
+  35 0018 01F13004 		add	r4, r1, #48
+  36 001c 392C     		cmp	r4, #57
+  37 001e C8BF     		it	gt
+  38 0020 01F13704 		addgt	r4, r1, #55
+  39 0024 E4B2     		uxtb	r4, r4
+  40 0026 B3FBF2F3 		udiv	r3, r3, r2
+  41 002a 3146     		mov	r1, r6
+  42 002c 2E46     		mov	r6, r5
+  43 002e 05F80149 		strb	r4, [r5], #-1
+  44 0032 002B     		cmp	r3, #0
+  45 0034 ECD1     		bne	.L5
+  46 0036 BA1B     		subs	r2, r7, r6
+  47 0038 3346     		mov	r3, r6
+  48 003a 0244     		add	r2, r2, r0
+  49 003c 01E0     		b	.L7
+  50              	.L11:
+  51 003e 13F8014F 		ldrb	r4, [r3, #1]!	@ zero_extendqisi2
+  52              	.L7:
+  53 0042 00F8014B 		strb	r4, [r0], #1
+  54 0046 9042     		cmp	r0, r2
+  55 0048 F9D1     		bne	.L11
+  56 004a F0BC     		pop	{r4, r5, r6, r7}
+  57 004c 7047     		bx	lr
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUj4KMI.s 			page 2
+
+
+  58              		.size	long_to_string_with_divisor, .-long_to_string_with_divisor
+  59              		.global	__aeabi_dcmplt
+  60              		.global	__aeabi_d2iz
+  61              		.global	__aeabi_i2d
+  62              		.global	__aeabi_dsub
+  63              		.global	__aeabi_ui2d
+  64              		.global	__aeabi_dmul
+  65 004e 00BF     		.section	.text.ftoa,"ax",%progbits
+  66              		.align	2
+  67              		.p2align 4,,15
+  68              		.global	ftoa
+  69              		.thumb
+  70              		.thumb_func
+  71              		.type	ftoa, %function
+  72              	ftoa:
+  73              		@ args = 4, pretend = 0, frame = 0
+  74              		@ frame_needed = 0, uses_anonymous_args = 0
+  75 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+  76 0004 1746     		mov	r7, r2
+  77 0006 9846     		mov	r8, r3
+  78 0008 0646     		mov	r6, r0
+  79 000a 0022     		movs	r2, #0
+  80 000c 0023     		movs	r3, #0
+  81 000e 3846     		mov	r0, r7
+  82 0010 4146     		mov	r1, r8
+  83 0012 DDF82090 		ldr	r9, [sp, #32]
+  84 0016 FFF7FEFF 		bl	__aeabi_dcmplt
+  85 001a 60B1     		cbz	r0, .L13
+  86 001c 2D24     		movs	r4, #45
+  87              	.L16:
+  88 001e 08F10048 		add	r8, r8, #-2147483648
+  89 0022 3846     		mov	r0, r7
+  90 0024 4146     		mov	r1, r8
+  91 0026 06F8014B 		strb	r4, [r6], #1
+  92 002a 0022     		movs	r2, #0
+  93 002c 0023     		movs	r3, #0
+  94 002e FFF7FEFF 		bl	__aeabi_dcmplt
+  95 0032 0028     		cmp	r0, #0
+  96 0034 F3D1     		bne	.L16
+  97              	.L13:
+  98 0036 3846     		mov	r0, r7
+  99 0038 4146     		mov	r1, r8
+ 100 003a FFF7FEFF 		bl	__fpclassifyd
+ 101 003e 0028     		cmp	r0, #0
+ 102 0040 3CD0     		beq	.L24
+ 103 0042 B9F1000F 		cmp	r9, #0
+ 104 0046 34D0     		beq	.L20
+ 105 0048 4CF6CD4A 		movw	r10, #52429
+ 106 004c CCF6CC4A 		movt	r10, 52428
+ 107 0050 AAFB093A 		umull	r3, r10, r10, r9
+ 108 0054 4FEADA0A 		lsr	r10, r10, #3
+ 109              	.L19:
+ 110 0058 4146     		mov	r1, r8
+ 111 005a 3846     		mov	r0, r7
+ 112 005c FFF7FEFF 		bl	__aeabi_d2iz
+ 113 0060 0446     		mov	r4, r0
+ 114 0062 2146     		mov	r1, r4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUj4KMI.s 			page 3
+
+
+ 115 0064 0A22     		movs	r2, #10
+ 116 0066 3046     		mov	r0, r6
+ 117 0068 0023     		movs	r3, #0
+ 118 006a FFF7FEFF 		bl	long_to_string_with_divisor
+ 119 006e 0646     		mov	r6, r0
+ 120 0070 2E23     		movs	r3, #46
+ 121 0072 06F8013B 		strb	r3, [r6], #1
+ 122 0076 2046     		mov	r0, r4
+ 123 0078 FFF7FEFF 		bl	__aeabi_i2d
+ 124 007c 0246     		mov	r2, r0
+ 125 007e 0B46     		mov	r3, r1
+ 126 0080 3846     		mov	r0, r7
+ 127 0082 4146     		mov	r1, r8
+ 128 0084 FFF7FEFF 		bl	__aeabi_dsub
+ 129 0088 0446     		mov	r4, r0
+ 130 008a 4846     		mov	r0, r9
+ 131 008c 0D46     		mov	r5, r1
+ 132 008e FFF7FEFF 		bl	__aeabi_ui2d
+ 133 0092 0246     		mov	r2, r0
+ 134 0094 0B46     		mov	r3, r1
+ 135 0096 2046     		mov	r0, r4
+ 136 0098 2946     		mov	r1, r5
+ 137 009a FFF7FEFF 		bl	__aeabi_dmul
+ 138 009e FFF7FEFF 		bl	__aeabi_d2iz
+ 139 00a2 5346     		mov	r3, r10
+ 140 00a4 0146     		mov	r1, r0
+ 141 00a6 0A22     		movs	r2, #10
+ 142 00a8 3046     		mov	r0, r6
+ 143 00aa BDE8F047 		pop	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 144 00ae FFF7FEBF 		b	long_to_string_with_divisor
+ 145              	.L20:
+ 146 00b2 4FF00A0A 		mov	r10, #10
+ 147 00b6 4FF06409 		mov	r9, #100
+ 148 00ba CDE7     		b	.L19
+ 149              	.L24:
+ 150 00bc 4E23     		movs	r3, #78
+ 151 00be 6122     		movs	r2, #97
+ 152 00c0 3370     		strb	r3, [r6]
+ 153 00c2 B370     		strb	r3, [r6, #2]
+ 154 00c4 7270     		strb	r2, [r6, #1]
+ 155 00c6 F01C     		adds	r0, r6, #3
+ 156 00c8 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 157              		.size	ftoa, .-ftoa
+ 158              		.global	__aeabi_d2f
+ 159              		.global	__aeabi_f2d
+ 160 00cc AFF30080 		.section	.text.chvprintf,"ax",%progbits
+ 161              		.align	2
+ 162              		.p2align 4,,15
+ 163              		.global	chvprintf
+ 164              		.thumb
+ 165              		.thumb_func
+ 166              		.type	chvprintf, %function
+ 167              	chvprintf:
+ 168              		@ args = 0, pretend = 0, frame = 40
+ 169              		@ frame_needed = 0, uses_anonymous_args = 0
+ 170 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 171 0004 40F20003 		movw	r3, #:lower16:rlist
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUj4KMI.s 			page 4
+
+
+ 172 0008 C0F20003 		movt	r3, #:upper16:rlist
+ 173 000c 8DB0     		sub	sp, sp, #52
+ 174 000e 0746     		mov	r7, r0
+ 175 0010 9869     		ldr	r0, [r3, #24]
+ 176 0012 0C46     		mov	r4, r1
+ 177 0014 1646     		mov	r6, r2
+ 178 0016 FFF7FEFF 		bl	getRemainingStack
+ 179 001a 4028     		cmp	r0, #64
+ 180 001c 40F35C81 		ble	.L26
+ 181 0020 0DF11900 		add	r0, sp, #25
+ 182 0024 0DF1180B 		add	fp, sp, #24
+ 183 0028 40F20003 		movw	r3, #:lower16:.LC0
+ 184 002c 0390     		str	r0, [sp, #12]
+ 185 002e C0F20003 		movt	r3, #:upper16:.LC0
+ 186 0032 CBEB0000 		rsb	r0, fp, r0
+ 187 0036 0590     		str	r0, [sp, #20]
+ 188 0038 0493     		str	r3, [sp, #16]
+ 189              	.L27:
+ 190 003a 2178     		ldrb	r1, [r4]	@ zero_extendqisi2
+ 191 003c 631C     		adds	r3, r4, #1
+ 192 003e 51B1     		cbz	r1, .L25
+ 193              	.L98:
+ 194 0040 2529     		cmp	r1, #37
+ 195 0042 0BD0     		beq	.L29
+ 196 0044 3A68     		ldr	r2, [r7]
+ 197 0046 1C46     		mov	r4, r3
+ 198 0048 9268     		ldr	r2, [r2, #8]
+ 199 004a 3846     		mov	r0, r7
+ 200 004c 9047     		blx	r2
+ 201 004e 2178     		ldrb	r1, [r4]	@ zero_extendqisi2
+ 202 0050 631C     		adds	r3, r4, #1
+ 203 0052 0029     		cmp	r1, #0
+ 204 0054 F4D1     		bne	.L98
+ 205              	.L25:
+ 206 0056 0DB0     		add	sp, sp, #52
+ 207              		@ sp needed
+ 208 0058 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 209              	.L29:
+ 210 005c 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
+ 211 005e 2D2A     		cmp	r2, #45
+ 212 0060 03BF     		ittte	eq
+ 213 0062 A278     		ldrbeq	r2, [r4, #2]	@ zero_extendqisi2
+ 214 0064 A31C     		addeq	r3, r4, #2
+ 215 0066 4FF0010C 		moveq	ip, #1
+ 216 006a 4FF0000C 		movne	ip, #0
+ 217 006e 2E2A     		cmp	r2, #46
+ 218 0070 18BF     		it	ne
+ 219 0072 302A     		cmpne	r2, #48
+ 220 0074 03BF     		ittte	eq
+ 221 0076 5A78     		ldrbeq	r2, [r3, #1]	@ zero_extendqisi2
+ 222 0078 0133     		addeq	r3, r3, #1
+ 223 007a 4FF03008 		moveq	r8, #48
+ 224 007e 4FF02008 		movne	r8, #32
+ 225 0082 1C46     		mov	r4, r3
+ 226 0084 0025     		movs	r5, #0
+ 227 0086 06E0     		b	.L35
+ 228              	.L99:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUj4KMI.s 			page 5
+
+
+ 229 0088 3378     		ldrb	r3, [r6]	@ zero_extendqisi2
+ 230 008a 0436     		adds	r6, r6, #4
+ 231              	.L33:
+ 232 008c 05EB8505 		add	r5, r5, r5, lsl #2
+ 233 0090 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
+ 234 0092 03EB4505 		add	r5, r3, r5, lsl #1
+ 235              	.L35:
+ 236 0096 A2F13003 		sub	r3, r2, #48
+ 237 009a DBB2     		uxtb	r3, r3
+ 238 009c 092B     		cmp	r3, #9
+ 239 009e 04F10104 		add	r4, r4, #1
+ 240 00a2 F3D9     		bls	.L33
+ 241 00a4 2A2A     		cmp	r2, #42
+ 242 00a6 EFD0     		beq	.L99
+ 243 00a8 2E2A     		cmp	r2, #46
+ 244 00aa 4FF00009 		mov	r9, #0
+ 245 00ae 49D0     		beq	.L38
+ 246              	.L36:
+ 247 00b0 02F0DF03 		and	r3, r2, #223
+ 248 00b4 4C2B     		cmp	r3, #76
+ 249 00b6 03D1     		bne	.L40
+ 250 00b8 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 251 00ba 0BB1     		cbz	r3, .L40
+ 252 00bc 0134     		adds	r4, r4, #1
+ 253 00be 1A46     		mov	r2, r3
+ 254              	.L40:
+ 255 00c0 A2F14403 		sub	r3, r2, #68
+ 256 00c4 342B     		cmp	r3, #52
+ 257 00c6 00F2EF80 		bhi	.L41
+ 258 00ca DFE813F0 		tbh	[pc, r3, lsl #1]
+ 259              	.L43:
+ 260 00ce D500     		.2byte	(.L42-.L43)/2
+ 261 00d0 ED00     		.2byte	(.L41-.L43)/2
+ 262 00d2 ED00     		.2byte	(.L41-.L43)/2
+ 263 00d4 ED00     		.2byte	(.L41-.L43)/2
+ 264 00d6 ED00     		.2byte	(.L41-.L43)/2
+ 265 00d8 D500     		.2byte	(.L42-.L43)/2
+ 266 00da ED00     		.2byte	(.L41-.L43)/2
+ 267 00dc ED00     		.2byte	(.L41-.L43)/2
+ 268 00de ED00     		.2byte	(.L41-.L43)/2
+ 269 00e0 ED00     		.2byte	(.L41-.L43)/2
+ 270 00e2 ED00     		.2byte	(.L41-.L43)/2
+ 271 00e4 EB00     		.2byte	(.L44-.L43)/2
+ 272 00e6 ED00     		.2byte	(.L41-.L43)/2
+ 273 00e8 ED00     		.2byte	(.L41-.L43)/2
+ 274 00ea ED00     		.2byte	(.L41-.L43)/2
+ 275 00ec ED00     		.2byte	(.L41-.L43)/2
+ 276 00ee ED00     		.2byte	(.L41-.L43)/2
+ 277 00f0 4500     		.2byte	(.L72-.L43)/2
+ 278 00f2 ED00     		.2byte	(.L41-.L43)/2
+ 279 00f4 ED00     		.2byte	(.L41-.L43)/2
+ 280 00f6 E900     		.2byte	(.L46-.L43)/2
+ 281 00f8 ED00     		.2byte	(.L41-.L43)/2
+ 282 00fa ED00     		.2byte	(.L41-.L43)/2
+ 283 00fc ED00     		.2byte	(.L41-.L43)/2
+ 284 00fe ED00     		.2byte	(.L41-.L43)/2
+ 285 0100 ED00     		.2byte	(.L41-.L43)/2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUj4KMI.s 			page 6
+
+
+ 286 0102 ED00     		.2byte	(.L41-.L43)/2
+ 287 0104 ED00     		.2byte	(.L41-.L43)/2
+ 288 0106 ED00     		.2byte	(.L41-.L43)/2
+ 289 0108 ED00     		.2byte	(.L41-.L43)/2
+ 290 010a ED00     		.2byte	(.L41-.L43)/2
+ 291 010c CB00     		.2byte	(.L47-.L43)/2
+ 292 010e D500     		.2byte	(.L42-.L43)/2
+ 293 0110 ED00     		.2byte	(.L41-.L43)/2
+ 294 0112 9C00     		.2byte	(.L48-.L43)/2
+ 295 0114 ED00     		.2byte	(.L41-.L43)/2
+ 296 0116 ED00     		.2byte	(.L41-.L43)/2
+ 297 0118 D500     		.2byte	(.L42-.L43)/2
+ 298 011a ED00     		.2byte	(.L41-.L43)/2
+ 299 011c ED00     		.2byte	(.L41-.L43)/2
+ 300 011e ED00     		.2byte	(.L41-.L43)/2
+ 301 0120 ED00     		.2byte	(.L41-.L43)/2
+ 302 0122 ED00     		.2byte	(.L41-.L43)/2
+ 303 0124 EB00     		.2byte	(.L44-.L43)/2
+ 304 0126 ED00     		.2byte	(.L41-.L43)/2
+ 305 0128 ED00     		.2byte	(.L41-.L43)/2
+ 306 012a ED00     		.2byte	(.L41-.L43)/2
+ 307 012c 7800     		.2byte	(.L49-.L43)/2
+ 308 012e ED00     		.2byte	(.L41-.L43)/2
+ 309 0130 4500     		.2byte	(.L72-.L43)/2
+ 310 0132 ED00     		.2byte	(.L41-.L43)/2
+ 311 0134 ED00     		.2byte	(.L41-.L43)/2
+ 312 0136 E900     		.2byte	(.L46-.L43)/2
+ 313              	.L100:
+ 314 0138 3378     		ldrb	r3, [r6]	@ zero_extendqisi2
+ 315 013a 0436     		adds	r6, r6, #4
+ 316              	.L37:
+ 317 013c 09EB8909 		add	r9, r9, r9, lsl #2
+ 318 0140 03EB4909 		add	r9, r3, r9, lsl #1
+ 319              	.L38:
+ 320 0144 14F8012B 		ldrb	r2, [r4], #1	@ zero_extendqisi2
+ 321 0148 A2F13003 		sub	r3, r2, #48
+ 322 014c DBB2     		uxtb	r3, r3
+ 323 014e 092B     		cmp	r3, #9
+ 324 0150 F4D9     		bls	.L37
+ 325 0152 2A2A     		cmp	r2, #42
+ 326 0154 F0D0     		beq	.L100
+ 327 0156 ABE7     		b	.L36
+ 328              	.L72:
+ 329 0158 0A22     		movs	r2, #10
+ 330              	.L45:
+ 331 015a 3168     		ldr	r1, [r6]
+ 332 015c 5846     		mov	r0, fp
+ 333 015e 0023     		movs	r3, #0
+ 334 0160 FFF7FEFF 		bl	long_to_string_with_divisor
+ 335 0164 0436     		adds	r6, r6, #4
+ 336 0166 DA46     		mov	r10, fp
+ 337 0168 CBEB0009 		rsb	r9, fp, r0
+ 338              	.L50:
+ 339 016c C9EB0505 		rsb	r5, r9, r5
+ 340 0170 25EAE575 		bic	r5, r5, r5, asr #31
+ 341 0174 BCF1000F 		cmp	ip, #0
+ 342 0178 0DD1     		bne	.L63
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUj4KMI.s 			page 7
+
+
+ 343 017a 6D42     		negs	r5, r5
+ 344 017c 5DB1     		cbz	r5, .L63
+ 345 017e 9AF80010 		ldrb	r1, [r10]	@ zero_extendqisi2
+ 346 0182 2D29     		cmp	r1, #45
+ 347 0184 00F09680 		beq	.L101
+ 348              	.L65:
+ 349 0188 3B68     		ldr	r3, [r7]
+ 350 018a 3846     		mov	r0, r7
+ 351 018c 9B68     		ldr	r3, [r3, #8]
+ 352 018e 4146     		mov	r1, r8
+ 353 0190 9847     		blx	r3
+ 354 0192 0135     		adds	r5, r5, #1
+ 355 0194 F8D1     		bne	.L65
+ 356              	.L63:
+ 357 0196 B9F1000F 		cmp	r9, #0
+ 358 019a 05DD     		ble	.L66
+ 359 019c 3B68     		ldr	r3, [r7]
+ 360 019e 5146     		mov	r1, r10
+ 361 01a0 4A46     		mov	r2, r9
+ 362 01a2 1B68     		ldr	r3, [r3]
+ 363 01a4 3846     		mov	r0, r7
+ 364 01a6 9847     		blx	r3
+ 365              	.L66:
+ 366 01a8 002D     		cmp	r5, #0
+ 367 01aa 3FF446AF 		beq	.L27
+ 368              	.L67:
+ 369 01ae 3B68     		ldr	r3, [r7]
+ 370 01b0 3846     		mov	r0, r7
+ 371 01b2 9B68     		ldr	r3, [r3, #8]
+ 372 01b4 4146     		mov	r1, r8
+ 373 01b6 9847     		blx	r3
+ 374 01b8 013D     		subs	r5, r5, #1
+ 375 01ba F8D1     		bne	.L67
+ 376 01bc 3DE7     		b	.L27
+ 377              	.L49:
+ 378 01be D6F800A0 		ldr	r10, [r6]
+ 379 01c2 049B     		ldr	r3, [sp, #16]
+ 380 01c4 BAF1000F 		cmp	r10, #0
+ 381 01c8 08BF     		it	eq
+ 382 01ca 9A46     		moveq	r10, r3
+ 383 01cc 47F6FF72 		movw	r2, #32767
+ 384 01d0 9AF80030 		ldrb	r3, [r10]	@ zero_extendqisi2
+ 385 01d4 0436     		adds	r6, r6, #4
+ 386 01d6 B9F1000F 		cmp	r9, #0
+ 387 01da 08BF     		it	eq
+ 388 01dc 9146     		moveq	r9, r2
+ 389 01de 002B     		cmp	r3, #0
+ 390 01e0 00F08380 		beq	.L75
+ 391 01e4 0AEB0902 		add	r2, r10, r9
+ 392 01e8 D146     		mov	r9, r10
+ 393 01ea 01E0     		b	.L55
+ 394              	.L53:
+ 395 01ec 9145     		cmp	r9, r2
+ 396 01ee 6ED0     		beq	.L102
+ 397              	.L55:
+ 398 01f0 99F80130 		ldrb	r3, [r9, #1]	@ zero_extendqisi2
+ 399 01f4 09F10109 		add	r9, r9, #1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUj4KMI.s 			page 8
+
+
+ 400 01f8 002B     		cmp	r3, #0
+ 401 01fa F7D1     		bne	.L53
+ 402 01fc CAEB0909 		rsb	r9, r10, r9
+ 403 0200 4FF02008 		mov	r8, #32
+ 404 0204 B2E7     		b	.L50
+ 405              	.L48:
+ 406 0206 0736     		adds	r6, r6, #7
+ 407 0208 26F00706 		bic	r6, r6, #7
+ 408 020c D6E90001 		ldrd	r0, [r6]
+ 409 0210 CDF808C0 		str	ip, [sp, #8]
+ 410 0214 FFF7FEFF 		bl	__aeabi_d2f
+ 411 0218 07EE900A 		fmsr	s15, r0
+ 412 021c F5EEC07A 		fcmpezs	s15
+ 413 0220 F1EE10FA 		fmstat
+ 414 0224 DDF808C0 		ldr	ip, [sp, #8]
+ 415 0228 44BF     		itt	mi
+ 416 022a F1EE677A 		fnegsmi	s15, s15
+ 417 022e 2D23     		movmi	r3, #45
+ 418 0230 17EE900A 		fmrs	r0, s15
+ 419 0234 4ABF     		itet	mi
+ 420 0236 0DF1190A 		addmi	r10, sp, #25
+ 421 023a DA46     		movpl	r10, fp
+ 422 023c 8DF81830 		strbmi	r3, [sp, #24]
+ 423 0240 CDF808C0 		str	ip, [sp, #8]
+ 424 0244 FFF7FEFF 		bl	__aeabi_f2d
+ 425 0248 CDF80090 		str	r9, [sp]
+ 426 024c 0246     		mov	r2, r0
+ 427 024e 0B46     		mov	r3, r1
+ 428 0250 5046     		mov	r0, r10
+ 429 0252 FFF7FEFF 		bl	ftoa
+ 430 0256 0836     		adds	r6, r6, #8
+ 431 0258 DA46     		mov	r10, fp
+ 432 025a CBEB0009 		rsb	r9, fp, r0
+ 433 025e DDF808C0 		ldr	ip, [sp, #8]
+ 434 0262 83E7     		b	.L50
+ 435              	.L47:
+ 436 0264 3368     		ldr	r3, [r6]
+ 437 0266 DDF81490 		ldr	r9, [sp, #20]
+ 438 026a 8DF81830 		strb	r3, [sp, #24]
+ 439 026e 0436     		adds	r6, r6, #4
+ 440 0270 4FF02008 		mov	r8, #32
+ 441 0274 DA46     		mov	r10, fp
+ 442 0276 79E7     		b	.L50
+ 443              	.L42:
+ 444 0278 3168     		ldr	r1, [r6]
+ 445 027a 0029     		cmp	r1, #0
+ 446 027c BFBF     		itttt	lt
+ 447 027e 2D20     		movlt	r0, #45
+ 448 0280 8DF81800 		strblt	r0, [sp, #24]
+ 449 0284 4942     		rsblt	r1, r1, #0
+ 450 0286 0DF11900 		addlt	r0, sp, #25
+ 451 028a A8BF     		it	ge
+ 452 028c 5846     		movge	r0, fp
+ 453 028e 0A22     		movs	r2, #10
+ 454 0290 0023     		movs	r3, #0
+ 455 0292 FFF7FEFF 		bl	long_to_string_with_divisor
+ 456 0296 0436     		adds	r6, r6, #4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUj4KMI.s 			page 9
+
+
+ 457 0298 DA46     		mov	r10, fp
+ 458 029a CBEB0009 		rsb	r9, fp, r0
+ 459 029e 65E7     		b	.L50
+ 460              	.L46:
+ 461 02a0 1022     		movs	r2, #16
+ 462 02a2 5AE7     		b	.L45
+ 463              	.L44:
+ 464 02a4 0822     		movs	r2, #8
+ 465 02a6 58E7     		b	.L45
+ 466              	.L41:
+ 467 02a8 8DF81820 		strb	r2, [sp, #24]
+ 468 02ac DDF81490 		ldr	r9, [sp, #20]
+ 469 02b0 DA46     		mov	r10, fp
+ 470 02b2 5BE7     		b	.L50
+ 471              	.L101:
+ 472 02b4 B8F1300F 		cmp	r8, #48
+ 473 02b8 7FF466AF 		bne	.L65
+ 474 02bc 3B68     		ldr	r3, [r7]
+ 475 02be 3846     		mov	r0, r7
+ 476 02c0 9B68     		ldr	r3, [r3, #8]
+ 477 02c2 9847     		blx	r3
+ 478 02c4 0AF1010A 		add	r10, r10, #1
+ 479 02c8 09F1FF39 		add	r9, r9, #-1
+ 480 02cc 5CE7     		b	.L65
+ 481              	.L102:
+ 482 02ce CAEB0209 		rsb	r9, r10, r2
+ 483 02d2 4FF02008 		mov	r8, #32
+ 484 02d6 49E7     		b	.L50
+ 485              	.L26:
+ 486 02d8 40F20000 		movw	r0, #:lower16:.LC1
+ 487 02dc C0F20000 		movt	r0, #:upper16:.LC1
+ 488 02e0 FFF7FEFF 		bl	firmwareError
+ 489 02e4 0DB0     		add	sp, sp, #52
+ 490              		@ sp needed
+ 491 02e6 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 492              	.L75:
+ 493 02ea 9946     		mov	r9, r3
+ 494 02ec 4FF02008 		mov	r8, #32
+ 495 02f0 3CE7     		b	.L50
+ 496              		.size	chvprintf, .-chvprintf
+ 497 02f2 00BFAFF3 		.section	.rodata.str1.4,"aMS",%progbits,1
+ 497      0080AFF3 
+ 497      0080AFF3 
+ 497      0080
+ 498              		.align	2
+ 499              	.LC0:
+ 500 0000 286E756C 		.ascii	"(null)\000"
+ 500      6C2900
+ 501 0007 00       		.space	1
+ 502              	.LC1:
+ 503 0008 6C6F7773 		.ascii	"lowstck#1c\000"
+ 503      74636B23 
+ 503      316300
+ 504 0013 00       		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUj4KMI.s 			page 10
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 chprintf.c
+C:\Users\pc\AppData\Local\Temp\ccUj4KMI.s:17     .text.long_to_string_with_divisor:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccUj4KMI.s:22     .text.long_to_string_with_divisor:00000000 long_to_string_with_divisor
+C:\Users\pc\AppData\Local\Temp\ccUj4KMI.s:66     .text.ftoa:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccUj4KMI.s:72     .text.ftoa:00000000 ftoa
+C:\Users\pc\AppData\Local\Temp\ccUj4KMI.s:161    .text.chvprintf:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccUj4KMI.s:167    .text.chvprintf:00000000 chvprintf
+C:\Users\pc\AppData\Local\Temp\ccUj4KMI.s:499    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccUj4KMI.s:260    .text.chvprintf:000000ce $d
+C:\Users\pc\AppData\Local\Temp\ccUj4KMI.s:314    .text.chvprintf:00000138 $t
+C:\Users\pc\AppData\Local\Temp\ccUj4KMI.s:502    .rodata.str1.4:00000008 .LC1
+C:\Users\pc\AppData\Local\Temp\ccUj4KMI.s:498    .rodata.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+__aeabi_dcmplt
+__aeabi_d2iz
+__aeabi_i2d
+__aeabi_dsub
+__aeabi_ui2d
+__aeabi_dmul
+__fpclassifyd
+__aeabi_d2f
+__aeabi_f2d
+rlist
+getRemainingStack
+firmwareError

@@ -1,0 +1,300 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"sensor_chart.cpp"
+  16              		.section	.text._ZL23setSensorChartFrequencyi,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	_ZL23setSensorChartFrequencyi, %function
+  22              	_ZL23setSensorChartFrequencyi:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25              		@ link register save eliminated.
+  26 0000 40F20003 		movw	r3, #:lower16:engineConfiguration
+  27 0004 C0F20003 		movt	r3, #:upper16:engineConfiguration
+  28 0008 1B68     		ldr	r3, [r3]
+  29 000a C3F81402 		str	r0, [r3, #532]
+  30 000e 7047     		bx	lr
+  31              		.size	_ZL23setSensorChartFrequencyi, .-_ZL23setSensorChartFrequencyi
+  32              		.global	__aeabi_f2d
+  33              		.section	.text._Z9scAddDataff,"ax",%progbits
+  34              		.align	2
+  35              		.p2align 4,,15
+  36              		.global	_Z9scAddDataff
+  37              		.thumb
+  38              		.thumb_func
+  39              		.type	_Z9scAddDataff, %function
+  40              	_Z9scAddDataff:
+  41              		@ args = 0, pretend = 0, frame = 0
+  42              		@ frame_needed = 0, uses_anonymous_args = 0
+  43 0000 70B5     		push	{r4, r5, r6, lr}
+  44 0002 40F20003 		movw	r3, #:lower16:.LANCHOR0
+  45 0006 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+  46 000a 82B0     		sub	sp, sp, #8
+  47 000c 1B68     		ldr	r3, [r3]
+  48 000e 0546     		mov	r5, r0	@ float
+  49 0010 0E46     		mov	r6, r1	@ float
+  50 0012 002B     		cmp	r3, #0
+  51 0014 37D0     		beq	.L2
+  52 0016 40F20004 		movw	r4, #:lower16:engineConfiguration
+  53 001a C0F20004 		movt	r4, #:upper16:engineConfiguration
+  54 001e 2368     		ldr	r3, [r4]
+  55 0020 D3F81432 		ldr	r3, [r3, #532]
+  56 0024 012B     		cmp	r3, #1
+  57 0026 2EDD     		ble	.L2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s 			page 2
+
+
+  58 0028 FFF7FEFF 		bl	_Z20getRevolutionCounterv
+  59 002c 2368     		ldr	r3, [r4]
+  60 002e D3F81432 		ldr	r3, [r3, #532]
+  61 0032 90FBF3F2 		sdiv	r2, r0, r3
+  62 0036 02FB1300 		mls	r0, r2, r3, r0
+  63 003a 30BB     		cbnz	r0, .L16
+  64 003c 40F20003 		movw	r3, #:lower16:.LANCHOR1
+  65 0040 C0F20003 		movt	r3, #:upper16:.LANCHOR1
+  66 0044 1A68     		ldr	r2, [r3]
+  67 0046 002A     		cmp	r2, #0
+  68 0048 36D0     		beq	.L17
+  69              	.L8:
+  70 004a 40F20000 		movw	r0, #:lower16:.LANCHOR2
+  71 004e C0F20000 		movt	r0, #:upper16:.LANCHOR2
+  72 0052 FFF7FEFF 		bl	remainingSize
+  73 0056 6428     		cmp	r0, #100
+  74 0058 15D9     		bls	.L2
+  75 005a 2846     		mov	r0, r5	@ float
+  76 005c FFF7FEFF 		bl	__aeabi_f2d
+  77 0060 0446     		mov	r4, r0
+  78 0062 3046     		mov	r0, r6	@ float
+  79 0064 0D46     		mov	r5, r1
+  80 0066 FFF7FEFF 		bl	__aeabi_f2d
+  81 006a CDE90001 		strd	r0, [sp]
+  82 006e 40F20000 		movw	r0, #:lower16:.LANCHOR2
+  83 0072 40F20001 		movw	r1, #:lower16:.LC2
+  84 0076 2246     		mov	r2, r4
+  85 0078 2B46     		mov	r3, r5
+  86 007a C0F20000 		movt	r0, #:upper16:.LANCHOR2
+  87 007e C0F20001 		movt	r1, #:upper16:.LC2
+  88 0082 FFF7FEFF 		bl	appendPrintf
+  89              	.L2:
+  90 0086 02B0     		add	sp, sp, #8
+  91              		@ sp needed
+  92 0088 70BD     		pop	{r4, r5, r6, pc}
+  93              	.L16:
+  94 008a 40F20004 		movw	r4, #:lower16:.LANCHOR1
+  95 008e C0F20004 		movt	r4, #:upper16:.LANCHOR1
+  96 0092 2368     		ldr	r3, [r4]
+  97 0094 002B     		cmp	r3, #0
+  98 0096 F6D0     		beq	.L2
+  99 0098 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 100 009c 40F20001 		movw	r1, #:lower16:.LC0
+ 101 00a0 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 102 00a4 C0F20001 		movt	r1, #:upper16:.LC0
+ 103 00a8 FFF7FEFF 		bl	appendPrintf
+ 104 00ac FFF7FEFF 		bl	_Z10getFullLogv
+ 105 00b0 C8B9     		cbnz	r0, .L18
+ 106              	.L7:
+ 107 00b2 0023     		movs	r3, #0
+ 108 00b4 2360     		str	r3, [r4]
+ 109 00b6 E6E7     		b	.L2
+ 110              	.L17:
+ 111 00b8 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 112 00bc 0122     		movs	r2, #1
+ 113 00be C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 114 00c2 1A60     		str	r2, [r3]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s 			page 3
+
+
+ 115 00c4 FFF7FEFF 		bl	resetLogging
+ 116 00c8 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 117 00cc 40F20001 		movw	r1, #:lower16:.LC1
+ 118 00d0 40F20002 		movw	r2, #:lower16:.LC0
+ 119 00d4 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 120 00d8 C0F20001 		movt	r1, #:upper16:.LC1
+ 121 00dc C0F20002 		movt	r2, #:upper16:.LC0
+ 122 00e0 FFF7FEFF 		bl	appendPrintf
+ 123 00e4 B1E7     		b	.L8
+ 124              	.L18:
+ 125 00e6 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 126 00ea C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 127 00ee FFF7FEFF 		bl	scheduleLogging
+ 128 00f2 DEE7     		b	.L7
+ 129              		.size	_Z9scAddDataff, .-_Z9scAddDataff
+ 130 00f4 AFF30080 		.section	.text._Z15initSensorChartv,"ax",%progbits
+ 130      AFF30080 
+ 130      AFF30080 
+ 131              		.align	2
+ 132              		.p2align 4,,15
+ 133              		.global	_Z15initSensorChartv
+ 134              		.thumb
+ 135              		.thumb_func
+ 136              		.type	_Z15initSensorChartv, %function
+ 137              	_Z15initSensorChartv:
+ 138              		@ args = 0, pretend = 0, frame = 0
+ 139              		@ frame_needed = 0, uses_anonymous_args = 0
+ 140 0000 08B5     		push	{r3, lr}
+ 141 0002 40F20000 		movw	r0, #:lower16:.LC3
+ 142 0006 40F20001 		movw	r1, #:lower16:_ZL23setSensorChartFrequencyi
+ 143 000a C0F20000 		movt	r0, #:upper16:.LC3
+ 144 000e C0F20001 		movt	r1, #:upper16:_ZL23setSensorChartFrequencyi
+ 145 0012 FFF7FEFF 		bl	addConsoleActionI
+ 146 0016 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 147 001a C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 148 001e 0122     		movs	r2, #1
+ 149 0020 1A60     		str	r2, [r3]
+ 150 0022 08BD     		pop	{r3, pc}
+ 151              		.size	_Z15initSensorChartv, .-_Z15initSensorChartv
+ 152 0024 AFF30080 		.section	.text.startup._GLOBAL__sub_I__Z9scAddDataff,"ax",%progbits
+ 152      AFF30080 
+ 152      AFF30080 
+ 153              		.align	2
+ 154              		.p2align 4,,15
+ 155              		.thumb
+ 156              		.thumb_func
+ 157              		.type	_GLOBAL__sub_I__Z9scAddDataff, %function
+ 158              	_GLOBAL__sub_I__Z9scAddDataff:
+ 159              		@ args = 0, pretend = 0, frame = 0
+ 160              		@ frame_needed = 0, uses_anonymous_args = 0
+ 161              		@ link register save eliminated.
+ 162 0000 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 163 0004 40F20001 		movw	r1, #:lower16:.LC4
+ 164 0008 40F20002 		movw	r2, #:lower16:.LANCHOR3
+ 165 000c C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 166 0010 C0F20001 		movt	r1, #:upper16:.LC4
+ 167 0014 C0F20002 		movt	r2, #:upper16:.LANCHOR3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s 			page 4
+
+
+ 168 0018 41F28833 		movw	r3, #5000
+ 169 001c FFF7FEBF 		b	_ZN7LoggingC1EPKcPci
+ 170              		.size	_GLOBAL__sub_I__Z9scAddDataff, .-_GLOBAL__sub_I__Z9scAddDataff
+ 171              		.section	.init_array,"aw",%init_array
+ 172              		.align	2
+ 173 0000 00000000 		.word	_GLOBAL__sub_I__Z9scAddDataff(target1)
+ 174              		.section	.bss._ZL7logging,"aw",%nobits
+ 175              		.align	2
+ 176              		.set	.LANCHOR2,. + 0
+ 177              		.type	_ZL7logging, %object
+ 178              		.size	_ZL7logging, 60
+ 179              	_ZL7logging:
+ 180 0000 00000000 		.space	60
+ 180      00000000 
+ 180      00000000 
+ 180      00000000 
+ 180      00000000 
+ 181              		.section	.bss._ZL14LOGGING_BUFFER,"aw",%nobits
+ 182              		.align	2
+ 183              		.set	.LANCHOR3,. + 0
+ 184              		.type	_ZL14LOGGING_BUFFER, %object
+ 185              		.size	_ZL14LOGGING_BUFFER, 5000
+ 186              	_ZL14LOGGING_BUFFER:
+ 187 0000 00000000 		.space	5000
+ 187      00000000 
+ 187      00000000 
+ 187      00000000 
+ 187      00000000 
+ 188              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 189              		.align	2
+ 190              	.LC0:
+ 191 0000 2C00     		.ascii	",\000"
+ 192 0002 0000     		.space	2
+ 193              	.LC1:
+ 194 0004 616E616C 		.ascii	"analog_chart%s\000"
+ 194      6F675F63 
+ 194      68617274 
+ 194      257300
+ 195 0013 00       		.space	1
+ 196              	.LC2:
+ 197 0014 25667C25 		.ascii	"%f|%f|\000"
+ 197      667C00
+ 198 001b 00       		.space	1
+ 199              	.LC3:
+ 200 001c 7365745F 		.ascii	"set_sensor_chart_freq\000"
+ 200      73656E73 
+ 200      6F725F63 
+ 200      68617274 
+ 200      5F667265 
+ 201 0032 0000     		.space	2
+ 202              	.LC4:
+ 203 0034 616E616C 		.ascii	"analog chart\000"
+ 203      6F672063 
+ 203      68617274 
+ 203      00
+ 204 0041 000000   		.section	.bss._ZL11pendingData,"aw",%nobits
+ 205              		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s 			page 5
+
+
+ 206              		.set	.LANCHOR1,. + 0
+ 207              		.type	_ZL11pendingData, %object
+ 208              		.size	_ZL11pendingData, 4
+ 209              	_ZL11pendingData:
+ 210 0000 00000000 		.space	4
+ 211              		.section	.bss._ZL11initialized,"aw",%nobits
+ 212              		.align	2
+ 213              		.set	.LANCHOR0,. + 0
+ 214              		.type	_ZL11initialized, %object
+ 215              		.size	_ZL11initialized, 4
+ 216              	_ZL11initialized:
+ 217 0000 00000000 		.space	4
+ 218              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 sensor_chart.cpp
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:17     .text._ZL23setSensorChartFrequencyi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:22     .text._ZL23setSensorChartFrequencyi:00000000 _ZL23setSensorChartFrequencyi
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:34     .text._Z9scAddDataff:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:40     .text._Z9scAddDataff:00000000 _Z9scAddDataff
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:213    .bss._ZL11initialized:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:206    .bss._ZL11pendingData:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:176    .bss._ZL7logging:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:196    .rodata.str1.4:00000014 .LC2
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:190    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:193    .rodata.str1.4:00000004 .LC1
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:131    .text._Z15initSensorChartv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:137    .text._Z15initSensorChartv:00000000 _Z15initSensorChartv
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:199    .rodata.str1.4:0000001c .LC3
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:153    .text.startup._GLOBAL__sub_I__Z9scAddDataff:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:158    .text.startup._GLOBAL__sub_I__Z9scAddDataff:00000000 _GLOBAL__sub_I__Z9scAddDataff
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:202    .rodata.str1.4:00000034 .LC4
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:183    .bss._ZL14LOGGING_BUFFER:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:172    .init_array:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:175    .bss._ZL7logging:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:179    .bss._ZL7logging:00000000 _ZL7logging
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:182    .bss._ZL14LOGGING_BUFFER:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:186    .bss._ZL14LOGGING_BUFFER:00000000 _ZL14LOGGING_BUFFER
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:189    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:205    .bss._ZL11pendingData:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:209    .bss._ZL11pendingData:00000000 _ZL11pendingData
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:212    .bss._ZL11initialized:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccOjPkN7.s:216    .bss._ZL11initialized:00000000 _ZL11initialized
+
+UNDEFINED SYMBOLS
+engineConfiguration
+__aeabi_f2d
+_Z20getRevolutionCounterv
+remainingSize
+appendPrintf
+_Z10getFullLogv
+resetLogging
+scheduleLogging
+addConsoleActionI
+_ZN7LoggingC1EPKcPci

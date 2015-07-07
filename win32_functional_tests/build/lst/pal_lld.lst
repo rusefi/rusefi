@@ -1,0 +1,66 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccDqX37p.s 			page 1
+
+
+   1              		.file	"pal_lld.c"
+   2              		.section	.text$_pal_lld_setgroupmode,"x"
+   3              		.p2align 4,,15
+   4              		.globl	__pal_lld_setgroupmode
+   5              		.def	__pal_lld_setgroupmode;	.scl	2;	.type	32;	.endef
+   6              	__pal_lld_setgroupmode:
+   7              	LFB28:
+   8              		.cfi_startproc
+   9 0000 8B54240C 		movl	12(%esp), %edx
+  10 0004 8B442404 		movl	4(%esp), %eax
+  11 0008 83FA01   		cmpl	$1, %edx
+  12 000b 7423     		je	L4
+  13 000d 7211     		jb	L3
+  14 000f 83FA02   		cmpl	$2, %edx
+  15 0012 740C     		je	L3
+  16 0014 83FA06   		cmpl	$6, %edx
+  17              		.p2align 4,,5
+  18 0017 741D     		je	L5
+  19              		.p2align 4,,5
+  20 0019 F3       		rep
+  21 001a C3       		ret
+  22 001b 908D7426 		.p2align 4,,7
+  22      00
+  23              	L3:
+  24 0020 8B542408 		movl	8(%esp), %edx
+  25 0024 F7D2     		notl	%edx
+  26 0026 215008   		andl	%edx, 8(%eax)
+  27 0029 C3       		ret
+  28 002a 8DB60000 		.p2align 4,,7
+  28      0000
+  29              	L4:
+  30 0030 8B542408 		movl	8(%esp), %edx
+  31 0034 0910     		orl	%edx, (%eax)
+  32              	L5:
+  33 0036 8B542408 		movl	8(%esp), %edx
+  34 003a 095008   		orl	%edx, 8(%eax)
+  35 003d C3       		ret
+  36              		.cfi_endproc
+  37              	LFE28:
+  38              		.globl	_vio_port_2
+  39 003e 9090     		.section	.data$vio_port_2,"w"
+  40              		.align 4
+  41              	_vio_port_2:
+  42 0000 00000000 		.space 12
+  42      00000000 
+  42      00000000 
+  43              		.globl	_vio_port_1
+  44              		.section	.data$vio_port_1,"w"
+  45              		.align 4
+  46              	_vio_port_1:
+  47 0000 00000000 		.space 12
+  47      00000000 
+  47      00000000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccDqX37p.s 			page 2
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 pal_lld.c
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccDqX37p.s:6      .text$_pal_lld_setgroupmode:00000000 __pal_lld_setgroupmode
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccDqX37p.s:41     .data$vio_port_2:00000000 _vio_port_2
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccDqX37p.s:46     .data$vio_port_1:00000000 _vio_port_1
+
+NO UNDEFINED SYMBOLS

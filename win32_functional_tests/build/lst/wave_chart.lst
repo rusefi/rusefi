@@ -1,0 +1,920 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s 			page 1
+
+
+   1              		.file	"wave_chart.cpp"
+   2              		.section .rdata,"dr"
+   3              	LC0:
+   4 0000 656E6769 		.ascii "engine chart: %s\0"
+   4      6E652063 
+   4      68617274 
+   4      3A202573 
+   4      00
+   5              	LC1:
+   6 0011 656E6769 		.ascii "engine chart size=%d\0"
+   6      6E652063 
+   6      68617274 
+   6      2073697A 
+   6      653D2564 
+   7              		.section	.text$_ZL11printStatusv,"x"
+   8              		.p2align 4,,15
+   9              		.def	__ZL11printStatusv;	.scl	3;	.type	32;	.endef
+  10              	__ZL11printStatusv:
+  11              	LFB89:
+  12              		.cfi_startproc
+  13 0000 83EC1C   		subl	$28, %esp
+  14              		.cfi_def_cfa_offset 32
+  15 0003 A1000000 		movl	_engineConfiguration, %eax
+  15      00
+  16 0008 0FB680D8 		movzbl	1496(%eax), %eax
+  16      050000
+  17 000f C0E805   		shrb	$5, %al
+  18 0012 83E001   		andl	$1, %eax
+  19 0015 890424   		movl	%eax, (%esp)
+  20 0018 E8000000 		call	__Z12boolToStringb
+  20      00
+  21 001d C7442404 		movl	$LC0, 4(%esp)
+  21      00000000 
+  22 0025 C7042400 		movl	$__ZL6logger, (%esp)
+  22      000000
+  23 002c 89442408 		movl	%eax, 8(%esp)
+  24 0030 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+  24      00
+  25 0035 A1000000 		movl	_engineConfiguration, %eax
+  25      00
+  26 003a 8B80E805 		movl	1512(%eax), %eax
+  26      0000
+  27 0040 C7442404 		movl	$LC1, 4(%esp)
+  27      11000000 
+  28 0048 C7042400 		movl	$__ZL6logger, (%esp)
+  28      000000
+  29 004f 89442408 		movl	%eax, 8(%esp)
+  30 0053 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+  30      00
+  31 0058 83C41C   		addl	$28, %esp
+  32              		.cfi_def_cfa_offset 4
+  33 005b C3       		ret
+  34              		.cfi_endproc
+  35              	LFE89:
+  36 005c 90909090 		.section	.text$_ZL14setChartActivei,"x"
+  37              		.p2align 4,,15
+  38              		.def	__ZL14setChartActivei;	.scl	3;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s 			page 2
+
+
+  39              	__ZL14setChartActivei:
+  40              	LFB90:
+  41              		.cfi_startproc
+  42 0000 83EC0C   		subl	$12, %esp
+  43              		.cfi_def_cfa_offset 16
+  44 0003 8B0D0000 		movl	_engineConfiguration, %ecx
+  44      0000
+  45 0009 8B442410 		movl	16(%esp), %eax
+  46 000d 85C0     		testl	%eax, %eax
+  47 000f 0FB681D8 		movzbl	1496(%ecx), %eax
+  47      050000
+  48 0016 0F95C2   		setne	%dl
+  49 0019 C1E205   		sall	$5, %edx
+  50 001c 83E0DF   		andl	$-33, %eax
+  51 001f 09D0     		orl	%edx, %eax
+  52 0021 8881D805 		movb	%al, 1496(%ecx)
+  52      0000
+  53 0027 E8000000 		call	__ZL11printStatusv
+  53      00
+  54 002c C7050000 		movl	$0, _maxLockTime
+  54      00000000 
+  54      0000
+  55 0036 83C40C   		addl	$12, %esp
+  56              		.cfi_def_cfa_offset 4
+  57 0039 C3       		ret
+  58              		.cfi_endproc
+  59              	LFE90:
+  60 003a 90909090 		.section	.text$_Z12setChartSizei,"x"
+  60      9090
+  61              		.p2align 4,,15
+  62              		.globl	__Z12setChartSizei
+  63              		.def	__Z12setChartSizei;	.scl	2;	.type	32;	.endef
+  64              	__Z12setChartSizei:
+  65              	LFB91:
+  66              		.cfi_startproc
+  67 0000 8B442404 		movl	4(%esp), %eax
+  68 0004 83F804   		cmpl	$4, %eax
+  69 0007 7F07     		jg	L8
+  70 0009 F3       		rep
+  71 000a C3       		ret
+  72 000b 908D7426 		.p2align 4,,7
+  72      00
+  73              	L8:
+  74 0010 8B150000 		movl	_engineConfiguration, %edx
+  74      0000
+  75 0016 8982E805 		movl	%eax, 1512(%edx)
+  75      0000
+  76 001c E9000000 		jmp	__ZL11printStatusv
+  76      00
+  77              		.cfi_endproc
+  78              	LFE91:
+  79 0021 90909090 		.section .rdata,"dr"
+  79      90909090 
+  79      90909090 
+  79      909090
+  80              	LC2:
+  81 0026 2C00     		.ascii ",\0"
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s 			page 3
+
+
+  82              	LC3:
+  83 0028 77617665 		.ascii "wave_chart%s\0"
+  83      5F636861 
+  83      72742573 
+  83      00
+  84              		.section	.text$_ZN9WaveChart14resetWaveChartEv,"x"
+  85              		.align 2
+  86              		.p2align 4,,15
+  87              		.globl	__ZN9WaveChart14resetWaveChartEv
+  88              		.def	__ZN9WaveChart14resetWaveChartEv;	.scl	2;	.type	32;	.endef
+  89              	__ZN9WaveChart14resetWaveChartEv:
+  90              	LFB86:
+  91              		.cfi_startproc
+  92 0000 53       		pushl	%ebx
+  93              		.cfi_def_cfa_offset 8
+  94              		.cfi_offset 3, -8
+  95 0001 89CB     		movl	%ecx, %ebx
+  96 0003 83EC18   		subl	$24, %esp
+  97              		.cfi_def_cfa_offset 32
+  98 0006 890C24   		movl	%ecx, (%esp)
+  99 0009 E8000000 		call	__Z12resetLoggingP7Logging
+  99      00
+ 100 000e 891C24   		movl	%ebx, (%esp)
+ 101 0011 C7433C00 		movl	$0, 60(%ebx)
+ 101      000000
+ 102 0018 C7434000 		movl	$0, 64(%ebx)
+ 102      000000
+ 103 001f C7434400 		movl	$0, 68(%ebx)
+ 103      000000
+ 104 0026 C7442408 		movl	$LC2, 8(%esp)
+ 104      26000000 
+ 105 002e C7442404 		movl	$LC3, 4(%esp)
+ 105      28000000 
+ 106 0036 E8000000 		call	_appendPrintf
+ 106      00
+ 107 003b 83C418   		addl	$24, %esp
+ 108              		.cfi_def_cfa_offset 8
+ 109 003e 5B       		popl	%ebx
+ 110              		.cfi_restore 3
+ 111              		.cfi_def_cfa_offset 4
+ 112 003f C3       		ret
+ 113              		.cfi_endproc
+ 114              	LFE86:
+ 115              		.section	.text$_ZL17resetWaveChartNowv,"x"
+ 116              		.p2align 4,,15
+ 117              		.def	__ZL17resetWaveChartNowv;	.scl	3;	.type	32;	.endef
+ 118              	__ZL17resetWaveChartNowv:
+ 119              	LFB85:
+ 120              		.cfi_startproc
+ 121 0000 83EC0C   		subl	$12, %esp
+ 122              		.cfi_def_cfa_offset 16
+ 123 0003 8B0D0000 		movl	_engine, %ecx
+ 123      0000
+ 124 0009 E8000000 		call	__ZN13RpmCalculator20getRevolutionCounterEv
+ 124      00
+ 125 000e B9000000 		movl	$_waveChart, %ecx
+ 125      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s 			page 4
+
+
+ 126 0013 83C003   		addl	$3, %eax
+ 127 0016 A3000000 		movl	%eax, _skipUntilEngineCycle
+ 127      00
+ 128 001b 83C40C   		addl	$12, %esp
+ 129              		.cfi_def_cfa_offset 4
+ 130 001e E9000000 		jmp	__ZN9WaveChart14resetWaveChartEv
+ 130      00
+ 131              		.cfi_endproc
+ 132              	LFE85:
+ 133              		.def	___divdi3;	.scl	2;	.type	32;	.endef
+ 134 0023 90909090 		.section	.text$_ZN9WaveChart19isStartedTooLongAgoEv,"x"
+ 134      90909090 
+ 134      90909090 
+ 134      90
+ 135              		.align 2
+ 136              		.p2align 4,,15
+ 137              		.globl	__ZN9WaveChart19isStartedTooLongAgoEv
+ 138              		.def	__ZN9WaveChart19isStartedTooLongAgoEv;	.scl	2;	.type	32;	.endef
+ 139              	__ZN9WaveChart19isStartedTooLongAgoEv:
+ 140              	LFB87:
+ 141              		.cfi_startproc
+ 142 0000 83EC1C   		subl	$28, %esp
+ 143              		.cfi_def_cfa_offset 32
+ 144 0003 895C2410 		movl	%ebx, 16(%esp)
+ 145              		.cfi_offset 3, -16
+ 146 0007 89CB     		movl	%ecx, %ebx
+ 147 0009 89742414 		movl	%esi, 20(%esp)
+ 148              		.cfi_offset 6, -12
+ 149 000d 31F6     		xorl	%esi, %esi
+ 150 000f 897C2418 		movl	%edi, 24(%esp)
+ 151              		.cfi_offset 7, -8
+ 152 0013 E8000000 		call	_getTimeNowNt
+ 152      00
+ 153 0018 8B4B40   		movl	64(%ebx), %ecx
+ 154 001b 8B5B44   		movl	68(%ebx), %ebx
+ 155 001e 89DF     		movl	%ebx, %edi
+ 156 0020 09CF     		orl	%ecx, %edi
+ 157 0022 7449     		je	L14
+ 158 0024 29C8     		subl	%ecx, %eax
+ 159 0026 BE010000 		movl	$1, %esi
+ 159      00
+ 160 002b 19DA     		sbbl	%ebx, %edx
+ 161 002d C7442408 		movl	$100, 8(%esp)
+ 161      64000000 
+ 162 0035 C744240C 		movl	$0, 12(%esp)
+ 162      00000000 
+ 163 003d 890424   		movl	%eax, (%esp)
+ 164 0040 89542404 		movl	%edx, 4(%esp)
+ 165 0044 E8000000 		call	___divdi3
+ 165      00
+ 166 0049 89C7     		movl	%eax, %edi
+ 167 004b A1000000 		movl	_engineConfiguration, %eax
+ 167      00
+ 168 0050 89D3     		movl	%edx, %ebx
+ 169 0052 BACDCCCC 		movl	$-858993459, %edx
+ 169      CC
+ 170 0057 6988E805 		imull	$1000000, 1512(%eax), %ecx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s 			page 5
+
+
+ 170      00004042 
+ 170      0F00
+ 171 0061 89C8     		movl	%ecx, %eax
+ 172 0063 F7E2     		mull	%edx
+ 173 0065 C1EA04   		shrl	$4, %edx
+ 174 0068 83FB00   		cmpl	$0, %ebx
+ 175 006b 7E13     		jle	L20
+ 176              	L14:
+ 177 006d 89F0     		movl	%esi, %eax
+ 178 006f 8B5C2410 		movl	16(%esp), %ebx
+ 179 0073 8B742414 		movl	20(%esp), %esi
+ 180 0077 8B7C2418 		movl	24(%esp), %edi
+ 181 007b 83C41C   		addl	$28, %esp
+ 182              		.cfi_remember_state
+ 183              		.cfi_restore 7
+ 184              		.cfi_restore 6
+ 185              		.cfi_restore 3
+ 186              		.cfi_def_cfa_offset 4
+ 187 007e C3       		ret
+ 188 007f 90       		.p2align 4,,7
+ 189              	L20:
+ 190              		.cfi_restore_state
+ 191 0080 7D04     		jge	L21
+ 192              	L16:
+ 193 0082 31F6     		xorl	%esi, %esi
+ 194 0084 EBE7     		jmp	L14
+ 195              		.p2align 4,,7
+ 196              	L21:
+ 197 0086 39D7     		cmpl	%edx, %edi
+ 198              		.p2align 4,,7
+ 199 0088 77E3     		ja	L14
+ 200 008a 8DB60000 		.p2align 4,,7
+ 200      0000
+ 201 0090 EBF0     		jmp	L16
+ 202              		.cfi_endproc
+ 203              	LFE87:
+ 204 0092 90909090 		.section	.text$_ZN9WaveChart15isWaveChartFullEv,"x"
+ 204      90909090 
+ 204      90909090 
+ 204      9090
+ 205              		.align 2
+ 206              		.p2align 4,,15
+ 207              		.globl	__ZN9WaveChart15isWaveChartFullEv
+ 208              		.def	__ZN9WaveChart15isWaveChartFullEv;	.scl	2;	.type	32;	.endef
+ 209              	__ZN9WaveChart15isWaveChartFullEv:
+ 210              	LFB88:
+ 211              		.cfi_startproc
+ 212 0000 A1000000 		movl	_engineConfiguration, %eax
+ 212      00
+ 213 0005 8B90E805 		movl	1512(%eax), %edx
+ 213      0000
+ 214 000b 39513C   		cmpl	%edx, 60(%ecx)
+ 215 000e 0F93C0   		setae	%al
+ 216 0011 C3       		ret
+ 217              		.cfi_endproc
+ 218              	LFE88:
+ 219 0012 90909090 		.section	.text$_ZN9WaveChartC2Ev,"x"
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s 			page 6
+
+
+ 219      90909090 
+ 219      90909090 
+ 219      9090
+ 220              		.align 2
+ 221              		.p2align 4,,15
+ 222              		.globl	__ZN9WaveChartC2Ev
+ 223              		.def	__ZN9WaveChartC2Ev;	.scl	2;	.type	32;	.endef
+ 224              	__ZN9WaveChartC2Ev:
+ 225              	LFB94:
+ 226              		.cfi_startproc
+ 227 0000 53       		pushl	%ebx
+ 228              		.cfi_def_cfa_offset 8
+ 229              		.cfi_offset 3, -8
+ 230 0001 89CB     		movl	%ecx, %ebx
+ 231 0003 83EC08   		subl	$8, %esp
+ 232              		.cfi_def_cfa_offset 16
+ 233 0006 E8000000 		call	__ZN7LoggingC1Ev
+ 233      00
+ 234 000b C7434800 		movl	$0, 72(%ebx)
+ 234      000000
+ 235 0012 C7434000 		movl	$0, 64(%ebx)
+ 235      000000
+ 236 0019 C7434400 		movl	$0, 68(%ebx)
+ 236      000000
+ 237 0020 C7433C00 		movl	$0, 60(%ebx)
+ 237      000000
+ 238 0027 83C408   		addl	$8, %esp
+ 239              		.cfi_def_cfa_offset 8
+ 240 002a 5B       		popl	%ebx
+ 241              		.cfi_restore 3
+ 242              		.cfi_def_cfa_offset 4
+ 243 002b C3       		ret
+ 244              		.cfi_endproc
+ 245              	LFE94:
+ 246              		.globl	__ZN9WaveChartC1Ev
+ 247              		.def	__ZN9WaveChartC1Ev;	.scl	2;	.type	32;	.endef
+ 248              		.set	__ZN9WaveChartC1Ev,__ZN9WaveChartC2Ev
+ 249 002c 90909090 		.section .rdata,"dr"
+ 250              	LC4:
+ 251 0035 77617665 		.ascii "wave chart\0"
+ 251      20636861 
+ 251      727400
+ 252              		.section	.text$_ZN9WaveChart4initEv,"x"
+ 253              		.align 2
+ 254              		.p2align 4,,15
+ 255              		.globl	__ZN9WaveChart4initEv
+ 256              		.def	__ZN9WaveChart4initEv;	.scl	2;	.type	32;	.endef
+ 257              	__ZN9WaveChart4initEv:
+ 258              	LFB96:
+ 259              		.cfi_startproc
+ 260 0000 53       		pushl	%ebx
+ 261              		.cfi_def_cfa_offset 8
+ 262              		.cfi_offset 3, -8
+ 263 0001 89CB     		movl	%ecx, %ebx
+ 264 0003 83EC18   		subl	$24, %esp
+ 265              		.cfi_def_cfa_offset 32
+ 266 0006 890C24   		movl	%ecx, (%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s 			page 7
+
+
+ 267 0009 C744240C 		movl	$35000, 12(%esp)
+ 267      B8880000 
+ 268 0011 C7442408 		movl	$__ZL19WAVE_LOGGING_BUFFER, 8(%esp)
+ 268      00000000 
+ 269 0019 C7442404 		movl	$LC4, 4(%esp)
+ 269      35000000 
+ 270 0021 E8000000 		call	__Z14initLoggingExtP7LoggingPKcPci
+ 270      00
+ 271 0026 89D9     		movl	%ebx, %ecx
+ 272 0028 C7434801 		movl	$1, 72(%ebx)
+ 272      000000
+ 273 002f 83C418   		addl	$24, %esp
+ 274              		.cfi_def_cfa_offset 8
+ 275 0032 5B       		popl	%ebx
+ 276              		.cfi_restore 3
+ 277              		.cfi_def_cfa_offset 4
+ 278 0033 E9000000 		jmp	__ZN9WaveChart14resetWaveChartEv
+ 278      00
+ 279              		.cfi_endproc
+ 280              	LFE96:
+ 281 0038 90909090 		.section	.text$_ZN9WaveChart12publishChartEv,"x"
+ 281      90909090 
+ 282              		.align 2
+ 283              		.p2align 4,,15
+ 284              		.globl	__ZN9WaveChart12publishChartEv
+ 285              		.def	__ZN9WaveChart12publishChartEv;	.scl	2;	.type	32;	.endef
+ 286              	__ZN9WaveChart12publishChartEv:
+ 287              	LFB97:
+ 288              		.cfi_startproc
+ 289 0000 53       		pushl	%ebx
+ 290              		.cfi_def_cfa_offset 8
+ 291              		.cfi_offset 3, -8
+ 292 0001 89CB     		movl	%ecx, %ebx
+ 293 0003 83EC18   		subl	$24, %esp
+ 294              		.cfi_def_cfa_offset 32
+ 295 0006 890C24   		movl	%ecx, (%esp)
+ 296 0009 C7442404 		movl	$LC2, 4(%esp)
+ 296      26000000 
+ 297 0011 E8000000 		call	_appendPrintf
+ 297      00
+ 298 0016 8B4330   		movl	48(%ebx), %eax
+ 299 0019 2B432C   		subl	44(%ebx), %eax
+ 300 001c A3000000 		movl	%eax, _waveChartUsedSize
+ 300      00
+ 301 0021 E8000000 		call	__Z10getFullLogv
+ 301      00
+ 302 0026 8B150000 		movl	_engineConfiguration, %edx
+ 302      0000
+ 303 002c F682D805 		testb	$32, 1496(%edx)
+ 303      000020
+ 304 0033 7404     		je	L27
+ 305 0035 84C0     		testb	%al, %al
+ 306 0037 7507     		jne	L36
+ 307              	L27:
+ 308 0039 83C418   		addl	$24, %esp
+ 309              		.cfi_remember_state
+ 310              		.cfi_def_cfa_offset 8
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s 			page 8
+
+
+ 311 003c 5B       		popl	%ebx
+ 312              		.cfi_restore 3
+ 313              		.cfi_def_cfa_offset 4
+ 314 003d C3       		ret
+ 315 003e 6690     		.p2align 4,,7
+ 316              	L36:
+ 317              		.cfi_restore_state
+ 318 0040 891C24   		movl	%ebx, (%esp)
+ 319 0043 E8000000 		call	_scheduleLogging
+ 319      00
+ 320 0048 83C418   		addl	$24, %esp
+ 321              		.cfi_def_cfa_offset 8
+ 322 004b 5B       		popl	%ebx
+ 323              		.cfi_restore 3
+ 324              		.cfi_def_cfa_offset 4
+ 325 004c C3       		ret
+ 326              		.cfi_endproc
+ 327              	LFE97:
+ 328 004d 909090   		.section	.text$_ZN9WaveChart18publishChartIfFullEv,"x"
+ 329              		.align 2
+ 330              		.p2align 4,,15
+ 331              		.globl	__ZN9WaveChart18publishChartIfFullEv
+ 332              		.def	__ZN9WaveChart18publishChartIfFullEv;	.scl	2;	.type	32;	.endef
+ 333              	__ZN9WaveChart18publishChartIfFullEv:
+ 334              	LFB92:
+ 335              		.cfi_startproc
+ 336 0000 53       		pushl	%ebx
+ 337              		.cfi_def_cfa_offset 8
+ 338              		.cfi_offset 3, -8
+ 339 0001 89CB     		movl	%ecx, %ebx
+ 340 0003 83EC08   		subl	$8, %esp
+ 341              		.cfi_def_cfa_offset 16
+ 342 0006 A1000000 		movl	_engineConfiguration, %eax
+ 342      00
+ 343 000b 8B90E805 		movl	1512(%eax), %edx
+ 343      0000
+ 344 0011 39513C   		cmpl	%edx, 60(%ecx)
+ 345 0014 7212     		jb	L41
+ 346              	L38:
+ 347 0016 89D9     		movl	%ebx, %ecx
+ 348 0018 E8000000 		call	__ZN9WaveChart12publishChartEv
+ 348      00
+ 349 001d 83C408   		addl	$8, %esp
+ 350              		.cfi_remember_state
+ 351              		.cfi_def_cfa_offset 8
+ 352 0020 89D9     		movl	%ebx, %ecx
+ 353 0022 5B       		popl	%ebx
+ 354              		.cfi_restore 3
+ 355              		.cfi_def_cfa_offset 4
+ 356 0023 E9000000 		jmp	__ZN9WaveChart14resetWaveChartEv
+ 356      00
+ 357              		.p2align 4,,7
+ 358              	L41:
+ 359              		.cfi_restore_state
+ 360 0028 E8000000 		call	__ZN9WaveChart19isStartedTooLongAgoEv
+ 360      00
+ 361 002d 84C0     		testb	%al, %al
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s 			page 9
+
+
+ 362 002f 75E5     		jne	L38
+ 363 0031 83C408   		addl	$8, %esp
+ 364              		.cfi_def_cfa_offset 8
+ 365 0034 5B       		popl	%ebx
+ 366              		.cfi_restore 3
+ 367              		.cfi_def_cfa_offset 4
+ 368              		.p2align 4,,2
+ 369 0035 C3       		ret
+ 370              		.cfi_endproc
+ 371              	LFE92:
+ 372 0036 90909090 		.section .rdata,"dr"
+ 372      90909090 
+ 372      9090
+ 373              	LC5:
+ 374 0040 57433A20 		.ascii "WC: NULL name\0"
+ 374      4E554C4C 
+ 374      206E616D 
+ 374      6500
+ 375              	LC6:
+ 376 004e 63686172 		.ascii "chart not initialized\0"
+ 376      74206E6F 
+ 376      7420696E 
+ 376      69746961 
+ 376      6C697A65 
+ 377              		.section	.text$_ZN9WaveChart18addWaveChartEvent3EPKcS1_,"x"
+ 378              		.align 2
+ 379              		.p2align 4,,15
+ 380              		.globl	__ZN9WaveChart18addWaveChartEvent3EPKcS1_
+ 381              		.def	__ZN9WaveChart18addWaveChartEvent3EPKcS1_;	.scl	2;	.type	32;	.endef
+ 382              	__ZN9WaveChart18addWaveChartEvent3EPKcS1_:
+ 383              	LFB98:
+ 384              		.cfi_startproc
+ 385 0000 83EC2C   		subl	$44, %esp
+ 386              		.cfi_def_cfa_offset 48
+ 387 0003 895C241C 		movl	%ebx, 28(%esp)
+ 388              		.cfi_offset 3, -20
+ 389 0007 89CB     		movl	%ecx, %ebx
+ 390 0009 8B0D0000 		movl	_engine, %ecx
+ 390      0000
+ 391 000f 89742420 		movl	%esi, 32(%esp)
+ 392 0013 897C2424 		movl	%edi, 36(%esp)
+ 393 0017 896C2428 		movl	%ebp, 40(%esp)
+ 394              		.cfi_offset 6, -16
+ 395              		.cfi_offset 7, -12
+ 396              		.cfi_offset 5, -8
+ 397 001b E8000000 		call	__ZN13RpmCalculator20getRevolutionCounterEv
+ 397      00
+ 398 0020 3B050000 		cmpl	_skipUntilEngineCycle, %eax
+ 398      0000
+ 399 0026 722C     		jb	L42
+ 400 0028 8B542430 		movl	48(%esp), %edx
+ 401 002c 85D2     		testl	%edx, %edx
+ 402 002e 0F840C01 		je	L54
+ 402      0000
+ 403 0034 A1000000 		movl	_engineConfiguration, %eax
+ 403      00
+ 404 0039 F680D805 		testb	$32, 1496(%eax)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s 			page 10
+
+
+ 404      000020
+ 405 0040 7412     		je	L42
+ 406 0042 8B5348   		movl	72(%ebx), %edx
+ 407 0045 85D2     		testl	%edx, %edx
+ 408 0047 7469     		je	L55
+ 409 0049 8B90E805 		movl	1512(%eax), %edx
+ 409      0000
+ 410 004f 39533C   		cmpl	%edx, 60(%ebx)
+ 411 0052 721C     		jb	L56
+ 412              		.p2align 4,,7
+ 413              	L42:
+ 414 0054 8B5C241C 		movl	28(%esp), %ebx
+ 415 0058 8B742420 		movl	32(%esp), %esi
+ 416 005c 8B7C2424 		movl	36(%esp), %edi
+ 417 0060 8B6C2428 		movl	40(%esp), %ebp
+ 418 0064 83C42C   		addl	$44, %esp
+ 419              		.cfi_remember_state
+ 420              		.cfi_restore 5
+ 421              		.cfi_restore 7
+ 422              		.cfi_restore 6
+ 423              		.cfi_restore 3
+ 424              		.cfi_def_cfa_offset 4
+ 425 0067 C20800   		ret	$8
+ 426 006a 8DB60000 		.p2align 4,,7
+ 426      0000
+ 427              	L56:
+ 428              		.cfi_restore_state
+ 429 0070 E8000000 		call	_getTimeNowNt
+ 429      00
+ 430 0075 89C7     		movl	%eax, %edi
+ 431 0077 89D5     		movl	%edx, %ebp
+ 432 0079 E8000000 		call	_lockOutputBuffer
+ 432      00
+ 433 007e 8B4B3C   		movl	60(%ebx), %ecx
+ 434 0081 85C9     		testl	%ecx, %ecx
+ 435 0083 89C6     		movl	%eax, %esi
+ 436 0085 7506     		jne	L48
+ 437 0087 897B40   		movl	%edi, 64(%ebx)
+ 438 008a 896B44   		movl	%ebp, 68(%ebx)
+ 439              	L48:
+ 440 008d 83C101   		addl	$1, %ecx
+ 441 0090 8B6B40   		movl	64(%ebx), %ebp
+ 442 0093 894B3C   		movl	%ecx, 60(%ebx)
+ 443 0096 891C24   		movl	%ebx, (%esp)
+ 444 0099 E8000000 		call	_remainingSize
+ 444      00
+ 445 009e 83F823   		cmpl	$35, %eax
+ 446 00a1 771D     		ja	L57
+ 447              	L49:
+ 448 00a3 89F2     		movl	%esi, %edx
+ 449 00a5 84D2     		testb	%dl, %dl
+ 450 00a7 75AB     		jne	L42
+ 451 00a9 E8000000 		call	_unlockOutputBuffer
+ 451      00
+ 452 00ae 6690     		.p2align 4,,4
+ 453 00b0 EBA2     		jmp	L42
+ 454              		.p2align 4,,7
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s 			page 11
+
+
+ 455              	L55:
+ 456 00b2 C704244E 		movl	$LC6, (%esp)
+ 456      000000
+ 457 00b9 E8000000 		call	_firmwareError
+ 457      00
+ 458 00be EB94     		jmp	L42
+ 459              		.p2align 4,,7
+ 460              	L57:
+ 461 00c0 8B442430 		movl	48(%esp), %eax
+ 462 00c4 29EF     		subl	%ebp, %edi
+ 463 00c6 891C24   		movl	%ebx, (%esp)
+ 464 00c9 89442404 		movl	%eax, 4(%esp)
+ 465 00cd E8000000 		call	_appendFast
+ 465      00
+ 466 00d2 8B4330   		movl	48(%ebx), %eax
+ 467 00d5 C60021   		movb	$33, (%eax)
+ 468 00d8 8B442434 		movl	52(%esp), %eax
+ 469 00dc 83433001 		addl	$1, 48(%ebx)
+ 470 00e0 891C24   		movl	%ebx, (%esp)
+ 471 00e3 89442404 		movl	%eax, 4(%esp)
+ 472 00e7 E8000000 		call	_appendFast
+ 472      00
+ 473 00ec 8B4330   		movl	48(%ebx), %eax
+ 474 00ef BAD34D62 		movl	$274877907, %edx
+ 474      10
+ 475 00f4 C60021   		movb	$33, (%eax)
+ 476 00f7 89F8     		movl	%edi, %eax
+ 477 00f9 F7E2     		mull	%edx
+ 478 00fb 83433001 		addl	$1, 48(%ebx)
+ 479 00ff C7042400 		movl	$__ZL10timeBuffer, (%esp)
+ 479      000000
+ 480 0106 C1EA06   		shrl	$6, %edx
+ 481 0109 89542404 		movl	%edx, 4(%esp)
+ 482 010d E8000000 		call	_itoa10
+ 482      00
+ 483 0112 C7442404 		movl	$__ZL10timeBuffer, 4(%esp)
+ 483      00000000 
+ 484 011a 891C24   		movl	%ebx, (%esp)
+ 485 011d E8000000 		call	_appendFast
+ 485      00
+ 486 0122 8B4330   		movl	48(%ebx), %eax
+ 487 0125 C60021   		movb	$33, (%eax)
+ 488 0128 8B4330   		movl	48(%ebx), %eax
+ 489 012b 8D5001   		leal	1(%eax), %edx
+ 490 012e 895330   		movl	%edx, 48(%ebx)
+ 491 0131 C6400100 		movb	$0, 1(%eax)
+ 492 0135 E969FFFF 		jmp	L49
+ 492      FF
+ 493 013a 8DB60000 		.p2align 4,,7
+ 493      0000
+ 494              	L54:
+ 495 0140 C7042440 		movl	$LC5, (%esp)
+ 495      000000
+ 496 0147 E8000000 		call	_firmwareError
+ 496      00
+ 497 014c E903FFFF 		jmp	L42
+ 497      FF
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s 			page 12
+
+
+ 498              		.cfi_endproc
+ 499              	LFE98:
+ 500 0151 90909090 		.section	.text$_Z22showWaveChartHistogramv,"x"
+ 500      90909090 
+ 500      90909090 
+ 500      909090
+ 501              		.p2align 4,,15
+ 502              		.globl	__Z22showWaveChartHistogramv
+ 503              		.def	__Z22showWaveChartHistogramv;	.scl	2;	.type	32;	.endef
+ 504              	__Z22showWaveChartHistogramv:
+ 505              	LFB99:
+ 506              		.cfi_startproc
+ 507 0000 F3       		rep
+ 508 0001 C3       		ret
+ 509              		.cfi_endproc
+ 510              	LFE99:
+ 511 0002 90909090 		.section .rdata,"dr"
+ 511      90909090 
+ 511      90909090 
+ 511      9090
+ 512              		.align 4
+ 513              	LC7:
+ 514 0064 21212121 		.ascii "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! chart disabled\0"
+ 514      21212121 
+ 514      21212121 
+ 514      21212121 
+ 514      21212121 
+ 515              	LC8:
+ 516 00ba 63686172 		.ascii "chartsize\0"
+ 516      7473697A 
+ 516      6500
+ 517              	LC9:
+ 518 00c4 63686172 		.ascii "chart\0"
+ 518      7400
+ 519              	LC10:
+ 520 00ca 72657365 		.ascii "reset_engine_chart\0"
+ 520      745F656E 
+ 520      67696E65 
+ 520      5F636861 
+ 520      727400
+ 521              		.section	.text$_Z13initWaveChartP9WaveChart,"x"
+ 522              		.p2align 4,,15
+ 523              		.globl	__Z13initWaveChartP9WaveChart
+ 524              		.def	__Z13initWaveChartP9WaveChart;	.scl	2;	.type	32;	.endef
+ 525              	__Z13initWaveChartP9WaveChart:
+ 526              	LFB100:
+ 527              		.cfi_startproc
+ 528 0000 83EC1C   		subl	$28, %esp
+ 529              		.cfi_def_cfa_offset 32
+ 530 0003 A1000000 		movl	_engineConfiguration, %eax
+ 530      00
+ 531 0008 F680D805 		testb	$32, 1496(%eax)
+ 531      000020
+ 532 000f 7514     		jne	L60
+ 533 0011 C7442404 		movl	$LC7, 4(%esp)
+ 533      64000000 
+ 534 0019 C7042400 		movl	$__ZL6logger, (%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s 			page 13
+
+
+ 534      000000
+ 535 0020 E8000000 		call	_printMsg
+ 535      00
+ 536              	L60:
+ 537 0025 8B4C2420 		movl	32(%esp), %ecx
+ 538 0029 E8000000 		call	__ZN9WaveChart4initEv
+ 538      00
+ 539 002e E8000000 		call	__ZL11printStatusv
+ 539      00
+ 540 0033 C7442404 		movl	$LC4, 4(%esp)
+ 540      35000000 
+ 541 003b C7042400 		movl	$__ZL14waveChartHisto, (%esp)
+ 541      000000
+ 542 0042 E8000000 		call	_initHistogram
+ 542      00
+ 543 0047 C7442404 		movl	$__Z12setChartSizei, 4(%esp)
+ 543      00000000 
+ 544 004f C70424BA 		movl	$LC8, (%esp)
+ 544      000000
+ 545 0056 E8000000 		call	_addConsoleActionI
+ 545      00
+ 546 005b C7442404 		movl	$__ZL14setChartActivei, 4(%esp)
+ 546      00000000 
+ 547 0063 C70424C4 		movl	$LC9, (%esp)
+ 547      000000
+ 548 006a E8000000 		call	_addConsoleActionI
+ 548      00
+ 549 006f C7442404 		movl	$__ZL17resetWaveChartNowv, 4(%esp)
+ 549      00000000 
+ 550 0077 C70424CA 		movl	$LC10, (%esp)
+ 550      000000
+ 551 007e E8000000 		call	_addConsoleAction
+ 551      00
+ 552 0083 83C41C   		addl	$28, %esp
+ 553              		.cfi_def_cfa_offset 4
+ 554 0086 C3       		ret
+ 555              		.cfi_endproc
+ 556              	LFE100:
+ 557 0087 90909090 		.section .rdata,"dr"
+ 557      90909090 
+ 557      90
+ 558              	LC11:
+ 559 00dd 77617665 		.ascii "wave info\0"
+ 559      20696E66 
+ 559      6F00
+ 560 00e7 00       		.section	.text.startup._GLOBAL__sub_I_waveChartUsedSize,"x"
+ 561              		.p2align 4,,15
+ 562              		.def	__GLOBAL__sub_I_waveChartUsedSize;	.scl	3;	.type	32;	.endef
+ 563              	__GLOBAL__sub_I_waveChartUsedSize:
+ 564              	LFB102:
+ 565              		.cfi_startproc
+ 566 0000 83EC1C   		subl	$28, %esp
+ 567              		.cfi_def_cfa_offset 32
+ 568 0003 B9000000 		movl	$__ZL6logger, %ecx
+ 568      00
+ 569 0008 C70424DD 		movl	$LC11, (%esp)
+ 569      000000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s 			page 14
+
+
+ 570 000f E8000000 		call	__ZN18LoggingWithStorageC1EPKc
+ 570      00
+ 571              		.cfi_def_cfa_offset 28
+ 572 0014 83EC04   		subl	$4, %esp
+ 573              		.cfi_def_cfa_offset 32
+ 574 0017 83C41C   		addl	$28, %esp
+ 575              		.cfi_def_cfa_offset 4
+ 576 001a C3       		ret
+ 577              		.cfi_endproc
+ 578              	LFE102:
+ 579 001b 90909090 		.section	.ctors,"w"
+ 579      90
+ 580              		.align 4
+ 581 0000 00000000 		.long	__GLOBAL__sub_I_waveChartUsedSize
+ 582              		.globl	_skipUntilEngineCycle
+ 583              		.section	.data$skipUntilEngineCycle,"w"
+ 584              		.align 4
+ 585              	_skipUntilEngineCycle:
+ 586 0000 00000000 		.space 4
+ 587              		.globl	_waveChartUsedSize
+ 588              		.section	.data$waveChartUsedSize,"w"
+ 589              		.align 4
+ 590              	_waveChartUsedSize:
+ 591 0000 00000000 		.space 4
+ 592              		.section	.data$_ZL6logger,"w"
+ 593              		.align 32
+ 594              	__ZL6logger:
+ 595 0000 00000000 		.space 260
+ 595      00000000 
+ 595      00000000 
+ 595      00000000 
+ 595      00000000 
+ 596 0104 00000000 		.section	.data$_ZL19WAVE_LOGGING_BUFFER,"w"
+ 596      00000000 
+ 596      00000000 
+ 596      00000000 
+ 596      00000000 
+ 597              		.align 32
+ 598              	__ZL19WAVE_LOGGING_BUFFER:
+ 599 0000 00000000 		.space 35000
+ 599      00000000 
+ 599      00000000 
+ 599      00000000 
+ 599      00000000 
+ 600 88b8 00000000 		.section	.data$_ZL10timeBuffer,"w"
+ 600      00000000 
+ 601              	__ZL10timeBuffer:
+ 602 0000 00000000 		.space 10
+ 602      00000000 
+ 602      0000
+ 603 000a 0000     		.section	.data$_ZL14waveChartHisto,"w"
+ 604              		.align 32
+ 605              	__ZL14waveChartHisto:
+ 606 0000 00000000 		.space 3616
+ 606      00000000 
+ 606      00000000 
+ 606      00000000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s 			page 15
+
+
+ 606      00000000 
+ 607              		.def	__Z12boolToStringb;	.scl	2;	.type	32;	.endef
+ 608              		.def	__Z11scheduleMsgP7LoggingPKcz;	.scl	2;	.type	32;	.endef
+ 609              		.def	__Z12resetLoggingP7Logging;	.scl	2;	.type	32;	.endef
+ 610              		.def	_appendPrintf;	.scl	2;	.type	32;	.endef
+ 611              		.def	__ZN13RpmCalculator20getRevolutionCounterEv;	.scl	2;	.type	32;	.endef
+ 612              		.def	_getTimeNowNt;	.scl	2;	.type	32;	.endef
+ 613              		.def	__ZN7LoggingC1Ev;	.scl	2;	.type	32;	.endef
+ 614              		.def	__Z14initLoggingExtP7LoggingPKcPci;	.scl	2;	.type	32;	.endef
+ 615              		.def	__Z10getFullLogv;	.scl	2;	.type	32;	.endef
+ 616              		.def	_scheduleLogging;	.scl	2;	.type	32;	.endef
+ 617              		.def	_lockOutputBuffer;	.scl	2;	.type	32;	.endef
+ 618              		.def	_remainingSize;	.scl	2;	.type	32;	.endef
+ 619              		.def	_unlockOutputBuffer;	.scl	2;	.type	32;	.endef
+ 620              		.def	_firmwareError;	.scl	2;	.type	32;	.endef
+ 621              		.def	_appendFast;	.scl	2;	.type	32;	.endef
+ 622              		.def	_itoa10;	.scl	2;	.type	32;	.endef
+ 623              		.def	_printMsg;	.scl	2;	.type	32;	.endef
+ 624              		.def	_initHistogram;	.scl	2;	.type	32;	.endef
+ 625              		.def	_addConsoleActionI;	.scl	2;	.type	32;	.endef
+ 626              		.def	_addConsoleAction;	.scl	2;	.type	32;	.endef
+ 627              		.def	__ZN18LoggingWithStorageC1EPKc;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s 			page 16
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 wave_chart.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s:10     .text$_ZL11printStatusv:00000000 __ZL11printStatusv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s:594    .data$_ZL6logger:00000000 __ZL6logger
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s:39     .text$_ZL14setChartActivei:00000000 __ZL14setChartActivei
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s:64     .text$_Z12setChartSizei:00000000 __Z12setChartSizei
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s:89     .text$_ZN9WaveChart14resetWaveChartEv:00000000 __ZN9WaveChart14resetWaveChartEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s:118    .text$_ZL17resetWaveChartNowv:00000000 __ZL17resetWaveChartNowv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s:585    .data$skipUntilEngineCycle:00000000 _skipUntilEngineCycle
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s:139    .text$_ZN9WaveChart19isStartedTooLongAgoEv:00000000 __ZN9WaveChart19isStartedTooLongAgoEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s:209    .text$_ZN9WaveChart15isWaveChartFullEv:00000000 __ZN9WaveChart15isWaveChartFullEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s:224    .text$_ZN9WaveChartC2Ev:00000000 __ZN9WaveChartC2Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s:224    .text$_ZN9WaveChartC2Ev:00000000 __ZN9WaveChartC1Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s:257    .text$_ZN9WaveChart4initEv:00000000 __ZN9WaveChart4initEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s:598    .data$_ZL19WAVE_LOGGING_BUFFER:00000000 __ZL19WAVE_LOGGING_BUFFER
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s:286    .text$_ZN9WaveChart12publishChartEv:00000000 __ZN9WaveChart12publishChartEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s:590    .data$waveChartUsedSize:00000000 _waveChartUsedSize
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s:333    .text$_ZN9WaveChart18publishChartIfFullEv:00000000 __ZN9WaveChart18publishChartIfFullEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s:382    .text$_ZN9WaveChart18addWaveChartEvent3EPKcS1_:00000000 __ZN9WaveChart18addWaveChartEvent3EPKcS1_
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s:601    .data$_ZL10timeBuffer:00000000 __ZL10timeBuffer
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s:504    .text$_Z22showWaveChartHistogramv:00000000 __Z22showWaveChartHistogramv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s:525    .text$_Z13initWaveChartP9WaveChart:00000000 __Z13initWaveChartP9WaveChart
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s:605    .data$_ZL14waveChartHisto:00000000 __ZL14waveChartHisto
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccuUluyJ.s:563    .text.startup._GLOBAL__sub_I_waveChartUsedSize:00000000 __GLOBAL__sub_I_waveChartUsedSize
+
+UNDEFINED SYMBOLS
+_engineConfiguration
+_maxLockTime
+_engine
+_waveChart
+___divdi3
+__Z12boolToStringb
+__Z11scheduleMsgP7LoggingPKcz
+__Z12resetLoggingP7Logging
+_appendPrintf
+__ZN13RpmCalculator20getRevolutionCounterEv
+_getTimeNowNt
+__ZN7LoggingC1Ev
+__Z14initLoggingExtP7LoggingPKcPci
+__Z10getFullLogv
+_scheduleLogging
+_lockOutputBuffer
+_remainingSize
+_unlockOutputBuffer
+_firmwareError
+_appendFast
+_itoa10
+_printMsg
+_initHistogram
+_addConsoleActionI
+_addConsoleAction
+__ZN18LoggingWithStorageC1EPKc

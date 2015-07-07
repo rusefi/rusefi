@@ -1,0 +1,1217 @@
+###############################################################################
+#                                                                             #
+# IAR ANSI C/C++ Compiler V6.50.3.4676/W32 for ARM      30/Jun/2015  23:09:12 #
+# Copyright 1999-2013 IAR Systems AB.                                         #
+#                                                                             #
+#    Cpu mode        =  thumb                                                 #
+#    Endian          =  little                                                #
+#    Source file     =  F:\stuff\rusefi_sourceforge\firmware\controllers\algo #
+#                       \accel_enrichment.cpp                                 #
+#    Command line    =  F:\stuff\rusefi_sourceforge\firmware\controllers\algo #
+#                       \accel_enrichment.cpp -lCN                            #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\  #
+#                       -lA F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Li #
+#                       st\ -o F:\stuff\rusefi_sourceforge\firmware\iar\Debug #
+#                       \Obj\ --no_cse --no_unroll --no_inline                #
+#                       --no_code_motion --no_tbaa --no_clustering            #
+#                       --no_scheduling --debug --endian=little               #
+#                       --cpu=Cortex-M4 -e --fpu=VFPv4_sp --dlib_config       #
+#                       "C:\Program Files (x86)\IAR Systems\Embedded          #
+#                       Workbench 6.5\arm\INC\c\DLib_Config_Normal.h"         #
+#                       --misrac2004=1.2-1.4,2.3,3.4,4.2,6.5-7,8.2-8.3,9.3,   #
+#                       12.3,13.6-13,15.5,17.3,19.17,20.7-20.9,20.11 -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\ -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\kernel\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\ports\common\ARMCMx\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\common\ARMCMx\CMSIS\include\ -I               #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\IAR\ARMCMx\ -I F:\stuff\rusefi_sourceforge\fi #
+#                       rmware\iar\..\chibios\os\ports\IAR\ARMCMx\STM32F4xx\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\chibio #
+#                       s\os\hal\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\hal\platforms\STM32\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\DMAv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\GPIOv2\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\I2Cv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\SPIv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\TIMv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\RTCv2\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\USARTv1\ -I                     #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\OTGv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32F4xx\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\various\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\chibios\os\various\devices_lib\accel\ -I         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\b #
+#                       oards\ST_STM32F4_DISCOVERY\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\co #
+#                       ntrollers\algo\ -I F:\stuff\rusefi_sourceforge\firmwa #
+#                       re\iar\..\controllers\core\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\system\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\controllers\sensors\ -I                          #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\math\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\controllers\trigger\ -I                            #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\config #
+#                       \ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\conf #
+#                       ig\engines\ -I F:\stuff\rusefi_sourceforge\firmware\i #
+#                       ar\..\config\stm32f4ems\ -I                           #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\b #
+#                       inary\ -I F:\stuff\rusefi_sourceforge\firmware\iar\.. #
+#                       \console_util\ -I F:\stuff\rusefi_sourceforge\firmwar #
+#                       e\iar\..\development\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\development\test\ -I                  #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\developme #
+#                       nt\hw_layer\ -I F:\stuff\rusefi_sourceforge\firmware\ #
+#                       iar\..\hw_layer\algo\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\hw_layer\lcd\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                       stm32f4\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\hw_layer\serial_over_usb\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                        -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext_al #
+#                       go\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\de #
+#                       velopment\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\development\hw_layer\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\util\     #
+#                       -On --eec++                                           #
+#    MISRA C version =  2004                                                  #
+#      Enabled       =  1.2-1.4 2.3 3.4 4.2 6.5 7 8.2 8.3 9.3 12.3 13.6 13.7  #
+#                       15.5 17.3 19.17 20.7-20.9 20.11                       #
+#      Checked       =  1.4 2.3 4.2 6.5 7 8.2 8.3 9.3 12.3 13.7 15.5          #
+#                       20.7-20.9 20.11                                       #
+#      Not checked   =  1.1-1.3 1.5-2.2 2.4-4.1 5-6.4 8.1 8.4-9.2 10-12.2     #
+#                       12.4-13.6 14-15.4 16-20.6 20.10 20.12 21              #
+#    List file       =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\a #
+#                       ccel_enrichment.lst                                   #
+#    Object file     =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\ac #
+#                       cel_enrichment.o                                      #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+F:\stuff\rusefi_sourceforge\firmware\controllers\algo\accel_enrichment.cpp
+      1          /**
+      2           * @file    accel_enrichment.cpp
+      3           * @brief   Acceleration enrichment calculator
+      4           *
+      5           * @date Apr 21, 2014
+      6           * @author Dmitry Sidin
+      7           * @author Andrey Belomutskiy, (c) 2012-2015
+      8           */
+      9          
+     10          #include "main.h"
+
+   \                                 In section .text, align 2
+   \   __intrinsic __nounwind __interwork __softfp void *memset(void *, int, size_t)
+   \                     memset:
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+   \   00000008   0x002A             MOVS     R2,R5
+   \   0000000A   0x0031             MOVS     R1,R6
+   \   0000000C   0x0020             MOVS     R0,R4
+   \   0000000E   0x.... 0x....      BL       __aeabi_memset
+   \   00000012   0x0020             MOVS     R0,R4
+   \   00000014   0xBD70             POP      {R4-R6,PC}       ;; return
+     11          #include "trigger_central.h"
+
+   \                                 In section .text, align 2
+   \   __code __interwork __softfp cyclic_buffer<float>::cyclic_buffer()
+   \                     _ZN13cyclic_bufferIfEC1Ev:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x2140             MOVS     R1,#+64
+   \   00000006   0x0020             MOVS     R0,R4
+   \   00000008   0x.... 0x....      BL       _ZN13cyclic_bufferIfE5baseCEi
+   \   0000000C   0x0020             MOVS     R0,R4
+   \   0000000E   0xBD10             POP      {R4,PC}          ;; return
+
+   \                                 In section .text, align 2
+   \   __interwork __softfp void cyclic_buffer<float>::baseC(int)
+   \                     _ZN13cyclic_bufferIfE5baseCEi:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x2000             MOVS     R0,#+0
+   \   00000008   0xF8C4 0x0100      STR      R0,[R4, #+256]
+   \   0000000C   0x0029             MOVS     R1,R5
+   \   0000000E   0x0020             MOVS     R0,R4
+   \   00000010   0x.... 0x....      BL       _ZN13cyclic_bufferIfE7setSizeEi
+   \   00000014   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+
+   \                                 In section .text, align 2
+   \   __interwork __vfp void cyclic_buffer<float>::add(float)
+   \                     _ZN13cyclic_bufferIfE3addEf:
+   \   00000000   0xF8D0 0x1100      LDR      R1,[R0, #+256]
+   \   00000004   0x1C49             ADDS     R1,R1,#+1
+   \   00000006   0xF8C0 0x1100      STR      R1,[R0, #+256]
+   \   0000000A   0xF8D0 0x1100      LDR      R1,[R0, #+256]
+   \   0000000E   0xF8D0 0x2108      LDR      R2,[R0, #+264]
+   \   00000012   0x4291             CMP      R1,R2
+   \   00000014   0xD102             BNE.N    ??add_0
+   \   00000016   0x2100             MOVS     R1,#+0
+   \   00000018   0xF8C0 0x1100      STR      R1,[R0, #+256]
+   \                     ??add_0:
+   \   0000001C   0xF8D0 0x1100      LDR      R1,[R0, #+256]
+   \   00000020   0xEB10 0x0181      ADDS     R1,R0,R1, LSL #+2
+   \   00000024   0xED81 0x0A00      VSTR     S0,[R1, #0]
+   \   00000028   0xF8D0 0x1104      LDR      R1,[R0, #+260]
+   \   0000002C   0x1C49             ADDS     R1,R1,#+1
+   \   0000002E   0xF8C0 0x1104      STR      R1,[R0, #+260]
+   \   00000032   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 2
+   \   __interwork __softfp void cyclic_buffer<float>::setSize(int)
+   \                     _ZN13cyclic_bufferIfE7setSizeEi:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0020             MOVS     R0,R4
+   \   00000008   0x.... 0x....      BL       _ZN13cyclic_bufferIfE5clearEv
+   \   0000000C   0x2D40             CMP      R5,#+64
+   \   0000000E   0xDA01             BGE.N    ??setSize_0
+   \   00000010   0x0028             MOVS     R0,R5
+   \   00000012   0xE000             B.N      ??setSize_1
+   \                     ??setSize_0:
+   \   00000014   0x2040             MOVS     R0,#+64
+   \                     ??setSize_1:
+   \   00000016   0xF8C4 0x0108      STR      R0,[R4, #+264]
+   \   0000001A   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+
+   \                                 In section .text, align 2
+   \   __interwork __softfp int cyclic_buffer<float>::getSize()
+   \                     _ZN13cyclic_bufferIfE7getSizeEv:
+   \   00000000   0xF8D0 0x0108      LDR      R0,[R0, #+264]
+   \   00000004   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 4
+   \   __interwork __vfp float cyclic_buffer<float>::maxValue(int)
+   \                     _ZN13cyclic_bufferIfE8maxValueEi:
+   \   00000000   0xB430             PUSH     {R4,R5}
+   \   00000002   0xF8D0 0x2104      LDR      R2,[R0, #+260]
+   \   00000006   0x428A             CMP      R2,R1
+   \   00000008   0xDA02             BGE.N    ??maxValue_0
+   \   0000000A   0xF8D0 0x2104      LDR      R2,[R0, #+260]
+   \   0000000E   0x0011             MOVS     R1,R2
+   \                     ??maxValue_0:
+   \   00000010   0xF8D0 0x2100      LDR      R2,[R0, #+256]
+   \   00000014   0xED9F 0x0A0E      VLDR.W   S0,??maxValue_1  ;; 0xc9f42400
+   \   00000018   0x2300             MOVS     R3,#+0
+   \                     ??maxValue_2:
+   \   0000001A   0x428B             CMP      R3,R1
+   \   0000001C   0xDA15             BGE.N    ??maxValue_3
+   \   0000001E   0x1AD4             SUBS     R4,R2,R3
+   \                     ??maxValue_4:
+   \   00000020   0x2C00             CMP      R4,#+0
+   \   00000022   0xD503             BPL.N    ??maxValue_5
+   \   00000024   0xF8D0 0x5108      LDR      R5,[R0, #+264]
+   \   00000028   0x192C             ADDS     R4,R5,R4
+   \   0000002A   0xE7F9             B.N      ??maxValue_4
+   \                     ??maxValue_5:
+   \   0000002C   0xEB10 0x0584      ADDS     R5,R0,R4, LSL #+2
+   \   00000030   0xEDD5 0x0A00      VLDR     S1,[R5, #0]
+   \   00000034   0xEEB4 0x0A60      VCMP.F32 S0,S1
+   \   00000038   0xEEF1 0xFA10      FMSTAT   
+   \   0000003C   0xD503             BPL.N    ??maxValue_6
+   \   0000003E   0xF850 0x4024      LDR      R4,[R0, R4, LSL #+2]
+   \   00000042   0xEE00 0x4A10      VMOV     S0,R4
+   \                     ??maxValue_6:
+   \   00000046   0x1C5B             ADDS     R3,R3,#+1
+   \   00000048   0xE7E7             B.N      ??maxValue_2
+   \                     ??maxValue_3:
+   \   0000004A   0xBC30             POP      {R4,R5}
+   \   0000004C   0x4770             BX       LR               ;; return
+   \   0000004E   0xBF00             Nop      
+   \                     ??maxValue_1:
+   \   00000050   0xC9F42400         DC32     0xc9f42400
+
+   \                                 In section .text, align 2
+   \   __interwork __softfp void cyclic_buffer<float>::clear()
+   \                     _ZN13cyclic_bufferIfE5clearEv:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0xF44F 0x7280      MOV      R2,#+256
+   \   00000008   0x2100             MOVS     R1,#+0
+   \   0000000A   0x0020             MOVS     R0,R4
+   \   0000000C   0x.... 0x....      BL       memset
+   \   00000010   0x2000             MOVS     R0,#+0
+   \   00000012   0xF8C4 0x0104      STR      R0,[R4, #+260]
+   \   00000016   0x2000             MOVS     R0,#+0
+   \   00000018   0xF8C4 0x0104      STR      R0,[R4, #+260]
+   \   0000001C   0xBD10             POP      {R4,PC}          ;; return
+     12          #include "accel_enrichment.h"
+     13          #include "engine_state.h"
+     14          #include "engine_math.h"
+     15          #include "signal_executor.h"
+     16          
+     17          EXTERN_ENGINE
+     18          ;
+     19          
+
+   \                                 In section .bss, align 4
+     20          static Logging *logger;
+   \                     logger:
+   \   00000000                      DS8 4
+     21          
+
+   \                                 In section .text, align 2, keep-with-next
+     22          float AccelEnrichmemnt::getDelta() {
+   \                     _ZN16AccelEnrichmemnt8getDeltaEv:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+     23          	return cb.maxValue(cb.getSize());
+   \   00000004   0x1D20             ADDS     R0,R4,#+4
+   \   00000006   0x.... 0x....      BL       _ZN13cyclic_bufferIfE7getSizeEv
+   \   0000000A   0x0001             MOVS     R1,R0
+   \   0000000C   0x1D20             ADDS     R0,R4,#+4
+   \   0000000E   0x.... 0x....      BL       _ZN13cyclic_bufferIfE8maxValueEi
+   \   00000012   0xBD10             POP      {R4,PC}          ;; return
+     24          }
+     25          
+
+   \                                 In section .text, align 4, keep-with-next
+     26          floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_F) {
+   \                     _ZN16AccelEnrichmemnt16getTpsEnrichmentEv:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+     27          	float d = getDelta();
+   \   00000004   0x0020             MOVS     R0,R4
+   \   00000006   0x.... 0x....      BL       _ZN16AccelEnrichmemnt8getDeltaEv
+   \   0000000A   0xEEF0 0x0A40      VMOV.F32 S1,S0
+     28          	if (d > engineConfiguration->tpsAccelEnrichmentThreshold) {
+   \   0000000E   0x....             LDR.N    R0,??DataTable12
+   \   00000010   0x6800             LDR      R0,[R0, #+0]
+   \   00000012   0xF8D0 0x088C      LDR      R0,[R0, #+2188]
+   \   00000016   0xEE00 0x0A10      VMOV     S0,R0
+   \   0000001A   0xEEB4 0x0A60      VCMP.F32 S0,S1
+   \   0000001E   0xEEF1 0xFA10      FMSTAT   
+   \   00000022   0xD508             BPL.N    ??getTpsEnrichment_0
+     29          		return d * engineConfiguration->tpsAccelEnrichmentMultiplier;
+   \   00000024   0x....             LDR.N    R0,??DataTable12
+   \   00000026   0x6800             LDR      R0,[R0, #+0]
+   \   00000028   0xF8D0 0x0890      LDR      R0,[R0, #+2192]
+   \   0000002C   0xEE00 0x0A10      VMOV     S0,R0
+   \   00000030   0xEE20 0x0A80      VMUL.F32 S0,S1,S0
+   \   00000034   0xE001             B.N      ??getTpsEnrichment_1
+     30          	}
+     31          	return 0;
+   \                     ??getTpsEnrichment_0:
+   \   00000036   0xED9F 0x....      VLDR.W   S0,??DataTable11  ;; 0x0
+   \                     ??getTpsEnrichment_1:
+   \   0000003A   0xBD10             POP      {R4,PC}          ;; return
+     32          }
+     33          
+
+   \                                 In section .text, align 4, keep-with-next
+     34          float AccelEnrichmemnt::getMapEnrichment(DECLARE_ENGINE_PARAMETER_F) {
+   \                     _ZN16AccelEnrichmemnt16getMapEnrichmentEv:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+     35          	float d = getDelta();
+   \   00000004   0x0020             MOVS     R0,R4
+   \   00000006   0x.... 0x....      BL       _ZN16AccelEnrichmemnt8getDeltaEv
+   \   0000000A   0xEEF0 0x0A40      VMOV.F32 S1,S0
+     36          	if (d > engineConfiguration->mapAccelEnrichmentThreshold) {
+   \   0000000E   0x....             LDR.N    R0,??DataTable12
+   \   00000010   0x6800             LDR      R0,[R0, #+0]
+   \   00000012   0xF8D0 0x08A0      LDR      R0,[R0, #+2208]
+   \   00000016   0xEE00 0x0A10      VMOV     S0,R0
+   \   0000001A   0xEEB4 0x0A60      VCMP.F32 S0,S1
+   \   0000001E   0xEEF1 0xFA10      FMSTAT   
+   \   00000022   0xD508             BPL.N    ??getMapEnrichment_0
+     37          		return d * engineConfiguration->mapAccelEnrichmentMultiplier;
+   \   00000024   0x....             LDR.N    R0,??DataTable12
+   \   00000026   0x6800             LDR      R0,[R0, #+0]
+   \   00000028   0xF8D0 0x08A4      LDR      R0,[R0, #+2212]
+   \   0000002C   0xEE00 0x0A10      VMOV     S0,R0
+   \   00000030   0xEE20 0x0A80      VMUL.F32 S0,S1,S0
+   \   00000034   0xE001             B.N      ??getMapEnrichment_1
+     38          	}
+     39          //	if (d < engineConfiguration->deaccelEnrichmentThreshold) {
+     40          //		return d * engineConfiguration->deaccelEnrichmentMultiplier;
+     41          //	}
+     42          	return 0;
+   \                     ??getMapEnrichment_0:
+   \   00000036   0xED9F 0x....      VLDR.W   S0,??DataTable11  ;; 0x0
+   \                     ??getMapEnrichment_1:
+   \   0000003A   0xBD10             POP      {R4,PC}          ;; return
+     43          }
+     44          
+
+   \                                 In section .text, align 2, keep-with-next
+     45          void AccelEnrichmemnt::reset() {
+     46          	delta = 0;
+   \                     _ZN16AccelEnrichmemnt5resetEv:
+   \   00000000   0x2100             MOVS     R1,#+0
+   \   00000002   0x6001             STR      R1,[R0, #+0]
+     47          	currentValue = NAN;
+   \   00000004   0xF07F 0x4100      MVNS     R1,#-2147483648
+   \   00000008   0xF8C0 0x1110      STR      R1,[R0, #+272]
+     48          }
+   \   0000000C   0x4770             BX       LR               ;; return
+     49          
+
+   \                                 In section .text, align 2, keep-with-next
+     50          void AccelEnrichmemnt::onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_S) {
+   \                     _ZN16AccelEnrichmemnt10onNewValueEf:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0xED2D 0x8B02      VPUSH    {D8}
+   \   00000006   0x0004             MOVS     R4,R0
+   \   00000008   0xEEB0 0x8A40      VMOV.F32 S16,S0
+     51          	if (!cisnan(this->currentValue)) {
+   \   0000000C   0xED94 0x0A44      VLDR     S0,[R4, #+272]
+   \   00000010   0x.... 0x....      BL       __iar_FDtest
+   \   00000014   0x2802             CMP      R0,#+2
+   \   00000016   0xD019             BEQ.N    ??onNewValue_0
+     52          		delta = currentValue - this->currentValue;
+   \   00000018   0xED94 0x0A44      VLDR     S0,[R4, #+272]
+   \   0000001C   0xEE38 0x0A40      VSUB.F32 S0,S16,S0
+   \   00000020   0xED84 0x0A00      VSTR     S0,[R4, #0]
+     53          		FuelSchedule *fs = &engine->engineConfiguration2->injectionEvents;
+   \   00000024   0x....             LDR.N    R0,??DataTable12_1
+   \   00000026   0x6800             LDR      R0,[R0, #+0]
+   \   00000028   0x6A80             LDR      R0,[R0, #+40]
+   \   0000002A   0xF500 0x55B8      ADD      R5,R0,#+5888
+   \   0000002E   0x3588             ADDS     R5,R5,#+136
+     54          		cb.add(delta * fs->eventsCount);
+   \   00000030   0xF505 0x50B8      ADD      R0,R5,#+5888
+   \   00000034   0x3084             ADDS     R0,R0,#+132
+   \   00000036   0xED90 0x0A00      VLDR     S0,[R0, #0]
+   \   0000003A   0xEEB8 0x0AC0      VCVT.F32.S32 S0,S0
+   \   0000003E   0xEDD4 0x0A00      VLDR     S1,[R4, #0]
+   \   00000042   0xEE20 0x0A20      VMUL.F32 S0,S0,S1
+   \   00000046   0x1D20             ADDS     R0,R4,#+4
+   \   00000048   0x.... 0x....      BL       _ZN13cyclic_bufferIfE3addEf
+     55          	}
+     56          
+     57          	this->currentValue = currentValue;
+   \                     ??onNewValue_0:
+   \   0000004C   0xED84 0x8A44      VSTR     S16,[R4, #+272]
+     58          }
+   \   00000050   0xECBD 0x8B02      VPOP     {D8}
+   \   00000054   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+     59          
+
+   \                                 In section .text, align 2, keep-with-next
+     60          void AccelEnrichmemnt::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_F) {
+   \                     _ZN16AccelEnrichmemnt16onEngineCycleTpsEv:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+     61          	onNewValue(getTPS(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER);
+   \   00000004   0x.... 0x....      BL       _Z6getTPSv
+   \   00000008   0x0020             MOVS     R0,R4
+   \   0000000A   0x.... 0x....      BL       _ZN16AccelEnrichmemnt10onNewValueEf
+     62          }
+   \   0000000E   0xBD10             POP      {R4,PC}          ;; return
+     63          
+
+   \                                 In section .text, align 2, keep-with-next
+     64          void AccelEnrichmemnt::onEngineCycle(DECLARE_ENGINE_PARAMETER_F) {
+   \                     _ZN16AccelEnrichmemnt13onEngineCycleEv:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+     65          	onNewValue(getEngineLoadT(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER);
+   \   00000004   0x.... 0x....      BL       _Z14getEngineLoadTv
+   \   00000008   0x0020             MOVS     R0,R4
+   \   0000000A   0x.... 0x....      BL       _ZN16AccelEnrichmemnt10onNewValueEf
+     66          }
+   \   0000000E   0xBD10             POP      {R4,PC}          ;; return
+     67          
+
+   \                                 In section .text, align 2, keep-with-next
+   \   __code __interwork __softfp AccelEnrichmemnt::subobject AccelEnrichmemnt()
+   \                     _ZN16AccelEnrichmemntC2Ev:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x0020             MOVS     R0,R4
+   \   00000006   0x.... 0x....      BL       _ZN16AccelEnrichmemntC1Ev
+   \   0000000A   0xBD10             POP      {R4,PC}          ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+     68          AccelEnrichmemnt::AccelEnrichmemnt() {
+   \                     _ZN16AccelEnrichmemntC1Ev:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x1D20             ADDS     R0,R4,#+4
+   \   00000006   0x.... 0x....      BL       _ZN13cyclic_bufferIfEC1Ev
+     69          	reset();
+   \   0000000A   0x0020             MOVS     R0,R4
+   \   0000000C   0x.... 0x....      BL       _ZN16AccelEnrichmemnt5resetEv
+     70          	cb.setSize(4);
+   \   00000010   0x2104             MOVS     R1,#+4
+   \   00000012   0x1D20             ADDS     R0,R4,#+4
+   \   00000014   0x.... 0x....      BL       _ZN13cyclic_bufferIfE7setSizeEi
+     71          }
+   \   00000018   0x0020             MOVS     R0,R4
+   \   0000001A   0xBD10             POP      {R4,PC}          ;; return
+     72          
+     73          #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+     74          
+
+   \                                 In section .text, align 2, keep-with-next
+     75          static void accelInfo() {
+   \                     _Z9accelInfov:
+   \   00000000   0xB500             PUSH     {LR}
+   \   00000002   0xB083             SUB      SP,SP,#+12
+     76          //	scheduleMsg(logger, "MAP accel length=%d", mapInstance.cb.getSize());
+     77          	scheduleMsg(logger, "MAP accel th=%f/mult=%f", engineConfiguration->mapAccelEnrichmentThreshold, engineConfiguration->mapAccelEnrichmentMultiplier);
+   \   00000004   0x....             LDR.N    R0,??DataTable12
+   \   00000006   0x6800             LDR      R0,[R0, #+0]
+   \   00000008   0xF8D0 0x08A4      LDR      R0,[R0, #+2212]
+   \   0000000C   0x.... 0x....      BL       __aeabi_f2d
+   \   00000010   0xE9CD 0x0100      STRD     R0,R1,[SP, #+0]
+   \   00000014   0x....             LDR.N    R0,??DataTable12
+   \   00000016   0x6800             LDR      R0,[R0, #+0]
+   \   00000018   0xF8D0 0x08A0      LDR      R0,[R0, #+2208]
+   \   0000001C   0x.... 0x....      BL       __aeabi_f2d
+   \   00000020   0x0002             MOVS     R2,R0
+   \   00000022   0x000B             MOVS     R3,R1
+   \   00000024   0x....             LDR.N    R1,??DataTable12_2
+   \   00000026   0x....             LDR.N    R0,??DataTable12_3
+   \   00000028   0x6800             LDR      R0,[R0, #+0]
+   \   0000002A   0x.... 0x....      BL       scheduleMsg
+     78          	scheduleMsg(logger, "MAP decel th=%f/mult=%f", engineConfiguration->decelEnrichmentThreshold, engineConfiguration->decelEnrichmentMultiplier);
+   \   0000002E   0x....             LDR.N    R0,??DataTable12
+   \   00000030   0x6800             LDR      R0,[R0, #+0]
+   \   00000032   0xF8D0 0x089C      LDR      R0,[R0, #+2204]
+   \   00000036   0x.... 0x....      BL       __aeabi_f2d
+   \   0000003A   0xE9CD 0x0100      STRD     R0,R1,[SP, #+0]
+   \   0000003E   0x....             LDR.N    R0,??DataTable12
+   \   00000040   0x6800             LDR      R0,[R0, #+0]
+   \   00000042   0xF8D0 0x0898      LDR      R0,[R0, #+2200]
+   \   00000046   0x.... 0x....      BL       __aeabi_f2d
+   \   0000004A   0x0002             MOVS     R2,R0
+   \   0000004C   0x000B             MOVS     R3,R1
+   \   0000004E   0x....             LDR.N    R1,??DataTable12_4
+   \   00000050   0x....             LDR.N    R0,??DataTable12_3
+   \   00000052   0x6800             LDR      R0,[R0, #+0]
+   \   00000054   0x.... 0x....      BL       scheduleMsg
+     79          
+     80          //	scheduleMsg(logger, "TPS accel length=%d", tpsInstance.cb.getSize());
+     81          	scheduleMsg(logger, "TPS accel th=%f/mult=%f", engineConfiguration->tpsAccelEnrichmentThreshold, engineConfiguration->tpsAccelEnrichmentMultiplier);
+   \   00000058   0x....             LDR.N    R0,??DataTable12
+   \   0000005A   0x6800             LDR      R0,[R0, #+0]
+   \   0000005C   0xF8D0 0x0890      LDR      R0,[R0, #+2192]
+   \   00000060   0x.... 0x....      BL       __aeabi_f2d
+   \   00000064   0xE9CD 0x0100      STRD     R0,R1,[SP, #+0]
+   \   00000068   0x....             LDR.N    R0,??DataTable12
+   \   0000006A   0x6800             LDR      R0,[R0, #+0]
+   \   0000006C   0xF8D0 0x088C      LDR      R0,[R0, #+2188]
+   \   00000070   0x.... 0x....      BL       __aeabi_f2d
+   \   00000074   0x0002             MOVS     R2,R0
+   \   00000076   0x000B             MOVS     R3,R1
+   \   00000078   0x....             LDR.N    R1,??DataTable12_5
+   \   0000007A   0x....             LDR.N    R0,??DataTable12_3
+   \   0000007C   0x6800             LDR      R0,[R0, #+0]
+   \   0000007E   0x.... 0x....      BL       scheduleMsg
+     82          }
+   \   00000082   0xBD07             POP      {R0-R2,PC}       ;; return
+     83          
+
+   \                                 In section .text, align 2, keep-with-next
+     84          static void setMapAccelThr(float value) {
+   \                     _Z14setMapAccelThrf:
+   \   00000000   0xB580             PUSH     {R7,LR}
+   \   00000002   0xED2D 0x8B02      VPUSH    {D8}
+   \   00000006   0xEEB0 0x8A40      VMOV.F32 S16,S0
+     85          	engineConfiguration->mapAccelEnrichmentThreshold = value;
+   \   0000000A   0x....             LDR.N    R0,??DataTable12
+   \   0000000C   0x6800             LDR      R0,[R0, #+0]
+   \   0000000E   0xF600 0x00A0      ADDW     R0,R0,#+2208
+   \   00000012   0xED80 0x8A00      VSTR     S16,[R0, #0]
+     86          	accelInfo();
+   \   00000016   0x.... 0x....      BL       _Z9accelInfov
+     87          }
+   \   0000001A   0xECBD 0x8B02      VPOP     {D8}
+   \   0000001E   0xBD01             POP      {R0,PC}          ;; return
+     88          
+
+   \                                 In section .text, align 2, keep-with-next
+     89          static void setMapAccelMult(float value) {
+   \                     _Z15setMapAccelMultf:
+   \   00000000   0xB580             PUSH     {R7,LR}
+   \   00000002   0xED2D 0x8B02      VPUSH    {D8}
+   \   00000006   0xEEB0 0x8A40      VMOV.F32 S16,S0
+     90          	engineConfiguration->mapAccelEnrichmentMultiplier = value;
+   \   0000000A   0x....             LDR.N    R0,??DataTable12
+   \   0000000C   0x6800             LDR      R0,[R0, #+0]
+   \   0000000E   0xF600 0x00A4      ADDW     R0,R0,#+2212
+   \   00000012   0xED80 0x8A00      VSTR     S16,[R0, #0]
+     91          	accelInfo();
+   \   00000016   0x.... 0x....      BL       _Z9accelInfov
+     92          }
+   \   0000001A   0xECBD 0x8B02      VPOP     {D8}
+   \   0000001E   0xBD01             POP      {R0,PC}          ;; return
+     93          
+
+   \                                 In section .text, align 2, keep-with-next
+     94          static void setTpsAccelThr(float value) {
+   \                     _Z14setTpsAccelThrf:
+   \   00000000   0xB580             PUSH     {R7,LR}
+   \   00000002   0xED2D 0x8B02      VPUSH    {D8}
+   \   00000006   0xEEB0 0x8A40      VMOV.F32 S16,S0
+     95          	engineConfiguration->tpsAccelEnrichmentThreshold = value;
+   \   0000000A   0x....             LDR.N    R0,??DataTable12
+   \   0000000C   0x6800             LDR      R0,[R0, #+0]
+   \   0000000E   0xF600 0x008C      ADDW     R0,R0,#+2188
+   \   00000012   0xED80 0x8A00      VSTR     S16,[R0, #0]
+     96          	accelInfo();
+   \   00000016   0x.... 0x....      BL       _Z9accelInfov
+     97          }
+   \   0000001A   0xECBD 0x8B02      VPOP     {D8}
+   \   0000001E   0xBD01             POP      {R0,PC}          ;; return
+     98          
+
+   \                                 In section .text, align 2, keep-with-next
+     99          static void setTpsAccelMult(float value) {
+   \                     _Z15setTpsAccelMultf:
+   \   00000000   0xB580             PUSH     {R7,LR}
+   \   00000002   0xED2D 0x8B02      VPUSH    {D8}
+   \   00000006   0xEEB0 0x8A40      VMOV.F32 S16,S0
+    100          	engineConfiguration->tpsAccelEnrichmentMultiplier = value;
+   \   0000000A   0x....             LDR.N    R0,??DataTable12
+   \   0000000C   0x6800             LDR      R0,[R0, #+0]
+   \   0000000E   0xF600 0x0090      ADDW     R0,R0,#+2192
+   \   00000012   0xED80 0x8A00      VSTR     S16,[R0, #0]
+    101          	accelInfo();
+   \   00000016   0x.... 0x....      BL       _Z9accelInfov
+    102          }
+   \   0000001A   0xECBD 0x8B02      VPOP     {D8}
+   \   0000001E   0xBD01             POP      {R0,PC}          ;; return
+    103          
+
+   \                                 In section .text, align 2, keep-with-next
+    104          static void setDecelThr(float value) {
+   \                     _Z11setDecelThrf:
+   \   00000000   0xB580             PUSH     {R7,LR}
+   \   00000002   0xED2D 0x8B02      VPUSH    {D8}
+   \   00000006   0xEEB0 0x8A40      VMOV.F32 S16,S0
+    105          	engineConfiguration->decelEnrichmentThreshold = value;
+   \   0000000A   0x....             LDR.N    R0,??DataTable12
+   \   0000000C   0x6800             LDR      R0,[R0, #+0]
+   \   0000000E   0xF600 0x0098      ADDW     R0,R0,#+2200
+   \   00000012   0xED80 0x8A00      VSTR     S16,[R0, #0]
+    106          	accelInfo();
+   \   00000016   0x.... 0x....      BL       _Z9accelInfov
+    107          }
+   \   0000001A   0xECBD 0x8B02      VPOP     {D8}
+   \   0000001E   0xBD01             POP      {R0,PC}          ;; return
+    108          
+
+   \                                 In section .text, align 2, keep-with-next
+    109          static void setDecelMult(float value) {
+   \                     _Z12setDecelMultf:
+   \   00000000   0xB580             PUSH     {R7,LR}
+   \   00000002   0xED2D 0x8B02      VPUSH    {D8}
+   \   00000006   0xEEB0 0x8A40      VMOV.F32 S16,S0
+    110          	engineConfiguration->decelEnrichmentMultiplier = value;
+   \   0000000A   0x....             LDR.N    R0,??DataTable12
+   \   0000000C   0x6800             LDR      R0,[R0, #+0]
+   \   0000000E   0xF600 0x009C      ADDW     R0,R0,#+2204
+   \   00000012   0xED80 0x8A00      VSTR     S16,[R0, #0]
+    111          	accelInfo();
+   \   00000016   0x.... 0x....      BL       _Z9accelInfov
+    112          }
+   \   0000001A   0xECBD 0x8B02      VPOP     {D8}
+   \   0000001E   0xBD01             POP      {R0,PC}          ;; return
+    113          
+
+   \                                 In section .text, align 2, keep-with-next
+    114          static void setTpsAccelLen(int len) {
+   \                     _Z14setTpsAccelLeni:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    115          	if (len < 1) {
+   \   00000004   0x2C01             CMP      R4,#+1
+   \   00000006   0xDA05             BGE.N    ??setTpsAccelLen_0
+    116          		scheduleMsg(logger, "Length shoold be positive");
+   \   00000008   0x....             LDR.N    R1,??DataTable12_6
+   \   0000000A   0x....             LDR.N    R0,??DataTable12_3
+   \   0000000C   0x6800             LDR      R0,[R0, #+0]
+   \   0000000E   0x.... 0x....      BL       scheduleMsg
+    117          		return;
+   \   00000012   0xE008             B.N      ??setTpsAccelLen_1
+    118          	}
+    119          	engine->tpsAccelEnrichment.cb.setSize(len);
+   \                     ??setTpsAccelLen_0:
+   \   00000014   0x0021             MOVS     R1,R4
+   \   00000016   0x....             LDR.N    R0,??DataTable12_1
+   \   00000018   0x6800             LDR      R0,[R0, #+0]
+   \   0000001A   0xF510 0x70A8      ADDS     R0,R0,#+336
+   \   0000001E   0x.... 0x....      BL       _ZN13cyclic_bufferIfE7setSizeEi
+    120          	accelInfo();
+   \   00000022   0x.... 0x....      BL       _Z9accelInfov
+    121          }
+   \                     ??setTpsAccelLen_1:
+   \   00000026   0xBD10             POP      {R4,PC}          ;; return
+    122          
+
+   \                                 In section .text, align 2, keep-with-next
+    123          static void setMapAccelLen(int len) {
+   \                     _Z14setMapAccelLeni:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    124          	if (len < 1) {
+   \   00000004   0x2C01             CMP      R4,#+1
+   \   00000006   0xDA05             BGE.N    ??setMapAccelLen_0
+    125          		scheduleMsg(logger, "Length shoold be positive");
+   \   00000008   0x....             LDR.N    R1,??DataTable12_6
+   \   0000000A   0x....             LDR.N    R0,??DataTable12_3
+   \   0000000C   0x6800             LDR      R0,[R0, #+0]
+   \   0000000E   0x.... 0x....      BL       scheduleMsg
+    126          		return;
+   \   00000012   0xE007             B.N      ??setMapAccelLen_1
+    127          	}
+    128          	engine->mapAccelEnrichment.cb.setSize(len);
+   \                     ??setMapAccelLen_0:
+   \   00000014   0x0021             MOVS     R1,R4
+   \   00000016   0x....             LDR.N    R0,??DataTable12_1
+   \   00000018   0x6800             LDR      R0,[R0, #+0]
+   \   0000001A   0x303C             ADDS     R0,R0,#+60
+   \   0000001C   0x.... 0x....      BL       _ZN13cyclic_bufferIfE7setSizeEi
+    129          	accelInfo();
+   \   00000020   0x.... 0x....      BL       _Z9accelInfov
+    130          }
+   \                     ??setMapAccelLen_1:
+   \   00000024   0xBD10             POP      {R4,PC}          ;; return
+    131          
+
+   \                                 In section .text, align 2, keep-with-next
+    132          void initAccelEnrichment(Logging *sharedLogger) {
+   \                     _Z19initAccelEnrichmentP7Logging:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    133          	logger = sharedLogger;
+   \   00000004   0x....             LDR.N    R0,??DataTable12_3
+   \   00000006   0x6004             STR      R4,[R0, #+0]
+    134          	addConsoleActionI("set_tps_accel_len", setTpsAccelLen);
+   \   00000008   0x....             LDR.N    R1,??DataTable12_7
+   \   0000000A   0x....             LDR.N    R0,??DataTable12_8
+   \   0000000C   0x.... 0x....      BL       addConsoleActionI
+    135          	addConsoleActionF("set_tps_accel_threshold", setTpsAccelThr);
+   \   00000010   0x....             LDR.N    R1,??DataTable12_9
+   \   00000012   0x....             LDR.N    R0,??DataTable12_10
+   \   00000014   0x.... 0x....      BL       addConsoleActionF
+    136          	addConsoleActionF("set_tps_accel_multiplier", setTpsAccelMult);
+   \   00000018   0x....             LDR.N    R1,??DataTable12_11
+   \   0000001A   0x....             LDR.N    R0,??DataTable12_12
+   \   0000001C   0x.... 0x....      BL       addConsoleActionF
+    137          
+    138          	addConsoleActionI("set_map_accel_len", setMapAccelLen);
+   \   00000020   0x....             LDR.N    R1,??DataTable12_13
+   \   00000022   0x....             LDR.N    R0,??DataTable12_14
+   \   00000024   0x.... 0x....      BL       addConsoleActionI
+    139          	addConsoleActionF("set_map_accel_threshold", setMapAccelThr);
+   \   00000028   0x....             LDR.N    R1,??DataTable12_15
+   \   0000002A   0x....             LDR.N    R0,??DataTable12_16
+   \   0000002C   0x.... 0x....      BL       addConsoleActionF
+    140          	addConsoleActionF("set_map_accel_multiplier", setMapAccelMult);
+   \   00000030   0x....             LDR.N    R1,??DataTable12_17
+   \   00000032   0x....             LDR.N    R0,??DataTable12_18
+   \   00000034   0x.... 0x....      BL       addConsoleActionF
+    141          	addConsoleActionF("set_decel_threshold", setDecelThr);
+   \   00000038   0x....             LDR.N    R1,??DataTable12_19
+   \   0000003A   0x....             LDR.N    R0,??DataTable12_20
+   \   0000003C   0x.... 0x....      BL       addConsoleActionF
+    142          	addConsoleActionF("set_decel_multiplier", setDecelMult);
+   \   00000040   0x....             LDR.N    R1,??DataTable12_21
+   \   00000042   0x....             LDR.N    R0,??DataTable12_22
+   \   00000044   0x.... 0x....      BL       addConsoleActionF
+    143          	addConsoleAction("accelinfo", accelInfo);
+   \   00000048   0x....             LDR.N    R1,??DataTable12_23
+   \   0000004A   0x....             LDR.N    R0,??DataTable12_24
+   \   0000004C   0x.... 0x....      BL       addConsoleAction
+    144          
+    145          	setMapAccelLen(engineConfiguration->mapAccelLength);
+   \   00000050   0x....             LDR.N    R0,??DataTable12
+   \   00000052   0x6800             LDR      R0,[R0, #+0]
+   \   00000054   0xF8D0 0x0894      LDR      R0,[R0, #+2196]
+   \   00000058   0x.... 0x....      BL       _Z14setMapAccelLeni
+    146          	setTpsAccelLen(engineConfiguration->tpsAccelLength);
+   \   0000005C   0x....             LDR.N    R0,??DataTable12
+   \   0000005E   0x6800             LDR      R0,[R0, #+0]
+   \   00000060   0xF8D0 0x0888      LDR      R0,[R0, #+2184]
+   \   00000064   0x.... 0x....      BL       _Z14setTpsAccelLeni
+    147          }
+   \   00000068   0xBD10             POP      {R4,PC}          ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable11:
+   \   00000000   0x00000000         DC32     0x0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12:
+   \   00000000   0x........         DC32     engineConfiguration
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12_1:
+   \   00000000   0x........         DC32     engine
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12_2:
+   \   00000000   0x........         DC32     `?<Constant "MAP accel th=%f/mult=%f">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12_3:
+   \   00000000   0x........         DC32     logger
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12_4:
+   \   00000000   0x........         DC32     `?<Constant "MAP decel th=%f/mult=%f">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12_5:
+   \   00000000   0x........         DC32     `?<Constant "TPS accel th=%f/mult=%f">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12_6:
+   \   00000000   0x........         DC32     `?<Constant "Length shoold be posi...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12_7:
+   \   00000000   0x........         DC32     _Z14setTpsAccelLeni
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12_8:
+   \   00000000   0x........         DC32     `?<Constant "set_tps_accel_len">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12_9:
+   \   00000000   0x........         DC32     _Z14setTpsAccelThrf
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12_10:
+   \   00000000   0x........         DC32     `?<Constant "set_tps_accel_threshold">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12_11:
+   \   00000000   0x........         DC32     _Z15setTpsAccelMultf
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12_12:
+   \   00000000   0x........         DC32     `?<Constant "set_tps_accel_multiplier">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12_13:
+   \   00000000   0x........         DC32     _Z14setMapAccelLeni
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12_14:
+   \   00000000   0x........         DC32     `?<Constant "set_map_accel_len">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12_15:
+   \   00000000   0x........         DC32     _Z14setMapAccelThrf
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12_16:
+   \   00000000   0x........         DC32     `?<Constant "set_map_accel_threshold">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12_17:
+   \   00000000   0x........         DC32     _Z15setMapAccelMultf
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12_18:
+   \   00000000   0x........         DC32     `?<Constant "set_map_accel_multiplier">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12_19:
+   \   00000000   0x........         DC32     _Z11setDecelThrf
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12_20:
+   \   00000000   0x........         DC32     `?<Constant "set_decel_threshold">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12_21:
+   \   00000000   0x........         DC32     _Z12setDecelMultf
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12_22:
+   \   00000000   0x........         DC32     `?<Constant "set_decel_multiplier">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12_23:
+   \   00000000   0x........         DC32     _Z9accelInfov
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable12_24:
+   \   00000000   0x........         DC32     `?<Constant "accelinfo">`
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "MAP accel th=%f/mult=%f">`:
+   \   00000000   0x4D 0x41          DC8 "MAP accel th=%f/mult=%f"
+   \              0x50 0x20    
+   \              0x61 0x63    
+   \              0x63 0x65    
+   \              0x6C 0x20    
+   \              0x74 0x68    
+   \              0x3D 0x25    
+   \              0x66 0x2F    
+   \              0x6D 0x75    
+   \              0x6C 0x74    
+   \              0x3D 0x25    
+   \              0x66 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "MAP decel th=%f/mult=%f">`:
+   \   00000000   0x4D 0x41          DC8 "MAP decel th=%f/mult=%f"
+   \              0x50 0x20    
+   \              0x64 0x65    
+   \              0x63 0x65    
+   \              0x6C 0x20    
+   \              0x74 0x68    
+   \              0x3D 0x25    
+   \              0x66 0x2F    
+   \              0x6D 0x75    
+   \              0x6C 0x74    
+   \              0x3D 0x25    
+   \              0x66 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "TPS accel th=%f/mult=%f">`:
+   \   00000000   0x54 0x50          DC8 "TPS accel th=%f/mult=%f"
+   \              0x53 0x20    
+   \              0x61 0x63    
+   \              0x63 0x65    
+   \              0x6C 0x20    
+   \              0x74 0x68    
+   \              0x3D 0x25    
+   \              0x66 0x2F    
+   \              0x6D 0x75    
+   \              0x6C 0x74    
+   \              0x3D 0x25    
+   \              0x66 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "Length shoold be posi...">`:
+   \   00000000   0x4C 0x65          DC8 "Length shoold be positive"
+   \              0x6E 0x67    
+   \              0x74 0x68    
+   \              0x20 0x73    
+   \              0x68 0x6F    
+   \              0x6F 0x6C    
+   \              0x64 0x20    
+   \              0x62 0x65    
+   \              0x20 0x70    
+   \              0x6F 0x73    
+   \              0x69 0x74    
+   \              0x69 0x76    
+   \              0x65 0x00    
+   \   0000001A   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "set_tps_accel_len">`:
+   \   00000000   0x73 0x65          DC8 "set_tps_accel_len"
+   \              0x74 0x5F    
+   \              0x74 0x70    
+   \              0x73 0x5F    
+   \              0x61 0x63    
+   \              0x63 0x65    
+   \              0x6C 0x5F    
+   \              0x6C 0x65    
+   \              0x6E 0x00    
+   \   00000012   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "set_tps_accel_threshold">`:
+   \   00000000   0x73 0x65          DC8 "set_tps_accel_threshold"
+   \              0x74 0x5F    
+   \              0x74 0x70    
+   \              0x73 0x5F    
+   \              0x61 0x63    
+   \              0x63 0x65    
+   \              0x6C 0x5F    
+   \              0x74 0x68    
+   \              0x72 0x65    
+   \              0x73 0x68    
+   \              0x6F 0x6C    
+   \              0x64 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "set_tps_accel_multiplier">`:
+   \   00000000   0x73 0x65          DC8 "set_tps_accel_multiplier"
+   \              0x74 0x5F    
+   \              0x74 0x70    
+   \              0x73 0x5F    
+   \              0x61 0x63    
+   \              0x63 0x65    
+   \              0x6C 0x5F    
+   \              0x6D 0x75    
+   \              0x6C 0x74    
+   \              0x69 0x70    
+   \              0x6C 0x69    
+   \              0x65 0x72    
+   \              0x00         
+   \   00000019   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "set_map_accel_len">`:
+   \   00000000   0x73 0x65          DC8 "set_map_accel_len"
+   \              0x74 0x5F    
+   \              0x6D 0x61    
+   \              0x70 0x5F    
+   \              0x61 0x63    
+   \              0x63 0x65    
+   \              0x6C 0x5F    
+   \              0x6C 0x65    
+   \              0x6E 0x00    
+   \   00000012   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "set_map_accel_threshold">`:
+   \   00000000   0x73 0x65          DC8 "set_map_accel_threshold"
+   \              0x74 0x5F    
+   \              0x6D 0x61    
+   \              0x70 0x5F    
+   \              0x61 0x63    
+   \              0x63 0x65    
+   \              0x6C 0x5F    
+   \              0x74 0x68    
+   \              0x72 0x65    
+   \              0x73 0x68    
+   \              0x6F 0x6C    
+   \              0x64 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "set_map_accel_multiplier">`:
+   \   00000000   0x73 0x65          DC8 "set_map_accel_multiplier"
+   \              0x74 0x5F    
+   \              0x6D 0x61    
+   \              0x70 0x5F    
+   \              0x61 0x63    
+   \              0x63 0x65    
+   \              0x6C 0x5F    
+   \              0x6D 0x75    
+   \              0x6C 0x74    
+   \              0x69 0x70    
+   \              0x6C 0x69    
+   \              0x65 0x72    
+   \              0x00         
+   \   00000019   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "set_decel_threshold">`:
+   \   00000000   0x73 0x65          DC8 "set_decel_threshold"
+   \              0x74 0x5F    
+   \              0x64 0x65    
+   \              0x63 0x65    
+   \              0x6C 0x5F    
+   \              0x74 0x68    
+   \              0x72 0x65    
+   \              0x73 0x68    
+   \              0x6F 0x6C    
+   \              0x64 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "set_decel_multiplier">`:
+   \   00000000   0x73 0x65          DC8 "set_decel_multiplier"
+   \              0x74 0x5F    
+   \              0x64 0x65    
+   \              0x63 0x65    
+   \              0x6C 0x5F    
+   \              0x6D 0x75    
+   \              0x6C 0x74    
+   \              0x69 0x70    
+   \              0x6C 0x69    
+   \              0x65 0x72    
+   \              0x00         
+   \   00000015   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "accelinfo">`:
+   \   00000000   0x61 0x63          DC8 "accelinfo"
+   \              0x63 0x65    
+   \              0x6C 0x69    
+   \              0x6E 0x66    
+   \              0x6F 0x00    
+   \   0000000A   0x00 0x00          DC8 0, 0
+
+   \                                 In section .text, align 2
+   \   __code __interwork __softfp cyclic_buffer<float>::subobject cyclic_buffer()
+   \                     _ZN13cyclic_bufferIfEC2Ev:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x0020             MOVS     R0,R4
+   \   00000006   0x.... 0x....      BL       _ZN13cyclic_bufferIfEC1Ev
+   \   0000000A   0xBD10             POP      {R4,PC}          ;; return
+    148          #endif /* ! EFI_UNIT_TEST */
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   AccelEnrichmemnt::AccelEnrichmemnt()
+         8   -> AccelEnrichmemnt::reset()
+         8   -> cyclic_buffer<float>::cyclic_buffer()
+         8   -> cyclic_buffer<float>::setSize(int)
+       8   AccelEnrichmemnt::getDelta()
+         8   -> cyclic_buffer<float>::getSize()
+         8   -> cyclic_buffer<float>::maxValue(int)
+       8   AccelEnrichmemnt::getMapEnrichment()
+         8   -> AccelEnrichmemnt::getDelta()
+       8   AccelEnrichmemnt::getTpsEnrichment()
+         8   -> AccelEnrichmemnt::getDelta()
+       8   AccelEnrichmemnt::onEngineCycle()
+         8   -> AccelEnrichmemnt::onNewValue(float)
+         8   -> getEngineLoadT()
+       8   AccelEnrichmemnt::onEngineCycleTps()
+         8   -> AccelEnrichmemnt::onNewValue(float)
+         8   -> getTPS()
+      24   AccelEnrichmemnt::onNewValue(float)
+        24   -> __iar_FDtest
+        24   -> cyclic_buffer<float>::add(float)
+       0   AccelEnrichmemnt::reset()
+       8   AccelEnrichmemnt::subobject AccelEnrichmemnt()
+         8   -> AccelEnrichmemnt::AccelEnrichmemnt()
+      16   accelInfo()
+        16   -> __aeabi_f2d
+        16   -> scheduleMsg
+       0   cyclic_buffer<float>::add(float)
+      16   cyclic_buffer<float>::baseC(int)
+        16   -> cyclic_buffer<float>::setSize(int)
+       8   cyclic_buffer<float>::clear()
+         8   -> memset
+       8   cyclic_buffer<float>::cyclic_buffer()
+         8   -> cyclic_buffer<float>::baseC(int)
+       0   cyclic_buffer<float>::getSize()
+       8   cyclic_buffer<float>::maxValue(int)
+      16   cyclic_buffer<float>::setSize(int)
+        16   -> cyclic_buffer<float>::clear()
+       8   cyclic_buffer<float>::subobject cyclic_buffer()
+         8   -> cyclic_buffer<float>::cyclic_buffer()
+       8   initAccelEnrichment(Logging *)
+         8   -> addConsoleAction
+         8   -> addConsoleActionF
+         8   -> addConsoleActionI
+         8   -> setMapAccelLen(int)
+         8   -> setTpsAccelLen(int)
+      16   memset
+        16   -> __aeabi_memset
+      16   setDecelMult(float)
+        16   -> accelInfo()
+      16   setDecelThr(float)
+        16   -> accelInfo()
+       8   setMapAccelLen(int)
+         8   -> accelInfo()
+         8   -> cyclic_buffer<float>::setSize(int)
+         8   -> scheduleMsg
+      16   setMapAccelMult(float)
+        16   -> accelInfo()
+      16   setMapAccelThr(float)
+        16   -> accelInfo()
+       8   setTpsAccelLen(int)
+         8   -> accelInfo()
+         8   -> cyclic_buffer<float>::setSize(int)
+         8   -> scheduleMsg
+      16   setTpsAccelMult(float)
+        16   -> accelInfo()
+      16   setTpsAccelThr(float)
+        16   -> accelInfo()
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      28  ?<Constant "Length shoold be posi...">
+      24  ?<Constant "MAP accel th=%f/mult=%f">
+      24  ?<Constant "MAP decel th=%f/mult=%f">
+      24  ?<Constant "TPS accel th=%f/mult=%f">
+      12  ?<Constant "accelinfo">
+      24  ?<Constant "set_decel_multiplier">
+      20  ?<Constant "set_decel_threshold">
+      20  ?<Constant "set_map_accel_len">
+      28  ?<Constant "set_map_accel_multiplier">
+      24  ?<Constant "set_map_accel_threshold">
+      20  ?<Constant "set_tps_accel_len">
+      28  ?<Constant "set_tps_accel_multiplier">
+      24  ?<Constant "set_tps_accel_threshold">
+       4  ??DataTable11
+       4  ??DataTable12
+       4  ??DataTable12_1
+       4  ??DataTable12_10
+       4  ??DataTable12_11
+       4  ??DataTable12_12
+       4  ??DataTable12_13
+       4  ??DataTable12_14
+       4  ??DataTable12_15
+       4  ??DataTable12_16
+       4  ??DataTable12_17
+       4  ??DataTable12_18
+       4  ??DataTable12_19
+       4  ??DataTable12_2
+       4  ??DataTable12_20
+       4  ??DataTable12_21
+       4  ??DataTable12_22
+       4  ??DataTable12_23
+       4  ??DataTable12_24
+       4  ??DataTable12_3
+       4  ??DataTable12_4
+       4  ??DataTable12_5
+       4  ??DataTable12_6
+       4  ??DataTable12_7
+       4  ??DataTable12_8
+       4  ??DataTable12_9
+      28  AccelEnrichmemnt::AccelEnrichmemnt()
+      20  AccelEnrichmemnt::getDelta()
+      60  AccelEnrichmemnt::getMapEnrichment()
+      60  AccelEnrichmemnt::getTpsEnrichment()
+      16  AccelEnrichmemnt::onEngineCycle()
+      16  AccelEnrichmemnt::onEngineCycleTps()
+      86  AccelEnrichmemnt::onNewValue(float)
+      14  AccelEnrichmemnt::reset()
+      12  AccelEnrichmemnt::subobject AccelEnrichmemnt()
+     132  accelInfo()
+      52  cyclic_buffer<float>::add(float)
+      22  cyclic_buffer<float>::baseC(int)
+      30  cyclic_buffer<float>::clear()
+      16  cyclic_buffer<float>::cyclic_buffer()
+       6  cyclic_buffer<float>::getSize()
+      84  cyclic_buffer<float>::maxValue(int)
+      28  cyclic_buffer<float>::setSize(int)
+      12  cyclic_buffer<float>::subobject cyclic_buffer()
+     106  initAccelEnrichment(Logging *)
+       4  logger
+      22  memset
+      32  setDecelMult(float)
+      32  setDecelThr(float)
+      38  setMapAccelLen(int)
+      32  setMapAccelMult(float)
+      32  setMapAccelThr(float)
+      40  setTpsAccelLen(int)
+      32  setTpsAccelMult(float)
+      32  setTpsAccelThr(float)
+
+ 
+     4 bytes in section .bss
+   300 bytes in section .rodata
+ 1 196 bytes in section .text
+ 
+ 924 bytes of CODE  memory (+ 272 bytes shared)
+ 300 bytes of CONST memory
+   4 bytes of DATA  memory
+
+Errors: none
+Warnings: 1

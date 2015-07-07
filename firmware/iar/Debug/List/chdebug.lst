@@ -1,0 +1,1022 @@
+###############################################################################
+#                                                                             #
+# IAR ANSI C/C++ Compiler V6.50.3.4676/W32 for ARM      30/Jun/2015  23:09:41 #
+# Copyright 1999-2013 IAR Systems AB.                                         #
+#                                                                             #
+#    Cpu mode        =  thumb                                                 #
+#    Endian          =  little                                                #
+#    Source file     =  F:\stuff\rusefi_sourceforge\firmware\chibios\os\kerne #
+#                       l\src\chdebug.c                                       #
+#    Command line    =  F:\stuff\rusefi_sourceforge\firmware\chibios\os\kerne #
+#                       l\src\chdebug.c -lCN F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\Debug\List\ -lA F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\Debug\List\ -o                           #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\   #
+#                       --no_cse --no_unroll --no_inline --no_code_motion     #
+#                       --no_tbaa --no_clustering --no_scheduling --debug     #
+#                       --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp     #
+#                       --dlib_config "C:\Program Files (x86)\IAR             #
+#                       Systems\Embedded Workbench                            #
+#                       6.5\arm\INC\c\DLib_Config_Normal.h"                   #
+#                       --misrac2004=1.2-1.4,2.3,3.4,4.2,6.5-7,8.2-8.3,9.3,   #
+#                       12.3,13.6-13,15.5,17.3,19.17,20.7-20.9,20.11 -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\ -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\kernel\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\ports\common\ARMCMx\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\common\ARMCMx\CMSIS\include\ -I               #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\IAR\ARMCMx\ -I F:\stuff\rusefi_sourceforge\fi #
+#                       rmware\iar\..\chibios\os\ports\IAR\ARMCMx\STM32F4xx\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\chibio #
+#                       s\os\hal\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\hal\platforms\STM32\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\DMAv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\GPIOv2\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\I2Cv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\SPIv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\TIMv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\RTCv2\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\USARTv1\ -I                     #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\OTGv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32F4xx\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\various\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\chibios\os\various\devices_lib\accel\ -I         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\b #
+#                       oards\ST_STM32F4_DISCOVERY\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\co #
+#                       ntrollers\algo\ -I F:\stuff\rusefi_sourceforge\firmwa #
+#                       re\iar\..\controllers\core\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\system\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\controllers\sensors\ -I                          #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\math\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\controllers\trigger\ -I                            #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\config #
+#                       \ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\conf #
+#                       ig\engines\ -I F:\stuff\rusefi_sourceforge\firmware\i #
+#                       ar\..\config\stm32f4ems\ -I                           #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\b #
+#                       inary\ -I F:\stuff\rusefi_sourceforge\firmware\iar\.. #
+#                       \console_util\ -I F:\stuff\rusefi_sourceforge\firmwar #
+#                       e\iar\..\development\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\development\test\ -I                  #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\developme #
+#                       nt\hw_layer\ -I F:\stuff\rusefi_sourceforge\firmware\ #
+#                       iar\..\hw_layer\algo\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\hw_layer\lcd\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                       stm32f4\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\hw_layer\serial_over_usb\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                        -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext_al #
+#                       go\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\de #
+#                       velopment\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\development\hw_layer\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\util\ -On #
+#    MISRA C version =  2004                                                  #
+#      Enabled       =  1.2-1.4 2.3 3.4 4.2 6.5 7 8.2 8.3 9.3 12.3 13.6 13.7  #
+#                       15.5 17.3 19.17 20.7-20.9 20.11                       #
+#      Checked       =  1.4 2.3 4.2 6.5 7 8.2 8.3 9.3 12.3 13.7 15.5          #
+#                       20.7-20.9 20.11                                       #
+#      Not checked   =  1.1-1.3 1.5-2.2 2.4-4.1 5-6.4 8.1 8.4-9.2 10-12.2     #
+#                       12.4-13.6 14-15.4 16-20.6 20.10 20.12 21              #
+#    List file       =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\c #
+#                       hdebug.lst                                            #
+#    Object file     =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\ch #
+#                       debug.o                                               #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+F:\stuff\rusefi_sourceforge\firmware\chibios\os\kernel\src\chdebug.c
+      1          /*
+      2              ChibiOS/RT - Copyright (C) 2006,2007,2008,2009,2010,
+      3                           2011,2012,2013 Giovanni Di Sirio.
+      4          
+      5              This file is part of ChibiOS/RT.
+      6          
+      7              ChibiOS/RT is free software; you can redistribute it and/or modify
+      8              it under the terms of the GNU General Public License as published by
+      9              the Free Software Foundation; either version 3 of the License, or
+     10              (at your option) any later version.
+     11          
+     12              ChibiOS/RT is distributed in the hope that it will be useful,
+     13              but WITHOUT ANY WARRANTY; without even the implied warranty of
+     14              MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     15              GNU General Public License for more details.
+     16          
+     17              You should have received a copy of the GNU General Public License
+     18              along with this program.  If not, see <http://www.gnu.org/licenses/>.
+     19          
+     20                                                ---
+     21          
+     22              A special exception to the GPL can be applied should you wish to distribute
+     23              a combined work that includes ChibiOS/RT, without being obliged to provide
+     24              the source code for any proprietary components. See the file exception.txt
+     25              for full details of how and when the exception can be applied.
+     26          */
+     27          
+     28          /**
+     29           * @file    chdebug.c
+     30           * @brief   ChibiOS/RT Debug code.
+     31           *
+     32           * @addtogroup debug
+     33           * @details Debug APIs and services:
+     34           *          - Runtime system state and call protocol check. The following
+     35           *            panic messages can be generated:
+     36           *            - SV#1, misplaced @p chSysDisable().
+     37           *            - SV#2, misplaced @p chSysSuspend()
+     38           *            - SV#3, misplaced @p chSysEnable().
+     39           *            - SV#4, misplaced @p chSysLock().
+     40           *            - SV#5, misplaced @p chSysUnlock().
+     41           *            - SV#6, misplaced @p chSysLockFromIsr().
+     42           *            - SV#7, misplaced @p chSysUnlockFromIsr().
+     43           *            - SV#8, misplaced @p CH_IRQ_PROLOGUE().
+     44           *            - SV#9, misplaced @p CH_IRQ_EPILOGUE().
+     45           *            - SV#10, misplaced I-class function.
+     46           *            - SV#11, misplaced S-class function.
+     47           *            .
+     48           *          - Trace buffer.
+     49           *          - Parameters check.
+     50           *          - Kernel assertions.
+     51           *          - Kernel panics.
+     52           *          .
+     53           * @note    Stack checks are not implemented in this module but in the port
+     54           *          layer in an architecture-dependent way.
+     55           * @{
+     56           */
+     57          
+     58          #include "ch.h"
+     59          
+     60          /*===========================================================================*/
+     61          /* System state checker related code and variables.                          */
+     62          /*===========================================================================*/
+     63          
+     64          #if CH_DBG_SYSTEM_STATE_CHECK || defined(__DOXYGEN__)
+     65          
+     66          /**
+     67           * @brief   ISR nesting level.
+     68           */
+
+   \                                 In section .bss, align 4
+     69          cnt_t dbg_isr_cnt;
+   \                     dbg_isr_cnt:
+   \   00000000                      DS8 4
+     70          
+     71          /**
+     72           * @brief   Lock nesting level.
+     73           */
+
+   \                                 In section .bss, align 4
+     74          cnt_t dbg_lock_cnt;
+   \                     dbg_lock_cnt:
+   \   00000000                      DS8 4
+     75          
+     76          /**
+     77           * @brief   Guard code for @p chSysDisable().
+     78           *
+     79           * @notapi
+     80           */
+
+   \                                 In section .text, align 2, keep-with-next
+     81          void dbg_check_disable(void) {
+   \                     dbg_check_disable:
+   \   00000000   0xB580             PUSH     {R7,LR}
+     82          
+     83            if ((dbg_isr_cnt != 0) || (dbg_lock_cnt != 0))
+   \   00000002   0x....             LDR.N    R0,??DataTable13
+   \   00000004   0x6800             LDR      R0,[R0, #+0]
+   \   00000006   0x....             LDR.N    R1,??DataTable13_1
+   \   00000008   0x6809             LDR      R1,[R1, #+0]
+   \   0000000A   0x4308             ORRS     R0,R1,R0
+   \   0000000C   0x2800             CMP      R0,#+0
+   \   0000000E   0xD002             BEQ.N    ??dbg_check_disable_0
+     84              chDbgPanic("SV#1");
+   \   00000010   0x....             LDR.N    R0,??DataTable13_2
+   \   00000012   0x.... 0x....      BL       chDbgPanic
+     85          }
+   \                     ??dbg_check_disable_0:
+   \   00000016   0xBD01             POP      {R0,PC}          ;; return
+     86          
+     87          /**
+     88           * @brief   Guard code for @p chSysSuspend().
+     89           *
+     90           * @notapi
+     91           */
+
+   \                                 In section .text, align 2, keep-with-next
+     92          void dbg_check_suspend(void) {
+   \                     dbg_check_suspend:
+   \   00000000   0xB580             PUSH     {R7,LR}
+     93          
+     94            if ((dbg_isr_cnt != 0) || (dbg_lock_cnt != 0))
+   \   00000002   0x....             LDR.N    R0,??DataTable13
+   \   00000004   0x6800             LDR      R0,[R0, #+0]
+   \   00000006   0x....             LDR.N    R1,??DataTable13_1
+   \   00000008   0x6809             LDR      R1,[R1, #+0]
+   \   0000000A   0x4308             ORRS     R0,R1,R0
+   \   0000000C   0x2800             CMP      R0,#+0
+   \   0000000E   0xD002             BEQ.N    ??dbg_check_suspend_0
+     95              chDbgPanic("SV#2");
+   \   00000010   0x....             LDR.N    R0,??DataTable13_3
+   \   00000012   0x.... 0x....      BL       chDbgPanic
+     96          }
+   \                     ??dbg_check_suspend_0:
+   \   00000016   0xBD01             POP      {R0,PC}          ;; return
+     97          
+     98          /**
+     99           * @brief   Guard code for @p chSysEnable().
+    100           *
+    101           * @notapi
+    102           */
+
+   \                                 In section .text, align 2, keep-with-next
+    103          void dbg_check_enable(void) {
+   \                     dbg_check_enable:
+   \   00000000   0xB580             PUSH     {R7,LR}
+    104          
+    105            if ((dbg_isr_cnt != 0) || (dbg_lock_cnt != 0))
+   \   00000002   0x....             LDR.N    R0,??DataTable13
+   \   00000004   0x6800             LDR      R0,[R0, #+0]
+   \   00000006   0x....             LDR.N    R1,??DataTable13_1
+   \   00000008   0x6809             LDR      R1,[R1, #+0]
+   \   0000000A   0x4308             ORRS     R0,R1,R0
+   \   0000000C   0x2800             CMP      R0,#+0
+   \   0000000E   0xD002             BEQ.N    ??dbg_check_enable_0
+    106              chDbgPanic("SV#3");
+   \   00000010   0x....             LDR.N    R0,??DataTable13_4
+   \   00000012   0x.... 0x....      BL       chDbgPanic
+    107          }
+   \                     ??dbg_check_enable_0:
+   \   00000016   0xBD01             POP      {R0,PC}          ;; return
+    108          
+    109          /**
+    110           * @brief   Guard code for @p chSysLock().
+    111           *
+    112           * @notapi
+    113           */
+
+   \                                 In section .text, align 2, keep-with-next
+    114          void dbg_check_lock(void) {
+   \                     dbg_check_lock:
+   \   00000000   0xB580             PUSH     {R7,LR}
+    115          
+    116            if ((dbg_isr_cnt != 0) || (dbg_lock_cnt != 0))
+   \   00000002   0x....             LDR.N    R0,??DataTable13
+   \   00000004   0x6800             LDR      R0,[R0, #+0]
+   \   00000006   0x....             LDR.N    R1,??DataTable13_1
+   \   00000008   0x6809             LDR      R1,[R1, #+0]
+   \   0000000A   0x4308             ORRS     R0,R1,R0
+   \   0000000C   0x2800             CMP      R0,#+0
+   \   0000000E   0xD002             BEQ.N    ??dbg_check_lock_0
+    117              chDbgPanic("SV#4 misplaced chSysLock()");
+   \   00000010   0x....             LDR.N    R0,??DataTable13_5
+   \   00000012   0x.... 0x....      BL       chDbgPanic
+    118            dbg_enter_lock();
+   \                     ??dbg_check_lock_0:
+   \   00000016   0x....             LDR.N    R0,??DataTable13_1
+   \   00000018   0x2101             MOVS     R1,#+1
+   \   0000001A   0x6001             STR      R1,[R0, #+0]
+    119          }
+   \   0000001C   0xBD01             POP      {R0,PC}          ;; return
+    120          
+    121          /**
+    122           * @brief   Guard code for @p chSysUnlock().
+    123           *
+    124           * @notapi
+    125           */
+
+   \                                 In section .text, align 2, keep-with-next
+    126          void dbg_check_unlock(void) {
+   \                     dbg_check_unlock:
+   \   00000000   0xB580             PUSH     {R7,LR}
+    127          
+    128            if ((dbg_isr_cnt != 0) || (dbg_lock_cnt <= 0))
+   \   00000002   0x....             LDR.N    R0,??DataTable13
+   \   00000004   0x6800             LDR      R0,[R0, #+0]
+   \   00000006   0x2800             CMP      R0,#+0
+   \   00000008   0xD103             BNE.N    ??dbg_check_unlock_0
+   \   0000000A   0x....             LDR.N    R0,??DataTable13_1
+   \   0000000C   0x6800             LDR      R0,[R0, #+0]
+   \   0000000E   0x2801             CMP      R0,#+1
+   \   00000010   0xDA02             BGE.N    ??dbg_check_unlock_1
+    129              chDbgPanic("SV#5");
+   \                     ??dbg_check_unlock_0:
+   \   00000012   0x....             LDR.N    R0,??DataTable13_6
+   \   00000014   0x.... 0x....      BL       chDbgPanic
+    130            dbg_leave_lock();
+   \                     ??dbg_check_unlock_1:
+   \   00000018   0x....             LDR.N    R0,??DataTable13_1
+   \   0000001A   0x2100             MOVS     R1,#+0
+   \   0000001C   0x6001             STR      R1,[R0, #+0]
+    131          }
+   \   0000001E   0xBD01             POP      {R0,PC}          ;; return
+    132          
+    133          /**
+    134           * @brief   Guard code for @p chSysLockFromIsr().
+    135           *
+    136           * @notapi
+    137           */
+
+   \                                 In section .text, align 2, keep-with-next
+    138          void dbg_check_lock_from_isr(void) {
+   \                     dbg_check_lock_from_isr:
+   \   00000000   0xB580             PUSH     {R7,LR}
+    139          
+    140            if ((dbg_isr_cnt <= 0) || (dbg_lock_cnt != 0))
+   \   00000002   0x....             LDR.N    R0,??DataTable13
+   \   00000004   0x6800             LDR      R0,[R0, #+0]
+   \   00000006   0x2801             CMP      R0,#+1
+   \   00000008   0xDB03             BLT.N    ??dbg_check_lock_from_isr_0
+   \   0000000A   0x....             LDR.N    R0,??DataTable13_1
+   \   0000000C   0x6800             LDR      R0,[R0, #+0]
+   \   0000000E   0x2800             CMP      R0,#+0
+   \   00000010   0xD002             BEQ.N    ??dbg_check_lock_from_isr_1
+    141              chDbgPanic("SV#6 misplaced chSysLockFromIsr");
+   \                     ??dbg_check_lock_from_isr_0:
+   \   00000012   0x....             LDR.N    R0,??DataTable13_7
+   \   00000014   0x.... 0x....      BL       chDbgPanic
+    142            dbg_enter_lock();
+   \                     ??dbg_check_lock_from_isr_1:
+   \   00000018   0x....             LDR.N    R0,??DataTable13_1
+   \   0000001A   0x2101             MOVS     R1,#+1
+   \   0000001C   0x6001             STR      R1,[R0, #+0]
+    143          }
+   \   0000001E   0xBD01             POP      {R0,PC}          ;; return
+    144          
+    145          /**
+    146           * @brief   Guard code for @p chSysUnlockFromIsr().
+    147           *
+    148           * @notapi
+    149           */
+
+   \                                 In section .text, align 2, keep-with-next
+    150          void dbg_check_unlock_from_isr(void) {
+   \                     dbg_check_unlock_from_isr:
+   \   00000000   0xB580             PUSH     {R7,LR}
+    151          
+    152            if ((dbg_isr_cnt <= 0) || (dbg_lock_cnt <= 0))
+   \   00000002   0x....             LDR.N    R0,??DataTable13
+   \   00000004   0x6800             LDR      R0,[R0, #+0]
+   \   00000006   0x2801             CMP      R0,#+1
+   \   00000008   0xDB03             BLT.N    ??dbg_check_unlock_from_isr_0
+   \   0000000A   0x....             LDR.N    R0,??DataTable13_1
+   \   0000000C   0x6800             LDR      R0,[R0, #+0]
+   \   0000000E   0x2801             CMP      R0,#+1
+   \   00000010   0xDA02             BGE.N    ??dbg_check_unlock_from_isr_1
+    153              chDbgPanic("SV#7");
+   \                     ??dbg_check_unlock_from_isr_0:
+   \   00000012   0x....             LDR.N    R0,??DataTable13_8
+   \   00000014   0x.... 0x....      BL       chDbgPanic
+    154            dbg_leave_lock();
+   \                     ??dbg_check_unlock_from_isr_1:
+   \   00000018   0x....             LDR.N    R0,??DataTable13_1
+   \   0000001A   0x2100             MOVS     R1,#+0
+   \   0000001C   0x6001             STR      R1,[R0, #+0]
+    155          }
+   \   0000001E   0xBD01             POP      {R0,PC}          ;; return
+    156          
+    157          void firmwareError(const char *fmt, ...);
+    158          
+    159          extern int maxNesting;
+    160          
+    161          /**
+    162           * @brief   Guard code for @p CH_IRQ_PROLOGUE().
+    163           *
+    164           * @notapi
+    165           */
+
+   \                                 In section .text, align 2, keep-with-next
+    166          void dbg_check_enter_isr(void) {
+   \                     dbg_check_enter_isr:
+   \   00000000   0xB580             PUSH     {R7,LR}
+    167            port_lock_from_isr();
+   \   00000002   0x2020             MOVS     R0,#+32
+   \   00000004   0xF380 0x8811      MSR      BASEPRI,R0
+    168            if ((dbg_isr_cnt < 0) || (dbg_lock_cnt != 0))
+   \   00000008   0x....             LDR.N    R0,??DataTable13
+   \   0000000A   0x6800             LDR      R0,[R0, #+0]
+   \   0000000C   0x2800             CMP      R0,#+0
+   \   0000000E   0xD403             BMI.N    ??dbg_check_enter_isr_0
+   \   00000010   0x....             LDR.N    R0,??DataTable13_1
+   \   00000012   0x6800             LDR      R0,[R0, #+0]
+   \   00000014   0x2800             CMP      R0,#+0
+   \   00000016   0xD002             BEQ.N    ??dbg_check_enter_isr_1
+    169              chDbgPanic("SV#8");
+   \                     ??dbg_check_enter_isr_0:
+   \   00000018   0x....             LDR.N    R0,??DataTable13_9
+   \   0000001A   0x.... 0x....      BL       chDbgPanic
+    170            dbg_isr_cnt++;
+   \                     ??dbg_check_enter_isr_1:
+   \   0000001E   0x....             LDR.N    R0,??DataTable13
+   \   00000020   0x6800             LDR      R0,[R0, #+0]
+   \   00000022   0x1C40             ADDS     R0,R0,#+1
+   \   00000024   0x....             LDR.N    R1,??DataTable13
+   \   00000026   0x6008             STR      R0,[R1, #+0]
+    171            if (dbg_isr_cnt > maxNesting)
+   \   00000028   0x....             LDR.N    R0,??DataTable13_10
+   \   0000002A   0x6800             LDR      R0,[R0, #+0]
+   \   0000002C   0x....             LDR.N    R1,??DataTable13
+   \   0000002E   0x6809             LDR      R1,[R1, #+0]
+   \   00000030   0x4288             CMP      R0,R1
+   \   00000032   0xDA03             BGE.N    ??dbg_check_enter_isr_2
+    172          	  maxNesting = dbg_isr_cnt;
+   \   00000034   0x....             LDR.N    R0,??DataTable13_10
+   \   00000036   0x....             LDR.N    R1,??DataTable13
+   \   00000038   0x6809             LDR      R1,[R1, #+0]
+   \   0000003A   0x6001             STR      R1,[R0, #+0]
+    173            port_unlock_from_isr();
+   \                     ??dbg_check_enter_isr_2:
+   \   0000003C   0x2000             MOVS     R0,#+0
+   \   0000003E   0xF380 0x8811      MSR      BASEPRI,R0
+    174          }
+   \   00000042   0xBD01             POP      {R0,PC}          ;; return
+    175          
+    176          /**
+    177           * @brief   Guard code for @p CH_IRQ_EPILOGUE().
+    178           *
+    179           * @notapi
+    180           */
+
+   \                                 In section .text, align 2, keep-with-next
+    181          void dbg_check_leave_isr(void) {
+   \                     dbg_check_leave_isr:
+   \   00000000   0xB580             PUSH     {R7,LR}
+    182          
+    183            port_lock_from_isr();
+   \   00000002   0x2020             MOVS     R0,#+32
+   \   00000004   0xF380 0x8811      MSR      BASEPRI,R0
+    184            if ((dbg_isr_cnt <= 0) || (dbg_lock_cnt != 0))
+   \   00000008   0x....             LDR.N    R0,??DataTable13
+   \   0000000A   0x6800             LDR      R0,[R0, #+0]
+   \   0000000C   0x2801             CMP      R0,#+1
+   \   0000000E   0xDB03             BLT.N    ??dbg_check_leave_isr_0
+   \   00000010   0x....             LDR.N    R0,??DataTable13_1
+   \   00000012   0x6800             LDR      R0,[R0, #+0]
+   \   00000014   0x2800             CMP      R0,#+0
+   \   00000016   0xD002             BEQ.N    ??dbg_check_leave_isr_1
+    185              chDbgPanic("SV#9");
+   \                     ??dbg_check_leave_isr_0:
+   \   00000018   0x....             LDR.N    R0,??DataTable13_11
+   \   0000001A   0x.... 0x....      BL       chDbgPanic
+    186            dbg_isr_cnt--;
+   \                     ??dbg_check_leave_isr_1:
+   \   0000001E   0x....             LDR.N    R0,??DataTable13
+   \   00000020   0x6800             LDR      R0,[R0, #+0]
+   \   00000022   0x1E40             SUBS     R0,R0,#+1
+   \   00000024   0x....             LDR.N    R1,??DataTable13
+   \   00000026   0x6008             STR      R0,[R1, #+0]
+    187            port_unlock_from_isr();
+   \   00000028   0x2000             MOVS     R0,#+0
+   \   0000002A   0xF380 0x8811      MSR      BASEPRI,R0
+    188          }
+   \   0000002E   0xBD01             POP      {R0,PC}          ;; return
+    189          
+    190          /**
+    191           * @brief   I-class functions context check.
+    192           * @details Verifies that the system is in an appropriate state for invoking
+    193           *          an I-class API function. A panic is generated if the state is
+    194           *          not compatible.
+    195           *
+    196           * @api
+    197           */
+
+   \                                 In section .text, align 2, keep-with-next
+    198          void chDbgCheckClassI(void) {
+   \                     chDbgCheckClassI:
+   \   00000000   0xB580             PUSH     {R7,LR}
+    199          
+    200            if ((dbg_isr_cnt < 0) || (dbg_lock_cnt <= 0))
+   \   00000002   0x....             LDR.N    R0,??DataTable13
+   \   00000004   0x6800             LDR      R0,[R0, #+0]
+   \   00000006   0x2800             CMP      R0,#+0
+   \   00000008   0xD403             BMI.N    ??chDbgCheckClassI_0
+   \   0000000A   0x....             LDR.N    R0,??DataTable13_1
+   \   0000000C   0x6800             LDR      R0,[R0, #+0]
+   \   0000000E   0x2801             CMP      R0,#+1
+   \   00000010   0xDA02             BGE.N    ??chDbgCheckClassI_1
+    201              chDbgPanic("SV#10 misplaced I-class function");
+   \                     ??chDbgCheckClassI_0:
+   \   00000012   0x....             LDR.N    R0,??DataTable13_12
+   \   00000014   0x.... 0x....      BL       chDbgPanic
+    202          }
+   \                     ??chDbgCheckClassI_1:
+   \   00000018   0xBD01             POP      {R0,PC}          ;; return
+    203          
+    204          /**
+    205           * @brief   S-class functions context check.
+    206           * @details Verifies that the system is in an appropriate state for invoking
+    207           *          an S-class API function. A panic is generated if the state is
+    208           *          not compatible.
+    209           *
+    210           * @api
+    211           */
+
+   \                                 In section .text, align 2, keep-with-next
+    212          void chDbgCheckClassS(void) {
+   \                     chDbgCheckClassS:
+   \   00000000   0xB580             PUSH     {R7,LR}
+    213          
+    214            if ((dbg_isr_cnt != 0) || (dbg_lock_cnt <= 0))
+   \   00000002   0x....             LDR.N    R0,??DataTable13
+   \   00000004   0x6800             LDR      R0,[R0, #+0]
+   \   00000006   0x2800             CMP      R0,#+0
+   \   00000008   0xD103             BNE.N    ??chDbgCheckClassS_0
+   \   0000000A   0x....             LDR.N    R0,??DataTable13_1
+   \   0000000C   0x6800             LDR      R0,[R0, #+0]
+   \   0000000E   0x2801             CMP      R0,#+1
+   \   00000010   0xDA02             BGE.N    ??chDbgCheckClassS_1
+    215              chDbgPanic("SV#11");
+   \                     ??chDbgCheckClassS_0:
+   \   00000012   0x....             LDR.N    R0,??DataTable13_13
+   \   00000014   0x.... 0x....      BL       chDbgPanic
+    216          }
+   \                     ??chDbgCheckClassS_1:
+   \   00000018   0xBD01             POP      {R0,PC}          ;; return
+    217          
+    218          #endif /* CH_DBG_SYSTEM_STATE_CHECK */
+    219          
+    220          /*===========================================================================*/
+    221          /* Trace related code and variables.                                         */
+    222          /*===========================================================================*/
+    223          
+    224          #if CH_DBG_ENABLE_TRACE || defined(__DOXYGEN__)
+    225          /**
+    226           * @brief   Public trace buffer.
+    227           */
+
+   \                                 In section .bss, align 4
+    228          ch_trace_buffer_t dbg_trace_buffer;
+   \                     dbg_trace_buffer:
+   \   00000000                      DS8 1032
+    229          
+    230          /**
+    231           * @brief   Trace circular buffer subsystem initialization.
+    232           * @note    Internal use only.
+    233           */
+
+   \                                 In section .text, align 2, keep-with-next
+    234          void _trace_init(void) {
+    235          
+    236            dbg_trace_buffer.tb_size = CH_TRACE_BUFFER_SIZE;
+   \                     _trace_init:
+   \   00000000   0x....             LDR.N    R0,??DataTable13_14
+   \   00000002   0x2140             MOVS     R1,#+64
+   \   00000004   0x6001             STR      R1,[R0, #+0]
+    237            dbg_trace_buffer.tb_ptr = &dbg_trace_buffer.tb_buffer[0];
+   \   00000006   0x....             LDR.N    R0,??DataTable13_14
+   \   00000008   0x....             LDR.N    R1,??DataTable13_15
+   \   0000000A   0x6041             STR      R1,[R0, #+4]
+    238          }
+   \   0000000C   0x4770             BX       LR               ;; return
+    239          
+    240          /**
+    241           * @brief   Inserts in the circular debug trace buffer a context switch record.
+    242           *
+    243           * @param[in] otp       the thread being switched out
+    244           *
+    245           * @notapi
+    246           */
+
+   \                                 In section .text, align 2, keep-with-next
+    247          void dbg_trace(Thread *otp) {
+    248          
+    249            dbg_trace_buffer.tb_ptr->se_time   = chTimeNow();
+   \                     dbg_trace:
+   \   00000000   0x....             LDR.N    R1,??DataTable13_14
+   \   00000002   0x6849             LDR      R1,[R1, #+4]
+   \   00000004   0x....             LDR.N    R2,??DataTable13_16
+   \   00000006   0x68D2             LDR      R2,[R2, #+12]
+   \   00000008   0x600A             STR      R2,[R1, #+0]
+    250            dbg_trace_buffer.tb_ptr->se_tp     = currp;
+   \   0000000A   0x....             LDR.N    R1,??DataTable13_14
+   \   0000000C   0x6849             LDR      R1,[R1, #+4]
+   \   0000000E   0x....             LDR.N    R2,??DataTable13_17
+   \   00000010   0x6992             LDR      R2,[R2, #+24]
+   \   00000012   0x604A             STR      R2,[R1, #+4]
+    251            dbg_trace_buffer.tb_ptr->se_wtobjp = otp->p_u.wtobjp;
+   \   00000014   0x....             LDR.N    R1,??DataTable13_14
+   \   00000016   0x6849             LDR      R1,[R1, #+4]
+   \   00000018   0x6A82             LDR      R2,[R0, #+40]
+   \   0000001A   0x608A             STR      R2,[R1, #+8]
+    252            dbg_trace_buffer.tb_ptr->se_state  = (uint8_t)otp->p_state;
+   \   0000001C   0x....             LDR.N    R1,??DataTable13_14
+   \   0000001E   0x6849             LDR      R1,[R1, #+4]
+   \   00000020   0xF890 0x2020      LDRB     R2,[R0, #+32]
+   \   00000024   0x730A             STRB     R2,[R1, #+12]
+    253            if (++dbg_trace_buffer.tb_ptr >=
+    254                &dbg_trace_buffer.tb_buffer[CH_TRACE_BUFFER_SIZE])
+   \   00000026   0x....             LDR.N    R1,??DataTable13_14
+   \   00000028   0x6849             LDR      R1,[R1, #+4]
+   \   0000002A   0x3110             ADDS     R1,R1,#+16
+   \   0000002C   0x....             LDR.N    R2,??DataTable13_14
+   \   0000002E   0x6051             STR      R1,[R2, #+4]
+   \   00000030   0x....             LDR.N    R2,??DataTable13_18
+   \   00000032   0x4291             CMP      R1,R2
+   \   00000034   0xD302             BCC.N    ??dbg_trace_0
+    255              dbg_trace_buffer.tb_ptr = &dbg_trace_buffer.tb_buffer[0];
+   \   00000036   0x....             LDR.N    R1,??DataTable13_14
+   \   00000038   0x....             LDR.N    R2,??DataTable13_15
+   \   0000003A   0x604A             STR      R2,[R1, #+4]
+    256          }
+   \                     ??dbg_trace_0:
+   \   0000003C   0x4770             BX       LR               ;; return
+    257          #endif /* CH_DBG_ENABLE_TRACE */
+    258          
+    259          /*===========================================================================*/
+    260          /* Panic related code and variables.                                         */
+    261          /*===========================================================================*/
+    262          
+    263          #if CH_DBG_ENABLED || defined(__DOXYGEN__)
+    264          /**
+    265           * @brief   Pointer to the panic message.
+    266           * @details This pointer is meant to be accessed through the debugger, it is
+    267           *          written once and then the system is halted.
+    268           */
+
+   \                                 In section .bss, align 4
+    269          const char *dbg_panic_msg;
+   \                     dbg_panic_msg:
+   \   00000000                      DS8 4
+    270          
+    271          /**
+    272           * @brief   Prints a panic message on the console and then halts the system.
+    273           *
+    274           * @param[in] msg       the pointer to the panic message string
+    275           */
+    276          
+    277          void chDbgPanic3(const char *msg, const char * file, int line);
+    278          
+
+   \                                 In section .text, align 2, keep-with-next
+    279          void chDbgPanic(const char *msg) {
+   \                     chDbgPanic:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    280          	chDbgPanic3(msg, __FILE__, __LINE__);
+   \   00000004   0xF44F 0x728C      MOV      R2,#+280
+   \   00000008   0x....             LDR.N    R1,??DataTable13_19
+   \   0000000A   0x0020             MOVS     R0,R4
+   \   0000000C   0x.... 0x....      BL       chDbgPanic3
+    281          }
+   \   00000010   0xBD10             POP      {R4,PC}          ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable13:
+   \   00000000   0x........         DC32     dbg_isr_cnt
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable13_1:
+   \   00000000   0x........         DC32     dbg_lock_cnt
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable13_2:
+   \   00000000   0x........         DC32     `?<Constant "SV#1">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable13_3:
+   \   00000000   0x........         DC32     `?<Constant "SV#2">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable13_4:
+   \   00000000   0x........         DC32     `?<Constant "SV#3">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable13_5:
+   \   00000000   0x........         DC32     `?<Constant "SV#4 misplaced chSysL...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable13_6:
+   \   00000000   0x........         DC32     `?<Constant "SV#5">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable13_7:
+   \   00000000   0x........         DC32     `?<Constant "SV#6 misplaced chSysL...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable13_8:
+   \   00000000   0x........         DC32     `?<Constant "SV#7">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable13_9:
+   \   00000000   0x........         DC32     `?<Constant "SV#8">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable13_10:
+   \   00000000   0x........         DC32     maxNesting
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable13_11:
+   \   00000000   0x........         DC32     `?<Constant "SV#9">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable13_12:
+   \   00000000   0x........         DC32     `?<Constant "SV#10 misplaced I-cla...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable13_13:
+   \   00000000   0x........         DC32     `?<Constant "SV#11">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable13_14:
+   \   00000000   0x........         DC32     dbg_trace_buffer
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable13_15:
+   \   00000000   0x........         DC32     dbg_trace_buffer+0x8
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable13_16:
+   \   00000000   0x........         DC32     vtlist
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable13_17:
+   \   00000000   0x........         DC32     rlist
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable13_18:
+   \   00000000   0x........         DC32     dbg_trace_buffer+0x408
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable13_19:
+   \   00000000   0x........         DC32     `?<Constant "F:\\\\stuff\\\\rusefi_sourc...">`
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "SV#1">`:
+   \   00000000   0x53 0x56          DC8 "SV#1"
+   \              0x23 0x31    
+   \              0x00         
+   \   00000005   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "SV#2">`:
+   \   00000000   0x53 0x56          DC8 "SV#2"
+   \              0x23 0x32    
+   \              0x00         
+   \   00000005   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "SV#3">`:
+   \   00000000   0x53 0x56          DC8 "SV#3"
+   \              0x23 0x33    
+   \              0x00         
+   \   00000005   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "SV#4 misplaced chSysL...">`:
+   \   00000000   0x53 0x56          DC8 "SV#4 misplaced chSysLock()"
+   \              0x23 0x34    
+   \              0x20 0x6D    
+   \              0x69 0x73    
+   \              0x70 0x6C    
+   \              0x61 0x63    
+   \              0x65 0x64    
+   \              0x20 0x63    
+   \              0x68 0x53    
+   \              0x79 0x73    
+   \              0x4C 0x6F    
+   \              0x63 0x6B    
+   \              0x28 0x29    
+   \              0x00         
+   \   0000001B   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "SV#5">`:
+   \   00000000   0x53 0x56          DC8 "SV#5"
+   \              0x23 0x35    
+   \              0x00         
+   \   00000005   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "SV#6 misplaced chSysL...">`:
+   \   00000000   0x53 0x56          DC8 "SV#6 misplaced chSysLockFromIsr"
+   \              0x23 0x36    
+   \              0x20 0x6D    
+   \              0x69 0x73    
+   \              0x70 0x6C    
+   \              0x61 0x63    
+   \              0x65 0x64    
+   \              0x20 0x63    
+   \              0x68 0x53    
+   \              0x79 0x73    
+   \              0x4C 0x6F    
+   \              0x63 0x6B    
+   \              0x46 0x72    
+   \              0x6F 0x6D    
+   \              0x49 0x73    
+   \              0x72 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "SV#7">`:
+   \   00000000   0x53 0x56          DC8 "SV#7"
+   \              0x23 0x37    
+   \              0x00         
+   \   00000005   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "SV#8">`:
+   \   00000000   0x53 0x56          DC8 "SV#8"
+   \              0x23 0x38    
+   \              0x00         
+   \   00000005   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "SV#9">`:
+   \   00000000   0x53 0x56          DC8 "SV#9"
+   \              0x23 0x39    
+   \              0x00         
+   \   00000005   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "SV#10 misplaced I-cla...">`:
+   \   00000000   0x53 0x56          DC8 "SV#10 misplaced I-class function"
+   \              0x23 0x31    
+   \              0x30 0x20    
+   \              0x6D 0x69    
+   \              0x73 0x70    
+   \              0x6C 0x61    
+   \              0x63 0x65    
+   \              0x64 0x20    
+   \              0x49 0x2D    
+   \              0x63 0x6C    
+   \              0x61 0x73    
+   \              0x73 0x20    
+   \              0x66 0x75    
+   \              0x6E 0x63    
+   \              0x74 0x69    
+   \              0x6F 0x6E    
+   \              0x00         
+   \   00000021   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "SV#11">`:
+   \   00000000   0x53 0x56          DC8 "SV#11"
+   \              0x23 0x31    
+   \              0x31 0x00    
+   \   00000006   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "F:\\\\stuff\\\\rusefi_sourc...">`:
+   \   00000000   0x46 0x3A          DC8 46H, 3AH, 5CH, 73H, 74H, 75H, 66H, 66H
+   \              0x5C 0x73    
+   \              0x74 0x75    
+   \              0x66 0x66    
+   \   00000008   0x5C 0x72          DC8 5CH, 72H, 75H, 73H, 65H, 66H, 69H, 5FH
+   \              0x75 0x73    
+   \              0x65 0x66    
+   \              0x69 0x5F    
+   \   00000010   0x73 0x6F          DC8 73H, 6FH, 75H, 72H, 63H, 65H, 66H, 6FH
+   \              0x75 0x72    
+   \              0x63 0x65    
+   \              0x66 0x6F    
+   \   00000018   0x72 0x67          DC8 72H, 67H, 65H, 5CH, 66H, 69H, 72H, 6DH
+   \              0x65 0x5C    
+   \              0x66 0x69    
+   \              0x72 0x6D    
+   \   00000020   0x77 0x61          DC8 77H, 61H, 72H, 65H, 5CH, 63H, 68H, 69H
+   \              0x72 0x65    
+   \              0x5C 0x63    
+   \              0x68 0x69    
+   \   00000028   0x62 0x69          DC8 62H, 69H, 6FH, 73H, 5CH, 6FH, 73H, 5CH
+   \              0x6F 0x73    
+   \              0x5C 0x6F    
+   \              0x73 0x5C    
+   \   00000030   0x6B 0x65          DC8 6BH, 65H, 72H, 6EH, 65H, 6CH, 5CH, 73H
+   \              0x72 0x6E    
+   \              0x65 0x6C    
+   \              0x5C 0x73    
+   \   00000038   0x72 0x63          DC8 72H, 63H, 5CH, 63H, 68H, 64H, 65H, 62H
+   \              0x5C 0x63    
+   \              0x68 0x64    
+   \              0x65 0x62    
+   \   00000040   0x75 0x67          DC8 75H, 67H, 2EH, 63H, 0
+   \              0x2E 0x63    
+   \              0x00         
+   \   00000045   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+    282          #endif /* CH_DBG_ENABLED */
+    283          
+    284          /** @} */
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   _trace_init
+       8   chDbgCheckClassI
+         8   -> chDbgPanic
+       8   chDbgCheckClassS
+         8   -> chDbgPanic
+       8   chDbgPanic
+         8   -> chDbgPanic3
+       8   dbg_check_disable
+         8   -> chDbgPanic
+       8   dbg_check_enable
+         8   -> chDbgPanic
+       8   dbg_check_enter_isr
+         8   -> chDbgPanic
+       8   dbg_check_leave_isr
+         8   -> chDbgPanic
+       8   dbg_check_lock
+         8   -> chDbgPanic
+       8   dbg_check_lock_from_isr
+         8   -> chDbgPanic
+       8   dbg_check_suspend
+         8   -> chDbgPanic
+       8   dbg_check_unlock
+         8   -> chDbgPanic
+       8   dbg_check_unlock_from_isr
+         8   -> chDbgPanic
+       0   dbg_trace
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      72  ?<Constant "F:\\stuff\\rusefi_sourc...">
+       8  ?<Constant "SV#1">
+      36  ?<Constant "SV#10 misplaced I-cla...">
+       8  ?<Constant "SV#11">
+       8  ?<Constant "SV#2">
+       8  ?<Constant "SV#3">
+      28  ?<Constant "SV#4 misplaced chSysL...">
+       8  ?<Constant "SV#5">
+      32  ?<Constant "SV#6 misplaced chSysL...">
+       8  ?<Constant "SV#7">
+       8  ?<Constant "SV#8">
+       8  ?<Constant "SV#9">
+       4  ??DataTable13
+       4  ??DataTable13_1
+       4  ??DataTable13_10
+       4  ??DataTable13_11
+       4  ??DataTable13_12
+       4  ??DataTable13_13
+       4  ??DataTable13_14
+       4  ??DataTable13_15
+       4  ??DataTable13_16
+       4  ??DataTable13_17
+       4  ??DataTable13_18
+       4  ??DataTable13_19
+       4  ??DataTable13_2
+       4  ??DataTable13_3
+       4  ??DataTable13_4
+       4  ??DataTable13_5
+       4  ??DataTable13_6
+       4  ??DataTable13_7
+       4  ??DataTable13_8
+       4  ??DataTable13_9
+      14  _trace_init
+      26  chDbgCheckClassI
+      26  chDbgCheckClassS
+      18  chDbgPanic
+      24  dbg_check_disable
+      24  dbg_check_enable
+      68  dbg_check_enter_isr
+      48  dbg_check_leave_isr
+      30  dbg_check_lock
+      32  dbg_check_lock_from_isr
+      24  dbg_check_suspend
+      32  dbg_check_unlock
+      32  dbg_check_unlock_from_isr
+       4  dbg_isr_cnt
+       4  dbg_lock_cnt
+       4  dbg_panic_msg
+      62  dbg_trace
+    1032  dbg_trace_buffer
+
+ 
+ 1 044 bytes in section .bss
+   232 bytes in section .rodata
+   540 bytes in section .text
+ 
+   540 bytes of CODE  memory
+   232 bytes of CONST memory
+ 1 044 bytes of DATA  memory
+
+Errors: none
+Warnings: none

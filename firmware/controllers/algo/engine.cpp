@@ -41,7 +41,15 @@ void Engine::updateSlowSensors() {
 	engineState.iat = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F);
 	engineState.clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_F);
 
-	injectorLagMs = getInjectorLag(getVBatt(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER);
+	if (engineConfiguration->fuelLevelSensor != EFI_ADC_NONE) {
+		float fuelLevelVoltage = getVoltageDivided("fuel", engineConfiguration->fuelLevelSensor);
+		engineState.fuelLevel = interpolate(boardConfiguration->fuelLevelEmptyTankVoltage, 0,
+				boardConfiguration->fuelLevelFullTankVoltage, 100,
+				fuelLevelVoltage);
+	}
+	float vBatt = hasVBatt(PASS_ENGINE_PARAMETER_F) ? getVBatt(PASS_ENGINE_PARAMETER_F) : 12;
+
+	injectorLagMs = getInjectorLag(vBatt PASS_ENGINE_PARAMETER);
 }
 
 void Engine::onTriggerEvent(efitick_t nowNt) {
@@ -76,6 +84,8 @@ Engine::Engine(persistent_config_s *config) {
 	knockNow = false;
 	knockEver = false;
 	knockCount = 0;
+	knockDebug = false;
+	timeOfLastKnockEvent = 0;
 	injectorLagMs = fuelMs = 0;
 	clutchDownState = clutchUpState = false;
 	memset(&m, 0, sizeof(m));
@@ -177,14 +187,23 @@ void Engine::watchdog() {
 	 *
 	 * todo: better watch dog implementation should be implemented - see
 	 * http://sourceforge.net/p/rusefi/tickets/96/
+	 *
+	 * note that the result of this subtraction could be negative, that would happen if
+	 * we have a trigger event between the time we've invoked 'getTimeNow' and here
 	 */
-	if (nowNt - lastTriggerEventTimeNt < US2NT(250000LL)) {
+	efitick_t timeSinceLastTriggerEvent = nowNt - lastTriggerEventTimeNt;
+	if (timeSinceLastTriggerEvent < US2NT(250000LL)) {
 		return;
 	}
 	isSpinning = false;
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	scheduleMsg(&logger, "engine has STOPPED");
-	triggerInfo(engine);
+	scheduleMsg(&logger, "templog engine has STOPPED [%x][%x] [%x][%x] %d",
+			(int)(nowNt >> 32), (int)nowNt,
+			(int)(lastTriggerEventTimeNt >> 32), (int)lastTriggerEventTimeNt,
+			(int)timeSinceLastTriggerEvent
+			);
+	triggerInfo();
 #endif
 
 	stopPins();
@@ -211,7 +230,7 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 
 	engine->engineState.baroCorrection = getBaroCorrection(PASS_ENGINE_PARAMETER_F);
 
-	engine->engineState.injectionAngle = getInjectionAngle(rpm PASS_ENGINE_PARAMETER);
+	engine->engineState.injectionOffset = getinjectionOffset(rpm PASS_ENGINE_PARAMETER);
 	engine->engineState.timingAdvance = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER);
 
 	if (engineConfiguration->algorithm == LM_SPEED_DENSITY) {

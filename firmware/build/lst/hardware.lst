@@ -1,0 +1,741 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"hardware.cpp"
+  16              		.section	.text._ZL11sendI2Cbyteii,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	_ZL11sendI2Cbyteii, %function
+  22              	_ZL11sendI2Cbyteii:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25              		@ link register save eliminated.
+  26 0000 7047     		bx	lr
+  27              		.size	_ZL11sendI2Cbyteii, .-_ZL11sendI2Cbyteii
+  28 0002 00BFAFF3 		.section	.text._ZL18calcFastAdcIndexesv,"ax",%progbits
+  28      0080AFF3 
+  28      0080AFF3 
+  28      0080
+  29              		.align	2
+  30              		.p2align 4,,15
+  31              		.thumb
+  32              		.thumb_func
+  33              		.type	_ZL18calcFastAdcIndexesv, %function
+  34              	_ZL18calcFastAdcIndexesv:
+  35              		@ args = 0, pretend = 0, frame = 0
+  36              		@ frame_needed = 0, uses_anonymous_args = 0
+  37              		@ link register save eliminated.
+  38 0000 40F20002 		movw	r2, #:lower16:engineConfiguration
+  39 0004 C0F20002 		movt	r2, #:upper16:engineConfiguration
+  40 0008 40F20003 		movw	r3, #:lower16:fastAdc
+  41 000c 1168     		ldr	r1, [r2]
+  42 000e C0F20003 		movt	r3, #:upper16:fastAdc
+  43 0012 D1F8FC20 		ldr	r2, [r1, #252]
+  44 0016 D1F8DC05 		ldr	r0, [r1, #1500]
+  45 001a D1F80C12 		ldr	r1, [r1, #524]
+  46 001e 10B4     		push	{r4}
+  47 0020 53F82240 		ldr	r4, [r3, r2, lsl #2]
+  48 0024 40F20002 		movw	r2, #:lower16:.LANCHOR0
+  49 0028 C0F20002 		movt	r2, #:upper16:.LANCHOR0
+  50 002c B0F55E7F 		cmp	r0, #888
+  51 0030 1460     		str	r4, [r2]
+  52 0032 40F20002 		movw	r2, #:lower16:.LANCHOR1
+  53 0036 C0F20002 		movt	r2, #:upper16:.LANCHOR1
+  54 003a 18BF     		it	ne
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s 			page 2
+
+
+  55 003c 53F82000 		ldrne	r0, [r3, r0, lsl #2]
+  56 0040 5DF8044B 		ldr	r4, [sp], #4
+  57 0044 08BF     		it	eq
+  58 0046 4FF0FF30 		moveq	r0, #-1
+  59 004a B1F55E7F 		cmp	r1, #888
+  60 004e 1060     		str	r0, [r2]
+  61 0050 0FBF     		iteee	eq
+  62 0052 40F20003 		movweq	r3, #:lower16:.LANCHOR2
+  63 0056 40F20002 		movwne	r2, #:lower16:.LANCHOR2
+  64 005a 53F82130 		ldrne	r3, [r3, r1, lsl #2]
+  65 005e C0F20002 		movtne	r2, #:upper16:.LANCHOR2
+  66 0062 05BF     		ittet	eq
+  67 0064 C0F20003 		movteq	r3, #:upper16:.LANCHOR2
+  68 0068 4FF0FF32 		moveq	r2, #-1
+  69 006c 1360     		strne	r3, [r2]
+  70 006e 1A60     		streq	r2, [r3]
+  71 0070 7047     		bx	lr
+  72              		.size	_ZL18calcFastAdcIndexesv, .-_ZL18calcFastAdcIndexesv
+  73 0072 00BFAFF3 		.section	.text._ZL17adcConfigListenerP6Engine,"ax",%progbits
+  73      0080AFF3 
+  73      0080AFF3 
+  73      0080
+  74              		.align	2
+  75              		.p2align 4,,15
+  76              		.thumb
+  77              		.thumb_func
+  78              		.type	_ZL17adcConfigListenerP6Engine, %function
+  79              	_ZL17adcConfigListenerP6Engine:
+  80              		@ args = 0, pretend = 0, frame = 0
+  81              		@ frame_needed = 0, uses_anonymous_args = 0
+  82              		@ link register save eliminated.
+  83 0000 FFF7FEBF 		b	_ZL18calcFastAdcIndexesv
+  84              		.size	_ZL17adcConfigListenerP6Engine, .-_ZL17adcConfigListenerP6Engine
+  85 0004 AFF30080 		.section	.text._Z7lockSpi12spi_device_e,"ax",%progbits
+  85      AFF30080 
+  85      AFF30080 
+  86              		.align	2
+  87              		.p2align 4,,15
+  88              		.global	_Z7lockSpi12spi_device_e
+  89              		.thumb
+  90              		.thumb_func
+  91              		.type	_Z7lockSpi12spi_device_e, %function
+  92              	_Z7lockSpi12spi_device_e:
+  93              		@ args = 0, pretend = 0, frame = 0
+  94              		@ frame_needed = 0, uses_anonymous_args = 0
+  95              		@ link register save eliminated.
+  96 0000 40F20000 		movw	r0, #:lower16:.LANCHOR3
+  97 0004 C0F20000 		movt	r0, #:upper16:.LANCHOR3
+  98 0008 FFF7FEBF 		b	chMtxLock
+  99              		.size	_Z7lockSpi12spi_device_e, .-_Z7lockSpi12spi_device_e
+ 100 000c AFF30080 		.section	.text._Z9unlockSpiv,"ax",%progbits
+ 101              		.align	2
+ 102              		.p2align 4,,15
+ 103              		.global	_Z9unlockSpiv
+ 104              		.thumb
+ 105              		.thumb_func
+ 106              		.type	_Z9unlockSpiv, %function
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s 			page 3
+
+
+ 107              	_Z9unlockSpiv:
+ 108              		@ args = 0, pretend = 0, frame = 0
+ 109              		@ frame_needed = 0, uses_anonymous_args = 0
+ 110              		@ link register save eliminated.
+ 111 0000 FFF7FEBF 		b	chMtxUnlock
+ 112              		.size	_Z9unlockSpiv, .-_Z9unlockSpiv
+ 113 0004 AFF30080 		.section	.text._Z12getSpiDevice12spi_device_e,"ax",%progbits
+ 113      AFF30080 
+ 113      AFF30080 
+ 114              		.align	2
+ 115              		.p2align 4,,15
+ 116              		.global	_Z12getSpiDevice12spi_device_e
+ 117              		.thumb
+ 118              		.thumb_func
+ 119              		.type	_Z12getSpiDevice12spi_device_e, %function
+ 120              	_Z12getSpiDevice12spi_device_e:
+ 121              		@ args = 0, pretend = 0, frame = 0
+ 122              		@ frame_needed = 0, uses_anonymous_args = 0
+ 123 0000 08B5     		push	{r3, lr}
+ 124 0002 0146     		mov	r1, r0
+ 125 0004 A8B1     		cbz	r0, .L16
+ 126 0006 0128     		cmp	r0, #1
+ 127 0008 08D0     		beq	.L13
+ 128 000a 0228     		cmp	r0, #2
+ 129 000c 13D0     		beq	.L14
+ 130 000e 0328     		cmp	r0, #3
+ 131 0010 09D1     		bne	.L18
+ 132 0012 40F20000 		movw	r0, #:lower16:SPID3
+ 133 0016 C0F20000 		movt	r0, #:upper16:SPID3
+ 134 001a 08BD     		pop	{r3, pc}
+ 135              	.L13:
+ 136 001c 40F20000 		movw	r0, #:lower16:SPID1
+ 137 0020 C0F20000 		movt	r0, #:upper16:SPID1
+ 138 0024 08BD     		pop	{r3, pc}
+ 139              	.L18:
+ 140 0026 40F20000 		movw	r0, #:lower16:.LC0
+ 141 002a C0F20000 		movt	r0, #:upper16:.LC0
+ 142 002e FFF7FEFF 		bl	firmwareError
+ 143              	.L16:
+ 144 0032 0020     		movs	r0, #0
+ 145 0034 08BD     		pop	{r3, pc}
+ 146              	.L14:
+ 147 0036 40F20000 		movw	r0, #:lower16:SPID2
+ 148 003a C0F20000 		movt	r0, #:upper16:SPID2
+ 149 003e 08BD     		pop	{r3, pc}
+ 150              		.size	_Z12getSpiDevice12spi_device_e, .-_Z12getSpiDevice12spi_device_e
+ 151              		.section	.text._Z13initI2Cmodulev,"ax",%progbits
+ 152              		.align	2
+ 153              		.p2align 4,,15
+ 154              		.global	_Z13initI2Cmodulev
+ 155              		.thumb
+ 156              		.thumb_func
+ 157              		.type	_Z13initI2Cmodulev, %function
+ 158              	_Z13initI2Cmodulev:
+ 159              		@ args = 0, pretend = 0, frame = 0
+ 160              		@ frame_needed = 0, uses_anonymous_args = 0
+ 161 0000 40F20000 		movw	r0, #:lower16:.LC1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s 			page 4
+
+
+ 162 0004 10B5     		push	{r4, lr}
+ 163 0006 C0F20000 		movt	r0, #:upper16:.LC1
+ 164 000a FFF7FEFF 		bl	print
+ 165 000e FFF7FEFF 		bl	i2cInit
+ 166 0012 40F20000 		movw	r0, #:lower16:I2CD1
+ 167 0016 40F20001 		movw	r1, #:lower16:.LANCHOR4
+ 168 001a C0F20000 		movt	r0, #:upper16:I2CD1
+ 169 001e C0F20001 		movt	r1, #:upper16:.LANCHOR4
+ 170 0022 4FF48064 		mov	r4, #1024
+ 171 0026 FFF7FEFF 		bl	i2cStart
+ 172 002a C4F20204 		movt	r4, 16386
+ 173 002e 40F20000 		movw	r0, #:lower16:.LC2
+ 174 0032 2146     		mov	r1, r4
+ 175 0034 C0F20000 		movt	r0, #:upper16:.LC2
+ 176 0038 0622     		movs	r2, #6
+ 177 003a 40F20623 		movw	r3, #518
+ 178 003e FFF7FEFF 		bl	_Z12mySetPadModePKcP12GPIO_TypeDefmm
+ 179 0042 40F20000 		movw	r0, #:lower16:.LC3
+ 180 0046 2146     		mov	r1, r4
+ 181 0048 C0F20000 		movt	r0, #:upper16:.LC3
+ 182 004c 0722     		movs	r2, #7
+ 183 004e 40F20623 		movw	r3, #518
+ 184 0052 BDE81040 		pop	{r4, lr}
+ 185 0056 FFF7FEBF 		b	_Z12mySetPadModePKcP12GPIO_TypeDefmm
+ 186              		.size	_Z13initI2Cmodulev, .-_Z13initI2Cmodulev
+ 187 005a 00BFAFF3 		.section	.text._Z17adc_callback_fastP9ADCDriverPtj,"ax",%progbits
+ 187      0080
+ 188              		.align	2
+ 189              		.p2align 4,,15
+ 190              		.global	_Z17adc_callback_fastP9ADCDriverPtj
+ 191              		.thumb
+ 192              		.thumb_func
+ 193              		.type	_Z17adc_callback_fastP9ADCDriverPtj, %function
+ 194              	_Z17adc_callback_fastP9ADCDriverPtj:
+ 195              		@ args = 0, pretend = 0, frame = 0
+ 196              		@ frame_needed = 0, uses_anonymous_args = 0
+ 197 0000 38B5     		push	{r3, r4, r5, lr}
+ 198 0002 40F20004 		movw	r4, #:lower16:rlist
+ 199 0006 C0F20004 		movt	r4, #:upper16:rlist
+ 200 000a 0546     		mov	r5, r0
+ 201 000c A069     		ldr	r0, [r4, #24]
+ 202 000e FFF7FEFF 		bl	getRemainingStack
+ 203 0012 4028     		cmp	r0, #64
+ 204 0014 03DD     		ble	.L33
+ 205 0016 2B78     		ldrb	r3, [r5]	@ zero_extendqisi2
+ 206 0018 042B     		cmp	r3, #4
+ 207 001a 08D0     		beq	.L34
+ 208              	.L20:
+ 209 001c 38BD     		pop	{r3, r4, r5, pc}
+ 210              	.L33:
+ 211 001e 40F20000 		movw	r0, #:lower16:.LC4
+ 212 0022 C0F20000 		movt	r0, #:upper16:.LC4
+ 213 0026 BDE83840 		pop	{r3, r4, r5, lr}
+ 214 002a FFF7FEBF 		b	firmwareError
+ 215              	.L34:
+ 216 002e A069     		ldr	r0, [r4, #24]
+ 217 0030 FFF7FEFF 		bl	getRemainingStack
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s 			page 5
+
+
+ 218 0034 8028     		cmp	r0, #128
+ 219 0036 28DD     		ble	.L35
+ 220 0038 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 221 003c C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 222 0040 40F20004 		movw	r4, #:lower16:fastAdc
+ 223 0044 1B68     		ldr	r3, [r3]
+ 224 0046 C0F20004 		movt	r4, #:upper16:fastAdc
+ 225 004a 2C33     		adds	r3, r3, #44
+ 226 004c 34F81300 		ldrh	r0, [r4, r3, lsl #1]
+ 227 0050 FFF7FEFF 		bl	_Z20mapAveragingCallbackt
+ 228 0054 40F20003 		movw	r3, #:lower16:boardConfiguration
+ 229 0058 C0F20003 		movt	r3, #:upper16:boardConfiguration
+ 230 005c 1B68     		ldr	r3, [r3]
+ 231 005e 93F88031 		ldrb	r3, [r3, #384]	@ zero_extendqisi2
+ 232 0062 5906     		lsls	r1, r3, #25
+ 233 0064 19D4     		bmi	.L36
+ 234              	.L25:
+ 235 0066 40F20003 		movw	r3, #:lower16:.LANCHOR2
+ 236 006a C0F20003 		movt	r3, #:upper16:.LANCHOR2
+ 237 006e 1B68     		ldr	r3, [r3]
+ 238 0070 5A1C     		adds	r2, r3, #1
+ 239 0072 1FBF     		itttt	ne
+ 240 0074 03F12C02 		addne	r2, r3, #44
+ 241 0078 40F20003 		movwne	r3, #:lower16:tpsFastAdc
+ 242 007c 34F81220 		ldrhne	r2, [r4, r2, lsl #1]
+ 243 0080 C0F20003 		movtne	r3, #:upper16:tpsFastAdc
+ 244 0084 18BF     		it	ne
+ 245 0086 1A60     		strne	r2, [r3]
+ 246 0088 C8E7     		b	.L20
+ 247              	.L35:
+ 248 008a 40F20000 		movw	r0, #:lower16:.LC5
+ 249 008e C0F20000 		movt	r0, #:upper16:.LC5
+ 250 0092 BDE83840 		pop	{r3, r4, r5, lr}
+ 251 0096 FFF7FEBF 		b	firmwareError
+ 252              	.L36:
+ 253 009a 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 254 009e C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ 255 00a2 1B68     		ldr	r3, [r3]
+ 256 00a4 2C33     		adds	r3, r3, #44
+ 257 00a6 34F81300 		ldrh	r0, [r4, r3, lsl #1]
+ 258 00aa FFF7FEFF 		bl	_Z14hipAdcCallbackt
+ 259 00ae DAE7     		b	.L25
+ 260              		.size	_Z17adc_callback_fastP9ADCDriverPtj, .-_Z17adc_callback_fastP9ADCDriverPtj
+ 261              		.section	.text._Z14turnOnHardwareP7Logging,"ax",%progbits
+ 262              		.align	2
+ 263              		.p2align 4,,15
+ 264              		.global	_Z14turnOnHardwareP7Logging
+ 265              		.thumb
+ 266              		.thumb_func
+ 267              		.type	_Z14turnOnHardwareP7Logging, %function
+ 268              	_Z14turnOnHardwareP7Logging:
+ 269              		@ args = 0, pretend = 0, frame = 0
+ 270              		@ frame_needed = 0, uses_anonymous_args = 0
+ 271              		@ link register save eliminated.
+ 272 0000 FFF7FEBF 		b	_Z22turnOnTriggerInputPinsP7Logging
+ 273              		.size	_Z14turnOnHardwareP7Logging, .-_Z14turnOnHardwareP7Logging
+ 274 0004 AFF30080 		.section	.text._Z24applyNewHardwareSettingsv,"ax",%progbits
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s 			page 6
+
+
+ 274      AFF30080 
+ 274      AFF30080 
+ 275              		.align	2
+ 276              		.p2align 4,,15
+ 277              		.global	_Z24applyNewHardwareSettingsv
+ 278              		.thumb
+ 279              		.thumb_func
+ 280              		.type	_Z24applyNewHardwareSettingsv, %function
+ 281              	_Z24applyNewHardwareSettingsv:
+ 282              		@ args = 0, pretend = 0, frame = 0
+ 283              		@ frame_needed = 0, uses_anonymous_args = 0
+ 284 0000 08B5     		push	{r3, lr}
+ 285 0002 FFF7FEFF 		bl	_Z24applyNewTriggerInputPinsv
+ 286 0006 FFF7FEFF 		bl	_Z17stopInjectionPinsv
+ 287 000a FFF7FEFF 		bl	_Z16stopIgnitionPinsv
+ 288 000e FFF7FEFF 		bl	_Z18startInjectionPinsv
+ 289 0012 BDE80840 		pop	{r3, lr}
+ 290 0016 FFF7FEBF 		b	_Z17startIgnitionPinsv
+ 291              		.size	_Z24applyNewHardwareSettingsv, .-_Z24applyNewHardwareSettingsv
+ 292 001a 00BFAFF3 		.section	.text._Z12initHardwareP7Logging,"ax",%progbits
+ 292      0080
+ 293              		.align	2
+ 294              		.p2align 4,,15
+ 295              		.global	_Z12initHardwareP7Logging
+ 296              		.thumb
+ 297              		.thumb_func
+ 298              		.type	_Z12initHardwareP7Logging, %function
+ 299              	_Z12initHardwareP7Logging:
+ 300              		@ args = 0, pretend = 0, frame = 0
+ 301              		@ frame_needed = 0, uses_anonymous_args = 0
+ 302 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 303 0004 40F20005 		movw	r5, #:lower16:engine
+ 304 0008 C0F20005 		movt	r5, #:upper16:engine
+ 305 000c 40F20004 		movw	r4, #:lower16:.LANCHOR5
+ 306 0010 2B68     		ldr	r3, [r5]
+ 307 0012 C0F20004 		movt	r4, #:upper16:.LANCHOR5
+ 308 0016 5F6A     		ldr	r7, [r3, #36]
+ 309 0018 2060     		str	r0, [r4]
+ 310 001a 002F     		cmp	r7, #0
+ 311 001c 00F0B880 		beq	.L58
+ 312 0020 40F20001 		movw	r1, #:lower16:.LC7
+ 313 0024 C0F20001 		movt	r1, #:upper16:.LC7
+ 314 0028 FFF7FEFF 		bl	printMsg
+ 315 002c 40F20006 		movw	r6, #:lower16:hasFirmwareErrorFlag
+ 316 0030 40F20000 		movw	r0, #:lower16:.LANCHOR3
+ 317 0034 C0F20000 		movt	r0, #:upper16:.LANCHOR3
+ 318 0038 C0F20006 		movt	r6, #:upper16:hasFirmwareErrorFlag
+ 319 003c FFF7FEFF 		bl	chMtxInit
+ 320 0040 2068     		ldr	r0, [r4]
+ 321 0042 FFF7FEFF 		bl	_Z24initTriggerDecoderLoggerP7Logging
+ 322 0046 FFF7FEFF 		bl	_Z15initPrimaryPinsv
+ 323 004a 3378     		ldrb	r3, [r6]	@ zero_extendqisi2
+ 324 004c 0BB1     		cbz	r3, .L59
+ 325              	.L39:
+ 326 004e BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 327              	.L59:
+ 328 0052 4FF44068 		mov	r8, #3072
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s 			page 7
+
+
+ 329 0056 C4F20208 		movt	r8, 16386
+ 330 005a FFF7FEFF 		bl	_Z18initDataStructuresv
+ 331 005e 4021     		movs	r1, #64
+ 332 0060 4046     		mov	r0, r8
+ 333 0062 2022     		movs	r2, #32
+ 334 0064 FFF7FEFF 		bl	_pal_lld_setgroupmode
+ 335 0068 2068     		ldr	r0, [r4]
+ 336 006a FFF7FEFF 		bl	_Z9initFlashP7Logging
+ 337 006e D8F81010 		ldr	r1, [r8, #16]
+ 338 0072 11F04001 		ands	r1, r1, #64
+ 339 0076 00F08480 		beq	.L60
+ 340 007a FFF7FEFF 		bl	_Z13readFromFlashv
+ 341              	.L44:
+ 342 007e 3378     		ldrb	r3, [r6]	@ zero_extendqisi2
+ 343 0080 002B     		cmp	r3, #0
+ 344 0082 E4D1     		bne	.L39
+ 345 0084 FFF7FEFF 		bl	_Z18initTriggerDecoderv
+ 346 0088 40F20000 		movw	r0, #:lower16:.LC8
+ 347 008c D7F8C013 		ldr	r1, [r7, #960]
+ 348 0090 2022     		movs	r2, #32
+ 349 0092 C0F20000 		movt	r0, #:upper16:.LC8
+ 350 0096 FFF7FEFF 		bl	_Z13mySetPadMode2PKc11brain_pin_em
+ 351 009a D7F8C003 		ldr	r0, [r7, #960]
+ 352 009e FFF7FEFF 		bl	_Z9getHwPort11brain_pin_e
+ 353 00a2 0346     		mov	r3, r0
+ 354 00a4 D7F8C003 		ldr	r0, [r7, #960]
+ 355 00a8 D3F81080 		ldr	r8, [r3, #16]
+ 356 00ac FFF7FEFF 		bl	_Z8getHwPin11brain_pin_e
+ 357 00b0 28FA00F0 		lsr	r0, r8, r0
+ 358 00b4 00F00108 		and	r8, r0, #1
+ 359 00b8 88F00108 		eor	r8, r8, #1
+ 360 00bc 4046     		mov	r0, r8
+ 361 00be FFF7FEFF 		bl	_Z13initAdcInputsb
+ 362 00c2 B8F1000F 		cmp	r8, #0
+ 363 00c6 6BD1     		bne	.L61
+ 364              	.L46:
+ 365 00c8 FFF7FEFF 		bl	_Z7initRtcv
+ 366 00cc FFF7FEFF 		bl	_Z14initOutputPinsv
+ 367 00d0 D7F83004 		ldr	r0, [r7, #1072]
+ 368 00d4 D4F80080 		ldr	r8, [r4]
+ 369 00d8 FFF7FEFF 		bl	_Z12getSpiDevice12spi_device_e
+ 370 00dc 07F58262 		add	r2, r7, #1040
+ 371 00e0 0146     		mov	r1, r0
+ 372 00e2 4046     		mov	r0, r8
+ 373 00e4 FFF7FEFF 		bl	_Z12initMax31855P7LoggingP9SPIDriverP11brain_pin_e
+ 374 00e8 FFF7FEFF 		bl	_Z7initCanv
+ 375 00ec 2068     		ldr	r0, [r4]
+ 376 00ee 2968     		ldr	r1, [r5]
+ 377 00f0 FFF7FEFF 		bl	_Z18initTriggerCentralP7LoggingP6Engine
+ 378 00f4 2068     		ldr	r0, [r4]
+ 379 00f6 FFF7FEFF 		bl	_Z22turnOnTriggerInputPinsP7Logging
+ 380 00fa 97F8F033 		ldrb	r3, [r7, #1008]	@ zero_extendqisi2
+ 381 00fe 9A07     		lsls	r2, r3, #30
+ 382 0100 51D4     		bmi	.L62
+ 383              	.L47:
+ 384 0102 5807     		lsls	r0, r3, #29
+ 385 0104 02D5     		bpl	.L48
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s 			page 8
+
+
+ 386 0106 0320     		movs	r0, #3
+ 387 0108 FFF7FEFF 		bl	_Z9turnOnSpi12spi_device_e
+ 388              	.L48:
+ 389 010c 2068     		ldr	r0, [r4]
+ 390 010e FFF7FEFF 		bl	_Z11initHip9011P7Logging
+ 391 0112 FFF7FEFF 		bl	initMmcCard
+ 392 0116 FFF7FEFF 		bl	initGps
+ 393 011a 2068     		ldr	r0, [r4]
+ 394 011c FFF7FEFF 		bl	lcd_HD44780_init
+ 395 0120 3378     		ldrb	r3, [r6]	@ zero_extendqisi2
+ 396 0122 40F20004 		movw	r4, #:lower16:.LANCHOR5
+ 397 0126 C0F20004 		movt	r4, #:upper16:.LANCHOR5
+ 398 012a 002B     		cmp	r3, #0
+ 399 012c 8FD1     		bne	.L39
+ 400 012e 40F20000 		movw	r0, #:lower16:.LC9
+ 401 0132 C0F20000 		movt	r0, #:upper16:.LC9
+ 402 0136 FFF7FEFF 		bl	lcd_HD44780_print_string
+ 403 013a 40F20000 		movw	r0, #:lower16:.LC10
+ 404 013e 40F20001 		movw	r1, #:lower16:_ZL11sendI2Cbyteii
+ 405 0142 C0F20001 		movt	r1, #:upper16:_ZL11sendI2Cbyteii
+ 406 0146 C0F20000 		movt	r0, #:upper16:.LC10
+ 407 014a FFF7FEFF 		bl	addConsoleActionII
+ 408 014e 2068     		ldr	r0, [r4]
+ 409 0150 FFF7FEFF 		bl	_Z16initVehicleSpeedP7Logging
+ 410 0154 2068     		ldr	r0, [r4]
+ 411 0156 FFF7FEFF 		bl	_Z12initJoystickP7Logging
+ 412 015a FFF7FEFF 		bl	_ZL18calcFastAdcIndexesv
+ 413 015e 40F20001 		movw	r1, #:lower16:_ZL17adcConfigListenerP6Engine
+ 414 0162 2868     		ldr	r0, [r5]
+ 415 0164 C0F20001 		movt	r1, #:upper16:_ZL17adcConfigListenerP6Engine
+ 416 0168 FFF7FEFF 		bl	_ZN6Engine24addConfigurationListenerEPFvPS_E
+ 417 016c FFF7FEFF 		bl	_Z17initWboControllerv
+ 418 0170 40F20001 		movw	r1, #:lower16:.LC11
+ 419 0174 2068     		ldr	r0, [r4]
+ 420 0176 C0F20001 		movt	r1, #:upper16:.LC11
+ 421 017a BDE8F041 		pop	{r4, r5, r6, r7, r8, lr}
+ 422 017e FFF7FEBF 		b	printMsg
+ 423              	.L60:
+ 424 0182 3960     		str	r1, [r7]
+ 425 0184 2068     		ldr	r0, [r4]
+ 426 0186 FFF7FEFF 		bl	_Z21resetConfigurationExtP7Logging13engine_type_e
+ 427 018a FFF7FEFF 		bl	_Z15writeToFlashNowv
+ 428 018e 76E7     		b	.L44
+ 429              	.L58:
+ 430 0190 40F20000 		movw	r0, #:lower16:.LC6
+ 431 0194 C0F20000 		movt	r0, #:upper16:.LC6
+ 432 0198 BDE8F041 		pop	{r4, r5, r6, r7, r8, lr}
+ 433 019c FFF7FEBF 		b	firmwareError
+ 434              	.L61:
+ 435 01a0 FFF7FEFF 		bl	_Z13initBoardTestv
+ 436 01a4 90E7     		b	.L46
+ 437              	.L62:
+ 438 01a6 0220     		movs	r0, #2
+ 439 01a8 FFF7FEFF 		bl	_Z9turnOnSpi12spi_device_e
+ 440 01ac 97F8F033 		ldrb	r3, [r7, #1008]	@ zero_extendqisi2
+ 441 01b0 A7E7     		b	.L47
+ 442              		.size	_Z12initHardwareP7Logging, .-_Z12initHardwareP7Logging
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s 			page 9
+
+
+ 443              		.global	maxNesting
+ 444 01b2 00BFAFF3 		.section	.bss._ZL18fastMapSampleIndex,"aw",%nobits
+ 444      0080AFF3 
+ 444      0080AFF3 
+ 444      0080
+ 445              		.align	2
+ 446              		.set	.LANCHOR0,. + 0
+ 447              		.type	_ZL18fastMapSampleIndex, %object
+ 448              		.size	_ZL18fastMapSampleIndex, 4
+ 449              	_ZL18fastMapSampleIndex:
+ 450 0000 00000000 		.space	4
+ 451              		.section	.bss._ZL6spiMtx,"aw",%nobits
+ 452              		.align	2
+ 453              		.set	.LANCHOR3,. + 0
+ 454              		.type	_ZL6spiMtx, %object
+ 455              		.size	_ZL6spiMtx, 16
+ 456              	_ZL6spiMtx:
+ 457 0000 00000000 		.space	16
+ 457      00000000 
+ 457      00000000 
+ 457      00000000 
+ 458              		.section	.bss._ZL14tpsSampleIndex,"aw",%nobits
+ 459              		.align	2
+ 460              		.set	.LANCHOR2,. + 0
+ 461              		.type	_ZL14tpsSampleIndex, %object
+ 462              		.size	_ZL14tpsSampleIndex, 4
+ 463              	_ZL14tpsSampleIndex:
+ 464 0000 00000000 		.space	4
+ 465              		.section	.bss.maxNesting,"aw",%nobits
+ 466              		.align	2
+ 467              		.type	maxNesting, %object
+ 468              		.size	maxNesting, 4
+ 469              	maxNesting:
+ 470 0000 00000000 		.space	4
+ 471              		.section	.data._ZL5i2cfg,"aw",%progbits
+ 472              		.align	2
+ 473              		.set	.LANCHOR4,. + 0
+ 474              		.type	_ZL5i2cfg, %object
+ 475              		.size	_ZL5i2cfg, 12
+ 476              	_ZL5i2cfg:
+ 477 0000 01       		.byte	1
+ 478 0001 000000   		.space	3
+ 479 0004 A0860100 		.word	100000
+ 480 0008 01       		.byte	1
+ 481 0009 000000   		.space	3
+ 482              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 483              		.align	2
+ 484              	.LC0:
+ 485 0000 556E6578 		.ascii	"Unexpected SPI device: %d\000"
+ 485      70656374 
+ 485      65642053 
+ 485      50492064 
+ 485      65766963 
+ 486 001a 0000     		.space	2
+ 487              	.LC1:
+ 488 001c 53746172 		.ascii	"Starting I2C module\015\012\000"
+ 488      74696E67 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s 			page 10
+
+
+ 488      20493243 
+ 488      206D6F64 
+ 488      756C650D 
+ 489 0032 0000     		.space	2
+ 490              	.LC2:
+ 491 0034 49324320 		.ascii	"I2C clock\000"
+ 491      636C6F63 
+ 491      6B00
+ 492 003e 0000     		.space	2
+ 493              	.LC3:
+ 494 0040 49324320 		.ascii	"I2C data\000"
+ 494      64617461 
+ 494      00
+ 495 0049 000000   		.space	3
+ 496              	.LC4:
+ 497 004c 6C6F7773 		.ascii	"lowstck12a\000"
+ 497      74636B31 
+ 497      326100
+ 498 0057 00       		.space	1
+ 499              	.LC5:
+ 500 0058 6C6F7773 		.ascii	"lowstck#9b\000"
+ 500      74636B23 
+ 500      396200
+ 501 0063 00       		.space	1
+ 502              	.LC6:
+ 503 0064 656E6769 		.ascii	"engineConfiguration\000"
+ 503      6E65436F 
+ 503      6E666967 
+ 503      75726174 
+ 503      696F6E00 
+ 504              	.LC7:
+ 505 0078 696E6974 		.ascii	"initHardware()\000"
+ 505      48617264 
+ 505      77617265 
+ 505      282900
+ 506 0087 00       		.space	1
+ 507              	.LC8:
+ 508 0088 626F6172 		.ascii	"board test\000"
+ 508      64207465 
+ 508      737400
+ 509 0093 00       		.space	1
+ 510              	.LC9:
+ 511 0094 38323230 		.ascii	"8220\000"
+ 511      00
+ 512 0099 000000   		.space	3
+ 513              	.LC10:
+ 514 009c 69326300 		.ascii	"i2c\000"
+ 515              	.LC11:
+ 516 00a0 696E6974 		.ascii	"initHardware() OK!\000"
+ 516      48617264 
+ 516      77617265 
+ 516      2829204F 
+ 516      4B2100
+ 517 00b3 00       		.section	.bss._ZL12sharedLogger,"aw",%nobits
+ 518              		.align	2
+ 519              		.set	.LANCHOR5,. + 0
+ 520              		.type	_ZL12sharedLogger, %object
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s 			page 11
+
+
+ 521              		.size	_ZL12sharedLogger, 4
+ 522              	_ZL12sharedLogger:
+ 523 0000 00000000 		.space	4
+ 524              		.section	.bss._ZL14hipSampleIndex,"aw",%nobits
+ 525              		.align	2
+ 526              		.set	.LANCHOR1,. + 0
+ 527              		.type	_ZL14hipSampleIndex, %object
+ 528              		.size	_ZL14hipSampleIndex, 4
+ 529              	_ZL14hipSampleIndex:
+ 530 0000 00000000 		.space	4
+ 531              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s 			page 12
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 hardware.cpp
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:17     .text._ZL11sendI2Cbyteii:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:22     .text._ZL11sendI2Cbyteii:00000000 _ZL11sendI2Cbyteii
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:29     .text._ZL18calcFastAdcIndexesv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:34     .text._ZL18calcFastAdcIndexesv:00000000 _ZL18calcFastAdcIndexesv
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:446    .bss._ZL18fastMapSampleIndex:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:526    .bss._ZL14hipSampleIndex:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:460    .bss._ZL14tpsSampleIndex:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:74     .text._ZL17adcConfigListenerP6Engine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:79     .text._ZL17adcConfigListenerP6Engine:00000000 _ZL17adcConfigListenerP6Engine
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:86     .text._Z7lockSpi12spi_device_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:92     .text._Z7lockSpi12spi_device_e:00000000 _Z7lockSpi12spi_device_e
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:453    .bss._ZL6spiMtx:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:101    .text._Z9unlockSpiv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:107    .text._Z9unlockSpiv:00000000 _Z9unlockSpiv
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:114    .text._Z12getSpiDevice12spi_device_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:120    .text._Z12getSpiDevice12spi_device_e:00000000 _Z12getSpiDevice12spi_device_e
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:484    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:152    .text._Z13initI2Cmodulev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:158    .text._Z13initI2Cmodulev:00000000 _Z13initI2Cmodulev
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:487    .rodata.str1.4:0000001c .LC1
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:473    .data._ZL5i2cfg:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:490    .rodata.str1.4:00000034 .LC2
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:493    .rodata.str1.4:00000040 .LC3
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:188    .text._Z17adc_callback_fastP9ADCDriverPtj:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:194    .text._Z17adc_callback_fastP9ADCDriverPtj:00000000 _Z17adc_callback_fastP9ADCDriverPtj
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:496    .rodata.str1.4:0000004c .LC4
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:499    .rodata.str1.4:00000058 .LC5
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:262    .text._Z14turnOnHardwareP7Logging:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:268    .text._Z14turnOnHardwareP7Logging:00000000 _Z14turnOnHardwareP7Logging
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:275    .text._Z24applyNewHardwareSettingsv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:281    .text._Z24applyNewHardwareSettingsv:00000000 _Z24applyNewHardwareSettingsv
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:293    .text._Z12initHardwareP7Logging:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:299    .text._Z12initHardwareP7Logging:00000000 _Z12initHardwareP7Logging
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:519    .bss._ZL12sharedLogger:00000000 .LANCHOR5
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:504    .rodata.str1.4:00000078 .LC7
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:507    .rodata.str1.4:00000088 .LC8
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:510    .rodata.str1.4:00000094 .LC9
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:513    .rodata.str1.4:0000009c .LC10
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:515    .rodata.str1.4:000000a0 .LC11
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:502    .rodata.str1.4:00000064 .LC6
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:469    .bss.maxNesting:00000000 maxNesting
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:445    .bss._ZL18fastMapSampleIndex:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:449    .bss._ZL18fastMapSampleIndex:00000000 _ZL18fastMapSampleIndex
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:452    .bss._ZL6spiMtx:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:456    .bss._ZL6spiMtx:00000000 _ZL6spiMtx
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:459    .bss._ZL14tpsSampleIndex:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:463    .bss._ZL14tpsSampleIndex:00000000 _ZL14tpsSampleIndex
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:466    .bss.maxNesting:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:472    .data._ZL5i2cfg:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:476    .data._ZL5i2cfg:00000000 _ZL5i2cfg
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:483    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:518    .bss._ZL12sharedLogger:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:522    .bss._ZL12sharedLogger:00000000 _ZL12sharedLogger
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:525    .bss._ZL14hipSampleIndex:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s:529    .bss._ZL14hipSampleIndex:00000000 _ZL14hipSampleIndex
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s 			page 13
+
+
+
+UNDEFINED SYMBOLS
+engineConfiguration
+fastAdc
+chMtxLock
+chMtxUnlock
+SPID3
+SPID1
+firmwareError
+SPID2
+print
+i2cInit
+I2CD1
+i2cStart
+_Z12mySetPadModePKcP12GPIO_TypeDefmm
+rlist
+getRemainingStack
+_Z20mapAveragingCallbackt
+boardConfiguration
+tpsFastAdc
+_Z14hipAdcCallbackt
+_Z22turnOnTriggerInputPinsP7Logging
+_Z24applyNewTriggerInputPinsv
+_Z17stopInjectionPinsv
+_Z16stopIgnitionPinsv
+_Z18startInjectionPinsv
+_Z17startIgnitionPinsv
+engine
+printMsg
+hasFirmwareErrorFlag
+chMtxInit
+_Z24initTriggerDecoderLoggerP7Logging
+_Z15initPrimaryPinsv
+_Z18initDataStructuresv
+_pal_lld_setgroupmode
+_Z9initFlashP7Logging
+_Z13readFromFlashv
+_Z18initTriggerDecoderv
+_Z13mySetPadMode2PKc11brain_pin_em
+_Z9getHwPort11brain_pin_e
+_Z8getHwPin11brain_pin_e
+_Z13initAdcInputsb
+_Z7initRtcv
+_Z14initOutputPinsv
+_Z12initMax31855P7LoggingP9SPIDriverP11brain_pin_e
+_Z7initCanv
+_Z18initTriggerCentralP7LoggingP6Engine
+_Z9turnOnSpi12spi_device_e
+_Z11initHip9011P7Logging
+initMmcCard
+initGps
+lcd_HD44780_init
+lcd_HD44780_print_string
+addConsoleActionII
+_Z16initVehicleSpeedP7Logging
+_Z12initJoystickP7Logging
+_ZN6Engine24addConfigurationListenerEPFvPS_E
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccOHqxpb.s 			page 14
+
+
+_Z17initWboControllerv
+_Z21resetConfigurationExtP7Logging13engine_type_e
+_Z15writeToFlashNowv
+_Z13initBoardTestv

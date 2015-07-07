@@ -1,6 +1,7 @@
 package com.rusefi.core;
 
 import com.rusefi.core.test.ResponseBufferTest;
+import com.rusefi.io.LinkDecoder;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -19,7 +20,7 @@ public class ResponseBuffer {
         this.listener = listener;
     }
 
-    public void append(String append) {
+    public void append(String append, LinkDecoder decoder) {
         pending.append(append);
 
         /**
@@ -39,7 +40,7 @@ public class ResponseBuffer {
                 int endOfLine = Math.min(cr, lf);
                 if (endOfLine > 0) {
                     String fullLine = pending.substring(0, endOfLine);
-                    listener.onResponse(fullLine);
+                    listener.onResponse(decoder.unpack(fullLine));
                 }
                 while (pending.length() > endOfLine && (pending.charAt(endOfLine) == '\r' || pending.charAt(endOfLine) == '\n'))
                     endOfLine++;
@@ -56,6 +57,6 @@ public class ResponseBuffer {
     }
 
     public interface ResponseListener {
-        void onResponse(String response);
+        void onResponse(String unpack);
     }
 }

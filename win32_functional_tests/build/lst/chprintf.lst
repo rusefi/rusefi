@@ -1,0 +1,801 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc2A6Cin.s 			page 1
+
+
+   1              		.file	"chprintf.c"
+   2              		.section	.text$long_to_string_with_divisor,"x"
+   3              		.p2align 4,,15
+   4              		.def	_long_to_string_with_divisor;	.scl	3;	.type	32;	.endef
+   5              	_long_to_string_with_divisor:
+   6              	LFB35:
+   7              		.cfi_startproc
+   8 0000 55       		pushl	%ebp
+   9              		.cfi_def_cfa_offset 8
+  10              		.cfi_offset 5, -8
+  11 0001 57       		pushl	%edi
+  12              		.cfi_def_cfa_offset 12
+  13              		.cfi_offset 7, -12
+  14 0002 89CF     		movl	%ecx, %edi
+  15 0004 56       		pushl	%esi
+  16              		.cfi_def_cfa_offset 16
+  17              		.cfi_offset 6, -16
+  18 0005 89D1     		movl	%edx, %ecx
+  19 0007 53       		pushl	%ebx
+  20              		.cfi_def_cfa_offset 20
+  21              		.cfi_offset 3, -20
+  22 0008 83EC08   		subl	$8, %esp
+  23              		.cfi_def_cfa_offset 28
+  24 000b 8B74241C 		movl	28(%esp), %esi
+  25 000f 890424   		movl	%eax, (%esp)
+  26 0012 85F6     		testl	%esi, %esi
+  27 0014 0F44F2   		cmove	%edx, %esi
+  28 0017 83C00B   		addl	$11, %eax
+  29 001a 89442404 		movl	%eax, 4(%esp)
+  30 001e 89C3     		movl	%eax, %ebx
+  31              		.p2align 4,,7
+  32              	L4:
+  33 0020 89C8     		movl	%ecx, %eax
+  34 0022 31D2     		xorl	%edx, %edx
+  35 0024 F7F7     		divl	%edi
+  36 0026 8D4A30   		leal	48(%edx), %ecx
+  37 0029 83C237   		addl	$55, %edx
+  38 002c 83F93A   		cmpl	$58, %ecx
+  39 002f 0F4DCA   		cmovge	%edx, %ecx
+  40 0032 83EB01   		subl	$1, %ebx
+  41 0035 31D2     		xorl	%edx, %edx
+  42 0037 89CD     		movl	%ecx, %ebp
+  43 0039 880B     		movb	%cl, (%ebx)
+  44 003b 89C1     		movl	%eax, %ecx
+  45 003d 89F0     		movl	%esi, %eax
+  46 003f F7F7     		divl	%edi
+  47 0041 85C0     		testl	%eax, %eax
+  48 0043 89C6     		movl	%eax, %esi
+  49 0045 75D9     		jne	L4
+  50 0047 8B442404 		movl	4(%esp), %eax
+  51 004b 8B1424   		movl	(%esp), %edx
+  52 004e 29D8     		subl	%ebx, %eax
+  53 0050 8D0C03   		leal	(%ebx,%eax), %ecx
+  54 0053 89CE     		movl	%ecx, %esi
+  55 0055 89E9     		movl	%ebp, %ecx
+  56 0057 EB0A     		jmp	L6
+  57 0059 8DB42600 		.p2align 4,,7
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc2A6Cin.s 			page 2
+
+
+  57      000000
+  58              	L11:
+  59 0060 0FB60B   		movzbl	(%ebx), %ecx
+  60              	L6:
+  61 0063 83C301   		addl	$1, %ebx
+  62 0066 880A     		movb	%cl, (%edx)
+  63 0068 83C201   		addl	$1, %edx
+  64 006b 39F3     		cmpl	%esi, %ebx
+  65 006d 75F1     		jne	L11
+  66 006f 030424   		addl	(%esp), %eax
+  67 0072 83C408   		addl	$8, %esp
+  68              		.cfi_def_cfa_offset 20
+  69 0075 5B       		popl	%ebx
+  70              		.cfi_restore 3
+  71              		.cfi_def_cfa_offset 16
+  72 0076 5E       		popl	%esi
+  73              		.cfi_restore 6
+  74              		.cfi_def_cfa_offset 12
+  75 0077 5F       		popl	%edi
+  76              		.cfi_restore 7
+  77              		.cfi_def_cfa_offset 8
+  78 0078 5D       		popl	%ebp
+  79              		.cfi_restore 5
+  80              		.cfi_def_cfa_offset 4
+  81 0079 C3       		ret
+  82              		.cfi_endproc
+  83              	LFE35:
+  84 007a 90909090 		.section	.text$ftoa,"x"
+  84      9090
+  85              		.p2align 4,,15
+  86              		.globl	_ftoa
+  87              		.def	_ftoa;	.scl	2;	.type	32;	.endef
+  88              	_ftoa:
+  89              	LFB37:
+  90              		.cfi_startproc
+  91 0000 55       		pushl	%ebp
+  92              		.cfi_def_cfa_offset 8
+  93              		.cfi_offset 5, -8
+  94 0001 57       		pushl	%edi
+  95              		.cfi_def_cfa_offset 12
+  96              		.cfi_offset 7, -12
+  97 0002 56       		pushl	%esi
+  98              		.cfi_def_cfa_offset 16
+  99              		.cfi_offset 6, -16
+ 100 0003 53       		pushl	%ebx
+ 101              		.cfi_def_cfa_offset 20
+ 102              		.cfi_offset 3, -20
+ 103 0004 83EC28   		subl	$40, %esp
+ 104              		.cfi_def_cfa_offset 60
+ 105 0007 DD442440 		fldl	64(%esp)
+ 106 000b D9EE     		fldz
+ 107 000d 8B6C243C 		movl	60(%esp), %ebp
+ 108 0011 D9C0     		fld	%st(0)
+ 109 0013 8B5C2448 		movl	72(%esp), %ebx
+ 110 0017 DFEA     		fucomip	%st(2), %st
+ 111 0019 761A     		jbe	L25
+ 112 001b D9C9     		fxch	%st(1)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc2A6Cin.s 			page 3
+
+
+ 113 001d EB03     		jmp	L20
+ 114 001f 90       		.p2align 4,,7
+ 115              	L26:
+ 116 0020 D9C9     		fxch	%st(1)
+ 117              	L20:
+ 118 0022 D9E0     		fchs
+ 119 0024 D9C9     		fxch	%st(1)
+ 120 0026 C645002D 		movb	$45, 0(%ebp)
+ 121 002a 83C501   		addl	$1, %ebp
+ 122 002d DBE9     		fucomi	%st(1), %st
+ 123 002f 77EF     		ja	L26
+ 124 0031 DDD8     		fstp	%st(0)
+ 125 0033 EB02     		jmp	L13
+ 126              	L25:
+ 127 0035 DDD8     		fstp	%st(0)
+ 128              		.p2align 4,,7
+ 129              	L13:
+ 130              	/APP
+ 131              	 # 351 "/usr/i686-pc-mingw32/sys-root/mingw/include/math.h" 1
+ 132 0037 D9E59BDF 		fxam;fstsw %ax
+ 132      E0
+ 133              	 # 0 "" 2
+ 134              	/NO_APP
+ 135 003c 66250045 		andw	$17664, %ax
+ 136 0040 663D0001 		cmpw	$256, %ax
+ 137 0044 0F84B900 		je	L24
+ 137      0000
+ 138 004a 85DB     		testl	%ebx, %ebx
+ 139 004c 0F84A200 		je	L19
+ 139      0000
+ 140 0052 BECDCCCC 		movl	$-858993459, %esi
+ 140      CC
+ 141 0057 89D8     		movl	%ebx, %eax
+ 142 0059 F7E6     		mull	%esi
+ 143 005b 89D6     		movl	%edx, %esi
+ 144 005d C1EE03   		shrl	$3, %esi
+ 145              	L18:
+ 146 0060 D97C2422 		fnstcw	34(%esp)
+ 147 0064 B90A0000 		movl	$10, %ecx
+ 147      00
+ 148 0069 C7042400 		movl	$0, (%esp)
+ 148      000000
+ 149 0070 0FB74424 		movzwl	34(%esp), %eax
+ 149      22
+ 150 0075 B40C     		movb	$12, %ah
+ 151 0077 66894424 		movw	%ax, 32(%esp)
+ 151      20
+ 152 007c 89E8     		movl	%ebp, %eax
+ 153 007e D96C2420 		fldcw	32(%esp)
+ 154 0082 DB54241C 		fistl	28(%esp)
+ 155 0086 D96C2422 		fldcw	34(%esp)
+ 156 008a 8B7C241C 		movl	28(%esp), %edi
+ 157 008e DD5C2404 		fstpl	4(%esp)
+ 158 0092 89FA     		movl	%edi, %edx
+ 159 0094 E8000000 		call	_long_to_string_with_divisor
+ 159      00
+ 160 0099 89D9     		movl	%ebx, %ecx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc2A6Cin.s 			page 4
+
+
+ 161 009b 31DB     		xorl	%ebx, %ebx
+ 162 009d C6002E   		movb	$46, (%eax)
+ 163 00a0 83C001   		addl	$1, %eax
+ 164 00a3 897C241C 		movl	%edi, 28(%esp)
+ 165 00a7 DB44241C 		fildl	28(%esp)
+ 166 00ab DD442404 		fldl	4(%esp)
+ 167 00af D97C2422 		fnstcw	34(%esp)
+ 168 00b3 DEE1     		fsubp	%st, %st(1)
+ 169 00b5 894C2414 		movl	%ecx, 20(%esp)
+ 170 00b9 B90A0000 		movl	$10, %ecx
+ 170      00
+ 171 00be 895C2418 		movl	%ebx, 24(%esp)
+ 172 00c2 DF6C2414 		fildq	20(%esp)
+ 173 00c6 0FB75424 		movzwl	34(%esp), %edx
+ 173      22
+ 174 00cb DEC9     		fmulp	%st, %st(1)
+ 175 00cd 8974243C 		movl	%esi, 60(%esp)
+ 176 00d1 B60C     		movb	$12, %dh
+ 177 00d3 66895424 		movw	%dx, 32(%esp)
+ 177      20
+ 178 00d8 D96C2420 		fldcw	32(%esp)
+ 179 00dc DB5C241C 		fistpl	28(%esp)
+ 180 00e0 D96C2422 		fldcw	34(%esp)
+ 181 00e4 8B54241C 		movl	28(%esp), %edx
+ 182 00e8 83C428   		addl	$40, %esp
+ 183              		.cfi_remember_state
+ 184              		.cfi_def_cfa_offset 20
+ 185 00eb 5B       		popl	%ebx
+ 186              		.cfi_restore 3
+ 187              		.cfi_def_cfa_offset 16
+ 188 00ec 5E       		popl	%esi
+ 189              		.cfi_restore 6
+ 190              		.cfi_def_cfa_offset 12
+ 191 00ed 5F       		popl	%edi
+ 192              		.cfi_restore 7
+ 193              		.cfi_def_cfa_offset 8
+ 194 00ee 5D       		popl	%ebp
+ 195              		.cfi_restore 5
+ 196              		.cfi_def_cfa_offset 4
+ 197 00ef E9000000 		jmp	_long_to_string_with_divisor
+ 197      00
+ 198              		.p2align 4,,7
+ 199              	L19:
+ 200              		.cfi_restore_state
+ 201 00f4 BE0A0000 		movl	$10, %esi
+ 201      00
+ 202 00f9 BB640000 		movl	$100, %ebx
+ 202      00
+ 203 00fe E95DFFFF 		jmp	L18
+ 203      FF
+ 204              		.p2align 4,,7
+ 205              	L24:
+ 206 0103 DDD8     		fstp	%st(0)
+ 207 0105 C645004E 		movb	$78, 0(%ebp)
+ 208 0109 8D4503   		leal	3(%ebp), %eax
+ 209 010c C6450161 		movb	$97, 1(%ebp)
+ 210 0110 C645024E 		movb	$78, 2(%ebp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc2A6Cin.s 			page 5
+
+
+ 211 0114 83C428   		addl	$40, %esp
+ 212              		.cfi_def_cfa_offset 20
+ 213 0117 5B       		popl	%ebx
+ 214              		.cfi_restore 3
+ 215              		.cfi_def_cfa_offset 16
+ 216 0118 5E       		popl	%esi
+ 217              		.cfi_restore 6
+ 218              		.cfi_def_cfa_offset 12
+ 219 0119 5F       		popl	%edi
+ 220              		.cfi_restore 7
+ 221              		.cfi_def_cfa_offset 8
+ 222 011a 5D       		popl	%ebp
+ 223              		.cfi_restore 5
+ 224              		.cfi_def_cfa_offset 4
+ 225 011b C3       		ret
+ 226              		.cfi_endproc
+ 227              	LFE37:
+ 228 011c 90909090 		.section .rdata,"dr"
+ 229              	LC2:
+ 230 0000 286E756C 		.ascii "(null)\0"
+ 230      6C2900
+ 231              	LC3:
+ 232 0007 6C6F7773 		.ascii "lowstck#1c\0"
+ 232      74636B23 
+ 232      316300
+ 233              		.section	.text$chvprintf,"x"
+ 234              		.p2align 4,,15
+ 235              		.globl	_chvprintf
+ 236              		.def	_chvprintf;	.scl	2;	.type	32;	.endef
+ 237              	_chvprintf:
+ 238              	LFB38:
+ 239              		.cfi_startproc
+ 240 0000 55       		pushl	%ebp
+ 241              		.cfi_def_cfa_offset 8
+ 242              		.cfi_offset 5, -8
+ 243 0001 57       		pushl	%edi
+ 244              		.cfi_def_cfa_offset 12
+ 245              		.cfi_offset 7, -12
+ 246 0002 56       		pushl	%esi
+ 247              		.cfi_def_cfa_offset 16
+ 248              		.cfi_offset 6, -16
+ 249 0003 53       		pushl	%ebx
+ 250              		.cfi_def_cfa_offset 20
+ 251              		.cfi_offset 3, -20
+ 252 0004 83EC6C   		subl	$108, %esp
+ 253              		.cfi_def_cfa_offset 128
+ 254 0007 A1180000 		movl	_rlist+24, %eax
+ 254      00
+ 255 000c 8BAC2480 		movl	128(%esp), %ebp
+ 255      000000
+ 256 0013 8BBC2484 		movl	132(%esp), %edi
+ 256      000000
+ 257 001a 8BB42488 		movl	136(%esp), %esi
+ 257      000000
+ 258 0021 890424   		movl	%eax, (%esp)
+ 259 0024 E8000000 		call	_getRemainingStack
+ 259      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc2A6Cin.s 			page 6
+
+
+ 260 0029 83F840   		cmpl	$64, %eax
+ 261 002c 0F8E4803 		jle	L109
+ 261      0000
+ 262 0032 8D442449 		leal	73(%esp), %eax
+ 263 0036 8D54244A 		leal	74(%esp), %edx
+ 264 003a 89442428 		movl	%eax, 40(%esp)
+ 265 003e 89542424 		movl	%edx, 36(%esp)
+ 266              		.p2align 4,,7
+ 267              	L101:
+ 268 0042 0FB607   		movzbl	(%edi), %eax
+ 269 0045 8D5F01   		leal	1(%edi), %ebx
+ 270 0048 84C0     		testb	%al, %al
+ 271 004a 741D     		je	L27
+ 272              	L110:
+ 273 004c 3C25     		cmpb	$37, %al
+ 274 004e 7421     		je	L31
+ 275 0050 8B5500   		movl	0(%ebp), %edx
+ 276 0053 89DF     		movl	%ebx, %edi
+ 277 0055 89442404 		movl	%eax, 4(%esp)
+ 278 0059 8D5F01   		leal	1(%edi), %ebx
+ 279 005c 892C24   		movl	%ebp, (%esp)
+ 280 005f FF5208   		call	*8(%edx)
+ 281 0062 0FB607   		movzbl	(%edi), %eax
+ 282 0065 84C0     		testb	%al, %al
+ 283 0067 75E3     		jne	L110
+ 284              	L27:
+ 285 0069 83C46C   		addl	$108, %esp
+ 286              		.cfi_remember_state
+ 287              		.cfi_def_cfa_offset 20
+ 288 006c 5B       		popl	%ebx
+ 289              		.cfi_restore 3
+ 290              		.cfi_def_cfa_offset 16
+ 291 006d 5E       		popl	%esi
+ 292              		.cfi_restore 6
+ 293              		.cfi_def_cfa_offset 12
+ 294 006e 5F       		popl	%edi
+ 295              		.cfi_restore 7
+ 296              		.cfi_def_cfa_offset 8
+ 297 006f 5D       		popl	%ebp
+ 298              		.cfi_restore 5
+ 299              		.cfi_def_cfa_offset 4
+ 300 0070 C3       		ret
+ 301              		.p2align 4,,7
+ 302              	L31:
+ 303              		.cfi_restore_state
+ 304 0071 0FB64701 		movzbl	1(%edi), %eax
+ 305 0075 C6442430 		movb	$0, 48(%esp)
+ 305      00
+ 306 007a 3C2D     		cmpb	$45, %al
+ 307 007c 0F848E01 		je	L111
+ 307      0000
+ 308              	L33:
+ 309 0082 3C30     		cmpb	$48, %al
+ 310 0084 7409     		je	L83
+ 311 0086 3C2E     		cmpb	$46, %al
+ 312 0088 C6442437 		movb	$32, 55(%esp)
+ 312      20
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc2A6Cin.s 			page 7
+
+
+ 313 008d 750C     		jne	L34
+ 314              	L83:
+ 315 008f 0FB64301 		movzbl	1(%ebx), %eax
+ 316 0093 83C301   		addl	$1, %ebx
+ 317 0096 C6442437 		movb	$48, 55(%esp)
+ 317      30
+ 318              	L34:
+ 319 009b 89DF     		movl	%ebx, %edi
+ 320 009d 31DB     		xorl	%ebx, %ebx
+ 321 009f EB12     		jmp	L39
+ 322              		.p2align 4,,7
+ 323              	L112:
+ 324 00a1 0FB616   		movzbl	(%esi), %edx
+ 325 00a4 83C604   		addl	$4, %esi
+ 326              	L37:
+ 327 00a7 8D049B   		leal	(%ebx,%ebx,4), %eax
+ 328 00aa 0FBED2   		movsbl	%dl, %edx
+ 329 00ad 8D1C42   		leal	(%edx,%eax,2), %ebx
+ 330 00b0 0FB607   		movzbl	(%edi), %eax
+ 331              	L39:
+ 332 00b3 8D50D0   		leal	-48(%eax), %edx
+ 333 00b6 83C701   		addl	$1, %edi
+ 334 00b9 80FA09   		cmpb	$9, %dl
+ 335 00bc 76E9     		jbe	L37
+ 336 00be 3C2A     		cmpb	$42, %al
+ 337 00c0 74DF     		je	L112
+ 338 00c2 31D2     		xorl	%edx, %edx
+ 339 00c4 3C2E     		cmpb	$46, %al
+ 340 00c6 0F840301 		je	L43
+ 340      0000
+ 341 00cc 89C1     		movl	%eax, %ecx
+ 342 00ce 83E1DF   		andl	$-33, %ecx
+ 343 00d1 80F94C   		cmpb	$76, %cl
+ 344 00d4 0F851501 		jne	L44
+ 344      0000
+ 345              	L116:
+ 346 00da 0FB60F   		movzbl	(%edi), %ecx
+ 347 00dd C644242C 		movb	$1, 44(%esp)
+ 347      01
+ 348 00e2 84C9     		testb	%cl, %cl
+ 349 00e4 7405     		je	L45
+ 350 00e6 83C701   		addl	$1, %edi
+ 351 00e9 89C8     		movl	%ecx, %eax
+ 352              	L45:
+ 353 00eb 8D48BC   		leal	-68(%eax), %ecx
+ 354 00ee 80F934   		cmpb	$52, %cl
+ 355 00f1 0F860F01 		jbe	L113
+ 355      0000
+ 356              	L46:
+ 357 00f7 8B542424 		movl	36(%esp), %edx
+ 358 00fb 8D4C2449 		leal	73(%esp), %ecx
+ 359 00ff 2B542428 		subl	40(%esp), %edx
+ 360 0103 88442449 		movb	%al, 73(%esp)
+ 361 0107 894C242C 		movl	%ecx, 44(%esp)
+ 362 010b 908D7426 		.p2align 4,,7
+ 362      00
+ 363              	L55:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc2A6Cin.s 			page 8
+
+
+ 364 0110 31C9     		xorl	%ecx, %ecx
+ 365 0112 29D3     		subl	%edx, %ebx
+ 366 0114 0F49CB   		cmovns	%ebx, %ecx
+ 367 0117 807C2430 		cmpb	$0, 48(%esp)
+ 367      00
+ 368 011c 7545     		jne	L67
+ 369 011e F7D9     		negl	%ecx
+ 370 0120 7441     		je	L67
+ 371 0122 8B44242C 		movl	44(%esp), %eax
+ 372 0126 80382D   		cmpb	$45, (%eax)
+ 373 0129 0F841002 		je	L114
+ 373      0000
+ 374              	L68:
+ 375 012f 0FBE5C24 		movsbl	55(%esp), %ebx
+ 375      37
+ 376 0134 897C2438 		movl	%edi, 56(%esp)
+ 377 0138 89EF     		movl	%ebp, %edi
+ 378 013a 89F5     		movl	%esi, %ebp
+ 379 013c 89542430 		movl	%edx, 48(%esp)
+ 380 0140 89DE     		movl	%ebx, %esi
+ 381 0142 89CB     		movl	%ecx, %ebx
+ 382              		.p2align 4,,7
+ 383              	L69:
+ 384 0144 8B07     		movl	(%edi), %eax
+ 385 0146 89742404 		movl	%esi, 4(%esp)
+ 386 014a 893C24   		movl	%edi, (%esp)
+ 387 014d FF5008   		call	*8(%eax)
+ 388 0150 83C301   		addl	$1, %ebx
+ 389 0153 75EF     		jne	L69
+ 390 0155 89EE     		movl	%ebp, %esi
+ 391 0157 8B542430 		movl	48(%esp), %edx
+ 392 015b 89FD     		movl	%edi, %ebp
+ 393 015d 8B7C2438 		movl	56(%esp), %edi
+ 394 0161 89D9     		movl	%ebx, %ecx
+ 395              	L67:
+ 396 0163 85D2     		testl	%edx, %edx
+ 397 0165 7E1C     		jle	L70
+ 398 0167 8B4500   		movl	0(%ebp), %eax
+ 399 016a 89542408 		movl	%edx, 8(%esp)
+ 400 016e 8B54242C 		movl	44(%esp), %edx
+ 401 0172 894C241C 		movl	%ecx, 28(%esp)
+ 402 0176 892C24   		movl	%ebp, (%esp)
+ 403 0179 89542404 		movl	%edx, 4(%esp)
+ 404 017d FF10     		call	*(%eax)
+ 405 017f 8B4C241C 		movl	28(%esp), %ecx
+ 406              	L70:
+ 407 0183 85C9     		testl	%ecx, %ecx
+ 408 0185 0F84B7FE 		je	L101
+ 408      FFFF
+ 409 018b 0FBE5C24 		movsbl	55(%esp), %ebx
+ 409      37
+ 410 0190 897C242C 		movl	%edi, 44(%esp)
+ 411 0194 89EF     		movl	%ebp, %edi
+ 412 0196 89F5     		movl	%esi, %ebp
+ 413 0198 89DE     		movl	%ebx, %esi
+ 414 019a 89CB     		movl	%ecx, %ebx
+ 415 019c 8D742600 		.p2align 4,,7
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc2A6Cin.s 			page 9
+
+
+ 416              	L71:
+ 417 01a0 8B07     		movl	(%edi), %eax
+ 418 01a2 89742404 		movl	%esi, 4(%esp)
+ 419 01a6 893C24   		movl	%edi, (%esp)
+ 420 01a9 FF5008   		call	*8(%eax)
+ 421 01ac 83EB01   		subl	$1, %ebx
+ 422 01af 75EF     		jne	L71
+ 423 01b1 89EE     		movl	%ebp, %esi
+ 424 01b3 89FD     		movl	%edi, %ebp
+ 425 01b5 8B7C242C 		movl	44(%esp), %edi
+ 426 01b9 E984FEFF 		jmp	L101
+ 426      FF
+ 427 01be 6690     		.p2align 4,,7
+ 428              	L115:
+ 429 01c0 0FB60E   		movzbl	(%esi), %ecx
+ 430 01c3 83C604   		addl	$4, %esi
+ 431              	L42:
+ 432 01c6 8D0492   		leal	(%edx,%edx,4), %eax
+ 433 01c9 0FBEC9   		movsbl	%cl, %ecx
+ 434 01cc 8D1441   		leal	(%ecx,%eax,2), %edx
+ 435              	L43:
+ 436 01cf 0FB607   		movzbl	(%edi), %eax
+ 437 01d2 83C701   		addl	$1, %edi
+ 438 01d5 8D48D0   		leal	-48(%eax), %ecx
+ 439 01d8 80F909   		cmpb	$9, %cl
+ 440 01db 76E9     		jbe	L42
+ 441 01dd 3C2A     		cmpb	$42, %al
+ 442 01df 74DF     		je	L115
+ 443 01e1 89C1     		movl	%eax, %ecx
+ 444 01e3 83E1DF   		andl	$-33, %ecx
+ 445 01e6 80F94C   		cmpb	$76, %cl
+ 446 01e9 0F84EBFE 		je	L116
+ 446      FFFF
+ 447              	L44:
+ 448 01ef 8D48BF   		leal	-65(%eax), %ecx
+ 449 01f2 80F919   		cmpb	$25, %cl
+ 450 01f5 8D48BC   		leal	-68(%eax), %ecx
+ 451 01f8 0F964424 		setbe	44(%esp)
+ 451      2C
+ 452 01fd 80F934   		cmpb	$52, %cl
+ 453 0200 0F87F1FE 		ja	L46
+ 453      FFFF
+ 454              	L113:
+ 455 0206 0FB6C9   		movzbl	%cl, %ecx
+ 456 0209 FF248D14 		jmp	*L54(,%ecx,4)
+ 456      000000
+ 457              		.section .rdata,"dr"
+ 458 0012 0000     		.align 4
+ 459              	L54:
+ 460 0014 EF020000 		.long	L47
+ 461 0018 F7000000 		.long	L46
+ 462 001c F7000000 		.long	L46
+ 463 0020 F7000000 		.long	L46
+ 464 0024 F7000000 		.long	L46
+ 465 0028 EF020000 		.long	L47
+ 466 002c F7000000 		.long	L46
+ 467 0030 F7000000 		.long	L46
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc2A6Cin.s 			page 10
+
+
+ 468 0034 F7000000 		.long	L46
+ 469 0038 F7000000 		.long	L46
+ 470 003c F7000000 		.long	L46
+ 471 0040 C2020000 		.long	L48
+ 472 0044 F7000000 		.long	L46
+ 473 0048 F7000000 		.long	L46
+ 474 004c F7000000 		.long	L46
+ 475 0050 F7000000 		.long	L46
+ 476 0054 F7000000 		.long	L46
+ 477 0058 15030000 		.long	L76
+ 478 005c F7000000 		.long	L46
+ 479 0060 F7000000 		.long	L46
+ 480 0064 0E030000 		.long	L50
+ 481 0068 F7000000 		.long	L46
+ 482 006c F7000000 		.long	L46
+ 483 0070 F7000000 		.long	L46
+ 484 0074 F7000000 		.long	L46
+ 485 0078 F7000000 		.long	L46
+ 486 007c F7000000 		.long	L46
+ 487 0080 F7000000 		.long	L46
+ 488 0084 F7000000 		.long	L46
+ 489 0088 F7000000 		.long	L46
+ 490 008c F7000000 		.long	L46
+ 491 0090 1C030000 		.long	L51
+ 492 0094 EF020000 		.long	L47
+ 493 0098 F7000000 		.long	L46
+ 494 009c 7C020000 		.long	L52
+ 495 00a0 F7000000 		.long	L46
+ 496 00a4 F7000000 		.long	L46
+ 497 00a8 EF020000 		.long	L47
+ 498 00ac F7000000 		.long	L46
+ 499 00b0 F7000000 		.long	L46
+ 500 00b4 F7000000 		.long	L46
+ 501 00b8 F7000000 		.long	L46
+ 502 00bc F7000000 		.long	L46
+ 503 00c0 C2020000 		.long	L48
+ 504 00c4 F7000000 		.long	L46
+ 505 00c8 F7000000 		.long	L46
+ 506 00cc F7000000 		.long	L46
+ 507 00d0 21020000 		.long	L53
+ 508 00d4 F7000000 		.long	L46
+ 509 00d8 15030000 		.long	L76
+ 510 00dc F7000000 		.long	L46
+ 511 00e0 F7000000 		.long	L46
+ 512 00e4 0E030000 		.long	L50
+ 513              		.section	.text$chvprintf,"x"
+ 514              		.p2align 4,,7
+ 515              	L111:
+ 516 0210 8D5F02   		leal	2(%edi), %ebx
+ 517 0213 0FB64702 		movzbl	2(%edi), %eax
+ 518 0217 C6442430 		movb	$1, 48(%esp)
+ 518      01
+ 519 021c E961FEFF 		jmp	L33
+ 519      FF
+ 520              	L53:
+ 521 0221 8D4604   		leal	4(%esi), %eax
+ 522 0224 8B36     		movl	(%esi), %esi
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc2A6Cin.s 			page 11
+
+
+ 523 0226 B9000000 		movl	$LC2, %ecx
+ 523      00
+ 524 022b 85F6     		testl	%esi, %esi
+ 525 022d 0F45CE   		cmovne	%esi, %ecx
+ 526 0230 85D2     		testl	%edx, %edx
+ 527 0232 894C242C 		movl	%ecx, 44(%esp)
+ 528 0236 B9FF7F00 		movl	$32767, %ecx
+ 528      00
+ 529 023b 0F44D1   		cmove	%ecx, %edx
+ 530 023e 8B4C242C 		movl	44(%esp), %ecx
+ 531 0242 803900   		cmpb	$0, (%ecx)
+ 532 0245 0F846301 		je	L80
+ 532      0000
+ 533 024b 85D2     		testl	%edx, %edx
+ 534 024d 0F8E5B01 		jle	L80
+ 534      0000
+ 535 0253 01D1     		addl	%edx, %ecx
+ 536 0255 8B54242C 		movl	44(%esp), %edx
+ 537 0259 EB09     		jmp	L59
+ 538 025b 908D7426 		.p2align 4,,7
+ 538      00
+ 539              	L58:
+ 540 0260 39CA     		cmpl	%ecx, %edx
+ 541 0262 7408     		je	L106
+ 542              	L59:
+ 543 0264 83C201   		addl	$1, %edx
+ 544 0267 803A00   		cmpb	$0, (%edx)
+ 545 026a 75F4     		jne	L58
+ 546              	L106:
+ 547 026c 2B54242C 		subl	44(%esp), %edx
+ 548 0270 89C6     		movl	%eax, %esi
+ 549 0272 C6442437 		movb	$32, 55(%esp)
+ 549      20
+ 550 0277 E994FEFF 		jmp	L55
+ 550      FF
+ 551              	L52:
+ 552 027c DD06     		fldl	(%esi)
+ 553 027e 8D4E08   		leal	8(%esi), %ecx
+ 554 0281 D95C243C 		fstps	60(%esp)
+ 555 0285 D944243C 		flds	60(%esp)
+ 556 0289 8D442449 		leal	73(%esp), %eax
+ 557 028d D9EE     		fldz
+ 558 028f DFE9     		fucomip	%st(1), %st
+ 559 0291 894C242C 		movl	%ecx, 44(%esp)
+ 560 0295 0F870301 		ja	L117
+ 560      0000
+ 561              	L63:
+ 562 029b DD5C2404 		fstpl	4(%esp)
+ 563 029f 8954240C 		movl	%edx, 12(%esp)
+ 564 02a3 890424   		movl	%eax, (%esp)
+ 565 02a6 E8000000 		call	_ftoa
+ 565      00
+ 566 02ab 8D4C2449 		leal	73(%esp), %ecx
+ 567 02af 8B74242C 		movl	44(%esp), %esi
+ 568 02b3 894C242C 		movl	%ecx, 44(%esp)
+ 569 02b7 89C2     		movl	%eax, %edx
+ 570 02b9 2B542428 		subl	40(%esp), %edx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc2A6Cin.s 			page 12
+
+
+ 571 02bd E94EFEFF 		jmp	L55
+ 571      FF
+ 572              	L48:
+ 573 02c2 B9080000 		movl	$8, %ecx
+ 573      00
+ 574              	L49:
+ 575 02c7 8B16     		movl	(%esi), %edx
+ 576 02c9 8D442449 		leal	73(%esp), %eax
+ 577 02cd 83C604   		addl	$4, %esi
+ 578 02d0 C7042400 		movl	$0, (%esp)
+ 578      000000
+ 579              	L107:
+ 580 02d7 E8000000 		call	_long_to_string_with_divisor
+ 580      00
+ 581 02dc 8D4C2449 		leal	73(%esp), %ecx
+ 582 02e0 894C242C 		movl	%ecx, 44(%esp)
+ 583 02e4 89C2     		movl	%eax, %edx
+ 584 02e6 2B542428 		subl	40(%esp), %edx
+ 585 02ea E921FEFF 		jmp	L55
+ 585      FF
+ 586              	L47:
+ 587 02ef 8B16     		movl	(%esi), %edx
+ 588 02f1 83C604   		addl	$4, %esi
+ 589 02f4 8D442449 		leal	73(%esp), %eax
+ 590 02f8 85D2     		testl	%edx, %edx
+ 591 02fa 0F888E00 		js	L118
+ 591      0000
+ 592              	L62:
+ 593 0300 C7042400 		movl	$0, (%esp)
+ 593      000000
+ 594 0307 B90A0000 		movl	$10, %ecx
+ 594      00
+ 595 030c EBC9     		jmp	L107
+ 596              	L50:
+ 597 030e B9100000 		movl	$16, %ecx
+ 597      00
+ 598 0313 EBB2     		jmp	L49
+ 599              	L76:
+ 600 0315 B90A0000 		movl	$10, %ecx
+ 600      00
+ 601 031a EBAB     		jmp	L49
+ 602              	L51:
+ 603 031c 8B06     		movl	(%esi), %eax
+ 604 031e 8D4C2449 		leal	73(%esp), %ecx
+ 605 0322 83C604   		addl	$4, %esi
+ 606 0325 8B542424 		movl	36(%esp), %edx
+ 607 0329 2B542428 		subl	40(%esp), %edx
+ 608 032d C6442437 		movb	$32, 55(%esp)
+ 608      20
+ 609 0332 88442449 		movb	%al, 73(%esp)
+ 610 0336 894C242C 		movl	%ecx, 44(%esp)
+ 611 033a E9D1FDFF 		jmp	L55
+ 611      FF
+ 612              	L114:
+ 613 033f 807C2437 		cmpb	$48, 55(%esp)
+ 613      30
+ 614 0344 0F85E5FD 		jne	L68
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc2A6Cin.s 			page 13
+
+
+ 614      FFFF
+ 615 034a 83C001   		addl	$1, %eax
+ 616 034d 8944242C 		movl	%eax, 44(%esp)
+ 617 0351 8B4500   		movl	0(%ebp), %eax
+ 618 0354 89542420 		movl	%edx, 32(%esp)
+ 619 0358 894C241C 		movl	%ecx, 28(%esp)
+ 620 035c C7442404 		movl	$45, 4(%esp)
+ 620      2D000000 
+ 621 0364 892C24   		movl	%ebp, (%esp)
+ 622 0367 FF5008   		call	*8(%eax)
+ 623 036a 8B542420 		movl	32(%esp), %edx
+ 624 036e 8B4C241C 		movl	28(%esp), %ecx
+ 625 0372 83EA01   		subl	$1, %edx
+ 626 0375 E9B5FDFF 		jmp	L68
+ 626      FF
+ 627              	L109:
+ 628 037a C7042407 		movl	$LC3, (%esp)
+ 628      000000
+ 629 0381 E8000000 		call	_firmwareError
+ 629      00
+ 630 0386 83C46C   		addl	$108, %esp
+ 631              		.cfi_remember_state
+ 632              		.cfi_def_cfa_offset 20
+ 633 0389 5B       		popl	%ebx
+ 634              		.cfi_restore 3
+ 635              		.cfi_def_cfa_offset 16
+ 636 038a 5E       		popl	%esi
+ 637              		.cfi_restore 6
+ 638              		.cfi_def_cfa_offset 12
+ 639 038b 5F       		popl	%edi
+ 640              		.cfi_restore 7
+ 641              		.cfi_def_cfa_offset 8
+ 642 038c 5D       		popl	%ebp
+ 643              		.cfi_restore 5
+ 644              		.cfi_def_cfa_offset 4
+ 645 038d C3       		ret
+ 646              	L118:
+ 647              		.cfi_restore_state
+ 648 038e C6442449 		movb	$45, 73(%esp)
+ 648      2D
+ 649 0393 F7DA     		negl	%edx
+ 650 0395 8D44244A 		leal	74(%esp), %eax
+ 651 0399 E962FFFF 		jmp	L62
+ 651      FF
+ 652              	L117:
+ 653 039e C6442449 		movb	$45, 73(%esp)
+ 653      2D
+ 654 03a3 D9E0     		fchs
+ 655 03a5 8D44244A 		leal	74(%esp), %eax
+ 656 03a9 E9EDFEFF 		jmp	L63
+ 656      FF
+ 657              	L80:
+ 658 03ae 89C6     		movl	%eax, %esi
+ 659 03b0 31D2     		xorl	%edx, %edx
+ 660 03b2 C6442437 		movb	$32, 55(%esp)
+ 660      20
+ 661 03b7 E954FDFF 		jmp	L55
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc2A6Cin.s 			page 14
+
+
+ 661      FF
+ 662              		.cfi_endproc
+ 663              	LFE38:
+ 664              		.def	_getRemainingStack;	.scl	2;	.type	32;	.endef
+ 665 03bc 90909090 		.def	_firmwareError;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc2A6Cin.s 			page 15
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 chprintf.c
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc2A6Cin.s:5      .text$long_to_string_with_divisor:00000000 _long_to_string_with_divisor
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc2A6Cin.s:88     .text$ftoa:00000000 _ftoa
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc2A6Cin.s:237    .text$chvprintf:00000000 _chvprintf
+
+UNDEFINED SYMBOLS
+_rlist
+_getRemainingStack
+_firmwareError

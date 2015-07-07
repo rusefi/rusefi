@@ -1,0 +1,1167 @@
+###############################################################################
+#                                                                             #
+# IAR ANSI C/C++ Compiler V6.50.3.4676/W32 for ARM      30/Jun/2015  23:08:49 #
+# Copyright 1999-2013 IAR Systems AB.                                         #
+#                                                                             #
+#    Cpu mode        =  thumb                                                 #
+#    Endian          =  little                                                #
+#    Source file     =  F:\stuff\rusefi_sourceforge\firmware\development\wave #
+#                       _chart.cpp                                            #
+#    Command line    =  F:\stuff\rusefi_sourceforge\firmware\development\wave #
+#                       _chart.cpp -lCN F:\stuff\rusefi_sourceforge\firmware\ #
+#                       iar\Debug\List\ -lA F:\stuff\rusefi_sourceforge\firmw #
+#                       are\iar\Debug\List\ -o F:\stuff\rusefi_sourceforge\fi #
+#                       rmware\iar\Debug\Obj\ --no_cse --no_unroll            #
+#                       --no_inline --no_code_motion --no_tbaa                #
+#                       --no_clustering --no_scheduling --debug               #
+#                       --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp     #
+#                       --dlib_config "C:\Program Files (x86)\IAR             #
+#                       Systems\Embedded Workbench                            #
+#                       6.5\arm\INC\c\DLib_Config_Normal.h"                   #
+#                       --misrac2004=1.2-1.4,2.3,3.4,4.2,6.5-7,8.2-8.3,9.3,   #
+#                       12.3,13.6-13,15.5,17.3,19.17,20.7-20.9,20.11 -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\ -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\kernel\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\ports\common\ARMCMx\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\common\ARMCMx\CMSIS\include\ -I               #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\IAR\ARMCMx\ -I F:\stuff\rusefi_sourceforge\fi #
+#                       rmware\iar\..\chibios\os\ports\IAR\ARMCMx\STM32F4xx\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\chibio #
+#                       s\os\hal\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\hal\platforms\STM32\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\DMAv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\GPIOv2\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\I2Cv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\SPIv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\TIMv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\RTCv2\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\USARTv1\ -I                     #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\OTGv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32F4xx\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\various\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\chibios\os\various\devices_lib\accel\ -I         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\b #
+#                       oards\ST_STM32F4_DISCOVERY\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\co #
+#                       ntrollers\algo\ -I F:\stuff\rusefi_sourceforge\firmwa #
+#                       re\iar\..\controllers\core\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\system\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\controllers\sensors\ -I                          #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\math\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\controllers\trigger\ -I                            #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\config #
+#                       \ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\conf #
+#                       ig\engines\ -I F:\stuff\rusefi_sourceforge\firmware\i #
+#                       ar\..\config\stm32f4ems\ -I                           #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\b #
+#                       inary\ -I F:\stuff\rusefi_sourceforge\firmware\iar\.. #
+#                       \console_util\ -I F:\stuff\rusefi_sourceforge\firmwar #
+#                       e\iar\..\development\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\development\test\ -I                  #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\developme #
+#                       nt\hw_layer\ -I F:\stuff\rusefi_sourceforge\firmware\ #
+#                       iar\..\hw_layer\algo\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\hw_layer\lcd\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                       stm32f4\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\hw_layer\serial_over_usb\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                        -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext_al #
+#                       go\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\de #
+#                       velopment\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\development\hw_layer\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\util\     #
+#                       -On --eec++                                           #
+#    MISRA C version =  2004                                                  #
+#      Enabled       =  1.2-1.4 2.3 3.4 4.2 6.5 7 8.2 8.3 9.3 12.3 13.6 13.7  #
+#                       15.5 17.3 19.17 20.7-20.9 20.11                       #
+#      Checked       =  1.4 2.3 4.2 6.5 7 8.2 8.3 9.3 12.3 13.7 15.5          #
+#                       20.7-20.9 20.11                                       #
+#      Not checked   =  1.1-1.3 1.5-2.2 2.4-4.1 5-6.4 8.1 8.4-9.2 10-12.2     #
+#                       12.4-13.6 14-15.4 16-20.6 20.10 20.12 21              #
+#    List file       =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\w #
+#                       ave_chart.lst                                         #
+#    Object file     =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\wa #
+#                       ve_chart.o                                            #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+F:\stuff\rusefi_sourceforge\firmware\development\wave_chart.cpp
+      1          /**
+      2           * @file	wave_chart.cpp
+      3           * @brief	Dev console wave sniffer logic
+      4           *
+      5           * Here we have our own build-in logic analyzer. The data we aggregate here is sent to the
+      6           * java UI Dev Console so that it can be displayed nicely in the Sniffer tab.
+      7           *
+      8           * Both external events (see wave_analyzer.c) and internal (see signal executors) are supported
+      9           *
+     10           * @date Jun 23, 2013
+     11           * @author Andrey Belomutskiy, (c) 2012-2015
+     12           *
+     13           * This file is part of rusEfi - see http://rusefi.com
+     14           *
+     15           * rusEfi is free software; you can redistribute it and/or modify it under the terms of
+     16           * the GNU General Public License as published by the Free Software Foundation; either
+     17           * version 3 of the License, or (at your option) any later version.
+     18           *
+     19           * rusEfi is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+     20           * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     21           * GNU General Public License for more details.
+     22           *
+     23           * You should have received a copy of the GNU General Public License along with this program.
+     24           * If not, see <http://www.gnu.org/licenses/>.
+     25           */
+     26          
+     27          #include "main.h"
+     28          #include "wave_chart.h"
+     29          
+     30          #if EFI_WAVE_CHART || defined(__DOXYGEN__)
+     31          
+     32          #include "engine_configuration.h"
+     33          #include "eficonsole.h"
+     34          #include "status_loop.h"
+     35          
+     36          #define CHART_DELIMETER	'!'
+     37          
+     38          #if EFI_HISTOGRAMS || defined(__DOXYGEN__)
+     39          #include "rfiutil.h"
+     40          #include "histogram.h"
+     41          static histogram_s waveChartHisto;
+     42          #endif
+     43          
+     44          EXTERN_ENGINE
+     45          ;
+     46          extern uint32_t maxLockTime;
+     47          
+     48          /**
+     49           * This is the number of events in the digital chart which would be displayed
+     50           * on the 'digital sniffer' pane
+     51           */
+     52          #if EFI_PROD_CODE
+     53          #define WAVE_LOGGING_SIZE 5000
+     54          #else
+     55          #define WAVE_LOGGING_SIZE 35000
+     56          #endif
+     57          
+
+   \                                 In section .bss, align 4
+     58          int waveChartUsedSize;
+   \                     waveChartUsedSize:
+   \   00000000                      DS8 4
+     59          
+     60          //#define DEBUG_WAVE 1
+     61          
+     62          #if DEBUG_WAVE
+     63          static Logging debugLogging;
+     64          #endif /* DEBUG_WAVE */
+     65          
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __intrinsic __interwork __softfp void __sti__routine()
+   \                     __sti__routine:
+   \   00000000   0xB580             PUSH     {R7,LR}
+     66          static LoggingWithStorage logger("wave info");
+   \   00000002   0x....             LDR.N    R1,??DataTable10
+   \   00000004   0x....             LDR.N    R0,??DataTable10_1
+   \   00000006   0x.... 0x....      BL       _ZN18LoggingWithStorageC1EPKc
+   \   0000000A   0xBD01             POP      {R0,PC}          ;; return
+
+   \                                 In section .bss, align 4
+   \                     logger:
+   \   00000000                      DS8 260
+     67          
+     68          /**
+     69           * We want to skip some engine cycles to skip what was scheduled before parameters were changed
+     70           */
+
+   \                                 In section .bss, align 4
+     71          uint32_t skipUntilEngineCycle = 0;
+   \                     skipUntilEngineCycle:
+   \   00000000                      DS8 4
+     72          
+     73          #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+     74          extern WaveChart waveChart;
+     75          //static void resetWaveChartNow(void) {
+     76          //	skipUntilEngineCycle = engine->rpmCalculator.getRevolutionCounter() + 3;
+     77          //	waveChart.resetWaveChart();
+     78          //}
+     79          #endif
+     80          
+
+   \                                 In section .text, align 2, keep-with-next
+     81          void WaveChart::resetWaveChart() {
+   \                     _ZN9WaveChart14resetWaveChartEv:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+     82          #if DEBUG_WAVE
+     83          	scheduleSimpleMsg(&debugLogging, "reset while at ", counter);
+     84          #endif /* DEBUG_WAVE */
+     85          	resetLogging(&logging);
+   \   00000004   0x0020             MOVS     R0,R4
+   \   00000006   0x.... 0x....      BL       resetLogging
+     86          	counter = 0;
+   \   0000000A   0x2000             MOVS     R0,#+0
+   \   0000000C   0x63E0             STR      R0,[R4, #+60]
+     87          	startTimeNt = 0;
+   \   0000000E   0x2000             MOVS     R0,#+0
+   \   00000010   0x2100             MOVS     R1,#+0
+   \   00000012   0xE9C4 0x0110      STRD     R0,R1,[R4, #+64]
+     88          	appendPrintf(&logging, "wave_chart%s", DELIMETER);
+   \   00000016   0x....             ADR.N    R2,??DataTable9  ;; ","
+   \   00000018   0x....             LDR.N    R1,??DataTable10_2
+   \   0000001A   0x0020             MOVS     R0,R4
+   \   0000001C   0x.... 0x....      BL       appendPrintf
+     89          }
+   \   00000020   0xBD10             POP      {R4,PC}          ;; return
+     90          
+
+   \                                 In section .ccm, align 4
+     91          static char WAVE_LOGGING_BUFFER[WAVE_LOGGING_SIZE] CCM_OPTIONAL;
+   \                     WAVE_LOGGING_BUFFER:
+   \   00000000                      DS8 5000
+     92          
+
+   \                                 In section .text, align 2, keep-with-next
+     93          bool_t WaveChart::isStartedTooLongAgo() {
+   \                     _ZN9WaveChart19isStartedTooLongAgoEv:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+     94          	/**
+     95          	 * Say at 300rpm we should get at least four events per revolution.
+     96          	 * That's 300/60*4=20 events per second
+     97          	 * engineChartSize/20 is the longest meaningful chart.
+     98          	 *
+     99          	 */
+    100          	efitime_t chartDurationNt = getTimeNowNt() - startTimeNt;
+   \   00000004   0x.... 0x....      BL       getTimeNowNt
+   \   00000008   0xE9D4 0x2310      LDRD     R2,R3,[R4, #+64]
+   \   0000000C   0x1A80             SUBS     R0,R0,R2
+   \   0000000E   0x4199             SBCS     R1,R1,R3
+    101          	return startTimeNt != 0 && NT2US(chartDurationNt) > engineConfiguration->engineChartSize * 1000000 / 20;
+   \   00000010   0xE9D4 0x2310      LDRD     R2,R3,[R4, #+64]
+   \   00000014   0x2B00             CMP      R3,#+0
+   \   00000016   0xD101             BNE.N    ??isStartedTooLongAgo_0
+   \   00000018   0x2A00             CMP      R2,#+0
+   \   0000001A   0xD014             BEQ.N    ??isStartedTooLongAgo_1
+   \                     ??isStartedTooLongAgo_0:
+   \   0000001C   0x22A8             MOVS     R2,#+168
+   \   0000001E   0x2300             MOVS     R3,#+0
+   \   00000020   0x.... 0x....      BL       __aeabi_ldivmod
+   \   00000024   0x....             LDR.N    R2,??DataTable10_3
+   \   00000026   0x6812             LDR      R2,[R2, #+0]
+   \   00000028   0xF8D2 0x25E8      LDR      R2,[R2, #+1512]
+   \   0000002C   0x....             LDR.N    R3,??DataTable10_4  ;; 0xf4240
+   \   0000002E   0x435A             MULS     R2,R3,R2
+   \   00000030   0x2314             MOVS     R3,#+20
+   \   00000032   0xFBB2 0xF2F3      UDIV     R2,R2,R3
+   \   00000036   0x2300             MOVS     R3,#+0
+   \   00000038   0x428B             CMP      R3,R1
+   \   0000003A   0xDC04             BGT.N    ??isStartedTooLongAgo_1
+   \   0000003C   0xDB01             BLT.N    ??isStartedTooLongAgo_2
+   \   0000003E   0x4282             CMP      R2,R0
+   \   00000040   0xD201             BCS.N    ??isStartedTooLongAgo_1
+   \                     ??isStartedTooLongAgo_2:
+   \   00000042   0x2001             MOVS     R0,#+1
+   \   00000044   0xE000             B.N      ??isStartedTooLongAgo_3
+   \                     ??isStartedTooLongAgo_1:
+   \   00000046   0x2000             MOVS     R0,#+0
+   \                     ??isStartedTooLongAgo_3:
+   \   00000048   0xB2C0             UXTB     R0,R0            ;; ZeroExt  R0,R0,#+24,#+24
+   \   0000004A   0xBD10             POP      {R4,PC}          ;; return
+    102          }
+    103          
+
+   \                                 In section .text, align 2, keep-with-next
+    104          bool_t WaveChart::isWaveChartFull() {
+    105          	return counter >= engineConfiguration->engineChartSize;
+   \                     _ZN9WaveChart15isWaveChartFullEv:
+   \   00000000   0x6BC0             LDR      R0,[R0, #+60]
+   \   00000002   0x....             LDR.N    R1,??DataTable10_3
+   \   00000004   0x6809             LDR      R1,[R1, #+0]
+   \   00000006   0xF8D1 0x15E8      LDR      R1,[R1, #+1512]
+   \   0000000A   0x4288             CMP      R0,R1
+   \   0000000C   0xD301             BCC.N    ??isWaveChartFull_0
+   \   0000000E   0x2001             MOVS     R0,#+1
+   \   00000010   0xE000             B.N      ??isWaveChartFull_1
+   \                     ??isWaveChartFull_0:
+   \   00000012   0x2000             MOVS     R0,#+0
+   \                     ??isWaveChartFull_1:
+   \   00000014   0xB2C0             UXTB     R0,R0            ;; ZeroExt  R0,R0,#+24,#+24
+   \   00000016   0x4770             BX       LR               ;; return
+    106          }
+    107          
+
+   \                                 In section .text, align 2, keep-with-next
+    108          static void printStatus(void) {
+   \                     _Z11printStatusv:
+   \   00000000   0xB580             PUSH     {R7,LR}
+    109          	scheduleMsg(&logger, "engine chart: %s", boolToString(engineConfiguration->isEngineChartEnabled));
+   \   00000002   0x....             LDR.N    R0,??DataTable10_3
+   \   00000004   0x6800             LDR      R0,[R0, #+0]
+   \   00000006   0xF890 0x05D8      LDRB     R0,[R0, #+1496]
+   \   0000000A   0xB2C0             UXTB     R0,R0            ;; ZeroExt  R0,R0,#+24,#+24
+   \   0000000C   0x0940             LSRS     R0,R0,#+5
+   \   0000000E   0xF010 0x0001      ANDS     R0,R0,#0x1
+   \   00000012   0x.... 0x....      BL       _Z12boolToStringb
+   \   00000016   0x0002             MOVS     R2,R0
+   \   00000018   0x....             LDR.N    R1,??DataTable10_5
+   \   0000001A   0x....             LDR.N    R0,??DataTable10_1
+   \   0000001C   0x.... 0x....      BL       scheduleMsg
+    110          	scheduleMsg(&logger, "engine chart size=%d", engineConfiguration->engineChartSize);
+   \   00000020   0x....             LDR.N    R0,??DataTable10_3
+   \   00000022   0x6800             LDR      R0,[R0, #+0]
+   \   00000024   0xF8D0 0x25E8      LDR      R2,[R0, #+1512]
+   \   00000028   0x....             LDR.N    R1,??DataTable10_6
+   \   0000002A   0x....             LDR.N    R0,??DataTable10_1
+   \   0000002C   0x.... 0x....      BL       scheduleMsg
+    111          }
+   \   00000030   0xBD01             POP      {R0,PC}          ;; return
+    112          
+
+   \                                 In section .text, align 2, keep-with-next
+    113          static void setChartActive(int value) {
+   \                     _Z14setChartActivei:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    114          	engineConfiguration->isEngineChartEnabled = value;
+   \   00000004   0x2C00             CMP      R4,#+0
+   \   00000006   0xD001             BEQ.N    ??setChartActive_0
+   \   00000008   0x2001             MOVS     R0,#+1
+   \   0000000A   0xE000             B.N      ??setChartActive_1
+   \                     ??setChartActive_0:
+   \   0000000C   0x2000             MOVS     R0,#+0
+   \                     ??setChartActive_1:
+   \   0000000E   0x....             LDR.N    R1,??DataTable10_3
+   \   00000010   0x6809             LDR      R1,[R1, #+0]
+   \   00000012   0xF891 0x15D8      LDRB     R1,[R1, #+1496]
+   \   00000016   0xF360 0x1145      BFI      R1,R0,#+5,#+1
+   \   0000001A   0x....             LDR.N    R0,??DataTable10_3
+   \   0000001C   0x6800             LDR      R0,[R0, #+0]
+   \   0000001E   0xF880 0x15D8      STRB     R1,[R0, #+1496]
+    115          	printStatus();
+   \   00000022   0x.... 0x....      BL       _Z11printStatusv
+    116          	maxLockTime = 0;
+   \   00000026   0x....             LDR.N    R0,??DataTable10_7
+   \   00000028   0x2100             MOVS     R1,#+0
+   \   0000002A   0x6001             STR      R1,[R0, #+0]
+    117          }
+   \   0000002C   0xBD10             POP      {R4,PC}          ;; return
+    118          
+
+   \                                 In section .text, align 2, keep-with-next
+    119          void setChartSize(int newSize) {
+   \                     _Z12setChartSizei:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    120          	if (newSize < 5) {
+   \   00000004   0x2C05             CMP      R4,#+5
+   \   00000006   0xDB05             BLT.N    ??setChartSize_0
+    121          		return;
+    122          	}
+    123          	engineConfiguration->engineChartSize = newSize;
+   \                     ??setChartSize_1:
+   \   00000008   0x....             LDR.N    R0,??DataTable10_3
+   \   0000000A   0x6800             LDR      R0,[R0, #+0]
+   \   0000000C   0xF8C0 0x45E8      STR      R4,[R0, #+1512]
+    124          	printStatus();
+   \   00000010   0x.... 0x....      BL       _Z11printStatusv
+    125          }
+   \                     ??setChartSize_0:
+   \   00000014   0xBD10             POP      {R4,PC}          ;; return
+    126          
+
+   \                                 In section .text, align 2, keep-with-next
+    127          void WaveChart::publishChartIfFull() {
+   \                     _ZN9WaveChart18publishChartIfFullEv:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    128          	if (isWaveChartFull() || isStartedTooLongAgo()) {
+   \   00000004   0x0020             MOVS     R0,R4
+   \   00000006   0x.... 0x....      BL       _ZN9WaveChart15isWaveChartFullEv
+   \   0000000A   0x2800             CMP      R0,#+0
+   \   0000000C   0xD104             BNE.N    ??publishChartIfFull_0
+   \   0000000E   0x0020             MOVS     R0,R4
+   \   00000010   0x.... 0x....      BL       _ZN9WaveChart19isStartedTooLongAgoEv
+   \   00000014   0x2800             CMP      R0,#+0
+   \   00000016   0xD005             BEQ.N    ??publishChartIfFull_1
+    129          		publishChart();
+   \                     ??publishChartIfFull_0:
+   \   00000018   0x0020             MOVS     R0,R4
+   \   0000001A   0x.... 0x....      BL       _ZN9WaveChart12publishChartEv
+    130          		resetWaveChart();
+   \   0000001E   0x0020             MOVS     R0,R4
+   \   00000020   0x.... 0x....      BL       _ZN9WaveChart14resetWaveChartEv
+    131          	}
+    132          }
+   \                     ??publishChartIfFull_1:
+   \   00000024   0xBD10             POP      {R4,PC}          ;; return
+    133          
+
+   \                                 In section .text, align 2, keep-with-next
+   \   __code __interwork __softfp WaveChart::subobject WaveChart()
+   \                     _ZN9WaveChartC2Ev:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x0020             MOVS     R0,R4
+   \   00000006   0x.... 0x....      BL       _ZN9WaveChartC1Ev
+   \   0000000A   0xBD10             POP      {R4,PC}          ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+    134          WaveChart::WaveChart() {
+   \                     _ZN9WaveChartC1Ev:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x0020             MOVS     R0,R4
+   \   00000006   0x.... 0x....      BL       _ZN7LoggingC1Ev
+    135          	isInitialized = false;
+   \   0000000A   0x2000             MOVS     R0,#+0
+   \   0000000C   0x64A0             STR      R0,[R4, #+72]
+    136          	startTimeNt = 0;
+   \   0000000E   0x2000             MOVS     R0,#+0
+   \   00000010   0x2100             MOVS     R1,#+0
+   \   00000012   0xE9C4 0x0110      STRD     R0,R1,[R4, #+64]
+    137          	counter = 0;
+   \   00000016   0x2000             MOVS     R0,#+0
+   \   00000018   0x63E0             STR      R0,[R4, #+60]
+    138          }
+   \   0000001A   0x0020             MOVS     R0,R4
+   \   0000001C   0xBD10             POP      {R4,PC}          ;; return
+    139          
+
+   \                                 In section .text, align 2, keep-with-next
+    140          void WaveChart::init() {
+   \                     _ZN9WaveChart4initEv:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    141          	initLoggingExt(&logging, "wave chart", WAVE_LOGGING_BUFFER, sizeof(WAVE_LOGGING_BUFFER));
+   \   00000004   0xF241 0x3388      MOVW     R3,#+5000
+   \   00000008   0x....             LDR.N    R2,??DataTable10_8
+   \   0000000A   0x....             LDR.N    R1,??DataTable10_9
+   \   0000000C   0x0020             MOVS     R0,R4
+   \   0000000E   0x.... 0x....      BL       initLoggingExt
+    142          	isInitialized = true;
+   \   00000012   0x2001             MOVS     R0,#+1
+   \   00000014   0x64A0             STR      R0,[R4, #+72]
+    143          	resetWaveChart();
+   \   00000016   0x0020             MOVS     R0,R4
+   \   00000018   0x.... 0x....      BL       _ZN9WaveChart14resetWaveChartEv
+    144          }
+   \   0000001C   0xBD10             POP      {R4,PC}          ;; return
+    145          
+
+   \                                 In section .text, align 2, keep-with-next
+    146          void WaveChart::publishChart() {
+   \                     _ZN9WaveChart12publishChartEv:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    147          	appendPrintf(&logging, DELIMETER);
+   \   00000004   0x....             ADR.N    R1,??DataTable9  ;; ","
+   \   00000006   0x0020             MOVS     R0,R4
+   \   00000008   0x.... 0x....      BL       appendPrintf
+    148          	waveChartUsedSize = loggingSize(&logging);
+   \   0000000C   0x6B20             LDR      R0,[R4, #+48]
+   \   0000000E   0x6AE1             LDR      R1,[R4, #+44]
+   \   00000010   0x1A40             SUBS     R0,R0,R1
+   \   00000012   0x....             LDR.N    R1,??DataTable10_10
+   \   00000014   0x6008             STR      R0,[R1, #+0]
+    149          #if DEBUG_WAVE
+    150          	Logging *l = &chart->logging;
+    151          	scheduleSimpleMsg(&debugLogging, "IT'S TIME", strlen(l->buffer));
+    152          #endif
+    153          	bool isFullLog = getFullLog();
+   \   00000016   0x.... 0x....      BL       _Z10getFullLogv
+   \   0000001A   0x0005             MOVS     R5,R0
+    154          	if (engineConfiguration->isEngineChartEnabled && isFullLog) {
+   \   0000001C   0x....             LDR.N    R0,??DataTable10_3
+   \   0000001E   0x6800             LDR      R0,[R0, #+0]
+   \   00000020   0xF890 0x05D8      LDRB     R0,[R0, #+1496]
+   \   00000024   0x0680             LSLS     R0,R0,#+26
+   \   00000026   0xD505             BPL.N    ??publishChart_0
+   \   00000028   0xB2ED             UXTB     R5,R5            ;; ZeroExt  R5,R5,#+24,#+24
+   \   0000002A   0x2D00             CMP      R5,#+0
+   \   0000002C   0xD002             BEQ.N    ??publishChart_0
+    155          		scheduleLogging(&logging);
+   \   0000002E   0x0020             MOVS     R0,R4
+   \   00000030   0x.... 0x....      BL       scheduleLogging
+    156          	}
+    157          }
+   \                     ??publishChart_0:
+   \   00000034   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+    158          
+
+   \                                 In section .bss, align 4
+    159          static char timeBuffer[10];
+   \                     timeBuffer:
+   \   00000000                      DS8 12
+    160          
+    161          /**
+    162           * @brief	Register an event for digital sniffer
+    163           */
+
+   \                                 In section .text, align 2, keep-with-next
+    164          void WaveChart::addWaveChartEvent3(const char *name, const char * msg) {
+   \                     _ZN9WaveChart18addWaveChartEvent3EPKcS1_:
+   \   00000000   0xE92D 0x4FF8      PUSH     {R3-R11,LR}
+   \   00000004   0x0006             MOVS     R6,R0
+   \   00000006   0x000F             MOVS     R7,R1
+   \   00000008   0x4690             MOV      R8,R2
+    165          	if (engine->rpmCalculator.getRevolutionCounter() < skipUntilEngineCycle)
+   \   0000000A   0x....             LDR.N    R0,??DataTable10_11
+   \   0000000C   0x6800             LDR      R0,[R0, #+0]
+   \   0000000E   0x.... 0x....      BL       _ZN13RpmCalculator20getRevolutionCounterEv
+   \   00000012   0x....             LDR.N    R1,??DataTable10_12
+   \   00000014   0x6809             LDR      R1,[R1, #+0]
+   \   00000016   0x4288             CMP      R0,R1
+   \   00000018   0xD36F             BCC.N    ??addWaveChartEvent3_0
+    166          		return;
+    167          	efiAssertVoid(name!=NULL, "WC: NULL name");
+   \                     ??addWaveChartEvent3_1:
+   \   0000001A   0x2F00             CMP      R7,#+0
+   \   0000001C   0xD103             BNE.N    ??addWaveChartEvent3_2
+   \   0000001E   0x....             LDR.N    R0,??DataTable10_13
+   \   00000020   0x.... 0x....      BL       firmwareError
+   \   00000024   0xE069             B.N      ??addWaveChartEvent3_0
+    168          	if (!engineConfiguration->isEngineChartEnabled) {
+   \                     ??addWaveChartEvent3_2:
+   \   00000026   0x....             LDR.N    R0,??DataTable10_3
+   \   00000028   0x6800             LDR      R0,[R0, #+0]
+   \   0000002A   0xF890 0x05D8      LDRB     R0,[R0, #+1496]
+   \   0000002E   0xB2C0             UXTB     R0,R0            ;; ZeroExt  R0,R0,#+24,#+24
+   \   00000030   0x0940             LSRS     R0,R0,#+5
+   \   00000032   0xF010 0x0001      ANDS     R0,R0,#0x1
+   \   00000036   0x2800             CMP      R0,#+0
+   \   00000038   0xD05F             BEQ.N    ??addWaveChartEvent3_0
+    169          		return;
+    170          	}
+    171          
+    172          #if EFI_PROD_CODE
+    173          	efiAssertVoid(getRemainingStack(chThdSelf()) > 32, "lowstck#2c");
+   \                     ??addWaveChartEvent3_3:
+   \   0000003A   0x....             LDR.N    R0,??DataTable10_14
+   \   0000003C   0x6980             LDR      R0,[R0, #+24]
+   \   0000003E   0x.... 0x....      BL       getRemainingStack
+   \   00000042   0x2821             CMP      R0,#+33
+   \   00000044   0xDA03             BGE.N    ??addWaveChartEvent3_4
+   \   00000046   0x....             LDR.N    R0,??DataTable10_15
+   \   00000048   0x.... 0x....      BL       firmwareError
+   \   0000004C   0xE055             B.N      ??addWaveChartEvent3_0
+    174          #endif
+    175          
+    176          	efiAssertVoid(isInitialized, "chart not initialized");
+   \                     ??addWaveChartEvent3_4:
+   \   0000004E   0x6CB0             LDR      R0,[R6, #+72]
+   \   00000050   0x2800             CMP      R0,#+0
+   \   00000052   0xD103             BNE.N    ??addWaveChartEvent3_5
+   \   00000054   0x....             LDR.N    R0,??DataTable10_16
+   \   00000056   0x.... 0x....      BL       firmwareError
+   \   0000005A   0xE04E             B.N      ??addWaveChartEvent3_0
+    177          #if DEBUG_WAVE
+    178          	scheduleSimpleMsg(&debugLogging, "current", chart->counter);
+    179          #endif
+    180          	if (isWaveChartFull()) {
+   \                     ??addWaveChartEvent3_5:
+   \   0000005C   0x0030             MOVS     R0,R6
+   \   0000005E   0x.... 0x....      BL       _ZN9WaveChart15isWaveChartFullEv
+   \   00000062   0x2800             CMP      R0,#+0
+   \   00000064   0xD149             BNE.N    ??addWaveChartEvent3_0
+    181          		return;
+    182          	}
+    183          
+    184          #if EFI_HISTOGRAMS && EFI_PROD_CODE
+    185          	int beforeCallback = hal_lld_get_counter_value();
+    186          #endif
+    187          
+    188          	efitick_t nowNt = getTimeNowNt();
+   \                     ??addWaveChartEvent3_6:
+   \   00000066   0x.... 0x....      BL       getTimeNowNt
+   \   0000006A   0x0004             MOVS     R4,R0
+   \   0000006C   0x000D             MOVS     R5,R1
+    189          
+    190          	bool alreadyLocked = lockOutputBuffer(); // we have multiple threads writing to the same output buffer
+   \   0000006E   0x.... 0x....      BL       lockOutputBuffer
+   \   00000072   0x4681             MOV      R9,R0
+    191          
+    192          	if (counter == 0) {
+   \   00000074   0x6BF0             LDR      R0,[R6, #+60]
+   \   00000076   0x2800             CMP      R0,#+0
+   \   00000078   0xD101             BNE.N    ??addWaveChartEvent3_7
+    193          		startTimeNt = nowNt;
+   \   0000007A   0xE9C6 0x4510      STRD     R4,R5,[R6, #+64]
+    194          	}
+    195          	counter++;
+   \                     ??addWaveChartEvent3_7:
+   \   0000007E   0x6BF0             LDR      R0,[R6, #+60]
+   \   00000080   0x1C40             ADDS     R0,R0,#+1
+   \   00000082   0x63F0             STR      R0,[R6, #+60]
+    196          
+    197          	/**
+    198          	 * We want smaller times within a chart in order to reduce packet size.
+    199          	 */
+    200          	/**
+    201          	 * todo: migrate to binary fractions in order to eliminate
+    202          	 * this division? I do not like division
+    203          	 *
+    204          	 * at least that's 32 bit division now
+    205          	 */
+    206          	uint32_t diffNt = nowNt - startTimeNt;
+   \   00000084   0xE9D6 0x0110      LDRD     R0,R1,[R6, #+64]
+   \   00000088   0xEBB4 0x0A00      SUBS     R10,R4,R0
+    207          	uint32_t time100 = NT2US(diffNt / 10);
+   \   0000008C   0x200A             MOVS     R0,#+10
+   \   0000008E   0xFBBA 0xF0F0      UDIV     R0,R10,R0
+   \   00000092   0x21A8             MOVS     R1,#+168
+   \   00000094   0xFBB0 0xFBF1      UDIV     R11,R0,R1
+    208          
+    209          	if (remainingSize(&logging) > 35) {
+   \   00000098   0x0030             MOVS     R0,R6
+   \   0000009A   0x.... 0x....      BL       remainingSize
+   \   0000009E   0x2824             CMP      R0,#+36
+   \   000000A0   0xD324             BCC.N    ??addWaveChartEvent3_8
+    210          		/**
+    211          		 * printf is a heavy method, append is used here as a performance optimization
+    212          		 */
+    213          		appendFast(&logging, name);
+   \   000000A2   0x0039             MOVS     R1,R7
+   \   000000A4   0x0030             MOVS     R0,R6
+   \   000000A6   0x.... 0x....      BL       appendFast
+    214          		appendChar(&logging, CHART_DELIMETER);
+   \   000000AA   0x6B30             LDR      R0,[R6, #+48]
+   \   000000AC   0x2121             MOVS     R1,#+33
+   \   000000AE   0x7001             STRB     R1,[R0, #+0]
+   \   000000B0   0x6B30             LDR      R0,[R6, #+48]
+   \   000000B2   0x1C40             ADDS     R0,R0,#+1
+   \   000000B4   0x6330             STR      R0,[R6, #+48]
+    215          		appendFast(&logging, msg);
+   \   000000B6   0x4641             MOV      R1,R8
+   \   000000B8   0x0030             MOVS     R0,R6
+   \   000000BA   0x.... 0x....      BL       appendFast
+    216          		appendChar(&logging, CHART_DELIMETER);
+   \   000000BE   0x6B30             LDR      R0,[R6, #+48]
+   \   000000C0   0x2121             MOVS     R1,#+33
+   \   000000C2   0x7001             STRB     R1,[R0, #+0]
+   \   000000C4   0x6B30             LDR      R0,[R6, #+48]
+   \   000000C6   0x1C40             ADDS     R0,R0,#+1
+   \   000000C8   0x6330             STR      R0,[R6, #+48]
+    217          //		time100 -= startTime100;
+    218          
+    219          		itoa10(timeBuffer, time100);
+   \   000000CA   0x4659             MOV      R1,R11
+   \   000000CC   0x....             LDR.N    R0,??DataTable10_17
+   \   000000CE   0x.... 0x....      BL       itoa10
+    220          		appendFast(&logging, timeBuffer);
+   \   000000D2   0x....             LDR.N    R1,??DataTable10_17
+   \   000000D4   0x0030             MOVS     R0,R6
+   \   000000D6   0x.... 0x....      BL       appendFast
+    221          		appendChar(&logging, CHART_DELIMETER);
+   \   000000DA   0x6B30             LDR      R0,[R6, #+48]
+   \   000000DC   0x2121             MOVS     R1,#+33
+   \   000000DE   0x7001             STRB     R1,[R0, #+0]
+   \   000000E0   0x6B30             LDR      R0,[R6, #+48]
+   \   000000E2   0x1C40             ADDS     R0,R0,#+1
+   \   000000E4   0x6330             STR      R0,[R6, #+48]
+    222          		logging.linePointer[0] = 0;
+   \   000000E6   0x6B30             LDR      R0,[R6, #+48]
+   \   000000E8   0x2100             MOVS     R1,#+0
+   \   000000EA   0x7001             STRB     R1,[R0, #+0]
+    223          	}
+    224          	if (!alreadyLocked) {
+   \                     ??addWaveChartEvent3_8:
+   \   000000EC   0xFA5F 0xF989      UXTB     R9,R9            ;; ZeroExt  R9,R9,#+24,#+24
+   \   000000F0   0xF1B9 0x0F00      CMP      R9,#+0
+   \   000000F4   0xD101             BNE.N    ??addWaveChartEvent3_9
+    225          		unlockOutputBuffer();
+   \   000000F6   0x.... 0x....      BL       unlockOutputBuffer
+    226          	}
+    227          
+    228          #if EFI_HISTOGRAMS && EFI_PROD_CODE
+    229          	int64_t diff = hal_lld_get_counter_value() - beforeCallback;
+    230          	if (diff > 0) {
+    231          		hsAdd(&waveChartHisto, diff);
+    232          	}
+    233          #endif /* EFI_HISTOGRAMS */
+    234          
+    235          }
+   \                     ??addWaveChartEvent3_9:
+   \                     ??addWaveChartEvent3_0:
+   \   000000FA   0xE8BD 0x8FF1      POP      {R0,R4-R11,PC}   ;; return
+    236          
+
+   \                                 In section .text, align 2, keep-with-next
+    237          void showWaveChartHistogram(void) {
+    238          #if (EFI_HISTOGRAMS && EFI_PROD_CODE) || defined(__DOXYGEN__)
+    239          	printHistogram(&logger, &waveChartHisto);
+    240          #endif
+    241          }
+   \                     _Z22showWaveChartHistogramv:
+   \   00000000   0x4770             BX       LR               ;; return
+    242          
+
+   \                                 In section .text, align 2, keep-with-next
+    243          void initWaveChart(WaveChart *chart) {
+   \                     _Z13initWaveChartP9WaveChart:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    244          
+    245          	if (!engineConfiguration->isEngineChartEnabled) {
+   \   00000004   0x....             LDR.N    R0,??DataTable10_3
+   \   00000006   0x6800             LDR      R0,[R0, #+0]
+   \   00000008   0xF890 0x05D8      LDRB     R0,[R0, #+1496]
+   \   0000000C   0xB2C0             UXTB     R0,R0            ;; ZeroExt  R0,R0,#+24,#+24
+   \   0000000E   0x0940             LSRS     R0,R0,#+5
+   \   00000010   0xF010 0x0001      ANDS     R0,R0,#0x1
+   \   00000014   0x2800             CMP      R0,#+0
+   \   00000016   0xD103             BNE.N    ??initWaveChart_0
+    246          		printMsg(&logger, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! chart disabled");
+   \   00000018   0x....             LDR.N    R1,??DataTable10_18
+   \   0000001A   0x....             LDR.N    R0,??DataTable10_1
+   \   0000001C   0x.... 0x....      BL       printMsg
+    247          	}
+    248          
+    249          	/**
+    250          	 * constructor does not work because we need specific initialization order
+    251          	 */
+    252          	chart->init();
+   \                     ??initWaveChart_0:
+   \   00000020   0x0020             MOVS     R0,R4
+   \   00000022   0x.... 0x....      BL       _ZN9WaveChart4initEv
+    253          
+    254          	printStatus();
+   \   00000026   0x.... 0x....      BL       _Z11printStatusv
+    255          
+    256          #if DEBUG_WAVE || defined(__DOXYGEN__)
+    257          	initLoggingExt(&debugLogging, "wave chart debug", &debugLogging.DEFAULT_BUFFER, sizeof(debugLogging.DEFAULT_BUFFER));
+    258          #endif
+    259          
+    260          #if EFI_HISTOGRAMS || defined(__DOXYGEN__)
+    261          	initHistogram(&waveChartHisto, "wave chart");
+    262          #endif /* EFI_HISTOGRAMS */
+    263          
+    264          	addConsoleActionI("chartsize", setChartSize);
+   \   0000002A   0x....             LDR.N    R1,??DataTable10_19
+   \   0000002C   0x....             LDR.N    R0,??DataTable10_20
+   \   0000002E   0x.... 0x....      BL       addConsoleActionI
+    265          	addConsoleActionI("chart", setChartActive);
+   \   00000032   0x....             LDR.N    R1,??DataTable10_21
+   \   00000034   0x....             LDR.N    R0,??DataTable10_22
+   \   00000036   0x.... 0x....      BL       addConsoleActionI
+    266          //#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+    267          //	addConsoleAction("reset_engine_chart", resetWaveChartNow);
+    268          //#endif
+    269          }
+   \   0000003A   0xBD10             POP      {R4,PC}          ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable9:
+   \   00000000   0x2C 0x00          DC8      ",",0x0,0x0
+   \              0x00 0x00    
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10:
+   \   00000000   0x........         DC32     `?<Constant "wave info">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_1:
+   \   00000000   0x........         DC32     logger
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_2:
+   \   00000000   0x........         DC32     `?<Constant "wave_chart%s">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_3:
+   \   00000000   0x........         DC32     engineConfiguration
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_4:
+   \   00000000   0x000F4240         DC32     0xf4240
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_5:
+   \   00000000   0x........         DC32     `?<Constant "engine chart: %s">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_6:
+   \   00000000   0x........         DC32     `?<Constant "engine chart size=%d">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_7:
+   \   00000000   0x........         DC32     maxLockTime
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_8:
+   \   00000000   0x........         DC32     WAVE_LOGGING_BUFFER
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_9:
+   \   00000000   0x........         DC32     `?<Constant "wave chart">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_10:
+   \   00000000   0x........         DC32     waveChartUsedSize
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_11:
+   \   00000000   0x........         DC32     engine
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_12:
+   \   00000000   0x........         DC32     skipUntilEngineCycle
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_13:
+   \   00000000   0x........         DC32     `?<Constant "WC: NULL name">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_14:
+   \   00000000   0x........         DC32     rlist
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_15:
+   \   00000000   0x........         DC32     `?<Constant "lowstck#2c">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_16:
+   \   00000000   0x........         DC32     `?<Constant "chart not initialized">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_17:
+   \   00000000   0x........         DC32     timeBuffer
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_18:
+   \   00000000   0x........         DC32     `?<Constant "!!!!!!!!!!!!!!!!!!!!!...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_19:
+   \   00000000   0x........         DC32     _Z12setChartSizei
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_20:
+   \   00000000   0x........         DC32     `?<Constant "chartsize">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_21:
+   \   00000000   0x........         DC32     _Z14setChartActivei
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_22:
+   \   00000000   0x........         DC32     `?<Constant "chart">`
+
+   \                                 In section .init_array, align 4, keep-with-next, root
+   \   00000000   0x........         DC32    RELOC_ARM_TARGET1 __sti__routine
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "engine chart: %s">`:
+   \   00000000   0x65 0x6E          DC8 "engine chart: %s"
+   \              0x67 0x69    
+   \              0x6E 0x65    
+   \              0x20 0x63    
+   \              0x68 0x61    
+   \              0x72 0x74    
+   \              0x3A 0x20    
+   \              0x25 0x73    
+   \              0x00         
+   \   00000011   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "engine chart size=%d">`:
+   \   00000000   0x65 0x6E          DC8 "engine chart size=%d"
+   \              0x67 0x69    
+   \              0x6E 0x65    
+   \              0x20 0x63    
+   \              0x68 0x61    
+   \              0x72 0x74    
+   \              0x20 0x73    
+   \              0x69 0x7A    
+   \              0x65 0x3D    
+   \              0x25 0x64    
+   \              0x00         
+   \   00000015   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "!!!!!!!!!!!!!!!!!!!!!...">`:
+   \   00000000   0x21 0x21          DC8 21H, 21H, 21H, 21H, 21H, 21H, 21H, 21H
+   \              0x21 0x21    
+   \              0x21 0x21    
+   \              0x21 0x21    
+   \   00000008   0x21 0x21          DC8 21H, 21H, 21H, 21H, 21H, 21H, 21H, 21H
+   \              0x21 0x21    
+   \              0x21 0x21    
+   \              0x21 0x21    
+   \   00000010   0x21 0x21          DC8 21H, 21H, 21H, 21H, 21H, 21H, 21H, 21H
+   \              0x21 0x21    
+   \              0x21 0x21    
+   \              0x21 0x21    
+   \   00000018   0x21 0x21          DC8 21H, 21H, 21H, 21H, 21H, 21H, 21H, 21H
+   \              0x21 0x21    
+   \              0x21 0x21    
+   \              0x21 0x21    
+   \   00000020   0x21 0x21          DC8 21H, 21H, 21H, 21H, 21H, 21H, 21H, 21H
+   \              0x21 0x21    
+   \              0x21 0x21    
+   \              0x21 0x21    
+   \   00000028   0x21 0x21          DC8 21H, 21H, 21H, 21H, 21H, 21H, 21H, 21H
+   \              0x21 0x21    
+   \              0x21 0x21    
+   \              0x21 0x21    
+   \   00000030   0x21 0x21          DC8 21H, 21H, 21H, 21H, 21H, 21H, 21H, 21H
+   \              0x21 0x21    
+   \              0x21 0x21    
+   \              0x21 0x21    
+   \   00000038   0x21 0x21          DC8 21H, 21H, 21H, 21H, 21H, 21H, 21H, 21H
+   \              0x21 0x21    
+   \              0x21 0x21    
+   \              0x21 0x21    
+   \   00000040   0x21 0x21          DC8 21H, 21H, 21H, 21H, 21H, 21H, 20H, 63H
+   \              0x21 0x21    
+   \              0x21 0x21    
+   \              0x20 0x63    
+   \   00000048   0x68 0x61          DC8 68H, 61H, 72H, 74H, 20H, 64H, 69H, 73H
+   \              0x72 0x74    
+   \              0x20 0x64    
+   \              0x69 0x73    
+   \   00000050   0x61 0x62          DC8 61H, 62H, 6CH, 65H, 64H, 0
+   \              0x6C 0x65    
+   \              0x64 0x00    
+   \   00000056   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "chartsize">`:
+   \   00000000   0x63 0x68          DC8 "chartsize"
+   \              0x61 0x72    
+   \              0x74 0x73    
+   \              0x69 0x7A    
+   \              0x65 0x00    
+   \   0000000A   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "chart">`:
+   \   00000000   0x63 0x68          DC8 "chart"
+   \              0x61 0x72    
+   \              0x74 0x00    
+   \   00000006   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "wave chart">`:
+   \   00000000   0x77 0x61          DC8 "wave chart"
+   \              0x76 0x65    
+   \              0x20 0x63    
+   \              0x68 0x61    
+   \              0x72 0x74    
+   \              0x00         
+   \   0000000B   0x00               DC8 0
+
+   \                                 In section .rodata, align 2
+   \   00000000   0x2C 0x00          DC8 ","
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "wave_chart%s">`:
+   \   00000000   0x77 0x61          DC8 "wave_chart%s"
+   \              0x76 0x65    
+   \              0x5F 0x63    
+   \              0x68 0x61    
+   \              0x72 0x74    
+   \              0x25 0x73    
+   \              0x00         
+   \   0000000D   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "WC: NULL name">`:
+   \   00000000   0x57 0x43          DC8 "WC: NULL name"
+   \              0x3A 0x20    
+   \              0x4E 0x55    
+   \              0x4C 0x4C    
+   \              0x20 0x6E    
+   \              0x61 0x6D    
+   \              0x65 0x00    
+   \   0000000E   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "lowstck#2c">`:
+   \   00000000   0x6C 0x6F          DC8 "lowstck#2c"
+   \              0x77 0x73    
+   \              0x74 0x63    
+   \              0x6B 0x23    
+   \              0x32 0x63    
+   \              0x00         
+   \   0000000B   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "chart not initialized">`:
+   \   00000000   0x63 0x68          DC8 "chart not initialized"
+   \              0x61 0x72    
+   \              0x74 0x20    
+   \              0x6E 0x6F    
+   \              0x74 0x20    
+   \              0x69 0x6E    
+   \              0x69 0x74    
+   \              0x69 0x61    
+   \              0x6C 0x69    
+   \              0x7A 0x65    
+   \              0x64 0x00    
+   \   00000016   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "wave info">`:
+   \   00000000   0x77 0x61          DC8 "wave info"
+   \              0x76 0x65    
+   \              0x20 0x69    
+   \              0x6E 0x66    
+   \              0x6F 0x00    
+   \   0000000A   0x00 0x00          DC8 0, 0
+    270          
+    271          #endif /* EFI_WAVE_CHART */
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   WaveChart::WaveChart()
+         8   -> Logging::Logging()
+      40   WaveChart::addWaveChartEvent3(char const *, char const *)
+        40   -> RpmCalculator::getRevolutionCounter()
+        40   -> WaveChart::isWaveChartFull()
+        40   -> appendFast
+        40   -> firmwareError
+        40   -> getRemainingStack
+        40   -> getTimeNowNt
+        40   -> itoa10
+        40   -> lockOutputBuffer
+        40   -> remainingSize
+        40   -> unlockOutputBuffer
+       8   WaveChart::init()
+         8   -> WaveChart::resetWaveChart()
+         8   -> initLoggingExt
+       8   WaveChart::isStartedTooLongAgo()
+         8   -> __aeabi_ldivmod
+         8   -> getTimeNowNt
+       0   WaveChart::isWaveChartFull()
+      16   WaveChart::publishChart()
+        16   -> appendPrintf
+        16   -> getFullLog()
+        16   -> scheduleLogging
+       8   WaveChart::publishChartIfFull()
+         8   -> WaveChart::isStartedTooLongAgo()
+         8   -> WaveChart::isWaveChartFull()
+         8   -> WaveChart::publishChart()
+         8   -> WaveChart::resetWaveChart()
+       8   WaveChart::resetWaveChart()
+         8   -> appendPrintf
+         8   -> resetLogging
+       8   WaveChart::subobject WaveChart()
+         8   -> WaveChart::WaveChart()
+       8   __sti__routine()
+         8   -> LoggingWithStorage::LoggingWithStorage(char const *)
+       8   initWaveChart(WaveChart *)
+         8   -> WaveChart::init()
+         8   -> addConsoleActionI
+         8   -> printMsg
+         8   -> printStatus()
+       8   printStatus()
+         8   -> boolToString(bool)
+         8   -> scheduleMsg
+       8   setChartActive(int)
+         8   -> printStatus()
+       8   setChartSize(int)
+         8   -> printStatus()
+       0   showWaveChartHistogram()
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      88  ?<Constant "!!!!!!!!!!!!!!!!!!!!!...">
+       2  ?<Constant ",">
+      16  ?<Constant "WC: NULL name">
+      24  ?<Constant "chart not initialized">
+       8  ?<Constant "chart">
+      12  ?<Constant "chartsize">
+      24  ?<Constant "engine chart size=%d">
+      20  ?<Constant "engine chart: %s">
+      12  ?<Constant "lowstck#2c">
+      12  ?<Constant "wave chart">
+      12  ?<Constant "wave info">
+      16  ?<Constant "wave_chart%s">
+       4  ??DataTable10
+       4  ??DataTable10_1
+       4  ??DataTable10_10
+       4  ??DataTable10_11
+       4  ??DataTable10_12
+       4  ??DataTable10_13
+       4  ??DataTable10_14
+       4  ??DataTable10_15
+       4  ??DataTable10_16
+       4  ??DataTable10_17
+       4  ??DataTable10_18
+       4  ??DataTable10_19
+       4  ??DataTable10_2
+       4  ??DataTable10_20
+       4  ??DataTable10_21
+       4  ??DataTable10_22
+       4  ??DataTable10_3
+       4  ??DataTable10_4
+       4  ??DataTable10_5
+       4  ??DataTable10_6
+       4  ??DataTable10_7
+       4  ??DataTable10_8
+       4  ??DataTable10_9
+       4  ??DataTable9
+    5000  WAVE_LOGGING_BUFFER
+      30  WaveChart::WaveChart()
+     254  WaveChart::addWaveChartEvent3(char const *, char const *)
+      30  WaveChart::init()
+      76  WaveChart::isStartedTooLongAgo()
+      24  WaveChart::isWaveChartFull()
+      54  WaveChart::publishChart()
+      38  WaveChart::publishChartIfFull()
+      34  WaveChart::resetWaveChart()
+      12  WaveChart::subobject WaveChart()
+      12  __sti__routine()
+      60  initWaveChart(WaveChart *)
+     260  logger
+      50  printStatus()
+      46  setChartActive(int)
+      22  setChartSize(int)
+       2  showWaveChartHistogram()
+       4  skipUntilEngineCycle
+      12  timeBuffer
+       4  waveChartUsedSize
+       4  -- Other
+
+ 
+   280 bytes in section .bss
+ 5 000 bytes in section .ccm
+     4 bytes in section .init_array
+   246 bytes in section .rodata
+   840 bytes in section .text
+ 
+   844 bytes of CODE  memory
+   246 bytes of CONST memory
+ 5 280 bytes of DATA  memory
+
+Errors: none
+Warnings: 1

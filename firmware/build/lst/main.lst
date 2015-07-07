@@ -1,0 +1,52 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccWJsaTT.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"main.cpp"
+  16              		.section	.text.startup.main,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	main
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	main, %function
+  23              	main:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 08B5     		push	{r3, lr}
+  27 0002 FFF7FEFF 		bl	halInit
+  28 0006 FFF7FEFF 		bl	chSysInit
+  29 000a FFF7FEFF 		bl	_Z16baseHardwareInitv
+  30 000e FFF7FEFF 		bl	runRusEfi
+  31 0012 0020     		movs	r0, #0
+  32 0014 08BD     		pop	{r3, pc}
+  33              		.size	main, .-main
+  34 0016 00BFAFF3 		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+  34      0080AFF3 
+  34      0080
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccWJsaTT.s 			page 2
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.cpp
+C:\Users\pc\AppData\Local\Temp\ccWJsaTT.s:17     .text.startup.main:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccWJsaTT.s:23     .text.startup.main:00000000 main
+
+UNDEFINED SYMBOLS
+halInit
+chSysInit
+_Z16baseHardwareInitv
+runRusEfi

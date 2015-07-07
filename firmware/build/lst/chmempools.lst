@@ -1,0 +1,293 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccCE9bNc.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"chmempools.c"
+  16              		.section	.text.chPoolInit,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	chPoolInit
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	chPoolInit, %function
+  23              	chPoolInit:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 0028     		cmp	r0, #0
+  27 0002 18BF     		it	ne
+  28 0004 0329     		cmpne	r1, #3
+  29 0006 70B5     		push	{r4, r5, r6, lr}
+  30 0008 0D46     		mov	r5, r1
+  31 000a 0446     		mov	r4, r0
+  32 000c 1646     		mov	r6, r2
+  33 000e 0AD8     		bhi	.L2
+  34 0010 40F20000 		movw	r0, #:lower16:.LC0
+  35 0014 40F20001 		movw	r1, #:lower16:.LC1
+  36 0018 C0F20000 		movt	r0, #:upper16:.LC0
+  37 001c C0F20001 		movt	r1, #:upper16:.LC1
+  38 0020 4022     		movs	r2, #64
+  39 0022 FFF7FEFF 		bl	chDbgPanic3
+  40              	.L2:
+  41 0026 0023     		movs	r3, #0
+  42 0028 84E86800 		stmia	r4, {r3, r5, r6}
+  43 002c 70BD     		pop	{r4, r5, r6, pc}
+  44              		.size	chPoolInit, .-chPoolInit
+  45 002e 00BF     		.section	.text.chPoolAllocI,"ax",%progbits
+  46              		.align	2
+  47              		.p2align 4,,15
+  48              		.global	chPoolAllocI
+  49              		.thumb
+  50              		.thumb_func
+  51              		.type	chPoolAllocI, %function
+  52              	chPoolAllocI:
+  53              		@ args = 0, pretend = 0, frame = 0
+  54              		@ frame_needed = 0, uses_anonymous_args = 0
+  55 0000 10B5     		push	{r4, lr}
+  56 0002 0446     		mov	r4, r0
+  57 0004 FFF7FEFF 		bl	chDbgCheckClassI
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccCE9bNc.s 			page 2
+
+
+  58 0008 4CB1     		cbz	r4, .L14
+  59              	.L8:
+  60 000a 2068     		ldr	r0, [r4]
+  61 000c 10B1     		cbz	r0, .L9
+  62 000e 0368     		ldr	r3, [r0]
+  63 0010 2360     		str	r3, [r4]
+  64 0012 10BD     		pop	{r4, pc}
+  65              	.L9:
+  66 0014 A368     		ldr	r3, [r4, #8]
+  67 0016 0BB1     		cbz	r3, .L10
+  68 0018 6068     		ldr	r0, [r4, #4]
+  69 001a 9847     		blx	r3
+  70              	.L10:
+  71 001c 10BD     		pop	{r4, pc}
+  72              	.L14:
+  73 001e 40F20000 		movw	r0, #:lower16:.LC2
+  74 0022 40F20001 		movw	r1, #:lower16:.LC1
+  75 0026 C0F20000 		movt	r0, #:upper16:.LC2
+  76 002a C0F20001 		movt	r1, #:upper16:.LC1
+  77 002e 6D22     		movs	r2, #109
+  78 0030 FFF7FEFF 		bl	chDbgPanic3
+  79 0034 E9E7     		b	.L8
+  80              		.size	chPoolAllocI, .-chPoolAllocI
+  81 0036 00BFAFF3 		.section	.text.chPoolAlloc,"ax",%progbits
+  81      0080AFF3 
+  81      0080
+  82              		.align	2
+  83              		.p2align 4,,15
+  84              		.global	chPoolAlloc
+  85              		.thumb
+  86              		.thumb_func
+  87              		.type	chPoolAlloc, %function
+  88              	chPoolAlloc:
+  89              		@ args = 0, pretend = 0, frame = 0
+  90              		@ frame_needed = 0, uses_anonymous_args = 0
+  91 0000 10B5     		push	{r4, lr}
+  92 0002 2023     		movs	r3, #32
+  93 0004 0446     		mov	r4, r0
+  94              	@ 131 "chibios/os/kernel/src/chmempools.c" 1
+  95 0006 83F31188 		msr     BASEPRI, r3
+  96              	@ 0 "" 2
+  97              		.thumb
+  98 000a FFF7FEFF 		bl	dbg_check_lock
+  99 000e 2046     		mov	r0, r4
+ 100 0010 FFF7FEFF 		bl	chPoolAllocI
+ 101 0014 0446     		mov	r4, r0
+ 102 0016 FFF7FEFF 		bl	dbg_check_unlock
+ 103 001a 0023     		movs	r3, #0
+ 104              	@ 133 "chibios/os/kernel/src/chmempools.c" 1
+ 105 001c 83F31188 		msr     BASEPRI, r3
+ 106              	@ 0 "" 2
+ 107              		.thumb
+ 108 0020 2046     		mov	r0, r4
+ 109 0022 10BD     		pop	{r4, pc}
+ 110              		.size	chPoolAlloc, .-chPoolAlloc
+ 111 0024 AFF30080 		.section	.text.chPoolFreeI,"ax",%progbits
+ 111      AFF30080 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccCE9bNc.s 			page 3
+
+
+ 111      AFF30080 
+ 112              		.align	2
+ 113              		.p2align 4,,15
+ 114              		.global	chPoolFreeI
+ 115              		.thumb
+ 116              		.thumb_func
+ 117              		.type	chPoolFreeI, %function
+ 118              	chPoolFreeI:
+ 119              		@ args = 0, pretend = 0, frame = 0
+ 120              		@ frame_needed = 0, uses_anonymous_args = 0
+ 121 0000 38B5     		push	{r3, r4, r5, lr}
+ 122 0002 0446     		mov	r4, r0
+ 123 0004 0D46     		mov	r5, r1
+ 124 0006 FFF7FEFF 		bl	chDbgCheckClassI
+ 125 000a 002C     		cmp	r4, #0
+ 126 000c 18BF     		it	ne
+ 127 000e 002D     		cmpne	r5, #0
+ 128 0010 0AD1     		bne	.L17
+ 129 0012 40F20000 		movw	r0, #:lower16:.LC3
+ 130 0016 40F20001 		movw	r1, #:lower16:.LC1
+ 131 001a C0F20000 		movt	r0, #:upper16:.LC3
+ 132 001e C0F20001 		movt	r1, #:upper16:.LC1
+ 133 0022 9922     		movs	r2, #153
+ 134 0024 FFF7FEFF 		bl	chDbgPanic3
+ 135              	.L17:
+ 136 0028 2368     		ldr	r3, [r4]
+ 137 002a 2B60     		str	r3, [r5]
+ 138 002c 2560     		str	r5, [r4]
+ 139 002e 38BD     		pop	{r3, r4, r5, pc}
+ 140              		.size	chPoolFreeI, .-chPoolFreeI
+ 141              		.section	.text.chPoolFree,"ax",%progbits
+ 142              		.align	2
+ 143              		.p2align 4,,15
+ 144              		.global	chPoolFree
+ 145              		.thumb
+ 146              		.thumb_func
+ 147              		.type	chPoolFree, %function
+ 148              	chPoolFree:
+ 149              		@ args = 0, pretend = 0, frame = 0
+ 150              		@ frame_needed = 0, uses_anonymous_args = 0
+ 151 0000 38B5     		push	{r3, r4, r5, lr}
+ 152 0002 0546     		mov	r5, r0
+ 153 0004 0C46     		mov	r4, r1
+ 154 0006 2023     		movs	r3, #32
+ 155              	@ 173 "chibios/os/kernel/src/chmempools.c" 1
+ 156 0008 83F31188 		msr     BASEPRI, r3
+ 157              	@ 0 "" 2
+ 158              		.thumb
+ 159 000c FFF7FEFF 		bl	dbg_check_lock
+ 160 0010 2846     		mov	r0, r5
+ 161 0012 2146     		mov	r1, r4
+ 162 0014 FFF7FEFF 		bl	chPoolFreeI
+ 163 0018 FFF7FEFF 		bl	dbg_check_unlock
+ 164 001c 0023     		movs	r3, #0
+ 165              	@ 175 "chibios/os/kernel/src/chmempools.c" 1
+ 166 001e 83F31188 		msr     BASEPRI, r3
+ 167              	@ 0 "" 2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccCE9bNc.s 			page 4
+
+
+ 168              		.thumb
+ 169 0022 38BD     		pop	{r3, r4, r5, pc}
+ 170              		.size	chPoolFree, .-chPoolFree
+ 171 0024 AFF30080 		.section	.text.chPoolLoadArray,"ax",%progbits
+ 171      AFF30080 
+ 171      AFF30080 
+ 172              		.align	2
+ 173              		.p2align 4,,15
+ 174              		.global	chPoolLoadArray
+ 175              		.thumb
+ 176              		.thumb_func
+ 177              		.type	chPoolLoadArray, %function
+ 178              	chPoolLoadArray:
+ 179              		@ args = 0, pretend = 0, frame = 0
+ 180              		@ frame_needed = 0, uses_anonymous_args = 0
+ 181 0000 002A     		cmp	r2, #0
+ 182 0002 18BF     		it	ne
+ 183 0004 0028     		cmpne	r0, #0
+ 184 0006 70B5     		push	{r4, r5, r6, lr}
+ 185 0008 0646     		mov	r6, r0
+ 186 000a 1446     		mov	r4, r2
+ 187 000c 0D46     		mov	r5, r1
+ 188 000e 08D0     		beq	.L32
+ 189              	.L25:
+ 190 0010 2946     		mov	r1, r5
+ 191 0012 3046     		mov	r0, r6
+ 192 0014 FFF7FEFF 		bl	chPoolFree
+ 193 0018 7368     		ldr	r3, [r6, #4]
+ 194 001a 013C     		subs	r4, r4, #1
+ 195 001c 1D44     		add	r5, r5, r3
+ 196 001e F7D1     		bne	.L25
+ 197              	.L22:
+ 198 0020 70BD     		pop	{r4, r5, r6, pc}
+ 199              	.L32:
+ 200 0022 40F20000 		movw	r0, #:lower16:.LC4
+ 201 0026 40F20001 		movw	r1, #:lower16:.LC1
+ 202 002a C0F20000 		movt	r0, #:upper16:.LC4
+ 203 002e C0F20001 		movt	r1, #:upper16:.LC1
+ 204 0032 5622     		movs	r2, #86
+ 205 0034 FFF7FEFF 		bl	chDbgPanic3
+ 206 0038 002C     		cmp	r4, #0
+ 207 003a E9D1     		bne	.L25
+ 208 003c F0E7     		b	.L22
+ 209              		.size	chPoolLoadArray, .-chPoolLoadArray
+ 210 003e 00BF     		.section	.rodata.str1.4,"aMS",%progbits,1
+ 211              		.align	2
+ 212              	.LC0:
+ 213 0000 22636850 		.ascii	"\"chPoolInit\"()\000"
+ 213      6F6F6C49 
+ 213      6E697422 
+ 213      282900
+ 214 000f 00       		.space	1
+ 215              	.LC1:
+ 216 0010 63686962 		.ascii	"chibios/os/kernel/src/chmempools.c\000"
+ 216      696F732F 
+ 216      6F732F6B 
+ 216      65726E65 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccCE9bNc.s 			page 5
+
+
+ 216      6C2F7372 
+ 217 0033 00       		.space	1
+ 218              	.LC2:
+ 219 0034 22636850 		.ascii	"\"chPoolAllocI\"()\000"
+ 219      6F6F6C41 
+ 219      6C6C6F63 
+ 219      49222829 
+ 219      00
+ 220 0045 000000   		.space	3
+ 221              	.LC3:
+ 222 0048 22636850 		.ascii	"\"chPoolFreeI\"()\000"
+ 222      6F6F6C46 
+ 222      72656549 
+ 222      22282900 
+ 223              	.LC4:
+ 224 0058 22636850 		.ascii	"\"chPoolLoadArray\"()\000"
+ 224      6F6F6C4C 
+ 224      6F616441 
+ 224      72726179 
+ 224      22282900 
+ 225              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccCE9bNc.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 chmempools.c
+C:\Users\pc\AppData\Local\Temp\ccCE9bNc.s:17     .text.chPoolInit:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccCE9bNc.s:23     .text.chPoolInit:00000000 chPoolInit
+C:\Users\pc\AppData\Local\Temp\ccCE9bNc.s:212    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccCE9bNc.s:215    .rodata.str1.4:00000010 .LC1
+C:\Users\pc\AppData\Local\Temp\ccCE9bNc.s:46     .text.chPoolAllocI:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccCE9bNc.s:52     .text.chPoolAllocI:00000000 chPoolAllocI
+C:\Users\pc\AppData\Local\Temp\ccCE9bNc.s:218    .rodata.str1.4:00000034 .LC2
+C:\Users\pc\AppData\Local\Temp\ccCE9bNc.s:82     .text.chPoolAlloc:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccCE9bNc.s:88     .text.chPoolAlloc:00000000 chPoolAlloc
+C:\Users\pc\AppData\Local\Temp\ccCE9bNc.s:112    .text.chPoolFreeI:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccCE9bNc.s:118    .text.chPoolFreeI:00000000 chPoolFreeI
+C:\Users\pc\AppData\Local\Temp\ccCE9bNc.s:221    .rodata.str1.4:00000048 .LC3
+C:\Users\pc\AppData\Local\Temp\ccCE9bNc.s:142    .text.chPoolFree:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccCE9bNc.s:148    .text.chPoolFree:00000000 chPoolFree
+C:\Users\pc\AppData\Local\Temp\ccCE9bNc.s:172    .text.chPoolLoadArray:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccCE9bNc.s:178    .text.chPoolLoadArray:00000000 chPoolLoadArray
+C:\Users\pc\AppData\Local\Temp\ccCE9bNc.s:223    .rodata.str1.4:00000058 .LC4
+C:\Users\pc\AppData\Local\Temp\ccCE9bNc.s:211    .rodata.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+chDbgPanic3
+chDbgCheckClassI
+dbg_check_lock
+dbg_check_unlock

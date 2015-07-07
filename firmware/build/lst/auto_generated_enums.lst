@@ -1,0 +1,3633 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"auto_generated_enums.cpp"
+  16              		.section	.text._Z16getTiming_mode_e13timing_mode_e,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_Z16getTiming_mode_e13timing_mode_e
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_Z16getTiming_mode_e13timing_mode_e, %function
+  23              	_Z16getTiming_mode_e13timing_mode_e:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 0128     		cmp	r0, #1
+  28 0002 0ED0     		beq	.L3
+  29 0004 4FF41443 		mov	r3, #37888
+  30 0008 C7F23573 		movt	r3, 30517
+  31 000c 9842     		cmp	r0, r3
+  32 000e 0DD0     		beq	.L4
+  33 0010 40F20003 		movw	r3, #:lower16:.LC1
+  34 0014 C0F20003 		movt	r3, #:upper16:.LC1
+  35 0018 0028     		cmp	r0, #0
+  36 001a 0CBF     		ite	eq
+  37 001c 1846     		moveq	r0, r3
+  38 001e 0020     		movne	r0, #0
+  39 0020 7047     		bx	lr
+  40              	.L3:
+  41 0022 40F20000 		movw	r0, #:lower16:.LC2
+  42 0026 C0F20000 		movt	r0, #:upper16:.LC2
+  43 002a 7047     		bx	lr
+  44              	.L4:
+  45 002c 40F20000 		movw	r0, #:lower16:.LC0
+  46 0030 C0F20000 		movt	r0, #:upper16:.LC0
+  47 0034 7047     		bx	lr
+  48              		.size	_Z16getTiming_mode_e13timing_mode_e, .-_Z16getTiming_mode_e13timing_mode_e
+  49 0036 00BFAFF3 		.section	.text._Z16getEngine_type_e13engine_type_e,"ax",%progbits
+  49      0080AFF3 
+  49      0080
+  50              		.align	2
+  51              		.p2align 4,,15
+  52              		.global	_Z16getEngine_type_e13engine_type_e
+  53              		.thumb
+  54              		.thumb_func
+  55              		.type	_Z16getEngine_type_e13engine_type_e, %function
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 2
+
+
+  56              	_Z16getEngine_type_e13engine_type_e:
+  57              		@ args = 0, pretend = 0, frame = 0
+  58              		@ frame_needed = 0, uses_anonymous_args = 0
+  59              		@ link register save eliminated.
+  60 0000 1128     		cmp	r0, #17
+  61 0002 00F0FC80 		beq	.L10
+  62 0006 16DD     		ble	.L56
+  63 0008 1A28     		cmp	r0, #26
+  64 000a 00F0DA80 		beq	.L32
+  65 000e 3CDC     		bgt	.L33
+  66 0010 1528     		cmp	r0, #21
+  67 0012 00F0DB80 		beq	.L34
+  68 0016 58DD     		ble	.L57
+  69 0018 1728     		cmp	r0, #23
+  70 001a 00F0AF80 		beq	.L39
+  71 001e C0F2A880 		blt	.L40
+  72 0022 1828     		cmp	r0, #24
+  73 0024 6ED0     		beq	.L41
+  74 0026 1928     		cmp	r0, #25
+  75 0028 40F0EE80 		bne	.L9
+  76 002c 40F20000 		movw	r0, #:lower16:.LC8
+  77 0030 C0F20000 		movt	r0, #:upper16:.LC8
+  78 0034 7047     		bx	lr
+  79              	.L56:
+  80 0036 0828     		cmp	r0, #8
+  81 0038 00F0D780 		beq	.L12
+  82 003c 12DC     		bgt	.L13
+  83 003e 0328     		cmp	r0, #3
+  84 0040 00F0D880 		beq	.L14
+  85 0044 36DD     		ble	.L58
+  86 0046 0528     		cmp	r0, #5
+  87 0048 00F0AC80 		beq	.L19
+  88 004c C0F2A580 		blt	.L20
+  89 0050 0628     		cmp	r0, #6
+  90 0052 52D0     		beq	.L21
+  91 0054 0728     		cmp	r0, #7
+  92 0056 40F0D780 		bne	.L9
+  93 005a 40F20000 		movw	r0, #:lower16:.LC17
+  94 005e C0F20000 		movt	r0, #:upper16:.LC17
+  95 0062 7047     		bx	lr
+  96              	.L13:
+  97 0064 0C28     		cmp	r0, #12
+  98 0066 00F0BB80 		beq	.L23
+  99 006a 36DD     		ble	.L59
+ 100 006c 0E28     		cmp	r0, #14
+ 101 006e 00F0A380 		beq	.L28
+ 102 0072 C0F29C80 		blt	.L29
+ 103 0076 0F28     		cmp	r0, #15
+ 104 0078 49D0     		beq	.L30
+ 105 007a 1028     		cmp	r0, #16
+ 106 007c 40F0C480 		bne	.L9
+ 107 0080 40F20000 		movw	r0, #:lower16:.LC31
+ 108 0084 C0F20000 		movt	r0, #:upper16:.LC31
+ 109 0088 7047     		bx	lr
+ 110              	.L33:
+ 111 008a 1E28     		cmp	r0, #30
+ 112 008c 00F0A380 		beq	.L43
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 3
+
+
+ 113 0090 2BDD     		ble	.L60
+ 114 0092 2028     		cmp	r0, #32
+ 115 0094 7CD0     		beq	.L48
+ 116 0096 76DB     		blt	.L49
+ 117 0098 2128     		cmp	r0, #33
+ 118 009a 3DD0     		beq	.L50
+ 119 009c 4FF41443 		mov	r3, #37888
+ 120 00a0 C7F23573 		movt	r3, 30517
+ 121 00a4 9842     		cmp	r0, r3
+ 122 00a6 40F0AF80 		bne	.L9
+ 123 00aa 40F20000 		movw	r0, #:lower16:.LC18
+ 124 00ae C0F20000 		movt	r0, #:upper16:.LC18
+ 125 00b2 7047     		bx	lr
+ 126              	.L58:
+ 127 00b4 0128     		cmp	r0, #1
+ 128 00b6 48D0     		beq	.L52
+ 129 00b8 3DDC     		bgt	.L17
+ 130 00ba 0028     		cmp	r0, #0
+ 131 00bc 40F0A480 		bne	.L9
+ 132 00c0 40F20000 		movw	r0, #:lower16:.LC10
+ 133 00c4 C0F20000 		movt	r0, #:upper16:.LC10
+ 134 00c8 7047     		bx	lr
+ 135              	.L57:
+ 136 00ca 1328     		cmp	r0, #19
+ 137 00cc 4CD0     		beq	.L36
+ 138 00ce 2DDC     		bgt	.L61
+ 139 00d0 40F20000 		movw	r0, #:lower16:.LC21
+ 140 00d4 C0F20000 		movt	r0, #:upper16:.LC21
+ 141 00d8 7047     		bx	lr
+ 142              	.L59:
+ 143 00da 0A28     		cmp	r0, #10
+ 144 00dc 3FD0     		beq	.L25
+ 145 00de 20DC     		bgt	.L62
+ 146 00e0 40F20000 		movw	r0, #:lower16:.LC25
+ 147 00e4 C0F20000 		movt	r0, #:upper16:.LC25
+ 148 00e8 7047     		bx	lr
+ 149              	.L60:
+ 150 00ea 1C28     		cmp	r0, #28
+ 151 00ec 32D0     		beq	.L45
+ 152 00ee 27DC     		bgt	.L63
+ 153 00f0 40F20000 		movw	r0, #:lower16:.LC3
+ 154 00f4 C0F20000 		movt	r0, #:upper16:.LC3
+ 155 00f8 7047     		bx	lr
+ 156              	.L21:
+ 157 00fa 40F20000 		movw	r0, #:lower16:.LC20
+ 158 00fe C0F20000 		movt	r0, #:upper16:.LC20
+ 159 0102 7047     		bx	lr
+ 160              	.L41:
+ 161 0104 40F20000 		movw	r0, #:lower16:.LC28
+ 162 0108 C0F20000 		movt	r0, #:upper16:.LC28
+ 163 010c 7047     		bx	lr
+ 164              	.L30:
+ 165 010e 40F20000 		movw	r0, #:lower16:.LC9
+ 166 0112 C0F20000 		movt	r0, #:upper16:.LC9
+ 167 0116 7047     		bx	lr
+ 168              	.L50:
+ 169 0118 40F20000 		movw	r0, #:lower16:.LC13
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 4
+
+
+ 170 011c C0F20000 		movt	r0, #:upper16:.LC13
+ 171 0120 7047     		bx	lr
+ 172              	.L62:
+ 173 0122 40F20000 		movw	r0, #:lower16:.LC23
+ 174 0126 C0F20000 		movt	r0, #:upper16:.LC23
+ 175 012a 7047     		bx	lr
+ 176              	.L61:
+ 177 012c 40F20000 		movw	r0, #:lower16:.LC27
+ 178 0130 C0F20000 		movt	r0, #:upper16:.LC27
+ 179 0134 7047     		bx	lr
+ 180              	.L17:
+ 181 0136 40F20000 		movw	r0, #:lower16:.LC11
+ 182 013a C0F20000 		movt	r0, #:upper16:.LC11
+ 183 013e 7047     		bx	lr
+ 184              	.L63:
+ 185 0140 40F20000 		movw	r0, #:lower16:.LC5
+ 186 0144 C0F20000 		movt	r0, #:upper16:.LC5
+ 187 0148 7047     		bx	lr
+ 188              	.L52:
+ 189 014a 40F20000 		movw	r0, #:lower16:.LC4
+ 190 014e C0F20000 		movt	r0, #:upper16:.LC4
+ 191 0152 7047     		bx	lr
+ 192              	.L45:
+ 193 0154 40F20000 		movw	r0, #:lower16:.LC24
+ 194 0158 C0F20000 		movt	r0, #:upper16:.LC24
+ 195 015c 7047     		bx	lr
+ 196              	.L25:
+ 197 015e 40F20000 		movw	r0, #:lower16:.LC33
+ 198 0162 C0F20000 		movt	r0, #:upper16:.LC33
+ 199 0166 7047     		bx	lr
+ 200              	.L36:
+ 201 0168 40F20000 		movw	r0, #:lower16:.LC26
+ 202 016c C0F20000 		movt	r0, #:upper16:.LC26
+ 203 0170 7047     		bx	lr
+ 204              	.L40:
+ 205 0172 40F20000 		movw	r0, #:lower16:.LC35
+ 206 0176 C0F20000 		movt	r0, #:upper16:.LC35
+ 207 017a 7047     		bx	lr
+ 208              	.L39:
+ 209 017c 40F20000 		movw	r0, #:lower16:.LC12
+ 210 0180 C0F20000 		movt	r0, #:upper16:.LC12
+ 211 0184 7047     		bx	lr
+ 212              	.L49:
+ 213 0186 40F20000 		movw	r0, #:lower16:.LC7
+ 214 018a C0F20000 		movt	r0, #:upper16:.LC7
+ 215 018e 7047     		bx	lr
+ 216              	.L48:
+ 217 0190 40F20000 		movw	r0, #:lower16:.LC37
+ 218 0194 C0F20000 		movt	r0, #:upper16:.LC37
+ 219 0198 7047     		bx	lr
+ 220              	.L20:
+ 221 019a 40F20000 		movw	r0, #:lower16:.LC16
+ 222 019e C0F20000 		movt	r0, #:upper16:.LC16
+ 223 01a2 7047     		bx	lr
+ 224              	.L19:
+ 225 01a4 40F20000 		movw	r0, #:lower16:.LC32
+ 226 01a8 C0F20000 		movt	r0, #:upper16:.LC32
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 5
+
+
+ 227 01ac 7047     		bx	lr
+ 228              	.L29:
+ 229 01ae 40F20000 		movw	r0, #:lower16:.LC30
+ 230 01b2 C0F20000 		movt	r0, #:upper16:.LC30
+ 231 01b6 7047     		bx	lr
+ 232              	.L28:
+ 233 01b8 40F20000 		movw	r0, #:lower16:.LC15
+ 234 01bc C0F20000 		movt	r0, #:upper16:.LC15
+ 235 01c0 7047     		bx	lr
+ 236              	.L32:
+ 237 01c2 40F20000 		movw	r0, #:lower16:.LC36
+ 238 01c6 C0F20000 		movt	r0, #:upper16:.LC36
+ 239 01ca 7047     		bx	lr
+ 240              	.L34:
+ 241 01cc 40F20000 		movw	r0, #:lower16:.LC29
+ 242 01d0 C0F20000 		movt	r0, #:upper16:.LC29
+ 243 01d4 7047     		bx	lr
+ 244              	.L43:
+ 245 01d6 40F20000 		movw	r0, #:lower16:.LC6
+ 246 01da C0F20000 		movt	r0, #:upper16:.LC6
+ 247 01de 7047     		bx	lr
+ 248              	.L23:
+ 249 01e0 40F20000 		movw	r0, #:lower16:.LC34
+ 250 01e4 C0F20000 		movt	r0, #:upper16:.LC34
+ 251 01e8 7047     		bx	lr
+ 252              	.L12:
+ 253 01ea 40F20000 		movw	r0, #:lower16:.LC19
+ 254 01ee C0F20000 		movt	r0, #:upper16:.LC19
+ 255 01f2 7047     		bx	lr
+ 256              	.L14:
+ 257 01f4 40F20000 		movw	r0, #:lower16:.LC14
+ 258 01f8 C0F20000 		movt	r0, #:upper16:.LC14
+ 259 01fc 7047     		bx	lr
+ 260              	.L10:
+ 261 01fe 40F20000 		movw	r0, #:lower16:.LC22
+ 262 0202 C0F20000 		movt	r0, #:upper16:.LC22
+ 263 0206 7047     		bx	lr
+ 264              	.L9:
+ 265 0208 0020     		movs	r0, #0
+ 266 020a 7047     		bx	lr
+ 267              		.size	_Z16getEngine_type_e13engine_type_e, .-_Z16getEngine_type_e13engine_type_e
+ 268 020c AFF30080 		.section	.text._Z17getTrigger_type_e14trigger_type_e,"ax",%progbits
+ 269              		.align	2
+ 270              		.p2align 4,,15
+ 271              		.global	_Z17getTrigger_type_e14trigger_type_e
+ 272              		.thumb
+ 273              		.thumb_func
+ 274              		.type	_Z17getTrigger_type_e14trigger_type_e, %function
+ 275              	_Z17getTrigger_type_e14trigger_type_e:
+ 276              		@ args = 0, pretend = 0, frame = 0
+ 277              		@ frame_needed = 0, uses_anonymous_args = 0
+ 278              		@ link register save eliminated.
+ 279 0000 0B28     		cmp	r0, #11
+ 280 0002 00F0A280 		beq	.L66
+ 281 0006 11DC     		bgt	.L67
+ 282 0008 0528     		cmp	r0, #5
+ 283 000a 00F0A380 		beq	.L68
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 6
+
+
+ 284 000e 1EDC     		bgt	.L69
+ 285 0010 0228     		cmp	r0, #2
+ 286 0012 00F08480 		beq	.L96
+ 287 0016 51DC     		bgt	.L71
+ 288 0018 0028     		cmp	r0, #0
+ 289 001a 62D0     		beq	.L72
+ 290 001c 0128     		cmp	r0, #1
+ 291 001e 40F09280 		bne	.L65
+ 292 0022 40F20000 		movw	r0, #:lower16:.LC41
+ 293 0026 C0F20000 		movt	r0, #:upper16:.LC41
+ 294 002a 7047     		bx	lr
+ 295              	.L67:
+ 296 002c 1128     		cmp	r0, #17
+ 297 002e 00F09680 		beq	.L82
+ 298 0032 18DC     		bgt	.L83
+ 299 0034 0E28     		cmp	r0, #14
+ 300 0036 7CD0     		beq	.L84
+ 301 0038 21DC     		bgt	.L85
+ 302 003a 0C28     		cmp	r0, #12
+ 303 003c 47D0     		beq	.L86
+ 304 003e 0D28     		cmp	r0, #13
+ 305 0040 40F08180 		bne	.L65
+ 306 0044 40F20000 		movw	r0, #:lower16:.LC47
+ 307 0048 C0F20000 		movt	r0, #:upper16:.LC47
+ 308 004c 7047     		bx	lr
+ 309              	.L69:
+ 310 004e 0828     		cmp	r0, #8
+ 311 0050 6AD0     		beq	.L76
+ 312 0052 1DDC     		bgt	.L77
+ 313 0054 0628     		cmp	r0, #6
+ 314 0056 3FD0     		beq	.L78
+ 315 0058 0728     		cmp	r0, #7
+ 316 005a 74D1     		bne	.L65
+ 317 005c 40F20000 		movw	r0, #:lower16:.LC42
+ 318 0060 C0F20000 		movt	r0, #:upper16:.LC42
+ 319 0064 7047     		bx	lr
+ 320              	.L83:
+ 321 0066 1428     		cmp	r0, #20
+ 322 0068 68D0     		beq	.L90
+ 323 006a 1ADC     		bgt	.L91
+ 324 006c 1228     		cmp	r0, #18
+ 325 006e 3DD0     		beq	.L92
+ 326 0070 1328     		cmp	r0, #19
+ 327 0072 68D1     		bne	.L65
+ 328 0074 40F20000 		movw	r0, #:lower16:.LC59
+ 329 0078 C0F20000 		movt	r0, #:upper16:.LC59
+ 330 007c 7047     		bx	lr
+ 331              	.L85:
+ 332 007e 0F28     		cmp	r0, #15
+ 333 0080 48D0     		beq	.L88
+ 334 0082 1028     		cmp	r0, #16
+ 335 0084 5FD1     		bne	.L65
+ 336 0086 40F20000 		movw	r0, #:lower16:.LC44
+ 337 008a C0F20000 		movt	r0, #:upper16:.LC44
+ 338 008e 7047     		bx	lr
+ 339              	.L77:
+ 340 0090 0928     		cmp	r0, #9
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 7
+
+
+ 341 0092 35D0     		beq	.L80
+ 342 0094 0A28     		cmp	r0, #10
+ 343 0096 56D1     		bne	.L65
+ 344 0098 40F20000 		movw	r0, #:lower16:.LC46
+ 345 009c C0F20000 		movt	r0, #:upper16:.LC46
+ 346 00a0 7047     		bx	lr
+ 347              	.L91:
+ 348 00a2 1528     		cmp	r0, #21
+ 349 00a4 27D0     		beq	.L94
+ 350 00a6 4FF41443 		mov	r3, #37888
+ 351 00aa C7F23573 		movt	r3, 30517
+ 352 00ae 9842     		cmp	r0, r3
+ 353 00b0 49D1     		bne	.L65
+ 354 00b2 40F20000 		movw	r0, #:lower16:.LC38
+ 355 00b6 C0F20000 		movt	r0, #:upper16:.LC38
+ 356 00ba 7047     		bx	lr
+ 357              	.L71:
+ 358 00bc 0328     		cmp	r0, #3
+ 359 00be 24D0     		beq	.L74
+ 360 00c0 0428     		cmp	r0, #4
+ 361 00c2 40D1     		bne	.L65
+ 362 00c4 40F20000 		movw	r0, #:lower16:.LC50
+ 363 00c8 C0F20000 		movt	r0, #:upper16:.LC50
+ 364 00cc 7047     		bx	lr
+ 365              	.L86:
+ 366 00ce 40F20000 		movw	r0, #:lower16:.LC48
+ 367 00d2 C0F20000 		movt	r0, #:upper16:.LC48
+ 368 00d6 7047     		bx	lr
+ 369              	.L78:
+ 370 00d8 40F20000 		movw	r0, #:lower16:.LC51
+ 371 00dc C0F20000 		movt	r0, #:upper16:.LC51
+ 372 00e0 7047     		bx	lr
+ 373              	.L72:
+ 374 00e2 40F20000 		movw	r0, #:lower16:.LC53
+ 375 00e6 C0F20000 		movt	r0, #:upper16:.LC53
+ 376 00ea 7047     		bx	lr
+ 377              	.L92:
+ 378 00ec 40F20000 		movw	r0, #:lower16:.LC57
+ 379 00f0 C0F20000 		movt	r0, #:upper16:.LC57
+ 380 00f4 7047     		bx	lr
+ 381              	.L94:
+ 382 00f6 40F20000 		movw	r0, #:lower16:.LC60
+ 383 00fa C0F20000 		movt	r0, #:upper16:.LC60
+ 384 00fe 7047     		bx	lr
+ 385              	.L80:
+ 386 0100 40F20000 		movw	r0, #:lower16:.LC54
+ 387 0104 C0F20000 		movt	r0, #:upper16:.LC54
+ 388 0108 7047     		bx	lr
+ 389              	.L74:
+ 390 010a 40F20000 		movw	r0, #:lower16:.LC49
+ 391 010e C0F20000 		movt	r0, #:upper16:.LC49
+ 392 0112 7047     		bx	lr
+ 393              	.L88:
+ 394 0114 40F20000 		movw	r0, #:lower16:.LC43
+ 395 0118 C0F20000 		movt	r0, #:upper16:.LC43
+ 396 011c 7047     		bx	lr
+ 397              	.L96:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 8
+
+
+ 398 011e 40F20000 		movw	r0, #:lower16:.LC39
+ 399 0122 C0F20000 		movt	r0, #:upper16:.LC39
+ 400 0126 7047     		bx	lr
+ 401              	.L76:
+ 402 0128 40F20000 		movw	r0, #:lower16:.LC55
+ 403 012c C0F20000 		movt	r0, #:upper16:.LC55
+ 404 0130 7047     		bx	lr
+ 405              	.L84:
+ 406 0132 40F20000 		movw	r0, #:lower16:.LC40
+ 407 0136 C0F20000 		movt	r0, #:upper16:.LC40
+ 408 013a 7047     		bx	lr
+ 409              	.L90:
+ 410 013c 40F20000 		movw	r0, #:lower16:.LC58
+ 411 0140 C0F20000 		movt	r0, #:upper16:.LC58
+ 412 0144 7047     		bx	lr
+ 413              	.L65:
+ 414 0146 0020     		movs	r0, #0
+ 415 0148 7047     		bx	lr
+ 416              	.L66:
+ 417 014a 40F20000 		movw	r0, #:lower16:.LC52
+ 418 014e C0F20000 		movt	r0, #:upper16:.LC52
+ 419 0152 7047     		bx	lr
+ 420              	.L68:
+ 421 0154 40F20000 		movw	r0, #:lower16:.LC45
+ 422 0158 C0F20000 		movt	r0, #:upper16:.LC45
+ 423 015c 7047     		bx	lr
+ 424              	.L82:
+ 425 015e 40F20000 		movw	r0, #:lower16:.LC56
+ 426 0162 C0F20000 		movt	r0, #:upper16:.LC56
+ 427 0166 7047     		bx	lr
+ 428              		.size	_Z17getTrigger_type_e14trigger_type_e, .-_Z17getTrigger_type_e14trigger_type_e
+ 429 0168 AFF30080 		.section	.text._Z21getAdc_channel_mode_e18adc_channel_mode_e,"ax",%progbits
+ 429      AFF30080 
+ 430              		.align	2
+ 431              		.p2align 4,,15
+ 432              		.global	_Z21getAdc_channel_mode_e18adc_channel_mode_e
+ 433              		.thumb
+ 434              		.thumb_func
+ 435              		.type	_Z21getAdc_channel_mode_e18adc_channel_mode_e, %function
+ 436              	_Z21getAdc_channel_mode_e18adc_channel_mode_e:
+ 437              		@ args = 0, pretend = 0, frame = 0
+ 438              		@ frame_needed = 0, uses_anonymous_args = 0
+ 439              		@ link register save eliminated.
+ 440 0000 0128     		cmp	r0, #1
+ 441 0002 1AD0     		beq	.L99
+ 442 0004 11DD     		ble	.L105
+ 443 0006 0228     		cmp	r0, #2
+ 444 0008 0AD0     		beq	.L102
+ 445 000a 4FF41443 		mov	r3, #37888
+ 446 000e C7F23573 		movt	r3, 30517
+ 447 0012 9842     		cmp	r0, r3
+ 448 0014 0FD1     		bne	.L98
+ 449 0016 40F20000 		movw	r0, #:lower16:.LC64
+ 450 001a C0F20000 		movt	r0, #:upper16:.LC64
+ 451 001e 7047     		bx	lr
+ 452              	.L102:
+ 453 0020 40F20000 		movw	r0, #:lower16:.LC61
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 9
+
+
+ 454 0024 C0F20000 		movt	r0, #:upper16:.LC61
+ 455 0028 7047     		bx	lr
+ 456              	.L105:
+ 457 002a 20B9     		cbnz	r0, .L98
+ 458 002c 40F20000 		movw	r0, #:lower16:.LC62
+ 459 0030 C0F20000 		movt	r0, #:upper16:.LC62
+ 460 0034 7047     		bx	lr
+ 461              	.L98:
+ 462 0036 0020     		movs	r0, #0
+ 463 0038 7047     		bx	lr
+ 464              	.L99:
+ 465 003a 40F20000 		movw	r0, #:lower16:.LC63
+ 466 003e C0F20000 		movt	r0, #:upper16:.LC63
+ 467 0042 7047     		bx	lr
+ 468              		.size	_Z21getAdc_channel_mode_e18adc_channel_mode_e, .-_Z21getAdc_channel_mode_e18adc_channel_mode
+ 469 0044 AFF30080 		.section	.text._Z18getTrigger_value_e15trigger_value_e,"ax",%progbits
+ 469      AFF30080 
+ 469      AFF30080 
+ 470              		.align	2
+ 471              		.p2align 4,,15
+ 472              		.global	_Z18getTrigger_value_e15trigger_value_e
+ 473              		.thumb
+ 474              		.thumb_func
+ 475              		.type	_Z18getTrigger_value_e15trigger_value_e, %function
+ 476              	_Z18getTrigger_value_e15trigger_value_e:
+ 477              		@ args = 0, pretend = 0, frame = 0
+ 478              		@ frame_needed = 0, uses_anonymous_args = 0
+ 479              		@ link register save eliminated.
+ 480 0000 40B1     		cbz	r0, .L110
+ 481 0002 40F20003 		movw	r3, #:lower16:.LC65
+ 482 0006 C0F20003 		movt	r3, #:upper16:.LC65
+ 483 000a 0128     		cmp	r0, #1
+ 484 000c 0CBF     		ite	eq
+ 485 000e 1846     		moveq	r0, r3
+ 486 0010 0020     		movne	r0, #0
+ 487 0012 7047     		bx	lr
+ 488              	.L110:
+ 489 0014 40F20000 		movw	r0, #:lower16:.LC66
+ 490 0018 C0F20000 		movt	r0, #:upper16:.LC66
+ 491 001c 7047     		bx	lr
+ 492              		.size	_Z18getTrigger_value_e15trigger_value_e, .-_Z18getTrigger_value_e15trigger_value_e
+ 493 001e 00BF     		.section	.text._Z18getTrigger_wheel_e15trigger_wheel_e,"ax",%progbits
+ 494              		.align	2
+ 495              		.p2align 4,,15
+ 496              		.global	_Z18getTrigger_wheel_e15trigger_wheel_e
+ 497              		.thumb
+ 498              		.thumb_func
+ 499              		.type	_Z18getTrigger_wheel_e15trigger_wheel_e, %function
+ 500              	_Z18getTrigger_wheel_e15trigger_wheel_e:
+ 501              		@ args = 0, pretend = 0, frame = 0
+ 502              		@ frame_needed = 0, uses_anonymous_args = 0
+ 503              		@ link register save eliminated.
+ 504 0000 0228     		cmp	r0, #2
+ 505 0002 9DBF     		ittte	ls
+ 506 0004 40F20003 		movwls	r3, #:lower16:.LANCHOR0
+ 507 0008 C0F20003 		movtls	r3, #:upper16:.LANCHOR0
+ 508 000c 53F82000 		ldrls	r0, [r3, r0, lsl #2]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 10
+
+
+ 509 0010 0020     		movhi	r0, #0
+ 510 0012 7047     		bx	lr
+ 511              		.size	_Z18getTrigger_wheel_e15trigger_wheel_e, .-_Z18getTrigger_wheel_e15trigger_wheel_e
+ 512 0014 AFF30080 		.section	.text._Z18getTrigger_event_e15trigger_event_e,"ax",%progbits
+ 512      AFF30080 
+ 512      AFF30080 
+ 513              		.align	2
+ 514              		.p2align 4,,15
+ 515              		.global	_Z18getTrigger_event_e15trigger_event_e
+ 516              		.thumb
+ 517              		.thumb_func
+ 518              		.type	_Z18getTrigger_event_e15trigger_event_e, %function
+ 519              	_Z18getTrigger_event_e15trigger_event_e:
+ 520              		@ args = 0, pretend = 0, frame = 0
+ 521              		@ frame_needed = 0, uses_anonymous_args = 0
+ 522              		@ link register save eliminated.
+ 523 0000 0528     		cmp	r0, #5
+ 524 0002 9DBF     		ittte	ls
+ 525 0004 40F20003 		movwls	r3, #:lower16:.LANCHOR1
+ 526 0008 C0F20003 		movtls	r3, #:upper16:.LANCHOR1
+ 527 000c 53F82000 		ldrls	r0, [r3, r0, lsl #2]
+ 528 0010 0020     		movhi	r0, #0
+ 529 0012 7047     		bx	lr
+ 530              		.size	_Z18getTrigger_event_e15trigger_event_e, .-_Z18getTrigger_event_e15trigger_event_e
+ 531 0014 AFF30080 		.section	.text._Z21getEngine_load_mode_e18engine_load_mode_e,"ax",%progbits
+ 531      AFF30080 
+ 531      AFF30080 
+ 532              		.align	2
+ 533              		.p2align 4,,15
+ 534              		.global	_Z21getEngine_load_mode_e18engine_load_mode_e
+ 535              		.thumb
+ 536              		.thumb_func
+ 537              		.type	_Z21getEngine_load_mode_e18engine_load_mode_e, %function
+ 538              	_Z21getEngine_load_mode_e18engine_load_mode_e:
+ 539              		@ args = 0, pretend = 0, frame = 0
+ 540              		@ frame_needed = 0, uses_anonymous_args = 0
+ 541              		@ link register save eliminated.
+ 542 0000 0228     		cmp	r0, #2
+ 543 0002 27D0     		beq	.L119
+ 544 0004 0DDD     		ble	.L127
+ 545 0006 0428     		cmp	r0, #4
+ 546 0008 13D0     		beq	.L123
+ 547 000a 1EDB     		blt	.L124
+ 548 000c 4FF41443 		mov	r3, #37888
+ 549 0010 C7F23573 		movt	r3, 30517
+ 550 0014 9842     		cmp	r0, r3
+ 551 0016 11D1     		bne	.L118
+ 552 0018 40F20000 		movw	r0, #:lower16:.LC67
+ 553 001c C0F20000 		movt	r0, #:upper16:.LC67
+ 554 0020 7047     		bx	lr
+ 555              	.L127:
+ 556 0022 68B1     		cbz	r0, .L121
+ 557 0024 0128     		cmp	r0, #1
+ 558 0026 09D1     		bne	.L118
+ 559 0028 40F20000 		movw	r0, #:lower16:.LC68
+ 560 002c C0F20000 		movt	r0, #:upper16:.LC68
+ 561 0030 7047     		bx	lr
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 11
+
+
+ 562              	.L123:
+ 563 0032 40F20000 		movw	r0, #:lower16:.LC70
+ 564 0036 C0F20000 		movt	r0, #:upper16:.LC70
+ 565 003a 7047     		bx	lr
+ 566              	.L118:
+ 567 003c 0020     		movs	r0, #0
+ 568 003e 7047     		bx	lr
+ 569              	.L121:
+ 570 0040 40F20000 		movw	r0, #:lower16:.LC69
+ 571 0044 C0F20000 		movt	r0, #:upper16:.LC69
+ 572 0048 7047     		bx	lr
+ 573              	.L124:
+ 574 004a 40F20000 		movw	r0, #:lower16:.LC72
+ 575 004e C0F20000 		movt	r0, #:upper16:.LC72
+ 576 0052 7047     		bx	lr
+ 577              	.L119:
+ 578 0054 40F20000 		movw	r0, #:lower16:.LC71
+ 579 0058 C0F20000 		movt	r0, #:upper16:.LC71
+ 580 005c 7047     		bx	lr
+ 581              		.size	_Z21getEngine_load_mode_e18engine_load_mode_e, .-_Z21getEngine_load_mode_e18engine_load_mode
+ 582              		.section	.text._Z17getDisplay_mode_e14display_mode_e,"ax",%progbits
+ 583              		.align	2
+ 584              		.p2align 4,,15
+ 585              		.global	_Z17getDisplay_mode_e14display_mode_e
+ 586              		.thumb
+ 587              		.thumb_func
+ 588              		.type	_Z17getDisplay_mode_e14display_mode_e, %function
+ 589              	_Z17getDisplay_mode_e14display_mode_e:
+ 590              		@ args = 0, pretend = 0, frame = 0
+ 591              		@ frame_needed = 0, uses_anonymous_args = 0
+ 592              		@ link register save eliminated.
+ 593 0000 0128     		cmp	r0, #1
+ 594 0002 1AD0     		beq	.L130
+ 595 0004 11DD     		ble	.L136
+ 596 0006 0228     		cmp	r0, #2
+ 597 0008 0AD0     		beq	.L135
+ 598 000a 4FF41443 		mov	r3, #37888
+ 599 000e C7F23573 		movt	r3, 30517
+ 600 0012 9842     		cmp	r0, r3
+ 601 0014 0FD1     		bne	.L129
+ 602 0016 40F20000 		movw	r0, #:lower16:.LC76
+ 603 001a C0F20000 		movt	r0, #:upper16:.LC76
+ 604 001e 7047     		bx	lr
+ 605              	.L135:
+ 606 0020 40F20000 		movw	r0, #:lower16:.LC74
+ 607 0024 C0F20000 		movt	r0, #:upper16:.LC74
+ 608 0028 7047     		bx	lr
+ 609              	.L136:
+ 610 002a 20B9     		cbnz	r0, .L129
+ 611 002c 40F20000 		movw	r0, #:lower16:.LC75
+ 612 0030 C0F20000 		movt	r0, #:upper16:.LC75
+ 613 0034 7047     		bx	lr
+ 614              	.L129:
+ 615 0036 0020     		movs	r0, #0
+ 616 0038 7047     		bx	lr
+ 617              	.L130:
+ 618 003a 40F20000 		movw	r0, #:lower16:.LC73
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 12
+
+
+ 619 003e C0F20000 		movt	r0, #:upper16:.LC73
+ 620 0042 7047     		bx	lr
+ 621              		.size	_Z17getDisplay_mode_e14display_mode_e, .-_Z17getDisplay_mode_e14display_mode_e
+ 622 0044 AFF30080 		.section	.text._Z15getLog_format_e12log_format_e,"ax",%progbits
+ 622      AFF30080 
+ 622      AFF30080 
+ 623              		.align	2
+ 624              		.p2align 4,,15
+ 625              		.global	_Z15getLog_format_e12log_format_e
+ 626              		.thumb
+ 627              		.thumb_func
+ 628              		.type	_Z15getLog_format_e12log_format_e, %function
+ 629              	_Z15getLog_format_e12log_format_e:
+ 630              		@ args = 0, pretend = 0, frame = 0
+ 631              		@ frame_needed = 0, uses_anonymous_args = 0
+ 632              		@ link register save eliminated.
+ 633 0000 0128     		cmp	r0, #1
+ 634 0002 0ED0     		beq	.L139
+ 635 0004 4FF41443 		mov	r3, #37888
+ 636 0008 C7F23573 		movt	r3, 30517
+ 637 000c 9842     		cmp	r0, r3
+ 638 000e 0DD0     		beq	.L140
+ 639 0010 40F20003 		movw	r3, #:lower16:.LC78
+ 640 0014 C0F20003 		movt	r3, #:upper16:.LC78
+ 641 0018 0028     		cmp	r0, #0
+ 642 001a 0CBF     		ite	eq
+ 643 001c 1846     		moveq	r0, r3
+ 644 001e 0020     		movne	r0, #0
+ 645 0020 7047     		bx	lr
+ 646              	.L139:
+ 647 0022 40F20000 		movw	r0, #:lower16:.LC79
+ 648 0026 C0F20000 		movt	r0, #:upper16:.LC79
+ 649 002a 7047     		bx	lr
+ 650              	.L140:
+ 651 002c 40F20000 		movw	r0, #:lower16:.LC77
+ 652 0030 C0F20000 		movt	r0, #:upper16:.LC77
+ 653 0034 7047     		bx	lr
+ 654              		.size	_Z15getLog_format_e12log_format_e, .-_Z15getLog_format_e12log_format_e
+ 655 0036 00BFAFF3 		.section	.text._Z14getIdle_mode_e11idle_mode_e,"ax",%progbits
+ 655      0080AFF3 
+ 655      0080
+ 656              		.align	2
+ 657              		.p2align 4,,15
+ 658              		.global	_Z14getIdle_mode_e11idle_mode_e
+ 659              		.thumb
+ 660              		.thumb_func
+ 661              		.type	_Z14getIdle_mode_e11idle_mode_e, %function
+ 662              	_Z14getIdle_mode_e11idle_mode_e:
+ 663              		@ args = 0, pretend = 0, frame = 0
+ 664              		@ frame_needed = 0, uses_anonymous_args = 0
+ 665              		@ link register save eliminated.
+ 666 0000 0128     		cmp	r0, #1
+ 667 0002 0ED0     		beq	.L145
+ 668 0004 4FF41443 		mov	r3, #37888
+ 669 0008 C7F23573 		movt	r3, 30517
+ 670 000c 9842     		cmp	r0, r3
+ 671 000e 0DD0     		beq	.L146
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 13
+
+
+ 672 0010 40F20003 		movw	r3, #:lower16:.LC81
+ 673 0014 C0F20003 		movt	r3, #:upper16:.LC81
+ 674 0018 0028     		cmp	r0, #0
+ 675 001a 0CBF     		ite	eq
+ 676 001c 1846     		moveq	r0, r3
+ 677 001e 0020     		movne	r0, #0
+ 678 0020 7047     		bx	lr
+ 679              	.L145:
+ 680 0022 40F20000 		movw	r0, #:lower16:.LC82
+ 681 0026 C0F20000 		movt	r0, #:upper16:.LC82
+ 682 002a 7047     		bx	lr
+ 683              	.L146:
+ 684 002c 40F20000 		movw	r0, #:lower16:.LC80
+ 685 0030 C0F20000 		movt	r0, #:upper16:.LC80
+ 686 0034 7047     		bx	lr
+ 687              		.size	_Z14getIdle_mode_e11idle_mode_e, .-_Z14getIdle_mode_e11idle_mode_e
+ 688 0036 00BFAFF3 		.section	.text._Z20getPin_output_mode_e17pin_output_mode_e,"ax",%progbits
+ 688      0080AFF3 
+ 688      0080
+ 689              		.align	2
+ 690              		.p2align 4,,15
+ 691              		.global	_Z20getPin_output_mode_e17pin_output_mode_e
+ 692              		.thumb
+ 693              		.thumb_func
+ 694              		.type	_Z20getPin_output_mode_e17pin_output_mode_e, %function
+ 695              	_Z20getPin_output_mode_e17pin_output_mode_e:
+ 696              		@ args = 0, pretend = 0, frame = 0
+ 697              		@ frame_needed = 0, uses_anonymous_args = 0
+ 698              		@ link register save eliminated.
+ 699 0000 0228     		cmp	r0, #2
+ 700 0002 21D0     		beq	.L151
+ 701 0004 07DC     		bgt	.L152
+ 702 0006 D0B1     		cbz	r0, .L157
+ 703 0008 0128     		cmp	r0, #1
+ 704 000a 11D1     		bne	.L150
+ 705 000c 40F20000 		movw	r0, #:lower16:.LC85
+ 706 0010 C0F20000 		movt	r0, #:upper16:.LC85
+ 707 0014 7047     		bx	lr
+ 708              	.L152:
+ 709 0016 0328     		cmp	r0, #3
+ 710 0018 0CD0     		beq	.L155
+ 711 001a 4FF41443 		mov	r3, #37888
+ 712 001e C7F23573 		movt	r3, 30517
+ 713 0022 9842     		cmp	r0, r3
+ 714 0024 04D1     		bne	.L150
+ 715 0026 40F20000 		movw	r0, #:lower16:.LC83
+ 716 002a C0F20000 		movt	r0, #:upper16:.LC83
+ 717 002e 7047     		bx	lr
+ 718              	.L150:
+ 719 0030 0020     		movs	r0, #0
+ 720 0032 7047     		bx	lr
+ 721              	.L155:
+ 722 0034 40F20000 		movw	r0, #:lower16:.LC87
+ 723 0038 C0F20000 		movt	r0, #:upper16:.LC87
+ 724 003c 7047     		bx	lr
+ 725              	.L157:
+ 726 003e 40F20000 		movw	r0, #:lower16:.LC84
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 14
+
+
+ 727 0042 C0F20000 		movt	r0, #:upper16:.LC84
+ 728 0046 7047     		bx	lr
+ 729              	.L151:
+ 730 0048 40F20000 		movw	r0, #:lower16:.LC86
+ 731 004c C0F20000 		movt	r0, #:upper16:.LC86
+ 732 0050 7047     		bx	lr
+ 733              		.size	_Z20getPin_output_mode_e17pin_output_mode_e, .-_Z20getPin_output_mode_e17pin_output_mode_e
+ 734 0052 00BFAFF3 		.section	.text._Z14getGpio_mode_e11gpio_mode_e,"ax",%progbits
+ 734      0080AFF3 
+ 734      0080AFF3 
+ 734      0080
+ 735              		.align	2
+ 736              		.p2align 4,,15
+ 737              		.global	_Z14getGpio_mode_e11gpio_mode_e
+ 738              		.thumb
+ 739              		.thumb_func
+ 740              		.type	_Z14getGpio_mode_e11gpio_mode_e, %function
+ 741              	_Z14getGpio_mode_e11gpio_mode_e:
+ 742              		@ args = 0, pretend = 0, frame = 0
+ 743              		@ frame_needed = 0, uses_anonymous_args = 0
+ 744              		@ link register save eliminated.
+ 745 0000 4FF41442 		mov	r2, #37888
+ 746 0004 40F20003 		movw	r3, #:lower16:.LC88
+ 747 0008 C7F23572 		movt	r2, 30517
+ 748 000c C0F20003 		movt	r3, #:upper16:.LC88
+ 749 0010 9042     		cmp	r0, r2
+ 750 0012 0CBF     		ite	eq
+ 751 0014 1846     		moveq	r0, r3
+ 752 0016 0020     		movne	r0, #0
+ 753 0018 7047     		bx	lr
+ 754              		.size	_Z14getGpio_mode_e11gpio_mode_e, .-_Z14getGpio_mode_e11gpio_mode_e
+ 755 001a 00BFAFF3 		.section	.text._Z19getPin_input_mode_e16pin_input_mode_e,"ax",%progbits
+ 755      0080
+ 756              		.align	2
+ 757              		.p2align 4,,15
+ 758              		.global	_Z19getPin_input_mode_e16pin_input_mode_e
+ 759              		.thumb
+ 760              		.thumb_func
+ 761              		.type	_Z19getPin_input_mode_e16pin_input_mode_e, %function
+ 762              	_Z19getPin_input_mode_e16pin_input_mode_e:
+ 763              		@ args = 0, pretend = 0, frame = 0
+ 764              		@ frame_needed = 0, uses_anonymous_args = 0
+ 765              		@ link register save eliminated.
+ 766 0000 0128     		cmp	r0, #1
+ 767 0002 1AD0     		beq	.L164
+ 768 0004 11DD     		ble	.L170
+ 769 0006 0228     		cmp	r0, #2
+ 770 0008 0AD0     		beq	.L167
+ 771 000a 4FF41443 		mov	r3, #37888
+ 772 000e C7F23573 		movt	r3, 30517
+ 773 0012 9842     		cmp	r0, r3
+ 774 0014 0FD1     		bne	.L163
+ 775 0016 40F20000 		movw	r0, #:lower16:.LC89
+ 776 001a C0F20000 		movt	r0, #:upper16:.LC89
+ 777 001e 7047     		bx	lr
+ 778              	.L167:
+ 779 0020 40F20000 		movw	r0, #:lower16:.LC91
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 15
+
+
+ 780 0024 C0F20000 		movt	r0, #:upper16:.LC91
+ 781 0028 7047     		bx	lr
+ 782              	.L170:
+ 783 002a 20B9     		cbnz	r0, .L163
+ 784 002c 40F20000 		movw	r0, #:lower16:.LC90
+ 785 0030 C0F20000 		movt	r0, #:upper16:.LC90
+ 786 0034 7047     		bx	lr
+ 787              	.L163:
+ 788 0036 0020     		movs	r0, #0
+ 789 0038 7047     		bx	lr
+ 790              	.L164:
+ 791 003a 40F20000 		movw	r0, #:lower16:.LC92
+ 792 003e C0F20000 		movt	r0, #:upper16:.LC92
+ 793 0042 7047     		bx	lr
+ 794              		.size	_Z19getPin_input_mode_e16pin_input_mode_e, .-_Z19getPin_input_mode_e16pin_input_mode_e
+ 795 0044 AFF30080 		.section	.text._Z17getFiring_order_e14firing_order_e,"ax",%progbits
+ 795      AFF30080 
+ 795      AFF30080 
+ 796              		.align	2
+ 797              		.p2align 4,,15
+ 798              		.global	_Z17getFiring_order_e14firing_order_e
+ 799              		.thumb
+ 800              		.thumb_func
+ 801              		.type	_Z17getFiring_order_e14firing_order_e, %function
+ 802              	_Z17getFiring_order_e14firing_order_e:
+ 803              		@ args = 0, pretend = 0, frame = 0
+ 804              		@ frame_needed = 0, uses_anonymous_args = 0
+ 805              		@ link register save eliminated.
+ 806 0000 0428     		cmp	r0, #4
+ 807 0002 46D0     		beq	.L173
+ 808 0004 0BDD     		ble	.L187
+ 809 0006 0728     		cmp	r0, #7
+ 810 0008 3ED0     		beq	.L180
+ 811 000a 14DC     		bgt	.L181
+ 812 000c 0528     		cmp	r0, #5
+ 813 000e 29D0     		beq	.L182
+ 814 0010 0628     		cmp	r0, #6
+ 815 0012 32D1     		bne	.L172
+ 816 0014 40F20000 		movw	r0, #:lower16:.LC93
+ 817 0018 C0F20000 		movt	r0, #:upper16:.LC93
+ 818 001c 7047     		bx	lr
+ 819              	.L187:
+ 820 001e 0128     		cmp	r0, #1
+ 821 0020 2DD0     		beq	.L175
+ 822 0022 24DD     		ble	.L188
+ 823 0024 0228     		cmp	r0, #2
+ 824 0026 13D0     		beq	.L178
+ 825 0028 0328     		cmp	r0, #3
+ 826 002a 26D1     		bne	.L172
+ 827 002c 40F20000 		movw	r0, #:lower16:.LC97
+ 828 0030 C0F20000 		movt	r0, #:upper16:.LC97
+ 829 0034 7047     		bx	lr
+ 830              	.L181:
+ 831 0036 0828     		cmp	r0, #8
+ 832 0038 0FD0     		beq	.L186
+ 833 003a 4FF41443 		mov	r3, #37888
+ 834 003e C7F23573 		movt	r3, 30517
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 16
+
+
+ 835 0042 9842     		cmp	r0, r3
+ 836 0044 19D1     		bne	.L172
+ 837 0046 40F20000 		movw	r0, #:lower16:.LC102
+ 838 004a C0F20000 		movt	r0, #:upper16:.LC102
+ 839 004e 7047     		bx	lr
+ 840              	.L178:
+ 841 0050 40F20000 		movw	r0, #:lower16:.LC96
+ 842 0054 C0F20000 		movt	r0, #:upper16:.LC96
+ 843 0058 7047     		bx	lr
+ 844              	.L186:
+ 845 005a 40F20000 		movw	r0, #:lower16:.LC94
+ 846 005e C0F20000 		movt	r0, #:upper16:.LC94
+ 847 0062 7047     		bx	lr
+ 848              	.L182:
+ 849 0064 40F20000 		movw	r0, #:lower16:.LC95
+ 850 0068 C0F20000 		movt	r0, #:upper16:.LC95
+ 851 006c 7047     		bx	lr
+ 852              	.L188:
+ 853 006e 20B9     		cbnz	r0, .L172
+ 854 0070 40F20000 		movw	r0, #:lower16:.LC101
+ 855 0074 C0F20000 		movt	r0, #:upper16:.LC101
+ 856 0078 7047     		bx	lr
+ 857              	.L172:
+ 858 007a 0020     		movs	r0, #0
+ 859 007c 7047     		bx	lr
+ 860              	.L175:
+ 861 007e 40F20000 		movw	r0, #:lower16:.LC98
+ 862 0082 C0F20000 		movt	r0, #:upper16:.LC98
+ 863 0086 7047     		bx	lr
+ 864              	.L180:
+ 865 0088 40F20000 		movw	r0, #:lower16:.LC100
+ 866 008c C0F20000 		movt	r0, #:upper16:.LC100
+ 867 0090 7047     		bx	lr
+ 868              	.L173:
+ 869 0092 40F20000 		movw	r0, #:lower16:.LC99
+ 870 0096 C0F20000 		movt	r0, #:upper16:.LC99
+ 871 009a 7047     		bx	lr
+ 872              		.size	_Z17getFiring_order_e14firing_order_e, .-_Z17getFiring_order_e14firing_order_e
+ 873 009c AFF30080 		.section	.text._Z19getOperation_mode_e16operation_mode_e,"ax",%progbits
+ 874              		.align	2
+ 875              		.p2align 4,,15
+ 876              		.global	_Z19getOperation_mode_e16operation_mode_e
+ 877              		.thumb
+ 878              		.thumb_func
+ 879              		.type	_Z19getOperation_mode_e16operation_mode_e, %function
+ 880              	_Z19getOperation_mode_e16operation_mode_e:
+ 881              		@ args = 0, pretend = 0, frame = 0
+ 882              		@ frame_needed = 0, uses_anonymous_args = 0
+ 883              		@ link register save eliminated.
+ 884 0000 0228     		cmp	r0, #2
+ 885 0002 21D0     		beq	.L191
+ 886 0004 07DC     		bgt	.L192
+ 887 0006 D0B1     		cbz	r0, .L193
+ 888 0008 0128     		cmp	r0, #1
+ 889 000a 11D1     		bne	.L190
+ 890 000c 40F20000 		movw	r0, #:lower16:.LC104
+ 891 0010 C0F20000 		movt	r0, #:upper16:.LC104
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 17
+
+
+ 892 0014 7047     		bx	lr
+ 893              	.L192:
+ 894 0016 0328     		cmp	r0, #3
+ 895 0018 0CD0     		beq	.L195
+ 896 001a 4FF41443 		mov	r3, #37888
+ 897 001e C7F23573 		movt	r3, 30517
+ 898 0022 9842     		cmp	r0, r3
+ 899 0024 04D1     		bne	.L190
+ 900 0026 40F20000 		movw	r0, #:lower16:.LC106
+ 901 002a C0F20000 		movt	r0, #:upper16:.LC106
+ 902 002e 7047     		bx	lr
+ 903              	.L190:
+ 904 0030 0020     		movs	r0, #0
+ 905 0032 7047     		bx	lr
+ 906              	.L195:
+ 907 0034 40F20000 		movw	r0, #:lower16:.LC105
+ 908 0038 C0F20000 		movt	r0, #:upper16:.LC105
+ 909 003c 7047     		bx	lr
+ 910              	.L193:
+ 911 003e 40F20000 		movw	r0, #:lower16:.LC107
+ 912 0042 C0F20000 		movt	r0, #:upper16:.LC107
+ 913 0046 7047     		bx	lr
+ 914              	.L191:
+ 915 0048 40F20000 		movw	r0, #:lower16:.LC103
+ 916 004c C0F20000 		movt	r0, #:upper16:.LC103
+ 917 0050 7047     		bx	lr
+ 918              		.size	_Z19getOperation_mode_e16operation_mode_e, .-_Z19getOperation_mode_e16operation_mode_e
+ 919 0052 00BFAFF3 		.section	.text._Z18getIgnition_mode_e15ignition_mode_e,"ax",%progbits
+ 919      0080AFF3 
+ 919      0080AFF3 
+ 919      0080
+ 920              		.align	2
+ 921              		.p2align 4,,15
+ 922              		.global	_Z18getIgnition_mode_e15ignition_mode_e
+ 923              		.thumb
+ 924              		.thumb_func
+ 925              		.type	_Z18getIgnition_mode_e15ignition_mode_e, %function
+ 926              	_Z18getIgnition_mode_e15ignition_mode_e:
+ 927              		@ args = 0, pretend = 0, frame = 0
+ 928              		@ frame_needed = 0, uses_anonymous_args = 0
+ 929              		@ link register save eliminated.
+ 930 0000 0128     		cmp	r0, #1
+ 931 0002 1AD0     		beq	.L205
+ 932 0004 11DD     		ble	.L206
+ 933 0006 0228     		cmp	r0, #2
+ 934 0008 0AD0     		beq	.L203
+ 935 000a 4FF41443 		mov	r3, #37888
+ 936 000e C7F23573 		movt	r3, 30517
+ 937 0012 9842     		cmp	r0, r3
+ 938 0014 0FD1     		bne	.L199
+ 939 0016 40F20000 		movw	r0, #:lower16:.LC108
+ 940 001a C0F20000 		movt	r0, #:upper16:.LC108
+ 941 001e 7047     		bx	lr
+ 942              	.L203:
+ 943 0020 40F20000 		movw	r0, #:lower16:.LC111
+ 944 0024 C0F20000 		movt	r0, #:upper16:.LC111
+ 945 0028 7047     		bx	lr
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 18
+
+
+ 946              	.L206:
+ 947 002a 20B9     		cbnz	r0, .L199
+ 948 002c 40F20000 		movw	r0, #:lower16:.LC110
+ 949 0030 C0F20000 		movt	r0, #:upper16:.LC110
+ 950 0034 7047     		bx	lr
+ 951              	.L199:
+ 952 0036 0020     		movs	r0, #0
+ 953 0038 7047     		bx	lr
+ 954              	.L205:
+ 955 003a 40F20000 		movw	r0, #:lower16:.LC109
+ 956 003e C0F20000 		movt	r0, #:upper16:.LC109
+ 957 0042 7047     		bx	lr
+ 958              		.size	_Z18getIgnition_mode_e15ignition_mode_e, .-_Z18getIgnition_mode_e15ignition_mode_e
+ 959 0044 AFF30080 		.section	.text._Z19getInjection_mode_e16injection_mode_e,"ax",%progbits
+ 959      AFF30080 
+ 959      AFF30080 
+ 960              		.align	2
+ 961              		.p2align 4,,15
+ 962              		.global	_Z19getInjection_mode_e16injection_mode_e
+ 963              		.thumb
+ 964              		.thumb_func
+ 965              		.type	_Z19getInjection_mode_e16injection_mode_e, %function
+ 966              	_Z19getInjection_mode_e16injection_mode_e:
+ 967              		@ args = 0, pretend = 0, frame = 0
+ 968              		@ frame_needed = 0, uses_anonymous_args = 0
+ 969              		@ link register save eliminated.
+ 970 0000 0128     		cmp	r0, #1
+ 971 0002 1AD0     		beq	.L209
+ 972 0004 11DD     		ble	.L215
+ 973 0006 0228     		cmp	r0, #2
+ 974 0008 0AD0     		beq	.L214
+ 975 000a 4FF41443 		mov	r3, #37888
+ 976 000e C7F23573 		movt	r3, 30517
+ 977 0012 9842     		cmp	r0, r3
+ 978 0014 0FD1     		bne	.L208
+ 979 0016 40F20000 		movw	r0, #:lower16:.LC112
+ 980 001a C0F20000 		movt	r0, #:upper16:.LC112
+ 981 001e 7047     		bx	lr
+ 982              	.L214:
+ 983 0020 40F20000 		movw	r0, #:lower16:.LC113
+ 984 0024 C0F20000 		movt	r0, #:upper16:.LC113
+ 985 0028 7047     		bx	lr
+ 986              	.L215:
+ 987 002a 20B9     		cbnz	r0, .L208
+ 988 002c 40F20000 		movw	r0, #:lower16:.LC115
+ 989 0030 C0F20000 		movt	r0, #:upper16:.LC115
+ 990 0034 7047     		bx	lr
+ 991              	.L208:
+ 992 0036 0020     		movs	r0, #0
+ 993 0038 7047     		bx	lr
+ 994              	.L209:
+ 995 003a 40F20000 		movw	r0, #:lower16:.LC114
+ 996 003e C0F20000 		movt	r0, #:upper16:.LC114
+ 997 0042 7047     		bx	lr
+ 998              		.size	_Z19getInjection_mode_e16injection_mode_e, .-_Z19getInjection_mode_e16injection_mode_e
+ 999 0044 AFF30080 		.section	.text._Z27getCranking_ignition_mode_e24cranking_ignition_mode_e,"ax",%progbits
+ 999      AFF30080 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 19
+
+
+ 999      AFF30080 
+ 1000              		.align	2
+ 1001              		.p2align 4,,15
+ 1002              		.global	_Z27getCranking_ignition_mode_e24cranking_ignition_mode_e
+ 1003              		.thumb
+ 1004              		.thumb_func
+ 1005              		.type	_Z27getCranking_ignition_mode_e24cranking_ignition_mode_e, %function
+ 1006              	_Z27getCranking_ignition_mode_e24cranking_ignition_mode_e:
+ 1007              		@ args = 0, pretend = 0, frame = 0
+ 1008              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1009              		@ link register save eliminated.
+ 1010 0000 0128     		cmp	r0, #1
+ 1011 0002 0ED0     		beq	.L221
+ 1012 0004 4FF41443 		mov	r3, #37888
+ 1013 0008 C7F23573 		movt	r3, 30517
+ 1014 000c 9842     		cmp	r0, r3
+ 1015 000e 0DD0     		beq	.L219
+ 1016 0010 40F20003 		movw	r3, #:lower16:.LC116
+ 1017 0014 C0F20003 		movt	r3, #:upper16:.LC116
+ 1018 0018 0028     		cmp	r0, #0
+ 1019 001a 0CBF     		ite	eq
+ 1020 001c 1846     		moveq	r0, r3
+ 1021 001e 0020     		movne	r0, #0
+ 1022 0020 7047     		bx	lr
+ 1023              	.L221:
+ 1024 0022 40F20000 		movw	r0, #:lower16:.LC117
+ 1025 0026 C0F20000 		movt	r0, #:upper16:.LC117
+ 1026 002a 7047     		bx	lr
+ 1027              	.L219:
+ 1028 002c 40F20000 		movw	r0, #:lower16:.LC118
+ 1029 0030 C0F20000 		movt	r0, #:upper16:.LC118
+ 1030 0034 7047     		bx	lr
+ 1031              		.size	_Z27getCranking_ignition_mode_e24cranking_ignition_mode_e, .-_Z27getCranking_ignition_mode_e
+ 1032 0036 00BFAFF3 		.section	.text._Z15getSpi_device_e12spi_device_e,"ax",%progbits
+ 1032      0080AFF3 
+ 1032      0080
+ 1033              		.align	2
+ 1034              		.p2align 4,,15
+ 1035              		.global	_Z15getSpi_device_e12spi_device_e
+ 1036              		.thumb
+ 1037              		.thumb_func
+ 1038              		.type	_Z15getSpi_device_e12spi_device_e, %function
+ 1039              	_Z15getSpi_device_e12spi_device_e:
+ 1040              		@ args = 0, pretend = 0, frame = 0
+ 1041              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1042              		@ link register save eliminated.
+ 1043 0000 0228     		cmp	r0, #2
+ 1044 0002 27D0     		beq	.L224
+ 1045 0004 0DDD     		ble	.L232
+ 1046 0006 0428     		cmp	r0, #4
+ 1047 0008 13D0     		beq	.L228
+ 1048 000a 1EDB     		blt	.L229
+ 1049 000c 4FF41443 		mov	r3, #37888
+ 1050 0010 C7F23573 		movt	r3, 30517
+ 1051 0014 9842     		cmp	r0, r3
+ 1052 0016 11D1     		bne	.L223
+ 1053 0018 40F20000 		movw	r0, #:lower16:.LC119
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 20
+
+
+ 1054 001c C0F20000 		movt	r0, #:upper16:.LC119
+ 1055 0020 7047     		bx	lr
+ 1056              	.L232:
+ 1057 0022 68B1     		cbz	r0, .L226
+ 1058 0024 0128     		cmp	r0, #1
+ 1059 0026 09D1     		bne	.L223
+ 1060 0028 40F20000 		movw	r0, #:lower16:.LC120
+ 1061 002c C0F20000 		movt	r0, #:upper16:.LC120
+ 1062 0030 7047     		bx	lr
+ 1063              	.L228:
+ 1064 0032 40F20000 		movw	r0, #:lower16:.LC123
+ 1065 0036 C0F20000 		movt	r0, #:upper16:.LC123
+ 1066 003a 7047     		bx	lr
+ 1067              	.L223:
+ 1068 003c 0020     		movs	r0, #0
+ 1069 003e 7047     		bx	lr
+ 1070              	.L226:
+ 1071 0040 40F20000 		movw	r0, #:lower16:.LC124
+ 1072 0044 C0F20000 		movt	r0, #:upper16:.LC124
+ 1073 0048 7047     		bx	lr
+ 1074              	.L229:
+ 1075 004a 40F20000 		movw	r0, #:lower16:.LC122
+ 1076 004e C0F20000 		movt	r0, #:upper16:.LC122
+ 1077 0052 7047     		bx	lr
+ 1078              	.L224:
+ 1079 0054 40F20000 		movw	r0, #:lower16:.LC121
+ 1080 0058 C0F20000 		movt	r0, #:upper16:.LC121
+ 1081 005c 7047     		bx	lr
+ 1082              		.size	_Z15getSpi_device_e12spi_device_e, .-_Z15getSpi_device_e12spi_device_e
+ 1083              		.section	.text._Z16getAdc_channel_e13adc_channel_e,"ax",%progbits
+ 1084              		.align	2
+ 1085              		.p2align 4,,15
+ 1086              		.global	_Z16getAdc_channel_e13adc_channel_e
+ 1087              		.thumb
+ 1088              		.thumb_func
+ 1089              		.type	_Z16getAdc_channel_e13adc_channel_e, %function
+ 1090              	_Z16getAdc_channel_e13adc_channel_e:
+ 1091              		@ args = 0, pretend = 0, frame = 0
+ 1092              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1093              		@ link register save eliminated.
+ 1094 0000 0928     		cmp	r0, #9
+ 1095 0002 7FD0     		beq	.L235
+ 1096 0004 0FDD     		ble	.L260
+ 1097 0006 0E28     		cmp	r0, #14
+ 1098 0008 68D0     		beq	.L248
+ 1099 000a 27DC     		bgt	.L249
+ 1100 000c 0B28     		cmp	r0, #11
+ 1101 000e 47D0     		beq	.L250
+ 1102 0010 C0F28280 		blt	.L251
+ 1103 0014 0C28     		cmp	r0, #12
+ 1104 0016 7AD0     		beq	.L252
+ 1105 0018 0D28     		cmp	r0, #13
+ 1106 001a 5DD1     		bne	.L234
+ 1107 001c 40F20000 		movw	r0, #:lower16:.LC130
+ 1108 0020 C0F20000 		movt	r0, #:upper16:.LC130
+ 1109 0024 7047     		bx	lr
+ 1110              	.L260:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 21
+
+
+ 1111 0026 0428     		cmp	r0, #4
+ 1112 0028 67D0     		beq	.L237
+ 1113 002a 0BDC     		bgt	.L238
+ 1114 002c 0128     		cmp	r0, #1
+ 1115 002e 2DD0     		beq	.L259
+ 1116 0030 3BDD     		ble	.L261
+ 1117 0032 0228     		cmp	r0, #2
+ 1118 0034 46D0     		beq	.L242
+ 1119 0036 0328     		cmp	r0, #3
+ 1120 0038 4ED1     		bne	.L234
+ 1121 003a 40F20000 		movw	r0, #:lower16:.LC134
+ 1122 003e C0F20000 		movt	r0, #:upper16:.LC134
+ 1123 0042 7047     		bx	lr
+ 1124              	.L238:
+ 1125 0044 0628     		cmp	r0, #6
+ 1126 0046 1CD0     		beq	.L244
+ 1127 0048 52DB     		blt	.L245
+ 1128 004a 0728     		cmp	r0, #7
+ 1129 004c 4BD0     		beq	.L246
+ 1130 004e 0828     		cmp	r0, #8
+ 1131 0050 42D1     		bne	.L234
+ 1132 0052 40F20000 		movw	r0, #:lower16:.LC139
+ 1133 0056 C0F20000 		movt	r0, #:upper16:.LC139
+ 1134 005a 7047     		bx	lr
+ 1135              	.L249:
+ 1136 005c B0F55E7F 		cmp	r0, #888
+ 1137 0060 19D0     		beq	.L254
+ 1138 0062 28DD     		ble	.L262
+ 1139 0064 40F2E733 		movw	r3, #999
+ 1140 0068 9842     		cmp	r0, r3
+ 1141 006a 30D0     		beq	.L257
+ 1142 006c 4FF41443 		mov	r3, #37888
+ 1143 0070 C7F23573 		movt	r3, 30517
+ 1144 0074 9842     		cmp	r0, r3
+ 1145 0076 2FD1     		bne	.L234
+ 1146 0078 40F20000 		movw	r0, #:lower16:.LC143
+ 1147 007c C0F20000 		movt	r0, #:upper16:.LC143
+ 1148 0080 7047     		bx	lr
+ 1149              	.L244:
+ 1150 0082 40F20000 		movw	r0, #:lower16:.LC137
+ 1151 0086 C0F20000 		movt	r0, #:upper16:.LC137
+ 1152 008a 7047     		bx	lr
+ 1153              	.L259:
+ 1154 008c 40F20000 		movw	r0, #:lower16:.LC126
+ 1155 0090 C0F20000 		movt	r0, #:upper16:.LC126
+ 1156 0094 7047     		bx	lr
+ 1157              	.L254:
+ 1158 0096 40F20000 		movw	r0, #:lower16:.LC142
+ 1159 009a C0F20000 		movt	r0, #:upper16:.LC142
+ 1160 009e 7047     		bx	lr
+ 1161              	.L250:
+ 1162 00a0 40F20000 		movw	r0, #:lower16:.LC128
+ 1163 00a4 C0F20000 		movt	r0, #:upper16:.LC128
+ 1164 00a8 7047     		bx	lr
+ 1165              	.L261:
+ 1166 00aa A8B9     		cbnz	r0, .L234
+ 1167 00ac 40F20000 		movw	r0, #:lower16:.LC125
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 22
+
+
+ 1168 00b0 C0F20000 		movt	r0, #:upper16:.LC125
+ 1169 00b4 7047     		bx	lr
+ 1170              	.L262:
+ 1171 00b6 0F28     		cmp	r0, #15
+ 1172 00b8 0ED1     		bne	.L234
+ 1173 00ba 40F20000 		movw	r0, #:lower16:.LC132
+ 1174 00be C0F20000 		movt	r0, #:upper16:.LC132
+ 1175 00c2 7047     		bx	lr
+ 1176              	.L242:
+ 1177 00c4 40F20000 		movw	r0, #:lower16:.LC133
+ 1178 00c8 C0F20000 		movt	r0, #:upper16:.LC133
+ 1179 00cc 7047     		bx	lr
+ 1180              	.L257:
+ 1181 00ce 40F20000 		movw	r0, #:lower16:.LC141
+ 1182 00d2 C0F20000 		movt	r0, #:upper16:.LC141
+ 1183 00d6 7047     		bx	lr
+ 1184              	.L234:
+ 1185 00d8 0020     		movs	r0, #0
+ 1186 00da 7047     		bx	lr
+ 1187              	.L248:
+ 1188 00dc 40F20000 		movw	r0, #:lower16:.LC131
+ 1189 00e0 C0F20000 		movt	r0, #:upper16:.LC131
+ 1190 00e4 7047     		bx	lr
+ 1191              	.L246:
+ 1192 00e6 40F20000 		movw	r0, #:lower16:.LC138
+ 1193 00ea C0F20000 		movt	r0, #:upper16:.LC138
+ 1194 00ee 7047     		bx	lr
+ 1195              	.L245:
+ 1196 00f0 40F20000 		movw	r0, #:lower16:.LC136
+ 1197 00f4 C0F20000 		movt	r0, #:upper16:.LC136
+ 1198 00f8 7047     		bx	lr
+ 1199              	.L237:
+ 1200 00fa 40F20000 		movw	r0, #:lower16:.LC135
+ 1201 00fe C0F20000 		movt	r0, #:upper16:.LC135
+ 1202 0102 7047     		bx	lr
+ 1203              	.L235:
+ 1204 0104 40F20000 		movw	r0, #:lower16:.LC140
+ 1205 0108 C0F20000 		movt	r0, #:upper16:.LC140
+ 1206 010c 7047     		bx	lr
+ 1207              	.L252:
+ 1208 010e 40F20000 		movw	r0, #:lower16:.LC129
+ 1209 0112 C0F20000 		movt	r0, #:upper16:.LC129
+ 1210 0116 7047     		bx	lr
+ 1211              	.L251:
+ 1212 0118 40F20000 		movw	r0, #:lower16:.LC127
+ 1213 011c C0F20000 		movt	r0, #:upper16:.LC127
+ 1214 0120 7047     		bx	lr
+ 1215              		.size	_Z16getAdc_channel_e13adc_channel_e, .-_Z16getAdc_channel_e13adc_channel_e
+ 1216 0122 00BFAFF3 		.section	.text._Z15getEgo_sensor_e12ego_sensor_e,"ax",%progbits
+ 1216      0080AFF3 
+ 1216      0080AFF3 
+ 1216      0080
+ 1217              		.align	2
+ 1218              		.p2align 4,,15
+ 1219              		.global	_Z15getEgo_sensor_e12ego_sensor_e
+ 1220              		.thumb
+ 1221              		.thumb_func
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 23
+
+
+ 1222              		.type	_Z15getEgo_sensor_e12ego_sensor_e, %function
+ 1223              	_Z15getEgo_sensor_e12ego_sensor_e:
+ 1224              		@ args = 0, pretend = 0, frame = 0
+ 1225              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1226              		@ link register save eliminated.
+ 1227 0000 0228     		cmp	r0, #2
+ 1228 0002 21D0     		beq	.L265
+ 1229 0004 07DC     		bgt	.L266
+ 1230 0006 D0B1     		cbz	r0, .L271
+ 1231 0008 0128     		cmp	r0, #1
+ 1232 000a 11D1     		bne	.L264
+ 1233 000c 40F20000 		movw	r0, #:lower16:.LC146
+ 1234 0010 C0F20000 		movt	r0, #:upper16:.LC146
+ 1235 0014 7047     		bx	lr
+ 1236              	.L266:
+ 1237 0016 0328     		cmp	r0, #3
+ 1238 0018 0CD0     		beq	.L269
+ 1239 001a 4FF41443 		mov	r3, #37888
+ 1240 001e C7F23573 		movt	r3, 30517
+ 1241 0022 9842     		cmp	r0, r3
+ 1242 0024 04D1     		bne	.L264
+ 1243 0026 40F20000 		movw	r0, #:lower16:.LC148
+ 1244 002a C0F20000 		movt	r0, #:upper16:.LC148
+ 1245 002e 7047     		bx	lr
+ 1246              	.L264:
+ 1247 0030 0020     		movs	r0, #0
+ 1248 0032 7047     		bx	lr
+ 1249              	.L269:
+ 1250 0034 40F20000 		movw	r0, #:lower16:.LC147
+ 1251 0038 C0F20000 		movt	r0, #:upper16:.LC147
+ 1252 003c 7047     		bx	lr
+ 1253              	.L271:
+ 1254 003e 40F20000 		movw	r0, #:lower16:.LC145
+ 1255 0042 C0F20000 		movt	r0, #:upper16:.LC145
+ 1256 0046 7047     		bx	lr
+ 1257              	.L265:
+ 1258 0048 40F20000 		movw	r0, #:lower16:.LC144
+ 1259 004c C0F20000 		movt	r0, #:upper16:.LC144
+ 1260 0050 7047     		bx	lr
+ 1261              		.size	_Z15getEgo_sensor_e12ego_sensor_e, .-_Z15getEgo_sensor_e12ego_sensor_e
+ 1262 0052 00BFAFF3 		.section	.text._Z14getBrain_pin_e11brain_pin_e,"ax",%progbits
+ 1262      0080AFF3 
+ 1262      0080AFF3 
+ 1262      0080
+ 1263              		.align	2
+ 1264              		.p2align 4,,15
+ 1265              		.global	_Z14getBrain_pin_e11brain_pin_e
+ 1266              		.thumb
+ 1267              		.thumb_func
+ 1268              		.type	_Z14getBrain_pin_e11brain_pin_e, %function
+ 1269              	_Z14getBrain_pin_e11brain_pin_e:
+ 1270              		@ args = 0, pretend = 0, frame = 0
+ 1271              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1272              		@ link register save eliminated.
+ 1273 0000 2928     		cmp	r0, #41
+ 1274 0002 00F02682 		beq	.L274
+ 1275 0006 1CDC     		bgt	.L275
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 24
+
+
+ 1276 0008 1428     		cmp	r0, #20
+ 1277 000a 00F01882 		beq	.L276
+ 1278 000e 35DC     		bgt	.L277
+ 1279 0010 0928     		cmp	r0, #9
+ 1280 0012 00F01982 		beq	.L278
+ 1281 0016 63DD     		ble	.L378
+ 1282 0018 0E28     		cmp	r0, #14
+ 1283 001a 00F04782 		beq	.L291
+ 1284 001e 40F33181 		ble	.L379
+ 1285 0022 1128     		cmp	r0, #17
+ 1286 0024 00F0FB80 		beq	.L297
+ 1287 0028 00F35181 		bgt	.L298
+ 1288 002c 0F28     		cmp	r0, #15
+ 1289 002e 00F03382 		beq	.L299
+ 1290 0032 1028     		cmp	r0, #16
+ 1291 0034 40F0B181 		bne	.L273
+ 1292 0038 40F20000 		movw	r0, #:lower16:.LC166
+ 1293 003c C0F20000 		movt	r0, #:upper16:.LC166
+ 1294 0040 7047     		bx	lr
+ 1295              	.L275:
+ 1296 0042 3E28     		cmp	r0, #62
+ 1297 0044 00F0E781 		beq	.L327
+ 1298 0048 31DC     		bgt	.L328
+ 1299 004a 3328     		cmp	r0, #51
+ 1300 004c 00F0E881 		beq	.L329
+ 1301 0050 5ADD     		ble	.L380
+ 1302 0052 3828     		cmp	r0, #56
+ 1303 0054 00F00282 		beq	.L341
+ 1304 0058 40F3E680 		ble	.L381
+ 1305 005c 3B28     		cmp	r0, #59
+ 1306 005e 00F0D480 		beq	.L347
+ 1307 0062 00F33E81 		bgt	.L348
+ 1308 0066 3928     		cmp	r0, #57
+ 1309 0068 00F05282 		beq	.L349
+ 1310 006c 3A28     		cmp	r0, #58
+ 1311 006e 40F09481 		bne	.L273
+ 1312 0072 40F20000 		movw	r0, #:lower16:.LC200
+ 1313 0076 C0F20000 		movt	r0, #:upper16:.LC200
+ 1314 007a 7047     		bx	lr
+ 1315              	.L277:
+ 1316 007c 1E28     		cmp	r0, #30
+ 1317 007e 00F0D981 		beq	.L303
+ 1318 0082 55DD     		ble	.L382
+ 1319 0084 2328     		cmp	r0, #35
+ 1320 0086 00F04C81 		beq	.L315
+ 1321 008a 40F3DD80 		ble	.L383
+ 1322 008e 2628     		cmp	r0, #38
+ 1323 0090 00F0B680 		beq	.L321
+ 1324 0094 00F30381 		bgt	.L322
+ 1325 0098 2428     		cmp	r0, #36
+ 1326 009a 00F05681 		beq	.L323
+ 1327 009e 2528     		cmp	r0, #37
+ 1328 00a0 40F07B81 		bne	.L273
+ 1329 00a4 40F20000 		movw	r0, #:lower16:.LC193
+ 1330 00a8 C0F20000 		movt	r0, #:upper16:.LC193
+ 1331 00ac 7047     		bx	lr
+ 1332              	.L328:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 25
+
+
+ 1333 00ae 4828     		cmp	r0, #72
+ 1334 00b0 00F0BB81 		beq	.L353
+ 1335 00b4 50DD     		ble	.L384
+ 1336 00b6 4D28     		cmp	r0, #77
+ 1337 00b8 00F0A881 		beq	.L365
+ 1338 00bc 40F3D280 		ble	.L385
+ 1339 00c0 5028     		cmp	r0, #80
+ 1340 00c2 00F0A780 		beq	.L371
+ 1341 00c6 00F3F480 		bgt	.L372
+ 1342 00ca 4E28     		cmp	r0, #78
+ 1343 00cc 00F09481 		beq	.L373
+ 1344 00d0 4F28     		cmp	r0, #79
+ 1345 00d2 40F06281 		bne	.L273
+ 1346 00d6 40F20000 		movw	r0, #:lower16:.LC221
+ 1347 00da C0F20000 		movt	r0, #:upper16:.LC221
+ 1348 00de 7047     		bx	lr
+ 1349              	.L378:
+ 1350 00e0 0428     		cmp	r0, #4
+ 1351 00e2 00F0D481 		beq	.L280
+ 1352 00e6 7BDD     		ble	.L386
+ 1353 00e8 0628     		cmp	r0, #6
+ 1354 00ea 00F02981 		beq	.L287
+ 1355 00ee C0F22281 		blt	.L288
+ 1356 00f2 0728     		cmp	r0, #7
+ 1357 00f4 00F06281 		beq	.L289
+ 1358 00f8 0828     		cmp	r0, #8
+ 1359 00fa 40F04E81 		bne	.L273
+ 1360 00fe 40F20000 		movw	r0, #:lower16:.LC164
+ 1361 0102 C0F20000 		movt	r0, #:upper16:.LC164
+ 1362 0106 7047     		bx	lr
+ 1363              	.L380:
+ 1364 0108 2E28     		cmp	r0, #46
+ 1365 010a 00F00F81 		beq	.L331
+ 1366 010e 57DD     		ble	.L387
+ 1367 0110 3028     		cmp	r0, #48
+ 1368 0112 00F0DA81 		beq	.L337
+ 1369 0116 C0F2D381 		blt	.L338
+ 1370 011a 3128     		cmp	r0, #49
+ 1371 011c 00F0CB81 		beq	.L339
+ 1372 0120 3228     		cmp	r0, #50
+ 1373 0122 40F03A81 		bne	.L273
+ 1374 0126 40F20000 		movw	r0, #:lower16:.LC206
+ 1375 012a C0F20000 		movt	r0, #:upper16:.LC206
+ 1376 012e 7047     		bx	lr
+ 1377              	.L382:
+ 1378 0130 1928     		cmp	r0, #25
+ 1379 0132 00F01E81 		beq	.L305
+ 1380 0136 33DD     		ble	.L388
+ 1381 0138 1B28     		cmp	r0, #27
+ 1382 013a 00F05881 		beq	.L311
+ 1383 013e C0F25181 		blt	.L312
+ 1384 0142 1C28     		cmp	r0, #28
+ 1385 0144 00F0EE81 		beq	.L313
+ 1386 0148 1D28     		cmp	r0, #29
+ 1387 014a 40F02681 		bne	.L273
+ 1388 014e 40F20000 		movw	r0, #:lower16:.LC171
+ 1389 0152 C0F20000 		movt	r0, #:upper16:.LC171
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 26
+
+
+ 1390 0156 7047     		bx	lr
+ 1391              	.L384:
+ 1392 0158 4328     		cmp	r0, #67
+ 1393 015a 00F09381 		beq	.L355
+ 1394 015e 0FDD     		ble	.L389
+ 1395 0160 4528     		cmp	r0, #69
+ 1396 0162 00F0D081 		beq	.L361
+ 1397 0166 C0F2C981 		blt	.L362
+ 1398 016a 4628     		cmp	r0, #70
+ 1399 016c 00F0CA80 		beq	.L363
+ 1400 0170 4728     		cmp	r0, #71
+ 1401 0172 40F01281 		bne	.L273
+ 1402 0176 40F20000 		movw	r0, #:lower16:.LC227
+ 1403 017a C0F20000 		movt	r0, #:upper16:.LC227
+ 1404 017e 7047     		bx	lr
+ 1405              	.L389:
+ 1406 0180 4028     		cmp	r0, #64
+ 1407 0182 00F01681 		beq	.L357
+ 1408 0186 C0F20F81 		blt	.L358
+ 1409 018a 4128     		cmp	r0, #65
+ 1410 018c 00F00781 		beq	.L359
+ 1411 0190 4228     		cmp	r0, #66
+ 1412 0192 40F00281 		bne	.L273
+ 1413 0196 40F20000 		movw	r0, #:lower16:.LC222
+ 1414 019a C0F20000 		movt	r0, #:upper16:.LC222
+ 1415 019e 7047     		bx	lr
+ 1416              	.L388:
+ 1417 01a0 1628     		cmp	r0, #22
+ 1418 01a2 00F0F580 		beq	.L307
+ 1419 01a6 C0F2EE80 		blt	.L308
+ 1420 01aa 1728     		cmp	r0, #23
+ 1421 01ac 00F0E680 		beq	.L309
+ 1422 01b0 1828     		cmp	r0, #24
+ 1423 01b2 40F0F280 		bne	.L273
+ 1424 01b6 40F20000 		movw	r0, #:lower16:.LC180
+ 1425 01ba C0F20000 		movt	r0, #:upper16:.LC180
+ 1426 01be 7047     		bx	lr
+ 1427              	.L387:
+ 1428 01c0 2B28     		cmp	r0, #43
+ 1429 01c2 00F05A81 		beq	.L333
+ 1430 01c6 C0F25381 		blt	.L334
+ 1431 01ca 2C28     		cmp	r0, #44
+ 1432 01cc 00F04B81 		beq	.L335
+ 1433 01d0 2D28     		cmp	r0, #45
+ 1434 01d2 40F0E280 		bne	.L273
+ 1435 01d6 40F20000 		movw	r0, #:lower16:.LC187
+ 1436 01da C0F20000 		movt	r0, #:upper16:.LC187
+ 1437 01de 7047     		bx	lr
+ 1438              	.L386:
+ 1439 01e0 0128     		cmp	r0, #1
+ 1440 01e2 00F0A981 		beq	.L282
+ 1441 01e6 40F38680 		ble	.L390
+ 1442 01ea 0228     		cmp	r0, #2
+ 1443 01ec 00F09F81 		beq	.L285
+ 1444 01f0 0328     		cmp	r0, #3
+ 1445 01f2 40F0D280 		bne	.L273
+ 1446 01f6 40F20000 		movw	r0, #:lower16:.LC159
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 27
+
+
+ 1447 01fa C0F20000 		movt	r0, #:upper16:.LC159
+ 1448 01fe 7047     		bx	lr
+ 1449              	.L321:
+ 1450 0200 40F20000 		movw	r0, #:lower16:.LC194
+ 1451 0204 C0F20000 		movt	r0, #:upper16:.LC194
+ 1452 0208 7047     		bx	lr
+ 1453              	.L347:
+ 1454 020a 40F20000 		movw	r0, #:lower16:.LC201
+ 1455 020e C0F20000 		movt	r0, #:upper16:.LC201
+ 1456 0212 7047     		bx	lr
+ 1457              	.L371:
+ 1458 0214 40F20000 		movw	r0, #:lower16:.LC231
+ 1459 0218 C0F20000 		movt	r0, #:upper16:.LC231
+ 1460 021c 7047     		bx	lr
+ 1461              	.L297:
+ 1462 021e 40F20000 		movw	r0, #:lower16:.LC167
+ 1463 0222 C0F20000 		movt	r0, #:upper16:.LC167
+ 1464 0226 7047     		bx	lr
+ 1465              	.L381:
+ 1466 0228 3528     		cmp	r0, #53
+ 1467 022a 00F0D680 		beq	.L343
+ 1468 022e C0F2CF80 		blt	.L344
+ 1469 0232 3628     		cmp	r0, #54
+ 1470 0234 00F0C780 		beq	.L345
+ 1471 0238 3728     		cmp	r0, #55
+ 1472 023a 40F0AE80 		bne	.L273
+ 1473 023e 40F20000 		movw	r0, #:lower16:.LC211
+ 1474 0242 C0F20000 		movt	r0, #:upper16:.LC211
+ 1475 0246 7047     		bx	lr
+ 1476              	.L383:
+ 1477 0248 2028     		cmp	r0, #32
+ 1478 024a 65D0     		beq	.L317
+ 1479 024c 5FDB     		blt	.L318
+ 1480 024e 2128     		cmp	r0, #33
+ 1481 0250 00F04081 		beq	.L319
+ 1482 0254 2228     		cmp	r0, #34
+ 1483 0256 40F0A080 		bne	.L273
+ 1484 025a 40F20000 		movw	r0, #:lower16:.LC190
+ 1485 025e C0F20000 		movt	r0, #:upper16:.LC190
+ 1486 0262 7047     		bx	lr
+ 1487              	.L385:
+ 1488 0264 4A28     		cmp	r0, #74
+ 1489 0266 00F04481 		beq	.L367
+ 1490 026a C0F23D81 		blt	.L368
+ 1491 026e 4B28     		cmp	r0, #75
+ 1492 0270 00F03581 		beq	.L369
+ 1493 0274 4C28     		cmp	r0, #76
+ 1494 0276 40F09080 		bne	.L273
+ 1495 027a 40F20000 		movw	r0, #:lower16:.LC218
+ 1496 027e C0F20000 		movt	r0, #:upper16:.LC218
+ 1497 0282 7047     		bx	lr
+ 1498              	.L379:
+ 1499 0284 0B28     		cmp	r0, #11
+ 1500 0286 6FD0     		beq	.L293
+ 1501 0288 69DB     		blt	.L294
+ 1502 028a 0C28     		cmp	r0, #12
+ 1503 028c 62D0     		beq	.L295
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 28
+
+
+ 1504 028e 0D28     		cmp	r0, #13
+ 1505 0290 40F08380 		bne	.L273
+ 1506 0294 40F20000 		movw	r0, #:lower16:.LC155
+ 1507 0298 C0F20000 		movt	r0, #:upper16:.LC155
+ 1508 029c 7047     		bx	lr
+ 1509              	.L322:
+ 1510 029e 2728     		cmp	r0, #39
+ 1511 02a0 00F0AF80 		beq	.L325
+ 1512 02a4 2828     		cmp	r0, #40
+ 1513 02a6 78D1     		bne	.L273
+ 1514 02a8 40F20000 		movw	r0, #:lower16:.LC196
+ 1515 02ac C0F20000 		movt	r0, #:upper16:.LC196
+ 1516 02b0 7047     		bx	lr
+ 1517              	.L372:
+ 1518 02b2 5128     		cmp	r0, #81
+ 1519 02b4 00F0F580 		beq	.L375
+ 1520 02b8 4FF41443 		mov	r3, #37888
+ 1521 02bc C7F23573 		movt	r3, 30517
+ 1522 02c0 9842     		cmp	r0, r3
+ 1523 02c2 6AD1     		bne	.L273
+ 1524 02c4 40F20000 		movw	r0, #:lower16:.LC149
+ 1525 02c8 C0F20000 		movt	r0, #:upper16:.LC149
+ 1526 02cc 7047     		bx	lr
+ 1527              	.L298:
+ 1528 02ce 1228     		cmp	r0, #18
+ 1529 02d0 00F02381 		beq	.L301
+ 1530 02d4 1328     		cmp	r0, #19
+ 1531 02d6 60D1     		bne	.L273
+ 1532 02d8 40F20000 		movw	r0, #:lower16:.LC175
+ 1533 02dc C0F20000 		movt	r0, #:upper16:.LC175
+ 1534 02e0 7047     		bx	lr
+ 1535              	.L348:
+ 1536 02e2 3C28     		cmp	r0, #60
+ 1537 02e4 00F02D81 		beq	.L351
+ 1538 02e8 3D28     		cmp	r0, #61
+ 1539 02ea 56D1     		bne	.L273
+ 1540 02ec 40F20000 		movw	r0, #:lower16:.LC203
+ 1541 02f0 C0F20000 		movt	r0, #:upper16:.LC203
+ 1542 02f4 7047     		bx	lr
+ 1543              	.L390:
+ 1544 02f6 0028     		cmp	r0, #0
+ 1545 02f8 4FD1     		bne	.L273
+ 1546 02fa 40F20000 		movw	r0, #:lower16:.LC150
+ 1547 02fe C0F20000 		movt	r0, #:upper16:.LC150
+ 1548 0302 7047     		bx	lr
+ 1549              	.L363:
+ 1550 0304 40F20000 		movw	r0, #:lower16:.LC226
+ 1551 0308 C0F20000 		movt	r0, #:upper16:.LC226
+ 1552 030c 7047     		bx	lr
+ 1553              	.L318:
+ 1554 030e 40F20000 		movw	r0, #:lower16:.LC173
+ 1555 0312 C0F20000 		movt	r0, #:upper16:.LC173
+ 1556 0316 7047     		bx	lr
+ 1557              	.L317:
+ 1558 0318 40F20000 		movw	r0, #:lower16:.LC182
+ 1559 031c C0F20000 		movt	r0, #:upper16:.LC182
+ 1560 0320 7047     		bx	lr
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 29
+
+
+ 1561              	.L315:
+ 1562 0322 40F20000 		movw	r0, #:lower16:.LC191
+ 1563 0326 C0F20000 		movt	r0, #:upper16:.LC191
+ 1564 032a 7047     		bx	lr
+ 1565              	.L331:
+ 1566 032c 40F20000 		movw	r0, #:lower16:.LC188
+ 1567 0330 C0F20000 		movt	r0, #:upper16:.LC188
+ 1568 0334 7047     		bx	lr
+ 1569              	.L288:
+ 1570 0336 40F20000 		movw	r0, #:lower16:.LC161
+ 1571 033a C0F20000 		movt	r0, #:upper16:.LC161
+ 1572 033e 7047     		bx	lr
+ 1573              	.L287:
+ 1574 0340 40F20000 		movw	r0, #:lower16:.LC162
+ 1575 0344 C0F20000 		movt	r0, #:upper16:.LC162
+ 1576 0348 7047     		bx	lr
+ 1577              	.L323:
+ 1578 034a 40F20000 		movw	r0, #:lower16:.LC192
+ 1579 034e C0F20000 		movt	r0, #:upper16:.LC192
+ 1580 0352 7047     		bx	lr
+ 1581              	.L295:
+ 1582 0354 40F20000 		movw	r0, #:lower16:.LC154
+ 1583 0358 C0F20000 		movt	r0, #:upper16:.LC154
+ 1584 035c 7047     		bx	lr
+ 1585              	.L294:
+ 1586 035e 40F20000 		movw	r0, #:lower16:.LC152
+ 1587 0362 C0F20000 		movt	r0, #:upper16:.LC152
+ 1588 0366 7047     		bx	lr
+ 1589              	.L293:
+ 1590 0368 40F20000 		movw	r0, #:lower16:.LC153
+ 1591 036c C0F20000 		movt	r0, #:upper16:.LC153
+ 1592 0370 7047     		bx	lr
+ 1593              	.L305:
+ 1594 0372 40F20000 		movw	r0, #:lower16:.LC181
+ 1595 0376 C0F20000 		movt	r0, #:upper16:.LC181
+ 1596 037a 7047     		bx	lr
+ 1597              	.L309:
+ 1598 037c 40F20000 		movw	r0, #:lower16:.LC179
+ 1599 0380 C0F20000 		movt	r0, #:upper16:.LC179
+ 1600 0384 7047     		bx	lr
+ 1601              	.L308:
+ 1602 0386 40F20000 		movw	r0, #:lower16:.LC177
+ 1603 038a C0F20000 		movt	r0, #:upper16:.LC177
+ 1604 038e 7047     		bx	lr
+ 1605              	.L307:
+ 1606 0390 40F20000 		movw	r0, #:lower16:.LC178
+ 1607 0394 C0F20000 		movt	r0, #:upper16:.LC178
+ 1608 0398 7047     		bx	lr
+ 1609              	.L273:
+ 1610 039a 0020     		movs	r0, #0
+ 1611 039c 7047     		bx	lr
+ 1612              	.L359:
+ 1613 039e 40F20000 		movw	r0, #:lower16:.LC215
+ 1614 03a2 C0F20000 		movt	r0, #:upper16:.LC215
+ 1615 03a6 7047     		bx	lr
+ 1616              	.L358:
+ 1617 03a8 40F20000 		movw	r0, #:lower16:.LC205
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 30
+
+
+ 1618 03ac C0F20000 		movt	r0, #:upper16:.LC205
+ 1619 03b0 7047     		bx	lr
+ 1620              	.L357:
+ 1621 03b2 40F20000 		movw	r0, #:lower16:.LC214
+ 1622 03b6 C0F20000 		movt	r0, #:upper16:.LC214
+ 1623 03ba 7047     		bx	lr
+ 1624              	.L289:
+ 1625 03bc 40F20000 		movw	r0, #:lower16:.LC163
+ 1626 03c0 C0F20000 		movt	r0, #:upper16:.LC163
+ 1627 03c4 7047     		bx	lr
+ 1628              	.L345:
+ 1629 03c6 40F20000 		movw	r0, #:lower16:.LC210
+ 1630 03ca C0F20000 		movt	r0, #:upper16:.LC210
+ 1631 03ce 7047     		bx	lr
+ 1632              	.L344:
+ 1633 03d0 40F20000 		movw	r0, #:lower16:.LC208
+ 1634 03d4 C0F20000 		movt	r0, #:upper16:.LC208
+ 1635 03d8 7047     		bx	lr
+ 1636              	.L343:
+ 1637 03da 40F20000 		movw	r0, #:lower16:.LC209
+ 1638 03de C0F20000 		movt	r0, #:upper16:.LC209
+ 1639 03e2 7047     		bx	lr
+ 1640              	.L312:
+ 1641 03e4 40F20000 		movw	r0, #:lower16:.LC168
+ 1642 03e8 C0F20000 		movt	r0, #:upper16:.LC168
+ 1643 03ec 7047     		bx	lr
+ 1644              	.L311:
+ 1645 03ee 40F20000 		movw	r0, #:lower16:.LC169
+ 1646 03f2 C0F20000 		movt	r0, #:upper16:.LC169
+ 1647 03f6 7047     		bx	lr
+ 1648              	.L373:
+ 1649 03f8 40F20000 		movw	r0, #:lower16:.LC220
+ 1650 03fc C0F20000 		movt	r0, #:upper16:.LC220
+ 1651 0400 7047     		bx	lr
+ 1652              	.L325:
+ 1653 0402 40F20000 		movw	r0, #:lower16:.LC195
+ 1654 0406 C0F20000 		movt	r0, #:upper16:.LC195
+ 1655 040a 7047     		bx	lr
+ 1656              	.L365:
+ 1657 040c 40F20000 		movw	r0, #:lower16:.LC219
+ 1658 0410 C0F20000 		movt	r0, #:upper16:.LC219
+ 1659 0414 7047     		bx	lr
+ 1660              	.L327:
+ 1661 0416 40F20000 		movw	r0, #:lower16:.LC204
+ 1662 041a C0F20000 		movt	r0, #:upper16:.LC204
+ 1663 041e 7047     		bx	lr
+ 1664              	.L329:
+ 1665 0420 40F20000 		movw	r0, #:lower16:.LC207
+ 1666 0424 C0F20000 		movt	r0, #:upper16:.LC207
+ 1667 0428 7047     		bx	lr
+ 1668              	.L353:
+ 1669 042a 40F20000 		movw	r0, #:lower16:.LC228
+ 1670 042e C0F20000 		movt	r0, #:upper16:.LC228
+ 1671 0432 7047     		bx	lr
+ 1672              	.L303:
+ 1673 0434 40F20000 		movw	r0, #:lower16:.LC172
+ 1674 0438 C0F20000 		movt	r0, #:upper16:.LC172
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 31
+
+
+ 1675 043c 7047     		bx	lr
+ 1676              	.L276:
+ 1677 043e 40F20000 		movw	r0, #:lower16:.LC176
+ 1678 0442 C0F20000 		movt	r0, #:upper16:.LC176
+ 1679 0446 7047     		bx	lr
+ 1680              	.L278:
+ 1681 0448 40F20000 		movw	r0, #:lower16:.LC165
+ 1682 044c C0F20000 		movt	r0, #:upper16:.LC165
+ 1683 0450 7047     		bx	lr
+ 1684              	.L274:
+ 1685 0452 40F20000 		movw	r0, #:lower16:.LC197
+ 1686 0456 C0F20000 		movt	r0, #:upper16:.LC197
+ 1687 045a 7047     		bx	lr
+ 1688              	.L341:
+ 1689 045c 40F20000 		movw	r0, #:lower16:.LC212
+ 1690 0460 C0F20000 		movt	r0, #:upper16:.LC212
+ 1691 0464 7047     		bx	lr
+ 1692              	.L335:
+ 1693 0466 40F20000 		movw	r0, #:lower16:.LC186
+ 1694 046a C0F20000 		movt	r0, #:upper16:.LC186
+ 1695 046e 7047     		bx	lr
+ 1696              	.L334:
+ 1697 0470 40F20000 		movw	r0, #:lower16:.LC184
+ 1698 0474 C0F20000 		movt	r0, #:upper16:.LC184
+ 1699 0478 7047     		bx	lr
+ 1700              	.L333:
+ 1701 047a 40F20000 		movw	r0, #:lower16:.LC185
+ 1702 047e C0F20000 		movt	r0, #:upper16:.LC185
+ 1703 0482 7047     		bx	lr
+ 1704              	.L355:
+ 1705 0484 40F20000 		movw	r0, #:lower16:.LC223
+ 1706 0488 C0F20000 		movt	r0, #:upper16:.LC223
+ 1707 048c 7047     		bx	lr
+ 1708              	.L280:
+ 1709 048e 40F20000 		movw	r0, #:lower16:.LC160
+ 1710 0492 C0F20000 		movt	r0, #:upper16:.LC160
+ 1711 0496 7047     		bx	lr
+ 1712              	.L299:
+ 1713 0498 40F20000 		movw	r0, #:lower16:.LC157
+ 1714 049c C0F20000 		movt	r0, #:upper16:.LC157
+ 1715 04a0 7047     		bx	lr
+ 1716              	.L375:
+ 1717 04a2 40F20000 		movw	r0, #:lower16:.LC230
+ 1718 04a6 C0F20000 		movt	r0, #:upper16:.LC230
+ 1719 04aa 7047     		bx	lr
+ 1720              	.L291:
+ 1721 04ac 40F20000 		movw	r0, #:lower16:.LC156
+ 1722 04b0 C0F20000 		movt	r0, #:upper16:.LC156
+ 1723 04b4 7047     		bx	lr
+ 1724              	.L339:
+ 1725 04b6 40F20000 		movw	r0, #:lower16:.LC199
+ 1726 04ba C0F20000 		movt	r0, #:upper16:.LC199
+ 1727 04be 7047     		bx	lr
+ 1728              	.L338:
+ 1729 04c0 40F20000 		movw	r0, #:lower16:.LC189
+ 1730 04c4 C0F20000 		movt	r0, #:upper16:.LC189
+ 1731 04c8 7047     		bx	lr
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 32
+
+
+ 1732              	.L337:
+ 1733 04ca 40F20000 		movw	r0, #:lower16:.LC198
+ 1734 04ce C0F20000 		movt	r0, #:upper16:.LC198
+ 1735 04d2 7047     		bx	lr
+ 1736              	.L319:
+ 1737 04d4 40F20000 		movw	r0, #:lower16:.LC183
+ 1738 04d8 C0F20000 		movt	r0, #:upper16:.LC183
+ 1739 04dc 7047     		bx	lr
+ 1740              	.L369:
+ 1741 04de 40F20000 		movw	r0, #:lower16:.LC217
+ 1742 04e2 C0F20000 		movt	r0, #:upper16:.LC217
+ 1743 04e6 7047     		bx	lr
+ 1744              	.L368:
+ 1745 04e8 40F20000 		movw	r0, #:lower16:.LC229
+ 1746 04ec C0F20000 		movt	r0, #:upper16:.LC229
+ 1747 04f0 7047     		bx	lr
+ 1748              	.L367:
+ 1749 04f2 40F20000 		movw	r0, #:lower16:.LC216
+ 1750 04f6 C0F20000 		movt	r0, #:upper16:.LC216
+ 1751 04fa 7047     		bx	lr
+ 1752              	.L362:
+ 1753 04fc 40F20000 		movw	r0, #:lower16:.LC224
+ 1754 0500 C0F20000 		movt	r0, #:upper16:.LC224
+ 1755 0504 7047     		bx	lr
+ 1756              	.L361:
+ 1757 0506 40F20000 		movw	r0, #:lower16:.LC225
+ 1758 050a C0F20000 		movt	r0, #:upper16:.LC225
+ 1759 050e 7047     		bx	lr
+ 1760              	.L349:
+ 1761 0510 40F20000 		movw	r0, #:lower16:.LC213
+ 1762 0514 C0F20000 		movt	r0, #:upper16:.LC213
+ 1763 0518 7047     		bx	lr
+ 1764              	.L301:
+ 1765 051a 40F20000 		movw	r0, #:lower16:.LC174
+ 1766 051e C0F20000 		movt	r0, #:upper16:.LC174
+ 1767 0522 7047     		bx	lr
+ 1768              	.L313:
+ 1769 0524 40F20000 		movw	r0, #:lower16:.LC170
+ 1770 0528 C0F20000 		movt	r0, #:upper16:.LC170
+ 1771 052c 7047     		bx	lr
+ 1772              	.L285:
+ 1773 052e 40F20000 		movw	r0, #:lower16:.LC158
+ 1774 0532 C0F20000 		movt	r0, #:upper16:.LC158
+ 1775 0536 7047     		bx	lr
+ 1776              	.L282:
+ 1777 0538 40F20000 		movw	r0, #:lower16:.LC151
+ 1778 053c C0F20000 		movt	r0, #:upper16:.LC151
+ 1779 0540 7047     		bx	lr
+ 1780              	.L351:
+ 1781 0542 40F20000 		movw	r0, #:lower16:.LC202
+ 1782 0546 C0F20000 		movt	r0, #:upper16:.LC202
+ 1783 054a 7047     		bx	lr
+ 1784              		.size	_Z14getBrain_pin_e11brain_pin_e, .-_Z14getBrain_pin_e11brain_pin_e
+ 1785 054c AFF30080 		.section	.text._Z29getAir_pressure_sensor_type_e26air_pressure_sensor_type_e,"ax",%progbits
+ 1786              		.align	2
+ 1787              		.p2align 4,,15
+ 1788              		.global	_Z29getAir_pressure_sensor_type_e26air_pressure_sensor_type_e
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 33
+
+
+ 1789              		.thumb
+ 1790              		.thumb_func
+ 1791              		.type	_Z29getAir_pressure_sensor_type_e26air_pressure_sensor_type_e, %function
+ 1792              	_Z29getAir_pressure_sensor_type_e26air_pressure_sensor_type_e:
+ 1793              		@ args = 0, pretend = 0, frame = 0
+ 1794              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1795              		@ link register save eliminated.
+ 1796 0000 0328     		cmp	r0, #3
+ 1797 0002 34D0     		beq	.L393
+ 1798 0004 0FDD     		ble	.L403
+ 1799 0006 0528     		cmp	r0, #5
+ 1800 0008 2CD0     		beq	.L398
+ 1801 000a 1FDB     		blt	.L399
+ 1802 000c 0628     		cmp	r0, #6
+ 1803 000e 18D0     		beq	.L400
+ 1804 0010 4FF41443 		mov	r3, #37888
+ 1805 0014 C7F23573 		movt	r3, 30517
+ 1806 0018 9842     		cmp	r0, r3
+ 1807 001a 21D1     		bne	.L392
+ 1808 001c 40F20000 		movw	r0, #:lower16:.LC232
+ 1809 0020 C0F20000 		movt	r0, #:upper16:.LC232
+ 1810 0024 7047     		bx	lr
+ 1811              	.L403:
+ 1812 0026 0128     		cmp	r0, #1
+ 1813 0028 15D0     		beq	.L395
+ 1814 002a 05DC     		bgt	.L396
+ 1815 002c C0B9     		cbnz	r0, .L392
+ 1816 002e 40F20000 		movw	r0, #:lower16:.LC233
+ 1817 0032 C0F20000 		movt	r0, #:upper16:.LC233
+ 1818 0036 7047     		bx	lr
+ 1819              	.L396:
+ 1820 0038 40F20000 		movw	r0, #:lower16:.LC237
+ 1821 003c C0F20000 		movt	r0, #:upper16:.LC237
+ 1822 0040 7047     		bx	lr
+ 1823              	.L400:
+ 1824 0042 40F20000 		movw	r0, #:lower16:.LC239
+ 1825 0046 C0F20000 		movt	r0, #:upper16:.LC239
+ 1826 004a 7047     		bx	lr
+ 1827              	.L399:
+ 1828 004c 40F20000 		movw	r0, #:lower16:.LC235
+ 1829 0050 C0F20000 		movt	r0, #:upper16:.LC235
+ 1830 0054 7047     		bx	lr
+ 1831              	.L395:
+ 1832 0056 40F20000 		movw	r0, #:lower16:.LC234
+ 1833 005a C0F20000 		movt	r0, #:upper16:.LC234
+ 1834 005e 7047     		bx	lr
+ 1835              	.L392:
+ 1836 0060 0020     		movs	r0, #0
+ 1837 0062 7047     		bx	lr
+ 1838              	.L398:
+ 1839 0064 40F20000 		movw	r0, #:lower16:.LC238
+ 1840 0068 C0F20000 		movt	r0, #:upper16:.LC238
+ 1841 006c 7047     		bx	lr
+ 1842              	.L393:
+ 1843 006e 40F20000 		movw	r0, #:lower16:.LC236
+ 1844 0072 C0F20000 		movt	r0, #:upper16:.LC236
+ 1845 0076 7047     		bx	lr
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 34
+
+
+ 1846              		.size	_Z29getAir_pressure_sensor_type_e26air_pressure_sensor_type_e, .-_Z29getAir_pressure_sensor_
+ 1847 0078 AFF30080 		.section	.rodata.str1.4,"aMS",%progbits,1
+ 1847      AFF30080 
+ 1848              		.align	2
+ 1849              	.LC0:
+ 1850 0000 496E7465 		.ascii	"Internal_ForceMyEnumIntSize_timing_mode\000"
+ 1850      726E616C 
+ 1850      5F466F72 
+ 1850      63654D79 
+ 1850      456E756D 
+ 1851              	.LC1:
+ 1852 0028 544D5F44 		.ascii	"TM_DYNAMIC\000"
+ 1852      594E414D 
+ 1852      494300
+ 1853 0033 00       		.space	1
+ 1854              	.LC2:
+ 1855 0034 544D5F46 		.ascii	"TM_FIXED\000"
+ 1855      49584544 
+ 1855      00
+ 1856 003d 000000   		.space	3
+ 1857              	.LC3:
+ 1858 0040 41435552 		.ascii	"ACURA_RSX\000"
+ 1858      415F5253 
+ 1858      5800
+ 1859 004a 0000     		.space	2
+ 1860              	.LC4:
+ 1861 004c 41554449 		.ascii	"AUDI_AAN\000"
+ 1861      5F41414E 
+ 1861      00
+ 1862 0055 000000   		.space	3
+ 1863              	.LC5:
+ 1864 0058 53414348 		.ascii	"SACHS\000"
+ 1864      5300
+ 1865 005e 0000     		.space	2
+ 1866              	.LC6:
+ 1867 0060 474D5F32 		.ascii	"GM_2_2\000"
+ 1867      5F3200
+ 1868 0067 00       		.space	1
+ 1869              	.LC7:
+ 1870 0068 444F4447 		.ascii	"DODGE_RAM\000"
+ 1870      455F5241 
+ 1870      4D00
+ 1871 0072 0000     		.space	2
+ 1872              	.LC8:
+ 1873 0074 424D575F 		.ascii	"BMW_E34\000"
+ 1873      45333400 
+ 1874              	.LC9:
+ 1875 007c 43495452 		.ascii	"CITROEN_TU3JP\000"
+ 1875      4F454E5F 
+ 1875      5455334A 
+ 1875      5000
+ 1876 008a 0000     		.space	2
+ 1877              	.LC10:
+ 1878 008c 43555354 		.ascii	"CUSTOM_ENGINE\000"
+ 1878      4F4D5F45 
+ 1878      4E47494E 
+ 1878      4500
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 35
+
+
+ 1879 009a 0000     		.space	2
+ 1880              	.LC11:
+ 1881 009c 444F4447 		.ascii	"DODGE_NEON_1995\000"
+ 1881      455F4E45 
+ 1881      4F4E5F31 
+ 1881      39393500 
+ 1882              	.LC12:
+ 1883 00ac 444F4447 		.ascii	"DODGE_NEON_2003\000"
+ 1883      455F4E45 
+ 1883      4F4E5F32 
+ 1883      30303300 
+ 1884              	.LC13:
+ 1885 00bc 45545F55 		.ascii	"ET_UNUSED\000"
+ 1885      4E555345 
+ 1885      4400
+ 1886 00c6 0000     		.space	2
+ 1887              	.LC14:
+ 1888 00c8 464F5244 		.ascii	"FORD_ASPIRE_1996\000"
+ 1888      5F415350 
+ 1888      4952455F 
+ 1888      31393936 
+ 1888      00
+ 1889 00d9 000000   		.space	3
+ 1890              	.LC15:
+ 1891 00dc 464F5244 		.ascii	"FORD_ESCORT_GT\000"
+ 1891      5F455343 
+ 1891      4F52545F 
+ 1891      475400
+ 1892 00eb 00       		.space	1
+ 1893              	.LC16:
+ 1894 00ec 464F5244 		.ascii	"FORD_FIESTA\000"
+ 1894      5F464945 
+ 1894      53544100 
+ 1895              	.LC17:
+ 1896 00f8 464F5244 		.ascii	"FORD_INLINE_6_1995\000"
+ 1896      5F494E4C 
+ 1896      494E455F 
+ 1896      365F3139 
+ 1896      393500
+ 1897 010b 00       		.space	1
+ 1898              	.LC18:
+ 1899 010c 466F7263 		.ascii	"Force_4b_engine_type\000"
+ 1899      655F3462 
+ 1899      5F656E67 
+ 1899      696E655F 
+ 1899      74797065 
+ 1900 0121 000000   		.space	3
+ 1901              	.LC19:
+ 1902 0124 4759365F 		.ascii	"GY6_139QMB\000"
+ 1902      31333951 
+ 1902      4D4200
+ 1903 012f 00       		.space	1
+ 1904              	.LC20:
+ 1905 0130 484F4E44 		.ascii	"HONDA_ACCORD_CD\000"
+ 1905      415F4143 
+ 1905      434F5244 
+ 1905      5F434400 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 36
+
+
+ 1906              	.LC21:
+ 1907 0140 484F4E44 		.ascii	"HONDA_ACCORD_CD_DIP\000"
+ 1907      415F4143 
+ 1907      434F5244 
+ 1907      5F43445F 
+ 1907      44495000 
+ 1908              	.LC22:
+ 1909 0154 484F4E44 		.ascii	"HONDA_ACCORD_CD_TWO_WIRES\000"
+ 1909      415F4143 
+ 1909      434F5244 
+ 1909      5F43445F 
+ 1909      54574F5F 
+ 1910 016e 0000     		.space	2
+ 1911              	.LC23:
+ 1912 0170 4D415A44 		.ascii	"MAZDA_323\000"
+ 1912      415F3332 
+ 1912      3300
+ 1913 017a 0000     		.space	2
+ 1914              	.LC24:
+ 1915 017c 4D415A44 		.ascii	"MAZDA_626\000"
+ 1915      415F3632 
+ 1915      3600
+ 1916 0186 0000     		.space	2
+ 1917              	.LC25:
+ 1918 0188 4D415A44 		.ascii	"MAZDA_MIATA_NB\000"
+ 1918      415F4D49 
+ 1918      4154415F 
+ 1918      4E4200
+ 1919 0197 00       		.space	1
+ 1920              	.LC26:
+ 1921 0198 4D494154 		.ascii	"MIATA_1990\000"
+ 1921      415F3139 
+ 1921      393000
+ 1922 01a3 00       		.space	1
+ 1923              	.LC27:
+ 1924 01a4 4D494154 		.ascii	"MIATA_1994_DEVIATOR\000"
+ 1924      415F3139 
+ 1924      39345F44 
+ 1924      45564941 
+ 1924      544F5200 
+ 1925              	.LC28:
+ 1926 01b8 4D494154 		.ascii	"MIATA_1994_SPAGS\000"
+ 1926      415F3139 
+ 1926      39345F53 
+ 1926      50414753 
+ 1926      00
+ 1927 01c9 000000   		.space	3
+ 1928              	.LC29:
+ 1929 01cc 4D494154 		.ascii	"MIATA_1996\000"
+ 1929      415F3139 
+ 1929      393600
+ 1930 01d7 00       		.space	1
+ 1931              	.LC30:
+ 1932 01d8 4D494E49 		.ascii	"MINI_COOPER_R50\000"
+ 1932      5F434F4F 
+ 1932      5045525F 
+ 1932      52353000 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 37
+
+
+ 1933              	.LC31:
+ 1934 01e8 4D495453 		.ascii	"MITSU_4G93\000"
+ 1934      555F3447 
+ 1934      393300
+ 1935 01f3 00       		.space	1
+ 1936              	.LC32:
+ 1937 01f4 4E495353 		.ascii	"NISSAN_PRIMERA\000"
+ 1937      414E5F50 
+ 1937      52494D45 
+ 1937      524100
+ 1938 0203 00       		.space	1
+ 1939              	.LC33:
+ 1940 0204 524F5645 		.ascii	"ROVER_V8\000"
+ 1940      525F5638 
+ 1940      00
+ 1941 020d 000000   		.space	3
+ 1942              	.LC34:
+ 1943 0210 53415455 		.ascii	"SATURN_ION_2004\000"
+ 1943      524E5F49 
+ 1943      4F4E5F32 
+ 1943      30303400 
+ 1944              	.LC35:
+ 1945 0220 53554241 		.ascii	"SUBARU_2003_WRX\000"
+ 1945      52555F32 
+ 1945      3030335F 
+ 1945      57525800 
+ 1946              	.LC36:
+ 1947 0230 54455354 		.ascii	"TEST_ENGINE\000"
+ 1947      5F454E47 
+ 1947      494E4500 
+ 1948              	.LC37:
+ 1949 023c 56575F41 		.ascii	"VW_ABA\000"
+ 1949      424100
+ 1950 0243 00       		.space	1
+ 1951              	.LC38:
+ 1952 0244 466F7263 		.ascii	"Force_4b_trigger_type\000"
+ 1952      655F3462 
+ 1952      5F747269 
+ 1952      67676572 
+ 1952      5F747970 
+ 1953 025a 0000     		.space	2
+ 1954              	.LC39:
+ 1955 025c 54545F44 		.ascii	"TT_DODGE_NEON_1995\000"
+ 1955      4F444745 
+ 1955      5F4E454F 
+ 1955      4E5F3139 
+ 1955      393500
+ 1956 026f 00       		.space	1
+ 1957              	.LC40:
+ 1958 0270 54545F44 		.ascii	"TT_DODGE_NEON_2003\000"
+ 1958      4F444745 
+ 1958      5F4E454F 
+ 1958      4E5F3230 
+ 1958      303300
+ 1959 0283 00       		.space	1
+ 1960              	.LC41:
+ 1961 0284 54545F46 		.ascii	"TT_FORD_ASPIRE\000"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 38
+
+
+ 1961      4F52445F 
+ 1961      41535049 
+ 1961      524500
+ 1962 0293 00       		.space	1
+ 1963              	.LC42:
+ 1964 0294 54545F4D 		.ascii	"TT_MAZDA_SOHC_4\000"
+ 1964      415A4441 
+ 1964      5F534F48 
+ 1964      435F3400 
+ 1965              	.LC43:
+ 1966 02a4 54545F4D 		.ascii	"TT_MAZDA_DOHC_1_4\000"
+ 1966      415A4441 
+ 1966      5F444F48 
+ 1966      435F315F 
+ 1966      3400
+ 1967 02b6 0000     		.space	2
+ 1968              	.LC44:
+ 1969 02b8 54545F4F 		.ascii	"TT_ONE_PLUS_ONE\000"
+ 1969      4E455F50 
+ 1969      4C55535F 
+ 1969      4F4E4500 
+ 1970              	.LC45:
+ 1971 02c8 54545F47 		.ascii	"TT_GM_7X\000"
+ 1971      4D5F3758 
+ 1971      00
+ 1972 02d1 000000   		.space	3
+ 1973              	.LC46:
+ 1974 02d4 54545F48 		.ascii	"TT_HONDA_ACCORD_CD\000"
+ 1974      4F4E4441 
+ 1974      5F414343 
+ 1974      4F52445F 
+ 1974      434400
+ 1975 02e7 00       		.space	1
+ 1976              	.LC47:
+ 1977 02e8 54545F48 		.ascii	"TT_HONDA_ACCORD_CD_DIP\000"
+ 1977      4F4E4441 
+ 1977      5F414343 
+ 1977      4F52445F 
+ 1977      43445F44 
+ 1978 02ff 00       		.space	1
+ 1979              	.LC48:
+ 1980 0300 54545F48 		.ascii	"TT_HONDA_ACCORD_CD_TWO_WIRES\000"
+ 1980      4F4E4441 
+ 1980      5F414343 
+ 1980      4F52445F 
+ 1980      43445F54 
+ 1981 031d 000000   		.space	3
+ 1982              	.LC49:
+ 1983 0320 54545F4D 		.ascii	"TT_MAZDA_MIATA_NA\000"
+ 1983      415A4441 
+ 1983      5F4D4941 
+ 1983      54415F4E 
+ 1983      4100
+ 1984 0332 0000     		.space	2
+ 1985              	.LC50:
+ 1986 0334 54545F4D 		.ascii	"TT_MAZDA_MIATA_NB\000"
+ 1986      415A4441 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 39
+
+
+ 1986      5F4D4941 
+ 1986      54415F4E 
+ 1986      4200
+ 1987 0346 0000     		.space	2
+ 1988              	.LC51:
+ 1989 0348 54545F4D 		.ascii	"TT_MINI_COOPER_R50\000"
+ 1989      494E495F 
+ 1989      434F4F50 
+ 1989      45525F52 
+ 1989      353000
+ 1990 035b 00       		.space	1
+ 1991              	.LC52:
+ 1992 035c 54545F4D 		.ascii	"TT_MITSU\000"
+ 1992      49545355 
+ 1992      00
+ 1993 0365 000000   		.space	3
+ 1994              	.LC53:
+ 1995 0368 54545F54 		.ascii	"TT_TOOTHED_WHEEL\000"
+ 1995      4F4F5448 
+ 1995      45445F57 
+ 1995      4845454C 
+ 1995      00
+ 1996 0379 000000   		.space	3
+ 1997              	.LC54:
+ 1998 037c 54545F54 		.ascii	"TT_TOOTHED_WHEEL_36_1\000"
+ 1998      4F4F5448 
+ 1998      45445F57 
+ 1998      4845454C 
+ 1998      5F33365F 
+ 1999 0392 0000     		.space	2
+ 2000              	.LC55:
+ 2001 0394 54545F54 		.ascii	"TT_TOOTHED_WHEEL_60_2\000"
+ 2001      4F4F5448 
+ 2001      45445F57 
+ 2001      4845454C 
+ 2001      5F36305F 
+ 2002 03aa 0000     		.space	2
+ 2003              	.LC56:
+ 2004 03ac 54545F4F 		.ascii	"TT_ONE_PLUS_TOOTHED_WHEEL_60_2\000"
+ 2004      4E455F50 
+ 2004      4C55535F 
+ 2004      544F4F54 
+ 2004      4845445F 
+ 2005 03cb 00       		.space	1
+ 2006              	.LC57:
+ 2007 03cc 54545F4F 		.ascii	"TT_ONE\000"
+ 2007      4E4500
+ 2008 03d3 00       		.space	1
+ 2009              	.LC58:
+ 2010 03d4 54545F36 		.ascii	"TT_60_2_VW\000"
+ 2010      305F325F 
+ 2010      565700
+ 2011 03df 00       		.space	1
+ 2012              	.LC59:
+ 2013 03e0 54545F44 		.ascii	"TT_DODGE_RAM\000"
+ 2013      4F444745 
+ 2013      5F52414D 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 40
+
+
+ 2013      00
+ 2014 03ed 000000   		.space	3
+ 2015              	.LC60:
+ 2016 03f0 54545F55 		.ascii	"TT_UNUSED\000"
+ 2016      4E555345 
+ 2016      4400
+ 2017 03fa 0000     		.space	2
+ 2018              	.LC61:
+ 2019 03fc 4144435F 		.ascii	"ADC_FAST\000"
+ 2019      46415354 
+ 2019      00
+ 2020 0405 000000   		.space	3
+ 2021              	.LC62:
+ 2022 0408 4144435F 		.ascii	"ADC_OFF\000"
+ 2022      4F464600 
+ 2023              	.LC63:
+ 2024 0410 4144435F 		.ascii	"ADC_SLOW\000"
+ 2024      534C4F57 
+ 2024      00
+ 2025 0419 000000   		.space	3
+ 2026              	.LC64:
+ 2027 041c 466F7263 		.ascii	"Force_4b_adc_channel_mode\000"
+ 2027      655F3462 
+ 2027      5F616463 
+ 2027      5F636861 
+ 2027      6E6E656C 
+ 2028 0436 0000     		.space	2
+ 2029              	.LC65:
+ 2030 0438 54565F48 		.ascii	"TV_HIGH\000"
+ 2030      49474800 
+ 2031              	.LC66:
+ 2032 0440 54565F4C 		.ascii	"TV_LOW\000"
+ 2032      4F5700
+ 2033 0447 00       		.space	1
+ 2034              	.LC67:
+ 2035 0448 466F7263 		.ascii	"Force_4b_engine_load_mode\000"
+ 2035      655F3462 
+ 2035      5F656E67 
+ 2035      696E655F 
+ 2035      6C6F6164 
+ 2036 0462 0000     		.space	2
+ 2037              	.LC68:
+ 2038 0464 4C4D5F41 		.ascii	"LM_ALPHA_N\000"
+ 2038      4C504841 
+ 2038      5F4E00
+ 2039 046f 00       		.space	1
+ 2040              	.LC69:
+ 2041 0470 4C4D5F50 		.ascii	"LM_PLAIN_MAF\000"
+ 2041      4C41494E 
+ 2041      5F4D4146 
+ 2041      00
+ 2042 047d 000000   		.space	3
+ 2043              	.LC70:
+ 2044 0480 4C4D5F52 		.ascii	"LM_REAL_MAF\000"
+ 2044      45414C5F 
+ 2044      4D414600 
+ 2045              	.LC71:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 41
+
+
+ 2046 048c 4C4D5F4D 		.ascii	"LM_MAP\000"
+ 2046      415000
+ 2047 0493 00       		.space	1
+ 2048              	.LC72:
+ 2049 0494 4C4D5F53 		.ascii	"LM_SPEED_DENSITY\000"
+ 2049      50454544 
+ 2049      5F44454E 
+ 2049      53495459 
+ 2049      00
+ 2050 04a5 000000   		.space	3
+ 2051              	.LC73:
+ 2052 04a8 444D5F48 		.ascii	"DM_HD44780\000"
+ 2052      44343437 
+ 2052      383000
+ 2053 04b3 00       		.space	1
+ 2054              	.LC74:
+ 2055 04b4 444D5F48 		.ascii	"DM_HD44780_OVER_PCF8574\000"
+ 2055      44343437 
+ 2055      38305F4F 
+ 2055      5645525F 
+ 2055      50434638 
+ 2056              	.LC75:
+ 2057 04cc 444D5F4E 		.ascii	"DM_NONE\000"
+ 2057      4F4E4500 
+ 2058              	.LC76:
+ 2059 04d4 466F7263 		.ascii	"Force_4b_display_mode\000"
+ 2059      655F3462 
+ 2059      5F646973 
+ 2059      706C6179 
+ 2059      5F6D6F64 
+ 2060 04ea 0000     		.space	2
+ 2061              	.LC77:
+ 2062 04ec 466F7263 		.ascii	"Force_4b_log_format\000"
+ 2062      655F3462 
+ 2062      5F6C6F67 
+ 2062      5F666F72 
+ 2062      6D617400 
+ 2063              	.LC78:
+ 2064 0500 4C465F4E 		.ascii	"LF_NATIVE\000"
+ 2064      41544956 
+ 2064      4500
+ 2065 050a 0000     		.space	2
+ 2066              	.LC79:
+ 2067 050c 4C4D5F4D 		.ascii	"LM_MLV\000"
+ 2067      4C5600
+ 2068 0513 00       		.space	1
+ 2069              	.LC80:
+ 2070 0514 466F7263 		.ascii	"Force_4b_idle_mode\000"
+ 2070      655F3462 
+ 2070      5F69646C 
+ 2070      655F6D6F 
+ 2070      646500
+ 2071 0527 00       		.space	1
+ 2072              	.LC81:
+ 2073 0528 494D5F41 		.ascii	"IM_AUTO\000"
+ 2073      55544F00 
+ 2074              	.LC82:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 42
+
+
+ 2075 0530 494D5F4D 		.ascii	"IM_MANUAL\000"
+ 2075      414E5541 
+ 2075      4C00
+ 2076 053a 0000     		.space	2
+ 2077              	.LC83:
+ 2078 053c 466F7263 		.ascii	"Force_4b_pin_output_mode\000"
+ 2078      655F3462 
+ 2078      5F70696E 
+ 2078      5F6F7574 
+ 2078      7075745F 
+ 2079 0555 000000   		.space	3
+ 2080              	.LC84:
+ 2081 0558 4F4D5F44 		.ascii	"OM_DEFAULT\000"
+ 2081      45464155 
+ 2081      4C5400
+ 2082 0563 00       		.space	1
+ 2083              	.LC85:
+ 2084 0564 4F4D5F49 		.ascii	"OM_INVERTED\000"
+ 2084      4E564552 
+ 2084      54454400 
+ 2085              	.LC86:
+ 2086 0570 4F4D5F4F 		.ascii	"OM_OPENDRAIN\000"
+ 2086      50454E44 
+ 2086      5241494E 
+ 2086      00
+ 2087 057d 000000   		.space	3
+ 2088              	.LC87:
+ 2089 0580 4F4D5F4F 		.ascii	"OM_OPENDRAIN_INVERTED\000"
+ 2089      50454E44 
+ 2089      5241494E 
+ 2089      5F494E56 
+ 2089      45525445 
+ 2090 0596 0000     		.space	2
+ 2091              	.LC88:
+ 2092 0598 466F7263 		.ascii	"Force_4b_gpio_mode\000"
+ 2092      655F3462 
+ 2092      5F677069 
+ 2092      6F5F6D6F 
+ 2092      646500
+ 2093 05ab 00       		.space	1
+ 2094              	.LC89:
+ 2095 05ac 466F7263 		.ascii	"Force_4b_pin_input_mode\000"
+ 2095      655F3462 
+ 2095      5F70696E 
+ 2095      5F696E70 
+ 2095      75745F6D 
+ 2096              	.LC90:
+ 2097 05c4 50495F44 		.ascii	"PI_DEFAULT\000"
+ 2097      45464155 
+ 2097      4C5400
+ 2098 05cf 00       		.space	1
+ 2099              	.LC91:
+ 2100 05d0 50495F50 		.ascii	"PI_PULLDOWN\000"
+ 2100      554C4C44 
+ 2100      4F574E00 
+ 2101              	.LC92:
+ 2102 05dc 50495F50 		.ascii	"PI_PULLUP\000"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 43
+
+
+ 2102      554C4C55 
+ 2102      5000
+ 2103 05e6 0000     		.space	2
+ 2104              	.LC93:
+ 2105 05e8 464F5F31 		.ascii	"FO_1_2_4_5_3\000"
+ 2105      5F325F34 
+ 2105      5F355F33 
+ 2105      00
+ 2106 05f5 000000   		.space	3
+ 2107              	.LC94:
+ 2108 05f8 464F5F31 		.ascii	"FO_1_THEN_2\000"
+ 2108      5F544845 
+ 2108      4E5F3200 
+ 2109              	.LC95:
+ 2110 0604 464F5F31 		.ascii	"FO_1_8_4_3_6_5_7_2\000"
+ 2110      5F385F34 
+ 2110      5F335F36 
+ 2110      5F355F37 
+ 2110      5F3200
+ 2111 0617 00       		.space	1
+ 2112              	.LC96:
+ 2113 0618 464F5F31 		.ascii	"FO_1_THEN_2_THEN_4_THEN3\000"
+ 2113      5F544845 
+ 2113      4E5F325F 
+ 2113      5448454E 
+ 2113      5F345F54 
+ 2114 0631 000000   		.space	3
+ 2115              	.LC97:
+ 2116 0634 464F5F31 		.ascii	"FO_1_THEN_3_THEN_2_THEN4\000"
+ 2116      5F544845 
+ 2116      4E5F335F 
+ 2116      5448454E 
+ 2116      5F325F54 
+ 2117 064d 000000   		.space	3
+ 2118              	.LC98:
+ 2119 0650 464F5F31 		.ascii	"FO_1_THEN_3_THEN_4_THEN2\000"
+ 2119      5F544845 
+ 2119      4E5F335F 
+ 2119      5448454E 
+ 2119      5F345F54 
+ 2120 0669 000000   		.space	3
+ 2121              	.LC99:
+ 2122 066c 464F5F31 		.ascii	"FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4\000"
+ 2122      5F544845 
+ 2122      4E5F355F 
+ 2122      5448454E 
+ 2122      5F335F54 
+ 2123              	.LC100:
+ 2124 0694 464F5F31 		.ascii	"FO_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6\000"
+ 2124      5F544845 
+ 2124      4E5F345F 
+ 2124      5448454E 
+ 2124      5F325F54 
+ 2125              	.LC101:
+ 2126 06bc 464F5F4F 		.ascii	"FO_ONE_CYLINDER\000"
+ 2126      4E455F43 
+ 2126      594C494E 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 44
+
+
+ 2126      44455200 
+ 2127              	.LC102:
+ 2128 06cc 466F7263 		.ascii	"Force_4b_firing_order\000"
+ 2128      655F3462 
+ 2128      5F666972 
+ 2128      696E675F 
+ 2128      6F726465 
+ 2129 06e2 0000     		.space	2
+ 2130              	.LC103:
+ 2131 06e4 464F5552 		.ascii	"FOUR_STROKE_CAM_SENSOR\000"
+ 2131      5F535452 
+ 2131      4F4B455F 
+ 2131      43414D5F 
+ 2131      53454E53 
+ 2132 06fb 00       		.space	1
+ 2133              	.LC104:
+ 2134 06fc 464F5552 		.ascii	"FOUR_STROKE_CRANK_SENSOR\000"
+ 2134      5F535452 
+ 2134      4F4B455F 
+ 2134      4352414E 
+ 2134      4B5F5345 
+ 2135 0715 000000   		.space	3
+ 2136              	.LC105:
+ 2137 0718 54574F5F 		.ascii	"TWO_STROKE\000"
+ 2137      5354524F 
+ 2137      4B4500
+ 2138 0723 00       		.space	1
+ 2139              	.LC106:
+ 2140 0724 466F7263 		.ascii	"Force_4b_operation_mode_e\000"
+ 2140      655F3462 
+ 2140      5F6F7065 
+ 2140      72617469 
+ 2140      6F6E5F6D 
+ 2141 073e 0000     		.space	2
+ 2142              	.LC107:
+ 2143 0740 4F4D5F4E 		.ascii	"OM_NONE\000"
+ 2143      4F4E4500 
+ 2144              	.LC108:
+ 2145 0748 466F7263 		.ascii	"Force_4b_ignition_mode\000"
+ 2145      655F3462 
+ 2145      5F69676E 
+ 2145      6974696F 
+ 2145      6E5F6D6F 
+ 2146 075f 00       		.space	1
+ 2147              	.LC109:
+ 2148 0760 494D5F49 		.ascii	"IM_INDIVIDUAL_COILS\000"
+ 2148      4E444956 
+ 2148      49445541 
+ 2148      4C5F434F 
+ 2148      494C5300 
+ 2149              	.LC110:
+ 2150 0774 494D5F4F 		.ascii	"IM_ONE_COIL\000"
+ 2150      4E455F43 
+ 2150      4F494C00 
+ 2151              	.LC111:
+ 2152 0780 494D5F57 		.ascii	"IM_WASTED_SPARK\000"
+ 2152      41535445 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 45
+
+
+ 2152      445F5350 
+ 2152      41524B00 
+ 2153              	.LC112:
+ 2154 0790 466F7263 		.ascii	"Force_4b_injection_mode\000"
+ 2154      655F3462 
+ 2154      5F696E6A 
+ 2154      65637469 
+ 2154      6F6E5F6D 
+ 2155              	.LC113:
+ 2156 07a8 494D5F42 		.ascii	"IM_BATCH\000"
+ 2156      41544348 
+ 2156      00
+ 2157 07b1 000000   		.space	3
+ 2158              	.LC114:
+ 2159 07b4 494D5F53 		.ascii	"IM_SEQUENTIAL\000"
+ 2159      45515545 
+ 2159      4E544941 
+ 2159      4C00
+ 2160 07c2 0000     		.space	2
+ 2161              	.LC115:
+ 2162 07c4 494D5F53 		.ascii	"IM_SIMULTANEOUS\000"
+ 2162      494D554C 
+ 2162      54414E45 
+ 2162      4F555300 
+ 2163              	.LC116:
+ 2164 07d4 43494D5F 		.ascii	"CIM_DEFAULT\000"
+ 2164      44454641 
+ 2164      554C5400 
+ 2165              	.LC117:
+ 2166 07e0 43494D5F 		.ascii	"CIM_FIXED_ANGLE\000"
+ 2166      46495845 
+ 2166      445F414E 
+ 2166      474C4500 
+ 2167              	.LC118:
+ 2168 07f0 466F7263 		.ascii	"Force_4b_cranking_ignition_mode\000"
+ 2168      655F3462 
+ 2168      5F637261 
+ 2168      6E6B696E 
+ 2168      675F6967 
+ 2169              	.LC119:
+ 2170 0810 466F7263 		.ascii	"Force_4b_spi_device\000"
+ 2170      655F3462 
+ 2170      5F737069 
+ 2170      5F646576 
+ 2170      69636500 
+ 2171              	.LC120:
+ 2172 0824 5350495F 		.ascii	"SPI_DEVICE_1\000"
+ 2172      44455649 
+ 2172      43455F31 
+ 2172      00
+ 2173 0831 000000   		.space	3
+ 2174              	.LC121:
+ 2175 0834 5350495F 		.ascii	"SPI_DEVICE_2\000"
+ 2175      44455649 
+ 2175      43455F32 
+ 2175      00
+ 2176 0841 000000   		.space	3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 46
+
+
+ 2177              	.LC122:
+ 2178 0844 5350495F 		.ascii	"SPI_DEVICE_3\000"
+ 2178      44455649 
+ 2178      43455F33 
+ 2178      00
+ 2179 0851 000000   		.space	3
+ 2180              	.LC123:
+ 2181 0854 5350495F 		.ascii	"SPI_DEVICE_4\000"
+ 2181      44455649 
+ 2181      43455F34 
+ 2181      00
+ 2182 0861 000000   		.space	3
+ 2183              	.LC124:
+ 2184 0864 5350495F 		.ascii	"SPI_NONE\000"
+ 2184      4E4F4E45 
+ 2184      00
+ 2185 086d 000000   		.space	3
+ 2186              	.LC125:
+ 2187 0870 4546495F 		.ascii	"EFI_ADC_0\000"
+ 2187      4144435F 
+ 2187      3000
+ 2188 087a 0000     		.space	2
+ 2189              	.LC126:
+ 2190 087c 4546495F 		.ascii	"EFI_ADC_1\000"
+ 2190      4144435F 
+ 2190      3100
+ 2191 0886 0000     		.space	2
+ 2192              	.LC127:
+ 2193 0888 4546495F 		.ascii	"EFI_ADC_10\000"
+ 2193      4144435F 
+ 2193      313000
+ 2194 0893 00       		.space	1
+ 2195              	.LC128:
+ 2196 0894 4546495F 		.ascii	"EFI_ADC_11\000"
+ 2196      4144435F 
+ 2196      313100
+ 2197 089f 00       		.space	1
+ 2198              	.LC129:
+ 2199 08a0 4546495F 		.ascii	"EFI_ADC_12\000"
+ 2199      4144435F 
+ 2199      313200
+ 2200 08ab 00       		.space	1
+ 2201              	.LC130:
+ 2202 08ac 4546495F 		.ascii	"EFI_ADC_13\000"
+ 2202      4144435F 
+ 2202      313300
+ 2203 08b7 00       		.space	1
+ 2204              	.LC131:
+ 2205 08b8 4546495F 		.ascii	"EFI_ADC_14\000"
+ 2205      4144435F 
+ 2205      313400
+ 2206 08c3 00       		.space	1
+ 2207              	.LC132:
+ 2208 08c4 4546495F 		.ascii	"EFI_ADC_15\000"
+ 2208      4144435F 
+ 2208      313500
+ 2209 08cf 00       		.space	1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 47
+
+
+ 2210              	.LC133:
+ 2211 08d0 4546495F 		.ascii	"EFI_ADC_2\000"
+ 2211      4144435F 
+ 2211      3200
+ 2212 08da 0000     		.space	2
+ 2213              	.LC134:
+ 2214 08dc 4546495F 		.ascii	"EFI_ADC_3\000"
+ 2214      4144435F 
+ 2214      3300
+ 2215 08e6 0000     		.space	2
+ 2216              	.LC135:
+ 2217 08e8 4546495F 		.ascii	"EFI_ADC_4\000"
+ 2217      4144435F 
+ 2217      3400
+ 2218 08f2 0000     		.space	2
+ 2219              	.LC136:
+ 2220 08f4 4546495F 		.ascii	"EFI_ADC_5\000"
+ 2220      4144435F 
+ 2220      3500
+ 2221 08fe 0000     		.space	2
+ 2222              	.LC137:
+ 2223 0900 4546495F 		.ascii	"EFI_ADC_6\000"
+ 2223      4144435F 
+ 2223      3600
+ 2224 090a 0000     		.space	2
+ 2225              	.LC138:
+ 2226 090c 4546495F 		.ascii	"EFI_ADC_7\000"
+ 2226      4144435F 
+ 2226      3700
+ 2227 0916 0000     		.space	2
+ 2228              	.LC139:
+ 2229 0918 4546495F 		.ascii	"EFI_ADC_8\000"
+ 2229      4144435F 
+ 2229      3800
+ 2230 0922 0000     		.space	2
+ 2231              	.LC140:
+ 2232 0924 4546495F 		.ascii	"EFI_ADC_9\000"
+ 2232      4144435F 
+ 2232      3900
+ 2233 092e 0000     		.space	2
+ 2234              	.LC141:
+ 2235 0930 4546495F 		.ascii	"EFI_ADC_ERROR\000"
+ 2235      4144435F 
+ 2235      4552524F 
+ 2235      5200
+ 2236 093e 0000     		.space	2
+ 2237              	.LC142:
+ 2238 0940 4546495F 		.ascii	"EFI_ADC_NONE\000"
+ 2238      4144435F 
+ 2238      4E4F4E45 
+ 2238      00
+ 2239 094d 000000   		.space	3
+ 2240              	.LC143:
+ 2241 0950 466F7263 		.ascii	"Force_4b_cranking_adc_channel\000"
+ 2241      655F3462 
+ 2241      5F637261 
+ 2241      6E6B696E 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 48
+
+
+ 2241      675F6164 
+ 2242 096e 0000     		.space	2
+ 2243              	.LC144:
+ 2244 0970 45535F31 		.ascii	"ES_14Point7_Free\000"
+ 2244      34506F69 
+ 2244      6E74375F 
+ 2244      46726565 
+ 2244      00
+ 2245 0981 000000   		.space	3
+ 2246              	.LC145:
+ 2247 0984 45535F42 		.ascii	"ES_BPSX_D1\000"
+ 2247      5053585F 
+ 2247      443100
+ 2248 098f 00       		.space	1
+ 2249              	.LC146:
+ 2250 0990 45535F49 		.ascii	"ES_Innovate_MTX_L\000"
+ 2250      6E6E6F76 
+ 2250      6174655F 
+ 2250      4D54585F 
+ 2250      4C00
+ 2251 09a2 0000     		.space	2
+ 2252              	.LC147:
+ 2253 09a4 45535F4E 		.ascii	"ES_NarrowBand\000"
+ 2253      6172726F 
+ 2253      7742616E 
+ 2253      6400
+ 2254 09b2 0000     		.space	2
+ 2255              	.LC148:
+ 2256 09b4 466F7263 		.ascii	"Force_4b_ego_sensor\000"
+ 2256      655F3462 
+ 2256      5F65676F 
+ 2256      5F73656E 
+ 2256      736F7200 
+ 2257              	.LC149:
+ 2258 09c8 466F7263 		.ascii	"Force_4b_cranking_brain_pin\000"
+ 2258      655F3462 
+ 2258      5F637261 
+ 2258      6E6B696E 
+ 2258      675F6272 
+ 2259              	.LC150:
+ 2260 09e4 4750494F 		.ascii	"GPIOA_0\000"
+ 2260      415F3000 
+ 2261              	.LC151:
+ 2262 09ec 4750494F 		.ascii	"GPIOA_1\000"
+ 2262      415F3100 
+ 2263              	.LC152:
+ 2264 09f4 4750494F 		.ascii	"GPIOA_10\000"
+ 2264      415F3130 
+ 2264      00
+ 2265 09fd 000000   		.space	3
+ 2266              	.LC153:
+ 2267 0a00 4750494F 		.ascii	"GPIOA_11\000"
+ 2267      415F3131 
+ 2267      00
+ 2268 0a09 000000   		.space	3
+ 2269              	.LC154:
+ 2270 0a0c 4750494F 		.ascii	"GPIOA_12\000"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 49
+
+
+ 2270      415F3132 
+ 2270      00
+ 2271 0a15 000000   		.space	3
+ 2272              	.LC155:
+ 2273 0a18 4750494F 		.ascii	"GPIOA_13\000"
+ 2273      415F3133 
+ 2273      00
+ 2274 0a21 000000   		.space	3
+ 2275              	.LC156:
+ 2276 0a24 4750494F 		.ascii	"GPIOA_14\000"
+ 2276      415F3134 
+ 2276      00
+ 2277 0a2d 000000   		.space	3
+ 2278              	.LC157:
+ 2279 0a30 4750494F 		.ascii	"GPIOA_15\000"
+ 2279      415F3135 
+ 2279      00
+ 2280 0a39 000000   		.space	3
+ 2281              	.LC158:
+ 2282 0a3c 4750494F 		.ascii	"GPIOA_2\000"
+ 2282      415F3200 
+ 2283              	.LC159:
+ 2284 0a44 4750494F 		.ascii	"GPIOA_3\000"
+ 2284      415F3300 
+ 2285              	.LC160:
+ 2286 0a4c 4750494F 		.ascii	"GPIOA_4\000"
+ 2286      415F3400 
+ 2287              	.LC161:
+ 2288 0a54 4750494F 		.ascii	"GPIOA_5\000"
+ 2288      415F3500 
+ 2289              	.LC162:
+ 2290 0a5c 4750494F 		.ascii	"GPIOA_6\000"
+ 2290      415F3600 
+ 2291              	.LC163:
+ 2292 0a64 4750494F 		.ascii	"GPIOA_7\000"
+ 2292      415F3700 
+ 2293              	.LC164:
+ 2294 0a6c 4750494F 		.ascii	"GPIOA_8\000"
+ 2294      415F3800 
+ 2295              	.LC165:
+ 2296 0a74 4750494F 		.ascii	"GPIOA_9\000"
+ 2296      415F3900 
+ 2297              	.LC166:
+ 2298 0a7c 4750494F 		.ascii	"GPIOB_0\000"
+ 2298      425F3000 
+ 2299              	.LC167:
+ 2300 0a84 4750494F 		.ascii	"GPIOB_1\000"
+ 2300      425F3100 
+ 2301              	.LC168:
+ 2302 0a8c 4750494F 		.ascii	"GPIOB_10\000"
+ 2302      425F3130 
+ 2302      00
+ 2303 0a95 000000   		.space	3
+ 2304              	.LC169:
+ 2305 0a98 4750494F 		.ascii	"GPIOB_11\000"
+ 2305      425F3131 
+ 2305      00
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 50
+
+
+ 2306 0aa1 000000   		.space	3
+ 2307              	.LC170:
+ 2308 0aa4 4750494F 		.ascii	"GPIOB_12\000"
+ 2308      425F3132 
+ 2308      00
+ 2309 0aad 000000   		.space	3
+ 2310              	.LC171:
+ 2311 0ab0 4750494F 		.ascii	"GPIOB_13\000"
+ 2311      425F3133 
+ 2311      00
+ 2312 0ab9 000000   		.space	3
+ 2313              	.LC172:
+ 2314 0abc 4750494F 		.ascii	"GPIOB_14\000"
+ 2314      425F3134 
+ 2314      00
+ 2315 0ac5 000000   		.space	3
+ 2316              	.LC173:
+ 2317 0ac8 4750494F 		.ascii	"GPIOB_15\000"
+ 2317      425F3135 
+ 2317      00
+ 2318 0ad1 000000   		.space	3
+ 2319              	.LC174:
+ 2320 0ad4 4750494F 		.ascii	"GPIOB_2\000"
+ 2320      425F3200 
+ 2321              	.LC175:
+ 2322 0adc 4750494F 		.ascii	"GPIOB_3\000"
+ 2322      425F3300 
+ 2323              	.LC176:
+ 2324 0ae4 4750494F 		.ascii	"GPIOB_4\000"
+ 2324      425F3400 
+ 2325              	.LC177:
+ 2326 0aec 4750494F 		.ascii	"GPIOB_5\000"
+ 2326      425F3500 
+ 2327              	.LC178:
+ 2328 0af4 4750494F 		.ascii	"GPIOB_6\000"
+ 2328      425F3600 
+ 2329              	.LC179:
+ 2330 0afc 4750494F 		.ascii	"GPIOB_7\000"
+ 2330      425F3700 
+ 2331              	.LC180:
+ 2332 0b04 4750494F 		.ascii	"GPIOB_8\000"
+ 2332      425F3800 
+ 2333              	.LC181:
+ 2334 0b0c 4750494F 		.ascii	"GPIOB_9\000"
+ 2334      425F3900 
+ 2335              	.LC182:
+ 2336 0b14 4750494F 		.ascii	"GPIOC_0\000"
+ 2336      435F3000 
+ 2337              	.LC183:
+ 2338 0b1c 4750494F 		.ascii	"GPIOC_1\000"
+ 2338      435F3100 
+ 2339              	.LC184:
+ 2340 0b24 4750494F 		.ascii	"GPIOC_10\000"
+ 2340      435F3130 
+ 2340      00
+ 2341 0b2d 000000   		.space	3
+ 2342              	.LC185:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 51
+
+
+ 2343 0b30 4750494F 		.ascii	"GPIOC_11\000"
+ 2343      435F3131 
+ 2343      00
+ 2344 0b39 000000   		.space	3
+ 2345              	.LC186:
+ 2346 0b3c 4750494F 		.ascii	"GPIOC_12\000"
+ 2346      435F3132 
+ 2346      00
+ 2347 0b45 000000   		.space	3
+ 2348              	.LC187:
+ 2349 0b48 4750494F 		.ascii	"GPIOC_13\000"
+ 2349      435F3133 
+ 2349      00
+ 2350 0b51 000000   		.space	3
+ 2351              	.LC188:
+ 2352 0b54 4750494F 		.ascii	"GPIOC_14\000"
+ 2352      435F3134 
+ 2352      00
+ 2353 0b5d 000000   		.space	3
+ 2354              	.LC189:
+ 2355 0b60 4750494F 		.ascii	"GPIOC_15\000"
+ 2355      435F3135 
+ 2355      00
+ 2356 0b69 000000   		.space	3
+ 2357              	.LC190:
+ 2358 0b6c 4750494F 		.ascii	"GPIOC_2\000"
+ 2358      435F3200 
+ 2359              	.LC191:
+ 2360 0b74 4750494F 		.ascii	"GPIOC_3\000"
+ 2360      435F3300 
+ 2361              	.LC192:
+ 2362 0b7c 4750494F 		.ascii	"GPIOC_4\000"
+ 2362      435F3400 
+ 2363              	.LC193:
+ 2364 0b84 4750494F 		.ascii	"GPIOC_5\000"
+ 2364      435F3500 
+ 2365              	.LC194:
+ 2366 0b8c 4750494F 		.ascii	"GPIOC_6\000"
+ 2366      435F3600 
+ 2367              	.LC195:
+ 2368 0b94 4750494F 		.ascii	"GPIOC_7\000"
+ 2368      435F3700 
+ 2369              	.LC196:
+ 2370 0b9c 4750494F 		.ascii	"GPIOC_8\000"
+ 2370      435F3800 
+ 2371              	.LC197:
+ 2372 0ba4 4750494F 		.ascii	"GPIOC_9\000"
+ 2372      435F3900 
+ 2373              	.LC198:
+ 2374 0bac 4750494F 		.ascii	"GPIOD_0\000"
+ 2374      445F3000 
+ 2375              	.LC199:
+ 2376 0bb4 4750494F 		.ascii	"GPIOD_1\000"
+ 2376      445F3100 
+ 2377              	.LC200:
+ 2378 0bbc 4750494F 		.ascii	"GPIOD_10\000"
+ 2378      445F3130 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 52
+
+
+ 2378      00
+ 2379 0bc5 000000   		.space	3
+ 2380              	.LC201:
+ 2381 0bc8 4750494F 		.ascii	"GPIOD_11\000"
+ 2381      445F3131 
+ 2381      00
+ 2382 0bd1 000000   		.space	3
+ 2383              	.LC202:
+ 2384 0bd4 4750494F 		.ascii	"GPIOD_12\000"
+ 2384      445F3132 
+ 2384      00
+ 2385 0bdd 000000   		.space	3
+ 2386              	.LC203:
+ 2387 0be0 4750494F 		.ascii	"GPIOD_13\000"
+ 2387      445F3133 
+ 2387      00
+ 2388 0be9 000000   		.space	3
+ 2389              	.LC204:
+ 2390 0bec 4750494F 		.ascii	"GPIOD_14\000"
+ 2390      445F3134 
+ 2390      00
+ 2391 0bf5 000000   		.space	3
+ 2392              	.LC205:
+ 2393 0bf8 4750494F 		.ascii	"GPIOD_15\000"
+ 2393      445F3135 
+ 2393      00
+ 2394 0c01 000000   		.space	3
+ 2395              	.LC206:
+ 2396 0c04 4750494F 		.ascii	"GPIOD_2\000"
+ 2396      445F3200 
+ 2397              	.LC207:
+ 2398 0c0c 4750494F 		.ascii	"GPIOD_3\000"
+ 2398      445F3300 
+ 2399              	.LC208:
+ 2400 0c14 4750494F 		.ascii	"GPIOD_4\000"
+ 2400      445F3400 
+ 2401              	.LC209:
+ 2402 0c1c 4750494F 		.ascii	"GPIOD_5\000"
+ 2402      445F3500 
+ 2403              	.LC210:
+ 2404 0c24 4750494F 		.ascii	"GPIOD_6\000"
+ 2404      445F3600 
+ 2405              	.LC211:
+ 2406 0c2c 4750494F 		.ascii	"GPIOD_7\000"
+ 2406      445F3700 
+ 2407              	.LC212:
+ 2408 0c34 4750494F 		.ascii	"GPIOD_8\000"
+ 2408      445F3800 
+ 2409              	.LC213:
+ 2410 0c3c 4750494F 		.ascii	"GPIOD_9\000"
+ 2410      445F3900 
+ 2411              	.LC214:
+ 2412 0c44 4750494F 		.ascii	"GPIOE_0\000"
+ 2412      455F3000 
+ 2413              	.LC215:
+ 2414 0c4c 4750494F 		.ascii	"GPIOE_1\000"
+ 2414      455F3100 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 53
+
+
+ 2415              	.LC216:
+ 2416 0c54 4750494F 		.ascii	"GPIOE_10\000"
+ 2416      455F3130 
+ 2416      00
+ 2417 0c5d 000000   		.space	3
+ 2418              	.LC217:
+ 2419 0c60 4750494F 		.ascii	"GPIOE_11\000"
+ 2419      455F3131 
+ 2419      00
+ 2420 0c69 000000   		.space	3
+ 2421              	.LC218:
+ 2422 0c6c 4750494F 		.ascii	"GPIOE_12\000"
+ 2422      455F3132 
+ 2422      00
+ 2423 0c75 000000   		.space	3
+ 2424              	.LC219:
+ 2425 0c78 4750494F 		.ascii	"GPIOE_13\000"
+ 2425      455F3133 
+ 2425      00
+ 2426 0c81 000000   		.space	3
+ 2427              	.LC220:
+ 2428 0c84 4750494F 		.ascii	"GPIOE_14\000"
+ 2428      455F3134 
+ 2428      00
+ 2429 0c8d 000000   		.space	3
+ 2430              	.LC221:
+ 2431 0c90 4750494F 		.ascii	"GPIOE_15\000"
+ 2431      455F3135 
+ 2431      00
+ 2432 0c99 000000   		.space	3
+ 2433              	.LC222:
+ 2434 0c9c 4750494F 		.ascii	"GPIOE_2\000"
+ 2434      455F3200 
+ 2435              	.LC223:
+ 2436 0ca4 4750494F 		.ascii	"GPIOE_3\000"
+ 2436      455F3300 
+ 2437              	.LC224:
+ 2438 0cac 4750494F 		.ascii	"GPIOE_4\000"
+ 2438      455F3400 
+ 2439              	.LC225:
+ 2440 0cb4 4750494F 		.ascii	"GPIOE_5\000"
+ 2440      455F3500 
+ 2441              	.LC226:
+ 2442 0cbc 4750494F 		.ascii	"GPIOE_6\000"
+ 2442      455F3600 
+ 2443              	.LC227:
+ 2444 0cc4 4750494F 		.ascii	"GPIOE_7\000"
+ 2444      455F3700 
+ 2445              	.LC228:
+ 2446 0ccc 4750494F 		.ascii	"GPIOE_8\000"
+ 2446      455F3800 
+ 2447              	.LC229:
+ 2448 0cd4 4750494F 		.ascii	"GPIOE_9\000"
+ 2448      455F3900 
+ 2449              	.LC230:
+ 2450 0cdc 4750494F 		.ascii	"GPIO_INVALID\000"
+ 2450      5F494E56 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 54
+
+
+ 2450      414C4944 
+ 2450      00
+ 2451 0ce9 000000   		.space	3
+ 2452              	.LC231:
+ 2453 0cec 4750494F 		.ascii	"GPIO_UNASSIGNED\000"
+ 2453      5F554E41 
+ 2453      53534947 
+ 2453      4E454400 
+ 2454              	.LC232:
+ 2455 0cfc 466F7263 		.ascii	"Force_4b_cranking_map_type\000"
+ 2455      655F3462 
+ 2455      5F637261 
+ 2455      6E6B696E 
+ 2455      675F6D61 
+ 2456 0d17 00       		.space	1
+ 2457              	.LC233:
+ 2458 0d18 4D545F43 		.ascii	"MT_CUSTOM\000"
+ 2458      5553544F 
+ 2458      4D00
+ 2459 0d22 0000     		.space	2
+ 2460              	.LC234:
+ 2461 0d24 4D545F44 		.ascii	"MT_DENSO183\000"
+ 2461      454E534F 
+ 2461      31383300 
+ 2462              	.LC235:
+ 2463 0d30 4D545F44 		.ascii	"MT_DODGE_NEON_2003\000"
+ 2463      4F444745 
+ 2463      5F4E454F 
+ 2463      4E5F3230 
+ 2463      303300
+ 2464 0d43 00       		.space	1
+ 2465              	.LC236:
+ 2466 0d44 4D545F48 		.ascii	"MT_HONDA3BAR\000"
+ 2466      4F4E4441 
+ 2466      33424152 
+ 2466      00
+ 2467 0d51 000000   		.space	3
+ 2468              	.LC237:
+ 2469 0d54 4D545F4D 		.ascii	"MT_MPX4250\000"
+ 2469      50583432 
+ 2469      353000
+ 2470 0d5f 00       		.space	1
+ 2471              	.LC238:
+ 2472 0d60 4D545F53 		.ascii	"MT_SUBY_DENSO\000"
+ 2472      5542595F 
+ 2472      44454E53 
+ 2472      4F00
+ 2473 0d6e 0000     		.space	2
+ 2474              	.LC239:
+ 2475 0d70 4D545F47 		.ascii	"MT_GM_3_BAR\000"
+ 2475      4D5F335F 
+ 2475      42415200 
+ 2476              	.LC240:
+ 2477 0d7c 53484146 		.ascii	"SHAFT_PRIMARY_DOWN\000"
+ 2477      545F5052 
+ 2477      494D4152 
+ 2477      595F444F 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 55
+
+
+ 2477      574E00
+ 2478 0d8f 00       		.space	1
+ 2479              	.LC241:
+ 2480 0d90 53484146 		.ascii	"SHAFT_PRIMARY_UP\000"
+ 2480      545F5052 
+ 2480      494D4152 
+ 2480      595F5550 
+ 2480      00
+ 2481 0da1 000000   		.space	3
+ 2482              	.LC242:
+ 2483 0da4 53484146 		.ascii	"SHAFT_SECONDARY_DOWN\000"
+ 2483      545F5345 
+ 2483      434F4E44 
+ 2483      4152595F 
+ 2483      444F574E 
+ 2484 0db9 000000   		.space	3
+ 2485              	.LC243:
+ 2486 0dbc 53484146 		.ascii	"SHAFT_SECONDARY_UP\000"
+ 2486      545F5345 
+ 2486      434F4E44 
+ 2486      4152595F 
+ 2486      555000
+ 2487 0dcf 00       		.space	1
+ 2488              	.LC244:
+ 2489 0dd0 53484146 		.ascii	"SHAFT_3RD_DOWN\000"
+ 2489      545F3352 
+ 2489      445F444F 
+ 2489      574E00
+ 2490 0ddf 00       		.space	1
+ 2491              	.LC245:
+ 2492 0de0 53484146 		.ascii	"SHAFT_3RD_UP\000"
+ 2492      545F3352 
+ 2492      445F5550 
+ 2492      00
+ 2493 0ded 000000   		.space	3
+ 2494              	.LC246:
+ 2495 0df0 545F5052 		.ascii	"T_PRIMARY\000"
+ 2495      494D4152 
+ 2495      5900
+ 2496 0dfa 0000     		.space	2
+ 2497              	.LC247:
+ 2498 0dfc 545F5345 		.ascii	"T_SECONDARY\000"
+ 2498      434F4E44 
+ 2498      41525900 
+ 2499              	.LC248:
+ 2500 0e08 545F4348 		.ascii	"T_CHANNEL_3\000"
+ 2500      414E4E45 
+ 2500      4C5F3300 
+ 2501              		.section	.rodata.CSWTCH.27,"a",%progbits
+ 2502              		.align	2
+ 2503              		.set	.LANCHOR0,. + 0
+ 2504              		.type	CSWTCH.27, %object
+ 2505              		.size	CSWTCH.27, 12
+ 2506              	CSWTCH.27:
+ 2507 0000 F00D0000 		.word	.LC246
+ 2508 0004 FC0D0000 		.word	.LC247
+ 2509 0008 080E0000 		.word	.LC248
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 56
+
+
+ 2510              		.section	.rodata.CSWTCH.29,"a",%progbits
+ 2511              		.align	2
+ 2512              		.set	.LANCHOR1,. + 0
+ 2513              		.type	CSWTCH.29, %object
+ 2514              		.size	CSWTCH.29, 24
+ 2515              	CSWTCH.29:
+ 2516 0000 7C0D0000 		.word	.LC240
+ 2517 0004 900D0000 		.word	.LC241
+ 2518 0008 A40D0000 		.word	.LC242
+ 2519 000c BC0D0000 		.word	.LC243
+ 2520 0010 D00D0000 		.word	.LC244
+ 2521 0014 E00D0000 		.word	.LC245
+ 2522              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 57
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 auto_generated_enums.cpp
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:17     .text._Z16getTiming_mode_e13timing_mode_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:23     .text._Z16getTiming_mode_e13timing_mode_e:00000000 _Z16getTiming_mode_e13timing_mode_e
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1851   .rodata.str1.4:00000028 .LC1
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1854   .rodata.str1.4:00000034 .LC2
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1849   .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:50     .text._Z16getEngine_type_e13engine_type_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:56     .text._Z16getEngine_type_e13engine_type_e:00000000 _Z16getEngine_type_e13engine_type_e
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1872   .rodata.str1.4:00000074 .LC8
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1895   .rodata.str1.4:000000f8 .LC17
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1933   .rodata.str1.4:000001e8 .LC31
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1898   .rodata.str1.4:0000010c .LC18
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1877   .rodata.str1.4:0000008c .LC10
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1906   .rodata.str1.4:00000140 .LC21
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1917   .rodata.str1.4:00000188 .LC25
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1857   .rodata.str1.4:00000040 .LC3
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1904   .rodata.str1.4:00000130 .LC20
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1925   .rodata.str1.4:000001b8 .LC28
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1874   .rodata.str1.4:0000007c .LC9
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1884   .rodata.str1.4:000000bc .LC13
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1911   .rodata.str1.4:00000170 .LC23
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1923   .rodata.str1.4:000001a4 .LC27
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1880   .rodata.str1.4:0000009c .LC11
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1863   .rodata.str1.4:00000058 .LC5
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1860   .rodata.str1.4:0000004c .LC4
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1914   .rodata.str1.4:0000017c .LC24
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1939   .rodata.str1.4:00000204 .LC33
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1920   .rodata.str1.4:00000198 .LC26
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1944   .rodata.str1.4:00000220 .LC35
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1882   .rodata.str1.4:000000ac .LC12
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1869   .rodata.str1.4:00000068 .LC7
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1948   .rodata.str1.4:0000023c .LC37
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1893   .rodata.str1.4:000000ec .LC16
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1936   .rodata.str1.4:000001f4 .LC32
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1931   .rodata.str1.4:000001d8 .LC30
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1890   .rodata.str1.4:000000dc .LC15
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1946   .rodata.str1.4:00000230 .LC36
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1928   .rodata.str1.4:000001cc .LC29
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1866   .rodata.str1.4:00000060 .LC6
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1942   .rodata.str1.4:00000210 .LC34
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1901   .rodata.str1.4:00000124 .LC19
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1887   .rodata.str1.4:000000c8 .LC14
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1908   .rodata.str1.4:00000154 .LC22
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:269    .text._Z17getTrigger_type_e14trigger_type_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:275    .text._Z17getTrigger_type_e14trigger_type_e:00000000 _Z17getTrigger_type_e14trigger_type_e
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1960   .rodata.str1.4:00000284 .LC41
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1976   .rodata.str1.4:000002e8 .LC47
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1963   .rodata.str1.4:00000294 .LC42
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2012   .rodata.str1.4:000003e0 .LC59
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1968   .rodata.str1.4:000002b8 .LC44
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1973   .rodata.str1.4:000002d4 .LC46
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1951   .rodata.str1.4:00000244 .LC38
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1985   .rodata.str1.4:00000334 .LC50
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1979   .rodata.str1.4:00000300 .LC48
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1988   .rodata.str1.4:00000348 .LC51
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1994   .rodata.str1.4:00000368 .LC53
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 58
+
+
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2006   .rodata.str1.4:000003cc .LC57
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2015   .rodata.str1.4:000003f0 .LC60
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1997   .rodata.str1.4:0000037c .LC54
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1982   .rodata.str1.4:00000320 .LC49
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1965   .rodata.str1.4:000002a4 .LC43
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1954   .rodata.str1.4:0000025c .LC39
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2000   .rodata.str1.4:00000394 .LC55
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1957   .rodata.str1.4:00000270 .LC40
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2009   .rodata.str1.4:000003d4 .LC58
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1991   .rodata.str1.4:0000035c .LC52
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1970   .rodata.str1.4:000002c8 .LC45
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2003   .rodata.str1.4:000003ac .LC56
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:430    .text._Z21getAdc_channel_mode_e18adc_channel_mode_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:436    .text._Z21getAdc_channel_mode_e18adc_channel_mode_e:00000000 _Z21getAdc_channel_mode_e18adc_channel_mode_e
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2026   .rodata.str1.4:0000041c .LC64
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2018   .rodata.str1.4:000003fc .LC61
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2021   .rodata.str1.4:00000408 .LC62
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2023   .rodata.str1.4:00000410 .LC63
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:470    .text._Z18getTrigger_value_e15trigger_value_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:476    .text._Z18getTrigger_value_e15trigger_value_e:00000000 _Z18getTrigger_value_e15trigger_value_e
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2029   .rodata.str1.4:00000438 .LC65
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2031   .rodata.str1.4:00000440 .LC66
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:494    .text._Z18getTrigger_wheel_e15trigger_wheel_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:500    .text._Z18getTrigger_wheel_e15trigger_wheel_e:00000000 _Z18getTrigger_wheel_e15trigger_wheel_e
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2503   .rodata.CSWTCH.27:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:513    .text._Z18getTrigger_event_e15trigger_event_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:519    .text._Z18getTrigger_event_e15trigger_event_e:00000000 _Z18getTrigger_event_e15trigger_event_e
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2512   .rodata.CSWTCH.29:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:532    .text._Z21getEngine_load_mode_e18engine_load_mode_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:538    .text._Z21getEngine_load_mode_e18engine_load_mode_e:00000000 _Z21getEngine_load_mode_e18engine_load_mode_e
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2034   .rodata.str1.4:00000448 .LC67
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2037   .rodata.str1.4:00000464 .LC68
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2043   .rodata.str1.4:00000480 .LC70
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2040   .rodata.str1.4:00000470 .LC69
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2048   .rodata.str1.4:00000494 .LC72
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2045   .rodata.str1.4:0000048c .LC71
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:583    .text._Z17getDisplay_mode_e14display_mode_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:589    .text._Z17getDisplay_mode_e14display_mode_e:00000000 _Z17getDisplay_mode_e14display_mode_e
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2058   .rodata.str1.4:000004d4 .LC76
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2054   .rodata.str1.4:000004b4 .LC74
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2056   .rodata.str1.4:000004cc .LC75
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2051   .rodata.str1.4:000004a8 .LC73
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:623    .text._Z15getLog_format_e12log_format_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:629    .text._Z15getLog_format_e12log_format_e:00000000 _Z15getLog_format_e12log_format_e
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2063   .rodata.str1.4:00000500 .LC78
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2066   .rodata.str1.4:0000050c .LC79
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2061   .rodata.str1.4:000004ec .LC77
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:656    .text._Z14getIdle_mode_e11idle_mode_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:662    .text._Z14getIdle_mode_e11idle_mode_e:00000000 _Z14getIdle_mode_e11idle_mode_e
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2072   .rodata.str1.4:00000528 .LC81
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2074   .rodata.str1.4:00000530 .LC82
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2069   .rodata.str1.4:00000514 .LC80
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:689    .text._Z20getPin_output_mode_e17pin_output_mode_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:695    .text._Z20getPin_output_mode_e17pin_output_mode_e:00000000 _Z20getPin_output_mode_e17pin_output_mode_e
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2083   .rodata.str1.4:00000564 .LC85
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2077   .rodata.str1.4:0000053c .LC83
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2088   .rodata.str1.4:00000580 .LC87
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 59
+
+
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2080   .rodata.str1.4:00000558 .LC84
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2085   .rodata.str1.4:00000570 .LC86
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:735    .text._Z14getGpio_mode_e11gpio_mode_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:741    .text._Z14getGpio_mode_e11gpio_mode_e:00000000 _Z14getGpio_mode_e11gpio_mode_e
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2091   .rodata.str1.4:00000598 .LC88
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:756    .text._Z19getPin_input_mode_e16pin_input_mode_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:762    .text._Z19getPin_input_mode_e16pin_input_mode_e:00000000 _Z19getPin_input_mode_e16pin_input_mode_e
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2094   .rodata.str1.4:000005ac .LC89
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2099   .rodata.str1.4:000005d0 .LC91
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2096   .rodata.str1.4:000005c4 .LC90
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2101   .rodata.str1.4:000005dc .LC92
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:796    .text._Z17getFiring_order_e14firing_order_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:802    .text._Z17getFiring_order_e14firing_order_e:00000000 _Z17getFiring_order_e14firing_order_e
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2104   .rodata.str1.4:000005e8 .LC93
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2115   .rodata.str1.4:00000634 .LC97
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2127   .rodata.str1.4:000006cc .LC102
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2112   .rodata.str1.4:00000618 .LC96
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2107   .rodata.str1.4:000005f8 .LC94
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2109   .rodata.str1.4:00000604 .LC95
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2125   .rodata.str1.4:000006bc .LC101
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2118   .rodata.str1.4:00000650 .LC98
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2123   .rodata.str1.4:00000694 .LC100
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2121   .rodata.str1.4:0000066c .LC99
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:874    .text._Z19getOperation_mode_e16operation_mode_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:880    .text._Z19getOperation_mode_e16operation_mode_e:00000000 _Z19getOperation_mode_e16operation_mode_e
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2133   .rodata.str1.4:000006fc .LC104
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2139   .rodata.str1.4:00000724 .LC106
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2136   .rodata.str1.4:00000718 .LC105
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2142   .rodata.str1.4:00000740 .LC107
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2130   .rodata.str1.4:000006e4 .LC103
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:920    .text._Z18getIgnition_mode_e15ignition_mode_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:926    .text._Z18getIgnition_mode_e15ignition_mode_e:00000000 _Z18getIgnition_mode_e15ignition_mode_e
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2144   .rodata.str1.4:00000748 .LC108
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2151   .rodata.str1.4:00000780 .LC111
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2149   .rodata.str1.4:00000774 .LC110
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2147   .rodata.str1.4:00000760 .LC109
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:960    .text._Z19getInjection_mode_e16injection_mode_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:966    .text._Z19getInjection_mode_e16injection_mode_e:00000000 _Z19getInjection_mode_e16injection_mode_e
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2153   .rodata.str1.4:00000790 .LC112
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2155   .rodata.str1.4:000007a8 .LC113
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2161   .rodata.str1.4:000007c4 .LC115
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2158   .rodata.str1.4:000007b4 .LC114
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1000   .text._Z27getCranking_ignition_mode_e24cranking_ignition_mode_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1006   .text._Z27getCranking_ignition_mode_e24cranking_ignition_mode_e:00000000 _Z27getCranking_ignition_mode_e24cranking_ignition_mode_e
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2163   .rodata.str1.4:000007d4 .LC116
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2165   .rodata.str1.4:000007e0 .LC117
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2167   .rodata.str1.4:000007f0 .LC118
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1033   .text._Z15getSpi_device_e12spi_device_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1039   .text._Z15getSpi_device_e12spi_device_e:00000000 _Z15getSpi_device_e12spi_device_e
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2169   .rodata.str1.4:00000810 .LC119
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2171   .rodata.str1.4:00000824 .LC120
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2180   .rodata.str1.4:00000854 .LC123
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2183   .rodata.str1.4:00000864 .LC124
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2177   .rodata.str1.4:00000844 .LC122
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2174   .rodata.str1.4:00000834 .LC121
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1084   .text._Z16getAdc_channel_e13adc_channel_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1090   .text._Z16getAdc_channel_e13adc_channel_e:00000000 _Z16getAdc_channel_e13adc_channel_e
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 60
+
+
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2201   .rodata.str1.4:000008ac .LC130
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2213   .rodata.str1.4:000008dc .LC134
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2228   .rodata.str1.4:00000918 .LC139
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2240   .rodata.str1.4:00000950 .LC143
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2222   .rodata.str1.4:00000900 .LC137
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2189   .rodata.str1.4:0000087c .LC126
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2237   .rodata.str1.4:00000940 .LC142
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2195   .rodata.str1.4:00000894 .LC128
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2186   .rodata.str1.4:00000870 .LC125
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2207   .rodata.str1.4:000008c4 .LC132
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2210   .rodata.str1.4:000008d0 .LC133
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2234   .rodata.str1.4:00000930 .LC141
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2204   .rodata.str1.4:000008b8 .LC131
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2225   .rodata.str1.4:0000090c .LC138
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2219   .rodata.str1.4:000008f4 .LC136
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2216   .rodata.str1.4:000008e8 .LC135
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2231   .rodata.str1.4:00000924 .LC140
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2198   .rodata.str1.4:000008a0 .LC129
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2192   .rodata.str1.4:00000888 .LC127
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1217   .text._Z15getEgo_sensor_e12ego_sensor_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1223   .text._Z15getEgo_sensor_e12ego_sensor_e:00000000 _Z15getEgo_sensor_e12ego_sensor_e
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2249   .rodata.str1.4:00000990 .LC146
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2255   .rodata.str1.4:000009b4 .LC148
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2252   .rodata.str1.4:000009a4 .LC147
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2246   .rodata.str1.4:00000984 .LC145
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2243   .rodata.str1.4:00000970 .LC144
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1263   .text._Z14getBrain_pin_e11brain_pin_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1269   .text._Z14getBrain_pin_e11brain_pin_e:00000000 _Z14getBrain_pin_e11brain_pin_e
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2297   .rodata.str1.4:00000a7c .LC166
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2377   .rodata.str1.4:00000bbc .LC200
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2363   .rodata.str1.4:00000b84 .LC193
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2430   .rodata.str1.4:00000c90 .LC221
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2293   .rodata.str1.4:00000a6c .LC164
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2395   .rodata.str1.4:00000c04 .LC206
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2310   .rodata.str1.4:00000ab0 .LC171
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2443   .rodata.str1.4:00000cc4 .LC227
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2433   .rodata.str1.4:00000c9c .LC222
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2331   .rodata.str1.4:00000b04 .LC180
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2348   .rodata.str1.4:00000b48 .LC187
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2283   .rodata.str1.4:00000a44 .LC159
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2365   .rodata.str1.4:00000b8c .LC194
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2380   .rodata.str1.4:00000bc8 .LC201
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2452   .rodata.str1.4:00000cec .LC231
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2299   .rodata.str1.4:00000a84 .LC167
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2405   .rodata.str1.4:00000c2c .LC211
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2357   .rodata.str1.4:00000b6c .LC190
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2421   .rodata.str1.4:00000c6c .LC218
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2272   .rodata.str1.4:00000a18 .LC155
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2369   .rodata.str1.4:00000b9c .LC196
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2257   .rodata.str1.4:000009c8 .LC149
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2321   .rodata.str1.4:00000adc .LC175
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2386   .rodata.str1.4:00000be0 .LC203
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2259   .rodata.str1.4:000009e4 .LC150
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2441   .rodata.str1.4:00000cbc .LC226
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2316   .rodata.str1.4:00000ac8 .LC173
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2335   .rodata.str1.4:00000b14 .LC182
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2359   .rodata.str1.4:00000b74 .LC191
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 61
+
+
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2351   .rodata.str1.4:00000b54 .LC188
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2287   .rodata.str1.4:00000a54 .LC161
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2289   .rodata.str1.4:00000a5c .LC162
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2361   .rodata.str1.4:00000b7c .LC192
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2269   .rodata.str1.4:00000a0c .LC154
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2263   .rodata.str1.4:000009f4 .LC152
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2266   .rodata.str1.4:00000a00 .LC153
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2333   .rodata.str1.4:00000b0c .LC181
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2329   .rodata.str1.4:00000afc .LC179
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2325   .rodata.str1.4:00000aec .LC177
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2327   .rodata.str1.4:00000af4 .LC178
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2413   .rodata.str1.4:00000c4c .LC215
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2392   .rodata.str1.4:00000bf8 .LC205
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2411   .rodata.str1.4:00000c44 .LC214
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2291   .rodata.str1.4:00000a64 .LC163
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2403   .rodata.str1.4:00000c24 .LC210
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2399   .rodata.str1.4:00000c14 .LC208
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2401   .rodata.str1.4:00000c1c .LC209
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2301   .rodata.str1.4:00000a8c .LC168
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2304   .rodata.str1.4:00000a98 .LC169
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2427   .rodata.str1.4:00000c84 .LC220
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2367   .rodata.str1.4:00000b94 .LC195
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2424   .rodata.str1.4:00000c78 .LC219
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2389   .rodata.str1.4:00000bec .LC204
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2397   .rodata.str1.4:00000c0c .LC207
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2445   .rodata.str1.4:00000ccc .LC228
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2313   .rodata.str1.4:00000abc .LC172
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2323   .rodata.str1.4:00000ae4 .LC176
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2295   .rodata.str1.4:00000a74 .LC165
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2371   .rodata.str1.4:00000ba4 .LC197
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2407   .rodata.str1.4:00000c34 .LC212
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2345   .rodata.str1.4:00000b3c .LC186
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2339   .rodata.str1.4:00000b24 .LC184
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2342   .rodata.str1.4:00000b30 .LC185
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2435   .rodata.str1.4:00000ca4 .LC223
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2285   .rodata.str1.4:00000a4c .LC160
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2278   .rodata.str1.4:00000a30 .LC157
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2449   .rodata.str1.4:00000cdc .LC230
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2275   .rodata.str1.4:00000a24 .LC156
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2375   .rodata.str1.4:00000bb4 .LC199
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2354   .rodata.str1.4:00000b60 .LC189
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2373   .rodata.str1.4:00000bac .LC198
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2337   .rodata.str1.4:00000b1c .LC183
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2418   .rodata.str1.4:00000c60 .LC217
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2447   .rodata.str1.4:00000cd4 .LC229
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2415   .rodata.str1.4:00000c54 .LC216
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2437   .rodata.str1.4:00000cac .LC224
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2439   .rodata.str1.4:00000cb4 .LC225
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2409   .rodata.str1.4:00000c3c .LC213
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2319   .rodata.str1.4:00000ad4 .LC174
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2307   .rodata.str1.4:00000aa4 .LC170
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2281   .rodata.str1.4:00000a3c .LC158
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2261   .rodata.str1.4:000009ec .LC151
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2383   .rodata.str1.4:00000bd4 .LC202
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1786   .text._Z29getAir_pressure_sensor_type_e26air_pressure_sensor_type_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1792   .text._Z29getAir_pressure_sensor_type_e26air_pressure_sensor_type_e:00000000 _Z29getAir_pressure_sensor_type_e26air_pressure_sensor_type_e
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2454   .rodata.str1.4:00000cfc .LC232
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s 			page 62
+
+
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2457   .rodata.str1.4:00000d18 .LC233
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2468   .rodata.str1.4:00000d54 .LC237
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2474   .rodata.str1.4:00000d70 .LC239
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2462   .rodata.str1.4:00000d30 .LC235
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2460   .rodata.str1.4:00000d24 .LC234
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2471   .rodata.str1.4:00000d60 .LC238
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2465   .rodata.str1.4:00000d44 .LC236
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:1848   .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2502   .rodata.CSWTCH.27:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2506   .rodata.CSWTCH.27:00000000 CSWTCH.27
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2511   .rodata.CSWTCH.29:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccnhbrwE.s:2515   .rodata.CSWTCH.29:00000000 CSWTCH.29
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,588 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccicydwO.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"event_queue.cpp"
+  16              		.section	.text._ZN12scheduling_sC2Ev,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_ZN12scheduling_sC2Ev
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_ZN12scheduling_sC2Ev, %function
+  23              	_ZN12scheduling_sC2Ev:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 10B4     		push	{r4}
+  28 0002 0024     		movs	r4, #0
+  29 0004 0022     		movs	r2, #0
+  30 0006 0023     		movs	r3, #0
+  31 0008 8460     		str	r4, [r0, #8]
+  32 000a 0461     		str	r4, [r0, #16]
+  33 000c C460     		str	r4, [r0, #12]
+  34 000e 0475     		strb	r4, [r0, #20]
+  35 0010 C0E90023 		strd	r2, [r0]
+  36 0014 5DF8044B 		ldr	r4, [sp], #4
+  37 0018 7047     		bx	lr
+  38              		.size	_ZN12scheduling_sC2Ev, .-_ZN12scheduling_sC2Ev
+  39              		.global	_ZN12scheduling_sC1Ev
+  40              		.thumb_set _ZN12scheduling_sC1Ev,_ZN12scheduling_sC2Ev
+  41 001a 00BFAFF3 		.section	.text._ZN10EventQueueC2Ev,"ax",%progbits
+  41      0080
+  42              		.align	2
+  43              		.p2align 4,,15
+  44              		.global	_ZN10EventQueueC2Ev
+  45              		.thumb
+  46              		.thumb_func
+  47              		.type	_ZN10EventQueueC2Ev, %function
+  48              	_ZN10EventQueueC2Ev:
+  49              		@ args = 0, pretend = 0, frame = 0
+  50              		@ frame_needed = 0, uses_anonymous_args = 0
+  51              		@ link register save eliminated.
+  52 0000 10B4     		push	{r4}
+  53 0002 0024     		movs	r4, #0
+  54 0004 6422     		movs	r2, #100
+  55 0006 0023     		movs	r3, #0
+  56 0008 0460     		str	r4, [r0]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccicydwO.s 			page 2
+
+
+  57 000a C0E90223 		strd	r2, [r0, #8]
+  58 000e 5DF8044B 		ldr	r4, [sp], #4
+  59 0012 7047     		bx	lr
+  60              		.size	_ZN10EventQueueC2Ev, .-_ZN10EventQueueC2Ev
+  61              		.global	_ZN10EventQueueC1Ev
+  62              		.thumb_set _ZN10EventQueueC1Ev,_ZN10EventQueueC2Ev
+  63 0014 AFF30080 		.section	.text._ZN10EventQueue14checkIfPendingEP12scheduling_s,"ax",%progbits
+  63      AFF30080 
+  63      AFF30080 
+  64              		.align	2
+  65              		.p2align 4,,15
+  66              		.global	_ZN10EventQueue14checkIfPendingEP12scheduling_s
+  67              		.thumb
+  68              		.thumb_func
+  69              		.type	_ZN10EventQueue14checkIfPendingEP12scheduling_s, %function
+  70              	_ZN10EventQueue14checkIfPendingEP12scheduling_s:
+  71              		@ args = 0, pretend = 0, frame = 0
+  72              		@ frame_needed = 0, uses_anonymous_args = 0
+  73 0000 0068     		ldr	r0, [r0]
+  74 0002 10B5     		push	{r4, lr}
+  75 0004 60B1     		cbz	r0, .L4
+  76 0006 8842     		cmp	r0, r1
+  77 0008 18BF     		it	ne
+  78 000a 4FF47A74 		movne	r4, #1000
+  79 000e 04D1     		bne	.L8
+  80 0010 07E0     		b	.L5
+  81              	.L9:
+  82 0012 013C     		subs	r4, r4, #1
+  83 0014 0FD0     		beq	.L13
+  84 0016 8142     		cmp	r1, r0
+  85 0018 03D0     		beq	.L5
+  86              	.L8:
+  87 001a 0069     		ldr	r0, [r0, #16]
+  88 001c 0028     		cmp	r0, #0
+  89 001e F8D1     		bne	.L9
+  90              	.L4:
+  91 0020 10BD     		pop	{r4, pc}
+  92              	.L5:
+  93 0022 40F20001 		movw	r1, #:lower16:.LC1
+  94 0026 C0F20001 		movt	r1, #:upper16:.LC1
+  95 002a 40F25E20 		movw	r0, #606
+  96 002e FFF7FEFF 		bl	warning
+  97 0032 0120     		movs	r0, #1
+  98 0034 10BD     		pop	{r4, pc}
+  99              	.L13:
+ 100 0036 40F20000 		movw	r0, #:lower16:.LC0
+ 101 003a C0F20000 		movt	r0, #:upper16:.LC0
+ 102 003e FFF7FEFF 		bl	firmwareError
+ 103 0042 2046     		mov	r0, r4
+ 104 0044 10BD     		pop	{r4, pc}
+ 105              		.size	_ZN10EventQueue14checkIfPendingEP12scheduling_s, .-_ZN10EventQueue14checkIfPendingEP12schedu
+ 106 0046 00BFAFF3 		.section	.text._ZN10EventQueue10insertTaskEP12scheduling_syPFvPvES2_,"ax",%progbits
+ 106      0080AFF3 
+ 106      0080
+ 107              		.align	2
+ 108              		.p2align 4,,15
+ 109              		.global	_ZN10EventQueue10insertTaskEP12scheduling_syPFvPvES2_
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccicydwO.s 			page 3
+
+
+ 110              		.thumb
+ 111              		.thumb_func
+ 112              		.type	_ZN10EventQueue10insertTaskEP12scheduling_syPFvPvES2_, %function
+ 113              	_ZN10EventQueue10insertTaskEP12scheduling_syPFvPvES2_:
+ 114              		@ args = 8, pretend = 0, frame = 0
+ 115              		@ frame_needed = 0, uses_anonymous_args = 0
+ 116 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 117 0002 069C     		ldr	r4, [sp, #24]
+ 118 0004 8446     		mov	ip, r0
+ 119 0006 0F46     		mov	r7, r1
+ 120 0008 3CB3     		cbz	r4, .L28
+ 121 000a 097D     		ldrb	r1, [r1, #20]	@ zero_extendqisi2
+ 122 000c 19BB     		cbnz	r1, .L20
+ 123 000e 0668     		ldr	r6, [r0]
+ 124 0010 0798     		ldr	r0, [sp, #28]
+ 125 0012 BC60     		str	r4, [r7, #8]
+ 126 0014 0121     		movs	r1, #1
+ 127 0016 C7E90023 		strd	r2, [r7]
+ 128 001a F860     		str	r0, [r7, #12]
+ 129 001c 3975     		strb	r1, [r7, #20]
+ 130 001e 2EB1     		cbz	r6, .L17
+ 131 0020 D6E90045 		ldrd	r4, [r6]
+ 132 0024 AB42     		cmp	r3, r5
+ 133 0026 08BF     		it eq
+ 134 0028 A242     		cmpeq	r2, r4
+ 135 002a 04D2     		bcs	.L29
+ 136              	.L17:
+ 137 002c 3E61     		str	r6, [r7, #16]
+ 138 002e 0120     		movs	r0, #1
+ 139 0030 CCF80070 		str	r7, [ip]
+ 140 0034 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 141              	.L29:
+ 142 0036 3469     		ldr	r4, [r6, #16]
+ 143 0038 4CB1     		cbz	r4, .L18
+ 144              	.L30:
+ 145 003a D4E90001 		ldrd	r0, [r4]
+ 146 003e 9942     		cmp	r1, r3
+ 147 0040 08BF     		it eq
+ 148 0042 9042     		cmpeq	r0, r2
+ 149 0044 03D2     		bcs	.L18
+ 150 0046 2646     		mov	r6, r4
+ 151 0048 3469     		ldr	r4, [r6, #16]
+ 152 004a 002C     		cmp	r4, #0
+ 153 004c F5D1     		bne	.L30
+ 154              	.L18:
+ 155 004e 3C61     		str	r4, [r7, #16]
+ 156 0050 0020     		movs	r0, #0
+ 157 0052 3761     		str	r7, [r6, #16]
+ 158 0054 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 159              	.L20:
+ 160 0056 0020     		movs	r0, #0
+ 161 0058 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 162              	.L28:
+ 163 005a 40F20000 		movw	r0, #:lower16:.LC2
+ 164 005e C0F20000 		movt	r0, #:upper16:.LC2
+ 165 0062 FFF7FEFF 		bl	firmwareError
+ 166 0066 2046     		mov	r0, r4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccicydwO.s 			page 4
+
+
+ 167 0068 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 168              		.size	_ZN10EventQueue10insertTaskEP12scheduling_syPFvPvES2_, .-_ZN10EventQueue10insertTaskEP12sche
+ 169 006a 00BFAFF3 		.section	.text._ZN10EventQueue16getNextEventTimeEy,"ax",%progbits
+ 169      0080
+ 170              		.align	2
+ 171              		.p2align 4,,15
+ 172              		.global	_ZN10EventQueue16getNextEventTimeEy
+ 173              		.thumb
+ 174              		.thumb_func
+ 175              		.type	_ZN10EventQueue16getNextEventTimeEy, %function
+ 176              	_ZN10EventQueue16getNextEventTimeEy:
+ 177              		@ args = 0, pretend = 0, frame = 0
+ 178              		@ frame_needed = 0, uses_anonymous_args = 0
+ 179              		@ link register save eliminated.
+ 180 0000 0168     		ldr	r1, [r0]
+ 181 0002 30B4     		push	{r4, r5}
+ 182 0004 81B1     		cbz	r1, .L34
+ 183 0006 D1E90045 		ldrd	r4, [r1]
+ 184 000a AB42     		cmp	r3, r5
+ 185 000c 08BF     		it eq
+ 186 000e A242     		cmpeq	r2, r4
+ 187 0010 03D2     		bcs	.L35
+ 188 0012 D1E90001 		ldrd	r0, [r1]
+ 189 0016 30BC     		pop	{r4, r5}
+ 190 0018 7047     		bx	lr
+ 191              	.L35:
+ 192 001a D0E90201 		ldrd	r0, [r0, #8]
+ 193 001e 8018     		adds	r0, r0, r2
+ 194 0020 41EB0301 		adc	r1, r1, r3
+ 195 0024 30BC     		pop	{r4, r5}
+ 196 0026 7047     		bx	lr
+ 197              	.L34:
+ 198 0028 4FF0FF30 		mov	r0, #-1
+ 199 002c 6FF07041 		mvn	r1, #-268435456
+ 200 0030 30BC     		pop	{r4, r5}
+ 201 0032 7047     		bx	lr
+ 202              		.size	_ZN10EventQueue16getNextEventTimeEy, .-_ZN10EventQueue16getNextEventTimeEy
+ 203 0034 AFF30080 		.section	.text._ZN10EventQueue10executeAllEy,"ax",%progbits
+ 203      AFF30080 
+ 203      AFF30080 
+ 204              		.align	2
+ 205              		.p2align 4,,15
+ 206              		.global	_ZN10EventQueue10executeAllEy
+ 207              		.thumb
+ 208              		.thumb_func
+ 209              		.type	_ZN10EventQueue10executeAllEy, %function
+ 210              	_ZN10EventQueue10executeAllEy:
+ 211              		@ args = 0, pretend = 0, frame = 8
+ 212              		@ frame_needed = 0, uses_anonymous_args = 0
+ 213 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 214 0004 0468     		ldr	r4, [r0]
+ 215 0006 83B0     		sub	sp, sp, #12
+ 216 0008 0146     		mov	r1, r0
+ 217 000a 002C     		cmp	r4, #0
+ 218 000c 00F08580 		beq	.L54
+ 219 0010 D4E90067 		ldrd	r6, [r4]
+ 220 0014 BB42     		cmp	r3, r7
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccicydwO.s 			page 5
+
+
+ 221 0016 08BF     		it eq
+ 222 0018 B242     		cmpeq	r2, r6
+ 223 001a D4F810C0 		ldr	ip, [r4, #16]
+ 224 001e 7CD3     		bcc	.L54
+ 225 0020 6046     		mov	r0, ip
+ 226 0022 0126     		movs	r6, #1
+ 227 0024 0025     		movs	r5, #0
+ 228 0026 40F2E93B 		movw	fp, #1001
+ 229 002a 8A46     		mov	r10, r1
+ 230 002c 0FE0     		b	.L41
+ 231              	.L42:
+ 232 002e 5F45     		cmp	r7, fp
+ 233 0030 0169     		ldr	r1, [r0, #16]
+ 234 0032 6AD0     		beq	.L55
+ 235 0034 D0E90089 		ldrd	r8, [r0]
+ 236 0038 4B45     		cmp	r3, r9
+ 237 003a 08BF     		it eq
+ 238 003c 4245     		cmpeq	r2, r8
+ 239 003e 0BD3     		bcc	.L39
+ 240 0040 8445     		cmp	ip, r0
+ 241 0042 55D1     		bne	.L40
+ 242 0044 2546     		mov	r5, r4
+ 243 0046 8C46     		mov	ip, r1
+ 244 0048 0846     		mov	r0, r1
+ 245 004a 3E46     		mov	r6, r7
+ 246 004c 7446     		mov	r4, lr
+ 247              	.L41:
+ 248 004e 771C     		adds	r7, r6, #1
+ 249 0050 E646     		mov	lr, ip
+ 250 0052 2561     		str	r5, [r4, #16]
+ 251 0054 0028     		cmp	r0, #0
+ 252 0056 EAD1     		bne	.L42
+ 253              	.L39:
+ 254 0058 4FF48058 		mov	r8, #4096
+ 255 005c CEF20008 		movt	r8, 57344
+ 256 0060 40F20009 		movw	r9, #:lower16:.LANCHOR0
+ 257 0064 40F20001 		movw	r1, #:lower16:.LANCHOR1
+ 258 0068 C0F20009 		movt	r9, #:upper16:.LANCHOR0
+ 259 006c 4346     		mov	r3, r8
+ 260 006e 40F2000B 		movw	fp, #:lower16:.LANCHOR2
+ 261 0072 40F20007 		movw	r7, #:lower16:.LANCHOR3
+ 262 0076 C0F20001 		movt	r1, #:upper16:.LANCHOR1
+ 263 007a CAF800C0 		str	ip, [r10]
+ 264 007e C846     		mov	r8, r9
+ 265 0080 C0F2000B 		movt	fp, #:upper16:.LANCHOR2
+ 266 0084 C0F20007 		movt	r7, #:upper16:.LANCHOR3
+ 267 0088 0091     		str	r1, [sp]
+ 268 008a 9246     		mov	r10, r2
+ 269 008c 0196     		str	r6, [sp, #4]
+ 270 008e 9946     		mov	r9, r3
+ 271 0090 00E0     		b	.L46
+ 272              	.L56:
+ 273 0092 2D69     		ldr	r5, [r5, #16]
+ 274              	.L46:
+ 275 0094 4FF00001 		mov	r1, #0
+ 276 0098 D9F80460 		ldr	r6, [r9, #4]
+ 277 009c 2175     		strb	r1, [r4, #20]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccicydwO.s 			page 6
+
+
+ 278 009e D4E90001 		ldrd	r0, [r4]
+ 279 00a2 C0EB0A01 		rsb	r1, r0, r10
+ 280 00a6 3868     		ldr	r0, [r7]
+ 281 00a8 FFF7FEFF 		bl	maxI
+ 282 00ac A168     		ldr	r1, [r4, #8]
+ 283 00ae 3860     		str	r0, [r7]
+ 284 00b0 E068     		ldr	r0, [r4, #12]
+ 285 00b2 8847     		blx	r1
+ 286 00b4 D9F80400 		ldr	r0, [r9, #4]
+ 287 00b8 D8F80010 		ldr	r1, [r8]
+ 288 00bc 861B     		subs	r6, r0, r6
+ 289 00be 8E42     		cmp	r6, r1
+ 290 00c0 CBF80060 		str	r6, [fp]
+ 291 00c4 04D9     		bls	.L49
+ 292 00c6 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 293 00ca C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 294 00ce 1E60     		str	r6, [r3]
+ 295              	.L49:
+ 296 00d0 B6F5FA6F 		cmp	r6, #2000
+ 297 00d4 81BF     		itttt	hi
+ 298 00d6 009B     		ldrhi	r3, [sp]
+ 299 00d8 0136     		addhi	r6, r6, #1
+ 300 00da 1C60     		strhi	r4, [r3]
+ 301 00dc CBF80060 		strhi	r6, [fp]
+ 302 00e0 2C46     		mov	r4, r5
+ 303 00e2 002D     		cmp	r5, #0
+ 304 00e4 D5D1     		bne	.L56
+ 305 00e6 019E     		ldr	r6, [sp, #4]
+ 306 00e8 3046     		mov	r0, r6
+ 307 00ea 03B0     		add	sp, sp, #12
+ 308              		@ sp needed
+ 309 00ec BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 310              	.L40:
+ 311 00f0 40F20000 		movw	r0, #:lower16:.LC4
+ 312 00f4 CAF800C0 		str	ip, [r10]
+ 313 00f8 C0F20000 		movt	r0, #:upper16:.LC4
+ 314 00fc FFF7FEFF 		bl	firmwareError
+ 315 0100 4FF0FF30 		mov	r0, #-1
+ 316 0104 03B0     		add	sp, sp, #12
+ 317              		@ sp needed
+ 318 0106 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 319              	.L55:
+ 320 010a 40F20000 		movw	r0, #:lower16:.LC3
+ 321 010e CAF800C0 		str	ip, [r10]
+ 322 0112 C0F20000 		movt	r0, #:upper16:.LC3
+ 323 0116 FFF7FEFF 		bl	firmwareError
+ 324              	.L54:
+ 325 011a 0020     		movs	r0, #0
+ 326 011c 03B0     		add	sp, sp, #12
+ 327              		@ sp needed
+ 328 011e BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 329              		.size	_ZN10EventQueue10executeAllEy, .-_ZN10EventQueue10executeAllEy
+ 330 0122 00BFAFF3 		.section	.text._ZN10EventQueue4sizeEv,"ax",%progbits
+ 330      0080AFF3 
+ 330      0080AFF3 
+ 330      0080
+ 331              		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccicydwO.s 			page 7
+
+
+ 332              		.p2align 4,,15
+ 333              		.global	_ZN10EventQueue4sizeEv
+ 334              		.thumb
+ 335              		.thumb_func
+ 336              		.type	_ZN10EventQueue4sizeEv, %function
+ 337              	_ZN10EventQueue4sizeEv:
+ 338              		@ args = 0, pretend = 0, frame = 0
+ 339              		@ frame_needed = 0, uses_anonymous_args = 0
+ 340              		@ link register save eliminated.
+ 341 0000 0368     		ldr	r3, [r0]
+ 342 0002 2BB1     		cbz	r3, .L60
+ 343 0004 0020     		movs	r0, #0
+ 344              	.L59:
+ 345 0006 1B69     		ldr	r3, [r3, #16]
+ 346 0008 0130     		adds	r0, r0, #1
+ 347 000a 002B     		cmp	r3, #0
+ 348 000c FBD1     		bne	.L59
+ 349 000e 7047     		bx	lr
+ 350              	.L60:
+ 351 0010 1846     		mov	r0, r3
+ 352 0012 7047     		bx	lr
+ 353              		.size	_ZN10EventQueue4sizeEv, .-_ZN10EventQueue4sizeEv
+ 354              		.section	.text._ZN10EventQueue12setLateDelayEi,"ax",%progbits
+ 355              		.align	2
+ 356              		.p2align 4,,15
+ 357              		.global	_ZN10EventQueue12setLateDelayEi
+ 358              		.thumb
+ 359              		.thumb_func
+ 360              		.type	_ZN10EventQueue12setLateDelayEi, %function
+ 361              	_ZN10EventQueue12setLateDelayEi:
+ 362              		@ args = 0, pretend = 0, frame = 0
+ 363              		@ frame_needed = 0, uses_anonymous_args = 0
+ 364              		@ link register save eliminated.
+ 365 0000 0A46     		mov	r2, r1
+ 366 0002 CB17     		asrs	r3, r1, #31
+ 367 0004 C0E90223 		strd	r2, [r0, #8]
+ 368 0008 7047     		bx	lr
+ 369              		.size	_ZN10EventQueue12setLateDelayEi, .-_ZN10EventQueue12setLateDelayEi
+ 370 000a 00BFAFF3 		.section	.text._ZN10EventQueue7getHeadEv,"ax",%progbits
+ 370      0080
+ 371              		.align	2
+ 372              		.p2align 4,,15
+ 373              		.global	_ZN10EventQueue7getHeadEv
+ 374              		.thumb
+ 375              		.thumb_func
+ 376              		.type	_ZN10EventQueue7getHeadEv, %function
+ 377              	_ZN10EventQueue7getHeadEv:
+ 378              		@ args = 0, pretend = 0, frame = 0
+ 379              		@ frame_needed = 0, uses_anonymous_args = 0
+ 380              		@ link register save eliminated.
+ 381 0000 0068     		ldr	r0, [r0]
+ 382 0002 7047     		bx	lr
+ 383              		.size	_ZN10EventQueue7getHeadEv, .-_ZN10EventQueue7getHeadEv
+ 384 0004 AFF30080 		.section	.text._ZN10EventQueue14getForUnitTextEi,"ax",%progbits
+ 384      AFF30080 
+ 384      AFF30080 
+ 385              		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccicydwO.s 			page 8
+
+
+ 386              		.p2align 4,,15
+ 387              		.global	_ZN10EventQueue14getForUnitTextEi
+ 388              		.thumb
+ 389              		.thumb_func
+ 390              		.type	_ZN10EventQueue14getForUnitTextEi, %function
+ 391              	_ZN10EventQueue14getForUnitTextEi:
+ 392              		@ args = 0, pretend = 0, frame = 0
+ 393              		@ frame_needed = 0, uses_anonymous_args = 0
+ 394              		@ link register save eliminated.
+ 395 0000 0068     		ldr	r0, [r0]
+ 396 0002 30B1     		cbz	r0, .L67
+ 397 0004 09B9     		cbnz	r1, .L68
+ 398 0006 05E0     		b	.L78
+ 399              	.L69:
+ 400 0008 19B1     		cbz	r1, .L67
+ 401              	.L68:
+ 402 000a 0069     		ldr	r0, [r0, #16]
+ 403 000c 0139     		subs	r1, r1, #1
+ 404 000e 0028     		cmp	r0, #0
+ 405 0010 FAD1     		bne	.L69
+ 406              	.L67:
+ 407 0012 7047     		bx	lr
+ 408              	.L78:
+ 409 0014 7047     		bx	lr
+ 410              		.size	_ZN10EventQueue14getForUnitTextEi, .-_ZN10EventQueue14getForUnitTextEi
+ 411 0016 00BFAFF3 		.section	.text._ZN10EventQueue5clearEv,"ax",%progbits
+ 411      0080AFF3 
+ 411      0080
+ 412              		.align	2
+ 413              		.p2align 4,,15
+ 414              		.global	_ZN10EventQueue5clearEv
+ 415              		.thumb
+ 416              		.thumb_func
+ 417              		.type	_ZN10EventQueue5clearEv, %function
+ 418              	_ZN10EventQueue5clearEv:
+ 419              		@ args = 0, pretend = 0, frame = 0
+ 420              		@ frame_needed = 0, uses_anonymous_args = 0
+ 421              		@ link register save eliminated.
+ 422 0000 0023     		movs	r3, #0
+ 423 0002 0360     		str	r3, [r0]
+ 424 0004 7047     		bx	lr
+ 425              		.size	_ZN10EventQueue5clearEv, .-_ZN10EventQueue5clearEv
+ 426              		.global	lastEventQueueTime
+ 427              		.global	maxEventQueueTime
+ 428              		.global	maxHowFarOff
+ 429 0006 00BFAFF3 		.section	.bss.maxHowFarOff,"aw",%nobits
+ 429      0080AFF3 
+ 429      0080
+ 430              		.align	2
+ 431              		.set	.LANCHOR3,. + 0
+ 432              		.type	maxHowFarOff, %object
+ 433              		.size	maxHowFarOff, 4
+ 434              	maxHowFarOff:
+ 435 0000 00000000 		.space	4
+ 436              		.section	.bss.lastEventQueueTime,"aw",%nobits
+ 437              		.align	2
+ 438              		.set	.LANCHOR2,. + 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccicydwO.s 			page 9
+
+
+ 439              		.type	lastEventQueueTime, %object
+ 440              		.size	lastEventQueueTime, 4
+ 441              	lastEventQueueTime:
+ 442 0000 00000000 		.space	4
+ 443              		.section	.bss._ZL14longScheduling,"aw",%nobits
+ 444              		.align	2
+ 445              		.set	.LANCHOR1,. + 0
+ 446              		.type	_ZL14longScheduling, %object
+ 447              		.size	_ZL14longScheduling, 4
+ 448              	_ZL14longScheduling:
+ 449 0000 00000000 		.space	4
+ 450              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 451              		.align	2
+ 452              	.LC0:
+ 453 0000 4C6F6F70 		.ascii	"Looped queue?\000"
+ 453      65642071 
+ 453      75657565 
+ 453      3F00
+ 454 000e 0000     		.space	2
+ 455              	.LC1:
+ 456 0010 72652D61 		.ascii	"re-adding element into event_queue\000"
+ 456      6464696E 
+ 456      6720656C 
+ 456      656D656E 
+ 456      7420696E 
+ 457 0033 00       		.space	1
+ 458              	.LC2:
+ 459 0034 4E554C4C 		.ascii	"NULL callback\000"
+ 459      2063616C 
+ 459      6C626163 
+ 459      6B00
+ 460 0042 0000     		.space	2
+ 461              	.LC3:
+ 462 0044 49732074 		.ascii	"Is this list looped?\000"
+ 462      68697320 
+ 462      6C697374 
+ 462      206C6F6F 
+ 462      7065643F 
+ 463 0059 000000   		.space	3
+ 464              	.LC4:
+ 465 005c 72656D6F 		.ascii	"removing from head\000"
+ 465      76696E67 
+ 465      2066726F 
+ 465      6D206865 
+ 465      616400
+ 466 006f 00       		.section	.bss.maxEventQueueTime,"aw",%nobits
+ 467              		.align	2
+ 468              		.set	.LANCHOR0,. + 0
+ 469              		.type	maxEventQueueTime, %object
+ 470              		.size	maxEventQueueTime, 4
+ 471              	maxEventQueueTime:
+ 472 0000 00000000 		.space	4
+ 473              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccicydwO.s 			page 10
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 event_queue.cpp
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:17     .text._ZN12scheduling_sC2Ev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:23     .text._ZN12scheduling_sC2Ev:00000000 _ZN12scheduling_sC2Ev
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:23     .text._ZN12scheduling_sC2Ev:00000000 _ZN12scheduling_sC1Ev
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:42     .text._ZN10EventQueueC2Ev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:48     .text._ZN10EventQueueC2Ev:00000000 _ZN10EventQueueC2Ev
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:48     .text._ZN10EventQueueC2Ev:00000000 _ZN10EventQueueC1Ev
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:64     .text._ZN10EventQueue14checkIfPendingEP12scheduling_s:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:70     .text._ZN10EventQueue14checkIfPendingEP12scheduling_s:00000000 _ZN10EventQueue14checkIfPendingEP12scheduling_s
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:455    .rodata.str1.4:00000010 .LC1
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:452    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:107    .text._ZN10EventQueue10insertTaskEP12scheduling_syPFvPvES2_:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:113    .text._ZN10EventQueue10insertTaskEP12scheduling_syPFvPvES2_:00000000 _ZN10EventQueue10insertTaskEP12scheduling_syPFvPvES2_
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:458    .rodata.str1.4:00000034 .LC2
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:170    .text._ZN10EventQueue16getNextEventTimeEy:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:176    .text._ZN10EventQueue16getNextEventTimeEy:00000000 _ZN10EventQueue16getNextEventTimeEy
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:204    .text._ZN10EventQueue10executeAllEy:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:210    .text._ZN10EventQueue10executeAllEy:00000000 _ZN10EventQueue10executeAllEy
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:468    .bss.maxEventQueueTime:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:445    .bss._ZL14longScheduling:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:438    .bss.lastEventQueueTime:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:431    .bss.maxHowFarOff:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:464    .rodata.str1.4:0000005c .LC4
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:461    .rodata.str1.4:00000044 .LC3
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:331    .text._ZN10EventQueue4sizeEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:337    .text._ZN10EventQueue4sizeEv:00000000 _ZN10EventQueue4sizeEv
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:355    .text._ZN10EventQueue12setLateDelayEi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:361    .text._ZN10EventQueue12setLateDelayEi:00000000 _ZN10EventQueue12setLateDelayEi
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:371    .text._ZN10EventQueue7getHeadEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:377    .text._ZN10EventQueue7getHeadEv:00000000 _ZN10EventQueue7getHeadEv
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:385    .text._ZN10EventQueue14getForUnitTextEi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:391    .text._ZN10EventQueue14getForUnitTextEi:00000000 _ZN10EventQueue14getForUnitTextEi
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:412    .text._ZN10EventQueue5clearEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:418    .text._ZN10EventQueue5clearEv:00000000 _ZN10EventQueue5clearEv
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:441    .bss.lastEventQueueTime:00000000 lastEventQueueTime
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:471    .bss.maxEventQueueTime:00000000 maxEventQueueTime
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:434    .bss.maxHowFarOff:00000000 maxHowFarOff
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:430    .bss.maxHowFarOff:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:437    .bss.lastEventQueueTime:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:444    .bss._ZL14longScheduling:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:448    .bss._ZL14longScheduling:00000000 _ZL14longScheduling
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:451    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccicydwO.s:467    .bss.maxEventQueueTime:00000000 $d
+
+UNDEFINED SYMBOLS
+warning
+firmwareError
+maxI

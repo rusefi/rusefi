@@ -229,7 +229,7 @@
         <option>
           <name>CCAllowList</name>
           <version>1</version>
-          <state>1011111</state>
+          <state>0000000</state>
         </option>
         <option>
           <name>CCDebugInfo</name>
@@ -362,7 +362,7 @@
         </option>
         <option>
           <name>CCOptLevel</name>
-          <state>3</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCOptStrategy</name>
@@ -371,7 +371,7 @@
         </option>
         <option>
           <name>CCOptLevelSlave</name>
-          <state>3</state>
+          <state>0</state>
         </option>
         <option>
           <name>CompilerMisraRules98</name>
@@ -2530,6 +2530,12 @@
       <name>$PROJ_DIR$\..\controllers\map_averaging.h</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\controllers\obd2.cpp</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\controllers\obd2.h</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\controllers\obd2viaCAN.c</name>
     </file>
     <file>
@@ -2695,6 +2701,12 @@
       <name>$PROJ_DIR$\..\hw_layer\can_hw.h</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\hw_layer\digital_input_hw.cpp</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\hw_layer\digital_input_hw.h</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\hw_layer\flash.c</name>
     </file>
     <file>
@@ -2770,7 +2782,7 @@
       <name>$PROJ_DIR$\..\hw_layer\pwm_generator.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\hw_layer\rtc_helper.c</name>
+      <name>$PROJ_DIR$\..\hw_layer\rtc_helper.cpp</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\hw_layer\rtc_helper.h</name>
@@ -2797,10 +2809,10 @@
       <name>$PROJ_DIR$\..\hw_layer\vehicle_speed.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\hw_layer\digital_input_hw.cpp</name>
+      <name>$PROJ_DIR$\..\hw_layer\wbo.cpp</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\hw_layer\digital_input_hw.h</name>
+      <name>$PROJ_DIR$\..\hw_layer\wbo.h</name>
     </file>
   </group>
   <group>
@@ -3214,6 +3226,12 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\chibios\os\various\chprintf.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\chibios\os\various\chrtclib.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\chibios\os\various\chrtclib.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\chibios\os\various\fatfs_bindings\fatfs_diskio.c</name>

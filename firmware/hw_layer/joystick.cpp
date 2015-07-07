@@ -28,6 +28,7 @@ static Logging *sharedLogger;
 static efitick_t lastEventTime = 0;
 
 static void extCallback(EXTDriver *extp, expchannel_t channel) {
+        UNUSED(extp);
 	efitick_t now = getTimeNowNt();
 	if (now - lastEventTime < NT_EVENT_GAP)
 		return; // two consecutive events are probably just jitter

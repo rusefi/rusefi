@@ -1,0 +1,626 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s 			page 1
+
+
+   1              		.file	"serial.c"
+   2              		.section	.text$readt,"x"
+   3              		.p2align 4,,15
+   4              		.def	_readt;	.scl	3;	.type	32;	.endef
+   5              	_readt:
+   6              	LFB35:
+   7              		.cfi_startproc
+   8 0000 8B442404 		movl	4(%esp), %eax
+   9 0004 83C00C   		addl	$12, %eax
+  10 0007 89442404 		movl	%eax, 4(%esp)
+  11 000b E9000000 		jmp	_chIQReadTimeout
+  11      00
+  12              		.cfi_endproc
+  13              	LFE35:
+  14              		.section	.text$read,"x"
+  15              		.p2align 4,,15
+  16              		.def	_read;	.scl	3;	.type	32;	.endef
+  17              	_read:
+  18              	LFB29:
+  19              		.cfi_startproc
+  20 0000 83EC1C   		subl	$28, %esp
+  21              		.cfi_def_cfa_offset 32
+  22 0003 8B442428 		movl	40(%esp), %eax
+  23 0007 C744240C 		movl	$-1, 12(%esp)
+  23      FFFFFFFF 
+  24 000f 89442408 		movl	%eax, 8(%esp)
+  25 0013 8B442424 		movl	36(%esp), %eax
+  26 0017 89442404 		movl	%eax, 4(%esp)
+  27 001b 8B442420 		movl	32(%esp), %eax
+  28 001f 83C00C   		addl	$12, %eax
+  29 0022 890424   		movl	%eax, (%esp)
+  30 0025 E8000000 		call	_chIQReadTimeout
+  30      00
+  31 002a 83C41C   		addl	$28, %esp
+  32              		.cfi_def_cfa_offset 4
+  33 002d C3       		ret
+  34              		.cfi_endproc
+  35              	LFE29:
+  36 002e 9090     		.section	.text$writet,"x"
+  37              		.p2align 4,,15
+  38              		.def	_writet;	.scl	3;	.type	32;	.endef
+  39              	_writet:
+  40              	LFB34:
+  41              		.cfi_startproc
+  42 0000 8B442404 		movl	4(%esp), %eax
+  43 0004 83C030   		addl	$48, %eax
+  44 0007 89442404 		movl	%eax, 4(%esp)
+  45 000b E9000000 		jmp	_chOQWriteTimeout
+  45      00
+  46              		.cfi_endproc
+  47              	LFE34:
+  48              		.section	.text$write,"x"
+  49              		.p2align 4,,15
+  50              		.def	_write;	.scl	3;	.type	32;	.endef
+  51              	_write:
+  52              	LFB28:
+  53              		.cfi_startproc
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s 			page 2
+
+
+  54 0000 83EC1C   		subl	$28, %esp
+  55              		.cfi_def_cfa_offset 32
+  56 0003 8B442428 		movl	40(%esp), %eax
+  57 0007 C744240C 		movl	$-1, 12(%esp)
+  57      FFFFFFFF 
+  58 000f 89442408 		movl	%eax, 8(%esp)
+  59 0013 8B442424 		movl	36(%esp), %eax
+  60 0017 89442404 		movl	%eax, 4(%esp)
+  61 001b 8B442420 		movl	32(%esp), %eax
+  62 001f 83C030   		addl	$48, %eax
+  63 0022 890424   		movl	%eax, (%esp)
+  64 0025 E8000000 		call	_chOQWriteTimeout
+  64      00
+  65 002a 83C41C   		addl	$28, %esp
+  66              		.cfi_def_cfa_offset 4
+  67 002d C3       		ret
+  68              		.cfi_endproc
+  69              	LFE28:
+  70 002e 9090     		.section	.text$gett,"x"
+  71              		.p2align 4,,15
+  72              		.def	_gett;	.scl	3;	.type	32;	.endef
+  73              	_gett:
+  74              	LFB33:
+  75              		.cfi_startproc
+  76 0000 8B442404 		movl	4(%esp), %eax
+  77 0004 83C00C   		addl	$12, %eax
+  78 0007 89442404 		movl	%eax, 4(%esp)
+  79 000b E9000000 		jmp	_chIQGetTimeout
+  79      00
+  80              		.cfi_endproc
+  81              	LFE33:
+  82              		.section	.text$get,"x"
+  83              		.p2align 4,,15
+  84              		.def	_get;	.scl	3;	.type	32;	.endef
+  85              	_get:
+  86              	LFB31:
+  87              		.cfi_startproc
+  88 0000 83EC1C   		subl	$28, %esp
+  89              		.cfi_def_cfa_offset 32
+  90 0003 8B442420 		movl	32(%esp), %eax
+  91 0007 C7442404 		movl	$-1, 4(%esp)
+  91      FFFFFFFF 
+  92 000f 83C00C   		addl	$12, %eax
+  93 0012 890424   		movl	%eax, (%esp)
+  94 0015 E8000000 		call	_chIQGetTimeout
+  94      00
+  95 001a 83C41C   		addl	$28, %esp
+  96              		.cfi_def_cfa_offset 4
+  97 001d C3       		ret
+  98              		.cfi_endproc
+  99              	LFE31:
+ 100 001e 9090     		.section	.text$putt,"x"
+ 101              		.p2align 4,,15
+ 102              		.def	_putt;	.scl	3;	.type	32;	.endef
+ 103              	_putt:
+ 104              	LFB32:
+ 105              		.cfi_startproc
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s 			page 3
+
+
+ 106 0000 0FB64424 		movzbl	8(%esp), %eax
+ 106      08
+ 107 0005 89442408 		movl	%eax, 8(%esp)
+ 108 0009 8B442404 		movl	4(%esp), %eax
+ 109 000d 83C030   		addl	$48, %eax
+ 110 0010 89442404 		movl	%eax, 4(%esp)
+ 111 0014 E9000000 		jmp	_chOQPutTimeout
+ 111      00
+ 112              		.cfi_endproc
+ 113              	LFE32:
+ 114 0019 90909090 		.section	.text$put,"x"
+ 114      909090
+ 115              		.p2align 4,,15
+ 116              		.def	_put;	.scl	3;	.type	32;	.endef
+ 117              	_put:
+ 118              	LFB30:
+ 119              		.cfi_startproc
+ 120 0000 83EC1C   		subl	$28, %esp
+ 121              		.cfi_def_cfa_offset 32
+ 122 0003 0FB64424 		movzbl	36(%esp), %eax
+ 122      24
+ 123 0008 C7442408 		movl	$-1, 8(%esp)
+ 123      FFFFFFFF 
+ 124 0010 89442404 		movl	%eax, 4(%esp)
+ 125 0014 8B442420 		movl	32(%esp), %eax
+ 126 0018 83C030   		addl	$48, %eax
+ 127 001b 890424   		movl	%eax, (%esp)
+ 128 001e E8000000 		call	_chOQPutTimeout
+ 128      00
+ 129 0023 83C41C   		addl	$28, %esp
+ 130              		.cfi_def_cfa_offset 4
+ 131 0026 C3       		ret
+ 132              		.cfi_endproc
+ 133              	LFE30:
+ 134 0027 90909090 		.section	.text$sdInit,"x"
+ 134      90909090 
+ 134      90
+ 135              		.p2align 4,,15
+ 136              		.globl	_sdInit
+ 137              		.def	_sdInit;	.scl	2;	.type	32;	.endef
+ 138              	_sdInit:
+ 139              	LFB36:
+ 140              		.cfi_startproc
+ 141 0000 E9000000 		jmp	_sd_lld_init
+ 141      00
+ 142              		.cfi_endproc
+ 143              	LFE36:
+ 144 0005 90909090 		.section	.text$sdObjectInit,"x"
+ 144      90909090 
+ 144      909090
+ 145              		.p2align 4,,15
+ 146              		.globl	_sdObjectInit
+ 147              		.def	_sdObjectInit;	.scl	2;	.type	32;	.endef
+ 148              	_sdObjectInit:
+ 149              	LFB37:
+ 150              		.cfi_startproc
+ 151 0000 53       		pushl	%ebx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s 			page 4
+
+
+ 152              		.cfi_def_cfa_offset 8
+ 153              		.cfi_offset 3, -8
+ 154 0001 83EC28   		subl	$40, %esp
+ 155              		.cfi_def_cfa_offset 48
+ 156 0004 8B5C2430 		movl	48(%esp), %ebx
+ 157 0008 8D4304   		leal	4(%ebx), %eax
+ 158 000b 894304   		movl	%eax, 4(%ebx)
+ 159 000e 8B442434 		movl	52(%esp), %eax
+ 160 0012 C7030000 		movl	$_vmt, (%ebx)
+ 160      0000
+ 161 0018 C7430801 		movl	$1, 8(%ebx)
+ 161      000000
+ 162 001f 895C2410 		movl	%ebx, 16(%esp)
+ 163 0023 8944240C 		movl	%eax, 12(%esp)
+ 164 0027 8D4354   		leal	84(%ebx), %eax
+ 165 002a 89442404 		movl	%eax, 4(%esp)
+ 166 002e 8D430C   		leal	12(%ebx), %eax
+ 167 0031 890424   		movl	%eax, (%esp)
+ 168 0034 C7442408 		movl	$32, 8(%esp)
+ 168      20000000 
+ 169 003c E8000000 		call	_chIQInit
+ 169      00
+ 170 0041 8B442438 		movl	56(%esp), %eax
+ 171 0045 895C2410 		movl	%ebx, 16(%esp)
+ 172 0049 C7442408 		movl	$32, 8(%esp)
+ 172      20000000 
+ 173 0051 8944240C 		movl	%eax, 12(%esp)
+ 174 0055 8D4374   		leal	116(%ebx), %eax
+ 175 0058 83C330   		addl	$48, %ebx
+ 176 005b 891C24   		movl	%ebx, (%esp)
+ 177 005e 89442404 		movl	%eax, 4(%esp)
+ 178 0062 E8000000 		call	_chOQInit
+ 178      00
+ 179 0067 83C428   		addl	$40, %esp
+ 180              		.cfi_def_cfa_offset 8
+ 181 006a 5B       		popl	%ebx
+ 182              		.cfi_restore 3
+ 183              		.cfi_def_cfa_offset 4
+ 184 006b C3       		ret
+ 185              		.cfi_endproc
+ 186              	LFE37:
+ 187 006c 90909090 		.section .rdata,"dr"
+ 188              	LC0:
+ 189 0000 22736453 		.ascii "\"sdStart\"()\0"
+ 189      74617274 
+ 189      22282900 
+ 190              	LC1:
+ 191 000c 73645374 		.ascii "sdStart(), #1\0"
+ 191      61727428 
+ 191      292C2023 
+ 191      3100
+ 192              		.section	.text$sdStart,"x"
+ 193              		.p2align 4,,15
+ 194              		.globl	_sdStart
+ 195              		.def	_sdStart;	.scl	2;	.type	32;	.endef
+ 196              	_sdStart:
+ 197              	LFB38:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s 			page 5
+
+
+ 198              		.cfi_startproc
+ 199 0000 53       		pushl	%ebx
+ 200              		.cfi_def_cfa_offset 8
+ 201              		.cfi_offset 3, -8
+ 202 0001 83EC18   		subl	$24, %esp
+ 203              		.cfi_def_cfa_offset 32
+ 204 0004 8B5C2420 		movl	32(%esp), %ebx
+ 205 0008 85DB     		testl	%ebx, %ebx
+ 206 000a 7444     		je	L21
+ 207              	L17:
+ 208              	/APP
+ 209              	 # 163 "../firmware/chibios/os/hal/src/serial.c" 1
+ 210 000c 90       		nop
+ 211              	 # 0 "" 2
+ 212              	/NO_APP
+ 213 000d E8000000 		call	_dbg_check_lock
+ 213      00
+ 214 0012 8B4308   		movl	8(%ebx), %eax
+ 215 0015 83E801   		subl	$1, %eax
+ 216 0018 83F801   		cmpl	$1, %eax
+ 217 001b 760C     		jbe	L18
+ 218 001d C704240C 		movl	$LC1, (%esp)
+ 218      000000
+ 219 0024 E8000000 		call	_chDbgPanic
+ 219      00
+ 220              	L18:
+ 221 0029 8B442424 		movl	36(%esp), %eax
+ 222 002d 891C24   		movl	%ebx, (%esp)
+ 223 0030 89442404 		movl	%eax, 4(%esp)
+ 224 0034 E8000000 		call	_sd_lld_start
+ 224      00
+ 225 0039 C7430802 		movl	$2, 8(%ebx)
+ 225      000000
+ 226 0040 E8000000 		call	_dbg_check_unlock
+ 226      00
+ 227              	/APP
+ 228              	 # 169 "../firmware/chibios/os/hal/src/serial.c" 1
+ 229 0045 90       		nop
+ 230              	 # 0 "" 2
+ 231              	/NO_APP
+ 232 0046 83C418   		addl	$24, %esp
+ 233              		.cfi_remember_state
+ 234              		.cfi_def_cfa_offset 8
+ 235 0049 5B       		popl	%ebx
+ 236              		.cfi_restore 3
+ 237              		.cfi_def_cfa_offset 4
+ 238 004a C3       		ret
+ 239 004b 908D7426 		.p2align 4,,7
+ 239      00
+ 240              	L21:
+ 241              		.cfi_restore_state
+ 242 0050 C7042400 		movl	$LC0, (%esp)
+ 242      000000
+ 243 0057 E8000000 		call	_chDbgPanic
+ 243      00
+ 244 005c EBAE     		jmp	L17
+ 245              		.cfi_endproc
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s 			page 6
+
+
+ 246              	LFE38:
+ 247 005e 9090     		.section .rdata,"dr"
+ 248              	LC2:
+ 249 001a 22736453 		.ascii "\"sdStop\"()\0"
+ 249      746F7022 
+ 249      282900
+ 250              	LC3:
+ 251 0025 73645374 		.ascii "sdStop(), #1\0"
+ 251      6F702829 
+ 251      2C202331 
+ 251      00
+ 252              		.section	.text$sdStop,"x"
+ 253              		.p2align 4,,15
+ 254              		.globl	_sdStop
+ 255              		.def	_sdStop;	.scl	2;	.type	32;	.endef
+ 256              	_sdStop:
+ 257              	LFB39:
+ 258              		.cfi_startproc
+ 259 0000 53       		pushl	%ebx
+ 260              		.cfi_def_cfa_offset 8
+ 261              		.cfi_offset 3, -8
+ 262 0001 83EC18   		subl	$24, %esp
+ 263              		.cfi_def_cfa_offset 32
+ 264 0004 8B5C2420 		movl	32(%esp), %ebx
+ 265 0008 85DB     		testl	%ebx, %ebx
+ 266 000a 7454     		je	L26
+ 267              	L23:
+ 268              	/APP
+ 269              	 # 185 "../firmware/chibios/os/hal/src/serial.c" 1
+ 270 000c 90       		nop
+ 271              	 # 0 "" 2
+ 272              	/NO_APP
+ 273 000d E8000000 		call	_dbg_check_lock
+ 273      00
+ 274 0012 8B4308   		movl	8(%ebx), %eax
+ 275 0015 83E801   		subl	$1, %eax
+ 276 0018 83F801   		cmpl	$1, %eax
+ 277 001b 760C     		jbe	L24
+ 278 001d C7042425 		movl	$LC3, (%esp)
+ 278      000000
+ 279 0024 E8000000 		call	_chDbgPanic
+ 279      00
+ 280              	L24:
+ 281 0029 891C24   		movl	%ebx, (%esp)
+ 282 002c E8000000 		call	_sd_lld_stop
+ 282      00
+ 283 0031 8D4330   		leal	48(%ebx), %eax
+ 284 0034 C7430801 		movl	$1, 8(%ebx)
+ 284      000000
+ 285 003b 83C30C   		addl	$12, %ebx
+ 286 003e 890424   		movl	%eax, (%esp)
+ 287 0041 E8000000 		call	_chOQResetI
+ 287      00
+ 288 0046 891C24   		movl	%ebx, (%esp)
+ 289 0049 E8000000 		call	_chIQResetI
+ 289      00
+ 290 004e E8000000 		call	_chSchRescheduleS
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s 			page 7
+
+
+ 290      00
+ 291 0053 E8000000 		call	_dbg_check_unlock
+ 291      00
+ 292              	/APP
+ 293              	 # 194 "../firmware/chibios/os/hal/src/serial.c" 1
+ 294 0058 90       		nop
+ 295              	 # 0 "" 2
+ 296              	/NO_APP
+ 297 0059 83C418   		addl	$24, %esp
+ 298              		.cfi_remember_state
+ 299              		.cfi_def_cfa_offset 8
+ 300 005c 5B       		popl	%ebx
+ 301              		.cfi_restore 3
+ 302              		.cfi_def_cfa_offset 4
+ 303              		.p2align 4,,1
+ 304 005d C3       		ret
+ 305 005e 6690     		.p2align 4,,7
+ 306              	L26:
+ 307              		.cfi_restore_state
+ 308 0060 C704241A 		movl	$LC2, (%esp)
+ 308      000000
+ 309 0067 E8000000 		call	_chDbgPanic
+ 309      00
+ 310 006c EB9E     		jmp	L23
+ 311              		.cfi_endproc
+ 312              	LFE39:
+ 313 006e 9090     		.section .rdata,"dr"
+ 314              	LC4:
+ 315 0032 22736449 		.ascii "\"sdIncomingDataI\"()\0"
+ 315      6E636F6D 
+ 315      696E6744 
+ 315      61746149 
+ 315      22282900 
+ 316              		.section	.text$sdIncomingDataI,"x"
+ 317              		.p2align 4,,15
+ 318              		.globl	_sdIncomingDataI
+ 319              		.def	_sdIncomingDataI;	.scl	2;	.type	32;	.endef
+ 320              	_sdIncomingDataI:
+ 321              	LFB40:
+ 322              		.cfi_startproc
+ 323 0000 83EC1C   		subl	$28, %esp
+ 324              		.cfi_def_cfa_offset 32
+ 325 0003 895C2414 		movl	%ebx, 20(%esp)
+ 326              		.cfi_offset 3, -12
+ 327 0007 8B5C2420 		movl	32(%esp), %ebx
+ 328 000b 89742418 		movl	%esi, 24(%esp)
+ 329              		.cfi_offset 6, -8
+ 330 000f 0FB67424 		movzbl	36(%esp), %esi
+ 330      24
+ 331 0014 E8000000 		call	_chDbgCheckClassI
+ 331      00
+ 332 0019 85DB     		testl	%ebx, %ebx
+ 333 001b 7467     		je	L32
+ 334              	L28:
+ 335 001d 8B4314   		movl	20(%ebx), %eax
+ 336 0020 85C0     		testl	%eax, %eax
+ 337 0022 742C     		je	L33
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s 			page 8
+
+
+ 338              	L29:
+ 339 0024 81E6FF00 		andl	$255, %esi
+ 339      0000
+ 340 002a 8D430C   		leal	12(%ebx), %eax
+ 341 002d 89742404 		movl	%esi, 4(%esp)
+ 342 0031 890424   		movl	%eax, (%esp)
+ 343 0034 E8000000 		call	_chIQPutI
+ 343      00
+ 344 0039 85C0     		testl	%eax, %eax
+ 345 003b 7828     		js	L34
+ 346 003d 8B5C2414 		movl	20(%esp), %ebx
+ 347 0041 8B742418 		movl	24(%esp), %esi
+ 348 0045 83C41C   		addl	$28, %esp
+ 349              		.cfi_remember_state
+ 350              		.cfi_restore 6
+ 351              		.cfi_restore 3
+ 352              		.cfi_def_cfa_offset 4
+ 353 0048 C3       		ret
+ 354 0049 8DB42600 		.p2align 4,,7
+ 354      000000
+ 355              	L33:
+ 356              		.cfi_restore_state
+ 357 0050 8D4304   		leal	4(%ebx), %eax
+ 358 0053 C7442404 		movl	$4, 4(%esp)
+ 358      04000000 
+ 359 005b 890424   		movl	%eax, (%esp)
+ 360 005e E8000000 		call	_chEvtBroadcastFlagsI
+ 360      00
+ 361 0063 EBBF     		jmp	L29
+ 362              		.p2align 4,,7
+ 363              	L34:
+ 364 0065 83C304   		addl	$4, %ebx
+ 365 0068 8B742418 		movl	24(%esp), %esi
+ 366 006c 895C2420 		movl	%ebx, 32(%esp)
+ 367 0070 8B5C2414 		movl	20(%esp), %ebx
+ 368 0074 C7442424 		movl	$128, 36(%esp)
+ 368      80000000 
+ 369 007c 83C41C   		addl	$28, %esp
+ 370              		.cfi_remember_state
+ 371              		.cfi_restore 6
+ 372              		.cfi_restore 3
+ 373              		.cfi_def_cfa_offset 4
+ 374 007f E9000000 		jmp	_chEvtBroadcastFlagsI
+ 374      00
+ 375              		.p2align 4,,7
+ 376              	L32:
+ 377              		.cfi_restore_state
+ 378 0084 C7042432 		movl	$LC4, (%esp)
+ 378      000000
+ 379 008b E8000000 		call	_chDbgPanic
+ 379      00
+ 380 0090 EB8B     		jmp	L28
+ 381              		.cfi_endproc
+ 382              	LFE40:
+ 383 0092 90909090 		.section .rdata,"dr"
+ 383      90909090 
+ 383      90909090 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s 			page 9
+
+
+ 383      9090
+ 384              	LC5:
+ 385 0046 22736452 		.ascii "\"sdRequestDataI\"()\0"
+ 385      65717565 
+ 385      73744461 
+ 385      74614922 
+ 385      282900
+ 386 0059 000000   		.section	.text$sdRequestDataI,"x"
+ 387              		.p2align 4,,15
+ 388              		.globl	_sdRequestDataI
+ 389              		.def	_sdRequestDataI;	.scl	2;	.type	32;	.endef
+ 390              	_sdRequestDataI:
+ 391              	LFB41:
+ 392              		.cfi_startproc
+ 393 0000 53       		pushl	%ebx
+ 394              		.cfi_def_cfa_offset 8
+ 395              		.cfi_offset 3, -8
+ 396 0001 83EC28   		subl	$40, %esp
+ 397              		.cfi_def_cfa_offset 48
+ 398 0004 8B5C2430 		movl	48(%esp), %ebx
+ 399 0008 E8000000 		call	_chDbgCheckClassI
+ 399      00
+ 400 000d 85DB     		testl	%ebx, %ebx
+ 401 000f 7434     		je	L39
+ 402              	L36:
+ 403 0011 8D4330   		leal	48(%ebx), %eax
+ 404 0014 890424   		movl	%eax, (%esp)
+ 405 0017 E8000000 		call	_chOQGetI
+ 405      00
+ 406 001c 85C0     		testl	%eax, %eax
+ 407 001e 7805     		js	L40
+ 408 0020 83C428   		addl	$40, %esp
+ 409              		.cfi_remember_state
+ 410              		.cfi_def_cfa_offset 8
+ 411 0023 5B       		popl	%ebx
+ 412              		.cfi_restore 3
+ 413              		.cfi_def_cfa_offset 4
+ 414 0024 C3       		ret
+ 415              		.p2align 4,,7
+ 416              	L40:
+ 417              		.cfi_restore_state
+ 418 0025 83C304   		addl	$4, %ebx
+ 419 0028 891C24   		movl	%ebx, (%esp)
+ 420 002b C7442404 		movl	$8, 4(%esp)
+ 420      08000000 
+ 421 0033 8944241C 		movl	%eax, 28(%esp)
+ 422 0037 E8000000 		call	_chEvtBroadcastFlagsI
+ 422      00
+ 423 003c 8B44241C 		movl	28(%esp), %eax
+ 424 0040 83C428   		addl	$40, %esp
+ 425              		.cfi_remember_state
+ 426              		.cfi_def_cfa_offset 8
+ 427 0043 5B       		popl	%ebx
+ 428              		.cfi_restore 3
+ 429              		.cfi_def_cfa_offset 4
+ 430 0044 C3       		ret
+ 431              		.p2align 4,,7
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s 			page 10
+
+
+ 432              	L39:
+ 433              		.cfi_restore_state
+ 434 0045 C7042446 		movl	$LC5, (%esp)
+ 434      000000
+ 435 004c E8000000 		call	_chDbgPanic
+ 435      00
+ 436 0051 EBBE     		jmp	L36
+ 437              		.cfi_endproc
+ 438              	LFE41:
+ 439 0053 90909090 		.section	.rdata$vmt,"dr"
+ 439      90909090 
+ 439      90909090 
+ 439      90
+ 440              		.align 32
+ 441              	_vmt:
+ 442 0000 00000000 		.long	_write
+ 443 0004 00000000 		.long	_read
+ 444 0008 00000000 		.long	_put
+ 445 000c 00000000 		.long	_get
+ 446 0010 00000000 		.long	_putt
+ 447 0014 00000000 		.long	_gett
+ 448 0018 00000000 		.long	_writet
+ 449 001c 00000000 		.long	_readt
+ 450              		.def	_chIQReadTimeout;	.scl	2;	.type	32;	.endef
+ 451              		.def	_chOQWriteTimeout;	.scl	2;	.type	32;	.endef
+ 452              		.def	_chIQGetTimeout;	.scl	2;	.type	32;	.endef
+ 453              		.def	_chOQPutTimeout;	.scl	2;	.type	32;	.endef
+ 454              		.def	_sd_lld_init;	.scl	2;	.type	32;	.endef
+ 455              		.def	_chIQInit;	.scl	2;	.type	32;	.endef
+ 456              		.def	_chOQInit;	.scl	2;	.type	32;	.endef
+ 457              		.def	_dbg_check_lock;	.scl	2;	.type	32;	.endef
+ 458              		.def	_chDbgPanic;	.scl	2;	.type	32;	.endef
+ 459              		.def	_sd_lld_start;	.scl	2;	.type	32;	.endef
+ 460              		.def	_dbg_check_unlock;	.scl	2;	.type	32;	.endef
+ 461              		.def	_sd_lld_stop;	.scl	2;	.type	32;	.endef
+ 462              		.def	_chOQResetI;	.scl	2;	.type	32;	.endef
+ 463              		.def	_chIQResetI;	.scl	2;	.type	32;	.endef
+ 464              		.def	_chSchRescheduleS;	.scl	2;	.type	32;	.endef
+ 465              		.def	_chDbgCheckClassI;	.scl	2;	.type	32;	.endef
+ 466              		.def	_chIQPutI;	.scl	2;	.type	32;	.endef
+ 467              		.def	_chEvtBroadcastFlagsI;	.scl	2;	.type	32;	.endef
+ 468              		.def	_chOQGetI;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s 			page 11
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 serial.c
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s:5      .text$readt:00000000 _readt
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s:17     .text$read:00000000 _read
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s:39     .text$writet:00000000 _writet
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s:51     .text$write:00000000 _write
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s:73     .text$gett:00000000 _gett
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s:85     .text$get:00000000 _get
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s:103    .text$putt:00000000 _putt
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s:117    .text$put:00000000 _put
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s:138    .text$sdInit:00000000 _sdInit
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s:148    .text$sdObjectInit:00000000 _sdObjectInit
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s:441    .rdata$vmt:00000000 _vmt
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s:196    .text$sdStart:00000000 _sdStart
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s:256    .text$sdStop:00000000 _sdStop
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s:320    .text$sdIncomingDataI:00000000 _sdIncomingDataI
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccloxbbB.s:390    .text$sdRequestDataI:00000000 _sdRequestDataI
+
+UNDEFINED SYMBOLS
+_chIQReadTimeout
+_chOQWriteTimeout
+_chIQGetTimeout
+_chOQPutTimeout
+_sd_lld_init
+_chIQInit
+_chOQInit
+_dbg_check_lock
+_chDbgPanic
+_sd_lld_start
+_dbg_check_unlock
+_sd_lld_stop
+_chOQResetI
+_chIQResetI
+_chSchRescheduleS
+_chDbgCheckClassI
+_chIQPutI
+_chEvtBroadcastFlagsI
+_chOQGetI

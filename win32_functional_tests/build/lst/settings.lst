@@ -1,0 +1,4895 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 1
+
+
+   1              		.file	"settings.cpp"
+   2              		.section	.text$_ZL24setIdleSolenoidFrequencyi,"x"
+   3              		.p2align 4,,15
+   4              		.def	__ZL24setIdleSolenoidFrequencyi;	.scl	3;	.type	32;	.endef
+   5              	__ZL24setIdleSolenoidFrequencyi:
+   6              	LFB94:
+   7              		.cfi_startproc
+   8 0000 A1000000 		movl	_boardConfiguration, %eax
+   8      00
+   9 0005 8B542404 		movl	4(%esp), %edx
+  10 0009 895008   		movl	%edx, 8(%eax)
+  11 000c C3       		ret
+  12              		.cfi_endproc
+  13              	LFE94:
+  14 000d 909090   		.section	.text$_ZL10setCltBiasf,"x"
+  15              		.p2align 4,,15
+  16              		.def	__ZL10setCltBiasf;	.scl	3;	.type	32;	.endef
+  17              	__ZL10setCltBiasf:
+  18              	LFB121:
+  19              		.cfi_startproc
+  20 0000 A1000000 		movl	_engineConfiguration, %eax
+  20      00
+  21 0005 D9442404 		flds	4(%esp)
+  22 0009 D9981801 		fstps	280(%eax)
+  22      0000
+  23 000f C3       		ret
+  24              		.cfi_endproc
+  25              	LFE121:
+  26              		.section	.text$_ZL10setIatBiasf,"x"
+  27              		.p2align 4,,15
+  28              		.def	__ZL10setIatBiasf;	.scl	3;	.type	32;	.endef
+  29              	__ZL10setIatBiasf:
+  30              	LFB123:
+  31              		.cfi_startproc
+  32 0000 A1000000 		movl	_engineConfiguration, %eax
+  32      00
+  33 0005 D9442404 		flds	4(%esp)
+  34 0009 D9983801 		fstps	312(%eax)
+  34      0000
+  35 000f C3       		ret
+  36              		.cfi_endproc
+  37              	LFE123:
+  38              		.section	.text$_ZL15setVBattDividerf,"x"
+  39              		.p2align 4,,15
+  40              		.def	__ZL15setVBattDividerf;	.scl	3;	.type	32;	.endef
+  41              	__ZL15setVBattDividerf:
+  42              	LFB124:
+  43              		.cfi_startproc
+  44 0000 A1000000 		movl	_engineConfiguration, %eax
+  44      00
+  45 0005 D9442404 		flds	4(%esp)
+  46 0009 D998D401 		fstps	468(%eax)
+  46      0000
+  47 000f C3       		ret
+  48              		.cfi_endproc
+  49              	LFE124:
+  50              		.section	.text$_ZL14setInjectorLagf,"x"
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 2
+
+
+  51              		.p2align 4,,15
+  52              		.def	__ZL14setInjectorLagf;	.scl	3;	.type	32;	.endef
+  53              	__ZL14setInjectorLagf:
+  54              	LFB144:
+  55              		.cfi_startproc
+  56 0000 A1000000 		movl	_engineConfiguration, %eax
+  56      00
+  57 0005 D9442404 		flds	4(%esp)
+  58 0009 D9580C   		fstps	12(%eax)
+  59 000c C3       		ret
+  60              		.cfi_endproc
+  61              	LFE144:
+  62 000d 909090   		.section .rdata,"dr"
+  63              	LC1:
+  64 0000 69676E69 		.ascii "ignition disabled\0"
+  64      74696F6E 
+  64      20646973 
+  64      61626C65 
+  64      6400
+  65              		.section	.text$_ZL15disableIgnitionv,"x"
+  66              		.p2align 4,,15
+  67              		.def	__ZL15disableIgnitionv;	.scl	3;	.type	32;	.endef
+  68              	__ZL15disableIgnitionv:
+  69              	LFB141:
+  70              		.cfi_startproc
+  71 0000 83EC1C   		subl	$28, %esp
+  72              		.cfi_def_cfa_offset 32
+  73 0003 A1000000 		movl	_engineConfiguration, %eax
+  73      00
+  74 0008 80A0E405 		andb	$-3, 1508(%eax)
+  74      0000FD
+  75 000f C7442404 		movl	$LC1, 4(%esp)
+  75      00000000 
+  76 0017 C7042400 		movl	$__ZL6logger, (%esp)
+  76      000000
+  77 001e E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+  77      00
+  78 0023 83C41C   		addl	$28, %esp
+  79              		.cfi_def_cfa_offset 4
+  80 0026 C3       		ret
+  81              		.cfi_endproc
+  82              	LFE141:
+  83 0027 90909090 		.section .rdata,"dr"
+  83      90909090 
+  83      90
+  84              	LC2:
+  85 0012 69676E69 		.ascii "ignition enabled\0"
+  85      74696F6E 
+  85      20656E61 
+  85      626C6564 
+  85      00
+  86              		.section	.text$_ZL14enableIgnitionv,"x"
+  87              		.p2align 4,,15
+  88              		.def	__ZL14enableIgnitionv;	.scl	3;	.type	32;	.endef
+  89              	__ZL14enableIgnitionv:
+  90              	LFB140:
+  91              		.cfi_startproc
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 3
+
+
+  92 0000 83EC1C   		subl	$28, %esp
+  93              		.cfi_def_cfa_offset 32
+  94 0003 A1000000 		movl	_engineConfiguration, %eax
+  94      00
+  95 0008 8088E405 		orb	$2, 1508(%eax)
+  95      000002
+  96 000f C7442404 		movl	$LC2, 4(%esp)
+  96      12000000 
+  97 0017 C7042400 		movl	$__ZL6logger, (%esp)
+  97      000000
+  98 001e E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+  98      00
+  99 0023 83C41C   		addl	$28, %esp
+ 100              		.cfi_def_cfa_offset 4
+ 101 0026 C3       		ret
+ 102              		.cfi_endproc
+ 103              	LFE140:
+ 104 0027 90909090 		.section .rdata,"dr"
+ 104      90909090 
+ 104      90
+ 105              	LC3:
+ 106 0023 696E6A65 		.ascii "injection disabled\0"
+ 106      6374696F 
+ 106      6E206469 
+ 106      7361626C 
+ 106      656400
+ 107              		.section	.text$_ZL16disableInjectionv,"x"
+ 108              		.p2align 4,,15
+ 109              		.def	__ZL16disableInjectionv;	.scl	3;	.type	32;	.endef
+ 110              	__ZL16disableInjectionv:
+ 111              	LFB139:
+ 112              		.cfi_startproc
+ 113 0000 83EC1C   		subl	$28, %esp
+ 114              		.cfi_def_cfa_offset 32
+ 115 0003 A1000000 		movl	_engineConfiguration, %eax
+ 115      00
+ 116 0008 80A0E405 		andb	$-2, 1508(%eax)
+ 116      0000FE
+ 117 000f C7442404 		movl	$LC3, 4(%esp)
+ 117      23000000 
+ 118 0017 C7042400 		movl	$__ZL6logger, (%esp)
+ 118      000000
+ 119 001e E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 119      00
+ 120 0023 83C41C   		addl	$28, %esp
+ 121              		.cfi_def_cfa_offset 4
+ 122 0026 C3       		ret
+ 123              		.cfi_endproc
+ 124              	LFE139:
+ 125 0027 90909090 		.section .rdata,"dr"
+ 125      90909090 
+ 125      90
+ 126              	LC4:
+ 127 0036 696E6A65 		.ascii "injection enabled\0"
+ 127      6374696F 
+ 127      6E20656E 
+ 127      61626C65 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 4
+
+
+ 127      6400
+ 128              		.section	.text$_ZL15enableInjectionv,"x"
+ 129              		.p2align 4,,15
+ 130              		.def	__ZL15enableInjectionv;	.scl	3;	.type	32;	.endef
+ 131              	__ZL15enableInjectionv:
+ 132              	LFB138:
+ 133              		.cfi_startproc
+ 134 0000 83EC1C   		subl	$28, %esp
+ 135              		.cfi_def_cfa_offset 32
+ 136 0003 A1000000 		movl	_engineConfiguration, %eax
+ 136      00
+ 137 0008 8088E405 		orb	$1, 1508(%eax)
+ 137      000001
+ 138 000f C7442404 		movl	$LC4, 4(%esp)
+ 138      36000000 
+ 139 0017 C7042400 		movl	$__ZL6logger, (%esp)
+ 139      000000
+ 140 001e E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 140      00
+ 141 0023 83C41C   		addl	$28, %esp
+ 142              		.cfi_def_cfa_offset 4
+ 143 0026 C3       		ret
+ 144              		.cfi_endproc
+ 145              	LFE138:
+ 146 0027 90909090 		.section .rdata,"dr"
+ 146      90909090 
+ 146      90
+ 147              		.align 4
+ 148              	LC5:
+ 149 0048 53657474 		.ascii "Setting whole timing map to %f\0"
+ 149      696E6720 
+ 149      77686F6C 
+ 149      65207469 
+ 149      6D696E67 
+ 150              		.section	.text$_ZL17setWholeTimingMapf,"x"
+ 151              		.p2align 4,,15
+ 152              		.def	__ZL17setWholeTimingMapf;	.scl	3;	.type	32;	.endef
+ 153              	__ZL17setWholeTimingMapf:
+ 154              	LFB125:
+ 155              		.cfi_startproc
+ 156 0000 83EC2C   		subl	$44, %esp
+ 157              		.cfi_def_cfa_offset 48
+ 158 0003 D9442430 		flds	48(%esp)
+ 159 0007 DD542408 		fstl	8(%esp)
+ 160 000b C7442404 		movl	$LC5, 4(%esp)
+ 160      48000000 
+ 161 0013 C7042400 		movl	$__ZL6logger, (%esp)
+ 161      000000
+ 162 001a D95C2410 		fstps	16(%esp)
+ 163 001e E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 163      00
+ 164 0023 8B150000 		movl	_config, %edx
+ 164      0000
+ 165 0029 31C9     		xorl	%ecx, %ecx
+ 166 002b D9442410 		flds	16(%esp)
+ 167 002f 90       		.p2align 4,,7
+ 168              	L15:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 5
+
+
+ 169 0030 31C0     		xorl	%eax, %eax
+ 170              		.p2align 4,,7
+ 171              	L16:
+ 172 0032 D9948238 		fsts	11832(%edx,%eax,4)
+ 172      2E0000
+ 173 0039 83C001   		addl	$1, %eax
+ 174 003c 83F810   		cmpl	$16, %eax
+ 175 003f 75F1     		jne	L16
+ 176 0041 83C101   		addl	$1, %ecx
+ 177 0044 83C240   		addl	$64, %edx
+ 178 0047 83F910   		cmpl	$16, %ecx
+ 179 004a 75E4     		jne	L15
+ 180 004c DDD8     		fstp	%st(0)
+ 181 004e 83C42C   		addl	$44, %esp
+ 182              		.cfi_def_cfa_offset 4
+ 183 0051 C3       		ret
+ 184              		.cfi_endproc
+ 185              	LFE125:
+ 186 0052 90909090 		.section .rdata,"dr"
+ 186      90909090 
+ 186      90909090 
+ 186      9090
+ 187 0067 00       		.align 4
+ 188              	LC6:
+ 189 0068 53657474 		.ascii "Setting whole timing advance map to %f\0"
+ 189      696E6720 
+ 189      77686F6C 
+ 189      65207469 
+ 189      6D696E67 
+ 190              		.section	.text$_ZL20setWholeTimingMapCmdf,"x"
+ 191              		.p2align 4,,15
+ 192              		.def	__ZL20setWholeTimingMapCmdf;	.scl	3;	.type	32;	.endef
+ 193              	__ZL20setWholeTimingMapCmdf:
+ 194              	LFB127:
+ 195              		.cfi_startproc
+ 196 0000 83EC2C   		subl	$44, %esp
+ 197              		.cfi_def_cfa_offset 48
+ 198 0003 D9442430 		flds	48(%esp)
+ 199 0007 DD542408 		fstl	8(%esp)
+ 200 000b C7442404 		movl	$LC6, 4(%esp)
+ 200      68000000 
+ 201 0013 C7042400 		movl	$__ZL6logger, (%esp)
+ 201      000000
+ 202 001a D95C2410 		fstps	16(%esp)
+ 203 001e E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 203      00
+ 204 0023 D9442410 		flds	16(%esp)
+ 205 0027 D95C2430 		fstps	48(%esp)
+ 206 002b 83C42C   		addl	$44, %esp
+ 207              		.cfi_def_cfa_offset 4
+ 208 002e E9000000 		jmp	__ZL17setWholeTimingMapf
+ 208      00
+ 209              		.cfi_endproc
+ 210              	LFE127:
+ 211 0033 90909090 		.section .rdata,"dr"
+ 211      90909090 
+ 211      90909090 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 6
+
+
+ 211      90
+ 212              	LC9:
+ 213 008f 73657474 		.ascii "setting fuel mult=%f\0"
+ 213      696E6720 
+ 213      6675656C 
+ 213      206D756C 
+ 213      743D2566 
+ 214              		.section	.text$_ZL23setGlobalFuelCorrectionf,"x"
+ 215              		.p2align 4,,15
+ 216              		.def	__ZL23setGlobalFuelCorrectionf;	.scl	3;	.type	32;	.endef
+ 217              	__ZL23setGlobalFuelCorrectionf:
+ 218              	LFB120:
+ 219              		.cfi_startproc
+ 220 0000 83EC2C   		subl	$44, %esp
+ 221              		.cfi_def_cfa_offset 48
+ 222 0003 D9442430 		flds	48(%esp)
+ 223 0007 D9C0     		fld	%st(0)
+ 224 0009 DD05E80C 		fldl	LC7
+ 224      0000
+ 225 000f DFE9     		fucomip	%st(1), %st
+ 226 0011 DDD8     		fstp	%st(0)
+ 227 0013 7712     		ja	L27
+ 228 0015 D905F00C 		flds	LC8
+ 228      0000
+ 229 001b D9C9     		fxch	%st(1)
+ 230 001d DBE9     		fucomi	%st(1), %st
+ 231 001f DDD9     		fstp	%st(1)
+ 232 0021 760D     		jbe	L26
+ 233 0023 DDD8     		fstp	%st(0)
+ 234 0025 EB02     		jmp	L23
+ 235              		.p2align 4,,7
+ 236              	L27:
+ 237 0027 DDD8     		fstp	%st(0)
+ 238              	L23:
+ 239 0029 83C42C   		addl	$44, %esp
+ 240              		.cfi_remember_state
+ 241              		.cfi_def_cfa_offset 4
+ 242 002c C3       		ret
+ 243 002d 8D7600   		.p2align 4,,7
+ 244              	L26:
+ 245              		.cfi_restore_state
+ 246 0030 DD542408 		fstl	8(%esp)
+ 247 0034 C7442404 		movl	$LC9, 4(%esp)
+ 247      8F000000 
+ 248 003c C7042400 		movl	$__ZL6logger, (%esp)
+ 248      000000
+ 249 0043 D95C2410 		fstps	16(%esp)
+ 250 0047 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 250      00
+ 251 004c A1000000 		movl	_engineConfiguration, %eax
+ 251      00
+ 252 0051 D9442410 		flds	16(%esp)
+ 253 0055 D9983802 		fstps	568(%eax)
+ 253      0000
+ 254 005b 83C42C   		addl	$44, %esp
+ 255              		.cfi_def_cfa_offset 4
+ 256 005e C3       		ret
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 7
+
+
+ 257              		.cfi_endproc
+ 258              	LFE120:
+ 259 005f 90       		.section .rdata,"dr"
+ 260              	LC10:
+ 261 00a4 656E6162 		.ascii "enabled\0"
+ 261      6C656400 
+ 262              	LC11:
+ 263 00ac 64697361 		.ascii "disabled\0"
+ 263      626C6564 
+ 263      00
+ 264              	LC12:
+ 265 00b5 66617374 		.ascii "fastadc\0"
+ 265      61646300 
+ 266              	LC13:
+ 267 00bd 73746570 		.ascii "step1limimter\0"
+ 267      316C696D 
+ 267      696D7465 
+ 267      7200
+ 268              	LC14:
+ 269 00cb 73657269 		.ascii "serial\0"
+ 269      616C00
+ 270              	LC15:
+ 271 00d2 73746570 		.ascii "stepperidle\0"
+ 271      70657269 
+ 271      646C6500 
+ 272              	LC16:
+ 273 00de 74726967 		.ascii "trigger_only_front\0"
+ 273      6765725F 
+ 273      6F6E6C79 
+ 273      5F66726F 
+ 273      6E7400
+ 274              	LC17:
+ 275 00f1 74776F5F 		.ascii "two_wire_batch\0"
+ 275      77697265 
+ 275      5F626174 
+ 275      636800
+ 276              	LC18:
+ 277 0100 6A6F7973 		.ascii "joystick\0"
+ 277      7469636B 
+ 277      00
+ 278              	LC19:
+ 279 0109 48495039 		.ascii "HIP9011\0"
+ 279      30313100 
+ 280              	LC20:
+ 281 0111 616C7464 		.ascii "altdebug\0"
+ 281      65627567 
+ 281      00
+ 282              	LC21:
+ 283 011a 74706963 		.ascii "tpic_advanced_mode\0"
+ 283      5F616476 
+ 283      616E6365 
+ 283      645F6D6F 
+ 283      646500
+ 284              	LC22:
+ 285 012d 6B6E6F63 		.ascii "knockdebug\0"
+ 285      6B646562 
+ 285      756700
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 8
+
+
+ 286              	LC23:
+ 287 0138 616C7463 		.ascii "altcontrol\0"
+ 287      6F6E7472 
+ 287      6F6C00
+ 288              	LC24:
+ 289 0143 736400   		.ascii "sd\0"
+ 290              	LC25:
+ 291 0146 63616E00 		.ascii "can\0"
+ 292              	LC26:
+ 293 014a 74657374 		.ascii "test_mode\0"
+ 293      5F6D6F64 
+ 293      6500
+ 294              	LC27:
+ 295 0154 63616E5F 		.ascii "can_read\0"
+ 295      72656164 
+ 295      00
+ 296              	LC28:
+ 297 015d 63616E5F 		.ascii "can_write\0"
+ 297      77726974 
+ 297      6500
+ 298              	LC29:
+ 299 0167 696E6A65 		.ascii "injection\0"
+ 299      6374696F 
+ 299      6E00
+ 300              	LC30:
+ 301 0171 74726967 		.ascii "trigger_details\0"
+ 301      6765725F 
+ 301      64657461 
+ 301      696C7300 
+ 302              	LC31:
+ 303 0181 69676E69 		.ascii "ignition\0"
+ 303      74696F6E 
+ 303      00
+ 304              	LC32:
+ 305 018a 73656C66 		.ascii "self_stimulation\0"
+ 305      5F737469 
+ 305      6D756C61 
+ 305      74696F6E 
+ 305      00
+ 306              	LC33:
+ 307 019b 656E6769 		.ascii "engine_control\0"
+ 307      6E655F63 
+ 307      6F6E7472 
+ 307      6F6C00
+ 308              	LC34:
+ 309 01aa 6D61705F 		.ascii "map_avg\0"
+ 309      61766700 
+ 310              	LC35:
+ 311 01b2 6D696C00 		.ascii "mil\0"
+ 312              	LC36:
+ 313 01b6 6675656C 		.ascii "fuel_pump\0"
+ 313      5F70756D 
+ 313      7000
+ 314              	LC37:
+ 315 01c0 74756E65 		.ascii "tunerstudio\0"
+ 315      72737475 
+ 315      64696F00 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 9
+
+
+ 316              	LC38:
+ 317 01cc 77617665 		.ascii "wave_analyzer\0"
+ 317      5F616E61 
+ 317      6C797A65 
+ 317      7200
+ 318              	LC39:
+ 319 01da 69646C65 		.ascii "idle_thread\0"
+ 319      5F746872 
+ 319      65616400 
+ 320              	LC40:
+ 321 01e6 6D616E75 		.ascii "manual_spinning\0"
+ 321      616C5F73 
+ 321      70696E6E 
+ 321      696E6700 
+ 322              	LC41:
+ 323 01f6 63796C69 		.ascii "cylinder_cleanup\0"
+ 323      6E646572 
+ 323      5F636C65 
+ 323      616E7570 
+ 323      00
+ 324              	LC42:
+ 325 0207 756E6578 		.ascii "unexpected [%s]\0"
+ 325      70656374 
+ 325      6564205B 
+ 325      25735D00 
+ 326              	LC43:
+ 327 0217 5B25735D 		.ascii "[%s] %s\0"
+ 327      20257300 
+ 328              		.section	.text$_ZL15enableOrDisablePKcb,"x"
+ 329              		.p2align 4,,15
+ 330              		.def	__ZL15enableOrDisablePKcb;	.scl	3;	.type	32;	.endef
+ 331              	__ZL15enableOrDisablePKcb:
+ 332              	LFB133:
+ 333              		.cfi_startproc
+ 334 0000 56       		pushl	%esi
+ 335              		.cfi_def_cfa_offset 8
+ 336              		.cfi_offset 6, -8
+ 337 0001 89D6     		movl	%edx, %esi
+ 338 0003 53       		pushl	%ebx
+ 339              		.cfi_def_cfa_offset 12
+ 340              		.cfi_offset 3, -12
+ 341 0004 89C3     		movl	%eax, %ebx
+ 342 0006 83EC14   		subl	$20, %esp
+ 343              		.cfi_def_cfa_offset 32
+ 344 0009 C7442404 		movl	$LC12, 4(%esp)
+ 344      B5000000 
+ 345 0011 890424   		movl	%eax, (%esp)
+ 346 0014 E8000000 		call	_strEqualCaseInsensitive
+ 346      00
+ 347 0019 84C0     		testb	%al, %al
+ 348 001b 7453     		je	L29
+ 349 001d 8B150000 		movl	_boardConfiguration, %edx
+ 349      0000
+ 350 0023 89F0     		movl	%esi, %eax
+ 351 0025 83E001   		andl	$1, %eax
+ 352 0028 C1E004   		sall	$4, %eax
+ 353 002b 0FB68A80 		movzbl	384(%edx), %ecx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 10
+
+
+ 353      010000
+ 354 0032 83E1EF   		andl	$-17, %ecx
+ 355 0035 09C1     		orl	%eax, %ecx
+ 356 0037 888A8001 		movb	%cl, 384(%edx)
+ 356      0000
+ 357              	L30:
+ 358 003d 89F0     		movl	%esi, %eax
+ 359 003f B9A40000 		movl	$LC10, %ecx
+ 359      00
+ 360 0044 84C0     		testb	%al, %al
+ 361 0046 B8AC0000 		movl	$LC11, %eax
+ 361      00
+ 362 004b 0F44C8   		cmove	%eax, %ecx
+ 363 004e 894C240C 		movl	%ecx, 12(%esp)
+ 364 0052 895C2408 		movl	%ebx, 8(%esp)
+ 365 0056 C7442404 		movl	$LC43, 4(%esp)
+ 365      17020000 
+ 366 005e C7042400 		movl	$__ZL6logger, (%esp)
+ 366      000000
+ 367 0065 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 367      00
+ 368              	L28:
+ 369 006a 83C414   		addl	$20, %esp
+ 370              		.cfi_remember_state
+ 371              		.cfi_def_cfa_offset 12
+ 372 006d 5B       		popl	%ebx
+ 373              		.cfi_restore 3
+ 374              		.cfi_def_cfa_offset 8
+ 375 006e 5E       		popl	%esi
+ 376              		.cfi_restore 6
+ 377              		.cfi_def_cfa_offset 4
+ 378 006f C3       		ret
+ 379              		.p2align 4,,7
+ 380              	L29:
+ 381              		.cfi_restore_state
+ 382 0070 C7442404 		movl	$LC13, 4(%esp)
+ 382      BD000000 
+ 383 0078 891C24   		movl	%ebx, (%esp)
+ 384 007b E8000000 		call	_strEqualCaseInsensitive
+ 384      00
+ 385 0080 84C0     		testb	%al, %al
+ 386 0082 7422     		je	L31
+ 387 0084 8B150000 		movl	_boardConfiguration, %edx
+ 387      0000
+ 388 008a 89F1     		movl	%esi, %ecx
+ 389 008c 83E101   		andl	$1, %ecx
+ 390 008f C1E102   		sall	$2, %ecx
+ 391 0092 0FB68281 		movzbl	385(%edx), %eax
+ 391      010000
+ 392 0099 83E0FB   		andl	$-5, %eax
+ 393 009c 09C8     		orl	%ecx, %eax
+ 394 009e 88828101 		movb	%al, 385(%edx)
+ 394      0000
+ 395 00a4 EB97     		jmp	L30
+ 396              		.p2align 4,,7
+ 397              	L31:
+ 398 00a6 C7442404 		movl	$LC14, 4(%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 11
+
+
+ 398      CB000000 
+ 399 00ae 891C24   		movl	%ebx, (%esp)
+ 400 00b1 E8000000 		call	_strEqualCaseInsensitive
+ 400      00
+ 401 00b6 84C0     		testb	%al, %al
+ 402 00b8 7426     		je	L32
+ 403 00ba 8B150000 		movl	_boardConfiguration, %edx
+ 403      0000
+ 404 00c0 89F1     		movl	%esi, %ecx
+ 405 00c2 83E101   		andl	$1, %ecx
+ 406 00c5 0FB68281 		movzbl	385(%edx), %eax
+ 406      010000
+ 407 00cc 83E0FE   		andl	$-2, %eax
+ 408 00cf 09C8     		orl	%ecx, %eax
+ 409 00d1 88828101 		movb	%al, 385(%edx)
+ 409      0000
+ 410 00d7 E961FFFF 		jmp	L30
+ 410      FF
+ 411 00dc 8D742600 		.p2align 4,,7
+ 412              	L32:
+ 413 00e0 C7442404 		movl	$LC15, 4(%esp)
+ 413      D2000000 
+ 414 00e8 891C24   		movl	%ebx, (%esp)
+ 415 00eb E8000000 		call	_strEqualCaseInsensitive
+ 415      00
+ 416 00f0 84C0     		testb	%al, %al
+ 417 00f2 7424     		je	L33
+ 418 00f4 8B150000 		movl	_boardConfiguration, %edx
+ 418      0000
+ 419 00fa 89F1     		movl	%esi, %ecx
+ 420 00fc 83E101   		andl	$1, %ecx
+ 421 00ff 01C9     		addl	%ecx, %ecx
+ 422 0101 0FB68281 		movzbl	385(%edx), %eax
+ 422      010000
+ 423 0108 83E0FD   		andl	$-3, %eax
+ 424 010b 09C8     		orl	%ecx, %eax
+ 425 010d 88828101 		movb	%al, 385(%edx)
+ 425      0000
+ 426 0113 E925FFFF 		jmp	L30
+ 426      FF
+ 427              	L33:
+ 428 0118 C7442404 		movl	$LC16, 4(%esp)
+ 428      DE000000 
+ 429 0120 891C24   		movl	%ebx, (%esp)
+ 430 0123 E8000000 		call	_strEqualCaseInsensitive
+ 430      00
+ 431 0128 84C0     		testb	%al, %al
+ 432 012a 742A     		je	L34
+ 433 012c 8B0D0000 		movl	_engineConfiguration, %ecx
+ 433      0000
+ 434 0132 89F2     		movl	%esi, %edx
+ 435 0134 83E201   		andl	$1, %edx
+ 436 0137 C1E206   		sall	$6, %edx
+ 437 013a 0FB681E5 		movzbl	1509(%ecx), %eax
+ 437      050000
+ 438 0141 83E0BF   		andl	$-65, %eax
+ 439 0144 09D0     		orl	%edx, %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 12
+
+
+ 440 0146 8881E505 		movb	%al, 1509(%ecx)
+ 440      0000
+ 441 014c E8000000 		call	__Z35incrementGlobalConfigurationVersionv
+ 441      00
+ 442 0151 E9E7FEFF 		jmp	L30
+ 442      FF
+ 443              	L34:
+ 444 0156 C7442404 		movl	$LC17, 4(%esp)
+ 444      F1000000 
+ 445 015e 891C24   		movl	%ebx, (%esp)
+ 446 0161 E8000000 		call	_strEqualCaseInsensitive
+ 446      00
+ 447 0166 84C0     		testb	%al, %al
+ 448 0168 742A     		je	L35
+ 449 016a 8B0D0000 		movl	_engineConfiguration, %ecx
+ 449      0000
+ 450 0170 89F2     		movl	%esi, %edx
+ 451 0172 83E201   		andl	$1, %edx
+ 452 0175 C1E205   		sall	$5, %edx
+ 453 0178 0FB681E5 		movzbl	1509(%ecx), %eax
+ 453      050000
+ 454 017f 83E0DF   		andl	$-33, %eax
+ 455 0182 09D0     		orl	%edx, %eax
+ 456 0184 8881E505 		movb	%al, 1509(%ecx)
+ 456      0000
+ 457 018a E8000000 		call	__Z35incrementGlobalConfigurationVersionv
+ 457      00
+ 458 018f E9A9FEFF 		jmp	L30
+ 458      FF
+ 459              	L35:
+ 460 0194 C7442404 		movl	$LC18, 4(%esp)
+ 460      00010000 
+ 461 019c 891C24   		movl	%ebx, (%esp)
+ 462 019f E8000000 		call	_strEqualCaseInsensitive
+ 462      00
+ 463 01a4 84C0     		testb	%al, %al
+ 464 01a6 7425     		je	L36
+ 465 01a8 8B150000 		movl	_engineConfiguration, %edx
+ 465      0000
+ 466 01ae 89F1     		movl	%esi, %ecx
+ 467 01b0 83E101   		andl	$1, %ecx
+ 468 01b3 C1E103   		sall	$3, %ecx
+ 469 01b6 0FB682D9 		movzbl	1497(%edx), %eax
+ 469      050000
+ 470 01bd 83E0F7   		andl	$-9, %eax
+ 471 01c0 09C8     		orl	%ecx, %eax
+ 472 01c2 8882D905 		movb	%al, 1497(%edx)
+ 472      0000
+ 473 01c8 E970FEFF 		jmp	L30
+ 473      FF
+ 474              	L36:
+ 475 01cd C7442404 		movl	$LC19, 4(%esp)
+ 475      09010000 
+ 476 01d5 891C24   		movl	%ebx, (%esp)
+ 477 01d8 E8000000 		call	_strEqualCaseInsensitive
+ 477      00
+ 478 01dd 84C0     		testb	%al, %al
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 13
+
+
+ 479 01df 7425     		je	L37
+ 480 01e1 8B0D0000 		movl	_boardConfiguration, %ecx
+ 480      0000
+ 481 01e7 89F2     		movl	%esi, %edx
+ 482 01e9 83E201   		andl	$1, %edx
+ 483 01ec C1E206   		sall	$6, %edx
+ 484 01ef 0FB68180 		movzbl	384(%ecx), %eax
+ 484      010000
+ 485 01f6 83E0BF   		andl	$-65, %eax
+ 486 01f9 09D0     		orl	%edx, %eax
+ 487 01fb 88818001 		movb	%al, 384(%ecx)
+ 487      0000
+ 488 0201 E937FEFF 		jmp	L30
+ 488      FF
+ 489              	L37:
+ 490 0206 C7442404 		movl	$LC20, 4(%esp)
+ 490      11010000 
+ 491 020e 891C24   		movl	%ebx, (%esp)
+ 492 0211 E8000000 		call	_strEqualCaseInsensitive
+ 492      00
+ 493 0216 84C0     		testb	%al, %al
+ 494 0218 7422     		je	L38
+ 495 021a 8B150000 		movl	_boardConfiguration, %edx
+ 495      0000
+ 496 0220 89F1     		movl	%esi, %ecx
+ 497 0222 C1E107   		sall	$7, %ecx
+ 498 0225 0FB68280 		movzbl	384(%edx), %eax
+ 498      010000
+ 499 022c 83E07F   		andl	$127, %eax
+ 500 022f 09C8     		orl	%ecx, %eax
+ 501 0231 88828001 		movb	%al, 384(%edx)
+ 501      0000
+ 502 0237 E901FEFF 		jmp	L30
+ 502      FF
+ 503              	L38:
+ 504 023c C7442404 		movl	$LC21, 4(%esp)
+ 504      1A010000 
+ 505 0244 891C24   		movl	%ebx, (%esp)
+ 506 0247 E8000000 		call	_strEqualCaseInsensitive
+ 506      00
+ 507 024c 84C0     		testb	%al, %al
+ 508 024e 7425     		je	L39
+ 509 0250 8B150000 		movl	_boardConfiguration, %edx
+ 509      0000
+ 510 0256 89F1     		movl	%esi, %ecx
+ 511 0258 83E101   		andl	$1, %ecx
+ 512 025b C1E103   		sall	$3, %ecx
+ 513 025e 0FB68281 		movzbl	385(%edx), %eax
+ 513      010000
+ 514 0265 83E0F7   		andl	$-9, %eax
+ 515 0268 09C8     		orl	%ecx, %eax
+ 516 026a 88828101 		movb	%al, 385(%edx)
+ 516      0000
+ 517 0270 E9C8FDFF 		jmp	L30
+ 517      FF
+ 518              	L39:
+ 519 0275 C7442404 		movl	$LC22, 4(%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 14
+
+
+ 519      2D010000 
+ 520 027d 891C24   		movl	%ebx, (%esp)
+ 521 0280 E8000000 		call	_strEqualCaseInsensitive
+ 521      00
+ 522 0285 84C0     		testb	%al, %al
+ 523 0287 7412     		je	L40
+ 524 0289 A1000000 		movl	_engine, %eax
+ 524      00
+ 525 028e 89F2     		movl	%esi, %edx
+ 526 0290 88907002 		movb	%dl, 624(%eax)
+ 526      0000
+ 527 0296 E9A2FDFF 		jmp	L30
+ 527      FF
+ 528              	L40:
+ 529 029b C7442404 		movl	$LC23, 4(%esp)
+ 529      38010000 
+ 530 02a3 891C24   		movl	%ebx, (%esp)
+ 531 02a6 E8000000 		call	_strEqualCaseInsensitive
+ 531      00
+ 532 02ab 84C0     		testb	%al, %al
+ 533 02ad 7425     		je	L41
+ 534 02af 8B0D0000 		movl	_engineConfiguration, %ecx
+ 534      0000
+ 535 02b5 89F2     		movl	%esi, %edx
+ 536 02b7 83E201   		andl	$1, %edx
+ 537 02ba C1E205   		sall	$5, %edx
+ 538 02bd 0FB681D9 		movzbl	1497(%ecx), %eax
+ 538      050000
+ 539 02c4 83E0DF   		andl	$-33, %eax
+ 540 02c7 09D0     		orl	%edx, %eax
+ 541 02c9 8881D905 		movb	%al, 1497(%ecx)
+ 541      0000
+ 542 02cf E969FDFF 		jmp	L30
+ 542      FF
+ 543              	L41:
+ 544 02d4 C7442404 		movl	$LC24, 4(%esp)
+ 544      43010000 
+ 545 02dc 891C24   		movl	%ebx, (%esp)
+ 546 02df E8000000 		call	_strEqualCaseInsensitive
+ 546      00
+ 547 02e4 84C0     		testb	%al, %al
+ 548 02e6 7425     		je	L42
+ 549 02e8 8B150000 		movl	_boardConfiguration, %edx
+ 549      0000
+ 550 02ee 89F1     		movl	%esi, %ecx
+ 551 02f0 83E101   		andl	$1, %ecx
+ 552 02f3 C1E103   		sall	$3, %ecx
+ 553 02f6 0FB68280 		movzbl	384(%edx), %eax
+ 553      010000
+ 554 02fd 83E0F7   		andl	$-9, %eax
+ 555 0300 09C8     		orl	%ecx, %eax
+ 556 0302 88828001 		movb	%al, 384(%edx)
+ 556      0000
+ 557 0308 E930FDFF 		jmp	L30
+ 557      FF
+ 558              	L42:
+ 559 030d C7442404 		movl	$LC25, 4(%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 15
+
+
+ 559      46010000 
+ 560 0315 891C24   		movl	%ebx, (%esp)
+ 561 0318 E8000000 		call	_strEqualCaseInsensitive
+ 561      00
+ 562 031d 84C0     		testb	%al, %al
+ 563 031f 7425     		je	L43
+ 564 0321 8B0D0000 		movl	_engineConfiguration, %ecx
+ 564      0000
+ 565 0327 89F2     		movl	%esi, %edx
+ 566 0329 83E201   		andl	$1, %edx
+ 567 032c C1E206   		sall	$6, %edx
+ 568 032f 0FB681D8 		movzbl	1496(%ecx), %eax
+ 568      050000
+ 569 0336 83E0BF   		andl	$-65, %eax
+ 570 0339 09D0     		orl	%edx, %eax
+ 571 033b 8881D805 		movb	%al, 1496(%ecx)
+ 571      0000
+ 572 0341 E9F7FCFF 		jmp	L30
+ 572      FF
+ 573              	L43:
+ 574 0346 C7442404 		movl	$LC26, 4(%esp)
+ 574      4A010000 
+ 575 034e 891C24   		movl	%ebx, (%esp)
+ 576 0351 E8000000 		call	_strEqualCaseInsensitive
+ 576      00
+ 577 0356 84C0     		testb	%al, %al
+ 578 0358 7412     		je	L44
+ 579 035a A1000000 		movl	_engine, %eax
+ 579      00
+ 580 035f 89F2     		movl	%esi, %edx
+ 581 0361 88908002 		movb	%dl, 640(%eax)
+ 581      0000
+ 582 0367 E9D1FCFF 		jmp	L30
+ 582      FF
+ 583              	L44:
+ 584 036c C7442404 		movl	$LC27, 4(%esp)
+ 584      54010000 
+ 585 0374 891C24   		movl	%ebx, (%esp)
+ 586 0377 E8000000 		call	_strEqualCaseInsensitive
+ 586      00
+ 587 037c 84C0     		testb	%al, %al
+ 588 037e 7422     		je	L45
+ 589 0380 8B150000 		movl	_engineConfiguration, %edx
+ 589      0000
+ 590 0386 89F1     		movl	%esi, %ecx
+ 591 0388 83E101   		andl	$1, %ecx
+ 592 038b 0FB682D9 		movzbl	1497(%edx), %eax
+ 592      050000
+ 593 0392 83E0FE   		andl	$-2, %eax
+ 594 0395 09C8     		orl	%ecx, %eax
+ 595 0397 8882D905 		movb	%al, 1497(%edx)
+ 595      0000
+ 596 039d E99BFCFF 		jmp	L30
+ 596      FF
+ 597              	L45:
+ 598 03a2 C7442404 		movl	$LC28, 4(%esp)
+ 598      5D010000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 16
+
+
+ 599 03aa 891C24   		movl	%ebx, (%esp)
+ 600 03ad E8000000 		call	_strEqualCaseInsensitive
+ 600      00
+ 601 03b2 84C0     		testb	%al, %al
+ 602 03b4 7424     		je	L46
+ 603 03b6 8B150000 		movl	_engineConfiguration, %edx
+ 603      0000
+ 604 03bc 89F1     		movl	%esi, %ecx
+ 605 03be 83E101   		andl	$1, %ecx
+ 606 03c1 01C9     		addl	%ecx, %ecx
+ 607 03c3 0FB682D9 		movzbl	1497(%edx), %eax
+ 607      050000
+ 608 03ca 83E0FD   		andl	$-3, %eax
+ 609 03cd 09C8     		orl	%ecx, %eax
+ 610 03cf 8882D905 		movb	%al, 1497(%edx)
+ 610      0000
+ 611 03d5 E963FCFF 		jmp	L30
+ 611      FF
+ 612              	L46:
+ 613 03da C7442404 		movl	$LC29, 4(%esp)
+ 613      67010000 
+ 614 03e2 891C24   		movl	%ebx, (%esp)
+ 615 03e5 E8000000 		call	_strEqualCaseInsensitive
+ 615      00
+ 616 03ea 84C0     		testb	%al, %al
+ 617 03ec 7422     		je	L47
+ 618 03ee 8B150000 		movl	_engineConfiguration, %edx
+ 618      0000
+ 619 03f4 89F1     		movl	%esi, %ecx
+ 620 03f6 83E101   		andl	$1, %ecx
+ 621 03f9 0FB682E4 		movzbl	1508(%edx), %eax
+ 621      050000
+ 622 0400 83E0FE   		andl	$-2, %eax
+ 623 0403 09C8     		orl	%ecx, %eax
+ 624 0405 8882E405 		movb	%al, 1508(%edx)
+ 624      0000
+ 625 040b E92DFCFF 		jmp	L30
+ 625      FF
+ 626              	L47:
+ 627 0410 C7442404 		movl	$LC30, 4(%esp)
+ 627      71010000 
+ 628 0418 891C24   		movl	%ebx, (%esp)
+ 629 041b E8000000 		call	_strEqualCaseInsensitive
+ 629      00
+ 630 0420 84C0     		testb	%al, %al
+ 631 0422 7425     		je	L48
+ 632 0424 8B150000 		movl	_engineConfiguration, %edx
+ 632      0000
+ 633 042a 89F1     		movl	%esi, %ecx
+ 634 042c 83E101   		andl	$1, %ecx
+ 635 042f C1E103   		sall	$3, %ecx
+ 636 0432 0FB682E5 		movzbl	1509(%edx), %eax
+ 636      050000
+ 637 0439 83E0F7   		andl	$-9, %eax
+ 638 043c 09C8     		orl	%ecx, %eax
+ 639 043e 8882E505 		movb	%al, 1509(%edx)
+ 639      0000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 17
+
+
+ 640 0444 E9F4FBFF 		jmp	L30
+ 640      FF
+ 641              	L48:
+ 642 0449 C7442404 		movl	$LC31, 4(%esp)
+ 642      81010000 
+ 643 0451 891C24   		movl	%ebx, (%esp)
+ 644 0454 E8000000 		call	_strEqualCaseInsensitive
+ 644      00
+ 645 0459 84C0     		testb	%al, %al
+ 646 045b 7424     		je	L49
+ 647 045d 8B150000 		movl	_engineConfiguration, %edx
+ 647      0000
+ 648 0463 89F1     		movl	%esi, %ecx
+ 649 0465 83E101   		andl	$1, %ecx
+ 650 0468 01C9     		addl	%ecx, %ecx
+ 651 046a 0FB682E4 		movzbl	1508(%edx), %eax
+ 651      050000
+ 652 0471 83E0FD   		andl	$-3, %eax
+ 653 0474 09C8     		orl	%ecx, %eax
+ 654 0476 8882E405 		movb	%al, 1508(%edx)
+ 654      0000
+ 655 047c E9BCFBFF 		jmp	L30
+ 655      FF
+ 656              	L49:
+ 657 0481 C7442404 		movl	$LC32, 4(%esp)
+ 657      8A010000 
+ 658 0489 891C24   		movl	%ebx, (%esp)
+ 659 048c E8000000 		call	_strEqualCaseInsensitive
+ 659      00
+ 660 0491 84C0     		testb	%al, %al
+ 661 0493 741C     		je	L50
+ 662 0495 8B150000 		movl	_engineConfiguration, %edx
+ 662      0000
+ 663 049b 89F1     		movl	%esi, %ecx
+ 664 049d 83E101   		andl	$1, %ecx
+ 665 04a0 0FB64250 		movzbl	80(%edx), %eax
+ 666 04a4 83E0FE   		andl	$-2, %eax
+ 667 04a7 09C8     		orl	%ecx, %eax
+ 668 04a9 884250   		movb	%al, 80(%edx)
+ 669 04ac E98CFBFF 		jmp	L30
+ 669      FF
+ 670              	L50:
+ 671 04b1 C7442404 		movl	$LC33, 4(%esp)
+ 671      9B010000 
+ 672 04b9 891C24   		movl	%ebx, (%esp)
+ 673 04bc E8000000 		call	_strEqualCaseInsensitive
+ 673      00
+ 674 04c1 84C0     		testb	%al, %al
+ 675 04c3 7425     		je	L51
+ 676 04c5 8B0D0000 		movl	_boardConfiguration, %ecx
+ 676      0000
+ 677 04cb 89F2     		movl	%esi, %edx
+ 678 04cd 83E201   		andl	$1, %edx
+ 679 04d0 C1E205   		sall	$5, %edx
+ 680 04d3 0FB68180 		movzbl	384(%ecx), %eax
+ 680      010000
+ 681 04da 83E0DF   		andl	$-33, %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 18
+
+
+ 682 04dd 09D0     		orl	%edx, %eax
+ 683 04df 88818001 		movb	%al, 384(%ecx)
+ 683      0000
+ 684 04e5 E953FBFF 		jmp	L30
+ 684      FF
+ 685              	L51:
+ 686 04ea C7442404 		movl	$LC34, 4(%esp)
+ 686      AA010000 
+ 687 04f2 891C24   		movl	%ebx, (%esp)
+ 688 04f5 E8000000 		call	_strEqualCaseInsensitive
+ 688      00
+ 689 04fa 84C0     		testb	%al, %al
+ 690 04fc 7425     		je	L52
+ 691 04fe 8B0D0000 		movl	_engineConfiguration, %ecx
+ 691      0000
+ 692 0504 89F2     		movl	%esi, %edx
+ 693 0506 83E201   		andl	$1, %edx
+ 694 0509 C1E205   		sall	$5, %edx
+ 695 050c 0FB681E4 		movzbl	1508(%ecx), %eax
+ 695      050000
+ 696 0513 83E0DF   		andl	$-33, %eax
+ 697 0516 09D0     		orl	%edx, %eax
+ 698 0518 8881E405 		movb	%al, 1508(%ecx)
+ 698      0000
+ 699 051e E91AFBFF 		jmp	L30
+ 699      FF
+ 700              	L52:
+ 701 0523 C7442404 		movl	$LC35, 4(%esp)
+ 701      B2010000 
+ 702 052b 891C24   		movl	%ebx, (%esp)
+ 703 052e E8000000 		call	_strEqualCaseInsensitive
+ 703      00
+ 704 0533 84C0     		testb	%al, %al
+ 705 0535 7425     		je	L53
+ 706 0537 8B0D0000 		movl	_engineConfiguration, %ecx
+ 706      0000
+ 707 053d 89F2     		movl	%esi, %edx
+ 708 053f 83E201   		andl	$1, %edx
+ 709 0542 C1E206   		sall	$6, %edx
+ 710 0545 0FB681E4 		movzbl	1508(%ecx), %eax
+ 710      050000
+ 711 054c 83E0BF   		andl	$-65, %eax
+ 712 054f 09D0     		orl	%edx, %eax
+ 713 0551 8881E405 		movb	%al, 1508(%ecx)
+ 713      0000
+ 714 0557 E9E1FAFF 		jmp	L30
+ 714      FF
+ 715              	L53:
+ 716 055c C7442404 		movl	$LC36, 4(%esp)
+ 716      B6010000 
+ 717 0564 891C24   		movl	%ebx, (%esp)
+ 718 0567 E8000000 		call	_strEqualCaseInsensitive
+ 718      00
+ 719 056c 84C0     		testb	%al, %al
+ 720 056e 7422     		je	L54
+ 721 0570 8B150000 		movl	_engineConfiguration, %edx
+ 721      0000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 19
+
+
+ 722 0576 89F1     		movl	%esi, %ecx
+ 723 0578 C1E107   		sall	$7, %ecx
+ 724 057b 0FB682E4 		movzbl	1508(%edx), %eax
+ 724      050000
+ 725 0582 83E07F   		andl	$127, %eax
+ 726 0585 09C8     		orl	%ecx, %eax
+ 727 0587 8882E405 		movb	%al, 1508(%edx)
+ 727      0000
+ 728 058d E9ABFAFF 		jmp	L30
+ 728      FF
+ 729              	L54:
+ 730 0592 C7442404 		movl	$LC37, 4(%esp)
+ 730      C0010000 
+ 731 059a 891C24   		movl	%ebx, (%esp)
+ 732 059d E8000000 		call	_strEqualCaseInsensitive
+ 732      00
+ 733 05a2 84C0     		testb	%al, %al
+ 734 05a4 7422     		je	L55
+ 735 05a6 8B150000 		movl	_engineConfiguration, %edx
+ 735      0000
+ 736 05ac 89F1     		movl	%esi, %ecx
+ 737 05ae 83E101   		andl	$1, %ecx
+ 738 05b1 0FB682E5 		movzbl	1509(%edx), %eax
+ 738      050000
+ 739 05b8 83E0FE   		andl	$-2, %eax
+ 740 05bb 09C8     		orl	%ecx, %eax
+ 741 05bd 8882E505 		movb	%al, 1509(%edx)
+ 741      0000
+ 742 05c3 E975FAFF 		jmp	L30
+ 742      FF
+ 743              	L55:
+ 744 05c8 C7442404 		movl	$LC38, 4(%esp)
+ 744      CC010000 
+ 745 05d0 891C24   		movl	%ebx, (%esp)
+ 746 05d3 E8000000 		call	_strEqualCaseInsensitive
+ 746      00
+ 747 05d8 84C0     		testb	%al, %al
+ 748 05da 7424     		je	L56
+ 749 05dc 8B150000 		movl	_engineConfiguration, %edx
+ 749      0000
+ 750 05e2 89F1     		movl	%esi, %ecx
+ 751 05e4 83E101   		andl	$1, %ecx
+ 752 05e7 01C9     		addl	%ecx, %ecx
+ 753 05e9 0FB682E5 		movzbl	1509(%edx), %eax
+ 753      050000
+ 754 05f0 83E0FD   		andl	$-3, %eax
+ 755 05f3 09C8     		orl	%ecx, %eax
+ 756 05f5 8882E505 		movb	%al, 1509(%edx)
+ 756      0000
+ 757 05fb E93DFAFF 		jmp	L30
+ 757      FF
+ 758              	L56:
+ 759 0600 C7442404 		movl	$LC39, 4(%esp)
+ 759      DA010000 
+ 760 0608 891C24   		movl	%ebx, (%esp)
+ 761 060b E8000000 		call	_strEqualCaseInsensitive
+ 761      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 20
+
+
+ 762 0610 84C0     		testb	%al, %al
+ 763 0612 7425     		je	L57
+ 764 0614 8B150000 		movl	_engineConfiguration, %edx
+ 764      0000
+ 765 061a 89F1     		movl	%esi, %ecx
+ 766 061c 83E101   		andl	$1, %ecx
+ 767 061f C1E102   		sall	$2, %ecx
+ 768 0622 0FB682E5 		movzbl	1509(%edx), %eax
+ 768      050000
+ 769 0629 83E0FB   		andl	$-5, %eax
+ 770 062c 09C8     		orl	%ecx, %eax
+ 771 062e 8882E505 		movb	%al, 1509(%edx)
+ 771      0000
+ 772 0634 E904FAFF 		jmp	L30
+ 772      FF
+ 773              	L57:
+ 774 0639 C7442404 		movl	$LC40, 4(%esp)
+ 774      E6010000 
+ 775 0641 891C24   		movl	%ebx, (%esp)
+ 776 0644 E8000000 		call	_strEqualCaseInsensitive
+ 776      00
+ 777 0649 84C0     		testb	%al, %al
+ 778 064b 7425     		je	L58
+ 779 064d 8B0D0000 		movl	_engineConfiguration, %ecx
+ 779      0000
+ 780 0653 89F2     		movl	%esi, %edx
+ 781 0655 83E201   		andl	$1, %edx
+ 782 0658 C1E204   		sall	$4, %edx
+ 783 065b 0FB681E5 		movzbl	1509(%ecx), %eax
+ 783      050000
+ 784 0662 83E0EF   		andl	$-17, %eax
+ 785 0665 09D0     		orl	%edx, %eax
+ 786 0667 8881E505 		movb	%al, 1509(%ecx)
+ 786      0000
+ 787 066d E9CBF9FF 		jmp	L30
+ 787      FF
+ 788              	L58:
+ 789 0672 C7442404 		movl	$LC41, 4(%esp)
+ 789      F6010000 
+ 790 067a 891C24   		movl	%ebx, (%esp)
+ 791 067d E8000000 		call	_strEqualCaseInsensitive
+ 791      00
+ 792 0682 84C0     		testb	%al, %al
+ 793 0684 7425     		je	L59
+ 794 0686 8B150000 		movl	_engineConfiguration, %edx
+ 794      0000
+ 795 068c 89F1     		movl	%esi, %ecx
+ 796 068e 83E101   		andl	$1, %ecx
+ 797 0691 C1E102   		sall	$2, %ecx
+ 798 0694 0FB682E4 		movzbl	1508(%edx), %eax
+ 798      050000
+ 799 069b 83E0FB   		andl	$-5, %eax
+ 800 069e 09C8     		orl	%ecx, %eax
+ 801 06a0 8882E405 		movb	%al, 1508(%edx)
+ 801      0000
+ 802 06a6 E992F9FF 		jmp	L30
+ 802      FF
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 21
+
+
+ 803              	L59:
+ 804 06ab 895C2408 		movl	%ebx, 8(%esp)
+ 805 06af C7442404 		movl	$LC42, 4(%esp)
+ 805      07020000 
+ 806 06b7 C7042400 		movl	$__ZL6logger, (%esp)
+ 806      000000
+ 807 06be E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 807      00
+ 808 06c3 E9A2F9FF 		jmp	L28
+ 808      FF
+ 809              		.cfi_endproc
+ 810              	LFE133:
+ 811 06c8 90909090 		.section	.text$_ZL7disablePKc,"x"
+ 811      90909090 
+ 812              		.p2align 4,,15
+ 813              		.def	__ZL7disablePKc;	.scl	3;	.type	32;	.endef
+ 814              	__ZL7disablePKc:
+ 815              	LFB135:
+ 816              		.cfi_startproc
+ 817 0000 8B442404 		movl	4(%esp), %eax
+ 818 0004 31D2     		xorl	%edx, %edx
+ 819 0006 E9000000 		jmp	__ZL15enableOrDisablePKcb
+ 819      00
+ 820              		.cfi_endproc
+ 821              	LFE135:
+ 822 000b 90909090 		.section	.text$_ZL6enablePKc,"x"
+ 822      90
+ 823              		.p2align 4,,15
+ 824              		.def	__ZL6enablePKc;	.scl	3;	.type	32;	.endef
+ 825              	__ZL6enablePKc:
+ 826              	LFB134:
+ 827              		.cfi_startproc
+ 828 0000 8B442404 		movl	4(%esp), %eax
+ 829 0004 BA010000 		movl	$1, %edx
+ 829      00
+ 830 0009 E9000000 		jmp	__ZL15enableOrDisablePKcb
+ 830      00
+ 831              		.cfi_endproc
+ 832              	LFE134:
+ 833 000e 9090     		.section .rdata,"dr"
+ 834 021f 00       		.align 4
+ 835              	LC44:
+ 836 0220 53657474 		.ascii "Setting timing map entry %d:%d to %f\0"
+ 836      696E6720 
+ 836      74696D69 
+ 836      6E67206D 
+ 836      61702065 
+ 837              		.section	.text$_ZL12setTimingMapPKcS0_S0_,"x"
+ 838              		.p2align 4,,15
+ 839              		.def	__ZL12setTimingMapPKcS0_S0_;	.scl	3;	.type	32;	.endef
+ 840              	__ZL12setTimingMapPKcS0_S0_:
+ 841              	LFB130:
+ 842              		.cfi_startproc
+ 843 0000 56       		pushl	%esi
+ 844              		.cfi_def_cfa_offset 8
+ 845              		.cfi_offset 6, -8
+ 846 0001 31F6     		xorl	%esi, %esi
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 22
+
+
+ 847 0003 53       		pushl	%ebx
+ 848              		.cfi_def_cfa_offset 12
+ 849              		.cfi_offset 3, -12
+ 850 0004 89F3     		movl	%esi, %ebx
+ 851 0006 83EC44   		subl	$68, %esp
+ 852              		.cfi_def_cfa_offset 80
+ 853 0009 8B442450 		movl	80(%esp), %eax
+ 854 000d 890424   		movl	%eax, (%esp)
+ 855 0010 E8000000 		call	_atoff
+ 855      00
+ 856 0015 8B442454 		movl	84(%esp), %eax
+ 857 0019 890424   		movl	%eax, (%esp)
+ 858 001c D95C2430 		fstps	48(%esp)
+ 859 0020 E8000000 		call	_atoff
+ 859      00
+ 860 0025 8B442458 		movl	88(%esp), %eax
+ 861 0029 890424   		movl	%eax, (%esp)
+ 862 002c D95C2420 		fstps	32(%esp)
+ 863 0030 E8000000 		call	_atoff
+ 863      00
+ 864 0035 A1000000 		movl	_config, %eax
+ 864      00
+ 865 003a C7442404 		movl	$16, 4(%esp)
+ 865      10000000 
+ 866 0042 05783200 		addl	$12920, %eax
+ 866      00
+ 867 0047 890424   		movl	%eax, (%esp)
+ 868 004a D9442430 		flds	48(%esp)
+ 869 004e D95C2408 		fstps	8(%esp)
+ 870 0052 D95C2430 		fstps	48(%esp)
+ 871 0056 E8000000 		call	__Z9findIndexPKfif
+ 871      00
+ 872 005b C7442404 		movl	$16, 4(%esp)
+ 872      10000000 
+ 873 0063 85C0     		testl	%eax, %eax
+ 874 0065 D9442420 		flds	32(%esp)
+ 875 0069 0F49D8   		cmovns	%eax, %ebx
+ 876 006c A1000000 		movl	_config, %eax
+ 876      00
+ 877 0071 D95C2408 		fstps	8(%esp)
+ 878 0075 05383200 		addl	$12856, %eax
+ 878      00
+ 879 007a 890424   		movl	%eax, (%esp)
+ 880 007d E8000000 		call	__Z9findIndexPKfif
+ 880      00
+ 881 0082 85C0     		testl	%eax, %eax
+ 882 0084 D9442430 		flds	48(%esp)
+ 883 0088 0F49F0   		cmovns	%eax, %esi
+ 884 008b 89F0     		movl	%esi, %eax
+ 885 008d C1E004   		sall	$4, %eax
+ 886 0090 8D94038C 		leal	2956(%ebx,%eax), %edx
+ 886      0B0000
+ 887 0097 A1000000 		movl	_config, %eax
+ 887      00
+ 888 009c D9549008 		fsts	8(%eax,%edx,4)
+ 889 00a0 DD5C2410 		fstpl	16(%esp)
+ 890 00a4 8974240C 		movl	%esi, 12(%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 23
+
+
+ 891 00a8 895C2408 		movl	%ebx, 8(%esp)
+ 892 00ac C7442404 		movl	$LC44, 4(%esp)
+ 892      20020000 
+ 893 00b4 C7042400 		movl	$__ZL6logger, (%esp)
+ 893      000000
+ 894 00bb E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 894      00
+ 895 00c0 83C444   		addl	$68, %esp
+ 896              		.cfi_def_cfa_offset 12
+ 897 00c3 5B       		popl	%ebx
+ 898              		.cfi_restore 3
+ 899              		.cfi_def_cfa_offset 8
+ 900 00c4 5E       		popl	%esi
+ 901              		.cfi_restore 6
+ 902              		.cfi_def_cfa_offset 4
+ 903 00c5 C3       		ret
+ 904              		.cfi_endproc
+ 905              	LFE130:
+ 906 00c6 90909090 		.section .rdata,"dr"
+ 906      90909090 
+ 906      9090
+ 907 0245 000000   		.align 4
+ 908              	LC45:
+ 909 0248 53657474 		.ascii "Setting fuel map entry %d:%d to %f\0"
+ 909      696E6720 
+ 909      6675656C 
+ 909      206D6170 
+ 909      20656E74 
+ 910              		.section	.text$_ZL10setFuelMapPKcS0_S0_,"x"
+ 911              		.p2align 4,,15
+ 912              		.def	__ZL10setFuelMapPKcS0_S0_;	.scl	3;	.type	32;	.endef
+ 913              	__ZL10setFuelMapPKcS0_S0_:
+ 914              	LFB131:
+ 915              		.cfi_startproc
+ 916 0000 56       		pushl	%esi
+ 917              		.cfi_def_cfa_offset 8
+ 918              		.cfi_offset 6, -8
+ 919 0001 31F6     		xorl	%esi, %esi
+ 920 0003 53       		pushl	%ebx
+ 921              		.cfi_def_cfa_offset 12
+ 922              		.cfi_offset 3, -12
+ 923 0004 89F3     		movl	%esi, %ebx
+ 924 0006 83EC44   		subl	$68, %esp
+ 925              		.cfi_def_cfa_offset 80
+ 926 0009 8B442450 		movl	80(%esp), %eax
+ 927 000d 890424   		movl	%eax, (%esp)
+ 928 0010 E8000000 		call	_atoff
+ 928      00
+ 929 0015 8B442454 		movl	84(%esp), %eax
+ 930 0019 890424   		movl	%eax, (%esp)
+ 931 001c D95C2430 		fstps	48(%esp)
+ 932 0020 E8000000 		call	_atoff
+ 932      00
+ 933 0025 8B442458 		movl	88(%esp), %eax
+ 934 0029 890424   		movl	%eax, (%esp)
+ 935 002c D95C2420 		fstps	32(%esp)
+ 936 0030 E8000000 		call	_atoff
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 24
+
+
+ 936      00
+ 937 0035 A1000000 		movl	_config, %eax
+ 937      00
+ 938 003a C7442404 		movl	$16, 4(%esp)
+ 938      10000000 
+ 939 0042 05F82D00 		addl	$11768, %eax
+ 939      00
+ 940 0047 890424   		movl	%eax, (%esp)
+ 941 004a D9442430 		flds	48(%esp)
+ 942 004e D95C2408 		fstps	8(%esp)
+ 943 0052 D95C2430 		fstps	48(%esp)
+ 944 0056 E8000000 		call	__Z9findIndexPKfif
+ 944      00
+ 945 005b C7442404 		movl	$16, 4(%esp)
+ 945      10000000 
+ 946 0063 85C0     		testl	%eax, %eax
+ 947 0065 D9442420 		flds	32(%esp)
+ 948 0069 0F49D8   		cmovns	%eax, %ebx
+ 949 006c A1000000 		movl	_config, %eax
+ 949      00
+ 950 0071 D95C2408 		fstps	8(%esp)
+ 951 0075 05B82D00 		addl	$11704, %eax
+ 951      00
+ 952 007a 890424   		movl	%eax, (%esp)
+ 953 007d E8000000 		call	__Z9findIndexPKfif
+ 953      00
+ 954 0082 85C0     		testl	%eax, %eax
+ 955 0084 D9442430 		flds	48(%esp)
+ 956 0088 0F49F0   		cmovns	%eax, %esi
+ 957 008b 89F0     		movl	%esi, %eax
+ 958 008d C1E004   		sall	$4, %eax
+ 959 0090 8D94036C 		leal	2668(%ebx,%eax), %edx
+ 959      0A0000
+ 960 0097 A1000000 		movl	_config, %eax
+ 960      00
+ 961 009c D9549008 		fsts	8(%eax,%edx,4)
+ 962 00a0 DD5C2410 		fstpl	16(%esp)
+ 963 00a4 8974240C 		movl	%esi, 12(%esp)
+ 964 00a8 895C2408 		movl	%ebx, 8(%esp)
+ 965 00ac C7442404 		movl	$LC45, 4(%esp)
+ 965      48020000 
+ 966 00b4 C7042400 		movl	$__ZL6logger, (%esp)
+ 966      000000
+ 967 00bb E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 967      00
+ 968 00c0 83C444   		addl	$68, %esp
+ 969              		.cfi_def_cfa_offset 12
+ 970 00c3 5B       		popl	%ebx
+ 971              		.cfi_restore 3
+ 972              		.cfi_def_cfa_offset 8
+ 973 00c4 5E       		popl	%esi
+ 974              		.cfi_restore 6
+ 975              		.cfi_def_cfa_offset 4
+ 976 00c5 C3       		ret
+ 977              		.cfi_endproc
+ 978              	LFE131:
+ 979 00c6 90909090 		.section .rdata,"dr"
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 25
+
+
+ 979      90909090 
+ 979      9090
+ 980              	LC46:
+ 981 026b 53657474 		.ascii "Setting whole VE map to %f\0"
+ 981      696E6720 
+ 981      77686F6C 
+ 981      65205645 
+ 981      206D6170 
+ 982 0286 0000     		.align 4
+ 983              	LC47:
+ 984 0288 5741524E 		.ascii "WARNING: setting VE map not in SD mode is pointless\0"
+ 984      494E473A 
+ 984      20736574 
+ 984      74696E67 
+ 984      20564520 
+ 985              		.section	.text$_ZL13setWholeVeCmdf,"x"
+ 986              		.p2align 4,,15
+ 987              		.def	__ZL13setWholeVeCmdf;	.scl	3;	.type	32;	.endef
+ 988              	__ZL13setWholeVeCmdf:
+ 989              	LFB128:
+ 990              		.cfi_startproc
+ 991 0000 83EC1C   		subl	$28, %esp
+ 992              		.cfi_def_cfa_offset 32
+ 993 0003 D9442420 		flds	32(%esp)
+ 994 0007 DD5C2408 		fstpl	8(%esp)
+ 995 000b C7442404 		movl	$LC46, 4(%esp)
+ 995      6B020000 
+ 996 0013 C7042400 		movl	$__ZL6logger, (%esp)
+ 996      000000
+ 997 001a E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 997      00
+ 998 001f A1000000 		movl	_engineConfiguration, %eax
+ 998      00
+ 999 0024 83B8A801 		cmpl	$3, 424(%eax)
+ 999      000003
+ 1000 002b 7414     		je	L71
+ 1001 002d C7442404 		movl	$LC47, 4(%esp)
+ 1001      88020000 
+ 1002 0035 C7042400 		movl	$__ZL6logger, (%esp)
+ 1002      000000
+ 1003 003c E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1003      00
+ 1004              	L71:
+ 1005 0041 A1000000 		movl	_config, %eax
+ 1005      00
+ 1006 0046 D9442420 		flds	32(%esp)
+ 1007 004a D95C2404 		fstps	4(%esp)
+ 1008 004e 05B83200 		addl	$12984, %eax
+ 1008      00
+ 1009 0053 890424   		movl	%eax, (%esp)
+ 1010 0056 E8000000 		call	__Z6setMapPA16_ff
+ 1010      00
+ 1011 005b 83C41C   		addl	$28, %esp
+ 1012              		.cfi_def_cfa_offset 4
+ 1013 005e C3       		ret
+ 1014              		.cfi_endproc
+ 1015              	LFE128:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 26
+
+
+ 1016 005f 90       		.section .rdata,"dr"
+ 1017              		.align 4
+ 1018              	LC48:
+ 1019 02bc 53657474 		.ascii "Setting whole injection phase map to %f\0"
+ 1019      696E6720 
+ 1019      77686F6C 
+ 1019      6520696E 
+ 1019      6A656374 
+ 1020              		.section	.text$_ZL19setWholePhaseMapCmdf,"x"
+ 1021              		.p2align 4,,15
+ 1022              		.def	__ZL19setWholePhaseMapCmdf;	.scl	3;	.type	32;	.endef
+ 1023              	__ZL19setWholePhaseMapCmdf:
+ 1024              	LFB126:
+ 1025              		.cfi_startproc
+ 1026 0000 83EC2C   		subl	$44, %esp
+ 1027              		.cfi_def_cfa_offset 48
+ 1028 0003 D9442430 		flds	48(%esp)
+ 1029 0007 DD542408 		fstl	8(%esp)
+ 1030 000b C7442404 		movl	$LC48, 4(%esp)
+ 1030      BC020000 
+ 1031 0013 C7042400 		movl	$__ZL6logger, (%esp)
+ 1031      000000
+ 1032 001a D95C2410 		fstps	16(%esp)
+ 1033 001e E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1033      00
+ 1034 0023 A1000000 		movl	_config, %eax
+ 1034      00
+ 1035 0028 05382500 		addl	$9528, %eax
+ 1035      00
+ 1036 002d 890424   		movl	%eax, (%esp)
+ 1037 0030 D9442410 		flds	16(%esp)
+ 1038 0034 D95C2404 		fstps	4(%esp)
+ 1039 0038 E8000000 		call	__Z6setMapPA16_ff
+ 1039      00
+ 1040 003d 83C42C   		addl	$44, %esp
+ 1041              		.cfi_def_cfa_offset 4
+ 1042 0040 C3       		ret
+ 1043              		.cfi_endproc
+ 1044              	LFE126:
+ 1045 0041 90909090 		.section .rdata,"dr"
+ 1045      90909090 
+ 1045      90909090 
+ 1045      909090
+ 1046              	LC49:
+ 1047 02e4 53657474 		.ascii "Setting whole fuel map to %f\0"
+ 1047      696E6720 
+ 1047      77686F6C 
+ 1047      65206675 
+ 1047      656C206D 
+ 1048 0301 000000   		.align 4
+ 1049              	LC50:
+ 1050 0304 5741524E 		.ascii "WARNING: setting fuel map in SD mode is pointless\0"
+ 1050      494E473A 
+ 1050      20736574 
+ 1050      74696E67 
+ 1050      20667565 
+ 1051              		.section	.text$_ZL18setWholeFuelMapCmdf,"x"
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 27
+
+
+ 1052              		.p2align 4,,15
+ 1053              		.def	__ZL18setWholeFuelMapCmdf;	.scl	3;	.type	32;	.endef
+ 1054              	__ZL18setWholeFuelMapCmdf:
+ 1055              	LFB129:
+ 1056              		.cfi_startproc
+ 1057 0000 83EC2C   		subl	$44, %esp
+ 1058              		.cfi_def_cfa_offset 48
+ 1059 0003 D9442430 		flds	48(%esp)
+ 1060 0007 DD542408 		fstl	8(%esp)
+ 1061 000b C7442404 		movl	$LC49, 4(%esp)
+ 1061      E4020000 
+ 1062 0013 C7042400 		movl	$__ZL6logger, (%esp)
+ 1062      000000
+ 1063 001a D95C2410 		fstps	16(%esp)
+ 1064 001e E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1064      00
+ 1065 0023 A1000000 		movl	_engineConfiguration, %eax
+ 1065      00
+ 1066 0028 83B8A801 		cmpl	$3, 424(%eax)
+ 1066      000003
+ 1067 002f D9442410 		flds	16(%esp)
+ 1068 0033 740C     		je	L78
+ 1069 0035 D95C2430 		fstps	48(%esp)
+ 1070 0039 83C42C   		addl	$44, %esp
+ 1071              		.cfi_remember_state
+ 1072              		.cfi_def_cfa_offset 4
+ 1073 003c E9000000 		jmp	__Z15setWholeFuelMapf
+ 1073      00
+ 1074              		.p2align 4,,7
+ 1075              	L78:
+ 1076              		.cfi_restore_state
+ 1077 0041 DDD8     		fstp	%st(0)
+ 1078 0043 C7442404 		movl	$LC50, 4(%esp)
+ 1078      04030000 
+ 1079 004b C7042400 		movl	$__ZL6logger, (%esp)
+ 1079      000000
+ 1080 0052 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1080      00
+ 1081 0057 D9442410 		flds	16(%esp)
+ 1082 005b D95C2430 		fstps	48(%esp)
+ 1083 005f 83C42C   		addl	$44, %esp
+ 1084              		.cfi_def_cfa_offset 4
+ 1085 0062 E9000000 		jmp	__Z15setWholeFuelMapf
+ 1085      00
+ 1086              		.cfi_endproc
+ 1087              	LFE129:
+ 1088 0067 90909090 		.section .rdata,"dr"
+ 1088      90909090 
+ 1088      90
+ 1089 0336 0000     		.align 4
+ 1090              	LC51:
+ 1091 0338 63757272 		.ascii "current 10bit=%d value=%f rate=%f\0"
+ 1091      656E7420 
+ 1091      31306269 
+ 1091      743D2564 
+ 1091      2076616C 
+ 1092              		.section	.text$_ZL12printTPSInfov,"x"
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 28
+
+
+ 1093              		.p2align 4,,15
+ 1094              		.def	__ZL12printTPSInfov;	.scl	3;	.type	32;	.endef
+ 1095              	__ZL12printTPSInfov:
+ 1096              	LFB105:
+ 1097              		.cfi_startproc
+ 1098 0000 83EC4C   		subl	$76, %esp
+ 1099              		.cfi_def_cfa_offset 80
+ 1100 0003 E8000000 		call	__Z18getTpsRateOfChangev
+ 1100      00
+ 1101 0008 D95C2420 		fstps	32(%esp)
+ 1102 000c E8000000 		call	__Z6getTPSv
+ 1102      00
+ 1103 0011 D95C2430 		fstps	48(%esp)
+ 1104 0015 E8000000 		call	__Z14getTPS10bitAdcv
+ 1104      00
+ 1105 001a C7442404 		movl	$LC51, 4(%esp)
+ 1105      38030000 
+ 1106 0022 C7042400 		movl	$__ZL6logger, (%esp)
+ 1106      000000
+ 1107 0029 D9442420 		flds	32(%esp)
+ 1108 002d DD5C2414 		fstpl	20(%esp)
+ 1109 0031 89442408 		movl	%eax, 8(%esp)
+ 1110 0035 D9442430 		flds	48(%esp)
+ 1111 0039 DD5C240C 		fstpl	12(%esp)
+ 1112 003d E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1112      00
+ 1113 0042 83C44C   		addl	$76, %esp
+ 1114              		.cfi_def_cfa_offset 4
+ 1115 0045 C3       		ret
+ 1116              		.cfi_endproc
+ 1117              	LFE105:
+ 1118 0046 90909090 		.section .rdata,"dr"
+ 1118      90909090 
+ 1118      9090
+ 1119              	LC52:
+ 1120 035a 7465726D 		.ascii "term\0"
+ 1120      00
+ 1121 035f 00       		.align 4
+ 1122              	LC54:
+ 1123 0360 25732076 		.ascii "%s volts=%f Celsius=%f sensorR=%f on channel %d\0"
+ 1123      6F6C7473 
+ 1123      3D256620 
+ 1123      43656C73 
+ 1123      6975733D 
+ 1124              	LC55:
+ 1125 0390 40257300 		.ascii "@%s\0"
+ 1126              	LC56:
+ 1127 0394 433D2566 		.ascii "C=%f/R=%f C=%f/R=%f C=%f/R=%f\0"
+ 1127      2F523D25 
+ 1127      6620433D 
+ 1127      25662F52 
+ 1127      3D256620 
+ 1128 03b2 0000     		.align 4
+ 1129              	LC58:
+ 1130 03b4 62696173 		.ascii "bias resistor=%fK A=%..100000f B=%..100000f C=%..100000f\0"
+ 1130      20726573 
+ 1130      6973746F 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 29
+
+
+ 1130      723D2566 
+ 1130      4B20413D 
+ 1131 03ed 000000   		.align 4
+ 1132              	LC59:
+ 1133 03f0 3D3D3D3D 		.ascii "==============================\0"
+ 1133      3D3D3D3D 
+ 1133      3D3D3D3D 
+ 1133      3D3D3D3D 
+ 1133      3D3D3D3D 
+ 1134              		.section	.text$_ZL15printThermistorPKcP14ThermistorConfP14ThermistorMath,"x"
+ 1135              		.p2align 4,,15
+ 1136              		.def	__ZL15printThermistorPKcP14ThermistorConfP14ThermistorMath;	.scl	3;	.type	32;	.endef
+ 1137              	__ZL15printThermistorPKcP14ThermistorConfP14ThermistorMath:
+ 1138              	LFB104:
+ 1139              		.cfi_startproc
+ 1140 0000 83EC7C   		subl	$124, %esp
+ 1141              		.cfi_def_cfa_offset 128
+ 1142 0003 897C2474 		movl	%edi, 116(%esp)
+ 1143              		.cfi_offset 7, -12
+ 1144 0007 8B7A1C   		movl	28(%edx), %edi
+ 1145 000a C704245A 		movl	$LC52, (%esp)
+ 1145      030000
+ 1146 0011 895C246C 		movl	%ebx, 108(%esp)
+ 1147              		.cfi_offset 3, -20
+ 1148 0015 89D3     		movl	%edx, %ebx
+ 1149 0017 89742470 		movl	%esi, 112(%esp)
+ 1150              		.cfi_offset 6, -16
+ 1151 001b 89CE     		movl	%ecx, %esi
+ 1152 001d 897C2404 		movl	%edi, 4(%esp)
+ 1153 0021 896C2478 		movl	%ebp, 120(%esp)
+ 1154              		.cfi_offset 5, -8
+ 1155 0025 89C5     		movl	%eax, %ebp
+ 1156 0027 E8000000 		call	__Z11getAdcValuePKci
+ 1156      00
+ 1157 002c 8944245C 		movl	%eax, 92(%esp)
+ 1158 0030 A1000000 		movl	_engineConfiguration, %eax
+ 1158      00
+ 1159 0035 DB44245C 		fildl	92(%esp)
+ 1160 0039 D80DF40C 		fmuls	LC53
+ 1160      0000
+ 1161 003f D888D001 		fmuls	464(%eax)
+ 1161      0000
+ 1162 0045 891C24   		movl	%ebx, (%esp)
+ 1163 0048 D95C2440 		fstps	64(%esp)
+ 1164 004c E8000000 		call	__Z13getResistanceP14ThermistorConf
+ 1164      00
+ 1165 0051 89742404 		movl	%esi, 4(%esp)
+ 1166 0055 891C24   		movl	%ebx, (%esp)
+ 1167 0058 D95C2450 		fstps	80(%esp)
+ 1168 005c E8000000 		call	__Z15getTemperatureCP14ThermistorConfP14ThermistorMath
+ 1168      00
+ 1169 0061 897C2424 		movl	%edi, 36(%esp)
+ 1170 0065 896C2408 		movl	%ebp, 8(%esp)
+ 1171 0069 C7442404 		movl	$LC54, 4(%esp)
+ 1171      60030000 
+ 1172 0071 C7042400 		movl	$__ZL6logger, (%esp)
+ 1172      000000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 30
+
+
+ 1173 0078 D9442450 		flds	80(%esp)
+ 1174 007c DD5C241C 		fstpl	28(%esp)
+ 1175 0080 DD5C2414 		fstpl	20(%esp)
+ 1176 0084 D9442440 		flds	64(%esp)
+ 1177 0088 DD5C240C 		fstpl	12(%esp)
+ 1178 008c E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1178      00
+ 1179 0091 893C24   		movl	%edi, (%esp)
+ 1180 0094 C7442404 		movl	$__ZL13pinNameBuffer, 4(%esp)
+ 1180      00000000 
+ 1181 009c E8000000 		call	__Z22getPinNameByAdcChannel13adc_channel_ePc
+ 1181      00
+ 1182 00a1 C7442404 		movl	$LC55, 4(%esp)
+ 1182      90030000 
+ 1183 00a9 C7042400 		movl	$__ZL6logger, (%esp)
+ 1183      000000
+ 1184 00b0 89442408 		movl	%eax, 8(%esp)
+ 1185 00b4 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1185      00
+ 1186 00b9 C7442404 		movl	$LC56, 4(%esp)
+ 1186      94030000 
+ 1187 00c1 C7042400 		movl	$__ZL6logger, (%esp)
+ 1187      000000
+ 1188 00c8 D94314   		flds	20(%ebx)
+ 1189 00cb DD5C2430 		fstpl	48(%esp)
+ 1190 00cf D94308   		flds	8(%ebx)
+ 1191 00d2 DD5C2428 		fstpl	40(%esp)
+ 1192 00d6 D94310   		flds	16(%ebx)
+ 1193 00d9 DD5C2420 		fstpl	32(%esp)
+ 1194 00dd D94304   		flds	4(%ebx)
+ 1195 00e0 DD5C2418 		fstpl	24(%esp)
+ 1196 00e4 D9430C   		flds	12(%ebx)
+ 1197 00e7 DD5C2410 		fstpl	16(%esp)
+ 1198 00eb D903     		flds	(%ebx)
+ 1199 00ed DD5C2408 		fstpl	8(%esp)
+ 1200 00f1 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1200      00
+ 1201 00f6 C7442404 		movl	$LC58, 4(%esp)
+ 1201      B4030000 
+ 1202 00fe C7042400 		movl	$__ZL6logger, (%esp)
+ 1202      000000
+ 1203 0105 D94608   		flds	8(%esi)
+ 1204 0108 DD5C2420 		fstpl	32(%esp)
+ 1205 010c D94604   		flds	4(%esi)
+ 1206 010f DD5C2418 		fstpl	24(%esp)
+ 1207 0113 D906     		flds	(%esi)
+ 1208 0115 DD5C2410 		fstpl	16(%esp)
+ 1209 0119 D905F80C 		flds	LC57
+ 1209      0000
+ 1210 011f D87B18   		fdivrs	24(%ebx)
+ 1211 0122 DD5C2408 		fstpl	8(%esp)
+ 1212 0126 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1212      00
+ 1213 012b C7442404 		movl	$LC59, 4(%esp)
+ 1213      F0030000 
+ 1214 0133 C7042400 		movl	$__ZL6logger, (%esp)
+ 1214      000000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 31
+
+
+ 1215 013a E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1215      00
+ 1216 013f 8B5C246C 		movl	108(%esp), %ebx
+ 1217 0143 8B742470 		movl	112(%esp), %esi
+ 1218 0147 8B7C2474 		movl	116(%esp), %edi
+ 1219 014b 8B6C2478 		movl	120(%esp), %ebp
+ 1220 014f 83C47C   		addl	$124, %esp
+ 1221              		.cfi_restore 5
+ 1222              		.cfi_restore 7
+ 1223              		.cfi_restore 6
+ 1224              		.cfi_restore 3
+ 1225              		.cfi_def_cfa_offset 4
+ 1226 0152 C3       		ret
+ 1227              		.cfi_endproc
+ 1228              	LFE104:
+ 1229 0153 90909090 		.section .rdata,"dr"
+ 1229      90909090 
+ 1229      90909090 
+ 1229      90
+ 1230              	LC60:
+ 1231 040f 434C5400 		.ascii "CLT\0"
+ 1232              	LC61:
+ 1233 0413 434C5420 		.ascii "CLT sensing error\0"
+ 1233      73656E73 
+ 1233      696E6720 
+ 1233      6572726F 
+ 1233      7200
+ 1234              	LC62:
+ 1235 0425 49415400 		.ascii "IAT\0"
+ 1236              	LC63:
+ 1237 0429 49415420 		.ascii "IAT sensing error\0"
+ 1237      73656E73 
+ 1237      696E6720 
+ 1237      6572726F 
+ 1237      7200
+ 1238              	LC64:
+ 1239 043b 4E2F4100 		.ascii "N/A\0"
+ 1240              	LC65:
+ 1241 043f 66616E3D 		.ascii "fan=%s @ %s\0"
+ 1241      25732040 
+ 1241      20257300 
+ 1242              	LC66:
+ 1243 044b 412F4320 		.ascii "A/C relay=%s @ %s\0"
+ 1243      72656C61 
+ 1243      793D2573 
+ 1243      20402025 
+ 1243      7300
+ 1244              		.section	.text$_ZL20printTemperatureInfov,"x"
+ 1245              		.p2align 4,,15
+ 1246              		.def	__ZL20printTemperatureInfov;	.scl	3;	.type	32;	.endef
+ 1247              	__ZL20printTemperatureInfov:
+ 1248              	LFB106:
+ 1249              		.cfi_startproc
+ 1250 0000 83EC1C   		subl	$28, %esp
+ 1251              		.cfi_def_cfa_offset 32
+ 1252 0003 8B0D0000 		movl	_engine, %ecx
+ 1252      0000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 32
+
+
+ 1253 0009 B80F0400 		movl	$LC60, %eax
+ 1253      00
+ 1254 000e 8B150000 		movl	_engineConfiguration, %edx
+ 1254      0000
+ 1255 0014 81C1841E 		addl	$7812, %ecx
+ 1255      0000
+ 1256 001a 81C20001 		addl	$256, %edx
+ 1256      0000
+ 1257 0020 E8000000 		call	__ZL15printThermistorPKcP14ThermistorConfP14ThermistorMath
+ 1257      00
+ 1258 0025 E8000000 		call	__Z21getCoolantTemperaturev
+ 1258      00
+ 1259 002a D91C24   		fstps	(%esp)
+ 1260 002d E8000000 		call	__Z25isValidCoolantTemperaturef
+ 1260      00
+ 1261 0032 84C0     		testb	%al, %al
+ 1262 0034 0F84B600 		je	L87
+ 1262      0000
+ 1263              	L84:
+ 1264 003a 8B0D0000 		movl	_engine, %ecx
+ 1264      0000
+ 1265 0040 B8250400 		movl	$LC62, %eax
+ 1265      00
+ 1266 0045 8B150000 		movl	_engineConfiguration, %edx
+ 1266      0000
+ 1267 004b 81C15C1E 		addl	$7772, %ecx
+ 1267      0000
+ 1268 0051 81C22001 		addl	$288, %edx
+ 1268      0000
+ 1269 0057 E8000000 		call	__ZL15printThermistorPKcP14ThermistorConfP14ThermistorMath
+ 1269      00
+ 1270 005c E8000000 		call	__Z23getIntakeAirTemperaturev
+ 1270      00
+ 1271 0061 D91C24   		fstps	(%esp)
+ 1272 0064 E8000000 		call	__Z27isValidIntakeAirTemperaturef
+ 1272      00
+ 1273 0069 84C0     		testb	%al, %al
+ 1274 006b 7514     		jne	L85
+ 1275 006d C7442404 		movl	$LC63, 4(%esp)
+ 1275      29040000 
+ 1276 0075 C7042400 		movl	$__ZL6logger, (%esp)
+ 1276      000000
+ 1277 007c E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1277      00
+ 1278              	L85:
+ 1279 0081 B9080000 		movl	$_enginePins+8, %ecx
+ 1279      00
+ 1280 0086 E8000000 		call	__ZN9OutputPin13getLogicValueEv
+ 1280      00
+ 1281 008b 0FB6C0   		movzbl	%al, %eax
+ 1282 008e 890424   		movl	%eax, (%esp)
+ 1283 0091 E8000000 		call	__Z12boolToStringb
+ 1283      00
+ 1284 0096 C744240C 		movl	$LC64, 12(%esp)
+ 1284      3B040000 
+ 1285 009e C7442404 		movl	$LC65, 4(%esp)
+ 1285      3F040000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 33
+
+
+ 1286 00a6 C7042400 		movl	$__ZL6logger, (%esp)
+ 1286      000000
+ 1287 00ad 89442408 		movl	%eax, 8(%esp)
+ 1288 00b1 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1288      00
+ 1289 00b6 B9100000 		movl	$_enginePins+16, %ecx
+ 1289      00
+ 1290 00bb E8000000 		call	__ZN9OutputPin13getLogicValueEv
+ 1290      00
+ 1291 00c0 0FB6C0   		movzbl	%al, %eax
+ 1292 00c3 890424   		movl	%eax, (%esp)
+ 1293 00c6 E8000000 		call	__Z12boolToStringb
+ 1293      00
+ 1294 00cb C744240C 		movl	$LC64, 12(%esp)
+ 1294      3B040000 
+ 1295 00d3 C7442404 		movl	$LC66, 4(%esp)
+ 1295      4B040000 
+ 1296 00db C7042400 		movl	$__ZL6logger, (%esp)
+ 1296      000000
+ 1297 00e2 89442408 		movl	%eax, 8(%esp)
+ 1298 00e6 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1298      00
+ 1299 00eb 83C41C   		addl	$28, %esp
+ 1300              		.cfi_remember_state
+ 1301              		.cfi_def_cfa_offset 4
+ 1302 00ee C3       		ret
+ 1303 00ef 90       		.p2align 4,,7
+ 1304              	L87:
+ 1305              		.cfi_restore_state
+ 1306 00f0 C7442404 		movl	$LC61, 4(%esp)
+ 1306      13040000 
+ 1307 00f8 C7042400 		movl	$__ZL6logger, (%esp)
+ 1307      000000
+ 1308 00ff E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1308      00
+ 1309 0104 E931FFFF 		jmp	L84
+ 1309      FF
+ 1310              		.cfi_endproc
+ 1311              	LFE106:
+ 1312 0109 90909090 		.section	.text$_ZL15setCrankingFuelf,"x"
+ 1312      909090
+ 1313              		.p2align 4,,15
+ 1314              		.def	__ZL15setCrankingFuelf;	.scl	3;	.type	32;	.endef
+ 1315              	__ZL15setCrankingFuelf:
+ 1316              	LFB111:
+ 1317              		.cfi_startproc
+ 1318 0000 A1000000 		movl	_engineConfiguration, %eax
+ 1318      00
+ 1319 0005 D9442404 		flds	4(%esp)
+ 1320 0009 D9585C   		fstps	92(%eax)
+ 1321 000c E9000000 		jmp	__ZL20printTemperatureInfov
+ 1321      00
+ 1322              		.cfi_endproc
+ 1323              	LFE111:
+ 1324 0011 90909090 		.section .rdata,"dr"
+ 1324      90909090 
+ 1324      90909090 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 34
+
+
+ 1324      909090
+ 1325              	LC67:
+ 1326 045d 77617665 		.ascii "waveChartUsedSize=%d\0"
+ 1326      43686172 
+ 1326      74557365 
+ 1326      6453697A 
+ 1326      653D2564 
+ 1327              		.section	.text$_ZL12printAllInfov,"x"
+ 1328              		.p2align 4,,15
+ 1329              		.def	__ZL12printAllInfov;	.scl	3;	.type	32;	.endef
+ 1330              	__ZL12printAllInfov:
+ 1331              	LFB143:
+ 1332              		.cfi_startproc
+ 1333 0000 83EC1C   		subl	$28, %esp
+ 1334              		.cfi_def_cfa_offset 32
+ 1335 0003 E8000000 		call	__ZL20printTemperatureInfov
+ 1335      00
+ 1336 0008 E8000000 		call	__ZL12printTPSInfov
+ 1336      00
+ 1337 000d A1000000 		movl	_waveChartUsedSize, %eax
+ 1337      00
+ 1338 0012 C7442404 		movl	$LC67, 4(%esp)
+ 1338      5D040000 
+ 1339 001a C7042400 		movl	$__ZL6logger, (%esp)
+ 1339      000000
+ 1340 0021 89442408 		movl	%eax, 8(%esp)
+ 1341 0025 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1341      00
+ 1342 002a 83C41C   		addl	$28, %esp
+ 1343              		.cfi_def_cfa_offset 4
+ 1344 002d C3       		ret
+ 1345              		.cfi_endproc
+ 1346              	LFE143:
+ 1347 002e 9090     		.section	.text$_Z10stopEnginev,"x"
+ 1348              		.p2align 4,,15
+ 1349              		.globl	__Z10stopEnginev
+ 1350              		.def	__Z10stopEnginev;	.scl	2;	.type	32;	.endef
+ 1351              	__Z10stopEnginev:
+ 1352              	LFB142:
+ 1353              		.cfi_startproc
+ 1354 0000 53       		pushl	%ebx
+ 1355              		.cfi_def_cfa_offset 8
+ 1356              		.cfi_offset 3, -8
+ 1357 0001 83EC08   		subl	$8, %esp
+ 1358              		.cfi_def_cfa_offset 16
+ 1359 0004 8B1D0000 		movl	_engine, %ebx
+ 1359      0000
+ 1360 000a E8000000 		call	_getTimeNowNt
+ 1360      00
+ 1361 000f 894330   		movl	%eax, 48(%ebx)
+ 1362 0012 895334   		movl	%edx, 52(%ebx)
+ 1363 0015 83C408   		addl	$8, %esp
+ 1364              		.cfi_def_cfa_offset 8
+ 1365 0018 5B       		popl	%ebx
+ 1366              		.cfi_restore 3
+ 1367              		.cfi_def_cfa_offset 4
+ 1368 0019 C3       		ret
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 35
+
+
+ 1369              		.cfi_endproc
+ 1370              	LFE142:
+ 1371 001a 90909090 		.section .rdata,"dr"
+ 1371      9090
+ 1372 0472 0000     		.align 4
+ 1373              	LC68:
+ 1374 0474 4F4E2074 		.ascii "ON temp [%f] should be above OFF temp [%f]\0"
+ 1374      656D7020 
+ 1374      5B25665D 
+ 1374      2073686F 
+ 1374      756C6420 
+ 1375              		.section	.text$_ZL13setFanSettingff,"x"
+ 1376              		.p2align 4,,15
+ 1377              		.def	__ZL13setFanSettingff;	.scl	3;	.type	32;	.endef
+ 1378              	__ZL13setFanSettingff:
+ 1379              	LFB122:
+ 1380              		.cfi_startproc
+ 1381 0000 83EC2C   		subl	$44, %esp
+ 1382              		.cfi_def_cfa_offset 48
+ 1383 0003 D9442430 		flds	48(%esp)
+ 1384 0007 D9442434 		flds	52(%esp)
+ 1385 000b DBE9     		fucomi	%st(1), %st
+ 1386 000d 7317     		jae	L100
+ 1387 000f D9C9     		fxch	%st(1)
+ 1388 0011 A1000000 		movl	_engineConfiguration, %eax
+ 1388      00
+ 1389 0016 D998DC01 		fstps	476(%eax)
+ 1389      0000
+ 1390 001c D998E001 		fstps	480(%eax)
+ 1390      0000
+ 1391 0022 83C42C   		addl	$44, %esp
+ 1392              		.cfi_remember_state
+ 1393              		.cfi_def_cfa_offset 4
+ 1394 0025 C3       		ret
+ 1395              		.p2align 4,,7
+ 1396              	L100:
+ 1397              		.cfi_restore_state
+ 1398 0026 DD5C2410 		fstpl	16(%esp)
+ 1399 002a C7442404 		movl	$LC68, 4(%esp)
+ 1399      74040000 
+ 1400 0032 DD5C2408 		fstpl	8(%esp)
+ 1401 0036 C7042400 		movl	$__ZL6logger, (%esp)
+ 1401      000000
+ 1402 003d E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1402      00
+ 1403 0042 83C42C   		addl	$44, %esp
+ 1404              		.cfi_def_cfa_offset 4
+ 1405 0045 C3       		ret
+ 1406              		.cfi_endproc
+ 1407              	LFE122:
+ 1408 0046 90909090 		.section .rdata,"dr"
+ 1408      90909090 
+ 1408      9090
+ 1409              	LC69:
+ 1410 049f 25662000 		.ascii "%f \0"
+ 1411              		.section	.text$_Z15printFloatArrayPKcPfi,"x"
+ 1412              		.p2align 4,,15
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 36
+
+
+ 1413              		.globl	__Z15printFloatArrayPKcPfi
+ 1414              		.def	__Z15printFloatArrayPKcPfi;	.scl	2;	.type	32;	.endef
+ 1415              	__Z15printFloatArrayPKcPfi:
+ 1416              	LFB85:
+ 1417              		.cfi_startproc
+ 1418 0000 57       		pushl	%edi
+ 1419              		.cfi_def_cfa_offset 8
+ 1420              		.cfi_offset 7, -8
+ 1421 0001 56       		pushl	%esi
+ 1422              		.cfi_def_cfa_offset 12
+ 1423              		.cfi_offset 6, -12
+ 1424 0002 53       		pushl	%ebx
+ 1425              		.cfi_def_cfa_offset 16
+ 1426              		.cfi_offset 3, -16
+ 1427 0003 83EC10   		subl	$16, %esp
+ 1428              		.cfi_def_cfa_offset 32
+ 1429 0006 8B5C2420 		movl	32(%esp), %ebx
+ 1430 000a 8B742428 		movl	40(%esp), %esi
+ 1431 000e C7042400 		movl	$__ZL6logger, (%esp)
+ 1431      000000
+ 1432 0015 8B7C2424 		movl	36(%esp), %edi
+ 1433 0019 E8000000 		call	__Z15appendMsgPrefixP7Logging
+ 1433      00
+ 1434 001e 895C2404 		movl	%ebx, 4(%esp)
+ 1435 0022 31DB     		xorl	%ebx, %ebx
+ 1436 0024 C7042400 		movl	$__ZL6logger, (%esp)
+ 1436      000000
+ 1437 002b E8000000 		call	_appendPrintf
+ 1437      00
+ 1438 0030 85F6     		testl	%esi, %esi
+ 1439 0032 7E22     		jle	L103
+ 1440              		.p2align 4,,7
+ 1441              	L105:
+ 1442 0034 D9049F   		flds	(%edi,%ebx,4)
+ 1443 0037 83C301   		addl	$1, %ebx
+ 1444 003a DD5C2408 		fstpl	8(%esp)
+ 1445 003e C7442404 		movl	$LC69, 4(%esp)
+ 1445      9F040000 
+ 1446 0046 C7042400 		movl	$__ZL6logger, (%esp)
+ 1446      000000
+ 1447 004d E8000000 		call	_appendPrintf
+ 1447      00
+ 1448 0052 39F3     		cmpl	%esi, %ebx
+ 1449 0054 75DE     		jne	L105
+ 1450              	L103:
+ 1451 0056 C7042400 		movl	$__ZL6logger, (%esp)
+ 1451      000000
+ 1452 005d E8000000 		call	__Z16appendMsgPostfixP7Logging
+ 1452      00
+ 1453 0062 C7442420 		movl	$__ZL6logger, 32(%esp)
+ 1453      00000000 
+ 1454 006a 83C410   		addl	$16, %esp
+ 1455              		.cfi_def_cfa_offset 16
+ 1456 006d 5B       		popl	%ebx
+ 1457              		.cfi_restore 3
+ 1458              		.cfi_def_cfa_offset 12
+ 1459 006e 5E       		popl	%esi
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 37
+
+
+ 1460              		.cfi_restore 6
+ 1461              		.cfi_def_cfa_offset 8
+ 1462 006f 5F       		popl	%edi
+ 1463              		.cfi_restore 7
+ 1464              		.cfi_def_cfa_offset 4
+ 1465 0070 E9000000 		jmp	_scheduleLogging
+ 1465      00
+ 1466              		.cfi_endproc
+ 1467              	LFE85:
+ 1468 0075 90909090 		.section .rdata,"dr"
+ 1468      90909090 
+ 1468      909090
+ 1469              	LC70:
+ 1470 04a3 73706920 		.ascii "spi 1=%s/2=%s/3=%s\0"
+ 1470      313D2573 
+ 1470      2F323D25 
+ 1470      732F333D 
+ 1470      257300
+ 1471              		.section	.text$_Z13printSpiStateP7LoggingP21board_configuration_s,"x"
+ 1472              		.p2align 4,,15
+ 1473              		.globl	__Z13printSpiStateP7LoggingP21board_configuration_s
+ 1474              		.def	__Z13printSpiStateP7LoggingP21board_configuration_s;	.scl	2;	.type	32;	.endef
+ 1475              	__Z13printSpiStateP7LoggingP21board_configuration_s:
+ 1476              	LFB86:
+ 1477              		.cfi_startproc
+ 1478 0000 83EC2C   		subl	$44, %esp
+ 1479              		.cfi_def_cfa_offset 48
+ 1480 0003 895C2420 		movl	%ebx, 32(%esp)
+ 1481              		.cfi_offset 3, -16
+ 1482 0007 8B5C2434 		movl	52(%esp), %ebx
+ 1483 000b 89742424 		movl	%esi, 36(%esp)
+ 1484 000f 897C2428 		movl	%edi, 40(%esp)
+ 1485              		.cfi_offset 6, -12
+ 1486              		.cfi_offset 7, -8
+ 1487 0013 0FB68380 		movzbl	384(%ebx), %eax
+ 1487      010000
+ 1488 001a C0E802   		shrb	$2, %al
+ 1489 001d 83E001   		andl	$1, %eax
+ 1490 0020 890424   		movl	%eax, (%esp)
+ 1491 0023 E8000000 		call	__Z12boolToStringb
+ 1491      00
+ 1492 0028 0FB69380 		movzbl	384(%ebx), %edx
+ 1492      010000
+ 1493 002f D0EA     		shrb	%dl
+ 1494 0031 83E201   		andl	$1, %edx
+ 1495 0034 891424   		movl	%edx, (%esp)
+ 1496 0037 89C7     		movl	%eax, %edi
+ 1497 0039 E8000000 		call	__Z12boolToStringb
+ 1497      00
+ 1498 003e 89C6     		movl	%eax, %esi
+ 1499 0040 0FB68380 		movzbl	384(%ebx), %eax
+ 1499      010000
+ 1500 0047 83E001   		andl	$1, %eax
+ 1501 004a 890424   		movl	%eax, (%esp)
+ 1502 004d E8000000 		call	__Z12boolToStringb
+ 1502      00
+ 1503 0052 897C2410 		movl	%edi, 16(%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 38
+
+
+ 1504 0056 8974240C 		movl	%esi, 12(%esp)
+ 1505 005a C7442404 		movl	$LC70, 4(%esp)
+ 1505      A3040000 
+ 1506 0062 89442408 		movl	%eax, 8(%esp)
+ 1507 0066 8B442430 		movl	48(%esp), %eax
+ 1508 006a 890424   		movl	%eax, (%esp)
+ 1509 006d E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1509      00
+ 1510 0072 8B5C2420 		movl	32(%esp), %ebx
+ 1511 0076 8B742424 		movl	36(%esp), %esi
+ 1512 007a 8B7C2428 		movl	40(%esp), %edi
+ 1513 007e 83C42C   		addl	$44, %esp
+ 1514              		.cfi_restore 7
+ 1515              		.cfi_restore 6
+ 1516              		.cfi_restore 3
+ 1517              		.cfi_def_cfa_offset 4
+ 1518 0081 C3       		ret
+ 1519              		.cfi_endproc
+ 1520              	LFE86:
+ 1521 0082 90909090 		.section .rdata,"dr"
+ 1521      90909090 
+ 1521      90909090 
+ 1521      9090
+ 1522              	LC71:
+ 1523 04b6 696E7661 		.ascii "invalid spi index %d\0"
+ 1523      6C696420 
+ 1523      73706920 
+ 1523      696E6465 
+ 1523      78202564 
+ 1524              		.section	.text$_ZL10setSpiModeib,"x"
+ 1525              		.p2align 4,,15
+ 1526              		.def	__ZL10setSpiModeib;	.scl	3;	.type	32;	.endef
+ 1527              	__ZL10setSpiModeib:
+ 1528              	LFB132:
+ 1529              		.cfi_startproc
+ 1530 0000 83EC1C   		subl	$28, %esp
+ 1531              		.cfi_def_cfa_offset 32
+ 1532 0003 83F802   		cmpl	$2, %eax
+ 1533 0006 747C     		je	L113
+ 1534 0008 83F803   		cmpl	$3, %eax
+ 1535 000b 7457     		je	L114
+ 1536 000d 83F801   		cmpl	$1, %eax
+ 1537 0010 741E     		je	L119
+ 1538 0012 89442408 		movl	%eax, 8(%esp)
+ 1539 0016 C7442404 		movl	$LC71, 4(%esp)
+ 1539      B6040000 
+ 1540 001e C7042400 		movl	$__ZL6logger, (%esp)
+ 1540      000000
+ 1541 0025 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1541      00
+ 1542 002a 83C41C   		addl	$28, %esp
+ 1543              		.cfi_remember_state
+ 1544              		.cfi_def_cfa_offset 4
+ 1545 002d C3       		ret
+ 1546 002e 6690     		.p2align 4,,7
+ 1547              	L119:
+ 1548              		.cfi_restore_state
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 39
+
+
+ 1549 0030 8B0D0000 		movl	_boardConfiguration, %ecx
+ 1549      0000
+ 1550 0036 83E201   		andl	$1, %edx
+ 1551 0039 0FB68180 		movzbl	384(%ecx), %eax
+ 1551      010000
+ 1552 0040 83E0FE   		andl	$-2, %eax
+ 1553 0043 09D0     		orl	%edx, %eax
+ 1554 0045 88818001 		movb	%al, 384(%ecx)
+ 1554      0000
+ 1555              	L115:
+ 1556 004b A1000000 		movl	_boardConfiguration, %eax
+ 1556      00
+ 1557 0050 C7042400 		movl	$__ZL6logger, (%esp)
+ 1557      000000
+ 1558 0057 89442404 		movl	%eax, 4(%esp)
+ 1559 005b E8000000 		call	__Z13printSpiStateP7LoggingP21board_configuration_s
+ 1559      00
+ 1560 0060 83C41C   		addl	$28, %esp
+ 1561              		.cfi_remember_state
+ 1562              		.cfi_def_cfa_offset 4
+ 1563 0063 C3       		ret
+ 1564              		.p2align 4,,7
+ 1565              	L114:
+ 1566              		.cfi_restore_state
+ 1567 0064 8B0D0000 		movl	_boardConfiguration, %ecx
+ 1567      0000
+ 1568 006a 83E201   		andl	$1, %edx
+ 1569 006d C1E202   		sall	$2, %edx
+ 1570 0070 0FB68180 		movzbl	384(%ecx), %eax
+ 1570      010000
+ 1571 0077 83E0FB   		andl	$-5, %eax
+ 1572 007a 09D0     		orl	%edx, %eax
+ 1573 007c 88818001 		movb	%al, 384(%ecx)
+ 1573      0000
+ 1574 0082 EBC7     		jmp	L115
+ 1575              		.p2align 4,,7
+ 1576              	L113:
+ 1577 0084 8B0D0000 		movl	_boardConfiguration, %ecx
+ 1577      0000
+ 1578 008a 83E201   		andl	$1, %edx
+ 1579 008d 01D2     		addl	%edx, %edx
+ 1580 008f 0FB68180 		movzbl	384(%ecx), %eax
+ 1580      010000
+ 1581 0096 83E0FD   		andl	$-3, %eax
+ 1582 0099 09D0     		orl	%edx, %eax
+ 1583 009b 88818001 		movb	%al, 384(%ecx)
+ 1583      0000
+ 1584 00a1 EBA8     		jmp	L115
+ 1585              		.cfi_endproc
+ 1586              	LFE132:
+ 1587 00a3 90909090 		.section	.text$_ZL10disableSpii,"x"
+ 1587      90909090 
+ 1587      90909090 
+ 1587      90
+ 1588              		.p2align 4,,15
+ 1589              		.def	__ZL10disableSpii;	.scl	3;	.type	32;	.endef
+ 1590              	__ZL10disableSpii:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 40
+
+
+ 1591              	LFB137:
+ 1592              		.cfi_startproc
+ 1593 0000 8B442404 		movl	4(%esp), %eax
+ 1594 0004 31D2     		xorl	%edx, %edx
+ 1595 0006 E9000000 		jmp	__ZL10setSpiModeib
+ 1595      00
+ 1596              		.cfi_endproc
+ 1597              	LFE137:
+ 1598 000b 90909090 		.section	.text$_ZL9enableSpii,"x"
+ 1598      90
+ 1599              		.p2align 4,,15
+ 1600              		.def	__ZL9enableSpii;	.scl	3;	.type	32;	.endef
+ 1601              	__ZL9enableSpii:
+ 1602              	LFB136:
+ 1603              		.cfi_startproc
+ 1604 0000 8B442404 		movl	4(%esp), %eax
+ 1605 0004 BA010000 		movl	$1, %edx
+ 1605      00
+ 1606 0009 E9000000 		jmp	__ZL10setSpiModeib
+ 1606      00
+ 1607              		.cfi_endproc
+ 1608              	LFE136:
+ 1609 000e 9090     		.section .rdata,"dr"
+ 1610              	LC72:
+ 1611 04cb 556E6B6E 		.ascii "UnknownType\0"
+ 1611      6F776E54 
+ 1611      79706500 
+ 1612              		.section	.text$_Z20getConfigurationName13engine_type_e,"x"
+ 1613              		.p2align 4,,15
+ 1614              		.globl	__Z20getConfigurationName13engine_type_e
+ 1615              		.def	__Z20getConfigurationName13engine_type_e;	.scl	2;	.type	32;	.endef
+ 1616              	__Z20getConfigurationName13engine_type_e:
+ 1617              	LFB88:
+ 1618              		.cfi_startproc
+ 1619 0000 8B542404 		movl	4(%esp), %edx
+ 1620 0004 B8CB0400 		movl	$LC72, %eax
+ 1620      00
+ 1621 0009 83FA20   		cmpl	$32, %edx
+ 1622 000c 7707     		ja	L123
+ 1623 000e 8B049500 		movl	_CSWTCH.168(,%edx,4), %eax
+ 1623      000000
+ 1624              	L123:
+ 1625 0015 F3       		rep
+ 1626 0016 C3       		ret
+ 1627              		.cfi_endproc
+ 1628              	LFE88:
+ 1629 0017 90909090 		.section .rdata,"dr"
+ 1629      90909090 
+ 1629      90
+ 1630 04d7 00       		.align 4
+ 1631              	LC73:
+ 1632 04d8 54656D70 		.ascii "Template %s/%d trigger %s/%s/%d\0"
+ 1632      6C617465 
+ 1632      2025732F 
+ 1632      25642074 
+ 1632      72696767 
+ 1633              	LC74:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 41
+
+
+ 1634 04f8 636F6E66 		.ascii "configurationVersion=%d\0"
+ 1634      69677572 
+ 1634      6174696F 
+ 1634      6E566572 
+ 1634      73696F6E 
+ 1635              		.align 4
+ 1636              	LC75:
+ 1637 0510 72706D48 		.ascii "rpmHardLimit: %d/operationMode=%d\0"
+ 1637      6172644C 
+ 1637      696D6974 
+ 1637      3A202564 
+ 1637      2F6F7065 
+ 1638              	LC76:
+ 1639 0532 676C6F62 		.ascii "globalTriggerAngleOffset=%f\0"
+ 1639      616C5472 
+ 1639      69676765 
+ 1639      72416E67 
+ 1639      6C654F66 
+ 1640              	LC77:
+ 1641 054e 3D3D3D20 		.ascii "=== cranking ===\0"
+ 1641      6372616E 
+ 1641      6B696E67 
+ 1641      203D3D3D 
+ 1641      00
+ 1642              	LC78:
+ 1643 055f 6372616E 		.ascii "crankingRpm: %d\0"
+ 1643      6B696E67 
+ 1643      52706D3A 
+ 1643      20256400 
+ 1644              	LC79:
+ 1645 056f 6372616E 		.ascii "cranking injection %s\0"
+ 1645      6B696E67 
+ 1645      20696E6A 
+ 1645      65637469 
+ 1645      6F6E2025 
+ 1646              	LC80:
+ 1647 0585 69676E69 		.ascii "ignitionDwellForCrankingMs=%f\0"
+ 1647      74696F6E 
+ 1647      4477656C 
+ 1647      6C466F72 
+ 1647      4372616E 
+ 1648 05a3 00       		.align 4
+ 1649              	LC81:
+ 1650 05a4 6372616E 		.ascii "cranking charge charge angle=%f fire at %f\0"
+ 1650      6B696E67 
+ 1650      20636861 
+ 1650      72676520 
+ 1650      63686172 
+ 1651              	LC82:
+ 1652 05cf 3D3D3D20 		.ascii "=== ignition ===\0"
+ 1652      69676E69 
+ 1652      74696F6E 
+ 1652      203D3D3D 
+ 1652      00
+ 1653              	LC83:
+ 1654 05e0 69676E69 		.ascii "ignitionMode: %s/enabled=%s\0"
+ 1654      74696F6E 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 42
+
+
+ 1654      4D6F6465 
+ 1654      3A202573 
+ 1654      2F656E61 
+ 1655              	LC84:
+ 1656 05fc 74696D69 		.ascii "timingMode: %s\0"
+ 1656      6E674D6F 
+ 1656      64653A20 
+ 1656      257300
+ 1657              	LC85:
+ 1658 060b 66697865 		.ascii "fixedModeTiming: %d\0"
+ 1658      644D6F64 
+ 1658      6554696D 
+ 1658      696E673A 
+ 1658      20256400 
+ 1659              	LC86:
+ 1660 061f 69676E69 		.ascii "ignitionOffset=%f\0"
+ 1660      74696F6E 
+ 1660      4F666673 
+ 1660      65743D25 
+ 1660      6600
+ 1661              	LC87:
+ 1662 0631 3D3D3D20 		.ascii "=== injection ===\0"
+ 1662      696E6A65 
+ 1662      6374696F 
+ 1662      6E203D3D 
+ 1662      3D00
+ 1663 0643 00       		.align 4
+ 1664              	LC88:
+ 1665 0644 696E6A65 		.ascii "injection %s offset=%f/enabled=%s\0"
+ 1665      6374696F 
+ 1665      6E202573 
+ 1665      206F6666 
+ 1665      7365743D 
+ 1666              	LC89:
+ 1667 0666 696E6A65 		.ascii "injectionPins: mode %s\0"
+ 1667      6374696F 
+ 1667      6E50696E 
+ 1667      733A206D 
+ 1667      6F646520 
+ 1668              	LC90:
+ 1669 067d 69676E69 		.ascii "ignitionPins: mode %s\0"
+ 1669      74696F6E 
+ 1669      50696E73 
+ 1669      3A206D6F 
+ 1669      64652025 
+ 1670              	LC91:
+ 1671 0693 696E6A65 		.ascii "injection #%d @ %s\0"
+ 1671      6374696F 
+ 1671      6E202325 
+ 1671      64204020 
+ 1671      257300
+ 1672              	LC92:
+ 1673 06a6 69646C65 		.ascii "idlePin: mode %s @ %s freq=%d\0"
+ 1673      50696E3A 
+ 1673      206D6F64 
+ 1673      65202573 
+ 1673      20402025 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 43
+
+
+ 1674              		.align 4
+ 1675              	LC93:
+ 1676 06c4 6D616C66 		.ascii "malfunctionIndicatorn: %s mode=%s\0"
+ 1676      756E6374 
+ 1676      696F6E49 
+ 1676      6E646963 
+ 1676      61746F72 
+ 1677              	LC94:
+ 1678 06e6 6675656C 		.ascii "fuelPumpPin: mode %s @ %s\0"
+ 1678      50756D70 
+ 1678      50696E3A 
+ 1678      206D6F64 
+ 1678      65202573 
+ 1679              	LC95:
+ 1680 0700 66616E50 		.ascii "fanPin: mode %s @ %s\0"
+ 1680      696E3A20 
+ 1680      6D6F6465 
+ 1680      20257320 
+ 1680      40202573 
+ 1681              	LC96:
+ 1682 0715 6D61696E 		.ascii "mainRelay: mode %s @ %s\0"
+ 1682      52656C61 
+ 1682      793A206D 
+ 1682      6F646520 
+ 1682      25732040 
+ 1683 072d 000000   		.align 4
+ 1684              	LC97:
+ 1685 0730 616C7465 		.ascii "alternator field: mode %s @ %s\0"
+ 1685      726E6174 
+ 1685      6F722066 
+ 1685      69656C64 
+ 1685      3A206D6F 
+ 1686 074f 00       		.align 4
+ 1687              	LC98:
+ 1688 0750 6D61705F 		.ascii "map_avg=%s/mil=%s/fp=%s/ts=%s/wa=%s/it=%s/fastAdc=%s\0"
+ 1688      6176673D 
+ 1688      25732F6D 
+ 1688      696C3D25 
+ 1688      732F6670 
+ 1689 0785 000000   		.align 4
+ 1690              	LC99:
+ 1691 0788 69734D61 		.ascii "isManualSpinningMode=%s/isCylinderCleanupEnabled=%s\0"
+ 1691      6E75616C 
+ 1691      5370696E 
+ 1691      6E696E67 
+ 1691      4D6F6465 
+ 1692              	LC100:
+ 1693 07bc 636C7574 		.ascii "clutchUp@%s: %s\0"
+ 1693      63685570 
+ 1693      4025733A 
+ 1693      20257300 
+ 1694              	LC101:
+ 1695 07cc 636C7574 		.ascii "clutchDown@%s: %s\0"
+ 1695      6368446F 
+ 1695      776E4025 
+ 1695      733A2025 
+ 1695      7300
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 44
+
+
+ 1696 07de 0000     		.align 4
+ 1697              	LC102:
+ 1698 07e0 626F6172 		.ascii "boardTestModeJumperPin: %s/nesting=%d\0"
+ 1698      64546573 
+ 1698      744D6F64 
+ 1698      654A756D 
+ 1698      70657250 
+ 1699 0806 0000     		.align 4
+ 1700              	LC103:
+ 1701 0808 64696769 		.ascii "digitalPotentiometerSpiDevice %d\0"
+ 1701      74616C50 
+ 1701      6F74656E 
+ 1701      74696F6D 
+ 1701      65746572 
+ 1702              	LC104:
+ 1703 0829 69676E69 		.ascii "ignition #%d @ %s\0"
+ 1703      74696F6E 
+ 1703      20232564 
+ 1703      20402025 
+ 1703      7300
+ 1704              	LC105:
+ 1705 083b 64696769 		.ascii "digitalPotentiometer CS%d %s\0"
+ 1705      74616C50 
+ 1705      6F74656E 
+ 1705      74696F6D 
+ 1705      65746572 
+ 1706              		.section	.text$_Z18printConfigurationP22engine_configuration_s,"x"
+ 1707              		.p2align 4,,15
+ 1708              		.globl	__Z18printConfigurationP22engine_configuration_s
+ 1709              		.def	__Z18printConfigurationP22engine_configuration_s;	.scl	2;	.type	32;	.endef
+ 1710              	__Z18printConfigurationP22engine_configuration_s:
+ 1711              	LFB89:
+ 1712              		.cfi_startproc
+ 1713 0000 55       		pushl	%ebp
+ 1714              		.cfi_def_cfa_offset 8
+ 1715              		.cfi_offset 5, -8
+ 1716 0001 57       		pushl	%edi
+ 1717              		.cfi_def_cfa_offset 12
+ 1718              		.cfi_offset 7, -12
+ 1719 0002 56       		pushl	%esi
+ 1720              		.cfi_def_cfa_offset 16
+ 1721              		.cfi_offset 6, -16
+ 1722 0003 53       		pushl	%ebx
+ 1723              		.cfi_def_cfa_offset 20
+ 1724              		.cfi_offset 3, -20
+ 1725 0004 83EC6C   		subl	$108, %esp
+ 1726              		.cfi_def_cfa_offset 128
+ 1727 0007 8B9C2480 		movl	128(%esp), %ebx
+ 1727      000000
+ 1728 000e 8BB3A801 		movl	424(%ebx), %esi
+ 1728      0000
+ 1729 0014 893424   		movl	%esi, (%esp)
+ 1730 0017 E8000000 		call	__Z21getEngine_load_mode_e18engine_load_mode_e
+ 1730      00
+ 1731 001c 89C7     		movl	%eax, %edi
+ 1732 001e 8B831802 		movl	536(%ebx), %eax
+ 1732      0000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 45
+
+
+ 1733 0024 890424   		movl	%eax, (%esp)
+ 1734 0027 E8000000 		call	__Z17getTrigger_type_e14trigger_type_e
+ 1734      00
+ 1735 002c 8B13     		movl	(%ebx), %edx
+ 1736 002e B9CB0400 		movl	$LC72, %ecx
+ 1736      00
+ 1737 0033 83FA20   		cmpl	$32, %edx
+ 1738 0036 7707     		ja	L126
+ 1739 0038 8B0C9500 		movl	_CSWTCH.168(,%edx,4), %ecx
+ 1739      000000
+ 1740              	L126:
+ 1741 003f 8954240C 		movl	%edx, 12(%esp)
+ 1742 0043 894C2408 		movl	%ecx, 8(%esp)
+ 1743 0047 89442410 		movl	%eax, 16(%esp)
+ 1744 004b 89742418 		movl	%esi, 24(%esp)
+ 1745 004f 897C2414 		movl	%edi, 20(%esp)
+ 1746 0053 C7442404 		movl	$LC73, 4(%esp)
+ 1746      D8040000 
+ 1747 005b C7042400 		movl	$__ZL6logger, (%esp)
+ 1747      000000
+ 1748 0062 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1748      00
+ 1749 0067 E8000000 		call	__Z29getGlobalConfigurationVersionv
+ 1749      00
+ 1750 006c C7442404 		movl	$LC74, 4(%esp)
+ 1750      F8040000 
+ 1751 0074 C7042400 		movl	$__ZL6logger, (%esp)
+ 1751      000000
+ 1752 007b 89442408 		movl	%eax, 8(%esp)
+ 1753 007f E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1753      00
+ 1754 0084 8B83F401 		movl	500(%ebx), %eax
+ 1754      0000
+ 1755 008a 8944240C 		movl	%eax, 12(%esp)
+ 1756 008e 8B83A401 		movl	420(%ebx), %eax
+ 1756      0000
+ 1757 0094 C7442404 		movl	$LC75, 4(%esp)
+ 1757      10050000 
+ 1758 009c C7042400 		movl	$__ZL6logger, (%esp)
+ 1758      000000
+ 1759 00a3 89442408 		movl	%eax, 8(%esp)
+ 1760 00a7 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1760      00
+ 1761 00ac D983CC01 		flds	460(%ebx)
+ 1761      0000
+ 1762 00b2 DD5C2408 		fstpl	8(%esp)
+ 1763 00b6 C7442404 		movl	$LC76, 4(%esp)
+ 1763      32050000 
+ 1764 00be C7042400 		movl	$__ZL6logger, (%esp)
+ 1764      000000
+ 1765 00c5 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1765      00
+ 1766 00ca C7442404 		movl	$LC77, 4(%esp)
+ 1766      4E050000 
+ 1767 00d2 C7042400 		movl	$__ZL6logger, (%esp)
+ 1767      000000
+ 1768 00d9 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 46
+
+
+ 1768      00
+ 1769 00de 0FBF4360 		movswl	96(%ebx), %eax
+ 1770 00e2 C7442404 		movl	$LC78, 4(%esp)
+ 1770      5F050000 
+ 1771 00ea C7042400 		movl	$__ZL6logger, (%esp)
+ 1771      000000
+ 1772 00f1 89442408 		movl	%eax, 8(%esp)
+ 1773 00f5 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1773      00
+ 1774 00fa 8B83AC01 		movl	428(%ebx), %eax
+ 1774      0000
+ 1775 0100 890424   		movl	%eax, (%esp)
+ 1776 0103 E8000000 		call	__Z19getInjection_mode_e16injection_mode_e
+ 1776      00
+ 1777 0108 C7442404 		movl	$LC79, 4(%esp)
+ 1777      6F050000 
+ 1778 0110 C7042400 		movl	$__ZL6logger, (%esp)
+ 1778      000000
+ 1779 0117 89442408 		movl	%eax, 8(%esp)
+ 1780 011b E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1780      00
+ 1781 0120 F683D805 		testb	$16, 1496(%ebx)
+ 1781      000010
+ 1782 0127 0F843305 		je	L127
+ 1782      0000
+ 1783 012d D94368   		flds	104(%ebx)
+ 1784 0130 DD5C2408 		fstpl	8(%esp)
+ 1785 0134 C7442404 		movl	$LC80, 4(%esp)
+ 1785      85050000 
+ 1786 013c C7042400 		movl	$__ZL6logger, (%esp)
+ 1786      000000
+ 1787 0143 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1787      00
+ 1788              	L128:
+ 1789 0148 C7442404 		movl	$LC82, 4(%esp)
+ 1789      CF050000 
+ 1790 0150 C7042400 		movl	$__ZL6logger, (%esp)
+ 1790      000000
+ 1791 0157 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1791      00
+ 1792 015c 0FB683E4 		movzbl	1508(%ebx), %eax
+ 1792      050000
+ 1793 0163 D0E8     		shrb	%al
+ 1794 0165 83E001   		andl	$1, %eax
+ 1795 0168 890424   		movl	%eax, (%esp)
+ 1796 016b E8000000 		call	__Z12boolToStringb
+ 1796      00
+ 1797 0170 89C6     		movl	%eax, %esi
+ 1798 0172 8B83BC01 		movl	444(%ebx), %eax
+ 1798      0000
+ 1799 0178 890424   		movl	%eax, (%esp)
+ 1800 017b E8000000 		call	__Z18getIgnition_mode_e15ignition_mode_e
+ 1800      00
+ 1801 0180 8974240C 		movl	%esi, 12(%esp)
+ 1802 0184 C7442404 		movl	$LC83, 4(%esp)
+ 1802      E0050000 
+ 1803 018c C7042400 		movl	$__ZL6logger, (%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 47
+
+
+ 1803      000000
+ 1804 0193 89442408 		movl	%eax, 8(%esp)
+ 1805 0197 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1805      00
+ 1806 019c 8B83C401 		movl	452(%ebx), %eax
+ 1806      0000
+ 1807 01a2 890424   		movl	%eax, (%esp)
+ 1808 01a5 E8000000 		call	__Z16getTiming_mode_e13timing_mode_e
+ 1808      00
+ 1809 01aa C7442404 		movl	$LC84, 4(%esp)
+ 1809      FC050000 
+ 1810 01b2 C7042400 		movl	$__ZL6logger, (%esp)
+ 1810      000000
+ 1811 01b9 89442408 		movl	%eax, 8(%esp)
+ 1812 01bd E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1812      00
+ 1813 01c2 83BBC401 		cmpl	$1, 452(%ebx)
+ 1813      000001
+ 1814 01c9 0F84C104 		je	L146
+ 1814      0000
+ 1815              	L129:
+ 1816 01cf D983C001 		flds	448(%ebx)
+ 1816      0000
+ 1817 01d5 8DBB9401 		leal	404(%ebx), %edi
+ 1817      0000
+ 1818 01db DD5C2408 		fstpl	8(%esp)
+ 1819 01df C7442404 		movl	$LC86, 4(%esp)
+ 1819      1F060000 
+ 1820 01e7 C7042400 		movl	$__ZL6logger, (%esp)
+ 1820      000000
+ 1821 01ee E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1821      00
+ 1822 01f3 C7442404 		movl	$LC87, 4(%esp)
+ 1822      31060000 
+ 1823 01fb C7042400 		movl	$__ZL6logger, (%esp)
+ 1823      000000
+ 1824 0202 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1824      00
+ 1825 0207 0FB683E4 		movzbl	1508(%ebx), %eax
+ 1825      050000
+ 1826 020e 83E001   		andl	$1, %eax
+ 1827 0211 890424   		movl	%eax, (%esp)
+ 1828 0214 E8000000 		call	__Z12boolToStringb
+ 1828      00
+ 1829 0219 89C6     		movl	%eax, %esi
+ 1830 021b 8B83B001 		movl	432(%ebx), %eax
+ 1830      0000
+ 1831 0221 D983B401 		flds	436(%ebx)
+ 1831      0000
+ 1832 0227 DD5C2440 		fstpl	64(%esp)
+ 1833 022b 890424   		movl	%eax, (%esp)
+ 1834 022e E8000000 		call	__Z19getInjection_mode_e16injection_mode_e
+ 1834      00
+ 1835 0233 89742414 		movl	%esi, 20(%esp)
+ 1836 0237 31F6     		xorl	%esi, %esi
+ 1837 0239 C7442404 		movl	$LC88, 4(%esp)
+ 1837      44060000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 48
+
+
+ 1838 0241 C7042400 		movl	$__ZL6logger, (%esp)
+ 1838      000000
+ 1839 0248 DD442440 		fldl	64(%esp)
+ 1840 024c DD5C240C 		fstpl	12(%esp)
+ 1841 0250 89442408 		movl	%eax, 8(%esp)
+ 1842 0254 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1842      00
+ 1843 0259 A1000000 		movl	_boardConfiguration, %eax
+ 1843      00
+ 1844 025e 8B4050   		movl	80(%eax), %eax
+ 1845 0261 890424   		movl	%eax, (%esp)
+ 1846 0264 E8000000 		call	__Z20getPin_output_mode_e17pin_output_mode_e
+ 1846      00
+ 1847 0269 C7442404 		movl	$LC89, 4(%esp)
+ 1847      66060000 
+ 1848 0271 C7042400 		movl	$__ZL6logger, (%esp)
+ 1848      000000
+ 1849 0278 89442408 		movl	%eax, 8(%esp)
+ 1850 027c E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1850      00
+ 1851 0281 8B939401 		movl	404(%ebx), %edx
+ 1851      0000
+ 1852 0287 85D2     		testl	%edx, %edx
+ 1853 0289 7E2C     		jle	L133
+ 1854 028b 908D7426 		.p2align 4,,7
+ 1854      00
+ 1855              	L139:
+ 1856 0290 83C601   		addl	$1, %esi
+ 1857 0293 C744240C 		movl	$LC64, 12(%esp)
+ 1857      3B040000 
+ 1858 029b 89742408 		movl	%esi, 8(%esp)
+ 1859 029f C7442404 		movl	$LC91, 4(%esp)
+ 1859      93060000 
+ 1860 02a7 C7042400 		movl	$__ZL6logger, (%esp)
+ 1860      000000
+ 1861 02ae E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1861      00
+ 1862 02b3 3B37     		cmpl	(%edi), %esi
+ 1863 02b5 7CD9     		jl	L139
+ 1864              	L133:
+ 1865 02b7 A1000000 		movl	_boardConfiguration, %eax
+ 1865      00
+ 1866 02bc 31F6     		xorl	%esi, %esi
+ 1867 02be 8B808400 		movl	132(%eax), %eax
+ 1867      0000
+ 1868 02c4 890424   		movl	%eax, (%esp)
+ 1869 02c7 E8000000 		call	__Z20getPin_output_mode_e17pin_output_mode_e
+ 1869      00
+ 1870 02cc C7442404 		movl	$LC90, 4(%esp)
+ 1870      7D060000 
+ 1871 02d4 C7042400 		movl	$__ZL6logger, (%esp)
+ 1871      000000
+ 1872 02db 89442408 		movl	%eax, 8(%esp)
+ 1873 02df E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1873      00
+ 1874 02e4 8B839401 		movl	404(%ebx), %eax
+ 1874      0000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 49
+
+
+ 1875 02ea 85C0     		testl	%eax, %eax
+ 1876 02ec 7E29     		jle	L132
+ 1877 02ee 6690     		.p2align 4,,7
+ 1878              	L138:
+ 1879 02f0 83C601   		addl	$1, %esi
+ 1880 02f3 C744240C 		movl	$LC64, 12(%esp)
+ 1880      3B040000 
+ 1881 02fb 89742408 		movl	%esi, 8(%esp)
+ 1882 02ff C7442404 		movl	$LC104, 4(%esp)
+ 1882      29080000 
+ 1883 0307 C7042400 		movl	$__ZL6logger, (%esp)
+ 1883      000000
+ 1884 030e E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1884      00
+ 1885 0313 3B37     		cmpl	(%edi), %esi
+ 1886 0315 7CD9     		jl	L138
+ 1887              	L132:
+ 1888 0317 A1000000 		movl	_boardConfiguration, %eax
+ 1888      00
+ 1889 031c 8B7008   		movl	8(%eax), %esi
+ 1890 031f 8B4004   		movl	4(%eax), %eax
+ 1891 0322 890424   		movl	%eax, (%esp)
+ 1892 0325 E8000000 		call	__Z20getPin_output_mode_e17pin_output_mode_e
+ 1892      00
+ 1893 032a 89742410 		movl	%esi, 16(%esp)
+ 1894 032e C744240C 		movl	$LC64, 12(%esp)
+ 1894      3B040000 
+ 1895 0336 C7442404 		movl	$LC92, 4(%esp)
+ 1895      A6060000 
+ 1896 033e C7042400 		movl	$__ZL6logger, (%esp)
+ 1896      000000
+ 1897 0345 89442408 		movl	%eax, 8(%esp)
+ 1898 0349 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1898      00
+ 1899 034e A1000000 		movl	_boardConfiguration, %eax
+ 1899      00
+ 1900 0353 8B808C00 		movl	140(%eax), %eax
+ 1900      0000
+ 1901 0359 890424   		movl	%eax, (%esp)
+ 1902 035c E8000000 		call	__Z20getPin_output_mode_e17pin_output_mode_e
+ 1902      00
+ 1903 0361 C7442408 		movl	$LC64, 8(%esp)
+ 1903      3B040000 
+ 1904 0369 C7442404 		movl	$LC93, 4(%esp)
+ 1904      C4060000 
+ 1905 0371 C7042400 		movl	$__ZL6logger, (%esp)
+ 1905      000000
+ 1906 0378 8944240C 		movl	%eax, 12(%esp)
+ 1907 037c E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1907      00
+ 1908 0381 A1000000 		movl	_boardConfiguration, %eax
+ 1908      00
+ 1909 0386 8B401C   		movl	28(%eax), %eax
+ 1910 0389 890424   		movl	%eax, (%esp)
+ 1911 038c E8000000 		call	__Z20getPin_output_mode_e17pin_output_mode_e
+ 1911      00
+ 1912 0391 C744240C 		movl	$LC64, 12(%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 50
+
+
+ 1912      3B040000 
+ 1913 0399 C7442404 		movl	$LC94, 4(%esp)
+ 1913      E6060000 
+ 1914 03a1 C7042400 		movl	$__ZL6logger, (%esp)
+ 1914      000000
+ 1915 03a8 89442408 		movl	%eax, 8(%esp)
+ 1916 03ac E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1916      00
+ 1917 03b1 A1000000 		movl	_boardConfiguration, %eax
+ 1917      00
+ 1918 03b6 8B809400 		movl	148(%eax), %eax
+ 1918      0000
+ 1919 03bc 890424   		movl	%eax, (%esp)
+ 1920 03bf E8000000 		call	__Z20getPin_output_mode_e17pin_output_mode_e
+ 1920      00
+ 1921 03c4 C744240C 		movl	$LC64, 12(%esp)
+ 1921      3B040000 
+ 1922 03cc C7442404 		movl	$LC95, 4(%esp)
+ 1922      00070000 
+ 1923 03d4 C7042400 		movl	$__ZL6logger, (%esp)
+ 1923      000000
+ 1924 03db 89442408 		movl	%eax, 8(%esp)
+ 1925 03df E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1925      00
+ 1926 03e4 A1000000 		movl	_boardConfiguration, %eax
+ 1926      00
+ 1927 03e9 8B809C01 		movl	412(%eax), %eax
+ 1927      0000
+ 1928 03ef 890424   		movl	%eax, (%esp)
+ 1929 03f2 E8000000 		call	__Z20getPin_output_mode_e17pin_output_mode_e
+ 1929      00
+ 1930 03f7 C744240C 		movl	$LC64, 12(%esp)
+ 1930      3B040000 
+ 1931 03ff C7442404 		movl	$LC96, 4(%esp)
+ 1931      15070000 
+ 1932 0407 C7042400 		movl	$__ZL6logger, (%esp)
+ 1932      000000
+ 1933 040e 89442408 		movl	%eax, 8(%esp)
+ 1934 0412 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1934      00
+ 1935 0417 A1000000 		movl	_boardConfiguration, %eax
+ 1935      00
+ 1936 041c 8B80AC00 		movl	172(%eax), %eax
+ 1936      0000
+ 1937 0422 890424   		movl	%eax, (%esp)
+ 1938 0425 E8000000 		call	__Z20getPin_output_mode_e17pin_output_mode_e
+ 1938      00
+ 1939 042a C744240C 		movl	$LC64, 12(%esp)
+ 1939      3B040000 
+ 1940 0432 C7442404 		movl	$LC97, 4(%esp)
+ 1940      30070000 
+ 1941 043a C7042400 		movl	$__ZL6logger, (%esp)
+ 1941      000000
+ 1942 0441 89442408 		movl	%eax, 8(%esp)
+ 1943 0445 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1943      00
+ 1944 044a A1000000 		movl	_boardConfiguration, %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 51
+
+
+ 1944      00
+ 1945 044f 0FB68080 		movzbl	384(%eax), %eax
+ 1945      010000
+ 1946 0456 C0E804   		shrb	$4, %al
+ 1947 0459 83E001   		andl	$1, %eax
+ 1948 045c 890424   		movl	%eax, (%esp)
+ 1949 045f E8000000 		call	__Z12boolToStringb
+ 1949      00
+ 1950 0464 89C1     		movl	%eax, %ecx
+ 1951 0466 0FB683E5 		movzbl	1509(%ebx), %eax
+ 1951      050000
+ 1952 046d 894C243C 		movl	%ecx, 60(%esp)
+ 1953 0471 C0E802   		shrb	$2, %al
+ 1954 0474 83E001   		andl	$1, %eax
+ 1955 0477 890424   		movl	%eax, (%esp)
+ 1956 047a E8000000 		call	__Z12boolToStringb
+ 1956      00
+ 1957 047f 89C2     		movl	%eax, %edx
+ 1958 0481 0FB683E5 		movzbl	1509(%ebx), %eax
+ 1958      050000
+ 1959 0488 89542440 		movl	%edx, 64(%esp)
+ 1960 048c D0E8     		shrb	%al
+ 1961 048e 83E001   		andl	$1, %eax
+ 1962 0491 890424   		movl	%eax, (%esp)
+ 1963 0494 E8000000 		call	__Z12boolToStringb
+ 1963      00
+ 1964 0499 89C5     		movl	%eax, %ebp
+ 1965 049b 0FB683E5 		movzbl	1509(%ebx), %eax
+ 1965      050000
+ 1966 04a2 83E001   		andl	$1, %eax
+ 1967 04a5 890424   		movl	%eax, (%esp)
+ 1968 04a8 E8000000 		call	__Z12boolToStringb
+ 1968      00
+ 1969 04ad 89C7     		movl	%eax, %edi
+ 1970 04af 0FB683E4 		movzbl	1508(%ebx), %eax
+ 1970      050000
+ 1971 04b6 C0E807   		shrb	$7, %al
+ 1972 04b9 0FB6C0   		movzbl	%al, %eax
+ 1973 04bc 890424   		movl	%eax, (%esp)
+ 1974 04bf E8000000 		call	__Z12boolToStringb
+ 1974      00
+ 1975 04c4 89C6     		movl	%eax, %esi
+ 1976 04c6 0FB683E4 		movzbl	1508(%ebx), %eax
+ 1976      050000
+ 1977 04cd C0E806   		shrb	$6, %al
+ 1978 04d0 83E001   		andl	$1, %eax
+ 1979 04d3 890424   		movl	%eax, (%esp)
+ 1980 04d6 E8000000 		call	__Z12boolToStringb
+ 1980      00
+ 1981 04db 89442458 		movl	%eax, 88(%esp)
+ 1982 04df 0FB683E4 		movzbl	1508(%ebx), %eax
+ 1982      050000
+ 1983 04e6 C0E805   		shrb	$5, %al
+ 1984 04e9 83E001   		andl	$1, %eax
+ 1985 04ec 890424   		movl	%eax, (%esp)
+ 1986 04ef E8000000 		call	__Z12boolToStringb
+ 1986      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 52
+
+
+ 1987 04f4 8B542440 		movl	64(%esp), %edx
+ 1988 04f8 8B4C243C 		movl	60(%esp), %ecx
+ 1989 04fc 89742410 		movl	%esi, 16(%esp)
+ 1990 0500 896C2418 		movl	%ebp, 24(%esp)
+ 1991 0504 8954241C 		movl	%edx, 28(%esp)
+ 1992 0508 8B542458 		movl	88(%esp), %edx
+ 1993 050c 894C2420 		movl	%ecx, 32(%esp)
+ 1994 0510 89442408 		movl	%eax, 8(%esp)
+ 1995 0514 897C2414 		movl	%edi, 20(%esp)
+ 1996 0518 8954240C 		movl	%edx, 12(%esp)
+ 1997 051c C7442404 		movl	$LC98, 4(%esp)
+ 1997      50070000 
+ 1998 0524 C7042400 		movl	$__ZL6logger, (%esp)
+ 1998      000000
+ 1999 052b E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 1999      00
+ 2000 0530 0FB683E4 		movzbl	1508(%ebx), %eax
+ 2000      050000
+ 2001 0537 C0E802   		shrb	$2, %al
+ 2002 053a 83E001   		andl	$1, %eax
+ 2003 053d 890424   		movl	%eax, (%esp)
+ 2004 0540 E8000000 		call	__Z12boolToStringb
+ 2004      00
+ 2005 0545 0FB693E5 		movzbl	1509(%ebx), %edx
+ 2005      050000
+ 2006 054c 31DB     		xorl	%ebx, %ebx
+ 2007 054e C0EA04   		shrb	$4, %dl
+ 2008 0551 83E201   		andl	$1, %edx
+ 2009 0554 891424   		movl	%edx, (%esp)
+ 2010 0557 89C6     		movl	%eax, %esi
+ 2011 0559 E8000000 		call	__Z12boolToStringb
+ 2011      00
+ 2012 055e 8974240C 		movl	%esi, 12(%esp)
+ 2013 0562 C7442404 		movl	$LC99, 4(%esp)
+ 2013      88070000 
+ 2014 056a C7042400 		movl	$__ZL6logger, (%esp)
+ 2014      000000
+ 2015 0571 89442408 		movl	%eax, 8(%esp)
+ 2016 0575 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 2016      00
+ 2017 057a A1000000 		movl	_engine, %eax
+ 2017      00
+ 2018 057f 0FB68064 		movzbl	612(%eax), %eax
+ 2018      020000
+ 2019 0586 890424   		movl	%eax, (%esp)
+ 2020 0589 E8000000 		call	__Z12boolToStringb
+ 2020      00
+ 2021 058e C7442408 		movl	$LC64, 8(%esp)
+ 2021      3B040000 
+ 2022 0596 C7442404 		movl	$LC100, 4(%esp)
+ 2022      BC070000 
+ 2023 059e C7042400 		movl	$__ZL6logger, (%esp)
+ 2023      000000
+ 2024 05a5 8944240C 		movl	%eax, 12(%esp)
+ 2025 05a9 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 2025      00
+ 2026 05ae A1000000 		movl	_engine, %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 53
+
+
+ 2026      00
+ 2027 05b3 0FB68065 		movzbl	613(%eax), %eax
+ 2027      020000
+ 2028 05ba 890424   		movl	%eax, (%esp)
+ 2029 05bd E8000000 		call	__Z12boolToStringb
+ 2029      00
+ 2030 05c2 C7442408 		movl	$LC64, 8(%esp)
+ 2030      3B040000 
+ 2031 05ca C7442404 		movl	$LC101, 4(%esp)
+ 2031      CC070000 
+ 2032 05d2 C7042400 		movl	$__ZL6logger, (%esp)
+ 2032      000000
+ 2033 05d9 8944240C 		movl	%eax, 12(%esp)
+ 2034 05dd E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 2034      00
+ 2035 05e2 A1000000 		movl	_maxNesting, %eax
+ 2035      00
+ 2036 05e7 C7442408 		movl	$LC64, 8(%esp)
+ 2036      3B040000 
+ 2037 05ef C7442404 		movl	$LC102, 4(%esp)
+ 2037      E0070000 
+ 2038 05f7 C7042400 		movl	$__ZL6logger, (%esp)
+ 2038      000000
+ 2039 05fe 8944240C 		movl	%eax, 12(%esp)
+ 2040 0602 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 2040      00
+ 2041 0607 A1000000 		movl	_boardConfiguration, %eax
+ 2041      00
+ 2042 060c 8B80D400 		movl	212(%eax), %eax
+ 2042      0000
+ 2043 0612 C7442404 		movl	$LC103, 4(%esp)
+ 2043      08080000 
+ 2044 061a C7042400 		movl	$__ZL6logger, (%esp)
+ 2044      000000
+ 2045 0621 89442408 		movl	%eax, 8(%esp)
+ 2046 0625 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 2046      00
+ 2047              	L134:
+ 2048 062a 895C2408 		movl	%ebx, 8(%esp)
+ 2049 062e 83C301   		addl	$1, %ebx
+ 2050 0631 C744240C 		movl	$LC64, 12(%esp)
+ 2050      3B040000 
+ 2051 0639 C7442404 		movl	$LC105, 4(%esp)
+ 2051      3B080000 
+ 2052 0641 C7042400 		movl	$__ZL6logger, (%esp)
+ 2052      000000
+ 2053 0648 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 2053      00
+ 2054 064d 83FB04   		cmpl	$4, %ebx
+ 2055 0650 75D8     		jne	L134
+ 2056 0652 83C46C   		addl	$108, %esp
+ 2057              		.cfi_remember_state
+ 2058              		.cfi_def_cfa_offset 20
+ 2059 0655 5B       		popl	%ebx
+ 2060              		.cfi_restore 3
+ 2061              		.cfi_def_cfa_offset 16
+ 2062 0656 5E       		popl	%esi
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 54
+
+
+ 2063              		.cfi_restore 6
+ 2064              		.cfi_def_cfa_offset 12
+ 2065 0657 5F       		popl	%edi
+ 2066              		.cfi_restore 7
+ 2067              		.cfi_def_cfa_offset 8
+ 2068 0658 5D       		popl	%ebp
+ 2069              		.cfi_restore 5
+ 2070              		.cfi_def_cfa_offset 4
+ 2071 0659 C3       		ret
+ 2072 065a 8DB60000 		.p2align 4,,7
+ 2072      0000
+ 2073              	L127:
+ 2074              		.cfi_restore_state
+ 2075 0660 D983B801 		flds	440(%ebx)
+ 2075      0000
+ 2076 0666 DD5C2410 		fstpl	16(%esp)
+ 2077 066a D9436C   		flds	108(%ebx)
+ 2078 066d DD5C2408 		fstpl	8(%esp)
+ 2079 0671 C7442404 		movl	$LC81, 4(%esp)
+ 2079      A4050000 
+ 2080 0679 C7042400 		movl	$__ZL6logger, (%esp)
+ 2080      000000
+ 2081 0680 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 2081      00
+ 2082 0685 E9BEFAFF 		jmp	L128
+ 2082      FF
+ 2083 068a 8DB60000 		.p2align 4,,7
+ 2083      0000
+ 2084              	L146:
+ 2085 0690 D983C801 		flds	456(%ebx)
+ 2085      0000
+ 2086 0696 D97C245E 		fnstcw	94(%esp)
+ 2087 069a C7442404 		movl	$LC85, 4(%esp)
+ 2087      0B060000 
+ 2088 06a2 C7042400 		movl	$__ZL6logger, (%esp)
+ 2088      000000
+ 2089 06a9 0FB74424 		movzwl	94(%esp), %eax
+ 2089      5E
+ 2090 06ae B40C     		movb	$12, %ah
+ 2091 06b0 66894424 		movw	%ax, 92(%esp)
+ 2091      5C
+ 2092 06b5 D96C245C 		fldcw	92(%esp)
+ 2093 06b9 DB5C2408 		fistpl	8(%esp)
+ 2094 06bd D96C245E 		fldcw	94(%esp)
+ 2095 06c1 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 2095      00
+ 2096 06c6 E904FBFF 		jmp	L129
+ 2096      FF
+ 2097              		.cfi_endproc
+ 2098              	LFE89:
+ 2099 06cb 90909090 		.section	.text$_ZL20doPrintConfigurationP6Engine,"x"
+ 2099      90
+ 2100              		.p2align 4,,15
+ 2101              		.def	__ZL20doPrintConfigurationP6Engine;	.scl	3;	.type	32;	.endef
+ 2102              	__ZL20doPrintConfigurationP6Engine:
+ 2103              	LFB90:
+ 2104              		.cfi_startproc
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 55
+
+
+ 2105 0000 A1000000 		movl	_engineConfiguration, %eax
+ 2105      00
+ 2106 0005 89442404 		movl	%eax, 4(%esp)
+ 2107 0009 E9000000 		jmp	__Z18printConfigurationP22engine_configuration_s
+ 2107      00
+ 2108              		.cfi_endproc
+ 2109              	LFE90:
+ 2110 000e 9090     		.section	.text$_ZL14setTriggerTypei,"x"
+ 2111              		.p2align 4,,15
+ 2112              		.def	__ZL14setTriggerTypei;	.scl	3;	.type	32;	.endef
+ 2113              	__ZL14setTriggerTypei:
+ 2114              	LFB117:
+ 2115              		.cfi_startproc
+ 2116 0000 83EC0C   		subl	$12, %esp
+ 2117              		.cfi_def_cfa_offset 16
+ 2118 0003 A1000000 		movl	_engineConfiguration, %eax
+ 2118      00
+ 2119 0008 8B542410 		movl	16(%esp), %edx
+ 2120 000c 89901802 		movl	%edx, 536(%eax)
+ 2120      0000
+ 2121 0012 E8000000 		call	__Z35incrementGlobalConfigurationVersionv
+ 2121      00
+ 2122 0017 A1000000 		movl	_engine, %eax
+ 2122      00
+ 2123 001c 89442410 		movl	%eax, 16(%esp)
+ 2124 0020 83C40C   		addl	$12, %esp
+ 2125              		.cfi_def_cfa_offset 4
+ 2126 0023 E9000000 		jmp	__ZL20doPrintConfigurationP6Engine
+ 2126      00
+ 2127              		.cfi_endproc
+ 2128              	LFE117:
+ 2129 0028 90909090 		.section .rdata,"dr"
+ 2129      90909090 
+ 2130              	LC106:
+ 2131 0858 746F6F74 		.ascii "toothed: total=%d/skipped=%d\0"
+ 2131      6865643A 
+ 2131      20746F74 
+ 2131      616C3D25 
+ 2131      642F736B 
+ 2132              		.section	.text$_ZL15setToothedWheelii,"x"
+ 2133              		.p2align 4,,15
+ 2134              		.def	__ZL15setToothedWheelii;	.scl	3;	.type	32;	.endef
+ 2135              	__ZL15setToothedWheelii:
+ 2136              	LFB118:
+ 2137              		.cfi_startproc
+ 2138 0000 83EC1C   		subl	$28, %esp
+ 2139              		.cfi_def_cfa_offset 32
+ 2140 0003 895C2414 		movl	%ebx, 20(%esp)
+ 2141              		.cfi_offset 3, -12
+ 2142 0007 8B5C2420 		movl	32(%esp), %ebx
+ 2143 000b 89742418 		movl	%esi, 24(%esp)
+ 2144              		.cfi_offset 6, -8
+ 2145 000f 8B742424 		movl	36(%esp), %esi
+ 2146 0013 C7442404 		movl	$LC106, 4(%esp)
+ 2146      58080000 
+ 2147 001b C7042400 		movl	$__ZL6logger, (%esp)
+ 2147      000000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 56
+
+
+ 2148 0022 895C2408 		movl	%ebx, 8(%esp)
+ 2149 0026 8974240C 		movl	%esi, 12(%esp)
+ 2150 002a E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 2150      00
+ 2151 002f A1000000 		movl	_engineConfiguration, %eax
+ 2151      00
+ 2152 0034 8B80F401 		movl	500(%eax), %eax
+ 2152      0000
+ 2153 003a 89742408 		movl	%esi, 8(%esp)
+ 2154 003e 895C2404 		movl	%ebx, 4(%esp)
+ 2155 0042 8944240C 		movl	%eax, 12(%esp)
+ 2156 0046 A1000000 		movl	_engine, %eax
+ 2156      00
+ 2157 004b 05840200 		addl	$644, %eax
+ 2157      00
+ 2158 0050 890424   		movl	%eax, (%esp)
+ 2159 0053 E8000000 		call	__Z28setToothedWheelConfigurationP12TriggerShapeii16operation_mode_e
+ 2159      00
+ 2160 0058 E8000000 		call	__Z35incrementGlobalConfigurationVersionv
+ 2160      00
+ 2161 005d A1000000 		movl	_engine, %eax
+ 2161      00
+ 2162 0062 8B5C2414 		movl	20(%esp), %ebx
+ 2163 0066 8B742418 		movl	24(%esp), %esi
+ 2164 006a 89442420 		movl	%eax, 32(%esp)
+ 2165 006e 83C41C   		addl	$28, %esp
+ 2166              		.cfi_restore 6
+ 2167              		.cfi_restore 3
+ 2168              		.cfi_def_cfa_offset 4
+ 2169 0071 E9000000 		jmp	__ZL20doPrintConfigurationP6Engine
+ 2169      00
+ 2170              		.cfi_endproc
+ 2171              	LFE118:
+ 2172 0076 90909090 		.section	.text$_ZL15setAlgorithmInti,"x"
+ 2172      90909090 
+ 2172      9090
+ 2173              		.p2align 4,,15
+ 2174              		.def	__ZL15setAlgorithmInti;	.scl	3;	.type	32;	.endef
+ 2175              	__ZL15setAlgorithmInti:
+ 2176              	LFB108:
+ 2177              		.cfi_startproc
+ 2178 0000 83EC1C   		subl	$28, %esp
+ 2179              		.cfi_def_cfa_offset 32
+ 2180 0003 8B442420 		movl	32(%esp), %eax
+ 2181 0007 890424   		movl	%eax, (%esp)
+ 2182 000a E8000000 		call	__Z12setAlgorithm18engine_load_mode_e
+ 2182      00
+ 2183 000f A1000000 		movl	_engine, %eax
+ 2183      00
+ 2184 0014 89442420 		movl	%eax, 32(%esp)
+ 2185 0018 83C41C   		addl	$28, %esp
+ 2186              		.cfi_def_cfa_offset 4
+ 2187 001b E9000000 		jmp	__ZL20doPrintConfigurationP6Engine
+ 2187      00
+ 2188              		.cfi_endproc
+ 2189              	LFE108:
+ 2190              		.section	.text$_ZL14setFiringOrderi,"x"
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 57
+
+
+ 2191              		.p2align 4,,15
+ 2192              		.def	__ZL14setFiringOrderi;	.scl	3;	.type	32;	.endef
+ 2193              	__ZL14setFiringOrderi:
+ 2194              	LFB109:
+ 2195              		.cfi_startproc
+ 2196 0000 A1000000 		movl	_engineConfiguration, %eax
+ 2196      00
+ 2197 0005 8B542404 		movl	4(%esp), %edx
+ 2198 0009 89909801 		movl	%edx, 408(%eax)
+ 2198      0000
+ 2199 000f A1000000 		movl	_engine, %eax
+ 2199      00
+ 2200 0014 89442404 		movl	%eax, 4(%esp)
+ 2201 0018 E9000000 		jmp	__ZL20doPrintConfigurationP6Engine
+ 2201      00
+ 2202              		.cfi_endproc
+ 2203              	LFE109:
+ 2204 001d 909090   		.section	.text$_ZL15setRpmHardLimiti,"x"
+ 2205              		.p2align 4,,15
+ 2206              		.def	__ZL15setRpmHardLimiti;	.scl	3;	.type	32;	.endef
+ 2207              	__ZL15setRpmHardLimiti:
+ 2208              	LFB110:
+ 2209              		.cfi_startproc
+ 2210 0000 A1000000 		movl	_engineConfiguration, %eax
+ 2210      00
+ 2211 0005 8B542404 		movl	4(%esp), %edx
+ 2212 0009 8990A401 		movl	%edx, 420(%eax)
+ 2212      0000
+ 2213 000f A1000000 		movl	_engine, %eax
+ 2213      00
+ 2214 0014 89442404 		movl	%eax, 4(%esp)
+ 2215 0018 E9000000 		jmp	__ZL20doPrintConfigurationP6Engine
+ 2215      00
+ 2216              		.cfi_endproc
+ 2217              	LFE110:
+ 2218 001d 909090   		.section	.text$_ZL16setInjectionModei,"x"
+ 2219              		.p2align 4,,15
+ 2220              		.def	__ZL16setInjectionModei;	.scl	3;	.type	32;	.endef
+ 2221              	__ZL16setInjectionModei:
+ 2222              	LFB115:
+ 2223              		.cfi_startproc
+ 2224 0000 83EC0C   		subl	$12, %esp
+ 2225              		.cfi_def_cfa_offset 16
+ 2226 0003 A1000000 		movl	_engineConfiguration, %eax
+ 2226      00
+ 2227 0008 8B542410 		movl	16(%esp), %edx
+ 2228 000c 8990B001 		movl	%edx, 432(%eax)
+ 2228      0000
+ 2229 0012 E8000000 		call	__Z35incrementGlobalConfigurationVersionv
+ 2229      00
+ 2230 0017 A1000000 		movl	_engine, %eax
+ 2230      00
+ 2231 001c 89442410 		movl	%eax, 16(%esp)
+ 2232 0020 83C40C   		addl	$12, %esp
+ 2233              		.cfi_def_cfa_offset 4
+ 2234 0023 E9000000 		jmp	__ZL20doPrintConfigurationP6Engine
+ 2234      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 58
+
+
+ 2235              		.cfi_endproc
+ 2236              	LFE115:
+ 2237 0028 90909090 		.section	.text$_ZL24setCrankingInjectionModei,"x"
+ 2237      90909090 
+ 2238              		.p2align 4,,15
+ 2239              		.def	__ZL24setCrankingInjectionModei;	.scl	3;	.type	32;	.endef
+ 2240              	__ZL24setCrankingInjectionModei:
+ 2241              	LFB114:
+ 2242              		.cfi_startproc
+ 2243 0000 83EC0C   		subl	$12, %esp
+ 2244              		.cfi_def_cfa_offset 16
+ 2245 0003 A1000000 		movl	_engineConfiguration, %eax
+ 2245      00
+ 2246 0008 8B542410 		movl	16(%esp), %edx
+ 2247 000c 8990AC01 		movl	%edx, 428(%eax)
+ 2247      0000
+ 2248 0012 E8000000 		call	__Z35incrementGlobalConfigurationVersionv
+ 2248      00
+ 2249 0017 A1000000 		movl	_engine, %eax
+ 2249      00
+ 2250 001c 89442410 		movl	%eax, 16(%esp)
+ 2251 0020 83C40C   		addl	$12, %esp
+ 2252              		.cfi_def_cfa_offset 4
+ 2253 0023 E9000000 		jmp	__ZL20doPrintConfigurationP6Engine
+ 2253      00
+ 2254              		.cfi_endproc
+ 2255              	LFE114:
+ 2256 0028 90909090 		.section	.text$_ZL15setIgnitionModei,"x"
+ 2256      90909090 
+ 2257              		.p2align 4,,15
+ 2258              		.def	__ZL15setIgnitionModei;	.scl	3;	.type	32;	.endef
+ 2259              	__ZL15setIgnitionModei:
+ 2260              	LFB116:
+ 2261              		.cfi_startproc
+ 2262 0000 83EC0C   		subl	$12, %esp
+ 2263              		.cfi_def_cfa_offset 16
+ 2264 0003 A1000000 		movl	_engineConfiguration, %eax
+ 2264      00
+ 2265 0008 8B542410 		movl	16(%esp), %edx
+ 2266 000c 8990BC01 		movl	%edx, 444(%eax)
+ 2266      0000
+ 2267 0012 E8000000 		call	__Z35incrementGlobalConfigurationVersionv
+ 2267      00
+ 2268 0017 A1000000 		movl	_engine, %eax
+ 2268      00
+ 2269 001c 89442410 		movl	%eax, 16(%esp)
+ 2270 0020 83C40C   		addl	$12, %esp
+ 2271              		.cfi_def_cfa_offset 4
+ 2272 0023 E9000000 		jmp	__ZL20doPrintConfigurationP6Engine
+ 2272      00
+ 2273              		.cfi_endproc
+ 2274              	LFE116:
+ 2275 0028 90909090 		.section	.text$_ZL22setCrankingChargeAnglef,"x"
+ 2275      90909090 
+ 2276              		.p2align 4,,15
+ 2277              		.def	__ZL22setCrankingChargeAnglef;	.scl	3;	.type	32;	.endef
+ 2278              	__ZL22setCrankingChargeAnglef:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 59
+
+
+ 2279              	LFB119:
+ 2280              		.cfi_startproc
+ 2281 0000 83EC0C   		subl	$12, %esp
+ 2282              		.cfi_def_cfa_offset 16
+ 2283 0003 A1000000 		movl	_engineConfiguration, %eax
+ 2283      00
+ 2284 0008 D9442410 		flds	16(%esp)
+ 2285 000c D9586C   		fstps	108(%eax)
+ 2286 000f E8000000 		call	__Z35incrementGlobalConfigurationVersionv
+ 2286      00
+ 2287 0014 A1000000 		movl	_engine, %eax
+ 2287      00
+ 2288 0019 89442410 		movl	%eax, 16(%esp)
+ 2289 001d 83C40C   		addl	$12, %esp
+ 2290              		.cfi_def_cfa_offset 4
+ 2291 0020 E9000000 		jmp	__ZL20doPrintConfigurationP6Engine
+ 2291      00
+ 2292              		.cfi_endproc
+ 2293              	LFE119:
+ 2294 0025 90909090 		.section	.text$_ZL22setCrankingTimingAnglef,"x"
+ 2294      90909090 
+ 2294      909090
+ 2295              		.p2align 4,,15
+ 2296              		.def	__ZL22setCrankingTimingAnglef;	.scl	3;	.type	32;	.endef
+ 2297              	__ZL22setCrankingTimingAnglef:
+ 2298              	LFB113:
+ 2299              		.cfi_startproc
+ 2300 0000 83EC0C   		subl	$12, %esp
+ 2301              		.cfi_def_cfa_offset 16
+ 2302 0003 A1000000 		movl	_engineConfiguration, %eax
+ 2302      00
+ 2303 0008 D9442410 		flds	16(%esp)
+ 2304 000c D998B801 		fstps	440(%eax)
+ 2304      0000
+ 2305 0012 E8000000 		call	__Z35incrementGlobalConfigurationVersionv
+ 2305      00
+ 2306 0017 A1000000 		movl	_engine, %eax
+ 2306      00
+ 2307 001c 89442410 		movl	%eax, 16(%esp)
+ 2308 0020 83C40C   		addl	$12, %esp
+ 2309              		.cfi_def_cfa_offset 4
+ 2310 0023 E9000000 		jmp	__ZL20doPrintConfigurationP6Engine
+ 2310      00
+ 2311              		.cfi_endproc
+ 2312              	LFE113:
+ 2313 0028 90909090 		.section	.text$_ZL14setCrankingRpmi,"x"
+ 2313      90909090 
+ 2314              		.p2align 4,,15
+ 2315              		.def	__ZL14setCrankingRpmi;	.scl	3;	.type	32;	.endef
+ 2316              	__ZL14setCrankingRpmi:
+ 2317              	LFB107:
+ 2318              		.cfi_startproc
+ 2319 0000 A1000000 		movl	_engineConfiguration, %eax
+ 2319      00
+ 2320 0005 8B542404 		movl	4(%esp), %edx
+ 2321 0009 66895060 		movw	%dx, 96(%eax)
+ 2322 000d A1000000 		movl	_engine, %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 60
+
+
+ 2322      00
+ 2323 0012 89442404 		movl	%eax, 4(%esp)
+ 2324 0016 E9000000 		jmp	__ZL20doPrintConfigurationP6Engine
+ 2324      00
+ 2325              		.cfi_endproc
+ 2326              	LFE107:
+ 2327 001b 90909090 		.section	.text$_ZL5setOMi,"x"
+ 2327      90
+ 2328              		.p2align 4,,15
+ 2329              		.def	__ZL5setOMi;	.scl	3;	.type	32;	.endef
+ 2330              	__ZL5setOMi:
+ 2331              	LFB103:
+ 2332              		.cfi_startproc
+ 2333 0000 A1000000 		movl	_engineConfiguration, %eax
+ 2333      00
+ 2334 0005 8B542404 		movl	4(%esp), %edx
+ 2335 0009 8990F401 		movl	%edx, 500(%eax)
+ 2335      0000
+ 2336 000f A1000000 		movl	_engine, %eax
+ 2336      00
+ 2337 0014 89442404 		movl	%eax, 4(%esp)
+ 2338 0018 E9000000 		jmp	__ZL20doPrintConfigurationP6Engine
+ 2338      00
+ 2339              		.cfi_endproc
+ 2340              	LFE103:
+ 2341 001d 909090   		.section	.text$_ZL30setMalfunctionIndicatorPinModei,"x"
+ 2342              		.p2align 4,,15
+ 2343              		.def	__ZL30setMalfunctionIndicatorPinModei;	.scl	3;	.type	32;	.endef
+ 2344              	__ZL30setMalfunctionIndicatorPinModei:
+ 2345              	LFB101:
+ 2346              		.cfi_startproc
+ 2347 0000 A1000000 		movl	_boardConfiguration, %eax
+ 2347      00
+ 2348 0005 8B542404 		movl	4(%esp), %edx
+ 2349 0009 89908C00 		movl	%edx, 140(%eax)
+ 2349      0000
+ 2350 000f A1000000 		movl	_engine, %eax
+ 2350      00
+ 2351 0014 89442404 		movl	%eax, 4(%esp)
+ 2352 0018 E9000000 		jmp	__ZL20doPrintConfigurationP6Engine
+ 2352      00
+ 2353              		.cfi_endproc
+ 2354              	LFE101:
+ 2355 001d 909090   		.section	.text$_ZL18setFuelPumpPinModei,"x"
+ 2356              		.p2align 4,,15
+ 2357              		.def	__ZL18setFuelPumpPinModei;	.scl	3;	.type	32;	.endef
+ 2358              	__ZL18setFuelPumpPinModei:
+ 2359              	LFB100:
+ 2360              		.cfi_startproc
+ 2361 0000 A1000000 		movl	_boardConfiguration, %eax
+ 2361      00
+ 2362 0005 8B542404 		movl	4(%esp), %edx
+ 2363 0009 89501C   		movl	%edx, 28(%eax)
+ 2364 000c A1000000 		movl	_engine, %eax
+ 2364      00
+ 2365 0011 89442404 		movl	%eax, 4(%esp)
+ 2366 0015 E9000000 		jmp	__ZL20doPrintConfigurationP6Engine
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 61
+
+
+ 2366      00
+ 2367              		.cfi_endproc
+ 2368              	LFE100:
+ 2369 001a 90909090 		.section	.text$_ZL14setIdlePinModei,"x"
+ 2369      9090
+ 2370              		.p2align 4,,15
+ 2371              		.def	__ZL14setIdlePinModei;	.scl	3;	.type	32;	.endef
+ 2372              	__ZL14setIdlePinModei:
+ 2373              	LFB97:
+ 2374              		.cfi_startproc
+ 2375 0000 A1000000 		movl	_boardConfiguration, %eax
+ 2375      00
+ 2376 0005 8B542404 		movl	4(%esp), %edx
+ 2377 0009 895004   		movl	%edx, 4(%eax)
+ 2378 000c A1000000 		movl	_engine, %eax
+ 2378      00
+ 2379 0011 89442404 		movl	%eax, 4(%esp)
+ 2380 0015 E9000000 		jmp	__ZL20doPrintConfigurationP6Engine
+ 2380      00
+ 2381              		.cfi_endproc
+ 2382              	LFE97:
+ 2383 001a 90909090 		.section	.text$_ZL18setIgnitionPinModei,"x"
+ 2383      9090
+ 2384              		.p2align 4,,15
+ 2385              		.def	__ZL18setIgnitionPinModei;	.scl	3;	.type	32;	.endef
+ 2386              	__ZL18setIgnitionPinModei:
+ 2387              	LFB96:
+ 2388              		.cfi_startproc
+ 2389 0000 A1000000 		movl	_boardConfiguration, %eax
+ 2389      00
+ 2390 0005 8B542404 		movl	4(%esp), %edx
+ 2391 0009 89908400 		movl	%edx, 132(%eax)
+ 2391      0000
+ 2392 000f A1000000 		movl	_engine, %eax
+ 2392      00
+ 2393 0014 89442404 		movl	%eax, 4(%esp)
+ 2394 0018 E9000000 		jmp	__ZL20doPrintConfigurationP6Engine
+ 2394      00
+ 2395              		.cfi_endproc
+ 2396              	LFE96:
+ 2397 001d 909090   		.section	.text$_ZL19setInjectionPinModei,"x"
+ 2398              		.p2align 4,,15
+ 2399              		.def	__ZL19setInjectionPinModei;	.scl	3;	.type	32;	.endef
+ 2400              	__ZL19setInjectionPinModei:
+ 2401              	LFB95:
+ 2402              		.cfi_startproc
+ 2403 0000 A1000000 		movl	_boardConfiguration, %eax
+ 2403      00
+ 2404 0005 8B542404 		movl	4(%esp), %edx
+ 2405 0009 895050   		movl	%edx, 80(%eax)
+ 2406 000c A1000000 		movl	_engine, %eax
+ 2406      00
+ 2407 0011 89442404 		movl	%eax, 4(%esp)
+ 2408 0015 E9000000 		jmp	__ZL20doPrintConfigurationP6Engine
+ 2408      00
+ 2409              		.cfi_endproc
+ 2410              	LFE95:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 62
+
+
+ 2411 001a 90909090 		.section	.text$_ZL13setTimingModei,"x"
+ 2411      9090
+ 2412              		.p2align 4,,15
+ 2413              		.def	__ZL13setTimingModei;	.scl	3;	.type	32;	.endef
+ 2414              	__ZL13setTimingModei:
+ 2415              	LFB92:
+ 2416              		.cfi_startproc
+ 2417 0000 83EC1C   		subl	$28, %esp
+ 2418              		.cfi_def_cfa_offset 32
+ 2419 0003 A1000000 		movl	_engineConfiguration, %eax
+ 2419      00
+ 2420 0008 8B542420 		movl	32(%esp), %edx
+ 2421 000c 8990C401 		movl	%edx, 452(%eax)
+ 2421      0000
+ 2422 0012 A1000000 		movl	_engine, %eax
+ 2422      00
+ 2423 0017 890424   		movl	%eax, (%esp)
+ 2424 001a E8000000 		call	__ZL20doPrintConfigurationP6Engine
+ 2424      00
+ 2425 001f 83C41C   		addl	$28, %esp
+ 2426              		.cfi_def_cfa_offset 4
+ 2427 0022 E9000000 		jmp	__Z35incrementGlobalConfigurationVersionv
+ 2427      00
+ 2428              		.cfi_endproc
+ 2429              	LFE92:
+ 2430 0027 90909090 		.section	.text$_ZL18setFixedModeTimingi,"x"
+ 2430      90909090 
+ 2430      90
+ 2431              		.p2align 4,,15
+ 2432              		.def	__ZL18setFixedModeTimingi;	.scl	3;	.type	32;	.endef
+ 2433              	__ZL18setFixedModeTimingi:
+ 2434              	LFB91:
+ 2435              		.cfi_startproc
+ 2436 0000 83EC1C   		subl	$28, %esp
+ 2437              		.cfi_def_cfa_offset 32
+ 2438 0003 A1000000 		movl	_engineConfiguration, %eax
+ 2438      00
+ 2439 0008 DB442420 		fildl	32(%esp)
+ 2440 000c D998C801 		fstps	456(%eax)
+ 2440      0000
+ 2441 0012 A1000000 		movl	_engine, %eax
+ 2441      00
+ 2442 0017 890424   		movl	%eax, (%esp)
+ 2443 001a E8000000 		call	__ZL20doPrintConfigurationP6Engine
+ 2443      00
+ 2444 001f 83C41C   		addl	$28, %esp
+ 2445              		.cfi_def_cfa_offset 4
+ 2446 0022 E9000000 		jmp	__Z35incrementGlobalConfigurationVersionv
+ 2446      00
+ 2447              		.cfi_endproc
+ 2448              	LFE91:
+ 2449 0027 90909090 		.section	.text$_ZL18setSensorChartModei,"x"
+ 2449      90909090 
+ 2449      90
+ 2450              		.p2align 4,,15
+ 2451              		.def	__ZL18setSensorChartModei;	.scl	3;	.type	32;	.endef
+ 2452              	__ZL18setSensorChartModei:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 63
+
+
+ 2453              	LFB102:
+ 2454              		.cfi_startproc
+ 2455 0000 A1000000 		movl	_boardConfiguration, %eax
+ 2455      00
+ 2456 0005 8B542404 		movl	4(%esp), %edx
+ 2457 0009 89901003 		movl	%edx, 784(%eax)
+ 2457      0000
+ 2458 000f A1000000 		movl	_engine, %eax
+ 2458      00
+ 2459 0014 89442404 		movl	%eax, 4(%esp)
+ 2460 0018 E9000000 		jmp	__ZL20doPrintConfigurationP6Engine
+ 2460      00
+ 2461              		.cfi_endproc
+ 2462              	LFE102:
+ 2463 001d 909090   		.section	.text$_ZL27setGlobalTriggerAngleOffsetf,"x"
+ 2464              		.p2align 4,,15
+ 2465              		.def	__ZL27setGlobalTriggerAngleOffsetf;	.scl	3;	.type	32;	.endef
+ 2466              	__ZL27setGlobalTriggerAngleOffsetf:
+ 2467              	LFB112:
+ 2468              		.cfi_startproc
+ 2469 0000 83EC0C   		subl	$12, %esp
+ 2470              		.cfi_def_cfa_offset 16
+ 2471 0003 A1000000 		movl	_engineConfiguration, %eax
+ 2471      00
+ 2472 0008 D9442410 		flds	16(%esp)
+ 2473 000c D998CC01 		fstps	460(%eax)
+ 2473      0000
+ 2474 0012 E8000000 		call	__Z35incrementGlobalConfigurationVersionv
+ 2474      00
+ 2475 0017 A1000000 		movl	_engine, %eax
+ 2475      00
+ 2476 001c 89442410 		movl	%eax, 16(%esp)
+ 2477 0020 83C40C   		addl	$12, %esp
+ 2478              		.cfi_def_cfa_offset 4
+ 2479 0023 E9000000 		jmp	__ZL20doPrintConfigurationP6Engine
+ 2479      00
+ 2480              		.cfi_endproc
+ 2481              	LFE112:
+ 2482 0028 90909090 		.section	.text$_ZL18setInjectionOffsetf,"x"
+ 2482      90909090 
+ 2483              		.p2align 4,,15
+ 2484              		.def	__ZL18setInjectionOffsetf;	.scl	3;	.type	32;	.endef
+ 2485              	__ZL18setInjectionOffsetf:
+ 2486              	LFB98:
+ 2487              		.cfi_startproc
+ 2488 0000 83EC1C   		subl	$28, %esp
+ 2489              		.cfi_def_cfa_offset 32
+ 2490 0003 A1000000 		movl	_engineConfiguration, %eax
+ 2490      00
+ 2491 0008 D9442420 		flds	32(%esp)
+ 2492 000c D998B401 		fstps	436(%eax)
+ 2492      0000
+ 2493 0012 A1000000 		movl	_engine, %eax
+ 2493      00
+ 2494 0017 890424   		movl	%eax, (%esp)
+ 2495 001a E8000000 		call	__ZL20doPrintConfigurationP6Engine
+ 2495      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 64
+
+
+ 2496 001f 83C41C   		addl	$28, %esp
+ 2497              		.cfi_def_cfa_offset 4
+ 2498 0022 E9000000 		jmp	__Z35incrementGlobalConfigurationVersionv
+ 2498      00
+ 2499              		.cfi_endproc
+ 2500              	LFE98:
+ 2501 0027 90909090 		.section	.text$_ZL17setIgnitionOffsetf,"x"
+ 2501      90909090 
+ 2501      90
+ 2502              		.p2align 4,,15
+ 2503              		.def	__ZL17setIgnitionOffsetf;	.scl	3;	.type	32;	.endef
+ 2504              	__ZL17setIgnitionOffsetf:
+ 2505              	LFB99:
+ 2506              		.cfi_startproc
+ 2507 0000 83EC1C   		subl	$28, %esp
+ 2508              		.cfi_def_cfa_offset 32
+ 2509 0003 A1000000 		movl	_engineConfiguration, %eax
+ 2509      00
+ 2510 0008 D9442420 		flds	32(%esp)
+ 2511 000c D998C001 		fstps	448(%eax)
+ 2511      0000
+ 2512 0012 A1000000 		movl	_engine, %eax
+ 2512      00
+ 2513 0017 890424   		movl	%eax, (%esp)
+ 2514 001a E8000000 		call	__ZL20doPrintConfigurationP6Engine
+ 2514      00
+ 2515 001f 83C41C   		addl	$28, %esp
+ 2516              		.cfi_def_cfa_offset 4
+ 2517 0022 E9000000 		jmp	__Z35incrementGlobalConfigurationVersionv
+ 2517      00
+ 2518              		.cfi_endproc
+ 2519              	LFE99:
+ 2520 0027 90909090 		.section	.text$_Z13setEngineTypei,"x"
+ 2520      90909090 
+ 2520      90
+ 2521              		.p2align 4,,15
+ 2522              		.globl	__Z13setEngineTypei
+ 2523              		.def	__Z13setEngineTypei;	.scl	2;	.type	32;	.endef
+ 2524              	__Z13setEngineTypei:
+ 2525              	LFB93:
+ 2526              		.cfi_startproc
+ 2527 0000 83EC1C   		subl	$28, %esp
+ 2528              		.cfi_def_cfa_offset 32
+ 2529 0003 8B150000 		movl	_engineConfiguration, %edx
+ 2529      0000
+ 2530 0009 8B442420 		movl	32(%esp), %eax
+ 2531 000d 8902     		movl	%eax, (%edx)
+ 2532 000f 89442404 		movl	%eax, 4(%esp)
+ 2533 0013 C7042400 		movl	$__ZL6logger, (%esp)
+ 2533      000000
+ 2534 001a E8000000 		call	__Z21resetConfigurationExtP7Logging13engine_type_e
+ 2534      00
+ 2535 001f A1000000 		movl	_engine, %eax
+ 2535      00
+ 2536 0024 80B88002 		cmpb	$0, 640(%eax)
+ 2536      000000
+ 2537 002b 740A     		je	L185
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 65
+
+
+ 2538 002d B9000000 		movl	$_waveChart, %ecx
+ 2538      00
+ 2539 0032 E8000000 		call	__ZN9WaveChart14resetWaveChartEv
+ 2539      00
+ 2540              	L185:
+ 2541 0037 E8000000 		call	__Z35incrementGlobalConfigurationVersionv
+ 2541      00
+ 2542 003c A1000000 		movl	_engine, %eax
+ 2542      00
+ 2543 0041 89442420 		movl	%eax, 32(%esp)
+ 2544 0045 83C41C   		addl	$28, %esp
+ 2545              		.cfi_def_cfa_offset 4
+ 2546 0048 E9000000 		jmp	__ZL20doPrintConfigurationP6Engine
+ 2546      00
+ 2547              		.cfi_endproc
+ 2548              	LFE93:
+ 2549 004d 909090   		.section .rdata,"dr"
+ 2550              	LC107:
+ 2551 0875 73686F77 		.ascii "showconfig\0"
+ 2551      636F6E66 
+ 2551      696700
+ 2552              	LC108:
+ 2553 0880 74656D70 		.ascii "tempinfo\0"
+ 2553      696E666F 
+ 2553      00
+ 2554              	LC109:
+ 2555 0889 74707369 		.ascii "tpsinfo\0"
+ 2555      6E666F00 
+ 2556              	LC110:
+ 2557 0891 696E666F 		.ascii "info\0"
+ 2557      00
+ 2558              	LC111:
+ 2559 0896 7365745F 		.ascii "set_ignition_offset\0"
+ 2559      69676E69 
+ 2559      74696F6E 
+ 2559      5F6F6666 
+ 2559      73657400 
+ 2560              	LC112:
+ 2561 08aa 7365745F 		.ascii "set_injection_offset\0"
+ 2561      696E6A65 
+ 2561      6374696F 
+ 2561      6E5F6F66 
+ 2561      66736574 
+ 2562 08bf 00       		.align 4
+ 2563              	LC113:
+ 2564 08c0 7365745F 		.ascii "set_global_trigger_offset_angle\0"
+ 2564      676C6F62 
+ 2564      616C5F74 
+ 2564      72696767 
+ 2564      65725F6F 
+ 2565              	LC114:
+ 2566 08e0 7365745F 		.ascii "set_sensor_chart_mode\0"
+ 2566      73656E73 
+ 2566      6F725F63 
+ 2566      68617274 
+ 2566      5F6D6F64 
+ 2567              	LC115:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 66
+
+
+ 2568 08f6 7365745F 		.ascii "set_fixed_mode_timing\0"
+ 2568      66697865 
+ 2568      645F6D6F 
+ 2568      64655F74 
+ 2568      696D696E 
+ 2569              	LC116:
+ 2570 090c 7365745F 		.ascii "set_timing_mode\0"
+ 2570      74696D69 
+ 2570      6E675F6D 
+ 2570      6F646500 
+ 2571              	LC117:
+ 2572 091c 7365745F 		.ascii "set_engine_type\0"
+ 2572      656E6769 
+ 2572      6E655F74 
+ 2572      79706500 
+ 2573              	LC118:
+ 2574 092c 7365745F 		.ascii "set_injection_pin_mode\0"
+ 2574      696E6A65 
+ 2574      6374696F 
+ 2574      6E5F7069 
+ 2574      6E5F6D6F 
+ 2575              	LC119:
+ 2576 0943 7365745F 		.ascii "set_ignition_pin_mode\0"
+ 2576      69676E69 
+ 2576      74696F6E 
+ 2576      5F70696E 
+ 2576      5F6D6F64 
+ 2577              	LC120:
+ 2578 0959 7365745F 		.ascii "set_idle_pin_mode\0"
+ 2578      69646C65 
+ 2578      5F70696E 
+ 2578      5F6D6F64 
+ 2578      6500
+ 2579              	LC121:
+ 2580 096b 7365745F 		.ascii "set_fuel_pump_pin_mode\0"
+ 2580      6675656C 
+ 2580      5F70756D 
+ 2580      705F7069 
+ 2580      6E5F6D6F 
+ 2581 0982 0000     		.align 4
+ 2582              	LC122:
+ 2583 0984 7365745F 		.ascii "set_malfunction_indicator_pin_mode\0"
+ 2583      6D616C66 
+ 2583      756E6374 
+ 2583      696F6E5F 
+ 2583      696E6469 
+ 2584              	LC123:
+ 2585 09a7 7365745F 		.ascii "set_operation_mode\0"
+ 2585      6F706572 
+ 2585      6174696F 
+ 2585      6E5F6D6F 
+ 2585      646500
+ 2586              	LC124:
+ 2587 09ba 7365745F 		.ascii "set_global_fuel_correction\0"
+ 2587      676C6F62 
+ 2587      616C5F66 
+ 2587      75656C5F 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 67
+
+
+ 2587      636F7272 
+ 2588              	LC125:
+ 2589 09d5 7365745F 		.ascii "set_cranking_fuel\0"
+ 2589      6372616E 
+ 2589      6B696E67 
+ 2589      5F667565 
+ 2589      6C00
+ 2590              	LC126:
+ 2591 09e7 7365745F 		.ascii "set_cranking_rpm\0"
+ 2591      6372616E 
+ 2591      6B696E67 
+ 2591      5F72706D 
+ 2591      00
+ 2592              	LC127:
+ 2593 09f8 7365745F 		.ascii "set_cranking_timing_angle\0"
+ 2593      6372616E 
+ 2593      6B696E67 
+ 2593      5F74696D 
+ 2593      696E675F 
+ 2594              	LC128:
+ 2595 0a12 7365745F 		.ascii "set_cranking_charge_angle\0"
+ 2595      6372616E 
+ 2595      6B696E67 
+ 2595      5F636861 
+ 2595      7267655F 
+ 2596              	LC129:
+ 2597 0a2c 7365745F 		.ascii "set_ignition_mode\0"
+ 2597      69676E69 
+ 2597      74696F6E 
+ 2597      5F6D6F64 
+ 2597      6500
+ 2598              	LC130:
+ 2599 0a3e 7365745F 		.ascii "set_cranking_injection_mode\0"
+ 2599      6372616E 
+ 2599      6B696E67 
+ 2599      5F696E6A 
+ 2599      65637469 
+ 2600              	LC131:
+ 2601 0a5a 7365745F 		.ascii "set_injection_mode\0"
+ 2601      696E6A65 
+ 2601      6374696F 
+ 2601      6E5F6D6F 
+ 2601      646500
+ 2602              	LC132:
+ 2603 0a6d 7365745F 		.ascii "set_whole_phase_map\0"
+ 2603      77686F6C 
+ 2603      655F7068 
+ 2603      6173655F 
+ 2603      6D617000 
+ 2604              	LC133:
+ 2605 0a81 7365745F 		.ascii "set_whole_timing_map\0"
+ 2605      77686F6C 
+ 2605      655F7469 
+ 2605      6D696E67 
+ 2605      5F6D6170 
+ 2606              	LC134:
+ 2607 0a96 7365745F 		.ascii "set_whole_fuel_map\0"
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 68
+
+
+ 2607      77686F6C 
+ 2607      655F6675 
+ 2607      656C5F6D 
+ 2607      617000
+ 2608              	LC135:
+ 2609 0aa9 7365745F 		.ascii "set_whole_ve_map\0"
+ 2609      77686F6C 
+ 2609      655F7665 
+ 2609      5F6D6170 
+ 2609      00
+ 2610              	LC136:
+ 2611 0aba 7365745F 		.ascii "set_fuel_map\0"
+ 2611      6675656C 
+ 2611      5F6D6170 
+ 2611      00
+ 2612              	LC137:
+ 2613 0ac7 7365745F 		.ascii "set_timing_map\0"
+ 2613      74696D69 
+ 2613      6E675F6D 
+ 2613      617000
+ 2614              	LC138:
+ 2615 0ad6 7365745F 		.ascii "set_rpm_hard_limit\0"
+ 2615      72706D5F 
+ 2615      68617264 
+ 2615      5F6C696D 
+ 2615      697400
+ 2616              	LC139:
+ 2617 0ae9 7365745F 		.ascii "set_firing_order\0"
+ 2617      66697269 
+ 2617      6E675F6F 
+ 2617      72646572 
+ 2617      00
+ 2618              	LC140:
+ 2619 0afa 7365745F 		.ascii "set_algorithm\0"
+ 2619      616C676F 
+ 2619      72697468 
+ 2619      6D00
+ 2620              	LC141:
+ 2621 0b08 73746F70 		.ascii "stopengine\0"
+ 2621      656E6769 
+ 2621      6E6500
+ 2622              	LC142:
+ 2623 0b13 656E6162 		.ascii "enable_injection\0"
+ 2623      6C655F69 
+ 2623      6E6A6563 
+ 2623      74696F6E 
+ 2623      00
+ 2624              	LC143:
+ 2625 0b24 64697361 		.ascii "disable_injection\0"
+ 2625      626C655F 
+ 2625      696E6A65 
+ 2625      6374696F 
+ 2625      6E00
+ 2626              	LC144:
+ 2627 0b36 656E6162 		.ascii "enable_ignition\0"
+ 2627      6C655F69 
+ 2627      676E6974 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 69
+
+
+ 2627      696F6E00 
+ 2628              	LC145:
+ 2629 0b46 64697361 		.ascii "disable_ignition\0"
+ 2629      626C655F 
+ 2629      69676E69 
+ 2629      74696F6E 
+ 2629      00
+ 2630              	LC146:
+ 2631 0b57 656E6162 		.ascii "enable_spi\0"
+ 2631      6C655F73 
+ 2631      706900
+ 2632              	LC147:
+ 2633 0b62 64697361 		.ascii "disable_spi\0"
+ 2633      626C655F 
+ 2633      73706900 
+ 2634              	LC148:
+ 2635 0b6e 656E6162 		.ascii "enable\0"
+ 2635      6C6500
+ 2636              	LC149:
+ 2637 0b75 64697361 		.ascii "disable\0"
+ 2637      626C6500 
+ 2638              	LC150:
+ 2639 0b7d 7365745F 		.ascii "set_toothed_wheel\0"
+ 2639      746F6F74 
+ 2639      6865645F 
+ 2639      77686565 
+ 2639      6C00
+ 2640              	LC151:
+ 2641 0b8f 7365745F 		.ascii "set_trigger_type\0"
+ 2641      74726967 
+ 2641      6765725F 
+ 2641      74797065 
+ 2641      00
+ 2642              	LC152:
+ 2643 0ba0 7365745F 		.ascii "set_vbatt_divider\0"
+ 2643      76626174 
+ 2643      745F6469 
+ 2643      76696465 
+ 2643      7200
+ 2644              	LC153:
+ 2645 0bb2 7365745F 		.ascii "set_injector_lag\0"
+ 2645      696E6A65 
+ 2645      63746F72 
+ 2645      5F6C6167 
+ 2645      00
+ 2646              	LC154:
+ 2647 0bc3 7365745F 		.ascii "set_clt_bias\0"
+ 2647      636C745F 
+ 2647      62696173 
+ 2647      00
+ 2648              	LC155:
+ 2649 0bd0 7365745F 		.ascii "set_iat_bias\0"
+ 2649      6961745F 
+ 2649      62696173 
+ 2649      00
+ 2650              	LC156:
+ 2651 0bdd 7365745F 		.ascii "set_idle_solenoid_freq\0"
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 70
+
+
+ 2651      69646C65 
+ 2651      5F736F6C 
+ 2651      656E6F69 
+ 2651      645F6672 
+ 2652              	LC157:
+ 2653 0bf4 7365745F 		.ascii "set_fan\0"
+ 2653      66616E00 
+ 2654              		.section	.text$_Z12initSettingsP22engine_configuration_s,"x"
+ 2655              		.p2align 4,,15
+ 2656              		.globl	__Z12initSettingsP22engine_configuration_s
+ 2657              		.def	__Z12initSettingsP22engine_configuration_s;	.scl	2;	.type	32;	.endef
+ 2658              	__Z12initSettingsP22engine_configuration_s:
+ 2659              	LFB147:
+ 2660              		.cfi_startproc
+ 2661 0000 83EC1C   		subl	$28, %esp
+ 2662              		.cfi_def_cfa_offset 32
+ 2663 0003 C7442408 		movl	$_engine, 8(%esp)
+ 2663      00000000 
+ 2664 000b C7442404 		movl	$__ZL20doPrintConfigurationP6Engine, 4(%esp)
+ 2664      00000000 
+ 2665 0013 C7042475 		movl	$LC107, (%esp)
+ 2665      080000
+ 2666 001a E8000000 		call	_addConsoleActionP
+ 2666      00
+ 2667 001f C7442404 		movl	$__ZL20printTemperatureInfov, 4(%esp)
+ 2667      00000000 
+ 2668 0027 C7042480 		movl	$LC108, (%esp)
+ 2668      080000
+ 2669 002e E8000000 		call	_addConsoleAction
+ 2669      00
+ 2670 0033 C7442404 		movl	$__ZL12printTPSInfov, 4(%esp)
+ 2670      00000000 
+ 2671 003b C7042489 		movl	$LC109, (%esp)
+ 2671      080000
+ 2672 0042 E8000000 		call	_addConsoleAction
+ 2672      00
+ 2673 0047 C7442404 		movl	$__ZL12printAllInfov, 4(%esp)
+ 2673      00000000 
+ 2674 004f C7042491 		movl	$LC110, (%esp)
+ 2674      080000
+ 2675 0056 E8000000 		call	_addConsoleAction
+ 2675      00
+ 2676 005b C7442404 		movl	$__ZL17setIgnitionOffsetf, 4(%esp)
+ 2676      00000000 
+ 2677 0063 C7042496 		movl	$LC111, (%esp)
+ 2677      080000
+ 2678 006a E8000000 		call	_addConsoleActionF
+ 2678      00
+ 2679 006f C7442404 		movl	$__ZL18setInjectionOffsetf, 4(%esp)
+ 2679      00000000 
+ 2680 0077 C70424AA 		movl	$LC112, (%esp)
+ 2680      080000
+ 2681 007e E8000000 		call	_addConsoleActionF
+ 2681      00
+ 2682 0083 C7442404 		movl	$__ZL27setGlobalTriggerAngleOffsetf, 4(%esp)
+ 2682      00000000 
+ 2683 008b C70424C0 		movl	$LC113, (%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 71
+
+
+ 2683      080000
+ 2684 0092 E8000000 		call	_addConsoleActionF
+ 2684      00
+ 2685 0097 C7442404 		movl	$__ZL18setSensorChartModei, 4(%esp)
+ 2685      00000000 
+ 2686 009f C70424E0 		movl	$LC114, (%esp)
+ 2686      080000
+ 2687 00a6 E8000000 		call	_addConsoleActionI
+ 2687      00
+ 2688 00ab C7442404 		movl	$__ZL18setFixedModeTimingi, 4(%esp)
+ 2688      00000000 
+ 2689 00b3 C70424F6 		movl	$LC115, (%esp)
+ 2689      080000
+ 2690 00ba E8000000 		call	_addConsoleActionI
+ 2690      00
+ 2691 00bf C7442404 		movl	$__ZL13setTimingModei, 4(%esp)
+ 2691      00000000 
+ 2692 00c7 C704240C 		movl	$LC116, (%esp)
+ 2692      090000
+ 2693 00ce E8000000 		call	_addConsoleActionI
+ 2693      00
+ 2694 00d3 C7442404 		movl	$__Z13setEngineTypei, 4(%esp)
+ 2694      00000000 
+ 2695 00db C704241C 		movl	$LC117, (%esp)
+ 2695      090000
+ 2696 00e2 E8000000 		call	_addConsoleActionI
+ 2696      00
+ 2697 00e7 C7442404 		movl	$__ZL19setInjectionPinModei, 4(%esp)
+ 2697      00000000 
+ 2698 00ef C704242C 		movl	$LC118, (%esp)
+ 2698      090000
+ 2699 00f6 E8000000 		call	_addConsoleActionI
+ 2699      00
+ 2700 00fb C7442404 		movl	$__ZL18setIgnitionPinModei, 4(%esp)
+ 2700      00000000 
+ 2701 0103 C7042443 		movl	$LC119, (%esp)
+ 2701      090000
+ 2702 010a E8000000 		call	_addConsoleActionI
+ 2702      00
+ 2703 010f C7442404 		movl	$__ZL14setIdlePinModei, 4(%esp)
+ 2703      00000000 
+ 2704 0117 C7042459 		movl	$LC120, (%esp)
+ 2704      090000
+ 2705 011e E8000000 		call	_addConsoleActionI
+ 2705      00
+ 2706 0123 C7442404 		movl	$__ZL18setFuelPumpPinModei, 4(%esp)
+ 2706      00000000 
+ 2707 012b C704246B 		movl	$LC121, (%esp)
+ 2707      090000
+ 2708 0132 E8000000 		call	_addConsoleActionI
+ 2708      00
+ 2709 0137 C7442404 		movl	$__ZL30setMalfunctionIndicatorPinModei, 4(%esp)
+ 2709      00000000 
+ 2710 013f C7042484 		movl	$LC122, (%esp)
+ 2710      090000
+ 2711 0146 E8000000 		call	_addConsoleActionI
+ 2711      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 72
+
+
+ 2712 014b C7442404 		movl	$__ZL5setOMi, 4(%esp)
+ 2712      00000000 
+ 2713 0153 C70424A7 		movl	$LC123, (%esp)
+ 2713      090000
+ 2714 015a E8000000 		call	_addConsoleActionI
+ 2714      00
+ 2715 015f C7442404 		movl	$__ZL23setGlobalFuelCorrectionf, 4(%esp)
+ 2715      00000000 
+ 2716 0167 C70424BA 		movl	$LC124, (%esp)
+ 2716      090000
+ 2717 016e E8000000 		call	_addConsoleActionF
+ 2717      00
+ 2718 0173 C7442404 		movl	$__ZL15setCrankingFuelf, 4(%esp)
+ 2718      00000000 
+ 2719 017b C70424D5 		movl	$LC125, (%esp)
+ 2719      090000
+ 2720 0182 E8000000 		call	_addConsoleActionF
+ 2720      00
+ 2721 0187 C7442404 		movl	$__ZL14setCrankingRpmi, 4(%esp)
+ 2721      00000000 
+ 2722 018f C70424E7 		movl	$LC126, (%esp)
+ 2722      090000
+ 2723 0196 E8000000 		call	_addConsoleActionI
+ 2723      00
+ 2724 019b C7442404 		movl	$__ZL22setCrankingTimingAnglef, 4(%esp)
+ 2724      00000000 
+ 2725 01a3 C70424F8 		movl	$LC127, (%esp)
+ 2725      090000
+ 2726 01aa E8000000 		call	_addConsoleActionF
+ 2726      00
+ 2727 01af C7442404 		movl	$__ZL22setCrankingChargeAnglef, 4(%esp)
+ 2727      00000000 
+ 2728 01b7 C7042412 		movl	$LC128, (%esp)
+ 2728      0A0000
+ 2729 01be E8000000 		call	_addConsoleActionF
+ 2729      00
+ 2730 01c3 C7442404 		movl	$__ZL15setIgnitionModei, 4(%esp)
+ 2730      00000000 
+ 2731 01cb C704242C 		movl	$LC129, (%esp)
+ 2731      0A0000
+ 2732 01d2 E8000000 		call	_addConsoleActionI
+ 2732      00
+ 2733 01d7 C7442404 		movl	$__ZL24setCrankingInjectionModei, 4(%esp)
+ 2733      00000000 
+ 2734 01df C704243E 		movl	$LC130, (%esp)
+ 2734      0A0000
+ 2735 01e6 E8000000 		call	_addConsoleActionI
+ 2735      00
+ 2736 01eb C7442404 		movl	$__ZL16setInjectionModei, 4(%esp)
+ 2736      00000000 
+ 2737 01f3 C704245A 		movl	$LC131, (%esp)
+ 2737      0A0000
+ 2738 01fa E8000000 		call	_addConsoleActionI
+ 2738      00
+ 2739 01ff C7442404 		movl	$__ZL19setWholePhaseMapCmdf, 4(%esp)
+ 2739      00000000 
+ 2740 0207 C704246D 		movl	$LC132, (%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 73
+
+
+ 2740      0A0000
+ 2741 020e E8000000 		call	_addConsoleActionF
+ 2741      00
+ 2742 0213 C7442404 		movl	$__ZL20setWholeTimingMapCmdf, 4(%esp)
+ 2742      00000000 
+ 2743 021b C7042481 		movl	$LC133, (%esp)
+ 2743      0A0000
+ 2744 0222 E8000000 		call	_addConsoleActionF
+ 2744      00
+ 2745 0227 C7442404 		movl	$__ZL18setWholeFuelMapCmdf, 4(%esp)
+ 2745      00000000 
+ 2746 022f C7042496 		movl	$LC134, (%esp)
+ 2746      0A0000
+ 2747 0236 E8000000 		call	_addConsoleActionF
+ 2747      00
+ 2748 023b C7442404 		movl	$__ZL13setWholeVeCmdf, 4(%esp)
+ 2748      00000000 
+ 2749 0243 C70424A9 		movl	$LC135, (%esp)
+ 2749      0A0000
+ 2750 024a E8000000 		call	_addConsoleActionF
+ 2750      00
+ 2751 024f C7442404 		movl	$__ZL10setFuelMapPKcS0_S0_, 4(%esp)
+ 2751      00000000 
+ 2752 0257 C70424BA 		movl	$LC136, (%esp)
+ 2752      0A0000
+ 2753 025e E8000000 		call	_addConsoleActionSSS
+ 2753      00
+ 2754 0263 C7442404 		movl	$__ZL17setWholeTimingMapf, 4(%esp)
+ 2754      00000000 
+ 2755 026b C7042481 		movl	$LC133, (%esp)
+ 2755      0A0000
+ 2756 0272 E8000000 		call	_addConsoleActionF
+ 2756      00
+ 2757 0277 C7442404 		movl	$__ZL12setTimingMapPKcS0_S0_, 4(%esp)
+ 2757      00000000 
+ 2758 027f C70424C7 		movl	$LC137, (%esp)
+ 2758      0A0000
+ 2759 0286 E8000000 		call	_addConsoleActionSSS
+ 2759      00
+ 2760 028b C7442404 		movl	$__ZL15setRpmHardLimiti, 4(%esp)
+ 2760      00000000 
+ 2761 0293 C70424D6 		movl	$LC138, (%esp)
+ 2761      0A0000
+ 2762 029a E8000000 		call	_addConsoleActionI
+ 2762      00
+ 2763 029f C7442404 		movl	$__ZL14setFiringOrderi, 4(%esp)
+ 2763      00000000 
+ 2764 02a7 C70424E9 		movl	$LC139, (%esp)
+ 2764      0A0000
+ 2765 02ae E8000000 		call	_addConsoleActionI
+ 2765      00
+ 2766 02b3 C7442404 		movl	$__ZL15setAlgorithmInti, 4(%esp)
+ 2766      00000000 
+ 2767 02bb C70424FA 		movl	$LC140, (%esp)
+ 2767      0A0000
+ 2768 02c2 E8000000 		call	_addConsoleActionI
+ 2768      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 74
+
+
+ 2769 02c7 C7442404 		movl	$__Z10stopEnginev, 4(%esp)
+ 2769      00000000 
+ 2770 02cf C7042408 		movl	$LC141, (%esp)
+ 2770      0B0000
+ 2771 02d6 E8000000 		call	_addConsoleAction
+ 2771      00
+ 2772 02db C7442404 		movl	$__ZL15enableInjectionv, 4(%esp)
+ 2772      00000000 
+ 2773 02e3 C7042413 		movl	$LC142, (%esp)
+ 2773      0B0000
+ 2774 02ea E8000000 		call	_addConsoleAction
+ 2774      00
+ 2775 02ef C7442404 		movl	$__ZL16disableInjectionv, 4(%esp)
+ 2775      00000000 
+ 2776 02f7 C7042424 		movl	$LC143, (%esp)
+ 2776      0B0000
+ 2777 02fe E8000000 		call	_addConsoleAction
+ 2777      00
+ 2778 0303 C7442404 		movl	$__ZL14enableIgnitionv, 4(%esp)
+ 2778      00000000 
+ 2779 030b C7042436 		movl	$LC144, (%esp)
+ 2779      0B0000
+ 2780 0312 E8000000 		call	_addConsoleAction
+ 2780      00
+ 2781 0317 C7442404 		movl	$__ZL15disableIgnitionv, 4(%esp)
+ 2781      00000000 
+ 2782 031f C7042446 		movl	$LC145, (%esp)
+ 2782      0B0000
+ 2783 0326 E8000000 		call	_addConsoleAction
+ 2783      00
+ 2784 032b C7442404 		movl	$__ZL9enableSpii, 4(%esp)
+ 2784      00000000 
+ 2785 0333 C7042457 		movl	$LC146, (%esp)
+ 2785      0B0000
+ 2786 033a E8000000 		call	_addConsoleActionI
+ 2786      00
+ 2787 033f C7442404 		movl	$__ZL10disableSpii, 4(%esp)
+ 2787      00000000 
+ 2788 0347 C7042462 		movl	$LC147, (%esp)
+ 2788      0B0000
+ 2789 034e E8000000 		call	_addConsoleActionI
+ 2789      00
+ 2790 0353 C7442404 		movl	$__ZL6enablePKc, 4(%esp)
+ 2790      00000000 
+ 2791 035b C704246E 		movl	$LC148, (%esp)
+ 2791      0B0000
+ 2792 0362 E8000000 		call	_addConsoleActionS
+ 2792      00
+ 2793 0367 C7442404 		movl	$__ZL7disablePKc, 4(%esp)
+ 2793      00000000 
+ 2794 036f C7042475 		movl	$LC149, (%esp)
+ 2794      0B0000
+ 2795 0376 E8000000 		call	_addConsoleActionS
+ 2795      00
+ 2796 037b C7442404 		movl	$__ZL15setToothedWheelii, 4(%esp)
+ 2796      00000000 
+ 2797 0383 C704247D 		movl	$LC150, (%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 75
+
+
+ 2797      0B0000
+ 2798 038a E8000000 		call	_addConsoleActionII
+ 2798      00
+ 2799 038f C7442404 		movl	$__ZL14setTriggerTypei, 4(%esp)
+ 2799      00000000 
+ 2800 0397 C704248F 		movl	$LC151, (%esp)
+ 2800      0B0000
+ 2801 039e E8000000 		call	_addConsoleActionI
+ 2801      00
+ 2802 03a3 C7442404 		movl	$__ZL15setVBattDividerf, 4(%esp)
+ 2802      00000000 
+ 2803 03ab C70424A0 		movl	$LC152, (%esp)
+ 2803      0B0000
+ 2804 03b2 E8000000 		call	_addConsoleActionF
+ 2804      00
+ 2805 03b7 C7442404 		movl	$__ZL14setInjectorLagf, 4(%esp)
+ 2805      00000000 
+ 2806 03bf C70424B2 		movl	$LC153, (%esp)
+ 2806      0B0000
+ 2807 03c6 E8000000 		call	_addConsoleActionF
+ 2807      00
+ 2808 03cb C7442404 		movl	$__ZL10setCltBiasf, 4(%esp)
+ 2808      00000000 
+ 2809 03d3 C70424C3 		movl	$LC154, (%esp)
+ 2809      0B0000
+ 2810 03da E8000000 		call	_addConsoleActionF
+ 2810      00
+ 2811 03df C7442404 		movl	$__ZL10setIatBiasf, 4(%esp)
+ 2811      00000000 
+ 2812 03e7 C70424D0 		movl	$LC155, (%esp)
+ 2812      0B0000
+ 2813 03ee E8000000 		call	_addConsoleActionF
+ 2813      00
+ 2814 03f3 C7442404 		movl	$__ZL24setIdleSolenoidFrequencyi, 4(%esp)
+ 2814      00000000 
+ 2815 03fb C70424DD 		movl	$LC156, (%esp)
+ 2815      0B0000
+ 2816 0402 E8000000 		call	_addConsoleActionI
+ 2816      00
+ 2817 0407 C7442404 		movl	$__ZL13setFanSettingff, 4(%esp)
+ 2817      00000000 
+ 2818 040f C70424F4 		movl	$LC157, (%esp)
+ 2818      0B0000
+ 2819 0416 E8000000 		call	_addConsoleActionFF
+ 2819      00
+ 2820 041b 83C41C   		addl	$28, %esp
+ 2821              		.cfi_def_cfa_offset 4
+ 2822 041e C3       		ret
+ 2823              		.cfi_endproc
+ 2824              	LFE147:
+ 2825 041f 90       		.section .rdata,"dr"
+ 2826              	LC158:
+ 2827 0bfc 73657474 		.ascii "settings control\0"
+ 2827      696E6773 
+ 2827      20636F6E 
+ 2827      74726F6C 
+ 2827      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 76
+
+
+ 2828              		.section	.text.startup._GLOBAL__sub_I__Z15printFloatArrayPKcPfi,"x"
+ 2829              		.p2align 4,,15
+ 2830              		.def	__GLOBAL__sub_I__Z15printFloatArrayPKcPfi;	.scl	3;	.type	32;	.endef
+ 2831              	__GLOBAL__sub_I__Z15printFloatArrayPKcPfi:
+ 2832              	LFB149:
+ 2833              		.cfi_startproc
+ 2834 0000 83EC1C   		subl	$28, %esp
+ 2835              		.cfi_def_cfa_offset 32
+ 2836 0003 B9000000 		movl	$__ZL6logger, %ecx
+ 2836      00
+ 2837 0008 C7442408 		movl	$1000, 8(%esp)
+ 2837      E8030000 
+ 2838 0010 C7442404 		movl	$__ZL14LOGGING_BUFFER, 4(%esp)
+ 2838      00000000 
+ 2839 0018 C70424FC 		movl	$LC158, (%esp)
+ 2839      0B0000
+ 2840 001f E8000000 		call	__ZN7LoggingC1EPKcPci
+ 2840      00
+ 2841              		.cfi_def_cfa_offset 20
+ 2842 0024 83EC0C   		subl	$12, %esp
+ 2843              		.cfi_def_cfa_offset 32
+ 2844 0027 83C41C   		addl	$28, %esp
+ 2845              		.cfi_def_cfa_offset 4
+ 2846 002a C3       		ret
+ 2847              		.cfi_endproc
+ 2848              	LFE149:
+ 2849 002b 90909090 		.section	.ctors,"w"
+ 2849      90
+ 2850              		.align 4
+ 2851 0000 00000000 		.long	__GLOBAL__sub_I__Z15printFloatArrayPKcPfi
+ 2852              		.section	.data$_ZL6logger,"w"
+ 2853              		.align 32
+ 2854              	__ZL6logger:
+ 2855 0000 00000000 		.space 60
+ 2855      00000000 
+ 2855      00000000 
+ 2855      00000000 
+ 2855      00000000 
+ 2856 003c 00000000 		.section .rdata,"dr"
+ 2857              	LC159:
+ 2858 0c0d 43555354 		.ascii "CUSTOM\0"
+ 2858      4F4D00
+ 2859              	LC160:
+ 2860 0c14 4E656F6E 		.ascii "Neon95\0"
+ 2860      393500
+ 2861              	LC161:
+ 2862 0c1b 41737069 		.ascii "Aspire\0"
+ 2862      726500
+ 2863              	LC162:
+ 2864 0c22 46696573 		.ascii "Fiesta\0"
+ 2864      746100
+ 2865              	LC163:
+ 2866 0c29 5072696D 		.ascii "Primera\0"
+ 2866      65726100 
+ 2867              	LC164:
+ 2868 0c31 4163636F 		.ascii "Accord3\0"
+ 2868      72643300 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 77
+
+
+ 2869              	LC165:
+ 2870 0c39 466F7264 		.ascii "Fordi6\0"
+ 2870      693600
+ 2871              	LC166:
+ 2872 0c40 47793631 		.ascii "Gy6139\0"
+ 2872      333900
+ 2873              	LC167:
+ 2874 0c47 4D696174 		.ascii "MiataNB\0"
+ 2874      614E4200 
+ 2875              	LC168:
+ 2876 0c4f 52767276 		.ascii "Rvrv8\0"
+ 2876      3800
+ 2877              	LC169:
+ 2878 0c55 4D333233 		.ascii "M323\0"
+ 2878      00
+ 2879              	LC170:
+ 2880 0c5a 53617475 		.ascii "Saturn Ion\0"
+ 2880      726E2049 
+ 2880      6F6E00
+ 2881              	LC171:
+ 2882 0c65 436F6F70 		.ascii "CoopR50\0"
+ 2882      52353000 
+ 2883              	LC172:
+ 2884 0c6d 45736372 		.ascii "EscrtGT\0"
+ 2884      74475400 
+ 2885              	LC173:
+ 2886 0c75 5455334A 		.ascii "TU3JP\0"
+ 2886      5000
+ 2887              	LC174:
+ 2888 0c7b 4D693447 		.ascii "Mi4G93\0"
+ 2888      393300
+ 2889              	LC175:
+ 2890 0c82 4163636F 		.ascii "Accord2\0"
+ 2890      72643200 
+ 2891              	LC176:
+ 2892 0c8a 486F6E64 		.ascii "HondaD\0"
+ 2892      614400
+ 2893              	LC177:
+ 2894 0c91 4D583539 		.ascii "MX590\0"
+ 2894      3000
+ 2895              	LC178:
+ 2896 0c97 4D583539 		.ascii "MX594d\0"
+ 2896      346400
+ 2897              	LC179:
+ 2898 0c9e 4D583539 		.ascii "MX596\0"
+ 2898      3600
+ 2899              	LC180:
+ 2900 0ca4 4E656F6E 		.ascii "Neon03\0"
+ 2900      303300
+ 2901              	LC181:
+ 2902 0cab 4D583539 		.ascii "MX594s\0"
+ 2902      347300
+ 2903              	LC182:
+ 2904 0cb2 424D5765 		.ascii "BMWe34\0"
+ 2904      333400
+ 2905              	LC183:
+ 2906 0cb9 54657374 		.ascii "Test\0"
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 78
+
+
+ 2906      00
+ 2907              	LC184:
+ 2908 0cbe 4D617A64 		.ascii "Mazda626\0"
+ 2908      61363236 
+ 2908      00
+ 2909              	LC185:
+ 2910 0cc7 53414348 		.ascii "SACHS\0"
+ 2910      5300
+ 2911              	LC186:
+ 2912 0ccd 474D5F32 		.ascii "GM_2_2\0"
+ 2912      5F3200
+ 2913              	LC187:
+ 2914 0cd4 444F4447 		.ascii "DODGE_RAM\0"
+ 2914      455F5241 
+ 2914      4D00
+ 2915              	LC188:
+ 2916 0cde 56575F41 		.ascii "VW_ABA\0"
+ 2916      424100
+ 2917              		.section	.rdata$CSWTCH.168,"dr"
+ 2918              		.align 32
+ 2919              	_CSWTCH.168:
+ 2920 0000 0D0C0000 		.long	LC159
+ 2921 0004 CB040000 		.long	LC72
+ 2922 0008 140C0000 		.long	LC160
+ 2923 000c 1B0C0000 		.long	LC161
+ 2924 0010 220C0000 		.long	LC162
+ 2925 0014 290C0000 		.long	LC163
+ 2926 0018 310C0000 		.long	LC164
+ 2927 001c 390C0000 		.long	LC165
+ 2928 0020 400C0000 		.long	LC166
+ 2929 0024 470C0000 		.long	LC167
+ 2930 0028 4F0C0000 		.long	LC168
+ 2931 002c 550C0000 		.long	LC169
+ 2932 0030 5A0C0000 		.long	LC170
+ 2933 0034 650C0000 		.long	LC171
+ 2934 0038 6D0C0000 		.long	LC172
+ 2935 003c 750C0000 		.long	LC173
+ 2936 0040 7B0C0000 		.long	LC174
+ 2937 0044 820C0000 		.long	LC175
+ 2938 0048 8A0C0000 		.long	LC176
+ 2939 004c 910C0000 		.long	LC177
+ 2940 0050 970C0000 		.long	LC178
+ 2941 0054 9E0C0000 		.long	LC179
+ 2942 0058 CB040000 		.long	LC72
+ 2943 005c A40C0000 		.long	LC180
+ 2944 0060 AB0C0000 		.long	LC181
+ 2945 0064 B20C0000 		.long	LC182
+ 2946 0068 B90C0000 		.long	LC183
+ 2947 006c CB040000 		.long	LC72
+ 2948 0070 BE0C0000 		.long	LC184
+ 2949 0074 C70C0000 		.long	LC185
+ 2950 0078 CD0C0000 		.long	LC186
+ 2951 007c D40C0000 		.long	LC187
+ 2952 0080 DE0C0000 		.long	LC188
+ 2953 0084 00000000 		.section	.data$_ZL13pinNameBuffer,"w"
+ 2953      00000000 
+ 2953      00000000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 79
+
+
+ 2953      00000000 
+ 2953      00000000 
+ 2954              	__ZL13pinNameBuffer:
+ 2955 0000 00000000 		.space 16
+ 2955      00000000 
+ 2955      00000000 
+ 2955      00000000 
+ 2956              		.section	.data$_ZL14LOGGING_BUFFER,"w"
+ 2957              		.align 32
+ 2958              	__ZL14LOGGING_BUFFER:
+ 2959 0000 00000000 		.space 1000
+ 2959      00000000 
+ 2959      00000000 
+ 2959      00000000 
+ 2959      00000000 
+ 2960 03e8 00000000 		.section .rdata,"dr"
+ 2960      00000000 
+ 2960      00000000 
+ 2960      00000000 
+ 2960      00000000 
+ 2961 0ce5 000000   		.align 8
+ 2962              	LC7:
+ 2963 0ce8 7B14AE47 		.long	1202590843
+ 2964 0cec E17A843F 		.long	1065646817
+ 2965              		.align 4
+ 2966              	LC8:
+ 2967 0cf0 00004842 		.long	1112014848
+ 2968              		.align 4
+ 2969              	LC53:
+ 2970 0cf4 010C403A 		.long	977275905
+ 2971              		.align 4
+ 2972              	LC57:
+ 2973 0cf8 00007A44 		.long	1148846080
+ 2974              		.def	__Z11scheduleMsgP7LoggingPKcz;	.scl	2;	.type	32;	.endef
+ 2975              		.def	_strEqualCaseInsensitive;	.scl	2;	.type	32;	.endef
+ 2976              		.def	__Z35incrementGlobalConfigurationVersionv;	.scl	2;	.type	32;	.endef
+ 2977              		.def	_atoff;	.scl	2;	.type	32;	.endef
+ 2978              		.def	__Z9findIndexPKfif;	.scl	2;	.type	32;	.endef
+ 2979              		.def	__Z6setMapPA16_ff;	.scl	2;	.type	32;	.endef
+ 2980              		.def	__Z15setWholeFuelMapf;	.scl	2;	.type	32;	.endef
+ 2981              		.def	__Z18getTpsRateOfChangev;	.scl	2;	.type	32;	.endef
+ 2982              		.def	__Z6getTPSv;	.scl	2;	.type	32;	.endef
+ 2983              		.def	__Z14getTPS10bitAdcv;	.scl	2;	.type	32;	.endef
+ 2984              		.def	__Z11getAdcValuePKci;	.scl	2;	.type	32;	.endef
+ 2985              		.def	__Z13getResistanceP14ThermistorConf;	.scl	2;	.type	32;	.endef
+ 2986              		.def	__Z15getTemperatureCP14ThermistorConfP14ThermistorMath;	.scl	2;	.type	32;	.endef
+ 2987              		.def	__Z22getPinNameByAdcChannel13adc_channel_ePc;	.scl	2;	.type	32;	.endef
+ 2988              		.def	__Z21getCoolantTemperaturev;	.scl	2;	.type	32;	.endef
+ 2989              		.def	__Z25isValidCoolantTemperaturef;	.scl	2;	.type	32;	.endef
+ 2990              		.def	__Z23getIntakeAirTemperaturev;	.scl	2;	.type	32;	.endef
+ 2991              		.def	__Z27isValidIntakeAirTemperaturef;	.scl	2;	.type	32;	.endef
+ 2992              		.def	__ZN9OutputPin13getLogicValueEv;	.scl	2;	.type	32;	.endef
+ 2993              		.def	__Z12boolToStringb;	.scl	2;	.type	32;	.endef
+ 2994              		.def	_getTimeNowNt;	.scl	2;	.type	32;	.endef
+ 2995              		.def	__Z15appendMsgPrefixP7Logging;	.scl	2;	.type	32;	.endef
+ 2996              		.def	_appendPrintf;	.scl	2;	.type	32;	.endef
+ 2997              		.def	__Z16appendMsgPostfixP7Logging;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 80
+
+
+ 2998              		.def	_scheduleLogging;	.scl	2;	.type	32;	.endef
+ 2999              		.def	__Z21getEngine_load_mode_e18engine_load_mode_e;	.scl	2;	.type	32;	.endef
+ 3000              		.def	__Z17getTrigger_type_e14trigger_type_e;	.scl	2;	.type	32;	.endef
+ 3001              		.def	__Z29getGlobalConfigurationVersionv;	.scl	2;	.type	32;	.endef
+ 3002              		.def	__Z19getInjection_mode_e16injection_mode_e;	.scl	2;	.type	32;	.endef
+ 3003              		.def	__Z18getIgnition_mode_e15ignition_mode_e;	.scl	2;	.type	32;	.endef
+ 3004              		.def	__Z16getTiming_mode_e13timing_mode_e;	.scl	2;	.type	32;	.endef
+ 3005              		.def	__Z20getPin_output_mode_e17pin_output_mode_e;	.scl	2;	.type	32;	.endef
+ 3006              		.def	__Z28setToothedWheelConfigurationP12TriggerShapeii16operation_mode_e;	.scl	2;	.type	32;	.ende
+ 3007              		.def	__Z12setAlgorithm18engine_load_mode_e;	.scl	2;	.type	32;	.endef
+ 3008              		.def	__Z21resetConfigurationExtP7Logging13engine_type_e;	.scl	2;	.type	32;	.endef
+ 3009              		.def	__ZN9WaveChart14resetWaveChartEv;	.scl	2;	.type	32;	.endef
+ 3010              		.def	_addConsoleActionP;	.scl	2;	.type	32;	.endef
+ 3011              		.def	_addConsoleAction;	.scl	2;	.type	32;	.endef
+ 3012              		.def	_addConsoleActionF;	.scl	2;	.type	32;	.endef
+ 3013              		.def	_addConsoleActionI;	.scl	2;	.type	32;	.endef
+ 3014              		.def	_addConsoleActionSSS;	.scl	2;	.type	32;	.endef
+ 3015              		.def	_addConsoleActionS;	.scl	2;	.type	32;	.endef
+ 3016              		.def	_addConsoleActionII;	.scl	2;	.type	32;	.endef
+ 3017              		.def	_addConsoleActionFF;	.scl	2;	.type	32;	.endef
+ 3018 0cfc 00000000 		.def	__ZN7LoggingC1EPKcPci;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 81
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 settings.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:5      .text$_ZL24setIdleSolenoidFrequencyi:00000000 __ZL24setIdleSolenoidFrequencyi
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:17     .text$_ZL10setCltBiasf:00000000 __ZL10setCltBiasf
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:29     .text$_ZL10setIatBiasf:00000000 __ZL10setIatBiasf
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:41     .text$_ZL15setVBattDividerf:00000000 __ZL15setVBattDividerf
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:53     .text$_ZL14setInjectorLagf:00000000 __ZL14setInjectorLagf
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:68     .text$_ZL15disableIgnitionv:00000000 __ZL15disableIgnitionv
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2854   .data$_ZL6logger:00000000 __ZL6logger
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:89     .text$_ZL14enableIgnitionv:00000000 __ZL14enableIgnitionv
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:110    .text$_ZL16disableInjectionv:00000000 __ZL16disableInjectionv
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:131    .text$_ZL15enableInjectionv:00000000 __ZL15enableInjectionv
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:153    .text$_ZL17setWholeTimingMapf:00000000 __ZL17setWholeTimingMapf
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:193    .text$_ZL20setWholeTimingMapCmdf:00000000 __ZL20setWholeTimingMapCmdf
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:217    .text$_ZL23setGlobalFuelCorrectionf:00000000 __ZL23setGlobalFuelCorrectionf
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:331    .text$_ZL15enableOrDisablePKcb:00000000 __ZL15enableOrDisablePKcb
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:814    .text$_ZL7disablePKc:00000000 __ZL7disablePKc
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:825    .text$_ZL6enablePKc:00000000 __ZL6enablePKc
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:840    .text$_ZL12setTimingMapPKcS0_S0_:00000000 __ZL12setTimingMapPKcS0_S0_
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:913    .text$_ZL10setFuelMapPKcS0_S0_:00000000 __ZL10setFuelMapPKcS0_S0_
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:988    .text$_ZL13setWholeVeCmdf:00000000 __ZL13setWholeVeCmdf
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:1023   .text$_ZL19setWholePhaseMapCmdf:00000000 __ZL19setWholePhaseMapCmdf
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:1054   .text$_ZL18setWholeFuelMapCmdf:00000000 __ZL18setWholeFuelMapCmdf
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:1095   .text$_ZL12printTPSInfov:00000000 __ZL12printTPSInfov
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:1137   .text$_ZL15printThermistorPKcP14ThermistorConfP14ThermistorMath:00000000 __ZL15printThermistorPKcP14ThermistorConfP14ThermistorMath
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2954   .data$_ZL13pinNameBuffer:00000000 __ZL13pinNameBuffer
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:1247   .text$_ZL20printTemperatureInfov:00000000 __ZL20printTemperatureInfov
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:1315   .text$_ZL15setCrankingFuelf:00000000 __ZL15setCrankingFuelf
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:1330   .text$_ZL12printAllInfov:00000000 __ZL12printAllInfov
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:1351   .text$_Z10stopEnginev:00000000 __Z10stopEnginev
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:1378   .text$_ZL13setFanSettingff:00000000 __ZL13setFanSettingff
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:1415   .text$_Z15printFloatArrayPKcPfi:00000000 __Z15printFloatArrayPKcPfi
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:1475   .text$_Z13printSpiStateP7LoggingP21board_configuration_s:00000000 __Z13printSpiStateP7LoggingP21board_configuration_s
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:1527   .text$_ZL10setSpiModeib:00000000 __ZL10setSpiModeib
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:1590   .text$_ZL10disableSpii:00000000 __ZL10disableSpii
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:1601   .text$_ZL9enableSpii:00000000 __ZL9enableSpii
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:1616   .text$_Z20getConfigurationName13engine_type_e:00000000 __Z20getConfigurationName13engine_type_e
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2919   .rdata$CSWTCH.168:00000000 _CSWTCH.168
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:1710   .text$_Z18printConfigurationP22engine_configuration_s:00000000 __Z18printConfigurationP22engine_configuration_s
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2102   .text$_ZL20doPrintConfigurationP6Engine:00000000 __ZL20doPrintConfigurationP6Engine
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2113   .text$_ZL14setTriggerTypei:00000000 __ZL14setTriggerTypei
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2135   .text$_ZL15setToothedWheelii:00000000 __ZL15setToothedWheelii
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2175   .text$_ZL15setAlgorithmInti:00000000 __ZL15setAlgorithmInti
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2193   .text$_ZL14setFiringOrderi:00000000 __ZL14setFiringOrderi
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2207   .text$_ZL15setRpmHardLimiti:00000000 __ZL15setRpmHardLimiti
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2221   .text$_ZL16setInjectionModei:00000000 __ZL16setInjectionModei
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2240   .text$_ZL24setCrankingInjectionModei:00000000 __ZL24setCrankingInjectionModei
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2259   .text$_ZL15setIgnitionModei:00000000 __ZL15setIgnitionModei
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2278   .text$_ZL22setCrankingChargeAnglef:00000000 __ZL22setCrankingChargeAnglef
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2297   .text$_ZL22setCrankingTimingAnglef:00000000 __ZL22setCrankingTimingAnglef
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2316   .text$_ZL14setCrankingRpmi:00000000 __ZL14setCrankingRpmi
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2330   .text$_ZL5setOMi:00000000 __ZL5setOMi
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2344   .text$_ZL30setMalfunctionIndicatorPinModei:00000000 __ZL30setMalfunctionIndicatorPinModei
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2358   .text$_ZL18setFuelPumpPinModei:00000000 __ZL18setFuelPumpPinModei
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2372   .text$_ZL14setIdlePinModei:00000000 __ZL14setIdlePinModei
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2386   .text$_ZL18setIgnitionPinModei:00000000 __ZL18setIgnitionPinModei
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2400   .text$_ZL19setInjectionPinModei:00000000 __ZL19setInjectionPinModei
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 82
+
+
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2414   .text$_ZL13setTimingModei:00000000 __ZL13setTimingModei
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2433   .text$_ZL18setFixedModeTimingi:00000000 __ZL18setFixedModeTimingi
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2452   .text$_ZL18setSensorChartModei:00000000 __ZL18setSensorChartModei
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2466   .text$_ZL27setGlobalTriggerAngleOffsetf:00000000 __ZL27setGlobalTriggerAngleOffsetf
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2485   .text$_ZL18setInjectionOffsetf:00000000 __ZL18setInjectionOffsetf
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2504   .text$_ZL17setIgnitionOffsetf:00000000 __ZL17setIgnitionOffsetf
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2524   .text$_Z13setEngineTypei:00000000 __Z13setEngineTypei
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2658   .text$_Z12initSettingsP22engine_configuration_s:00000000 __Z12initSettingsP22engine_configuration_s
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2831   .text.startup._GLOBAL__sub_I__Z15printFloatArrayPKcPfi:00000000 __GLOBAL__sub_I__Z15printFloatArrayPKcPfi
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s:2958   .data$_ZL14LOGGING_BUFFER:00000000 __ZL14LOGGING_BUFFER
+
+UNDEFINED SYMBOLS
+_boardConfiguration
+_engineConfiguration
+_config
+_engine
+_enginePins
+_waveChartUsedSize
+_maxNesting
+_waveChart
+__Z11scheduleMsgP7LoggingPKcz
+_strEqualCaseInsensitive
+__Z35incrementGlobalConfigurationVersionv
+_atoff
+__Z9findIndexPKfif
+__Z6setMapPA16_ff
+__Z15setWholeFuelMapf
+__Z18getTpsRateOfChangev
+__Z6getTPSv
+__Z14getTPS10bitAdcv
+__Z11getAdcValuePKci
+__Z13getResistanceP14ThermistorConf
+__Z15getTemperatureCP14ThermistorConfP14ThermistorMath
+__Z22getPinNameByAdcChannel13adc_channel_ePc
+__Z21getCoolantTemperaturev
+__Z25isValidCoolantTemperaturef
+__Z23getIntakeAirTemperaturev
+__Z27isValidIntakeAirTemperaturef
+__ZN9OutputPin13getLogicValueEv
+__Z12boolToStringb
+_getTimeNowNt
+__Z15appendMsgPrefixP7Logging
+_appendPrintf
+__Z16appendMsgPostfixP7Logging
+_scheduleLogging
+__Z21getEngine_load_mode_e18engine_load_mode_e
+__Z17getTrigger_type_e14trigger_type_e
+__Z29getGlobalConfigurationVersionv
+__Z19getInjection_mode_e16injection_mode_e
+__Z18getIgnition_mode_e15ignition_mode_e
+__Z16getTiming_mode_e13timing_mode_e
+__Z20getPin_output_mode_e17pin_output_mode_e
+__Z28setToothedWheelConfigurationP12TriggerShapeii16operation_mode_e
+__Z12setAlgorithm18engine_load_mode_e
+__Z21resetConfigurationExtP7Logging13engine_type_e
+__ZN9WaveChart14resetWaveChartEv
+_addConsoleActionP
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc8ArFyX.s 			page 83
+
+
+_addConsoleAction
+_addConsoleActionF
+_addConsoleActionI
+_addConsoleActionSSS
+_addConsoleActionS
+_addConsoleActionII
+_addConsoleActionFF
+__ZN7LoggingC1EPKcPci

@@ -1,11 +1,5 @@
 package com.rusefi.core;
 
-import com.romraider.logger.ecu.comms.query.ResponseImpl;
-import com.romraider.logger.ecu.definition.EcuDataConvertor;
-import com.romraider.logger.ecu.definition.EcuDataType;
-import com.romraider.logger.ecu.definition.LoggerData;
-import com.romraider.logger.ecu.ui.handler.table.TableUpdateHandler;
-
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +19,7 @@ public class SensorCentral {
     private final Map<Sensor, Double> values = new EnumMap<>(Sensor.class);
 
     private final Map<Sensor, List<SensorListener>> allListeners = new EnumMap<>(Sensor.class);
+    public SensorListener2 anySensorListener;
 
     public static SensorCentral getInstance() {
         return INSTANCE;
@@ -39,38 +34,6 @@ public class SensorCentral {
             return Double.NaN;
         return value;
     }
-
-    EcuDataConvertor convertor = new EcuDataConvertor() {
-        @Override
-        public double convert(byte[] bytes) {
-            return 0;
-        }
-
-        @Override
-        public String format(double value) {
-            return Double.toString(value);
-        }
-
-        @Override
-        public String getUnits() {
-            return null;
-        }
-
-        @Override
-        public String getFormat() {
-            return null;
-        }
-
-        @Override
-        public String getExpression() {
-            return null;
-        }
-
-        @Override
-        public String getDataType() {
-            return null;
-        }
-    };
 
     public void setValue(double value, final Sensor sensor) {
         Double oldValue = values.get(sensor);
@@ -91,63 +54,8 @@ public class SensorCentral {
     }
 
     private void applyValueToTables(double value, final Sensor sensor, boolean isUpdated) {
-        ResponseImpl r = new ResponseImpl();
-
-        LoggerData d = new LoggerData() {
-            @Override
-            public String toString() {
-                return getName();
-            }
-
-            @Override
-            public String getId() {
-                return sensor.name();
-            }
-
-            @Override
-            public String getName() {
-                return sensor.getName();
-            }
-
-            @Override
-            public String getDescription() {
-                return sensor.getName();
-            }
-
-            @Override
-            public EcuDataConvertor getSelectedConvertor() {
-                return convertor;
-            }
-
-            @Override
-            public EcuDataConvertor[] getConvertors() {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public void selectConvertor(EcuDataConvertor convertor) {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public EcuDataType getDataType() {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public boolean isSelected() {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public void setSelected(boolean selected) {
-                throw new UnsupportedOperationException();
-            }
-        };
-
-        r.setDataValue(d, value);
-        if (isUpdated)
-            TableUpdateHandler.getInstance().handleDataUpdate(r);
+        if (isUpdated && anySensorListener != null)
+            anySensorListener.onSensorUpdate(sensor, value);
     }
 
     public void addListener(Sensor sensor, SensorListener listener) {
@@ -194,6 +102,7 @@ public class SensorCentral {
         addDoubleSensor(Sensor.ADVANCE1, es);
         addDoubleSensor(Sensor.ADVANCE2, es);
         addDoubleSensor(Sensor.ADVANCE3, es);
+        addDoubleSensor(Sensor.KS, es);
 
         addDoubleSensor("tch", Sensor.T_CHARGE, es);
         addDoubleSensor(Sensor.AFR, es);
@@ -256,5 +165,9 @@ public class SensorCentral {
 
     public interface SensorListener {
         void onSensorUpdate(double value);
+    }
+
+    public interface SensorListener2 {
+        void onSensorUpdate(Sensor sensor, double value);
     }
 }

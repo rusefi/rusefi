@@ -1,0 +1,798 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"adc_lld.c"
+  16              		.section	.text.adc_lld_init,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	adc_lld_init
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	adc_lld_init, %function
+  23              	adc_lld_init:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 70B5     		push	{r4, r5, r6, lr}
+  27 0002 40F20005 		movw	r5, #:lower16:.LANCHOR0
+  28 0006 C0F20005 		movt	r5, #:upper16:.LANCHOR0
+  29 000a 2846     		mov	r0, r5
+  30 000c 40F20004 		movw	r4, #:lower16:.LANCHOR1
+  31 0010 FFF7FEFF 		bl	adcObjectInit
+  32 0014 C0F20004 		movt	r4, #:upper16:.LANCHOR1
+  33 0018 104E     		ldr	r6, .L2
+  34 001a 4FF40052 		mov	r2, #8192
+  35 001e 42F61643 		movw	r3, #11286
+  36 0022 C4F20102 		movt	r2, 16385
+  37 0026 C0F20203 		movt	r3, 2
+  38 002a 2046     		mov	r0, r4
+  39 002c AA62     		str	r2, [r5, #40]
+  40 002e 2B63     		str	r3, [r5, #48]
+  41 0030 EE62     		str	r6, [r5, #44]
+  42 0032 FFF7FEFF 		bl	adcObjectInit
+  43 0036 4FF40452 		mov	r2, #8448
+  44 003a 42F61643 		movw	r3, #11286
+  45 003e 183E     		subs	r6, r6, #24
+  46 0040 C4F20102 		movt	r2, 16385
+  47 0044 C0F20223 		movt	r3, 514
+  48 0048 E662     		str	r6, [r4, #44]
+  49 004a A262     		str	r2, [r4, #40]
+  50 004c 2363     		str	r3, [r4, #48]
+  51 004e 1220     		movs	r0, #18
+  52 0050 6021     		movs	r1, #96
+  53 0052 BDE87040 		pop	{r4, r5, r6, lr}
+  54 0056 FFF7FEBF 		b	nvicEnableVector
+  55              	.L3:
+  56 005a 00BF     		.align	2
+  57              	.L2:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s 			page 2
+
+
+  58 005c 90000000 		.word	_stm32_dma_streams+144
+  59              		.size	adc_lld_init, .-adc_lld_init
+  60              		.section	.text.adc_lld_start,"ax",%progbits
+  61              		.align	2
+  62              		.p2align 4,,15
+  63              		.global	adc_lld_start
+  64              		.thumb
+  65              		.thumb_func
+  66              		.type	adc_lld_start, %function
+  67              	adc_lld_start:
+  68              		@ args = 0, pretend = 0, frame = 0
+  69              		@ frame_needed = 0, uses_anonymous_args = 0
+  70 0000 38B5     		push	{r3, r4, r5, lr}
+  71 0002 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+  72 0004 012B     		cmp	r3, #1
+  73 0006 0446     		mov	r4, r0
+  74 0008 00D0     		beq	.L17
+  75 000a 38BD     		pop	{r3, r4, r5, pc}
+  76              	.L17:
+  77 000c 40F20005 		movw	r5, #:lower16:.LANCHOR0
+  78 0010 C0F20005 		movt	r5, #:upper16:.LANCHOR0
+  79 0014 A842     		cmp	r0, r5
+  80 0016 16D0     		beq	.L18
+  81 0018 40F20005 		movw	r5, #:lower16:.LANCHOR1
+  82 001c C0F20005 		movt	r5, #:upper16:.LANCHOR1
+  83 0020 A842     		cmp	r0, r5
+  84 0022 2AD0     		beq	.L19
+  85              	.L8:
+  86 0024 4FF40C52 		mov	r2, #8960
+  87 0028 C4F20102 		movt	r2, 16385
+  88 002c A36A     		ldr	r3, [r4, #40]
+  89 002e 5468     		ldr	r4, [r2, #4]
+  90 0030 04F44004 		and	r4, r4, #12582912
+  91 0034 0021     		movs	r1, #0
+  92 0036 44F48034 		orr	r4, r4, #65536
+  93 003a 0120     		movs	r0, #1
+  94 003c 5460     		str	r4, [r2, #4]
+  95 003e 5960     		str	r1, [r3, #4]
+  96 0040 9960     		str	r1, [r3, #8]
+  97 0042 9860     		str	r0, [r3, #8]
+  98 0044 38BD     		pop	{r3, r4, r5, pc}
+  99              	.L18:
+ 100 0046 40F20002 		movw	r2, #:lower16:adc_lld_serve_rx_interrupt
+ 101 004a C0F20002 		movt	r2, #:upper16:adc_lld_serve_rx_interrupt
+ 102 004e C06A     		ldr	r0, [r0, #44]
+ 103 0050 0621     		movs	r1, #6
+ 104 0052 2346     		mov	r3, r4
+ 105 0054 FFF7FEFF 		bl	dmaStreamAllocate
+ 106 0058 48BB     		cbnz	r0, .L20
+ 107              	.L7:
+ 108 005a EB6A     		ldr	r3, [r5, #44]
+ 109 005c 42F24C02 		movw	r2, #8268
+ 110 0060 1968     		ldr	r1, [r3]
+ 111 0062 4FF46053 		mov	r3, #14336
+ 112 0066 C4F20102 		movt	r2, 16385
+ 113 006a C4F20203 		movt	r3, 16386
+ 114 006e 8A60     		str	r2, [r1, #8]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s 			page 3
+
+
+ 115 0070 5A6C     		ldr	r2, [r3, #68]
+ 116 0072 42F48072 		orr	r2, r2, #256
+ 117 0076 5A64     		str	r2, [r3, #68]
+ 118 0078 D4E7     		b	.L8
+ 119              	.L19:
+ 120 007a 40F20002 		movw	r2, #:lower16:adc_lld_serve_rx_interrupt
+ 121 007e C0F20002 		movt	r2, #:upper16:adc_lld_serve_rx_interrupt
+ 122 0082 C06A     		ldr	r0, [r0, #44]
+ 123 0084 0621     		movs	r1, #6
+ 124 0086 2346     		mov	r3, r4
+ 125 0088 FFF7FEFF 		bl	dmaStreamAllocate
+ 126 008c B0B9     		cbnz	r0, .L21
+ 127              	.L9:
+ 128 008e EB6A     		ldr	r3, [r5, #44]
+ 129 0090 42F24C12 		movw	r2, #8524
+ 130 0094 1968     		ldr	r1, [r3]
+ 131 0096 4FF46053 		mov	r3, #14336
+ 132 009a C4F20102 		movt	r2, 16385
+ 133 009e C4F20203 		movt	r3, 16386
+ 134 00a2 8A60     		str	r2, [r1, #8]
+ 135 00a4 5A6C     		ldr	r2, [r3, #68]
+ 136 00a6 42F40072 		orr	r2, r2, #512
+ 137 00aa 5A64     		str	r2, [r3, #68]
+ 138 00ac BAE7     		b	.L8
+ 139              	.L20:
+ 140 00ae 40F20000 		movw	r0, #:lower16:.LC0
+ 141 00b2 C0F20000 		movt	r0, #:upper16:.LC0
+ 142 00b6 FFF7FEFF 		bl	chDbgPanic
+ 143 00ba CEE7     		b	.L7
+ 144              	.L21:
+ 145 00bc 40F20000 		movw	r0, #:lower16:.LC1
+ 146 00c0 C0F20000 		movt	r0, #:upper16:.LC1
+ 147 00c4 FFF7FEFF 		bl	chDbgPanic
+ 148 00c8 E1E7     		b	.L9
+ 149              		.size	adc_lld_start, .-adc_lld_start
+ 150 00ca 00BFAFF3 		.section	.text.adc_lld_stop,"ax",%progbits
+ 150      0080
+ 151              		.align	2
+ 152              		.p2align 4,,15
+ 153              		.global	adc_lld_stop
+ 154              		.thumb
+ 155              		.thumb_func
+ 156              		.type	adc_lld_stop, %function
+ 157              	adc_lld_stop:
+ 158              		@ args = 0, pretend = 0, frame = 0
+ 159              		@ frame_needed = 0, uses_anonymous_args = 0
+ 160 0000 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 161 0002 022B     		cmp	r3, #2
+ 162 0004 10B5     		push	{r4, lr}
+ 163 0006 0446     		mov	r4, r0
+ 164 0008 00D0     		beq	.L27
+ 165 000a 10BD     		pop	{r4, pc}
+ 166              	.L27:
+ 167 000c C06A     		ldr	r0, [r0, #44]
+ 168 000e FFF7FEFF 		bl	dmaStreamRelease
+ 169 0012 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 170 0016 A26A     		ldr	r2, [r4, #40]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s 			page 4
+
+
+ 171 0018 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 172 001c 0021     		movs	r1, #0
+ 173 001e 9C42     		cmp	r4, r3
+ 174 0020 5160     		str	r1, [r2, #4]
+ 175 0022 9160     		str	r1, [r2, #8]
+ 176 0024 0FD0     		beq	.L28
+ 177 0026 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 178 002a C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ 179 002e 9C42     		cmp	r4, r3
+ 180 0030 01BF     		itttt	eq
+ 181 0032 4FF46053 		moveq	r3, #14336
+ 182 0036 C4F20203 		movteq	r3, 16386
+ 183 003a 5A6C     		ldreq	r2, [r3, #68]
+ 184 003c 22F40072 		biceq	r2, r2, #512
+ 185 0040 08BF     		it	eq
+ 186 0042 5A64     		streq	r2, [r3, #68]
+ 187 0044 10BD     		pop	{r4, pc}
+ 188              	.L28:
+ 189 0046 4FF46053 		mov	r3, #14336
+ 190 004a C4F20203 		movt	r3, 16386
+ 191 004e 5A6C     		ldr	r2, [r3, #68]
+ 192 0050 22F48072 		bic	r2, r2, #256
+ 193 0054 5A64     		str	r2, [r3, #68]
+ 194 0056 10BD     		pop	{r4, pc}
+ 195              		.size	adc_lld_stop, .-adc_lld_stop
+ 196 0058 AFF30080 		.section	.text.adc_lld_start_conversion,"ax",%progbits
+ 196      AFF30080 
+ 197              		.align	2
+ 198              		.p2align 4,,15
+ 199              		.global	adc_lld_start_conversion
+ 200              		.thumb
+ 201              		.thumb_func
+ 202              		.type	adc_lld_start_conversion, %function
+ 203              	adc_lld_start_conversion:
+ 204              		@ args = 0, pretend = 0, frame = 0
+ 205              		@ frame_needed = 0, uses_anonymous_args = 0
+ 206              		@ link register save eliminated.
+ 207 0000 0369     		ldr	r3, [r0, #16]
+ 208 0002 026B     		ldr	r2, [r0, #48]
+ 209 0004 1978     		ldrb	r1, [r3]	@ zero_extendqisi2
+ 210 0006 2DE9F003 		push	{r4, r5, r6, r7, r8, r9}
+ 211 000a C568     		ldr	r5, [r0, #12]
+ 212 000c 29B1     		cbz	r1, .L31
+ 213 000e 012D     		cmp	r5, #1
+ 214 0010 94BF     		ite	ls
+ 215 0012 42F48072 		orrls	r2, r2, #256
+ 216 0016 42F48472 		orrhi	r2, r2, #264
+ 217              	.L31:
+ 218 001a C16A     		ldr	r1, [r0, #44]
+ 219 001c 5E88     		ldrh	r6, [r3, #2]
+ 220 001e 0968     		ldr	r1, [r1]
+ 221 0020 8468     		ldr	r4, [r0, #8]
+ 222 0022 D3F80C80 		ldr	r8, [r3, #12]
+ 223 0026 CC60     		str	r4, [r1, #12]
+ 224 0028 06FB05F4 		mul	r4, r6, r5
+ 225 002c 4C60     		str	r4, [r1, #4]
+ 226 002e 0A60     		str	r2, [r1]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s 			page 5
+
+
+ 227 0030 D1F80090 		ldr	r9, [r1]
+ 228 0034 9F69     		ldr	r7, [r3, #24]
+ 229 0036 DE69     		ldr	r6, [r3, #28]
+ 230 0038 1D6A     		ldr	r5, [r3, #32]
+ 231 003a 5C6A     		ldr	r4, [r3, #36]
+ 232 003c D3F814C0 		ldr	ip, [r3, #20]
+ 233 0040 1B69     		ldr	r3, [r3, #16]
+ 234 0042 826A     		ldr	r2, [r0, #40]
+ 235 0044 49F00109 		orr	r9, r9, #1
+ 236 0048 C1F80090 		str	r9, [r1]
+ 237 004c 5900     		lsls	r1, r3, #1
+ 238 004e 44BF     		itt	mi
+ 239 0050 23F08041 		bicmi	r1, r3, #1073741824
+ 240 0054 21F00201 		bicmi	r1, r1, #2
+ 241 0058 48F08060 		orr	r0, r8, #67108864
+ 242 005c 46BF     		itte	mi
+ 243 005e 41F44071 		orrmi	r1, r1, #768
+ 244 0062 43F44073 		orrmi	r3, r3, #768
+ 245 0066 43F44073 		orrpl	r3, r3, #768
+ 246 006a 4FF00008 		mov	r8, #0
+ 247 006e 40F48070 		orr	r0, r0, #256
+ 248 0072 46BF     		itte	mi
+ 249 0074 41F00301 		orrmi	r1, r1, #3
+ 250 0078 43F00303 		orrmi	r3, r3, #3
+ 251 007c 43F00103 		orrpl	r3, r3, #1
+ 252 0080 C2F80080 		str	r8, [r2]
+ 253 0084 C2F80CC0 		str	ip, [r2, #12]
+ 254 0088 1761     		str	r7, [r2, #16]
+ 255 008a D662     		str	r6, [r2, #44]
+ 256 008c 1563     		str	r5, [r2, #48]
+ 257 008e 5463     		str	r4, [r2, #52]
+ 258 0090 5060     		str	r0, [r2, #4]
+ 259 0092 BDE8F003 		pop	{r4, r5, r6, r7, r8, r9}
+ 260 0096 48BF     		it	mi
+ 261 0098 9160     		strmi	r1, [r2, #8]
+ 262 009a 9360     		str	r3, [r2, #8]
+ 263 009c 7047     		bx	lr
+ 264              		.size	adc_lld_start_conversion, .-adc_lld_start_conversion
+ 265 009e 00BF     		.section	.text.adc_lld_stop_conversion,"ax",%progbits
+ 266              		.align	2
+ 267              		.p2align 4,,15
+ 268              		.global	adc_lld_stop_conversion
+ 269              		.thumb
+ 270              		.thumb_func
+ 271              		.type	adc_lld_stop_conversion, %function
+ 272              	adc_lld_stop_conversion:
+ 273              		@ args = 0, pretend = 0, frame = 0
+ 274              		@ frame_needed = 0, uses_anonymous_args = 0
+ 275              		@ link register save eliminated.
+ 276 0000 C16A     		ldr	r1, [r0, #44]
+ 277 0002 0A68     		ldr	r2, [r1]
+ 278 0004 1368     		ldr	r3, [r2]
+ 279 0006 23F01F03 		bic	r3, r3, #31
+ 280 000a 10B4     		push	{r4}
+ 281 000c 1360     		str	r3, [r2]
+ 282              	.L37:
+ 283 000e 1368     		ldr	r3, [r2]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s 			page 6
+
+
+ 284 0010 13F00103 		ands	r3, r3, #1
+ 285 0014 FBD1     		bne	.L37
+ 286 0016 0C7A     		ldrb	r4, [r1, #8]	@ zero_extendqisi2
+ 287 0018 826A     		ldr	r2, [r0, #40]
+ 288 001a 4868     		ldr	r0, [r1, #4]
+ 289 001c 3D21     		movs	r1, #61
+ 290 001e 01FA04F4 		lsl	r4, r1, r4
+ 291 0022 0121     		movs	r1, #1
+ 292 0024 0460     		str	r4, [r0]
+ 293 0026 5360     		str	r3, [r2, #4]
+ 294 0028 5DF8044B 		ldr	r4, [sp], #4
+ 295 002c 9360     		str	r3, [r2, #8]
+ 296 002e 9160     		str	r1, [r2, #8]
+ 297 0030 7047     		bx	lr
+ 298              		.size	adc_lld_stop_conversion, .-adc_lld_stop_conversion
+ 299 0032 00BFAFF3 		.section	.text.Vector88,"ax",%progbits
+ 299      0080AFF3 
+ 299      0080AFF3 
+ 299      0080
+ 300              		.align	2
+ 301              		.p2align 4,,15
+ 302              		.global	Vector88
+ 303              		.thumb
+ 304              		.thumb_func
+ 305              		.type	Vector88, %function
+ 306              	Vector88:
+ 307              		@ args = 0, pretend = 0, frame = 0
+ 308              		@ frame_needed = 0, uses_anonymous_args = 0
+ 309 0000 10B5     		push	{r4, lr}
+ 310 0002 FFF7FEFF 		bl	dbg_check_enter_isr
+ 311 0006 4FF40053 		mov	r3, #8192
+ 312 000a C4F20103 		movt	r3, 16385
+ 313 000e 0021     		movs	r1, #0
+ 314 0010 1A68     		ldr	r2, [r3]
+ 315 0012 1960     		str	r1, [r3]
+ 316 0014 9406     		lsls	r4, r2, #26
+ 317 0016 08D5     		bpl	.L39
+ 318 0018 40F20004 		movw	r4, #:lower16:.LANCHOR0
+ 319 001c C0F20004 		movt	r4, #:upper16:.LANCHOR0
+ 320 0020 E36A     		ldr	r3, [r4, #44]
+ 321 0022 1B68     		ldr	r3, [r3]
+ 322 0024 5B68     		ldr	r3, [r3, #4]
+ 323 0026 002B     		cmp	r3, #0
+ 324 0028 41D1     		bne	.L73
+ 325              	.L39:
+ 326 002a 4FF40453 		mov	r3, #8448
+ 327 002e C4F20103 		movt	r3, 16385
+ 328 0032 0021     		movs	r1, #0
+ 329 0034 1A68     		ldr	r2, [r3]
+ 330 0036 1960     		str	r1, [r3]
+ 331 0038 9006     		lsls	r0, r2, #26
+ 332 003a 32D5     		bpl	.L44
+ 333 003c 40F20004 		movw	r4, #:lower16:.LANCHOR1
+ 334 0040 C0F20004 		movt	r4, #:upper16:.LANCHOR1
+ 335 0044 E36A     		ldr	r3, [r4, #44]
+ 336 0046 1B68     		ldr	r3, [r3]
+ 337 0048 5B68     		ldr	r3, [r3, #4]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s 			page 7
+
+
+ 338 004a 53B3     		cbz	r3, .L44
+ 339 004c 2369     		ldr	r3, [r4, #16]
+ 340 004e 43B3     		cbz	r3, .L44
+ 341 0050 2046     		mov	r0, r4
+ 342 0052 FFF7FEFF 		bl	adc_lld_stop_conversion
+ 343 0056 2369     		ldr	r3, [r4, #16]
+ 344 0058 9B68     		ldr	r3, [r3, #8]
+ 345 005a 4BB1     		cbz	r3, .L46
+ 346 005c 0522     		movs	r2, #5
+ 347 005e 2270     		strb	r2, [r4]
+ 348 0060 2046     		mov	r0, r4
+ 349 0062 0121     		movs	r1, #1
+ 350 0064 9847     		blx	r3
+ 351 0066 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 352 0068 052B     		cmp	r3, #5
+ 353 006a 04BF     		itt	eq
+ 354 006c 0223     		moveq	r3, #2
+ 355 006e 2370     		strbeq	r3, [r4]
+ 356              	.L46:
+ 357 0070 0023     		movs	r3, #0
+ 358 0072 2361     		str	r3, [r4, #16]
+ 359 0074 2023     		movs	r3, #32
+ 360              	@ 143 "chibios/os/hal/platforms/STM32F4xx/adc_lld.c" 1
+ 361 0076 83F31188 		msr     BASEPRI, r3
+ 362              	@ 0 "" 2
+ 363              		.thumb
+ 364 007a FFF7FEFF 		bl	dbg_check_lock_from_isr
+ 365 007e 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 366 0082 C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ 367 0086 5869     		ldr	r0, [r3, #20]
+ 368 0088 30B1     		cbz	r0, .L48
+ 369 008a 4FF0FF32 		mov	r2, #-1
+ 370 008e 8262     		str	r2, [r0, #40]
+ 371 0090 0022     		movs	r2, #0
+ 372 0092 5A61     		str	r2, [r3, #20]
+ 373 0094 FFF7FEFF 		bl	chSchReadyI
+ 374              	.L48:
+ 375 0098 FFF7FEFF 		bl	dbg_check_unlock_from_isr
+ 376 009c 0023     		movs	r3, #0
+ 377              	@ 143 "chibios/os/hal/platforms/STM32F4xx/adc_lld.c" 1
+ 378 009e 83F31188 		msr     BASEPRI, r3
+ 379              	@ 0 "" 2
+ 380              		.thumb
+ 381              	.L44:
+ 382 00a2 FFF7FEFF 		bl	dbg_check_leave_isr
+ 383 00a6 BDE81040 		pop	{r4, lr}
+ 384 00aa FFF7FEBF 		b	_port_irq_epilogue
+ 385              	.L73:
+ 386 00ae 2369     		ldr	r3, [r4, #16]
+ 387 00b0 002B     		cmp	r3, #0
+ 388 00b2 BAD0     		beq	.L39
+ 389 00b4 2046     		mov	r0, r4
+ 390 00b6 FFF7FEFF 		bl	adc_lld_stop_conversion
+ 391 00ba 2369     		ldr	r3, [r4, #16]
+ 392 00bc 9B68     		ldr	r3, [r3, #8]
+ 393 00be 4BB1     		cbz	r3, .L41
+ 394 00c0 0522     		movs	r2, #5
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s 			page 8
+
+
+ 395 00c2 2270     		strb	r2, [r4]
+ 396 00c4 2046     		mov	r0, r4
+ 397 00c6 0121     		movs	r1, #1
+ 398 00c8 9847     		blx	r3
+ 399 00ca 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 400 00cc 052B     		cmp	r3, #5
+ 401 00ce 04BF     		itt	eq
+ 402 00d0 0223     		moveq	r3, #2
+ 403 00d2 2370     		strbeq	r3, [r4]
+ 404              	.L41:
+ 405 00d4 0023     		movs	r3, #0
+ 406 00d6 2361     		str	r3, [r4, #16]
+ 407 00d8 2023     		movs	r3, #32
+ 408              	@ 129 "chibios/os/hal/platforms/STM32F4xx/adc_lld.c" 1
+ 409 00da 83F31188 		msr     BASEPRI, r3
+ 410              	@ 0 "" 2
+ 411              		.thumb
+ 412 00de FFF7FEFF 		bl	dbg_check_lock_from_isr
+ 413 00e2 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 414 00e6 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 415 00ea 5869     		ldr	r0, [r3, #20]
+ 416 00ec 30B1     		cbz	r0, .L43
+ 417 00ee 4FF0FF32 		mov	r2, #-1
+ 418 00f2 8262     		str	r2, [r0, #40]
+ 419 00f4 0022     		movs	r2, #0
+ 420 00f6 5A61     		str	r2, [r3, #20]
+ 421 00f8 FFF7FEFF 		bl	chSchReadyI
+ 422              	.L43:
+ 423 00fc FFF7FEFF 		bl	dbg_check_unlock_from_isr
+ 424 0100 0023     		movs	r3, #0
+ 425              	@ 129 "chibios/os/hal/platforms/STM32F4xx/adc_lld.c" 1
+ 426 0102 83F31188 		msr     BASEPRI, r3
+ 427              	@ 0 "" 2
+ 428              		.thumb
+ 429 0106 90E7     		b	.L39
+ 430              		.size	Vector88, .-Vector88
+ 431 0108 AFF30080 		.section	.text.adc_lld_serve_rx_interrupt,"ax",%progbits
+ 431      AFF30080 
+ 432              		.align	2
+ 433              		.p2align 4,,15
+ 434              		.thumb
+ 435              		.thumb_func
+ 436              		.type	adc_lld_serve_rx_interrupt, %function
+ 437              	adc_lld_serve_rx_interrupt:
+ 438              		@ args = 0, pretend = 0, frame = 0
+ 439              		@ frame_needed = 0, uses_anonymous_args = 0
+ 440 0000 38B5     		push	{r3, r4, r5, lr}
+ 441 0002 40F20003 		movw	r3, #:lower16:rlist
+ 442 0006 C0F20003 		movt	r3, #:upper16:rlist
+ 443 000a 0446     		mov	r4, r0
+ 444 000c 9869     		ldr	r0, [r3, #24]
+ 445 000e 0D46     		mov	r5, r1
+ 446 0010 FFF7FEFF 		bl	getRemainingStack
+ 447 0014 4028     		cmp	r0, #64
+ 448 0016 4BDD     		ble	.L106
+ 449 0018 15F00C0F 		tst	r5, #12
+ 450 001c 21D1     		bne	.L107
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s 			page 9
+
+
+ 451 001e 2369     		ldr	r3, [r4, #16]
+ 452 0020 F3B1     		cbz	r3, .L74
+ 453 0022 AA06     		lsls	r2, r5, #26
+ 454 0024 13D5     		bpl	.L82
+ 455 0026 1D78     		ldrb	r5, [r3]	@ zero_extendqisi2
+ 456 0028 002D     		cmp	r5, #0
+ 457 002a 49D0     		beq	.L83
+ 458 002c 5D68     		ldr	r5, [r3, #4]
+ 459 002e BDB1     		cbz	r5, .L74
+ 460 0030 E268     		ldr	r2, [r4, #12]
+ 461 0032 012A     		cmp	r2, #1
+ 462 0034 83BF     		ittte	hi
+ 463 0036 5988     		ldrhhi	r1, [r3, #2]
+ 464 0038 A368     		ldrhi	r3, [r4, #8]
+ 465 003a 5208     		lsrhi	r2, r2, #1
+ 466 003c 2046     		movls	r0, r4
+ 467 003e 83BF     		ittte	hi
+ 468 0040 5143     		mulhi	r1, r1, r2
+ 469 0042 03EB4101 		addhi	r1, r3, r1, lsl #1
+ 470 0046 2046     		movhi	r0, r4
+ 471 0048 8168     		ldrls	r1, [r0, #8]
+ 472 004a A847     		blx	r5
+ 473 004c 38BD     		pop	{r3, r4, r5, pc}
+ 474              	.L82:
+ 475 004e ED06     		lsls	r5, r5, #27
+ 476 0050 06D5     		bpl	.L74
+ 477 0052 5B68     		ldr	r3, [r3, #4]
+ 478 0054 23B1     		cbz	r3, .L74
+ 479 0056 E268     		ldr	r2, [r4, #12]
+ 480 0058 A168     		ldr	r1, [r4, #8]
+ 481 005a 2046     		mov	r0, r4
+ 482 005c 5208     		lsrs	r2, r2, #1
+ 483 005e 9847     		blx	r3
+ 484              	.L74:
+ 485 0060 38BD     		pop	{r3, r4, r5, pc}
+ 486              	.L107:
+ 487 0062 2046     		mov	r0, r4
+ 488 0064 FFF7FEFF 		bl	adc_lld_stop_conversion
+ 489 0068 2369     		ldr	r3, [r4, #16]
+ 490 006a 9B68     		ldr	r3, [r3, #8]
+ 491 006c 4BB1     		cbz	r3, .L78
+ 492 006e 0522     		movs	r2, #5
+ 493 0070 2270     		strb	r2, [r4]
+ 494 0072 2046     		mov	r0, r4
+ 495 0074 0021     		movs	r1, #0
+ 496 0076 9847     		blx	r3
+ 497 0078 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 498 007a 052B     		cmp	r3, #5
+ 499 007c 04BF     		itt	eq
+ 500 007e 0223     		moveq	r3, #2
+ 501 0080 2370     		strbeq	r3, [r4]
+ 502              	.L78:
+ 503 0082 0023     		movs	r3, #0
+ 504 0084 2361     		str	r3, [r4, #16]
+ 505 0086 2023     		movs	r3, #32
+ 506              	@ 86 "chibios/os/hal/platforms/STM32F4xx/adc_lld.c" 1
+ 507 0088 83F31188 		msr     BASEPRI, r3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s 			page 10
+
+
+ 508              	@ 0 "" 2
+ 509              		.thumb
+ 510 008c FFF7FEFF 		bl	dbg_check_lock_from_isr
+ 511 0090 6369     		ldr	r3, [r4, #20]
+ 512 0092 3BB1     		cbz	r3, .L87
+ 513 0094 0021     		movs	r1, #0
+ 514 0096 4FF0FF32 		mov	r2, #-1
+ 515 009a 6161     		str	r1, [r4, #20]
+ 516 009c 1846     		mov	r0, r3
+ 517 009e 9A62     		str	r2, [r3, #40]
+ 518 00a0 FFF7FEFF 		bl	chSchReadyI
+ 519              	.L87:
+ 520 00a4 FFF7FEFF 		bl	dbg_check_unlock_from_isr
+ 521 00a8 0023     		movs	r3, #0
+ 522              	@ 94 "chibios/os/hal/platforms/STM32F4xx/adc_lld.c" 1
+ 523 00aa 83F31188 		msr     BASEPRI, r3
+ 524              	@ 0 "" 2
+ 525              		.thumb
+ 526 00ae 38BD     		pop	{r3, r4, r5, pc}
+ 527              	.L106:
+ 528 00b0 40F20000 		movw	r0, #:lower16:.LC2
+ 529 00b4 C0F20000 		movt	r0, #:upper16:.LC2
+ 530 00b8 BDE83840 		pop	{r3, r4, r5, lr}
+ 531 00bc FFF7FEBF 		b	firmwareError
+ 532              	.L83:
+ 533 00c0 2046     		mov	r0, r4
+ 534 00c2 FFF7FEFF 		bl	adc_lld_stop_conversion
+ 535 00c6 2369     		ldr	r3, [r4, #16]
+ 536 00c8 5B68     		ldr	r3, [r3, #4]
+ 537 00ca D3B1     		cbz	r3, .L85
+ 538 00cc 0422     		movs	r2, #4
+ 539 00ce 2270     		strb	r2, [r4]
+ 540 00d0 2046     		mov	r0, r4
+ 541 00d2 A168     		ldr	r1, [r4, #8]
+ 542 00d4 E268     		ldr	r2, [r4, #12]
+ 543 00d6 9847     		blx	r3
+ 544 00d8 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 545 00da 042B     		cmp	r3, #4
+ 546 00dc 02BF     		ittt	eq
+ 547 00de 0223     		moveq	r3, #2
+ 548 00e0 2561     		streq	r5, [r4, #16]
+ 549 00e2 2370     		strbeq	r3, [r4]
+ 550              	.L86:
+ 551 00e4 2023     		movs	r3, #32
+ 552              	@ 94 "chibios/os/hal/platforms/STM32F4xx/adc_lld.c" 1
+ 553 00e6 83F31188 		msr     BASEPRI, r3
+ 554              	@ 0 "" 2
+ 555              		.thumb
+ 556 00ea FFF7FEFF 		bl	dbg_check_lock_from_isr
+ 557 00ee 6369     		ldr	r3, [r4, #20]
+ 558 00f0 002B     		cmp	r3, #0
+ 559 00f2 D7D0     		beq	.L87
+ 560 00f4 0022     		movs	r2, #0
+ 561 00f6 6261     		str	r2, [r4, #20]
+ 562 00f8 1846     		mov	r0, r3
+ 563 00fa 9A62     		str	r2, [r3, #40]
+ 564 00fc FFF7FEFF 		bl	chSchReadyI
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s 			page 11
+
+
+ 565 0100 D0E7     		b	.L87
+ 566              	.L85:
+ 567 0102 0222     		movs	r2, #2
+ 568 0104 2361     		str	r3, [r4, #16]
+ 569 0106 2270     		strb	r2, [r4]
+ 570 0108 ECE7     		b	.L86
+ 571              		.size	adc_lld_serve_rx_interrupt, .-adc_lld_serve_rx_interrupt
+ 572 010a 00BFAFF3 		.section	.text.adcSTM32EnableTSVREFE,"ax",%progbits
+ 572      0080
+ 573              		.align	2
+ 574              		.p2align 4,,15
+ 575              		.global	adcSTM32EnableTSVREFE
+ 576              		.thumb
+ 577              		.thumb_func
+ 578              		.type	adcSTM32EnableTSVREFE, %function
+ 579              	adcSTM32EnableTSVREFE:
+ 580              		@ args = 0, pretend = 0, frame = 0
+ 581              		@ frame_needed = 0, uses_anonymous_args = 0
+ 582              		@ link register save eliminated.
+ 583 0000 4FF40C53 		mov	r3, #8960
+ 584 0004 C4F20103 		movt	r3, 16385
+ 585 0008 5A68     		ldr	r2, [r3, #4]
+ 586 000a 42F40002 		orr	r2, r2, #8388608
+ 587 000e 5A60     		str	r2, [r3, #4]
+ 588 0010 7047     		bx	lr
+ 589              		.size	adcSTM32EnableTSVREFE, .-adcSTM32EnableTSVREFE
+ 590 0012 00BFAFF3 		.section	.text.adcSTM32DisableTSVREFE,"ax",%progbits
+ 590      0080AFF3 
+ 590      0080AFF3 
+ 590      0080
+ 591              		.align	2
+ 592              		.p2align 4,,15
+ 593              		.global	adcSTM32DisableTSVREFE
+ 594              		.thumb
+ 595              		.thumb_func
+ 596              		.type	adcSTM32DisableTSVREFE, %function
+ 597              	adcSTM32DisableTSVREFE:
+ 598              		@ args = 0, pretend = 0, frame = 0
+ 599              		@ frame_needed = 0, uses_anonymous_args = 0
+ 600              		@ link register save eliminated.
+ 601 0000 4FF40C53 		mov	r3, #8960
+ 602 0004 C4F20103 		movt	r3, 16385
+ 603 0008 5A68     		ldr	r2, [r3, #4]
+ 604 000a 22F40002 		bic	r2, r2, #8388608
+ 605 000e 5A60     		str	r2, [r3, #4]
+ 606 0010 7047     		bx	lr
+ 607              		.size	adcSTM32DisableTSVREFE, .-adcSTM32DisableTSVREFE
+ 608 0012 00BFAFF3 		.section	.text.adcSTM32EnableVBATE,"ax",%progbits
+ 608      0080AFF3 
+ 608      0080AFF3 
+ 608      0080
+ 609              		.align	2
+ 610              		.p2align 4,,15
+ 611              		.global	adcSTM32EnableVBATE
+ 612              		.thumb
+ 613              		.thumb_func
+ 614              		.type	adcSTM32EnableVBATE, %function
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s 			page 12
+
+
+ 615              	adcSTM32EnableVBATE:
+ 616              		@ args = 0, pretend = 0, frame = 0
+ 617              		@ frame_needed = 0, uses_anonymous_args = 0
+ 618              		@ link register save eliminated.
+ 619 0000 4FF40C53 		mov	r3, #8960
+ 620 0004 C4F20103 		movt	r3, 16385
+ 621 0008 5A68     		ldr	r2, [r3, #4]
+ 622 000a 42F48002 		orr	r2, r2, #4194304
+ 623 000e 5A60     		str	r2, [r3, #4]
+ 624 0010 7047     		bx	lr
+ 625              		.size	adcSTM32EnableVBATE, .-adcSTM32EnableVBATE
+ 626 0012 00BFAFF3 		.section	.text.adcSTM32DisableVBATE,"ax",%progbits
+ 626      0080AFF3 
+ 626      0080AFF3 
+ 626      0080
+ 627              		.align	2
+ 628              		.p2align 4,,15
+ 629              		.global	adcSTM32DisableVBATE
+ 630              		.thumb
+ 631              		.thumb_func
+ 632              		.type	adcSTM32DisableVBATE, %function
+ 633              	adcSTM32DisableVBATE:
+ 634              		@ args = 0, pretend = 0, frame = 0
+ 635              		@ frame_needed = 0, uses_anonymous_args = 0
+ 636              		@ link register save eliminated.
+ 637 0000 4FF40C53 		mov	r3, #8960
+ 638 0004 C4F20103 		movt	r3, 16385
+ 639 0008 5A68     		ldr	r2, [r3, #4]
+ 640 000a 22F48002 		bic	r2, r2, #4194304
+ 641 000e 5A60     		str	r2, [r3, #4]
+ 642 0010 7047     		bx	lr
+ 643              		.size	adcSTM32DisableVBATE, .-adcSTM32DisableVBATE
+ 644              		.global	ADCD2
+ 645              		.global	ADCD1
+ 646 0012 00BFAFF3 		.section	.bss.ADCD1,"aw",%nobits
+ 646      0080AFF3 
+ 646      0080AFF3 
+ 646      0080
+ 647              		.align	2
+ 648              		.set	.LANCHOR0,. + 0
+ 649              		.type	ADCD1, %object
+ 650              		.size	ADCD1, 52
+ 651              	ADCD1:
+ 652 0000 00000000 		.space	52
+ 652      00000000 
+ 652      00000000 
+ 652      00000000 
+ 652      00000000 
+ 653              		.section	.bss.ADCD2,"aw",%nobits
+ 654              		.align	2
+ 655              		.set	.LANCHOR1,. + 0
+ 656              		.type	ADCD2, %object
+ 657              		.size	ADCD2, 52
+ 658              	ADCD2:
+ 659 0000 00000000 		.space	52
+ 659      00000000 
+ 659      00000000 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s 			page 13
+
+
+ 659      00000000 
+ 659      00000000 
+ 660              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 661              		.align	2
+ 662              	.LC0:
+ 663 0000 6164635F 		.ascii	"adc_lld_start(), #1\000"
+ 663      6C6C645F 
+ 663      73746172 
+ 663      7428292C 
+ 663      20233100 
+ 664              	.LC1:
+ 665 0014 6164635F 		.ascii	"adc_lld_start(), #2\000"
+ 665      6C6C645F 
+ 665      73746172 
+ 665      7428292C 
+ 665      20233200 
+ 666              	.LC2:
+ 667 0028 7379735F 		.ascii	"sys_adc\000"
+ 667      61646300 
+ 668              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s 			page 14
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 adc_lld.c
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:17     .text.adc_lld_init:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:23     .text.adc_lld_init:00000000 adc_lld_init
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:648    .bss.ADCD1:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:655    .bss.ADCD2:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:58     .text.adc_lld_init:0000005c $d
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:61     .text.adc_lld_start:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:67     .text.adc_lld_start:00000000 adc_lld_start
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:437    .text.adc_lld_serve_rx_interrupt:00000000 adc_lld_serve_rx_interrupt
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:662    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:664    .rodata.str1.4:00000014 .LC1
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:151    .text.adc_lld_stop:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:157    .text.adc_lld_stop:00000000 adc_lld_stop
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:197    .text.adc_lld_start_conversion:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:203    .text.adc_lld_start_conversion:00000000 adc_lld_start_conversion
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:266    .text.adc_lld_stop_conversion:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:272    .text.adc_lld_stop_conversion:00000000 adc_lld_stop_conversion
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:300    .text.Vector88:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:306    .text.Vector88:00000000 Vector88
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:432    .text.adc_lld_serve_rx_interrupt:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:666    .rodata.str1.4:00000028 .LC2
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:573    .text.adcSTM32EnableTSVREFE:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:579    .text.adcSTM32EnableTSVREFE:00000000 adcSTM32EnableTSVREFE
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:591    .text.adcSTM32DisableTSVREFE:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:597    .text.adcSTM32DisableTSVREFE:00000000 adcSTM32DisableTSVREFE
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:609    .text.adcSTM32EnableVBATE:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:615    .text.adcSTM32EnableVBATE:00000000 adcSTM32EnableVBATE
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:627    .text.adcSTM32DisableVBATE:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:633    .text.adcSTM32DisableVBATE:00000000 adcSTM32DisableVBATE
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:658    .bss.ADCD2:00000000 ADCD2
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:651    .bss.ADCD1:00000000 ADCD1
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:647    .bss.ADCD1:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:654    .bss.ADCD2:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccXm4wTe.s:661    .rodata.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+adcObjectInit
+nvicEnableVector
+_stm32_dma_streams
+dmaStreamAllocate
+chDbgPanic
+dmaStreamRelease
+dbg_check_enter_isr
+dbg_check_lock_from_isr
+chSchReadyI
+dbg_check_unlock_from_isr
+dbg_check_leave_isr
+_port_irq_epilogue
+rlist
+getRemainingStack
+firmwareError

@@ -1,0 +1,172 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cczPqorZ.s 			page 1
+
+
+   1              		.file	"signal_executor_sleep.cpp"
+   2              		.section	.text$_Z12scheduleTaskPKcP12scheduling_siPFvPvES3_,"x"
+   3              		.p2align 4,,15
+   4              		.globl	__Z12scheduleTaskPKcP12scheduling_siPFvPvES3_
+   5              		.def	__Z12scheduleTaskPKcP12scheduling_siPFvPvES3_;	.scl	2;	.type	32;	.endef
+   6              	__Z12scheduleTaskPKcP12scheduling_siPFvPvES3_:
+   7              	LFB55:
+   8              		.cfi_startproc
+   9 0000 83EC2C   		subl	$44, %esp
+  10              		.cfi_def_cfa_offset 48
+  11 0003 8B4C2438 		movl	56(%esp), %ecx
+  12 0007 895C241C 		movl	%ebx, 28(%esp)
+  13              		.cfi_offset 3, -20
+  14 000b BB676666 		movl	$1717986919, %ebx
+  14      66
+  15 0010 89742420 		movl	%esi, 32(%esp)
+  16              		.cfi_offset 6, -16
+  17 0014 8B742434 		movl	52(%esp), %esi
+  18 0018 897C2424 		movl	%edi, 36(%esp)
+  19              		.cfi_offset 7, -12
+  20 001c 8B7C243C 		movl	60(%esp), %edi
+  21 0020 89C8     		movl	%ecx, %eax
+  22 0022 F7EB     		imull	%ebx
+  23 0024 C1F91F   		sarl	$31, %ecx
+  24 0027 896C2428 		movl	%ebp, 40(%esp)
+  25              		.cfi_offset 5, -8
+  26 002b 8B6C2440 		movl	64(%esp), %ebp
+  27 002f 89D3     		movl	%edx, %ebx
+  28 0031 C1FB02   		sarl	$2, %ebx
+  29 0034 29CB     		subl	%ecx, %ebx
+  30 0036 85DB     		testl	%ebx, %ebx
+  31 0038 7E46     		jle	L6
+  32 003a E8000000 		call	_lockAnyContext
+  32      00
+  33 003f 8B460C   		movl	12(%esi), %eax
+  34 0042 85C0     		testl	%eax, %eax
+  35 0044 7408     		je	L3
+  36 0046 893424   		movl	%esi, (%esp)
+  37 0049 E8000000 		call	_chVTResetI
+  37      00
+  38              	L3:
+  39 004e 896C240C 		movl	%ebp, 12(%esp)
+  40 0052 897C2408 		movl	%edi, 8(%esp)
+  41 0056 895C2404 		movl	%ebx, 4(%esp)
+  42 005a 893424   		movl	%esi, (%esp)
+  43 005d E8000000 		call	_chVTSetI
+  43      00
+  44 0062 8B5C241C 		movl	28(%esp), %ebx
+  45 0066 8B742420 		movl	32(%esp), %esi
+  46 006a 8B7C2424 		movl	36(%esp), %edi
+  47 006e 8B6C2428 		movl	40(%esp), %ebp
+  48 0072 83C42C   		addl	$44, %esp
+  49              		.cfi_remember_state
+  50              		.cfi_restore 5
+  51              		.cfi_restore 7
+  52              		.cfi_restore 6
+  53              		.cfi_restore 3
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cczPqorZ.s 			page 2
+
+
+  54              		.cfi_def_cfa_offset 4
+  55 0075 E9000000 		jmp	_unlockAnyContext
+  55      00
+  56 007a 8DB60000 		.p2align 4,,7
+  56      0000
+  57              	L6:
+  58              		.cfi_restore_state
+  59 0080 896C2430 		movl	%ebp, 48(%esp)
+  60 0084 89F8     		movl	%edi, %eax
+  61 0086 8B5C241C 		movl	28(%esp), %ebx
+  62 008a 8B742420 		movl	32(%esp), %esi
+  63 008e 8B7C2424 		movl	36(%esp), %edi
+  64 0092 8B6C2428 		movl	40(%esp), %ebp
+  65 0096 83C42C   		addl	$44, %esp
+  66              		.cfi_restore 5
+  67              		.cfi_restore 7
+  68              		.cfi_restore 6
+  69              		.cfi_restore 3
+  70              		.cfi_def_cfa_offset 4
+  71 0099 FFE0     		jmp	*%eax
+  72              		.cfi_endproc
+  73              	LFE55:
+  74 009b 90909090 		.section	.text$_Z14scheduleByTimePKcP12scheduling_sxPFvPvES3_,"x"
+  74      90
+  75              		.p2align 4,,15
+  76              		.globl	__Z14scheduleByTimePKcP12scheduling_sxPFvPvES3_
+  77              		.def	__Z14scheduleByTimePKcP12scheduling_sxPFvPvES3_;	.scl	2;	.type	32;	.endef
+  78              	__Z14scheduleByTimePKcP12scheduling_sxPFvPvES3_:
+  79              	LFB54:
+  80              		.cfi_startproc
+  81 0000 83EC2C   		subl	$44, %esp
+  82              		.cfi_def_cfa_offset 48
+  83 0003 8B442438 		movl	56(%esp), %eax
+  84 0007 895C241C 		movl	%ebx, 28(%esp)
+  85              		.cfi_offset 3, -20
+  86 000b 8B5C2444 		movl	68(%esp), %ebx
+  87 000f 89742420 		movl	%esi, 32(%esp)
+  88              		.cfi_offset 6, -16
+  89 0013 8B742430 		movl	48(%esp), %esi
+  90 0017 897C2424 		movl	%edi, 36(%esp)
+  91              		.cfi_offset 7, -12
+  92 001b 8B7C2434 		movl	52(%esp), %edi
+  93 001f 896C2428 		movl	%ebp, 40(%esp)
+  94              		.cfi_offset 5, -8
+  95 0023 8B6C2440 		movl	64(%esp), %ebp
+  96 0027 8944240C 		movl	%eax, 12(%esp)
+  97 002b E8000000 		call	_getTimeNowUs
+  97      00
+  98 0030 895C2440 		movl	%ebx, 64(%esp)
+  99 0034 8B5C240C 		movl	12(%esp), %ebx
+ 100 0038 896C243C 		movl	%ebp, 60(%esp)
+ 101 003c 8B6C2428 		movl	40(%esp), %ebp
+ 102 0040 897C2434 		movl	%edi, 52(%esp)
+ 103 0044 8B7C2424 		movl	36(%esp), %edi
+ 104 0048 89742430 		movl	%esi, 48(%esp)
+ 105 004c 8B742420 		movl	32(%esp), %esi
+ 106 0050 29C3     		subl	%eax, %ebx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cczPqorZ.s 			page 3
+
+
+ 107 0052 895C2438 		movl	%ebx, 56(%esp)
+ 108 0056 8B5C241C 		movl	28(%esp), %ebx
+ 109 005a 83C42C   		addl	$44, %esp
+ 110              		.cfi_restore 5
+ 111              		.cfi_restore 7
+ 112              		.cfi_restore 6
+ 113              		.cfi_restore 3
+ 114              		.cfi_def_cfa_offset 4
+ 115 005d E9000000 		jmp	__Z12scheduleTaskPKcP12scheduling_siPFvPvES3_
+ 115      00
+ 116              		.cfi_endproc
+ 117              	LFE54:
+ 118 0062 90909090 		.section	.text$_Z22initSignalExecutorImplv,"x"
+ 118      90909090 
+ 118      90909090 
+ 118      9090
+ 119              		.p2align 4,,15
+ 120              		.globl	__Z22initSignalExecutorImplv
+ 121              		.def	__Z22initSignalExecutorImplv;	.scl	2;	.type	32;	.endef
+ 122              	__Z22initSignalExecutorImplv:
+ 123              	LFB56:
+ 124              		.cfi_startproc
+ 125 0000 F3       		rep
+ 126 0001 C3       		ret
+ 127              		.cfi_endproc
+ 128              	LFE56:
+ 129              		.def	_lockAnyContext;	.scl	2;	.type	32;	.endef
+ 130              		.def	_chVTResetI;	.scl	2;	.type	32;	.endef
+ 131              		.def	_chVTSetI;	.scl	2;	.type	32;	.endef
+ 132              		.def	_unlockAnyContext;	.scl	2;	.type	32;	.endef
+ 133 0002 90909090 		.def	_getTimeNowUs;	.scl	2;	.type	32;	.endef
+ 133      90909090 
+ 133      90909090 
+ 133      9090
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cczPqorZ.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 signal_executor_sleep.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/cczPqorZ.s:6      .text$_Z12scheduleTaskPKcP12scheduling_siPFvPvES3_:00000000 __Z12scheduleTaskPKcP12scheduling_siPFvPvES3_
+/cygdrive/c/Users/pc/AppData/Local/Temp/cczPqorZ.s:78     .text$_Z14scheduleByTimePKcP12scheduling_sxPFvPvES3_:00000000 __Z14scheduleByTimePKcP12scheduling_sxPFvPvES3_
+/cygdrive/c/Users/pc/AppData/Local/Temp/cczPqorZ.s:122    .text$_Z22initSignalExecutorImplv:00000000 __Z22initSignalExecutorImplv
+
+UNDEFINED SYMBOLS
+_lockAnyContext
+_chVTResetI
+_chVTSetI
+_unlockAnyContext
+_getTimeNowUs

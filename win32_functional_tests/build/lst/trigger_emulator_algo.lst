@@ -1,0 +1,776 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s 			page 1
+
+
+   1              		.file	"trigger_emulator_algo.cpp"
+   2              		.section	.text$_ZL18setEmulatorAtIndexiP6Engine,"x"
+   3              		.p2align 4,,15
+   4              		.def	__ZL18setEmulatorAtIndexiP6Engine;	.scl	3;	.type	32;	.endef
+   5              	__ZL18setEmulatorAtIndexiP6Engine:
+   6              	LFB93:
+   7              		.cfi_startproc
+   8 0000 8B442404 		movl	4(%esp), %eax
+   9 0004 A3000000 		movl	%eax, __ZL20stopEmulationAtIndex
+   9      00
+  10 0009 C3       		ret
+  11              		.cfi_endproc
+  12              	LFE93:
+  13 000a 90909090 		.section	.text$_ZL16resumeStimulatorP6Engine,"x"
+  13      9090
+  14              		.p2align 4,,15
+  15              		.def	__ZL16resumeStimulatorP6Engine;	.scl	3;	.type	32;	.endef
+  16              	__ZL16resumeStimulatorP6Engine:
+  17              	LFB94:
+  18              		.cfi_startproc
+  19 0000 C6050000 		movb	$1, __ZL11isEmulating
+  19      000001
+  20 0007 C7050000 		movl	$999999999, __ZL20stopEmulationAtIndex
+  20      0000FFC9 
+  20      9A3B
+  21 0011 C3       		ret
+  22              		.cfi_endproc
+  23              	LFE94:
+  24 0012 90909090 		.section .rdata,"dr"
+  24      90909090 
+  24      90909090 
+  24      9090
+  25              		.align 4
+  26              	LC4:
+  27 0000 456D756C 		.ascii "Emulating position sensor(s). RPM=%d\0"
+  27      6174696E 
+  27      6720706F 
+  27      73697469 
+  27      6F6E2073 
+  28              		.section	.text$_Z21setTriggerEmulatorRPMiP6Engine,"x"
+  29              		.p2align 4,,15
+  30              		.globl	__Z21setTriggerEmulatorRPMiP6Engine
+  31              		.def	__Z21setTriggerEmulatorRPMiP6Engine;	.scl	2;	.type	32;	.endef
+  32              	__Z21setTriggerEmulatorRPMiP6Engine:
+  33              	LFB90:
+  34              		.cfi_startproc
+  35 0000 53       		pushl	%ebx
+  36              		.cfi_def_cfa_offset 8
+  37              		.cfi_offset 3, -8
+  38 0001 83EC28   		subl	$40, %esp
+  39              		.cfi_def_cfa_offset 48
+  40 0004 A1000000 		movl	_engineConfiguration, %eax
+  40      00
+  41 0009 8B5C2430 		movl	48(%esp), %ebx
+  42 000d 85DB     		testl	%ebx, %ebx
+  43 000f 89984003 		movl	%ebx, 832(%eax)
+  43      0000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s 			page 2
+
+
+  44 0015 753F     		jne	L4
+  45 0017 C7051800 		movl	$0x7fc00000, _triggerSignal+24
+  45      00000000 
+  45      C07F
+  46              	L5:
+  47 0021 8B442434 		movl	52(%esp), %eax
+  48 0025 80B88002 		cmpb	$0, 640(%eax)
+  48      000000
+  49 002c 740A     		je	L6
+  50 002e B9000000 		movl	$_waveChart, %ecx
+  50      00
+  51 0033 E8000000 		call	__ZN9WaveChart14resetWaveChartEv
+  51      00
+  52              	L6:
+  53 0038 A1000000 		movl	__ZL6logger, %eax
+  53      00
+  54 003d 895C2408 		movl	%ebx, 8(%esp)
+  55 0041 C7442404 		movl	$LC4, 4(%esp)
+  55      00000000 
+  56 0049 890424   		movl	%eax, (%esp)
+  57 004c E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+  57      00
+  58 0051 83C428   		addl	$40, %esp
+  59              		.cfi_remember_state
+  60              		.cfi_def_cfa_offset 8
+  61 0054 5B       		popl	%ebx
+  62              		.cfi_restore 3
+  63              		.cfi_def_cfa_offset 4
+  64 0055 C3       		ret
+  65              		.p2align 4,,7
+  66              	L4:
+  67              		.cfi_restore_state
+  68 0056 8B80F401 		movl	500(%eax), %eax
+  68      0000
+  69 005c 890424   		movl	%eax, (%esp)
+  70 005f E8000000 		call	__Z16getRpmMultiplier16operation_mode_e
+  70      00
+  71 0064 895C241C 		movl	%ebx, 28(%esp)
+  72 0068 DB44241C 		fildl	28(%esp)
+  73 006c DEC9     		fmulp	%st, %st(1)
+  74 006e D8359400 		fdivs	LC1
+  74      0000
+  75 0074 D83D9800 		fdivrs	LC2
+  75      0000
+  76 007a D80D9C00 		fmuls	LC3
+  76      0000
+  77 0080 D91D1800 		fstps	_triggerSignal+24
+  77      0000
+  78 0086 EB99     		jmp	L5
+  79              		.cfi_endproc
+  80              	LFE90:
+  81 0088 90909090 		.section	.text$_ZL15fireShaftSignal15trigger_event_e,"x"
+  81      90909090 
+  82              		.p2align 4,,15
+  83              		.def	__ZL15fireShaftSignal15trigger_event_e;	.scl	3;	.type	32;	.endef
+  84              	__ZL15fireShaftSignal15trigger_event_e:
+  85              	LFB88:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s 			page 3
+
+
+  86              		.cfi_startproc
+  87 0000 83EC1C   		subl	$28, %esp
+  88              		.cfi_def_cfa_offset 32
+  89 0003 8B150000 		movl	_engineConfiguration, %edx
+  89      0000
+  90 0009 F682E505 		testb	$64, 1509(%edx)
+  90      000040
+  91 0010 7409     		je	L10
+  92 0012 80B80000 		cmpb	$0, __ZL9isUpEvent(%eax)
+  92      000000
+  93 0019 7408     		je	L9
+  94              	L10:
+  95 001b 890424   		movl	%eax, (%esp)
+  96 001e E8000000 		call	__Z19hwHandleShaftSignal15trigger_event_e
+  96      00
+  97              	L9:
+  98 0023 83C41C   		addl	$28, %esp
+  99              		.cfi_def_cfa_offset 4
+ 100 0026 C3       		ret
+ 101              		.cfi_endproc
+ 102              	LFE88:
+ 103 0027 90909090 		.section .rdata,"dr"
+ 103      90909090 
+ 103      90
+ 104 0025 000000   		.align 4
+ 105              	LC5:
+ 106 0028 5374696D 		.ascii "Stimulator: updating trigger shape: %d/%d %d\0"
+ 106      756C6174 
+ 106      6F723A20 
+ 106      75706461 
+ 106      74696E67 
+ 107              		.section	.text$_ZL26updateTriggerShapeIfNeededP9PwmConfig,"x"
+ 108              		.p2align 4,,15
+ 109              		.def	__ZL26updateTriggerShapeIfNeededP9PwmConfig;	.scl	3;	.type	32;	.endef
+ 110              	__ZL26updateTriggerShapeIfNeededP9PwmConfig:
+ 111              	LFB91:
+ 112              		.cfi_startproc
+ 113 0000 56       		pushl	%esi
+ 114              		.cfi_def_cfa_offset 8
+ 115              		.cfi_offset 6, -8
+ 116 0001 B9000000 		movl	$__ZL21emulatorConfigVersion, %ecx
+ 116      00
+ 117 0006 53       		pushl	%ebx
+ 118              		.cfi_def_cfa_offset 12
+ 119              		.cfi_offset 3, -12
+ 120 0007 83EC34   		subl	$52, %esp
+ 121              		.cfi_def_cfa_offset 64
+ 122 000a E8000000 		call	__ZN18LocalVersionHolder5isOldEv
+ 122      00
+ 123 000f 84C0     		testb	%al, %al
+ 124 0011 0F84A600 		je	L16
+ 124      0000
+ 125 0017 E8000000 		call	_currentTimeMillis
+ 125      00
+ 126 001c 89C6     		movl	%eax, %esi
+ 127 001e E8000000 		call	__Z29getGlobalConfigurationVersionv
+ 127      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s 			page 4
+
+
+ 128 0023 B9000000 		movl	$__ZL21emulatorConfigVersion, %ecx
+ 128      00
+ 129 0028 89C3     		movl	%eax, %ebx
+ 130 002a E8000000 		call	__ZN18LocalVersionHolder10getVersionEv
+ 130      00
+ 131 002f 895C240C 		movl	%ebx, 12(%esp)
+ 132 0033 89742410 		movl	%esi, 16(%esp)
+ 133 0037 C7442404 		movl	$LC5, 4(%esp)
+ 133      28000000 
+ 134 003f 89442408 		movl	%eax, 8(%esp)
+ 135 0043 A1000000 		movl	__ZL6logger, %eax
+ 135      00
+ 136 0048 890424   		movl	%eax, (%esp)
+ 137 004b E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+ 137      00
+ 138 0050 A1000000 		movl	__ZL6logger, %eax
+ 138      00
+ 139 0055 890424   		movl	%eax, (%esp)
+ 140 0058 E8000000 		call	__Z31applyNonPersistentConfigurationP7Logging
+ 140      00
+ 141 005d 8B0D0000 		movl	_engine, %ecx
+ 141      0000
+ 142 0063 8B81FC0D 		movl	3580(%ecx), %eax
+ 142      0000
+ 143 0069 8B99000E 		movl	3584(%ecx), %ebx
+ 143      0000
+ 144 006f 81C18402 		addl	$644, %ecx
+ 144      0000
+ 145 0075 8B10     		movl	(%eax), %edx
+ 146 0077 89542424 		movl	%edx, 36(%esp)
+ 147 007b 8B5004   		movl	4(%eax), %edx
+ 148 007e 89542428 		movl	%edx, 40(%esp)
+ 149 0082 8B4008   		movl	8(%eax), %eax
+ 150 0085 8944242C 		movl	%eax, 44(%esp)
+ 151 0089 E8000000 		call	__ZNK12TriggerShape7getSizeEv
+ 151      00
+ 152 008e 8D542424 		leal	36(%esp), %edx
+ 153 0092 89542410 		movl	%edx, 16(%esp)
+ 154 0096 C744240C 		movl	$3, 12(%esp)
+ 154      03000000 
+ 155 009e 895C2408 		movl	%ebx, 8(%esp)
+ 156 00a2 89442404 		movl	%eax, 4(%esp)
+ 157 00a6 8B442440 		movl	64(%esp), %eax
+ 158 00aa 890424   		movl	%eax, (%esp)
+ 159 00ad E8000000 		call	__Z17copyPwmParametersP9PwmConfigiPfiPPa
+ 159      00
+ 160 00b2 8B442440 		movl	64(%esp), %eax
+ 161 00b6 C7405000 		movl	$0xbf800000, 80(%eax)
+ 161      0080BF
+ 162              	L16:
+ 163 00bd 83C434   		addl	$52, %esp
+ 164              		.cfi_def_cfa_offset 12
+ 165 00c0 5B       		popl	%ebx
+ 166              		.cfi_restore 3
+ 167              		.cfi_def_cfa_offset 8
+ 168 00c1 5E       		popl	%esi
+ 169              		.cfi_restore 6
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s 			page 5
+
+
+ 170              		.cfi_def_cfa_offset 4
+ 171 00c2 C3       		ret
+ 172              		.cfi_endproc
+ 173              	LFE91:
+ 174 00c3 90909090 		.section	.text$_ZN21TriggerEmulatorHelperC2Ev,"x"
+ 174      90909090 
+ 174      90909090 
+ 174      90
+ 175              		.align 2
+ 176              		.p2align 4,,15
+ 177              		.globl	__ZN21TriggerEmulatorHelperC2Ev
+ 178              		.def	__ZN21TriggerEmulatorHelperC2Ev;	.scl	2;	.type	32;	.endef
+ 179              	__ZN21TriggerEmulatorHelperC2Ev:
+ 180              	LFB86:
+ 181              		.cfi_startproc
+ 182 0000 C60100   		movb	$0, (%ecx)
+ 183 0003 C6410100 		movb	$0, 1(%ecx)
+ 184 0007 C6410200 		movb	$0, 2(%ecx)
+ 185 000b C3       		ret
+ 186              		.cfi_endproc
+ 187              	LFE86:
+ 188              		.globl	__ZN21TriggerEmulatorHelperC1Ev
+ 189              		.def	__ZN21TriggerEmulatorHelperC1Ev;	.scl	2;	.type	32;	.endef
+ 190              		.set	__ZN21TriggerEmulatorHelperC1Ev,__ZN21TriggerEmulatorHelperC2Ev
+ 191 000c 90909090 		.section	.text$_ZN21TriggerEmulatorHelper22handleEmulatorCallbackEP9PwmConfigi,"x"
+ 192              		.align 2
+ 193              		.p2align 4,,15
+ 194              		.globl	__ZN21TriggerEmulatorHelper22handleEmulatorCallbackEP9PwmConfigi
+ 195              		.def	__ZN21TriggerEmulatorHelper22handleEmulatorCallbackEP9PwmConfigi;	.scl	2;	.type	32;	.endef
+ 196              	__ZN21TriggerEmulatorHelper22handleEmulatorCallbackEP9PwmConfigi:
+ 197              	LFB89:
+ 198              		.cfi_startproc
+ 199 0000 83EC2C   		subl	$44, %esp
+ 200              		.cfi_def_cfa_offset 48
+ 201 0003 8B442430 		movl	48(%esp), %eax
+ 202 0007 897C2424 		movl	%edi, 36(%esp)
+ 203 000b 8B4C2434 		movl	52(%esp), %ecx
+ 204 000f 895C241C 		movl	%ebx, 28(%esp)
+ 205 0013 89742420 		movl	%esi, 32(%esp)
+ 206              		.cfi_offset 7, -12
+ 207              		.cfi_offset 3, -20
+ 208              		.cfi_offset 6, -16
+ 209 0017 8B7868   		movl	104(%eax), %edi
+ 210 001a 8B5810   		movl	16(%eax), %ebx
+ 211 001d 896C2428 		movl	%ebp, 40(%esp)
+ 212              		.cfi_offset 5, -8
+ 213 0021 8D440FFF 		leal	-1(%edi,%ecx), %eax
+ 214 0025 89C2     		movl	%eax, %edx
+ 215 0027 8B33     		movl	(%ebx), %esi
+ 216 0029 C1FA1F   		sarl	$31, %edx
+ 217 002c F7FF     		idivl	%edi
+ 218 002e 8B7B04   		movl	4(%ebx), %edi
+ 219 0031 8B5B08   		movl	8(%ebx), %ebx
+ 220 0034 0FBE040E 		movsbl	(%esi,%ecx), %eax
+ 221 0038 89442408 		movl	%eax, 8(%esp)
+ 222 003c 803C1700 		cmpb	$0, (%edi,%edx)
+ 223 0040 0FBE3C0F 		movsbl	(%edi,%ecx), %edi
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s 			page 6
+
+
+ 224 0044 0F95C0   		setne	%al
+ 225 0047 803C1300 		cmpb	$0, (%ebx,%edx)
+ 226 004b 89C5     		movl	%eax, %ebp
+ 227 004d 0FBE1C0B 		movsbl	(%ebx,%ecx), %ebx
+ 228 0051 0F954424 		setne	15(%esp)
+ 228      0F
+ 229 0056 803C1600 		cmpb	$0, (%esi,%edx)
+ 230 005a 0F95C2   		setne	%dl
+ 231 005d 0FB6D2   		movzbl	%dl, %edx
+ 232 0060 3B542408 		cmpl	8(%esp), %edx
+ 233 0064 7410     		je	L24
+ 234 0066 8B542408 		movl	8(%esp), %edx
+ 235 006a 31C0     		xorl	%eax, %eax
+ 236 006c 85D2     		testl	%edx, %edx
+ 237 006e 0F95C0   		setne	%al
+ 238 0071 E8000000 		call	__ZL15fireShaftSignal15trigger_event_e
+ 238      00
+ 239              	L24:
+ 240 0076 81E5FF00 		andl	$255, %ebp
+ 240      0000
+ 241 007c 39FD     		cmpl	%edi, %ebp
+ 242 007e 740D     		je	L25
+ 243 0080 83FF01   		cmpl	$1, %edi
+ 244 0083 19C0     		sbbl	%eax, %eax
+ 245 0085 83C003   		addl	$3, %eax
+ 246 0088 E8000000 		call	__ZL15fireShaftSignal15trigger_event_e
+ 246      00
+ 247              	L25:
+ 248 008d 0FB64424 		movzbl	15(%esp), %eax
+ 248      0F
+ 249 0092 39D8     		cmpl	%ebx, %eax
+ 250 0094 740D     		je	L23
+ 251 0096 83FB01   		cmpl	$1, %ebx
+ 252 0099 19C0     		sbbl	%eax, %eax
+ 253 009b 83C005   		addl	$5, %eax
+ 254 009e E8000000 		call	__ZL15fireShaftSignal15trigger_event_e
+ 254      00
+ 255              	L23:
+ 256 00a3 8B5C241C 		movl	28(%esp), %ebx
+ 257 00a7 8B742420 		movl	32(%esp), %esi
+ 258 00ab 8B7C2424 		movl	36(%esp), %edi
+ 259 00af 8B6C2428 		movl	40(%esp), %ebp
+ 260 00b3 83C42C   		addl	$44, %esp
+ 261              		.cfi_restore 5
+ 262              		.cfi_restore 7
+ 263              		.cfi_restore 6
+ 264              		.cfi_restore 3
+ 265              		.cfi_def_cfa_offset 4
+ 266 00b6 C20800   		ret	$8
+ 267              		.cfi_endproc
+ 268              	LFE89:
+ 269 00b9 90909090 		.section	.text$_ZL21emulatorApplyPinStateP9PwmConfigi,"x"
+ 269      909090
+ 270              		.p2align 4,,15
+ 271              		.def	__ZL21emulatorApplyPinStateP9PwmConfigi;	.scl	3;	.type	32;	.endef
+ 272              	__ZL21emulatorApplyPinStateP9PwmConfigi:
+ 273              	LFB92:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s 			page 7
+
+
+ 274              		.cfi_startproc
+ 275 0000 83EC1C   		subl	$28, %esp
+ 276              		.cfi_def_cfa_offset 32
+ 277 0003 8B442424 		movl	36(%esp), %eax
+ 278 0007 39050000 		cmpl	%eax, __ZL20stopEmulationAtIndex
+ 278      0000
+ 279 000d 7435     		je	L39
+ 280 000f 803D0000 		cmpb	$0, __ZL11isEmulating
+ 280      000000
+ 281 0016 740C     		je	L32
+ 282 0018 8B150000 		movl	_engineConfiguration, %edx
+ 282      0000
+ 283 001e F6425001 		testb	$1, 80(%edx)
+ 284 0022 7504     		jne	L40
+ 285              	L32:
+ 286 0024 83C41C   		addl	$28, %esp
+ 287              		.cfi_remember_state
+ 288              		.cfi_def_cfa_offset 4
+ 289 0027 C3       		ret
+ 290              		.p2align 4,,7
+ 291              	L40:
+ 292              		.cfi_restore_state
+ 293 0028 89442404 		movl	%eax, 4(%esp)
+ 294 002c 8B442420 		movl	32(%esp), %eax
+ 295 0030 B9000000 		movl	$__ZL6helper, %ecx
+ 295      00
+ 296 0035 890424   		movl	%eax, (%esp)
+ 297 0038 E8000000 		call	__ZN21TriggerEmulatorHelper22handleEmulatorCallbackEP9PwmConfigi
+ 297      00
+ 298              		.cfi_def_cfa_offset 24
+ 299 003d 83EC08   		subl	$8, %esp
+ 300              		.cfi_def_cfa_offset 32
+ 301 0040 83C41C   		addl	$28, %esp
+ 302              		.cfi_remember_state
+ 303              		.cfi_def_cfa_offset 4
+ 304 0043 C3       		ret
+ 305              		.p2align 4,,7
+ 306              	L39:
+ 307              		.cfi_restore_state
+ 308 0044 C6050000 		movb	$0, __ZL11isEmulating
+ 308      000000
+ 309 004b 83C41C   		addl	$28, %esp
+ 310              		.cfi_def_cfa_offset 4
+ 311 004e C3       		ret
+ 312              		.cfi_endproc
+ 313              	LFE92:
+ 314 004f 90       		.section .rdata,"dr"
+ 315              	LC7:
+ 316 0055 706F7369 		.ascii "position sensor\0"
+ 316      74696F6E 
+ 316      2073656E 
+ 316      736F7200 
+ 317              	LC8:
+ 318 0065 72706D00 		.ascii "rpm\0"
+ 319              	LC9:
+ 320 0069 73746F70 		.ascii "stop_stimulator_at_index\0"
+ 320      5F737469 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s 			page 8
+
+
+ 320      6D756C61 
+ 320      746F725F 
+ 320      61745F69 
+ 321              	LC10:
+ 322 0082 72657375 		.ascii "resume_stimulator\0"
+ 322      6D655F73 
+ 322      74696D75 
+ 322      6C61746F 
+ 322      7200
+ 323              		.section	.text$_Z24initTriggerEmulatorLogicP7LoggingP6Engine,"x"
+ 324              		.p2align 4,,15
+ 325              		.globl	__Z24initTriggerEmulatorLogicP7LoggingP6Engine
+ 326              		.def	__Z24initTriggerEmulatorLogicP7LoggingP6Engine;	.scl	2;	.type	32;	.endef
+ 327              	__Z24initTriggerEmulatorLogicP7LoggingP6Engine:
+ 328              	LFB95:
+ 329              		.cfi_startproc
+ 330 0000 56       		pushl	%esi
+ 331              		.cfi_def_cfa_offset 8
+ 332              		.cfi_offset 6, -8
+ 333 0001 53       		pushl	%ebx
+ 334              		.cfi_def_cfa_offset 12
+ 335              		.cfi_offset 3, -12
+ 336 0002 83EC34   		subl	$52, %esp
+ 337              		.cfi_def_cfa_offset 64
+ 338 0005 8B442440 		movl	64(%esp), %eax
+ 339 0009 8B5C2444 		movl	68(%esp), %ebx
+ 340 000d A3000000 		movl	%eax, __ZL6logger
+ 340      00
+ 341 0012 A1000000 		movl	_engineConfiguration, %eax
+ 341      00
+ 342 0017 895C2404 		movl	%ebx, 4(%esp)
+ 343 001b 8B804003 		movl	832(%eax), %eax
+ 343      0000
+ 344 0021 890424   		movl	%eax, (%esp)
+ 345 0024 E8000000 		call	__Z21setTriggerEmulatorRPMiP6Engine
+ 345      00
+ 346 0029 8B83FC0D 		movl	3580(%ebx), %eax
+ 346      0000
+ 347 002f 8D8B8402 		leal	644(%ebx), %ecx
+ 347      0000
+ 348 0035 8BB3000E 		movl	3584(%ebx), %esi
+ 348      0000
+ 349 003b 8B10     		movl	(%eax), %edx
+ 350 003d 89542424 		movl	%edx, 36(%esp)
+ 351 0041 8B5004   		movl	4(%eax), %edx
+ 352 0044 89542428 		movl	%edx, 40(%esp)
+ 353 0048 8B4008   		movl	8(%eax), %eax
+ 354 004b 8944242C 		movl	%eax, 44(%esp)
+ 355 004f E8000000 		call	__ZNK12TriggerShape7getSizeEv
+ 355      00
+ 356 0054 8D542424 		leal	36(%esp), %edx
+ 357 0058 B9000000 		movl	$_triggerSignal, %ecx
+ 357      00
+ 358 005d 89542410 		movl	%edx, 16(%esp)
+ 359 0061 89742408 		movl	%esi, 8(%esp)
+ 360 0065 C7442418 		movl	$__ZL21emulatorApplyPinStateP9PwmConfigi, 24(%esp)
+ 360      00000000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s 			page 9
+
+
+ 361 006d C7442414 		movl	$__ZL26updateTriggerShapeIfNeededP9PwmConfig, 20(%esp)
+ 361      00000000 
+ 362 0075 C744240C 		movl	$3, 12(%esp)
+ 362      03000000 
+ 363 007d 89442404 		movl	%eax, 4(%esp)
+ 364 0081 C7042455 		movl	$LC7, (%esp)
+ 364      000000
+ 365 0088 E8000000 		call	__ZN9PwmConfig13weComplexInitEPKciPfiPPaPFvPS_EPFvS5_iE
+ 365      00
+ 366              		.cfi_def_cfa_offset 36
+ 367 008d 83EC1C   		subl	$28, %esp
+ 368              		.cfi_def_cfa_offset 64
+ 369 0090 895C2408 		movl	%ebx, 8(%esp)
+ 370 0094 C7442404 		movl	$__Z21setTriggerEmulatorRPMiP6Engine, 4(%esp)
+ 370      00000000 
+ 371 009c C7042465 		movl	$LC8, (%esp)
+ 371      000000
+ 372 00a3 E8000000 		call	_addConsoleActionIP
+ 372      00
+ 373 00a8 895C2408 		movl	%ebx, 8(%esp)
+ 374 00ac C7442404 		movl	$__ZL18setEmulatorAtIndexiP6Engine, 4(%esp)
+ 374      00000000 
+ 375 00b4 C7042469 		movl	$LC9, (%esp)
+ 375      000000
+ 376 00bb E8000000 		call	_addConsoleActionIP
+ 376      00
+ 377 00c0 895C2408 		movl	%ebx, 8(%esp)
+ 378 00c4 C7442404 		movl	$__ZL16resumeStimulatorP6Engine, 4(%esp)
+ 378      00000000 
+ 379 00cc C7042482 		movl	$LC10, (%esp)
+ 379      000000
+ 380 00d3 E8000000 		call	_addConsoleActionP
+ 380      00
+ 381 00d8 83C434   		addl	$52, %esp
+ 382              		.cfi_def_cfa_offset 12
+ 383 00db 5B       		popl	%ebx
+ 384              		.cfi_restore 3
+ 385              		.cfi_def_cfa_offset 8
+ 386 00dc 5E       		popl	%esi
+ 387              		.cfi_restore 6
+ 388              		.cfi_def_cfa_offset 4
+ 389 00dd C3       		ret
+ 390              		.cfi_endproc
+ 391              	LFE95:
+ 392 00de 9090     		.section	.text.startup._GLOBAL__sub_I__ZN21TriggerEmulatorHelperC2Ev,"x"
+ 393              		.p2align 4,,15
+ 394              		.def	__GLOBAL__sub_I__ZN21TriggerEmulatorHelperC2Ev;	.scl	3;	.type	32;	.endef
+ 395              	__GLOBAL__sub_I__ZN21TriggerEmulatorHelperC2Ev:
+ 396              	LFB97:
+ 397              		.cfi_startproc
+ 398 0000 83EC1C   		subl	$28, %esp
+ 399              		.cfi_def_cfa_offset 32
+ 400 0003 B9000000 		movl	$__ZL5waves, %ecx
+ 400      00
+ 401 0008 C7042400 		movl	$__ZL10pinStates1, (%esp)
+ 401      000000
+ 402 000f E8000000 		call	__ZN13single_wave_sC1EPa
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s 			page 10
+
+
+ 402      00
+ 403              		.cfi_def_cfa_offset 28
+ 404 0014 B9040000 		movl	$__ZL5waves+4, %ecx
+ 404      00
+ 405 0019 83EC04   		subl	$4, %esp
+ 406              		.cfi_def_cfa_offset 32
+ 407 001c C7042400 		movl	$__ZL10pinStates2, (%esp)
+ 407      000000
+ 408 0023 E8000000 		call	__ZN13single_wave_sC1EPa
+ 408      00
+ 409              		.cfi_def_cfa_offset 28
+ 410 0028 B9080000 		movl	$__ZL5waves+8, %ecx
+ 410      00
+ 411 002d 83EC04   		subl	$4, %esp
+ 412              		.cfi_def_cfa_offset 32
+ 413 0030 C7042400 		movl	$__ZL10pinStates3, (%esp)
+ 413      000000
+ 414 0037 E8000000 		call	__ZN13single_wave_sC1EPa
+ 414      00
+ 415              		.cfi_def_cfa_offset 28
+ 416 003c A1000000 		movl	__ZL5waves, %eax
+ 416      00
+ 417 0041 B9000000 		movl	$_triggerSignal, %ecx
+ 417      00
+ 418 0046 A3000000 		movl	%eax, __ZL2sr
+ 418      00
+ 419 004b A1040000 		movl	__ZL5waves+4, %eax
+ 419      00
+ 420 0050 83EC04   		subl	$4, %esp
+ 421              		.cfi_def_cfa_offset 32
+ 422 0053 C7442404 		movl	$__ZL2sr, 4(%esp)
+ 422      00000000 
+ 423 005b A3040000 		movl	%eax, __ZL2sr+4
+ 423      00
+ 424 0060 A1080000 		movl	__ZL5waves+8, %eax
+ 424      00
+ 425 0065 C7042400 		movl	$__ZL8swtchTms, (%esp)
+ 425      000000
+ 426 006c A3080000 		movl	%eax, __ZL2sr+8
+ 426      00
+ 427 0071 E8000000 		call	__ZN9PwmConfigC1EPfP13single_wave_s
+ 427      00
+ 428              		.cfi_def_cfa_offset 24
+ 429 0076 B9000000 		movl	$__ZL21emulatorConfigVersion, %ecx
+ 429      00
+ 430 007b 83EC08   		subl	$8, %esp
+ 431              		.cfi_def_cfa_offset 32
+ 432 007e E8000000 		call	__ZN18LocalVersionHolderC1Ev
+ 432      00
+ 433 0083 C6050000 		movb	$0, __ZL6helper
+ 433      000000
+ 434 008a C6050100 		movb	$0, __ZL6helper+1
+ 434      000000
+ 435 0091 C6050200 		movb	$0, __ZL6helper+2
+ 435      000000
+ 436 0098 83C41C   		addl	$28, %esp
+ 437              		.cfi_def_cfa_offset 4
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s 			page 11
+
+
+ 438 009b C3       		ret
+ 439              		.cfi_endproc
+ 440              	LFE97:
+ 441 009c 90909090 		.section	.ctors,"w"
+ 442              		.align 4
+ 443 0000 00000000 		.long	__GLOBAL__sub_I__ZN21TriggerEmulatorHelperC2Ev
+ 444              		.globl	_triggerSignal
+ 445              		.section	.data$triggerSignal,"w"
+ 446              		.align 32
+ 447              	_triggerSignal:
+ 448 0000 00000000 		.space 120
+ 448      00000000 
+ 448      00000000 
+ 448      00000000 
+ 448      00000000 
+ 449 0078 00000000 		.section	.rdata$_ZL9isUpEvent,"dr"
+ 449      00000000 
+ 450              	__ZL9isUpEvent:
+ 451 0000 00       		.byte	0
+ 452 0001 01       		.byte	1
+ 453 0002 00       		.byte	0
+ 454 0003 01       		.byte	1
+ 455 0004 00       		.byte	0
+ 456 0005 01       		.byte	1
+ 457 0006 0000     		.section	.data$_ZL6logger,"w"
+ 458              		.align 4
+ 459              	__ZL6logger:
+ 460 0000 00000000 		.space 4
+ 461              		.section	.data$_ZL11isEmulating,"w"
+ 462              	__ZL11isEmulating:
+ 463 0000 01       		.byte	1
+ 464 0001 000000   		.section	.data$_ZL20stopEmulationAtIndex,"w"
+ 465              		.align 4
+ 466              	__ZL20stopEmulationAtIndex:
+ 467 0000 FFC99A3B 		.long	999999999
+ 468              		.section	.data$_ZL6helper,"w"
+ 469              	__ZL6helper:
+ 470 0000 000000   		.space 3
+ 471 0003 00       		.section	.data$_ZL21emulatorConfigVersion,"w"
+ 472              		.align 4
+ 473              	__ZL21emulatorConfigVersion:
+ 474 0000 00000000 		.space 4
+ 475              		.section	.data$_ZL5waves,"w"
+ 476              		.align 4
+ 477              	__ZL5waves:
+ 478 0000 00000000 		.space 12
+ 478      00000000 
+ 478      00000000 
+ 479              		.section	.data$_ZL10pinStates1,"w"
+ 480              		.align 32
+ 481              	__ZL10pinStates1:
+ 482 0000 00000000 		.space 252
+ 482      00000000 
+ 482      00000000 
+ 482      00000000 
+ 482      00000000 
+ 483 00fc 00000000 		.section	.data$_ZL10pinStates2,"w"
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s 			page 12
+
+
+ 484              		.align 32
+ 485              	__ZL10pinStates2:
+ 486 0000 00000000 		.space 252
+ 486      00000000 
+ 486      00000000 
+ 486      00000000 
+ 486      00000000 
+ 487 00fc 00000000 		.section	.data$_ZL10pinStates3,"w"
+ 488              		.align 32
+ 489              	__ZL10pinStates3:
+ 490 0000 00000000 		.space 252
+ 490      00000000 
+ 490      00000000 
+ 490      00000000 
+ 490      00000000 
+ 491 00fc 00000000 		.section	.data$_ZL2sr,"w"
+ 492              		.align 4
+ 493              	__ZL2sr:
+ 494 0000 00000000 		.space 12
+ 494      00000000 
+ 494      00000000 
+ 495              		.section	.data$_ZL8swtchTms,"w"
+ 496              		.align 32
+ 497              	__ZL8swtchTms:
+ 498 0000 00000000 		.space 1008
+ 498      00000000 
+ 498      00000000 
+ 498      00000000 
+ 498      00000000 
+ 499 03f0 00000000 		.section .rdata,"dr"
+ 499      00000000 
+ 499      00000000 
+ 499      00000000 
+ 500              		.align 4
+ 501              	LC1:
+ 502 0094 00007042 		.long	1114636288
+ 503              		.align 4
+ 504              	LC2:
+ 505 0098 00247449 		.long	1232348160
+ 506              		.align 4
+ 507              	LC3:
+ 508 009c 0000C842 		.long	1120403456
+ 509              		.def	__ZN9WaveChart14resetWaveChartEv;	.scl	2;	.type	32;	.endef
+ 510              		.def	__Z11scheduleMsgP7LoggingPKcz;	.scl	2;	.type	32;	.endef
+ 511              		.def	__Z16getRpmMultiplier16operation_mode_e;	.scl	2;	.type	32;	.endef
+ 512              		.def	__Z19hwHandleShaftSignal15trigger_event_e;	.scl	2;	.type	32;	.endef
+ 513              		.def	__ZN18LocalVersionHolder5isOldEv;	.scl	2;	.type	32;	.endef
+ 514              		.def	_currentTimeMillis;	.scl	2;	.type	32;	.endef
+ 515              		.def	__Z29getGlobalConfigurationVersionv;	.scl	2;	.type	32;	.endef
+ 516              		.def	__ZN18LocalVersionHolder10getVersionEv;	.scl	2;	.type	32;	.endef
+ 517              		.def	__Z31applyNonPersistentConfigurationP7Logging;	.scl	2;	.type	32;	.endef
+ 518              		.def	__ZNK12TriggerShape7getSizeEv;	.scl	2;	.type	32;	.endef
+ 519              		.def	__Z17copyPwmParametersP9PwmConfigiPfiPPa;	.scl	2;	.type	32;	.endef
+ 520              		.def	__ZN9PwmConfig13weComplexInitEPKciPfiPPaPFvPS_EPFvS5_iE;	.scl	2;	.type	32;	.endef
+ 521              		.def	_addConsoleActionIP;	.scl	2;	.type	32;	.endef
+ 522              		.def	_addConsoleActionP;	.scl	2;	.type	32;	.endef
+ 523              		.def	__ZN13single_wave_sC1EPa;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s 			page 13
+
+
+ 524              		.def	__ZN9PwmConfigC1EPfP13single_wave_s;	.scl	2;	.type	32;	.endef
+ 525              		.def	__ZN18LocalVersionHolderC1Ev;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s 			page 14
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 trigger_emulator_algo.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s:5      .text$_ZL18setEmulatorAtIndexiP6Engine:00000000 __ZL18setEmulatorAtIndexiP6Engine
+/cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s:466    .data$_ZL20stopEmulationAtIndex:00000000 __ZL20stopEmulationAtIndex
+/cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s:16     .text$_ZL16resumeStimulatorP6Engine:00000000 __ZL16resumeStimulatorP6Engine
+/cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s:462    .data$_ZL11isEmulating:00000000 __ZL11isEmulating
+/cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s:32     .text$_Z21setTriggerEmulatorRPMiP6Engine:00000000 __Z21setTriggerEmulatorRPMiP6Engine
+/cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s:447    .data$triggerSignal:00000000 _triggerSignal
+/cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s:459    .data$_ZL6logger:00000000 __ZL6logger
+/cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s:84     .text$_ZL15fireShaftSignal15trigger_event_e:00000000 __ZL15fireShaftSignal15trigger_event_e
+/cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s:450    .rdata$_ZL9isUpEvent:00000000 __ZL9isUpEvent
+/cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s:110    .text$_ZL26updateTriggerShapeIfNeededP9PwmConfig:00000000 __ZL26updateTriggerShapeIfNeededP9PwmConfig
+/cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s:473    .data$_ZL21emulatorConfigVersion:00000000 __ZL21emulatorConfigVersion
+/cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s:179    .text$_ZN21TriggerEmulatorHelperC2Ev:00000000 __ZN21TriggerEmulatorHelperC2Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s:179    .text$_ZN21TriggerEmulatorHelperC2Ev:00000000 __ZN21TriggerEmulatorHelperC1Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s:196    .text$_ZN21TriggerEmulatorHelper22handleEmulatorCallbackEP9PwmConfigi:00000000 __ZN21TriggerEmulatorHelper22handleEmulatorCallbackEP9PwmConfigi
+/cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s:272    .text$_ZL21emulatorApplyPinStateP9PwmConfigi:00000000 __ZL21emulatorApplyPinStateP9PwmConfigi
+/cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s:469    .data$_ZL6helper:00000000 __ZL6helper
+/cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s:327    .text$_Z24initTriggerEmulatorLogicP7LoggingP6Engine:00000000 __Z24initTriggerEmulatorLogicP7LoggingP6Engine
+/cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s:395    .text.startup._GLOBAL__sub_I__ZN21TriggerEmulatorHelperC2Ev:00000000 __GLOBAL__sub_I__ZN21TriggerEmulatorHelperC2Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s:477    .data$_ZL5waves:00000000 __ZL5waves
+/cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s:481    .data$_ZL10pinStates1:00000000 __ZL10pinStates1
+/cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s:485    .data$_ZL10pinStates2:00000000 __ZL10pinStates2
+/cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s:489    .data$_ZL10pinStates3:00000000 __ZL10pinStates3
+/cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s:493    .data$_ZL2sr:00000000 __ZL2sr
+/cygdrive/c/Users/pc/AppData/Local/Temp/cco3Fb7r.s:497    .data$_ZL8swtchTms:00000000 __ZL8swtchTms
+
+UNDEFINED SYMBOLS
+_engineConfiguration
+_waveChart
+_engine
+__ZN9WaveChart14resetWaveChartEv
+__Z11scheduleMsgP7LoggingPKcz
+__Z16getRpmMultiplier16operation_mode_e
+__Z19hwHandleShaftSignal15trigger_event_e
+__ZN18LocalVersionHolder5isOldEv
+_currentTimeMillis
+__Z29getGlobalConfigurationVersionv
+__ZN18LocalVersionHolder10getVersionEv
+__Z31applyNonPersistentConfigurationP7Logging
+__ZNK12TriggerShape7getSizeEv
+__Z17copyPwmParametersP9PwmConfigiPfiPPa
+__ZN9PwmConfig13weComplexInitEPKciPfiPPaPFvPS_EPFvS5_iE
+_addConsoleActionIP
+_addConsoleActionP
+__ZN13single_wave_sC1EPa
+__ZN9PwmConfigC1EPfP13single_wave_s
+__ZN18LocalVersionHolderC1Ev

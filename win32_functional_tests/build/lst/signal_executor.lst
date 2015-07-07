@@ -1,0 +1,487 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccNiqA2v.s 			page 1
+
+
+   1              		.file	"signal_executor.cpp"
+   2              		.section .rdata,"dr"
+   3              	LC0:
+   4 0000 4E554C4C 		.ascii "NULL turnPinLow\0"
+   4      20747572 
+   4      6E50696E 
+   4      4C6F7700 
+   5              	LC1:
+   6 0010 6400     		.ascii "d\0"
+   7              		.section	.text$_Z10turnPinLowP14NamedOutputPin,"x"
+   8              		.p2align 4,,15
+   9              		.globl	__Z10turnPinLowP14NamedOutputPin
+  10              		.def	__Z10turnPinLowP14NamedOutputPin;	.scl	2;	.type	32;	.endef
+  11              	__Z10turnPinLowP14NamedOutputPin:
+  12              	LFB87:
+  13              		.cfi_startproc
+  14 0000 83EC1C   		subl	$28, %esp
+  15              		.cfi_def_cfa_offset 32
+  16 0003 8B442420 		movl	32(%esp), %eax
+  17 0007 85C0     		testl	%eax, %eax
+  18 0009 7445     		je	L10
+  19 000b 8B5004   		movl	4(%eax), %edx
+  20 000e 85D2     		testl	%edx, %edx
+  21 0010 752E     		jne	L11
+  22              	L3:
+  23 0012 F605E005 		testb	$32, _persistentState+1504
+  23      000020
+  24 0019 741B     		je	L1
+  25 001b C7442404 		movl	$LC1, 4(%esp)
+  25      10000000 
+  26 0023 8B4008   		movl	8(%eax), %eax
+  27 0026 B9000000 		movl	$_waveChart, %ecx
+  27      00
+  28 002b 890424   		movl	%eax, (%esp)
+  29 002e E8000000 		call	__ZN9WaveChart18addWaveChartEvent3EPKcS1_
+  29      00
+  30              		.cfi_def_cfa_offset 24
+  31 0033 83EC08   		subl	$8, %esp
+  32              		.cfi_def_cfa_offset 32
+  33              	L1:
+  34 0036 83C41C   		addl	$28, %esp
+  35              		.cfi_remember_state
+  36              		.cfi_def_cfa_offset 4
+  37 0039 C3       		ret
+  38 003a 8DB60000 		.p2align 4,,7
+  38      0000
+  39              	L11:
+  40              		.cfi_restore_state
+  41 0040 C7400400 		movl	$0, 4(%eax)
+  41      000000
+  42 0047 EBC9     		jmp	L3
+  43 0049 8DB42600 		.p2align 4,,7
+  43      000000
+  44              	L10:
+  45 0050 C7442420 		movl	$LC0, 32(%esp)
+  45      00000000 
+  46 0058 83C41C   		addl	$28, %esp
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccNiqA2v.s 			page 2
+
+
+  47              		.cfi_def_cfa_offset 4
+  48 005b E9000000 		jmp	_firmwareError
+  48      00
+  49              		.cfi_endproc
+  50              	LFE87:
+  51              		.section .rdata,"dr"
+  52              	LC2:
+  53 0012 4E554C4C 		.ascii "NULL @ turnPinHigh\0"
+  53      20402074 
+  53      75726E50 
+  53      696E4869 
+  53      676800
+  54              	LC3:
+  55 0025 7500     		.ascii "u\0"
+  56              		.section	.text$_Z11turnPinHighP14NamedOutputPin,"x"
+  57              		.p2align 4,,15
+  58              		.globl	__Z11turnPinHighP14NamedOutputPin
+  59              		.def	__Z11turnPinHighP14NamedOutputPin;	.scl	2;	.type	32;	.endef
+  60              	__Z11turnPinHighP14NamedOutputPin:
+  61              	LFB86:
+  62              		.cfi_startproc
+  63 0000 83EC1C   		subl	$28, %esp
+  64              		.cfi_def_cfa_offset 32
+  65 0003 8B442420 		movl	32(%esp), %eax
+  66 0007 85C0     		testl	%eax, %eax
+  67 0009 7435     		je	L20
+  68 000b 83780401 		cmpl	$1, 4(%eax)
+  69 000f 7407     		je	L14
+  70 0011 C7400401 		movl	$1, 4(%eax)
+  70      000000
+  71              	L14:
+  72 0018 F605E005 		testb	$32, _persistentState+1504
+  72      000020
+  73 001f 741B     		je	L12
+  74 0021 C7442404 		movl	$LC3, 4(%esp)
+  74      25000000 
+  75 0029 8B4008   		movl	8(%eax), %eax
+  76 002c B9000000 		movl	$_waveChart, %ecx
+  76      00
+  77 0031 890424   		movl	%eax, (%esp)
+  78 0034 E8000000 		call	__ZN9WaveChart18addWaveChartEvent3EPKcS1_
+  78      00
+  79              		.cfi_def_cfa_offset 24
+  80 0039 83EC08   		subl	$8, %esp
+  81              		.cfi_def_cfa_offset 32
+  82              	L12:
+  83 003c 83C41C   		addl	$28, %esp
+  84              		.cfi_remember_state
+  85              		.cfi_def_cfa_offset 4
+  86 003f C3       		ret
+  87              		.p2align 4,,7
+  88              	L20:
+  89              		.cfi_restore_state
+  90 0040 C7442420 		movl	$LC2, 32(%esp)
+  90      12000000 
+  91 0048 83C41C   		addl	$28, %esp
+  92              		.cfi_def_cfa_offset 4
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccNiqA2v.s 			page 3
+
+
+  93 004b E9000000 		jmp	_firmwareError
+  93      00
+  94              		.cfi_endproc
+  95              	LFE86:
+  96              		.section	.text$_Z18initSignalExecutorv,"x"
+  97              		.p2align 4,,15
+  98              		.globl	__Z18initSignalExecutorv
+  99              		.def	__Z18initSignalExecutorv;	.scl	2;	.type	32;	.endef
+ 100              	__Z18initSignalExecutorv:
+ 101              	LFB85:
+ 102              		.cfi_startproc
+ 103 0000 83EC0C   		subl	$12, %esp
+ 104              		.cfi_def_cfa_offset 16
+ 105 0003 E8000000 		call	__Z22initSignalExecutorImplv
+ 105      00
+ 106 0008 BAC80000 		movl	$_enginePins+200, %edx
+ 106      00
+ 107 000d 31C0     		xorl	%eax, %eax
+ 108 000f 90       		.p2align 4,,7
+ 109              	L22:
+ 110 0010 8B0C8500 		movl	__ZL10sparkNames(,%eax,4), %ecx
+ 110      000000
+ 111 0017 83C001   		addl	$1, %eax
+ 112 001a 890A     		movl	%ecx, (%edx)
+ 113 001c 83C20C   		addl	$12, %edx
+ 114 001f 83F80C   		cmpl	$12, %eax
+ 115 0022 75EC     		jne	L22
+ 116 0024 BA380000 		movl	$_enginePins+56, %edx
+ 116      00
+ 117 0029 30C0     		xorb	%al, %al
+ 118 002b 908D7426 		.p2align 4,,7
+ 118      00
+ 119              	L23:
+ 120 0030 8B0C8500 		movl	__ZL13injectorNames(,%eax,4), %ecx
+ 120      000000
+ 121 0037 83C001   		addl	$1, %eax
+ 122 003a 890A     		movl	%ecx, (%edx)
+ 123 003c 83C20C   		addl	$12, %edx
+ 124 003f 83F80C   		cmpl	$12, %eax
+ 125 0042 75EC     		jne	L23
+ 126 0044 83C40C   		addl	$12, %esp
+ 127              		.cfi_def_cfa_offset 4
+ 128 0047 C3       		ret
+ 129              		.cfi_endproc
+ 130              	LFE85:
+ 131 0048 90909090 		.section .rdata,"dr"
+ 131      90909090 
+ 132 0027 00       		.align 4
+ 133              	LC5:
+ 134 0028 64757261 		.ascii "duration cannot be negative: %d\0"
+ 134      74696F6E 
+ 134      2063616E 
+ 134      6E6F7420 
+ 134      6265206E 
+ 135              	LC6:
+ 136 0048 4E614E20 		.ascii "NaN in scheduleOutput\0"
+ 136      696E2073 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccNiqA2v.s 			page 4
+
+
+ 136      63686564 
+ 136      756C654F 
+ 136      75747075 
+ 137              	LC7:
+ 138 005e 7369676E 		.ascii "signal is NULL\0"
+ 138      616C2069 
+ 138      73204E55 
+ 138      4C4C00
+ 139              	LC8:
+ 140 006d 6F757420 		.ascii "out up\0"
+ 140      757000
+ 141              	LC9:
+ 142 0074 6F757420 		.ascii "out down\0"
+ 142      646F776E 
+ 142      00
+ 143              		.section	.text$_Z14scheduleOutputP19OutputSignal_structxff,"x"
+ 144              		.p2align 4,,15
+ 145              		.globl	__Z14scheduleOutputP19OutputSignal_structxff
+ 146              		.def	__Z14scheduleOutputP19OutputSignal_structxff;	.scl	2;	.type	32;	.endef
+ 147              	__Z14scheduleOutputP19OutputSignal_structxff:
+ 148              	LFB88:
+ 149              		.cfi_startproc
+ 150 0000 83EC4C   		subl	$76, %esp
+ 151              		.cfi_def_cfa_offset 80
+ 152 0003 D944245C 		flds	92(%esp)
+ 153 0007 D95C2424 		fstps	36(%esp)
+ 154 000b D9442460 		flds	96(%esp)
+ 155 000f D9542420 		fsts	32(%esp)
+ 156 0013 D9EE     		fldz
+ 157 0015 DFE9     		fucomip	%st(1), %st
+ 158 0017 89742440 		movl	%esi, 64(%esp)
+ 159              		.cfi_offset 6, -16
+ 160 001b 8B742454 		movl	84(%esp), %esi
+ 161 001f 897C2444 		movl	%edi, 68(%esp)
+ 162              		.cfi_offset 7, -12
+ 163 0023 8B7C2458 		movl	88(%esp), %edi
+ 164 0027 896C2448 		movl	%ebp, 72(%esp)
+ 165              		.cfi_offset 5, -8
+ 166 002b 8B6C2450 		movl	80(%esp), %ebp
+ 167 002f 895C243C 		movl	%ebx, 60(%esp)
+ 168              		.cfi_offset 3, -20
+ 169 0033 0F87F700 		ja	L36
+ 169      0000
+ 170 0039 DDD8     		fstp	%st(0)
+ 171 003b 817C2420 		cmpl	$2143289344, 32(%esp)
+ 171      0000C07F 
+ 172 0043 0F841701 		je	L37
+ 172      0000
+ 173 0049 85ED     		testl	%ebp, %ebp
+ 174 004b 0F842101 		je	L38
+ 174      0000
+ 175 0051 E8000000 		call	__Z20getRevolutionCounterv
+ 175      00
+ 176 0056 89C2     		movl	%eax, %edx
+ 177 0058 D9442424 		flds	36(%esp)
+ 178 005c C1EA1F   		shrl	$31, %edx
+ 179 005f 01D0     		addl	%edx, %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccNiqA2v.s 			page 5
+
+
+ 180 0061 83E001   		andl	$1, %eax
+ 181 0064 29D0     		subl	%edx, %eax
+ 182 0066 8D0C40   		leal	(%eax,%eax,2), %ecx
+ 183 0069 8B4500   		movl	0(%ebp), %eax
+ 184 006c D97C242E 		fnstcw	46(%esp)
+ 185 0070 C1E104   		sall	$4, %ecx
+ 186 0073 C7442410 		movl	$__Z11turnPinHighP14NamedOutputPin, 16(%esp)
+ 186      00000000 
+ 187 007b 8D5C0D68 		leal	104(%ebp,%ecx), %ebx
+ 188 007f C704246D 		movl	$LC8, (%esp)
+ 188      000000
+ 189 0086 89442414 		movl	%eax, 20(%esp)
+ 190 008a 0FB74424 		movzwl	46(%esp), %eax
+ 190      2E
+ 191 008f B40C     		movb	$12, %ah
+ 192 0091 66894424 		movw	%ax, 44(%esp)
+ 192      2C
+ 193 0096 D96C242C 		fldcw	44(%esp)
+ 194 009a DB5C2428 		fistpl	40(%esp)
+ 195 009e D96C242E 		fldcw	46(%esp)
+ 196 00a2 8B442428 		movl	40(%esp), %eax
+ 197 00a6 89C2     		movl	%eax, %edx
+ 198 00a8 C1FA1F   		sarl	$31, %edx
+ 199 00ab 01F0     		addl	%esi, %eax
+ 200 00ad 11FA     		adcl	%edi, %edx
+ 201 00af 89442408 		movl	%eax, 8(%esp)
+ 202 00b3 8D440D08 		leal	8(%ebp,%ecx), %eax
+ 203 00b7 8954240C 		movl	%edx, 12(%esp)
+ 204 00bb 89442404 		movl	%eax, 4(%esp)
+ 205 00bf E8000000 		call	__Z14scheduleByTimePKcP12scheduling_sxPFvPvES3_
+ 205      00
+ 206 00c4 8B4500   		movl	0(%ebp), %eax
+ 207 00c7 895C2404 		movl	%ebx, 4(%esp)
+ 208 00cb C7442410 		movl	$__Z10turnPinLowP14NamedOutputPin, 16(%esp)
+ 208      00000000 
+ 209 00d3 C7042474 		movl	$LC9, (%esp)
+ 209      000000
+ 210 00da 89442414 		movl	%eax, 20(%esp)
+ 211 00de D97C242E 		fnstcw	46(%esp)
+ 212 00e2 D9442420 		flds	32(%esp)
+ 213 00e6 D8442424 		fadds	36(%esp)
+ 214 00ea 0FB74424 		movzwl	46(%esp), %eax
+ 214      2E
+ 215 00ef B40C     		movb	$12, %ah
+ 216 00f1 66894424 		movw	%ax, 44(%esp)
+ 216      2C
+ 217 00f6 D96C242C 		fldcw	44(%esp)
+ 218 00fa DB5C2428 		fistpl	40(%esp)
+ 219 00fe D96C242E 		fldcw	46(%esp)
+ 220 0102 8B442428 		movl	40(%esp), %eax
+ 221 0106 89C2     		movl	%eax, %edx
+ 222 0108 C1FA1F   		sarl	$31, %edx
+ 223 010b 01F0     		addl	%esi, %eax
+ 224 010d 11FA     		adcl	%edi, %edx
+ 225 010f 89442408 		movl	%eax, 8(%esp)
+ 226 0113 8954240C 		movl	%edx, 12(%esp)
+ 227 0117 E8000000 		call	__Z14scheduleByTimePKcP12scheduling_sxPFvPvES3_
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccNiqA2v.s 			page 6
+
+
+ 227      00
+ 228 011c 8B5C243C 		movl	60(%esp), %ebx
+ 229 0120 8B742440 		movl	64(%esp), %esi
+ 230 0124 8B7C2444 		movl	68(%esp), %edi
+ 231 0128 8B6C2448 		movl	72(%esp), %ebp
+ 232 012c 83C44C   		addl	$76, %esp
+ 233              		.cfi_remember_state
+ 234              		.cfi_restore 5
+ 235              		.cfi_restore 7
+ 236              		.cfi_restore 6
+ 237              		.cfi_restore 3
+ 238              		.cfi_def_cfa_offset 4
+ 239 012f C3       		ret
+ 240              		.p2align 4,,7
+ 241              	L36:
+ 242              		.cfi_restore_state
+ 243 0130 DD5C2458 		fstpl	88(%esp)
+ 244 0134 C7442454 		movl	$LC5, 84(%esp)
+ 244      28000000 
+ 245              	L35:
+ 246 013c 8B5C243C 		movl	60(%esp), %ebx
+ 247 0140 8B742440 		movl	64(%esp), %esi
+ 248 0144 8B7C2444 		movl	68(%esp), %edi
+ 249 0148 8B6C2448 		movl	72(%esp), %ebp
+ 250 014c C7442450 		movl	$606, 80(%esp)
+ 250      5E020000 
+ 251 0154 83C44C   		addl	$76, %esp
+ 252              		.cfi_remember_state
+ 253              		.cfi_restore 5
+ 254              		.cfi_restore 7
+ 255              		.cfi_restore 6
+ 256              		.cfi_restore 3
+ 257              		.cfi_def_cfa_offset 4
+ 258 0157 E9000000 		jmp	_warning
+ 258      00
+ 259 015c 8D742600 		.p2align 4,,7
+ 260              	L37:
+ 261              		.cfi_restore_state
+ 262 0160 D9442420 		flds	32(%esp)
+ 263 0164 DD5C2458 		fstpl	88(%esp)
+ 264 0168 C7442454 		movl	$LC6, 84(%esp)
+ 264      48000000 
+ 265 0170 EBCA     		jmp	L35
+ 266              		.p2align 4,,7
+ 267              	L38:
+ 268 0172 8B5C243C 		movl	60(%esp), %ebx
+ 269 0176 8B742440 		movl	64(%esp), %esi
+ 270 017a 8B7C2444 		movl	68(%esp), %edi
+ 271 017e 8B6C2448 		movl	72(%esp), %ebp
+ 272 0182 C7442450 		movl	$LC7, 80(%esp)
+ 272      5E000000 
+ 273 018a 83C44C   		addl	$76, %esp
+ 274              		.cfi_restore 5
+ 275              		.cfi_restore 7
+ 276              		.cfi_restore 6
+ 277              		.cfi_restore 3
+ 278              		.cfi_def_cfa_offset 4
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccNiqA2v.s 			page 7
+
+
+ 279 018d E9000000 		jmp	_firmwareError
+ 279      00
+ 280              		.cfi_endproc
+ 281              	LFE88:
+ 282 0192 90909090 		.section .rdata,"dr"
+ 282      90909090 
+ 282      90909090 
+ 282      9090
+ 283              	LC11:
+ 284 007d 633100   		.ascii "c1\0"
+ 285              	LC12:
+ 286 0080 633200   		.ascii "c2\0"
+ 287              	LC13:
+ 288 0083 633300   		.ascii "c3\0"
+ 289              	LC14:
+ 290 0086 633400   		.ascii "c4\0"
+ 291              	LC15:
+ 292 0089 633500   		.ascii "c5\0"
+ 293              	LC16:
+ 294 008c 633600   		.ascii "c6\0"
+ 295              	LC17:
+ 296 008f 633700   		.ascii "c7\0"
+ 297              	LC18:
+ 298 0092 633800   		.ascii "c8\0"
+ 299              	LC19:
+ 300 0095 633900   		.ascii "c9\0"
+ 301              	LC20:
+ 302 0098 634100   		.ascii "cA\0"
+ 303              	LC21:
+ 304 009b 634200   		.ascii "cB\0"
+ 305              	LC22:
+ 306 009e 634400   		.ascii "cD\0"
+ 307              		.section	.rdata$_ZL10sparkNames,"dr"
+ 308              		.align 32
+ 309              	__ZL10sparkNames:
+ 310 0000 7D000000 		.long	LC11
+ 311 0004 80000000 		.long	LC12
+ 312 0008 83000000 		.long	LC13
+ 313 000c 86000000 		.long	LC14
+ 314 0010 89000000 		.long	LC15
+ 315 0014 8C000000 		.long	LC16
+ 316 0018 8F000000 		.long	LC17
+ 317 001c 92000000 		.long	LC18
+ 318 0020 95000000 		.long	LC19
+ 319 0024 98000000 		.long	LC20
+ 320 0028 9B000000 		.long	LC21
+ 321 002c 9E000000 		.long	LC22
+ 322 0030 00000000 		.section .rdata,"dr"
+ 322      00000000 
+ 322      00000000 
+ 322      00000000 
+ 323              	LC23:
+ 324 00a1 693100   		.ascii "i1\0"
+ 325              	LC24:
+ 326 00a4 693200   		.ascii "i2\0"
+ 327              	LC25:
+ 328 00a7 693300   		.ascii "i3\0"
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccNiqA2v.s 			page 8
+
+
+ 329              	LC26:
+ 330 00aa 693400   		.ascii "i4\0"
+ 331              	LC27:
+ 332 00ad 693500   		.ascii "i5\0"
+ 333              	LC28:
+ 334 00b0 693600   		.ascii "i6\0"
+ 335              	LC29:
+ 336 00b3 693700   		.ascii "i7\0"
+ 337              	LC30:
+ 338 00b6 693800   		.ascii "i8\0"
+ 339              	LC31:
+ 340 00b9 6A3900   		.ascii "j9\0"
+ 341              	LC32:
+ 342 00bc 694100   		.ascii "iA\0"
+ 343              	LC33:
+ 344 00bf 694200   		.ascii "iB\0"
+ 345              	LC34:
+ 346 00c2 694300   		.ascii "iC\0"
+ 347 00c5 000000   		.section	.rdata$_ZL13injectorNames,"dr"
+ 348              		.align 32
+ 349              	__ZL13injectorNames:
+ 350 0000 A1000000 		.long	LC23
+ 351 0004 A4000000 		.long	LC24
+ 352 0008 A7000000 		.long	LC25
+ 353 000c AA000000 		.long	LC26
+ 354 0010 AD000000 		.long	LC27
+ 355 0014 B0000000 		.long	LC28
+ 356 0018 B3000000 		.long	LC29
+ 357 001c B6000000 		.long	LC30
+ 358 0020 B9000000 		.long	LC31
+ 359 0024 BC000000 		.long	LC32
+ 360 0028 BF000000 		.long	LC33
+ 361 002c C2000000 		.long	LC34
+ 362              		.def	__ZN9WaveChart18addWaveChartEvent3EPKcS1_;	.scl	2;	.type	32;	.endef
+ 363              		.def	_firmwareError;	.scl	2;	.type	32;	.endef
+ 364              		.def	__Z22initSignalExecutorImplv;	.scl	2;	.type	32;	.endef
+ 365              		.def	__Z20getRevolutionCounterv;	.scl	2;	.type	32;	.endef
+ 366              		.def	__Z14scheduleByTimePKcP12scheduling_sxPFvPvES3_;	.scl	2;	.type	32;	.endef
+ 367 0030 00000000 		.def	_warning;	.scl	2;	.type	32;	.endef
+ 367      00000000 
+ 367      00000000 
+ 367      00000000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccNiqA2v.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 signal_executor.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccNiqA2v.s:11     .text$_Z10turnPinLowP14NamedOutputPin:00000000 __Z10turnPinLowP14NamedOutputPin
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccNiqA2v.s:60     .text$_Z11turnPinHighP14NamedOutputPin:00000000 __Z11turnPinHighP14NamedOutputPin
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccNiqA2v.s:100    .text$_Z18initSignalExecutorv:00000000 __Z18initSignalExecutorv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccNiqA2v.s:309    .rdata$_ZL10sparkNames:00000000 __ZL10sparkNames
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccNiqA2v.s:349    .rdata$_ZL13injectorNames:00000000 __ZL13injectorNames
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccNiqA2v.s:147    .text$_Z14scheduleOutputP19OutputSignal_structxff:00000000 __Z14scheduleOutputP19OutputSignal_structxff
+
+UNDEFINED SYMBOLS
+_persistentState
+_waveChart
+_enginePins
+__ZN9WaveChart18addWaveChartEvent3EPKcS1_
+_firmwareError
+__Z22initSignalExecutorImplv
+__Z20getRevolutionCounterv
+__Z14scheduleByTimePKcP12scheduling_sxPFvPvES3_
+_warning

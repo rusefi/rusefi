@@ -1,0 +1,540 @@
+###############################################################################
+#                                                                             #
+# IAR ANSI C/C++ Compiler V6.50.3.4676/W32 for ARM      30/Jun/2015  23:09:58 #
+# Copyright 1999-2013 IAR Systems AB.                                         #
+#                                                                             #
+#    Cpu mode        =  thumb                                                 #
+#    Endian          =  little                                                #
+#    Source file     =  F:\stuff\rusefi_sourceforge\firmware\development\hw_l #
+#                       ayer\poten.cpp                                        #
+#    Command line    =  F:\stuff\rusefi_sourceforge\firmware\development\hw_l #
+#                       ayer\poten.cpp -lCN F:\stuff\rusefi_sourceforge\firmw #
+#                       are\iar\Debug\List\ -lA F:\stuff\rusefi_sourceforge\f #
+#                       irmware\iar\Debug\List\ -o                            #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\   #
+#                       --no_cse --no_unroll --no_inline --no_code_motion     #
+#                       --no_tbaa --no_clustering --no_scheduling --debug     #
+#                       --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp     #
+#                       --dlib_config "C:\Program Files (x86)\IAR             #
+#                       Systems\Embedded Workbench                            #
+#                       6.5\arm\INC\c\DLib_Config_Normal.h"                   #
+#                       --misrac2004=1.2-1.4,2.3,3.4,4.2,6.5-7,8.2-8.3,9.3,   #
+#                       12.3,13.6-13,15.5,17.3,19.17,20.7-20.9,20.11 -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\ -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\kernel\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\ports\common\ARMCMx\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\common\ARMCMx\CMSIS\include\ -I               #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\IAR\ARMCMx\ -I F:\stuff\rusefi_sourceforge\fi #
+#                       rmware\iar\..\chibios\os\ports\IAR\ARMCMx\STM32F4xx\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\chibio #
+#                       s\os\hal\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\hal\platforms\STM32\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\DMAv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\GPIOv2\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\I2Cv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\SPIv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\TIMv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\RTCv2\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\USARTv1\ -I                     #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\OTGv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32F4xx\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\various\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\chibios\os\various\devices_lib\accel\ -I         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\b #
+#                       oards\ST_STM32F4_DISCOVERY\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\co #
+#                       ntrollers\algo\ -I F:\stuff\rusefi_sourceforge\firmwa #
+#                       re\iar\..\controllers\core\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\system\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\controllers\sensors\ -I                          #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\math\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\controllers\trigger\ -I                            #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\config #
+#                       \ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\conf #
+#                       ig\engines\ -I F:\stuff\rusefi_sourceforge\firmware\i #
+#                       ar\..\config\stm32f4ems\ -I                           #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\b #
+#                       inary\ -I F:\stuff\rusefi_sourceforge\firmware\iar\.. #
+#                       \console_util\ -I F:\stuff\rusefi_sourceforge\firmwar #
+#                       e\iar\..\development\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\development\test\ -I                  #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\developme #
+#                       nt\hw_layer\ -I F:\stuff\rusefi_sourceforge\firmware\ #
+#                       iar\..\hw_layer\algo\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\hw_layer\lcd\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                       stm32f4\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\hw_layer\serial_over_usb\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                        -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext_al #
+#                       go\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\de #
+#                       velopment\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\development\hw_layer\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\util\     #
+#                       -On --eec++                                           #
+#    MISRA C version =  2004                                                  #
+#      Enabled       =  1.2-1.4 2.3 3.4 4.2 6.5 7 8.2 8.3 9.3 12.3 13.6 13.7  #
+#                       15.5 17.3 19.17 20.7-20.9 20.11                       #
+#      Checked       =  1.4 2.3 4.2 6.5 7 8.2 8.3 9.3 12.3 13.7 15.5          #
+#                       20.7-20.9 20.11                                       #
+#      Not checked   =  1.1-1.3 1.5-2.2 2.4-4.1 5-6.4 8.1 8.4-9.2 10-12.2     #
+#                       12.4-13.6 14-15.4 16-20.6 20.10 20.12 21              #
+#    List file       =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\p #
+#                       oten.lst                                              #
+#    Object file     =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\po #
+#                       ten.o                                                 #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+F:\stuff\rusefi_sourceforge\firmware\development\hw_layer\poten.cpp
+      1          /**
+      2           * @file	poten.c
+      3           * @brief	MCP42010 digital potentiometer driver
+      4           *
+      5           * @date Mar 16, 2013
+      6           * @author Andrey Belomutskiy, (c) 2012-2015
+      7           */
+      8          
+      9          #include "main.h"
+     10          #include "poten.h"
+     11          #include "eficonsole.h"
+     12          #include "pin_repository.h"
+     13          #include "engine_configuration.h"
+     14          #include "hardware.h"
+     15          #include "mpu_util.h"
+     16          
+     17          /**
+     18           * MCP42010 digital potentiometer driver
+     19           *
+     20           *
+     21           * 1	CS		pin select						PB12		PA10
+     22           * 2	SCK		serial clock					PA5			PC10
+     23           * 3	SI		serial input		(MOSI)		PA7			PC12
+     24           * 4	Vss 	ground
+     25           * 5	PB1
+     26           * 6	PW1
+     27           * 7	PA1
+     28           * 8	PA0
+     29           * 9	PW0
+     30           * 10	PB0
+     31           * 11	RS		Reset
+     32           *
+     33           * 14	Vdd 	V input
+     34           *
+     35           * Rwa = 10000 * (256 - d) / 256 + 52
+     36           * d = 256 - (Rwa - 52) * 256 / 10000
+     37           *
+     38           */
+     39          
+     40          /* Low speed SPI configuration (281.250kHz, CPHA=0, CPOL=0, MSb first).*/
+     41          #define SPI_POT_CONFIG SPI_CR1_BR_2 | SPI_CR1_BR_1 | SPI_CR1_DFF
+     42          
+
+   \                                 In section .bss, align 4
+     43          static Logging * logger;
+   \                     logger:
+   \   00000000                      DS8 4
+     44          
+     45          #if EFI_POTENTIOMETER || defined(__DOXYGEN__)
+
+   \                                 In section .bss, align 4
+     46          static Mcp42010Driver potConfig[DIGIPOT_COUNT];
+   \                     potConfig:
+   \   00000000                      DS8 64
+     47          
+
+   \                                 In section .text, align 2, keep-with-next
+     48          void initPotentiometer(Mcp42010Driver *driver, SPIDriver *spi, brain_pin_e csPin) {
+   \                     _Z17initPotentiometerP14Mcp42010DriverP9SPIDriver11brain_pin_e:
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+     49          	driver->spiConfig.cr1 = SPI_POT_CONFIG;
+   \   00000008   0xF44F 0x6003      MOV      R0,#+2096
+   \   0000000C   0x81E0             STRH     R0,[R4, #+14]
+     50          	driver->spi = spi;
+   \   0000000E   0x6025             STR      R5,[R4, #+0]
+     51          	initSpiCs(&driver->spiConfig, csPin);
+   \   00000010   0x0031             MOVS     R1,R6
+   \   00000012   0x1D20             ADDS     R0,R4,#+4
+   \   00000014   0x.... 0x....      BL       initSpiCs
+     52          }
+   \   00000018   0xBD70             POP      {R4-R6,PC}       ;; return
+     53          
+
+   \                                 In section .text, align 2, keep-with-next
+     54          static int getPotStep(int resistanceWA) {
+     55          	return 256 - (int) ((resistanceWA - 52) * 256 / 10000);
+   \                     _Z10getPotStepi:
+   \   00000000   0x3834             SUBS     R0,R0,#+52
+   \   00000002   0xF44F 0x7180      MOV      R1,#+256
+   \   00000006   0x4348             MULS     R0,R1,R0
+   \   00000008   0xF242 0x7110      MOVW     R1,#+10000
+   \   0000000C   0xFB90 0xF0F1      SDIV     R0,R0,R1
+   \   00000010   0xF5D0 0x7080      RSBS     R0,R0,#+256
+   \   00000014   0x4770             BX       LR               ;; return
+     56          }
+     57          
+
+   \                                 In section .text, align 2, keep-with-next
+     58          static void sendToPot(Mcp42010Driver *driver, int channel, int value) {
+   \                     _Z9sendToPotP14Mcp42010Driverii:
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0xB082             SUB      SP,SP,#+8
+   \   00000004   0x0004             MOVS     R4,R0
+   \   00000006   0x000D             MOVS     R5,R1
+   \   00000008   0x0016             MOVS     R6,R2
+     59          	lockSpi(SPI_NONE);
+   \   0000000A   0x2000             MOVS     R0,#+0
+   \   0000000C   0x.... 0x....      BL       _Z7lockSpi12spi_device_e
+     60          	spiStart(driver->spi, &driver->spiConfig);
+   \   00000010   0x1D21             ADDS     R1,R4,#+4
+   \   00000012   0x6820             LDR      R0,[R4, #+0]
+   \   00000014   0x.... 0x....      BL       spiStart
+     61          	spiSelect(driver->spi);
+   \   00000018   0x6820             LDR      R0,[R4, #+0]
+   \   0000001A   0x.... 0x....      BL       spiSelect
+     62          	int word = (17 + channel) * 256 + value;
+   \   0000001E   0xF115 0x0011      ADDS     R0,R5,#+17
+   \   00000022   0xF44F 0x7180      MOV      R1,#+256
+   \   00000026   0xFB01 0x6000      MLA      R0,R1,R0,R6
+   \   0000002A   0x9000             STR      R0,[SP, #+0]
+     63          	spiSend(driver->spi, 1, &word);
+   \   0000002C   0xAA00             ADD      R2,SP,#+0
+   \   0000002E   0x2101             MOVS     R1,#+1
+   \   00000030   0x6820             LDR      R0,[R4, #+0]
+   \   00000032   0x.... 0x....      BL       spiSend
+     64          	spiUnselect(driver->spi);
+   \   00000036   0x6820             LDR      R0,[R4, #+0]
+   \   00000038   0x.... 0x....      BL       spiUnselect
+     65          	spiStop(driver->spi);
+   \   0000003C   0x6820             LDR      R0,[R4, #+0]
+   \   0000003E   0x.... 0x....      BL       spiStop
+     66          	unlockSpi();
+   \   00000042   0x.... 0x....      BL       _Z9unlockSpiv
+     67          }
+   \   00000046   0xBD73             POP      {R0,R1,R4-R6,PC}  ;; return
+     68          
+
+   \                                 In section .text, align 2, keep-with-next
+     69          void setPotResistance(Mcp42010Driver *driver, int channel, int resistance) {
+   \                     _Z16setPotResistanceP14Mcp42010Driverii:
+   \   00000000   0xB5F8             PUSH     {R3-R7,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+     70          	int value = getPotStep(resistance);
+   \   00000008   0x0030             MOVS     R0,R6
+   \   0000000A   0x.... 0x....      BL       _Z10getPotStepi
+   \   0000000E   0x0007             MOVS     R7,R0
+     71          
+     72          	scheduleMsg(logger, "Sending to potentiometer%d: %d for R=%d", channel, value, resistance);
+   \   00000010   0x9600             STR      R6,[SP, #+0]
+   \   00000012   0x003B             MOVS     R3,R7
+   \   00000014   0x002A             MOVS     R2,R5
+   \   00000016   0x....             LDR.N    R1,??DataTable3_1
+   \   00000018   0x....             LDR.N    R0,??DataTable3_2
+   \   0000001A   0x6800             LDR      R0,[R0, #+0]
+   \   0000001C   0x.... 0x....      BL       scheduleMsg
+     73          	sendToPot(driver, channel, value);
+   \   00000020   0x003A             MOVS     R2,R7
+   \   00000022   0x0029             MOVS     R1,R5
+   \   00000024   0x0020             MOVS     R0,R4
+   \   00000026   0x.... 0x....      BL       _Z9sendToPotP14Mcp42010Driverii
+     74          }
+   \   0000002A   0xBDF1             POP      {R0,R4-R7,PC}    ;; return
+     75          
+
+   \                                 In section .text, align 2, keep-with-next
+     76          static void setPotResistanceCommand(int index, int value) {
+   \                     _Z23setPotResistanceCommandii:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+     77          	setPotResistance(&potConfig[index / 2], index % 2, value);
+   \   00000006   0x002A             MOVS     R2,R5
+   \   00000008   0x2002             MOVS     R0,#+2
+   \   0000000A   0xFB94 0xF1F0      SDIV     R1,R4,R0
+   \   0000000E   0xFB01 0x4110      MLS      R1,R1,R0,R4
+   \   00000012   0x2002             MOVS     R0,#+2
+   \   00000014   0xFB94 0xF0F0      SDIV     R0,R4,R0
+   \   00000018   0x....             LDR.N    R3,??DataTable3_3
+   \   0000001A   0xEB13 0x1000      ADDS     R0,R3,R0, LSL #+4
+   \   0000001E   0x.... 0x....      BL       _Z16setPotResistanceP14Mcp42010Driverii
+     78          }
+   \   00000022   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+     79          
+
+   \                                 In section .text, align 2, keep-with-next
+     80          static void setPotValue1(int value) {
+   \                     _Z12setPotValue1i:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+     81          	sendToPot(&potConfig[0], 1, value);
+   \   00000004   0x0022             MOVS     R2,R4
+   \   00000006   0x2101             MOVS     R1,#+1
+   \   00000008   0x....             LDR.N    R0,??DataTable3_3
+   \   0000000A   0x.... 0x....      BL       _Z9sendToPotP14Mcp42010Driverii
+     82          }
+   \   0000000E   0xBD10             POP      {R4,PC}          ;; return
+     83          
+     84          #endif /* EFI_POTENTIOMETER */
+     85          
+
+   \                                 In section .text, align 2, keep-with-next
+     86          void initPotentiometers(Logging *sharedLogger, board_configuration_s *boardConfiguration) {
+   \                     _Z18initPotentiometersP7LoggingP21board_configuration_s:
+   \   00000000   0xB5F8             PUSH     {R3-R7,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+     87          	logger = sharedLogger;
+   \   00000006   0x....             LDR.N    R0,??DataTable3_2
+   \   00000008   0x6004             STR      R4,[R0, #+0]
+     88          #if EFI_POTENTIOMETER
+     89          	if (boardConfiguration->digitalPotentiometerSpiDevice == SPI_NONE) {
+   \   0000000A   0xF8D5 0x00D4      LDR      R0,[R5, #+212]
+   \   0000000E   0x2800             CMP      R0,#+0
+   \   00000010   0xD105             BNE.N    ??initPotentiometers_0
+     90          		scheduleMsg(logger, "digiPot spi disabled");
+   \   00000012   0x....             LDR.N    R1,??DataTable3_4
+   \   00000014   0x....             LDR.N    R0,??DataTable3_2
+   \   00000016   0x6800             LDR      R0,[R0, #+0]
+   \   00000018   0x.... 0x....      BL       scheduleMsg
+     91          		return;
+   \   0000001C   0xE02D             B.N      ??initPotentiometers_1
+     92          	}
+     93          	turnOnSpi(boardConfiguration->digitalPotentiometerSpiDevice);
+   \                     ??initPotentiometers_0:
+   \   0000001E   0xF8D5 0x00D4      LDR      R0,[R5, #+212]
+   \   00000022   0x.... 0x....      BL       _Z9turnOnSpi12spi_device_e
+     94          
+     95          	for (int i = 0; i < DIGIPOT_COUNT; i++) {
+   \   00000026   0x2600             MOVS     R6,#+0
+   \                     ??initPotentiometers_2:
+   \   00000028   0x2E04             CMP      R6,#+4
+   \   0000002A   0xDA12             BGE.N    ??initPotentiometers_3
+     96          		brain_pin_e csPin = boardConfiguration->digitalPotentiometerChipSelect[i];
+   \   0000002C   0xEB15 0x0086      ADDS     R0,R5,R6, LSL #+2
+   \   00000030   0xF8D0 0x70D8      LDR      R7,[R0, #+216]
+     97          		if (csPin == GPIO_UNASSIGNED) {
+   \   00000034   0x2F50             CMP      R7,#+80
+   \   00000036   0xD00A             BEQ.N    ??initPotentiometers_4
+     98          			continue;
+     99                          }
+    100          
+    101          		initPotentiometer(&potConfig[i], getSpiDevice(boardConfiguration->digitalPotentiometerSpiDevice),
+    102          				csPin);
+   \                     ??initPotentiometers_5:
+   \   00000038   0xF8D5 0x00D4      LDR      R0,[R5, #+212]
+   \   0000003C   0x.... 0x....      BL       _Z12getSpiDevice12spi_device_e
+   \   00000040   0x003A             MOVS     R2,R7
+   \   00000042   0x0001             MOVS     R1,R0
+   \   00000044   0x....             LDR.N    R0,??DataTable3_3
+   \   00000046   0xEB10 0x1006      ADDS     R0,R0,R6, LSL #+4
+   \   0000004A   0x.... 0x....      BL       _Z17initPotentiometerP14Mcp42010DriverP9SPIDriver11brain_pin_e
+    103          	}
+   \                     ??initPotentiometers_4:
+   \   0000004E   0x1C76             ADDS     R6,R6,#+1
+   \   00000050   0xE7EA             B.N      ??initPotentiometers_2
+    104          
+    105          	addConsoleActionII("pot", setPotResistanceCommand);
+   \                     ??initPotentiometers_3:
+   \   00000052   0x....             LDR.N    R1,??DataTable3_5
+   \   00000054   0x....             ADR.N    R0,??DataTable3  ;; "pot"
+   \   00000056   0x.... 0x....      BL       addConsoleActionII
+    106          
+    107          	addConsoleActionI("potd1", setPotValue1);
+   \   0000005A   0x....             LDR.N    R1,??DataTable3_6
+   \   0000005C   0x....             LDR.N    R0,??DataTable3_7
+   \   0000005E   0x.... 0x....      BL       addConsoleActionI
+    108          
+    109          	setPotResistance(&potConfig[0], 0, 3000);
+   \   00000062   0xF640 0x32B8      MOVW     R2,#+3000
+   \   00000066   0x2100             MOVS     R1,#+0
+   \   00000068   0x....             LDR.N    R0,??DataTable3_3
+   \   0000006A   0x.... 0x....      BL       _Z16setPotResistanceP14Mcp42010Driverii
+    110          	setPotResistance(&potConfig[0], 1, 7000);
+   \   0000006E   0xF641 0x3258      MOVW     R2,#+7000
+   \   00000072   0x2101             MOVS     R1,#+1
+   \   00000074   0x....             LDR.N    R0,??DataTable3_3
+   \   00000076   0x.... 0x....      BL       _Z16setPotResistanceP14Mcp42010Driverii
+    111          #else
+    112          	print("digiPot logic disabled\r\n");
+    113          #endif
+    114          }
+   \                     ??initPotentiometers_1:
+   \   0000007A   0xBDF1             POP      {R0,R4-R7,PC}    ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable3:
+   \   00000000   0x70 0x6F          DC8      "pot"
+   \              0x74 0x00    
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable3_1:
+   \   00000000   0x........         DC32     `?<Constant "Sending to potentiome...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable3_2:
+   \   00000000   0x........         DC32     logger
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable3_3:
+   \   00000000   0x........         DC32     potConfig
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable3_4:
+   \   00000000   0x........         DC32     `?<Constant "digiPot spi disabled">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable3_5:
+   \   00000000   0x........         DC32     _Z23setPotResistanceCommandii
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable3_6:
+   \   00000000   0x........         DC32     _Z12setPotValue1i
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable3_7:
+   \   00000000   0x........         DC32     `?<Constant "potd1">`
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "Sending to potentiome...">`:
+   \   00000000   0x53 0x65          DC8 "Sending to potentiometer%d: %d for R=%d"
+   \              0x6E 0x64    
+   \              0x69 0x6E    
+   \              0x67 0x20    
+   \              0x74 0x6F    
+   \              0x20 0x70    
+   \              0x6F 0x74    
+   \              0x65 0x6E    
+   \              0x74 0x69    
+   \              0x6F 0x6D    
+   \              0x65 0x74    
+   \              0x65 0x72    
+   \              0x25 0x64    
+   \              0x3A 0x20    
+   \              0x25 0x64    
+   \              0x20 0x66    
+   \              0x6F 0x72    
+   \              0x20 0x52    
+   \              0x3D 0x25    
+   \              0x64 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "digiPot spi disabled">`:
+   \   00000000   0x64 0x69          DC8 "digiPot spi disabled"
+   \              0x67 0x69    
+   \              0x50 0x6F    
+   \              0x74 0x20    
+   \              0x73 0x70    
+   \              0x69 0x20    
+   \              0x64 0x69    
+   \              0x73 0x61    
+   \              0x62 0x6C    
+   \              0x65 0x64    
+   \              0x00         
+   \   00000015   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \   00000000   0x70 0x6F          DC8 "pot"
+   \              0x74 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "potd1">`:
+   \   00000000   0x70 0x6F          DC8 "potd1"
+   \              0x74 0x64    
+   \              0x31 0x00    
+   \   00000006   0x00 0x00          DC8 0, 0
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   getPotStep(int)
+      16   initPotentiometer(Mcp42010Driver *, SPIDriver *, brain_pin_e)
+        16   -> initSpiCs
+      24   initPotentiometers(Logging *, board_configuration_s *)
+        24   -> addConsoleActionI
+        24   -> addConsoleActionII
+        24   -> getSpiDevice(spi_device_e)
+        24   -> initPotentiometer(Mcp42010Driver *, SPIDriver *, brain_pin_e)
+        24   -> scheduleMsg
+        24   -> setPotResistance(Mcp42010Driver *, int, int)
+        24   -> turnOnSpi(spi_device_e)
+      24   sendToPot(Mcp42010Driver *, int, int)
+        24   -> lockSpi(spi_device_e)
+        24   -> spiSelect
+        24   -> spiSend
+        24   -> spiStart
+        24   -> spiStop
+        24   -> spiUnselect
+        24   -> unlockSpi()
+      24   setPotResistance(Mcp42010Driver *, int, int)
+        24   -> getPotStep(int)
+        24   -> scheduleMsg
+        24   -> sendToPot(Mcp42010Driver *, int, int)
+      16   setPotResistanceCommand(int, int)
+        16   -> setPotResistance(Mcp42010Driver *, int, int)
+       8   setPotValue1(int)
+         8   -> sendToPot(Mcp42010Driver *, int, int)
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      40  ?<Constant "Sending to potentiome...">
+      24  ?<Constant "digiPot spi disabled">
+       4  ?<Constant "pot">
+       8  ?<Constant "potd1">
+       4  ??DataTable3
+       4  ??DataTable3_1
+       4  ??DataTable3_2
+       4  ??DataTable3_3
+       4  ??DataTable3_4
+       4  ??DataTable3_5
+       4  ??DataTable3_6
+       4  ??DataTable3_7
+      22  getPotStep(int)
+      26  initPotentiometer(Mcp42010Driver *, SPIDriver *, brain_pin_e)
+     124  initPotentiometers(Logging *, board_configuration_s *)
+       4  logger
+      64  potConfig
+      72  sendToPot(Mcp42010Driver *, int, int)
+      44  setPotResistance(Mcp42010Driver *, int, int)
+      36  setPotResistanceCommand(int, int)
+      16  setPotValue1(int)
+
+ 
+  68 bytes in section .bss
+  76 bytes in section .rodata
+ 372 bytes in section .text
+ 
+ 372 bytes of CODE  memory
+  76 bytes of CONST memory
+  68 bytes of DATA  memory
+
+Errors: none
+Warnings: 1

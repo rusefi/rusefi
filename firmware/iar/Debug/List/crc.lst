@@ -1,0 +1,548 @@
+###############################################################################
+#                                                                             #
+# IAR ANSI C/C++ Compiler V6.50.3.4676/W32 for ARM      30/Jun/2015  23:08:48 #
+# Copyright 1999-2013 IAR Systems AB.                                         #
+#                                                                             #
+#    Cpu mode        =  thumb                                                 #
+#    Endian          =  little                                                #
+#    Source file     =  F:\stuff\rusefi_sourceforge\firmware\util\crc.c       #
+#    Command line    =  F:\stuff\rusefi_sourceforge\firmware\util\crc.c -lCN  #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\  #
+#                       -lA F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Li #
+#                       st\ -o F:\stuff\rusefi_sourceforge\firmware\iar\Debug #
+#                       \Obj\ --no_cse --no_unroll --no_inline                #
+#                       --no_code_motion --no_tbaa --no_clustering            #
+#                       --no_scheduling --debug --endian=little               #
+#                       --cpu=Cortex-M4 -e --fpu=VFPv4_sp --dlib_config       #
+#                       "C:\Program Files (x86)\IAR Systems\Embedded          #
+#                       Workbench 6.5\arm\INC\c\DLib_Config_Normal.h"         #
+#                       --misrac2004=1.2-1.4,2.3,3.4,4.2,6.5-7,8.2-8.3,9.3,   #
+#                       12.3,13.6-13,15.5,17.3,19.17,20.7-20.9,20.11 -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\ -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\kernel\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\ports\common\ARMCMx\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\common\ARMCMx\CMSIS\include\ -I               #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\IAR\ARMCMx\ -I F:\stuff\rusefi_sourceforge\fi #
+#                       rmware\iar\..\chibios\os\ports\IAR\ARMCMx\STM32F4xx\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\chibio #
+#                       s\os\hal\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\hal\platforms\STM32\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\DMAv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\GPIOv2\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\I2Cv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\SPIv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\TIMv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\RTCv2\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\USARTv1\ -I                     #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\OTGv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32F4xx\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\various\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\chibios\os\various\devices_lib\accel\ -I         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\b #
+#                       oards\ST_STM32F4_DISCOVERY\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\co #
+#                       ntrollers\algo\ -I F:\stuff\rusefi_sourceforge\firmwa #
+#                       re\iar\..\controllers\core\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\system\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\controllers\sensors\ -I                          #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\math\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\controllers\trigger\ -I                            #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\config #
+#                       \ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\conf #
+#                       ig\engines\ -I F:\stuff\rusefi_sourceforge\firmware\i #
+#                       ar\..\config\stm32f4ems\ -I                           #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\b #
+#                       inary\ -I F:\stuff\rusefi_sourceforge\firmware\iar\.. #
+#                       \console_util\ -I F:\stuff\rusefi_sourceforge\firmwar #
+#                       e\iar\..\development\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\development\test\ -I                  #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\developme #
+#                       nt\hw_layer\ -I F:\stuff\rusefi_sourceforge\firmware\ #
+#                       iar\..\hw_layer\algo\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\hw_layer\lcd\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                       stm32f4\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\hw_layer\serial_over_usb\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                        -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext_al #
+#                       go\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\de #
+#                       velopment\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\development\hw_layer\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\util\ -On #
+#    MISRA C version =  2004                                                  #
+#      Enabled       =  1.2-1.4 2.3 3.4 4.2 6.5 7 8.2 8.3 9.3 12.3 13.6 13.7  #
+#                       15.5 17.3 19.17 20.7-20.9 20.11                       #
+#      Checked       =  1.4 2.3 4.2 6.5 7 8.2 8.3 9.3 12.3 13.7 15.5          #
+#                       20.7-20.9 20.11                                       #
+#      Not checked   =  1.1-1.3 1.5-2.2 2.4-4.1 5-6.4 8.1 8.4-9.2 10-12.2     #
+#                       12.4-13.6 14-15.4 16-20.6 20.10 20.12 21              #
+#    List file       =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\c #
+#                       rc.lst                                                #
+#    Object file     =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\cr #
+#                       c.o                                                   #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+F:\stuff\rusefi_sourceforge\firmware\util\crc.c
+      1          /**
+      2           * @file    crc.c
+      3           * @date Sep 20, 2013
+      4           * @author Andrey Belomutskiy, (c) 2012-2015
+      5           */
+      6          
+      7          #include "crc.h"
+      8          
+      9          #define WIDTH  (8)
+     10          #define TOPBIT (1 << (WIDTH - 1))
+     11          #define POLYNOMIAL 0xD8
+     12          
+
+   \                                 In section .text, align 2, keep-with-next
+     13          crc_t calc_crc(const crc_t message[], int nBytes) {
+   \                     calc_crc:
+   \   00000000   0xB430             PUSH     {R4,R5}
+   \   00000002   0x0002             MOVS     R2,R0
+     14          	crc_t remainder = 0;
+   \   00000004   0x2000             MOVS     R0,#+0
+     15          
+     16          	/*
+     17          	 * Perform modulo-2 division, a byte at a time.
+     18          	 */
+     19          	for (int byte = 0; byte < nBytes; ++byte) {
+   \   00000006   0x2300             MOVS     R3,#+0
+   \                     ??calc_crc_0:
+   \   00000008   0x428B             CMP      R3,R1
+   \   0000000A   0xDA10             BGE.N    ??calc_crc_1
+     20          		/*
+     21          		 * Bring the next byte into the remainder.
+     22          		 */
+     23          		remainder ^= (message[byte] << (WIDTH - 8));
+   \   0000000C   0x5C9C             LDRB     R4,[R3, R2]
+   \   0000000E   0x4060             EORS     R0,R4,R0
+     24          
+     25          		/*
+     26          		 * Perform modulo-2 division, a bit at a time.
+     27          		 */
+     28          		for (unsigned char bit = 8; bit > 0; --bit) {
+   \   00000010   0x2408             MOVS     R4,#+8
+   \                     ??calc_crc_2:
+   \   00000012   0xB2E4             UXTB     R4,R4            ;; ZeroExt  R4,R4,#+24,#+24
+   \   00000014   0x2C00             CMP      R4,#+0
+   \   00000016   0xD008             BEQ.N    ??calc_crc_3
+     29          			/*
+     30          			 * Try to divide the current data bit.
+     31          			 */
+     32          			if (remainder & TOPBIT) {
+   \   00000018   0x0605             LSLS     R5,R0,#+24
+   \   0000001A   0xD503             BPL.N    ??calc_crc_4
+     33          				remainder = (remainder << 1) ^ POLYNOMIAL;
+   \   0000001C   0x0040             LSLS     R0,R0,#+1
+   \   0000001E   0xF090 0x00D8      EORS     R0,R0,#0xD8
+   \   00000022   0xE000             B.N      ??calc_crc_5
+     34          			} else {
+     35          				remainder = (remainder << 1);
+   \                     ??calc_crc_4:
+   \   00000024   0x0040             LSLS     R0,R0,#+1
+     36          			}
+     37          		}
+   \                     ??calc_crc_5:
+   \   00000026   0x1E64             SUBS     R4,R4,#+1
+   \   00000028   0xE7F3             B.N      ??calc_crc_2
+     38          	}
+   \                     ??calc_crc_3:
+   \   0000002A   0x1C5B             ADDS     R3,R3,#+1
+   \   0000002C   0xE7EC             B.N      ??calc_crc_0
+     39          
+     40          	/*
+     41          	 * The final remainder is the CRC result.
+     42          	 */
+     43          	return remainder;
+   \                     ??calc_crc_1:
+   \   0000002E   0xB2C0             UXTB     R0,R0            ;; ZeroExt  R0,R0,#+24,#+24
+   \   00000030   0xBC30             POP      {R4,R5}
+   \   00000032   0x4770             BX       LR               ;; return
+     44          }
+     45          
+
+   \                                 In section .data, align 4
+     46          static uint32_t crc32_tab[] = { 0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f, 0xe963a535,
+   \                     crc32_tab:
+   \   00000000   0x00000000         DC32 0, 1996959894, 3993919788, 2567524794, 124634137, 1886057615
+   \              0x77073096   
+   \              0xEE0E612C   
+   \              0x990951BA   
+   \              0x076DC419   
+   \              0x706AF48F   
+   \   00000018   0xE963A535         DC32 3915621685, 2657392035, 249268274, 2044508324, 3772115230
+   \              0x9E6495A3   
+   \              0x0EDB8832   
+   \              0x79DCB8A4   
+   \              0xE0D5E91E   
+   \   0000002C   0x97D2D988         DC32 2547177864, 162941995, 2125561021, 3887607047, 2428444049
+   \              0x09B64C2B   
+   \              0x7EB17CBD   
+   \              0xE7B82D07   
+   \              0x90BF1D91   
+   \   00000040   0x1DB71064         DC32 498536548, 1789927666, 4089016648, 2227061214, 450548861
+   \              0x6AB020F2   
+   \              0xF3B97148   
+   \              0x84BE41DE   
+   \              0x1ADAD47D   
+   \   00000054   0x6DDDE4EB         DC32 1843258603, 4107580753, 2211677639, 325883990, 1684777152
+   \              0xF4D4B551   
+   \              0x83D385C7   
+   \              0x136C9856   
+   \              0x646BA8C0   
+   \   00000068   0xFD62F97A         DC32 4251122042, 2321926636, 335633487, 1661365465, 4195302755
+   \              0x8A65C9EC   
+   \              0x14015C4F   
+   \              0x63066CD9   
+   \              0xFA0F3D63   
+   \   0000007C   0x8D080DF5         DC32 2366115317, 997073096, 1281953886, 3579855332, 2724688242
+   \              0x3B6E20C8   
+   \              0x4C69105E   
+   \              0xD56041E4   
+   \              0xA2677172   
+   \   00000090   0x3C03E4D1         DC32 1006888145, 1258607687, 3524101629, 2768942443, 901097722
+   \              0x4B04D447   
+   \              0xD20D85FD   
+   \              0xA50AB56B   
+   \              0x35B5A8FA   
+   \   000000A4   0x42B2986C         DC32 1119000684, 3686517206, 2898065728, 853044451, 1172266101
+   \              0xDBBBC9D6   
+   \              0xACBCF940   
+   \              0x32D86CE3   
+   \              0x45DF5C75   
+   \   000000B8   0xDCD60DCF         DC32 3705015759, 2882616665, 651767980, 1373503546, 3369554304
+   \              0xABD13D59   
+   \              0x26D930AC   
+   \              0x51DE003A   
+   \              0xC8D75180   
+   \   000000CC   0xBFD06116         DC32 3218104598, 565507253, 1454621731, 3485111705, 3099436303
+   \              0x21B4F4B5   
+   \              0x56B3C423   
+   \              0xCFBA9599   
+   \              0xB8BDA50F   
+   \   000000E0   0x2802B89E         DC32 671266974, 1594198024, 3322730930, 2970347812, 795835527
+   \              0x5F058808   
+   \              0xC60CD9B2   
+   \              0xB10BE924   
+   \              0x2F6F7C87   
+   \   000000F4   0x58684C11         DC32 1483230225, 3244367275, 3060149565, 1994146192, 31158534
+   \              0xC1611DAB   
+   \              0xB6662D3D   
+   \              0x76DC4190   
+   \              0x01DB7106   
+   \   00000108   0x98D220BC         DC32 2563907772, 4023717930, 1907459465, 112637215, 2680153253
+   \              0xEFD5102A   
+   \              0x71B18589   
+   \              0x06B6B51F   
+   \              0x9FBFE4A5   
+   \   0000011C   0xE8B8D433         DC32 3904427059, 2013776290, 251722036, 2517215374, 3775830040
+   \              0x7807C9A2   
+   \              0x0F00F934   
+   \              0x9609A88E   
+   \              0xE10E9818   
+   \   00000130   0x7F6A0DBB         DC32 2137656763, 141376813, 2439277719, 3865271297, 1802195444
+   \              0x086D3D2D   
+   \              0x91646C97   
+   \              0xE6635C01   
+   \              0x6B6B51F4   
+   \   00000144   0x1C6C6162         DC32 476864866, 2238001368, 4066508878, 1812370925, 453092731
+   \              0x856530D8   
+   \              0xF262004E   
+   \              0x6C0695ED   
+   \              0x1B01A57B   
+   \   00000158   0x8208F4C1         DC32 2181625025, 4111451223, 1706088902, 314042704, 2344532202
+   \              0xF50FC457   
+   \              0x65B0D9C6   
+   \              0x12B7E950   
+   \              0x8BBEB8EA   
+   \   0000016C   0xFCB9887C         DC32 4240017532, 1658658271, 366619977, 2362670323, 4224994405
+   \              0x62DD1DDF   
+   \              0x15DA2D49   
+   \              0x8CD37CF3   
+   \              0xFBD44C65   
+   \   00000180   0x4DB26158         DC32 1303535960, 984961486, 2747007092, 3569037538, 1256170817
+   \              0x3AB551CE   
+   \              0xA3BC0074   
+   \              0xD4BB30E2   
+   \              0x4ADFA541   
+   \   00000194   0x3DD895D7         DC32 1037604311, 2765210733, 3554079995, 1131014506, 879679996
+   \              0xA4D1C46D   
+   \              0xD3D6F4FB   
+   \              0x4369E96A   
+   \              0x346ED9FC   
+   \   000001A8   0xAD678846         DC32 2909243462, 3663771856, 1141124467, 855842277, 2852801631
+   \              0xDA60B8D0   
+   \              0x44042D73   
+   \              0x33031DE5   
+   \              0xAA0A4C5F   
+   \   000001BC   0xDD0D7CC9         DC32 3708648649, 1342533948, 654459306, 3188396048, 3373015174
+   \              0x5005713C   
+   \              0x270241AA   
+   \              0xBE0B1010   
+   \              0xC90C2086   
+   \   000001D0   0x5768B525         DC32 1466479909, 544179635, 3110523913, 3462522015, 1591671054
+   \              0x206F85B3   
+   \              0xB966D409   
+   \              0xCE61E49F   
+   \              0x5EDEF90E   
+   \   000001E4   0x29D9C998         DC32 702138776, 2966460450, 3352799412, 1504918807, 783551873
+   \              0xB0D09822   
+   \              0xC7D7A8B4   
+   \              0x59B33D17   
+   \              0x2EB40D81   
+   \   000001F8   0xB7BD5C3B         DC32 3082640443, 3233442989, 3988292384, 2596254646, 62317068
+   \              0xC0BA6CAD   
+   \              0xEDB88320   
+   \              0x9ABFB3B6   
+   \              0x03B6E20C   
+   \   0000020C   0x74B1D29A         DC32 1957810842, 3939845945, 2647816111, 81470997, 1943803523
+   \              0xEAD54739   
+   \              0x9DD277AF   
+   \              0x04DB2615   
+   \              0x73DC1683   
+   \   00000220   0xE3630B12         DC32 3814918930, 2489596804, 225274430, 2053790376, 3826175755
+   \              0x94643B84   
+   \              0x0D6D6A3E   
+   \              0x7A6A5AA8   
+   \              0xE40ECF0B   
+   \   00000234   0x9309FF9D         DC32 2466906013, 167816743, 2097651377, 4027552580, 2265490386
+   \              0x0A00AE27   
+   \              0x7D079EB1   
+   \              0xF00F9344   
+   \              0x8708A3D2   
+   \   00000248   0x1E01F268         DC32 503444072, 1762050814, 4150417245, 2154129355, 426522225
+   \              0x6906C2FE   
+   \              0xF762575D   
+   \              0x806567CB   
+   \              0x196C3671   
+   \   0000025C   0x6E6B06E7         DC32 1852507879, 4275313526, 2312317920, 282753626, 1742555852
+   \              0xFED41B76   
+   \              0x89D32BE0   
+   \              0x10DA7A5A   
+   \              0x67DD4ACC   
+   \   00000270   0xF9B9DF6F         DC32 4189708143, 2394877945, 397917763, 1622183637, 3604390888
+   \              0x8EBEEFF9   
+   \              0x17B7BE43   
+   \              0x60B08ED5   
+   \              0xD6D6A3E8   
+   \   00000284   0xA1D1937E         DC32 2714866558, 953729732, 1340076626, 3518719985, 2797360999
+   \              0x38D8C2C4   
+   \              0x4FDFF252   
+   \              0xD1BB67F1   
+   \              0xA6BC5767   
+   \   00000298   0x3FB506DD         DC32 1068828381, 1219638859, 3624741850, 2936675148, 906185462
+   \              0x48B2364B   
+   \              0xD80D2BDA   
+   \              0xAF0A1B4C   
+   \              0x36034AF6   
+   \   000002AC   0x41047A60         DC32 1090812512, 3747672003, 2825379669, 829329135, 1181335161
+   \              0xDF60EFC3   
+   \              0xA867DF55   
+   \              0x316E8EEF   
+   \              0x4669BE79   
+   \   000002C0   0xCB61B38C         DC32 3412177804, 3160834842, 628085408, 1382605366, 3423369109
+   \              0xBC66831A   
+   \              0x256FD2A0   
+   \              0x5268E236   
+   \              0xCC0C7795   
+   \   000002D4   0xBB0B4703         DC32 3138078467, 570562233, 1426400815, 3317316542, 2998733608
+   \              0x220216B9   
+   \              0x5505262F   
+   \              0xC5BA3BBE   
+   \              0xB2BD0B28   
+   \   000002E8   0x2BB45A92         DC32 733239954, 1555261956, 3268935591, 3050360625, 752459403
+   \              0x5CB36A04   
+   \              0xC2D7FFA7   
+   \              0xB5D0CF31   
+   \              0x2CD99E8B   
+   \   000002FC   0x5BDEAE1D         DC32 1541320221, 2607071920, 3965973030, 1969922972, 40735498
+   \              0x9B64C2B0   
+   \              0xEC63F226   
+   \              0x756AA39C   
+   \              0x026D930A   
+   \   00000310   0x9C0906A9         DC32 2617837225, 3943577151, 1913087877, 83908371, 2512341634
+   \              0xEB0E363F   
+   \              0x72076785   
+   \              0x05005713   
+   \              0x95BF4A82   
+   \   00000324   0xE2B87A14         DC32 3803740692, 2075208622, 213261112, 2463272603, 3855990285
+   \              0x7BB12BAE   
+   \              0x0CB61B38   
+   \              0x92D28E9B   
+   \              0xE5D5BE0D   
+   \   00000338   0x7CDCEFB7         DC32 2094854071, 198958881, 2262029012, 4057260610, 1759359992
+   \              0x0BDBDF21   
+   \              0x86D3D2D4   
+   \              0xF1D4E242   
+   \              0x68DDB3F8   
+   \   0000034C   0x1FDA836E         DC32 534414190, 2176718541, 4139329115, 1873836001, 414664567
+   \              0x81BE16CD   
+   \              0xF6B9265B   
+   \              0x6FB077E1   
+   \              0x18B74777   
+   \   00000360   0x88085AE6         DC32 2282248934, 4279200368, 1711684554, 285281116, 2405801727
+   \              0xFF0F6A70   
+   \              0x66063BCA   
+   \              0x11010B5C   
+   \              0x8F659EFF   
+   \   00000374   0xF862AE69         DC32 4167216745, 1634467795, 376229701, 2685067896, 3608007406
+   \              0x616BFFD3   
+   \              0x166CCF45   
+   \              0xA00AE278   
+   \              0xD70DD2EE   
+   \   00000388   0x4E048354         DC32 1308918612, 956543938, 2808555105, 3495958263, 1231636301
+   \              0x3903B3C2   
+   \              0xA7672661   
+   \              0xD06016F7   
+   \              0x4969474D   
+   \   0000039C   0x3E6E77DB         DC32 1047427035, 2932959818, 3654703836, 1088359270, 936918000
+   \              0xAED16A4A   
+   \              0xD9D65ADC   
+   \              0x40DF0B66   
+   \              0x37D83BF0   
+   \   000003B0   0xA9BCAE53         DC32 2847714899, 3736837829, 1202900863, 817233897, 3183342108
+   \              0xDEBB9EC5   
+   \              0x47B2CF7F   
+   \              0x30B5FFE9   
+   \              0xBDBDF21C   
+   \   000003C4   0xCABAC28A         DC32 3401237130, 1404277552, 615818150, 3134207493, 3453421203
+   \              0x53B39330   
+   \              0x24B4A3A6   
+   \              0xBAD03605   
+   \              0xCDD70693   
+   \   000003D8   0x54DE5729         DC32 1423857449, 601450431, 3009837614, 3294710456, 1567103746
+   \              0x23D967BF   
+   \              0xB3667A2E   
+   \              0xC4614AB8   
+   \              0x5D681B02   
+   \   000003EC   0x2A6F2B94         DC32 711928724, 3020668471, 3272380065, 1510334235, 755167117
+   \              0xB40BBE37   
+   \              0xC30C8EA1   
+   \              0x5A05DF1B   
+   \              0x2D02EF8D   
+     47          		0x9e6495a3, 0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988, 0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91,
+     48          		0x1db71064, 0x6ab020f2, 0xf3b97148, 0x84be41de, 0x1adad47d, 0x6ddde4eb, 0xf4d4b551, 0x83d385c7, 0x136c9856,
+     49          		0x646ba8c0, 0xfd62f97a, 0x8a65c9ec, 0x14015c4f, 0x63066cd9, 0xfa0f3d63, 0x8d080df5, 0x3b6e20c8, 0x4c69105e,
+     50          		0xd56041e4, 0xa2677172, 0x3c03e4d1, 0x4b04d447, 0xd20d85fd, 0xa50ab56b, 0x35b5a8fa, 0x42b2986c, 0xdbbbc9d6,
+     51          		0xacbcf940, 0x32d86ce3, 0x45df5c75, 0xdcd60dcf, 0xabd13d59, 0x26d930ac, 0x51de003a, 0xc8d75180, 0xbfd06116,
+     52          		0x21b4f4b5, 0x56b3c423, 0xcfba9599, 0xb8bda50f, 0x2802b89e, 0x5f058808, 0xc60cd9b2, 0xb10be924, 0x2f6f7c87,
+     53          		0x58684c11, 0xc1611dab, 0xb6662d3d, 0x76dc4190, 0x01db7106, 0x98d220bc, 0xefd5102a, 0x71b18589, 0x06b6b51f,
+     54          		0x9fbfe4a5, 0xe8b8d433, 0x7807c9a2, 0x0f00f934, 0x9609a88e, 0xe10e9818, 0x7f6a0dbb, 0x086d3d2d, 0x91646c97,
+     55          		0xe6635c01, 0x6b6b51f4, 0x1c6c6162, 0x856530d8, 0xf262004e, 0x6c0695ed, 0x1b01a57b, 0x8208f4c1, 0xf50fc457,
+     56          		0x65b0d9c6, 0x12b7e950, 0x8bbeb8ea, 0xfcb9887c, 0x62dd1ddf, 0x15da2d49, 0x8cd37cf3, 0xfbd44c65, 0x4db26158,
+     57          		0x3ab551ce, 0xa3bc0074, 0xd4bb30e2, 0x4adfa541, 0x3dd895d7, 0xa4d1c46d, 0xd3d6f4fb, 0x4369e96a, 0x346ed9fc,
+     58          		0xad678846, 0xda60b8d0, 0x44042d73, 0x33031de5, 0xaa0a4c5f, 0xdd0d7cc9, 0x5005713c, 0x270241aa, 0xbe0b1010,
+     59          		0xc90c2086, 0x5768b525, 0x206f85b3, 0xb966d409, 0xce61e49f, 0x5edef90e, 0x29d9c998, 0xb0d09822, 0xc7d7a8b4,
+     60          		0x59b33d17, 0x2eb40d81, 0xb7bd5c3b, 0xc0ba6cad, 0xedb88320, 0x9abfb3b6, 0x03b6e20c, 0x74b1d29a, 0xead54739,
+     61          		0x9dd277af, 0x04db2615, 0x73dc1683, 0xe3630b12, 0x94643b84, 0x0d6d6a3e, 0x7a6a5aa8, 0xe40ecf0b, 0x9309ff9d,
+     62          		0x0a00ae27, 0x7d079eb1, 0xf00f9344, 0x8708a3d2, 0x1e01f268, 0x6906c2fe, 0xf762575d, 0x806567cb, 0x196c3671,
+     63          		0x6e6b06e7, 0xfed41b76, 0x89d32be0, 0x10da7a5a, 0x67dd4acc, 0xf9b9df6f, 0x8ebeeff9, 0x17b7be43, 0x60b08ed5,
+     64          		0xd6d6a3e8, 0xa1d1937e, 0x38d8c2c4, 0x4fdff252, 0xd1bb67f1, 0xa6bc5767, 0x3fb506dd, 0x48b2364b, 0xd80d2bda,
+     65          		0xaf0a1b4c, 0x36034af6, 0x41047a60, 0xdf60efc3, 0xa867df55, 0x316e8eef, 0x4669be79, 0xcb61b38c, 0xbc66831a,
+     66          		0x256fd2a0, 0x5268e236, 0xcc0c7795, 0xbb0b4703, 0x220216b9, 0x5505262f, 0xc5ba3bbe, 0xb2bd0b28, 0x2bb45a92,
+     67          		0x5cb36a04, 0xc2d7ffa7, 0xb5d0cf31, 0x2cd99e8b, 0x5bdeae1d, 0x9b64c2b0, 0xec63f226, 0x756aa39c, 0x026d930a,
+     68          		0x9c0906a9, 0xeb0e363f, 0x72076785, 0x05005713, 0x95bf4a82, 0xe2b87a14, 0x7bb12bae, 0x0cb61b38, 0x92d28e9b,
+     69          		0xe5d5be0d, 0x7cdcefb7, 0x0bdbdf21, 0x86d3d2d4, 0xf1d4e242, 0x68ddb3f8, 0x1fda836e, 0x81be16cd, 0xf6b9265b,
+     70          		0x6fb077e1, 0x18b74777, 0x88085ae6, 0xff0f6a70, 0x66063bca, 0x11010b5c, 0x8f659eff, 0xf862ae69, 0x616bffd3,
+     71          		0x166ccf45, 0xa00ae278, 0xd70dd2ee, 0x4e048354, 0x3903b3c2, 0xa7672661, 0xd06016f7, 0x4969474d, 0x3e6e77db,
+     72          		0xaed16a4a, 0xd9d65adc, 0x40df0b66, 0x37d83bf0, 0xa9bcae53, 0xdebb9ec5, 0x47b2cf7f, 0x30b5ffe9, 0xbdbdf21c,
+     73          		0xcabac28a, 0x53b39330, 0x24b4a3a6, 0xbad03605, 0xcdd70693, 0x54de5729, 0x23d967bf, 0xb3667a2e, 0xc4614ab8,
+     74          		0x5d681b02, 0x2a6f2b94, 0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d };
+     75          
+     76          /**
+     77           * Online CRC calculator:
+     78           * http://www.zorc.breitbandkatze.de/crc.html
+     79           */
+
+   \                                 In section .text, align 2, keep-with-next
+     80          uint32_t crc32(const void *buf, uint32_t size) {
+   \                     crc32:
+   \   00000000   0xB430             PUSH     {R4,R5}
+   \   00000002   0x0002             MOVS     R2,R0
+     81          	const uint8_t *p;
+     82          	uint32_t crc = 0;
+   \   00000004   0x2000             MOVS     R0,#+0
+     83          
+     84          	p = buf;
+   \   00000006   0x0013             MOVS     R3,R2
+     85          	crc = crc ^ 0xFFFFFFFF;
+   \   00000008   0xF05F 0x34FF      MOVS     R4,#-1
+   \   0000000C   0x4060             EORS     R0,R4,R0
+     86          
+     87          	while (size--) {
+   \                     ??crc32_0:
+   \   0000000E   0x000C             MOVS     R4,R1
+   \   00000010   0x1E61             SUBS     R1,R4,#+1
+   \   00000012   0x2C00             CMP      R4,#+0
+   \   00000014   0xD009             BEQ.N    ??crc32_1
+     88          		crc = crc32_tab[(crc ^ *p++) & 0xFF] ^ (crc >> 8);
+   \   00000016   0x781C             LDRB     R4,[R3, #+0]
+   \   00000018   0x4044             EORS     R4,R4,R0
+   \   0000001A   0xB2E4             UXTB     R4,R4            ;; ZeroExt  R4,R4,#+24,#+24
+   \   0000001C   0x....             LDR.N    R5,??DataTable0
+   \   0000001E   0xF855 0x4024      LDR      R4,[R5, R4, LSL #+2]
+   \   00000022   0xEA94 0x2010      EORS     R0,R4,R0, LSR #+8
+   \   00000026   0x1C5B             ADDS     R3,R3,#+1
+   \   00000028   0xE7F1             B.N      ??crc32_0
+     89                  }
+     90          
+     91          	return crc ^ 0xFFFFFFFF;
+   \                     ??crc32_1:
+   \   0000002A   0xF05F 0x34FF      MOVS     R4,#-1
+   \   0000002E   0x4060             EORS     R0,R4,R0
+   \   00000030   0xBC30             POP      {R4,R5}
+   \   00000032   0x4770             BX       LR               ;; return
+     92          }
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable0:
+   \   00000000   0x........         DC32     crc32_tab
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   calc_crc
+       8   crc32
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable0
+      52  calc_crc
+      52  crc32
+    1024  crc32_tab
+
+ 
+ 1 024 bytes in section .data
+   108 bytes in section .text
+ 
+   108 bytes of CODE memory
+ 1 024 bytes of DATA memory
+
+Errors: none
+Warnings: none

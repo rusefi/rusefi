@@ -1,0 +1,404 @@
+###############################################################################
+#                                                                             #
+# IAR ANSI C/C++ Compiler V6.50.3.4676/W32 for ARM      30/Jun/2015  23:09:10 #
+# Copyright 1999-2013 IAR Systems AB.                                         #
+#                                                                             #
+#    Cpu mode        =  thumb                                                 #
+#    Endian          =  little                                                #
+#    Source file     =  F:\stuff\rusefi_sourceforge\firmware\chibios\os\vario #
+#                       us\memstreams.c                                       #
+#    Command line    =  F:\stuff\rusefi_sourceforge\firmware\chibios\os\vario #
+#                       us\memstreams.c -lCN F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\Debug\List\ -lA F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\Debug\List\ -o                           #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\   #
+#                       --no_cse --no_unroll --no_inline --no_code_motion     #
+#                       --no_tbaa --no_clustering --no_scheduling --debug     #
+#                       --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp     #
+#                       --dlib_config "C:\Program Files (x86)\IAR             #
+#                       Systems\Embedded Workbench                            #
+#                       6.5\arm\INC\c\DLib_Config_Normal.h"                   #
+#                       --misrac2004=1.2-1.4,2.3,3.4,4.2,6.5-7,8.2-8.3,9.3,   #
+#                       12.3,13.6-13,15.5,17.3,19.17,20.7-20.9,20.11 -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\ -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\kernel\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\ports\common\ARMCMx\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\common\ARMCMx\CMSIS\include\ -I               #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\IAR\ARMCMx\ -I F:\stuff\rusefi_sourceforge\fi #
+#                       rmware\iar\..\chibios\os\ports\IAR\ARMCMx\STM32F4xx\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\chibio #
+#                       s\os\hal\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\hal\platforms\STM32\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\DMAv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\GPIOv2\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\I2Cv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\SPIv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\TIMv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\RTCv2\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\USARTv1\ -I                     #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\OTGv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32F4xx\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\various\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\chibios\os\various\devices_lib\accel\ -I         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\b #
+#                       oards\ST_STM32F4_DISCOVERY\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\co #
+#                       ntrollers\algo\ -I F:\stuff\rusefi_sourceforge\firmwa #
+#                       re\iar\..\controllers\core\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\system\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\controllers\sensors\ -I                          #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\math\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\controllers\trigger\ -I                            #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\config #
+#                       \ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\conf #
+#                       ig\engines\ -I F:\stuff\rusefi_sourceforge\firmware\i #
+#                       ar\..\config\stm32f4ems\ -I                           #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\b #
+#                       inary\ -I F:\stuff\rusefi_sourceforge\firmware\iar\.. #
+#                       \console_util\ -I F:\stuff\rusefi_sourceforge\firmwar #
+#                       e\iar\..\development\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\development\test\ -I                  #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\developme #
+#                       nt\hw_layer\ -I F:\stuff\rusefi_sourceforge\firmware\ #
+#                       iar\..\hw_layer\algo\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\hw_layer\lcd\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                       stm32f4\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\hw_layer\serial_over_usb\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                        -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext_al #
+#                       go\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\de #
+#                       velopment\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\development\hw_layer\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\util\ -On #
+#    MISRA C version =  2004                                                  #
+#      Enabled       =  1.2-1.4 2.3 3.4 4.2 6.5 7 8.2 8.3 9.3 12.3 13.6 13.7  #
+#                       15.5 17.3 19.17 20.7-20.9 20.11                       #
+#      Checked       =  1.4 2.3 4.2 6.5 7 8.2 8.3 9.3 12.3 13.7 15.5          #
+#                       20.7-20.9 20.11                                       #
+#      Not checked   =  1.1-1.3 1.5-2.2 2.4-4.1 5-6.4 8.1 8.4-9.2 10-12.2     #
+#                       12.4-13.6 14-15.4 16-20.6 20.10 20.12 21              #
+#    List file       =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\m #
+#                       emstreams.lst                                         #
+#    Object file     =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\me #
+#                       mstreams.o                                            #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+F:\stuff\rusefi_sourceforge\firmware\chibios\os\various\memstreams.c
+      1          /*
+      2              ChibiOS/RT - Copyright (C) 2006-2013 Giovanni Di Sirio
+      3          
+      4              Licensed under the Apache License, Version 2.0 (the "License");
+      5              you may not use this file except in compliance with the License.
+      6              You may obtain a copy of the License at
+      7          
+      8                  http://www.apache.org/licenses/LICENSE-2.0
+      9          
+     10              Unless required by applicable law or agreed to in writing, software
+     11              distributed under the License is distributed on an "AS IS" BASIS,
+     12              WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     13              See the License for the specific language governing permissions and
+     14              limitations under the License.
+     15          */
+     16          
+     17          /**
+     18           * @file    memstreams.c
+     19           * @brief   Memory streams code.
+     20           *
+     21           * @addtogroup memory_streams
+     22           * @{
+     23           */
+     24          
+     25          #include <string.h>
+
+   \                                 In section .text, align 2
+   \   __intrinsic __nounwind __interwork __softfp void *memcpy(void *, void const *, size_t)
+   \                     memcpy:
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+   \   00000008   0x0032             MOVS     R2,R6
+   \   0000000A   0x0029             MOVS     R1,R5
+   \   0000000C   0x0020             MOVS     R0,R4
+   \   0000000E   0x.... 0x....      BL       __aeabi_memcpy
+   \   00000012   0x0020             MOVS     R0,R4
+   \   00000014   0xBD70             POP      {R4-R6,PC}       ;; return
+     26          
+     27          #include "ch.h"
+     28          #include "memstreams.h"
+     29          
+     30          /*===========================================================================*/
+     31          /* Driver local definitions.                                                 */
+     32          /*===========================================================================*/
+     33          
+     34          /*===========================================================================*/
+     35          /* Driver exported variables.                                                */
+     36          /*===========================================================================*/
+     37          
+     38          /*===========================================================================*/
+     39          /* Driver local variables.                                                   */
+     40          /*===========================================================================*/
+     41          
+     42          /*===========================================================================*/
+     43          /* Driver local functions.                                                   */
+     44          /*===========================================================================*/
+     45          
+
+   \                                 In section .text, align 2, keep-with-next
+     46          static size_t writes(void *ip, const uint8_t *bp, size_t n) {
+   \                     writes:
+   \   00000000   0xB5F8             PUSH     {R3-R7,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+     47            MemoryStream *msp = ip;
+   \   00000008   0x0027             MOVS     R7,R4
+     48          
+     49            if (msp->size - msp->eos < n)
+   \   0000000A   0x68B8             LDR      R0,[R7, #+8]
+   \   0000000C   0x68F9             LDR      R1,[R7, #+12]
+   \   0000000E   0x1A40             SUBS     R0,R0,R1
+   \   00000010   0x42B0             CMP      R0,R6
+   \   00000012   0xD203             BCS.N    ??writes_0
+     50              n = msp->size - msp->eos;
+   \   00000014   0x68B8             LDR      R0,[R7, #+8]
+   \   00000016   0x68F9             LDR      R1,[R7, #+12]
+   \   00000018   0x1A40             SUBS     R0,R0,R1
+   \   0000001A   0x0006             MOVS     R6,R0
+     51            memcpy(msp->buffer + msp->eos, bp, n);
+   \                     ??writes_0:
+   \   0000001C   0x0032             MOVS     R2,R6
+   \   0000001E   0x0029             MOVS     R1,R5
+   \   00000020   0x68F8             LDR      R0,[R7, #+12]
+   \   00000022   0x687B             LDR      R3,[R7, #+4]
+   \   00000024   0x18C0             ADDS     R0,R0,R3
+   \   00000026   0x.... 0x....      BL       memcpy
+     52            msp->eos += n;
+   \   0000002A   0x68F8             LDR      R0,[R7, #+12]
+   \   0000002C   0x1830             ADDS     R0,R6,R0
+   \   0000002E   0x60F8             STR      R0,[R7, #+12]
+     53            return n;
+   \   00000030   0x0030             MOVS     R0,R6
+   \   00000032   0xBDF2             POP      {R1,R4-R7,PC}    ;; return
+     54          }
+     55          
+
+   \                                 In section .text, align 2, keep-with-next
+     56          static size_t reads(void *ip, uint8_t *bp, size_t n) {
+   \                     reads:
+   \   00000000   0xB5F8             PUSH     {R3-R7,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+     57            MemoryStream *msp = ip;
+   \   00000008   0x0027             MOVS     R7,R4
+     58          
+     59            if (msp->eos - msp->offset < n)
+   \   0000000A   0x68F8             LDR      R0,[R7, #+12]
+   \   0000000C   0x6939             LDR      R1,[R7, #+16]
+   \   0000000E   0x1A40             SUBS     R0,R0,R1
+   \   00000010   0x42B0             CMP      R0,R6
+   \   00000012   0xD203             BCS.N    ??reads_0
+     60              n = msp->eos - msp->offset;
+   \   00000014   0x68F8             LDR      R0,[R7, #+12]
+   \   00000016   0x6939             LDR      R1,[R7, #+16]
+   \   00000018   0x1A40             SUBS     R0,R0,R1
+   \   0000001A   0x0006             MOVS     R6,R0
+     61            memcpy(bp, msp->buffer + msp->offset, n);
+   \                     ??reads_0:
+   \   0000001C   0x0032             MOVS     R2,R6
+   \   0000001E   0x6938             LDR      R0,[R7, #+16]
+   \   00000020   0x6879             LDR      R1,[R7, #+4]
+   \   00000022   0x1841             ADDS     R1,R0,R1
+   \   00000024   0x0028             MOVS     R0,R5
+   \   00000026   0x.... 0x....      BL       memcpy
+     62            msp->offset += n;
+   \   0000002A   0x6938             LDR      R0,[R7, #+16]
+   \   0000002C   0x1830             ADDS     R0,R6,R0
+   \   0000002E   0x6138             STR      R0,[R7, #+16]
+     63            return n;
+   \   00000030   0x0030             MOVS     R0,R6
+   \   00000032   0xBDF2             POP      {R1,R4-R7,PC}    ;; return
+     64          }
+     65          
+
+   \                                 In section .text, align 2, keep-with-next
+     66          static msg_t put(void *ip, uint8_t b) {
+   \                     put:
+   \   00000000   0xB410             PUSH     {R4}
+   \   00000002   0x0002             MOVS     R2,R0
+     67            MemoryStream *msp = ip;
+   \   00000004   0x0013             MOVS     R3,R2
+     68          
+     69            if (msp->size - msp->eos <= 0)
+   \   00000006   0x6898             LDR      R0,[R3, #+8]
+   \   00000008   0x68DC             LDR      R4,[R3, #+12]
+   \   0000000A   0x1B00             SUBS     R0,R0,R4
+   \   0000000C   0x2800             CMP      R0,#+0
+   \   0000000E   0xD102             BNE.N    ??put_0
+     70              return RDY_RESET;
+   \   00000010   0xF07F 0x0001      MVNS     R0,#+1
+   \   00000014   0xE006             B.N      ??put_1
+     71            *(msp->buffer + msp->eos) = b;
+   \                     ??put_0:
+   \   00000016   0x68D8             LDR      R0,[R3, #+12]
+   \   00000018   0x685C             LDR      R4,[R3, #+4]
+   \   0000001A   0x5501             STRB     R1,[R0, R4]
+     72            msp->eos += 1;
+   \   0000001C   0x68D8             LDR      R0,[R3, #+12]
+   \   0000001E   0x1C40             ADDS     R0,R0,#+1
+   \   00000020   0x60D8             STR      R0,[R3, #+12]
+     73            return RDY_OK;
+   \   00000022   0x2000             MOVS     R0,#+0
+   \                     ??put_1:
+   \   00000024   0xBC10             POP      {R4}
+   \   00000026   0x4770             BX       LR               ;; return
+     74          }
+     75          
+
+   \                                 In section .text, align 2, keep-with-next
+     76          static msg_t get(void *ip) {
+   \                     get:
+   \   00000000   0xB410             PUSH     {R4}
+   \   00000002   0x0001             MOVS     R1,R0
+     77            uint8_t b;
+     78            MemoryStream *msp = ip;
+   \   00000004   0x000B             MOVS     R3,R1
+     79          
+     80            if (msp->eos - msp->offset <= 0)
+   \   00000006   0x68D8             LDR      R0,[R3, #+12]
+   \   00000008   0x691C             LDR      R4,[R3, #+16]
+   \   0000000A   0x1B00             SUBS     R0,R0,R4
+   \   0000000C   0x2800             CMP      R0,#+0
+   \   0000000E   0xD102             BNE.N    ??get_0
+     81              return RDY_RESET;
+   \   00000010   0xF07F 0x0001      MVNS     R0,#+1
+   \   00000014   0xE008             B.N      ??get_1
+     82            b = *(msp->buffer + msp->offset);
+   \                     ??get_0:
+   \   00000016   0x6918             LDR      R0,[R3, #+16]
+   \   00000018   0x685C             LDR      R4,[R3, #+4]
+   \   0000001A   0x5D00             LDRB     R0,[R0, R4]
+   \   0000001C   0x0002             MOVS     R2,R0
+     83            msp->offset += 1;
+   \   0000001E   0x6918             LDR      R0,[R3, #+16]
+   \   00000020   0x1C40             ADDS     R0,R0,#+1
+   \   00000022   0x6118             STR      R0,[R3, #+16]
+     84            return b;
+   \   00000024   0xB2D2             UXTB     R2,R2            ;; ZeroExt  R2,R2,#+24,#+24
+   \   00000026   0x0010             MOVS     R0,R2
+   \                     ??get_1:
+   \   00000028   0xBC10             POP      {R4}
+   \   0000002A   0x4770             BX       LR               ;; return
+     85          }
+     86          
+
+   \                                 In section .rodata, align 4
+     87          static const struct MemStreamVMT vmt = {writes, reads, put, get};
+   \                     vmt:
+   \   00000000   0x........         DC32 writes, reads, put, get
+   \              0x........   
+   \              0x........   
+   \              0x........   
+     88          
+     89          /*===========================================================================*/
+     90          /* Driver exported functions.                                                */
+     91          /*===========================================================================*/
+     92          
+     93          /**
+     94           * @brief   Memory stream object initialization.
+     95           *
+     96           * @param[out] msp      pointer to the @p MemoryStream object to be initialized
+     97           * @param[in] buffer    pointer to the memory buffer for the memory stream
+     98           * @param[in] size      total size of the memory stream buffer
+     99           * @param[in] eos       initial End Of Stream offset. Normally you need to
+    100           *                      put this to zero for RAM buffers or equal to @p size
+    101           *                      for ROM streams.
+    102           */
+
+   \                                 In section .text, align 2, keep-with-next
+    103          void msObjectInit(MemoryStream *msp, uint8_t *buffer,
+    104                            size_t size, size_t eos) {
+   \                     msObjectInit:
+   \   00000000   0xB410             PUSH     {R4}
+    105          
+    106            msp->vmt    = &vmt;
+   \   00000002   0x....             LDR.N    R4,??DataTable0
+   \   00000004   0x6004             STR      R4,[R0, #+0]
+    107            msp->buffer = buffer;
+   \   00000006   0x6041             STR      R1,[R0, #+4]
+    108            msp->size   = size;
+   \   00000008   0x6082             STR      R2,[R0, #+8]
+    109            msp->eos    = eos;
+   \   0000000A   0x60C3             STR      R3,[R0, #+12]
+    110            msp->offset = 0;
+   \   0000000C   0x2400             MOVS     R4,#+0
+   \   0000000E   0x6104             STR      R4,[R0, #+16]
+    111          }
+   \   00000010   0xBC10             POP      {R4}
+   \   00000012   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable0:
+   \   00000000   0x........         DC32     vmt
+    112          
+    113          /** @} */
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       4   get
+      16   memcpy
+        16   -> __aeabi_memcpy
+       4   msObjectInit
+       4   put
+      24   reads
+        24   -> memcpy
+      24   writes
+        24   -> memcpy
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable0
+      44  get
+      22  memcpy
+      20  msObjectInit
+      40  put
+      52  reads
+      16  vmt
+      52  writes
+
+ 
+  16 bytes in section .rodata
+ 234 bytes in section .text
+ 
+ 212 bytes of CODE  memory (+ 22 bytes shared)
+  16 bytes of CONST memory
+
+Errors: none
+Warnings: none

@@ -1,0 +1,153 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciVK44v.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"data_buffer.c"
+  16              		.section	.text.dbIsFull,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	dbIsFull
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	dbIsFull, %function
+  23              	dbIsFull:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 00F58050 		add	r0, r0, #4096
+  28 0004 0068     		ldr	r0, [r0]
+  29 0006 B0F58063 		subs	r3, r0, #1024
+  30 000a 5842     		rsbs	r0, r3, #0
+  31 000c 5841     		adcs	r0, r0, r3
+  32 000e 7047     		bx	lr
+  33              		.size	dbIsFull, .-dbIsFull
+  34              		.section	.text.dbClear,"ax",%progbits
+  35              		.align	2
+  36              		.p2align 4,,15
+  37              		.global	dbClear
+  38              		.thumb
+  39              		.thumb_func
+  40              		.type	dbClear, %function
+  41              	dbClear:
+  42              		@ args = 0, pretend = 0, frame = 0
+  43              		@ frame_needed = 0, uses_anonymous_args = 0
+  44              		@ link register save eliminated.
+  45 0000 00F58050 		add	r0, r0, #4096
+  46 0004 0023     		movs	r3, #0
+  47 0006 0360     		str	r3, [r0]
+  48 0008 7047     		bx	lr
+  49              		.size	dbClear, .-dbClear
+  50 000a 00BFAFF3 		.section	.text.dbCopy,"ax",%progbits
+  50      0080
+  51              		.align	2
+  52              		.p2align 4,,15
+  53              		.global	dbCopy
+  54              		.thumb
+  55              		.thumb_func
+  56              		.type	dbCopy, %function
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciVK44v.s 			page 2
+
+
+  57              	dbCopy:
+  58              		@ args = 0, pretend = 0, frame = 0
+  59              		@ frame_needed = 0, uses_anonymous_args = 0
+  60              		@ link register save eliminated.
+  61 0000 00F58053 		add	r3, r0, #4096
+  62 0004 10B4     		push	{r4}
+  63 0006 1C68     		ldr	r4, [r3]
+  64 0008 01F58053 		add	r3, r1, #4096
+  65 000c 002C     		cmp	r4, #0
+  66 000e 1C60     		str	r4, [r3]
+  67 0010 06DD     		ble	.L3
+  68 0012 A400     		lsls	r4, r4, #2
+  69 0014 0023     		movs	r3, #0
+  70              	.L6:
+  71 0016 C258     		ldr	r2, [r0, r3]
+  72 0018 CA50     		str	r2, [r1, r3]
+  73 001a 0433     		adds	r3, r3, #4
+  74 001c A342     		cmp	r3, r4
+  75 001e FAD1     		bne	.L6
+  76              	.L3:
+  77 0020 5DF8044B 		ldr	r4, [sp], #4
+  78 0024 7047     		bx	lr
+  79              		.size	dbCopy, .-dbCopy
+  80 0026 00BFAFF3 		.section	.text.dbAdd,"ax",%progbits
+  80      0080AFF3 
+  80      0080
+  81              		.align	2
+  82              		.p2align 4,,15
+  83              		.global	dbAdd
+  84              		.thumb
+  85              		.thumb_func
+  86              		.type	dbAdd, %function
+  87              	dbAdd:
+  88              		@ args = 0, pretend = 0, frame = 0
+  89              		@ frame_needed = 0, uses_anonymous_args = 0
+  90              		@ link register save eliminated.
+  91 0000 00F58052 		add	r2, r0, #4096
+  92 0004 10B4     		push	{r4}
+  93 0006 1368     		ldr	r3, [r2]
+  94 0008 B3F5806F 		cmp	r3, #1024
+  95 000c 1EBF     		ittt	ne
+  96 000e 5C1C     		addne	r4, r3, #1
+  97 0010 40F82310 		strne	r1, [r0, r3, lsl #2]
+  98 0014 1460     		strne	r4, [r2]
+  99 0016 5DF8044B 		ldr	r4, [sp], #4
+ 100 001a 7047     		bx	lr
+ 101              		.size	dbAdd, .-dbAdd
+ 102 001c AFF30080 		.section	.text.modp,"ax",%progbits
+ 103              		.align	2
+ 104              		.p2align 4,,15
+ 105              		.global	modp
+ 106              		.thumb
+ 107              		.thumb_func
+ 108              		.type	modp, %function
+ 109              	modp:
+ 110              		@ args = 0, pretend = 0, frame = 0
+ 111              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciVK44v.s 			page 3
+
+
+ 112              		@ link register save eliminated.
+ 113 0000 4FF46143 		mov	r3, #57600
+ 114 0004 C0F2F553 		movt	r3, 1525
+ 115 0008 9842     		cmp	r0, r3
+ 116 000a C3BF     		ittte	gt
+ 117 000c 4FF4F853 		movgt	r3, #7936
+ 118 0010 CFF60A23 		movtgt	r3, 64010
+ 119 0014 1B18     		addgt	r3, r3, r0
+ 120 0016 0346     		movle	r3, r0
+ 121 0018 1846     		mov	r0, r3
+ 122 001a 7047     		bx	lr
+ 123              		.size	modp, .-modp
+ 124 001c AFF30080 		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciVK44v.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 data_buffer.c
+C:\Users\pc\AppData\Local\Temp\cciVK44v.s:17     .text.dbIsFull:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciVK44v.s:23     .text.dbIsFull:00000000 dbIsFull
+C:\Users\pc\AppData\Local\Temp\cciVK44v.s:35     .text.dbClear:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciVK44v.s:41     .text.dbClear:00000000 dbClear
+C:\Users\pc\AppData\Local\Temp\cciVK44v.s:51     .text.dbCopy:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciVK44v.s:57     .text.dbCopy:00000000 dbCopy
+C:\Users\pc\AppData\Local\Temp\cciVK44v.s:81     .text.dbAdd:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciVK44v.s:87     .text.dbAdd:00000000 dbAdd
+C:\Users\pc\AppData\Local\Temp\cciVK44v.s:103    .text.modp:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciVK44v.s:109    .text.modp:00000000 modp
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,63 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccdRoynt.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"subaru.cpp"
+  16              		.section	.text._Z16setSubaru2003Wrxv,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_Z16setSubaru2003Wrxv
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_Z16setSubaru2003Wrxv, %function
+  23              	_Z16setSubaru2003Wrxv:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 40F20003 		movw	r3, #:lower16:boardConfiguration
+  27 0004 C0F20003 		movt	r3, #:upper16:boardConfiguration
+  28 0008 10B5     		push	{r4, lr}
+  29 000a 40F20004 		movw	r4, #:lower16:engineConfiguration
+  30 000e C0F20004 		movt	r4, #:upper16:engineConfiguration
+  31 0012 1868     		ldr	r0, [r3]
+  32 0014 FFF7FEFF 		bl	_Z19setFrankenso_01_LCDP21board_configuration_s
+  33 0018 2068     		ldr	r0, [r4]
+  34 001a FFF7FEFF 		bl	_Z24setFrankenso0_1_joystickP22engine_configuration_s
+  35 001e 2368     		ldr	r3, [r4]
+  36 0020 0520     		movs	r0, #5
+  37 0022 0024     		movs	r4, #0
+  38 0024 0121     		movs	r1, #1
+  39 0026 0222     		movs	r2, #2
+  40 0028 C3F81842 		str	r4, [r3, #536]
+  41 002c C3F82002 		str	r0, [r3, #544]
+  42 0030 C3F82412 		str	r1, [r3, #548]
+  43 0034 C3F81422 		str	r2, [r3, #532]
+  44 0038 10BD     		pop	{r4, pc}
+  45              		.size	_Z16setSubaru2003Wrxv, .-_Z16setSubaru2003Wrxv
+  46 003a 00BFAFF3 		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+  46      0080
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccdRoynt.s 			page 2
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 subaru.cpp
+C:\Users\pc\AppData\Local\Temp\ccdRoynt.s:17     .text._Z16setSubaru2003Wrxv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccdRoynt.s:23     .text._Z16setSubaru2003Wrxv:00000000 _Z16setSubaru2003Wrxv
+
+UNDEFINED SYMBOLS
+boardConfiguration
+engineConfiguration
+_Z19setFrankenso_01_LCDP21board_configuration_s
+_Z24setFrankenso0_1_joystickP22engine_configuration_s

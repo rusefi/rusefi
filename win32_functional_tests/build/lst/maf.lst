@@ -1,0 +1,645 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccRAWaB7.s 			page 1
+
+
+   1              		.file	"maf.cpp"
+   2              		.section .rdata,"dr"
+   3              	LC0:
+   4 0000 6D616600 		.ascii "maf\0"
+   5              		.section	.text$_Z6getMafv,"x"
+   6              		.p2align 4,,15
+   7              		.globl	__Z6getMafv
+   8              		.def	__Z6getMafv;	.scl	2;	.type	32;	.endef
+   9              	__Z6getMafv:
+  10              	LFB85:
+  11              		.cfi_startproc
+  12 0000 83EC2C   		subl	$44, %esp
+  13              		.cfi_def_cfa_offset 48
+  14 0003 A1000000 		movl	_engineConfiguration, %eax
+  14      00
+  15 0008 8B804402 		movl	580(%eax), %eax
+  15      0000
+  16 000e C7042400 		movl	$LC0, (%esp)
+  16      000000
+  17 0015 89442404 		movl	%eax, 4(%esp)
+  18 0019 E8000000 		call	__Z11getAdcValuePKci
+  18      00
+  19 001e 8944241C 		movl	%eax, 28(%esp)
+  20 0022 A1000000 		movl	_engineConfiguration, %eax
+  20      00
+  21 0027 DB44241C 		fildl	28(%esp)
+  22 002b D80D0400 		fmuls	LC1
+  22      0000
+  23 0031 D888D001 		fmuls	464(%eax)
+  23      0000
+  24 0037 83C42C   		addl	$44, %esp
+  25              		.cfi_def_cfa_offset 4
+  26 003a C3       		ret
+  27              		.cfi_endproc
+  28              	LFE85:
+  29 003b 90909090 		.section	.text$_Z12hasMafSensorv,"x"
+  29      90
+  30              		.p2align 4,,15
+  31              		.globl	__Z12hasMafSensorv
+  32              		.def	__Z12hasMafSensorv;	.scl	2;	.type	32;	.endef
+  33              	__Z12hasMafSensorv:
+  34              	LFB86:
+  35              		.cfi_startproc
+  36 0000 8B150000 		movl	_engineConfiguration, %edx
+  36      0000
+  37 0006 31C0     		xorl	%eax, %eax
+  38 0008 F682D905 		testb	$64, 1497(%edx)
+  38      000040
+  39 000f 740A     		je	L4
+  40 0011 83BA4402 		cmpl	$16, 580(%edx)
+  40      000010
+  41 0018 0F95C0   		setne	%al
+  42              	L4:
+  43 001b F3       		rep
+  44 001c C3       		ret
+  45              		.cfi_endproc
+  46              	LFE86:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccRAWaB7.s 			page 2
+
+
+  47 001d 909090   		.section	.text$_Z10getRealMafv,"x"
+  48              		.p2align 4,,15
+  49              		.globl	__Z10getRealMafv
+  50              		.def	__Z10getRealMafv;	.scl	2;	.type	32;	.endef
+  51              	__Z10getRealMafv:
+  52              	LFB87:
+  53              		.cfi_startproc
+  54 0000 83EC1C   		subl	$28, %esp
+  55              		.cfi_def_cfa_offset 32
+  56 0003 A1000000 		movl	_engineConfiguration, %eax
+  56      00
+  57 0008 8B804402 		movl	580(%eax), %eax
+  57      0000
+  58 000e C7042400 		movl	$LC0, (%esp)
+  58      000000
+  59 0015 89442404 		movl	%eax, 4(%esp)
+  60 0019 E8000000 		call	__Z11getAdcValuePKci
+  60      00
+  61 001e 8B150000 		movl	_engine, %edx
+  61      0000
+  62 0024 C1F804   		sarl	$4, %eax
+  63 0027 D9848244 		flds	8004(%edx,%eax,4)
+  63      1F0000
+  64 002e 83C41C   		addl	$28, %esp
+  65              		.cfi_def_cfa_offset 4
+  66 0031 C3       		ret
+  67              		.cfi_endproc
+  68              	LFE87:
+  69 0032 90909090 		.section	.text$_Z18setBosch0280218037P19persistent_config_s,"x"
+  69      90909090 
+  69      90909090 
+  69      9090
+  70              		.p2align 4,,15
+  71              		.globl	__Z18setBosch0280218037P19persistent_config_s
+  72              		.def	__Z18setBosch0280218037P19persistent_config_s;	.scl	2;	.type	32;	.endef
+  73              	__Z18setBosch0280218037P19persistent_config_s:
+  74              	LFB90:
+  75              		.cfi_startproc
+  76 0000 83EC04   		subl	$4, %esp
+  77              		.cfi_def_cfa_offset 8
+  78 0003 B8100000 		movl	$16, %eax
+  78      00
+  79 0008 8B542408 		movl	8(%esp), %edx
+  80 000c C782B818 		movl	$0xc20a0000, 6328(%edx)
+  80      00000000 
+  80      0AC2
+  81 0016 C782B81C 		movl	$0x00000000, 7352(%edx)
+  81      00000000 
+  81      0000
+  82 0020 C782BC18 		movl	$0xc0c00000, 6332(%edx)
+  82      00000000 
+  82      C0C0
+  83 002a C782BC1C 		movl	$0x3f480000, 7356(%edx)
+  83      00000000 
+  83      483F
+  84 0034 C782C018 		movl	$0x41280000, 6336(%edx)
+  84      00000000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccRAWaB7.s 			page 3
+
+
+  84      2841
+  85 003e C782C01C 		movl	$0x3fb18000, 7360(%edx)
+  85      00000080 
+  85      B13F
+  86 0048 C782C418 		movl	$0x42d2999a, 6340(%edx)
+  86      00009A99 
+  86      D242
+  87 0052 C782C41C 		movl	$0x403a4000, 7364(%edx)
+  87      00000040 
+  87      3A40
+  88 005c C782C818 		movl	$0x43c1c000, 6344(%edx)
+  88      000000C0 
+  88      C143
+  89 0066 C782C81C 		movl	$0x40884000, 7368(%edx)
+  89      00000040 
+  89      8840
+  90 0070 C782CC18 		movl	$0x44388000, 6348(%edx)
+  90      00000080 
+  90      3844
+  91 007a C782CC1C 		movl	$0x409f6000, 7372(%edx)
+  91      00000060 
+  91      9F40
+  92              		.p2align 4,,7
+  93              	L11:
+  94 0084 C7848290 		movl	$0x43480000, 6288(%edx,%eax,4)
+  94      18000000 
+  94      004843
+  95 008f 890424   		movl	%eax, (%esp)
+  96 0092 DB0424   		fildl	(%esp)
+  97 0095 D99C8290 		fstps	7312(%edx,%eax,4)
+  97      1C0000
+  98 009c 83C001   		addl	$1, %eax
+  99 009f 3D0A0100 		cmpl	$266, %eax
+  99      00
+ 100 00a4 75DE     		jne	L11
+ 101 00a6 83C404   		addl	$4, %esp
+ 102              		.cfi_def_cfa_offset 4
+ 103 00a9 C3       		ret
+ 104              		.cfi_endproc
+ 105              	LFE90:
+ 106 00aa 90909090 		.section	.text$_Z18setBosch0280218004P19persistent_config_s,"x"
+ 106      9090
+ 107              		.p2align 4,,15
+ 108              		.globl	__Z18setBosch0280218004P19persistent_config_s
+ 109              		.def	__Z18setBosch0280218004P19persistent_config_s;	.scl	2;	.type	32;	.endef
+ 110              	__Z18setBosch0280218004P19persistent_config_s:
+ 111              	LFB91:
+ 112              		.cfi_startproc
+ 113 0000 83EC04   		subl	$4, %esp
+ 114              		.cfi_def_cfa_offset 8
+ 115 0003 B80A0000 		movl	$10, %eax
+ 115      00
+ 116 0008 8B542408 		movl	8(%esp), %edx
+ 117 000c 8D742600 		.p2align 4,,7
+ 118              	L15:
+ 119 0010 C7848290 		movl	$0x43480000, 6288(%edx,%eax,4)
+ 119      18000000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccRAWaB7.s 			page 4
+
+
+ 119      004843
+ 120 001b 890424   		movl	%eax, (%esp)
+ 121 001e DB0424   		fildl	(%esp)
+ 122 0021 D99C8290 		fstps	7312(%edx,%eax,4)
+ 122      1C0000
+ 123 0028 83C001   		addl	$1, %eax
+ 124 002b 3D0A0100 		cmpl	$266, %eax
+ 124      00
+ 125 0030 75DE     		jne	L15
+ 126 0032 83C404   		addl	$4, %esp
+ 127              		.cfi_def_cfa_offset 4
+ 128 0035 C3       		ret
+ 129              		.cfi_endproc
+ 130              	LFE91:
+ 131 0036 90909090 		.section	.text$_Z12setDensoTODOP19persistent_config_s,"x"
+ 131      90909090 
+ 131      9090
+ 132              		.p2align 4,,15
+ 133              		.globl	__Z12setDensoTODOP19persistent_config_s
+ 134              		.def	__Z12setDensoTODOP19persistent_config_s;	.scl	2;	.type	32;	.endef
+ 135              	__Z12setDensoTODOP19persistent_config_s:
+ 136              	LFB92:
+ 137              		.cfi_startproc
+ 138 0000 83EC04   		subl	$4, %esp
+ 139              		.cfi_def_cfa_offset 8
+ 140 0003 B8100000 		movl	$16, %eax
+ 140      00
+ 141 0008 8B542408 		movl	8(%esp), %edx
+ 142 000c C782B818 		movl	$0x42e8999a, 6328(%edx)
+ 142      00009A99 
+ 142      E842
+ 143 0016 C782B81C 		movl	$0x3f4ccccd, 7352(%edx)
+ 143      0000CDCC 
+ 143      4C3F
+ 144 0020 C782BC18 		movl	$0x4298999a, 6332(%edx)
+ 144      00009A99 
+ 144      9842
+ 145 002a C782BC1C 		movl	$0x3f851eb8, 7356(%edx)
+ 145      0000B81E 
+ 145      853F
+ 146 0034 C782C018 		movl	$0x42220000, 6336(%edx)
+ 146      00000000 
+ 146      2242
+ 147 003e C782C01C 		movl	$0x3fb33333, 7360(%edx)
+ 147      00003333 
+ 147      B33F
+ 148 0048 C782C418 		movl	$0x42020000, 6340(%edx)
+ 148      00000000 
+ 148      0242
+ 149 0052 C782C41C 		movl	$0x3fcccccd, 7364(%edx)
+ 149      0000CDCC 
+ 149      CC3F
+ 150 005c C782C818 		movl	$0x41be6666, 6344(%edx)
+ 150      00006666 
+ 150      BE41
+ 151 0066 C782C81C 		movl	$0x3fea3d71, 7368(%edx)
+ 151      0000713D 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccRAWaB7.s 			page 5
+
+
+ 151      EA3F
+ 152 0070 C782CC18 		movl	$0x00000000, 6348(%edx)
+ 152      00000000 
+ 152      0000
+ 153 007a C782CC1C 		movl	$0x40400000, 7372(%edx)
+ 153      00000000 
+ 153      4040
+ 154              		.p2align 4,,7
+ 155              	L19:
+ 156 0084 C7848290 		movl	$0x00000000, 6288(%edx,%eax,4)
+ 156      18000000 
+ 156      000000
+ 157 008f 890424   		movl	%eax, (%esp)
+ 158 0092 DB0424   		fildl	(%esp)
+ 159 0095 D99C8290 		fstps	7312(%edx,%eax,4)
+ 159      1C0000
+ 160 009c 83C001   		addl	$1, %eax
+ 161 009f 3D0A0100 		cmpl	$266, %eax
+ 161      00
+ 162 00a4 75DE     		jne	L19
+ 163 00a6 83C404   		addl	$4, %esp
+ 164              		.cfi_def_cfa_offset 4
+ 165 00a9 C3       		ret
+ 166              		.cfi_endproc
+ 167              	LFE92:
+ 168 00aa 90909090 		.section	.text$_Z18setMazdaMiataNAMafP19persistent_config_s,"x"
+ 168      9090
+ 169              		.p2align 4,,15
+ 170              		.globl	__Z18setMazdaMiataNAMafP19persistent_config_s
+ 171              		.def	__Z18setMazdaMiataNAMafP19persistent_config_s;	.scl	2;	.type	32;	.endef
+ 172              	__Z18setMazdaMiataNAMafP19persistent_config_s:
+ 173              	LFB93:
+ 174              		.cfi_startproc
+ 175 0000 83EC04   		subl	$4, %esp
+ 176              		.cfi_def_cfa_offset 8
+ 177 0003 B83D0000 		movl	$61, %eax
+ 177      00
+ 178 0008 8B542408 		movl	8(%esp), %edx
+ 179 000c C782B818 		movl	$0x00000000, 6328(%edx)
+ 179      00000000 
+ 179      0000
+ 180 0016 C782B81C 		movl	$0x00000000, 7352(%edx)
+ 180      00000000 
+ 180      0000
+ 181 0020 C782BC18 		movl	$0x37eae18b, 6332(%edx)
+ 181      00008BE1 
+ 181      EA37
+ 182 002a C782BC1C 		movl	$0x3dcccccd, 7356(%edx)
+ 182      0000CDCC 
+ 182      CC3D
+ 183 0034 C782C018 		movl	$0x39cae643, 6336(%edx)
+ 183      000043E6 
+ 183      CA39
+ 184 003e C782C01C 		movl	$0x3e4ccccd, 7360(%edx)
+ 184      0000CDCC 
+ 184      4C3E
+ 185 0048 C782C418 		movl	$0x3aed1bf8, 6340(%edx)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccRAWaB7.s 			page 6
+
+
+ 185      0000F81B 
+ 185      ED3A
+ 186 0052 C782C41C 		movl	$0x3e99999a, 7364(%edx)
+ 186      00009A99 
+ 186      993E
+ 187 005c C782C818 		movl	$0x3bb13dfb, 6344(%edx)
+ 187      0000FB3D 
+ 187      B13B
+ 188 0066 C782C81C 		movl	$0x3ecccccd, 7368(%edx)
+ 188      0000CDCC 
+ 188      CC3E
+ 189 0070 C782CC18 		movl	$0x3c4f398f, 6348(%edx)
+ 189      00008F39 
+ 189      4F3C
+ 190 007a C782CC1C 		movl	$0x3f000000, 7372(%edx)
+ 190      00000000 
+ 190      003F
+ 191 0084 C782D018 		movl	$0x3ccf6be3, 6352(%edx)
+ 191      0000E36B 
+ 191      CF3C
+ 192 008e C782D01C 		movl	$0x3f19999a, 7376(%edx)
+ 192      00009A99 
+ 192      193F
+ 193 0098 C782D418 		movl	$0x3d3a7fc3, 6356(%edx)
+ 193      0000C37F 
+ 193      3A3D
+ 194 00a2 C782D41C 		movl	$0x3f333333, 7380(%edx)
+ 194      00003333 
+ 194      333F
+ 195 00ac C782D818 		movl	$0x3d9b078e, 6360(%edx)
+ 195      00008E07 
+ 195      9B3D
+ 196 00b6 C782D81C 		movl	$0x3f4ccccd, 7384(%edx)
+ 196      0000CDCC 
+ 196      4C3F
+ 197 00c0 C782DC18 		movl	$0x3df2bd3c, 6364(%edx)
+ 197      00003CBD 
+ 197      F23D
+ 198 00ca C782DC1C 		movl	$0x3f666666, 7388(%edx)
+ 198      00006666 
+ 198      663F
+ 199 00d4 C782E018 		movl	$0x3e35425f, 6368(%edx)
+ 199      00005F42 
+ 199      353E
+ 200 00de C782E01C 		movl	$0x3f800000, 7392(%edx)
+ 200      00000000 
+ 200      803F
+ 201 00e8 C782E418 		movl	$0x3e82452c, 6372(%edx)
+ 201      00002C45 
+ 201      823E
+ 202 00f2 C782E41C 		movl	$0x3f8ccccd, 7396(%edx)
+ 202      0000CDCC 
+ 202      8C3F
+ 203 00fc C782E818 		movl	$0x3eb56cf8, 6376(%edx)
+ 203      0000F86C 
+ 203      B53E
+ 204 0106 C782E81C 		movl	$0x3f99999a, 7400(%edx)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccRAWaB7.s 			page 7
+
+
+ 204      00009A99 
+ 204      993F
+ 205 0110 C782EC18 		movl	$0x3ef60e0f, 6380(%edx)
+ 205      00000F0E 
+ 205      F63E
+ 206 011a C782EC1C 		movl	$0x3fa66666, 7404(%edx)
+ 206      00006666 
+ 206      A63F
+ 207 0124 C782F018 		movl	$0x3f232032, 6384(%edx)
+ 207      00003220 
+ 207      233F
+ 208 012e C782F01C 		movl	$0x3fb33333, 7408(%edx)
+ 208      00003333 
+ 208      B33F
+ 209 0138 C782F418 		movl	$0x3f541f64, 6388(%edx)
+ 209      0000641F 
+ 209      543F
+ 210 0142 C782F41C 		movl	$0x3fc00000, 7412(%edx)
+ 210      00000000 
+ 210      C03F
+ 211 014c C782F818 		movl	$0x3f879967, 6392(%edx)
+ 211      00006799 
+ 211      873F
+ 212 0156 C782F81C 		movl	$0x3fcccccd, 7416(%edx)
+ 212      0000CDCC 
+ 212      CC3F
+ 213 0160 C782FC18 		movl	$0x3faaccab, 6396(%edx)
+ 213      0000ABCC 
+ 213      AA3F
+ 214 016a C782FC1C 		movl	$0x3fd9999a, 7420(%edx)
+ 214      00009A99 
+ 214      D93F
+ 215 0174 C7820019 		movl	$0x3fd45133, 6400(%edx)
+ 215      00003351 
+ 215      D43F
+ 216 017e C782001D 		movl	$0x3fe66666, 7424(%edx)
+ 216      00006666 
+ 216      E63F
+ 217 0188 C7820419 		movl	$0x40026b76, 6404(%edx)
+ 217      0000766B 
+ 217      0240
+ 218 0192 C782041D 		movl	$0x3ff33333, 7428(%edx)
+ 218      00003333 
+ 218      F33F
+ 219 019c C7820819 		movl	$0x401e8adb, 6408(%edx)
+ 219      0000DB8A 
+ 219      1E40
+ 220 01a6 C782081D 		movl	$0x40000000, 7432(%edx)
+ 220      00000000 
+ 220      0040
+ 221 01b0 C7820C19 		movl	$0x403ee6c5, 6412(%edx)
+ 221      0000C5E6 
+ 221      3E40
+ 222 01ba C7820C1D 		movl	$0x40066666, 7436(%edx)
+ 222      00006666 
+ 222      0640
+ 223 01c4 C7821019 		movl	$0x4063e319, 6416(%edx)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccRAWaB7.s 			page 8
+
+
+ 223      000019E3 
+ 223      6340
+ 224 01ce C782101D 		movl	$0x400ccccd, 7440(%edx)
+ 224      0000CDCC 
+ 224      0C40
+ 225 01d8 C7821419 		movl	$0x4086f3d6, 6420(%edx)
+ 225      0000D6F3 
+ 225      8640
+ 226 01e2 C782141D 		movl	$0x40133333, 7444(%edx)
+ 226      00003333 
+ 226      1340
+ 227 01ec C7821819 		movl	$0x409eb016, 6424(%edx)
+ 227      000016B0 
+ 227      9E40
+ 228 01f6 C782181D 		movl	$0x4019999a, 7448(%edx)
+ 228      00009A99 
+ 228      1940
+ 229 0200 C7821C19 		movl	$0x40b95e1a, 6428(%edx)
+ 229      00001A5E 
+ 229      B940
+ 230 020a C7821C1D 		movl	$0x40200000, 7452(%edx)
+ 230      00000000 
+ 230      2040
+ 231 0214 C7822019 		movl	$0x40d7378d, 6432(%edx)
+ 231      00008D37 
+ 231      D740
+ 232 021e C782201D 		movl	$0x40266666, 7456(%edx)
+ 232      00006666 
+ 232      2640
+ 233 0228 C7822419 		movl	$0x40f877ff, 6436(%edx)
+ 233      0000FF77 
+ 233      F840
+ 234 0232 C782241D 		movl	$0x402ccccd, 7460(%edx)
+ 234      0000CDCC 
+ 234      2C40
+ 235 023c C7822819 		movl	$0x410eae75, 6440(%edx)
+ 235      000075AE 
+ 235      0E41
+ 236 0246 C782281D 		movl	$0x40333333, 7464(%edx)
+ 236      00003333 
+ 236      3340
+ 237 0250 C7822C19 		movl	$0x412312cf, 6444(%edx)
+ 237      0000CF12 
+ 237      2341
+ 238 025a C7822C1D 		movl	$0x4039999a, 7468(%edx)
+ 238      00009A99 
+ 238      3940
+ 239 0264 C7823019 		movl	$0x413989a2, 6448(%edx)
+ 239      0000A289 
+ 239      3941
+ 240 026e C782301D 		movl	$0x40400000, 7472(%edx)
+ 240      00000000 
+ 240      4040
+ 241 0278 C7823419 		movl	$0x41523470, 6452(%edx)
+ 241      00007034 
+ 241      5241
+ 242 0282 C782341D 		movl	$0x40466666, 7476(%edx)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccRAWaB7.s 			page 9
+
+
+ 242      00006666 
+ 242      4640
+ 243 028c C7823819 		movl	$0x416d35a3, 6456(%edx)
+ 243      0000A335 
+ 243      6D41
+ 244 0296 C782381D 		movl	$0x404ccccd, 7480(%edx)
+ 244      0000CDCC 
+ 244      4C40
+ 245 02a0 C7823C19 		movl	$0x41855847, 6460(%edx)
+ 245      00004758 
+ 245      8541
+ 246 02aa C7823C1D 		movl	$0x40533333, 7484(%edx)
+ 246      00003333 
+ 246      5340
+ 247 02b4 C7824019 		movl	$0x419564b7, 6464(%edx)
+ 247      0000B764 
+ 247      9541
+ 248 02be C782401D 		movl	$0x4059999a, 7488(%edx)
+ 248      00009A99 
+ 248      5940
+ 249 02c8 C7824419 		movl	$0x41a6d2b0, 6468(%edx)
+ 249      0000B0D2 
+ 249      A641
+ 250 02d2 C782441D 		movl	$0x40600000, 7492(%edx)
+ 250      00000000 
+ 250      6040
+ 251 02dc C7824819 		movl	$0x41b9b534, 6472(%edx)
+ 251      000034B5 
+ 251      B941
+ 252 02e6 C782481D 		movl	$0x40666666, 7496(%edx)
+ 252      00006666 
+ 252      6640
+ 253 02f0 C7824C19 		movl	$0x41ce1fb7, 6476(%edx)
+ 253      0000B71F 
+ 253      CE41
+ 254 02fa C7824C1D 		movl	$0x406ccccd, 7500(%edx)
+ 254      0000CDCC 
+ 254      6C40
+ 255 0304 C7825019 		movl	$0x41e4261d, 6480(%edx)
+ 255      00001D26 
+ 255      E441
+ 256 030e C782501D 		movl	$0x40733333, 7504(%edx)
+ 256      00003333 
+ 256      7340
+ 257 0318 C7825419 		movl	$0x41fbdcbb, 6484(%edx)
+ 257      0000BBDC 
+ 257      FB41
+ 258 0322 C782541D 		movl	$0x4079999a, 7508(%edx)
+ 258      00009A99 
+ 258      7940
+ 259 032c C7825819 		movl	$0x420aac2a, 6488(%edx)
+ 259      00002AAC 
+ 259      0A42
+ 260 0336 C782581D 		movl	$0x40800000, 7512(%edx)
+ 260      00000000 
+ 260      8040
+ 261 0340 C7825C19 		movl	$0x4218570f, 6492(%edx)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccRAWaB7.s 			page 10
+
+
+ 261      00000F57 
+ 261      1842
+ 262 034a C7825C1D 		movl	$0x40833333, 7516(%edx)
+ 262      00003333 
+ 262      8340
+ 263 0354 C7826019 		movl	$0x4226f9dd, 6496(%edx)
+ 263      0000DDF9 
+ 263      2642
+ 264 035e C782601D 		movl	$0x40866666, 7520(%edx)
+ 264      00006666 
+ 264      8640
+ 265 0368 C7826419 		movl	$0x42369f9b, 6500(%edx)
+ 265      00009B9F 
+ 265      3642
+ 266 0372 C782641D 		movl	$0x4089999a, 7524(%edx)
+ 266      00009A99 
+ 266      8940
+ 267 037c C7826819 		movl	$0x42475389, 6504(%edx)
+ 267      00008953 
+ 267      4742
+ 268 0386 C782681D 		movl	$0x408ccccd, 7528(%edx)
+ 268      0000CDCC 
+ 268      8C40
+ 269 0390 C7826C19 		movl	$0x4259211c, 6508(%edx)
+ 269      00001C21 
+ 269      5942
+ 270 039a C7826C1D 		movl	$0x40900000, 7532(%edx)
+ 270      00000000 
+ 270      9040
+ 271 03a4 C7827019 		movl	$0x426c1400, 6512(%edx)
+ 271      00000014 
+ 271      6C42
+ 272 03ae C782701D 		movl	$0x40933333, 7536(%edx)
+ 272      00003333 
+ 272      9340
+ 273 03b8 C7827419 		movl	$0x42801c0b, 6516(%edx)
+ 273      00000B1C 
+ 273      8042
+ 274 03c2 C782741D 		movl	$0x40966666, 7540(%edx)
+ 274      00006666 
+ 274      9640
+ 275 03cc C7827819 		movl	$0x428accbb, 6520(%edx)
+ 275      0000BBCC 
+ 275      8A42
+ 276 03d6 C782781D 		movl	$0x4099999a, 7544(%edx)
+ 276      00009A99 
+ 276      9940
+ 277 03e0 C7827C19 		movl	$0x42962236, 6524(%edx)
+ 277      00003622 
+ 277      9642
+ 278 03ea C7827C1D 		movl	$0x409ccccd, 7548(%edx)
+ 278      0000CDCC 
+ 278      9C40
+ 279 03f4 C7828019 		movl	$0x42a222bf, 6528(%edx)
+ 279      0000BF22 
+ 279      A242
+ 280 03fe C782801D 		movl	$0x40a00000, 7552(%edx)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccRAWaB7.s 			page 11
+
+
+ 280      00000000 
+ 280      A040
+ 281              		.p2align 4,,7
+ 282              	L23:
+ 283 0408 C7848290 		movl	$0x43480000, 6288(%edx,%eax,4)
+ 283      18000000 
+ 283      004843
+ 284 0413 890424   		movl	%eax, (%esp)
+ 285 0416 DB0424   		fildl	(%esp)
+ 286 0419 D99C8290 		fstps	7312(%edx,%eax,4)
+ 286      1C0000
+ 287 0420 83C001   		addl	$1, %eax
+ 288 0423 3D0A0100 		cmpl	$266, %eax
+ 288      00
+ 289 0428 75DE     		jne	L23
+ 290 042a 83C404   		addl	$4, %esp
+ 291              		.cfi_def_cfa_offset 4
+ 292 042d C3       		ret
+ 293              		.cfi_endproc
+ 294              	LFE93:
+ 295 042e 9090     		.section .rdata,"dr"
+ 296              		.align 4
+ 297              	LC1:
+ 298 0004 010C403A 		.long	977275905
+ 299              		.def	__Z11getAdcValuePKci;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccRAWaB7.s 			page 12
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 maf.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccRAWaB7.s:9      .text$_Z6getMafv:00000000 __Z6getMafv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccRAWaB7.s:33     .text$_Z12hasMafSensorv:00000000 __Z12hasMafSensorv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccRAWaB7.s:51     .text$_Z10getRealMafv:00000000 __Z10getRealMafv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccRAWaB7.s:73     .text$_Z18setBosch0280218037P19persistent_config_s:00000000 __Z18setBosch0280218037P19persistent_config_s
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccRAWaB7.s:110    .text$_Z18setBosch0280218004P19persistent_config_s:00000000 __Z18setBosch0280218004P19persistent_config_s
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccRAWaB7.s:135    .text$_Z12setDensoTODOP19persistent_config_s:00000000 __Z12setDensoTODOP19persistent_config_s
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccRAWaB7.s:172    .text$_Z18setMazdaMiataNAMafP19persistent_config_s:00000000 __Z18setMazdaMiataNAMafP19persistent_config_s
+
+UNDEFINED SYMBOLS
+_engineConfiguration
+_engine
+__Z11getAdcValuePKci

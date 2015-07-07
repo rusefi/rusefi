@@ -26,6 +26,7 @@ public enum Sensor {
     TPS("throttle", SensorCategory.SENSOR_INPUTS, "%", 100),
     PPS("pedal", SensorCategory.SENSOR_INPUTS, "%", 100),
     VSS("Speed", SensorCategory.SENSOR_INPUTS, "kph", 100),
+    KS("Knock", SensorCategory.SENSOR_INPUTS, "count", 30),
 
     ENGINE_LOAD("Engine Load", SensorCategory.SENSOR_INPUTS, "x", 300),
 

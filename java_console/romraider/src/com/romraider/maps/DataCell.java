@@ -45,8 +45,8 @@ public class DataCell extends JLabel implements MouseListener, Serializable {
     private static final Logger LOGGER = Logger.getLogger(DataCell.class);
     private final DecimalFormat PERCENT_FORMAT = new DecimalFormat("#,##0.0%");
     private final Font defaultFont = new Font("Arial", Font.BOLD, 12);
-    int unSelectMask1 = MouseEvent.BUTTON1_DOWN_MASK + MouseEvent.CTRL_DOWN_MASK + MouseEvent.ALT_DOWN_MASK;
-    int unSelectMask2 = MouseEvent.BUTTON3_DOWN_MASK + MouseEvent.CTRL_DOWN_MASK + MouseEvent.ALT_DOWN_MASK;
+    private static final int unSelectMask1 = MouseEvent.BUTTON1_DOWN_MASK + MouseEvent.CTRL_DOWN_MASK + MouseEvent.ALT_DOWN_MASK;
+    private static final int unSelectMask2 = MouseEvent.BUTTON3_DOWN_MASK + MouseEvent.CTRL_DOWN_MASK + MouseEvent.ALT_DOWN_MASK;
 
     private final Table table;
 

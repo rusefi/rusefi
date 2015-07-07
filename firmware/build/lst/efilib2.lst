@@ -1,0 +1,119 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccsw9GL5.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"efilib2.cpp"
+  16              		.section	.text._ZN17Overflow64CounterC2Ev,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_ZN17Overflow64CounterC2Ev
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_ZN17Overflow64CounterC2Ev, %function
+  23              	_ZN17Overflow64CounterC2Ev:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 10B4     		push	{r4}
+  28 0002 0024     		movs	r4, #0
+  29 0004 0022     		movs	r2, #0
+  30 0006 0023     		movs	r3, #0
+  31 0008 C0E90023 		strd	r2, [r0]
+  32 000c 8460     		str	r4, [r0, #8]
+  33 000e 5DF8044B 		ldr	r4, [sp], #4
+  34 0012 7047     		bx	lr
+  35              		.size	_ZN17Overflow64CounterC2Ev, .-_ZN17Overflow64CounterC2Ev
+  36              		.global	_ZN17Overflow64CounterC1Ev
+  37              		.thumb_set _ZN17Overflow64CounterC1Ev,_ZN17Overflow64CounterC2Ev
+  38 0014 AFF30080 		.section	.text._Z12updateAndSetP7State64m,"ax",%progbits
+  38      AFF30080 
+  38      AFF30080 
+  39              		.align	2
+  40              		.p2align 4,,15
+  41              		.global	_Z12updateAndSetP7State64m
+  42              		.thumb
+  43              		.thumb_func
+  44              		.type	_Z12updateAndSetP7State64m, %function
+  45              	_Z12updateAndSetP7State64m:
+  46              		@ args = 0, pretend = 0, frame = 0
+  47              		@ frame_needed = 0, uses_anonymous_args = 0
+  48              		@ link register save eliminated.
+  49 0000 8368     		ldr	r3, [r0, #8]
+  50 0002 8B42     		cmp	r3, r1
+  51 0004 06D9     		bls	.L3
+  52 0006 D0E90023 		ldrd	r2, [r0]
+  53 000a 0032     		adds	r2, r2, #0
+  54 000c 43F10103 		adc	r3, r3, #1
+  55 0010 C0E90023 		strd	r2, [r0]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccsw9GL5.s 			page 2
+
+
+  56              	.L3:
+  57 0014 8160     		str	r1, [r0, #8]
+  58 0016 7047     		bx	lr
+  59              		.size	_Z12updateAndSetP7State64m, .-_Z12updateAndSetP7State64m
+  60 0018 AFF30080 		.section	.text._ZN17Overflow64Counter3getEv,"ax",%progbits
+  60      AFF30080 
+  61              		.align	2
+  62              		.p2align 4,,15
+  63              		.global	_ZN17Overflow64Counter3getEv
+  64              		.thumb
+  65              		.thumb_func
+  66              		.type	_ZN17Overflow64Counter3getEv, %function
+  67              	_ZN17Overflow64Counter3getEv:
+  68              		@ args = 0, pretend = 0, frame = 0
+  69              		@ frame_needed = 0, uses_anonymous_args = 0
+  70 0000 38B5     		push	{r3, r4, r5, lr}
+  71 0002 0446     		mov	r4, r0
+  72 0004 FFF7FEFF 		bl	lockAnyContext
+  73 0008 4FF48051 		mov	r1, #4096
+  74 000c CEF20001 		movt	r1, 57344
+  75 0010 D4E90023 		ldrd	r2, [r4]
+  76 0014 A468     		ldr	r4, [r4, #8]
+  77 0016 4968     		ldr	r1, [r1, #4]
+  78 0018 8C42     		cmp	r4, r1
+  79 001a 02D9     		bls	.L6
+  80 001c 0032     		adds	r2, r2, #0
+  81 001e 43F10103 		adc	r3, r3, #1
+  82              	.L6:
+  83 0022 5418     		adds	r4, r2, r1
+  84 0024 43F10005 		adc	r5, r3, #0
+  85 0028 08B9     		cbnz	r0, .L7
+  86 002a FFF7FEFF 		bl	unlockAnyContext
+  87              	.L7:
+  88 002e 2046     		mov	r0, r4
+  89 0030 2946     		mov	r1, r5
+  90 0032 38BD     		pop	{r3, r4, r5, pc}
+  91              		.size	_ZN17Overflow64Counter3getEv, .-_ZN17Overflow64Counter3getEv
+  92 0034 AFF30080 		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+  92      AFF30080 
+  92      AFF30080 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccsw9GL5.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 efilib2.cpp
+C:\Users\pc\AppData\Local\Temp\ccsw9GL5.s:17     .text._ZN17Overflow64CounterC2Ev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccsw9GL5.s:23     .text._ZN17Overflow64CounterC2Ev:00000000 _ZN17Overflow64CounterC2Ev
+C:\Users\pc\AppData\Local\Temp\ccsw9GL5.s:23     .text._ZN17Overflow64CounterC2Ev:00000000 _ZN17Overflow64CounterC1Ev
+C:\Users\pc\AppData\Local\Temp\ccsw9GL5.s:39     .text._Z12updateAndSetP7State64m:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccsw9GL5.s:45     .text._Z12updateAndSetP7State64m:00000000 _Z12updateAndSetP7State64m
+C:\Users\pc\AppData\Local\Temp\ccsw9GL5.s:61     .text._ZN17Overflow64Counter3getEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccsw9GL5.s:67     .text._ZN17Overflow64Counter3getEv:00000000 _ZN17Overflow64Counter3getEv
+
+UNDEFINED SYMBOLS
+lockAnyContext
+unlockAnyContext

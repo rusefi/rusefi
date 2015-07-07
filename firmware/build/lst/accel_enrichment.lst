@@ -1,0 +1,889 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciuJbHh.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"accel_enrichment.cpp"
+  16              		.global	__aeabi_f2d
+  17              		.section	.text._ZL9accelInfov,"ax",%progbits
+  18              		.align	2
+  19              		.p2align 4,,15
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_ZL9accelInfov, %function
+  23              	_ZL9accelInfov:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+  27 0004 40F20007 		movw	r7, #:lower16:engineConfiguration
+  28 0008 C0F20007 		movt	r7, #:upper16:engineConfiguration
+  29 000c 83B0     		sub	sp, sp, #12
+  30 000e D7F80080 		ldr	r8, [r7]
+  31 0012 08F50A63 		add	r3, r8, #2208
+  32 0016 08F6A408 		addw	r8, r8, #2212
+  33 001a 1868     		ldr	r0, [r3]	@ float
+  34 001c FFF7FEFF 		bl	__aeabi_f2d
+  35 0020 40F20006 		movw	r6, #:lower16:.LANCHOR0
+  36 0024 0446     		mov	r4, r0
+  37 0026 D8F80000 		ldr	r0, [r8]	@ float
+  38 002a C0F20006 		movt	r6, #:upper16:.LANCHOR0
+  39 002e 0D46     		mov	r5, r1
+  40 0030 FFF7FEFF 		bl	__aeabi_f2d
+  41 0034 D6F80090 		ldr	r9, [r6]
+  42 0038 CDE90001 		strd	r0, [sp]
+  43 003c 40F20001 		movw	r1, #:lower16:.LC0
+  44 0040 2246     		mov	r2, r4
+  45 0042 2B46     		mov	r3, r5
+  46 0044 4846     		mov	r0, r9
+  47 0046 C0F20001 		movt	r1, #:upper16:.LC0
+  48 004a FFF7FEFF 		bl	scheduleMsg
+  49 004e D7F80080 		ldr	r8, [r7]
+  50 0052 D6F80090 		ldr	r9, [r6]
+  51 0056 08F69803 		addw	r3, r8, #2200
+  52 005a 08F69C08 		addw	r8, r8, #2204
+  53 005e 1868     		ldr	r0, [r3]	@ float
+  54 0060 FFF7FEFF 		bl	__aeabi_f2d
+  55 0064 0446     		mov	r4, r0
+  56 0066 D8F80000 		ldr	r0, [r8]	@ float
+  57 006a 0D46     		mov	r5, r1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciuJbHh.s 			page 2
+
+
+  58 006c FFF7FEFF 		bl	__aeabi_f2d
+  59 0070 CDE90001 		strd	r0, [sp]
+  60 0074 40F20001 		movw	r1, #:lower16:.LC1
+  61 0078 2246     		mov	r2, r4
+  62 007a 2B46     		mov	r3, r5
+  63 007c 4846     		mov	r0, r9
+  64 007e C0F20001 		movt	r1, #:upper16:.LC1
+  65 0082 FFF7FEFF 		bl	scheduleMsg
+  66 0086 3F68     		ldr	r7, [r7]
+  67 0088 3668     		ldr	r6, [r6]
+  68 008a 07F68C03 		addw	r3, r7, #2188
+  69 008e 07F50967 		add	r7, r7, #2192
+  70 0092 1868     		ldr	r0, [r3]	@ float
+  71 0094 FFF7FEFF 		bl	__aeabi_f2d
+  72 0098 0446     		mov	r4, r0
+  73 009a 3868     		ldr	r0, [r7]	@ float
+  74 009c 0D46     		mov	r5, r1
+  75 009e FFF7FEFF 		bl	__aeabi_f2d
+  76 00a2 CDE90001 		strd	r0, [sp]
+  77 00a6 40F20001 		movw	r1, #:lower16:.LC2
+  78 00aa 3046     		mov	r0, r6
+  79 00ac 2246     		mov	r2, r4
+  80 00ae 2B46     		mov	r3, r5
+  81 00b0 C0F20001 		movt	r1, #:upper16:.LC2
+  82 00b4 FFF7FEFF 		bl	scheduleMsg
+  83 00b8 03B0     		add	sp, sp, #12
+  84              		@ sp needed
+  85 00ba BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+  86              		.size	_ZL9accelInfov, .-_ZL9accelInfov
+  87 00be 00BF     		.section	.text._ZL12setDecelMultf,"ax",%progbits
+  88              		.align	2
+  89              		.p2align 4,,15
+  90              		.thumb
+  91              		.thumb_func
+  92              		.type	_ZL12setDecelMultf, %function
+  93              	_ZL12setDecelMultf:
+  94              		@ args = 0, pretend = 0, frame = 0
+  95              		@ frame_needed = 0, uses_anonymous_args = 0
+  96              		@ link register save eliminated.
+  97 0000 40F20003 		movw	r3, #:lower16:engineConfiguration
+  98 0004 C0F20003 		movt	r3, #:upper16:engineConfiguration
+  99 0008 1B68     		ldr	r3, [r3]
+ 100 000a 03F69C03 		addw	r3, r3, #2204
+ 101 000e 1860     		str	r0, [r3]	@ float
+ 102 0010 FFF7FEBF 		b	_ZL9accelInfov
+ 103              		.size	_ZL12setDecelMultf, .-_ZL12setDecelMultf
+ 104 0014 AFF30080 		.section	.text._ZL11setDecelThrf,"ax",%progbits
+ 104      AFF30080 
+ 104      AFF30080 
+ 105              		.align	2
+ 106              		.p2align 4,,15
+ 107              		.thumb
+ 108              		.thumb_func
+ 109              		.type	_ZL11setDecelThrf, %function
+ 110              	_ZL11setDecelThrf:
+ 111              		@ args = 0, pretend = 0, frame = 0
+ 112              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciuJbHh.s 			page 3
+
+
+ 113              		@ link register save eliminated.
+ 114 0000 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 115 0004 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 116 0008 1B68     		ldr	r3, [r3]
+ 117 000a 03F69803 		addw	r3, r3, #2200
+ 118 000e 1860     		str	r0, [r3]	@ float
+ 119 0010 FFF7FEBF 		b	_ZL9accelInfov
+ 120              		.size	_ZL11setDecelThrf, .-_ZL11setDecelThrf
+ 121 0014 AFF30080 		.section	.text._ZL15setMapAccelMultf,"ax",%progbits
+ 121      AFF30080 
+ 121      AFF30080 
+ 122              		.align	2
+ 123              		.p2align 4,,15
+ 124              		.thumb
+ 125              		.thumb_func
+ 126              		.type	_ZL15setMapAccelMultf, %function
+ 127              	_ZL15setMapAccelMultf:
+ 128              		@ args = 0, pretend = 0, frame = 0
+ 129              		@ frame_needed = 0, uses_anonymous_args = 0
+ 130              		@ link register save eliminated.
+ 131 0000 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 132 0004 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 133 0008 1B68     		ldr	r3, [r3]
+ 134 000a 03F6A403 		addw	r3, r3, #2212
+ 135 000e 1860     		str	r0, [r3]	@ float
+ 136 0010 FFF7FEBF 		b	_ZL9accelInfov
+ 137              		.size	_ZL15setMapAccelMultf, .-_ZL15setMapAccelMultf
+ 138 0014 AFF30080 		.section	.text._ZL14setMapAccelThrf,"ax",%progbits
+ 138      AFF30080 
+ 138      AFF30080 
+ 139              		.align	2
+ 140              		.p2align 4,,15
+ 141              		.thumb
+ 142              		.thumb_func
+ 143              		.type	_ZL14setMapAccelThrf, %function
+ 144              	_ZL14setMapAccelThrf:
+ 145              		@ args = 0, pretend = 0, frame = 0
+ 146              		@ frame_needed = 0, uses_anonymous_args = 0
+ 147              		@ link register save eliminated.
+ 148 0000 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 149 0004 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 150 0008 1B68     		ldr	r3, [r3]
+ 151 000a 03F50A63 		add	r3, r3, #2208
+ 152 000e 1860     		str	r0, [r3]	@ float
+ 153 0010 FFF7FEBF 		b	_ZL9accelInfov
+ 154              		.size	_ZL14setMapAccelThrf, .-_ZL14setMapAccelThrf
+ 155 0014 AFF30080 		.section	.text._ZL15setTpsAccelMultf,"ax",%progbits
+ 155      AFF30080 
+ 155      AFF30080 
+ 156              		.align	2
+ 157              		.p2align 4,,15
+ 158              		.thumb
+ 159              		.thumb_func
+ 160              		.type	_ZL15setTpsAccelMultf, %function
+ 161              	_ZL15setTpsAccelMultf:
+ 162              		@ args = 0, pretend = 0, frame = 0
+ 163              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciuJbHh.s 			page 4
+
+
+ 164              		@ link register save eliminated.
+ 165 0000 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 166 0004 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 167 0008 1B68     		ldr	r3, [r3]
+ 168 000a 03F50963 		add	r3, r3, #2192
+ 169 000e 1860     		str	r0, [r3]	@ float
+ 170 0010 FFF7FEBF 		b	_ZL9accelInfov
+ 171              		.size	_ZL15setTpsAccelMultf, .-_ZL15setTpsAccelMultf
+ 172 0014 AFF30080 		.section	.text._ZL14setTpsAccelThrf,"ax",%progbits
+ 172      AFF30080 
+ 172      AFF30080 
+ 173              		.align	2
+ 174              		.p2align 4,,15
+ 175              		.thumb
+ 176              		.thumb_func
+ 177              		.type	_ZL14setTpsAccelThrf, %function
+ 178              	_ZL14setTpsAccelThrf:
+ 179              		@ args = 0, pretend = 0, frame = 0
+ 180              		@ frame_needed = 0, uses_anonymous_args = 0
+ 181              		@ link register save eliminated.
+ 182 0000 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 183 0004 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 184 0008 1B68     		ldr	r3, [r3]
+ 185 000a 03F68C03 		addw	r3, r3, #2188
+ 186 000e 1860     		str	r0, [r3]	@ float
+ 187 0010 FFF7FEBF 		b	_ZL9accelInfov
+ 188              		.size	_ZL14setTpsAccelThrf, .-_ZL14setTpsAccelThrf
+ 189 0014 AFF30080 		.section	.text._ZL14setMapAccelLeni,"ax",%progbits
+ 189      AFF30080 
+ 189      AFF30080 
+ 190              		.align	2
+ 191              		.p2align 4,,15
+ 192              		.thumb
+ 193              		.thumb_func
+ 194              		.type	_ZL14setMapAccelLeni, %function
+ 195              	_ZL14setMapAccelLeni:
+ 196              		@ args = 0, pretend = 0, frame = 0
+ 197              		@ frame_needed = 0, uses_anonymous_args = 0
+ 198 0000 38B5     		push	{r3, r4, r5, lr}
+ 199 0002 051E     		subs	r5, r0, #0
+ 200 0004 19DD     		ble	.L11
+ 201 0006 40F20003 		movw	r3, #:lower16:engine
+ 202 000a C0F20003 		movt	r3, #:upper16:engine
+ 203 000e 0021     		movs	r1, #0
+ 204 0010 1C68     		ldr	r4, [r3]
+ 205 0012 4FF48072 		mov	r2, #256
+ 206 0016 04F13C00 		add	r0, r4, #60
+ 207 001a FFF7FEFF 		bl	memset
+ 208 001e 402D     		cmp	r5, #64
+ 209 0020 A8BF     		it	ge
+ 210 0022 4025     		movge	r5, #64
+ 211 0024 0023     		movs	r3, #0
+ 212 0026 C4F84031 		str	r3, [r4, #320]
+ 213 002a C4F84451 		str	r5, [r4, #324]
+ 214 002e C4F84031 		str	r3, [r4, #320]
+ 215 0032 BDE83840 		pop	{r3, r4, r5, lr}
+ 216 0036 FFF7FEBF 		b	_ZL9accelInfov
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciuJbHh.s 			page 5
+
+
+ 217              	.L11:
+ 218 003a 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 219 003e C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 220 0042 40F20001 		movw	r1, #:lower16:.LC3
+ 221 0046 1868     		ldr	r0, [r3]
+ 222 0048 C0F20001 		movt	r1, #:upper16:.LC3
+ 223 004c BDE83840 		pop	{r3, r4, r5, lr}
+ 224 0050 FFF7FEBF 		b	scheduleMsg
+ 225              		.size	_ZL14setMapAccelLeni, .-_ZL14setMapAccelLeni
+ 226 0054 AFF30080 		.section	.text._ZL14setTpsAccelLeni,"ax",%progbits
+ 226      AFF30080 
+ 226      AFF30080 
+ 227              		.align	2
+ 228              		.p2align 4,,15
+ 229              		.thumb
+ 230              		.thumb_func
+ 231              		.type	_ZL14setTpsAccelLeni, %function
+ 232              	_ZL14setTpsAccelLeni:
+ 233              		@ args = 0, pretend = 0, frame = 0
+ 234              		@ frame_needed = 0, uses_anonymous_args = 0
+ 235 0000 38B5     		push	{r3, r4, r5, lr}
+ 236 0002 051E     		subs	r5, r0, #0
+ 237 0004 19DD     		ble	.L14
+ 238 0006 40F20003 		movw	r3, #:lower16:engine
+ 239 000a C0F20003 		movt	r3, #:upper16:engine
+ 240 000e 0021     		movs	r1, #0
+ 241 0010 1C68     		ldr	r4, [r3]
+ 242 0012 4FF48072 		mov	r2, #256
+ 243 0016 04F5A870 		add	r0, r4, #336
+ 244 001a FFF7FEFF 		bl	memset
+ 245 001e 402D     		cmp	r5, #64
+ 246 0020 A8BF     		it	ge
+ 247 0022 4025     		movge	r5, #64
+ 248 0024 0023     		movs	r3, #0
+ 249 0026 C4F85432 		str	r3, [r4, #596]
+ 250 002a C4F85852 		str	r5, [r4, #600]
+ 251 002e C4F85432 		str	r3, [r4, #596]
+ 252 0032 BDE83840 		pop	{r3, r4, r5, lr}
+ 253 0036 FFF7FEBF 		b	_ZL9accelInfov
+ 254              	.L14:
+ 255 003a 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 256 003e C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 257 0042 40F20001 		movw	r1, #:lower16:.LC3
+ 258 0046 1868     		ldr	r0, [r3]
+ 259 0048 C0F20001 		movt	r1, #:upper16:.LC3
+ 260 004c BDE83840 		pop	{r3, r4, r5, lr}
+ 261 0050 FFF7FEBF 		b	scheduleMsg
+ 262              		.size	_ZL14setTpsAccelLeni, .-_ZL14setTpsAccelLeni
+ 263 0054 AFF30080 		.section	.text._ZN16AccelEnrichmemnt8getDeltaEv,"ax",%progbits
+ 263      AFF30080 
+ 263      AFF30080 
+ 264              		.align	2
+ 265              		.p2align 4,,15
+ 266              		.global	_ZN16AccelEnrichmemnt8getDeltaEv
+ 267              		.thumb
+ 268              		.thumb_func
+ 269              		.type	_ZN16AccelEnrichmemnt8getDeltaEv, %function
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciuJbHh.s 			page 6
+
+
+ 270              	_ZN16AccelEnrichmemnt8getDeltaEv:
+ 271              		@ args = 0, pretend = 0, frame = 0
+ 272              		@ frame_needed = 0, uses_anonymous_args = 0
+ 273              		@ link register save eliminated.
+ 274 0000 D0F80831 		ldr	r3, [r0, #264]
+ 275 0004 D0F80C21 		ldr	r2, [r0, #268]
+ 276 0008 9A42     		cmp	r2, r3
+ 277 000a 10B4     		push	{r4}
+ 278 000c C8BF     		it	gt
+ 279 000e D0F80841 		ldrgt	r4, [r0, #264]
+ 280 0012 D0F80411 		ldr	r1, [r0, #260]
+ 281 0016 D8BF     		it	le
+ 282 0018 1446     		movle	r4, r2
+ 283 001a 002C     		cmp	r4, #0
+ 284 001c 9FED0E7A 		flds	s14, .L27
+ 285 0020 14DD     		ble	.L17
+ 286 0022 0C1B     		subs	r4, r1, r4
+ 287              	.L22:
+ 288 0024 0029     		cmp	r1, #0
+ 289 0026 0B46     		mov	r3, r1
+ 290 0028 01DA     		bge	.L18
+ 291              	.L19:
+ 292 002a 9B18     		adds	r3, r3, r2
+ 293 002c FDD4     		bmi	.L19
+ 294              	.L18:
+ 295 002e 00EB8303 		add	r3, r0, r3, lsl #2
+ 296 0032 D3ED017A 		flds	s15, [r3, #4]
+ 297 0036 F4EEC77A 		fcmpes	s15, s14
+ 298 003a F1EE10FA 		fmstat
+ 299 003e 01F1FF31 		add	r1, r1, #-1
+ 300 0042 C8BF     		it	gt
+ 301 0044 93ED017A 		fldsgt	s14, [r3, #4]
+ 302 0048 A142     		cmp	r1, r4
+ 303 004a EBD1     		bne	.L22
+ 304              	.L17:
+ 305 004c 17EE100A 		fmrs	r0, s14
+ 306 0050 5DF8044B 		ldr	r4, [sp], #4
+ 307 0054 7047     		bx	lr
+ 308              	.L28:
+ 309 0056 00BF     		.align	2
+ 310              	.L27:
+ 311 0058 0024F4C9 		.word	-906746880
+ 312              		.size	_ZN16AccelEnrichmemnt8getDeltaEv, .-_ZN16AccelEnrichmemnt8getDeltaEv
+ 313              		.section	.text._ZN16AccelEnrichmemnt16getTpsEnrichmentEv,"ax",%progbits
+ 314              		.align	2
+ 315              		.p2align 4,,15
+ 316              		.global	_ZN16AccelEnrichmemnt16getTpsEnrichmentEv
+ 317              		.thumb
+ 318              		.thumb_func
+ 319              		.type	_ZN16AccelEnrichmemnt16getTpsEnrichmentEv, %function
+ 320              	_ZN16AccelEnrichmemnt16getTpsEnrichmentEv:
+ 321              		@ args = 0, pretend = 0, frame = 0
+ 322              		@ frame_needed = 0, uses_anonymous_args = 0
+ 323              		@ link register save eliminated.
+ 324 0000 D0F80831 		ldr	r3, [r0, #264]
+ 325 0004 D0F80C21 		ldr	r2, [r0, #268]
+ 326 0008 9A42     		cmp	r2, r3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciuJbHh.s 			page 7
+
+
+ 327 000a 10B4     		push	{r4}
+ 328 000c C8BF     		it	gt
+ 329 000e D0F80841 		ldrgt	r4, [r0, #264]
+ 330 0012 D0F80411 		ldr	r1, [r0, #260]
+ 331 0016 D8BF     		it	le
+ 332 0018 1446     		movle	r4, r2
+ 333 001a 002C     		cmp	r4, #0
+ 334 001c 9FED197A 		flds	s14, .L46
+ 335 0020 14DD     		ble	.L31
+ 336 0022 0C1B     		subs	r4, r1, r4
+ 337              	.L36:
+ 338 0024 0029     		cmp	r1, #0
+ 339 0026 0B46     		mov	r3, r1
+ 340 0028 01DA     		bge	.L32
+ 341              	.L33:
+ 342 002a 9B18     		adds	r3, r3, r2
+ 343 002c FDD4     		bmi	.L33
+ 344              	.L32:
+ 345 002e 00EB8303 		add	r3, r0, r3, lsl #2
+ 346 0032 D3ED017A 		flds	s15, [r3, #4]
+ 347 0036 F4EEC77A 		fcmpes	s15, s14
+ 348 003a F1EE10FA 		fmstat
+ 349 003e 01F1FF31 		add	r1, r1, #-1
+ 350 0042 C8BF     		it	gt
+ 351 0044 93ED017A 		fldsgt	s14, [r3, #4]
+ 352 0048 A142     		cmp	r1, r4
+ 353 004a EBD1     		bne	.L36
+ 354              	.L31:
+ 355 004c 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 356 0050 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 357 0054 5DF8044B 		ldr	r4, [sp], #4
+ 358 0058 1B68     		ldr	r3, [r3]
+ 359 005a 03F68C02 		addw	r2, r3, #2188
+ 360 005e D2ED007A 		flds	s15, [r2]
+ 361 0062 F4EEC77A 		fcmpes	s15, s14
+ 362 0066 F1EE10FA 		fmstat
+ 363 006a 45BF     		ittet	mi
+ 364 006c 03F50963 		addmi	r3, r3, #2192
+ 365 0070 D3ED007A 		fldsmi	s15, [r3]
+ 366 0074 9FED047A 		fldspl	s14, .L46+4
+ 367 0078 27EE277A 		fmulsmi	s14, s14, s15
+ 368 007c 17EE100A 		fmrs	r0, s14
+ 369 0080 7047     		bx	lr
+ 370              	.L47:
+ 371 0082 00BF     		.align	2
+ 372              	.L46:
+ 373 0084 0024F4C9 		.word	-906746880
+ 374 0088 00000000 		.word	0
+ 375              		.size	_ZN16AccelEnrichmemnt16getTpsEnrichmentEv, .-_ZN16AccelEnrichmemnt16getTpsEnrichmentEv
+ 376 008c AFF30080 		.section	.text._ZN16AccelEnrichmemnt16getMapEnrichmentEv,"ax",%progbits
+ 377              		.align	2
+ 378              		.p2align 4,,15
+ 379              		.global	_ZN16AccelEnrichmemnt16getMapEnrichmentEv
+ 380              		.thumb
+ 381              		.thumb_func
+ 382              		.type	_ZN16AccelEnrichmemnt16getMapEnrichmentEv, %function
+ 383              	_ZN16AccelEnrichmemnt16getMapEnrichmentEv:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciuJbHh.s 			page 8
+
+
+ 384              		@ args = 0, pretend = 0, frame = 0
+ 385              		@ frame_needed = 0, uses_anonymous_args = 0
+ 386              		@ link register save eliminated.
+ 387 0000 D0F80831 		ldr	r3, [r0, #264]
+ 388 0004 D0F80C21 		ldr	r2, [r0, #268]
+ 389 0008 9A42     		cmp	r2, r3
+ 390 000a 10B4     		push	{r4}
+ 391 000c C8BF     		it	gt
+ 392 000e D0F80841 		ldrgt	r4, [r0, #264]
+ 393 0012 D0F80411 		ldr	r1, [r0, #260]
+ 394 0016 D8BF     		it	le
+ 395 0018 1446     		movle	r4, r2
+ 396 001a 002C     		cmp	r4, #0
+ 397 001c 9FED197A 		flds	s14, .L65
+ 398 0020 14DD     		ble	.L50
+ 399 0022 0C1B     		subs	r4, r1, r4
+ 400              	.L55:
+ 401 0024 0029     		cmp	r1, #0
+ 402 0026 0B46     		mov	r3, r1
+ 403 0028 01DA     		bge	.L51
+ 404              	.L52:
+ 405 002a 9B18     		adds	r3, r3, r2
+ 406 002c FDD4     		bmi	.L52
+ 407              	.L51:
+ 408 002e 00EB8303 		add	r3, r0, r3, lsl #2
+ 409 0032 D3ED017A 		flds	s15, [r3, #4]
+ 410 0036 F4EEC77A 		fcmpes	s15, s14
+ 411 003a F1EE10FA 		fmstat
+ 412 003e 01F1FF31 		add	r1, r1, #-1
+ 413 0042 C8BF     		it	gt
+ 414 0044 93ED017A 		fldsgt	s14, [r3, #4]
+ 415 0048 A142     		cmp	r1, r4
+ 416 004a EBD1     		bne	.L55
+ 417              	.L50:
+ 418 004c 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 419 0050 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 420 0054 5DF8044B 		ldr	r4, [sp], #4
+ 421 0058 1B68     		ldr	r3, [r3]
+ 422 005a 03F50A62 		add	r2, r3, #2208
+ 423 005e D2ED007A 		flds	s15, [r2]
+ 424 0062 F4EEC77A 		fcmpes	s15, s14
+ 425 0066 F1EE10FA 		fmstat
+ 426 006a 45BF     		ittet	mi
+ 427 006c 03F6A403 		addwmi	r3, r3, #2212
+ 428 0070 D3ED007A 		fldsmi	s15, [r3]
+ 429 0074 9FED047A 		fldspl	s14, .L65+4
+ 430 0078 27EE277A 		fmulsmi	s14, s14, s15
+ 431 007c 17EE100A 		fmrs	r0, s14
+ 432 0080 7047     		bx	lr
+ 433              	.L66:
+ 434 0082 00BF     		.align	2
+ 435              	.L65:
+ 436 0084 0024F4C9 		.word	-906746880
+ 437 0088 00000000 		.word	0
+ 438              		.size	_ZN16AccelEnrichmemnt16getMapEnrichmentEv, .-_ZN16AccelEnrichmemnt16getMapEnrichmentEv
+ 439 008c AFF30080 		.section	.text._ZN16AccelEnrichmemnt5resetEv,"ax",%progbits
+ 440              		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciuJbHh.s 			page 9
+
+
+ 441              		.p2align 4,,15
+ 442              		.global	_ZN16AccelEnrichmemnt5resetEv
+ 443              		.thumb
+ 444              		.thumb_func
+ 445              		.type	_ZN16AccelEnrichmemnt5resetEv, %function
+ 446              	_ZN16AccelEnrichmemnt5resetEv:
+ 447              		@ args = 0, pretend = 0, frame = 0
+ 448              		@ frame_needed = 0, uses_anonymous_args = 0
+ 449              		@ link register save eliminated.
+ 450 0000 0023     		movs	r3, #0
+ 451 0002 0022     		movs	r2, #0
+ 452 0004 C7F6C073 		movt	r3, 32704
+ 453 0008 0260     		str	r2, [r0]	@ float
+ 454 000a C0F81031 		str	r3, [r0, #272]	@ float
+ 455 000e 7047     		bx	lr
+ 456              		.size	_ZN16AccelEnrichmemnt5resetEv, .-_ZN16AccelEnrichmemnt5resetEv
+ 457              		.section	.text._ZN16AccelEnrichmemnt10onNewValueEf,"ax",%progbits
+ 458              		.align	2
+ 459              		.p2align 4,,15
+ 460              		.global	_ZN16AccelEnrichmemnt10onNewValueEf
+ 461              		.thumb
+ 462              		.thumb_func
+ 463              		.type	_ZN16AccelEnrichmemnt10onNewValueEf, %function
+ 464              	_ZN16AccelEnrichmemnt10onNewValueEf:
+ 465              		@ args = 0, pretend = 0, frame = 0
+ 466              		@ frame_needed = 0, uses_anonymous_args = 0
+ 467 0000 10B5     		push	{r4, lr}
+ 468 0002 0446     		mov	r4, r0
+ 469 0004 2DED028B 		fstmfdd	sp!, {d8}
+ 470 0008 D0F81001 		ldr	r0, [r0, #272]	@ float
+ 471 000c 08EE101A 		fmsr	s16, r1
+ 472 0010 FFF7FEFF 		bl	__fpclassifyf
+ 473 0014 60B3     		cbz	r0, .L69
+ 474 0016 40F20003 		movw	r3, #:lower16:engine
+ 475 001a C0F20003 		movt	r3, #:upper16:engine
+ 476 001e D4F80411 		ldr	r1, [r4, #260]
+ 477 0022 1B68     		ldr	r3, [r3]
+ 478 0024 D4F80C21 		ldr	r2, [r4, #268]
+ 479 0028 9B6A     		ldr	r3, [r3, #40]
+ 480 002a 03F53C53 		add	r3, r3, #12032
+ 481 002e 93ED037A 		flds	s14, [r3, #12]	@ int
+ 482 0032 4B1C     		adds	r3, r1, #1
+ 483 0034 C4F80431 		str	r3, [r4, #260]
+ 484 0038 D4F80431 		ldr	r3, [r4, #260]
+ 485 003c D4ED447A 		flds	s15, [r4, #272]
+ 486 0040 9342     		cmp	r3, r2
+ 487 0042 04BF     		itt	eq
+ 488 0044 0023     		moveq	r3, #0
+ 489 0046 C4F80431 		streq	r3, [r4, #260]
+ 490 004a 78EE677A 		fsubs	s15, s16, s15
+ 491 004e B8EEC77A 		fsitos	s14, s14
+ 492 0052 D4F80431 		ldr	r3, [r4, #260]
+ 493 0056 27EE877A 		fmuls	s14, s15, s14
+ 494 005a 04EB8303 		add	r3, r4, r3, lsl #2
+ 495 005e C4ED007A 		fsts	s15, [r4]
+ 496 0062 83ED017A 		fsts	s14, [r3, #4]
+ 497 0066 D4F80831 		ldr	r3, [r4, #264]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciuJbHh.s 			page 10
+
+
+ 498 006a 0133     		adds	r3, r3, #1
+ 499 006c C4F80831 		str	r3, [r4, #264]
+ 500              	.L69:
+ 501 0070 84ED448A 		fsts	s16, [r4, #272]
+ 502 0074 BDEC028B 		fldmfdd	sp!, {d8}
+ 503 0078 10BD     		pop	{r4, pc}
+ 504              		.size	_ZN16AccelEnrichmemnt10onNewValueEf, .-_ZN16AccelEnrichmemnt10onNewValueEf
+ 505 007a 00BFAFF3 		.section	.text._ZN16AccelEnrichmemnt16onEngineCycleTpsEv,"ax",%progbits
+ 505      0080
+ 506              		.align	2
+ 507              		.p2align 4,,15
+ 508              		.global	_ZN16AccelEnrichmemnt16onEngineCycleTpsEv
+ 509              		.thumb
+ 510              		.thumb_func
+ 511              		.type	_ZN16AccelEnrichmemnt16onEngineCycleTpsEv, %function
+ 512              	_ZN16AccelEnrichmemnt16onEngineCycleTpsEv:
+ 513              		@ args = 0, pretend = 0, frame = 0
+ 514              		@ frame_needed = 0, uses_anonymous_args = 0
+ 515 0000 10B5     		push	{r4, lr}
+ 516 0002 0446     		mov	r4, r0
+ 517 0004 FFF7FEFF 		bl	_Z6getTPSv
+ 518 0008 0146     		mov	r1, r0	@ float
+ 519 000a 2046     		mov	r0, r4
+ 520 000c BDE81040 		pop	{r4, lr}
+ 521 0010 FFF7FEBF 		b	_ZN16AccelEnrichmemnt10onNewValueEf
+ 522              		.size	_ZN16AccelEnrichmemnt16onEngineCycleTpsEv, .-_ZN16AccelEnrichmemnt16onEngineCycleTpsEv
+ 523 0014 AFF30080 		.section	.text._ZN16AccelEnrichmemnt13onEngineCycleEv,"ax",%progbits
+ 523      AFF30080 
+ 523      AFF30080 
+ 524              		.align	2
+ 525              		.p2align 4,,15
+ 526              		.global	_ZN16AccelEnrichmemnt13onEngineCycleEv
+ 527              		.thumb
+ 528              		.thumb_func
+ 529              		.type	_ZN16AccelEnrichmemnt13onEngineCycleEv, %function
+ 530              	_ZN16AccelEnrichmemnt13onEngineCycleEv:
+ 531              		@ args = 0, pretend = 0, frame = 0
+ 532              		@ frame_needed = 0, uses_anonymous_args = 0
+ 533 0000 10B5     		push	{r4, lr}
+ 534 0002 0446     		mov	r4, r0
+ 535 0004 FFF7FEFF 		bl	_Z14getEngineLoadTv
+ 536 0008 0146     		mov	r1, r0	@ float
+ 537 000a 2046     		mov	r0, r4
+ 538 000c BDE81040 		pop	{r4, lr}
+ 539 0010 FFF7FEBF 		b	_ZN16AccelEnrichmemnt10onNewValueEf
+ 540              		.size	_ZN16AccelEnrichmemnt13onEngineCycleEv, .-_ZN16AccelEnrichmemnt13onEngineCycleEv
+ 541 0014 AFF30080 		.section	.text._ZN16AccelEnrichmemntC2Ev,"ax",%progbits
+ 541      AFF30080 
+ 541      AFF30080 
+ 542              		.align	2
+ 543              		.p2align 4,,15
+ 544              		.global	_ZN16AccelEnrichmemntC2Ev
+ 545              		.thumb
+ 546              		.thumb_func
+ 547              		.type	_ZN16AccelEnrichmemntC2Ev, %function
+ 548              	_ZN16AccelEnrichmemntC2Ev:
+ 549              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciuJbHh.s 			page 11
+
+
+ 550              		@ frame_needed = 0, uses_anonymous_args = 0
+ 551 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 552 0002 0446     		mov	r4, r0
+ 553 0004 0025     		movs	r5, #0
+ 554 0006 071D     		adds	r7, r0, #4
+ 555 0008 4FF48076 		mov	r6, #256
+ 556 000c 2946     		mov	r1, r5
+ 557 000e 3246     		mov	r2, r6
+ 558 0010 3846     		mov	r0, r7
+ 559 0012 C4F80451 		str	r5, [r4, #260]
+ 560 0016 FFF7FEFF 		bl	memset
+ 561 001a 0021     		movs	r1, #0
+ 562 001c 4FF0000E 		mov	lr, #0
+ 563 0020 4023     		movs	r3, #64
+ 564 0022 C7F6C071 		movt	r1, 32704
+ 565 0026 C4F80851 		str	r5, [r4, #264]
+ 566 002a C4F80C31 		str	r3, [r4, #268]
+ 567 002e C4F81011 		str	r1, [r4, #272]	@ float
+ 568 0032 3846     		mov	r0, r7
+ 569 0034 3246     		mov	r2, r6
+ 570 0036 C4F80851 		str	r5, [r4, #264]
+ 571 003a C4F800E0 		str	lr, [r4]	@ float
+ 572 003e 2946     		mov	r1, r5
+ 573 0040 FFF7FEFF 		bl	memset
+ 574 0044 0423     		movs	r3, #4
+ 575 0046 C4F80851 		str	r5, [r4, #264]
+ 576 004a C4F80C31 		str	r3, [r4, #268]
+ 577 004e C4F80851 		str	r5, [r4, #264]
+ 578 0052 2046     		mov	r0, r4
+ 579 0054 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 580              		.size	_ZN16AccelEnrichmemntC2Ev, .-_ZN16AccelEnrichmemntC2Ev
+ 581              		.global	_ZN16AccelEnrichmemntC1Ev
+ 582              		.thumb_set _ZN16AccelEnrichmemntC1Ev,_ZN16AccelEnrichmemntC2Ev
+ 583 0056 00BFAFF3 		.section	.text._Z19initAccelEnrichmentP7Logging,"ax",%progbits
+ 583      0080AFF3 
+ 583      0080
+ 584              		.align	2
+ 585              		.p2align 4,,15
+ 586              		.global	_Z19initAccelEnrichmentP7Logging
+ 587              		.thumb
+ 588              		.thumb_func
+ 589              		.type	_Z19initAccelEnrichmentP7Logging, %function
+ 590              	_Z19initAccelEnrichmentP7Logging:
+ 591              		@ args = 0, pretend = 0, frame = 0
+ 592              		@ frame_needed = 0, uses_anonymous_args = 0
+ 593 0000 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 594 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 595 0008 10B5     		push	{r4, lr}
+ 596 000a 40F20001 		movw	r1, #:lower16:_ZL14setTpsAccelLeni
+ 597 000e 1860     		str	r0, [r3]
+ 598 0010 40F20000 		movw	r0, #:lower16:.LC4
+ 599 0014 C0F20000 		movt	r0, #:upper16:.LC4
+ 600 0018 C0F20001 		movt	r1, #:upper16:_ZL14setTpsAccelLeni
+ 601 001c FFF7FEFF 		bl	addConsoleActionI
+ 602 0020 40F20000 		movw	r0, #:lower16:.LC5
+ 603 0024 40F20001 		movw	r1, #:lower16:_ZL14setTpsAccelThrf
+ 604 0028 C0F20000 		movt	r0, #:upper16:.LC5
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciuJbHh.s 			page 12
+
+
+ 605 002c C0F20001 		movt	r1, #:upper16:_ZL14setTpsAccelThrf
+ 606 0030 FFF7FEFF 		bl	addConsoleActionF
+ 607 0034 40F20000 		movw	r0, #:lower16:.LC6
+ 608 0038 40F20001 		movw	r1, #:lower16:_ZL15setTpsAccelMultf
+ 609 003c C0F20000 		movt	r0, #:upper16:.LC6
+ 610 0040 C0F20001 		movt	r1, #:upper16:_ZL15setTpsAccelMultf
+ 611 0044 FFF7FEFF 		bl	addConsoleActionF
+ 612 0048 40F20000 		movw	r0, #:lower16:.LC7
+ 613 004c 40F20001 		movw	r1, #:lower16:_ZL14setMapAccelLeni
+ 614 0050 C0F20000 		movt	r0, #:upper16:.LC7
+ 615 0054 C0F20001 		movt	r1, #:upper16:_ZL14setMapAccelLeni
+ 616 0058 FFF7FEFF 		bl	addConsoleActionI
+ 617 005c 40F20000 		movw	r0, #:lower16:.LC8
+ 618 0060 40F20001 		movw	r1, #:lower16:_ZL14setMapAccelThrf
+ 619 0064 C0F20000 		movt	r0, #:upper16:.LC8
+ 620 0068 C0F20001 		movt	r1, #:upper16:_ZL14setMapAccelThrf
+ 621 006c FFF7FEFF 		bl	addConsoleActionF
+ 622 0070 40F20000 		movw	r0, #:lower16:.LC9
+ 623 0074 40F20001 		movw	r1, #:lower16:_ZL15setMapAccelMultf
+ 624 0078 C0F20000 		movt	r0, #:upper16:.LC9
+ 625 007c C0F20001 		movt	r1, #:upper16:_ZL15setMapAccelMultf
+ 626 0080 FFF7FEFF 		bl	addConsoleActionF
+ 627 0084 40F20000 		movw	r0, #:lower16:.LC10
+ 628 0088 40F20001 		movw	r1, #:lower16:_ZL11setDecelThrf
+ 629 008c C0F20000 		movt	r0, #:upper16:.LC10
+ 630 0090 C0F20001 		movt	r1, #:upper16:_ZL11setDecelThrf
+ 631 0094 FFF7FEFF 		bl	addConsoleActionF
+ 632 0098 40F20000 		movw	r0, #:lower16:.LC11
+ 633 009c 40F20001 		movw	r1, #:lower16:_ZL12setDecelMultf
+ 634 00a0 C0F20000 		movt	r0, #:upper16:.LC11
+ 635 00a4 C0F20001 		movt	r1, #:upper16:_ZL12setDecelMultf
+ 636 00a8 40F20004 		movw	r4, #:lower16:engineConfiguration
+ 637 00ac FFF7FEFF 		bl	addConsoleActionF
+ 638 00b0 C0F20004 		movt	r4, #:upper16:engineConfiguration
+ 639 00b4 40F20000 		movw	r0, #:lower16:.LC12
+ 640 00b8 40F20001 		movw	r1, #:lower16:_ZL9accelInfov
+ 641 00bc C0F20000 		movt	r0, #:upper16:.LC12
+ 642 00c0 C0F20001 		movt	r1, #:upper16:_ZL9accelInfov
+ 643 00c4 FFF7FEFF 		bl	addConsoleAction
+ 644 00c8 2368     		ldr	r3, [r4]
+ 645 00ca D3F89408 		ldr	r0, [r3, #2196]
+ 646 00ce FFF7FEFF 		bl	_ZL14setMapAccelLeni
+ 647 00d2 2368     		ldr	r3, [r4]
+ 648 00d4 BDE81040 		pop	{r4, lr}
+ 649 00d8 D3F88808 		ldr	r0, [r3, #2184]
+ 650 00dc FFF7FEBF 		b	_ZL14setTpsAccelLeni
+ 651              		.size	_Z19initAccelEnrichmentP7Logging, .-_Z19initAccelEnrichmentP7Logging
+ 652              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 653              		.align	2
+ 654              	.LC0:
+ 655 0000 4D415020 		.ascii	"MAP accel th=%f/mult=%f\000"
+ 655      61636365 
+ 655      6C207468 
+ 655      3D25662F 
+ 655      6D756C74 
+ 656              	.LC1:
+ 657 0018 4D415020 		.ascii	"MAP decel th=%f/mult=%f\000"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciuJbHh.s 			page 13
+
+
+ 657      64656365 
+ 657      6C207468 
+ 657      3D25662F 
+ 657      6D756C74 
+ 658              	.LC2:
+ 659 0030 54505320 		.ascii	"TPS accel th=%f/mult=%f\000"
+ 659      61636365 
+ 659      6C207468 
+ 659      3D25662F 
+ 659      6D756C74 
+ 660              	.LC3:
+ 661 0048 4C656E67 		.ascii	"Length shoold be positive\000"
+ 661      74682073 
+ 661      686F6F6C 
+ 661      64206265 
+ 661      20706F73 
+ 662 0062 0000     		.space	2
+ 663              	.LC4:
+ 664 0064 7365745F 		.ascii	"set_tps_accel_len\000"
+ 664      7470735F 
+ 664      61636365 
+ 664      6C5F6C65 
+ 664      6E00
+ 665 0076 0000     		.space	2
+ 666              	.LC5:
+ 667 0078 7365745F 		.ascii	"set_tps_accel_threshold\000"
+ 667      7470735F 
+ 667      61636365 
+ 667      6C5F7468 
+ 667      72657368 
+ 668              	.LC6:
+ 669 0090 7365745F 		.ascii	"set_tps_accel_multiplier\000"
+ 669      7470735F 
+ 669      61636365 
+ 669      6C5F6D75 
+ 669      6C746970 
+ 670 00a9 000000   		.space	3
+ 671              	.LC7:
+ 672 00ac 7365745F 		.ascii	"set_map_accel_len\000"
+ 672      6D61705F 
+ 672      61636365 
+ 672      6C5F6C65 
+ 672      6E00
+ 673 00be 0000     		.space	2
+ 674              	.LC8:
+ 675 00c0 7365745F 		.ascii	"set_map_accel_threshold\000"
+ 675      6D61705F 
+ 675      61636365 
+ 675      6C5F7468 
+ 675      72657368 
+ 676              	.LC9:
+ 677 00d8 7365745F 		.ascii	"set_map_accel_multiplier\000"
+ 677      6D61705F 
+ 677      61636365 
+ 677      6C5F6D75 
+ 677      6C746970 
+ 678 00f1 000000   		.space	3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciuJbHh.s 			page 14
+
+
+ 679              	.LC10:
+ 680 00f4 7365745F 		.ascii	"set_decel_threshold\000"
+ 680      64656365 
+ 680      6C5F7468 
+ 680      72657368 
+ 680      6F6C6400 
+ 681              	.LC11:
+ 682 0108 7365745F 		.ascii	"set_decel_multiplier\000"
+ 682      64656365 
+ 682      6C5F6D75 
+ 682      6C746970 
+ 682      6C696572 
+ 683 011d 000000   		.space	3
+ 684              	.LC12:
+ 685 0120 61636365 		.ascii	"accelinfo\000"
+ 685      6C696E66 
+ 685      6F00
+ 686 012a 0000     		.section	.bss._ZL6logger,"aw",%nobits
+ 687              		.align	2
+ 688              		.set	.LANCHOR0,. + 0
+ 689              		.type	_ZL6logger, %object
+ 690              		.size	_ZL6logger, 4
+ 691              	_ZL6logger:
+ 692 0000 00000000 		.space	4
+ 693              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciuJbHh.s 			page 15
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 accel_enrichment.cpp
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:18     .text._ZL9accelInfov:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:23     .text._ZL9accelInfov:00000000 _ZL9accelInfov
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:688    .bss._ZL6logger:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:654    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:656    .rodata.str1.4:00000018 .LC1
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:658    .rodata.str1.4:00000030 .LC2
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:88     .text._ZL12setDecelMultf:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:93     .text._ZL12setDecelMultf:00000000 _ZL12setDecelMultf
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:105    .text._ZL11setDecelThrf:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:110    .text._ZL11setDecelThrf:00000000 _ZL11setDecelThrf
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:122    .text._ZL15setMapAccelMultf:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:127    .text._ZL15setMapAccelMultf:00000000 _ZL15setMapAccelMultf
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:139    .text._ZL14setMapAccelThrf:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:144    .text._ZL14setMapAccelThrf:00000000 _ZL14setMapAccelThrf
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:156    .text._ZL15setTpsAccelMultf:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:161    .text._ZL15setTpsAccelMultf:00000000 _ZL15setTpsAccelMultf
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:173    .text._ZL14setTpsAccelThrf:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:178    .text._ZL14setTpsAccelThrf:00000000 _ZL14setTpsAccelThrf
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:190    .text._ZL14setMapAccelLeni:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:195    .text._ZL14setMapAccelLeni:00000000 _ZL14setMapAccelLeni
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:660    .rodata.str1.4:00000048 .LC3
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:227    .text._ZL14setTpsAccelLeni:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:232    .text._ZL14setTpsAccelLeni:00000000 _ZL14setTpsAccelLeni
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:264    .text._ZN16AccelEnrichmemnt8getDeltaEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:270    .text._ZN16AccelEnrichmemnt8getDeltaEv:00000000 _ZN16AccelEnrichmemnt8getDeltaEv
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:311    .text._ZN16AccelEnrichmemnt8getDeltaEv:00000058 $d
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:314    .text._ZN16AccelEnrichmemnt16getTpsEnrichmentEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:320    .text._ZN16AccelEnrichmemnt16getTpsEnrichmentEv:00000000 _ZN16AccelEnrichmemnt16getTpsEnrichmentEv
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:373    .text._ZN16AccelEnrichmemnt16getTpsEnrichmentEv:00000084 $d
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:377    .text._ZN16AccelEnrichmemnt16getMapEnrichmentEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:383    .text._ZN16AccelEnrichmemnt16getMapEnrichmentEv:00000000 _ZN16AccelEnrichmemnt16getMapEnrichmentEv
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:436    .text._ZN16AccelEnrichmemnt16getMapEnrichmentEv:00000084 $d
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:440    .text._ZN16AccelEnrichmemnt5resetEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:446    .text._ZN16AccelEnrichmemnt5resetEv:00000000 _ZN16AccelEnrichmemnt5resetEv
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:458    .text._ZN16AccelEnrichmemnt10onNewValueEf:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:464    .text._ZN16AccelEnrichmemnt10onNewValueEf:00000000 _ZN16AccelEnrichmemnt10onNewValueEf
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:506    .text._ZN16AccelEnrichmemnt16onEngineCycleTpsEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:512    .text._ZN16AccelEnrichmemnt16onEngineCycleTpsEv:00000000 _ZN16AccelEnrichmemnt16onEngineCycleTpsEv
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:524    .text._ZN16AccelEnrichmemnt13onEngineCycleEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:530    .text._ZN16AccelEnrichmemnt13onEngineCycleEv:00000000 _ZN16AccelEnrichmemnt13onEngineCycleEv
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:542    .text._ZN16AccelEnrichmemntC2Ev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:548    .text._ZN16AccelEnrichmemntC2Ev:00000000 _ZN16AccelEnrichmemntC2Ev
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:548    .text._ZN16AccelEnrichmemntC2Ev:00000000 _ZN16AccelEnrichmemntC1Ev
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:584    .text._Z19initAccelEnrichmentP7Logging:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:590    .text._Z19initAccelEnrichmentP7Logging:00000000 _Z19initAccelEnrichmentP7Logging
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:663    .rodata.str1.4:00000064 .LC4
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:666    .rodata.str1.4:00000078 .LC5
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:668    .rodata.str1.4:00000090 .LC6
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:671    .rodata.str1.4:000000ac .LC7
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:674    .rodata.str1.4:000000c0 .LC8
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:676    .rodata.str1.4:000000d8 .LC9
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:679    .rodata.str1.4:000000f4 .LC10
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:681    .rodata.str1.4:00000108 .LC11
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:684    .rodata.str1.4:00000120 .LC12
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:653    .rodata.str1.4:00000000 $d
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciuJbHh.s 			page 16
+
+
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:687    .bss._ZL6logger:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:691    .bss._ZL6logger:00000000 _ZL6logger
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:693    .text._ZN16AccelEnrichmemnt8getDeltaEv:0000005c $t
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:376    .text._ZN16AccelEnrichmemnt16getTpsEnrichmentEv:0000008c $t
+C:\Users\pc\AppData\Local\Temp\cciuJbHh.s:439    .text._ZN16AccelEnrichmemnt16getMapEnrichmentEv:0000008c $t
+
+UNDEFINED SYMBOLS
+__aeabi_f2d
+engineConfiguration
+scheduleMsg
+engine
+memset
+__fpclassifyf
+_Z6getTPSv
+_Z14getEngineLoadTv
+addConsoleActionI
+addConsoleActionF
+addConsoleAction

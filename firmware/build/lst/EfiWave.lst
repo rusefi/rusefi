@@ -1,0 +1,289 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"EfiWave.cpp"
+  16              		.section	.text._ZN13single_wave_sC2Ev,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_ZN13single_wave_sC2Ev
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_ZN13single_wave_sC2Ev, %function
+  23              	_ZN13single_wave_sC2Ev:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 0022     		movs	r2, #0
+  28 0002 0260     		str	r2, [r0]
+  29 0004 7047     		bx	lr
+  30              		.size	_ZN13single_wave_sC2Ev, .-_ZN13single_wave_sC2Ev
+  31              		.global	_ZN13single_wave_sC1Ev
+  32              		.thumb_set _ZN13single_wave_sC1Ev,_ZN13single_wave_sC2Ev
+  33 0006 00BFAFF3 		.section	.text._ZN13single_wave_sC2EPa,"ax",%progbits
+  33      0080AFF3 
+  33      0080
+  34              		.align	2
+  35              		.p2align 4,,15
+  36              		.global	_ZN13single_wave_sC2EPa
+  37              		.thumb
+  38              		.thumb_func
+  39              		.type	_ZN13single_wave_sC2EPa, %function
+  40              	_ZN13single_wave_sC2EPa:
+  41              		@ args = 0, pretend = 0, frame = 0
+  42              		@ frame_needed = 0, uses_anonymous_args = 0
+  43              		@ link register save eliminated.
+  44 0000 0160     		str	r1, [r0]
+  45 0002 7047     		bx	lr
+  46              		.size	_ZN13single_wave_sC2EPa, .-_ZN13single_wave_sC2EPa
+  47              		.global	_ZN13single_wave_sC1EPa
+  48              		.thumb_set _ZN13single_wave_sC1EPa,_ZN13single_wave_sC2EPa
+  49 0004 AFF30080 		.section	.text._ZN13single_wave_s4initEPa,"ax",%progbits
+  49      AFF30080 
+  49      AFF30080 
+  50              		.align	2
+  51              		.p2align 4,,15
+  52              		.global	_ZN13single_wave_s4initEPa
+  53              		.thumb
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s 			page 2
+
+
+  54              		.thumb_func
+  55              		.type	_ZN13single_wave_s4initEPa, %function
+  56              	_ZN13single_wave_s4initEPa:
+  57              		@ args = 0, pretend = 0, frame = 0
+  58              		@ frame_needed = 0, uses_anonymous_args = 0
+  59              		@ link register save eliminated.
+  60 0000 0160     		str	r1, [r0]
+  61 0002 7047     		bx	lr
+  62              		.size	_ZN13single_wave_s4initEPa, .-_ZN13single_wave_s4initEPa
+  63 0004 AFF30080 		.section	.text._ZN12multi_wave_s15baseConstructorEv,"ax",%progbits
+  63      AFF30080 
+  63      AFF30080 
+  64              		.align	2
+  65              		.p2align 4,,15
+  66              		.global	_ZN12multi_wave_s15baseConstructorEv
+  67              		.thumb
+  68              		.thumb_func
+  69              		.type	_ZN12multi_wave_s15baseConstructorEv, %function
+  70              	_ZN12multi_wave_s15baseConstructorEv:
+  71              		@ args = 0, pretend = 0, frame = 0
+  72              		@ frame_needed = 0, uses_anonymous_args = 0
+  73              		@ link register save eliminated.
+  74 0000 0023     		movs	r3, #0
+  75 0002 4360     		str	r3, [r0, #4]
+  76 0004 8360     		str	r3, [r0, #8]
+  77 0006 0360     		str	r3, [r0]
+  78 0008 7047     		bx	lr
+  79              		.size	_ZN12multi_wave_s15baseConstructorEv, .-_ZN12multi_wave_s15baseConstructorEv
+  80 000a 00BFAFF3 		.section	.text._ZN12multi_wave_sC2Ev,"ax",%progbits
+  80      0080
+  81              		.align	2
+  82              		.p2align 4,,15
+  83              		.global	_ZN12multi_wave_sC2Ev
+  84              		.thumb
+  85              		.thumb_func
+  86              		.type	_ZN12multi_wave_sC2Ev, %function
+  87              	_ZN12multi_wave_sC2Ev:
+  88              		@ args = 0, pretend = 0, frame = 0
+  89              		@ frame_needed = 0, uses_anonymous_args = 0
+  90              		@ link register save eliminated.
+  91 0000 0022     		movs	r2, #0
+  92 0002 4260     		str	r2, [r0, #4]
+  93 0004 8260     		str	r2, [r0, #8]
+  94 0006 0260     		str	r2, [r0]
+  95 0008 7047     		bx	lr
+  96              		.size	_ZN12multi_wave_sC2Ev, .-_ZN12multi_wave_sC2Ev
+  97              		.global	_ZN12multi_wave_sC1Ev
+  98              		.thumb_set _ZN12multi_wave_sC1Ev,_ZN12multi_wave_sC2Ev
+  99 000a 00BFAFF3 		.section	.text._ZN12multi_wave_sC2EPfP13single_wave_s,"ax",%progbits
+  99      0080
+ 100              		.align	2
+ 101              		.p2align 4,,15
+ 102              		.global	_ZN12multi_wave_sC2EPfP13single_wave_s
+ 103              		.thumb
+ 104              		.thumb_func
+ 105              		.type	_ZN12multi_wave_sC2EPfP13single_wave_s, %function
+ 106              	_ZN12multi_wave_sC2EPfP13single_wave_s:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s 			page 3
+
+
+ 107              		@ args = 0, pretend = 0, frame = 0
+ 108              		@ frame_needed = 0, uses_anonymous_args = 0
+ 109              		@ link register save eliminated.
+ 110 0000 10B4     		push	{r4}
+ 111 0002 0024     		movs	r4, #0
+ 112 0004 0460     		str	r4, [r0]
+ 113 0006 8160     		str	r1, [r0, #8]
+ 114 0008 4260     		str	r2, [r0, #4]
+ 115 000a 5DF8044B 		ldr	r4, [sp], #4
+ 116 000e 7047     		bx	lr
+ 117              		.size	_ZN12multi_wave_sC2EPfP13single_wave_s, .-_ZN12multi_wave_sC2EPfP13single_wave_s
+ 118              		.global	_ZN12multi_wave_sC1EPfP13single_wave_s
+ 119              		.thumb_set _ZN12multi_wave_sC1EPfP13single_wave_s,_ZN12multi_wave_sC2EPfP13single_wave_s
+ 120              		.section	.text._ZN12multi_wave_s4initEPfP13single_wave_s,"ax",%progbits
+ 121              		.align	2
+ 122              		.p2align 4,,15
+ 123              		.global	_ZN12multi_wave_s4initEPfP13single_wave_s
+ 124              		.thumb
+ 125              		.thumb_func
+ 126              		.type	_ZN12multi_wave_s4initEPfP13single_wave_s, %function
+ 127              	_ZN12multi_wave_s4initEPfP13single_wave_s:
+ 128              		@ args = 0, pretend = 0, frame = 0
+ 129              		@ frame_needed = 0, uses_anonymous_args = 0
+ 130              		@ link register save eliminated.
+ 131 0000 8160     		str	r1, [r0, #8]
+ 132 0002 4260     		str	r2, [r0, #4]
+ 133 0004 7047     		bx	lr
+ 134              		.size	_ZN12multi_wave_s4initEPfP13single_wave_s, .-_ZN12multi_wave_s4initEPfP13single_wave_s
+ 135 0006 00BFAFF3 		.section	.text._ZN12multi_wave_s5resetEv,"ax",%progbits
+ 135      0080AFF3 
+ 135      0080
+ 136              		.align	2
+ 137              		.p2align 4,,15
+ 138              		.global	_ZN12multi_wave_s5resetEv
+ 139              		.thumb
+ 140              		.thumb_func
+ 141              		.type	_ZN12multi_wave_s5resetEv, %function
+ 142              	_ZN12multi_wave_s5resetEv:
+ 143              		@ args = 0, pretend = 0, frame = 0
+ 144              		@ frame_needed = 0, uses_anonymous_args = 0
+ 145              		@ link register save eliminated.
+ 146 0000 0023     		movs	r3, #0
+ 147 0002 0360     		str	r3, [r0]
+ 148 0004 7047     		bx	lr
+ 149              		.size	_ZN12multi_wave_s5resetEv, .-_ZN12multi_wave_s5resetEv
+ 150 0006 00BFAFF3 		.section	.text._ZNK12multi_wave_s13getSwitchTimeEi,"ax",%progbits
+ 150      0080AFF3 
+ 150      0080
+ 151              		.align	2
+ 152              		.p2align 4,,15
+ 153              		.global	_ZNK12multi_wave_s13getSwitchTimeEi
+ 154              		.thumb
+ 155              		.thumb_func
+ 156              		.type	_ZNK12multi_wave_s13getSwitchTimeEi, %function
+ 157              	_ZNK12multi_wave_s13getSwitchTimeEi:
+ 158              		@ args = 0, pretend = 0, frame = 0
+ 159              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s 			page 4
+
+
+ 160              		@ link register save eliminated.
+ 161 0000 8368     		ldr	r3, [r0, #8]
+ 162 0002 03EB8101 		add	r1, r3, r1, lsl #2
+ 163 0006 0868     		ldr	r0, [r1]	@ float
+ 164 0008 7047     		bx	lr
+ 165              		.size	_ZNK12multi_wave_s13getSwitchTimeEi, .-_ZNK12multi_wave_s13getSwitchTimeEi
+ 166              		.global	__aeabi_f2d
+ 167 000a 00BFAFF3 		.section	.text._Z17checkSwitchTimes2iPf,"ax",%progbits
+ 167      0080
+ 168              		.align	2
+ 169              		.p2align 4,,15
+ 170              		.global	_Z17checkSwitchTimes2iPf
+ 171              		.thumb
+ 172              		.thumb_func
+ 173              		.type	_Z17checkSwitchTimes2iPf, %function
+ 174              	_Z17checkSwitchTimes2iPf:
+ 175              		@ args = 0, pretend = 0, frame = 0
+ 176              		@ frame_needed = 0, uses_anonymous_args = 0
+ 177 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 178 0004 2DED028B 		fstmfdd	sp!, {d8}
+ 179 0008 00F1FF38 		add	r8, r0, #-1
+ 180 000c B8F1000F 		cmp	r8, #0
+ 181 0010 82B0     		sub	sp, sp, #8
+ 182 0012 26DD     		ble	.L10
+ 183 0014 0F1D     		adds	r7, r1, #4
+ 184 0016 0026     		movs	r6, #0
+ 185 0018 02E0     		b	.L15
+ 186              	.L12:
+ 187 001a 0136     		adds	r6, r6, #1
+ 188 001c 4645     		cmp	r6, r8
+ 189 001e 20D0     		beq	.L10
+ 190              	.L15:
+ 191 0020 57ED017A 		flds	s15, [r7, #-4]
+ 192 0024 B7EC018A 		fldmias	r7!, {s16}
+ 193 0028 F4EEC87A 		fcmpes	s15, s16
+ 194 002c F1EE10FA 		fmstat
+ 195 0030 F3DB     		blt	.L12
+ 196 0032 17EE900A 		fmrs	r0, s15
+ 197 0036 FFF7FEFF 		bl	__aeabi_f2d
+ 198 003a 0446     		mov	r4, r0
+ 199 003c 18EE100A 		fmrs	r0, s16
+ 200 0040 0D46     		mov	r5, r1
+ 201 0042 FFF7FEFF 		bl	__aeabi_f2d
+ 202 0046 CDE90001 		strd	r0, [sp]
+ 203 004a 40F20000 		movw	r0, #:lower16:.LC0
+ 204 004e 3146     		mov	r1, r6
+ 205 0050 2246     		mov	r2, r4
+ 206 0052 2B46     		mov	r3, r5
+ 207 0054 C0F20000 		movt	r0, #:upper16:.LC0
+ 208 0058 0136     		adds	r6, r6, #1
+ 209 005a FFF7FEFF 		bl	firmwareError
+ 210 005e 4645     		cmp	r6, r8
+ 211 0060 DED1     		bne	.L15
+ 212              	.L10:
+ 213 0062 02B0     		add	sp, sp, #8
+ 214              		@ sp needed
+ 215 0064 BDEC028B 		fldmfdd	sp!, {d8}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s 			page 5
+
+
+ 216 0068 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 217              		.size	_Z17checkSwitchTimes2iPf, .-_Z17checkSwitchTimes2iPf
+ 218 006c AFF30080 		.section	.rodata.str1.4,"aMS",%progbits,1
+ 219              		.align	2
+ 220              	.LC0:
+ 221 0000 696E7661 		.ascii	"invalid switchTimes @%d: %f/%f\000"
+ 221      6C696420 
+ 221      73776974 
+ 221      63685469 
+ 221      6D657320 
+ 222 001f 00       		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 EfiWave.cpp
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:17     .text._ZN13single_wave_sC2Ev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:23     .text._ZN13single_wave_sC2Ev:00000000 _ZN13single_wave_sC2Ev
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:23     .text._ZN13single_wave_sC2Ev:00000000 _ZN13single_wave_sC1Ev
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:34     .text._ZN13single_wave_sC2EPa:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:40     .text._ZN13single_wave_sC2EPa:00000000 _ZN13single_wave_sC2EPa
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:40     .text._ZN13single_wave_sC2EPa:00000000 _ZN13single_wave_sC1EPa
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:50     .text._ZN13single_wave_s4initEPa:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:56     .text._ZN13single_wave_s4initEPa:00000000 _ZN13single_wave_s4initEPa
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:64     .text._ZN12multi_wave_s15baseConstructorEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:70     .text._ZN12multi_wave_s15baseConstructorEv:00000000 _ZN12multi_wave_s15baseConstructorEv
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:81     .text._ZN12multi_wave_sC2Ev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:87     .text._ZN12multi_wave_sC2Ev:00000000 _ZN12multi_wave_sC2Ev
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:87     .text._ZN12multi_wave_sC2Ev:00000000 _ZN12multi_wave_sC1Ev
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:100    .text._ZN12multi_wave_sC2EPfP13single_wave_s:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:106    .text._ZN12multi_wave_sC2EPfP13single_wave_s:00000000 _ZN12multi_wave_sC2EPfP13single_wave_s
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:106    .text._ZN12multi_wave_sC2EPfP13single_wave_s:00000000 _ZN12multi_wave_sC1EPfP13single_wave_s
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:121    .text._ZN12multi_wave_s4initEPfP13single_wave_s:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:127    .text._ZN12multi_wave_s4initEPfP13single_wave_s:00000000 _ZN12multi_wave_s4initEPfP13single_wave_s
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:136    .text._ZN12multi_wave_s5resetEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:142    .text._ZN12multi_wave_s5resetEv:00000000 _ZN12multi_wave_s5resetEv
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:151    .text._ZNK12multi_wave_s13getSwitchTimeEi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:157    .text._ZNK12multi_wave_s13getSwitchTimeEi:00000000 _ZNK12multi_wave_s13getSwitchTimeEi
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:168    .text._Z17checkSwitchTimes2iPf:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:174    .text._Z17checkSwitchTimes2iPf:00000000 _Z17checkSwitchTimes2iPf
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:220    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccVUeYeW.s:219    .rodata.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+__aeabi_f2d
+firmwareError

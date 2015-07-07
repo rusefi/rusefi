@@ -1,0 +1,646 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccgkdsro.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"chmboxes.c"
+  16              		.section	.text.chMBInit,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	chMBInit
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	chMBInit, %function
+  23              	chMBInit:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 0029     		cmp	r1, #0
+  27 0002 18BF     		it	ne
+  28 0004 0028     		cmpne	r0, #0
+  29 0006 70B5     		push	{r4, r5, r6, lr}
+  30 0008 0446     		mov	r4, r0
+  31 000a 0D46     		mov	r5, r1
+  32 000c 1646     		mov	r6, r2
+  33 000e 13D0     		beq	.L2
+  34 0010 002A     		cmp	r2, #0
+  35 0012 11DD     		ble	.L2
+  36              	.L3:
+  37 0014 05EB8603 		add	r3, r5, r6, lsl #2
+  38 0018 3146     		mov	r1, r6
+  39 001a 04F11C00 		add	r0, r4, #28
+  40 001e E560     		str	r5, [r4, #12]
+  41 0020 A560     		str	r5, [r4, #8]
+  42 0022 2560     		str	r5, [r4]
+  43 0024 6360     		str	r3, [r4, #4]
+  44 0026 FFF7FEFF 		bl	chSemInit
+  45 002a 04F11000 		add	r0, r4, #16
+  46 002e 0021     		movs	r1, #0
+  47 0030 BDE87040 		pop	{r4, r5, r6, lr}
+  48 0034 FFF7FEBF 		b	chSemInit
+  49              	.L2:
+  50 0038 40F20000 		movw	r0, #:lower16:.LC0
+  51 003c 40F20001 		movw	r1, #:lower16:.LC1
+  52 0040 C0F20000 		movt	r0, #:upper16:.LC0
+  53 0044 C0F20001 		movt	r1, #:upper16:.LC1
+  54 0048 4A22     		movs	r2, #74
+  55 004a FFF7FEFF 		bl	chDbgPanic3
+  56 004e E1E7     		b	.L3
+  57              		.size	chMBInit, .-chMBInit
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccgkdsro.s 			page 2
+
+
+  58              		.section	.text.chMBReset,"ax",%progbits
+  59              		.align	2
+  60              		.p2align 4,,15
+  61              		.global	chMBReset
+  62              		.thumb
+  63              		.thumb_func
+  64              		.type	chMBReset, %function
+  65              	chMBReset:
+  66              		@ args = 0, pretend = 0, frame = 0
+  67              		@ frame_needed = 0, uses_anonymous_args = 0
+  68 0000 10B5     		push	{r4, lr}
+  69 0002 0446     		mov	r4, r0
+  70 0004 D8B1     		cbz	r0, .L7
+  71              	.L6:
+  72 0006 2023     		movs	r3, #32
+  73              	@ 95 "chibios/os/kernel/src/chmboxes.c" 1
+  74 0008 83F31188 		msr     BASEPRI, r3
+  75              	@ 0 "" 2
+  76              		.thumb
+  77 000c FFF7FEFF 		bl	dbg_check_lock
+  78 0010 2368     		ldr	r3, [r4]
+  79 0012 6168     		ldr	r1, [r4, #4]
+  80 0014 E360     		str	r3, [r4, #12]
+  81 0016 C91A     		subs	r1, r1, r3
+  82 0018 A360     		str	r3, [r4, #8]
+  83 001a 04F11C00 		add	r0, r4, #28
+  84 001e 8910     		asrs	r1, r1, #2
+  85 0020 FFF7FEFF 		bl	chSemResetI
+  86 0024 04F11000 		add	r0, r4, #16
+  87 0028 0021     		movs	r1, #0
+  88 002a FFF7FEFF 		bl	chSemResetI
+  89 002e FFF7FEFF 		bl	chSchRescheduleS
+  90 0032 FFF7FEFF 		bl	dbg_check_unlock
+  91 0036 0023     		movs	r3, #0
+  92              	@ 100 "chibios/os/kernel/src/chmboxes.c" 1
+  93 0038 83F31188 		msr     BASEPRI, r3
+  94              	@ 0 "" 2
+  95              		.thumb
+  96 003c 10BD     		pop	{r4, pc}
+  97              	.L7:
+  98 003e 40F20000 		movw	r0, #:lower16:.LC2
+  99 0042 40F20001 		movw	r1, #:lower16:.LC1
+ 100 0046 C0F20000 		movt	r0, #:upper16:.LC2
+ 101 004a C0F20001 		movt	r1, #:upper16:.LC1
+ 102 004e 5D22     		movs	r2, #93
+ 103 0050 FFF7FEFF 		bl	chDbgPanic3
+ 104 0054 D7E7     		b	.L6
+ 105              		.size	chMBReset, .-chMBReset
+ 106 0056 00BFAFF3 		.section	.text.chMBPostS,"ax",%progbits
+ 106      0080AFF3 
+ 106      0080
+ 107              		.align	2
+ 108              		.p2align 4,,15
+ 109              		.global	chMBPostS
+ 110              		.thumb
+ 111              		.thumb_func
+ 112              		.type	chMBPostS, %function
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccgkdsro.s 			page 3
+
+
+ 113              	chMBPostS:
+ 114              		@ args = 0, pretend = 0, frame = 0
+ 115              		@ frame_needed = 0, uses_anonymous_args = 0
+ 116 0000 70B5     		push	{r4, r5, r6, lr}
+ 117 0002 0446     		mov	r4, r0
+ 118 0004 0E46     		mov	r6, r1
+ 119 0006 1546     		mov	r5, r2
+ 120 0008 FFF7FEFF 		bl	chDbgCheckClassS
+ 121 000c C4B1     		cbz	r4, .L12
+ 122              	.L9:
+ 123 000e 2946     		mov	r1, r5
+ 124 0010 04F11C00 		add	r0, r4, #28
+ 125 0014 FFF7FEFF 		bl	chSemWaitTimeoutS
+ 126 0018 0546     		mov	r5, r0
+ 127 001a 78B9     		cbnz	r0, .L10
+ 128 001c A268     		ldr	r2, [r4, #8]
+ 129 001e 6168     		ldr	r1, [r4, #4]
+ 130 0020 131D     		adds	r3, r2, #4
+ 131 0022 8B42     		cmp	r3, r1
+ 132 0024 A360     		str	r3, [r4, #8]
+ 133 0026 28BF     		it	cs
+ 134 0028 2368     		ldrcs	r3, [r4]
+ 135 002a 1660     		str	r6, [r2]
+ 136 002c 04F11000 		add	r0, r4, #16
+ 137 0030 28BF     		it	cs
+ 138 0032 A360     		strcs	r3, [r4, #8]
+ 139 0034 FFF7FEFF 		bl	chSemSignalI
+ 140 0038 FFF7FEFF 		bl	chSchRescheduleS
+ 141              	.L10:
+ 142 003c 2846     		mov	r0, r5
+ 143 003e 70BD     		pop	{r4, r5, r6, pc}
+ 144              	.L12:
+ 145 0040 40F20000 		movw	r0, #:lower16:.LC3
+ 146 0044 40F20001 		movw	r1, #:lower16:.LC1
+ 147 0048 C0F20000 		movt	r0, #:upper16:.LC3
+ 148 004c C0F20001 		movt	r1, #:upper16:.LC1
+ 149 0050 9A22     		movs	r2, #154
+ 150 0052 FFF7FEFF 		bl	chDbgPanic3
+ 151 0056 DAE7     		b	.L9
+ 152              		.size	chMBPostS, .-chMBPostS
+ 153 0058 AFF30080 		.section	.text.chMBPost,"ax",%progbits
+ 153      AFF30080 
+ 154              		.align	2
+ 155              		.p2align 4,,15
+ 156              		.global	chMBPost
+ 157              		.thumb
+ 158              		.thumb_func
+ 159              		.type	chMBPost, %function
+ 160              	chMBPost:
+ 161              		@ args = 0, pretend = 0, frame = 0
+ 162              		@ frame_needed = 0, uses_anonymous_args = 0
+ 163 0000 70B5     		push	{r4, r5, r6, lr}
+ 164 0002 2023     		movs	r3, #32
+ 165 0004 0646     		mov	r6, r0
+ 166 0006 0D46     		mov	r5, r1
+ 167 0008 1446     		mov	r4, r2
+ 168              	@ 125 "chibios/os/kernel/src/chmboxes.c" 1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccgkdsro.s 			page 4
+
+
+ 169 000a 83F31188 		msr     BASEPRI, r3
+ 170              	@ 0 "" 2
+ 171              		.thumb
+ 172 000e FFF7FEFF 		bl	dbg_check_lock
+ 173 0012 2246     		mov	r2, r4
+ 174 0014 2946     		mov	r1, r5
+ 175 0016 3046     		mov	r0, r6
+ 176 0018 FFF7FEFF 		bl	chMBPostS
+ 177 001c 0446     		mov	r4, r0
+ 178 001e FFF7FEFF 		bl	dbg_check_unlock
+ 179 0022 0023     		movs	r3, #0
+ 180              	@ 127 "chibios/os/kernel/src/chmboxes.c" 1
+ 181 0024 83F31188 		msr     BASEPRI, r3
+ 182              	@ 0 "" 2
+ 183              		.thumb
+ 184 0028 2046     		mov	r0, r4
+ 185 002a 70BD     		pop	{r4, r5, r6, pc}
+ 186              		.size	chMBPost, .-chMBPost
+ 187 002c AFF30080 		.section	.text.chMBPostI,"ax",%progbits
+ 188              		.align	2
+ 189              		.p2align 4,,15
+ 190              		.global	chMBPostI
+ 191              		.thumb
+ 192              		.thumb_func
+ 193              		.type	chMBPostI, %function
+ 194              	chMBPostI:
+ 195              		@ args = 0, pretend = 0, frame = 0
+ 196              		@ frame_needed = 0, uses_anonymous_args = 0
+ 197 0000 38B5     		push	{r3, r4, r5, lr}
+ 198 0002 0446     		mov	r4, r0
+ 199 0004 0D46     		mov	r5, r1
+ 200 0006 FFF7FEFF 		bl	chDbgCheckClassI
+ 201 000a A4B1     		cbz	r4, .L19
+ 202              	.L15:
+ 203 000c 636A     		ldr	r3, [r4, #36]
+ 204 000e 002B     		cmp	r3, #0
+ 205 0010 1DDD     		ble	.L18
+ 206 0012 A068     		ldr	r0, [r4, #8]
+ 207 0014 6168     		ldr	r1, [r4, #4]
+ 208 0016 021D     		adds	r2, r0, #4
+ 209 0018 013B     		subs	r3, r3, #1
+ 210 001a 8A42     		cmp	r2, r1
+ 211 001c 6362     		str	r3, [r4, #36]
+ 212 001e 28BF     		it	cs
+ 213 0020 2368     		ldrcs	r3, [r4]
+ 214 0022 A260     		str	r2, [r4, #8]
+ 215 0024 0560     		str	r5, [r0]
+ 216 0026 04F11000 		add	r0, r4, #16
+ 217 002a 28BF     		it	cs
+ 218 002c A360     		strcs	r3, [r4, #8]
+ 219 002e FFF7FEFF 		bl	chSemSignalI
+ 220 0032 0020     		movs	r0, #0
+ 221 0034 38BD     		pop	{r3, r4, r5, pc}
+ 222              	.L19:
+ 223 0036 40F20000 		movw	r0, #:lower16:.LC4
+ 224 003a 40F20001 		movw	r1, #:lower16:.LC1
+ 225 003e C0F20000 		movt	r0, #:upper16:.LC4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccgkdsro.s 			page 5
+
+
+ 226 0042 C0F20001 		movt	r1, #:upper16:.LC1
+ 227 0046 B822     		movs	r2, #184
+ 228 0048 FFF7FEFF 		bl	chDbgPanic3
+ 229 004c DEE7     		b	.L15
+ 230              	.L18:
+ 231 004e 4FF0FF30 		mov	r0, #-1
+ 232 0052 38BD     		pop	{r3, r4, r5, pc}
+ 233              		.size	chMBPostI, .-chMBPostI
+ 234 0054 AFF30080 		.section	.text.chMBPostAheadS,"ax",%progbits
+ 234      AFF30080 
+ 234      AFF30080 
+ 235              		.align	2
+ 236              		.p2align 4,,15
+ 237              		.global	chMBPostAheadS
+ 238              		.thumb
+ 239              		.thumb_func
+ 240              		.type	chMBPostAheadS, %function
+ 241              	chMBPostAheadS:
+ 242              		@ args = 0, pretend = 0, frame = 0
+ 243              		@ frame_needed = 0, uses_anonymous_args = 0
+ 244 0000 70B5     		push	{r4, r5, r6, lr}
+ 245 0002 0446     		mov	r4, r0
+ 246 0004 0E46     		mov	r6, r1
+ 247 0006 1546     		mov	r5, r2
+ 248 0008 FFF7FEFF 		bl	chDbgCheckClassS
+ 249 000c C4B1     		cbz	r4, .L24
+ 250              	.L21:
+ 251 000e 2946     		mov	r1, r5
+ 252 0010 04F11C00 		add	r0, r4, #28
+ 253 0014 FFF7FEFF 		bl	chSemWaitTimeoutS
+ 254 0018 0546     		mov	r5, r0
+ 255 001a 78B9     		cbnz	r0, .L22
+ 256 001c E368     		ldr	r3, [r4, #12]
+ 257 001e 2268     		ldr	r2, [r4]
+ 258 0020 043B     		subs	r3, r3, #4
+ 259 0022 9342     		cmp	r3, r2
+ 260 0024 E360     		str	r3, [r4, #12]
+ 261 0026 3EBF     		ittt	cc
+ 262 0028 6368     		ldrcc	r3, [r4, #4]
+ 263 002a 043B     		subcc	r3, r3, #4
+ 264 002c E360     		strcc	r3, [r4, #12]
+ 265 002e 04F11000 		add	r0, r4, #16
+ 266 0032 1E60     		str	r6, [r3]
+ 267 0034 FFF7FEFF 		bl	chSemSignalI
+ 268 0038 FFF7FEFF 		bl	chSchRescheduleS
+ 269              	.L22:
+ 270 003c 2846     		mov	r0, r5
+ 271 003e 70BD     		pop	{r4, r5, r6, pc}
+ 272              	.L24:
+ 273 0040 40F20000 		movw	r0, #:lower16:.LC5
+ 274 0044 40F20001 		movw	r1, #:lower16:.LC1
+ 275 0048 C0F20000 		movt	r0, #:upper16:.LC5
+ 276 004c C0F20001 		movt	r1, #:upper16:.LC1
+ 277 0050 F722     		movs	r2, #247
+ 278 0052 FFF7FEFF 		bl	chDbgPanic3
+ 279 0056 DAE7     		b	.L21
+ 280              		.size	chMBPostAheadS, .-chMBPostAheadS
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccgkdsro.s 			page 6
+
+
+ 281 0058 AFF30080 		.section	.text.chMBPostAhead,"ax",%progbits
+ 281      AFF30080 
+ 282              		.align	2
+ 283              		.p2align 4,,15
+ 284              		.global	chMBPostAhead
+ 285              		.thumb
+ 286              		.thumb_func
+ 287              		.type	chMBPostAhead, %function
+ 288              	chMBPostAhead:
+ 289              		@ args = 0, pretend = 0, frame = 0
+ 290              		@ frame_needed = 0, uses_anonymous_args = 0
+ 291 0000 70B5     		push	{r4, r5, r6, lr}
+ 292 0002 2023     		movs	r3, #32
+ 293 0004 0646     		mov	r6, r0
+ 294 0006 0D46     		mov	r5, r1
+ 295 0008 1446     		mov	r4, r2
+ 296              	@ 218 "chibios/os/kernel/src/chmboxes.c" 1
+ 297 000a 83F31188 		msr     BASEPRI, r3
+ 298              	@ 0 "" 2
+ 299              		.thumb
+ 300 000e FFF7FEFF 		bl	dbg_check_lock
+ 301 0012 2246     		mov	r2, r4
+ 302 0014 2946     		mov	r1, r5
+ 303 0016 3046     		mov	r0, r6
+ 304 0018 FFF7FEFF 		bl	chMBPostAheadS
+ 305 001c 0446     		mov	r4, r0
+ 306 001e FFF7FEFF 		bl	dbg_check_unlock
+ 307 0022 0023     		movs	r3, #0
+ 308              	@ 220 "chibios/os/kernel/src/chmboxes.c" 1
+ 309 0024 83F31188 		msr     BASEPRI, r3
+ 310              	@ 0 "" 2
+ 311              		.thumb
+ 312 0028 2046     		mov	r0, r4
+ 313 002a 70BD     		pop	{r4, r5, r6, pc}
+ 314              		.size	chMBPostAhead, .-chMBPostAhead
+ 315 002c AFF30080 		.section	.text.chMBPostAheadI,"ax",%progbits
+ 316              		.align	2
+ 317              		.p2align 4,,15
+ 318              		.global	chMBPostAheadI
+ 319              		.thumb
+ 320              		.thumb_func
+ 321              		.type	chMBPostAheadI, %function
+ 322              	chMBPostAheadI:
+ 323              		@ args = 0, pretend = 0, frame = 0
+ 324              		@ frame_needed = 0, uses_anonymous_args = 0
+ 325 0000 38B5     		push	{r3, r4, r5, lr}
+ 326 0002 0446     		mov	r4, r0
+ 327 0004 0D46     		mov	r5, r1
+ 328 0006 FFF7FEFF 		bl	chDbgCheckClassI
+ 329 000a B4B1     		cbz	r4, .L31
+ 330              	.L27:
+ 331 000c 626A     		ldr	r2, [r4, #36]
+ 332 000e 002A     		cmp	r2, #0
+ 333 0010 20DD     		ble	.L30
+ 334 0012 E368     		ldr	r3, [r4, #12]
+ 335 0014 2168     		ldr	r1, [r4]
+ 336 0016 043B     		subs	r3, r3, #4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccgkdsro.s 			page 7
+
+
+ 337 0018 8B42     		cmp	r3, r1
+ 338 001a E360     		str	r3, [r4, #12]
+ 339 001c 3CBF     		itt	cc
+ 340 001e 6368     		ldrcc	r3, [r4, #4]
+ 341 0020 043B     		subcc	r3, r3, #4
+ 342 0022 02F1FF32 		add	r2, r2, #-1
+ 343 0026 6262     		str	r2, [r4, #36]
+ 344 0028 38BF     		it	cc
+ 345 002a E360     		strcc	r3, [r4, #12]
+ 346 002c 04F11000 		add	r0, r4, #16
+ 347 0030 1D60     		str	r5, [r3]
+ 348 0032 FFF7FEFF 		bl	chSemSignalI
+ 349 0036 0020     		movs	r0, #0
+ 350 0038 38BD     		pop	{r3, r4, r5, pc}
+ 351              	.L31:
+ 352 003a 40F20000 		movw	r0, #:lower16:.LC6
+ 353 003e 40F20001 		movw	r1, #:lower16:.LC1
+ 354 0042 C0F20000 		movt	r0, #:upper16:.LC6
+ 355 0046 C0F20001 		movt	r1, #:upper16:.LC1
+ 356 004a 40F21512 		movw	r2, #277
+ 357 004e FFF7FEFF 		bl	chDbgPanic3
+ 358 0052 DBE7     		b	.L27
+ 359              	.L30:
+ 360 0054 4FF0FF30 		mov	r0, #-1
+ 361 0058 38BD     		pop	{r3, r4, r5, pc}
+ 362              		.size	chMBPostAheadI, .-chMBPostAheadI
+ 363 005a 00BFAFF3 		.section	.text.chMBFetchS,"ax",%progbits
+ 363      0080
+ 364              		.align	2
+ 365              		.p2align 4,,15
+ 366              		.global	chMBFetchS
+ 367              		.thumb
+ 368              		.thumb_func
+ 369              		.type	chMBFetchS, %function
+ 370              	chMBFetchS:
+ 371              		@ args = 0, pretend = 0, frame = 0
+ 372              		@ frame_needed = 0, uses_anonymous_args = 0
+ 373 0000 70B5     		push	{r4, r5, r6, lr}
+ 374 0002 0446     		mov	r4, r0
+ 375 0004 0E46     		mov	r6, r1
+ 376 0006 1546     		mov	r5, r2
+ 377 0008 FFF7FEFF 		bl	chDbgCheckClassS
+ 378 000c 002E     		cmp	r6, #0
+ 379 000e 18BF     		it	ne
+ 380 0010 002C     		cmpne	r4, #0
+ 381 0012 19D0     		beq	.L39
+ 382              	.L33:
+ 383 0014 2946     		mov	r1, r5
+ 384 0016 04F11000 		add	r0, r4, #16
+ 385 001a FFF7FEFF 		bl	chSemWaitTimeoutS
+ 386 001e 0546     		mov	r5, r0
+ 387 0020 80B9     		cbnz	r0, .L34
+ 388 0022 E368     		ldr	r3, [r4, #12]
+ 389 0024 6268     		ldr	r2, [r4, #4]
+ 390 0026 1968     		ldr	r1, [r3]
+ 391 0028 0433     		adds	r3, r3, #4
+ 392 002a 9342     		cmp	r3, r2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccgkdsro.s 			page 8
+
+
+ 393 002c E360     		str	r3, [r4, #12]
+ 394 002e 28BF     		it	cs
+ 395 0030 2368     		ldrcs	r3, [r4]
+ 396 0032 3160     		str	r1, [r6]
+ 397 0034 04F11C00 		add	r0, r4, #28
+ 398 0038 28BF     		it	cs
+ 399 003a E360     		strcs	r3, [r4, #12]
+ 400 003c FFF7FEFF 		bl	chSemSignalI
+ 401 0040 FFF7FEFF 		bl	chSchRescheduleS
+ 402              	.L34:
+ 403 0044 2846     		mov	r0, r5
+ 404 0046 70BD     		pop	{r4, r5, r6, pc}
+ 405              	.L39:
+ 406 0048 40F20000 		movw	r0, #:lower16:.LC7
+ 407 004c 40F20001 		movw	r1, #:lower16:.LC1
+ 408 0050 C0F20000 		movt	r0, #:upper16:.LC7
+ 409 0054 C0F20001 		movt	r1, #:upper16:.LC1
+ 410 0058 4FF4AA72 		mov	r2, #340
+ 411 005c FFF7FEFF 		bl	chDbgPanic3
+ 412 0060 D8E7     		b	.L33
+ 413              		.size	chMBFetchS, .-chMBFetchS
+ 414 0062 00BFAFF3 		.section	.text.chMBFetch,"ax",%progbits
+ 414      0080AFF3 
+ 414      0080AFF3 
+ 414      0080
+ 415              		.align	2
+ 416              		.p2align 4,,15
+ 417              		.global	chMBFetch
+ 418              		.thumb
+ 419              		.thumb_func
+ 420              		.type	chMBFetch, %function
+ 421              	chMBFetch:
+ 422              		@ args = 0, pretend = 0, frame = 0
+ 423              		@ frame_needed = 0, uses_anonymous_args = 0
+ 424 0000 70B5     		push	{r4, r5, r6, lr}
+ 425 0002 2023     		movs	r3, #32
+ 426 0004 0646     		mov	r6, r0
+ 427 0006 0D46     		mov	r5, r1
+ 428 0008 1446     		mov	r4, r2
+ 429              	@ 311 "chibios/os/kernel/src/chmboxes.c" 1
+ 430 000a 83F31188 		msr     BASEPRI, r3
+ 431              	@ 0 "" 2
+ 432              		.thumb
+ 433 000e FFF7FEFF 		bl	dbg_check_lock
+ 434 0012 2246     		mov	r2, r4
+ 435 0014 2946     		mov	r1, r5
+ 436 0016 3046     		mov	r0, r6
+ 437 0018 FFF7FEFF 		bl	chMBFetchS
+ 438 001c 0446     		mov	r4, r0
+ 439 001e FFF7FEFF 		bl	dbg_check_unlock
+ 440 0022 0023     		movs	r3, #0
+ 441              	@ 313 "chibios/os/kernel/src/chmboxes.c" 1
+ 442 0024 83F31188 		msr     BASEPRI, r3
+ 443              	@ 0 "" 2
+ 444              		.thumb
+ 445 0028 2046     		mov	r0, r4
+ 446 002a 70BD     		pop	{r4, r5, r6, pc}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccgkdsro.s 			page 9
+
+
+ 447              		.size	chMBFetch, .-chMBFetch
+ 448 002c AFF30080 		.section	.text.chMBFetchI,"ax",%progbits
+ 449              		.align	2
+ 450              		.p2align 4,,15
+ 451              		.global	chMBFetchI
+ 452              		.thumb
+ 453              		.thumb_func
+ 454              		.type	chMBFetchI, %function
+ 455              	chMBFetchI:
+ 456              		@ args = 0, pretend = 0, frame = 0
+ 457              		@ frame_needed = 0, uses_anonymous_args = 0
+ 458 0000 38B5     		push	{r3, r4, r5, lr}
+ 459 0002 0446     		mov	r4, r0
+ 460 0004 0D46     		mov	r5, r1
+ 461 0006 FFF7FEFF 		bl	chDbgCheckClassI
+ 462 000a 002D     		cmp	r5, #0
+ 463 000c 18BF     		it	ne
+ 464 000e 002C     		cmpne	r4, #0
+ 465 0010 15D0     		beq	.L49
+ 466              	.L42:
+ 467 0012 A369     		ldr	r3, [r4, #24]
+ 468 0014 002B     		cmp	r3, #0
+ 469 0016 1FDD     		ble	.L45
+ 470 0018 5A1E     		subs	r2, r3, #1
+ 471 001a E368     		ldr	r3, [r4, #12]
+ 472 001c A261     		str	r2, [r4, #24]
+ 473 001e 6268     		ldr	r2, [r4, #4]
+ 474 0020 1968     		ldr	r1, [r3]
+ 475 0022 0433     		adds	r3, r3, #4
+ 476 0024 9342     		cmp	r3, r2
+ 477 0026 E360     		str	r3, [r4, #12]
+ 478 0028 28BF     		it	cs
+ 479 002a 2368     		ldrcs	r3, [r4]
+ 480 002c 2960     		str	r1, [r5]
+ 481 002e 04F11C00 		add	r0, r4, #28
+ 482 0032 28BF     		it	cs
+ 483 0034 E360     		strcs	r3, [r4, #12]
+ 484 0036 FFF7FEFF 		bl	chSemSignalI
+ 485 003a 0020     		movs	r0, #0
+ 486 003c 38BD     		pop	{r3, r4, r5, pc}
+ 487              	.L49:
+ 488 003e 40F20000 		movw	r0, #:lower16:.LC8
+ 489 0042 40F20001 		movw	r1, #:lower16:.LC1
+ 490 0046 C0F20000 		movt	r0, #:upper16:.LC8
+ 491 004a C0F20001 		movt	r1, #:upper16:.LC1
+ 492 004e 4FF4B972 		mov	r2, #370
+ 493 0052 FFF7FEFF 		bl	chDbgPanic3
+ 494 0056 DCE7     		b	.L42
+ 495              	.L45:
+ 496 0058 4FF0FF30 		mov	r0, #-1
+ 497 005c 38BD     		pop	{r3, r4, r5, pc}
+ 498              		.size	chMBFetchI, .-chMBFetchI
+ 499 005e 00BF     		.section	.rodata.str1.4,"aMS",%progbits,1
+ 500              		.align	2
+ 501              	.LC0:
+ 502 0000 2263684D 		.ascii	"\"chMBInit\"()\000"
+ 502      42496E69 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccgkdsro.s 			page 10
+
+
+ 502      74222829 
+ 502      00
+ 503 000d 000000   		.space	3
+ 504              	.LC1:
+ 505 0010 63686962 		.ascii	"chibios/os/kernel/src/chmboxes.c\000"
+ 505      696F732F 
+ 505      6F732F6B 
+ 505      65726E65 
+ 505      6C2F7372 
+ 506 0031 000000   		.space	3
+ 507              	.LC2:
+ 508 0034 2263684D 		.ascii	"\"chMBReset\"()\000"
+ 508      42526573 
+ 508      65742228 
+ 508      2900
+ 509 0042 0000     		.space	2
+ 510              	.LC3:
+ 511 0044 2263684D 		.ascii	"\"chMBPostS\"()\000"
+ 511      42506F73 
+ 511      74532228 
+ 511      2900
+ 512 0052 0000     		.space	2
+ 513              	.LC4:
+ 514 0054 2263684D 		.ascii	"\"chMBPostI\"()\000"
+ 514      42506F73 
+ 514      74492228 
+ 514      2900
+ 515 0062 0000     		.space	2
+ 516              	.LC5:
+ 517 0064 2263684D 		.ascii	"\"chMBPostAheadS\"()\000"
+ 517      42506F73 
+ 517      74416865 
+ 517      61645322 
+ 517      282900
+ 518 0077 00       		.space	1
+ 519              	.LC6:
+ 520 0078 2263684D 		.ascii	"\"chMBPostAheadI\"()\000"
+ 520      42506F73 
+ 520      74416865 
+ 520      61644922 
+ 520      282900
+ 521 008b 00       		.space	1
+ 522              	.LC7:
+ 523 008c 2263684D 		.ascii	"\"chMBFetchS\"()\000"
+ 523      42466574 
+ 523      63685322 
+ 523      282900
+ 524 009b 00       		.space	1
+ 525              	.LC8:
+ 526 009c 2263684D 		.ascii	"\"chMBFetchI\"()\000"
+ 526      42466574 
+ 526      63684922 
+ 526      282900
+ 527 00ab 00       		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccgkdsro.s 			page 11
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 chmboxes.c
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:17     .text.chMBInit:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:23     .text.chMBInit:00000000 chMBInit
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:501    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:504    .rodata.str1.4:00000010 .LC1
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:59     .text.chMBReset:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:65     .text.chMBReset:00000000 chMBReset
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:507    .rodata.str1.4:00000034 .LC2
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:107    .text.chMBPostS:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:113    .text.chMBPostS:00000000 chMBPostS
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:510    .rodata.str1.4:00000044 .LC3
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:154    .text.chMBPost:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:160    .text.chMBPost:00000000 chMBPost
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:188    .text.chMBPostI:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:194    .text.chMBPostI:00000000 chMBPostI
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:513    .rodata.str1.4:00000054 .LC4
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:235    .text.chMBPostAheadS:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:241    .text.chMBPostAheadS:00000000 chMBPostAheadS
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:516    .rodata.str1.4:00000064 .LC5
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:282    .text.chMBPostAhead:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:288    .text.chMBPostAhead:00000000 chMBPostAhead
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:316    .text.chMBPostAheadI:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:322    .text.chMBPostAheadI:00000000 chMBPostAheadI
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:519    .rodata.str1.4:00000078 .LC6
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:364    .text.chMBFetchS:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:370    .text.chMBFetchS:00000000 chMBFetchS
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:522    .rodata.str1.4:0000008c .LC7
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:415    .text.chMBFetch:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:421    .text.chMBFetch:00000000 chMBFetch
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:449    .text.chMBFetchI:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:455    .text.chMBFetchI:00000000 chMBFetchI
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:525    .rodata.str1.4:0000009c .LC8
+C:\Users\pc\AppData\Local\Temp\ccgkdsro.s:500    .rodata.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+chSemInit
+chDbgPanic3
+dbg_check_lock
+chSemResetI
+chSchRescheduleS
+dbg_check_unlock
+chDbgCheckClassS
+chSemWaitTimeoutS
+chSemSignalI
+chDbgCheckClassI

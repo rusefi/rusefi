@@ -1,0 +1,165 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccQXN1g8.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"dodge_ram.cpp"
+  16              		.section	.text._Z15setDodgeRam1996v,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_Z15setDodgeRam1996v
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_Z15setDodgeRam1996v, %function
+  23              	_Z15setDodgeRam1996v:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 2DE9F84F 		push	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+  27 0004 40F20004 		movw	r4, #:lower16:engineConfiguration
+  28 0008 C0F20004 		movt	r4, #:upper16:engineConfiguration
+  29 000c FFF7FEFF 		bl	_Z28setCustomEngineConfigurationv
+  30 0010 2068     		ldr	r0, [r4]
+  31 0012 0221     		movs	r1, #2
+  32 0014 FFF7FEFF 		bl	_Z16setOperationModeP22engine_configuration_s16operation_mode_e
+  33 0018 40F20005 		movw	r5, #:lower16:boardConfiguration
+  34 001c 2368     		ldr	r3, [r4]
+  35 001e 49F69A1E 		movw	lr, #39322
+  36 0022 0027     		movs	r7, #0
+  37 0024 C4F2733E 		movt	lr, 17267
+  38 0028 0421     		movs	r1, #4
+  39 002a 0322     		movs	r2, #3
+  40 002c C0F20005 		movt	r5, #:upper16:boardConfiguration
+  41 0030 1326     		movs	r6, #19
+  42 0032 C4F2F017 		movt	r7, 16880
+  43 0036 0020     		movs	r0, #0
+  44 0038 C3F81862 		str	r6, [r3, #536]
+  45 003c C3F808E0 		str	lr, [r3, #8]	@ float
+  46 0040 C3F8F810 		str	r1, [r3, #248]
+  47 0044 C3F8A821 		str	r2, [r3, #424]
+  48 0048 DF66     		str	r7, [r3, #108]	@ float
+  49 004a C4F2C000 		movt	r0, 16576
+  50 004e FFF7FEFF 		bl	_Z15setWholeFuelMapf
+  51 0052 46F26669 		movw	r9, #26214
+  52 0056 2B68     		ldr	r3, [r5]
+  53 0058 2268     		ldr	r2, [r4]
+  54 005a 0521     		movs	r1, #5
+  55 005c C4F2A609 		movt	r9, 16550
+  56 0060 0826     		movs	r6, #8
+  57 0062 4FF0430A 		mov	r10, #67
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccQXN1g8.s 			page 2
+
+
+  58 0066 C2F89461 		str	r6, [r2, #404]
+  59 006a C2F89091 		str	r9, [r2, #400]	@ float
+  60 006e C2F89811 		str	r1, [r2, #408]
+  61 0072 DFED3C7A 		flds	s15, .L2
+  62 0076 C3F834A0 		str	r10, [r3, #52]
+  63 007a 4FF02608 		mov	r8, #38
+  64 007e 4FF0420C 		mov	ip, #66
+  65 0082 4FF0190E 		mov	lr, #25
+  66 0086 3527     		movs	r7, #53
+  67 0088 1726     		movs	r6, #23
+  68 008a 4FF0000A 		mov	r10, #0
+  69 008e C3F82C11 		str	r1, [r3, #300]
+  70 0092 C3F82881 		str	r8, [r3, #296]
+  71 0096 C3F820C0 		str	ip, [r3, #32]
+  72 009a C3F824E0 		str	lr, [r3, #36]
+  73 009e 9F62     		str	r7, [r3, #40]
+  74 00a0 5021     		movs	r1, #80
+  75 00a2 1E63     		str	r6, [r3, #48]
+  76 00a4 4FF0290C 		mov	ip, #41
+  77 00a8 4FF0450E 		mov	lr, #69
+  78 00ac 4FF03308 		mov	r8, #51
+  79 00b0 4627     		movs	r7, #70
+  80 00b2 4FF4E176 		mov	r6, #450
+  81 00b6 0020     		movs	r0, #0
+  82 00b8 4FF0180B 		mov	fp, #24
+  83 00bc 4FF04409 		mov	r9, #68
+  84 00c0 C4F2E00A 		movt	r10, 16608
+  85 00c4 C3F83C80 		str	r8, [r3, #60]
+  86 00c8 C3F854C0 		str	ip, [r3, #84]
+  87 00cc C3F834E1 		str	lr, [r3, #308]
+  88 00d0 9F61     		str	r7, [r3, #24]
+  89 00d2 9965     		str	r1, [r3, #88]
+  90 00d4 D965     		str	r1, [r3, #92]
+  91 00d6 1966     		str	r1, [r3, #96]
+  92 00d8 C3F89010 		str	r1, [r3, #144]
+  93 00dc C3F82CB0 		str	fp, [r3, #44]
+  94 00e0 C3F83890 		str	r9, [r3, #56]
+  95 00e4 C4F22010 		movt	r0, 16672
+  96 00e8 C2ED737A 		fsts	s15, [r2, #460]
+  97 00ec C2F8E865 		str	r6, [r2, #1512]
+  98 00f0 C2F85CA0 		str	r10, [r2, #92]	@ float
+  99 00f4 FFF7FEFF 		bl	_Z19setWholeTimingTablef
+ 100 00f8 2368     		ldr	r3, [r4]
+ 101 00fa 2A68     		ldr	r2, [r5]
+ 102 00fc 03F67C0E 		addw	lr, r3, #2172
+ 103 0100 49F69A1C 		movw	ip, #39322
+ 104 0104 4FF00008 		mov	r8, #0
+ 105 0108 C4F2191C 		movt	ip, 16665
+ 106 010c 0E21     		movs	r1, #14
+ 107 010e 3720     		movs	r0, #55
+ 108 0110 4FF49676 		mov	r6, #300
+ 109 0114 C4F2B018 		movt	r8, 16816
+ 110 0118 2D27     		movs	r7, #45
+ 111 011a C2F8A800 		str	r0, [r2, #168]
+ 112 011e CEF80080 		str	r8, [lr]	@ float
+ 113 0122 03F58070 		add	r0, r3, #256
+ 114 0126 9660     		str	r6, [r2, #8]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccQXN1g8.s 			page 3
+
+
+ 115 0128 1760     		str	r7, [r2]
+ 116 012a C3F8D811 		str	r1, [r3, #472]
+ 117 012e C3F8D4C1 		str	ip, [r3, #468]	@ float
+ 118 0132 FFF7FEFF 		bl	_Z14setDodgeSensorP14ThermistorConf
+ 119 0136 4FF44046 		mov	r6, #49152
+ 120 013a 2068     		ldr	r0, [r4]
+ 121 013c C4F22856 		movt	r6, 17704
+ 122 0140 C0F81861 		str	r6, [r0, #280]	@ float
+ 123 0144 00F59070 		add	r0, r0, #288
+ 124 0148 FFF7FEFF 		bl	_Z14setDodgeSensorP14ThermistorConf
+ 125 014c 2268     		ldr	r2, [r4]
+ 126 014e 2B68     		ldr	r3, [r5]
+ 127 0150 C2F83861 		str	r6, [r2, #312]	@ float
+ 128 0154 93F88121 		ldrb	r2, [r3, #385]	@ zero_extendqisi2
+ 129 0158 42F00202 		orr	r2, r2, #2
+ 130 015c 83F88121 		strb	r2, [r3, #385]
+ 131 0160 BDE8F88F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 132              	.L3:
+ 133              		.align	2
+ 134              	.L2:
+ 135 0164 000048C2 		.word	-1035468800
+ 136              		.size	_Z15setDodgeRam1996v, .-_Z15setDodgeRam1996v
+ 137 0168 AFF30080 		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ 137      AFF30080 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccQXN1g8.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 dodge_ram.cpp
+C:\Users\pc\AppData\Local\Temp\ccQXN1g8.s:17     .text._Z15setDodgeRam1996v:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccQXN1g8.s:23     .text._Z15setDodgeRam1996v:00000000 _Z15setDodgeRam1996v
+C:\Users\pc\AppData\Local\Temp\ccQXN1g8.s:135    .text._Z15setDodgeRam1996v:00000164 $d
+C:\Users\pc\AppData\Local\Temp\ccQXN1g8.s:137    .text._Z15setDodgeRam1996v:00000168 $t
+
+UNDEFINED SYMBOLS
+engineConfiguration
+_Z28setCustomEngineConfigurationv
+_Z16setOperationModeP22engine_configuration_s16operation_mode_e
+boardConfiguration
+_Z15setWholeFuelMapf
+_Z19setWholeTimingTablef
+_Z14setDodgeSensorP14ThermistorConf

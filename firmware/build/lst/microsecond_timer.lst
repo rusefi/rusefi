@@ -1,0 +1,455 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"microsecond_timer.cpp"
+  16              		.section	.text._ZL8callbackP9GPTDriver,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	_ZL8callbackP9GPTDriver, %function
+  22              	_ZL8callbackP9GPTDriver:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25 0000 08B5     		push	{r3, lr}
+  26 0002 40F20003 		movw	r3, #:lower16:.LANCHOR0
+  27 0006 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+  28 000a 40F20002 		movw	r2, #:lower16:.LANCHOR1
+  29 000e C0F20002 		movt	r2, #:upper16:.LANCHOR1
+  30 0012 1968     		ldr	r1, [r3]
+  31 0014 1268     		ldr	r2, [r2]
+  32 0016 0131     		adds	r1, r1, #1
+  33 0018 1960     		str	r1, [r3]
+  34 001a 42B1     		cbz	r2, .L4
+  35 001c 40F20003 		movw	r3, #:lower16:.LANCHOR2
+  36 0020 0021     		movs	r1, #0
+  37 0022 C0F20003 		movt	r3, #:upper16:.LANCHOR2
+  38 0026 0846     		mov	r0, r1
+  39 0028 1970     		strb	r1, [r3]
+  40 002a 9047     		blx	r2
+  41 002c 08BD     		pop	{r3, pc}
+  42              	.L4:
+  43 002e 40F20000 		movw	r0, #:lower16:.LC0
+  44 0032 C0F20000 		movt	r0, #:upper16:.LC0
+  45 0036 BDE80840 		pop	{r3, lr}
+  46 003a FFF7FEBF 		b	firmwareError
+  47              		.size	_ZL8callbackP9GPTDriver, .-_ZL8callbackP9GPTDriver
+  48 003e 00BF     		.section	.text._ZL8mwThreadi,"ax",%progbits
+  49              		.align	2
+  50              		.p2align 4,,15
+  51              		.thumb
+  52              		.thumb_func
+  53              		.type	_ZL8mwThreadi, %function
+  54              	_ZL8mwThreadi:
+  55              		@ Volatile: function does not return.
+  56              		@ args = 0, pretend = 0, frame = 8
+  57              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s 			page 2
+
+
+  58 0000 2DE98048 		push	{r7, fp, lr}
+  59 0004 40F20002 		movw	r2, #:lower16:rlist
+  60 0008 C0F20002 		movt	r2, #:upper16:rlist
+  61 000c 40F20003 		movw	r3, #:lower16:.LC3
+  62 0010 9269     		ldr	r2, [r2, #24]
+  63 0012 C0F20003 		movt	r3, #:upper16:.LC3
+  64 0016 83B0     		sub	sp, sp, #12
+  65 0018 40F20001 		movw	r1, #:lower16:.LANCHOR5
+  66 001c 9361     		str	r3, [r2, #24]
+  67 001e 2EA5     		adr	r5, .L12
+  68 0020 D5E90045 		ldrd	r4, [r5]
+  69 0024 40F20003 		movw	r3, #:lower16:.LC4
+  70 0028 40F20007 		movw	r7, #:lower16:.LANCHOR6
+  71 002c 40F20006 		movw	r6, #:lower16:.LANCHOR3
+  72 0030 40F2000A 		movw	r10, #:lower16:.LANCHOR2
+  73 0034 40F20009 		movw	r9, #:lower16:.LC2
+  74 0038 40F20008 		movw	r8, #:lower16:.LC1
+  75 003c C0F20003 		movt	r3, #:upper16:.LC4
+  76 0040 C0F20001 		movt	r1, #:upper16:.LANCHOR5
+  77 0044 C0F20007 		movt	r7, #:upper16:.LANCHOR6
+  78 0048 C0F20006 		movt	r6, #:upper16:.LANCHOR3
+  79 004c 0093     		str	r3, [sp]
+  80 004e 0191     		str	r1, [sp, #4]
+  81 0050 C0F2000A 		movt	r10, #:upper16:.LANCHOR2
+  82 0054 C0F20009 		movt	r9, #:upper16:.LC2
+  83 0058 C0F20008 		movt	r8, #:upper16:.LC1
+  84              	.L6:
+  85 005c 4FF47A70 		mov	r0, #1000
+  86 0060 FFF7FEFF 		bl	chThdSleep
+  87 0064 FFF7FEFF 		bl	getTimeNowNt
+  88 0068 D6E90023 		ldrd	r2, [r6]
+  89 006c 1219     		adds	r2, r2, r4
+  90 006e 43EB0503 		adc	r3, r3, r5
+  91 0072 9942     		cmp	r1, r3
+  92 0074 08BF     		it eq
+  93 0076 9042     		cmpeq	r0, r2
+  94 0078 19D2     		bcs	.L11
+  95 007a 9AF80030 		ldrb	r3, [r10]	@ zero_extendqisi2
+  96 007e 002B     		cmp	r3, #0
+  97 0080 0CBF     		ite	eq
+  98 0082 4B46     		moveq	r3, r9
+  99 0084 4346     		movne	r3, r8
+ 100 0086 3B60     		str	r3, [r7]
+ 101 0088 FFF7FEFF 		bl	getTimeNowNt
+ 102 008c D6E90023 		ldrd	r2, [r6]
+ 103 0090 1219     		adds	r2, r2, r4
+ 104 0092 43EB0503 		adc	r3, r3, r5
+ 105 0096 9942     		cmp	r1, r3
+ 106 0098 08BF     		it eq
+ 107 009a 9042     		cmpeq	r0, r2
+ 108 009c DED3     		bcc	.L6
+ 109 009e 40F20001 		movw	r1, #:lower16:.LANCHOR6
+ 110 00a2 C0F20001 		movt	r1, #:upper16:.LANCHOR6
+ 111 00a6 0868     		ldr	r0, [r1]
+ 112 00a8 FFF7FEFF 		bl	firmwareError
+ 113 00ac D6E7     		b	.L6
+ 114              	.L11:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s 			page 3
+
+
+ 115 00ae 009B     		ldr	r3, [sp]
+ 116 00b0 93E80700 		ldmia	r3, {r0, r1, r2}
+ 117 00b4 40F2000B 		movw	fp, #:lower16:.LANCHOR4
+ 118 00b8 C0F2000B 		movt	fp, #:upper16:.LANCHOR4
+ 119 00bc ABE80300 		stmia	fp!, {r0, r1}
+ 120 00c0 019B     		ldr	r3, [sp, #4]
+ 121 00c2 8BF80020 		strb	r2, [fp]
+ 122 00c6 1968     		ldr	r1, [r3]
+ 123 00c8 5846     		mov	r0, fp
+ 124 00ca FFF7FEFF 		bl	itoa10
+ 125 00ce ABF10800 		sub	r0, fp, #8
+ 126 00d2 FFF7FEFF 		bl	firmwareError
+ 127 00d6 C1E7     		b	.L6
+ 128              	.L13:
+ 129              		.align	3
+ 130              	.L12:
+ 131 00d8 00F40614 		.word	336000000
+ 132 00dc 00000000 		.word	0
+ 133              		.size	_ZL8mwThreadi, .-_ZL8mwThreadi
+ 134              		.section	.text.setHardwareUsTimer,"ax",%progbits
+ 135              		.align	2
+ 136              		.p2align 4,,15
+ 137              		.global	setHardwareUsTimer
+ 138              		.thumb
+ 139              		.thumb_func
+ 140              		.type	setHardwareUsTimer, %function
+ 141              	setHardwareUsTimer:
+ 142              		@ args = 0, pretend = 0, frame = 8
+ 143              		@ frame_needed = 0, uses_anonymous_args = 0
+ 144 0000 10B5     		push	{r4, lr}
+ 145 0002 0128     		cmp	r0, #1
+ 146 0004 82B0     		sub	sp, sp, #8
+ 147 0006 0446     		mov	r4, r0
+ 148 0008 37D0     		beq	.L19
+ 149 000a 0028     		cmp	r0, #0
+ 150 000c DCBF     		itt	le
+ 151 000e 40F20000 		movwle	r0, #:lower16:.LC5
+ 152 0012 C0F20000 		movtle	r0, #:upper16:.LC5
+ 153 0016 37DD     		ble	.L20
+ 154 0018 49F27F63 		movw	r3, #38527
+ 155 001c C0F29803 		movt	r3, 152
+ 156 0020 9C42     		cmp	r4, r3
+ 157 0022 D8BF     		it	le
+ 158 0024 2146     		movle	r1, r4
+ 159 0026 2BDC     		bgt	.L21
+ 160              	.L15:
+ 161 0028 40F20000 		movw	r0, #:lower16:GPTD5
+ 162 002c C0F20000 		movt	r0, #:upper16:GPTD5
+ 163 0030 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 164 0032 042B     		cmp	r3, #4
+ 165 0034 2DD0     		beq	.L22
+ 166              	.L18:
+ 167 0036 40F20000 		movw	r0, #:lower16:GPTD5
+ 168 003a C0F20000 		movt	r0, #:upper16:GPTD5
+ 169 003e FFF7FEFF 		bl	gptStartOneShotI
+ 170 0042 FFF7FEFF 		bl	getTimeNowNt
+ 171 0046 40F20003 		movw	r3, #:lower16:.LANCHOR3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s 			page 4
+
+
+ 172 004a C0F20003 		movt	r3, #:upper16:.LANCHOR3
+ 173 004e 40F20002 		movw	r2, #:lower16:.LANCHOR2
+ 174 0052 C3E90001 		strd	r0, [r3]
+ 175 0056 C0F20002 		movt	r2, #:upper16:.LANCHOR2
+ 176 005a 40F20003 		movw	r3, #:lower16:.LANCHOR7
+ 177 005e C0F20003 		movt	r3, #:upper16:.LANCHOR7
+ 178 0062 0121     		movs	r1, #1
+ 179 0064 1170     		strb	r1, [r2]
+ 180 0066 1968     		ldr	r1, [r3]
+ 181 0068 40F20002 		movw	r2, #:lower16:.LANCHOR5
+ 182 006c C0F20002 		movt	r2, #:upper16:.LANCHOR5
+ 183 0070 0131     		adds	r1, r1, #1
+ 184 0072 1960     		str	r1, [r3]
+ 185 0074 1460     		str	r4, [r2]
+ 186 0076 02B0     		add	sp, sp, #8
+ 187              		@ sp needed
+ 188 0078 10BD     		pop	{r4, pc}
+ 189              	.L19:
+ 190 007a 0221     		movs	r1, #2
+ 191 007c 0C46     		mov	r4, r1
+ 192 007e D3E7     		b	.L15
+ 193              	.L21:
+ 194 0080 40F20000 		movw	r0, #:lower16:.LC6
+ 195 0084 C0F20000 		movt	r0, #:upper16:.LC6
+ 196              	.L20:
+ 197 0088 02B0     		add	sp, sp, #8
+ 198              		@ sp needed
+ 199 008a BDE81040 		pop	{r4, lr}
+ 200 008e FFF7FEBF 		b	firmwareError
+ 201              	.L22:
+ 202 0092 0191     		str	r1, [sp, #4]
+ 203 0094 FFF7FEFF 		bl	gptStopTimerI
+ 204 0098 0199     		ldr	r1, [sp, #4]
+ 205 009a CCE7     		b	.L18
+ 206              		.size	setHardwareUsTimer, .-setHardwareUsTimer
+ 207 009c AFF30080 		.section	.text.initMicrosecondTimer,"ax",%progbits
+ 208              		.align	2
+ 209              		.p2align 4,,15
+ 210              		.global	initMicrosecondTimer
+ 211              		.thumb
+ 212              		.thumb_func
+ 213              		.type	initMicrosecondTimer, %function
+ 214              	initMicrosecondTimer:
+ 215              		@ args = 0, pretend = 0, frame = 0
+ 216              		@ frame_needed = 0, uses_anonymous_args = 0
+ 217 0000 00B5     		push	{lr}
+ 218 0002 40F20000 		movw	r0, #:lower16:GPTD5
+ 219 0006 40F20001 		movw	r1, #:lower16:.LANCHOR8
+ 220 000a 83B0     		sub	sp, sp, #12
+ 221 000c C0F20000 		movt	r0, #:upper16:GPTD5
+ 222 0010 C0F20001 		movt	r1, #:upper16:.LANCHOR8
+ 223 0014 FFF7FEFF 		bl	gptStart
+ 224 0018 FFF7FEFF 		bl	getTimeNowNt
+ 225 001c 40F20003 		movw	r3, #:lower16:.LANCHOR3
+ 226 0020 C0F20003 		movt	r3, #:upper16:.LANCHOR3
+ 227 0024 C3E90001 		strd	r0, [r3]
+ 228 0028 0022     		movs	r2, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s 			page 5
+
+
+ 229 002a 40F20000 		movw	r0, #:lower16:.LANCHOR9
+ 230 002e 40F20003 		movw	r3, #:lower16:_ZL8mwThreadi
+ 231 0032 0092     		str	r2, [sp]
+ 232 0034 C0F20003 		movt	r3, #:upper16:_ZL8mwThreadi
+ 233 0038 4FF43A71 		mov	r1, #744
+ 234 003c 4022     		movs	r2, #64
+ 235 003e C0F20000 		movt	r0, #:upper16:.LANCHOR9
+ 236 0042 FFF7FEFF 		bl	chThdCreateStatic
+ 237 0046 03B0     		add	sp, sp, #12
+ 238              		@ sp needed
+ 239 0048 5DF804FB 		ldr	pc, [sp], #4
+ 240              		.size	initMicrosecondTimer, .-initMicrosecondTimer
+ 241              		.global	globalTimerCallback
+ 242 004c AFF30080 		.section	.bss._ZL19timerRestartCounter,"aw",%nobits
+ 243              		.align	2
+ 244              		.set	.LANCHOR7,. + 0
+ 245              		.type	_ZL19timerRestartCounter, %object
+ 246              		.size	_ZL19timerRestartCounter, 4
+ 247              	_ZL19timerRestartCounter:
+ 248 0000 00000000 		.space	4
+ 249              		.section	.bss._ZL4buff,"aw",%nobits
+ 250              		.align	2
+ 251              		.set	.LANCHOR4,. + 0
+ 252              		.type	_ZL4buff, %object
+ 253              		.size	_ZL4buff, 32
+ 254              	_ZL4buff:
+ 255 0000 00000000 		.space	32
+ 255      00000000 
+ 255      00000000 
+ 255      00000000 
+ 255      00000000 
+ 256              		.section	.bss._ZL13mwThreadStack,"aw",%nobits
+ 257              		.align	3
+ 258              		.set	.LANCHOR9,. + 0
+ 259              		.type	_ZL13mwThreadStack, %object
+ 260              		.size	_ZL13mwThreadStack, 744
+ 261              	_ZL13mwThreadStack:
+ 262 0000 00000000 		.space	744
+ 262      00000000 
+ 262      00000000 
+ 262      00000000 
+ 262      00000000 
+ 263              		.section	.bss._ZL3msg,"aw",%nobits
+ 264              		.align	2
+ 265              		.set	.LANCHOR6,. + 0
+ 266              		.type	_ZL3msg, %object
+ 267              		.size	_ZL3msg, 4
+ 268              	_ZL3msg:
+ 269 0000 00000000 		.space	4
+ 270              		.section	.rodata._ZL7gpt5cfg,"a",%progbits
+ 271              		.align	2
+ 272              		.set	.LANCHOR8,. + 0
+ 273              		.type	_ZL7gpt5cfg, %object
+ 274              		.size	_ZL7gpt5cfg, 12
+ 275              	_ZL7gpt5cfg:
+ 276 0000 40420F00 		.word	1000000
+ 277 0004 00000000 		.word	_ZL8callbackP9GPTDriver
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s 			page 6
+
+
+ 278 0008 00000000 		.word	0
+ 279              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 280              		.align	2
+ 281              	.LC0:
+ 282 0000 4E554C4C 		.ascii	"NULL globalTimerCallback\000"
+ 282      20676C6F 
+ 282      62616C54 
+ 282      696D6572 
+ 282      43616C6C 
+ 283 0019 000000   		.space	3
+ 284              	.LC1:
+ 285 001c 4E6F5F63 		.ascii	"No_cb too long\000"
+ 285      6220746F 
+ 285      6F206C6F 
+ 285      6E6700
+ 286 002b 00       		.space	1
+ 287              	.LC2:
+ 288 002c 54696D65 		.ascii	"Timer not awhile\000"
+ 288      72206E6F 
+ 288      74206177 
+ 288      68696C65 
+ 288      00
+ 289 003d 000000   		.space	3
+ 290              	.LC3:
+ 291 0040 74696D65 		.ascii	"timer watchdog\000"
+ 291      72207761 
+ 291      74636864 
+ 291      6F6700
+ 292 004f 00       		.space	1
+ 293              	.LC4:
+ 294 0050 6E6F5F65 		.ascii	"no_event\000"
+ 294      76656E74 
+ 294      00
+ 295 0059 000000   		.space	3
+ 296              	.LC5:
+ 297 005c 6E6F7420 		.ascii	"not positive timeUs\000"
+ 297      706F7369 
+ 297      74697665 
+ 297      2074696D 
+ 297      65557300 
+ 298              	.LC6:
+ 299 0070 73657448 		.ascii	"setHardwareUsTimer() too large\000"
+ 299      61726477 
+ 299      61726555 
+ 299      7354696D 
+ 299      65722829 
+ 300 008f 00       		.section	.bss._ZL20timerCallbackCounter,"aw",%nobits
+ 301              		.align	2
+ 302              		.set	.LANCHOR0,. + 0
+ 303              		.type	_ZL20timerCallbackCounter, %object
+ 304              		.size	_ZL20timerCallbackCounter, 4
+ 305              	_ZL20timerCallbackCounter:
+ 306 0000 00000000 		.space	4
+ 307              		.section	.bss._ZL17lastSetTimerValue,"aw",%nobits
+ 308              		.align	2
+ 309              		.set	.LANCHOR5,. + 0
+ 310              		.type	_ZL17lastSetTimerValue, %object
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s 			page 7
+
+
+ 311              		.size	_ZL17lastSetTimerValue, 4
+ 312              	_ZL17lastSetTimerValue:
+ 313 0000 00000000 		.space	4
+ 314              		.section	.bss._ZL14isTimerPending,"aw",%nobits
+ 315              		.set	.LANCHOR2,. + 0
+ 316              		.type	_ZL14isTimerPending, %object
+ 317              		.size	_ZL14isTimerPending, 1
+ 318              	_ZL14isTimerPending:
+ 319 0000 00       		.space	1
+ 320              		.section	.bss.globalTimerCallback,"aw",%nobits
+ 321              		.align	2
+ 322              		.set	.LANCHOR1,. + 0
+ 323              		.type	globalTimerCallback, %object
+ 324              		.size	globalTimerCallback, 4
+ 325              	globalTimerCallback:
+ 326 0000 00000000 		.space	4
+ 327              		.section	.bss._ZL18lastSetTimerTimeNt,"aw",%nobits
+ 328              		.align	3
+ 329              		.set	.LANCHOR3,. + 0
+ 330              		.type	_ZL18lastSetTimerTimeNt, %object
+ 331              		.size	_ZL18lastSetTimerTimeNt, 8
+ 332              	_ZL18lastSetTimerTimeNt:
+ 333 0000 00000000 		.space	8
+ 333      00000000 
+ 334              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 microsecond_timer.cpp
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:17     .text._ZL8callbackP9GPTDriver:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:22     .text._ZL8callbackP9GPTDriver:00000000 _ZL8callbackP9GPTDriver
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:302    .bss._ZL20timerCallbackCounter:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:322    .bss.globalTimerCallback:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:315    .bss._ZL14isTimerPending:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:281    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:49     .text._ZL8mwThreadi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:54     .text._ZL8mwThreadi:00000000 _ZL8mwThreadi
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:290    .rodata.str1.4:00000040 .LC3
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:309    .bss._ZL17lastSetTimerValue:00000000 .LANCHOR5
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:293    .rodata.str1.4:00000050 .LC4
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:265    .bss._ZL3msg:00000000 .LANCHOR6
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:329    .bss._ZL18lastSetTimerTimeNt:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:287    .rodata.str1.4:0000002c .LC2
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:284    .rodata.str1.4:0000001c .LC1
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:251    .bss._ZL4buff:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:131    .text._ZL8mwThreadi:000000d8 $d
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:135    .text.setHardwareUsTimer:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:141    .text.setHardwareUsTimer:00000000 setHardwareUsTimer
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:296    .rodata.str1.4:0000005c .LC5
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:244    .bss._ZL19timerRestartCounter:00000000 .LANCHOR7
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:298    .rodata.str1.4:00000070 .LC6
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:208    .text.initMicrosecondTimer:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:214    .text.initMicrosecondTimer:00000000 initMicrosecondTimer
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:272    .rodata._ZL7gpt5cfg:00000000 .LANCHOR8
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:258    .bss._ZL13mwThreadStack:00000000 .LANCHOR9
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:325    .bss.globalTimerCallback:00000000 globalTimerCallback
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:243    .bss._ZL19timerRestartCounter:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:247    .bss._ZL19timerRestartCounter:00000000 _ZL19timerRestartCounter
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:250    .bss._ZL4buff:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:254    .bss._ZL4buff:00000000 _ZL4buff
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:257    .bss._ZL13mwThreadStack:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:261    .bss._ZL13mwThreadStack:00000000 _ZL13mwThreadStack
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:264    .bss._ZL3msg:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:268    .bss._ZL3msg:00000000 _ZL3msg
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:271    .rodata._ZL7gpt5cfg:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:275    .rodata._ZL7gpt5cfg:00000000 _ZL7gpt5cfg
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:280    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:301    .bss._ZL20timerCallbackCounter:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:305    .bss._ZL20timerCallbackCounter:00000000 _ZL20timerCallbackCounter
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:308    .bss._ZL17lastSetTimerValue:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:312    .bss._ZL17lastSetTimerValue:00000000 _ZL17lastSetTimerValue
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:318    .bss._ZL14isTimerPending:00000000 _ZL14isTimerPending
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:319    .bss._ZL14isTimerPending:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:321    .bss.globalTimerCallback:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:328    .bss._ZL18lastSetTimerTimeNt:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s:332    .bss._ZL18lastSetTimerTimeNt:00000000 _ZL18lastSetTimerTimeNt
+
+UNDEFINED SYMBOLS
+firmwareError
+rlist
+chThdSleep
+getTimeNowNt
+itoa10
+GPTD5
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccuKUE0T.s 			page 9
+
+
+gptStartOneShotI
+gptStopTimerI
+gptStart
+chThdCreateStatic

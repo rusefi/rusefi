@@ -1,0 +1,171 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccqg4vcv.s 			page 1
+
+
+   1              		.file	"pal.c"
+   2              		.section .rdata,"dr"
+   3              	LC0:
+   4 0000 2270616C 		.ascii "\"palReadBus\"()\0"
+   4      52656164 
+   4      42757322 
+   4      282900
+   5              		.section	.text$palReadBus,"x"
+   6              		.p2align 4,,15
+   7              		.globl	_palReadBus
+   8              		.def	_palReadBus;	.scl	2;	.type	32;	.endef
+   9              	_palReadBus:
+  10              	LFB28:
+  11              		.cfi_startproc
+  12 0000 53       		pushl	%ebx
+  13              		.cfi_def_cfa_offset 8
+  14              		.cfi_offset 3, -8
+  15 0001 83EC18   		subl	$24, %esp
+  16              		.cfi_def_cfa_offset 32
+  17 0004 8B5C2420 		movl	32(%esp), %ebx
+  18 0008 85DB     		testl	%ebx, %ebx
+  19 000a 7409     		je	L2
+  20 000c 0FB64B08 		movzbl	8(%ebx), %ecx
+  21 0010 80F91F   		cmpb	$31, %cl
+  22 0013 7610     		jbe	L3
+  23              	L2:
+  24 0015 C7042400 		movl	$LC0, (%esp)
+  24      000000
+  25 001c E8000000 		call	_chDbgPanic
+  25      00
+  26 0021 0FB64B08 		movzbl	8(%ebx), %ecx
+  27              	L3:
+  28 0025 8B03     		movl	(%ebx), %eax
+  29 0027 8B4004   		movl	4(%eax), %eax
+  30 002a D3E8     		shrl	%cl, %eax
+  31 002c 234304   		andl	4(%ebx), %eax
+  32 002f 83C418   		addl	$24, %esp
+  33              		.cfi_def_cfa_offset 8
+  34 0032 5B       		popl	%ebx
+  35              		.cfi_restore 3
+  36              		.cfi_def_cfa_offset 4
+  37 0033 C3       		ret
+  38              		.cfi_endproc
+  39              	LFE28:
+  40 0034 90909090 		.section .rdata,"dr"
+  40      90909090 
+  40      90909090 
+  41              	LC1:
+  42 000f 2270616C 		.ascii "\"palWriteBus\"()\0"
+  42      57726974 
+  42      65427573 
+  42      22282900 
+  43              		.section	.text$palWriteBus,"x"
+  44              		.p2align 4,,15
+  45              		.globl	_palWriteBus
+  46              		.def	_palWriteBus;	.scl	2;	.type	32;	.endef
+  47              	_palWriteBus:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccqg4vcv.s 			page 2
+
+
+  48              	LFB29:
+  49              		.cfi_startproc
+  50 0000 83EC1C   		subl	$28, %esp
+  51              		.cfi_def_cfa_offset 32
+  52 0003 895C2414 		movl	%ebx, 20(%esp)
+  53              		.cfi_offset 3, -12
+  54 0007 8B5C2420 		movl	32(%esp), %ebx
+  55 000b 89742418 		movl	%esi, 24(%esp)
+  56              		.cfi_offset 6, -8
+  57 000f 85DB     		testl	%ebx, %ebx
+  58 0011 7409     		je	L10
+  59 0013 0FB64B08 		movzbl	8(%ebx), %ecx
+  60 0017 80F91F   		cmpb	$31, %cl
+  61 001a 7610     		jbe	L11
+  62              	L10:
+  63 001c C704240F 		movl	$LC1, (%esp)
+  63      000000
+  64 0023 E8000000 		call	_chDbgPanic
+  64      00
+  65 0028 0FB64B08 		movzbl	8(%ebx), %ecx
+  66              	L11:
+  67 002c 8B5304   		movl	4(%ebx), %edx
+  68 002f 8B33     		movl	(%ebx), %esi
+  69 0031 8B5C2414 		movl	20(%esp), %ebx
+  70 0035 89D0     		movl	%edx, %eax
+  71 0037 D3E0     		sall	%cl, %eax
+  72 0039 23542424 		andl	36(%esp), %edx
+  73 003d F7D0     		notl	%eax
+  74 003f 2306     		andl	(%esi), %eax
+  75 0041 D3E2     		sall	%cl, %edx
+  76 0043 09D0     		orl	%edx, %eax
+  77 0045 8906     		movl	%eax, (%esi)
+  78 0047 8B742418 		movl	24(%esp), %esi
+  79 004b 83C41C   		addl	$28, %esp
+  80              		.cfi_restore 6
+  81              		.cfi_restore 3
+  82              		.cfi_def_cfa_offset 4
+  83 004e C3       		ret
+  84              		.cfi_endproc
+  85              	LFE29:
+  86 004f 90       		.section .rdata,"dr"
+  87              	LC2:
+  88 001f 2270616C 		.ascii "\"palSetBusMode\"()\0"
+  88      53657442 
+  88      75734D6F 
+  88      64652228 
+  88      2900
+  89 0031 000000   		.section	.text$palSetBusMode,"x"
+  90              		.p2align 4,,15
+  91              		.globl	_palSetBusMode
+  92              		.def	_palSetBusMode;	.scl	2;	.type	32;	.endef
+  93              	_palSetBusMode:
+  94              	LFB30:
+  95              		.cfi_startproc
+  96 0000 53       		pushl	%ebx
+  97              		.cfi_def_cfa_offset 8
+  98              		.cfi_offset 3, -8
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccqg4vcv.s 			page 3
+
+
+  99 0001 83EC18   		subl	$24, %esp
+ 100              		.cfi_def_cfa_offset 32
+ 101 0004 8B5C2420 		movl	32(%esp), %ebx
+ 102 0008 85DB     		testl	%ebx, %ebx
+ 103 000a 7409     		je	L17
+ 104 000c 0FB64B08 		movzbl	8(%ebx), %ecx
+ 105 0010 80F91F   		cmpb	$31, %cl
+ 106 0013 7610     		jbe	L18
+ 107              	L17:
+ 108 0015 C704241F 		movl	$LC2, (%esp)
+ 108      000000
+ 109 001c E8000000 		call	_chDbgPanic
+ 109      00
+ 110 0021 0FB64B08 		movzbl	8(%ebx), %ecx
+ 111              	L18:
+ 112 0025 8B442424 		movl	36(%esp), %eax
+ 113 0029 89442408 		movl	%eax, 8(%esp)
+ 114 002d 8B4304   		movl	4(%ebx), %eax
+ 115 0030 D3E0     		sall	%cl, %eax
+ 116 0032 89442404 		movl	%eax, 4(%esp)
+ 117 0036 8B03     		movl	(%ebx), %eax
+ 118 0038 890424   		movl	%eax, (%esp)
+ 119 003b E8000000 		call	__pal_lld_setgroupmode
+ 119      00
+ 120 0040 83C418   		addl	$24, %esp
+ 121              		.cfi_def_cfa_offset 8
+ 122 0043 5B       		popl	%ebx
+ 123              		.cfi_restore 3
+ 124              		.cfi_def_cfa_offset 4
+ 125 0044 C3       		ret
+ 126              		.cfi_endproc
+ 127              	LFE30:
+ 128              		.def	_chDbgPanic;	.scl	2;	.type	32;	.endef
+ 129 0045 90909090 		.def	__pal_lld_setgroupmode;	.scl	2;	.type	32;	.endef
+ 129      90909090 
+ 129      909090
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccqg4vcv.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 pal.c
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccqg4vcv.s:9      .text$palReadBus:00000000 _palReadBus
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccqg4vcv.s:47     .text$palWriteBus:00000000 _palWriteBus
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccqg4vcv.s:93     .text$palSetBusMode:00000000 _palSetBusMode
+
+UNDEFINED SYMBOLS
+_chDbgPanic
+__pal_lld_setgroupmode

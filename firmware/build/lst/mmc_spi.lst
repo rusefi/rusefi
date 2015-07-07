@@ -1,0 +1,1901 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"mmc_spi.c"
+  16              		.section	.text.mmcGetInfo,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	mmcGetInfo
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	mmcGetInfo, %function
+  23              	mmcGetInfo:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 0029     		cmp	r1, #0
+  27 0002 18BF     		it	ne
+  28 0004 0028     		cmpne	r0, #0
+  29 0006 38B5     		push	{r3, r4, r5, lr}
+  30 0008 0446     		mov	r4, r0
+  31 000a 0D46     		mov	r5, r1
+  32 000c 0BD0     		beq	.L9
+  33              	.L2:
+  34 000e 2379     		ldrb	r3, [r4, #4]	@ zero_extendqisi2
+  35 0010 052B     		cmp	r3, #5
+  36 0012 01BF     		itttt	eq
+  37 0014 A36A     		ldreq	r3, [r4, #40]
+  38 0016 4FF40072 		moveq	r2, #512
+  39 001a 0020     		moveq	r0, #0
+  40 001c 85E80C00 		stmiaeq	r5, {r2, r3}
+  41 0020 18BF     		it	ne
+  42 0022 0120     		movne	r0, #1
+  43 0024 38BD     		pop	{r3, r4, r5, pc}
+  44              	.L9:
+  45 0026 40F20000 		movw	r0, #:lower16:.LC0
+  46 002a 40F20001 		movw	r1, #:lower16:.LC1
+  47 002e C0F20000 		movt	r0, #:upper16:.LC0
+  48 0032 C0F20001 		movt	r1, #:upper16:.LC1
+  49 0036 4FF44F72 		mov	r2, #828
+  50 003a FFF7FEFF 		bl	chDbgPanic3
+  51 003e E6E7     		b	.L2
+  52              		.size	mmcGetInfo, .-mmcGetInfo
+  53              		.section	.text.wait.isra.0,"ax",%progbits
+  54              		.align	2
+  55              		.p2align 4,,15
+  56              		.thumb
+  57              		.thumb_func
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 2
+
+
+  58              		.type	wait.isra.0, %function
+  59              	wait.isra.0:
+  60              		@ args = 0, pretend = 0, frame = 8
+  61              		@ frame_needed = 0, uses_anonymous_args = 0
+  62 0000 30B5     		push	{r4, r5, lr}
+  63 0002 0546     		mov	r5, r0
+  64 0004 83B0     		sub	sp, sp, #12
+  65 0006 1024     		movs	r4, #16
+  66              	.L13:
+  67 0008 2B68     		ldr	r3, [r5]
+  68 000a 0121     		movs	r1, #1
+  69 000c 1868     		ldr	r0, [r3]
+  70 000e 01AA     		add	r2, sp, #4
+  71 0010 FFF7FEFF 		bl	spiReceive
+  72 0014 9DF80430 		ldrb	r3, [sp, #4]	@ zero_extendqisi2
+  73 0018 FF2B     		cmp	r3, #255
+  74 001a 0FD0     		beq	.L10
+  75 001c 013C     		subs	r4, r4, #1
+  76 001e F3D1     		bne	.L13
+  77 0020 02E0     		b	.L15
+  78              	.L23:
+  79 0022 0120     		movs	r0, #1
+  80 0024 FFF7FEFF 		bl	chThdSleep
+  81              	.L15:
+  82 0028 2B68     		ldr	r3, [r5]
+  83 002a 0121     		movs	r1, #1
+  84 002c 1868     		ldr	r0, [r3]
+  85 002e 01AA     		add	r2, sp, #4
+  86 0030 FFF7FEFF 		bl	spiReceive
+  87 0034 9DF80430 		ldrb	r3, [sp, #4]	@ zero_extendqisi2
+  88 0038 FF2B     		cmp	r3, #255
+  89 003a F2D1     		bne	.L23
+  90              	.L10:
+  91 003c 03B0     		add	sp, sp, #12
+  92              		@ sp needed
+  93 003e 30BD     		pop	{r4, r5, pc}
+  94              		.size	wait.isra.0, .-wait.isra.0
+  95              		.section	.text.send_hdr,"ax",%progbits
+  96              		.align	2
+  97              		.p2align 4,,15
+  98              		.thumb
+  99              		.thumb_func
+ 100              		.type	send_hdr, %function
+ 101              	send_hdr:
+ 102              		@ args = 0, pretend = 0, frame = 8
+ 103              		@ frame_needed = 0, uses_anonymous_args = 0
+ 104 0000 70B5     		push	{r4, r5, r6, lr}
+ 105 0002 1546     		mov	r5, r2
+ 106 0004 82B0     		sub	sp, sp, #8
+ 107 0006 0C46     		mov	r4, r1
+ 108 0008 0646     		mov	r6, r0
+ 109 000a 2C30     		adds	r0, r0, #44
+ 110 000c FFF7FEFF 		bl	wait.isra.0
+ 111 0010 2A0C     		lsrs	r2, r5, #16
+ 112 0012 2B0A     		lsrs	r3, r5, #8
+ 113 0014 44F04001 		orr	r1, r4, #64
+ 114 0018 280E     		lsrs	r0, r5, #24
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 3
+
+
+ 115 001a 40F20004 		movw	r4, #:lower16:.LANCHOR0
+ 116 001e 8DF80450 		strb	r5, [sp, #4]
+ 117 0022 8DF80220 		strb	r2, [sp, #2]
+ 118 0026 8DF80330 		strb	r3, [sp, #3]
+ 119 002a 8DF80010 		strb	r1, [sp]
+ 120 002e 8DF80100 		strb	r0, [sp, #1]
+ 121 0032 6B46     		mov	r3, sp
+ 122 0034 C0F20004 		movt	r4, #:upper16:.LANCHOR0
+ 123 0038 01AD     		add	r5, sp, #4
+ 124 003a 0022     		movs	r2, #0
+ 125 003c 01E0     		b	.L26
+ 126              	.L28:
+ 127 003e 13F8011F 		ldrb	r1, [r3, #1]!	@ zero_extendqisi2
+ 128              	.L26:
+ 129 0042 81EA4202 		eor	r2, r1, r2, lsl #1
+ 130 0046 AB42     		cmp	r3, r5
+ 131 0048 A25C     		ldrb	r2, [r4, r2]	@ zero_extendqisi2
+ 132 004a F8D1     		bne	.L28
+ 133 004c 5200     		lsls	r2, r2, #1
+ 134 004e F36A     		ldr	r3, [r6, #44]
+ 135 0050 42F00102 		orr	r2, r2, #1
+ 136 0054 8DF80520 		strb	r2, [sp, #5]
+ 137 0058 1868     		ldr	r0, [r3]
+ 138 005a 6A46     		mov	r2, sp
+ 139 005c 0621     		movs	r1, #6
+ 140 005e FFF7FEFF 		bl	spiSend
+ 141 0062 02B0     		add	sp, sp, #8
+ 142              		@ sp needed
+ 143 0064 70BD     		pop	{r4, r5, r6, pc}
+ 144              		.size	send_hdr, .-send_hdr
+ 145 0066 00BFAFF3 		.section	.text.recvr1.isra.1,"ax",%progbits
+ 145      0080AFF3 
+ 145      0080
+ 146              		.align	2
+ 147              		.p2align 4,,15
+ 148              		.thumb
+ 149              		.thumb_func
+ 150              		.type	recvr1.isra.1, %function
+ 151              	recvr1.isra.1:
+ 152              		@ args = 0, pretend = 0, frame = 8
+ 153              		@ frame_needed = 0, uses_anonymous_args = 0
+ 154 0000 30B5     		push	{r4, r5, lr}
+ 155 0002 0546     		mov	r5, r0
+ 156 0004 83B0     		sub	sp, sp, #12
+ 157 0006 0924     		movs	r4, #9
+ 158              	.L31:
+ 159 0008 2B68     		ldr	r3, [r5]
+ 160 000a 0121     		movs	r1, #1
+ 161 000c 1868     		ldr	r0, [r3]
+ 162 000e 01AA     		add	r2, sp, #4
+ 163 0010 FFF7FEFF 		bl	spiReceive
+ 164 0014 9DF80400 		ldrb	r0, [sp, #4]	@ zero_extendqisi2
+ 165 0018 FF28     		cmp	r0, #255
+ 166 001a 01D1     		bne	.L30
+ 167 001c 013C     		subs	r4, r4, #1
+ 168 001e F3D1     		bne	.L31
+ 169              	.L30:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 4
+
+
+ 170 0020 03B0     		add	sp, sp, #12
+ 171              		@ sp needed
+ 172 0022 30BD     		pop	{r4, r5, pc}
+ 173              		.size	recvr1.isra.1, .-recvr1.isra.1
+ 174 0024 AFF30080 		.section	.text.send_command_R3,"ax",%progbits
+ 174      AFF30080 
+ 174      AFF30080 
+ 175              		.align	2
+ 176              		.p2align 4,,15
+ 177              		.thumb
+ 178              		.thumb_func
+ 179              		.type	send_command_R3, %function
+ 180              	send_command_R3:
+ 181              		@ args = 0, pretend = 0, frame = 0
+ 182              		@ frame_needed = 0, uses_anonymous_args = 0
+ 183 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 184 0002 0446     		mov	r4, r0
+ 185 0004 C06A     		ldr	r0, [r0, #44]
+ 186 0006 0F46     		mov	r7, r1
+ 187 0008 1546     		mov	r5, r2
+ 188 000a 0068     		ldr	r0, [r0]
+ 189 000c 1E46     		mov	r6, r3
+ 190 000e FFF7FEFF 		bl	spiSelect
+ 191 0012 3946     		mov	r1, r7
+ 192 0014 2A46     		mov	r2, r5
+ 193 0016 2046     		mov	r0, r4
+ 194 0018 FFF7FEFF 		bl	send_hdr
+ 195 001c 04F12C00 		add	r0, r4, #44
+ 196 0020 FFF7FEFF 		bl	recvr1.isra.1
+ 197 0024 E16A     		ldr	r1, [r4, #44]
+ 198 0026 0546     		mov	r5, r0
+ 199 0028 3246     		mov	r2, r6
+ 200 002a 0868     		ldr	r0, [r1]
+ 201 002c 0421     		movs	r1, #4
+ 202 002e FFF7FEFF 		bl	spiReceive
+ 203 0032 E36A     		ldr	r3, [r4, #44]
+ 204 0034 1868     		ldr	r0, [r3]
+ 205 0036 FFF7FEFF 		bl	spiUnselect
+ 206 003a 2846     		mov	r0, r5
+ 207 003c F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 208              		.size	send_command_R3, .-send_command_R3
+ 209 003e 00BF     		.section	.text.send_command_R1,"ax",%progbits
+ 210              		.align	2
+ 211              		.p2align 4,,15
+ 212              		.thumb
+ 213              		.thumb_func
+ 214              		.type	send_command_R1, %function
+ 215              	send_command_R1:
+ 216              		@ args = 0, pretend = 0, frame = 0
+ 217              		@ frame_needed = 0, uses_anonymous_args = 0
+ 218 0000 C36A     		ldr	r3, [r0, #44]
+ 219 0002 70B5     		push	{r4, r5, r6, lr}
+ 220 0004 0446     		mov	r4, r0
+ 221 0006 0E46     		mov	r6, r1
+ 222 0008 1868     		ldr	r0, [r3]
+ 223 000a 1546     		mov	r5, r2
+ 224 000c FFF7FEFF 		bl	spiSelect
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 5
+
+
+ 225 0010 2A46     		mov	r2, r5
+ 226 0012 3146     		mov	r1, r6
+ 227 0014 2046     		mov	r0, r4
+ 228 0016 FFF7FEFF 		bl	send_hdr
+ 229 001a 04F12C00 		add	r0, r4, #44
+ 230 001e FFF7FEFF 		bl	recvr1.isra.1
+ 231 0022 E36A     		ldr	r3, [r4, #44]
+ 232 0024 0546     		mov	r5, r0
+ 233 0026 1868     		ldr	r0, [r3]
+ 234 0028 FFF7FEFF 		bl	spiUnselect
+ 235 002c 2846     		mov	r0, r5
+ 236 002e 70BD     		pop	{r4, r5, r6, pc}
+ 237              		.size	send_command_R1, .-send_command_R1
+ 238              		.section	.text.read_CxD,"ax",%progbits
+ 239              		.align	2
+ 240              		.p2align 4,,15
+ 241              		.thumb
+ 242              		.thumb_func
+ 243              		.type	read_CxD, %function
+ 244              	read_CxD:
+ 245              		@ args = 0, pretend = 0, frame = 16
+ 246              		@ frame_needed = 0, uses_anonymous_args = 0
+ 247 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 248 0002 C36A     		ldr	r3, [r0, #44]
+ 249 0004 85B0     		sub	sp, sp, #20
+ 250 0006 0546     		mov	r5, r0
+ 251 0008 0C46     		mov	r4, r1
+ 252 000a 1868     		ldr	r0, [r3]
+ 253 000c 1646     		mov	r6, r2
+ 254 000e FFF7FEFF 		bl	spiSelect
+ 255 0012 2146     		mov	r1, r4
+ 256 0014 2846     		mov	r0, r5
+ 257 0016 0022     		movs	r2, #0
+ 258 0018 FFF7FEFF 		bl	send_hdr
+ 259 001c 05F12C00 		add	r0, r5, #44
+ 260 0020 FFF7FEFF 		bl	recvr1.isra.1
+ 261 0024 42F21074 		movw	r4, #10000
+ 262 0028 10B1     		cbz	r0, .L43
+ 263 002a 31E0     		b	.L48
+ 264              	.L40:
+ 265 002c 013C     		subs	r4, r4, #1
+ 266 002e 36D0     		beq	.L47
+ 267              	.L43:
+ 268 0030 EB6A     		ldr	r3, [r5, #44]
+ 269 0032 0121     		movs	r1, #1
+ 270 0034 1868     		ldr	r0, [r3]
+ 271 0036 6A46     		mov	r2, sp
+ 272 0038 FFF7FEFF 		bl	spiReceive
+ 273 003c 9DF80030 		ldrb	r3, [sp]	@ zero_extendqisi2
+ 274 0040 FE2B     		cmp	r3, #254
+ 275 0042 F3D1     		bne	.L40
+ 276 0044 EB6A     		ldr	r3, [r5, #44]
+ 277 0046 1021     		movs	r1, #16
+ 278 0048 1868     		ldr	r0, [r3]
+ 279 004a 6A46     		mov	r2, sp
+ 280 004c FFF7FEFF 		bl	spiReceive
+ 281 0050 6B46     		mov	r3, sp
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 6
+
+
+ 282 0052 06F10C01 		add	r1, r6, #12
+ 283 0056 321F     		subs	r2, r6, #4
+ 284              	.L42:
+ 285 0058 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 286 005a 1F78     		ldrb	r7, [r3]	@ zero_extendqisi2
+ 287 005c DE78     		ldrb	r6, [r3, #3]	@ zero_extendqisi2
+ 288 005e 9C78     		ldrb	r4, [r3, #2]	@ zero_extendqisi2
+ 289 0060 0004     		lsls	r0, r0, #16
+ 290 0062 40EA0760 		orr	r0, r0, r7, lsl #24
+ 291 0066 3043     		orrs	r0, r0, r6
+ 292 0068 40EA0420 		orr	r0, r0, r4, lsl #8
+ 293 006c 41F80409 		str	r0, [r1], #-4
+ 294 0070 9142     		cmp	r1, r2
+ 295 0072 03F10403 		add	r3, r3, #4
+ 296 0076 EFD1     		bne	.L42
+ 297 0078 EB6A     		ldr	r3, [r5, #44]
+ 298 007a 0221     		movs	r1, #2
+ 299 007c 1868     		ldr	r0, [r3]
+ 300 007e FFF7FEFF 		bl	spiIgnore
+ 301 0082 EB6A     		ldr	r3, [r5, #44]
+ 302 0084 1868     		ldr	r0, [r3]
+ 303 0086 FFF7FEFF 		bl	spiUnselect
+ 304 008a 0020     		movs	r0, #0
+ 305 008c 05B0     		add	sp, sp, #20
+ 306              		@ sp needed
+ 307 008e F0BD     		pop	{r4, r5, r6, r7, pc}
+ 308              	.L48:
+ 309 0090 EB6A     		ldr	r3, [r5, #44]
+ 310 0092 1868     		ldr	r0, [r3]
+ 311 0094 FFF7FEFF 		bl	spiUnselect
+ 312 0098 0120     		movs	r0, #1
+ 313 009a 05B0     		add	sp, sp, #20
+ 314              		@ sp needed
+ 315 009c F0BD     		pop	{r4, r5, r6, r7, pc}
+ 316              	.L47:
+ 317 009e 0120     		movs	r0, #1
+ 318 00a0 05B0     		add	sp, sp, #20
+ 319              		@ sp needed
+ 320 00a2 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 321              		.size	read_CxD, .-read_CxD
+ 322 00a4 AFF30080 		.section	.text.mmcConnect,"ax",%progbits
+ 322      AFF30080 
+ 322      AFF30080 
+ 323              		.align	2
+ 324              		.p2align 4,,15
+ 325              		.global	mmcConnect
+ 326              		.thumb
+ 327              		.thumb_func
+ 328              		.type	mmcConnect, %function
+ 329              	mmcConnect:
+ 330              		@ args = 0, pretend = 0, frame = 8
+ 331              		@ frame_needed = 0, uses_anonymous_args = 0
+ 332 0000 70B5     		push	{r4, r5, r6, lr}
+ 333 0002 0546     		mov	r5, r0
+ 334 0004 82B0     		sub	sp, sp, #8
+ 335 0006 0028     		cmp	r0, #0
+ 336 0008 00F09A80 		beq	.L85
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 7
+
+
+ 337              	.L50:
+ 338 000c 2B79     		ldrb	r3, [r5, #4]	@ zero_extendqisi2
+ 339 000e 052B     		cmp	r3, #5
+ 340 0010 18BF     		it	ne
+ 341 0012 022B     		cmpne	r3, #2
+ 342 0014 40F08D80 		bne	.L86
+ 343              	.L51:
+ 344 0018 EB6A     		ldr	r3, [r5, #44]
+ 345 001a 0022     		movs	r2, #0
+ 346 001c 0324     		movs	r4, #3
+ 347 001e 93E80300 		ldmia	r3, {r0, r1}
+ 348 0022 2C71     		strb	r4, [r5, #4]
+ 349 0024 85F83020 		strb	r2, [r5, #48]
+ 350 0028 FFF7FEFF 		bl	spiStart
+ 351 002c EB6A     		ldr	r3, [r5, #44]
+ 352 002e 1021     		movs	r1, #16
+ 353 0030 1868     		ldr	r0, [r3]
+ 354 0032 FFF7FEFF 		bl	spiIgnore
+ 355 0036 0A24     		movs	r4, #10
+ 356 0038 02E0     		b	.L54
+ 357              	.L87:
+ 358 003a 0A20     		movs	r0, #10
+ 359 003c FFF7FEFF 		bl	chThdSleep
+ 360              	.L54:
+ 361 0040 0021     		movs	r1, #0
+ 362 0042 0A46     		mov	r2, r1
+ 363 0044 2846     		mov	r0, r5
+ 364 0046 FFF7FEFF 		bl	send_command_R1
+ 365 004a 0128     		cmp	r0, #1
+ 366 004c 0AD0     		beq	.L52
+ 367 004e 013C     		subs	r4, r4, #1
+ 368 0050 F3D1     		bne	.L87
+ 369              	.L53:
+ 370 0052 EB6A     		ldr	r3, [r5, #44]
+ 371 0054 1868     		ldr	r0, [r3]
+ 372 0056 FFF7FEFF 		bl	spiStop
+ 373 005a 0223     		movs	r3, #2
+ 374 005c 2B71     		strb	r3, [r5, #4]
+ 375 005e 0120     		movs	r0, #1
+ 376              	.L65:
+ 377 0060 02B0     		add	sp, sp, #8
+ 378              		@ sp needed
+ 379 0062 70BD     		pop	{r4, r5, r6, pc}
+ 380              	.L52:
+ 381 0064 01AB     		add	r3, sp, #4
+ 382 0066 2846     		mov	r0, r5
+ 383 0068 0821     		movs	r1, #8
+ 384 006a 4FF4D572 		mov	r2, #426
+ 385 006e FFF7FEFF 		bl	send_command_R3
+ 386 0072 0528     		cmp	r0, #5
+ 387 0074 25D0     		beq	.L56
+ 388 0076 6424     		movs	r4, #100
+ 389 0078 04E0     		b	.L61
+ 390              	.L60:
+ 391 007a 013C     		subs	r4, r4, #1
+ 392 007c E9D0     		beq	.L53
+ 393 007e 0A20     		movs	r0, #10
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 8
+
+
+ 394 0080 FFF7FEFF 		bl	chThdSleep
+ 395              	.L61:
+ 396 0084 2846     		mov	r0, r5
+ 397 0086 3721     		movs	r1, #55
+ 398 0088 0022     		movs	r2, #0
+ 399 008a FFF7FEFF 		bl	send_command_R1
+ 400 008e 0128     		cmp	r0, #1
+ 401 0090 0646     		mov	r6, r0
+ 402 0092 F2D1     		bne	.L60
+ 403 0094 4FF4D572 		mov	r2, #426
+ 404 0098 C4F20002 		movt	r2, 16384
+ 405 009c 2846     		mov	r0, r5
+ 406 009e 2921     		movs	r1, #41
+ 407 00a0 01AB     		add	r3, sp, #4
+ 408 00a2 FFF7FEFF 		bl	send_command_R3
+ 409 00a6 0028     		cmp	r0, #0
+ 410 00a8 E7D1     		bne	.L60
+ 411 00aa 0246     		mov	r2, r0
+ 412 00ac 01AB     		add	r3, sp, #4
+ 413 00ae 2846     		mov	r0, r5
+ 414 00b0 3A21     		movs	r1, #58
+ 415 00b2 FFF7FEFF 		bl	send_command_R3
+ 416 00b6 9DF80430 		ldrb	r3, [sp, #4]	@ zero_extendqisi2
+ 417 00ba 5B06     		lsls	r3, r3, #25
+ 418 00bc 48BF     		it	mi
+ 419 00be 85F83060 		strbmi	r6, [r5, #48]
+ 420              	.L56:
+ 421 00c2 6424     		movs	r4, #100
+ 422 00c4 05E0     		b	.L64
+ 423              	.L88:
+ 424 00c6 012B     		cmp	r3, #1
+ 425 00c8 C3D1     		bne	.L53
+ 426 00ca 013C     		subs	r4, r4, #1
+ 427 00cc C1D0     		beq	.L53
+ 428 00ce FFF7FEFF 		bl	chThdSleep
+ 429              	.L64:
+ 430 00d2 2846     		mov	r0, r5
+ 431 00d4 0121     		movs	r1, #1
+ 432 00d6 0022     		movs	r2, #0
+ 433 00d8 FFF7FEFF 		bl	send_command_R1
+ 434 00dc 0346     		mov	r3, r0
+ 435 00de 0A20     		movs	r0, #10
+ 436 00e0 002B     		cmp	r3, #0
+ 437 00e2 F0D1     		bne	.L88
+ 438 00e4 EB6A     		ldr	r3, [r5, #44]
+ 439 00e6 1868     		ldr	r0, [r3]
+ 440 00e8 9968     		ldr	r1, [r3, #8]
+ 441 00ea FFF7FEFF 		bl	spiStart
+ 442 00ee 2846     		mov	r0, r5
+ 443 00f0 1021     		movs	r1, #16
+ 444 00f2 4FF40072 		mov	r2, #512
+ 445 00f6 FFF7FEFF 		bl	send_command_R1
+ 446 00fa 0028     		cmp	r0, #0
+ 447 00fc A9D1     		bne	.L53
+ 448 00fe 05F11804 		add	r4, r5, #24
+ 449 0102 2246     		mov	r2, r4
+ 450 0104 2846     		mov	r0, r5
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 9
+
+
+ 451 0106 0921     		movs	r1, #9
+ 452 0108 FFF7FEFF 		bl	read_CxD
+ 453 010c 0028     		cmp	r0, #0
+ 454 010e A0D1     		bne	.L53
+ 455 0110 2046     		mov	r0, r4
+ 456 0112 FFF7FEFF 		bl	mmcsdGetCapacity
+ 457 0116 A862     		str	r0, [r5, #40]
+ 458 0118 0028     		cmp	r0, #0
+ 459 011a 9AD0     		beq	.L53
+ 460 011c 2846     		mov	r0, r5
+ 461 011e 0A21     		movs	r1, #10
+ 462 0120 05F10802 		add	r2, r5, #8
+ 463 0124 FFF7FEFF 		bl	read_CxD
+ 464 0128 0028     		cmp	r0, #0
+ 465 012a 92D1     		bne	.L53
+ 466 012c 0523     		movs	r3, #5
+ 467 012e 2B71     		strb	r3, [r5, #4]
+ 468 0130 96E7     		b	.L65
+ 469              	.L86:
+ 470 0132 40F20000 		movw	r0, #:lower16:.LC3
+ 471 0136 C0F20000 		movt	r0, #:upper16:.LC3
+ 472 013a FFF7FEFF 		bl	chDbgPanic
+ 473 013e 6BE7     		b	.L51
+ 474              	.L85:
+ 475 0140 40F20000 		movw	r0, #:lower16:.LC2
+ 476 0144 40F20001 		movw	r1, #:lower16:.LC1
+ 477 0148 C0F20000 		movt	r0, #:upper16:.LC2
+ 478 014c C0F20001 		movt	r1, #:upper16:.LC1
+ 479 0150 40F2C312 		movw	r2, #451
+ 480 0154 FFF7FEFF 		bl	chDbgPanic3
+ 481 0158 58E7     		b	.L50
+ 482              		.size	mmcConnect, .-mmcConnect
+ 483              		.section	.text.sync.isra.2,"ax",%progbits
+ 484              		.align	2
+ 485              		.p2align 4,,15
+ 486              		.thumb
+ 487              		.thumb_func
+ 488              		.type	sync.isra.2, %function
+ 489              	sync.isra.2:
+ 490              		@ args = 0, pretend = 0, frame = 8
+ 491              		@ frame_needed = 0, uses_anonymous_args = 0
+ 492 0000 10B5     		push	{r4, lr}
+ 493 0002 0368     		ldr	r3, [r0]
+ 494 0004 0446     		mov	r4, r0
+ 495 0006 82B0     		sub	sp, sp, #8
+ 496 0008 1868     		ldr	r0, [r3]
+ 497 000a FFF7FEFF 		bl	spiSelect
+ 498 000e 02E0     		b	.L91
+ 499              	.L92:
+ 500 0010 0120     		movs	r0, #1
+ 501 0012 FFF7FEFF 		bl	chThdSleep
+ 502              	.L91:
+ 503 0016 2368     		ldr	r3, [r4]
+ 504 0018 0121     		movs	r1, #1
+ 505 001a 1868     		ldr	r0, [r3]
+ 506 001c 01AA     		add	r2, sp, #4
+ 507 001e FFF7FEFF 		bl	spiReceive
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 10
+
+
+ 508 0022 9DF80430 		ldrb	r3, [sp, #4]	@ zero_extendqisi2
+ 509 0026 FF2B     		cmp	r3, #255
+ 510 0028 F2D1     		bne	.L92
+ 511 002a 2368     		ldr	r3, [r4]
+ 512 002c 1868     		ldr	r0, [r3]
+ 513 002e FFF7FEFF 		bl	spiUnselect
+ 514 0032 02B0     		add	sp, sp, #8
+ 515              		@ sp needed
+ 516 0034 10BD     		pop	{r4, pc}
+ 517              		.size	sync.isra.2, .-sync.isra.2
+ 518 0036 00BFAFF3 		.section	.text.mmcDisconnect,"ax",%progbits
+ 518      0080AFF3 
+ 518      0080
+ 519              		.align	2
+ 520              		.p2align 4,,15
+ 521              		.global	mmcDisconnect
+ 522              		.thumb
+ 523              		.thumb_func
+ 524              		.type	mmcDisconnect, %function
+ 525              	mmcDisconnect:
+ 526              		@ args = 0, pretend = 0, frame = 0
+ 527              		@ frame_needed = 0, uses_anonymous_args = 0
+ 528 0000 38B5     		push	{r3, r4, r5, lr}
+ 529 0002 0446     		mov	r4, r0
+ 530 0004 A0B3     		cbz	r0, .L99
+ 531              	.L94:
+ 532 0006 2023     		movs	r3, #32
+ 533              	@ 559 "chibios/os/hal/src/mmc_spi.c" 1
+ 534 0008 83F31188 		msr     BASEPRI, r3
+ 535              	@ 0 "" 2
+ 536              		.thumb
+ 537 000c FFF7FEFF 		bl	dbg_check_lock
+ 538 0010 2379     		ldrb	r3, [r4, #4]	@ zero_extendqisi2
+ 539 0012 052B     		cmp	r3, #5
+ 540 0014 18BF     		it	ne
+ 541 0016 022B     		cmpne	r3, #2
+ 542 0018 1AD1     		bne	.L100
+ 543 001a 022B     		cmp	r3, #2
+ 544 001c 21D0     		beq	.L101
+ 545              	.L96:
+ 546 001e 0423     		movs	r3, #4
+ 547 0020 2371     		strb	r3, [r4, #4]
+ 548 0022 FFF7FEFF 		bl	dbg_check_unlock
+ 549 0026 0023     		movs	r3, #0
+ 550              	@ 567 "chibios/os/hal/src/mmc_spi.c" 1
+ 551 0028 83F31188 		msr     BASEPRI, r3
+ 552              	@ 0 "" 2
+ 553              		.thumb
+ 554 002c 2546     		mov	r5, r4
+ 555 002e 55F82C3F 		ldr	r3, [r5, #44]!
+ 556 0032 9968     		ldr	r1, [r3, #8]
+ 557 0034 1868     		ldr	r0, [r3]
+ 558 0036 FFF7FEFF 		bl	spiStart
+ 559 003a 2846     		mov	r0, r5
+ 560 003c FFF7FEFF 		bl	sync.isra.2
+ 561 0040 E36A     		ldr	r3, [r4, #44]
+ 562 0042 1868     		ldr	r0, [r3]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 11
+
+
+ 563 0044 FFF7FEFF 		bl	spiStop
+ 564 0048 0223     		movs	r3, #2
+ 565 004a 2371     		strb	r3, [r4, #4]
+ 566 004c 0020     		movs	r0, #0
+ 567 004e 38BD     		pop	{r3, r4, r5, pc}
+ 568              	.L100:
+ 569 0050 40F20000 		movw	r0, #:lower16:.LC5
+ 570 0054 C0F20000 		movt	r0, #:upper16:.LC5
+ 571 0058 FFF7FEFF 		bl	chDbgPanic
+ 572 005c 2379     		ldrb	r3, [r4, #4]	@ zero_extendqisi2
+ 573 005e 022B     		cmp	r3, #2
+ 574 0060 DDD1     		bne	.L96
+ 575              	.L101:
+ 576 0062 FFF7FEFF 		bl	dbg_check_unlock
+ 577 0066 0023     		movs	r3, #0
+ 578              	@ 563 "chibios/os/hal/src/mmc_spi.c" 1
+ 579 0068 83F31188 		msr     BASEPRI, r3
+ 580              	@ 0 "" 2
+ 581              		.thumb
+ 582 006c 0020     		movs	r0, #0
+ 583 006e 38BD     		pop	{r3, r4, r5, pc}
+ 584              	.L99:
+ 585 0070 40F20000 		movw	r0, #:lower16:.LC4
+ 586 0074 40F20001 		movw	r1, #:lower16:.LC1
+ 587 0078 C0F20000 		movt	r0, #:upper16:.LC4
+ 588 007c C0F20001 		movt	r1, #:upper16:.LC1
+ 589 0080 40F22D22 		movw	r2, #557
+ 590 0084 FFF7FEFF 		bl	chDbgPanic3
+ 591 0088 BDE7     		b	.L94
+ 592              		.size	mmcDisconnect, .-mmcDisconnect
+ 593 008a 00BFAFF3 		.section	.text.mmcSync,"ax",%progbits
+ 593      0080
+ 594              		.align	2
+ 595              		.p2align 4,,15
+ 596              		.global	mmcSync
+ 597              		.thumb
+ 598              		.thumb_func
+ 599              		.type	mmcSync, %function
+ 600              	mmcSync:
+ 601              		@ args = 0, pretend = 0, frame = 0
+ 602              		@ frame_needed = 0, uses_anonymous_args = 0
+ 603 0000 70B5     		push	{r4, r5, r6, lr}
+ 604 0002 0446     		mov	r4, r0
+ 605 0004 98B1     		cbz	r0, .L106
+ 606              	.L103:
+ 607 0006 2579     		ldrb	r5, [r4, #4]	@ zero_extendqisi2
+ 608 0008 052D     		cmp	r5, #5
+ 609 000a 01D0     		beq	.L107
+ 610 000c 0120     		movs	r0, #1
+ 611 000e 70BD     		pop	{r4, r5, r6, pc}
+ 612              	.L107:
+ 613 0010 2646     		mov	r6, r4
+ 614 0012 0822     		movs	r2, #8
+ 615 0014 56F82C3F 		ldr	r3, [r6, #44]!
+ 616 0018 2271     		strb	r2, [r4, #4]
+ 617 001a 1868     		ldr	r0, [r3]
+ 618 001c 9968     		ldr	r1, [r3, #8]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 12
+
+
+ 619 001e FFF7FEFF 		bl	spiStart
+ 620 0022 3046     		mov	r0, r6
+ 621 0024 FFF7FEFF 		bl	sync.isra.2
+ 622 0028 2571     		strb	r5, [r4, #4]
+ 623 002a 0020     		movs	r0, #0
+ 624 002c 70BD     		pop	{r4, r5, r6, pc}
+ 625              	.L106:
+ 626 002e 40F20000 		movw	r0, #:lower16:.LC6
+ 627 0032 40F20001 		movw	r1, #:lower16:.LC1
+ 628 0036 C0F20000 		movt	r0, #:upper16:.LC6
+ 629 003a C0F20001 		movt	r1, #:upper16:.LC1
+ 630 003e 40F21E32 		movw	r2, #798
+ 631 0042 FFF7FEFF 		bl	chDbgPanic3
+ 632 0046 DEE7     		b	.L103
+ 633              		.size	mmcSync, .-mmcSync
+ 634 0048 AFF30080 		.section	.text.mmcInit,"ax",%progbits
+ 634      AFF30080 
+ 635              		.align	2
+ 636              		.p2align 4,,15
+ 637              		.global	mmcInit
+ 638              		.thumb
+ 639              		.thumb_func
+ 640              		.type	mmcInit, %function
+ 641              	mmcInit:
+ 642              		@ args = 0, pretend = 0, frame = 0
+ 643              		@ frame_needed = 0, uses_anonymous_args = 0
+ 644              		@ link register save eliminated.
+ 645 0000 7047     		bx	lr
+ 646              		.size	mmcInit, .-mmcInit
+ 647 0002 00BFAFF3 		.section	.text.mmcObjectInit,"ax",%progbits
+ 647      0080AFF3 
+ 647      0080AFF3 
+ 647      0080
+ 648              		.align	2
+ 649              		.p2align 4,,15
+ 650              		.global	mmcObjectInit
+ 651              		.thumb
+ 652              		.thumb_func
+ 653              		.type	mmcObjectInit, %function
+ 654              	mmcObjectInit:
+ 655              		@ args = 0, pretend = 0, frame = 0
+ 656              		@ frame_needed = 0, uses_anonymous_args = 0
+ 657              		@ link register save eliminated.
+ 658 0000 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 659 0004 0022     		movs	r2, #0
+ 660 0006 C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ 661 000a 0121     		movs	r1, #1
+ 662 000c 0360     		str	r3, [r0]
+ 663 000e 0171     		strb	r1, [r0, #4]
+ 664 0010 C262     		str	r2, [r0, #44]
+ 665 0012 80F83020 		strb	r2, [r0, #48]
+ 666 0016 7047     		bx	lr
+ 667              		.size	mmcObjectInit, .-mmcObjectInit
+ 668 0018 AFF30080 		.section	.text.mmcStart,"ax",%progbits
+ 668      AFF30080 
+ 669              		.align	2
+ 670              		.p2align 4,,15
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 13
+
+
+ 671              		.global	mmcStart
+ 672              		.thumb
+ 673              		.thumb_func
+ 674              		.type	mmcStart, %function
+ 675              	mmcStart:
+ 676              		@ args = 0, pretend = 0, frame = 0
+ 677              		@ frame_needed = 0, uses_anonymous_args = 0
+ 678 0000 0029     		cmp	r1, #0
+ 679 0002 18BF     		it	ne
+ 680 0004 0028     		cmpne	r0, #0
+ 681 0006 38B5     		push	{r3, r4, r5, lr}
+ 682 0008 0446     		mov	r4, r0
+ 683 000a 0D46     		mov	r5, r1
+ 684 000c 0ED0     		beq	.L116
+ 685              	.L111:
+ 686 000e 2379     		ldrb	r3, [r4, #4]	@ zero_extendqisi2
+ 687 0010 013B     		subs	r3, r3, #1
+ 688 0012 DBB2     		uxtb	r3, r3
+ 689 0014 012B     		cmp	r3, #1
+ 690 0016 05D9     		bls	.L112
+ 691 0018 40F20000 		movw	r0, #:lower16:.LC8
+ 692 001c C0F20000 		movt	r0, #:upper16:.LC8
+ 693 0020 FFF7FEFF 		bl	chDbgPanic
+ 694              	.L112:
+ 695 0024 0223     		movs	r3, #2
+ 696 0026 E562     		str	r5, [r4, #44]
+ 697 0028 2371     		strb	r3, [r4, #4]
+ 698 002a 38BD     		pop	{r3, r4, r5, pc}
+ 699              	.L116:
+ 700 002c 40F20000 		movw	r0, #:lower16:.LC7
+ 701 0030 40F20001 		movw	r1, #:lower16:.LC1
+ 702 0034 C0F20000 		movt	r0, #:upper16:.LC7
+ 703 0038 C0F20001 		movt	r1, #:upper16:.LC1
+ 704 003c 40F29512 		movw	r2, #405
+ 705 0040 FFF7FEFF 		bl	chDbgPanic3
+ 706 0044 E3E7     		b	.L111
+ 707              		.size	mmcStart, .-mmcStart
+ 708 0046 00BFAFF3 		.section	.text.mmcStop,"ax",%progbits
+ 708      0080AFF3 
+ 708      0080
+ 709              		.align	2
+ 710              		.p2align 4,,15
+ 711              		.global	mmcStop
+ 712              		.thumb
+ 713              		.thumb_func
+ 714              		.type	mmcStop, %function
+ 715              	mmcStop:
+ 716              		@ args = 0, pretend = 0, frame = 0
+ 717              		@ frame_needed = 0, uses_anonymous_args = 0
+ 718 0000 10B5     		push	{r4, lr}
+ 719 0002 0446     		mov	r4, r0
+ 720 0004 88B1     		cbz	r0, .L120
+ 721              	.L118:
+ 722 0006 2379     		ldrb	r3, [r4, #4]	@ zero_extendqisi2
+ 723 0008 013B     		subs	r3, r3, #1
+ 724 000a DBB2     		uxtb	r3, r3
+ 725 000c 012B     		cmp	r3, #1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 14
+
+
+ 726 000e 05D9     		bls	.L119
+ 727 0010 40F20000 		movw	r0, #:lower16:.LC10
+ 728 0014 C0F20000 		movt	r0, #:upper16:.LC10
+ 729 0018 FFF7FEFF 		bl	chDbgPanic
+ 730              	.L119:
+ 731 001c E36A     		ldr	r3, [r4, #44]
+ 732 001e 1868     		ldr	r0, [r3]
+ 733 0020 FFF7FEFF 		bl	spiStop
+ 734 0024 0123     		movs	r3, #1
+ 735 0026 2371     		strb	r3, [r4, #4]
+ 736 0028 10BD     		pop	{r4, pc}
+ 737              	.L120:
+ 738 002a 40F20000 		movw	r0, #:lower16:.LC9
+ 739 002e 40F20001 		movw	r1, #:lower16:.LC1
+ 740 0032 C0F20000 		movt	r0, #:upper16:.LC9
+ 741 0036 C0F20001 		movt	r1, #:upper16:.LC1
+ 742 003a 4FF4D372 		mov	r2, #422
+ 743 003e FFF7FEFF 		bl	chDbgPanic3
+ 744 0042 E0E7     		b	.L118
+ 745              		.size	mmcStop, .-mmcStop
+ 746 0044 AFF30080 		.section	.text.mmcStartSequentialRead,"ax",%progbits
+ 746      AFF30080 
+ 746      AFF30080 
+ 747              		.align	2
+ 748              		.p2align 4,,15
+ 749              		.global	mmcStartSequentialRead
+ 750              		.thumb
+ 751              		.thumb_func
+ 752              		.type	mmcStartSequentialRead, %function
+ 753              	mmcStartSequentialRead:
+ 754              		@ args = 0, pretend = 0, frame = 0
+ 755              		@ frame_needed = 0, uses_anonymous_args = 0
+ 756 0000 38B5     		push	{r3, r4, r5, lr}
+ 757 0002 0446     		mov	r4, r0
+ 758 0004 0D46     		mov	r5, r1
+ 759 0006 70B3     		cbz	r0, .L131
+ 760              	.L122:
+ 761 0008 2379     		ldrb	r3, [r4, #4]	@ zero_extendqisi2
+ 762 000a 052B     		cmp	r3, #5
+ 763 000c 05D0     		beq	.L123
+ 764 000e 40F20000 		movw	r0, #:lower16:.LC12
+ 765 0012 C0F20000 		movt	r0, #:upper16:.LC12
+ 766 0016 FFF7FEFF 		bl	chDbgPanic
+ 767              	.L123:
+ 768 001a E36A     		ldr	r3, [r4, #44]
+ 769 001c 0622     		movs	r2, #6
+ 770 001e 1868     		ldr	r0, [r3]
+ 771 0020 9968     		ldr	r1, [r3, #8]
+ 772 0022 2271     		strb	r2, [r4, #4]
+ 773 0024 FFF7FEFF 		bl	spiStart
+ 774 0028 E36A     		ldr	r3, [r4, #44]
+ 775 002a 1868     		ldr	r0, [r3]
+ 776 002c FFF7FEFF 		bl	spiSelect
+ 777 0030 94F83030 		ldrb	r3, [r4, #48]	@ zero_extendqisi2
+ 778 0034 8BB1     		cbz	r3, .L124
+ 779 0036 2A46     		mov	r2, r5
+ 780 0038 2046     		mov	r0, r4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 15
+
+
+ 781 003a 1221     		movs	r1, #18
+ 782 003c FFF7FEFF 		bl	send_hdr
+ 783              	.L125:
+ 784 0040 04F12C00 		add	r0, r4, #44
+ 785 0044 FFF7FEFF 		bl	recvr1.isra.1
+ 786 0048 30B1     		cbz	r0, .L126
+ 787 004a E36A     		ldr	r3, [r4, #44]
+ 788 004c 1868     		ldr	r0, [r3]
+ 789 004e FFF7FEFF 		bl	spiStop
+ 790 0052 0523     		movs	r3, #5
+ 791 0054 2371     		strb	r3, [r4, #4]
+ 792 0056 0120     		movs	r0, #1
+ 793              	.L126:
+ 794 0058 38BD     		pop	{r3, r4, r5, pc}
+ 795              	.L124:
+ 796 005a 6A02     		lsls	r2, r5, #9
+ 797 005c 2046     		mov	r0, r4
+ 798 005e 1221     		movs	r1, #18
+ 799 0060 FFF7FEFF 		bl	send_hdr
+ 800 0064 ECE7     		b	.L125
+ 801              	.L131:
+ 802 0066 40F20000 		movw	r0, #:lower16:.LC11
+ 803 006a 40F20001 		movw	r1, #:lower16:.LC1
+ 804 006e C0F20000 		movt	r0, #:upper16:.LC11
+ 805 0072 C0F20001 		movt	r1, #:upper16:.LC1
+ 806 0076 4FF41472 		mov	r2, #592
+ 807 007a FFF7FEFF 		bl	chDbgPanic3
+ 808 007e C3E7     		b	.L122
+ 809              		.size	mmcStartSequentialRead, .-mmcStartSequentialRead
+ 810              		.section	.text.mmcSequentialRead,"ax",%progbits
+ 811              		.align	2
+ 812              		.p2align 4,,15
+ 813              		.global	mmcSequentialRead
+ 814              		.thumb
+ 815              		.thumb_func
+ 816              		.type	mmcSequentialRead, %function
+ 817              	mmcSequentialRead:
+ 818              		@ args = 0, pretend = 0, frame = 0
+ 819              		@ frame_needed = 0, uses_anonymous_args = 0
+ 820 0000 0029     		cmp	r1, #0
+ 821 0002 18BF     		it	ne
+ 822 0004 0028     		cmpne	r0, #0
+ 823 0006 70B5     		push	{r4, r5, r6, lr}
+ 824 0008 0646     		mov	r6, r0
+ 825 000a 0D46     		mov	r5, r1
+ 826 000c 20D0     		beq	.L142
+ 827              	.L133:
+ 828 000e 3379     		ldrb	r3, [r6, #4]	@ zero_extendqisi2
+ 829 0010 062B     		cmp	r3, #6
+ 830 0012 01D0     		beq	.L143
+ 831 0014 0120     		movs	r0, #1
+ 832 0016 70BD     		pop	{r4, r5, r6, pc}
+ 833              	.L143:
+ 834 0018 42F21074 		movw	r4, #10000
+ 835 001c 01E0     		b	.L137
+ 836              	.L135:
+ 837 001e 013C     		subs	r4, r4, #1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 16
+
+
+ 838 0020 23D0     		beq	.L144
+ 839              	.L137:
+ 840 0022 F36A     		ldr	r3, [r6, #44]
+ 841 0024 0121     		movs	r1, #1
+ 842 0026 1868     		ldr	r0, [r3]
+ 843 0028 2A46     		mov	r2, r5
+ 844 002a FFF7FEFF 		bl	spiReceive
+ 845 002e 2B78     		ldrb	r3, [r5]	@ zero_extendqisi2
+ 846 0030 FE2B     		cmp	r3, #254
+ 847 0032 F4D1     		bne	.L135
+ 848 0034 F36A     		ldr	r3, [r6, #44]
+ 849 0036 2A46     		mov	r2, r5
+ 850 0038 1868     		ldr	r0, [r3]
+ 851 003a 4FF40071 		mov	r1, #512
+ 852 003e FFF7FEFF 		bl	spiReceive
+ 853 0042 F36A     		ldr	r3, [r6, #44]
+ 854 0044 0221     		movs	r1, #2
+ 855 0046 1868     		ldr	r0, [r3]
+ 856 0048 FFF7FEFF 		bl	spiIgnore
+ 857 004c 0020     		movs	r0, #0
+ 858 004e 70BD     		pop	{r4, r5, r6, pc}
+ 859              	.L142:
+ 860 0050 40F20000 		movw	r0, #:lower16:.LC13
+ 861 0054 40F20001 		movw	r1, #:lower16:.LC1
+ 862 0058 C0F20000 		movt	r0, #:upper16:.LC13
+ 863 005c C0F20001 		movt	r1, #:upper16:.LC1
+ 864 0060 4FF41E72 		mov	r2, #632
+ 865 0064 FFF7FEFF 		bl	chDbgPanic3
+ 866 0068 D1E7     		b	.L133
+ 867              	.L144:
+ 868 006a F36A     		ldr	r3, [r6, #44]
+ 869 006c 1868     		ldr	r0, [r3]
+ 870 006e FFF7FEFF 		bl	spiUnselect
+ 871 0072 F36A     		ldr	r3, [r6, #44]
+ 872 0074 1868     		ldr	r0, [r3]
+ 873 0076 FFF7FEFF 		bl	spiStop
+ 874 007a 0523     		movs	r3, #5
+ 875 007c 3371     		strb	r3, [r6, #4]
+ 876 007e 0120     		movs	r0, #1
+ 877 0080 70BD     		pop	{r4, r5, r6, pc}
+ 878              		.size	mmcSequentialRead, .-mmcSequentialRead
+ 879 0082 00BFAFF3 		.section	.text.mmcStopSequentialRead,"ax",%progbits
+ 879      0080AFF3 
+ 879      0080AFF3 
+ 879      0080
+ 880              		.align	2
+ 881              		.p2align 4,,15
+ 882              		.global	mmcStopSequentialRead
+ 883              		.thumb
+ 884              		.thumb_func
+ 885              		.type	mmcStopSequentialRead, %function
+ 886              	mmcStopSequentialRead:
+ 887              		@ args = 0, pretend = 0, frame = 0
+ 888              		@ frame_needed = 0, uses_anonymous_args = 0
+ 889 0000 38B5     		push	{r3, r4, r5, lr}
+ 890 0002 0446     		mov	r4, r0
+ 891 0004 D0B1     		cbz	r0, .L149
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 17
+
+
+ 892              	.L146:
+ 893 0006 2379     		ldrb	r3, [r4, #4]	@ zero_extendqisi2
+ 894 0008 062B     		cmp	r3, #6
+ 895 000a 01D0     		beq	.L150
+ 896 000c 0120     		movs	r0, #1
+ 897 000e 38BD     		pop	{r3, r4, r5, pc}
+ 898              	.L150:
+ 899 0010 2546     		mov	r5, r4
+ 900 0012 40F20002 		movw	r2, #:lower16:.LANCHOR2
+ 901 0016 55F82C3F 		ldr	r3, [r5, #44]!
+ 902 001a C0F20002 		movt	r2, #:upper16:.LANCHOR2
+ 903 001e 1868     		ldr	r0, [r3]
+ 904 0020 0721     		movs	r1, #7
+ 905 0022 FFF7FEFF 		bl	spiSend
+ 906 0026 2846     		mov	r0, r5
+ 907 0028 FFF7FEFF 		bl	recvr1.isra.1
+ 908 002c E36A     		ldr	r3, [r4, #44]
+ 909 002e 1868     		ldr	r0, [r3]
+ 910 0030 FFF7FEFF 		bl	spiUnselect
+ 911 0034 0523     		movs	r3, #5
+ 912 0036 2371     		strb	r3, [r4, #4]
+ 913 0038 0020     		movs	r0, #0
+ 914 003a 38BD     		pop	{r3, r4, r5, pc}
+ 915              	.L149:
+ 916 003c 40F20000 		movw	r0, #:lower16:.LC14
+ 917 0040 40F20001 		movw	r1, #:lower16:.LC1
+ 918 0044 C0F20000 		movt	r0, #:upper16:.LC14
+ 919 0048 C0F20001 		movt	r1, #:upper16:.LC1
+ 920 004c 4FF42772 		mov	r2, #668
+ 921 0050 FFF7FEFF 		bl	chDbgPanic3
+ 922 0054 D7E7     		b	.L146
+ 923              		.size	mmcStopSequentialRead, .-mmcStopSequentialRead
+ 924 0056 00BFAFF3 		.section	.text.mmc_read,"ax",%progbits
+ 924      0080AFF3 
+ 924      0080
+ 925              		.align	2
+ 926              		.p2align 4,,15
+ 927              		.thumb
+ 928              		.thumb_func
+ 929              		.type	mmc_read, %function
+ 930              	mmc_read:
+ 931              		@ args = 0, pretend = 0, frame = 0
+ 932              		@ frame_needed = 0, uses_anonymous_args = 0
+ 933 0000 70B5     		push	{r4, r5, r6, lr}
+ 934 0002 1446     		mov	r4, r2
+ 935 0004 1D46     		mov	r5, r3
+ 936 0006 0646     		mov	r6, r0
+ 937 0008 FFF7FEFF 		bl	mmcStartSequentialRead
+ 938 000c 58B9     		cbnz	r0, .L153
+ 939 000e 15B9     		cbnz	r5, .L157
+ 940 0010 0BE0     		b	.L156
+ 941              	.L161:
+ 942 0012 013D     		subs	r5, r5, #1
+ 943 0014 09D0     		beq	.L156
+ 944              	.L157:
+ 945 0016 2146     		mov	r1, r4
+ 946 0018 3046     		mov	r0, r6
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 18
+
+
+ 947 001a FFF7FEFF 		bl	mmcSequentialRead
+ 948 001e 04F50074 		add	r4, r4, #512
+ 949 0022 0028     		cmp	r0, #0
+ 950 0024 F5D0     		beq	.L161
+ 951              	.L153:
+ 952 0026 0120     		movs	r0, #1
+ 953 0028 70BD     		pop	{r4, r5, r6, pc}
+ 954              	.L156:
+ 955 002a 3046     		mov	r0, r6
+ 956 002c BDE87040 		pop	{r4, r5, r6, lr}
+ 957 0030 FFF7FEBF 		b	mmcStopSequentialRead
+ 958              		.size	mmc_read, .-mmc_read
+ 959 0034 AFF30080 		.section	.text.mmcStartSequentialWrite,"ax",%progbits
+ 959      AFF30080 
+ 959      AFF30080 
+ 960              		.align	2
+ 961              		.p2align 4,,15
+ 962              		.global	mmcStartSequentialWrite
+ 963              		.thumb
+ 964              		.thumb_func
+ 965              		.type	mmcStartSequentialWrite, %function
+ 966              	mmcStartSequentialWrite:
+ 967              		@ args = 0, pretend = 0, frame = 0
+ 968              		@ frame_needed = 0, uses_anonymous_args = 0
+ 969 0000 38B5     		push	{r3, r4, r5, lr}
+ 970 0002 0446     		mov	r4, r0
+ 971 0004 0D46     		mov	r5, r1
+ 972 0006 70B3     		cbz	r0, .L172
+ 973              	.L163:
+ 974 0008 2379     		ldrb	r3, [r4, #4]	@ zero_extendqisi2
+ 975 000a 052B     		cmp	r3, #5
+ 976 000c 05D0     		beq	.L164
+ 977 000e 40F20000 		movw	r0, #:lower16:.LC16
+ 978 0012 C0F20000 		movt	r0, #:upper16:.LC16
+ 979 0016 FFF7FEFF 		bl	chDbgPanic
+ 980              	.L164:
+ 981 001a E36A     		ldr	r3, [r4, #44]
+ 982 001c 0722     		movs	r2, #7
+ 983 001e 1868     		ldr	r0, [r3]
+ 984 0020 9968     		ldr	r1, [r3, #8]
+ 985 0022 2271     		strb	r2, [r4, #4]
+ 986 0024 FFF7FEFF 		bl	spiStart
+ 987 0028 E36A     		ldr	r3, [r4, #44]
+ 988 002a 1868     		ldr	r0, [r3]
+ 989 002c FFF7FEFF 		bl	spiSelect
+ 990 0030 94F83030 		ldrb	r3, [r4, #48]	@ zero_extendqisi2
+ 991 0034 8BB1     		cbz	r3, .L165
+ 992 0036 2A46     		mov	r2, r5
+ 993 0038 2046     		mov	r0, r4
+ 994 003a 1921     		movs	r1, #25
+ 995 003c FFF7FEFF 		bl	send_hdr
+ 996              	.L166:
+ 997 0040 04F12C00 		add	r0, r4, #44
+ 998 0044 FFF7FEFF 		bl	recvr1.isra.1
+ 999 0048 30B1     		cbz	r0, .L167
+ 1000 004a E36A     		ldr	r3, [r4, #44]
+ 1001 004c 1868     		ldr	r0, [r3]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 19
+
+
+ 1002 004e FFF7FEFF 		bl	spiStop
+ 1003 0052 0523     		movs	r3, #5
+ 1004 0054 2371     		strb	r3, [r4, #4]
+ 1005 0056 0120     		movs	r0, #1
+ 1006              	.L167:
+ 1007 0058 38BD     		pop	{r3, r4, r5, pc}
+ 1008              	.L165:
+ 1009 005a 6A02     		lsls	r2, r5, #9
+ 1010 005c 2046     		mov	r0, r4
+ 1011 005e 1921     		movs	r1, #25
+ 1012 0060 FFF7FEFF 		bl	send_hdr
+ 1013 0064 ECE7     		b	.L166
+ 1014              	.L172:
+ 1015 0066 40F20000 		movw	r0, #:lower16:.LC15
+ 1016 006a 40F20001 		movw	r1, #:lower16:.LC1
+ 1017 006e C0F20000 		movt	r0, #:upper16:.LC15
+ 1018 0072 C0F20001 		movt	r1, #:upper16:.LC1
+ 1019 0076 40F2BA22 		movw	r2, #698
+ 1020 007a FFF7FEFF 		bl	chDbgPanic3
+ 1021 007e C3E7     		b	.L163
+ 1022              		.size	mmcStartSequentialWrite, .-mmcStartSequentialWrite
+ 1023              		.section	.text.mmcSequentialWrite,"ax",%progbits
+ 1024              		.align	2
+ 1025              		.p2align 4,,15
+ 1026              		.global	mmcSequentialWrite
+ 1027              		.thumb
+ 1028              		.thumb_func
+ 1029              		.type	mmcSequentialWrite, %function
+ 1030              	mmcSequentialWrite:
+ 1031              		@ args = 0, pretend = 0, frame = 8
+ 1032              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1033 0000 30B5     		push	{r4, r5, lr}
+ 1034 0002 0029     		cmp	r1, #0
+ 1035 0004 18BF     		it	ne
+ 1036 0006 0028     		cmpne	r0, #0
+ 1037 0008 83B0     		sub	sp, sp, #12
+ 1038 000a 0446     		mov	r4, r0
+ 1039 000c 0D46     		mov	r5, r1
+ 1040 000e 06D0     		beq	.L181
+ 1041 0010 2379     		ldrb	r3, [r4, #4]	@ zero_extendqisi2
+ 1042 0012 072B     		cmp	r3, #7
+ 1043 0014 18BF     		it	ne
+ 1044 0016 0120     		movne	r0, #1
+ 1045 0018 12D0     		beq	.L182
+ 1046              	.L175:
+ 1047 001a 03B0     		add	sp, sp, #12
+ 1048              		@ sp needed
+ 1049 001c 30BD     		pop	{r4, r5, pc}
+ 1050              	.L181:
+ 1051 001e 40F20000 		movw	r0, #:lower16:.LC17
+ 1052 0022 40F20001 		movw	r1, #:lower16:.LC1
+ 1053 0026 C0F20000 		movt	r0, #:upper16:.LC17
+ 1054 002a C0F20001 		movt	r1, #:upper16:.LC1
+ 1055 002e 40F2E122 		movw	r2, #737
+ 1056 0032 FFF7FEFF 		bl	chDbgPanic3
+ 1057 0036 2379     		ldrb	r3, [r4, #4]	@ zero_extendqisi2
+ 1058 0038 072B     		cmp	r3, #7
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 20
+
+
+ 1059 003a 18BF     		it	ne
+ 1060 003c 0120     		movne	r0, #1
+ 1061 003e ECD1     		bne	.L175
+ 1062              	.L182:
+ 1063 0040 E36A     		ldr	r3, [r4, #44]
+ 1064 0042 40F20002 		movw	r2, #:lower16:.LANCHOR3
+ 1065 0046 1868     		ldr	r0, [r3]
+ 1066 0048 C0F20002 		movt	r2, #:upper16:.LANCHOR3
+ 1067 004c 0221     		movs	r1, #2
+ 1068 004e FFF7FEFF 		bl	spiSend
+ 1069 0052 E36A     		ldr	r3, [r4, #44]
+ 1070 0054 2A46     		mov	r2, r5
+ 1071 0056 1868     		ldr	r0, [r3]
+ 1072 0058 4FF40071 		mov	r1, #512
+ 1073 005c FFF7FEFF 		bl	spiSend
+ 1074 0060 E36A     		ldr	r3, [r4, #44]
+ 1075 0062 0221     		movs	r1, #2
+ 1076 0064 1868     		ldr	r0, [r3]
+ 1077 0066 FFF7FEFF 		bl	spiIgnore
+ 1078 006a E36A     		ldr	r3, [r4, #44]
+ 1079 006c 0121     		movs	r1, #1
+ 1080 006e 1868     		ldr	r0, [r3]
+ 1081 0070 01AA     		add	r2, sp, #4
+ 1082 0072 FFF7FEFF 		bl	spiReceive
+ 1083 0076 9DF80430 		ldrb	r3, [sp, #4]	@ zero_extendqisi2
+ 1084 007a 03F01F03 		and	r3, r3, #31
+ 1085 007e 052B     		cmp	r3, #5
+ 1086 0080 0CD0     		beq	.L183
+ 1087 0082 E36A     		ldr	r3, [r4, #44]
+ 1088 0084 1868     		ldr	r0, [r3]
+ 1089 0086 FFF7FEFF 		bl	spiUnselect
+ 1090 008a E36A     		ldr	r3, [r4, #44]
+ 1091 008c 1868     		ldr	r0, [r3]
+ 1092 008e FFF7FEFF 		bl	spiStop
+ 1093 0092 0523     		movs	r3, #5
+ 1094 0094 0120     		movs	r0, #1
+ 1095 0096 2371     		strb	r3, [r4, #4]
+ 1096 0098 03B0     		add	sp, sp, #12
+ 1097              		@ sp needed
+ 1098 009a 30BD     		pop	{r4, r5, pc}
+ 1099              	.L183:
+ 1100 009c 04F12C00 		add	r0, r4, #44
+ 1101 00a0 FFF7FEFF 		bl	wait.isra.0
+ 1102 00a4 0020     		movs	r0, #0
+ 1103 00a6 B8E7     		b	.L175
+ 1104              		.size	mmcSequentialWrite, .-mmcSequentialWrite
+ 1105 00a8 AFF30080 		.section	.text.mmcStopSequentialWrite,"ax",%progbits
+ 1105      AFF30080 
+ 1106              		.align	2
+ 1107              		.p2align 4,,15
+ 1108              		.global	mmcStopSequentialWrite
+ 1109              		.thumb
+ 1110              		.thumb_func
+ 1111              		.type	mmcStopSequentialWrite, %function
+ 1112              	mmcStopSequentialWrite:
+ 1113              		@ args = 0, pretend = 0, frame = 0
+ 1114              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 21
+
+
+ 1115 0000 10B5     		push	{r4, lr}
+ 1116 0002 0446     		mov	r4, r0
+ 1117 0004 A8B1     		cbz	r0, .L188
+ 1118              	.L185:
+ 1119 0006 2379     		ldrb	r3, [r4, #4]	@ zero_extendqisi2
+ 1120 0008 072B     		cmp	r3, #7
+ 1121 000a 01D0     		beq	.L189
+ 1122 000c 0120     		movs	r0, #1
+ 1123 000e 10BD     		pop	{r4, pc}
+ 1124              	.L189:
+ 1125 0010 E36A     		ldr	r3, [r4, #44]
+ 1126 0012 40F20002 		movw	r2, #:lower16:.LANCHOR4
+ 1127 0016 1868     		ldr	r0, [r3]
+ 1128 0018 C0F20002 		movt	r2, #:upper16:.LANCHOR4
+ 1129 001c 0221     		movs	r1, #2
+ 1130 001e FFF7FEFF 		bl	spiSend
+ 1131 0022 E36A     		ldr	r3, [r4, #44]
+ 1132 0024 1868     		ldr	r0, [r3]
+ 1133 0026 FFF7FEFF 		bl	spiUnselect
+ 1134 002a 0523     		movs	r3, #5
+ 1135 002c 2371     		strb	r3, [r4, #4]
+ 1136 002e 0020     		movs	r0, #0
+ 1137 0030 10BD     		pop	{r4, pc}
+ 1138              	.L188:
+ 1139 0032 40F20000 		movw	r0, #:lower16:.LC18
+ 1140 0036 40F20001 		movw	r1, #:lower16:.LC1
+ 1141 003a C0F20000 		movt	r0, #:upper16:.LC18
+ 1142 003e C0F20001 		movt	r1, #:upper16:.LC1
+ 1143 0042 4FF44172 		mov	r2, #772
+ 1144 0046 FFF7FEFF 		bl	chDbgPanic3
+ 1145 004a DCE7     		b	.L185
+ 1146              		.size	mmcStopSequentialWrite, .-mmcStopSequentialWrite
+ 1147 004c AFF30080 		.section	.text.mmc_write,"ax",%progbits
+ 1148              		.align	2
+ 1149              		.p2align 4,,15
+ 1150              		.thumb
+ 1151              		.thumb_func
+ 1152              		.type	mmc_write, %function
+ 1153              	mmc_write:
+ 1154              		@ args = 0, pretend = 0, frame = 0
+ 1155              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1156 0000 70B5     		push	{r4, r5, r6, lr}
+ 1157 0002 1446     		mov	r4, r2
+ 1158 0004 1D46     		mov	r5, r3
+ 1159 0006 0646     		mov	r6, r0
+ 1160 0008 FFF7FEFF 		bl	mmcStartSequentialWrite
+ 1161 000c 58B9     		cbnz	r0, .L192
+ 1162 000e 15B9     		cbnz	r5, .L196
+ 1163 0010 0BE0     		b	.L195
+ 1164              	.L200:
+ 1165 0012 013D     		subs	r5, r5, #1
+ 1166 0014 09D0     		beq	.L195
+ 1167              	.L196:
+ 1168 0016 2146     		mov	r1, r4
+ 1169 0018 3046     		mov	r0, r6
+ 1170 001a FFF7FEFF 		bl	mmcSequentialWrite
+ 1171 001e 04F50074 		add	r4, r4, #512
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 22
+
+
+ 1172 0022 0028     		cmp	r0, #0
+ 1173 0024 F5D0     		beq	.L200
+ 1174              	.L192:
+ 1175 0026 0120     		movs	r0, #1
+ 1176 0028 70BD     		pop	{r4, r5, r6, pc}
+ 1177              	.L195:
+ 1178 002a 3046     		mov	r0, r6
+ 1179 002c BDE87040 		pop	{r4, r5, r6, lr}
+ 1180 0030 FFF7FEBF 		b	mmcStopSequentialWrite
+ 1181              		.size	mmc_write, .-mmc_write
+ 1182 0034 AFF30080 		.section	.text.mmcErase,"ax",%progbits
+ 1182      AFF30080 
+ 1182      AFF30080 
+ 1183              		.align	2
+ 1184              		.p2align 4,,15
+ 1185              		.global	mmcErase
+ 1186              		.thumb
+ 1187              		.thumb_func
+ 1188              		.type	mmcErase, %function
+ 1189              	mmcErase:
+ 1190              		@ args = 0, pretend = 0, frame = 0
+ 1191              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1192 0000 70B5     		push	{r4, r5, r6, lr}
+ 1193 0002 0446     		mov	r4, r0
+ 1194 0004 0D46     		mov	r5, r1
+ 1195 0006 1646     		mov	r6, r2
+ 1196 0008 20B3     		cbz	r0, .L206
+ 1197              	.L202:
+ 1198 000a 94F83030 		ldrb	r3, [r4, #48]	@ zero_extendqisi2
+ 1199 000e 0722     		movs	r2, #7
+ 1200 0010 2271     		strb	r2, [r4, #4]
+ 1201 0012 0BB9     		cbnz	r3, .L203
+ 1202 0014 6D02     		lsls	r5, r5, #9
+ 1203 0016 7602     		lsls	r6, r6, #9
+ 1204              	.L203:
+ 1205 0018 2A46     		mov	r2, r5
+ 1206 001a 2046     		mov	r0, r4
+ 1207 001c 2021     		movs	r1, #32
+ 1208 001e FFF7FEFF 		bl	send_command_R1
+ 1209 0022 28B9     		cbnz	r0, .L204
+ 1210 0024 3246     		mov	r2, r6
+ 1211 0026 2046     		mov	r0, r4
+ 1212 0028 2121     		movs	r1, #33
+ 1213 002a FFF7FEFF 		bl	send_command_R1
+ 1214 002e 38B1     		cbz	r0, .L207
+ 1215              	.L204:
+ 1216 0030 E36A     		ldr	r3, [r4, #44]
+ 1217 0032 1868     		ldr	r0, [r3]
+ 1218 0034 FFF7FEFF 		bl	spiStop
+ 1219 0038 0523     		movs	r3, #5
+ 1220 003a 2371     		strb	r3, [r4, #4]
+ 1221 003c 0120     		movs	r0, #1
+ 1222 003e 70BD     		pop	{r4, r5, r6, pc}
+ 1223              	.L207:
+ 1224 0040 0246     		mov	r2, r0
+ 1225 0042 2621     		movs	r1, #38
+ 1226 0044 2046     		mov	r0, r4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 23
+
+
+ 1227 0046 FFF7FEFF 		bl	send_command_R1
+ 1228 004a 0028     		cmp	r0, #0
+ 1229 004c F0D1     		bne	.L204
+ 1230 004e 0523     		movs	r3, #5
+ 1231 0050 2371     		strb	r3, [r4, #4]
+ 1232 0052 70BD     		pop	{r4, r5, r6, pc}
+ 1233              	.L206:
+ 1234 0054 40F20000 		movw	r0, #:lower16:.LC19
+ 1235 0058 40F20001 		movw	r1, #:lower16:.LC1
+ 1236 005c C0F20000 		movt	r0, #:upper16:.LC19
+ 1237 0060 C0F20001 		movt	r1, #:upper16:.LC1
+ 1238 0064 40F25632 		movw	r2, #854
+ 1239 0068 FFF7FEFF 		bl	chDbgPanic3
+ 1240 006c CDE7     		b	.L202
+ 1241              		.size	mmcErase, .-mmcErase
+ 1242 006e 00BF     		.section	.rodata.crc7_lookup_table,"a",%progbits
+ 1243              		.align	2
+ 1244              		.set	.LANCHOR0,. + 0
+ 1245              		.type	crc7_lookup_table, %object
+ 1246              		.size	crc7_lookup_table, 256
+ 1247              	crc7_lookup_table:
+ 1248 0000 00       		.byte	0
+ 1249 0001 09       		.byte	9
+ 1250 0002 12       		.byte	18
+ 1251 0003 1B       		.byte	27
+ 1252 0004 24       		.byte	36
+ 1253 0005 2D       		.byte	45
+ 1254 0006 36       		.byte	54
+ 1255 0007 3F       		.byte	63
+ 1256 0008 48       		.byte	72
+ 1257 0009 41       		.byte	65
+ 1258 000a 5A       		.byte	90
+ 1259 000b 53       		.byte	83
+ 1260 000c 6C       		.byte	108
+ 1261 000d 65       		.byte	101
+ 1262 000e 7E       		.byte	126
+ 1263 000f 77       		.byte	119
+ 1264 0010 19       		.byte	25
+ 1265 0011 10       		.byte	16
+ 1266 0012 0B       		.byte	11
+ 1267 0013 02       		.byte	2
+ 1268 0014 3D       		.byte	61
+ 1269 0015 34       		.byte	52
+ 1270 0016 2F       		.byte	47
+ 1271 0017 26       		.byte	38
+ 1272 0018 51       		.byte	81
+ 1273 0019 58       		.byte	88
+ 1274 001a 43       		.byte	67
+ 1275 001b 4A       		.byte	74
+ 1276 001c 75       		.byte	117
+ 1277 001d 7C       		.byte	124
+ 1278 001e 67       		.byte	103
+ 1279 001f 6E       		.byte	110
+ 1280 0020 32       		.byte	50
+ 1281 0021 3B       		.byte	59
+ 1282 0022 20       		.byte	32
+ 1283 0023 29       		.byte	41
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 24
+
+
+ 1284 0024 16       		.byte	22
+ 1285 0025 1F       		.byte	31
+ 1286 0026 04       		.byte	4
+ 1287 0027 0D       		.byte	13
+ 1288 0028 7A       		.byte	122
+ 1289 0029 73       		.byte	115
+ 1290 002a 68       		.byte	104
+ 1291 002b 61       		.byte	97
+ 1292 002c 5E       		.byte	94
+ 1293 002d 57       		.byte	87
+ 1294 002e 4C       		.byte	76
+ 1295 002f 45       		.byte	69
+ 1296 0030 2B       		.byte	43
+ 1297 0031 22       		.byte	34
+ 1298 0032 39       		.byte	57
+ 1299 0033 30       		.byte	48
+ 1300 0034 0F       		.byte	15
+ 1301 0035 06       		.byte	6
+ 1302 0036 1D       		.byte	29
+ 1303 0037 14       		.byte	20
+ 1304 0038 63       		.byte	99
+ 1305 0039 6A       		.byte	106
+ 1306 003a 71       		.byte	113
+ 1307 003b 78       		.byte	120
+ 1308 003c 47       		.byte	71
+ 1309 003d 4E       		.byte	78
+ 1310 003e 55       		.byte	85
+ 1311 003f 5C       		.byte	92
+ 1312 0040 64       		.byte	100
+ 1313 0041 6D       		.byte	109
+ 1314 0042 76       		.byte	118
+ 1315 0043 7F       		.byte	127
+ 1316 0044 40       		.byte	64
+ 1317 0045 49       		.byte	73
+ 1318 0046 52       		.byte	82
+ 1319 0047 5B       		.byte	91
+ 1320 0048 2C       		.byte	44
+ 1321 0049 25       		.byte	37
+ 1322 004a 3E       		.byte	62
+ 1323 004b 37       		.byte	55
+ 1324 004c 08       		.byte	8
+ 1325 004d 01       		.byte	1
+ 1326 004e 1A       		.byte	26
+ 1327 004f 13       		.byte	19
+ 1328 0050 7D       		.byte	125
+ 1329 0051 74       		.byte	116
+ 1330 0052 6F       		.byte	111
+ 1331 0053 66       		.byte	102
+ 1332 0054 59       		.byte	89
+ 1333 0055 50       		.byte	80
+ 1334 0056 4B       		.byte	75
+ 1335 0057 42       		.byte	66
+ 1336 0058 35       		.byte	53
+ 1337 0059 3C       		.byte	60
+ 1338 005a 27       		.byte	39
+ 1339 005b 2E       		.byte	46
+ 1340 005c 11       		.byte	17
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 25
+
+
+ 1341 005d 18       		.byte	24
+ 1342 005e 03       		.byte	3
+ 1343 005f 0A       		.byte	10
+ 1344 0060 56       		.byte	86
+ 1345 0061 5F       		.byte	95
+ 1346 0062 44       		.byte	68
+ 1347 0063 4D       		.byte	77
+ 1348 0064 72       		.byte	114
+ 1349 0065 7B       		.byte	123
+ 1350 0066 60       		.byte	96
+ 1351 0067 69       		.byte	105
+ 1352 0068 1E       		.byte	30
+ 1353 0069 17       		.byte	23
+ 1354 006a 0C       		.byte	12
+ 1355 006b 05       		.byte	5
+ 1356 006c 3A       		.byte	58
+ 1357 006d 33       		.byte	51
+ 1358 006e 28       		.byte	40
+ 1359 006f 21       		.byte	33
+ 1360 0070 4F       		.byte	79
+ 1361 0071 46       		.byte	70
+ 1362 0072 5D       		.byte	93
+ 1363 0073 54       		.byte	84
+ 1364 0074 6B       		.byte	107
+ 1365 0075 62       		.byte	98
+ 1366 0076 79       		.byte	121
+ 1367 0077 70       		.byte	112
+ 1368 0078 07       		.byte	7
+ 1369 0079 0E       		.byte	14
+ 1370 007a 15       		.byte	21
+ 1371 007b 1C       		.byte	28
+ 1372 007c 23       		.byte	35
+ 1373 007d 2A       		.byte	42
+ 1374 007e 31       		.byte	49
+ 1375 007f 38       		.byte	56
+ 1376 0080 41       		.byte	65
+ 1377 0081 48       		.byte	72
+ 1378 0082 53       		.byte	83
+ 1379 0083 5A       		.byte	90
+ 1380 0084 65       		.byte	101
+ 1381 0085 6C       		.byte	108
+ 1382 0086 77       		.byte	119
+ 1383 0087 7E       		.byte	126
+ 1384 0088 09       		.byte	9
+ 1385 0089 00       		.byte	0
+ 1386 008a 1B       		.byte	27
+ 1387 008b 12       		.byte	18
+ 1388 008c 2D       		.byte	45
+ 1389 008d 24       		.byte	36
+ 1390 008e 3F       		.byte	63
+ 1391 008f 36       		.byte	54
+ 1392 0090 58       		.byte	88
+ 1393 0091 51       		.byte	81
+ 1394 0092 4A       		.byte	74
+ 1395 0093 43       		.byte	67
+ 1396 0094 7C       		.byte	124
+ 1397 0095 75       		.byte	117
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 26
+
+
+ 1398 0096 6E       		.byte	110
+ 1399 0097 67       		.byte	103
+ 1400 0098 10       		.byte	16
+ 1401 0099 19       		.byte	25
+ 1402 009a 02       		.byte	2
+ 1403 009b 0B       		.byte	11
+ 1404 009c 34       		.byte	52
+ 1405 009d 3D       		.byte	61
+ 1406 009e 26       		.byte	38
+ 1407 009f 2F       		.byte	47
+ 1408 00a0 73       		.byte	115
+ 1409 00a1 7A       		.byte	122
+ 1410 00a2 61       		.byte	97
+ 1411 00a3 68       		.byte	104
+ 1412 00a4 57       		.byte	87
+ 1413 00a5 5E       		.byte	94
+ 1414 00a6 45       		.byte	69
+ 1415 00a7 4C       		.byte	76
+ 1416 00a8 3B       		.byte	59
+ 1417 00a9 32       		.byte	50
+ 1418 00aa 29       		.byte	41
+ 1419 00ab 20       		.byte	32
+ 1420 00ac 1F       		.byte	31
+ 1421 00ad 16       		.byte	22
+ 1422 00ae 0D       		.byte	13
+ 1423 00af 04       		.byte	4
+ 1424 00b0 6A       		.byte	106
+ 1425 00b1 63       		.byte	99
+ 1426 00b2 78       		.byte	120
+ 1427 00b3 71       		.byte	113
+ 1428 00b4 4E       		.byte	78
+ 1429 00b5 47       		.byte	71
+ 1430 00b6 5C       		.byte	92
+ 1431 00b7 55       		.byte	85
+ 1432 00b8 22       		.byte	34
+ 1433 00b9 2B       		.byte	43
+ 1434 00ba 30       		.byte	48
+ 1435 00bb 39       		.byte	57
+ 1436 00bc 06       		.byte	6
+ 1437 00bd 0F       		.byte	15
+ 1438 00be 14       		.byte	20
+ 1439 00bf 1D       		.byte	29
+ 1440 00c0 25       		.byte	37
+ 1441 00c1 2C       		.byte	44
+ 1442 00c2 37       		.byte	55
+ 1443 00c3 3E       		.byte	62
+ 1444 00c4 01       		.byte	1
+ 1445 00c5 08       		.byte	8
+ 1446 00c6 13       		.byte	19
+ 1447 00c7 1A       		.byte	26
+ 1448 00c8 6D       		.byte	109
+ 1449 00c9 64       		.byte	100
+ 1450 00ca 7F       		.byte	127
+ 1451 00cb 76       		.byte	118
+ 1452 00cc 49       		.byte	73
+ 1453 00cd 40       		.byte	64
+ 1454 00ce 5B       		.byte	91
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 27
+
+
+ 1455 00cf 52       		.byte	82
+ 1456 00d0 3C       		.byte	60
+ 1457 00d1 35       		.byte	53
+ 1458 00d2 2E       		.byte	46
+ 1459 00d3 27       		.byte	39
+ 1460 00d4 18       		.byte	24
+ 1461 00d5 11       		.byte	17
+ 1462 00d6 0A       		.byte	10
+ 1463 00d7 03       		.byte	3
+ 1464 00d8 74       		.byte	116
+ 1465 00d9 7D       		.byte	125
+ 1466 00da 66       		.byte	102
+ 1467 00db 6F       		.byte	111
+ 1468 00dc 50       		.byte	80
+ 1469 00dd 59       		.byte	89
+ 1470 00de 42       		.byte	66
+ 1471 00df 4B       		.byte	75
+ 1472 00e0 17       		.byte	23
+ 1473 00e1 1E       		.byte	30
+ 1474 00e2 05       		.byte	5
+ 1475 00e3 0C       		.byte	12
+ 1476 00e4 33       		.byte	51
+ 1477 00e5 3A       		.byte	58
+ 1478 00e6 21       		.byte	33
+ 1479 00e7 28       		.byte	40
+ 1480 00e8 5F       		.byte	95
+ 1481 00e9 56       		.byte	86
+ 1482 00ea 4D       		.byte	77
+ 1483 00eb 44       		.byte	68
+ 1484 00ec 7B       		.byte	123
+ 1485 00ed 72       		.byte	114
+ 1486 00ee 69       		.byte	105
+ 1487 00ef 60       		.byte	96
+ 1488 00f0 0E       		.byte	14
+ 1489 00f1 07       		.byte	7
+ 1490 00f2 1C       		.byte	28
+ 1491 00f3 15       		.byte	21
+ 1492 00f4 2A       		.byte	42
+ 1493 00f5 23       		.byte	35
+ 1494 00f6 38       		.byte	56
+ 1495 00f7 31       		.byte	49
+ 1496 00f8 46       		.byte	70
+ 1497 00f9 4F       		.byte	79
+ 1498 00fa 54       		.byte	84
+ 1499 00fb 5D       		.byte	93
+ 1500 00fc 62       		.byte	98
+ 1501 00fd 6B       		.byte	107
+ 1502 00fe 70       		.byte	112
+ 1503 00ff 79       		.byte	121
+ 1504              		.section	.rodata.start.8618,"a",%progbits
+ 1505              		.align	2
+ 1506              		.set	.LANCHOR3,. + 0
+ 1507              		.type	start.8618, %object
+ 1508              		.size	start.8618, 2
+ 1509              	start.8618:
+ 1510 0000 FF       		.byte	-1
+ 1511 0001 FC       		.byte	-4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 28
+
+
+ 1512 0002 0000     		.section	.rodata.mmc_vmt,"a",%progbits
+ 1513              		.align	2
+ 1514              		.set	.LANCHOR1,. + 0
+ 1515              		.type	mmc_vmt, %object
+ 1516              		.size	mmc_vmt, 32
+ 1517              	mmc_vmt:
+ 1518 0000 00000000 		.word	mmc_lld_is_card_inserted
+ 1519 0004 00000000 		.word	mmc_lld_is_write_protected
+ 1520 0008 00000000 		.word	mmcConnect
+ 1521 000c 00000000 		.word	mmcDisconnect
+ 1522 0010 00000000 		.word	mmc_read
+ 1523 0014 00000000 		.word	mmc_write
+ 1524 0018 00000000 		.word	mmcSync
+ 1525 001c 00000000 		.word	mmcGetInfo
+ 1526              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 1527              		.align	2
+ 1528              	.LC0:
+ 1529 0000 226D6D63 		.ascii	"\"mmcGetInfo\"()\000"
+ 1529      47657449 
+ 1529      6E666F22 
+ 1529      282900
+ 1530 000f 00       		.space	1
+ 1531              	.LC1:
+ 1532 0010 63686962 		.ascii	"chibios/os/hal/src/mmc_spi.c\000"
+ 1532      696F732F 
+ 1532      6F732F68 
+ 1532      616C2F73 
+ 1532      72632F6D 
+ 1533 002d 000000   		.space	3
+ 1534              	.LC2:
+ 1535 0030 226D6D63 		.ascii	"\"mmcConnect\"()\000"
+ 1535      436F6E6E 
+ 1535      65637422 
+ 1535      282900
+ 1536 003f 00       		.space	1
+ 1537              	.LC3:
+ 1538 0040 6D6D6343 		.ascii	"mmcConnect(), #1\000"
+ 1538      6F6E6E65 
+ 1538      63742829 
+ 1538      2C202331 
+ 1538      00
+ 1539 0051 000000   		.space	3
+ 1540              	.LC4:
+ 1541 0054 226D6D63 		.ascii	"\"mmcDisconnect\"()\000"
+ 1541      44697363 
+ 1541      6F6E6E65 
+ 1541      63742228 
+ 1541      2900
+ 1542 0066 0000     		.space	2
+ 1543              	.LC5:
+ 1544 0068 6D6D6344 		.ascii	"mmcDisconnect(), #1\000"
+ 1544      6973636F 
+ 1544      6E6E6563 
+ 1544      7428292C 
+ 1544      20233100 
+ 1545              	.LC6:
+ 1546 007c 226D6D63 		.ascii	"\"mmcSync\"()\000"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 29
+
+
+ 1546      53796E63 
+ 1546      22282900 
+ 1547              	.LC7:
+ 1548 0088 226D6D63 		.ascii	"\"mmcStart\"()\000"
+ 1548      53746172 
+ 1548      74222829 
+ 1548      00
+ 1549 0095 000000   		.space	3
+ 1550              	.LC8:
+ 1551 0098 6D6D6353 		.ascii	"mmcStart(), #1\000"
+ 1551      74617274 
+ 1551      28292C20 
+ 1551      233100
+ 1552 00a7 00       		.space	1
+ 1553              	.LC9:
+ 1554 00a8 226D6D63 		.ascii	"\"mmcStop\"()\000"
+ 1554      53746F70 
+ 1554      22282900 
+ 1555              	.LC10:
+ 1556 00b4 6D6D6353 		.ascii	"mmcStop(), #1\000"
+ 1556      746F7028 
+ 1556      292C2023 
+ 1556      3100
+ 1557 00c2 0000     		.space	2
+ 1558              	.LC11:
+ 1559 00c4 226D6D63 		.ascii	"\"mmcStartSequentialRead\"()\000"
+ 1559      53746172 
+ 1559      74536571 
+ 1559      75656E74 
+ 1559      69616C52 
+ 1560 00df 00       		.space	1
+ 1561              	.LC12:
+ 1562 00e0 6D6D6353 		.ascii	"mmcStartSequentialRead(), #1\000"
+ 1562      74617274 
+ 1562      53657175 
+ 1562      656E7469 
+ 1562      616C5265 
+ 1563 00fd 000000   		.space	3
+ 1564              	.LC13:
+ 1565 0100 226D6D63 		.ascii	"\"mmcSequentialRead\"()\000"
+ 1565      53657175 
+ 1565      656E7469 
+ 1565      616C5265 
+ 1565      61642228 
+ 1566 0116 0000     		.space	2
+ 1567              	.LC14:
+ 1568 0118 226D6D63 		.ascii	"\"mmcStopSequentialRead\"()\000"
+ 1568      53746F70 
+ 1568      53657175 
+ 1568      656E7469 
+ 1568      616C5265 
+ 1569 0132 0000     		.space	2
+ 1570              	.LC15:
+ 1571 0134 226D6D63 		.ascii	"\"mmcStartSequentialWrite\"()\000"
+ 1571      53746172 
+ 1571      74536571 
+ 1571      75656E74 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 30
+
+
+ 1571      69616C57 
+ 1572              	.LC16:
+ 1573 0150 6D6D6353 		.ascii	"mmcStartSequentialWrite(), #1\000"
+ 1573      74617274 
+ 1573      53657175 
+ 1573      656E7469 
+ 1573      616C5772 
+ 1574 016e 0000     		.space	2
+ 1575              	.LC17:
+ 1576 0170 226D6D63 		.ascii	"\"mmcSequentialWrite\"()\000"
+ 1576      53657175 
+ 1576      656E7469 
+ 1576      616C5772 
+ 1576      69746522 
+ 1577 0187 00       		.space	1
+ 1578              	.LC18:
+ 1579 0188 226D6D63 		.ascii	"\"mmcStopSequentialWrite\"()\000"
+ 1579      53746F70 
+ 1579      53657175 
+ 1579      656E7469 
+ 1579      616C5772 
+ 1580 01a3 00       		.space	1
+ 1581              	.LC19:
+ 1582 01a4 226D6D63 		.ascii	"\"mmcErase\"()\000"
+ 1582      45726173 
+ 1582      65222829 
+ 1582      00
+ 1583 01b1 000000   		.section	.rodata.stopcmd.8609,"a",%progbits
+ 1584              		.align	2
+ 1585              		.set	.LANCHOR2,. + 0
+ 1586              		.type	stopcmd.8609, %object
+ 1587              		.size	stopcmd.8609, 7
+ 1588              	stopcmd.8609:
+ 1589 0000 4C       		.byte	76
+ 1590 0001 00       		.byte	0
+ 1591 0002 00       		.byte	0
+ 1592 0003 00       		.byte	0
+ 1593 0004 00       		.byte	0
+ 1594 0005 01       		.byte	1
+ 1595 0006 FF       		.byte	-1
+ 1596 0007 00       		.section	.rodata.stop.8623,"a",%progbits
+ 1597              		.align	2
+ 1598              		.set	.LANCHOR4,. + 0
+ 1599              		.type	stop.8623, %object
+ 1600              		.size	stop.8623, 2
+ 1601              	stop.8623:
+ 1602 0000 FD       		.byte	-3
+ 1603 0001 FF       		.byte	-1
+ 1604 0002 0000     		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 31
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 mmc_spi.c
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:17     .text.mmcGetInfo:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:23     .text.mmcGetInfo:00000000 mmcGetInfo
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1528   .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1531   .rodata.str1.4:00000010 .LC1
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:54     .text.wait.isra.0:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:59     .text.wait.isra.0:00000000 wait.isra.0
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:96     .text.send_hdr:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:101    .text.send_hdr:00000000 send_hdr
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1244   .rodata.crc7_lookup_table:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:146    .text.recvr1.isra.1:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:151    .text.recvr1.isra.1:00000000 recvr1.isra.1
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:175    .text.send_command_R3:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:180    .text.send_command_R3:00000000 send_command_R3
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:210    .text.send_command_R1:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:215    .text.send_command_R1:00000000 send_command_R1
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:239    .text.read_CxD:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:244    .text.read_CxD:00000000 read_CxD
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:323    .text.mmcConnect:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:329    .text.mmcConnect:00000000 mmcConnect
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1537   .rodata.str1.4:00000040 .LC3
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1534   .rodata.str1.4:00000030 .LC2
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:484    .text.sync.isra.2:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:489    .text.sync.isra.2:00000000 sync.isra.2
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:519    .text.mmcDisconnect:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:525    .text.mmcDisconnect:00000000 mmcDisconnect
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1543   .rodata.str1.4:00000068 .LC5
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1540   .rodata.str1.4:00000054 .LC4
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:594    .text.mmcSync:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:600    .text.mmcSync:00000000 mmcSync
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1545   .rodata.str1.4:0000007c .LC6
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:635    .text.mmcInit:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:641    .text.mmcInit:00000000 mmcInit
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:648    .text.mmcObjectInit:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:654    .text.mmcObjectInit:00000000 mmcObjectInit
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1514   .rodata.mmc_vmt:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:669    .text.mmcStart:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:675    .text.mmcStart:00000000 mmcStart
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1550   .rodata.str1.4:00000098 .LC8
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1547   .rodata.str1.4:00000088 .LC7
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:709    .text.mmcStop:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:715    .text.mmcStop:00000000 mmcStop
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1555   .rodata.str1.4:000000b4 .LC10
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1553   .rodata.str1.4:000000a8 .LC9
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:747    .text.mmcStartSequentialRead:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:753    .text.mmcStartSequentialRead:00000000 mmcStartSequentialRead
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1561   .rodata.str1.4:000000e0 .LC12
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1558   .rodata.str1.4:000000c4 .LC11
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:811    .text.mmcSequentialRead:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:817    .text.mmcSequentialRead:00000000 mmcSequentialRead
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1564   .rodata.str1.4:00000100 .LC13
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:880    .text.mmcStopSequentialRead:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:886    .text.mmcStopSequentialRead:00000000 mmcStopSequentialRead
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1585   .rodata.stopcmd.8609:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1567   .rodata.str1.4:00000118 .LC14
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:925    .text.mmc_read:00000000 $t
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s 			page 32
+
+
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:930    .text.mmc_read:00000000 mmc_read
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:960    .text.mmcStartSequentialWrite:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:966    .text.mmcStartSequentialWrite:00000000 mmcStartSequentialWrite
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1572   .rodata.str1.4:00000150 .LC16
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1570   .rodata.str1.4:00000134 .LC15
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1024   .text.mmcSequentialWrite:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1030   .text.mmcSequentialWrite:00000000 mmcSequentialWrite
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1575   .rodata.str1.4:00000170 .LC17
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1506   .rodata.start.8618:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1106   .text.mmcStopSequentialWrite:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1112   .text.mmcStopSequentialWrite:00000000 mmcStopSequentialWrite
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1598   .rodata.stop.8623:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1578   .rodata.str1.4:00000188 .LC18
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1148   .text.mmc_write:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1153   .text.mmc_write:00000000 mmc_write
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1183   .text.mmcErase:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1189   .text.mmcErase:00000000 mmcErase
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1581   .rodata.str1.4:000001a4 .LC19
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1243   .rodata.crc7_lookup_table:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1247   .rodata.crc7_lookup_table:00000000 crc7_lookup_table
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1505   .rodata.start.8618:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1509   .rodata.start.8618:00000000 start.8618
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1513   .rodata.mmc_vmt:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1517   .rodata.mmc_vmt:00000000 mmc_vmt
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1527   .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1584   .rodata.stopcmd.8609:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1588   .rodata.stopcmd.8609:00000000 stopcmd.8609
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1597   .rodata.stop.8623:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccKAfO0h.s:1601   .rodata.stop.8623:00000000 stop.8623
+
+UNDEFINED SYMBOLS
+chDbgPanic3
+spiReceive
+chThdSleep
+spiSend
+spiSelect
+spiUnselect
+spiIgnore
+spiStart
+spiStop
+mmcsdGetCapacity
+chDbgPanic
+dbg_check_lock
+dbg_check_unlock
+mmc_lld_is_card_inserted
+mmc_lld_is_write_protected

@@ -1,0 +1,935 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s 			page 1
+
+
+   1              		.file	"serial_lld.c"
+   2              		.section	.text$inint,"x"
+   3              		.p2align 4,,15
+   4              		.def	_inint;	.scl	3;	.type	32;	.endef
+   5              	_inint:
+   6              	LFB30:
+   7              		.cfi_startproc
+   8 0000 57       		pushl	%edi
+   9              		.cfi_def_cfa_offset 8
+  10              		.cfi_offset 7, -8
+  11 0001 56       		pushl	%esi
+  12              		.cfi_def_cfa_offset 12
+  13              		.cfi_offset 6, -12
+  14 0002 89C6     		movl	%eax, %esi
+  15 0004 53       		pushl	%ebx
+  16              		.cfi_def_cfa_offset 16
+  17              		.cfi_offset 3, -16
+  18 0005 31DB     		xorl	%ebx, %ebx
+  19 0007 83EC30   		subl	$48, %esp
+  20              		.cfi_def_cfa_offset 64
+  21 000a 8B809800 		movl	152(%eax), %eax
+  21      0000
+  22 0010 83F8FF   		cmpl	$-1, %eax
+  23 0013 7458     		je	L2
+  24 0015 8D5C2410 		leal	16(%esp), %ebx
+  25 0019 C744240C 		movl	$0, 12(%esp)
+  25      00000000 
+  26 0021 C7442408 		movl	$32, 8(%esp)
+  26      20000000 
+  27 0029 895C2404 		movl	%ebx, 4(%esp)
+  28 002d 890424   		movl	%eax, (%esp)
+  29 0030 E8000000 		call	_recv@16
+  29      00
+  30              		.cfi_def_cfa_offset 48
+  31 0035 83EC10   		subl	$16, %esp
+  32              		.cfi_def_cfa_offset 64
+  33 0038 83F8FF   		cmpl	$-1, %eax
+  34 003b 7439     		je	L4
+  35 003d 85C0     		testl	%eax, %eax
+  36 003f 7467     		je	L5
+  37 0041 85C0     		testl	%eax, %eax
+  38 0043 8D3C03   		leal	(%ebx,%eax), %edi
+  39 0046 7E20     		jle	L9
+  40              		.p2align 4,,7
+  41              	L12:
+  42 0048 E8000000 		call	_dbg_check_lock_from_isr
+  42      00
+  43 004d 0FB613   		movzbl	(%ebx), %edx
+  44 0050 83C301   		addl	$1, %ebx
+  45 0053 893424   		movl	%esi, (%esp)
+  46 0056 89542404 		movl	%edx, 4(%esp)
+  47 005a E8000000 		call	_sdIncomingDataI
+  47      00
+  48 005f E8000000 		call	_dbg_check_unlock_from_isr
+  48      00
+  49 0064 39FB     		cmpl	%edi, %ebx
+  50 0066 75E0     		jne	L12
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s 			page 2
+
+
+  51              	L9:
+  52 0068 BB010000 		movl	$1, %ebx
+  52      00
+  53              	L2:
+  54 006d 83C430   		addl	$48, %esp
+  55              		.cfi_remember_state
+  56              		.cfi_def_cfa_offset 16
+  57 0070 89D8     		movl	%ebx, %eax
+  58 0072 5B       		popl	%ebx
+  59              		.cfi_restore 3
+  60              		.cfi_def_cfa_offset 12
+  61 0073 5E       		popl	%esi
+  62              		.cfi_restore 6
+  63              		.cfi_def_cfa_offset 8
+  64 0074 5F       		popl	%edi
+  65              		.cfi_restore 7
+  66              		.cfi_def_cfa_offset 4
+  67 0075 C3       		ret
+  68              		.p2align 4,,7
+  69              	L4:
+  70              		.cfi_restore_state
+  71 0076 E8000000 		call	_WSAGetLastError@0
+  71      00
+  72 007b 31DB     		xorl	%ebx, %ebx
+  73 007d 3D332700 		cmpl	$10035, %eax
+  73      00
+  74 0082 74E9     		je	L2
+  75 0084 8B869800 		movl	152(%esi), %eax
+  75      0000
+  76 008a 890424   		movl	%eax, (%esp)
+  77 008d E8000000 		call	_closesocket@4
+  77      00
+  78              		.cfi_def_cfa_offset 60
+  79 0092 89D8     		movl	%ebx, %eax
+  80 0094 C7869800 		movl	$-1, 152(%esi)
+  80      0000FFFF 
+  80      FFFF
+  81 009e 83EC04   		subl	$4, %esp
+  82              		.cfi_def_cfa_offset 64
+  83 00a1 83C430   		addl	$48, %esp
+  84              		.cfi_remember_state
+  85              		.cfi_def_cfa_offset 16
+  86 00a4 5B       		popl	%ebx
+  87              		.cfi_restore 3
+  88              		.cfi_def_cfa_offset 12
+  89 00a5 5E       		popl	%esi
+  90              		.cfi_restore 6
+  91              		.cfi_def_cfa_offset 8
+  92 00a6 5F       		popl	%edi
+  93              		.cfi_restore 7
+  94              		.cfi_def_cfa_offset 4
+  95 00a7 C3       		ret
+  96              		.p2align 4,,7
+  97              	L5:
+  98              		.cfi_restore_state
+  99 00a8 8B869800 		movl	152(%esi), %eax
+  99      0000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s 			page 3
+
+
+ 100 00ae 31DB     		xorl	%ebx, %ebx
+ 101 00b0 890424   		movl	%eax, (%esp)
+ 102 00b3 E8000000 		call	_closesocket@4
+ 102      00
+ 103              		.cfi_def_cfa_offset 60
+ 104 00b8 C7869800 		movl	$-1, 152(%esi)
+ 104      0000FFFF 
+ 104      FFFF
+ 105 00c2 83C604   		addl	$4, %esi
+ 106 00c5 83EC04   		subl	$4, %esp
+ 107              		.cfi_def_cfa_offset 64
+ 108 00c8 E8000000 		call	_dbg_check_lock_from_isr
+ 108      00
+ 109 00cd 893424   		movl	%esi, (%esp)
+ 110 00d0 C7442404 		movl	$2, 4(%esp)
+ 110      02000000 
+ 111 00d8 E8000000 		call	_chEvtBroadcastFlagsI
+ 111      00
+ 112 00dd E8000000 		call	_dbg_check_unlock_from_isr
+ 112      00
+ 113 00e2 83C430   		addl	$48, %esp
+ 114              		.cfi_def_cfa_offset 16
+ 115 00e5 89D8     		movl	%ebx, %eax
+ 116 00e7 5B       		popl	%ebx
+ 117              		.cfi_restore 3
+ 118              		.cfi_def_cfa_offset 12
+ 119 00e8 5E       		popl	%esi
+ 120              		.cfi_restore 6
+ 121              		.cfi_def_cfa_offset 8
+ 122 00e9 5F       		popl	%edi
+ 123              		.cfi_restore 7
+ 124              		.cfi_def_cfa_offset 4
+ 125 00ea C3       		ret
+ 126              		.cfi_endproc
+ 127              	LFE30:
+ 128 00eb 90909090 		.section .rdata,"dr"
+ 128      90
+ 129              		.align 4
+ 130              	LC0:
+ 131 0000 25733A20 		.ascii "%s: Unable to setup non blocking mode on data socket\12\0"
+ 131      556E6162 
+ 131      6C652074 
+ 131      6F207365 
+ 131      74757020 
+ 132              		.section	.text$connint,"x"
+ 133              		.p2align 4,,15
+ 134              		.def	_connint;	.scl	3;	.type	32;	.endef
+ 135              	_connint:
+ 136              	LFB29:
+ 137              		.cfi_startproc
+ 138 0000 53       		pushl	%ebx
+ 139              		.cfi_def_cfa_offset 8
+ 140              		.cfi_offset 3, -8
+ 141 0001 89C3     		movl	%eax, %ebx
+ 142 0003 83EC38   		subl	$56, %esp
+ 143              		.cfi_def_cfa_offset 64
+ 144 0006 83B89800 		cmpl	$-1, 152(%eax)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s 			page 4
+
+
+ 144      0000FF
+ 145 000d 7407     		je	L32
+ 146              	L23:
+ 147 000f 83C438   		addl	$56, %esp
+ 148              		.cfi_remember_state
+ 149              		.cfi_def_cfa_offset 8
+ 150 0012 31C0     		xorl	%eax, %eax
+ 151 0014 5B       		popl	%ebx
+ 152              		.cfi_restore 3
+ 153              		.cfi_def_cfa_offset 4
+ 154 0015 C3       		ret
+ 155              		.p2align 4,,7
+ 156              	L32:
+ 157              		.cfi_restore_state
+ 158 0016 8D44241C 		leal	28(%esp), %eax
+ 159 001a 89442408 		movl	%eax, 8(%esp)
+ 160 001e 8D442420 		leal	32(%esp), %eax
+ 161 0022 89442404 		movl	%eax, 4(%esp)
+ 162 0026 8B839400 		movl	148(%ebx), %eax
+ 162      0000
+ 163 002c C744241C 		movl	$16, 28(%esp)
+ 163      10000000 
+ 164 0034 890424   		movl	%eax, (%esp)
+ 165 0037 E8000000 		call	_accept@12
+ 165      00
+ 166              		.cfi_def_cfa_offset 52
+ 167 003c 83EC0C   		subl	$12, %esp
+ 168              		.cfi_def_cfa_offset 64
+ 169 003f 83F8FF   		cmpl	$-1, %eax
+ 170 0042 89839800 		movl	%eax, 152(%ebx)
+ 170      0000
+ 171 0048 74C5     		je	L23
+ 172 004a C7442408 		movl	$_nb, 8(%esp)
+ 172      00000000 
+ 173 0052 C7442404 		movl	$-2147195266, 4(%esp)
+ 173      7E660480 
+ 174 005a 890424   		movl	%eax, (%esp)
+ 175 005d E8000000 		call	_ioctlsocket@12
+ 175      00
+ 176              		.cfi_def_cfa_offset 52
+ 177 0062 83EC0C   		subl	$12, %esp
+ 178              		.cfi_def_cfa_offset 64
+ 179 0065 85C0     		testl	%eax, %eax
+ 180 0067 7527     		jne	L33
+ 181 0069 83C304   		addl	$4, %ebx
+ 182 006c E8000000 		call	_dbg_check_lock_from_isr
+ 182      00
+ 183 0071 891C24   		movl	%ebx, (%esp)
+ 184 0074 C7442404 		movl	$1, 4(%esp)
+ 184      01000000 
+ 185 007c E8000000 		call	_chEvtBroadcastFlagsI
+ 185      00
+ 186 0081 E8000000 		call	_dbg_check_unlock_from_isr
+ 186      00
+ 187 0086 83C438   		addl	$56, %esp
+ 188              		.cfi_remember_state
+ 189              		.cfi_def_cfa_offset 8
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s 			page 5
+
+
+ 190 0089 B8010000 		movl	$1, %eax
+ 190      00
+ 191 008e 5B       		popl	%ebx
+ 192              		.cfi_restore 3
+ 193              		.cfi_def_cfa_offset 4
+ 194 008f C3       		ret
+ 195              	L33:
+ 196              		.cfi_restore_state
+ 197 0090 8B839C00 		movl	156(%ebx), %eax
+ 197      0000
+ 198 0096 C7042400 		movl	$LC0, (%esp)
+ 198      000000
+ 199 009d 89442404 		movl	%eax, 4(%esp)
+ 200 00a1 E8000000 		call	_printf
+ 200      00
+ 201 00a6 8B839400 		movl	148(%ebx), %eax
+ 201      0000
+ 202 00ac 83F8FF   		cmpl	$-1, %eax
+ 203 00af 7409     		je	L21
+ 204 00b1 890424   		movl	%eax, (%esp)
+ 205 00b4 E8000000 		call	_closesocket@4
+ 205      00
+ 206              		.cfi_def_cfa_offset 60
+ 207 00b9 52       		pushl	%edx
+ 208              		.cfi_def_cfa_offset 64
+ 209              	L21:
+ 210 00ba 8B839800 		movl	152(%ebx), %eax
+ 210      0000
+ 211 00c0 83F8FF   		cmpl	$-1, %eax
+ 212 00c3 7409     		je	L22
+ 213 00c5 890424   		movl	%eax, (%esp)
+ 214 00c8 E8000000 		call	_closesocket@4
+ 214      00
+ 215              		.cfi_def_cfa_offset 60
+ 216 00cd 50       		pushl	%eax
+ 217              		.cfi_def_cfa_offset 64
+ 218              	L22:
+ 219 00ce E8000000 		call	_WSACleanup@0
+ 219      00
+ 220 00d3 C7042401 		movl	$1, (%esp)
+ 220      000000
+ 221 00da E8000000 		call	_exit
+ 221      00
+ 222              		.cfi_endproc
+ 223              	LFE29:
+ 224 00df 90       		.section	.text$outint.part.1,"x"
+ 225              		.p2align 4,,15
+ 226              		.def	_outint.part.1;	.scl	3;	.type	32;	.endef
+ 227              	_outint.part.1:
+ 228              	LFB37:
+ 229              		.cfi_startproc
+ 230 0000 56       		pushl	%esi
+ 231              		.cfi_def_cfa_offset 8
+ 232              		.cfi_offset 6, -8
+ 233 0001 53       		pushl	%ebx
+ 234              		.cfi_def_cfa_offset 12
+ 235              		.cfi_offset 3, -12
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s 			page 6
+
+
+ 236 0002 89C3     		movl	%eax, %ebx
+ 237 0004 83EC24   		subl	$36, %esp
+ 238              		.cfi_def_cfa_offset 48
+ 239 0007 E8000000 		call	_dbg_check_lock_from_isr
+ 239      00
+ 240 000c 891C24   		movl	%ebx, (%esp)
+ 241 000f E8000000 		call	_sdRequestDataI
+ 241      00
+ 242 0014 89C6     		movl	%eax, %esi
+ 243 0016 E8000000 		call	_dbg_check_unlock_from_isr
+ 243      00
+ 244 001b 85F6     		testl	%esi, %esi
+ 245 001d 7870     		js	L46
+ 246 001f 89F0     		movl	%esi, %eax
+ 247 0021 8844241F 		movb	%al, 31(%esp)
+ 248 0025 8D44241F 		leal	31(%esp), %eax
+ 249 0029 C744240C 		movl	$0, 12(%esp)
+ 249      00000000 
+ 250 0031 C7442408 		movl	$1, 8(%esp)
+ 250      01000000 
+ 251 0039 89442404 		movl	%eax, 4(%esp)
+ 252 003d 8B839800 		movl	152(%ebx), %eax
+ 252      0000
+ 253 0043 890424   		movl	%eax, (%esp)
+ 254 0046 E8000000 		call	_send@16
+ 254      00
+ 255              		.cfi_def_cfa_offset 32
+ 256 004b 83EC10   		subl	$16, %esp
+ 257              		.cfi_def_cfa_offset 48
+ 258 004e 83F8FF   		cmpl	$-1, %eax
+ 259 0051 744F     		je	L37
+ 260 0053 85C0     		testl	%eax, %eax
+ 261 0055 7540     		jne	L44
+ 262 0057 8B839800 		movl	152(%ebx), %eax
+ 262      0000
+ 263 005d 890424   		movl	%eax, (%esp)
+ 264 0060 E8000000 		call	_closesocket@4
+ 264      00
+ 265              		.cfi_def_cfa_offset 44
+ 266 0065 C7839800 		movl	$-1, 152(%ebx)
+ 266      0000FFFF 
+ 266      FFFF
+ 267 006f 83C304   		addl	$4, %ebx
+ 268 0072 83EC04   		subl	$4, %esp
+ 269              		.cfi_def_cfa_offset 48
+ 270 0075 E8000000 		call	_dbg_check_lock_from_isr
+ 270      00
+ 271 007a C7442404 		movl	$2, 4(%esp)
+ 271      02000000 
+ 272 0082 891C24   		movl	%ebx, (%esp)
+ 273 0085 E8000000 		call	_chEvtBroadcastFlagsI
+ 273      00
+ 274 008a E8000000 		call	_dbg_check_unlock_from_isr
+ 274      00
+ 275              	L46:
+ 276 008f 31C0     		xorl	%eax, %eax
+ 277              	L36:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s 			page 7
+
+
+ 278 0091 83C424   		addl	$36, %esp
+ 279              		.cfi_remember_state
+ 280              		.cfi_def_cfa_offset 12
+ 281 0094 5B       		popl	%ebx
+ 282              		.cfi_restore 3
+ 283              		.cfi_def_cfa_offset 8
+ 284 0095 5E       		popl	%esi
+ 285              		.cfi_restore 6
+ 286              		.cfi_def_cfa_offset 4
+ 287 0096 C3       		ret
+ 288              		.p2align 4,,7
+ 289              	L44:
+ 290              		.cfi_restore_state
+ 291 0097 83C424   		addl	$36, %esp
+ 292              		.cfi_remember_state
+ 293              		.cfi_def_cfa_offset 12
+ 294 009a B8010000 		movl	$1, %eax
+ 294      00
+ 295 009f 5B       		popl	%ebx
+ 296              		.cfi_restore 3
+ 297              		.cfi_def_cfa_offset 8
+ 298 00a0 5E       		popl	%esi
+ 299              		.cfi_restore 6
+ 300              		.cfi_def_cfa_offset 4
+ 301 00a1 C3       		ret
+ 302              		.p2align 4,,7
+ 303              	L37:
+ 304              		.cfi_restore_state
+ 305 00a2 E8000000 		call	_WSAGetLastError@0
+ 305      00
+ 306 00a7 3D332700 		cmpl	$10035, %eax
+ 306      00
+ 307 00ac 74E1     		je	L46
+ 308 00ae 8B839800 		movl	152(%ebx), %eax
+ 308      0000
+ 309 00b4 890424   		movl	%eax, (%esp)
+ 310 00b7 E8000000 		call	_closesocket@4
+ 310      00
+ 311              		.cfi_def_cfa_offset 44
+ 312 00bc 31C0     		xorl	%eax, %eax
+ 313 00be C7839800 		movl	$-1, 152(%ebx)
+ 313      0000FFFF 
+ 313      FFFF
+ 314 00c8 83EC04   		subl	$4, %esp
+ 315              		.cfi_def_cfa_offset 48
+ 316 00cb EBC4     		jmp	L36
+ 317              		.cfi_endproc
+ 318              	LFE37:
+ 319 00cd 909090   		.section .rdata,"dr"
+ 320              	LC1:
+ 321 0036 74637000 		.ascii "tcp\0"
+ 322 003a 0000     		.align 4
+ 323              	LC2:
+ 324 003c 25733A20 		.ascii "%s: Error mapping protocol name to protocol number\12\0"
+ 324      4572726F 
+ 324      72206D61 
+ 324      7070696E 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s 			page 8
+
+
+ 324      67207072 
+ 325              		.align 4
+ 326              	LC3:
+ 327 0070 25733A20 		.ascii "%s: Error creating simulator socket\12\0"
+ 327      4572726F 
+ 327      72206372 
+ 327      65617469 
+ 327      6E672073 
+ 328 0095 000000   		.align 4
+ 329              	LC4:
+ 330 0098 25733A20 		.ascii "%s: Unable to setup non blocking mode on socket\12\0"
+ 330      556E6162 
+ 330      6C652074 
+ 330      6F207365 
+ 330      74757020 
+ 331              	LC5:
+ 332 00c9 25733A20 		.ascii "%s: Error binding socket\12\0"
+ 332      4572726F 
+ 332      72206269 
+ 332      6E64696E 
+ 332      6720736F 
+ 333              	LC6:
+ 334 00e3 25733A20 		.ascii "%s: Error listening socket\12\0"
+ 334      4572726F 
+ 334      72206C69 
+ 334      7374656E 
+ 334      696E6720 
+ 335 00ff 00       		.align 4
+ 336              	LC7:
+ 337 0100 46756C6C 		.ascii "Full Duplex Channel %s listening on port %d\12\0"
+ 337      20447570 
+ 337      6C657820 
+ 337      4368616E 
+ 337      6E656C20 
+ 338              		.section	.text$init.isra.2,"x"
+ 339              		.p2align 4,,15
+ 340              		.def	_init.isra.2;	.scl	3;	.type	32;	.endef
+ 341              	_init.isra.2:
+ 342              	LFB38:
+ 343              		.cfi_startproc
+ 344 0000 55       		pushl	%ebp
+ 345              		.cfi_def_cfa_offset 8
+ 346              		.cfi_offset 5, -8
+ 347 0001 57       		pushl	%edi
+ 348              		.cfi_def_cfa_offset 12
+ 349              		.cfi_offset 7, -12
+ 350 0002 0FB7F9   		movzwl	%cx, %edi
+ 351 0005 56       		pushl	%esi
+ 352              		.cfi_def_cfa_offset 16
+ 353              		.cfi_offset 6, -16
+ 354 0006 89D6     		movl	%edx, %esi
+ 355 0008 53       		pushl	%ebx
+ 356              		.cfi_def_cfa_offset 20
+ 357              		.cfi_offset 3, -20
+ 358 0009 89C3     		movl	%eax, %ebx
+ 359 000b 83EC2C   		subl	$44, %esp
+ 360              		.cfi_def_cfa_offset 64
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s 			page 9
+
+
+ 361 000e C7042436 		movl	$LC1, (%esp)
+ 361      000000
+ 362 0015 E8000000 		call	_getprotobyname@4
+ 362      00
+ 363              		.cfi_def_cfa_offset 60
+ 364 001a 83EC04   		subl	$4, %esp
+ 365              		.cfi_def_cfa_offset 64
+ 366 001d 85C0     		testl	%eax, %eax
+ 367 001f 0F84E000 		je	L60
+ 367      0000
+ 368 0025 0FBF4008 		movswl	8(%eax), %eax
+ 369 0029 C7442404 		movl	$1, 4(%esp)
+ 369      01000000 
+ 370 0031 C7042402 		movl	$2, (%esp)
+ 370      000000
+ 371 0038 89442408 		movl	%eax, 8(%esp)
+ 372 003c E8000000 		call	_socket@12
+ 372      00
+ 373              		.cfi_def_cfa_offset 52
+ 374 0041 83EC0C   		subl	$12, %esp
+ 375              		.cfi_def_cfa_offset 64
+ 376 0044 83F8FF   		cmpl	$-1, %eax
+ 377 0047 8903     		movl	%eax, (%ebx)
+ 378 0049 0F842701 		je	L61
+ 378      0000
+ 379 004f C7442408 		movl	$_nb, 8(%esp)
+ 379      00000000 
+ 380 0057 C7442404 		movl	$-2147195266, 4(%esp)
+ 380      7E660480 
+ 381 005f 890424   		movl	%eax, (%esp)
+ 382 0062 E8000000 		call	_ioctlsocket@12
+ 382      00
+ 383              		.cfi_def_cfa_offset 52
+ 384 0067 83EC0C   		subl	$12, %esp
+ 385              		.cfi_def_cfa_offset 64
+ 386 006a 85C0     		testl	%eax, %eax
+ 387 006c 0F85F000 		jne	L62
+ 387      0000
+ 388 0072 893C24   		movl	%edi, (%esp)
+ 389 0075 8D6C2410 		leal	16(%esp), %ebp
+ 390 0079 C7442410 		movl	$0, 16(%esp)
+ 390      00000000 
+ 391 0081 C7442414 		movl	$0, 20(%esp)
+ 391      00000000 
+ 392 0089 C7442418 		movl	$0, 24(%esp)
+ 392      00000000 
+ 393 0091 C744241C 		movl	$0, 28(%esp)
+ 393      00000000 
+ 394 0099 66C74424 		movw	$2, 16(%esp)
+ 394      100200
+ 395 00a0 E8000000 		call	_htons@4
+ 395      00
+ 396              		.cfi_def_cfa_offset 60
+ 397 00a5 83EC04   		subl	$4, %esp
+ 398              		.cfi_def_cfa_offset 64
+ 399 00a8 66894424 		movw	%ax, 18(%esp)
+ 399      12
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s 			page 10
+
+
+ 400 00ad 8B03     		movl	(%ebx), %eax
+ 401 00af C7442408 		movl	$16, 8(%esp)
+ 401      10000000 
+ 402 00b7 896C2404 		movl	%ebp, 4(%esp)
+ 403 00bb 890424   		movl	%eax, (%esp)
+ 404 00be E8000000 		call	_bind@12
+ 404      00
+ 405              		.cfi_def_cfa_offset 52
+ 406 00c3 83EC0C   		subl	$12, %esp
+ 407              		.cfi_def_cfa_offset 64
+ 408 00c6 85C0     		testl	%eax, %eax
+ 409 00c8 0F858000 		jne	L63
+ 409      0000
+ 410 00ce 8B03     		movl	(%ebx), %eax
+ 411 00d0 C7442404 		movl	$1, 4(%esp)
+ 411      01000000 
+ 412 00d8 890424   		movl	%eax, (%esp)
+ 413 00db E8000000 		call	_listen@8
+ 413      00
+ 414              		.cfi_def_cfa_offset 56
+ 415 00e0 83EC08   		subl	$8, %esp
+ 416              		.cfi_def_cfa_offset 64
+ 417 00e3 85C0     		testl	%eax, %eax
+ 418 00e5 7553     		jne	L64
+ 419 00e7 8B06     		movl	(%esi), %eax
+ 420 00e9 897C2408 		movl	%edi, 8(%esp)
+ 421 00ed C7042400 		movl	$LC7, (%esp)
+ 421      010000
+ 422 00f4 89442404 		movl	%eax, 4(%esp)
+ 423 00f8 E8000000 		call	_printf
+ 423      00
+ 424 00fd 83C42C   		addl	$44, %esp
+ 425              		.cfi_remember_state
+ 426              		.cfi_def_cfa_offset 20
+ 427 0100 5B       		popl	%ebx
+ 428              		.cfi_restore 3
+ 429              		.cfi_def_cfa_offset 16
+ 430 0101 5E       		popl	%esi
+ 431              		.cfi_restore 6
+ 432              		.cfi_def_cfa_offset 12
+ 433 0102 5F       		popl	%edi
+ 434              		.cfi_restore 7
+ 435              		.cfi_def_cfa_offset 8
+ 436 0103 5D       		popl	%ebp
+ 437              		.cfi_restore 5
+ 438              		.cfi_def_cfa_offset 4
+ 439 0104 C3       		ret
+ 440              	L60:
+ 441              		.cfi_restore_state
+ 442 0105 8B06     		movl	(%esi), %eax
+ 443 0107 C704243C 		movl	$LC2, (%esp)
+ 443      000000
+ 444 010e 89442404 		movl	%eax, 4(%esp)
+ 445 0112 E8000000 		call	_printf
+ 445      00
+ 446              	L49:
+ 447 0117 8B03     		movl	(%ebx), %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s 			page 11
+
+
+ 448 0119 83F8FF   		cmpl	$-1, %eax
+ 449 011c 740B     		je	L54
+ 450 011e 890424   		movl	%eax, (%esp)
+ 451 0121 E8000000 		call	_closesocket@4
+ 451      00
+ 452              		.cfi_def_cfa_offset 60
+ 453 0126 83EC04   		subl	$4, %esp
+ 454              		.cfi_def_cfa_offset 64
+ 455              	L54:
+ 456 0129 E8000000 		call	_WSACleanup@0
+ 456      00
+ 457 012e C7042401 		movl	$1, (%esp)
+ 457      000000
+ 458 0135 E8000000 		call	_exit
+ 458      00
+ 459              	L64:
+ 460 013a 8B06     		movl	(%esi), %eax
+ 461 013c C70424E3 		movl	$LC6, (%esp)
+ 461      000000
+ 462 0143 89442404 		movl	%eax, 4(%esp)
+ 463 0147 E8000000 		call	_printf
+ 463      00
+ 464 014c EBC9     		jmp	L49
+ 465              	L63:
+ 466 014e 8B06     		movl	(%esi), %eax
+ 467 0150 C70424C9 		movl	$LC5, (%esp)
+ 467      000000
+ 468 0157 89442404 		movl	%eax, 4(%esp)
+ 469 015b E8000000 		call	_printf
+ 469      00
+ 470 0160 EBB5     		jmp	L49
+ 471              	L62:
+ 472 0162 8B06     		movl	(%esi), %eax
+ 473 0164 C7042498 		movl	$LC4, (%esp)
+ 473      000000
+ 474 016b 89442404 		movl	%eax, 4(%esp)
+ 475 016f E8000000 		call	_printf
+ 475      00
+ 476 0174 EBA1     		jmp	L49
+ 477              	L61:
+ 478 0176 8B06     		movl	(%esi), %eax
+ 479 0178 C7042470 		movl	$LC3, (%esp)
+ 479      000000
+ 480 017f 89442404 		movl	%eax, 4(%esp)
+ 481 0183 E8000000 		call	_printf
+ 481      00
+ 482 0188 EB8D     		jmp	L49
+ 483              		.cfi_endproc
+ 484              	LFE38:
+ 485 018a 90909090 		.section .rdata,"dr"
+ 485      9090
+ 486              	LC8:
+ 487 012d 53443100 		.ascii "SD1\0"
+ 488              	LC9:
+ 489 0131 53443200 		.ascii "SD2\0"
+ 490 0135 000000   		.section	.text$sd_lld_init,"x"
+ 491              		.p2align 4,,15
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s 			page 12
+
+
+ 492              		.globl	_sd_lld_init
+ 493              		.def	_sd_lld_init;	.scl	2;	.type	32;	.endef
+ 494              	_sd_lld_init:
+ 495              	LFB32:
+ 496              		.cfi_startproc
+ 497 0000 83EC1C   		subl	$28, %esp
+ 498              		.cfi_def_cfa_offset 32
+ 499 0003 C7442408 		movl	$0, 8(%esp)
+ 499      00000000 
+ 500 000b C7442404 		movl	$0, 4(%esp)
+ 500      00000000 
+ 501 0013 C7042400 		movl	$_SD1, (%esp)
+ 501      000000
+ 502 001a E8000000 		call	_sdObjectInit
+ 502      00
+ 503 001f C7442408 		movl	$0, 8(%esp)
+ 503      00000000 
+ 504 0027 C7442404 		movl	$0, 4(%esp)
+ 504      00000000 
+ 505 002f C7042400 		movl	$_SD2, (%esp)
+ 505      000000
+ 506 0036 C7059400 		movl	$-1, _SD1+148
+ 506      0000FFFF 
+ 506      FFFF
+ 507 0040 C7059800 		movl	$-1, _SD1+152
+ 507      0000FFFF 
+ 507      FFFF
+ 508 004a C7059C00 		movl	$LC8, _SD1+156
+ 508      00002D01 
+ 508      0000
+ 509 0054 E8000000 		call	_sdObjectInit
+ 509      00
+ 510 0059 C7059400 		movl	$-1, _SD2+148
+ 510      0000FFFF 
+ 510      FFFF
+ 511 0063 C7059800 		movl	$-1, _SD2+152
+ 511      0000FFFF 
+ 511      FFFF
+ 512 006d C7059C00 		movl	$LC9, _SD2+156
+ 512      00003101 
+ 512      0000
+ 513 0077 83C41C   		addl	$28, %esp
+ 514              		.cfi_def_cfa_offset 4
+ 515 007a C3       		ret
+ 516              		.cfi_endproc
+ 517              	LFE32:
+ 518 007b 90909090 		.section	.text$sd_lld_start,"x"
+ 518      90
+ 519              		.p2align 4,,15
+ 520              		.globl	_sd_lld_start
+ 521              		.def	_sd_lld_start;	.scl	2;	.type	32;	.endef
+ 522              	_sd_lld_start:
+ 523              	LFB33:
+ 524              		.cfi_startproc
+ 525 0000 8B442404 		movl	4(%esp), %eax
+ 526 0004 3D000000 		cmpl	$_SD1, %eax
+ 526      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s 			page 13
+
+
+ 527 0009 741D     		je	L70
+ 528 000b 3D000000 		cmpl	$_SD2, %eax
+ 528      00
+ 529 0010 7402     		je	L71
+ 530 0012 F3       		rep
+ 531 0013 C3       		ret
+ 532              		.p2align 4,,7
+ 533              	L71:
+ 534 0014 B94A7100 		movl	$29002, %ecx
+ 534      00
+ 535 0019 BA9C0000 		movl	$_SD2+156, %edx
+ 535      00
+ 536 001e B8940000 		movl	$_SD2+148, %eax
+ 536      00
+ 537 0023 E9000000 		jmp	_init.isra.2
+ 537      00
+ 538              		.p2align 4,,7
+ 539              	L70:
+ 540 0028 B9497100 		movl	$29001, %ecx
+ 540      00
+ 541 002d BA9C0000 		movl	$_SD1+156, %edx
+ 541      00
+ 542 0032 B8940000 		movl	$_SD1+148, %eax
+ 542      00
+ 543 0037 E9000000 		jmp	_init.isra.2
+ 543      00
+ 544              		.cfi_endproc
+ 545              	LFE33:
+ 546 003c 90909090 		.section	.text$sd_lld_stop,"x"
+ 547              		.p2align 4,,15
+ 548              		.globl	_sd_lld_stop
+ 549              		.def	_sd_lld_stop;	.scl	2;	.type	32;	.endef
+ 550              	_sd_lld_stop:
+ 551              	LFB34:
+ 552              		.cfi_startproc
+ 553 0000 F3       		rep
+ 554 0001 C3       		ret
+ 555              		.cfi_endproc
+ 556              	LFE34:
+ 557 0002 90909090 		.section	.text$sd_lld_interrupt_pending,"x"
+ 557      90909090 
+ 557      90909090 
+ 557      9090
+ 558              		.p2align 4,,15
+ 559              		.globl	_sd_lld_interrupt_pending
+ 560              		.def	_sd_lld_interrupt_pending;	.scl	2;	.type	32;	.endef
+ 561              	_sd_lld_interrupt_pending:
+ 562              	LFB35:
+ 563              		.cfi_startproc
+ 564 0000 53       		pushl	%ebx
+ 565              		.cfi_def_cfa_offset 8
+ 566              		.cfi_offset 3, -8
+ 567 0001 83EC08   		subl	$8, %esp
+ 568              		.cfi_def_cfa_offset 16
+ 569 0004 E8000000 		call	_dbg_check_enter_isr
+ 569      00
+ 570 0009 B8000000 		movl	$_SD1, %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s 			page 14
+
+
+ 570      00
+ 571 000e E8000000 		call	_connint
+ 571      00
+ 572 0013 84C0     		testb	%al, %al
+ 573 0015 7411     		je	L74
+ 574              	L76:
+ 575 0017 BB010000 		movl	$1, %ebx
+ 575      00
+ 576              	L75:
+ 577 001c E8000000 		call	_dbg_check_leave_isr
+ 577      00
+ 578 0021 83C408   		addl	$8, %esp
+ 579              		.cfi_remember_state
+ 580              		.cfi_def_cfa_offset 8
+ 581 0024 89D8     		movl	%ebx, %eax
+ 582 0026 5B       		popl	%ebx
+ 583              		.cfi_restore 3
+ 584              		.cfi_def_cfa_offset 4
+ 585 0027 C3       		ret
+ 586              		.p2align 4,,7
+ 587              	L74:
+ 588              		.cfi_restore_state
+ 589 0028 B8000000 		movl	$_SD2, %eax
+ 589      00
+ 590 002d E8000000 		call	_connint
+ 590      00
+ 591 0032 84C0     		testb	%al, %al
+ 592 0034 75E1     		jne	L76
+ 593 0036 B8000000 		movl	$_SD1, %eax
+ 593      00
+ 594 003b E8000000 		call	_inint
+ 594      00
+ 595 0040 84C0     		testb	%al, %al
+ 596 0042 75D3     		jne	L76
+ 597 0044 B8000000 		movl	$_SD2, %eax
+ 597      00
+ 598 0049 E8000000 		call	_inint
+ 598      00
+ 599 004e 84C0     		testb	%al, %al
+ 600 0050 75C5     		jne	L76
+ 601 0052 833D9800 		cmpl	$-1, _SD1+152
+ 601      0000FF
+ 602 0059 740E     		je	L79
+ 603 005b B8000000 		movl	$_SD1, %eax
+ 603      00
+ 604 0060 E8000000 		call	_outint.part.1
+ 604      00
+ 605 0065 84C0     		testb	%al, %al
+ 606 0067 75AE     		jne	L76
+ 607              	L79:
+ 608 0069 31DB     		xorl	%ebx, %ebx
+ 609 006b 833D9800 		cmpl	$-1, _SD2+152
+ 609      0000FF
+ 610 0072 74A8     		je	L75
+ 611 0074 B8000000 		movl	$_SD2, %eax
+ 611      00
+ 612 0079 E8000000 		call	_outint.part.1
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s 			page 15
+
+
+ 612      00
+ 613 007e 89C3     		movl	%eax, %ebx
+ 614 0080 EB9A     		jmp	L75
+ 615              		.cfi_endproc
+ 616              	LFE35:
+ 617              		.globl	_SD2
+ 618 0082 90909090 		.section	.data$SD2,"w"
+ 618      90909090 
+ 618      90909090 
+ 618      9090
+ 619              		.align 32
+ 620              	_SD2:
+ 621 0000 00000000 		.space 160
+ 621      00000000 
+ 621      00000000 
+ 621      00000000 
+ 621      00000000 
+ 622              		.globl	_SD1
+ 623              		.section	.data$SD1,"w"
+ 624              		.align 32
+ 625              	_SD1:
+ 626 0000 00000000 		.space 160
+ 626      00000000 
+ 626      00000000 
+ 626      00000000 
+ 626      00000000 
+ 627              		.section	.data$nb,"w"
+ 628              		.align 4
+ 629              	_nb:
+ 630 0000 01000000 		.long	1
+ 631              		.def	_recv@16;	.scl	2;	.type	32;	.endef
+ 632              		.def	_dbg_check_lock_from_isr;	.scl	2;	.type	32;	.endef
+ 633              		.def	_sdIncomingDataI;	.scl	2;	.type	32;	.endef
+ 634              		.def	_dbg_check_unlock_from_isr;	.scl	2;	.type	32;	.endef
+ 635              		.def	_WSAGetLastError@0;	.scl	2;	.type	32;	.endef
+ 636              		.def	_closesocket@4;	.scl	2;	.type	32;	.endef
+ 637              		.def	_chEvtBroadcastFlagsI;	.scl	2;	.type	32;	.endef
+ 638              		.def	_accept@12;	.scl	2;	.type	32;	.endef
+ 639              		.def	_ioctlsocket@12;	.scl	2;	.type	32;	.endef
+ 640              		.def	_printf;	.scl	2;	.type	32;	.endef
+ 641              		.def	_WSACleanup@0;	.scl	2;	.type	32;	.endef
+ 642              		.def	_exit;	.scl	2;	.type	32;	.endef
+ 643              		.def	_sdRequestDataI;	.scl	2;	.type	32;	.endef
+ 644              		.def	_send@16;	.scl	2;	.type	32;	.endef
+ 645              		.def	_getprotobyname@4;	.scl	2;	.type	32;	.endef
+ 646              		.def	_socket@12;	.scl	2;	.type	32;	.endef
+ 647              		.def	_htons@4;	.scl	2;	.type	32;	.endef
+ 648              		.def	_bind@12;	.scl	2;	.type	32;	.endef
+ 649              		.def	_listen@8;	.scl	2;	.type	32;	.endef
+ 650              		.def	_sdObjectInit;	.scl	2;	.type	32;	.endef
+ 651              		.def	_dbg_check_enter_isr;	.scl	2;	.type	32;	.endef
+ 652              		.def	_dbg_check_leave_isr;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s 			page 16
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 serial_lld.c
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s:5      .text$inint:00000000 _inint
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s:135    .text$connint:00000000 _connint
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s:629    .data$nb:00000000 _nb
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s:227    .text$outint.part.1:00000000 _outint.part.1
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s:341    .text$init.isra.2:00000000 _init.isra.2
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s:494    .text$sd_lld_init:00000000 _sd_lld_init
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s:625    .data$SD1:00000000 _SD1
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s:620    .data$SD2:00000000 _SD2
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s:522    .text$sd_lld_start:00000000 _sd_lld_start
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s:550    .text$sd_lld_stop:00000000 _sd_lld_stop
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccWHv8WS.s:561    .text$sd_lld_interrupt_pending:00000000 _sd_lld_interrupt_pending
+
+UNDEFINED SYMBOLS
+_recv@16
+_dbg_check_lock_from_isr
+_sdIncomingDataI
+_dbg_check_unlock_from_isr
+_WSAGetLastError@0
+_closesocket@4
+_chEvtBroadcastFlagsI
+_accept@12
+_ioctlsocket@12
+_printf
+_WSACleanup@0
+_exit
+_sdRequestDataI
+_send@16
+_getprotobyname@4
+_socket@12
+_htons@4
+_bind@12
+_listen@8
+_sdObjectInit
+_dbg_check_enter_isr
+_dbg_check_leave_isr

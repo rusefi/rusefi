@@ -1,0 +1,291 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc9Jy4AK.s 			page 1
+
+
+   1              		.file	"loggingcentral.cpp"
+   2              		.section	.text$scheduleLogging,"x"
+   3              		.p2align 4,,15
+   4              		.globl	_scheduleLogging
+   5              		.def	_scheduleLogging;	.scl	2;	.type	32;	.endef
+   6              	_scheduleLogging:
+   7              	LFB54:
+   8              		.cfi_startproc
+   9 0000 83EC2C   		subl	$44, %esp
+  10              		.cfi_def_cfa_offset 48
+  11 0003 895C241C 		movl	%ebx, 28(%esp)
+  12              		.cfi_offset 3, -20
+  13 0007 8B5C2430 		movl	48(%esp), %ebx
+  14 000b 89742420 		movl	%esi, 32(%esp)
+  15 000f 897C2424 		movl	%edi, 36(%esp)
+  16 0013 896C2428 		movl	%ebp, 40(%esp)
+  17              		.cfi_offset 6, -16
+  18              		.cfi_offset 7, -12
+  19              		.cfi_offset 5, -8
+  20 0017 8B432C   		movl	44(%ebx), %eax
+  21 001a 890424   		movl	%eax, (%esp)
+  22 001d E8000000 		call	_efiStrlen
+  22      00
+  23 0022 89C7     		movl	%eax, %edi
+  24 0024 E8000000 		call	_lockOutputBuffer
+  24      00
+  25 0029 8B150000 		movl	__ZL15accumulatedSize, %edx
+  25      0000
+  26 002f 8D3417   		leal	(%edi,%edx), %esi
+  27 0032 81FE2223 		cmpl	$8994, %esi
+  27      0000
+  28 0038 7626     		jbe	L2
+  29 003a 84C0     		testb	%al, %al
+  30 003c 744C     		je	L3
+  31              	L4:
+  32 003e 895C2430 		movl	%ebx, 48(%esp)
+  33 0042 8B742420 		movl	32(%esp), %esi
+  34 0046 8B5C241C 		movl	28(%esp), %ebx
+  35 004a 8B7C2424 		movl	36(%esp), %edi
+  36 004e 8B6C2428 		movl	40(%esp), %ebp
+  37 0052 83C42C   		addl	$44, %esp
+  38              		.cfi_remember_state
+  39              		.cfi_restore 5
+  40              		.cfi_restore 7
+  41              		.cfi_restore 6
+  42              		.cfi_restore 3
+  43              		.cfi_def_cfa_offset 4
+  44 0055 E9000000 		jmp	__Z12resetLoggingP7Logging
+  44      00
+  45 005a 8DB60000 		.p2align 4,,7
+  45      0000
+  46              	L2:
+  47              		.cfi_restore_state
+  48 0060 89C5     		movl	%eax, %ebp
+  49 0062 8B432C   		movl	44(%ebx), %eax
+  50 0065 83C701   		addl	$1, %edi
+  51 0068 03150000 		addl	__ZL18accumulationBuffer, %edx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc9Jy4AK.s 			page 2
+
+
+  51      0000
+  52 006e 897C2408 		movl	%edi, 8(%esp)
+  53 0072 89442404 		movl	%eax, 4(%esp)
+  54 0076 891424   		movl	%edx, (%esp)
+  55 0079 E8000000 		call	_memcpy
+  55      00
+  56 007e 89E8     		movl	%ebp, %eax
+  57 0080 84C0     		testb	%al, %al
+  58 0082 89350000 		movl	%esi, __ZL15accumulatedSize
+  58      0000
+  59 0088 75B4     		jne	L4
+  60              	L3:
+  61 008a E8000000 		call	_unlockOutputBuffer
+  61      00
+  62 008f EBAD     		jmp	L4
+  63              		.cfi_endproc
+  64              	LFE54:
+  65 0091 90909090 		.section .rdata,"dr"
+  65      90909090 
+  65      90909090 
+  65      909090
+  66              	LC0:
+  67 0000 6F757420 		.ascii "out constr\0"
+  67      636F6E73 
+  67      747200
+  68 000b 00       		.section	.text$_Z17swapOutputBuffersPi,"x"
+  69              		.p2align 4,,15
+  70              		.globl	__Z17swapOutputBuffersPi
+  71              		.def	__Z17swapOutputBuffersPi;	.scl	2;	.type	32;	.endef
+  72              	__Z17swapOutputBuffersPi:
+  73              	LFB55:
+  74              		.cfi_startproc
+  75 0000 53       		pushl	%ebx
+  76              		.cfi_def_cfa_offset 8
+  77              		.cfi_offset 3, -8
+  78 0001 83EC18   		subl	$24, %esp
+  79              		.cfi_def_cfa_offset 32
+  80 0004 E8000000 		call	_lockOutputBuffer
+  80      00
+  81 0009 A1000000 		movl	__ZL12outputBuffer, %eax
+  81      00
+  82 000e 8B150000 		movl	__ZL18accumulationBuffer, %edx
+  82      0000
+  83 0014 8B1D0000 		movl	__ZL15accumulatedSize, %ebx
+  83      0000
+  84 001a C7050000 		movl	$0, __ZL15accumulatedSize
+  84      00000000 
+  84      0000
+  85 0024 C60000   		movb	$0, (%eax)
+  86 0027 89150000 		movl	%edx, __ZL12outputBuffer
+  86      0000
+  87 002d A3000000 		movl	%eax, __ZL18accumulationBuffer
+  87      00
+  88 0032 E8000000 		call	_unlockOutputBuffer
+  88      00
+  89 0037 A1000000 		movl	__ZL12outputBuffer, %eax
+  89      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc9Jy4AK.s 			page 3
+
+
+  90 003c 890424   		movl	%eax, (%esp)
+  91 003f E8000000 		call	_efiStrlen
+  91      00
+  92 0044 89C2     		movl	%eax, %edx
+  93 0046 8B442420 		movl	32(%esp), %eax
+  94 004a 39D3     		cmpl	%edx, %ebx
+  95 004c 8910     		movl	%edx, (%eax)
+  96 004e A1000000 		movl	__ZL12outputBuffer, %eax
+  96      00
+  97 0053 750B     		jne	L15
+  98 0055 83C418   		addl	$24, %esp
+  99              		.cfi_remember_state
+ 100              		.cfi_def_cfa_offset 8
+ 101 0058 5B       		popl	%ebx
+ 102              		.cfi_restore 3
+ 103              		.cfi_def_cfa_offset 4
+ 104 0059 C3       		ret
+ 105 005a 8DB60000 		.p2align 4,,7
+ 105      0000
+ 106              	L15:
+ 107              		.cfi_restore_state
+ 108 0060 C7042400 		movl	$LC0, (%esp)
+ 108      000000
+ 109 0067 E8000000 		call	_firmwareError
+ 109      00
+ 110 006c 83C418   		addl	$24, %esp
+ 111              		.cfi_def_cfa_offset 8
+ 112 006f 31C0     		xorl	%eax, %eax
+ 113 0071 5B       		popl	%ebx
+ 114              		.cfi_restore 3
+ 115              		.cfi_def_cfa_offset 4
+ 116 0072 C3       		ret
+ 117              		.cfi_endproc
+ 118              	LFE55:
+ 119 0073 90909090 		.section	.text$printPending,"x"
+ 119      90909090 
+ 119      90909090 
+ 119      90
+ 120              		.p2align 4,,15
+ 121              		.globl	_printPending
+ 122              		.def	_printPending;	.scl	2;	.type	32;	.endef
+ 123              	_printPending:
+ 124              	LFB56:
+ 125              		.cfi_startproc
+ 126 0000 803D0000 		cmpb	$0, _consoleInBinaryMode
+ 126      000000
+ 127 0007 7407     		je	L23
+ 128 0009 C3       		ret
+ 129 000a 8DB60000 		.p2align 4,,7
+ 129      0000
+ 130              	L23:
+ 131 0010 83EC2C   		subl	$44, %esp
+ 132              		.cfi_def_cfa_offset 48
+ 133 0013 8D44241C 		leal	28(%esp), %eax
+ 134 0017 890424   		movl	%eax, (%esp)
+ 135 001a E8000000 		call	__Z17swapOutputBuffersPi
+ 135      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc9Jy4AK.s 			page 4
+
+
+ 136 001f 8B54241C 		movl	28(%esp), %edx
+ 137 0023 85D2     		testl	%edx, %edx
+ 138 0025 7E08     		jle	L16
+ 139 0027 890424   		movl	%eax, (%esp)
+ 140 002a E8000000 		call	__Z15printWithLengthPc
+ 140      00
+ 141              	L16:
+ 142 002f 83C42C   		addl	$44, %esp
+ 143              		.cfi_def_cfa_offset 4
+ 144 0032 C3       		ret
+ 145              		.cfi_endproc
+ 146              	LFE56:
+ 147 0033 90909090 		.section	.text$_Z18initLoggingCentralv,"x"
+ 147      90909090 
+ 147      90909090 
+ 147      90
+ 148              		.p2align 4,,15
+ 149              		.globl	__Z18initLoggingCentralv
+ 150              		.def	__Z18initLoggingCentralv;	.scl	2;	.type	32;	.endef
+ 151              	__Z18initLoggingCentralv:
+ 152              	LFB57:
+ 153              		.cfi_startproc
+ 154 0000 C6050000 		movb	$0, __ZL15pendingBuffers0
+ 154      000000
+ 155 0007 C6050000 		movb	$0, __ZL15pendingBuffers1
+ 155      000000
+ 156 000e C7050000 		movl	$__ZL15pendingBuffers0, __ZL18accumulationBuffer
+ 156      00000000 
+ 156      0000
+ 157 0018 C7050000 		movl	$__ZL15pendingBuffers1, __ZL12outputBuffer
+ 157      00000000 
+ 157      0000
+ 158 0022 C7050000 		movl	$0, __ZL15accumulatedSize
+ 158      00000000 
+ 158      0000
+ 159 002c C3       		ret
+ 160              		.cfi_endproc
+ 161              	LFE57:
+ 162 002d 909090   		.section	.data$_ZL15accumulatedSize,"w"
+ 163              		.align 4
+ 164              	__ZL15accumulatedSize:
+ 165 0000 00000000 		.space 4
+ 166              		.section	.data$_ZL18accumulationBuffer,"w"
+ 167              		.align 4
+ 168              	__ZL18accumulationBuffer:
+ 169 0000 00000000 		.space 4
+ 170              		.section	.data$_ZL12outputBuffer,"w"
+ 171              		.align 4
+ 172              	__ZL12outputBuffer:
+ 173 0000 00000000 		.space 4
+ 174              		.section	.data$_ZL15pendingBuffers0,"w"
+ 175              		.align 32
+ 176              	__ZL15pendingBuffers0:
+ 177 0000 00000000 		.space 9000
+ 177      00000000 
+ 177      00000000 
+ 177      00000000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc9Jy4AK.s 			page 5
+
+
+ 177      00000000 
+ 178 2328 00000000 		.section	.data$_ZL15pendingBuffers1,"w"
+ 178      00000000 
+ 178      00000000 
+ 178      00000000 
+ 178      00000000 
+ 179              		.align 32
+ 180              	__ZL15pendingBuffers1:
+ 181 0000 00000000 		.space 9000
+ 181      00000000 
+ 181      00000000 
+ 181      00000000 
+ 181      00000000 
+ 182              		.def	_memcpy;	.scl	2;	.type	32;	.endef
+ 183              		.def	_efiStrlen;	.scl	2;	.type	32;	.endef
+ 184              		.def	_lockOutputBuffer;	.scl	2;	.type	32;	.endef
+ 185              		.def	__Z12resetLoggingP7Logging;	.scl	2;	.type	32;	.endef
+ 186              		.def	_unlockOutputBuffer;	.scl	2;	.type	32;	.endef
+ 187              		.def	_firmwareError;	.scl	2;	.type	32;	.endef
+ 188 2328 00000000 		.def	__Z15printWithLengthPc;	.scl	2;	.type	32;	.endef
+ 188      00000000 
+ 188      00000000 
+ 188      00000000 
+ 188      00000000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc9Jy4AK.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 loggingcentral.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc9Jy4AK.s:6      .text$scheduleLogging:00000000 _scheduleLogging
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc9Jy4AK.s:164    .data$_ZL15accumulatedSize:00000000 __ZL15accumulatedSize
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc9Jy4AK.s:168    .data$_ZL18accumulationBuffer:00000000 __ZL18accumulationBuffer
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc9Jy4AK.s:72     .text$_Z17swapOutputBuffersPi:00000000 __Z17swapOutputBuffersPi
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc9Jy4AK.s:172    .data$_ZL12outputBuffer:00000000 __ZL12outputBuffer
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc9Jy4AK.s:123    .text$printPending:00000000 _printPending
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc9Jy4AK.s:151    .text$_Z18initLoggingCentralv:00000000 __Z18initLoggingCentralv
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc9Jy4AK.s:176    .data$_ZL15pendingBuffers0:00000000 __ZL15pendingBuffers0
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc9Jy4AK.s:180    .data$_ZL15pendingBuffers1:00000000 __ZL15pendingBuffers1
+
+UNDEFINED SYMBOLS
+_consoleInBinaryMode
+_memcpy
+_efiStrlen
+_lockOutputBuffer
+__Z12resetLoggingP7Logging
+_unlockOutputBuffer
+_firmwareError
+__Z15printWithLengthPc

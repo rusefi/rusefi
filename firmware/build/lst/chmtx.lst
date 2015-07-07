@@ -1,0 +1,619 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccn9ighd.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"chmtx.c"
+  16              		.section	.text.chMtxInit,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	chMtxInit
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	chMtxInit, %function
+  23              	chMtxInit:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 10B5     		push	{r4, lr}
+  27 0002 0446     		mov	r4, r0
+  28 0004 20B1     		cbz	r0, .L4
+  29              	.L2:
+  30 0006 0023     		movs	r3, #0
+  31 0008 6460     		str	r4, [r4, #4]
+  32 000a 2460     		str	r4, [r4]
+  33 000c A360     		str	r3, [r4, #8]
+  34 000e 10BD     		pop	{r4, pc}
+  35              	.L4:
+  36 0010 40F20000 		movw	r0, #:lower16:.LC0
+  37 0014 40F20001 		movw	r1, #:lower16:.LC1
+  38 0018 C0F20000 		movt	r0, #:upper16:.LC0
+  39 001c C0F20001 		movt	r1, #:upper16:.LC1
+  40 0020 5822     		movs	r2, #88
+  41 0022 FFF7FEFF 		bl	chDbgPanic3
+  42 0026 EEE7     		b	.L2
+  43              		.size	chMtxInit, .-chMtxInit
+  44 0028 AFF30080 		.section	.text.chMtxLockS,"ax",%progbits
+  44      AFF30080 
+  45              		.align	2
+  46              		.p2align 4,,15
+  47              		.global	chMtxLockS
+  48              		.thumb
+  49              		.thumb_func
+  50              		.type	chMtxLockS, %function
+  51              	chMtxLockS:
+  52              		@ args = 0, pretend = 0, frame = 0
+  53              		@ frame_needed = 0, uses_anonymous_args = 0
+  54 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  55 0002 40F20003 		movw	r3, #:lower16:rlist
+  56 0006 C0F20003 		movt	r3, #:upper16:rlist
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccn9ighd.s 			page 2
+
+
+  57 000a 0546     		mov	r5, r0
+  58 000c 9C69     		ldr	r4, [r3, #24]
+  59 000e FFF7FEFF 		bl	chDbgCheckClassS
+  60 0012 002D     		cmp	r5, #0
+  61 0014 5BD0     		beq	.L24
+  62              	.L6:
+  63 0016 A868     		ldr	r0, [r5, #8]
+  64 0018 0028     		cmp	r0, #0
+  65 001a 48D0     		beq	.L7
+  66 001c A168     		ldr	r1, [r4, #8]
+  67 001e 8368     		ldr	r3, [r0, #8]
+  68 0020 8B42     		cmp	r3, r1
+  69 0022 1ED2     		bcs	.L9
+  70              	.L17:
+  71 0024 90F82030 		ldrb	r3, [r0, #32]	@ zero_extendqisi2
+  72 0028 8160     		str	r1, [r0, #8]
+  73 002a 002B     		cmp	r3, #0
+  74 002c 44D0     		beq	.L10
+  75 002e 042B     		cmp	r3, #4
+  76 0030 17D1     		bne	.L9
+  77 0032 0368     		ldr	r3, [r0]
+  78 0034 4268     		ldr	r2, [r0, #4]
+  79 0036 866A     		ldr	r6, [r0, #40]
+  80 0038 1360     		str	r3, [r2]
+  81 003a 0768     		ldr	r7, [r0]
+  82 003c 3346     		mov	r3, r6
+  83 003e 7A60     		str	r2, [r7, #4]
+  84 0040 02E0     		b	.L16
+  85              	.L12:
+  86 0042 9A68     		ldr	r2, [r3, #8]
+  87 0044 8A42     		cmp	r2, r1
+  88 0046 02D3     		bcc	.L15
+  89              	.L16:
+  90 0048 1B68     		ldr	r3, [r3]
+  91 004a 9E42     		cmp	r6, r3
+  92 004c F9D1     		bne	.L12
+  93              	.L15:
+  94 004e 5A68     		ldr	r2, [r3, #4]
+  95 0050 0360     		str	r3, [r0]
+  96 0052 4260     		str	r2, [r0, #4]
+  97 0054 5860     		str	r0, [r3, #4]
+  98 0056 1060     		str	r0, [r2]
+  99 0058 B068     		ldr	r0, [r6, #8]
+ 100 005a A168     		ldr	r1, [r4, #8]
+ 101 005c 8368     		ldr	r3, [r0, #8]
+ 102 005e 8B42     		cmp	r3, r1
+ 103 0060 E0D3     		bcc	.L17
+ 104              	.L9:
+ 105 0062 2B46     		mov	r3, r5
+ 106 0064 03E0     		b	.L22
+ 107              	.L18:
+ 108 0066 9968     		ldr	r1, [r3, #8]
+ 109 0068 A268     		ldr	r2, [r4, #8]
+ 110 006a 9142     		cmp	r1, r2
+ 111 006c 02D3     		bcc	.L21
+ 112              	.L22:
+ 113 006e 1B68     		ldr	r3, [r3]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccn9ighd.s 			page 3
+
+
+ 114 0070 9D42     		cmp	r5, r3
+ 115 0072 F8D1     		bne	.L18
+ 116              	.L21:
+ 117 0074 5A68     		ldr	r2, [r3, #4]
+ 118 0076 2360     		str	r3, [r4]
+ 119 0078 6260     		str	r2, [r4, #4]
+ 120 007a 0420     		movs	r0, #4
+ 121 007c 5C60     		str	r4, [r3, #4]
+ 122 007e 1460     		str	r4, [r2]
+ 123 0080 A562     		str	r5, [r4, #40]
+ 124 0082 FFF7FEFF 		bl	chSchGoSleepS
+ 125 0086 AB68     		ldr	r3, [r5, #8]
+ 126 0088 A342     		cmp	r3, r4
+ 127 008a 05D0     		beq	.L20
+ 128 008c 40F20000 		movw	r0, #:lower16:.LC3
+ 129 0090 C0F20000 		movt	r0, #:upper16:.LC3
+ 130 0094 FFF7FEFF 		bl	chDbgPanic
+ 131              	.L20:
+ 132 0098 E36B     		ldr	r3, [r4, #60]
+ 133 009a AB42     		cmp	r3, r5
+ 134 009c 0BD0     		beq	.L5
+ 135 009e 40F20000 		movw	r0, #:lower16:.LC4
+ 136 00a2 C0F20000 		movt	r0, #:upper16:.LC4
+ 137 00a6 BDE8F840 		pop	{r3, r4, r5, r6, r7, lr}
+ 138 00aa FFF7FEBF 		b	chDbgPanic
+ 139              	.L7:
+ 140 00ae E36B     		ldr	r3, [r4, #60]
+ 141 00b0 AC60     		str	r4, [r5, #8]
+ 142 00b2 EB60     		str	r3, [r5, #12]
+ 143 00b4 E563     		str	r5, [r4, #60]
+ 144              	.L5:
+ 145 00b6 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 146              	.L10:
+ 147 00b8 90E80C00 		ldmia	r0, {r2, r3}
+ 148 00bc 0121     		movs	r1, #1
+ 149 00be 80F82010 		strb	r1, [r0, #32]
+ 150 00c2 1A60     		str	r2, [r3]
+ 151 00c4 0268     		ldr	r2, [r0]
+ 152 00c6 5360     		str	r3, [r2, #4]
+ 153 00c8 FFF7FEFF 		bl	chSchReadyI
+ 154 00cc C9E7     		b	.L9
+ 155              	.L24:
+ 156 00ce 40F20000 		movw	r0, #:lower16:.LC2
+ 157 00d2 40F20001 		movw	r1, #:lower16:.LC1
+ 158 00d6 C0F20000 		movt	r0, #:upper16:.LC2
+ 159 00da C0F20001 		movt	r1, #:upper16:.LC1
+ 160 00de 7D22     		movs	r2, #125
+ 161 00e0 FFF7FEFF 		bl	chDbgPanic3
+ 162 00e4 97E7     		b	.L6
+ 163              		.size	chMtxLockS, .-chMtxLockS
+ 164 00e6 00BFAFF3 		.section	.text.chMtxLock,"ax",%progbits
+ 164      0080AFF3 
+ 164      0080
+ 165              		.align	2
+ 166              		.p2align 4,,15
+ 167              		.global	chMtxLock
+ 168              		.thumb
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccn9ighd.s 			page 4
+
+
+ 169              		.thumb_func
+ 170              		.type	chMtxLock, %function
+ 171              	chMtxLock:
+ 172              		@ args = 0, pretend = 0, frame = 0
+ 173              		@ frame_needed = 0, uses_anonymous_args = 0
+ 174 0000 10B5     		push	{r4, lr}
+ 175 0002 2023     		movs	r3, #32
+ 176 0004 0446     		mov	r4, r0
+ 177              	@ 105 "chibios/os/kernel/src/chmtx.c" 1
+ 178 0006 83F31188 		msr     BASEPRI, r3
+ 179              	@ 0 "" 2
+ 180              		.thumb
+ 181 000a FFF7FEFF 		bl	dbg_check_lock
+ 182 000e 2046     		mov	r0, r4
+ 183 0010 FFF7FEFF 		bl	chMtxLockS
+ 184 0014 FFF7FEFF 		bl	dbg_check_unlock
+ 185 0018 0023     		movs	r3, #0
+ 186              	@ 109 "chibios/os/kernel/src/chmtx.c" 1
+ 187 001a 83F31188 		msr     BASEPRI, r3
+ 188              	@ 0 "" 2
+ 189              		.thumb
+ 190 001e 10BD     		pop	{r4, pc}
+ 191              		.size	chMtxLock, .-chMtxLock
+ 192              		.section	.text.chMtxTryLockS,"ax",%progbits
+ 193              		.align	2
+ 194              		.p2align 4,,15
+ 195              		.global	chMtxTryLockS
+ 196              		.thumb
+ 197              		.thumb_func
+ 198              		.type	chMtxTryLockS, %function
+ 199              	chMtxTryLockS:
+ 200              		@ args = 0, pretend = 0, frame = 0
+ 201              		@ frame_needed = 0, uses_anonymous_args = 0
+ 202 0000 10B5     		push	{r4, lr}
+ 203 0002 0446     		mov	r4, r0
+ 204 0004 FFF7FEFF 		bl	chDbgCheckClassS
+ 205 0008 74B1     		cbz	r4, .L30
+ 206              	.L27:
+ 207 000a A368     		ldr	r3, [r4, #8]
+ 208 000c 0BB1     		cbz	r3, .L31
+ 209 000e 0020     		movs	r0, #0
+ 210 0010 10BD     		pop	{r4, pc}
+ 211              	.L31:
+ 212 0012 40F20003 		movw	r3, #:lower16:rlist
+ 213 0016 C0F20003 		movt	r3, #:upper16:rlist
+ 214 001a 0120     		movs	r0, #1
+ 215 001c 9B69     		ldr	r3, [r3, #24]
+ 216 001e DA6B     		ldr	r2, [r3, #60]
+ 217 0020 A360     		str	r3, [r4, #8]
+ 218 0022 E260     		str	r2, [r4, #12]
+ 219 0024 DC63     		str	r4, [r3, #60]
+ 220 0026 10BD     		pop	{r4, pc}
+ 221              	.L30:
+ 222 0028 40F20000 		movw	r0, #:lower16:.LC5
+ 223 002c 40F20001 		movw	r1, #:lower16:.LC1
+ 224 0030 C0F20000 		movt	r0, #:upper16:.LC5
+ 225 0034 C0F20001 		movt	r1, #:upper16:.LC1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccn9ighd.s 			page 5
+
+
+ 226 0038 ED22     		movs	r2, #237
+ 227 003a FFF7FEFF 		bl	chDbgPanic3
+ 228 003e E4E7     		b	.L27
+ 229              		.size	chMtxTryLockS, .-chMtxTryLockS
+ 230              		.section	.text.chMtxTryLock,"ax",%progbits
+ 231              		.align	2
+ 232              		.p2align 4,,15
+ 233              		.global	chMtxTryLock
+ 234              		.thumb
+ 235              		.thumb_func
+ 236              		.type	chMtxTryLock, %function
+ 237              	chMtxTryLock:
+ 238              		@ args = 0, pretend = 0, frame = 0
+ 239              		@ frame_needed = 0, uses_anonymous_args = 0
+ 240 0000 10B5     		push	{r4, lr}
+ 241 0002 2023     		movs	r3, #32
+ 242 0004 0446     		mov	r4, r0
+ 243              	@ 209 "chibios/os/kernel/src/chmtx.c" 1
+ 244 0006 83F31188 		msr     BASEPRI, r3
+ 245              	@ 0 "" 2
+ 246              		.thumb
+ 247 000a FFF7FEFF 		bl	dbg_check_lock
+ 248 000e 2046     		mov	r0, r4
+ 249 0010 FFF7FEFF 		bl	chMtxTryLockS
+ 250 0014 0446     		mov	r4, r0
+ 251 0016 FFF7FEFF 		bl	dbg_check_unlock
+ 252 001a 0023     		movs	r3, #0
+ 253              	@ 213 "chibios/os/kernel/src/chmtx.c" 1
+ 254 001c 83F31188 		msr     BASEPRI, r3
+ 255              	@ 0 "" 2
+ 256              		.thumb
+ 257 0020 2046     		mov	r0, r4
+ 258 0022 10BD     		pop	{r4, pc}
+ 259              		.size	chMtxTryLock, .-chMtxTryLock
+ 260 0024 AFF30080 		.section	.text.chMtxUnlock,"ax",%progbits
+ 260      AFF30080 
+ 260      AFF30080 
+ 261              		.align	2
+ 262              		.p2align 4,,15
+ 263              		.global	chMtxUnlock
+ 264              		.thumb
+ 265              		.thumb_func
+ 266              		.type	chMtxUnlock, %function
+ 267              	chMtxUnlock:
+ 268              		@ args = 0, pretend = 0, frame = 0
+ 269              		@ frame_needed = 0, uses_anonymous_args = 0
+ 270 0000 40F20002 		movw	r2, #:lower16:rlist
+ 271 0004 C0F20002 		movt	r2, #:upper16:rlist
+ 272 0008 70B5     		push	{r4, r5, r6, lr}
+ 273 000a 2023     		movs	r3, #32
+ 274 000c 9569     		ldr	r5, [r2, #24]
+ 275              	@ 261 "chibios/os/kernel/src/chmtx.c" 1
+ 276 000e 83F31188 		msr     BASEPRI, r3
+ 277              	@ 0 "" 2
+ 278              		.thumb
+ 279 0012 FFF7FEFF 		bl	dbg_check_lock
+ 280 0016 EC6B     		ldr	r4, [r5, #60]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccn9ighd.s 			page 6
+
+
+ 281 0018 002C     		cmp	r4, #0
+ 282 001a 30D0     		beq	.L47
+ 283              	.L34:
+ 284 001c A368     		ldr	r3, [r4, #8]
+ 285 001e AB42     		cmp	r3, r5
+ 286 0020 06D0     		beq	.L35
+ 287 0022 40F20000 		movw	r0, #:lower16:.LC7
+ 288 0026 C0F20000 		movt	r0, #:upper16:.LC7
+ 289 002a FFF7FEFF 		bl	chDbgPanic
+ 290 002e EC6B     		ldr	r4, [r5, #60]
+ 291              	.L35:
+ 292 0030 2668     		ldr	r6, [r4]
+ 293 0032 E368     		ldr	r3, [r4, #12]
+ 294 0034 A642     		cmp	r6, r4
+ 295 0036 EB63     		str	r3, [r5, #60]
+ 296 0038 1ED0     		beq	.L36
+ 297 003a 296C     		ldr	r1, [r5, #64]
+ 298 003c 4BB1     		cbz	r3, .L37
+ 299              	.L39:
+ 300 003e 1A68     		ldr	r2, [r3]
+ 301 0040 9A42     		cmp	r2, r3
+ 302 0042 03D0     		beq	.L38
+ 303 0044 9268     		ldr	r2, [r2, #8]
+ 304 0046 9142     		cmp	r1, r2
+ 305 0048 38BF     		it	cc
+ 306 004a 1146     		movcc	r1, r2
+ 307              	.L38:
+ 308 004c DB68     		ldr	r3, [r3, #12]
+ 309 004e 002B     		cmp	r3, #0
+ 310 0050 F5D1     		bne	.L39
+ 311              	.L37:
+ 312 0052 F26B     		ldr	r2, [r6, #60]
+ 313 0054 3368     		ldr	r3, [r6]
+ 314 0056 A960     		str	r1, [r5, #8]
+ 315 0058 3046     		mov	r0, r6
+ 316 005a 2360     		str	r3, [r4]
+ 317 005c 0021     		movs	r1, #0
+ 318 005e 5C60     		str	r4, [r3, #4]
+ 319 0060 A660     		str	r6, [r4, #8]
+ 320 0062 E260     		str	r2, [r4, #12]
+ 321 0064 F463     		str	r4, [r6, #60]
+ 322 0066 FFF7FEFF 		bl	chSchWakeupS
+ 323              	.L40:
+ 324 006a FFF7FEFF 		bl	dbg_check_unlock
+ 325 006e 0023     		movs	r3, #0
+ 326              	@ 301 "chibios/os/kernel/src/chmtx.c" 1
+ 327 0070 83F31188 		msr     BASEPRI, r3
+ 328              	@ 0 "" 2
+ 329              		.thumb
+ 330 0074 2046     		mov	r0, r4
+ 331 0076 70BD     		pop	{r4, r5, r6, pc}
+ 332              	.L36:
+ 333 0078 0023     		movs	r3, #0
+ 334 007a A360     		str	r3, [r4, #8]
+ 335 007c F5E7     		b	.L40
+ 336              	.L47:
+ 337 007e 40F20000 		movw	r0, #:lower16:.LC6
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccn9ighd.s 			page 7
+
+
+ 338 0082 C0F20000 		movt	r0, #:upper16:.LC6
+ 339 0086 FFF7FEFF 		bl	chDbgPanic
+ 340 008a EC6B     		ldr	r4, [r5, #60]
+ 341 008c C6E7     		b	.L34
+ 342              		.size	chMtxUnlock, .-chMtxUnlock
+ 343 008e 00BF     		.section	.text.chMtxUnlockS,"ax",%progbits
+ 344              		.align	2
+ 345              		.p2align 4,,15
+ 346              		.global	chMtxUnlockS
+ 347              		.thumb
+ 348              		.thumb_func
+ 349              		.type	chMtxUnlockS, %function
+ 350              	chMtxUnlockS:
+ 351              		@ args = 0, pretend = 0, frame = 0
+ 352              		@ frame_needed = 0, uses_anonymous_args = 0
+ 353 0000 40F20003 		movw	r3, #:lower16:rlist
+ 354 0004 C0F20003 		movt	r3, #:upper16:rlist
+ 355 0008 70B5     		push	{r4, r5, r6, lr}
+ 356 000a 9D69     		ldr	r5, [r3, #24]
+ 357 000c FFF7FEFF 		bl	chDbgCheckClassS
+ 358 0010 EC6B     		ldr	r4, [r5, #60]
+ 359 0012 002C     		cmp	r4, #0
+ 360 0014 2BD0     		beq	.L62
+ 361              	.L49:
+ 362 0016 A368     		ldr	r3, [r4, #8]
+ 363 0018 AB42     		cmp	r3, r5
+ 364 001a 06D0     		beq	.L50
+ 365 001c 40F20000 		movw	r0, #:lower16:.LC9
+ 366 0020 C0F20000 		movt	r0, #:upper16:.LC9
+ 367 0024 FFF7FEFF 		bl	chDbgPanic
+ 368 0028 EC6B     		ldr	r4, [r5, #60]
+ 369              	.L50:
+ 370 002a 2668     		ldr	r6, [r4]
+ 371 002c E368     		ldr	r3, [r4, #12]
+ 372 002e A642     		cmp	r6, r4
+ 373 0030 EB63     		str	r3, [r5, #60]
+ 374 0032 18D0     		beq	.L51
+ 375 0034 296C     		ldr	r1, [r5, #64]
+ 376 0036 4BB1     		cbz	r3, .L52
+ 377              	.L54:
+ 378 0038 1A68     		ldr	r2, [r3]
+ 379 003a 9A42     		cmp	r2, r3
+ 380 003c 03D0     		beq	.L53
+ 381 003e 9268     		ldr	r2, [r2, #8]
+ 382 0040 9142     		cmp	r1, r2
+ 383 0042 38BF     		it	cc
+ 384 0044 1146     		movcc	r1, r2
+ 385              	.L53:
+ 386 0046 DB68     		ldr	r3, [r3, #12]
+ 387 0048 002B     		cmp	r3, #0
+ 388 004a F5D1     		bne	.L54
+ 389              	.L52:
+ 390 004c F26B     		ldr	r2, [r6, #60]
+ 391 004e 3368     		ldr	r3, [r6]
+ 392 0050 A960     		str	r1, [r5, #8]
+ 393 0052 3046     		mov	r0, r6
+ 394 0054 2360     		str	r3, [r4]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccn9ighd.s 			page 8
+
+
+ 395 0056 5C60     		str	r4, [r3, #4]
+ 396 0058 A660     		str	r6, [r4, #8]
+ 397 005a E260     		str	r2, [r4, #12]
+ 398 005c F463     		str	r4, [r6, #60]
+ 399 005e FFF7FEFF 		bl	chSchReadyI
+ 400 0062 2046     		mov	r0, r4
+ 401 0064 70BD     		pop	{r4, r5, r6, pc}
+ 402              	.L51:
+ 403 0066 0023     		movs	r3, #0
+ 404 0068 A360     		str	r3, [r4, #8]
+ 405 006a 2046     		mov	r0, r4
+ 406 006c 70BD     		pop	{r4, r5, r6, pc}
+ 407              	.L62:
+ 408 006e 40F20000 		movw	r0, #:lower16:.LC8
+ 409 0072 C0F20000 		movt	r0, #:upper16:.LC8
+ 410 0076 FFF7FEFF 		bl	chDbgPanic
+ 411 007a EC6B     		ldr	r4, [r5, #60]
+ 412 007c CBE7     		b	.L49
+ 413              		.size	chMtxUnlockS, .-chMtxUnlockS
+ 414 007e 00BF     		.section	.text.chMtxUnlockAll,"ax",%progbits
+ 415              		.align	2
+ 416              		.p2align 4,,15
+ 417              		.global	chMtxUnlockAll
+ 418              		.thumb
+ 419              		.thumb_func
+ 420              		.type	chMtxUnlockAll, %function
+ 421              	chMtxUnlockAll:
+ 422              		@ args = 0, pretend = 0, frame = 0
+ 423              		@ frame_needed = 0, uses_anonymous_args = 0
+ 424 0000 40F20002 		movw	r2, #:lower16:rlist
+ 425 0004 C0F20002 		movt	r2, #:upper16:rlist
+ 426 0008 70B5     		push	{r4, r5, r6, lr}
+ 427 000a 2023     		movs	r3, #32
+ 428 000c 9469     		ldr	r4, [r2, #24]
+ 429              	@ 377 "chibios/os/kernel/src/chmtx.c" 1
+ 430 000e 83F31188 		msr     BASEPRI, r3
+ 431              	@ 0 "" 2
+ 432              		.thumb
+ 433 0012 FFF7FEFF 		bl	dbg_check_lock
+ 434 0016 E36B     		ldr	r3, [r4, #60]
+ 435 0018 C3B1     		cbz	r3, .L64
+ 436 001a 0026     		movs	r6, #0
+ 437              	.L68:
+ 438 001c 1A68     		ldr	r2, [r3]
+ 439 001e D968     		ldr	r1, [r3, #12]
+ 440 0020 9A42     		cmp	r2, r3
+ 441 0022 E163     		str	r1, [r4, #60]
+ 442 0024 08BF     		it	eq
+ 443 0026 9E60     		streq	r6, [r3, #8]
+ 444 0028 09D0     		beq	.L66
+ 445 002a D56B     		ldr	r5, [r2, #60]
+ 446 002c 1168     		ldr	r1, [r2]
+ 447 002e 1046     		mov	r0, r2
+ 448 0030 1960     		str	r1, [r3]
+ 449 0032 4B60     		str	r3, [r1, #4]
+ 450 0034 9A60     		str	r2, [r3, #8]
+ 451 0036 DD60     		str	r5, [r3, #12]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccn9ighd.s 			page 9
+
+
+ 452 0038 D363     		str	r3, [r2, #60]
+ 453 003a FFF7FEFF 		bl	chSchReadyI
+ 454              	.L66:
+ 455 003e E36B     		ldr	r3, [r4, #60]
+ 456 0040 002B     		cmp	r3, #0
+ 457 0042 EBD1     		bne	.L68
+ 458 0044 236C     		ldr	r3, [r4, #64]
+ 459 0046 A360     		str	r3, [r4, #8]
+ 460 0048 FFF7FEFF 		bl	chSchRescheduleS
+ 461              	.L64:
+ 462 004c FFF7FEFF 		bl	dbg_check_unlock
+ 463 0050 0023     		movs	r3, #0
+ 464              	@ 395 "chibios/os/kernel/src/chmtx.c" 1
+ 465 0052 83F31188 		msr     BASEPRI, r3
+ 466              	@ 0 "" 2
+ 467              		.thumb
+ 468 0056 70BD     		pop	{r4, r5, r6, pc}
+ 469              		.size	chMtxUnlockAll, .-chMtxUnlockAll
+ 470 0058 AFF30080 		.section	.rodata.str1.4,"aMS",%progbits,1
+ 470      AFF30080 
+ 471              		.align	2
+ 472              	.LC0:
+ 473 0000 2263684D 		.ascii	"\"chMtxInit\"()\000"
+ 473      7478496E 
+ 473      69742228 
+ 473      2900
+ 474 000e 0000     		.space	2
+ 475              	.LC1:
+ 476 0010 63686962 		.ascii	"chibios/os/kernel/src/chmtx.c\000"
+ 476      696F732F 
+ 476      6F732F6B 
+ 476      65726E65 
+ 476      6C2F7372 
+ 477 002e 0000     		.space	2
+ 478              	.LC2:
+ 479 0030 2263684D 		.ascii	"\"chMtxLockS\"()\000"
+ 479      74784C6F 
+ 479      636B5322 
+ 479      282900
+ 480 003f 00       		.space	1
+ 481              	.LC3:
+ 482 0040 63684D74 		.ascii	"chMtxLockS(), #1\000"
+ 482      784C6F63 
+ 482      6B532829 
+ 482      2C202331 
+ 482      00
+ 483 0051 000000   		.space	3
+ 484              	.LC4:
+ 485 0054 63684D74 		.ascii	"chMtxLockS(), #2\000"
+ 485      784C6F63 
+ 485      6B532829 
+ 485      2C202332 
+ 485      00
+ 486 0065 000000   		.space	3
+ 487              	.LC5:
+ 488 0068 2263684D 		.ascii	"\"chMtxTryLockS\"()\000"
+ 488      74785472 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccn9ighd.s 			page 10
+
+
+ 488      794C6F63 
+ 488      6B532228 
+ 488      2900
+ 489 007a 0000     		.space	2
+ 490              	.LC6:
+ 491 007c 63684D74 		.ascii	"chMtxUnlock(), #1\000"
+ 491      78556E6C 
+ 491      6F636B28 
+ 491      292C2023 
+ 491      3100
+ 492 008e 0000     		.space	2
+ 493              	.LC7:
+ 494 0090 63684D74 		.ascii	"chMtxUnlock(), #2\000"
+ 494      78556E6C 
+ 494      6F636B28 
+ 494      292C2023 
+ 494      3200
+ 495 00a2 0000     		.space	2
+ 496              	.LC8:
+ 497 00a4 63684D74 		.ascii	"chMtxUnlockS(), #1\000"
+ 497      78556E6C 
+ 497      6F636B53 
+ 497      28292C20 
+ 497      233100
+ 498 00b7 00       		.space	1
+ 499              	.LC9:
+ 500 00b8 63684D74 		.ascii	"chMtxUnlockS(), #2\000"
+ 500      78556E6C 
+ 500      6F636B53 
+ 500      28292C20 
+ 500      233200
+ 501 00cb 00       		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccn9ighd.s 			page 11
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 chmtx.c
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:17     .text.chMtxInit:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:23     .text.chMtxInit:00000000 chMtxInit
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:472    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:475    .rodata.str1.4:00000010 .LC1
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:45     .text.chMtxLockS:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:51     .text.chMtxLockS:00000000 chMtxLockS
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:481    .rodata.str1.4:00000040 .LC3
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:484    .rodata.str1.4:00000054 .LC4
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:478    .rodata.str1.4:00000030 .LC2
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:165    .text.chMtxLock:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:171    .text.chMtxLock:00000000 chMtxLock
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:193    .text.chMtxTryLockS:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:199    .text.chMtxTryLockS:00000000 chMtxTryLockS
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:487    .rodata.str1.4:00000068 .LC5
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:231    .text.chMtxTryLock:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:237    .text.chMtxTryLock:00000000 chMtxTryLock
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:261    .text.chMtxUnlock:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:267    .text.chMtxUnlock:00000000 chMtxUnlock
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:493    .rodata.str1.4:00000090 .LC7
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:490    .rodata.str1.4:0000007c .LC6
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:344    .text.chMtxUnlockS:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:350    .text.chMtxUnlockS:00000000 chMtxUnlockS
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:499    .rodata.str1.4:000000b8 .LC9
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:496    .rodata.str1.4:000000a4 .LC8
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:415    .text.chMtxUnlockAll:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:421    .text.chMtxUnlockAll:00000000 chMtxUnlockAll
+C:\Users\pc\AppData\Local\Temp\ccn9ighd.s:471    .rodata.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+chDbgPanic3
+rlist
+chDbgCheckClassS
+chSchGoSleepS
+chDbgPanic
+chSchReadyI
+dbg_check_lock
+dbg_check_unlock
+chSchWakeupS
+chSchRescheduleS

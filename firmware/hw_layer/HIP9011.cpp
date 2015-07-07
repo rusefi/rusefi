@@ -58,12 +58,14 @@ static int settingUpdateCount = 0;
 static int totalKnockEventsCount = 0;
 static int currentPrescaler;
 static float hipValueMax = 0;
+float knockVolts = 0;
 static int spiCount = 0;
 
 static unsigned char tx_buff[1];
 static unsigned char rx_buff[1];
 static int nonZeroResponse = 0;
 static char pinNameBuffer[16];
+static float currentAngleWindowWidth;
 
 /**
  * Int/Hold pin is controlled from scheduler callbacks which are set according to current RPM
@@ -133,8 +135,16 @@ static void showHipInfo(void) {
 			nonZeroResponse);
 	scheduleMsg(logger, "CS@%s updateCount=%d", hwPortname(boardConfiguration->hip9011CsPin), settingUpdateCount);
 
-	scheduleMsg(logger, "hip v@%s spiCount=%d adv=%d",
-			getPinNameByAdcChannel(engineConfiguration->hipOutputChannel, pinNameBuffer), spiCount, boardConfiguration->useTpicAdvancedMode);
+	scheduleMsg(logger, "hip %fv/last=%f@%s/max=%f spiCount=%d adv=%d",
+			knockVolts,
+			getVoltage("hipinfo", engineConfiguration->hipOutputChannel),
+			getPinNameByAdcChannel(engineConfiguration->hipOutputChannel, pinNameBuffer),
+			hipValueMax,
+			spiCount, boardConfiguration->useTpicAdvancedMode);
+
+	scheduleMsg(logger, "start %f end %f", engineConfiguration->knockDetectionWindowStart,
+			engineConfiguration->knockDetectionWindowEnd);
+
 	hipValueMax = 0;
 	engine->printKnockState();
 }
@@ -146,6 +156,7 @@ void setHip9011FrankensoPinout(void) {
 	boardConfiguration->isHip9011Enabled = true;
 	boardConfiguration->hip9011CsPin = GPIOD_0;
 	boardConfiguration->hip9011IntHoldPin = GPIOB_11;
+	boardConfiguration->hip9011IntHoldPinMode = OM_DEFAULT;
 	boardConfiguration->is_enabled_spi_2 = true;
 
 	boardConfiguration->hip9011Gain = 1;
@@ -242,14 +253,23 @@ void hipAdcCallback(adcsample_t value) {
 	if (state == WAITING_FOR_ADC_TO_SKIP) {
 		state = WAITING_FOR_RESULT_ADC;
 	} else if (state == WAITING_FOR_RESULT_ADC) {
-		float hipValue = adcToVoltsDivided(value);
-		hipValueMax = maxF(hipValue, hipValueMax);
-		engine->knockLogic(hipValue);
+		knockVolts = adcToVoltsDivided(value);
+		hipValueMax = maxF(knockVolts, hipValueMax);
+		engine->knockLogic(knockVolts);
+
+		float angleWindowWidth =
+		engineConfiguration->knockDetectionWindowEnd - engineConfiguration->knockDetectionWindowStart;
+
+		if (angleWindowWidth != currentAngleWindowWidth) {
+			currentAngleWindowWidth = angleWindowWidth;
+		prepareHip9011RpmLookup(currentAngleWindowWidth);
+		}
 
 		int integratorIndex = getIntegrationIndexByRpm(engine->rpmCalculator.rpmValue);
 		int gainIndex = getHip9011GainIndex(boardConfiguration->hip9011Gain);
 		int bandIndex = getBandIndex();
 		int prescalerIndex = engineConfiguration->hip9011PrescalerAndSDO;
+
 
 		if (currentGainIndex != gainIndex) {
 			currentGainIndex = gainIndex;
@@ -352,9 +372,11 @@ void initHip9011(Logging *sharedLogger) {
 	if (!boardConfiguration->isHip9011Enabled)
 		return;
 
-	// todo: apply new properties on the fly
-	prepareHip9011RpmLookup(
-			engineConfiguration->knockDetectionWindowEnd - engineConfiguration->knockDetectionWindowStart);
+
+	currentAngleWindowWidth =
+	engineConfiguration->knockDetectionWindowEnd - engineConfiguration->knockDetectionWindowStart;
+
+	prepareHip9011RpmLookup(currentAngleWindowWidth);
 
 	// todo: configurable
 //	driver = getSpiDevice(boardConfiguration->hip9011SpiDevice);
@@ -362,7 +384,8 @@ void initHip9011(Logging *sharedLogger) {
 	spicfg.ssport = getHwPort(boardConfiguration->hip9011CsPin);
 	spicfg.sspad = getHwPin(boardConfiguration->hip9011CsPin);
 
-	outputPinRegisterExt2("hip int/hold", &intHold, boardConfiguration->hip9011IntHoldPin, &DEFAULT_OUTPUT);
+	outputPinRegisterExt2("hip int/hold", &intHold, boardConfiguration->hip9011IntHoldPin,
+			&boardConfiguration->hip9011IntHoldPinMode);
 	outputPinRegisterExt2("hip CS", &hipCs, boardConfiguration->hip9011CsPin, &DEFAULT_OUTPUT);
 
 	scheduleMsg(logger, "Starting HIP9011/TPIC8101 driver");

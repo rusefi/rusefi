@@ -124,7 +124,7 @@ public class EngineSnifferPanel {
         upperPanel.add(pauseButton);
         upperPanel.add(new RpmLabel(2).getContent());
 
-        JComponent command = new AnyCommand(config, "chartsize " + EFI_DEFAULT_CHART_SIZE, true).getContent();
+        JComponent command = new AnyCommand(config, "chartsize " + EFI_DEFAULT_CHART_SIZE, true, true).getContent();
         upperPanel.add(command);
 
         upperPanel.add(zoomControl);

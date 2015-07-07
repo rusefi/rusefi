@@ -1,0 +1,128 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccrXQkzN.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"mitsubishi.cpp"
+  16              		.section	.text._Z26setMitsubishiConfigurationv,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_Z26setMitsubishiConfigurationv
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_Z26setMitsubishiConfigurationv, %function
+  23              	_Z26setMitsubishiConfigurationv:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 2DE9F84F 		push	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+  27 0004 40F20004 		movw	r4, #:lower16:engineConfiguration
+  28 0008 C0F20004 		movt	r4, #:upper16:engineConfiguration
+  29 000c 46F2666A 		movw	r10, #26214
+  30 0010 2368     		ldr	r3, [r4]
+  31 0012 4FF44049 		mov	r9, #49152
+  32 0016 4FF00008 		mov	r8, #0
+  33 001a 4FF4404C 		mov	ip, #49152
+  34 001e CCF2324C 		movt	ip, 50226
+  35 0022 4FF0100E 		mov	lr, #16
+  36 0026 0221     		movs	r1, #2
+  37 0028 40F22622 		movw	r2, #550
+  38 002c 0425     		movs	r5, #4
+  39 002e 0126     		movs	r6, #1
+  40 0030 C3F6E67A 		movt	r10, 16358
+  41 0034 C4F22749 		movt	r9, 17447
+  42 0038 C4F28C28 		movt	r8, 17036
+  43 003c 0B27     		movs	r7, #11
+  44 003e 0020     		movs	r0, #0
+  45 0040 C3F800E0 		str	lr, [r3]
+  46 0044 C3F8BC11 		str	r1, [r3, #444]
+  47 0048 A3F86020 		strh	r2, [r3, #96]	@ movhi
+  48 004c C3F8B8C1 		str	ip, [r3, #440]	@ float
+  49 0050 C3F81872 		str	r7, [r3, #536]
+  50 0054 C3F890A1 		str	r10, [r3, #400]	@ float
+  51 0058 C3F8CC91 		str	r9, [r3, #460]	@ float
+  52 005c C3F86C80 		str	r8, [r3, #108]	@ float
+  53 0060 C3F89451 		str	r5, [r3, #404]
+  54 0064 C3F89861 		str	r6, [r3, #408]
+  55 0068 C4F24000 		movt	r0, 16448
+  56 006c FFF7FEFF 		bl	_Z15setWholeFuelMapf
+  57 0070 2068     		ldr	r0, [r4]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccrXQkzN.s 			page 2
+
+
+  58 0072 4FF08143 		mov	r3, #1082130432
+  59 0076 C365     		str	r3, [r0, #92]	@ float
+  60 0078 00F58070 		add	r0, r0, #256
+  61 007c FFF7FEFF 		bl	_Z18setCommonNTCSensorP14ThermistorConf
+  62 0080 40F20003 		movw	r3, #:lower16:boardConfiguration
+  63 0084 C0F20003 		movt	r3, #:upper16:boardConfiguration
+  64 0088 2268     		ldr	r2, [r4]
+  65 008a 1B68     		ldr	r3, [r3]
+  66 008c 4FF44040 		mov	r0, #49152
+  67 0090 4FF04A0E 		mov	lr, #74
+  68 0094 5024     		movs	r4, #80
+  69 0096 C4F22850 		movt	r0, 17704
+  70 009a 4FF0190B 		mov	fp, #25
+  71 009e 4FF0180A 		mov	r10, #24
+  72 00a2 4FF04309 		mov	r9, #67
+  73 00a6 4FF04508 		mov	r8, #69
+  74 00aa 4FF0480C 		mov	ip, #72
+  75 00ae 1427     		movs	r7, #20
+  76 00b0 C2F81801 		str	r0, [r2, #280]	@ float
+  77 00b4 3146     		mov	r1, r6
+  78 00b6 C3F820B0 		str	fp, [r3, #32]
+  79 00ba C3F824A0 		str	r10, [r3, #36]
+  80 00be C3F82890 		str	r9, [r3, #40]
+  81 00c2 C3F82C80 		str	r8, [r3, #44]
+  82 00c6 C3F854C0 		str	ip, [r3, #84]
+  83 00ca C3F85CE0 		str	lr, [r3, #92]
+  84 00ce 9C65     		str	r4, [r3, #88]
+  85 00d0 1C66     		str	r4, [r3, #96]
+  86 00d2 02F51270 		add	r0, r2, #584
+  87 00d6 C2F80852 		str	r5, [r2, #520]
+  88 00da C2F80472 		str	r7, [r2, #516]
+  89 00de FFF7FEFF 		bl	_Z13initEgoSensorP12afr_sensor_s12ego_sensor_e
+  90 00e2 40F20002 		movw	r2, #:lower16:.LC0
+  91 00e6 C0F20002 		movt	r2, #:upper16:.LC0
+  92 00ea 0020     		movs	r0, #0
+  93 00ec 3B21     		movs	r1, #59
+  94 00ee BDE8F84F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+  95 00f2 FFF7FEBF 		b	_Z7setFsioi11brain_pin_ePKc
+  96              		.size	_Z26setMitsubishiConfigurationv, .-_Z26setMitsubishiConfigurationv
+  97 00f6 00BFAFF3 		.section	.rodata.str1.4,"aMS",%progbits,1
+  97      0080AFF3 
+  97      0080
+  98              		.align	2
+  99              	.LC0:
+ 100 0000 72706D20 		.ascii	"rpm 5500 >\000"
+ 100      35353030 
+ 100      203E00
+ 101 000b 00       		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccrXQkzN.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 mitsubishi.cpp
+C:\Users\pc\AppData\Local\Temp\ccrXQkzN.s:17     .text._Z26setMitsubishiConfigurationv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccrXQkzN.s:23     .text._Z26setMitsubishiConfigurationv:00000000 _Z26setMitsubishiConfigurationv
+C:\Users\pc\AppData\Local\Temp\ccrXQkzN.s:99     .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccrXQkzN.s:98     .rodata.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+engineConfiguration
+_Z15setWholeFuelMapf
+_Z18setCommonNTCSensorP14ThermistorConf
+boardConfiguration
+_Z13initEgoSensorP12afr_sensor_s12ego_sensor_e
+_Z7setFsioi11brain_pin_ePKc

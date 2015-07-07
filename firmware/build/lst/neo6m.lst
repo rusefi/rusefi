@@ -1,0 +1,516 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUsewn2.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"neo6m.cpp"
+  16              		.global	__aeabi_f2d
+  17              		.section	.text._ZL12printGpsInfov,"ax",%progbits
+  18              		.align	2
+  19              		.p2align 4,,15
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_ZL12printGpsInfov, %function
+  23              	_ZL12printGpsInfov:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 70B5     		push	{r4, r5, r6, lr}
+  27 0002 40F20005 		movw	r5, #:lower16:boardConfiguration
+  28 0006 C0F20005 		movt	r5, #:upper16:boardConfiguration
+  29 000a 82B0     		sub	sp, sp, #8
+  30 000c 2B68     		ldr	r3, [r5]
+  31 000e D3F8C800 		ldr	r0, [r3, #200]
+  32 0012 FFF7FEFF 		bl	_Z10hwPortname11brain_pin_e
+  33 0016 40F20004 		movw	r4, #:lower16:.LANCHOR0
+  34 001a C0F20004 		movt	r4, #:upper16:.LANCHOR0
+  35 001e 40F20001 		movw	r1, #:lower16:.LC0
+  36 0022 0246     		mov	r2, r0
+  37 0024 C0F20001 		movt	r1, #:upper16:.LC0
+  38 0028 2046     		mov	r0, r4
+  39 002a FFF7FEFF 		bl	scheduleMsg
+  40 002e 2B68     		ldr	r3, [r5]
+  41 0030 D3F8CC00 		ldr	r0, [r3, #204]
+  42 0034 FFF7FEFF 		bl	_Z10hwPortname11brain_pin_e
+  43 0038 40F20005 		movw	r5, #:lower16:.LANCHOR2
+  44 003c C0F20005 		movt	r5, #:upper16:.LANCHOR2
+  45 0040 40F20001 		movw	r1, #:lower16:.LC1
+  46 0044 0246     		mov	r2, r0
+  47 0046 C0F20001 		movt	r1, #:upper16:.LC1
+  48 004a 2046     		mov	r0, r4
+  49 004c FFF7FEFF 		bl	scheduleMsg
+  50 0050 A868     		ldr	r0, [r5, #8]	@ float
+  51 0052 FFF7FEFF 		bl	__aeabi_f2d
+  52 0056 40F20006 		movw	r6, #:lower16:.LANCHOR1
+  53 005a C0F20006 		movt	r6, #:upper16:.LANCHOR1
+  54 005e CDE90001 		strd	r0, [sp]
+  55 0062 40F20001 		movw	r1, #:lower16:.LC2
+  56 0066 3268     		ldr	r2, [r6]
+  57 0068 0023     		movs	r3, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUsewn2.s 			page 2
+
+
+  58 006a 2046     		mov	r0, r4
+  59 006c C0F20001 		movt	r1, #:upper16:.LC2
+  60 0070 FFF7FEFF 		bl	scheduleMsg
+  61 0074 FFF7FEFF 		bl	currentTimeMillis
+  62 0078 07EE100A 		fmsr	s14, r0	@ int
+  63 007c DFED187A 		flds	s15, .L2
+  64 0080 F8EE476A 		fuitos	s13, s14
+  65 0084 96ED007A 		flds	s14, [r6]	@ int
+  66 0088 C6EEA77A 		fdivs	s15, s13, s15
+  67 008c B8EEC77A 		fsitos	s14, s14
+  68 0090 C7EE276A 		fdivs	s13, s14, s15
+  69 0094 16EE900A 		fmrs	r0, s13
+  70 0098 FFF7FEFF 		bl	__aeabi_f2d
+  71 009c 0B46     		mov	r3, r1
+  72 009e 40F20001 		movw	r1, #:lower16:.LC3
+  73 00a2 0246     		mov	r2, r0
+  74 00a4 C0F20001 		movt	r1, #:upper16:.LC3
+  75 00a8 2046     		mov	r0, r4
+  76 00aa FFF7FEFF 		bl	scheduleMsg
+  77 00ae 2868     		ldr	r0, [r5]	@ float
+  78 00b0 FFF7FEFF 		bl	__aeabi_f2d
+  79 00b4 0246     		mov	r2, r0
+  80 00b6 40F20000 		movw	r0, #:lower16:.LC4
+  81 00ba 0B46     		mov	r3, r1
+  82 00bc C0F20000 		movt	r0, #:upper16:.LC4
+  83 00c0 FFF7FEFF 		bl	print
+  84 00c4 6868     		ldr	r0, [r5, #4]	@ float
+  85 00c6 FFF7FEFF 		bl	__aeabi_f2d
+  86 00ca 0246     		mov	r2, r0
+  87 00cc 40F20000 		movw	r0, #:lower16:.LC5
+  88 00d0 0B46     		mov	r3, r1
+  89 00d2 C0F20000 		movt	r0, #:upper16:.LC5
+  90 00d6 02B0     		add	sp, sp, #8
+  91              		@ sp needed
+  92 00d8 BDE87040 		pop	{r4, r5, r6, lr}
+  93 00dc FFF7FEBF 		b	print
+  94              	.L3:
+  95              		.align	2
+  96              	.L2:
+  97 00e0 00007A44 		.word	1148846080
+  98              		.size	_ZL12printGpsInfov, .-_ZL12printGpsInfov
+  99 00e4 AFF30080 		.section	.text._ZL19GpsThreadEntryPointPv,"ax",%progbits
+  99      AFF30080 
+  99      AFF30080 
+ 100              		.align	2
+ 101              		.p2align 4,,15
+ 102              		.thumb
+ 103              		.thumb_func
+ 104              		.type	_ZL19GpsThreadEntryPointPv, %function
+ 105              	_ZL19GpsThreadEntryPointPv:
+ 106              		@ args = 0, pretend = 0, frame = 0
+ 107              		@ frame_needed = 0, uses_anonymous_args = 0
+ 108 0000 40F20002 		movw	r2, #:lower16:rlist
+ 109 0004 C0F20002 		movt	r2, #:upper16:rlist
+ 110 0008 2DE9F84F 		push	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 111 000c 9269     		ldr	r2, [r2, #24]
+ 112 000e 40F20003 		movw	r3, #:lower16:.LC6
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUsewn2.s 			page 3
+
+
+ 113 0012 40F20008 		movw	r8, #:lower16:.LANCHOR2
+ 114 0016 C0F20003 		movt	r3, #:upper16:.LC6
+ 115 001a C0F20008 		movt	r8, #:upper16:.LANCHOR2
+ 116 001e 0024     		movs	r4, #0
+ 117 0020 40F20007 		movw	r7, #:lower16:SD1
+ 118 0024 40F20006 		movw	r6, #:lower16:.LANCHOR3
+ 119 0028 40F20005 		movw	r5, #:lower16:.LANCHOR1
+ 120 002c 40F2000B 		movw	fp, #:lower16:.LANCHOR4
+ 121 0030 9361     		str	r3, [r2, #24]
+ 122 0032 C246     		mov	r10, r8
+ 123 0034 A146     		mov	r9, r4
+ 124 0036 C0F20007 		movt	r7, #:upper16:SD1
+ 125 003a C0F20006 		movt	r6, #:upper16:.LANCHOR3
+ 126 003e C0F20005 		movt	r5, #:upper16:.LANCHOR1
+ 127 0042 C0F2000B 		movt	fp, #:upper16:.LANCHOR4
+ 128              	.L5:
+ 129 0046 3B68     		ldr	r3, [r7]
+ 130 0048 40F20000 		movw	r0, #:lower16:SD1
+ 131 004c DB68     		ldr	r3, [r3, #12]
+ 132 004e C0F20000 		movt	r0, #:upper16:SD1
+ 133 0052 9847     		blx	r3
+ 134 0054 0346     		mov	r3, r0
+ 135 0056 0A2B     		cmp	r3, #10
+ 136 0058 18BF     		it	ne
+ 137 005a B4F5807F 		cmpne	r4, #256
+ 138 005e 40F20001 		movw	r1, #:lower16:.LANCHOR3
+ 139 0062 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 140 0066 18BF     		it	ne
+ 141 0068 3355     		strbne	r3, [r6, r4]
+ 142 006a C0F20001 		movt	r1, #:upper16:.LANCHOR3
+ 143 006e C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 144 0072 18BF     		it	ne
+ 145 0074 0134     		addne	r4, r4, #1
+ 146 0076 E6D1     		bne	.L5
+ 147 0078 3319     		adds	r3, r6, r4
+ 148 007a 0CB1     		cbz	r4, .L7
+ 149 007c 03F8019C 		strb	r9, [r3, #-1]
+ 150              	.L7:
+ 151 0080 FFF7FEFF 		bl	gps_location
+ 152 0084 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 153 0088 C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 154 008c FFF7FEFF 		bl	_Z11date_get_tmP2tm
+ 155 0090 D8F84430 		ldr	r3, [r8, #68]
+ 156 0094 042B     		cmp	r3, #4
+ 157 0096 0DD0     		beq	.L14
+ 158              	.L8:
+ 159 0098 2B68     		ldr	r3, [r5]
+ 160 009a 40F20000 		movw	r0, #:lower16:.LANCHOR3
+ 161 009e 0133     		adds	r3, r3, #1
+ 162 00a0 C0F20000 		movt	r0, #:upper16:.LANCHOR3
+ 163 00a4 0021     		movs	r1, #0
+ 164 00a6 4FF48072 		mov	r2, #256
+ 165 00aa 2B60     		str	r3, [r5]
+ 166 00ac 0024     		movs	r4, #0
+ 167 00ae FFF7FEFF 		bl	memset
+ 168 00b2 C8E7     		b	.L5
+ 169              	.L14:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUsewn2.s 			page 4
+
+
+ 170 00b4 DAF82830 		ldr	r3, [r10, #40]
+ 171 00b8 0548     		ldr	r0, .L15
+ 172 00ba 002B     		cmp	r3, #0
+ 173 00bc ECDD     		ble	.L8
+ 174 00be DAF81420 		ldr	r2, [r10, #20]
+ 175 00c2 DBF80030 		ldr	r3, [fp]
+ 176 00c6 9A42     		cmp	r2, r3
+ 177 00c8 E6D0     		beq	.L8
+ 178 00ca FFF7FEFF 		bl	_Z11date_set_tmP2tm
+ 179 00ce E3E7     		b	.L8
+ 180              	.L16:
+ 181              		.align	2
+ 182              	.L15:
+ 183 00d0 14000000 		.word	.LANCHOR2+20
+ 184              		.size	_ZL19GpsThreadEntryPointPv, .-_ZL19GpsThreadEntryPointPv
+ 185 00d4 AFF30080 		.section	.text.getCurrentSpeed,"ax",%progbits
+ 185      AFF30080 
+ 185      AFF30080 
+ 186              		.align	2
+ 187              		.p2align 4,,15
+ 188              		.global	getCurrentSpeed
+ 189              		.thumb
+ 190              		.thumb_func
+ 191              		.type	getCurrentSpeed, %function
+ 192              	getCurrentSpeed:
+ 193              		@ args = 0, pretend = 0, frame = 0
+ 194              		@ frame_needed = 0, uses_anonymous_args = 0
+ 195              		@ link register save eliminated.
+ 196 0000 40F20003 		movw	r3, #:lower16:.LANCHOR2
+ 197 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR2
+ 198 0008 9868     		ldr	r0, [r3, #8]	@ float
+ 199 000a 7047     		bx	lr
+ 200              		.size	getCurrentSpeed, .-getCurrentSpeed
+ 201 000c AFF30080 		.section	.text.initGps,"ax",%progbits
+ 202              		.align	2
+ 203              		.p2align 4,,15
+ 204              		.global	initGps
+ 205              		.thumb
+ 206              		.thumb_func
+ 207              		.type	initGps, %function
+ 208              	initGps:
+ 209              		@ args = 0, pretend = 0, frame = 0
+ 210              		@ frame_needed = 0, uses_anonymous_args = 0
+ 211 0000 10B5     		push	{r4, lr}
+ 212 0002 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 213 0006 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 214 000a 82B0     		sub	sp, sp, #8
+ 215 000c 1B68     		ldr	r3, [r3]
+ 216 000e 93F8D935 		ldrb	r3, [r3, #1497]	@ zero_extendqisi2
+ 217 0012 DB06     		lsls	r3, r3, #27
+ 218 0014 01D4     		bmi	.L20
+ 219 0016 02B0     		add	sp, sp, #8
+ 220              		@ sp needed
+ 221 0018 10BD     		pop	{r4, pc}
+ 222              	.L20:
+ 223 001a 40F20004 		movw	r4, #:lower16:boardConfiguration
+ 224 001e C0F20004 		movt	r4, #:upper16:boardConfiguration
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUsewn2.s 			page 5
+
+
+ 225 0022 40F20000 		movw	r0, #:lower16:SD1
+ 226 0026 40F20001 		movw	r1, #:lower16:.LANCHOR5
+ 227 002a C0F20000 		movt	r0, #:upper16:SD1
+ 228 002e C0F20001 		movt	r1, #:upper16:.LANCHOR5
+ 229 0032 FFF7FEFF 		bl	sdStart
+ 230 0036 2368     		ldr	r3, [r4]
+ 231 0038 40F20000 		movw	r0, #:lower16:.LC7
+ 232 003c D3F8CC10 		ldr	r1, [r3, #204]
+ 233 0040 C0F20000 		movt	r0, #:upper16:.LC7
+ 234 0044 40F28232 		movw	r2, #898
+ 235 0048 FFF7FEFF 		bl	_Z13mySetPadMode2PKc11brain_pin_em
+ 236 004c 2368     		ldr	r3, [r4]
+ 237 004e 40F20000 		movw	r0, #:lower16:.LC8
+ 238 0052 D3F8C810 		ldr	r1, [r3, #200]
+ 239 0056 C0F20000 		movt	r0, #:upper16:.LC8
+ 240 005a 40F28232 		movw	r2, #898
+ 241 005e FFF7FEFF 		bl	_Z13mySetPadMode2PKc11brain_pin_em
+ 242 0062 0022     		movs	r2, #0
+ 243 0064 40F20000 		movw	r0, #:lower16:.LANCHOR6
+ 244 0068 40F20003 		movw	r3, #:lower16:_ZL19GpsThreadEntryPointPv
+ 245 006c 0092     		str	r2, [sp]
+ 246 006e C0F20003 		movt	r3, #:upper16:_ZL19GpsThreadEntryPointPv
+ 247 0072 4FF43A71 		mov	r1, #744
+ 248 0076 0222     		movs	r2, #2
+ 249 0078 C0F20000 		movt	r0, #:upper16:.LANCHOR6
+ 250 007c FFF7FEFF 		bl	chThdCreateStatic
+ 251 0080 40F20000 		movw	r0, #:lower16:.LC9
+ 252 0084 40F20001 		movw	r1, #:lower16:_ZL12printGpsInfov
+ 253 0088 C0F20000 		movt	r0, #:upper16:.LC9
+ 254 008c C0F20001 		movt	r1, #:upper16:_ZL12printGpsInfov
+ 255 0090 02B0     		add	sp, sp, #8
+ 256              		@ sp needed
+ 257 0092 BDE81040 		pop	{r4, lr}
+ 258 0096 FFF7FEBF 		b	addConsoleAction
+ 259              		.size	initGps, .-initGps
+ 260 009a 00BFAFF3 		.section	.text.startup._GLOBAL__sub_I_getCurrentSpeed,"ax",%progbits
+ 260      0080
+ 261              		.align	2
+ 262              		.p2align 4,,15
+ 263              		.thumb
+ 264              		.thumb_func
+ 265              		.type	_GLOBAL__sub_I_getCurrentSpeed, %function
+ 266              	_GLOBAL__sub_I_getCurrentSpeed:
+ 267              		@ args = 0, pretend = 0, frame = 0
+ 268              		@ frame_needed = 0, uses_anonymous_args = 0
+ 269              		@ link register save eliminated.
+ 270 0000 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 271 0004 40F20001 		movw	r1, #:lower16:.LC10
+ 272 0008 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 273 000c C0F20001 		movt	r1, #:upper16:.LC10
+ 274 0010 FFF7FEBF 		b	_ZN18LoggingWithStorageC1EPKc
+ 275              		.size	_GLOBAL__sub_I_getCurrentSpeed, .-_GLOBAL__sub_I_getCurrentSpeed
+ 276 0014 AFF30080 		.section	.init_array,"aw",%init_array
+ 276      AFF30080 
+ 276      AFF30080 
+ 277              		.align	2
+ 278 0000 00000000 		.word	_GLOBAL__sub_I_getCurrentSpeed(target1)
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUsewn2.s 			page 6
+
+
+ 279              		.section	.bss._ZL7GPSdata,"aw",%nobits
+ 280              		.align	2
+ 281              		.set	.LANCHOR2,. + 0
+ 282              		.type	_ZL7GPSdata, %object
+ 283              		.size	_ZL7GPSdata, 80
+ 284              	_ZL7GPSdata:
+ 285 0000 00000000 		.space	80
+ 285      00000000 
+ 285      00000000 
+ 285      00000000 
+ 285      00000000 
+ 286              		.section	.bss._ZL14gpsThreadStack,"aw",%nobits
+ 287              		.align	3
+ 288              		.set	.LANCHOR6,. + 0
+ 289              		.type	_ZL14gpsThreadStack, %object
+ 290              		.size	_ZL14gpsThreadStack, 744
+ 291              	_ZL14gpsThreadStack:
+ 292 0000 00000000 		.space	744
+ 292      00000000 
+ 292      00000000 
+ 292      00000000 
+ 292      00000000 
+ 293              		.section	.bss._ZL5curTm,"aw",%nobits
+ 294              		.align	2
+ 295              		.set	.LANCHOR4,. + 0
+ 296              		.type	_ZL5curTm, %object
+ 297              		.size	_ZL5curTm, 44
+ 298              	_ZL5curTm:
+ 299 0000 00000000 		.space	44
+ 299      00000000 
+ 299      00000000 
+ 299      00000000 
+ 299      00000000 
+ 300              		.section	.bss._ZL15gpsMesagesCount,"aw",%nobits
+ 301              		.align	2
+ 302              		.set	.LANCHOR1,. + 0
+ 303              		.type	_ZL15gpsMesagesCount, %object
+ 304              		.size	_ZL15gpsMesagesCount, 4
+ 305              	_ZL15gpsMesagesCount:
+ 306 0000 00000000 		.space	4
+ 307              		.section	.bss._ZL7logging,"aw",%nobits
+ 308              		.align	2
+ 309              		.set	.LANCHOR0,. + 0
+ 310              		.type	_ZL7logging, %object
+ 311              		.size	_ZL7logging, 260
+ 312              	_ZL7logging:
+ 313 0000 00000000 		.space	260
+ 313      00000000 
+ 313      00000000 
+ 313      00000000 
+ 313      00000000 
+ 314              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 315              		.align	2
+ 316              	.LC0:
+ 317 0000 47505320 		.ascii	"GPS RX %s\000"
+ 317      52582025 
+ 317      7300
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUsewn2.s 			page 7
+
+
+ 318 000a 0000     		.space	2
+ 319              	.LC1:
+ 320 000c 47505320 		.ascii	"GPS TX %s\000"
+ 320      54582025 
+ 320      7300
+ 321 0016 0000     		.space	2
+ 322              	.LC2:
+ 323 0018 6D3D2564 		.ascii	"m=%d,e=%d: vehicle speed = %f\015\012\000"
+ 323      2C653D25 
+ 323      643A2076 
+ 323      65686963 
+ 323      6C652073 
+ 324              	.LC3:
+ 325 0038 636F6D6D 		.ascii	"communication speed: %f\000"
+ 325      756E6963 
+ 325      6174696F 
+ 325      6E207370 
+ 325      6565643A 
+ 326              	.LC4:
+ 327 0050 47505320 		.ascii	"GPS latitude = %f\015\012\000"
+ 327      6C617469 
+ 327      74756465 
+ 327      203D2025 
+ 327      660D0A00 
+ 328              	.LC5:
+ 329 0064 47505320 		.ascii	"GPS longitude = %f\015\012\000"
+ 329      6C6F6E67 
+ 329      69747564 
+ 329      65203D20 
+ 329      25660D0A 
+ 330 0079 000000   		.space	3
+ 331              	.LC6:
+ 332 007c 47505320 		.ascii	"GPS thread\000"
+ 332      74687265 
+ 332      616400
+ 333 0087 00       		.space	1
+ 334              	.LC7:
+ 335 0088 47505320 		.ascii	"GPS tx\000"
+ 335      747800
+ 336 008f 00       		.space	1
+ 337              	.LC8:
+ 338 0090 47505320 		.ascii	"GPS rx\000"
+ 338      727800
+ 339 0097 00       		.space	1
+ 340              	.LC9:
+ 341 0098 67707369 		.ascii	"gpsinfo\000"
+ 341      6E666F00 
+ 342              	.LC10:
+ 343 00a0 75617274 		.ascii	"uart gps\000"
+ 343      20677073 
+ 343      00
+ 344 00a9 000000   		.section	.bss._ZL7gps_str,"aw",%nobits
+ 345              		.align	2
+ 346              		.set	.LANCHOR3,. + 0
+ 347              		.type	_ZL7gps_str, %object
+ 348              		.size	_ZL7gps_str, 256
+ 349              	_ZL7gps_str:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUsewn2.s 			page 8
+
+
+ 350 0000 00000000 		.space	256
+ 350      00000000 
+ 350      00000000 
+ 350      00000000 
+ 350      00000000 
+ 351              		.section	.data._ZL15GPSserialConfig,"aw",%progbits
+ 352              		.align	2
+ 353              		.set	.LANCHOR5,. + 0
+ 354              		.type	_ZL15GPSserialConfig, %object
+ 355              		.size	_ZL15GPSserialConfig, 12
+ 356              	_ZL15GPSserialConfig:
+ 357 0000 00960000 		.word	38400
+ 358 0004 0000     		.short	0
+ 359 0006 0040     		.short	16384
+ 360 0008 0000     		.short	0
+ 361 000a 0000     		.space	2
+ 362              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUsewn2.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 neo6m.cpp
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:18     .text._ZL12printGpsInfov:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:23     .text._ZL12printGpsInfov:00000000 _ZL12printGpsInfov
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:309    .bss._ZL7logging:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:316    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:281    .bss._ZL7GPSdata:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:319    .rodata.str1.4:0000000c .LC1
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:302    .bss._ZL15gpsMesagesCount:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:322    .rodata.str1.4:00000018 .LC2
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:324    .rodata.str1.4:00000038 .LC3
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:326    .rodata.str1.4:00000050 .LC4
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:328    .rodata.str1.4:00000064 .LC5
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:97     .text._ZL12printGpsInfov:000000e0 $d
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:100    .text._ZL19GpsThreadEntryPointPv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:105    .text._ZL19GpsThreadEntryPointPv:00000000 _ZL19GpsThreadEntryPointPv
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:331    .rodata.str1.4:0000007c .LC6
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:346    .bss._ZL7gps_str:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:295    .bss._ZL5curTm:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:183    .text._ZL19GpsThreadEntryPointPv:000000d0 $d
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:186    .text.getCurrentSpeed:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:192    .text.getCurrentSpeed:00000000 getCurrentSpeed
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:202    .text.initGps:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:208    .text.initGps:00000000 initGps
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:353    .data._ZL15GPSserialConfig:00000000 .LANCHOR5
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:334    .rodata.str1.4:00000088 .LC7
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:337    .rodata.str1.4:00000090 .LC8
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:288    .bss._ZL14gpsThreadStack:00000000 .LANCHOR6
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:340    .rodata.str1.4:00000098 .LC9
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:261    .text.startup._GLOBAL__sub_I_getCurrentSpeed:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:266    .text.startup._GLOBAL__sub_I_getCurrentSpeed:00000000 _GLOBAL__sub_I_getCurrentSpeed
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:342    .rodata.str1.4:000000a0 .LC10
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:277    .init_array:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:280    .bss._ZL7GPSdata:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:284    .bss._ZL7GPSdata:00000000 _ZL7GPSdata
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:287    .bss._ZL14gpsThreadStack:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:291    .bss._ZL14gpsThreadStack:00000000 _ZL14gpsThreadStack
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:294    .bss._ZL5curTm:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:298    .bss._ZL5curTm:00000000 _ZL5curTm
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:301    .bss._ZL15gpsMesagesCount:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:305    .bss._ZL15gpsMesagesCount:00000000 _ZL15gpsMesagesCount
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:308    .bss._ZL7logging:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:312    .bss._ZL7logging:00000000 _ZL7logging
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:315    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:345    .bss._ZL7gps_str:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:349    .bss._ZL7gps_str:00000000 _ZL7gps_str
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:352    .data._ZL15GPSserialConfig:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:356    .data._ZL15GPSserialConfig:00000000 _ZL15GPSserialConfig
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:99     .text._ZL12printGpsInfov:000000e4 $t
+C:\Users\pc\AppData\Local\Temp\ccUsewn2.s:185    .text._ZL19GpsThreadEntryPointPv:000000d4 $t
+
+UNDEFINED SYMBOLS
+__aeabi_f2d
+boardConfiguration
+_Z10hwPortname11brain_pin_e
+scheduleMsg
+currentTimeMillis
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccUsewn2.s 			page 10
+
+
+print
+rlist
+SD1
+gps_location
+_Z11date_get_tmP2tm
+memset
+_Z11date_set_tmP2tm
+engineConfiguration
+sdStart
+_Z13mySetPadMode2PKc11brain_pin_em
+chThdCreateStatic
+addConsoleAction
+_ZN18LoggingWithStorageC1EPKc

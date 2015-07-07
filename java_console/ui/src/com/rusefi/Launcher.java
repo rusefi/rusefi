@@ -32,7 +32,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see com.rusefi.StartupFrame
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20150530;
+    public static final int CONSOLE_VERSION = 20150703;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -44,6 +44,8 @@ public class Launcher {
 
     private static Frame staticFrame;
     private final TableEditorPane tableEditor = new TableEditorPane();
+    private final SettingsTab settingsTab = new SettingsTab();
+    private final LogsManager logsManager = new LogsManager();
 
     FrameHelper frame = new FrameHelper() {
         @Override
@@ -99,8 +101,9 @@ public class Launcher {
         tabbedPane.addTab("Table Editor", tableEditor);
 //        tabbedPane.add("Wizards", new Wizard().createPane());
 
-        tabbedPane.add("Settings", new SettingsTab().createPane());
+        tabbedPane.add("Settings", settingsTab.createPane());
         tabbedPane.add("Bench Test", new BenchTestPane().getContent());
+        tabbedPane.add("Logs Manager", logsManager.getContent());
 
         if (!LinkManager.isLogViewerMode(port)) {
             int selectedIndex = getConfig().getRoot().getIntProperty(TAB_INDEX, 2);
@@ -129,11 +132,12 @@ public class Launcher {
             @Override
             public void onConnectionEstablished() {
                 tableEditor.showContent();
+                settingsTab.showContent();
+                logsManager.showContent();
             }
         });
 
         LinkManager.engineState.registerStringValueAction(EngineState.RUS_EFI_VERSION_TAG, new EngineState.ValueCallback<String>() {
-
             @Override
             public void onUpdate(String firmwareVersion) {
                 Launcher.firmwareVersion.set(firmwareVersion);
@@ -159,7 +163,7 @@ public class Launcher {
         getConfig().save();
         BinaryProtocol bp = BinaryProtocol.instance;
         if (bp != null && !bp.isClosed)
-            bp.close();
+            bp.close(); // it could be that serial driver wants to be closed explicitly
         System.exit(0);
     }
 

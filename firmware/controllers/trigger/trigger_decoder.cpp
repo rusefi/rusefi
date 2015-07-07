@@ -30,7 +30,7 @@
 #include "trigger_gm.h"
 #include "trigger_bmw.h"
 #include "trigger_mitsubishi.h"
-
+#include "auto_generated_enums.h"
 #include "trigger_structure.h"
 #include "efiGpio.h"
 #include "engine.h"
@@ -43,13 +43,10 @@ EXTERN_ENGINE
 // todo: better name for this constant
 #define HELPER_PERIOD 100000
 
-#define NO_LEFT_FILTER -1
-#define NO_RIGHT_FILTER 1000
-
 static cyclic_buffer<int> errorDetection;
 
 #if ! EFI_PROD_CODE
-bool printGapRatio = false;
+bool printTriggerDebug = false;
 float actualSynchGap;
 #endif /* ! EFI_PROD_CODE */
 
@@ -78,7 +75,7 @@ static trigger_value_e eventType[6] = { TV_LOW, TV_HIGH, TV_LOW, TV_HIGH, TV_LOW
 
 #define nextTriggerEvent() \
  { \
-	uint64_t prevTime = timeOfPreviousEventNt[triggerWheel]; \
+	efitime_t prevTime = timeOfPreviousEventNt[triggerWheel]; \
 	if (prevTime != 0) { \
 		/* even event - apply the value*/ \
 		totalTimeNt[triggerWheel] += (nowNt - prevTime); \
@@ -108,7 +105,7 @@ static trigger_value_e eventType[6] = { TV_LOW, TV_HIGH, TV_LOW, TV_HIGH, TV_LOW
  * @brief Trigger decoding happens here
  * This method changes the state of trigger_state_s data structure according to the trigger event
  */
-void TriggerState::decodeTriggerEvent(trigger_event_e const signal, uint64_t nowNt DECLARE_ENGINE_PARAMETER_S) {
+void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_S) {
 	efiAssertVoid(signal <= SHAFT_3RD_UP, "unexpected signal");
 
 	trigger_wheel_e triggerWheel = eventIndex[signal];
@@ -123,7 +120,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, uint64_t now
 	eventCount[triggerWheel]++;
 	eventCountExt[signal]++;
 
-	uint64_t currentDurationLong = getCurrentGapDuration(nowNt);
+	efitime_t currentDurationLong = getCurrentGapDuration(nowNt);
 
 	/**
 	 * For performance reasons, we want to work with 32 bit values. If there has been more then
@@ -133,6 +130,14 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, uint64_t now
 			currentDurationLong > 10 * US2NT(US_PER_SECOND_LL) ? 10 * US2NT(US_PER_SECOND_LL) : currentDurationLong;
 
 	if (isLessImportant(signal)) {
+#if EFI_UNIT_TEST
+		if (printTriggerDebug) {
+			printf("%s isLessImportant %s\r\n",
+					getTrigger_type_e(engineConfiguration->trigger.type),
+					getTrigger_event_e(signal));
+		}
+#endif
+
 		/**
 		 * For less important events we simply increment the index.
 		 */
@@ -168,7 +173,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, uint64_t now
 #if EFI_PROD_CODE
 		if (engineConfiguration->isPrintTriggerSynchDetails) {
 #else
-		if (printGapRatio) {
+		if (printTriggerDebug) {
 #endif /* EFI_PROD_CODE */
 			float gap = 1.0 * currentDuration / toothed_previous_duration;
 #if EFI_PROD_CODE
@@ -188,7 +193,17 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, uint64_t now
 
 	}
 
+#if EFI_UNIT_TEST
+		if (printTriggerDebug) {
+			printf("%s isSynchronizationPoint=%d index=%d %s\r\n",
+					getTrigger_type_e(engineConfiguration->trigger.type),
+					isSynchronizationPoint, current_index,
+					getTrigger_event_e(signal));
+		}
+#endif
+
 	if (isSynchronizationPoint) {
+
 		/**
 		 * We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
 		 */
@@ -306,14 +321,15 @@ static void configureOnePlus60_2(TriggerShape *s, operation_mode_e operationMode
 /**
  * External logger is needed because at this point our logger is not yet initialized
  */
-void initializeTriggerShape(Logging *logger, engine_configuration_s const *engineConfiguration, Engine *engine) {
+void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_S) {
+	TriggerShape *triggerShape = this;
+
 #if EFI_PROD_CODE
 	scheduleMsg(logger, "initializeTriggerShape()");
 #endif
 	const trigger_config_s *triggerConfig = &engineConfiguration->trigger;
-	TriggerShape *triggerShape = &engine->triggerShape;
 
-	triggerShape->clear();
+	clear();
 
 	switch (triggerConfig->type) {
 
@@ -343,7 +359,8 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 		break;
 
 	case TT_GM_7X:
-		configureGmTriggerShape(triggerShape);
+		// todo: fix this configureGmTriggerShape(triggerShape);
+		configureFordAspireTriggerShape(triggerShape);
 		break;
 
 	case TT_MAZDA_DOHC_1_4:
@@ -374,16 +391,24 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 		setToothedWheelConfiguration(triggerShape, 60, 2, engineConfiguration->operationMode);
 		break;
 
+	case TT_60_2_VW:
+		setVwConfiguration(triggerShape);
+		break;
+
 	case TT_TOOTHED_WHEEL_36_1:
 		setToothedWheelConfiguration(triggerShape, 36, 1, engineConfiguration->operationMode);
 		break;
 
 	case TT_HONDA_ACCORD_CD_TWO_WIRES:
-		configureHondaAccordCD(triggerShape, false);
+		configureHondaAccordCD(triggerShape, false, true, T_CHANNEL_3, T_PRIMARY, 0);
 		break;
 
 	case TT_HONDA_ACCORD_CD:
-		configureHondaAccordCD(triggerShape, true);
+		configureHondaAccordCD(triggerShape, true, true, T_CHANNEL_3, T_PRIMARY, 0);
+		break;
+
+	case TT_HONDA_ACCORD_1_24:
+		configureHondaAccordCD(triggerShape, true, false, T_PRIMARY, T_PRIMARY, 10);
 		break;
 
 	case TT_HONDA_ACCORD_CD_DIP:
@@ -403,7 +428,8 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 		;
 		return;
 	}
-	triggerShape->wave.checkSwitchTimes(triggerShape->getSize());
+	wave.checkSwitchTimes(getSize());
+	calculateTriggerSynchPoint(PASS_ENGINE_PARAMETER_F);
 }
 
 TriggerStimulatorHelper::TriggerStimulatorHelper() {
@@ -420,13 +446,13 @@ void TriggerStimulatorHelper::nextStep(TriggerState *state, TriggerShape * shape
 	int time = (int) (HELPER_PERIOD * (loopIndex + shape->wave.getSwitchTime(stateIndex)));
 
 	bool_t primaryWheelState = shape->wave.getChannelState(0, prevIndex);
-	bool newPrimaryWheelState = shape->wave.getChannelState(0, stateIndex);
+	bool_t newPrimaryWheelState = shape->wave.getChannelState(0, stateIndex);
 
 	bool_t secondaryWheelState = shape->wave.getChannelState(1, prevIndex);
-	bool newSecondaryWheelState = shape->wave.getChannelState(1, stateIndex);
+	bool_t newSecondaryWheelState = shape->wave.getChannelState(1, stateIndex);
 
 	bool_t thirdWheelState = shape->wave.getChannelState(2, prevIndex);
-	bool new3rdWheelState = shape->wave.getChannelState(2, stateIndex);
+	bool_t new3rdWheelState = shape->wave.getChannelState(2, stateIndex);
 
 	if (primaryWheelState != newPrimaryWheelState) {
 		primaryWheelState = newPrimaryWheelState;
@@ -503,7 +529,7 @@ DECLARE_ENGINE_PARAMETER_S) {
 		if (engineConfiguration->useOnlyFrontForTrigger)
 			i++;
 	}
-	efiAssert(state.getTotalRevolutionCounter() == 3, "totalRevolutionCounter2", EFI_ERROR_CODE);
+	efiAssert(state.getTotalRevolutionCounter() == 3, "totalRevolutionCounter2 expected 3", EFI_ERROR_CODE);
 
 	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 		shape->dutyCycle[i] = 1.0 * state.expectedTotalTime[i] / HELPER_PERIOD;

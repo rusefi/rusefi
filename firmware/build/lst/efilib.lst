@@ -1,0 +1,958 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"efilib.cpp"
+  16              		.section	.text._ZL13ltoa_internalPclj.constprop.1,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	_ZL13ltoa_internalPclj.constprop.1, %function
+  22              	_ZL13ltoa_internalPclj.constprop.1:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25              		@ link register save eliminated.
+  26 0000 70B4     		push	{r4, r5, r6}
+  27 0002 4CF6CD45 		movw	r5, #52429
+  28 0006 00F10B06 		add	r6, r0, #11
+  29 000a 00F10A04 		add	r4, r0, #10
+  30 000e CCF6CC45 		movt	r5, 52428
+  31              	.L3:
+  32 0012 A5FB0132 		umull	r3, r2, r5, r1
+  33 0016 D208     		lsrs	r2, r2, #3
+  34 0018 1346     		mov	r3, r2
+  35 001a 02EB8202 		add	r2, r2, r2, lsl #2
+  36 001e A1EB4202 		sub	r2, r1, r2, lsl #1
+  37 0022 3032     		adds	r2, r2, #48
+  38 0024 D2B2     		uxtb	r2, r2
+  39 0026 1946     		mov	r1, r3
+  40 0028 2346     		mov	r3, r4
+  41 002a 04F80129 		strb	r2, [r4], #-1
+  42 002e 0029     		cmp	r1, #0
+  43 0030 EFD1     		bne	.L3
+  44 0032 F11A     		subs	r1, r6, r3
+  45 0034 0144     		add	r1, r1, r0
+  46 0036 01E0     		b	.L5
+  47              	.L8:
+  48 0038 13F8012F 		ldrb	r2, [r3, #1]!	@ zero_extendqisi2
+  49              	.L5:
+  50 003c 00F8012B 		strb	r2, [r0], #1
+  51 0040 8842     		cmp	r0, r1
+  52 0042 F9D1     		bne	.L8
+  53 0044 70BC     		pop	{r4, r5, r6}
+  54 0046 7047     		bx	lr
+  55              		.size	_ZL13ltoa_internalPclj.constprop.1, .-_ZL13ltoa_internalPclj.constprop.1
+  56 0048 AFF30080 		.section	.text._Z12boolToStringb,"ax",%progbits
+  56      AFF30080 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s 			page 2
+
+
+  57              		.align	2
+  58              		.p2align 4,,15
+  59              		.global	_Z12boolToStringb
+  60              		.thumb
+  61              		.thumb_func
+  62              		.type	_Z12boolToStringb, %function
+  63              	_Z12boolToStringb:
+  64              		@ args = 0, pretend = 0, frame = 0
+  65              		@ frame_needed = 0, uses_anonymous_args = 0
+  66              		@ link register save eliminated.
+  67 0000 40F20002 		movw	r2, #:lower16:.LC1
+  68 0004 40F20003 		movw	r3, #:lower16:.LC0
+  69 0008 C0F20002 		movt	r2, #:upper16:.LC1
+  70 000c C0F20003 		movt	r3, #:upper16:.LC0
+  71 0010 0028     		cmp	r0, #0
+  72 0012 0CBF     		ite	eq
+  73 0014 1046     		moveq	r0, r2
+  74 0016 1846     		movne	r0, r3
+  75 0018 7047     		bx	lr
+  76              		.size	_Z12boolToStringb, .-_Z12boolToStringb
+  77 001a 00BFAFF3 		.section	.text.minI,"ax",%progbits
+  77      0080
+  78              		.align	2
+  79              		.p2align 4,,15
+  80              		.global	minI
+  81              		.thumb
+  82              		.thumb_func
+  83              		.type	minI, %function
+  84              	minI:
+  85              		@ args = 0, pretend = 0, frame = 0
+  86              		@ frame_needed = 0, uses_anonymous_args = 0
+  87              		@ link register save eliminated.
+  88 0000 8842     		cmp	r0, r1
+  89 0002 A8BF     		it	ge
+  90 0004 0846     		movge	r0, r1
+  91 0006 7047     		bx	lr
+  92              		.size	minI, .-minI
+  93 0008 AFF30080 		.section	.text.efiRound,"ax",%progbits
+  93      AFF30080 
+  94              		.align	2
+  95              		.p2align 4,,15
+  96              		.global	efiRound
+  97              		.thumb
+  98              		.thumb_func
+  99              		.type	efiRound, %function
+ 100              	efiRound:
+ 101              		@ args = 0, pretend = 0, frame = 0
+ 102              		@ frame_needed = 0, uses_anonymous_args = 0
+ 103              		@ link register save eliminated.
+ 104 0000 07EE901A 		fmsr	s15, r1
+ 105 0004 06EE900A 		fmsr	s13, r0
+ 106 0008 86EEA77A 		fdivs	s14, s13, s15
+ 107 000c BDEEC77A 		ftosizs	s14, s14
+ 108 0010 B8EEC77A 		fsitos	s14, s14
+ 109 0014 27EE277A 		fmuls	s14, s14, s15
+ 110 0018 17EE100A 		fmrs	r0, s14
+ 111 001c 7047     		bx	lr
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s 			page 3
+
+
+ 112              		.size	efiRound, .-efiRound
+ 113 001e 00BF     		.section	.text.absF,"ax",%progbits
+ 114              		.align	2
+ 115              		.p2align 4,,15
+ 116              		.global	absF
+ 117              		.thumb
+ 118              		.thumb_func
+ 119              		.type	absF, %function
+ 120              	absF:
+ 121              		@ args = 0, pretend = 0, frame = 0
+ 122              		@ frame_needed = 0, uses_anonymous_args = 0
+ 123              		@ link register save eliminated.
+ 124 0000 07EE900A 		fmsr	s15, r0
+ 125 0004 F5EEC07A 		fcmpezs	s15
+ 126 0008 F1EE10FA 		fmstat
+ 127 000c D8BF     		it	le
+ 128 000e F1EE677A 		fnegsle	s15, s15
+ 129 0012 17EE900A 		fmrs	r0, s15
+ 130 0016 7047     		bx	lr
+ 131              		.size	absF, .-absF
+ 132 0018 AFF30080 		.section	.text.absI,"ax",%progbits
+ 132      AFF30080 
+ 133              		.align	2
+ 134              		.p2align 4,,15
+ 135              		.global	absI
+ 136              		.thumb
+ 137              		.thumb_func
+ 138              		.type	absI, %function
+ 139              	absI:
+ 140              		@ args = 0, pretend = 0, frame = 0
+ 141              		@ frame_needed = 0, uses_anonymous_args = 0
+ 142              		@ link register save eliminated.
+ 143 0000 0028     		cmp	r0, #0
+ 144 0002 B8BF     		it	lt
+ 145 0004 4042     		rsblt	r0, r0, #0
+ 146 0006 7047     		bx	lr
+ 147              		.size	absI, .-absI
+ 148 0008 AFF30080 		.section	.text.maxI,"ax",%progbits
+ 148      AFF30080 
+ 149              		.align	2
+ 150              		.p2align 4,,15
+ 151              		.global	maxI
+ 152              		.thumb
+ 153              		.thumb_func
+ 154              		.type	maxI, %function
+ 155              	maxI:
+ 156              		@ args = 0, pretend = 0, frame = 0
+ 157              		@ frame_needed = 0, uses_anonymous_args = 0
+ 158              		@ link register save eliminated.
+ 159 0000 8842     		cmp	r0, r1
+ 160 0002 B8BF     		it	lt
+ 161 0004 0846     		movlt	r0, r1
+ 162 0006 7047     		bx	lr
+ 163              		.size	maxI, .-maxI
+ 164 0008 AFF30080 		.section	.text.maxF,"ax",%progbits
+ 164      AFF30080 
+ 165              		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s 			page 4
+
+
+ 166              		.p2align 4,,15
+ 167              		.global	maxF
+ 168              		.thumb
+ 169              		.thumb_func
+ 170              		.type	maxF, %function
+ 171              	maxF:
+ 172              		@ args = 0, pretend = 0, frame = 0
+ 173              		@ frame_needed = 0, uses_anonymous_args = 0
+ 174              		@ link register save eliminated.
+ 175 0000 07EE100A 		fmsr	s14, r0
+ 176 0004 07EE901A 		fmsr	s15, r1
+ 177 0008 B4EEE77A 		fcmpes	s14, s15
+ 178 000c F1EE10FA 		fmstat
+ 179 0010 D4BF     		ite	le
+ 180 0012 17EE900A 		fmrsle	r0, s15
+ 181 0016 17EE100A 		fmrsgt	r0, s14
+ 182 001a 7047     		bx	lr
+ 183              		.size	maxF, .-maxF
+ 184 001c AFF30080 		.section	.text.minF,"ax",%progbits
+ 185              		.align	2
+ 186              		.p2align 4,,15
+ 187              		.global	minF
+ 188              		.thumb
+ 189              		.thumb_func
+ 190              		.type	minF, %function
+ 191              	minF:
+ 192              		@ args = 0, pretend = 0, frame = 0
+ 193              		@ frame_needed = 0, uses_anonymous_args = 0
+ 194              		@ link register save eliminated.
+ 195 0000 07EE100A 		fmsr	s14, r0
+ 196 0004 07EE901A 		fmsr	s15, r1
+ 197 0008 B4EEE77A 		fcmpes	s14, s15
+ 198 000c F1EE10FA 		fmstat
+ 199 0010 54BF     		ite	pl
+ 200 0012 17EE900A 		fmrspl	r0, s15
+ 201 0016 17EE100A 		fmrsmi	r0, s14
+ 202 001a 7047     		bx	lr
+ 203              		.size	minF, .-minF
+ 204 001c AFF30080 		.section	.text.efiStrlen,"ax",%progbits
+ 205              		.align	2
+ 206              		.p2align 4,,15
+ 207              		.global	efiStrlen
+ 208              		.thumb
+ 209              		.thumb_func
+ 210              		.type	efiStrlen, %function
+ 211              	efiStrlen:
+ 212              		@ args = 0, pretend = 0, frame = 0
+ 213              		@ frame_needed = 0, uses_anonymous_args = 0
+ 214              		@ link register save eliminated.
+ 215 0000 0278     		ldrb	r2, [r0]	@ zero_extendqisi2
+ 216 0002 3AB1     		cbz	r2, .L33
+ 217 0004 431C     		adds	r3, r0, #1
+ 218              	.L32:
+ 219 0006 1A46     		mov	r2, r3
+ 220 0008 0133     		adds	r3, r3, #1
+ 221 000a 1178     		ldrb	r1, [r2]	@ zero_extendqisi2
+ 222 000c 0029     		cmp	r1, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s 			page 5
+
+
+ 223 000e FAD1     		bne	.L32
+ 224 0010 101A     		subs	r0, r2, r0
+ 225 0012 7047     		bx	lr
+ 226              	.L33:
+ 227 0014 1046     		mov	r0, r2
+ 228 0016 7047     		bx	lr
+ 229              		.size	efiStrlen, .-efiStrlen
+ 230 0018 AFF30080 		.section	.text.efiTrim,"ax",%progbits
+ 230      AFF30080 
+ 231              		.align	2
+ 232              		.p2align 4,,15
+ 233              		.global	efiTrim
+ 234              		.thumb
+ 235              		.thumb_func
+ 236              		.type	efiTrim, %function
+ 237              	efiTrim:
+ 238              		@ args = 0, pretend = 0, frame = 0
+ 239              		@ frame_needed = 0, uses_anonymous_args = 0
+ 240              		@ link register save eliminated.
+ 241 0000 30B4     		push	{r4, r5}
+ 242 0002 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 243 0004 202B     		cmp	r3, #32
+ 244 0006 05D1     		bne	.L35
+ 245 0008 421C     		adds	r2, r0, #1
+ 246              	.L36:
+ 247 000a 1046     		mov	r0, r2
+ 248 000c 0132     		adds	r2, r2, #1
+ 249 000e 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 250 0010 202B     		cmp	r3, #32
+ 251 0012 FAD0     		beq	.L36
+ 252              	.L35:
+ 253 0014 CBB1     		cbz	r3, .L46
+ 254 0016 431C     		adds	r3, r0, #1
+ 255              	.L39:
+ 256 0018 1A46     		mov	r2, r3
+ 257 001a 0133     		adds	r3, r3, #1
+ 258 001c 1478     		ldrb	r4, [r2]	@ zero_extendqisi2
+ 259 001e 002C     		cmp	r4, #0
+ 260 0020 FAD1     		bne	.L39
+ 261 0022 121A     		subs	r2, r2, r0
+ 262 0024 002A     		cmp	r2, #0
+ 263 0026 10DD     		ble	.L46
+ 264 0028 531E     		subs	r3, r2, #1
+ 265 002a C118     		adds	r1, r0, r3
+ 266 002c C55C     		ldrb	r5, [r0, r3]	@ zero_extendqisi2
+ 267 002e 202D     		cmp	r5, #32
+ 268 0030 0BD1     		bne	.L46
+ 269 0032 023A     		subs	r2, r2, #2
+ 270 0034 0244     		add	r2, r2, r0
+ 271 0036 03E0     		b	.L41
+ 272              	.L52:
+ 273 0038 0D78     		ldrb	r5, [r1]	@ zero_extendqisi2
+ 274 003a 202D     		cmp	r5, #32
+ 275 003c 05D1     		bne	.L46
+ 276 003e 013B     		subs	r3, r3, #1
+ 277              	.L41:
+ 278 0040 0C70     		strb	r4, [r1]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s 			page 6
+
+
+ 279 0042 1146     		mov	r1, r2
+ 280 0044 013A     		subs	r2, r2, #1
+ 281 0046 002B     		cmp	r3, #0
+ 282 0048 F6D1     		bne	.L52
+ 283              	.L46:
+ 284 004a 30BC     		pop	{r4, r5}
+ 285 004c 7047     		bx	lr
+ 286              		.size	efiTrim, .-efiTrim
+ 287 004e 00BF     		.section	.text.startsWith,"ax",%progbits
+ 288              		.align	2
+ 289              		.p2align 4,,15
+ 290              		.global	startsWith
+ 291              		.thumb
+ 292              		.thumb_func
+ 293              		.type	startsWith, %function
+ 294              	startsWith:
+ 295              		@ args = 0, pretend = 0, frame = 0
+ 296              		@ frame_needed = 0, uses_anonymous_args = 0
+ 297              		@ link register save eliminated.
+ 298 0000 F0B4     		push	{r4, r5, r6, r7}
+ 299 0002 0E78     		ldrb	r6, [r1]	@ zero_extendqisi2
+ 300 0004 3EB3     		cbz	r6, .L63
+ 301 0006 4B1C     		adds	r3, r1, #1
+ 302              	.L56:
+ 303 0008 1A46     		mov	r2, r3
+ 304 000a 0133     		adds	r3, r3, #1
+ 305 000c 1478     		ldrb	r4, [r2]	@ zero_extendqisi2
+ 306 000e 002C     		cmp	r4, #0
+ 307 0010 FAD1     		bne	.L56
+ 308 0012 551A     		subs	r5, r2, r1
+ 309              	.L54:
+ 310 0014 0778     		ldrb	r7, [r0]	@ zero_extendqisi2
+ 311 0016 E7B1     		cbz	r7, .L64
+ 312 0018 431C     		adds	r3, r0, #1
+ 313              	.L59:
+ 314 001a 1A46     		mov	r2, r3
+ 315 001c 0133     		adds	r3, r3, #1
+ 316 001e 1478     		ldrb	r4, [r2]	@ zero_extendqisi2
+ 317 0020 002C     		cmp	r4, #0
+ 318 0022 FAD1     		bne	.L59
+ 319 0024 121A     		subs	r2, r2, r0
+ 320              	.L57:
+ 321 0026 9542     		cmp	r5, r2
+ 322 0028 10D8     		bhi	.L68
+ 323 002a 65B1     		cbz	r5, .L66
+ 324 002c B742     		cmp	r7, r6
+ 325 002e 0DD1     		bne	.L68
+ 326 0030 421E     		subs	r2, r0, #1
+ 327 0032 2A44     		add	r2, r2, r5
+ 328 0034 05E0     		b	.L61
+ 329              	.L62:
+ 330 0036 10F8014F 		ldrb	r4, [r0, #1]!	@ zero_extendqisi2
+ 331 003a 11F8013F 		ldrb	r3, [r1, #1]!	@ zero_extendqisi2
+ 332 003e 9C42     		cmp	r4, r3
+ 333 0040 04D1     		bne	.L68
+ 334              	.L61:
+ 335 0042 9042     		cmp	r0, r2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s 			page 7
+
+
+ 336 0044 F7D1     		bne	.L62
+ 337              	.L66:
+ 338 0046 0120     		movs	r0, #1
+ 339 0048 F0BC     		pop	{r4, r5, r6, r7}
+ 340 004a 7047     		bx	lr
+ 341              	.L68:
+ 342 004c 0020     		movs	r0, #0
+ 343 004e F0BC     		pop	{r4, r5, r6, r7}
+ 344 0050 7047     		bx	lr
+ 345              	.L64:
+ 346 0052 3A46     		mov	r2, r7
+ 347 0054 E7E7     		b	.L57
+ 348              	.L63:
+ 349 0056 3546     		mov	r5, r6
+ 350 0058 DCE7     		b	.L54
+ 351              		.size	startsWith, .-startsWith
+ 352 005a 00BFAFF3 		.section	.text.indexOf,"ax",%progbits
+ 352      0080
+ 353              		.align	2
+ 354              		.p2align 4,,15
+ 355              		.global	indexOf
+ 356              		.thumb
+ 357              		.thumb_func
+ 358              		.type	indexOf, %function
+ 359              	indexOf:
+ 360              		@ args = 0, pretend = 0, frame = 0
+ 361              		@ frame_needed = 0, uses_anonymous_args = 0
+ 362              		@ link register save eliminated.
+ 363 0000 30B4     		push	{r4, r5}
+ 364 0002 0578     		ldrb	r5, [r0]	@ zero_extendqisi2
+ 365 0004 A5B1     		cbz	r5, .L76
+ 366 0006 431C     		adds	r3, r0, #1
+ 367              	.L72:
+ 368 0008 1C46     		mov	r4, r3
+ 369 000a 0133     		adds	r3, r3, #1
+ 370 000c 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
+ 371 000e 002A     		cmp	r2, #0
+ 372 0010 FAD1     		bne	.L72
+ 373 0012 241A     		subs	r4, r4, r0
+ 374 0014 002C     		cmp	r4, #0
+ 375 0016 0BDD     		ble	.L76
+ 376 0018 A942     		cmp	r1, r5
+ 377 001a 0DD0     		beq	.L77
+ 378 001c 0346     		mov	r3, r0
+ 379 001e 1046     		mov	r0, r2
+ 380 0020 03E0     		b	.L73
+ 381              	.L74:
+ 382 0022 13F8012F 		ldrb	r2, [r3, #1]!	@ zero_extendqisi2
+ 383 0026 8A42     		cmp	r2, r1
+ 384 0028 04D0     		beq	.L70
+ 385              	.L73:
+ 386 002a 0130     		adds	r0, r0, #1
+ 387 002c A042     		cmp	r0, r4
+ 388 002e F8D1     		bne	.L74
+ 389              	.L76:
+ 390 0030 4FF0FF30 		mov	r0, #-1
+ 391              	.L70:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s 			page 8
+
+
+ 392 0034 30BC     		pop	{r4, r5}
+ 393 0036 7047     		bx	lr
+ 394              	.L77:
+ 395 0038 1046     		mov	r0, r2
+ 396 003a FBE7     		b	.L70
+ 397              		.size	indexOf, .-indexOf
+ 398 003c AFF30080 		.section	.text.atoi,"ax",%progbits
+ 399              		.align	2
+ 400              		.p2align 4,,15
+ 401              		.global	atoi
+ 402              		.thumb
+ 403              		.thumb_func
+ 404              		.type	atoi, %function
+ 405              	atoi:
+ 406              		@ args = 0, pretend = 0, frame = 0
+ 407              		@ frame_needed = 0, uses_anonymous_args = 0
+ 408 0000 38B5     		push	{r3, r4, r5, lr}
+ 409 0002 0446     		mov	r4, r0
+ 410 0004 0125     		movs	r5, #1
+ 411 0006 04E0     		b	.L85
+ 412              	.L80:
+ 413 0008 14F8013B 		ldrb	r3, [r4], #1	@ zero_extendqisi2
+ 414 000c 2D2B     		cmp	r3, #45
+ 415 000e 0DD1     		bne	.L90
+ 416 0010 6D42     		negs	r5, r5
+ 417              	.L85:
+ 418 0012 2046     		mov	r0, r4
+ 419 0014 FFF7FEFF 		bl	strlen
+ 420 0018 2146     		mov	r1, r4
+ 421 001a 0028     		cmp	r0, #0
+ 422 001c F4D1     		bne	.L80
+ 423 001e 41F6D030 		movw	r0, #7120
+ 424 0022 CEF67350 		movt	r0, 60787
+ 425 0026 00FB05F0 		mul	r0, r0, r5
+ 426 002a 38BD     		pop	{r3, r4, r5, pc}
+ 427              	.L90:
+ 428 002c 0028     		cmp	r0, #0
+ 429 002e 1DDD     		ble	.L88
+ 430 0030 303B     		subs	r3, r3, #48
+ 431 0032 DAB2     		uxtb	r2, r3
+ 432 0034 092A     		cmp	r2, #9
+ 433 0036 12D8     		bhi	.L89
+ 434 0038 0844     		add	r0, r0, r1
+ 435 003a 0138     		subs	r0, r0, #1
+ 436 003c 0022     		movs	r2, #0
+ 437 003e 05E0     		b	.L84
+ 438              	.L87:
+ 439 0040 11F8013F 		ldrb	r3, [r1, #1]!	@ zero_extendqisi2
+ 440 0044 303B     		subs	r3, r3, #48
+ 441 0046 DCB2     		uxtb	r4, r3
+ 442 0048 092C     		cmp	r4, #9
+ 443 004a 08D8     		bhi	.L89
+ 444              	.L84:
+ 445 004c 02EB8202 		add	r2, r2, r2, lsl #2
+ 446 0050 8142     		cmp	r1, r0
+ 447 0052 03EB4202 		add	r2, r3, r2, lsl #1
+ 448 0056 F3D1     		bne	.L87
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s 			page 9
+
+
+ 449 0058 02FB05F0 		mul	r0, r2, r5
+ 450 005c 38BD     		pop	{r3, r4, r5, pc}
+ 451              	.L89:
+ 452 005e 4EF23040 		movw	r0, #58416
+ 453 0062 C1F28C20 		movt	r0, 4748
+ 454 0066 00FB05F0 		mul	r0, r0, r5
+ 455 006a 38BD     		pop	{r3, r4, r5, pc}
+ 456              	.L88:
+ 457 006c 0020     		movs	r0, #0
+ 458 006e 38BD     		pop	{r3, r4, r5, pc}
+ 459              		.size	atoi, .-atoi
+ 460              		.section	.text.itoa10,"ax",%progbits
+ 461              		.align	2
+ 462              		.p2align 4,,15
+ 463              		.global	itoa10
+ 464              		.thumb
+ 465              		.thumb_func
+ 466              		.type	itoa10, %function
+ 467              	itoa10:
+ 468              		@ args = 0, pretend = 0, frame = 0
+ 469              		@ frame_needed = 0, uses_anonymous_args = 0
+ 470 0000 08B5     		push	{r3, lr}
+ 471 0002 0B1E     		subs	r3, r1, #0
+ 472 0004 0246     		mov	r2, r0
+ 473 0006 BFBF     		itttt	lt
+ 474 0008 0046     		movlt	r0, r0
+ 475 000a 2D22     		movlt	r2, #45
+ 476 000c 5942     		rsblt	r1, r3, #0
+ 477 000e 00F8012B 		strblt	r2, [r0], #1
+ 478 0012 FFF7FEFF 		bl	_ZL13ltoa_internalPclj.constprop.1
+ 479 0016 0023     		movs	r3, #0
+ 480 0018 0370     		strb	r3, [r0]
+ 481 001a 08BD     		pop	{r3, pc}
+ 482              		.size	itoa10, .-itoa10
+ 483 001c AFF30080 		.section	.text.isSameF,"ax",%progbits
+ 484              		.align	2
+ 485              		.p2align 4,,15
+ 486              		.global	isSameF
+ 487              		.thumb
+ 488              		.thumb_func
+ 489              		.type	isSameF, %function
+ 490              	isSameF:
+ 491              		@ args = 0, pretend = 0, frame = 0
+ 492              		@ frame_needed = 0, uses_anonymous_args = 0
+ 493              		@ link register save eliminated.
+ 494 0000 06EE900A 		fmsr	s13, r0
+ 495 0004 07EE101A 		fmsr	s14, r1
+ 496 0008 76EEC77A 		fsubs	s15, s13, s14
+ 497 000c 9FED087A 		flds	s14, .L97
+ 498 0010 F5EEC07A 		fcmpezs	s15
+ 499 0014 F1EE10FA 		fmstat
+ 500 0018 D8BF     		it	le
+ 501 001a F1EE677A 		fnegsle	s15, s15
+ 502 001e F4EEC77A 		fcmpes	s15, s14
+ 503 0022 F1EE10FA 		fmstat
+ 504 0026 54BF     		ite	pl
+ 505 0028 0020     		movpl	r0, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s 			page 10
+
+
+ 506 002a 0120     		movmi	r0, #1
+ 507 002c 7047     		bx	lr
+ 508              	.L98:
+ 509 002e 00BF     		.align	2
+ 510              	.L97:
+ 511 0030 17B7D138 		.word	953267991
+ 512              		.size	isSameF, .-isSameF
+ 513 0034 AFF30080 		.section	.text.efiPow10,"ax",%progbits
+ 513      AFF30080 
+ 513      AFF30080 
+ 514              		.align	2
+ 515              		.p2align 4,,15
+ 516              		.global	efiPow10
+ 517              		.thumb
+ 518              		.thumb_func
+ 519              		.type	efiPow10, %function
+ 520              	efiPow10:
+ 521              		@ args = 0, pretend = 0, frame = 0
+ 522              		@ frame_needed = 0, uses_anonymous_args = 0
+ 523              		@ link register save eliminated.
+ 524 0000 0828     		cmp	r0, #8
+ 525 0002 26D8     		bhi	.L100
+ 526 0004 DFE800F0 		tbb	[pc, r0]
+ 527              	.L102:
+ 528 0008 0A       		.byte	(.L101-.L102)/2
+ 529 0009 0C       		.byte	(.L112-.L102)/2
+ 530 000a 0E       		.byte	(.L104-.L102)/2
+ 531 000b 10       		.byte	(.L105-.L102)/2
+ 532 000c 13       		.byte	(.L106-.L102)/2
+ 533 000d 16       		.byte	(.L107-.L102)/2
+ 534 000e 1B       		.byte	(.L108-.L102)/2
+ 535 000f 20       		.byte	(.L109-.L102)/2
+ 536 0010 05       		.byte	(.L110-.L102)/2
+ 537 0011 00       		.align	1
+ 538              	.L110:
+ 539 0012 4FF46140 		mov	r0, #57600
+ 540 0016 C0F2F550 		movt	r0, 1525
+ 541 001a 7047     		bx	lr
+ 542              	.L101:
+ 543 001c 0120     		movs	r0, #1
+ 544 001e 7047     		bx	lr
+ 545              	.L112:
+ 546 0020 0A20     		movs	r0, #10
+ 547 0022 7047     		bx	lr
+ 548              	.L104:
+ 549 0024 6420     		movs	r0, #100
+ 550 0026 7047     		bx	lr
+ 551              	.L105:
+ 552 0028 4FF47A70 		mov	r0, #1000
+ 553 002c 7047     		bx	lr
+ 554              	.L106:
+ 555 002e 42F21070 		movw	r0, #10000
+ 556 0032 7047     		bx	lr
+ 557              	.L107:
+ 558 0034 48F2A060 		movw	r0, #34464
+ 559 0038 C0F20100 		movt	r0, 1
+ 560 003c 7047     		bx	lr
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s 			page 11
+
+
+ 561              	.L108:
+ 562 003e 44F24020 		movw	r0, #16960
+ 563 0042 C0F20F00 		movt	r0, 15
+ 564 0046 7047     		bx	lr
+ 565              	.L109:
+ 566 0048 49F28060 		movw	r0, #38528
+ 567 004c C0F29800 		movt	r0, 152
+ 568 0050 7047     		bx	lr
+ 569              	.L100:
+ 570              	.L111:
+ 571 0052 FEE7     		b	.L111
+ 572              		.size	efiPow10, .-efiPow10
+ 573 0054 AFF30080 		.section	.text.atoff,"ax",%progbits
+ 573      AFF30080 
+ 573      AFF30080 
+ 574              		.align	2
+ 575              		.p2align 4,,15
+ 576              		.global	atoff
+ 577              		.thumb
+ 578              		.thumb_func
+ 579              		.type	atoff, %function
+ 580              	atoff:
+ 581              		@ args = 0, pretend = 0, frame = 0
+ 582              		@ frame_needed = 0, uses_anonymous_args = 0
+ 583 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 584 0004 0546     		mov	r5, r0
+ 585 0006 FFF7FEFF 		bl	strlen
+ 586 000a 6328     		cmp	r0, #99
+ 587 000c 05D9     		bls	.L114
+ 588              	.L123:
+ 589 000e DFED457A 		flds	s15, .L133
+ 590              	.L115:
+ 591 0012 17EE900A 		fmrs	r0, s15
+ 592 0016 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 593              	.L114:
+ 594 001a 40F20004 		movw	r4, #:lower16:.LANCHOR0
+ 595 001e C0F20004 		movt	r4, #:upper16:.LANCHOR0
+ 596 0022 421C     		adds	r2, r0, #1
+ 597 0024 2946     		mov	r1, r5
+ 598 0026 2046     		mov	r0, r4
+ 599 0028 FFF7FEFF 		bl	memcpy
+ 600 002c 2078     		ldrb	r0, [r4]	@ zero_extendqisi2
+ 601 002e A8B1     		cbz	r0, .L116
+ 602 0030 621C     		adds	r2, r4, #1
+ 603              	.L118:
+ 604 0032 1146     		mov	r1, r2
+ 605 0034 0132     		adds	r2, r2, #1
+ 606 0036 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+ 607 0038 002B     		cmp	r3, #0
+ 608 003a FAD1     		bne	.L118
+ 609 003c 091B     		subs	r1, r1, r4
+ 610 003e 0029     		cmp	r1, #0
+ 611 0040 0CDD     		ble	.L116
+ 612 0042 2E28     		cmp	r0, #46
+ 613 0044 64D0     		beq	.L126
+ 614 0046 384A     		ldr	r2, .L133+4
+ 615 0048 02E0     		b	.L120
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s 			page 12
+
+
+ 616              	.L122:
+ 617 004a 0478     		ldrb	r4, [r0]	@ zero_extendqisi2
+ 618 004c 2E2C     		cmp	r4, #46
+ 619 004e 1AD0     		beq	.L121
+ 620              	.L120:
+ 621 0050 0133     		adds	r3, r3, #1
+ 622 0052 8B42     		cmp	r3, r1
+ 623 0054 1046     		mov	r0, r2
+ 624 0056 02F10102 		add	r2, r2, #1
+ 625 005a F6D1     		bne	.L122
+ 626              	.L116:
+ 627 005c 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 628 0060 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 629 0064 FFF7FEFF 		bl	atoi
+ 630 0068 4EF23043 		movw	r3, #58416
+ 631 006c 80EAE072 		eor	r2, r0, r0, asr #31
+ 632 0070 A2EBE072 		sub	r2, r2, r0, asr #31
+ 633 0074 C1F28C23 		movt	r3, 4748
+ 634 0078 9A42     		cmp	r2, r3
+ 635 007a C8D0     		beq	.L123
+ 636 007c 06EE100A 		fmsr	s12, r0	@ int
+ 637 0080 F8EEC67A 		fsitos	s15, s12
+ 638 0084 C5E7     		b	.L115
+ 639              	.L121:
+ 640 0086 5A1C     		adds	r2, r3, #1
+ 641 0088 1CBF     		itt	ne
+ 642 008a 0246     		movne	r2, r0
+ 643 008c 9846     		movne	r8, r3
+ 644 008e E5D0     		beq	.L116
+ 645              	.L119:
+ 646 0090 40F20004 		movw	r4, #:lower16:.LANCHOR0
+ 647 0094 C0F20004 		movt	r4, #:upper16:.LANCHOR0
+ 648 0098 0027     		movs	r7, #0
+ 649 009a 1770     		strb	r7, [r2]
+ 650 009c 2046     		mov	r0, r4
+ 651 009e FFF7FEFF 		bl	atoi
+ 652 00a2 4EF23045 		movw	r5, #58416
+ 653 00a6 80EAE072 		eor	r2, r0, r0, asr #31
+ 654 00aa A2EBE072 		sub	r2, r2, r0, asr #31
+ 655 00ae C1F28C25 		movt	r5, 4748
+ 656 00b2 AA42     		cmp	r2, r5
+ 657 00b4 0646     		mov	r6, r0
+ 658 00b6 AAD0     		beq	.L123
+ 659 00b8 08F10108 		add	r8, r8, #1
+ 660 00bc A044     		add	r8, r8, r4
+ 661 00be 4046     		mov	r0, r8
+ 662 00c0 FFF7FEFF 		bl	strlen
+ 663 00c4 0446     		mov	r4, r0
+ 664 00c6 4046     		mov	r0, r8
+ 665 00c8 FFF7FEFF 		bl	atoi
+ 666 00cc 80EAE073 		eor	r3, r0, r0, asr #31
+ 667 00d0 A3EBE073 		sub	r3, r3, r0, asr #31
+ 668 00d4 AB42     		cmp	r3, r5
+ 669 00d6 9AD0     		beq	.L123
+ 670 00d8 BC42     		cmp	r4, r7
+ 671 00da 1FDD     		ble	.L128
+ 672 00dc 3B46     		mov	r3, r7
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s 			page 13
+
+
+ 673 00de F7EE007A 		fconsts	s15, #112
+ 674 00e2 B2EE047A 		fconsts	s14, #36
+ 675              	.L125:
+ 676 00e6 0133     		adds	r3, r3, #1
+ 677 00e8 9C42     		cmp	r4, r3
+ 678 00ea 67EE877A 		fmuls	s15, s15, s14
+ 679 00ee FAD1     		bne	.L125
+ 680              	.L124:
+ 681 00f0 07EE100A 		fmsr	s14, r0	@ int
+ 682 00f4 F8EEC76A 		fsitos	s13, s14
+ 683 00f8 06EE106A 		fmsr	s12, r6	@ int
+ 684 00fc C6EEA77A 		fdivs	s15, s13, s15
+ 685 0100 B8EEC67A 		fsitos	s14, s12
+ 686 0104 77EE277A 		fadds	s15, s14, s15
+ 687 0108 17EE900A 		fmrs	r0, s15
+ 688 010c BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 689              	.L126:
+ 690 0110 40F20002 		movw	r2, #:lower16:.LANCHOR0
+ 691 0114 9846     		mov	r8, r3
+ 692 0116 C0F20002 		movt	r2, #:upper16:.LANCHOR0
+ 693 011a B9E7     		b	.L119
+ 694              	.L128:
+ 695 011c F7EE007A 		fconsts	s15, #112
+ 696 0120 E6E7     		b	.L124
+ 697              	.L134:
+ 698 0122 00BF     		.align	2
+ 699              	.L133:
+ 700 0124 0000C07F 		.word	2143289344
+ 701 0128 01000000 		.word	.LANCHOR0+1
+ 702              		.size	atoff, .-atoff
+ 703 012c AFF30080 		.section	.text.strEqualCaseInsensitive,"ax",%progbits
+ 704              		.align	2
+ 705              		.p2align 4,,15
+ 706              		.global	strEqualCaseInsensitive
+ 707              		.thumb
+ 708              		.thumb_func
+ 709              		.type	strEqualCaseInsensitive, %function
+ 710              	strEqualCaseInsensitive:
+ 711              		@ args = 0, pretend = 0, frame = 0
+ 712              		@ frame_needed = 0, uses_anonymous_args = 0
+ 713 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 714 0004 0F46     		mov	r7, r1
+ 715 0006 8046     		mov	r8, r0
+ 716 0008 FFF7FEFF 		bl	strlen
+ 717 000c 0646     		mov	r6, r0
+ 718 000e 3846     		mov	r0, r7
+ 719 0010 FFF7FEFF 		bl	strlen
+ 720 0014 8642     		cmp	r6, r0
+ 721 0016 02D0     		beq	.L147
+ 722              	.L144:
+ 723 0018 0020     		movs	r0, #0
+ 724 001a BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 725              	.L147:
+ 726 001e 002E     		cmp	r6, #0
+ 727 0020 17DD     		ble	.L145
+ 728 0022 0023     		movs	r3, #0
+ 729              	.L141:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s 			page 14
+
+
+ 730 0024 18F80320 		ldrb	r2, [r8, r3]	@ zero_extendqisi2
+ 731 0028 A2F14104 		sub	r4, r2, #65
+ 732 002c E4B2     		uxtb	r4, r4
+ 733 002e 192C     		cmp	r4, #25
+ 734 0030 94BF     		ite	ls
+ 735 0032 02F12005 		addls	r5, r2, #32
+ 736 0036 1546     		movhi	r5, r2
+ 737 0038 FA5C     		ldrb	r2, [r7, r3]	@ zero_extendqisi2
+ 738 003a A2F14104 		sub	r4, r2, #65
+ 739 003e E4B2     		uxtb	r4, r4
+ 740 0040 192C     		cmp	r4, #25
+ 741 0042 98BF     		it	ls
+ 742 0044 2032     		addls	r2, r2, #32
+ 743 0046 9542     		cmp	r5, r2
+ 744 0048 03F10103 		add	r3, r3, #1
+ 745 004c E4D1     		bne	.L144
+ 746 004e 9E42     		cmp	r6, r3
+ 747 0050 E8D1     		bne	.L141
+ 748              	.L145:
+ 749 0052 0120     		movs	r0, #1
+ 750 0054 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 751              		.size	strEqualCaseInsensitive, .-strEqualCaseInsensitive
+ 752 0058 AFF30080 		.section	.text.strEqual,"ax",%progbits
+ 752      AFF30080 
+ 753              		.align	2
+ 754              		.p2align 4,,15
+ 755              		.global	strEqual
+ 756              		.thumb
+ 757              		.thumb_func
+ 758              		.type	strEqual, %function
+ 759              	strEqual:
+ 760              		@ args = 0, pretend = 0, frame = 0
+ 761              		@ frame_needed = 0, uses_anonymous_args = 0
+ 762 0000 70B5     		push	{r4, r5, r6, lr}
+ 763 0002 0C46     		mov	r4, r1
+ 764 0004 0546     		mov	r5, r0
+ 765 0006 FFF7FEFF 		bl	strlen
+ 766 000a 0646     		mov	r6, r0
+ 767 000c 2046     		mov	r0, r4
+ 768 000e FFF7FEFF 		bl	strlen
+ 769 0012 8642     		cmp	r6, r0
+ 770 0014 01D0     		beq	.L156
+ 771              	.L155:
+ 772 0016 0020     		movs	r0, #0
+ 773 0018 70BD     		pop	{r4, r5, r6, pc}
+ 774              	.L156:
+ 775 001a 002E     		cmp	r6, #0
+ 776 001c 10DD     		ble	.L153
+ 777 001e 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
+ 778 0020 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 779 0022 9A42     		cmp	r2, r3
+ 780 0024 F7D1     		bne	.L155
+ 781 0026 2A46     		mov	r2, r5
+ 782 0028 2146     		mov	r1, r4
+ 783 002a 0023     		movs	r3, #0
+ 784 002c 05E0     		b	.L150
+ 785              	.L151:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s 			page 15
+
+
+ 786 002e 12F8015F 		ldrb	r5, [r2, #1]!	@ zero_extendqisi2
+ 787 0032 11F8014F 		ldrb	r4, [r1, #1]!	@ zero_extendqisi2
+ 788 0036 A542     		cmp	r5, r4
+ 789 0038 EDD1     		bne	.L155
+ 790              	.L150:
+ 791 003a 0133     		adds	r3, r3, #1
+ 792 003c 9E42     		cmp	r6, r3
+ 793 003e F6D1     		bne	.L151
+ 794              	.L153:
+ 795 0040 0120     		movs	r0, #1
+ 796 0042 70BD     		pop	{r4, r5, r6, pc}
+ 797              		.size	strEqual, .-strEqual
+ 798 0044 AFF30080 		.section	.text._Z14printHistogramP7LoggingP11histogram_s,"ax",%progbits
+ 798      AFF30080 
+ 798      AFF30080 
+ 799              		.align	2
+ 800              		.p2align 4,,15
+ 801              		.global	_Z14printHistogramP7LoggingP11histogram_s
+ 802              		.thumb
+ 803              		.thumb_func
+ 804              		.type	_Z14printHistogramP7LoggingP11histogram_s, %function
+ 805              	_Z14printHistogramP7LoggingP11histogram_s:
+ 806              		@ args = 0, pretend = 0, frame = 0
+ 807              		@ frame_needed = 0, uses_anonymous_args = 0
+ 808              		@ link register save eliminated.
+ 809 0000 7047     		bx	lr
+ 810              		.size	_Z14printHistogramP7LoggingP11histogram_s, .-_Z14printHistogramP7LoggingP11histogram_s
+ 811 0002 00BFAFF3 		.section	.bss._ZL23todofixthismesswithcopy,"aw",%nobits
+ 811      0080AFF3 
+ 811      0080AFF3 
+ 811      0080
+ 812              		.align	2
+ 813              		.set	.LANCHOR0,. + 0
+ 814              		.type	_ZL23todofixthismesswithcopy, %object
+ 815              		.size	_ZL23todofixthismesswithcopy, 100
+ 816              	_ZL23todofixthismesswithcopy:
+ 817 0000 00000000 		.space	100
+ 817      00000000 
+ 817      00000000 
+ 817      00000000 
+ 817      00000000 
+ 818              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 819              		.align	2
+ 820              	.LC0:
+ 821 0000 59657300 		.ascii	"Yes\000"
+ 822              	.LC1:
+ 823 0004 4E6F00   		.ascii	"No\000"
+ 824 0007 00       		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s 			page 16
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 efilib.cpp
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:17     .text._ZL13ltoa_internalPclj.constprop.1:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:22     .text._ZL13ltoa_internalPclj.constprop.1:00000000 _ZL13ltoa_internalPclj.constprop.1
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:57     .text._Z12boolToStringb:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:63     .text._Z12boolToStringb:00000000 _Z12boolToStringb
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:822    .rodata.str1.4:00000004 .LC1
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:820    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:78     .text.minI:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:84     .text.minI:00000000 minI
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:94     .text.efiRound:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:100    .text.efiRound:00000000 efiRound
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:114    .text.absF:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:120    .text.absF:00000000 absF
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:133    .text.absI:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:139    .text.absI:00000000 absI
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:149    .text.maxI:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:155    .text.maxI:00000000 maxI
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:165    .text.maxF:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:171    .text.maxF:00000000 maxF
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:185    .text.minF:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:191    .text.minF:00000000 minF
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:205    .text.efiStrlen:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:211    .text.efiStrlen:00000000 efiStrlen
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:231    .text.efiTrim:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:237    .text.efiTrim:00000000 efiTrim
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:288    .text.startsWith:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:294    .text.startsWith:00000000 startsWith
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:353    .text.indexOf:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:359    .text.indexOf:00000000 indexOf
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:399    .text.atoi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:405    .text.atoi:00000000 atoi
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:461    .text.itoa10:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:467    .text.itoa10:00000000 itoa10
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:484    .text.isSameF:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:490    .text.isSameF:00000000 isSameF
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:511    .text.isSameF:00000030 $d
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:514    .text.efiPow10:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:520    .text.efiPow10:00000000 efiPow10
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:528    .text.efiPow10:00000008 $d
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:574    .text.atoff:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:580    .text.atoff:00000000 atoff
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:813    .bss._ZL23todofixthismesswithcopy:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:700    .text.atoff:00000124 $d
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:704    .text.strEqualCaseInsensitive:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:710    .text.strEqualCaseInsensitive:00000000 strEqualCaseInsensitive
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:753    .text.strEqual:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:759    .text.strEqual:00000000 strEqual
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:799    .text._Z14printHistogramP7LoggingP11histogram_s:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:805    .text._Z14printHistogramP7LoggingP11histogram_s:00000000 _Z14printHistogramP7LoggingP11histogram_s
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:812    .bss._ZL23todofixthismesswithcopy:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:816    .bss._ZL23todofixthismesswithcopy:00000000 _ZL23todofixthismesswithcopy
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:819    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:513    .text.isSameF:00000034 $t
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:703    .text.atoff:0000012c $t
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:537    .text.efiPow10:00000011 $d
+C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s:537    .text.efiPow10:00000012 $t
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccm9Rfbe.s 			page 17
+
+
+
+UNDEFINED SYMBOLS
+strlen
+memcpy

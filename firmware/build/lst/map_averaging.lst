@@ -1,0 +1,826 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"map_averaging.cpp"
+  16              		.section	.text._ZL12showMapStatsv,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	_ZL12showMapStatsv, %function
+  22              	_ZL12showMapStatsv:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25              		@ link register save eliminated.
+  26 0000 40F20002 		movw	r2, #:lower16:.LANCHOR0
+  27 0004 40F20003 		movw	r3, #:lower16:.LANCHOR1
+  28 0008 C0F20002 		movt	r2, #:upper16:.LANCHOR0
+  29 000c C0F20003 		movt	r3, #:upper16:.LANCHOR1
+  30 0010 40F20001 		movw	r1, #:lower16:.LC0
+  31 0014 1268     		ldr	r2, [r2]
+  32 0016 1868     		ldr	r0, [r3]
+  33 0018 C0F20001 		movt	r1, #:upper16:.LC0
+  34 001c FFF7FEBF 		b	scheduleMsg
+  35              		.size	_ZL12showMapStatsv, .-_ZL12showMapStatsv
+  36              		.section	.text._ZL12endAveragingPv,"ax",%progbits
+  37              		.align	2
+  38              		.p2align 4,,15
+  39              		.thumb
+  40              		.thumb_func
+  41              		.type	_ZL12endAveragingPv, %function
+  42              	_ZL12endAveragingPv:
+  43              		@ args = 0, pretend = 0, frame = 0
+  44              		@ frame_needed = 0, uses_anonymous_args = 0
+  45 0000 10B5     		push	{r4, lr}
+  46 0002 FFF7FEFF 		bl	lockAnyContext
+  47 0006 40F20003 		movw	r3, #:lower16:.LANCHOR4
+  48 000a 40F20002 		movw	r2, #:lower16:.LANCHOR3
+  49 000e C0F20003 		movt	r3, #:upper16:.LANCHOR4
+  50 0012 C0F20002 		movt	r2, #:upper16:.LANCHOR3
+  51 0016 92ED007A 		flds	s14, [r2]
+  52 001a D3ED007A 		flds	s15, [r3]	@ int
+  53 001e F8EEE77A 		fsitos	s15, s15
+  54 0022 40F20003 		movw	r3, #:lower16:engineConfiguration
+  55 0026 C7EE276A 		fdivs	s13, s14, s15
+  56 002a C0F20003 		movt	r3, #:upper16:engineConfiguration
+  57 002e 40F20001 		movw	r1, #:lower16:.LANCHOR2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s 			page 2
+
+
+  58 0032 1B68     		ldr	r3, [r3]
+  59 0034 40F20002 		movw	r2, #:lower16:.LANCHOR5
+  60 0038 C0F20001 		movt	r1, #:upper16:.LANCHOR2
+  61 003c 0446     		mov	r4, r0
+  62 003e C0F20002 		movt	r2, #:upper16:.LANCHOR5
+  63 0042 0020     		movs	r0, #0
+  64 0044 0870     		strb	r0, [r1]
+  65 0046 DFED0C7A 		flds	s15, .L5
+  66 004a 93ED747A 		flds	s14, [r3, #464]
+  67 004e 66EEA77A 		fmuls	s15, s13, s15
+  68 0052 67EE877A 		fmuls	s15, s15, s14
+  69 0056 C2ED007A 		fsts	s15, [r2]
+  70 005a 24B9     		cbnz	r4, .L3
+  71 005c FFF7FEFF 		bl	dbg_check_unlock_from_isr
+  72 0060 2346     		mov	r3, r4
+  73              	@ 161 "./controllers/map_averaging.cpp" 1
+  74 0062 83F31188 		msr     BASEPRI, r3
+  75              	@ 0 "" 2
+  76              		.thumb
+  77              	.L3:
+  78 0066 40F20000 		movw	r0, #:lower16:.LANCHOR6
+  79 006a C0F20000 		movt	r0, #:upper16:.LANCHOR6
+  80 006e BDE81040 		pop	{r4, lr}
+  81 0072 FFF7FEBF 		b	_Z10turnPinLowP14NamedOutputPin
+  82              	.L6:
+  83 0076 00BF     		.align	2
+  84              	.L5:
+  85 0078 010C403A 		.word	977275905
+  86              		.size	_ZL12endAveragingPv, .-_ZL12endAveragingPv
+  87 007c AFF30080 		.section	.text._ZL20mapAveragingCallback15trigger_event_em,"ax",%progbits
+  88              		.align	2
+  89              		.p2align 4,,15
+  90              		.thumb
+  91              		.thumb_func
+  92              		.type	_ZL20mapAveragingCallback15trigger_event_em, %function
+  93              	_ZL20mapAveragingCallback15trigger_event_em:
+  94              		@ args = 0, pretend = 0, frame = 0
+  95              		@ frame_needed = 0, uses_anonymous_args = 0
+  96 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+  97 0004 40F20005 		movw	r5, #:lower16:engine
+  98 0008 C0F20005 		movt	r5, #:upper16:engine
+  99 000c 4FF48053 		mov	r3, #4096
+ 100 0010 40F20004 		movw	r4, #:lower16:persistentState
+ 101 0014 2A68     		ldr	r2, [r5]
+ 102 0016 CEF20003 		movt	r3, 57344
+ 103 001a C0F20004 		movt	r4, #:upper16:persistentState
+ 104 001e 2DED028B 		fstmfdd	sp!, {d8}
+ 105 0022 02F50F50 		add	r0, r2, #9152
+ 106 0026 5A68     		ldr	r2, [r3, #4]
+ 107 0028 D4F87836 		ldr	r3, [r4, #1656]
+ 108 002c 8263     		str	r2, [r0, #56]
+ 109 002e 8B42     		cmp	r3, r1
+ 110 0030 83B0     		sub	sp, sp, #12
+ 111 0032 04D0     		beq	.L46
+ 112              	.L7:
+ 113 0034 03B0     		add	sp, sp, #12
+ 114              		@ sp needed
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s 			page 3
+
+
+ 115 0036 BDEC028B 		fldmfdd	sp!, {d8}
+ 116 003a BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ 117              	.L46:
+ 118 003e 40F20002 		movw	r2, #:lower16:_engine
+ 119 0042 C0F20002 		movt	r2, #:upper16:_engine
+ 120 0046 47F22E51 		movw	r1, #29998
+ 121 004a D2F80080 		ldr	r8, [r2]
+ 122 004e 08F1FF30 		add	r0, r8, #-1
+ 123 0052 8842     		cmp	r0, r1
+ 124 0054 EED8     		bhi	.L7
+ 125 0056 40F20001 		movw	r1, #:lower16:.LANCHOR7
+ 126 005a C0F20001 		movt	r1, #:upper16:.LANCHOR7
+ 127 005e 03F28233 		addw	r3, r3, #898
+ 128 0062 02EB8303 		add	r3, r2, r3, lsl #2
+ 129 0066 02F5F559 		add	r9, r2, #7840
+ 130 006a 40F20007 		movw	r7, #:lower16:.LANCHOR0
+ 131 006e 0A68     		ldr	r2, [r1]
+ 132 0070 D4F8A861 		ldr	r6, [r4, #424]
+ 133 0074 D3ED027A 		flds	s15, [r3, #8]
+ 134 0078 C0F20007 		movt	r7, #:upper16:.LANCHOR0
+ 135 007c 99ED038A 		flds	s16, [r9, #12]
+ 136 0080 0023     		movs	r3, #0
+ 137 0082 3A60     		str	r2, [r7]
+ 138 0084 38EE678A 		fsubs	s16, s16, s15
+ 139 0088 0B60     		str	r3, [r1]
+ 140 008a 002E     		cmp	r6, #0
+ 141 008c 00F08480 		beq	.L47
+ 142              	.L11:
+ 143 0090 B5EEC08A 		fcmpezs	s16
+ 144 0094 07EE106A 		fmsr	s14, r6	@ int
+ 145 0098 F1EE10FA 		fmstat
+ 146 009c F8EEC77A 		fsitos	s15, s14
+ 147 00a0 0DD5     		bpl	.L43
+ 148              	.L15:
+ 149 00a2 38EE278A 		fadds	s16, s16, s15
+ 150 00a6 B5EEC08A 		fcmpezs	s16
+ 151 00aa F1EE10FA 		fmstat
+ 152 00ae F8D4     		bmi	.L15
+ 153 00b0 B4EEE78A 		fcmpes	s16, s15
+ 154 00b4 F1EE10FA 		fmstat
+ 155 00b8 06DB     		blt	.L48
+ 156              	.L19:
+ 157 00ba 38EE678A 		fsubs	s16, s16, s15
+ 158              	.L43:
+ 159 00be B4EEE78A 		fcmpes	s16, s15
+ 160 00c2 F1EE10FA 		fmstat
+ 161 00c6 F8DA     		bge	.L19
+ 162              	.L48:
+ 163 00c8 D9ED048A 		flds	s17, [r9, #16]
+ 164 00cc F5EEC08A 		fcmpezs	s17
+ 165 00d0 F1EE10FA 		fmstat
+ 166 00d4 69D9     		bls	.L49
+ 167 00d6 78EE288A 		fadds	s17, s16, s17
+ 168 00da 66B9     		cbnz	r6, .L44
+ 169 00dc 40F20000 		movw	r0, #:lower16:.LC1
+ 170 00e0 C0F20000 		movt	r0, #:upper16:.LC1
+ 171 00e4 FFF7FEFF 		bl	firmwareError
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s 			page 4
+
+
+ 172 00e8 D4ED6A7A 		flds	s15, [r4, #424]	@ int
+ 173 00ec F8EEE77A 		fsitos	s15, s15
+ 174 00f0 01E0     		b	.L44
+ 175              	.L26:
+ 176 00f2 78EEA78A 		fadds	s17, s17, s15
+ 177              	.L44:
+ 178 00f6 F5EEC08A 		fcmpezs	s17
+ 179 00fa F1EE10FA 		fmstat
+ 180 00fe F8D4     		bmi	.L26
+ 181 0100 F4EEE87A 		fcmpes	s15, s17
+ 182 0104 F1EE10FA 		fmstat
+ 183 0108 06D8     		bhi	.L50
+ 184              	.L30:
+ 185 010a 78EEE78A 		fsubs	s17, s17, s15
+ 186 010e F4EEE87A 		fcmpes	s15, s17
+ 187 0112 F1EE10FA 		fmstat
+ 188 0116 F8D9     		bls	.L30
+ 189              	.L50:
+ 190 0118 18EE900A 		fmrs	r0, s17
+ 191 011c FFF7FEFF 		bl	__fpclassifyf
+ 192 0120 0028     		cmp	r0, #0
+ 193 0122 87D0     		beq	.L7
+ 194 0124 FFF7FEFF 		bl	_Z20getRevolutionCounterv
+ 195 0128 00EBD073 		add	r3, r0, r0, lsr #31
+ 196 012c 03F00103 		and	r3, r3, #1
+ 197 0130 A3EBD070 		sub	r0, r3, r0, lsr #31
+ 198 0134 2E68     		ldr	r6, [r5]
+ 199 0136 00EB4000 		add	r0, r0, r0, lsl #1
+ 200 013a 40F20001 		movw	r1, #:lower16:.LANCHOR8
+ 201 013e C400     		lsls	r4, r0, #3
+ 202 0140 0027     		movs	r7, #0
+ 203 0142 C0F20001 		movt	r1, #:upper16:.LANCHOR8
+ 204 0146 40F20003 		movw	r3, #:lower16:_ZL14startAveragingPv
+ 205 014a 2144     		add	r1, r1, r4
+ 206 014c 0196     		str	r6, [sp, #4]
+ 207 014e C0F20003 		movt	r3, #:upper16:_ZL14startAveragingPv
+ 208 0152 4046     		mov	r0, r8
+ 209 0154 18EE102A 		fmrs	r2, s16
+ 210 0158 0097     		str	r7, [sp]
+ 211 015a FFF7FEFF 		bl	_Z15scheduleByAngleiP12scheduling_sfPFvPvES1_P13RpmCalculator
+ 212 015e 2E68     		ldr	r6, [r5]
+ 213 0160 0097     		str	r7, [sp]
+ 214 0162 40F20001 		movw	r1, #:lower16:.LANCHOR9
+ 215 0166 C0F20001 		movt	r1, #:upper16:.LANCHOR9
+ 216 016a 40F20003 		movw	r3, #:lower16:_ZL12endAveragingPv
+ 217 016e 2144     		add	r1, r1, r4
+ 218 0170 C0F20003 		movt	r3, #:upper16:_ZL12endAveragingPv
+ 219 0174 18EE902A 		fmrs	r2, s17
+ 220 0178 4046     		mov	r0, r8
+ 221 017a 0196     		str	r6, [sp, #4]
+ 222 017c FFF7FEFF 		bl	_Z15scheduleByAngleiP12scheduling_sfPFvPvES1_P13RpmCalculator
+ 223 0180 2B68     		ldr	r3, [r5]
+ 224 0182 4FF48052 		mov	r2, #4096
+ 225 0186 03F50F53 		add	r3, r3, #9152
+ 226 018a CEF20002 		movt	r2, 57344
+ 227 018e 996B     		ldr	r1, [r3, #56]
+ 228 0190 5268     		ldr	r2, [r2, #4]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s 			page 5
+
+
+ 229 0192 511A     		subs	r1, r2, r1
+ 230 0194 D963     		str	r1, [r3, #60]
+ 231 0196 4DE7     		b	.L7
+ 232              	.L47:
+ 233 0198 40F20000 		movw	r0, #:lower16:.LC1
+ 234 019c C0F20000 		movt	r0, #:upper16:.LC1
+ 235 01a0 FFF7FEFF 		bl	firmwareError
+ 236 01a4 D4F8A861 		ldr	r6, [r4, #424]
+ 237 01a8 72E7     		b	.L11
+ 238              	.L49:
+ 239 01aa 40F20000 		movw	r0, #:lower16:.LC2
+ 240 01ae C0F20000 		movt	r0, #:upper16:.LC2
+ 241 01b2 03B0     		add	sp, sp, #12
+ 242              		@ sp needed
+ 243 01b4 BDEC028B 		fldmfdd	sp!, {d8}
+ 244 01b8 BDE8F043 		pop	{r4, r5, r6, r7, r8, r9, lr}
+ 245 01bc FFF7FEBF 		b	firmwareError
+ 246              		.size	_ZL20mapAveragingCallback15trigger_event_em, .-_ZL20mapAveragingCallback15trigger_event_em
+ 247              		.section	.text._ZL14startAveragingPv,"ax",%progbits
+ 248              		.align	2
+ 249              		.p2align 4,,15
+ 250              		.thumb
+ 251              		.thumb_func
+ 252              		.type	_ZL14startAveragingPv, %function
+ 253              	_ZL14startAveragingPv:
+ 254              		@ args = 0, pretend = 0, frame = 0
+ 255              		@ frame_needed = 0, uses_anonymous_args = 0
+ 256 0000 40F20003 		movw	r3, #:lower16:rlist
+ 257 0004 C0F20003 		movt	r3, #:upper16:rlist
+ 258 0008 70B5     		push	{r4, r5, r6, lr}
+ 259 000a 9869     		ldr	r0, [r3, #24]
+ 260 000c FFF7FEFF 		bl	getRemainingStack
+ 261 0010 8028     		cmp	r0, #128
+ 262 0012 1DDD     		ble	.L54
+ 263 0014 FFF7FEFF 		bl	lockAnyContext
+ 264 0018 40F20004 		movw	r4, #:lower16:.LANCHOR3
+ 265 001c 40F20002 		movw	r2, #:lower16:.LANCHOR4
+ 266 0020 40F20001 		movw	r1, #:lower16:.LANCHOR2
+ 267 0024 C0F20002 		movt	r2, #:upper16:.LANCHOR4
+ 268 0028 C0F20001 		movt	r1, #:upper16:.LANCHOR2
+ 269 002c C0F20004 		movt	r4, #:upper16:.LANCHOR3
+ 270 0030 0026     		movs	r6, #0
+ 271 0032 0546     		mov	r5, r0
+ 272 0034 0023     		movs	r3, #0
+ 273 0036 0120     		movs	r0, #1
+ 274 0038 2660     		str	r6, [r4]	@ float
+ 275 003a 0870     		strb	r0, [r1]
+ 276 003c 1360     		str	r3, [r2]
+ 277 003e 7DB1     		cbz	r5, .L55
+ 278 0040 40F20000 		movw	r0, #:lower16:.LANCHOR6
+ 279 0044 C0F20000 		movt	r0, #:upper16:.LANCHOR6
+ 280 0048 BDE87040 		pop	{r4, r5, r6, lr}
+ 281 004c FFF7FEBF 		b	_Z11turnPinHighP14NamedOutputPin
+ 282              	.L54:
+ 283 0050 40F20000 		movw	r0, #:lower16:.LC3
+ 284 0054 C0F20000 		movt	r0, #:upper16:.LC3
+ 285 0058 BDE87040 		pop	{r4, r5, r6, lr}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s 			page 6
+
+
+ 286 005c FFF7FEBF 		b	firmwareError
+ 287              	.L55:
+ 288 0060 FFF7FEFF 		bl	dbg_check_unlock_from_isr
+ 289 0064 2B46     		mov	r3, r5
+ 290              	@ 99 "./controllers/map_averaging.cpp" 1
+ 291 0066 83F31188 		msr     BASEPRI, r3
+ 292              	@ 0 "" 2
+ 293              		.thumb
+ 294 006a 40F20000 		movw	r0, #:lower16:.LANCHOR6
+ 295 006e C0F20000 		movt	r0, #:upper16:.LANCHOR6
+ 296 0072 BDE87040 		pop	{r4, r5, r6, lr}
+ 297 0076 FFF7FEBF 		b	_Z11turnPinHighP14NamedOutputPin
+ 298              		.size	_ZL14startAveragingPv, .-_ZL14startAveragingPv
+ 299 007a 00BFAFF3 		.section	.text._Z20mapAveragingCallbackt,"ax",%progbits
+ 299      0080
+ 300              		.align	2
+ 301              		.p2align 4,,15
+ 302              		.global	_Z20mapAveragingCallbackt
+ 303              		.thumb
+ 304              		.thumb_func
+ 305              		.type	_Z20mapAveragingCallbackt, %function
+ 306              	_Z20mapAveragingCallbackt:
+ 307              		@ args = 0, pretend = 0, frame = 0
+ 308              		@ frame_needed = 0, uses_anonymous_args = 0
+ 309 0000 38B5     		push	{r3, r4, r5, lr}
+ 310 0002 40F20003 		movw	r3, #:lower16:.LANCHOR2
+ 311 0006 C0F20003 		movt	r3, #:upper16:.LANCHOR2
+ 312 000a 2DED028B 		fstmfdd	sp!, {d8}
+ 313 000e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 314 0010 0546     		mov	r5, r0
+ 315 0012 5BB9     		cbnz	r3, .L57
+ 316 0014 40F20003 		movw	r3, #:lower16:boardConfiguration
+ 317 0018 C0F20003 		movt	r3, #:upper16:boardConfiguration
+ 318 001c 1B68     		ldr	r3, [r3]
+ 319 001e D3F81033 		ldr	r3, [r3, #784]
+ 320 0022 022B     		cmp	r3, #2
+ 321 0024 02D0     		beq	.L57
+ 322 0026 BDEC028B 		fldmfdd	sp!, {d8}
+ 323 002a 38BD     		pop	{r3, r4, r5, pc}
+ 324              	.L57:
+ 325 002c 40F20004 		movw	r4, #:lower16:.LANCHOR7
+ 326 0030 C0F20004 		movt	r4, #:upper16:.LANCHOR7
+ 327 0034 40F20003 		movw	r3, #:lower16:rlist
+ 328 0038 2268     		ldr	r2, [r4]
+ 329 003a C0F20003 		movt	r3, #:upper16:rlist
+ 330 003e 0132     		adds	r2, r2, #1
+ 331 0040 9869     		ldr	r0, [r3, #24]
+ 332 0042 2260     		str	r2, [r4]
+ 333 0044 FFF7FEFF 		bl	getRemainingStack
+ 334 0048 8028     		cmp	r0, #128
+ 335 004a 49DD     		ble	.L63
+ 336 004c 40F20003 		movw	r3, #:lower16:boardConfiguration
+ 337 0050 C0F20003 		movt	r3, #:upper16:boardConfiguration
+ 338 0054 1B68     		ldr	r3, [r3]
+ 339 0056 D3F81033 		ldr	r3, [r3, #784]
+ 340 005a 022B     		cmp	r3, #2
+ 341 005c 4AD0     		beq	.L60
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s 			page 7
+
+
+ 342              	.L62:
+ 343 005e 07EE905A 		fmsr	s15, r5	@ int
+ 344 0062 B8EEE78A 		fsitos	s16, s15
+ 345              	.L61:
+ 346 0066 40F20002 		movw	r2, #:lower16:.LANCHOR10
+ 347 006a C0F20002 		movt	r2, #:upper16:.LANCHOR10
+ 348 006e 40F20001 		movw	r1, #:lower16:.LANCHOR11
+ 349 0072 1068     		ldr	r0, [r2]
+ 350 0074 C0F20001 		movt	r1, #:upper16:.LANCHOR11
+ 351 0078 40F20003 		movw	r3, #:lower16:.LANCHOR12
+ 352 007c 01EB8004 		add	r4, r1, r0, lsl #2
+ 353 0080 C0F20003 		movt	r3, #:upper16:.LANCHOR12
+ 354 0084 D4ED007A 		flds	s15, [r4]
+ 355 0088 53F82040 		ldr	r4, [r3, r0, lsl #2]
+ 356 008c 77EE887A 		fadds	s15, s15, s16
+ 357 0090 80F00100 		eor	r0, r0, #1
+ 358 0094 0134     		adds	r4, r4, #1
+ 359 0096 01EB8001 		add	r1, r1, r0, lsl #2
+ 360 009a 43F82040 		str	r4, [r3, r0, lsl #2]
+ 361 009e 1060     		str	r0, [r2]
+ 362 00a0 C1ED007A 		fsts	s15, [r1]
+ 363 00a4 2023     		movs	r3, #32
+ 364              	@ 141 "./controllers/map_averaging.cpp" 1
+ 365 00a6 83F31188 		msr     BASEPRI, r3
+ 366              	@ 0 "" 2
+ 367              		.thumb
+ 368 00aa FFF7FEFF 		bl	dbg_check_lock_from_isr
+ 369 00ae 40F20002 		movw	r2, #:lower16:.LANCHOR3
+ 370 00b2 C0F20002 		movt	r2, #:upper16:.LANCHOR3
+ 371 00b6 D2ED007A 		flds	s15, [r2]
+ 372 00ba 37EE888A 		fadds	s16, s15, s16
+ 373 00be 40F20003 		movw	r3, #:lower16:.LANCHOR4
+ 374 00c2 82ED008A 		fsts	s16, [r2]
+ 375 00c6 C0F20003 		movt	r3, #:upper16:.LANCHOR4
+ 376 00ca 1A68     		ldr	r2, [r3]
+ 377 00cc 0132     		adds	r2, r2, #1
+ 378 00ce 1A60     		str	r2, [r3]
+ 379 00d0 FFF7FEFF 		bl	dbg_check_unlock_from_isr
+ 380 00d4 0023     		movs	r3, #0
+ 381              	@ 147 "./controllers/map_averaging.cpp" 1
+ 382 00d6 83F31188 		msr     BASEPRI, r3
+ 383              	@ 0 "" 2
+ 384              		.thumb
+ 385 00da BDEC028B 		fldmfdd	sp!, {d8}
+ 386 00de 38BD     		pop	{r3, r4, r5, pc}
+ 387              	.L63:
+ 388 00e0 BDEC028B 		fldmfdd	sp!, {d8}
+ 389 00e4 40F20000 		movw	r0, #:lower16:.LC4
+ 390 00e8 C0F20000 		movt	r0, #:upper16:.LC4
+ 391 00ec BDE83840 		pop	{r3, r4, r5, lr}
+ 392 00f0 FFF7FEBF 		b	firmwareError
+ 393              	.L60:
+ 394 00f4 2368     		ldr	r3, [r4]
+ 395 00f6 1B07     		lsls	r3, r3, #28
+ 396 00f8 B1D1     		bne	.L62
+ 397 00fa 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 398 00fe 07EE905A 		fmsr	s15, r5	@ int
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s 			page 8
+
+
+ 399 0102 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 400 0106 B8EEE78A 		fsitos	s16, s15
+ 401 010a 1B68     		ldr	r3, [r3]
+ 402 010c 9FED0A7A 		flds	s14, .L64
+ 403 0110 D3ED747A 		flds	s15, [r3, #464]
+ 404 0114 28EE077A 		fmuls	s14, s16, s14
+ 405 0118 67EE277A 		fmuls	s15, s14, s15
+ 406 011c 17EE900A 		fmrs	r0, s15
+ 407 0120 FFF7FEFF 		bl	_Z15getMapByVoltagef
+ 408 0124 0446     		mov	r4, r0	@ float
+ 409 0126 FFF7FEFF 		bl	getTimeNowNt
+ 410 012a FFF7FEFF 		bl	_Z20getCrankshaftAngleNty
+ 411 012e 2146     		mov	r1, r4	@ float
+ 412 0130 FFF7FEFF 		bl	_Z9scAddDataff
+ 413 0134 97E7     		b	.L61
+ 414              	.L65:
+ 415 0136 00BF     		.align	2
+ 416              	.L64:
+ 417 0138 010C403A 		.word	977275905
+ 418              		.size	_Z20mapAveragingCallbackt, .-_Z20mapAveragingCallbackt
+ 419 013c AFF30080 		.section	.text._Z13getMapVoltagev,"ax",%progbits
+ 420              		.align	2
+ 421              		.p2align 4,,15
+ 422              		.global	_Z13getMapVoltagev
+ 423              		.thumb
+ 424              		.thumb_func
+ 425              		.type	_Z13getMapVoltagev, %function
+ 426              	_Z13getMapVoltagev:
+ 427              		@ args = 0, pretend = 0, frame = 0
+ 428              		@ frame_needed = 0, uses_anonymous_args = 0
+ 429              		@ link register save eliminated.
+ 430 0000 40F20003 		movw	r3, #:lower16:.LANCHOR5
+ 431 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR5
+ 432 0008 1868     		ldr	r0, [r3]	@ float
+ 433 000a 7047     		bx	lr
+ 434              		.size	_Z13getMapVoltagev, .-_Z13getMapVoltagev
+ 435 000c AFF30080 		.section	.text._Z6getMapv,"ax",%progbits
+ 436              		.align	2
+ 437              		.p2align 4,,15
+ 438              		.global	_Z6getMapv
+ 439              		.thumb
+ 440              		.thumb_func
+ 441              		.type	_Z6getMapv, %function
+ 442              	_Z6getMapv:
+ 443              		@ args = 0, pretend = 0, frame = 0
+ 444              		@ frame_needed = 0, uses_anonymous_args = 0
+ 445              		@ link register save eliminated.
+ 446 0000 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 447 0004 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 448 0008 1B68     		ldr	r3, [r3]
+ 449 000a 93F8DA35 		ldrb	r3, [r3, #1498]	@ zero_extendqisi2
+ 450 000e 5A07     		lsls	r2, r3, #29
+ 451 0010 0CD4     		bmi	.L69
+ 452 0012 40F20003 		movw	r3, #:lower16:engine
+ 453 0016 C0F20003 		movt	r3, #:upper16:engine
+ 454 001a 1B68     		ldr	r3, [r3]
+ 455 001c 1A68     		ldr	r2, [r3]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s 			page 9
+
+
+ 456 001e 002A     		cmp	r2, #0
+ 457 0020 04DD     		ble	.L69
+ 458 0022 1A68     		ldr	r2, [r3]
+ 459 0024 47F22F53 		movw	r3, #29999
+ 460 0028 9A42     		cmp	r2, r3
+ 461 002a 01DD     		ble	.L71
+ 462              	.L69:
+ 463 002c FFF7FEBF 		b	_Z9getRawMapv
+ 464              	.L71:
+ 465 0030 40F20003 		movw	r3, #:lower16:.LANCHOR5
+ 466 0034 C0F20003 		movt	r3, #:upper16:.LANCHOR5
+ 467 0038 1868     		ldr	r0, [r3]	@ float
+ 468 003a FFF7FEBF 		b	_Z15getMapByVoltagef
+ 469              		.size	_Z6getMapv, .-_Z6getMapv
+ 470 003e 00BF     		.section	.text._Z16initMapAveragingP7LoggingP6Engine,"ax",%progbits
+ 471              		.align	2
+ 472              		.p2align 4,,15
+ 473              		.global	_Z16initMapAveragingP7LoggingP6Engine
+ 474              		.thumb
+ 475              		.thumb_func
+ 476              		.type	_Z16initMapAveragingP7LoggingP6Engine, %function
+ 477              	_Z16initMapAveragingP7LoggingP6Engine:
+ 478              		@ args = 0, pretend = 0, frame = 0
+ 479              		@ frame_needed = 0, uses_anonymous_args = 0
+ 480 0000 08B5     		push	{r3, lr}
+ 481 0002 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 482 0006 C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ 483 000a 0A46     		mov	r2, r1
+ 484 000c 1860     		str	r0, [r3]
+ 485 000e 40F20001 		movw	r1, #:lower16:.LC5
+ 486 0012 40F20000 		movw	r0, #:lower16:_ZL20mapAveragingCallback15trigger_event_em
+ 487 0016 C0F20000 		movt	r0, #:upper16:_ZL20mapAveragingCallback15trigger_event_em
+ 488 001a C0F20001 		movt	r1, #:upper16:.LC5
+ 489 001e FFF7FEFF 		bl	_Z23addTriggerEventListenerPFv15trigger_event_emEPKcP6Engine
+ 490 0022 40F20000 		movw	r0, #:lower16:.LC6
+ 491 0026 40F20001 		movw	r1, #:lower16:_ZL12showMapStatsv
+ 492 002a C0F20000 		movt	r0, #:upper16:.LC6
+ 493 002e C0F20001 		movt	r1, #:upper16:_ZL12showMapStatsv
+ 494 0032 BDE80840 		pop	{r3, lr}
+ 495 0036 FFF7FEBF 		b	addConsoleAction
+ 496              		.size	_Z16initMapAveragingP7LoggingP6Engine, .-_Z16initMapAveragingP7LoggingP6Engine
+ 497 003a 00BFAFF3 		.section	.text.startup._GLOBAL__sub_I__Z20mapAveragingCallbackt,"ax",%progbits
+ 497      0080
+ 498              		.align	2
+ 499              		.p2align 4,,15
+ 500              		.thumb
+ 501              		.thumb_func
+ 502              		.type	_GLOBAL__sub_I__Z20mapAveragingCallbackt, %function
+ 503              	_GLOBAL__sub_I__Z20mapAveragingCallbackt:
+ 504              		@ args = 0, pretend = 0, frame = 0
+ 505              		@ frame_needed = 0, uses_anonymous_args = 0
+ 506 0000 38B5     		push	{r3, r4, r5, lr}
+ 507 0002 40F20000 		movw	r0, #:lower16:.LANCHOR6
+ 508 0006 40F20001 		movw	r1, #:lower16:.LC7
+ 509 000a 40F20005 		movw	r5, #:lower16:.LANCHOR8
+ 510 000e C0F20001 		movt	r1, #:upper16:.LC7
+ 511 0012 C0F20005 		movt	r5, #:upper16:.LANCHOR8
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s 			page 10
+
+
+ 512 0016 C0F20000 		movt	r0, #:upper16:.LANCHOR6
+ 513 001a FFF7FEFF 		bl	_ZN14NamedOutputPinC1EPKc
+ 514 001e 40F20004 		movw	r4, #:lower16:.LANCHOR9
+ 515 0022 2846     		mov	r0, r5
+ 516 0024 FFF7FEFF 		bl	_ZN12scheduling_sC1Ev
+ 517 0028 C0F20004 		movt	r4, #:upper16:.LANCHOR9
+ 518 002c 05F11800 		add	r0, r5, #24
+ 519 0030 FFF7FEFF 		bl	_ZN12scheduling_sC1Ev
+ 520 0034 2046     		mov	r0, r4
+ 521 0036 FFF7FEFF 		bl	_ZN12scheduling_sC1Ev
+ 522 003a 04F11800 		add	r0, r4, #24
+ 523 003e BDE83840 		pop	{r3, r4, r5, lr}
+ 524 0042 FFF7FEBF 		b	_ZN12scheduling_sC1Ev
+ 525              		.size	_GLOBAL__sub_I__Z20mapAveragingCallbackt, .-_GLOBAL__sub_I__Z20mapAveragingCallbackt
+ 526 0046 00BFAFF3 		.section	.init_array,"aw",%init_array
+ 526      0080AFF3 
+ 526      0080
+ 527              		.align	2
+ 528 0000 00000000 		.word	_GLOBAL__sub_I__Z20mapAveragingCallbackt(target1)
+ 529              		.section	.bss._ZL22mapMeasurementsCounter,"aw",%nobits
+ 530              		.align	2
+ 531              		.set	.LANCHOR4,. + 0
+ 532              		.type	_ZL22mapMeasurementsCounter, %object
+ 533              		.size	_ZL22mapMeasurementsCounter, 4
+ 534              	_ZL22mapMeasurementsCounter:
+ 535 0000 00000000 		.space	4
+ 536              		.section	.bss._ZL11isAveraging,"aw",%nobits
+ 537              		.set	.LANCHOR2,. + 0
+ 538              		.type	_ZL11isAveraging, %object
+ 539              		.size	_ZL11isAveraging, 1
+ 540              	_ZL11isAveraging:
+ 541 0000 00       		.space	1
+ 542              		.section	.bss._ZL13perRevolution,"aw",%nobits
+ 543              		.align	2
+ 544              		.set	.LANCHOR0,. + 0
+ 545              		.type	_ZL13perRevolution, %object
+ 546              		.size	_ZL13perRevolution, 4
+ 547              	_ZL13perRevolution:
+ 548 0000 00000000 		.space	4
+ 549              		.section	.bss._ZL10startTimer,"aw",%nobits
+ 550              		.align	3
+ 551              		.set	.LANCHOR8,. + 0
+ 552              		.type	_ZL10startTimer, %object
+ 553              		.size	_ZL10startTimer, 48
+ 554              	_ZL10startTimer:
+ 555 0000 00000000 		.space	48
+ 555      00000000 
+ 555      00000000 
+ 555      00000000 
+ 555      00000000 
+ 556              		.section	.bss._ZL20perRevolutionCounter,"aw",%nobits
+ 557              		.align	2
+ 558              		.set	.LANCHOR7,. + 0
+ 559              		.type	_ZL20perRevolutionCounter, %object
+ 560              		.size	_ZL20perRevolutionCounter, 4
+ 561              	_ZL20perRevolutionCounter:
+ 562 0000 00000000 		.space	4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s 			page 11
+
+
+ 563              		.section	.bss._ZL8endTimer,"aw",%nobits
+ 564              		.align	3
+ 565              		.set	.LANCHOR9,. + 0
+ 566              		.type	_ZL8endTimer, %object
+ 567              		.size	_ZL8endTimer, 48
+ 568              	_ZL8endTimer:
+ 569 0000 00000000 		.space	48
+ 569      00000000 
+ 569      00000000 
+ 569      00000000 
+ 569      00000000 
+ 570              		.section	.bss._ZL12accumulators,"aw",%nobits
+ 571              		.align	2
+ 572              		.set	.LANCHOR11,. + 0
+ 573              		.type	_ZL12accumulators, %object
+ 574              		.size	_ZL12accumulators, 8
+ 575              	_ZL12accumulators:
+ 576 0000 00000000 		.space	8
+ 576      00000000 
+ 577              		.section	.bss._ZL9readIndex,"aw",%nobits
+ 578              		.align	2
+ 579              		.set	.LANCHOR10,. + 0
+ 580              		.type	_ZL9readIndex, %object
+ 581              		.size	_ZL9readIndex, 4
+ 582              	_ZL9readIndex:
+ 583 0000 00000000 		.space	4
+ 584              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 585              		.align	2
+ 586              	.LC0:
+ 587 0000 70657220 		.ascii	"per revolution %d\000"
+ 587      7265766F 
+ 587      6C757469 
+ 587      6F6E2025 
+ 587      6400
+ 588 0012 0000     		.space	2
+ 589              	.LC1:
+ 590 0014 7A65726F 		.ascii	"zero engineCycle\000"
+ 590      20656E67 
+ 590      696E6543 
+ 590      79636C65 
+ 590      00
+ 591 0025 000000   		.space	3
+ 592              	.LC2:
+ 593 0028 6D617020 		.ascii	"map sampling angle should be positive\000"
+ 593      73616D70 
+ 593      6C696E67 
+ 593      20616E67 
+ 593      6C652073 
+ 594 004e 0000     		.space	2
+ 595              	.LC3:
+ 596 0050 6C6F7773 		.ascii	"lowstck#9\000"
+ 596      74636B23 
+ 596      3900
+ 597 005a 0000     		.space	2
+ 598              	.LC4:
+ 599 005c 6C6F7773 		.ascii	"lowstck#9a\000"
+ 599      74636B23 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s 			page 12
+
+
+ 599      396100
+ 600 0067 00       		.space	1
+ 601              	.LC5:
+ 602 0068 4D415020 		.ascii	"MAP averaging\000"
+ 602      61766572 
+ 602      6167696E 
+ 602      6700
+ 603 0076 0000     		.space	2
+ 604              	.LC6:
+ 605 0078 66617374 		.ascii	"faststat\000"
+ 605      73746174 
+ 605      00
+ 606 0081 000000   		.space	3
+ 607              	.LC7:
+ 608 0084 6D617000 		.ascii	"map\000"
+ 609              		.section	.bss._ZL18v_averagedMapValue,"aw",%nobits
+ 610              		.align	2
+ 611              		.set	.LANCHOR5,. + 0
+ 612              		.type	_ZL18v_averagedMapValue, %object
+ 613              		.size	_ZL18v_averagedMapValue, 4
+ 614              	_ZL18v_averagedMapValue:
+ 615 0000 00000000 		.space	4
+ 616              		.section	.bss._ZL15mapAveragingPin,"aw",%nobits
+ 617              		.align	2
+ 618              		.set	.LANCHOR6,. + 0
+ 619              		.type	_ZL15mapAveragingPin, %object
+ 620              		.size	_ZL15mapAveragingPin, 20
+ 621              	_ZL15mapAveragingPin:
+ 622 0000 00000000 		.space	20
+ 622      00000000 
+ 622      00000000 
+ 622      00000000 
+ 622      00000000 
+ 623              		.section	.bss._ZL6logger,"aw",%nobits
+ 624              		.align	2
+ 625              		.set	.LANCHOR1,. + 0
+ 626              		.type	_ZL6logger, %object
+ 627              		.size	_ZL6logger, 4
+ 628              	_ZL6logger:
+ 629 0000 00000000 		.space	4
+ 630              		.section	.bss._ZL14mapAccumulator,"aw",%nobits
+ 631              		.align	2
+ 632              		.set	.LANCHOR3,. + 0
+ 633              		.type	_ZL14mapAccumulator, %object
+ 634              		.size	_ZL14mapAccumulator, 4
+ 635              	_ZL14mapAccumulator:
+ 636 0000 00000000 		.space	4
+ 637              		.section	.bss._ZL8counters,"aw",%nobits
+ 638              		.align	2
+ 639              		.set	.LANCHOR12,. + 0
+ 640              		.type	_ZL8counters, %object
+ 641              		.size	_ZL8counters, 8
+ 642              	_ZL8counters:
+ 643 0000 00000000 		.space	8
+ 643      00000000 
+ 644              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s 			page 13
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 map_averaging.cpp
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:17     .text._ZL12showMapStatsv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:22     .text._ZL12showMapStatsv:00000000 _ZL12showMapStatsv
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:544    .bss._ZL13perRevolution:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:625    .bss._ZL6logger:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:586    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:37     .text._ZL12endAveragingPv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:42     .text._ZL12endAveragingPv:00000000 _ZL12endAveragingPv
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:531    .bss._ZL22mapMeasurementsCounter:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:632    .bss._ZL14mapAccumulator:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:537    .bss._ZL11isAveraging:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:611    .bss._ZL18v_averagedMapValue:00000000 .LANCHOR5
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:618    .bss._ZL15mapAveragingPin:00000000 .LANCHOR6
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:85     .text._ZL12endAveragingPv:00000078 $d
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:88     .text._ZL20mapAveragingCallback15trigger_event_em:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:93     .text._ZL20mapAveragingCallback15trigger_event_em:00000000 _ZL20mapAveragingCallback15trigger_event_em
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:558    .bss._ZL20perRevolutionCounter:00000000 .LANCHOR7
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:589    .rodata.str1.4:00000014 .LC1
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:551    .bss._ZL10startTimer:00000000 .LANCHOR8
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:253    .text._ZL14startAveragingPv:00000000 _ZL14startAveragingPv
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:565    .bss._ZL8endTimer:00000000 .LANCHOR9
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:592    .rodata.str1.4:00000028 .LC2
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:248    .text._ZL14startAveragingPv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:595    .rodata.str1.4:00000050 .LC3
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:300    .text._Z20mapAveragingCallbackt:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:306    .text._Z20mapAveragingCallbackt:00000000 _Z20mapAveragingCallbackt
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:579    .bss._ZL9readIndex:00000000 .LANCHOR10
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:572    .bss._ZL12accumulators:00000000 .LANCHOR11
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:639    .bss._ZL8counters:00000000 .LANCHOR12
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:598    .rodata.str1.4:0000005c .LC4
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:417    .text._Z20mapAveragingCallbackt:00000138 $d
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:420    .text._Z13getMapVoltagev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:426    .text._Z13getMapVoltagev:00000000 _Z13getMapVoltagev
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:436    .text._Z6getMapv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:442    .text._Z6getMapv:00000000 _Z6getMapv
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:471    .text._Z16initMapAveragingP7LoggingP6Engine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:477    .text._Z16initMapAveragingP7LoggingP6Engine:00000000 _Z16initMapAveragingP7LoggingP6Engine
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:601    .rodata.str1.4:00000068 .LC5
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:604    .rodata.str1.4:00000078 .LC6
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:498    .text.startup._GLOBAL__sub_I__Z20mapAveragingCallbackt:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:503    .text.startup._GLOBAL__sub_I__Z20mapAveragingCallbackt:00000000 _GLOBAL__sub_I__Z20mapAveragingCallbackt
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:607    .rodata.str1.4:00000084 .LC7
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:527    .init_array:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:530    .bss._ZL22mapMeasurementsCounter:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:534    .bss._ZL22mapMeasurementsCounter:00000000 _ZL22mapMeasurementsCounter
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:540    .bss._ZL11isAveraging:00000000 _ZL11isAveraging
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:541    .bss._ZL11isAveraging:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:543    .bss._ZL13perRevolution:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:547    .bss._ZL13perRevolution:00000000 _ZL13perRevolution
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:550    .bss._ZL10startTimer:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:554    .bss._ZL10startTimer:00000000 _ZL10startTimer
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:557    .bss._ZL20perRevolutionCounter:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:561    .bss._ZL20perRevolutionCounter:00000000 _ZL20perRevolutionCounter
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:564    .bss._ZL8endTimer:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:568    .bss._ZL8endTimer:00000000 _ZL8endTimer
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:571    .bss._ZL12accumulators:00000000 $d
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s 			page 14
+
+
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:575    .bss._ZL12accumulators:00000000 _ZL12accumulators
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:578    .bss._ZL9readIndex:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:582    .bss._ZL9readIndex:00000000 _ZL9readIndex
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:585    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:610    .bss._ZL18v_averagedMapValue:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:614    .bss._ZL18v_averagedMapValue:00000000 _ZL18v_averagedMapValue
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:617    .bss._ZL15mapAveragingPin:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:621    .bss._ZL15mapAveragingPin:00000000 _ZL15mapAveragingPin
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:624    .bss._ZL6logger:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:628    .bss._ZL6logger:00000000 _ZL6logger
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:631    .bss._ZL14mapAccumulator:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:635    .bss._ZL14mapAccumulator:00000000 _ZL14mapAccumulator
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:638    .bss._ZL8counters:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:642    .bss._ZL8counters:00000000 _ZL8counters
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:87     .text._ZL12endAveragingPv:0000007c $t
+C:\Users\pc\AppData\Local\Temp\cc3y5oWb.s:419    .text._Z20mapAveragingCallbackt:0000013c $t
+
+UNDEFINED SYMBOLS
+scheduleMsg
+lockAnyContext
+engineConfiguration
+dbg_check_unlock_from_isr
+_Z10turnPinLowP14NamedOutputPin
+engine
+persistentState
+_engine
+firmwareError
+__fpclassifyf
+_Z20getRevolutionCounterv
+_Z15scheduleByAngleiP12scheduling_sfPFvPvES1_P13RpmCalculator
+rlist
+getRemainingStack
+_Z11turnPinHighP14NamedOutputPin
+boardConfiguration
+dbg_check_lock_from_isr
+_Z15getMapByVoltagef
+getTimeNowNt
+_Z20getCrankshaftAngleNty
+_Z9scAddDataff
+_Z9getRawMapv
+_Z23addTriggerEventListenerPFv15trigger_event_emEPKcP6Engine
+addConsoleAction
+_ZN14NamedOutputPinC1EPKc
+_ZN12scheduling_sC1Ev

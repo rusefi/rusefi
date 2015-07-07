@@ -54,8 +54,8 @@ public class SerialConnector implements LinkConnector {
     }
 
     @Override
-    public void send(String text) throws InterruptedException {
-        PortHolder.getInstance().packAndSend(text);
+    public void send(String text, boolean fireEvent) throws InterruptedException {
+        PortHolder.getInstance().packAndSend(text, fireEvent);
     }
 
     @Override

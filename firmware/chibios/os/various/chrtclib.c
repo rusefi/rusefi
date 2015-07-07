@@ -215,7 +215,12 @@ void rtcSetTimeUnixSec(RTCDriver *rtcp, time_t tv_sec) {
 #endif
   struct tm timp;
 
+#if defined __GNUC__
   localtime_r(&tv_sec, &timp);
+#else
+  struct tm *t = localtime(&tv_sec);
+  memcpy(&timp, t, sizeof(struct tm));
+#endif
   stm32_rtc_tm2bcd(&timp, &timespec);
   rtcSetTime(rtcp, &timespec);
 }
@@ -257,7 +262,13 @@ void rtcGetTimeTm(RTCDriver *rtcp, struct tm *timp) {
   RTCTime timespec = {0};
 
   rtcGetTime(rtcp, &timespec);
+#if defined __GNUC__
   localtime_r((time_t *)&(timespec.tv_sec), timp);
+#else
+  struct tm *t = localtime((time_t *)&(timespec.tv_sec));
+  memcpy(&timp, t, sizeof(struct tm));
+#endif
+
 }
 
 /**

@@ -1,0 +1,604 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"rusefi.cpp"
+  16              		.section	.text._ZL9rebootNowv,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	_ZL9rebootNowv, %function
+  22              	_ZL9rebootNowv:
+  23              		@ Volatile: function does not return.
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27              	@ 343 "chibios/os/ports/common/ARMCMx/CMSIS/include/core_cmInstr.h" 1
+  28 0000 BFF34F8F 		dsb
+  29              	@ 0 "" 2
+  30              		.thumb
+  31 0004 4FF46D42 		mov	r2, #60672
+  32 0008 CEF20002 		movt	r2, 57344
+  33 000c 0423     		movs	r3, #4
+  34 000e D168     		ldr	r1, [r2, #12]
+  35 0010 C0F2FA53 		movt	r3, 1530
+  36 0014 01F4E061 		and	r1, r1, #1792
+  37 0018 0B43     		orrs	r3, r3, r1
+  38 001a D360     		str	r3, [r2, #12]
+  39              	@ 343 "chibios/os/ports/common/ARMCMx/CMSIS/include/core_cmInstr.h" 1
+  40 001c BFF34F8F 		dsb
+  41              	@ 0 "" 2
+  42              		.thumb
+  43              	.L2:
+  44 0020 FEE7     		b	.L2
+  45              		.size	_ZL9rebootNowv, .-_ZL9rebootNowv
+  46 0022 00BFAFF3 		.section	.text._ZL14scheduleRebootv,"ax",%progbits
+  46      0080AFF3 
+  46      0080AFF3 
+  46      0080
+  47              		.align	2
+  48              		.p2align 4,,15
+  49              		.thumb
+  50              		.thumb_func
+  51              		.type	_ZL14scheduleRebootv, %function
+  52              	_ZL14scheduleRebootv:
+  53              		@ args = 0, pretend = 0, frame = 0
+  54              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s 			page 2
+
+
+  55 0000 08B5     		push	{r3, lr}
+  56 0002 40F20000 		movw	r0, #:lower16:.LANCHOR0
+  57 0006 40F20001 		movw	r1, #:lower16:.LC0
+  58 000a C0F20001 		movt	r1, #:upper16:.LC0
+  59 000e C0F20000 		movt	r0, #:upper16:.LANCHOR0
+  60 0012 FFF7FEFF 		bl	scheduleMsg
+  61 0016 FFF7FEFF 		bl	lockAnyContext
+  62 001a 40F20000 		movw	r0, #:lower16:.LANCHOR1
+  63 001e 40F20002 		movw	r2, #:lower16:_ZL9rebootNowv
+  64 0022 0023     		movs	r3, #0
+  65 0024 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+  66 0028 C0F20002 		movt	r2, #:upper16:_ZL9rebootNowv
+  67 002c 41F28831 		movw	r1, #5000
+  68 0030 FFF7FEFF 		bl	chVTSetI
+  69 0034 BDE80840 		pop	{r3, lr}
+  70 0038 FFF7FEBF 		b	unlockAnyContext
+  71              		.size	_ZL14scheduleRebootv, .-_ZL14scheduleRebootv
+  72 003c AFF30080 		.section	.text.getFirmwareError,"ax",%progbits
+  73              		.align	2
+  74              		.p2align 4,,15
+  75              		.global	getFirmwareError
+  76              		.thumb
+  77              		.thumb_func
+  78              		.type	getFirmwareError, %function
+  79              	getFirmwareError:
+  80              		@ args = 0, pretend = 0, frame = 0
+  81              		@ frame_needed = 0, uses_anonymous_args = 0
+  82              		@ link register save eliminated.
+  83 0000 40F20000 		movw	r0, #:lower16:.LANCHOR2
+  84 0004 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+  85 0008 7047     		bx	lr
+  86              		.size	getFirmwareError, .-getFirmwareError
+  87 000a 00BFAFF3 		.section	.text._Z8swo_initv,"ax",%progbits
+  87      0080
+  88              		.align	2
+  89              		.p2align 4,,15
+  90              		.global	_Z8swo_initv
+  91              		.thumb
+  92              		.thumb_func
+  93              		.type	_Z8swo_initv, %function
+  94              	_Z8swo_initv:
+  95              		@ args = 0, pretend = 0, frame = 0
+  96              		@ frame_needed = 0, uses_anonymous_args = 0
+  97              		@ link register save eliminated.
+  98 0000 7047     		bx	lr
+  99              		.size	_Z8swo_initv, .-_Z8swo_initv
+ 100 0002 00BFAFF3 		.section	.text.applyNewConfiguration,"ax",%progbits
+ 100      0080AFF3 
+ 100      0080AFF3 
+ 100      0080
+ 101              		.align	2
+ 102              		.p2align 4,,15
+ 103              		.global	applyNewConfiguration
+ 104              		.thumb
+ 105              		.thumb_func
+ 106              		.type	applyNewConfiguration, %function
+ 107              	applyNewConfiguration:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s 			page 3
+
+
+ 108              		@ args = 0, pretend = 0, frame = 0
+ 109              		@ frame_needed = 0, uses_anonymous_args = 0
+ 110 0000 08B5     		push	{r3, lr}
+ 111 0002 FFF7FEFF 		bl	_Z24applyNewHardwareSettingsv
+ 112 0006 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 113 000a C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 114 000e 40F20000 		movw	r0, #:lower16:.LANCHOR3
+ 115 0012 1968     		ldr	r1, [r3]
+ 116 0014 C0F20000 		movt	r0, #:upper16:.LANCHOR3
+ 117 0018 40F6A802 		movw	r2, #2216
+ 118 001c BDE80840 		pop	{r3, lr}
+ 119 0020 FFF7FEBF 		b	memcpy
+ 120              		.size	applyNewConfiguration, .-applyNewConfiguration
+ 121 0024 AFF30080 		.section	.text.chDbgStackOverflowPanic,"ax",%progbits
+ 121      AFF30080 
+ 121      AFF30080 
+ 122              		.align	2
+ 123              		.p2align 4,,15
+ 124              		.global	chDbgStackOverflowPanic
+ 125              		.thumb
+ 126              		.thumb_func
+ 127              		.type	chDbgStackOverflowPanic, %function
+ 128              	chDbgStackOverflowPanic:
+ 129              		@ args = 0, pretend = 0, frame = 0
+ 130              		@ frame_needed = 0, uses_anonymous_args = 0
+ 131 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 132 0002 40F20004 		movw	r4, #:lower16:.LC1
+ 133 0006 C0F20004 		movt	r4, #:upper16:.LC1
+ 134 000a 0746     		mov	r7, r0
+ 135 000c 0FCC     		ldmia	r4!, {r0, r1, r2, r3}
+ 136 000e 40F20006 		movw	r6, #:lower16:.LANCHOR4
+ 137 0012 C0F20006 		movt	r6, #:upper16:.LANCHOR4
+ 138 0016 3546     		mov	r5, r6
+ 139 0018 0FC5     		stmia	r5!, {r0, r1, r2, r3}
+ 140 001a 2368     		ldr	r3, [r4]
+ 141 001c 2B70     		strb	r3, [r5]
+ 142 001e B969     		ldr	r1, [r7, #24]
+ 143 0020 2846     		mov	r0, r5
+ 144 0022 FFF7FEFF 		bl	strcpy
+ 145 0026 40F20001 		movw	r1, #:lower16:.LC2
+ 146 002a 3046     		mov	r0, r6
+ 147 002c C0F20001 		movt	r1, #:upper16:.LC2
+ 148 0030 FF22     		movs	r2, #255
+ 149 0032 BDE8F840 		pop	{r3, r4, r5, r6, r7, lr}
+ 150 0036 FFF7FEBF 		b	chDbgPanic3
+ 151              		.size	chDbgStackOverflowPanic, .-chDbgStackOverflowPanic
+ 152 003a 00BFAFF3 		.section	.text.firmwareError,"ax",%progbits
+ 152      0080
+ 153              		.align	2
+ 154              		.p2align 4,,15
+ 155              		.global	firmwareError
+ 156              		.thumb
+ 157              		.thumb_func
+ 158              		.type	firmwareError, %function
+ 159              	firmwareError:
+ 160              		@ args = 4, pretend = 16, frame = 8
+ 161              		@ frame_needed = 0, uses_anonymous_args = 1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s 			page 4
+
+
+ 162 0000 0FB4     		push	{r0, r1, r2, r3}
+ 163 0002 30B5     		push	{r4, r5, lr}
+ 164 0004 40F20004 		movw	r4, #:lower16:.LANCHOR5
+ 165 0008 C0F20004 		movt	r4, #:upper16:.LANCHOR5
+ 166 000c 83B0     		sub	sp, sp, #12
+ 167 000e 2578     		ldrb	r5, [r4]	@ zero_extendqisi2
+ 168 0010 25B1     		cbz	r5, .L12
+ 169              	.L9:
+ 170 0012 03B0     		add	sp, sp, #12
+ 171              		@ sp needed
+ 172 0014 BDE83040 		pop	{r4, r5, lr}
+ 173 0018 04B0     		add	sp, sp, #16
+ 174 001a 7047     		bx	lr
+ 175              	.L12:
+ 176 001c 4FF44063 		mov	r3, #3072
+ 177 0020 C4F20203 		movt	r3, 16386
+ 178 0024 4FF48042 		mov	r2, #16384
+ 179 0028 9A61     		str	r2, [r3, #24]
+ 180 002a FFF7FEFF 		bl	_Z14turnAllPinsOffv
+ 181 002e 0123     		movs	r3, #1
+ 182 0030 0698     		ldr	r0, [sp, #24]
+ 183 0032 2370     		strb	r3, [r4]
+ 184 0034 2521     		movs	r1, #37
+ 185 0036 FFF7FEFF 		bl	indexOf
+ 186 003a 0130     		adds	r0, r0, #1
+ 187 003c 13D0     		beq	.L13
+ 188 003e 40F20004 		movw	r4, #:lower16:.LANCHOR6
+ 189 0042 C0F20004 		movt	r4, #:upper16:.LANCHOR6
+ 190 0046 07AB     		add	r3, sp, #28
+ 191 0048 1A46     		mov	r2, r3
+ 192 004a 2046     		mov	r0, r4
+ 193 004c 0699     		ldr	r1, [sp, #24]
+ 194 004e 0193     		str	r3, [sp, #4]
+ 195 0050 E560     		str	r5, [r4, #12]
+ 196 0052 FFF7FEFF 		bl	chvprintf
+ 197 0056 6268     		ldr	r2, [r4, #4]
+ 198 0058 E368     		ldr	r3, [r4, #12]
+ 199 005a D554     		strb	r5, [r2, r3]
+ 200 005c 03B0     		add	sp, sp, #12
+ 201              		@ sp needed
+ 202 005e BDE83040 		pop	{r4, r5, lr}
+ 203 0062 04B0     		add	sp, sp, #16
+ 204 0064 7047     		bx	lr
+ 205              	.L13:
+ 206 0066 40F20004 		movw	r4, #:lower16:.LANCHOR2
+ 207 006a C0F20004 		movt	r4, #:upper16:.LANCHOR2
+ 208 006e 2046     		mov	r0, r4
+ 209 0070 0699     		ldr	r1, [sp, #24]
+ 210 0072 C722     		movs	r2, #199
+ 211 0074 FFF7FEFF 		bl	strncpy
+ 212 0078 84F8C750 		strb	r5, [r4, #199]
+ 213 007c C9E7     		b	.L9
+ 214              		.size	firmwareError, .-firmwareError
+ 215 007e 00BF     		.section	.text.runRusEfi,"ax",%progbits
+ 216              		.align	2
+ 217              		.p2align 4,,15
+ 218              		.global	runRusEfi
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s 			page 5
+
+
+ 219              		.thumb
+ 220              		.thumb_func
+ 221              		.type	runRusEfi, %function
+ 222              	runRusEfi:
+ 223              		@ args = 0, pretend = 0, frame = 0
+ 224              		@ frame_needed = 0, uses_anonymous_args = 0
+ 225 0000 40F20000 		movw	r0, #:lower16:.LANCHOR6
+ 226 0004 40F20001 		movw	r1, #:lower16:.LANCHOR2
+ 227 0008 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 228 000c C0F20001 		movt	r1, #:upper16:.LANCHOR2
+ 229 0010 C0F20000 		movt	r0, #:upper16:.LANCHOR6
+ 230 0014 C822     		movs	r2, #200
+ 231 0016 0023     		movs	r3, #0
+ 232 0018 FFF7FEFF 		bl	msObjectInit
+ 233 001c 40F20004 		movw	r4, #:lower16:engine
+ 234 0020 40F20003 		movw	r3, #:lower16:engineConfiguration2
+ 235 0024 C0F20004 		movt	r4, #:upper16:engine
+ 236 0028 C0F20003 		movt	r3, #:upper16:engineConfiguration2
+ 237 002c 2268     		ldr	r2, [r4]
+ 238 002e 1B68     		ldr	r3, [r3]
+ 239 0030 9362     		str	r3, [r2, #40]
+ 240 0032 FFF7FEFF 		bl	initErrorHandling
+ 241 0036 40F20000 		movw	r0, #:lower16:.LANCHOR3
+ 242 003a C0F20000 		movt	r0, #:upper16:.LANCHOR3
+ 243 003e FFF7FEFF 		bl	_Z24prepareVoidConfigurationP22engine_configuration_s
+ 244 0042 FFF7FEFF 		bl	_Z17initPinRepositoryv
+ 245 0046 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 246 004a C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 247 004e FFF7FEFF 		bl	initializeConsole
+ 248 0052 2068     		ldr	r0, [r4]
+ 249 0054 FFF7FEFF 		bl	_ZN6Engine4initEv
+ 250 0058 40F20000 		movw	r0, #:lower16:.LC3
+ 251 005c 40F20001 		movw	r1, #:lower16:_ZL14scheduleRebootv
+ 252 0060 C0F20001 		movt	r1, #:upper16:_ZL14scheduleRebootv
+ 253 0064 C0F20000 		movt	r0, #:upper16:.LC3
+ 254 0068 FFF7FEFF 		bl	addConsoleAction
+ 255 006c 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 256 0070 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 257 0074 FFF7FEFF 		bl	_Z12initHardwareP7Logging
+ 258 0078 2068     		ldr	r0, [r4]
+ 259 007a FFF7FEFF 		bl	_Z14initStatusLoopP6Engine
+ 260 007e 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 261 0082 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 262 0086 FFF7FEFF 		bl	_Z19initEngineContollerP7Logging
+ 263 008a 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 264 008e 2168     		ldr	r1, [r4]
+ 265 0090 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 266 0094 FFF7FEFF 		bl	_Z18initEngineEmulatorP7LoggingP6Engine
+ 267 0098 2068     		ldr	r0, [r4]
+ 268 009a FFF7FEFF 		bl	_Z18startStatusThreadsP6Engine
+ 269 009e 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 270 00a2 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 271 00a6 40F20000 		movw	r0, #:lower16:.LANCHOR3
+ 272 00aa 1968     		ldr	r1, [r3]
+ 273 00ac 40F6A802 		movw	r2, #2216
+ 274 00b0 C0F20000 		movt	r0, #:upper16:.LANCHOR3
+ 275 00b4 FFF7FEFF 		bl	memcpy
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s 			page 6
+
+
+ 276 00b8 40F20000 		movw	r0, #:lower16:.LC4
+ 277 00bc C0F20000 		movt	r0, #:upper16:.LC4
+ 278 00c0 FFF7FEFF 		bl	print
+ 279 00c4 40F20003 		movw	r3, #:lower16:.LANCHOR7
+ 280 00c8 C0F20003 		movt	r3, #:upper16:.LANCHOR7
+ 281 00cc 0122     		movs	r2, #1
+ 282 00ce 40F20005 		movw	r5, #:lower16:rlist
+ 283 00d2 40F20006 		movw	r6, #:lower16:boardConfiguration
+ 284 00d6 44F6D357 		movw	r7, #19923
+ 285 00da 1A70     		strb	r2, [r3]
+ 286 00dc C0F20005 		movt	r5, #:upper16:rlist
+ 287 00e0 C0F20006 		movt	r6, #:upper16:boardConfiguration
+ 288 00e4 C1F26207 		movt	r7, 4194
+ 289 00e8 4FF47A78 		mov	r8, #1000
+ 290 00ec 0EE0     		b	.L16
+ 291              	.L15:
+ 292 00ee 2068     		ldr	r0, [r4]
+ 293 00f0 FFF7FEFF 		bl	_Z21updateDevConsoleStateP6Engine
+ 294 00f4 3368     		ldr	r3, [r6]
+ 295 00f6 D3F83C01 		ldr	r0, [r3, #316]
+ 296 00fa 08FB00F0 		mul	r0, r8, r0
+ 297 00fe 0138     		subs	r0, r0, #1
+ 298 0100 A7FB0030 		umull	r3, r0, r7, r0
+ 299 0104 8009     		lsrs	r0, r0, #6
+ 300 0106 0130     		adds	r0, r0, #1
+ 301 0108 FFF7FEFF 		bl	chThdSleep
+ 302              	.L16:
+ 303 010c A869     		ldr	r0, [r5, #24]
+ 304 010e FFF7FEFF 		bl	getRemainingStack
+ 305 0112 8028     		cmp	r0, #128
+ 306 0114 EBDC     		bgt	.L15
+ 307 0116 40F20000 		movw	r0, #:lower16:.LC5
+ 308 011a C0F20000 		movt	r0, #:upper16:.LC5
+ 309 011e BDE8F041 		pop	{r4, r5, r6, r7, r8, lr}
+ 310 0122 FFF7FEBF 		b	firmwareError
+ 311              		.size	runRusEfi, .-runRusEfi
+ 312 0126 00BFAFF3 		.section	.text.getRusEfiVersion,"ax",%progbits
+ 312      0080AFF3 
+ 312      0080
+ 313              		.align	2
+ 314              		.p2align 4,,15
+ 315              		.global	getRusEfiVersion
+ 316              		.thumb
+ 317              		.thumb_func
+ 318              		.type	getRusEfiVersion, %function
+ 319              	getRusEfiVersion:
+ 320              		@ args = 0, pretend = 0, frame = 0
+ 321              		@ frame_needed = 0, uses_anonymous_args = 0
+ 322              		@ link register save eliminated.
+ 323 0000 47F65E10 		movw	r0, #31070
+ 324 0004 C0F23310 		movt	r0, 307
+ 325 0008 7047     		bx	lr
+ 326              		.size	getRusEfiVersion, .-getRusEfiVersion
+ 327 000a 00BFAFF3 		.section	.text.startup._GLOBAL__sub_I_main_loop_started,"ax",%progbits
+ 327      0080
+ 328              		.align	2
+ 329              		.p2align 4,,15
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s 			page 7
+
+
+ 330              		.thumb
+ 331              		.thumb_func
+ 332              		.type	_GLOBAL__sub_I_main_loop_started, %function
+ 333              	_GLOBAL__sub_I_main_loop_started:
+ 334              		@ args = 0, pretend = 0, frame = 0
+ 335              		@ frame_needed = 0, uses_anonymous_args = 0
+ 336              		@ link register save eliminated.
+ 337 0000 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 338 0004 40F20001 		movw	r1, #:lower16:.LC6
+ 339 0008 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 340 000c C0F20001 		movt	r1, #:upper16:.LC6
+ 341 0010 FFF7FEBF 		b	_ZN18LoggingWithStorageC1EPKc
+ 342              		.size	_GLOBAL__sub_I_main_loop_started, .-_GLOBAL__sub_I_main_loop_started
+ 343 0014 AFF30080 		.section	.init_array,"aw",%init_array
+ 343      AFF30080 
+ 343      AFF30080 
+ 344              		.align	2
+ 345 0000 00000000 		.word	_GLOBAL__sub_I_main_loop_started(target1)
+ 346              		.global	activeConfiguration
+ 347              		.global	hasFirmwareErrorFlag
+ 348              		.global	errorMessageBuffer
+ 349              		.global	main_loop_started
+ 350              		.section	.bss._ZL12sharedLogger,"aw",%nobits
+ 351              		.align	2
+ 352              		.set	.LANCHOR0,. + 0
+ 353              		.type	_ZL12sharedLogger, %object
+ 354              		.size	_ZL12sharedLogger, 260
+ 355              	_ZL12sharedLogger:
+ 356 0000 00000000 		.space	260
+ 356      00000000 
+ 356      00000000 
+ 356      00000000 
+ 356      00000000 
+ 357              		.section	.bss._ZL12panicMessage,"aw",%nobits
+ 358              		.align	2
+ 359              		.set	.LANCHOR4,. + 0
+ 360              		.type	_ZL12panicMessage, %object
+ 361              		.size	_ZL12panicMessage, 200
+ 362              	_ZL12panicMessage:
+ 363 0000 00000000 		.space	200
+ 363      00000000 
+ 363      00000000 
+ 363      00000000 
+ 363      00000000 
+ 364              		.section	.bss.activeConfiguration,"aw",%nobits
+ 365              		.align	2
+ 366              		.set	.LANCHOR3,. + 0
+ 367              		.type	activeConfiguration, %object
+ 368              		.size	activeConfiguration, 2216
+ 369              	activeConfiguration:
+ 370 0000 00000000 		.space	2216
+ 370      00000000 
+ 370      00000000 
+ 370      00000000 
+ 370      00000000 
+ 371              		.section	.bss._ZL10resetTimer,"aw",%nobits
+ 372              		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s 			page 8
+
+
+ 373              		.set	.LANCHOR1,. + 0
+ 374              		.type	_ZL10resetTimer, %object
+ 375              		.size	_ZL10resetTimer, 20
+ 376              	_ZL10resetTimer:
+ 377 0000 00000000 		.space	20
+ 377      00000000 
+ 377      00000000 
+ 377      00000000 
+ 377      00000000 
+ 378              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 379              		.align	2
+ 380              	.LC0:
+ 381 0000 5265626F 		.ascii	"Rebooting in 5 seconds...\000"
+ 381      6F74696E 
+ 381      6720696E 
+ 381      20352073 
+ 381      65636F6E 
+ 382 001a 0000     		.space	2
+ 383              	.LC1:
+ 384 001c 73746163 		.ascii	"stack overflow: \000"
+ 384      6B206F76 
+ 384      6572666C 
+ 384      6F773A20 
+ 384      00
+ 385 002d 000000   		.space	3
+ 386              	.LC2:
+ 387 0030 72757365 		.ascii	"rusefi.cpp\000"
+ 387      66692E63 
+ 387      707000
+ 388 003b 00       		.space	1
+ 389              	.LC3:
+ 390 003c 7265626F 		.ascii	"reboot\000"
+ 390      6F7400
+ 391 0043 00       		.space	1
+ 392              	.LC4:
+ 393 0044 52756E6E 		.ascii	"Running main loop\015\012\000"
+ 393      696E6720 
+ 393      6D61696E 
+ 393      206C6F6F 
+ 393      700D0A00 
+ 394              	.LC5:
+ 395 0058 73746163 		.ascii	"stack#1\000"
+ 395      6B233100 
+ 396              	.LC6:
+ 397 0060 6D61696E 		.ascii	"main\000"
+ 397      00
+ 398 0065 000000   		.section	.bss.main_loop_started,"aw",%nobits
+ 399              		.set	.LANCHOR7,. + 0
+ 400              		.type	main_loop_started, %object
+ 401              		.size	main_loop_started, 1
+ 402              	main_loop_started:
+ 403 0000 00       		.space	1
+ 404              		.section	.bss.errorMessageBuffer,"aw",%nobits
+ 405              		.align	2
+ 406              		.set	.LANCHOR2,. + 0
+ 407              		.type	errorMessageBuffer, %object
+ 408              		.size	errorMessageBuffer, 200
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s 			page 9
+
+
+ 409              	errorMessageBuffer:
+ 410 0000 00000000 		.space	200
+ 410      00000000 
+ 410      00000000 
+ 410      00000000 
+ 410      00000000 
+ 411              		.section	.bss.hasFirmwareErrorFlag,"aw",%nobits
+ 412              		.set	.LANCHOR5,. + 0
+ 413              		.type	hasFirmwareErrorFlag, %object
+ 414              		.size	hasFirmwareErrorFlag, 1
+ 415              	hasFirmwareErrorFlag:
+ 416 0000 00       		.space	1
+ 417              		.section	.bss._ZL26firmwareErrorMessageStream,"aw",%nobits
+ 418              		.align	2
+ 419              		.set	.LANCHOR6,. + 0
+ 420              		.type	_ZL26firmwareErrorMessageStream, %object
+ 421              		.size	_ZL26firmwareErrorMessageStream, 20
+ 422              	_ZL26firmwareErrorMessageStream:
+ 423 0000 00000000 		.space	20
+ 423      00000000 
+ 423      00000000 
+ 423      00000000 
+ 423      00000000 
+ 424              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s 			page 10
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 rusefi.cpp
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:17     .text._ZL9rebootNowv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:22     .text._ZL9rebootNowv:00000000 _ZL9rebootNowv
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:47     .text._ZL14scheduleRebootv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:52     .text._ZL14scheduleRebootv:00000000 _ZL14scheduleRebootv
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:352    .bss._ZL12sharedLogger:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:380    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:373    .bss._ZL10resetTimer:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:73     .text.getFirmwareError:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:79     .text.getFirmwareError:00000000 getFirmwareError
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:406    .bss.errorMessageBuffer:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:88     .text._Z8swo_initv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:94     .text._Z8swo_initv:00000000 _Z8swo_initv
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:101    .text.applyNewConfiguration:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:107    .text.applyNewConfiguration:00000000 applyNewConfiguration
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:366    .bss.activeConfiguration:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:122    .text.chDbgStackOverflowPanic:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:128    .text.chDbgStackOverflowPanic:00000000 chDbgStackOverflowPanic
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:383    .rodata.str1.4:0000001c .LC1
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:359    .bss._ZL12panicMessage:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:386    .rodata.str1.4:00000030 .LC2
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:153    .text.firmwareError:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:159    .text.firmwareError:00000000 firmwareError
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:412    .bss.hasFirmwareErrorFlag:00000000 .LANCHOR5
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:419    .bss._ZL26firmwareErrorMessageStream:00000000 .LANCHOR6
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:216    .text.runRusEfi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:222    .text.runRusEfi:00000000 runRusEfi
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:389    .rodata.str1.4:0000003c .LC3
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:392    .rodata.str1.4:00000044 .LC4
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:399    .bss.main_loop_started:00000000 .LANCHOR7
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:394    .rodata.str1.4:00000058 .LC5
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:313    .text.getRusEfiVersion:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:319    .text.getRusEfiVersion:00000000 getRusEfiVersion
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:328    .text.startup._GLOBAL__sub_I_main_loop_started:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:333    .text.startup._GLOBAL__sub_I_main_loop_started:00000000 _GLOBAL__sub_I_main_loop_started
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:396    .rodata.str1.4:00000060 .LC6
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:344    .init_array:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:369    .bss.activeConfiguration:00000000 activeConfiguration
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:415    .bss.hasFirmwareErrorFlag:00000000 hasFirmwareErrorFlag
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:409    .bss.errorMessageBuffer:00000000 errorMessageBuffer
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:402    .bss.main_loop_started:00000000 main_loop_started
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:351    .bss._ZL12sharedLogger:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:355    .bss._ZL12sharedLogger:00000000 _ZL12sharedLogger
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:358    .bss._ZL12panicMessage:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:362    .bss._ZL12panicMessage:00000000 _ZL12panicMessage
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:365    .bss.activeConfiguration:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:372    .bss._ZL10resetTimer:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:376    .bss._ZL10resetTimer:00000000 _ZL10resetTimer
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:379    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:403    .bss.main_loop_started:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:405    .bss.errorMessageBuffer:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:416    .bss.hasFirmwareErrorFlag:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:418    .bss._ZL26firmwareErrorMessageStream:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s:422    .bss._ZL26firmwareErrorMessageStream:00000000 _ZL26firmwareErrorMessageStream
+
+UNDEFINED SYMBOLS
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccf6fEmV.s 			page 11
+
+
+scheduleMsg
+lockAnyContext
+chVTSetI
+unlockAnyContext
+_Z24applyNewHardwareSettingsv
+engineConfiguration
+memcpy
+strcpy
+chDbgPanic3
+_Z14turnAllPinsOffv
+indexOf
+chvprintf
+strncpy
+msObjectInit
+engine
+engineConfiguration2
+initErrorHandling
+_Z24prepareVoidConfigurationP22engine_configuration_s
+_Z17initPinRepositoryv
+initializeConsole
+_ZN6Engine4initEv
+addConsoleAction
+_Z12initHardwareP7Logging
+_Z14initStatusLoopP6Engine
+_Z19initEngineContollerP7Logging
+_Z18initEngineEmulatorP7LoggingP6Engine
+_Z18startStatusThreadsP6Engine
+print
+rlist
+boardConfiguration
+_Z21updateDevConsoleStateP6Engine
+chThdSleep
+getRemainingStack
+_ZN18LoggingWithStorageC1EPKc

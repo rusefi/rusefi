@@ -1,0 +1,2616 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"status_loop.cpp"
+  16              		.section	.text._ZL17setWarningEnabledi,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	_ZL17setWarningEnabledi, %function
+  22              	_ZL17setWarningEnabledi:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25              		@ link register save eliminated.
+  26 0000 40F20003 		movw	r3, #:lower16:.LANCHOR0
+  27 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+  28 0008 1860     		str	r0, [r3]
+  29 000a 7047     		bx	lr
+  30              		.size	_ZL17setWarningEnabledi, .-_ZL17setWarningEnabledi
+  31 000c AFF30080 		.section	.text._ZL11printStatusv,"ax",%progbits
+  32              		.align	2
+  33              		.p2align 4,,15
+  34              		.thumb
+  35              		.thumb_func
+  36              		.type	_ZL11printStatusv, %function
+  37              	_ZL11printStatusv:
+  38              		@ args = 0, pretend = 0, frame = 0
+  39              		@ frame_needed = 0, uses_anonymous_args = 0
+  40              		@ link register save eliminated.
+  41 0000 40F20003 		movw	r3, #:lower16:.LANCHOR1
+  42 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR1
+  43 0008 0122     		movs	r2, #1
+  44 000a 1A60     		str	r2, [r3]
+  45 000c 7047     		bx	lr
+  46              		.size	_ZL11printStatusv, .-_ZL11printStatusv
+  47 000e 00BF     		.section	.text._ZL17setBlinkingPeriodi,"ax",%progbits
+  48              		.align	2
+  49              		.p2align 4,,15
+  50              		.thumb
+  51              		.thumb_func
+  52              		.type	_ZL17setBlinkingPeriodi, %function
+  53              	_ZL17setBlinkingPeriodi:
+  54              		@ args = 0, pretend = 0, frame = 0
+  55              		@ frame_needed = 0, uses_anonymous_args = 0
+  56              		@ link register save eliminated.
+  57 0000 0028     		cmp	r0, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 2
+
+
+  58 0002 C2BF     		ittt	gt
+  59 0004 40F20003 		movwgt	r3, #:lower16:.LANCHOR2
+  60 0008 C0F20003 		movtgt	r3, #:upper16:.LANCHOR2
+  61 000c 1860     		strgt	r0, [r3]
+  62 000e 7047     		bx	lr
+  63              		.size	_ZL17setBlinkingPeriodi, .-_ZL17setBlinkingPeriodi
+  64              		.section	.text._ZL9subscribei,"ax",%progbits
+  65              		.align	2
+  66              		.p2align 4,,15
+  67              		.thumb
+  68              		.thumb_func
+  69              		.type	_ZL9subscribei, %function
+  70              	_ZL9subscribei:
+  71              		@ args = 0, pretend = 0, frame = 0
+  72              		@ frame_needed = 0, uses_anonymous_args = 0
+  73              		@ link register save eliminated.
+  74 0000 40F20003 		movw	r3, #:lower16:.LANCHOR3
+  75 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR3
+  76 0008 0122     		movs	r2, #1
+  77 000a 1A54     		strb	r2, [r3, r0]
+  78 000c 7047     		bx	lr
+  79              		.size	_ZL9subscribei, .-_ZL9subscribei
+  80 000e 00BF     		.section	.text._ZL11unsubscribei,"ax",%progbits
+  81              		.align	2
+  82              		.p2align 4,,15
+  83              		.thumb
+  84              		.thumb_func
+  85              		.type	_ZL11unsubscribei, %function
+  86              	_ZL11unsubscribei:
+  87              		@ args = 0, pretend = 0, frame = 0
+  88              		@ frame_needed = 0, uses_anonymous_args = 0
+  89              		@ link register save eliminated.
+  90 0000 40F20003 		movw	r3, #:lower16:.LANCHOR3
+  91 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR3
+  92 0008 0022     		movs	r2, #0
+  93 000a 1A54     		strb	r2, [r3, r0]
+  94 000c 7047     		bx	lr
+  95              		.size	_ZL11unsubscribei, .-_ZL11unsubscribei
+  96 000e 00BF     		.section	.text._ZL11printOutPinPKc11brain_pin_e,"ax",%progbits
+  97              		.align	2
+  98              		.p2align 4,,15
+  99              		.thumb
+ 100              		.thumb_func
+ 101              		.type	_ZL11printOutPinPKc11brain_pin_e, %function
+ 102              	_ZL11printOutPinPKc11brain_pin_e:
+ 103              		@ args = 0, pretend = 0, frame = 0
+ 104              		@ frame_needed = 0, uses_anonymous_args = 0
+ 105 0000 10B5     		push	{r4, lr}
+ 106 0002 0446     		mov	r4, r0
+ 107 0004 82B0     		sub	sp, sp, #8
+ 108 0006 0846     		mov	r0, r1
+ 109 0008 FFF7FEFF 		bl	_Z10hwPortname11brain_pin_e
+ 110 000c 40F20002 		movw	r2, #:lower16:.LC1
+ 111 0010 0090     		str	r0, [sp]
+ 112 0012 C0F20002 		movt	r2, #:upper16:.LC1
+ 113 0016 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 114 001a 40F20001 		movw	r1, #:lower16:.LC0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 3
+
+
+ 115 001e 2346     		mov	r3, r4
+ 116 0020 0192     		str	r2, [sp, #4]
+ 117 0022 C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 118 0026 C0F20001 		movt	r1, #:upper16:.LC0
+ 119 002a FFF7FEFF 		bl	appendPrintf
+ 120 002e 02B0     		add	sp, sp, #8
+ 121              		@ sp needed
+ 122 0030 10BD     		pop	{r4, pc}
+ 123              		.size	_ZL11printOutPinPKc11brain_pin_e, .-_ZL11printOutPinPKc11brain_pin_e
+ 124              		.global	__aeabi_f2d
+ 125 0032 00BFAFF3 		.section	.text._ZL13showFuelInfo2ff,"ax",%progbits
+ 125      0080AFF3 
+ 125      0080AFF3 
+ 125      0080
+ 126              		.align	2
+ 127              		.p2align 4,,15
+ 128              		.thumb
+ 129              		.thumb_func
+ 130              		.type	_ZL13showFuelInfo2ff, %function
+ 131              	_ZL13showFuelInfo2ff:
+ 132              		@ args = 0, pretend = 0, frame = 0
+ 133              		@ frame_needed = 0, uses_anonymous_args = 0
+ 134 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 135 0004 2DED028B 		fstmfdd	sp!, {d8}
+ 136 0008 08EE100A 		fmsr	s16, r0
+ 137 000c 40F2000A 		movw	r10, #:lower16:engineConfiguration
+ 138 0010 FDEEC87A 		ftosizs	s15, s16
+ 139 0014 C0F2000A 		movt	r10, #:upper16:engineConfiguration
+ 140 0018 0F46     		mov	r7, r1	@ float
+ 141 001a 85B0     		sub	sp, sp, #20
+ 142 001c 17EE901A 		fmrs	r1, s15	@ int
+ 143 0020 3A46     		mov	r2, r7	@ float
+ 144 0022 DAF80000 		ldr	r0, [r10]
+ 145 0026 17EE906A 		fmrs	r6, s15	@ int
+ 146 002a FFF7FEFF 		bl	_Z16getBaseTableFuelP22engine_configuration_sif
+ 147 002e 0021     		movs	r1, #0
+ 148 0030 49F23332 		movw	r2, #37683
+ 149 0034 C4F2C821 		movt	r1, 17096
+ 150 0038 C4F29232 		movt	r2, 17298
+ 151 003c 43F23333 		movw	r3, #13107
+ 152 0040 C4F26B13 		movt	r3, 16747
+ 153 0044 8046     		mov	r8, r0	@ float
+ 154 0046 DAF80000 		ldr	r0, [r10]
+ 155 004a 0092     		str	r2, [sp]	@ float
+ 156 004c 0A46     		mov	r2, r1	@ float
+ 157 004e FFF7FEFF 		bl	_Z6sdMathP22engine_configuration_sffff
+ 158 0052 FFF7FEFF 		bl	__aeabi_f2d
+ 159 0056 0246     		mov	r2, r0
+ 160 0058 0B46     		mov	r3, r1
+ 161 005a 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 162 005e 40F20001 		movw	r1, #:lower16:.LC2
+ 163 0062 C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 164 0066 C0F20001 		movt	r1, #:upper16:.LC2
+ 165 006a FFF7FEFF 		bl	scheduleMsg
+ 166 006e DAF80090 		ldr	r9, [r10]
+ 167 0072 D9F80800 		ldr	r0, [r9, #8]	@ float
+ 168 0076 FFF7FEFF 		bl	__aeabi_f2d
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 4
+
+
+ 169 007a 0446     		mov	r4, r0
+ 170 007c D9F89001 		ldr	r0, [r9, #400]	@ float
+ 171 0080 0D46     		mov	r5, r1
+ 172 0082 FFF7FEFF 		bl	__aeabi_f2d
+ 173 0086 CDE90001 		strd	r0, [sp]
+ 174 008a 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 175 008e 40F20001 		movw	r1, #:lower16:.LC3
+ 176 0092 2246     		mov	r2, r4
+ 177 0094 C0F20001 		movt	r1, #:upper16:.LC3
+ 178 0098 2B46     		mov	r3, r5
+ 179 009a C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 180 009e FFF7FEFF 		bl	scheduleMsg
+ 181 00a2 DAF80030 		ldr	r3, [r10]
+ 182 00a6 D3F8A801 		ldr	r0, [r3, #424]
+ 183 00aa FFF7FEFF 		bl	_Z21getEngine_load_mode_e18engine_load_mode_e
+ 184 00ae 0446     		mov	r4, r0
+ 185 00b0 6848     		ldr	r0, .L12
+ 186 00b2 FFF7FEFF 		bl	_ZN9OutputPin13getLogicValueEv
+ 187 00b6 FFF7FEFF 		bl	_Z12boolToStringb
+ 188 00ba 40F20001 		movw	r1, #:lower16:.LC4
+ 189 00be 0346     		mov	r3, r0
+ 190 00c0 40F20000 		movw	r0, #:lower16:.LANCHOR5
+ 191 00c4 2246     		mov	r2, r4
+ 192 00c6 C0F20001 		movt	r1, #:upper16:.LC4
+ 193 00ca C0F20000 		movt	r0, #:upper16:.LANCHOR5
+ 194 00ce FFF7FEFF 		bl	scheduleMsg
+ 195 00d2 3046     		mov	r0, r6
+ 196 00d4 FFF7FEFF 		bl	_Z18getinjectionOffseti
+ 197 00d8 FFF7FEFF 		bl	__aeabi_f2d
+ 198 00dc DAF80030 		ldr	r3, [r10]
+ 199 00e0 0446     		mov	r4, r0
+ 200 00e2 D3F83802 		ldr	r0, [r3, #568]	@ float
+ 201 00e6 0D46     		mov	r5, r1
+ 202 00e8 FFF7FEFF 		bl	__aeabi_f2d
+ 203 00ec 40F20009 		movw	r9, #:lower16:engine
+ 204 00f0 CDE90001 		strd	r0, [sp]
+ 205 00f4 C0F20009 		movt	r9, #:upper16:engine
+ 206 00f8 40F20000 		movw	r0, #:lower16:.LANCHOR5
+ 207 00fc 40F20001 		movw	r1, #:lower16:.LC5
+ 208 0100 2246     		mov	r2, r4
+ 209 0102 2B46     		mov	r3, r5
+ 210 0104 C0F20000 		movt	r0, #:upper16:.LANCHOR5
+ 211 0108 C0F20001 		movt	r1, #:upper16:.LC5
+ 212 010c FFF7FEFF 		bl	scheduleMsg
+ 213 0110 D9F80030 		ldr	r3, [r9]
+ 214 0114 03F5F653 		add	r3, r3, #7872
+ 215 0118 1869     		ldr	r0, [r3, #16]	@ float
+ 216 011a FFF7FEFF 		bl	__aeabi_f2d
+ 217 011e 0246     		mov	r2, r0
+ 218 0120 0B46     		mov	r3, r1
+ 219 0122 40F20000 		movw	r0, #:lower16:.LANCHOR5
+ 220 0126 40F20001 		movw	r1, #:lower16:.LC6
+ 221 012a C0F20000 		movt	r0, #:upper16:.LANCHOR5
+ 222 012e C0F20001 		movt	r1, #:upper16:.LC6
+ 223 0132 FFF7FEFF 		bl	scheduleMsg
+ 224 0136 DAF80030 		ldr	r3, [r10]
+ 225 013a D86D     		ldr	r0, [r3, #92]	@ float
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 5
+
+
+ 226 013c FFF7FEFF 		bl	__aeabi_f2d
+ 227 0140 0246     		mov	r2, r0
+ 228 0142 0B46     		mov	r3, r1
+ 229 0144 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 230 0148 40F20001 		movw	r1, #:lower16:.LC7
+ 231 014c C0F20001 		movt	r1, #:upper16:.LC7
+ 232 0150 C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 233 0154 FFF7FEFF 		bl	scheduleMsg
+ 234 0158 FFF7FEFF 		bl	_Z15getCrankingFuelv
+ 235 015c FFF7FEFF 		bl	__aeabi_f2d
+ 236 0160 0246     		mov	r2, r0
+ 237 0162 0B46     		mov	r3, r1
+ 238 0164 40F20000 		movw	r0, #:lower16:.LANCHOR5
+ 239 0168 40F20001 		movw	r1, #:lower16:.LC8
+ 240 016c C0F20000 		movt	r0, #:upper16:.LANCHOR5
+ 241 0170 C0F20001 		movt	r1, #:upper16:.LC8
+ 242 0174 FFF7FEFF 		bl	scheduleMsg
+ 243 0178 D9F80000 		ldr	r0, [r9]
+ 244 017c FFF7FEFF 		bl	_ZN13RpmCalculator9isRunningEv
+ 245 0180 20B9     		cbnz	r0, .L11
+ 246 0182 05B0     		add	sp, sp, #20
+ 247              		@ sp needed
+ 248 0184 BDEC028B 		fldmfdd	sp!, {d8}
+ 249 0188 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 250              	.L11:
+ 251 018c D9F80020 		ldr	r2, [r9]
+ 252 0190 02F5F653 		add	r3, r2, #7872
+ 253 0194 02F5F752 		add	r2, r2, #7904
+ 254 0198 18EE100A 		fmrs	r0, s16
+ 255 019c D2F81090 		ldr	r9, [r2, #16]	@ float
+ 256 01a0 D3F804B0 		ldr	fp, [r3, #4]	@ float
+ 257 01a4 D3F808A0 		ldr	r10, [r3, #8]	@ float
+ 258 01a8 FFF7FEFF 		bl	__aeabi_f2d
+ 259 01ac 0446     		mov	r4, r0
+ 260 01ae 3846     		mov	r0, r7	@ float
+ 261 01b0 0D46     		mov	r5, r1
+ 262 01b2 FFF7FEFF 		bl	__aeabi_f2d
+ 263 01b6 CDE90001 		strd	r0, [sp]
+ 264 01ba 40F20000 		movw	r0, #:lower16:.LANCHOR5
+ 265 01be 40F20001 		movw	r1, #:lower16:.LC9
+ 266 01c2 2246     		mov	r2, r4
+ 267 01c4 2B46     		mov	r3, r5
+ 268 01c6 C0F20000 		movt	r0, #:upper16:.LANCHOR5
+ 269 01ca C0F20001 		movt	r1, #:upper16:.LC9
+ 270 01ce FFF7FEFF 		bl	scheduleMsg
+ 271 01d2 4046     		mov	r0, r8	@ float
+ 272 01d4 FFF7FEFF 		bl	__aeabi_f2d
+ 273 01d8 0246     		mov	r2, r0
+ 274 01da 0B46     		mov	r3, r1
+ 275 01dc 40F20000 		movw	r0, #:lower16:.LANCHOR5
+ 276 01e0 40F20001 		movw	r1, #:lower16:.LC10
+ 277 01e4 C0F20000 		movt	r0, #:upper16:.LANCHOR5
+ 278 01e8 C0F20001 		movt	r1, #:upper16:.LC10
+ 279 01ec FFF7FEFF 		bl	scheduleMsg
+ 280 01f0 5846     		mov	r0, fp	@ float
+ 281 01f2 FFF7FEFF 		bl	__aeabi_f2d
+ 282 01f6 0446     		mov	r4, r0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 6
+
+
+ 283 01f8 5046     		mov	r0, r10	@ float
+ 284 01fa 0D46     		mov	r5, r1
+ 285 01fc FFF7FEFF 		bl	__aeabi_f2d
+ 286 0200 CDE90001 		strd	r0, [sp]
+ 287 0204 4846     		mov	r0, r9	@ float
+ 288 0206 FFF7FEFF 		bl	__aeabi_f2d
+ 289 020a CDE90201 		strd	r0, [sp, #8]
+ 290 020e 40F20000 		movw	r0, #:lower16:.LANCHOR5
+ 291 0212 40F20001 		movw	r1, #:lower16:.LC11
+ 292 0216 2246     		mov	r2, r4
+ 293 0218 2B46     		mov	r3, r5
+ 294 021a C0F20000 		movt	r0, #:upper16:.LANCHOR5
+ 295 021e C0F20001 		movt	r1, #:upper16:.LC11
+ 296 0222 FFF7FEFF 		bl	scheduleMsg
+ 297 0226 3146     		mov	r1, r6
+ 298 0228 4046     		mov	r0, r8	@ float
+ 299 022a FFF7FEFF 		bl	_Z14getRunningFuelfi
+ 300 022e FFF7FEFF 		bl	__aeabi_f2d
+ 301 0232 0246     		mov	r2, r0
+ 302 0234 0B46     		mov	r3, r1
+ 303 0236 40F20000 		movw	r0, #:lower16:.LANCHOR5
+ 304 023a 40F20001 		movw	r1, #:lower16:.LC12
+ 305 023e C0F20000 		movt	r0, #:upper16:.LANCHOR5
+ 306 0242 C0F20001 		movt	r1, #:upper16:.LC12
+ 307 0246 05B0     		add	sp, sp, #20
+ 308              		@ sp needed
+ 309 0248 BDEC028B 		fldmfdd	sp!, {d8}
+ 310 024c BDE8F04F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 311 0250 FFF7FEBF 		b	scheduleMsg
+ 312              	.L13:
+ 313              		.align	2
+ 314              	.L12:
+ 315 0254 30000000 		.word	enginePins+48
+ 316              		.size	_ZL13showFuelInfo2ff, .-_ZL13showFuelInfo2ff
+ 317 0258 AFF30080 		.section	.text._ZL12showFuelInfov,"ax",%progbits
+ 317      AFF30080 
+ 318              		.align	2
+ 319              		.p2align 4,,15
+ 320              		.thumb
+ 321              		.thumb_func
+ 322              		.type	_ZL12showFuelInfov, %function
+ 323              	_ZL12showFuelInfov:
+ 324              		@ args = 0, pretend = 0, frame = 0
+ 325              		@ frame_needed = 0, uses_anonymous_args = 0
+ 326 0000 40F20003 		movw	r3, #:lower16:engine
+ 327 0004 C0F20003 		movt	r3, #:upper16:engine
+ 328 0008 10B5     		push	{r4, lr}
+ 329 000a 1868     		ldr	r0, [r3]
+ 330 000c FFF7FEFF 		bl	_ZN13RpmCalculator3rpmEv
+ 331 0010 0446     		mov	r4, r0
+ 332 0012 FFF7FEFF 		bl	_Z14getEngineLoadTv
+ 333 0016 07EE904A 		fmsr	s15, r4	@ int
+ 334 001a F8EEE77A 		fsitos	s15, s15
+ 335 001e 0146     		mov	r1, r0	@ float
+ 336 0020 BDE81040 		pop	{r4, lr}
+ 337 0024 17EE900A 		fmrs	r0, s15
+ 338 0028 FFF7FEBF 		b	_ZL13showFuelInfo2ff
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 7
+
+
+ 339              		.size	_ZL12showFuelInfov, .-_ZL12showFuelInfov
+ 340 002c AFF30080 		.section	.text._ZL9lcdThreadPv,"ax",%progbits
+ 341              		.align	2
+ 342              		.p2align 4,,15
+ 343              		.thumb
+ 344              		.thumb_func
+ 345              		.type	_ZL9lcdThreadPv, %function
+ 346              	_ZL9lcdThreadPv:
+ 347              		@ args = 0, pretend = 0, frame = 0
+ 348              		@ frame_needed = 0, uses_anonymous_args = 0
+ 349 0000 40F20002 		movw	r2, #:lower16:rlist
+ 350 0004 C0F20002 		movt	r2, #:upper16:rlist
+ 351 0008 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 352 000a 9269     		ldr	r2, [r2, #24]
+ 353 000c 40F20003 		movw	r3, #:lower16:.LC13
+ 354 0010 C0F20003 		movt	r3, #:upper16:.LC13
+ 355 0014 40F20005 		movw	r5, #:lower16:engine
+ 356 0018 40F20004 		movw	r4, #:lower16:engineConfiguration
+ 357 001c 44F6D356 		movw	r6, #19923
+ 358 0020 9361     		str	r3, [r2, #24]
+ 359 0022 C0F20005 		movt	r5, #:upper16:engine
+ 360 0026 C0F20004 		movt	r4, #:upper16:engineConfiguration
+ 361 002a C1F26206 		movt	r6, 4194
+ 362 002e 4FF47A77 		mov	r7, #1000
+ 363              	.L16:
+ 364 0032 2868     		ldr	r0, [r5]
+ 365 0034 FFF7FEFF 		bl	_Z16updateHD44780lcdP6Engine
+ 366 0038 2368     		ldr	r3, [r4]
+ 367 003a D3F8B003 		ldr	r0, [r3, #944]
+ 368 003e 07FB00F0 		mul	r0, r7, r0
+ 369 0042 0138     		subs	r0, r0, #1
+ 370 0044 A6FB0030 		umull	r3, r0, r6, r0
+ 371 0048 8009     		lsrs	r0, r0, #6
+ 372 004a 0130     		adds	r0, r0, #1
+ 373 004c FFF7FEFF 		bl	chThdSleep
+ 374 0050 EFE7     		b	.L16
+ 375              		.size	_ZL9lcdThreadPv, .-_ZL9lcdThreadPv
+ 376 0052 00BFAFF3 		.section	.text._Z10setFullLogi,"ax",%progbits
+ 376      0080AFF3 
+ 376      0080AFF3 
+ 376      0080
+ 377              		.align	2
+ 378              		.p2align 4,,15
+ 379              		.global	_Z10setFullLogi
+ 380              		.thumb
+ 381              		.thumb_func
+ 382              		.type	_Z10setFullLogi, %function
+ 383              	_Z10setFullLogi:
+ 384              		@ args = 0, pretend = 0, frame = 0
+ 385              		@ frame_needed = 0, uses_anonymous_args = 0
+ 386 0000 38B5     		push	{r3, r4, r5, lr}
+ 387 0002 041C     		adds	r4, r0, #0
+ 388 0004 18BF     		it	ne
+ 389 0006 0124     		movne	r4, #1
+ 390 0008 0546     		mov	r5, r0
+ 391 000a 2046     		mov	r0, r4
+ 392 000c FFF7FEFF 		bl	_Z12boolToStringb
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 8
+
+
+ 393 0010 0146     		mov	r1, r0
+ 394 0012 40F20000 		movw	r0, #:lower16:.LC14
+ 395 0016 C0F20000 		movt	r0, #:upper16:.LC14
+ 396 001a FFF7FEFF 		bl	print
+ 397 001e 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 398 0022 40F20001 		movw	r1, #:lower16:.LC15
+ 399 0026 40F20002 		movw	r2, #:lower16:.LC16
+ 400 002a 2B46     		mov	r3, r5
+ 401 002c C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 402 0030 C0F20001 		movt	r1, #:upper16:.LC15
+ 403 0034 C0F20002 		movt	r2, #:upper16:.LC16
+ 404 0038 FFF7FEFF 		bl	printMsg
+ 405 003c 40F20003 		movw	r3, #:lower16:.LANCHOR6
+ 406 0040 C0F20003 		movt	r3, #:upper16:.LANCHOR6
+ 407 0044 1C70     		strb	r4, [r3]
+ 408 0046 38BD     		pop	{r3, r4, r5, pc}
+ 409              		.size	_Z10setFullLogi, .-_Z10setFullLogi
+ 410 0048 AFF30080 		.section	.text._ZL13reportSensorFP7LoggingbPKcS2_fi,"ax",%progbits
+ 410      AFF30080 
+ 411              		.align	2
+ 412              		.p2align 4,,15
+ 413              		.thumb
+ 414              		.thumb_func
+ 415              		.type	_ZL13reportSensorFP7LoggingbPKcS2_fi, %function
+ 416              	_ZL13reportSensorFP7LoggingbPKcS2_fi:
+ 417              		@ args = 4, pretend = 0, frame = 0
+ 418              		@ frame_needed = 0, uses_anonymous_args = 0
+ 419 0000 70B5     		push	{r4, r5, r6, lr}
+ 420 0002 049E     		ldr	r6, [sp, #16]
+ 421 0004 0546     		mov	r5, r0
+ 422 0006 A9B1     		cbz	r1, .L23
+ 423 0008 40F20004 		movw	r4, #:lower16:.LANCHOR7
+ 424 000c C0F20004 		movt	r4, #:upper16:.LANCHOR7
+ 425 0010 2468     		ldr	r4, [r4]
+ 426 0012 BCB1     		cbz	r4, .L24
+ 427 0014 012C     		cmp	r4, #1
+ 428 0016 19D0     		beq	.L25
+ 429 0018 3246     		mov	r2, r6
+ 430 001a 10EE101A 		fmrs	r1, s0
+ 431 001e FFF7FEFF 		bl	appendFloat
+ 432              	.L22:
+ 433 0022 40F20001 		movw	r1, #:lower16:.LC17
+ 434 0026 2846     		mov	r0, r5
+ 435 0028 C0F20001 		movt	r1, #:upper16:.LC17
+ 436 002c BDE87040 		pop	{r4, r5, r6, lr}
+ 437 0030 FFF7FEBF 		b	append
+ 438              	.L23:
+ 439 0034 1146     		mov	r1, r2
+ 440 0036 3346     		mov	r3, r6
+ 441 0038 10EE102A 		fmrs	r2, s0
+ 442 003c BDE87040 		pop	{r4, r5, r6, lr}
+ 443 0040 FFF7FEBF 		b	debugFloat
+ 444              	.L24:
+ 445 0044 1146     		mov	r1, r2
+ 446 0046 FFF7FEFF 		bl	append
+ 447 004a EAE7     		b	.L22
+ 448              	.L25:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 9
+
+
+ 449 004c 1946     		mov	r1, r3
+ 450 004e FFF7FEFF 		bl	append
+ 451 0052 E6E7     		b	.L22
+ 452              		.size	_ZL13reportSensorFP7LoggingbPKcS2_fi, .-_ZL13reportSensorFP7LoggingbPKcS2_fi
+ 453 0054 AFF30080 		.section	.text._ZL17isTriggerErrorNowv,"ax",%progbits
+ 453      AFF30080 
+ 453      AFF30080 
+ 454              		.align	2
+ 455              		.p2align 4,,15
+ 456              		.thumb
+ 457              		.thumb_func
+ 458              		.type	_ZL17isTriggerErrorNowv, %function
+ 459              	_ZL17isTriggerErrorNowv:
+ 460              		@ args = 0, pretend = 0, frame = 0
+ 461              		@ frame_needed = 0, uses_anonymous_args = 0
+ 462 0000 38B5     		push	{r3, r4, r5, lr}
+ 463 0002 40F20004 		movw	r4, #:lower16:.LANCHOR2
+ 464 0006 FFF7FEFF 		bl	getTimeNowNt
+ 465 000a C0F20004 		movt	r4, #:upper16:.LANCHOR2
+ 466 000e 40F20003 		movw	r3, #:lower16:lastDecodingErrorTime
+ 467 0012 C0F20003 		movt	r3, #:upper16:lastDecodingErrorTime
+ 468 0016 D3E90023 		ldrd	r2, [r3]
+ 469 001a 2468     		ldr	r4, [r4]
+ 470 001c 41F27075 		movw	r5, #6000
+ 471 0020 05FB04F4 		mul	r4, r5, r4
+ 472 0024 A825     		movs	r5, #168
+ 473 0026 801A     		subs	r0, r0, r2
+ 474 0028 61EB0301 		sbc	r1, r1, r3
+ 475 002c 84FB0545 		smull	r4, r5, r4, r5
+ 476 0030 A942     		cmp	r1, r5
+ 477 0032 08BF     		it eq
+ 478 0034 A042     		cmpeq	r0, r4
+ 479 0036 01D2     		bcs	.L28
+ 480 0038 0120     		movs	r0, #1
+ 481 003a 38BD     		pop	{r3, r4, r5, pc}
+ 482              	.L28:
+ 483 003c BDE83840 		pop	{r3, r4, r5, lr}
+ 484 0040 FFF7FEBF 		b	_Z21isTriggerDecoderErrorv
+ 485              		.size	_ZL17isTriggerErrorNowv, .-_ZL17isTriggerErrorNowv
+ 486 0044 AFF30080 		.section	.text._ZL14blinkingThreadPv,"ax",%progbits
+ 486      AFF30080 
+ 486      AFF30080 
+ 487              		.align	2
+ 488              		.p2align 4,,15
+ 489              		.thumb
+ 490              		.thumb_func
+ 491              		.type	_ZL14blinkingThreadPv, %function
+ 492              	_ZL14blinkingThreadPv:
+ 493              		@ args = 0, pretend = 0, frame = 0
+ 494              		@ frame_needed = 0, uses_anonymous_args = 0
+ 495 0000 40F20002 		movw	r2, #:lower16:rlist
+ 496 0004 C0F20002 		movt	r2, #:upper16:rlist
+ 497 0008 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 498 000a 9269     		ldr	r2, [r2, #24]
+ 499 000c 304C     		ldr	r4, .L43
+ 500 000e 40F20003 		movw	r3, #:lower16:.LC18
+ 501 0012 C0F20003 		movt	r3, #:upper16:.LC18
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 10
+
+
+ 502 0016 9361     		str	r3, [r2, #24]
+ 503 0018 A4F11405 		sub	r5, r4, #20
+ 504              	.L31:
+ 505 001c 55F8040F 		ldr	r0, [r5, #4]!
+ 506 0020 0121     		movs	r1, #1
+ 507 0022 FFF7FEFF 		bl	_ZN9OutputPin8setValueEi
+ 508 0026 A542     		cmp	r5, r4
+ 509 0028 F8D1     		bne	.L31
+ 510 002a 6420     		movs	r0, #100
+ 511 002c FFF7FEFF 		bl	chThdSleep
+ 512 0030 284D     		ldr	r5, .L43+4
+ 513              	.L33:
+ 514 0032 55F8040F 		ldr	r0, [r5, #4]!
+ 515 0036 0021     		movs	r1, #0
+ 516 0038 FFF7FEFF 		bl	_ZN9OutputPin8setValueEi
+ 517 003c AC42     		cmp	r4, r5
+ 518 003e F8D1     		bne	.L33
+ 519 0040 40F20005 		movw	r5, #:lower16:.LANCHOR2
+ 520 0044 44F6D356 		movw	r6, #19923
+ 521 0048 C0F20005 		movt	r5, #:upper16:.LANCHOR2
+ 522 004c C1F26206 		movt	r6, 4194
+ 523 0050 4FF47A77 		mov	r7, #1000
+ 524 0054 09E0     		b	.L38
+ 525              	.L37:
+ 526 0056 40F20000 		movw	r0, #:lower16:.LANCHOR10
+ 527 005a C0F20000 		movt	r0, #:upper16:.LANCHOR10
+ 528 005e 0121     		movs	r1, #1
+ 529 0060 FFF7FEFF 		bl	_ZN9OutputPin8setValueEi
+ 530              	.L39:
+ 531 0064 2046     		mov	r0, r4
+ 532 0066 FFF7FEFF 		bl	chThdSleep
+ 533              	.L38:
+ 534 006a FFF7FEFF 		bl	_Z14isConsoleReadyv
+ 535 006e 2C68     		ldr	r4, [r5]
+ 536 0070 08B1     		cbz	r0, .L35
+ 537 0072 04EB4404 		add	r4, r4, r4, lsl #1
+ 538              	.L35:
+ 539 0076 FFF7FEFF 		bl	_Z27getNeedToWriteConfigurationv
+ 540 007a 0021     		movs	r1, #0
+ 541 007c 00B1     		cbz	r0, .L36
+ 542 007e 6400     		lsls	r4, r4, #1
+ 543              	.L36:
+ 544 0080 07FB04F4 		mul	r4, r7, r4
+ 545 0084 40F20000 		movw	r0, #:lower16:.LANCHOR9
+ 546 0088 013C     		subs	r4, r4, #1
+ 547 008a C0F20000 		movt	r0, #:upper16:.LANCHOR9
+ 548 008e A6FB0434 		umull	r3, r4, r6, r4
+ 549 0092 FFF7FEFF 		bl	_ZN9OutputPin8setValueEi
+ 550 0096 A409     		lsrs	r4, r4, #6
+ 551 0098 40F20000 		movw	r0, #:lower16:.LANCHOR10
+ 552 009c 0021     		movs	r1, #0
+ 553 009e C0F20000 		movt	r0, #:upper16:.LANCHOR10
+ 554 00a2 0134     		adds	r4, r4, #1
+ 555 00a4 FFF7FEFF 		bl	_ZN9OutputPin8setValueEi
+ 556 00a8 2046     		mov	r0, r4
+ 557 00aa FFF7FEFF 		bl	chThdSleep
+ 558 00ae 40F20000 		movw	r0, #:lower16:.LANCHOR9
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 11
+
+
+ 559 00b2 C0F20000 		movt	r0, #:upper16:.LANCHOR9
+ 560 00b6 0121     		movs	r1, #1
+ 561 00b8 FFF7FEFF 		bl	_ZN9OutputPin8setValueEi
+ 562 00bc FFF7FEFF 		bl	_ZL17isTriggerErrorNowv
+ 563 00c0 0028     		cmp	r0, #0
+ 564 00c2 C8D1     		bne	.L37
+ 565 00c4 FFF7FEFF 		bl	_Z21isIgnitionTimingErrorv
+ 566 00c8 0028     		cmp	r0, #0
+ 567 00ca C4D1     		bne	.L37
+ 568 00cc CAE7     		b	.L39
+ 569              	.L44:
+ 570 00ce 00BF     		.align	2
+ 571              	.L43:
+ 572 00d0 10000000 		.word	.LANCHOR8+16
+ 573 00d4 FCFFFFFF 		.word	.LANCHOR8-4
+ 574              		.size	_ZL14blinkingThreadPv, .-_ZL14blinkingThreadPv
+ 575 00d8 AFF30080 		.section	.text._ZL12printSensorsP7Loggingb,"ax",%progbits
+ 575      AFF30080 
+ 576              		.align	2
+ 577              		.p2align 4,,15
+ 578              		.thumb
+ 579              		.thumb_func
+ 580              		.type	_ZL12printSensorsP7Loggingb, %function
+ 581              	_ZL12printSensorsP7Loggingb:
+ 582              		@ args = 0, pretend = 0, frame = 0
+ 583              		@ frame_needed = 0, uses_anonymous_args = 0
+ 584 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+ 585 0004 83B0     		sub	sp, sp, #12
+ 586 0006 0446     		mov	r4, r0
+ 587 0008 0D46     		mov	r5, r1
+ 588 000a FFF7FEFF 		bl	currentTimeMillis
+ 589 000e 07EE900A 		fmsr	s15, r0	@ int
+ 590 0012 40F20007 		movw	r7, #:lower16:engine
+ 591 0016 B8EEE77A 		fsitos	s14, s15
+ 592 001a DFEDCD7A 		flds	s15, .L85
+ 593 001e 0326     		movs	r6, #3
+ 594 0020 40F20002 		movw	r2, #:lower16:.LC19
+ 595 0024 40F20003 		movw	r3, #:lower16:.LC20
+ 596 0028 C0F20007 		movt	r7, #:upper16:engine
+ 597 002c 87EE270A 		fdivs	s0, s14, s15
+ 598 0030 2046     		mov	r0, r4
+ 599 0032 2946     		mov	r1, r5
+ 600 0034 C0F20002 		movt	r2, #:upper16:.LC19
+ 601 0038 C0F20003 		movt	r3, #:upper16:.LC20
+ 602 003c 0096     		str	r6, [sp]
+ 603 003e FFF7FEFF 		bl	_ZL13reportSensorFP7LoggingbPKcS2_fi
+ 604 0042 3868     		ldr	r0, [r7]
+ 605 0044 FFF7FEFF 		bl	_ZN13RpmCalculator3rpmEv
+ 606 0048 8146     		mov	r9, r0
+ 607 004a 002D     		cmp	r5, #0
+ 608 004c 00F07781 		beq	.L77
+ 609 0050 40F20003 		movw	r3, #:lower16:.LANCHOR7
+ 610 0054 C0F20003 		movt	r3, #:upper16:.LANCHOR7
+ 611 0058 40F20001 		movw	r1, #:lower16:.LC21
+ 612 005c 1B68     		ldr	r3, [r3]
+ 613 005e C0F20001 		movt	r1, #:upper16:.LC21
+ 614 0062 002B     		cmp	r3, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 12
+
+
+ 615 0064 00F06081 		beq	.L76
+ 616 0068 012B     		cmp	r3, #1
+ 617 006a 00F05981 		beq	.L78
+ 618 006e 40F20001 		movw	r1, #:lower16:.LC23
+ 619 0072 40F20003 		movw	r3, #:lower16:.LC17
+ 620 0076 C0F20001 		movt	r1, #:upper16:.LC23
+ 621 007a C0F20003 		movt	r3, #:upper16:.LC17
+ 622 007e 2046     		mov	r0, r4
+ 623 0080 4A46     		mov	r2, r9
+ 624 0082 FFF7FEFF 		bl	appendPrintf
+ 625              	.L47:
+ 626 0086 FFF7FEFF 		bl	_Z12hasMafSensorv
+ 627 008a 0028     		cmp	r0, #0
+ 628 008c 40F02481 		bne	.L79
+ 629              	.L50:
+ 630 0090 FFF7FEFF 		bl	_Z14getEngineLoadTv
+ 631 0094 40F20006 		movw	r6, #:lower16:engineConfiguration
+ 632 0098 4FF00208 		mov	r8, #2
+ 633 009c 40F20002 		movw	r2, #:lower16:.LC28
+ 634 00a0 40F20003 		movw	r3, #:lower16:.LC29
+ 635 00a4 C0F20006 		movt	r6, #:upper16:engineConfiguration
+ 636 00a8 00EE100A 		fmsr	s0, r0
+ 637 00ac C0F20003 		movt	r3, #:upper16:.LC29
+ 638 00b0 2946     		mov	r1, r5
+ 639 00b2 CDF80080 		str	r8, [sp]
+ 640 00b6 C0F20002 		movt	r2, #:upper16:.LC28
+ 641 00ba 2046     		mov	r0, r4
+ 642 00bc FFF7FEFF 		bl	_ZL13reportSensorFP7LoggingbPKcS2_fi
+ 643 00c0 3368     		ldr	r3, [r6]
+ 644 00c2 93F8D835 		ldrb	r3, [r3, #1496]	@ zero_extendqisi2
+ 645 00c6 D907     		lsls	r1, r3, #31
+ 646 00c8 00F1F380 		bmi	.L80
+ 647              	.L51:
+ 648 00cc FFF7FEFF 		bl	_Z13hasBaroSensorv
+ 649 00d0 0028     		cmp	r0, #0
+ 650 00d2 40F0DB80 		bne	.L81
+ 651              	.L52:
+ 652 00d6 3368     		ldr	r3, [r6]
+ 653 00d8 93F8D825 		ldrb	r2, [r3, #1496]	@ zero_extendqisi2
+ 654 00dc 40F20008 		movw	r8, #:lower16:engineConfiguration
+ 655 00e0 1207     		lsls	r2, r2, #28
+ 656 00e2 C0F20008 		movt	r8, #:upper16:engineConfiguration
+ 657 00e6 00F1BC80 		bmi	.L82
+ 658              	.L53:
+ 659 00ea 93F8D935 		ldrb	r3, [r3, #1497]	@ zero_extendqisi2
+ 660 00ee 5B07     		lsls	r3, r3, #29
+ 661 00f0 00F1A480 		bmi	.L83
+ 662              	.L54:
+ 663 00f4 3B68     		ldr	r3, [r7]
+ 664 00f6 93ED9B0A 		flds	s0, [r3, #620]	@ int
+ 665 00fa 0021     		movs	r1, #0
+ 666 00fc 40F20002 		movw	r2, #:lower16:.LC37
+ 667 0100 40F20003 		movw	r3, #:lower16:.LC38
+ 668 0104 B8EEC00A 		fsitos	s0, s0
+ 669 0108 C0F20002 		movt	r2, #:upper16:.LC37
+ 670 010c C0F20003 		movt	r3, #:upper16:.LC38
+ 671 0110 0091     		str	r1, [sp]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 13
+
+
+ 672 0112 2046     		mov	r0, r4
+ 673 0114 2946     		mov	r1, r5
+ 674 0116 FFF7FEFF 		bl	_ZL13reportSensorFP7LoggingbPKcS2_fi
+ 675 011a FFF7FEFF 		bl	_Z8getVBattv
+ 676 011e 0227     		movs	r7, #2
+ 677 0120 40F20002 		movw	r2, #:lower16:.LC39
+ 678 0124 40F20003 		movw	r3, #:lower16:.LC25
+ 679 0128 00EE100A 		fmsr	s0, r0
+ 680 012c C0F20002 		movt	r2, #:upper16:.LC39
+ 681 0130 C0F20003 		movt	r3, #:upper16:.LC25
+ 682 0134 2946     		mov	r1, r5
+ 683 0136 2046     		mov	r0, r4
+ 684 0138 0097     		str	r7, [sp]
+ 685 013a FFF7FEFF 		bl	_ZL13reportSensorFP7LoggingbPKcS2_fi
+ 686 013e FFF7FEFF 		bl	_Z6getTPSv
+ 687 0142 40F20002 		movw	r2, #:lower16:.LC40
+ 688 0146 40F20003 		movw	r3, #:lower16:.LC41
+ 689 014a 00EE100A 		fmsr	s0, r0
+ 690 014e 40F20008 		movw	r8, #:lower16:engine
+ 691 0152 0097     		str	r7, [sp]
+ 692 0154 C0F20002 		movt	r2, #:upper16:.LC40
+ 693 0158 C0F20003 		movt	r3, #:upper16:.LC41
+ 694 015c 2046     		mov	r0, r4
+ 695 015e 2946     		mov	r1, r5
+ 696 0160 C0F20008 		movt	r8, #:upper16:engine
+ 697 0164 FFF7FEFF 		bl	_ZL13reportSensorFP7LoggingbPKcS2_fi
+ 698 0168 5DBB     		cbnz	r5, .L84
+ 699              	.L55:
+ 700 016a 3368     		ldr	r3, [r6]
+ 701 016c 93F8D835 		ldrb	r3, [r3, #1496]	@ zero_extendqisi2
+ 702 0170 DB09     		lsrs	r3, r3, #7
+ 703 0172 11D0     		beq	.L56
+ 704 0174 FFF7FEFF 		bl	_Z21getCoolantTemperaturev
+ 705 0178 0221     		movs	r1, #2
+ 706 017a 40F20002 		movw	r2, #:lower16:.LC46
+ 707 017e 40F20003 		movw	r3, #:lower16:.LC47
+ 708 0182 00EE100A 		fmsr	s0, r0
+ 709 0186 0091     		str	r1, [sp]
+ 710 0188 C0F20002 		movt	r2, #:upper16:.LC46
+ 711 018c C0F20003 		movt	r3, #:upper16:.LC47
+ 712 0190 2046     		mov	r0, r4
+ 713 0192 2946     		mov	r1, r5
+ 714 0194 FFF7FEFF 		bl	_ZL13reportSensorFP7LoggingbPKcS2_fi
+ 715              	.L56:
+ 716 0198 FFF7FEFF 		bl	_Z23getIntakeAirTemperaturev
+ 717 019c 0226     		movs	r6, #2
+ 718 019e 40F20002 		movw	r2, #:lower16:.LC48
+ 719 01a2 40F20003 		movw	r3, #:lower16:.LC47
+ 720 01a6 00EE100A 		fmsr	s0, r0
+ 721 01aa 2946     		mov	r1, r5
+ 722 01ac 2046     		mov	r0, r4
+ 723 01ae 0096     		str	r6, [sp]
+ 724 01b0 C0F20002 		movt	r2, #:upper16:.LC48
+ 725 01b4 C0F20003 		movt	r3, #:upper16:.LC47
+ 726 01b8 FFF7FEFF 		bl	_ZL13reportSensorFP7LoggingbPKcS2_fi
+ 727 01bc 03B0     		add	sp, sp, #12
+ 728              		@ sp needed
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 14
+
+
+ 729 01be BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ 730              	.L84:
+ 731 01c2 D8F80000 		ldr	r0, [r8]
+ 732 01c6 00F5A670 		add	r0, r0, #332
+ 733 01ca FFF7FEFF 		bl	_ZN16AccelEnrichmemnt16getTpsEnrichmentEv
+ 734 01ce 40F20002 		movw	r2, #:lower16:.LC42
+ 735 01d2 40F20003 		movw	r3, #:lower16:.LC43
+ 736 01d6 00EE100A 		fmsr	s0, r0
+ 737 01da C0F20002 		movt	r2, #:upper16:.LC42
+ 738 01de C0F20003 		movt	r3, #:upper16:.LC43
+ 739 01e2 2046     		mov	r0, r4
+ 740 01e4 0121     		movs	r1, #1
+ 741 01e6 0097     		str	r7, [sp]
+ 742 01e8 FFF7FEFF 		bl	_ZL13reportSensorFP7LoggingbPKcS2_fi
+ 743 01ec D8F80000 		ldr	r0, [r8]
+ 744 01f0 00F5A670 		add	r0, r0, #332
+ 745 01f4 FFF7FEFF 		bl	_ZN16AccelEnrichmemnt16getTpsEnrichmentEv
+ 746 01f8 40F20002 		movw	r2, #:lower16:.LC44
+ 747 01fc 40F20003 		movw	r3, #:lower16:.LC45
+ 748 0200 00EE100A 		fmsr	s0, r0
+ 749 0204 C0F20002 		movt	r2, #:upper16:.LC44
+ 750 0208 C0F20003 		movt	r3, #:upper16:.LC45
+ 751 020c 2046     		mov	r0, r4
+ 752 020e 0121     		movs	r1, #1
+ 753 0210 0097     		str	r7, [sp]
+ 754 0212 FFF7FEFF 		bl	_ZL13reportSensorFP7LoggingbPKcS2_fi
+ 755 0216 4846     		mov	r0, r9
+ 756 0218 FFF7FEFF 		bl	_Z9getFuelMsi
+ 757 021c 40F20002 		movw	r2, #:lower16:.LC44
+ 758 0220 40F20003 		movw	r3, #:lower16:.LC45
+ 759 0224 00EE100A 		fmsr	s0, r0
+ 760 0228 0097     		str	r7, [sp]
+ 761 022a C0F20002 		movt	r2, #:upper16:.LC44
+ 762 022e C0F20003 		movt	r3, #:upper16:.LC45
+ 763 0232 2046     		mov	r0, r4
+ 764 0234 0121     		movs	r1, #1
+ 765 0236 FFF7FEFF 		bl	_ZL13reportSensorFP7LoggingbPKcS2_fi
+ 766 023a 96E7     		b	.L55
+ 767              	.L83:
+ 768 023c FFF7FEFF 		bl	_Z15getVehicleSpeedv
+ 769 0240 0221     		movs	r1, #2
+ 770 0242 40F20002 		movw	r2, #:lower16:.LC35
+ 771 0246 40F20003 		movw	r3, #:lower16:.LC36
+ 772 024a 00EE100A 		fmsr	s0, r0
+ 773 024e 0091     		str	r1, [sp]
+ 774 0250 C0F20002 		movt	r2, #:upper16:.LC35
+ 775 0254 C0F20003 		movt	r3, #:upper16:.LC36
+ 776 0258 2046     		mov	r0, r4
+ 777 025a 2946     		mov	r1, r5
+ 778 025c FFF7FEFF 		bl	_ZL13reportSensorFP7LoggingbPKcS2_fi
+ 779 0260 48E7     		b	.L54
+ 780              	.L82:
+ 781 0262 FFF7FEFF 		bl	_Z6getAfrv
+ 782 0266 0221     		movs	r1, #2
+ 783 0268 40F20002 		movw	r2, #:lower16:.LC33
+ 784 026c 40F20003 		movw	r3, #:lower16:.LC34
+ 785 0270 00EE100A 		fmsr	s0, r0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 15
+
+
+ 786 0274 0091     		str	r1, [sp]
+ 787 0276 C0F20003 		movt	r3, #:upper16:.LC34
+ 788 027a C0F20002 		movt	r2, #:upper16:.LC33
+ 789 027e 2046     		mov	r0, r4
+ 790 0280 2946     		mov	r1, r5
+ 791 0282 FFF7FEFF 		bl	_ZL13reportSensorFP7LoggingbPKcS2_fi
+ 792 0286 D8F80030 		ldr	r3, [r8]
+ 793 028a 2EE7     		b	.L53
+ 794              	.L81:
+ 795 028c FFF7FEFF 		bl	_Z15getBaroPressurev
+ 796 0290 0221     		movs	r1, #2
+ 797 0292 40F20002 		movw	r2, #:lower16:.LC32
+ 798 0296 40F20003 		movw	r3, #:lower16:.LC31
+ 799 029a 00EE100A 		fmsr	s0, r0
+ 800 029e 0091     		str	r1, [sp]
+ 801 02a0 C0F20002 		movt	r2, #:upper16:.LC32
+ 802 02a4 C0F20003 		movt	r3, #:upper16:.LC31
+ 803 02a8 2046     		mov	r0, r4
+ 804 02aa 2946     		mov	r1, r5
+ 805 02ac FFF7FEFF 		bl	_ZL13reportSensorFP7LoggingbPKcS2_fi
+ 806 02b0 11E7     		b	.L52
+ 807              	.L80:
+ 808 02b2 FFF7FEFF 		bl	_Z6getMapv
+ 809 02b6 40F20002 		movw	r2, #:lower16:.LC30
+ 810 02ba 40F20003 		movw	r3, #:lower16:.LC31
+ 811 02be 00EE100A 		fmsr	s0, r0
+ 812 02c2 CDF80080 		str	r8, [sp]
+ 813 02c6 C0F20002 		movt	r2, #:upper16:.LC30
+ 814 02ca C0F20003 		movt	r3, #:upper16:.LC31
+ 815 02ce 2046     		mov	r0, r4
+ 816 02d0 2946     		mov	r1, r5
+ 817 02d2 FFF7FEFF 		bl	_ZL13reportSensorFP7LoggingbPKcS2_fi
+ 818 02d6 F9E6     		b	.L51
+ 819              	.L79:
+ 820 02d8 FFF7FEFF 		bl	_Z6getMafv
+ 821 02dc 0226     		movs	r6, #2
+ 822 02de 40F20002 		movw	r2, #:lower16:.LC24
+ 823 02e2 40F20003 		movw	r3, #:lower16:.LC25
+ 824 02e6 00EE100A 		fmsr	s0, r0
+ 825 02ea 2946     		mov	r1, r5
+ 826 02ec C0F20002 		movt	r2, #:upper16:.LC24
+ 827 02f0 C0F20003 		movt	r3, #:upper16:.LC25
+ 828 02f4 2046     		mov	r0, r4
+ 829 02f6 0096     		str	r6, [sp]
+ 830 02f8 FFF7FEFF 		bl	_ZL13reportSensorFP7LoggingbPKcS2_fi
+ 831 02fc FFF7FEFF 		bl	_Z10getRealMafv
+ 832 0300 40F20002 		movw	r2, #:lower16:.LC26
+ 833 0304 40F20003 		movw	r3, #:lower16:.LC27
+ 834 0308 00EE100A 		fmsr	s0, r0
+ 835 030c 0096     		str	r6, [sp]
+ 836 030e C0F20002 		movt	r2, #:upper16:.LC26
+ 837 0312 C0F20003 		movt	r3, #:upper16:.LC27
+ 838 0316 2046     		mov	r0, r4
+ 839 0318 2946     		mov	r1, r5
+ 840 031a FFF7FEFF 		bl	_ZL13reportSensorFP7LoggingbPKcS2_fi
+ 841 031e B7E6     		b	.L50
+ 842              	.L78:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 16
+
+
+ 843 0320 40F20001 		movw	r1, #:lower16:.LC22
+ 844 0324 C0F20001 		movt	r1, #:upper16:.LC22
+ 845              	.L76:
+ 846 0328 2046     		mov	r0, r4
+ 847 032a FFF7FEFF 		bl	append
+ 848 032e 40F20001 		movw	r1, #:lower16:.LC17
+ 849 0332 2046     		mov	r0, r4
+ 850 0334 C0F20001 		movt	r1, #:upper16:.LC17
+ 851 0338 FFF7FEFF 		bl	append
+ 852 033c A3E6     		b	.L47
+ 853              	.L77:
+ 854 033e 40F20001 		movw	r1, #:lower16:.LC21
+ 855 0342 C0F20001 		movt	r1, #:upper16:.LC21
+ 856 0346 2046     		mov	r0, r4
+ 857 0348 4A46     		mov	r2, r9
+ 858 034a FFF7FEFF 		bl	debugInt
+ 859 034e 9AE6     		b	.L47
+ 860              	.L86:
+ 861              		.align	2
+ 862              	.L85:
+ 863 0350 00007A44 		.word	1148846080
+ 864              		.size	_ZL12printSensorsP7Loggingb, .-_ZL12printSensorsP7Loggingb
+ 865 0354 AFF30080 		.section	.text._Z12writeLogLinev,"ax",%progbits
+ 865      AFF30080 
+ 865      AFF30080 
+ 866              		.align	2
+ 867              		.p2align 4,,15
+ 868              		.global	_Z12writeLogLinev
+ 869              		.thumb
+ 870              		.thumb_func
+ 871              		.type	_Z12writeLogLinev, %function
+ 872              	_Z12writeLogLinev:
+ 873              		@ args = 0, pretend = 0, frame = 0
+ 874              		@ frame_needed = 0, uses_anonymous_args = 0
+ 875 0000 40F20003 		movw	r3, #:lower16:main_loop_started
+ 876 0004 C0F20003 		movt	r3, #:upper16:main_loop_started
+ 877 0008 10B5     		push	{r4, lr}
+ 878 000a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 879 000c 03B9     		cbnz	r3, .L94
+ 880              	.L87:
+ 881 000e 10BD     		pop	{r4, pc}
+ 882              	.L94:
+ 883 0010 40F20004 		movw	r4, #:lower16:.LANCHOR11
+ 884 0014 C0F20004 		movt	r4, #:upper16:.LANCHOR11
+ 885 0018 2046     		mov	r0, r4
+ 886 001a FFF7FEFF 		bl	resetLogging
+ 887 001e 2046     		mov	r0, r4
+ 888 0020 0121     		movs	r1, #1
+ 889 0022 FFF7FEFF 		bl	_ZL12printSensorsP7Loggingb
+ 890 0026 FFF7FEFF 		bl	isSdCardAlive
+ 891 002a 0028     		cmp	r0, #0
+ 892 002c EFD0     		beq	.L87
+ 893 002e 40F20001 		movw	r1, #:lower16:.LC49
+ 894 0032 C0F20001 		movt	r1, #:upper16:.LC49
+ 895 0036 2046     		mov	r0, r4
+ 896 0038 FFF7FEFF 		bl	appendPrintf
+ 897 003c E06A     		ldr	r0, [r4, #44]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 17
+
+
+ 898 003e FFF7FEFF 		bl	appendToLog
+ 899 0042 40F20003 		movw	r3, #:lower16:.LANCHOR7
+ 900 0046 C0F20003 		movt	r3, #:upper16:.LANCHOR7
+ 901 004a 1A68     		ldr	r2, [r3]
+ 902 004c 0132     		adds	r2, r2, #1
+ 903 004e 1A60     		str	r2, [r3]
+ 904 0050 10BD     		pop	{r4, pc}
+ 905              		.size	_Z12writeLogLinev, .-_Z12writeLogLinev
+ 906 0052 00BFAFF3 		.section	.text._Z21updateDevConsoleStateP6Engine,"ax",%progbits
+ 906      0080AFF3 
+ 906      0080AFF3 
+ 906      0080
+ 907              		.align	2
+ 908              		.p2align 4,,15
+ 909              		.global	_Z21updateDevConsoleStateP6Engine
+ 910              		.thumb
+ 911              		.thumb_func
+ 912              		.type	_Z21updateDevConsoleStateP6Engine, %function
+ 913              	_Z21updateDevConsoleStateP6Engine:
+ 914              		@ args = 0, pretend = 0, frame = 0
+ 915              		@ frame_needed = 0, uses_anonymous_args = 0
+ 916 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+ 917 0004 85B0     		sub	sp, sp, #20
+ 918 0006 FFF7FEFF 		bl	_Z14isConsoleReadyv
+ 919 000a 10B9     		cbnz	r0, .L129
+ 920              	.L95:
+ 921 000c 05B0     		add	sp, sp, #20
+ 922              		@ sp needed
+ 923 000e BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ 924              	.L129:
+ 925 0012 FFF7FEFF 		bl	printPending
+ 926 0016 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 927 001a C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 928 001e 0021     		movs	r1, #0
+ 929 0020 FFF7FEFF 		bl	_ZL12printSensorsP7Loggingb
+ 930 0024 40F20003 		movw	r3, #:lower16:hasFirmwareErrorFlag
+ 931 0028 C0F20003 		movt	r3, #:upper16:hasFirmwareErrorFlag
+ 932 002c 1C78     		ldrb	r4, [r3]	@ zero_extendqisi2
+ 933 002e 002C     		cmp	r4, #0
+ 934 0030 40F09C80 		bne	.L130
+ 935 0034 FFF7FEFF 		bl	_Z13pokeAdcInputsv
+ 936 0038 40F20003 		movw	r3, #:lower16:.LANCHOR6
+ 937 003c C0F20003 		movt	r3, #:upper16:.LANCHOR6
+ 938 0040 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 939 0042 002B     		cmp	r3, #0
+ 940 0044 E2D0     		beq	.L95
+ 941 0046 FFF7FEFF 		bl	getTimeNowSeconds
+ 942 004a 40F20003 		movw	r3, #:lower16:.LANCHOR12
+ 943 004e C0F20003 		movt	r3, #:upper16:.LANCHOR12
+ 944 0052 0746     		mov	r7, r0
+ 945 0054 1A68     		ldr	r2, [r3]
+ 946 0056 821A     		subs	r2, r0, r2
+ 947 0058 032A     		cmp	r2, #3
+ 948 005a 00F2A980 		bhi	.L100
+ 949              	.L103:
+ 950 005e FFF7FEFF 		bl	_Z20getCrankEventCounterv
+ 951 0062 40F20003 		movw	r3, #:lower16:.LANCHOR13
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 18
+
+
+ 952 0066 C0F20003 		movt	r3, #:upper16:.LANCHOR13
+ 953 006a 0146     		mov	r1, r0
+ 954 006c 1A68     		ldr	r2, [r3]
+ 955 006e 8242     		cmp	r2, r0
+ 956 0070 40F20002 		movw	r2, #:lower16:.LANCHOR14
+ 957 0074 C0F20002 		movt	r2, #:upper16:.LANCHOR14
+ 958 0078 00F09580 		beq	.L101
+ 959              	.L102:
+ 960 007c 40F20005 		movw	r5, #:lower16:engine
+ 961 0080 C0F20005 		movt	r5, #:upper16:engine
+ 962 0084 40F20004 		movw	r4, #:lower16:.LANCHOR3
+ 963 0088 C0F20004 		movt	r4, #:upper16:.LANCHOR3
+ 964 008c 2868     		ldr	r0, [r5]
+ 965 008e 1960     		str	r1, [r3]
+ 966 0090 1760     		str	r7, [r2]
+ 967 0092 FFF7FEFF 		bl	_ZN13RpmCalculator3rpmEv
+ 968 0096 637A     		ldrb	r3, [r4, #9]	@ zero_extendqisi2
+ 969 0098 0646     		mov	r6, r0
+ 970 009a 002B     		cmp	r3, #0
+ 971 009c 40F02781 		bne	.L131
+ 972              	.L105:
+ 973 00a0 A37A     		ldrb	r3, [r4, #10]	@ zero_extendqisi2
+ 974 00a2 002B     		cmp	r3, #0
+ 975 00a4 40F01381 		bne	.L132
+ 976              	.L106:
+ 977 00a8 237B     		ldrb	r3, [r4, #12]	@ zero_extendqisi2
+ 978 00aa 002B     		cmp	r3, #0
+ 979 00ac 40F0FF80 		bne	.L133
+ 980              	.L107:
+ 981 00b0 637B     		ldrb	r3, [r4, #13]	@ zero_extendqisi2
+ 982 00b2 002B     		cmp	r3, #0
+ 983 00b4 40F0EB80 		bne	.L134
+ 984              	.L108:
+ 985 00b8 E37A     		ldrb	r3, [r4, #11]	@ zero_extendqisi2
+ 986 00ba 53B1     		cbz	r3, .L109
+ 987 00bc 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 988 00c0 40F20001 		movw	r1, #:lower16:.LC61
+ 989 00c4 C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 990 00c8 C0F20001 		movt	r1, #:upper16:.LC61
+ 991 00cc 0022     		movs	r2, #0
+ 992 00ce FFF7FEFF 		bl	debugInt
+ 993              	.L109:
+ 994 00d2 FFF7FEFF 		bl	_Z14getEngineLoadTv
+ 995 00d6 3046     		mov	r0, r6
+ 996 00d8 FFF7FEFF 		bl	_Z11getBaseFueli
+ 997 00dc 40F20001 		movw	r1, #:lower16:.LC62
+ 998 00e0 0246     		mov	r2, r0	@ float
+ 999 00e2 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 1000 00e6 C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 1001 00ea C0F20001 		movt	r1, #:upper16:.LC62
+ 1002 00ee 0223     		movs	r3, #2
+ 1003 00f0 FFF7FEFF 		bl	debugFloat
+ 1004 00f4 2B68     		ldr	r3, [r5]
+ 1005 00f6 03F5F753 		add	r3, r3, #7904
+ 1006 00fa 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 1007 00fe 40F20001 		movw	r1, #:lower16:.LC63
+ 1008 0102 1A69     		ldr	r2, [r3, #16]	@ float
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 19
+
+
+ 1009 0104 C0F20001 		movt	r1, #:upper16:.LC63
+ 1010 0108 0223     		movs	r3, #2
+ 1011 010a C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 1012 010e FFF7FEFF 		bl	debugFloat
+ 1013 0112 3046     		mov	r0, r6
+ 1014 0114 FFF7FEFF 		bl	_Z9getFuelMsi
+ 1015 0118 40F20001 		movw	r1, #:lower16:.LC64
+ 1016 011c 0246     		mov	r2, r0	@ float
+ 1017 011e 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 1018 0122 C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 1019 0126 C0F20001 		movt	r1, #:upper16:.LC64
+ 1020 012a 0223     		movs	r3, #2
+ 1021 012c FFF7FEFF 		bl	debugFloat
+ 1022 0130 2B68     		ldr	r3, [r5]
+ 1023 0132 03F5F553 		add	r3, r3, #7840
+ 1024 0136 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 1025 013a 40F20001 		movw	r1, #:lower16:.LC65
+ 1026 013e 9A69     		ldr	r2, [r3, #24]	@ float
+ 1027 0140 C0F20001 		movt	r1, #:upper16:.LC65
+ 1028 0144 0223     		movs	r3, #2
+ 1029 0146 C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 1030 014a FFF7FEFF 		bl	debugFloat
+ 1031 014e 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 1032 0152 C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 1033 0156 FFF7FEFF 		bl	_Z9printWaveP7Logging
+ 1034 015a 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 1035 015e C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 1036 0162 05B0     		add	sp, sp, #20
+ 1037              		@ sp needed
+ 1038 0164 BDE8F043 		pop	{r4, r5, r6, r7, r8, r9, lr}
+ 1039 0168 FFF7FEBF 		b	scheduleLogging
+ 1040              	.L130:
+ 1041 016c 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 1042 0170 40F20001 		movw	r1, #:lower16:.LC50
+ 1043 0174 40F20002 		movw	r2, #:lower16:errorMessageBuffer
+ 1044 0178 C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 1045 017c C0F20001 		movt	r1, #:upper16:.LC50
+ 1046 0180 C0F20002 		movt	r2, #:upper16:errorMessageBuffer
+ 1047 0184 FFF7FEFF 		bl	scheduleMsg
+ 1048 0188 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 1049 018c C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 1050 0190 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 1051 0194 0022     		movs	r2, #0
+ 1052 0196 C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 1053 019a 1A60     		str	r2, [r3]
+ 1054 019c 05B0     		add	sp, sp, #20
+ 1055              		@ sp needed
+ 1056 019e BDE8F043 		pop	{r4, r5, r6, r7, r8, r9, lr}
+ 1057 01a2 FFF7FEBF 		b	scheduleLogging
+ 1058              	.L101:
+ 1059 01a6 1068     		ldr	r0, [r2]
+ 1060 01a8 B842     		cmp	r0, r7
+ 1061 01aa 7FF467AF 		bne	.L102
+ 1062 01ae 2DE7     		b	.L95
+ 1063              	.L100:
+ 1064 01b0 40F20008 		movw	r8, #:lower16:engineConfiguration
+ 1065 01b4 C0F20008 		movt	r8, #:upper16:engineConfiguration
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 20
+
+
+ 1066 01b8 1860     		str	r0, [r3]
+ 1067 01ba FFF7FEFF 		bl	getRusEfiVersion
+ 1068 01be D8F80020 		ldr	r2, [r8]
+ 1069 01c2 8146     		mov	r9, r0
+ 1070 01c4 1068     		ldr	r0, [r2]
+ 1071 01c6 FFF7FEFF 		bl	_Z20getConfigurationName13engine_type_e
+ 1072 01ca 40F20006 		movw	r6, #:lower16:boardConfiguration
+ 1073 01ce 40F20002 		movw	r2, #:lower16:.LC1
+ 1074 01d2 40F20005 		movw	r5, #:lower16:.LC52
+ 1075 01d6 C0F20002 		movt	r2, #:upper16:.LC1
+ 1076 01da C0F20006 		movt	r6, #:upper16:boardConfiguration
+ 1077 01de 0190     		str	r0, [sp, #4]
+ 1078 01e0 C0F20005 		movt	r5, #:upper16:.LC52
+ 1079 01e4 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 1080 01e8 40F20001 		movw	r1, #:lower16:.LC51
+ 1081 01ec 0292     		str	r2, [sp, #8]
+ 1082 01ee 4B46     		mov	r3, r9
+ 1083 01f0 C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 1084 01f4 C0F20001 		movt	r1, #:upper16:.LC51
+ 1085 01f8 0095     		str	r5, [sp]
+ 1086 01fa FFF7FEFF 		bl	appendPrintf
+ 1087 01fe 3368     		ldr	r3, [r6]
+ 1088 0200 40F20000 		movw	r0, #:lower16:.LC53
+ 1089 0204 D3F82811 		ldr	r1, [r3, #296]
+ 1090 0208 C0F20000 		movt	r0, #:upper16:.LC53
+ 1091 020c FFF7FEFF 		bl	_ZL11printOutPinPKc11brain_pin_e
+ 1092 0210 3368     		ldr	r3, [r6]
+ 1093 0212 40F20000 		movw	r0, #:lower16:.LC54
+ 1094 0216 D3F82C11 		ldr	r1, [r3, #300]
+ 1095 021a C0F20000 		movt	r0, #:upper16:.LC54
+ 1096 021e FFF7FEFF 		bl	_ZL11printOutPinPKc11brain_pin_e
+ 1097 0222 3368     		ldr	r3, [r6]
+ 1098 0224 40F20000 		movw	r0, #:lower16:.LC55
+ 1099 0228 D3F88411 		ldr	r1, [r3, #388]
+ 1100 022c C0F20000 		movt	r0, #:upper16:.LC55
+ 1101 0230 FFF7FEFF 		bl	_ZL11printOutPinPKc11brain_pin_e
+ 1102 0234 3368     		ldr	r3, [r6]
+ 1103 0236 40F20000 		movw	r0, #:lower16:.LC56
+ 1104 023a D3F88811 		ldr	r1, [r3, #392]
+ 1105 023e C0F20000 		movt	r0, #:upper16:.LC56
+ 1106 0242 FFF7FEFF 		bl	_ZL11printOutPinPKc11brain_pin_e
+ 1107 0246 D8F80030 		ldr	r3, [r8]
+ 1108 024a D3F89431 		ldr	r3, [r3, #404]
+ 1109 024e 002B     		cmp	r3, #0
+ 1110 0250 7FF705AF 		ble	.L103
+ 1111 0254 40F20005 		movw	r5, #:lower16:enginePins
+ 1112 0258 C0F20005 		movt	r5, #:upper16:enginePins
+ 1113              	.L104:
+ 1114 025c 3368     		ldr	r3, [r6]
+ 1115 025e D5F86001 		ldr	r0, [r5, #352]
+ 1116 0262 03EB8403 		add	r3, r3, r4, lsl #2
+ 1117 0266 1435     		adds	r5, r5, #20
+ 1118 0268 596D     		ldr	r1, [r3, #84]
+ 1119 026a FFF7FEFF 		bl	_ZL11printOutPinPKc11brain_pin_e
+ 1120 026e 3368     		ldr	r3, [r6]
+ 1121 0270 E86D     		ldr	r0, [r5, #92]
+ 1122 0272 04F10802 		add	r2, r4, #8
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 21
+
+
+ 1123 0276 0134     		adds	r4, r4, #1
+ 1124 0278 53F82210 		ldr	r1, [r3, r2, lsl #2]
+ 1125 027c FFF7FEFF 		bl	_ZL11printOutPinPKc11brain_pin_e
+ 1126 0280 D8F80030 		ldr	r3, [r8]
+ 1127 0284 D3F89431 		ldr	r3, [r3, #404]
+ 1128 0288 9C42     		cmp	r4, r3
+ 1129 028a E7DB     		blt	.L104
+ 1130 028c E7E6     		b	.L103
+ 1131              	.L134:
+ 1132 028e 40F20003 		movw	r3, #:lower16:triggerCentral
+ 1133 0292 C0F20003 		movt	r3, #:upper16:triggerCentral
+ 1134 0296 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 1135 029a 40F20001 		movw	r1, #:lower16:.LC60
+ 1136 029e 9A6C     		ldr	r2, [r3, #72]
+ 1137 02a0 C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 1138 02a4 C0F20001 		movt	r1, #:upper16:.LC60
+ 1139 02a8 FFF7FEFF 		bl	debugInt
+ 1140 02ac 04E7     		b	.L108
+ 1141              	.L133:
+ 1142 02ae 40F20003 		movw	r3, #:lower16:triggerCentral
+ 1143 02b2 C0F20003 		movt	r3, #:upper16:triggerCentral
+ 1144 02b6 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 1145 02ba 40F20001 		movw	r1, #:lower16:.LC59
+ 1146 02be 1A6C     		ldr	r2, [r3, #64]
+ 1147 02c0 C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 1148 02c4 C0F20001 		movt	r1, #:upper16:.LC59
+ 1149 02c8 FFF7FEFF 		bl	debugInt
+ 1150 02cc F0E6     		b	.L107
+ 1151              	.L132:
+ 1152 02ce 40F20003 		movw	r3, #:lower16:triggerCentral
+ 1153 02d2 C0F20003 		movt	r3, #:upper16:triggerCentral
+ 1154 02d6 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 1155 02da 40F20001 		movw	r1, #:lower16:.LC58
+ 1156 02de 1A6D     		ldr	r2, [r3, #80]
+ 1157 02e0 C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 1158 02e4 C0F20001 		movt	r1, #:upper16:.LC58
+ 1159 02e8 FFF7FEFF 		bl	debugInt
+ 1160 02ec DCE6     		b	.L106
+ 1161              	.L131:
+ 1162 02ee FFF7FEFF 		bl	_Z20getCrankEventCounterv
+ 1163 02f2 40F20001 		movw	r1, #:lower16:.LC57
+ 1164 02f6 0246     		mov	r2, r0
+ 1165 02f8 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 1166 02fc C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 1167 0300 C0F20001 		movt	r1, #:upper16:.LC57
+ 1168 0304 FFF7FEFF 		bl	debugInt
+ 1169 0308 CAE6     		b	.L105
+ 1170              		.size	_Z21updateDevConsoleStateP6Engine, .-_Z21updateDevConsoleStateP6Engine
+ 1171 030a 00BFAFF3 		.section	.text._Z22updateTunerStudioStateP25TunerStudioOutputChannels,"ax",%progbits
+ 1171      0080
+ 1172              		.align	2
+ 1173              		.p2align 4,,15
+ 1174              		.global	_Z22updateTunerStudioStateP25TunerStudioOutputChannels
+ 1175              		.thumb
+ 1176              		.thumb_func
+ 1177              		.type	_Z22updateTunerStudioStateP25TunerStudioOutputChannels, %function
+ 1178              	_Z22updateTunerStudioStateP25TunerStudioOutputChannels:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 22
+
+
+ 1179              		@ args = 0, pretend = 0, frame = 8
+ 1180              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1181 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 1182 0004 40F20006 		movw	r6, #:lower16:engine
+ 1183 0008 2DED028B 		fstmfdd	sp!, {d8}
+ 1184 000c C0F20006 		movt	r6, #:upper16:engine
+ 1185 0010 87B0     		sub	sp, sp, #28
+ 1186 0012 0446     		mov	r4, r0
+ 1187 0014 3068     		ldr	r0, [r6]
+ 1188 0016 FFF7FEFF 		bl	_ZN13RpmCalculator3rpmEv
+ 1189 001a 0746     		mov	r7, r0
+ 1190 001c FFF7FEFF 		bl	_Z6getTPSv
+ 1191 0020 8246     		mov	r10, r0	@ float
+ 1192 0022 FFF7FEFF 		bl	_Z21getCoolantTemperaturev
+ 1193 0026 8146     		mov	r9, r0	@ float
+ 1194 0028 FFF7FEFF 		bl	_Z23getIntakeAirTemperaturev
+ 1195 002c 8046     		mov	r8, r0	@ float
+ 1196 002e FFF7FEFF 		bl	_Z14getEngineLoadTv
+ 1197 0032 0546     		mov	r5, r0	@ float
+ 1198 0034 3846     		mov	r0, r7
+ 1199 0036 FFF7FEFF 		bl	_Z11getBaseFueli
+ 1200 003a 47F6FA03 		movw	r3, #30970
+ 1201 003e C0F23313 		movt	r3, 307
+ 1202 0042 6365     		str	r3, [r4, #84]
+ 1203 0044 2760     		str	r7, [r4]
+ 1204 0046 C4F80490 		str	r9, [r4, #4]	@ float
+ 1205 004a C4F80880 		str	r8, [r4, #8]	@ float
+ 1206 004e C4F80CA0 		str	r10, [r4, #12]	@ float
+ 1207 0052 0590     		str	r0, [sp, #20]	@ float
+ 1208 0054 FFF7FEFF 		bl	_Z6getMafv
+ 1209 0058 2061     		str	r0, [r4, #16]	@ float
+ 1210 005a FFF7FEFF 		bl	_Z10getRealMafv
+ 1211 005e E066     		str	r0, [r4, #108]	@ float
+ 1212 0060 FFF7FEFF 		bl	_Z6getMapv
+ 1213 0064 40F20003 		movw	r3, #:lower16:veMap
+ 1214 0068 C0F20003 		movt	r3, #:upper16:veMap
+ 1215 006c 4FF25852 		movw	r2, #62808
+ 1216 0070 996C     		ldr	r1, [r3, #72]
+ 1217 0072 C0F62312 		movt	r2, 2339
+ 1218 0076 9142     		cmp	r1, r2
+ 1219 0078 00F04781 		beq	.L136
+ 1220 007c 40F20000 		movw	r0, #:lower16:.LC66
+ 1221 0080 C0F20000 		movt	r0, #:upper16:.LC66
+ 1222 0084 FFF7FEFF 		bl	firmwareError
+ 1223 0088 0020     		movs	r0, #0
+ 1224 008a C7F6C070 		movt	r0, 32704
+ 1225              	.L137:
+ 1226 008e 2067     		str	r0, [r4, #112]	@ float
+ 1227 0090 FFF7FEFF 		bl	_Z6getAfrv
+ 1228 0094 6061     		str	r0, [r4, #20]	@ float
+ 1229 0096 FFF7FEFF 		bl	_Z8getVBattv
+ 1230 009a E061     		str	r0, [r4, #28]	@ float
+ 1231 009c FFF7FEFF 		bl	_Z14getTPS10bitAdcv
+ 1232 00a0 2084     		strh	r0, [r4, #32]	@ movhi
+ 1233 00a2 FFF7FEFF 		bl	_Z15getBaroPressurev
+ 1234 00a6 6062     		str	r0, [r4, #36]	@ float
+ 1235 00a8 FFF7FEFF 		bl	_Z6getMapv
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 23
+
+
+ 1236 00ac A561     		str	r5, [r4, #24]	@ float
+ 1237 00ae A062     		str	r0, [r4, #40]	@ float
+ 1238 00b0 3068     		ldr	r0, [r6]
+ 1239 00b2 FFF7FEFF 		bl	_ZN13RpmCalculator18getRpmAccelerationEv
+ 1240 00b6 3368     		ldr	r3, [r6]
+ 1241 00b8 A066     		str	r0, [r4, #104]	@ float
+ 1242 00ba 03F13800 		add	r0, r3, #56
+ 1243 00be FFF7FEFF 		bl	_ZN16AccelEnrichmemnt16getMapEnrichmentEv
+ 1244 00c2 08EE100A 		fmsr	s16, r0
+ 1245 00c6 FFF7FEFF 		bl	_Z6getMapv
+ 1246 00ca DFED977A 		flds	s15, .L145
+ 1247 00ce 07EE100A 		fmsr	s14, r0
+ 1248 00d2 28EE278A 		fmuls	s16, s16, s15
+ 1249 00d6 3368     		ldr	r3, [r6]
+ 1250 00d8 C8EE077A 		fdivs	s15, s16, s14
+ 1251 00dc 03F5A670 		add	r0, r3, #332
+ 1252 00e0 A346     		mov	fp, r4
+ 1253 00e2 0025     		movs	r5, #0
+ 1254 00e4 C4ED1F7A 		fsts	s15, [r4, #124]
+ 1255 00e8 FFF7FEFF 		bl	_ZN16AccelEnrichmemnt16getTpsEnrichmentEv
+ 1256 00ec 3268     		ldr	r2, [r6]
+ 1257 00ee C4F88000 		str	r0, [r4, #128]	@ float
+ 1258 00f2 02F5A670 		add	r0, r2, #332
+ 1259 00f6 FFF7FEFF 		bl	_ZN16AccelEnrichmemnt8getDeltaEv
+ 1260 00fa 3268     		ldr	r2, [r6]
+ 1261 00fc 6067     		str	r0, [r4, #116]	@ float
+ 1262 00fe 40F20001 		movw	r1, #:lower16:triggerCentral
+ 1263 0102 C0F20001 		movt	r1, #:upper16:triggerCentral
+ 1264 0106 02F5F652 		add	r2, r2, #7872
+ 1265 010a C96B     		ldr	r1, [r1, #60]
+ 1266 010c 1269     		ldr	r2, [r2, #16]	@ float
+ 1267 010e A167     		str	r1, [r4, #120]
+ 1268 0110 C4F88420 		str	r2, [r4, #132]	@ float
+ 1269 0114 FFF7FEFF 		bl	_Z16getPedalPositionv
+ 1270 0118 3268     		ldr	r2, [r6]
+ 1271 011a C4F88800 		str	r0, [r4, #136]	@ float
+ 1272 011e D2F86C22 		ldr	r2, [r2, #620]
+ 1273 0122 3846     		mov	r0, r7
+ 1274 0124 C4F89020 		str	r2, [r4, #144]
+ 1275 0128 FFF7FEFF 		bl	_Z20getInjectorDutyCyclei
+ 1276 012c 3268     		ldr	r2, [r6]
+ 1277 012e C4F88C00 		str	r0, [r4, #140]	@ float
+ 1278 0132 40F20001 		movw	r1, #:lower16:hasFirmwareErrorFlag
+ 1279 0136 C0F20001 		movt	r1, #:upper16:hasFirmwareErrorFlag
+ 1280 013a 02F5F252 		add	r2, r2, #7744
+ 1281 013e 91F800E0 		ldrb	lr, [r1]	@ zero_extendqisi2
+ 1282 0142 94F85010 		ldrb	r1, [r4, #80]	@ zero_extendqisi2
+ 1283 0146 9269     		ldr	r2, [r2, #24]	@ float
+ 1284 0148 6EF38611 		bfi	r1, lr, #6, #1
+ 1285 014c 84F85010 		strb	r1, [r4, #80]
+ 1286 0150 C4F89420 		str	r2, [r4, #148]	@ float
+ 1287 0154 FFF7FEFF 		bl	hasErrorCodes
+ 1288 0158 94F84920 		ldrb	r2, [r4, #73]	@ zero_extendqisi2
+ 1289 015c 60F30002 		bfi	r2, r0, #0, #1
+ 1290 0160 84F84920 		strb	r2, [r4, #73]
+ 1291 0164 FFF7FEFF 		bl	_ZL17isTriggerErrorNowv
+ 1292 0168 94F85020 		ldrb	r2, [r4, #80]	@ zero_extendqisi2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 24
+
+
+ 1293 016c 60F34512 		bfi	r2, r0, #5, #1
+ 1294 0170 84F85020 		strb	r2, [r4, #80]
+ 1295              	.L139:
+ 1296 0174 2846     		mov	r0, r5
+ 1297 0176 FFF7FEFF 		bl	_Z11getEgtValuei
+ 1298 017a 0135     		adds	r5, r5, #1
+ 1299 017c 082D     		cmp	r5, #8
+ 1300 017e ABF85800 		strh	r0, [fp, #88]	@ movhi
+ 1301 0182 0BF1020B 		add	fp, fp, #2
+ 1302 0186 F5D1     		bne	.L139
+ 1303 0188 FFF7FEFF 		bl	_Z27getNeedToWriteConfigurationv
+ 1304 018c 94F84930 		ldrb	r3, [r4, #73]	@ zero_extendqisi2
+ 1305 0190 60F34103 		bfi	r3, r0, #1, #1
+ 1306 0194 84F84930 		strb	r3, [r4, #73]
+ 1307 0198 FFF7FEFF 		bl	isSdCardAlive
+ 1308 019c 94F84830 		ldrb	r3, [r4, #72]	@ zero_extendqisi2
+ 1309 01a0 60F30003 		bfi	r3, r0, #0, #1
+ 1310 01a4 84F84830 		strb	r3, [r4, #72]
+ 1311 01a8 6048     		ldr	r0, .L145+4
+ 1312 01aa FFF7FEFF 		bl	_ZN9OutputPin13getLogicValueEv
+ 1313 01ae 94F84830 		ldrb	r3, [r4, #72]	@ zero_extendqisi2
+ 1314 01b2 60F34513 		bfi	r3, r0, #5, #1
+ 1315 01b6 84F84830 		strb	r3, [r4, #72]
+ 1316 01ba 5D48     		ldr	r0, .L145+8
+ 1317 01bc FFF7FEFF 		bl	_ZN9OutputPin13getLogicValueEv
+ 1318 01c0 94F84830 		ldrb	r3, [r4, #72]	@ zero_extendqisi2
+ 1319 01c4 60F38613 		bfi	r3, r0, #6, #1
+ 1320 01c8 84F84830 		strb	r3, [r4, #72]
+ 1321 01cc 5948     		ldr	r0, .L145+12
+ 1322 01ce FFF7FEFF 		bl	_ZN9OutputPin13getLogicValueEv
+ 1323 01d2 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 1324 01d6 94F84850 		ldrb	r5, [r4, #72]	@ zero_extendqisi2
+ 1325 01da 3268     		ldr	r2, [r6]
+ 1326 01dc 94F84910 		ldrb	r1, [r4, #73]	@ zero_extendqisi2
+ 1327 01e0 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 1328 01e4 60F3C715 		bfi	r5, r0, #7, #1
+ 1329 01e8 1B68     		ldr	r3, [r3]
+ 1330 01ea 84F84850 		strb	r5, [r4, #72]
+ 1331 01ee 93F8E455 		ldrb	r5, [r3, #1508]	@ zero_extendqisi2
+ 1332 01f2 94F84800 		ldrb	r0, [r4, #72]	@ zero_extendqisi2
+ 1333 01f6 C5F34005 		ubfx	r5, r5, #1, #1
+ 1334 01fa 65F34100 		bfi	r0, r5, #1, #1
+ 1335 01fe 84F84800 		strb	r0, [r4, #72]
+ 1336 0202 93F8E455 		ldrb	r5, [r3, #1508]	@ zero_extendqisi2
+ 1337 0206 C0B2     		uxtb	r0, r0
+ 1338 0208 65F38200 		bfi	r0, r5, #2, #1
+ 1339 020c 84F84800 		strb	r0, [r4, #72]
+ 1340 0210 93F8E455 		ldrb	r5, [r3, #1508]	@ zero_extendqisi2
+ 1341 0214 02F5F752 		add	r2, r2, #7904
+ 1342 0218 C5F38005 		ubfx	r5, r5, #2, #1
+ 1343 021c C0B2     		uxtb	r0, r0
+ 1344 021e 65F3C300 		bfi	r0, r5, #3, #1
+ 1345 0222 157E     		ldrb	r5, [r2, #24]	@ zero_extendqisi2
+ 1346 0224 0246     		mov	r2, r0
+ 1347 0226 65F30412 		bfi	r2, r5, #4, #1
+ 1348 022a 84F84820 		strb	r2, [r4, #72]
+ 1349 022e 93F8E435 		ldrb	r3, [r3, #1508]	@ zero_extendqisi2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 25
+
+
+ 1350 0232 C3F3C003 		ubfx	r3, r3, #3, #1
+ 1351 0236 63F38201 		bfi	r1, r3, #2, #1
+ 1352 023a 84F84910 		strb	r1, [r4, #73]
+ 1353 023e FFF7FEFF 		bl	_Z15getVehicleSpeedv
+ 1354 0242 E064     		str	r0, [r4, #76]	@ float
+ 1355 0244 FFF7FEFF 		bl	_Z21getCoolantTemperaturev
+ 1356 0248 FFF7FEFF 		bl	_Z25isValidCoolantTemperaturef
+ 1357 024c 94F85030 		ldrb	r3, [r4, #80]	@ zero_extendqisi2
+ 1358 0250 80F00100 		eor	r0, r0, #1
+ 1359 0254 60F34103 		bfi	r3, r0, #1, #1
+ 1360 0258 84F85030 		strb	r3, [r4, #80]
+ 1361 025c FFF7FEFF 		bl	_Z23getIntakeAirTemperaturev
+ 1362 0260 FFF7FEFF 		bl	_Z27isValidIntakeAirTemperaturef
+ 1363 0264 3368     		ldr	r3, [r6]
+ 1364 0266 94F84920 		ldrb	r2, [r4, #73]	@ zero_extendqisi2
+ 1365 026a D3F86C12 		ldr	r1, [r3, #620]
+ 1366 026e 94F85050 		ldrb	r5, [r4, #80]	@ zero_extendqisi2
+ 1367 0272 0029     		cmp	r1, #0
+ 1368 0274 D4BF     		ite	le
+ 1369 0276 0021     		movle	r1, #0
+ 1370 0278 0121     		movgt	r1, #1
+ 1371 027a 61F38612 		bfi	r2, r1, #6, #1
+ 1372 027e 84F84920 		strb	r2, [r4, #73]
+ 1373 0282 93F86812 		ldrb	r1, [r3, #616]	@ zero_extendqisi2
+ 1374 0286 61F34512 		bfi	r2, r1, #5, #1
+ 1375 028a 84F84920 		strb	r2, [r4, #73]
+ 1376 028e 93F86412 		ldrb	r1, [r3, #612]	@ zero_extendqisi2
+ 1377 0292 61F3C302 		bfi	r2, r1, #3, #1
+ 1378 0296 84F84920 		strb	r2, [r4, #73]
+ 1379 029a 93F86532 		ldrb	r3, [r3, #613]	@ zero_extendqisi2
+ 1380 029e 80F00100 		eor	r0, r0, #1
+ 1381 02a2 9646     		mov	lr, r2
+ 1382 02a4 63F3041E 		bfi	lr, r3, #4, #1
+ 1383 02a8 60F3C305 		bfi	r5, r0, #3, #1
+ 1384 02ac 5146     		mov	r1, r10	@ float
+ 1385 02ae 84F849E0 		strb	lr, [r4, #73]
+ 1386 02b2 4A46     		mov	r2, r9	@ float
+ 1387 02b4 4346     		mov	r3, r8	@ float
+ 1388 02b6 84F85050 		strb	r5, [r4, #80]
+ 1389 02ba 3846     		mov	r0, r7
+ 1390 02bc FFF7FEFF 		bl	_Z10getTChargeifff
+ 1391 02c0 3368     		ldr	r3, [r6]
+ 1392 02c2 059A     		ldr	r2, [sp, #20]	@ float
+ 1393 02c4 6063     		str	r0, [r4, #52]	@ float
+ 1394 02c6 03F5F553 		add	r3, r3, #7840
+ 1395 02ca D3ED067A 		flds	s15, [r3, #24]
+ 1396 02ce 9FED1A7A 		flds	s14, .L145+16
+ 1397 02d2 F4EEC77A 		fcmpes	s15, s14
+ 1398 02d6 F1EE10FA 		fmstat
+ 1399 02da C8BF     		it	gt
+ 1400 02dc 9FED177A 		fldsgt	s14, .L145+20
+ 1401 02e0 174B     		ldr	r3, .L145+24
+ 1402 02e2 C8BF     		it	gt
+ 1403 02e4 77EEC77A 		fsubsgt	s15, s15, s14
+ 1404 02e8 5B69     		ldr	r3, [r3, #20]	@ float
+ 1405 02ea 2263     		str	r2, [r4, #48]	@ float
+ 1406 02ec C4ED0E7A 		fsts	s15, [r4, #56]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 26
+
+
+ 1407 02f0 E363     		str	r3, [r4, #60]	@ float
+ 1408 02f2 3846     		mov	r0, r7
+ 1409 02f4 FFF7FEFF 		bl	_Z9getFuelMsi
+ 1410 02f8 2064     		str	r0, [r4, #64]	@ float
+ 1411 02fa FFF7FEFF 		bl	_Z15getCrankingFuelv
+ 1412 02fe E062     		str	r0, [r4, #44]	@ float
+ 1413 0300 07B0     		add	sp, sp, #28
+ 1414              		@ sp needed
+ 1415 0302 BDEC028B 		fldmfdd	sp!, {d8}
+ 1416 0306 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 1417              	.L136:
+ 1418 030a 07EE107A 		fmsr	s14, r7	@ int
+ 1419 030e 5A6C     		ldr	r2, [r3, #68]
+ 1420 0310 196C     		ldr	r1, [r3, #64]
+ 1421 0312 0092     		str	r2, [sp]
+ 1422 0314 B8EEC77A 		fsitos	s14, s14
+ 1423 0318 1022     		movs	r2, #16
+ 1424 031a 0293     		str	r3, [sp, #8]
+ 1425 031c 0192     		str	r2, [sp, #4]
+ 1426 031e 17EE103A 		fmrs	r3, s14
+ 1427 0322 FFF7FEFF 		bl	_Z13interpolate3dfPfifS_iPS_
+ 1428 0326 B2E6     		b	.L137
+ 1429              	.L146:
+ 1430              		.align	2
+ 1431              	.L145:
+ 1432 0328 0000C842 		.word	1120403456
+ 1433 032c 30000000 		.word	enginePins+48
+ 1434 0330 10000000 		.word	enginePins+16
+ 1435 0334 40000000 		.word	enginePins+64
+ 1436 0338 0000B443 		.word	1135869952
+ 1437 033c 00003444 		.word	1144258560
+ 1438 0340 A01E0000 		.word	_engine+7840
+ 1439              		.size	_Z22updateTunerStudioStateP25TunerStudioOutputChannels, .-_Z22updateTunerStudioStateP25Tuner
+ 1440 0344 AFF30080 		.section	.text._Z25prepareTunerStudioOutputsv,"ax",%progbits
+ 1440      AFF30080 
+ 1440      AFF30080 
+ 1441              		.align	2
+ 1442              		.p2align 4,,15
+ 1443              		.global	_Z25prepareTunerStudioOutputsv
+ 1444              		.thumb
+ 1445              		.thumb_func
+ 1446              		.type	_Z25prepareTunerStudioOutputsv, %function
+ 1447              	_Z25prepareTunerStudioOutputsv:
+ 1448              		@ args = 0, pretend = 0, frame = 0
+ 1449              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1450              		@ link register save eliminated.
+ 1451 0000 40F20000 		movw	r0, #:lower16:tsOutputChannels
+ 1452 0004 C0F20000 		movt	r0, #:upper16:tsOutputChannels
+ 1453 0008 FFF7FEBF 		b	_Z22updateTunerStudioStateP25TunerStudioOutputChannels
+ 1454              		.size	_Z25prepareTunerStudioOutputsv, .-_Z25prepareTunerStudioOutputsv
+ 1455 000c AFF30080 		.section	.text._Z14initStatusLoopP6Engine,"ax",%progbits
+ 1456              		.align	2
+ 1457              		.p2align 4,,15
+ 1458              		.global	_Z14initStatusLoopP6Engine
+ 1459              		.thumb
+ 1460              		.thumb_func
+ 1461              		.type	_Z14initStatusLoopP6Engine, %function
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 27
+
+
+ 1462              	_Z14initStatusLoopP6Engine:
+ 1463              		@ args = 0, pretend = 0, frame = 0
+ 1464              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1465 0000 10B5     		push	{r4, lr}
+ 1466 0002 0120     		movs	r0, #1
+ 1467 0004 FFF7FEFF 		bl	_Z10setFullLogi
+ 1468 0008 40F20000 		movw	r0, #:lower16:.LC16
+ 1469 000c 40F20001 		movw	r1, #:lower16:_Z10setFullLogi
+ 1470 0010 C0F20000 		movt	r0, #:upper16:.LC16
+ 1471 0014 C0F20001 		movt	r1, #:upper16:_Z10setFullLogi
+ 1472 0018 FFF7FEFF 		bl	addConsoleActionI
+ 1473 001c 40F20000 		movw	r0, #:lower16:.LC67
+ 1474 0020 40F20001 		movw	r1, #:lower16:_ZL17setWarningEnabledi
+ 1475 0024 C0F20000 		movt	r0, #:upper16:.LC67
+ 1476 0028 C0F20001 		movt	r1, #:upper16:_ZL17setWarningEnabledi
+ 1477 002c FFF7FEFF 		bl	addConsoleActionI
+ 1478 0030 40F20000 		movw	r0, #:lower16:.LC68
+ 1479 0034 40F20001 		movw	r1, #:lower16:_ZL13showFuelInfo2ff
+ 1480 0038 C0F20000 		movt	r0, #:upper16:.LC68
+ 1481 003c C0F20001 		movt	r1, #:upper16:_ZL13showFuelInfo2ff
+ 1482 0040 FFF7FEFF 		bl	addConsoleActionFF
+ 1483 0044 40F20000 		movw	r0, #:lower16:.LC69
+ 1484 0048 40F20001 		movw	r1, #:lower16:_ZL12showFuelInfov
+ 1485 004c C0F20000 		movt	r0, #:upper16:.LC69
+ 1486 0050 C0F20001 		movt	r1, #:upper16:_ZL12showFuelInfov
+ 1487 0054 FFF7FEFF 		bl	addConsoleAction
+ 1488 0058 40F20003 		movw	r3, #:lower16:.LANCHOR3
+ 1489 005c C0F20003 		movt	r3, #:upper16:.LANCHOR3
+ 1490 0060 40F20000 		movw	r0, #:lower16:.LC70
+ 1491 0064 40F20001 		movw	r1, #:lower16:_ZL9subscribei
+ 1492 0068 0022     		movs	r2, #0
+ 1493 006a 0124     		movs	r4, #1
+ 1494 006c C0F20000 		movt	r0, #:upper16:.LC70
+ 1495 0070 C0F20001 		movt	r1, #:upper16:_ZL9subscribei
+ 1496 0074 DC70     		strb	r4, [r3, #3]
+ 1497 0076 1C71     		strb	r4, [r3, #4]
+ 1498 0078 5C72     		strb	r4, [r3, #9]
+ 1499 007a 5A71     		strb	r2, [r3, #5]
+ 1500 007c 9A71     		strb	r2, [r3, #6]
+ 1501 007e 9A72     		strb	r2, [r3, #10]
+ 1502 0080 FFF7FEFF 		bl	addConsoleActionI
+ 1503 0084 40F20000 		movw	r0, #:lower16:.LC71
+ 1504 0088 40F20001 		movw	r1, #:lower16:_ZL11unsubscribei
+ 1505 008c C0F20000 		movt	r0, #:upper16:.LC71
+ 1506 0090 C0F20001 		movt	r1, #:upper16:_ZL11unsubscribei
+ 1507 0094 FFF7FEFF 		bl	addConsoleActionI
+ 1508 0098 40F20000 		movw	r0, #:lower16:.LC72
+ 1509 009c 40F20001 		movw	r1, #:lower16:_ZL17setBlinkingPeriodi
+ 1510 00a0 C0F20000 		movt	r0, #:upper16:.LC72
+ 1511 00a4 C0F20001 		movt	r1, #:upper16:_ZL17setBlinkingPeriodi
+ 1512 00a8 FFF7FEFF 		bl	addConsoleActionI
+ 1513 00ac 40F20000 		movw	r0, #:lower16:.LC73
+ 1514 00b0 40F20001 		movw	r1, #:lower16:_ZL11printStatusv
+ 1515 00b4 C0F20000 		movt	r0, #:upper16:.LC73
+ 1516 00b8 C0F20001 		movt	r1, #:upper16:_ZL11printStatusv
+ 1517 00bc BDE81040 		pop	{r4, lr}
+ 1518 00c0 FFF7FEBF 		b	addConsoleAction
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 28
+
+
+ 1519              		.size	_Z14initStatusLoopP6Engine, .-_Z14initStatusLoopP6Engine
+ 1520 00c4 AFF30080 		.section	.text._Z18startStatusThreadsP6Engine,"ax",%progbits
+ 1520      AFF30080 
+ 1520      AFF30080 
+ 1521              		.align	2
+ 1522              		.p2align 4,,15
+ 1523              		.global	_Z18startStatusThreadsP6Engine
+ 1524              		.thumb
+ 1525              		.thumb_func
+ 1526              		.type	_Z18startStatusThreadsP6Engine, %function
+ 1527              	_Z18startStatusThreadsP6Engine:
+ 1528              		@ args = 0, pretend = 0, frame = 0
+ 1529              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1530 0000 10B5     		push	{r4, lr}
+ 1531 0002 82B0     		sub	sp, sp, #8
+ 1532 0004 40F20003 		movw	r3, #:lower16:_ZL9lcdThreadPv
+ 1533 0008 0090     		str	r0, [sp]
+ 1534 000a 40F20000 		movw	r0, #:lower16:.LANCHOR15
+ 1535 000e C0F20003 		movt	r3, #:upper16:_ZL9lcdThreadPv
+ 1536 0012 4FF43A71 		mov	r1, #744
+ 1537 0016 4022     		movs	r2, #64
+ 1538 0018 C0F20000 		movt	r0, #:upper16:.LANCHOR15
+ 1539 001c 4FF44064 		mov	r4, #3072
+ 1540 0020 FFF7FEFF 		bl	chThdCreateStatic
+ 1541 0024 C4F20204 		movt	r4, 16386
+ 1542 0028 40F20000 		movw	r0, #:lower16:.LC74
+ 1543 002c 40F20001 		movw	r1, #:lower16:.LANCHOR9
+ 1544 0030 2246     		mov	r2, r4
+ 1545 0032 C0F20000 		movt	r0, #:upper16:.LC74
+ 1546 0036 C0F20001 		movt	r1, #:upper16:.LANCHOR9
+ 1547 003a 0F23     		movs	r3, #15
+ 1548 003c FFF7FEFF 		bl	_Z17outputPinRegisterPKcP9OutputPinP12GPIO_TypeDefm
+ 1549 0040 40F20000 		movw	r0, #:lower16:.LC75
+ 1550 0044 40F20001 		movw	r1, #:lower16:.LANCHOR10
+ 1551 0048 2246     		mov	r2, r4
+ 1552 004a C0F20000 		movt	r0, #:upper16:.LC75
+ 1553 004e C0F20001 		movt	r1, #:upper16:.LANCHOR10
+ 1554 0052 0D23     		movs	r3, #13
+ 1555 0054 FFF7FEFF 		bl	_Z17outputPinRegisterPKcP9OutputPinP12GPIO_TypeDefm
+ 1556 0058 40F20000 		movw	r0, #:lower16:.LC76
+ 1557 005c 40F20001 		movw	r1, #:lower16:.LANCHOR16
+ 1558 0060 2246     		mov	r2, r4
+ 1559 0062 C0F20000 		movt	r0, #:upper16:.LC76
+ 1560 0066 C0F20001 		movt	r1, #:upper16:.LANCHOR16
+ 1561 006a 0C23     		movs	r3, #12
+ 1562 006c FFF7FEFF 		bl	_Z17outputPinRegisterPKcP9OutputPinP12GPIO_TypeDefm
+ 1563 0070 0022     		movs	r2, #0
+ 1564 0072 40F20000 		movw	r0, #:lower16:.LANCHOR17
+ 1565 0076 40F20003 		movw	r3, #:lower16:_ZL14blinkingThreadPv
+ 1566 007a 0092     		str	r2, [sp]
+ 1567 007c C0F20003 		movt	r3, #:upper16:_ZL14blinkingThreadPv
+ 1568 0080 4FF4EC71 		mov	r1, #472
+ 1569 0084 4022     		movs	r2, #64
+ 1570 0086 C0F20000 		movt	r0, #:upper16:.LANCHOR17
+ 1571 008a FFF7FEFF 		bl	chThdCreateStatic
+ 1572 008e 02B0     		add	sp, sp, #8
+ 1573              		@ sp needed
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 29
+
+
+ 1574 0090 10BD     		pop	{r4, pc}
+ 1575              		.size	_Z18startStatusThreadsP6Engine, .-_Z18startStatusThreadsP6Engine
+ 1576 0092 00BFAFF3 		.section	.text._Z10getFullLogv,"ax",%progbits
+ 1576      0080AFF3 
+ 1576      0080AFF3 
+ 1576      0080
+ 1577              		.align	2
+ 1578              		.p2align 4,,15
+ 1579              		.global	_Z10getFullLogv
+ 1580              		.thumb
+ 1581              		.thumb_func
+ 1582              		.type	_Z10getFullLogv, %function
+ 1583              	_Z10getFullLogv:
+ 1584              		@ args = 0, pretend = 0, frame = 0
+ 1585              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1586              		@ link register save eliminated.
+ 1587 0000 40F20003 		movw	r3, #:lower16:.LANCHOR6
+ 1588 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR6
+ 1589 0008 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 1590 000a 7047     		bx	lr
+ 1591              		.size	_Z10getFullLogv, .-_Z10getFullLogv
+ 1592 000c AFF30080 		.section	.text.startup._GLOBAL__sub_I_warningEnabled,"ax",%progbits
+ 1593              		.align	2
+ 1594              		.p2align 4,,15
+ 1595              		.thumb
+ 1596              		.thumb_func
+ 1597              		.type	_GLOBAL__sub_I_warningEnabled, %function
+ 1598              	_GLOBAL__sub_I_warningEnabled:
+ 1599              		@ args = 0, pretend = 0, frame = 0
+ 1600              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1601 0000 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 1602 0004 40F20001 		movw	r1, #:lower16:.LC77
+ 1603 0008 40F20002 		movw	r2, #:lower16:.LANCHOR18
+ 1604 000c 08B5     		push	{r3, lr}
+ 1605 000e C0F20002 		movt	r2, #:upper16:.LANCHOR18
+ 1606 0012 4FF4AF63 		mov	r3, #1400
+ 1607 0016 C0F20001 		movt	r1, #:upper16:.LC77
+ 1608 001a C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 1609 001e FFF7FEFF 		bl	_ZN7LoggingC1EPKcPci
+ 1610 0022 40F20000 		movw	r0, #:lower16:.LANCHOR11
+ 1611 0026 40F20001 		movw	r1, #:lower16:.LC78
+ 1612 002a C0F20001 		movt	r1, #:upper16:.LC78
+ 1613 002e C0F20000 		movt	r0, #:upper16:.LANCHOR11
+ 1614 0032 FFF7FEFF 		bl	_ZN18LoggingWithStorageC1EPKc
+ 1615 0036 40F20000 		movw	r0, #:lower16:.LANCHOR5
+ 1616 003a 40F20001 		movw	r1, #:lower16:.LC79
+ 1617 003e C0F20001 		movt	r1, #:upper16:.LC79
+ 1618 0042 C0F20000 		movt	r0, #:upper16:.LANCHOR5
+ 1619 0046 FFF7FEFF 		bl	_ZN18LoggingWithStorageC1EPKc
+ 1620 004a 40F20000 		movw	r0, #:lower16:.LANCHOR9
+ 1621 004e C0F20000 		movt	r0, #:upper16:.LANCHOR9
+ 1622 0052 FFF7FEFF 		bl	_ZN9OutputPinC1Ev
+ 1623 0056 40F20000 		movw	r0, #:lower16:.LANCHOR19
+ 1624 005a C0F20000 		movt	r0, #:upper16:.LANCHOR19
+ 1625 005e FFF7FEFF 		bl	_ZN9OutputPinC1Ev
+ 1626 0062 40F20000 		movw	r0, #:lower16:.LANCHOR10
+ 1627 0066 C0F20000 		movt	r0, #:upper16:.LANCHOR10
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 30
+
+
+ 1628 006a FFF7FEFF 		bl	_ZN9OutputPinC1Ev
+ 1629 006e 40F20000 		movw	r0, #:lower16:.LANCHOR16
+ 1630 0072 C0F20000 		movt	r0, #:upper16:.LANCHOR16
+ 1631 0076 BDE80840 		pop	{r3, lr}
+ 1632 007a FFF7FEBF 		b	_ZN9OutputPinC1Ev
+ 1633              		.size	_GLOBAL__sub_I_warningEnabled, .-_GLOBAL__sub_I_warningEnabled
+ 1634 007e 00BF     		.section	.init_array,"aw",%init_array
+ 1635              		.align	2
+ 1636 0000 00000000 		.word	_GLOBAL__sub_I_warningEnabled(target1)
+ 1637              		.global	blinkingPeriod
+ 1638              		.global	runningPin
+ 1639              		.global	warningPin
+ 1640              		.global	checkEnginePin
+ 1641              		.global	needToReportStatus
+ 1642              		.global	warningEnabled
+ 1643              		.section	.data.warningEnabled,"aw",%progbits
+ 1644              		.align	2
+ 1645              		.set	.LANCHOR0,. + 0
+ 1646              		.type	warningEnabled, %object
+ 1647              		.size	warningEnabled, 4
+ 1648              	warningEnabled:
+ 1649 0000 01000000 		.word	1
+ 1650              		.section	.bss._ZL16communicationPin,"aw",%nobits
+ 1651              		.align	2
+ 1652              		.set	.LANCHOR9,. + 0
+ 1653              		.type	_ZL16communicationPin, %object
+ 1654              		.size	_ZL16communicationPin, 16
+ 1655              	_ZL16communicationPin:
+ 1656 0000 00000000 		.space	16
+ 1656      00000000 
+ 1656      00000000 
+ 1656      00000000 
+ 1657              		.section	.bss._ZL7logger2,"aw",%nobits
+ 1658              		.align	2
+ 1659              		.set	.LANCHOR5,. + 0
+ 1660              		.type	_ZL7logger2, %object
+ 1661              		.size	_ZL7logger2, 260
+ 1662              	_ZL7logger2:
+ 1663 0000 00000000 		.space	260
+ 1663      00000000 
+ 1663      00000000 
+ 1663      00000000 
+ 1663      00000000 
+ 1664              		.section	.bss._ZL14lcdThreadStack,"aw",%nobits
+ 1665              		.align	3
+ 1666              		.set	.LANCHOR15,. + 0
+ 1667              		.type	_ZL14lcdThreadStack, %object
+ 1668              		.size	_ZL14lcdThreadStack, 744
+ 1669              	_ZL14lcdThreadStack:
+ 1670 0000 00000000 		.space	744
+ 1670      00000000 
+ 1670      00000000 
+ 1670      00000000 
+ 1670      00000000 
+ 1671              		.section	.data._ZL26timeOfPreviousPrintVersion,"aw",%progbits
+ 1672              		.align	2
+ 1673              		.set	.LANCHOR12,. + 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 31
+
+
+ 1674              		.type	_ZL26timeOfPreviousPrintVersion, %object
+ 1675              		.size	_ZL26timeOfPreviousPrintVersion, 4
+ 1676              	_ZL26timeOfPreviousPrintVersion:
+ 1677 0000 FFFFFFFF 		.word	-1
+ 1678              		.section	.bss._ZL12subscription,"aw",%nobits
+ 1679              		.align	2
+ 1680              		.set	.LANCHOR3,. + 0
+ 1681              		.type	_ZL12subscription, %object
+ 1682              		.size	_ZL12subscription, 14
+ 1683              	_ZL12subscription:
+ 1684 0000 00000000 		.space	14
+ 1684      00000000 
+ 1684      00000000 
+ 1684      0000
+ 1685 000e 0000     		.section	.data.blinkingPeriod,"aw",%progbits
+ 1686              		.align	2
+ 1687              		.set	.LANCHOR2,. + 0
+ 1688              		.type	blinkingPeriod, %object
+ 1689              		.size	blinkingPeriod, 4
+ 1690              	blinkingPeriod:
+ 1691 0000 21000000 		.word	33
+ 1692              		.section	.rodata._ZL4leds,"a",%progbits
+ 1693              		.align	2
+ 1694              		.set	.LANCHOR8,. + 0
+ 1695              		.type	_ZL4leds, %object
+ 1696              		.size	_ZL4leds, 20
+ 1697              	_ZL4leds:
+ 1698 0000 00000000 		.word	warningPin
+ 1699 0004 00000000 		.word	runningPin
+ 1700 0008 50000000 		.word	enginePins+80
+ 1701 000c 00000000 		.word	_ZL16communicationPin
+ 1702 0010 00000000 		.word	checkEnginePin
+ 1703              		.section	.data._ZL19prevCkpEventCounter,"aw",%progbits
+ 1704              		.align	2
+ 1705              		.set	.LANCHOR13,. + 0
+ 1706              		.type	_ZL19prevCkpEventCounter, %object
+ 1707              		.size	_ZL19prevCkpEventCounter, 4
+ 1708              	_ZL19prevCkpEventCounter:
+ 1709 0000 FFFFFFFF 		.word	-1
+ 1710              		.section	.bss._ZL14LOGGING_BUFFER,"aw",%nobits
+ 1711              		.align	2
+ 1712              		.set	.LANCHOR18,. + 0
+ 1713              		.type	_ZL14LOGGING_BUFFER, %object
+ 1714              		.size	_ZL14LOGGING_BUFFER, 1400
+ 1715              	_ZL14LOGGING_BUFFER:
+ 1716 0000 00000000 		.space	1400
+ 1716      00000000 
+ 1716      00000000 
+ 1716      00000000 
+ 1716      00000000 
+ 1717              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 1718              		.align	2
+ 1719              	.LC0:
+ 1720 0000 6F757470 		.ascii	"outpin%s%s@%s%s\000"
+ 1720      696E2573 
+ 1720      25734025 
+ 1720      73257300 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 32
+
+
+ 1721              	.LC1:
+ 1722 0010 2C00     		.ascii	",\000"
+ 1723 0012 0000     		.space	2
+ 1724              	.LC2:
+ 1725 0014 5344206D 		.ascii	"SD magic fuel %f\000"
+ 1725      61676963 
+ 1725      20667565 
+ 1725      6C202566 
+ 1725      00
+ 1726 0025 000000   		.space	3
+ 1727              	.LC3:
+ 1728 0028 696E6A20 		.ascii	"inj flow %fcc/min displacement %fL\000"
+ 1728      666C6F77 
+ 1728      20256663 
+ 1728      632F6D69 
+ 1728      6E206469 
+ 1729 004b 00       		.space	1
+ 1730              	.LC4:
+ 1731 004c 616C676F 		.ascii	"algo=%s/pump=%s\000"
+ 1731      3D25732F 
+ 1731      70756D70 
+ 1731      3D257300 
+ 1732              	.LC5:
+ 1733 005c 70686173 		.ascii	"phase=%f correction=%f\000"
+ 1733      653D2566 
+ 1733      20636F72 
+ 1733      72656374 
+ 1733      696F6E3D 
+ 1734 0073 00       		.space	1
+ 1735              	.LC6:
+ 1736 0074 6261726F 		.ascii	"baro correction=%f\000"
+ 1736      20636F72 
+ 1736      72656374 
+ 1736      696F6E3D 
+ 1736      256600
+ 1737 0087 00       		.space	1
+ 1738              	.LC7:
+ 1739 0088 62617365 		.ascii	"base cranking fuel %f\000"
+ 1739      20637261 
+ 1739      6E6B696E 
+ 1739      67206675 
+ 1739      656C2025 
+ 1740 009e 0000     		.space	2
+ 1741              	.LC8:
+ 1742 00a0 6372616E 		.ascii	"cranking fuel: %f\000"
+ 1742      6B696E67 
+ 1742      20667565 
+ 1742      6C3A2025 
+ 1742      6600
+ 1743 00b2 0000     		.space	2
+ 1744              	.LC9:
+ 1745 00b4 72706D3D 		.ascii	"rpm=%f engineLoad=%f\000"
+ 1745      25662065 
+ 1745      6E67696E 
+ 1745      654C6F61 
+ 1745      643D2566 
+ 1746 00c9 000000   		.space	3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 33
+
+
+ 1747              	.LC10:
+ 1748 00cc 62617365 		.ascii	"baseFuel=%f\000"
+ 1748      4675656C 
+ 1748      3D256600 
+ 1749              	.LC11:
+ 1750 00d8 69617443 		.ascii	"iatCorrection=%f cltCorrection=%f injectorLag=%f\000"
+ 1750      6F727265 
+ 1750      6374696F 
+ 1750      6E3D2566 
+ 1750      20636C74 
+ 1751 0109 000000   		.space	3
+ 1752              	.LC12:
+ 1753 010c 696E6A65 		.ascii	"injection pulse width: %f\000"
+ 1753      6374696F 
+ 1753      6E207075 
+ 1753      6C736520 
+ 1753      77696474 
+ 1754 0126 0000     		.space	2
+ 1755              	.LC13:
+ 1756 0128 6C636400 		.ascii	"lcd\000"
+ 1757              	.LC14:
+ 1758 012c 53657474 		.ascii	"Setting full logging: %s\015\012\000"
+ 1758      696E6720 
+ 1758      66756C6C 
+ 1758      206C6F67 
+ 1758      67696E67 
+ 1759 0147 00       		.space	1
+ 1760              	.LC15:
+ 1761 0148 25732564 		.ascii	"%s%d\000"
+ 1761      00
+ 1762 014d 000000   		.space	3
+ 1763              	.LC16:
+ 1764 0150 666C00   		.ascii	"fl\000"
+ 1765 0153 00       		.space	1
+ 1766              	.LC17:
+ 1767 0154 0900     		.ascii	"\011\000"
+ 1768 0156 0000     		.space	2
+ 1769              	.LC18:
+ 1770 0158 636F6D6D 		.ascii	"communication blinking\000"
+ 1770      756E6963 
+ 1770      6174696F 
+ 1770      6E20626C 
+ 1770      696E6B69 
+ 1771 016f 00       		.space	1
+ 1772              	.LC19:
+ 1773 0170 74696D65 		.ascii	"time\000"
+ 1773      00
+ 1774 0175 000000   		.space	3
+ 1775              	.LC20:
+ 1776 0178 00       		.ascii	"\000"
+ 1777 0179 000000   		.space	3
+ 1778              	.LC21:
+ 1779 017c 72706D00 		.ascii	"rpm\000"
+ 1780              	.LC22:
+ 1781 0180 52504D00 		.ascii	"RPM\000"
+ 1782              	.LC23:
+ 1783 0184 25642573 		.ascii	"%d%s\000"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 34
+
+
+ 1783      00
+ 1784 0189 000000   		.space	3
+ 1785              	.LC24:
+ 1786 018c 6D616600 		.ascii	"maf\000"
+ 1787              	.LC25:
+ 1788 0190 5600     		.ascii	"V\000"
+ 1789 0192 0000     		.space	2
+ 1790              	.LC26:
+ 1791 0194 6D616672 		.ascii	"mafr\000"
+ 1791      00
+ 1792 0199 000000   		.space	3
+ 1793              	.LC27:
+ 1794 019c 6B672F68 		.ascii	"kg/hr\000"
+ 1794      7200
+ 1795 01a2 0000     		.space	2
+ 1796              	.LC28:
+ 1797 01a4 454E4749 		.ascii	"ENGINE_LOAD\000"
+ 1797      4E455F4C 
+ 1797      4F414400 
+ 1798              	.LC29:
+ 1799 01b0 7800     		.ascii	"x\000"
+ 1800 01b2 0000     		.space	2
+ 1801              	.LC30:
+ 1802 01b4 4D415000 		.ascii	"MAP\000"
+ 1803              	.LC31:
+ 1804 01b8 6B506100 		.ascii	"kPa\000"
+ 1805              	.LC32:
+ 1806 01bc 6261726F 		.ascii	"baro\000"
+ 1806      00
+ 1807 01c1 000000   		.space	3
+ 1808              	.LC33:
+ 1809 01c4 61667200 		.ascii	"afr\000"
+ 1810              	.LC34:
+ 1811 01c8 41465200 		.ascii	"AFR\000"
+ 1812              	.LC35:
+ 1813 01cc 76737300 		.ascii	"vss\000"
+ 1814              	.LC36:
+ 1815 01d0 6B706800 		.ascii	"kph\000"
+ 1816              	.LC37:
+ 1817 01d4 6B7300   		.ascii	"ks\000"
+ 1818 01d7 00       		.space	1
+ 1819              	.LC38:
+ 1820 01d8 636F756E 		.ascii	"count\000"
+ 1820      7400
+ 1821 01de 0000     		.space	2
+ 1822              	.LC39:
+ 1823 01e0 76626174 		.ascii	"vbatt\000"
+ 1823      7400
+ 1824 01e6 0000     		.space	2
+ 1825              	.LC40:
+ 1826 01e8 545000   		.ascii	"TP\000"
+ 1827 01eb 00       		.space	1
+ 1828              	.LC41:
+ 1829 01ec 2500     		.ascii	"%\000"
+ 1830 01ee 0000     		.space	2
+ 1831              	.LC42:
+ 1832 01f0 74707361 		.ascii	"tpsacc\000"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 35
+
+
+ 1832      636300
+ 1833 01f7 00       		.space	1
+ 1834              	.LC43:
+ 1835 01f8 6D7300   		.ascii	"ms\000"
+ 1836 01fb 00       		.space	1
+ 1837              	.LC44:
+ 1838 01fc 61647661 		.ascii	"advance\000"
+ 1838      6E636500 
+ 1839              	.LC45:
+ 1840 0204 64656700 		.ascii	"deg\000"
+ 1841              	.LC46:
+ 1842 0208 434C5400 		.ascii	"CLT\000"
+ 1843              	.LC47:
+ 1844 020c 4300     		.ascii	"C\000"
+ 1845 020e 0000     		.space	2
+ 1846              	.LC48:
+ 1847 0210 4D415400 		.ascii	"MAT\000"
+ 1848              	.LC49:
+ 1849 0214 0D0A00   		.ascii	"\015\012\000"
+ 1850 0217 00       		.space	1
+ 1851              	.LC50:
+ 1852 0218 46415441 		.ascii	"FATAL error: %s\000"
+ 1852      4C206572 
+ 1852      726F723A 
+ 1852      20257300 
+ 1853              	.LC51:
+ 1854 0228 72757345 		.ascii	"rusEfiVersion%s%d@%s %s%s\000"
+ 1854      66695665 
+ 1854      7273696F 
+ 1854      6E257325 
+ 1854      64402573 
+ 1855 0242 0000     		.space	2
+ 1856              	.LC52:
+ 1857 0244 38323230 		.ascii	"8220\000"
+ 1857      00
+ 1858 0249 000000   		.space	3
+ 1859              	.LC53:
+ 1860 024c 743100   		.ascii	"t1\000"
+ 1861 024f 00       		.space	1
+ 1862              	.LC54:
+ 1863 0250 743200   		.ascii	"t2\000"
+ 1864 0253 00       		.space	1
+ 1865              	.LC55:
+ 1866 0254 696E7075 		.ascii	"input1\000"
+ 1866      743100
+ 1867 025b 00       		.space	1
+ 1868              	.LC56:
+ 1869 025c 696E7075 		.ascii	"input2\000"
+ 1869      743200
+ 1870 0263 00       		.space	1
+ 1871              	.LC57:
+ 1872 0264 636B705F 		.ascii	"ckp_c\000"
+ 1872      6300
+ 1873 026a 0000     		.space	2
+ 1874              	.LC58:
+ 1875 026c 636B705F 		.ascii	"ckp_r\000"
+ 1875      7200
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 36
+
+
+ 1876 0272 0000     		.space	2
+ 1877              	.LC59:
+ 1878 0274 7472675F 		.ascii	"trg_r_errors\000"
+ 1878      725F6572 
+ 1878      726F7273 
+ 1878      00
+ 1879 0281 000000   		.space	3
+ 1880              	.LC60:
+ 1881 0284 7472675F 		.ascii	"trg_r_order_errors\000"
+ 1881      725F6F72 
+ 1881      6465725F 
+ 1881      6572726F 
+ 1881      727300
+ 1882 0297 00       		.space	1
+ 1883              	.LC61:
+ 1884 0298 77617665 		.ascii	"wave_chart_current\000"
+ 1884      5F636861 
+ 1884      72745F63 
+ 1884      75727265 
+ 1884      6E7400
+ 1885 02ab 00       		.space	1
+ 1886              	.LC62:
+ 1887 02ac 6675656C 		.ascii	"fuel_base\000"
+ 1887      5F626173 
+ 1887      6500
+ 1888 02b6 0000     		.space	2
+ 1889              	.LC63:
+ 1890 02b8 6675656C 		.ascii	"fuel_lag\000"
+ 1890      5F6C6167 
+ 1890      00
+ 1891 02c1 000000   		.space	3
+ 1892              	.LC64:
+ 1893 02c4 6675656C 		.ascii	"fuel\000"
+ 1893      00
+ 1894 02c9 000000   		.space	3
+ 1895              	.LC65:
+ 1896 02cc 74696D69 		.ascii	"timing\000"
+ 1896      6E6700
+ 1897 02d3 00       		.space	1
+ 1898              	.LC66:
+ 1899 02d4 6D617020 		.ascii	"map not initialized\000"
+ 1899      6E6F7420 
+ 1899      696E6974 
+ 1899      69616C69 
+ 1899      7A656400 
+ 1900              	.LC67:
+ 1901 02e8 7761726E 		.ascii	"warn\000"
+ 1901      00
+ 1902 02ed 000000   		.space	3
+ 1903              	.LC68:
+ 1904 02f0 6675656C 		.ascii	"fuelinfo2\000"
+ 1904      696E666F 
+ 1904      3200
+ 1905 02fa 0000     		.space	2
+ 1906              	.LC69:
+ 1907 02fc 6675656C 		.ascii	"fuelinfo\000"
+ 1907      696E666F 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 37
+
+
+ 1907      00
+ 1908 0305 000000   		.space	3
+ 1909              	.LC70:
+ 1910 0308 73756273 		.ascii	"subscribe\000"
+ 1910      63726962 
+ 1910      6500
+ 1911 0312 0000     		.space	2
+ 1912              	.LC71:
+ 1913 0314 756E7375 		.ascii	"unsubscribe\000"
+ 1913      62736372 
+ 1913      69626500 
+ 1914              	.LC72:
+ 1915 0320 7365745F 		.ascii	"set_led_blinking_period\000"
+ 1915      6C65645F 
+ 1915      626C696E 
+ 1915      6B696E67 
+ 1915      5F706572 
+ 1916              	.LC73:
+ 1917 0338 73746174 		.ascii	"status\000"
+ 1917      757300
+ 1918 033f 00       		.space	1
+ 1919              	.LC74:
+ 1920 0340 636F6D6D 		.ascii	"communication status 1\000"
+ 1920      756E6963 
+ 1920      6174696F 
+ 1920      6E207374 
+ 1920      61747573 
+ 1921 0357 00       		.space	1
+ 1922              	.LC75:
+ 1923 0358 7761726E 		.ascii	"warning\000"
+ 1923      696E6700 
+ 1924              	.LC76:
+ 1925 0360 69732072 		.ascii	"is running status\000"
+ 1925      756E6E69 
+ 1925      6E672073 
+ 1925      74617475 
+ 1925      7300
+ 1926 0372 0000     		.space	2
+ 1927              	.LC77:
+ 1928 0374 73746174 		.ascii	"status loop\000"
+ 1928      7573206C 
+ 1928      6F6F7000 
+ 1929              	.LC78:
+ 1930 0380 66696C65 		.ascii	"file logger\000"
+ 1930      206C6F67 
+ 1930      67657200 
+ 1931              	.LC79:
+ 1932 038c 6D61696E 		.ascii	"main event handler\000"
+ 1932      20657665 
+ 1932      6E742068 
+ 1932      616E646C 
+ 1932      657200
+ 1933 039f 00       		.section	.bss.checkEnginePin,"aw",%nobits
+ 1934              		.align	2
+ 1935              		.set	.LANCHOR19,. + 0
+ 1936              		.type	checkEnginePin, %object
+ 1937              		.size	checkEnginePin, 16
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 38
+
+
+ 1938              	checkEnginePin:
+ 1939 0000 00000000 		.space	16
+ 1939      00000000 
+ 1939      00000000 
+ 1939      00000000 
+ 1940              		.section	.bss.warningPin,"aw",%nobits
+ 1941              		.align	2
+ 1942              		.set	.LANCHOR10,. + 0
+ 1943              		.type	warningPin, %object
+ 1944              		.size	warningPin, 16
+ 1945              	warningPin:
+ 1946 0000 00000000 		.space	16
+ 1946      00000000 
+ 1946      00000000 
+ 1946      00000000 
+ 1947              		.section	.bss.runningPin,"aw",%nobits
+ 1948              		.align	2
+ 1949              		.set	.LANCHOR16,. + 0
+ 1950              		.type	runningPin, %object
+ 1951              		.size	runningPin, 16
+ 1952              	runningPin:
+ 1953 0000 00000000 		.space	16
+ 1953      00000000 
+ 1953      00000000 
+ 1953      00000000 
+ 1954              		.section	.data._ZL7fullLog,"aw",%progbits
+ 1955              		.set	.LANCHOR6,. + 0
+ 1956              		.type	_ZL7fullLog, %object
+ 1957              		.size	_ZL7fullLog, 1
+ 1958              	_ZL7fullLog:
+ 1959 0000 01       		.byte	1
+ 1960              		.section	.data._ZL20timeOfPreviousReport,"aw",%progbits
+ 1961              		.align	2
+ 1962              		.set	.LANCHOR14,. + 0
+ 1963              		.type	_ZL20timeOfPreviousReport, %object
+ 1964              		.size	_ZL20timeOfPreviousReport, 4
+ 1965              	_ZL20timeOfPreviousReport:
+ 1966 0000 FFFFFFFF 		.word	-1
+ 1967              		.section	.bss.needToReportStatus,"aw",%nobits
+ 1968              		.align	2
+ 1969              		.set	.LANCHOR1,. + 0
+ 1970              		.type	needToReportStatus, %object
+ 1971              		.size	needToReportStatus, 4
+ 1972              	needToReportStatus:
+ 1973 0000 00000000 		.space	4
+ 1974              		.section	.bss._ZL6logger,"aw",%nobits
+ 1975              		.align	2
+ 1976              		.set	.LANCHOR4,. + 0
+ 1977              		.type	_ZL6logger, %object
+ 1978              		.size	_ZL6logger, 60
+ 1979              	_ZL6logger:
+ 1980 0000 00000000 		.space	60
+ 1980      00000000 
+ 1980      00000000 
+ 1980      00000000 
+ 1980      00000000 
+ 1981              		.section	.bss._ZL16logFileLineIndex,"aw",%nobits
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 39
+
+
+ 1982              		.align	2
+ 1983              		.set	.LANCHOR7,. + 0
+ 1984              		.type	_ZL16logFileLineIndex, %object
+ 1985              		.size	_ZL16logFileLineIndex, 4
+ 1986              	_ZL16logFileLineIndex:
+ 1987 0000 00000000 		.space	4
+ 1988              		.section	.bss._ZL10fileLogger,"aw",%nobits
+ 1989              		.align	2
+ 1990              		.set	.LANCHOR11,. + 0
+ 1991              		.type	_ZL10fileLogger, %object
+ 1992              		.size	_ZL10fileLogger, 260
+ 1993              	_ZL10fileLogger:
+ 1994 0000 00000000 		.space	260
+ 1994      00000000 
+ 1994      00000000 
+ 1994      00000000 
+ 1994      00000000 
+ 1995              		.section	.bss._ZL13blinkingStack,"aw",%nobits
+ 1996              		.align	3
+ 1997              		.set	.LANCHOR17,. + 0
+ 1998              		.type	_ZL13blinkingStack, %object
+ 1999              		.size	_ZL13blinkingStack, 472
+ 2000              	_ZL13blinkingStack:
+ 2001 0000 00000000 		.space	472
+ 2001      00000000 
+ 2001      00000000 
+ 2001      00000000 
+ 2001      00000000 
+ 2002              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 40
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 status_loop.cpp
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:17     .text._ZL17setWarningEnabledi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:22     .text._ZL17setWarningEnabledi:00000000 _ZL17setWarningEnabledi
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1645   .data.warningEnabled:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:32     .text._ZL11printStatusv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:37     .text._ZL11printStatusv:00000000 _ZL11printStatusv
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1969   .bss.needToReportStatus:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:48     .text._ZL17setBlinkingPeriodi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:53     .text._ZL17setBlinkingPeriodi:00000000 _ZL17setBlinkingPeriodi
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1687   .data.blinkingPeriod:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:65     .text._ZL9subscribei:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:70     .text._ZL9subscribei:00000000 _ZL9subscribei
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1680   .bss._ZL12subscription:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:81     .text._ZL11unsubscribei:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:86     .text._ZL11unsubscribei:00000000 _ZL11unsubscribei
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:97     .text._ZL11printOutPinPKc11brain_pin_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:102    .text._ZL11printOutPinPKc11brain_pin_e:00000000 _ZL11printOutPinPKc11brain_pin_e
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1721   .rodata.str1.4:00000010 .LC1
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1976   .bss._ZL6logger:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1719   .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:126    .text._ZL13showFuelInfo2ff:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:131    .text._ZL13showFuelInfo2ff:00000000 _ZL13showFuelInfo2ff
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1724   .rodata.str1.4:00000014 .LC2
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1727   .rodata.str1.4:00000028 .LC3
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1730   .rodata.str1.4:0000004c .LC4
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1659   .bss._ZL7logger2:00000000 .LANCHOR5
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1732   .rodata.str1.4:0000005c .LC5
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1735   .rodata.str1.4:00000074 .LC6
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1738   .rodata.str1.4:00000088 .LC7
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1741   .rodata.str1.4:000000a0 .LC8
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1744   .rodata.str1.4:000000b4 .LC9
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1747   .rodata.str1.4:000000cc .LC10
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1749   .rodata.str1.4:000000d8 .LC11
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1752   .rodata.str1.4:0000010c .LC12
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:315    .text._ZL13showFuelInfo2ff:00000254 $d
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:318    .text._ZL12showFuelInfov:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:323    .text._ZL12showFuelInfov:00000000 _ZL12showFuelInfov
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:341    .text._ZL9lcdThreadPv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:346    .text._ZL9lcdThreadPv:00000000 _ZL9lcdThreadPv
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1755   .rodata.str1.4:00000128 .LC13
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:377    .text._Z10setFullLogi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:383    .text._Z10setFullLogi:00000000 _Z10setFullLogi
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1757   .rodata.str1.4:0000012c .LC14
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1760   .rodata.str1.4:00000148 .LC15
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1763   .rodata.str1.4:00000150 .LC16
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1955   .data._ZL7fullLog:00000000 .LANCHOR6
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:411    .text._ZL13reportSensorFP7LoggingbPKcS2_fi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:416    .text._ZL13reportSensorFP7LoggingbPKcS2_fi:00000000 _ZL13reportSensorFP7LoggingbPKcS2_fi
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1983   .bss._ZL16logFileLineIndex:00000000 .LANCHOR7
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1766   .rodata.str1.4:00000154 .LC17
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:454    .text._ZL17isTriggerErrorNowv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:459    .text._ZL17isTriggerErrorNowv:00000000 _ZL17isTriggerErrorNowv
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:487    .text._ZL14blinkingThreadPv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:492    .text._ZL14blinkingThreadPv:00000000 _ZL14blinkingThreadPv
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1769   .rodata.str1.4:00000158 .LC18
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1942   .bss.warningPin:00000000 .LANCHOR10
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 41
+
+
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1652   .bss._ZL16communicationPin:00000000 .LANCHOR9
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:572    .text._ZL14blinkingThreadPv:000000d0 $d
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:576    .text._ZL12printSensorsP7Loggingb:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:581    .text._ZL12printSensorsP7Loggingb:00000000 _ZL12printSensorsP7Loggingb
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1772   .rodata.str1.4:00000170 .LC19
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1775   .rodata.str1.4:00000178 .LC20
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1778   .rodata.str1.4:0000017c .LC21
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1782   .rodata.str1.4:00000184 .LC23
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1796   .rodata.str1.4:000001a4 .LC28
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1798   .rodata.str1.4:000001b0 .LC29
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1816   .rodata.str1.4:000001d4 .LC37
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1819   .rodata.str1.4:000001d8 .LC38
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1822   .rodata.str1.4:000001e0 .LC39
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1787   .rodata.str1.4:00000190 .LC25
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1825   .rodata.str1.4:000001e8 .LC40
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1828   .rodata.str1.4:000001ec .LC41
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1841   .rodata.str1.4:00000208 .LC46
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1843   .rodata.str1.4:0000020c .LC47
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1846   .rodata.str1.4:00000210 .LC48
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1831   .rodata.str1.4:000001f0 .LC42
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1834   .rodata.str1.4:000001f8 .LC43
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1837   .rodata.str1.4:000001fc .LC44
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1839   .rodata.str1.4:00000204 .LC45
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1812   .rodata.str1.4:000001cc .LC35
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1814   .rodata.str1.4:000001d0 .LC36
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1808   .rodata.str1.4:000001c4 .LC33
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1810   .rodata.str1.4:000001c8 .LC34
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1805   .rodata.str1.4:000001bc .LC32
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1803   .rodata.str1.4:000001b8 .LC31
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1801   .rodata.str1.4:000001b4 .LC30
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1785   .rodata.str1.4:0000018c .LC24
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1790   .rodata.str1.4:00000194 .LC26
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1793   .rodata.str1.4:0000019c .LC27
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1780   .rodata.str1.4:00000180 .LC22
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:863    .text._ZL12printSensorsP7Loggingb:00000350 $d
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:866    .text._Z12writeLogLinev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:872    .text._Z12writeLogLinev:00000000 _Z12writeLogLinev
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1990   .bss._ZL10fileLogger:00000000 .LANCHOR11
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1848   .rodata.str1.4:00000214 .LC49
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:907    .text._Z21updateDevConsoleStateP6Engine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:913    .text._Z21updateDevConsoleStateP6Engine:00000000 _Z21updateDevConsoleStateP6Engine
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1673   .data._ZL26timeOfPreviousPrintVersion:00000000 .LANCHOR12
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1705   .data._ZL19prevCkpEventCounter:00000000 .LANCHOR13
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1962   .data._ZL20timeOfPreviousReport:00000000 .LANCHOR14
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1883   .rodata.str1.4:00000298 .LC61
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1886   .rodata.str1.4:000002ac .LC62
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1889   .rodata.str1.4:000002b8 .LC63
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1892   .rodata.str1.4:000002c4 .LC64
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1895   .rodata.str1.4:000002cc .LC65
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1851   .rodata.str1.4:00000218 .LC50
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1856   .rodata.str1.4:00000244 .LC52
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1853   .rodata.str1.4:00000228 .LC51
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1859   .rodata.str1.4:0000024c .LC53
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1862   .rodata.str1.4:00000250 .LC54
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1865   .rodata.str1.4:00000254 .LC55
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1868   .rodata.str1.4:0000025c .LC56
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1880   .rodata.str1.4:00000284 .LC60
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 42
+
+
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1877   .rodata.str1.4:00000274 .LC59
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1874   .rodata.str1.4:0000026c .LC58
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1871   .rodata.str1.4:00000264 .LC57
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1172   .text._Z22updateTunerStudioStateP25TunerStudioOutputChannels:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1178   .text._Z22updateTunerStudioStateP25TunerStudioOutputChannels:00000000 _Z22updateTunerStudioStateP25TunerStudioOutputChannels
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1898   .rodata.str1.4:000002d4 .LC66
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1432   .text._Z22updateTunerStudioStateP25TunerStudioOutputChannels:00000328 $d
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1441   .text._Z25prepareTunerStudioOutputsv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1447   .text._Z25prepareTunerStudioOutputsv:00000000 _Z25prepareTunerStudioOutputsv
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1456   .text._Z14initStatusLoopP6Engine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1462   .text._Z14initStatusLoopP6Engine:00000000 _Z14initStatusLoopP6Engine
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1900   .rodata.str1.4:000002e8 .LC67
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1903   .rodata.str1.4:000002f0 .LC68
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1906   .rodata.str1.4:000002fc .LC69
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1909   .rodata.str1.4:00000308 .LC70
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1912   .rodata.str1.4:00000314 .LC71
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1914   .rodata.str1.4:00000320 .LC72
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1916   .rodata.str1.4:00000338 .LC73
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1521   .text._Z18startStatusThreadsP6Engine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1527   .text._Z18startStatusThreadsP6Engine:00000000 _Z18startStatusThreadsP6Engine
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1666   .bss._ZL14lcdThreadStack:00000000 .LANCHOR15
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1919   .rodata.str1.4:00000340 .LC74
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1922   .rodata.str1.4:00000358 .LC75
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1924   .rodata.str1.4:00000360 .LC76
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1949   .bss.runningPin:00000000 .LANCHOR16
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1997   .bss._ZL13blinkingStack:00000000 .LANCHOR17
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1577   .text._Z10getFullLogv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1583   .text._Z10getFullLogv:00000000 _Z10getFullLogv
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1593   .text.startup._GLOBAL__sub_I_warningEnabled:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1598   .text.startup._GLOBAL__sub_I_warningEnabled:00000000 _GLOBAL__sub_I_warningEnabled
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1927   .rodata.str1.4:00000374 .LC77
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1712   .bss._ZL14LOGGING_BUFFER:00000000 .LANCHOR18
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1929   .rodata.str1.4:00000380 .LC78
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1931   .rodata.str1.4:0000038c .LC79
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1935   .bss.checkEnginePin:00000000 .LANCHOR19
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1635   .init_array:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1690   .data.blinkingPeriod:00000000 blinkingPeriod
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1952   .bss.runningPin:00000000 runningPin
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1945   .bss.warningPin:00000000 warningPin
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1938   .bss.checkEnginePin:00000000 checkEnginePin
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1972   .bss.needToReportStatus:00000000 needToReportStatus
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1648   .data.warningEnabled:00000000 warningEnabled
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1644   .data.warningEnabled:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1651   .bss._ZL16communicationPin:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1655   .bss._ZL16communicationPin:00000000 _ZL16communicationPin
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1658   .bss._ZL7logger2:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1662   .bss._ZL7logger2:00000000 _ZL7logger2
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1665   .bss._ZL14lcdThreadStack:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1669   .bss._ZL14lcdThreadStack:00000000 _ZL14lcdThreadStack
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1672   .data._ZL26timeOfPreviousPrintVersion:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1676   .data._ZL26timeOfPreviousPrintVersion:00000000 _ZL26timeOfPreviousPrintVersion
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1679   .bss._ZL12subscription:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1683   .bss._ZL12subscription:00000000 _ZL12subscription
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1686   .data.blinkingPeriod:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1693   .rodata._ZL4leds:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1697   .rodata._ZL4leds:00000000 _ZL4leds
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1704   .data._ZL19prevCkpEventCounter:00000000 $d
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 43
+
+
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1708   .data._ZL19prevCkpEventCounter:00000000 _ZL19prevCkpEventCounter
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1711   .bss._ZL14LOGGING_BUFFER:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1715   .bss._ZL14LOGGING_BUFFER:00000000 _ZL14LOGGING_BUFFER
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1718   .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1934   .bss.checkEnginePin:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1941   .bss.warningPin:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1948   .bss.runningPin:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1958   .data._ZL7fullLog:00000000 _ZL7fullLog
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1961   .data._ZL20timeOfPreviousReport:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1965   .data._ZL20timeOfPreviousReport:00000000 _ZL20timeOfPreviousReport
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1968   .bss.needToReportStatus:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1975   .bss._ZL6logger:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1979   .bss._ZL6logger:00000000 _ZL6logger
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1982   .bss._ZL16logFileLineIndex:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1986   .bss._ZL16logFileLineIndex:00000000 _ZL16logFileLineIndex
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1989   .bss._ZL10fileLogger:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1993   .bss._ZL10fileLogger:00000000 _ZL10fileLogger
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1996   .bss._ZL13blinkingStack:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:2000   .bss._ZL13blinkingStack:00000000 _ZL13blinkingStack
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:317    .text._ZL13showFuelInfo2ff:00000258 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:575    .text._ZL14blinkingThreadPv:000000d8 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:865    .text._ZL12printSensorsP7Loggingb:00000354 $t
+C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s:1440   .text._Z22updateTunerStudioStateP25TunerStudioOutputChannels:00000344 $t
+
+UNDEFINED SYMBOLS
+_Z10hwPortname11brain_pin_e
+appendPrintf
+__aeabi_f2d
+engineConfiguration
+_Z16getBaseTableFuelP22engine_configuration_sif
+_Z6sdMathP22engine_configuration_sffff
+scheduleMsg
+_Z21getEngine_load_mode_e18engine_load_mode_e
+_ZN9OutputPin13getLogicValueEv
+_Z12boolToStringb
+_Z18getinjectionOffseti
+engine
+_Z15getCrankingFuelv
+_ZN13RpmCalculator9isRunningEv
+_Z14getRunningFuelfi
+enginePins
+_ZN13RpmCalculator3rpmEv
+_Z14getEngineLoadTv
+rlist
+_Z16updateHD44780lcdP6Engine
+chThdSleep
+print
+printMsg
+appendFloat
+append
+debugFloat
+getTimeNowNt
+lastDecodingErrorTime
+_Z21isTriggerDecoderErrorv
+_ZN9OutputPin8setValueEi
+_Z14isConsoleReadyv
+_Z27getNeedToWriteConfigurationv
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 44
+
+
+_Z21isIgnitionTimingErrorv
+currentTimeMillis
+_Z12hasMafSensorv
+_Z13hasBaroSensorv
+_Z8getVBattv
+_Z6getTPSv
+_Z21getCoolantTemperaturev
+_Z23getIntakeAirTemperaturev
+_ZN16AccelEnrichmemnt16getTpsEnrichmentEv
+_Z9getFuelMsi
+_Z15getVehicleSpeedv
+_Z6getAfrv
+_Z15getBaroPressurev
+_Z6getMapv
+_Z6getMafv
+_Z10getRealMafv
+debugInt
+main_loop_started
+resetLogging
+isSdCardAlive
+appendToLog
+printPending
+hasFirmwareErrorFlag
+_Z13pokeAdcInputsv
+getTimeNowSeconds
+_Z20getCrankEventCounterv
+_Z11getBaseFueli
+_Z9printWaveP7Logging
+scheduleLogging
+errorMessageBuffer
+getRusEfiVersion
+_Z20getConfigurationName13engine_type_e
+boardConfiguration
+triggerCentral
+veMap
+firmwareError
+_Z14getTPS10bitAdcv
+_ZN13RpmCalculator18getRpmAccelerationEv
+_ZN16AccelEnrichmemnt16getMapEnrichmentEv
+_ZN16AccelEnrichmemnt8getDeltaEv
+_Z16getPedalPositionv
+_Z20getInjectorDutyCyclei
+hasErrorCodes
+_Z11getEgtValuei
+_Z25isValidCoolantTemperaturef
+_Z27isValidIntakeAirTemperaturef
+_Z10getTChargeifff
+_Z13interpolate3dfPfifS_iPS_
+_engine
+tsOutputChannels
+addConsoleActionI
+addConsoleActionFF
+addConsoleAction
+chThdCreateStatic
+_Z17outputPinRegisterPKcP9OutputPinP12GPIO_TypeDefm
+_ZN7LoggingC1EPKcPci
+_ZN18LoggingWithStorageC1EPKc
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAh1wSY.s 			page 45
+
+
+_ZN9OutputPinC1Ev

@@ -1,0 +1,852 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciPoy9M.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"eficonsole.cpp"
+  16              		.section	.text._ZL10sayNothingv,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	_ZL10sayNothingv, %function
+  22              	_ZL10sayNothingv:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25              		@ link register save eliminated.
+  26 0000 7047     		bx	lr
+  27              		.size	_ZL10sayNothingv, .-_ZL10sayNothingv
+  28 0002 00BFAFF3 		.section	.text._ZL7myfatalv,"ax",%progbits
+  28      0080AFF3 
+  28      0080AFF3 
+  28      0080
+  29              		.align	2
+  30              		.p2align 4,,15
+  31              		.thumb
+  32              		.thumb_func
+  33              		.type	_ZL7myfatalv, %function
+  34              	_ZL7myfatalv:
+  35              		@ args = 0, pretend = 0, frame = 0
+  36              		@ frame_needed = 0, uses_anonymous_args = 0
+  37              		@ link register save eliminated.
+  38 0000 40F20000 		movw	r0, #:lower16:.LC0
+  39 0004 40F20001 		movw	r1, #:lower16:.LC1
+  40 0008 C0F20000 		movt	r0, #:upper16:.LC0
+  41 000c C0F20001 		movt	r1, #:upper16:.LC1
+  42 0010 2F22     		movs	r2, #47
+  43 0012 FFF7FEBF 		b	chDbgPanic3
+  44              		.size	_ZL7myfatalv, .-_ZL7myfatalv
+  45 0016 00BFAFF3 		.section	.text._ZL11cmd_threadsv,"ax",%progbits
+  45      0080AFF3 
+  45      0080
+  46              		.align	2
+  47              		.p2align 4,,15
+  48              		.thumb
+  49              		.thumb_func
+  50              		.type	_ZL11cmd_threadsv, %function
+  51              	_ZL11cmd_threadsv:
+  52              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciPoy9M.s 			page 2
+
+
+  53              		@ frame_needed = 0, uses_anonymous_args = 0
+  54 0000 70B5     		push	{r4, r5, r6, lr}
+  55 0002 40F20000 		movw	r0, #:lower16:.LANCHOR0
+  56 0006 40F20001 		movw	r1, #:lower16:.LC2
+  57 000a 86B0     		sub	sp, sp, #24
+  58 000c C0F20000 		movt	r0, #:upper16:.LANCHOR0
+  59 0010 C0F20001 		movt	r1, #:upper16:.LC2
+  60 0014 FFF7FEFF 		bl	scheduleMsg
+  61 0018 FFF7FEFF 		bl	chRegFirstThread
+  62 001c 0446     		mov	r4, r0
+  63 001e 10B3     		cbz	r0, .L3
+  64 0020 40F20005 		movw	r5, #:lower16:.LANCHOR1
+  65 0024 C0F20005 		movt	r5, #:upper16:.LANCHOR1
+  66 0028 0026     		movs	r6, #0
+  67              	.L6:
+  68 002a A368     		ldr	r3, [r4, #8]
+  69 002c 626A     		ldr	r2, [r4, #36]
+  70 002e 8DE84800 		stmia	sp, {r3, r6}
+  71 0032 94F82030 		ldrb	r3, [r4, #32]	@ zero_extendqisi2
+  72 0036 0392     		str	r2, [sp, #12]
+  73 0038 55F82330 		ldr	r3, [r5, r3, lsl #2]
+  74 003c 0293     		str	r3, [sp, #8]
+  75 003e A369     		ldr	r3, [r4, #24]
+  76 0040 40F20000 		movw	r0, #:lower16:.LANCHOR0
+  77 0044 40F20001 		movw	r1, #:lower16:.LC3
+  78 0048 2246     		mov	r2, r4
+  79 004a 0493     		str	r3, [sp, #16]
+  80 004c C0F20000 		movt	r0, #:upper16:.LANCHOR0
+  81 0050 C0F20001 		movt	r1, #:upper16:.LC3
+  82 0054 0023     		movs	r3, #0
+  83 0056 FFF7FEFF 		bl	scheduleMsg
+  84 005a 2046     		mov	r0, r4
+  85 005c FFF7FEFF 		bl	chRegNextThread
+  86 0060 0446     		mov	r4, r0
+  87 0062 0028     		cmp	r0, #0
+  88 0064 E1D1     		bne	.L6
+  89              	.L3:
+  90 0066 06B0     		add	sp, sp, #24
+  91              		@ sp needed
+  92 0068 70BD     		pop	{r4, r5, r6, pc}
+  93              		.size	_ZL11cmd_threadsv, .-_ZL11cmd_threadsv
+  94              		.section	.text._ZL7myerrorv,"ax",%progbits
+  95              		.align	2
+  96              		.p2align 4,,15
+  97              		.thumb
+  98              		.thumb_func
+  99              		.type	_ZL7myerrorv, %function
+ 100              	_ZL7myerrorv:
+ 101              		@ args = 0, pretend = 0, frame = 0
+ 102              		@ frame_needed = 0, uses_anonymous_args = 0
+ 103 0000 08B5     		push	{r3, lr}
+ 104 0002 FFF7FEFF 		bl	getRusEfiVersion
+ 105 0006 0146     		mov	r1, r0
+ 106 0008 40F20000 		movw	r0, #:lower16:.LC4
+ 107 000c C0F20000 		movt	r0, #:upper16:.LC4
+ 108 0010 BDE80840 		pop	{r3, lr}
+ 109 0014 FFF7FEBF 		b	firmwareError
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciPoy9M.s 			page 3
+
+
+ 110              		.size	_ZL7myerrorv, .-_ZL7myerrorv
+ 111 0018 AFF30080 		.section	.text._ZL8sayHellov,"ax",%progbits
+ 111      AFF30080 
+ 112              		.align	2
+ 113              		.p2align 4,,15
+ 114              		.thumb
+ 115              		.thumb_func
+ 116              		.type	_ZL8sayHellov, %function
+ 117              	_ZL8sayHellov:
+ 118              		@ args = 0, pretend = 0, frame = 0
+ 119              		@ frame_needed = 0, uses_anonymous_args = 0
+ 120 0000 38B5     		push	{r3, r4, r5, lr}
+ 121 0002 40F20004 		movw	r4, #:lower16:.LANCHOR0
+ 122 0006 C0F20004 		movt	r4, #:upper16:.LANCHOR0
+ 123 000a 40F20001 		movw	r1, #:lower16:.LC5
+ 124 000e 2046     		mov	r0, r4
+ 125 0010 C0F20001 		movt	r1, #:upper16:.LC5
+ 126 0014 FFF7FEFF 		bl	scheduleMsg
+ 127 0018 FFF7FEFF 		bl	getRusEfiVersion
+ 128 001c 40F20001 		movw	r1, #:lower16:.LC6
+ 129 0020 40F20003 		movw	r3, #:lower16:.LC7
+ 130 0024 C0F20003 		movt	r3, #:upper16:.LC7
+ 131 0028 0246     		mov	r2, r0
+ 132 002a C0F20001 		movt	r1, #:upper16:.LC6
+ 133 002e 2046     		mov	r0, r4
+ 134 0030 FFF7FEFF 		bl	scheduleMsg
+ 135 0034 40F20001 		movw	r1, #:lower16:.LC8
+ 136 0038 40F20002 		movw	r2, #:lower16:.LC9
+ 137 003c 2046     		mov	r0, r4
+ 138 003e C0F20002 		movt	r2, #:upper16:.LC9
+ 139 0042 C0F20001 		movt	r1, #:upper16:.LC8
+ 140 0046 FFF7FEFF 		bl	scheduleMsg
+ 141 004a 40F20001 		movw	r1, #:lower16:.LC10
+ 142 004e 2046     		mov	r0, r4
+ 143 0050 C0F20001 		movt	r1, #:upper16:.LC10
+ 144 0054 FFF7FEFF 		bl	scheduleMsg
+ 145 0058 40F20001 		movw	r1, #:lower16:.LC11
+ 146 005c 40F20002 		movw	r2, #:lower16:.LC12
+ 147 0060 2046     		mov	r0, r4
+ 148 0062 C0F20001 		movt	r1, #:upper16:.LC11
+ 149 0066 C0F20002 		movt	r2, #:upper16:.LC12
+ 150 006a FFF7FEFF 		bl	scheduleMsg
+ 151 006e 40F20001 		movw	r1, #:lower16:.LC13
+ 152 0072 2046     		mov	r0, r4
+ 153 0074 C0F20001 		movt	r1, #:upper16:.LC13
+ 154 0078 4FF47A72 		mov	r2, #1000
+ 155 007c FFF7FEFF 		bl	scheduleMsg
+ 156 0080 40F20001 		movw	r1, #:lower16:.LC14
+ 157 0084 2046     		mov	r0, r4
+ 158 0086 C0F20001 		movt	r1, #:upper16:.LC14
+ 159 008a 4FF4E132 		mov	r2, #115200
+ 160 008e FFF7FEFF 		bl	scheduleMsg
+ 161 0092 40F20001 		movw	r1, #:lower16:.LC15
+ 162 0096 2046     		mov	r0, r4
+ 163 0098 C0F20001 		movt	r1, #:upper16:.LC15
+ 164 009c 0222     		movs	r2, #2
+ 165 009e FFF7FEFF 		bl	scheduleMsg
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciPoy9M.s 			page 4
+
+
+ 166 00a2 40F20001 		movw	r1, #:lower16:.LC16
+ 167 00a6 46F64072 		movw	r2, #28480
+ 168 00aa 2046     		mov	r0, r4
+ 169 00ac C0F20001 		movt	r1, #:upper16:.LC16
+ 170 00b0 C0F24012 		movt	r2, 320
+ 171 00b4 4FF43D45 		mov	r5, #48384
+ 172 00b8 FFF7FEFF 		bl	scheduleMsg
+ 173 00bc C0F20155 		movt	r5, 1281
+ 174 00c0 40F20001 		movw	r1, #:lower16:.LC17
+ 175 00c4 2046     		mov	r0, r4
+ 176 00c6 2A46     		mov	r2, r5
+ 177 00c8 C0F20001 		movt	r1, #:upper16:.LC17
+ 178 00cc FFF7FEFF 		bl	scheduleMsg
+ 179 00d0 40F20001 		movw	r1, #:lower16:.LC18
+ 180 00d4 4FF4F442 		mov	r2, #31232
+ 181 00d8 2046     		mov	r0, r4
+ 182 00da C0F20001 		movt	r1, #:upper16:.LC18
+ 183 00de C0F60322 		movt	r2, 2563
+ 184 00e2 FFF7FEFF 		bl	scheduleMsg
+ 185 00e6 40F20001 		movw	r1, #:lower16:.LC19
+ 186 00ea 4DF68062 		movw	r2, #56960
+ 187 00ee 2046     		mov	r0, r4
+ 188 00f0 C0F20001 		movt	r1, #:upper16:.LC19
+ 189 00f4 C0F28022 		movt	r2, 640
+ 190 00f8 FFF7FEFF 		bl	scheduleMsg
+ 191 00fc 40F20001 		movw	r1, #:lower16:.LC20
+ 192 0100 2046     		mov	r0, r4
+ 193 0102 2A46     		mov	r2, r5
+ 194 0104 C0F20001 		movt	r1, #:upper16:.LC20
+ 195 0108 FFF7FEFF 		bl	scheduleMsg
+ 196 010c 40F20001 		movw	r1, #:lower16:.LC21
+ 197 0110 2046     		mov	r0, r4
+ 198 0112 C0F20001 		movt	r1, #:upper16:.LC21
+ 199 0116 4FF48062 		mov	r2, #1024
+ 200 011a FFF7FEFF 		bl	scheduleMsg
+ 201 011e 40F20001 		movw	r1, #:lower16:.LC22
+ 202 0122 2046     		mov	r0, r4
+ 203 0124 C0F20001 		movt	r1, #:upper16:.LC22
+ 204 0128 0122     		movs	r2, #1
+ 205 012a FFF7FEFF 		bl	scheduleMsg
+ 206 012e 40F20001 		movw	r1, #:lower16:.LC23
+ 207 0132 2046     		mov	r0, r4
+ 208 0134 C0F20001 		movt	r1, #:upper16:.LC23
+ 209 0138 0122     		movs	r2, #1
+ 210 013a FFF7FEFF 		bl	scheduleMsg
+ 211 013e 40F20001 		movw	r1, #:lower16:.LC24
+ 212 0142 2046     		mov	r0, r4
+ 213 0144 C0F20001 		movt	r1, #:upper16:.LC24
+ 214 0148 0122     		movs	r2, #1
+ 215 014a FFF7FEFF 		bl	scheduleMsg
+ 216 014e 40F20001 		movw	r1, #:lower16:.LC25
+ 217 0152 2046     		mov	r0, r4
+ 218 0154 C0F20001 		movt	r1, #:upper16:.LC25
+ 219 0158 0122     		movs	r2, #1
+ 220 015a FFF7FEFF 		bl	scheduleMsg
+ 221 015e 40F20001 		movw	r1, #:lower16:.LC26
+ 222 0162 2046     		mov	r0, r4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciPoy9M.s 			page 5
+
+
+ 223 0164 C0F20001 		movt	r1, #:upper16:.LC26
+ 224 0168 0122     		movs	r2, #1
+ 225 016a FFF7FEFF 		bl	scheduleMsg
+ 226 016e 40F20001 		movw	r1, #:lower16:.LC27
+ 227 0172 2046     		mov	r0, r4
+ 228 0174 C0F20001 		movt	r1, #:upper16:.LC27
+ 229 0178 0122     		movs	r2, #1
+ 230 017a FFF7FEFF 		bl	scheduleMsg
+ 231 017e 40F20001 		movw	r1, #:lower16:.LC28
+ 232 0182 2046     		mov	r0, r4
+ 233 0184 C0F20001 		movt	r1, #:upper16:.LC28
+ 234 0188 0022     		movs	r2, #0
+ 235 018a FFF7FEFF 		bl	scheduleMsg
+ 236 018e 40F20001 		movw	r1, #:lower16:.LC29
+ 237 0192 2046     		mov	r0, r4
+ 238 0194 C0F20001 		movt	r1, #:upper16:.LC29
+ 239 0198 0022     		movs	r2, #0
+ 240 019a FFF7FEFF 		bl	scheduleMsg
+ 241 019e 40F20001 		movw	r1, #:lower16:.LC30
+ 242 01a2 2046     		mov	r0, r4
+ 243 01a4 C0F20001 		movt	r1, #:upper16:.LC30
+ 244 01a8 0122     		movs	r2, #1
+ 245 01aa FFF7FEFF 		bl	scheduleMsg
+ 246 01ae 40F20001 		movw	r1, #:lower16:.LC31
+ 247 01b2 2046     		mov	r0, r4
+ 248 01b4 C0F20001 		movt	r1, #:upper16:.LC31
+ 249 01b8 0122     		movs	r2, #1
+ 250 01ba FFF7FEFF 		bl	scheduleMsg
+ 251 01be 0520     		movs	r0, #5
+ 252 01c0 BDE83840 		pop	{r3, r4, r5, lr}
+ 253 01c4 FFF7FEBF 		b	chThdSleep
+ 254              		.size	_ZL8sayHellov, .-_ZL8sayHellov
+ 255 01c8 AFF30080 		.section	.text._Z6fatal3PcS_i,"ax",%progbits
+ 255      AFF30080 
+ 256              		.align	2
+ 257              		.p2align 4,,15
+ 258              		.global	_Z6fatal3PcS_i
+ 259              		.thumb
+ 260              		.thumb_func
+ 261              		.type	_Z6fatal3PcS_i, %function
+ 262              	_Z6fatal3PcS_i:
+ 263              		@ args = 0, pretend = 0, frame = 0
+ 264              		@ frame_needed = 0, uses_anonymous_args = 0
+ 265 0000 70B5     		push	{r4, r5, r6, lr}
+ 266 0002 40F20004 		movw	r4, #:lower16:.LANCHOR2
+ 267 0006 C0F20004 		movt	r4, #:upper16:.LANCHOR2
+ 268 000a 0E46     		mov	r6, r1
+ 269 000c 1546     		mov	r5, r2
+ 270 000e 0146     		mov	r1, r0
+ 271 0010 C722     		movs	r2, #199
+ 272 0012 2046     		mov	r0, r4
+ 273 0014 FFF7FEFF 		bl	strncpy
+ 274 0018 0023     		movs	r3, #0
+ 275 001a 3146     		mov	r1, r6
+ 276 001c 2A46     		mov	r2, r5
+ 277 001e 2046     		mov	r0, r4
+ 278 0020 84F8C730 		strb	r3, [r4, #199]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciPoy9M.s 			page 6
+
+
+ 279 0024 BDE87040 		pop	{r4, r5, r6, lr}
+ 280 0028 FFF7FEBF 		b	chDbgPanic3
+ 281              		.size	_Z6fatal3PcS_i, .-_Z6fatal3PcS_i
+ 282 002c AFF30080 		.section	.text.print,"ax",%progbits
+ 283              		.align	2
+ 284              		.p2align 4,,15
+ 285              		.global	print
+ 286              		.thumb
+ 287              		.thumb_func
+ 288              		.type	print, %function
+ 289              	print:
+ 290              		@ args = 4, pretend = 16, frame = 8
+ 291              		@ frame_needed = 0, uses_anonymous_args = 1
+ 292 0000 0FB4     		push	{r0, r1, r2, r3}
+ 293 0002 00B5     		push	{lr}
+ 294 0004 83B0     		sub	sp, sp, #12
+ 295 0006 FFF7FEFF 		bl	_Z14isConsoleReadyv
+ 296 000a 20B9     		cbnz	r0, .L20
+ 297 000c 03B0     		add	sp, sp, #12
+ 298              		@ sp needed
+ 299 000e 5DF804EB 		ldr	lr, [sp], #4
+ 300 0012 04B0     		add	sp, sp, #16
+ 301 0014 7047     		bx	lr
+ 302              	.L20:
+ 303 0016 05AB     		add	r3, sp, #20
+ 304 0018 0193     		str	r3, [sp, #4]
+ 305 001a FFF7FEFF 		bl	_Z17getConsoleChannelv
+ 306 001e 0499     		ldr	r1, [sp, #16]
+ 307 0020 019A     		ldr	r2, [sp, #4]
+ 308 0022 FFF7FEFF 		bl	chvprintf
+ 309 0026 03B0     		add	sp, sp, #12
+ 310              		@ sp needed
+ 311 0028 5DF804EB 		ldr	lr, [sp], #4
+ 312 002c 04B0     		add	sp, sp, #16
+ 313 002e 7047     		bx	lr
+ 314              		.size	print, .-print
+ 315              		.section	.text.initializeConsole,"ax",%progbits
+ 316              		.align	2
+ 317              		.p2align 4,,15
+ 318              		.global	initializeConsole
+ 319              		.thumb
+ 320              		.thumb_func
+ 321              		.type	initializeConsole, %function
+ 322              	initializeConsole:
+ 323              		@ args = 0, pretend = 0, frame = 0
+ 324              		@ frame_needed = 0, uses_anonymous_args = 0
+ 325 0000 10B5     		push	{r4, lr}
+ 326 0002 0446     		mov	r4, r0
+ 327 0004 FFF7FEFF 		bl	initIntermediateLoggingBuffer
+ 328 0008 2046     		mov	r0, r4
+ 329 000a FFF7FEFF 		bl	initConsoleLogic
+ 330 000e 40F20001 		movw	r1, #:lower16:handleConsoleLine
+ 331 0012 2046     		mov	r0, r4
+ 332 0014 C0F20001 		movt	r1, #:upper16:handleConsoleLine
+ 333 0018 FFF7FEFF 		bl	_Z12startConsoleP7LoggingPFvPcE
+ 334 001c FFF7FEFF 		bl	_ZL8sayHellov
+ 335 0020 40F20000 		movw	r0, #:lower16:.LC32
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciPoy9M.s 			page 7
+
+
+ 336 0024 40F20001 		movw	r1, #:lower16:_ZL10sayNothingv
+ 337 0028 C0F20000 		movt	r0, #:upper16:.LC32
+ 338 002c C0F20001 		movt	r1, #:upper16:_ZL10sayNothingv
+ 339 0030 FFF7FEFF 		bl	addConsoleAction
+ 340 0034 40F20000 		movw	r0, #:lower16:.LC33
+ 341 0038 40F20001 		movw	r1, #:lower16:_ZL8sayHellov
+ 342 003c C0F20000 		movt	r0, #:upper16:.LC33
+ 343 0040 C0F20001 		movt	r1, #:upper16:_ZL8sayHellov
+ 344 0044 FFF7FEFF 		bl	addConsoleAction
+ 345 0048 40F20000 		movw	r0, #:lower16:.LC34
+ 346 004c 40F20001 		movw	r1, #:lower16:_ZL7myfatalv
+ 347 0050 C0F20000 		movt	r0, #:upper16:.LC34
+ 348 0054 C0F20001 		movt	r1, #:upper16:_ZL7myfatalv
+ 349 0058 FFF7FEFF 		bl	addConsoleAction
+ 350 005c 40F20000 		movw	r0, #:lower16:.LC35
+ 351 0060 40F20001 		movw	r1, #:lower16:_ZL7myerrorv
+ 352 0064 C0F20000 		movt	r0, #:upper16:.LC35
+ 353 0068 C0F20001 		movt	r1, #:upper16:_ZL7myerrorv
+ 354 006c FFF7FEFF 		bl	addConsoleAction
+ 355 0070 40F20000 		movw	r0, #:lower16:.LC36
+ 356 0074 40F20001 		movw	r1, #:lower16:_ZL11cmd_threadsv
+ 357 0078 C0F20000 		movt	r0, #:upper16:.LC36
+ 358 007c C0F20001 		movt	r1, #:upper16:_ZL11cmd_threadsv
+ 359 0080 BDE81040 		pop	{r4, lr}
+ 360 0084 FFF7FEBF 		b	addConsoleAction
+ 361              		.size	initializeConsole, .-initializeConsole
+ 362 0088 AFF30080 		.section	.text.startup._GLOBAL__sub_I__Z6fatal3PcS_i,"ax",%progbits
+ 362      AFF30080 
+ 363              		.align	2
+ 364              		.p2align 4,,15
+ 365              		.thumb
+ 366              		.thumb_func
+ 367              		.type	_GLOBAL__sub_I__Z6fatal3PcS_i, %function
+ 368              	_GLOBAL__sub_I__Z6fatal3PcS_i:
+ 369              		@ args = 0, pretend = 0, frame = 0
+ 370              		@ frame_needed = 0, uses_anonymous_args = 0
+ 371              		@ link register save eliminated.
+ 372 0000 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 373 0004 40F20001 		movw	r1, #:lower16:.LC37
+ 374 0008 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 375 000c C0F20001 		movt	r1, #:upper16:.LC37
+ 376 0010 FFF7FEBF 		b	_ZN18LoggingWithStorageC1EPKc
+ 377              		.size	_GLOBAL__sub_I__Z6fatal3PcS_i, .-_GLOBAL__sub_I__Z6fatal3PcS_i
+ 378 0014 AFF30080 		.section	.init_array,"aw",%init_array
+ 378      AFF30080 
+ 378      AFF30080 
+ 379              		.align	2
+ 380 0000 00000000 		.word	_GLOBAL__sub_I__Z6fatal3PcS_i(target1)
+ 381              		.section	.rodata._ZZL11cmd_threadsvE6states,"a",%progbits
+ 382              		.align	2
+ 383              		.set	.LANCHOR1,. + 0
+ 384              		.type	_ZZL11cmd_threadsvE6states, %object
+ 385              		.size	_ZZL11cmd_threadsvE6states, 60
+ 386              	_ZZL11cmd_threadsvE6states:
+ 387 0000 4C030000 		.word	.LC38
+ 388 0004 54030000 		.word	.LC39
+ 389 0008 5C030000 		.word	.LC40
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciPoy9M.s 			page 8
+
+
+ 390 000c 68030000 		.word	.LC41
+ 391 0010 70030000 		.word	.LC42
+ 392 0014 78030000 		.word	.LC43
+ 393 0018 80030000 		.word	.LC44
+ 394 001c 8C030000 		.word	.LC45
+ 395 0020 94030000 		.word	.LC46
+ 396 0024 9C030000 		.word	.LC47
+ 397 0028 A8030000 		.word	.LC48
+ 398 002c B0030000 		.word	.LC49
+ 399 0030 B8030000 		.word	.LC50
+ 400 0034 C0030000 		.word	.LC51
+ 401 0038 C8030000 		.word	.LC52
+ 402              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 403              		.align	2
+ 404              	.LC0:
+ 405 0000 226D7920 		.ascii	"\"my fatal\"()\000"
+ 405      66617461 
+ 405      6C222829 
+ 405      00
+ 406 000d 000000   		.space	3
+ 407              	.LC1:
+ 408 0010 2E2F636F 		.ascii	"./console/eficonsole.cpp\000"
+ 408      6E736F6C 
+ 408      652F6566 
+ 408      69636F6E 
+ 408      736F6C65 
+ 409 0029 000000   		.space	3
+ 410              	.LC2:
+ 411 002c 20202020 		.ascii	"    addr    stack prio refs     state time\000"
+ 411      61646472 
+ 411      20202020 
+ 411      73746163 
+ 411      6B207072 
+ 412 0057 00       		.space	1
+ 413              	.LC3:
+ 414 0058 252E386C 		.ascii	"%.8lx [%.8lx] %4lu %4lu %9s %lu %s\000"
+ 414      78205B25 
+ 414      2E386C78 
+ 414      5D202534 
+ 414      6C752025 
+ 415 007b 00       		.space	1
+ 416              	.LC4:
+ 417 007c 6669726D 		.ascii	"firmwareError: %d\000"
+ 417      77617265 
+ 417      4572726F 
+ 417      723A2025 
+ 417      6400
+ 418 008e 0000     		.space	2
+ 419              	.LC5:
+ 420 0090 2A2A2A20 		.ascii	"*** rusEFI (c) Andrey Belomutskiy 2012-2015. All ri"
+ 420      72757345 
+ 420      46492028 
+ 420      63292041 
+ 420      6E647265 
+ 421 00c3 67687473 		.ascii	"ghts reserved.\000"
+ 421      20726573 
+ 421      65727665 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciPoy9M.s 			page 9
+
+
+ 421      642E00
+ 422 00d2 0000     		.space	2
+ 423              	.LC6:
+ 424 00d4 72757345 		.ascii	"rusEFI v%d@%s\000"
+ 424      46492076 
+ 424      25644025 
+ 424      7300
+ 425 00e2 0000     		.space	2
+ 426              	.LC7:
+ 427 00e4 38323230 		.ascii	"8220\000"
+ 427      00
+ 428 00e9 000000   		.space	3
+ 429              	.LC8:
+ 430 00ec 2A2A2A20 		.ascii	"*** Chibios Kernel:       %s\000"
+ 430      43686962 
+ 430      696F7320 
+ 430      4B65726E 
+ 430      656C3A20 
+ 431 0109 000000   		.space	3
+ 432              	.LC9:
+ 433 010c 322E362E 		.ascii	"2.6.8\000"
+ 433      3800
+ 434 0112 0000     		.space	2
+ 435              	.LC10:
+ 436 0114 2A2A2A20 		.ascii	"*** Compiled:     Jun 22 2015 - 20:43:46\000"
+ 436      436F6D70 
+ 436      696C6564 
+ 436      3A202020 
+ 436      20204A75 
+ 437 013d 000000   		.space	3
+ 438              	.LC11:
+ 439 0140 434F4D50 		.ascii	"COMPILER=%s\000"
+ 439      494C4552 
+ 439      3D257300 
+ 440              	.LC12:
+ 441 014c 342E382E 		.ascii	"4.8.1\000"
+ 441      3100
+ 442 0152 0000     		.space	2
+ 443              	.LC13:
+ 444 0154 43485F46 		.ascii	"CH_FREQUENCY=%d\000"
+ 444      52455155 
+ 444      454E4359 
+ 444      3D256400 
+ 445              	.LC14:
+ 446 0164 53455249 		.ascii	"SERIAL_SPEED=%d\000"
+ 446      414C5F53 
+ 446      50454544 
+ 446      3D256400 
+ 447              	.LC15:
+ 448 0174 434F5254 		.ascii	"CORTEX_MAX_KERNEL_PRIORITY=%d\000"
+ 448      45585F4D 
+ 448      41585F4B 
+ 448      45524E45 
+ 448      4C5F5052 
+ 449 0192 0000     		.space	2
+ 450              	.LC16:
+ 451 0194 53544D33 		.ascii	"STM32_ADCCLK=%d\000"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciPoy9M.s 			page 10
+
+
+ 451      325F4144 
+ 451      43434C4B 
+ 451      3D256400 
+ 452              	.LC17:
+ 453 01a4 53544D33 		.ascii	"STM32_TIMCLK1=%d\000"
+ 453      325F5449 
+ 453      4D434C4B 
+ 453      313D2564 
+ 453      00
+ 454 01b5 000000   		.space	3
+ 455              	.LC18:
+ 456 01b8 53544D33 		.ascii	"STM32_TIMCLK2=%d\000"
+ 456      325F5449 
+ 456      4D434C4B 
+ 456      323D2564 
+ 456      00
+ 457 01c9 000000   		.space	3
+ 458              	.LC19:
+ 459 01cc 53544D33 		.ascii	"STM32_PCLK1=%d\000"
+ 459      325F5043 
+ 459      4C4B313D 
+ 459      256400
+ 460 01db 00       		.space	1
+ 461              	.LC20:
+ 462 01dc 53544D33 		.ascii	"STM32_PCLK2=%d\000"
+ 462      325F5043 
+ 462      4C4B323D 
+ 462      256400
+ 463 01eb 00       		.space	1
+ 464              	.LC21:
+ 465 01ec 504F5254 		.ascii	"PORT_IDLE_THREAD_STACK_SIZE=%d\000"
+ 465      5F49444C 
+ 465      455F5448 
+ 465      52454144 
+ 465      5F535441 
+ 466 020b 00       		.space	1
+ 467              	.LC22:
+ 468 020c 43485F44 		.ascii	"CH_DBG_ENABLE_ASSERTS=%d\000"
+ 468      42475F45 
+ 468      4E41424C 
+ 468      455F4153 
+ 468      53455254 
+ 469 0225 000000   		.space	3
+ 470              	.LC23:
+ 471 0228 43485F44 		.ascii	"CH_DBG_ENABLED=%d\000"
+ 471      42475F45 
+ 471      4E41424C 
+ 471      45443D25 
+ 471      6400
+ 472 023a 0000     		.space	2
+ 473              	.LC24:
+ 474 023c 43485F44 		.ascii	"CH_DBG_SYSTEM_STATE_CHECK=%d\000"
+ 474      42475F53 
+ 474      59535445 
+ 474      4D5F5354 
+ 474      4154455F 
+ 475 0259 000000   		.space	3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciPoy9M.s 			page 11
+
+
+ 476              	.LC25:
+ 477 025c 43485F44 		.ascii	"CH_DBG_ENABLE_STACK_CHECK=%d\000"
+ 477      42475F45 
+ 477      4E41424C 
+ 477      455F5354 
+ 477      41434B5F 
+ 478 0279 000000   		.space	3
+ 479              	.LC26:
+ 480 027c 4546495F 		.ascii	"EFI_WAVE_ANALYZER=%d\000"
+ 480      57415645 
+ 480      5F414E41 
+ 480      4C595A45 
+ 480      523D2564 
+ 481 0291 000000   		.space	3
+ 482              	.LC27:
+ 483 0294 4546495F 		.ascii	"EFI_TUNER_STUDIO=%d\000"
+ 483      54554E45 
+ 483      525F5354 
+ 483      5544494F 
+ 483      3D256400 
+ 484              	.LC28:
+ 485 02a8 4546495F 		.ascii	"EFI_SIGNAL_EXECUTOR_SLEEP=%d\000"
+ 485      5349474E 
+ 485      414C5F45 
+ 485      58454355 
+ 485      544F525F 
+ 486 02c5 000000   		.space	3
+ 487              	.LC29:
+ 488 02c8 4546495F 		.ascii	"EFI_SIGNAL_EXECUTOR_HW_TIMER=%d\000"
+ 488      5349474E 
+ 488      414C5F45 
+ 488      58454355 
+ 488      544F525F 
+ 489              	.LC30:
+ 490 02e8 4546495F 		.ascii	"EFI_SHAFT_POSITION_INPUT=%d\000"
+ 490      53484146 
+ 490      545F504F 
+ 490      53495449 
+ 490      4F4E5F49 
+ 491              	.LC31:
+ 492 0304 4546495F 		.ascii	"EFI_INTERNAL_ADC=%d\000"
+ 492      494E5445 
+ 492      524E414C 
+ 492      5F414443 
+ 492      3D256400 
+ 493              	.LC32:
+ 494 0318 74657374 		.ascii	"test\000"
+ 494      00
+ 495 031d 000000   		.space	3
+ 496              	.LC33:
+ 497 0320 68656C6C 		.ascii	"hello\000"
+ 497      6F00
+ 498 0326 0000     		.space	2
+ 499              	.LC34:
+ 500 0328 66617461 		.ascii	"fatal\000"
+ 500      6C00
+ 501 032e 0000     		.space	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciPoy9M.s 			page 12
+
+
+ 502              	.LC35:
+ 503 0330 6572726F 		.ascii	"error\000"
+ 503      7200
+ 504 0336 0000     		.space	2
+ 505              	.LC36:
+ 506 0338 74687265 		.ascii	"threadsinfo\000"
+ 506      61647369 
+ 506      6E666F00 
+ 507              	.LC37:
+ 508 0344 636F6E73 		.ascii	"console\000"
+ 508      6F6C6500 
+ 509              	.LC38:
+ 510 034c 52454144 		.ascii	"READY\000"
+ 510      5900
+ 511 0352 0000     		.space	2
+ 512              	.LC39:
+ 513 0354 43555252 		.ascii	"CURRENT\000"
+ 513      454E5400 
+ 514              	.LC40:
+ 515 035c 53555350 		.ascii	"SUSPENDED\000"
+ 515      454E4445 
+ 515      4400
+ 516 0366 0000     		.space	2
+ 517              	.LC41:
+ 518 0368 57545345 		.ascii	"WTSEM\000"
+ 518      4D00
+ 519 036e 0000     		.space	2
+ 520              	.LC42:
+ 521 0370 57544D54 		.ascii	"WTMTX\000"
+ 521      5800
+ 522 0376 0000     		.space	2
+ 523              	.LC43:
+ 524 0378 5754434F 		.ascii	"WTCOND\000"
+ 524      4E4400
+ 525 037f 00       		.space	1
+ 526              	.LC44:
+ 527 0380 534C4545 		.ascii	"SLEEPING\000"
+ 527      50494E47 
+ 527      00
+ 528 0389 000000   		.space	3
+ 529              	.LC45:
+ 530 038c 57544558 		.ascii	"WTEXIT\000"
+ 530      495400
+ 531 0393 00       		.space	1
+ 532              	.LC46:
+ 533 0394 57544F52 		.ascii	"WTOREVT\000"
+ 533      45565400 
+ 534              	.LC47:
+ 535 039c 5754414E 		.ascii	"WTANDEVT\000"
+ 535      44455654 
+ 535      00
+ 536 03a5 000000   		.space	3
+ 537              	.LC48:
+ 538 03a8 534E444D 		.ascii	"SNDMSGQ\000"
+ 538      53475100 
+ 539              	.LC49:
+ 540 03b0 534E444D 		.ascii	"SNDMSG\000"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciPoy9M.s 			page 13
+
+
+ 540      534700
+ 541 03b7 00       		.space	1
+ 542              	.LC50:
+ 543 03b8 57544D53 		.ascii	"WTMSG\000"
+ 543      4700
+ 544 03be 0000     		.space	2
+ 545              	.LC51:
+ 546 03c0 57545155 		.ascii	"WTQUEUE\000"
+ 546      45554500 
+ 547              	.LC52:
+ 548 03c8 46494E41 		.ascii	"FINAL\000"
+ 548      4C00
+ 549 03ce 0000     		.section	.bss._ZL6logger,"aw",%nobits
+ 550              		.align	2
+ 551              		.set	.LANCHOR0,. + 0
+ 552              		.type	_ZL6logger, %object
+ 553              		.size	_ZL6logger, 260
+ 554              	_ZL6logger:
+ 555 0000 00000000 		.space	260
+ 555      00000000 
+ 555      00000000 
+ 555      00000000 
+ 555      00000000 
+ 556              		.section	.bss._ZL17fatalErrorMessage,"aw",%nobits
+ 557              		.align	2
+ 558              		.set	.LANCHOR2,. + 0
+ 559              		.type	_ZL17fatalErrorMessage, %object
+ 560              		.size	_ZL17fatalErrorMessage, 200
+ 561              	_ZL17fatalErrorMessage:
+ 562 0000 00000000 		.space	200
+ 562      00000000 
+ 562      00000000 
+ 562      00000000 
+ 562      00000000 
+ 563              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciPoy9M.s 			page 14
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 eficonsole.cpp
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:17     .text._ZL10sayNothingv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:22     .text._ZL10sayNothingv:00000000 _ZL10sayNothingv
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:29     .text._ZL7myfatalv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:34     .text._ZL7myfatalv:00000000 _ZL7myfatalv
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:404    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:407    .rodata.str1.4:00000010 .LC1
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:46     .text._ZL11cmd_threadsv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:51     .text._ZL11cmd_threadsv:00000000 _ZL11cmd_threadsv
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:551    .bss._ZL6logger:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:410    .rodata.str1.4:0000002c .LC2
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:383    .rodata._ZZL11cmd_threadsvE6states:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:413    .rodata.str1.4:00000058 .LC3
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:95     .text._ZL7myerrorv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:100    .text._ZL7myerrorv:00000000 _ZL7myerrorv
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:416    .rodata.str1.4:0000007c .LC4
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:112    .text._ZL8sayHellov:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:117    .text._ZL8sayHellov:00000000 _ZL8sayHellov
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:419    .rodata.str1.4:00000090 .LC5
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:423    .rodata.str1.4:000000d4 .LC6
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:426    .rodata.str1.4:000000e4 .LC7
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:429    .rodata.str1.4:000000ec .LC8
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:432    .rodata.str1.4:0000010c .LC9
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:435    .rodata.str1.4:00000114 .LC10
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:438    .rodata.str1.4:00000140 .LC11
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:440    .rodata.str1.4:0000014c .LC12
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:443    .rodata.str1.4:00000154 .LC13
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:445    .rodata.str1.4:00000164 .LC14
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:447    .rodata.str1.4:00000174 .LC15
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:450    .rodata.str1.4:00000194 .LC16
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:452    .rodata.str1.4:000001a4 .LC17
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:455    .rodata.str1.4:000001b8 .LC18
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:458    .rodata.str1.4:000001cc .LC19
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:461    .rodata.str1.4:000001dc .LC20
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:464    .rodata.str1.4:000001ec .LC21
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:467    .rodata.str1.4:0000020c .LC22
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:470    .rodata.str1.4:00000228 .LC23
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:473    .rodata.str1.4:0000023c .LC24
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:476    .rodata.str1.4:0000025c .LC25
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:479    .rodata.str1.4:0000027c .LC26
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:482    .rodata.str1.4:00000294 .LC27
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:484    .rodata.str1.4:000002a8 .LC28
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:487    .rodata.str1.4:000002c8 .LC29
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:489    .rodata.str1.4:000002e8 .LC30
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:491    .rodata.str1.4:00000304 .LC31
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:256    .text._Z6fatal3PcS_i:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:262    .text._Z6fatal3PcS_i:00000000 _Z6fatal3PcS_i
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:558    .bss._ZL17fatalErrorMessage:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:283    .text.print:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:289    .text.print:00000000 print
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:316    .text.initializeConsole:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:322    .text.initializeConsole:00000000 initializeConsole
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:493    .rodata.str1.4:00000318 .LC32
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:496    .rodata.str1.4:00000320 .LC33
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:499    .rodata.str1.4:00000328 .LC34
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:502    .rodata.str1.4:00000330 .LC35
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cciPoy9M.s 			page 15
+
+
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:505    .rodata.str1.4:00000338 .LC36
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:363    .text.startup._GLOBAL__sub_I__Z6fatal3PcS_i:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:368    .text.startup._GLOBAL__sub_I__Z6fatal3PcS_i:00000000 _GLOBAL__sub_I__Z6fatal3PcS_i
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:507    .rodata.str1.4:00000344 .LC37
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:379    .init_array:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:382    .rodata._ZZL11cmd_threadsvE6states:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:386    .rodata._ZZL11cmd_threadsvE6states:00000000 _ZZL11cmd_threadsvE6states
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:403    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:550    .bss._ZL6logger:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:554    .bss._ZL6logger:00000000 _ZL6logger
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:557    .bss._ZL17fatalErrorMessage:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cciPoy9M.s:561    .bss._ZL17fatalErrorMessage:00000000 _ZL17fatalErrorMessage
+
+UNDEFINED SYMBOLS
+chDbgPanic3
+scheduleMsg
+chRegFirstThread
+chRegNextThread
+getRusEfiVersion
+firmwareError
+chThdSleep
+strncpy
+_Z14isConsoleReadyv
+_Z17getConsoleChannelv
+chvprintf
+initIntermediateLoggingBuffer
+initConsoleLogic
+handleConsoleLine
+_Z12startConsoleP7LoggingPFvPcE
+addConsoleAction
+_ZN18LoggingWithStorageC1EPKc

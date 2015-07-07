@@ -1,0 +1,425 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccck4r22.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"idle_controller.cpp"
+  16              		.section	.text._ZL11setNewValueP14IdleValveStateimPKcf.isra.0,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	_ZL11setNewValueP14IdleValveStateimPKcf.isra.0, %function
+  22              	_ZL11setNewValueP14IdleValveStateimPKcf.isra.0:
+  23              		@ args = 4, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  26 0002 0D46     		mov	r5, r1
+  27 0004 0021     		movs	r1, #0
+  28 0006 2DED028B 		fstmfdd	sp!, {d8}
+  29 000a 0446     		mov	r4, r0
+  30 000c C4F22011 		movt	r1, 16672
+  31 0010 10EE100A 		fmrs	r0, s0
+  32 0014 1746     		mov	r7, r2
+  33 0016 1E46     		mov	r6, r3
+  34 0018 FFF7FEFF 		bl	maxF
+  35 001c 0021     		movs	r1, #0
+  36 001e C4F2B421 		movt	r1, 17076
+  37 0022 FFF7FEFF 		bl	minF
+  38 0026 D4ED007A 		flds	s15, [r4]
+  39 002a 08EE100A 		fmsr	s16, r0
+  40 002e B4EE678A 		fcmps	s16, s15
+  41 0032 F1EE10FA 		fmstat
+  42 0036 09D0     		beq	.L2
+  43 0038 07EE907A 		fmsr	s15, r7	@ int
+  44 003c F8EEE77A 		fsitos	s15, s15
+  45 0040 0898     		ldr	r0, [sp, #32]
+  46 0042 17EE901A 		fmrs	r1, s15
+  47 0046 FFF7FEFF 		bl	_Z9idleDebugPKcf
+  48 004a 2E60     		str	r6, [r5]
+  49              	.L2:
+  50 004c B0EE480A 		fcpys	s0, s16
+  51 0050 84ED008A 		fsts	s16, [r4]
+  52 0054 BDEC028B 		fldmfdd	sp!, {d8}
+  53 0058 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+  54              		.size	_ZL11setNewValueP14IdleValveStateimPKcf.isra.0, .-_ZL11setNewValueP14IdleValveStateimPKcf.is
+  55 005a 00BFAFF3 		.section	.text._ZL11changeValueP14IdleValveStateiiPKcf,"ax",%progbits
+  55      0080
+  56              		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccck4r22.s 			page 2
+
+
+  57              		.p2align 4,,15
+  58              		.thumb
+  59              		.thumb_func
+  60              		.type	_ZL11changeValueP14IdleValveStateiiPKcf, %function
+  61              	_ZL11changeValueP14IdleValveStateiiPKcf:
+  62              		@ args = 0, pretend = 0, frame = 0
+  63              		@ frame_needed = 0, uses_anonymous_args = 0
+  64 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+  65 0002 2DED028B 		fstmfdd	sp!, {d8}
+  66 0006 83B0     		sub	sp, sp, #12
+  67 0008 0446     		mov	r4, r0
+  68 000a 0E46     		mov	r6, r1
+  69 000c 1546     		mov	r5, r2
+  70 000e 1F46     		mov	r7, r3
+  71 0010 B0EE408A 		fcpys	s16, s0
+  72 0014 FFF7FEFF 		bl	_Z6getTPSv
+  73 0018 07EE100A 		fmsr	s14, r0
+  74 001c F1EE047A 		fconsts	s15, #20
+  75 0020 B4EEE77A 		fcmpes	s14, s15
+  76 0024 F1EE10FA 		fmstat
+  77 0028 0FDC     		bgt	.L10
+  78 002a 94ED010A 		flds	s0, [r4, #4]
+  79 002e 3246     		mov	r2, r6
+  80 0030 0097     		str	r7, [sp]
+  81 0032 2B46     		mov	r3, r5
+  82 0034 38EE000A 		fadds	s0, s16, s0
+  83 0038 201D     		adds	r0, r4, #4
+  84 003a 04F10801 		add	r1, r4, #8
+  85 003e FFF7FEFF 		bl	_ZL11setNewValueP14IdleValveStateimPKcf.isra.0
+  86 0042 03B0     		add	sp, sp, #12
+  87              		@ sp needed
+  88 0044 BDEC028B 		fldmfdd	sp!, {d8}
+  89 0048 F0BD     		pop	{r4, r5, r6, r7, pc}
+  90              	.L10:
+  91 004a FFF7FEFF 		bl	_Z6getTPSv
+  92 004e 0146     		mov	r1, r0	@ float
+  93 0050 40F20000 		movw	r0, #:lower16:.LC0
+  94 0054 C0F20000 		movt	r0, #:upper16:.LC0
+  95 0058 FFF7FEFF 		bl	_Z9idleDebugPKcf
+  96 005c 94ED010A 		flds	s0, [r4, #4]
+  97 0060 03B0     		add	sp, sp, #12
+  98              		@ sp needed
+  99 0062 BDEC028B 		fldmfdd	sp!, {d8}
+ 100 0066 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 101              		.size	_ZL11changeValueP14IdleValveStateiiPKcf, .-_ZL11changeValueP14IdleValveStateiiPKcf
+ 102 0068 AFF30080 		.section	.text._ZN14IdleValveStateC2Ev,"ax",%progbits
+ 102      AFF30080 
+ 103              		.align	2
+ 104              		.p2align 4,,15
+ 105              		.global	_ZN14IdleValveStateC2Ev
+ 106              		.thumb
+ 107              		.thumb_func
+ 108              		.type	_ZN14IdleValveStateC2Ev, %function
+ 109              	_ZN14IdleValveStateC2Ev:
+ 110              		@ args = 0, pretend = 0, frame = 0
+ 111              		@ frame_needed = 0, uses_anonymous_args = 0
+ 112              		@ link register save eliminated.
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccck4r22.s 			page 3
+
+
+ 113 0000 0021     		movs	r1, #0
+ 114 0002 0022     		movs	r2, #0
+ 115 0004 C4F27021 		movt	r1, 17008
+ 116 0008 4160     		str	r1, [r0, #4]	@ float
+ 117 000a 8260     		str	r2, [r0, #8]
+ 118 000c 0260     		str	r2, [r0]
+ 119 000e 0261     		str	r2, [r0, #16]
+ 120 0010 C260     		str	r2, [r0, #12]
+ 121 0012 7047     		bx	lr
+ 122              		.size	_ZN14IdleValveStateC2Ev, .-_ZN14IdleValveStateC2Ev
+ 123              		.global	_ZN14IdleValveStateC1Ev
+ 124              		.thumb_set _ZN14IdleValveStateC1Ev,_ZN14IdleValveStateC2Ev
+ 125 0014 AFF30080 		.section	.text._ZN14IdleValveState4initEv,"ax",%progbits
+ 125      AFF30080 
+ 125      AFF30080 
+ 126              		.align	2
+ 127              		.p2align 4,,15
+ 128              		.global	_ZN14IdleValveState4initEv
+ 129              		.thumb
+ 130              		.thumb_func
+ 131              		.type	_ZN14IdleValveState4initEv, %function
+ 132              	_ZN14IdleValveState4initEv:
+ 133              		@ args = 0, pretend = 0, frame = 0
+ 134              		@ frame_needed = 0, uses_anonymous_args = 0
+ 135              		@ link register save eliminated.
+ 136 0000 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 137 0004 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 138 0008 9FED0B7A 		flds	s14, .L13
+ 139 000c 1B68     		ldr	r3, [r3]
+ 140 000e D3F8EC35 		ldr	r3, [r3, #1516]
+ 141 0012 07EE903A 		fmsr	s15, r3	@ int
+ 142 0016 DFED096A 		flds	s13, .L13+4
+ 143 001a F8EEE77A 		fsitos	s15, s15
+ 144 001e 27EE877A 		fmuls	s14, s15, s14
+ 145 0022 67EEA67A 		fmuls	s15, s15, s13
+ 146 0026 BDEEC77A 		ftosizs	s14, s14
+ 147 002a FDEEE77A 		ftosizs	s15, s15
+ 148 002e 80ED037A 		fsts	s14, [r0, #12]	@ int
+ 149 0032 C0ED047A 		fsts	s15, [r0, #16]	@ int
+ 150 0036 7047     		bx	lr
+ 151              	.L14:
+ 152              		.align	2
+ 153              	.L13:
+ 154 0038 7B146E3F 		.word	1064178811
+ 155 003c C3F5883F 		.word	1065940419
+ 156              		.size	_ZN14IdleValveState4initEv, .-_ZN14IdleValveState4initEv
+ 157              		.section	.text._ZN14IdleValveState12setTargetRpmEi,"ax",%progbits
+ 158              		.align	2
+ 159              		.p2align 4,,15
+ 160              		.global	_ZN14IdleValveState12setTargetRpmEi
+ 161              		.thumb
+ 162              		.thumb_func
+ 163              		.type	_ZN14IdleValveState12setTargetRpmEi, %function
+ 164              	_ZN14IdleValveState12setTargetRpmEi:
+ 165              		@ args = 0, pretend = 0, frame = 0
+ 166              		@ frame_needed = 0, uses_anonymous_args = 0
+ 167              		@ link register save eliminated.
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccck4r22.s 			page 4
+
+
+ 168 0000 07EE101A 		fmsr	s14, r1	@ int
+ 169 0004 DFED096A 		flds	s13, .L16
+ 170 0008 F8EEC77A 		fsitos	s15, s14
+ 171 000c 9FED087A 		flds	s14, .L16+4
+ 172 0010 27EE877A 		fmuls	s14, s15, s14
+ 173 0014 67EEA67A 		fmuls	s15, s15, s13
+ 174 0018 BDEEC77A 		ftosizs	s14, s14
+ 175 001c FDEEE77A 		ftosizs	s15, s15
+ 176 0020 80ED037A 		fsts	s14, [r0, #12]	@ int
+ 177 0024 C0ED047A 		fsts	s15, [r0, #16]	@ int
+ 178 0028 7047     		bx	lr
+ 179              	.L17:
+ 180 002a 00BF     		.align	2
+ 181              	.L16:
+ 182 002c C3F5883F 		.word	1065940419
+ 183 0030 7B146E3F 		.word	1064178811
+ 184              		.size	_ZN14IdleValveState12setTargetRpmEi, .-_ZN14IdleValveState12setTargetRpmEi
+ 185 0034 AFF30080 		.section	.text._ZN14IdleValveState7getIdleEim,"ax",%progbits
+ 185      AFF30080 
+ 185      AFF30080 
+ 186              		.align	2
+ 187              		.p2align 4,,15
+ 188              		.global	_ZN14IdleValveState7getIdleEim
+ 189              		.thumb
+ 190              		.thumb_func
+ 191              		.type	_ZN14IdleValveState7getIdleEim, %function
+ 192              	_ZN14IdleValveState7getIdleEim:
+ 193              		@ args = 0, pretend = 0, frame = 0
+ 194              		@ frame_needed = 0, uses_anonymous_args = 0
+ 195 0000 70B5     		push	{r4, r5, r6, lr}
+ 196 0002 0D46     		mov	r5, r1
+ 197 0004 82B0     		sub	sp, sp, #8
+ 198 0006 0446     		mov	r4, r0
+ 199 0008 1646     		mov	r6, r2
+ 200 000a 89B9     		cbnz	r1, .L41
+ 201              	.L19:
+ 202 000c 40F20001 		movw	r1, #:lower16:.LC6
+ 203 0010 C0F20001 		movt	r1, #:upper16:.LC6
+ 204              	.L40:
+ 205 0014 0091     		str	r1, [sp]
+ 206 0016 201D     		adds	r0, r4, #4
+ 207 0018 2A46     		mov	r2, r5
+ 208 001a 3346     		mov	r3, r6
+ 209 001c 04F10801 		add	r1, r4, #8
+ 210 0020 9FED3A0A 		flds	s0, .L44
+ 211 0024 FFF7FEFF 		bl	_ZL11setNewValueP14IdleValveStateimPKcf.isra.0
+ 212 0028 10EE100A 		fmrs	r0, s0
+ 213              	.L37:
+ 214 002c 02B0     		add	sp, sp, #8
+ 215              		@ sp needed
+ 216 002e 70BD     		pop	{r4, r5, r6, pc}
+ 217              	.L41:
+ 218 0030 FFF7FEFF 		bl	_Z10isCrankingv
+ 219 0034 0028     		cmp	r0, #0
+ 220 0036 E9D1     		bne	.L19
+ 221 0038 E268     		ldr	r2, [r4, #12]
+ 222 003a 06EE902A 		fmsr	s13, r2	@ int
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccck4r22.s 			page 5
+
+
+ 223 003e DFED347A 		flds	s15, .L44+4
+ 224 0042 B8EEE67A 		fsitos	s14, s13
+ 225 0046 06EE905A 		fmsr	s13, r5	@ int
+ 226 004a 67EE277A 		fmuls	s15, s14, s15
+ 227 004e B8EEE67A 		fsitos	s14, s13
+ 228 0052 B4EEE77A 		fcmpes	s14, s15
+ 229 0056 F1EE10FA 		fmstat
+ 230 005a 35D4     		bmi	.L42
+ 231 005c A368     		ldr	r3, [r4, #8]
+ 232 005e F31A     		subs	r3, r6, r3
+ 233 0060 B3F57A7F 		cmp	r3, #1000
+ 234 0064 15D3     		bcc	.L24
+ 235 0066 9542     		cmp	r5, r2
+ 236 0068 2369     		ldr	r3, [r4, #16]
+ 237 006a 15DD     		ble	.L23
+ 238 006c 9D42     		cmp	r5, r3
+ 239 006e 10DB     		blt	.L24
+ 240 0070 6333     		adds	r3, r3, #99
+ 241 0072 9D42     		cmp	r5, r3
+ 242 0074 3BDC     		bgt	.L31
+ 243              	.L32:
+ 244 0076 40F20003 		movw	r3, #:lower16:.LC3
+ 245 007a 2046     		mov	r0, r4
+ 246 007c 2946     		mov	r1, r5
+ 247 007e 3246     		mov	r2, r6
+ 248 0080 C0F20003 		movt	r3, #:upper16:.LC3
+ 249 0084 9FED230A 		flds	s0, .L44+8
+ 250 0088 FFF7FEFF 		bl	_ZL11changeValueP14IdleValveStateiiPKcf
+ 251 008c 10EE100A 		fmrs	r0, s0
+ 252 0090 CCE7     		b	.L37
+ 253              	.L24:
+ 254 0092 6068     		ldr	r0, [r4, #4]	@ float
+ 255 0094 02B0     		add	sp, sp, #8
+ 256              		@ sp needed
+ 257 0096 70BD     		pop	{r4, r5, r6, pc}
+ 258              	.L23:
+ 259 0098 03F16301 		add	r1, r3, #99
+ 260 009c 8D42     		cmp	r5, r1
+ 261 009e 26DC     		bgt	.L31
+ 262 00a0 9D42     		cmp	r5, r3
+ 263 00a2 E8DA     		bge	.L32
+ 264 00a4 643A     		subs	r2, r2, #100
+ 265 00a6 9542     		cmp	r5, r2
+ 266 00a8 13DB     		blt	.L43
+ 267 00aa 40F20003 		movw	r3, #:lower16:.LC5
+ 268 00ae 2046     		mov	r0, r4
+ 269 00b0 2946     		mov	r1, r5
+ 270 00b2 3246     		mov	r2, r6
+ 271 00b4 C0F20003 		movt	r3, #:upper16:.LC5
+ 272 00b8 9FED170A 		flds	s0, .L44+12
+ 273 00bc FFF7FEFF 		bl	_ZL11changeValueP14IdleValveStateiiPKcf
+ 274 00c0 10EE100A 		fmrs	r0, s0
+ 275 00c4 02B0     		add	sp, sp, #8
+ 276              		@ sp needed
+ 277 00c6 70BD     		pop	{r4, r5, r6, pc}
+ 278              	.L42:
+ 279 00c8 40F20001 		movw	r1, #:lower16:.LC1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccck4r22.s 			page 6
+
+
+ 280 00cc C0F20001 		movt	r1, #:upper16:.LC1
+ 281 00d0 A0E7     		b	.L40
+ 282              	.L43:
+ 283 00d2 40F20003 		movw	r3, #:lower16:.LC4
+ 284 00d6 2046     		mov	r0, r4
+ 285 00d8 2946     		mov	r1, r5
+ 286 00da 3246     		mov	r2, r6
+ 287 00dc C0F20003 		movt	r3, #:upper16:.LC4
+ 288 00e0 B6EE000A 		fconsts	s0, #96
+ 289 00e4 FFF7FEFF 		bl	_ZL11changeValueP14IdleValveStateiiPKcf
+ 290 00e8 10EE100A 		fmrs	r0, s0
+ 291 00ec 9EE7     		b	.L37
+ 292              	.L31:
+ 293 00ee 40F20003 		movw	r3, #:lower16:.LC2
+ 294 00f2 2046     		mov	r0, r4
+ 295 00f4 2946     		mov	r1, r5
+ 296 00f6 3246     		mov	r2, r6
+ 297 00f8 C0F20003 		movt	r3, #:upper16:.LC2
+ 298 00fc BEEE000A 		fconsts	s0, #224
+ 299 0100 FFF7FEFF 		bl	_ZL11changeValueP14IdleValveStateiiPKcf
+ 300 0104 10EE100A 		fmrs	r0, s0
+ 301 0108 90E7     		b	.L37
+ 302              	.L45:
+ 303 010a 00BF     		.align	2
+ 304              	.L44:
+ 305 010c 00007042 		.word	1114636288
+ 306 0110 3333333F 		.word	1060320051
+ 307 0114 CDCCCCBD 		.word	-1110651699
+ 308 0118 CDCCCC3D 		.word	1036831949
+ 309              		.size	_ZN14IdleValveState7getIdleEim, .-_ZN14IdleValveState7getIdleEim
+ 310 011c AFF30080 		.section	.rodata.str1.4,"aMS",%progbits,1
+ 311              		.align	2
+ 312              	.LC0:
+ 313 0000 54505320 		.ascii	"TPS Lockout, TPS=\000"
+ 313      4C6F636B 
+ 313      6F75742C 
+ 313      20545053 
+ 313      3D00
+ 314 0012 0000     		.space	2
+ 315              	.LC1:
+ 316 0014 52504D73 		.ascii	"RPMs are seriously low: \000"
+ 316      20617265 
+ 316      20736572 
+ 316      696F7573 
+ 316      6C79206C 
+ 317 002d 000000   		.space	3
+ 318              	.LC2:
+ 319 0030 69646C65 		.ascii	"idle control: rpm is too high: \000"
+ 319      20636F6E 
+ 319      74726F6C 
+ 319      3A207270 
+ 319      6D206973 
+ 320              	.LC3:
+ 321 0050 69646C65 		.ascii	"idle control: rpm is a bit too high: \000"
+ 321      20636F6E 
+ 321      74726F6C 
+ 321      3A207270 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccck4r22.s 			page 7
+
+
+ 321      6D206973 
+ 322 0076 0000     		.space	2
+ 323              	.LC4:
+ 324 0078 69646C65 		.ascii	"idle control: RPMs are low: \000"
+ 324      20636F6E 
+ 324      74726F6C 
+ 324      3A205250 
+ 324      4D732061 
+ 325 0095 000000   		.space	3
+ 326              	.LC5:
+ 327 0098 69646C65 		.ascii	"idle control: RPMs are a bit low: \000"
+ 327      20636F6E 
+ 327      74726F6C 
+ 327      3A205250 
+ 327      4D732061 
+ 328 00bb 00       		.space	1
+ 329              	.LC6:
+ 330 00bc 6372616E 		.ascii	"cranking value: \000"
+ 330      6B696E67 
+ 330      2076616C 
+ 330      75653A20 
+ 330      00
+ 331 00cd 000000   		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccck4r22.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 idle_controller.cpp
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:17     .text._ZL11setNewValueP14IdleValveStateimPKcf.isra.0:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:22     .text._ZL11setNewValueP14IdleValveStateimPKcf.isra.0:00000000 _ZL11setNewValueP14IdleValveStateimPKcf.isra.0
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:56     .text._ZL11changeValueP14IdleValveStateiiPKcf:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:61     .text._ZL11changeValueP14IdleValveStateiiPKcf:00000000 _ZL11changeValueP14IdleValveStateiiPKcf
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:312    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:103    .text._ZN14IdleValveStateC2Ev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:109    .text._ZN14IdleValveStateC2Ev:00000000 _ZN14IdleValveStateC2Ev
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:109    .text._ZN14IdleValveStateC2Ev:00000000 _ZN14IdleValveStateC1Ev
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:126    .text._ZN14IdleValveState4initEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:132    .text._ZN14IdleValveState4initEv:00000000 _ZN14IdleValveState4initEv
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:154    .text._ZN14IdleValveState4initEv:00000038 $d
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:158    .text._ZN14IdleValveState12setTargetRpmEi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:164    .text._ZN14IdleValveState12setTargetRpmEi:00000000 _ZN14IdleValveState12setTargetRpmEi
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:182    .text._ZN14IdleValveState12setTargetRpmEi:0000002c $d
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:186    .text._ZN14IdleValveState7getIdleEim:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:192    .text._ZN14IdleValveState7getIdleEim:00000000 _ZN14IdleValveState7getIdleEim
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:329    .rodata.str1.4:000000bc .LC6
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:320    .rodata.str1.4:00000050 .LC3
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:326    .rodata.str1.4:00000098 .LC5
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:315    .rodata.str1.4:00000014 .LC1
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:323    .rodata.str1.4:00000078 .LC4
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:318    .rodata.str1.4:00000030 .LC2
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:305    .text._ZN14IdleValveState7getIdleEim:0000010c $d
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:311    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:185    .text._ZN14IdleValveState12setTargetRpmEi:00000034 $t
+C:\Users\pc\AppData\Local\Temp\ccck4r22.s:310    .text._ZN14IdleValveState7getIdleEim:0000011c $t
+
+UNDEFINED SYMBOLS
+maxF
+minF
+_Z9idleDebugPKcf
+_Z6getTPSv
+engineConfiguration
+_Z10isCrankingv

@@ -36,6 +36,11 @@
 /*===========================================================================*/
 
 /**
+ * this rusEfi hack is about surviving lack of LSE (32kHz osc) part of RTC
+ */
+#define LSE_TIMEOUT 1000000
+
+/**
  * @brief   Two alarm comparators available on STM32F4x and STM32F2x.
  */
 #if !defined(STM32F0XX)

@@ -1,0 +1,908 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"map.cpp"
+  16              		.global	__aeabi_uldivmod
+  17              		.global	__aeabi_ul2f
+  18              		.section	.text._ZL23digitalMapWidthCallbackv,"ax",%progbits
+  19              		.align	2
+  20              		.p2align 4,,15
+  21              		.thumb
+  22              		.thumb_func
+  23              		.type	_ZL23digitalMapWidthCallbackv, %function
+  24              	_ZL23digitalMapWidthCallbackv:
+  25              		@ args = 0, pretend = 0, frame = 0
+  26              		@ frame_needed = 0, uses_anonymous_args = 0
+  27 0000 70B5     		push	{r4, r5, r6, lr}
+  28 0002 FFF7FEFF 		bl	getTimeNowNt
+  29 0006 40F20006 		movw	r6, #:lower16:.LANCHOR1
+  30 000a C0F20006 		movt	r6, #:upper16:.LANCHOR1
+  31 000e 0446     		mov	r4, r0
+  32 0010 0D46     		mov	r5, r1
+  33 0012 D6E90001 		ldrd	r0, [r6]
+  34 0016 0023     		movs	r3, #0
+  35 0018 A822     		movs	r2, #168
+  36 001a 201A     		subs	r0, r4, r0
+  37 001c 65EB0101 		sbc	r1, r5, r1
+  38 0020 FFF7FEFF 		bl	__aeabi_uldivmod
+  39 0024 FFF7FEFF 		bl	__aeabi_ul2f
+  40 0028 DFED077A 		flds	s15, .L2
+  41 002c 07EE100A 		fmsr	s14, r0
+  42 0030 C7EE877A 		fdivs	s15, s15, s14
+  43 0034 40F20003 		movw	r3, #:lower16:.LANCHOR0
+  44 0038 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+  45 003c C6E90045 		strd	r4, [r6]
+  46 0040 C3ED007A 		fsts	s15, [r3]
+  47 0044 70BD     		pop	{r4, r5, r6, pc}
+  48              	.L3:
+  49 0046 00BF     		.align	2
+  50              	.L2:
+  51 0048 00247449 		.word	1232348160
+  52              		.size	_ZL23digitalMapWidthCallbackv, .-_ZL23digitalMapWidthCallbackv
+  53 004c AFF30080 		.section	.text._Z14decodePressurefP28air_pressure_sensor_config_s,"ax",%progbits
+  54              		.align	2
+  55              		.p2align 4,,15
+  56              		.global	_Z14decodePressurefP28air_pressure_sensor_config_s
+  57              		.thumb
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s 			page 2
+
+
+  58              		.thumb_func
+  59              		.type	_Z14decodePressurefP28air_pressure_sensor_config_s, %function
+  60              	_Z14decodePressurefP28air_pressure_sensor_config_s:
+  61              		@ args = 0, pretend = 0, frame = 0
+  62              		@ frame_needed = 0, uses_anonymous_args = 0
+  63 0000 00B5     		push	{lr}
+  64 0002 8B68     		ldr	r3, [r1, #8]
+  65 0004 83B0     		sub	sp, sp, #12
+  66 0006 0246     		mov	r2, r0	@ float
+  67 0008 062B     		cmp	r3, #6
+  68 000a 4ED8     		bhi	.L5
+  69 000c DFE803F0 		tbb	[pc, r3]
+  70              	.L7:
+  71 0010 0E       		.byte	(.L6-.L7)/2
+  72 0011 1B       		.byte	(.L8-.L7)/2
+  73 0012 25       		.byte	(.L9-.L7)/2
+  74 0013 2F       		.byte	(.L10-.L7)/2
+  75 0014 39       		.byte	(.L11-.L7)/2
+  76 0015 43       		.byte	(.L12-.L7)/2
+  77 0016 04       		.byte	(.L13-.L7)/2
+  78 0017 00       		.align	1
+  79              	.L13:
+  80 0018 40F20000 		movw	r0, #:lower16:.LANCHOR7
+  81 001c 1146     		mov	r1, r2	@ float
+  82 001e C0F20000 		movt	r0, #:upper16:.LANCHOR7
+  83 0022 03B0     		add	sp, sp, #12
+  84              		@ sp needed
+  85 0024 5DF804EB 		ldr	lr, [sp], #4
+  86 0028 FFF7FEBF 		b	_ZN17FastInterpolation8getValueEf
+  87              	.L6:
+  88 002c 0868     		ldr	r0, [r1]	@ float
+  89 002e 4B68     		ldr	r3, [r1, #4]	@ float
+  90 0030 0092     		str	r2, [sp]	@ float
+  91 0032 0022     		movs	r2, #0
+  92 0034 0146     		mov	r1, r0	@ float
+  93 0036 C4F2A002 		movt	r2, 16544
+  94 003a 0020     		movs	r0, #0
+  95 003c FFF7FEFF 		bl	_Z11interpolatefffff
+  96 0040 03B0     		add	sp, sp, #12
+  97              		@ sp needed
+  98 0042 5DF804FB 		ldr	pc, [sp], #4
+  99              	.L8:
+ 100 0046 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 101 004a 1146     		mov	r1, r2	@ float
+ 102 004c C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 103 0050 03B0     		add	sp, sp, #12
+ 104              		@ sp needed
+ 105 0052 5DF804EB 		ldr	lr, [sp], #4
+ 106 0056 FFF7FEBF 		b	_ZN17FastInterpolation8getValueEf
+ 107              	.L9:
+ 108 005a 40F20000 		movw	r0, #:lower16:.LANCHOR3
+ 109 005e 1146     		mov	r1, r2	@ float
+ 110 0060 C0F20000 		movt	r0, #:upper16:.LANCHOR3
+ 111 0064 03B0     		add	sp, sp, #12
+ 112              		@ sp needed
+ 113 0066 5DF804EB 		ldr	lr, [sp], #4
+ 114 006a FFF7FEBF 		b	_ZN17FastInterpolation8getValueEf
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s 			page 3
+
+
+ 115              	.L10:
+ 116 006e 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 117 0072 1146     		mov	r1, r2	@ float
+ 118 0074 C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 119 0078 03B0     		add	sp, sp, #12
+ 120              		@ sp needed
+ 121 007a 5DF804EB 		ldr	lr, [sp], #4
+ 122 007e FFF7FEBF 		b	_ZN17FastInterpolation8getValueEf
+ 123              	.L11:
+ 124 0082 40F20000 		movw	r0, #:lower16:.LANCHOR5
+ 125 0086 1146     		mov	r1, r2	@ float
+ 126 0088 C0F20000 		movt	r0, #:upper16:.LANCHOR5
+ 127 008c 03B0     		add	sp, sp, #12
+ 128              		@ sp needed
+ 129 008e 5DF804EB 		ldr	lr, [sp], #4
+ 130 0092 FFF7FEBF 		b	_ZN17FastInterpolation8getValueEf
+ 131              	.L12:
+ 132 0096 40F20000 		movw	r0, #:lower16:.LANCHOR6
+ 133 009a 1146     		mov	r1, r2	@ float
+ 134 009c C0F20000 		movt	r0, #:upper16:.LANCHOR6
+ 135 00a0 03B0     		add	sp, sp, #12
+ 136              		@ sp needed
+ 137 00a2 5DF804EB 		ldr	lr, [sp], #4
+ 138 00a6 FFF7FEBF 		b	_ZN17FastInterpolation8getValueEf
+ 139              	.L5:
+ 140 00aa 40F20000 		movw	r0, #:lower16:.LC0
+ 141 00ae 1946     		mov	r1, r3
+ 142 00b0 C0F20000 		movt	r0, #:upper16:.LC0
+ 143 00b4 FFF7FEFF 		bl	firmwareError
+ 144 00b8 0020     		movs	r0, #0
+ 145 00ba C7F6C070 		movt	r0, 32704
+ 146 00be 03B0     		add	sp, sp, #12
+ 147              		@ sp needed
+ 148 00c0 5DF804FB 		ldr	pc, [sp], #4
+ 149              		.size	_Z14decodePressurefP28air_pressure_sensor_config_s, .-_Z14decodePressurefP28air_pressure_sen
+ 150 00c4 AFF30080 		.section	.text._Z15getMapByVoltagef,"ax",%progbits
+ 150      AFF30080 
+ 150      AFF30080 
+ 151              		.align	2
+ 152              		.p2align 4,,15
+ 153              		.global	_Z15getMapByVoltagef
+ 154              		.thumb
+ 155              		.thumb_func
+ 156              		.type	_Z15getMapByVoltagef, %function
+ 157              	_Z15getMapByVoltagef:
+ 158              		@ args = 0, pretend = 0, frame = 0
+ 159              		@ frame_needed = 0, uses_anonymous_args = 0
+ 160              		@ link register save eliminated.
+ 161 0000 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 162 0004 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 163 0008 1968     		ldr	r1, [r3]
+ 164 000a F031     		adds	r1, r1, #240
+ 165 000c FFF7FEBF 		b	_Z14decodePressurefP28air_pressure_sensor_config_s
+ 166              		.size	_Z15getMapByVoltagef, .-_Z15getMapByVoltagef
+ 167              		.section	.text._Z9getRawMapv,"ax",%progbits
+ 168              		.align	2
+ 169              		.p2align 4,,15
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s 			page 4
+
+
+ 170              		.global	_Z9getRawMapv
+ 171              		.thumb
+ 172              		.thumb_func
+ 173              		.type	_Z9getRawMapv, %function
+ 174              	_Z9getRawMapv:
+ 175              		@ args = 0, pretend = 0, frame = 0
+ 176              		@ frame_needed = 0, uses_anonymous_args = 0
+ 177 0000 10B5     		push	{r4, lr}
+ 178 0002 40F20004 		movw	r4, #:lower16:engineConfiguration
+ 179 0006 C0F20004 		movt	r4, #:upper16:engineConfiguration
+ 180 000a 82B0     		sub	sp, sp, #8
+ 181 000c 2368     		ldr	r3, [r4]
+ 182 000e 93F8DA25 		ldrb	r2, [r3, #1498]	@ zero_extendqisi2
+ 183 0012 5207     		lsls	r2, r2, #29
+ 184 0014 1CD4     		bmi	.L22
+ 185 0016 40F20000 		movw	r0, #:lower16:.LC1
+ 186 001a D3F8FC10 		ldr	r1, [r3, #252]
+ 187 001e C0F20000 		movt	r0, #:upper16:.LC1
+ 188 0022 FFF7FEFF 		bl	_Z19getInternalAdcValuePKc13adc_channel_e
+ 189 0026 07EE900A 		fmsr	s15, r0	@ int
+ 190 002a 2168     		ldr	r1, [r4]
+ 191 002c F8EEE76A 		fsitos	s13, s15
+ 192 0030 9FED137A 		flds	s14, .L23
+ 193 0034 D1ED747A 		flds	s15, [r1, #464]
+ 194 0038 26EE877A 		fmuls	s14, s13, s14
+ 195 003c F031     		adds	r1, r1, #240
+ 196 003e 67EE277A 		fmuls	s15, s14, s15
+ 197 0042 17EE900A 		fmrs	r0, s15
+ 198 0046 02B0     		add	sp, sp, #8
+ 199              		@ sp needed
+ 200 0048 BDE81040 		pop	{r4, lr}
+ 201 004c FFF7FEBF 		b	_Z14decodePressurefP28air_pressure_sensor_config_s
+ 202              	.L22:
+ 203 0050 40F20003 		movw	r3, #:lower16:boardConfiguration
+ 204 0054 40F20004 		movw	r4, #:lower16:.LANCHOR0
+ 205 0058 C0F20003 		movt	r3, #:upper16:boardConfiguration
+ 206 005c C0F20004 		movt	r4, #:upper16:.LANCHOR0
+ 207 0060 1A68     		ldr	r2, [r3]
+ 208 0062 2468     		ldr	r4, [r4]	@ float
+ 209 0064 D2F89800 		ldr	r0, [r2, #152]	@ float
+ 210 0068 D2F89C20 		ldr	r2, [r2, #156]	@ float
+ 211 006c 0094     		str	r4, [sp]	@ float
+ 212 006e 0023     		movs	r3, #0
+ 213 0070 0021     		movs	r1, #0
+ 214 0072 C4F2C823 		movt	r3, 17096
+ 215 0076 FFF7FEFF 		bl	_Z11interpolatefffff
+ 216 007a 02B0     		add	sp, sp, #8
+ 217              		@ sp needed
+ 218 007c 10BD     		pop	{r4, pc}
+ 219              	.L24:
+ 220 007e 00BF     		.align	2
+ 221              	.L23:
+ 222 0080 010C403A 		.word	977275905
+ 223              		.size	_Z9getRawMapv, .-_Z9getRawMapv
+ 224 0084 AFF30080 		.section	.text._Z13hasBaroSensorv,"ax",%progbits
+ 224      AFF30080 
+ 224      AFF30080 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s 			page 5
+
+
+ 225              		.align	2
+ 226              		.p2align 4,,15
+ 227              		.global	_Z13hasBaroSensorv
+ 228              		.thumb
+ 229              		.thumb_func
+ 230              		.type	_Z13hasBaroSensorv, %function
+ 231              	_Z13hasBaroSensorv:
+ 232              		@ args = 0, pretend = 0, frame = 0
+ 233              		@ frame_needed = 0, uses_anonymous_args = 0
+ 234              		@ link register save eliminated.
+ 235 0000 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 236 0004 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 237 0008 1B68     		ldr	r3, [r3]
+ 238 000a 93F8D805 		ldrb	r0, [r3, #1496]	@ zero_extendqisi2
+ 239 000e C0F38000 		ubfx	r0, r0, #2, #1
+ 240 0012 28B1     		cbz	r0, .L26
+ 241 0014 D3F86C02 		ldr	r0, [r3, #620]
+ 242 0018 B0F55E70 		subs	r0, r0, #888
+ 243 001c 18BF     		it	ne
+ 244 001e 0120     		movne	r0, #1
+ 245              	.L26:
+ 246 0020 7047     		bx	lr
+ 247              		.size	_Z13hasBaroSensorv, .-_Z13hasBaroSensorv
+ 248 0022 00BFAFF3 		.section	.text._Z15getBaroPressurev,"ax",%progbits
+ 248      0080AFF3 
+ 248      0080AFF3 
+ 248      0080
+ 249              		.align	2
+ 250              		.p2align 4,,15
+ 251              		.global	_Z15getBaroPressurev
+ 252              		.thumb
+ 253              		.thumb_func
+ 254              		.type	_Z15getBaroPressurev, %function
+ 255              	_Z15getBaroPressurev:
+ 256              		@ args = 0, pretend = 0, frame = 0
+ 257              		@ frame_needed = 0, uses_anonymous_args = 0
+ 258 0000 10B5     		push	{r4, lr}
+ 259 0002 40F20004 		movw	r4, #:lower16:engineConfiguration
+ 260 0006 C0F20004 		movt	r4, #:upper16:engineConfiguration
+ 261 000a 40F20000 		movw	r0, #:lower16:.LC2
+ 262 000e 2368     		ldr	r3, [r4]
+ 263 0010 C0F20000 		movt	r0, #:upper16:.LC2
+ 264 0014 D3F86C12 		ldr	r1, [r3, #620]
+ 265 0018 FFF7FEFF 		bl	_Z19getInternalAdcValuePKc13adc_channel_e
+ 266 001c 07EE900A 		fmsr	s15, r0	@ int
+ 267 0020 2168     		ldr	r1, [r4]
+ 268 0022 F8EEE76A 		fsitos	s13, s15
+ 269 0026 9FED087A 		flds	s14, .L29
+ 270 002a D1ED747A 		flds	s15, [r1, #464]
+ 271 002e 26EE877A 		fmuls	s14, s13, s14
+ 272 0032 01F51871 		add	r1, r1, #608
+ 273 0036 67EE277A 		fmuls	s15, s14, s15
+ 274 003a BDE81040 		pop	{r4, lr}
+ 275 003e 17EE900A 		fmrs	r0, s15
+ 276 0042 FFF7FEBF 		b	_Z14decodePressurefP28air_pressure_sensor_config_s
+ 277              	.L30:
+ 278 0046 00BF     		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s 			page 6
+
+
+ 279              	.L29:
+ 280 0048 010C403A 		.word	977275905
+ 281              		.size	_Z15getBaroPressurev, .-_Z15getBaroPressurev
+ 282              		.global	__aeabi_f2d
+ 283 004c AFF30080 		.section	.text._ZL12printMAPInfov,"ax",%progbits
+ 284              		.align	2
+ 285              		.p2align 4,,15
+ 286              		.thumb
+ 287              		.thumb_func
+ 288              		.type	_ZL12printMAPInfov, %function
+ 289              	_ZL12printMAPInfov:
+ 290              		@ args = 0, pretend = 0, frame = 0
+ 291              		@ frame_needed = 0, uses_anonymous_args = 0
+ 292 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+ 293 0004 40F20007 		movw	r7, #:lower16:.LANCHOR8
+ 294 0008 C0F20007 		movt	r7, #:upper16:.LANCHOR8
+ 295 000c 83B0     		sub	sp, sp, #12
+ 296 000e 3C68     		ldr	r4, [r7]
+ 297 0010 FFF7FEFF 		bl	_Z9getRawMapv
+ 298 0014 FFF7FEFF 		bl	__aeabi_f2d
+ 299 0018 40F20006 		movw	r6, #:lower16:engineConfiguration
+ 300 001c 0B46     		mov	r3, r1
+ 301 001e C0F20006 		movt	r6, #:upper16:engineConfiguration
+ 302 0022 40F20001 		movw	r1, #:lower16:.LC3
+ 303 0026 0246     		mov	r2, r0
+ 304 0028 C0F20001 		movt	r1, #:upper16:.LC3
+ 305 002c 2046     		mov	r0, r4
+ 306 002e FFF7FEFF 		bl	scheduleMsg
+ 307 0032 3368     		ldr	r3, [r6]
+ 308 0034 93F8DA25 		ldrb	r2, [r3, #1498]	@ zero_extendqisi2
+ 309 0038 5107     		lsls	r1, r2, #29
+ 310 003a 50D5     		bpl	.L32
+ 311 003c 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 312 0040 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 313 0044 D7F80080 		ldr	r8, [r7]
+ 314 0048 1868     		ldr	r0, [r3]	@ float
+ 315 004a FFF7FEFF 		bl	__aeabi_f2d
+ 316 004e 40F20003 		movw	r3, #:lower16:boardConfiguration
+ 317 0052 C0F20003 		movt	r3, #:upper16:boardConfiguration
+ 318 0056 0446     		mov	r4, r0
+ 319 0058 1B68     		ldr	r3, [r3]
+ 320 005a D3F86403 		ldr	r0, [r3, #868]
+ 321 005e 0D46     		mov	r5, r1
+ 322 0060 FFF7FEFF 		bl	_Z10hwPortname11brain_pin_e
+ 323 0064 40F20001 		movw	r1, #:lower16:.LC4
+ 324 0068 0090     		str	r0, [sp]
+ 325 006a 2B46     		mov	r3, r5
+ 326 006c 2246     		mov	r2, r4
+ 327 006e 4046     		mov	r0, r8
+ 328 0070 C0F20001 		movt	r1, #:upper16:.LC4
+ 329 0074 FFF7FEFF 		bl	scheduleMsg
+ 330 0078 3368     		ldr	r3, [r6]
+ 331              	.L33:
+ 332 007a D3F86842 		ldr	r4, [r3, #616]
+ 333 007e 3D68     		ldr	r5, [r7]
+ 334 0080 FFF7FEFF 		bl	_Z15getBaroPressurev
+ 335 0084 FFF7FEFF 		bl	__aeabi_f2d
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s 			page 7
+
+
+ 336 0088 CDE90001 		strd	r0, [sp]
+ 337 008c 40F20001 		movw	r1, #:lower16:.LC7
+ 338 0090 2246     		mov	r2, r4
+ 339 0092 2846     		mov	r0, r5
+ 340 0094 C0F20001 		movt	r1, #:upper16:.LC7
+ 341 0098 FFF7FEFF 		bl	scheduleMsg
+ 342 009c 3668     		ldr	r6, [r6]
+ 343 009e D6F86822 		ldr	r2, [r6, #616]
+ 344 00a2 40F20003 		movw	r3, #:lower16:.LANCHOR8
+ 345 00a6 C0F20003 		movt	r3, #:upper16:.LANCHOR8
+ 346 00aa AAB9     		cbnz	r2, .L31
+ 347 00ac D6F86002 		ldr	r0, [r6, #608]	@ float
+ 348 00b0 1F68     		ldr	r7, [r3]
+ 349 00b2 FFF7FEFF 		bl	__aeabi_f2d
+ 350 00b6 0446     		mov	r4, r0
+ 351 00b8 D6F86402 		ldr	r0, [r6, #612]	@ float
+ 352 00bc 0D46     		mov	r5, r1
+ 353 00be FFF7FEFF 		bl	__aeabi_f2d
+ 354 00c2 CDE90001 		strd	r0, [sp]
+ 355 00c6 40F20001 		movw	r1, #:lower16:.LC8
+ 356 00ca 3846     		mov	r0, r7
+ 357 00cc 2246     		mov	r2, r4
+ 358 00ce 2B46     		mov	r3, r5
+ 359 00d0 C0F20001 		movt	r1, #:upper16:.LC8
+ 360 00d4 FFF7FEFF 		bl	scheduleMsg
+ 361              	.L31:
+ 362 00d8 03B0     		add	sp, sp, #12
+ 363              		@ sp needed
+ 364 00da BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ 365              	.L32:
+ 366 00de D3F8F840 		ldr	r4, [r3, #248]
+ 367 00e2 D7F80080 		ldr	r8, [r7]
+ 368 00e6 2046     		mov	r0, r4
+ 369 00e8 FFF7FEFF 		bl	_Z29getAir_pressure_sensor_type_e26air_pressure_sensor_type_e
+ 370 00ec 0546     		mov	r5, r0
+ 371 00ee FFF7FEFF 		bl	_Z6getMapv
+ 372 00f2 FFF7FEFF 		bl	__aeabi_f2d
+ 373 00f6 CDE90001 		strd	r0, [sp]
+ 374 00fa 40F20001 		movw	r1, #:lower16:.LC5
+ 375 00fe 4046     		mov	r0, r8
+ 376 0100 2B46     		mov	r3, r5
+ 377 0102 2246     		mov	r2, r4
+ 378 0104 C0F20001 		movt	r1, #:upper16:.LC5
+ 379 0108 FFF7FEFF 		bl	scheduleMsg
+ 380 010c D6F80080 		ldr	r8, [r6]
+ 381 0110 D8F8F830 		ldr	r3, [r8, #248]
+ 382 0114 0BB1     		cbz	r3, .L36
+ 383 0116 4346     		mov	r3, r8
+ 384 0118 AFE7     		b	.L33
+ 385              	.L36:
+ 386 011a D8F8F000 		ldr	r0, [r8, #240]	@ float
+ 387 011e D7F80090 		ldr	r9, [r7]
+ 388 0122 FFF7FEFF 		bl	__aeabi_f2d
+ 389 0126 0446     		mov	r4, r0
+ 390 0128 D8F8F400 		ldr	r0, [r8, #244]	@ float
+ 391 012c 0D46     		mov	r5, r1
+ 392 012e FFF7FEFF 		bl	__aeabi_f2d
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s 			page 8
+
+
+ 393 0132 CDE90001 		strd	r0, [sp]
+ 394 0136 40F20001 		movw	r1, #:lower16:.LC6
+ 395 013a 2B46     		mov	r3, r5
+ 396 013c 2246     		mov	r2, r4
+ 397 013e 4846     		mov	r0, r9
+ 398 0140 C0F20001 		movt	r1, #:upper16:.LC6
+ 399 0144 FFF7FEFF 		bl	scheduleMsg
+ 400 0148 3368     		ldr	r3, [r6]
+ 401 014a 96E7     		b	.L33
+ 402              		.size	_ZL12printMAPInfov, .-_ZL12printMAPInfov
+ 403 014c AFF30080 		.section	.text._Z14initMapDecoderP7Logging,"ax",%progbits
+ 404              		.align	2
+ 405              		.p2align 4,,15
+ 406              		.global	_Z14initMapDecoderP7Logging
+ 407              		.thumb
+ 408              		.thumb_func
+ 409              		.type	_Z14initMapDecoderP7Logging, %function
+ 410              	_Z14initMapDecoderP7Logging:
+ 411              		@ args = 0, pretend = 0, frame = 0
+ 412              		@ frame_needed = 0, uses_anonymous_args = 0
+ 413 0000 70B5     		push	{r4, r5, r6, lr}
+ 414 0002 40F20004 		movw	r4, #:lower16:engineConfiguration
+ 415 0006 C0F20004 		movt	r4, #:upper16:engineConfiguration
+ 416 000a 40F20005 		movw	r5, #:lower16:.LANCHOR8
+ 417 000e 2668     		ldr	r6, [r4]
+ 418 0010 C0F20005 		movt	r5, #:upper16:.LANCHOR8
+ 419 0014 D6F8F020 		ldr	r2, [r6, #240]	@ float
+ 420 0018 D6F8F460 		ldr	r6, [r6, #244]	@ float
+ 421 001c 2860     		str	r0, [r5]
+ 422 001e 82B0     		sub	sp, sp, #8
+ 423 0020 0023     		movs	r3, #0
+ 424 0022 40F20000 		movw	r0, #:lower16:.LANCHOR9
+ 425 0026 0021     		movs	r1, #0
+ 426 0028 C4F2A003 		movt	r3, 16544
+ 427 002c 0096     		str	r6, [sp]	@ float
+ 428 002e C0F20000 		movt	r0, #:upper16:.LANCHOR9
+ 429 0032 FFF7FEFF 		bl	_ZN17FastInterpolation4initEffff
+ 430 0036 2268     		ldr	r2, [r4]
+ 431 0038 D2F8F810 		ldr	r1, [r2, #248]
+ 432 003c 0629     		cmp	r1, #6
+ 433 003e 5ED8     		bhi	.L38
+ 434 0040 DFE801F0 		tbb	[pc, r1]
+ 435              	.L40:
+ 436 0044 57       		.byte	(.L39-.L40)/2
+ 437 0045 04       		.byte	(.L48-.L40)/2
+ 438 0046 39       		.byte	(.L42-.L40)/2
+ 439 0047 3F       		.byte	(.L43-.L40)/2
+ 440 0048 45       		.byte	(.L44-.L40)/2
+ 441 0049 4B       		.byte	(.L45-.L40)/2
+ 442 004a 51       		.byte	(.L46-.L40)/2
+ 443 004b 00       		.align	1
+ 444              	.L48:
+ 445 004c 40F20003 		movw	r3, #:lower16:.LANCHOR2
+ 446 0050 1146     		mov	r1, r2
+ 447 0052 C0F20003 		movt	r3, #:upper16:.LANCHOR2
+ 448              	.L41:
+ 449 0056 40F20002 		movw	r2, #:lower16:.LANCHOR10
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s 			page 9
+
+
+ 450 005a 91F8DA15 		ldrb	r1, [r1, #1498]	@ zero_extendqisi2
+ 451 005e C0F20002 		movt	r2, #:upper16:.LANCHOR10
+ 452 0062 4807     		lsls	r0, r1, #29
+ 453 0064 1360     		str	r3, [r2]
+ 454 0066 19D5     		bpl	.L47
+ 455 0068 40F20003 		movw	r3, #:lower16:boardConfiguration
+ 456 006c C0F20003 		movt	r3, #:upper16:boardConfiguration
+ 457 0070 40F20000 		movw	r0, #:lower16:.LC9
+ 458 0074 1B68     		ldr	r3, [r3]
+ 459 0076 C0F20000 		movt	r0, #:upper16:.LC9
+ 460 007a D3F86413 		ldr	r1, [r3, #868]
+ 461 007e FFF7FEFF 		bl	_Z22initWaveAnalyzerDriverPKc11brain_pin_e
+ 462 0082 0121     		movs	r1, #1
+ 463 0084 0446     		mov	r4, r0
+ 464 0086 FFF7FEFF 		bl	_Z16startInputDriverP15digital_input_sb
+ 465 008a 40F20001 		movw	r1, #:lower16:_ZL23digitalMapWidthCallbackv
+ 466 008e 04F10800 		add	r0, r4, #8
+ 467 0092 C0F20001 		movt	r1, #:upper16:_ZL23digitalMapWidthCallbackv
+ 468 0096 0022     		movs	r2, #0
+ 469 0098 FFF7FEFF 		bl	_ZN16IntListenerArray16registerCallbackEPFviEPv
+ 470              	.L47:
+ 471 009c 40F20000 		movw	r0, #:lower16:.LC10
+ 472 00a0 40F20001 		movw	r1, #:lower16:_ZL12printMAPInfov
+ 473 00a4 C0F20000 		movt	r0, #:upper16:.LC10
+ 474 00a8 C0F20001 		movt	r1, #:upper16:_ZL12printMAPInfov
+ 475 00ac 02B0     		add	sp, sp, #8
+ 476              		@ sp needed
+ 477 00ae BDE87040 		pop	{r4, r5, r6, lr}
+ 478 00b2 FFF7FEBF 		b	addConsoleAction
+ 479              	.L42:
+ 480 00b6 40F20003 		movw	r3, #:lower16:.LANCHOR3
+ 481 00ba 1146     		mov	r1, r2
+ 482 00bc C0F20003 		movt	r3, #:upper16:.LANCHOR3
+ 483 00c0 C9E7     		b	.L41
+ 484              	.L43:
+ 485 00c2 40F20003 		movw	r3, #:lower16:.LANCHOR4
+ 486 00c6 1146     		mov	r1, r2
+ 487 00c8 C0F20003 		movt	r3, #:upper16:.LANCHOR4
+ 488 00cc C3E7     		b	.L41
+ 489              	.L44:
+ 490 00ce 40F20003 		movw	r3, #:lower16:.LANCHOR5
+ 491 00d2 1146     		mov	r1, r2
+ 492 00d4 C0F20003 		movt	r3, #:upper16:.LANCHOR5
+ 493 00d8 BDE7     		b	.L41
+ 494              	.L45:
+ 495 00da 40F20003 		movw	r3, #:lower16:.LANCHOR6
+ 496 00de 1146     		mov	r1, r2
+ 497 00e0 C0F20003 		movt	r3, #:upper16:.LANCHOR6
+ 498 00e4 B7E7     		b	.L41
+ 499              	.L46:
+ 500 00e6 40F20003 		movw	r3, #:lower16:.LANCHOR7
+ 501 00ea 1146     		mov	r1, r2
+ 502 00ec C0F20003 		movt	r3, #:upper16:.LANCHOR7
+ 503 00f0 B1E7     		b	.L41
+ 504              	.L39:
+ 505 00f2 40F20003 		movw	r3, #:lower16:.LANCHOR9
+ 506 00f6 1146     		mov	r1, r2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s 			page 10
+
+
+ 507 00f8 C0F20003 		movt	r3, #:upper16:.LANCHOR9
+ 508 00fc ABE7     		b	.L41
+ 509              	.L38:
+ 510 00fe 40F20000 		movw	r0, #:lower16:.LC0
+ 511 0102 C0F20000 		movt	r0, #:upper16:.LC0
+ 512 0106 FFF7FEFF 		bl	firmwareError
+ 513 010a 40F20003 		movw	r3, #:lower16:.LANCHOR9
+ 514 010e 2168     		ldr	r1, [r4]
+ 515 0110 C0F20003 		movt	r3, #:upper16:.LANCHOR9
+ 516 0114 9FE7     		b	.L41
+ 517              		.size	_Z14initMapDecoderP7Logging, .-_Z14initMapDecoderP7Logging
+ 518 0116 00BFAFF3 		.section	.text.startup._GLOBAL__sub_I__Z14decodePressurefP28air_pressure_sensor_config_s,"ax",%pro
+ 518      0080AFF3 
+ 518      0080
+ 519              		.align	2
+ 520              		.p2align 4,,15
+ 521              		.thumb
+ 522              		.thumb_func
+ 523              		.type	_GLOBAL__sub_I__Z14decodePressurefP28air_pressure_sensor_config_s, %function
+ 524              	_GLOBAL__sub_I__Z14decodePressurefP28air_pressure_sensor_config_s:
+ 525              		@ args = 0, pretend = 0, frame = 0
+ 526              		@ frame_needed = 0, uses_anonymous_args = 0
+ 527 0000 10B5     		push	{r4, lr}
+ 528 0002 40F20000 		movw	r0, #:lower16:.LANCHOR9
+ 529 0006 82B0     		sub	sp, sp, #8
+ 530 0008 C0F20000 		movt	r0, #:upper16:.LANCHOR9
+ 531 000c FFF7FEFF 		bl	_ZN17FastInterpolationC1Ev
+ 532 0010 4CF2AE73 		movw	r3, #51118
+ 533 0014 C4F23633 		movt	r3, 17206
+ 534 0018 0024     		movs	r4, #0
+ 535 001a 0093     		str	r3, [sp]	@ float
+ 536 001c 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 537 0020 47F6E122 		movw	r2, #31457
+ 538 0024 0023     		movs	r3, #0
+ 539 0026 2146     		mov	r1, r4	@ float
+ 540 0028 CCF2D402 		movt	r2, 49364
+ 541 002c C4F2A003 		movt	r3, 16544
+ 542 0030 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 543 0034 FFF7FEFF 		bl	_ZN17FastInterpolationC1Effff
+ 544 0038 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 545 003c 4DF61002 		movw	r2, #55312
+ 546 0040 0023     		movs	r3, #0
+ 547 0042 0094     		str	r4, [sp]	@ float
+ 548 0044 4FF07C51 		mov	r1, #1056964608
+ 549 0048 C4F2B622 		movt	r2, 17078
+ 550 004c C4F24003 		movt	r3, 16448
+ 551 0050 C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 552 0054 FFF7FEFF 		bl	_ZN17FastInterpolationC1Effff
+ 553 0058 0023     		movs	r3, #0
+ 554 005a C4F24833 		movt	r3, 17224
+ 555 005e 0093     		str	r3, [sp]	@ float
+ 556 0060 40F20000 		movw	r0, #:lower16:.LANCHOR6
+ 557 0064 0023     		movs	r3, #0
+ 558 0066 2146     		mov	r1, r4	@ float
+ 559 0068 2246     		mov	r2, r4	@ float
+ 560 006a C4F2A003 		movt	r3, 16544
+ 561 006e C0F20000 		movt	r0, #:upper16:.LANCHOR6
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s 			page 11
+
+
+ 562 0072 FFF7FEFF 		bl	_ZN17FastInterpolationC1Effff
+ 563 0076 0023     		movs	r3, #0
+ 564 0078 C4F29833 		movt	r3, 17304
+ 565 007c 0093     		str	r3, [sp]	@ float
+ 566 007e 40F20000 		movw	r0, #:lower16:.LANCHOR7
+ 567 0082 48F63711 		movw	r1, #35127
+ 568 0086 0022     		movs	r2, #0
+ 569 0088 43F67D73 		movw	r3, #16253
+ 570 008c C3F62171 		movt	r1, 16161
+ 571 0090 C4F22022 		movt	r2, 16928
+ 572 0094 C4F29D03 		movt	r3, 16541
+ 573 0098 C0F20000 		movt	r0, #:upper16:.LANCHOR7
+ 574 009c FFF7FEFF 		bl	_ZN17FastInterpolationC1Effff
+ 575 00a0 0023     		movs	r3, #0
+ 576 00a2 C4F28233 		movt	r3, 17282
+ 577 00a6 0093     		str	r3, [sp]	@ float
+ 578 00a8 40F20000 		movw	r0, #:lower16:.LANCHOR3
+ 579 00ac 0023     		movs	r3, #0
+ 580 00ae 2146     		mov	r1, r4	@ float
+ 581 00b0 4FF08242 		mov	r2, #1090519040
+ 582 00b4 C4F2A003 		movt	r3, 16544
+ 583 00b8 C0F20000 		movt	r0, #:upper16:.LANCHOR3
+ 584 00bc FFF7FEFF 		bl	_ZN17FastInterpolationC1Effff
+ 585 00c0 0023     		movs	r3, #0
+ 586 00c2 C4F2C823 		movt	r3, 17096
+ 587 00c6 0093     		str	r3, [sp]	@ float
+ 588 00c8 40F20000 		movw	r0, #:lower16:.LANCHOR5
+ 589 00cc 0023     		movs	r3, #0
+ 590 00ce 2246     		mov	r2, r4	@ float
+ 591 00d0 4FF07C51 		mov	r1, #1056964608
+ 592 00d4 C4F29003 		movt	r3, 16528
+ 593 00d8 C0F20000 		movt	r0, #:upper16:.LANCHOR5
+ 594 00dc FFF7FEFF 		bl	_ZN17FastInterpolationC1Effff
+ 595 00e0 02B0     		add	sp, sp, #8
+ 596              		@ sp needed
+ 597 00e2 10BD     		pop	{r4, pc}
+ 598              		.size	_GLOBAL__sub_I__Z14decodePressurefP28air_pressure_sensor_config_s, .-_GLOBAL__sub_I__Z14deco
+ 599 00e4 AFF30080 		.section	.init_array,"aw",%init_array
+ 599      AFF30080 
+ 599      AFF30080 
+ 600              		.align	2
+ 601 0000 00000000 		.word	_GLOBAL__sub_I__Z14decodePressurefP28air_pressure_sensor_config_s(target1)
+ 602              		.section	.bss._ZL9honda3bar,"aw",%nobits
+ 603              		.align	2
+ 604              		.set	.LANCHOR4,. + 0
+ 605              		.type	_ZL9honda3bar, %object
+ 606              		.size	_ZL9honda3bar, 8
+ 607              	_ZL9honda3bar:
+ 608 0000 00000000 		.space	8
+ 608      00000000 
+ 609              		.section	.bss._ZL7mpx4250,"aw",%nobits
+ 610              		.align	2
+ 611              		.set	.LANCHOR3,. + 0
+ 612              		.type	_ZL7mpx4250, %object
+ 613              		.size	_ZL7mpx4250, 8
+ 614              	_ZL7mpx4250:
+ 615 0000 00000000 		.space	8
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s 			page 12
+
+
+ 615      00000000 
+ 616              		.section	.bss._ZL9customMap,"aw",%nobits
+ 617              		.align	2
+ 618              		.set	.LANCHOR9,. + 0
+ 619              		.type	_ZL9customMap, %object
+ 620              		.size	_ZL9customMap, 8
+ 621              	_ZL9customMap:
+ 622 0000 00000000 		.space	8
+ 622      00000000 
+ 623              		.section	.bss._ZL9subyDenso,"aw",%nobits
+ 624              		.align	2
+ 625              		.set	.LANCHOR6,. + 0
+ 626              		.type	_ZL9subyDenso, %object
+ 627              		.size	_ZL9subyDenso, 8
+ 628              	_ZL9subyDenso:
+ 629 0000 00000000 		.space	8
+ 629      00000000 
+ 630              		.section	.bss._ZL6gm3bar,"aw",%nobits
+ 631              		.align	2
+ 632              		.set	.LANCHOR7,. + 0
+ 633              		.type	_ZL6gm3bar, %object
+ 634              		.size	_ZL6gm3bar, 8
+ 635              	_ZL6gm3bar:
+ 636 0000 00000000 		.space	8
+ 636      00000000 
+ 637              		.section	.bss._ZL7mapFreq,"aw",%nobits
+ 638              		.align	2
+ 639              		.set	.LANCHOR0,. + 0
+ 640              		.type	_ZL7mapFreq, %object
+ 641              		.size	_ZL7mapFreq, 4
+ 642              	_ZL7mapFreq:
+ 643 0000 00000000 		.space	4
+ 644              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 645              		.align	2
+ 646              	.LC0:
+ 647 0000 556E6B6E 		.ascii	"Unknown MAP type: %d\000"
+ 647      6F776E20 
+ 647      4D415020 
+ 647      74797065 
+ 647      3A202564 
+ 648 0015 000000   		.space	3
+ 649              	.LC1:
+ 650 0018 6D617000 		.ascii	"map\000"
+ 651              	.LC2:
+ 652 001c 6261726F 		.ascii	"baro\000"
+ 652      00
+ 653 0021 000000   		.space	3
+ 654              	.LC3:
+ 655 0024 696E7374 		.ascii	"instant value=%fkPa\000"
+ 655      616E7420 
+ 655      76616C75 
+ 655      653D2566 
+ 655      6B506100 
+ 656              	.LC4:
+ 657 0038 696E7374 		.ascii	"instant value=%fHz @ %s\000"
+ 657      616E7420 
+ 657      76616C75 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s 			page 13
+
+
+ 657      653D2566 
+ 657      487A2040 
+ 658              	.LC5:
+ 659 0050 6D617020 		.ascii	"map type=%d/%s MAP=%fkPa\000"
+ 659      74797065 
+ 659      3D25642F 
+ 659      2573204D 
+ 659      41503D25 
+ 660 0069 000000   		.space	3
+ 661              	.LC6:
+ 662 006c 6174303D 		.ascii	"at0=%f at5=%f\000"
+ 662      25662061 
+ 662      74353D25 
+ 662      6600
+ 663 007a 0000     		.space	2
+ 664              	.LC7:
+ 665 007c 6261726F 		.ascii	"baro type=%d value=%f\000"
+ 665      20747970 
+ 665      653D2564 
+ 665      2076616C 
+ 665      75653D25 
+ 666 0092 0000     		.space	2
+ 667              	.LC8:
+ 668 0094 6D696E3D 		.ascii	"min=%f max=%f\000"
+ 668      2566206D 
+ 668      61783D25 
+ 668      6600
+ 669 00a2 0000     		.space	2
+ 670              	.LC9:
+ 671 00a4 6D617020 		.ascii	"map freq\000"
+ 671      66726571 
+ 671      00
+ 672 00ad 000000   		.space	3
+ 673              	.LC10:
+ 674 00b0 6D617069 		.ascii	"mapinfo\000"
+ 674      6E666F00 
+ 675              		.section	.bss._ZL15prevWidthTimeNt,"aw",%nobits
+ 676              		.align	3
+ 677              		.set	.LANCHOR1,. + 0
+ 678              		.type	_ZL15prevWidthTimeNt, %object
+ 679              		.size	_ZL15prevWidthTimeNt, 8
+ 680              	_ZL15prevWidthTimeNt:
+ 681 0000 00000000 		.space	8
+ 681      00000000 
+ 682              		.section	.bss._ZL8denso183,"aw",%nobits
+ 683              		.align	2
+ 684              		.set	.LANCHOR2,. + 0
+ 685              		.type	_ZL8denso183, %object
+ 686              		.size	_ZL8denso183, 8
+ 687              	_ZL8denso183:
+ 688 0000 00000000 		.space	8
+ 688      00000000 
+ 689              		.section	.bss._ZL13dodgeNeon2003,"aw",%nobits
+ 690              		.align	2
+ 691              		.set	.LANCHOR5,. + 0
+ 692              		.type	_ZL13dodgeNeon2003, %object
+ 693              		.size	_ZL13dodgeNeon2003, 8
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s 			page 14
+
+
+ 694              	_ZL13dodgeNeon2003:
+ 695 0000 00000000 		.space	8
+ 695      00000000 
+ 696              		.section	.bss._ZL6logger,"aw",%nobits
+ 697              		.align	2
+ 698              		.set	.LANCHOR8,. + 0
+ 699              		.type	_ZL6logger, %object
+ 700              		.size	_ZL6logger, 4
+ 701              	_ZL6logger:
+ 702 0000 00000000 		.space	4
+ 703              		.section	.bss._ZL10mapDecoder,"aw",%nobits
+ 704              		.align	2
+ 705              		.set	.LANCHOR10,. + 0
+ 706              		.type	_ZL10mapDecoder, %object
+ 707              		.size	_ZL10mapDecoder, 4
+ 708              	_ZL10mapDecoder:
+ 709 0000 00000000 		.space	4
+ 710              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s 			page 15
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 map.cpp
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:19     .text._ZL23digitalMapWidthCallbackv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:24     .text._ZL23digitalMapWidthCallbackv:00000000 _ZL23digitalMapWidthCallbackv
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:677    .bss._ZL15prevWidthTimeNt:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:639    .bss._ZL7mapFreq:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:51     .text._ZL23digitalMapWidthCallbackv:00000048 $d
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:54     .text._Z14decodePressurefP28air_pressure_sensor_config_s:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:60     .text._Z14decodePressurefP28air_pressure_sensor_config_s:00000000 _Z14decodePressurefP28air_pressure_sensor_config_s
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:71     .text._Z14decodePressurefP28air_pressure_sensor_config_s:00000010 $d
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:632    .bss._ZL6gm3bar:00000000 .LANCHOR7
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:684    .bss._ZL8denso183:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:611    .bss._ZL7mpx4250:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:604    .bss._ZL9honda3bar:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:691    .bss._ZL13dodgeNeon2003:00000000 .LANCHOR5
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:625    .bss._ZL9subyDenso:00000000 .LANCHOR6
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:646    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:151    .text._Z15getMapByVoltagef:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:157    .text._Z15getMapByVoltagef:00000000 _Z15getMapByVoltagef
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:168    .text._Z9getRawMapv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:174    .text._Z9getRawMapv:00000000 _Z9getRawMapv
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:649    .rodata.str1.4:00000018 .LC1
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:222    .text._Z9getRawMapv:00000080 $d
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:225    .text._Z13hasBaroSensorv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:231    .text._Z13hasBaroSensorv:00000000 _Z13hasBaroSensorv
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:249    .text._Z15getBaroPressurev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:255    .text._Z15getBaroPressurev:00000000 _Z15getBaroPressurev
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:651    .rodata.str1.4:0000001c .LC2
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:280    .text._Z15getBaroPressurev:00000048 $d
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:284    .text._ZL12printMAPInfov:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:289    .text._ZL12printMAPInfov:00000000 _ZL12printMAPInfov
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:698    .bss._ZL6logger:00000000 .LANCHOR8
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:654    .rodata.str1.4:00000024 .LC3
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:656    .rodata.str1.4:00000038 .LC4
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:664    .rodata.str1.4:0000007c .LC7
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:667    .rodata.str1.4:00000094 .LC8
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:658    .rodata.str1.4:00000050 .LC5
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:661    .rodata.str1.4:0000006c .LC6
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:404    .text._Z14initMapDecoderP7Logging:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:410    .text._Z14initMapDecoderP7Logging:00000000 _Z14initMapDecoderP7Logging
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:618    .bss._ZL9customMap:00000000 .LANCHOR9
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:436    .text._Z14initMapDecoderP7Logging:00000044 $d
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:705    .bss._ZL10mapDecoder:00000000 .LANCHOR10
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:670    .rodata.str1.4:000000a4 .LC9
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:673    .rodata.str1.4:000000b0 .LC10
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:519    .text.startup._GLOBAL__sub_I__Z14decodePressurefP28air_pressure_sensor_config_s:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:524    .text.startup._GLOBAL__sub_I__Z14decodePressurefP28air_pressure_sensor_config_s:00000000 _GLOBAL__sub_I__Z14decodePressurefP28air_pressure_sensor_config_s
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:600    .init_array:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:603    .bss._ZL9honda3bar:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:607    .bss._ZL9honda3bar:00000000 _ZL9honda3bar
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:610    .bss._ZL7mpx4250:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:614    .bss._ZL7mpx4250:00000000 _ZL7mpx4250
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:617    .bss._ZL9customMap:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:621    .bss._ZL9customMap:00000000 _ZL9customMap
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:624    .bss._ZL9subyDenso:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:628    .bss._ZL9subyDenso:00000000 _ZL9subyDenso
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:631    .bss._ZL6gm3bar:00000000 $d
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s 			page 16
+
+
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:635    .bss._ZL6gm3bar:00000000 _ZL6gm3bar
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:638    .bss._ZL7mapFreq:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:642    .bss._ZL7mapFreq:00000000 _ZL7mapFreq
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:645    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:676    .bss._ZL15prevWidthTimeNt:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:680    .bss._ZL15prevWidthTimeNt:00000000 _ZL15prevWidthTimeNt
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:683    .bss._ZL8denso183:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:687    .bss._ZL8denso183:00000000 _ZL8denso183
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:690    .bss._ZL13dodgeNeon2003:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:694    .bss._ZL13dodgeNeon2003:00000000 _ZL13dodgeNeon2003
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:697    .bss._ZL6logger:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:701    .bss._ZL6logger:00000000 _ZL6logger
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:704    .bss._ZL10mapDecoder:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:708    .bss._ZL10mapDecoder:00000000 _ZL10mapDecoder
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:53     .text._ZL23digitalMapWidthCallbackv:0000004c $t
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:224    .text._Z9getRawMapv:00000084 $t
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:283    .text._Z15getBaroPressurev:0000004c $t
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:78     .text._Z14decodePressurefP28air_pressure_sensor_config_s:00000017 $d
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:78     .text._Z14decodePressurefP28air_pressure_sensor_config_s:00000018 $t
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:443    .text._Z14initMapDecoderP7Logging:0000004b $d
+C:\Users\pc\AppData\Local\Temp\ccAlaF8V.s:443    .text._Z14initMapDecoderP7Logging:0000004c $t
+
+UNDEFINED SYMBOLS
+__aeabi_uldivmod
+__aeabi_ul2f
+getTimeNowNt
+_ZN17FastInterpolation8getValueEf
+_Z11interpolatefffff
+firmwareError
+engineConfiguration
+_Z19getInternalAdcValuePKc13adc_channel_e
+boardConfiguration
+__aeabi_f2d
+scheduleMsg
+_Z10hwPortname11brain_pin_e
+_Z29getAir_pressure_sensor_type_e26air_pressure_sensor_type_e
+_Z6getMapv
+_ZN17FastInterpolation4initEffff
+_Z22initWaveAnalyzerDriverPKc11brain_pin_e
+_Z16startInputDriverP15digital_input_sb
+_ZN16IntListenerArray16registerCallbackEPFviEPv
+addConsoleAction
+_ZN17FastInterpolationC1Ev
+_ZN17FastInterpolationC1Effff

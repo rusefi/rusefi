@@ -137,6 +137,11 @@ typedef enum {
 	TT_ONE = 18,
 
 	TT_DODGE_RAM = 19,
+	TT_60_2_VW = 20,
+
+	TT_HONDA_ACCORD_1_24 = 21,
+
+	TT_UNUSED = 22, // this is used if we want to iterate over all trigger types
 
 	Force_4b_trigger_type = ENUM_32_BITS,
 } trigger_type_e;
@@ -358,7 +363,7 @@ typedef enum {
 	EFI_ADC_15 = 15,
 
 
-	EFI_ADC_NONE = 888,
+	EFI_ADC_NONE = 16,
 	EFI_ADC_ERROR = 999,
 
 	Force_4b_cranking_adc_channel = ENUM_32_BITS,
@@ -374,6 +379,8 @@ typedef enum {
 	ES_14Point7_Free = 2,
 
 	ES_NarrowBand = 3,
+
+	ES_PLX = 4,
 
 	Force_4b_ego_sensor = ENUM_32_BITS,
 } ego_sensor_e;

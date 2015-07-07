@@ -1,0 +1,957 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"chevents.c"
+  16              		.section	.text.chEvtRegisterMask,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	chEvtRegisterMask
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	chEvtRegisterMask, %function
+  23              	chEvtRegisterMask:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 0029     		cmp	r1, #0
+  27 0002 18BF     		it	ne
+  28 0004 0028     		cmpne	r0, #0
+  29 0006 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  30 0008 0546     		mov	r5, r0
+  31 000a 0C46     		mov	r4, r1
+  32 000c 1746     		mov	r7, r2
+  33 000e 0AD1     		bne	.L2
+  34 0010 40F20000 		movw	r0, #:lower16:.LC0
+  35 0014 40F20001 		movw	r1, #:lower16:.LC1
+  36 0018 C0F20000 		movt	r0, #:upper16:.LC0
+  37 001c C0F20001 		movt	r1, #:upper16:.LC1
+  38 0020 5722     		movs	r2, #87
+  39 0022 FFF7FEFF 		bl	chDbgPanic3
+  40              	.L2:
+  41 0026 2023     		movs	r3, #32
+  42              	@ 89 "chibios/os/kernel/src/chevents.c" 1
+  43 0028 83F31188 		msr     BASEPRI, r3
+  44              	@ 0 "" 2
+  45              		.thumb
+  46 002c FFF7FEFF 		bl	dbg_check_lock
+  47 0030 40F20003 		movw	r3, #:lower16:rlist
+  48 0034 C0F20003 		movt	r3, #:upper16:rlist
+  49 0038 2A68     		ldr	r2, [r5]
+  50 003a 9B69     		ldr	r3, [r3, #24]
+  51 003c 2260     		str	r2, [r4]
+  52 003e 0026     		movs	r6, #0
+  53 0040 2C60     		str	r4, [r5]
+  54 0042 6360     		str	r3, [r4, #4]
+  55 0044 A760     		str	r7, [r4, #8]
+  56 0046 E660     		str	r6, [r4, #12]
+  57 0048 FFF7FEFF 		bl	dbg_check_unlock
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s 			page 2
+
+
+  58 004c 3346     		mov	r3, r6
+  59              	@ 95 "chibios/os/kernel/src/chevents.c" 1
+  60 004e 83F31188 		msr     BASEPRI, r3
+  61              	@ 0 "" 2
+  62              		.thumb
+  63 0052 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+  64              		.size	chEvtRegisterMask, .-chEvtRegisterMask
+  65 0054 AFF30080 		.section	.text.chEvtUnregister,"ax",%progbits
+  65      AFF30080 
+  65      AFF30080 
+  66              		.align	2
+  67              		.p2align 4,,15
+  68              		.global	chEvtUnregister
+  69              		.thumb
+  70              		.thumb_func
+  71              		.type	chEvtUnregister, %function
+  72              	chEvtUnregister:
+  73              		@ args = 0, pretend = 0, frame = 0
+  74              		@ frame_needed = 0, uses_anonymous_args = 0
+  75 0000 0029     		cmp	r1, #0
+  76 0002 18BF     		it	ne
+  77 0004 0028     		cmpne	r0, #0
+  78 0006 38B5     		push	{r3, r4, r5, lr}
+  79 0008 0446     		mov	r4, r0
+  80 000a 0D46     		mov	r5, r1
+  81 000c 1AD0     		beq	.L16
+  82              	.L8:
+  83 000e 2023     		movs	r3, #32
+  84              	@ 117 "chibios/os/kernel/src/chevents.c" 1
+  85 0010 83F31188 		msr     BASEPRI, r3
+  86              	@ 0 "" 2
+  87              		.thumb
+  88 0014 FFF7FEFF 		bl	dbg_check_lock
+  89 0018 2246     		mov	r2, r4
+  90 001a 02E0     		b	.L9
+  91              	.L12:
+  92 001c 9D42     		cmp	r5, r3
+  93 001e 09D0     		beq	.L17
+  94 0020 1A46     		mov	r2, r3
+  95              	.L9:
+  96 0022 1368     		ldr	r3, [r2]
+  97 0024 A342     		cmp	r3, r4
+  98 0026 F9D1     		bne	.L12
+  99 0028 FFF7FEFF 		bl	dbg_check_unlock
+ 100 002c 0023     		movs	r3, #0
+ 101              	@ 125 "chibios/os/kernel/src/chevents.c" 1
+ 102 002e 83F31188 		msr     BASEPRI, r3
+ 103              	@ 0 "" 2
+ 104              		.thumb
+ 105 0032 38BD     		pop	{r3, r4, r5, pc}
+ 106              	.L17:
+ 107 0034 2B68     		ldr	r3, [r5]
+ 108 0036 1360     		str	r3, [r2]
+ 109 0038 FFF7FEFF 		bl	dbg_check_unlock
+ 110 003c 0023     		movs	r3, #0
+ 111              	@ 125 "chibios/os/kernel/src/chevents.c" 1
+ 112 003e 83F31188 		msr     BASEPRI, r3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s 			page 3
+
+
+ 113              	@ 0 "" 2
+ 114              		.thumb
+ 115 0042 38BD     		pop	{r3, r4, r5, pc}
+ 116              	.L16:
+ 117 0044 40F20000 		movw	r0, #:lower16:.LC2
+ 118 0048 40F20001 		movw	r1, #:lower16:.LC1
+ 119 004c C0F20000 		movt	r0, #:upper16:.LC2
+ 120 0050 C0F20001 		movt	r1, #:upper16:.LC1
+ 121 0054 7222     		movs	r2, #114
+ 122 0056 FFF7FEFF 		bl	chDbgPanic3
+ 123 005a D8E7     		b	.L8
+ 124              		.size	chEvtUnregister, .-chEvtUnregister
+ 125 005c AFF30080 		.section	.text.chEvtGetAndClearEvents,"ax",%progbits
+ 126              		.align	2
+ 127              		.p2align 4,,15
+ 128              		.global	chEvtGetAndClearEvents
+ 129              		.thumb
+ 130              		.thumb_func
+ 131              		.type	chEvtGetAndClearEvents, %function
+ 132              	chEvtGetAndClearEvents:
+ 133              		@ args = 0, pretend = 0, frame = 0
+ 134              		@ frame_needed = 0, uses_anonymous_args = 0
+ 135 0000 10B5     		push	{r4, lr}
+ 136 0002 2023     		movs	r3, #32
+ 137 0004 0446     		mov	r4, r0
+ 138              	@ 139 "chibios/os/kernel/src/chevents.c" 1
+ 139 0006 83F31188 		msr     BASEPRI, r3
+ 140              	@ 0 "" 2
+ 141              		.thumb
+ 142 000a FFF7FEFF 		bl	dbg_check_lock
+ 143 000e 40F20003 		movw	r3, #:lower16:rlist
+ 144 0012 C0F20003 		movt	r3, #:upper16:rlist
+ 145 0016 9B69     		ldr	r3, [r3, #24]
+ 146 0018 986B     		ldr	r0, [r3, #56]
+ 147 001a 20EA0402 		bic	r2, r0, r4
+ 148 001e 9A63     		str	r2, [r3, #56]
+ 149 0020 0440     		ands	r4, r4, r0
+ 150 0022 FFF7FEFF 		bl	dbg_check_unlock
+ 151 0026 0023     		movs	r3, #0
+ 152              	@ 144 "chibios/os/kernel/src/chevents.c" 1
+ 153 0028 83F31188 		msr     BASEPRI, r3
+ 154              	@ 0 "" 2
+ 155              		.thumb
+ 156 002c 2046     		mov	r0, r4
+ 157 002e 10BD     		pop	{r4, pc}
+ 158              		.size	chEvtGetAndClearEvents, .-chEvtGetAndClearEvents
+ 159              		.section	.text.chEvtAddEvents,"ax",%progbits
+ 160              		.align	2
+ 161              		.p2align 4,,15
+ 162              		.global	chEvtAddEvents
+ 163              		.thumb
+ 164              		.thumb_func
+ 165              		.type	chEvtAddEvents, %function
+ 166              	chEvtAddEvents:
+ 167              		@ args = 0, pretend = 0, frame = 0
+ 168              		@ frame_needed = 0, uses_anonymous_args = 0
+ 169 0000 10B5     		push	{r4, lr}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s 			page 4
+
+
+ 170 0002 2023     		movs	r3, #32
+ 171 0004 0446     		mov	r4, r0
+ 172              	@ 159 "chibios/os/kernel/src/chevents.c" 1
+ 173 0006 83F31188 		msr     BASEPRI, r3
+ 174              	@ 0 "" 2
+ 175              		.thumb
+ 176 000a FFF7FEFF 		bl	dbg_check_lock
+ 177 000e 40F20003 		movw	r3, #:lower16:rlist
+ 178 0012 C0F20003 		movt	r3, #:upper16:rlist
+ 179 0016 9B69     		ldr	r3, [r3, #24]
+ 180 0018 9A6B     		ldr	r2, [r3, #56]
+ 181 001a 1443     		orrs	r4, r4, r2
+ 182 001c 9C63     		str	r4, [r3, #56]
+ 183 001e FFF7FEFF 		bl	dbg_check_unlock
+ 184 0022 0023     		movs	r3, #0
+ 185              	@ 163 "chibios/os/kernel/src/chevents.c" 1
+ 186 0024 83F31188 		msr     BASEPRI, r3
+ 187              	@ 0 "" 2
+ 188              		.thumb
+ 189 0028 2046     		mov	r0, r4
+ 190 002a 10BD     		pop	{r4, pc}
+ 191              		.size	chEvtAddEvents, .-chEvtAddEvents
+ 192 002c AFF30080 		.section	.text.chEvtGetAndClearFlags,"ax",%progbits
+ 193              		.align	2
+ 194              		.p2align 4,,15
+ 195              		.global	chEvtGetAndClearFlags
+ 196              		.thumb
+ 197              		.thumb_func
+ 198              		.type	chEvtGetAndClearFlags, %function
+ 199              	chEvtGetAndClearFlags:
+ 200              		@ args = 0, pretend = 0, frame = 0
+ 201              		@ frame_needed = 0, uses_anonymous_args = 0
+ 202 0000 70B5     		push	{r4, r5, r6, lr}
+ 203 0002 2023     		movs	r3, #32
+ 204 0004 0546     		mov	r5, r0
+ 205              	@ 212 "chibios/os/kernel/src/chevents.c" 1
+ 206 0006 83F31188 		msr     BASEPRI, r3
+ 207              	@ 0 "" 2
+ 208              		.thumb
+ 209 000a 0024     		movs	r4, #0
+ 210 000c FFF7FEFF 		bl	dbg_check_lock
+ 211 0010 EE68     		ldr	r6, [r5, #12]
+ 212 0012 EC60     		str	r4, [r5, #12]
+ 213 0014 FFF7FEFF 		bl	dbg_check_unlock
+ 214 0018 2346     		mov	r3, r4
+ 215              	@ 217 "chibios/os/kernel/src/chevents.c" 1
+ 216 001a 83F31188 		msr     BASEPRI, r3
+ 217              	@ 0 "" 2
+ 218              		.thumb
+ 219 001e 3046     		mov	r0, r6
+ 220 0020 70BD     		pop	{r4, r5, r6, pc}
+ 221              		.size	chEvtGetAndClearFlags, .-chEvtGetAndClearFlags
+ 222 0022 00BFAFF3 		.section	.text.chEvtSignalI,"ax",%progbits
+ 222      0080AFF3 
+ 222      0080AFF3 
+ 222      0080
+ 223              		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s 			page 5
+
+
+ 224              		.p2align 4,,15
+ 225              		.global	chEvtSignalI
+ 226              		.thumb
+ 227              		.thumb_func
+ 228              		.type	chEvtSignalI, %function
+ 229              	chEvtSignalI:
+ 230              		@ args = 0, pretend = 0, frame = 0
+ 231              		@ frame_needed = 0, uses_anonymous_args = 0
+ 232 0000 38B5     		push	{r3, r4, r5, lr}
+ 233 0002 0446     		mov	r4, r0
+ 234 0004 0D46     		mov	r5, r1
+ 235 0006 FFF7FEFF 		bl	chDbgCheckClassI
+ 236 000a C4B1     		cbz	r4, .L26
+ 237              	.L22:
+ 238 000c A26B     		ldr	r2, [r4, #56]
+ 239 000e 94F82030 		ldrb	r3, [r4, #32]	@ zero_extendqisi2
+ 240 0012 45EA0201 		orr	r1, r5, r2
+ 241 0016 082B     		cmp	r3, #8
+ 242 0018 A163     		str	r1, [r4, #56]
+ 243 001a 0CD0     		beq	.L27
+ 244 001c 092B     		cmp	r3, #9
+ 245 001e 00D0     		beq	.L28
+ 246              	.L21:
+ 247 0020 38BD     		pop	{r3, r4, r5, pc}
+ 248              	.L28:
+ 249 0022 A36A     		ldr	r3, [r4, #40]
+ 250 0024 1940     		ands	r1, r1, r3
+ 251 0026 8B42     		cmp	r3, r1
+ 252 0028 FAD1     		bne	.L21
+ 253              	.L24:
+ 254 002a 2046     		mov	r0, r4
+ 255 002c FFF7FEFF 		bl	chSchReadyI
+ 256 0030 0023     		movs	r3, #0
+ 257 0032 8362     		str	r3, [r0, #40]
+ 258 0034 38BD     		pop	{r3, r4, r5, pc}
+ 259              	.L27:
+ 260 0036 A36A     		ldr	r3, [r4, #40]
+ 261 0038 1942     		tst	r1, r3
+ 262 003a F6D1     		bne	.L24
+ 263 003c 38BD     		pop	{r3, r4, r5, pc}
+ 264              	.L26:
+ 265 003e 40F20000 		movw	r0, #:lower16:.LC3
+ 266 0042 40F20001 		movw	r1, #:lower16:.LC1
+ 267 0046 C0F20000 		movt	r0, #:upper16:.LC3
+ 268 004a C0F20001 		movt	r1, #:upper16:.LC1
+ 269 004e FE22     		movs	r2, #254
+ 270 0050 FFF7FEFF 		bl	chDbgPanic3
+ 271 0054 DAE7     		b	.L22
+ 272              		.size	chEvtSignalI, .-chEvtSignalI
+ 273 0056 00BFAFF3 		.section	.text.chEvtBroadcastFlagsI,"ax",%progbits
+ 273      0080AFF3 
+ 273      0080
+ 274              		.align	2
+ 275              		.p2align 4,,15
+ 276              		.global	chEvtBroadcastFlagsI
+ 277              		.thumb
+ 278              		.thumb_func
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s 			page 6
+
+
+ 279              		.type	chEvtBroadcastFlagsI, %function
+ 280              	chEvtBroadcastFlagsI:
+ 281              		@ args = 0, pretend = 0, frame = 0
+ 282              		@ frame_needed = 0, uses_anonymous_args = 0
+ 283 0000 70B5     		push	{r4, r5, r6, lr}
+ 284 0002 0546     		mov	r5, r0
+ 285 0004 0E46     		mov	r6, r1
+ 286 0006 FFF7FEFF 		bl	chDbgCheckClassI
+ 287 000a 65B1     		cbz	r5, .L34
+ 288              	.L30:
+ 289 000c 2C68     		ldr	r4, [r5]
+ 290 000e A542     		cmp	r5, r4
+ 291 0010 08D0     		beq	.L29
+ 292              	.L33:
+ 293 0012 201D     		adds	r0, r4, #4
+ 294 0014 0BC8     		ldmia	r0, {r0, r1, r3}
+ 295 0016 3343     		orrs	r3, r3, r6
+ 296 0018 E360     		str	r3, [r4, #12]
+ 297 001a FFF7FEFF 		bl	chEvtSignalI
+ 298 001e 2468     		ldr	r4, [r4]
+ 299 0020 A542     		cmp	r5, r4
+ 300 0022 F6D1     		bne	.L33
+ 301              	.L29:
+ 302 0024 70BD     		pop	{r4, r5, r6, pc}
+ 303              	.L34:
+ 304 0026 40F20000 		movw	r0, #:lower16:.LC4
+ 305 002a 40F20001 		movw	r1, #:lower16:.LC1
+ 306 002e C0F20000 		movt	r0, #:upper16:.LC4
+ 307 0032 C0F20001 		movt	r1, #:upper16:.LC1
+ 308 0036 BC22     		movs	r2, #188
+ 309 0038 FFF7FEFF 		bl	chDbgPanic3
+ 310 003c E6E7     		b	.L30
+ 311              		.size	chEvtBroadcastFlagsI, .-chEvtBroadcastFlagsI
+ 312 003e 00BF     		.section	.text.chEvtSignal,"ax",%progbits
+ 313              		.align	2
+ 314              		.p2align 4,,15
+ 315              		.global	chEvtSignal
+ 316              		.thumb
+ 317              		.thumb_func
+ 318              		.type	chEvtSignal, %function
+ 319              	chEvtSignal:
+ 320              		@ args = 0, pretend = 0, frame = 0
+ 321              		@ frame_needed = 0, uses_anonymous_args = 0
+ 322 0000 38B5     		push	{r3, r4, r5, lr}
+ 323 0002 0446     		mov	r4, r0
+ 324 0004 0D46     		mov	r5, r1
+ 325 0006 80B1     		cbz	r0, .L37
+ 326              	.L36:
+ 327 0008 2023     		movs	r3, #32
+ 328              	@ 233 "chibios/os/kernel/src/chevents.c" 1
+ 329 000a 83F31188 		msr     BASEPRI, r3
+ 330              	@ 0 "" 2
+ 331              		.thumb
+ 332 000e FFF7FEFF 		bl	dbg_check_lock
+ 333 0012 2046     		mov	r0, r4
+ 334 0014 2946     		mov	r1, r5
+ 335 0016 FFF7FEFF 		bl	chEvtSignalI
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s 			page 7
+
+
+ 336 001a FFF7FEFF 		bl	chSchRescheduleS
+ 337 001e FFF7FEFF 		bl	dbg_check_unlock
+ 338 0022 0023     		movs	r3, #0
+ 339              	@ 236 "chibios/os/kernel/src/chevents.c" 1
+ 340 0024 83F31188 		msr     BASEPRI, r3
+ 341              	@ 0 "" 2
+ 342              		.thumb
+ 343 0028 38BD     		pop	{r3, r4, r5, pc}
+ 344              	.L37:
+ 345 002a 40F20000 		movw	r0, #:lower16:.LC5
+ 346 002e 40F20001 		movw	r1, #:lower16:.LC1
+ 347 0032 C0F20000 		movt	r0, #:upper16:.LC5
+ 348 0036 C0F20001 		movt	r1, #:upper16:.LC1
+ 349 003a E722     		movs	r2, #231
+ 350 003c FFF7FEFF 		bl	chDbgPanic3
+ 351 0040 E2E7     		b	.L36
+ 352              		.size	chEvtSignal, .-chEvtSignal
+ 353 0042 00BFAFF3 		.section	.text.chEvtBroadcastFlags,"ax",%progbits
+ 353      0080AFF3 
+ 353      0080AFF3 
+ 353      0080
+ 354              		.align	2
+ 355              		.p2align 4,,15
+ 356              		.global	chEvtBroadcastFlags
+ 357              		.thumb
+ 358              		.thumb_func
+ 359              		.type	chEvtBroadcastFlags, %function
+ 360              	chEvtBroadcastFlags:
+ 361              		@ args = 0, pretend = 0, frame = 0
+ 362              		@ frame_needed = 0, uses_anonymous_args = 0
+ 363 0000 38B5     		push	{r3, r4, r5, lr}
+ 364 0002 0546     		mov	r5, r0
+ 365 0004 0C46     		mov	r4, r1
+ 366 0006 2023     		movs	r3, #32
+ 367              	@ 280 "chibios/os/kernel/src/chevents.c" 1
+ 368 0008 83F31188 		msr     BASEPRI, r3
+ 369              	@ 0 "" 2
+ 370              		.thumb
+ 371 000c FFF7FEFF 		bl	dbg_check_lock
+ 372 0010 2846     		mov	r0, r5
+ 373 0012 2146     		mov	r1, r4
+ 374 0014 FFF7FEFF 		bl	chEvtBroadcastFlagsI
+ 375 0018 FFF7FEFF 		bl	chSchRescheduleS
+ 376 001c FFF7FEFF 		bl	dbg_check_unlock
+ 377 0020 0023     		movs	r3, #0
+ 378              	@ 283 "chibios/os/kernel/src/chevents.c" 1
+ 379 0022 83F31188 		msr     BASEPRI, r3
+ 380              	@ 0 "" 2
+ 381              		.thumb
+ 382 0026 38BD     		pop	{r3, r4, r5, pc}
+ 383              		.size	chEvtBroadcastFlags, .-chEvtBroadcastFlags
+ 384 0028 AFF30080 		.section	.text.chEvtGetAndClearFlagsI,"ax",%progbits
+ 384      AFF30080 
+ 385              		.align	2
+ 386              		.p2align 4,,15
+ 387              		.global	chEvtGetAndClearFlagsI
+ 388              		.thumb
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s 			page 8
+
+
+ 389              		.thumb_func
+ 390              		.type	chEvtGetAndClearFlagsI, %function
+ 391              	chEvtGetAndClearFlagsI:
+ 392              		@ args = 0, pretend = 0, frame = 0
+ 393              		@ frame_needed = 0, uses_anonymous_args = 0
+ 394              		@ link register save eliminated.
+ 395 0000 0346     		mov	r3, r0
+ 396 0002 0022     		movs	r2, #0
+ 397 0004 C068     		ldr	r0, [r0, #12]
+ 398 0006 DA60     		str	r2, [r3, #12]
+ 399 0008 7047     		bx	lr
+ 400              		.size	chEvtGetAndClearFlagsI, .-chEvtGetAndClearFlagsI
+ 401 000a 00BFAFF3 		.section	.text.chEvtDispatch,"ax",%progbits
+ 401      0080
+ 402              		.align	2
+ 403              		.p2align 4,,15
+ 404              		.global	chEvtDispatch
+ 405              		.thumb
+ 406              		.thumb_func
+ 407              		.type	chEvtDispatch, %function
+ 408              	chEvtDispatch:
+ 409              		@ args = 0, pretend = 0, frame = 0
+ 410              		@ frame_needed = 0, uses_anonymous_args = 0
+ 411 0000 2DE9F843 		push	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 412 0004 8146     		mov	r9, r0
+ 413 0006 0D46     		mov	r5, r1
+ 414 0008 F0B1     		cbz	r0, .L54
+ 415              	.L41:
+ 416 000a 95B1     		cbz	r5, .L40
+ 417 000c 0026     		movs	r6, #0
+ 418 000e 3446     		mov	r4, r6
+ 419 0010 4FF00108 		mov	r8, #1
+ 420              	.L46:
+ 421 0014 08FA04F7 		lsl	r7, r8, r4
+ 422 0018 2F42     		tst	r7, r5
+ 423 001a 06D0     		beq	.L43
+ 424 001c 59F80630 		ldr	r3, [r9, r6]
+ 425 0020 4BB1     		cbz	r3, .L55
+ 426              	.L44:
+ 427 0022 2046     		mov	r0, r4
+ 428 0024 25EA0705 		bic	r5, r5, r7
+ 429 0028 9847     		blx	r3
+ 430              	.L43:
+ 431 002a 0134     		adds	r4, r4, #1
+ 432 002c 0436     		adds	r6, r6, #4
+ 433 002e 002D     		cmp	r5, #0
+ 434 0030 F0D1     		bne	.L46
+ 435              	.L40:
+ 436 0032 BDE8F883 		pop	{r3, r4, r5, r6, r7, r8, r9, pc}
+ 437              	.L55:
+ 438 0036 40F20000 		movw	r0, #:lower16:.LC7
+ 439 003a C0F20000 		movt	r0, #:upper16:.LC7
+ 440 003e FFF7FEFF 		bl	chDbgPanic
+ 441 0042 59F80630 		ldr	r3, [r9, r6]
+ 442 0046 ECE7     		b	.L44
+ 443              	.L54:
+ 444 0048 40F20000 		movw	r0, #:lower16:.LC6
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s 			page 9
+
+
+ 445 004c 40F20001 		movw	r1, #:lower16:.LC1
+ 446 0050 C0F20000 		movt	r0, #:upper16:.LC6
+ 447 0054 C0F20001 		movt	r1, #:upper16:.LC1
+ 448 0058 4FF49F72 		mov	r2, #318
+ 449 005c FFF7FEFF 		bl	chDbgPanic3
+ 450 0060 D3E7     		b	.L41
+ 451              		.size	chEvtDispatch, .-chEvtDispatch
+ 452 0062 00BFAFF3 		.section	.text.chEvtWaitOne,"ax",%progbits
+ 452      0080AFF3 
+ 452      0080AFF3 
+ 452      0080
+ 453              		.align	2
+ 454              		.p2align 4,,15
+ 455              		.global	chEvtWaitOne
+ 456              		.thumb
+ 457              		.thumb_func
+ 458              		.type	chEvtWaitOne, %function
+ 459              	chEvtWaitOne:
+ 460              		@ args = 0, pretend = 0, frame = 0
+ 461              		@ frame_needed = 0, uses_anonymous_args = 0
+ 462 0000 38B5     		push	{r3, r4, r5, lr}
+ 463 0002 40F20003 		movw	r3, #:lower16:rlist
+ 464 0006 C0F20003 		movt	r3, #:upper16:rlist
+ 465 000a 0446     		mov	r4, r0
+ 466 000c 9D69     		ldr	r5, [r3, #24]
+ 467 000e 2023     		movs	r3, #32
+ 468              	@ 354 "chibios/os/kernel/src/chevents.c" 1
+ 469 0010 83F31188 		msr     BASEPRI, r3
+ 470              	@ 0 "" 2
+ 471              		.thumb
+ 472 0014 FFF7FEFF 		bl	dbg_check_lock
+ 473 0018 AB6B     		ldr	r3, [r5, #56]
+ 474 001a 14EA0302 		ands	r2, r4, r3
+ 475 001e 06D1     		bne	.L57
+ 476 0020 AC62     		str	r4, [r5, #40]
+ 477 0022 0820     		movs	r0, #8
+ 478 0024 FFF7FEFF 		bl	chSchGoSleepS
+ 479 0028 AB6B     		ldr	r3, [r5, #56]
+ 480 002a 04EA0302 		and	r2, r4, r3
+ 481              	.L57:
+ 482 002e 5442     		negs	r4, r2
+ 483 0030 1440     		ands	r4, r4, r2
+ 484 0032 23EA0403 		bic	r3, r3, r4
+ 485 0036 AB63     		str	r3, [r5, #56]
+ 486 0038 FFF7FEFF 		bl	dbg_check_unlock
+ 487 003c 0023     		movs	r3, #0
+ 488              	@ 364 "chibios/os/kernel/src/chevents.c" 1
+ 489 003e 83F31188 		msr     BASEPRI, r3
+ 490              	@ 0 "" 2
+ 491              		.thumb
+ 492 0042 2046     		mov	r0, r4
+ 493 0044 38BD     		pop	{r3, r4, r5, pc}
+ 494              		.size	chEvtWaitOne, .-chEvtWaitOne
+ 495 0046 00BFAFF3 		.section	.text.chEvtWaitAny,"ax",%progbits
+ 495      0080AFF3 
+ 495      0080
+ 496              		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s 			page 10
+
+
+ 497              		.p2align 4,,15
+ 498              		.global	chEvtWaitAny
+ 499              		.thumb
+ 500              		.thumb_func
+ 501              		.type	chEvtWaitAny, %function
+ 502              	chEvtWaitAny:
+ 503              		@ args = 0, pretend = 0, frame = 0
+ 504              		@ frame_needed = 0, uses_anonymous_args = 0
+ 505 0000 40F20003 		movw	r3, #:lower16:rlist
+ 506 0004 C0F20003 		movt	r3, #:upper16:rlist
+ 507 0008 70B5     		push	{r4, r5, r6, lr}
+ 508 000a 9D69     		ldr	r5, [r3, #24]
+ 509 000c 0446     		mov	r4, r0
+ 510 000e 2023     		movs	r3, #32
+ 511              	@ 383 "chibios/os/kernel/src/chevents.c" 1
+ 512 0010 83F31188 		msr     BASEPRI, r3
+ 513              	@ 0 "" 2
+ 514              		.thumb
+ 515 0014 FFF7FEFF 		bl	dbg_check_lock
+ 516 0018 AB6B     		ldr	r3, [r5, #56]
+ 517 001a 14EA0306 		ands	r6, r4, r3
+ 518 001e 06D1     		bne	.L60
+ 519 0020 AC62     		str	r4, [r5, #40]
+ 520 0022 0820     		movs	r0, #8
+ 521 0024 FFF7FEFF 		bl	chSchGoSleepS
+ 522 0028 AB6B     		ldr	r3, [r5, #56]
+ 523 002a 04EA0306 		and	r6, r4, r3
+ 524              	.L60:
+ 525 002e 23EA0603 		bic	r3, r3, r6
+ 526 0032 AB63     		str	r3, [r5, #56]
+ 527 0034 FFF7FEFF 		bl	dbg_check_unlock
+ 528 0038 0023     		movs	r3, #0
+ 529              	@ 392 "chibios/os/kernel/src/chevents.c" 1
+ 530 003a 83F31188 		msr     BASEPRI, r3
+ 531              	@ 0 "" 2
+ 532              		.thumb
+ 533 003e 3046     		mov	r0, r6
+ 534 0040 70BD     		pop	{r4, r5, r6, pc}
+ 535              		.size	chEvtWaitAny, .-chEvtWaitAny
+ 536 0042 00BFAFF3 		.section	.text.chEvtWaitAll,"ax",%progbits
+ 536      0080AFF3 
+ 536      0080AFF3 
+ 536      0080
+ 537              		.align	2
+ 538              		.p2align 4,,15
+ 539              		.global	chEvtWaitAll
+ 540              		.thumb
+ 541              		.thumb_func
+ 542              		.type	chEvtWaitAll, %function
+ 543              	chEvtWaitAll:
+ 544              		@ args = 0, pretend = 0, frame = 0
+ 545              		@ frame_needed = 0, uses_anonymous_args = 0
+ 546 0000 38B5     		push	{r3, r4, r5, lr}
+ 547 0002 40F20003 		movw	r3, #:lower16:rlist
+ 548 0006 C0F20003 		movt	r3, #:upper16:rlist
+ 549 000a 0446     		mov	r4, r0
+ 550 000c 9D69     		ldr	r5, [r3, #24]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s 			page 11
+
+
+ 551 000e 2023     		movs	r3, #32
+ 552              	@ 410 "chibios/os/kernel/src/chevents.c" 1
+ 553 0010 83F31188 		msr     BASEPRI, r3
+ 554              	@ 0 "" 2
+ 555              		.thumb
+ 556 0014 FFF7FEFF 		bl	dbg_check_lock
+ 557 0018 AB6B     		ldr	r3, [r5, #56]
+ 558 001a 04EA0302 		and	r2, r4, r3
+ 559 001e A242     		cmp	r2, r4
+ 560 0020 04D0     		beq	.L63
+ 561 0022 AC62     		str	r4, [r5, #40]
+ 562 0024 0920     		movs	r0, #9
+ 563 0026 FFF7FEFF 		bl	chSchGoSleepS
+ 564 002a AB6B     		ldr	r3, [r5, #56]
+ 565              	.L63:
+ 566 002c 23EA0403 		bic	r3, r3, r4
+ 567 0030 AB63     		str	r3, [r5, #56]
+ 568 0032 FFF7FEFF 		bl	dbg_check_unlock
+ 569 0036 0023     		movs	r3, #0
+ 570              	@ 418 "chibios/os/kernel/src/chevents.c" 1
+ 571 0038 83F31188 		msr     BASEPRI, r3
+ 572              	@ 0 "" 2
+ 573              		.thumb
+ 574 003c 2046     		mov	r0, r4
+ 575 003e 38BD     		pop	{r3, r4, r5, pc}
+ 576              		.size	chEvtWaitAll, .-chEvtWaitAll
+ 577              		.section	.text.chEvtWaitOneTimeout,"ax",%progbits
+ 578              		.align	2
+ 579              		.p2align 4,,15
+ 580              		.global	chEvtWaitOneTimeout
+ 581              		.thumb
+ 582              		.thumb_func
+ 583              		.type	chEvtWaitOneTimeout, %function
+ 584              	chEvtWaitOneTimeout:
+ 585              		@ args = 0, pretend = 0, frame = 0
+ 586              		@ frame_needed = 0, uses_anonymous_args = 0
+ 587 0000 40F20002 		movw	r2, #:lower16:rlist
+ 588 0004 C0F20002 		movt	r2, #:upper16:rlist
+ 589 0008 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 590 000a 0446     		mov	r4, r0
+ 591 000c 0F46     		mov	r7, r1
+ 592 000e 9569     		ldr	r5, [r2, #24]
+ 593 0010 2023     		movs	r3, #32
+ 594              	@ 450 "chibios/os/kernel/src/chevents.c" 1
+ 595 0012 83F31188 		msr     BASEPRI, r3
+ 596              	@ 0 "" 2
+ 597              		.thumb
+ 598 0016 FFF7FEFF 		bl	dbg_check_lock
+ 599 001a AA6B     		ldr	r2, [r5, #56]
+ 600 001c 14EA0206 		ands	r6, r4, r2
+ 601 0020 0BD1     		bne	.L66
+ 602 0022 B7B1     		cbz	r7, .L71
+ 603 0024 AC62     		str	r4, [r5, #40]
+ 604 0026 3946     		mov	r1, r7
+ 605 0028 0820     		movs	r0, #8
+ 606 002a FFF7FEFF 		bl	chSchGoSleepTimeoutS
+ 607 002e 0028     		cmp	r0, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s 			page 12
+
+
+ 608 0030 A4BF     		itt	ge
+ 609 0032 AA6B     		ldrge	r2, [r5, #56]
+ 610 0034 04EA0206 		andge	r6, r4, r2
+ 611 0038 12DB     		blt	.L72
+ 612              	.L66:
+ 613 003a 7342     		negs	r3, r6
+ 614 003c 1E40     		ands	r6, r6, r3
+ 615 003e 22EA0602 		bic	r2, r2, r6
+ 616 0042 AA63     		str	r2, [r5, #56]
+ 617 0044 FFF7FEFF 		bl	dbg_check_unlock
+ 618 0048 0023     		movs	r3, #0
+ 619              	@ 467 "chibios/os/kernel/src/chevents.c" 1
+ 620 004a 83F31188 		msr     BASEPRI, r3
+ 621              	@ 0 "" 2
+ 622              		.thumb
+ 623 004e 3046     		mov	r0, r6
+ 624 0050 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 625              	.L71:
+ 626 0052 FFF7FEFF 		bl	dbg_check_unlock
+ 627 0056 3B46     		mov	r3, r7
+ 628              	@ 454 "chibios/os/kernel/src/chevents.c" 1
+ 629 0058 83F31188 		msr     BASEPRI, r3
+ 630              	@ 0 "" 2
+ 631              		.thumb
+ 632 005c 0020     		movs	r0, #0
+ 633 005e F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 634              	.L72:
+ 635 0060 FFF7FEFF 		bl	dbg_check_unlock
+ 636 0064 3346     		mov	r3, r6
+ 637              	@ 459 "chibios/os/kernel/src/chevents.c" 1
+ 638 0066 83F31188 		msr     BASEPRI, r3
+ 639              	@ 0 "" 2
+ 640              		.thumb
+ 641 006a 0020     		movs	r0, #0
+ 642 006c F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 643              		.size	chEvtWaitOneTimeout, .-chEvtWaitOneTimeout
+ 644 006e 00BF     		.section	.text.chEvtWaitAnyTimeout,"ax",%progbits
+ 645              		.align	2
+ 646              		.p2align 4,,15
+ 647              		.global	chEvtWaitAnyTimeout
+ 648              		.thumb
+ 649              		.thumb_func
+ 650              		.type	chEvtWaitAnyTimeout, %function
+ 651              	chEvtWaitAnyTimeout:
+ 652              		@ args = 0, pretend = 0, frame = 0
+ 653              		@ frame_needed = 0, uses_anonymous_args = 0
+ 654 0000 40F20002 		movw	r2, #:lower16:rlist
+ 655 0004 C0F20002 		movt	r2, #:upper16:rlist
+ 656 0008 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 657 000a 0446     		mov	r4, r0
+ 658 000c 0F46     		mov	r7, r1
+ 659 000e 9569     		ldr	r5, [r2, #24]
+ 660 0010 2023     		movs	r3, #32
+ 661              	@ 493 "chibios/os/kernel/src/chevents.c" 1
+ 662 0012 83F31188 		msr     BASEPRI, r3
+ 663              	@ 0 "" 2
+ 664              		.thumb
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s 			page 13
+
+
+ 665 0016 FFF7FEFF 		bl	dbg_check_lock
+ 666 001a AA6B     		ldr	r2, [r5, #56]
+ 667 001c 14EA0206 		ands	r6, r4, r2
+ 668 0020 0BD1     		bne	.L74
+ 669 0022 A7B1     		cbz	r7, .L79
+ 670 0024 AC62     		str	r4, [r5, #40]
+ 671 0026 3946     		mov	r1, r7
+ 672 0028 0820     		movs	r0, #8
+ 673 002a FFF7FEFF 		bl	chSchGoSleepTimeoutS
+ 674 002e 0028     		cmp	r0, #0
+ 675 0030 A4BF     		itt	ge
+ 676 0032 AA6B     		ldrge	r2, [r5, #56]
+ 677 0034 04EA0206 		andge	r6, r4, r2
+ 678 0038 10DB     		blt	.L80
+ 679              	.L74:
+ 680 003a 22EA0602 		bic	r2, r2, r6
+ 681 003e AA63     		str	r2, [r5, #56]
+ 682 0040 FFF7FEFF 		bl	dbg_check_unlock
+ 683 0044 0023     		movs	r3, #0
+ 684              	@ 509 "chibios/os/kernel/src/chevents.c" 1
+ 685 0046 83F31188 		msr     BASEPRI, r3
+ 686              	@ 0 "" 2
+ 687              		.thumb
+ 688 004a 3046     		mov	r0, r6
+ 689 004c F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 690              	.L79:
+ 691 004e FFF7FEFF 		bl	dbg_check_unlock
+ 692 0052 3B46     		mov	r3, r7
+ 693              	@ 497 "chibios/os/kernel/src/chevents.c" 1
+ 694 0054 83F31188 		msr     BASEPRI, r3
+ 695              	@ 0 "" 2
+ 696              		.thumb
+ 697 0058 0020     		movs	r0, #0
+ 698 005a F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 699              	.L80:
+ 700 005c FFF7FEFF 		bl	dbg_check_unlock
+ 701 0060 3346     		mov	r3, r6
+ 702              	@ 502 "chibios/os/kernel/src/chevents.c" 1
+ 703 0062 83F31188 		msr     BASEPRI, r3
+ 704              	@ 0 "" 2
+ 705              		.thumb
+ 706 0066 0020     		movs	r0, #0
+ 707 0068 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 708              		.size	chEvtWaitAnyTimeout, .-chEvtWaitAnyTimeout
+ 709 006a 00BFAFF3 		.section	.text.chEvtWaitAllTimeout,"ax",%progbits
+ 709      0080
+ 710              		.align	2
+ 711              		.p2align 4,,15
+ 712              		.global	chEvtWaitAllTimeout
+ 713              		.thumb
+ 714              		.thumb_func
+ 715              		.type	chEvtWaitAllTimeout, %function
+ 716              	chEvtWaitAllTimeout:
+ 717              		@ args = 0, pretend = 0, frame = 0
+ 718              		@ frame_needed = 0, uses_anonymous_args = 0
+ 719 0000 40F20002 		movw	r2, #:lower16:rlist
+ 720 0004 C0F20002 		movt	r2, #:upper16:rlist
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s 			page 14
+
+
+ 721 0008 70B5     		push	{r4, r5, r6, lr}
+ 722 000a 2023     		movs	r3, #32
+ 723 000c 0446     		mov	r4, r0
+ 724 000e 0E46     		mov	r6, r1
+ 725 0010 9569     		ldr	r5, [r2, #24]
+ 726              	@ 533 "chibios/os/kernel/src/chevents.c" 1
+ 727 0012 83F31188 		msr     BASEPRI, r3
+ 728              	@ 0 "" 2
+ 729              		.thumb
+ 730 0016 FFF7FEFF 		bl	dbg_check_lock
+ 731 001a AB6B     		ldr	r3, [r5, #56]
+ 732 001c 04EA0302 		and	r2, r4, r3
+ 733 0020 A242     		cmp	r2, r4
+ 734 0022 08D0     		beq	.L82
+ 735 0024 8EB1     		cbz	r6, .L87
+ 736 0026 AC62     		str	r4, [r5, #40]
+ 737 0028 3146     		mov	r1, r6
+ 738 002a 0920     		movs	r0, #9
+ 739 002c FFF7FEFF 		bl	chSchGoSleepTimeoutS
+ 740 0030 0028     		cmp	r0, #0
+ 741 0032 11DB     		blt	.L85
+ 742 0034 AB6B     		ldr	r3, [r5, #56]
+ 743              	.L82:
+ 744 0036 23EA0403 		bic	r3, r3, r4
+ 745 003a AB63     		str	r3, [r5, #56]
+ 746 003c FFF7FEFF 		bl	dbg_check_unlock
+ 747 0040 0023     		movs	r3, #0
+ 748              	@ 548 "chibios/os/kernel/src/chevents.c" 1
+ 749 0042 83F31188 		msr     BASEPRI, r3
+ 750              	@ 0 "" 2
+ 751              		.thumb
+ 752 0046 2046     		mov	r0, r4
+ 753 0048 70BD     		pop	{r4, r5, r6, pc}
+ 754              	.L87:
+ 755 004a FFF7FEFF 		bl	dbg_check_unlock
+ 756 004e 3346     		mov	r3, r6
+ 757              	@ 537 "chibios/os/kernel/src/chevents.c" 1
+ 758 0050 83F31188 		msr     BASEPRI, r3
+ 759              	@ 0 "" 2
+ 760              		.thumb
+ 761 0054 0020     		movs	r0, #0
+ 762 0056 70BD     		pop	{r4, r5, r6, pc}
+ 763              	.L85:
+ 764 0058 FFF7FEFF 		bl	dbg_check_unlock
+ 765 005c 0023     		movs	r3, #0
+ 766              	@ 542 "chibios/os/kernel/src/chevents.c" 1
+ 767 005e 83F31188 		msr     BASEPRI, r3
+ 768              	@ 0 "" 2
+ 769              		.thumb
+ 770 0062 0020     		movs	r0, #0
+ 771 0064 70BD     		pop	{r4, r5, r6, pc}
+ 772              		.size	chEvtWaitAllTimeout, .-chEvtWaitAllTimeout
+ 773 0066 00BFAFF3 		.section	.rodata.str1.4,"aMS",%progbits,1
+ 773      0080AFF3 
+ 773      0080
+ 774              		.align	2
+ 775              	.LC0:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s 			page 15
+
+
+ 776 0000 22636845 		.ascii	"\"chEvtRegisterMask\"()\000"
+ 776      76745265 
+ 776      67697374 
+ 776      65724D61 
+ 776      736B2228 
+ 777 0016 0000     		.space	2
+ 778              	.LC1:
+ 779 0018 63686962 		.ascii	"chibios/os/kernel/src/chevents.c\000"
+ 779      696F732F 
+ 779      6F732F6B 
+ 779      65726E65 
+ 779      6C2F7372 
+ 780 0039 000000   		.space	3
+ 781              	.LC2:
+ 782 003c 22636845 		.ascii	"\"chEvtUnregister\"()\000"
+ 782      7674556E 
+ 782      72656769 
+ 782      73746572 
+ 782      22282900 
+ 783              	.LC3:
+ 784 0050 22636845 		.ascii	"\"chEvtSignalI\"()\000"
+ 784      76745369 
+ 784      676E616C 
+ 784      49222829 
+ 784      00
+ 785 0061 000000   		.space	3
+ 786              	.LC4:
+ 787 0064 22636845 		.ascii	"\"chEvtBroadcastMaskI\"()\000"
+ 787      76744272 
+ 787      6F616463 
+ 787      6173744D 
+ 787      61736B49 
+ 788              	.LC5:
+ 789 007c 22636845 		.ascii	"\"chEvtSignal\"()\000"
+ 789      76745369 
+ 789      676E616C 
+ 789      22282900 
+ 790              	.LC6:
+ 791 008c 22636845 		.ascii	"\"chEvtDispatch\"()\000"
+ 791      76744469 
+ 791      73706174 
+ 791      63682228 
+ 791      2900
+ 792 009e 0000     		.space	2
+ 793              	.LC7:
+ 794 00a0 63684576 		.ascii	"chEvtDispatch(), #1\000"
+ 794      74446973 
+ 794      70617463 
+ 794      6828292C 
+ 794      20233100 
+ 795              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s 			page 16
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 chevents.c
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:17     .text.chEvtRegisterMask:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:23     .text.chEvtRegisterMask:00000000 chEvtRegisterMask
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:775    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:778    .rodata.str1.4:00000018 .LC1
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:66     .text.chEvtUnregister:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:72     .text.chEvtUnregister:00000000 chEvtUnregister
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:781    .rodata.str1.4:0000003c .LC2
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:126    .text.chEvtGetAndClearEvents:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:132    .text.chEvtGetAndClearEvents:00000000 chEvtGetAndClearEvents
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:160    .text.chEvtAddEvents:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:166    .text.chEvtAddEvents:00000000 chEvtAddEvents
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:193    .text.chEvtGetAndClearFlags:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:199    .text.chEvtGetAndClearFlags:00000000 chEvtGetAndClearFlags
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:223    .text.chEvtSignalI:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:229    .text.chEvtSignalI:00000000 chEvtSignalI
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:783    .rodata.str1.4:00000050 .LC3
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:274    .text.chEvtBroadcastFlagsI:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:280    .text.chEvtBroadcastFlagsI:00000000 chEvtBroadcastFlagsI
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:786    .rodata.str1.4:00000064 .LC4
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:313    .text.chEvtSignal:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:319    .text.chEvtSignal:00000000 chEvtSignal
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:788    .rodata.str1.4:0000007c .LC5
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:354    .text.chEvtBroadcastFlags:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:360    .text.chEvtBroadcastFlags:00000000 chEvtBroadcastFlags
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:385    .text.chEvtGetAndClearFlagsI:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:391    .text.chEvtGetAndClearFlagsI:00000000 chEvtGetAndClearFlagsI
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:402    .text.chEvtDispatch:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:408    .text.chEvtDispatch:00000000 chEvtDispatch
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:793    .rodata.str1.4:000000a0 .LC7
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:790    .rodata.str1.4:0000008c .LC6
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:453    .text.chEvtWaitOne:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:459    .text.chEvtWaitOne:00000000 chEvtWaitOne
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:496    .text.chEvtWaitAny:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:502    .text.chEvtWaitAny:00000000 chEvtWaitAny
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:537    .text.chEvtWaitAll:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:543    .text.chEvtWaitAll:00000000 chEvtWaitAll
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:578    .text.chEvtWaitOneTimeout:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:584    .text.chEvtWaitOneTimeout:00000000 chEvtWaitOneTimeout
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:645    .text.chEvtWaitAnyTimeout:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:651    .text.chEvtWaitAnyTimeout:00000000 chEvtWaitAnyTimeout
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:710    .text.chEvtWaitAllTimeout:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:716    .text.chEvtWaitAllTimeout:00000000 chEvtWaitAllTimeout
+C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s:774    .rodata.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+chDbgPanic3
+dbg_check_lock
+rlist
+dbg_check_unlock
+chDbgCheckClassI
+chSchReadyI
+chSchRescheduleS
+chDbgPanic
+chSchGoSleepS
+chSchGoSleepTimeoutS
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccD4GIUh.s 			page 17
+
+

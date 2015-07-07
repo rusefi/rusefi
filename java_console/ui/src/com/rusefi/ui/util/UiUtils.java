@@ -1,6 +1,7 @@
 package com.rusefi.ui.util;
 
 import com.rusefi.StartupFrame;
+import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -24,15 +25,20 @@ public class UiUtils {
     private static final String SAVE_IMAGE = "save image";
 
     public static void saveImageWithPrompt(String fileName, Component parentForDialog, Component content) {
-        JFileChooser fc = new JFileChooser();
-        FileFilter filter = new FileNameExtensionFilter("PNG files", "png");
-        fc.setFileFilter(filter);
-        fc.addChoosableFileFilter(filter);
+        JFileChooser fc = getFileChooser(new FileNameExtensionFilter("PNG files", "png"));
         fc.setSelectedFile(new File(fileName));
         if (fc.showSaveDialog(parentForDialog) == JFileChooser.APPROVE_OPTION) {
             fileName = fc.getSelectedFile().getAbsolutePath();
             UiUtils.saveImage(fileName, content);
         }
+    }
+
+    @NotNull
+    public static JFileChooser getFileChooser(FileNameExtensionFilter filter) {
+        JFileChooser fc = new JFileChooser();
+        fc.setFileFilter(filter);
+        fc.addChoosableFileFilter(filter);
+        return fc;
     }
 
     public static void saveImage(String fileName, Component component) {
@@ -122,5 +128,9 @@ public class UiUtils {
         } else {
             SwingUtilities.invokeAndWait(runnable);
         }
+    }
+
+    public static void showLoadingMessage(JPanel panel) {
+        panel.add(new JLabel("Loading..."), BorderLayout.CENTER);
     }
 }

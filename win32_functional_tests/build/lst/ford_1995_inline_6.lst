@@ -1,0 +1,258 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccJNfp8g.s 			page 1
+
+
+   1              		.file	"ford_1995_inline_6.cpp"
+   2              		.section	.text$_Z14setFordInline6v,"x"
+   3              		.p2align 4,,15
+   4              		.globl	__Z14setFordInline6v
+   5              		.def	__Z14setFordInline6v;	.scl	2;	.type	32;	.endef
+   6              	__Z14setFordInline6v:
+   7              	LFB85:
+   8              		.cfi_startproc
+   9 0000 53       		pushl	%ebx
+  10              		.cfi_def_cfa_offset 8
+  11              		.cfi_offset 3, -8
+  12 0001 81EC8800 		subl	$136, %esp
+  12      0000
+  13              		.cfi_def_cfa_offset 144
+  14 0007 A1000000 		movl	_engineConfiguration, %eax
+  14      00
+  15 000c C7809401 		movl	$6, 404(%eax)
+  15      00000600 
+  15      0000
+  16 0016 890424   		movl	%eax, (%esp)
+  17 0019 C7442404 		movl	$2, 4(%esp)
+  17      02000000 
+  18 0021 E8000000 		call	__Z16setOperationModeP22engine_configuration_s16operation_mode_e
+  18      00
+  19 0026 A1000000 		movl	_engineConfiguration, %eax
+  19      00
+  20 002b 8088E505 		orb	$32, 1509(%eax)
+  20      000020
+  21 0032 C780BC01 		movl	$0, 444(%eax)
+  21      00000000 
+  21      0000
+  22 003c C7809801 		movl	$4, 408(%eax)
+  22      00000400 
+  22      0000
+  23 0046 C780AC01 		movl	$0, 428(%eax)
+  23      00000000 
+  23      0000
+  24 0050 C780B001 		movl	$2, 432(%eax)
+  24      00000200 
+  24      0000
+  25 005a C7042400 		movl	$0x3f000000, (%esp)
+  25      00003F
+  26 0061 E8000000 		call	__Z16setConstantDwellf
+  26      00
+  27 0066 A1000000 		movl	_engineConfiguration, %eax
+  27      00
+  28 006b C7801802 		movl	$0, 536(%eax)
+  28      00000000 
+  28      0000
+  29 0075 C7802002 		movl	$6, 544(%eax)
+  29      00000600 
+  29      0000
+  30 007f D9050000 		flds	LC4
+  30      0000
+  31 0085 C7802402 		movl	$0, 548(%eax)
+  31      00000000 
+  31      0000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccJNfp8g.s 			page 2
+
+
+  32 008f C780CC01 		movl	$0x00000000, 460(%eax)
+  32      00000000 
+  32      0000
+  33 0099 C780C001 		movl	$0x41500000, 448(%eax)
+  33      00000000 
+  33      5041
+  34 00a3 C780B401 		movl	$0x434f451f, 436(%eax)
+  34      00001F45 
+  34      4F43
+  35 00ad D9542418 		fsts	24(%esp)
+  36 00b1 05000100 		addl	$256, %eax
+  36      00
+  37 00b6 D9050400 		flds	LC5
+  37      0000
+  38 00bc D9542414 		fsts	20(%esp)
+  39 00c0 D9050800 		flds	LC6
+  39      0000
+  40 00c6 D9542410 		fsts	16(%esp)
+  41 00ca D9050C00 		flds	LC7
+  41      0000
+  42 00d0 D954240C 		fsts	12(%esp)
+  43 00d4 D9051000 		flds	LC8
+  43      0000
+  44 00da D9542408 		fsts	8(%esp)
+  45 00de D9051400 		flds	LC9
+  45      0000
+  46 00e4 D9542404 		fsts	4(%esp)
+  47 00e8 D95C2420 		fstps	32(%esp)
+  48 00ec D95C2430 		fstps	48(%esp)
+  49 00f0 D95C2440 		fstps	64(%esp)
+  50 00f4 D95C2450 		fstps	80(%esp)
+  51 00f8 D95C2460 		fstps	96(%esp)
+  52 00fc 890424   		movl	%eax, (%esp)
+  53 00ff D95C2470 		fstps	112(%esp)
+  54 0103 E8000000 		call	__Z26setThermistorConfigurationP14ThermistorConfffffff
+  54      00
+  55 0108 A1000000 		movl	_engineConfiguration, %eax
+  55      00
+  56 010d D9051800 		flds	LC10
+  56      0000
+  57 0113 D9901801 		fsts	280(%eax)
+  57      0000
+  58 0119 05200100 		addl	$288, %eax
+  58      00
+  59 011e D9442470 		flds	112(%esp)
+  60 0122 D95C2418 		fstps	24(%esp)
+  61 0126 D9442460 		flds	96(%esp)
+  62 012a D95C2414 		fstps	20(%esp)
+  63 012e D9442450 		flds	80(%esp)
+  64 0132 D95C2410 		fstps	16(%esp)
+  65 0136 D9442440 		flds	64(%esp)
+  66 013a D95C240C 		fstps	12(%esp)
+  67 013e D9442430 		flds	48(%esp)
+  68 0142 D95C2408 		fstps	8(%esp)
+  69 0146 D9442420 		flds	32(%esp)
+  70 014a D95C2404 		fstps	4(%esp)
+  71 014e 890424   		movl	%eax, (%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccJNfp8g.s 			page 3
+
+
+  72 0151 D95C2470 		fstps	112(%esp)
+  73 0155 E8000000 		call	__Z26setThermistorConfigurationP14ThermistorConfffffff
+  73      00
+  74 015a 8B1D0000 		movl	_engineConfiguration, %ebx
+  74      0000
+  75 0160 A1000000 		movl	_boardConfiguration, %eax
+  75      00
+  76 0165 D9442470 		flds	112(%esp)
+  77 0169 D99B3801 		fstps	312(%ebx)
+  77      0000
+  78 016f C7830C02 		movl	$4, 524(%ebx)
+  78      00000400 
+  78      0000
+  79 0179 C7833C01 		movl	$2, 316(%ebx)
+  79      00000200 
+  79      0000
+  80 0183 C7831C01 		movl	$1, 284(%ebx)
+  80      00000100 
+  80      0000
+  81 018d C7834802 		movl	$11, 584(%ebx)
+  81      00000B00 
+  81      0000
+  82 0197 C783F800 		movl	$2, 248(%ebx)
+  82      00000200 
+  82      0000
+  83 01a1 C783FC00 		movl	$15, 252(%ebx)
+  83      00000F00 
+  83      0000
+  84 01ab C7836802 		movl	$2, 616(%ebx)
+  84      00000200 
+  84      0000
+  85 01b5 C7836C02 		movl	$7, 620(%ebx)
+  85      00000700 
+  85      0000
+  86 01bf C740182D 		movl	$45, 24(%eax)
+  86      000000
+  87 01c6 C7402019 		movl	$25, 32(%eax)
+  87      000000
+  88 01cd C7402443 		movl	$67, 36(%eax)
+  88      000000
+  89 01d4 C740542F 		movl	$47, 84(%eax)
+  89      000000
+  90 01db C7402850 		movl	$80, 40(%eax)
+  90      000000
+  91 01e2 C7809000 		movl	$80, 144(%eax)
+  91      00005000 
+  91      0000
+  92 01ec C7042400 		movl	$0x3fa00000, (%esp)
+  92      00A03F
+  93 01f3 E8000000 		call	__Z24convertVoltageTo10bitADCf
+  93      00
+  94 01f8 66894352 		movw	%ax, 82(%ebx)
+  95 01fc 8B1D0000 		movl	_engineConfiguration, %ebx
+  95      0000
+  96 0202 C704244C 		movl	$0x4091374c, (%esp)
+  96      379140
+  97 0209 E8000000 		call	__Z24convertVoltageTo10bitADCf
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccJNfp8g.s 			page 4
+
+
+  97      00
+  98 020e 66894354 		movw	%ax, 84(%ebx)
+  99 0212 A1000000 		movl	_engineConfiguration, %eax
+  99      00
+ 100 0217 8088D905 		orb	$64, 1497(%eax)
+ 100      000040
+ 101 021e C7804402 		movl	$1, 580(%eax)
+ 101      00000100 
+ 101      0000
+ 102 0228 A1000000 		movl	_boardConfiguration, %eax
+ 102      00
+ 103 022d C7802801 		movl	$8, 296(%eax)
+ 103      00000800 
+ 103      0000
+ 104 0237 C7802C01 		movl	$5, 300(%eax)
+ 104      00000500 
+ 104      0000
+ 105 0241 C7808401 		movl	$38, 388(%eax)
+ 105      00002600 
+ 105      0000
+ 106 024b C7808801 		movl	$69, 392(%eax)
+ 106      00004500 
+ 106      0000
+ 107 0255 81C48800 		addl	$136, %esp
+ 107      0000
+ 108              		.cfi_def_cfa_offset 8
+ 109 025b 5B       		popl	%ebx
+ 110              		.cfi_restore 3
+ 111              		.cfi_def_cfa_offset 4
+ 112 025c C3       		ret
+ 113              		.cfi_endproc
+ 114              	LFE85:
+ 115 025d 909090   		.section .rdata,"dr"
+ 116              		.align 4
+ 117              	LC4:
+ 118 0000 00809344 		.long	1150517248
+ 119              		.align 4
+ 120              	LC5:
+ 121 0004 0000F042 		.long	1123024896
+ 122              		.align 4
+ 123              	LC6:
+ 124 0008 00A0F045 		.long	1173397504
+ 125              		.align 4
+ 126              	LC7:
+ 127 000c 00007042 		.long	1114636288
+ 128              		.align 4
+ 129              	LC8:
+ 130 0010 808D1C48 		.long	1209830784
+ 131              		.align 4
+ 132              	LC9:
+ 133 0014 000020C1 		.long	-1054867456
+ 134              		.align 4
+ 135              	LC10:
+ 136 0018 00C02845 		.long	1160298496
+ 137              		.def	__Z16setOperationModeP22engine_configuration_s16operation_mode_e;	.scl	2;	.type	32;	.endef
+ 138              		.def	__Z16setConstantDwellf;	.scl	2;	.type	32;	.endef
+ 139              		.def	__Z26setThermistorConfigurationP14ThermistorConfffffff;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccJNfp8g.s 			page 5
+
+
+ 140              		.def	__Z24convertVoltageTo10bitADCf;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccJNfp8g.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 ford_1995_inline_6.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccJNfp8g.s:6      .text$_Z14setFordInline6v:00000000 __Z14setFordInline6v
+
+UNDEFINED SYMBOLS
+_engineConfiguration
+_boardConfiguration
+__Z16setOperationModeP22engine_configuration_s16operation_mode_e
+__Z16setConstantDwellf
+__Z26setThermistorConfigurationP14ThermistorConfffffff
+__Z24convertVoltageTo10bitADCf

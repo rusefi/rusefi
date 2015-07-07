@@ -1,0 +1,184 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccCWoR7F.s 			page 1
+
+
+   1              		.file	"mazda_626.cpp"
+   2              		.section .rdata,"dr"
+   3              	LC17:
+   4 0000 3100     		.ascii "1\0"
+   5              		.section	.text$_Z30setMazda626EngineConfigurationv,"x"
+   6              		.p2align 4,,15
+   7              		.globl	__Z30setMazda626EngineConfigurationv
+   8              		.def	__Z30setMazda626EngineConfigurationv;	.scl	2;	.type	32;	.endef
+   9              	__Z30setMazda626EngineConfigurationv:
+  10              	LFB85:
+  11              		.cfi_startproc
+  12 0000 83EC3C   		subl	$60, %esp
+  13              		.cfi_def_cfa_offset 64
+  14 0003 E8000000 		call	__Z28setCustomEngineConfigurationv
+  14      00
+  15 0008 A1000000 		movl	_engineConfiguration, %eax
+  15      00
+  16 000d 8B150000 		movl	_boardConfiguration, %edx
+  16      0000
+  17 0013 C7801802 		movl	$15, 536(%eax)
+  17      00000F00 
+  17      0000
+  18 001d C780E805 		movl	$150, 1512(%eax)
+  18      00009600 
+  18      0000
+  19 0027 D9050400 		flds	LC5
+  19      0000
+  20 002d C7821003 		movl	$1, 784(%edx)
+  20      00000100 
+  20      0000
+  21 0037 D9505C   		fsts	92(%eax)
+  22 003a C7801402 		movl	$2, 532(%eax)
+  22      00000200 
+  22      0000
+  23 0044 C7400800 		movl	$0x43a50000, 8(%eax)
+  23      00A543
+  24 004b C7809001 		movl	$0x40000000, 400(%eax)
+  24      00000000 
+  24      0040
+  25 0055 C780CC01 		movl	$0xc2280000, 460(%eax)
+  25      00000000 
+  25      28C2
+  26 005f C780B801 		movl	$0x41000000, 440(%eax)
+  26      00000000 
+  26      0041
+  27 0069 C7406C00 		movl	$0x428c0000, 108(%eax)
+  27      008C42
+  28 0070 C780A401 		movl	$6000, 420(%eax)
+  28      00007017 
+  28      0000
+  29 007a 66C74052 		movw	$80, 82(%eax)
+  29      5000
+  30 0080 66C74054 		movw	$764, 84(%eax)
+  30      FC02
+  31 0086 D95C2420 		fstps	32(%esp)
+  32 008a C7042403 		movl	$3, (%esp)
+  32      000000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccCWoR7F.s 			page 2
+
+
+  33 0091 E8000000 		call	__Z12setAlgorithm18engine_load_mode_e
+  33      00
+  34 0096 C7442404 		movl	$0x42c80000, 4(%esp)
+  34      0000C842 
+  35 009e C7042400 		movl	$0x00000000, (%esp)
+  35      000000
+  36 00a5 E8000000 		call	__Z14setFuelLoadBinff
+  36      00
+  37 00aa D9442420 		flds	32(%esp)
+  38 00ae D91C24   		fstps	(%esp)
+  39 00b1 E8000000 		call	__Z15setWholeFuelMapf
+  39      00
+  40 00b6 C7042400 		movl	$0x41200000, (%esp)
+  40      002041
+  41 00bd E8000000 		call	__Z19setWholeTimingTablef
+  41      00
+  42 00c2 A1000000 		movl	_engineConfiguration, %eax
+  42      00
+  43 00c7 05000100 		addl	$256, %eax
+  43      00
+  44 00cc 890424   		movl	%eax, (%esp)
+  45 00cf E8000000 		call	__Z18setCommonNTCSensorP14ThermistorConf
+  45      00
+  46 00d4 A1000000 		movl	_engineConfiguration, %eax
+  46      00
+  47 00d9 C7442418 		movl	$0x4528c000, 24(%esp)
+  47      00C02845 
+  48 00e1 C7442414 		movl	$0x42a00000, 20(%esp)
+  48      0000A042 
+  49 00e9 C7442410 		movl	$0x460ca000, 16(%esp)
+  49      00A00C46 
+  50 00f1 05200100 		addl	$288, %eax
+  50      00
+  51 00f6 890424   		movl	%eax, (%esp)
+  52 00f9 C744240C 		movl	$0x42480000, 12(%esp)
+  52      00004842 
+  53 0101 C7442408 		movl	$0x475ac000, 8(%esp)
+  53      00C05A47 
+  54 0109 C7442404 		movl	$0x41500000, 4(%esp)
+  54      00005041 
+  55 0111 E8000000 		call	__Z26setThermistorConfigurationP14ThermistorConfffffff
+  55      00
+  56 0116 A1000000 		movl	_engineConfiguration, %eax
+  56      00
+  57 011b C7803801 		movl	$0x468ca000, 312(%eax)
+  57      000000A0 
+  57      8C46
+  58 0125 890424   		movl	%eax, (%esp)
+  59 0128 E8000000 		call	__Z27commonFrankensoAnalogInputsP22engine_configuration_s
+  59      00
+  60 012d A1000000 		movl	_engineConfiguration, %eax
+  60      00
+  61 0132 C7804402 		movl	$0, 580(%eax)
+  61      00000000 
+  61      0000
+  62 013c C780D401 		movl	$0x4109999a, 468(%eax)
+  62      00009A99 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccCWoR7F.s 			page 3
+
+
+  62      0941
+  63 0146 C780F800 		movl	$5, 248(%eax)
+  63      00000500 
+  63      0000
+  64 0150 C7042401 		movl	$1, (%esp)
+  64      000000
+  65 0157 E8000000 		call	__Z12setEgoSensor12ego_sensor_e
+  65      00
+  66 015c C7442408 		movl	$LC17, 8(%esp)
+  66      00000000 
+  67 0164 C7442404 		movl	$70, 4(%esp)
+  67      46000000 
+  68 016c C7042400 		movl	$0, (%esp)
+  68      000000
+  69 0173 E8000000 		call	__Z7setFsioi11brain_pin_ePKc
+  69      00
+  70 0178 A1000000 		movl	_engineConfiguration, %eax
+  70      00
+  71 017d C7805406 		movl	$4, 1620(%eax)
+  71      00000400 
+  71      0000
+  72 0187 83C43C   		addl	$60, %esp
+  73              		.cfi_def_cfa_offset 4
+  74 018a C3       		ret
+  75              		.cfi_endproc
+  76              	LFE85:
+  77 018b 90909090 		.section .rdata,"dr"
+  77      90
+  78 0002 0000     		.align 4
+  79              	LC5:
+  80 0004 00001041 		.long	1091567616
+  81              		.def	__Z28setCustomEngineConfigurationv;	.scl	2;	.type	32;	.endef
+  82              		.def	__Z12setAlgorithm18engine_load_mode_e;	.scl	2;	.type	32;	.endef
+  83              		.def	__Z14setFuelLoadBinff;	.scl	2;	.type	32;	.endef
+  84              		.def	__Z15setWholeFuelMapf;	.scl	2;	.type	32;	.endef
+  85              		.def	__Z19setWholeTimingTablef;	.scl	2;	.type	32;	.endef
+  86              		.def	__Z18setCommonNTCSensorP14ThermistorConf;	.scl	2;	.type	32;	.endef
+  87              		.def	__Z26setThermistorConfigurationP14ThermistorConfffffff;	.scl	2;	.type	32;	.endef
+  88              		.def	__Z27commonFrankensoAnalogInputsP22engine_configuration_s;	.scl	2;	.type	32;	.endef
+  89              		.def	__Z12setEgoSensor12ego_sensor_e;	.scl	2;	.type	32;	.endef
+  90              		.def	__Z7setFsioi11brain_pin_ePKc;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccCWoR7F.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 mazda_626.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccCWoR7F.s:9      .text$_Z30setMazda626EngineConfigurationv:00000000 __Z30setMazda626EngineConfigurationv
+
+UNDEFINED SYMBOLS
+_engineConfiguration
+_boardConfiguration
+__Z28setCustomEngineConfigurationv
+__Z12setAlgorithm18engine_load_mode_e
+__Z14setFuelLoadBinff
+__Z15setWholeFuelMapf
+__Z19setWholeTimingTablef
+__Z18setCommonNTCSensorP14ThermistorConf
+__Z26setThermistorConfigurationP14ThermistorConfffffff
+__Z27commonFrankensoAnalogInputsP22engine_configuration_s
+__Z12setEgoSensor12ego_sensor_e
+__Z7setFsioi11brain_pin_ePKc

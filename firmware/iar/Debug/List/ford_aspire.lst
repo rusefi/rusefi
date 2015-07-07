@@ -1,0 +1,1098 @@
+###############################################################################
+#                                                                             #
+# IAR ANSI C/C++ Compiler V6.50.3.4676/W32 for ARM      30/Jun/2015  23:08:52 #
+# Copyright 1999-2013 IAR Systems AB.                                         #
+#                                                                             #
+#    Cpu mode        =  thumb                                                 #
+#    Endian          =  little                                                #
+#    Source file     =  F:\stuff\rusefi_sourceforge\firmware\config\engines\f #
+#                       ord_aspire.cpp                                        #
+#    Command line    =  F:\stuff\rusefi_sourceforge\firmware\config\engines\f #
+#                       ord_aspire.cpp -lCN F:\stuff\rusefi_sourceforge\firmw #
+#                       are\iar\Debug\List\ -lA F:\stuff\rusefi_sourceforge\f #
+#                       irmware\iar\Debug\List\ -o                            #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\   #
+#                       --no_cse --no_unroll --no_inline --no_code_motion     #
+#                       --no_tbaa --no_clustering --no_scheduling --debug     #
+#                       --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp     #
+#                       --dlib_config "C:\Program Files (x86)\IAR             #
+#                       Systems\Embedded Workbench                            #
+#                       6.5\arm\INC\c\DLib_Config_Normal.h"                   #
+#                       --misrac2004=1.2-1.4,2.3,3.4,4.2,6.5-7,8.2-8.3,9.3,   #
+#                       12.3,13.6-13,15.5,17.3,19.17,20.7-20.9,20.11 -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\ -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\kernel\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\ports\common\ARMCMx\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\common\ARMCMx\CMSIS\include\ -I               #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\IAR\ARMCMx\ -I F:\stuff\rusefi_sourceforge\fi #
+#                       rmware\iar\..\chibios\os\ports\IAR\ARMCMx\STM32F4xx\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\chibio #
+#                       s\os\hal\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\hal\platforms\STM32\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\DMAv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\GPIOv2\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\I2Cv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\SPIv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\TIMv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\RTCv2\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\USARTv1\ -I                     #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\OTGv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32F4xx\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\various\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\chibios\os\various\devices_lib\accel\ -I         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\b #
+#                       oards\ST_STM32F4_DISCOVERY\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\co #
+#                       ntrollers\algo\ -I F:\stuff\rusefi_sourceforge\firmwa #
+#                       re\iar\..\controllers\core\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\system\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\controllers\sensors\ -I                          #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\math\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\controllers\trigger\ -I                            #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\config #
+#                       \ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\conf #
+#                       ig\engines\ -I F:\stuff\rusefi_sourceforge\firmware\i #
+#                       ar\..\config\stm32f4ems\ -I                           #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\b #
+#                       inary\ -I F:\stuff\rusefi_sourceforge\firmware\iar\.. #
+#                       \console_util\ -I F:\stuff\rusefi_sourceforge\firmwar #
+#                       e\iar\..\development\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\development\test\ -I                  #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\developme #
+#                       nt\hw_layer\ -I F:\stuff\rusefi_sourceforge\firmware\ #
+#                       iar\..\hw_layer\algo\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\hw_layer\lcd\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                       stm32f4\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\hw_layer\serial_over_usb\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                        -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext_al #
+#                       go\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\de #
+#                       velopment\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\development\hw_layer\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\util\     #
+#                       -On --eec++                                           #
+#    MISRA C version =  2004                                                  #
+#      Enabled       =  1.2-1.4 2.3 3.4 4.2 6.5 7 8.2 8.3 9.3 12.3 13.6 13.7  #
+#                       15.5 17.3 19.17 20.7-20.9 20.11                       #
+#      Checked       =  1.4 2.3 4.2 6.5 7 8.2 8.3 9.3 12.3 13.7 15.5          #
+#                       20.7-20.9 20.11                                       #
+#      Not checked   =  1.1-1.3 1.5-2.2 2.4-4.1 5-6.4 8.1 8.4-9.2 10-12.2     #
+#                       12.4-13.6 14-15.4 16-20.6 20.10 20.12 21              #
+#    List file       =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\f #
+#                       ord_aspire.lst                                        #
+#    Object file     =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\fo #
+#                       rd_aspire.o                                           #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+F:\stuff\rusefi_sourceforge\firmware\config\engines\ford_aspire.cpp
+      1          /**
+      2           * @file    ford_aspire.cpp
+      3           * @brief	1996 Ford Aspire default engine configuration
+      4           *
+      5           * FORD_ASPIRE_1996 = 3
+      6           * set_engine_type 3
+      7           *
+      8           * @date Sep 9, 2013
+      9           * @author Andrey Belomutskiy, (c) 2012-2015
+     10           */
+     11          
+     12          #include "main.h"
+     13          
+     14          #include "ford_aspire.h"
+     15          
+     16          #include "allsensors.h"
+     17          #include "engine_math.h"
+     18          #include "advance_map.h"
+     19          #include "engine_configuration.h"
+     20          
+     21          #if EFI_SUPPORT_FORD_ASPIRE || defined(__DOXYGEN__)
+     22          
+     23          /**
+     24           * This is just the default map which is stored into flash memory in case flash is empty
+     25           * The convenient way to override these default would be to tune this map using TunerStudio software
+     26           * with which rusEfi is integrated
+     27           */
+
+   \                                 In section .rodata, align 4
+     28          static const fuel_table_t default_aspire_fuel_table = {
+   \                     default_aspire_fuel_table:
+   \   00000000   0x3FC56042         DC32 3FC56042H, 3FC617C2H, 3FC6A394H, 3FC8F5C3H, 3FC66666H, 3F689E56H
+   \              0x3FC617C2   
+   \              0x3FC6A394   
+   \              0x3FC8F5C3   
+   \              0x3FC66666   
+   \              0x3F689E56   
+   \   00000018   0x3F4B7803         DC32 3F4B7803H, 3F467382H, 3F4AAF04H, 3F4CCCCDH, 3F4C7571H, 3F4E4485H
+   \              0x3F467382   
+   \              0x3F4AAF04   
+   \              0x3F4CCCCD   
+   \              0x3F4C7571   
+   \              0x3F4E4485   
+   \   00000030   0x3F4F5C29         DC32 3F4F5C29H, 3F4F5C29H, 3F4F5C29H, 3F4F5C29H, 3FC41CEFH, 3FC85C92H
+   \              0x3F4F5C29   
+   \              0x3F4F5C29   
+   \              0x3F4F5C29   
+   \              0x3FC41CEF   
+   \              0x3FC85C92   
+   \   00000048   0x3FC68F2A         DC32 3FC68F2AH, 3FC6C144H, 3FC5E3EBH, 3F4D55B4H, 3F4F5C29H, 3F49DB98H
+   \              0x3FC6C144   
+   \              0x3FC5E3EB   
+   \              0x3F4D55B4   
+   \              0x3F4F5C29   
+   \              0x3F49DB98   
+   \   00000060   0x3F4F13F0         DC32 3F4F13F0H, 3F3EB778H, 3F338D82H, 3F361E93H, 3F3EA27FH, 3F4F5C29H
+   \              0x3F3EB778   
+   \              0x3F338D82   
+   \              0x3F361E93   
+   \              0x3F3EA27F   
+   \              0x3F4F5C29   
+   \   00000078   0x3F4F5C29         DC32 3F4F5C29H, 3F4F5C29H, 3FC594AFH, 3FC5D556H, 3FC72991H, 3FC5E271H
+   \              0x3F4F5C29   
+   \              0x3FC594AF   
+   \              0x3FC5D556   
+   \              0x3FC72991   
+   \              0x3FC5E271   
+   \   00000090   0x3FB529A2         DC32 3FB529A2H, 3DEC1C1DH, 0H, 0H, 0H, 0H, 0H, 0H, 0H, 0H, 0H, 0H
+   \              0x3DEC1C1D   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \   000000C0   0x3FC4F766         DC32 3FC4F766H, 3FDEF65AH, 3FC77A81H, 3FCBB44EH, 3F9D486FH, 0H, 0H, 0H
+   \              0x3FDEF65A   
+   \              0x3FC77A81   
+   \              0x3FCBB44E   
+   \              0x3F9D486F   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \   000000E0   0x00000000         DC32 0H, 0H, 0H, 0H, 0H, 0H, 0H, 0H, 4014AAEFH, 405C27C8H, 403462AEH
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x4014AAEF   
+   \              0x405C27C8   
+   \              0x403462AE   
+   \   0000010C   0x400F8149         DC32 400F8149H, 40080DBFH, 3F98D656H, 3EFA58D6H, 0H, 0H, 0H, 0H, 0H, 0H
+   \              0x40080DBF   
+   \              0x3F98D656   
+   \              0x3EFA58D6   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \   00000134   0x00000000         DC32 0H, 0H, 0H, 40F64B19H, 40BEA3ECH, 40966E69H, 407844D0H, 40465FD9H
+   \              0x00000000   
+   \              0x00000000   
+   \              0x40F64B19   
+   \              0x40BEA3EC   
+   \              0x40966E69   
+   \              0x407844D0   
+   \              0x40465FD9   
+   \   00000154   0x4019CC92         DC32 4019CC92H, 401D5AC9H, 3FE53ECDH, 400C31B1H, 4004C758H, 3FAF37B0H
+   \              0x401D5AC9   
+   \              0x3FE53ECD   
+   \              0x400C31B1   
+   \              0x4004C758   
+   \              0x3FAF37B0   
+   \   0000016C   0x3FA4CEA3         DC32 3FA4CEA3H, 0H, 0H, 0H, 0H, 416547AFH, 410B5F54H, 40D1DC3CH
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x416547AF   
+   \              0x410B5F54   
+   \              0x40D1DC3C   
+   \   0000018C   0x40AFBA88         DC32 40AFBA88H, 40A3C283H, 4089E1ACH, 404BDF93H, 4055BAB2H, 40388659H
+   \              0x40A3C283   
+   \              0x4089E1AC   
+   \              0x404BDF93   
+   \              0x4055BAB2   
+   \              0x40388659   
+   \   000001A4   0x4035C919         DC32 4035C919H, 40292C62H, 4020536DH, 4012FC26H, 0H, 0H, 0H, 41AAD500H
+   \              0x40292C62   
+   \              0x4020536D   
+   \              0x4012FC26   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x41AAD500   
+   \   000001C4   0x4176A7DC         DC32 4176A7DCH, 412F4102H, 410C78EAH, 40BBBA36H, 40A13C06H, 40A39FC7H
+   \              0x412F4102   
+   \              0x410C78EA   
+   \              0x40BBBA36   
+   \              0x40A13C06   
+   \              0x40A39FC7   
+   \   000001DC   0x408CA878         DC32 408CA878H, 409130BEH, 4063CCFBH, 40750825H, 40496F11H, 40582C56H
+   \              0x409130BE   
+   \              0x4063CCFB   
+   \              0x40750825   
+   \              0x40496F11   
+   \              0x40582C56   
+   \   000001F4   0x4031EB85         DC32 4031EB85H, 4031EB85H, 4031EB85H, 41A029C8H, 41827D57H, 4189AE06H
+   \              0x4031EB85   
+   \              0x4031EB85   
+   \              0x41A029C8   
+   \              0x41827D57   
+   \              0x4189AE06   
+   \   0000020C   0x41799B93         DC32 41799B93H, 412F33F3H, 40F8C03AH, 40C7C8B8H, 40ECD1D2H, 40D58162H
+   \              0x412F33F3   
+   \              0x40F8C03A   
+   \              0x40C7C8B8   
+   \              0x40ECD1D2   
+   \              0x40D58162   
+   \   00000224   0x40C44949         DC32 40C44949H, 40B0F5C0H, 40989F77H, 4090E679H, 408051ECH, 408051ECH
+   \              0x40B0F5C0   
+   \              0x40989F77   
+   \              0x4090E679   
+   \              0x408051EC   
+   \              0x408051EC   
+   \   0000023C   0x408051EC         DC32 408051ECH, 41921CACH, 41776D18H, 4179860DH, 41765508H, 414FCAEDH
+   \              0x41921CAC   
+   \              0x41776D18   
+   \              0x4179860D   
+   \              0x41765508   
+   \              0x414FCAED   
+   \   00000254   0x41556D5C         DC32 41556D5CH, 410E5CE4H, 410ED65BH, 410086ADH, 40D89BFAH, 40BA58C3H
+   \              0x410E5CE4   
+   \              0x410ED65B   
+   \              0x410086AD   
+   \              0x40D89BFA   
+   \              0x40BA58C3   
+   \   0000026C   0x40CD387E         DC32 40CD387EH, 40C2DB64H, 40B75C29H, 40B75C29H, 40B75C29H, 418B513DH
+   \              0x40C2DB64   
+   \              0x40B75C29   
+   \              0x40B75C29   
+   \              0x40B75C29   
+   \              0x418B513D   
+   \   00000284   0x4175DCC7         DC32 4175DCC7H, 4172FF80H, 41756A17H, 4174E7EEH, 417630B3H, 41678866H
+   \              0x4172FF80   
+   \              0x41756A17   
+   \              0x4174E7EE   
+   \              0x417630B3   
+   \              0x41678866   
+   \   0000029C   0x413F1157         DC32 413F1157H, 412FC4D7H, 411F4D6AH, 41104E47H, 4107109CH, 40F07C83H
+   \              0x412FC4D7   
+   \              0x411F4D6A   
+   \              0x41104E47   
+   \              0x4107109C   
+   \              0x40F07C83   
+   \   000002B4   0x40DCCCCD         DC32 40DCCCCDH, 40DCCCCDH, 40DCCCCDH, 41880AECH, 4175F4F3H, 417302B4H
+   \              0x40DCCCCD   
+   \              0x40DCCCCD   
+   \              0x41880AEC   
+   \              0x4175F4F3   
+   \              0x417302B4   
+   \   000002CC   0x417473C9         DC32 417473C9H, 417536CAH, 4178FC7FH, 417A38F5H, 4176A5A5H, 415A1617H
+   \              0x417536CA   
+   \              0x4178FC7F   
+   \              0x417A38F5   
+   \              0x4176A5A5   
+   \              0x415A1617   
+   \   000002E4   0x412EB34C         DC32 412EB34CH, 4138220EH, 412A8F67H, 4118D43DH, 4113AE14H, 4113AE14H
+   \              0x4138220E   
+   \              0x412A8F67   
+   \              0x4118D43D   
+   \              0x4113AE14   
+   \              0x4113AE14   
+   \   000002FC   0x4113AE14         DC32 4113AE14H, 4187D495H, 4175C3FAH, 4172BAB9H, 4174D3AEH, 41754DE8H
+   \              0x4187D495   
+   \              0x4175C3FA   
+   \              0x4172BAB9   
+   \              0x4174D3AE   
+   \              0x41754DE8   
+   \   00000314   0x417AF34E         DC32 417AF34EH, 417CF7BAH, 417B3D40H, 417D3FEDH, 4171D6E4H, 416AA7F1H
+   \              0x417CF7BA   
+   \              0x417B3D40   
+   \              0x417D3FED   
+   \              0x4171D6E4   
+   \              0x416AA7F1   
+   \   0000032C   0x413E8AA3         DC32 413E8AA3H, 4140BF61H, 4113AE14H, 4113AE14H, 4113AE14H, 4187CE07H
+   \              0x4140BF61   
+   \              0x4113AE14   
+   \              0x4113AE14   
+   \              0x4113AE14   
+   \              0x4187CE07   
+   \   00000344   0x41757D46         DC32 41757D46H, 4174E435H, 41749842H, 41749EEEH, 4177BED4H, 417EDC96H
+   \              0x4174E435   
+   \              0x41749842   
+   \              0x41749EEE   
+   \              0x4177BED4   
+   \              0x417EDC96   
+   \   0000035C   0x417C7C61         DC32 417C7C61H, 417AB464H, 417D6318H, 4180FC97H, 4170DFF2H, 416F8FB7H
+   \              0x417AB464   
+   \              0x417D6318   
+   \              0x4180FC97   
+   \              0x4170DFF2   
+   \              0x416F8FB7   
+   \   00000374   0x4169C28F         DC32 4169C28FH, 4169C28FH, 4169C28FH, 4187B1E8H, 4175E4EEH, 41735D96H
+   \              0x4169C28F   
+   \              0x4169C28F   
+   \              0x4187B1E8   
+   \              0x4175E4EE   
+   \              0x41735D96   
+   \   0000038C   0x4174A677         DC32 4174A677H, 41743825H, 4177C5BFH, 417D3CC2H, 417CD6C6H, 417AD89EH
+   \              0x41743825   
+   \              0x4177C5BF   
+   \              0x417D3CC2   
+   \              0x417CD6C6   
+   \              0x417AD89E   
+   \   000003A4   0x417D3BE2         DC32 417D3BE2H, 417FF459H, 41803841H, 4177A7DBH, 41730A3DH, 41730A3DH
+   \              0x417FF459   
+   \              0x41803841   
+   \              0x4177A7DB   
+   \              0x41730A3D   
+   \              0x41730A3D   
+   \   000003BC   0x41730A3D         DC32 41730A3DH, 4188147BH, 41740000H, 417AE148H, 41770A3DH, 417451ECH
+   \              0x4188147B   
+   \              0x41740000   
+   \              0x417AE148   
+   \              0x41770A3D   
+   \              0x417451EC   
+   \   000003D4   0x4177851F         DC32 4177851FH, 417CCCCDH, 417BAE14H, 4179999AH, 417CA3D7H, 4180F5C3H
+   \              0x417CCCCD   
+   \              0x417BAE14   
+   \              0x4179999A   
+   \              0x417CA3D7   
+   \              0x4180F5C3   
+   \   000003EC   0x4180E148         DC32 4180E148H, 417A147BH, 41726666H, 41726666H, 41726666H
+   \              0x417A147B   
+   \              0x41726666   
+   \              0x41726666   
+   \              0x41726666   
+     29          /* RPM					800.000000	1213.333374	1626.666748	2040.000000	2453.333496	2866.666748	3280.000000	3693.333496	4106.666992	4520.000000	4933.333496	5346.666992	5760.000000	6173.333496	6586.666992	7000.000000*/
+     30          /* Load 1.200000 */{	1.542000,	1.547600,	1.551867,	1.570000,	1.550000,	0.908666,	0.794800,	0.775200,	0.791733,	0.800000,	0.798667,	0.805733,	0.810000,	0.810000,	0.810000,	0.810000},
+     31          /* Load 1.413333 */{	1.532133,	1.565325,	1.551244,	1.552773,	1.546018,	0.802089,	0.810000,	0.788507,	0.808898,	0.744987,	0.701378,	0.711404,	0.744667,	0.810000,	0.810000,	0.810000},
+     32          /* Load 1.626667 */{	1.543600,	1.545573,	1.555956,	1.545973,	1.415333,	0.115288,	0.000000,	0.000000,	0.000000,	0.000000,	0.000000,	0.000000,	0.000000,	0.000000,	0.000000,	0.000000},
+     33          /* Load 1.840000 */{	1.538800,	1.741893,	1.558426,	1.591440,	1.228773,	0.000000,	0.000000,	0.000000,	0.000000,	0.000000,	0.000000,	0.000000,	0.000000,	0.000000,	0.000000,	0.000000},
+     34          /* Load 2.053333 */{	2.322933,	3.439928,	2.818523,	2.242266,	2.125839,	1.194041,	0.488959,	0.000000,	0.000000,	0.000000,	0.000000,	0.000000,	0.000000,	0.000000,	0.000000,	0.000000},
+     35          /* Load 2.266667 */{	7.696667,	5.957510,	4.700978,	3.879200,	3.099600,	2.403111,	2.458666,	1.790979,	2.190533,	2.074667,	1.368887,	1.287556,	0.000000,	0.000000,	0.000000,	0.000000},
+     36          /* Load 2.480000 */{	14.330001,	8.710773,	6.558134,	5.491520,	5.117494,	4.308798,	3.185521,	3.339520,	2.883200,	2.840399,	2.643334,	2.505092,	2.296640,	0.000000,	0.000000,	0.000000},
+     37          /* Load 2.693333 */{	21.354004,	15.415981,	10.953371,	8.779520,	5.866481,	5.038577,	5.113254,	4.395565,	4.537200,	3.559386,	3.828622,	3.147404,	3.377706,	2.780000,	2.780000,	2.780000},
+     38          /* Load 2.906667 */{	20.020401,	16.311201,	17.209972,	15.600482,	10.950183,	7.773465,	6.243252,	7.400613,	6.672044,	6.133946,	5.529999,	4.769466,	4.528134,	4.010000,	4.010000,	4.010000},
+     39          /* Load 3.120000 */{	18.264000,	15.464134,	15.595227,	15.395760,	12.987042,	13.339199,	8.897678,	8.927333,	8.032880,	6.769040,	5.823335,	6.413146,	6.089281,	5.730000,	5.730000,	5.730000},
+     40          /* Load 3.333333 */{	17.414667,	15.366401,	15.187378,	15.338401,	15.306623,	15.386889,	14.470800,	11.941733,	10.985557,	9.956400,	9.019111,	8.441555,	7.515199,	6.900000,	6.900000,	6.900000},
+     41          /* Load 3.546667 */{	17.005333,	15.372302,	15.188160,	15.278268,	15.325876,	15.561645,	15.638906,	15.415441,	13.630393,	10.918774,	11.508314,	10.660010,	9.551816,	9.230000,	9.230000,	9.230000},
+     42          /* Load 3.760000 */{	16.978800,	15.360346,	15.170587,	15.301680,	15.331520,	15.684401,	15.810480,	15.702454,	15.828107,	15.114964,	14.666001,	11.908847,	12.046723,	9.230000,	9.230000,	9.230000},
+     43          /* Load 3.973333 */{	16.975599,	15.343084,	15.305715,	15.287172,	15.288801,	15.484089,	15.928854,	15.780366,	15.669041,	15.836693,	16.123335,	15.054674,	14.972587,	14.610000,	14.610000,	14.610000},
+     44          /* Load 4.186667 */{	16.961868,	15.368391,	15.210348,	15.290641,	15.263707,	15.485778,	15.827333,	15.802435,	15.677885,	15.827120,	15.997155,	16.027468,	15.478480,	15.190000,	15.190000,	15.190000},
+     45          /* Load 4.400000 */{	17.010000,	15.250000,	15.680000,	15.440000,	15.270000,	15.470000,	15.800000,	15.730000,	15.600000,	15.790000,	16.120001,	16.110001,	15.630000,	15.150000,	15.150000,	15.150000}
+     46          };
+     47          
+
+   \                                 In section .rodata, align 4
+     48          static const ignition_table_t default_aspire_timing_table = {
+   \                     default_aspire_timing_table:
+   \   00000000   0xBF2978D5         DC32 0BF2978D5H, 40F75C29H, 4185C6A8H, 41B91EB8H, 41EB2F1BH, 41FA24DDH
+   \              0x40F75C29   
+   \              0x4185C6A8   
+   \              0x41B91EB8   
+   \              0x41EB2F1B   
+   \              0x41FA24DD   
+   \   00000018   0x42006E98         DC32 42006E98H, 41F37CEEH, 41F72B02H, 41D53F7DH, 41C5A1CBH, 41C8DD2FH
+   \              0x41F37CEE   
+   \              0x41F72B02   
+   \              0x41D53F7D   
+   \              0x41C5A1CB   
+   \              0x41C8DD2F   
+   \   00000030   0x41C90E56         DC32 41C90E56H, 41CBAE14H, 41CBAE14H, 41CBAE14H, 0BF0BC6A8H, 40F52F1BH
+   \              0x41CBAE14   
+   \              0x41CBAE14   
+   \              0x41CBAE14   
+   \              0xBF0BC6A8   
+   \              0x40F52F1B   
+   \   00000048   0x41870E56         DC32 41870E56H, 41BBDB23H, 41EC28F6H, 41FA978DH, 42006E98H, 41F53F7DH
+   \              0x41BBDB23   
+   \              0x41EC28F6   
+   \              0x41FA978D   
+   \              0x42006E98   
+   \              0x41F53F7D   
+   \   00000060   0x41F3BE77         DC32 41F3BE77H, 41D70A3DH, 41C5F7CFH, 41C5EF9EH, 41E84189H, 41CC7EFAH
+   \              0x41D70A3D   
+   \              0x41C5F7CF   
+   \              0x41C5EF9E   
+   \              0x41E84189   
+   \              0x41CC7EFA   
+   \   00000078   0x41CC7EFA         DC32 41CC7EFAH, 41CC7EFAH, 0BF158106H, 40FBD70AH, 4185B646H, 41B8353FH
+   \              0x41CC7EFA   
+   \              0xBF158106   
+   \              0x40FBD70A   
+   \              0x4185B646   
+   \              0x41B8353F   
+   \   00000090   0x41EC5604         DC32 41EC5604H, 41F953F8H, 4200B439H, 41F451ECH, 41F224DDH, 41D353F8H
+   \              0x41F953F8   
+   \              0x4200B439   
+   \              0x41F451EC   
+   \              0x41F224DD   
+   \              0x41D353F8   
+   \   000000A8   0x41C1126F         DC32 41C1126FH, 41C81062H, 41C59581H, 41D15810H, 41D15810H, 41D15810H
+   \              0x41C81062   
+   \              0x41C59581   
+   \              0x41D15810   
+   \              0x41D15810   
+   \              0x41D15810   
+   \   000000C0   0xBF158106         DC32 0BF158106H, 40F50E56H, 4185B646H, 41BA0831H, 41EAD0E5H, 41F7D2F2H
+   \              0x40F50E56   
+   \              0x4185B646   
+   \              0x41BA0831   
+   \              0x41EAD0E5   
+   \              0x41F7D2F2   
+   \   000000D8   0x42009168         DC32 42009168H, 41F6FDF4H, 41F72B02H, 41D41062H, 41C476C9H, 41C31EB8H
+   \              0x41F6FDF4   
+   \              0x41F72B02   
+   \              0x41D41062   
+   \              0x41C476C9   
+   \              0x41C31EB8   
+   \   000000F0   0x41CE1893         DC32 41CE1893H, 420DF7CFH, 420DF7CFH, 420DF7CFH, 0BF158106H, 40FB9581H
+   \              0x420DF7CF   
+   \              0x420DF7CF   
+   \              0x420DF7CF   
+   \              0xBF158106   
+   \              0x40FB9581   
+   \   00000108   0x41844DD3         DC32 41844DD3H, 41BA0831H, 41E9DB23H, 41FA5E35H, 4202147BH, 41F122D1H
+   \              0x41BA0831   
+   \              0x41E9DB23   
+   \              0x41FA5E35   
+   \              0x4202147B   
+   \              0x41F122D1   
+   \   00000120   0x41F31AA0         DC32 41F31AA0H, 41CF3B64H, 41C2F5C3H, 41C0A7F0H, 41C65604H, 41C2D0E5H
+   \              0x41CF3B64   
+   \              0x41C2F5C3   
+   \              0x41C0A7F0   
+   \              0x41C65604   
+   \              0x41C2D0E5   
+   \   00000138   0x41C2D0E5         DC32 41C2D0E5H, 41C2D0E5H, 3FAE978DH, 40F73B64H, 418672B0H, 41BA0831H
+   \              0x41C2D0E5   
+   \              0x3FAE978D   
+   \              0x40F73B64   
+   \              0x418672B0   
+   \              0x41BA0831   
+   \   00000150   0x41ED1EB8         DC32 41ED1EB8H, 41F80C4AH, 42013127H, 41F74BC7H, 41EF0E56H, 41D322D1H
+   \              0x41F80C4A   
+   \              0x42013127   
+   \              0x41F74BC7   
+   \              0x41EF0E56   
+   \              0x41D322D1   
+   \   00000168   0x41C54FDF         DC32 41C54FDFH, 41D9DF3BH, 41CAFDF4H, 41CB5810H, 41CB5810H, 41CB5810H
+   \              0x41D9DF3B   
+   \              0x41CAFDF4   
+   \              0x41CB5810   
+   \              0x41CB5810   
+   \              0x41CB5810   
+   \   00000180   0xBFAE978D         DC32 0BFAE978DH, 4127D70AH, 4185A5E3H, 41B38937H, 41E0D0E5H, 41F1E76DH
+   \              0x4127D70A   
+   \              0x4185A5E3   
+   \              0x41B38937   
+   \              0x41E0D0E5   
+   \              0x41F1E76D   
+   \   00000198   0x420174BC         DC32 420174BCH, 41F5C28FH, 41F72B02H, 41D4DD2FH, 41C54FDFH, 41C374BCH
+   \              0x41F5C28F   
+   \              0x41F72B02   
+   \              0x41D4DD2F   
+   \              0x41C54FDF   
+   \              0x41C374BC   
+   \   000001B0   0x41C40000         DC32 41C40000H, 41CC147BH, 41CC147BH, 41CC147BH, 0C11DD2F2H, 4126A7F0H
+   \              0x41CC147B   
+   \              0x41CC147B   
+   \              0x41CC147B   
+   \              0xC11DD2F2   
+   \              0x4126A7F0   
+   \   000001C8   0x413AE148         DC32 413AE148H, 41993333H, 41CE0831H, 41DF7CEEH, 4202374CH, 41F53F7DH
+   \              0x41993333   
+   \              0x41CE0831   
+   \              0x41DF7CEE   
+   \              0x4202374C   
+   \              0x41F53F7D   
+   \   000001E0   0x41F13B64         DC32 41F13B64H, 41D978D5H, 41CA0419H, 41B67EFAH, 41C39DB2H, 41C9C28FH
+   \              0x41D978D5   
+   \              0x41CA0419   
+   \              0x41B67EFA   
+   \              0x41C39DB2   
+   \              0x41C9C28F   
+   \   000001F8   0x41C9C28F         DC32 41C9C28FH, 41C9C28FH, 0C11DDB23H, 0C0AE76C9H, 0C036A7F0H
+   \              0x41C9C28F   
+   \              0xC11DDB23   
+   \              0xC0AE76C9   
+   \              0xC036A7F0   
+   \   0000020C   0x4189B22D         DC32 4189B22DH, 418C6A7FH, 41A58106H, 41CD47AEH, 41DE7AE1H, 41DD8937H
+   \              0x418C6A7F   
+   \              0x41A58106   
+   \              0x41CD47AE   
+   \              0x41DE7AE1   
+   \              0x41DD8937   
+   \   00000224   0x41D9CAC1         DC32 41D9CAC1H, 41CF0E56H, 41CAE148H, 41D0CCCDH, 41DFEF9EH, 41DFEF9EH
+   \              0x41CF0E56   
+   \              0x41CAE148   
+   \              0x41D0CCCD   
+   \              0x41DFEF9E   
+   \              0x41DFEF9E   
+   \   0000023C   0x41DFEF9E         DC32 41DFEF9EH, 0C11DD2F2H, 0C0AE76C9H, 0C036A7F0H, 3EAF1AA0H
+   \              0xC11DD2F2   
+   \              0xC0AE76C9   
+   \              0xC036A7F0   
+   \              0x3EAF1AA0   
+   \   00000250   0x41486A7F         DC32 41486A7FH, 4181BE77H, 41AAE979H, 41DCB852H, 41CE3D71H, 41C15C29H
+   \              0x4181BE77   
+   \              0x41AAE979   
+   \              0x41DCB852   
+   \              0x41CE3D71   
+   \              0x41C15C29   
+   \   00000268   0x41C54FDF         DC32 41C54FDFH, 41CCAC08H, 41D3EB85H, 41FFBE77H, 41FFBE77H, 41FFBE77H
+   \              0x41CCAC08   
+   \              0x41D3EB85   
+   \              0x41FFBE77   
+   \              0x41FFBE77   
+   \              0x41FFBE77   
+   \   00000280   0xC11DD2F2         DC32 0C11DD2F2H, 0C0B08312H, 0C036A7F0H, 3E676C8BH, 402F3B64H
+   \              0xC0B08312   
+   \              0xC036A7F0   
+   \              0x3E676C8B   
+   \              0x402F3B64   
+   \   00000294   0x40743958         DC32 40743958H, 413EC8B4H, 419676C9H, 41A84DD3H, 41AC4DD3H, 41A9AE14H
+   \              0x413EC8B4   
+   \              0x419676C9   
+   \              0x41A84DD3   
+   \              0x41AC4DD3   
+   \              0x41A9AE14   
+   \   000002AC   0x41B1D2F2         DC32 41B1D2F2H, 41C85E35H, 41C93F7DH, 41C93F7DH, 41C93F7DH, 0C11DDB23H
+   \              0x41C85E35   
+   \              0x41C93F7D   
+   \              0x41C93F7D   
+   \              0x41C93F7D   
+   \              0xC11DDB23   
+   \   000002C4   0xC0B09375         DC32 0C0B09375H, 0C036A7F0H, 80000000H, 40416873H, 40743958H, 40CDB22DH
+   \              0xC036A7F0   
+   \              0x80000000   
+   \              0x40416873   
+   \              0x40743958   
+   \              0x40CDB22D   
+   \   000002DC   0x40F9374C         DC32 40F9374CH, 419B6873H, 41A6E148H, 419FBA5EH, 41A83D71H, 41AB2B02H
+   \              0x419B6873   
+   \              0x41A6E148   
+   \              0x419FBA5E   
+   \              0x41A83D71   
+   \              0x41AB2B02   
+   \   000002F4   0x41AC8F5C         DC32 41AC8F5CH, 41AC8F5CH, 41AC8F5CH, 0C11DD2F2H, 0C0B08312H
+   \              0x41AC8F5C   
+   \              0x41AC8F5C   
+   \              0xC11DD2F2   
+   \              0xC0B08312   
+   \   00000308   0xC0316873         DC32 0C0316873H, 3E676C8BH, 402ED917H, 40600000H, 40D98937H, 4101A1CBH
+   \              0x3E676C8B   
+   \              0x402ED917   
+   \              0x40600000   
+   \              0x40D98937   
+   \              0x4101A1CB   
+   \   00000320   0x410A8F5C         DC32 410A8F5CH, 41180000H, 413C9BA6H, 41A10E56H, 41A09375H, 41A4147BH
+   \              0x41180000   
+   \              0x413C9BA6   
+   \              0x41A10E56   
+   \              0x41A09375   
+   \              0x41A4147B   
+   \   00000338   0x41A4147B         DC32 41A4147BH, 41A4147BH, 0C11DD2F2H, 0C0B09375H, 0C036A7F0H
+   \              0x41A4147B   
+   \              0xC11DD2F2   
+   \              0xC0B09375   
+   \              0xC036A7F0   
+   \   0000034C   0x80000000         DC32 80000000H, 403851ECH, 40743958H, 40CD70A4H, 41051EB8H, 4106D0E5H
+   \              0x403851EC   
+   \              0x40743958   
+   \              0x40CD70A4   
+   \              0x41051EB8   
+   \              0x4106D0E5   
+   \   00000364   0x41088312         DC32 41088312H, 4137851FH, 4137126FH, 4159C28FH, 41405A1DH, 41405A1DH
+   \              0x4137851F   
+   \              0x4137126F   
+   \              0x4159C28F   
+   \              0x41405A1D   
+   \              0x41405A1D   
+   \   0000037C   0x41405A1D         DC32 41405A1DH, 0C11C0000H, 0C0B09375H, 0C026A7F0H, 80000000H
+   \              0xC11C0000   
+   \              0xC0B09375   
+   \              0xC026A7F0   
+   \              0x80000000   
+   \   00000390   0x403851EC         DC32 403851ECH, 4069DB23H, 40C1999AH, 40DC6A7FH, 4105F3B6H, 4115D2F2H
+   \              0x4069DB23   
+   \              0x40C1999A   
+   \              0x40DC6A7F   
+   \              0x4105F3B6   
+   \              0x4115D2F2   
+   \   000003A8   0x413C3958         DC32 413C3958H, 413BB646H, 413DD2F2H, 41460419H, 41460419H, 41460419H
+   \              0x413BB646   
+   \              0x413DD2F2   
+   \              0x41460419   
+   \              0x41460419   
+   \              0x41460419   
+   \   000003C0   0xBEB33333         DC32 0BEB33333H, 0C0B2E148H, 0BF008312H, 0BF68F5C3H, 0BF5D2F1BH
+   \              0xC0B2E148   
+   \              0xBF008312   
+   \              0xBF68F5C3   
+   \              0xBF5D2F1B   
+   \   000003D4   0xBF743958         DC32 0BF743958H, 0BFA978D5H, 40EDF3B6H, 0BF95C28FH, 0BF86E979H
+   \              0xBFA978D5   
+   \              0x40EDF3B6   
+   \              0xBF95C28F   
+   \              0xBF86E979   
+   \   000003E8   0xC003B646         DC32 0C003B646H, 0C00645A2H, 0C028B439H, 4145A1CBH, 4145A1CBH
+   \              0xC00645A2   
+   \              0xC028B439   
+   \              0x4145A1CB   
+   \              0x4145A1CB   
+   \   000003FC   0x4145A1CB         DC32 4145A1CBH
+     49          /* RPM					800.000000	1213.333374	1626.666748	2040.000000	2453.333496	2866.666748	3280.000000	3693.333496	4106.666992	4520.000000	4933.333496	5346.666992	5760.000000	6173.333496	6586.666992	7000.000000*/
+     50          /* Load 1.200000 */{	-0.662000,	+7.730000,	+16.722000,	+23.139999,	+29.398001,	+31.268000,	+32.108002,	+30.436001,	+30.896000,	+26.656000,	+24.704000,	+25.108000,	+25.132000,	+25.459999,	+25.459999,	+25.459999},
+     51          /* Load 1.413333 */{	-0.546000,	+7.662000,	+16.882000,	+23.482000,	+29.520000,	+31.323999,	+32.108002,	+30.656000,	+30.468000,	+26.879999,	+24.746000,	+24.742001,	+29.032000,	+25.562000,	+25.562000,	+25.562000},
+     52          /* Load 1.626667 */{	-0.584000,	+7.870000,	+16.714001,	+23.025999,	+29.542000,	+31.166000,	+32.175999,	+30.540001,	+30.268000,	+26.416000,	+24.134001,	+25.007999,	+24.698000,	+26.167999,	+26.167999,	+26.167999},
+     53          /* Load 1.840000 */{	-0.584000,	+7.658000,	+16.714001,	+23.254000,	+29.351999,	+30.978001,	+32.141998,	+30.874001,	+30.896000,	+26.507999,	+24.558001,	+24.389999,	+25.761999,	+35.492001,	+35.492001,	+35.492001},
+     54          /* Load 2.053333 */{	-0.584000,	+7.862000,	+16.538000,	+23.254000,	+29.232000,	+31.296000,	+32.520000,	+30.142000,	+30.388000,	+25.903999,	+24.370001,	+24.082001,	+24.792000,	+24.351999,	+24.351999,	+24.351999},
+     55          /* Load 2.266667 */{	+1.364000,	+7.726000,	+16.806000,	+23.254000,	+29.639999,	+31.006001,	+32.298000,	+30.912001,	+29.882000,	+26.392000,	+24.664000,	+27.233999,	+25.374001,	+25.417999,	+25.417999,	+25.417999},
+     56          /* Load 2.480000 */{	-1.364000,	+10.490000,	+16.705999,	+22.441999,	+28.101999,	+30.238001,	+32.363998,	+30.719999,	+30.896000,	+26.608000,	+24.664000,	+24.431999,	+24.500000,	+25.510000,	+25.510000,	+25.510000},
+     57          /* Load 2.693333 */{	-9.864000,	+10.416000,	+11.680000,	+19.150000,	+25.754000,	+27.936001,	+32.554001,	+30.656000,	+30.153999,	+27.184000,	+25.252001,	+22.812000,	+24.452000,	+25.219999,	+25.219999,	+25.219999},
+     58          /* Load 2.906667 */{	-9.866000,	-5.452000,	-2.854000,	+17.212000,	+17.552000,	+20.688000,	+25.660000,	+27.809999,	+27.691999,	+27.224001,	+25.882000,	+25.360001,	+26.100000,	+27.992001,	+27.992001,	+27.992001},
+     59          /* Load 3.120000 */{	-9.864000,	-5.452000,	-2.854000,	+0.342000,	+12.526000,	+16.218000,	+21.364000,	+27.590000,	+25.780001,	+24.170000,	+24.664000,	+25.584000,	+26.490000,	+31.968000,	+31.968000,	+31.968000},
+     60          /* Load 3.333333 */{	-9.864000,	-5.516000,	-2.854000,	+0.226000,	+2.738000,	+3.816000,	+11.924000,	+18.808001,	+21.038000,	+21.538000,	+21.209999,	+22.228001,	+25.046000,	+25.156000,	+25.156000,	+25.156000},
+     61          /* Load 3.546667 */{	-9.866000,	-5.518000,	-2.854000,	-0.000000,	+3.022000,	+3.816000,	+6.428000,	+7.788000,	+19.426001,	+20.860001,	+19.966000,	+21.030001,	+21.396000,	+21.570000,	+21.570000,	+21.570000},
+     62          /* Load 3.760000 */{	-9.864000,	-5.516000,	-2.772000,	+0.226000,	+2.732000,	+3.500000,	+6.798000,	+8.102000,	+8.660000,	+9.500000,	+11.788000,	+20.132000,	+20.072001,	+20.510000,	+20.510000,	+20.510000},
+     63          /* Load 3.973333 */{	-9.864000,	-5.518000,	-2.854000,	-0.000000,	+2.880000,	+3.816000,	+6.420000,	+8.320000,	+8.426000,	+8.532000,	+11.470000,	+11.442000,	+13.610000,	+12.022000,	+12.022000,	+12.022000},
+     64          /* Load 4.186667 */{	-9.750000,	-5.518000,	-2.604000,	-0.000000,	+2.880000,	+3.654000,	+6.050000,	+6.888000,	+8.372000,	+9.364000,	+11.764000,	+11.732000,	+11.864000,	+12.376000,	+12.376000,	+12.376000},
+     65          /* Load 4.400000 */{	-0.350000,	-5.590000,	-0.502000,	-0.910000,	-0.864000,	-0.954000,	-1.324000,	+7.436000,	-1.170000,	-1.054000,	-2.058000,	-2.098000,	-2.636000,	+12.352000,	+12.352000,	+12.352000}
+     66          };
+     67          
+     68          EXTERN_ENGINE;
+     69          
+
+   \                                 In section .text, align 4, keep-with-next
+     70          static void setDefaultAspireMaps(DECLARE_ENGINE_PARAMETER_F) {
+   \                     _Z20setDefaultAspireMapsv:
+   \   00000000   0xB580             PUSH     {R7,LR}
+     71          
+     72          	setFuelLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER);
+   \   00000002   0xEDDF 0x....      VLDR.W   S1,??DataTable1  ;; 0x408ccccd
+   \   00000006   0xED9F 0x....      VLDR.W   S0,??DataTable1_1  ;; 0x3f99999a
+   \   0000000A   0x.... 0x....      BL       _Z14setFuelLoadBinff
+     73          	setFuelRpmBin(800, 7000 PASS_ENGINE_PARAMETER);
+   \   0000000E   0xEDDF 0x....      VLDR.W   S1,??DataTable1_2  ;; 0x45dac000
+   \   00000012   0xED9F 0x....      VLDR.W   S0,??DataTable1_3  ;; 0x44480000
+   \   00000016   0x.... 0x....      BL       _Z13setFuelRpmBinff
+     74          	setTimingLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER);
+   \   0000001A   0xEDDF 0x....      VLDR.W   S1,??DataTable1  ;; 0x408ccccd
+   \   0000001E   0xED9F 0x....      VLDR.W   S0,??DataTable1_1  ;; 0x3f99999a
+   \   00000022   0x.... 0x....      BL       _Z16setTimingLoadBinff
+     75          	setTimingRpmBin(800, 7000 PASS_ENGINE_PARAMETER);
+   \   00000026   0xEDDF 0x....      VLDR.W   S1,??DataTable1_2  ;; 0x45dac000
+   \   0000002A   0xED9F 0x....      VLDR.W   S0,??DataTable1_3  ;; 0x44480000
+   \   0000002E   0x.... 0x....      BL       _Z15setTimingRpmBinff
+     76          
+     77          	copyFuelTable(default_aspire_fuel_table, config->fuelTable);
+   \   00000032   0x....             LDR.N    R0,??DataTable1_9
+   \   00000034   0x6800             LDR      R0,[R0, #+0]
+   \   00000036   0xF500 0x5124      ADD      R1,R0,#+10496
+   \   0000003A   0x31B8             ADDS     R1,R1,#+184
+   \   0000003C   0x....             LDR.N    R0,??DataTable1_10
+   \   0000003E   0x.... 0x....      BL       _Z13copyFuelTablePA16_KfPA16_f
+     78          	copyTimingTable(default_aspire_timing_table, config->ignitionTable);
+   \   00000042   0x....             LDR.N    R0,??DataTable1_9
+   \   00000044   0x6800             LDR      R0,[R0, #+0]
+   \   00000046   0xF500 0x5138      ADD      R1,R0,#+11776
+   \   0000004A   0x3138             ADDS     R1,R1,#+56
+   \   0000004C   0x....             LDR.N    R0,??DataTable1_11
+   \   0000004E   0x.... 0x....      BL       _Z15copyTimingTablePA16_KfPA16_f
+     79          }
+   \   00000052   0xBD01             POP      {R0,PC}          ;; return
+     80          
+
+   \                                 In section .text, align 4, keep-with-next
+     81          void setFordAspireEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
+   \                     _Z32setFordAspireEngineConfigurationv:
+   \   00000000   0xB580             PUSH     {R7,LR}
+     82          	engineConfiguration->tpsMin = 100;
+   \   00000002   0x....             LDR.N    R0,??DataTable1_12
+   \   00000004   0x6800             LDR      R0,[R0, #+0]
+   \   00000006   0x2164             MOVS     R1,#+100
+   \   00000008   0xF8A0 0x1052      STRH     R1,[R0, #+82]
+     83          	engineConfiguration->tpsMax = 750;
+   \   0000000C   0x....             LDR.N    R0,??DataTable1_12
+   \   0000000E   0x6800             LDR      R0,[R0, #+0]
+   \   00000010   0xF240 0x21EE      MOVW     R1,#+750
+   \   00000014   0xF8A0 0x1054      STRH     R1,[R0, #+84]
+     84          
+     85          	engineConfiguration->rpmHardLimit = 7000;
+   \   00000018   0x....             LDR.N    R0,??DataTable1_12
+   \   0000001A   0x6800             LDR      R0,[R0, #+0]
+   \   0000001C   0xF641 0x3158      MOVW     R1,#+7000
+   \   00000020   0xF8C0 0x11A4      STR      R1,[R0, #+420]
+     86          
+     87          	/**
+     88          	 * 18K Ohm @ -20C
+     89          	 * 2.1K Ohm @ 24C
+     90          	 * 1K Ohm @ 49C
+     91          	 */
+     92          	setThermistorConfiguration(&engineConfiguration->clt, -20, 18000, 23.8889, 2100, 48.8889, 1000);
+   \   00000024   0xEDDF 0x....      VLDR.W   S5,??DataTable1_4  ;; 0x447a0000
+   \   00000028   0xED9F 0x....      VLDR.W   S4,??DataTable1_5  ;; 0x42438e3c
+   \   0000002C   0xEDDF 0x....      VLDR.W   S3,??DataTable1_6  ;; 0x45034000
+   \   00000030   0xED9F 0x....      VLDR.W   S2,??DataTable1_7  ;; 0x41bf1c78
+   \   00000034   0xEDDF 0x....      VLDR.W   S1,??DataTable1_8  ;; 0x468ca000
+   \   00000038   0xEEBB 0x0A04      VMOV.F32 S0,#-20.0
+   \   0000003C   0x....             LDR.N    R0,??DataTable1_12
+   \   0000003E   0x6800             LDR      R0,[R0, #+0]
+   \   00000040   0xF510 0x7080      ADDS     R0,R0,#+256
+   \   00000044   0x.... 0x....      BL       _Z26setThermistorConfigurationP14ThermistorConfffffff
+     93          	engineConfiguration->clt.config.bias_resistor = 3300; // that's my custom resistor value!
+   \   00000048   0x....             LDR.N    R0,??DataTable1_12
+   \   0000004A   0x6800             LDR      R0,[R0, #+0]
+   \   0000004C   0x....             LDR.N    R1,??DataTable1_13  ;; 0x454e4000
+   \   0000004E   0xF8C0 0x1118      STR      R1,[R0, #+280]
+     94          
+     95          	engineConfiguration->cranking.baseFuel = 3;
+   \   00000052   0x....             LDR.N    R0,??DataTable1_12
+   \   00000054   0x6800             LDR      R0,[R0, #+0]
+   \   00000056   0x....             LDR.N    R1,??DataTable1_14  ;; 0x40400000
+   \   00000058   0x65C1             STR      R1,[R0, #+92]
+     96          
+     97          //	engineConfiguration->ignitionPinMode = OM_INVERTED;
+     98          
+     99          	engineConfiguration->specs.cylindersCount = 4;
+   \   0000005A   0x....             LDR.N    R0,??DataTable1_12
+   \   0000005C   0x6800             LDR      R0,[R0, #+0]
+   \   0000005E   0x2104             MOVS     R1,#+4
+   \   00000060   0xF8C0 0x1194      STR      R1,[R0, #+404]
+    100          	engineConfiguration->specs.displacement = 1.3;
+   \   00000064   0x....             LDR.N    R0,??DataTable1_12
+   \   00000066   0x6800             LDR      R0,[R0, #+0]
+   \   00000068   0x....             LDR.N    R1,??DataTable1_15  ;; 0x3fa66666
+   \   0000006A   0xF8C0 0x1190      STR      R1,[R0, #+400]
+    101          	// Denso 195500-2110
+    102          	engineConfiguration->injector.flow = 119.8;
+   \   0000006E   0x....             LDR.N    R0,??DataTable1_12
+   \   00000070   0x6800             LDR      R0,[R0, #+0]
+   \   00000072   0x....             LDR.N    R1,??DataTable1_16  ;; 0x42ef999a
+   \   00000074   0x6081             STR      R1,[R0, #+8]
+    103          
+    104          	engineConfiguration->specs.firingOrder = FO_1_THEN_3_THEN_4_THEN2;
+   \   00000076   0x....             LDR.N    R0,??DataTable1_12
+   \   00000078   0x6800             LDR      R0,[R0, #+0]
+   \   0000007A   0x2101             MOVS     R1,#+1
+   \   0000007C   0xF8C0 0x1198      STR      R1,[R0, #+408]
+    105          	engineConfiguration->globalTriggerAngleOffset = 175;
+   \   00000080   0x....             LDR.N    R0,??DataTable1_12
+   \   00000082   0x6800             LDR      R0,[R0, #+0]
+   \   00000084   0x....             LDR.N    R1,??DataTable1_17  ;; 0x432f0000
+   \   00000086   0xF8C0 0x11CC      STR      R1,[R0, #+460]
+    106          	engineConfiguration->ignitionOffset = 87;
+   \   0000008A   0x....             LDR.N    R0,??DataTable1_12
+   \   0000008C   0x6800             LDR      R0,[R0, #+0]
+   \   0000008E   0x....             LDR.N    R1,??DataTable1_18  ;; 0x42ae0000
+   \   00000090   0xF8C0 0x11C0      STR      R1,[R0, #+448]
+    107          	engineConfiguration->injectionOffset = 54 + 360;
+   \   00000094   0x....             LDR.N    R0,??DataTable1_12
+   \   00000096   0x6800             LDR      R0,[R0, #+0]
+   \   00000098   0x....             LDR.N    R1,??DataTable1_19  ;; 0x43cf0000
+   \   0000009A   0xF8C0 0x11B4      STR      R1,[R0, #+436]
+    108          
+    109          	setDefaultAspireMaps(PASS_ENGINE_PARAMETER_F);
+   \   0000009E   0x.... 0x....      BL       _Z20setDefaultAspireMapsv
+    110          	// set_cranking_rpm 550
+    111          	engineConfiguration->cranking.rpm = 550;
+   \   000000A2   0x....             LDR.N    R0,??DataTable1_12
+   \   000000A4   0x6800             LDR      R0,[R0, #+0]
+   \   000000A6   0xF240 0x2126      MOVW     R1,#+550
+   \   000000AA   0xF8A0 0x1060      STRH     R1,[R0, #+96]
+    112          	// set_cranking_charge_angle 70
+    113          	engineConfiguration->crankingChargeAngle = 70;
+   \   000000AE   0x....             LDR.N    R0,??DataTable1_12
+   \   000000B0   0x6800             LDR      R0,[R0, #+0]
+   \   000000B2   0x....             LDR.N    R1,??DataTable1_20  ;; 0x428c0000
+   \   000000B4   0x66C1             STR      R1,[R0, #+108]
+    114          	// set_cranking_timing_angle 37
+    115          	engineConfiguration->crankingTimingAngle = -37;
+   \   000000B6   0x....             LDR.N    R0,??DataTable1_12
+   \   000000B8   0x6800             LDR      R0,[R0, #+0]
+   \   000000BA   0x....             LDR.N    R1,??DataTable1_21  ;; 0xc2140000
+   \   000000BC   0xF8C0 0x11B8      STR      R1,[R0, #+440]
+    116          
+    117          	setSingleCoilDwell(engineConfiguration);
+   \   000000C0   0x....             LDR.N    R0,??DataTable1_12
+   \   000000C2   0x6800             LDR      R0,[R0, #+0]
+   \   000000C4   0x.... 0x....      BL       _Z18setSingleCoilDwellP22engine_configuration_s
+    118          	engineConfiguration->ignitionMode = IM_ONE_COIL;
+   \   000000C8   0x....             LDR.N    R0,??DataTable1_12
+   \   000000CA   0x6800             LDR      R0,[R0, #+0]
+   \   000000CC   0x2100             MOVS     R1,#+0
+   \   000000CE   0xF8C0 0x11BC      STR      R1,[R0, #+444]
+    119          	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
+   \   000000D2   0x2102             MOVS     R1,#+2
+   \   000000D4   0x....             LDR.N    R0,??DataTable1_12
+   \   000000D6   0x6800             LDR      R0,[R0, #+0]
+   \   000000D8   0x.... 0x....      BL       _Z16setOperationModeP22engine_configuration_s16operation_mode_e
+    120          	engineConfiguration->useOnlyFrontForTrigger = true;
+   \   000000DC   0x....             LDR.N    R0,??DataTable1_12
+   \   000000DE   0x6800             LDR      R0,[R0, #+0]
+   \   000000E0   0xF890 0x05E5      LDRB     R0,[R0, #+1509]
+   \   000000E4   0xF050 0x0040      ORRS     R0,R0,#0x40
+   \   000000E8   0x....             LDR.N    R1,??DataTable1_12
+   \   000000EA   0x6809             LDR      R1,[R1, #+0]
+   \   000000EC   0xF881 0x05E5      STRB     R0,[R1, #+1509]
+    121          	engineConfiguration->trigger.type = TT_FORD_ASPIRE;
+   \   000000F0   0x....             LDR.N    R0,??DataTable1_12
+   \   000000F2   0x6800             LDR      R0,[R0, #+0]
+   \   000000F4   0x2101             MOVS     R1,#+1
+   \   000000F6   0xF8C0 0x1218      STR      R1,[R0, #+536]
+    122          
+    123          	boardConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
+   \   000000FA   0x....             LDR.N    R0,??DataTable1_22
+   \   000000FC   0x6800             LDR      R0,[R0, #+0]
+   \   000000FE   0x2150             MOVS     R1,#+80
+   \   00000100   0x6301             STR      R1,[R0, #+48]
+    124          	boardConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
+   \   00000102   0x....             LDR.N    R0,??DataTable1_22
+   \   00000104   0x6800             LDR      R0,[R0, #+0]
+   \   00000106   0x2150             MOVS     R1,#+80
+   \   00000108   0x6341             STR      R1,[R0, #+52]
+    125          
+    126          	engineConfiguration->HD44780width = 20;
+   \   0000010A   0x....             LDR.N    R0,??DataTable1_12
+   \   0000010C   0x6800             LDR      R0,[R0, #+0]
+   \   0000010E   0x2114             MOVS     R1,#+20
+   \   00000110   0xF8C0 0x1204      STR      R1,[R0, #+516]
+    127          	engineConfiguration->HD44780height = 4;
+   \   00000114   0x....             LDR.N    R0,??DataTable1_12
+   \   00000116   0x6800             LDR      R0,[R0, #+0]
+   \   00000118   0x2104             MOVS     R1,#+4
+   \   0000011A   0xF8C0 0x1208      STR      R1,[R0, #+520]
+    128          
+    129          	// Frankenstein analog input #1: adc1
+    130          	// Frankenstein analog input #2: adc3
+    131          	// Frankenstein analog input #3: adc13
+    132          	// Frankenstein analog input #4: adc11
+    133          	// Frankenstein analog input #5: adc
+    134          	// Frankenstein analog input #6: adc
+    135          	// Frankenstein analog input #7: adc
+    136          	// Frankenstein analog input #8: adc
+    137          	// Frankenstein analog input #9: adc
+    138          	// Frankenstein analog input #10: adc
+    139          	// Frankenstein analog input #11: adc
+    140          	// Frankenstein analog input #12: adc
+    141          
+    142          
+    143          	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
+   \   0000011E   0x....             LDR.N    R0,??DataTable1_12
+   \   00000120   0x6800             LDR      R0,[R0, #+0]
+   \   00000122   0x2103             MOVS     R1,#+3
+   \   00000124   0xF8C0 0x120C      STR      R1,[R0, #+524]
+    144          	engineConfiguration->vbattAdcChannel = EFI_ADC_0;
+   \   00000128   0x....             LDR.N    R0,??DataTable1_12
+   \   0000012A   0x6800             LDR      R0,[R0, #+0]
+   \   0000012C   0x2100             MOVS     R1,#+0
+   \   0000012E   0xF8C0 0x11D8      STR      R1,[R0, #+472]
+    145          	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
+   \   00000132   0x....             LDR.N    R0,??DataTable1_12
+   \   00000134   0x6800             LDR      R0,[R0, #+0]
+   \   00000136   0x2104             MOVS     R1,#+4
+   \   00000138   0xF8C0 0x10FC      STR      R1,[R0, #+252]
+    146          	engineConfiguration->mafAdcChannel = EFI_ADC_1;
+   \   0000013C   0x....             LDR.N    R0,??DataTable1_12
+   \   0000013E   0x6800             LDR      R0,[R0, #+0]
+   \   00000140   0x2101             MOVS     R1,#+1
+   \   00000142   0xF8C0 0x1244      STR      R1,[R0, #+580]
+    147          	engineConfiguration->clt.adcChannel = EFI_ADC_11;
+   \   00000146   0x....             LDR.N    R0,??DataTable1_12
+   \   00000148   0x6800             LDR      R0,[R0, #+0]
+   \   0000014A   0x210B             MOVS     R1,#+11
+   \   0000014C   0xF8C0 0x111C      STR      R1,[R0, #+284]
+    148          //	engineConfiguration->iat.adcChannel =
+    149          
+    150          	engineConfiguration->map.sensor.type = MT_DENSO183;
+   \   00000150   0x....             LDR.N    R0,??DataTable1_12
+   \   00000152   0x6800             LDR      R0,[R0, #+0]
+   \   00000154   0x2101             MOVS     R1,#+1
+   \   00000156   0xF8C0 0x10F8      STR      R1,[R0, #+248]
+    151          }
+   \   0000015A   0xBD01             POP      {R0,PC}          ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1:
+   \   00000000   0x408CCCCD         DC32     0x408ccccd
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_1:
+   \   00000000   0x3F99999A         DC32     0x3f99999a
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_2:
+   \   00000000   0x45DAC000         DC32     0x45dac000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_3:
+   \   00000000   0x44480000         DC32     0x44480000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_4:
+   \   00000000   0x447A0000         DC32     0x447a0000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_5:
+   \   00000000   0x42438E3C         DC32     0x42438e3c
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_6:
+   \   00000000   0x45034000         DC32     0x45034000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_7:
+   \   00000000   0x41BF1C78         DC32     0x41bf1c78
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_8:
+   \   00000000   0x468CA000         DC32     0x468ca000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_9:
+   \   00000000   0x........         DC32     config
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_10:
+   \   00000000   0x........         DC32     default_aspire_fuel_table
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_11:
+   \   00000000   0x........         DC32     default_aspire_timing_table
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_12:
+   \   00000000   0x........         DC32     engineConfiguration
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_13:
+   \   00000000   0x454E4000         DC32     0x454e4000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_14:
+   \   00000000   0x40400000         DC32     0x40400000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_15:
+   \   00000000   0x3FA66666         DC32     0x3fa66666
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_16:
+   \   00000000   0x42EF999A         DC32     0x42ef999a
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_17:
+   \   00000000   0x432F0000         DC32     0x432f0000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_18:
+   \   00000000   0x42AE0000         DC32     0x42ae0000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_19:
+   \   00000000   0x43CF0000         DC32     0x43cf0000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_20:
+   \   00000000   0x428C0000         DC32     0x428c0000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_21:
+   \   00000000   0xC2140000         DC32     0xc2140000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_22:
+   \   00000000   0x........         DC32     boardConfiguration
+    152          
+    153          #endif /* EFI_SUPPORT_FORD_ASPIRE */
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   setDefaultAspireMaps()
+         8   -> copyFuelTable(float const (*)[16], float (*)[16])
+         8   -> copyTimingTable(float const (*)[16], float (*)[16])
+         8   -> setFuelLoadBin(float, float)
+         8   -> setFuelRpmBin(float, float)
+         8   -> setTimingLoadBin(float, float)
+         8   -> setTimingRpmBin(float, float)
+       8   setFordAspireEngineConfiguration()
+         8   -> setDefaultAspireMaps()
+         8   -> setOperationMode(engine_configuration_s *, operation_mode_e)
+         8   -> setSingleCoilDwell(engine_configuration_s *)
+         8   -> setThermistorConfiguration(ThermistorConf *, float, float, float, float, float, float)
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable1
+       4  ??DataTable1_1
+       4  ??DataTable1_10
+       4  ??DataTable1_11
+       4  ??DataTable1_12
+       4  ??DataTable1_13
+       4  ??DataTable1_14
+       4  ??DataTable1_15
+       4  ??DataTable1_16
+       4  ??DataTable1_17
+       4  ??DataTable1_18
+       4  ??DataTable1_19
+       4  ??DataTable1_2
+       4  ??DataTable1_20
+       4  ??DataTable1_21
+       4  ??DataTable1_22
+       4  ??DataTable1_3
+       4  ??DataTable1_4
+       4  ??DataTable1_5
+       4  ??DataTable1_6
+       4  ??DataTable1_7
+       4  ??DataTable1_8
+       4  ??DataTable1_9
+    1024  default_aspire_fuel_table
+    1024  default_aspire_timing_table
+      84  setDefaultAspireMaps()
+     348  setFordAspireEngineConfiguration()
+
+ 
+ 2 048 bytes in section .rodata
+   524 bytes in section .text
+ 
+   524 bytes of CODE  memory
+ 2 048 bytes of CONST memory
+
+Errors: none
+Warnings: 1

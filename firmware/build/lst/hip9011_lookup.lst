@@ -1,0 +1,400 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"hip9011_lookup.cpp"
+  16              		.section	.text._Z23prepareHip9011RpmLookupf,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_Z23prepareHip9011RpmLookupf
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_Z23prepareHip9011RpmLookupf, %function
+  23              	_Z23prepareHip9011RpmLookupf:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 07EE100A 		fmsr	s14, r0
+  28 0004 DFED127A 		flds	s15, .L6
+  29 0008 124B     		ldr	r3, .L6+4
+  30 000a 40F20002 		movw	r2, #:lower16:.LANCHOR1
+  31 000e 9FED126A 		flds	s12, .L6+8
+  32 0012 DFED126A 		flds	s13, .L6+12
+  33 0016 C7EE275A 		fdivs	s11, s14, s15
+  34 001a A3F18000 		sub	r0, r3, #128
+  35 001e C0F20002 		movt	r2, #:upper16:.LANCHOR1
+  36 0022 B1EE047A 		fconsts	s14, #20
+  37              	.L3:
+  38 0026 53F8041D 		ldr	r1, [r3, #-4]!
+  39 002a 4900     		lsls	r1, r1, #1
+  40 002c 07EE901A 		fmsr	s15, r1	@ int
+  41 0030 F8EEE77A 		fsitos	s15, s15
+  42 0034 8342     		cmp	r3, r0
+  43 0036 67EE867A 		fmuls	s15, s15, s12
+  44 003a 67EE877A 		fmuls	s15, s15, s14
+  45 003e C6EEA77A 		fdivs	s15, s13, s15
+  46 0042 67EEA57A 		fmuls	s15, s15, s11
+  47 0046 E2EC017A 		fstmias	r2!, {s15}
+  48 004a ECD1     		bne	.L3
+  49 004c 7047     		bx	lr
+  50              	.L7:
+  51 004e 00BF     		.align	2
+  52              	.L6:
+  53 0050 0000B443 		.word	1135869952
+  54 0054 80000000 		.word	.LANCHOR0+128
+  55 0058 D00F4940 		.word	1078530000
+  56 005c C0E1644C 		.word	1281679808
+  57              		.size	_Z23prepareHip9011RpmLookupf, .-_Z23prepareHip9011RpmLookupf
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s 			page 2
+
+
+  58              		.section	.text._Z28getRpmByAngleWindowAndTimeUsif,"ax",%progbits
+  59              		.align	2
+  60              		.p2align 4,,15
+  61              		.global	_Z28getRpmByAngleWindowAndTimeUsif
+  62              		.thumb
+  63              		.thumb_func
+  64              		.type	_Z28getRpmByAngleWindowAndTimeUsif, %function
+  65              	_Z28getRpmByAngleWindowAndTimeUsif:
+  66              		@ args = 0, pretend = 0, frame = 0
+  67              		@ frame_needed = 0, uses_anonymous_args = 0
+  68              		@ link register save eliminated.
+  69 0000 4000     		lsls	r0, r0, #1
+  70 0002 06EE900A 		fmsr	s13, r0	@ int
+  71 0006 DFED0C7A 		flds	s15, .L9
+  72 000a B8EEE67A 		fsitos	s14, s13
+  73 000e DFED0B6A 		flds	s13, .L9+4
+  74 0012 27EE277A 		fmuls	s14, s14, s15
+  75 0016 F1EE047A 		fconsts	s15, #20
+  76 001a 27EE277A 		fmuls	s14, s14, s15
+  77 001e DFED087A 		flds	s15, .L9+8
+  78 0022 86EE877A 		fdivs	s14, s13, s14
+  79 0026 06EE901A 		fmsr	s13, r1
+  80 002a C6EEA77A 		fdivs	s15, s13, s15
+  81 002e 67EE277A 		fmuls	s15, s14, s15
+  82 0032 17EE900A 		fmrs	r0, s15
+  83 0036 7047     		bx	lr
+  84              	.L10:
+  85              		.align	2
+  86              	.L9:
+  87 0038 D00F4940 		.word	1078530000
+  88 003c C0E1644C 		.word	1281679808
+  89 0040 0000B443 		.word	1135869952
+  90              		.size	_Z28getRpmByAngleWindowAndTimeUsif, .-_Z28getRpmByAngleWindowAndTimeUsif
+  91 0044 AFF30080 		.section	.text._Z24getIntegrationIndexByRpmf,"ax",%progbits
+  91      AFF30080 
+  91      AFF30080 
+  92              		.align	2
+  93              		.p2align 4,,15
+  94              		.global	_Z24getIntegrationIndexByRpmf
+  95              		.thumb
+  96              		.thumb_func
+  97              		.type	_Z24getIntegrationIndexByRpmf, %function
+  98              	_Z24getIntegrationIndexByRpmf:
+  99              		@ args = 0, pretend = 0, frame = 0
+ 100              		@ frame_needed = 0, uses_anonymous_args = 0
+ 101 0000 0246     		mov	r2, r0	@ float
+ 102 0002 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 103 0006 08B5     		push	{r3, lr}
+ 104 0008 2021     		movs	r1, #32
+ 105 000a C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 106 000e FFF7FEFF 		bl	_Z9findIndexPKfif
+ 107 0012 431C     		adds	r3, r0, #1
+ 108 0014 14BF     		ite	ne
+ 109 0016 C0F11F00 		rsbne	r0, r0, #31
+ 110 001a 1F20     		moveq	r0, #31
+ 111 001c 08BD     		pop	{r3, pc}
+ 112              		.size	_Z24getIntegrationIndexByRpmf, .-_Z24getIntegrationIndexByRpmf
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s 			page 3
+
+
+ 113 001e 00BF     		.section	.text._Z19getHip9011GainIndexf,"ax",%progbits
+ 114              		.align	2
+ 115              		.p2align 4,,15
+ 116              		.global	_Z19getHip9011GainIndexf
+ 117              		.thumb
+ 118              		.thumb_func
+ 119              		.type	_Z19getHip9011GainIndexf, %function
+ 120              	_Z19getHip9011GainIndexf:
+ 121              		@ args = 0, pretend = 0, frame = 0
+ 122              		@ frame_needed = 0, uses_anonymous_args = 0
+ 123 0000 0246     		mov	r2, r0	@ float
+ 124 0002 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 125 0006 08B5     		push	{r3, lr}
+ 126 0008 4021     		movs	r1, #64
+ 127 000a C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 128 000e FFF7FEFF 		bl	_Z9findIndexPKfif
+ 129 0012 C0F13F00 		rsb	r0, r0, #63
+ 130 0016 4028     		cmp	r0, #64
+ 131 0018 08BF     		it	eq
+ 132 001a 3F20     		moveq	r0, #63
+ 133 001c 08BD     		pop	{r3, pc}
+ 134              		.size	_Z19getHip9011GainIndexf, .-_Z19getHip9011GainIndexf
+ 135 001e 00BF     		.section	.text._Z19getHip9011BandIndexf,"ax",%progbits
+ 136              		.align	2
+ 137              		.p2align 4,,15
+ 138              		.global	_Z19getHip9011BandIndexf
+ 139              		.thumb
+ 140              		.thumb_func
+ 141              		.type	_Z19getHip9011BandIndexf, %function
+ 142              	_Z19getHip9011BandIndexf:
+ 143              		@ args = 0, pretend = 0, frame = 0
+ 144              		@ frame_needed = 0, uses_anonymous_args = 0
+ 145              		@ link register save eliminated.
+ 146 0000 0246     		mov	r2, r0	@ float
+ 147 0002 40F20000 		movw	r0, #:lower16:.LANCHOR3
+ 148 0006 C0F20000 		movt	r0, #:upper16:.LANCHOR3
+ 149 000a 4021     		movs	r1, #64
+ 150 000c FFF7FEBF 		b	_Z9findIndexPKfif
+ 151              		.size	_Z19getHip9011BandIndexf, .-_Z19getHip9011BandIndexf
+ 152              		.global	rpmLookup
+ 153              		.global	bandFreqLookup
+ 154              		.global	gainLookupInReverseOrder
+ 155              		.global	integratorValues
+ 156              		.section	.bss.rpmLookup,"aw",%nobits
+ 157              		.align	2
+ 158              		.set	.LANCHOR1,. + 0
+ 159              		.type	rpmLookup, %object
+ 160              		.size	rpmLookup, 128
+ 161              	rpmLookup:
+ 162 0000 00000000 		.space	128
+ 162      00000000 
+ 162      00000000 
+ 162      00000000 
+ 162      00000000 
+ 163              		.section	.rodata.integratorValues,"a",%progbits
+ 164              		.align	2
+ 165              		.set	.LANCHOR0,. + 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s 			page 4
+
+
+ 166              		.type	integratorValues, %object
+ 167              		.size	integratorValues, 128
+ 168              	integratorValues:
+ 169 0000 28000000 		.word	40
+ 170 0004 2D000000 		.word	45
+ 171 0008 32000000 		.word	50
+ 172 000c 37000000 		.word	55
+ 173 0010 3C000000 		.word	60
+ 174 0014 41000000 		.word	65
+ 175 0018 46000000 		.word	70
+ 176 001c 4B000000 		.word	75
+ 177 0020 50000000 		.word	80
+ 178 0024 5A000000 		.word	90
+ 179 0028 64000000 		.word	100
+ 180 002c 6E000000 		.word	110
+ 181 0030 78000000 		.word	120
+ 182 0034 82000000 		.word	130
+ 183 0038 8C000000 		.word	140
+ 184 003c 96000000 		.word	150
+ 185 0040 A0000000 		.word	160
+ 186 0044 B4000000 		.word	180
+ 187 0048 C8000000 		.word	200
+ 188 004c DC000000 		.word	220
+ 189 0050 F0000000 		.word	240
+ 190 0054 04010000 		.word	260
+ 191 0058 18010000 		.word	280
+ 192 005c 2C010000 		.word	300
+ 193 0060 40010000 		.word	320
+ 194 0064 68010000 		.word	360
+ 195 0068 90010000 		.word	400
+ 196 006c B8010000 		.word	440
+ 197 0070 E0010000 		.word	480
+ 198 0074 08020000 		.word	520
+ 199 0078 30020000 		.word	560
+ 200 007c 58020000 		.word	600
+ 201              		.section	.rodata.bandFreqLookup,"a",%progbits
+ 202              		.align	2
+ 203              		.set	.LANCHOR3,. + 0
+ 204              		.type	bandFreqLookup, %object
+ 205              		.size	bandFreqLookup, 256
+ 206              	bandFreqLookup:
+ 207 0000 F6289C3F 		.word	1067198710
+ 208 0004 AE47A13F 		.word	1067534254
+ 209 0008 14AEA73F 		.word	1067953684
+ 210 000c CDCCAC3F 		.word	1068289229
+ 211 0010 3333B33F 		.word	1068708659
+ 212 0014 9A99B93F 		.word	1069128090
+ 213 0018 AE47C13F 		.word	1069631406
+ 214 001c C3F5C83F 		.word	1070134723
+ 215 0020 D7A3D03F 		.word	1070638039
+ 216 0024 48E1DA3F 		.word	1071309128
+ 217 0028 0AD7E33F 		.word	1071896330
+ 218 002c 295CEF3F 		.word	1072651305
+ 219 0030 48E1FA3F 		.word	1073406280
+ 220 0034 E17A0440 		.word	1074035425
+ 221 0038 1F850B40 		.word	1074496799
+ 222 003c 0AD71340 		.word	1075042058
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s 			page 5
+
+
+ 223 0040 A4701D40 		.word	1075671204
+ 224 0044 5C8F2240 		.word	1076006748
+ 225 0048 14AE2740 		.word	1076342292
+ 226 004c A4702D40 		.word	1076719780
+ 227 0050 0AD73340 		.word	1077139210
+ 228 0054 48E13A40 		.word	1077600584
+ 229 0058 85EB4140 		.word	1078061957
+ 230 005c 9A994940 		.word	1078565274
+ 231 0060 85EB5140 		.word	1079110533
+ 232 0064 1F855B40 		.word	1079739679
+ 233 0068 8FC26540 		.word	1080410767
+ 234 006c D7A37040 		.word	1081123799
+ 235 0070 CDCC7C40 		.word	1081920717
+ 236 0074 B81E8540 		.word	1082465976
+ 237 0078 E17A8C40 		.word	1082948321
+ 238 007c B81E9540 		.word	1083514552
+ 239 0080 66669E40 		.word	1084122726
+ 240 0084 0AD7A340 		.word	1084479242
+ 241 0088 AE47A940 		.word	1084835758
+ 242 008c 295CAF40 		.word	1085234217
+ 243 0090 8FC2B540 		.word	1085653647
+ 244 0094 CDCCBC40 		.word	1086115021
+ 245 0098 0AD7C340 		.word	1086576394
+ 246 009c 0AD7CB40 		.word	1087100682
+ 247 00a0 E17AD440 		.word	1087666913
+ 248 00a4 7B14DE40 		.word	1088296059
+ 249 00a8 D7A3E840 		.word	1088988119
+ 250 00ac F628F440 		.word	1089743094
+ 251 00b0 EC510041 		.word	1090540012
+ 252 00b4 295C0741 		.word	1091001385
+ 253 00b8 33330F41 		.word	1091515187
+ 254 00bc 00001841 		.word	1092091904
+ 255 00c0 85EB2141 		.word	1092742021
+ 256 00c4 295C2741 		.word	1093098537
+ 257 00c8 AE472D41 		.word	1093486510
+ 258 00cc 1F853341 		.word	1093895455
+ 259 00d0 66663A41 		.word	1094346342
+ 260 00d4 9A994141 		.word	1094818202
+ 261 00d8 9A994941 		.word	1095342490
+ 262 00dc 713D5241 		.word	1095908721
+ 263 00e0 1F855B41 		.word	1096516895
+ 264 00e4 8FC26541 		.word	1097187983
+ 265 00e8 B81E7141 		.word	1097932472
+ 266 00ec A4707D41 		.word	1098739876
+ 267 00f0 14AE8541 		.word	1099279892
+ 268 00f4 295C8D41 		.word	1099783209
+ 269 00f8 7B149641 		.word	1100354683
+ 270 00fc 0AD79F41 		.word	1100994314
+ 271              		.section	.rodata.gainLookupInReverseOrder,"a",%progbits
+ 272              		.align	2
+ 273              		.set	.LANCHOR2,. + 0
+ 274              		.type	gainLookupInReverseOrder, %object
+ 275              		.size	gainLookupInReverseOrder, 256
+ 276              	gainLookupInReverseOrder:
+ 277 0000 F853E33D 		.word	1038308344
+ 278 0004 FCA9F13D 		.word	1039247868
+ 279 0008 0000003E 		.word	1040187392
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s 			page 6
+
+
+ 280 000c 9318043E 		.word	1040455827
+ 281 0010 2731083E 		.word	1040724263
+ 282 0014 DF4F0D3E 		.word	1041059807
+ 283 0018 986E123E 		.word	1041395352
+ 284 001c 508D173E 		.word	1041730896
+ 285 0020 2DB21D3E 		.word	1042133549
+ 286 0024 0AD7233E 		.word	1042536202
+ 287 0028 0C022B3E 		.word	1043005964
+ 288 002c 0E2D323E 		.word	1043475726
+ 289 0030 355E3A3E 		.word	1044012597
+ 290 0034 5C8F423E 		.word	1044549468
+ 291 0038 CDCC4C3E 		.word	1045220557
+ 292 003c 6210583E 		.word	1045958754
+ 293 0040 F853633E 		.word	1046696952
+ 294 0044 FCA9713E 		.word	1047636476
+ 295 0048 0000803E 		.word	1048576000
+ 296 004c 9318843E 		.word	1048844435
+ 297 0050 39B4883E 		.word	1049146425
+ 298 0054 DF4F8D3E 		.word	1049448415
+ 299 0058 986E923E 		.word	1049783960
+ 300 005c 508D973E 		.word	1050119504
+ 301 0060 2DB29D3E 		.word	1050522157
+ 302 0064 0AD7A33E 		.word	1050924810
+ 303 0068 FA7EAA3E 		.word	1051361018
+ 304 006c 0E2DB23E 		.word	1051864334
+ 305 0070 355EBA3E 		.word	1052401205
+ 306 0074 6F12C33E 		.word	1052971631
+ 307 0078 CDCCCC3E 		.word	1053609165
+ 308 007c 508DD73E 		.word	1054313808
+ 309 0080 F853E33E 		.word	1055085560
+ 310 0084 E926F13E 		.word	1055991529
+ 311 0088 0000003F 		.word	1056964608
+ 312 008c BA490C3F 		.word	1057769914
+ 313 0090 E926113F 		.word	1058088681
+ 314 0094 1904163F 		.word	1058407449
+ 315 0098 5A641B3F 		.word	1058759770
+ 316 009c AE47213F 		.word	1059145646
+ 317 00a0 8B6C273F 		.word	1059548299
+ 318 00a4 7B142E3F 		.word	1059984507
+ 319 00a8 7D3F353F 		.word	1060454269
+ 320 00ac 1B2F3D3F 		.word	1060974363
+ 321 00b0 54E3453F 		.word	1061544788
+ 322 00b4 295C4F3F 		.word	1062165545
+ 323 00b8 9A99593F 		.word	1062836634
+ 324 00bc B81E653F 		.word	1063591608
+ 325 00c0 FCA9713F 		.word	1064413692
+ 326 00c4 0000803F 		.word	1065353216
+ 327 00c8 6210883F 		.word	1065881698
+ 328 00cc D34D923F 		.word	1066552787
+ 329 00d0 14AE973F 		.word	1066905108
+ 330 00d4 68919D3F 		.word	1067290984
+ 331 00d8 0AD7A33F 		.word	1067702026
+ 332 00dc BE9FAA3F 		.word	1068146622
+ 333 00e0 4A0CB23F 		.word	1068633162
+ 334 00e4 713DBA3F 		.word	1069170033
+ 335 00e8 AAF1C23F 		.word	1069740458
+ 336 00ec CDCCCC3F 		.word	1070386381
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s 			page 7
+
+
+ 337 00f0 508DD73F 		.word	1071091024
+ 338 00f4 8195E33F 		.word	1071879553
+ 339 00f8 60E5F03F 		.word	1072751968
+ 340 00fc 00000040 		.word	1073741824
+ 341              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 hip9011_lookup.cpp
+C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s:17     .text._Z23prepareHip9011RpmLookupf:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s:23     .text._Z23prepareHip9011RpmLookupf:00000000 _Z23prepareHip9011RpmLookupf
+C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s:158    .bss.rpmLookup:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s:53     .text._Z23prepareHip9011RpmLookupf:00000050 $d
+C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s:59     .text._Z28getRpmByAngleWindowAndTimeUsif:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s:65     .text._Z28getRpmByAngleWindowAndTimeUsif:00000000 _Z28getRpmByAngleWindowAndTimeUsif
+C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s:87     .text._Z28getRpmByAngleWindowAndTimeUsif:00000038 $d
+C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s:92     .text._Z24getIntegrationIndexByRpmf:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s:98     .text._Z24getIntegrationIndexByRpmf:00000000 _Z24getIntegrationIndexByRpmf
+C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s:114    .text._Z19getHip9011GainIndexf:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s:120    .text._Z19getHip9011GainIndexf:00000000 _Z19getHip9011GainIndexf
+C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s:273    .rodata.gainLookupInReverseOrder:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s:136    .text._Z19getHip9011BandIndexf:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s:142    .text._Z19getHip9011BandIndexf:00000000 _Z19getHip9011BandIndexf
+C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s:203    .rodata.bandFreqLookup:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s:161    .bss.rpmLookup:00000000 rpmLookup
+C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s:206    .rodata.bandFreqLookup:00000000 bandFreqLookup
+C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s:276    .rodata.gainLookupInReverseOrder:00000000 gainLookupInReverseOrder
+C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s:168    .rodata.integratorValues:00000000 integratorValues
+C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s:157    .bss.rpmLookup:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s:164    .rodata.integratorValues:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s:202    .rodata.bandFreqLookup:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s:272    .rodata.gainLookupInReverseOrder:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccoBbiMw.s:91     .text._Z28getRpmByAngleWindowAndTimeUsif:00000044 $t
+
+UNDEFINED SYMBOLS
+_Z9findIndexPKfif

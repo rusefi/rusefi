@@ -1,4 +1,4 @@
-update=1/23/2015 6:22:06 AM
+update=6/14/2015 7:45:10 AM
 version=1
 last_client=eeschema
 [general]
@@ -66,3 +66,4 @@ LibName10=art-electro-ic
 LibName11=STM32F407IGT6
 LibName12=art-electro-power
 LibName13=art-electro-max
+LibName14=crystal(mc306)

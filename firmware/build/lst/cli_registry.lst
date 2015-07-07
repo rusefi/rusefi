@@ -1,0 +1,1320 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccbMU92l.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"cli_registry.cpp"
+  16              		.section	.text._ZL11doAddActionPKc13action_type_ePFvvEPv,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	_ZL11doAddActionPKc13action_type_ePFvvEPv, %function
+  22              	_ZL11doAddActionPKc13action_type_ePFvvEPv:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25              		@ link register save eliminated.
+  26 0000 F0B4     		push	{r4, r5, r6, r7}
+  27 0002 40F20004 		movw	r4, #:lower16:.LANCHOR0
+  28 0006 C0F20004 		movt	r4, #:upper16:.LANCHOR0
+  29 000a 2668     		ldr	r6, [r4]
+  30 000c C32E     		cmp	r6, #195
+  31 000e 10DC     		bgt	.L4
+  32 0010 40F20005 		movw	r5, #:lower16:.LANCHOR1
+  33 0014 C0F20005 		movt	r5, #:upper16:.LANCHOR1
+  34 0018 4FEA061C 		lsl	ip, r6, #4
+  35 001c 05EB0C07 		add	r7, r5, ip
+  36 0020 0136     		adds	r6, r6, #1
+  37 0022 45F80C00 		str	r0, [r5, ip]
+  38 0026 2660     		str	r6, [r4]
+  39 0028 3971     		strb	r1, [r7, #4]
+  40 002a BA60     		str	r2, [r7, #8]
+  41 002c FB60     		str	r3, [r7, #12]
+  42 002e F0BC     		pop	{r4, r5, r6, r7}
+  43 0030 7047     		bx	lr
+  44              	.L4:
+  45 0032 40F20000 		movw	r0, #:lower16:.LC0
+  46 0036 C0F20000 		movt	r0, #:upper16:.LC0
+  47 003a F0BC     		pop	{r4, r5, r6, r7}
+  48 003c FFF7FEBF 		b	firmwareError
+  49              		.size	_ZL11doAddActionPKc13action_type_ePFvvEPv, .-_ZL11doAddActionPKc13action_type_ePFvvEPv
+  50              		.section	.text._ZL4echoi,"ax",%progbits
+  51              		.align	2
+  52              		.p2align 4,,15
+  53              		.thumb
+  54              		.thumb_func
+  55              		.type	_ZL4echoi, %function
+  56              	_ZL4echoi:
+  57              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccbMU92l.s 			page 2
+
+
+  58              		@ frame_needed = 0, uses_anonymous_args = 0
+  59              		@ link register save eliminated.
+  60 0000 0146     		mov	r1, r0
+  61 0002 40F20000 		movw	r0, #:lower16:.LC1
+  62 0006 C0F20000 		movt	r0, #:upper16:.LC1
+  63 000a FFF7FEBF 		b	print
+  64              		.size	_ZL4echoi, .-_ZL4echoi
+  65 000e 00BF     		.section	.text.helpCommand,"ax",%progbits
+  66              		.align	2
+  67              		.p2align 4,,15
+  68              		.global	helpCommand
+  69              		.thumb
+  70              		.thumb_func
+  71              		.type	helpCommand, %function
+  72              	helpCommand:
+  73              		@ args = 0, pretend = 0, frame = 0
+  74              		@ frame_needed = 0, uses_anonymous_args = 0
+  75 0000 2DE9F843 		push	{r3, r4, r5, r6, r7, r8, r9, lr}
+  76 0004 FFF7FEFF 		bl	isBoardTestMode
+  77 0008 0446     		mov	r4, r0
+  78 000a 0028     		cmp	r0, #0
+  79 000c 3DD1     		bne	.L13
+  80 000e 40F20007 		movw	r7, #:lower16:.LANCHOR2
+  81 0012 40F20009 		movw	r9, #:lower16:.LANCHOR0
+  82 0016 C0F20009 		movt	r9, #:upper16:.LANCHOR0
+  83 001a C0F20007 		movt	r7, #:upper16:.LANCHOR2
+  84 001e 40F20001 		movw	r1, #:lower16:.LC2
+  85 0022 3868     		ldr	r0, [r7]
+  86 0024 D9F80020 		ldr	r2, [r9]
+  87 0028 C0F20001 		movt	r1, #:upper16:.LC2
+  88 002c FFF7FEFF 		bl	scheduleMsg
+  89 0030 D9F80030 		ldr	r3, [r9]
+  90 0034 002B     		cmp	r3, #0
+  91 0036 1FDD     		ble	.L10
+  92 0038 40F20006 		movw	r6, #:lower16:.LANCHOR1
+  93 003c 40F20008 		movw	r8, #:lower16:.LANCHOR3
+  94 0040 2546     		mov	r5, r4
+  95 0042 C0F20006 		movt	r6, #:upper16:.LANCHOR1
+  96 0046 C0F20008 		movt	r8, #:upper16:.LANCHOR3
+  97              	.L11:
+  98 004a 3319     		adds	r3, r6, r4
+  99 004c 40F20001 		movw	r1, #:lower16:.LC4
+ 100 0050 1B79     		ldrb	r3, [r3, #4]	@ zero_extendqisi2
+ 101 0052 3259     		ldr	r2, [r6, r4]
+ 102 0054 3868     		ldr	r0, [r7]
+ 103 0056 0F2B     		cmp	r3, #15
+ 104 0058 94BF     		ite	ls
+ 105 005a 58F82330 		ldrls	r3, [r8, r3, lsl #2]
+ 106 005e 4FF0FF33 		movhi	r3, #-1
+ 107 0062 C0F20001 		movt	r1, #:upper16:.LC4
+ 108 0066 FFF7FEFF 		bl	scheduleMsg
+ 109 006a D9F80030 		ldr	r3, [r9]
+ 110 006e 0135     		adds	r5, r5, #1
+ 111 0070 9D42     		cmp	r5, r3
+ 112 0072 04F11004 		add	r4, r4, #16
+ 113 0076 E8DB     		blt	.L11
+ 114              	.L10:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccbMU92l.s 			page 3
+
+
+ 115 0078 40F20001 		movw	r1, #:lower16:.LC3
+ 116 007c 3868     		ldr	r0, [r7]
+ 117 007e C0F20001 		movt	r1, #:upper16:.LC3
+ 118 0082 BDE8F843 		pop	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 119 0086 FFF7FEBF 		b	scheduleMsg
+ 120              	.L13:
+ 121 008a BDE8F843 		pop	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 122 008e FFF7FEBF 		b	printBoardTestState
+ 123              		.size	helpCommand, .-helpCommand
+ 124 0092 00BFAFF3 		.section	.text.resetConsoleActions,"ax",%progbits
+ 124      0080AFF3 
+ 124      0080AFF3 
+ 124      0080
+ 125              		.align	2
+ 126              		.p2align 4,,15
+ 127              		.global	resetConsoleActions
+ 128              		.thumb
+ 129              		.thumb_func
+ 130              		.type	resetConsoleActions, %function
+ 131              	resetConsoleActions:
+ 132              		@ args = 0, pretend = 0, frame = 0
+ 133              		@ frame_needed = 0, uses_anonymous_args = 0
+ 134              		@ link register save eliminated.
+ 135 0000 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 136 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 137 0008 0022     		movs	r2, #0
+ 138 000a 1A60     		str	r2, [r3]
+ 139 000c 7047     		bx	lr
+ 140              		.size	resetConsoleActions, .-resetConsoleActions
+ 141 000e 00BF     		.section	.text.addConsoleActionP,"ax",%progbits
+ 142              		.align	2
+ 143              		.p2align 4,,15
+ 144              		.global	addConsoleActionP
+ 145              		.thumb
+ 146              		.thumb_func
+ 147              		.type	addConsoleActionP, %function
+ 148              	addConsoleActionP:
+ 149              		@ args = 0, pretend = 0, frame = 0
+ 150              		@ frame_needed = 0, uses_anonymous_args = 0
+ 151              		@ link register save eliminated.
+ 152 0000 1346     		mov	r3, r2
+ 153 0002 0A46     		mov	r2, r1
+ 154 0004 0121     		movs	r1, #1
+ 155 0006 FFF7FEBF 		b	_ZL11doAddActionPKc13action_type_ePFvvEPv
+ 156              		.size	addConsoleActionP, .-addConsoleActionP
+ 157 000a 00BFAFF3 		.section	.text.addConsoleActionSSP,"ax",%progbits
+ 157      0080
+ 158              		.align	2
+ 159              		.p2align 4,,15
+ 160              		.global	addConsoleActionSSP
+ 161              		.thumb
+ 162              		.thumb_func
+ 163              		.type	addConsoleActionSSP, %function
+ 164              	addConsoleActionSSP:
+ 165              		@ args = 0, pretend = 0, frame = 0
+ 166              		@ frame_needed = 0, uses_anonymous_args = 0
+ 167              		@ link register save eliminated.
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccbMU92l.s 			page 4
+
+
+ 168 0000 1346     		mov	r3, r2
+ 169 0002 0A46     		mov	r2, r1
+ 170 0004 0921     		movs	r1, #9
+ 171 0006 FFF7FEBF 		b	_ZL11doAddActionPKc13action_type_ePFvvEPv
+ 172              		.size	addConsoleActionSSP, .-addConsoleActionSSP
+ 173 000a 00BFAFF3 		.section	.text.addConsoleAction,"ax",%progbits
+ 173      0080
+ 174              		.align	2
+ 175              		.p2align 4,,15
+ 176              		.global	addConsoleAction
+ 177              		.thumb
+ 178              		.thumb_func
+ 179              		.type	addConsoleAction, %function
+ 180              	addConsoleAction:
+ 181              		@ args = 0, pretend = 0, frame = 0
+ 182              		@ frame_needed = 0, uses_anonymous_args = 0
+ 183              		@ link register save eliminated.
+ 184 0000 0A46     		mov	r2, r1
+ 185 0002 0021     		movs	r1, #0
+ 186 0004 0B46     		mov	r3, r1
+ 187 0006 FFF7FEBF 		b	_ZL11doAddActionPKc13action_type_ePFvvEPv
+ 188              		.size	addConsoleAction, .-addConsoleAction
+ 189 000a 00BFAFF3 		.section	.text.addConsoleActionI,"ax",%progbits
+ 189      0080
+ 190              		.align	2
+ 191              		.p2align 4,,15
+ 192              		.global	addConsoleActionI
+ 193              		.thumb
+ 194              		.thumb_func
+ 195              		.type	addConsoleActionI, %function
+ 196              	addConsoleActionI:
+ 197              		@ args = 0, pretend = 0, frame = 0
+ 198              		@ frame_needed = 0, uses_anonymous_args = 0
+ 199              		@ link register save eliminated.
+ 200 0000 0A46     		mov	r2, r1
+ 201 0002 0023     		movs	r3, #0
+ 202 0004 0221     		movs	r1, #2
+ 203 0006 FFF7FEBF 		b	_ZL11doAddActionPKc13action_type_ePFvvEPv
+ 204              		.size	addConsoleActionI, .-addConsoleActionI
+ 205 000a 00BFAFF3 		.section	.text.addConsoleActionIP,"ax",%progbits
+ 205      0080
+ 206              		.align	2
+ 207              		.p2align 4,,15
+ 208              		.global	addConsoleActionIP
+ 209              		.thumb
+ 210              		.thumb_func
+ 211              		.type	addConsoleActionIP, %function
+ 212              	addConsoleActionIP:
+ 213              		@ args = 0, pretend = 0, frame = 0
+ 214              		@ frame_needed = 0, uses_anonymous_args = 0
+ 215              		@ link register save eliminated.
+ 216 0000 1346     		mov	r3, r2
+ 217 0002 0A46     		mov	r2, r1
+ 218 0004 0321     		movs	r1, #3
+ 219 0006 FFF7FEBF 		b	_ZL11doAddActionPKc13action_type_ePFvvEPv
+ 220              		.size	addConsoleActionIP, .-addConsoleActionIP
+ 221 000a 00BFAFF3 		.section	.text.addConsoleActionII,"ax",%progbits
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccbMU92l.s 			page 5
+
+
+ 221      0080
+ 222              		.align	2
+ 223              		.p2align 4,,15
+ 224              		.global	addConsoleActionII
+ 225              		.thumb
+ 226              		.thumb_func
+ 227              		.type	addConsoleActionII, %function
+ 228              	addConsoleActionII:
+ 229              		@ args = 0, pretend = 0, frame = 0
+ 230              		@ frame_needed = 0, uses_anonymous_args = 0
+ 231              		@ link register save eliminated.
+ 232 0000 0A46     		mov	r2, r1
+ 233 0002 0023     		movs	r3, #0
+ 234 0004 0C21     		movs	r1, #12
+ 235 0006 FFF7FEBF 		b	_ZL11doAddActionPKc13action_type_ePFvvEPv
+ 236              		.size	addConsoleActionII, .-addConsoleActionII
+ 237 000a 00BFAFF3 		.section	.text.addConsoleActionIIP,"ax",%progbits
+ 237      0080
+ 238              		.align	2
+ 239              		.p2align 4,,15
+ 240              		.global	addConsoleActionIIP
+ 241              		.thumb
+ 242              		.thumb_func
+ 243              		.type	addConsoleActionIIP, %function
+ 244              	addConsoleActionIIP:
+ 245              		@ args = 0, pretend = 0, frame = 0
+ 246              		@ frame_needed = 0, uses_anonymous_args = 0
+ 247              		@ link register save eliminated.
+ 248 0000 1346     		mov	r3, r2
+ 249 0002 0A46     		mov	r2, r1
+ 250 0004 0D21     		movs	r1, #13
+ 251 0006 FFF7FEBF 		b	_ZL11doAddActionPKc13action_type_ePFvvEPv
+ 252              		.size	addConsoleActionIIP, .-addConsoleActionIIP
+ 253 000a 00BFAFF3 		.section	.text.addConsoleActionS,"ax",%progbits
+ 253      0080
+ 254              		.align	2
+ 255              		.p2align 4,,15
+ 256              		.global	addConsoleActionS
+ 257              		.thumb
+ 258              		.thumb_func
+ 259              		.type	addConsoleActionS, %function
+ 260              	addConsoleActionS:
+ 261              		@ args = 0, pretend = 0, frame = 0
+ 262              		@ frame_needed = 0, uses_anonymous_args = 0
+ 263              		@ link register save eliminated.
+ 264 0000 0A46     		mov	r2, r1
+ 265 0002 0023     		movs	r3, #0
+ 266 0004 0621     		movs	r1, #6
+ 267 0006 FFF7FEBF 		b	_ZL11doAddActionPKc13action_type_ePFvvEPv
+ 268              		.size	addConsoleActionS, .-addConsoleActionS
+ 269 000a 00BFAFF3 		.section	.text.addConsoleActionSP,"ax",%progbits
+ 269      0080
+ 270              		.align	2
+ 271              		.p2align 4,,15
+ 272              		.global	addConsoleActionSP
+ 273              		.thumb
+ 274              		.thumb_func
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccbMU92l.s 			page 6
+
+
+ 275              		.type	addConsoleActionSP, %function
+ 276              	addConsoleActionSP:
+ 277              		@ args = 0, pretend = 0, frame = 0
+ 278              		@ frame_needed = 0, uses_anonymous_args = 0
+ 279              		@ link register save eliminated.
+ 280 0000 1346     		mov	r3, r2
+ 281 0002 0A46     		mov	r2, r1
+ 282 0004 0721     		movs	r1, #7
+ 283 0006 FFF7FEBF 		b	_ZL11doAddActionPKc13action_type_ePFvvEPv
+ 284              		.size	addConsoleActionSP, .-addConsoleActionSP
+ 285 000a 00BFAFF3 		.section	.text.addConsoleActionSS,"ax",%progbits
+ 285      0080
+ 286              		.align	2
+ 287              		.p2align 4,,15
+ 288              		.global	addConsoleActionSS
+ 289              		.thumb
+ 290              		.thumb_func
+ 291              		.type	addConsoleActionSS, %function
+ 292              	addConsoleActionSS:
+ 293              		@ args = 0, pretend = 0, frame = 0
+ 294              		@ frame_needed = 0, uses_anonymous_args = 0
+ 295              		@ link register save eliminated.
+ 296 0000 0A46     		mov	r2, r1
+ 297 0002 0023     		movs	r3, #0
+ 298 0004 0821     		movs	r1, #8
+ 299 0006 FFF7FEBF 		b	_ZL11doAddActionPKc13action_type_ePFvvEPv
+ 300              		.size	addConsoleActionSS, .-addConsoleActionSS
+ 301 000a 00BFAFF3 		.section	.text.addConsoleActionSSS,"ax",%progbits
+ 301      0080
+ 302              		.align	2
+ 303              		.p2align 4,,15
+ 304              		.global	addConsoleActionSSS
+ 305              		.thumb
+ 306              		.thumb_func
+ 307              		.type	addConsoleActionSSS, %function
+ 308              	addConsoleActionSSS:
+ 309              		@ args = 0, pretend = 0, frame = 0
+ 310              		@ frame_needed = 0, uses_anonymous_args = 0
+ 311              		@ link register save eliminated.
+ 312 0000 0A46     		mov	r2, r1
+ 313 0002 0023     		movs	r3, #0
+ 314 0004 0A21     		movs	r1, #10
+ 315 0006 FFF7FEBF 		b	_ZL11doAddActionPKc13action_type_ePFvvEPv
+ 316              		.size	addConsoleActionSSS, .-addConsoleActionSSS
+ 317 000a 00BFAFF3 		.section	.text.addConsoleActionSSSSS,"ax",%progbits
+ 317      0080
+ 318              		.align	2
+ 319              		.p2align 4,,15
+ 320              		.global	addConsoleActionSSSSS
+ 321              		.thumb
+ 322              		.thumb_func
+ 323              		.type	addConsoleActionSSSSS, %function
+ 324              	addConsoleActionSSSSS:
+ 325              		@ args = 0, pretend = 0, frame = 0
+ 326              		@ frame_needed = 0, uses_anonymous_args = 0
+ 327              		@ link register save eliminated.
+ 328 0000 0A46     		mov	r2, r1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccbMU92l.s 			page 7
+
+
+ 329 0002 0023     		movs	r3, #0
+ 330 0004 0B21     		movs	r1, #11
+ 331 0006 FFF7FEBF 		b	_ZL11doAddActionPKc13action_type_ePFvvEPv
+ 332              		.size	addConsoleActionSSSSS, .-addConsoleActionSSSSS
+ 333 000a 00BFAFF3 		.section	.text.addConsoleActionF,"ax",%progbits
+ 333      0080
+ 334              		.align	2
+ 335              		.p2align 4,,15
+ 336              		.global	addConsoleActionF
+ 337              		.thumb
+ 338              		.thumb_func
+ 339              		.type	addConsoleActionF, %function
+ 340              	addConsoleActionF:
+ 341              		@ args = 0, pretend = 0, frame = 0
+ 342              		@ frame_needed = 0, uses_anonymous_args = 0
+ 343              		@ link register save eliminated.
+ 344 0000 0A46     		mov	r2, r1
+ 345 0002 0023     		movs	r3, #0
+ 346 0004 0421     		movs	r1, #4
+ 347 0006 FFF7FEBF 		b	_ZL11doAddActionPKc13action_type_ePFvvEPv
+ 348              		.size	addConsoleActionF, .-addConsoleActionF
+ 349 000a 00BFAFF3 		.section	.text.addConsoleActionFF,"ax",%progbits
+ 349      0080
+ 350              		.align	2
+ 351              		.p2align 4,,15
+ 352              		.global	addConsoleActionFF
+ 353              		.thumb
+ 354              		.thumb_func
+ 355              		.type	addConsoleActionFF, %function
+ 356              	addConsoleActionFF:
+ 357              		@ args = 0, pretend = 0, frame = 0
+ 358              		@ frame_needed = 0, uses_anonymous_args = 0
+ 359              		@ link register save eliminated.
+ 360 0000 0A46     		mov	r2, r1
+ 361 0002 0023     		movs	r3, #0
+ 362 0004 0E21     		movs	r1, #14
+ 363 0006 FFF7FEBF 		b	_ZL11doAddActionPKc13action_type_ePFvvEPv
+ 364              		.size	addConsoleActionFF, .-addConsoleActionFF
+ 365 000a 00BFAFF3 		.section	.text.addConsoleActionFFP,"ax",%progbits
+ 365      0080
+ 366              		.align	2
+ 367              		.p2align 4,,15
+ 368              		.global	addConsoleActionFFP
+ 369              		.thumb
+ 370              		.thumb_func
+ 371              		.type	addConsoleActionFFP, %function
+ 372              	addConsoleActionFFP:
+ 373              		@ args = 0, pretend = 0, frame = 0
+ 374              		@ frame_needed = 0, uses_anonymous_args = 0
+ 375              		@ link register save eliminated.
+ 376 0000 1346     		mov	r3, r2
+ 377 0002 0A46     		mov	r2, r1
+ 378 0004 0F21     		movs	r1, #15
+ 379 0006 FFF7FEBF 		b	_ZL11doAddActionPKc13action_type_ePFvvEPv
+ 380              		.size	addConsoleActionFFP, .-addConsoleActionFFP
+ 381 000a 00BFAFF3 		.section	.text.unquote,"ax",%progbits
+ 381      0080
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccbMU92l.s 			page 8
+
+
+ 382              		.align	2
+ 383              		.p2align 4,,15
+ 384              		.global	unquote
+ 385              		.thumb
+ 386              		.thumb_func
+ 387              		.type	unquote, %function
+ 388              	unquote:
+ 389              		@ args = 0, pretend = 0, frame = 0
+ 390              		@ frame_needed = 0, uses_anonymous_args = 0
+ 391 0000 10B5     		push	{r4, lr}
+ 392 0002 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 393 0004 222B     		cmp	r3, #34
+ 394 0006 0446     		mov	r4, r0
+ 395 0008 01D0     		beq	.L34
+ 396              	.L33:
+ 397 000a 2046     		mov	r0, r4
+ 398 000c 10BD     		pop	{r4, pc}
+ 399              	.L34:
+ 400 000e FFF7FEFF 		bl	strlen
+ 401 0012 0138     		subs	r0, r0, #1
+ 402 0014 235C     		ldrb	r3, [r4, r0]	@ zero_extendqisi2
+ 403 0016 222B     		cmp	r3, #34
+ 404 0018 F7D1     		bne	.L33
+ 405 001a 0023     		movs	r3, #0
+ 406 001c 2354     		strb	r3, [r4, r0]
+ 407 001e 601C     		adds	r0, r4, #1
+ 408 0020 10BD     		pop	{r4, pc}
+ 409              		.size	unquote, .-unquote
+ 410 0022 00BFAFF3 		.section	.text.findEndOfToken,"ax",%progbits
+ 410      0080AFF3 
+ 410      0080AFF3 
+ 410      0080
+ 411              		.align	2
+ 412              		.p2align 4,,15
+ 413              		.global	findEndOfToken
+ 414              		.thumb
+ 415              		.thumb_func
+ 416              		.type	findEndOfToken, %function
+ 417              	findEndOfToken:
+ 418              		@ args = 0, pretend = 0, frame = 0
+ 419              		@ frame_needed = 0, uses_anonymous_args = 0
+ 420 0000 08B5     		push	{r3, lr}
+ 421 0002 0178     		ldrb	r1, [r0]	@ zero_extendqisi2
+ 422 0004 2229     		cmp	r1, #34
+ 423 0006 04D0     		beq	.L40
+ 424 0008 2021     		movs	r1, #32
+ 425 000a BDE80840 		pop	{r3, lr}
+ 426 000e FFF7FEBF 		b	indexOf
+ 427              	.L40:
+ 428 0012 0130     		adds	r0, r0, #1
+ 429 0014 FFF7FEFF 		bl	indexOf
+ 430 0018 431C     		adds	r3, r0, #1
+ 431 001a 01D0     		beq	.L38
+ 432 001c 0230     		adds	r0, r0, #2
+ 433 001e 08BD     		pop	{r3, pc}
+ 434              	.L38:
+ 435 0020 08BD     		pop	{r3, pc}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccbMU92l.s 			page 9
+
+
+ 436              		.size	findEndOfToken, .-findEndOfToken
+ 437 0022 00BFAFF3 		.section	.text._Z25handleActionWithParameterP13TokenCallbackPc,"ax",%progbits
+ 437      0080AFF3 
+ 437      0080AFF3 
+ 437      0080
+ 438              		.align	2
+ 439              		.p2align 4,,15
+ 440              		.global	_Z25handleActionWithParameterP13TokenCallbackPc
+ 441              		.thumb
+ 442              		.thumb_func
+ 443              		.type	_Z25handleActionWithParameterP13TokenCallbackPc, %function
+ 444              	_Z25handleActionWithParameterP13TokenCallbackPc:
+ 445              		@ args = 0, pretend = 0, frame = 0
+ 446              		@ frame_needed = 0, uses_anonymous_args = 0
+ 447 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+ 448 0004 0379     		ldrb	r3, [r0, #4]	@ zero_extendqisi2
+ 449 0006 062B     		cmp	r3, #6
+ 450 0008 83B0     		sub	sp, sp, #12
+ 451 000a 0446     		mov	r4, r0
+ 452 000c 0D46     		mov	r5, r1
+ 453 000e 00F09380 		beq	.L84
+ 454 0012 072B     		cmp	r3, #7
+ 455 0014 00F0C480 		beq	.L85
+ 456 0018 A3F10802 		sub	r2, r3, #8
+ 457 001c D2B2     		uxtb	r2, r2
+ 458 001e 012A     		cmp	r2, #1
+ 459 0020 61D9     		bls	.L86
+ 460 0022 0A2B     		cmp	r3, #10
+ 461 0024 71D0     		beq	.L87
+ 462 0026 0B2B     		cmp	r3, #11
+ 463 0028 00F08A80 		beq	.L88
+ 464 002c 0C2B     		cmp	r3, #12
+ 465 002e 1DD0     		beq	.L89
+ 466 0030 042B     		cmp	r3, #4
+ 467 0032 00F0BF80 		beq	.L90
+ 468 0036 0E3B     		subs	r3, r3, #14
+ 469 0038 DBB2     		uxtb	r3, r3
+ 470 003a 012B     		cmp	r3, #1
+ 471 003c 0846     		mov	r0, r1
+ 472 003e 3AD9     		bls	.L91
+ 473 0040 FFF7FEFF 		bl	atoi
+ 474 0044 0646     		mov	r6, r0
+ 475 0046 FFF7FEFF 		bl	absI
+ 476 004a 4EF23043 		movw	r3, #58416
+ 477 004e C1F28C23 		movt	r3, 4748
+ 478 0052 9842     		cmp	r0, r3
+ 479 0054 00F0B480 		beq	.L92
+ 480 0058 2379     		ldrb	r3, [r4, #4]	@ zero_extendqisi2
+ 481 005a 032B     		cmp	r3, #3
+ 482 005c 00F0A580 		beq	.L93
+ 483 0060 A368     		ldr	r3, [r4, #8]
+ 484 0062 3046     		mov	r0, r6
+ 485 0064 9847     		blx	r3
+ 486              	.L41:
+ 487 0066 03B0     		add	sp, sp, #12
+ 488              		@ sp needed
+ 489 0068 BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccbMU92l.s 			page 10
+
+
+ 490              	.L89:
+ 491 006c 0846     		mov	r0, r1
+ 492 006e FFF7FEFF 		bl	findEndOfToken
+ 493 0072 411C     		adds	r1, r0, #1
+ 494 0074 0646     		mov	r6, r0
+ 495 0076 F6D0     		beq	.L41
+ 496 0078 0023     		movs	r3, #0
+ 497 007a 2B54     		strb	r3, [r5, r0]
+ 498 007c 2846     		mov	r0, r5
+ 499 007e FFF7FEFF 		bl	atoi
+ 500 0082 8046     		mov	r8, r0
+ 501 0084 FFF7FEFF 		bl	absI
+ 502 0088 4EF23047 		movw	r7, #58416
+ 503 008c C1F28C27 		movt	r7, 4748
+ 504 0090 B842     		cmp	r0, r7
+ 505 0092 00F0A780 		beq	.L83
+ 506 0096 0136     		adds	r6, r6, #1
+ 507 0098 3544     		add	r5, r5, r6
+ 508 009a 2846     		mov	r0, r5
+ 509 009c FFF7FEFF 		bl	atoi
+ 510 00a0 0646     		mov	r6, r0
+ 511 00a2 FFF7FEFF 		bl	absI
+ 512 00a6 B842     		cmp	r0, r7
+ 513 00a8 00F09C80 		beq	.L83
+ 514 00ac A368     		ldr	r3, [r4, #8]
+ 515 00ae 4046     		mov	r0, r8
+ 516 00b0 3146     		mov	r1, r6
+ 517 00b2 9847     		blx	r3
+ 518 00b4 D7E7     		b	.L41
+ 519              	.L91:
+ 520 00b6 FFF7FEFF 		bl	findEndOfToken
+ 521 00ba 421C     		adds	r2, r0, #1
+ 522 00bc 0646     		mov	r6, r0
+ 523 00be D2D0     		beq	.L41
+ 524 00c0 0023     		movs	r3, #0
+ 525 00c2 2B54     		strb	r3, [r5, r0]
+ 526 00c4 2846     		mov	r0, r5
+ 527 00c6 FFF7FEFF 		bl	atoff
+ 528 00ca 0746     		mov	r7, r0	@ float
+ 529 00cc 701C     		adds	r0, r6, #1
+ 530 00ce 2844     		add	r0, r0, r5
+ 531 00d0 FFF7FEFF 		bl	atoff
+ 532 00d4 2379     		ldrb	r3, [r4, #4]	@ zero_extendqisi2
+ 533 00d6 0E2B     		cmp	r3, #14
+ 534 00d8 0146     		mov	r1, r0	@ float
+ 535 00da 7FD0     		beq	.L94
+ 536 00dc 3846     		mov	r0, r7	@ float
+ 537 00de A368     		ldr	r3, [r4, #8]
+ 538 00e0 E268     		ldr	r2, [r4, #12]
+ 539 00e2 9847     		blx	r3
+ 540 00e4 BFE7     		b	.L41
+ 541              	.L86:
+ 542 00e6 0846     		mov	r0, r1
+ 543 00e8 FFF7FEFF 		bl	findEndOfToken
+ 544 00ec 411C     		adds	r1, r0, #1
+ 545 00ee BAD0     		beq	.L41
+ 546 00f0 0023     		movs	r3, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccbMU92l.s 			page 11
+
+
+ 547 00f2 2B54     		strb	r3, [r5, r0]
+ 548 00f4 2379     		ldrb	r3, [r4, #4]	@ zero_extendqisi2
+ 549 00f6 0130     		adds	r0, r0, #1
+ 550 00f8 082B     		cmp	r3, #8
+ 551 00fa 05EB0001 		add	r1, r5, r0
+ 552 00fe 69D0     		beq	.L95
+ 553 0100 2846     		mov	r0, r5
+ 554 0102 A368     		ldr	r3, [r4, #8]
+ 555 0104 E268     		ldr	r2, [r4, #12]
+ 556 0106 9847     		blx	r3
+ 557 0108 ADE7     		b	.L41
+ 558              	.L87:
+ 559 010a 0846     		mov	r0, r1
+ 560 010c FFF7FEFF 		bl	findEndOfToken
+ 561 0110 421C     		adds	r2, r0, #1
+ 562 0112 0346     		mov	r3, r0
+ 563 0114 A7D0     		beq	.L41
+ 564 0116 461C     		adds	r6, r0, #1
+ 565 0118 2E44     		add	r6, r6, r5
+ 566 011a 0027     		movs	r7, #0
+ 567 011c EF54     		strb	r7, [r5, r3]
+ 568 011e 3046     		mov	r0, r6
+ 569 0120 FFF7FEFF 		bl	findEndOfToken
+ 570 0124 431C     		adds	r3, r0, #1
+ 571 0126 9ED0     		beq	.L41
+ 572 0128 3754     		strb	r7, [r6, r0]
+ 573 012a 421C     		adds	r2, r0, #1
+ 574 012c 3146     		mov	r1, r6
+ 575 012e A368     		ldr	r3, [r4, #8]
+ 576 0130 3244     		add	r2, r2, r6
+ 577 0132 2846     		mov	r0, r5
+ 578 0134 9847     		blx	r3
+ 579 0136 96E7     		b	.L41
+ 580              	.L84:
+ 581 0138 8368     		ldr	r3, [r0, #8]
+ 582 013a 0846     		mov	r0, r1
+ 583 013c 9847     		blx	r3
+ 584 013e 92E7     		b	.L41
+ 585              	.L88:
+ 586 0140 0846     		mov	r0, r1
+ 587 0142 FFF7FEFF 		bl	findEndOfToken
+ 588 0146 0346     		mov	r3, r0
+ 589 0148 0130     		adds	r0, r0, #1
+ 590 014a 8CD0     		beq	.L41
+ 591 014c 5E1C     		adds	r6, r3, #1
+ 592 014e 2E44     		add	r6, r6, r5
+ 593 0150 0027     		movs	r7, #0
+ 594 0152 3046     		mov	r0, r6
+ 595 0154 EF54     		strb	r7, [r5, r3]
+ 596 0156 FFF7FEFF 		bl	findEndOfToken
+ 597 015a 411C     		adds	r1, r0, #1
+ 598 015c 83D0     		beq	.L41
+ 599 015e 00F10108 		add	r8, r0, #1
+ 600 0162 B044     		add	r8, r8, r6
+ 601 0164 3754     		strb	r7, [r6, r0]
+ 602 0166 4046     		mov	r0, r8
+ 603 0168 FFF7FEFF 		bl	findEndOfToken
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccbMU92l.s 			page 12
+
+
+ 604 016c 421C     		adds	r2, r0, #1
+ 605 016e 3FF47AAF 		beq	.L41
+ 606 0172 00F10109 		add	r9, r0, #1
+ 607 0176 C144     		add	r9, r9, r8
+ 608 0178 08F80070 		strb	r7, [r8, r0]
+ 609 017c 4846     		mov	r0, r9
+ 610 017e FFF7FEFF 		bl	findEndOfToken
+ 611 0182 431C     		adds	r3, r0, #1
+ 612 0184 3FF46FAF 		beq	.L41
+ 613 0188 431C     		adds	r3, r0, #1
+ 614 018a 09F80070 		strb	r7, [r9, r0]
+ 615 018e 4B44     		add	r3, r3, r9
+ 616 0190 0093     		str	r3, [sp]
+ 617 0192 A468     		ldr	r4, [r4, #8]
+ 618 0194 2846     		mov	r0, r5
+ 619 0196 3146     		mov	r1, r6
+ 620 0198 4246     		mov	r2, r8
+ 621 019a 4B46     		mov	r3, r9
+ 622 019c A047     		blx	r4
+ 623 019e 62E7     		b	.L41
+ 624              	.L85:
+ 625 01a0 0846     		mov	r0, r1
+ 626 01a2 A368     		ldr	r3, [r4, #8]
+ 627 01a4 E168     		ldr	r1, [r4, #12]
+ 628 01a6 9847     		blx	r3
+ 629 01a8 5DE7     		b	.L41
+ 630              	.L93:
+ 631 01aa 3046     		mov	r0, r6
+ 632 01ac A368     		ldr	r3, [r4, #8]
+ 633 01ae E168     		ldr	r1, [r4, #12]
+ 634 01b0 9847     		blx	r3
+ 635 01b2 58E7     		b	.L41
+ 636              	.L90:
+ 637 01b4 0846     		mov	r0, r1
+ 638 01b6 FFF7FEFF 		bl	atoff
+ 639 01ba A368     		ldr	r3, [r4, #8]
+ 640 01bc 9847     		blx	r3
+ 641 01be 52E7     		b	.L41
+ 642              	.L92:
+ 643 01c0 40F20000 		movw	r0, #:lower16:.LC6
+ 644 01c4 2946     		mov	r1, r5
+ 645 01c6 C0F20000 		movt	r0, #:upper16:.LC6
+ 646 01ca 03B0     		add	sp, sp, #12
+ 647              		@ sp needed
+ 648 01cc BDE8F043 		pop	{r4, r5, r6, r7, r8, r9, lr}
+ 649 01d0 FFF7FEBF 		b	print
+ 650              	.L95:
+ 651 01d4 A368     		ldr	r3, [r4, #8]
+ 652 01d6 2846     		mov	r0, r5
+ 653 01d8 9847     		blx	r3
+ 654 01da 44E7     		b	.L41
+ 655              	.L94:
+ 656 01dc A368     		ldr	r3, [r4, #8]
+ 657 01de 3846     		mov	r0, r7	@ float
+ 658 01e0 9847     		blx	r3
+ 659 01e2 40E7     		b	.L41
+ 660              	.L83:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccbMU92l.s 			page 13
+
+
+ 661 01e4 40F20003 		movw	r3, #:lower16:.LANCHOR2
+ 662 01e8 C0F20003 		movt	r3, #:upper16:.LANCHOR2
+ 663 01ec 40F20001 		movw	r1, #:lower16:.LC5
+ 664 01f0 1868     		ldr	r0, [r3]
+ 665 01f2 2A46     		mov	r2, r5
+ 666 01f4 C0F20001 		movt	r1, #:upper16:.LC5
+ 667 01f8 03B0     		add	sp, sp, #12
+ 668              		@ sp needed
+ 669 01fa BDE8F043 		pop	{r4, r5, r6, r7, r8, r9, lr}
+ 670 01fe FFF7FEBF 		b	scheduleMsg
+ 671              		.size	_Z25handleActionWithParameterP13TokenCallbackPc, .-_Z25handleActionWithParameterP13TokenCall
+ 672 0202 00BFAFF3 		.section	.text.tokenLength,"ax",%progbits
+ 672      0080AFF3 
+ 672      0080AFF3 
+ 672      0080
+ 673              		.align	2
+ 674              		.p2align 4,,15
+ 675              		.global	tokenLength
+ 676              		.thumb
+ 677              		.thumb_func
+ 678              		.type	tokenLength, %function
+ 679              	tokenLength:
+ 680              		@ args = 0, pretend = 0, frame = 0
+ 681              		@ frame_needed = 0, uses_anonymous_args = 0
+ 682              		@ link register save eliminated.
+ 683 0000 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 684 0002 13F0DF03 		ands	r3, r3, #223
+ 685 0006 07D0     		beq	.L97
+ 686 0008 0023     		movs	r3, #0
+ 687 000a 01E0     		b	.L98
+ 688              	.L99:
+ 689 000c 202A     		cmp	r2, #32
+ 690 000e 03D0     		beq	.L97
+ 691              	.L98:
+ 692 0010 0133     		adds	r3, r3, #1
+ 693 0012 C25C     		ldrb	r2, [r0, r3]	@ zero_extendqisi2
+ 694 0014 002A     		cmp	r2, #0
+ 695 0016 F9D1     		bne	.L99
+ 696              	.L97:
+ 697 0018 1846     		mov	r0, r3
+ 698 001a 7047     		bx	lr
+ 699              		.size	tokenLength, .-tokenLength
+ 700 001c AFF30080 		.section	.text.initConsoleLogic,"ax",%progbits
+ 701              		.align	2
+ 702              		.p2align 4,,15
+ 703              		.global	initConsoleLogic
+ 704              		.thumb
+ 705              		.thumb_func
+ 706              		.type	initConsoleLogic, %function
+ 707              	initConsoleLogic:
+ 708              		@ args = 0, pretend = 0, frame = 0
+ 709              		@ frame_needed = 0, uses_anonymous_args = 0
+ 710 0000 40F20003 		movw	r3, #:lower16:.LANCHOR2
+ 711 0004 10B5     		push	{r4, lr}
+ 712 0006 C0F20003 		movt	r3, #:upper16:.LANCHOR2
+ 713 000a 0021     		movs	r1, #0
+ 714 000c 1860     		str	r0, [r3]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccbMU92l.s 			page 14
+
+
+ 715 000e 40F20002 		movw	r2, #:lower16:helpCommand
+ 716 0012 40F20000 		movw	r0, #:lower16:.LC7
+ 717 0016 0B46     		mov	r3, r1
+ 718 0018 C0F20000 		movt	r0, #:upper16:.LC7
+ 719 001c C0F20002 		movt	r2, #:upper16:helpCommand
+ 720 0020 FFF7FEFF 		bl	_ZL11doAddActionPKc13action_type_ePFvvEPv
+ 721 0024 40F20000 		movw	r0, #:lower16:.LC8
+ 722 0028 40F20002 		movw	r2, #:lower16:_ZL4echoi
+ 723 002c C0F20000 		movt	r0, #:upper16:.LC8
+ 724 0030 C0F20002 		movt	r2, #:upper16:_ZL4echoi
+ 725 0034 0221     		movs	r1, #2
+ 726 0036 0023     		movs	r3, #0
+ 727 0038 BDE81040 		pop	{r4, lr}
+ 728 003c FFF7FEBF 		b	_ZL11doAddActionPKc13action_type_ePFvvEPv
+ 729              		.size	initConsoleLogic, .-initConsoleLogic
+ 730              		.section	.text.validateSecureLine,"ax",%progbits
+ 731              		.align	2
+ 732              		.p2align 4,,15
+ 733              		.global	validateSecureLine
+ 734              		.thumb
+ 735              		.thumb_func
+ 736              		.type	validateSecureLine, %function
+ 737              	validateSecureLine:
+ 738              		@ args = 0, pretend = 0, frame = 0
+ 739              		@ frame_needed = 0, uses_anonymous_args = 0
+ 740 0000 70B5     		push	{r4, r5, r6, lr}
+ 741 0002 0446     		mov	r4, r0
+ 742 0004 58B3     		cbz	r0, .L123
+ 743 0006 40F20000 		movw	r0, #:lower16:.LC9
+ 744 000a C0F20000 		movt	r0, #:upper16:.LC9
+ 745 000e 2146     		mov	r1, r4
+ 746 0010 0422     		movs	r2, #4
+ 747 0012 FFF7FEFF 		bl	strncmp
+ 748 0016 D0B9     		cbnz	r0, .L115
+ 749 0018 2379     		ldrb	r3, [r4, #4]	@ zero_extendqisi2
+ 750 001a 212B     		cmp	r3, #33
+ 751 001c 04F10401 		add	r1, r4, #4
+ 752 0020 29D0     		beq	.L114
+ 753 0022 B3B1     		cbz	r3, .L108
+ 754 0024 631D     		adds	r3, r4, #5
+ 755 0026 00E0     		b	.L110
+ 756              	.L111:
+ 757 0028 9AB1     		cbz	r2, .L108
+ 758              	.L110:
+ 759 002a 1C46     		mov	r4, r3
+ 760 002c 13F8012B 		ldrb	r2, [r3], #1	@ zero_extendqisi2
+ 761 0030 212A     		cmp	r2, #33
+ 762 0032 F9D1     		bne	.L111
+ 763              	.L107:
+ 764 0034 0025     		movs	r5, #0
+ 765 0036 0846     		mov	r0, r1
+ 766 0038 04F8015B 		strb	r5, [r4], #1
+ 767 003c FFF7FEFF 		bl	atoi
+ 768 0040 0646     		mov	r6, r0
+ 769 0042 2046     		mov	r0, r4
+ 770 0044 FFF7FEFF 		bl	strlen
+ 771 0048 8642     		cmp	r6, r0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccbMU92l.s 			page 15
+
+
+ 772 004a 0246     		mov	r2, r0
+ 773 004c 09D1     		bne	.L124
+ 774              	.L115:
+ 775 004e 2046     		mov	r0, r4
+ 776 0050 70BD     		pop	{r4, r5, r6, pc}
+ 777              	.L108:
+ 778 0052 40F20000 		movw	r0, #:lower16:.LC10
+ 779 0056 C0F20000 		movt	r0, #:upper16:.LC10
+ 780 005a FFF7FEFF 		bl	print
+ 781              	.L123:
+ 782 005e 0020     		movs	r0, #0
+ 783 0060 70BD     		pop	{r4, r5, r6, pc}
+ 784              	.L124:
+ 785 0062 40F20000 		movw	r0, #:lower16:.LC11
+ 786 0066 3146     		mov	r1, r6
+ 787 0068 2346     		mov	r3, r4
+ 788 006a C0F20000 		movt	r0, #:upper16:.LC11
+ 789 006e FFF7FEFF 		bl	print
+ 790 0072 2846     		mov	r0, r5
+ 791 0074 70BD     		pop	{r4, r5, r6, pc}
+ 792              	.L114:
+ 793 0076 0C46     		mov	r4, r1
+ 794 0078 DCE7     		b	.L107
+ 795              		.size	validateSecureLine, .-validateSecureLine
+ 796 007a 00BFAFF3 		.section	.text.handleConsoleLine,"ax",%progbits
+ 796      0080
+ 797              		.align	2
+ 798              		.p2align 4,,15
+ 799              		.global	handleConsoleLine
+ 800              		.thumb
+ 801              		.thumb_func
+ 802              		.type	handleConsoleLine, %function
+ 803              	handleConsoleLine:
+ 804              		@ args = 0, pretend = 0, frame = 0
+ 805              		@ frame_needed = 0, uses_anonymous_args = 0
+ 806 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 807 0004 FFF7FEFF 		bl	validateSecureLine
+ 808 0008 8146     		mov	r9, r0
+ 809 000a 0028     		cmp	r0, #0
+ 810 000c 00F09F80 		beq	.L125
+ 811 0010 FFF7FEFF 		bl	strlen
+ 812 0014 6428     		cmp	r0, #100
+ 813 0016 0646     		mov	r6, r0
+ 814 0018 66DC     		bgt	.L146
+ 815 001a 40F20002 		movw	r2, #:lower16:.LC13
+ 816 001e C0F20002 		movt	r2, #:upper16:.LC13
+ 817 0022 0FCA     		ldmia	r2, {r0, r1, r2, r3}
+ 818 0024 40F20004 		movw	r4, #:lower16:.LANCHOR4
+ 819 0028 C0F20004 		movt	r4, #:upper16:.LANCHOR4
+ 820 002c 2546     		mov	r5, r4
+ 821 002e 07C5     		stmia	r5!, {r0, r1, r2}
+ 822 0030 4946     		mov	r1, r9
+ 823 0032 2B70     		strb	r3, [r5]
+ 824 0034 04F10D00 		add	r0, r4, #13
+ 825 0038 FFF7FEFF 		bl	strcpy
+ 826 003c 2046     		mov	r0, r4
+ 827 003e FFF7FEFF 		bl	strlen
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccbMU92l.s 			page 16
+
+
+ 828 0042 40F20003 		movw	r3, #:lower16:.LC14
+ 829 0046 C0F20003 		movt	r3, #:upper16:.LC14
+ 830 004a 40F20008 		movw	r8, #:lower16:.LANCHOR2
+ 831 004e 1B88     		ldrh	r3, [r3]	@ unaligned
+ 832 0050 C0F20008 		movt	r8, #:upper16:.LANCHOR2
+ 833 0054 40F20001 		movw	r1, #:lower16:.LC15
+ 834 0058 40F20007 		movw	r7, #:lower16:.LANCHOR5
+ 835 005c 2352     		strh	r3, [r4, r0]	@ unaligned
+ 836 005e 2246     		mov	r2, r4
+ 837 0060 3346     		mov	r3, r6
+ 838 0062 C0F20007 		movt	r7, #:upper16:.LANCHOR5
+ 839 0066 D8F80000 		ldr	r0, [r8]
+ 840 006a C0F20001 		movt	r1, #:upper16:.LC15
+ 841 006e FFF7FEFF 		bl	scheduleMsg
+ 842 0072 3846     		mov	r0, r7
+ 843 0074 4946     		mov	r1, r9
+ 844 0076 C722     		movs	r2, #199
+ 845 0078 FFF7FEFF 		bl	strncpy
+ 846 007c 3B78     		ldrb	r3, [r7]	@ zero_extendqisi2
+ 847 007e 0024     		movs	r4, #0
+ 848 0080 13F0DF03 		ands	r3, r3, #223
+ 849 0084 87F8C740 		strb	r4, [r7, #199]
+ 850 0088 02D1     		bne	.L129
+ 851 008a 62E0     		b	.L150
+ 852              	.L130:
+ 853 008c 202D     		cmp	r5, #32
+ 854 008e 03D0     		beq	.L128
+ 855              	.L129:
+ 856 0090 0134     		adds	r4, r4, #1
+ 857 0092 3D5D     		ldrb	r5, [r7, r4]	@ zero_extendqisi2
+ 858 0094 002D     		cmp	r5, #0
+ 859 0096 F9D1     		bne	.L130
+ 860              	.L128:
+ 861 0098 40F2000A 		movw	r10, #:lower16:.LANCHOR0
+ 862 009c A642     		cmp	r6, r4
+ 863 009e C0F2000A 		movt	r10, #:upper16:.LANCHOR0
+ 864 00a2 36D0     		beq	.L147
+ 865 00a4 DAF80030 		ldr	r3, [r10]
+ 866 00a8 0026     		movs	r6, #0
+ 867 00aa B342     		cmp	r3, r6
+ 868 00ac 3E55     		strb	r6, [r7, r4]
+ 869 00ae 3C44     		add	r4, r4, r7
+ 870 00b0 22DD     		ble	.L132
+ 871 00b2 40F20005 		movw	r5, #:lower16:.LANCHOR1
+ 872 00b6 C0F20005 		movt	r5, #:upper16:.LANCHOR1
+ 873 00ba 05E0     		b	.L138
+ 874              	.L137:
+ 875 00bc DAF80030 		ldr	r3, [r10]
+ 876 00c0 9E42     		cmp	r6, r3
+ 877 00c2 05F11005 		add	r5, r5, #16
+ 878 00c6 17DA     		bge	.L132
+ 879              	.L138:
+ 880 00c8 40F20000 		movw	r0, #:lower16:.LANCHOR5
+ 881 00cc C0F20000 		movt	r0, #:upper16:.LANCHOR5
+ 882 00d0 2968     		ldr	r1, [r5]
+ 883 00d2 0136     		adds	r6, r6, #1
+ 884 00d4 FFF7FEFF 		bl	strEqual
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccbMU92l.s 			page 17
+
+
+ 885 00d8 0028     		cmp	r0, #0
+ 886 00da EFD0     		beq	.L137
+ 887 00dc 2846     		mov	r0, r5
+ 888 00de 611C     		adds	r1, r4, #1
+ 889 00e0 BDE8F047 		pop	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 890 00e4 FFF7FEBF 		b	_Z25handleActionWithParameterP13TokenCallbackPc
+ 891              	.L146:
+ 892 00e8 40F20000 		movw	r0, #:lower16:.LC12
+ 893 00ec C0F20000 		movt	r0, #:upper16:.LC12
+ 894 00f0 BDE8F047 		pop	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 895 00f4 FFF7FEBF 		b	print
+ 896              	.L132:
+ 897 00f8 40F20001 		movw	r1, #:lower16:.LC16
+ 898 00fc D8F80000 		ldr	r0, [r8]
+ 899 0100 4A46     		mov	r2, r9
+ 900 0102 C0F20001 		movt	r1, #:upper16:.LC16
+ 901 0106 FFF7FEFF 		bl	scheduleMsg
+ 902 010a BDE8F047 		pop	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 903 010e FFF7FEBF 		b	helpCommand
+ 904              	.L147:
+ 905 0112 DAF80030 		ldr	r3, [r10]
+ 906 0116 002B     		cmp	r3, #0
+ 907 0118 EEDD     		ble	.L132
+ 908 011a 40F20004 		movw	r4, #:lower16:.LANCHOR1
+ 909 011e C0F20004 		movt	r4, #:upper16:.LANCHOR1
+ 910 0122 0025     		movs	r5, #0
+ 911 0124 05E0     		b	.L136
+ 912              	.L133:
+ 913 0126 DAF80030 		ldr	r3, [r10]
+ 914 012a 9D42     		cmp	r5, r3
+ 915 012c 04F11004 		add	r4, r4, #16
+ 916 0130 E2DA     		bge	.L132
+ 917              	.L136:
+ 918 0132 40F20000 		movw	r0, #:lower16:.LANCHOR5
+ 919 0136 C0F20000 		movt	r0, #:upper16:.LANCHOR5
+ 920 013a 2168     		ldr	r1, [r4]
+ 921 013c 0135     		adds	r5, r5, #1
+ 922 013e FFF7FEFF 		bl	strEqual
+ 923 0142 0028     		cmp	r0, #0
+ 924 0144 EFD0     		beq	.L133
+ 925 0146 2379     		ldrb	r3, [r4, #4]	@ zero_extendqisi2
+ 926 0148 2BB1     		cbz	r3, .L148
+ 927 014a 012B     		cmp	r3, #1
+ 928 014c 07D0     		beq	.L149
+ 929              	.L125:
+ 930 014e BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 931              	.L150:
+ 932 0152 1C46     		mov	r4, r3
+ 933 0154 A0E7     		b	.L128
+ 934              	.L148:
+ 935 0156 A368     		ldr	r3, [r4, #8]
+ 936 0158 9847     		blx	r3
+ 937 015a BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 938              	.L149:
+ 939 015e A368     		ldr	r3, [r4, #8]
+ 940 0160 E068     		ldr	r0, [r4, #12]
+ 941 0162 9847     		blx	r3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccbMU92l.s 			page 18
+
+
+ 942 0164 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 943              		.size	handleConsoleLine, .-handleConsoleLine
+ 944 0168 AFF30080 		.section	.bss._ZL14consoleActions,"aw",%nobits
+ 944      AFF30080 
+ 945              		.align	2
+ 946              		.set	.LANCHOR1,. + 0
+ 947              		.type	_ZL14consoleActions, %object
+ 948              		.size	_ZL14consoleActions, 3136
+ 949              	_ZL14consoleActions:
+ 950 0000 00000000 		.space	3136
+ 950      00000000 
+ 950      00000000 
+ 950      00000000 
+ 950      00000000 
+ 951              		.section	.bss._ZL12confirmation,"aw",%nobits
+ 952              		.align	2
+ 953              		.set	.LANCHOR4,. + 0
+ 954              		.type	_ZL12confirmation, %object
+ 955              		.size	_ZL12confirmation, 200
+ 956              	_ZL12confirmation:
+ 957 0000 00000000 		.space	200
+ 957      00000000 
+ 957      00000000 
+ 957      00000000 
+ 957      00000000 
+ 958              		.section	.bss._ZL7logging,"aw",%nobits
+ 959              		.align	2
+ 960              		.set	.LANCHOR2,. + 0
+ 961              		.type	_ZL7logging, %object
+ 962              		.size	_ZL7logging, 4
+ 963              	_ZL7logging:
+ 964 0000 00000000 		.space	4
+ 965              		.section	.bss._ZL18consoleActionCount,"aw",%nobits
+ 966              		.align	2
+ 967              		.set	.LANCHOR0,. + 0
+ 968              		.type	_ZL18consoleActionCount, %object
+ 969              		.size	_ZL18consoleActionCount, 4
+ 970              	_ZL18consoleActionCount:
+ 971 0000 00000000 		.space	4
+ 972              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 973              		.align	2
+ 974              	.LC0:
+ 975 0000 546F6F20 		.ascii	"Too many console actions\000"
+ 975      6D616E79 
+ 975      20636F6E 
+ 975      736F6C65 
+ 975      20616374 
+ 976 0019 000000   		.space	3
+ 977              	.LC1:
+ 978 001c 676F7420 		.ascii	"got value: %d\015\012\000"
+ 978      76616C75 
+ 978      653A2025 
+ 978      640D0A00 
+ 979              	.LC2:
+ 980 002c 25642061 		.ascii	"%d actions available\000"
+ 980      6374696F 
+ 980      6E732061 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccbMU92l.s 			page 19
+
+
+ 980      7661696C 
+ 980      61626C65 
+ 981 0041 000000   		.space	3
+ 982              	.LC3:
+ 983 0044 466F7220 		.ascii	"For more visit http://rusefi.com/wiki/index.php?tit"
+ 983      6D6F7265 
+ 983      20766973 
+ 983      69742068 
+ 983      7474703A 
+ 984 0077 6C653D4D 		.ascii	"le=Manual:Software:dev_console_commands\000"
+ 984      616E7561 
+ 984      6C3A536F 
+ 984      66747761 
+ 984      72653A64 
+ 985 009f 00       		.space	1
+ 986              	.LC4:
+ 987 00a0 20202573 		.ascii	"  %s: %d parameters\000"
+ 987      3A202564 
+ 987      20706172 
+ 987      616D6574 
+ 987      65727300 
+ 988              	.LC5:
+ 989 00b4 6E6F7420 		.ascii	"not an integer [%s]\000"
+ 989      616E2069 
+ 989      6E746567 
+ 989      6572205B 
+ 989      25735D00 
+ 990              	.LC6:
+ 991 00c8 696E7661 		.ascii	"invalid integer [%s]\015\012\000"
+ 991      6C696420 
+ 991      696E7465 
+ 991      67657220 
+ 991      5B25735D 
+ 992 00df 00       		.space	1
+ 993              	.LC7:
+ 994 00e0 68656C70 		.ascii	"help\000"
+ 994      00
+ 995 00e5 000000   		.space	3
+ 996              	.LC8:
+ 997 00e8 6563686F 		.ascii	"echo\000"
+ 997      00
+ 998 00ed 000000   		.space	3
+ 999              	.LC9:
+ 1000 00f0 73656321 		.ascii	"sec!\000"
+ 1000      00
+ 1001 00f5 000000   		.space	3
+ 1002              	.LC10:
+ 1003 00f8 44697669 		.ascii	"Divider not found [%s]\015\012\000"
+ 1003      64657220 
+ 1003      6E6F7420 
+ 1003      666F756E 
+ 1003      64205B25 
+ 1004 0111 000000   		.space	3
+ 1005              	.LC11:
+ 1006 0114 4572726F 		.ascii	"Error detected: expected %d but got %d in [%s]\015\012"
+ 1006      72206465 
+ 1006      74656374 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccbMU92l.s 			page 20
+
+
+ 1006      65643A20 
+ 1006      65787065 
+ 1007 0144 00       		.ascii	"\000"
+ 1008 0145 000000   		.space	3
+ 1009              	.LC12:
+ 1010 0148 4C6F6E67 		.ascii	"Long line?\015\012\000"
+ 1010      206C696E 
+ 1010      653F0D0A 
+ 1010      00
+ 1011 0155 000000   		.space	3
+ 1012              	.LC13:
+ 1013 0158 636F6E66 		.ascii	"confirmation_\000"
+ 1013      69726D61 
+ 1013      74696F6E 
+ 1013      5F00
+ 1014 0166 0000     		.space	2
+ 1015              	.LC14:
+ 1016 0168 3A00     		.ascii	":\000"
+ 1017 016a 0000     		.space	2
+ 1018              	.LC15:
+ 1019 016c 25732564 		.ascii	"%s%d\000"
+ 1019      00
+ 1020 0171 000000   		.space	3
+ 1021              	.LC16:
+ 1022 0174 756E6B6E 		.ascii	"unknown [%s]\000"
+ 1022      6F776E20 
+ 1022      5B25735D 
+ 1022      00
+ 1023 0181 000000   		.section	.rodata.CSWTCH.25,"a",%progbits
+ 1024              		.align	2
+ 1025              		.set	.LANCHOR3,. + 0
+ 1026              		.type	CSWTCH.25, %object
+ 1027              		.size	CSWTCH.25, 64
+ 1028              	CSWTCH.25:
+ 1029 0000 00000000 		.word	0
+ 1030 0004 00000000 		.word	0
+ 1031 0008 01000000 		.word	1
+ 1032 000c 01000000 		.word	1
+ 1033 0010 01000000 		.word	1
+ 1034 0014 FFFFFFFF 		.word	-1
+ 1035 0018 01000000 		.word	1
+ 1036 001c FFFFFFFF 		.word	-1
+ 1037 0020 02000000 		.word	2
+ 1038 0024 02000000 		.word	2
+ 1039 0028 03000000 		.word	3
+ 1040 002c 05000000 		.word	5
+ 1041 0030 02000000 		.word	2
+ 1042 0034 02000000 		.word	2
+ 1043 0038 02000000 		.word	2
+ 1044 003c 02000000 		.word	2
+ 1045              		.section	.bss._ZL12handleBuffer,"aw",%nobits
+ 1046              		.align	2
+ 1047              		.set	.LANCHOR5,. + 0
+ 1048              		.type	_ZL12handleBuffer, %object
+ 1049              		.size	_ZL12handleBuffer, 200
+ 1050              	_ZL12handleBuffer:
+ 1051 0000 00000000 		.space	200
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccbMU92l.s 			page 21
+
+
+ 1051      00000000 
+ 1051      00000000 
+ 1051      00000000 
+ 1051      00000000 
+ 1052              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccbMU92l.s 			page 22
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 cli_registry.cpp
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:17     .text._ZL11doAddActionPKc13action_type_ePFvvEPv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:22     .text._ZL11doAddActionPKc13action_type_ePFvvEPv:00000000 _ZL11doAddActionPKc13action_type_ePFvvEPv
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:967    .bss._ZL18consoleActionCount:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:946    .bss._ZL14consoleActions:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:974    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:51     .text._ZL4echoi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:56     .text._ZL4echoi:00000000 _ZL4echoi
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:977    .rodata.str1.4:0000001c .LC1
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:66     .text.helpCommand:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:72     .text.helpCommand:00000000 helpCommand
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:960    .bss._ZL7logging:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:979    .rodata.str1.4:0000002c .LC2
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:1025   .rodata.CSWTCH.25:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:986    .rodata.str1.4:000000a0 .LC4
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:982    .rodata.str1.4:00000044 .LC3
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:125    .text.resetConsoleActions:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:131    .text.resetConsoleActions:00000000 resetConsoleActions
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:142    .text.addConsoleActionP:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:148    .text.addConsoleActionP:00000000 addConsoleActionP
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:158    .text.addConsoleActionSSP:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:164    .text.addConsoleActionSSP:00000000 addConsoleActionSSP
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:174    .text.addConsoleAction:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:180    .text.addConsoleAction:00000000 addConsoleAction
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:190    .text.addConsoleActionI:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:196    .text.addConsoleActionI:00000000 addConsoleActionI
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:206    .text.addConsoleActionIP:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:212    .text.addConsoleActionIP:00000000 addConsoleActionIP
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:222    .text.addConsoleActionII:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:228    .text.addConsoleActionII:00000000 addConsoleActionII
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:238    .text.addConsoleActionIIP:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:244    .text.addConsoleActionIIP:00000000 addConsoleActionIIP
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:254    .text.addConsoleActionS:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:260    .text.addConsoleActionS:00000000 addConsoleActionS
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:270    .text.addConsoleActionSP:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:276    .text.addConsoleActionSP:00000000 addConsoleActionSP
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:286    .text.addConsoleActionSS:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:292    .text.addConsoleActionSS:00000000 addConsoleActionSS
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:302    .text.addConsoleActionSSS:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:308    .text.addConsoleActionSSS:00000000 addConsoleActionSSS
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:318    .text.addConsoleActionSSSSS:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:324    .text.addConsoleActionSSSSS:00000000 addConsoleActionSSSSS
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:334    .text.addConsoleActionF:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:340    .text.addConsoleActionF:00000000 addConsoleActionF
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:350    .text.addConsoleActionFF:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:356    .text.addConsoleActionFF:00000000 addConsoleActionFF
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:366    .text.addConsoleActionFFP:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:372    .text.addConsoleActionFFP:00000000 addConsoleActionFFP
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:382    .text.unquote:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:388    .text.unquote:00000000 unquote
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:411    .text.findEndOfToken:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:417    .text.findEndOfToken:00000000 findEndOfToken
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:438    .text._Z25handleActionWithParameterP13TokenCallbackPc:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:444    .text._Z25handleActionWithParameterP13TokenCallbackPc:00000000 _Z25handleActionWithParameterP13TokenCallbackPc
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:990    .rodata.str1.4:000000c8 .LC6
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:988    .rodata.str1.4:000000b4 .LC5
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccbMU92l.s 			page 23
+
+
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:673    .text.tokenLength:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:679    .text.tokenLength:00000000 tokenLength
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:701    .text.initConsoleLogic:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:707    .text.initConsoleLogic:00000000 initConsoleLogic
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:993    .rodata.str1.4:000000e0 .LC7
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:996    .rodata.str1.4:000000e8 .LC8
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:731    .text.validateSecureLine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:737    .text.validateSecureLine:00000000 validateSecureLine
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:999    .rodata.str1.4:000000f0 .LC9
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:1002   .rodata.str1.4:000000f8 .LC10
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:1005   .rodata.str1.4:00000114 .LC11
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:797    .text.handleConsoleLine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:803    .text.handleConsoleLine:00000000 handleConsoleLine
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:1012   .rodata.str1.4:00000158 .LC13
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:953    .bss._ZL12confirmation:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:1015   .rodata.str1.4:00000168 .LC14
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:1018   .rodata.str1.4:0000016c .LC15
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:1047   .bss._ZL12handleBuffer:00000000 .LANCHOR5
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:1009   .rodata.str1.4:00000148 .LC12
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:1021   .rodata.str1.4:00000174 .LC16
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:945    .bss._ZL14consoleActions:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:949    .bss._ZL14consoleActions:00000000 _ZL14consoleActions
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:952    .bss._ZL12confirmation:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:956    .bss._ZL12confirmation:00000000 _ZL12confirmation
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:959    .bss._ZL7logging:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:963    .bss._ZL7logging:00000000 _ZL7logging
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:966    .bss._ZL18consoleActionCount:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:970    .bss._ZL18consoleActionCount:00000000 _ZL18consoleActionCount
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:973    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:1024   .rodata.CSWTCH.25:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:1028   .rodata.CSWTCH.25:00000000 CSWTCH.25
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:1046   .bss._ZL12handleBuffer:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccbMU92l.s:1050   .bss._ZL12handleBuffer:00000000 _ZL12handleBuffer
+
+UNDEFINED SYMBOLS
+firmwareError
+print
+isBoardTestMode
+scheduleMsg
+printBoardTestState
+strlen
+indexOf
+atoi
+absI
+atoff
+strncmp
+strcpy
+strncpy
+strEqual

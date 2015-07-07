@@ -1,0 +1,633 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"serial_lld.c"
+  16              		.section	.text.notify1,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	notify1, %function
+  22              	notify1:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25              		@ link register save eliminated.
+  26 0000 4FF48053 		mov	r3, #4096
+  27 0004 C4F20103 		movt	r3, 16385
+  28 0008 9A89     		ldrh	r2, [r3, #12]
+  29 000a 92B2     		uxth	r2, r2
+  30 000c 42F08002 		orr	r2, r2, #128
+  31 0010 9A81     		strh	r2, [r3, #12]	@ movhi
+  32 0012 7047     		bx	lr
+  33              		.size	notify1, .-notify1
+  34 0014 AFF30080 		.section	.text.notify2,"ax",%progbits
+  34      AFF30080 
+  34      AFF30080 
+  35              		.align	2
+  36              		.p2align 4,,15
+  37              		.thumb
+  38              		.thumb_func
+  39              		.type	notify2, %function
+  40              	notify2:
+  41              		@ args = 0, pretend = 0, frame = 0
+  42              		@ frame_needed = 0, uses_anonymous_args = 0
+  43              		@ link register save eliminated.
+  44 0000 4FF48843 		mov	r3, #17408
+  45 0004 C4F20003 		movt	r3, 16384
+  46 0008 9A89     		ldrh	r2, [r3, #12]
+  47 000a 92B2     		uxth	r2, r2
+  48 000c 42F08002 		orr	r2, r2, #128
+  49 0010 9A81     		strh	r2, [r3, #12]	@ movhi
+  50 0012 7047     		bx	lr
+  51              		.size	notify2, .-notify2
+  52 0014 AFF30080 		.section	.text.notify3,"ax",%progbits
+  52      AFF30080 
+  52      AFF30080 
+  53              		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s 			page 2
+
+
+  54              		.p2align 4,,15
+  55              		.thumb
+  56              		.thumb_func
+  57              		.type	notify3, %function
+  58              	notify3:
+  59              		@ args = 0, pretend = 0, frame = 0
+  60              		@ frame_needed = 0, uses_anonymous_args = 0
+  61              		@ link register save eliminated.
+  62 0000 4FF49043 		mov	r3, #18432
+  63 0004 C4F20003 		movt	r3, 16384
+  64 0008 9A89     		ldrh	r2, [r3, #12]
+  65 000a 92B2     		uxth	r2, r2
+  66 000c 42F08002 		orr	r2, r2, #128
+  67 0010 9A81     		strh	r2, [r3, #12]	@ movhi
+  68 0012 7047     		bx	lr
+  69              		.size	notify3, .-notify3
+  70 0014 AFF30080 		.section	.text.serve_interrupt,"ax",%progbits
+  70      AFF30080 
+  70      AFF30080 
+  71              		.align	2
+  72              		.p2align 4,,15
+  73              		.thumb
+  74              		.thumb_func
+  75              		.type	serve_interrupt, %function
+  76              	serve_interrupt:
+  77              		@ args = 0, pretend = 0, frame = 0
+  78              		@ frame_needed = 0, uses_anonymous_args = 0
+  79 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+  80 0004 456F     		ldr	r5, [r0, #116]
+  81 0006 B5F80C80 		ldrh	r8, [r5, #12]
+  82 000a 2C88     		ldrh	r4, [r5]
+  83 000c A4B2     		uxth	r4, r4
+  84 000e E205     		lsls	r2, r4, #23
+  85 0010 0646     		mov	r6, r0
+  86 0012 1FFA88F8 		uxth	r8, r8
+  87 0016 5BD4     		bmi	.L55
+  88              	.L5:
+  89 0018 2023     		movs	r3, #32
+  90              	@ 168 "chibios/os/hal/platforms/STM32/USARTv1/serial_lld.c" 1
+  91 001a 83F31188 		msr     BASEPRI, r3
+  92              	@ 0 "" 2
+  93              		.thumb
+  94 001e FFF7FEFF 		bl	dbg_check_lock_from_isr
+  95 0022 14F02F0F 		tst	r4, #47
+  96 0026 2DD0     		beq	.L6
+  97 0028 371D     		adds	r7, r6, #4
+  98 002a 08E0     		b	.L13
+  99              	.L7:
+ 100 002c A988     		ldrh	r1, [r5, #4]
+ 101 002e A006     		lsls	r0, r4, #26
+ 102 0030 89B2     		uxth	r1, r1
+ 103 0032 1ED4     		bmi	.L56
+ 104              	.L12:
+ 105 0034 2C88     		ldrh	r4, [r5]
+ 106 0036 A4B2     		uxth	r4, r4
+ 107 0038 14F02F0F 		tst	r4, #47
+ 108 003c 22D0     		beq	.L6
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s 			page 3
+
+
+ 109              	.L13:
+ 110 003e 2307     		lsls	r3, r4, #28
+ 111 0040 F4D0     		beq	.L7
+ 112 0042 14F0080F 		tst	r4, #8
+ 113 0046 14BF     		ite	ne
+ 114 0048 8021     		movne	r1, #128
+ 115 004a 0021     		moveq	r1, #0
+ 116 004c E007     		lsls	r0, r4, #31
+ 117 004e 48BF     		it	mi
+ 118 0050 41F02001 		orrmi	r1, r1, #32
+ 119 0054 A207     		lsls	r2, r4, #30
+ 120 0056 48BF     		it	mi
+ 121 0058 41F04001 		orrmi	r1, r1, #64
+ 122 005c 6307     		lsls	r3, r4, #29
+ 123 005e 48BF     		it	mi
+ 124 0060 41F48071 		orrmi	r1, r1, #256
+ 125 0064 3846     		mov	r0, r7
+ 126 0066 FFF7FEFF 		bl	chEvtBroadcastFlagsI
+ 127 006a A988     		ldrh	r1, [r5, #4]
+ 128 006c A006     		lsls	r0, r4, #26
+ 129 006e 89B2     		uxth	r1, r1
+ 130 0070 E0D5     		bpl	.L12
+ 131              	.L56:
+ 132 0072 C9B2     		uxtb	r1, r1
+ 133 0074 3046     		mov	r0, r6
+ 134 0076 FFF7FEFF 		bl	sdIncomingDataI
+ 135 007a 2C88     		ldrh	r4, [r5]
+ 136 007c A4B2     		uxth	r4, r4
+ 137 007e 14F02F0F 		tst	r4, #47
+ 138 0082 DCD1     		bne	.L13
+ 139              	.L6:
+ 140 0084 FFF7FEFF 		bl	dbg_check_unlock_from_isr
+ 141 0088 0023     		movs	r3, #0
+ 142              	@ 181 "chibios/os/hal/platforms/STM32/USARTv1/serial_lld.c" 1
+ 143 008a 83F31188 		msr     BASEPRI, r3
+ 144              	@ 0 "" 2
+ 145              		.thumb
+ 146 008e 18F0800F 		tst	r8, #128
+ 147 0092 01D0     		beq	.L14
+ 148 0094 2206     		lsls	r2, r4, #24
+ 149 0096 2ED4     		bmi	.L57
+ 150              	.L14:
+ 151 0098 6306     		lsls	r3, r4, #25
+ 152 009a 01D4     		bmi	.L58
+ 153 009c BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 154              	.L58:
+ 155 00a0 2023     		movs	r3, #32
+ 156              	@ 199 "chibios/os/hal/platforms/STM32/USARTv1/serial_lld.c" 1
+ 157 00a2 83F31188 		msr     BASEPRI, r3
+ 158              	@ 0 "" 2
+ 159              		.thumb
+ 160 00a6 FFF7FEFF 		bl	dbg_check_lock_from_isr
+ 161 00aa 726C     		ldr	r2, [r6, #68]
+ 162 00ac B36C     		ldr	r3, [r6, #72]
+ 163 00ae 9A42     		cmp	r2, r3
+ 164 00b0 35D0     		beq	.L59
+ 165              	.L18:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s 			page 4
+
+
+ 166 00b2 4FF6BF73 		movw	r3, #65471
+ 167 00b6 08EA0303 		and	r3, r8, r3
+ 168 00ba 4FF6BF72 		movw	r2, #65471
+ 169 00be AB81     		strh	r3, [r5, #12]	@ movhi
+ 170 00c0 2A80     		strh	r2, [r5]	@ movhi
+ 171 00c2 FFF7FEFF 		bl	dbg_check_unlock_from_isr
+ 172 00c6 0023     		movs	r3, #0
+ 173              	@ 204 "chibios/os/hal/platforms/STM32/USARTv1/serial_lld.c" 1
+ 174 00c8 83F31188 		msr     BASEPRI, r3
+ 175              	@ 0 "" 2
+ 176              		.thumb
+ 177 00cc BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 178              	.L55:
+ 179 00d0 2023     		movs	r3, #32
+ 180              	@ 161 "chibios/os/hal/platforms/STM32/USARTv1/serial_lld.c" 1
+ 181 00d2 83F31188 		msr     BASEPRI, r3
+ 182              	@ 0 "" 2
+ 183              		.thumb
+ 184 00d6 FFF7FEFF 		bl	dbg_check_lock_from_isr
+ 185 00da 301D     		adds	r0, r6, #4
+ 186 00dc 4FF40071 		mov	r1, #512
+ 187 00e0 FFF7FEFF 		bl	chEvtBroadcastFlagsI
+ 188 00e4 FFF7FEFF 		bl	dbg_check_unlock_from_isr
+ 189 00e8 0023     		movs	r3, #0
+ 190              	@ 163 "chibios/os/hal/platforms/STM32/USARTv1/serial_lld.c" 1
+ 191 00ea 83F31188 		msr     BASEPRI, r3
+ 192              	@ 0 "" 2
+ 193              		.thumb
+ 194 00ee 4FF6FF63 		movw	r3, #65279
+ 195 00f2 2B80     		strh	r3, [r5]	@ movhi
+ 196 00f4 90E7     		b	.L5
+ 197              	.L57:
+ 198 00f6 2023     		movs	r3, #32
+ 199              	@ 186 "chibios/os/hal/platforms/STM32/USARTv1/serial_lld.c" 1
+ 200 00f8 83F31188 		msr     BASEPRI, r3
+ 201              	@ 0 "" 2
+ 202              		.thumb
+ 203 00fc FFF7FEFF 		bl	dbg_check_lock_from_isr
+ 204 0100 06F13000 		add	r0, r6, #48
+ 205 0104 FFF7FEFF 		bl	chOQGetI
+ 206 0108 0028     		cmp	r0, #0
+ 207 010a A4BF     		itt	ge
+ 208 010c 80B2     		uxthge	r0, r0
+ 209 010e A880     		strhge	r0, [r5, #4]	@ movhi
+ 210 0110 0DDB     		blt	.L60
+ 211              	.L16:
+ 212 0112 FFF7FEFF 		bl	dbg_check_unlock_from_isr
+ 213 0116 0023     		movs	r3, #0
+ 214              	@ 194 "chibios/os/hal/platforms/STM32/USARTv1/serial_lld.c" 1
+ 215 0118 83F31188 		msr     BASEPRI, r3
+ 216              	@ 0 "" 2
+ 217              		.thumb
+ 218 011c BCE7     		b	.L14
+ 219              	.L59:
+ 220 011e B36B     		ldr	r3, [r6, #56]
+ 221 0120 002B     		cmp	r3, #0
+ 222 0122 C6D0     		beq	.L18
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s 			page 5
+
+
+ 223 0124 301D     		adds	r0, r6, #4
+ 224 0126 1021     		movs	r1, #16
+ 225 0128 FFF7FEFF 		bl	chEvtBroadcastFlagsI
+ 226 012c C1E7     		b	.L18
+ 227              	.L60:
+ 228 012e 301D     		adds	r0, r6, #4
+ 229 0130 0821     		movs	r1, #8
+ 230 0132 FFF7FEFF 		bl	chEvtBroadcastFlagsI
+ 231 0136 28F0C003 		bic	r3, r8, #192
+ 232 013a 43F04003 		orr	r3, r3, #64
+ 233 013e AB81     		strh	r3, [r5, #12]	@ movhi
+ 234 0140 E7E7     		b	.L16
+ 235              		.size	serve_interrupt, .-serve_interrupt
+ 236 0142 00BFAFF3 		.section	.text.VectorD4,"ax",%progbits
+ 236      0080AFF3 
+ 236      0080AFF3 
+ 236      0080
+ 237              		.align	2
+ 238              		.p2align 4,,15
+ 239              		.global	VectorD4
+ 240              		.thumb
+ 241              		.thumb_func
+ 242              		.type	VectorD4, %function
+ 243              	VectorD4:
+ 244              		@ args = 0, pretend = 0, frame = 0
+ 245              		@ frame_needed = 0, uses_anonymous_args = 0
+ 246 0000 08B5     		push	{r3, lr}
+ 247 0002 FFF7FEFF 		bl	dbg_check_enter_isr
+ 248 0006 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 249 000a C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 250 000e FFF7FEFF 		bl	serve_interrupt
+ 251 0012 FFF7FEFF 		bl	dbg_check_leave_isr
+ 252 0016 BDE80840 		pop	{r3, lr}
+ 253 001a FFF7FEBF 		b	_port_irq_epilogue
+ 254              		.size	VectorD4, .-VectorD4
+ 255 001e 00BF     		.section	.text.VectorD8,"ax",%progbits
+ 256              		.align	2
+ 257              		.p2align 4,,15
+ 258              		.global	VectorD8
+ 259              		.thumb
+ 260              		.thumb_func
+ 261              		.type	VectorD8, %function
+ 262              	VectorD8:
+ 263              		@ args = 0, pretend = 0, frame = 0
+ 264              		@ frame_needed = 0, uses_anonymous_args = 0
+ 265 0000 08B5     		push	{r3, lr}
+ 266 0002 FFF7FEFF 		bl	dbg_check_enter_isr
+ 267 0006 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 268 000a C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 269 000e FFF7FEFF 		bl	serve_interrupt
+ 270 0012 FFF7FEFF 		bl	dbg_check_leave_isr
+ 271 0016 BDE80840 		pop	{r3, lr}
+ 272 001a FFF7FEBF 		b	_port_irq_epilogue
+ 273              		.size	VectorD8, .-VectorD8
+ 274 001e 00BF     		.section	.text.VectorDC,"ax",%progbits
+ 275              		.align	2
+ 276              		.p2align 4,,15
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s 			page 6
+
+
+ 277              		.global	VectorDC
+ 278              		.thumb
+ 279              		.thumb_func
+ 280              		.type	VectorDC, %function
+ 281              	VectorDC:
+ 282              		@ args = 0, pretend = 0, frame = 0
+ 283              		@ frame_needed = 0, uses_anonymous_args = 0
+ 284 0000 08B5     		push	{r3, lr}
+ 285 0002 FFF7FEFF 		bl	dbg_check_enter_isr
+ 286 0006 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 287 000a C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 288 000e FFF7FEFF 		bl	serve_interrupt
+ 289 0012 FFF7FEFF 		bl	dbg_check_leave_isr
+ 290 0016 BDE80840 		pop	{r3, lr}
+ 291 001a FFF7FEBF 		b	_port_irq_epilogue
+ 292              		.size	VectorDC, .-VectorDC
+ 293 001e 00BF     		.section	.text.sd_lld_init,"ax",%progbits
+ 294              		.align	2
+ 295              		.p2align 4,,15
+ 296              		.global	sd_lld_init
+ 297              		.thumb
+ 298              		.thumb_func
+ 299              		.type	sd_lld_init, %function
+ 300              	sd_lld_init:
+ 301              		@ args = 0, pretend = 0, frame = 0
+ 302              		@ frame_needed = 0, uses_anonymous_args = 0
+ 303 0000 70B5     		push	{r4, r5, r6, lr}
+ 304 0002 40F20006 		movw	r6, #:lower16:.LANCHOR0
+ 305 0006 C0F20006 		movt	r6, #:upper16:.LANCHOR0
+ 306 000a 40F20002 		movw	r2, #:lower16:notify1
+ 307 000e 3046     		mov	r0, r6
+ 308 0010 C0F20002 		movt	r2, #:upper16:notify1
+ 309 0014 0021     		movs	r1, #0
+ 310 0016 40F20005 		movw	r5, #:lower16:.LANCHOR1
+ 311 001a FFF7FEFF 		bl	sdObjectInit
+ 312 001e C0F20005 		movt	r5, #:upper16:.LANCHOR1
+ 313 0022 4FF48053 		mov	r3, #4096
+ 314 0026 40F20002 		movw	r2, #:lower16:notify2
+ 315 002a C4F20103 		movt	r3, 16385
+ 316 002e 2846     		mov	r0, r5
+ 317 0030 C0F20002 		movt	r2, #:upper16:notify2
+ 318 0034 0021     		movs	r1, #0
+ 319 0036 40F20004 		movw	r4, #:lower16:.LANCHOR2
+ 320 003a 7367     		str	r3, [r6, #116]
+ 321 003c C0F20004 		movt	r4, #:upper16:.LANCHOR2
+ 322 0040 FFF7FEFF 		bl	sdObjectInit
+ 323 0044 4FF48843 		mov	r3, #17408
+ 324 0048 40F20002 		movw	r2, #:lower16:notify3
+ 325 004c C4F20003 		movt	r3, 16384
+ 326 0050 2046     		mov	r0, r4
+ 327 0052 C0F20002 		movt	r2, #:upper16:notify3
+ 328 0056 0021     		movs	r1, #0
+ 329 0058 6B67     		str	r3, [r5, #116]
+ 330 005a FFF7FEFF 		bl	sdObjectInit
+ 331 005e 4FF49043 		mov	r3, #18432
+ 332 0062 C4F20003 		movt	r3, 16384
+ 333 0066 6367     		str	r3, [r4, #116]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s 			page 7
+
+
+ 334 0068 70BD     		pop	{r4, r5, r6, pc}
+ 335              		.size	sd_lld_init, .-sd_lld_init
+ 336 006a 00BFAFF3 		.section	.text.sd_lld_start,"ax",%progbits
+ 336      0080
+ 337              		.align	2
+ 338              		.p2align 4,,15
+ 339              		.global	sd_lld_start
+ 340              		.thumb
+ 341              		.thumb_func
+ 342              		.type	sd_lld_start, %function
+ 343              	sd_lld_start:
+ 344              		@ args = 0, pretend = 0, frame = 0
+ 345              		@ frame_needed = 0, uses_anonymous_args = 0
+ 346 0000 38B5     		push	{r3, r4, r5, lr}
+ 347 0002 40F20004 		movw	r4, #:lower16:.LANCHOR3
+ 348 0006 037A     		ldrb	r3, [r0, #8]	@ zero_extendqisi2
+ 349 0008 C0F20004 		movt	r4, #:upper16:.LANCHOR3
+ 350 000c 0029     		cmp	r1, #0
+ 351 000e 18BF     		it	ne
+ 352 0010 0C46     		movne	r4, r1
+ 353 0012 012B     		cmp	r3, #1
+ 354 0014 0546     		mov	r5, r0
+ 355 0016 31D0     		beq	.L73
+ 356              	.L67:
+ 357 0018 6B6F     		ldr	r3, [r5, #116]
+ 358 001a 4FF4A051 		mov	r1, #5120
+ 359 001e 4FF48052 		mov	r2, #4096
+ 360 0022 C4F20102 		movt	r2, 16385
+ 361 0026 C4F20101 		movt	r1, 16385
+ 362 002a 9342     		cmp	r3, r2
+ 363 002c 18BF     		it	ne
+ 364 002e 8B42     		cmpne	r3, r1
+ 365 0030 0BBF     		itete	eq
+ 366 0032 2168     		ldreq	r1, [r4]
+ 367 0034 2168     		ldrne	r1, [r4]
+ 368 0036 4FF43D42 		moveq	r2, #48384
+ 369 003a 4DF68062 		movwne	r2, #56960
+ 370 003e 0CBF     		ite	eq
+ 371 0040 C0F20152 		movteq	r2, 1281
+ 372 0044 C0F28022 		movtne	r2, 640
+ 373 0048 B2FBF1F2 		udiv	r2, r2, r1
+ 374 004c 92B2     		uxth	r2, r2
+ 375 004e 1A81     		strh	r2, [r3, #8]	@ movhi
+ 376 0050 A288     		ldrh	r2, [r4, #4]
+ 377 0052 E188     		ldrh	r1, [r4, #6]
+ 378 0054 2089     		ldrh	r0, [r4, #8]
+ 379 0056 42F40452 		orr	r2, r2, #8448
+ 380 005a 41F04004 		orr	r4, r1, #64
+ 381 005e 42F02C02 		orr	r2, r2, #44
+ 382 0062 40F00100 		orr	r0, r0, #1
+ 383 0066 92B2     		uxth	r2, r2
+ 384 0068 A4B2     		uxth	r4, r4
+ 385 006a 80B2     		uxth	r0, r0
+ 386 006c 0021     		movs	r1, #0
+ 387 006e 1C82     		strh	r4, [r3, #16]	@ movhi
+ 388 0070 9882     		strh	r0, [r3, #20]	@ movhi
+ 389 0072 9A81     		strh	r2, [r3, #12]	@ movhi
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s 			page 8
+
+
+ 390 0074 1980     		strh	r1, [r3]	@ movhi
+ 391 0076 1A88     		ldrh	r2, [r3]
+ 392 0078 9B88     		ldrh	r3, [r3, #4]
+ 393 007a 38BD     		pop	{r3, r4, r5, pc}
+ 394              	.L73:
+ 395 007c 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 396 0080 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 397 0084 9842     		cmp	r0, r3
+ 398 0086 18D0     		beq	.L74
+ 399 0088 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 400 008c C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ 401 0090 9842     		cmp	r0, r3
+ 402 0092 1FD0     		beq	.L75
+ 403 0094 40F20003 		movw	r3, #:lower16:.LANCHOR2
+ 404 0098 C0F20003 		movt	r3, #:upper16:.LANCHOR2
+ 405 009c 9842     		cmp	r0, r3
+ 406 009e BBD1     		bne	.L67
+ 407 00a0 4FF46053 		mov	r3, #14336
+ 408 00a4 C4F20203 		movt	r3, 16386
+ 409 00a8 2720     		movs	r0, #39
+ 410 00aa 1A6C     		ldr	r2, [r3, #64]
+ 411 00ac 42F48022 		orr	r2, r2, #262144
+ 412 00b0 1A64     		str	r2, [r3, #64]
+ 413 00b2 C021     		movs	r1, #192
+ 414 00b4 FFF7FEFF 		bl	nvicEnableVector
+ 415 00b8 AEE7     		b	.L67
+ 416              	.L74:
+ 417 00ba 4FF46053 		mov	r3, #14336
+ 418 00be C4F20203 		movt	r3, 16386
+ 419 00c2 2520     		movs	r0, #37
+ 420 00c4 5A6C     		ldr	r2, [r3, #68]
+ 421 00c6 42F01002 		orr	r2, r2, #16
+ 422 00ca 5A64     		str	r2, [r3, #68]
+ 423 00cc C021     		movs	r1, #192
+ 424 00ce FFF7FEFF 		bl	nvicEnableVector
+ 425 00d2 A1E7     		b	.L67
+ 426              	.L75:
+ 427 00d4 4FF46053 		mov	r3, #14336
+ 428 00d8 C4F20203 		movt	r3, 16386
+ 429 00dc 2620     		movs	r0, #38
+ 430 00de 1A6C     		ldr	r2, [r3, #64]
+ 431 00e0 42F40032 		orr	r2, r2, #131072
+ 432 00e4 1A64     		str	r2, [r3, #64]
+ 433 00e6 C021     		movs	r1, #192
+ 434 00e8 FFF7FEFF 		bl	nvicEnableVector
+ 435 00ec 94E7     		b	.L67
+ 436              		.size	sd_lld_start, .-sd_lld_start
+ 437 00ee 00BF     		.section	.text.sd_lld_stop,"ax",%progbits
+ 438              		.align	2
+ 439              		.p2align 4,,15
+ 440              		.global	sd_lld_stop
+ 441              		.thumb
+ 442              		.thumb_func
+ 443              		.type	sd_lld_stop, %function
+ 444              	sd_lld_stop:
+ 445              		@ args = 0, pretend = 0, frame = 0
+ 446              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s 			page 9
+
+
+ 447              		@ link register save eliminated.
+ 448 0000 037A     		ldrb	r3, [r0, #8]	@ zero_extendqisi2
+ 449 0002 022B     		cmp	r3, #2
+ 450 0004 00D0     		beq	.L82
+ 451              	.L76:
+ 452 0006 7047     		bx	lr
+ 453              	.L82:
+ 454 0008 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 455 000c 426F     		ldr	r2, [r0, #116]
+ 456 000e C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 457 0012 0021     		movs	r1, #0
+ 458 0014 9842     		cmp	r0, r3
+ 459 0016 9181     		strh	r1, [r2, #12]	@ movhi
+ 460 0018 1182     		strh	r1, [r2, #16]	@ movhi
+ 461 001a 9182     		strh	r1, [r2, #20]	@ movhi
+ 462 001c 16D0     		beq	.L83
+ 463 001e 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 464 0022 C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ 465 0026 9842     		cmp	r0, r3
+ 466 0028 1BD0     		beq	.L84
+ 467 002a 40F20003 		movw	r3, #:lower16:.LANCHOR2
+ 468 002e C0F20003 		movt	r3, #:upper16:.LANCHOR2
+ 469 0032 9842     		cmp	r0, r3
+ 470 0034 E7D1     		bne	.L76
+ 471 0036 4FF46053 		mov	r3, #14336
+ 472 003a C4F20203 		movt	r3, 16386
+ 473 003e 2720     		movs	r0, #39
+ 474 0040 1A6C     		ldr	r2, [r3, #64]
+ 475 0042 22F48022 		bic	r2, r2, #262144
+ 476 0046 1A64     		str	r2, [r3, #64]
+ 477 0048 FFF7FEBF 		b	nvicDisableVector
+ 478              	.L83:
+ 479 004c 4FF46053 		mov	r3, #14336
+ 480 0050 C4F20203 		movt	r3, 16386
+ 481 0054 2520     		movs	r0, #37
+ 482 0056 5A6C     		ldr	r2, [r3, #68]
+ 483 0058 22F01002 		bic	r2, r2, #16
+ 484 005c 5A64     		str	r2, [r3, #68]
+ 485 005e FFF7FEBF 		b	nvicDisableVector
+ 486              	.L84:
+ 487 0062 4FF46053 		mov	r3, #14336
+ 488 0066 C4F20203 		movt	r3, 16386
+ 489 006a 2620     		movs	r0, #38
+ 490 006c 1A6C     		ldr	r2, [r3, #64]
+ 491 006e 22F40032 		bic	r2, r2, #131072
+ 492 0072 1A64     		str	r2, [r3, #64]
+ 493 0074 FFF7FEBF 		b	nvicDisableVector
+ 494              		.size	sd_lld_stop, .-sd_lld_stop
+ 495              		.global	SD3
+ 496              		.global	SD2
+ 497              		.global	SD1
+ 498 0078 AFF30080 		.section	.rodata.default_config,"a",%progbits
+ 498      AFF30080 
+ 499              		.align	2
+ 500              		.set	.LANCHOR3,. + 0
+ 501              		.type	default_config, %object
+ 502              		.size	default_config, 12
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s 			page 10
+
+
+ 503              	default_config:
+ 504 0000 00960000 		.word	38400
+ 505 0004 0000     		.short	0
+ 506 0006 0040     		.short	16384
+ 507 0008 0000     		.short	0
+ 508 000a 0000     		.space	2
+ 509              		.section	.bss.SD1,"aw",%nobits
+ 510              		.align	2
+ 511              		.set	.LANCHOR0,. + 0
+ 512              		.type	SD1, %object
+ 513              		.size	SD1, 120
+ 514              	SD1:
+ 515 0000 00000000 		.space	120
+ 515      00000000 
+ 515      00000000 
+ 515      00000000 
+ 515      00000000 
+ 516              		.section	.bss.SD2,"aw",%nobits
+ 517              		.align	2
+ 518              		.set	.LANCHOR1,. + 0
+ 519              		.type	SD2, %object
+ 520              		.size	SD2, 120
+ 521              	SD2:
+ 522 0000 00000000 		.space	120
+ 522      00000000 
+ 522      00000000 
+ 522      00000000 
+ 522      00000000 
+ 523              		.section	.bss.SD3,"aw",%nobits
+ 524              		.align	2
+ 525              		.set	.LANCHOR2,. + 0
+ 526              		.type	SD3, %object
+ 527              		.size	SD3, 120
+ 528              	SD3:
+ 529 0000 00000000 		.space	120
+ 529      00000000 
+ 529      00000000 
+ 529      00000000 
+ 529      00000000 
+ 530              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s 			page 11
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 serial_lld.c
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:17     .text.notify1:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:22     .text.notify1:00000000 notify1
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:35     .text.notify2:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:40     .text.notify2:00000000 notify2
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:53     .text.notify3:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:58     .text.notify3:00000000 notify3
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:71     .text.serve_interrupt:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:76     .text.serve_interrupt:00000000 serve_interrupt
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:237    .text.VectorD4:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:243    .text.VectorD4:00000000 VectorD4
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:511    .bss.SD1:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:256    .text.VectorD8:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:262    .text.VectorD8:00000000 VectorD8
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:518    .bss.SD2:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:275    .text.VectorDC:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:281    .text.VectorDC:00000000 VectorDC
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:525    .bss.SD3:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:294    .text.sd_lld_init:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:300    .text.sd_lld_init:00000000 sd_lld_init
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:337    .text.sd_lld_start:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:343    .text.sd_lld_start:00000000 sd_lld_start
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:500    .rodata.default_config:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:438    .text.sd_lld_stop:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:444    .text.sd_lld_stop:00000000 sd_lld_stop
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:528    .bss.SD3:00000000 SD3
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:521    .bss.SD2:00000000 SD2
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:514    .bss.SD1:00000000 SD1
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:499    .rodata.default_config:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:503    .rodata.default_config:00000000 default_config
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:510    .bss.SD1:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:517    .bss.SD2:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccVh7yPJ.s:524    .bss.SD3:00000000 $d
+
+UNDEFINED SYMBOLS
+dbg_check_lock_from_isr
+chEvtBroadcastFlagsI
+sdIncomingDataI
+dbg_check_unlock_from_isr
+chOQGetI
+dbg_check_enter_isr
+dbg_check_leave_isr
+_port_irq_epilogue
+sdObjectInit
+nvicEnableVector
+nvicDisableVector

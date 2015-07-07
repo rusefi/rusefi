@@ -56,7 +56,7 @@ public class MessagesPanel {
 
         buttonPanel.add(resetButton);
         buttonPanel.add(pauseButton);
-        anyCommand = new AnyCommand(config, listenToCommands);
+        anyCommand = new AnyCommand(config, listenToCommands, false);
         buttonPanel.add(anyCommand.getContent());
     }
 

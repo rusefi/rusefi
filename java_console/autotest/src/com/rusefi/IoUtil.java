@@ -20,6 +20,8 @@ import static com.rusefi.waves.EngineReport.isCloseEnough;
  */
 public class IoUtil {
 
+    public static final String RESET_ENGINE_CHART = "reset_engine_chart";
+
     /**
      * Send a command and wait for the confirmation
      *
@@ -85,7 +87,7 @@ public class IoUtil {
 
         if (!isCloseEnough(rpm, actualRpm))
             throw new IllegalStateException("rpm change did not happen: " + rpm + ", actual " + actualRpm);
-        sendCommand("reset_wave_chart");
+        sendCommand(RESET_ENGINE_CHART);
     }
 
     static void waitForFirstResponse() throws InterruptedException {

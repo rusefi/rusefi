@@ -1,0 +1,117 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccqivHyw.s 			page 1
+
+
+   1              		.file	"trigger_emulator.cpp"
+   2              		.section .rdata,"dr"
+   3              	LC0:
+   4 0000 456D756C 		.ascii "Emulating %s\15\12\0"
+   4      6174696E 
+   4      67202573 
+   4      0D0A00
+   5 000f 00       		.section	.text$_Z19initTriggerEmulatorP7LoggingP6Engine,"x"
+   6              		.p2align 4,,15
+   7              		.globl	__Z19initTriggerEmulatorP7LoggingP6Engine
+   8              		.def	__Z19initTriggerEmulatorP7LoggingP6Engine;	.scl	2;	.type	32;	.endef
+   9              	__Z19initTriggerEmulatorP7LoggingP6Engine:
+  10              	LFB85:
+  11              		.cfi_startproc
+  12 0000 83EC1C   		subl	$28, %esp
+  13              		.cfi_def_cfa_offset 32
+  14 0003 895C2414 		movl	%ebx, 20(%esp)
+  15              		.cfi_offset 3, -12
+  16 0007 8B5C2424 		movl	36(%esp), %ebx
+  17 000b 89742418 		movl	%esi, 24(%esp)
+  18              		.cfi_offset 6, -8
+  19 000f 8B742420 		movl	32(%esp), %esi
+  20 0013 8B4324   		movl	36(%ebx), %eax
+  21 0016 8B00     		movl	(%eax), %eax
+  22 0018 890424   		movl	%eax, (%esp)
+  23 001b E8000000 		call	__Z20getConfigurationName13engine_type_e
+  23      00
+  24 0020 C7042400 		movl	$LC0, (%esp)
+  24      000000
+  25 0027 89442404 		movl	%eax, 4(%esp)
+  26 002b E8000000 		call	__Z5printPKcz
+  26      00
+  27 0030 895C2424 		movl	%ebx, 36(%esp)
+  28 0034 8B5C2414 		movl	20(%esp), %ebx
+  29 0038 89742420 		movl	%esi, 32(%esp)
+  30 003c 8B742418 		movl	24(%esp), %esi
+  31 0040 C7050000 		movl	$__ZL15emulatorOutputs, _triggerSignal
+  31      00000000 
+  31      0000
+  32 004a C7050400 		movl	$__ZL15emulatorOutputs+8, _triggerSignal+4
+  32      00000800 
+  32      0000
+  33 0054 C7050800 		movl	$__ZL15emulatorOutputs+16, _triggerSignal+8
+  33      00001000 
+  33      0000
+  34 005e 83C41C   		addl	$28, %esp
+  35              		.cfi_restore 6
+  36              		.cfi_restore 3
+  37              		.cfi_def_cfa_offset 4
+  38 0061 E9000000 		jmp	__Z24initTriggerEmulatorLogicP7LoggingP6Engine
+  38      00
+  39              		.cfi_endproc
+  40              	LFE85:
+  41 0066 90909090 		.section	.text.startup._GLOBAL__sub_I__Z19initTriggerEmulatorP7LoggingP6Engine,"x"
+  41      90909090 
+  41      9090
+  42              		.p2align 4,,15
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccqivHyw.s 			page 2
+
+
+  43              		.def	__GLOBAL__sub_I__Z19initTriggerEmulatorP7LoggingP6Engine;	.scl	3;	.type	32;	.endef
+  44              	__GLOBAL__sub_I__Z19initTriggerEmulatorP7LoggingP6Engine:
+  45              	LFB87:
+  46              		.cfi_startproc
+  47 0000 83EC0C   		subl	$12, %esp
+  48              		.cfi_def_cfa_offset 16
+  49 0003 B9000000 		movl	$__ZL15emulatorOutputs, %ecx
+  49      00
+  50 0008 E8000000 		call	__ZN9OutputPinC1Ev
+  50      00
+  51 000d B9080000 		movl	$__ZL15emulatorOutputs+8, %ecx
+  51      00
+  52 0012 E8000000 		call	__ZN9OutputPinC1Ev
+  52      00
+  53 0017 B9100000 		movl	$__ZL15emulatorOutputs+16, %ecx
+  53      00
+  54 001c 83C40C   		addl	$12, %esp
+  55              		.cfi_def_cfa_offset 4
+  56 001f E9000000 		jmp	__ZN9OutputPinC1Ev
+  56      00
+  57              		.cfi_endproc
+  58              	LFE87:
+  59 0024 90909090 		.section	.ctors,"w"
+  59      90909090 
+  59      90909090 
+  60              		.align 4
+  61 0000 00000000 		.long	__GLOBAL__sub_I__Z19initTriggerEmulatorP7LoggingP6Engine
+  62              		.section	.data$_ZL15emulatorOutputs,"w"
+  63              		.align 4
+  64              	__ZL15emulatorOutputs:
+  65 0000 00000000 		.space 24
+  65      00000000 
+  65      00000000 
+  65      00000000 
+  65      00000000 
+  66              		.def	__Z20getConfigurationName13engine_type_e;	.scl	2;	.type	32;	.endef
+  67              		.def	__Z5printPKcz;	.scl	2;	.type	32;	.endef
+  68              		.def	__Z24initTriggerEmulatorLogicP7LoggingP6Engine;	.scl	2;	.type	32;	.endef
+  69              		.def	__ZN9OutputPinC1Ev;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccqivHyw.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 trigger_emulator.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccqivHyw.s:9      .text$_Z19initTriggerEmulatorP7LoggingP6Engine:00000000 __Z19initTriggerEmulatorP7LoggingP6Engine
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccqivHyw.s:64     .data$_ZL15emulatorOutputs:00000000 __ZL15emulatorOutputs
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccqivHyw.s:44     .text.startup._GLOBAL__sub_I__Z19initTriggerEmulatorP7LoggingP6Engine:00000000 __GLOBAL__sub_I__Z19initTriggerEmulatorP7LoggingP6Engine
+
+UNDEFINED SYMBOLS
+_triggerSignal
+__Z20getConfigurationName13engine_type_e
+__Z5printPKcz
+__Z24initTriggerEmulatorLogicP7LoggingP6Engine
+__ZN9OutputPinC1Ev

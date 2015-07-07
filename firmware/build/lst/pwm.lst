@@ -1,0 +1,449 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"pwm.c"
+  16              		.section	.text.pwmInit,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	pwmInit
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	pwmInit, %function
+  23              	pwmInit:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 FFF7FEBF 		b	pwm_lld_init
+  28              		.size	pwmInit, .-pwmInit
+  29 0004 AFF30080 		.section	.text.pwmObjectInit,"ax",%progbits
+  29      AFF30080 
+  29      AFF30080 
+  30              		.align	2
+  31              		.p2align 4,,15
+  32              		.global	pwmObjectInit
+  33              		.thumb
+  34              		.thumb_func
+  35              		.type	pwmObjectInit, %function
+  36              	pwmObjectInit:
+  37              		@ args = 0, pretend = 0, frame = 0
+  38              		@ frame_needed = 0, uses_anonymous_args = 0
+  39              		@ link register save eliminated.
+  40 0000 0122     		movs	r2, #1
+  41 0002 0023     		movs	r3, #0
+  42 0004 0270     		strb	r2, [r0]
+  43 0006 4360     		str	r3, [r0, #4]
+  44 0008 7047     		bx	lr
+  45              		.size	pwmObjectInit, .-pwmObjectInit
+  46 000a 00BFAFF3 		.section	.text.pwmStart,"ax",%progbits
+  46      0080
+  47              		.align	2
+  48              		.p2align 4,,15
+  49              		.global	pwmStart
+  50              		.thumb
+  51              		.thumb_func
+  52              		.type	pwmStart, %function
+  53              	pwmStart:
+  54              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s 			page 2
+
+
+  55              		@ frame_needed = 0, uses_anonymous_args = 0
+  56 0000 0029     		cmp	r1, #0
+  57 0002 18BF     		it	ne
+  58 0004 0028     		cmpne	r0, #0
+  59 0006 38B5     		push	{r3, r4, r5, lr}
+  60 0008 0446     		mov	r4, r0
+  61 000a 0D46     		mov	r5, r1
+  62 000c 1DD0     		beq	.L10
+  63              	.L4:
+  64 000e 2023     		movs	r3, #32
+  65              	@ 103 "chibios/os/hal/src/pwm.c" 1
+  66 0010 83F31188 		msr     BASEPRI, r3
+  67              	@ 0 "" 2
+  68              		.thumb
+  69 0014 FFF7FEFF 		bl	dbg_check_lock
+  70 0018 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+  71 001a 013B     		subs	r3, r3, #1
+  72 001c DBB2     		uxtb	r3, r3
+  73 001e 012B     		cmp	r3, #1
+  74 0020 05D9     		bls	.L5
+  75 0022 40F20000 		movw	r0, #:lower16:.LC2
+  76 0026 C0F20000 		movt	r0, #:upper16:.LC2
+  77 002a FFF7FEFF 		bl	chDbgPanic
+  78              	.L5:
+  79 002e AB88     		ldrh	r3, [r5, #4]
+  80 0030 6560     		str	r5, [r4, #4]
+  81 0032 2381     		strh	r3, [r4, #8]	@ movhi
+  82 0034 2046     		mov	r0, r4
+  83 0036 FFF7FEFF 		bl	pwm_lld_start
+  84 003a 0223     		movs	r3, #2
+  85 003c 2370     		strb	r3, [r4]
+  86 003e FFF7FEFF 		bl	dbg_check_unlock
+  87 0042 0023     		movs	r3, #0
+  88              	@ 110 "chibios/os/hal/src/pwm.c" 1
+  89 0044 83F31188 		msr     BASEPRI, r3
+  90              	@ 0 "" 2
+  91              		.thumb
+  92 0048 38BD     		pop	{r3, r4, r5, pc}
+  93              	.L10:
+  94 004a 40F20000 		movw	r0, #:lower16:.LC0
+  95 004e 40F20001 		movw	r1, #:lower16:.LC1
+  96 0052 C0F20000 		movt	r0, #:upper16:.LC0
+  97 0056 C0F20001 		movt	r1, #:upper16:.LC1
+  98 005a 6522     		movs	r2, #101
+  99 005c FFF7FEFF 		bl	chDbgPanic3
+ 100 0060 D5E7     		b	.L4
+ 101              		.size	pwmStart, .-pwmStart
+ 102 0062 00BFAFF3 		.section	.text.pwmStop,"ax",%progbits
+ 102      0080AFF3 
+ 102      0080AFF3 
+ 102      0080
+ 103              		.align	2
+ 104              		.p2align 4,,15
+ 105              		.global	pwmStop
+ 106              		.thumb
+ 107              		.thumb_func
+ 108              		.type	pwmStop, %function
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s 			page 3
+
+
+ 109              	pwmStop:
+ 110              		@ args = 0, pretend = 0, frame = 0
+ 111              		@ frame_needed = 0, uses_anonymous_args = 0
+ 112 0000 10B5     		push	{r4, lr}
+ 113 0002 0446     		mov	r4, r0
+ 114 0004 D0B1     		cbz	r0, .L14
+ 115              	.L12:
+ 116 0006 2023     		movs	r3, #32
+ 117              	@ 124 "chibios/os/hal/src/pwm.c" 1
+ 118 0008 83F31188 		msr     BASEPRI, r3
+ 119              	@ 0 "" 2
+ 120              		.thumb
+ 121 000c FFF7FEFF 		bl	dbg_check_lock
+ 122 0010 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 123 0012 013B     		subs	r3, r3, #1
+ 124 0014 DBB2     		uxtb	r3, r3
+ 125 0016 012B     		cmp	r3, #1
+ 126 0018 05D9     		bls	.L13
+ 127 001a 40F20000 		movw	r0, #:lower16:.LC4
+ 128 001e C0F20000 		movt	r0, #:upper16:.LC4
+ 129 0022 FFF7FEFF 		bl	chDbgPanic
+ 130              	.L13:
+ 131 0026 2046     		mov	r0, r4
+ 132 0028 FFF7FEFF 		bl	pwm_lld_stop
+ 133 002c 0123     		movs	r3, #1
+ 134 002e 2370     		strb	r3, [r4]
+ 135 0030 FFF7FEFF 		bl	dbg_check_unlock
+ 136 0034 0023     		movs	r3, #0
+ 137              	@ 129 "chibios/os/hal/src/pwm.c" 1
+ 138 0036 83F31188 		msr     BASEPRI, r3
+ 139              	@ 0 "" 2
+ 140              		.thumb
+ 141 003a 10BD     		pop	{r4, pc}
+ 142              	.L14:
+ 143 003c 40F20000 		movw	r0, #:lower16:.LC3
+ 144 0040 40F20001 		movw	r1, #:lower16:.LC1
+ 145 0044 C0F20000 		movt	r0, #:upper16:.LC3
+ 146 0048 C0F20001 		movt	r1, #:upper16:.LC1
+ 147 004c 7A22     		movs	r2, #122
+ 148 004e FFF7FEFF 		bl	chDbgPanic3
+ 149 0052 D8E7     		b	.L12
+ 150              		.size	pwmStop, .-pwmStop
+ 151 0054 AFF30080 		.section	.text.pwmChangePeriod,"ax",%progbits
+ 151      AFF30080 
+ 151      AFF30080 
+ 152              		.align	2
+ 153              		.p2align 4,,15
+ 154              		.global	pwmChangePeriod
+ 155              		.thumb
+ 156              		.thumb_func
+ 157              		.type	pwmChangePeriod, %function
+ 158              	pwmChangePeriod:
+ 159              		@ args = 0, pretend = 0, frame = 0
+ 160              		@ frame_needed = 0, uses_anonymous_args = 0
+ 161 0000 38B5     		push	{r3, r4, r5, lr}
+ 162 0002 0446     		mov	r4, r0
+ 163 0004 0D46     		mov	r5, r1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s 			page 4
+
+
+ 164 0006 C0B1     		cbz	r0, .L21
+ 165              	.L16:
+ 166 0008 2023     		movs	r3, #32
+ 167              	@ 151 "chibios/os/hal/src/pwm.c" 1
+ 168 000a 83F31188 		msr     BASEPRI, r3
+ 169              	@ 0 "" 2
+ 170              		.thumb
+ 171 000e FFF7FEFF 		bl	dbg_check_lock
+ 172 0012 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 173 0014 022B     		cmp	r3, #2
+ 174 0016 05D0     		beq	.L17
+ 175 0018 40F20000 		movw	r0, #:lower16:.LC6
+ 176 001c C0F20000 		movt	r0, #:upper16:.LC6
+ 177 0020 FFF7FEFF 		bl	chDbgPanic
+ 178              	.L17:
+ 179 0024 2369     		ldr	r3, [r4, #16]
+ 180 0026 2581     		strh	r5, [r4, #8]	@ movhi
+ 181 0028 6A1E     		subs	r2, r5, #1
+ 182 002a 92B2     		uxth	r2, r2
+ 183 002c DA62     		str	r2, [r3, #44]
+ 184 002e FFF7FEFF 		bl	dbg_check_unlock
+ 185 0032 0023     		movs	r3, #0
+ 186              	@ 155 "chibios/os/hal/src/pwm.c" 1
+ 187 0034 83F31188 		msr     BASEPRI, r3
+ 188              	@ 0 "" 2
+ 189              		.thumb
+ 190 0038 38BD     		pop	{r3, r4, r5, pc}
+ 191              	.L21:
+ 192 003a 40F20000 		movw	r0, #:lower16:.LC5
+ 193 003e 40F20001 		movw	r1, #:lower16:.LC1
+ 194 0042 C0F20000 		movt	r0, #:upper16:.LC5
+ 195 0046 C0F20001 		movt	r1, #:upper16:.LC1
+ 196 004a 9522     		movs	r2, #149
+ 197 004c FFF7FEFF 		bl	chDbgPanic3
+ 198 0050 DAE7     		b	.L16
+ 199              		.size	pwmChangePeriod, .-pwmChangePeriod
+ 200 0052 00BFAFF3 		.section	.text.pwmEnableChannel,"ax",%progbits
+ 200      0080AFF3 
+ 200      0080AFF3 
+ 200      0080
+ 201              		.align	2
+ 202              		.p2align 4,,15
+ 203              		.global	pwmEnableChannel
+ 204              		.thumb
+ 205              		.thumb_func
+ 206              		.type	pwmEnableChannel, %function
+ 207              	pwmEnableChannel:
+ 208              		@ args = 0, pretend = 0, frame = 0
+ 209              		@ frame_needed = 0, uses_anonymous_args = 0
+ 210 0000 0329     		cmp	r1, #3
+ 211 0002 94BF     		ite	ls
+ 212 0004 0023     		movls	r3, #0
+ 213 0006 0123     		movhi	r3, #1
+ 214 0008 0028     		cmp	r0, #0
+ 215 000a 08BF     		it	eq
+ 216 000c 43F00103 		orreq	r3, r3, #1
+ 217 0010 70B5     		push	{r4, r5, r6, lr}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s 			page 5
+
+
+ 218 0012 0D46     		mov	r5, r1
+ 219 0014 0446     		mov	r4, r0
+ 220 0016 1646     		mov	r6, r2
+ 221 0018 C3B9     		cbnz	r3, .L31
+ 222              	.L23:
+ 223 001a 2023     		movs	r3, #32
+ 224              	@ 179 "chibios/os/hal/src/pwm.c" 1
+ 225 001c 83F31188 		msr     BASEPRI, r3
+ 226              	@ 0 "" 2
+ 227              		.thumb
+ 228 0020 FFF7FEFF 		bl	dbg_check_lock
+ 229 0024 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 230 0026 022B     		cmp	r3, #2
+ 231 0028 05D0     		beq	.L24
+ 232 002a 40F20000 		movw	r0, #:lower16:.LC8
+ 233 002e C0F20000 		movt	r0, #:upper16:.LC8
+ 234 0032 FFF7FEFF 		bl	chDbgPanic
+ 235              	.L24:
+ 236 0036 2046     		mov	r0, r4
+ 237 0038 2946     		mov	r1, r5
+ 238 003a 3246     		mov	r2, r6
+ 239 003c FFF7FEFF 		bl	pwm_lld_enable_channel
+ 240 0040 FFF7FEFF 		bl	dbg_check_unlock
+ 241 0044 0023     		movs	r3, #0
+ 242              	@ 183 "chibios/os/hal/src/pwm.c" 1
+ 243 0046 83F31188 		msr     BASEPRI, r3
+ 244              	@ 0 "" 2
+ 245              		.thumb
+ 246 004a 70BD     		pop	{r4, r5, r6, pc}
+ 247              	.L31:
+ 248 004c 40F20000 		movw	r0, #:lower16:.LC7
+ 249 0050 40F20001 		movw	r1, #:lower16:.LC1
+ 250 0054 C0F20000 		movt	r0, #:upper16:.LC7
+ 251 0058 C0F20001 		movt	r1, #:upper16:.LC1
+ 252 005c B122     		movs	r2, #177
+ 253 005e FFF7FEFF 		bl	chDbgPanic3
+ 254 0062 DAE7     		b	.L23
+ 255              		.size	pwmEnableChannel, .-pwmEnableChannel
+ 256 0064 AFF30080 		.section	.text.pwmDisableChannel,"ax",%progbits
+ 256      AFF30080 
+ 256      AFF30080 
+ 257              		.align	2
+ 258              		.p2align 4,,15
+ 259              		.global	pwmDisableChannel
+ 260              		.thumb
+ 261              		.thumb_func
+ 262              		.type	pwmDisableChannel, %function
+ 263              	pwmDisableChannel:
+ 264              		@ args = 0, pretend = 0, frame = 0
+ 265              		@ frame_needed = 0, uses_anonymous_args = 0
+ 266 0000 0329     		cmp	r1, #3
+ 267 0002 38B5     		push	{r3, r4, r5, lr}
+ 268 0004 94BF     		ite	ls
+ 269 0006 0023     		movls	r3, #0
+ 270 0008 0123     		movhi	r3, #1
+ 271 000a 0028     		cmp	r0, #0
+ 272 000c 08BF     		it	eq
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s 			page 6
+
+
+ 273 000e 43F00103 		orreq	r3, r3, #1
+ 274 0012 0D46     		mov	r5, r1
+ 275 0014 0446     		mov	r4, r0
+ 276 0016 BBB9     		cbnz	r3, .L41
+ 277              	.L33:
+ 278 0018 2023     		movs	r3, #32
+ 279              	@ 205 "chibios/os/hal/src/pwm.c" 1
+ 280 001a 83F31188 		msr     BASEPRI, r3
+ 281              	@ 0 "" 2
+ 282              		.thumb
+ 283 001e FFF7FEFF 		bl	dbg_check_lock
+ 284 0022 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 285 0024 022B     		cmp	r3, #2
+ 286 0026 05D0     		beq	.L34
+ 287 0028 40F20000 		movw	r0, #:lower16:.LC9
+ 288 002c C0F20000 		movt	r0, #:upper16:.LC9
+ 289 0030 FFF7FEFF 		bl	chDbgPanic
+ 290              	.L34:
+ 291 0034 2046     		mov	r0, r4
+ 292 0036 2946     		mov	r1, r5
+ 293 0038 FFF7FEFF 		bl	pwm_lld_disable_channel
+ 294 003c FFF7FEFF 		bl	dbg_check_unlock
+ 295 0040 0023     		movs	r3, #0
+ 296              	@ 209 "chibios/os/hal/src/pwm.c" 1
+ 297 0042 83F31188 		msr     BASEPRI, r3
+ 298              	@ 0 "" 2
+ 299              		.thumb
+ 300 0046 38BD     		pop	{r3, r4, r5, pc}
+ 301              	.L41:
+ 302 0048 40F20000 		movw	r0, #:lower16:.LC7
+ 303 004c 40F20001 		movw	r1, #:lower16:.LC1
+ 304 0050 C0F20000 		movt	r0, #:upper16:.LC7
+ 305 0054 C0F20001 		movt	r1, #:upper16:.LC1
+ 306 0058 CB22     		movs	r2, #203
+ 307 005a FFF7FEFF 		bl	chDbgPanic3
+ 308 005e DBE7     		b	.L33
+ 309              		.size	pwmDisableChannel, .-pwmDisableChannel
+ 310              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 311              		.align	2
+ 312              	.LC0:
+ 313 0000 2270776D 		.ascii	"\"pwmStart\"()\000"
+ 313      53746172 
+ 313      74222829 
+ 313      00
+ 314 000d 000000   		.space	3
+ 315              	.LC1:
+ 316 0010 63686962 		.ascii	"chibios/os/hal/src/pwm.c\000"
+ 316      696F732F 
+ 316      6F732F68 
+ 316      616C2F73 
+ 316      72632F70 
+ 317 0029 000000   		.space	3
+ 318              	.LC2:
+ 319 002c 70776D53 		.ascii	"pwmStart(), #1\000"
+ 319      74617274 
+ 319      28292C20 
+ 319      233100
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s 			page 7
+
+
+ 320 003b 00       		.space	1
+ 321              	.LC3:
+ 322 003c 2270776D 		.ascii	"\"pwmStop\"()\000"
+ 322      53746F70 
+ 322      22282900 
+ 323              	.LC4:
+ 324 0048 70776D53 		.ascii	"pwmStop(), #1\000"
+ 324      746F7028 
+ 324      292C2023 
+ 324      3100
+ 325 0056 0000     		.space	2
+ 326              	.LC5:
+ 327 0058 2270776D 		.ascii	"\"pwmChangePeriod\"()\000"
+ 327      4368616E 
+ 327      67655065 
+ 327      72696F64 
+ 327      22282900 
+ 328              	.LC6:
+ 329 006c 70776D43 		.ascii	"pwmChangePeriod(), #1\000"
+ 329      68616E67 
+ 329      65506572 
+ 329      696F6428 
+ 329      292C2023 
+ 330 0082 0000     		.space	2
+ 331              	.LC7:
+ 332 0084 2270776D 		.ascii	"\"pwmEnableChannel\"()\000"
+ 332      456E6162 
+ 332      6C654368 
+ 332      616E6E65 
+ 332      6C222829 
+ 333 0099 000000   		.space	3
+ 334              	.LC8:
+ 335 009c 70776D45 		.ascii	"pwmEnableChannel(), #1\000"
+ 335      6E61626C 
+ 335      65436861 
+ 335      6E6E656C 
+ 335      28292C20 
+ 336 00b3 00       		.space	1
+ 337              	.LC9:
+ 338 00b4 70776D44 		.ascii	"pwmDisableChannel(), #1\000"
+ 338      69736162 
+ 338      6C654368 
+ 338      616E6E65 
+ 338      6C28292C 
+ 339              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 pwm.c
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:17     .text.pwmInit:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:23     .text.pwmInit:00000000 pwmInit
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:30     .text.pwmObjectInit:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:36     .text.pwmObjectInit:00000000 pwmObjectInit
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:47     .text.pwmStart:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:53     .text.pwmStart:00000000 pwmStart
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:318    .rodata.str1.4:0000002c .LC2
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:312    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:315    .rodata.str1.4:00000010 .LC1
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:103    .text.pwmStop:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:109    .text.pwmStop:00000000 pwmStop
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:323    .rodata.str1.4:00000048 .LC4
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:321    .rodata.str1.4:0000003c .LC3
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:152    .text.pwmChangePeriod:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:158    .text.pwmChangePeriod:00000000 pwmChangePeriod
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:328    .rodata.str1.4:0000006c .LC6
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:326    .rodata.str1.4:00000058 .LC5
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:201    .text.pwmEnableChannel:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:207    .text.pwmEnableChannel:00000000 pwmEnableChannel
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:334    .rodata.str1.4:0000009c .LC8
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:331    .rodata.str1.4:00000084 .LC7
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:257    .text.pwmDisableChannel:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:263    .text.pwmDisableChannel:00000000 pwmDisableChannel
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:337    .rodata.str1.4:000000b4 .LC9
+C:\Users\pc\AppData\Local\Temp\ccmLJ9ga.s:311    .rodata.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+pwm_lld_init
+dbg_check_lock
+chDbgPanic
+pwm_lld_start
+dbg_check_unlock
+chDbgPanic3
+pwm_lld_stop
+pwm_lld_enable_channel
+pwm_lld_disable_channel

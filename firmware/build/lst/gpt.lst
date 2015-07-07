@@ -1,0 +1,620 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"gpt.c"
+  16              		.section	.text.gptInit,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	gptInit
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	gptInit, %function
+  23              	gptInit:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 FFF7FEBF 		b	gpt_lld_init
+  28              		.size	gptInit, .-gptInit
+  29 0004 AFF30080 		.section	.text.gptObjectInit,"ax",%progbits
+  29      AFF30080 
+  29      AFF30080 
+  30              		.align	2
+  31              		.p2align 4,,15
+  32              		.global	gptObjectInit
+  33              		.thumb
+  34              		.thumb_func
+  35              		.type	gptObjectInit, %function
+  36              	gptObjectInit:
+  37              		@ args = 0, pretend = 0, frame = 0
+  38              		@ frame_needed = 0, uses_anonymous_args = 0
+  39              		@ link register save eliminated.
+  40 0000 0122     		movs	r2, #1
+  41 0002 0023     		movs	r3, #0
+  42 0004 0270     		strb	r2, [r0]
+  43 0006 4360     		str	r3, [r0, #4]
+  44 0008 7047     		bx	lr
+  45              		.size	gptObjectInit, .-gptObjectInit
+  46 000a 00BFAFF3 		.section	.text.gptStart,"ax",%progbits
+  46      0080
+  47              		.align	2
+  48              		.p2align 4,,15
+  49              		.global	gptStart
+  50              		.thumb
+  51              		.thumb_func
+  52              		.type	gptStart, %function
+  53              	gptStart:
+  54              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s 			page 2
+
+
+  55              		@ frame_needed = 0, uses_anonymous_args = 0
+  56 0000 0029     		cmp	r1, #0
+  57 0002 18BF     		it	ne
+  58 0004 0028     		cmpne	r0, #0
+  59 0006 38B5     		push	{r3, r4, r5, lr}
+  60 0008 0446     		mov	r4, r0
+  61 000a 0D46     		mov	r5, r1
+  62 000c 1BD0     		beq	.L10
+  63              	.L4:
+  64 000e 2023     		movs	r3, #32
+  65              	@ 98 "chibios/os/hal/src/gpt.c" 1
+  66 0010 83F31188 		msr     BASEPRI, r3
+  67              	@ 0 "" 2
+  68              		.thumb
+  69 0014 FFF7FEFF 		bl	dbg_check_lock
+  70 0018 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+  71 001a 013B     		subs	r3, r3, #1
+  72 001c DBB2     		uxtb	r3, r3
+  73 001e 012B     		cmp	r3, #1
+  74 0020 05D9     		bls	.L5
+  75 0022 40F20000 		movw	r0, #:lower16:.LC2
+  76 0026 C0F20000 		movt	r0, #:upper16:.LC2
+  77 002a FFF7FEFF 		bl	chDbgPanic
+  78              	.L5:
+  79 002e 2046     		mov	r0, r4
+  80 0030 6560     		str	r5, [r4, #4]
+  81 0032 FFF7FEFF 		bl	gpt_lld_start
+  82 0036 0223     		movs	r3, #2
+  83 0038 2370     		strb	r3, [r4]
+  84 003a FFF7FEFF 		bl	dbg_check_unlock
+  85 003e 0023     		movs	r3, #0
+  86              	@ 104 "chibios/os/hal/src/gpt.c" 1
+  87 0040 83F31188 		msr     BASEPRI, r3
+  88              	@ 0 "" 2
+  89              		.thumb
+  90 0044 38BD     		pop	{r3, r4, r5, pc}
+  91              	.L10:
+  92 0046 40F20000 		movw	r0, #:lower16:.LC0
+  93 004a 40F20001 		movw	r1, #:lower16:.LC1
+  94 004e C0F20000 		movt	r0, #:upper16:.LC0
+  95 0052 C0F20001 		movt	r1, #:upper16:.LC1
+  96 0056 6022     		movs	r2, #96
+  97 0058 FFF7FEFF 		bl	chDbgPanic3
+  98 005c D7E7     		b	.L4
+  99              		.size	gptStart, .-gptStart
+ 100 005e 00BF     		.section	.text.gptStop,"ax",%progbits
+ 101              		.align	2
+ 102              		.p2align 4,,15
+ 103              		.global	gptStop
+ 104              		.thumb
+ 105              		.thumb_func
+ 106              		.type	gptStop, %function
+ 107              	gptStop:
+ 108              		@ args = 0, pretend = 0, frame = 0
+ 109              		@ frame_needed = 0, uses_anonymous_args = 0
+ 110 0000 10B5     		push	{r4, lr}
+ 111 0002 0446     		mov	r4, r0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s 			page 3
+
+
+ 112 0004 D0B1     		cbz	r0, .L14
+ 113              	.L12:
+ 114 0006 2023     		movs	r3, #32
+ 115              	@ 118 "chibios/os/hal/src/gpt.c" 1
+ 116 0008 83F31188 		msr     BASEPRI, r3
+ 117              	@ 0 "" 2
+ 118              		.thumb
+ 119 000c FFF7FEFF 		bl	dbg_check_lock
+ 120 0010 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 121 0012 013B     		subs	r3, r3, #1
+ 122 0014 DBB2     		uxtb	r3, r3
+ 123 0016 012B     		cmp	r3, #1
+ 124 0018 05D9     		bls	.L13
+ 125 001a 40F20000 		movw	r0, #:lower16:.LC4
+ 126 001e C0F20000 		movt	r0, #:upper16:.LC4
+ 127 0022 FFF7FEFF 		bl	chDbgPanic
+ 128              	.L13:
+ 129 0026 2046     		mov	r0, r4
+ 130 0028 FFF7FEFF 		bl	gpt_lld_stop
+ 131 002c 0123     		movs	r3, #1
+ 132 002e 2370     		strb	r3, [r4]
+ 133 0030 FFF7FEFF 		bl	dbg_check_unlock
+ 134 0034 0023     		movs	r3, #0
+ 135              	@ 123 "chibios/os/hal/src/gpt.c" 1
+ 136 0036 83F31188 		msr     BASEPRI, r3
+ 137              	@ 0 "" 2
+ 138              		.thumb
+ 139 003a 10BD     		pop	{r4, pc}
+ 140              	.L14:
+ 141 003c 40F20000 		movw	r0, #:lower16:.LC3
+ 142 0040 40F20001 		movw	r1, #:lower16:.LC1
+ 143 0044 C0F20000 		movt	r0, #:upper16:.LC3
+ 144 0048 C0F20001 		movt	r1, #:upper16:.LC1
+ 145 004c 7422     		movs	r2, #116
+ 146 004e FFF7FEFF 		bl	chDbgPanic3
+ 147 0052 D8E7     		b	.L12
+ 148              		.size	gptStop, .-gptStop
+ 149 0054 AFF30080 		.section	.text.gptChangeInterval,"ax",%progbits
+ 149      AFF30080 
+ 149      AFF30080 
+ 150              		.align	2
+ 151              		.p2align 4,,15
+ 152              		.global	gptChangeInterval
+ 153              		.thumb
+ 154              		.thumb_func
+ 155              		.type	gptChangeInterval, %function
+ 156              	gptChangeInterval:
+ 157              		@ args = 0, pretend = 0, frame = 0
+ 158              		@ frame_needed = 0, uses_anonymous_args = 0
+ 159 0000 38B5     		push	{r3, r4, r5, lr}
+ 160 0002 0446     		mov	r4, r0
+ 161 0004 0D46     		mov	r5, r1
+ 162 0006 B0B1     		cbz	r0, .L21
+ 163              	.L16:
+ 164 0008 2023     		movs	r3, #32
+ 165              	@ 143 "chibios/os/hal/src/gpt.c" 1
+ 166 000a 83F31188 		msr     BASEPRI, r3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s 			page 4
+
+
+ 167              	@ 0 "" 2
+ 168              		.thumb
+ 169 000e FFF7FEFF 		bl	dbg_check_lock
+ 170 0012 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 171 0014 032B     		cmp	r3, #3
+ 172 0016 05D0     		beq	.L17
+ 173 0018 40F20000 		movw	r0, #:lower16:.LC6
+ 174 001c C0F20000 		movt	r0, #:upper16:.LC6
+ 175 0020 FFF7FEFF 		bl	chDbgPanic
+ 176              	.L17:
+ 177 0024 E368     		ldr	r3, [r4, #12]
+ 178 0026 013D     		subs	r5, r5, #1
+ 179 0028 DD62     		str	r5, [r3, #44]
+ 180 002a FFF7FEFF 		bl	dbg_check_unlock
+ 181 002e 0023     		movs	r3, #0
+ 182              	@ 147 "chibios/os/hal/src/gpt.c" 1
+ 183 0030 83F31188 		msr     BASEPRI, r3
+ 184              	@ 0 "" 2
+ 185              		.thumb
+ 186 0034 38BD     		pop	{r3, r4, r5, pc}
+ 187              	.L21:
+ 188 0036 40F20000 		movw	r0, #:lower16:.LC5
+ 189 003a 40F20001 		movw	r1, #:lower16:.LC1
+ 190 003e C0F20000 		movt	r0, #:upper16:.LC5
+ 191 0042 C0F20001 		movt	r1, #:upper16:.LC1
+ 192 0046 8D22     		movs	r2, #141
+ 193 0048 FFF7FEFF 		bl	chDbgPanic3
+ 194 004c DCE7     		b	.L16
+ 195              		.size	gptChangeInterval, .-gptChangeInterval
+ 196 004e 00BF     		.section	.text.gptStartContinuousI,"ax",%progbits
+ 197              		.align	2
+ 198              		.p2align 4,,15
+ 199              		.global	gptStartContinuousI
+ 200              		.thumb
+ 201              		.thumb_func
+ 202              		.type	gptStartContinuousI, %function
+ 203              	gptStartContinuousI:
+ 204              		@ args = 0, pretend = 0, frame = 0
+ 205              		@ frame_needed = 0, uses_anonymous_args = 0
+ 206 0000 38B5     		push	{r3, r4, r5, lr}
+ 207 0002 0446     		mov	r4, r0
+ 208 0004 0D46     		mov	r5, r1
+ 209 0006 FFF7FEFF 		bl	chDbgCheckClassI
+ 210 000a 84B1     		cbz	r4, .L28
+ 211              	.L23:
+ 212 000c 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 213 000e 022B     		cmp	r3, #2
+ 214 0010 05D0     		beq	.L24
+ 215 0012 40F20000 		movw	r0, #:lower16:.LC8
+ 216 0016 C0F20000 		movt	r0, #:upper16:.LC8
+ 217 001a FFF7FEFF 		bl	chDbgPanic
+ 218              	.L24:
+ 219 001e 0323     		movs	r3, #3
+ 220 0020 2946     		mov	r1, r5
+ 221 0022 2370     		strb	r3, [r4]
+ 222 0024 2046     		mov	r0, r4
+ 223 0026 BDE83840 		pop	{r3, r4, r5, lr}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s 			page 5
+
+
+ 224 002a FFF7FEBF 		b	gpt_lld_start_timer
+ 225              	.L28:
+ 226 002e 40F20000 		movw	r0, #:lower16:.LC7
+ 227 0032 40F20001 		movw	r1, #:lower16:.LC1
+ 228 0036 C0F20000 		movt	r0, #:upper16:.LC7
+ 229 003a C0F20001 		movt	r1, #:upper16:.LC1
+ 230 003e B022     		movs	r2, #176
+ 231 0040 FFF7FEFF 		bl	chDbgPanic3
+ 232 0044 E2E7     		b	.L23
+ 233              		.size	gptStartContinuousI, .-gptStartContinuousI
+ 234 0046 00BFAFF3 		.section	.text.gptStartContinuous,"ax",%progbits
+ 234      0080AFF3 
+ 234      0080
+ 235              		.align	2
+ 236              		.p2align 4,,15
+ 237              		.global	gptStartContinuous
+ 238              		.thumb
+ 239              		.thumb_func
+ 240              		.type	gptStartContinuous, %function
+ 241              	gptStartContinuous:
+ 242              		@ args = 0, pretend = 0, frame = 0
+ 243              		@ frame_needed = 0, uses_anonymous_args = 0
+ 244 0000 38B5     		push	{r3, r4, r5, lr}
+ 245 0002 0546     		mov	r5, r0
+ 246 0004 0C46     		mov	r4, r1
+ 247 0006 2023     		movs	r3, #32
+ 248              	@ 160 "chibios/os/hal/src/gpt.c" 1
+ 249 0008 83F31188 		msr     BASEPRI, r3
+ 250              	@ 0 "" 2
+ 251              		.thumb
+ 252 000c FFF7FEFF 		bl	dbg_check_lock
+ 253 0010 2846     		mov	r0, r5
+ 254 0012 2146     		mov	r1, r4
+ 255 0014 FFF7FEFF 		bl	gptStartContinuousI
+ 256 0018 FFF7FEFF 		bl	dbg_check_unlock
+ 257 001c 0023     		movs	r3, #0
+ 258              	@ 162 "chibios/os/hal/src/gpt.c" 1
+ 259 001e 83F31188 		msr     BASEPRI, r3
+ 260              	@ 0 "" 2
+ 261              		.thumb
+ 262 0022 38BD     		pop	{r3, r4, r5, pc}
+ 263              		.size	gptStartContinuous, .-gptStartContinuous
+ 264 0024 AFF30080 		.section	.text.gptStartOneShotI,"ax",%progbits
+ 264      AFF30080 
+ 264      AFF30080 
+ 265              		.align	2
+ 266              		.p2align 4,,15
+ 267              		.global	gptStartOneShotI
+ 268              		.thumb
+ 269              		.thumb_func
+ 270              		.type	gptStartOneShotI, %function
+ 271              	gptStartOneShotI:
+ 272              		@ args = 0, pretend = 0, frame = 0
+ 273              		@ frame_needed = 0, uses_anonymous_args = 0
+ 274 0000 38B5     		push	{r3, r4, r5, lr}
+ 275 0002 0446     		mov	r4, r0
+ 276 0004 0D46     		mov	r5, r1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s 			page 6
+
+
+ 277 0006 FFF7FEFF 		bl	chDbgCheckClassI
+ 278 000a 84B1     		cbz	r4, .L36
+ 279              	.L31:
+ 280 000c 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 281 000e 022B     		cmp	r3, #2
+ 282 0010 05D0     		beq	.L32
+ 283 0012 40F20000 		movw	r0, #:lower16:.LC10
+ 284 0016 C0F20000 		movt	r0, #:upper16:.LC10
+ 285 001a FFF7FEFF 		bl	chDbgPanic
+ 286              	.L32:
+ 287 001e 0423     		movs	r3, #4
+ 288 0020 2946     		mov	r1, r5
+ 289 0022 2370     		strb	r3, [r4]
+ 290 0024 2046     		mov	r0, r4
+ 291 0026 BDE83840 		pop	{r3, r4, r5, lr}
+ 292 002a FFF7FEBF 		b	gpt_lld_start_timer
+ 293              	.L36:
+ 294 002e 40F20000 		movw	r0, #:lower16:.LC9
+ 295 0032 40F20001 		movw	r1, #:lower16:.LC1
+ 296 0036 C0F20000 		movt	r0, #:upper16:.LC9
+ 297 003a C0F20001 		movt	r1, #:upper16:.LC1
+ 298 003e D222     		movs	r2, #210
+ 299 0040 FFF7FEFF 		bl	chDbgPanic3
+ 300 0044 E2E7     		b	.L31
+ 301              		.size	gptStartOneShotI, .-gptStartOneShotI
+ 302 0046 00BFAFF3 		.section	.text.gptStartOneShot,"ax",%progbits
+ 302      0080AFF3 
+ 302      0080
+ 303              		.align	2
+ 304              		.p2align 4,,15
+ 305              		.global	gptStartOneShot
+ 306              		.thumb
+ 307              		.thumb_func
+ 308              		.type	gptStartOneShot, %function
+ 309              	gptStartOneShot:
+ 310              		@ args = 0, pretend = 0, frame = 0
+ 311              		@ frame_needed = 0, uses_anonymous_args = 0
+ 312 0000 38B5     		push	{r3, r4, r5, lr}
+ 313 0002 0546     		mov	r5, r0
+ 314 0004 0C46     		mov	r4, r1
+ 315 0006 2023     		movs	r3, #32
+ 316              	@ 194 "chibios/os/hal/src/gpt.c" 1
+ 317 0008 83F31188 		msr     BASEPRI, r3
+ 318              	@ 0 "" 2
+ 319              		.thumb
+ 320 000c FFF7FEFF 		bl	dbg_check_lock
+ 321 0010 2846     		mov	r0, r5
+ 322 0012 2146     		mov	r1, r4
+ 323 0014 FFF7FEFF 		bl	gptStartOneShotI
+ 324 0018 FFF7FEFF 		bl	dbg_check_unlock
+ 325 001c 0023     		movs	r3, #0
+ 326              	@ 196 "chibios/os/hal/src/gpt.c" 1
+ 327 001e 83F31188 		msr     BASEPRI, r3
+ 328              	@ 0 "" 2
+ 329              		.thumb
+ 330 0022 38BD     		pop	{r3, r4, r5, pc}
+ 331              		.size	gptStartOneShot, .-gptStartOneShot
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s 			page 7
+
+
+ 332 0024 AFF30080 		.section	.text.gptStopTimerI,"ax",%progbits
+ 332      AFF30080 
+ 332      AFF30080 
+ 333              		.align	2
+ 334              		.p2align 4,,15
+ 335              		.global	gptStopTimerI
+ 336              		.thumb
+ 337              		.thumb_func
+ 338              		.type	gptStopTimerI, %function
+ 339              	gptStopTimerI:
+ 340              		@ args = 0, pretend = 0, frame = 0
+ 341              		@ frame_needed = 0, uses_anonymous_args = 0
+ 342 0000 10B5     		push	{r4, lr}
+ 343 0002 0446     		mov	r4, r0
+ 344 0004 FFF7FEFF 		bl	chDbgCheckClassI
+ 345 0008 8CB1     		cbz	r4, .L41
+ 346              	.L39:
+ 347 000a 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 348 000c 023B     		subs	r3, r3, #2
+ 349 000e DBB2     		uxtb	r3, r3
+ 350 0010 022B     		cmp	r3, #2
+ 351 0012 05D9     		bls	.L40
+ 352 0014 40F20000 		movw	r0, #:lower16:.LC12
+ 353 0018 C0F20000 		movt	r0, #:upper16:.LC12
+ 354 001c FFF7FEFF 		bl	chDbgPanic
+ 355              	.L40:
+ 356 0020 0223     		movs	r3, #2
+ 357 0022 2370     		strb	r3, [r4]
+ 358 0024 2046     		mov	r0, r4
+ 359 0026 BDE81040 		pop	{r4, lr}
+ 360 002a FFF7FEBF 		b	gpt_lld_stop_timer
+ 361              	.L41:
+ 362 002e 40F20000 		movw	r0, #:lower16:.LC11
+ 363 0032 40F20001 		movw	r1, #:lower16:.LC1
+ 364 0036 C0F20000 		movt	r0, #:upper16:.LC11
+ 365 003a C0F20001 		movt	r1, #:upper16:.LC1
+ 366 003e F222     		movs	r2, #242
+ 367 0040 FFF7FEFF 		bl	chDbgPanic3
+ 368 0044 E1E7     		b	.L39
+ 369              		.size	gptStopTimerI, .-gptStopTimerI
+ 370 0046 00BFAFF3 		.section	.text.gptStopTimer,"ax",%progbits
+ 370      0080AFF3 
+ 370      0080
+ 371              		.align	2
+ 372              		.p2align 4,,15
+ 373              		.global	gptStopTimer
+ 374              		.thumb
+ 375              		.thumb_func
+ 376              		.type	gptStopTimer, %function
+ 377              	gptStopTimer:
+ 378              		@ args = 0, pretend = 0, frame = 0
+ 379              		@ frame_needed = 0, uses_anonymous_args = 0
+ 380 0000 10B5     		push	{r4, lr}
+ 381 0002 2023     		movs	r3, #32
+ 382 0004 0446     		mov	r4, r0
+ 383              	@ 227 "chibios/os/hal/src/gpt.c" 1
+ 384 0006 83F31188 		msr     BASEPRI, r3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s 			page 8
+
+
+ 385              	@ 0 "" 2
+ 386              		.thumb
+ 387 000a FFF7FEFF 		bl	dbg_check_lock
+ 388 000e 2046     		mov	r0, r4
+ 389 0010 FFF7FEFF 		bl	gptStopTimerI
+ 390 0014 FFF7FEFF 		bl	dbg_check_unlock
+ 391 0018 0023     		movs	r3, #0
+ 392              	@ 229 "chibios/os/hal/src/gpt.c" 1
+ 393 001a 83F31188 		msr     BASEPRI, r3
+ 394              	@ 0 "" 2
+ 395              		.thumb
+ 396 001e 10BD     		pop	{r4, pc}
+ 397              		.size	gptStopTimer, .-gptStopTimer
+ 398              		.section	.text.gptPolledDelay,"ax",%progbits
+ 399              		.align	2
+ 400              		.p2align 4,,15
+ 401              		.global	gptPolledDelay
+ 402              		.thumb
+ 403              		.thumb_func
+ 404              		.type	gptPolledDelay, %function
+ 405              	gptPolledDelay:
+ 406              		@ args = 0, pretend = 0, frame = 0
+ 407              		@ frame_needed = 0, uses_anonymous_args = 0
+ 408 0000 38B5     		push	{r3, r4, r5, lr}
+ 409 0002 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 410 0004 022B     		cmp	r3, #2
+ 411 0006 0446     		mov	r4, r0
+ 412 0008 0D46     		mov	r5, r1
+ 413 000a 05D0     		beq	.L44
+ 414 000c 40F20000 		movw	r0, #:lower16:.LC13
+ 415 0010 C0F20000 		movt	r0, #:upper16:.LC13
+ 416 0014 FFF7FEFF 		bl	chDbgPanic
+ 417              	.L44:
+ 418 0018 0423     		movs	r3, #4
+ 419 001a 2370     		strb	r3, [r4]
+ 420 001c 2946     		mov	r1, r5
+ 421 001e 2046     		mov	r0, r4
+ 422 0020 FFF7FEFF 		bl	gpt_lld_polled_delay
+ 423 0024 0223     		movs	r3, #2
+ 424 0026 2370     		strb	r3, [r4]
+ 425 0028 38BD     		pop	{r3, r4, r5, pc}
+ 426              		.size	gptPolledDelay, .-gptPolledDelay
+ 427 002a 00BFAFF3 		.section	.rodata.str1.4,"aMS",%progbits,1
+ 427      0080
+ 428              		.align	2
+ 429              	.LC0:
+ 430 0000 22677074 		.ascii	"\"gptStart\"()\000"
+ 430      53746172 
+ 430      74222829 
+ 430      00
+ 431 000d 000000   		.space	3
+ 432              	.LC1:
+ 433 0010 63686962 		.ascii	"chibios/os/hal/src/gpt.c\000"
+ 433      696F732F 
+ 433      6F732F68 
+ 433      616C2F73 
+ 433      72632F67 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s 			page 9
+
+
+ 434 0029 000000   		.space	3
+ 435              	.LC2:
+ 436 002c 67707453 		.ascii	"gptStart(), #1\000"
+ 436      74617274 
+ 436      28292C20 
+ 436      233100
+ 437 003b 00       		.space	1
+ 438              	.LC3:
+ 439 003c 22677074 		.ascii	"\"gptStop\"()\000"
+ 439      53746F70 
+ 439      22282900 
+ 440              	.LC4:
+ 441 0048 67707453 		.ascii	"gptStop(), #1\000"
+ 441      746F7028 
+ 441      292C2023 
+ 441      3100
+ 442 0056 0000     		.space	2
+ 443              	.LC5:
+ 444 0058 22677074 		.ascii	"\"gptChangeInterval\"()\000"
+ 444      4368616E 
+ 444      6765496E 
+ 444      74657276 
+ 444      616C2228 
+ 445 006e 0000     		.space	2
+ 446              	.LC6:
+ 447 0070 67707443 		.ascii	"gptChangeInterval(), #1\000"
+ 447      68616E67 
+ 447      65496E74 
+ 447      65727661 
+ 447      6C28292C 
+ 448              	.LC7:
+ 449 0088 22677074 		.ascii	"\"gptStartContinuousI\"()\000"
+ 449      53746172 
+ 449      74436F6E 
+ 449      74696E75 
+ 449      6F757349 
+ 450              	.LC8:
+ 451 00a0 67707453 		.ascii	"gptStartContinuousI(), #1\000"
+ 451      74617274 
+ 451      436F6E74 
+ 451      696E756F 
+ 451      75734928 
+ 452 00ba 0000     		.space	2
+ 453              	.LC9:
+ 454 00bc 22677074 		.ascii	"\"gptStartOneShotI\"()\000"
+ 454      53746172 
+ 454      744F6E65 
+ 454      53686F74 
+ 454      49222829 
+ 455 00d1 000000   		.space	3
+ 456              	.LC10:
+ 457 00d4 67707453 		.ascii	"gptStartOneShotI(), #1\000"
+ 457      74617274 
+ 457      4F6E6553 
+ 457      686F7449 
+ 457      28292C20 
+ 458 00eb 00       		.space	1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s 			page 10
+
+
+ 459              	.LC11:
+ 460 00ec 22677074 		.ascii	"\"gptStopTimerI\"()\000"
+ 460      53746F70 
+ 460      54696D65 
+ 460      72492228 
+ 460      2900
+ 461 00fe 0000     		.space	2
+ 462              	.LC12:
+ 463 0100 67707453 		.ascii	"gptStopTimerI(), #1\000"
+ 463      746F7054 
+ 463      696D6572 
+ 463      4928292C 
+ 463      20233100 
+ 464              	.LC13:
+ 465 0114 67707450 		.ascii	"gptPolledDelay(), #1\000"
+ 465      6F6C6C65 
+ 465      6444656C 
+ 465      61792829 
+ 465      2C202331 
+ 466 0129 000000   		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s 			page 11
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 gpt.c
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:17     .text.gptInit:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:23     .text.gptInit:00000000 gptInit
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:30     .text.gptObjectInit:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:36     .text.gptObjectInit:00000000 gptObjectInit
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:47     .text.gptStart:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:53     .text.gptStart:00000000 gptStart
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:435    .rodata.str1.4:0000002c .LC2
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:429    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:432    .rodata.str1.4:00000010 .LC1
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:101    .text.gptStop:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:107    .text.gptStop:00000000 gptStop
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:440    .rodata.str1.4:00000048 .LC4
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:438    .rodata.str1.4:0000003c .LC3
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:150    .text.gptChangeInterval:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:156    .text.gptChangeInterval:00000000 gptChangeInterval
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:446    .rodata.str1.4:00000070 .LC6
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:443    .rodata.str1.4:00000058 .LC5
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:197    .text.gptStartContinuousI:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:203    .text.gptStartContinuousI:00000000 gptStartContinuousI
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:450    .rodata.str1.4:000000a0 .LC8
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:448    .rodata.str1.4:00000088 .LC7
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:235    .text.gptStartContinuous:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:241    .text.gptStartContinuous:00000000 gptStartContinuous
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:265    .text.gptStartOneShotI:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:271    .text.gptStartOneShotI:00000000 gptStartOneShotI
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:456    .rodata.str1.4:000000d4 .LC10
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:453    .rodata.str1.4:000000bc .LC9
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:303    .text.gptStartOneShot:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:309    .text.gptStartOneShot:00000000 gptStartOneShot
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:333    .text.gptStopTimerI:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:339    .text.gptStopTimerI:00000000 gptStopTimerI
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:462    .rodata.str1.4:00000100 .LC12
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:459    .rodata.str1.4:000000ec .LC11
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:371    .text.gptStopTimer:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:377    .text.gptStopTimer:00000000 gptStopTimer
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:399    .text.gptPolledDelay:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:405    .text.gptPolledDelay:00000000 gptPolledDelay
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:464    .rodata.str1.4:00000114 .LC13
+C:\Users\pc\AppData\Local\Temp\ccyBP9tu.s:428    .rodata.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+gpt_lld_init
+dbg_check_lock
+chDbgPanic
+gpt_lld_start
+dbg_check_unlock
+chDbgPanic3
+gpt_lld_stop
+chDbgCheckClassI
+gpt_lld_start_timer
+gpt_lld_stop_timer
+gpt_lld_polled_delay

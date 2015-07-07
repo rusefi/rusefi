@@ -8,6 +8,8 @@
  * default pinouts in case of SPI2 connected to MMC: PB13 - SCK, PB14 - MISO, PB15 - MOSI, PD4 - CS, 3.3v
  * default pinouts in case of SPI3 connected to MMC: PB3  - SCK, PB4  - MISO, PB5  - MOSI, PD4 - CS, 3.3v
  *
+ *
+ * todo: extract some logic into a controller file
  */
 
 #include "main.h"
@@ -22,6 +24,11 @@
 #include "hardware.h"
 #include "engine_configuration.h"
 #include "status_loop.h"
+
+#define LOG_INDEX_FILENAME "index.txt"
+#define RUSEFI_LOG_PREFIX "rus"
+#define LS_RESPONSE "ls_result"
+#define FILE_LIST_MAX_COUNT 20
 
 extern board_configuration_s *boardConfiguration;
 
@@ -60,6 +67,9 @@ static void printError(const char *str, FRESULT f_error) {
 }
 
 static FIL FDLogFile;
+static FIL FDCurrFile;
+static int logFileIndex = 1;
+static char logName[15];
 
 static int totalLoggedBytes = 0;
 
@@ -73,8 +83,45 @@ static void printMmcPinout(void) {
 
 static void sdStatistics(void) {
 	printMmcPinout();
-	scheduleMsg(&logger, "SD enabled: %s", boolToString(boardConfiguration->isSdCardEnabled));
-	scheduleMsg(&logger, "fs_ready=%d totalLoggedBytes=%d", fs_ready, totalLoggedBytes);
+	scheduleMsg(&logger, "SD enabled: %s [%s]", boolToString(boardConfiguration->isSdCardEnabled),
+			logName);
+	scheduleMsg(&logger, "fs_ready=%d totalLoggedBytes=%d %d", fs_ready, totalLoggedBytes, logFileIndex);
+}
+
+static void incLogFileName(void) {
+	lockSpi(SPI_NONE);
+	memset(&FDCurrFile, 0, sizeof(FIL));						// clear the memory
+	FRESULT err = f_open(&FDCurrFile, LOG_INDEX_FILENAME, FA_READ);				// This file has the index for next log file name
+
+	char data[10];
+	UINT result = 0;
+	if (err != FR_OK && err != FR_EXIST) {
+			logFileIndex = 1;
+			scheduleMsg(&logger, "%s: not found or error: %d", LOG_INDEX_FILENAME, err);
+	} else {
+		f_read(&FDCurrFile, (void*)data, sizeof(data), &result);
+
+		scheduleMsg(&logger, "Got content [%s] size %d", data, result);
+		f_close(&FDCurrFile);
+		if (result < 5) {
+                      data[result] = 0;
+			logFileIndex = atoi(data);
+			if (absI(logFileIndex) == ERROR_CODE) {
+				logFileIndex = 1;
+			} else {
+				logFileIndex++; // next file would use next file name
+			}
+		} else {
+			logFileIndex = 1;
+		}
+	}
+
+	err = f_open(&FDCurrFile, LOG_INDEX_FILENAME, FA_OPEN_ALWAYS | FA_WRITE);
+	itoa10(data, logFileIndex);
+	f_write(&FDCurrFile, (void*)data, strlen(data), &result);
+	f_close(&FDCurrFile);
+	scheduleMsg(&logger, "Done %d", logFileIndex);
+	unlockSpi();
 }
 
 /**
@@ -86,7 +133,11 @@ static void sdStatistics(void) {
 static void createLogFile(void) {
 	lockSpi(SPI_NONE);
 	memset(&FDLogFile, 0, sizeof(FIL));						// clear the memory
-	FRESULT err = f_open(&FDLogFile, "rusefi.log", FA_OPEN_ALWAYS | FA_WRITE);				// Create new file
+	strcpy(logName, RUSEFI_LOG_PREFIX);
+	char *ptr = itoa10(&logName[3], logFileIndex);
+	strcat(ptr, ".log");
+
+	FRESULT err = f_open(&FDLogFile, logName, FA_OPEN_ALWAYS | FA_WRITE);				// Create new file
 	if (err != FR_OK && err != FR_EXIST) {
 		unlockSpi();
 		printError("FS mount failed", err);	// else - show error
@@ -104,48 +155,57 @@ static void createLogFile(void) {
 	unlockSpi();
 }
 
-static void ff_cmd_dir(const char *pathx) {
-	char *path = (char *) pathx; // todo: fix this hack!
-	DIR dir;
-	FILINFO fno;
-	char *fn;
+static void removeFile(const char *pathx) {
+	if (!fs_ready) {
+		scheduleMsg(&logger, "Error: No File system is mounted");
+		return;
+	}
+	lockSpi(SPI_NONE);
+	f_unlink(pathx);
+
+	unlockSpi();
+}
+
+static void listDirectory(const char *path) {
 
 	if (!fs_ready) {
 		scheduleMsg(&logger, "Error: No File system is mounted");
 		return;
 	}
+	lockSpi(SPI_NONE);
 
+	DIR dir;
 	FRESULT res = f_opendir(&dir, path);
 
 	if (res != FR_OK) {
 		scheduleMsg(&logger, "Error opening directory %s", path);
+		unlockSpi();
 		return;
 	}
 
+	scheduleMsg(&logger, LS_RESPONSE);
+
 	int i = strlen(path);
-	for (;;) {
+	for (int count = 0;count < FILE_LIST_MAX_COUNT;) {
+		FILINFO fno;
 		res = f_readdir(&dir, &fno);
 		if (res != FR_OK || fno.fname[0] == 0)
 			break;
 		if (fno.lfname[0] == '.')
 			continue;
-		fn = fno.lfname;
-		if (fno.fattrib & AM_DIR) {
-			// TODO: WHAT? WE ARE APPENDING FILE NAME TO PARAMETER??? WEIRD!!!
-			path[i++] = '/';
-			strcpy(&path[i], fn);
-			// res = ff_cmd_ls(path);
-			if (res != FR_OK)
-				break;
-			path[i] = 0;
-		} else {
-			scheduleMsg(&logger, "%c%c%c%c%c %u/%02u/%02u %02u:%02u %9lu  %-12s", (fno.fattrib & AM_DIR) ? 'D' : '-',
-					(fno.fattrib & AM_RDO) ? 'R' : '-', (fno.fattrib & AM_HID) ? 'H' : '-',
-					(fno.fattrib & AM_SYS) ? 'S' : '-', (fno.fattrib & AM_ARC) ? 'A' : '-', (fno.fdate >> 9) + 1980,
-					(fno.fdate >> 5) & 15, fno.fdate & 31, (fno.ftime >> 11), (fno.ftime >> 5) & 63, fno.fsize,
-					fno.fname);
+		if ((fno.fattrib & AM_DIR) || strncmp(RUSEFI_LOG_PREFIX, fno.fname, sizeof(RUSEFI_LOG_PREFIX) - 1)) {
+			continue;
 		}
+		scheduleMsg(&logger, "logfile%lu:%s", fno.fsize, fno.fname);
+		count++;
+
+//			scheduleMsg(&logger, "%c%c%c%c%c %u/%02u/%02u %02u:%02u %9lu  %-12s", (fno.fattrib & AM_DIR) ? 'D' : '-',
+//					(fno.fattrib & AM_RDO) ? 'R' : '-', (fno.fattrib & AM_HID) ? 'H' : '-',
+//					(fno.fattrib & AM_SYS) ? 'S' : '-', (fno.fattrib & AM_ARC) ? 'A' : '-', (fno.fdate >> 9) + 1980,
+//					(fno.fdate >> 5) & 15, fno.fdate & 31, (fno.ftime >> 11), (fno.ftime >> 5) & 63, fno.fsize,
+//					fno.fname);
 	}
+	unlockSpi();
 }
 
 static int errorReported = FALSE; // this is used to report the error only once
@@ -217,6 +277,7 @@ static void MMCmount(void) {
 	// if Ok - mount FS now
 	memset(&MMC_FS, 0, sizeof(FATFS));
 	if (f_mount(0, &MMC_FS) == FR_OK) {
+		incLogFileName();
 		createLogFile();
 		scheduleMsg(&logger, "MMC/SD mounted!");
 	}
@@ -251,7 +312,8 @@ bool isSdCardAlive(void) {
 }
 
 void initMmcCard(void) {
-	addConsoleAction("sdstat", sdStatistics);
+	logName[0] = 0;
+	addConsoleAction("sdinfo", sdStatistics);
 	if (!boardConfiguration->isSdCardEnabled) {
 		return;
 	}
@@ -272,7 +334,9 @@ void initMmcCard(void) {
 	addConsoleAction("mountsd", MMCmount);
 	addConsoleActionS("appendToLog", appendToLog);
 	addConsoleAction("umountsd", MMCumount);
-	addConsoleActionS("ls", ff_cmd_dir);
+	addConsoleActionS("ls", listDirectory);
+	addConsoleActionS("del", removeFile);
+	addConsoleAction("incfilename", incLogFileName);
 }
 
 #endif /* EFI_FILE_LOGGING */

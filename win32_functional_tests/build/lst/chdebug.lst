@@ -1,0 +1,539 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s 			page 1
+
+
+   1              		.file	"chdebug.c"
+   2              		.section .rdata,"dr"
+   3              		.align 4
+   4              	LC0:
+   5 0000 2E2E2F66 		.ascii "../firmware/chibios/os/kernel/src/chdebug.c\0"
+   5      69726D77 
+   5      6172652F 
+   5      63686962 
+   5      696F732F 
+   6              		.section	.text$chDbgPanic,"x"
+   7              		.p2align 4,,15
+   8              		.globl	_chDbgPanic
+   9              		.def	_chDbgPanic;	.scl	2;	.type	32;	.endef
+  10              	_chDbgPanic:
+  11              	LFB18:
+  12              		.cfi_startproc
+  13 0000 83EC1C   		subl	$28, %esp
+  14              		.cfi_def_cfa_offset 32
+  15 0003 8B442420 		movl	32(%esp), %eax
+  16 0007 C7442408 		movl	$280, 8(%esp)
+  16      18010000 
+  17 000f C7442404 		movl	$LC0, 4(%esp)
+  17      00000000 
+  18 0017 890424   		movl	%eax, (%esp)
+  19 001a E8000000 		call	_chDbgPanic3
+  19      00
+  20 001f 83C41C   		addl	$28, %esp
+  21              		.cfi_def_cfa_offset 4
+  22 0022 C3       		ret
+  23              		.cfi_endproc
+  24              	LFE18:
+  25 0023 90909090 		.section .rdata,"dr"
+  25      90909090 
+  25      90909090 
+  25      90
+  26              	LC1:
+  27 002c 53562331 		.ascii "SV#11\0"
+  27      3100
+  28              		.section	.text$chDbgCheckClassS,"x"
+  29              		.p2align 4,,15
+  30              		.globl	_chDbgCheckClassS
+  31              		.def	_chDbgCheckClassS;	.scl	2;	.type	32;	.endef
+  32              	_chDbgCheckClassS:
+  33              	LFB17:
+  34              		.cfi_startproc
+  35 0000 83EC1C   		subl	$28, %esp
+  36              		.cfi_def_cfa_offset 32
+  37 0003 8B150000 		movl	_dbg_isr_cnt, %edx
+  37      0000
+  38 0009 85D2     		testl	%edx, %edx
+  39 000b 7513     		jne	L4
+  40 000d A1000000 		movl	_dbg_lock_cnt, %eax
+  40      00
+  41 0012 85C0     		testl	%eax, %eax
+  42 0014 7E0A     		jle	L4
+  43 0016 83C41C   		addl	$28, %esp
+  44              		.cfi_remember_state
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s 			page 2
+
+
+  45              		.cfi_def_cfa_offset 4
+  46 0019 C3       		ret
+  47 001a 8DB60000 		.p2align 4,,7
+  47      0000
+  48              	L4:
+  49              		.cfi_restore_state
+  50 0020 C704242C 		movl	$LC1, (%esp)
+  50      000000
+  51 0027 E8000000 		call	_chDbgPanic
+  51      00
+  52 002c 83C41C   		addl	$28, %esp
+  53              		.cfi_def_cfa_offset 4
+  54 002f C3       		ret
+  55              		.cfi_endproc
+  56              	LFE17:
+  57              		.section .rdata,"dr"
+  58 0032 0000     		.align 4
+  59              	LC2:
+  60 0034 53562331 		.ascii "SV#10 misplaced I-class function\0"
+  60      30206D69 
+  60      73706C61 
+  60      63656420 
+  60      492D636C 
+  61              		.section	.text$chDbgCheckClassI,"x"
+  62              		.p2align 4,,15
+  63              		.globl	_chDbgCheckClassI
+  64              		.def	_chDbgCheckClassI;	.scl	2;	.type	32;	.endef
+  65              	_chDbgCheckClassI:
+  66              	LFB16:
+  67              		.cfi_startproc
+  68 0000 83EC1C   		subl	$28, %esp
+  69              		.cfi_def_cfa_offset 32
+  70 0003 A1000000 		movl	_dbg_isr_cnt, %eax
+  70      00
+  71 0008 85C0     		testl	%eax, %eax
+  72 000a 7814     		js	L9
+  73 000c 8B0D0000 		movl	_dbg_lock_cnt, %ecx
+  73      0000
+  74 0012 85C9     		testl	%ecx, %ecx
+  75 0014 7E0A     		jle	L9
+  76 0016 83C41C   		addl	$28, %esp
+  77              		.cfi_remember_state
+  78              		.cfi_def_cfa_offset 4
+  79 0019 C3       		ret
+  80 001a 8DB60000 		.p2align 4,,7
+  80      0000
+  81              	L9:
+  82              		.cfi_restore_state
+  83 0020 C7042434 		movl	$LC2, (%esp)
+  83      000000
+  84 0027 E8000000 		call	_chDbgPanic
+  84      00
+  85 002c 83C41C   		addl	$28, %esp
+  86              		.cfi_def_cfa_offset 4
+  87 002f C3       		ret
+  88              		.cfi_endproc
+  89              	LFE16:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s 			page 3
+
+
+  90              		.section .rdata,"dr"
+  91              	LC3:
+  92 0055 53562339 		.ascii "SV#9\0"
+  92      00
+  93              		.section	.text$dbg_check_leave_isr,"x"
+  94              		.p2align 4,,15
+  95              		.globl	_dbg_check_leave_isr
+  96              		.def	_dbg_check_leave_isr;	.scl	2;	.type	32;	.endef
+  97              	_dbg_check_leave_isr:
+  98              	LFB15:
+  99              		.cfi_startproc
+ 100 0000 83EC1C   		subl	$28, %esp
+ 101              		.cfi_def_cfa_offset 32
+ 102 0003 A1000000 		movl	_dbg_isr_cnt, %eax
+ 102      00
+ 103 0008 85C0     		testl	%eax, %eax
+ 104 000a 7E0A     		jle	L13
+ 105 000c 8B150000 		movl	_dbg_lock_cnt, %edx
+ 105      0000
+ 106 0012 85D2     		testl	%edx, %edx
+ 107 0014 7411     		je	L14
+ 108              	L13:
+ 109 0016 C7042455 		movl	$LC3, (%esp)
+ 109      000000
+ 110 001d E8000000 		call	_chDbgPanic
+ 110      00
+ 111 0022 A1000000 		movl	_dbg_isr_cnt, %eax
+ 111      00
+ 112              	L14:
+ 113 0027 83E801   		subl	$1, %eax
+ 114 002a A3000000 		movl	%eax, _dbg_isr_cnt
+ 114      00
+ 115 002f 83C41C   		addl	$28, %esp
+ 116              		.cfi_def_cfa_offset 4
+ 117 0032 C3       		ret
+ 118              		.cfi_endproc
+ 119              	LFE15:
+ 120 0033 90909090 		.section .rdata,"dr"
+ 120      90909090 
+ 120      90909090 
+ 120      90
+ 121              	LC4:
+ 122 005a 53562338 		.ascii "SV#8\0"
+ 122      00
+ 123              		.section	.text$dbg_check_enter_isr,"x"
+ 124              		.p2align 4,,15
+ 125              		.globl	_dbg_check_enter_isr
+ 126              		.def	_dbg_check_enter_isr;	.scl	2;	.type	32;	.endef
+ 127              	_dbg_check_enter_isr:
+ 128              	LFB14:
+ 129              		.cfi_startproc
+ 130 0000 83EC1C   		subl	$28, %esp
+ 131              		.cfi_def_cfa_offset 32
+ 132 0003 A1000000 		movl	_dbg_isr_cnt, %eax
+ 132      00
+ 133 0008 85C0     		testl	%eax, %eax
+ 134 000a 7824     		js	L17
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s 			page 4
+
+
+ 135 000c 8B0D0000 		movl	_dbg_lock_cnt, %ecx
+ 135      0000
+ 136 0012 85C9     		testl	%ecx, %ecx
+ 137 0014 751A     		jne	L17
+ 138              	L18:
+ 139 0016 83C001   		addl	$1, %eax
+ 140 0019 3B050000 		cmpl	_maxNesting, %eax
+ 140      0000
+ 141 001f A3000000 		movl	%eax, _dbg_isr_cnt
+ 141      00
+ 142 0024 7E05     		jle	L16
+ 143 0026 A3000000 		movl	%eax, _maxNesting
+ 143      00
+ 144              	L16:
+ 145 002b 83C41C   		addl	$28, %esp
+ 146              		.cfi_remember_state
+ 147              		.cfi_def_cfa_offset 4
+ 148 002e C3       		ret
+ 149 002f 90       		.p2align 4,,7
+ 150              	L17:
+ 151              		.cfi_restore_state
+ 152 0030 C704245A 		movl	$LC4, (%esp)
+ 152      000000
+ 153 0037 E8000000 		call	_chDbgPanic
+ 153      00
+ 154 003c A1000000 		movl	_dbg_isr_cnt, %eax
+ 154      00
+ 155 0041 EBD3     		jmp	L18
+ 156              		.cfi_endproc
+ 157              	LFE14:
+ 158 0043 90909090 		.section .rdata,"dr"
+ 158      90909090 
+ 158      90909090 
+ 158      90
+ 159              	LC5:
+ 160 005f 53562337 		.ascii "SV#7\0"
+ 160      00
+ 161              		.section	.text$dbg_check_unlock_from_isr,"x"
+ 162              		.p2align 4,,15
+ 163              		.globl	_dbg_check_unlock_from_isr
+ 164              		.def	_dbg_check_unlock_from_isr;	.scl	2;	.type	32;	.endef
+ 165              	_dbg_check_unlock_from_isr:
+ 166              	LFB13:
+ 167              		.cfi_startproc
+ 168 0000 83EC1C   		subl	$28, %esp
+ 169              		.cfi_def_cfa_offset 32
+ 170 0003 A1000000 		movl	_dbg_isr_cnt, %eax
+ 170      00
+ 171 0008 85C0     		testl	%eax, %eax
+ 172 000a 7E17     		jle	L22
+ 173 000c A1000000 		movl	_dbg_lock_cnt, %eax
+ 173      00
+ 174 0011 85C0     		testl	%eax, %eax
+ 175 0013 7E0E     		jle	L22
+ 176 0015 C7050000 		movl	$0, _dbg_lock_cnt
+ 176      00000000 
+ 176      0000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s 			page 5
+
+
+ 177 001f 83C41C   		addl	$28, %esp
+ 178              		.cfi_remember_state
+ 179              		.cfi_def_cfa_offset 4
+ 180 0022 C3       		ret
+ 181              		.p2align 4,,7
+ 182              	L22:
+ 183              		.cfi_restore_state
+ 184 0023 C704245F 		movl	$LC5, (%esp)
+ 184      000000
+ 185 002a E8000000 		call	_chDbgPanic
+ 185      00
+ 186 002f C7050000 		movl	$0, _dbg_lock_cnt
+ 186      00000000 
+ 186      0000
+ 187 0039 83C41C   		addl	$28, %esp
+ 188              		.cfi_def_cfa_offset 4
+ 189 003c C3       		ret
+ 190              		.cfi_endproc
+ 191              	LFE13:
+ 192 003d 909090   		.section .rdata,"dr"
+ 193              		.align 4
+ 194              	LC6:
+ 195 0064 53562336 		.ascii "SV#6 misplaced chSysLockFromIsr\0"
+ 195      206D6973 
+ 195      706C6163 
+ 195      65642063 
+ 195      68537973 
+ 196              		.section	.text$dbg_check_lock_from_isr,"x"
+ 197              		.p2align 4,,15
+ 198              		.globl	_dbg_check_lock_from_isr
+ 199              		.def	_dbg_check_lock_from_isr;	.scl	2;	.type	32;	.endef
+ 200              	_dbg_check_lock_from_isr:
+ 201              	LFB12:
+ 202              		.cfi_startproc
+ 203 0000 83EC1C   		subl	$28, %esp
+ 204              		.cfi_def_cfa_offset 32
+ 205 0003 A1000000 		movl	_dbg_isr_cnt, %eax
+ 205      00
+ 206 0008 85C0     		testl	%eax, %eax
+ 207 000a 7E09     		jle	L26
+ 208 000c A1000000 		movl	_dbg_lock_cnt, %eax
+ 208      00
+ 209 0011 85C0     		testl	%eax, %eax
+ 210 0013 740C     		je	L27
+ 211              	L26:
+ 212 0015 C7042464 		movl	$LC6, (%esp)
+ 212      000000
+ 213 001c E8000000 		call	_chDbgPanic
+ 213      00
+ 214              	L27:
+ 215 0021 C7050000 		movl	$1, _dbg_lock_cnt
+ 215      00000100 
+ 215      0000
+ 216 002b 83C41C   		addl	$28, %esp
+ 217              		.cfi_def_cfa_offset 4
+ 218 002e C3       		ret
+ 219              		.cfi_endproc
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s 			page 6
+
+
+ 220              	LFE12:
+ 221 002f 90       		.section .rdata,"dr"
+ 222              	LC7:
+ 223 0084 53562335 		.ascii "SV#5\0"
+ 223      00
+ 224              		.section	.text$dbg_check_unlock,"x"
+ 225              		.p2align 4,,15
+ 226              		.globl	_dbg_check_unlock
+ 227              		.def	_dbg_check_unlock;	.scl	2;	.type	32;	.endef
+ 228              	_dbg_check_unlock:
+ 229              	LFB11:
+ 230              		.cfi_startproc
+ 231 0000 83EC1C   		subl	$28, %esp
+ 232              		.cfi_def_cfa_offset 32
+ 233 0003 A1000000 		movl	_dbg_isr_cnt, %eax
+ 233      00
+ 234 0008 85C0     		testl	%eax, %eax
+ 235 000a 7517     		jne	L30
+ 236 000c A1000000 		movl	_dbg_lock_cnt, %eax
+ 236      00
+ 237 0011 85C0     		testl	%eax, %eax
+ 238 0013 7E0E     		jle	L30
+ 239 0015 C7050000 		movl	$0, _dbg_lock_cnt
+ 239      00000000 
+ 239      0000
+ 240 001f 83C41C   		addl	$28, %esp
+ 241              		.cfi_remember_state
+ 242              		.cfi_def_cfa_offset 4
+ 243 0022 C3       		ret
+ 244              		.p2align 4,,7
+ 245              	L30:
+ 246              		.cfi_restore_state
+ 247 0023 C7042484 		movl	$LC7, (%esp)
+ 247      000000
+ 248 002a E8000000 		call	_chDbgPanic
+ 248      00
+ 249 002f C7050000 		movl	$0, _dbg_lock_cnt
+ 249      00000000 
+ 249      0000
+ 250 0039 83C41C   		addl	$28, %esp
+ 251              		.cfi_def_cfa_offset 4
+ 252 003c C3       		ret
+ 253              		.cfi_endproc
+ 254              	LFE11:
+ 255 003d 909090   		.section .rdata,"dr"
+ 256              	LC8:
+ 257 0089 53562334 		.ascii "SV#4 misplaced chSysLock()\0"
+ 257      206D6973 
+ 257      706C6163 
+ 257      65642063 
+ 257      68537973 
+ 258              		.section	.text$dbg_check_lock,"x"
+ 259              		.p2align 4,,15
+ 260              		.globl	_dbg_check_lock
+ 261              		.def	_dbg_check_lock;	.scl	2;	.type	32;	.endef
+ 262              	_dbg_check_lock:
+ 263              	LFB10:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s 			page 7
+
+
+ 264              		.cfi_startproc
+ 265 0000 83EC1C   		subl	$28, %esp
+ 266              		.cfi_def_cfa_offset 32
+ 267 0003 8B0D0000 		movl	_dbg_isr_cnt, %ecx
+ 267      0000
+ 268 0009 85C9     		testl	%ecx, %ecx
+ 269 000b 750A     		jne	L34
+ 270 000d 8B150000 		movl	_dbg_lock_cnt, %edx
+ 270      0000
+ 271 0013 85D2     		testl	%edx, %edx
+ 272 0015 740C     		je	L35
+ 273              	L34:
+ 274 0017 C7042489 		movl	$LC8, (%esp)
+ 274      000000
+ 275 001e E8000000 		call	_chDbgPanic
+ 275      00
+ 276              	L35:
+ 277 0023 C7050000 		movl	$1, _dbg_lock_cnt
+ 277      00000100 
+ 277      0000
+ 278 002d 83C41C   		addl	$28, %esp
+ 279              		.cfi_def_cfa_offset 4
+ 280 0030 C3       		ret
+ 281              		.cfi_endproc
+ 282              	LFE10:
+ 283 0031 90909090 		.section .rdata,"dr"
+ 283      90909090 
+ 283      90909090 
+ 283      909090
+ 284              	LC9:
+ 285 00a4 53562333 		.ascii "SV#3\0"
+ 285      00
+ 286              		.section	.text$dbg_check_enable,"x"
+ 287              		.p2align 4,,15
+ 288              		.globl	_dbg_check_enable
+ 289              		.def	_dbg_check_enable;	.scl	2;	.type	32;	.endef
+ 290              	_dbg_check_enable:
+ 291              	LFB9:
+ 292              		.cfi_startproc
+ 293 0000 83EC1C   		subl	$28, %esp
+ 294              		.cfi_def_cfa_offset 32
+ 295 0003 A1000000 		movl	_dbg_isr_cnt, %eax
+ 295      00
+ 296 0008 85C0     		testl	%eax, %eax
+ 297 000a 7509     		jne	L38
+ 298 000c A1000000 		movl	_dbg_lock_cnt, %eax
+ 298      00
+ 299 0011 85C0     		testl	%eax, %eax
+ 300 0013 740C     		je	L37
+ 301              	L38:
+ 302 0015 C70424A4 		movl	$LC9, (%esp)
+ 302      000000
+ 303 001c E8000000 		call	_chDbgPanic
+ 303      00
+ 304              	L37:
+ 305 0021 83C41C   		addl	$28, %esp
+ 306              		.cfi_def_cfa_offset 4
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s 			page 8
+
+
+ 307 0024 C3       		ret
+ 308              		.cfi_endproc
+ 309              	LFE9:
+ 310 0025 90909090 		.section .rdata,"dr"
+ 310      90909090 
+ 310      909090
+ 311              	LC10:
+ 312 00a9 53562332 		.ascii "SV#2\0"
+ 312      00
+ 313              		.section	.text$dbg_check_suspend,"x"
+ 314              		.p2align 4,,15
+ 315              		.globl	_dbg_check_suspend
+ 316              		.def	_dbg_check_suspend;	.scl	2;	.type	32;	.endef
+ 317              	_dbg_check_suspend:
+ 318              	LFB8:
+ 319              		.cfi_startproc
+ 320 0000 83EC1C   		subl	$28, %esp
+ 321              		.cfi_def_cfa_offset 32
+ 322 0003 A1000000 		movl	_dbg_isr_cnt, %eax
+ 322      00
+ 323 0008 85C0     		testl	%eax, %eax
+ 324 000a 7509     		jne	L42
+ 325 000c A1000000 		movl	_dbg_lock_cnt, %eax
+ 325      00
+ 326 0011 85C0     		testl	%eax, %eax
+ 327 0013 740C     		je	L41
+ 328              	L42:
+ 329 0015 C70424A9 		movl	$LC10, (%esp)
+ 329      000000
+ 330 001c E8000000 		call	_chDbgPanic
+ 330      00
+ 331              	L41:
+ 332 0021 83C41C   		addl	$28, %esp
+ 333              		.cfi_def_cfa_offset 4
+ 334 0024 C3       		ret
+ 335              		.cfi_endproc
+ 336              	LFE8:
+ 337 0025 90909090 		.section .rdata,"dr"
+ 337      90909090 
+ 337      909090
+ 338              	LC11:
+ 339 00ae 53562331 		.ascii "SV#1\0"
+ 339      00
+ 340 00b3 00       		.section	.text$dbg_check_disable,"x"
+ 341              		.p2align 4,,15
+ 342              		.globl	_dbg_check_disable
+ 343              		.def	_dbg_check_disable;	.scl	2;	.type	32;	.endef
+ 344              	_dbg_check_disable:
+ 345              	LFB7:
+ 346              		.cfi_startproc
+ 347 0000 83EC1C   		subl	$28, %esp
+ 348              		.cfi_def_cfa_offset 32
+ 349 0003 A1000000 		movl	_dbg_isr_cnt, %eax
+ 349      00
+ 350 0008 85C0     		testl	%eax, %eax
+ 351 000a 7509     		jne	L46
+ 352 000c A1000000 		movl	_dbg_lock_cnt, %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s 			page 9
+
+
+ 352      00
+ 353 0011 85C0     		testl	%eax, %eax
+ 354 0013 740C     		je	L45
+ 355              	L46:
+ 356 0015 C70424AE 		movl	$LC11, (%esp)
+ 356      000000
+ 357 001c E8000000 		call	_chDbgPanic
+ 357      00
+ 358              	L45:
+ 359 0021 83C41C   		addl	$28, %esp
+ 360              		.cfi_def_cfa_offset 4
+ 361 0024 C3       		ret
+ 362              		.cfi_endproc
+ 363              	LFE7:
+ 364              		.globl	_dbg_panic_msg
+ 365 0025 90909090 		.section	.data$dbg_panic_msg,"w"
+ 365      90909090 
+ 365      909090
+ 366              		.align 4
+ 367              	_dbg_panic_msg:
+ 368 0000 00000000 		.space 4
+ 369              		.globl	_dbg_lock_cnt
+ 370              		.section	.data$dbg_lock_cnt,"w"
+ 371              		.align 4
+ 372              	_dbg_lock_cnt:
+ 373 0000 00000000 		.space 4
+ 374              		.globl	_dbg_isr_cnt
+ 375              		.section	.data$dbg_isr_cnt,"w"
+ 376              		.align 4
+ 377              	_dbg_isr_cnt:
+ 378 0000 00000000 		.space 4
+ 379              		.def	_chDbgPanic3;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s 			page 10
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 chdebug.c
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s:10     .text$chDbgPanic:00000000 _chDbgPanic
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s:32     .text$chDbgCheckClassS:00000000 _chDbgCheckClassS
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s:377    .data$dbg_isr_cnt:00000000 _dbg_isr_cnt
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s:372    .data$dbg_lock_cnt:00000000 _dbg_lock_cnt
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s:65     .text$chDbgCheckClassI:00000000 _chDbgCheckClassI
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s:97     .text$dbg_check_leave_isr:00000000 _dbg_check_leave_isr
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s:127    .text$dbg_check_enter_isr:00000000 _dbg_check_enter_isr
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s:165    .text$dbg_check_unlock_from_isr:00000000 _dbg_check_unlock_from_isr
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s:200    .text$dbg_check_lock_from_isr:00000000 _dbg_check_lock_from_isr
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s:228    .text$dbg_check_unlock:00000000 _dbg_check_unlock
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s:262    .text$dbg_check_lock:00000000 _dbg_check_lock
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s:290    .text$dbg_check_enable:00000000 _dbg_check_enable
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s:317    .text$dbg_check_suspend:00000000 _dbg_check_suspend
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s:344    .text$dbg_check_disable:00000000 _dbg_check_disable
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc4mqOn5.s:367    .data$dbg_panic_msg:00000000 _dbg_panic_msg
+
+UNDEFINED SYMBOLS
+_maxNesting
+_chDbgPanic3

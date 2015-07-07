@@ -1,0 +1,440 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"rtc_helper.cpp"
+  16              		.section	.text._Z11date_set_tmP2tm,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_Z11date_set_tmP2tm
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_Z11date_set_tmP2tm, %function
+  23              	_Z11date_set_tmP2tm:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 0146     		mov	r1, r0
+  28 0002 40F20000 		movw	r0, #:lower16:RTCD1
+  29 0006 C0F20000 		movt	r0, #:upper16:RTCD1
+  30 000a FFF7FEBF 		b	rtcSetTimeTm
+  31              		.size	_Z11date_set_tmP2tm, .-_Z11date_set_tmP2tm
+  32 000e 00BF     		.section	.text._Z11date_get_tmP2tm,"ax",%progbits
+  33              		.align	2
+  34              		.p2align 4,,15
+  35              		.global	_Z11date_get_tmP2tm
+  36              		.thumb
+  37              		.thumb_func
+  38              		.type	_Z11date_get_tmP2tm, %function
+  39              	_Z11date_get_tmP2tm:
+  40              		@ args = 0, pretend = 0, frame = 0
+  41              		@ frame_needed = 0, uses_anonymous_args = 0
+  42              		@ link register save eliminated.
+  43 0000 0146     		mov	r1, r0
+  44 0002 40F20000 		movw	r0, #:lower16:RTCD1
+  45 0006 C0F20000 		movt	r0, #:upper16:RTCD1
+  46 000a FFF7FEBF 		b	rtcGetTimeTm
+  47              		.size	_Z11date_get_tmP2tm, .-_Z11date_get_tmP2tm
+  48 000e 00BF     		.section	.text._Z12dateToStringPc,"ax",%progbits
+  49              		.align	2
+  50              		.p2align 4,,15
+  51              		.global	_Z12dateToStringPc
+  52              		.thumb
+  53              		.thumb_func
+  54              		.type	_Z12dateToStringPc, %function
+  55              	_Z12dateToStringPc:
+  56              		@ args = 0, pretend = 0, frame = 48
+  57              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s 			page 2
+
+
+  58 0000 40F20003 		movw	r3, #:lower16:.LANCHOR0
+  59 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+  60 0008 30B5     		push	{r4, r5, lr}
+  61 000a 0446     		mov	r4, r0
+  62 000c 07CB     		ldmia	r3!, {r0, r1, r2}
+  63 000e 1D88     		ldrh	r5, [r3]	@ unaligned
+  64 0010 9B78     		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+  65 0012 2060     		str	r0, [r4]	@ unaligned
+  66 0014 8DB0     		sub	sp, sp, #52
+  67 0016 40F20000 		movw	r0, #:lower16:RTCD1
+  68 001a A260     		str	r2, [r4, #8]	@ unaligned
+  69 001c A373     		strb	r3, [r4, #14]
+  70 001e 6160     		str	r1, [r4, #4]	@ unaligned
+  71 0020 A581     		strh	r5, [r4, #12]	@ unaligned
+  72 0022 01A9     		add	r1, sp, #4
+  73 0024 C0F20000 		movt	r0, #:upper16:RTCD1
+  74 0028 FFF7FEFF 		bl	rtcGetTimeTm
+  75 002c 40F20005 		movw	r5, #:lower16:.LANCHOR1
+  76 0030 0599     		ldr	r1, [sp, #20]
+  77 0032 C0F20005 		movt	r5, #:upper16:.LANCHOR1
+  78 0036 2846     		mov	r0, r5
+  79 0038 0131     		adds	r1, r1, #1
+  80 003a FFF7FEFF 		bl	itoa10
+  81 003e 059B     		ldr	r3, [sp, #20]
+  82 0040 0499     		ldr	r1, [sp, #16]
+  83 0042 082B     		cmp	r3, #8
+  84 0044 CDBF     		iteet	gt
+  85 0046 2B78     		ldrbgt	r3, [r5]	@ zero_extendqisi2
+  86 0048 3023     		movle	r3, #48
+  87 004a 2370     		strble	r3, [r4]
+  88 004c 2370     		strbgt	r3, [r4]
+  89 004e D4BF     		ite	le
+  90 0050 2B78     		ldrble	r3, [r5]	@ zero_extendqisi2
+  91 0052 6B78     		ldrbgt	r3, [r5, #1]	@ zero_extendqisi2
+  92 0054 40F20005 		movw	r5, #:lower16:.LANCHOR1
+  93 0058 C0F20005 		movt	r5, #:upper16:.LANCHOR1
+  94 005c 6370     		strb	r3, [r4, #1]
+  95 005e 2846     		mov	r0, r5
+  96 0060 FFF7FEFF 		bl	itoa10
+  97 0064 049B     		ldr	r3, [sp, #16]
+  98 0066 0399     		ldr	r1, [sp, #12]
+  99 0068 092B     		cmp	r3, #9
+ 100 006a CDBF     		iteet	gt
+ 101 006c 2B78     		ldrbgt	r3, [r5]	@ zero_extendqisi2
+ 102 006e 3023     		movle	r3, #48
+ 103 0070 E370     		strble	r3, [r4, #3]
+ 104 0072 E370     		strbgt	r3, [r4, #3]
+ 105 0074 D4BF     		ite	le
+ 106 0076 2B78     		ldrble	r3, [r5]	@ zero_extendqisi2
+ 107 0078 6B78     		ldrbgt	r3, [r5, #1]	@ zero_extendqisi2
+ 108 007a 40F20005 		movw	r5, #:lower16:.LANCHOR1
+ 109 007e C0F20005 		movt	r5, #:upper16:.LANCHOR1
+ 110 0082 2371     		strb	r3, [r4, #4]
+ 111 0084 2846     		mov	r0, r5
+ 112 0086 FFF7FEFF 		bl	itoa10
+ 113 008a 039B     		ldr	r3, [sp, #12]
+ 114 008c 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s 			page 3
+
+
+ 115 008e 0299     		ldr	r1, [sp, #8]
+ 116 0090 092B     		cmp	r3, #9
+ 117 0092 CCBF     		ite	gt
+ 118 0094 6B78     		ldrbgt	r3, [r5, #1]	@ zero_extendqisi2
+ 119 0096 E271     		strble	r2, [r4, #7]
+ 120 0098 40F20005 		movw	r5, #:lower16:.LANCHOR1
+ 121 009c D8BF     		it	le
+ 122 009e 3023     		movle	r3, #48
+ 123 00a0 C0F20005 		movt	r5, #:upper16:.LANCHOR1
+ 124 00a4 D2BF     		itee	le
+ 125 00a6 A371     		strble	r3, [r4, #6]
+ 126 00a8 A271     		strbgt	r2, [r4, #6]
+ 127 00aa E371     		strbgt	r3, [r4, #7]
+ 128 00ac 2846     		mov	r0, r5
+ 129 00ae FFF7FEFF 		bl	itoa10
+ 130 00b2 029B     		ldr	r3, [sp, #8]
+ 131 00b4 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
+ 132 00b6 0199     		ldr	r1, [sp, #4]
+ 133 00b8 092B     		cmp	r3, #9
+ 134 00ba CCBF     		ite	gt
+ 135 00bc 6B78     		ldrbgt	r3, [r5, #1]	@ zero_extendqisi2
+ 136 00be A272     		strble	r2, [r4, #10]
+ 137 00c0 40F20005 		movw	r5, #:lower16:.LANCHOR1
+ 138 00c4 D8BF     		it	le
+ 139 00c6 3023     		movle	r3, #48
+ 140 00c8 C0F20005 		movt	r5, #:upper16:.LANCHOR1
+ 141 00cc D2BF     		itee	le
+ 142 00ce 6372     		strble	r3, [r4, #9]
+ 143 00d0 6272     		strbgt	r2, [r4, #9]
+ 144 00d2 A372     		strbgt	r3, [r4, #10]
+ 145 00d4 2846     		mov	r0, r5
+ 146 00d6 FFF7FEFF 		bl	itoa10
+ 147 00da 019B     		ldr	r3, [sp, #4]
+ 148 00dc 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
+ 149 00de 092B     		cmp	r3, #9
+ 150 00e0 CFBF     		iteee	gt
+ 151 00e2 6B78     		ldrbgt	r3, [r5, #1]	@ zero_extendqisi2
+ 152 00e4 6273     		strble	r2, [r4, #13]
+ 153 00e6 3023     		movle	r3, #48
+ 154 00e8 2373     		strble	r3, [r4, #12]
+ 155 00ea C4BF     		itt	gt
+ 156 00ec 2273     		strbgt	r2, [r4, #12]
+ 157 00ee 6373     		strbgt	r3, [r4, #13]
+ 158 00f0 0DB0     		add	sp, sp, #52
+ 159              		@ sp needed
+ 160 00f2 30BD     		pop	{r4, r5, pc}
+ 161              		.size	_Z12dateToStringPc, .-_Z12dateToStringPc
+ 162 00f4 AFF30080 		.section	.text._Z13printDateTimev,"ax",%progbits
+ 162      AFF30080 
+ 162      AFF30080 
+ 163              		.align	2
+ 164              		.p2align 4,,15
+ 165              		.global	_Z13printDateTimev
+ 166              		.thumb
+ 167              		.thumb_func
+ 168              		.type	_Z13printDateTimev, %function
+ 169              	_Z13printDateTimev:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s 			page 4
+
+
+ 170              		@ args = 0, pretend = 0, frame = 48
+ 171              		@ frame_needed = 0, uses_anonymous_args = 0
+ 172 0000 70B5     		push	{r4, r5, r6, lr}
+ 173 0002 40F20000 		movw	r0, #:lower16:RTCD1
+ 174 0006 90B0     		sub	sp, sp, #64
+ 175 0008 C0F20000 		movt	r0, #:upper16:RTCD1
+ 176 000c FFF7FEFF 		bl	rtcGetTimeUnixSec
+ 177 0010 0246     		mov	r2, r0
+ 178 0012 531C     		adds	r3, r2, #1
+ 179 0014 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 180 0018 38D0     		beq	.L18
+ 181 001a 40F20001 		movw	r1, #:lower16:.LC2
+ 182 001e C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 183 0022 C0F20001 		movt	r1, #:upper16:.LC2
+ 184 0026 FFF7FEFF 		bl	scheduleMsg
+ 185 002a 40F20000 		movw	r0, #:lower16:RTCD1
+ 186 002e 05A9     		add	r1, sp, #20
+ 187 0030 C0F20000 		movt	r0, #:upper16:RTCD1
+ 188 0034 FFF7FEFF 		bl	rtcGetTimeTm
+ 189 0038 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 190 003c C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 191 0040 05AC     		add	r4, sp, #20
+ 192 0042 FFF7FEFF 		bl	appendMsgPrefix
+ 193 0046 70CC     		ldmia	r4, {r4, r5, r6}
+ 194 0048 0899     		ldr	r1, [sp, #32]
+ 195 004a 0A9A     		ldr	r2, [sp, #40]
+ 196 004c 099B     		ldr	r3, [sp, #36]
+ 197 004e 0091     		str	r1, [sp]
+ 198 0050 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 199 0054 40F20001 		movw	r1, #:lower16:.LC3
+ 200 0058 02F26C72 		addw	r2, r2, #1900
+ 201 005c 0133     		adds	r3, r3, #1
+ 202 005e C0F20001 		movt	r1, #:upper16:.LC3
+ 203 0062 0196     		str	r6, [sp, #4]
+ 204 0064 0295     		str	r5, [sp, #8]
+ 205 0066 0394     		str	r4, [sp, #12]
+ 206 0068 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 207 006c FFF7FEFF 		bl	appendPrintf
+ 208 0070 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 209 0074 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 210 0078 FFF7FEFF 		bl	appendMsgPostfix
+ 211 007c 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 212 0080 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 213 0084 FFF7FEFF 		bl	scheduleLogging
+ 214 0088 10B0     		add	sp, sp, #64
+ 215              		@ sp needed
+ 216 008a 70BD     		pop	{r4, r5, r6, pc}
+ 217              	.L18:
+ 218 008c 40F20001 		movw	r1, #:lower16:.LC1
+ 219 0090 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 220 0094 C0F20001 		movt	r1, #:upper16:.LC1
+ 221 0098 FFF7FEFF 		bl	scheduleMsg
+ 222 009c 10B0     		add	sp, sp, #64
+ 223              		@ sp needed
+ 224 009e 70BD     		pop	{r4, r5, r6, pc}
+ 225              		.size	_Z13printDateTimev, .-_Z13printDateTimev
+ 226              		.section	.text._Z11setDateTimePKc,"ax",%progbits
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s 			page 5
+
+
+ 227              		.align	2
+ 228              		.p2align 4,,15
+ 229              		.global	_Z11setDateTimePKc
+ 230              		.thumb
+ 231              		.thumb_func
+ 232              		.type	_Z11setDateTimePKc, %function
+ 233              	_Z11setDateTimePKc:
+ 234              		@ args = 0, pretend = 0, frame = 0
+ 235              		@ frame_needed = 0, uses_anonymous_args = 0
+ 236 0000 10B5     		push	{r4, lr}
+ 237 0002 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 238 0004 0446     		mov	r4, r0
+ 239 0006 4BB1     		cbz	r3, .L20
+ 240 0008 FFF7FEFF 		bl	atoff
+ 241 000c 07EE900A 		fmsr	s15, r0
+ 242 0010 FDEEE77A 		ftosizs	s15, s15
+ 243 0014 17EE901A 		fmrs	r1, s15	@ int
+ 244 0018 0029     		cmp	r1, #0
+ 245 001a 0CDC     		bgt	.L24
+ 246              	.L20:
+ 247 001c 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 248 0020 40F20001 		movw	r1, #:lower16:.LC4
+ 249 0024 2246     		mov	r2, r4
+ 250 0026 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 251 002a C0F20001 		movt	r1, #:upper16:.LC4
+ 252 002e BDE81040 		pop	{r4, lr}
+ 253 0032 FFF7FEBF 		b	scheduleMsg
+ 254              	.L24:
+ 255 0036 40F20000 		movw	r0, #:lower16:RTCD1
+ 256 003a C0F20000 		movt	r0, #:upper16:RTCD1
+ 257 003e FFF7FEFF 		bl	rtcSetTimeUnixSec
+ 258 0042 BDE81040 		pop	{r4, lr}
+ 259 0046 FFF7FEBF 		b	_Z13printDateTimev
+ 260              		.size	_Z11setDateTimePKc, .-_Z11setDateTimePKc
+ 261 004a 00BFAFF3 		.section	.text._Z7initRtcv,"ax",%progbits
+ 261      0080
+ 262              		.align	2
+ 263              		.p2align 4,,15
+ 264              		.global	_Z7initRtcv
+ 265              		.thumb
+ 266              		.thumb_func
+ 267              		.type	_Z7initRtcv, %function
+ 268              	_Z7initRtcv:
+ 269              		@ args = 0, pretend = 0, frame = 0
+ 270              		@ frame_needed = 0, uses_anonymous_args = 0
+ 271              		@ link register save eliminated.
+ 272 0000 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 273 0004 40F20001 		movw	r1, #:lower16:.LC5
+ 274 0008 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 275 000c C0F20001 		movt	r1, #:upper16:.LC5
+ 276 0010 FFF7FEBF 		b	printMsg
+ 277              		.size	_Z7initRtcv, .-_Z7initRtcv
+ 278 0014 AFF30080 		.section	.text.startup._GLOBAL__sub_I__Z11date_set_tmP2tm,"ax",%progbits
+ 278      AFF30080 
+ 278      AFF30080 
+ 279              		.align	2
+ 280              		.p2align 4,,15
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s 			page 6
+
+
+ 281              		.thumb
+ 282              		.thumb_func
+ 283              		.type	_GLOBAL__sub_I__Z11date_set_tmP2tm, %function
+ 284              	_GLOBAL__sub_I__Z11date_set_tmP2tm:
+ 285              		@ args = 0, pretend = 0, frame = 0
+ 286              		@ frame_needed = 0, uses_anonymous_args = 0
+ 287              		@ link register save eliminated.
+ 288 0000 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 289 0004 40F20001 		movw	r1, #:lower16:.LC6
+ 290 0008 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 291 000c C0F20001 		movt	r1, #:upper16:.LC6
+ 292 0010 FFF7FEBF 		b	_ZN18LoggingWithStorageC1EPKc
+ 293              		.size	_GLOBAL__sub_I__Z11date_set_tmP2tm, .-_GLOBAL__sub_I__Z11date_set_tmP2tm
+ 294 0014 AFF30080 		.section	.init_array,"aw",%init_array
+ 294      AFF30080 
+ 294      AFF30080 
+ 295              		.align	2
+ 296 0000 00000000 		.word	_GLOBAL__sub_I__Z11date_set_tmP2tm(target1)
+ 297              		.section	.rodata
+ 298              		.align	2
+ 299              		.set	.LANCHOR0,. + 0
+ 300              	.LC0:
+ 301 0000 30302F30 		.ascii	"00/00 00:00:00\000\000"
+ 301      30203030 
+ 301      3A30303A 
+ 301      30300000 
+ 302              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 303              		.align	2
+ 304              	.LC1:
+ 305 0000 696E636F 		.ascii	"incorrect time in RTC cell\000"
+ 305      72726563 
+ 305      74207469 
+ 305      6D652069 
+ 305      6E205254 
+ 306 001b 00       		.space	1
+ 307              	.LC2:
+ 308 001c 2544202D 		.ascii	"%D - unix time\000"
+ 308      20756E69 
+ 308      78207469 
+ 308      6D6500
+ 309 002b 00       		.space	1
+ 310              	.LC3:
+ 311 002c 43757272 		.ascii	"Current RTC time in GMT is: %04u-%02u-%02u %02u:%02"
+ 311      656E7420 
+ 311      52544320 
+ 311      74696D65 
+ 311      20696E20 
+ 312 005f 753A2530 		.ascii	"u:%02u\000"
+ 312      327500
+ 313 0066 0000     		.space	2
+ 314              	.LC4:
+ 315 0068 64617465 		.ascii	"date_set Date parameter %s is wrong\015\012\000"
+ 315      5F736574 
+ 315      20446174 
+ 315      65207061 
+ 315      72616D65 
+ 316 008e 0000     		.space	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s 			page 7
+
+
+ 317              	.LC5:
+ 318 0090 696E6974 		.ascii	"initRtc()\000"
+ 318      52746328 
+ 318      2900
+ 319 009a 0000     		.space	2
+ 320              	.LC6:
+ 321 009c 52544300 		.ascii	"RTC\000"
+ 322              		.section	.bss._ZZ12dateToStringPcE4buff,"aw",%nobits
+ 323              		.align	2
+ 324              		.set	.LANCHOR1,. + 0
+ 325              		.type	_ZZ12dateToStringPcE4buff, %object
+ 326              		.size	_ZZ12dateToStringPcE4buff, 4
+ 327              	_ZZ12dateToStringPcE4buff:
+ 328 0000 00000000 		.space	4
+ 329              		.section	.bss._ZL6logger,"aw",%nobits
+ 330              		.align	2
+ 331              		.set	.LANCHOR2,. + 0
+ 332              		.type	_ZL6logger, %object
+ 333              		.size	_ZL6logger, 260
+ 334              	_ZL6logger:
+ 335 0000 00000000 		.space	260
+ 335      00000000 
+ 335      00000000 
+ 335      00000000 
+ 335      00000000 
+ 336              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 rtc_helper.cpp
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:17     .text._Z11date_set_tmP2tm:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:23     .text._Z11date_set_tmP2tm:00000000 _Z11date_set_tmP2tm
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:33     .text._Z11date_get_tmP2tm:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:39     .text._Z11date_get_tmP2tm:00000000 _Z11date_get_tmP2tm
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:49     .text._Z12dateToStringPc:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:55     .text._Z12dateToStringPc:00000000 _Z12dateToStringPc
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:299    .rodata:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:324    .bss._ZZ12dateToStringPcE4buff:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:163    .text._Z13printDateTimev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:169    .text._Z13printDateTimev:00000000 _Z13printDateTimev
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:331    .bss._ZL6logger:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:307    .rodata.str1.4:0000001c .LC2
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:310    .rodata.str1.4:0000002c .LC3
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:304    .rodata.str1.4:00000000 .LC1
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:227    .text._Z11setDateTimePKc:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:233    .text._Z11setDateTimePKc:00000000 _Z11setDateTimePKc
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:314    .rodata.str1.4:00000068 .LC4
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:262    .text._Z7initRtcv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:268    .text._Z7initRtcv:00000000 _Z7initRtcv
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:317    .rodata.str1.4:00000090 .LC5
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:279    .text.startup._GLOBAL__sub_I__Z11date_set_tmP2tm:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:284    .text.startup._GLOBAL__sub_I__Z11date_set_tmP2tm:00000000 _GLOBAL__sub_I__Z11date_set_tmP2tm
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:320    .rodata.str1.4:0000009c .LC6
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:295    .init_array:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:298    .rodata:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:303    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:323    .bss._ZZ12dateToStringPcE4buff:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:327    .bss._ZZ12dateToStringPcE4buff:00000000 _ZZ12dateToStringPcE4buff
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:330    .bss._ZL6logger:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccN7VHIM.s:334    .bss._ZL6logger:00000000 _ZL6logger
+
+UNDEFINED SYMBOLS
+RTCD1
+rtcSetTimeTm
+rtcGetTimeTm
+itoa10
+rtcGetTimeUnixSec
+scheduleMsg
+appendMsgPrefix
+appendPrintf
+appendMsgPostfix
+scheduleLogging
+atoff
+rtcSetTimeUnixSec
+printMsg
+_ZN18LoggingWithStorageC1EPKc

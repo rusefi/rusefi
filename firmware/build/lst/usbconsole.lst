@@ -1,0 +1,105 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cckBW62V.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"usbconsole.c"
+  16              		.section	.text.usb_serial_start,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	usb_serial_start
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	usb_serial_start, %function
+  23              	usb_serial_start:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 38B5     		push	{r3, r4, r5, lr}
+  27 0002 40F20005 		movw	r5, #:lower16:SDU1
+  28 0006 C0F20005 		movt	r5, #:upper16:SDU1
+  29 000a 40F20004 		movw	r4, #:lower16:serusbcfg
+  30 000e 2846     		mov	r0, r5
+  31 0010 C0F20004 		movt	r4, #:upper16:serusbcfg
+  32 0014 FFF7FEFF 		bl	sduObjectInit
+  33 0018 2146     		mov	r1, r4
+  34 001a 2846     		mov	r0, r5
+  35 001c FFF7FEFF 		bl	sduStart
+  36 0020 2468     		ldr	r4, [r4]
+  37 0022 236D     		ldr	r3, [r4, #80]
+  38 0024 9A6B     		ldr	r2, [r3, #56]
+  39 0026 22F40022 		bic	r2, r2, #524288
+  40 002a 9A63     		str	r2, [r3, #56]
+  41 002c 40F2DC50 		movw	r0, #1500
+  42 0030 FFF7FEFF 		bl	chThdSleep
+  43 0034 40F20001 		movw	r1, #:lower16:usbcfg
+  44 0038 2046     		mov	r0, r4
+  45 003a C0F20001 		movt	r1, #:upper16:usbcfg
+  46 003e FFF7FEFF 		bl	usbStart
+  47 0042 236D     		ldr	r3, [r4, #80]
+  48 0044 9A6B     		ldr	r2, [r3, #56]
+  49 0046 40F20000 		movw	r0, #:lower16:SD2
+  50 004a 42F40022 		orr	r2, r2, #524288
+  51 004e 9A63     		str	r2, [r3, #56]
+  52 0050 C0F20000 		movt	r0, #:upper16:SD2
+  53 0054 0021     		movs	r1, #0
+  54 0056 BDE83840 		pop	{r3, r4, r5, lr}
+  55 005a FFF7FEBF 		b	sdStart
+  56              		.size	usb_serial_start, .-usb_serial_start
+  57 005e 00BF     		.section	.text.is_usb_serial_ready,"ax",%progbits
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cckBW62V.s 			page 2
+
+
+  58              		.align	2
+  59              		.p2align 4,,15
+  60              		.global	is_usb_serial_ready
+  61              		.thumb
+  62              		.thumb_func
+  63              		.type	is_usb_serial_ready, %function
+  64              	is_usb_serial_ready:
+  65              		@ args = 0, pretend = 0, frame = 0
+  66              		@ frame_needed = 0, uses_anonymous_args = 0
+  67              		@ link register save eliminated.
+  68 0000 40F20003 		movw	r3, #:lower16:SDU1
+  69 0004 C0F20003 		movt	r3, #:upper16:SDU1
+  70 0008 D3F85432 		ldr	r3, [r3, #596]
+  71 000c 1B68     		ldr	r3, [r3]
+  72 000e 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+  73 0010 031F     		subs	r3, r0, #4
+  74 0012 5842     		rsbs	r0, r3, #0
+  75 0014 5841     		adcs	r0, r0, r3
+  76 0016 7047     		bx	lr
+  77              		.size	is_usb_serial_ready, .-is_usb_serial_ready
+  78 0018 AFF30080 		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+  78      AFF30080 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cckBW62V.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 usbconsole.c
+C:\Users\pc\AppData\Local\Temp\cckBW62V.s:17     .text.usb_serial_start:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cckBW62V.s:23     .text.usb_serial_start:00000000 usb_serial_start
+C:\Users\pc\AppData\Local\Temp\cckBW62V.s:58     .text.is_usb_serial_ready:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cckBW62V.s:64     .text.is_usb_serial_ready:00000000 is_usb_serial_ready
+
+UNDEFINED SYMBOLS
+SDU1
+serusbcfg
+sduObjectInit
+sduStart
+chThdSleep
+usbcfg
+usbStart
+SD2
+sdStart

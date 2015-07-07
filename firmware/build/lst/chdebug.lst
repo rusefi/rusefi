@@ -1,0 +1,674 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"chdebug.c"
+  16              		.section	.text.dbg_check_disable,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	dbg_check_disable
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	dbg_check_disable, %function
+  23              	dbg_check_disable:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 40F20003 		movw	r3, #:lower16:.LANCHOR0
+  28 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+  29 0008 1B68     		ldr	r3, [r3]
+  30 000a 2BB9     		cbnz	r3, .L2
+  31 000c 40F20003 		movw	r3, #:lower16:.LANCHOR1
+  32 0010 C0F20003 		movt	r3, #:upper16:.LANCHOR1
+  33 0014 1B68     		ldr	r3, [r3]
+  34 0016 5BB1     		cbz	r3, .L1
+  35              	.L2:
+  36 0018 40F20000 		movw	r0, #:lower16:.LC0
+  37 001c 40F20001 		movw	r1, #:lower16:.LC1
+  38 0020 C0F20000 		movt	r0, #:upper16:.LC0
+  39 0024 C0F20001 		movt	r1, #:upper16:.LC1
+  40 0028 4FF48C72 		mov	r2, #280
+  41 002c FFF7FEBF 		b	chDbgPanic3
+  42              	.L1:
+  43 0030 7047     		bx	lr
+  44              		.size	dbg_check_disable, .-dbg_check_disable
+  45 0032 00BFAFF3 		.section	.text.dbg_check_suspend,"ax",%progbits
+  45      0080AFF3 
+  45      0080AFF3 
+  45      0080
+  46              		.align	2
+  47              		.p2align 4,,15
+  48              		.global	dbg_check_suspend
+  49              		.thumb
+  50              		.thumb_func
+  51              		.type	dbg_check_suspend, %function
+  52              	dbg_check_suspend:
+  53              		@ args = 0, pretend = 0, frame = 0
+  54              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s 			page 2
+
+
+  55              		@ link register save eliminated.
+  56 0000 40F20003 		movw	r3, #:lower16:.LANCHOR0
+  57 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+  58 0008 1B68     		ldr	r3, [r3]
+  59 000a 2BB9     		cbnz	r3, .L6
+  60 000c 40F20003 		movw	r3, #:lower16:.LANCHOR1
+  61 0010 C0F20003 		movt	r3, #:upper16:.LANCHOR1
+  62 0014 1B68     		ldr	r3, [r3]
+  63 0016 5BB1     		cbz	r3, .L5
+  64              	.L6:
+  65 0018 40F20000 		movw	r0, #:lower16:.LC2
+  66 001c 40F20001 		movw	r1, #:lower16:.LC1
+  67 0020 C0F20000 		movt	r0, #:upper16:.LC2
+  68 0024 C0F20001 		movt	r1, #:upper16:.LC1
+  69 0028 4FF48C72 		mov	r2, #280
+  70 002c FFF7FEBF 		b	chDbgPanic3
+  71              	.L5:
+  72 0030 7047     		bx	lr
+  73              		.size	dbg_check_suspend, .-dbg_check_suspend
+  74 0032 00BFAFF3 		.section	.text.dbg_check_enable,"ax",%progbits
+  74      0080AFF3 
+  74      0080AFF3 
+  74      0080
+  75              		.align	2
+  76              		.p2align 4,,15
+  77              		.global	dbg_check_enable
+  78              		.thumb
+  79              		.thumb_func
+  80              		.type	dbg_check_enable, %function
+  81              	dbg_check_enable:
+  82              		@ args = 0, pretend = 0, frame = 0
+  83              		@ frame_needed = 0, uses_anonymous_args = 0
+  84              		@ link register save eliminated.
+  85 0000 40F20003 		movw	r3, #:lower16:.LANCHOR0
+  86 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+  87 0008 1B68     		ldr	r3, [r3]
+  88 000a 2BB9     		cbnz	r3, .L9
+  89 000c 40F20003 		movw	r3, #:lower16:.LANCHOR1
+  90 0010 C0F20003 		movt	r3, #:upper16:.LANCHOR1
+  91 0014 1B68     		ldr	r3, [r3]
+  92 0016 5BB1     		cbz	r3, .L8
+  93              	.L9:
+  94 0018 40F20000 		movw	r0, #:lower16:.LC3
+  95 001c 40F20001 		movw	r1, #:lower16:.LC1
+  96 0020 C0F20000 		movt	r0, #:upper16:.LC3
+  97 0024 C0F20001 		movt	r1, #:upper16:.LC1
+  98 0028 4FF48C72 		mov	r2, #280
+  99 002c FFF7FEBF 		b	chDbgPanic3
+ 100              	.L8:
+ 101 0030 7047     		bx	lr
+ 102              		.size	dbg_check_enable, .-dbg_check_enable
+ 103 0032 00BFAFF3 		.section	.text.dbg_check_lock,"ax",%progbits
+ 103      0080AFF3 
+ 103      0080AFF3 
+ 103      0080
+ 104              		.align	2
+ 105              		.p2align 4,,15
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s 			page 3
+
+
+ 106              		.global	dbg_check_lock
+ 107              		.thumb
+ 108              		.thumb_func
+ 109              		.type	dbg_check_lock, %function
+ 110              	dbg_check_lock:
+ 111              		@ args = 0, pretend = 0, frame = 0
+ 112              		@ frame_needed = 0, uses_anonymous_args = 0
+ 113 0000 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 114 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 115 0008 10B5     		push	{r4, lr}
+ 116 000a 1B68     		ldr	r3, [r3]
+ 117 000c 40F20004 		movw	r4, #:lower16:.LANCHOR1
+ 118 0010 C0F20004 		movt	r4, #:upper16:.LANCHOR1
+ 119 0014 0BB9     		cbnz	r3, .L12
+ 120 0016 2368     		ldr	r3, [r4]
+ 121 0018 5BB1     		cbz	r3, .L13
+ 122              	.L12:
+ 123 001a 40F20000 		movw	r0, #:lower16:.LC4
+ 124 001e 40F20001 		movw	r1, #:lower16:.LC1
+ 125 0022 C0F20000 		movt	r0, #:upper16:.LC4
+ 126 0026 C0F20001 		movt	r1, #:upper16:.LC1
+ 127 002a 4FF48C72 		mov	r2, #280
+ 128 002e FFF7FEFF 		bl	chDbgPanic3
+ 129              	.L13:
+ 130 0032 0123     		movs	r3, #1
+ 131 0034 2360     		str	r3, [r4]
+ 132 0036 10BD     		pop	{r4, pc}
+ 133              		.size	dbg_check_lock, .-dbg_check_lock
+ 134 0038 AFF30080 		.section	.text.dbg_check_unlock,"ax",%progbits
+ 134      AFF30080 
+ 135              		.align	2
+ 136              		.p2align 4,,15
+ 137              		.global	dbg_check_unlock
+ 138              		.thumb
+ 139              		.thumb_func
+ 140              		.type	dbg_check_unlock, %function
+ 141              	dbg_check_unlock:
+ 142              		@ args = 0, pretend = 0, frame = 0
+ 143              		@ frame_needed = 0, uses_anonymous_args = 0
+ 144 0000 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 145 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 146 0008 10B5     		push	{r4, lr}
+ 147 000a 1B68     		ldr	r3, [r3]
+ 148 000c 40F20004 		movw	r4, #:lower16:.LANCHOR1
+ 149 0010 C0F20004 		movt	r4, #:upper16:.LANCHOR1
+ 150 0014 2BB9     		cbnz	r3, .L20
+ 151 0016 2368     		ldr	r3, [r4]
+ 152 0018 002B     		cmp	r3, #0
+ 153 001a 02DD     		ble	.L20
+ 154 001c 0023     		movs	r3, #0
+ 155 001e 2360     		str	r3, [r4]
+ 156 0020 10BD     		pop	{r4, pc}
+ 157              	.L20:
+ 158 0022 40F20000 		movw	r0, #:lower16:.LC5
+ 159 0026 40F20001 		movw	r1, #:lower16:.LC1
+ 160 002a C0F20000 		movt	r0, #:upper16:.LC5
+ 161 002e C0F20001 		movt	r1, #:upper16:.LC1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s 			page 4
+
+
+ 162 0032 4FF48C72 		mov	r2, #280
+ 163 0036 FFF7FEFF 		bl	chDbgPanic3
+ 164 003a 0023     		movs	r3, #0
+ 165 003c 2360     		str	r3, [r4]
+ 166 003e 10BD     		pop	{r4, pc}
+ 167              		.size	dbg_check_unlock, .-dbg_check_unlock
+ 168              		.section	.text.dbg_check_lock_from_isr,"ax",%progbits
+ 169              		.align	2
+ 170              		.p2align 4,,15
+ 171              		.global	dbg_check_lock_from_isr
+ 172              		.thumb
+ 173              		.thumb_func
+ 174              		.type	dbg_check_lock_from_isr, %function
+ 175              	dbg_check_lock_from_isr:
+ 176              		@ args = 0, pretend = 0, frame = 0
+ 177              		@ frame_needed = 0, uses_anonymous_args = 0
+ 178 0000 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 179 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 180 0008 10B5     		push	{r4, lr}
+ 181 000a 1B68     		ldr	r3, [r3]
+ 182 000c 40F20004 		movw	r4, #:lower16:.LANCHOR1
+ 183 0010 002B     		cmp	r3, #0
+ 184 0012 C0F20004 		movt	r4, #:upper16:.LANCHOR1
+ 185 0016 01DD     		ble	.L25
+ 186 0018 2368     		ldr	r3, [r4]
+ 187 001a 5BB1     		cbz	r3, .L26
+ 188              	.L25:
+ 189 001c 40F20000 		movw	r0, #:lower16:.LC6
+ 190 0020 40F20001 		movw	r1, #:lower16:.LC1
+ 191 0024 C0F20000 		movt	r0, #:upper16:.LC6
+ 192 0028 C0F20001 		movt	r1, #:upper16:.LC1
+ 193 002c 4FF48C72 		mov	r2, #280
+ 194 0030 FFF7FEFF 		bl	chDbgPanic3
+ 195              	.L26:
+ 196 0034 0123     		movs	r3, #1
+ 197 0036 2360     		str	r3, [r4]
+ 198 0038 10BD     		pop	{r4, pc}
+ 199              		.size	dbg_check_lock_from_isr, .-dbg_check_lock_from_isr
+ 200 003a 00BFAFF3 		.section	.text.dbg_check_unlock_from_isr,"ax",%progbits
+ 200      0080
+ 201              		.align	2
+ 202              		.p2align 4,,15
+ 203              		.global	dbg_check_unlock_from_isr
+ 204              		.thumb
+ 205              		.thumb_func
+ 206              		.type	dbg_check_unlock_from_isr, %function
+ 207              	dbg_check_unlock_from_isr:
+ 208              		@ args = 0, pretend = 0, frame = 0
+ 209              		@ frame_needed = 0, uses_anonymous_args = 0
+ 210 0000 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 211 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 212 0008 10B5     		push	{r4, lr}
+ 213 000a 1B68     		ldr	r3, [r3]
+ 214 000c 40F20004 		movw	r4, #:lower16:.LANCHOR1
+ 215 0010 002B     		cmp	r3, #0
+ 216 0012 C0F20004 		movt	r4, #:upper16:.LANCHOR1
+ 217 0016 05DD     		ble	.L33
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s 			page 5
+
+
+ 218 0018 2368     		ldr	r3, [r4]
+ 219 001a 002B     		cmp	r3, #0
+ 220 001c 02DD     		ble	.L33
+ 221 001e 0023     		movs	r3, #0
+ 222 0020 2360     		str	r3, [r4]
+ 223 0022 10BD     		pop	{r4, pc}
+ 224              	.L33:
+ 225 0024 40F20000 		movw	r0, #:lower16:.LC7
+ 226 0028 40F20001 		movw	r1, #:lower16:.LC1
+ 227 002c C0F20000 		movt	r0, #:upper16:.LC7
+ 228 0030 C0F20001 		movt	r1, #:upper16:.LC1
+ 229 0034 4FF48C72 		mov	r2, #280
+ 230 0038 FFF7FEFF 		bl	chDbgPanic3
+ 231 003c 0023     		movs	r3, #0
+ 232 003e 2360     		str	r3, [r4]
+ 233 0040 10BD     		pop	{r4, pc}
+ 234              		.size	dbg_check_unlock_from_isr, .-dbg_check_unlock_from_isr
+ 235 0042 00BFAFF3 		.section	.text.dbg_check_enter_isr,"ax",%progbits
+ 235      0080AFF3 
+ 235      0080AFF3 
+ 235      0080
+ 236              		.align	2
+ 237              		.p2align 4,,15
+ 238              		.global	dbg_check_enter_isr
+ 239              		.thumb
+ 240              		.thumb_func
+ 241              		.type	dbg_check_enter_isr, %function
+ 242              	dbg_check_enter_isr:
+ 243              		@ args = 0, pretend = 0, frame = 0
+ 244              		@ frame_needed = 0, uses_anonymous_args = 0
+ 245 0000 10B5     		push	{r4, lr}
+ 246 0002 2023     		movs	r3, #32
+ 247              	@ 167 "chibios/os/kernel/src/chdebug.c" 1
+ 248 0004 83F31188 		msr     BASEPRI, r3
+ 249              	@ 0 "" 2
+ 250              		.thumb
+ 251 0008 40F20004 		movw	r4, #:lower16:.LANCHOR0
+ 252 000c C0F20004 		movt	r4, #:upper16:.LANCHOR0
+ 253 0010 2268     		ldr	r2, [r4]
+ 254 0012 002A     		cmp	r2, #0
+ 255 0014 05DB     		blt	.L38
+ 256 0016 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 257 001a C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ 258 001e 1B68     		ldr	r3, [r3]
+ 259 0020 63B1     		cbz	r3, .L39
+ 260              	.L38:
+ 261 0022 40F20000 		movw	r0, #:lower16:.LC8
+ 262 0026 40F20001 		movw	r1, #:lower16:.LC1
+ 263 002a 4FF48C72 		mov	r2, #280
+ 264 002e C0F20000 		movt	r0, #:upper16:.LC8
+ 265 0032 C0F20001 		movt	r1, #:upper16:.LC1
+ 266 0036 FFF7FEFF 		bl	chDbgPanic3
+ 267 003a 2268     		ldr	r2, [r4]
+ 268              	.L39:
+ 269 003c 40F20003 		movw	r3, #:lower16:maxNesting
+ 270 0040 C0F20003 		movt	r3, #:upper16:maxNesting
+ 271 0044 0132     		adds	r2, r2, #1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s 			page 6
+
+
+ 272 0046 1968     		ldr	r1, [r3]
+ 273 0048 2260     		str	r2, [r4]
+ 274 004a 8A42     		cmp	r2, r1
+ 275 004c C8BF     		it	gt
+ 276 004e 1A60     		strgt	r2, [r3]
+ 277 0050 0023     		movs	r3, #0
+ 278              	@ 173 "chibios/os/kernel/src/chdebug.c" 1
+ 279 0052 83F31188 		msr     BASEPRI, r3
+ 280              	@ 0 "" 2
+ 281              		.thumb
+ 282 0056 10BD     		pop	{r4, pc}
+ 283              		.size	dbg_check_enter_isr, .-dbg_check_enter_isr
+ 284 0058 AFF30080 		.section	.text.dbg_check_leave_isr,"ax",%progbits
+ 284      AFF30080 
+ 285              		.align	2
+ 286              		.p2align 4,,15
+ 287              		.global	dbg_check_leave_isr
+ 288              		.thumb
+ 289              		.thumb_func
+ 290              		.type	dbg_check_leave_isr, %function
+ 291              	dbg_check_leave_isr:
+ 292              		@ args = 0, pretend = 0, frame = 0
+ 293              		@ frame_needed = 0, uses_anonymous_args = 0
+ 294 0000 10B5     		push	{r4, lr}
+ 295 0002 2023     		movs	r3, #32
+ 296              	@ 183 "chibios/os/kernel/src/chdebug.c" 1
+ 297 0004 83F31188 		msr     BASEPRI, r3
+ 298              	@ 0 "" 2
+ 299              		.thumb
+ 300 0008 40F20004 		movw	r4, #:lower16:.LANCHOR0
+ 301 000c C0F20004 		movt	r4, #:upper16:.LANCHOR0
+ 302 0010 2268     		ldr	r2, [r4]
+ 303 0012 002A     		cmp	r2, #0
+ 304 0014 05DD     		ble	.L43
+ 305 0016 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 306 001a C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ 307 001e 1B68     		ldr	r3, [r3]
+ 308 0020 63B1     		cbz	r3, .L44
+ 309              	.L43:
+ 310 0022 40F20000 		movw	r0, #:lower16:.LC9
+ 311 0026 40F20001 		movw	r1, #:lower16:.LC1
+ 312 002a 4FF48C72 		mov	r2, #280
+ 313 002e C0F20000 		movt	r0, #:upper16:.LC9
+ 314 0032 C0F20001 		movt	r1, #:upper16:.LC1
+ 315 0036 FFF7FEFF 		bl	chDbgPanic3
+ 316 003a 2268     		ldr	r2, [r4]
+ 317              	.L44:
+ 318 003c 013A     		subs	r2, r2, #1
+ 319 003e 2260     		str	r2, [r4]
+ 320 0040 0023     		movs	r3, #0
+ 321              	@ 187 "chibios/os/kernel/src/chdebug.c" 1
+ 322 0042 83F31188 		msr     BASEPRI, r3
+ 323              	@ 0 "" 2
+ 324              		.thumb
+ 325 0046 10BD     		pop	{r4, pc}
+ 326              		.size	dbg_check_leave_isr, .-dbg_check_leave_isr
+ 327 0048 AFF30080 		.section	.text.chDbgCheckClassI,"ax",%progbits
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s 			page 7
+
+
+ 327      AFF30080 
+ 328              		.align	2
+ 329              		.p2align 4,,15
+ 330              		.global	chDbgCheckClassI
+ 331              		.thumb
+ 332              		.thumb_func
+ 333              		.type	chDbgCheckClassI, %function
+ 334              	chDbgCheckClassI:
+ 335              		@ args = 0, pretend = 0, frame = 0
+ 336              		@ frame_needed = 0, uses_anonymous_args = 0
+ 337              		@ link register save eliminated.
+ 338 0000 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 339 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 340 0008 1B68     		ldr	r3, [r3]
+ 341 000a 002B     		cmp	r3, #0
+ 342 000c 07DB     		blt	.L47
+ 343 000e 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 344 0012 C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ 345 0016 1B68     		ldr	r3, [r3]
+ 346 0018 002B     		cmp	r3, #0
+ 347 001a 00DD     		ble	.L47
+ 348 001c 7047     		bx	lr
+ 349              	.L47:
+ 350 001e 40F20000 		movw	r0, #:lower16:.LC10
+ 351 0022 40F20001 		movw	r1, #:lower16:.LC1
+ 352 0026 C0F20000 		movt	r0, #:upper16:.LC10
+ 353 002a C0F20001 		movt	r1, #:upper16:.LC1
+ 354 002e 4FF48C72 		mov	r2, #280
+ 355 0032 FFF7FEBF 		b	chDbgPanic3
+ 356              		.size	chDbgCheckClassI, .-chDbgCheckClassI
+ 357 0036 00BFAFF3 		.section	.text.chDbgCheckClassS,"ax",%progbits
+ 357      0080AFF3 
+ 357      0080
+ 358              		.align	2
+ 359              		.p2align 4,,15
+ 360              		.global	chDbgCheckClassS
+ 361              		.thumb
+ 362              		.thumb_func
+ 363              		.type	chDbgCheckClassS, %function
+ 364              	chDbgCheckClassS:
+ 365              		@ args = 0, pretend = 0, frame = 0
+ 366              		@ frame_needed = 0, uses_anonymous_args = 0
+ 367              		@ link register save eliminated.
+ 368 0000 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 369 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 370 0008 1B68     		ldr	r3, [r3]
+ 371 000a 3BB9     		cbnz	r3, .L50
+ 372 000c 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 373 0010 C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ 374 0014 1B68     		ldr	r3, [r3]
+ 375 0016 002B     		cmp	r3, #0
+ 376 0018 00DD     		ble	.L50
+ 377 001a 7047     		bx	lr
+ 378              	.L50:
+ 379 001c 40F20000 		movw	r0, #:lower16:.LC11
+ 380 0020 40F20001 		movw	r1, #:lower16:.LC1
+ 381 0024 C0F20000 		movt	r0, #:upper16:.LC11
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s 			page 8
+
+
+ 382 0028 C0F20001 		movt	r1, #:upper16:.LC1
+ 383 002c 4FF48C72 		mov	r2, #280
+ 384 0030 FFF7FEBF 		b	chDbgPanic3
+ 385              		.size	chDbgCheckClassS, .-chDbgCheckClassS
+ 386 0034 AFF30080 		.section	.text._trace_init,"ax",%progbits
+ 386      AFF30080 
+ 386      AFF30080 
+ 387              		.align	2
+ 388              		.p2align 4,,15
+ 389              		.global	_trace_init
+ 390              		.thumb
+ 391              		.thumb_func
+ 392              		.type	_trace_init, %function
+ 393              	_trace_init:
+ 394              		@ args = 0, pretend = 0, frame = 0
+ 395              		@ frame_needed = 0, uses_anonymous_args = 0
+ 396              		@ link register save eliminated.
+ 397 0000 40F20003 		movw	r3, #:lower16:.LANCHOR2
+ 398 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR2
+ 399 0008 1A46     		mov	r2, r3
+ 400 000a 4021     		movs	r1, #64
+ 401 000c 42F8081B 		str	r1, [r2], #8
+ 402 0010 5A60     		str	r2, [r3, #4]
+ 403 0012 7047     		bx	lr
+ 404              		.size	_trace_init, .-_trace_init
+ 405 0014 AFF30080 		.section	.text.dbg_trace,"ax",%progbits
+ 405      AFF30080 
+ 405      AFF30080 
+ 406              		.align	2
+ 407              		.p2align 4,,15
+ 408              		.global	dbg_trace
+ 409              		.thumb
+ 410              		.thumb_func
+ 411              		.type	dbg_trace, %function
+ 412              	dbg_trace:
+ 413              		@ args = 0, pretend = 0, frame = 0
+ 414              		@ frame_needed = 0, uses_anonymous_args = 0
+ 415              		@ link register save eliminated.
+ 416 0000 10B4     		push	{r4}
+ 417 0002 40F20003 		movw	r3, #:lower16:.LANCHOR2
+ 418 0006 40F20004 		movw	r4, #:lower16:vtlist
+ 419 000a 40F20001 		movw	r1, #:lower16:rlist
+ 420 000e C0F20003 		movt	r3, #:upper16:.LANCHOR2
+ 421 0012 C0F20004 		movt	r4, #:upper16:vtlist
+ 422 0016 C0F20001 		movt	r1, #:upper16:rlist
+ 423 001a 5A68     		ldr	r2, [r3, #4]
+ 424 001c E468     		ldr	r4, [r4, #12]
+ 425 001e 8969     		ldr	r1, [r1, #24]
+ 426 0020 1460     		str	r4, [r2]
+ 427 0022 5160     		str	r1, [r2, #4]
+ 428 0024 816A     		ldr	r1, [r0, #40]
+ 429 0026 9160     		str	r1, [r2, #8]
+ 430 0028 90F82040 		ldrb	r4, [r0, #32]	@ zero_extendqisi2
+ 431 002c 02F11001 		add	r1, r2, #16
+ 432 0030 03F58160 		add	r0, r3, #1032
+ 433 0034 8142     		cmp	r1, r0
+ 434 0036 1473     		strb	r4, [r2, #12]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s 			page 9
+
+
+ 435 0038 2ABF     		itet	cs
+ 436 003a 03F10802 		addcs	r2, r3, #8
+ 437 003e 5960     		strcc	r1, [r3, #4]
+ 438 0040 5A60     		strcs	r2, [r3, #4]
+ 439 0042 5DF8044B 		ldr	r4, [sp], #4
+ 440 0046 7047     		bx	lr
+ 441              		.size	dbg_trace, .-dbg_trace
+ 442 0048 AFF30080 		.section	.text.chDbgPanic,"ax",%progbits
+ 442      AFF30080 
+ 443              		.align	2
+ 444              		.p2align 4,,15
+ 445              		.global	chDbgPanic
+ 446              		.thumb
+ 447              		.thumb_func
+ 448              		.type	chDbgPanic, %function
+ 449              	chDbgPanic:
+ 450              		@ args = 0, pretend = 0, frame = 0
+ 451              		@ frame_needed = 0, uses_anonymous_args = 0
+ 452              		@ link register save eliminated.
+ 453 0000 40F20001 		movw	r1, #:lower16:.LC1
+ 454 0004 C0F20001 		movt	r1, #:upper16:.LC1
+ 455 0008 4FF48C72 		mov	r2, #280
+ 456 000c FFF7FEBF 		b	chDbgPanic3
+ 457              		.size	chDbgPanic, .-chDbgPanic
+ 458              		.global	dbg_panic_msg
+ 459              		.global	dbg_trace_buffer
+ 460              		.global	dbg_lock_cnt
+ 461              		.global	dbg_isr_cnt
+ 462              		.section	.bss.dbg_isr_cnt,"aw",%nobits
+ 463              		.align	2
+ 464              		.set	.LANCHOR0,. + 0
+ 465              		.type	dbg_isr_cnt, %object
+ 466              		.size	dbg_isr_cnt, 4
+ 467              	dbg_isr_cnt:
+ 468 0000 00000000 		.space	4
+ 469              		.section	.bss.dbg_trace_buffer,"aw",%nobits
+ 470              		.align	2
+ 471              		.set	.LANCHOR2,. + 0
+ 472              		.type	dbg_trace_buffer, %object
+ 473              		.size	dbg_trace_buffer, 1032
+ 474              	dbg_trace_buffer:
+ 475 0000 00000000 		.space	1032
+ 475      00000000 
+ 475      00000000 
+ 475      00000000 
+ 475      00000000 
+ 476              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 477              		.align	2
+ 478              	.LC0:
+ 479 0000 53562331 		.ascii	"SV#1\000"
+ 479      00
+ 480 0005 000000   		.space	3
+ 481              	.LC1:
+ 482 0008 63686962 		.ascii	"chibios/os/kernel/src/chdebug.c\000"
+ 482      696F732F 
+ 482      6F732F6B 
+ 482      65726E65 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s 			page 10
+
+
+ 482      6C2F7372 
+ 483              	.LC2:
+ 484 0028 53562332 		.ascii	"SV#2\000"
+ 484      00
+ 485 002d 000000   		.space	3
+ 486              	.LC3:
+ 487 0030 53562333 		.ascii	"SV#3\000"
+ 487      00
+ 488 0035 000000   		.space	3
+ 489              	.LC4:
+ 490 0038 53562334 		.ascii	"SV#4 misplaced chSysLock()\000"
+ 490      206D6973 
+ 490      706C6163 
+ 490      65642063 
+ 490      68537973 
+ 491 0053 00       		.space	1
+ 492              	.LC5:
+ 493 0054 53562335 		.ascii	"SV#5\000"
+ 493      00
+ 494 0059 000000   		.space	3
+ 495              	.LC6:
+ 496 005c 53562336 		.ascii	"SV#6 misplaced chSysLockFromIsr\000"
+ 496      206D6973 
+ 496      706C6163 
+ 496      65642063 
+ 496      68537973 
+ 497              	.LC7:
+ 498 007c 53562337 		.ascii	"SV#7\000"
+ 498      00
+ 499 0081 000000   		.space	3
+ 500              	.LC8:
+ 501 0084 53562338 		.ascii	"SV#8\000"
+ 501      00
+ 502 0089 000000   		.space	3
+ 503              	.LC9:
+ 504 008c 53562339 		.ascii	"SV#9\000"
+ 504      00
+ 505 0091 000000   		.space	3
+ 506              	.LC10:
+ 507 0094 53562331 		.ascii	"SV#10 misplaced I-class function\000"
+ 507      30206D69 
+ 507      73706C61 
+ 507      63656420 
+ 507      492D636C 
+ 508 00b5 000000   		.space	3
+ 509              	.LC11:
+ 510 00b8 53562331 		.ascii	"SV#11\000"
+ 510      3100
+ 511 00be 0000     		.section	.bss.dbg_lock_cnt,"aw",%nobits
+ 512              		.align	2
+ 513              		.set	.LANCHOR1,. + 0
+ 514              		.type	dbg_lock_cnt, %object
+ 515              		.size	dbg_lock_cnt, 4
+ 516              	dbg_lock_cnt:
+ 517 0000 00000000 		.space	4
+ 518              		.section	.bss.dbg_panic_msg,"aw",%nobits
+ 519              		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s 			page 11
+
+
+ 520              		.type	dbg_panic_msg, %object
+ 521              		.size	dbg_panic_msg, 4
+ 522              	dbg_panic_msg:
+ 523 0000 00000000 		.space	4
+ 524              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s 			page 12
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 chdebug.c
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:17     .text.dbg_check_disable:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:23     .text.dbg_check_disable:00000000 dbg_check_disable
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:464    .bss.dbg_isr_cnt:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:513    .bss.dbg_lock_cnt:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:478    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:481    .rodata.str1.4:00000008 .LC1
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:46     .text.dbg_check_suspend:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:52     .text.dbg_check_suspend:00000000 dbg_check_suspend
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:483    .rodata.str1.4:00000028 .LC2
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:75     .text.dbg_check_enable:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:81     .text.dbg_check_enable:00000000 dbg_check_enable
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:486    .rodata.str1.4:00000030 .LC3
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:104    .text.dbg_check_lock:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:110    .text.dbg_check_lock:00000000 dbg_check_lock
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:489    .rodata.str1.4:00000038 .LC4
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:135    .text.dbg_check_unlock:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:141    .text.dbg_check_unlock:00000000 dbg_check_unlock
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:492    .rodata.str1.4:00000054 .LC5
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:169    .text.dbg_check_lock_from_isr:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:175    .text.dbg_check_lock_from_isr:00000000 dbg_check_lock_from_isr
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:495    .rodata.str1.4:0000005c .LC6
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:201    .text.dbg_check_unlock_from_isr:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:207    .text.dbg_check_unlock_from_isr:00000000 dbg_check_unlock_from_isr
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:497    .rodata.str1.4:0000007c .LC7
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:236    .text.dbg_check_enter_isr:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:242    .text.dbg_check_enter_isr:00000000 dbg_check_enter_isr
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:500    .rodata.str1.4:00000084 .LC8
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:285    .text.dbg_check_leave_isr:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:291    .text.dbg_check_leave_isr:00000000 dbg_check_leave_isr
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:503    .rodata.str1.4:0000008c .LC9
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:328    .text.chDbgCheckClassI:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:334    .text.chDbgCheckClassI:00000000 chDbgCheckClassI
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:506    .rodata.str1.4:00000094 .LC10
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:358    .text.chDbgCheckClassS:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:364    .text.chDbgCheckClassS:00000000 chDbgCheckClassS
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:509    .rodata.str1.4:000000b8 .LC11
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:387    .text._trace_init:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:393    .text._trace_init:00000000 _trace_init
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:471    .bss.dbg_trace_buffer:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:406    .text.dbg_trace:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:412    .text.dbg_trace:00000000 dbg_trace
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:443    .text.chDbgPanic:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:449    .text.chDbgPanic:00000000 chDbgPanic
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:522    .bss.dbg_panic_msg:00000000 dbg_panic_msg
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:474    .bss.dbg_trace_buffer:00000000 dbg_trace_buffer
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:516    .bss.dbg_lock_cnt:00000000 dbg_lock_cnt
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:467    .bss.dbg_isr_cnt:00000000 dbg_isr_cnt
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:463    .bss.dbg_isr_cnt:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:470    .bss.dbg_trace_buffer:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:477    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:512    .bss.dbg_lock_cnt:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s:519    .bss.dbg_panic_msg:00000000 $d
+
+UNDEFINED SYMBOLS
+chDbgPanic3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccKb8Xyk.s 			page 13
+
+
+maxNesting
+vtlist
+rlist

@@ -1,0 +1,577 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccRKmqJh.s 			page 1
+
+
+   1              		.file	"main.c"
+   2              		.section .rdata,"dr"
+   3              	LC0:
+   4 0000 496E6974 		.ascii "Init: shell on SD1 terminated\0"
+   4      3A207368 
+   4      656C6C20 
+   4      6F6E2053 
+   4      44312074 
+   5              		.section	.text$termination_handler,"x"
+   6              		.p2align 4,,15
+   7              		.def	_termination_handler;	.scl	3;	.type	32;	.endef
+   8              	_termination_handler:
+   9              	LFB71:
+  10              		.cfi_startproc
+  11 0000 83EC1C   		subl	$28, %esp
+  12              		.cfi_def_cfa_offset 32
+  13 0003 C70424E8 		movl	$1000, (%esp)
+  13      030000
+  14 000a E8000000 		call	_chThdSleep
+  14      00
+  15 000f A1000000 		movl	_cdtp, %eax
+  15      00
+  16 0014 C7442404 		movl	$LC0, 4(%esp)
+  16      00000000 
+  17 001c 890424   		movl	%eax, (%esp)
+  18 001f E8000000 		call	_chMsgSend
+  18      00
+  19              	/APP
+  20              	 # 66 "main.c" 1
+  21 0024 90       		nop
+  22              	 # 0 "" 2
+  23              	/NO_APP
+  24 0025 E8000000 		call	_dbg_check_lock
+  24      00
+  25 002a C7042430 		movl	$_SD1+48, (%esp)
+  25      000000
+  26 0031 E8000000 		call	_chOQResetI
+  26      00
+  27 0036 E8000000 		call	_dbg_check_unlock
+  27      00
+  28              	/APP
+  29              	 # 68 "main.c" 1
+  30 003b 90       		nop
+  31              	 # 0 "" 2
+  32              	/NO_APP
+  33 003c 83C41C   		addl	$28, %esp
+  34              		.cfi_def_cfa_offset 4
+  35 003f C3       		ret
+  36              		.cfi_endproc
+  37              	LFE71:
+  38              		.section	.text$console_thread,"x"
+  39              		.p2align 4,,15
+  40              		.def	_console_thread;	.scl	3;	.type	32;	.endef
+  41              	_console_thread:
+  42              	LFB70:
+  43              		.cfi_startproc
+  44 0000 56       		pushl	%esi
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccRKmqJh.s 			page 2
+
+
+  45              		.cfi_def_cfa_offset 8
+  46              		.cfi_offset 6, -8
+  47 0001 53       		pushl	%ebx
+  48              		.cfi_def_cfa_offset 12
+  49              		.cfi_offset 3, -12
+  50 0002 83EC14   		subl	$20, %esp
+  51              		.cfi_def_cfa_offset 32
+  52 0005 8B350000 		movl	__imp___iob, %esi
+  52      0000
+  53 000b A1180000 		movl	_rlist+24, %eax
+  53      00
+  54 0010 83C620   		addl	$32, %esi
+  55 0013 F6401D04 		testb	$4, 29(%eax)
+  56 0017 753C     		jne	L13
+  57 0019 8DB42600 		.p2align 4,,7
+  57      000000
+  58              	L10:
+  59 0020 E8000000 		call	_chMsgWait
+  59      00
+  60 0025 89C3     		movl	%eax, %ebx
+  61 0027 8B4034   		movl	52(%eax), %eax
+  62 002a 890424   		movl	%eax, (%esp)
+  63 002d E8000000 		call	_puts
+  63      00
+  64 0032 893424   		movl	%esi, (%esp)
+  65 0035 E8000000 		call	_fflush
+  65      00
+  66 003a C7442404 		movl	$0, 4(%esp)
+  66      00000000 
+  67 0042 891C24   		movl	%ebx, (%esp)
+  68 0045 E8000000 		call	_chMsgRelease
+  68      00
+  69 004a A1180000 		movl	_rlist+24, %eax
+  69      00
+  70 004f F6401D04 		testb	$4, 29(%eax)
+  71 0053 74CB     		je	L10
+  72              	L13:
+  73 0055 83C414   		addl	$20, %esp
+  74              		.cfi_def_cfa_offset 12
+  75 0058 31C0     		xorl	%eax, %eax
+  76 005a 5B       		popl	%ebx
+  77              		.cfi_restore 3
+  78              		.cfi_def_cfa_offset 8
+  79 005b 5E       		popl	%esi
+  80              		.cfi_restore 6
+  81              		.cfi_def_cfa_offset 4
+  82 005c C3       		ret
+  83              		.cfi_endproc
+  84              	LFE70:
+  85 005d 909090   		.section .rdata,"dr"
+  86              	LC1:
+  87 001e 496E6974 		.ascii "Init: connection on SD2\0"
+  87      3A20636F 
+  87      6E6E6563 
+  87      74696F6E 
+  87      206F6E20 
+  88              	LC2:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccRKmqJh.s 			page 3
+
+
+  89 0036 496E6974 		.ascii "Init: disconnection on SD2\0"
+  89      3A206469 
+  89      73636F6E 
+  89      6E656374 
+  89      696F6E20 
+  90              		.section	.text$sd2_handler,"x"
+  91              		.p2align 4,,15
+  92              		.def	_sd2_handler;	.scl	3;	.type	32;	.endef
+  93              	_sd2_handler:
+  94              	LFB73:
+  95              		.cfi_startproc
+  96 0000 53       		pushl	%ebx
+  97              		.cfi_def_cfa_offset 8
+  98              		.cfi_offset 3, -8
+  99 0001 83EC18   		subl	$24, %esp
+ 100              		.cfi_def_cfa_offset 32
+ 101 0004 C7042400 		movl	$_sd2fel, (%esp)
+ 101      000000
+ 102 000b E8000000 		call	_chEvtGetAndClearFlags
+ 102      00
+ 103 0010 A801     		testb	$1, %al
+ 104 0012 89C3     		movl	%eax, %ebx
+ 105 0014 753A     		jne	L26
+ 106              	L17:
+ 107 0016 83E302   		andl	$2, %ebx
+ 108 0019 742D     		je	L16
+ 109 001b A1000000 		movl	_cdtp, %eax
+ 109      00
+ 110 0020 C7442404 		movl	$LC2, 4(%esp)
+ 110      36000000 
+ 111 0028 890424   		movl	%eax, (%esp)
+ 112 002b E8000000 		call	_chMsgSend
+ 112      00
+ 113              	/APP
+ 114              	 # 124 "main.c" 1
+ 115 0030 90       		nop
+ 116              	 # 0 "" 2
+ 117              	/NO_APP
+ 118 0031 E8000000 		call	_dbg_check_lock
+ 118      00
+ 119 0036 C704240C 		movl	$_SD2+12, (%esp)
+ 119      000000
+ 120 003d E8000000 		call	_chIQResetI
+ 120      00
+ 121 0042 E8000000 		call	_dbg_check_unlock
+ 121      00
+ 122              	/APP
+ 123              	 # 126 "main.c" 1
+ 124 0047 90       		nop
+ 125              	 # 0 "" 2
+ 126              	/NO_APP
+ 127              	L16:
+ 128 0048 83C418   		addl	$24, %esp
+ 129              		.cfi_remember_state
+ 130              		.cfi_def_cfa_offset 8
+ 131 004b 5B       		popl	%ebx
+ 132              		.cfi_restore 3
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccRKmqJh.s 			page 4
+
+
+ 133              		.cfi_def_cfa_offset 4
+ 134 004c C3       		ret
+ 135 004d 8D7600   		.p2align 4,,7
+ 136              	L26:
+ 137              		.cfi_restore_state
+ 138 0050 A1000000 		movl	_cdtp, %eax
+ 138      00
+ 139 0055 C7442404 		movl	$LC1, 4(%esp)
+ 139      1E000000 
+ 140 005d 890424   		movl	%eax, (%esp)
+ 141 0060 E8000000 		call	_chMsgSend
+ 141      00
+ 142 0065 EBAF     		jmp	L17
+ 143              		.cfi_endproc
+ 144              	LFE73:
+ 145 0067 90909090 		.section .rdata,"dr"
+ 145      90909090 
+ 145      90
+ 146              	LC3:
+ 147 0051 496E6974 		.ascii "Init: connection on SD1\0"
+ 147      3A20636F 
+ 147      6E6E6563 
+ 147      74696F6E 
+ 147      206F6E20 
+ 148              	LC4:
+ 149 0069 496E6974 		.ascii "Init: disconnection on SD1\0"
+ 149      3A206469 
+ 149      73636F6E 
+ 149      6E656374 
+ 149      696F6E20 
+ 150              		.section	.text$sd1_handler,"x"
+ 151              		.p2align 4,,15
+ 152              		.def	_sd1_handler;	.scl	3;	.type	32;	.endef
+ 153              	_sd1_handler:
+ 154              	LFB72:
+ 155              		.cfi_startproc
+ 156 0000 53       		pushl	%ebx
+ 157              		.cfi_def_cfa_offset 8
+ 158              		.cfi_offset 3, -8
+ 159 0001 83EC18   		subl	$24, %esp
+ 160              		.cfi_def_cfa_offset 32
+ 161 0004 C7042400 		movl	$_sd1fel, (%esp)
+ 161      000000
+ 162 000b E8000000 		call	_chEvtGetAndClearFlags
+ 162      00
+ 163 0010 A801     		testb	$1, %al
+ 164 0012 89C3     		movl	%eax, %ebx
+ 165 0014 7541     		jne	L37
+ 166              	L28:
+ 167 0016 83E302   		andl	$2, %ebx
+ 168 0019 7437     		je	L27
+ 169 001b A1000000 		movl	_cdtp, %eax
+ 169      00
+ 170 0020 C7442404 		movl	$LC4, 4(%esp)
+ 170      69000000 
+ 171 0028 890424   		movl	%eax, (%esp)
+ 172 002b E8000000 		call	_chMsgSend
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccRKmqJh.s 			page 5
+
+
+ 172      00
+ 173 0030 C7050000 		movl	$0, _isSerialOverTcpReady
+ 173      00000000 
+ 173      0000
+ 174              	/APP
+ 175              	 # 103 "main.c" 1
+ 176 003a 90       		nop
+ 177              	 # 0 "" 2
+ 178              	/NO_APP
+ 179 003b E8000000 		call	_dbg_check_lock
+ 179      00
+ 180 0040 C704240C 		movl	$_SD1+12, (%esp)
+ 180      000000
+ 181 0047 E8000000 		call	_chIQResetI
+ 181      00
+ 182 004c E8000000 		call	_dbg_check_unlock
+ 182      00
+ 183              	/APP
+ 184              	 # 105 "main.c" 1
+ 185 0051 90       		nop
+ 186              	 # 0 "" 2
+ 187              	/NO_APP
+ 188              	L27:
+ 189 0052 83C418   		addl	$24, %esp
+ 190              		.cfi_remember_state
+ 191              		.cfi_def_cfa_offset 8
+ 192 0055 5B       		popl	%ebx
+ 193              		.cfi_restore 3
+ 194              		.cfi_def_cfa_offset 4
+ 195 0056 C3       		ret
+ 196              		.p2align 4,,7
+ 197              	L37:
+ 198              		.cfi_restore_state
+ 199 0057 A1000000 		movl	_cdtp, %eax
+ 199      00
+ 200 005c C7442404 		movl	$LC3, 4(%esp)
+ 200      51000000 
+ 201 0064 890424   		movl	%eax, (%esp)
+ 202 0067 E8000000 		call	_chMsgSend
+ 202      00
+ 203 006c C7050000 		movl	$1, _isSerialOverTcpReady
+ 203      00000100 
+ 203      0000
+ 204 0076 EB9E     		jmp	L28
+ 205              		.cfi_endproc
+ 206              	LFE72:
+ 207 0078 90909090 		.section	.text$printToWin32Console,"x"
+ 207      90909090 
+ 208              		.p2align 4,,15
+ 209              		.globl	_printToWin32Console
+ 210              		.def	_printToWin32Console;	.scl	2;	.type	32;	.endef
+ 211              	_printToWin32Console:
+ 212              	LFB69:
+ 213              		.cfi_startproc
+ 214 0000 83EC1C   		subl	$28, %esp
+ 215              		.cfi_def_cfa_offset 32
+ 216 0003 8B442420 		movl	32(%esp), %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccRKmqJh.s 			page 6
+
+
+ 217 0007 89442404 		movl	%eax, 4(%esp)
+ 218 000b A1000000 		movl	_cdtp, %eax
+ 218      00
+ 219 0010 890424   		movl	%eax, (%esp)
+ 220 0013 E8000000 		call	_chMsgSend
+ 220      00
+ 221 0018 83C41C   		addl	$28, %esp
+ 222              		.cfi_def_cfa_offset 4
+ 223 001b C3       		ret
+ 224              		.cfi_endproc
+ 225              	LFE69:
+ 226              		.def	___main;	.scl	2;	.type	32;	.endef
+ 227 001c 90909090 		.section .rdata,"dr"
+ 228              		.align 4
+ 229              	LC5:
+ 230 0084 5368656C 		.ascii "Shell service started on SD1, SD2\0"
+ 230      6C207365 
+ 230      72766963 
+ 230      65207374 
+ 230      61727465 
+ 231 00a6 0000     		.align 4
+ 232              	LC6:
+ 233 00a8 20202D20 		.ascii "  - Listening for connections on SD1\0"
+ 233      4C697374 
+ 233      656E696E 
+ 233      6720666F 
+ 233      7220636F 
+ 234 00cd 000000   		.align 4
+ 235              	LC7:
+ 236 00d0 20202D20 		.ascii "  - Listening for connections on SD2\0"
+ 236      4C697374 
+ 236      656E696E 
+ 236      6720666F 
+ 236      7220636F 
+ 237 00f5 000000   		.section	.text.startup.main,"x"
+ 238              		.p2align 4,,15
+ 239              		.globl	_main
+ 240              		.def	_main;	.scl	2;	.type	32;	.endef
+ 241              	_main:
+ 242              	LFB74:
+ 243              		.cfi_startproc
+ 244 0000 55       		pushl	%ebp
+ 245              		.cfi_def_cfa_offset 8
+ 246              		.cfi_offset 5, -8
+ 247 0001 89E5     		movl	%esp, %ebp
+ 248              		.cfi_def_cfa_register 5
+ 249 0003 83E4F0   		andl	$-16, %esp
+ 250 0006 83EC20   		subl	$32, %esp
+ 251 0009 E8000000 		call	___main
+ 251      00
+ 252 000e C7042400 		movl	$_testStream, (%esp)
+ 252      000000
+ 253 0015 E8000000 		call	_initTestStream
+ 253      00
+ 254 001a E8000000 		call	_halInit
+ 254      00
+ 255 001f E8000000 		call	_chSysInit
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccRKmqJh.s 			page 7
+
+
+ 255      00
+ 256 0024 C7442404 		movl	$0, 4(%esp)
+ 256      00000000 
+ 257 002c C7042400 		movl	$_SD1, (%esp)
+ 257      000000
+ 258 0033 E8000000 		call	_sdStart
+ 258      00
+ 259 0038 C7442404 		movl	$0, 4(%esp)
+ 259      00000000 
+ 260 0040 C7042400 		movl	$_SD2, (%esp)
+ 260      000000
+ 261 0047 E8000000 		call	_sdStart
+ 261      00
+ 262 004c C7442410 		movl	$0, 16(%esp)
+ 262      00000000 
+ 263 0054 C744240C 		movl	$_console_thread, 12(%esp)
+ 263      00000000 
+ 264 005c C7442408 		movl	$65, 8(%esp)
+ 264      41000000 
+ 265 0064 C7442404 		movl	$20592, 4(%esp)
+ 265      70500000 
+ 266 006c C7042400 		movl	$0, (%esp)
+ 266      000000
+ 267 0073 E8000000 		call	_chThdCreateFromHeap
+ 267      00
+ 268 0078 C7442404 		movl	$LC5, 4(%esp)
+ 268      84000000 
+ 269 0080 890424   		movl	%eax, (%esp)
+ 270 0083 A3000000 		movl	%eax, _cdtp
+ 270      00
+ 271 0088 E8000000 		call	_chMsgSend
+ 271      00
+ 272 008d A1000000 		movl	_cdtp, %eax
+ 272      00
+ 273 0092 C7442404 		movl	$LC6, 4(%esp)
+ 273      A8000000 
+ 274 009a 890424   		movl	%eax, (%esp)
+ 275 009d E8000000 		call	_chMsgSend
+ 275      00
+ 276 00a2 C7442408 		movl	$2, 8(%esp)
+ 276      02000000 
+ 277 00aa C7442404 		movl	$_sd1fel, 4(%esp)
+ 277      00000000 
+ 278 00b2 C7042404 		movl	$_SD1+4, (%esp)
+ 278      000000
+ 279 00b9 E8000000 		call	_chEvtRegisterMask
+ 279      00
+ 280 00be A1000000 		movl	_cdtp, %eax
+ 280      00
+ 281 00c3 C7442404 		movl	$LC7, 4(%esp)
+ 281      D0000000 
+ 282 00cb 890424   		movl	%eax, (%esp)
+ 283 00ce E8000000 		call	_chMsgSend
+ 283      00
+ 284 00d3 C7442408 		movl	$4, 8(%esp)
+ 284      04000000 
+ 285 00db C7442404 		movl	$_sd2fel, 4(%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccRKmqJh.s 			page 8
+
+
+ 285      00000000 
+ 286 00e3 C7042404 		movl	$_SD2+4, (%esp)
+ 286      000000
+ 287 00ea E8000000 		call	_chEvtRegisterMask
+ 287      00
+ 288 00ef E8000000 		call	_rusEfiFunctionalTest
+ 288      00
+ 289 00f4 A1180000 		movl	_rlist+24, %eax
+ 289      00
+ 290 00f9 F6401D04 		testb	$4, 29(%eax)
+ 291 00fd 7539     		jne	L42
+ 292 00ff 90       		.p2align 4,,7
+ 293              	L47:
+ 294 0100 C70424FF 		movl	$-1, (%esp)
+ 294      FFFFFF
+ 295 0107 E8000000 		call	_chEvtWaitOne
+ 295      00
+ 296 010c C7042400 		movl	$_fhandlers, (%esp)
+ 296      000000
+ 297 0113 89442404 		movl	%eax, 4(%esp)
+ 298 0117 E8000000 		call	_chEvtDispatch
+ 298      00
+ 299 011c E8000000 		call	_printPendingMessages
+ 299      00
+ 300 0121 C7042410 		movl	$10000, (%esp)
+ 300      270000
+ 301 0128 E8000000 		call	_chThdSleep
+ 301      00
+ 302 012d A1180000 		movl	_rlist+24, %eax
+ 302      00
+ 303 0132 F6401D04 		testb	$4, 29(%eax)
+ 304 0136 74C8     		je	L47
+ 305              	L42:
+ 306 0138 C7442404 		movl	$_sd1fel, 4(%esp)
+ 306      00000000 
+ 307 0140 C7042404 		movl	$_SD1+4, (%esp)
+ 307      000000
+ 308 0147 E8000000 		call	_chEvtUnregister
+ 308      00
+ 309 014c C7442404 		movl	$_sd2fel, 4(%esp)
+ 309      00000000 
+ 310 0154 C7042404 		movl	$_SD2+4, (%esp)
+ 310      000000
+ 311 015b E8000000 		call	_chEvtUnregister
+ 311      00
+ 312 0160 31C0     		xorl	%eax, %eax
+ 313 0162 C9       		leave
+ 314              		.cfi_restore 5
+ 315              		.cfi_def_cfa 4, 4
+ 316 0163 C3       		ret
+ 317              		.cfi_endproc
+ 318              	LFE74:
+ 319              		.globl	_testStream
+ 320 0164 90909090 		.section	.data$testStream,"w"
+ 320      90909090 
+ 320      90909090 
+ 321              		.align 4
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccRKmqJh.s 			page 9
+
+
+ 322              	_testStream:
+ 323 0000 00000000 		.space 4
+ 324              		.section	.data$cdtp,"w"
+ 325              		.align 4
+ 326              	_cdtp:
+ 327 0000 00000000 		.space 4
+ 328              		.section	.data$sd1fel,"w"
+ 329              		.align 4
+ 330              	_sd1fel:
+ 331 0000 00000000 		.space 16
+ 331      00000000 
+ 331      00000000 
+ 331      00000000 
+ 332              		.section	.data$sd2fel,"w"
+ 333              		.align 4
+ 334              	_sd2fel:
+ 335 0000 00000000 		.space 16
+ 335      00000000 
+ 335      00000000 
+ 335      00000000 
+ 336              		.section	.data$fhandlers,"w"
+ 337              		.align 4
+ 338              	_fhandlers:
+ 339 0000 00000000 		.long	_termination_handler
+ 340 0004 00000000 		.long	_sd1_handler
+ 341 0008 00000000 		.long	_sd2_handler
+ 342              		.def	_chThdSleep;	.scl	2;	.type	32;	.endef
+ 343              		.def	_chMsgSend;	.scl	2;	.type	32;	.endef
+ 344              		.def	_dbg_check_lock;	.scl	2;	.type	32;	.endef
+ 345              		.def	_chOQResetI;	.scl	2;	.type	32;	.endef
+ 346              		.def	_dbg_check_unlock;	.scl	2;	.type	32;	.endef
+ 347              		.def	_chMsgWait;	.scl	2;	.type	32;	.endef
+ 348              		.def	_puts;	.scl	2;	.type	32;	.endef
+ 349              		.def	_fflush;	.scl	2;	.type	32;	.endef
+ 350              		.def	_chMsgRelease;	.scl	2;	.type	32;	.endef
+ 351              		.def	_chEvtGetAndClearFlags;	.scl	2;	.type	32;	.endef
+ 352              		.def	_chIQResetI;	.scl	2;	.type	32;	.endef
+ 353              		.def	_initTestStream;	.scl	2;	.type	32;	.endef
+ 354              		.def	_halInit;	.scl	2;	.type	32;	.endef
+ 355              		.def	_chSysInit;	.scl	2;	.type	32;	.endef
+ 356              		.def	_sdStart;	.scl	2;	.type	32;	.endef
+ 357              		.def	_chThdCreateFromHeap;	.scl	2;	.type	32;	.endef
+ 358              		.def	_chEvtRegisterMask;	.scl	2;	.type	32;	.endef
+ 359              		.def	_rusEfiFunctionalTest;	.scl	2;	.type	32;	.endef
+ 360              		.def	_chEvtWaitOne;	.scl	2;	.type	32;	.endef
+ 361              		.def	_chEvtDispatch;	.scl	2;	.type	32;	.endef
+ 362              		.def	_printPendingMessages;	.scl	2;	.type	32;	.endef
+ 363              		.def	_chEvtUnregister;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccRKmqJh.s 			page 10
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccRKmqJh.s:8      .text$termination_handler:00000000 _termination_handler
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccRKmqJh.s:326    .data$cdtp:00000000 _cdtp
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccRKmqJh.s:41     .text$console_thread:00000000 _console_thread
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccRKmqJh.s:93     .text$sd2_handler:00000000 _sd2_handler
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccRKmqJh.s:334    .data$sd2fel:00000000 _sd2fel
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccRKmqJh.s:153    .text$sd1_handler:00000000 _sd1_handler
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccRKmqJh.s:330    .data$sd1fel:00000000 _sd1fel
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccRKmqJh.s:211    .text$printToWin32Console:00000000 _printToWin32Console
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccRKmqJh.s:241    .text.startup.main:00000000 _main
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccRKmqJh.s:322    .data$testStream:00000000 _testStream
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccRKmqJh.s:338    .data$fhandlers:00000000 _fhandlers
+
+UNDEFINED SYMBOLS
+_SD1
+__imp___iob
+_rlist
+_SD2
+_isSerialOverTcpReady
+___main
+_chThdSleep
+_chMsgSend
+_dbg_check_lock
+_chOQResetI
+_dbg_check_unlock
+_chMsgWait
+_puts
+_fflush
+_chMsgRelease
+_chEvtGetAndClearFlags
+_chIQResetI
+_initTestStream
+_halInit
+_chSysInit
+_sdStart
+_chThdCreateFromHeap
+_chEvtRegisterMask
+_rusEfiFunctionalTest
+_chEvtWaitOne
+_chEvtDispatch
+_printPendingMessages
+_chEvtUnregister

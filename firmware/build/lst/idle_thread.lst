@@ -1,0 +1,950 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"idle_thread.cpp"
+  16              		.section	.text._ZL22doSetIdleValvePositioni,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	_ZL22doSetIdleValvePositioni, %function
+  22              	_ZL22doSetIdleValvePositioni:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25 0000 40F20002 		movw	r2, #:lower16:engine
+  26 0004 38B5     		push	{r3, r4, r5, lr}
+  27 0006 C0F20002 		movt	r2, #:upper16:engine
+  28 000a 40F20003 		movw	r3, #:lower16:config
+  29 000e 1168     		ldr	r1, [r2]
+  30 0010 C0F20003 		movt	r3, #:upper16:config
+  31 0014 40F20005 		movw	r5, #:lower16:boardConfiguration
+  32 0018 07EE100A 		fmsr	s14, r0	@ int
+  33 001c C0F20005 		movt	r5, #:upper16:boardConfiguration
+  34 0020 1A68     		ldr	r2, [r3]
+  35 0022 2B68     		ldr	r3, [r5]
+  36 0024 01F5F251 		add	r1, r1, #7744
+  37 0028 2DED028B 		fstmfdd	sp!, {d8}
+  38 002c B8EEC78A 		fsitos	s16, s14
+  39 0030 4869     		ldr	r0, [r1, #20]	@ float
+  40 0032 02F5C151 		add	r1, r2, #6176
+  41 0036 02F5C352 		add	r2, r2, #6240
+  42 003a 1832     		adds	r2, r2, #24
+  43 003c 83ED058A 		fsts	s16, [r3, #20]
+  44 0040 1831     		adds	r1, r1, #24
+  45 0042 1023     		movs	r3, #16
+  46 0044 FFF7FEFF 		bl	_Z13interpolate2dfPfS_i
+  47 0048 07EE900A 		fmsr	s15, r0
+  48 004c 68EE277A 		fmuls	s15, s16, s15
+  49 0050 4DF20A71 		movw	r1, #55050
+  50 0054 17EE900A 		fmrs	r0, s15
+  51 0058 C3F62341 		movt	r1, 15395
+  52 005c FFF7FEFF 		bl	maxF
+  53 0060 4CF6CD41 		movw	r1, #52429
+  54 0064 C4F2C721 		movt	r1, 17095
+  55 0068 FFF7FEFF 		bl	minF
+  56 006c 40F20004 		movw	r4, #:lower16:.LANCHOR0
+  57 0070 C0F20004 		movt	r4, #:upper16:.LANCHOR0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s 			page 2
+
+
+  58 0074 08EE100A 		fmsr	s16, r0
+  59 0078 D4ED007A 		flds	s15, [r4]
+  60 007c 78EE677A 		fsubs	s15, s16, s15
+  61 0080 17EE900A 		fmrs	r0, s15
+  62 0084 FFF7FEFF 		bl	absF
+  63 0088 07EE100A 		fmsr	s14, r0
+  64 008c F7EE007A 		fconsts	s15, #112
+  65 0090 B4EEE77A 		fcmpes	s14, s15
+  66 0094 F1EE10FA 		fmstat
+  67 0098 33D4     		bmi	.L1
+  68 009a 2B68     		ldr	r3, [r5]
+  69 009c 93F88131 		ldrb	r3, [r3, #385]	@ zero_extendqisi2
+  70 00a0 9B07     		lsls	r3, r3, #30
+  71 00a2 84ED008A 		fsts	s16, [r4]
+  72 00a6 DFED187A 		flds	s15, .L6
+  73 00aa 0DD4     		bmi	.L5
+  74 00ac 88EE277A 		fdivs	s14, s16, s15
+  75 00b0 BDEC028B 		fldmfdd	sp!, {d8}
+  76 00b4 40F20000 		movw	r0, #:lower16:.LANCHOR2
+  77 00b8 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+  78 00bc BDE83840 		pop	{r3, r4, r5, lr}
+  79 00c0 17EE101A 		fmrs	r1, s14
+  80 00c4 FFF7FEBF 		b	_ZN9SimplePwm21setSimplePwmDutyCycleEf
+  81              	.L5:
+  82 00c8 88EE277A 		fdivs	s14, s16, s15
+  83 00cc 40F20003 		movw	r3, #:lower16:engineConfiguration
+  84 00d0 C0F20003 		movt	r3, #:upper16:engineConfiguration
+  85 00d4 BDEC028B 		fldmfdd	sp!, {d8}
+  86 00d8 1B68     		ldr	r3, [r3]
+  87 00da D3F86436 		ldr	r3, [r3, #1636]
+  88 00de 40F20000 		movw	r0, #:lower16:.LANCHOR1
+  89 00e2 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+  90 00e6 07EE903A 		fmsr	s15, r3	@ int
+  91 00ea F8EEE77A 		fsitos	s15, s15
+  92 00ee BDE83840 		pop	{r3, r4, r5, lr}
+  93 00f2 67EE277A 		fmuls	s15, s14, s15
+  94 00f6 FDEEE77A 		ftosizs	s15, s15
+  95 00fa 17EE901A 		fmrs	r1, s15	@ int
+  96 00fe FFF7FEBF 		b	_ZN12StepperMotor17setTargetPositionEi
+  97              	.L1:
+  98 0102 BDEC028B 		fldmfdd	sp!, {d8}
+  99 0106 38BD     		pop	{r3, r4, r5, pc}
+ 100              	.L7:
+ 101              		.align	2
+ 102              	.L6:
+ 103 0108 0000C842 		.word	1120403456
+ 104              		.size	_ZL22doSetIdleValvePositioni, .-_ZL22doSetIdleValvePositioni
+ 105 010c AFF30080 		.section	.text._ZL16setIdleRpmActioni,"ax",%progbits
+ 106              		.align	2
+ 107              		.p2align 4,,15
+ 108              		.thumb
+ 109              		.thumb_func
+ 110              		.type	_ZL16setIdleRpmActioni, %function
+ 111              	_ZL16setIdleRpmActioni:
+ 112              		@ args = 0, pretend = 0, frame = 0
+ 113              		@ frame_needed = 0, uses_anonymous_args = 0
+ 114 0000 10B5     		push	{r4, lr}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s 			page 3
+
+
+ 115 0002 0446     		mov	r4, r0
+ 116 0004 40F20000 		movw	r0, #:lower16:.LANCHOR3
+ 117 0008 2146     		mov	r1, r4
+ 118 000a C0F20000 		movt	r0, #:upper16:.LANCHOR3
+ 119 000e FFF7FEFF 		bl	_ZN14IdleValveState12setTargetRpmEi
+ 120 0012 40F20003 		movw	r3, #:lower16:.LANCHOR4
+ 121 0016 C0F20003 		movt	r3, #:upper16:.LANCHOR4
+ 122 001a 40F20001 		movw	r1, #:lower16:.LC0
+ 123 001e 2246     		mov	r2, r4
+ 124 0020 1868     		ldr	r0, [r3]
+ 125 0022 C0F20001 		movt	r1, #:upper16:.LC0
+ 126 0026 BDE81040 		pop	{r4, lr}
+ 127 002a FFF7FEBF 		b	scheduleMsg
+ 128              		.size	_ZL16setIdleRpmActioni, .-_ZL16setIdleRpmActioni
+ 129              		.global	__aeabi_f2d
+ 130 002e 00BF     		.section	.text._ZL12showIdleInfov,"ax",%progbits
+ 131              		.align	2
+ 132              		.p2align 4,,15
+ 133              		.thumb
+ 134              		.thumb_func
+ 135              		.type	_ZL12showIdleInfov, %function
+ 136              	_ZL12showIdleInfov:
+ 137              		@ args = 0, pretend = 0, frame = 0
+ 138              		@ frame_needed = 0, uses_anonymous_args = 0
+ 139 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 140 0004 40F20008 		movw	r8, #:lower16:engineConfiguration
+ 141 0008 C0F20008 		movt	r8, #:upper16:engineConfiguration
+ 142 000c 40F20006 		movw	r6, #:lower16:.LANCHOR4
+ 143 0010 D8F80030 		ldr	r3, [r8]
+ 144 0014 40F20007 		movw	r7, #:lower16:boardConfiguration
+ 145 0018 C0F20006 		movt	r6, #:upper16:.LANCHOR4
+ 146 001c 85B0     		sub	sp, sp, #20
+ 147 001e D3F8E005 		ldr	r0, [r3, #1504]
+ 148 0022 D6F800A0 		ldr	r10, [r6]
+ 149 0026 C0F20007 		movt	r7, #:upper16:boardConfiguration
+ 150 002a FFF7FEFF 		bl	_Z14getIdle_mode_e11idle_mode_e
+ 151 002e D7F80090 		ldr	r9, [r7]
+ 152 0032 8346     		mov	fp, r0
+ 153 0034 D9F81400 		ldr	r0, [r9, #20]	@ float
+ 154 0038 FFF7FEFF 		bl	__aeabi_f2d
+ 155 003c 0446     		mov	r4, r0
+ 156 003e 99F88101 		ldrb	r0, [r9, #385]	@ zero_extendqisi2
+ 157 0042 C0F34000 		ubfx	r0, r0, #1, #1
+ 158 0046 0D46     		mov	r5, r1
+ 159 0048 FFF7FEFF 		bl	_Z12boolToStringb
+ 160 004c 40F20001 		movw	r1, #:lower16:.LC1
+ 161 0050 0290     		str	r0, [sp, #8]
+ 162 0052 5A46     		mov	r2, fp
+ 163 0054 CDE90045 		strd	r4, [sp]
+ 164 0058 5046     		mov	r0, r10
+ 165 005a C0F20001 		movt	r1, #:upper16:.LC1
+ 166 005e FFF7FEFF 		bl	scheduleMsg
+ 167 0062 3B68     		ldr	r3, [r7]
+ 168 0064 93F88121 		ldrb	r2, [r3, #385]	@ zero_extendqisi2
+ 169 0068 9207     		lsls	r2, r2, #30
+ 170 006a 10D4     		bmi	.L11
+ 171 006c 1868     		ldr	r0, [r3]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s 			page 4
+
+
+ 172 006e 9C68     		ldr	r4, [r3, #8]
+ 173 0070 3568     		ldr	r5, [r6]
+ 174 0072 FFF7FEFF 		bl	_Z10hwPortname11brain_pin_e
+ 175 0076 40F20001 		movw	r1, #:lower16:.LC5
+ 176 007a 0346     		mov	r3, r0
+ 177 007c 2246     		mov	r2, r4
+ 178 007e 2846     		mov	r0, r5
+ 179 0080 C0F20001 		movt	r1, #:upper16:.LC5
+ 180 0084 05B0     		add	sp, sp, #20
+ 181              		@ sp needed
+ 182 0086 BDE8F04F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 183 008a FFF7FEBF 		b	scheduleMsg
+ 184              	.L11:
+ 185 008e D868     		ldr	r0, [r3, #12]
+ 186 0090 3468     		ldr	r4, [r6]
+ 187 0092 FFF7FEFF 		bl	_Z10hwPortname11brain_pin_e
+ 188 0096 D8F80030 		ldr	r3, [r8]
+ 189 009a 03F20C63 		addw	r3, r3, #1548
+ 190 009e 0546     		mov	r5, r0
+ 191 00a0 1868     		ldr	r0, [r3]	@ float
+ 192 00a2 FFF7FEFF 		bl	__aeabi_f2d
+ 193 00a6 CDE90001 		strd	r0, [sp]
+ 194 00aa 40F20001 		movw	r1, #:lower16:.LC2
+ 195 00ae 2A46     		mov	r2, r5
+ 196 00b0 2046     		mov	r0, r4
+ 197 00b2 C0F20001 		movt	r1, #:upper16:.LC2
+ 198 00b6 FFF7FEFF 		bl	scheduleMsg
+ 199 00ba 3B68     		ldr	r3, [r7]
+ 200 00bc 3468     		ldr	r4, [r6]
+ 201 00be 1869     		ldr	r0, [r3, #16]
+ 202 00c0 FFF7FEFF 		bl	_Z10hwPortname11brain_pin_e
+ 203 00c4 D8F80030 		ldr	r3, [r8]
+ 204 00c8 40F20001 		movw	r1, #:lower16:.LC3
+ 205 00cc 0246     		mov	r2, r0
+ 206 00ce C0F20001 		movt	r1, #:upper16:.LC3
+ 207 00d2 2046     		mov	r0, r4
+ 208 00d4 D3F86436 		ldr	r3, [r3, #1636]
+ 209 00d8 FFF7FEFF 		bl	scheduleMsg
+ 210 00dc D8F80030 		ldr	r3, [r8]
+ 211 00e0 3468     		ldr	r4, [r6]
+ 212 00e2 D3F86806 		ldr	r0, [r3, #1640]
+ 213 00e6 FFF7FEFF 		bl	_Z10hwPortname11brain_pin_e
+ 214 00ea 40F20001 		movw	r1, #:lower16:.LC4
+ 215 00ee 0246     		mov	r2, r0
+ 216 00f0 C0F20001 		movt	r1, #:upper16:.LC4
+ 217 00f4 2046     		mov	r0, r4
+ 218 00f6 05B0     		add	sp, sp, #20
+ 219              		@ sp needed
+ 220 00f8 BDE8F04F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 221 00fc FFF7FEBF 		b	scheduleMsg
+ 222              		.size	_ZL12showIdleInfov, .-_ZL12showIdleInfov
+ 223              		.section	.text._ZL21setIdleControlEnabledi,"ax",%progbits
+ 224              		.align	2
+ 225              		.p2align 4,,15
+ 226              		.thumb
+ 227              		.thumb_func
+ 228              		.type	_ZL21setIdleControlEnabledi, %function
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s 			page 5
+
+
+ 229              	_ZL21setIdleControlEnabledi:
+ 230              		@ args = 0, pretend = 0, frame = 0
+ 231              		@ frame_needed = 0, uses_anonymous_args = 0
+ 232              		@ link register save eliminated.
+ 233 0000 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 234 0004 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 235 0008 D0F10100 		rsbs	r0, r0, #1
+ 236 000c 1B68     		ldr	r3, [r3]
+ 237 000e 38BF     		it	cc
+ 238 0010 0020     		movcc	r0, #0
+ 239 0012 C3F8E005 		str	r0, [r3, #1504]
+ 240 0016 FFF7FEBF 		b	_ZL12showIdleInfov
+ 241              		.size	_ZL21setIdleControlEnabledi, .-_ZL21setIdleControlEnabledi
+ 242 001a 00BFAFF3 		.section	.text._ZL8ivThreadi,"ax",%progbits
+ 242      0080
+ 243              		.align	2
+ 244              		.p2align 4,,15
+ 245              		.thumb
+ 246              		.thumb_func
+ 247              		.type	_ZL8ivThreadi, %function
+ 248              	_ZL8ivThreadi:
+ 249              		@ args = 0, pretend = 0, frame = 0
+ 250              		@ frame_needed = 0, uses_anonymous_args = 0
+ 251 0000 2DE9F84F 		push	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 252 0004 40F20002 		movw	r2, #:lower16:rlist
+ 253 0008 C0F20002 		movt	r2, #:upper16:rlist
+ 254 000c 40F20003 		movw	r3, #:lower16:.LC6
+ 255 0010 9269     		ldr	r2, [r2, #24]
+ 256 0012 40F20004 		movw	r4, #:lower16:boardConfiguration
+ 257 0016 2DED048B 		fstmfdd	sp!, {d8, d9}
+ 258 001a C0F20003 		movt	r3, #:upper16:.LC6
+ 259 001e C0F20004 		movt	r4, #:upper16:boardConfiguration
+ 260 0022 40F20005 		movw	r5, #:lower16:engine
+ 261 0026 40F20007 		movw	r7, #:lower16:engineConfiguration
+ 262 002a 44F6D358 		movw	r8, #19923
+ 263 002e 9FED3C9A 		flds	s18, .L23
+ 264 0032 9361     		str	r3, [r2, #24]
+ 265 0034 2646     		mov	r6, r4
+ 266 0036 C0F20005 		movt	r5, #:upper16:engine
+ 267 003a C0F20007 		movt	r7, #:upper16:engineConfiguration
+ 268 003e C1F26208 		movt	r8, 4194
+ 269 0042 FFEE008A 		fconsts	s17, #240
+ 270 0046 4FF47A79 		mov	r9, #1000
+ 271              	.L14:
+ 272 004a 2368     		ldr	r3, [r4]
+ 273 004c D3F83801 		ldr	r0, [r3, #312]
+ 274 0050 09FB00F0 		mul	r0, r9, r0
+ 275 0054 0138     		subs	r0, r0, #1
+ 276 0056 A8FB0030 		umull	r3, r0, r8, r0
+ 277 005a 8009     		lsrs	r0, r0, #6
+ 278 005c 0130     		adds	r0, r0, #1
+ 279 005e FFF7FEFF 		bl	chThdSleep
+ 280 0062 2268     		ldr	r2, [r4]
+ 281 0064 D2F8A030 		ldr	r3, [r2, #160]
+ 282 0068 502B     		cmp	r3, #80
+ 283 006a 1846     		mov	r0, r3
+ 284 006c 11D0     		beq	.L15
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s 			page 6
+
+
+ 285 006e D5F800A0 		ldr	r10, [r5]
+ 286 0072 FFF7FEFF 		bl	_Z9getHwPort11brain_pin_e
+ 287 0076 3368     		ldr	r3, [r6]
+ 288 0078 D0F810B0 		ldr	fp, [r0, #16]
+ 289 007c D3F8A000 		ldr	r0, [r3, #160]
+ 290 0080 FFF7FEFF 		bl	_Z8getHwPin11brain_pin_e
+ 291 0084 2BFA00F0 		lsr	r0, fp, r0
+ 292 0088 00F0010B 		and	fp, r0, #1
+ 293 008c 3268     		ldr	r2, [r6]
+ 294 008e 8AF865B2 		strb	fp, [r10, #613]
+ 295              	.L15:
+ 296 0092 D2F81C33 		ldr	r3, [r2, #796]
+ 297 0096 502B     		cmp	r3, #80
+ 298 0098 1846     		mov	r0, r3
+ 299 009a 10D0     		beq	.L16
+ 300 009c D5F800A0 		ldr	r10, [r5]
+ 301 00a0 FFF7FEFF 		bl	_Z9getHwPort11brain_pin_e
+ 302 00a4 2368     		ldr	r3, [r4]
+ 303 00a6 D0F810B0 		ldr	fp, [r0, #16]
+ 304 00aa D3F81C03 		ldr	r0, [r3, #796]
+ 305 00ae FFF7FEFF 		bl	_Z8getHwPin11brain_pin_e
+ 306 00b2 2BFA00F0 		lsr	r0, fp, r0
+ 307 00b6 00F0010B 		and	fp, r0, #1
+ 308 00ba 8AF864B2 		strb	fp, [r10, #612]
+ 309              	.L16:
+ 310 00be 3B68     		ldr	r3, [r7]
+ 311 00c0 D3F8E035 		ldr	r3, [r3, #1504]
+ 312 00c4 4BB1     		cbz	r3, .L17
+ 313 00c6 2368     		ldr	r3, [r4]
+ 314 00c8 D3ED057A 		flds	s15, [r3, #20]
+ 315 00cc FDEEE77A 		ftosizs	s15, s15
+ 316 00d0 17EE900A 		fmrs	r0, s15	@ int
+ 317 00d4 FFF7FEFF 		bl	_ZL22doSetIdleValvePositioni
+ 318 00d8 B7E7     		b	.L14
+ 319              	.L17:
+ 320 00da FFF7FEFF 		bl	currentTimeMillis
+ 321 00de 8246     		mov	r10, r0
+ 322 00e0 2868     		ldr	r0, [r5]
+ 323 00e2 FFF7FEFF 		bl	_ZN13RpmCalculator3rpmEv
+ 324 00e6 0146     		mov	r1, r0
+ 325 00e8 40F20000 		movw	r0, #:lower16:.LANCHOR3
+ 326 00ec 5246     		mov	r2, r10
+ 327 00ee C0F20000 		movt	r0, #:upper16:.LANCHOR3
+ 328 00f2 FFF7FEFF 		bl	_ZN14IdleValveState7getIdleEim
+ 329 00f6 08EE100A 		fmsr	s16, r0
+ 330 00fa F4EE488A 		fcmps	s17, s16
+ 331 00fe F1EE10FA 		fmstat
+ 332 0102 A2D0     		beq	.L14
+ 333 0104 C8EE097A 		fdivs	s15, s16, s18
+ 334 0108 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 335 010c C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 336 0110 F0EE488A 		fcpys	s17, s16
+ 337 0114 17EE901A 		fmrs	r1, s15
+ 338 0118 FFF7FEFF 		bl	_ZN9SimplePwm21setSimplePwmDutyCycleEf
+ 339 011c 95E7     		b	.L14
+ 340              	.L24:
+ 341 011e 00BF     		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s 			page 7
+
+
+ 342              	.L23:
+ 343 0120 0000C842 		.word	1120403456
+ 344              		.size	_ZL8ivThreadi, .-_ZL8ivThreadi
+ 345 0124 AFF30080 		.section	.text._ZL20setIdleValvePositioni,"ax",%progbits
+ 345      AFF30080 
+ 345      AFF30080 
+ 346              		.align	2
+ 347              		.p2align 4,,15
+ 348              		.thumb
+ 349              		.thumb_func
+ 350              		.type	_ZL20setIdleValvePositioni, %function
+ 351              	_ZL20setIdleValvePositioni:
+ 352              		@ args = 0, pretend = 0, frame = 0
+ 353              		@ frame_needed = 0, uses_anonymous_args = 0
+ 354 0000 431E     		subs	r3, r0, #1
+ 355 0002 622B     		cmp	r3, #98
+ 356 0004 10B5     		push	{r4, lr}
+ 357 0006 0446     		mov	r4, r0
+ 358 0008 00D9     		bls	.L27
+ 359 000a 10BD     		pop	{r4, pc}
+ 360              	.L27:
+ 361 000c 40F20003 		movw	r3, #:lower16:.LANCHOR4
+ 362 0010 C0F20003 		movt	r3, #:upper16:.LANCHOR4
+ 363 0014 40F20001 		movw	r1, #:lower16:.LC7
+ 364 0018 1868     		ldr	r0, [r3]
+ 365 001a 2246     		mov	r2, r4
+ 366 001c C0F20001 		movt	r1, #:upper16:.LC7
+ 367 0020 FFF7FEFF 		bl	scheduleMsg
+ 368 0024 FFF7FEFF 		bl	_ZL12showIdleInfov
+ 369 0028 2046     		mov	r0, r4
+ 370 002a BDE81040 		pop	{r4, lr}
+ 371 002e FFF7FEBF 		b	_ZL22doSetIdleValvePositioni
+ 372              		.size	_ZL20setIdleValvePositioni, .-_ZL20setIdleValvePositioni
+ 373 0032 00BFAFF3 		.section	.text._ZL25applyIdleSolenoidPinStateP9PwmConfigi,"ax",%progbits
+ 373      0080AFF3 
+ 373      0080AFF3 
+ 373      0080
+ 374              		.align	2
+ 375              		.p2align 4,,15
+ 376              		.thumb
+ 377              		.thumb_func
+ 378              		.type	_ZL25applyIdleSolenoidPinStateP9PwmConfigi, %function
+ 379              	_ZL25applyIdleSolenoidPinStateP9PwmConfigi:
+ 380              		@ args = 0, pretend = 0, frame = 0
+ 381              		@ frame_needed = 0, uses_anonymous_args = 0
+ 382              		@ link register save eliminated.
+ 383 0000 FB29     		cmp	r1, #251
+ 384 0002 16DC     		bgt	.L36
+ 385 0004 C368     		ldr	r3, [r0, #12]
+ 386 0006 012B     		cmp	r3, #1
+ 387 0008 0DD1     		bne	.L37
+ 388 000a 0369     		ldr	r3, [r0, #16]
+ 389 000c 0068     		ldr	r0, [r0]
+ 390 000e 1B68     		ldr	r3, [r3]
+ 391 0010 5956     		ldrsb	r1, [r3, r1]
+ 392 0012 31B1     		cbz	r1, .L31
+ 393 0014 40F20003 		movw	r3, #:lower16:engine
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s 			page 8
+
+
+ 394 0018 C0F20003 		movt	r3, #:upper16:engine
+ 395 001c 1B68     		ldr	r3, [r3]
+ 396 001e 1B68     		ldr	r3, [r3]
+ 397 0020 6BB1     		cbz	r3, .L35
+ 398              	.L31:
+ 399 0022 FFF7FEBF 		b	_ZN9OutputPin8setValueEi
+ 400              	.L37:
+ 401 0026 40F20000 		movw	r0, #:lower16:.LC9
+ 402 002a C0F20000 		movt	r0, #:upper16:.LC9
+ 403 002e FFF7FEBF 		b	firmwareError
+ 404              	.L36:
+ 405 0032 40F20000 		movw	r0, #:lower16:.LC8
+ 406 0036 C0F20000 		movt	r0, #:upper16:.LC8
+ 407 003a FFF7FEBF 		b	firmwareError
+ 408              	.L35:
+ 409 003e 7047     		bx	lr
+ 410              		.size	_ZL25applyIdleSolenoidPinStateP9PwmConfigi, .-_ZL25applyIdleSolenoidPinStateP9PwmConfigi
+ 411              		.section	.text._Z9idleDebugPKcf,"ax",%progbits
+ 412              		.align	2
+ 413              		.p2align 4,,15
+ 414              		.global	_Z9idleDebugPKcf
+ 415              		.thumb
+ 416              		.thumb_func
+ 417              		.type	_Z9idleDebugPKcf, %function
+ 418              	_Z9idleDebugPKcf:
+ 419              		@ args = 0, pretend = 0, frame = 0
+ 420              		@ frame_needed = 0, uses_anonymous_args = 0
+ 421 0000 30B5     		push	{r4, r5, lr}
+ 422 0002 40F20003 		movw	r3, #:lower16:.LANCHOR4
+ 423 0006 C0F20003 		movt	r3, #:upper16:.LANCHOR4
+ 424 000a 83B0     		sub	sp, sp, #12
+ 425 000c 0546     		mov	r5, r0
+ 426 000e 0846     		mov	r0, r1	@ float
+ 427 0010 1C68     		ldr	r4, [r3]
+ 428 0012 FFF7FEFF 		bl	__aeabi_f2d
+ 429 0016 CDE90001 		strd	r0, [sp]
+ 430 001a 40F20001 		movw	r1, #:lower16:.LC10
+ 431 001e 2046     		mov	r0, r4
+ 432 0020 2A46     		mov	r2, r5
+ 433 0022 C0F20001 		movt	r1, #:upper16:.LC10
+ 434 0026 FFF7FEFF 		bl	scheduleMsg
+ 435 002a 03B0     		add	sp, sp, #12
+ 436              		@ sp needed
+ 437 002c 30BD     		pop	{r4, r5, pc}
+ 438              		.size	_Z9idleDebugPKcf, .-_Z9idleDebugPKcf
+ 439 002e 00BF     		.section	.text._Z15startIdleThreadP7LoggingP6Engine,"ax",%progbits
+ 440              		.align	2
+ 441              		.p2align 4,,15
+ 442              		.global	_Z15startIdleThreadP7LoggingP6Engine
+ 443              		.thumb
+ 444              		.thumb_func
+ 445              		.type	_Z15startIdleThreadP7LoggingP6Engine, %function
+ 446              	_Z15startIdleThreadP7LoggingP6Engine:
+ 447              		@ args = 0, pretend = 0, frame = 0
+ 448              		@ frame_needed = 0, uses_anonymous_args = 0
+ 449 0000 70B5     		push	{r4, r5, r6, lr}
+ 450 0002 40F20004 		movw	r4, #:lower16:boardConfiguration
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s 			page 9
+
+
+ 451 0006 C0F20004 		movt	r4, #:upper16:boardConfiguration
+ 452 000a 40F20005 		movw	r5, #:lower16:.LANCHOR4
+ 453 000e 2368     		ldr	r3, [r4]
+ 454 0010 93F88121 		ldrb	r2, [r3, #385]	@ zero_extendqisi2
+ 455 0014 C0F20005 		movt	r5, #:upper16:.LANCHOR4
+ 456 0018 9107     		lsls	r1, r2, #30
+ 457 001a 84B0     		sub	sp, sp, #16
+ 458 001c 2860     		str	r0, [r5]
+ 459 001e 40F18A80 		bpl	.L40
+ 460 0022 40F20002 		movw	r2, #:lower16:engineConfiguration
+ 461 0026 C0F20002 		movt	r2, #:upper16:engineConfiguration
+ 462 002a 1969     		ldr	r1, [r3, #16]
+ 463 002c 1068     		ldr	r0, [r2]
+ 464 002e DA68     		ldr	r2, [r3, #12]
+ 465 0030 D0F86466 		ldr	r6, [r0, #1636]
+ 466 0034 00F20C63 		addw	r3, r0, #1548
+ 467 0038 1B68     		ldr	r3, [r3]	@ float
+ 468 003a 0096     		str	r6, [sp]
+ 469 003c D0F86866 		ldr	r6, [r0, #1640]
+ 470 0040 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 471 0044 0196     		str	r6, [sp, #4]
+ 472 0046 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 473 004a FFF7FEFF 		bl	_ZN12StepperMotor10initializeE11brain_pin_eS0_fiS0_
+ 474              	.L41:
+ 475 004e 40F20006 		movw	r6, #:lower16:.LANCHOR3
+ 476 0052 C0F20006 		movt	r6, #:upper16:.LANCHOR3
+ 477 0056 3046     		mov	r0, r6
+ 478 0058 FFF7FEFF 		bl	_ZN14IdleValveState4initEv
+ 479 005c 7068     		ldr	r0, [r6, #4]	@ float
+ 480 005e 2D68     		ldr	r5, [r5]
+ 481 0060 FFF7FEFF 		bl	__aeabi_f2d
+ 482 0064 0B46     		mov	r3, r1
+ 483 0066 40F20001 		movw	r1, #:lower16:.LC12
+ 484 006a 0246     		mov	r2, r0
+ 485 006c C0F20001 		movt	r1, #:upper16:.LC12
+ 486 0070 2846     		mov	r0, r5
+ 487 0072 FFF7FEFF 		bl	scheduleMsg
+ 488 0076 0022     		movs	r2, #0
+ 489 0078 40F20000 		movw	r0, #:lower16:.LANCHOR6
+ 490 007c 40F20003 		movw	r3, #:lower16:_ZL8ivThreadi
+ 491 0080 0092     		str	r2, [sp]
+ 492 0082 C0F20003 		movt	r3, #:upper16:_ZL8ivThreadi
+ 493 0086 C0F20000 		movt	r0, #:upper16:.LANCHOR6
+ 494 008a 4FF43A71 		mov	r1, #744
+ 495 008e 4022     		movs	r2, #64
+ 496 0090 FFF7FEFF 		bl	chThdCreateStatic
+ 497 0094 2368     		ldr	r3, [r4]
+ 498 0096 D3F8A050 		ldr	r5, [r3, #160]
+ 499 009a 40F20004 		movw	r4, #:lower16:boardConfiguration
+ 500 009e 502D     		cmp	r5, #80
+ 501 00a0 C0F20004 		movt	r4, #:upper16:boardConfiguration
+ 502 00a4 0CD0     		beq	.L42
+ 503 00a6 D3F8A400 		ldr	r0, [r3, #164]
+ 504 00aa FFF7FEFF 		bl	_Z12getInputMode16pin_input_mode_e
+ 505 00ae 0246     		mov	r2, r0
+ 506 00b0 40F20000 		movw	r0, #:lower16:.LC13
+ 507 00b4 2946     		mov	r1, r5
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s 			page 10
+
+
+ 508 00b6 C0F20000 		movt	r0, #:upper16:.LC13
+ 509 00ba FFF7FEFF 		bl	_Z13mySetPadMode2PKc11brain_pin_em
+ 510 00be 2368     		ldr	r3, [r4]
+ 511              	.L42:
+ 512 00c0 D3F81C43 		ldr	r4, [r3, #796]
+ 513 00c4 502C     		cmp	r4, #80
+ 514 00c6 0BD0     		beq	.L43
+ 515 00c8 D3F82003 		ldr	r0, [r3, #800]
+ 516 00cc FFF7FEFF 		bl	_Z12getInputMode16pin_input_mode_e
+ 517 00d0 0246     		mov	r2, r0
+ 518 00d2 40F20000 		movw	r0, #:lower16:.LC14
+ 519 00d6 2146     		mov	r1, r4
+ 520 00d8 C0F20000 		movt	r0, #:upper16:.LC14
+ 521 00dc FFF7FEFF 		bl	_Z13mySetPadMode2PKc11brain_pin_em
+ 522              	.L43:
+ 523 00e0 40F20000 		movw	r0, #:lower16:.LC15
+ 524 00e4 40F20001 		movw	r1, #:lower16:_ZL12showIdleInfov
+ 525 00e8 C0F20000 		movt	r0, #:upper16:.LC15
+ 526 00ec C0F20001 		movt	r1, #:upper16:_ZL12showIdleInfov
+ 527 00f0 FFF7FEFF 		bl	addConsoleAction
+ 528 00f4 40F20000 		movw	r0, #:lower16:.LC16
+ 529 00f8 40F20001 		movw	r1, #:lower16:_ZL16setIdleRpmActioni
+ 530 00fc C0F20000 		movt	r0, #:upper16:.LC16
+ 531 0100 C0F20001 		movt	r1, #:upper16:_ZL16setIdleRpmActioni
+ 532 0104 FFF7FEFF 		bl	addConsoleActionI
+ 533 0108 40F20000 		movw	r0, #:lower16:.LC17
+ 534 010c 40F20001 		movw	r1, #:lower16:_ZL20setIdleValvePositioni
+ 535 0110 C0F20000 		movt	r0, #:upper16:.LC17
+ 536 0114 C0F20001 		movt	r1, #:upper16:_ZL20setIdleValvePositioni
+ 537 0118 FFF7FEFF 		bl	addConsoleActionI
+ 538 011c 40F20000 		movw	r0, #:lower16:.LC18
+ 539 0120 40F20001 		movw	r1, #:lower16:_ZL21setIdleControlEnabledi
+ 540 0124 C0F20000 		movt	r0, #:upper16:.LC18
+ 541 0128 C0F20001 		movt	r1, #:upper16:_ZL21setIdleControlEnabledi
+ 542 012c 04B0     		add	sp, sp, #16
+ 543              		@ sp needed
+ 544 012e BDE87040 		pop	{r4, r5, r6, lr}
+ 545 0132 FFF7FEBF 		b	addConsoleActionI
+ 546              	.L40:
+ 547 0136 D3ED027A 		flds	s15, [r3, #8]	@ int
+ 548 013a B8EEE77A 		fsitos	s14, s15
+ 549 013e 1A68     		ldr	r2, [r3]
+ 550 0140 8DED007A 		fsts	s14, [sp]
+ 551 0144 DFED0D7A 		flds	s15, .L48
+ 552 0148 93ED057A 		flds	s14, [r3, #20]
+ 553 014c C7EE277A 		fdivs	s15, s14, s15
+ 554 0150 40F20006 		movw	r6, #:lower16:_ZL25applyIdleSolenoidPinStateP9PwmConfigi
+ 555 0154 C0F20006 		movt	r6, #:upper16:_ZL25applyIdleSolenoidPinStateP9PwmConfigi
+ 556 0158 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 557 015c 40F20001 		movw	r1, #:lower16:.LC11
+ 558 0160 40F20003 		movw	r3, #:lower16:.LANCHOR5
+ 559 0164 0296     		str	r6, [sp, #8]
+ 560 0166 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 561 016a C0F20001 		movt	r1, #:upper16:.LC11
+ 562 016e C0F20003 		movt	r3, #:upper16:.LANCHOR5
+ 563 0172 CDED017A 		fsts	s15, [sp, #4]
+ 564 0176 FFF7FEFF 		bl	_Z17startSimplePwmExtP9PwmConfigPKc11brain_pin_eP9OutputPinffPFvS0_iE
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s 			page 11
+
+
+ 565 017a 68E7     		b	.L41
+ 566              	.L49:
+ 567              		.align	2
+ 568              	.L48:
+ 569 017c 0000C842 		.word	1120403456
+ 570              		.size	_Z15startIdleThreadP7LoggingP6Engine, .-_Z15startIdleThreadP7LoggingP6Engine
+ 571              		.section	.text.startup._GLOBAL__sub_I__Z9idleDebugPKcf,"ax",%progbits
+ 572              		.align	2
+ 573              		.p2align 4,,15
+ 574              		.thumb
+ 575              		.thumb_func
+ 576              		.type	_GLOBAL__sub_I__Z9idleDebugPKcf, %function
+ 577              	_GLOBAL__sub_I__Z9idleDebugPKcf:
+ 578              		@ args = 0, pretend = 0, frame = 0
+ 579              		@ frame_needed = 0, uses_anonymous_args = 0
+ 580 0000 40F20000 		movw	r0, #:lower16:.LANCHOR5
+ 581 0004 08B5     		push	{r3, lr}
+ 582 0006 C0F20000 		movt	r0, #:upper16:.LANCHOR5
+ 583 000a FFF7FEFF 		bl	_ZN9OutputPinC1Ev
+ 584 000e 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 585 0012 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 586 0016 FFF7FEFF 		bl	_ZN9SimplePwmC1Ev
+ 587 001a 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 588 001e C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 589 0022 FFF7FEFF 		bl	_ZN12StepperMotorC1Ev
+ 590 0026 40F20000 		movw	r0, #:lower16:.LANCHOR3
+ 591 002a C0F20000 		movt	r0, #:upper16:.LANCHOR3
+ 592 002e BDE80840 		pop	{r3, lr}
+ 593 0032 FFF7FEBF 		b	_ZN14IdleValveStateC1Ev
+ 594              		.size	_GLOBAL__sub_I__Z9idleDebugPKcf, .-_GLOBAL__sub_I__Z9idleDebugPKcf
+ 595 0036 00BFAFF3 		.section	.init_array,"aw",%init_array
+ 595      0080AFF3 
+ 595      0080
+ 596              		.align	2
+ 597 0000 00000000 		.word	_GLOBAL__sub_I__Z9idleDebugPKcf(target1)
+ 598              		.section	.data._ZL18actualIdlePosition,"aw",%progbits
+ 599              		.align	2
+ 600              		.set	.LANCHOR0,. + 0
+ 601              		.type	_ZL18actualIdlePosition, %object
+ 602              		.size	_ZL18actualIdlePosition, 4
+ 603              	_ZL18actualIdlePosition:
+ 604 0000 0000C8C2 		.word	-1027080192
+ 605              		.section	.bss._ZL8iacMotor,"aw",%nobits
+ 606              		.align	3
+ 607              		.set	.LANCHOR1,. + 0
+ 608              		.type	_ZL8iacMotor, %object
+ 609              		.size	_ZL8iacMotor, 784
+ 610              	_ZL8iacMotor:
+ 611 0000 00000000 		.space	784
+ 611      00000000 
+ 611      00000000 
+ 611      00000000 
+ 611      00000000 
+ 612              		.section	.bss._ZL12idleSolenoid,"aw",%nobits
+ 613              		.align	3
+ 614              		.set	.LANCHOR2,. + 0
+ 615              		.type	_ZL12idleSolenoid, %object
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s 			page 12
+
+
+ 616              		.size	_ZL12idleSolenoid, 112
+ 617              	_ZL12idleSolenoid:
+ 618 0000 00000000 		.space	112
+ 618      00000000 
+ 618      00000000 
+ 618      00000000 
+ 618      00000000 
+ 619              		.section	.bss._ZL13ivThreadStack,"aw",%nobits
+ 620              		.align	3
+ 621              		.set	.LANCHOR6,. + 0
+ 622              		.type	_ZL13ivThreadStack, %object
+ 623              		.size	_ZL13ivThreadStack, 744
+ 624              	_ZL13ivThreadStack:
+ 625 0000 00000000 		.space	744
+ 625      00000000 
+ 625      00000000 
+ 625      00000000 
+ 625      00000000 
+ 626              		.section	.bss._ZL15idleSolenoidPin,"aw",%nobits
+ 627              		.align	2
+ 628              		.set	.LANCHOR5,. + 0
+ 629              		.type	_ZL15idleSolenoidPin, %object
+ 630              		.size	_ZL15idleSolenoidPin, 16
+ 631              	_ZL15idleSolenoidPin:
+ 632 0000 00000000 		.space	16
+ 632      00000000 
+ 632      00000000 
+ 632      00000000 
+ 633              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 634              		.align	2
+ 635              	.LC0:
+ 636 0000 74617267 		.ascii	"target idle RPM %d\000"
+ 636      65742069 
+ 636      646C6520 
+ 636      52504D20 
+ 636      256400
+ 637 0013 00       		.space	1
+ 638              	.LC1:
+ 639 0014 69646C65 		.ascii	"idleMode=%s position=%f isStepper=%s\000"
+ 639      4D6F6465 
+ 639      3D257320 
+ 639      706F7369 
+ 639      74696F6E 
+ 640 0039 000000   		.space	3
+ 641              	.LC2:
+ 642 003c 64697265 		.ascii	"direction=%s reactionTime=%f\000"
+ 642      6374696F 
+ 642      6E3D2573 
+ 642      20726561 
+ 642      6374696F 
+ 643 0059 000000   		.space	3
+ 644              	.LC3:
+ 645 005c 73746570 		.ascii	"step=%s steps=%d\000"
+ 645      3D257320 
+ 645      73746570 
+ 645      733D2564 
+ 645      00
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s 			page 13
+
+
+ 646 006d 000000   		.space	3
+ 647              	.LC4:
+ 648 0070 656E6162 		.ascii	"enable=%s\000"
+ 648      6C653D25 
+ 648      7300
+ 649 007a 0000     		.space	2
+ 650              	.LC5:
+ 651 007c 69646C65 		.ascii	"idle valve freq=%d on %s\000"
+ 651      2076616C 
+ 651      76652066 
+ 651      7265713D 
+ 651      2564206F 
+ 652 0095 000000   		.space	3
+ 653              	.LC6:
+ 654 0098 49646C65 		.ascii	"IdleValve\000"
+ 654      56616C76 
+ 654      6500
+ 655 00a2 0000     		.space	2
+ 656              	.LC7:
+ 657 00a4 73657474 		.ascii	"setting idle valve position %d\000"
+ 657      696E6720 
+ 657      69646C65 
+ 657      2076616C 
+ 657      76652070 
+ 658 00c3 00       		.space	1
+ 659              	.LC8:
+ 660 00c4 696E7661 		.ascii	"invalid stateIndex\000"
+ 660      6C696420 
+ 660      73746174 
+ 660      65496E64 
+ 660      657800
+ 661 00d7 00       		.space	1
+ 662              	.LC9:
+ 663 00d8 696E7661 		.ascii	"invalid idle waveCount\000"
+ 663      6C696420 
+ 663      69646C65 
+ 663      20776176 
+ 663      65436F75 
+ 664 00ef 00       		.space	1
+ 665              	.LC10:
+ 666 00f0 25732566 		.ascii	"%s%f\000"
+ 666      00
+ 667 00f5 000000   		.space	3
+ 668              	.LC11:
+ 669 00f8 49646C65 		.ascii	"Idle Valve\000"
+ 669      2056616C 
+ 669      766500
+ 670 0103 00       		.space	1
+ 671              	.LC12:
+ 672 0104 696E6974 		.ascii	"initial idle %d\000"
+ 672      69616C20 
+ 672      69646C65 
+ 672      20256400 
+ 673              	.LC13:
+ 674 0114 636C7574 		.ascii	"clutch down switch\000"
+ 674      63682064 
+ 674      6F776E20 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s 			page 14
+
+
+ 674      73776974 
+ 674      636800
+ 675 0127 00       		.space	1
+ 676              	.LC14:
+ 677 0128 636C7574 		.ascii	"clutch up switch\000"
+ 677      63682075 
+ 677      70207377 
+ 677      69746368 
+ 677      00
+ 678 0139 000000   		.space	3
+ 679              	.LC15:
+ 680 013c 69646C65 		.ascii	"idleinfo\000"
+ 680      696E666F 
+ 680      00
+ 681 0145 000000   		.space	3
+ 682              	.LC16:
+ 683 0148 7365745F 		.ascii	"set_idle_rpm\000"
+ 683      69646C65 
+ 683      5F72706D 
+ 683      00
+ 684 0155 000000   		.space	3
+ 685              	.LC17:
+ 686 0158 7365745F 		.ascii	"set_idle_position\000"
+ 686      69646C65 
+ 686      5F706F73 
+ 686      6974696F 
+ 686      6E00
+ 687 016a 0000     		.space	2
+ 688              	.LC18:
+ 689 016c 7365745F 		.ascii	"set_idle_enabled\000"
+ 689      69646C65 
+ 689      5F656E61 
+ 689      626C6564 
+ 689      00
+ 690 017d 000000   		.section	.bss._ZL6logger,"aw",%nobits
+ 691              		.align	2
+ 692              		.set	.LANCHOR4,. + 0
+ 693              		.type	_ZL6logger, %object
+ 694              		.size	_ZL6logger, 4
+ 695              	_ZL6logger:
+ 696 0000 00000000 		.space	4
+ 697              		.section	.bss._ZL8idleMath,"aw",%nobits
+ 698              		.align	2
+ 699              		.set	.LANCHOR3,. + 0
+ 700              		.type	_ZL8idleMath, %object
+ 701              		.size	_ZL8idleMath, 20
+ 702              	_ZL8idleMath:
+ 703 0000 00000000 		.space	20
+ 703      00000000 
+ 703      00000000 
+ 703      00000000 
+ 703      00000000 
+ 704              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s 			page 15
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 idle_thread.cpp
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:17     .text._ZL22doSetIdleValvePositioni:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:22     .text._ZL22doSetIdleValvePositioni:00000000 _ZL22doSetIdleValvePositioni
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:600    .data._ZL18actualIdlePosition:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:614    .bss._ZL12idleSolenoid:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:607    .bss._ZL8iacMotor:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:103    .text._ZL22doSetIdleValvePositioni:00000108 $d
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:106    .text._ZL16setIdleRpmActioni:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:111    .text._ZL16setIdleRpmActioni:00000000 _ZL16setIdleRpmActioni
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:699    .bss._ZL8idleMath:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:692    .bss._ZL6logger:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:635    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:131    .text._ZL12showIdleInfov:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:136    .text._ZL12showIdleInfov:00000000 _ZL12showIdleInfov
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:638    .rodata.str1.4:00000014 .LC1
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:650    .rodata.str1.4:0000007c .LC5
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:641    .rodata.str1.4:0000003c .LC2
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:644    .rodata.str1.4:0000005c .LC3
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:647    .rodata.str1.4:00000070 .LC4
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:224    .text._ZL21setIdleControlEnabledi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:229    .text._ZL21setIdleControlEnabledi:00000000 _ZL21setIdleControlEnabledi
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:243    .text._ZL8ivThreadi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:248    .text._ZL8ivThreadi:00000000 _ZL8ivThreadi
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:653    .rodata.str1.4:00000098 .LC6
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:343    .text._ZL8ivThreadi:00000120 $d
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:346    .text._ZL20setIdleValvePositioni:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:351    .text._ZL20setIdleValvePositioni:00000000 _ZL20setIdleValvePositioni
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:656    .rodata.str1.4:000000a4 .LC7
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:374    .text._ZL25applyIdleSolenoidPinStateP9PwmConfigi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:379    .text._ZL25applyIdleSolenoidPinStateP9PwmConfigi:00000000 _ZL25applyIdleSolenoidPinStateP9PwmConfigi
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:662    .rodata.str1.4:000000d8 .LC9
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:659    .rodata.str1.4:000000c4 .LC8
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:412    .text._Z9idleDebugPKcf:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:418    .text._Z9idleDebugPKcf:00000000 _Z9idleDebugPKcf
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:665    .rodata.str1.4:000000f0 .LC10
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:440    .text._Z15startIdleThreadP7LoggingP6Engine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:446    .text._Z15startIdleThreadP7LoggingP6Engine:00000000 _Z15startIdleThreadP7LoggingP6Engine
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:671    .rodata.str1.4:00000104 .LC12
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:621    .bss._ZL13ivThreadStack:00000000 .LANCHOR6
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:673    .rodata.str1.4:00000114 .LC13
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:676    .rodata.str1.4:00000128 .LC14
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:679    .rodata.str1.4:0000013c .LC15
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:682    .rodata.str1.4:00000148 .LC16
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:685    .rodata.str1.4:00000158 .LC17
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:688    .rodata.str1.4:0000016c .LC18
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:668    .rodata.str1.4:000000f8 .LC11
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:628    .bss._ZL15idleSolenoidPin:00000000 .LANCHOR5
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:569    .text._Z15startIdleThreadP7LoggingP6Engine:0000017c $d
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:572    .text.startup._GLOBAL__sub_I__Z9idleDebugPKcf:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:577    .text.startup._GLOBAL__sub_I__Z9idleDebugPKcf:00000000 _GLOBAL__sub_I__Z9idleDebugPKcf
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:596    .init_array:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:599    .data._ZL18actualIdlePosition:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:603    .data._ZL18actualIdlePosition:00000000 _ZL18actualIdlePosition
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:606    .bss._ZL8iacMotor:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:610    .bss._ZL8iacMotor:00000000 _ZL8iacMotor
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:613    .bss._ZL12idleSolenoid:00000000 $d
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s 			page 16
+
+
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:617    .bss._ZL12idleSolenoid:00000000 _ZL12idleSolenoid
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:620    .bss._ZL13ivThreadStack:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:624    .bss._ZL13ivThreadStack:00000000 _ZL13ivThreadStack
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:627    .bss._ZL15idleSolenoidPin:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:631    .bss._ZL15idleSolenoidPin:00000000 _ZL15idleSolenoidPin
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:634    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:691    .bss._ZL6logger:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:695    .bss._ZL6logger:00000000 _ZL6logger
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:698    .bss._ZL8idleMath:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:702    .bss._ZL8idleMath:00000000 _ZL8idleMath
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:105    .text._ZL22doSetIdleValvePositioni:0000010c $t
+C:\Users\pc\AppData\Local\Temp\cc0Ndlwn.s:345    .text._ZL8ivThreadi:00000124 $t
+
+UNDEFINED SYMBOLS
+engine
+config
+boardConfiguration
+_Z13interpolate2dfPfS_i
+maxF
+minF
+absF
+_ZN9SimplePwm21setSimplePwmDutyCycleEf
+engineConfiguration
+_ZN12StepperMotor17setTargetPositionEi
+_ZN14IdleValveState12setTargetRpmEi
+scheduleMsg
+__aeabi_f2d
+_Z14getIdle_mode_e11idle_mode_e
+_Z12boolToStringb
+_Z10hwPortname11brain_pin_e
+rlist
+chThdSleep
+_Z9getHwPort11brain_pin_e
+_Z8getHwPin11brain_pin_e
+currentTimeMillis
+_ZN13RpmCalculator3rpmEv
+_ZN14IdleValveState7getIdleEim
+_ZN9OutputPin8setValueEi
+firmwareError
+_ZN12StepperMotor10initializeE11brain_pin_eS0_fiS0_
+_ZN14IdleValveState4initEv
+chThdCreateStatic
+_Z12getInputMode16pin_input_mode_e
+_Z13mySetPadMode2PKc11brain_pin_em
+addConsoleAction
+addConsoleActionI
+_Z17startSimplePwmExtP9PwmConfigPKc11brain_pin_eP9OutputPinffPFvS0_iE
+_ZN9OutputPinC1Ev
+_ZN9SimplePwmC1Ev
+_ZN12StepperMotorC1Ev
+_ZN14IdleValveStateC1Ev

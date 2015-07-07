@@ -1,0 +1,168 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc28ITka.s 			page 1
+
+
+   1              		.file	"chregistry.c"
+   2              		.section	.text$chRegFirstThread,"x"
+   3              		.p2align 4,,15
+   4              		.globl	_chRegFirstThread
+   5              		.def	_chRegFirstThread;	.scl	2;	.type	32;	.endef
+   6              	_chRegFirstThread:
+   7              	LFB7:
+   8              		.cfi_startproc
+   9 0000 53       		pushl	%ebx
+  10              		.cfi_def_cfa_offset 8
+  11              		.cfi_offset 3, -8
+  12 0001 83EC08   		subl	$8, %esp
+  13              		.cfi_def_cfa_offset 16
+  14              	/APP
+  15              	 # 120 "../firmware/chibios/os/kernel/src/chregistry.c" 1
+  16 0004 90       		nop
+  17              	 # 0 "" 2
+  18              	/NO_APP
+  19 0005 E8000000 		call	_dbg_check_lock
+  19      00
+  20 000a 8B1D1000 		movl	_rlist+16, %ebx
+  20      0000
+  21 0010 80431E01 		addb	$1, 30(%ebx)
+  22 0014 E8000000 		call	_dbg_check_unlock
+  22      00
+  23              	/APP
+  24              	 # 125 "../firmware/chibios/os/kernel/src/chregistry.c" 1
+  25 0019 90       		nop
+  26              	 # 0 "" 2
+  27              	/NO_APP
+  28 001a 83C408   		addl	$8, %esp
+  29              		.cfi_def_cfa_offset 8
+  30 001d 89D8     		movl	%ebx, %eax
+  31 001f 5B       		popl	%ebx
+  32              		.cfi_restore 3
+  33              		.cfi_def_cfa_offset 4
+  34 0020 C3       		ret
+  35              		.cfi_endproc
+  36              	LFE7:
+  37 0021 90909090 		.section .rdata,"dr"
+  37      90909090 
+  37      90909090 
+  37      909090
+  38              	LC0:
+  39 0000 63685265 		.ascii "chRegNextThread(), #1\0"
+  39      674E6578 
+  39      74546872 
+  39      65616428 
+  39      292C2023 
+  40 0016 0000     		.section	.text$chRegNextThread,"x"
+  41              		.p2align 4,,15
+  42              		.globl	_chRegNextThread
+  43              		.def	_chRegNextThread;	.scl	2;	.type	32;	.endef
+  44              	_chRegNextThread:
+  45              	LFB8:
+  46              		.cfi_startproc
+  47 0000 83EC1C   		subl	$28, %esp
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc28ITka.s 			page 2
+
+
+  48              		.cfi_def_cfa_offset 32
+  49 0003 89742418 		movl	%esi, 24(%esp)
+  50              		.cfi_offset 6, -8
+  51 0007 8B742420 		movl	32(%esp), %esi
+  52 000b 895C2414 		movl	%ebx, 20(%esp)
+  53              		.cfi_offset 3, -12
+  54              	/APP
+  55              	 # 143 "../firmware/chibios/os/kernel/src/chregistry.c" 1
+  56 000f 90       		nop
+  57              	 # 0 "" 2
+  58              	/NO_APP
+  59 0010 E8000000 		call	_dbg_check_lock
+  59      00
+  60 0015 8B5E10   		movl	16(%esi), %ebx
+  61 0018 81FB0000 		cmpl	$_rlist, %ebx
+  61      0000
+  62 001e 7442     		je	L6
+  63 0020 0FB6431E 		movzbl	30(%ebx), %eax
+  64 0024 3CFF     		cmpb	$-1, %al
+  65 0026 7428     		je	L9
+  66              	L5:
+  67 0028 83C001   		addl	$1, %eax
+  68 002b 88431E   		movb	%al, 30(%ebx)
+  69              	L4:
+  70 002e E8000000 		call	_dbg_check_unlock
+  70      00
+  71              	/APP
+  72              	 # 154 "../firmware/chibios/os/kernel/src/chregistry.c" 1
+  73 0033 90       		nop
+  74              	 # 0 "" 2
+  75              	/NO_APP
+  76 0034 893424   		movl	%esi, (%esp)
+  77 0037 E8000000 		call	_chThdRelease
+  77      00
+  78 003c 89D8     		movl	%ebx, %eax
+  79 003e 8B742418 		movl	24(%esp), %esi
+  80 0042 8B5C2414 		movl	20(%esp), %ebx
+  81 0046 83C41C   		addl	$28, %esp
+  82              		.cfi_remember_state
+  83              		.cfi_restore 6
+  84              		.cfi_restore 3
+  85              		.cfi_def_cfa_offset 4
+  86 0049 C3       		ret
+  87 004a 8DB60000 		.p2align 4,,7
+  87      0000
+  88              	L9:
+  89              		.cfi_restore_state
+  90 0050 C7042400 		movl	$LC0, (%esp)
+  90      000000
+  91 0057 E8000000 		call	_chDbgPanic
+  91      00
+  92 005c 0FB6431E 		movzbl	30(%ebx), %eax
+  93 0060 EBC6     		jmp	L5
+  94              		.p2align 4,,7
+  95              	L6:
+  96 0062 31DB     		xorl	%ebx, %ebx
+  97 0064 EBC8     		jmp	L4
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc28ITka.s 			page 3
+
+
+  98              		.cfi_endproc
+  99              	LFE8:
+ 100              		.globl	_ch_debug
+ 101 0066 90909090 		.section	.rdata$ch_debug,"dr"
+ 101      90909090 
+ 101      9090
+ 102              		.align 2
+ 103              	_ch_debug:
+ 104 0000 6D61696E 		.ascii "main"
+ 105 0004 00       		.byte	0
+ 106 0005 16       		.byte	22
+ 107 0006 8811     		.word	4488
+ 108 0008 04       		.byte	4
+ 109 0009 04       		.byte	4
+ 110 000a 48       		.byte	72
+ 111 000b 08       		.byte	8
+ 112 000c 0C       		.byte	12
+ 113 000d 10       		.byte	16
+ 114 000e 14       		.byte	20
+ 115 000f 18       		.byte	24
+ 116 0010 00       		.byte	0
+ 117 0011 1C       		.byte	28
+ 118 0012 1D       		.byte	29
+ 119 0013 1E       		.byte	30
+ 120 0014 1F       		.byte	31
+ 121 0015 20       		.byte	32
+ 122              		.def	_dbg_check_lock;	.scl	2;	.type	32;	.endef
+ 123              		.def	_dbg_check_unlock;	.scl	2;	.type	32;	.endef
+ 124              		.def	_chThdRelease;	.scl	2;	.type	32;	.endef
+ 125 0016 0000     		.def	_chDbgPanic;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc28ITka.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 chregistry.c
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc28ITka.s:6      .text$chRegFirstThread:00000000 _chRegFirstThread
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc28ITka.s:44     .text$chRegNextThread:00000000 _chRegNextThread
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc28ITka.s:103    .rdata$ch_debug:00000000 _ch_debug
+
+UNDEFINED SYMBOLS
+_rlist
+_dbg_check_lock
+_dbg_check_unlock
+_chThdRelease
+_chDbgPanic

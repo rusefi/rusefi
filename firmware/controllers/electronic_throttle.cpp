@@ -31,6 +31,7 @@
 #include "pwm_generator.h"
 #include "pwm_generator_logic.h"
 #include "pid.h"
+#include "engine_controller.h"
 
 #if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
 
@@ -49,23 +50,32 @@ static OutputPin output1;
 static SimplePwm etbPwmDown;
 static OutputPin output2;
 
-static Pid pid(10, 0, 0, 1, 90);
+static Pid pid(1, 0, 0, 0, 100);
 
 static float prevTps;
+
+static float currentEtbDuty;
 
 EXTERN_ENGINE;
 
 static msg_t etbThread(void *arg) {
-	while (TRUE) {
-		int tps = (int)getTPS();
+        UNUSED(arg);
+	while (true) {
+		float pedal = getPedalPosition(PASS_ENGINE_PARAMETER_F);
+		float tps = getTPS();
 
-		if (tps != prevTps) {
-			prevTps = tps;
-			scheduleMsg(&logger, "tps=%d", (int) tps);
-		}
+		currentEtbDuty = pid.getValue(pedal, getTPS(), 1);
+
+		etbPwmUp.setSimplePwmDutyCycle(currentEtbDuty / 100);
+
+
+//		if (tps != prevTps) {
+//			prevTps = tps;
+//			scheduleMsg(&logger, "tps=%d", (int) tps);
+//		}
 
 		// this thread is activated 10 times per second
-		chThdSleepMilliseconds(100);
+		chThdSleepMilliseconds(boardConfiguration->etbDT);
 	}
 #if defined __GNUC__
 	return -1;
@@ -80,10 +90,53 @@ static void setThrottleConsole(int level) {
 	print("st = %f\r\n", dc);
 }
 
+static void showEthInfo(void) {
+	static char pinNameBuffer[16];
+
+	scheduleMsg(&logger, "pedal=%f %d/%d @", getPedalPosition(), engineConfiguration->pedalPositionMin, engineConfiguration->pedalPositionMax,
+			getPinNameByAdcChannel(engineConfiguration->pedalPositionChannel, pinNameBuffer));
+
+	scheduleMsg(&logger, "tsp=%f", getTPS());
+
+	scheduleMsg(&logger, "etbControlPin1=%s duty=%f", hwPortname(boardConfiguration->etbControlPin1),
+			currentEtbDuty);
+	scheduleMsg(&logger, "etb P=%f I=%f D=%f dT=%d", boardConfiguration->etbPFactor,
+			boardConfiguration->etbIFactor,
+			0.0,
+			boardConfiguration->etbDT);
+}
+
+static void apply(void) {
+	pid.updateFactors(boardConfiguration->etbPFactor, boardConfiguration->etbIFactor, 0);
+}
+
+static void setEtbPFactor(float value) {
+	boardConfiguration->etbPFactor = value;
+	apply();
+	showEthInfo();
+}
+
+static void setEtbIFactor(float value) {
+	boardConfiguration->etbIFactor = value;
+	apply();
+	showEthInfo();
+}
+
+void setDefaultEtbParameters(void) {
+	engineConfiguration->pedalPositionMax = 6;
+	boardConfiguration->etbPFactor = 1;
+	boardConfiguration->etbIFactor = 0.5;
+	boardConfiguration->etbDT = 100;
+}
+
 void initElectronicThrottle(void) {
 	// these two lines are controlling direction
 //	outputPinRegister("etb1", ELECTRONIC_THROTTLE_CONTROL_1, ETB_CONTROL_LINE_1_PORT, ETB_CONTROL_LINE_1_PIN);
 //	outputPinRegister("etb2", ELECTRONIC_THROTTLE_CONTROL_2, ETB_CONTROL_LINE_2_PORT, ETB_CONTROL_LINE_2_PIN);
+
+	if (!hasPedalPositionSensor()) {
+		return;
+	}
 
 	// this line used for PWM
 	startSimplePwmExt(&etbPwmUp, "etb1",
@@ -92,7 +145,7 @@ void initElectronicThrottle(void) {
 			ETB_FREQ,
 			0.80,
 			applyPinState);
-	startSimplePwmExt(&etbPwmUp, "etb2",
+	startSimplePwmExt(&etbPwmDown, "etb2",
 			boardConfiguration->etbControlPin2,
 			&output2,
 			ETB_FREQ,
@@ -100,7 +153,16 @@ void initElectronicThrottle(void) {
 			applyPinState);
 
 	addConsoleActionI("e", setThrottleConsole);
+
+	addConsoleAction("ethinfo", showEthInfo);
+
+	addConsoleActionF("set_etb_p", setEtbPFactor);
+	addConsoleActionF("set_etb_i", setEtbIFactor);
+
+	apply();
+
 	chThdCreateStatic(etbTreadStack, sizeof(etbTreadStack), NORMALPRIO, (tfunc_t) etbThread, NULL);
 }
+
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 

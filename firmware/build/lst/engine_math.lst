@@ -1,0 +1,1561 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"engine_math.cpp"
+  16              		.section	.text._Z29getCrankshaftRevolutionTimeMsi,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_Z29getCrankshaftRevolutionTimeMsi
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_Z29getCrankshaftRevolutionTimeMsi, %function
+  23              	_Z29getCrankshaftRevolutionTimeMsi:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 07EE100A 		fmsr	s14, r0	@ int
+  28 0004 F8EEC77A 		fsitos	s15, s14
+  29 0008 9FED057A 		flds	s14, .L2
+  30 000c 87EE277A 		fdivs	s14, s14, s15
+  31 0010 DFED047A 		flds	s15, .L2+4
+  32 0014 67EE277A 		fmuls	s15, s14, s15
+  33 0018 17EE900A 		fmrs	r0, s15
+  34 001c 7047     		bx	lr
+  35              	.L3:
+  36 001e 00BF     		.align	2
+  37              	.L2:
+  38 0020 ABAA2643 		.word	1126607531
+  39 0024 0000B443 		.word	1135869952
+  40              		.size	_Z29getCrankshaftRevolutionTimeMsi, .-_Z29getCrankshaftRevolutionTimeMsi
+  41 0028 AFF30080 		.section	.text._Z14getEngineLoadTv,"ax",%progbits
+  41      AFF30080 
+  42              		.align	2
+  43              		.p2align 4,,15
+  44              		.global	_Z14getEngineLoadTv
+  45              		.thumb
+  46              		.thumb_func
+  47              		.type	_Z14getEngineLoadTv, %function
+  48              	_Z14getEngineLoadTv:
+  49              		@ args = 0, pretend = 0, frame = 0
+  50              		@ frame_needed = 0, uses_anonymous_args = 0
+  51 0000 40F20003 		movw	r3, #:lower16:engine
+  52 0004 C0F20003 		movt	r3, #:upper16:engine
+  53 0008 10B5     		push	{r4, lr}
+  54 000a 1B68     		ldr	r3, [r3]
+  55 000c 002B     		cmp	r3, #0
+  56 000e 4FD0     		beq	.L16
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 2
+
+
+  57 0010 40F20004 		movw	r4, #:lower16:engineConfiguration
+  58 0014 C0F20004 		movt	r4, #:upper16:engineConfiguration
+  59 0018 2368     		ldr	r3, [r4]
+  60 001a 002B     		cmp	r3, #0
+  61 001c 51D0     		beq	.L17
+  62 001e D3F8A821 		ldr	r2, [r3, #424]
+  63 0022 042A     		cmp	r2, #4
+  64 0024 20D8     		bhi	.L8
+  65 0026 DFE802F0 		tbb	[pc, r2]
+  66              	.L10:
+  67 002a 07       		.byte	(.L9-.L10)/2
+  68 002b 17       		.byte	(.L11-.L10)/2
+  69 002c 1B       		.byte	(.L12-.L10)/2
+  70 002d 1B       		.byte	(.L12-.L10)/2
+  71 002e 03       		.byte	(.L13-.L10)/2
+  72 002f 00       		.align	1
+  73              	.L13:
+  74 0030 BDE81040 		pop	{r4, lr}
+  75 0034 FFF7FEBF 		b	_Z10getRealMafv
+  76              	.L9:
+  77 0038 FFF7FEFF 		bl	_Z12hasMafSensorv
+  78 003c 08BB     		cbnz	r0, .L14
+  79 003e 40F20001 		movw	r1, #:lower16:.LC2
+  80 0042 C0F20001 		movt	r1, #:upper16:.LC2
+  81 0046 40F25E20 		movw	r0, #606
+  82 004a FFF7FEFF 		bl	warning
+  83 004e DFED217A 		flds	s15, .L18
+  84              	.L6:
+  85 0052 17EE900A 		fmrs	r0, s15
+  86 0056 10BD     		pop	{r4, pc}
+  87              	.L11:
+  88 0058 BDE81040 		pop	{r4, lr}
+  89 005c FFF7FEBF 		b	_Z6getTPSv
+  90              	.L12:
+  91 0060 BDE81040 		pop	{r4, lr}
+  92 0064 FFF7FEBF 		b	_Z6getMapv
+  93              	.L8:
+  94 0068 40F20001 		movw	r1, #:lower16:.LC4
+  95 006c C0F20001 		movt	r1, #:upper16:.LC4
+  96 0070 40F25E20 		movw	r0, #606
+  97 0074 FFF7FEFF 		bl	warning
+  98 0078 FFEE007A 		fconsts	s15, #240
+  99 007c 17EE900A 		fmrs	r0, s15
+ 100 0080 10BD     		pop	{r4, pc}
+ 101              	.L14:
+ 102 0082 2368     		ldr	r3, [r4]
+ 103 0084 40F20000 		movw	r0, #:lower16:.LC3
+ 104 0088 D3F84412 		ldr	r1, [r3, #580]
+ 105 008c C0F20000 		movt	r0, #:upper16:.LC3
+ 106 0090 FFF7FEFF 		bl	_Z19getInternalAdcValuePKc13adc_channel_e
+ 107 0094 07EE900A 		fmsr	s15, r0	@ int
+ 108 0098 2368     		ldr	r3, [r4]
+ 109 009a F8EEE76A 		fsitos	s13, s15
+ 110 009e DFED0E7A 		flds	s15, .L18+4
+ 111 00a2 93ED747A 		flds	s14, [r3, #464]
+ 112 00a6 66EEA77A 		fmuls	s15, s13, s15
+ 113 00aa 67EE877A 		fmuls	s15, s15, s14
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 3
+
+
+ 114 00ae D0E7     		b	.L6
+ 115              	.L16:
+ 116 00b0 40F20000 		movw	r0, #:lower16:.LC0
+ 117 00b4 C0F20000 		movt	r0, #:upper16:.LC0
+ 118 00b8 FFF7FEFF 		bl	firmwareError
+ 119 00bc DFED057A 		flds	s15, .L18
+ 120 00c0 C7E7     		b	.L6
+ 121              	.L17:
+ 122 00c2 40F20000 		movw	r0, #:lower16:.LC1
+ 123 00c6 C0F20000 		movt	r0, #:upper16:.LC1
+ 124 00ca FFF7FEFF 		bl	firmwareError
+ 125 00ce DFED017A 		flds	s15, .L18
+ 126 00d2 BEE7     		b	.L6
+ 127              	.L19:
+ 128              		.align	2
+ 129              	.L18:
+ 130 00d4 0000C07F 		.word	2143289344
+ 131 00d8 010C403A 		.word	977275905
+ 132              		.size	_Z14getEngineLoadTv, .-_Z14getEngineLoadTv
+ 133 00dc AFF30080 		.section	.text._Z18setSingleCoilDwellP22engine_configuration_s,"ax",%progbits
+ 134              		.align	2
+ 135              		.p2align 4,,15
+ 136              		.global	_Z18setSingleCoilDwellP22engine_configuration_s
+ 137              		.thumb
+ 138              		.thumb_func
+ 139              		.type	_Z18setSingleCoilDwellP22engine_configuration_s, %function
+ 140              	_Z18setSingleCoilDwellP22engine_configuration_s:
+ 141              		@ args = 0, pretend = 0, frame = 0
+ 142              		@ frame_needed = 0, uses_anonymous_args = 0
+ 143              		@ link register save eliminated.
+ 144 0000 30B4     		push	{r4, r5}
+ 145 0002 0021     		movs	r1, #0
+ 146 0004 00F5B872 		add	r2, r0, #368
+ 147 0008 6FF00903 		mvn	r3, #9
+ 148 000c CBF68071 		movt	r1, 49024
+ 149              	.L22:
+ 150 0010 07EE103A 		fmsr	s14, r3	@ int
+ 151 0014 0133     		adds	r3, r3, #1
+ 152 0016 F8EEC77A 		fsitos	s15, s14
+ 153 001a 9C1C     		adds	r4, r3, #2
+ 154 001c 42ED087A 		fsts	s15, [r2, #-32]
+ 155 0020 42F8041B 		str	r1, [r2], #4	@ float
+ 156 0024 F4D1     		bne	.L22
+ 157 0026 4FF42045 		mov	r5, #40960
+ 158 002a 4FF4A044 		mov	r4, #20480
+ 159 002e C4F28C55 		movt	r5, 17804
+ 160 0032 C4F24364 		movt	r4, 17987
+ 161 0036 4FF08143 		mov	r3, #1082130432
+ 162 003a 0021     		movs	r1, #0
+ 163 003c 4FF07E52 		mov	r2, #1065353216
+ 164 0040 C0F86851 		str	r5, [r0, #360]	@ float
+ 165 0044 C0F86C41 		str	r4, [r0, #364]	@ float
+ 166 0048 C0F88C11 		str	r1, [r0, #396]	@ float
+ 167 004c C0F86421 		str	r2, [r0, #356]	@ float
+ 168 0050 C0F88431 		str	r3, [r0, #388]	@ float
+ 169 0054 C0F88831 		str	r3, [r0, #392]	@ float
+ 170 0058 30BC     		pop	{r4, r5}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 4
+
+
+ 171 005a 7047     		bx	lr
+ 172              		.size	_Z18setSingleCoilDwellP22engine_configuration_s, .-_Z18setSingleCoilDwellP22engine_configura
+ 173 005c AFF30080 		.section	.text._ZN12FuelScheduleC2Ev,"ax",%progbits
+ 174              		.align	2
+ 175              		.p2align 4,,15
+ 176              		.global	_ZN12FuelScheduleC2Ev
+ 177              		.thumb
+ 178              		.thumb_func
+ 179              		.type	_ZN12FuelScheduleC2Ev, %function
+ 180              	_ZN12FuelScheduleC2Ev:
+ 181              		@ args = 0, pretend = 0, frame = 0
+ 182              		@ frame_needed = 0, uses_anonymous_args = 0
+ 183 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 184 0002 00F10807 		add	r7, r0, #8
+ 185 0006 0646     		mov	r6, r0
+ 186 0008 3C46     		mov	r4, r7
+ 187 000a 07F5B455 		add	r5, r7, #5760
+ 188              	.L26:
+ 189 000e 2046     		mov	r0, r4
+ 190 0010 8034     		adds	r4, r4, #128
+ 191 0012 FFF7FEFF 		bl	_ZN14InjectionEventC1Ev
+ 192 0016 AC42     		cmp	r4, r5
+ 193 0018 F9D1     		bne	.L26
+ 194 001a 3846     		mov	r0, r7
+ 195 001c 0021     		movs	r1, #0
+ 196 001e 4FF4B452 		mov	r2, #5760
+ 197 0022 FFF7FEFF 		bl	memset
+ 198 0026 0024     		movs	r4, #0
+ 199 0028 06F5B450 		add	r0, r6, #5760
+ 200 002c 3460     		str	r4, [r6]
+ 201 002e 2146     		mov	r1, r4
+ 202 0030 FC22     		movs	r2, #252
+ 203 0032 0830     		adds	r0, r0, #8
+ 204 0034 FFF7FEFF 		bl	memset
+ 205 0038 06F5BC53 		add	r3, r6, #6016
+ 206 003c 3046     		mov	r0, r6
+ 207 003e 5C60     		str	r4, [r3, #4]
+ 208 0040 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 209              		.size	_ZN12FuelScheduleC2Ev, .-_ZN12FuelScheduleC2Ev
+ 210              		.global	_ZN12FuelScheduleC1Ev
+ 211              		.thumb_set _ZN12FuelScheduleC1Ev,_ZN12FuelScheduleC2Ev
+ 212 0042 00BFAFF3 		.section	.text._ZN12FuelSchedule5clearEv,"ax",%progbits
+ 212      0080AFF3 
+ 212      0080AFF3 
+ 212      0080
+ 213              		.align	2
+ 214              		.p2align 4,,15
+ 215              		.global	_ZN12FuelSchedule5clearEv
+ 216              		.thumb
+ 217              		.thumb_func
+ 218              		.type	_ZN12FuelSchedule5clearEv, %function
+ 219              	_ZN12FuelSchedule5clearEv:
+ 220              		@ args = 0, pretend = 0, frame = 0
+ 221              		@ frame_needed = 0, uses_anonymous_args = 0
+ 222 0000 10B5     		push	{r4, lr}
+ 223 0002 0446     		mov	r4, r0
+ 224 0004 00F5B450 		add	r0, r0, #5760
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 5
+
+
+ 225 0008 0830     		adds	r0, r0, #8
+ 226 000a 0021     		movs	r1, #0
+ 227 000c FC22     		movs	r2, #252
+ 228 000e 04F5BC54 		add	r4, r4, #6016
+ 229 0012 FFF7FEFF 		bl	memset
+ 230 0016 0023     		movs	r3, #0
+ 231 0018 6360     		str	r3, [r4, #4]
+ 232 001a 10BD     		pop	{r4, pc}
+ 233              		.size	_ZN12FuelSchedule5clearEv, .-_ZN12FuelSchedule5clearEv
+ 234 001c AFF30080 		.section	.text._Z16getSparkDwellMsTi,"ax",%progbits
+ 235              		.align	2
+ 236              		.p2align 4,,15
+ 237              		.global	_Z16getSparkDwellMsTi
+ 238              		.thumb
+ 239              		.thumb_func
+ 240              		.type	_Z16getSparkDwellMsTi, %function
+ 241              	_Z16getSparkDwellMsTi:
+ 242              		@ args = 0, pretend = 0, frame = 0
+ 243              		@ frame_needed = 0, uses_anonymous_args = 0
+ 244 0000 10B5     		push	{r4, lr}
+ 245 0002 0028     		cmp	r0, #0
+ 246 0004 2DED028B 		fstmfdd	sp!, {d8}
+ 247 0008 24DD     		ble	.L29
+ 248 000a 40F20003 		movw	r3, #:lower16:persistentState
+ 249 000e C0F20003 		movt	r3, #:upper16:persistentState
+ 250 0012 B3F96830 		ldrsh	r3, [r3, #104]
+ 251 0016 9842     		cmp	r0, r3
+ 252 0018 1CDA     		bge	.L29
+ 253 001a 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 254 001e C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 255 0022 BDEC028B 		fldmfdd	sp!, {d8}
+ 256 0026 1B68     		ldr	r3, [r3]
+ 257 0028 93F8D825 		ldrb	r2, [r3, #1496]	@ zero_extendqisi2
+ 258 002c D206     		lsls	r2, r2, #27
+ 259 002e 5FBF     		itttt	pl
+ 260 0030 07EE100A 		fmsrpl	s14, r0	@ int
+ 261 0034 F8EEC77A 		fsitospl	s15, s14
+ 262 0038 9FED1A7A 		fldspl	s14, .L34
+ 263 003c 87EE277A 		fdivspl	s14, s14, s15
+ 264 0040 56BF     		itet	pl
+ 265 0042 D3ED1B7A 		fldspl	s15, [r3, #108]
+ 266 0046 D3ED1A7A 		fldsmi	s15, [r3, #104]
+ 267 004a 67EE277A 		fmulspl	s15, s14, s15
+ 268 004e 17EE900A 		fmrs	r0, s15
+ 269 0052 10BD     		pop	{r4, pc}
+ 270              	.L29:
+ 271 0054 07EE900A 		fmsr	s15, r0	@ int
+ 272 0058 B8EEE78A 		fsitos	s16, s15
+ 273 005c 18EE100A 		fmrs	r0, s16
+ 274 0060 FFF7FEFF 		bl	__fpclassifyf
+ 275 0064 88B1     		cbz	r0, .L33
+ 276 0066 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 277 006a 18EE100A 		fmrs	r0, s16
+ 278 006e BDEC028B 		fldmfdd	sp!, {d8}
+ 279 0072 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 280 0076 BDE81040 		pop	{r4, lr}
+ 281 007a 1A68     		ldr	r2, [r3]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 6
+
+
+ 282 007c 0823     		movs	r3, #8
+ 283 007e 02F5A871 		add	r1, r2, #336
+ 284 0082 02F5B872 		add	r2, r2, #368
+ 285 0086 FFF7FEBF 		b	_Z13interpolate2dfPfS_i
+ 286              	.L33:
+ 287 008a 40F20000 		movw	r0, #:lower16:.LC5
+ 288 008e C0F20000 		movt	r0, #:upper16:.LC5
+ 289 0092 FFF7FEFF 		bl	firmwareError
+ 290 0096 BDEC028B 		fldmfdd	sp!, {d8}
+ 291 009a DFED037A 		flds	s15, .L34+4
+ 292 009e 17EE900A 		fmrs	r0, s15
+ 293 00a2 10BD     		pop	{r4, pc}
+ 294              	.L35:
+ 295              		.align	2
+ 296              	.L34:
+ 297 00a4 ABAA2643 		.word	1126607531
+ 298 00a8 0000C07F 		.word	2143289344
+ 299              		.size	_Z16getSparkDwellMsTi, .-_Z16getSparkDwellMsTi
+ 300              		.global	__aeabi_f2d
+ 301 00ac AFF30080 		.section	.text._Z19findTriggerPositionP24event_trigger_position_sf,"ax",%progbits
+ 302              		.align	2
+ 303              		.p2align 4,,15
+ 304              		.global	_Z19findTriggerPositionP24event_trigger_position_sf
+ 305              		.thumb
+ 306              		.thumb_func
+ 307              		.type	_Z19findTriggerPositionP24event_trigger_position_sf, %function
+ 308              	_Z19findTriggerPositionP24event_trigger_position_sf:
+ 309              		@ args = 0, pretend = 0, frame = 0
+ 310              		@ frame_needed = 0, uses_anonymous_args = 0
+ 311 0000 30B5     		push	{r4, r5, lr}
+ 312 0002 3C4B     		ldr	r3, .L58
+ 313 0004 40F20004 		movw	r4, #:lower16:persistentState
+ 314 0008 C0F20004 		movt	r4, #:upper16:persistentState
+ 315 000c 2DED028B 		fstmfdd	sp!, {d8}
+ 316 0010 D4ED757A 		flds	s15, [r4, #468]
+ 317 0014 93ED008A 		flds	s16, [r3]
+ 318 0018 07EE101A 		fmsr	s14, r1
+ 319 001c 38EE278A 		fadds	s16, s16, s15
+ 320 0020 D4F8A831 		ldr	r3, [r4, #424]
+ 321 0024 83B0     		sub	sp, sp, #12
+ 322 0026 0546     		mov	r5, r0
+ 323 0028 38EE078A 		fadds	s16, s16, s14
+ 324 002c 002B     		cmp	r3, #0
+ 325 002e 3DD0     		beq	.L55
+ 326              	.L37:
+ 327 0030 B5EEC08A 		fcmpezs	s16
+ 328 0034 07EE103A 		fmsr	s14, r3	@ int
+ 329 0038 F1EE10FA 		fmstat
+ 330 003c F8EEC77A 		fsitos	s15, s14
+ 331 0040 0DD5     		bpl	.L54
+ 332              	.L41:
+ 333 0042 38EE278A 		fadds	s16, s16, s15
+ 334 0046 B5EEC08A 		fcmpezs	s16
+ 335 004a F1EE10FA 		fmstat
+ 336 004e F8D4     		bmi	.L41
+ 337 0050 B4EEE78A 		fcmpes	s16, s15
+ 338 0054 F1EE10FA 		fmstat
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 7
+
+
+ 339 0058 06DB     		blt	.L56
+ 340              	.L45:
+ 341 005a 38EE678A 		fsubs	s16, s16, s15
+ 342              	.L54:
+ 343 005e B4EEE78A 		fcmpes	s16, s15
+ 344 0062 F1EE10FA 		fmstat
+ 345 0066 F8DA     		bge	.L45
+ 346              	.L56:
+ 347 0068 FDEEC87A 		ftosizs	s15, s16
+ 348 006c 40F20003 		movw	r3, #:lower16:_engine
+ 349 0070 17EE902A 		fmrs	r2, s15	@ int
+ 350 0074 C0F20003 		movt	r3, #:upper16:_engine
+ 351 0078 03EB8202 		add	r2, r3, r2, lsl #2
+ 352 007c D2F89C22 		ldr	r2, [r2, #668]
+ 353 0080 02F28231 		addw	r1, r2, #898
+ 354 0084 03EB8103 		add	r3, r3, r1, lsl #2
+ 355 0088 D3ED028A 		flds	s17, [r3, #8]
+ 356 008c F4EEC88A 		fcmpes	s17, s16
+ 357 0090 F1EE10FA 		fmstat
+ 358 0094 13DC     		bgt	.L57
+ 359 0096 38EE688A 		fsubs	s16, s16, s17
+ 360 009a C5ED018A 		fsts	s17, [r5, #4]
+ 361 009e 85ED028A 		fsts	s16, [r5, #8]
+ 362 00a2 2A60     		str	r2, [r5]
+ 363 00a4 03B0     		add	sp, sp, #12
+ 364              		@ sp needed
+ 365 00a6 BDEC028B 		fldmfdd	sp!, {d8}
+ 366 00aa 30BD     		pop	{r4, r5, pc}
+ 367              	.L55:
+ 368 00ac 40F20000 		movw	r0, #:lower16:.LC6
+ 369 00b0 C0F20000 		movt	r0, #:upper16:.LC6
+ 370 00b4 FFF7FEFF 		bl	firmwareError
+ 371 00b8 D4F8A831 		ldr	r3, [r4, #424]
+ 372 00bc B8E7     		b	.L37
+ 373              	.L57:
+ 374 00be 18EE100A 		fmrs	r0, s16
+ 375 00c2 FFF7FEFF 		bl	__aeabi_f2d
+ 376 00c6 0446     		mov	r4, r0
+ 377 00c8 18EE900A 		fmrs	r0, s17
+ 378 00cc 0D46     		mov	r5, r1
+ 379 00ce FFF7FEFF 		bl	__aeabi_f2d
+ 380 00d2 CDE90001 		strd	r0, [sp]
+ 381 00d6 40F20001 		movw	r1, #:lower16:.LC7
+ 382 00da 2246     		mov	r2, r4
+ 383 00dc 2B46     		mov	r3, r5
+ 384 00de C0F20001 		movt	r1, #:upper16:.LC7
+ 385 00e2 40F25E20 		movw	r0, #606
+ 386 00e6 FFF7FEFF 		bl	warning
+ 387 00ea 03B0     		add	sp, sp, #12
+ 388              		@ sp needed
+ 389 00ec BDEC028B 		fldmfdd	sp!, {d8}
+ 390 00f0 30BD     		pop	{r4, r5, pc}
+ 391              	.L59:
+ 392 00f2 00BF     		.align	2
+ 393              	.L58:
+ 394 00f4 E40D0000 		.word	_engine+3556
+ 395              		.size	_Z19findTriggerPositionP24event_trigger_position_sf, .-_Z19findTriggerPositionP24event_trigg
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 8
+
+
+ 396 00f8 AFF30080 		.section	.text._Z25initializeIgnitionActionsffP9ArrayListI13IgnitionEventLi80EE,"ax",%progbits
+ 396      AFF30080 
+ 397              		.align	2
+ 398              		.p2align 4,,15
+ 399              		.global	_Z25initializeIgnitionActionsffP9ArrayListI13IgnitionEventLi80EE
+ 400              		.thumb
+ 401              		.thumb_func
+ 402              		.type	_Z25initializeIgnitionActionsffP9ArrayListI13IgnitionEventLi80EE, %function
+ 403              	_Z25initializeIgnitionActionsffP9ArrayListI13IgnitionEventLi80EE:
+ 404              		@ args = 0, pretend = 0, frame = 0
+ 405              		@ frame_needed = 0, uses_anonymous_args = 0
+ 406 0000 2DE9F843 		push	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 407 0004 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 408 0008 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 409 000c 2DED048B 		fstmfdd	sp!, {d8, d9}
+ 410 0010 1B68     		ldr	r3, [r3]
+ 411 0012 D3F89431 		ldr	r3, [r3, #404]
+ 412 0016 002B     		cmp	r3, #0
+ 413 0018 08EE900A 		fmsr	s17, r0
+ 414 001c 9046     		mov	r8, r2
+ 415 001e 09EE101A 		fmsr	s18, r1
+ 416 0022 49DD     		ble	.L69
+ 417 0024 40F20009 		movw	r9, #:lower16:persistentState
+ 418 0028 C0F20009 		movt	r9, #:upper16:persistentState
+ 419 002c 0023     		movs	r3, #0
+ 420 002e D9F89C21 		ldr	r2, [r9, #412]
+ 421 0032 C8F80030 		str	r3, [r8]
+ 422 0036 9A42     		cmp	r2, r3
+ 423 0038 3ADD     		ble	.L60
+ 424 003a 244E     		ldr	r6, .L71
+ 425 003c 1D46     		mov	r5, r3
+ 426 003e 1BE0     		b	.L68
+ 427              	.L64:
+ 428 0040 03EB4304 		add	r4, r3, r3, lsl #1
+ 429 0044 0133     		adds	r3, r3, #1
+ 430 0046 C8F80030 		str	r3, [r8]
+ 431 004a 3B68     		ldr	r3, [r7]
+ 432 004c 08EB4414 		add	r4, r8, r4, lsl #5
+ 433 0050 0834     		adds	r4, r4, #8
+ 434 0052 0135     		adds	r5, r5, #1
+ 435 0054 13B3     		cbz	r3, .L70
+ 436              	.L66:
+ 437 0056 84ED0E8A 		fsts	s16, [r4, #56]
+ 438 005a 38EE498A 		fsubs	s16, s16, s18
+ 439 005e 2760     		str	r7, [r4]
+ 440 0060 04F13C00 		add	r0, r4, #60
+ 441 0064 18EE101A 		fmrs	r1, s16
+ 442 0068 FFF7FEFF 		bl	_Z19findTriggerPositionP24event_trigger_position_sf
+ 443 006c D9F89C31 		ldr	r3, [r9, #412]
+ 444 0070 AB42     		cmp	r3, r5
+ 445 0072 1DDD     		ble	.L60
+ 446 0074 D8F80030 		ldr	r3, [r8]
+ 447              	.L68:
+ 448 0078 B6EC018A 		fldmias	r6!, {s16}
+ 449 007c 4F2B     		cmp	r3, #79
+ 450 007e 38EE288A 		fadds	s16, s16, s17
+ 451 0082 F76A     		ldr	r7, [r6, #44]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 9
+
+
+ 452 0084 DCDD     		ble	.L64
+ 453 0086 40F20000 		movw	r0, #:lower16:.LC9
+ 454 008a C0F20000 		movt	r0, #:upper16:.LC9
+ 455 008e FFF7FEFF 		bl	firmwareError
+ 456 0092 3B68     		ldr	r3, [r7]
+ 457 0094 0024     		movs	r4, #0
+ 458 0096 0135     		adds	r5, r5, #1
+ 459 0098 002B     		cmp	r3, #0
+ 460 009a DCD1     		bne	.L66
+ 461              	.L70:
+ 462 009c 40F20001 		movw	r1, #:lower16:.LC10
+ 463 00a0 C0F20001 		movt	r1, #:upper16:.LC10
+ 464 00a4 3A69     		ldr	r2, [r7, #16]
+ 465 00a6 40F25E20 		movw	r0, #606
+ 466 00aa FFF7FEFF 		bl	warning
+ 467 00ae D2E7     		b	.L66
+ 468              	.L60:
+ 469 00b0 BDEC048B 		fldmfdd	sp!, {d8-d9}
+ 470 00b4 BDE8F883 		pop	{r3, r4, r5, r6, r7, r8, r9, pc}
+ 471              	.L69:
+ 472 00b8 BDEC048B 		fldmfdd	sp!, {d8-d9}
+ 473 00bc 40F20000 		movw	r0, #:lower16:.LC8
+ 474 00c0 C0F20000 		movt	r0, #:upper16:.LC8
+ 475 00c4 BDE8F843 		pop	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 476 00c8 FFF7FEBF 		b	firmwareError
+ 477              	.L72:
+ 478              		.align	2
+ 479              	.L71:
+ 480 00cc F01D0000 		.word	_engine+7664
+ 481              		.size	_Z25initializeIgnitionActionsffP9ArrayListI13IgnitionEventLi80EE, .-_Z25initializeIgnitionAc
+ 482              		.section	.text._ZN12FuelSchedule22registerInjectionEventEP14NamedOutputPinfb,"ax",%progbits
+ 483              		.align	2
+ 484              		.p2align 4,,15
+ 485              		.global	_ZN12FuelSchedule22registerInjectionEventEP14NamedOutputPinfb
+ 486              		.thumb
+ 487              		.thumb_func
+ 488              		.type	_ZN12FuelSchedule22registerInjectionEventEP14NamedOutputPinfb, %function
+ 489              	_ZN12FuelSchedule22registerInjectionEventEP14NamedOutputPinfb:
+ 490              		@ args = 0, pretend = 0, frame = 8
+ 491              		@ frame_needed = 0, uses_anonymous_args = 0
+ 492 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+ 493 0004 0446     		mov	r4, r0
+ 494 0006 83B0     		sub	sp, sp, #12
+ 495 0008 0F46     		mov	r7, r1
+ 496 000a 9146     		mov	r9, r2	@ float
+ 497 000c 13B9     		cbnz	r3, .L74
+ 498 000e 0A68     		ldr	r2, [r1]
+ 499 0010 002A     		cmp	r2, #0
+ 500 0012 35D0     		beq	.L79
+ 501              	.L74:
+ 502 0014 2568     		ldr	r5, [r4]
+ 503 0016 2C2D     		cmp	r5, #44
+ 504 0018 C4BF     		itt	gt
+ 505 001a 40F20000 		movwgt	r0, #:lower16:.LC9
+ 506 001e C0F20000 		movtgt	r0, #:upper16:.LC9
+ 507 0022 28DC     		bgt	.L78
+ 508 0024 4FEAC518 		lsl	r8, r5, #7
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 10
+
+
+ 509 0028 08F10808 		add	r8, r8, #8
+ 510 002c 04EB0806 		add	r6, r4, r8
+ 511 0030 0135     		adds	r5, r5, #1
+ 512 0032 2560     		str	r5, [r4]
+ 513 0034 1848     		ldr	r0, .L81
+ 514 0036 3761     		str	r7, [r6, #16]
+ 515 0038 86F87830 		strb	r3, [r6, #120]
+ 516 003c FFF7FEFF 		bl	_ZNK12TriggerShape7getSizeEv
+ 517 0040 0028     		cmp	r0, #0
+ 518 0042 14DD     		ble	.L80
+ 519 0044 3046     		mov	r0, r6
+ 520 0046 4946     		mov	r1, r9	@ float
+ 521 0048 FFF7FEFF 		bl	_Z19findTriggerPositionP24event_trigger_position_sf
+ 522 004c 54F80830 		ldr	r3, [r4, r8]
+ 523 0050 2344     		add	r3, r3, r4
+ 524 0052 03F5B453 		add	r3, r3, #5760
+ 525 0056 1A7A     		ldrb	r2, [r3, #8]	@ zero_extendqisi2
+ 526 0058 32B9     		cbnz	r2, .L73
+ 527 005a 04F5BC54 		add	r4, r4, #6016
+ 528 005e 0121     		movs	r1, #1
+ 529 0060 6268     		ldr	r2, [r4, #4]
+ 530 0062 1972     		strb	r1, [r3, #8]
+ 531 0064 5318     		adds	r3, r2, r1
+ 532 0066 6360     		str	r3, [r4, #4]
+ 533              	.L73:
+ 534 0068 03B0     		add	sp, sp, #12
+ 535              		@ sp needed
+ 536 006a BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ 537              	.L80:
+ 538 006e 40F20000 		movw	r0, #:lower16:.LC12
+ 539 0072 C0F20000 		movt	r0, #:upper16:.LC12
+ 540              	.L78:
+ 541 0076 03B0     		add	sp, sp, #12
+ 542              		@ sp needed
+ 543 0078 BDE8F043 		pop	{r4, r5, r6, r7, r8, r9, lr}
+ 544 007c FFF7FEBF 		b	firmwareError
+ 545              	.L79:
+ 546 0080 40F20001 		movw	r1, #:lower16:.LC11
+ 547 0084 3A69     		ldr	r2, [r7, #16]
+ 548 0086 0193     		str	r3, [sp, #4]
+ 549 0088 C0F20001 		movt	r1, #:upper16:.LC11
+ 550 008c 40F25E20 		movw	r0, #606
+ 551 0090 FFF7FEFF 		bl	warning
+ 552 0094 019B     		ldr	r3, [sp, #4]
+ 553 0096 BDE7     		b	.L74
+ 554              	.L82:
+ 555              		.align	2
+ 556              	.L81:
+ 557 0098 84020000 		.word	_engine+644
+ 558              		.size	_ZN12FuelSchedule22registerInjectionEventEP14NamedOutputPinfb, .-_ZN12FuelSchedule22register
+ 559 009c AFF30080 		.section	.text._Z13getCylinderId14firing_order_ei,"ax",%progbits
+ 560              		.align	2
+ 561              		.p2align 4,,15
+ 562              		.global	_Z13getCylinderId14firing_order_ei
+ 563              		.thumb
+ 564              		.thumb_func
+ 565              		.type	_Z13getCylinderId14firing_order_ei, %function
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 11
+
+
+ 566              	_Z13getCylinderId14firing_order_ei:
+ 567              		@ args = 0, pretend = 0, frame = 0
+ 568              		@ frame_needed = 0, uses_anonymous_args = 0
+ 569 0000 08B5     		push	{r3, lr}
+ 570 0002 0828     		cmp	r0, #8
+ 571 0004 40D8     		bhi	.L84
+ 572 0006 DFE800F0 		tbb	[pc, r0]
+ 573              	.L86:
+ 574 000a 05       		.byte	(.L95-.L86)/2
+ 575 000b 07       		.byte	(.L87-.L86)/2
+ 576 000c 0E       		.byte	(.L88-.L86)/2
+ 577 000d 15       		.byte	(.L89-.L86)/2
+ 578 000e 1C       		.byte	(.L90-.L86)/2
+ 579 000f 23       		.byte	(.L91-.L86)/2
+ 580 0010 2A       		.byte	(.L92-.L86)/2
+ 581 0011 31       		.byte	(.L93-.L86)/2
+ 582 0012 38       		.byte	(.L94-.L86)/2
+ 583 0013 00       		.align	1
+ 584              	.L95:
+ 585 0014 0120     		movs	r0, #1
+ 586 0016 08BD     		pop	{r3, pc}
+ 587              	.L87:
+ 588 0018 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 589 001c C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ 590 0020 53F82100 		ldr	r0, [r3, r1, lsl #2]
+ 591 0024 08BD     		pop	{r3, pc}
+ 592              	.L88:
+ 593 0026 40F20003 		movw	r3, #:lower16:.LANCHOR2
+ 594 002a C0F20003 		movt	r3, #:upper16:.LANCHOR2
+ 595 002e 53F82100 		ldr	r0, [r3, r1, lsl #2]
+ 596 0032 08BD     		pop	{r3, pc}
+ 597              	.L89:
+ 598 0034 40F20003 		movw	r3, #:lower16:.LANCHOR3
+ 599 0038 C0F20003 		movt	r3, #:upper16:.LANCHOR3
+ 600 003c 53F82100 		ldr	r0, [r3, r1, lsl #2]
+ 601 0040 08BD     		pop	{r3, pc}
+ 602              	.L90:
+ 603 0042 40F20003 		movw	r3, #:lower16:.LANCHOR5
+ 604 0046 C0F20003 		movt	r3, #:upper16:.LANCHOR5
+ 605 004a 53F82100 		ldr	r0, [r3, r1, lsl #2]
+ 606 004e 08BD     		pop	{r3, pc}
+ 607              	.L91:
+ 608 0050 40F20003 		movw	r3, #:lower16:.LANCHOR7
+ 609 0054 C0F20003 		movt	r3, #:upper16:.LANCHOR7
+ 610 0058 53F82100 		ldr	r0, [r3, r1, lsl #2]
+ 611 005c 08BD     		pop	{r3, pc}
+ 612              	.L92:
+ 613 005e 40F20003 		movw	r3, #:lower16:.LANCHOR4
+ 614 0062 C0F20003 		movt	r3, #:upper16:.LANCHOR4
+ 615 0066 53F82100 		ldr	r0, [r3, r1, lsl #2]
+ 616 006a 08BD     		pop	{r3, pc}
+ 617              	.L93:
+ 618 006c 40F20003 		movw	r3, #:lower16:.LANCHOR6
+ 619 0070 C0F20003 		movt	r3, #:upper16:.LANCHOR6
+ 620 0074 53F82100 		ldr	r0, [r3, r1, lsl #2]
+ 621 0078 08BD     		pop	{r3, pc}
+ 622              	.L94:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 12
+
+
+ 623 007a 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 624 007e C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 625 0082 53F82100 		ldr	r0, [r3, r1, lsl #2]
+ 626 0086 08BD     		pop	{r3, pc}
+ 627              	.L84:
+ 628 0088 40F20001 		movw	r1, #:lower16:.LC13
+ 629 008c 0246     		mov	r2, r0
+ 630 008e C0F20001 		movt	r1, #:upper16:.LC13
+ 631 0092 40F25E20 		movw	r0, #606
+ 632 0096 FFF7FEFF 		bl	warning
+ 633 009a 0120     		movs	r0, #1
+ 634 009c 08BD     		pop	{r3, pc}
+ 635              		.size	_Z13getCylinderId14firing_order_ei, .-_Z13getCylinderId14firing_order_ei
+ 636 009e 00BF     		.section	.text._ZN12FuelSchedule13addFuelEventsE16injection_mode_e,"ax",%progbits
+ 637              		.align	2
+ 638              		.p2align 4,,15
+ 639              		.global	_ZN12FuelSchedule13addFuelEventsE16injection_mode_e
+ 640              		.thumb
+ 641              		.thumb_func
+ 642              		.type	_ZN12FuelSchedule13addFuelEventsE16injection_mode_e, %function
+ 643              	_ZN12FuelSchedule13addFuelEventsE16injection_mode_e:
+ 644              		@ args = 0, pretend = 0, frame = 0
+ 645              		@ frame_needed = 0, uses_anonymous_args = 0
+ 646 0000 2DE9F84F 		push	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 647 0004 40F20004 		movw	r4, #:lower16:engine
+ 648 0008 0546     		mov	r5, r0
+ 649 000a C0F20004 		movt	r4, #:upper16:engine
+ 650 000e 00F5B450 		add	r0, r0, #5760
+ 651 0012 2DED028B 		fstmfdd	sp!, {d8}
+ 652 0016 0F46     		mov	r7, r1
+ 653 0018 0830     		adds	r0, r0, #8
+ 654 001a 0021     		movs	r1, #0
+ 655 001c FC22     		movs	r2, #252
+ 656 001e FFF7FEFF 		bl	memset
+ 657 0022 05F5BC50 		add	r0, r5, #6016
+ 658 0026 2368     		ldr	r3, [r4]
+ 659 0028 0026     		movs	r6, #0
+ 660 002a 4660     		str	r6, [r0, #4]
+ 661 002c 2E60     		str	r6, [r5]
+ 662 002e 002B     		cmp	r3, #0
+ 663 0030 00F09180 		beq	.L117
+ 664 0034 9868     		ldr	r0, [r3, #8]	@ float
+ 665 0036 FFF7FEFF 		bl	__fpclassifyf
+ 666 003a 18B9     		cbnz	r0, .L118
+ 667              	.L96:
+ 668 003c BDEC028B 		fldmfdd	sp!, {d8}
+ 669 0040 BDE8F88F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 670              	.L118:
+ 671 0044 2368     		ldr	r3, [r4]
+ 672 0046 9868     		ldr	r0, [r3, #8]	@ float
+ 673 0048 FFF7FEFF 		bl	__fpclassifyf
+ 674 004c 0028     		cmp	r0, #0
+ 675 004e 00F08C80 		beq	.L119
+ 676 0052 40F20003 		movw	r3, #:lower16:_engine
+ 677 0056 C0F20003 		movt	r3, #:upper16:_engine
+ 678 005a D3ED986A 		flds	s13, [r3, #608]
+ 679 005e 9FED777A 		flds	s14, .L121
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 13
+
+
+ 680 0062 D3ED027A 		flds	s15, [r3, #8]
+ 681 0066 26EE877A 		fmuls	s14, s13, s14
+ 682 006a 40F20004 		movw	r4, #:lower16:persistentState
+ 683 006e C7EE277A 		fdivs	s15, s14, s15
+ 684 0072 03F5F753 		add	r3, r3, #7904
+ 685 0076 C0F20004 		movt	r4, #:upper16:persistentState
+ 686 007a 012F     		cmp	r7, #1
+ 687 007c 93ED018A 		flds	s16, [r3, #4]
+ 688 0080 94ED6F7A 		flds	s14, [r4, #444]
+ 689 0084 38EE078A 		fadds	s16, s16, s14
+ 690 0088 38EE678A 		fsubs	s16, s16, s15
+ 691 008c 77D0     		beq	.L102
+ 692 008e 022F     		cmp	r7, #2
+ 693 0090 0FD0     		beq	.L103
+ 694 0092 002F     		cmp	r7, #0
+ 695 0094 00F0AC80 		beq	.L120
+ 696 0098 BDEC028B 		fldmfdd	sp!, {d8}
+ 697 009c 40F20001 		movw	r1, #:lower16:.LC16
+ 698 00a0 3A46     		mov	r2, r7
+ 699 00a2 C0F20001 		movt	r1, #:upper16:.LC16
+ 700 00a6 40F25E20 		movw	r0, #606
+ 701 00aa BDE8F84F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 702 00ae FFF7FEBF 		b	warning
+ 703              	.L103:
+ 704 00b2 D4F89C31 		ldr	r3, [r4, #412]
+ 705 00b6 002B     		cmp	r3, #0
+ 706 00b8 C0DD     		ble	.L96
+ 707 00ba 40F20008 		movw	r8, #:lower16:enginePins
+ 708 00be C0F20008 		movt	r8, #:upper16:enginePins
+ 709 00c2 40F20009 		movw	r9, #:lower16:engineConfiguration
+ 710 00c6 C346     		mov	fp, r8
+ 711 00c8 C0F20009 		movt	r9, #:upper16:engineConfiguration
+ 712 00cc A246     		mov	r10, r4
+ 713 00ce 03E0     		b	.L112
+ 714              	.L111:
+ 715 00d0 D4F89C31 		ldr	r3, [r4, #412]
+ 716 00d4 B342     		cmp	r3, r6
+ 717 00d6 B1DD     		ble	.L96
+ 718              	.L112:
+ 719 00d8 D4ED6A7A 		flds	s15, [r4, #424]	@ int
+ 720 00dc 06EE106A 		fmsr	s12, r6	@ int
+ 721 00e0 B8EEE77A 		fsitos	s14, s15
+ 722 00e4 F8EEC66A 		fsitos	s13, s12
+ 723 00e8 06EE103A 		fmsr	s12, r3	@ int
+ 724 00ec 26EE877A 		fmuls	s14, s13, s14
+ 725 00f0 F8EEC67A 		fsitos	s15, s12
+ 726 00f4 D9F80020 		ldr	r2, [r9]
+ 727 00f8 C7EE278A 		fdivs	s17, s14, s15
+ 728 00fc D2F89471 		ldr	r7, [r2, #404]
+ 729 0100 07EBD777 		add	r7, r7, r7, lsr #31
+ 730 0104 7F10     		asrs	r7, r7, #1
+ 731 0106 96FBF7F3 		sdiv	r3, r6, r7
+ 732 010a 07FB1367 		mls	r7, r7, r3, r6
+ 733 010e 07EB8701 		add	r1, r7, r7, lsl #2
+ 734 0112 08EB8101 		add	r1, r8, r1, lsl #2
+ 735 0116 6031     		adds	r1, r1, #96
+ 736 0118 0023     		movs	r3, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 14
+
+
+ 737 011a 2846     		mov	r0, r5
+ 738 011c 0136     		adds	r6, r6, #1
+ 739 011e 78EE288A 		fadds	s17, s16, s17
+ 740 0122 18EE902A 		fmrs	r2, s17
+ 741 0126 FFF7FEFF 		bl	_ZN12FuelSchedule22registerInjectionEventEP14NamedOutputPinfb
+ 742 012a 94F8ED35 		ldrb	r3, [r4, #1517]	@ zero_extendqisi2
+ 743 012e 9906     		lsls	r1, r3, #26
+ 744 0130 CED5     		bpl	.L111
+ 745 0132 DAF89C31 		ldr	r3, [r10, #412]
+ 746 0136 03EBD373 		add	r3, r3, r3, lsr #31
+ 747 013a 07EB6307 		add	r7, r7, r3, asr #1
+ 748 013e 07EB8707 		add	r7, r7, r7, lsl #2
+ 749 0142 0BEB8701 		add	r1, fp, r7, lsl #2
+ 750 0146 6031     		adds	r1, r1, #96
+ 751 0148 2846     		mov	r0, r5
+ 752 014a 18EE902A 		fmrs	r2, s17
+ 753 014e 0023     		movs	r3, #0
+ 754 0150 FFF7FEFF 		bl	_ZN12FuelSchedule22registerInjectionEventEP14NamedOutputPinfb
+ 755 0154 BCE7     		b	.L111
+ 756              	.L117:
+ 757 0156 BDEC028B 		fldmfdd	sp!, {d8}
+ 758 015a 40F20000 		movw	r0, #:lower16:.LC14
+ 759 015e C0F20000 		movt	r0, #:upper16:.LC14
+ 760 0162 BDE8F84F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 761 0166 FFF7FEBF 		b	firmwareError
+ 762              	.L119:
+ 763 016a BDEC028B 		fldmfdd	sp!, {d8}
+ 764 016e 40F20000 		movw	r0, #:lower16:.LC15
+ 765 0172 C0F20000 		movt	r0, #:upper16:.LC15
+ 766 0176 BDE8F84F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 767 017a FFF7FEBF 		b	firmwareError
+ 768              	.L102:
+ 769 017e D4F89C31 		ldr	r3, [r4, #412]
+ 770 0182 002B     		cmp	r3, #0
+ 771 0184 C1BF     		itttt	gt
+ 772 0186 40F20009 		movwgt	r9, #:lower16:engineConfiguration
+ 773 018a 40F20008 		movwgt	r8, #:lower16:enginePins
+ 774 018e C0F20009 		movtgt	r9, #:upper16:engineConfiguration
+ 775 0192 C0F20008 		movtgt	r8, #:upper16:enginePins
+ 776 0196 7FF751AF 		ble	.L96
+ 777              	.L109:
+ 778 019a D9F80030 		ldr	r3, [r9]
+ 779 019e 3146     		mov	r1, r6
+ 780 01a0 D3F89801 		ldr	r0, [r3, #408]
+ 781 01a4 FFF7FEFF 		bl	_Z13getCylinderId14firing_order_ei
+ 782 01a8 94ED6A6A 		flds	s12, [r4, #424]	@ int
+ 783 01ac 07EE906A 		fmsr	s15, r6	@ int
+ 784 01b0 F8EEC66A 		fsitos	s13, s12
+ 785 01b4 B8EEE77A 		fsitos	s14, s15
+ 786 01b8 94ED676A 		flds	s12, [r4, #412]	@ int
+ 787 01bc 26EE877A 		fmuls	s14, s13, s14
+ 788 01c0 F8EEC67A 		fsitos	s15, s12
+ 789 01c4 0138     		subs	r0, r0, #1
+ 790 01c6 C7EE277A 		fdivs	s15, s14, s15
+ 791 01ca 00EB8000 		add	r0, r0, r0, lsl #2
+ 792 01ce 08EB8001 		add	r1, r8, r0, lsl #2
+ 793 01d2 0023     		movs	r3, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 15
+
+
+ 794 01d4 6031     		adds	r1, r1, #96
+ 795 01d6 2846     		mov	r0, r5
+ 796 01d8 0136     		adds	r6, r6, #1
+ 797 01da 78EE277A 		fadds	s15, s16, s15
+ 798 01de 17EE902A 		fmrs	r2, s15
+ 799 01e2 FFF7FEFF 		bl	_ZN12FuelSchedule22registerInjectionEventEP14NamedOutputPinfb
+ 800 01e6 D4F89C31 		ldr	r3, [r4, #412]
+ 801 01ea 9E42     		cmp	r6, r3
+ 802 01ec D5DB     		blt	.L109
+ 803 01ee 25E7     		b	.L96
+ 804              	.L120:
+ 805 01f0 D4F89C31 		ldr	r3, [r4, #412]
+ 806 01f4 002B     		cmp	r3, #0
+ 807 01f6 C8BF     		it	gt
+ 808 01f8 3E46     		movgt	r6, r7
+ 809 01fa 7FF71FAF 		ble	.L96
+ 810              	.L110:
+ 811 01fe 07EE906A 		fmsr	s15, r6	@ int
+ 812 0202 94ED6A6A 		flds	s12, [r4, #424]	@ int
+ 813 0206 B8EEE77A 		fsitos	s14, s15
+ 814 020a F8EEC66A 		fsitos	s13, s12
+ 815 020e 06EE103A 		fmsr	s12, r3	@ int
+ 816 0212 26EE877A 		fmuls	s14, s13, s14
+ 817 0216 F8EEC67A 		fsitos	s15, s12
+ 818 021a 0123     		movs	r3, #1
+ 819 021c C7EE277A 		fdivs	s15, s14, s15
+ 820 0220 2846     		mov	r0, r5
+ 821 0222 0021     		movs	r1, #0
+ 822 0224 1E44     		add	r6, r6, r3
+ 823 0226 78EE277A 		fadds	s15, s16, s15
+ 824 022a 17EE902A 		fmrs	r2, s15
+ 825 022e FFF7FEFF 		bl	_ZN12FuelSchedule22registerInjectionEventEP14NamedOutputPinfb
+ 826 0232 D4F89C31 		ldr	r3, [r4, #412]
+ 827 0236 B342     		cmp	r3, r6
+ 828 0238 E1DC     		bgt	.L110
+ 829 023a FFE6     		b	.L96
+ 830              	.L122:
+ 831              		.align	2
+ 832              	.L121:
+ 833 023c 00007A44 		.word	1148846080
+ 834              		.size	_ZN12FuelSchedule13addFuelEventsE16injection_mode_e, .-_ZN12FuelSchedule13addFuelEventsE16in
+ 835              		.section	.text._Z20prepareOutputSignalsv,"ax",%progbits
+ 836              		.align	2
+ 837              		.p2align 4,,15
+ 838              		.global	_Z20prepareOutputSignalsv
+ 839              		.thumb
+ 840              		.thumb_func
+ 841              		.type	_Z20prepareOutputSignalsv, %function
+ 842              	_Z20prepareOutputSignalsv:
+ 843              		@ args = 0, pretend = 0, frame = 0
+ 844              		@ frame_needed = 0, uses_anonymous_args = 0
+ 845 0000 2DE9F84F 		push	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 846 0004 40F20005 		movw	r5, #:lower16:persistentState
+ 847 0008 C0F20005 		movt	r5, #:upper16:persistentState
+ 848 000c 40F20008 		movw	r8, #:lower16:engine
+ 849 0010 C0F20008 		movt	r8, #:upper16:engine
+ 850 0014 D5F89C31 		ldr	r3, [r5, #412]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 16
+
+
+ 851 0018 D8F80020 		ldr	r2, [r8]
+ 852 001c 002B     		cmp	r3, #0
+ 853 001e 40F20007 		movw	r7, #:lower16:engineConfiguration
+ 854 0022 966A     		ldr	r6, [r2, #40]
+ 855 0024 DCBF     		itt	le
+ 856 0026 C0F20007 		movtle	r7, #:upper16:engineConfiguration
+ 857 002a D5ED6A6A 		fldsle	s13, [r5, #424]	@ int
+ 858 002e 50DD     		ble	.L125
+ 859 0030 40F2000A 		movw	r10, #:lower16:enginePins
+ 860 0034 D5ED6A6A 		flds	s13, [r5, #424]	@ int
+ 861 0038 DFF85C91 		ldr	r9, .L160+4
+ 862 003c C0F20007 		movt	r7, #:upper16:engineConfiguration
+ 863 0040 C0F2000A 		movt	r10, #:upper16:enginePins
+ 864 0044 0024     		movs	r4, #0
+ 865 0046 AB46     		mov	fp, r5
+ 866 0048 1AE0     		b	.L130
+ 867              	.L156:
+ 868 004a 022A     		cmp	r2, #2
+ 869 004c 00F08D80 		beq	.L128
+ 870 0050 40F20001 		movw	r1, #:lower16:.LC17
+ 871 0054 40F25E20 		movw	r0, #606
+ 872 0058 C0F20001 		movt	r1, #:upper16:.LC17
+ 873 005c 002A     		cmp	r2, #0
+ 874 005e 00F08280 		beq	.L155
+ 875 0062 3B68     		ldr	r3, [r7]
+ 876 0064 D3F8BC21 		ldr	r2, [r3, #444]
+ 877 0068 FFF7FEFF 		bl	warning
+ 878 006c DBED6A6A 		flds	s13, [fp, #424]	@ int
+ 879 0070 484A     		ldr	r2, .L160
+ 880              	.L129:
+ 881 0072 D5F89C31 		ldr	r3, [r5, #412]
+ 882 0076 C9F82C20 		str	r2, [r9, #44]
+ 883 007a 0134     		adds	r4, r4, #1
+ 884 007c A342     		cmp	r3, r4
+ 885 007e 28DD     		ble	.L125
+ 886              	.L130:
+ 887 0080 06EE104A 		fmsr	s12, r4	@ int
+ 888 0084 B8EEE67A 		fsitos	s14, s13
+ 889 0088 F8EEC67A 		fsitos	s15, s12
+ 890 008c 06EE103A 		fmsr	s12, r3	@ int
+ 891 0090 27EE277A 		fmuls	s14, s14, s15
+ 892 0094 F8EEC67A 		fsitos	s15, s12
+ 893 0098 D5F8C421 		ldr	r2, [r5, #452]
+ 894 009c C7EE277A 		fdivs	s15, s14, s15
+ 895 00a0 012A     		cmp	r2, #1
+ 896 00a2 E9EC017A 		fstmias	r9!, {s15}
+ 897 00a6 D0D1     		bne	.L156
+ 898 00a8 DBF8A001 		ldr	r0, [fp, #416]
+ 899 00ac 2146     		mov	r1, r4
+ 900              	.L154:
+ 901 00ae FFF7FEFF 		bl	_Z13getCylinderId14firing_order_ei
+ 902 00b2 0138     		subs	r0, r0, #1
+ 903 00b4 00EB8000 		add	r0, r0, r0, lsl #2
+ 904 00b8 D5F89C31 		ldr	r3, [r5, #412]
+ 905 00bc 0AEB8002 		add	r2, r10, r0, lsl #2
+ 906 00c0 0134     		adds	r4, r4, #1
+ 907 00c2 02F5A872 		add	r2, r2, #336
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 17
+
+
+ 908 00c6 A342     		cmp	r3, r4
+ 909 00c8 DBED6A6A 		flds	s13, [fp, #424]	@ int
+ 910 00cc C9F82C20 		str	r2, [r9, #44]
+ 911 00d0 D6DC     		bgt	.L130
+ 912              	.L125:
+ 913 00d2 16EE903A 		fmrs	r3, s13	@ int
+ 914 00d6 002B     		cmp	r3, #0
+ 915 00d8 D8BF     		it	le
+ 916 00da 3B68     		ldrle	r3, [r7]
+ 917 00dc 34DD     		ble	.L132
+ 918 00de DFF8BCA0 		ldr	r10, .L160+8
+ 919 00e2 4FF00009 		mov	r9, #0
+ 920 00e6 AAF52674 		sub	r4, r10, #664
+ 921              	.L143:
+ 922 00ea D8F80030 		ldr	r3, [r8]
+ 923 00ee 03F5F753 		add	r3, r3, #7904
+ 924 00f2 06EE109A 		fmsr	s12, r9	@ int
+ 925 00f6 D869     		ldr	r0, [r3, #28]
+ 926 00f8 0028     		cmp	r0, #0
+ 927 00fa B8EEC67A 		fsitos	s14, s12
+ 928 00fe C4BF     		itt	gt
+ 929 0100 00F1FF30 		addgt	r0, r0, #-1
+ 930 0104 0022     		movgt	r2, #0
+ 931 0106 06DC     		bgt	.L138
+ 932 0108 3CE0     		b	.L159
+ 933              	.L158:
+ 934 010a B4EEE77A 		fcmpes	s14, s15
+ 935 010e F1EE10FA 		fmstat
+ 936 0112 34D5     		bpl	.L152
+ 937 0114 1846     		mov	r0, r3
+ 938              	.L138:
+ 939 0116 8318     		adds	r3, r0, r2
+ 940 0118 5B08     		lsrs	r3, r3, #1
+ 941 011a 03F28231 		addw	r1, r3, #898
+ 942 011e 04EB8101 		add	r1, r4, r1, lsl #2
+ 943 0122 9342     		cmp	r3, r2
+ 944 0124 D1ED027A 		flds	s15, [r1, #8]
+ 945 0128 EFD1     		bne	.L158
+ 946              	.L134:
+ 947 012a 3B68     		ldr	r3, [r7]
+ 948 012c 93F8E515 		ldrb	r1, [r3, #1509]	@ zero_extendqisi2
+ 949 0130 4806     		lsls	r0, r1, #25
+ 950 0132 D5F8A811 		ldr	r1, [r5, #424]
+ 951 0136 09F10109 		add	r9, r9, #1
+ 952 013a 48BF     		it	mi
+ 953 013c 22F00102 		bicmi	r2, r2, #1
+ 954 0140 4945     		cmp	r1, r9
+ 955 0142 4AF8042F 		str	r2, [r10, #4]!
+ 956 0146 D0DC     		bgt	.L143
+ 957              	.L132:
+ 958 0148 D3F8AC11 		ldr	r1, [r3, #428]
+ 959 014c 3046     		mov	r0, r6
+ 960 014e FFF7FEFF 		bl	_ZN12FuelSchedule13addFuelEventsE16injection_mode_e
+ 961 0152 3B68     		ldr	r3, [r7]
+ 962 0154 06F5BC50 		add	r0, r6, #6016
+ 963 0158 D3F8B011 		ldr	r1, [r3, #432]
+ 964 015c 0830     		adds	r0, r0, #8
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 18
+
+
+ 965 015e BDE8F84F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 966 0162 FFF7FEBF 		b	_ZN12FuelSchedule13addFuelEventsE16injection_mode_e
+ 967              	.L155:
+ 968 0166 0B4A     		ldr	r2, .L160
+ 969 0168 83E7     		b	.L129
+ 970              	.L128:
+ 971 016a 03EBD373 		add	r3, r3, r3, lsr #31
+ 972 016e 5B10     		asrs	r3, r3, #1
+ 973 0170 94FBF3F1 		sdiv	r1, r4, r3
+ 974 0174 03FB1141 		mls	r1, r3, r1, r4
+ 975 0178 DBF8A001 		ldr	r0, [fp, #416]
+ 976 017c 97E7     		b	.L154
+ 977              	.L152:
+ 978 017e 1A46     		mov	r2, r3
+ 979 0180 C9DC     		bgt	.L138
+ 980 0182 D2E7     		b	.L134
+ 981              	.L159:
+ 982 0184 40F20000 		movw	r0, #:lower16:.LC18
+ 983 0188 C0F20000 		movt	r0, #:upper16:.LC18
+ 984 018c FFF7FEFF 		bl	firmwareError
+ 985 0190 0022     		movs	r2, #0
+ 986 0192 CAE7     		b	.L134
+ 987              	.L161:
+ 988              		.align	2
+ 989              	.L160:
+ 990 0194 50010000 		.word	enginePins+336
+ 991 0198 F01D0000 		.word	_engine+7664
+ 992 019c 98020000 		.word	_engine+664
+ 993              		.size	_Z20prepareOutputSignalsv, .-_Z20prepareOutputSignalsv
+ 994              		.section	.text._Z13setFuelRpmBinff,"ax",%progbits
+ 995              		.align	2
+ 996              		.p2align 4,,15
+ 997              		.global	_Z13setFuelRpmBinff
+ 998              		.thumb
+ 999              		.thumb_func
+ 1000              		.type	_Z13setFuelRpmBinff, %function
+ 1001              	_Z13setFuelRpmBinff:
+ 1002              		@ args = 0, pretend = 0, frame = 0
+ 1003              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1004              		@ link register save eliminated.
+ 1005 0000 40F20003 		movw	r3, #:lower16:config
+ 1006 0004 C0F20003 		movt	r3, #:upper16:config
+ 1007 0008 0246     		mov	r2, r0	@ float
+ 1008 000a 1868     		ldr	r0, [r3]
+ 1009 000c 00F53750 		add	r0, r0, #11712
+ 1010 0010 0B46     		mov	r3, r1	@ float
+ 1011 0012 3830     		adds	r0, r0, #56
+ 1012 0014 1021     		movs	r1, #16
+ 1013 0016 FFF7FEBF 		b	_Z11setTableBinPfiff
+ 1014              		.size	_Z13setFuelRpmBinff, .-_Z13setFuelRpmBinff
+ 1015 001a 00BFAFF3 		.section	.text._Z14setFuelLoadBinff,"ax",%progbits
+ 1015      0080
+ 1016              		.align	2
+ 1017              		.p2align 4,,15
+ 1018              		.global	_Z14setFuelLoadBinff
+ 1019              		.thumb
+ 1020              		.thumb_func
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 19
+
+
+ 1021              		.type	_Z14setFuelLoadBinff, %function
+ 1022              	_Z14setFuelLoadBinff:
+ 1023              		@ args = 0, pretend = 0, frame = 0
+ 1024              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1025              		@ link register save eliminated.
+ 1026 0000 40F20003 		movw	r3, #:lower16:config
+ 1027 0004 C0F20003 		movt	r3, #:upper16:config
+ 1028 0008 0246     		mov	r2, r0	@ float
+ 1029 000a 1868     		ldr	r0, [r3]
+ 1030 000c 00F53650 		add	r0, r0, #11648
+ 1031 0010 0B46     		mov	r3, r1	@ float
+ 1032 0012 3830     		adds	r0, r0, #56
+ 1033 0014 1021     		movs	r1, #16
+ 1034 0016 FFF7FEBF 		b	_Z11setTableBinPfiff
+ 1035              		.size	_Z14setFuelLoadBinff, .-_Z14setFuelLoadBinff
+ 1036 001a 00BFAFF3 		.section	.text._Z15setTimingRpmBinff,"ax",%progbits
+ 1036      0080
+ 1037              		.align	2
+ 1038              		.p2align 4,,15
+ 1039              		.global	_Z15setTimingRpmBinff
+ 1040              		.thumb
+ 1041              		.thumb_func
+ 1042              		.type	_Z15setTimingRpmBinff, %function
+ 1043              	_Z15setTimingRpmBinff:
+ 1044              		@ args = 0, pretend = 0, frame = 0
+ 1045              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1046              		@ link register save eliminated.
+ 1047 0000 40F20003 		movw	r3, #:lower16:config
+ 1048 0004 C0F20003 		movt	r3, #:upper16:config
+ 1049 0008 0246     		mov	r2, r0	@ float
+ 1050 000a 1868     		ldr	r0, [r3]
+ 1051 000c 00F54950 		add	r0, r0, #12864
+ 1052 0010 0B46     		mov	r3, r1	@ float
+ 1053 0012 3830     		adds	r0, r0, #56
+ 1054 0014 1021     		movs	r1, #16
+ 1055 0016 FFF7FEBF 		b	_Z11setTableBinPfiff
+ 1056              		.size	_Z15setTimingRpmBinff, .-_Z15setTimingRpmBinff
+ 1057 001a 00BFAFF3 		.section	.text._Z16setTimingLoadBinff,"ax",%progbits
+ 1057      0080
+ 1058              		.align	2
+ 1059              		.p2align 4,,15
+ 1060              		.global	_Z16setTimingLoadBinff
+ 1061              		.thumb
+ 1062              		.thumb_func
+ 1063              		.type	_Z16setTimingLoadBinff, %function
+ 1064              	_Z16setTimingLoadBinff:
+ 1065              		@ args = 0, pretend = 0, frame = 0
+ 1066              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1067              		@ link register save eliminated.
+ 1068 0000 40F20003 		movw	r3, #:lower16:config
+ 1069 0004 C0F20003 		movt	r3, #:upper16:config
+ 1070 0008 0246     		mov	r2, r0	@ float
+ 1071 000a 1868     		ldr	r0, [r3]
+ 1072 000c 00F54850 		add	r0, r0, #12800
+ 1073 0010 0B46     		mov	r3, r1	@ float
+ 1074 0012 3830     		adds	r0, r0, #56
+ 1075 0014 1021     		movs	r1, #16
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 20
+
+
+ 1076 0016 FFF7FEBF 		b	_Z11setTableBinPfiff
+ 1077              		.size	_Z16setTimingLoadBinff, .-_Z16setTimingLoadBinff
+ 1078 001a 00BFAFF3 		.section	.text._Z18isInjectionEnabledP22engine_configuration_s,"ax",%progbits
+ 1078      0080
+ 1079              		.align	2
+ 1080              		.p2align 4,,15
+ 1081              		.global	_Z18isInjectionEnabledP22engine_configuration_s
+ 1082              		.thumb
+ 1083              		.thumb_func
+ 1084              		.type	_Z18isInjectionEnabledP22engine_configuration_s, %function
+ 1085              	_Z18isInjectionEnabledP22engine_configuration_s:
+ 1086              		@ args = 0, pretend = 0, frame = 0
+ 1087              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1088              		@ link register save eliminated.
+ 1089 0000 90F8E405 		ldrb	r0, [r0, #1508]	@ zero_extendqisi2
+ 1090 0004 00F00100 		and	r0, r0, #1
+ 1091 0008 7047     		bx	lr
+ 1092              		.size	_Z18isInjectionEnabledP22engine_configuration_s, .-_Z18isInjectionEnabledP22engine_configura
+ 1093 000a 00BFAFF3 		.section	.text._Z12setAlgorithm18engine_load_mode_e,"ax",%progbits
+ 1093      0080
+ 1094              		.align	2
+ 1095              		.p2align 4,,15
+ 1096              		.global	_Z12setAlgorithm18engine_load_mode_e
+ 1097              		.thumb
+ 1098              		.thumb_func
+ 1099              		.type	_Z12setAlgorithm18engine_load_mode_e, %function
+ 1100              	_Z12setAlgorithm18engine_load_mode_e:
+ 1101              		@ args = 0, pretend = 0, frame = 0
+ 1102              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1103              		@ link register save eliminated.
+ 1104 0000 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 1105 0004 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 1106 0008 0128     		cmp	r0, #1
+ 1107 000a 1B68     		ldr	r3, [r3]
+ 1108 000c C3F8A801 		str	r0, [r3, #424]
+ 1109 0010 11D0     		beq	.L170
+ 1110 0012 0328     		cmp	r0, #3
+ 1111 0014 00D0     		beq	.L171
+ 1112 0016 7047     		bx	lr
+ 1113              	.L171:
+ 1114 0018 40F20003 		movw	r3, #:lower16:config
+ 1115 001c C0F20003 		movt	r3, #:upper16:config
+ 1116 0020 1021     		movs	r1, #16
+ 1117 0022 1868     		ldr	r0, [r3]
+ 1118 0024 0023     		movs	r3, #0
+ 1119 0026 00F54850 		add	r0, r0, #12800
+ 1120 002a 0022     		movs	r2, #0
+ 1121 002c C4F22033 		movt	r3, 17184
+ 1122 0030 3830     		adds	r0, r0, #56
+ 1123 0032 FFF7FEBF 		b	_Z11setTableBinPfiff
+ 1124              	.L170:
+ 1125 0036 40F20003 		movw	r3, #:lower16:config
+ 1126 003a C0F20003 		movt	r3, #:upper16:config
+ 1127 003e 1021     		movs	r1, #16
+ 1128 0040 1868     		ldr	r0, [r3]
+ 1129 0042 0023     		movs	r3, #0
+ 1130 0044 00F54850 		add	r0, r0, #12800
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 21
+
+
+ 1131 0048 0022     		movs	r2, #0
+ 1132 004a C4F2C823 		movt	r3, 17096
+ 1133 004e 3830     		adds	r0, r0, #56
+ 1134 0050 FFF7FEBF 		b	_Z11setTableBinPfiff
+ 1135              		.size	_Z12setAlgorithm18engine_load_mode_e, .-_Z12setAlgorithm18engine_load_mode_e
+ 1136 0054 AFF30080 		.section	.rodata._ZL27order_1_THEN_3_THEN_2_THEN4,"a",%progbits
+ 1136      AFF30080 
+ 1136      AFF30080 
+ 1137              		.align	2
+ 1138              		.set	.LANCHOR3,. + 0
+ 1139              		.type	_ZL27order_1_THEN_3_THEN_2_THEN4, %object
+ 1140              		.size	_ZL27order_1_THEN_3_THEN_2_THEN4, 16
+ 1141              	_ZL27order_1_THEN_3_THEN_2_THEN4:
+ 1142 0000 01000000 		.word	1
+ 1143 0004 03000000 		.word	3
+ 1144 0008 02000000 		.word	2
+ 1145 000c 04000000 		.word	4
+ 1146              		.section	.rodata._ZL15order_1_2_4_5_3,"a",%progbits
+ 1147              		.align	2
+ 1148              		.set	.LANCHOR4,. + 0
+ 1149              		.type	_ZL15order_1_2_4_5_3, %object
+ 1150              		.size	_ZL15order_1_2_4_5_3, 20
+ 1151              	_ZL15order_1_2_4_5_3:
+ 1152 0000 01000000 		.word	1
+ 1153 0004 02000000 		.word	2
+ 1154 0008 04000000 		.word	4
+ 1155 000c 05000000 		.word	5
+ 1156 0010 03000000 		.word	3
+ 1157              		.section	.rodata._ZL27order_1_THEN_2_THEN_4_THEN3,"a",%progbits
+ 1158              		.align	2
+ 1159              		.set	.LANCHOR2,. + 0
+ 1160              		.type	_ZL27order_1_THEN_2_THEN_4_THEN3, %object
+ 1161              		.size	_ZL27order_1_THEN_2_THEN_4_THEN3, 16
+ 1162              	_ZL27order_1_THEN_2_THEN_4_THEN3:
+ 1163 0000 01000000 		.word	1
+ 1164 0004 02000000 		.word	2
+ 1165 0008 04000000 		.word	4
+ 1166 000c 03000000 		.word	3
+ 1167              		.section	.rodata._ZL42order_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4,"a",%progbits
+ 1168              		.align	2
+ 1169              		.set	.LANCHOR5,. + 0
+ 1170              		.type	_ZL42order_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4, %object
+ 1171              		.size	_ZL42order_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4, 24
+ 1172              	_ZL42order_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4:
+ 1173 0000 01000000 		.word	1
+ 1174 0004 05000000 		.word	5
+ 1175 0008 03000000 		.word	3
+ 1176 000c 06000000 		.word	6
+ 1177 0010 02000000 		.word	2
+ 1178 0014 04000000 		.word	4
+ 1179              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 1180              		.align	2
+ 1181              	.LC0:
+ 1182 0000 656E6769 		.ascii	"engine 2NULL\000"
+ 1182      6E652032 
+ 1182      4E554C4C 
+ 1182      00
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 22
+
+
+ 1183 000d 000000   		.space	3
+ 1184              	.LC1:
+ 1185 0010 656E6769 		.ascii	"engineConfiguration 2NULL\000"
+ 1185      6E65436F 
+ 1185      6E666967 
+ 1185      75726174 
+ 1185      696F6E20 
+ 1186 002a 0000     		.space	2
+ 1187              	.LC2:
+ 1188 002c 4D414620 		.ascii	"MAF sensor needed for current fuel algorithm\000"
+ 1188      73656E73 
+ 1188      6F72206E 
+ 1188      65656465 
+ 1188      6420666F 
+ 1189 0059 000000   		.space	3
+ 1190              	.LC3:
+ 1191 005c 6D616600 		.ascii	"maf\000"
+ 1192              	.LC4:
+ 1193 0060 556E6578 		.ascii	"Unexpected engine load parameter: %d\000"
+ 1193      70656374 
+ 1193      65642065 
+ 1193      6E67696E 
+ 1193      65206C6F 
+ 1194 0085 000000   		.space	3
+ 1195              	.LC5:
+ 1196 0088 696E7661 		.ascii	"invalid rpm\000"
+ 1196      6C696420 
+ 1196      72706D00 
+ 1197              	.LC6:
+ 1198 0094 7A65726F 		.ascii	"zero engineCycle\000"
+ 1198      20656E67 
+ 1198      696E6543 
+ 1198      79636C65 
+ 1198      00
+ 1199 00a5 000000   		.space	3
+ 1200              	.LC7:
+ 1201 00a8 616E676C 		.ascii	"angle constraint violation in findTriggerPosition()"
+ 1201      6520636F 
+ 1201      6E737472 
+ 1201      61696E74 
+ 1201      2076696F 
+ 1202 00db 3A202566 		.ascii	": %f/%f\000"
+ 1202      2F256600 
+ 1203 00e3 00       		.space	1
+ 1204              	.LC8:
+ 1205 00e4 63796C69 		.ascii	"cylindersCount\000"
+ 1205      6E646572 
+ 1205      73436F75 
+ 1205      6E7400
+ 1206 00f3 00       		.space	1
+ 1207              	.LC9:
+ 1208 00f4 61646428 		.ascii	"add() too many elements\000"
+ 1208      2920746F 
+ 1208      6F206D61 
+ 1208      6E792065 
+ 1208      6C656D65 
+ 1209              	.LC10:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 23
+
+
+ 1210 010c 6E6F5F70 		.ascii	"no_pin_cl #%s\000"
+ 1210      696E5F63 
+ 1210      6C202325 
+ 1210      7300
+ 1211 011a 0000     		.space	2
+ 1212              	.LC11:
+ 1213 011c 6E6F5F70 		.ascii	"no_pin_inj #%s\000"
+ 1213      696E5F69 
+ 1213      6E6A2023 
+ 1213      257300
+ 1214 012b 00       		.space	1
+ 1215              	.LC12:
+ 1216 012c 756E696E 		.ascii	"uninitialized TriggerShape\000"
+ 1216      69746961 
+ 1216      6C697A65 
+ 1216      64205472 
+ 1216      69676765 
+ 1217 0147 00       		.space	1
+ 1218              	.LC13:
+ 1219 0148 67657443 		.ascii	"getCylinderId not supported for %d\000"
+ 1219      796C696E 
+ 1219      64657249 
+ 1219      64206E6F 
+ 1219      74207375 
+ 1220 016b 00       		.space	1
+ 1221              	.LC14:
+ 1222 016c 656E6769 		.ascii	"engine is NULL\000"
+ 1222      6E652069 
+ 1222      73204E55 
+ 1222      4C4C00
+ 1223 017b 00       		.space	1
+ 1224              	.LC15:
+ 1225 017c 4E414E20 		.ascii	"NAN one deg\000"
+ 1225      6F6E6520 
+ 1225      64656700 
+ 1226              	.LC16:
+ 1227 0188 556E6578 		.ascii	"Unexpected injection mode %d\000"
+ 1227      70656374 
+ 1227      65642069 
+ 1227      6E6A6563 
+ 1227      74696F6E 
+ 1228 01a5 000000   		.space	3
+ 1229              	.LC17:
+ 1230 01a8 756E7375 		.ascii	"unsupported ignitionMode %d in initializeIgnitionAc"
+ 1230      70706F72 
+ 1230      74656420 
+ 1230      69676E69 
+ 1230      74696F6E 
+ 1231 01db 74696F6E 		.ascii	"tions()\000"
+ 1231      73282900 
+ 1232 01e3 00       		.space	1
+ 1233              	.LC18:
+ 1234 01e4 656E6769 		.ascii	"engineCycleEventCount\000"
+ 1234      6E654379 
+ 1234      636C6545 
+ 1234      76656E74 
+ 1234      436F756E 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 24
+
+
+ 1235 01fa 0000     		.section	.rodata._ZL42order_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6,"a",%progbits
+ 1236              		.align	2
+ 1237              		.set	.LANCHOR6,. + 0
+ 1238              		.type	_ZL42order_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6, %object
+ 1239              		.size	_ZL42order_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6, 24
+ 1240              	_ZL42order_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6:
+ 1241 0000 01000000 		.word	1
+ 1242 0004 04000000 		.word	4
+ 1243 0008 02000000 		.word	2
+ 1244 000c 05000000 		.word	5
+ 1245 0010 03000000 		.word	3
+ 1246 0014 06000000 		.word	6
+ 1247              		.section	.rodata._ZL27order_1_THEN_3_THEN_4_THEN2,"a",%progbits
+ 1248              		.align	2
+ 1249              		.set	.LANCHOR1,. + 0
+ 1250              		.type	_ZL27order_1_THEN_3_THEN_4_THEN2, %object
+ 1251              		.size	_ZL27order_1_THEN_3_THEN_4_THEN2, 16
+ 1252              	_ZL27order_1_THEN_3_THEN_4_THEN2:
+ 1253 0000 01000000 		.word	1
+ 1254 0004 03000000 		.word	3
+ 1255 0008 04000000 		.word	4
+ 1256 000c 02000000 		.word	2
+ 1257              		.section	.rodata._ZL9order_1_2,"a",%progbits
+ 1258              		.align	2
+ 1259              		.set	.LANCHOR0,. + 0
+ 1260              		.type	_ZL9order_1_2, %object
+ 1261              		.size	_ZL9order_1_2, 8
+ 1262              	_ZL9order_1_2:
+ 1263 0000 01000000 		.word	1
+ 1264 0004 02000000 		.word	2
+ 1265              		.section	.rodata._ZL21order_1_8_4_3_6_5_7_2,"a",%progbits
+ 1266              		.align	2
+ 1267              		.set	.LANCHOR7,. + 0
+ 1268              		.type	_ZL21order_1_8_4_3_6_5_7_2, %object
+ 1269              		.size	_ZL21order_1_8_4_3_6_5_7_2, 32
+ 1270              	_ZL21order_1_8_4_3_6_5_7_2:
+ 1271 0000 01000000 		.word	1
+ 1272 0004 08000000 		.word	8
+ 1273 0008 04000000 		.word	4
+ 1274 000c 03000000 		.word	3
+ 1275 0010 06000000 		.word	6
+ 1276 0014 05000000 		.word	5
+ 1277 0018 07000000 		.word	7
+ 1278 001c 02000000 		.word	2
+ 1279              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 25
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 engine_math.cpp
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:17     .text._Z29getCrankshaftRevolutionTimeMsi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:23     .text._Z29getCrankshaftRevolutionTimeMsi:00000000 _Z29getCrankshaftRevolutionTimeMsi
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:38     .text._Z29getCrankshaftRevolutionTimeMsi:00000020 $d
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:42     .text._Z14getEngineLoadTv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:48     .text._Z14getEngineLoadTv:00000000 _Z14getEngineLoadTv
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:67     .text._Z14getEngineLoadTv:0000002a $d
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1187   .rodata.str1.4:0000002c .LC2
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1192   .rodata.str1.4:00000060 .LC4
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1190   .rodata.str1.4:0000005c .LC3
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1181   .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1184   .rodata.str1.4:00000010 .LC1
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:130    .text._Z14getEngineLoadTv:000000d4 $d
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:134    .text._Z18setSingleCoilDwellP22engine_configuration_s:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:140    .text._Z18setSingleCoilDwellP22engine_configuration_s:00000000 _Z18setSingleCoilDwellP22engine_configuration_s
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:174    .text._ZN12FuelScheduleC2Ev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:180    .text._ZN12FuelScheduleC2Ev:00000000 _ZN12FuelScheduleC2Ev
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:180    .text._ZN12FuelScheduleC2Ev:00000000 _ZN12FuelScheduleC1Ev
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:213    .text._ZN12FuelSchedule5clearEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:219    .text._ZN12FuelSchedule5clearEv:00000000 _ZN12FuelSchedule5clearEv
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:235    .text._Z16getSparkDwellMsTi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:241    .text._Z16getSparkDwellMsTi:00000000 _Z16getSparkDwellMsTi
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1195   .rodata.str1.4:00000088 .LC5
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:297    .text._Z16getSparkDwellMsTi:000000a4 $d
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:302    .text._Z19findTriggerPositionP24event_trigger_position_sf:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:308    .text._Z19findTriggerPositionP24event_trigger_position_sf:00000000 _Z19findTriggerPositionP24event_trigger_position_sf
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1197   .rodata.str1.4:00000094 .LC6
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1200   .rodata.str1.4:000000a8 .LC7
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:394    .text._Z19findTriggerPositionP24event_trigger_position_sf:000000f4 $d
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:397    .text._Z25initializeIgnitionActionsffP9ArrayListI13IgnitionEventLi80EE:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:403    .text._Z25initializeIgnitionActionsffP9ArrayListI13IgnitionEventLi80EE:00000000 _Z25initializeIgnitionActionsffP9ArrayListI13IgnitionEventLi80EE
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1207   .rodata.str1.4:000000f4 .LC9
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1209   .rodata.str1.4:0000010c .LC10
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1204   .rodata.str1.4:000000e4 .LC8
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:480    .text._Z25initializeIgnitionActionsffP9ArrayListI13IgnitionEventLi80EE:000000cc $d
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:483    .text._ZN12FuelSchedule22registerInjectionEventEP14NamedOutputPinfb:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:489    .text._ZN12FuelSchedule22registerInjectionEventEP14NamedOutputPinfb:00000000 _ZN12FuelSchedule22registerInjectionEventEP14NamedOutputPinfb
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1215   .rodata.str1.4:0000012c .LC12
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1212   .rodata.str1.4:0000011c .LC11
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:557    .text._ZN12FuelSchedule22registerInjectionEventEP14NamedOutputPinfb:00000098 $d
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:560    .text._Z13getCylinderId14firing_order_ei:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:566    .text._Z13getCylinderId14firing_order_ei:00000000 _Z13getCylinderId14firing_order_ei
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:574    .text._Z13getCylinderId14firing_order_ei:0000000a $d
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1249   .rodata._ZL27order_1_THEN_3_THEN_4_THEN2:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1159   .rodata._ZL27order_1_THEN_2_THEN_4_THEN3:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1138   .rodata._ZL27order_1_THEN_3_THEN_2_THEN4:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1169   .rodata._ZL42order_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4:00000000 .LANCHOR5
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1267   .rodata._ZL21order_1_8_4_3_6_5_7_2:00000000 .LANCHOR7
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1148   .rodata._ZL15order_1_2_4_5_3:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1237   .rodata._ZL42order_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6:00000000 .LANCHOR6
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1259   .rodata._ZL9order_1_2:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1218   .rodata.str1.4:00000148 .LC13
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:637    .text._ZN12FuelSchedule13addFuelEventsE16injection_mode_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:643    .text._ZN12FuelSchedule13addFuelEventsE16injection_mode_e:00000000 _ZN12FuelSchedule13addFuelEventsE16injection_mode_e
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1226   .rodata.str1.4:00000188 .LC16
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1221   .rodata.str1.4:0000016c .LC14
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 26
+
+
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1224   .rodata.str1.4:0000017c .LC15
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:833    .text._ZN12FuelSchedule13addFuelEventsE16injection_mode_e:0000023c $d
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:836    .text._Z20prepareOutputSignalsv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:842    .text._Z20prepareOutputSignalsv:00000000 _Z20prepareOutputSignalsv
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1229   .rodata.str1.4:000001a8 .LC17
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1233   .rodata.str1.4:000001e4 .LC18
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:990    .text._Z20prepareOutputSignalsv:00000194 $d
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:995    .text._Z13setFuelRpmBinff:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1001   .text._Z13setFuelRpmBinff:00000000 _Z13setFuelRpmBinff
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1016   .text._Z14setFuelLoadBinff:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1022   .text._Z14setFuelLoadBinff:00000000 _Z14setFuelLoadBinff
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1037   .text._Z15setTimingRpmBinff:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1043   .text._Z15setTimingRpmBinff:00000000 _Z15setTimingRpmBinff
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1058   .text._Z16setTimingLoadBinff:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1064   .text._Z16setTimingLoadBinff:00000000 _Z16setTimingLoadBinff
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1079   .text._Z18isInjectionEnabledP22engine_configuration_s:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1085   .text._Z18isInjectionEnabledP22engine_configuration_s:00000000 _Z18isInjectionEnabledP22engine_configuration_s
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1094   .text._Z12setAlgorithm18engine_load_mode_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1100   .text._Z12setAlgorithm18engine_load_mode_e:00000000 _Z12setAlgorithm18engine_load_mode_e
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1137   .rodata._ZL27order_1_THEN_3_THEN_2_THEN4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1141   .rodata._ZL27order_1_THEN_3_THEN_2_THEN4:00000000 _ZL27order_1_THEN_3_THEN_2_THEN4
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1147   .rodata._ZL15order_1_2_4_5_3:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1151   .rodata._ZL15order_1_2_4_5_3:00000000 _ZL15order_1_2_4_5_3
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1158   .rodata._ZL27order_1_THEN_2_THEN_4_THEN3:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1162   .rodata._ZL27order_1_THEN_2_THEN_4_THEN3:00000000 _ZL27order_1_THEN_2_THEN_4_THEN3
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1168   .rodata._ZL42order_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1172   .rodata._ZL42order_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4:00000000 _ZL42order_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1180   .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1236   .rodata._ZL42order_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1240   .rodata._ZL42order_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6:00000000 _ZL42order_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1248   .rodata._ZL27order_1_THEN_3_THEN_4_THEN2:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1252   .rodata._ZL27order_1_THEN_3_THEN_4_THEN2:00000000 _ZL27order_1_THEN_3_THEN_4_THEN2
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1258   .rodata._ZL9order_1_2:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1262   .rodata._ZL9order_1_2:00000000 _ZL9order_1_2
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1266   .rodata._ZL21order_1_8_4_3_6_5_7_2:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:1270   .rodata._ZL21order_1_8_4_3_6_5_7_2:00000000 _ZL21order_1_8_4_3_6_5_7_2
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:41     .text._Z29getCrankshaftRevolutionTimeMsi:00000028 $t
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:133    .text._Z14getEngineLoadTv:000000dc $t
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:301    .text._Z16getSparkDwellMsTi:000000ac $t
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:396    .text._Z19findTriggerPositionP24event_trigger_position_sf:000000f8 $t
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:559    .text._ZN12FuelSchedule22registerInjectionEventEP14NamedOutputPinfb:0000009c $t
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:72     .text._Z14getEngineLoadTv:0000002f $d
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:72     .text._Z14getEngineLoadTv:00000030 $t
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:583    .text._Z13getCylinderId14firing_order_ei:00000013 $d
+C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s:583    .text._Z13getCylinderId14firing_order_ei:00000014 $t
+
+UNDEFINED SYMBOLS
+engine
+engineConfiguration
+_Z10getRealMafv
+_Z12hasMafSensorv
+warning
+_Z6getTPSv
+_Z6getMapv
+_Z19getInternalAdcValuePKc13adc_channel_e
+firmwareError
+_ZN14InjectionEventC1Ev
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccVwZgPV.s 			page 27
+
+
+memset
+persistentState
+__fpclassifyf
+_Z13interpolate2dfPfS_i
+__aeabi_f2d
+_engine
+_ZNK12TriggerShape7getSizeEv
+enginePins
+config
+_Z11setTableBinPfiff

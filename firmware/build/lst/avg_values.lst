@@ -1,0 +1,306 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccGcql7m.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"avg_values.cpp"
+  16              		.section	.text._Z7avgFillP8AvgTableif,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_Z7avgFillP8AvgTableif
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_Z7avgFillP8AvgTableif, %function
+  23              	_Z7avgFillP8AvgTableif:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 30B4     		push	{r4, r5}
+  28 0002 00F50F53 		add	r3, r0, #9152
+  29 0006 00F58F45 		add	r5, r0, #18304
+  30 000a 3C33     		adds	r3, r3, #60
+  31 000c 7C35     		adds	r5, r5, #124
+  32              	.L2:
+  33 000e A3F50F50 		sub	r0, r3, #9152
+  34 0012 3C38     		subs	r0, r0, #60
+  35 0014 03F1C004 		add	r4, r3, #192
+  36              	.L5:
+  37 0018 43F8041F 		str	r1, [r3, #4]!
+  38 001c A342     		cmp	r3, r4
+  39 001e 40F8042B 		str	r2, [r0], #4	@ float
+  40 0022 F9D1     		bne	.L5
+  41 0024 AB42     		cmp	r3, r5
+  42 0026 F2D1     		bne	.L2
+  43 0028 30BC     		pop	{r4, r5}
+  44 002a 7047     		bx	lr
+  45              		.size	_Z7avgFillP8AvgTableif, .-_Z7avgFillP8AvgTableif
+  46 002c AFF30080 		.section	.text._Z8avgResetP8AvgTable,"ax",%progbits
+  47              		.align	2
+  48              		.p2align 4,,15
+  49              		.global	_Z8avgResetP8AvgTable
+  50              		.thumb
+  51              		.thumb_func
+  52              		.type	_Z8avgResetP8AvgTable, %function
+  53              	_Z8avgResetP8AvgTable:
+  54              		@ args = 0, pretend = 0, frame = 0
+  55              		@ frame_needed = 0, uses_anonymous_args = 0
+  56              		@ link register save eliminated.
+  57 0000 30B4     		push	{r4, r5}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccGcql7m.s 			page 2
+
+
+  58 0002 00F50F53 		add	r3, r0, #9152
+  59 0006 00F58F45 		add	r5, r0, #18304
+  60 000a 3C33     		adds	r3, r3, #60
+  61 000c 7C35     		adds	r5, r5, #124
+  62 000e 0020     		movs	r0, #0
+  63 0010 0024     		movs	r4, #0
+  64              	.L8:
+  65 0012 A3F50F52 		sub	r2, r3, #9152
+  66 0016 3C3A     		subs	r2, r2, #60
+  67 0018 03F1C001 		add	r1, r3, #192
+  68              	.L11:
+  69 001c 43F8040F 		str	r0, [r3, #4]!
+  70 0020 8B42     		cmp	r3, r1
+  71 0022 42F8044B 		str	r4, [r2], #4	@ float
+  72 0026 F9D1     		bne	.L11
+  73 0028 AB42     		cmp	r3, r5
+  74 002a F2D1     		bne	.L8
+  75 002c 30BC     		pop	{r4, r5}
+  76 002e 7047     		bx	lr
+  77              		.size	_Z8avgResetP8AvgTable, .-_Z8avgResetP8AvgTable
+  78              		.section	.text._Z11avgAddValueP8AvgTableiff,"ax",%progbits
+  79              		.align	2
+  80              		.p2align 4,,15
+  81              		.global	_Z11avgAddValueP8AvgTableiff
+  82              		.thumb
+  83              		.thumb_func
+  84              		.type	_Z11avgAddValueP8AvgTableiff, %function
+  85              	_Z11avgAddValueP8AvgTableiff:
+  86              		@ args = 0, pretend = 0, frame = 0
+  87              		@ frame_needed = 0, uses_anonymous_args = 0
+  88              		@ link register save eliminated.
+  89 0000 B1F5FA5F 		cmp	r1, #8000
+  90 0004 10B4     		push	{r4}
+  91 0006 07EE902A 		fmsr	s15, r2
+  92 000a 06EE903A 		fmsr	s13, r3
+  93 000e 2DDA     		bge	.L12
+  94 0010 B1EE047A 		fconsts	s14, #20
+  95 0014 F4EEC77A 		fcmpes	s15, s14
+  96 0018 F1EE10FA 		fmstat
+  97 001c 26DA     		bge	.L12
+  98 001e 9FED156A 		flds	s12, .L14
+  99 0022 67EE867A 		fmuls	s15, s15, s12
+ 100 0026 01EB4101 		add	r1, r1, r1, lsl #1
+ 101 002a C7EE877A 		fdivs	s15, s15, s14
+ 102 002e 44F6D352 		movw	r2, #19923
+ 103 0032 0B01     		lsls	r3, r1, #4
+ 104 0034 C1F26202 		movt	r2, 4194
+ 105 0038 82FB0341 		smull	r4, r1, r2, r3
+ 106 003c DB17     		asrs	r3, r3, #31
+ 107 003e C3EB6121 		rsb	r1, r3, r1, asr #9
+ 108 0042 01EB4103 		add	r3, r1, r1, lsl #1
+ 109 0046 FDEEE77A 		ftosizs	s15, s15
+ 110 004a 17EE901A 		fmrs	r1, s15	@ int
+ 111 004e 01EB0311 		add	r1, r1, r3, lsl #4
+ 112 0052 00EB8100 		add	r0, r0, r1, lsl #2
+ 113 0056 D0ED007A 		flds	s15, [r0]
+ 114 005a 77EEA66A 		fadds	s13, s15, s13
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccGcql7m.s 			page 3
+
+
+ 115 005e 00F51053 		add	r3, r0, #9216
+ 116 0062 C0ED006A 		fsts	s13, [r0]
+ 117 0066 1A68     		ldr	r2, [r3]
+ 118 0068 0132     		adds	r2, r2, #1
+ 119 006a 1A60     		str	r2, [r3]
+ 120              	.L12:
+ 121 006c 5DF8044B 		ldr	r4, [sp], #4
+ 122 0070 7047     		bx	lr
+ 123              	.L15:
+ 124 0072 00BF     		.align	2
+ 125              	.L14:
+ 126 0074 00004042 		.word	1111490560
+ 127              		.size	_Z11avgAddValueP8AvgTableiff, .-_Z11avgAddValueP8AvgTableiff
+ 128 0078 AFF30080 		.section	.text._Z20avgGetValueByIndexesP8AvgTableii,"ax",%progbits
+ 128      AFF30080 
+ 129              		.align	2
+ 130              		.p2align 4,,15
+ 131              		.global	_Z20avgGetValueByIndexesP8AvgTableii
+ 132              		.thumb
+ 133              		.thumb_func
+ 134              		.type	_Z20avgGetValueByIndexesP8AvgTableii, %function
+ 135              	_Z20avgGetValueByIndexesP8AvgTableii:
+ 136              		@ args = 0, pretend = 0, frame = 0
+ 137              		@ frame_needed = 0, uses_anonymous_args = 0
+ 138              		@ link register save eliminated.
+ 139 0000 01EB4101 		add	r1, r1, r1, lsl #1
+ 140 0004 02EB0112 		add	r2, r2, r1, lsl #4
+ 141 0008 02F51063 		add	r3, r2, #2304
+ 142 000c 50F82330 		ldr	r3, [r0, r3, lsl #2]
+ 143 0010 63B1     		cbz	r3, .L18
+ 144 0012 06EE903A 		fmsr	s13, r3	@ int
+ 145 0016 00EB8202 		add	r2, r0, r2, lsl #2
+ 146 001a 92ED007A 		flds	s14, [r2]
+ 147 001e F8EEE67A 		fsitos	s15, s13
+ 148 0022 C7EE277A 		fdivs	s15, s14, s15
+ 149 0026 17EE900A 		fmrs	r0, s15
+ 150 002a 7047     		bx	lr
+ 151              	.L18:
+ 152 002c DFED027A 		flds	s15, .L19
+ 153 0030 17EE900A 		fmrs	r0, s15
+ 154 0034 7047     		bx	lr
+ 155              	.L20:
+ 156 0036 00BF     		.align	2
+ 157              	.L19:
+ 158 0038 0000C07F 		.word	2143289344
+ 159              		.size	_Z20avgGetValueByIndexesP8AvgTableii, .-_Z20avgGetValueByIndexesP8AvgTableii
+ 160 003c AFF30080 		.section	.text._Z11avgGetValueP8AvgTableif,"ax",%progbits
+ 161              		.align	2
+ 162              		.p2align 4,,15
+ 163              		.global	_Z11avgGetValueP8AvgTableif
+ 164              		.thumb
+ 165              		.thumb_func
+ 166              		.type	_Z11avgGetValueP8AvgTableif, %function
+ 167              	_Z11avgGetValueP8AvgTableif:
+ 168              		@ args = 0, pretend = 0, frame = 0
+ 169              		@ frame_needed = 0, uses_anonymous_args = 0
+ 170              		@ link register save eliminated.
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccGcql7m.s 			page 4
+
+
+ 171 0000 B1F5FA5F 		cmp	r1, #8000
+ 172 0004 10B4     		push	{r4}
+ 173 0006 07EE902A 		fmsr	s15, r2
+ 174 000a 25DA     		bge	.L25
+ 175 000c B1EE047A 		fconsts	s14, #20
+ 176 0010 F4EEC77A 		fcmpes	s15, s14
+ 177 0014 F1EE10FA 		fmstat
+ 178 0018 1EDA     		bge	.L25
+ 179 001a DFED1A6A 		flds	s13, .L27
+ 180 001e 67EEA67A 		fmuls	s15, s15, s13
+ 181 0022 01EB4101 		add	r1, r1, r1, lsl #1
+ 182 0026 C7EE877A 		fdivs	s15, s15, s14
+ 183 002a 44F6D352 		movw	r2, #19923
+ 184 002e 0B01     		lsls	r3, r1, #4
+ 185 0030 C1F26202 		movt	r2, 4194
+ 186 0034 82FB0341 		smull	r4, r1, r2, r3
+ 187 0038 DB17     		asrs	r3, r3, #31
+ 188 003a C3EB6121 		rsb	r1, r3, r1, asr #9
+ 189 003e 01EB4103 		add	r3, r1, r1, lsl #1
+ 190 0042 FDEEE77A 		ftosizs	s15, s15
+ 191 0046 17EE901A 		fmrs	r1, s15	@ int
+ 192 004a 01EB0311 		add	r1, r1, r3, lsl #4
+ 193 004e 01F51063 		add	r3, r1, #2304
+ 194 0052 50F82330 		ldr	r3, [r0, r3, lsl #2]
+ 195 0056 33B9     		cbnz	r3, .L26
+ 196              	.L25:
+ 197 0058 DFED0B7A 		flds	s15, .L27+4
+ 198 005c 5DF8044B 		ldr	r4, [sp], #4
+ 199 0060 17EE900A 		fmrs	r0, s15
+ 200 0064 7047     		bx	lr
+ 201              	.L26:
+ 202 0066 06EE903A 		fmsr	s13, r3	@ int
+ 203 006a 00EB8101 		add	r1, r0, r1, lsl #2
+ 204 006e 91ED007A 		flds	s14, [r1]
+ 205 0072 F8EEE67A 		fsitos	s15, s13
+ 206 0076 5DF8044B 		ldr	r4, [sp], #4
+ 207 007a C7EE277A 		fdivs	s15, s14, s15
+ 208 007e 17EE900A 		fmrs	r0, s15
+ 209 0082 7047     		bx	lr
+ 210              	.L28:
+ 211              		.align	2
+ 212              	.L27:
+ 213 0084 00004042 		.word	1111490560
+ 214 0088 0000C07F 		.word	2143289344
+ 215              		.size	_Z11avgGetValueP8AvgTableif, .-_Z11avgGetValueP8AvgTableif
+ 216 008c AFF30080 		.section	.text._Z17avgGetValuesCountP8AvgTableif,"ax",%progbits
+ 217              		.align	2
+ 218              		.p2align 4,,15
+ 219              		.global	_Z17avgGetValuesCountP8AvgTableif
+ 220              		.thumb
+ 221              		.thumb_func
+ 222              		.type	_Z17avgGetValuesCountP8AvgTableif, %function
+ 223              	_Z17avgGetValuesCountP8AvgTableif:
+ 224              		@ args = 0, pretend = 0, frame = 0
+ 225              		@ frame_needed = 0, uses_anonymous_args = 0
+ 226              		@ link register save eliminated.
+ 227 0000 B1F5FA5F 		cmp	r1, #8000
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccGcql7m.s 			page 5
+
+
+ 228 0004 10B4     		push	{r4}
+ 229 0006 07EE902A 		fmsr	s15, r2
+ 230 000a 27DA     		bge	.L32
+ 231 000c B1EE047A 		fconsts	s14, #20
+ 232 0010 F4EEC77A 		fcmpes	s15, s14
+ 233 0014 F1EE10FA 		fmstat
+ 234 0018 20DA     		bge	.L32
+ 235 001a DFED126A 		flds	s13, .L33
+ 236 001e 67EEA67A 		fmuls	s15, s15, s13
+ 237 0022 01EB4101 		add	r1, r1, r1, lsl #1
+ 238 0026 C7EE877A 		fdivs	s15, s15, s14
+ 239 002a 44F6D352 		movw	r2, #19923
+ 240 002e 0B01     		lsls	r3, r1, #4
+ 241 0030 C1F26202 		movt	r2, 4194
+ 242 0034 82FB0341 		smull	r4, r1, r2, r3
+ 243 0038 DB17     		asrs	r3, r3, #31
+ 244 003a C3EB6121 		rsb	r1, r3, r1, asr #9
+ 245 003e 01EB4103 		add	r3, r1, r1, lsl #1
+ 246 0042 5DF8044B 		ldr	r4, [sp], #4
+ 247 0046 FDEEE77A 		ftosizs	s15, s15
+ 248 004a 17EE901A 		fmrs	r1, s15	@ int
+ 249 004e 01EB0311 		add	r1, r1, r3, lsl #4
+ 250 0052 01F51061 		add	r1, r1, #2304
+ 251 0056 50F82100 		ldr	r0, [r0, r1, lsl #2]
+ 252 005a 7047     		bx	lr
+ 253              	.L32:
+ 254 005c 0020     		movs	r0, #0
+ 255 005e 5DF8044B 		ldr	r4, [sp], #4
+ 256 0062 7047     		bx	lr
+ 257              	.L34:
+ 258              		.align	2
+ 259              	.L33:
+ 260 0064 00004042 		.word	1111490560
+ 261              		.size	_Z17avgGetValuesCountP8AvgTableif, .-_Z17avgGetValuesCountP8AvgTableif
+ 262 0068 AFF30080 		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ 262      AFF30080 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccGcql7m.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 avg_values.cpp
+C:\Users\pc\AppData\Local\Temp\ccGcql7m.s:17     .text._Z7avgFillP8AvgTableif:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccGcql7m.s:23     .text._Z7avgFillP8AvgTableif:00000000 _Z7avgFillP8AvgTableif
+C:\Users\pc\AppData\Local\Temp\ccGcql7m.s:47     .text._Z8avgResetP8AvgTable:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccGcql7m.s:53     .text._Z8avgResetP8AvgTable:00000000 _Z8avgResetP8AvgTable
+C:\Users\pc\AppData\Local\Temp\ccGcql7m.s:79     .text._Z11avgAddValueP8AvgTableiff:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccGcql7m.s:85     .text._Z11avgAddValueP8AvgTableiff:00000000 _Z11avgAddValueP8AvgTableiff
+C:\Users\pc\AppData\Local\Temp\ccGcql7m.s:126    .text._Z11avgAddValueP8AvgTableiff:00000074 $d
+C:\Users\pc\AppData\Local\Temp\ccGcql7m.s:129    .text._Z20avgGetValueByIndexesP8AvgTableii:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccGcql7m.s:135    .text._Z20avgGetValueByIndexesP8AvgTableii:00000000 _Z20avgGetValueByIndexesP8AvgTableii
+C:\Users\pc\AppData\Local\Temp\ccGcql7m.s:158    .text._Z20avgGetValueByIndexesP8AvgTableii:00000038 $d
+C:\Users\pc\AppData\Local\Temp\ccGcql7m.s:161    .text._Z11avgGetValueP8AvgTableif:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccGcql7m.s:167    .text._Z11avgGetValueP8AvgTableif:00000000 _Z11avgGetValueP8AvgTableif
+C:\Users\pc\AppData\Local\Temp\ccGcql7m.s:213    .text._Z11avgGetValueP8AvgTableif:00000084 $d
+C:\Users\pc\AppData\Local\Temp\ccGcql7m.s:217    .text._Z17avgGetValuesCountP8AvgTableif:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccGcql7m.s:223    .text._Z17avgGetValuesCountP8AvgTableif:00000000 _Z17avgGetValuesCountP8AvgTableif
+C:\Users\pc\AppData\Local\Temp\ccGcql7m.s:260    .text._Z17avgGetValuesCountP8AvgTableif:00000064 $d
+C:\Users\pc\AppData\Local\Temp\ccGcql7m.s:128    .text._Z11avgAddValueP8AvgTableiff:00000078 $t
+C:\Users\pc\AppData\Local\Temp\ccGcql7m.s:160    .text._Z20avgGetValueByIndexesP8AvgTableii:0000003c $t
+C:\Users\pc\AppData\Local\Temp\ccGcql7m.s:216    .text._Z11avgGetValueP8AvgTableif:0000008c $t
+C:\Users\pc\AppData\Local\Temp\ccGcql7m.s:262    .text._Z17avgGetValuesCountP8AvgTableif:00000068 $t
+
+NO UNDEFINED SYMBOLS

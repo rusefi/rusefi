@@ -1,0 +1,187 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0ASnPk.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"memstreams.c"
+  16              		.section	.text.put,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	put, %function
+  22              	put:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25              		@ link register save eliminated.
+  26 0000 C368     		ldr	r3, [r0, #12]
+  27 0002 8268     		ldr	r2, [r0, #8]
+  28 0004 9A42     		cmp	r2, r3
+  29 0006 1FBF     		itttt	ne
+  30 0008 4268     		ldrne	r2, [r0, #4]
+  31 000a D154     		strbne	r1, [r2, r3]
+  32 000c C368     		ldrne	r3, [r0, #12]
+  33 000e 0133     		addne	r3, r3, #1
+  34 0010 1ABF     		itte	ne
+  35 0012 C360     		strne	r3, [r0, #12]
+  36 0014 0020     		movne	r0, #0
+  37 0016 6FF00100 		mvneq	r0, #1
+  38 001a 7047     		bx	lr
+  39              		.size	put, .-put
+  40 001c AFF30080 		.section	.text.get,"ax",%progbits
+  41              		.align	2
+  42              		.p2align 4,,15
+  43              		.thumb
+  44              		.thumb_func
+  45              		.type	get, %function
+  46              	get:
+  47              		@ args = 0, pretend = 0, frame = 0
+  48              		@ frame_needed = 0, uses_anonymous_args = 0
+  49              		@ link register save eliminated.
+  50 0000 0269     		ldr	r2, [r0, #16]
+  51 0002 C168     		ldr	r1, [r0, #12]
+  52 0004 9142     		cmp	r1, r2
+  53 0006 18BF     		it	ne
+  54 0008 4168     		ldrne	r1, [r0, #4]
+  55 000a 0346     		mov	r3, r0
+  56 000c 1DBF     		ittte	ne
+  57 000e 885C     		ldrbne	r0, [r1, r2]	@ zero_extendqisi2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0ASnPk.s 			page 2
+
+
+  58 0010 0132     		addne	r2, r2, #1
+  59 0012 1A61     		strne	r2, [r3, #16]
+  60 0014 6FF00100 		mvneq	r0, #1
+  61 0018 7047     		bx	lr
+  62              		.size	get, .-get
+  63 001a 00BFAFF3 		.section	.text.reads,"ax",%progbits
+  63      0080
+  64              		.align	2
+  65              		.p2align 4,,15
+  66              		.thumb
+  67              		.thumb_func
+  68              		.type	reads, %function
+  69              	reads:
+  70              		@ args = 0, pretend = 0, frame = 0
+  71              		@ frame_needed = 0, uses_anonymous_args = 0
+  72 0000 38B5     		push	{r3, r4, r5, lr}
+  73 0002 0446     		mov	r4, r0
+  74 0004 0846     		mov	r0, r1
+  75 0006 2369     		ldr	r3, [r4, #16]
+  76 0008 E568     		ldr	r5, [r4, #12]
+  77 000a 6168     		ldr	r1, [r4, #4]
+  78 000c ED1A     		subs	r5, r5, r3
+  79 000e AA42     		cmp	r2, r5
+  80 0010 38BF     		it	cc
+  81 0012 1546     		movcc	r5, r2
+  82 0014 1944     		add	r1, r1, r3
+  83 0016 2A46     		mov	r2, r5
+  84 0018 FFF7FEFF 		bl	memcpy
+  85 001c 2369     		ldr	r3, [r4, #16]
+  86 001e 2B44     		add	r3, r3, r5
+  87 0020 2361     		str	r3, [r4, #16]
+  88 0022 2846     		mov	r0, r5
+  89 0024 38BD     		pop	{r3, r4, r5, pc}
+  90              		.size	reads, .-reads
+  91 0026 00BFAFF3 		.section	.text.writes,"ax",%progbits
+  91      0080AFF3 
+  91      0080
+  92              		.align	2
+  93              		.p2align 4,,15
+  94              		.thumb
+  95              		.thumb_func
+  96              		.type	writes, %function
+  97              	writes:
+  98              		@ args = 0, pretend = 0, frame = 0
+  99              		@ frame_needed = 0, uses_anonymous_args = 0
+ 100 0000 38B5     		push	{r3, r4, r5, lr}
+ 101 0002 C368     		ldr	r3, [r0, #12]
+ 102 0004 8568     		ldr	r5, [r0, #8]
+ 103 0006 0446     		mov	r4, r0
+ 104 0008 ED1A     		subs	r5, r5, r3
+ 105 000a 4068     		ldr	r0, [r0, #4]
+ 106 000c AA42     		cmp	r2, r5
+ 107 000e 38BF     		it	cc
+ 108 0010 1546     		movcc	r5, r2
+ 109 0012 1844     		add	r0, r0, r3
+ 110 0014 2A46     		mov	r2, r5
+ 111 0016 FFF7FEFF 		bl	memcpy
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0ASnPk.s 			page 3
+
+
+ 112 001a E368     		ldr	r3, [r4, #12]
+ 113 001c 2B44     		add	r3, r3, r5
+ 114 001e E360     		str	r3, [r4, #12]
+ 115 0020 2846     		mov	r0, r5
+ 116 0022 38BD     		pop	{r3, r4, r5, pc}
+ 117              		.size	writes, .-writes
+ 118 0024 AFF30080 		.section	.text.msObjectInit,"ax",%progbits
+ 118      AFF30080 
+ 118      AFF30080 
+ 119              		.align	2
+ 120              		.p2align 4,,15
+ 121              		.global	msObjectInit
+ 122              		.thumb
+ 123              		.thumb_func
+ 124              		.type	msObjectInit, %function
+ 125              	msObjectInit:
+ 126              		@ args = 0, pretend = 0, frame = 0
+ 127              		@ frame_needed = 0, uses_anonymous_args = 0
+ 128              		@ link register save eliminated.
+ 129 0000 30B4     		push	{r4, r5}
+ 130 0002 40F20004 		movw	r4, #:lower16:.LANCHOR0
+ 131 0006 C0F20004 		movt	r4, #:upper16:.LANCHOR0
+ 132 000a 0025     		movs	r5, #0
+ 133 000c 0460     		str	r4, [r0]
+ 134 000e 0561     		str	r5, [r0, #16]
+ 135 0010 4160     		str	r1, [r0, #4]
+ 136 0012 8260     		str	r2, [r0, #8]
+ 137 0014 C360     		str	r3, [r0, #12]
+ 138 0016 30BC     		pop	{r4, r5}
+ 139 0018 7047     		bx	lr
+ 140              		.size	msObjectInit, .-msObjectInit
+ 141 001a 00BFAFF3 		.section	.rodata.vmt,"a",%progbits
+ 141      0080
+ 142              		.align	2
+ 143              		.set	.LANCHOR0,. + 0
+ 144              		.type	vmt, %object
+ 145              		.size	vmt, 16
+ 146              	vmt:
+ 147 0000 00000000 		.word	writes
+ 148 0004 00000000 		.word	reads
+ 149 0008 00000000 		.word	put
+ 150 000c 00000000 		.word	get
+ 151              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc0ASnPk.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 memstreams.c
+C:\Users\pc\AppData\Local\Temp\cc0ASnPk.s:17     .text.put:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc0ASnPk.s:22     .text.put:00000000 put
+C:\Users\pc\AppData\Local\Temp\cc0ASnPk.s:41     .text.get:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc0ASnPk.s:46     .text.get:00000000 get
+C:\Users\pc\AppData\Local\Temp\cc0ASnPk.s:64     .text.reads:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc0ASnPk.s:69     .text.reads:00000000 reads
+C:\Users\pc\AppData\Local\Temp\cc0ASnPk.s:92     .text.writes:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc0ASnPk.s:97     .text.writes:00000000 writes
+C:\Users\pc\AppData\Local\Temp\cc0ASnPk.s:119    .text.msObjectInit:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc0ASnPk.s:125    .text.msObjectInit:00000000 msObjectInit
+C:\Users\pc\AppData\Local\Temp\cc0ASnPk.s:143    .rodata.vmt:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\cc0ASnPk.s:142    .rodata.vmt:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc0ASnPk.s:146    .rodata.vmt:00000000 vmt
+
+UNDEFINED SYMBOLS
+memcpy

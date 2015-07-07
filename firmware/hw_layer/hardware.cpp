@@ -37,6 +37,7 @@
 #include "trigger_central.h"
 #include "svnversion.h"
 #include "engine_configuration.h"
+#include "wbo.h"
 #endif
 
 #if EFI_SPEED_DENSITY
@@ -62,6 +63,7 @@ static bool isSpiInitialized[5] = { false, false, false, false, false };
  * Only one consumer can use SPI bus at a given time
  */
 void lockSpi(spi_device_e device) {
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lockSpi");
 	// todo: different locks for different SPI devices!
 	chMtxLock(&spiMtx);
 }
@@ -253,7 +255,7 @@ void initHardware(Logging *l) {
 
 	palSetPadMode(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
 
-	initFlash(sharedLogger, engine);
+	initFlash(sharedLogger);
 	/**
 	 * this call reads configuration from flash memory or sets default configuration
 	 * if flash state does not look right.
@@ -370,6 +372,8 @@ void initHardware(Logging *l) {
 
 	calcFastAdcIndexes();
 	engine->addConfigurationListener(adcConfigListener);
+
+	initWboController();
 
 	printMsg(sharedLogger, "initHardware() OK!");
 }

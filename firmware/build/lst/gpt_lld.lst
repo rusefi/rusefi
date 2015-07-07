@@ -1,0 +1,318 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"gpt_lld.c"
+  16              		.section	.text.Vector108,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	Vector108
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	Vector108, %function
+  23              	Vector108:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 08B5     		push	{r3, lr}
+  27 0002 FFF7FEFF 		bl	dbg_check_enter_isr
+  28 0006 40F20003 		movw	r3, #:lower16:.LANCHOR0
+  29 000a C0F20003 		movt	r3, #:upper16:.LANCHOR0
+  30 000e 0021     		movs	r1, #0
+  31 0010 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+  32 0012 DA68     		ldr	r2, [r3, #12]
+  33 0014 0428     		cmp	r0, #4
+  34 0016 1161     		str	r1, [r2, #16]
+  35 0018 07D1     		bne	.L2
+  36 001a 0220     		movs	r0, #2
+  37 001c 1870     		strb	r0, [r3]
+  38 001e 1160     		str	r1, [r2]
+  39 0020 1161     		str	r1, [r2, #16]
+  40 0022 D168     		ldr	r1, [r2, #12]
+  41 0024 21F0FF01 		bic	r1, r1, #255
+  42 0028 D160     		str	r1, [r2, #12]
+  43              	.L2:
+  44 002a 5B68     		ldr	r3, [r3, #4]
+  45 002c 40F20000 		movw	r0, #:lower16:.LANCHOR0
+  46 0030 5B68     		ldr	r3, [r3, #4]
+  47 0032 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+  48 0036 9847     		blx	r3
+  49 0038 FFF7FEFF 		bl	dbg_check_leave_isr
+  50 003c BDE80840 		pop	{r3, lr}
+  51 0040 FFF7FEBF 		b	_port_irq_epilogue
+  52              		.size	Vector108, .-Vector108
+  53 0044 AFF30080 		.section	.text.gpt_lld_init,"ax",%progbits
+  53      AFF30080 
+  53      AFF30080 
+  54              		.align	2
+  55              		.p2align 4,,15
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s 			page 2
+
+
+  56              		.global	gpt_lld_init
+  57              		.thumb
+  58              		.thumb_func
+  59              		.type	gpt_lld_init, %function
+  60              	gpt_lld_init:
+  61              		@ args = 0, pretend = 0, frame = 0
+  62              		@ frame_needed = 0, uses_anonymous_args = 0
+  63              		@ link register save eliminated.
+  64 0000 40F20003 		movw	r3, #:lower16:.LANCHOR0
+  65 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+  66 0008 4FF44062 		mov	r2, #3072
+  67 000c C4F20002 		movt	r2, 16384
+  68 0010 1846     		mov	r0, r3
+  69 0012 DA60     		str	r2, [r3, #12]
+  70 0014 FFF7FEBF 		b	gptObjectInit
+  71              		.size	gpt_lld_init, .-gpt_lld_init
+  72 0018 AFF30080 		.section	.text.gpt_lld_start,"ax",%progbits
+  72      AFF30080 
+  73              		.align	2
+  74              		.p2align 4,,15
+  75              		.global	gpt_lld_start
+  76              		.thumb
+  77              		.thumb_func
+  78              		.type	gpt_lld_start, %function
+  79              	gpt_lld_start:
+  80              		@ args = 0, pretend = 0, frame = 0
+  81              		@ frame_needed = 0, uses_anonymous_args = 0
+  82 0000 38B5     		push	{r3, r4, r5, lr}
+  83 0002 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+  84 0004 012B     		cmp	r3, #1
+  85 0006 0446     		mov	r4, r0
+  86 0008 1BD0     		beq	.L8
+  87              	.L6:
+  88 000a 6268     		ldr	r2, [r4, #4]
+  89 000c A168     		ldr	r1, [r4, #8]
+  90 000e 1368     		ldr	r3, [r2]
+  91 0010 B1FBF3F5 		udiv	r5, r1, r3
+  92 0014 013D     		subs	r5, r5, #1
+  93 0016 ADB2     		uxth	r5, r5
+  94 0018 05FB0333 		mla	r3, r5, r3, r3
+  95 001c 9942     		cmp	r1, r3
+  96 001e 06D0     		beq	.L7
+  97 0020 40F20000 		movw	r0, #:lower16:.LC0
+  98 0024 C0F20000 		movt	r0, #:upper16:.LC0
+  99 0028 FFF7FEFF 		bl	chDbgPanic
+ 100 002c 6268     		ldr	r2, [r4, #4]
+ 101              	.L7:
+ 102 002e 117A     		ldrb	r1, [r2, #8]	@ zero_extendqisi2
+ 103 0030 E368     		ldr	r3, [r4, #12]
+ 104 0032 0022     		movs	r2, #0
+ 105 0034 0820     		movs	r0, #8
+ 106 0036 1A60     		str	r2, [r3]
+ 107 0038 5860     		str	r0, [r3, #4]
+ 108 003a 9D62     		str	r5, [r3, #40]
+ 109 003c D960     		str	r1, [r3, #12]
+ 110 003e 1A61     		str	r2, [r3, #16]
+ 111 0040 38BD     		pop	{r3, r4, r5, pc}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s 			page 3
+
+
+ 112              	.L8:
+ 113 0042 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 114 0046 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 115 004a 9842     		cmp	r0, r3
+ 116 004c DDD1     		bne	.L6
+ 117 004e 4FF46053 		mov	r3, #14336
+ 118 0052 C4F20203 		movt	r3, 16386
+ 119 0056 0022     		movs	r2, #0
+ 120 0058 196C     		ldr	r1, [r3, #64]
+ 121 005a 41F00801 		orr	r1, r1, #8
+ 122 005e 1964     		str	r1, [r3, #64]
+ 123 0060 196A     		ldr	r1, [r3, #32]
+ 124 0062 41F00801 		orr	r1, r1, #8
+ 125 0066 1962     		str	r1, [r3, #32]
+ 126 0068 3220     		movs	r0, #50
+ 127 006a 1A62     		str	r2, [r3, #32]
+ 128 006c 4021     		movs	r1, #64
+ 129 006e FFF7FEFF 		bl	nvicEnableVector
+ 130 0072 4FF43D43 		mov	r3, #48384
+ 131 0076 C0F20153 		movt	r3, 1281
+ 132 007a A360     		str	r3, [r4, #8]
+ 133 007c C5E7     		b	.L6
+ 134              		.size	gpt_lld_start, .-gpt_lld_start
+ 135 007e 00BF     		.section	.text.gpt_lld_stop,"ax",%progbits
+ 136              		.align	2
+ 137              		.p2align 4,,15
+ 138              		.global	gpt_lld_stop
+ 139              		.thumb
+ 140              		.thumb_func
+ 141              		.type	gpt_lld_stop, %function
+ 142              	gpt_lld_stop:
+ 143              		@ args = 0, pretend = 0, frame = 0
+ 144              		@ frame_needed = 0, uses_anonymous_args = 0
+ 145 0000 08B5     		push	{r3, lr}
+ 146 0002 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 147 0004 022B     		cmp	r3, #2
+ 148 0006 00D0     		beq	.L13
+ 149              	.L9:
+ 150 0008 08BD     		pop	{r3, pc}
+ 151              	.L13:
+ 152 000a 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 153 000e C268     		ldr	r2, [r0, #12]
+ 154 0010 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 155 0014 0021     		movs	r1, #0
+ 156 0016 9842     		cmp	r0, r3
+ 157 0018 1160     		str	r1, [r2]
+ 158 001a D160     		str	r1, [r2, #12]
+ 159 001c 1161     		str	r1, [r2, #16]
+ 160 001e F3D1     		bne	.L9
+ 161 0020 3220     		movs	r0, #50
+ 162 0022 FFF7FEFF 		bl	nvicDisableVector
+ 163 0026 4FF46053 		mov	r3, #14336
+ 164 002a C4F20203 		movt	r3, 16386
+ 165 002e 1A6C     		ldr	r2, [r3, #64]
+ 166 0030 22F00802 		bic	r2, r2, #8
+ 167 0034 1A64     		str	r2, [r3, #64]
+ 168 0036 E7E7     		b	.L9
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s 			page 4
+
+
+ 169              		.size	gpt_lld_stop, .-gpt_lld_stop
+ 170 0038 AFF30080 		.section	.text.gpt_lld_start_timer,"ax",%progbits
+ 170      AFF30080 
+ 171              		.align	2
+ 172              		.p2align 4,,15
+ 173              		.global	gpt_lld_start_timer
+ 174              		.thumb
+ 175              		.thumb_func
+ 176              		.type	gpt_lld_start_timer, %function
+ 177              	gpt_lld_start_timer:
+ 178              		@ args = 0, pretend = 0, frame = 0
+ 179              		@ frame_needed = 0, uses_anonymous_args = 0
+ 180              		@ link register save eliminated.
+ 181 0000 C368     		ldr	r3, [r0, #12]
+ 182 0002 0022     		movs	r2, #0
+ 183 0004 0139     		subs	r1, r1, #1
+ 184 0006 0120     		movs	r0, #1
+ 185 0008 D962     		str	r1, [r3, #44]
+ 186 000a 5861     		str	r0, [r3, #20]
+ 187 000c 5A62     		str	r2, [r3, #36]
+ 188 000e 1A61     		str	r2, [r3, #16]
+ 189 0010 D968     		ldr	r1, [r3, #12]
+ 190 0012 0522     		movs	r2, #5
+ 191 0014 0143     		orrs	r1, r1, r0
+ 192 0016 D960     		str	r1, [r3, #12]
+ 193 0018 1A60     		str	r2, [r3]
+ 194 001a 7047     		bx	lr
+ 195              		.size	gpt_lld_start_timer, .-gpt_lld_start_timer
+ 196 001c AFF30080 		.section	.text.gpt_lld_stop_timer,"ax",%progbits
+ 197              		.align	2
+ 198              		.p2align 4,,15
+ 199              		.global	gpt_lld_stop_timer
+ 200              		.thumb
+ 201              		.thumb_func
+ 202              		.type	gpt_lld_stop_timer, %function
+ 203              	gpt_lld_stop_timer:
+ 204              		@ args = 0, pretend = 0, frame = 0
+ 205              		@ frame_needed = 0, uses_anonymous_args = 0
+ 206              		@ link register save eliminated.
+ 207 0000 C368     		ldr	r3, [r0, #12]
+ 208 0002 0022     		movs	r2, #0
+ 209 0004 1A60     		str	r2, [r3]
+ 210 0006 1A61     		str	r2, [r3, #16]
+ 211 0008 DA68     		ldr	r2, [r3, #12]
+ 212 000a 22F0FF02 		bic	r2, r2, #255
+ 213 000e DA60     		str	r2, [r3, #12]
+ 214 0010 7047     		bx	lr
+ 215              		.size	gpt_lld_stop_timer, .-gpt_lld_stop_timer
+ 216 0012 00BFAFF3 		.section	.text.gpt_lld_polled_delay,"ax",%progbits
+ 216      0080AFF3 
+ 216      0080AFF3 
+ 216      0080
+ 217              		.align	2
+ 218              		.p2align 4,,15
+ 219              		.global	gpt_lld_polled_delay
+ 220              		.thumb
+ 221              		.thumb_func
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s 			page 5
+
+
+ 222              		.type	gpt_lld_polled_delay, %function
+ 223              	gpt_lld_polled_delay:
+ 224              		@ args = 0, pretend = 0, frame = 0
+ 225              		@ frame_needed = 0, uses_anonymous_args = 0
+ 226              		@ link register save eliminated.
+ 227 0000 C268     		ldr	r2, [r0, #12]
+ 228 0002 10B4     		push	{r4}
+ 229 0004 0139     		subs	r1, r1, #1
+ 230 0006 0124     		movs	r4, #1
+ 231 0008 0020     		movs	r0, #0
+ 232 000a 0D23     		movs	r3, #13
+ 233 000c D162     		str	r1, [r2, #44]
+ 234 000e 5461     		str	r4, [r2, #20]
+ 235 0010 1061     		str	r0, [r2, #16]
+ 236 0012 1360     		str	r3, [r2]
+ 237              	.L18:
+ 238 0014 1369     		ldr	r3, [r2, #16]
+ 239 0016 DB07     		lsls	r3, r3, #31
+ 240 0018 FCD5     		bpl	.L18
+ 241 001a 5DF8044B 		ldr	r4, [sp], #4
+ 242 001e 7047     		bx	lr
+ 243              		.size	gpt_lld_polled_delay, .-gpt_lld_polled_delay
+ 244              		.global	GPTD5
+ 245              		.section	.bss.GPTD5,"aw",%nobits
+ 246              		.align	2
+ 247              		.set	.LANCHOR0,. + 0
+ 248              		.type	GPTD5, %object
+ 249              		.size	GPTD5, 16
+ 250              	GPTD5:
+ 251 0000 00000000 		.space	16
+ 251      00000000 
+ 251      00000000 
+ 251      00000000 
+ 252              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 253              		.align	2
+ 254              	.LC0:
+ 255 0000 6770745F 		.ascii	"gpt_lld_start(), #1\000"
+ 255      6C6C645F 
+ 255      73746172 
+ 255      7428292C 
+ 255      20233100 
+ 256              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 gpt_lld.c
+C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s:17     .text.Vector108:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s:23     .text.Vector108:00000000 Vector108
+C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s:247    .bss.GPTD5:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s:54     .text.gpt_lld_init:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s:60     .text.gpt_lld_init:00000000 gpt_lld_init
+C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s:73     .text.gpt_lld_start:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s:79     .text.gpt_lld_start:00000000 gpt_lld_start
+C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s:254    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s:136    .text.gpt_lld_stop:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s:142    .text.gpt_lld_stop:00000000 gpt_lld_stop
+C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s:171    .text.gpt_lld_start_timer:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s:177    .text.gpt_lld_start_timer:00000000 gpt_lld_start_timer
+C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s:197    .text.gpt_lld_stop_timer:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s:203    .text.gpt_lld_stop_timer:00000000 gpt_lld_stop_timer
+C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s:217    .text.gpt_lld_polled_delay:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s:223    .text.gpt_lld_polled_delay:00000000 gpt_lld_polled_delay
+C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s:250    .bss.GPTD5:00000000 GPTD5
+C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s:246    .bss.GPTD5:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccLB2wkV.s:253    .rodata.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+dbg_check_enter_isr
+dbg_check_leave_isr
+_port_irq_epilogue
+gptObjectInit
+chDbgPanic
+nvicEnableVector
+nvicDisableVector

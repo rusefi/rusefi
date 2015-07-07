@@ -118,12 +118,12 @@ void readFromFlash(void) {
 	engineConfiguration->firmwareVersion = getRusEfiVersion();
 }
 
-static void rewriteConfig(Engine *engine) {
+static void rewriteConfig(void) {
 	doResetConfiguration();
 	writeToFlashNow();
 }
 
-void initFlash(Logging *sharedLogger, Engine *engine) {
+void initFlash(Logging *sharedLogger) {
 	logger = sharedLogger;
 
 	addConsoleAction("readconfig", readFromFlash);
@@ -138,7 +138,7 @@ void initFlash(Logging *sharedLogger, Engine *engine) {
 	addConsoleAction("burnconfig", requestBurn);
 #endif
 	addConsoleAction("resetconfig", doResetConfiguration);
-	addConsoleActionP("rewriteconfig", (VoidPtr)rewriteConfig, engine);
+	addConsoleAction("rewriteconfig", rewriteConfig);
 }
 
 #endif /* EFI_INTERNAL_FLASH */

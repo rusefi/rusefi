@@ -73,13 +73,14 @@ public class RomCellRenderer implements TreeCellRenderer {
             }
 
 
-            carInfo.setText(rom.getRomIDString() + ", " +
-                    rom.getRomID().getCaseId() + "; " +
-                    rom.getRomID().getYear() + " " +
-                    rom.getRomID().getMake() + " " +
-                    rom.getRomID().getModel() + " " +
-                    rom.getRomID().getSubModel() + ", " +
-                    rom.getRomID().getTransmission()
+            carInfo.setText(rom.getRomIDString()
+//                            + ", " +
+//                    rom.getRomID().getCaseId() + "; " +
+//                    rom.getRomID().getYear() + " " +
+//                    rom.getRomID().getMake() + " " +
+//                    rom.getRomID().getModel() + " " +
+//                    rom.getRomID().getSubModel() + ", " +
+//                    rom.getRomID().getTransmission()
                     );
 
             JPanel renderer = new JPanel(new GridLayout(2, 1));

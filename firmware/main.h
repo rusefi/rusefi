@@ -46,7 +46,7 @@ extern "C"
 /**
  * converts efitimeus_t to efitick_t
  */
-#define US2NT(us) (((uint64_t)(us))*US_TO_NT_MULTIPLIER)
+#define US2NT(us) (((efitime_t)(us))*US_TO_NT_MULTIPLIER)
 
 /**
  * converts efitick_t to efitimeus_t

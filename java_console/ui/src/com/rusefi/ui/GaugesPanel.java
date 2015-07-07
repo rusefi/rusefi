@@ -12,6 +12,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * Date: 2/5/13
@@ -46,6 +48,7 @@ public class GaugesPanel {
     private static final String GAUGES_COLUMNS = "gauges_cols";
     public static final String SHOW_MESSAGES = "show_messages";
     public static final String SHOW_RPM = "show_rpm";
+    public static final String SPLIT_LOCATION = "SPLIT_LOCATION";
 
     static {
         if (DEFAULT_LAYOUT.length != SizeSelectorPanel.WIDTH * SizeSelectorPanel.HEIGHT)
@@ -60,6 +63,7 @@ public class GaugesPanel {
     private boolean showMessagesPanel = true;
     private final JPanel lowerRpmPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
     private final JPanel messagesPanel = new JPanel(new BorderLayout());
+    private final JSplitPane middleSplitPanel;
 
     public GaugesPanel(final Node config) {
         this.config = config;
@@ -75,14 +79,27 @@ public class GaugesPanel {
 
         applySize(rows, columns);
 
+        middleSplitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, createMiddleLeftPanel(), messagesPanel);
+
         content.add(createTopPanel(config), BorderLayout.NORTH);
 
-        content.add(createMiddleLeftPanel(), BorderLayout.CENTER);
-        content.add(messagesPanel, BorderLayout.EAST);
+        content.add(middleSplitPanel, BorderLayout.CENTER);
 
         content.add(new WarningPanel().getPanel(), BorderLayout.SOUTH);
 
         applyShowFlags();
+        final int splitLocation = config.getIntProperty(SPLIT_LOCATION, -1);
+        if (splitLocation != -1) {
+            // this does not work. maybe because panel is not displayed yet? todo: fix it so that splitter location
+            // would be persisted in the config
+            middleSplitPanel.setDividerLocation(splitLocation);
+        }
+        middleSplitPanel.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent pce) {
+                config.setProperty(SPLIT_LOCATION, middleSplitPanel.getDividerLocation());
+            }
+        });
     }
 
     @NotNull
@@ -143,6 +160,8 @@ public class GaugesPanel {
                 config.setProperty(SHOW_RPM, showRpmPanel);
                 config.setProperty(SHOW_MESSAGES, showMessagesPanel);
                 applyShowFlags();
+                // todo: this is not needed if we show/hide RPM panel. TODO: split into two different listeners
+                middleSplitPanel.setDividerLocation(0.5);
             }
         };
         showRpmItem.addActionListener(showCheckboxListener);

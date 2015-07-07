@@ -1,0 +1,908 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc4veNEH.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"rpm_calculator.cpp"
+  16              		.section	.text._ZN13RpmCalculatorC2Ev,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_ZN13RpmCalculatorC2Ev
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_ZN13RpmCalculatorC2Ev, %function
+  23              	_ZN13RpmCalculatorC2Ev:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 0023     		movs	r3, #0
+  28 0002 0360     		str	r3, [r0]
+  29 0004 0268     		ldr	r2, [r0]
+  30 0006 0360     		str	r3, [r0]
+  31 0008 0368     		ldr	r3, [r0]
+  32 000a 4260     		str	r2, [r0, #4]
+  33 000c 002B     		cmp	r3, #0
+  34 000e C1BF     		itttt	gt
+  35 0010 D0ED007A 		fldsgt	s15, [r0]	@ int
+  36 0014 F8EEE77A 		fsitosgt	s15, s15
+  37 0018 9FED157A 		fldsgt	s14, .L4+8
+  38 001c C7EE277A 		fdivsgt	s15, s14, s15
+  39 0020 F0B4     		push	{r4, r5, r6, r7}
+  40 0022 D8BF     		it	le
+  41 0024 0023     		movle	r3, #0
+  42 0026 10A5     		adr	r5, .L4
+  43 0028 D5E90045 		ldrd	r4, [r5]
+  44 002c 0146     		mov	r1, r0
+  45 002e D8BF     		it	le
+  46 0030 C7F6C073 		movtle	r3, 32704
+  47 0034 4FF00007 		mov	r7, #0
+  48 0038 D8BF     		it	le
+  49 003a 8360     		strle	r3, [r0, #8]	@ float
+  50 003c 4FF00006 		mov	r6, #0
+  51 0040 C7F6C077 		movt	r7, 32704
+  52 0044 4FF00002 		mov	r2, #0
+  53 0048 4FF00003 		mov	r3, #0
+  54 004c C8BF     		it	gt
+  55 004e C0ED027A 		fstsgt	s15, [r0, #8]
+  56 0052 C0E90445 		strd	r4, [r0, #16]
+  57 0056 CE61     		str	r6, [r1, #28]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc4veNEH.s 			page 2
+
+
+  58 0058 8E61     		str	r6, [r1, #24]
+  59 005a C1E90423 		strd	r2, [r1, #16]
+  60 005e 8F60     		str	r7, [r1, #8]	@ float
+  61 0060 F0BC     		pop	{r4, r5, r6, r7}
+  62 0062 7047     		bx	lr
+  63              	.L5:
+  64 0064 AFF30080 		.align	3
+  65              	.L4:
+  66 0068 003CDD9B 		.word	-1680000000
+  67 006c FFFFFFFF 		.word	-1
+  68 0070 ABC22248 		.word	1210237611
+  69              		.size	_ZN13RpmCalculatorC2Ev, .-_ZN13RpmCalculatorC2Ev
+  70              		.global	_ZN13RpmCalculatorC1Ev
+  71              		.thumb_set _ZN13RpmCalculatorC1Ev,_ZN13RpmCalculatorC2Ev
+  72 0074 AFF30080 		.section	.text._ZN13RpmCalculator9isRunningEv,"ax",%progbits
+  72      AFF30080 
+  72      AFF30080 
+  73              		.align	2
+  74              		.p2align 4,,15
+  75              		.global	_ZN13RpmCalculator9isRunningEv
+  76              		.thumb
+  77              		.thumb_func
+  78              		.type	_ZN13RpmCalculator9isRunningEv, %function
+  79              	_ZN13RpmCalculator9isRunningEv:
+  80              		@ args = 0, pretend = 0, frame = 0
+  81              		@ frame_needed = 0, uses_anonymous_args = 0
+  82 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  83 0002 0446     		mov	r4, r0
+  84 0004 FFF7FEFF 		bl	getTimeNowNt
+  85 0008 40F20003 		movw	r3, #:lower16:engine
+  86 000c C0F20003 		movt	r3, #:upper16:engine
+  87 0010 1B68     		ldr	r3, [r3]
+  88 0012 D3E90C23 		ldrd	r2, [r3, #48]
+  89 0016 52EA0305 		orrs	r5, r2, r3
+  90 001a 09D0     		beq	.L7
+  91 001c 0EA7     		adr	r7, .L14
+  92 001e D7E90067 		ldrd	r6, [r7]
+  93 0022 821A     		subs	r2, r0, r2
+  94 0024 61EB0303 		sbc	r3, r1, r3
+  95 0028 9F42     		cmp	r7, r3
+  96 002a 08BF     		it eq
+  97 002c 9642     		cmpeq	r6, r2
+  98 002e 0ED2     		bcs	.L9
+  99              	.L7:
+ 100 0030 D4E90445 		ldrd	r4, [r4, #16]
+ 101 0034 0AA3     		adr	r3, .L14+8
+ 102 0036 D3E90023 		ldrd	r2, [r3]
+ 103 003a 001B     		subs	r0, r0, r4
+ 104 003c 61EB0501 		sbc	r1, r1, r5
+ 105 0040 8B42     		cmp	r3, r1
+ 106 0042 08BF     		it eq
+ 107 0044 8242     		cmpeq	r2, r0
+ 108 0046 34BF     		ite	cc
+ 109 0048 0020     		movcc	r0, #0
+ 110 004a 0120     		movcs	r0, #1
+ 111 004c F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 112              	.L9:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc4veNEH.s 			page 3
+
+
+ 113 004e 0020     		movs	r0, #0
+ 114 0050 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 115              	.L15:
+ 116 0052 00BFAFF3 		.align	3
+ 116      0080
+ 117              	.L14:
+ 118 0058 FF6D0A1E 		.word	503999999
+ 119 005c 00000000 		.word	0
+ 120 0060 FF79030A 		.word	167999999
+ 121 0064 00000000 		.word	0
+ 122              		.size	_ZN13RpmCalculator9isRunningEv, .-_ZN13RpmCalculator9isRunningEv
+ 123 0068 AFF30080 		.section	.text._ZL13onTdcCallbackv,"ax",%progbits
+ 123      AFF30080 
+ 124              		.align	2
+ 125              		.p2align 4,,15
+ 126              		.thumb
+ 127              		.thumb_func
+ 128              		.type	_ZL13onTdcCallbackv, %function
+ 129              	_ZL13onTdcCallbackv:
+ 130              		@ args = 0, pretend = 0, frame = 0
+ 131              		@ frame_needed = 0, uses_anonymous_args = 0
+ 132 0000 40F20003 		movw	r3, #:lower16:engine
+ 133 0004 C0F20003 		movt	r3, #:upper16:engine
+ 134 0008 10B5     		push	{r4, lr}
+ 135 000a 1C68     		ldr	r4, [r3]
+ 136 000c 2046     		mov	r0, r4
+ 137 000e FFF7FEFF 		bl	_ZN13RpmCalculator9isRunningEv
+ 138 0012 08B9     		cbnz	r0, .L17
+ 139 0014 E061     		str	r0, [r4, #28]
+ 140 0016 2060     		str	r0, [r4]
+ 141              	.L17:
+ 142 0018 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 143 001c 2168     		ldr	r1, [r4]
+ 144 001e C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 145 0022 FFF7FEFF 		bl	itoa10
+ 146 0026 40F20000 		movw	r0, #:lower16:waveChart
+ 147 002a 40F20001 		movw	r1, #:lower16:.LC0
+ 148 002e 40F20002 		movw	r2, #:lower16:.LANCHOR0
+ 149 0032 C0F20000 		movt	r0, #:upper16:waveChart
+ 150 0036 C0F20001 		movt	r1, #:upper16:.LC0
+ 151 003a C0F20002 		movt	r2, #:upper16:.LANCHOR0
+ 152 003e BDE81040 		pop	{r4, lr}
+ 153 0042 FFF7FEBF 		b	_ZN9WaveChart18addWaveChartEvent3EPKcS1_
+ 154              		.size	_ZL13onTdcCallbackv, .-_ZL13onTdcCallbackv
+ 155 0046 00BFAFF3 		.section	.text._ZN13RpmCalculator11setRpmValueEi,"ax",%progbits
+ 155      0080AFF3 
+ 155      0080
+ 156              		.align	2
+ 157              		.p2align 4,,15
+ 158              		.global	_ZN13RpmCalculator11setRpmValueEi
+ 159              		.thumb
+ 160              		.thumb_func
+ 161              		.type	_ZN13RpmCalculator11setRpmValueEi, %function
+ 162              	_ZN13RpmCalculator11setRpmValueEi:
+ 163              		@ args = 0, pretend = 0, frame = 0
+ 164              		@ frame_needed = 0, uses_anonymous_args = 0
+ 165              		@ link register save eliminated.
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc4veNEH.s 			page 4
+
+
+ 166 0000 0368     		ldr	r3, [r0]
+ 167 0002 0160     		str	r1, [r0]
+ 168 0004 0268     		ldr	r2, [r0]
+ 169 0006 4360     		str	r3, [r0, #4]
+ 170 0008 002A     		cmp	r2, #0
+ 171 000a C3BF     		ittte	gt
+ 172 000c D0ED007A 		fldsgt	s15, [r0]	@ int
+ 173 0010 9FED067A 		fldsgt	s14, .L21
+ 174 0014 F8EEE77A 		fsitosgt	s15, s15
+ 175 0018 0023     		movle	r3, #0
+ 176 001a CDBF     		iteet	gt
+ 177 001c C7EE277A 		fdivsgt	s15, s14, s15
+ 178 0020 C7F6C073 		movtle	r3, 32704
+ 179 0024 8360     		strle	r3, [r0, #8]	@ float
+ 180 0026 C0ED027A 		fstsgt	s15, [r0, #8]
+ 181 002a 7047     		bx	lr
+ 182              	.L22:
+ 183              		.align	2
+ 184              	.L21:
+ 185 002c ABC22248 		.word	1210237611
+ 186              		.size	_ZN13RpmCalculator11setRpmValueEi, .-_ZN13RpmCalculator11setRpmValueEi
+ 187              		.section	.text._ZN13RpmCalculator16onNewEngineCycleEv,"ax",%progbits
+ 188              		.align	2
+ 189              		.p2align 4,,15
+ 190              		.global	_ZN13RpmCalculator16onNewEngineCycleEv
+ 191              		.thumb
+ 192              		.thumb_func
+ 193              		.type	_ZN13RpmCalculator16onNewEngineCycleEv, %function
+ 194              	_ZN13RpmCalculator16onNewEngineCycleEv:
+ 195              		@ args = 0, pretend = 0, frame = 0
+ 196              		@ frame_needed = 0, uses_anonymous_args = 0
+ 197              		@ link register save eliminated.
+ 198 0000 8369     		ldr	r3, [r0, #24]
+ 199 0002 0133     		adds	r3, r3, #1
+ 200 0004 8361     		str	r3, [r0, #24]
+ 201 0006 C369     		ldr	r3, [r0, #28]
+ 202 0008 0133     		adds	r3, r3, #1
+ 203 000a C361     		str	r3, [r0, #28]
+ 204 000c 7047     		bx	lr
+ 205              		.size	_ZN13RpmCalculator16onNewEngineCycleEv, .-_ZN13RpmCalculator16onNewEngineCycleEv
+ 206 000e 00BF     		.section	.text._ZN13RpmCalculator20getRevolutionCounterEv,"ax",%progbits
+ 207              		.align	2
+ 208              		.p2align 4,,15
+ 209              		.global	_ZN13RpmCalculator20getRevolutionCounterEv
+ 210              		.thumb
+ 211              		.thumb_func
+ 212              		.type	_ZN13RpmCalculator20getRevolutionCounterEv, %function
+ 213              	_ZN13RpmCalculator20getRevolutionCounterEv:
+ 214              		@ args = 0, pretend = 0, frame = 0
+ 215              		@ frame_needed = 0, uses_anonymous_args = 0
+ 216              		@ link register save eliminated.
+ 217 0000 8069     		ldr	r0, [r0, #24]
+ 218 0002 7047     		bx	lr
+ 219              		.size	_ZN13RpmCalculator20getRevolutionCounterEv, .-_ZN13RpmCalculator20getRevolutionCounterEv
+ 220 0004 AFF30080 		.section	.text._ZN13RpmCalculator30getRevolutionCounterSinceStartEv,"ax",%progbits
+ 220      AFF30080 
+ 220      AFF30080 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc4veNEH.s 			page 5
+
+
+ 221              		.align	2
+ 222              		.p2align 4,,15
+ 223              		.global	_ZN13RpmCalculator30getRevolutionCounterSinceStartEv
+ 224              		.thumb
+ 225              		.thumb_func
+ 226              		.type	_ZN13RpmCalculator30getRevolutionCounterSinceStartEv, %function
+ 227              	_ZN13RpmCalculator30getRevolutionCounterSinceStartEv:
+ 228              		@ args = 0, pretend = 0, frame = 0
+ 229              		@ frame_needed = 0, uses_anonymous_args = 0
+ 230              		@ link register save eliminated.
+ 231 0000 C069     		ldr	r0, [r0, #28]
+ 232 0002 7047     		bx	lr
+ 233              		.size	_ZN13RpmCalculator30getRevolutionCounterSinceStartEv, .-_ZN13RpmCalculator30getRevolutionCou
+ 234 0004 AFF30080 		.section	.text._ZN13RpmCalculator18getRpmAccelerationEv,"ax",%progbits
+ 234      AFF30080 
+ 234      AFF30080 
+ 235              		.align	2
+ 236              		.p2align 4,,15
+ 237              		.global	_ZN13RpmCalculator18getRpmAccelerationEv
+ 238              		.thumb
+ 239              		.thumb_func
+ 240              		.type	_ZN13RpmCalculator18getRpmAccelerationEv, %function
+ 241              	_ZN13RpmCalculator18getRpmAccelerationEv:
+ 242              		@ args = 0, pretend = 0, frame = 0
+ 243              		@ frame_needed = 0, uses_anonymous_args = 0
+ 244              		@ link register save eliminated.
+ 245 0000 D0ED007A 		flds	s15, [r0]	@ int
+ 246 0004 90ED017A 		flds	s14, [r0, #4]	@ int
+ 247 0008 F8EEE77A 		fsitos	s15, s15
+ 248 000c B8EEC77A 		fsitos	s14, s14
+ 249 0010 C7EE276A 		fdivs	s13, s14, s15
+ 250 0014 16EE900A 		fmrs	r0, s13
+ 251 0018 7047     		bx	lr
+ 252              		.size	_ZN13RpmCalculator18getRpmAccelerationEv, .-_ZN13RpmCalculator18getRpmAccelerationEv
+ 253 001a 00BFAFF3 		.section	.text._ZN13RpmCalculator3rpmEv,"ax",%progbits
+ 253      0080
+ 254              		.align	2
+ 255              		.p2align 4,,15
+ 256              		.global	_ZN13RpmCalculator3rpmEv
+ 257              		.thumb
+ 258              		.thumb_func
+ 259              		.type	_ZN13RpmCalculator3rpmEv, %function
+ 260              	_ZN13RpmCalculator3rpmEv:
+ 261              		@ args = 0, pretend = 0, frame = 0
+ 262              		@ frame_needed = 0, uses_anonymous_args = 0
+ 263 0000 10B5     		push	{r4, lr}
+ 264 0002 0446     		mov	r4, r0
+ 265 0004 FFF7FEFF 		bl	_ZN13RpmCalculator9isRunningEv
+ 266 0008 08B9     		cbnz	r0, .L28
+ 267 000a E061     		str	r0, [r4, #28]
+ 268 000c 2060     		str	r0, [r4]
+ 269              	.L28:
+ 270 000e 2068     		ldr	r0, [r4]
+ 271 0010 10BD     		pop	{r4, pc}
+ 272              		.size	_ZN13RpmCalculator3rpmEv, .-_ZN13RpmCalculator3rpmEv
+ 273 0012 00BFAFF3 		.section	.text._Z11isCrankingEP6Engine,"ax",%progbits
+ 273      0080AFF3 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc4veNEH.s 			page 6
+
+
+ 273      0080AFF3 
+ 273      0080
+ 274              		.align	2
+ 275              		.p2align 4,,15
+ 276              		.global	_Z11isCrankingEP6Engine
+ 277              		.thumb
+ 278              		.thumb_func
+ 279              		.type	_Z11isCrankingEP6Engine, %function
+ 280              	_Z11isCrankingEP6Engine:
+ 281              		@ args = 0, pretend = 0, frame = 0
+ 282              		@ frame_needed = 0, uses_anonymous_args = 0
+ 283 0000 10B5     		push	{r4, lr}
+ 284 0002 0446     		mov	r4, r0
+ 285 0004 FFF7FEFF 		bl	_ZN13RpmCalculator9isRunningEv
+ 286 0008 08B9     		cbnz	r0, .L30
+ 287 000a E061     		str	r0, [r4, #28]
+ 288 000c 2060     		str	r0, [r4]
+ 289              	.L30:
+ 290 000e 2268     		ldr	r2, [r4]
+ 291 0010 002A     		cmp	r2, #0
+ 292 0012 0ADD     		ble	.L32
+ 293 0014 40F20003 		movw	r3, #:lower16:persistentState
+ 294 0018 C0F20003 		movt	r3, #:upper16:persistentState
+ 295 001c B3F96800 		ldrsh	r0, [r3, #104]
+ 296 0020 9042     		cmp	r0, r2
+ 297 0022 D4BF     		ite	le
+ 298 0024 0020     		movle	r0, #0
+ 299 0026 0120     		movgt	r0, #1
+ 300 0028 10BD     		pop	{r4, pc}
+ 301              	.L32:
+ 302 002a 0020     		movs	r0, #0
+ 303 002c 10BD     		pop	{r4, pc}
+ 304              		.size	_Z11isCrankingEP6Engine, .-_Z11isCrankingEP6Engine
+ 305 002e 00BF     		.section	.text._Z10isCrankingv,"ax",%progbits
+ 306              		.align	2
+ 307              		.p2align 4,,15
+ 308              		.global	_Z10isCrankingv
+ 309              		.thumb
+ 310              		.thumb_func
+ 311              		.type	_Z10isCrankingv, %function
+ 312              	_Z10isCrankingv:
+ 313              		@ args = 0, pretend = 0, frame = 0
+ 314              		@ frame_needed = 0, uses_anonymous_args = 0
+ 315              		@ link register save eliminated.
+ 316 0000 40F20003 		movw	r3, #:lower16:engine
+ 317 0004 C0F20003 		movt	r3, #:upper16:engine
+ 318 0008 1868     		ldr	r0, [r3]
+ 319 000a FFF7FEBF 		b	_Z11isCrankingEP6Engine
+ 320              		.size	_Z10isCrankingv, .-_Z10isCrankingv
+ 321 000e 00BF     		.section	.text._Z20getRevolutionCounterv,"ax",%progbits
+ 322              		.align	2
+ 323              		.p2align 4,,15
+ 324              		.global	_Z20getRevolutionCounterv
+ 325              		.thumb
+ 326              		.thumb_func
+ 327              		.type	_Z20getRevolutionCounterv, %function
+ 328              	_Z20getRevolutionCounterv:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc4veNEH.s 			page 7
+
+
+ 329              		@ args = 0, pretend = 0, frame = 0
+ 330              		@ frame_needed = 0, uses_anonymous_args = 0
+ 331              		@ link register save eliminated.
+ 332 0000 40F20003 		movw	r3, #:lower16:engine
+ 333 0004 C0F20003 		movt	r3, #:upper16:engine
+ 334 0008 1B68     		ldr	r3, [r3]
+ 335 000a 9869     		ldr	r0, [r3, #24]
+ 336 000c 7047     		bx	lr
+ 337              		.size	_Z20getRevolutionCounterv, .-_Z20getRevolutionCounterv
+ 338              		.global	__aeabi_ul2f
+ 339 000e 00BF     		.section	.text._Z20getCrankshaftAngleNty,"ax",%progbits
+ 340              		.align	2
+ 341              		.p2align 4,,15
+ 342              		.global	_Z20getCrankshaftAngleNty
+ 343              		.thumb
+ 344              		.thumb_func
+ 345              		.type	_Z20getCrankshaftAngleNty, %function
+ 346              	_Z20getCrankshaftAngleNty:
+ 347              		@ args = 0, pretend = 0, frame = 0
+ 348              		@ frame_needed = 0, uses_anonymous_args = 0
+ 349 0000 40F20003 		movw	r3, #:lower16:engine
+ 350 0004 C0F20003 		movt	r3, #:upper16:engine
+ 351 0008 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 352 000c D3F80080 		ldr	r8, [r3]
+ 353 0010 0646     		mov	r6, r0
+ 354 0012 4046     		mov	r0, r8
+ 355 0014 0F46     		mov	r7, r1
+ 356 0016 D8E90445 		ldrd	r4, [r8, #16]
+ 357 001a FFF7FEFF 		bl	_ZN13RpmCalculator9isRunningEv
+ 358 001e 18B9     		cbnz	r0, .L36
+ 359 0020 C8F81C00 		str	r0, [r8, #28]
+ 360 0024 C8F80000 		str	r0, [r8]
+ 361              	.L36:
+ 362 0028 D8F80080 		ldr	r8, [r8]
+ 363 002c B8F1000F 		cmp	r8, #0
+ 364 0030 16D0     		beq	.L38
+ 365 0032 3046     		mov	r0, r6
+ 366 0034 3946     		mov	r1, r7
+ 367 0036 001B     		subs	r0, r0, r4
+ 368 0038 61EB0501 		sbc	r1, r1, r5
+ 369 003c FFF7FEFF 		bl	__aeabi_ul2f
+ 370 0040 07EE108A 		fmsr	s14, r8	@ int
+ 371 0044 F8EEC77A 		fsitos	s15, s14
+ 372 0048 9FED087A 		flds	s14, .L39
+ 373 004c C7EE277A 		fdivs	s15, s14, s15
+ 374 0050 07EE100A 		fmsr	s14, r0
+ 375 0054 C7EE277A 		fdivs	s15, s14, s15
+ 376 0058 17EE900A 		fmrs	r0, s15
+ 377 005c BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 378              	.L38:
+ 379 0060 DFED037A 		flds	s15, .L39+4
+ 380 0064 17EE900A 		fmrs	r0, s15
+ 381 0068 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 382              	.L40:
+ 383              		.align	2
+ 384              	.L39:
+ 385 006c 809FD54B 		.word	1272291200
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc4veNEH.s 			page 8
+
+
+ 386 0070 0000C07F 		.word	2143289344
+ 387              		.size	_Z20getCrankshaftAngleNty, .-_Z20getCrankshaftAngleNty
+ 388              		.global	__aeabi_uldivmod
+ 389 0074 AFF30080 		.section	.text._Z24rpmShaftPositionCallback15trigger_event_em,"ax",%progbits
+ 389      AFF30080 
+ 389      AFF30080 
+ 390              		.align	2
+ 391              		.p2align 4,,15
+ 392              		.global	_Z24rpmShaftPositionCallback15trigger_event_em
+ 393              		.thumb
+ 394              		.thumb_func
+ 395              		.type	_Z24rpmShaftPositionCallback15trigger_event_em, %function
+ 396              	_Z24rpmShaftPositionCallback15trigger_event_em:
+ 397              		@ args = 0, pretend = 0, frame = 0
+ 398              		@ frame_needed = 0, uses_anonymous_args = 0
+ 399 0000 2DE9F843 		push	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 400 0004 40F20006 		movw	r6, #:lower16:engine
+ 401 0008 C0F20006 		movt	r6, #:upper16:engine
+ 402 000c 8146     		mov	r9, r0
+ 403 000e 8846     		mov	r8, r1
+ 404 0010 3768     		ldr	r7, [r6]
+ 405 0012 FFF7FEFF 		bl	getTimeNowNt
+ 406 0016 4FF48052 		mov	r2, #4096
+ 407 001a 0D46     		mov	r5, r1
+ 408 001c CEF20002 		movt	r2, 57344
+ 409 0020 3168     		ldr	r1, [r6]
+ 410 0022 5268     		ldr	r2, [r2, #4]
+ 411 0024 40F20003 		movw	r3, #:lower16:rlist
+ 412 0028 01F51051 		add	r1, r1, #9216
+ 413 002c C0F20003 		movt	r3, #:upper16:rlist
+ 414 0030 0446     		mov	r4, r0
+ 415 0032 8A60     		str	r2, [r1, #8]
+ 416 0034 9869     		ldr	r0, [r3, #24]
+ 417 0036 FFF7FEFF 		bl	getRemainingStack
+ 418 003a B0F5807F 		cmp	r0, #256
+ 419 003e 49DD     		ble	.L56
+ 420 0040 B8F1000F 		cmp	r8, #0
+ 421 0044 0AD0     		beq	.L43
+ 422 0046 40F20003 		movw	r3, #:lower16:boardConfiguration
+ 423 004a C0F20003 		movt	r3, #:upper16:boardConfiguration
+ 424 004e 1B68     		ldr	r3, [r3]
+ 425 0050 D3F81033 		ldr	r3, [r3, #784]
+ 426 0054 012B     		cmp	r3, #1
+ 427 0056 45D0     		beq	.L57
+ 428 0058 BDE8F883 		pop	{r3, r4, r5, r6, r7, r8, r9, pc}
+ 429              	.L43:
+ 430 005c 3846     		mov	r0, r7
+ 431 005e FFF7FEFF 		bl	_ZN13RpmCalculator9isRunningEv
+ 432 0062 C8B1     		cbz	r0, .L45
+ 433 0064 D7E90423 		ldrd	r2, [r7, #16]
+ 434 0068 A21A     		subs	r2, r4, r2
+ 435 006a 65EB0303 		sbc	r3, r5, r3
+ 436 006e 52EA0301 		orrs	r1, r2, r3
+ 437 0072 49D1     		bne	.L46
+ 438 0074 4FF0FF32 		mov	r2, #-1
+ 439 0078 3B68     		ldr	r3, [r7]
+ 440 007a 3A60     		str	r2, [r7]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc4veNEH.s 			page 9
+
+
+ 441 007c 3A68     		ldr	r2, [r7]
+ 442 007e 7B60     		str	r3, [r7, #4]
+ 443 0080 002A     		cmp	r2, #0
+ 444 0082 6DDD     		ble	.L55
+ 445              	.L49:
+ 446 0084 D7ED007A 		flds	s15, [r7]	@ int
+ 447 0088 9FED3C7A 		flds	s14, .L59
+ 448 008c F8EEE77A 		fsitos	s15, s15
+ 449 0090 C7EE277A 		fdivs	s15, s14, s15
+ 450 0094 C7ED027A 		fsts	s15, [r7, #8]
+ 451              	.L45:
+ 452 0098 40F20003 		movw	r3, #:lower16:boardConfiguration
+ 453 009c BA69     		ldr	r2, [r7, #24]
+ 454 009e C0F20003 		movt	r3, #:upper16:boardConfiguration
+ 455 00a2 0132     		adds	r2, r2, #1
+ 456 00a4 1B68     		ldr	r3, [r3]
+ 457 00a6 BA61     		str	r2, [r7, #24]
+ 458 00a8 FA69     		ldr	r2, [r7, #28]
+ 459 00aa D3F81033 		ldr	r3, [r3, #784]
+ 460 00ae 0132     		adds	r2, r2, #1
+ 461 00b0 012B     		cmp	r3, #1
+ 462 00b2 FA61     		str	r2, [r7, #28]
+ 463 00b4 C7E90445 		strd	r4, [r7, #16]
+ 464 00b8 57D0     		beq	.L58
+ 465              	.L50:
+ 466 00ba 3368     		ldr	r3, [r6]
+ 467 00bc 4FF48052 		mov	r2, #4096
+ 468 00c0 03F51053 		add	r3, r3, #9216
+ 469 00c4 CEF20002 		movt	r2, 57344
+ 470 00c8 9968     		ldr	r1, [r3, #8]
+ 471 00ca 5268     		ldr	r2, [r2, #4]
+ 472 00cc 511A     		subs	r1, r2, r1
+ 473 00ce D960     		str	r1, [r3, #12]
+ 474 00d0 BDE8F883 		pop	{r3, r4, r5, r6, r7, r8, r9, pc}
+ 475              	.L56:
+ 476 00d4 40F20000 		movw	r0, #:lower16:.LC1
+ 477 00d8 C0F20000 		movt	r0, #:upper16:.LC1
+ 478 00dc BDE8F843 		pop	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 479 00e0 FFF7FEBF 		b	firmwareError
+ 480              	.L57:
+ 481 00e4 2946     		mov	r1, r5
+ 482 00e6 2046     		mov	r0, r4
+ 483 00e8 FFF7FEFF 		bl	_Z20getCrankshaftAngleNty
+ 484 00ec 4FF47A71 		mov	r1, #1000
+ 485 00f0 01FB0981 		mla	r1, r1, r9, r8
+ 486 00f4 07EE901A 		fmsr	s15, r1	@ int
+ 487 00f8 F8EE677A 		fuitos	s15, s15
+ 488 00fc BDE8F843 		pop	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 489 0100 17EE901A 		fmrs	r1, s15
+ 490 0104 FFF7FEBF 		b	_Z9scAddDataff
+ 491              	.L46:
+ 492 0108 40F20001 		movw	r1, #:lower16:engineConfiguration
+ 493 010c C0F20001 		movt	r1, #:upper16:engineConfiguration
+ 494 0110 46F2B700 		movw	r0, #24759
+ 495 0114 0968     		ldr	r1, [r1]
+ 496 0116 D1F8A011 		ldr	r1, [r1, #416]
+ 497 011a CBF20B60 		movt	r0, 46603
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc4veNEH.s 			page 10
+
+
+ 498 011e 80FB01E0 		smull	lr, r0, r0, r1
+ 499 0122 0844     		add	r0, r0, r1
+ 500 0124 C917     		asrs	r1, r1, #31
+ 501 0126 C1EB2020 		rsb	r0, r1, r0, asr #8
+ 502 012a 4FF41841 		mov	r1, #38912
+ 503 012e 4FEAE079 		asr	r9, r0, #31
+ 504 0132 4FEA400E 		lsl	lr, r0, #1
+ 505 0136 C5F6D001 		movt	r1, 22736
+ 506 013a 01FB09EE 		mla	lr, r1, r9, lr
+ 507 013e A0FB0101 		umull	r0, r1, r0, r1
+ 508 0142 7144     		add	r1, r1, lr
+ 509 0144 FFF7FEFF 		bl	__aeabi_uldivmod
+ 510 0148 47F23053 		movw	r3, #30000
+ 511 014c 9842     		cmp	r0, r3
+ 512 014e C8BF     		it	gt
+ 513 0150 4FF0FF30 		movgt	r0, #-1
+ 514 0154 3B68     		ldr	r3, [r7]
+ 515 0156 3860     		str	r0, [r7]
+ 516 0158 3A68     		ldr	r2, [r7]
+ 517 015a 7B60     		str	r3, [r7, #4]
+ 518 015c 002A     		cmp	r2, #0
+ 519 015e 91DC     		bgt	.L49
+ 520              	.L55:
+ 521 0160 0023     		movs	r3, #0
+ 522 0162 C7F6C073 		movt	r3, 32704
+ 523 0166 BB60     		str	r3, [r7, #8]	@ float
+ 524 0168 96E7     		b	.L45
+ 525              	.L58:
+ 526 016a 2946     		mov	r1, r5
+ 527 016c 2046     		mov	r0, r4
+ 528 016e FFF7FEFF 		bl	_Z20getCrankshaftAngleNty
+ 529 0172 0021     		movs	r1, #0
+ 530 0174 FFF7FEFF 		bl	_Z9scAddDataff
+ 531 0178 9FE7     		b	.L50
+ 532              	.L60:
+ 533 017a 00BF     		.align	2
+ 534              	.L59:
+ 535 017c ABC22248 		.word	1210237611
+ 536              		.size	_Z24rpmShaftPositionCallback15trigger_event_em, .-_Z24rpmShaftPositionCallback15trigger_even
+ 537              		.section	.text._Z17initRpmCalculatorP6Engine,"ax",%progbits
+ 538              		.align	2
+ 539              		.p2align 4,,15
+ 540              		.global	_Z17initRpmCalculatorP6Engine
+ 541              		.thumb
+ 542              		.thumb_func
+ 543              		.type	_Z17initRpmCalculatorP6Engine, %function
+ 544              	_Z17initRpmCalculatorP6Engine:
+ 545              		@ args = 0, pretend = 0, frame = 0
+ 546              		@ frame_needed = 0, uses_anonymous_args = 0
+ 547 0000 10B5     		push	{r4, lr}
+ 548 0002 40F20001 		movw	r1, #:lower16:.LC2
+ 549 0006 0446     		mov	r4, r0
+ 550 0008 40F20000 		movw	r0, #:lower16:_ZL15tdcMarkCallback15trigger_event_em
+ 551 000c 2246     		mov	r2, r4
+ 552 000e C0F20000 		movt	r0, #:upper16:_ZL15tdcMarkCallback15trigger_event_em
+ 553 0012 C0F20001 		movt	r1, #:upper16:.LC2
+ 554 0016 FFF7FEFF 		bl	_Z23addTriggerEventListenerPFv15trigger_event_emEPKcP6Engine
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc4veNEH.s 			page 11
+
+
+ 555 001a 40F20000 		movw	r0, #:lower16:_Z24rpmShaftPositionCallback15trigger_event_em
+ 556 001e 40F20001 		movw	r1, #:lower16:.LC3
+ 557 0022 2246     		mov	r2, r4
+ 558 0024 C0F20000 		movt	r0, #:upper16:_Z24rpmShaftPositionCallback15trigger_event_em
+ 559 0028 C0F20001 		movt	r1, #:upper16:.LC3
+ 560 002c BDE81040 		pop	{r4, lr}
+ 561 0030 FFF7FEBF 		b	_Z23addTriggerEventListenerPFv15trigger_event_emEPKcP6Engine
+ 562              		.size	_Z17initRpmCalculatorP6Engine, .-_Z17initRpmCalculatorP6Engine
+ 563 0034 AFF30080 		.section	.text._Z15scheduleByAngleiP12scheduling_sfPFvPvES1_P13RpmCalculator,"ax",%progbits
+ 563      AFF30080 
+ 563      AFF30080 
+ 564              		.align	2
+ 565              		.p2align 4,,15
+ 566              		.global	_Z15scheduleByAngleiP12scheduling_sfPFvPvES1_P13RpmCalculator
+ 567              		.thumb
+ 568              		.thumb_func
+ 569              		.type	_Z15scheduleByAngleiP12scheduling_sfPFvPvES1_P13RpmCalculator, %function
+ 570              	_Z15scheduleByAngleiP12scheduling_sfPFvPvES1_P13RpmCalculator:
+ 571              		@ args = 8, pretend = 0, frame = 0
+ 572              		@ frame_needed = 0, uses_anonymous_args = 0
+ 573 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 574 0004 0138     		subs	r0, r0, #1
+ 575 0006 47F22E54 		movw	r4, #29998
+ 576 000a 2DED028B 		fstmfdd	sp!, {d8}
+ 577 000e A042     		cmp	r0, r4
+ 578 0010 07EE902A 		fmsr	s15, r2
+ 579 0014 0E46     		mov	r6, r1
+ 580 0016 1D46     		mov	r5, r3
+ 581 0018 089F     		ldr	r7, [sp, #32]
+ 582 001a 099A     		ldr	r2, [sp, #36]
+ 583 001c 23D8     		bhi	.L65
+ 584 001e 92ED028A 		flds	s16, [r2, #8]
+ 585 0022 28EE278A 		fmuls	s16, s16, s15
+ 586 0026 18EE100A 		fmrs	r0, s16
+ 587 002a FFF7FEFF 		bl	__fpclassifyf
+ 588 002e 80B1     		cbz	r0, .L66
+ 589 0030 BDEEC88A 		ftosizs	s16, s16
+ 590 0034 0897     		str	r7, [sp, #32]
+ 591 0036 18EE102A 		fmrs	r2, s16	@ int
+ 592 003a BDEC028B 		fldmfdd	sp!, {d8}
+ 593 003e 40F20000 		movw	r0, #:lower16:.LC6
+ 594 0042 3146     		mov	r1, r6
+ 595 0044 2B46     		mov	r3, r5
+ 596 0046 C0F20000 		movt	r0, #:upper16:.LC6
+ 597 004a BDE8F041 		pop	{r4, r5, r6, r7, r8, lr}
+ 598 004e FFF7FEBF 		b	_Z12scheduleTaskPKcP12scheduling_siPFvPvES3_
+ 599              	.L66:
+ 600 0052 BDEC028B 		fldmfdd	sp!, {d8}
+ 601 0056 40F20000 		movw	r0, #:lower16:.LC5
+ 602 005a C0F20000 		movt	r0, #:upper16:.LC5
+ 603 005e BDE8F041 		pop	{r4, r5, r6, r7, r8, lr}
+ 604 0062 FFF7FEBF 		b	firmwareError
+ 605              	.L65:
+ 606 0066 BDEC028B 		fldmfdd	sp!, {d8}
+ 607 006a 40F20000 		movw	r0, #:lower16:.LC4
+ 608 006e C0F20000 		movt	r0, #:upper16:.LC4
+ 609 0072 BDE8F041 		pop	{r4, r5, r6, r7, r8, lr}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc4veNEH.s 			page 12
+
+
+ 610 0076 FFF7FEBF 		b	firmwareError
+ 611              		.size	_Z15scheduleByAngleiP12scheduling_sfPFvPvES1_P13RpmCalculator, .-_Z15scheduleByAngleiP12sche
+ 612 007a 00BFAFF3 		.section	.text._ZL15tdcMarkCallback15trigger_event_em,"ax",%progbits
+ 612      0080
+ 613              		.align	2
+ 614              		.p2align 4,,15
+ 615              		.thumb
+ 616              		.thumb_func
+ 617              		.type	_ZL15tdcMarkCallback15trigger_event_em, %function
+ 618              	_ZL15tdcMarkCallback15trigger_event_em:
+ 619              		@ args = 0, pretend = 0, frame = 0
+ 620              		@ frame_needed = 0, uses_anonymous_args = 0
+ 621 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 622 0002 83B0     		sub	sp, sp, #12
+ 623 0004 41B9     		cbnz	r1, .L67
+ 624 0006 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 625 000a C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 626 000e 1B68     		ldr	r3, [r3]
+ 627 0010 93F8D835 		ldrb	r3, [r3, #1496]	@ zero_extendqisi2
+ 628 0014 9B06     		lsls	r3, r3, #26
+ 629 0016 01D4     		bmi	.L75
+ 630              	.L67:
+ 631 0018 03B0     		add	sp, sp, #12
+ 632              		@ sp needed
+ 633 001a F0BD     		pop	{r4, r5, r6, r7, pc}
+ 634              	.L75:
+ 635 001c 40F20005 		movw	r5, #:lower16:engine
+ 636 0020 C0F20005 		movt	r5, #:upper16:engine
+ 637 0024 2C68     		ldr	r4, [r5]
+ 638 0026 2046     		mov	r0, r4
+ 639 0028 A669     		ldr	r6, [r4, #24]
+ 640 002a FFF7FEFF 		bl	_ZN13RpmCalculator9isRunningEv
+ 641 002e 08B9     		cbnz	r0, .L71
+ 642 0030 E061     		str	r0, [r4, #28]
+ 643 0032 2060     		str	r0, [r4]
+ 644              	.L71:
+ 645 0034 2068     		ldr	r0, [r4]
+ 646 0036 47F22E53 		movw	r3, #29998
+ 647 003a 421E     		subs	r2, r0, #1
+ 648 003c 9A42     		cmp	r2, r3
+ 649 003e EBD8     		bhi	.L67
+ 650 0040 104F     		ldr	r7, .L76
+ 651 0042 2C68     		ldr	r4, [r5]
+ 652 0044 40F20003 		movw	r3, #:lower16:persistentState
+ 653 0048 C0F20003 		movt	r3, #:upper16:persistentState
+ 654 004c D3ED757A 		flds	s15, [r3, #468]
+ 655 0050 97ED007A 		flds	s14, [r7]
+ 656 0054 06F00106 		and	r6, r6, #1
+ 657 0058 7100     		lsls	r1, r6, #1
+ 658 005a 77EE277A 		fadds	s15, s14, s15
+ 659 005e 40F20002 		movw	r2, #:lower16:.LANCHOR1
+ 660 0062 3144     		add	r1, r1, r6
+ 661 0064 C0F20002 		movt	r2, #:upper16:.LANCHOR1
+ 662 0068 0025     		movs	r5, #0
+ 663 006a 40F20003 		movw	r3, #:lower16:_ZL13onTdcCallbackv
+ 664 006e 02EBC101 		add	r1, r2, r1, lsl #3
+ 665 0072 0194     		str	r4, [sp, #4]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc4veNEH.s 			page 13
+
+
+ 666 0074 17EE902A 		fmrs	r2, s15
+ 667 0078 0095     		str	r5, [sp]
+ 668 007a C0F20003 		movt	r3, #:upper16:_ZL13onTdcCallbackv
+ 669 007e FFF7FEFF 		bl	_Z15scheduleByAngleiP12scheduling_sfPFvPvES1_P13RpmCalculator
+ 670 0082 C9E7     		b	.L67
+ 671              	.L77:
+ 672              		.align	2
+ 673              	.L76:
+ 674 0084 E40D0000 		.word	_engine+3556
+ 675              		.size	_ZL15tdcMarkCallback15trigger_event_em, .-_ZL15tdcMarkCallback15trigger_event_em
+ 676 0088 AFF30080 		.section	.text.startup._GLOBAL__sub_I__ZN13RpmCalculatorC2Ev,"ax",%progbits
+ 676      AFF30080 
+ 677              		.align	2
+ 678              		.p2align 4,,15
+ 679              		.thumb
+ 680              		.thumb_func
+ 681              		.type	_GLOBAL__sub_I__ZN13RpmCalculatorC2Ev, %function
+ 682              	_GLOBAL__sub_I__ZN13RpmCalculatorC2Ev:
+ 683              		@ args = 0, pretend = 0, frame = 0
+ 684              		@ frame_needed = 0, uses_anonymous_args = 0
+ 685 0000 10B5     		push	{r4, lr}
+ 686 0002 40F20004 		movw	r4, #:lower16:.LANCHOR1
+ 687 0006 C0F20004 		movt	r4, #:upper16:.LANCHOR1
+ 688 000a 2046     		mov	r0, r4
+ 689 000c FFF7FEFF 		bl	_ZN12scheduling_sC1Ev
+ 690 0010 04F11800 		add	r0, r4, #24
+ 691 0014 BDE81040 		pop	{r4, lr}
+ 692 0018 FFF7FEBF 		b	_ZN12scheduling_sC1Ev
+ 693              		.size	_GLOBAL__sub_I__ZN13RpmCalculatorC2Ev, .-_GLOBAL__sub_I__ZN13RpmCalculatorC2Ev
+ 694 001c AFF30080 		.section	.init_array,"aw",%init_array
+ 695              		.align	2
+ 696 0000 00000000 		.word	_GLOBAL__sub_I__ZN13RpmCalculatorC2Ev(target1)
+ 697              		.section	.bss._ZL9rpmBuffer,"aw",%nobits
+ 698              		.align	2
+ 699              		.set	.LANCHOR0,. + 0
+ 700              		.type	_ZL9rpmBuffer, %object
+ 701              		.size	_ZL9rpmBuffer, 10
+ 702              	_ZL9rpmBuffer:
+ 703 0000 00000000 		.space	10
+ 703      00000000 
+ 703      0000
+ 704 000a 0000     		.section	.rodata.str1.4,"aMS",%progbits,1
+ 705              		.align	2
+ 706              	.LC0:
+ 707 0000 7200     		.ascii	"r\000"
+ 708 0002 0000     		.space	2
+ 709              	.LC1:
+ 710 0004 6C6F7773 		.ascii	"lowstck#2z\000"
+ 710      74636B23 
+ 710      327A00
+ 711 000f 00       		.space	1
+ 712              	.LC2:
+ 713 0010 63686172 		.ascii	"chart TDC mark\000"
+ 713      74205444 
+ 713      43206D61 
+ 713      726B00
+ 714 001f 00       		.space	1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc4veNEH.s 			page 14
+
+
+ 715              	.LC3:
+ 716 0020 72706D20 		.ascii	"rpm reporter\000"
+ 716      7265706F 
+ 716      72746572 
+ 716      00
+ 717 002d 000000   		.space	3
+ 718              	.LC4:
+ 719 0030 52504D20 		.ascii	"RPM check expected\000"
+ 719      63686563 
+ 719      6B206578 
+ 719      70656374 
+ 719      656400
+ 720 0043 00       		.space	1
+ 721              	.LC5:
+ 722 0044 4E614E20 		.ascii	"NaN delay?\000"
+ 722      64656C61 
+ 722      793F00
+ 723 004f 00       		.space	1
+ 724              	.LC6:
+ 725 0050 62792061 		.ascii	"by angle\000"
+ 725      6E676C65 
+ 725      00
+ 726 0059 000000   		.section	.bss._ZL12tdcScheduler,"aw",%nobits
+ 727              		.align	3
+ 728              		.set	.LANCHOR1,. + 0
+ 729              		.type	_ZL12tdcScheduler, %object
+ 730              		.size	_ZL12tdcScheduler, 48
+ 731              	_ZL12tdcScheduler:
+ 732 0000 00000000 		.space	48
+ 732      00000000 
+ 732      00000000 
+ 732      00000000 
+ 732      00000000 
+ 733              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc4veNEH.s 			page 15
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 rpm_calculator.cpp
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:17     .text._ZN13RpmCalculatorC2Ev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:23     .text._ZN13RpmCalculatorC2Ev:00000000 _ZN13RpmCalculatorC2Ev
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:66     .text._ZN13RpmCalculatorC2Ev:00000068 $d
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:23     .text._ZN13RpmCalculatorC2Ev:00000000 _ZN13RpmCalculatorC1Ev
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:73     .text._ZN13RpmCalculator9isRunningEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:79     .text._ZN13RpmCalculator9isRunningEv:00000000 _ZN13RpmCalculator9isRunningEv
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:118    .text._ZN13RpmCalculator9isRunningEv:00000058 $d
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:124    .text._ZL13onTdcCallbackv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:129    .text._ZL13onTdcCallbackv:00000000 _ZL13onTdcCallbackv
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:699    .bss._ZL9rpmBuffer:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:706    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:156    .text._ZN13RpmCalculator11setRpmValueEi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:162    .text._ZN13RpmCalculator11setRpmValueEi:00000000 _ZN13RpmCalculator11setRpmValueEi
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:185    .text._ZN13RpmCalculator11setRpmValueEi:0000002c $d
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:188    .text._ZN13RpmCalculator16onNewEngineCycleEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:194    .text._ZN13RpmCalculator16onNewEngineCycleEv:00000000 _ZN13RpmCalculator16onNewEngineCycleEv
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:207    .text._ZN13RpmCalculator20getRevolutionCounterEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:213    .text._ZN13RpmCalculator20getRevolutionCounterEv:00000000 _ZN13RpmCalculator20getRevolutionCounterEv
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:221    .text._ZN13RpmCalculator30getRevolutionCounterSinceStartEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:227    .text._ZN13RpmCalculator30getRevolutionCounterSinceStartEv:00000000 _ZN13RpmCalculator30getRevolutionCounterSinceStartEv
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:235    .text._ZN13RpmCalculator18getRpmAccelerationEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:241    .text._ZN13RpmCalculator18getRpmAccelerationEv:00000000 _ZN13RpmCalculator18getRpmAccelerationEv
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:254    .text._ZN13RpmCalculator3rpmEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:260    .text._ZN13RpmCalculator3rpmEv:00000000 _ZN13RpmCalculator3rpmEv
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:274    .text._Z11isCrankingEP6Engine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:280    .text._Z11isCrankingEP6Engine:00000000 _Z11isCrankingEP6Engine
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:306    .text._Z10isCrankingv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:312    .text._Z10isCrankingv:00000000 _Z10isCrankingv
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:322    .text._Z20getRevolutionCounterv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:328    .text._Z20getRevolutionCounterv:00000000 _Z20getRevolutionCounterv
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:340    .text._Z20getCrankshaftAngleNty:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:346    .text._Z20getCrankshaftAngleNty:00000000 _Z20getCrankshaftAngleNty
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:385    .text._Z20getCrankshaftAngleNty:0000006c $d
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:390    .text._Z24rpmShaftPositionCallback15trigger_event_em:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:396    .text._Z24rpmShaftPositionCallback15trigger_event_em:00000000 _Z24rpmShaftPositionCallback15trigger_event_em
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:709    .rodata.str1.4:00000004 .LC1
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:535    .text._Z24rpmShaftPositionCallback15trigger_event_em:0000017c $d
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:538    .text._Z17initRpmCalculatorP6Engine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:544    .text._Z17initRpmCalculatorP6Engine:00000000 _Z17initRpmCalculatorP6Engine
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:712    .rodata.str1.4:00000010 .LC2
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:618    .text._ZL15tdcMarkCallback15trigger_event_em:00000000 _ZL15tdcMarkCallback15trigger_event_em
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:715    .rodata.str1.4:00000020 .LC3
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:564    .text._Z15scheduleByAngleiP12scheduling_sfPFvPvES1_P13RpmCalculator:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:570    .text._Z15scheduleByAngleiP12scheduling_sfPFvPvES1_P13RpmCalculator:00000000 _Z15scheduleByAngleiP12scheduling_sfPFvPvES1_P13RpmCalculator
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:724    .rodata.str1.4:00000050 .LC6
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:721    .rodata.str1.4:00000044 .LC5
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:718    .rodata.str1.4:00000030 .LC4
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:613    .text._ZL15tdcMarkCallback15trigger_event_em:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:728    .bss._ZL12tdcScheduler:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:674    .text._ZL15tdcMarkCallback15trigger_event_em:00000084 $d
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:677    .text.startup._GLOBAL__sub_I__ZN13RpmCalculatorC2Ev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:682    .text.startup._GLOBAL__sub_I__ZN13RpmCalculatorC2Ev:00000000 _GLOBAL__sub_I__ZN13RpmCalculatorC2Ev
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:695    .init_array:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:698    .bss._ZL9rpmBuffer:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:702    .bss._ZL9rpmBuffer:00000000 _ZL9rpmBuffer
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc4veNEH.s 			page 16
+
+
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:705    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:727    .bss._ZL12tdcScheduler:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:731    .bss._ZL12tdcScheduler:00000000 _ZL12tdcScheduler
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:72     .text._ZN13RpmCalculatorC2Ev:00000074 $t
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:123    .text._ZN13RpmCalculator9isRunningEv:00000068 $t
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:389    .text._Z20getCrankshaftAngleNty:00000074 $t
+C:\Users\pc\AppData\Local\Temp\cc4veNEH.s:676    .text._ZL15tdcMarkCallback15trigger_event_em:00000088 $t
+
+UNDEFINED SYMBOLS
+getTimeNowNt
+engine
+itoa10
+waveChart
+_ZN9WaveChart18addWaveChartEvent3EPKcS1_
+persistentState
+__aeabi_ul2f
+__aeabi_uldivmod
+rlist
+getRemainingStack
+boardConfiguration
+firmwareError
+_Z9scAddDataff
+engineConfiguration
+_Z23addTriggerEventListenerPFv15trigger_event_emEPKcP6Engine
+__fpclassifyf
+_Z12scheduleTaskPKcP12scheduling_siPFvPvES3_
+_engine
+_ZN12scheduling_sC1Ev

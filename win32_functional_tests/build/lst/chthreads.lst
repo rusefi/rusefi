@@ -1,0 +1,805 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s 			page 1
+
+
+   1              		.file	"chthreads.c"
+   2              		.section	.text$_thread_init,"x"
+   3              		.p2align 4,,15
+   4              		.globl	__thread_init
+   5              		.def	__thread_init;	.scl	2;	.type	32;	.endef
+   6              	__thread_init:
+   7              	LFB7:
+   8              		.cfi_startproc
+   9 0000 8B442404 		movl	4(%esp), %eax
+  10 0004 8B542408 		movl	8(%esp), %edx
+  11 0008 C7401000 		movl	$_rlist, 16(%eax)
+  11      000000
+  12 000f 895008   		movl	%edx, 8(%eax)
+  13 0012 895040   		movl	%edx, 64(%eax)
+  14 0015 8B151400 		movl	_rlist+20, %edx
+  14      0000
+  15 001b C6401C02 		movb	$2, 28(%eax)
+  16 001f C6401D00 		movb	$0, 29(%eax)
+  17 0023 C6401F14 		movb	$20, 31(%eax)
+  18 0027 895014   		movl	%edx, 20(%eax)
+  19 002a A3140000 		movl	%eax, _rlist+20
+  19      00
+  20 002f 894210   		movl	%eax, 16(%edx)
+  21 0032 8D5028   		leal	40(%eax), %edx
+  22 0035 895028   		movl	%edx, 40(%eax)
+  23 0038 8D502C   		leal	44(%eax), %edx
+  24 003b C7403C00 		movl	$0, 60(%eax)
+  24      000000
+  25 0042 C7403800 		movl	$0, 56(%eax)
+  25      000000
+  26 0049 C7402000 		movl	$0, 32(%eax)
+  26      000000
+  27 0050 C6401E01 		movb	$1, 30(%eax)
+  28 0054 C7401800 		movl	$0, 24(%eax)
+  28      000000
+  29 005b 895030   		movl	%edx, 48(%eax)
+  30 005e 89502C   		movl	%edx, 44(%eax)
+  31 0061 C3       		ret
+  32              		.cfi_endproc
+  33              	LFE7:
+  34 0062 90909090 		.section .rdata,"dr"
+  34      90909090 
+  34      90909090 
+  34      9090
+  35              	LC0:
+  36 0000 22636854 		.ascii "\"chThdCreateI\"()\0"
+  36      68644372 
+  36      65617465 
+  36      49222829 
+  36      00
+  37              		.section	.text$chThdCreateI,"x"
+  38              		.p2align 4,,15
+  39              		.globl	_chThdCreateI
+  40              		.def	_chThdCreateI;	.scl	2;	.type	32;	.endef
+  41              	_chThdCreateI:
+  42              	LFB8:
+  43              		.cfi_startproc
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s 			page 2
+
+
+  44 0000 83EC2C   		subl	$44, %esp
+  45              		.cfi_def_cfa_offset 48
+  46 0003 896C2428 		movl	%ebp, 40(%esp)
+  47              		.cfi_offset 5, -8
+  48 0007 8B6C2434 		movl	52(%esp), %ebp
+  49 000b 895C241C 		movl	%ebx, 28(%esp)
+  50              		.cfi_offset 3, -20
+  51 000f 8B5C2430 		movl	48(%esp), %ebx
+  52 0013 89742420 		movl	%esi, 32(%esp)
+  53              		.cfi_offset 6, -16
+  54 0017 8B742438 		movl	56(%esp), %esi
+  55 001b 897C2424 		movl	%edi, 36(%esp)
+  56              		.cfi_offset 7, -12
+  57 001f 8B7C243C 		movl	60(%esp), %edi
+  58 0023 E8000000 		call	_chDbgCheckClassI
+  58      00
+  59 0028 81FD6F40 		cmpl	$16495, %ebp
+  59      0000
+  60 002e 760C     		jbe	L3
+  61 0030 85DB     		testl	%ebx, %ebx
+  62 0032 7408     		je	L3
+  63 0034 85FF     		testl	%edi, %edi
+  64 0036 0F85C400 		jne	L11
+  64      0000
+  65              	L3:
+  66 003c C7042400 		movl	$LC0, (%esp)
+  66      000000
+  67 0043 E8000000 		call	_chDbgPanic
+  67      00
+  68              	L4:
+  69 0048 8D142B   		leal	(%ebx,%ebp), %edx
+  70 004b 8B6C2440 		movl	64(%esp), %ebp
+  71 004f C742FC00 		movl	$0, -4(%edx)
+  71      000000
+  72 0056 8D4AFC   		leal	-4(%edx), %ecx
+  73 0059 83EA0C   		subl	$12, %edx
+  74 005c 83E2F0   		andl	$-16, %edx
+  75 005f 893A     		movl	%edi, (%edx)
+  76 0061 896A04   		movl	%ebp, 4(%edx)
+  77 0064 C742FC00 		movl	$0, -4(%edx)
+  77      000000
+  78 006b A1140000 		movl	_rlist+20, %eax
+  78      00
+  79 0070 C742F800 		movl	$__port_thread_start, -8(%edx)
+  79      000000
+  80 0077 C742E800 		movl	$0, -24(%edx)
+  80      000000
+  81 007e C742EC00 		movl	$0, -20(%edx)
+  81      000000
+  82 0085 C742F000 		movl	$0, -16(%edx)
+  82      000000
+  83 008c 894AF4   		movl	%ecx, -12(%edx)
+  84 008f 83EA18   		subl	$24, %edx
+  85 0092 897308   		movl	%esi, 8(%ebx)
+  86 0095 C7431000 		movl	$_rlist, 16(%ebx)
+  86      000000
+  87 009c 894314   		movl	%eax, 20(%ebx)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s 			page 3
+
+
+  88 009f 89530C   		movl	%edx, 12(%ebx)
+  89 00a2 891D1400 		movl	%ebx, _rlist+20
+  89      0000
+  90 00a8 895810   		movl	%ebx, 16(%eax)
+  91 00ab 8D4328   		leal	40(%ebx), %eax
+  92 00ae 894328   		movl	%eax, 40(%ebx)
+  93 00b1 8D432C   		leal	44(%ebx), %eax
+  94 00b4 C6431C02 		movb	$2, 28(%ebx)
+  95 00b8 C6431D00 		movb	$0, 29(%ebx)
+  96 00bc C6431F14 		movb	$20, 31(%ebx)
+  97 00c0 C6431E01 		movb	$1, 30(%ebx)
+  98 00c4 8B7C2424 		movl	36(%esp), %edi
+  99 00c8 897340   		movl	%esi, 64(%ebx)
+ 100 00cb 8B6C2428 		movl	40(%esp), %ebp
+ 101 00cf 894330   		movl	%eax, 48(%ebx)
+ 102 00d2 8B742420 		movl	32(%esp), %esi
+ 103 00d6 89432C   		movl	%eax, 44(%ebx)
+ 104 00d9 89D8     		movl	%ebx, %eax
+ 105 00db C7433C00 		movl	$0, 60(%ebx)
+ 105      000000
+ 106 00e2 C7433800 		movl	$0, 56(%ebx)
+ 106      000000
+ 107 00e9 C7432000 		movl	$0, 32(%ebx)
+ 107      000000
+ 108 00f0 C7431800 		movl	$0, 24(%ebx)
+ 108      000000
+ 109 00f7 8B5C241C 		movl	28(%esp), %ebx
+ 110 00fb 83C42C   		addl	$44, %esp
+ 111              		.cfi_remember_state
+ 112              		.cfi_restore 5
+ 113              		.cfi_restore 7
+ 114              		.cfi_restore 6
+ 115              		.cfi_restore 3
+ 116              		.cfi_def_cfa_offset 4
+ 117 00fe C3       		ret
+ 118 00ff 90       		.p2align 4,,7
+ 119              	L11:
+ 120              		.cfi_restore_state
+ 121 0100 83FE7F   		cmpl	$127, %esi
+ 122 0103 0F8733FF 		ja	L3
+ 122      FFFF
+ 123 0109 E93AFFFF 		jmp	L4
+ 123      FF
+ 124              		.cfi_endproc
+ 125              	LFE8:
+ 126 010e 9090     		.section	.text$chThdCreateStatic,"x"
+ 127              		.p2align 4,,15
+ 128              		.globl	_chThdCreateStatic
+ 129              		.def	_chThdCreateStatic;	.scl	2;	.type	32;	.endef
+ 130              	_chThdCreateStatic:
+ 131              	LFB9:
+ 132              		.cfi_startproc
+ 133 0000 53       		pushl	%ebx
+ 134              		.cfi_def_cfa_offset 8
+ 135              		.cfi_offset 3, -8
+ 136 0001 83EC28   		subl	$40, %esp
+ 137              		.cfi_def_cfa_offset 48
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s 			page 4
+
+
+ 138              	/APP
+ 139              	 # 199 "../firmware/chibios/os/kernel/src/chthreads.c" 1
+ 140 0004 90       		nop
+ 141              	 # 0 "" 2
+ 142              	/NO_APP
+ 143 0005 E8000000 		call	_dbg_check_lock
+ 143      00
+ 144 000a 8B442440 		movl	64(%esp), %eax
+ 145 000e 89442410 		movl	%eax, 16(%esp)
+ 146 0012 8B44243C 		movl	60(%esp), %eax
+ 147 0016 8944240C 		movl	%eax, 12(%esp)
+ 148 001a 8B442438 		movl	56(%esp), %eax
+ 149 001e 89442408 		movl	%eax, 8(%esp)
+ 150 0022 8B442434 		movl	52(%esp), %eax
+ 151 0026 89442404 		movl	%eax, 4(%esp)
+ 152 002a 8B442430 		movl	48(%esp), %eax
+ 153 002e 890424   		movl	%eax, (%esp)
+ 154 0031 E8000000 		call	_chThdCreateI
+ 154      00
+ 155 0036 C7442404 		movl	$0, 4(%esp)
+ 155      00000000 
+ 156 003e 890424   		movl	%eax, (%esp)
+ 157 0041 89C3     		movl	%eax, %ebx
+ 158 0043 E8000000 		call	_chSchWakeupS
+ 158      00
+ 159 0048 E8000000 		call	_dbg_check_unlock
+ 159      00
+ 160              	/APP
+ 161              	 # 201 "../firmware/chibios/os/kernel/src/chthreads.c" 1
+ 162 004d 90       		nop
+ 163              	 # 0 "" 2
+ 164              	/NO_APP
+ 165 004e 83C428   		addl	$40, %esp
+ 166              		.cfi_def_cfa_offset 8
+ 167 0051 89D8     		movl	%ebx, %eax
+ 168 0053 5B       		popl	%ebx
+ 169              		.cfi_restore 3
+ 170              		.cfi_def_cfa_offset 4
+ 171 0054 C3       		ret
+ 172              		.cfi_endproc
+ 173              	LFE9:
+ 174 0055 90909090 		.section .rdata,"dr"
+ 174      90909090 
+ 174      909090
+ 175              	LC1:
+ 176 0011 22636854 		.ascii "\"chThdSetPriority\"()\0"
+ 176      68645365 
+ 176      74507269 
+ 176      6F726974 
+ 176      79222829 
+ 177              		.section	.text$chThdSetPriority,"x"
+ 178              		.p2align 4,,15
+ 179              		.globl	_chThdSetPriority
+ 180              		.def	_chThdSetPriority;	.scl	2;	.type	32;	.endef
+ 181              	_chThdSetPriority:
+ 182              	LFB10:
+ 183              		.cfi_startproc
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s 			page 5
+
+
+ 184 0000 83EC1C   		subl	$28, %esp
+ 185              		.cfi_def_cfa_offset 32
+ 186 0003 895C2414 		movl	%ebx, 20(%esp)
+ 187              		.cfi_offset 3, -12
+ 188 0007 8B5C2420 		movl	32(%esp), %ebx
+ 189 000b 89742418 		movl	%esi, 24(%esp)
+ 190              		.cfi_offset 6, -8
+ 191 000f 83FB7F   		cmpl	$127, %ebx
+ 192 0012 773C     		ja	L19
+ 193              	L15:
+ 194              	/APP
+ 195              	 # 222 "../firmware/chibios/os/kernel/src/chthreads.c" 1
+ 196 0014 90       		nop
+ 197              	 # 0 "" 2
+ 198              	/NO_APP
+ 199 0015 E8000000 		call	_dbg_check_lock
+ 199      00
+ 200 001a 8B151800 		movl	_rlist+24, %edx
+ 200      0000
+ 201 0020 8B7240   		movl	64(%edx), %esi
+ 202 0023 8B4208   		movl	8(%edx), %eax
+ 203 0026 39C6     		cmpl	%eax, %esi
+ 204 0028 7404     		je	L16
+ 205 002a 39C3     		cmpl	%eax, %ebx
+ 206 002c 7603     		jbe	L17
+ 207              	L16:
+ 208 002e 895A08   		movl	%ebx, 8(%edx)
+ 209              	L17:
+ 210 0031 895A40   		movl	%ebx, 64(%edx)
+ 211 0034 E8000000 		call	_chSchRescheduleS
+ 211      00
+ 212 0039 E8000000 		call	_dbg_check_unlock
+ 212      00
+ 213              	/APP
+ 214              	 # 233 "../firmware/chibios/os/kernel/src/chthreads.c" 1
+ 215 003e 90       		nop
+ 216              	 # 0 "" 2
+ 217              	/NO_APP
+ 218 003f 89F0     		movl	%esi, %eax
+ 219 0041 8B5C2414 		movl	20(%esp), %ebx
+ 220 0045 8B742418 		movl	24(%esp), %esi
+ 221 0049 83C41C   		addl	$28, %esp
+ 222              		.cfi_remember_state
+ 223              		.cfi_restore 6
+ 224              		.cfi_restore 3
+ 225              		.cfi_def_cfa_offset 4
+ 226 004c C3       		ret
+ 227 004d 8D7600   		.p2align 4,,7
+ 228              	L19:
+ 229              		.cfi_restore_state
+ 230 0050 C7042411 		movl	$LC1, (%esp)
+ 230      000000
+ 231 0057 E8000000 		call	_chDbgPanic
+ 231      00
+ 232 005c EBB6     		jmp	L15
+ 233              		.cfi_endproc
+ 234              	LFE10:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s 			page 6
+
+
+ 235 005e 9090     		.section .rdata,"dr"
+ 236              	LC2:
+ 237 0026 63685468 		.ascii "chThdResume(), #1\0"
+ 237      64526573 
+ 237      756D6528 
+ 237      292C2023 
+ 237      3100
+ 238              		.section	.text$chThdResume,"x"
+ 239              		.p2align 4,,15
+ 240              		.globl	_chThdResume
+ 241              		.def	_chThdResume;	.scl	2;	.type	32;	.endef
+ 242              	_chThdResume:
+ 243              	LFB11:
+ 244              		.cfi_startproc
+ 245 0000 53       		pushl	%ebx
+ 246              		.cfi_def_cfa_offset 8
+ 247              		.cfi_offset 3, -8
+ 248 0001 83EC18   		subl	$24, %esp
+ 249              		.cfi_def_cfa_offset 32
+ 250 0004 8B5C2420 		movl	32(%esp), %ebx
+ 251              	/APP
+ 252              	 # 252 "../firmware/chibios/os/kernel/src/chthreads.c" 1
+ 253 0008 90       		nop
+ 254              	 # 0 "" 2
+ 255              	/NO_APP
+ 256 0009 E8000000 		call	_dbg_check_lock
+ 256      00
+ 257 000e 807B1C02 		cmpb	$2, 28(%ebx)
+ 258 0012 740C     		je	L21
+ 259 0014 C7042426 		movl	$LC2, (%esp)
+ 259      000000
+ 260 001b E8000000 		call	_chDbgPanic
+ 260      00
+ 261              	L21:
+ 262 0020 C7442404 		movl	$0, 4(%esp)
+ 262      00000000 
+ 263 0028 891C24   		movl	%ebx, (%esp)
+ 264 002b E8000000 		call	_chSchWakeupS
+ 264      00
+ 265 0030 E8000000 		call	_dbg_check_unlock
+ 265      00
+ 266              	/APP
+ 267              	 # 257 "../firmware/chibios/os/kernel/src/chthreads.c" 1
+ 268 0035 90       		nop
+ 269              	 # 0 "" 2
+ 270              	/NO_APP
+ 271 0036 83C418   		addl	$24, %esp
+ 272              		.cfi_def_cfa_offset 8
+ 273 0039 89D8     		movl	%ebx, %eax
+ 274 003b 5B       		popl	%ebx
+ 275              		.cfi_restore 3
+ 276              		.cfi_def_cfa_offset 4
+ 277 003c C3       		ret
+ 278              		.cfi_endproc
+ 279              	LFE11:
+ 280 003d 909090   		.section	.text$chThdTerminate,"x"
+ 281              		.p2align 4,,15
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s 			page 7
+
+
+ 282              		.globl	_chThdTerminate
+ 283              		.def	_chThdTerminate;	.scl	2;	.type	32;	.endef
+ 284              	_chThdTerminate:
+ 285              	LFB12:
+ 286              		.cfi_startproc
+ 287 0000 53       		pushl	%ebx
+ 288              		.cfi_def_cfa_offset 8
+ 289              		.cfi_offset 3, -8
+ 290 0001 83EC08   		subl	$8, %esp
+ 291              		.cfi_def_cfa_offset 16
+ 292 0004 8B5C2410 		movl	16(%esp), %ebx
+ 293              	/APP
+ 294              	 # 275 "../firmware/chibios/os/kernel/src/chthreads.c" 1
+ 295 0008 90       		nop
+ 296              	 # 0 "" 2
+ 297              	/NO_APP
+ 298 0009 E8000000 		call	_dbg_check_lock
+ 298      00
+ 299 000e 804B1D04 		orb	$4, 29(%ebx)
+ 300 0012 E8000000 		call	_dbg_check_unlock
+ 300      00
+ 301              	/APP
+ 302              	 # 277 "../firmware/chibios/os/kernel/src/chthreads.c" 1
+ 303 0017 90       		nop
+ 304              	 # 0 "" 2
+ 305              	/NO_APP
+ 306 0018 83C408   		addl	$8, %esp
+ 307              		.cfi_def_cfa_offset 8
+ 308 001b 5B       		popl	%ebx
+ 309              		.cfi_restore 3
+ 310              		.cfi_def_cfa_offset 4
+ 311 001c C3       		ret
+ 312              		.cfi_endproc
+ 313              	LFE12:
+ 314 001d 909090   		.section .rdata,"dr"
+ 315              	LC3:
+ 316 0038 22636854 		.ascii "\"chThdSleep\"()\0"
+ 316      6864536C 
+ 316      65657022 
+ 316      282900
+ 317              		.section	.text$chThdSleep,"x"
+ 318              		.p2align 4,,15
+ 319              		.globl	_chThdSleep
+ 320              		.def	_chThdSleep;	.scl	2;	.type	32;	.endef
+ 321              	_chThdSleep:
+ 322              	LFB13:
+ 323              		.cfi_startproc
+ 324 0000 53       		pushl	%ebx
+ 325              		.cfi_def_cfa_offset 8
+ 326              		.cfi_offset 3, -8
+ 327 0001 83EC18   		subl	$24, %esp
+ 328              		.cfi_def_cfa_offset 32
+ 329 0004 8B5C2420 		movl	32(%esp), %ebx
+ 330 0008 85DB     		testl	%ebx, %ebx
+ 331 000a 750C     		jne	L26
+ 332 000c C7042438 		movl	$LC3, (%esp)
+ 332      000000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s 			page 8
+
+
+ 333 0013 E8000000 		call	_chDbgPanic
+ 333      00
+ 334              	L26:
+ 335              	/APP
+ 336              	 # 296 "../firmware/chibios/os/kernel/src/chthreads.c" 1
+ 337 0018 90       		nop
+ 338              	 # 0 "" 2
+ 339              	/NO_APP
+ 340 0019 E8000000 		call	_dbg_check_lock
+ 340      00
+ 341 001e 895C2404 		movl	%ebx, 4(%esp)
+ 342 0022 C7042406 		movl	$6, (%esp)
+ 342      000000
+ 343 0029 E8000000 		call	_chSchGoSleepTimeoutS
+ 343      00
+ 344 002e E8000000 		call	_dbg_check_unlock
+ 344      00
+ 345              	/APP
+ 346              	 # 298 "../firmware/chibios/os/kernel/src/chthreads.c" 1
+ 347 0033 90       		nop
+ 348              	 # 0 "" 2
+ 349              	/NO_APP
+ 350 0034 83C418   		addl	$24, %esp
+ 351              		.cfi_def_cfa_offset 8
+ 352 0037 5B       		popl	%ebx
+ 353              		.cfi_restore 3
+ 354              		.cfi_def_cfa_offset 4
+ 355 0038 C3       		ret
+ 356              		.cfi_endproc
+ 357              	LFE13:
+ 358 0039 90909090 		.section	.text$chThdSleepUntil,"x"
+ 358      909090
+ 359              		.p2align 4,,15
+ 360              		.globl	_chThdSleepUntil
+ 361              		.def	_chThdSleepUntil;	.scl	2;	.type	32;	.endef
+ 362              	_chThdSleepUntil:
+ 363              	LFB14:
+ 364              		.cfi_startproc
+ 365 0000 83EC1C   		subl	$28, %esp
+ 366              		.cfi_def_cfa_offset 32
+ 367              	/APP
+ 368              	 # 311 "../firmware/chibios/os/kernel/src/chthreads.c" 1
+ 369 0003 90       		nop
+ 370              	 # 0 "" 2
+ 371              	/NO_APP
+ 372 0004 E8000000 		call	_dbg_check_lock
+ 372      00
+ 373 0009 A10C0000 		movl	_vtlist+12, %eax
+ 373      00
+ 374 000e 8B542420 		movl	32(%esp), %edx
+ 375 0012 29C2     		subl	%eax, %edx
+ 376 0014 7410     		je	L29
+ 377 0016 89542404 		movl	%edx, 4(%esp)
+ 378 001a C7042406 		movl	$6, (%esp)
+ 378      000000
+ 379 0021 E8000000 		call	_chSchGoSleepTimeoutS
+ 379      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s 			page 9
+
+
+ 380              	L29:
+ 381 0026 E8000000 		call	_dbg_check_unlock
+ 381      00
+ 382              	/APP
+ 383              	 # 314 "../firmware/chibios/os/kernel/src/chthreads.c" 1
+ 384 002b 90       		nop
+ 385              	 # 0 "" 2
+ 386              	/NO_APP
+ 387 002c 83C41C   		addl	$28, %esp
+ 388              		.cfi_def_cfa_offset 4
+ 389 002f C3       		ret
+ 390              		.cfi_endproc
+ 391              	LFE14:
+ 392              		.section	.text$chThdYield,"x"
+ 393              		.p2align 4,,15
+ 394              		.globl	_chThdYield
+ 395              		.def	_chThdYield;	.scl	2;	.type	32;	.endef
+ 396              	_chThdYield:
+ 397              	LFB15:
+ 398              		.cfi_startproc
+ 399 0000 83EC0C   		subl	$12, %esp
+ 400              		.cfi_def_cfa_offset 16
+ 401              	/APP
+ 402              	 # 326 "../firmware/chibios/os/kernel/src/chthreads.c" 1
+ 403 0003 90       		nop
+ 404              	 # 0 "" 2
+ 405              	/NO_APP
+ 406 0004 E8000000 		call	_dbg_check_lock
+ 406      00
+ 407 0009 A1180000 		movl	_rlist+24, %eax
+ 407      00
+ 408 000e 8B150000 		movl	_rlist, %edx
+ 408      0000
+ 409 0014 8B4808   		movl	8(%eax), %ecx
+ 410 0017 394A08   		cmpl	%ecx, 8(%edx)
+ 411 001a 7205     		jb	L35
+ 412 001c E8000000 		call	_chSchDoRescheduleBehind
+ 412      00
+ 413              	L35:
+ 414 0021 E8000000 		call	_dbg_check_unlock
+ 414      00
+ 415              	/APP
+ 416              	 # 328 "../firmware/chibios/os/kernel/src/chthreads.c" 1
+ 417 0026 90       		nop
+ 418              	 # 0 "" 2
+ 419              	/NO_APP
+ 420 0027 83C40C   		addl	$12, %esp
+ 421              		.cfi_def_cfa_offset 4
+ 422              		.p2align 4,,2
+ 423 002a C3       		ret
+ 424              		.cfi_endproc
+ 425              	LFE15:
+ 426 002b 90909090 		.section .rdata,"dr"
+ 426      90
+ 427              	LC4:
+ 428 0047 63685468 		.ascii "chThdExitS(), #1\0"
+ 428      64457869 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s 			page 10
+
+
+ 428      74532829 
+ 428      2C202331 
+ 428      00
+ 429              		.section	.text$chThdExitS,"x"
+ 430              		.p2align 4,,15
+ 431              		.globl	_chThdExitS
+ 432              		.def	_chThdExitS;	.scl	2;	.type	32;	.endef
+ 433              	_chThdExitS:
+ 434              	LFB17:
+ 435              		.cfi_startproc
+ 436 0000 56       		pushl	%esi
+ 437              		.cfi_def_cfa_offset 8
+ 438              		.cfi_offset 6, -8
+ 439 0001 53       		pushl	%ebx
+ 440              		.cfi_def_cfa_offset 12
+ 441              		.cfi_offset 3, -12
+ 442 0002 83EC14   		subl	$20, %esp
+ 443              		.cfi_def_cfa_offset 32
+ 444 0005 8B1D1800 		movl	_rlist+24, %ebx
+ 444      0000
+ 445 000b 8B442420 		movl	32(%esp), %eax
+ 446 000f 8D7328   		leal	40(%ebx), %esi
+ 447 0012 894324   		movl	%eax, 36(%ebx)
+ 448 0015 8B4328   		movl	40(%ebx), %eax
+ 449 0018 39F0     		cmpl	%esi, %eax
+ 450 001a 7418     		je	L42
+ 451 001c 8D742600 		.p2align 4,,7
+ 452              	L43:
+ 453 0020 8B10     		movl	(%eax), %edx
+ 454 0022 895328   		movl	%edx, 40(%ebx)
+ 455 0025 890424   		movl	%eax, (%esp)
+ 456 0028 E8000000 		call	_chSchReadyI
+ 456      00
+ 457 002d 8B4328   		movl	40(%ebx), %eax
+ 458 0030 39F0     		cmpl	%esi, %eax
+ 459 0032 75EC     		jne	L43
+ 460              	L42:
+ 461 0034 F6431D03 		testb	$3, 29(%ebx)
+ 462 0038 750F     		jne	L40
+ 463 003a 8B4314   		movl	20(%ebx), %eax
+ 464 003d 8B5310   		movl	16(%ebx), %edx
+ 465 0040 895010   		movl	%edx, 16(%eax)
+ 466 0043 8B5310   		movl	16(%ebx), %edx
+ 467 0046 894214   		movl	%eax, 20(%edx)
+ 468              	L40:
+ 469 0049 C704240E 		movl	$14, (%esp)
+ 469      000000
+ 470 0050 E8000000 		call	_chSchGoSleepS
+ 470      00
+ 471 0055 C7442420 		movl	$LC4, 32(%esp)
+ 471      47000000 
+ 472 005d 83C414   		addl	$20, %esp
+ 473              		.cfi_def_cfa_offset 12
+ 474 0060 5B       		popl	%ebx
+ 475              		.cfi_restore 3
+ 476              		.cfi_def_cfa_offset 8
+ 477 0061 5E       		popl	%esi
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s 			page 11
+
+
+ 478              		.cfi_restore 6
+ 479              		.cfi_def_cfa_offset 4
+ 480 0062 E9000000 		jmp	_chDbgPanic
+ 480      00
+ 481              		.cfi_endproc
+ 482              	LFE17:
+ 483 0067 90909090 		.section	.text$chThdExit,"x"
+ 483      90909090 
+ 483      90
+ 484              		.p2align 4,,15
+ 485              		.globl	_chThdExit
+ 486              		.def	_chThdExit;	.scl	2;	.type	32;	.endef
+ 487              	_chThdExit:
+ 488              	LFB16:
+ 489              		.cfi_startproc
+ 490 0000 53       		pushl	%ebx
+ 491              		.cfi_def_cfa_offset 8
+ 492              		.cfi_offset 3, -8
+ 493 0001 83EC08   		subl	$8, %esp
+ 494              		.cfi_def_cfa_offset 16
+ 495 0004 8B5C2410 		movl	16(%esp), %ebx
+ 496              	/APP
+ 497              	 # 347 "../firmware/chibios/os/kernel/src/chthreads.c" 1
+ 498 0008 90       		nop
+ 499              	 # 0 "" 2
+ 500              	/NO_APP
+ 501 0009 E8000000 		call	_dbg_check_lock
+ 501      00
+ 502 000e 895C2410 		movl	%ebx, 16(%esp)
+ 503 0012 83C408   		addl	$8, %esp
+ 504              		.cfi_def_cfa_offset 8
+ 505 0015 5B       		popl	%ebx
+ 506              		.cfi_restore 3
+ 507              		.cfi_def_cfa_offset 4
+ 508 0016 E9000000 		jmp	_chThdExitS
+ 508      00
+ 509              		.cfi_endproc
+ 510              	LFE16:
+ 511 001b 90909090 		.section .rdata,"dr"
+ 511      90
+ 512              	LC5:
+ 513 0058 22636854 		.ascii "\"chThdWait\"()\0"
+ 513      68645761 
+ 513      69742228 
+ 513      2900
+ 514              	LC6:
+ 515 0066 63685468 		.ascii "chThdWait(), #1\0"
+ 515      64576169 
+ 515      7428292C 
+ 515      20233100 
+ 516              	LC7:
+ 517 0076 63685468 		.ascii "chThdWait(), #2\0"
+ 517      64576169 
+ 517      7428292C 
+ 517      20233200 
+ 518 0086 0000     		.section	.text$chThdWait,"x"
+ 519              		.p2align 4,,15
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s 			page 12
+
+
+ 520              		.globl	_chThdWait
+ 521              		.def	_chThdWait;	.scl	2;	.type	32;	.endef
+ 522              	_chThdWait:
+ 523              	LFB18:
+ 524              		.cfi_startproc
+ 525 0000 56       		pushl	%esi
+ 526              		.cfi_def_cfa_offset 8
+ 527              		.cfi_offset 6, -8
+ 528 0001 53       		pushl	%ebx
+ 529              		.cfi_def_cfa_offset 12
+ 530              		.cfi_offset 3, -12
+ 531 0002 83EC14   		subl	$20, %esp
+ 532              		.cfi_def_cfa_offset 32
+ 533 0005 8B5C2420 		movl	32(%esp), %ebx
+ 534 0009 85DB     		testl	%ebx, %ebx
+ 535 000b 7473     		je	L54
+ 536              	L49:
+ 537              	/APP
+ 538              	 # 425 "../firmware/chibios/os/kernel/src/chthreads.c" 1
+ 539 000d 90       		nop
+ 540              	 # 0 "" 2
+ 541              	/NO_APP
+ 542 000e E8000000 		call	_dbg_check_lock
+ 542      00
+ 543 0013 391D1800 		cmpl	%ebx, _rlist+24
+ 543      0000
+ 544 0019 7455     		je	L55
+ 545              	L50:
+ 546 001b 807B1E00 		cmpb	$0, 30(%ebx)
+ 547 001f 743F     		je	L56
+ 548              	L51:
+ 549 0021 807B1C0E 		cmpb	$14, 28(%ebx)
+ 550 0025 7419     		je	L52
+ 551 0027 8B5328   		movl	40(%ebx), %edx
+ 552 002a A1180000 		movl	_rlist+24, %eax
+ 552      00
+ 553 002f 8910     		movl	%edx, (%eax)
+ 554 0031 894328   		movl	%eax, 40(%ebx)
+ 555 0034 C7042407 		movl	$7, (%esp)
+ 555      000000
+ 556 003b E8000000 		call	_chSchGoSleepS
+ 556      00
+ 557              	L52:
+ 558 0040 8B7324   		movl	36(%ebx), %esi
+ 559 0043 E8000000 		call	_dbg_check_unlock
+ 559      00
+ 560              	/APP
+ 561              	 # 435 "../firmware/chibios/os/kernel/src/chthreads.c" 1
+ 562 0048 90       		nop
+ 563              	 # 0 "" 2
+ 564              	/NO_APP
+ 565 0049 891C24   		movl	%ebx, (%esp)
+ 566 004c E8000000 		call	_chThdRelease
+ 566      00
+ 567 0051 83C414   		addl	$20, %esp
+ 568              		.cfi_remember_state
+ 569              		.cfi_def_cfa_offset 12
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s 			page 13
+
+
+ 570 0054 89F0     		movl	%esi, %eax
+ 571 0056 5B       		popl	%ebx
+ 572              		.cfi_restore 3
+ 573              		.cfi_def_cfa_offset 8
+ 574 0057 5E       		popl	%esi
+ 575              		.cfi_restore 6
+ 576              		.cfi_def_cfa_offset 4
+ 577 0058 C3       		ret
+ 578 0059 8DB42600 		.p2align 4,,7
+ 578      000000
+ 579              	L56:
+ 580              		.cfi_restore_state
+ 581 0060 C7042476 		movl	$LC7, (%esp)
+ 581      000000
+ 582 0067 E8000000 		call	_chDbgPanic
+ 582      00
+ 583 006c EBB3     		jmp	L51
+ 584 006e 6690     		.p2align 4,,7
+ 585              	L55:
+ 586 0070 C7042466 		movl	$LC6, (%esp)
+ 586      000000
+ 587 0077 E8000000 		call	_chDbgPanic
+ 587      00
+ 588 007c EB9D     		jmp	L50
+ 589 007e 6690     		.p2align 4,,7
+ 590              	L54:
+ 591 0080 C7042458 		movl	$LC5, (%esp)
+ 591      000000
+ 592 0087 E8000000 		call	_chDbgPanic
+ 592      00
+ 593 008c E97CFFFF 		jmp	L49
+ 593      FF
+ 594              		.cfi_endproc
+ 595              	LFE18:
+ 596              		.def	__port_thread_start;	.scl	2;	.type	32;	.endef
+ 597              		.def	_chDbgCheckClassI;	.scl	2;	.type	32;	.endef
+ 598              		.def	_chDbgPanic;	.scl	2;	.type	32;	.endef
+ 599              		.def	_dbg_check_lock;	.scl	2;	.type	32;	.endef
+ 600              		.def	_chSchWakeupS;	.scl	2;	.type	32;	.endef
+ 601              		.def	_dbg_check_unlock;	.scl	2;	.type	32;	.endef
+ 602              		.def	_chSchRescheduleS;	.scl	2;	.type	32;	.endef
+ 603              		.def	_chSchGoSleepTimeoutS;	.scl	2;	.type	32;	.endef
+ 604              		.def	_chSchDoRescheduleBehind;	.scl	2;	.type	32;	.endef
+ 605              		.def	_chSchReadyI;	.scl	2;	.type	32;	.endef
+ 606              		.def	_chSchGoSleepS;	.scl	2;	.type	32;	.endef
+ 607 0091 90909090 		.def	_chThdRelease;	.scl	2;	.type	32;	.endef
+ 607      90909090 
+ 607      90909090 
+ 607      909090
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s 			page 14
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 chthreads.c
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s:6      .text$_thread_init:00000000 __thread_init
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s:41     .text$chThdCreateI:00000000 _chThdCreateI
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s:130    .text$chThdCreateStatic:00000000 _chThdCreateStatic
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s:181    .text$chThdSetPriority:00000000 _chThdSetPriority
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s:242    .text$chThdResume:00000000 _chThdResume
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s:284    .text$chThdTerminate:00000000 _chThdTerminate
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s:321    .text$chThdSleep:00000000 _chThdSleep
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s:362    .text$chThdSleepUntil:00000000 _chThdSleepUntil
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s:396    .text$chThdYield:00000000 _chThdYield
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s:433    .text$chThdExitS:00000000 _chThdExitS
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s:487    .text$chThdExit:00000000 _chThdExit
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccEvYOH8.s:522    .text$chThdWait:00000000 _chThdWait
+
+UNDEFINED SYMBOLS
+_rlist
+_vtlist
+__port_thread_start
+_chDbgCheckClassI
+_chDbgPanic
+_dbg_check_lock
+_chSchWakeupS
+_dbg_check_unlock
+_chSchRescheduleS
+_chSchGoSleepTimeoutS
+_chSchDoRescheduleBehind
+_chSchReadyI
+_chSchGoSleepS
+_chThdRelease

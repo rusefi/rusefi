@@ -1,0 +1,220 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccxaVbIh.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"engine_emulator.cpp"
+  16              		.section	.text._Z7setDiagi,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_Z7setDiagi
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_Z7setDiagi, %function
+  23              	_Z7setDiagi:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 10B5     		push	{r4, lr}
+  27 0002 0446     		mov	r4, r0
+  28 0004 40F20000 		movw	r0, #:lower16:.LC0
+  29 0008 2146     		mov	r1, r4
+  30 000a C0F20000 		movt	r0, #:upper16:.LC0
+  31 000e FFF7FEFF 		bl	print
+  32 0012 14F00104 		ands	r4, r4, #1
+  33 0016 4FF44063 		mov	r3, #3072
+  34 001a 14BF     		ite	ne
+  35 001c 0022     		movne	r2, #0
+  36 001e 4FF48032 		moveq	r2, #65536
+  37 0022 C4F20203 		movt	r3, 16386
+  38 0026 1443     		orrs	r4, r4, r2
+  39 0028 9C61     		str	r4, [r3, #24]
+  40 002a 10BD     		pop	{r4, pc}
+  41              		.size	_Z7setDiagi, .-_Z7setDiagi
+  42 002c AFF30080 		.section	.text._Z7emulateP6Engine,"ax",%progbits
+  43              		.align	2
+  44              		.p2align 4,,15
+  45              		.global	_Z7emulateP6Engine
+  46              		.thumb
+  47              		.thumb_func
+  48              		.type	_Z7emulateP6Engine, %function
+  49              	_Z7emulateP6Engine:
+  50              		@ args = 0, pretend = 0, frame = 0
+  51              		@ frame_needed = 0, uses_anonymous_args = 0
+  52 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+  53 0004 0646     		mov	r6, r0
+  54 0006 40F20000 		movw	r0, #:lower16:.LC1
+  55 000a C0F20000 		movt	r0, #:upper16:.LC1
+  56 000e FFF7FEFF 		bl	print
+  57 0012 0120     		movs	r0, #1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccxaVbIh.s 			page 2
+
+
+  58 0014 FFF7FEFF 		bl	_Z7setDiagi
+  59 0018 0120     		movs	r0, #1
+  60 001a FFF7FEFF 		bl	chThdSleep
+  61 001e 48F21F55 		movw	r5, #34079
+  62 0022 0120     		movs	r0, #1
+  63 0024 FFF7FEFF 		bl	_Z10setFullLogi
+  64 0028 C5F2EB15 		movt	r5, 20971
+  65 002c 4FF4C874 		mov	r4, #400
+  66 0030 4FF03208 		mov	r8, #50
+  67 0034 40F21557 		movw	r7, #1301
+  68 0038 02E0     		b	.L7
+  69              	.L5:
+  70 003a 0134     		adds	r4, r4, #1
+  71 003c BC42     		cmp	r4, r7
+  72 003e 13D0     		beq	.L9
+  73              	.L7:
+  74 0040 85FB0423 		smull	r2, r3, r5, r4
+  75 0044 E217     		asrs	r2, r4, #31
+  76 0046 C2EB2313 		rsb	r3, r2, r3, asr #4
+  77 004a 08FB1343 		mls	r3, r8, r3, r4
+  78 004e 002B     		cmp	r3, #0
+  79 0050 F3D1     		bne	.L5
+  80 0052 2046     		mov	r0, r4
+  81 0054 3146     		mov	r1, r6
+  82 0056 FFF7FEFF 		bl	_Z21setTriggerEmulatorRPMiP6Engine
+  83 005a 0134     		adds	r4, r4, #1
+  84 005c 40F6B830 		movw	r0, #3000
+  85 0060 FFF7FEFF 		bl	chThdSleep
+  86 0064 BC42     		cmp	r4, r7
+  87 0066 EBD1     		bne	.L7
+  88              	.L9:
+  89 0068 3146     		mov	r1, r6
+  90 006a 0020     		movs	r0, #0
+  91 006c FFF7FEFF 		bl	_Z21setTriggerEmulatorRPMiP6Engine
+  92 0070 0020     		movs	r0, #0
+  93 0072 FFF7FEFF 		bl	_Z10setFullLogi
+  94 0076 0020     		movs	r0, #0
+  95 0078 FFF7FEFF 		bl	_Z7setDiagi
+  96 007c 0120     		movs	r0, #1
+  97 007e FFF7FEFF 		bl	chThdSleep
+  98 0082 40F20000 		movw	r0, #:lower16:.LC2
+  99 0086 C0F20000 		movt	r0, #:upper16:.LC2
+ 100 008a BDE8F041 		pop	{r4, r5, r6, r7, r8, lr}
+ 101 008e FFF7FEBF 		b	print
+ 102              		.size	_Z7emulateP6Engine, .-_Z7emulateP6Engine
+ 103 0092 00BFAFF3 		.section	.text._Z13startEmulatorv,"ax",%progbits
+ 103      0080AFF3 
+ 103      0080AFF3 
+ 103      0080
+ 104              		.align	2
+ 105              		.p2align 4,,15
+ 106              		.global	_Z13startEmulatorv
+ 107              		.thumb
+ 108              		.thumb_func
+ 109              		.type	_Z13startEmulatorv, %function
+ 110              	_Z13startEmulatorv:
+ 111              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccxaVbIh.s 			page 3
+
+
+ 112              		@ frame_needed = 0, uses_anonymous_args = 0
+ 113              		@ link register save eliminated.
+ 114 0000 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 115 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 116 0008 0122     		movs	r2, #1
+ 117 000a 1A60     		str	r2, [r3]
+ 118 000c 7047     		bx	lr
+ 119              		.size	_Z13startEmulatorv, .-_Z13startEmulatorv
+ 120 000e 00BF     		.section	.text._Z18initEngineEmulatorP7LoggingP6Engine,"ax",%progbits
+ 121              		.align	2
+ 122              		.p2align 4,,15
+ 123              		.global	_Z18initEngineEmulatorP7LoggingP6Engine
+ 124              		.thumb
+ 125              		.thumb_func
+ 126              		.type	_Z18initEngineEmulatorP7LoggingP6Engine, %function
+ 127              	_Z18initEngineEmulatorP7LoggingP6Engine:
+ 128              		@ args = 0, pretend = 0, frame = 0
+ 129              		@ frame_needed = 0, uses_anonymous_args = 0
+ 130 0000 38B5     		push	{r3, r4, r5, lr}
+ 131 0002 40F20003 		movw	r3, #:lower16:hasFirmwareErrorFlag
+ 132 0006 C0F20003 		movt	r3, #:upper16:hasFirmwareErrorFlag
+ 133 000a 0C46     		mov	r4, r1
+ 134 000c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 135 000e 0546     		mov	r5, r0
+ 136 0010 03B1     		cbz	r3, .L13
+ 137 0012 38BD     		pop	{r3, r4, r5, pc}
+ 138              	.L13:
+ 139 0014 496A     		ldr	r1, [r1, #36]
+ 140 0016 01F51C71 		add	r1, r1, #624
+ 141 001a FFF7FEFF 		bl	_Z18initPotentiometersP7LoggingP21board_configuration_s
+ 142 001e 2846     		mov	r0, r5
+ 143 0020 2146     		mov	r1, r4
+ 144 0022 BDE83840 		pop	{r3, r4, r5, lr}
+ 145 0026 FFF7FEBF 		b	_Z19initTriggerEmulatorP7LoggingP6Engine
+ 146              		.size	_Z18initEngineEmulatorP7LoggingP6Engine, .-_Z18initEngineEmulatorP7LoggingP6Engine
+ 147 002a 00BFAFF3 		.section	.bss._ZL4flag,"aw",%nobits
+ 147      0080
+ 148              		.align	2
+ 149              		.set	.LANCHOR0,. + 0
+ 150              		.type	_ZL4flag, %object
+ 151              		.size	_ZL4flag, 4
+ 152              	_ZL4flag:
+ 153 0000 00000000 		.space	4
+ 154              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 155              		.align	2
+ 156              	.LC0:
+ 157 0000 53657474 		.ascii	"Setting diag: %d\015\012\000"
+ 157      696E6720 
+ 157      64696167 
+ 157      3A202564 
+ 157      0D0A00
+ 158 0013 00       		.space	1
+ 159              	.LC1:
+ 160 0014 456D756C 		.ascii	"Emulating...\015\012\000"
+ 160      6174696E 
+ 160      672E2E2E 
+ 160      0D0A00
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccxaVbIh.s 			page 4
+
+
+ 161 0023 00       		.space	1
+ 162              	.LC2:
+ 163 0024 456D756C 		.ascii	"Emulation DONE!\015\012\000"
+ 163      6174696F 
+ 163      6E20444F 
+ 163      4E45210D 
+ 163      0A00
+ 164 0036 0000     		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccxaVbIh.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 engine_emulator.cpp
+C:\Users\pc\AppData\Local\Temp\ccxaVbIh.s:17     .text._Z7setDiagi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccxaVbIh.s:23     .text._Z7setDiagi:00000000 _Z7setDiagi
+C:\Users\pc\AppData\Local\Temp\ccxaVbIh.s:156    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccxaVbIh.s:43     .text._Z7emulateP6Engine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccxaVbIh.s:49     .text._Z7emulateP6Engine:00000000 _Z7emulateP6Engine
+C:\Users\pc\AppData\Local\Temp\ccxaVbIh.s:159    .rodata.str1.4:00000014 .LC1
+C:\Users\pc\AppData\Local\Temp\ccxaVbIh.s:162    .rodata.str1.4:00000024 .LC2
+C:\Users\pc\AppData\Local\Temp\ccxaVbIh.s:104    .text._Z13startEmulatorv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccxaVbIh.s:110    .text._Z13startEmulatorv:00000000 _Z13startEmulatorv
+C:\Users\pc\AppData\Local\Temp\ccxaVbIh.s:149    .bss._ZL4flag:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccxaVbIh.s:121    .text._Z18initEngineEmulatorP7LoggingP6Engine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccxaVbIh.s:127    .text._Z18initEngineEmulatorP7LoggingP6Engine:00000000 _Z18initEngineEmulatorP7LoggingP6Engine
+C:\Users\pc\AppData\Local\Temp\ccxaVbIh.s:148    .bss._ZL4flag:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccxaVbIh.s:152    .bss._ZL4flag:00000000 _ZL4flag
+C:\Users\pc\AppData\Local\Temp\ccxaVbIh.s:155    .rodata.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+print
+chThdSleep
+_Z10setFullLogi
+_Z21setTriggerEmulatorRPMiP6Engine
+hasFirmwareErrorFlag
+_Z18initPotentiometersP7LoggingP21board_configuration_s
+_Z19initTriggerEmulatorP7LoggingP6Engine

@@ -1,0 +1,516 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc21HGFX.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"chschd.c"
+  16              		.section	.text._scheduler_init,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_scheduler_init
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_scheduler_init, %function
+  23              	_scheduler_init:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 40F20003 		movw	r3, #:lower16:.LANCHOR0
+  28 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+  29 0008 0022     		movs	r2, #0
+  30 000a 5B60     		str	r3, [r3, #4]
+  31 000c 1B60     		str	r3, [r3]
+  32 000e 5B61     		str	r3, [r3, #20]
+  33 0010 1B61     		str	r3, [r3, #16]
+  34 0012 9A60     		str	r2, [r3, #8]
+  35 0014 7047     		bx	lr
+  36              		.size	_scheduler_init, .-_scheduler_init
+  37 0016 00BFAFF3 		.section	.text.chSchReadyI,"ax",%progbits
+  37      0080AFF3 
+  37      0080
+  38              		.align	2
+  39              		.p2align 4,,15
+  40              		.global	chSchReadyI
+  41              		.thumb
+  42              		.thumb_func
+  43              		.type	chSchReadyI, %function
+  44              	chSchReadyI:
+  45              		@ args = 0, pretend = 0, frame = 0
+  46              		@ frame_needed = 0, uses_anonymous_args = 0
+  47 0000 10B5     		push	{r4, lr}
+  48 0002 0446     		mov	r4, r0
+  49 0004 FFF7FEFF 		bl	chDbgCheckClassI
+  50 0008 94F82030 		ldrb	r3, [r4, #32]	@ zero_extendqisi2
+  51 000c 002B     		cmp	r3, #0
+  52 000e 18BF     		it	ne
+  53 0010 0E2B     		cmpne	r3, #14
+  54 0012 12D0     		beq	.L10
+  55              	.L3:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc21HGFX.s 			page 2
+
+
+  56 0014 0022     		movs	r2, #0
+  57 0016 40F20003 		movw	r3, #:lower16:.LANCHOR0
+  58 001a A168     		ldr	r1, [r4, #8]
+  59 001c 84F82020 		strb	r2, [r4, #32]
+  60 0020 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+  61              	.L5:
+  62 0024 1B68     		ldr	r3, [r3]
+  63 0026 9A68     		ldr	r2, [r3, #8]
+  64 0028 8A42     		cmp	r2, r1
+  65 002a FBD2     		bcs	.L5
+  66 002c 5A68     		ldr	r2, [r3, #4]
+  67 002e 2360     		str	r3, [r4]
+  68 0030 6260     		str	r2, [r4, #4]
+  69 0032 2046     		mov	r0, r4
+  70 0034 5C60     		str	r4, [r3, #4]
+  71 0036 1460     		str	r4, [r2]
+  72 0038 10BD     		pop	{r4, pc}
+  73              	.L10:
+  74 003a 40F20000 		movw	r0, #:lower16:.LC0
+  75 003e C0F20000 		movt	r0, #:upper16:.LC0
+  76 0042 FFF7FEFF 		bl	chDbgPanic
+  77 0046 E5E7     		b	.L3
+  78              		.size	chSchReadyI, .-chSchReadyI
+  79 0048 AFF30080 		.section	.text.wakeup,"ax",%progbits
+  79      AFF30080 
+  80              		.align	2
+  81              		.p2align 4,,15
+  82              		.thumb
+  83              		.thumb_func
+  84              		.type	wakeup, %function
+  85              	wakeup:
+  86              		@ args = 0, pretend = 0, frame = 0
+  87              		@ frame_needed = 0, uses_anonymous_args = 0
+  88 0000 38B5     		push	{r3, r4, r5, lr}
+  89 0002 0446     		mov	r4, r0
+  90 0004 2023     		movs	r3, #32
+  91              	@ 139 "chibios/os/kernel/src/chschd.c" 1
+  92 0006 83F31188 		msr     BASEPRI, r3
+  93              	@ 0 "" 2
+  94              		.thumb
+  95 000a FFF7FEFF 		bl	dbg_check_lock_from_isr
+  96 000e 94F82050 		ldrb	r5, [r4, #32]	@ zero_extendqisi2
+  97 0012 032D     		cmp	r5, #3
+  98 0014 0ED0     		beq	.L13
+  99 0016 0D2D     		cmp	r5, #13
+ 100 0018 10D0     		beq	.L14
+ 101 001a ADB1     		cbz	r5, .L20
+ 102              	.L12:
+ 103 001c 4FF0FF33 		mov	r3, #-1
+ 104 0020 A362     		str	r3, [r4, #40]
+ 105 0022 2046     		mov	r0, r4
+ 106 0024 FFF7FEFF 		bl	chSchReadyI
+ 107 0028 FFF7FEFF 		bl	dbg_check_unlock_from_isr
+ 108 002c 0023     		movs	r3, #0
+ 109              	@ 165 "chibios/os/kernel/src/chschd.c" 1
+ 110 002e 83F31188 		msr     BASEPRI, r3
+ 111              	@ 0 "" 2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc21HGFX.s 			page 3
+
+
+ 112              		.thumb
+ 113 0032 38BD     		pop	{r3, r4, r5, pc}
+ 114              	.L13:
+ 115 0034 A36A     		ldr	r3, [r4, #40]
+ 116 0036 9A68     		ldr	r2, [r3, #8]
+ 117 0038 0132     		adds	r2, r2, #1
+ 118 003a 9A60     		str	r2, [r3, #8]
+ 119              	.L14:
+ 120 003c 94E80C00 		ldmia	r4, {r2, r3}
+ 121 0040 1A60     		str	r2, [r3]
+ 122 0042 2268     		ldr	r2, [r4]
+ 123 0044 5360     		str	r3, [r2, #4]
+ 124 0046 E9E7     		b	.L12
+ 125              	.L20:
+ 126 0048 FFF7FEFF 		bl	dbg_check_unlock_from_isr
+ 127 004c 2B46     		mov	r3, r5
+ 128              	@ 144 "chibios/os/kernel/src/chschd.c" 1
+ 129 004e 83F31188 		msr     BASEPRI, r3
+ 130              	@ 0 "" 2
+ 131              		.thumb
+ 132 0052 38BD     		pop	{r3, r4, r5, pc}
+ 133              		.size	wakeup, .-wakeup
+ 134 0054 AFF30080 		.section	.text.chSchGoSleepS,"ax",%progbits
+ 134      AFF30080 
+ 134      AFF30080 
+ 135              		.align	2
+ 136              		.p2align 4,,15
+ 137              		.global	chSchGoSleepS
+ 138              		.thumb
+ 139              		.thumb_func
+ 140              		.type	chSchGoSleepS, %function
+ 141              	chSchGoSleepS:
+ 142              		@ args = 0, pretend = 0, frame = 0
+ 143              		@ frame_needed = 0, uses_anonymous_args = 0
+ 144 0000 70B5     		push	{r4, r5, r6, lr}
+ 145 0002 40F20004 		movw	r4, #:lower16:.LANCHOR0
+ 146 0006 C0F20004 		movt	r4, #:upper16:.LANCHOR0
+ 147 000a 0646     		mov	r6, r0
+ 148 000c FFF7FEFF 		bl	chDbgCheckClassS
+ 149 0010 2368     		ldr	r3, [r4]
+ 150 0012 A569     		ldr	r5, [r4, #24]
+ 151 0014 1A68     		ldr	r2, [r3]
+ 152 0016 85F82060 		strb	r6, [r5, #32]
+ 153 001a 0121     		movs	r1, #1
+ 154 001c 1420     		movs	r0, #20
+ 155 001e 85F82200 		strb	r0, [r5, #34]
+ 156 0022 5460     		str	r4, [r2, #4]
+ 157 0024 2846     		mov	r0, r5
+ 158 0026 83F82010 		strb	r1, [r3, #32]
+ 159 002a 2260     		str	r2, [r4]
+ 160 002c A361     		str	r3, [r4, #24]
+ 161 002e FFF7FEFF 		bl	dbg_trace
+ 162 0032 2846     		mov	r0, r5
+ 163 0034 FFF7FEFF 		bl	getRemainingStack
+ 164 0038 0028     		cmp	r0, #0
+ 165 003a 05DB     		blt	.L23
+ 166 003c A069     		ldr	r0, [r4, #24]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc21HGFX.s 			page 4
+
+
+ 167 003e 2946     		mov	r1, r5
+ 168 0040 BDE87040 		pop	{r4, r5, r6, lr}
+ 169 0044 FFF7FEBF 		b	_port_switch
+ 170              	.L23:
+ 171 0048 2846     		mov	r0, r5
+ 172 004a FFF7FEFF 		bl	chDbgStackOverflowPanic
+ 173 004e A069     		ldr	r0, [r4, #24]
+ 174 0050 2946     		mov	r1, r5
+ 175 0052 BDE87040 		pop	{r4, r5, r6, lr}
+ 176 0056 FFF7FEBF 		b	_port_switch
+ 177              		.size	chSchGoSleepS, .-chSchGoSleepS
+ 178 005a 00BFAFF3 		.section	.text.chSchGoSleepTimeoutS,"ax",%progbits
+ 178      0080
+ 179              		.align	2
+ 180              		.p2align 4,,15
+ 181              		.global	chSchGoSleepTimeoutS
+ 182              		.thumb
+ 183              		.thumb_func
+ 184              		.type	chSchGoSleepTimeoutS, %function
+ 185              	chSchGoSleepTimeoutS:
+ 186              		@ args = 0, pretend = 0, frame = 24
+ 187              		@ frame_needed = 0, uses_anonymous_args = 0
+ 188 0000 70B5     		push	{r4, r5, r6, lr}
+ 189 0002 0D46     		mov	r5, r1
+ 190 0004 86B0     		sub	sp, sp, #24
+ 191 0006 0646     		mov	r6, r0
+ 192 0008 FFF7FEFF 		bl	chDbgCheckClassS
+ 193 000c 6B1C     		adds	r3, r5, #1
+ 194 000e 18D0     		beq	.L25
+ 195 0010 40F20004 		movw	r4, #:lower16:.LANCHOR0
+ 196 0014 C0F20004 		movt	r4, #:upper16:.LANCHOR0
+ 197 0018 40F20002 		movw	r2, #:lower16:wakeup
+ 198 001c A369     		ldr	r3, [r4, #24]
+ 199 001e 2946     		mov	r1, r5
+ 200 0020 01A8     		add	r0, sp, #4
+ 201 0022 C0F20002 		movt	r2, #:upper16:wakeup
+ 202 0026 FFF7FEFF 		bl	chVTSetI
+ 203 002a 3046     		mov	r0, r6
+ 204 002c FFF7FEFF 		bl	chSchGoSleepS
+ 205 0030 049B     		ldr	r3, [sp, #16]
+ 206 0032 13B1     		cbz	r3, .L27
+ 207 0034 01A8     		add	r0, sp, #4
+ 208 0036 FFF7FEFF 		bl	chVTResetI
+ 209              	.L27:
+ 210 003a A369     		ldr	r3, [r4, #24]
+ 211 003c 986A     		ldr	r0, [r3, #40]
+ 212 003e 06B0     		add	sp, sp, #24
+ 213              		@ sp needed
+ 214 0040 70BD     		pop	{r4, r5, r6, pc}
+ 215              	.L25:
+ 216 0042 40F20004 		movw	r4, #:lower16:.LANCHOR0
+ 217 0046 C0F20004 		movt	r4, #:upper16:.LANCHOR0
+ 218 004a 3046     		mov	r0, r6
+ 219 004c FFF7FEFF 		bl	chSchGoSleepS
+ 220 0050 A369     		ldr	r3, [r4, #24]
+ 221 0052 986A     		ldr	r0, [r3, #40]
+ 222 0054 06B0     		add	sp, sp, #24
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc21HGFX.s 			page 5
+
+
+ 223              		@ sp needed
+ 224 0056 70BD     		pop	{r4, r5, r6, pc}
+ 225              		.size	chSchGoSleepTimeoutS, .-chSchGoSleepTimeoutS
+ 226 0058 AFF30080 		.section	.text.chSchWakeupS,"ax",%progbits
+ 226      AFF30080 
+ 227              		.align	2
+ 228              		.p2align 4,,15
+ 229              		.global	chSchWakeupS
+ 230              		.thumb
+ 231              		.thumb_func
+ 232              		.type	chSchWakeupS, %function
+ 233              	chSchWakeupS:
+ 234              		@ args = 0, pretend = 0, frame = 0
+ 235              		@ frame_needed = 0, uses_anonymous_args = 0
+ 236 0000 70B5     		push	{r4, r5, r6, lr}
+ 237 0002 40F20005 		movw	r5, #:lower16:.LANCHOR0
+ 238 0006 C0F20005 		movt	r5, #:upper16:.LANCHOR0
+ 239 000a 0446     		mov	r4, r0
+ 240 000c 0E46     		mov	r6, r1
+ 241 000e FFF7FEFF 		bl	chDbgCheckClassS
+ 242 0012 A869     		ldr	r0, [r5, #24]
+ 243 0014 A368     		ldr	r3, [r4, #8]
+ 244 0016 8268     		ldr	r2, [r0, #8]
+ 245 0018 A662     		str	r6, [r4, #40]
+ 246 001a 9342     		cmp	r3, r2
+ 247 001c 13D9     		bls	.L34
+ 248 001e FFF7FEFF 		bl	chSchReadyI
+ 249 0022 0123     		movs	r3, #1
+ 250 0024 0646     		mov	r6, r0
+ 251 0026 84F82030 		strb	r3, [r4, #32]
+ 252 002a AC61     		str	r4, [r5, #24]
+ 253 002c FFF7FEFF 		bl	dbg_trace
+ 254 0030 3046     		mov	r0, r6
+ 255 0032 FFF7FEFF 		bl	getRemainingStack
+ 256 0036 0028     		cmp	r0, #0
+ 257 0038 0ADB     		blt	.L35
+ 258              	.L33:
+ 259 003a 2046     		mov	r0, r4
+ 260 003c 3146     		mov	r1, r6
+ 261 003e BDE87040 		pop	{r4, r5, r6, lr}
+ 262 0042 FFF7FEBF 		b	_port_switch
+ 263              	.L34:
+ 264 0046 2046     		mov	r0, r4
+ 265 0048 BDE87040 		pop	{r4, r5, r6, lr}
+ 266 004c FFF7FEBF 		b	chSchReadyI
+ 267              	.L35:
+ 268 0050 3046     		mov	r0, r6
+ 269 0052 FFF7FEFF 		bl	chDbgStackOverflowPanic
+ 270 0056 F0E7     		b	.L33
+ 271              		.size	chSchWakeupS, .-chSchWakeupS
+ 272 0058 AFF30080 		.section	.text.chSchDoRescheduleBehind,"ax",%progbits
+ 272      AFF30080 
+ 273              		.align	2
+ 274              		.p2align 4,,15
+ 275              		.global	chSchDoRescheduleBehind
+ 276              		.thumb
+ 277              		.thumb_func
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc21HGFX.s 			page 6
+
+
+ 278              		.type	chSchDoRescheduleBehind, %function
+ 279              	chSchDoRescheduleBehind:
+ 280              		@ args = 0, pretend = 0, frame = 0
+ 281              		@ frame_needed = 0, uses_anonymous_args = 0
+ 282 0000 70B5     		push	{r4, r5, r6, lr}
+ 283 0002 40F20004 		movw	r4, #:lower16:.LANCHOR0
+ 284 0006 C0F20004 		movt	r4, #:upper16:.LANCHOR0
+ 285 000a 1421     		movs	r1, #20
+ 286 000c 2368     		ldr	r3, [r4]
+ 287 000e A569     		ldr	r5, [r4, #24]
+ 288 0010 1A68     		ldr	r2, [r3]
+ 289 0012 0126     		movs	r6, #1
+ 290 0014 5460     		str	r4, [r2, #4]
+ 291 0016 2846     		mov	r0, r5
+ 292 0018 83F82060 		strb	r6, [r3, #32]
+ 293 001c 85F82210 		strb	r1, [r5, #34]
+ 294 0020 2260     		str	r2, [r4]
+ 295 0022 A361     		str	r3, [r4, #24]
+ 296 0024 FFF7FEFF 		bl	chSchReadyI
+ 297 0028 2846     		mov	r0, r5
+ 298 002a FFF7FEFF 		bl	dbg_trace
+ 299 002e 2846     		mov	r0, r5
+ 300 0030 FFF7FEFF 		bl	getRemainingStack
+ 301 0034 0028     		cmp	r0, #0
+ 302 0036 05DB     		blt	.L38
+ 303 0038 A069     		ldr	r0, [r4, #24]
+ 304 003a 2946     		mov	r1, r5
+ 305 003c BDE87040 		pop	{r4, r5, r6, lr}
+ 306 0040 FFF7FEBF 		b	_port_switch
+ 307              	.L38:
+ 308 0044 2846     		mov	r0, r5
+ 309 0046 FFF7FEFF 		bl	chDbgStackOverflowPanic
+ 310 004a A069     		ldr	r0, [r4, #24]
+ 311 004c 2946     		mov	r1, r5
+ 312 004e BDE87040 		pop	{r4, r5, r6, lr}
+ 313 0052 FFF7FEBF 		b	_port_switch
+ 314              		.size	chSchDoRescheduleBehind, .-chSchDoRescheduleBehind
+ 315 0056 00BFAFF3 		.section	.text.chSchDoRescheduleAhead,"ax",%progbits
+ 315      0080AFF3 
+ 315      0080
+ 316              		.align	2
+ 317              		.p2align 4,,15
+ 318              		.global	chSchDoRescheduleAhead
+ 319              		.thumb
+ 320              		.thumb_func
+ 321              		.type	chSchDoRescheduleAhead, %function
+ 322              	chSchDoRescheduleAhead:
+ 323              		@ args = 0, pretend = 0, frame = 0
+ 324              		@ frame_needed = 0, uses_anonymous_args = 0
+ 325 0000 70B5     		push	{r4, r5, r6, lr}
+ 326 0002 40F20006 		movw	r6, #:lower16:.LANCHOR0
+ 327 0006 C0F20006 		movt	r6, #:upper16:.LANCHOR0
+ 328 000a 0120     		movs	r0, #1
+ 329 000c 3268     		ldr	r2, [r6]
+ 330 000e B569     		ldr	r5, [r6, #24]
+ 331 0010 1368     		ldr	r3, [r2]
+ 332 0012 AC68     		ldr	r4, [r5, #8]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc21HGFX.s 			page 7
+
+
+ 333 0014 3360     		str	r3, [r6]
+ 334 0016 0021     		movs	r1, #0
+ 335 0018 5E60     		str	r6, [r3, #4]
+ 336 001a 82F82000 		strb	r0, [r2, #32]
+ 337 001e 1346     		mov	r3, r2
+ 338 0020 B261     		str	r2, [r6, #24]
+ 339 0022 85F82010 		strb	r1, [r5, #32]
+ 340 0026 00E0     		b	.L41
+ 341              	.L43:
+ 342 0028 1B68     		ldr	r3, [r3]
+ 343              	.L41:
+ 344 002a 9A68     		ldr	r2, [r3, #8]
+ 345 002c A242     		cmp	r2, r4
+ 346 002e FBD8     		bhi	.L43
+ 347 0030 5A68     		ldr	r2, [r3, #4]
+ 348 0032 2B60     		str	r3, [r5]
+ 349 0034 6A60     		str	r2, [r5, #4]
+ 350 0036 2846     		mov	r0, r5
+ 351 0038 5D60     		str	r5, [r3, #4]
+ 352 003a 1560     		str	r5, [r2]
+ 353 003c FFF7FEFF 		bl	dbg_trace
+ 354 0040 2846     		mov	r0, r5
+ 355 0042 FFF7FEFF 		bl	getRemainingStack
+ 356 0046 0028     		cmp	r0, #0
+ 357 0048 05DB     		blt	.L44
+ 358 004a B069     		ldr	r0, [r6, #24]
+ 359 004c 2946     		mov	r1, r5
+ 360 004e BDE87040 		pop	{r4, r5, r6, lr}
+ 361 0052 FFF7FEBF 		b	_port_switch
+ 362              	.L44:
+ 363 0056 2846     		mov	r0, r5
+ 364 0058 FFF7FEFF 		bl	chDbgStackOverflowPanic
+ 365 005c B069     		ldr	r0, [r6, #24]
+ 366 005e 2946     		mov	r1, r5
+ 367 0060 BDE87040 		pop	{r4, r5, r6, lr}
+ 368 0064 FFF7FEBF 		b	_port_switch
+ 369              		.size	chSchDoRescheduleAhead, .-chSchDoRescheduleAhead
+ 370 0068 AFF30080 		.section	.text.chSchRescheduleS,"ax",%progbits
+ 370      AFF30080 
+ 371              		.align	2
+ 372              		.p2align 4,,15
+ 373              		.global	chSchRescheduleS
+ 374              		.thumb
+ 375              		.thumb_func
+ 376              		.type	chSchRescheduleS, %function
+ 377              	chSchRescheduleS:
+ 378              		@ args = 0, pretend = 0, frame = 0
+ 379              		@ frame_needed = 0, uses_anonymous_args = 0
+ 380 0000 08B5     		push	{r3, lr}
+ 381 0002 FFF7FEFF 		bl	chDbgCheckClassS
+ 382 0006 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 383 000a C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 384 000e 1A68     		ldr	r2, [r3]
+ 385 0010 9B69     		ldr	r3, [r3, #24]
+ 386 0012 9268     		ldr	r2, [r2, #8]
+ 387 0014 9B68     		ldr	r3, [r3, #8]
+ 388 0016 9A42     		cmp	r2, r3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc21HGFX.s 			page 8
+
+
+ 389 0018 00D8     		bhi	.L47
+ 390 001a 08BD     		pop	{r3, pc}
+ 391              	.L47:
+ 392 001c BDE80840 		pop	{r3, lr}
+ 393 0020 FFF7FEBF 		b	chSchDoRescheduleAhead
+ 394              		.size	chSchRescheduleS, .-chSchRescheduleS
+ 395 0024 AFF30080 		.section	.text.chSchDoReschedule,"ax",%progbits
+ 395      AFF30080 
+ 395      AFF30080 
+ 396              		.align	2
+ 397              		.p2align 4,,15
+ 398              		.global	chSchDoReschedule
+ 399              		.thumb
+ 400              		.thumb_func
+ 401              		.type	chSchDoReschedule, %function
+ 402              	chSchDoReschedule:
+ 403              		@ args = 0, pretend = 0, frame = 0
+ 404              		@ frame_needed = 0, uses_anonymous_args = 0
+ 405              		@ link register save eliminated.
+ 406 0000 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 407 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 408 0008 9B69     		ldr	r3, [r3, #24]
+ 409 000a 93F82230 		ldrb	r3, [r3, #34]	@ zero_extendqisi2
+ 410 000e 0BB1     		cbz	r3, .L50
+ 411 0010 FFF7FEBF 		b	chSchDoRescheduleAhead
+ 412              	.L50:
+ 413 0014 FFF7FEBF 		b	chSchDoRescheduleBehind
+ 414              		.size	chSchDoReschedule, .-chSchDoReschedule
+ 415              		.global	rlist
+ 416 0018 AFF30080 		.section	.rodata.str1.4,"aMS",%progbits,1
+ 416      AFF30080 
+ 417              		.align	2
+ 418              	.LC0:
+ 419 0000 63685363 		.ascii	"chSchReadyI(), #1\000"
+ 419      68526561 
+ 419      64794928 
+ 419      292C2023 
+ 419      3100
+ 420 0012 0000     		.section	.bss.rlist,"aw",%nobits
+ 421              		.align	2
+ 422              		.set	.LANCHOR0,. + 0
+ 423              		.type	rlist, %object
+ 424              		.size	rlist, 28
+ 425              	rlist:
+ 426 0000 00000000 		.space	28
+ 426      00000000 
+ 426      00000000 
+ 426      00000000 
+ 426      00000000 
+ 427              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc21HGFX.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 chschd.c
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:17     .text._scheduler_init:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:23     .text._scheduler_init:00000000 _scheduler_init
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:422    .bss.rlist:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:38     .text.chSchReadyI:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:44     .text.chSchReadyI:00000000 chSchReadyI
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:418    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:80     .text.wakeup:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:85     .text.wakeup:00000000 wakeup
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:135    .text.chSchGoSleepS:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:141    .text.chSchGoSleepS:00000000 chSchGoSleepS
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:179    .text.chSchGoSleepTimeoutS:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:185    .text.chSchGoSleepTimeoutS:00000000 chSchGoSleepTimeoutS
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:227    .text.chSchWakeupS:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:233    .text.chSchWakeupS:00000000 chSchWakeupS
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:273    .text.chSchDoRescheduleBehind:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:279    .text.chSchDoRescheduleBehind:00000000 chSchDoRescheduleBehind
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:316    .text.chSchDoRescheduleAhead:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:322    .text.chSchDoRescheduleAhead:00000000 chSchDoRescheduleAhead
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:371    .text.chSchRescheduleS:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:377    .text.chSchRescheduleS:00000000 chSchRescheduleS
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:396    .text.chSchDoReschedule:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:402    .text.chSchDoReschedule:00000000 chSchDoReschedule
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:425    .bss.rlist:00000000 rlist
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:417    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc21HGFX.s:421    .bss.rlist:00000000 $d
+
+UNDEFINED SYMBOLS
+chDbgCheckClassI
+chDbgPanic
+dbg_check_lock_from_isr
+dbg_check_unlock_from_isr
+chDbgCheckClassS
+dbg_trace
+getRemainingStack
+_port_switch
+chDbgStackOverflowPanic
+chVTSetI
+chVTResetI

@@ -1,0 +1,396 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cci9x6SW.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"electronic_throttle.cpp"
+  16              		.section	.text._ZL9etbThreadPv,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	_ZL9etbThreadPv, %function
+  22              	_ZL9etbThreadPv:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25 0000 38B5     		push	{r3, r4, r5, lr}
+  26 0002 40F20004 		movw	r4, #:lower16:.LANCHOR0
+  27 0006 C0F20004 		movt	r4, #:upper16:.LANCHOR0
+  28 000a 2546     		mov	r5, r4
+  29              	.L3:
+  30 000c FFF7FEFF 		bl	_Z6getTPSv
+  31 0010 07EE100A 		fmsr	s14, r0
+  32 0014 FDEEC77A 		ftosizs	s15, s14
+  33 0018 94ED007A 		flds	s14, [r4]
+  34 001c F8EEE77A 		fsitos	s15, s15
+  35 0020 6420     		movs	r0, #100
+  36 0022 F4EE477A 		fcmps	s15, s14
+  37 0026 F1EE10FA 		fmstat
+  38 002a 18BF     		it	ne
+  39 002c C5ED007A 		fstsne	s15, [r5]
+  40 0030 FFF7FEFF 		bl	chThdSleep
+  41 0034 EAE7     		b	.L3
+  42              		.size	_ZL9etbThreadPv, .-_ZL9etbThreadPv
+  43              		.global	__aeabi_f2d
+  44 0036 00BFAFF3 		.section	.text._ZL18setThrottleConsolei,"ax",%progbits
+  44      0080AFF3 
+  44      0080
+  45              		.align	2
+  46              		.p2align 4,,15
+  47              		.thumb
+  48              		.thumb_func
+  49              		.type	_ZL18setThrottleConsolei, %function
+  50              	_ZL18setThrottleConsolei:
+  51              		@ args = 0, pretend = 0, frame = 0
+  52              		@ frame_needed = 0, uses_anonymous_args = 0
+  53 0000 10B5     		push	{r4, lr}
+  54 0002 40F20001 		movw	r1, #:lower16:.LC0
+  55 0006 0446     		mov	r4, r0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cci9x6SW.s 			page 2
+
+
+  56 0008 40F20000 		movw	r0, #:lower16:.LANCHOR1
+  57 000c 2DED028B 		fstmfdd	sp!, {d8}
+  58 0010 2246     		mov	r2, r4
+  59 0012 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+  60 0016 C0F20001 		movt	r1, #:upper16:.LC0
+  61 001a FFF7FEFF 		bl	scheduleMsg
+  62 001e 2046     		mov	r0, r4
+  63 0020 6221     		movs	r1, #98
+  64 0022 FFF7FEFF 		bl	minI
+  65 0026 07EE900A 		fmsr	s15, r0	@ int
+  66 002a 9FED117A 		flds	s14, .L6
+  67 002e F8EEE76A 		fsitos	s13, s15
+  68 0032 DFED107A 		flds	s15, .L6+4
+  69 0036 86EE878A 		fdivs	s16, s13, s14
+  70 003a 40F20000 		movw	r0, #:lower16:.LANCHOR2
+  71 003e C0F20000 		movt	r0, #:upper16:.LANCHOR2
+  72 0042 38EE278A 		fadds	s16, s16, s15
+  73 0046 18EE101A 		fmrs	r1, s16
+  74 004a FFF7FEFF 		bl	_ZN9SimplePwm21setSimplePwmDutyCycleEf
+  75 004e 18EE100A 		fmrs	r0, s16
+  76 0052 FFF7FEFF 		bl	__aeabi_f2d
+  77 0056 BDEC028B 		fldmfdd	sp!, {d8}
+  78 005a 0246     		mov	r2, r0
+  79 005c 40F20000 		movw	r0, #:lower16:.LC1
+  80 0060 0B46     		mov	r3, r1
+  81 0062 C0F20000 		movt	r0, #:upper16:.LC1
+  82 0066 BDE81040 		pop	{r4, lr}
+  83 006a FFF7FEBF 		b	print
+  84              	.L7:
+  85 006e 00BF     		.align	2
+  86              	.L6:
+  87 0070 0000C842 		.word	1120403456
+  88 0074 0AD7233C 		.word	1008981770
+  89              		.size	_ZL18setThrottleConsolei, .-_ZL18setThrottleConsolei
+  90 0078 AFF30080 		.section	.text._Z22initElectronicThrottlev,"ax",%progbits
+  90      AFF30080 
+  91              		.align	2
+  92              		.p2align 4,,15
+  93              		.global	_Z22initElectronicThrottlev
+  94              		.thumb
+  95              		.thumb_func
+  96              		.type	_Z22initElectronicThrottlev, %function
+  97              	_Z22initElectronicThrottlev:
+  98              		@ args = 0, pretend = 0, frame = 0
+  99              		@ frame_needed = 0, uses_anonymous_args = 0
+ 100 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 101 0004 40F20006 		movw	r6, #:lower16:boardConfiguration
+ 102 0008 C0F20006 		movt	r6, #:upper16:boardConfiguration
+ 103 000c 84B0     		sub	sp, sp, #16
+ 104 000e 3368     		ldr	r3, [r6]
+ 105 0010 40F20004 		movw	r4, #:lower16:.LANCHOR2
+ 106 0014 40F20005 		movw	r5, #:lower16:_Z13applyPinStateP9PwmConfigi
+ 107 0018 4FF00008 		mov	r8, #0
+ 108 001c 4CF6CD47 		movw	r7, #52429
+ 109 0020 D3F8F020 		ldr	r2, [r3, #240]
+ 110 0024 C4F2C838 		movt	r8, 17352
+ 111 0028 C3F64C77 		movt	r7, 16204
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cci9x6SW.s 			page 3
+
+
+ 112 002c C0F20004 		movt	r4, #:upper16:.LANCHOR2
+ 113 0030 C0F20005 		movt	r5, #:upper16:_Z13applyPinStateP9PwmConfigi
+ 114 0034 40F20001 		movw	r1, #:lower16:.LC2
+ 115 0038 40F20003 		movw	r3, #:lower16:.LANCHOR3
+ 116 003c 2046     		mov	r0, r4
+ 117 003e 0295     		str	r5, [sp, #8]
+ 118 0040 CDF80080 		str	r8, [sp]	@ float
+ 119 0044 0197     		str	r7, [sp, #4]	@ float
+ 120 0046 C0F20001 		movt	r1, #:upper16:.LC2
+ 121 004a C0F20003 		movt	r3, #:upper16:.LANCHOR3
+ 122 004e FFF7FEFF 		bl	_Z17startSimplePwmExtP9PwmConfigPKc11brain_pin_eP9OutputPinffPFvS0_iE
+ 123 0052 3368     		ldr	r3, [r6]
+ 124 0054 40F20001 		movw	r1, #:lower16:.LC3
+ 125 0058 D3F8F420 		ldr	r2, [r3, #244]
+ 126 005c 0295     		str	r5, [sp, #8]
+ 127 005e 40F20003 		movw	r3, #:lower16:.LANCHOR4
+ 128 0062 2046     		mov	r0, r4
+ 129 0064 C0F20003 		movt	r3, #:upper16:.LANCHOR4
+ 130 0068 CDF80080 		str	r8, [sp]	@ float
+ 131 006c 0197     		str	r7, [sp, #4]	@ float
+ 132 006e C0F20001 		movt	r1, #:upper16:.LC3
+ 133 0072 FFF7FEFF 		bl	_Z17startSimplePwmExtP9PwmConfigPKc11brain_pin_eP9OutputPinffPFvS0_iE
+ 134 0076 40F20000 		movw	r0, #:lower16:.LC4
+ 135 007a 40F20001 		movw	r1, #:lower16:_ZL18setThrottleConsolei
+ 136 007e C0F20000 		movt	r0, #:upper16:.LC4
+ 137 0082 C0F20001 		movt	r1, #:upper16:_ZL18setThrottleConsolei
+ 138 0086 FFF7FEFF 		bl	addConsoleActionI
+ 139 008a 0022     		movs	r2, #0
+ 140 008c 40F20000 		movw	r0, #:lower16:.LANCHOR5
+ 141 0090 40F20003 		movw	r3, #:lower16:_ZL9etbThreadPv
+ 142 0094 0092     		str	r2, [sp]
+ 143 0096 C0F20003 		movt	r3, #:upper16:_ZL9etbThreadPv
+ 144 009a 4FF43A71 		mov	r1, #744
+ 145 009e 4022     		movs	r2, #64
+ 146 00a0 C0F20000 		movt	r0, #:upper16:.LANCHOR5
+ 147 00a4 FFF7FEFF 		bl	chThdCreateStatic
+ 148 00a8 04B0     		add	sp, sp, #16
+ 149              		@ sp needed
+ 150 00aa BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 151              		.size	_Z22initElectronicThrottlev, .-_Z22initElectronicThrottlev
+ 152 00ae 00BF     		.section	.text.startup._GLOBAL__sub_I__Z22initElectronicThrottlev,"ax",%progbits
+ 153              		.align	2
+ 154              		.p2align 4,,15
+ 155              		.thumb
+ 156              		.thumb_func
+ 157              		.type	_GLOBAL__sub_I__Z22initElectronicThrottlev, %function
+ 158              	_GLOBAL__sub_I__Z22initElectronicThrottlev:
+ 159              		@ args = 0, pretend = 0, frame = 0
+ 160              		@ frame_needed = 0, uses_anonymous_args = 0
+ 161 0000 10B5     		push	{r4, lr}
+ 162 0002 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 163 0006 40F20001 		movw	r1, #:lower16:.LC5
+ 164 000a 82B0     		sub	sp, sp, #8
+ 165 000c C0F20001 		movt	r1, #:upper16:.LC5
+ 166 0010 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 167 0014 FFF7FEFF 		bl	_ZN18LoggingWithStorageC1EPKc
+ 168 0018 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cci9x6SW.s 			page 4
+
+
+ 169 001c C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 170 0020 FFF7FEFF 		bl	_ZN9SimplePwmC1Ev
+ 171 0024 40F20000 		movw	r0, #:lower16:.LANCHOR3
+ 172 0028 C0F20000 		movt	r0, #:upper16:.LANCHOR3
+ 173 002c FFF7FEFF 		bl	_ZN9OutputPinC1Ev
+ 174 0030 40F20000 		movw	r0, #:lower16:.LANCHOR6
+ 175 0034 C0F20000 		movt	r0, #:upper16:.LANCHOR6
+ 176 0038 FFF7FEFF 		bl	_ZN9SimplePwmC1Ev
+ 177 003c 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 178 0040 C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 179 0044 FFF7FEFF 		bl	_ZN9OutputPinC1Ev
+ 180 0048 0024     		movs	r4, #0
+ 181 004a 4FF07E51 		mov	r1, #1065353216
+ 182 004e 0022     		movs	r2, #0
+ 183 0050 0091     		str	r1, [sp]	@ float
+ 184 0052 C4F2B424 		movt	r4, 17076
+ 185 0056 40F20000 		movw	r0, #:lower16:.LANCHOR7
+ 186 005a 0021     		movs	r1, #0
+ 187 005c 1346     		mov	r3, r2	@ float
+ 188 005e 0194     		str	r4, [sp, #4]	@ float
+ 189 0060 C4F22011 		movt	r1, 16672
+ 190 0064 C0F20000 		movt	r0, #:upper16:.LANCHOR7
+ 191 0068 FFF7FEFF 		bl	_ZN3PidC1Efffff
+ 192 006c 02B0     		add	sp, sp, #8
+ 193              		@ sp needed
+ 194 006e 10BD     		pop	{r4, pc}
+ 195              		.size	_GLOBAL__sub_I__Z22initElectronicThrottlev, .-_GLOBAL__sub_I__Z22initElectronicThrottlev
+ 196              		.section	.init_array,"aw",%init_array
+ 197              		.align	2
+ 198 0000 00000000 		.word	_GLOBAL__sub_I__Z22initElectronicThrottlev(target1)
+ 199              		.section	.bss._ZL3pid,"aw",%nobits
+ 200              		.align	2
+ 201              		.set	.LANCHOR7,. + 0
+ 202              		.type	_ZL3pid, %object
+ 203              		.size	_ZL3pid, 28
+ 204              	_ZL3pid:
+ 205 0000 00000000 		.space	28
+ 205      00000000 
+ 205      00000000 
+ 205      00000000 
+ 205      00000000 
+ 206              		.section	.bss._ZL7output1,"aw",%nobits
+ 207              		.align	2
+ 208              		.set	.LANCHOR3,. + 0
+ 209              		.type	_ZL7output1, %object
+ 210              		.size	_ZL7output1, 16
+ 211              	_ZL7output1:
+ 212 0000 00000000 		.space	16
+ 212      00000000 
+ 212      00000000 
+ 212      00000000 
+ 213              		.section	.bss._ZL7output2,"aw",%nobits
+ 214              		.align	2
+ 215              		.set	.LANCHOR4,. + 0
+ 216              		.type	_ZL7output2, %object
+ 217              		.size	_ZL7output2, 16
+ 218              	_ZL7output2:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cci9x6SW.s 			page 5
+
+
+ 219 0000 00000000 		.space	16
+ 219      00000000 
+ 219      00000000 
+ 219      00000000 
+ 220              		.section	.bss._ZL10etbPwmDown,"aw",%nobits
+ 221              		.align	3
+ 222              		.set	.LANCHOR6,. + 0
+ 223              		.type	_ZL10etbPwmDown, %object
+ 224              		.size	_ZL10etbPwmDown, 112
+ 225              	_ZL10etbPwmDown:
+ 226 0000 00000000 		.space	112
+ 226      00000000 
+ 226      00000000 
+ 226      00000000 
+ 226      00000000 
+ 227              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 228              		.align	2
+ 229              	.LC0:
+ 230 0000 73657474 		.ascii	"setting throttle=%d\000"
+ 230      696E6720 
+ 230      7468726F 
+ 230      74746C65 
+ 230      3D256400 
+ 231              	.LC1:
+ 232 0014 7374203D 		.ascii	"st = %f\015\012\000"
+ 232      2025660D 
+ 232      0A00
+ 233 001e 0000     		.space	2
+ 234              	.LC2:
+ 235 0020 65746231 		.ascii	"etb1\000"
+ 235      00
+ 236 0025 000000   		.space	3
+ 237              	.LC3:
+ 238 0028 65746232 		.ascii	"etb2\000"
+ 238      00
+ 239 002d 000000   		.space	3
+ 240              	.LC4:
+ 241 0030 6500     		.ascii	"e\000"
+ 242 0032 0000     		.space	2
+ 243              	.LC5:
+ 244 0034 45544200 		.ascii	"ETB\000"
+ 245              		.section	.bss._ZL6logger,"aw",%nobits
+ 246              		.align	2
+ 247              		.set	.LANCHOR1,. + 0
+ 248              		.type	_ZL6logger, %object
+ 249              		.size	_ZL6logger, 260
+ 250              	_ZL6logger:
+ 251 0000 00000000 		.space	260
+ 251      00000000 
+ 251      00000000 
+ 251      00000000 
+ 251      00000000 
+ 252              		.section	.bss._ZL13etbTreadStack,"aw",%nobits
+ 253              		.align	3
+ 254              		.set	.LANCHOR5,. + 0
+ 255              		.type	_ZL13etbTreadStack, %object
+ 256              		.size	_ZL13etbTreadStack, 744
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cci9x6SW.s 			page 6
+
+
+ 257              	_ZL13etbTreadStack:
+ 258 0000 00000000 		.space	744
+ 258      00000000 
+ 258      00000000 
+ 258      00000000 
+ 258      00000000 
+ 259              		.section	.bss._ZL8etbPwmUp,"aw",%nobits
+ 260              		.align	3
+ 261              		.set	.LANCHOR2,. + 0
+ 262              		.type	_ZL8etbPwmUp, %object
+ 263              		.size	_ZL8etbPwmUp, 112
+ 264              	_ZL8etbPwmUp:
+ 265 0000 00000000 		.space	112
+ 265      00000000 
+ 265      00000000 
+ 265      00000000 
+ 265      00000000 
+ 266              		.section	.bss._ZL7prevTps,"aw",%nobits
+ 267              		.align	2
+ 268              		.set	.LANCHOR0,. + 0
+ 269              		.type	_ZL7prevTps, %object
+ 270              		.size	_ZL7prevTps, 4
+ 271              	_ZL7prevTps:
+ 272 0000 00000000 		.space	4
+ 273              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cci9x6SW.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 electronic_throttle.cpp
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:17     .text._ZL9etbThreadPv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:22     .text._ZL9etbThreadPv:00000000 _ZL9etbThreadPv
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:268    .bss._ZL7prevTps:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:45     .text._ZL18setThrottleConsolei:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:50     .text._ZL18setThrottleConsolei:00000000 _ZL18setThrottleConsolei
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:229    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:247    .bss._ZL6logger:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:261    .bss._ZL8etbPwmUp:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:231    .rodata.str1.4:00000014 .LC1
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:87     .text._ZL18setThrottleConsolei:00000070 $d
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:91     .text._Z22initElectronicThrottlev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:97     .text._Z22initElectronicThrottlev:00000000 _Z22initElectronicThrottlev
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:234    .rodata.str1.4:00000020 .LC2
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:208    .bss._ZL7output1:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:237    .rodata.str1.4:00000028 .LC3
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:215    .bss._ZL7output2:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:240    .rodata.str1.4:00000030 .LC4
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:254    .bss._ZL13etbTreadStack:00000000 .LANCHOR5
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:153    .text.startup._GLOBAL__sub_I__Z22initElectronicThrottlev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:158    .text.startup._GLOBAL__sub_I__Z22initElectronicThrottlev:00000000 _GLOBAL__sub_I__Z22initElectronicThrottlev
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:243    .rodata.str1.4:00000034 .LC5
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:222    .bss._ZL10etbPwmDown:00000000 .LANCHOR6
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:201    .bss._ZL3pid:00000000 .LANCHOR7
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:197    .init_array:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:200    .bss._ZL3pid:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:204    .bss._ZL3pid:00000000 _ZL3pid
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:207    .bss._ZL7output1:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:211    .bss._ZL7output1:00000000 _ZL7output1
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:214    .bss._ZL7output2:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:218    .bss._ZL7output2:00000000 _ZL7output2
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:221    .bss._ZL10etbPwmDown:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:225    .bss._ZL10etbPwmDown:00000000 _ZL10etbPwmDown
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:228    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:246    .bss._ZL6logger:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:250    .bss._ZL6logger:00000000 _ZL6logger
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:253    .bss._ZL13etbTreadStack:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:257    .bss._ZL13etbTreadStack:00000000 _ZL13etbTreadStack
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:260    .bss._ZL8etbPwmUp:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:264    .bss._ZL8etbPwmUp:00000000 _ZL8etbPwmUp
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:267    .bss._ZL7prevTps:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:271    .bss._ZL7prevTps:00000000 _ZL7prevTps
+C:\Users\pc\AppData\Local\Temp\cci9x6SW.s:90     .text._ZL18setThrottleConsolei:00000078 $t
+
+UNDEFINED SYMBOLS
+_Z6getTPSv
+chThdSleep
+__aeabi_f2d
+scheduleMsg
+minI
+_ZN9SimplePwm21setSimplePwmDutyCycleEf
+print
+boardConfiguration
+_Z13applyPinStateP9PwmConfigi
+_Z17startSimplePwmExtP9PwmConfigPKc11brain_pin_eP9OutputPinffPFvS0_iE
+addConsoleActionI
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cci9x6SW.s 			page 8
+
+
+chThdCreateStatic
+_ZN18LoggingWithStorageC1EPKc
+_ZN9SimplePwmC1Ev
+_ZN9OutputPinC1Ev
+_ZN3PidC1Efffff

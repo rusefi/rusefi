@@ -7,6 +7,7 @@ import com.rusefi.io.CommandQueue;
 import com.rusefi.io.DataListener;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.CommunicationLoggingHolder;
 import com.rusefi.io.serial.PortHolder;
 import com.rusefi.io.serial.SerialIoStream;
 import etch.util.CircularByteBuffer;
@@ -21,6 +22,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import static com.rusefi.binaryprotocol.IoHelper.*;
+
 /**
  * (c) Andrey Belomutskiy
  * 3/6/2015
@@ -30,12 +33,18 @@ public class BinaryProtocol {
     private static final byte RESPONSE_OK = 0;
     private static final byte RESPONSE_BURN_OK = 0x04;
     private static final byte RESPONSE_COMMAND_OK = 0x07;
-    private static final int SWITCH_TO_BINARY_RESPONSE = 0xA7E;
+    /**
+     * that's hex for "~\n", see BINARY_SWITCH_TAG in firmware source code
+     */
+    private static final int SWITCH_TO_BINARY_RESPONSE = 0x7e0a;
+    /**
+     * See SWITCH_TO_BINARY_COMMAND in firmware source code
+     */
+    private static final String SWITCH_TO_BINARY_COMMAND = "~";
 
     private final Logger logger;
     private final IoStream stream;
-    private static final int BUFFER_SIZE = 10000;
-    private final CircularByteBuffer cbb;
+    private final IncomingDataBuffer incomingData;
     private boolean isBurnPending;
 
     private final Object lock = new Object();
@@ -52,22 +61,14 @@ public class BinaryProtocol {
 
         instance = this;
 
-        cbb = new CircularByteBuffer(BUFFER_SIZE);
-        DataListener listener = new DataListener() {
+        incomingData = new IncomingDataBuffer(logger);
+        DataListener streamDataListener = new DataListener() {
             @Override
             public void onDataArrived(byte[] freshData) {
-                logger.trace(freshData.length + " byte(s) arrived");
-                synchronized (cbb) {
-                    if (cbb.size() - cbb.length() < freshData.length) {
-                        logger.error("buffer overflow not expected");
-                        cbb.clear();
-                    }
-                    cbb.put(freshData);
-                    cbb.notifyAll();
-                }
+                incomingData.addData(freshData);
             }
         };
-        stream.addEventListener(listener);
+        stream.setDataListener(streamDataListener);
     }
 
     public BinaryProtocol(Logger logger, SerialPort serialPort) {
@@ -82,9 +83,11 @@ public class BinaryProtocol {
         }
     }
 
-    public void doSend(final String command) throws InterruptedException {
+    public void doSend(final String command, boolean fireEvent) throws InterruptedException {
         FileLog.MAIN.logLine("Sending [" + command + "]");
-        PortHolder.portHolderListener.onPortHolderMessage(PortHolder.class, "Sending [" + command + "]");
+        if (fireEvent) {
+            CommunicationLoggingHolder.communicationLoggingListener.onPortHolderMessage(BinaryProtocol.class, "Sending [" + command + "]");
+        }
 
         Future f = LinkManager.COMMUNICATION_EXECUTOR.submit(new Runnable() {
             @Override
@@ -112,7 +115,11 @@ public class BinaryProtocol {
         MessagesCentral.getInstance().postMessage(PortHolder.class, CommandQueue.CONFIRMATION_PREFIX + command);
     }
 
-    public boolean connect(DataListener listener) {
+    /**
+     * this method would switch controller to binary protocol and read configuration snapshot from controller
+     * @return true if everything fine
+     */
+    public boolean connectAndReadConfiguration(DataListener listener) {
         switchToBinaryProtocol();
         readImage(TsPageSize.IMAGE_SIZE);
         if (isClosed)
@@ -122,7 +129,7 @@ public class BinaryProtocol {
         return true;
     }
 
-    public void startTextPullThread(final DataListener listener) {
+    private void startTextPullThread(final DataListener listener) {
         if (!LinkManager.COMMUNICATION_QUEUE.isEmpty()) {
             System.out.println("Current queue: " + LinkManager.COMMUNICATION_QUEUE.size());
         }
@@ -168,16 +175,16 @@ public class BinaryProtocol {
             try {
                 dropPending();
 
-                stream.write("~\n".getBytes());
-                synchronized (cbb) {
-                    boolean isTimeout = waitForBytes(2, start, "switch to binary");
+                stream.write((SWITCH_TO_BINARY_COMMAND + "\n").getBytes());
+                synchronized (lock) {
+                    boolean isTimeout = incomingData.waitForBytes(2, start, "switch to binary");
                     if (isTimeout) {
                         close();
                         System.out.println("Timeout waiting for switch response");
                         return;
                     }
-                    int response = cbb.getShort();
-                    if (response != SWITCH_TO_BINARY_RESPONSE) {
+                    int response = incomingData.getShort();
+                    if (response != swap16(SWITCH_TO_BINARY_RESPONSE)) {
                         logger.error(String.format("Unexpected response [%x], re-trying", response));
                         continue;
                     }
@@ -195,14 +202,10 @@ public class BinaryProtocol {
     }
 
     private void dropPending() throws IOException {
-        synchronized (cbb) {
+        synchronized (lock) {
             if (isClosed)
                 return;
-            int pending = cbb.length();
-            if (pending > 0) {
-                logger.error("Unexpected pending data: " + pending + " byte(s)");
-                cbb.get(new byte[pending]);
-            }
+            incomingData.dropPending();
             stream.purge();
         }
     }
@@ -232,55 +235,31 @@ public class BinaryProtocol {
         setController(newVersion);
     }
 
-    /**
-     * this method adds two bytes for packet size before and four bytes for CRC after
-     */
-    public static byte[] makePacket(byte[] command) {
-        byte[] packet = new byte[command.length + 6];
-
-        packet[0] = (byte) (command.length / 256);
-        packet[1] = (byte) command.length;
-
-        System.arraycopy(command, 0, packet, 2, command.length);
-        int crc = CRC.crc32(command);
-
-        putInt(packet, packet.length - 4, crc);
-        return packet;
-    }
-
-    public static int swap16(int x) {
-        return (((x & 0xFF) << 8) | ((x) >> 8));
-    }
-
-    public static int swap32(int x) {
-        return (((x) >> 24) & 0xff) | (((x) << 8) & 0xff0000) | (((x) >> 8) & 0xff00) | (((x) << 24) & 0xff000000);
-    }
-
     private byte[] receivePacket(String msg, boolean allowLongResponse) throws InterruptedException, EOFException {
         long start = System.currentTimeMillis();
-        synchronized (cbb) {
-            boolean isTimeout = waitForBytes(2, start, msg + " header");
+        synchronized (lock) {
+            boolean isTimeout = incomingData.waitForBytes(2, start, msg + " header");
             if (isTimeout)
                 return null;
 
-            int packetSize = BinaryProtocol.swap16(cbb.getShort());
+            int packetSize = swap16(incomingData.getShort());
             logger.trace("Got packet size " + packetSize);
             if (packetSize < 0)
                 return null;
             if (!allowLongResponse && packetSize > BLOCKING_FACTOR + 10)
                 return null;
 
-            isTimeout = waitForBytes(packetSize + 4, start, msg + " body");
+            isTimeout = incomingData.waitForBytes(packetSize + 4, start, msg + " body");
             if (isTimeout)
                 return null;
 
             byte[] packet = new byte[packetSize];
             int packetCrc;
-            synchronized (cbb) {
-                cbb.get(packet);
-                packetCrc = BinaryProtocol.swap32(cbb.getInt());
+            synchronized (lock) {
+                incomingData.getData(packet);
+                packetCrc = swap32(incomingData.getInt());
             }
-            int actualCrc = CRC.crc32(packet);
+            int actualCrc = crc32(packet);
 
             boolean isCrcOk = actualCrc == packetCrc;
             if (!isCrcOk) {
@@ -299,6 +278,7 @@ public class BinaryProtocol {
         int offset = 0;
 
         long start = System.currentTimeMillis();
+        logger.info("Reading from controller...");
 
         while (offset < image.getSize() && (System.currentTimeMillis() - start < Timeouts.READ_IMAGE_TIMEOUT)) {
             if (isClosed)
@@ -313,19 +293,18 @@ public class BinaryProtocol {
             putShort(packet, 3, swap16(offset));
             putShort(packet, 5, swap16(requestSize));
 
-            byte[] response = exchange(packet, "load image", false);
+            byte[] response = executeCommand(packet, "load image", false);
 
             if (!checkResponseCode(response, RESPONSE_OK) || response.length != requestSize + 1) {
                 logger.error("readImage: Something is wrong, retrying...");
                 continue;
             }
 
-
             System.arraycopy(response, 1, image.getContent(), offset, requestSize);
 
             offset += requestSize;
         }
-        logger.info("Got image!");
+        logger.info("Got configuration from controller.");
         setController(image);
     }
 
@@ -334,7 +313,7 @@ public class BinaryProtocol {
      *
      * @return null in case of IO issues
      */
-    public byte[] exchange(byte[] packet, String msg, boolean allowLongResponse) {
+    private byte[] executeCommand(byte[] packet, String msg, boolean allowLongResponse) {
         if (isClosed)
             return null;
         try {
@@ -345,7 +324,7 @@ public class BinaryProtocol {
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         } catch (IOException e) {
-            logger.error(msg + ": exchange failed: " + e);
+            logger.error(msg + ": executeCommand failed: " + e);
             close();
             return null;
         }
@@ -377,7 +356,7 @@ public class BinaryProtocol {
 
         long start = System.currentTimeMillis();
         while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
-            byte[] response = exchange(packet, "writeImage", false);
+            byte[] response = executeCommand(packet, "writeImage", false);
             if (!checkResponseCode(response, RESPONSE_OK) || response.length != 1) {
                 logger.error("writeData: Something is wrong, retrying...");
                 continue;
@@ -394,7 +373,7 @@ public class BinaryProtocol {
         while (true) {
             if (isClosed)
                 return;
-            byte[] response = exchange(new byte[]{'B'}, "burn", false);
+            byte[] response = executeCommand(new byte[]{'B'}, "burn", false);
             if (!checkResponseCode(response, RESPONSE_BURN_OK) || response.length != 1) {
                 continue;
             }
@@ -418,45 +397,9 @@ public class BinaryProtocol {
         }
     }
 
-    /**
-     * @return true in case of timeout, false if everything is fine
-     */
-    private boolean waitForBytes(int count, long start, String msg) throws InterruptedException {
-        logger.info("Waiting for " + count + " byte(s): " + msg);
-        synchronized (cbb) {
-            while (cbb.length() < count) {
-                int timeout = (int) (start + Timeouts.BINARY_IO_TIMEOUT - System.currentTimeMillis());
-                if (timeout <= 0) {
-                    return true; // timeout. Sad face.
-                }
-                cbb.wait(timeout);
-            }
-        }
-        return false; // looks good!
-    }
-
-    private boolean checkResponseCode(byte[] response, byte code) {
-        return response != null && response.length > 0 && response[0] == code;
-    }
-
-    private static void putInt(byte[] packet, int offset, int value) {
-        int index = offset + 3;
-        for (int i = 0; i < 4; i++) {
-            packet[index--] = (byte) value;
-            value >>= 8;
-        }
-    }
-
-    private static void putShort(byte[] packet, int offset, int value) {
-        int index = offset + 1;
-        for (int i = 0; i < 2; i++) {
-            packet[index--] = (byte) value;
-            value >>= 8;
-        }
-    }
 
     private void sendCrcPacket(byte[] command) throws IOException {
-        byte[] packet = makePacket(command);
+        byte[] packet = IoHelper.makeCrc32Packet(command);
         logger.info("Sending " + Arrays.toString(packet));
         stream.write(packet);
     }
@@ -466,7 +409,7 @@ public class BinaryProtocol {
      *
      * @return true in case of timeout, false if got proper confirmation
      */
-    public boolean sendTextCommand(String text) {
+    private boolean sendTextCommand(String text) {
         byte[] asBytes = text.getBytes();
         byte[] command = new byte[asBytes.length + 1];
         command[0] = 'E';
@@ -474,7 +417,7 @@ public class BinaryProtocol {
 
         long start = System.currentTimeMillis();
         while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
-            byte[] response = exchange(command, "execute", false);
+            byte[] response = executeCommand(command, "execute", false);
             if (!checkResponseCode(response, RESPONSE_COMMAND_OK) || response.length != 1) {
                 continue;
             }
@@ -487,7 +430,7 @@ public class BinaryProtocol {
         if (isClosed)
             return null;
         try {
-            byte[] response = exchange(new byte[]{'G'}, "text", true);
+            byte[] response = executeCommand(new byte[]{'G'}, "text", true);
             if (response != null && response.length == 1)
                 Thread.sleep(100);
             //        System.out.println(result);

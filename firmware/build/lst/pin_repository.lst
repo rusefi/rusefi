@@ -1,0 +1,1041 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"pin_repository.cpp"
+  16              		.section	.text._ZL12getPortIndexP12GPIO_TypeDef,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	_ZL12getPortIndexP12GPIO_TypeDef, %function
+  22              	_ZL12getPortIndexP12GPIO_TypeDef:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25 0000 08B5     		push	{r3, lr}
+  26 0002 0023     		movs	r3, #0
+  27 0004 C4F20203 		movt	r3, 16386
+  28 0008 9842     		cmp	r0, r3
+  29 000a 2BD0     		beq	.L3
+  30 000c 4FF48063 		mov	r3, #1024
+  31 0010 C4F20203 		movt	r3, 16386
+  32 0014 9842     		cmp	r0, r3
+  33 0016 27D0     		beq	.L4
+  34 0018 4FF40063 		mov	r3, #2048
+  35 001c C4F20203 		movt	r3, 16386
+  36 0020 9842     		cmp	r0, r3
+  37 0022 19D0     		beq	.L5
+  38 0024 4FF44063 		mov	r3, #3072
+  39 0028 C4F20203 		movt	r3, 16386
+  40 002c 9842     		cmp	r0, r3
+  41 002e 15D0     		beq	.L6
+  42 0030 4FF48053 		mov	r3, #4096
+  43 0034 C4F20203 		movt	r3, 16386
+  44 0038 9842     		cmp	r0, r3
+  45 003a 11D0     		beq	.L7
+  46 003c 4FF4A053 		mov	r3, #5120
+  47 0040 C4F20203 		movt	r3, 16386
+  48 0044 9842     		cmp	r0, r3
+  49 0046 11D0     		beq	.L8
+  50 0048 4FF4E053 		mov	r3, #7168
+  51 004c C4F20203 		movt	r3, 16386
+  52 0050 9842     		cmp	r0, r3
+  53 0052 0DD1     		bne	.L11
+  54 0054 0620     		movs	r0, #6
+  55 0056 08BD     		pop	{r3, pc}
+  56              	.L5:
+  57 0058 0220     		movs	r0, #2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s 			page 2
+
+
+  58 005a 08BD     		pop	{r3, pc}
+  59              	.L6:
+  60 005c 0320     		movs	r0, #3
+  61 005e 08BD     		pop	{r3, pc}
+  62              	.L7:
+  63 0060 0420     		movs	r0, #4
+  64 0062 08BD     		pop	{r3, pc}
+  65              	.L3:
+  66 0064 0020     		movs	r0, #0
+  67 0066 08BD     		pop	{r3, pc}
+  68              	.L4:
+  69 0068 0120     		movs	r0, #1
+  70 006a 08BD     		pop	{r3, pc}
+  71              	.L8:
+  72 006c 0520     		movs	r0, #5
+  73 006e 08BD     		pop	{r3, pc}
+  74              	.L11:
+  75 0070 40F20000 		movw	r0, #:lower16:.LC0
+  76 0074 C0F20000 		movt	r0, #:upper16:.LC0
+  77 0078 FFF7FEFF 		bl	firmwareError
+  78 007c 4FF0FF30 		mov	r0, #-1
+  79 0080 08BD     		pop	{r3, pc}
+  80              		.size	_ZL12getPortIndexP12GPIO_TypeDef, .-_ZL12getPortIndexP12GPIO_TypeDef
+  81 0082 00BFAFF3 		.section	.text.chprintf.constprop.1,"ax",%progbits
+  81      0080AFF3 
+  81      0080AFF3 
+  81      0080
+  82              		.align	2
+  83              		.p2align 4,,15
+  84              		.thumb
+  85              		.thumb_func
+  86              		.type	chprintf.constprop.1, %function
+  87              	chprintf.constprop.1:
+  88              		@ args = 4, pretend = 12, frame = 8
+  89              		@ frame_needed = 0, uses_anonymous_args = 1
+  90 0000 0EB4     		push	{r1, r2, r3}
+  91 0002 00B5     		push	{lr}
+  92 0004 82B0     		sub	sp, sp, #8
+  93 0006 04AB     		add	r3, sp, #16
+  94 0008 40F20000 		movw	r0, #:lower16:.LANCHOR0
+  95 000c 40F20001 		movw	r1, #:lower16:.LC1
+  96 0010 1A46     		mov	r2, r3
+  97 0012 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+  98 0016 C0F20001 		movt	r1, #:upper16:.LC1
+  99 001a 0193     		str	r3, [sp, #4]
+ 100 001c FFF7FEFF 		bl	chvprintf
+ 101 0020 02B0     		add	sp, sp, #8
+ 102              		@ sp needed
+ 103 0022 5DF804EB 		ldr	lr, [sp], #4
+ 104 0026 03B0     		add	sp, sp, #12
+ 105 0028 7047     		bx	lr
+ 106              		.size	chprintf.constprop.1, .-chprintf.constprop.1
+ 107 002a 00BFAFF3 		.section	.text._Z8portnameP12GPIO_TypeDef,"ax",%progbits
+ 107      0080
+ 108              		.align	2
+ 109              		.p2align 4,,15
+ 110              		.global	_Z8portnameP12GPIO_TypeDef
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s 			page 3
+
+
+ 111              		.thumb
+ 112              		.thumb_func
+ 113              		.type	_Z8portnameP12GPIO_TypeDef, %function
+ 114              	_Z8portnameP12GPIO_TypeDef:
+ 115              		@ args = 0, pretend = 0, frame = 0
+ 116              		@ frame_needed = 0, uses_anonymous_args = 0
+ 117              		@ link register save eliminated.
+ 118 0000 0023     		movs	r3, #0
+ 119 0002 C4F20203 		movt	r3, 16386
+ 120 0006 9842     		cmp	r0, r3
+ 121 0008 2ED0     		beq	.L16
+ 122 000a 4FF48063 		mov	r3, #1024
+ 123 000e C4F20203 		movt	r3, 16386
+ 124 0012 9842     		cmp	r0, r3
+ 125 0014 2DD0     		beq	.L17
+ 126 0016 4FF40063 		mov	r3, #2048
+ 127 001a C4F20203 		movt	r3, 16386
+ 128 001e 9842     		cmp	r0, r3
+ 129 0020 2CD0     		beq	.L18
+ 130 0022 4FF44063 		mov	r3, #3072
+ 131 0026 C4F20203 		movt	r3, 16386
+ 132 002a 9842     		cmp	r0, r3
+ 133 002c 2BD0     		beq	.L19
+ 134 002e 4FF48053 		mov	r3, #4096
+ 135 0032 C4F20203 		movt	r3, 16386
+ 136 0036 9842     		cmp	r0, r3
+ 137 0038 2AD0     		beq	.L20
+ 138 003a 4FF4E053 		mov	r3, #7168
+ 139 003e C4F20203 		movt	r3, 16386
+ 140 0042 9842     		cmp	r0, r3
+ 141 0044 29D0     		beq	.L21
+ 142 0046 4FF4A051 		mov	r1, #5120
+ 143 004a 40F20002 		movw	r2, #:lower16:.LC4
+ 144 004e 40F20003 		movw	r3, #:lower16:.LC3
+ 145 0052 C4F20201 		movt	r1, 16386
+ 146 0056 C0F20002 		movt	r2, #:upper16:.LC4
+ 147 005a C0F20003 		movt	r3, #:upper16:.LC3
+ 148 005e 8842     		cmp	r0, r1
+ 149 0060 14BF     		ite	ne
+ 150 0062 1046     		movne	r0, r2
+ 151 0064 1846     		moveq	r0, r3
+ 152 0066 7047     		bx	lr
+ 153              	.L16:
+ 154 0068 40F20000 		movw	r0, #:lower16:.LC5
+ 155 006c C0F20000 		movt	r0, #:upper16:.LC5
+ 156 0070 7047     		bx	lr
+ 157              	.L17:
+ 158 0072 40F20000 		movw	r0, #:lower16:.LC6
+ 159 0076 C0F20000 		movt	r0, #:upper16:.LC6
+ 160 007a 7047     		bx	lr
+ 161              	.L18:
+ 162 007c 40F20000 		movw	r0, #:lower16:.LC7
+ 163 0080 C0F20000 		movt	r0, #:upper16:.LC7
+ 164 0084 7047     		bx	lr
+ 165              	.L19:
+ 166 0086 40F20000 		movw	r0, #:lower16:.LC8
+ 167 008a C0F20000 		movt	r0, #:upper16:.LC8
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s 			page 4
+
+
+ 168 008e 7047     		bx	lr
+ 169              	.L20:
+ 170 0090 40F20000 		movw	r0, #:lower16:.LC9
+ 171 0094 C0F20000 		movt	r0, #:upper16:.LC9
+ 172 0098 7047     		bx	lr
+ 173              	.L21:
+ 174 009a 40F20000 		movw	r0, #:lower16:.LC2
+ 175 009e C0F20000 		movt	r0, #:upper16:.LC2
+ 176 00a2 7047     		bx	lr
+ 177              		.size	_Z8portnameP12GPIO_TypeDef, .-_Z8portnameP12GPIO_TypeDef
+ 178 00a4 AFF30080 		.section	.text._ZL10reportPinsv,"ax",%progbits
+ 178      AFF30080 
+ 178      AFF30080 
+ 179              		.align	2
+ 180              		.p2align 4,,15
+ 181              		.thumb
+ 182              		.thumb_func
+ 183              		.type	_ZL10reportPinsv, %function
+ 184              	_ZL10reportPinsv:
+ 185              		@ args = 0, pretend = 0, frame = 0
+ 186              		@ frame_needed = 0, uses_anonymous_args = 0
+ 187 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 188 0002 40F20007 		movw	r7, #:lower16:.LANCHOR2
+ 189 0006 184E     		ldr	r6, .L30
+ 190 0008 83B0     		sub	sp, sp, #12
+ 191 000a C0F20007 		movt	r7, #:upper16:.LANCHOR2
+ 192 000e 0024     		movs	r4, #0
+ 193              	.L26:
+ 194 0010 2311     		asrs	r3, r4, #4
+ 195 0012 56F8045F 		ldr	r5, [r6, #4]!
+ 196 0016 57F82300 		ldr	r0, [r7, r3, lsl #2]
+ 197 001a 7DB1     		cbz	r5, .L24
+ 198 001c FFF7FEFF 		bl	_Z8portnameP12GPIO_TypeDef
+ 199 0020 40F20001 		movw	r1, #:lower16:.LC10
+ 200 0024 0246     		mov	r2, r0
+ 201 0026 40F20000 		movw	r0, #:lower16:.LANCHOR3
+ 202 002a 0095     		str	r5, [sp]
+ 203 002c C0F20000 		movt	r0, #:upper16:.LANCHOR3
+ 204 0030 C0F20001 		movt	r1, #:upper16:.LC10
+ 205 0034 04F00F03 		and	r3, r4, #15
+ 206 0038 FFF7FEFF 		bl	scheduleMsg
+ 207              	.L24:
+ 208 003c 0134     		adds	r4, r4, #1
+ 209 003e 702C     		cmp	r4, #112
+ 210 0040 E6D1     		bne	.L26
+ 211 0042 40F20003 		movw	r3, #:lower16:.LANCHOR4
+ 212 0046 C0F20003 		movt	r3, #:upper16:.LANCHOR4
+ 213 004a 40F20000 		movw	r0, #:lower16:.LANCHOR3
+ 214 004e 40F20001 		movw	r1, #:lower16:.LC11
+ 215 0052 1A68     		ldr	r2, [r3]
+ 216 0054 C0F20000 		movt	r0, #:upper16:.LANCHOR3
+ 217 0058 C0F20001 		movt	r1, #:upper16:.LC11
+ 218 005c 03B0     		add	sp, sp, #12
+ 219              		@ sp needed
+ 220 005e BDE8F040 		pop	{r4, r5, r6, r7, lr}
+ 221 0062 FFF7FEBF 		b	scheduleMsg
+ 222              	.L31:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s 			page 5
+
+
+ 223 0066 00BF     		.align	2
+ 224              	.L30:
+ 225 0068 FCFFFFFF 		.word	.LANCHOR1-4
+ 226              		.size	_ZL10reportPinsv, .-_ZL10reportPinsv
+ 227 006c AFF30080 		.section	.text._Z13parseBrainPinPKc,"ax",%progbits
+ 228              		.align	2
+ 229              		.p2align 4,,15
+ 230              		.global	_Z13parseBrainPinPKc
+ 231              		.thumb
+ 232              		.thumb_func
+ 233              		.type	_Z13parseBrainPinPKc, %function
+ 234              	_Z13parseBrainPinPKc:
+ 235              		@ args = 0, pretend = 0, frame = 0
+ 236              		@ frame_needed = 0, uses_anonymous_args = 0
+ 237 0000 40F20001 		movw	r1, #:lower16:.LC12
+ 238 0004 38B5     		push	{r3, r4, r5, lr}
+ 239 0006 C0F20001 		movt	r1, #:upper16:.LC12
+ 240 000a 0446     		mov	r4, r0
+ 241 000c FFF7FEFF 		bl	strEqual
+ 242 0010 08B1     		cbz	r0, .L39
+ 243 0012 5020     		movs	r0, #80
+ 244 0014 38BD     		pop	{r3, r4, r5, pc}
+ 245              	.L39:
+ 246 0016 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 247 0018 03F0DF03 		and	r3, r3, #223
+ 248 001c 502B     		cmp	r3, #80
+ 249 001e 01D0     		beq	.L40
+ 250              	.L38:
+ 251 0020 5120     		movs	r0, #81
+ 252 0022 38BD     		pop	{r3, r4, r5, pc}
+ 253              	.L40:
+ 254 0024 6378     		ldrb	r3, [r4, #1]	@ zero_extendqisi2
+ 255 0026 A3F16100 		sub	r0, r3, #97
+ 256 002a C2B2     		uxtb	r2, r0
+ 257 002c 192A     		cmp	r2, #25
+ 258 002e 98BF     		it	ls
+ 259 0030 0501     		lslls	r5, r0, #4
+ 260 0032 04D9     		bls	.L35
+ 261 0034 413B     		subs	r3, r3, #65
+ 262 0036 DAB2     		uxtb	r2, r3
+ 263 0038 192A     		cmp	r2, #25
+ 264 003a F1D8     		bhi	.L38
+ 265 003c 1D01     		lsls	r5, r3, #4
+ 266              	.L35:
+ 267 003e A01C     		adds	r0, r4, #2
+ 268 0040 FFF7FEFF 		bl	atoi
+ 269 0044 2844     		add	r0, r0, r5
+ 270 0046 38BD     		pop	{r3, r4, r5, pc}
+ 271              		.size	_Z13parseBrainPinPKc, .-_Z13parseBrainPinPKc
+ 272 0048 AFF30080 		.section	.text._Z10hwPortname11brain_pin_e,"ax",%progbits
+ 272      AFF30080 
+ 273              		.align	2
+ 274              		.p2align 4,,15
+ 275              		.global	_Z10hwPortname11brain_pin_e
+ 276              		.thumb
+ 277              		.thumb_func
+ 278              		.type	_Z10hwPortname11brain_pin_e, %function
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s 			page 6
+
+
+ 279              	_Z10hwPortname11brain_pin_e:
+ 280              		@ args = 0, pretend = 0, frame = 0
+ 281              		@ frame_needed = 0, uses_anonymous_args = 0
+ 282 0000 5128     		cmp	r0, #81
+ 283 0002 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 284 0004 0546     		mov	r5, r0
+ 285 0006 21D0     		beq	.L43
+ 286 0008 FFF7FEFF 		bl	_Z9getHwPort11brain_pin_e
+ 287 000c 0646     		mov	r6, r0
+ 288 000e 10B3     		cbz	r0, .L44
+ 289 0010 2846     		mov	r0, r5
+ 290 0012 FFF7FEFF 		bl	_Z8getHwPin11brain_pin_e
+ 291 0016 40F20004 		movw	r4, #:lower16:.LANCHOR0
+ 292 001a C0F20004 		movt	r4, #:upper16:.LANCHOR0
+ 293 001e 0746     		mov	r7, r0
+ 294 0020 0025     		movs	r5, #0
+ 295 0022 3046     		mov	r0, r6
+ 296 0024 E560     		str	r5, [r4, #12]
+ 297 0026 FFF7FEFF 		bl	_Z8portnameP12GPIO_TypeDef
+ 298 002a 40F20001 		movw	r1, #:lower16:.LC1
+ 299 002e 0246     		mov	r2, r0
+ 300 0030 3B46     		mov	r3, r7
+ 301 0032 2046     		mov	r0, r4
+ 302 0034 C0F20001 		movt	r1, #:upper16:.LC1
+ 303 0038 FFF7FEFF 		bl	chprintf.constprop.1
+ 304 003c 6268     		ldr	r2, [r4, #4]
+ 305 003e E368     		ldr	r3, [r4, #12]
+ 306 0040 D554     		strb	r5, [r2, r3]
+ 307 0042 40F20000 		movw	r0, #:lower16:.LANCHOR5
+ 308 0046 C0F20000 		movt	r0, #:upper16:.LANCHOR5
+ 309 004a F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 310              	.L43:
+ 311 004c 40F20000 		movw	r0, #:lower16:.LC13
+ 312 0050 C0F20000 		movt	r0, #:upper16:.LC13
+ 313 0054 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 314              	.L44:
+ 315 0056 40F20000 		movw	r0, #:lower16:.LC14
+ 316 005a C0F20000 		movt	r0, #:upper16:.LC14
+ 317 005e F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 318              		.size	_Z10hwPortname11brain_pin_e, .-_Z10hwPortname11brain_pin_e
+ 319              		.section	.text._Z17initPinRepositoryv,"ax",%progbits
+ 320              		.align	2
+ 321              		.p2align 4,,15
+ 322              		.global	_Z17initPinRepositoryv
+ 323              		.thumb
+ 324              		.thumb_func
+ 325              		.type	_Z17initPinRepositoryv, %function
+ 326              	_Z17initPinRepositoryv:
+ 327              		@ args = 0, pretend = 0, frame = 0
+ 328              		@ frame_needed = 0, uses_anonymous_args = 0
+ 329 0000 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 330 0004 40F20001 		movw	r1, #:lower16:.LANCHOR5
+ 331 0008 08B5     		push	{r3, lr}
+ 332 000a C0F20001 		movt	r1, #:upper16:.LANCHOR5
+ 333 000e 1422     		movs	r2, #20
+ 334 0010 0023     		movs	r3, #0
+ 335 0012 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s 			page 7
+
+
+ 336 0016 FFF7FEFF 		bl	msObjectInit
+ 337 001a 0D4B     		ldr	r3, .L49
+ 338 001c 0021     		movs	r1, #0
+ 339 001e 03F5E072 		add	r2, r3, #448
+ 340              	.L47:
+ 341 0022 43F8041F 		str	r1, [r3, #4]!
+ 342 0026 9342     		cmp	r3, r2
+ 343 0028 FBD1     		bne	.L47
+ 344 002a 40F20003 		movw	r3, #:lower16:.LANCHOR6
+ 345 002e C0F20003 		movt	r3, #:upper16:.LANCHOR6
+ 346 0032 40F20000 		movw	r0, #:lower16:.LC15
+ 347 0036 40F20001 		movw	r1, #:lower16:_ZL10reportPinsv
+ 348 003a 0122     		movs	r2, #1
+ 349 003c 1A60     		str	r2, [r3]
+ 350 003e C0F20000 		movt	r0, #:upper16:.LC15
+ 351 0042 C0F20001 		movt	r1, #:upper16:_ZL10reportPinsv
+ 352 0046 BDE80840 		pop	{r3, lr}
+ 353 004a FFF7FEBF 		b	addConsoleAction
+ 354              	.L50:
+ 355 004e 00BF     		.align	2
+ 356              	.L49:
+ 357 0050 FCFFFFFF 		.word	.LANCHOR1-4
+ 358              		.size	_Z17initPinRepositoryv, .-_Z17initPinRepositoryv
+ 359 0054 AFF30080 		.section	.text._Z12getInputMode16pin_input_mode_e,"ax",%progbits
+ 359      AFF30080 
+ 359      AFF30080 
+ 360              		.align	2
+ 361              		.p2align 4,,15
+ 362              		.global	_Z12getInputMode16pin_input_mode_e
+ 363              		.thumb
+ 364              		.thumb_func
+ 365              		.type	_Z12getInputMode16pin_input_mode_e, %function
+ 366              	_Z12getInputMode16pin_input_mode_e:
+ 367              		@ args = 0, pretend = 0, frame = 0
+ 368              		@ frame_needed = 0, uses_anonymous_args = 0
+ 369              		@ link register save eliminated.
+ 370 0000 0128     		cmp	r0, #1
+ 371 0002 04D0     		beq	.L53
+ 372 0004 0228     		cmp	r0, #2
+ 373 0006 0CBF     		ite	eq
+ 374 0008 4020     		moveq	r0, #64
+ 375 000a 0020     		movne	r0, #0
+ 376 000c 7047     		bx	lr
+ 377              	.L53:
+ 378 000e 2020     		movs	r0, #32
+ 379 0010 7047     		bx	lr
+ 380              		.size	_Z12getInputMode16pin_input_mode_e, .-_Z12getInputMode16pin_input_mode_e
+ 381 0012 00BFAFF3 		.section	.text._Z14getPinFunction11brain_pin_e,"ax",%progbits
+ 381      0080AFF3 
+ 381      0080AFF3 
+ 381      0080
+ 382              		.align	2
+ 383              		.p2align 4,,15
+ 384              		.global	_Z14getPinFunction11brain_pin_e
+ 385              		.thumb
+ 386              		.thumb_func
+ 387              		.type	_Z14getPinFunction11brain_pin_e, %function
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s 			page 8
+
+
+ 388              	_Z14getPinFunction11brain_pin_e:
+ 389              		@ args = 0, pretend = 0, frame = 0
+ 390              		@ frame_needed = 0, uses_anonymous_args = 0
+ 391 0000 38B5     		push	{r3, r4, r5, lr}
+ 392 0002 0446     		mov	r4, r0
+ 393 0004 FFF7FEFF 		bl	_Z9getHwPort11brain_pin_e
+ 394 0008 0546     		mov	r5, r0
+ 395 000a 2046     		mov	r0, r4
+ 396 000c FFF7FEFF 		bl	_Z8getHwPin11brain_pin_e
+ 397 0010 0446     		mov	r4, r0
+ 398 0012 2846     		mov	r0, r5
+ 399 0014 FFF7FEFF 		bl	_ZL12getPortIndexP12GPIO_TypeDef
+ 400 0018 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 401 001c 04EB0010 		add	r0, r4, r0, lsl #4
+ 402 0020 C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ 403 0024 53F82000 		ldr	r0, [r3, r0, lsl #2]
+ 404 0028 38BD     		pop	{r3, r4, r5, pc}
+ 405              		.size	_Z14getPinFunction11brain_pin_e, .-_Z14getPinFunction11brain_pin_e
+ 406 002a 00BFAFF3 		.section	.text._Z12mySetPadModePKcP12GPIO_TypeDefmm,"ax",%progbits
+ 406      0080
+ 407              		.align	2
+ 408              		.p2align 4,,15
+ 409              		.global	_Z12mySetPadModePKcP12GPIO_TypeDefmm
+ 410              		.thumb
+ 411              		.thumb_func
+ 412              		.type	_Z12mySetPadModePKcP12GPIO_TypeDefmm, %function
+ 413              	_Z12mySetPadModePKcP12GPIO_TypeDefmm:
+ 414              		@ args = 0, pretend = 0, frame = 0
+ 415              		@ frame_needed = 0, uses_anonymous_args = 0
+ 416 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+ 417 0004 40F20004 		movw	r4, #:lower16:.LANCHOR6
+ 418 0008 C0F20004 		movt	r4, #:upper16:.LANCHOR6
+ 419 000c 0646     		mov	r6, r0
+ 420 000e 2068     		ldr	r0, [r4]
+ 421 0010 83B0     		sub	sp, sp, #12
+ 422 0012 0D46     		mov	r5, r1
+ 423 0014 1446     		mov	r4, r2
+ 424 0016 9946     		mov	r9, r3
+ 425 0018 0028     		cmp	r0, #0
+ 426 001a 49D0     		beq	.L64
+ 427 001c 0029     		cmp	r1, #0
+ 428 001e 44D0     		beq	.L57
+ 429 0020 0846     		mov	r0, r1
+ 430 0022 FFF7FEFF 		bl	_Z8portnameP12GPIO_TypeDef
+ 431 0026 8046     		mov	r8, r0
+ 432 0028 40F20000 		movw	r0, #:lower16:.LC17
+ 433 002c 2346     		mov	r3, r4
+ 434 002e 4246     		mov	r2, r8
+ 435 0030 C0F20000 		movt	r0, #:upper16:.LC17
+ 436 0034 3146     		mov	r1, r6
+ 437 0036 FFF7FEFF 		bl	print
+ 438 003a 40F20000 		movw	r0, #:lower16:.LANCHOR3
+ 439 003e 40F20001 		movw	r1, #:lower16:.LC18
+ 440 0042 C0F20000 		movt	r0, #:upper16:.LANCHOR3
+ 441 0046 C0F20001 		movt	r1, #:upper16:.LC18
+ 442 004a 3246     		mov	r2, r6
+ 443 004c 40F20007 		movw	r7, #:lower16:.LC20
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s 			page 9
+
+
+ 444 0050 FFF7FEFF 		bl	appendPrintf
+ 445 0054 C0F20007 		movt	r7, #:upper16:.LC20
+ 446 0058 40F20000 		movw	r0, #:lower16:.LANCHOR3
+ 447 005c 40F20001 		movw	r1, #:lower16:.LC19
+ 448 0060 2346     		mov	r3, r4
+ 449 0062 4246     		mov	r2, r8
+ 450 0064 C0F20001 		movt	r1, #:upper16:.LC19
+ 451 0068 0097     		str	r7, [sp]
+ 452 006a C0F20000 		movt	r0, #:upper16:.LANCHOR3
+ 453 006e FFF7FEFF 		bl	appendPrintf
+ 454 0072 40F20000 		movw	r0, #:lower16:.LANCHOR3
+ 455 0076 C0F20000 		movt	r0, #:upper16:.LANCHOR3
+ 456 007a FFF7FEFF 		bl	printLine
+ 457 007e 2846     		mov	r0, r5
+ 458 0080 FFF7FEFF 		bl	_ZL12getPortIndexP12GPIO_TypeDef
+ 459 0084 40F20007 		movw	r7, #:lower16:.LANCHOR1
+ 460 0088 04EB0010 		add	r0, r4, r0, lsl #4
+ 461 008c C0F20007 		movt	r7, #:upper16:.LANCHOR1
+ 462 0090 57F82030 		ldr	r3, [r7, r0, lsl #2]
+ 463 0094 ABB1     		cbz	r3, .L60
+ 464 0096 40F20000 		movw	r0, #:lower16:.LC21
+ 465 009a 0093     		str	r3, [sp]
+ 466 009c 4146     		mov	r1, r8
+ 467 009e 2246     		mov	r2, r4
+ 468 00a0 3346     		mov	r3, r6
+ 469 00a2 C0F20000 		movt	r0, #:upper16:.LC21
+ 470 00a6 FFF7FEFF 		bl	firmwareError
+ 471              	.L57:
+ 472 00aa 03B0     		add	sp, sp, #12
+ 473              		@ sp needed
+ 474 00ac BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ 475              	.L64:
+ 476 00b0 40F20000 		movw	r0, #:lower16:.LC16
+ 477 00b4 C0F20000 		movt	r0, #:upper16:.LC16
+ 478 00b8 03B0     		add	sp, sp, #12
+ 479              		@ sp needed
+ 480 00ba BDE8F043 		pop	{r4, r5, r6, r7, r8, r9, lr}
+ 481 00be FFF7FEBF 		b	firmwareError
+ 482              	.L60:
+ 483 00c2 40F2000C 		movw	ip, #:lower16:.LANCHOR4
+ 484 00c6 C0F2000C 		movt	ip, #:upper16:.LANCHOR4
+ 485 00ca 0121     		movs	r1, #1
+ 486 00cc DCF80030 		ldr	r3, [ip]
+ 487 00d0 47F82060 		str	r6, [r7, r0, lsl #2]
+ 488 00d4 0B44     		add	r3, r3, r1
+ 489 00d6 2846     		mov	r0, r5
+ 490 00d8 4A46     		mov	r2, r9
+ 491 00da A140     		lsls	r1, r1, r4
+ 492 00dc CCF80030 		str	r3, [ip]
+ 493 00e0 03B0     		add	sp, sp, #12
+ 494              		@ sp needed
+ 495 00e2 BDE8F043 		pop	{r4, r5, r6, r7, r8, r9, lr}
+ 496 00e6 FFF7FEBF 		b	_pal_lld_setgroupmode
+ 497              		.size	_Z12mySetPadModePKcP12GPIO_TypeDefmm, .-_Z12mySetPadModePKcP12GPIO_TypeDefmm
+ 498 00ea 00BFAFF3 		.section	.text._Z13mySetPadMode2PKc11brain_pin_em,"ax",%progbits
+ 498      0080
+ 499              		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s 			page 10
+
+
+ 500              		.p2align 4,,15
+ 501              		.global	_Z13mySetPadMode2PKc11brain_pin_em
+ 502              		.thumb
+ 503              		.thumb_func
+ 504              		.type	_Z13mySetPadMode2PKc11brain_pin_em, %function
+ 505              	_Z13mySetPadMode2PKc11brain_pin_em:
+ 506              		@ args = 0, pretend = 0, frame = 0
+ 507              		@ frame_needed = 0, uses_anonymous_args = 0
+ 508 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 509 0004 0646     		mov	r6, r0
+ 510 0006 0846     		mov	r0, r1
+ 511 0008 0C46     		mov	r4, r1
+ 512 000a 1546     		mov	r5, r2
+ 513 000c FFF7FEFF 		bl	_Z9getHwPort11brain_pin_e
+ 514 0010 0746     		mov	r7, r0
+ 515 0012 2046     		mov	r0, r4
+ 516 0014 FFF7FEFF 		bl	_Z8getHwPin11brain_pin_e
+ 517 0018 3946     		mov	r1, r7
+ 518 001a 0246     		mov	r2, r0
+ 519 001c 2B46     		mov	r3, r5
+ 520 001e 3046     		mov	r0, r6
+ 521 0020 BDE8F041 		pop	{r4, r5, r6, r7, r8, lr}
+ 522 0024 FFF7FEBF 		b	_Z12mySetPadModePKcP12GPIO_TypeDefmm
+ 523              		.size	_Z13mySetPadMode2PKc11brain_pin_em, .-_Z13mySetPadMode2PKc11brain_pin_em
+ 524 0028 AFF30080 		.section	.text._Z9unmarkPin11brain_pin_e,"ax",%progbits
+ 524      AFF30080 
+ 525              		.align	2
+ 526              		.p2align 4,,15
+ 527              		.global	_Z9unmarkPin11brain_pin_e
+ 528              		.thumb
+ 529              		.thumb_func
+ 530              		.type	_Z9unmarkPin11brain_pin_e, %function
+ 531              	_Z9unmarkPin11brain_pin_e:
+ 532              		@ args = 0, pretend = 0, frame = 0
+ 533              		@ frame_needed = 0, uses_anonymous_args = 0
+ 534 0000 38B5     		push	{r3, r4, r5, lr}
+ 535 0002 0446     		mov	r4, r0
+ 536 0004 FFF7FEFF 		bl	_Z9getHwPort11brain_pin_e
+ 537 0008 0546     		mov	r5, r0
+ 538 000a 2046     		mov	r0, r4
+ 539 000c FFF7FEFF 		bl	_Z8getHwPin11brain_pin_e
+ 540 0010 0446     		mov	r4, r0
+ 541 0012 2846     		mov	r0, r5
+ 542 0014 FFF7FEFF 		bl	_ZL12getPortIndexP12GPIO_TypeDef
+ 543 0018 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 544 001c 04EB0010 		add	r0, r4, r0, lsl #4
+ 545 0020 C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ 546 0024 53F82020 		ldr	r2, [r3, r0, lsl #2]
+ 547 0028 4AB1     		cbz	r2, .L66
+ 548 002a 40F20002 		movw	r2, #:lower16:.LANCHOR4
+ 549 002e C0F20002 		movt	r2, #:upper16:.LANCHOR4
+ 550 0032 0024     		movs	r4, #0
+ 551 0034 1168     		ldr	r1, [r2]
+ 552 0036 43F82040 		str	r4, [r3, r0, lsl #2]
+ 553 003a 0139     		subs	r1, r1, #1
+ 554 003c 1160     		str	r1, [r2]
+ 555              	.L66:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s 			page 11
+
+
+ 556 003e 38BD     		pop	{r3, r4, r5, pc}
+ 557              		.size	_Z9unmarkPin11brain_pin_e, .-_Z9unmarkPin11brain_pin_e
+ 558              		.section	.text._Z25registedFundamentralIoPinPcP12GPIO_TypeDefmm,"ax",%progbits
+ 559              		.align	2
+ 560              		.p2align 4,,15
+ 561              		.global	_Z25registedFundamentralIoPinPcP12GPIO_TypeDefmm
+ 562              		.thumb
+ 563              		.thumb_func
+ 564              		.type	_Z25registedFundamentralIoPinPcP12GPIO_TypeDefmm, %function
+ 565              	_Z25registedFundamentralIoPinPcP12GPIO_TypeDefmm:
+ 566              		@ args = 0, pretend = 0, frame = 0
+ 567              		@ frame_needed = 0, uses_anonymous_args = 0
+ 568 0000 2DE9F843 		push	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 569 0004 40F20004 		movw	r4, #:lower16:.LANCHOR6
+ 570 0008 C0F20004 		movt	r4, #:upper16:.LANCHOR6
+ 571 000c 8046     		mov	r8, r0
+ 572 000e 2468     		ldr	r4, [r4]
+ 573 0010 0F46     		mov	r7, r1
+ 574 0012 1546     		mov	r5, r2
+ 575 0014 9946     		mov	r9, r3
+ 576 0016 1CB3     		cbz	r4, .L74
+ 577 0018 0846     		mov	r0, r1
+ 578 001a FFF7FEFF 		bl	_ZL12getPortIndexP12GPIO_TypeDef
+ 579 001e 40F20004 		movw	r4, #:lower16:.LANCHOR1
+ 580 0022 05EB0016 		add	r6, r5, r0, lsl #4
+ 581 0026 C0F20004 		movt	r4, #:upper16:.LANCHOR1
+ 582 002a 54F82610 		ldr	r1, [r4, r6, lsl #2]
+ 583 002e F9B1     		cbz	r1, .L73
+ 584 0030 40F20000 		movw	r0, #:lower16:.LC23
+ 585 0034 4146     		mov	r1, r8
+ 586 0036 2A46     		mov	r2, r5
+ 587 0038 C0F20000 		movt	r0, #:upper16:.LC23
+ 588 003c FFF7FEFF 		bl	print
+ 589 0040 40F20000 		movw	r0, #:lower16:.LC24
+ 590 0044 54F82610 		ldr	r1, [r4, r6, lsl #2]
+ 591 0048 C0F20000 		movt	r0, #:upper16:.LC24
+ 592 004c FFF7FEFF 		bl	print
+ 593 0050 40F20000 		movw	r0, #:lower16:.LC25
+ 594 0054 C0F20000 		movt	r0, #:upper16:.LC25
+ 595 0058 BDE8F843 		pop	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 596 005c FFF7FEBF 		b	firmwareError
+ 597              	.L74:
+ 598 0060 40F20000 		movw	r0, #:lower16:.LC22
+ 599 0064 C0F20000 		movt	r0, #:upper16:.LC22
+ 600 0068 BDE8F843 		pop	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 601 006c FFF7FEBF 		b	firmwareError
+ 602              	.L73:
+ 603 0070 40F20003 		movw	r3, #:lower16:.LANCHOR4
+ 604 0074 C0F20003 		movt	r3, #:upper16:.LANCHOR4
+ 605 0078 44F82680 		str	r8, [r4, r6, lsl #2]
+ 606 007c 1E68     		ldr	r6, [r3]
+ 607 007e 0121     		movs	r1, #1
+ 608 0080 7418     		adds	r4, r6, r1
+ 609 0082 3846     		mov	r0, r7
+ 610 0084 4A46     		mov	r2, r9
+ 611 0086 A940     		lsls	r1, r1, r5
+ 612 0088 1C60     		str	r4, [r3]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s 			page 12
+
+
+ 613 008a BDE8F843 		pop	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 614 008e FFF7FEBF 		b	_pal_lld_setgroupmode
+ 615              		.size	_Z25registedFundamentralIoPinPcP12GPIO_TypeDefmm, .-_Z25registedFundamentralIoPinPcP12GPIO_T
+ 616 0092 00BFAFF3 		.section	.text._Z11efiIcuStartP9ICUDriverPK9ICUConfig,"ax",%progbits
+ 616      0080AFF3 
+ 616      0080AFF3 
+ 616      0080
+ 617              		.align	2
+ 618              		.p2align 4,,15
+ 619              		.global	_Z11efiIcuStartP9ICUDriverPK9ICUConfig
+ 620              		.thumb
+ 621              		.thumb_func
+ 622              		.type	_Z11efiIcuStartP9ICUDriverPK9ICUConfig, %function
+ 623              	_Z11efiIcuStartP9ICUDriverPK9ICUConfig:
+ 624              		@ args = 0, pretend = 0, frame = 0
+ 625              		@ frame_needed = 0, uses_anonymous_args = 0
+ 626              		@ link register save eliminated.
+ 627 0000 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 628 0002 013B     		subs	r3, r3, #1
+ 629 0004 DBB2     		uxtb	r3, r3
+ 630 0006 012B     		cmp	r3, #1
+ 631 0008 05D9     		bls	.L76
+ 632 000a 40F20000 		movw	r0, #:lower16:.LC26
+ 633 000e C0F20000 		movt	r0, #:upper16:.LC26
+ 634 0012 FFF7FEBF 		b	firmwareError
+ 635              	.L76:
+ 636 0016 FFF7FEBF 		b	icuStart
+ 637              		.size	_Z11efiIcuStartP9ICUDriverPK9ICUConfig, .-_Z11efiIcuStartP9ICUDriverPK9ICUConfig
+ 638 001a 00BFAFF3 		.section	.text.startup._GLOBAL__sub_I_PIN_USED,"ax",%progbits
+ 638      0080
+ 639              		.align	2
+ 640              		.p2align 4,,15
+ 641              		.thumb
+ 642              		.thumb_func
+ 643              		.type	_GLOBAL__sub_I_PIN_USED, %function
+ 644              	_GLOBAL__sub_I_PIN_USED:
+ 645              		@ args = 0, pretend = 0, frame = 0
+ 646              		@ frame_needed = 0, uses_anonymous_args = 0
+ 647              		@ link register save eliminated.
+ 648 0000 40F20000 		movw	r0, #:lower16:.LANCHOR3
+ 649 0004 40F20001 		movw	r1, #:lower16:.LC27
+ 650 0008 C0F20000 		movt	r0, #:upper16:.LANCHOR3
+ 651 000c C0F20001 		movt	r1, #:upper16:.LC27
+ 652 0010 FFF7FEBF 		b	_ZN18LoggingWithStorageC1EPKc
+ 653              		.size	_GLOBAL__sub_I_PIN_USED, .-_GLOBAL__sub_I_PIN_USED
+ 654 0014 AFF30080 		.section	.init_array,"aw",%init_array
+ 654      AFF30080 
+ 654      AFF30080 
+ 655              		.align	2
+ 656 0000 00000000 		.word	_GLOBAL__sub_I_PIN_USED(target1)
+ 657              		.global	PIN_USED
+ 658              		.section	.bss._ZL11initialized,"aw",%nobits
+ 659              		.align	2
+ 660              		.set	.LANCHOR6,. + 0
+ 661              		.type	_ZL11initialized, %object
+ 662              		.size	_ZL11initialized, 4
+ 663              	_ZL11initialized:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s 			page 13
+
+
+ 664 0000 00000000 		.space	4
+ 665              		.section	.bss._ZL14portNameStream,"aw",%nobits
+ 666              		.align	2
+ 667              		.set	.LANCHOR0,. + 0
+ 668              		.type	_ZL14portNameStream, %object
+ 669              		.size	_ZL14portNameStream, 20
+ 670              	_ZL14portNameStream:
+ 671 0000 00000000 		.space	20
+ 671      00000000 
+ 671      00000000 
+ 671      00000000 
+ 671      00000000 
+ 672              		.section	.bss._ZL13totalPinsUsed,"aw",%nobits
+ 673              		.align	2
+ 674              		.set	.LANCHOR4,. + 0
+ 675              		.type	_ZL13totalPinsUsed, %object
+ 676              		.size	_ZL13totalPinsUsed, 4
+ 677              	_ZL13totalPinsUsed:
+ 678 0000 00000000 		.space	4
+ 679              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 680              		.align	2
+ 681              	.LC0:
+ 682 0000 706F7274 		.ascii	"portindex\000"
+ 682      696E6465 
+ 682      7800
+ 683 000a 0000     		.space	2
+ 684              	.LC1:
+ 685 000c 25732564 		.ascii	"%s%d\000"
+ 685      00
+ 686 0011 000000   		.space	3
+ 687              	.LC2:
+ 688 0014 504800   		.ascii	"PH\000"
+ 689 0017 00       		.space	1
+ 690              	.LC3:
+ 691 0018 504600   		.ascii	"PF\000"
+ 692 001b 00       		.space	1
+ 693              	.LC4:
+ 694 001c 756E6B6E 		.ascii	"unknown\000"
+ 694      6F776E00 
+ 695              	.LC5:
+ 696 0024 504100   		.ascii	"PA\000"
+ 697 0027 00       		.space	1
+ 698              	.LC6:
+ 699 0028 504200   		.ascii	"PB\000"
+ 700 002b 00       		.space	1
+ 701              	.LC7:
+ 702 002c 504300   		.ascii	"PC\000"
+ 703 002f 00       		.space	1
+ 704              	.LC8:
+ 705 0030 504400   		.ascii	"PD\000"
+ 706 0033 00       		.space	1
+ 707              	.LC9:
+ 708 0034 504500   		.ascii	"PE\000"
+ 709 0037 00       		.space	1
+ 710              	.LC10:
+ 711 0038 70696E20 		.ascii	"pin %s%d: %s\000"
+ 711      25732564 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s 			page 14
+
+
+ 711      3A202573 
+ 711      00
+ 712 0045 000000   		.space	3
+ 713              	.LC11:
+ 714 0048 546F7461 		.ascii	"Total pins count: %d\000"
+ 714      6C207069 
+ 714      6E732063 
+ 714      6F756E74 
+ 714      3A202564 
+ 715 005d 000000   		.space	3
+ 716              	.LC12:
+ 717 0060 6E6F6E65 		.ascii	"none\000"
+ 717      00
+ 718 0065 000000   		.space	3
+ 719              	.LC13:
+ 720 0068 494E5641 		.ascii	"INVALID\000"
+ 720      4C494400 
+ 721              	.LC14:
+ 722 0070 4E4F4E45 		.ascii	"NONE\000"
+ 722      00
+ 723 0075 000000   		.space	3
+ 724              	.LC15:
+ 725 0078 70696E73 		.ascii	"pins\000"
+ 725      00
+ 726 007d 000000   		.space	3
+ 727              	.LC16:
+ 728 0080 7265706F 		.ascii	"repository not initialized\000"
+ 728      7369746F 
+ 728      7279206E 
+ 728      6F742069 
+ 728      6E697469 
+ 729 009b 00       		.space	1
+ 730              	.LC17:
+ 731 009c 2573206F 		.ascii	"%s on %s:%d\015\012\000"
+ 731      6E202573 
+ 731      3A25640D 
+ 731      0A00
+ 732 00aa 0000     		.space	2
+ 733              	.LC18:
+ 734 00ac 6D73672C 		.ascii	"msg,%s\000"
+ 734      257300
+ 735 00b3 00       		.space	1
+ 736              	.LC19:
+ 737 00b4 206F6E20 		.ascii	" on %s%d%s\000"
+ 737      25732564 
+ 737      257300
+ 738 00bf 00       		.space	1
+ 739              	.LC20:
+ 740 00c0 2C00     		.ascii	",\000"
+ 741 00c2 0000     		.space	2
+ 742              	.LC21:
+ 743 00c4 25732564 		.ascii	"%s%d req by %s used by %s\000"
+ 743      20726571 
+ 743      20627920 
+ 743      25732075 
+ 743      73656420 
+ 744 00de 0000     		.space	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s 			page 15
+
+
+ 745              	.LC22:
+ 746 00e0 7265706F 		.ascii	"repo not initialized\000"
+ 746      206E6F74 
+ 746      20696E69 
+ 746      7469616C 
+ 746      697A6564 
+ 747 00f5 000000   		.space	3
+ 748              	.LC23:
+ 749 00f8 21212121 		.ascii	"!!!!!!!!!!!!! Already used [%s] %d\015\012\000"
+ 749      21212121 
+ 749      21212121 
+ 749      2120416C 
+ 749      72656164 
+ 750 011d 000000   		.space	3
+ 751              	.LC24:
+ 752 0120 21212121 		.ascii	"!!!!!!!!!!!!! Already used by [%s]\015\012\000"
+ 752      21212121 
+ 752      21212121 
+ 752      2120416C 
+ 752      72656164 
+ 753 0145 000000   		.space	3
+ 754              	.LC25:
+ 755 0148 70696E20 		.ascii	"pin already used\000"
+ 755      616C7265 
+ 755      61647920 
+ 755      75736564 
+ 755      00
+ 756 0159 000000   		.space	3
+ 757              	.LC26:
+ 758 015c 696E7075 		.ascii	"input already used?\000"
+ 758      7420616C 
+ 758      72656164 
+ 758      79207573 
+ 758      65643F00 
+ 759              	.LC27:
+ 760 0170 70696E20 		.ascii	"pin repos\000"
+ 760      7265706F 
+ 760      7300
+ 761 017a 0000     		.section	.rodata._ZL5ports,"a",%progbits
+ 762              		.align	2
+ 763              		.set	.LANCHOR2,. + 0
+ 764              		.type	_ZL5ports, %object
+ 765              		.size	_ZL5ports, 28
+ 766              	_ZL5ports:
+ 767 0000 00000240 		.word	1073872896
+ 768 0004 00040240 		.word	1073873920
+ 769 0008 00080240 		.word	1073874944
+ 770 000c 000C0240 		.word	1073875968
+ 771 0010 00100240 		.word	1073876992
+ 772 0014 00140240 		.word	1073878016
+ 773 0018 001C0240 		.word	1073880064
+ 774              		.section	.bss._ZL14portNameBuffer,"aw",%nobits
+ 775              		.align	2
+ 776              		.set	.LANCHOR5,. + 0
+ 777              		.type	_ZL14portNameBuffer, %object
+ 778              		.size	_ZL14portNameBuffer, 20
+ 779              	_ZL14portNameBuffer:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s 			page 16
+
+
+ 780 0000 00000000 		.space	20
+ 780      00000000 
+ 780      00000000 
+ 780      00000000 
+ 780      00000000 
+ 781              		.section	.bss._ZL6logger,"aw",%nobits
+ 782              		.align	2
+ 783              		.set	.LANCHOR3,. + 0
+ 784              		.type	_ZL6logger, %object
+ 785              		.size	_ZL6logger, 260
+ 786              	_ZL6logger:
+ 787 0000 00000000 		.space	260
+ 787      00000000 
+ 787      00000000 
+ 787      00000000 
+ 787      00000000 
+ 788              		.section	.bss.PIN_USED,"aw",%nobits
+ 789              		.align	2
+ 790              		.set	.LANCHOR1,. + 0
+ 791              		.type	PIN_USED, %object
+ 792              		.size	PIN_USED, 448
+ 793              	PIN_USED:
+ 794 0000 00000000 		.space	448
+ 794      00000000 
+ 794      00000000 
+ 794      00000000 
+ 794      00000000 
+ 795              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s 			page 17
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 pin_repository.cpp
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:17     .text._ZL12getPortIndexP12GPIO_TypeDef:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:22     .text._ZL12getPortIndexP12GPIO_TypeDef:00000000 _ZL12getPortIndexP12GPIO_TypeDef
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:681    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:82     .text.chprintf.constprop.1:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:87     .text.chprintf.constprop.1:00000000 chprintf.constprop.1
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:667    .bss._ZL14portNameStream:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:684    .rodata.str1.4:0000000c .LC1
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:108    .text._Z8portnameP12GPIO_TypeDef:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:114    .text._Z8portnameP12GPIO_TypeDef:00000000 _Z8portnameP12GPIO_TypeDef
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:693    .rodata.str1.4:0000001c .LC4
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:690    .rodata.str1.4:00000018 .LC3
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:695    .rodata.str1.4:00000024 .LC5
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:698    .rodata.str1.4:00000028 .LC6
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:701    .rodata.str1.4:0000002c .LC7
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:704    .rodata.str1.4:00000030 .LC8
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:707    .rodata.str1.4:00000034 .LC9
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:687    .rodata.str1.4:00000014 .LC2
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:179    .text._ZL10reportPinsv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:184    .text._ZL10reportPinsv:00000000 _ZL10reportPinsv
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:763    .rodata._ZL5ports:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:710    .rodata.str1.4:00000038 .LC10
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:783    .bss._ZL6logger:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:674    .bss._ZL13totalPinsUsed:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:713    .rodata.str1.4:00000048 .LC11
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:225    .text._ZL10reportPinsv:00000068 $d
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:228    .text._Z13parseBrainPinPKc:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:234    .text._Z13parseBrainPinPKc:00000000 _Z13parseBrainPinPKc
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:716    .rodata.str1.4:00000060 .LC12
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:273    .text._Z10hwPortname11brain_pin_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:279    .text._Z10hwPortname11brain_pin_e:00000000 _Z10hwPortname11brain_pin_e
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:776    .bss._ZL14portNameBuffer:00000000 .LANCHOR5
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:719    .rodata.str1.4:00000068 .LC13
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:721    .rodata.str1.4:00000070 .LC14
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:320    .text._Z17initPinRepositoryv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:326    .text._Z17initPinRepositoryv:00000000 _Z17initPinRepositoryv
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:660    .bss._ZL11initialized:00000000 .LANCHOR6
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:724    .rodata.str1.4:00000078 .LC15
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:357    .text._Z17initPinRepositoryv:00000050 $d
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:360    .text._Z12getInputMode16pin_input_mode_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:366    .text._Z12getInputMode16pin_input_mode_e:00000000 _Z12getInputMode16pin_input_mode_e
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:382    .text._Z14getPinFunction11brain_pin_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:388    .text._Z14getPinFunction11brain_pin_e:00000000 _Z14getPinFunction11brain_pin_e
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:790    .bss.PIN_USED:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:407    .text._Z12mySetPadModePKcP12GPIO_TypeDefmm:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:413    .text._Z12mySetPadModePKcP12GPIO_TypeDefmm:00000000 _Z12mySetPadModePKcP12GPIO_TypeDefmm
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:730    .rodata.str1.4:0000009c .LC17
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:733    .rodata.str1.4:000000ac .LC18
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:739    .rodata.str1.4:000000c0 .LC20
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:736    .rodata.str1.4:000000b4 .LC19
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:742    .rodata.str1.4:000000c4 .LC21
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:727    .rodata.str1.4:00000080 .LC16
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:499    .text._Z13mySetPadMode2PKc11brain_pin_em:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:505    .text._Z13mySetPadMode2PKc11brain_pin_em:00000000 _Z13mySetPadMode2PKc11brain_pin_em
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:525    .text._Z9unmarkPin11brain_pin_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:531    .text._Z9unmarkPin11brain_pin_e:00000000 _Z9unmarkPin11brain_pin_e
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s 			page 18
+
+
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:559    .text._Z25registedFundamentralIoPinPcP12GPIO_TypeDefmm:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:565    .text._Z25registedFundamentralIoPinPcP12GPIO_TypeDefmm:00000000 _Z25registedFundamentralIoPinPcP12GPIO_TypeDefmm
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:748    .rodata.str1.4:000000f8 .LC23
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:751    .rodata.str1.4:00000120 .LC24
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:754    .rodata.str1.4:00000148 .LC25
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:745    .rodata.str1.4:000000e0 .LC22
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:617    .text._Z11efiIcuStartP9ICUDriverPK9ICUConfig:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:623    .text._Z11efiIcuStartP9ICUDriverPK9ICUConfig:00000000 _Z11efiIcuStartP9ICUDriverPK9ICUConfig
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:757    .rodata.str1.4:0000015c .LC26
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:639    .text.startup._GLOBAL__sub_I_PIN_USED:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:644    .text.startup._GLOBAL__sub_I_PIN_USED:00000000 _GLOBAL__sub_I_PIN_USED
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:759    .rodata.str1.4:00000170 .LC27
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:655    .init_array:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:793    .bss.PIN_USED:00000000 PIN_USED
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:659    .bss._ZL11initialized:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:663    .bss._ZL11initialized:00000000 _ZL11initialized
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:666    .bss._ZL14portNameStream:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:670    .bss._ZL14portNameStream:00000000 _ZL14portNameStream
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:673    .bss._ZL13totalPinsUsed:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:677    .bss._ZL13totalPinsUsed:00000000 _ZL13totalPinsUsed
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:680    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:762    .rodata._ZL5ports:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:766    .rodata._ZL5ports:00000000 _ZL5ports
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:775    .bss._ZL14portNameBuffer:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:779    .bss._ZL14portNameBuffer:00000000 _ZL14portNameBuffer
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:782    .bss._ZL6logger:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:786    .bss._ZL6logger:00000000 _ZL6logger
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:789    .bss.PIN_USED:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:227    .text._ZL10reportPinsv:0000006c $t
+C:\Users\pc\AppData\Local\Temp\ccnPGjNa.s:359    .text._Z17initPinRepositoryv:00000054 $t
+
+UNDEFINED SYMBOLS
+firmwareError
+chvprintf
+scheduleMsg
+strEqual
+atoi
+_Z9getHwPort11brain_pin_e
+_Z8getHwPin11brain_pin_e
+msObjectInit
+addConsoleAction
+print
+appendPrintf
+printLine
+_pal_lld_setgroupmode
+icuStart
+_ZN18LoggingWithStorageC1EPKc

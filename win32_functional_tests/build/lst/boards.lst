@@ -1,0 +1,342 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccZvFreh.s 			page 1
+
+
+   1              		.file	"boards.cpp"
+   2              		.section .rdata,"dr"
+   3              		.align 4
+   4              	LC0:
+   5 0000 66616B65 		.ascii "fake voltage: channel %d value %f\0"
+   5      20766F6C 
+   5      74616765 
+   5      3A206368 
+   5      616E6E65 
+   6              		.section	.text$_ZL10setVoltageif,"x"
+   7              		.p2align 4,,15
+   8              		.def	__ZL10setVoltageif;	.scl	3;	.type	32;	.endef
+   9              	__ZL10setVoltageif:
+  10              	LFB55:
+  11              		.cfi_startproc
+  12 0000 53       		pushl	%ebx
+  13              		.cfi_def_cfa_offset 8
+  14              		.cfi_offset 3, -8
+  15 0001 89C3     		movl	%eax, %ebx
+  16 0003 83EC38   		subl	$56, %esp
+  17              		.cfi_def_cfa_offset 64
+  18 0006 D9442440 		flds	64(%esp)
+  19 000a DD54240C 		fstl	12(%esp)
+  20 000e 89442408 		movl	%eax, 8(%esp)
+  21 0012 C7442404 		movl	$LC0, 4(%esp)
+  21      00000000 
+  22 001a D95C2420 		fstps	32(%esp)
+  23 001e C7042400 		movl	$__ZL6logger, (%esp)
+  23      000000
+  24 0025 E8000000 		call	__Z11scheduleMsgP7LoggingPKcz
+  24      00
+  25 002a D9442420 		flds	32(%esp)
+  26 002e D80DB000 		fmuls	LC1
+  26      0000
+  27 0034 D91C9D00 		fstps	__ZL13fakeAdcValues(,%ebx,4)
+  27      000000
+  28 003b 83C438   		addl	$56, %esp
+  29              		.cfi_def_cfa_offset 8
+  30 003e 5B       		popl	%ebx
+  31              		.cfi_restore 3
+  32              		.cfi_def_cfa_offset 4
+  33 003f C3       		ret
+  34              		.cfi_endproc
+  35              	LFE55:
+  36              		.section	.text$_ZL13setMapVoltagef,"x"
+  37              		.p2align 4,,15
+  38              		.def	__ZL13setMapVoltagef;	.scl	3;	.type	32;	.endef
+  39              	__ZL13setMapVoltagef:
+  40              	LFB61:
+  41              		.cfi_startproc
+  42 0000 A1000000 		movl	_engineConfiguration, %eax
+  42      00
+  43 0005 8B80FC00 		movl	252(%eax), %eax
+  43      0000
+  44 000b E9000000 		jmp	__ZL10setVoltageif
+  44      00
+  45              		.cfi_endproc
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccZvFreh.s 			page 2
+
+
+  46              	LFE61:
+  47              		.section	.text$_ZL13setTpsVoltagef,"x"
+  48              		.p2align 4,,15
+  49              		.def	__ZL13setTpsVoltagef;	.scl	3;	.type	32;	.endef
+  50              	__ZL13setTpsVoltagef:
+  51              	LFB60:
+  52              		.cfi_startproc
+  53 0000 A1000000 		movl	_engineConfiguration, %eax
+  53      00
+  54 0005 8B800C02 		movl	524(%eax), %eax
+  54      0000
+  55 000b E9000000 		jmp	__ZL10setVoltageif
+  55      00
+  56              		.cfi_endproc
+  57              	LFE60:
+  58              		.section	.text$_ZL13setAfrVoltagef,"x"
+  59              		.p2align 4,,15
+  60              		.def	__ZL13setAfrVoltagef;	.scl	3;	.type	32;	.endef
+  61              	__ZL13setAfrVoltagef:
+  62              	LFB59:
+  63              		.cfi_startproc
+  64 0000 A1000000 		movl	_engineConfiguration, %eax
+  64      00
+  65 0005 8B804802 		movl	584(%eax), %eax
+  65      0000
+  66 000b E9000000 		jmp	__ZL10setVoltageif
+  66      00
+  67              		.cfi_endproc
+  68              	LFE59:
+  69              		.section	.text$_ZL13setMafVoltagef,"x"
+  70              		.p2align 4,,15
+  71              		.def	__ZL13setMafVoltagef;	.scl	3;	.type	32;	.endef
+  72              	__ZL13setMafVoltagef:
+  73              	LFB58:
+  74              		.cfi_startproc
+  75 0000 A1000000 		movl	_engineConfiguration, %eax
+  75      00
+  76 0005 8B804402 		movl	580(%eax), %eax
+  76      0000
+  77 000b E9000000 		jmp	__ZL10setVoltageif
+  77      00
+  78              		.cfi_endproc
+  79              	LFE58:
+  80              		.section	.text$_ZL13setIatVoltagef,"x"
+  81              		.p2align 4,,15
+  82              		.def	__ZL13setIatVoltagef;	.scl	3;	.type	32;	.endef
+  83              	__ZL13setIatVoltagef:
+  84              	LFB57:
+  85              		.cfi_startproc
+  86 0000 A1000000 		movl	_engineConfiguration, %eax
+  86      00
+  87 0005 8B803C01 		movl	316(%eax), %eax
+  87      0000
+  88 000b E9000000 		jmp	__ZL10setVoltageif
+  88      00
+  89              		.cfi_endproc
+  90              	LFE57:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccZvFreh.s 			page 3
+
+
+  91              		.section	.text$_ZL13setCltVoltagef,"x"
+  92              		.p2align 4,,15
+  93              		.def	__ZL13setCltVoltagef;	.scl	3;	.type	32;	.endef
+  94              	__ZL13setCltVoltagef:
+  95              	LFB56:
+  96              		.cfi_startproc
+  97 0000 A1000000 		movl	_engineConfiguration, %eax
+  97      00
+  98 0005 8B801C01 		movl	284(%eax), %eax
+  98      0000
+  99 000b E9000000 		jmp	__ZL10setVoltageif
+  99      00
+ 100              		.cfi_endproc
+ 101              	LFE56:
+ 102              		.section	.text$_Z11getAdcValuePKci,"x"
+ 103              		.p2align 4,,15
+ 104              		.globl	__Z11getAdcValuePKci
+ 105              		.def	__Z11getAdcValuePKci;	.scl	2;	.type	32;	.endef
+ 106              	__Z11getAdcValuePKci:
+ 107              	LFB54:
+ 108              		.cfi_startproc
+ 109 0000 83EC08   		subl	$8, %esp
+ 110              		.cfi_def_cfa_offset 12
+ 111 0003 8B442410 		movl	16(%esp), %eax
+ 112 0007 D97C2406 		fnstcw	6(%esp)
+ 113 000b D9048500 		flds	__ZL13fakeAdcValues(,%eax,4)
+ 113      000000
+ 114 0012 0FB74424 		movzwl	6(%esp), %eax
+ 114      06
+ 115 0017 B40C     		movb	$12, %ah
+ 116 0019 66894424 		movw	%ax, 4(%esp)
+ 116      04
+ 117 001e D96C2404 		fldcw	4(%esp)
+ 118 0022 DB1C24   		fistpl	(%esp)
+ 119 0025 D96C2406 		fldcw	6(%esp)
+ 120 0029 8B0424   		movl	(%esp), %eax
+ 121 002c 83C408   		addl	$8, %esp
+ 122              		.cfi_def_cfa_offset 4
+ 123 002f C3       		ret
+ 124              		.cfi_endproc
+ 125              	LFE54:
+ 126              		.section .rdata,"dr"
+ 127              	LC3:
+ 128 0022 7365745F 		.ascii "set_mock_clt_voltage\0"
+ 128      6D6F636B 
+ 128      5F636C74 
+ 128      5F766F6C 
+ 128      74616765 
+ 129              	LC4:
+ 130 0037 7365745F 		.ascii "set_mock_iat_voltage\0"
+ 130      6D6F636B 
+ 130      5F696174 
+ 130      5F766F6C 
+ 130      74616765 
+ 131              	LC5:
+ 132 004c 7365745F 		.ascii "set_mock_maf_voltage\0"
+ 132      6D6F636B 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccZvFreh.s 			page 4
+
+
+ 132      5F6D6166 
+ 132      5F766F6C 
+ 132      74616765 
+ 133              	LC6:
+ 134 0061 7365745F 		.ascii "set_mock_afr_voltage\0"
+ 134      6D6F636B 
+ 134      5F616672 
+ 134      5F766F6C 
+ 134      74616765 
+ 135              	LC7:
+ 136 0076 7365745F 		.ascii "set_mock_tps_voltage\0"
+ 136      6D6F636B 
+ 136      5F747073 
+ 136      5F766F6C 
+ 136      74616765 
+ 137              	LC8:
+ 138 008b 7365745F 		.ascii "set_mock_map_voltage\0"
+ 138      6D6F636B 
+ 138      5F6D6170 
+ 138      5F766F6C 
+ 138      74616765 
+ 139              		.section	.text$_Z13initFakeBoardv,"x"
+ 140              		.p2align 4,,15
+ 141              		.globl	__Z13initFakeBoardv
+ 142              		.def	__Z13initFakeBoardv;	.scl	2;	.type	32;	.endef
+ 143              	__Z13initFakeBoardv:
+ 144              	LFB62:
+ 145              		.cfi_startproc
+ 146 0000 83EC1C   		subl	$28, %esp
+ 147              		.cfi_def_cfa_offset 32
+ 148 0003 C7442404 		movl	$__ZL13setCltVoltagef, 4(%esp)
+ 148      00000000 
+ 149 000b C7042422 		movl	$LC3, (%esp)
+ 149      000000
+ 150 0012 E8000000 		call	_addConsoleActionF
+ 150      00
+ 151 0017 C7442404 		movl	$__ZL13setIatVoltagef, 4(%esp)
+ 151      00000000 
+ 152 001f C7042437 		movl	$LC4, (%esp)
+ 152      000000
+ 153 0026 E8000000 		call	_addConsoleActionF
+ 153      00
+ 154 002b C7442404 		movl	$__ZL13setMafVoltagef, 4(%esp)
+ 154      00000000 
+ 155 0033 C704244C 		movl	$LC5, (%esp)
+ 155      000000
+ 156 003a E8000000 		call	_addConsoleActionF
+ 156      00
+ 157 003f C7442404 		movl	$__ZL13setAfrVoltagef, 4(%esp)
+ 157      00000000 
+ 158 0047 C7042461 		movl	$LC6, (%esp)
+ 158      000000
+ 159 004e E8000000 		call	_addConsoleActionF
+ 159      00
+ 160 0053 C7442404 		movl	$__ZL13setTpsVoltagef, 4(%esp)
+ 160      00000000 
+ 161 005b C7042476 		movl	$LC7, (%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccZvFreh.s 			page 5
+
+
+ 161      000000
+ 162 0062 E8000000 		call	_addConsoleActionF
+ 162      00
+ 163 0067 C7442404 		movl	$__ZL13setMapVoltagef, 4(%esp)
+ 163      00000000 
+ 164 006f C704248B 		movl	$LC8, (%esp)
+ 164      000000
+ 165 0076 E8000000 		call	_addConsoleActionF
+ 165      00
+ 166 007b 83C41C   		addl	$28, %esp
+ 167              		.cfi_def_cfa_offset 4
+ 168 007e C3       		ret
+ 169              		.cfi_endproc
+ 170              	LFE62:
+ 171 007f 90       		.section .rdata,"dr"
+ 172              	LC9:
+ 173 00a0 73696D75 		.ascii "simulator board\0"
+ 173      6C61746F 
+ 173      7220626F 
+ 173      61726400 
+ 174              		.section	.text.startup._GLOBAL__sub_I__Z11getAdcValuePKci,"x"
+ 175              		.p2align 4,,15
+ 176              		.def	__GLOBAL__sub_I__Z11getAdcValuePKci;	.scl	3;	.type	32;	.endef
+ 177              	__GLOBAL__sub_I__Z11getAdcValuePKci:
+ 178              	LFB64:
+ 179              		.cfi_startproc
+ 180 0000 83EC1C   		subl	$28, %esp
+ 181              		.cfi_def_cfa_offset 32
+ 182 0003 B9000000 		movl	$__ZL6logger, %ecx
+ 182      00
+ 183 0008 C70424A0 		movl	$LC9, (%esp)
+ 183      000000
+ 184 000f E8000000 		call	__ZN18LoggingWithStorageC1EPKc
+ 184      00
+ 185              		.cfi_def_cfa_offset 28
+ 186 0014 83EC04   		subl	$4, %esp
+ 187              		.cfi_def_cfa_offset 32
+ 188 0017 83C41C   		addl	$28, %esp
+ 189              		.cfi_def_cfa_offset 4
+ 190 001a C3       		ret
+ 191              		.cfi_endproc
+ 192              	LFE64:
+ 193 001b 90909090 		.section	.ctors,"w"
+ 193      90
+ 194              		.align 4
+ 195 0000 00000000 		.long	__GLOBAL__sub_I__Z11getAdcValuePKci
+ 196              		.section	.data$_ZL13fakeAdcValues,"w"
+ 197              		.align 32
+ 198              	__ZL13fakeAdcValues:
+ 199 0000 00000000 		.space 64
+ 199      00000000 
+ 199      00000000 
+ 199      00000000 
+ 199      00000000 
+ 200              		.section	.data$_ZL6logger,"w"
+ 201              		.align 32
+ 202              	__ZL6logger:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccZvFreh.s 			page 6
+
+
+ 203 0000 00000000 		.space 260
+ 203      00000000 
+ 203      00000000 
+ 203      00000000 
+ 203      00000000 
+ 204 0104 00000000 		.section .rdata,"dr"
+ 204      00000000 
+ 204      00000000 
+ 204      00000000 
+ 204      00000000 
+ 205              		.align 4
+ 206              	LC1:
+ 207 00b0 00A0AA44 		.long	1152032768
+ 208              		.def	__Z11scheduleMsgP7LoggingPKcz;	.scl	2;	.type	32;	.endef
+ 209              		.def	_addConsoleActionF;	.scl	2;	.type	32;	.endef
+ 210              		.def	__ZN18LoggingWithStorageC1EPKc;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccZvFreh.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 boards.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccZvFreh.s:9      .text$_ZL10setVoltageif:00000000 __ZL10setVoltageif
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccZvFreh.s:202    .data$_ZL6logger:00000000 __ZL6logger
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccZvFreh.s:198    .data$_ZL13fakeAdcValues:00000000 __ZL13fakeAdcValues
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccZvFreh.s:39     .text$_ZL13setMapVoltagef:00000000 __ZL13setMapVoltagef
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccZvFreh.s:50     .text$_ZL13setTpsVoltagef:00000000 __ZL13setTpsVoltagef
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccZvFreh.s:61     .text$_ZL13setAfrVoltagef:00000000 __ZL13setAfrVoltagef
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccZvFreh.s:72     .text$_ZL13setMafVoltagef:00000000 __ZL13setMafVoltagef
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccZvFreh.s:83     .text$_ZL13setIatVoltagef:00000000 __ZL13setIatVoltagef
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccZvFreh.s:94     .text$_ZL13setCltVoltagef:00000000 __ZL13setCltVoltagef
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccZvFreh.s:106    .text$_Z11getAdcValuePKci:00000000 __Z11getAdcValuePKci
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccZvFreh.s:143    .text$_Z13initFakeBoardv:00000000 __Z13initFakeBoardv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccZvFreh.s:177    .text.startup._GLOBAL__sub_I__Z11getAdcValuePKci:00000000 __GLOBAL__sub_I__Z11getAdcValuePKci
+
+UNDEFINED SYMBOLS
+_engineConfiguration
+__Z11scheduleMsgP7LoggingPKcz
+_addConsoleActionF
+__ZN18LoggingWithStorageC1EPKc

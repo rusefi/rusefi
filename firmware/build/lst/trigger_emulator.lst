@@ -1,0 +1,162 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccfUGDk8.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"trigger_emulator.cpp"
+  16              		.section	.text._Z19initTriggerEmulatorP7LoggingP6Engine,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_Z19initTriggerEmulatorP7LoggingP6Engine
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_Z19initTriggerEmulatorP7LoggingP6Engine, %function
+  23              	_Z19initTriggerEmulatorP7LoggingP6Engine:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+  27 0004 4C6A     		ldr	r4, [r1, #36]
+  28 0006 8046     		mov	r8, r0
+  29 0008 2068     		ldr	r0, [r4]
+  30 000a 0F46     		mov	r7, r1
+  31 000c FFF7FEFF 		bl	_Z20getConfigurationName13engine_type_e
+  32 0010 40F20005 		movw	r5, #:lower16:triggerSignal
+  33 0014 0146     		mov	r1, r0
+  34 0016 40F20006 		movw	r6, #:lower16:.LANCHOR0
+  35 001a 40F20000 		movw	r0, #:lower16:.LC0
+  36 001e C0F20005 		movt	r5, #:upper16:triggerSignal
+  37 0022 C0F20006 		movt	r6, #:upper16:.LANCHOR0
+  38 0026 C0F20000 		movt	r0, #:upper16:.LC0
+  39 002a FFF7FEFF 		bl	print
+  40 002e 06F11003 		add	r3, r6, #16
+  41 0032 40F20000 		movw	r0, #:lower16:.LC1
+  42 0036 06F1200E 		add	lr, r6, #32
+  43 003a 3146     		mov	r1, r6
+  44 003c D4F8D023 		ldr	r2, [r4, #976]
+  45 0040 6B60     		str	r3, [r5, #4]
+  46 0042 C0F20000 		movt	r0, #:upper16:.LC1
+  47 0046 04F57773 		add	r3, r4, #988
+  48 004a C5F808E0 		str	lr, [r5, #8]
+  49 004e 2E60     		str	r6, [r5]
+  50 0050 FFF7FEFF 		bl	_Z21outputPinRegisterExt2PKcP9OutputPin11brain_pin_eP17pin_output_mode_e
+  51 0054 40F20000 		movw	r0, #:lower16:.LC2
+  52 0058 6968     		ldr	r1, [r5, #4]
+  53 005a D4F8D423 		ldr	r2, [r4, #980]
+  54 005e 04F57873 		add	r3, r4, #992
+  55 0062 C0F20000 		movt	r0, #:upper16:.LC2
+  56 0066 FFF7FEFF 		bl	_Z21outputPinRegisterExt2PKcP9OutputPin11brain_pin_eP17pin_output_mode_e
+  57 006a 40F20000 		movw	r0, #:lower16:.LC3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccfUGDk8.s 			page 2
+
+
+  58 006e A968     		ldr	r1, [r5, #8]
+  59 0070 D4F8D823 		ldr	r2, [r4, #984]
+  60 0074 04F57973 		add	r3, r4, #996
+  61 0078 C0F20000 		movt	r0, #:upper16:.LC3
+  62 007c FFF7FEFF 		bl	_Z21outputPinRegisterExt2PKcP9OutputPin11brain_pin_eP17pin_output_mode_e
+  63 0080 4046     		mov	r0, r8
+  64 0082 3946     		mov	r1, r7
+  65 0084 BDE8F041 		pop	{r4, r5, r6, r7, r8, lr}
+  66 0088 FFF7FEBF 		b	_Z24initTriggerEmulatorLogicP7LoggingP6Engine
+  67              		.size	_Z19initTriggerEmulatorP7LoggingP6Engine, .-_Z19initTriggerEmulatorP7LoggingP6Engine
+  68 008c AFF30080 		.section	.text.startup._GLOBAL__sub_I__Z19initTriggerEmulatorP7LoggingP6Engine,"ax",%progbits
+  69              		.align	2
+  70              		.p2align 4,,15
+  71              		.thumb
+  72              		.thumb_func
+  73              		.type	_GLOBAL__sub_I__Z19initTriggerEmulatorP7LoggingP6Engine, %function
+  74              	_GLOBAL__sub_I__Z19initTriggerEmulatorP7LoggingP6Engine:
+  75              		@ args = 0, pretend = 0, frame = 0
+  76              		@ frame_needed = 0, uses_anonymous_args = 0
+  77 0000 10B5     		push	{r4, lr}
+  78 0002 40F20004 		movw	r4, #:lower16:.LANCHOR0
+  79 0006 C0F20004 		movt	r4, #:upper16:.LANCHOR0
+  80 000a 2046     		mov	r0, r4
+  81 000c FFF7FEFF 		bl	_ZN9OutputPinC1Ev
+  82 0010 04F11000 		add	r0, r4, #16
+  83 0014 FFF7FEFF 		bl	_ZN9OutputPinC1Ev
+  84 0018 04F12000 		add	r0, r4, #32
+  85 001c BDE81040 		pop	{r4, lr}
+  86 0020 FFF7FEBF 		b	_ZN9OutputPinC1Ev
+  87              		.size	_GLOBAL__sub_I__Z19initTriggerEmulatorP7LoggingP6Engine, .-_GLOBAL__sub_I__Z19initTriggerEmu
+  88 0024 AFF30080 		.section	.init_array,"aw",%init_array
+  88      AFF30080 
+  88      AFF30080 
+  89              		.align	2
+  90 0000 00000000 		.word	_GLOBAL__sub_I__Z19initTriggerEmulatorP7LoggingP6Engine(target1)
+  91              		.section	.rodata.str1.4,"aMS",%progbits,1
+  92              		.align	2
+  93              	.LC0:
+  94 0000 456D756C 		.ascii	"Emulating %s\015\012\000"
+  94      6174696E 
+  94      67202573 
+  94      0D0A00
+  95 000f 00       		.space	1
+  96              	.LC1:
+  97 0010 64697374 		.ascii	"distributor ch1\000"
+  97      72696275 
+  97      746F7220 
+  97      63683100 
+  98              	.LC2:
+  99 0020 64697374 		.ascii	"distributor ch2\000"
+  99      72696275 
+  99      746F7220 
+  99      63683200 
+ 100              	.LC3:
+ 101 0030 64697374 		.ascii	"distributor ch3\000"
+ 101      72696275 
+ 101      746F7220 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccfUGDk8.s 			page 3
+
+
+ 101      63683300 
+ 102              		.section	.bss._ZL15emulatorOutputs,"aw",%nobits
+ 103              		.align	2
+ 104              		.set	.LANCHOR0,. + 0
+ 105              		.type	_ZL15emulatorOutputs, %object
+ 106              		.size	_ZL15emulatorOutputs, 48
+ 107              	_ZL15emulatorOutputs:
+ 108 0000 00000000 		.space	48
+ 108      00000000 
+ 108      00000000 
+ 108      00000000 
+ 108      00000000 
+ 109              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccfUGDk8.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 trigger_emulator.cpp
+C:\Users\pc\AppData\Local\Temp\ccfUGDk8.s:17     .text._Z19initTriggerEmulatorP7LoggingP6Engine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccfUGDk8.s:23     .text._Z19initTriggerEmulatorP7LoggingP6Engine:00000000 _Z19initTriggerEmulatorP7LoggingP6Engine
+C:\Users\pc\AppData\Local\Temp\ccfUGDk8.s:104    .bss._ZL15emulatorOutputs:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccfUGDk8.s:93     .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccfUGDk8.s:96     .rodata.str1.4:00000010 .LC1
+C:\Users\pc\AppData\Local\Temp\ccfUGDk8.s:98     .rodata.str1.4:00000020 .LC2
+C:\Users\pc\AppData\Local\Temp\ccfUGDk8.s:100    .rodata.str1.4:00000030 .LC3
+C:\Users\pc\AppData\Local\Temp\ccfUGDk8.s:69     .text.startup._GLOBAL__sub_I__Z19initTriggerEmulatorP7LoggingP6Engine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccfUGDk8.s:74     .text.startup._GLOBAL__sub_I__Z19initTriggerEmulatorP7LoggingP6Engine:00000000 _GLOBAL__sub_I__Z19initTriggerEmulatorP7LoggingP6Engine
+C:\Users\pc\AppData\Local\Temp\ccfUGDk8.s:89     .init_array:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccfUGDk8.s:92     .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccfUGDk8.s:103    .bss._ZL15emulatorOutputs:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccfUGDk8.s:107    .bss._ZL15emulatorOutputs:00000000 _ZL15emulatorOutputs
+
+UNDEFINED SYMBOLS
+_Z20getConfigurationName13engine_type_e
+triggerSignal
+print
+_Z21outputPinRegisterExt2PKcP9OutputPin11brain_pin_eP17pin_output_mode_e
+_Z24initTriggerEmulatorLogicP7LoggingP6Engine
+_ZN9OutputPinC1Ev

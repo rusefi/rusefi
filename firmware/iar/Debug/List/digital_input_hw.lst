@@ -1,0 +1,869 @@
+###############################################################################
+#                                                                             #
+# IAR ANSI C/C++ Compiler V6.50.3.4676/W32 for ARM      30/Jun/2015  23:09:44 #
+# Copyright 1999-2013 IAR Systems AB.                                         #
+#                                                                             #
+#    Cpu mode        =  thumb                                                 #
+#    Endian          =  little                                                #
+#    Source file     =  F:\stuff\rusefi_sourceforge\firmware\hw_layer\digital #
+#                       _input_hw.cpp                                         #
+#    Command line    =  F:\stuff\rusefi_sourceforge\firmware\hw_layer\digital #
+#                       _input_hw.cpp -lCN F:\stuff\rusefi_sourceforge\firmwa #
+#                       re\iar\Debug\List\ -lA F:\stuff\rusefi_sourceforge\fi #
+#                       rmware\iar\Debug\List\ -o                             #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\   #
+#                       --no_cse --no_unroll --no_inline --no_code_motion     #
+#                       --no_tbaa --no_clustering --no_scheduling --debug     #
+#                       --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp     #
+#                       --dlib_config "C:\Program Files (x86)\IAR             #
+#                       Systems\Embedded Workbench                            #
+#                       6.5\arm\INC\c\DLib_Config_Normal.h"                   #
+#                       --misrac2004=1.2-1.4,2.3,3.4,4.2,6.5-7,8.2-8.3,9.3,   #
+#                       12.3,13.6-13,15.5,17.3,19.17,20.7-20.9,20.11 -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\ -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\kernel\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\ports\common\ARMCMx\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\common\ARMCMx\CMSIS\include\ -I               #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\IAR\ARMCMx\ -I F:\stuff\rusefi_sourceforge\fi #
+#                       rmware\iar\..\chibios\os\ports\IAR\ARMCMx\STM32F4xx\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\chibio #
+#                       s\os\hal\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\hal\platforms\STM32\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\DMAv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\GPIOv2\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\I2Cv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\SPIv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\TIMv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\RTCv2\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\USARTv1\ -I                     #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\OTGv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32F4xx\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\various\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\chibios\os\various\devices_lib\accel\ -I         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\b #
+#                       oards\ST_STM32F4_DISCOVERY\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\co #
+#                       ntrollers\algo\ -I F:\stuff\rusefi_sourceforge\firmwa #
+#                       re\iar\..\controllers\core\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\system\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\controllers\sensors\ -I                          #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\math\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\controllers\trigger\ -I                            #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\config #
+#                       \ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\conf #
+#                       ig\engines\ -I F:\stuff\rusefi_sourceforge\firmware\i #
+#                       ar\..\config\stm32f4ems\ -I                           #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\b #
+#                       inary\ -I F:\stuff\rusefi_sourceforge\firmware\iar\.. #
+#                       \console_util\ -I F:\stuff\rusefi_sourceforge\firmwar #
+#                       e\iar\..\development\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\development\test\ -I                  #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\developme #
+#                       nt\hw_layer\ -I F:\stuff\rusefi_sourceforge\firmware\ #
+#                       iar\..\hw_layer\algo\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\hw_layer\lcd\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                       stm32f4\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\hw_layer\serial_over_usb\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                        -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext_al #
+#                       go\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\de #
+#                       velopment\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\development\hw_layer\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\util\     #
+#                       -On --eec++                                           #
+#    MISRA C version =  2004                                                  #
+#      Enabled       =  1.2-1.4 2.3 3.4 4.2 6.5 7 8.2 8.3 9.3 12.3 13.6 13.7  #
+#                       15.5 17.3 19.17 20.7-20.9 20.11                       #
+#      Checked       =  1.4 2.3 4.2 6.5 7 8.2 8.3 9.3 12.3 13.7 15.5          #
+#                       20.7-20.9 20.11                                       #
+#      Not checked   =  1.1-1.3 1.5-2.2 2.4-4.1 5-6.4 8.1 8.4-9.2 10-12.2     #
+#                       12.4-13.6 14-15.4 16-20.6 20.10 20.12 21              #
+#    List file       =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\d #
+#                       igital_input_hw.lst                                   #
+#    Object file     =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\di #
+#                       gital_input_hw.o                                      #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+F:\stuff\rusefi_sourceforge\firmware\hw_layer\digital_input_hw.cpp
+      1          /*
+      2           * @file	digital_input_hw.cpp
+      3           * @brief	Helper methods related to Input Capture Unit (ICU)
+      4           *
+      5           * @date Jun 23, 2013
+      6           * @author Andrey Belomutskiy, (c) 2012-2015
+      7           */
+      8          
+      9          #include "digital_input_hw.h"
+
+   \                                 In section .text, align 2
+   \   __intrinsic __nounwind __interwork __softfp void *memset(void *, int, size_t)
+   \                     memset:
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+   \   00000008   0x002A             MOVS     R2,R5
+   \   0000000A   0x0031             MOVS     R1,R6
+   \   0000000C   0x0020             MOVS     R0,R4
+   \   0000000E   0x.... 0x....      BL       __aeabi_memset
+   \   00000012   0x0020             MOVS     R0,R4
+   \   00000014   0xBD70             POP      {R4-R6,PC}       ;; return
+
+   \                                 In section .text, align 2
+   \   __code __interwork __softfp digital_input_s::<_ZN15digital_input_sC1Ev>()
+   \                     _ZN15digital_input_sC1Ev:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0xF114 0x0008      ADDS     R0,R4,#+8
+   \   00000008   0x.... 0x....      BL       _ZN16IntListenerArrayC1Ev
+   \   0000000C   0xF114 0x0084      ADDS     R0,R4,#+132
+   \   00000010   0x.... 0x....      BL       _ZN16IntListenerArrayC1Ev
+   \   00000014   0x0020             MOVS     R0,R4
+   \   00000016   0xBD10             POP      {R4,PC}          ;; return
+     10          #include "mpu_util.h"
+     11          #include "fl_stack.h"
+
+   \                                 In section .text, align 4
+   \   __code __interwork __softfp ArrayList<digital_input_s, 8>::ArrayList()
+   \                     _ZN9ArrayListI15digital_input_sLi8EEC1Ev:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x2308             MOVS     R3,#+8
+   \   00000006   0xF44F 0x7280      MOV      R2,#+256
+   \   0000000A   0x4907             LDR.N    R1,??ArrayList_0
+   \   0000000C   0x1D20             ADDS     R0,R4,#+4
+   \   0000000E   0x.... 0x....      BL       __aeabi_vec_ctor_nocookie_nodtor
+   \   00000012   0xF44F 0x6200      MOV      R2,#+2048
+   \   00000016   0x2100             MOVS     R1,#+0
+   \   00000018   0x1D20             ADDS     R0,R4,#+4
+   \   0000001A   0x.... 0x....      BL       memset
+   \   0000001E   0x0020             MOVS     R0,R4
+   \   00000020   0x.... 0x....      BL       _ZN9ArrayListI15digital_input_sLi8EE5resetEv
+   \   00000024   0x0020             MOVS     R0,R4
+   \   00000026   0xBD10             POP      {R4,PC}          ;; return
+   \                     ??ArrayList_0:
+   \   00000028   0x........         DC32     _ZN15digital_input_sC1Ev
+
+   \                                 In section .text, align 2
+   \   __interwork __softfp void ArrayList<digital_input_s, 8>::reset()
+   \                     _ZN9ArrayListI15digital_input_sLi8EE5resetEv:
+   \   00000000   0x2100             MOVS     R1,#+0
+   \   00000002   0x6001             STR      R1,[R0, #+0]
+   \   00000004   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 4
+   \   __interwork __softfp digital_input_s *ArrayList<digital_input_s, 8>::add()
+   \                     _ZN9ArrayListI15digital_input_sLi8EE3addEv:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x6820             LDR      R0,[R4, #+0]
+   \   00000006   0x2808             CMP      R0,#+8
+   \   00000008   0xDB04             BLT.N    ??add_0
+   \   0000000A   0x4807             LDR.N    R0,??add_1
+   \   0000000C   0x.... 0x....      BL       firmwareError
+   \   00000010   0x2000             MOVS     R0,#+0
+   \   00000012   0xE007             B.N      ??add_2
+   \                     ??add_0:
+   \   00000014   0x6820             LDR      R0,[R4, #+0]
+   \   00000016   0x1C41             ADDS     R1,R0,#+1
+   \   00000018   0x6021             STR      R1,[R4, #+0]
+   \   0000001A   0xF44F 0x7180      MOV      R1,#+256
+   \   0000001E   0xFB01 0x4000      MLA      R0,R1,R0,R4
+   \   00000022   0x1D00             ADDS     R0,R0,#+4
+   \                     ??add_2:
+   \   00000024   0xBD10             POP      {R4,PC}          ;; return
+   \   00000026   0xBF00             Nop      
+   \                     ??add_1:
+   \   00000028   0x........         DC32     _ZZN9ArrayListI15digital_input_sLi8EE3addEvEs
+     12          
+     13          #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
+     14          
+     15          #include "eficonsole.h"
+     16          #include "pin_repository.h"
+     17          
+     18          static void icuWidthCallback(ICUDriver *driver);
+     19          static void icuPeriordCallBack(ICUDriver *driver);
+     20          
+     21          /*
+     22           * 30ms seems like width maximum, at 16bit precision that means
+     23           * CORE_CLOCK / 33.33333 = TICKS * 65536
+     24           * 168000000 / 33.333333 / 65536 = 76.90
+     25           */
+
+   \                                 In section .data, align 4
+     26          static ICUConfig wave_icucfg = { ICU_INPUT_ACTIVE_LOW, CORE_CLOCK / 100, icuWidthCallback, icuPeriordCallBack, 0,
+   \                     wave_icucfg:
+   \   00000000   0x01 0x00          DC8 1, 0, 0, 0
+   \              0x00 0x00    
+   \   00000004   0x0019A280         DC32 1680000, _Z16icuWidthCallbackP9ICUDriver
+   \              0x........   
+   \   0000000C   0x........         DC32 _Z18icuPeriordCallBackP9ICUDriver, 0H
+   \              0x00000000   
+   \   00000014   0x00 0x00          DC8 0, 0, 0, 0
+   \              0x00 0x00    
+   \   00000018   0x00000000         DC32 0
+     27          		ICU_CHANNEL_1, 0 };
+     28          
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __intrinsic __interwork __softfp void __sti__routine()
+   \                     __sti__routine:
+   \   00000000   0xB580             PUSH     {R7,LR}
+     29          static ArrayList<digital_input_s, 8> registeredIcus;
+   \   00000002   0x....             LDR.N    R0,??DataTable6
+   \   00000004   0x.... 0x....      BL       _ZN9ArrayListI15digital_input_sLi8EEC1Ev
+   \   00000008   0xBD01             POP      {R0,PC}          ;; return
+
+   \                                 In section .bss, align 4
+   \                     registeredIcus:
+   \   00000000                      DS8 2052
+     30          
+
+   \                                 In section .text, align 2, keep-with-next
+     31          static digital_input_s * finddigital_input_s(ICUDriver *driver) {
+   \                     _Z19finddigital_input_sP9ICUDriver:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+     32          	for (int i = 0; i < registeredIcus.size; i++) {
+   \   00000004   0x2000             MOVS     R0,#+0
+   \                     ??finddigital_input_s_0:
+   \   00000006   0x....             LDR.N    R1,??DataTable6
+   \   00000008   0x6809             LDR      R1,[R1, #+0]
+   \   0000000A   0x4288             CMP      R0,R1
+   \   0000000C   0xDA10             BGE.N    ??finddigital_input_s_1
+     33          		if (registeredIcus.elements[i].driver == driver) {
+   \   0000000E   0xF44F 0x7180      MOV      R1,#+256
+   \   00000012   0x....             LDR.N    R2,??DataTable6
+   \   00000014   0xFB01 0x2100      MLA      R1,R1,R0,R2
+   \   00000018   0x6849             LDR      R1,[R1, #+4]
+   \   0000001A   0x42A1             CMP      R1,R4
+   \   0000001C   0xD106             BNE.N    ??finddigital_input_s_2
+     34          			return &registeredIcus.elements[i];
+   \   0000001E   0xF44F 0x7180      MOV      R1,#+256
+   \   00000022   0x....             LDR.N    R2,??DataTable6
+   \   00000024   0xFB01 0x2000      MLA      R0,R1,R0,R2
+   \   00000028   0x1D00             ADDS     R0,R0,#+4
+   \   0000002A   0xE005             B.N      ??finddigital_input_s_3
+     35          		}
+     36          	}
+   \                     ??finddigital_input_s_2:
+   \   0000002C   0x1C40             ADDS     R0,R0,#+1
+   \   0000002E   0xE7EA             B.N      ??finddigital_input_s_0
+     37          	firmwareError("reader not found");
+   \                     ??finddigital_input_s_1:
+   \   00000030   0x....             LDR.N    R0,??DataTable6_1
+   \   00000032   0x.... 0x....      BL       firmwareError
+     38          	return (digital_input_s *) NULL;
+   \   00000036   0x2000             MOVS     R0,#+0
+   \                     ??finddigital_input_s_3:
+   \   00000038   0xBD10             POP      {R4,PC}          ;; return
+     39          }
+     40          
+
+   \                                 In section .text, align 2, keep-with-next
+     41          static void icuWidthCallback(ICUDriver *driver) {
+   \                     _Z16icuWidthCallbackP9ICUDriver:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+     42          	/*
+     43          	 * see comment in icuPeriordCallBack
+     44          	 int rowWidth = icuGetWidth(driver);
+     45          	 */
+     46          	digital_input_s * hw = finddigital_input_s(driver);
+   \   00000004   0x0020             MOVS     R0,R4
+   \   00000006   0x.... 0x....      BL       _Z19finddigital_input_sP9ICUDriver
+   \   0000000A   0x0005             MOVS     R5,R0
+     47          	hw->widthListeners.invokeJustArgCallbacks();
+   \   0000000C   0xF115 0x0008      ADDS     R0,R5,#+8
+   \   00000010   0x.... 0x....      BL       _ZN16IntListenerArray22invokeJustArgCallbacksEv
+     48          }
+   \   00000014   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+     49          
+
+   \                                 In section .text, align 2, keep-with-next
+     50          static void icuPeriordCallBack(ICUDriver *driver) {
+   \                     _Z18icuPeriordCallBackP9ICUDriver:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+     51          	/*
+     52          	 * 	we do not use timer period at all - we just need the event. For all time characteristics,
+     53          	 * 	we use system time
+     54          	 * 	int period = icuGetPeriod(driver);
+     55          	 */
+     56          
+     57          	digital_input_s * hw = finddigital_input_s(driver);
+   \   00000004   0x0020             MOVS     R0,R4
+   \   00000006   0x.... 0x....      BL       _Z19finddigital_input_sP9ICUDriver
+   \   0000000A   0x0005             MOVS     R5,R0
+     58          	hw->periodListeners.invokeJustArgCallbacks();
+   \   0000000C   0xF115 0x0084      ADDS     R0,R5,#+132
+   \   00000010   0x.... 0x....      BL       _ZN16IntListenerArray22invokeJustArgCallbacksEv
+     59          }
+   \   00000014   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+     60          
+
+   \                                 In section .text, align 2, keep-with-next
+     61          static uint32_t getAlternateFunctions(ICUDriver *driver) {
+   \                     _Z21getAlternateFunctionsP9ICUDriver:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+     62          	if (driver == NULL) {
+   \   00000004   0x2C00             CMP      R4,#+0
+   \   00000006   0xD105             BNE.N    ??getAlternateFunctions_0
+     63          		firmwareError("getAlternateFunctions(NULL)");
+   \   00000008   0x....             LDR.N    R0,??DataTable6_2
+   \   0000000A   0x.... 0x....      BL       firmwareError
+     64          		return 0xffffffff;
+   \   0000000E   0xF05F 0x30FF      MOVS     R0,#-1
+   \   00000012   0xE018             B.N      ??getAlternateFunctions_1
+     65          	}
+     66          #if STM32_ICU_USE_TIM1
+     67          	if (driver == &ICUD1) {
+   \                     ??getAlternateFunctions_0:
+   \   00000014   0x....             LDR.N    R0,??DataTable6_3
+   \   00000016   0x4284             CMP      R4,R0
+   \   00000018   0xD101             BNE.N    ??getAlternateFunctions_2
+     68          		return GPIO_AF_TIM1;
+   \   0000001A   0x2001             MOVS     R0,#+1
+   \   0000001C   0xE013             B.N      ??getAlternateFunctions_1
+     69          	}
+     70          #endif
+     71          #if STM32_ICU_USE_TIM2
+     72          	if (driver == &ICUD2) {
+   \                     ??getAlternateFunctions_2:
+   \   0000001E   0x....             LDR.N    R0,??DataTable6_4
+   \   00000020   0x4284             CMP      R4,R0
+   \   00000022   0xD101             BNE.N    ??getAlternateFunctions_3
+     73          		return GPIO_AF_TIM2;
+   \   00000024   0x2001             MOVS     R0,#+1
+   \   00000026   0xE00E             B.N      ??getAlternateFunctions_1
+     74          	}
+     75          #endif
+     76          #if STM32_ICU_USE_TIM3
+     77          	if (driver == &ICUD3) {
+   \                     ??getAlternateFunctions_3:
+   \   00000028   0x....             LDR.N    R0,??DataTable6_5
+   \   0000002A   0x4284             CMP      R4,R0
+   \   0000002C   0xD101             BNE.N    ??getAlternateFunctions_4
+     78          		return GPIO_AF_TIM3;
+   \   0000002E   0x2002             MOVS     R0,#+2
+   \   00000030   0xE009             B.N      ??getAlternateFunctions_1
+     79          	}
+     80          #endif
+     81          #if STM32_ICU_USE_TIM4
+     82          	if (driver == &ICUD4) {
+     83          		return GPIO_AF_TIM4;
+     84          	}
+     85          #endif
+     86          #if STM32_ICU_USE_TIM9
+     87          	if (driver == &ICUD9) {
+   \                     ??getAlternateFunctions_4:
+   \   00000032   0x....             LDR.N    R0,??DataTable6_6
+   \   00000034   0x4284             CMP      R4,R0
+   \   00000036   0xD101             BNE.N    ??getAlternateFunctions_5
+     88          		return GPIO_AF_TIM9;
+   \   00000038   0x2003             MOVS     R0,#+3
+   \   0000003A   0xE004             B.N      ??getAlternateFunctions_1
+     89          	}
+     90          #endif
+     91          	firmwareError("No such driver");
+   \                     ??getAlternateFunctions_5:
+   \   0000003C   0x....             LDR.N    R0,??DataTable6_7
+   \   0000003E   0x.... 0x....      BL       firmwareError
+     92          	return 0xffffffff;
+   \   00000042   0xF05F 0x30FF      MOVS     R0,#-1
+   \                     ??getAlternateFunctions_1:
+   \   00000046   0xBD10             POP      {R4,PC}          ;; return
+     93          }
+     94          
+
+   \                                 In section .text, align 2, keep-with-next
+     95          icuchannel_t getInputCaptureChannel(brain_pin_e hwPin) {
+   \                     _Z22getInputCaptureChannel11brain_pin_e:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+     96          	switch (hwPin) {
+   \   00000004   0x0020             MOVS     R0,R4
+   \   00000006   0x2805             CMP      R0,#+5
+   \   00000008   0xD00C             BEQ.N    ??getInputCaptureChannel_0
+   \   0000000A   0x2808             CMP      R0,#+8
+   \   0000000C   0xD00A             BEQ.N    ??getInputCaptureChannel_0
+   \   0000000E   0x2826             CMP      R0,#+38
+   \   00000010   0xD008             BEQ.N    ??getInputCaptureChannel_0
+   \   00000012   0x2845             CMP      R0,#+69
+   \   00000014   0xD006             BEQ.N    ??getInputCaptureChannel_0
+   \   00000016   0x2846             CMP      R0,#+70
+   \   00000018   0xD006             BEQ.N    ??getInputCaptureChannel_1
+   \   0000001A   0x2849             CMP      R0,#+73
+   \   0000001C   0xD002             BEQ.N    ??getInputCaptureChannel_0
+   \   0000001E   0x284B             CMP      R0,#+75
+   \   00000020   0xD002             BEQ.N    ??getInputCaptureChannel_1
+   \   00000022   0xE003             B.N      ??getInputCaptureChannel_2
+     97          	case GPIOA_5:
+     98          	case GPIOA_8:
+     99          	case GPIOC_6:
+    100          	case GPIOE_5:
+    101          	case GPIOE_9:
+    102          		return ICU_CHANNEL_1;
+   \                     ??getInputCaptureChannel_0:
+   \   00000024   0x2000             MOVS     R0,#+0
+   \   00000026   0xE006             B.N      ??getInputCaptureChannel_3
+    103          
+    104          	case GPIOE_6:
+    105          	case GPIOE_11:
+    106          		return ICU_CHANNEL_2;
+   \                     ??getInputCaptureChannel_1:
+   \   00000028   0x2001             MOVS     R0,#+1
+   \   0000002A   0xE004             B.N      ??getInputCaptureChannel_3
+    107          	default:
+    108          		firmwareError("Unexpected hw pin in getInputCaptureChannel %d", hwPin);
+   \                     ??getInputCaptureChannel_2:
+   \   0000002C   0x0021             MOVS     R1,R4
+   \   0000002E   0x....             LDR.N    R0,??DataTable6_8
+   \   00000030   0x.... 0x....      BL       firmwareError
+    109          		return ICU_CHANNEL_1;
+   \   00000034   0x2000             MOVS     R0,#+0
+   \                     ??getInputCaptureChannel_3:
+   \   00000036   0xBD10             POP      {R4,PC}          ;; return
+    110          	}
+    111          }
+    112          
+
+   \                                 In section .text, align 2, keep-with-next
+    113          ICUDriver * getInputCaptureDriver(brain_pin_e hwPin) {
+   \                     _Z21getInputCaptureDriver11brain_pin_e:
+   \   00000000   0x0001             MOVS     R1,R0
+    114          #if STM32_ICU_USE_TIM1
+    115          	if (hwPin == GPIOA_8) {
+   \   00000002   0x2908             CMP      R1,#+8
+   \   00000004   0xD101             BNE.N    ??getInputCaptureDriver_0
+    116          		return &ICUD1;
+   \   00000006   0x....             LDR.N    R0,??DataTable6_3
+   \   00000008   0xE014             B.N      ??getInputCaptureDriver_1
+    117          	}
+    118          	if (hwPin == GPIOE_9) {
+   \                     ??getInputCaptureDriver_0:
+   \   0000000A   0x2949             CMP      R1,#+73
+   \   0000000C   0xD101             BNE.N    ??getInputCaptureDriver_2
+    119          		return &ICUD1;
+   \   0000000E   0x....             LDR.N    R0,??DataTable6_3
+   \   00000010   0xE010             B.N      ??getInputCaptureDriver_1
+    120          	}
+    121          	if (hwPin == GPIOE_11) {
+   \                     ??getInputCaptureDriver_2:
+   \   00000012   0x294B             CMP      R1,#+75
+   \   00000014   0xD101             BNE.N    ??getInputCaptureDriver_3
+    122          		return &ICUD1;
+   \   00000016   0x....             LDR.N    R0,??DataTable6_3
+   \   00000018   0xE00C             B.N      ??getInputCaptureDriver_1
+    123          	}
+    124          #endif
+    125          #if STM32_ICU_USE_TIM2
+    126          	if (hwPin == GPIOA_5) {
+   \                     ??getInputCaptureDriver_3:
+   \   0000001A   0x2905             CMP      R1,#+5
+   \   0000001C   0xD101             BNE.N    ??getInputCaptureDriver_4
+    127          		return &ICUD2;
+   \   0000001E   0x....             LDR.N    R0,??DataTable6_4
+   \   00000020   0xE008             B.N      ??getInputCaptureDriver_1
+    128          	}
+    129          #endif
+    130          #if STM32_ICU_USE_TIM3
+    131          	if (hwPin == GPIOC_6) {
+   \                     ??getInputCaptureDriver_4:
+   \   00000022   0x2926             CMP      R1,#+38
+   \   00000024   0xD101             BNE.N    ??getInputCaptureDriver_5
+    132          		return &ICUD3;
+   \   00000026   0x....             LDR.N    R0,??DataTable6_5
+   \   00000028   0xE004             B.N      ??getInputCaptureDriver_1
+    133          	}
+    134          #endif
+    135          #if STM32_ICU_USE_TIM9
+    136          	if (hwPin == GPIOE_5) {
+   \                     ??getInputCaptureDriver_5:
+   \   0000002A   0x2945             CMP      R1,#+69
+   \   0000002C   0xD101             BNE.N    ??getInputCaptureDriver_6
+    137          		return &ICUD9;
+   \   0000002E   0x....             LDR.N    R0,??DataTable6_6
+   \   00000030   0xE000             B.N      ??getInputCaptureDriver_1
+    138          	}
+    139          #endif
+    140          	return (ICUDriver *) NULL;
+   \                     ??getInputCaptureDriver_6:
+   \   00000032   0x2000             MOVS     R0,#+0
+   \                     ??getInputCaptureDriver_1:
+   \   00000034   0x4770             BX       LR               ;; return
+    141          }
+    142          
+
+   \                                 In section .text, align 2, keep-with-next
+    143          void turnOnCapturePin(const char *msg, brain_pin_e brainPin) {
+   \                     _Z16turnOnCapturePinPKc11brain_pin_e:
+   \   00000000   0xE92D 0x43F8      PUSH     {R3-R9,LR}
+   \   00000004   0x0004             MOVS     R4,R0
+   \   00000006   0x000D             MOVS     R5,R1
+    144          	ioportid_t port = getHwPort(brainPin);
+   \   00000008   0x0028             MOVS     R0,R5
+   \   0000000A   0x.... 0x....      BL       _Z9getHwPort11brain_pin_e
+   \   0000000E   0x0006             MOVS     R6,R0
+    145          	ioportmask_t pin = getHwPin(brainPin);
+   \   00000010   0x0028             MOVS     R0,R5
+   \   00000012   0x.... 0x....      BL       _Z8getHwPin11brain_pin_e
+   \   00000016   0x0007             MOVS     R7,R0
+    146          
+    147          	ICUDriver *driver = getInputCaptureDriver(brainPin);
+   \   00000018   0x0028             MOVS     R0,R5
+   \   0000001A   0x.... 0x....      BL       _Z21getInputCaptureDriver11brain_pin_e
+   \   0000001E   0x4680             MOV      R8,R0
+    148          	if (driver != NULL) {
+   \   00000020   0xF1B8 0x0F00      CMP      R8,#+0
+   \   00000024   0xD00B             BEQ.N    ??turnOnCapturePin_0
+    149          		iomode_t mode = (iomode_t) PAL_MODE_ALTERNATE(getAlternateFunctions(driver));
+   \   00000026   0x4640             MOV      R0,R8
+   \   00000028   0x.... 0x....      BL       _Z21getAlternateFunctionsP9ICUDriver
+   \   0000002C   0x01C0             LSLS     R0,R0,#+7
+   \   0000002E   0xF050 0x0902      ORRS     R9,R0,#0x2
+    150          		mySetPadMode(msg, port, pin, mode);
+   \   00000032   0x464B             MOV      R3,R9
+   \   00000034   0x003A             MOVS     R2,R7
+   \   00000036   0x0031             MOVS     R1,R6
+   \   00000038   0x0020             MOVS     R0,R4
+   \   0000003A   0x.... 0x....      BL       _Z12mySetPadModePKcP12GPIO_TypeDefjj
+    151          	}
+    152          }
+   \                     ??turnOnCapturePin_0:
+   \   0000003E   0xE8BD 0x83F1      POP      {R0,R4-R9,PC}    ;; return
+    153          
+
+   \                                 In section .text, align 2, keep-with-next
+    154          digital_input_s * initWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) {
+   \                     _Z22initWaveAnalyzerDriverPKc11brain_pin_e:
+   \   00000000   0xB5F8             PUSH     {R3-R7,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+    155          	ICUDriver *driver = getInputCaptureDriver(brainPin);
+   \   00000006   0x0028             MOVS     R0,R5
+   \   00000008   0x.... 0x....      BL       _Z21getInputCaptureDriver11brain_pin_e
+   \   0000000C   0x0006             MOVS     R6,R0
+    156          
+    157          	digital_input_s *hw = registeredIcus.add();
+   \   0000000E   0x....             LDR.N    R0,??DataTable6
+   \   00000010   0x.... 0x....      BL       _ZN9ArrayListI15digital_input_sLi8EE3addEv
+   \   00000014   0x0007             MOVS     R7,R0
+    158          
+    159          	hw->driver = driver;
+   \   00000016   0x603E             STR      R6,[R7, #+0]
+    160          	turnOnCapturePin(msg, brainPin);
+   \   00000018   0x0029             MOVS     R1,R5
+   \   0000001A   0x0020             MOVS     R0,R4
+   \   0000001C   0x.... 0x....      BL       _Z16turnOnCapturePinPKc11brain_pin_e
+    161          	return hw;
+   \   00000020   0x0038             MOVS     R0,R7
+   \   00000022   0xBDF2             POP      {R1,R4-R7,PC}    ;; return
+    162          }
+    163          
+
+   \                                 In section .text, align 2, keep-with-next
+    164          void startInputDriver(digital_input_s *hw, bool isActiveHigh) {
+   \                     _Z16startInputDriverP15digital_input_sb:
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+    165          	hw->isActiveHigh = isActiveHigh;
+   \   00000006   0x7125             STRB     R5,[R4, #+4]
+    166          	if (hw->isActiveHigh) {
+   \   00000008   0x7920             LDRB     R0,[R4, #+4]
+   \   0000000A   0x2800             CMP      R0,#+0
+   \   0000000C   0xD003             BEQ.N    ??startInputDriver_0
+    167          		wave_icucfg.mode = ICU_INPUT_ACTIVE_HIGH;
+   \   0000000E   0x....             LDR.N    R0,??DataTable6_9
+   \   00000010   0x2100             MOVS     R1,#+0
+   \   00000012   0x7001             STRB     R1,[R0, #+0]
+   \   00000014   0xE002             B.N      ??startInputDriver_1
+    168          	} else {
+    169          		wave_icucfg.mode = ICU_INPUT_ACTIVE_LOW;
+   \                     ??startInputDriver_0:
+   \   00000016   0x....             LDR.N    R0,??DataTable6_9
+   \   00000018   0x2101             MOVS     R1,#+1
+   \   0000001A   0x7001             STRB     R1,[R0, #+0]
+    170          	}
+    171          	ICUDriver *driver = hw->driver;
+   \                     ??startInputDriver_1:
+   \   0000001C   0x6826             LDR      R6,[R4, #+0]
+    172          
+    173          	if (driver != NULL) {
+   \   0000001E   0x2E00             CMP      R6,#+0
+   \   00000020   0xD00F             BEQ.N    ??startInputDriver_2
+    174          		if (hw->started) {
+   \   00000022   0x7960             LDRB     R0,[R4, #+5]
+   \   00000024   0x2800             CMP      R0,#+0
+   \   00000026   0xD005             BEQ.N    ??startInputDriver_3
+    175          			icuDisable(driver);
+   \   00000028   0x0030             MOVS     R0,R6
+   \   0000002A   0x.... 0x....      BL       icuDisable
+    176          			icuStop(driver);
+   \   0000002E   0x0030             MOVS     R0,R6
+   \   00000030   0x.... 0x....      BL       icuStop
+    177          		}
+    178          		efiIcuStart(driver, &wave_icucfg);
+   \                     ??startInputDriver_3:
+   \   00000034   0x....             LDR.N    R1,??DataTable6_9
+   \   00000036   0x0030             MOVS     R0,R6
+   \   00000038   0x.... 0x....      BL       _Z11efiIcuStartP9ICUDriverPK9ICUConfig
+    179          		icuEnable(driver);
+   \   0000003C   0x0030             MOVS     R0,R6
+   \   0000003E   0x.... 0x....      BL       icuEnable
+    180          	}
+    181          	hw->started = true;
+   \                     ??startInputDriver_2:
+   \   00000042   0x2001             MOVS     R0,#+1
+   \   00000044   0x7160             STRB     R0,[R4, #+5]
+    182          }
+   \   00000046   0xBD70             POP      {R4-R6,PC}       ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6:
+   \   00000000   0x........         DC32     registeredIcus
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_1:
+   \   00000000   0x........         DC32     `?<Constant "reader not found">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_2:
+   \   00000000   0x........         DC32     `?<Constant "getAlternateFunctions...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_3:
+   \   00000000   0x........         DC32     ICUD1
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_4:
+   \   00000000   0x........         DC32     ICUD2
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_5:
+   \   00000000   0x........         DC32     ICUD3
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_6:
+   \   00000000   0x........         DC32     ICUD9
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_7:
+   \   00000000   0x........         DC32     `?<Constant "No such driver">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_8:
+   \   00000000   0x........         DC32     `?<Constant "Unexpected hw pin in ...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_9:
+   \   00000000   0x........         DC32     wave_icucfg
+
+   \                                 In section .init_array, align 4, keep-with-next, root
+   \   00000000   0x........         DC32    RELOC_ARM_TARGET1 __sti__routine
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "reader not found">`:
+   \   00000000   0x72 0x65          DC8 "reader not found"
+   \              0x61 0x64    
+   \              0x65 0x72    
+   \              0x20 0x6E    
+   \              0x6F 0x74    
+   \              0x20 0x66    
+   \              0x6F 0x75    
+   \              0x6E 0x64    
+   \              0x00         
+   \   00000011   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "getAlternateFunctions...">`:
+   \   00000000   0x67 0x65          DC8 "getAlternateFunctions(NULL)"
+   \              0x74 0x41    
+   \              0x6C 0x74    
+   \              0x65 0x72    
+   \              0x6E 0x61    
+   \              0x74 0x65    
+   \              0x46 0x75    
+   \              0x6E 0x63    
+   \              0x74 0x69    
+   \              0x6F 0x6E    
+   \              0x73 0x28    
+   \              0x4E 0x55    
+   \              0x4C 0x4C    
+   \              0x29 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "No such driver">`:
+   \   00000000   0x4E 0x6F          DC8 "No such driver"
+   \              0x20 0x73    
+   \              0x75 0x63    
+   \              0x68 0x20    
+   \              0x64 0x72    
+   \              0x69 0x76    
+   \              0x65 0x72    
+   \              0x00         
+   \   0000000F   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "Unexpected hw pin in ...">`:
+   \   00000000   0x55 0x6E          DC8 "Unexpected hw pin in getInputCaptureChannel %d"
+   \              0x65 0x78    
+   \              0x70 0x65    
+   \              0x63 0x74    
+   \              0x65 0x64    
+   \              0x20 0x68    
+   \              0x77 0x20    
+   \              0x70 0x69    
+   \              0x6E 0x20    
+   \              0x69 0x6E    
+   \              0x20 0x67    
+   \              0x65 0x74    
+   \              0x49 0x6E    
+   \              0x70 0x75    
+   \              0x74 0x43    
+   \              0x61 0x70    
+   \              0x74 0x75    
+   \              0x72 0x65    
+   \              0x43 0x68    
+   \              0x61 0x6E    
+   \              0x6E 0x65    
+   \              0x6C 0x20    
+   \              0x25 0x64    
+   \              0x00         
+   \   0000002F   0x00               DC8 0
+
+   \                                 In section .text, align 2
+   \   __code __interwork __softfp ArrayList<digital_input_s, 8>::subobject ArrayList()
+   \                     _ZN9ArrayListI15digital_input_sLi8EEC2Ev:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x0020             MOVS     R0,R4
+   \   00000006   0x.... 0x....      BL       _ZN9ArrayListI15digital_input_sLi8EEC1Ev
+   \   0000000A   0xBD10             POP      {R4,PC}          ;; return
+    183          
+    184          #endif
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   ArrayList<digital_input_s, 8>::ArrayList()
+         8   -> ArrayList<digital_input_s, 8>::reset()
+         8   -> __aeabi_vec_ctor_nocookie_nodtor
+         8   -> memset
+       8   ArrayList<digital_input_s, 8>::add()
+         8   -> firmwareError
+       0   ArrayList<digital_input_s, 8>::reset()
+       8   ArrayList<digital_input_s, 8>::subobject ArrayList()
+         8   -> ArrayList<digital_input_s, 8>::ArrayList()
+       8   __sti__routine()
+         8   -> ArrayList<digital_input_s, 8>::ArrayList()
+       8   digital_input_s::<_ZN15digital_input_sC1Ev>()
+         8   -> IntListenerArray::IntListenerArray()
+       8   finddigital_input_s(ICUDriver *)
+         8   -> firmwareError
+       8   getAlternateFunctions(ICUDriver *)
+         8   -> firmwareError
+       8   getInputCaptureChannel(brain_pin_e)
+         8   -> firmwareError
+       0   getInputCaptureDriver(brain_pin_e)
+      16   icuPeriordCallBack(ICUDriver *)
+        16   -> IntListenerArray::invokeJustArgCallbacks()
+        16   -> finddigital_input_s(ICUDriver *)
+      16   icuWidthCallback(ICUDriver *)
+        16   -> IntListenerArray::invokeJustArgCallbacks()
+        16   -> finddigital_input_s(ICUDriver *)
+      24   initWaveAnalyzerDriver(char const *, brain_pin_e)
+        24   -> ArrayList<digital_input_s, 8>::add()
+        24   -> getInputCaptureDriver(brain_pin_e)
+        24   -> turnOnCapturePin(char const *, brain_pin_e)
+      16   memset
+        16   -> __aeabi_memset
+      16   startInputDriver(digital_input_s *, bool)
+        16   -> efiIcuStart(ICUDriver *, ICUConfig const *)
+        16   -> icuDisable
+        16   -> icuEnable
+        16   -> icuStop
+      32   turnOnCapturePin(char const *, brain_pin_e)
+        32   -> getAlternateFunctions(ICUDriver *)
+        32   -> getHwPin(brain_pin_e)
+        32   -> getHwPort(brain_pin_e)
+        32   -> getInputCaptureDriver(brain_pin_e)
+        32   -> mySetPadMode(char const *, ioportid_t, uint32_t, iomode_t)
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      16  ?<Constant "No such driver">
+      48  ?<Constant "Unexpected hw pin in ...">
+      28  ?<Constant "getAlternateFunctions...">
+      20  ?<Constant "reader not found">
+       4  ??DataTable6
+       4  ??DataTable6_1
+       4  ??DataTable6_2
+       4  ??DataTable6_3
+       4  ??DataTable6_4
+       4  ??DataTable6_5
+       4  ??DataTable6_6
+       4  ??DataTable6_7
+       4  ??DataTable6_8
+       4  ??DataTable6_9
+      44  ArrayList<digital_input_s, 8>::ArrayList()
+      44  ArrayList<digital_input_s, 8>::add()
+       6  ArrayList<digital_input_s, 8>::reset()
+      12  ArrayList<digital_input_s, 8>::subobject ArrayList()
+      10  __sti__routine()
+      24  digital_input_s::<_ZN15digital_input_sC1Ev>()
+      58  finddigital_input_s(ICUDriver *)
+      72  getAlternateFunctions(ICUDriver *)
+      56  getInputCaptureChannel(brain_pin_e)
+      54  getInputCaptureDriver(brain_pin_e)
+      22  icuPeriordCallBack(ICUDriver *)
+      22  icuWidthCallback(ICUDriver *)
+      36  initWaveAnalyzerDriver(char const *, brain_pin_e)
+      22  memset
+    2052  registeredIcus
+      72  startInputDriver(digital_input_s *, bool)
+      66  turnOnCapturePin(char const *, brain_pin_e)
+      28  wave_icucfg
+      28  -- Other
+
+ 
+ 2 052 bytes in section .bss
+    28 bytes in section .data
+     4 bytes in section .init_array
+   136 bytes in section .rodata
+   660 bytes in section .text
+ 
+   512 bytes of CODE  memory (+ 152 bytes shared)
+   112 bytes of CONST memory (+  24 bytes shared)
+ 2 080 bytes of DATA  memory
+
+Errors: none
+Warnings: none

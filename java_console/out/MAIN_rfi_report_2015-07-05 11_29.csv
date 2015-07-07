@@ -1,0 +1,1522 @@
+Sun Jul 05 11:29:41 EDT 2015<EOT>: Console 20150703
+Sun Jul 05 11:29:41 EDT 2015<EOT>: Starting COM56
+Sun Jul 05 11:29:42 EDT 2015<EOT>: postMessage CommandQueue: SerialIO started
+Sun Jul 05 11:29:44 EDT 2015<EOT>: onWindowOpened
+Sun Jul 05 11:29:44 EDT 2015<EOT>: SerialConnector: connecting
+Sun Jul 05 11:29:44 EDT 2015<EOT>: scheduleOpening
+Sun Jul 05 11:29:44 EDT 2015<EOT>: scheduleOpening>openPort
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage SerialManager: Opening port: COM56
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Opening COM56 @ 115200
+Sun Jul 05 11:29:44 EDT 2015<EOT>: PortHolder: Sleeping a bit
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): switch to binary
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@c4b4dd9
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Switched to binary protocol
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): switch to binary
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@414c103e
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Switched to binary protocol
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): switch to binary
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@1019f2a
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Switched to binary protocol
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): switch to binary
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@11787eea
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Switched to binary protocol
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@4ae23d66
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): switch to binary
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Switched to binary protocol
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@7e02856c
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): switch to binary
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Switched to binary protocol
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@23b5810f
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): switch to binary
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Switched to binary protocol
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@13cfa0fe
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): switch to binary
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Switched to binary protocol
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@27df377e
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): switch to binary
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Switched to binary protocol
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): switch to binary
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@2fb445a5
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Switched to binary protocol
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@64486c1a
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): switch to binary
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Switched to binary protocol
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@7acd5aa1
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): switch to binary
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Switched to binary protocol
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@497fec5
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): switch to binary
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Switched to binary protocol
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@b524a9d
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): switch to binary
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Switched to binary protocol
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@21abb1fb
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): switch to binary
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Switched to binary protocol
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Reading from controller...
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 0, 0, 1, 94, 33, 23, 118]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@18960763
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 1, 0, 1, 95, -29, 125, 65]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@767aa36c
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 2, 0, 1, 93, -91, -61, 24]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3cceafcb
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 3, 0, 1, 92, 103, -87, 47]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@351f3b0c
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 4, 0, 1, 89, 40, -65, -86]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@16d63f65
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 5, 0, 1, 88, -22, -43, -99]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@901846d
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 6, 0, 1, 90, -84, 107, -60]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@429d14b9
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 7, 0, 1, 91, 110, 1, -13]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@56bb9fd9
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 8, 0, 1, 80, 50, 70, -50]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@1c040a30
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 9, 0, 1, 81, -16, 44, -7]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@6e4f7806
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 10, 0, 1, 83, -74, -110, -96]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@32767bcf
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 11, 0, 1, 82, 116, -8, -105]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@2781e2ed
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 12, 0, 1, 87, 59, -18, 18]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3eeba269
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 13, 0, 1, 86, -7, -124, 37]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@5ff3bbc4
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 14, 0, 1, 84, -65, 58, 124]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@7aac7212
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 15, 0, 1, 85, 125, 80, 75]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@4f753aa9
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 16, 0, 1, 66, 7, -76, 6]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@195e5600
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 17, 0, 1, 67, -59, -34, 49]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@602703
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 18, 0, 1, 65, -125, 96, 104]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@28a13626
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 19, 0, 1, 64, 65, 10, 95]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@6fea0da0
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 20, 0, 1, 69, 14, 28, -38]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@6f24bcc6
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 21, 0, 1, 68, -52, 118, -19]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@54e5a42b
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 22, 0, 1, 70, -118, -56, -76]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@307d2e98
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 23, 0, 1, 71, 72, -94, -125]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@6a7e1606
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 24, 0, 1, 76, 20, -27, -66]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@7bd81a88
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 25, 0, 1, 77, -42, -113, -119]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@28b6163d
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 26, 0, 1, 79, -112, 49, -48]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@4a6e13ac
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 27, 0, 1, 78, 82, 91, -25]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@cda761
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 28, 0, 1, 75, 29, 77, 98]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3da7d1b0
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 29, 0, 1, 74, -33, 39, 85]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@54b7996f
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 30, 0, 1, 72, -103, -103, 12]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@61ba71dc
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 31, 0, 1, 73, 91, -13, 59]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@573f17b0
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 32, 0, 1, 102, 108, 81, -106]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@7004c040
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 33, 0, 1, 103, -82, 59, -95]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@47e9e334
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 34, 0, 1, 101, -24, -123, -8]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@7962144c
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 35, 0, 1, 100, 42, -17, -49]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@27d201c8
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 36, 0, 1, 97, 101, -7, 74]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@4c7305e4
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 37, 0, 1, 96, -89, -109, 125]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@1387e2f2
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 38, 0, 1, 98, -31, 45, 36]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3e4487e2
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 39, 0, 1, 99, 35, 71, 19]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@21b7e734
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 40, 0, 1, 104, 127, 0, 46]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@30ac1837
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 41, 0, 1, 105, -67, 106, 25]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@15de8130
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 42, 0, 1, 107, -5, -44, 64]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@42f38187
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 43, 0, 1, 106, 57, -66, 119]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@45873320
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 44, 0, 1, 111, 118, -88, -14]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@35227d5c
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 45, 0, 1, 110, -76, -62, -59]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@67f3a9b7
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 46, 0, 1, 108, -14, 124, -100]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@49ef4b31
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 47, 0, 1, 109, 48, 22, -85]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@4a4038e2
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 48, 0, 1, 122, 74, -14, -26]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3e56a383
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 49, 0, 1, 123, -120, -104, -47]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@2a090d6e
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 50, 0, 1, 121, -50, 38, -120]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3850c651
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 51, 0, 1, 120, 12, 76, -65]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3f0c0cb9
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 52, 0, 1, 125, 67, 90, 58]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@30176605
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 53, 0, 1, 124, -127, 48, 13]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@79cda784
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 54, 0, 1, 126, -57, -114, 84]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@2cb10995
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 55, 0, 1, 127, 5, -28, 99]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@1aec2c1f
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 56, 0, 1, 116, 89, -93, 94]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@744b508
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 57, 0, 1, 117, -101, -55, 105]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@2fc923f2
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 58, 0, 1, 119, -35, 119, 48]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3e56fd60
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 261 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 7, 82, 0, 0, 0, 59, -72, 0, 45, 4, 9, 33]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): load image header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@4114c999
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 189 byte(s): load image body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Got configuration from controller.
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:44 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@14d728e4
+Sun Jul 05 11:29:44 EDT 2015<EOT>: Waiting for 2713 byte(s): text body
+Sun Jul 05 11:29:44 EDT 2015<EOT>: msg,confirmation_~:1,msg,switching to binary protocol,msg,READ mode=1 page=0 offset=0 size=256,msg,READ mode=1 page=0 offset=256 size=256,msg,READ mode=1 page=0 offset=512 size=256,msg,READ mode=1 page=0 offset=768 size=256,msg,READ mode=1 page=0 offset=1024 size=256,msg,READ mode=1 page=0 offset=1280 size=256,msg,READ mode=1 page=0 offset=1536 size=256,msg,READ mode=1 page=0 offset=1792 size=256,msg,READ mode=1 page=0 offset=2048 size=256,msg,READ mode=1 page=0 offset=2304 size=256,msg,READ mode=1 page=0 offset=2560 size=256,msg,READ mode=1 page=0 offset=2816 size=256,msg,READ mode=1 page=0 offset=3072 size=256,msg,READ mode=1 page=0 offset=3328 size=256,msg,READ mode=1 page=0 offset=3584 size=256,msg,READ mode=1 page=0 offset=3840 size=256,msg,READ mode=1 page=0 offset=4096 size=256,msg,READ mode=1 page=0 offset=4352 size=256,msg,READ mode=1 page=0 offset=4608 size=256,msg,READ mode=1 page=0 offset=4864 size=256,msg,READ mode=1 page=0 offset=5120 size=256,msg,READ mode=1 page=0 offset=5376 size=256,msg,READ mode=1 page=0 offset=5632 size=256,msg,READ mode=1 page=0 offset=5888 size=256,msg,READ mode=1 page=0 offset=6144 size=256,msg,READ mode=1 page=0 offset=6400 size=256,msg,READ mode=1 page=0 offset=6656 size=256,msg,READ mode=1 page=0 offset=6912 size=256,msg,READ mode=1 page=0 offset=7168 size=256,msg,READ mode=1 page=0 offset=7424 size=256,msg,READ mode=1 page=0 offset=7680 size=256,msg,READ mode=1 page=0 offset=7936 size=256,msg,READ mode=1 page=0 offset=8192 size=256,msg,READ mode=1 page=0 offset=8448 size=256,msg,READ mode=1 page=0 offset=8704 size=256,msg,READ mode=1 page=0 offset=8960 size=256,msg,READ mode=1 page=0 offset=9216 size=256,msg,READ mode=1 page=0 offset=9472 size=256,msg,READ mode=1 page=0 offset=9728 size=256,msg,READ mode=1 page=0 offset=9984 size=256,msg,READ mode=1 page=0 offset=10240 size=256,msg,READ mode=1 page=0 offset=10496 size=256,msg,READ mode=1 page=0 offset=10752 size=256,msg,READ mode=1 page=0 offset=11008 size=256,msg,READ mode=1 page=0 offset=11264 size=256,msg,READ mode=1 page=0 offset=11520 size=256,msg,READ mode=1 page=0 offset=11776 size=256,msg,READ mode=1 page=0 offset=12032 size=256,msg,READ mode=1 page=0 offset=12288 size=256,msg,READ mode=1 page=0 offset=12544 size=256,msg,READ mode=1 page=0 offset=12800 size=256,msg,READ mode=1 page=0 offset=13056 size=256,msg,READ mode=1 page=0 offset=13312 size=256,msg,READ mode=1 page=0 offset=13568 size=256,msg,READ mode=1 page=0 offset=13824 size=256,msg,READ mode=1 page=0 offset=14080 size=256,msg,READ mode=1 page=0 offset=14336 size=256,msg,READ mode=1 page=0 offset=14592 size=256,msg,READ mode=1 page=0 offset=14848 size=256,msg,READ mode=1 page=0 offset=15104 size=184,
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: confirmation_~:1
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: switching to binary protocol
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! ~:1, still pending: 0
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=0 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=256 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=512 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=768 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=1024 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=1280 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=1536 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=1792 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=2048 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=2304 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=2560 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=2816 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=3072 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=3328 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=3584 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=3840 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=4096 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=4352 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=4608 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=4864 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=5120 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=5376 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=5632 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=5888 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=6144 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=6400 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=6656 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=6912 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=7168 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=7424 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=7680 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=7936 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=8192 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=8448 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=8704 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=8960 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=9216 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=9472 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=9728 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=9984 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=10240 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=10496 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=10752 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=11008 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=11264 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=11520 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=11776 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=12032 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=12288 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=12544 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=12800 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=13056 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=13312 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=13568 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=13824 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=14080 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=14336 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=14592 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=14848 size=256
+Sun Jul 05 11:29:44 EDT 2015<EOT>: postMessage EngineState: READ mode=1 page=0 offset=15104 size=184
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:45 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@276c7c8
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 57 byte(s): text body
+Sun Jul 05 11:29:45 EDT 2015<EOT>: msg,WARNING: ADC: should not be asking for NONE pPS,
+Sun Jul 05 11:29:45 EDT 2015<EOT>: postMessage EngineState: WARNING: ADC: should not be asking for NONE pPS
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:45 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@36be5783
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:45 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@42b0014a
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 548 byte(s): text body
+Sun Jul 05 11:29:45 EDT 2015<EOT>: time,29.788,rpm,0,ENGINE_LOAD,136.32,MAP,136.47,afr,10.70,vss,0.00,ks,0.00,vbatt,6.71,TP,100.00,CLT,50.74,MAT,59.11,time,29.989,rpm,0,ENGINE_LOAD,136.47,MAP,134.93,afr,10.70,vss,0.00,ks,0.00,vbatt,6.48,TP,100.00,CLT,50.87,MAT,58.90,time,30.188,rpm,0,ENGINE_LOAD,136.47,MAP,134.64,afr,10.70,vss,0.00,ks,0.00,vbatt,6.58,TP,100.00,CLT,50.95,MAT,59.06,ckp_c,0,fuel_base,13.48,fuel_lag,1.00,fuel,15.12,timing,714.28,duty0,NaN,dwell0,0.00,total_dwell0,0.00,period0,0.00,advance0,NaN,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,NaN,
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Sending [get_bit 1496 5]
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Sending [0, 15, 69, 103, 101, 116, 95, 98, 105, 116, 32, 49, 52, 57, 54, 32, 53, 47, 105, 88, 94]
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:45 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@6419f098
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:45 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_bit 1496 5
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:45 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@77acf1c0
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 61 byte(s): text body
+Sun Jul 05 11:29:45 EDT 2015<EOT>: msg,confirmation_get_bit 1496 5:14,msg,bit @1496/5 is 1,
+Sun Jul 05 11:29:45 EDT 2015<EOT>: postMessage EngineState: confirmation_get_bit 1496 5:14
+Sun Jul 05 11:29:45 EDT 2015<EOT>: postMessage EngineState: bit @1496/5 is 1
+Sun Jul 05 11:29:45 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_bit 1496 5, still pending: 3
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Sending [get_int 1512]
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Sending [0, 13, 69, 103, 101, 116, 95, 105, 110, 116, 32, 49, 53, 49, 50, -95, 52, 114, -12]
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:45 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@58621e34
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:45 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_int 1512
+Sun Jul 05 11:29:45 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_bit 1496 5:14, still pending: 2
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:45 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@12eada5d
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 59 byte(s): text body
+Sun Jul 05 11:29:45 EDT 2015<EOT>: msg,confirmation_get_int 1512:12,msg,int @1512 is 300,
+Sun Jul 05 11:29:45 EDT 2015<EOT>: postMessage EngineState: confirmation_get_int 1512:12
+Sun Jul 05 11:29:45 EDT 2015<EOT>: postMessage EngineState: int @1512 is 300
+Sun Jul 05 11:29:45 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 1512, still pending: 2
+Sun Jul 05 11:29:45 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 1512:12, still pending: 2
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:45 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@345ac4dc
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Sending [get_int 1408]
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Sending [0, 13, 69, 103, 101, 116, 95, 105, 110, 116, 32, 49, 52, 48, 56, 89, 56, -64, -100]
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:45 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3329e3d7
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:45 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_int 1408
+Sun Jul 05 11:29:45 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 1408, still pending: 1
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Sending [get_int 532]
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Sending [0, 12, 69, 103, 101, 116, 95, 105, 110, 116, 32, 53, 51, 50, 34, -47, -92, 85]
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:45 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@408d849b
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:45 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_int 532
+Sun Jul 05 11:29:45 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 532, still pending: 0
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:45 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@6656bc05
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 108 byte(s): text body
+Sun Jul 05 11:29:45 EDT 2015<EOT>: msg,confirmation_get_int 1408:12,msg,int @1408 is 2,msg,confirmation_get_int 532:11,msg,int @532 is 20,
+Sun Jul 05 11:29:45 EDT 2015<EOT>: postMessage EngineState: confirmation_get_int 1408:12
+Sun Jul 05 11:29:45 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 1408:12, still pending: 0
+Sun Jul 05 11:29:45 EDT 2015<EOT>: postMessage EngineState: int @1408 is 2
+Sun Jul 05 11:29:45 EDT 2015<EOT>: postMessage EngineState: confirmation_get_int 532:11
+Sun Jul 05 11:29:45 EDT 2015<EOT>: postMessage EngineState: int @532 is 20
+Sun Jul 05 11:29:45 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 532:11, still pending: 0
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:45 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@5031c1e1
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:45 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:45 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@1209e1e4
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:46 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@dcc3481
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:46 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@6a741d0d
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 780 byte(s): text body
+Sun Jul 05 11:29:46 EDT 2015<EOT>: time,30.389,rpm,0,ENGINE_LOAD,134.86,MAP,136.91,afr,10.70,vss,0.00,ks,0.00,vbatt,6.79,TP,100.00,CLT,50.74,MAT,58.95,time,30.590,rpm,0,ENGINE_LOAD,135.96,MAP,135.96,afr,10.70,vss,0.00,ks,0.00,vbatt,6.43,TP,100.00,CLT,50.45,MAT,58.43,time,30.790,rpm,0,ENGINE_LOAD,134.89,MAP,134.89,afr,10.70,vss,0.00,ks,0.00,vbatt,6.65,TP,100.00,CLT,49.83,MAT,56.78,time,30.989,rpm,0,ENGINE_LOAD,134.78,MAP,134.78,afr,10.70,vss,0.00,ks,0.00,vbatt,6.68,TP,100.00,CLT,49.34,MAT,56.58,time,31.190,rpm,0,ENGINE_LOAD,136.25,MAP,134.89,afr,10.70,vss,0.00,ks,0.00,vbatt,6.58,TP,100.00,CLT,49.38,MAT,56.87,ckp_c,0,fuel_base,13.55,fuel_lag,1.00,fuel,15.38,timing,714.28,duty0,NaN,dwell0,0.00,total_dwell0,0.00,period0,0.00,advance0,NaN,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,NaN,
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:46 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@70b01428
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:46 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@7d183b5d
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [get_int 424]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [0, 12, 69, 103, 101, 116, 95, 105, 110, 116, 32, 52, 50, 52, -45, 107, 90, 22]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:46 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3eee7317
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_int 424
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 424, still pending: 21
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [get_int 536]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [0, 12, 69, 103, 101, 116, 95, 105, 110, 116, 32, 53, 51, 54, 37, -68, 96, 76]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:46 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@720eb0ac
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_int 536
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 536, still pending: 20
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [get_bit 1508 14]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [0, 16, 69, 103, 101, 116, 95, 98, 105, 116, 32, 49, 53, 48, 56, 32, 49, 52, 61, -75, 13, 112]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:46 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@32a40516
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_bit 1508 14
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_bit 1508 14, still pending: 19
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [get_int 920]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [0, 12, 69, 103, 101, 116, 95, 105, 110, 116, 32, 57, 50, 48, -36, -34, 13, 92]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:46 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@2e4a0153
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_int 920
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 920, still pending: 18
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [get_int 924]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [0, 12, 69, 103, 101, 116, 95, 105, 110, 116, 32, 57, 50, 52, -37, -77, -55, 69]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:46 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@7c9d07e2
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_int 924
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:46 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@2970c658
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 265 byte(s): text body
+Sun Jul 05 11:29:46 EDT 2015<EOT>: msg,confirmation_get_int 424:11,msg,int @424 is 3,msg,confirmation_get_int 536:11,msg,int @536 is 14,msg,confirmation_get_bit 1508 14:15,msg,bit @1508/14 is 0,msg,confirmation_get_int 920:11,msg,int @920 is 5,msg,confirmation_get_int 924:11,msg,int @924 is 38,
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage EngineState: confirmation_get_int 424:11
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage EngineState: int @424 is 3
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage EngineState: confirmation_get_int 536:11
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage EngineState: int @536 is 14
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage EngineState: confirmation_get_bit 1508 14:15
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage EngineState: bit @1508/14 is 0
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage EngineState: confirmation_get_int 920:11
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage EngineState: int @920 is 5
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage EngineState: confirmation_get_int 924:11
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage EngineState: int @924 is 38
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 924, still pending: 17
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [get_int 656]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [0, 12, 69, 103, 101, 116, 95, 105, 110, 116, 32, 54, 53, 54, 113, -96, 121, -109]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:46 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@2aedd0a9
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_int 656
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 424:11, still pending: 16
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 536:11, still pending: 16
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_bit 1508 14:15, still pending: 16
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 920:11, still pending: 16
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 924:11, still pending: 16
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 656, still pending: 16
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:46 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@1cab9869
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 56 byte(s): text body
+Sun Jul 05 11:29:46 EDT 2015<EOT>: msg,confirmation_get_int 656:11,msg,int @656 is 24,
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage EngineState: confirmation_get_int 656:11
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage EngineState: int @656 is 24
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 656:11, still pending: 16
+Sun Jul 05 11:29:46 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@fcc06e0
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [get_bit 1008 3]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [0, 15, 69, 103, 101, 116, 95, 98, 105, 116, 32, 49, 48, 48, 56, 32, 51, 68, 28, 57, 43]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:46 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@63144ceb
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_bit 1008 3
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_bit 1008 3, still pending: 15
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [get_int 1276]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [0, 13, 69, 103, 101, 116, 95, 105, 110, 116, 32, 49, 50, 55, 54, -11, 76, 7, -18]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:46 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@49c60b1e
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_int 1276
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 1276, still pending: 14
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [get_int 1280]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Sending [0, 13, 69, 103, 101, 116, 95, 105, 110, 116, 32, 49, 50, 56, 48, -101, -73, -66, 20]
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:46 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@69040468
+Sun Jul 05 11:29:46 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:46 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_int 1280
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 1280, still pending: 13
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [get_int 584]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [0, 12, 69, 103, 101, 116, 95, 105, 110, 116, 32, 53, 56, 52, 40, 70, -40, -85]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:47 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@6bd7db5
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_int 584
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:47 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@287f988
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 216 byte(s): text body
+Sun Jul 05 11:29:47 EDT 2015<EOT>: msg,confirmation_get_bit 1008 3:14,msg,bit @1008/3 is 1,msg,confirmation_get_int 1276:12,msg,int @1276 is 27,msg,confirmation_get_int 1280:12,msg,int @1280 is 0,msg,confirmation_get_int 584:11,msg,int @584 is 4,
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: confirmation_get_bit 1008 3:14
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: bit @1008/3 is 1
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: confirmation_get_int 1276:12
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: int @1276 is 27
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: confirmation_get_int 1280:12
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: int @1280 is 0
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: confirmation_get_int 584:11
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: int @584 is 4
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 584, still pending: 12
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [get_int 580]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [0, 12, 69, 103, 101, 116, 95, 105, 110, 116, 32, 53, 56, 48, 47, 43, 28, -78]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:47 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@2d0f5104
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_int 580
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_bit 1008 3:14, still pending: 11
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 1276:12, still pending: 11
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 1280:12, still pending: 11
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 584:11, still pending: 11
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 580, still pending: 11
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 56 byte(s): text body
+Sun Jul 05 11:29:47 EDT 2015<EOT>: msg,confirmation_get_int 580:11,msg,int @580 is 16,
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: confirmation_get_int 580:11
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: int @580 is 16
+Sun Jul 05 11:29:47 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3f9de3
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 580:11, still pending: 11
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:47 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@65869549
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 780 byte(s): text body
+Sun Jul 05 11:29:47 EDT 2015<EOT>: time,31.391,rpm,0,ENGINE_LOAD,136.47,MAP,136.47,afr,10.70,vss,0.00,ks,0.00,vbatt,6.79,TP,100.00,CLT,48.65,MAT,56.14,time,31.590,rpm,0,ENGINE_LOAD,135.19,MAP,135.19,afr,10.70,vss,0.00,ks,0.00,vbatt,6.44,TP,100.00,CLT,48.61,MAT,56.34,time,31.791,rpm,0,ENGINE_LOAD,136.47,MAP,136.47,afr,10.70,vss,0.00,ks,0.00,vbatt,6.44,TP,100.00,CLT,48.61,MAT,56.34,time,31.990,rpm,0,ENGINE_LOAD,134.97,MAP,134.97,afr,10.70,vss,0.00,ks,0.00,vbatt,6.83,TP,100.00,CLT,48.57,MAT,56.29,time,32.191,rpm,0,ENGINE_LOAD,134.75,MAP,134.75,afr,10.70,vss,0.00,ks,0.00,vbatt,6.94,TP,100.00,CLT,49.21,MAT,56.53,ckp_c,0,fuel_base,13.43,fuel_lag,1.00,fuel,15.20,timing,714.28,duty0,NaN,dwell0,0.00,total_dwell0,0.00,period0,0.00,advance0,NaN,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,NaN,
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [get_int 604]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [0, 12, 69, 103, 101, 116, 95, 105, 110, 116, 32, 54, 48, 52, -30, -39, -20, -6]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:47 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3bc932f2
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_int 604
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 604, still pending: 10
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [get_bit 1496 6]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [0, 15, 69, 103, 101, 116, 95, 98, 105, 116, 32, 49, 52, 57, 54, 32, 54, -74, 96, 9, -28]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:47 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@162fcc88
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_bit 1496 6
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:47 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@1c1d0019
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 112 byte(s): text body
+Sun Jul 05 11:29:47 EDT 2015<EOT>: msg,confirmation_get_int 604:11,msg,int @604 is 16,msg,confirmation_get_bit 1496 6:14,msg,bit @1496/6 is 0,
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: confirmation_get_int 604:11
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: int @604 is 16
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: confirmation_get_bit 1496 6:14
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: bit @1496/6 is 0
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_bit 1496 6, still pending: 9
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [get_bit 1496 8]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [0, 15, 69, 103, 101, 116, 95, 98, 105, 116, 32, 49, 52, 57, 54, 32, 56, 81, -40, 36, -29]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:47 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@33f177ba
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_bit 1496 8
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 604:11, still pending: 8
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_bit 1496 6:14, still pending: 8
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_bit 1496 8, still pending: 8
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:47 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@320467b6
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 61 byte(s): text body
+Sun Jul 05 11:29:47 EDT 2015<EOT>: msg,confirmation_get_bit 1496 8:14,msg,bit @1496/8 is 0,
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: confirmation_get_bit 1496 8:14
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: bit @1496/8 is 0
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_bit 1496 8:14, still pending: 8
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:47 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@103449d6
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [get_bit 1496 9]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [0, 15, 69, 103, 101, 116, 95, 98, 105, 116, 32, 49, 52, 57, 54, 32, 57, 38, -33, 20, 117]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:47 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@58db88e9
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_bit 1496 9
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_bit 1496 9, still pending: 7
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [get_int 968]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [0, 12, 69, 103, 101, 116, 95, 105, 110, 116, 32, 57, 54, 56, -74, 105, 64, 106]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:47 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@34f9a692
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_int 968
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 968, still pending: 6
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [get_int 972]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [0, 12, 69, 103, 101, 116, 95, 105, 110, 116, 32, 57, 55, 50, 79, -89, -104, 53]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:47 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@7226d669
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_int 972
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 972, still pending: 5
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [get_float 568]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [0, 14, 69, 103, 101, 116, 95, 102, 108, 111, 97, 116, 32, 53, 54, 56, -24, -127, -111, 121]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:47 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@53c6c20b
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_float 568
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@1ded8b25
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 223 byte(s): text body
+Sun Jul 05 11:29:47 EDT 2015<EOT>: msg,confirmation_get_bit 1496 9:14,msg,bit @1496/9 is 1,msg,confirmation_get_int 968:11,msg,int @968 is 22,msg,confirmation_get_int 972:11,msg,int @972 is 28,msg,confirmation_get_float 568:13,msg,float @568 is 1.00000,
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: confirmation_get_bit 1496 9:14
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: bit @1496/9 is 1
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: confirmation_get_int 968:11
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: int @968 is 22
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: confirmation_get_int 972:11
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: int @972 is 28
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: confirmation_get_float 568:13
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: float @568 is 1.00000
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_float 568, still pending: 4
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [get_float 460]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [0, 14, 69, 103, 101, 116, 95, 102, 108, 111, 97, 116, 32, 52, 54, 48, -25, -104, 115, 124]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_bit 1496 9:14, still pending: 3
+Sun Jul 05 11:29:47 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@65e7e8bf
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 968:11, still pending: 3
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_float 460
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_int 972:11, still pending: 3
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_float 568:13, still pending: 3
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_float 460, still pending: 3
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:47 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@45c19d55
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 66 byte(s): text body
+Sun Jul 05 11:29:47 EDT 2015<EOT>: msg,confirmation_get_float 460:13,msg,float @460 is 38.00000,
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: confirmation_get_float 460:13
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage EngineState: float @460 is 38.00000
+Sun Jul 05 11:29:47 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_float 460:13, still pending: 3
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:47 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@243b31a6
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:47 EDT 2015<EOT>: Sending [get_float 92]
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Sending [0, 13, 69, 103, 101, 116, 95, 102, 108, 111, 97, 116, 32, 57, 50, -99, -9, -79, 76]
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:48 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@2a389bdf
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:48 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_float 92
+Sun Jul 05 11:29:48 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_float 92, still pending: 2
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Sending [get_float 448]
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Sending [0, 14, 69, 103, 101, 116, 95, 102, 108, 111, 97, 116, 32, 52, 52, 56, -37, 117, -103, -52]
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:48 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@6a816320
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:48 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_float 448
+Sun Jul 05 11:29:48 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_float 448, still pending: 1
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Sending [get_float 440]
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Sending [0, 14, 69, 103, 101, 116, 95, 102, 108, 111, 97, 116, 32, 52, 52, 48, -43, -82, 17, -2]
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:29:48 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@54930080
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:29:48 EDT 2015<EOT>: postMessage PortHolder: confirmation_get_float 440
+Sun Jul 05 11:29:48 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_float 440, still pending: 0
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:48 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@7f05fee0
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Waiting for 186 byte(s): text body
+Sun Jul 05 11:29:48 EDT 2015<EOT>: msg,confirmation_get_float 92:12,msg,float @92 is 5.00000,msg,confirmation_get_float 448:13,msg,float @448 is 0.00000,msg,confirmation_get_float 440:13,msg,float @440 is -710.00000,
+Sun Jul 05 11:29:48 EDT 2015<EOT>: postMessage EngineState: confirmation_get_float 92:12
+Sun Jul 05 11:29:48 EDT 2015<EOT>: postMessage EngineState: float @92 is 5.00000
+Sun Jul 05 11:29:48 EDT 2015<EOT>: postMessage EngineState: confirmation_get_float 448:13
+Sun Jul 05 11:29:48 EDT 2015<EOT>: postMessage EngineState: float @448 is 0.00000
+Sun Jul 05 11:29:48 EDT 2015<EOT>: postMessage EngineState: confirmation_get_float 440:13
+Sun Jul 05 11:29:48 EDT 2015<EOT>: postMessage EngineState: float @440 is -710.00000
+Sun Jul 05 11:29:48 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_float 92:12, still pending: 0
+Sun Jul 05 11:29:48 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_float 448:13, still pending: 0
+Sun Jul 05 11:29:48 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! get_float 440:13, still pending: 0
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:48 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@2b038048
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Waiting for 995 byte(s): text body
+Sun Jul 05 11:29:48 EDT 2015<EOT>: time,32.391,rpm,0,ENGINE_LOAD,136.47,MAP,136.80,afr,10.70,vss,0.00,ks,0.00,vbatt,6.97,TP,100.00,CLT,48.97,MAT,56.48,time,32.591,rpm,0,ENGINE_LOAD,136.47,MAP,136.47,afr,10.70,vss,0.00,ks,0.00,vbatt,6.92,TP,100.00,CLT,49.05,MAT,56.87,time,32.791,rpm,0,ENGINE_LOAD,136.43,MAP,136.43,afr,10.70,vss,0.00,ks,0.00,vbatt,6.89,TP,100.00,CLT,49.09,MAT,57.17,time,32.992,rpm,0,ENGINE_LOAD,136.58,MAP,136.58,afr,10.69,vss,0.00,ks,0.00,vbatt,6.49,TP,100.00,CLT,51.72,MAT,60.06,time,33.192,rpm,0,ENGINE_LOAD,135.00,MAP,135.00,afr,10.71,vss,0.00,ks,0.00,vbatt,6.82,TP,100.00,CLT,50.03,MAT,57.72,rusEfiVersion,20150703@8529 Neon03,outpin,t1@PA5,outpin,t2@PC6,outpin,input1@NONE,outpin,input2@NONE,outpin,c1@PC9,outpin,i1@PB8,outpin,c2@NONE,outpin,i2@PB9,outpin,c3@PE8,outpin,i3@PE2,outpin,c4@NONE,outpin,i4@PB7,ckp_c,0,fuel_base,13.37,fuel_lag,1.00,fuel,15.17,timing,714.28,duty0,NaN,dwell0,0.00,total_dwell0,0.00,period0,0.00,advance0,NaN,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,NaN,
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:48 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@217c36af
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:48 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@61ea2c55
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:48 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@5504b2ab
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:48 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@276e2428
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:48 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3007d251
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:48 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@5180dc79
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:48 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@630ab5bc
+Sun Jul 05 11:29:48 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:49 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@54217c70
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:49 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@6270c836
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:49 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@5a6883b7
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Waiting for 780 byte(s): text body
+Sun Jul 05 11:29:49 EDT 2015<EOT>: time,33.393,rpm,0,ENGINE_LOAD,136.32,MAP,136.58,afr,10.70,vss,0.00,ks,0.00,vbatt,6.70,TP,100.00,CLT,49.99,MAT,58.69,time,33.592,rpm,0,ENGINE_LOAD,136.03,MAP,134.64,afr,10.70,vss,0.00,ks,0.00,vbatt,6.49,TP,100.00,CLT,50.74,MAT,58.54,time,33.792,rpm,0,ENGINE_LOAD,136.73,MAP,136.84,afr,10.70,vss,0.00,ks,0.00,vbatt,6.79,TP,100.00,CLT,50.87,MAT,59.27,time,33.993,rpm,0,ENGINE_LOAD,136.80,MAP,136.80,afr,10.70,vss,0.00,ks,0.00,vbatt,6.60,TP,100.00,CLT,51.46,MAT,59.27,time,34.193,rpm,0,ENGINE_LOAD,134.56,MAP,134.56,afr,10.70,vss,0.00,ks,0.00,vbatt,6.64,TP,100.00,CLT,51.04,MAT,59.21,ckp_c,0,fuel_base,13.49,fuel_lag,1.00,fuel,15.14,timing,714.28,duty0,NaN,dwell0,0.00,total_dwell0,0.00,period0,0.00,advance0,NaN,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,NaN,
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:49 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@62377782
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:49 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@27872a2e
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:49 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@1ae24648
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:49 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@7d742ec1
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:49 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@56a9c13f
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:49 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@22ce3b8c
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:49 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@11a7762e
+Sun Jul 05 11:29:49 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:50 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@93fcf10
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:50 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3c33282e
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:50 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@429302e2
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Waiting for 780 byte(s): text body
+Sun Jul 05 11:29:50 EDT 2015<EOT>: time,34.394,rpm,0,ENGINE_LOAD,136.32,MAP,136.47,afr,10.71,vss,0.00,ks,0.00,vbatt,6.71,TP,100.00,CLT,50.07,MAT,57.62,time,34.594,rpm,0,ENGINE_LOAD,136.84,MAP,136.62,afr,10.70,vss,0.00,ks,0.00,vbatt,7.08,TP,100.00,CLT,48.85,MAT,56.48,time,34.793,rpm,0,ENGINE_LOAD,136.76,MAP,136.43,afr,10.70,vss,0.00,ks,0.00,vbatt,6.56,TP,100.00,CLT,48.69,MAT,56.43,time,34.993,rpm,0,ENGINE_LOAD,136.32,MAP,134.75,afr,10.70,vss,0.00,ks,0.00,vbatt,6.56,TP,100.00,CLT,48.57,MAT,56.14,time,35.194,rpm,0,ENGINE_LOAD,136.25,MAP,136.54,afr,10.70,vss,0.00,ks,0.00,vbatt,6.48,TP,100.00,CLT,51.51,MAT,58.85,ckp_c,0,fuel_base,13.46,fuel_lag,1.00,fuel,15.03,timing,714.28,duty0,NaN,dwell0,0.00,total_dwell0,0.00,period0,0.00,advance0,NaN,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,NaN,
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:50 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@532ba0c2
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:50 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@55474b36
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:50 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3b9af1f7
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:50 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3983adb3
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:50 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@7400e044
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:50 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@6583cbdb
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:50 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@43940451
+Sun Jul 05 11:29:50 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:51 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@2aa78480
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:51 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@5bec0560
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:51 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@645510c5
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Waiting for 780 byte(s): text body
+Sun Jul 05 11:29:51 EDT 2015<EOT>: time,35.395,rpm,0,ENGINE_LOAD,136.32,MAP,136.58,afr,10.69,vss,0.00,ks,0.00,vbatt,6.99,TP,100.00,CLT,49.01,MAT,57.82,time,35.595,rpm,0,ENGINE_LOAD,136.32,MAP,136.62,afr,10.70,vss,0.00,ks,0.00,vbatt,6.77,TP,100.00,CLT,49.95,MAT,58.18,time,35.794,rpm,0,ENGINE_LOAD,136.65,MAP,136.80,afr,10.72,vss,0.00,ks,0.00,vbatt,6.73,TP,100.00,CLT,50.36,MAT,58.54,time,35.994,rpm,0,ENGINE_LOAD,136.62,MAP,136.62,afr,10.70,vss,0.00,ks,0.00,vbatt,6.79,TP,100.00,CLT,49.66,MAT,56.58,time,36.194,rpm,0,ENGINE_LOAD,134.75,MAP,134.75,afr,10.70,vss,0.00,ks,0.00,vbatt,6.50,TP,100.00,CLT,48.49,MAT,56.73,ckp_c,0,fuel_base,13.41,fuel_lag,1.00,fuel,15.23,timing,714.28,duty0,NaN,dwell0,0.00,total_dwell0,0.00,period0,0.00,advance0,NaN,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,NaN,
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:51 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@56d4cc43
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:51 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@2cae6f3e
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:51 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@7009665c
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:51 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@791f5b7a
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:51 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@79aee4b5
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:51 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@4929657c
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:51 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3cc5d56a
+Sun Jul 05 11:29:51 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:52 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@603e4151
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:52 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@17325e34
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:52 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@6bc6b3d1
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Waiting for 995 byte(s): text body
+Sun Jul 05 11:29:52 EDT 2015<EOT>: time,36.395,rpm,0,ENGINE_LOAD,135.19,MAP,135.19,afr,10.70,vss,0.00,ks,0.00,vbatt,6.52,TP,100.00,CLT,48.45,MAT,56.48,time,36.596,rpm,0,ENGINE_LOAD,134.89,MAP,134.89,afr,10.72,vss,0.00,ks,0.00,vbatt,6.84,TP,100.00,CLT,48.77,MAT,56.53,time,36.796,rpm,0,ENGINE_LOAD,136.58,MAP,136.58,afr,10.70,vss,0.00,ks,0.00,vbatt,6.85,TP,100.00,CLT,49.38,MAT,56.58,time,36.995,rpm,0,ENGINE_LOAD,134.93,MAP,134.93,afr,10.70,vss,0.00,ks,0.00,vbatt,6.40,TP,100.00,CLT,48.81,MAT,56.39,time,37.195,rpm,0,ENGINE_LOAD,136.80,MAP,136.80,afr,10.69,vss,0.00,ks,0.00,vbatt,6.49,TP,100.00,CLT,51.08,MAT,59.16,rusEfiVersion,20150703@8529 Neon03,outpin,t1@PA5,outpin,t2@PC6,outpin,input1@NONE,outpin,input2@NONE,outpin,c1@PC9,outpin,i1@PB8,outpin,c2@NONE,outpin,i2@PB9,outpin,c3@PE8,outpin,i3@PE2,outpin,c4@NONE,outpin,i4@PB7,ckp_c,0,fuel_base,13.33,fuel_lag,1.00,fuel,15.09,timing,714.28,duty0,NaN,dwell0,0.00,total_dwell0,0.00,period0,0.00,advance0,NaN,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,NaN,
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:52 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@7b653cd6
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:52 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@337d44e4
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:52 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@6535ef24
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:52 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@37e75865
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:52 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@355c6b8f
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:52 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@469994a7
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:52 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@cee8427
+Sun Jul 05 11:29:52 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:53 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@7f262312
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:53 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@20c8b3f5
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:53 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@589eaaa3
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Waiting for 780 byte(s): text body
+Sun Jul 05 11:29:53 EDT 2015<EOT>: time,37.396,rpm,0,ENGINE_LOAD,136.10,MAP,136.62,afr,10.70,vss,0.00,ks,0.00,vbatt,6.83,TP,100.00,CLT,50.16,MAT,58.74,time,37.597,rpm,0,ENGINE_LOAD,136.32,MAP,136.47,afr,10.68,vss,0.00,ks,0.00,vbatt,6.52,TP,100.00,CLT,50.78,MAT,58.95,time,37.797,rpm,0,ENGINE_LOAD,136.29,MAP,136.47,afr,10.70,vss,0.00,ks,0.00,vbatt,6.83,TP,100.00,CLT,50.16,MAT,58.18,time,37.997,rpm,0,ENGINE_LOAD,134.93,MAP,134.93,afr,10.70,vss,0.00,ks,0.00,vbatt,6.38,TP,100.00,CLT,51.81,MAT,59.37,time,38.196,rpm,0,ENGINE_LOAD,136.65,MAP,134.97,afr,10.70,vss,0.00,ks,0.00,vbatt,6.66,TP,100.00,CLT,51.21,MAT,58.90,ckp_c,0,fuel_base,13.47,fuel_lag,1.00,fuel,15.23,timing,714.28,duty0,NaN,dwell0,0.00,total_dwell0,0.00,period0,0.00,advance0,NaN,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,NaN,
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:53 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3badb7a0
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:53 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@9f287fc
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:53 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@11bdb67e
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:53 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3e18134b
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:53 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@1e9ac0c6
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:53 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@41e616dc
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:53 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:53 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@68e6e750
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:54 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@f5c6afe
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:54 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@7c745192
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:54 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@38978813
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Waiting for 780 byte(s): text body
+Sun Jul 05 11:29:54 EDT 2015<EOT>: time,38.397,rpm,0,ENGINE_LOAD,136.32,MAP,136.25,afr,10.70,vss,0.00,ks,0.00,vbatt,6.78,TP,100.00,CLT,49.95,MAT,58.74,time,38.597,rpm,0,ENGINE_LOAD,136.69,MAP,136.84,afr,10.70,vss,0.00,ks,0.00,vbatt,6.89,TP,100.00,CLT,49.25,MAT,58.64,time,38.798,rpm,0,ENGINE_LOAD,136.32,MAP,136.62,afr,10.70,vss,0.00,ks,0.00,vbatt,6.75,TP,100.00,CLT,49.99,MAT,58.33,time,38.998,rpm,0,ENGINE_LOAD,136.25,MAP,136.47,afr,10.71,vss,0.00,ks,0.00,vbatt,6.90,TP,100.00,CLT,49.54,MAT,58.03,time,39.198,rpm,0,ENGINE_LOAD,136.29,MAP,136.21,afr,10.69,vss,0.00,ks,0.00,vbatt,6.71,TP,100.00,CLT,49.91,MAT,58.38,ckp_c,0,fuel_base,13.40,fuel_lag,1.00,fuel,15.17,timing,714.28,duty0,NaN,dwell0,0.00,total_dwell0,0.00,period0,0.00,advance0,NaN,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,NaN,
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:54 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@30a7202
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:54 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@22c2e2dd
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:54 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@28bc2cff
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:54 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@5a2e2e3d
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:54 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@dddd50c
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:54 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@5ece0df0
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:54 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@29f53830
+Sun Jul 05 11:29:54 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:55 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@223becd5
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Waiting for 57 byte(s): text body
+Sun Jul 05 11:29:55 EDT 2015<EOT>: msg,WARNING: ADC: should not be asking for NONE pPS,
+Sun Jul 05 11:29:55 EDT 2015<EOT>: postMessage EngineState: WARNING: ADC: should not be asking for NONE pPS
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:55 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@c39a582
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:55 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@1ca10013
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Waiting for 780 byte(s): text body
+Sun Jul 05 11:29:55 EDT 2015<EOT>: time,39.398,rpm,0,ENGINE_LOAD,136.32,MAP,136.47,afr,10.70,vss,0.00,ks,0.00,vbatt,6.79,TP,100.00,CLT,50.12,MAT,58.38,time,39.598,rpm,0,ENGINE_LOAD,136.32,MAP,136.58,afr,10.69,vss,0.00,ks,0.00,vbatt,6.86,TP,100.00,CLT,49.17,MAT,56.43,time,39.798,rpm,0,ENGINE_LOAD,136.69,MAP,136.58,afr,10.69,vss,0.00,ks,0.00,vbatt,6.41,TP,100.00,CLT,48.81,MAT,56.43,time,39.999,rpm,0,ENGINE_LOAD,136.32,MAP,134.93,afr,10.70,vss,0.00,ks,0.00,vbatt,6.89,TP,100.00,CLT,48.57,MAT,56.63,time,40.199,rpm,0,ENGINE_LOAD,136.32,MAP,134.53,afr,10.70,vss,0.00,ks,0.00,vbatt,6.55,TP,100.00,CLT,48.73,MAT,56.53,ckp_c,0,fuel_base,13.57,fuel_lag,1.00,fuel,15.39,timing,714.28,duty0,NaN,dwell0,0.00,total_dwell0,0.00,period0,0.00,advance0,NaN,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,NaN,
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:55 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@19dde4d9
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:55 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@36db6fd3
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:55 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@8aa1c8
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:55 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@d8351bf
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:55 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@286bd987
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:55 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@409642cc
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:55 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@48fb8034
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:55 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:56 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@779dfb5a
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Waiting for 879 byte(s): text body
+Sun Jul 05 11:29:56 EDT 2015<EOT>: time,40.400,rpm,0,ENGINE_LOAD,136.62,MAP,134.89,afr,10.70,vss,0.00,ks,0.00,vbatt,6.65,TP,100.00,CLT,48.53,MAT,56.53,time,40.599,rpm,0,ENGINE_LOAD,136.65,MAP,136.47,afr,10.70,vss,0.00,ks,0.00,vbatt,6.89,TP,100.00,CLT,48.85,MAT,56.68,time,40.799,rpm,0,ENGINE_LOAD,136.25,MAP,136.62,afr,10.70,vss,0.00,ks,0.00,vbatt,6.66,TP,100.00,CLT,48.57,MAT,56.78,time,41.000,rpm,0,ENGINE_LOAD,136.40,MAP,134.93,afr,10.69,vss,0.00,ks,0.00,vbatt,6.58,TP,100.00,CLT,48.13,MAT,56.34,rusEfiVersion,20150703@8529 Neon03,outpin,t1@PA5,outpin,t2@PC6,outpin,input1@NONE,outpin,input2@NONE,outpin,c1@PC9,outpin,i1@PB8,outpin,c2@NONE,outpin,i2@PB9,outpin,c3@PE8,outpin,i3@PE2,outpin,c4@NONE,outpin,i4@PB7,ckp_c,0,fuel_base,13.61,fuel_lag,1.00,fuel,15.41,timing,714.28,duty0,NaN,dwell0,0.00,total_dwell0,0.00,period0,0.00,advance0,NaN,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,NaN,
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:56 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@626419fa
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:56 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@19e59e8d
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:56 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@320c4843
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:56 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@445c4060
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:56 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@48681b0
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:56 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@1aac4c22
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:56 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@25ba59dc
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:56 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@6d618ddd
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:56 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@1fa8e045
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:56 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:57 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@81be240
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Waiting for 780 byte(s): text body
+Sun Jul 05 11:29:57 EDT 2015<EOT>: time,41.201,rpm,0,ENGINE_LOAD,136.80,MAP,136.80,afr,10.70,vss,0.00,ks,0.00,vbatt,6.89,TP,100.00,CLT,49.13,MAT,56.87,time,41.401,rpm,0,ENGINE_LOAD,136.80,MAP,136.80,afr,10.70,vss,0.00,ks,0.00,vbatt,7.02,TP,100.00,CLT,48.93,MAT,56.78,time,41.601,rpm,0,ENGINE_LOAD,136.47,MAP,136.47,afr,10.70,vss,0.00,ks,0.00,vbatt,6.88,TP,100.00,CLT,49.54,MAT,56.97,time,41.800,rpm,0,ENGINE_LOAD,136.84,MAP,136.84,afr,10.71,vss,0.00,ks,0.00,vbatt,6.86,TP,100.00,CLT,49.83,MAT,58.38,time,42.000,rpm,0,ENGINE_LOAD,136.80,MAP,136.80,afr,10.70,vss,0.00,ks,0.00,vbatt,6.93,TP,100.00,CLT,49.50,MAT,55.52,ckp_c,0,fuel_base,13.40,fuel_lag,1.00,fuel,15.22,timing,714.28,duty0,NaN,dwell0,0.00,total_dwell0,0.00,period0,0.00,advance0,NaN,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,NaN,
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:57 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@265649cf
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:57 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@6b07c8b2
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:57 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@4c095503
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:57 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@78ac5ef4
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:57 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@7c8e2310
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:57 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@57a02f52
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:57 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@5582dd6f
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:57 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@297ce45
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:57 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:57 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3c671557
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:58 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@13aa21bc
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Waiting for 780 byte(s): text body
+Sun Jul 05 11:29:58 EDT 2015<EOT>: time,42.201,rpm,0,ENGINE_LOAD,136.18,MAP,136.62,afr,10.70,vss,0.00,ks,0.00,vbatt,6.59,TP,100.00,CLT,50.53,MAT,58.54,time,42.402,rpm,0,ENGINE_LOAD,136.25,MAP,136.21,afr,10.70,vss,0.00,ks,0.00,vbatt,6.56,TP,100.00,CLT,49.66,MAT,58.13,time,42.602,rpm,0,ENGINE_LOAD,136.69,MAP,136.43,afr,10.70,vss,0.00,ks,0.00,vbatt,6.70,TP,100.00,CLT,49.58,MAT,58.28,time,42.801,rpm,0,ENGINE_LOAD,136.25,MAP,136.51,afr,10.70,vss,0.00,ks,0.00,vbatt,6.48,TP,100.00,CLT,50.07,MAT,58.80,time,43.001,rpm,0,ENGINE_LOAD,136.32,MAP,136.62,afr,10.70,vss,0.00,ks,0.00,vbatt,6.58,TP,100.00,CLT,49.25,MAT,56.97,ckp_c,0,fuel_base,13.39,fuel_lag,1.00,fuel,15.20,timing,714.28,duty0,NaN,dwell0,0.00,total_dwell0,0.00,period0,0.00,advance0,NaN,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,NaN,
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:58 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@a8b2ee7
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:58 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@37b44519
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:58 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@1c2488e1
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:58 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@453180f7
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:58 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3509fb9e
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:58 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@22665d46
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:58 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@6e75b04e
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:58 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@708a0989
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:58 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@76783b17
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:58 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:59 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@4f6f9fc4
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Waiting for 780 byte(s): text body
+Sun Jul 05 11:29:59 EDT 2015<EOT>: time,43.202,rpm,0,ENGINE_LOAD,136.69,MAP,136.62,afr,10.70,vss,0.00,ks,0.00,vbatt,6.67,TP,100.00,CLT,48.49,MAT,56.63,time,43.402,rpm,0,ENGINE_LOAD,136.65,MAP,136.47,afr,10.70,vss,0.00,ks,0.00,vbatt,6.53,TP,100.00,CLT,47.74,MAT,56.34,time,43.603,rpm,0,ENGINE_LOAD,136.10,MAP,134.64,afr,10.70,vss,0.00,ks,0.00,vbatt,6.48,TP,100.00,CLT,48.05,MAT,56.19,time,43.803,rpm,0,ENGINE_LOAD,136.76,MAP,135.52,afr,10.70,vss,0.00,ks,0.00,vbatt,6.86,TP,100.00,CLT,48.93,MAT,56.53,time,44.002,rpm,0,ENGINE_LOAD,136.40,MAP,136.58,afr,10.70,vss,0.00,ks,0.00,vbatt,6.61,TP,100.00,CLT,48.21,MAT,56.63,ckp_c,0,fuel_base,13.44,fuel_lag,1.00,fuel,15.24,timing,714.28,duty0,NaN,dwell0,0.00,total_dwell0,0.00,period0,0.00,advance0,NaN,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,NaN,
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:59 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@20bf0ac
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:59 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@a033c59
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:59 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@7fa81658
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:59 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@74532ce1
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:59 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@a7a371
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:59 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@7ddb500c
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:59 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@49648461
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:59 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@662f21eb
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:29:59 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@205bffb6
+Sun Jul 05 11:29:59 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:00 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@77f11652
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Waiting for 995 byte(s): text body
+Sun Jul 05 11:30:00 EDT 2015<EOT>: time,44.203,rpm,0,ENGINE_LOAD,136.69,MAP,136.47,afr,10.70,vss,0.00,ks,0.00,vbatt,6.47,TP,100.00,CLT,48.29,MAT,56.43,time,44.403,rpm,0,ENGINE_LOAD,135.04,MAP,135.08,afr,10.70,vss,0.00,ks,0.00,vbatt,6.57,TP,100.00,CLT,47.90,MAT,55.76,time,44.604,rpm,0,ENGINE_LOAD,136.25,MAP,134.71,afr,10.70,vss,0.00,ks,0.00,vbatt,6.61,TP,100.00,CLT,50.57,MAT,59.53,time,44.804,rpm,0,ENGINE_LOAD,136.18,MAP,134.93,afr,10.70,vss,0.00,ks,0.00,vbatt,6.52,TP,100.00,CLT,51.21,MAT,59.27,time,45.004,rpm,0,ENGINE_LOAD,136.32,MAP,135.19,afr,10.70,vss,0.00,ks,0.00,vbatt,6.78,TP,100.00,CLT,49.83,MAT,55.85,rusEfiVersion,20150703@8529 Neon03,outpin,t1@PA5,outpin,t2@PC6,outpin,input1@NONE,outpin,input2@NONE,outpin,c1@PC9,outpin,i1@PB8,outpin,c2@NONE,outpin,i2@PB9,outpin,c3@PE8,outpin,i3@PE2,outpin,c4@NONE,outpin,i4@PB7,ckp_c,0,fuel_base,13.56,fuel_lag,1.00,fuel,15.16,timing,714.28,duty0,NaN,dwell0,0.00,total_dwell0,0.00,period0,0.00,advance0,NaN,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,NaN,
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:00 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@62541229
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:00 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@7d74742d
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:00 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@7b121759
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:00 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@60bb132e
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:00 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@19e8629f
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:00 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@67a2c202
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:00 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@6e6f4675
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:00 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@4b7ae3f7
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:00 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@70be423c
+Sun Jul 05 11:30:00 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:01 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@5aeeaaf7
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Waiting for 780 byte(s): text body
+Sun Jul 05 11:30:01 EDT 2015<EOT>: time,45.205,rpm,0,ENGINE_LOAD,134.89,MAP,134.89,afr,10.70,vss,0.00,ks,0.00,vbatt,6.69,TP,100.00,CLT,51.29,MAT,59.27,time,45.404,rpm,0,ENGINE_LOAD,136.76,MAP,134.78,afr,10.70,vss,0.00,ks,0.00,vbatt,6.69,TP,100.00,CLT,50.24,MAT,58.64,time,45.604,rpm,0,ENGINE_LOAD,135.19,MAP,136.58,afr,10.70,vss,0.00,ks,0.00,vbatt,6.68,TP,100.00,CLT,49.30,MAT,58.23,time,45.805,rpm,0,ENGINE_LOAD,136.84,MAP,136.58,afr,10.70,vss,0.00,ks,0.00,vbatt,6.83,TP,100.00,CLT,50.91,MAT,59.00,time,46.005,rpm,0,ENGINE_LOAD,136.32,MAP,134.56,afr,10.70,vss,0.00,ks,0.00,vbatt,6.72,TP,100.00,CLT,50.28,MAT,58.59,ckp_c,0,fuel_base,13.35,fuel_lag,1.00,fuel,15.32,timing,714.28,duty0,NaN,dwell0,0.00,total_dwell0,0.00,period0,0.00,advance0,NaN,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,NaN,
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:01 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@362e0fba
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:01 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@a0a9820
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:01 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3d896206
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:01 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@682977a
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:01 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@67a6cdec
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:01 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@7819761d
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:01 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@4f99a784
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:01 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@70c4f3ef
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:01 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@126b09c0
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:01 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:02 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@314d25b2
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Waiting for 780 byte(s): text body
+Sun Jul 05 11:30:02 EDT 2015<EOT>: time,46.206,rpm,0,ENGINE_LOAD,136.25,MAP,136.25,afr,10.70,vss,0.00,ks,0.00,vbatt,6.80,TP,100.00,CLT,49.95,MAT,55.57,time,46.405,rpm,0,ENGINE_LOAD,136.47,MAP,136.80,afr,10.70,vss,0.00,ks,0.00,vbatt,6.80,TP,100.00,CLT,48.97,MAT,56.48,time,46.605,rpm,0,ENGINE_LOAD,136.80,MAP,136.80,afr,10.70,vss,0.00,ks,0.00,vbatt,6.58,TP,100.00,CLT,47.78,MAT,56.29,time,46.805,rpm,0,ENGINE_LOAD,136.80,MAP,136.80,afr,10.70,vss,0.00,ks,0.00,vbatt,6.57,TP,100.00,CLT,50.62,MAT,59.53,time,47.006,rpm,0,ENGINE_LOAD,136.32,MAP,136.14,afr,10.70,vss,0.00,ks,0.00,vbatt,6.64,TP,100.00,CLT,49.38,MAT,58.28,ckp_c,0,fuel_base,13.37,fuel_lag,1.00,fuel,15.17,timing,714.28,duty0,NaN,dwell0,0.00,total_dwell0,0.00,period0,0.00,advance0,NaN,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,NaN,
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:02 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@53a62b79
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:02 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@42703fd6
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:02 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@576f1cad
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:02 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3fc3ceb3
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:02 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@50376a79
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:02 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@662f5713
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:02 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@2dfdd4ce
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:02 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@739e37f8
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:02 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@186cb615
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:02 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:03 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@926293a
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Waiting for 780 byte(s): text body
+Sun Jul 05 11:30:03 EDT 2015<EOT>: time,47.207,rpm,0,ENGINE_LOAD,136.32,MAP,134.93,afr,10.70,vss,0.00,ks,0.00,vbatt,6.73,TP,100.00,CLT,48.89,MAT,56.87,time,47.407,rpm,0,ENGINE_LOAD,136.29,MAP,134.64,afr,10.70,vss,0.00,ks,0.00,vbatt,6.50,TP,100.00,CLT,50.74,MAT,59.48,time,47.606,rpm,0,ENGINE_LOAD,136.65,MAP,136.62,afr,10.70,vss,0.00,ks,0.00,vbatt,6.73,TP,100.00,CLT,51.04,MAT,58.95,time,47.806,rpm,0,ENGINE_LOAD,136.32,MAP,134.64,afr,10.70,vss,0.00,ks,0.00,vbatt,6.45,TP,100.00,CLT,50.62,MAT,59.11,time,48.006,rpm,0,ENGINE_LOAD,136.69,MAP,135.22,afr,10.70,vss,0.00,ks,0.00,vbatt,6.55,TP,100.00,CLT,50.24,MAT,56.24,ckp_c,0,fuel_base,13.53,fuel_lag,1.00,fuel,15.34,timing,714.28,duty0,NaN,dwell0,0.00,total_dwell0,0.00,period0,0.00,advance0,NaN,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,NaN,
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:03 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@6be417da
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:03 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@4bda208c
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:03 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@5d8eee3b
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:03 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@52ba9379
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:03 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@5728175d
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:03 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@916075f
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:03 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@53df2a2
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:03 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@26046c5e
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:03 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@6c66a2d1
+Sun Jul 05 11:30:03 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:04 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:04 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:04 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@464b7ef0
+Sun Jul 05 11:30:04 EDT 2015<EOT>: Waiting for 995 byte(s): text body
+Sun Jul 05 11:30:04 EDT 2015<EOT>: time,48.208,rpm,0,ENGINE_LOAD,136.40,MAP,134.56,afr,10.69,vss,0.00,ks,0.00,vbatt,6.48,TP,100.00,CLT,48.09,MAT,56.29,time,48.408,rpm,0,ENGINE_LOAD,136.65,MAP,135.30,afr,10.70,vss,0.00,ks,0.00,vbatt,6.68,TP,100.00,CLT,51.89,MAT,59.42,time,48.608,rpm,0,ENGINE_LOAD,136.58,MAP,134.64,afr,10.70,vss,0.00,ks,0.00,vbatt,6.83,TP,100.00,CLT,49.83,MAT,58.28,time,48.807,rpm,0,ENGINE_LOAD,136.47,MAP,134.93,afr,10.70,vss,0.00,ks,0.00,vbatt,6.66,TP,100.00,CLT,49.70,MAT,58.33,time,49.007,rpm,0,ENGINE_LOAD,136.69,MAP,134.56,afr,10.70,vss,0.00,ks,0.00,vbatt,6.57,TP,100.00,CLT,49.99,MAT,58.18,rusEfiVersion,20150703@8529 Neon03,outpin,t1@PA5,outpin,t2@PC6,outpin,input1@NONE,outpin,input2@NONE,outpin,c1@PC9,outpin,i1@PB8,outpin,c2@NONE,outpin,i2@PB9,outpin,c3@PE8,outpin,i3@PE2,outpin,c4@NONE,outpin,i4@PB7,ckp_c,0,fuel_base,13.52,fuel_lag,1.00,fuel,15.16,timing,714.28,duty0,NaN,dwell0,0.00,total_dwell0,0.00,period0,0.00,advance0,NaN,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,NaN,
+Sun Jul 05 11:30:04 EDT 2015<EOT>: Sending [rewriteconfig]
+Sun Jul 05 11:30:04 EDT 2015<EOT>: postMessage BinaryProtocol: Sending [rewriteconfig]
+Sun Jul 05 11:30:04 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:04 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:04 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@e966006
+Sun Jul 05 11:30:04 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:04 EDT 2015<EOT>: Sending [0, 14, 69, 114, 101, 119, 114, 105, 116, 101, 99, 111, 110, 102, 105, 103, 63, 65, 101, 81]
+Sun Jul 05 11:30:04 EDT 2015<EOT>: Waiting for 2 byte(s): execute header
+Sun Jul 05 11:30:05 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@327a3165
+Sun Jul 05 11:30:05 EDT 2015<EOT>: Waiting for 5 byte(s): execute body
+Sun Jul 05 11:30:05 EDT 2015<EOT>: postMessage PortHolder: confirmation_rewriteconfig
+Sun Jul 05 11:30:05 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:05 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! rewriteconfig, still pending: 0
+Sun Jul 05 11:30:05 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:05 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@7440f7c6
+Sun Jul 05 11:30:05 EDT 2015<EOT>: Waiting for 331 byte(s): text body
+Sun Jul 05 11:30:05 EDT 2015<EOT>: msg,confirmation_rewriteconfig:13,msg,applyNonPersistentConfiguration(),msg,initializeTriggerShape(),msg, !!!!!!!!!!!!!!!!!!!! BE SURE NOT WRITE WITH IGNITION ON !!!!!!!!!!!!!!!!!!!!,msg,flash compatible with 8400,msg,Reseting flash: size=15300,msg,Flashing with CRC=24,msg,Flash programmed in (ms): 76,msg,Flashing result: 0,
+Sun Jul 05 11:30:05 EDT 2015<EOT>: postMessage EngineState: confirmation_rewriteconfig:13
+Sun Jul 05 11:30:05 EDT 2015<EOT>: postMessage EngineState: applyNonPersistentConfiguration()
+Sun Jul 05 11:30:05 EDT 2015<EOT>: postMessage EngineState: initializeTriggerShape()
+Sun Jul 05 11:30:05 EDT 2015<EOT>: postMessage EngineState:  !!!!!!!!!!!!!!!!!!!! BE SURE NOT WRITE WITH IGNITION ON !!!!!!!!!!!!!!!!!!!!
+Sun Jul 05 11:30:05 EDT 2015<EOT>: postMessage EngineState: flash compatible with 8400
+Sun Jul 05 11:30:05 EDT 2015<EOT>: postMessage EngineState: Reseting flash: size=15300
+Sun Jul 05 11:30:05 EDT 2015<EOT>: postMessage EngineState: Flashing with CRC=24
+Sun Jul 05 11:30:05 EDT 2015<EOT>: postMessage EngineState: Flash programmed in (ms): 76
+Sun Jul 05 11:30:05 EDT 2015<EOT>: postMessage EngineState: Flashing result: 0
+Sun Jul 05 11:30:05 EDT 2015<EOT>: postMessage CommandQueue: got valid conf! rewriteconfig:13, still pending: 0
+Sun Jul 05 11:30:05 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:05 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@67ec9a89
+Sun Jul 05 11:30:05 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:05 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:05 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:05 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:05 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@5e95cdac
+Sun Jul 05 11:30:05 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:05 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:05 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:05 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3cf207b7
+Sun Jul 05 11:30:05 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:05 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:05 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:05 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@35d89ea3
+Sun Jul 05 11:30:05 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:05 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:05 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:05 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@2096faf3
+Sun Jul 05 11:30:05 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:05 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:05 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:05 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@1835783c
+Sun Jul 05 11:30:05 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:06 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@5e68b78e
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Waiting for 815 byte(s): text body
+Sun Jul 05 11:30:06 EDT 2015<EOT>: msg,WARNING: ADC is off [map] index=0,time,49.208,rpm,0,ENGINE_LOAD,136.62,MAP,134.93,afr,10.70,vss,0.00,ks,0.00,vbatt,6.87,TP,100.00,CLT,48.85,MAT,56.68,time,49.409,rpm,0,ENGINE_LOAD,-12.50,MAP,-12.50,afr,10.70,vss,0.00,ks,0.00,vbatt,7.20,TP,100.00,CLT,49.21,MAT,57.47,time,49.609,rpm,0,ENGINE_LOAD,-12.50,MAP,-12.50,afr,10.70,vss,0.00,ks,0.00,vbatt,6.65,TP,100.00,CLT,49.95,MAT,59.11,time,49.808,rpm,0,ENGINE_LOAD,-12.50,MAP,-12.50,afr,10.70,vss,0.00,ks,0.00,vbatt,6.47,TP,100.00,CLT,51.12,MAT,58.90,time,50.008,rpm,0,ENGINE_LOAD,-12.50,MAP,-12.50,afr,10.70,vss,0.00,ks,0.00,vbatt,6.54,TP,100.00,CLT,50.28,MAT,58.80,ckp_c,0,fuel_base,0.00,fuel_lag,1.00,fuel,1.00,timing,10.00,duty0,NaN,dwell0,0.00,total_dwell0,0.00,period0,0.00,advance0,NaN,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,NaN,
+Sun Jul 05 11:30:06 EDT 2015<EOT>: postMessage EngineState: WARNING: ADC is off [map] index=0
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:06 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@199732af
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:06 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@15808c49
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:06 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@2a7a17a6
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:06 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@35a6a913
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:06 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@5124195c
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:06 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@18fd10a2
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:06 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@e4f087f
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:06 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@66b6d12f
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:06 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@6c5f9957
+Sun Jul 05 11:30:06 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:07 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:07 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:07 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@784c5656
+Sun Jul 05 11:30:07 EDT 2015<EOT>: Waiting for 777 byte(s): text body
+Sun Jul 05 11:30:07 EDT 2015<EOT>: time,50.209,rpm,0,ENGINE_LOAD,-12.50,MAP,-12.50,afr,10.70,vss,0.00,ks,0.00,vbatt,6.55,TP,100.00,CLT,50.78,MAT,58.54,time,50.409,rpm,0,ENGINE_LOAD,-12.50,MAP,-12.50,afr,10.70,vss,0.00,ks,0.00,vbatt,6.52,TP,100.00,CLT,50.36,MAT,59.06,time,50.610,rpm,0,ENGINE_LOAD,-12.50,MAP,-12.50,afr,10.70,vss,0.00,ks,0.00,vbatt,6.76,TP,100.00,CLT,50.70,MAT,58.85,time,50.810,rpm,0,ENGINE_LOAD,-12.50,MAP,-12.50,afr,10.70,vss,0.00,ks,0.00,vbatt,6.53,TP,100.00,CLT,51.16,MAT,59.11,time,51.009,rpm,0,ENGINE_LOAD,-12.50,MAP,-12.50,afr,10.70,vss,0.00,ks,0.00,vbatt,6.69,TP,100.00,CLT,51.68,MAT,59.37,ckp_c,0,fuel_base,0.00,fuel_lag,1.00,fuel,1.00,timing,10.00,duty0,NaN,dwell0,0.00,total_dwell0,0.00,period0,0.00,advance0,NaN,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,NaN,
+Sun Jul 05 11:30:07 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:07 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:07 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@3f245e3f
+Sun Jul 05 11:30:07 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:07 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:07 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:07 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@6ca79a7b
+Sun Jul 05 11:30:07 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:07 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:07 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@6f8f38f7
+Sun Jul 05 11:30:07 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:07 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:07 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:07 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:07 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@23e51959
+Sun Jul 05 11:30:07 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:07 EDT 2015<EOT>: Sending [0, 1, 71, 58, -70, 59, -66]
+Sun Jul 05 11:30:07 EDT 2015<EOT>: Waiting for 2 byte(s): text header
+Sun Jul 05 11:30:07 EDT 2015<EOT>: less expected SerialPortReader serialEvent jssc.SerialPortEvent@262f0a99
+Sun Jul 05 11:30:07 EDT 2015<EOT>: Waiting for 5 byte(s): text body
+Sun Jul 05 11:30:07 EDT 2015<EOT>: CLOSING PORT...
+Sun Jul 05 11:30:07 EDT 2015<EOT>: PORT CLOSED
+Sun Jul 05 11:30:07 EDT 2015<EOT>: Stopping text pull

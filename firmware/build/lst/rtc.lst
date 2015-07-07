@@ -1,0 +1,325 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAQHAoV.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"rtc.c"
+  16              		.section	.text.rtcInit,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	rtcInit
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	rtcInit, %function
+  23              	rtcInit:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 FFF7FEBF 		b	rtc_lld_init
+  28              		.size	rtcInit, .-rtcInit
+  29 0004 AFF30080 		.section	.text.rtcSetTime,"ax",%progbits
+  29      AFF30080 
+  29      AFF30080 
+  30              		.align	2
+  31              		.p2align 4,,15
+  32              		.global	rtcSetTime
+  33              		.thumb
+  34              		.thumb_func
+  35              		.type	rtcSetTime, %function
+  36              	rtcSetTime:
+  37              		@ args = 0, pretend = 0, frame = 0
+  38              		@ frame_needed = 0, uses_anonymous_args = 0
+  39 0000 0029     		cmp	r1, #0
+  40 0002 18BF     		it	ne
+  41 0004 0028     		cmpne	r0, #0
+  42 0006 38B5     		push	{r3, r4, r5, lr}
+  43 0008 0546     		mov	r5, r0
+  44 000a 0C46     		mov	r4, r1
+  45 000c 0AD1     		bne	.L3
+  46 000e 40F20000 		movw	r0, #:lower16:.LC0
+  47 0012 40F20001 		movw	r1, #:lower16:.LC1
+  48 0016 C0F20000 		movt	r0, #:upper16:.LC0
+  49 001a C0F20001 		movt	r1, #:upper16:.LC1
+  50 001e 5722     		movs	r2, #87
+  51 0020 FFF7FEFF 		bl	chDbgPanic3
+  52              	.L3:
+  53 0024 2023     		movs	r3, #32
+  54              	@ 89 "chibios/os/hal/src/rtc.c" 1
+  55 0026 83F31188 		msr     BASEPRI, r3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAQHAoV.s 			page 2
+
+
+  56              	@ 0 "" 2
+  57              		.thumb
+  58 002a FFF7FEFF 		bl	dbg_check_lock
+  59 002e 2846     		mov	r0, r5
+  60 0030 2146     		mov	r1, r4
+  61 0032 FFF7FEFF 		bl	rtc_lld_set_time
+  62 0036 FFF7FEFF 		bl	dbg_check_unlock
+  63 003a 0023     		movs	r3, #0
+  64              	@ 91 "chibios/os/hal/src/rtc.c" 1
+  65 003c 83F31188 		msr     BASEPRI, r3
+  66              	@ 0 "" 2
+  67              		.thumb
+  68 0040 38BD     		pop	{r3, r4, r5, pc}
+  69              		.size	rtcSetTime, .-rtcSetTime
+  70 0042 00BFAFF3 		.section	.text.rtcGetTime,"ax",%progbits
+  70      0080AFF3 
+  70      0080AFF3 
+  70      0080
+  71              		.align	2
+  72              		.p2align 4,,15
+  73              		.global	rtcGetTime
+  74              		.thumb
+  75              		.thumb_func
+  76              		.type	rtcGetTime, %function
+  77              	rtcGetTime:
+  78              		@ args = 0, pretend = 0, frame = 0
+  79              		@ frame_needed = 0, uses_anonymous_args = 0
+  80 0000 0029     		cmp	r1, #0
+  81 0002 18BF     		it	ne
+  82 0004 0028     		cmpne	r0, #0
+  83 0006 38B5     		push	{r3, r4, r5, lr}
+  84 0008 0546     		mov	r5, r0
+  85 000a 0C46     		mov	r4, r1
+  86 000c 0AD1     		bne	.L9
+  87 000e 40F20000 		movw	r0, #:lower16:.LC2
+  88 0012 40F20001 		movw	r1, #:lower16:.LC1
+  89 0016 C0F20000 		movt	r0, #:upper16:.LC2
+  90 001a C0F20001 		movt	r1, #:upper16:.LC1
+  91 001e 6822     		movs	r2, #104
+  92 0020 FFF7FEFF 		bl	chDbgPanic3
+  93              	.L9:
+  94 0024 2023     		movs	r3, #32
+  95              	@ 106 "chibios/os/hal/src/rtc.c" 1
+  96 0026 83F31188 		msr     BASEPRI, r3
+  97              	@ 0 "" 2
+  98              		.thumb
+  99 002a FFF7FEFF 		bl	dbg_check_lock
+ 100 002e 2846     		mov	r0, r5
+ 101 0030 2146     		mov	r1, r4
+ 102 0032 FFF7FEFF 		bl	rtc_lld_get_time
+ 103 0036 FFF7FEFF 		bl	dbg_check_unlock
+ 104 003a 0023     		movs	r3, #0
+ 105              	@ 108 "chibios/os/hal/src/rtc.c" 1
+ 106 003c 83F31188 		msr     BASEPRI, r3
+ 107              	@ 0 "" 2
+ 108              		.thumb
+ 109 0040 38BD     		pop	{r3, r4, r5, pc}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAQHAoV.s 			page 3
+
+
+ 110              		.size	rtcGetTime, .-rtcGetTime
+ 111 0042 00BFAFF3 		.section	.text.rtcSetAlarm,"ax",%progbits
+ 111      0080AFF3 
+ 111      0080AFF3 
+ 111      0080
+ 112              		.align	2
+ 113              		.p2align 4,,15
+ 114              		.global	rtcSetAlarm
+ 115              		.thumb
+ 116              		.thumb_func
+ 117              		.type	rtcSetAlarm, %function
+ 118              	rtcSetAlarm:
+ 119              		@ args = 0, pretend = 0, frame = 0
+ 120              		@ frame_needed = 0, uses_anonymous_args = 0
+ 121 0000 0129     		cmp	r1, #1
+ 122 0002 94BF     		ite	ls
+ 123 0004 0023     		movls	r3, #0
+ 124 0006 0123     		movhi	r3, #1
+ 125 0008 0028     		cmp	r0, #0
+ 126 000a 08BF     		it	eq
+ 127 000c 43F00103 		orreq	r3, r3, #1
+ 128 0010 70B5     		push	{r4, r5, r6, lr}
+ 129 0012 0C46     		mov	r4, r1
+ 130 0014 0546     		mov	r5, r0
+ 131 0016 1646     		mov	r6, r2
+ 132 0018 53B1     		cbz	r3, .L14
+ 133 001a 40F20000 		movw	r0, #:lower16:.LC3
+ 134 001e 40F20001 		movw	r1, #:lower16:.LC1
+ 135 0022 C0F20000 		movt	r0, #:upper16:.LC3
+ 136 0026 C0F20001 		movt	r1, #:upper16:.LC1
+ 137 002a 7D22     		movs	r2, #125
+ 138 002c FFF7FEFF 		bl	chDbgPanic3
+ 139              	.L14:
+ 140 0030 2023     		movs	r3, #32
+ 141              	@ 127 "chibios/os/hal/src/rtc.c" 1
+ 142 0032 83F31188 		msr     BASEPRI, r3
+ 143              	@ 0 "" 2
+ 144              		.thumb
+ 145 0036 FFF7FEFF 		bl	dbg_check_lock
+ 146 003a 2846     		mov	r0, r5
+ 147 003c 2146     		mov	r1, r4
+ 148 003e 3246     		mov	r2, r6
+ 149 0040 FFF7FEFF 		bl	rtc_lld_set_alarm
+ 150 0044 FFF7FEFF 		bl	dbg_check_unlock
+ 151 0048 0023     		movs	r3, #0
+ 152              	@ 129 "chibios/os/hal/src/rtc.c" 1
+ 153 004a 83F31188 		msr     BASEPRI, r3
+ 154              	@ 0 "" 2
+ 155              		.thumb
+ 156 004e 70BD     		pop	{r4, r5, r6, pc}
+ 157              		.size	rtcSetAlarm, .-rtcSetAlarm
+ 158              		.section	.text.rtcGetAlarm,"ax",%progbits
+ 159              		.align	2
+ 160              		.p2align 4,,15
+ 161              		.global	rtcGetAlarm
+ 162              		.thumb
+ 163              		.thumb_func
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAQHAoV.s 			page 4
+
+
+ 164              		.type	rtcGetAlarm, %function
+ 165              	rtcGetAlarm:
+ 166              		@ args = 0, pretend = 0, frame = 0
+ 167              		@ frame_needed = 0, uses_anonymous_args = 0
+ 168 0000 0129     		cmp	r1, #1
+ 169 0002 94BF     		ite	ls
+ 170 0004 0023     		movls	r3, #0
+ 171 0006 0123     		movhi	r3, #1
+ 172 0008 0028     		cmp	r0, #0
+ 173 000a 08BF     		it	eq
+ 174 000c 43F00103 		orreq	r3, r3, #1
+ 175 0010 70B5     		push	{r4, r5, r6, lr}
+ 176 0012 0C46     		mov	r4, r1
+ 177 0014 0546     		mov	r5, r0
+ 178 0016 1646     		mov	r6, r2
+ 179 0018 83B9     		cbnz	r3, .L19
+ 180 001a 7AB1     		cbz	r2, .L19
+ 181              	.L20:
+ 182 001c 2023     		movs	r3, #32
+ 183              	@ 150 "chibios/os/hal/src/rtc.c" 1
+ 184 001e 83F31188 		msr     BASEPRI, r3
+ 185              	@ 0 "" 2
+ 186              		.thumb
+ 187 0022 FFF7FEFF 		bl	dbg_check_lock
+ 188 0026 2846     		mov	r0, r5
+ 189 0028 2146     		mov	r1, r4
+ 190 002a 3246     		mov	r2, r6
+ 191 002c FFF7FEFF 		bl	rtc_lld_get_alarm
+ 192 0030 FFF7FEFF 		bl	dbg_check_unlock
+ 193 0034 0023     		movs	r3, #0
+ 194              	@ 152 "chibios/os/hal/src/rtc.c" 1
+ 195 0036 83F31188 		msr     BASEPRI, r3
+ 196              	@ 0 "" 2
+ 197              		.thumb
+ 198 003a 70BD     		pop	{r4, r5, r6, pc}
+ 199              	.L19:
+ 200 003c 40F20000 		movw	r0, #:lower16:.LC4
+ 201 0040 40F20001 		movw	r1, #:lower16:.LC1
+ 202 0044 C0F20000 		movt	r0, #:upper16:.LC4
+ 203 0048 C0F20001 		movt	r1, #:upper16:.LC1
+ 204 004c 9422     		movs	r2, #148
+ 205 004e FFF7FEFF 		bl	chDbgPanic3
+ 206 0052 E3E7     		b	.L20
+ 207              		.size	rtcGetAlarm, .-rtcGetAlarm
+ 208 0054 AFF30080 		.section	.text.rtcGetTimeFat,"ax",%progbits
+ 208      AFF30080 
+ 208      AFF30080 
+ 209              		.align	2
+ 210              		.p2align 4,,15
+ 211              		.global	rtcGetTimeFat
+ 212              		.thumb
+ 213              		.thumb_func
+ 214              		.type	rtcGetTimeFat, %function
+ 215              	rtcGetTimeFat:
+ 216              		@ args = 0, pretend = 0, frame = 0
+ 217              		@ frame_needed = 0, uses_anonymous_args = 0
+ 218 0000 10B5     		push	{r4, lr}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAQHAoV.s 			page 5
+
+
+ 219 0002 0446     		mov	r4, r0
+ 220 0004 20B1     		cbz	r0, .L23
+ 221 0006 2046     		mov	r0, r4
+ 222 0008 BDE81040 		pop	{r4, lr}
+ 223 000c FFF7FEBF 		b	rtc_lld_get_time_fat
+ 224              	.L23:
+ 225 0010 40F20000 		movw	r0, #:lower16:.LC0
+ 226 0014 40F20001 		movw	r1, #:lower16:.LC1
+ 227 0018 C0F20000 		movt	r0, #:upper16:.LC0
+ 228 001c C0F20001 		movt	r1, #:upper16:.LC1
+ 229 0020 BB22     		movs	r2, #187
+ 230 0022 FFF7FEFF 		bl	chDbgPanic3
+ 231 0026 2046     		mov	r0, r4
+ 232 0028 BDE81040 		pop	{r4, lr}
+ 233 002c FFF7FEBF 		b	rtc_lld_get_time_fat
+ 234              		.size	rtcGetTimeFat, .-rtcGetTimeFat
+ 235              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 236              		.align	2
+ 237              	.LC0:
+ 238 0000 22727463 		.ascii	"\"rtcSetTime\"()\000"
+ 238      53657454 
+ 238      696D6522 
+ 238      282900
+ 239 000f 00       		.space	1
+ 240              	.LC1:
+ 241 0010 63686962 		.ascii	"chibios/os/hal/src/rtc.c\000"
+ 241      696F732F 
+ 241      6F732F68 
+ 241      616C2F73 
+ 241      72632F72 
+ 242 0029 000000   		.space	3
+ 243              	.LC2:
+ 244 002c 22727463 		.ascii	"\"rtcGetTime\"()\000"
+ 244      47657454 
+ 244      696D6522 
+ 244      282900
+ 245 003b 00       		.space	1
+ 246              	.LC3:
+ 247 003c 22727463 		.ascii	"\"rtcSetAlarm\"()\000"
+ 247      53657441 
+ 247      6C61726D 
+ 247      22282900 
+ 248              	.LC4:
+ 249 004c 22727463 		.ascii	"\"rtcGetAlarm\"()\000"
+ 249      47657441 
+ 249      6C61726D 
+ 249      22282900 
+ 250              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccAQHAoV.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 rtc.c
+C:\Users\pc\AppData\Local\Temp\ccAQHAoV.s:17     .text.rtcInit:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAQHAoV.s:23     .text.rtcInit:00000000 rtcInit
+C:\Users\pc\AppData\Local\Temp\ccAQHAoV.s:30     .text.rtcSetTime:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAQHAoV.s:36     .text.rtcSetTime:00000000 rtcSetTime
+C:\Users\pc\AppData\Local\Temp\ccAQHAoV.s:237    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccAQHAoV.s:240    .rodata.str1.4:00000010 .LC1
+C:\Users\pc\AppData\Local\Temp\ccAQHAoV.s:71     .text.rtcGetTime:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAQHAoV.s:77     .text.rtcGetTime:00000000 rtcGetTime
+C:\Users\pc\AppData\Local\Temp\ccAQHAoV.s:243    .rodata.str1.4:0000002c .LC2
+C:\Users\pc\AppData\Local\Temp\ccAQHAoV.s:112    .text.rtcSetAlarm:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAQHAoV.s:118    .text.rtcSetAlarm:00000000 rtcSetAlarm
+C:\Users\pc\AppData\Local\Temp\ccAQHAoV.s:246    .rodata.str1.4:0000003c .LC3
+C:\Users\pc\AppData\Local\Temp\ccAQHAoV.s:159    .text.rtcGetAlarm:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAQHAoV.s:165    .text.rtcGetAlarm:00000000 rtcGetAlarm
+C:\Users\pc\AppData\Local\Temp\ccAQHAoV.s:248    .rodata.str1.4:0000004c .LC4
+C:\Users\pc\AppData\Local\Temp\ccAQHAoV.s:209    .text.rtcGetTimeFat:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccAQHAoV.s:215    .text.rtcGetTimeFat:00000000 rtcGetTimeFat
+C:\Users\pc\AppData\Local\Temp\ccAQHAoV.s:236    .rodata.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+rtc_lld_init
+chDbgPanic3
+dbg_check_lock
+rtc_lld_set_time
+dbg_check_unlock
+rtc_lld_get_time
+rtc_lld_set_alarm
+rtc_lld_get_alarm
+rtc_lld_get_time_fat

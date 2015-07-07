@@ -38,7 +38,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.romraider.Settings;
-import com.romraider.editor.ecu.ECUEditorManager;
 import com.romraider.maps.DataCell;
 import com.romraider.maps.Rom;
 import com.romraider.maps.RomID;
@@ -383,34 +382,24 @@ public final class DOMRomUnmarshaller {
         } catch (NullPointerException ex) { // if type is null or less than 0,
             // create new instance (otherwise it
             // is inherited)
-            if (unmarshallAttribute(tableNode, "type", "unknown")
-                    .equalsIgnoreCase("3D")) {
+            String typeStr = unmarshallAttribute(tableNode, "type", "unknown");
+            if (typeStr.equalsIgnoreCase(Table3D.TYPE_3D)) {
                 table = new Table3D();
 
-            } else if (unmarshallAttribute(tableNode, "type", "unknown")
-                    .equalsIgnoreCase("2D")) {
+            } else if (typeStr.equalsIgnoreCase(Table2D.TYPE_2D)) {
                 table = new Table2D();
 
-            } else if (unmarshallAttribute(tableNode, "type", "unknown")
-                    .equalsIgnoreCase("1D")) {
+            } else if (typeStr.equalsIgnoreCase(Table1D.TYPE_1D)
+                    || typeStr.equalsIgnoreCase(Table1D.TYPE_X_AXIS)
+                    || typeStr.equalsIgnoreCase(Table1D.TYPE_Y_AXIS)) {
                 table = new Table1D();
 
-            } else if (unmarshallAttribute(tableNode, "type", "unknown")
-                    .equalsIgnoreCase("X Axis")
-                    || unmarshallAttribute(tableNode, "type", "unknown")
-                    .equalsIgnoreCase("Y Axis")) {
+            } else if (typeStr.equalsIgnoreCase("Static Y Axis")
+                    || typeStr.equalsIgnoreCase("Static X Axis")) {
                 table = new Table1D();
 
-            } else if (unmarshallAttribute(tableNode, "type", "unknown")
-                    .equalsIgnoreCase("Static Y Axis")
-                    || unmarshallAttribute(tableNode, "type", "unknown")
-                    .equalsIgnoreCase("Static X Axis")) {
-                table = new Table1D();
-
-            } else if (unmarshallAttribute(tableNode, "type", "unknown")
-                    .equalsIgnoreCase("Switch")) {
+            } else if (typeStr.equalsIgnoreCase(TableSwitch.TYPE_SWITCH)) {
                 table = new TableSwitch();
-
             } else {
                 throw new XMLParseException("Error loading table, "
                         + tableNode.getAttributes().getNamedItem("name"));

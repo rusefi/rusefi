@@ -1,0 +1,1072 @@
+###############################################################################
+#                                                                             #
+# IAR ANSI C/C++ Compiler V6.50.3.4676/W32 for ARM      30/Jun/2015  23:09:13 #
+# Copyright 1999-2013 IAR Systems AB.                                         #
+#                                                                             #
+#    Cpu mode        =  thumb                                                 #
+#    Endian          =  little                                                #
+#    Source file     =  F:\stuff\rusefi_sourceforge\firmware\controllers\algo #
+#                       \advance_map.cpp                                      #
+#    Command line    =  F:\stuff\rusefi_sourceforge\firmware\controllers\algo #
+#                       \advance_map.cpp -lCN F:\stuff\rusefi_sourceforge\fir #
+#                       mware\iar\Debug\List\ -lA                             #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\  #
+#                       -o F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj #
+#                       \ --no_cse --no_unroll --no_inline --no_code_motion   #
+#                       --no_tbaa --no_clustering --no_scheduling --debug     #
+#                       --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp     #
+#                       --dlib_config "C:\Program Files (x86)\IAR             #
+#                       Systems\Embedded Workbench                            #
+#                       6.5\arm\INC\c\DLib_Config_Normal.h"                   #
+#                       --misrac2004=1.2-1.4,2.3,3.4,4.2,6.5-7,8.2-8.3,9.3,   #
+#                       12.3,13.6-13,15.5,17.3,19.17,20.7-20.9,20.11 -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\ -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\kernel\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\ports\common\ARMCMx\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\common\ARMCMx\CMSIS\include\ -I               #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\IAR\ARMCMx\ -I F:\stuff\rusefi_sourceforge\fi #
+#                       rmware\iar\..\chibios\os\ports\IAR\ARMCMx\STM32F4xx\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\chibio #
+#                       s\os\hal\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\hal\platforms\STM32\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\DMAv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\GPIOv2\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\I2Cv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\SPIv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\TIMv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\RTCv2\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\USARTv1\ -I                     #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\OTGv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32F4xx\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\various\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\chibios\os\various\devices_lib\accel\ -I         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\b #
+#                       oards\ST_STM32F4_DISCOVERY\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\co #
+#                       ntrollers\algo\ -I F:\stuff\rusefi_sourceforge\firmwa #
+#                       re\iar\..\controllers\core\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\system\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\controllers\sensors\ -I                          #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\math\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\controllers\trigger\ -I                            #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\config #
+#                       \ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\conf #
+#                       ig\engines\ -I F:\stuff\rusefi_sourceforge\firmware\i #
+#                       ar\..\config\stm32f4ems\ -I                           #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\b #
+#                       inary\ -I F:\stuff\rusefi_sourceforge\firmware\iar\.. #
+#                       \console_util\ -I F:\stuff\rusefi_sourceforge\firmwar #
+#                       e\iar\..\development\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\development\test\ -I                  #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\developme #
+#                       nt\hw_layer\ -I F:\stuff\rusefi_sourceforge\firmware\ #
+#                       iar\..\hw_layer\algo\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\hw_layer\lcd\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                       stm32f4\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\hw_layer\serial_over_usb\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                        -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext_al #
+#                       go\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\de #
+#                       velopment\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\development\hw_layer\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\util\     #
+#                       -On --eec++                                           #
+#    MISRA C version =  2004                                                  #
+#      Enabled       =  1.2-1.4 2.3 3.4 4.2 6.5 7 8.2 8.3 9.3 12.3 13.6 13.7  #
+#                       15.5 17.3 19.17 20.7-20.9 20.11                       #
+#      Checked       =  1.4 2.3 4.2 6.5 7 8.2 8.3 9.3 12.3 13.7 15.5          #
+#                       20.7-20.9 20.11                                       #
+#      Not checked   =  1.1-1.3 1.5-2.2 2.4-4.1 5-6.4 8.1 8.4-9.2 10-12.2     #
+#                       12.4-13.6 14-15.4 16-20.6 20.10 20.12 21              #
+#    List file       =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\a #
+#                       dvance_map.lst                                        #
+#    Object file     =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\ad #
+#                       vance_map.o                                           #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+F:\stuff\rusefi_sourceforge\firmware\controllers\algo\advance_map.cpp
+      1          /**
+      2           * @file	advance_map.cpp
+      3           *
+      4           * @date Mar 27, 2013
+      5           * @author Andrey Belomutskiy, (c) 2012-2015
+      6           *
+      7           * This file is part of rusEfi - see http://rusefi.com
+      8           *
+      9           * rusEfi is free software; you can redistribute it and/or modify it under the terms of
+     10           * the GNU General Public License as published by the Free Software Foundation; either
+     11           * version 3 of the License, or (at your option) any later version.
+     12           *
+     13           * rusEfi is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+     14           * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     15           * GNU General Public License for more details.
+     16           *
+     17           * You should have received a copy of the GNU General Public License along with this program.
+     18           * If not, see <http://www.gnu.org/licenses/>.
+     19           */
+     20          
+     21          #include "main.h"
+
+   \                                 In section .text, align 2
+   \   __intrinsic __nounwind __interwork __softfp void *memcpy(void *, void const *, size_t)
+   \                     memcpy:
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+   \   00000008   0x0032             MOVS     R2,R6
+   \   0000000A   0x0029             MOVS     R1,R5
+   \   0000000C   0x0020             MOVS     R0,R4
+   \   0000000E   0x.... 0x....      BL       __aeabi_memcpy
+   \   00000012   0x0020             MOVS     R0,R4
+   \   00000014   0xBD70             POP      {R4-R6,PC}       ;; return
+
+   \                                 In section .text, align 2
+   \   __intrinsic __nounwind __interwork __softfp void *memset(void *, int, size_t)
+   \                     memset:
+   \   00000000   0xB570             PUSH     {R4-R6,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+   \   00000008   0x002A             MOVS     R2,R5
+   \   0000000A   0x0031             MOVS     R1,R6
+   \   0000000C   0x0020             MOVS     R0,R4
+   \   0000000E   0x.... 0x....      BL       __aeabi_memset
+   \   00000012   0x0020             MOVS     R0,R4
+   \   00000014   0xBD70             POP      {R4-R6,PC}       ;; return
+     22          #include "advance_map.h"
+
+   \                                 In section .text, align 4
+   \   __interwork __softfp void Map3D<16, 16>::init(float (*)[16], float *, float *)
+   \                     _ZN5Map3DILi16ELi16EE4initEPA16_fPfS3_:
+   \   00000000   0xB430             PUSH     {R4,R5}
+   \   00000002   0x2400             MOVS     R4,#+0
+   \                     ??init_0:
+   \   00000004   0x2C10             CMP      R4,#+16
+   \   00000006   0xDA06             BGE.N    ??init_1
+   \   00000008   0x2540             MOVS     R5,#+64
+   \   0000000A   0xFB05 0x1504      MLA      R5,R5,R4,R1
+   \   0000000E   0xF840 0x5024      STR      R5,[R0, R4, LSL #+2]
+   \   00000012   0x1C64             ADDS     R4,R4,#+1
+   \   00000014   0xE7F6             B.N      ??init_0
+   \                     ??init_1:
+   \   00000016   0x4C03             LDR.N    R4,??init_2      ;; 0x923f558
+   \   00000018   0x6484             STR      R4,[R0, #+72]
+   \   0000001A   0x6402             STR      R2,[R0, #+64]
+   \   0000001C   0x6443             STR      R3,[R0, #+68]
+   \   0000001E   0xBC30             POP      {R4,R5}
+   \   00000020   0x4770             BX       LR               ;; return
+   \   00000022   0xBF00             Nop      
+   \                     ??init_2:
+   \   00000024   0x0923F558         DC32     0x923f558
+
+   \                                 In section .text, align 4
+   \   __interwork __vfp float Map3D<16, 16>::getValue(float, float)
+   \                     _ZN5Map3DILi16ELi16EE8getValueEff:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0xED2D 0x8B02      VPUSH    {D8}
+   \   00000006   0xB082             SUB      SP,SP,#+8
+   \   00000008   0x0004             MOVS     R4,R0
+   \   0000000A   0xEEB0 0x8A40      VMOV.F32 S16,S0
+   \   0000000E   0xEEF0 0x8A60      VMOV.F32 S17,S1
+   \   00000012   0x6CA0             LDR      R0,[R4, #+72]
+   \   00000014   0x490C             LDR.N    R1,??getValue_0+0x4  ;; 0x923f558
+   \   00000016   0x4288             CMP      R0,R1
+   \   00000018   0xD005             BEQ.N    ??getValue_1
+   \   0000001A   0x480C             LDR.N    R0,??getValue_0+0x8
+   \   0000001C   0x.... 0x....      BL       firmwareError
+   \   00000020   0xED9F 0x0A08      VLDR.W   S0,??getValue_0  ;; 0x7fffffff
+   \   00000024   0xE00A             B.N      ??getValue_2
+   \                     ??getValue_1:
+   \   00000026   0x9400             STR      R4,[SP, #+0]
+   \   00000028   0x2310             MOVS     R3,#+16
+   \   0000002A   0x6C62             LDR      R2,[R4, #+68]
+   \   0000002C   0xEEF0 0x0A68      VMOV.F32 S1,S17
+   \   00000030   0x2110             MOVS     R1,#+16
+   \   00000032   0x6C20             LDR      R0,[R4, #+64]
+   \   00000034   0xEEB0 0x0A48      VMOV.F32 S0,S16
+   \   00000038   0x.... 0x....      BL       _Z13interpolate3dfPfifS_iPS_
+   \                     ??getValue_2:
+   \   0000003C   0xB002             ADD      SP,SP,#+8
+   \   0000003E   0xECBD 0x8B02      VPOP     {D8}
+   \   00000042   0xBD10             POP      {R4,PC}          ;; return
+   \                     ??getValue_0:
+   \   00000044   0x7FFFFFFF         DC32     0x7fffffff
+   \   00000048   0x0923F558         DC32     0x923f558
+   \   0000004C   0x........         DC32     _ZZN5Map3DILi16ELi16EE8getValueEffEs
+
+   \                                 In section .text, align 2
+   \   __code __interwork __softfp Map3D<16, 16>::Map3D()
+   \                     _ZN5Map3DILi16ELi16EEC1Ev:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x2000             MOVS     R0,#+0
+   \   00000006   0x64A0             STR      R0,[R4, #+72]
+   \   00000008   0x2240             MOVS     R2,#+64
+   \   0000000A   0x2100             MOVS     R1,#+0
+   \   0000000C   0x0020             MOVS     R0,R4
+   \   0000000E   0x.... 0x....      BL       memset
+   \   00000012   0x2000             MOVS     R0,#+0
+   \   00000014   0x6420             STR      R0,[R4, #+64]
+   \   00000016   0x2000             MOVS     R0,#+0
+   \   00000018   0x6460             STR      R0,[R4, #+68]
+   \   0000001A   0x0020             MOVS     R0,R4
+   \   0000001C   0xBD10             POP      {R4,PC}          ;; return
+     23          #include "interpolation.h"
+     24          #include "efilib2.h"
+     25          #include "engine_configuration.h"
+     26          #include "engine_math.h"
+     27          
+     28          EXTERN_ENGINE;
+     29          
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __intrinsic __interwork __softfp void __sti__routine()
+   \                     __sti__routine:
+   \   00000000   0xB580             PUSH     {R7,LR}
+     30          static ign_Map3D_t advanceMap;
+   \   00000002   0x....             LDR.N    R0,??DataTable5_3
+   \   00000004   0x.... 0x....      BL       _ZN5Map3DILi16ELi16EEC1Ev
+     31          static ign_Map3D_t iatAdvanceCorrectionMap;
+   \   00000008   0x....             LDR.N    R0,??DataTable5_4
+   \   0000000A   0x.... 0x....      BL       _ZN5Map3DILi16ELi16EEC1Ev
+   \   0000000E   0xBD01             POP      {R0,PC}          ;; return
+
+   \                                 In section .bss, align 4
+   \                     advanceMap:
+   \   00000000                      DS8 76
+
+   \                                 In section .bss, align 4
+   \                     iatAdvanceCorrectionMap:
+   \   00000000                      DS8 76
+     32          
+
+   \                                 In section .rodata, align 4
+     33          static const float iatTimingRpmBins[IGN_LOAD_COUNT] = {880,	1260,	1640,	2020,	2400,	2780,	3000,	3380,	3760,	4140,	4520,	5000,	5700,	6500,	7200,	8000};
+   \                     iatTimingRpmBins:
+   \   00000000   0x445C0000         DC32 445C0000H, 449D8000H, 44CD0000H, 44FC8000H, 45160000H, 452DC000H
+   \              0x449D8000   
+   \              0x44CD0000   
+   \              0x44FC8000   
+   \              0x45160000   
+   \              0x452DC000   
+   \   00000018   0x453B8000         DC32 453B8000H, 45534000H, 456B0000H, 45816000H, 458D4000H, 459C4000H
+   \              0x45534000   
+   \              0x456B0000   
+   \              0x45816000   
+   \              0x458D4000   
+   \              0x459C4000   
+   \   00000030   0x45B22000         DC32 45B22000H, 45CB2000H, 45E10000H, 45FA0000H
+   \              0x45CB2000   
+   \              0x45E10000   
+   \              0x45FA0000   
+     34          
+     35          //880	1260	1640	2020	2400	2780	3000	3380	3760	4140	4520	5000	5700	6500	7200	8000
+
+   \                                 In section .rodata, align 4
+     36          static const ignition_table_t defaultIatTiming = {
+   \                     defaultIatTiming:
+   \   00000000   0x40800000         DC32 40800000H, 40800000H, 40800000H, 40800000H, 40800000H, 40800000H
+   \              0x40800000   
+   \              0x40800000   
+   \              0x40800000   
+   \              0x40800000   
+   \              0x40800000   
+   \   00000018   0x40800000         DC32 40800000H, 40800000H, 40800000H, 40800000H, 40800000H, 40000000H
+   \              0x40800000   
+   \              0x40800000   
+   \              0x40800000   
+   \              0x40800000   
+   \              0x40000000   
+   \   00000030   0x40000000         DC32 40000000H, 40000000H, 40000000H, 40000000H, 40800000H, 40800000H
+   \              0x40000000   
+   \              0x40000000   
+   \              0x40000000   
+   \              0x40800000   
+   \              0x40800000   
+   \   00000048   0x40800000         DC32 40800000H, 40800000H, 40800000H, 40800000H, 40800000H, 40800000H
+   \              0x40800000   
+   \              0x40800000   
+   \              0x40800000   
+   \              0x40800000   
+   \              0x40800000   
+   \   00000060   0x40800000         DC32 40800000H, 40800000H, 40800000H, 40000000H, 40000000H, 40000000H
+   \              0x40800000   
+   \              0x40800000   
+   \              0x40000000   
+   \              0x40000000   
+   \              0x40000000   
+   \   00000078   0x40000000         DC32 40000000H, 40000000H, 40800000H, 40800000H, 40800000H, 40800000H
+   \              0x40000000   
+   \              0x40800000   
+   \              0x40800000   
+   \              0x40800000   
+   \              0x40800000   
+   \   00000090   0x40800000         DC32 40800000H, 40800000H, 40800000H, 40800000H, 40800000H, 40800000H
+   \              0x40800000   
+   \              0x40800000   
+   \              0x40800000   
+   \              0x40800000   
+   \              0x40800000   
+   \   000000A8   0x40800000         DC32 40800000H, 40000000H, 40000000H, 40000000H, 40000000H, 40000000H
+   \              0x40000000   
+   \              0x40000000   
+   \              0x40000000   
+   \              0x40000000   
+   \              0x40000000   
+   \   000000C0   0x40800000         DC32 40800000H, 40800000H, 40800000H, 40800000H, 40800000H, 40800000H
+   \              0x40800000   
+   \              0x40800000   
+   \              0x40800000   
+   \              0x40800000   
+   \              0x40800000   
+   \   000000D8   0x40800000         DC32 40800000H, 40800000H, 40800000H, 40800000H, 40800000H, 40000000H
+   \              0x40800000   
+   \              0x40800000   
+   \              0x40800000   
+   \              0x40800000   
+   \              0x40000000   
+   \   000000F0   0x40000000         DC32 40000000H, 40000000H, 40000000H, 40000000H, 40600000H, 40600000H
+   \              0x40000000   
+   \              0x40000000   
+   \              0x40000000   
+   \              0x40600000   
+   \              0x40600000   
+   \   00000108   0x40600000         DC32 40600000H, 40600000H, 40600000H, 40600000H, 40600000H, 40600000H
+   \              0x40600000   
+   \              0x40600000   
+   \              0x40600000   
+   \              0x40600000   
+   \              0x40600000   
+   \   00000120   0x40600000         DC32 40600000H, 40600000H, 40600000H, 40000000H, 40000000H, 40000000H
+   \              0x40600000   
+   \              0x40600000   
+   \              0x40000000   
+   \              0x40000000   
+   \              0x40000000   
+   \   00000138   0x40000000         DC32 40000000H, 40000000H, 40400000H, 40400000H, 40400000H, 40400000H
+   \              0x40000000   
+   \              0x40400000   
+   \              0x40400000   
+   \              0x40400000   
+   \              0x40400000   
+   \   00000150   0x40400000         DC32 40400000H, 40400000H, 40400000H, 40400000H, 40400000H, 40400000H
+   \              0x40400000   
+   \              0x40400000   
+   \              0x40400000   
+   \              0x40400000   
+   \              0x40400000   
+   \   00000168   0x40400000         DC32 40400000H, 40000000H, 40000000H, 40000000H, 40000000H, 40000000H
+   \              0x40000000   
+   \              0x40000000   
+   \              0x40000000   
+   \              0x40000000   
+   \              0x40000000   
+   \   00000180   0x40000000         DC32 40000000H, 40000000H, 40000000H, 40000000H, 40000000H, 40000000H
+   \              0x40000000   
+   \              0x40000000   
+   \              0x40000000   
+   \              0x40000000   
+   \              0x40000000   
+   \   00000198   0x40000000         DC32 40000000H, 40000000H, 40000000H, 40000000H, 40000000H, 0H, 0H, 0H
+   \              0x40000000   
+   \              0x40000000   
+   \              0x40000000   
+   \              0x40000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \   000001B8   0x00000000         DC32 0H, 0H, 0H, 0H, 0H, 0H, 0H, 0H, 0H, 0H, 0H, 0H, 0H, 0H, 0H, 0H, 0H
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \   000001FC   0x00000000         DC32 0H, 0H, 0H, 0H, 0H, 0H, 0H, 0H, 0H, 0H, 0H, 0H, 0H, 0H, 0H, 0H, 0H
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \              0x00000000   
+   \   00000240   0x00000000         DC32 0H, 0H, 0BF666666H, 0BF666666H, 0BF666666H, 0BF666666H, 0BF666666H
+   \              0x00000000   
+   \              0xBF666666   
+   \              0xBF666666   
+   \              0xBF666666   
+   \              0xBF666666   
+   \              0xBF666666   
+   \   0000025C   0xBF666666         DC32 0BF666666H, 0BF666666H, 0BF666666H, 0BF666666H, 0BF666666H
+   \              0xBF666666   
+   \              0xBF666666   
+   \              0xBF666666   
+   \              0xBF666666   
+   \   00000270   0xBF666666         DC32 0BF666666H, 0BF666666H, 0BF666666H, 0BF666666H, 0C0533333H
+   \              0xBF666666   
+   \              0xBF666666   
+   \              0xBF666666   
+   \              0xC0533333   
+   \   00000284   0xC059999A         DC32 0C059999AH, 0C09CCCCDH, 0C09CCCCDH, 0C09CCCCDH, 0C09CCCCDH
+   \              0xC09CCCCD   
+   \              0xC09CCCCD   
+   \              0xC09CCCCD   
+   \              0xC09CCCCD   
+   \   00000298   0xC08CCCCD         DC32 0C08CCCCDH, 0C08CCCCDH, 0C08CCCCDH, 0C08CCCCDH, 0C08CCCCDH
+   \              0xC08CCCCD   
+   \              0xC08CCCCD   
+   \              0xC08CCCCD   
+   \              0xC08CCCCD   
+   \   000002AC   0xBF666666         DC32 0BF666666H, 0BF666666H, 0BF666666H, 0BF666666H, 0BF666666H
+   \              0xBF666666   
+   \              0xBF666666   
+   \              0xBF666666   
+   \              0xBF666666   
+   \   000002C0   0xC08CCCCD         DC32 0C08CCCCDH, 0C09CCCCDH, 0C0BCCCCDH, 0C0BCCCCDH, 0C0BCCCCDH
+   \              0xC09CCCCD   
+   \              0xC0BCCCCD   
+   \              0xC0BCCCCD   
+   \              0xC0BCCCCD   
+   \   000002D4   0xC0BCCCCD         DC32 0C0BCCCCDH, 0C09CCCCDH, 0C09CCCCDH, 0C09CCCCDH, 0C09CCCCDH
+   \              0xC09CCCCD   
+   \              0xC09CCCCD   
+   \              0xC09CCCCD   
+   \              0xC09CCCCD   
+   \   000002E8   0xC09CCCCD         DC32 0C09CCCCDH, 0C019999AH, 0C019999AH, 0C019999AH, 0C019999AH
+   \              0xC019999A   
+   \              0xC019999A   
+   \              0xC019999A   
+   \              0xC019999A   
+   \   000002FC   0xC019999A         DC32 0C019999AH, 0C08CCCCDH, 0C09CCCCDH, 0C0BCCCCDH, 0C0BCCCCDH
+   \              0xC08CCCCD   
+   \              0xC09CCCCD   
+   \              0xC0BCCCCD   
+   \              0xC0BCCCCD   
+   \   00000310   0xC0BCCCCD         DC32 0C0BCCCCDH, 0C0BCCCCDH, 0C09CCCCDH, 0C09CCCCDH, 0C09CCCCDH
+   \              0xC0BCCCCD   
+   \              0xC09CCCCD   
+   \              0xC09CCCCD   
+   \              0xC09CCCCD   
+   \   00000324   0xC09CCCCD         DC32 0C09CCCCDH, 0C09CCCCDH, 0C039999AH, 0C039999AH, 0C039999AH
+   \              0xC09CCCCD   
+   \              0xC039999A   
+   \              0xC039999A   
+   \              0xC039999A   
+   \   00000338   0xC039999A         DC32 0C039999AH, 0C039999AH, 0C08CCCCDH, 0C09CCCCDH, 0C0BCCCCDH
+   \              0xC039999A   
+   \              0xC08CCCCD   
+   \              0xC09CCCCD   
+   \              0xC0BCCCCD   
+   \   0000034C   0xC0BCCCCD         DC32 0C0BCCCCDH, 0C0BCCCCDH, 0C0BCCCCDH, 0C09CCCCDH, 0C09CCCCDH
+   \              0xC0BCCCCD   
+   \              0xC0BCCCCD   
+   \              0xC09CCCCD   
+   \              0xC09CCCCD   
+   \   00000360   0xC09CCCCD         DC32 0C09CCCCDH, 0C09CCCCDH, 0C09CCCCDH, 0C079999AH, 0C079999AH
+   \              0xC09CCCCD   
+   \              0xC09CCCCD   
+   \              0xC079999A   
+   \              0xC079999A   
+   \   00000374   0xC079999A         DC32 0C079999AH, 0C079999AH, 0C079999AH, 0C08CCCCDH, 0C09CCCCDH
+   \              0xC079999A   
+   \              0xC079999A   
+   \              0xC08CCCCD   
+   \              0xC09CCCCD   
+   \   00000388   0xC0BCCCCD         DC32 0C0BCCCCDH, 0C0BCCCCDH, 0C0BCCCCDH, 0C0BCCCCDH, 0C09CCCCDH
+   \              0xC0BCCCCD   
+   \              0xC0BCCCCD   
+   \              0xC0BCCCCD   
+   \              0xC09CCCCD   
+   \   0000039C   0xC09CCCCD         DC32 0C09CCCCDH, 0C09CCCCDH, 0C09CCCCDH, 0C09CCCCDH, 0C079999AH
+   \              0xC09CCCCD   
+   \              0xC09CCCCD   
+   \              0xC09CCCCD   
+   \              0xC079999A   
+   \   000003B0   0xC079999A         DC32 0C079999AH, 0C079999AH, 0C079999AH, 0C079999AH, 0C08CCCCDH
+   \              0xC079999A   
+   \              0xC079999A   
+   \              0xC079999A   
+   \              0xC08CCCCD   
+   \   000003C4   0xC09CCCCD         DC32 0C09CCCCDH, 0C0BCCCCDH, 0C0BCCCCDH, 0C0BCCCCDH, 0C0BCCCCDH
+   \              0xC0BCCCCD   
+   \              0xC0BCCCCD   
+   \              0xC0BCCCCD   
+   \              0xC0BCCCCD   
+   \   000003D8   0xC09CCCCD         DC32 0C09CCCCDH, 0C09CCCCDH, 0C09CCCCDH, 0C09CCCCDH, 0C09CCCCDH
+   \              0xC09CCCCD   
+   \              0xC09CCCCD   
+   \              0xC09CCCCD   
+   \              0xC09CCCCD   
+   \   000003EC   0xC079999A         DC32 0C079999AH, 0C079999AH, 0C079999AH, 0C079999AH, 0C079999AH
+   \              0xC079999A   
+   \              0xC079999A   
+   \              0xC079999A   
+   \              0xC079999A   
+     37          		{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2},
+     38          		{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2},
+     39          		{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2},
+     40          		{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2},
+     41          		{3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 2, 2, 2, 2, 2},
+     42          		{ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2},
+     43          		{ 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0},
+     44          		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+     45          		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+     46          		{ 0, 0, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9},
+     47          		{ -3.3, -3.4, -4.9, -4.9, -4.9, -4.9, -4.4, -4.4, -4.4, -4.4, -4.4, -0.9, -0.9, -0.9, -0.9, -0.9},
+     48          		{ -4.4, -4.9, -5.9, -5.9, -5.9, -5.9, -4.9, -4.9, -4.9, -4.9, -4.9, -2.4, -2.4, -2.4, -2.4, -2.4},
+     49          		{ -4.4, -4.9, -5.9, -5.9, -5.9, -5.9, -4.9, -4.9, -4.9, -4.9, -4.9, -2.9, -2.9, -2.9, -2.9, -2.9},
+     50          		{-4.4, -4.9, -5.9, -5.9, -5.9, -5.9, -4.9, -4.9, -4.9, -4.9, -4.9, -3.9, -3.9, -3.9, -3.9, -3.9},
+     51          		{-4.4, -4.9, -5.9, -5.9, -5.9, -5.9, -4.9, -4.9, -4.9, -4.9, -4.9, -3.9, -3.9, -3.9, -3.9, -3.9},
+     52          		{-4.4, -4.9, -5.9, -5.9, -5.9, -5.9, -4.9, -4.9, -4.9, -4.9, -4.9, -3.9, -3.9, -3.9, -3.9, -3.9},
+     53          };
+     54          
+
+   \                                 In section .text, align 2, keep-with-next
+     55          bool_t isStep1Condition(int rpm DECLARE_ENGINE_PARAMETER_S) {
+     56          	return  boardConfiguration->enabledStep1Limiter && rpm >= engineConfiguration->step1rpm;
+   \                     _Z16isStep1Conditioni:
+   \   00000000   0x....             LDR.N    R1,??DataTable5_5
+   \   00000002   0x6809             LDR      R1,[R1, #+0]
+   \   00000004   0xF891 0x1181      LDRB     R1,[R1, #+385]
+   \   00000008   0xB2C9             UXTB     R1,R1            ;; ZeroExt  R1,R1,#+24,#+24
+   \   0000000A   0x0889             LSRS     R1,R1,#+2
+   \   0000000C   0xF011 0x0101      ANDS     R1,R1,#0x1
+   \   00000010   0x2900             CMP      R1,#+0
+   \   00000012   0xD007             BEQ.N    ??isStep1Condition_0
+   \   00000014   0x....             LDR.N    R1,??DataTable5_6
+   \   00000016   0x6809             LDR      R1,[R1, #+0]
+   \   00000018   0xF8D1 0x1140      LDR      R1,[R1, #+320]
+   \   0000001C   0x4288             CMP      R0,R1
+   \   0000001E   0xDB01             BLT.N    ??isStep1Condition_0
+   \   00000020   0x2001             MOVS     R0,#+1
+   \   00000022   0xE000             B.N      ??isStep1Condition_1
+   \                     ??isStep1Condition_0:
+   \   00000024   0x2000             MOVS     R0,#+0
+   \                     ??isStep1Condition_1:
+   \   00000026   0xB2C0             UXTB     R0,R0            ;; ZeroExt  R0,R0,#+24,#+24
+   \   00000028   0x4770             BX       LR               ;; return
+     57          }
+     58          
+     59          /**
+     60           * @return ignition timing angle advance before TDC
+     61           */
+
+   \                                 In section .text, align 4, keep-with-next
+     62          static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
+   \                     _Z17getRunningAdvanceif:
+   \   00000000   0xB580             PUSH     {R7,LR}
+   \   00000002   0xED2D 0x8B04      VPUSH    {D8-D9}
+   \   00000006   0xEE08 0x0A10      VMOV     S16,R0
+   \   0000000A   0xEEF0 0x8A40      VMOV.F32 S17,S0
+     63          	engine->m.beforeAdvance = GET_TIMESTAMP();
+   \   0000000E   0xF242 0x30E8      MOVW     R0,#+9192
+   \   00000012   0x....             LDR.N    R1,??DataTable5_7
+   \   00000014   0x6809             LDR      R1,[R1, #+0]
+   \   00000016   0x....             LDR.N    R2,??DataTable5_8  ;; 0xe0001004
+   \   00000018   0x6812             LDR      R2,[R2, #+0]
+   \   0000001A   0x5042             STR      R2,[R0, R1]
+     64          	if (cisnan(engineLoad)) {
+   \   0000001C   0xEEB0 0x0A68      VMOV.F32 S0,S17
+   \   00000020   0x.... 0x....      BL       __iar_FDtest
+   \   00000024   0x2802             CMP      R0,#+2
+   \   00000026   0xD107             BNE.N    ??getRunningAdvance_0
+     65          		warning(OBD_PCM_Processor_Fault, "NaN engine load");
+   \   00000028   0x....             LDR.N    R1,??DataTable5_9
+   \   0000002A   0xF240 0x205E      MOVW     R0,#+606
+   \   0000002E   0x.... 0x....      BL       warning
+     66          		return NAN;
+   \   00000032   0xED9F 0x....      VLDR.W   S0,??DataTable5  ;; 0x7fffffff
+   \   00000036   0xE05C             B.N      ??getRunningAdvance_1
+     67          	}
+     68          	efiAssert(!cisnan(engineLoad), "invalid el", NAN);
+   \                     ??getRunningAdvance_0:
+   \   00000038   0xEEB0 0x0A68      VMOV.F32 S0,S17
+   \   0000003C   0x.... 0x....      BL       __iar_FDtest
+   \   00000040   0x2802             CMP      R0,#+2
+   \   00000042   0xD105             BNE.N    ??getRunningAdvance_2
+   \   00000044   0x....             LDR.N    R0,??DataTable5_10
+   \   00000046   0x.... 0x....      BL       firmwareError
+   \   0000004A   0xED9F 0x....      VLDR.W   S0,??DataTable5  ;; 0x7fffffff
+   \   0000004E   0xE050             B.N      ??getRunningAdvance_1
+     69          	efiAssert(!cisnan(engineLoad), "invalid rpm", NAN);
+   \                     ??getRunningAdvance_2:
+   \   00000050   0xEEB0 0x0A68      VMOV.F32 S0,S17
+   \   00000054   0x.... 0x....      BL       __iar_FDtest
+   \   00000058   0x2802             CMP      R0,#+2
+   \   0000005A   0xD105             BNE.N    ??getRunningAdvance_3
+   \   0000005C   0x....             LDR.N    R0,??DataTable5_11
+   \   0000005E   0x.... 0x....      BL       firmwareError
+   \   00000062   0xED9F 0x....      VLDR.W   S0,??DataTable5  ;; 0x7fffffff
+   \   00000066   0xE044             B.N      ??getRunningAdvance_1
+     70          	engine->m.beforeZeroTest = GET_TIMESTAMP();
+   \                     ??getRunningAdvance_3:
+   \   00000068   0xF242 0x30E0      MOVW     R0,#+9184
+   \   0000006C   0x....             LDR.N    R1,??DataTable5_7
+   \   0000006E   0x6809             LDR      R1,[R1, #+0]
+   \   00000070   0x....             LDR.N    R2,??DataTable5_8  ;; 0xe0001004
+   \   00000072   0x6812             LDR      R2,[R2, #+0]
+   \   00000074   0x5042             STR      R2,[R0, R1]
+     71          	engine->m.zeroTestTime = GET_TIMESTAMP() - engine->m.beforeZeroTest;
+   \   00000076   0x....             LDR.N    R0,??DataTable5_8  ;; 0xe0001004
+   \   00000078   0x6800             LDR      R0,[R0, #+0]
+   \   0000007A   0xF242 0x31E0      MOVW     R1,#+9184
+   \   0000007E   0x....             LDR.N    R2,??DataTable5_7
+   \   00000080   0x6812             LDR      R2,[R2, #+0]
+   \   00000082   0x5889             LDR      R1,[R1, R2]
+   \   00000084   0x1A40             SUBS     R0,R0,R1
+   \   00000086   0xF242 0x31E4      MOVW     R1,#+9188
+   \   0000008A   0x....             LDR.N    R2,??DataTable5_7
+   \   0000008C   0x6812             LDR      R2,[R2, #+0]
+   \   0000008E   0x5088             STR      R0,[R1, R2]
+     72          
+     73          	if (isStep1Condition(rpm PASS_ENGINE_PARAMETER)) {
+   \   00000090   0xEE18 0x0A10      VMOV     R0,S16
+   \   00000094   0x.... 0x....      BL       _Z16isStep1Conditioni
+   \   00000098   0x2800             CMP      R0,#+0
+   \   0000009A   0xD006             BEQ.N    ??getRunningAdvance_4
+     74          		return engineConfiguration->step1timing;
+   \   0000009C   0x....             LDR.N    R0,??DataTable5_6
+   \   0000009E   0x6800             LDR      R0,[R0, #+0]
+   \   000000A0   0xED90 0x0A51      VLDR     S0,[R0, #+324]
+   \   000000A4   0xEEB8 0x0AC0      VCVT.F32.S32 S0,S0
+   \   000000A8   0xE023             B.N      ??getRunningAdvance_1
+     75          	}
+     76          
+     77          	float iatCorrection = iatAdvanceCorrectionMap.getValue(engine->engineState.clt, (float) rpm);
+   \                     ??getRunningAdvance_4:
+   \   000000AA   0xEEF8 0x0AC8      VCVT.F32.S32 S1,S16
+   \   000000AE   0x....             LDR.N    R0,??DataTable5_7
+   \   000000B0   0x6800             LDR      R0,[R0, #+0]
+   \   000000B2   0xF500 0x50F0      ADD      R0,R0,#+7680
+   \   000000B6   0x3054             ADDS     R0,R0,#+84
+   \   000000B8   0xED90 0x0A00      VLDR     S0,[R0, #0]
+   \   000000BC   0x....             LDR.N    R0,??DataTable5_4
+   \   000000BE   0x.... 0x....      BL       _ZN5Map3DILi16ELi16EE8getValueEff
+   \   000000C2   0xEEB0 0x9A40      VMOV.F32 S18,S0
+     78          
+     79          	float result = advanceMap.getValue(engineLoad, (float) rpm) + iatCorrection
+     80          			// todo: uncomment once we get useable knock   - engine->knockCount
+     81          			;
+   \   000000C6   0xEEF8 0x0AC8      VCVT.F32.S32 S1,S16
+   \   000000CA   0xEEB0 0x0A68      VMOV.F32 S0,S17
+   \   000000CE   0x....             LDR.N    R0,??DataTable5_3
+   \   000000D0   0x.... 0x....      BL       _ZN5Map3DILi16ELi16EE8getValueEff
+   \   000000D4   0xEE30 0x0A09      VADD.F32 S0,S0,S18
+     82          	engine->m.advanceLookupTime = GET_TIMESTAMP() - engine->m.beforeAdvance;
+   \   000000D8   0x....             LDR.N    R0,??DataTable5_8  ;; 0xe0001004
+   \   000000DA   0x6800             LDR      R0,[R0, #+0]
+   \   000000DC   0xF242 0x31E8      MOVW     R1,#+9192
+   \   000000E0   0x....             LDR.N    R2,??DataTable5_7
+   \   000000E2   0x6812             LDR      R2,[R2, #+0]
+   \   000000E4   0x5889             LDR      R1,[R1, R2]
+   \   000000E6   0x1A40             SUBS     R0,R0,R1
+   \   000000E8   0xF242 0x31EC      MOVW     R1,#+9196
+   \   000000EC   0x....             LDR.N    R2,??DataTable5_7
+   \   000000EE   0x6812             LDR      R2,[R2, #+0]
+   \   000000F0   0x5088             STR      R0,[R1, R2]
+     83          	return result;
+   \                     ??getRunningAdvance_1:
+   \   000000F2   0xECBD 0x8B04      VPOP     {D8-D9}
+   \   000000F6   0xBD01             POP      {R0,PC}          ;; return
+     84          }
+     85          
+
+   \                                 In section .text, align 2, keep-with-next
+     86          angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
+   \                     _Z10getAdvanceif:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0xED2D 0x8B02      VPUSH    {D8}
+   \   00000006   0x0004             MOVS     R4,R0
+   \   00000008   0xEEB0 0x8A40      VMOV.F32 S16,S0
+     87          	angle_t angle;
+     88          	if (isCrankingR(rpm)) {
+   \   0000000C   0x2C01             CMP      R4,#+1
+   \   0000000E   0xDB0B             BLT.N    ??getAdvance_0
+   \   00000010   0x....             LDR.N    R0,??DataTable5_12
+   \   00000012   0xF9B0 0x0068      LDRSH    R0,[R0, #+104]
+   \   00000016   0x4284             CMP      R4,R0
+   \   00000018   0xDA06             BGE.N    ??getAdvance_0
+     89          		angle = engineConfiguration->crankingTimingAngle;
+   \   0000001A   0x....             LDR.N    R0,??DataTable5_6
+   \   0000001C   0x6800             LDR      R0,[R0, #+0]
+   \   0000001E   0xED90 0x0A6E      VLDR     S0,[R0, #+440]
+   \   00000022   0xEEF0 0x8A40      VMOV.F32 S17,S0
+   \   00000026   0xE006             B.N      ??getAdvance_1
+     90          	} else {
+     91          		angle = getRunningAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER);
+   \                     ??getAdvance_0:
+   \   00000028   0xEEB0 0x0A48      VMOV.F32 S0,S16
+   \   0000002C   0x0020             MOVS     R0,R4
+   \   0000002E   0x.... 0x....      BL       _Z17getRunningAdvanceif
+   \   00000032   0xEEF0 0x8A40      VMOV.F32 S17,S0
+     92          	}
+     93          	angle -= engineConfiguration->ignitionOffset;
+   \                     ??getAdvance_1:
+   \   00000036   0x....             LDR.N    R0,??DataTable5_6
+   \   00000038   0x6800             LDR      R0,[R0, #+0]
+   \   0000003A   0xED90 0x0A70      VLDR     S0,[R0, #+448]
+   \   0000003E   0xEE78 0x8AC0      VSUB.F32 S17,S17,S0
+     94          	fixAngle(angle);
+   \   00000042   0x....             LDR.N    R0,??DataTable5_12
+   \   00000044   0xF8D0 0x01A8      LDR      R0,[R0, #+424]
+   \   00000048   0x2800             CMP      R0,#+0
+   \   0000004A   0xD102             BNE.N    ??getAdvance_2
+   \   0000004C   0x....             LDR.N    R0,??DataTable5_13
+   \   0000004E   0x.... 0x....      BL       firmwareError
+   \                     ??getAdvance_2:
+   \   00000052   0xEEF5 0x8A40      VCMP.F32 S17,#0.0
+   \   00000056   0xEEF1 0xFA10      FMSTAT   
+   \   0000005A   0xD507             BPL.N    ??getAdvance_3
+   \   0000005C   0x....             LDR.N    R0,??DataTable5_12
+   \   0000005E   0xED90 0x0A6A      VLDR     S0,[R0, #+424]
+   \   00000062   0xEEB8 0x0AC0      VCVT.F32.S32 S0,S0
+   \   00000066   0xEE70 0x8A28      VADD.F32 S17,S0,S17
+   \   0000006A   0xE7F2             B.N      ??getAdvance_2
+   \                     ??getAdvance_3:
+   \   0000006C   0x....             LDR.N    R0,??DataTable5_12
+   \   0000006E   0xED90 0x0A6A      VLDR     S0,[R0, #+424]
+   \   00000072   0xEEB8 0x0AC0      VCVT.F32.S32 S0,S0
+   \   00000076   0xEEF4 0x8A40      VCMP.F32 S17,S0
+   \   0000007A   0xEEF1 0xFA10      FMSTAT   
+   \   0000007E   0xDB07             BLT.N    ??getAdvance_4
+   \   00000080   0x....             LDR.N    R0,??DataTable5_12
+   \   00000082   0xED90 0x0A6A      VLDR     S0,[R0, #+424]
+   \   00000086   0xEEB8 0x0AC0      VCVT.F32.S32 S0,S0
+   \   0000008A   0xEE78 0x8AC0      VSUB.F32 S17,S17,S0
+   \   0000008E   0xE7ED             B.N      ??getAdvance_3
+     95          	return angle;
+   \                     ??getAdvance_4:
+   \   00000090   0xEEB0 0x0A68      VMOV.F32 S0,S17
+   \   00000094   0xECBD 0x8B02      VPOP     {D8}
+   \   00000098   0xBD10             POP      {R4,PC}          ;; return
+     96          }
+     97          
+
+   \                                 In section .text, align 4, keep-with-next
+     98          void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_F) {
+   \                     _Z29setDefaultIatTimingCorrectionv:
+   \   00000000   0xB580             PUSH     {R7,LR}
+     99          	setTableBin2(config->ignitionIatCorrLoadBins, IGN_LOAD_COUNT, -40, 110, 1);
+   \   00000002   0xEEB7 0x1A00      VMOV.F32 S2,#1.0
+   \   00000006   0xEDDF 0x....      VLDR.W   S1,??DataTable5_1  ;; 0x42dc0000
+   \   0000000A   0xED9F 0x....      VLDR.W   S0,??DataTable5_2  ;; 0xc2200000
+   \   0000000E   0x2110             MOVS     R1,#+16
+   \   00000010   0x....             LDR.N    R0,??DataTable5_14
+   \   00000012   0x6800             LDR      R0,[R0, #+0]
+   \   00000014   0xF500 0x5010      ADD      R0,R0,#+9216
+   \   00000018   0x30B8             ADDS     R0,R0,#+184
+   \   0000001A   0x.... 0x....      BL       _Z12setTableBin2Pfifff
+    100          	memcpy(config->ignitionIatCorrRpmBins, iatTimingRpmBins, sizeof(iatTimingRpmBins));
+   \   0000001E   0x2240             MOVS     R2,#+64
+   \   00000020   0x....             LDR.N    R1,??DataTable5_15
+   \   00000022   0x....             LDR.N    R0,??DataTable5_14
+   \   00000024   0x6800             LDR      R0,[R0, #+0]
+   \   00000026   0xF500 0x5010      ADD      R0,R0,#+9216
+   \   0000002A   0x30F8             ADDS     R0,R0,#+248
+   \   0000002C   0x.... 0x....      BL       memcpy
+    101          	copyTimingTable(defaultIatTiming, config->ignitionIatCorrTable);
+   \   00000030   0x....             LDR.N    R0,??DataTable5_14
+   \   00000032   0x6800             LDR      R0,[R0, #+0]
+   \   00000034   0xF500 0x5100      ADD      R1,R0,#+8192
+   \   00000038   0x31B8             ADDS     R1,R1,#+184
+   \   0000003A   0x....             LDR.N    R0,??DataTable5_16
+   \   0000003C   0x.... 0x....      BL       _Z15copyTimingTablePA16_KfPA16_f
+    102          }
+   \   00000040   0xBD01             POP      {R0,PC}          ;; return
+    103          
+
+   \                                 In section .text, align 2, keep-with-next
+    104          void prepareTimingMap(DECLARE_ENGINE_PARAMETER_F) {
+   \                     _Z16prepareTimingMapv:
+   \   00000000   0xB580             PUSH     {R7,LR}
+    105          	advanceMap.init(config->ignitionTable, config->ignitionLoadBins,
+    106          			config->ignitionRpmBins);
+   \   00000002   0x....             LDR.N    R0,??DataTable5_14
+   \   00000004   0x6800             LDR      R0,[R0, #+0]
+   \   00000006   0xF500 0x5348      ADD      R3,R0,#+12800
+   \   0000000A   0x3378             ADDS     R3,R3,#+120
+   \   0000000C   0x....             LDR.N    R0,??DataTable5_14
+   \   0000000E   0x6800             LDR      R0,[R0, #+0]
+   \   00000010   0xF500 0x5248      ADD      R2,R0,#+12800
+   \   00000014   0x3238             ADDS     R2,R2,#+56
+   \   00000016   0x....             LDR.N    R0,??DataTable5_14
+   \   00000018   0x6800             LDR      R0,[R0, #+0]
+   \   0000001A   0xF500 0x5138      ADD      R1,R0,#+11776
+   \   0000001E   0x3138             ADDS     R1,R1,#+56
+   \   00000020   0x....             LDR.N    R0,??DataTable5_3
+   \   00000022   0x.... 0x....      BL       _ZN5Map3DILi16ELi16EE4initEPA16_fPfS3_
+    107          	iatAdvanceCorrectionMap.init(config->ignitionIatCorrTable, config->ignitionIatCorrLoadBins,
+    108          			config->ignitionIatCorrRpmBins);
+   \   00000026   0x....             LDR.N    R0,??DataTable5_14
+   \   00000028   0x6800             LDR      R0,[R0, #+0]
+   \   0000002A   0xF500 0x5310      ADD      R3,R0,#+9216
+   \   0000002E   0x33F8             ADDS     R3,R3,#+248
+   \   00000030   0x....             LDR.N    R0,??DataTable5_14
+   \   00000032   0x6800             LDR      R0,[R0, #+0]
+   \   00000034   0xF500 0x5210      ADD      R2,R0,#+9216
+   \   00000038   0x32B8             ADDS     R2,R2,#+184
+   \   0000003A   0x....             LDR.N    R0,??DataTable5_14
+   \   0000003C   0x6800             LDR      R0,[R0, #+0]
+   \   0000003E   0xF500 0x5100      ADD      R1,R0,#+8192
+   \   00000042   0x31B8             ADDS     R1,R1,#+184
+   \   00000044   0x....             LDR.N    R0,??DataTable5_4
+   \   00000046   0x.... 0x....      BL       _ZN5Map3DILi16ELi16EE4initEPA16_fPfS3_
+    109          }
+   \   0000004A   0xBD01             POP      {R0,PC}          ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5:
+   \   00000000   0x7FFFFFFF         DC32     0x7fffffff
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_1:
+   \   00000000   0x42DC0000         DC32     0x42dc0000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_2:
+   \   00000000   0xC2200000         DC32     0xc2200000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_3:
+   \   00000000   0x........         DC32     advanceMap
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_4:
+   \   00000000   0x........         DC32     iatAdvanceCorrectionMap
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_5:
+   \   00000000   0x........         DC32     boardConfiguration
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_6:
+   \   00000000   0x........         DC32     engineConfiguration
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_7:
+   \   00000000   0x........         DC32     engine
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_8:
+   \   00000000   0xE0001004         DC32     0xe0001004
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_9:
+   \   00000000   0x........         DC32     `?<Constant "NaN engine load">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_10:
+   \   00000000   0x........         DC32     `?<Constant "invalid el">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_11:
+   \   00000000   0x........         DC32     `?<Constant "invalid rpm">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_12:
+   \   00000000   0x........         DC32     persistentState
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_13:
+   \   00000000   0x........         DC32     `?<Constant "zero engineCycle">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_14:
+   \   00000000   0x........         DC32     config
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_15:
+   \   00000000   0x........         DC32     iatTimingRpmBins
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_16:
+   \   00000000   0x........         DC32     defaultIatTiming
+
+   \                                 In section .init_array, align 4, keep-with-next, root
+   \   00000000   0x........         DC32    RELOC_ARM_TARGET1 __sti__routine
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "NaN engine load">`:
+   \   00000000   0x4E 0x61          DC8 "NaN engine load"
+   \              0x4E 0x20    
+   \              0x65 0x6E    
+   \              0x67 0x69    
+   \              0x6E 0x65    
+   \              0x20 0x6C    
+   \              0x6F 0x61    
+   \              0x64 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "invalid el">`:
+   \   00000000   0x69 0x6E          DC8 "invalid el"
+   \              0x76 0x61    
+   \              0x6C 0x69    
+   \              0x64 0x20    
+   \              0x65 0x6C    
+   \              0x00         
+   \   0000000B   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "invalid rpm">`:
+   \   00000000   0x69 0x6E          DC8 "invalid rpm"
+   \              0x76 0x61    
+   \              0x6C 0x69    
+   \              0x64 0x20    
+   \              0x72 0x70    
+   \              0x6D 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "zero engineCycle">`:
+   \   00000000   0x7A 0x65          DC8 "zero engineCycle"
+   \              0x72 0x6F    
+   \              0x20 0x65    
+   \              0x6E 0x67    
+   \              0x69 0x6E    
+   \              0x65 0x43    
+   \              0x79 0x63    
+   \              0x6C 0x65    
+   \              0x00         
+   \   00000011   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .text, align 2
+   \   __code __interwork __softfp Map3D<16, 16>::subobject Map3D()
+   \                     _ZN5Map3DILi16ELi16EEC2Ev:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x0020             MOVS     R0,R4
+   \   00000006   0x.... 0x....      BL       _ZN5Map3DILi16ELi16EEC1Ev
+   \   0000000A   0xBD10             POP      {R4,PC}          ;; return
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   Map3D<16, 16>::Map3D()
+         8   -> memset
+      24   Map3D<16, 16>::getValue(float, float)
+        24   -> firmwareError
+        24   -> interpolate3d(float, float *, int, float, float *, int, float **)
+       8   Map3D<16, 16>::init(float (*)[16], float *, float *)
+       8   Map3D<16, 16>::subobject Map3D()
+         8   -> Map3D<16, 16>::Map3D()
+       8   __sti__routine()
+         8   -> Map3D<16, 16>::Map3D()
+      16   getAdvance(int, float)
+        16   -> firmwareError
+        16   -> getRunningAdvance(int, float)
+      24   getRunningAdvance(int, float)
+        24   -> Map3D<16, 16>::getValue(float, float)
+        24   -> __iar_FDtest
+        24   -> firmwareError
+        24   -> isStep1Condition(int)
+        24   -> warning
+       0   isStep1Condition(int)
+      16   memcpy
+        16   -> __aeabi_memcpy
+      16   memset
+        16   -> __aeabi_memset
+       8   prepareTimingMap()
+         8   -> Map3D<16, 16>::init(float (*)[16], float *, float *)
+       8   setDefaultIatTimingCorrection()
+         8   -> copyTimingTable(float const (*)[16], float (*)[16])
+         8   -> memcpy
+         8   -> setTableBin2(float *, int, float, float, float)
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      16  ?<Constant "NaN engine load">
+      12  ?<Constant "invalid el">
+      12  ?<Constant "invalid rpm">
+      20  ?<Constant "zero engineCycle">
+       4  ??DataTable5
+       4  ??DataTable5_1
+       4  ??DataTable5_10
+       4  ??DataTable5_11
+       4  ??DataTable5_12
+       4  ??DataTable5_13
+       4  ??DataTable5_14
+       4  ??DataTable5_15
+       4  ??DataTable5_16
+       4  ??DataTable5_2
+       4  ??DataTable5_3
+       4  ??DataTable5_4
+       4  ??DataTable5_5
+       4  ??DataTable5_6
+       4  ??DataTable5_7
+       4  ??DataTable5_8
+       4  ??DataTable5_9
+      30  Map3D<16, 16>::Map3D()
+      80  Map3D<16, 16>::getValue(float, float)
+      40  Map3D<16, 16>::init(float (*)[16], float *, float *)
+      12  Map3D<16, 16>::subobject Map3D()
+      16  __sti__routine()
+      76  advanceMap
+    1024  defaultIatTiming
+     154  getAdvance(int, float)
+     248  getRunningAdvance(int, float)
+      76  iatAdvanceCorrectionMap
+      64  iatTimingRpmBins
+      42  isStep1Condition(int)
+      22  memcpy
+      22  memset
+      76  prepareTimingMap()
+      66  setDefaultIatTimingCorrection()
+      24  -- Other
+
+ 
+   152 bytes in section .bss
+     4 bytes in section .init_array
+ 1 168 bytes in section .rodata
+   876 bytes in section .text
+ 
+   674 bytes of CODE  memory (+ 206 bytes shared)
+ 1 148 bytes of CONST memory (+  20 bytes shared)
+   152 bytes of DATA  memory
+
+Errors: none
+Warnings: 1

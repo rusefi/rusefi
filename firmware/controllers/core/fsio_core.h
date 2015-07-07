@@ -24,7 +24,7 @@ typedef enum {
 	LE_OPERATOR_OR = 7,
 	LE_OPERATOR_NOT = 8,
 	LE_OPERATOR_ADDITION = 9,
-	LE_OPERATOR_SUBSTRACTION = 10,
+	LE_OPERATOR_SUBTRACTION = 10,
 	LE_OPERATOR_MULTIPLICATION = 11,
 	LE_OPERATOR_DIVISION = 12,
 	LE_METHOD_MAX = 13,
@@ -43,6 +43,7 @@ typedef enum {
 	LE_METHOD_VBATT = 109,
 	LE_METHOD_AC_TOGGLE = 110,
 	LE_METHOD_FSIO_SETTING = 111,
+	LE_METHOD_KNOCK = 112,
 
 	Force_4b_le_action = ENUM_32_BITS,
 
@@ -80,6 +81,8 @@ private:
 
 typedef FLStack<float, MAX_STACK_DEPTH> calc_stack_t;
 
+#define MAX_CALC_LOG 64
+
 class LECalculator {
 public:
 	LECalculator();
@@ -88,8 +91,11 @@ public:
 	void add(LEElement *element);
 	void reset();
 	void reset(LEElement *element);
-
+	le_action_e calcLogAction[MAX_CALC_LOG];
+	float calcLogValue[MAX_CALC_LOG];
+	int currentCalculationLogPosition;
 private:
+	void push(le_action_e action, float value);
 	bool_t doJob(Engine *engine, LEElement *element);
 	float pop(le_action_e action);
 	LEElement *first;

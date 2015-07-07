@@ -1,0 +1,1614 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"trigger_central.cpp"
+  16              		.global	__aeabi_f2d
+  17              		.section	.text._Z11triggerInfov,"ax",%progbits
+  18              		.align	2
+  19              		.p2align 4,,15
+  20              		.global	_Z11triggerInfov
+  21              		.thumb
+  22              		.thumb_func
+  23              		.type	_Z11triggerInfov, %function
+  24              	_Z11triggerInfov:
+  25              		@ args = 0, pretend = 0, frame = 8
+  26              		@ frame_needed = 0, uses_anonymous_args = 0
+  27 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+  28 0004 40F20009 		movw	r9, #:lower16:engineConfiguration
+  29 0008 C0F20009 		movt	r9, #:upper16:engineConfiguration
+  30 000c 40F20007 		movw	r7, #:lower16:engine
+  31 0010 D9F80030 		ldr	r3, [r9]
+  32 0014 40F20006 		movw	r6, #:lower16:.LANCHOR0
+  33 0018 C0F20007 		movt	r7, #:upper16:engine
+  34 001c C0F20006 		movt	r6, #:upper16:.LANCHOR0
+  35 0020 87B0     		sub	sp, sp, #28
+  36 0022 1868     		ldr	r0, [r3]
+  37 0024 3568     		ldr	r5, [r6]
+  38 0026 D7F80080 		ldr	r8, [r7]
+  39 002a FFF7FEFF 		bl	_Z20getConfigurationName13engine_type_e
+  40 002e D9F80030 		ldr	r3, [r9]
+  41 0032 8246     		mov	r10, r0
+  42 0034 D3F81802 		ldr	r0, [r3, #536]
+  43 0038 D3F800B0 		ldr	fp, [r3]
+  44 003c FFF7FEFF 		bl	_Z17getTrigger_type_e14trigger_type_e
+  45 0040 D9F80040 		ldr	r4, [r9]
+  46 0044 40F20001 		movw	r1, #:lower16:_engine
+  47 0048 C0F20001 		movt	r1, #:upper16:_engine
+  48 004c D4F81822 		ldr	r2, [r4, #536]
+  49 0050 0346     		mov	r3, r0
+  50 0052 91F8E80D 		ldrb	r0, [r1, #3560]	@ zero_extendqisi2
+  51 0056 0492     		str	r2, [sp, #16]
+  52 0058 0593     		str	r3, [sp, #20]
+  53 005a FFF7FEFF 		bl	_Z12boolToStringb
+  54 005e D9F80010 		ldr	r1, [r9]
+  55 0062 0446     		mov	r4, r0
+  56 0064 91F8E505 		ldrb	r0, [r1, #1509]	@ zero_extendqisi2
+  57 0068 C0F38010 		ubfx	r0, r0, #6, #1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 2
+
+
+  58 006c FFF7FEFF 		bl	_Z12boolToStringb
+  59 0070 059B     		ldr	r3, [sp, #20]
+  60 0072 049A     		ldr	r2, [sp, #16]
+  61 0074 0093     		str	r3, [sp]
+  62 0076 40F20001 		movw	r1, #:lower16:.LC0
+  63 007a 0390     		str	r0, [sp, #12]
+  64 007c 0192     		str	r2, [sp, #4]
+  65 007e 5B46     		mov	r3, fp
+  66 0080 5246     		mov	r2, r10
+  67 0082 2846     		mov	r0, r5
+  68 0084 0294     		str	r4, [sp, #8]
+  69 0086 C0F20001 		movt	r1, #:upper16:.LC0
+  70 008a FFF7FEFF 		bl	scheduleMsg
+  71 008e D9F80030 		ldr	r3, [r9]
+  72 0092 D3F81822 		ldr	r2, [r3, #536]
+  73 0096 002A     		cmp	r2, #0
+  74 0098 00F0CF81 		beq	.L14
+  75              	.L2:
+  76 009c 40F2000A 		movw	r10, #:lower16:.LANCHOR1
+  77 00a0 C0F2000A 		movt	r10, #:upper16:.LANCHOR1
+  78 00a4 40F20001 		movw	r1, #:lower16:.LC2
+  79 00a8 DAF83C21 		ldr	r2, [r10, #316]
+  80 00ac DAF84031 		ldr	r3, [r10, #320]
+  81 00b0 3068     		ldr	r0, [r6]
+  82 00b2 C0F20001 		movt	r1, #:upper16:.LC2
+  83 00b6 FFF7FEFF 		bl	scheduleMsg
+  84 00ba 3A68     		ldr	r2, [r7]
+  85 00bc 92F88512 		ldrb	r1, [r2, #645]	@ zero_extendqisi2
+  86 00c0 40F20003 		movw	r3, #:lower16:.LANCHOR0
+  87 00c4 40F20004 		movw	r4, #:lower16:engine
+  88 00c8 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+  89 00cc C0F20004 		movt	r4, #:upper16:engine
+  90 00d0 0029     		cmp	r1, #0
+  91 00d2 40F0A581 		bne	.L15
+  92              	.L3:
+  93 00d6 D8F8F44D 		ldr	r4, [r8, #3572]
+  94 00da D2F8F03D 		ldr	r3, [r2, #3568]
+  95 00de 3068     		ldr	r0, [r6]
+  96 00e0 D8F8EC2D 		ldr	r2, [r8, #3564]
+  97 00e4 0094     		str	r4, [sp]
+  98 00e6 40F20001 		movw	r1, #:lower16:.LC4
+  99 00ea C0F20001 		movt	r1, #:upper16:.LC4
+ 100 00ee FFF7FEFF 		bl	scheduleMsg
+ 101 00f2 3B68     		ldr	r3, [r7]
+ 102 00f4 D9F80020 		ldr	r2, [r9]
+ 103 00f8 93F88502 		ldrb	r0, [r3, #645]	@ zero_extendqisi2
+ 104 00fc D2F81842 		ldr	r4, [r2, #536]
+ 105 0100 3568     		ldr	r5, [r6]
+ 106 0102 FFF7FEFF 		bl	_Z12boolToStringb
+ 107 0106 40F20001 		movw	r1, #:lower16:.LC5
+ 108 010a 0346     		mov	r3, r0
+ 109 010c 2246     		mov	r2, r4
+ 110 010e 2846     		mov	r0, r5
+ 111 0110 C0F20001 		movt	r1, #:upper16:.LC5
+ 112 0114 FFF7FEFF 		bl	scheduleMsg
+ 113 0118 D8F89002 		ldr	r0, [r8, #656]	@ float
+ 114 011c D6F800B0 		ldr	fp, [r6]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 3
+
+
+ 115 0120 FFF7FEFF 		bl	__aeabi_f2d
+ 116 0124 0446     		mov	r4, r0
+ 117 0126 D8F89402 		ldr	r0, [r8, #660]	@ float
+ 118 012a 0D46     		mov	r5, r1
+ 119 012c FFF7FEFF 		bl	__aeabi_f2d
+ 120 0130 CDE90001 		strd	r0, [sp]
+ 121 0134 40F20001 		movw	r1, #:lower16:.LC6
+ 122 0138 2246     		mov	r2, r4
+ 123 013a 2B46     		mov	r3, r5
+ 124 013c C0F20001 		movt	r1, #:upper16:.LC6
+ 125 0140 5846     		mov	r0, fp
+ 126 0142 FFF7FEFF 		bl	scheduleMsg
+ 127 0146 98F88402 		ldrb	r0, [r8, #644]	@ zero_extendqisi2
+ 128 014a 3568     		ldr	r5, [r6]
+ 129 014c FFF7FEFF 		bl	_Z12boolToStringb
+ 130 0150 0490     		str	r0, [sp, #16]
+ 131 0152 FFF7FEFF 		bl	_Z21isTriggerDecoderErrorv
+ 132 0156 FFF7FEFF 		bl	_Z12boolToStringb
+ 133 015a DAF83C30 		ldr	r3, [r10, #60]
+ 134 015e DAF844B0 		ldr	fp, [r10, #68]
+ 135 0162 0593     		str	r3, [sp, #20]
+ 136 0164 0446     		mov	r4, r0
+ 137 0166 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 138 016a C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 139 016e FFF7FEFF 		bl	_ZN12TriggerState25getTotalRevolutionCounterEv
+ 140 0172 D9F80010 		ldr	r1, [r9]
+ 141 0176 8246     		mov	r10, r0
+ 142 0178 91F85000 		ldrb	r0, [r1, #80]	@ zero_extendqisi2
+ 143 017c 00F00100 		and	r0, r0, #1
+ 144 0180 FFF7FEFF 		bl	_Z12boolToStringb
+ 145 0184 059B     		ldr	r3, [sp, #20]
+ 146 0186 0390     		str	r0, [sp, #12]
+ 147 0188 40F20001 		movw	r1, #:lower16:.LC7
+ 148 018c 8DE80808 		stmia	sp, {r3, fp}
+ 149 0190 049A     		ldr	r2, [sp, #16]
+ 150 0192 CDF808A0 		str	r10, [sp, #8]
+ 151 0196 2346     		mov	r3, r4
+ 152 0198 2846     		mov	r0, r5
+ 153 019a C0F20001 		movt	r1, #:upper16:.LC7
+ 154 019e FFF7FEFF 		bl	scheduleMsg
+ 155 01a2 98F88422 		ldrb	r2, [r8, #644]	@ zero_extendqisi2
+ 156 01a6 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 157 01aa C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 158 01ae 002A     		cmp	r2, #0
+ 159 01b0 40F01B81 		bne	.L16
+ 160              	.L4:
+ 161 01b4 40F20004 		movw	r4, #:lower16:boardConfiguration
+ 162 01b8 C0F20004 		movt	r4, #:upper16:boardConfiguration
+ 163 01bc 3568     		ldr	r5, [r6]
+ 164 01be 2368     		ldr	r3, [r4]
+ 165 01c0 D3F82801 		ldr	r0, [r3, #296]
+ 166 01c4 FFF7FEFF 		bl	_Z10hwPortname11brain_pin_e
+ 167 01c8 40F20001 		movw	r1, #:lower16:.LC9
+ 168 01cc 0246     		mov	r2, r0
+ 169 01ce C0F20001 		movt	r1, #:upper16:.LC9
+ 170 01d2 2846     		mov	r0, r5
+ 171 01d4 FFF7FEFF 		bl	scheduleMsg
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 4
+
+
+ 172 01d8 2368     		ldr	r3, [r4]
+ 173 01da 3568     		ldr	r5, [r6]
+ 174 01dc D3F86001 		ldr	r0, [r3, #352]
+ 175 01e0 FFF7FEFF 		bl	_Z10hwPortname11brain_pin_e
+ 176 01e4 2368     		ldr	r3, [r4]
+ 177 01e6 8146     		mov	r9, r0
+ 178 01e8 D3F86C01 		ldr	r0, [r3, #364]
+ 179 01ec FFF7FEFF 		bl	_Z20getPin_output_mode_e17pin_output_mode_e
+ 180 01f0 2268     		ldr	r2, [r4]
+ 181 01f2 D2F8D020 		ldr	r2, [r2, #208]
+ 182 01f6 40F20001 		movw	r1, #:lower16:.LC10
+ 183 01fa 0346     		mov	r3, r0
+ 184 01fc 0092     		str	r2, [sp]
+ 185 01fe 2846     		mov	r0, r5
+ 186 0200 4A46     		mov	r2, r9
+ 187 0202 C0F20001 		movt	r1, #:upper16:.LC10
+ 188 0206 FFF7FEFF 		bl	scheduleMsg
+ 189 020a 3B68     		ldr	r3, [r7]
+ 190 020c 93F88532 		ldrb	r3, [r3, #645]	@ zero_extendqisi2
+ 191 0210 40F20005 		movw	r5, #:lower16:.LANCHOR0
+ 192 0214 C0F20005 		movt	r5, #:upper16:.LANCHOR0
+ 193 0218 53B3     		cbz	r3, .L5
+ 194 021a 2368     		ldr	r3, [r4]
+ 195 021c D5F80080 		ldr	r8, [r5]
+ 196 0220 D3F82C01 		ldr	r0, [r3, #300]
+ 197 0224 FFF7FEFF 		bl	_Z10hwPortname11brain_pin_e
+ 198 0228 40F20001 		movw	r1, #:lower16:.LC11
+ 199 022c 0246     		mov	r2, r0
+ 200 022e C0F20001 		movt	r1, #:upper16:.LC11
+ 201 0232 4046     		mov	r0, r8
+ 202 0234 FFF7FEFF 		bl	scheduleMsg
+ 203 0238 2368     		ldr	r3, [r4]
+ 204 023a D5F80080 		ldr	r8, [r5]
+ 205 023e D3F86401 		ldr	r0, [r3, #356]
+ 206 0242 FFF7FEFF 		bl	_Z10hwPortname11brain_pin_e
+ 207 0246 2368     		ldr	r3, [r4]
+ 208 0248 40F20005 		movw	r5, #:lower16:triggerSignal
+ 209 024c 8146     		mov	r9, r0
+ 210 024e C0F20005 		movt	r5, #:upper16:triggerSignal
+ 211 0252 D3F87001 		ldr	r0, [r3, #368]
+ 212 0256 FFF7FEFF 		bl	_Z20getPin_output_mode_e17pin_output_mode_e
+ 213 025a AD6C     		ldr	r5, [r5, #72]
+ 214 025c 40F20001 		movw	r1, #:lower16:.LC12
+ 215 0260 0346     		mov	r3, r0
+ 216 0262 4A46     		mov	r2, r9
+ 217 0264 4046     		mov	r0, r8
+ 218 0266 0095     		str	r5, [sp]
+ 219 0268 C0F20001 		movt	r1, #:upper16:.LC12
+ 220 026c FFF7FEFF 		bl	scheduleMsg
+ 221              	.L5:
+ 222 0270 2368     		ldr	r3, [r4]
+ 223 0272 D6F80080 		ldr	r8, [r6]
+ 224 0276 D3F85802 		ldr	r0, [r3, #600]
+ 225 027a FFF7FEFF 		bl	_Z10hwPortname11brain_pin_e
+ 226 027e 2368     		ldr	r3, [r4]
+ 227 0280 0546     		mov	r5, r0
+ 228 0282 D3F85C02 		ldr	r0, [r3, #604]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 5
+
+
+ 229 0286 FFF7FEFF 		bl	_Z20getPin_output_mode_e17pin_output_mode_e
+ 230 028a 40F20001 		movw	r1, #:lower16:.LC13
+ 231 028e 2A46     		mov	r2, r5
+ 232 0290 0346     		mov	r3, r0
+ 233 0292 C0F20001 		movt	r1, #:upper16:.LC13
+ 234 0296 4046     		mov	r0, r8
+ 235 0298 FFF7FEFF 		bl	scheduleMsg
+ 236 029c 2368     		ldr	r3, [r4]
+ 237 029e 3568     		ldr	r5, [r6]
+ 238 02a0 D3F88401 		ldr	r0, [r3, #388]
+ 239 02a4 FFF7FEFF 		bl	_Z10hwPortname11brain_pin_e
+ 240 02a8 40F20001 		movw	r1, #:lower16:.LC14
+ 241 02ac 0246     		mov	r2, r0
+ 242 02ae C0F20001 		movt	r1, #:upper16:.LC14
+ 243 02b2 2846     		mov	r0, r5
+ 244 02b4 FFF7FEFF 		bl	scheduleMsg
+ 245 02b8 2368     		ldr	r3, [r4]
+ 246 02ba 3468     		ldr	r4, [r6]
+ 247 02bc D3F88801 		ldr	r0, [r3, #392]
+ 248 02c0 FFF7FEFF 		bl	_Z10hwPortname11brain_pin_e
+ 249 02c4 40F20001 		movw	r1, #:lower16:.LC15
+ 250 02c8 0246     		mov	r2, r0
+ 251 02ca C0F20001 		movt	r1, #:upper16:.LC15
+ 252 02ce 2046     		mov	r0, r4
+ 253 02d0 FFF7FEFF 		bl	scheduleMsg
+ 254 02d4 3B68     		ldr	r3, [r7]
+ 255 02d6 3068     		ldr	r0, [r6]
+ 256 02d8 40F20004 		movw	r4, #:lower16:maxHowFarOff
+ 257 02dc C0F20004 		movt	r4, #:upper16:maxHowFarOff
+ 258 02e0 03F50F53 		add	r3, r3, #9152
+ 259 02e4 40F20001 		movw	r1, #:lower16:.LC16
+ 260 02e8 5A6A     		ldr	r2, [r3, #36]
+ 261 02ea 2368     		ldr	r3, [r4]
+ 262 02ec C0F20001 		movt	r1, #:upper16:.LC16
+ 263 02f0 FFF7FEFF 		bl	scheduleMsg
+ 264 02f4 3D68     		ldr	r5, [r7]
+ 265 02f6 3068     		ldr	r0, [r6]
+ 266 02f8 40F20003 		movw	r3, #:lower16:cyccnt
+ 267 02fc 05F50F55 		add	r5, r5, #9152
+ 268 0300 C0F20003 		movt	r3, #:upper16:cyccnt
+ 269 0304 EA6A     		ldr	r2, [r5, #44]
+ 270 0306 1B68     		ldr	r3, [r3]
+ 271 0308 6D6B     		ldr	r5, [r5, #52]
+ 272 030a 1B68     		ldr	r3, [r3]
+ 273 030c 0095     		str	r5, [sp]
+ 274 030e 40F20001 		movw	r1, #:lower16:.LC17
+ 275 0312 0025     		movs	r5, #0
+ 276 0314 2560     		str	r5, [r4]
+ 277 0316 C0F20001 		movt	r1, #:upper16:.LC17
+ 278 031a FFF7FEFF 		bl	scheduleMsg
+ 279 031e 3C68     		ldr	r4, [r7]
+ 280 0320 3068     		ldr	r0, [r6]
+ 281 0322 04F50F54 		add	r4, r4, #9152
+ 282 0326 40F20001 		movw	r1, #:lower16:.LC18
+ 283 032a E268     		ldr	r2, [r4, #12]
+ 284 032c 6369     		ldr	r3, [r4, #20]
+ 285 032e E469     		ldr	r4, [r4, #28]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 6
+
+
+ 286 0330 C0F20001 		movt	r1, #:upper16:.LC18
+ 287 0334 0094     		str	r4, [sp]
+ 288 0336 FFF7FEFF 		bl	scheduleMsg
+ 289 033a 3968     		ldr	r1, [r7]
+ 290 033c 3068     		ldr	r0, [r6]
+ 291 033e 01F51053 		add	r3, r1, #9216
+ 292 0342 01F50F51 		add	r1, r1, #9152
+ 293 0346 DC68     		ldr	r4, [r3, #12]
+ 294 0348 CA6B     		ldr	r2, [r1, #60]
+ 295 034a 5B68     		ldr	r3, [r3, #4]
+ 296 034c 0094     		str	r4, [sp]
+ 297 034e 4C68     		ldr	r4, [r1, #4]
+ 298 0350 40F20001 		movw	r1, #:lower16:.LC19
+ 299 0354 0194     		str	r4, [sp, #4]
+ 300 0356 C0F20001 		movt	r1, #:upper16:.LC19
+ 301 035a FFF7FEFF 		bl	scheduleMsg
+ 302 035e 40F20004 		movw	r4, #:lower16:maxLockTime
+ 303 0362 40F20003 		movw	r3, #:lower16:.LANCHOR2
+ 304 0366 C0F20004 		movt	r4, #:upper16:maxLockTime
+ 305 036a C0F20003 		movt	r3, #:upper16:.LANCHOR2
+ 306 036e 40F20001 		movw	r1, #:lower16:.LC20
+ 307 0372 2268     		ldr	r2, [r4]
+ 308 0374 3068     		ldr	r0, [r6]
+ 309 0376 1B68     		ldr	r3, [r3]
+ 310 0378 C0F20001 		movt	r1, #:upper16:.LC20
+ 311 037c FFF7FEFF 		bl	scheduleMsg
+ 312 0380 40F20003 		movw	r3, #:lower16:maxEventQueueTime
+ 313 0384 C0F20003 		movt	r3, #:upper16:maxEventQueueTime
+ 314 0388 40F20001 		movw	r1, #:lower16:.LC21
+ 315 038c 1A68     		ldr	r2, [r3]
+ 316 038e 3068     		ldr	r0, [r6]
+ 317 0390 2560     		str	r5, [r4]
+ 318 0392 C0F20001 		movt	r1, #:upper16:.LC21
+ 319 0396 FFF7FEFF 		bl	scheduleMsg
+ 320 039a 40F20003 		movw	r3, #:lower16:hipLastExecutionCount
+ 321 039e C0F20003 		movt	r3, #:upper16:hipLastExecutionCount
+ 322 03a2 40F20001 		movw	r1, #:lower16:.LC22
+ 323 03a6 1A68     		ldr	r2, [r3]
+ 324 03a8 3068     		ldr	r0, [r6]
+ 325 03aa C0F20001 		movt	r1, #:upper16:.LC22
+ 326 03ae FFF7FEFF 		bl	scheduleMsg
+ 327 03b2 40F20003 		movw	r3, #:lower16:hwSetTimerTime
+ 328 03b6 C0F20003 		movt	r3, #:upper16:hwSetTimerTime
+ 329 03ba 40F20001 		movw	r1, #:lower16:.LC23
+ 330 03be 40F20004 		movw	r4, #:lower16:.LANCHOR3
+ 331 03c2 1A68     		ldr	r2, [r3]
+ 332 03c4 3068     		ldr	r0, [r6]
+ 333 03c6 C0F20004 		movt	r4, #:upper16:.LANCHOR3
+ 334 03ca C0F20001 		movt	r1, #:upper16:.LC23
+ 335 03ce FFF7FEFF 		bl	scheduleMsg
+ 336 03d2 40F20001 		movw	r1, #:lower16:.LC24
+ 337 03d6 3068     		ldr	r0, [r6]
+ 338 03d8 2268     		ldr	r2, [r4]
+ 339 03da C0F20001 		movt	r1, #:upper16:.LC24
+ 340 03de FFF7FEFF 		bl	scheduleMsg
+ 341 03e2 2560     		str	r5, [r4]
+ 342 03e4 07B0     		add	sp, sp, #28
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 7
+
+
+ 343              		@ sp needed
+ 344 03e6 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 345              	.L16:
+ 346 03ea 08F6DC52 		addw	r2, r8, #3548
+ 347 03ee D3F80090 		ldr	r9, [r3]
+ 348 03f2 1068     		ldr	r0, [r2]	@ float
+ 349 03f4 FFF7FEFF 		bl	__aeabi_f2d
+ 350 03f8 08F55E68 		add	r8, r8, #3552
+ 351 03fc 0446     		mov	r4, r0
+ 352 03fe D8F80000 		ldr	r0, [r8]	@ float
+ 353 0402 0D46     		mov	r5, r1
+ 354 0404 FFF7FEFF 		bl	__aeabi_f2d
+ 355 0408 CDE90001 		strd	r0, [sp]
+ 356 040c 40F20001 		movw	r1, #:lower16:.LC8
+ 357 0410 4846     		mov	r0, r9
+ 358 0412 2246     		mov	r2, r4
+ 359 0414 2B46     		mov	r3, r5
+ 360 0416 C0F20001 		movt	r1, #:upper16:.LC8
+ 361 041a FFF7FEFF 		bl	scheduleMsg
+ 362 041e C9E6     		b	.L4
+ 363              	.L15:
+ 364 0420 40F20001 		movw	r1, #:lower16:.LC3
+ 365 0424 1868     		ldr	r0, [r3]
+ 366 0426 DAF84421 		ldr	r2, [r10, #324]
+ 367 042a DAF84831 		ldr	r3, [r10, #328]
+ 368 042e C0F20001 		movt	r1, #:upper16:.LC3
+ 369 0432 FFF7FEFF 		bl	scheduleMsg
+ 370 0436 2268     		ldr	r2, [r4]
+ 371 0438 4DE6     		b	.L3
+ 372              	.L14:
+ 373 043a 40F20001 		movw	r1, #:lower16:.LC1
+ 374 043e D3F82022 		ldr	r2, [r3, #544]
+ 375 0442 3068     		ldr	r0, [r6]
+ 376 0444 D3F82432 		ldr	r3, [r3, #548]
+ 377 0448 C0F20001 		movt	r1, #:upper16:.LC1
+ 378 044c FFF7FEFF 		bl	scheduleMsg
+ 379 0450 24E6     		b	.L2
+ 380              		.size	_Z11triggerInfov, .-_Z11triggerInfov
+ 381 0452 00BFAFF3 		.section	.text._ZL16triggerShapeInfov,"ax",%progbits
+ 381      0080AFF3 
+ 381      0080AFF3 
+ 381      0080
+ 382              		.align	2
+ 383              		.p2align 4,,15
+ 384              		.thumb
+ 385              		.thumb_func
+ 386              		.type	_ZL16triggerShapeInfov, %function
+ 387              	_ZL16triggerShapeInfov:
+ 388              		@ args = 0, pretend = 0, frame = 0
+ 389              		@ frame_needed = 0, uses_anonymous_args = 0
+ 390 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+ 391 0004 40F20003 		movw	r3, #:lower16:engine
+ 392 0008 C0F20003 		movt	r3, #:upper16:engine
+ 393 000c 40F20007 		movw	r7, #:lower16:.LANCHOR0
+ 394 0010 1E68     		ldr	r6, [r3]
+ 395 0012 C0F20007 		movt	r7, #:upper16:.LANCHOR0
+ 396 0016 83B0     		sub	sp, sp, #12
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 8
+
+
+ 397 0018 96F8E80D 		ldrb	r0, [r6, #3560]	@ zero_extendqisi2
+ 398 001c 3C68     		ldr	r4, [r7]
+ 399 001e FFF7FEFF 		bl	_Z12boolToStringb
+ 400 0022 40F20001 		movw	r1, #:lower16:.LC25
+ 401 0026 0246     		mov	r2, r0
+ 402 0028 C0F20001 		movt	r1, #:upper16:.LC25
+ 403 002c 2046     		mov	r0, r4
+ 404 002e FFF7FEFF 		bl	scheduleMsg
+ 405 0032 06F6DC53 		addw	r3, r6, #3548
+ 406 0036 D7F80090 		ldr	r9, [r7]
+ 407 003a 1868     		ldr	r0, [r3]	@ float
+ 408 003c FFF7FEFF 		bl	__aeabi_f2d
+ 409 0040 06F55E63 		add	r3, r6, #3552
+ 410 0044 0446     		mov	r4, r0
+ 411 0046 1868     		ldr	r0, [r3]	@ float
+ 412 0048 0D46     		mov	r5, r1
+ 413 004a FFF7FEFF 		bl	__aeabi_f2d
+ 414 004e CDE90001 		strd	r0, [sp]
+ 415 0052 40F20001 		movw	r1, #:lower16:.LC8
+ 416 0056 2246     		mov	r2, r4
+ 417 0058 2B46     		mov	r3, r5
+ 418 005a 4846     		mov	r0, r9
+ 419 005c C0F20001 		movt	r1, #:upper16:.LC8
+ 420 0060 06F52178 		add	r8, r6, #644
+ 421 0064 FFF7FEFF 		bl	scheduleMsg
+ 422 0068 06F56165 		add	r5, r6, #3600
+ 423 006c 0024     		movs	r4, #0
+ 424 006e 0FE0     		b	.L18
+ 425              	.L19:
+ 426 0070 55F8040B 		ldr	r0, [r5], #4	@ float
+ 427 0074 3E68     		ldr	r6, [r7]
+ 428 0076 FFF7FEFF 		bl	__aeabi_f2d
+ 429 007a CDE90001 		strd	r0, [sp]
+ 430 007e 40F20001 		movw	r1, #:lower16:.LC26
+ 431 0082 2246     		mov	r2, r4
+ 432 0084 3046     		mov	r0, r6
+ 433 0086 C0F20001 		movt	r1, #:upper16:.LC26
+ 434 008a FFF7FEFF 		bl	scheduleMsg
+ 435 008e 0134     		adds	r4, r4, #1
+ 436              	.L18:
+ 437 0090 4046     		mov	r0, r8
+ 438 0092 FFF7FEFF 		bl	_ZNK12TriggerShape7getSizeEv
+ 439 0096 8442     		cmp	r4, r0
+ 440 0098 EADB     		blt	.L19
+ 441 009a 03B0     		add	sp, sp, #12
+ 442              		@ sp needed
+ 443 009c BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ 444              		.size	_ZL16triggerShapeInfov, .-_ZL16triggerShapeInfov
+ 445              		.section	.text._Z20getCrankEventCounterv,"ax",%progbits
+ 446              		.align	2
+ 447              		.p2align 4,,15
+ 448              		.global	_Z20getCrankEventCounterv
+ 449              		.thumb
+ 450              		.thumb_func
+ 451              		.type	_Z20getCrankEventCounterv, %function
+ 452              	_Z20getCrankEventCounterv:
+ 453              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 9
+
+
+ 454              		@ frame_needed = 0, uses_anonymous_args = 0
+ 455              		@ link register save eliminated.
+ 456 0000 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 457 0004 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 458 0008 FFF7FEBF 		b	_ZN12TriggerState20getTotalEventCounterEv
+ 459              		.size	_Z20getCrankEventCounterv, .-_Z20getCrankEventCounterv
+ 460 000c AFF30080 		.section	.text._Z25getStartOfRevolutionIndexv,"ax",%progbits
+ 461              		.align	2
+ 462              		.p2align 4,,15
+ 463              		.global	_Z25getStartOfRevolutionIndexv
+ 464              		.thumb
+ 465              		.thumb_func
+ 466              		.type	_Z25getStartOfRevolutionIndexv, %function
+ 467              	_Z25getStartOfRevolutionIndexv:
+ 468              		@ args = 0, pretend = 0, frame = 0
+ 469              		@ frame_needed = 0, uses_anonymous_args = 0
+ 470              		@ link register save eliminated.
+ 471 0000 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 472 0004 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 473 0008 FFF7FEBF 		b	_ZN12TriggerState25getStartOfRevolutionIndexEv
+ 474              		.size	_Z25getStartOfRevolutionIndexv, .-_Z25getStartOfRevolutionIndexv
+ 475 000c AFF30080 		.section	.text._ZN14TriggerCentral16addEventListenerEPFv15trigger_event_emEPKcP6Engine,"ax",%progb
+ 476              		.align	2
+ 477              		.p2align 4,,15
+ 478              		.global	_ZN14TriggerCentral16addEventListenerEPFv15trigger_event_emEPKcP6Engine
+ 479              		.thumb
+ 480              		.thumb_func
+ 481              		.type	_ZN14TriggerCentral16addEventListenerEPFv15trigger_event_emEPKcP6Engine, %function
+ 482              	_ZN14TriggerCentral16addEventListenerEPFv15trigger_event_emEPKcP6Engine:
+ 483              		@ args = 0, pretend = 0, frame = 0
+ 484              		@ frame_needed = 0, uses_anonymous_args = 0
+ 485 0000 70B5     		push	{r4, r5, r6, lr}
+ 486 0002 0546     		mov	r5, r0
+ 487 0004 40F20000 		movw	r0, #:lower16:.LC27
+ 488 0008 0C46     		mov	r4, r1
+ 489 000a 1E46     		mov	r6, r3
+ 490 000c 1146     		mov	r1, r2
+ 491 000e C0F20000 		movt	r0, #:upper16:.LC27
+ 492 0012 FFF7FEFF 		bl	print
+ 493 0016 05F1C000 		add	r0, r5, #192
+ 494 001a 2146     		mov	r1, r4
+ 495 001c 3246     		mov	r2, r6
+ 496 001e BDE87040 		pop	{r4, r5, r6, lr}
+ 497 0022 FFF7FEBF 		b	_ZN16IntListenerArray16registerCallbackEPFviEPv
+ 498              		.size	_ZN14TriggerCentral16addEventListenerEPFv15trigger_event_emEPKcP6Engine, .-_ZN14TriggerCentr
+ 499 0026 00BFAFF3 		.section	.text._Z23addTriggerEventListenerPFv15trigger_event_emEPKcP6Engine,"ax",%progbits
+ 499      0080AFF3 
+ 499      0080
+ 500              		.align	2
+ 501              		.p2align 4,,15
+ 502              		.global	_Z23addTriggerEventListenerPFv15trigger_event_emEPKcP6Engine
+ 503              		.thumb
+ 504              		.thumb_func
+ 505              		.type	_Z23addTriggerEventListenerPFv15trigger_event_emEPKcP6Engine, %function
+ 506              	_Z23addTriggerEventListenerPFv15trigger_event_emEPKcP6Engine:
+ 507              		@ args = 0, pretend = 0, frame = 0
+ 508              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 10
+
+
+ 509 0000 38B5     		push	{r3, r4, r5, lr}
+ 510 0002 0446     		mov	r4, r0
+ 511 0004 40F20000 		movw	r0, #:lower16:.LC27
+ 512 0008 1546     		mov	r5, r2
+ 513 000a C0F20000 		movt	r0, #:upper16:.LC27
+ 514 000e FFF7FEFF 		bl	print
+ 515 0012 2146     		mov	r1, r4
+ 516 0014 2A46     		mov	r2, r5
+ 517 0016 0248     		ldr	r0, .L24
+ 518 0018 BDE83840 		pop	{r3, r4, r5, lr}
+ 519 001c FFF7FEBF 		b	_ZN16IntListenerArray16registerCallbackEPFviEPv
+ 520              	.L25:
+ 521              		.align	2
+ 522              	.L24:
+ 523 0020 C0000000 		.word	.LANCHOR1+192
+ 524              		.size	_Z23addTriggerEventListenerPFv15trigger_event_emEPKcP6Engine, .-_Z23addTriggerEventListenerP
+ 525 0024 AFF30080 		.section	.text._ZN14TriggerCentralC2Ev,"ax",%progbits
+ 525      AFF30080 
+ 525      AFF30080 
+ 526              		.align	2
+ 527              		.p2align 4,,15
+ 528              		.global	_ZN14TriggerCentralC2Ev
+ 529              		.thumb
+ 530              		.thumb_func
+ 531              		.type	_ZN14TriggerCentralC2Ev, %function
+ 532              	_ZN14TriggerCentralC2Ev:
+ 533              		@ args = 0, pretend = 0, frame = 0
+ 534              		@ frame_needed = 0, uses_anonymous_args = 0
+ 535 0000 38B5     		push	{r3, r4, r5, lr}
+ 536 0002 00F1C005 		add	r5, r0, #192
+ 537 0006 0446     		mov	r4, r0
+ 538 0008 FFF7FEFF 		bl	_ZN12TriggerStateC1Ev
+ 539 000c 2846     		mov	r0, r5
+ 540 000e FFF7FEFF 		bl	_ZN16IntListenerArrayC1Ev
+ 541 0012 0023     		movs	r3, #0
+ 542 0014 0022     		movs	r2, #0
+ 543 0016 C4E92E23 		strd	r2, [r4, #184]
+ 544 001a 0021     		movs	r1, #0
+ 545 001c 1822     		movs	r2, #24
+ 546 001e 04F59E70 		add	r0, r4, #316
+ 547 0022 FFF7FEFF 		bl	memset
+ 548 0026 2846     		mov	r0, r5
+ 549 0028 FFF7FEFF 		bl	_Z14clearCallbacksP16IntListenerArray
+ 550 002c 2046     		mov	r0, r4
+ 551 002e 38BD     		pop	{r3, r4, r5, pc}
+ 552              		.size	_ZN14TriggerCentralC2Ev, .-_ZN14TriggerCentralC2Ev
+ 553              		.global	_ZN14TriggerCentralC1Ev
+ 554              		.thumb_set _ZN14TriggerCentralC1Ev,_ZN14TriggerCentralC2Ev
+ 555              		.section	.text._ZN14TriggerCentral17getHwEventCounterEi,"ax",%progbits
+ 556              		.align	2
+ 557              		.p2align 4,,15
+ 558              		.global	_ZN14TriggerCentral17getHwEventCounterEi
+ 559              		.thumb
+ 560              		.thumb_func
+ 561              		.type	_ZN14TriggerCentral17getHwEventCounterEi, %function
+ 562              	_ZN14TriggerCentral17getHwEventCounterEi:
+ 563              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 11
+
+
+ 564              		@ frame_needed = 0, uses_anonymous_args = 0
+ 565              		@ link register save eliminated.
+ 566 0000 00EB8101 		add	r1, r0, r1, lsl #2
+ 567 0004 D1F83C01 		ldr	r0, [r1, #316]
+ 568 0008 7047     		bx	lr
+ 569              		.size	_ZN14TriggerCentral17getHwEventCounterEi, .-_ZN14TriggerCentral17getHwEventCounterEi
+ 570 000a 00BFAFF3 		.section	.text._ZN14TriggerCentral13resetCountersEv,"ax",%progbits
+ 570      0080
+ 571              		.align	2
+ 572              		.p2align 4,,15
+ 573              		.global	_ZN14TriggerCentral13resetCountersEv
+ 574              		.thumb
+ 575              		.thumb_func
+ 576              		.type	_ZN14TriggerCentral13resetCountersEv, %function
+ 577              	_ZN14TriggerCentral13resetCountersEv:
+ 578              		@ args = 0, pretend = 0, frame = 0
+ 579              		@ frame_needed = 0, uses_anonymous_args = 0
+ 580 0000 10B5     		push	{r4, lr}
+ 581 0002 0021     		movs	r1, #0
+ 582 0004 0446     		mov	r4, r0
+ 583 0006 1822     		movs	r2, #24
+ 584 0008 00F59E70 		add	r0, r0, #316
+ 585 000c FFF7FEFF 		bl	memset
+ 586 0010 2046     		mov	r0, r4
+ 587 0012 BDE81040 		pop	{r4, lr}
+ 588 0016 FFF7FEBF 		b	_ZN12TriggerState20resetRunningCountersEv
+ 589              		.size	_ZN14TriggerCentral13resetCountersEv, .-_ZN14TriggerCentral13resetCountersEv
+ 590 001a 00BFAFF3 		.section	.text._ZL27resetRunningTriggerCountersv,"ax",%progbits
+ 590      0080
+ 591              		.align	2
+ 592              		.p2align 4,,15
+ 593              		.thumb
+ 594              		.thumb_func
+ 595              		.type	_ZL27resetRunningTriggerCountersv, %function
+ 596              	_ZL27resetRunningTriggerCountersv:
+ 597              		@ args = 0, pretend = 0, frame = 0
+ 598              		@ frame_needed = 0, uses_anonymous_args = 0
+ 599 0000 08B5     		push	{r3, lr}
+ 600 0002 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 601 0006 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 602 000a FFF7FEFF 		bl	_ZN14TriggerCentral13resetCountersEv
+ 603 000e BDE80840 		pop	{r3, lr}
+ 604 0012 FFF7FEBF 		b	_Z11triggerInfov
+ 605              		.size	_ZL27resetRunningTriggerCountersv, .-_ZL27resetRunningTriggerCountersv
+ 606 0016 00BFAFF3 		.section	.text._ZN14TriggerCentral17handleShaftSignalE15trigger_event_e,"ax",%progbits
+ 606      0080AFF3 
+ 606      0080
+ 607              		.align	2
+ 608              		.p2align 4,,15
+ 609              		.global	_ZN14TriggerCentral17handleShaftSignalE15trigger_event_e
+ 610              		.thumb
+ 611              		.thumb_func
+ 612              		.type	_ZN14TriggerCentral17handleShaftSignalE15trigger_event_e, %function
+ 613              	_ZN14TriggerCentral17handleShaftSignalE15trigger_event_e:
+ 614              		@ args = 0, pretend = 0, frame = 0
+ 615              		@ frame_needed = 0, uses_anonymous_args = 0
+ 616 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 12
+
+
+ 617 0004 40F20004 		movw	r4, #:lower16:engine
+ 618 0008 C0F20004 		movt	r4, #:upper16:engine
+ 619 000c 0646     		mov	r6, r0
+ 620 000e 2368     		ldr	r3, [r4]
+ 621 0010 0F46     		mov	r7, r1
+ 622 0012 002B     		cmp	r3, #0
+ 623 0014 00F0AE80 		beq	.L54
+ 624 0018 FFF7FEFF 		bl	getTimeNowNt
+ 625 001c 0246     		mov	r2, r0
+ 626 001e 2068     		ldr	r0, [r4]
+ 627 0020 0B46     		mov	r3, r1
+ 628 0022 416A     		ldr	r1, [r0, #36]
+ 629 0024 C6E92E23 		strd	r2, [r6, #184]
+ 630 0028 0029     		cmp	r1, #0
+ 631 002a 00F0D480 		beq	.L55
+ 632 002e 816A     		ldr	r1, [r0, #40]
+ 633 0030 0029     		cmp	r1, #0
+ 634 0032 00F0A780 		beq	.L56
+ 635 0036 FFF7FEFF 		bl	_ZN6Engine14onTriggerEventEy
+ 636 003a 052F     		cmp	r7, #5
+ 637 003c 00F28280 		bhi	.L57
+ 638 0040 06EB8703 		add	r3, r6, r7, lsl #2
+ 639 0044 40F2000E 		movw	lr, #:lower16:.LANCHOR4
+ 640 0048 D3F83C21 		ldr	r2, [r3, #316]
+ 641 004c 0132     		adds	r2, r2, #1
+ 642 004e C3F83C21 		str	r2, [r3, #316]
+ 643 0052 C0F2000E 		movt	lr, #:upper16:.LANCHOR4
+ 644 0056 D6E92E45 		ldrd	r4, [r6, #184]
+ 645 005a DEE90023 		ldrd	r2, [lr]
+ 646 005e 64A1     		adr	r1, .L59
+ 647 0060 D1E90001 		ldrd	r0, [r1]
+ 648 0064 A21A     		subs	r2, r4, r2
+ 649 0066 65EB0303 		sbc	r3, r5, r3
+ 650 006a 9942     		cmp	r1, r3
+ 651 006c 08BF     		it eq
+ 652 006e 9042     		cmpeq	r0, r2
+ 653 0070 3CBF     		itt	cc
+ 654 0072 0023     		movcc	r3, #0
+ 655 0074 3371     		strbcc	r3, [r6, #4]
+ 656 0076 2246     		mov	r2, r4
+ 657 0078 2B46     		mov	r3, r5
+ 658 007a 3046     		mov	r0, r6
+ 659 007c 3946     		mov	r1, r7
+ 660 007e CEE90045 		strd	r4, [lr]
+ 661 0082 FFF7FEFF 		bl	_ZN12TriggerState18decodeTriggerEventE15trigger_event_ey
+ 662 0086 3379     		ldrb	r3, [r6, #4]	@ zero_extendqisi2
+ 663 0088 002B     		cmp	r3, #0
+ 664 008a 59D0     		beq	.L30
+ 665 008c 40F20005 		movw	r5, #:lower16:engineConfiguration
+ 666 0090 C0F20005 		movt	r5, #:upper16:engineConfiguration
+ 667 0094 3046     		mov	r0, r6
+ 668 0096 2B68     		ldr	r3, [r5]
+ 669 0098 D3F8F431 		ldr	r3, [r3, #500]
+ 670 009c 012B     		cmp	r3, #1
+ 671 009e 59D0     		beq	.L38
+ 672 00a0 FFF7FEFF 		bl	_ZN12TriggerState15getCurrentIndexEv
+ 673 00a4 DFF85091 		ldr	r9, .L59+8
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 13
+
+
+ 674 00a8 8046     		mov	r8, r0
+ 675              	.L39:
+ 676 00aa 40F20004 		movw	r4, #:lower16:.LANCHOR5
+ 677 00ae C0F20004 		movt	r4, #:upper16:.LANCHOR5
+ 678 00b2 A01C     		adds	r0, r4, #2
+ 679 00b4 4146     		mov	r1, r8
+ 680 00b6 FFF7FEFF 		bl	itoa10
+ 681 00ba 40F20003 		movw	r3, #:lower16:.LANCHOR6
+ 682 00be C0F20003 		movt	r3, #:upper16:.LANCHOR6
+ 683 00c2 DB5D     		ldrb	r3, [r3, r7]	@ zero_extendqisi2
+ 684 00c4 002B     		cmp	r3, #0
+ 685 00c6 65D1     		bne	.L41
+ 686 00c8 40F20003 		movw	r3, #:lower16:.LANCHOR8
+ 687 00cc C0F20003 		movt	r3, #:upper16:.LANCHOR8
+ 688 00d0 40F20000 		movw	r0, #:lower16:.LANCHOR7
+ 689 00d4 53F827A0 		ldr	r10, [r3, r7, lsl #2]
+ 690 00d8 2246     		mov	r2, r4
+ 691 00da 6423     		movs	r3, #100
+ 692 00dc C0F20000 		movt	r0, #:upper16:.LANCHOR7
+ 693 00e0 5146     		mov	r1, r10
+ 694 00e2 2370     		strb	r3, [r4]
+ 695 00e4 FFF7FEFF 		bl	_ZN9WaveChart18addWaveChartEvent3EPKcS1_
+ 696 00e8 2B68     		ldr	r3, [r5]
+ 697 00ea 93F8E535 		ldrb	r3, [r3, #1509]	@ zero_extendqisi2
+ 698 00ee 5A06     		lsls	r2, r3, #25
+ 699 00f0 0CD5     		bpl	.L48
+ 700 00f2 7523     		movs	r3, #117
+ 701              	.L47:
+ 702 00f4 40F20000 		movw	r0, #:lower16:.LANCHOR7
+ 703 00f8 40F20002 		movw	r2, #:lower16:.LANCHOR5
+ 704 00fc 5146     		mov	r1, r10
+ 705 00fe C0F20000 		movt	r0, #:upper16:.LANCHOR7
+ 706 0102 C0F20002 		movt	r2, #:upper16:.LANCHOR5
+ 707 0106 2370     		strb	r3, [r4]
+ 708 0108 FFF7FEFF 		bl	_ZN9WaveChart18addWaveChartEvent3EPKcS1_
+ 709              	.L48:
+ 710 010c D9F81030 		ldr	r3, [r9, #16]
+ 711 0110 F26C     		ldr	r2, [r6, #76]
+ 712 0112 9A42     		cmp	r2, r3
+ 713 0114 55D2     		bcs	.L43
+ 714 0116 D6F8C030 		ldr	r3, [r6, #192]
+ 715 011a 002B     		cmp	r3, #0
+ 716 011c C4BF     		itt	gt
+ 717 011e 3546     		movgt	r5, r6
+ 718 0120 0024     		movgt	r4, #0
+ 719 0122 60DD     		ble	.L58
+ 720              	.L46:
+ 721 0124 D5F8C430 		ldr	r3, [r5, #196]
+ 722 0128 3846     		mov	r0, r7
+ 723 012a 4146     		mov	r1, r8
+ 724 012c 9847     		blx	r3
+ 725 012e D6F8C030 		ldr	r3, [r6, #192]
+ 726 0132 0134     		adds	r4, r4, #1
+ 727 0134 A342     		cmp	r3, r4
+ 728 0136 05F10405 		add	r5, r5, #4
+ 729 013a F3DC     		bgt	.L46
+ 730 013c BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 14
+
+
+ 731              	.L30:
+ 732 0140 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 733              	.L57:
+ 734 0144 40F20000 		movw	r0, #:lower16:.LC31
+ 735 0148 C0F20000 		movt	r0, #:upper16:.LC31
+ 736 014c BDE8F047 		pop	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 737 0150 FFF7FEBF 		b	firmwareError
+ 738              	.L38:
+ 739 0154 FFF7FEFF 		bl	_ZN12TriggerState25getTotalRevolutionCounterEv
+ 740 0158 DFF89C90 		ldr	r9, .L59+8
+ 741 015c 0446     		mov	r4, r0
+ 742 015e 3046     		mov	r0, r6
+ 743 0160 FFF7FEFF 		bl	_ZN12TriggerState15getCurrentIndexEv
+ 744 0164 E107     		lsls	r1, r4, #31
+ 745 0166 54BF     		ite	pl
+ 746 0168 D9F81030 		ldrpl	r3, [r9, #16]
+ 747 016c 0023     		movmi	r3, #0
+ 748 016e 00EB0308 		add	r8, r0, r3
+ 749 0172 9AE7     		b	.L39
+ 750              	.L54:
+ 751 0174 40F20000 		movw	r0, #:lower16:.LC28
+ 752 0178 C0F20000 		movt	r0, #:upper16:.LC28
+ 753 017c BDE8F047 		pop	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 754 0180 FFF7FEBF 		b	firmwareError
+ 755              	.L56:
+ 756 0184 40F20000 		movw	r0, #:lower16:.LC30
+ 757 0188 C0F20000 		movt	r0, #:upper16:.LC30
+ 758 018c BDE8F047 		pop	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 759 0190 FFF7FEBF 		b	firmwareError
+ 760              	.L41:
+ 761 0194 40F20003 		movw	r3, #:lower16:.LANCHOR8
+ 762 0198 C0F20003 		movt	r3, #:upper16:.LANCHOR8
+ 763 019c 40F20000 		movw	r0, #:lower16:.LANCHOR7
+ 764 01a0 53F827A0 		ldr	r10, [r3, r7, lsl #2]
+ 765 01a4 C0F20000 		movt	r0, #:upper16:.LANCHOR7
+ 766 01a8 7523     		movs	r3, #117
+ 767 01aa 5146     		mov	r1, r10
+ 768 01ac 2246     		mov	r2, r4
+ 769 01ae 2370     		strb	r3, [r4]
+ 770 01b0 FFF7FEFF 		bl	_ZN9WaveChart18addWaveChartEvent3EPKcS1_
+ 771 01b4 2B68     		ldr	r3, [r5]
+ 772 01b6 93F8E535 		ldrb	r3, [r3, #1509]	@ zero_extendqisi2
+ 773 01ba 5B06     		lsls	r3, r3, #25
+ 774 01bc A6D5     		bpl	.L48
+ 775 01be 6423     		movs	r3, #100
+ 776 01c0 98E7     		b	.L47
+ 777              	.L43:
+ 778 01c2 40F20001 		movw	r1, #:lower16:.LC32
+ 779 01c6 C0F20001 		movt	r1, #:upper16:.LC32
+ 780 01ca 40F25E20 		movw	r0, #606
+ 781 01ce BDE8F047 		pop	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 782 01d2 FFF7FEBF 		b	warning
+ 783              	.L55:
+ 784 01d6 40F20000 		movw	r0, #:lower16:.LC29
+ 785 01da C0F20000 		movt	r0, #:upper16:.LC29
+ 786 01de BDE8F047 		pop	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 787 01e2 FFF7FEBF 		b	firmwareError
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 15
+
+
+ 788              	.L58:
+ 789 01e6 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 790              	.L60:
+ 791 01ea 00BFAFF3 		.align	3
+ 791      0080
+ 792              	.L59:
+ 793 01f0 007A030A 		.word	168000000
+ 794 01f4 00000000 		.word	0
+ 795 01f8 E0160000 		.word	_engine+5856
+ 796              		.size	_ZN14TriggerCentral17handleShaftSignalE15trigger_event_e, .-_ZN14TriggerCentral17handleShaft
+ 797 01fc AFF30080 		.section	.text._Z19hwHandleShaftSignal15trigger_event_e,"ax",%progbits
+ 798              		.align	2
+ 799              		.p2align 4,,15
+ 800              		.global	_Z19hwHandleShaftSignal15trigger_event_e
+ 801              		.thumb
+ 802              		.thumb_func
+ 803              		.type	_Z19hwHandleShaftSignal15trigger_event_e, %function
+ 804              	_Z19hwHandleShaftSignal15trigger_event_e:
+ 805              		@ args = 0, pretend = 0, frame = 0
+ 806              		@ frame_needed = 0, uses_anonymous_args = 0
+ 807 0000 4FF48051 		mov	r1, #4096
+ 808 0004 CEF20001 		movt	r1, 57344
+ 809 0008 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 810 000a 40F20002 		movw	r2, #:lower16:.LANCHOR2
+ 811 000e 40F20003 		movw	r3, #:lower16:.LANCHOR10
+ 812 0012 40F20005 		movw	r5, #:lower16:.LANCHOR9
+ 813 0016 4968     		ldr	r1, [r1, #4]
+ 814 0018 C0F20003 		movt	r3, #:upper16:.LANCHOR10
+ 815 001c C0F20002 		movt	r2, #:upper16:.LANCHOR2
+ 816 0020 C0F20005 		movt	r5, #:upper16:.LANCHOR9
+ 817 0024 1E68     		ldr	r6, [r3]
+ 818 0026 2960     		str	r1, [r5]
+ 819 0028 1168     		ldr	r1, [r2]
+ 820 002a 8E42     		cmp	r6, r1
+ 821 002c C8BF     		it	gt
+ 822 002e 1660     		strgt	r6, [r2]
+ 823 0030 40F20002 		movw	r2, #:lower16:rlist
+ 824 0034 C0F20002 		movt	r2, #:upper16:rlist
+ 825 0038 40F20004 		movw	r4, #:lower16:isInsideTriggerHandler
+ 826 003c C0F20004 		movt	r4, #:upper16:isInsideTriggerHandler
+ 827 0040 4FF0010E 		mov	lr, #1
+ 828 0044 0136     		adds	r6, r6, #1
+ 829 0046 0746     		mov	r7, r0
+ 830 0048 9069     		ldr	r0, [r2, #24]
+ 831 004a 1E60     		str	r6, [r3]
+ 832 004c 84F800E0 		strb	lr, [r4]
+ 833 0050 FFF7FEFF 		bl	getRemainingStack
+ 834 0054 40F20006 		movw	r6, #:lower16:.LANCHOR10
+ 835 0058 8028     		cmp	r0, #128
+ 836 005a C0F20006 		movt	r6, #:upper16:.LANCHOR10
+ 837 005e 20DD     		ble	.L65
+ 838 0060 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 839 0064 3946     		mov	r1, r7
+ 840 0066 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 841 006a FFF7FEFF 		bl	_ZN14TriggerCentral17handleShaftSignalE15trigger_event_e
+ 842 006e 4FF48052 		mov	r2, #4096
+ 843 0072 CEF20002 		movt	r2, 57344
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 16
+
+
+ 844 0076 40F20003 		movw	r3, #:lower16:.LANCHOR3
+ 845 007a C0F20003 		movt	r3, #:upper16:.LANCHOR3
+ 846 007e 5768     		ldr	r7, [r2, #4]
+ 847 0080 2968     		ldr	r1, [r5]
+ 848 0082 1868     		ldr	r0, [r3]
+ 849 0084 3568     		ldr	r5, [r6]
+ 850 0086 40F20002 		movw	r2, #:lower16:.LANCHOR11
+ 851 008a 791A     		subs	r1, r7, r1
+ 852 008c C0F20002 		movt	r2, #:upper16:.LANCHOR11
+ 853 0090 013D     		subs	r5, r5, #1
+ 854 0092 0027     		movs	r7, #0
+ 855 0094 8142     		cmp	r1, r0
+ 856 0096 1160     		str	r1, [r2]
+ 857 0098 3560     		str	r5, [r6]
+ 858 009a 2770     		strb	r7, [r4]
+ 859 009c 88BF     		it	hi
+ 860 009e 1960     		strhi	r1, [r3]
+ 861 00a0 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 862              	.L65:
+ 863 00a2 40F20000 		movw	r0, #:lower16:.LC33
+ 864 00a6 C0F20000 		movt	r0, #:upper16:.LC33
+ 865 00aa BDE8F840 		pop	{r3, r4, r5, r6, r7, lr}
+ 866 00ae FFF7FEBF 		b	firmwareError
+ 867              		.size	_Z19hwHandleShaftSignal15trigger_event_e, .-_Z19hwHandleShaftSignal15trigger_event_e
+ 868 00b2 00BFAFF3 		.section	.text._Z26printAllCallbacksHistogramv,"ax",%progbits
+ 868      0080AFF3 
+ 868      0080AFF3 
+ 868      0080
+ 869              		.align	2
+ 870              		.p2align 4,,15
+ 871              		.global	_Z26printAllCallbacksHistogramv
+ 872              		.thumb
+ 873              		.thumb_func
+ 874              		.type	_Z26printAllCallbacksHistogramv, %function
+ 875              	_Z26printAllCallbacksHistogramv:
+ 876              		@ args = 0, pretend = 0, frame = 0
+ 877              		@ frame_needed = 0, uses_anonymous_args = 0
+ 878              		@ link register save eliminated.
+ 879 0000 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 880 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 881 0008 40F20001 		movw	r1, #:lower16:.LANCHOR12
+ 882 000c 1868     		ldr	r0, [r3]
+ 883 000e C0F20001 		movt	r1, #:upper16:.LANCHOR12
+ 884 0012 FFF7FEBF 		b	_Z14printHistogramP7LoggingP11histogram_s
+ 885              		.size	_Z26printAllCallbacksHistogramv, .-_Z26printAllCallbacksHistogramv
+ 886 0016 00BFAFF3 		.section	.text._Z19getTriggerDutyCyclei,"ax",%progbits
+ 886      0080AFF3 
+ 886      0080
+ 887              		.align	2
+ 888              		.p2align 4,,15
+ 889              		.global	_Z19getTriggerDutyCyclei
+ 890              		.thumb
+ 891              		.thumb_func
+ 892              		.type	_Z19getTriggerDutyCyclei, %function
+ 893              	_Z19getTriggerDutyCyclei:
+ 894              		@ args = 0, pretend = 0, frame = 0
+ 895              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 17
+
+
+ 896              		@ link register save eliminated.
+ 897 0000 0146     		mov	r1, r0
+ 898 0002 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 899 0006 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 900 000a FFF7FEBF 		b	_ZN12TriggerState19getTriggerDutyCycleEi
+ 901              		.size	_Z19getTriggerDutyCyclei, .-_Z19getTriggerDutyCyclei
+ 902 000e 00BF     		.section	.text._Z18initTriggerCentralP7LoggingP6Engine,"ax",%progbits
+ 903              		.align	2
+ 904              		.p2align 4,,15
+ 905              		.global	_Z18initTriggerCentralP7LoggingP6Engine
+ 906              		.thumb
+ 907              		.thumb_func
+ 908              		.type	_Z18initTriggerCentralP7LoggingP6Engine, %function
+ 909              	_Z18initTriggerCentralP7LoggingP6Engine:
+ 910              		@ args = 0, pretend = 0, frame = 0
+ 911              		@ frame_needed = 0, uses_anonymous_args = 0
+ 912 0000 08B5     		push	{r3, lr}
+ 913 0002 40F20002 		movw	r2, #:lower16:.LC34
+ 914 0006 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 915 000a C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 916 000e C0F20002 		movt	r2, #:upper16:.LC34
+ 917 0012 1860     		str	r0, [r3]
+ 918 0014 1268     		ldr	r2, [r2]
+ 919 0016 40F20003 		movw	r3, #:lower16:.LANCHOR5
+ 920 001a C0F20003 		movt	r3, #:upper16:.LANCHOR5
+ 921 001e 110C     		lsrs	r1, r2, #16
+ 922 0020 40F20000 		movw	r0, #:lower16:.LANCHOR7
+ 923 0024 9970     		strb	r1, [r3, #2]
+ 924 0026 1A80     		strh	r2, [r3]	@ movhi
+ 925 0028 C0F20000 		movt	r0, #:upper16:.LANCHOR7
+ 926 002c FFF7FEFF 		bl	_Z13initWaveChartP9WaveChart
+ 927 0030 40F20000 		movw	r0, #:lower16:.LC35
+ 928 0034 40F20001 		movw	r1, #:lower16:_Z11triggerInfov
+ 929 0038 C0F20000 		movt	r0, #:upper16:.LC35
+ 930 003c C0F20001 		movt	r1, #:upper16:_Z11triggerInfov
+ 931 0040 FFF7FEFF 		bl	addConsoleAction
+ 932 0044 40F20000 		movw	r0, #:lower16:.LC36
+ 933 0048 40F20001 		movw	r1, #:lower16:_ZL16triggerShapeInfov
+ 934 004c C0F20000 		movt	r0, #:upper16:.LC36
+ 935 0050 C0F20001 		movt	r1, #:upper16:_ZL16triggerShapeInfov
+ 936 0054 FFF7FEFF 		bl	addConsoleAction
+ 937 0058 40F20000 		movw	r0, #:lower16:.LC37
+ 938 005c 40F20001 		movw	r1, #:lower16:_ZL27resetRunningTriggerCountersv
+ 939 0060 C0F20000 		movt	r0, #:upper16:.LC37
+ 940 0064 C0F20001 		movt	r1, #:upper16:_ZL27resetRunningTriggerCountersv
+ 941 0068 BDE80840 		pop	{r3, lr}
+ 942 006c FFF7FEBF 		b	addConsoleAction
+ 943              		.size	_Z18initTriggerCentralP7LoggingP6Engine, .-_Z18initTriggerCentralP7LoggingP6Engine
+ 944              		.section	.text.startup._GLOBAL__sub_I_waveChart,"ax",%progbits
+ 945              		.align	2
+ 946              		.p2align 4,,15
+ 947              		.thumb
+ 948              		.thumb_func
+ 949              		.type	_GLOBAL__sub_I_waveChart, %function
+ 950              	_GLOBAL__sub_I_waveChart:
+ 951              		@ args = 0, pretend = 0, frame = 0
+ 952              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 18
+
+
+ 953 0000 08B5     		push	{r3, lr}
+ 954 0002 40F20000 		movw	r0, #:lower16:.LANCHOR7
+ 955 0006 C0F20000 		movt	r0, #:upper16:.LANCHOR7
+ 956 000a FFF7FEFF 		bl	_ZN9WaveChartC1Ev
+ 957 000e 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 958 0012 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 959 0016 BDE80840 		pop	{r3, lr}
+ 960 001a FFF7FEBF 		b	_ZN14TriggerCentralC1Ev
+ 961              		.size	_GLOBAL__sub_I_waveChart, .-_GLOBAL__sub_I_waveChart
+ 962 001e 00BF     		.section	.init_array,"aw",%init_array
+ 963              		.align	2
+ 964 0000 00000000 		.word	_GLOBAL__sub_I_waveChart(target1)
+ 965              		.global	triggerMaxDuration
+ 966              		.global	triggerDuration
+ 967              		.global	maxTriggerReentraint
+ 968              		.global	triggerReentraint
+ 969              		.global	triggerHanlderEntryTime
+ 970              		.global	triggerCentral
+ 971              		.global	waveChart
+ 972              		.section	.bss.maxTriggerReentraint,"aw",%nobits
+ 973              		.align	2
+ 974              		.set	.LANCHOR2,. + 0
+ 975              		.type	maxTriggerReentraint, %object
+ 976              		.size	maxTriggerReentraint, 4
+ 977              	maxTriggerReentraint:
+ 978 0000 00000000 		.space	4
+ 979              		.section	.bss.triggerHanlderEntryTime,"aw",%nobits
+ 980              		.align	2
+ 981              		.set	.LANCHOR9,. + 0
+ 982              		.type	triggerHanlderEntryTime, %object
+ 983              		.size	triggerHanlderEntryTime, 4
+ 984              	triggerHanlderEntryTime:
+ 985 0000 00000000 		.space	4
+ 986              		.section	.bss.triggerCentral,"aw",%nobits
+ 987              		.align	3
+ 988              		.set	.LANCHOR1,. + 0
+ 989              		.type	triggerCentral, %object
+ 990              		.size	triggerCentral, 344
+ 991              	triggerCentral:
+ 992 0000 00000000 		.space	344
+ 992      00000000 
+ 992      00000000 
+ 992      00000000 
+ 992      00000000 
+ 993              		.section	.bss._ZL15triggerCallback,"aw",%nobits
+ 994              		.align	3
+ 995              		.set	.LANCHOR12,. + 0
+ 996              		.type	_ZL15triggerCallback, %object
+ 997              		.size	_ZL15triggerCallback, 3616
+ 998              	_ZL15triggerCallback:
+ 999 0000 00000000 		.space	3616
+ 999      00000000 
+ 999      00000000 
+ 999      00000000 
+ 999      00000000 
+ 1000              		.section	.bss.waveChart,"aw",%nobits
+ 1001              		.align	3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 19
+
+
+ 1002              		.set	.LANCHOR7,. + 0
+ 1003              		.type	waveChart, %object
+ 1004              		.size	waveChart, 80
+ 1005              	waveChart:
+ 1006 0000 00000000 		.space	80
+ 1006      00000000 
+ 1006      00000000 
+ 1006      00000000 
+ 1006      00000000 
+ 1007              		.section	.bss._ZL22shaft_signal_msg_index,"aw",%nobits
+ 1008              		.align	2
+ 1009              		.set	.LANCHOR5,. + 0
+ 1010              		.type	_ZL22shaft_signal_msg_index, %object
+ 1011              		.size	_ZL22shaft_signal_msg_index, 15
+ 1012              	_ZL22shaft_signal_msg_index:
+ 1013 0000 00000000 		.space	15
+ 1013      00000000 
+ 1013      00000000 
+ 1013      000000
+ 1014 000f 00       		.section	.rodata.str1.4,"aMS",%progbits,1
+ 1015              		.align	2
+ 1016              	.LC0:
+ 1017 0000 54656D70 		.ascii	"Template %s (%d) trigger %s (%d) useRiseEdge=%s onl"
+ 1017      6C617465 
+ 1017      20257320 
+ 1017      28256429 
+ 1017      20747269 
+ 1018 0033 7946726F 		.ascii	"yFront=%s\000"
+ 1018      6E743D25 
+ 1018      7300
+ 1019 003d 000000   		.space	3
+ 1020              	.LC1:
+ 1021 0040 746F7461 		.ascii	"total %d/skipped %d\000"
+ 1021      6C202564 
+ 1021      2F736B69 
+ 1021      70706564 
+ 1021      20256400 
+ 1022              	.LC2:
+ 1023 0054 74726967 		.ascii	"trigger#1 event counters up=%d/down=%d\000"
+ 1023      67657223 
+ 1023      31206576 
+ 1023      656E7420 
+ 1023      636F756E 
+ 1024 007b 00       		.space	1
+ 1025              	.LC3:
+ 1026 007c 74726967 		.ascii	"trigger#2 event counters up=%d/down=%d\000"
+ 1026      67657223 
+ 1026      32206576 
+ 1026      656E7420 
+ 1026      636F756E 
+ 1027 00a3 00       		.space	1
+ 1028              	.LC4:
+ 1029 00a4 65787065 		.ascii	"expected cycle events %d/%d/%d\000"
+ 1029      63746564 
+ 1029      20637963 
+ 1029      6C652065 
+ 1029      76656E74 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 20
+
+
+ 1030 00c3 00       		.space	1
+ 1031              	.LC5:
+ 1032 00c4 74726967 		.ascii	"trigger type=%d/need2ndChannel=%s\000"
+ 1032      67657220 
+ 1032      74797065 
+ 1032      3D25642F 
+ 1032      6E656564 
+ 1033 00e6 0000     		.space	2
+ 1034              	.LC6:
+ 1035 00e8 65787065 		.ascii	"expected duty #0=%f/#1=%f\000"
+ 1035      63746564 
+ 1035      20647574 
+ 1035      79202330 
+ 1035      3D25662F 
+ 1036 0102 0000     		.space	2
+ 1037              	.LC7:
+ 1038 0104 73796E63 		.ascii	"synchronizationNeeded=%s/isError=%s/total errors=%d"
+ 1038      68726F6E 
+ 1038      697A6174 
+ 1038      696F6E4E 
+ 1038      65656465 
+ 1039 0137 206F7264 		.ascii	" ord_err=%d/total revolutions=%d/self=%s\000"
+ 1039      5F657272 
+ 1039      3D25642F 
+ 1039      746F7461 
+ 1039      6C207265 
+ 1040              	.LC8:
+ 1041 0160 67617020 		.ascii	"gap from %f to %f\000"
+ 1041      66726F6D 
+ 1041      20256620 
+ 1041      746F2025 
+ 1041      6600
+ 1042 0172 0000     		.space	2
+ 1043              	.LC9:
+ 1044 0174 7072696D 		.ascii	"primary trigger input: %s\000"
+ 1044      61727920 
+ 1044      74726967 
+ 1044      67657220 
+ 1044      696E7075 
+ 1045 018e 0000     		.space	2
+ 1046              	.LC10:
+ 1047 0190 7072696D 		.ascii	"primary trigger simulator: %s %s freq=%d\000"
+ 1047      61727920 
+ 1047      74726967 
+ 1047      67657220 
+ 1047      73696D75 
+ 1048 01b9 000000   		.space	3
+ 1049              	.LC11:
+ 1050 01bc 7365636F 		.ascii	"secondary trigger input: %s\000"
+ 1050      6E646172 
+ 1050      79207472 
+ 1050      69676765 
+ 1050      7220696E 
+ 1051              	.LC12:
+ 1052 01d8 7365636F 		.ascii	"secondary trigger simulator: %s %s phase=%d\000"
+ 1052      6E646172 
+ 1052      79207472 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 21
+
+
+ 1052      69676765 
+ 1052      72207369 
+ 1053              	.LC13:
+ 1054 0204 74726967 		.ascii	"trigger error extra LED: %s %s\000"
+ 1054      67657220 
+ 1054      6572726F 
+ 1054      72206578 
+ 1054      74726120 
+ 1055 0223 00       		.space	1
+ 1056              	.LC14:
+ 1057 0224 7072696D 		.ascii	"primary logic input: %s\000"
+ 1057      61727920 
+ 1057      6C6F6769 
+ 1057      6320696E 
+ 1057      7075743A 
+ 1058              	.LC15:
+ 1059 023c 7365636F 		.ascii	"secondary logic input: %s\000"
+ 1059      6E646172 
+ 1059      79206C6F 
+ 1059      67696320 
+ 1059      696E7075 
+ 1060 0256 0000     		.space	2
+ 1061              	.LC16:
+ 1062 0258 7A65726F 		.ascii	"zeroTestTime=%d maxHowFarOff=%d\000"
+ 1062      54657374 
+ 1062      54696D65 
+ 1062      3D256420 
+ 1062      6D617848 
+ 1063              	.LC17:
+ 1064 0278 61647661 		.ascii	"advanceLookupTime=%d now=%d fuelCalcTime=%d\000"
+ 1064      6E63654C 
+ 1064      6F6F6B75 
+ 1064      7054696D 
+ 1064      653D2564 
+ 1065              	.LC18:
+ 1066 02a4 69676E69 		.ascii	"ignitionMathTime=%d ignitionSchTime=%d injectonSchT"
+ 1066      74696F6E 
+ 1066      4D617468 
+ 1066      54696D65 
+ 1066      3D256420 
+ 1067 02d7 696D653D 		.ascii	"ime=%d\000"
+ 1067      256400
+ 1068 02de 0000     		.space	2
+ 1069              	.LC19:
+ 1070 02e0 6D617054 		.ascii	"mapTime=%d/hipTime=%d/rpmTime=%d/mainTriggerCallbac"
+ 1070      696D653D 
+ 1070      25642F68 
+ 1070      69705469 
+ 1070      6D653D25 
+ 1071 0313 6B54696D 		.ascii	"kTime=%d\000"
+ 1071      653D2564 
+ 1071      00
+ 1072              	.LC20:
+ 1073 031c 6D61784C 		.ascii	"maxLockTime=%d / maxTriggerReentraint=%d\000"
+ 1073      6F636B54 
+ 1073      696D653D 
+ 1073      2564202F 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 22
+
+
+ 1073      206D6178 
+ 1074 0345 000000   		.space	3
+ 1075              	.LC21:
+ 1076 0348 6D617845 		.ascii	"maxEventQueueTime=%d\000"
+ 1076      76656E74 
+ 1076      51756575 
+ 1076      6554696D 
+ 1076      653D2564 
+ 1077 035d 000000   		.space	3
+ 1078              	.LC22:
+ 1079 0360 6869704C 		.ascii	"hipLastExecutionCount=%d\000"
+ 1079      61737445 
+ 1079      78656375 
+ 1079      74696F6E 
+ 1079      436F756E 
+ 1080 0379 000000   		.space	3
+ 1081              	.LC23:
+ 1082 037c 68775365 		.ascii	"hwSetTimerTime %d\000"
+ 1082      7454696D 
+ 1082      65725469 
+ 1082      6D652025 
+ 1082      6400
+ 1083 038e 0000     		.space	2
+ 1084              	.LC24:
+ 1085 0390 746F7461 		.ascii	"totalTriggerHandlerMaxTime=%d\000"
+ 1085      6C547269 
+ 1085      67676572 
+ 1085      48616E64 
+ 1085      6C65724D 
+ 1086 03ae 0000     		.space	2
+ 1087              	.LC25:
+ 1088 03b0 75736552 		.ascii	"useRise=%s\000"
+ 1088      6973653D 
+ 1088      257300
+ 1089 03bb 00       		.space	1
+ 1090              	.LC26:
+ 1091 03bc 6576656E 		.ascii	"event %d %f\000"
+ 1091      74202564 
+ 1091      20256600 
+ 1092              	.LC27:
+ 1093 03c8 72656769 		.ascii	"registerCkpListener: %s\015\012\000"
+ 1093      73746572 
+ 1093      436B704C 
+ 1093      69737465 
+ 1093      6E65723A 
+ 1094 03e2 0000     		.space	2
+ 1095              	.LC28:
+ 1096 03e4 636F6E66 		.ascii	"configuration\000"
+ 1096      69677572 
+ 1096      6174696F 
+ 1096      6E00
+ 1097 03f2 0000     		.space	2
+ 1098              	.LC29:
+ 1099 03f4 656E6769 		.ascii	"engineConfiguration\000"
+ 1099      6E65436F 
+ 1099      6E666967 
+ 1099      75726174 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 23
+
+
+ 1099      696F6E00 
+ 1100              	.LC30:
+ 1101 0408 656E6769 		.ascii	"engineConfiguration2\000"
+ 1101      6E65436F 
+ 1101      6E666967 
+ 1101      75726174 
+ 1101      696F6E32 
+ 1102 041d 000000   		.space	3
+ 1103              	.LC31:
+ 1104 0420 7369676E 		.ascii	"signal type\000"
+ 1104      616C2074 
+ 1104      79706500 
+ 1105              	.LC32:
+ 1106 042c 756E6578 		.ascii	"unexpected eventIndex=%d\000"
+ 1106      70656374 
+ 1106      65642065 
+ 1106      76656E74 
+ 1106      496E6465 
+ 1107 0445 000000   		.space	3
+ 1108              	.LC33:
+ 1109 0448 6C6F7773 		.ascii	"lowstck#8\000"
+ 1109      74636B23 
+ 1109      3800
+ 1110 0452 0000     		.space	2
+ 1111              	.LC34:
+ 1112 0454 785F00   		.ascii	"x_\000"
+ 1113 0457 00       		.space	1
+ 1114              	.LC35:
+ 1115 0458 74726967 		.ascii	"triggerinfo\000"
+ 1115      67657269 
+ 1115      6E666F00 
+ 1116              	.LC36:
+ 1117 0464 74726967 		.ascii	"trigger_shape_info\000"
+ 1117      6765725F 
+ 1117      73686170 
+ 1117      655F696E 
+ 1117      666F00
+ 1118 0477 00       		.space	1
+ 1119              	.LC37:
+ 1120 0478 72657365 		.ascii	"reset_trigger\000"
+ 1120      745F7472 
+ 1120      69676765 
+ 1120      7200
+ 1121 0486 0000     		.space	2
+ 1122              	.LC38:
+ 1123 0488 743100   		.ascii	"t1\000"
+ 1124 048b 00       		.space	1
+ 1125              	.LC39:
+ 1126 048c 743200   		.ascii	"t2\000"
+ 1127 048f 00       		.space	1
+ 1128              	.LC40:
+ 1129 0490 743300   		.ascii	"t3\000"
+ 1130 0493 00       		.section	.bss.triggerReentraint,"aw",%nobits
+ 1131              		.align	2
+ 1132              		.set	.LANCHOR10,. + 0
+ 1133              		.type	triggerReentraint, %object
+ 1134              		.size	triggerReentraint, 4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 24
+
+
+ 1135              	triggerReentraint:
+ 1136 0000 00000000 		.space	4
+ 1137              		.section	.rodata._ZL7eventId,"a",%progbits
+ 1138              		.align	2
+ 1139              		.set	.LANCHOR8,. + 0
+ 1140              		.type	_ZL7eventId, %object
+ 1141              		.size	_ZL7eventId, 24
+ 1142              	_ZL7eventId:
+ 1143 0000 88040000 		.word	.LC38
+ 1144 0004 88040000 		.word	.LC38
+ 1145 0008 8C040000 		.word	.LC39
+ 1146 000c 8C040000 		.word	.LC39
+ 1147 0010 90040000 		.word	.LC40
+ 1148 0014 90040000 		.word	.LC40
+ 1149              		.section	.bss.triggerDuration,"aw",%nobits
+ 1150              		.align	2
+ 1151              		.set	.LANCHOR11,. + 0
+ 1152              		.type	triggerDuration, %object
+ 1153              		.size	triggerDuration, 4
+ 1154              	triggerDuration:
+ 1155 0000 00000000 		.space	4
+ 1156              		.section	.bss._ZL6logger,"aw",%nobits
+ 1157              		.align	2
+ 1158              		.set	.LANCHOR0,. + 0
+ 1159              		.type	_ZL6logger, %object
+ 1160              		.size	_ZL6logger, 4
+ 1161              	_ZL6logger:
+ 1162 0000 00000000 		.space	4
+ 1163              		.section	.rodata._ZL9isUpEvent,"a",%progbits
+ 1164              		.align	2
+ 1165              		.set	.LANCHOR6,. + 0
+ 1166              		.type	_ZL9isUpEvent, %object
+ 1167              		.size	_ZL9isUpEvent, 6
+ 1168              	_ZL9isUpEvent:
+ 1169 0000 00       		.byte	0
+ 1170 0001 01       		.byte	1
+ 1171 0002 00       		.byte	0
+ 1172 0003 01       		.byte	1
+ 1173 0004 00       		.byte	0
+ 1174 0005 01       		.byte	1
+ 1175 0006 0000     		.section	.bss.triggerMaxDuration,"aw",%nobits
+ 1176              		.align	2
+ 1177              		.set	.LANCHOR3,. + 0
+ 1178              		.type	triggerMaxDuration, %object
+ 1179              		.size	triggerMaxDuration, 4
+ 1180              	triggerMaxDuration:
+ 1181 0000 00000000 		.space	4
+ 1182              		.section	.data._ZL24previousShaftEventTimeNt,"aw",%progbits
+ 1183              		.align	3
+ 1184              		.set	.LANCHOR4,. + 0
+ 1185              		.type	_ZL24previousShaftEventTimeNt, %object
+ 1186              		.size	_ZL24previousShaftEventTimeNt, 8
+ 1187              	_ZL24previousShaftEventTimeNt:
+ 1188 0000 003CDD9B 		.word	-1680000000
+ 1189 0004 FF79030A 		.word	167999999
+ 1190              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 25
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 trigger_central.cpp
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:18     .text._Z11triggerInfov:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:24     .text._Z11triggerInfov:00000000 _Z11triggerInfov
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1158   .bss._ZL6logger:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1016   .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:988    .bss.triggerCentral:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1022   .rodata.str1.4:00000054 .LC2
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1028   .rodata.str1.4:000000a4 .LC4
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1031   .rodata.str1.4:000000c4 .LC5
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1034   .rodata.str1.4:000000e8 .LC6
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1037   .rodata.str1.4:00000104 .LC7
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1043   .rodata.str1.4:00000174 .LC9
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1046   .rodata.str1.4:00000190 .LC10
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1049   .rodata.str1.4:000001bc .LC11
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1051   .rodata.str1.4:000001d8 .LC12
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1053   .rodata.str1.4:00000204 .LC13
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1056   .rodata.str1.4:00000224 .LC14
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1058   .rodata.str1.4:0000023c .LC15
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1061   .rodata.str1.4:00000258 .LC16
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1063   .rodata.str1.4:00000278 .LC17
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1065   .rodata.str1.4:000002a4 .LC18
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1069   .rodata.str1.4:000002e0 .LC19
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:974    .bss.maxTriggerReentraint:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1072   .rodata.str1.4:0000031c .LC20
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1075   .rodata.str1.4:00000348 .LC21
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1078   .rodata.str1.4:00000360 .LC22
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1081   .rodata.str1.4:0000037c .LC23
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1177   .bss.triggerMaxDuration:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1084   .rodata.str1.4:00000390 .LC24
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1040   .rodata.str1.4:00000160 .LC8
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1025   .rodata.str1.4:0000007c .LC3
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1020   .rodata.str1.4:00000040 .LC1
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:382    .text._ZL16triggerShapeInfov:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:387    .text._ZL16triggerShapeInfov:00000000 _ZL16triggerShapeInfov
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1087   .rodata.str1.4:000003b0 .LC25
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1090   .rodata.str1.4:000003bc .LC26
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:446    .text._Z20getCrankEventCounterv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:452    .text._Z20getCrankEventCounterv:00000000 _Z20getCrankEventCounterv
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:461    .text._Z25getStartOfRevolutionIndexv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:467    .text._Z25getStartOfRevolutionIndexv:00000000 _Z25getStartOfRevolutionIndexv
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:476    .text._ZN14TriggerCentral16addEventListenerEPFv15trigger_event_emEPKcP6Engine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:482    .text._ZN14TriggerCentral16addEventListenerEPFv15trigger_event_emEPKcP6Engine:00000000 _ZN14TriggerCentral16addEventListenerEPFv15trigger_event_emEPKcP6Engine
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1092   .rodata.str1.4:000003c8 .LC27
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:500    .text._Z23addTriggerEventListenerPFv15trigger_event_emEPKcP6Engine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:506    .text._Z23addTriggerEventListenerPFv15trigger_event_emEPKcP6Engine:00000000 _Z23addTriggerEventListenerPFv15trigger_event_emEPKcP6Engine
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:523    .text._Z23addTriggerEventListenerPFv15trigger_event_emEPKcP6Engine:00000020 $d
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:526    .text._ZN14TriggerCentralC2Ev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:532    .text._ZN14TriggerCentralC2Ev:00000000 _ZN14TriggerCentralC2Ev
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:532    .text._ZN14TriggerCentralC2Ev:00000000 _ZN14TriggerCentralC1Ev
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:556    .text._ZN14TriggerCentral17getHwEventCounterEi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:562    .text._ZN14TriggerCentral17getHwEventCounterEi:00000000 _ZN14TriggerCentral17getHwEventCounterEi
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:571    .text._ZN14TriggerCentral13resetCountersEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:577    .text._ZN14TriggerCentral13resetCountersEv:00000000 _ZN14TriggerCentral13resetCountersEv
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:591    .text._ZL27resetRunningTriggerCountersv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:596    .text._ZL27resetRunningTriggerCountersv:00000000 _ZL27resetRunningTriggerCountersv
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:607    .text._ZN14TriggerCentral17handleShaftSignalE15trigger_event_e:00000000 $t
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 26
+
+
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:613    .text._ZN14TriggerCentral17handleShaftSignalE15trigger_event_e:00000000 _ZN14TriggerCentral17handleShaftSignalE15trigger_event_e
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1184   .data._ZL24previousShaftEventTimeNt:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1009   .bss._ZL22shaft_signal_msg_index:00000000 .LANCHOR5
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1165   .rodata._ZL9isUpEvent:00000000 .LANCHOR6
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1139   .rodata._ZL7eventId:00000000 .LANCHOR8
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1002   .bss.waveChart:00000000 .LANCHOR7
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1103   .rodata.str1.4:00000420 .LC31
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1095   .rodata.str1.4:000003e4 .LC28
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1100   .rodata.str1.4:00000408 .LC30
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1105   .rodata.str1.4:0000042c .LC32
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1098   .rodata.str1.4:000003f4 .LC29
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:793    .text._ZN14TriggerCentral17handleShaftSignalE15trigger_event_e:000001f0 $d
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:798    .text._Z19hwHandleShaftSignal15trigger_event_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:804    .text._Z19hwHandleShaftSignal15trigger_event_e:00000000 _Z19hwHandleShaftSignal15trigger_event_e
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1132   .bss.triggerReentraint:00000000 .LANCHOR10
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:981    .bss.triggerHanlderEntryTime:00000000 .LANCHOR9
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1151   .bss.triggerDuration:00000000 .LANCHOR11
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1108   .rodata.str1.4:00000448 .LC33
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:869    .text._Z26printAllCallbacksHistogramv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:875    .text._Z26printAllCallbacksHistogramv:00000000 _Z26printAllCallbacksHistogramv
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:995    .bss._ZL15triggerCallback:00000000 .LANCHOR12
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:887    .text._Z19getTriggerDutyCyclei:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:893    .text._Z19getTriggerDutyCyclei:00000000 _Z19getTriggerDutyCyclei
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:903    .text._Z18initTriggerCentralP7LoggingP6Engine:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:909    .text._Z18initTriggerCentralP7LoggingP6Engine:00000000 _Z18initTriggerCentralP7LoggingP6Engine
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1111   .rodata.str1.4:00000454 .LC34
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1114   .rodata.str1.4:00000458 .LC35
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1116   .rodata.str1.4:00000464 .LC36
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1119   .rodata.str1.4:00000478 .LC37
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:945    .text.startup._GLOBAL__sub_I_waveChart:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:950    .text.startup._GLOBAL__sub_I_waveChart:00000000 _GLOBAL__sub_I_waveChart
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:963    .init_array:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1180   .bss.triggerMaxDuration:00000000 triggerMaxDuration
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1154   .bss.triggerDuration:00000000 triggerDuration
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:977    .bss.maxTriggerReentraint:00000000 maxTriggerReentraint
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1135   .bss.triggerReentraint:00000000 triggerReentraint
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:984    .bss.triggerHanlderEntryTime:00000000 triggerHanlderEntryTime
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:991    .bss.triggerCentral:00000000 triggerCentral
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1005   .bss.waveChart:00000000 waveChart
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:973    .bss.maxTriggerReentraint:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:980    .bss.triggerHanlderEntryTime:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:987    .bss.triggerCentral:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:994    .bss._ZL15triggerCallback:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:998    .bss._ZL15triggerCallback:00000000 _ZL15triggerCallback
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1001   .bss.waveChart:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1008   .bss._ZL22shaft_signal_msg_index:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1012   .bss._ZL22shaft_signal_msg_index:00000000 _ZL22shaft_signal_msg_index
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1015   .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1131   .bss.triggerReentraint:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1138   .rodata._ZL7eventId:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1142   .rodata._ZL7eventId:00000000 _ZL7eventId
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1150   .bss.triggerDuration:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1157   .bss._ZL6logger:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1161   .bss._ZL6logger:00000000 _ZL6logger
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1164   .rodata._ZL9isUpEvent:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1168   .rodata._ZL9isUpEvent:00000000 _ZL9isUpEvent
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1176   .bss.triggerMaxDuration:00000000 $d
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cchCltVm.s 			page 27
+
+
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1183   .data._ZL24previousShaftEventTimeNt:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:1187   .data._ZL24previousShaftEventTimeNt:00000000 _ZL24previousShaftEventTimeNt
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:525    .text._Z23addTriggerEventListenerPFv15trigger_event_emEPKcP6Engine:00000024 $t
+C:\Users\pc\AppData\Local\Temp\cchCltVm.s:797    .text._ZN14TriggerCentral17handleShaftSignalE15trigger_event_e:000001fc $t
+
+UNDEFINED SYMBOLS
+__aeabi_f2d
+engineConfiguration
+engine
+_Z20getConfigurationName13engine_type_e
+_Z17getTrigger_type_e14trigger_type_e
+_engine
+_Z12boolToStringb
+scheduleMsg
+_Z21isTriggerDecoderErrorv
+_ZN12TriggerState25getTotalRevolutionCounterEv
+boardConfiguration
+_Z10hwPortname11brain_pin_e
+_Z20getPin_output_mode_e17pin_output_mode_e
+triggerSignal
+maxHowFarOff
+cyccnt
+maxLockTime
+maxEventQueueTime
+hipLastExecutionCount
+hwSetTimerTime
+_ZNK12TriggerShape7getSizeEv
+_ZN12TriggerState20getTotalEventCounterEv
+_ZN12TriggerState25getStartOfRevolutionIndexEv
+print
+_ZN16IntListenerArray16registerCallbackEPFviEPv
+_ZN12TriggerStateC1Ev
+_ZN16IntListenerArrayC1Ev
+memset
+_Z14clearCallbacksP16IntListenerArray
+_ZN12TriggerState20resetRunningCountersEv
+getTimeNowNt
+_ZN6Engine14onTriggerEventEy
+_ZN12TriggerState18decodeTriggerEventE15trigger_event_ey
+_ZN12TriggerState15getCurrentIndexEv
+itoa10
+_ZN9WaveChart18addWaveChartEvent3EPKcS1_
+firmwareError
+warning
+rlist
+isInsideTriggerHandler
+getRemainingStack
+_Z14printHistogramP7LoggingP11histogram_s
+_ZN12TriggerState19getTriggerDutyCycleEi
+_Z13initWaveChartP9WaveChart
+addConsoleAction
+_ZN9WaveChartC1Ev

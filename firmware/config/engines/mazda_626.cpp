@@ -72,7 +72,7 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 
 // todo	engineConfiguration->afr.hwChannel = EFI_ADC_3;
-	initEgoSensor(&engineConfiguration->afr, ES_Innovate_MTX_L);
+	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER);
 
 
 #if EFI_FSIO || defined(__DOXYGEN__)

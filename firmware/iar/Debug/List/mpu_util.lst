@@ -1,0 +1,1196 @@
+###############################################################################
+#                                                                             #
+# IAR ANSI C/C++ Compiler V6.50.3.4676/W32 for ARM      30/Jun/2015  23:08:59 #
+# Copyright 1999-2013 IAR Systems AB.                                         #
+#                                                                             #
+#    Cpu mode        =  thumb                                                 #
+#    Endian          =  little                                                #
+#    Source file     =  F:\stuff\rusefi_sourceforge\firmware\hw_layer\stm32f4 #
+#                       \mpu_util.cpp                                         #
+#    Command line    =  F:\stuff\rusefi_sourceforge\firmware\hw_layer\stm32f4 #
+#                       \mpu_util.cpp -lCN F:\stuff\rusefi_sourceforge\firmwa #
+#                       re\iar\Debug\List\ -lA F:\stuff\rusefi_sourceforge\fi #
+#                       rmware\iar\Debug\List\ -o                             #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\   #
+#                       --no_cse --no_unroll --no_inline --no_code_motion     #
+#                       --no_tbaa --no_clustering --no_scheduling --debug     #
+#                       --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp     #
+#                       --dlib_config "C:\Program Files (x86)\IAR             #
+#                       Systems\Embedded Workbench                            #
+#                       6.5\arm\INC\c\DLib_Config_Normal.h"                   #
+#                       --misrac2004=1.2-1.4,2.3,3.4,4.2,6.5-7,8.2-8.3,9.3,   #
+#                       12.3,13.6-13,15.5,17.3,19.17,20.7-20.9,20.11 -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\ -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\kernel\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\ports\common\ARMCMx\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\common\ARMCMx\CMSIS\include\ -I               #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\IAR\ARMCMx\ -I F:\stuff\rusefi_sourceforge\fi #
+#                       rmware\iar\..\chibios\os\ports\IAR\ARMCMx\STM32F4xx\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\chibio #
+#                       s\os\hal\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\hal\platforms\STM32\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\DMAv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\GPIOv2\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\I2Cv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\SPIv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\TIMv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\RTCv2\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\USARTv1\ -I                     #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\OTGv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32F4xx\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\various\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\chibios\os\various\devices_lib\accel\ -I         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\b #
+#                       oards\ST_STM32F4_DISCOVERY\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\co #
+#                       ntrollers\algo\ -I F:\stuff\rusefi_sourceforge\firmwa #
+#                       re\iar\..\controllers\core\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\system\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\controllers\sensors\ -I                          #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\math\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\controllers\trigger\ -I                            #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\config #
+#                       \ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\conf #
+#                       ig\engines\ -I F:\stuff\rusefi_sourceforge\firmware\i #
+#                       ar\..\config\stm32f4ems\ -I                           #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\b #
+#                       inary\ -I F:\stuff\rusefi_sourceforge\firmware\iar\.. #
+#                       \console_util\ -I F:\stuff\rusefi_sourceforge\firmwar #
+#                       e\iar\..\development\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\development\test\ -I                  #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\developme #
+#                       nt\hw_layer\ -I F:\stuff\rusefi_sourceforge\firmware\ #
+#                       iar\..\hw_layer\algo\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\hw_layer\lcd\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                       stm32f4\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\hw_layer\serial_over_usb\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                        -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext_al #
+#                       go\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\de #
+#                       velopment\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\development\hw_layer\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\util\     #
+#                       -On --eec++                                           #
+#    MISRA C version =  2004                                                  #
+#      Enabled       =  1.2-1.4 2.3 3.4 4.2 6.5 7 8.2 8.3 9.3 12.3 13.6 13.7  #
+#                       15.5 17.3 19.17 20.7-20.9 20.11                       #
+#      Checked       =  1.4 2.3 4.2 6.5 7 8.2 8.3 9.3 12.3 13.7 15.5          #
+#                       20.7-20.9 20.11                                       #
+#      Not checked   =  1.1-1.3 1.5-2.2 2.4-4.1 5-6.4 8.1 8.4-9.2 10-12.2     #
+#                       12.4-13.6 14-15.4 16-20.6 20.10 20.12 21              #
+#    List file       =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\m #
+#                       pu_util.lst                                           #
+#    Object file     =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\mp #
+#                       u_util.o                                              #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+F:\stuff\rusefi_sourceforge\firmware\hw_layer\stm32f4\mpu_util.cpp
+      1          /**
+      2           * @file	mpu_util.cpp
+      3           *
+      4           * @date Jul 27, 2014
+      5           * @author Andrey Belomutskiy, (c) 2012-2015
+      6           */
+      7          
+      8          #include "main.h"
+      9          #include "mpu_util.h"
+     10          #include "error_handling.h"
+     11          #include "engine.h"
+     12          #include "pin_repository.h"
+     13          
+     14          EXTERN_ENGINE;
+     15          
+     16          extern "C" {
+     17          int getRemainingStack(Thread *otp);
+     18          void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress);
+     19          }
+     20          
+     21          extern uint32_t __main_stack_base__;
+     22          
+     23          #define GET_CFSR() (*((volatile uint32_t *) (0xE000ED28)))
+     24          
+     25          #if defined __GNUC__
+     26          // GCC version
+     27          
+     28          int getRemainingStack(Thread *otp) {
+     29          
+     30          #if CH_DBG_ENABLE_STACK_CHECK
+     31          	register struct intctx *r13 asm ("r13");
+     32          	otp->activeStack = r13;
+     33          
+     34          	int remainingStack;
+     35          	if (dbg_isr_cnt > 0) {
+     36          		// ISR context
+     37          		remainingStack = (int)(r13 - 1) - (int)&__main_stack_base__;
+     38          	} else {
+     39          		remainingStack = (int)(r13 - 1) - (int)otp->p_stklimit;
+     40          	}
+     41          	otp->remainingStack = remainingStack;
+     42          	return remainingStack;
+     43          #else
+     44          	return 99999;
+     45          #endif /* CH_DBG_ENABLE_STACK_CHECK */
+     46          }
+     47          
+     48          #else /* __GNUC__ */
+     49          
+     50          extern uint32_t CSTACK$$Base; /* symbol created by the IAR linker */
+     51          extern uint32_t IRQSTACK$$Base; /* symbol created by the IAR linker */
+     52          
+
+   \                                 In section .text, align 2, keep-with-next
+     53          int getRemainingStack(Thread *otp) {
+   \                     getRemainingStack:
+   \   00000000   0x0001             MOVS     R1,R0
+     54          #if CH_DBG_ENABLE_STACK_CHECK || defined(__DOXYGEN__)
+     55          	int remainingStack;
+     56          	if (dbg_isr_cnt > 0) {
+   \   00000002   0x....             LDR.N    R2,??DataTable10
+   \   00000004   0x6812             LDR      R2,[R2, #+0]
+   \   00000006   0x2A01             CMP      R2,#+1
+   \   00000008   0xDB05             BLT.N    ??getRemainingStack_0
+     57          		remainingStack = (__get_SP() - sizeof(struct intctx)) - (int)&IRQSTACK$$Base;
+   \   0000000A   0x466A             MOV      R2,SP
+   \   0000000C   0x3A64             SUBS     R2,R2,#+100
+   \   0000000E   0x....             LDR.N    R3,??DataTable10_1
+   \   00000010   0x1AD2             SUBS     R2,R2,R3
+   \   00000012   0x0010             MOVS     R0,R2
+   \   00000014   0xE004             B.N      ??getRemainingStack_1
+     58          	} else {
+     59          		remainingStack = (__get_SP() - sizeof(struct intctx)) - (int)otp->p_stklimit;
+   \                     ??getRemainingStack_0:
+   \   00000016   0x466A             MOV      R2,SP
+   \   00000018   0x3A64             SUBS     R2,R2,#+100
+   \   0000001A   0x69CB             LDR      R3,[R1, #+28]
+   \   0000001C   0x1AD2             SUBS     R2,R2,R3
+   \   0000001E   0x0010             MOVS     R0,R2
+     60          	}
+     61          	otp->remainingStack = remainingStack;
+   \                     ??getRemainingStack_1:
+   \   00000020   0x6488             STR      R0,[R1, #+72]
+     62          	return remainingStack;
+   \   00000022   0x4770             BX       LR               ;; return
+     63          #else
+     64          	return 999999;
+     65          #endif  
+     66          }
+     67          
+     68          // IAR version
+     69          
+     70          #endif
+     71          
+
+   \                                 In section .text, align 2, keep-with-next
+     72          void baseHardwareInit(void) {
+     73          	// looks like this holds a random value on start? Let's set a nice clean zero
+     74          	DWT_CYCCNT = 0;
+   \                     _Z16baseHardwareInitv:
+   \   00000000   0x....             LDR.N    R0,??DataTable10_2  ;; 0xe0001004
+   \   00000002   0x2100             MOVS     R1,#+0
+   \   00000004   0x6001             STR      R1,[R0, #+0]
+     75          }
+   \   00000006   0x4770             BX       LR               ;; return
+     76          
+
+   \                                 In section .text, align 2, keep-with-next
+     77          void DebugMonitorVector(void) {
+   \                     DebugMonitorVector:
+   \   00000000   0xB580             PUSH     {R7,LR}
+     78          
+     79          	chDbgPanic3("DebugMonitorVector", __FILE__, __LINE__);
+   \   00000002   0x224F             MOVS     R2,#+79
+   \   00000004   0x....             LDR.N    R1,??DataTable10_3
+   \   00000006   0x....             LDR.N    R0,??DataTable10_4
+   \   00000008   0x.... 0x....      BL       chDbgPanic3
+     80          
+     81          	while (TRUE)
+   \                     ??DebugMonitorVector_0:
+   \   0000000C   0xE7FE             B.N      ??DebugMonitorVector_0
+     82          		;
+     83          }
+     84          
+
+   \                                 In section .text, align 2, keep-with-next
+     85          void UsageFaultVector(void) {
+   \                     UsageFaultVector:
+   \   00000000   0xB580             PUSH     {R7,LR}
+     86          
+     87          	chDbgPanic3("UsageFaultVector", __FILE__, __LINE__);
+   \   00000002   0x2257             MOVS     R2,#+87
+   \   00000004   0x....             LDR.N    R1,??DataTable10_3
+   \   00000006   0x....             LDR.N    R0,??DataTable10_5
+   \   00000008   0x.... 0x....      BL       chDbgPanic3
+     88          
+     89          	while (TRUE)
+   \                     ??UsageFaultVector_0:
+   \   0000000C   0xE7FE             B.N      ??UsageFaultVector_0
+     90          		;
+     91          }
+     92          
+
+   \                                 In section .text, align 2, keep-with-next
+     93          void BusFaultVector(void) {
+   \                     BusFaultVector:
+   \   00000000   0xB580             PUSH     {R7,LR}
+     94          
+     95          	chDbgPanic3("BusFaultVector", __FILE__, __LINE__);
+   \   00000002   0x225F             MOVS     R2,#+95
+   \   00000004   0x....             LDR.N    R1,??DataTable10_3
+   \   00000006   0x....             LDR.N    R0,??DataTable10_6
+   \   00000008   0x.... 0x....      BL       chDbgPanic3
+     96          
+     97          	while (TRUE) {
+   \                     ??BusFaultVector_0:
+   \   0000000C   0xE7FE             B.N      ??BusFaultVector_0
+     98          	}
+     99          }
+    100          
+    101          /**
+    102           + * @brief   Register values for postmortem debugging.
+    103           + */
+
+   \                                 In section .bss, align 4
+    104          volatile uint32_t postmortem_r0;
+   \                     postmortem_r0:
+   \   00000000                      DS8 4
+
+   \                                 In section .bss, align 4
+    105          volatile uint32_t postmortem_r1;
+   \                     postmortem_r1:
+   \   00000000                      DS8 4
+
+   \                                 In section .bss, align 4
+    106          volatile uint32_t postmortem_r2;
+   \                     postmortem_r2:
+   \   00000000                      DS8 4
+
+   \                                 In section .bss, align 4
+    107          volatile uint32_t postmortem_r3;
+   \                     postmortem_r3:
+   \   00000000                      DS8 4
+
+   \                                 In section .bss, align 4
+    108          volatile uint32_t postmortem_r12;
+   \                     postmortem_r12:
+   \   00000000                      DS8 4
+
+   \                                 In section .bss, align 4
+    109          volatile uint32_t postmortem_lr; /* Link register. */
+   \                     postmortem_lr:
+   \   00000000                      DS8 4
+
+   \                                 In section .bss, align 4
+    110          volatile uint32_t postmortem_pc; /* Program counter. */
+   \                     postmortem_pc:
+   \   00000000                      DS8 4
+
+   \                                 In section .bss, align 4
+    111          volatile uint32_t postmortem_psr;/* Program status register. */
+   \                     postmortem_psr:
+   \   00000000                      DS8 4
+
+   \                                 In section .bss, align 4
+    112          volatile uint32_t postmortem_CFSR;
+   \                     postmortem_CFSR:
+   \   00000000                      DS8 4
+
+   \                                 In section .bss, align 4
+    113          volatile uint32_t postmortem_HFSR;
+   \                     postmortem_HFSR:
+   \   00000000                      DS8 4
+
+   \                                 In section .bss, align 4
+    114          volatile uint32_t postmortem_DFSR;
+   \                     postmortem_DFSR:
+   \   00000000                      DS8 4
+
+   \                                 In section .bss, align 4
+    115          volatile uint32_t postmortem_AFSR;
+   \                     postmortem_AFSR:
+   \   00000000                      DS8 4
+
+   \                                 In section .bss, align 4
+    116          volatile uint32_t postmortem_BFAR;
+   \                     postmortem_BFAR:
+   \   00000000                      DS8 4
+
+   \                                 In section .bss, align 4
+    117          volatile uint32_t postmortem_MMAR;
+   \                     postmortem_MMAR:
+   \   00000000                      DS8 4
+
+   \                                 In section .bss, align 4
+    118          volatile uint32_t postmortem_SCB_SHCSR;
+   \                     postmortem_SCB_SHCSR:
+   \   00000000                      DS8 4
+    119          
+    120          /**
+    121           * @brief   Evaluates to TRUE if system runs under debugger control.
+    122           * @note    This bit resets only by power reset.
+    123           */
+    124          #define is_under_debugger() (((CoreDebug)->DHCSR) & \
+    125                                      CoreDebug_DHCSR_C_DEBUGEN_Msk)
+    126          
+    127          /**
+    128           *
+    129           */
+
+   \                                 In section .text, align 4, keep-with-next
+    130          void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress) {
+    131          
+    132          	postmortem_r0 = pulFaultStackAddress[0];
+   \                     prvGetRegistersFromStack:
+   \   00000000   0x....             LDR.N    R1,??DataTable10_7
+   \   00000002   0x6802             LDR      R2,[R0, #+0]
+   \   00000004   0x600A             STR      R2,[R1, #+0]
+    133          	postmortem_r1 = pulFaultStackAddress[1];
+   \   00000006   0x6841             LDR      R1,[R0, #+4]
+   \   00000008   0x....             LDR.N    R2,??DataTable10_8
+   \   0000000A   0x6011             STR      R1,[R2, #+0]
+    134          	postmortem_r2 = pulFaultStackAddress[2];
+   \   0000000C   0x6881             LDR      R1,[R0, #+8]
+   \   0000000E   0x....             LDR.N    R2,??DataTable10_9
+   \   00000010   0x6011             STR      R1,[R2, #+0]
+    135          	postmortem_r3 = pulFaultStackAddress[3];
+   \   00000012   0x68C1             LDR      R1,[R0, #+12]
+   \   00000014   0x....             LDR.N    R2,??DataTable10_10
+   \   00000016   0x6011             STR      R1,[R2, #+0]
+    136          	postmortem_r12 = pulFaultStackAddress[4];
+   \   00000018   0x6901             LDR      R1,[R0, #+16]
+   \   0000001A   0x....             LDR.N    R2,??DataTable10_11
+   \   0000001C   0x6011             STR      R1,[R2, #+0]
+    137          	postmortem_lr = pulFaultStackAddress[5];
+   \   0000001E   0x6941             LDR      R1,[R0, #+20]
+   \   00000020   0x....             LDR.N    R2,??DataTable10_12
+   \   00000022   0x6011             STR      R1,[R2, #+0]
+    138          	postmortem_pc = pulFaultStackAddress[6];
+   \   00000024   0x6981             LDR      R1,[R0, #+24]
+   \   00000026   0x....             LDR.N    R2,??DataTable10_13
+   \   00000028   0x6011             STR      R1,[R2, #+0]
+    139          	postmortem_psr = pulFaultStackAddress[7];
+   \   0000002A   0x69C1             LDR      R1,[R0, #+28]
+   \   0000002C   0x....             LDR.N    R2,??DataTable10_14
+   \   0000002E   0x6011             STR      R1,[R2, #+0]
+    140          
+    141          	/* Configurable Fault Status Register. Consists of MMSR, BFSR and UFSR */
+    142          	postmortem_CFSR = GET_CFSR();
+   \   00000030   0x....             LDR.N    R1,??DataTable10_15
+   \   00000032   0x....             LDR.N    R2,??DataTable10_16  ;; 0xe000ed28
+   \   00000034   0x6812             LDR      R2,[R2, #+0]
+   \   00000036   0x600A             STR      R2,[R1, #+0]
+    143          
+    144          	/* Hard Fault Status Register */
+    145          	postmortem_HFSR = (*((volatile uint32_t *) (0xE000ED2C)));
+   \   00000038   0x....             LDR.N    R1,??DataTable10_17
+   \   0000003A   0x....             LDR.N    R2,??DataTable10_18  ;; 0xe000ed2c
+   \   0000003C   0x6812             LDR      R2,[R2, #+0]
+   \   0000003E   0x600A             STR      R2,[R1, #+0]
+    146          
+    147          	/* Debug Fault Status Register */
+    148          	postmortem_DFSR = (*((volatile uint32_t *) (0xE000ED30)));
+   \   00000040   0x....             LDR.N    R1,??DataTable10_19
+   \   00000042   0x....             LDR.N    R2,??DataTable10_20  ;; 0xe000ed30
+   \   00000044   0x6812             LDR      R2,[R2, #+0]
+   \   00000046   0x600A             STR      R2,[R1, #+0]
+    149          
+    150          	/* Auxiliary Fault Status Register */
+    151          	postmortem_AFSR = (*((volatile uint32_t *) (0xE000ED3C)));
+   \   00000048   0x....             LDR.N    R1,??DataTable10_21
+   \   0000004A   0x....             LDR.N    R2,??DataTable10_22  ;; 0xe000ed3c
+   \   0000004C   0x6812             LDR      R2,[R2, #+0]
+   \   0000004E   0x600A             STR      R2,[R1, #+0]
+    152          
+    153          	/* Read the Fault Address Registers. These may not contain valid values.
+    154          	 Check BFARVALID/MMARVALID to see if they are valid values
+    155          	 MemManage Fault Address Register */
+    156          	postmortem_MMAR = (*((volatile uint32_t *) (0xE000ED34)));
+   \   00000050   0x....             LDR.N    R1,??DataTable10_23
+   \   00000052   0x....             LDR.N    R2,??DataTable10_24  ;; 0xe000ed34
+   \   00000054   0x6812             LDR      R2,[R2, #+0]
+   \   00000056   0x600A             STR      R2,[R1, #+0]
+    157          	/* Bus Fault Address Register */
+    158          	postmortem_BFAR = (*((volatile uint32_t *) (0xE000ED38)));
+   \   00000058   0x....             LDR.N    R1,??DataTable10_25
+   \   0000005A   0x....             LDR.N    R2,??DataTable10_26  ;; 0xe000ed38
+   \   0000005C   0x6812             LDR      R2,[R2, #+0]
+   \   0000005E   0x600A             STR      R2,[R1, #+0]
+    159          
+    160          	postmortem_SCB_SHCSR = SCB->SHCSR;
+   \   00000060   0x....             LDR.N    R1,??DataTable10_27
+   \   00000062   0x....             LDR.N    R2,??DataTable10_28  ;; 0xe000ed24
+   \   00000064   0x6812             LDR      R2,[R2, #+0]
+   \   00000066   0x600A             STR      R2,[R1, #+0]
+    161          
+    162          	if (is_under_debugger()) {
+   \   00000068   0x....             LDR.N    R1,??DataTable10_29  ;; 0xe000edf0
+   \   0000006A   0x6809             LDR      R1,[R1, #+0]
+   \   0000006C   0x07C9             LSLS     R1,R1,#+31
+   \   0000006E   0xD500             BPL.N    ??prvGetRegistersFromStack_0
+    163          		__asm("BKPT #0\n");
+   \   00000070   0xBE00             BKPT #0
+    164          		// Break into the debugger
+    165          	}
+    166          
+    167          	/* harmless infinite loop */
+    168          	while (1) {
+   \                     ??prvGetRegistersFromStack_0:
+   \   00000072   0xE7FE             B.N      ??prvGetRegistersFromStack_0
+    169          		;
+    170          	}
+    171          }
+    172          
+
+   \                                 In section .text, align 2, keep-with-next
+    173          void HardFaultVector(void) {
+   \                     HardFaultVector:
+   \   00000000   0xB510             PUSH     {R4,LR}
+    174          #if 0 && defined __GNUC__
+    175          	__asm volatile (
+    176          			" tst lr, #4                                                \n"
+    177          			" ite eq                                                    \n"
+    178          			" mrseq r0, msp                                             \n"
+    179          			" mrsne r0, psp                                             \n"
+    180          			" ldr r1, [r0, #24]                                         \n"
+    181          			" ldr r2, handler2_address_const                            \n"
+    182          			" bx r2                                                     \n"
+    183          			" handler2_address_const: .word prvGetRegistersFromStack    \n"
+    184          	);
+    185          
+    186          #else
+    187          #endif        
+    188          
+    189          	int cfsr = GET_CFSR();
+   \   00000002   0x....             LDR.N    R0,??DataTable10_16  ;; 0xe000ed28
+   \   00000004   0x6804             LDR      R4,[R0, #+0]
+    190          	if (cfsr & 0x1) {
+   \   00000006   0x07E0             LSLS     R0,R4,#+31
+   \   00000008   0xD505             BPL.N    ??HardFaultVector_0
+    191          		chDbgPanic3("H IACCVIOL", __FILE__, __LINE__);
+   \   0000000A   0x22BF             MOVS     R2,#+191
+   \   0000000C   0x....             LDR.N    R1,??DataTable10_3
+   \   0000000E   0x....             LDR.N    R0,??DataTable10_30
+   \   00000010   0x.... 0x....      BL       chDbgPanic3
+   \   00000014   0xE014             B.N      ??HardFaultVector_1
+    192          	} else if (cfsr & 0x100) {
+   \                     ??HardFaultVector_0:
+   \   00000016   0x05E0             LSLS     R0,R4,#+23
+   \   00000018   0xD505             BPL.N    ??HardFaultVector_2
+    193          		chDbgPanic3("H IBUSERR", __FILE__, __LINE__);
+   \   0000001A   0x22C1             MOVS     R2,#+193
+   \   0000001C   0x....             LDR.N    R1,??DataTable10_3
+   \   0000001E   0x....             LDR.N    R0,??DataTable10_31
+   \   00000020   0x.... 0x....      BL       chDbgPanic3
+   \   00000024   0xE00C             B.N      ??HardFaultVector_1
+    194          	} else if (cfsr & 0x20000) {
+   \                     ??HardFaultVector_2:
+   \   00000026   0x03A0             LSLS     R0,R4,#+14
+   \   00000028   0xD505             BPL.N    ??HardFaultVector_3
+    195          		chDbgPanic3("H INVSTATE", __FILE__, __LINE__);
+   \   0000002A   0x22C3             MOVS     R2,#+195
+   \   0000002C   0x....             LDR.N    R1,??DataTable10_3
+   \   0000002E   0x....             LDR.N    R0,??DataTable10_32
+   \   00000030   0x.... 0x....      BL       chDbgPanic3
+   \   00000034   0xE004             B.N      ??HardFaultVector_1
+    196          	} else {
+    197          		chDbgPanic3("HardFaultVector", __FILE__, __LINE__);
+   \                     ??HardFaultVector_3:
+   \   00000036   0x22C5             MOVS     R2,#+197
+   \   00000038   0x....             LDR.N    R1,??DataTable10_3
+   \   0000003A   0x....             LDR.N    R0,??DataTable10_33
+   \   0000003C   0x.... 0x....      BL       chDbgPanic3
+    198          	}
+    199          
+    200          	while (TRUE) {
+   \                     ??HardFaultVector_1:
+   \   00000040   0xE7FE             B.N      ??HardFaultVector_1
+    201          	}
+    202          }
+    203          
+    204          #if HAL_USE_SPI || defined(__DOXYGEN__)
+
+   \                                 In section .bss, align 4
+    205          static bool isSpiInitialized[5] = { false, false, false, false, false };
+   \                     isSpiInitialized:
+   \   00000000                      DS8 8
+    206          
+
+   \                                 In section .text, align 2, keep-with-next
+    207          static int getSpiAf(SPIDriver *driver) {
+   \                     _Z8getSpiAfP9SPIDriver:
+   \   00000000   0x0001             MOVS     R1,R0
+    208          #if STM32_SPI_USE_SPI1
+    209          	if (driver == &SPID1) {
+   \   00000002   0x....             LDR.N    R0,??DataTable10_34
+   \   00000004   0x4281             CMP      R1,R0
+   \   00000006   0xD101             BNE.N    ??getSpiAf_0
+    210          		return EFI_SPI1_AF;
+   \   00000008   0x2005             MOVS     R0,#+5
+   \   0000000A   0xE00B             B.N      ??getSpiAf_1
+    211          	}
+    212          #endif
+    213          #if STM32_SPI_USE_SPI2
+    214          	if (driver == &SPID2) {
+   \                     ??getSpiAf_0:
+   \   0000000C   0x....             LDR.N    R0,??DataTable10_35
+   \   0000000E   0x4281             CMP      R1,R0
+   \   00000010   0xD101             BNE.N    ??getSpiAf_2
+    215          		return EFI_SPI2_AF;
+   \   00000012   0x2005             MOVS     R0,#+5
+   \   00000014   0xE006             B.N      ??getSpiAf_1
+    216          	}
+    217          #endif
+    218          #if STM32_SPI_USE_SPI3
+    219          	if (driver == &SPID3) {
+   \                     ??getSpiAf_2:
+   \   00000016   0x....             LDR.N    R0,??DataTable10_36
+   \   00000018   0x4281             CMP      R1,R0
+   \   0000001A   0xD101             BNE.N    ??getSpiAf_3
+    220          		return EFI_SPI3_AF;
+   \   0000001C   0x2006             MOVS     R0,#+6
+   \   0000001E   0xE001             B.N      ??getSpiAf_1
+    221          	}
+    222          #endif
+    223          	return -1;
+   \                     ??getSpiAf_3:
+   \   00000020   0xF05F 0x30FF      MOVS     R0,#-1
+   \                     ??getSpiAf_1:
+   \   00000024   0x4770             BX       LR               ;; return
+    224          }
+    225          
+
+   \                                 In section .text, align 2, keep-with-next
+    226          void turnOnSpi(spi_device_e device) {
+   \                     _Z9turnOnSpi12spi_device_e:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    227          	if (isSpiInitialized[device])
+   \   00000004   0x....             LDR.N    R0,??DataTable10_37
+   \   00000006   0x5C20             LDRB     R0,[R4, R0]
+   \   00000008   0x2800             CMP      R0,#+0
+   \   0000000A   0xD135             BNE.N    ??turnOnSpi_0
+    228          		return; // already initialized
+    229          	isSpiInitialized[device] = true;
+   \                     ??turnOnSpi_1:
+   \   0000000C   0x....             LDR.N    R0,??DataTable10_37
+   \   0000000E   0x2101             MOVS     R1,#+1
+   \   00000010   0x5421             STRB     R1,[R4, R0]
+    230          	if (device == SPI_DEVICE_1) {
+   \   00000012   0x2C01             CMP      R4,#+1
+   \   00000014   0xD10E             BNE.N    ??turnOnSpi_2
+    231          #if STM32_SPI_USE_SPI1
+    232          //	scheduleMsg(&logging, "Turning on SPI1 pins");
+    233          		initSpiModule(&SPID1, boardConfiguration->spi1sckPin,
+    234          				boardConfiguration->spi1misoPin,
+    235          				boardConfiguration->spi1mosiPin);
+   \   00000016   0x....             LDR.N    R0,??DataTable10_38
+   \   00000018   0x6800             LDR      R0,[R0, #+0]
+   \   0000001A   0xF8D0 0x32D4      LDR      R3,[R0, #+724]
+   \   0000001E   0x....             LDR.N    R0,??DataTable10_38
+   \   00000020   0x6800             LDR      R0,[R0, #+0]
+   \   00000022   0xF8D0 0x22D8      LDR      R2,[R0, #+728]
+   \   00000026   0x....             LDR.N    R0,??DataTable10_38
+   \   00000028   0x6800             LDR      R0,[R0, #+0]
+   \   0000002A   0xF8D0 0x12DC      LDR      R1,[R0, #+732]
+   \   0000002E   0x....             LDR.N    R0,??DataTable10_34
+   \   00000030   0x.... 0x....      BL       initSpiModule
+    236          #endif /* STM32_SPI_USE_SPI1 */
+    237          	}
+    238          	if (device == SPI_DEVICE_2) {
+   \                     ??turnOnSpi_2:
+   \   00000034   0x2C02             CMP      R4,#+2
+   \   00000036   0xD10E             BNE.N    ??turnOnSpi_3
+    239          #if STM32_SPI_USE_SPI2
+    240          //	scheduleMsg(&logging, "Turning on SPI2 pins");
+    241          		initSpiModule(&SPID2, boardConfiguration->spi2sckPin,
+    242          				boardConfiguration->spi2misoPin,
+    243          				boardConfiguration->spi2mosiPin);
+   \   00000038   0x....             LDR.N    R0,??DataTable10_38
+   \   0000003A   0x6800             LDR      R0,[R0, #+0]
+   \   0000003C   0xF8D0 0x32E0      LDR      R3,[R0, #+736]
+   \   00000040   0x....             LDR.N    R0,??DataTable10_38
+   \   00000042   0x6800             LDR      R0,[R0, #+0]
+   \   00000044   0xF8D0 0x22E4      LDR      R2,[R0, #+740]
+   \   00000048   0x....             LDR.N    R0,??DataTable10_38
+   \   0000004A   0x6800             LDR      R0,[R0, #+0]
+   \   0000004C   0xF8D0 0x12E8      LDR      R1,[R0, #+744]
+   \   00000050   0x....             LDR.N    R0,??DataTable10_35
+   \   00000052   0x.... 0x....      BL       initSpiModule
+    244          #endif /* STM32_SPI_USE_SPI2 */
+    245          	}
+    246          	if (device == SPI_DEVICE_3) {
+   \                     ??turnOnSpi_3:
+   \   00000056   0x2C03             CMP      R4,#+3
+   \   00000058   0xD10E             BNE.N    ??turnOnSpi_4
+    247          #if STM32_SPI_USE_SPI3
+    248          //	scheduleMsg(&logging, "Turning on SPI3 pins");
+    249          		initSpiModule(&SPID3, boardConfiguration->spi3sckPin,
+    250          				boardConfiguration->spi3misoPin,
+    251          				boardConfiguration->spi3mosiPin);
+   \   0000005A   0x....             LDR.N    R0,??DataTable10_38
+   \   0000005C   0x6800             LDR      R0,[R0, #+0]
+   \   0000005E   0xF8D0 0x32EC      LDR      R3,[R0, #+748]
+   \   00000062   0x....             LDR.N    R0,??DataTable10_38
+   \   00000064   0x6800             LDR      R0,[R0, #+0]
+   \   00000066   0xF8D0 0x22F0      LDR      R2,[R0, #+752]
+   \   0000006A   0x....             LDR.N    R0,??DataTable10_38
+   \   0000006C   0x6800             LDR      R0,[R0, #+0]
+   \   0000006E   0xF8D0 0x12F4      LDR      R1,[R0, #+756]
+   \   00000072   0x....             LDR.N    R0,??DataTable10_36
+   \   00000074   0x.... 0x....      BL       initSpiModule
+    252          #endif /* STM32_SPI_USE_SPI3 */
+    253          	}
+    254          }
+   \                     ??turnOnSpi_4:
+   \                     ??turnOnSpi_0:
+   \   00000078   0xBD10             POP      {R4,PC}          ;; return
+    255          
+
+   \                                 In section .text, align 2, keep-with-next
+    256          void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
+    257          		brain_pin_e mosi) {
+   \                     initSpiModule:
+   \   00000000   0xB5F8             PUSH     {R3-R7,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+   \   00000006   0x0016             MOVS     R6,R2
+   \   00000008   0x001F             MOVS     R7,R3
+    258          
+    259          	mySetPadMode2("SPI clock", sck,	PAL_MODE_ALTERNATE(getSpiAf(driver)));
+   \   0000000A   0x0020             MOVS     R0,R4
+   \   0000000C   0x.... 0x....      BL       _Z8getSpiAfP9SPIDriver
+   \   00000010   0x01C0             LSLS     R0,R0,#+7
+   \   00000012   0xF050 0x0202      ORRS     R2,R0,#0x2
+   \   00000016   0x0029             MOVS     R1,R5
+   \   00000018   0x....             LDR.N    R0,??DataTable10_39
+   \   0000001A   0x.... 0x....      BL       _Z13mySetPadMode2PKc11brain_pin_ej
+    260          
+    261          	mySetPadMode2("SPI master out", mosi, PAL_MODE_ALTERNATE(getSpiAf(driver)));
+   \   0000001E   0x0020             MOVS     R0,R4
+   \   00000020   0x.... 0x....      BL       _Z8getSpiAfP9SPIDriver
+   \   00000024   0x01C0             LSLS     R0,R0,#+7
+   \   00000026   0xF050 0x0202      ORRS     R2,R0,#0x2
+   \   0000002A   0x0039             MOVS     R1,R7
+   \   0000002C   0x....             LDR.N    R0,??DataTable10_40
+   \   0000002E   0x.... 0x....      BL       _Z13mySetPadMode2PKc11brain_pin_ej
+    262          	mySetPadMode2("SPI master in ", miso, PAL_MODE_ALTERNATE(getSpiAf(driver)));
+   \   00000032   0x0020             MOVS     R0,R4
+   \   00000034   0x.... 0x....      BL       _Z8getSpiAfP9SPIDriver
+   \   00000038   0x01C0             LSLS     R0,R0,#+7
+   \   0000003A   0xF050 0x0202      ORRS     R2,R0,#0x2
+   \   0000003E   0x0031             MOVS     R1,R6
+   \   00000040   0x....             LDR.N    R0,??DataTable10_41
+   \   00000042   0x.... 0x....      BL       _Z13mySetPadMode2PKc11brain_pin_ej
+    263          }
+   \   00000046   0xBDF1             POP      {R0,R4-R7,PC}    ;; return
+    264          
+
+   \                                 In section .text, align 2, keep-with-next
+    265          void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
+   \                     initSpiCs:
+   \   00000000   0xB5F8             PUSH     {R3-R7,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+    266          	spiConfig->end_cb = NULL;
+   \   00000006   0x2000             MOVS     R0,#+0
+   \   00000008   0x6020             STR      R0,[R4, #+0]
+    267          	ioportid_t port = getHwPort(csPin);
+   \   0000000A   0x0028             MOVS     R0,R5
+   \   0000000C   0x.... 0x....      BL       _Z9getHwPort11brain_pin_e
+   \   00000010   0x0006             MOVS     R6,R0
+    268          	ioportmask_t pin = getHwPin(csPin);
+   \   00000012   0x0028             MOVS     R0,R5
+   \   00000014   0x.... 0x....      BL       _Z8getHwPin11brain_pin_e
+   \   00000018   0x0007             MOVS     R7,R0
+    269          	spiConfig->ssport = port;
+   \   0000001A   0x6066             STR      R6,[R4, #+4]
+    270          	spiConfig->sspad = pin;
+   \   0000001C   0x8127             STRH     R7,[R4, #+8]
+    271          	mySetPadMode("chip select", port, pin, PAL_STM32_MODE_OUTPUT);
+   \   0000001E   0x2301             MOVS     R3,#+1
+   \   00000020   0x003A             MOVS     R2,R7
+   \   00000022   0x0031             MOVS     R1,R6
+   \   00000024   0x....             LDR.N    R0,??DataTable10_42
+   \   00000026   0x.... 0x....      BL       _Z12mySetPadModePKcP12GPIO_TypeDefjj
+    272          }
+   \   0000002A   0xBDF1             POP      {R0,R4-R7,PC}    ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10:
+   \   00000000   0x........         DC32     dbg_isr_cnt
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_1:
+   \   00000000   0x........         DC32     `IRQSTACK$$Base`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_2:
+   \   00000000   0xE0001004         DC32     0xe0001004
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_3:
+   \   00000000   0x........         DC32     `?<Constant "F:\\\\stuff\\\\rusefi_sourc...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_4:
+   \   00000000   0x........         DC32     `?<Constant "DebugMonitorVector">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_5:
+   \   00000000   0x........         DC32     `?<Constant "UsageFaultVector">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_6:
+   \   00000000   0x........         DC32     `?<Constant "BusFaultVector">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_7:
+   \   00000000   0x........         DC32     postmortem_r0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_8:
+   \   00000000   0x........         DC32     postmortem_r1
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_9:
+   \   00000000   0x........         DC32     postmortem_r2
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_10:
+   \   00000000   0x........         DC32     postmortem_r3
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_11:
+   \   00000000   0x........         DC32     postmortem_r12
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_12:
+   \   00000000   0x........         DC32     postmortem_lr
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_13:
+   \   00000000   0x........         DC32     postmortem_pc
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_14:
+   \   00000000   0x........         DC32     postmortem_psr
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_15:
+   \   00000000   0x........         DC32     postmortem_CFSR
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_16:
+   \   00000000   0xE000ED28         DC32     0xe000ed28
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_17:
+   \   00000000   0x........         DC32     postmortem_HFSR
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_18:
+   \   00000000   0xE000ED2C         DC32     0xe000ed2c
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_19:
+   \   00000000   0x........         DC32     postmortem_DFSR
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_20:
+   \   00000000   0xE000ED30         DC32     0xe000ed30
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_21:
+   \   00000000   0x........         DC32     postmortem_AFSR
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_22:
+   \   00000000   0xE000ED3C         DC32     0xe000ed3c
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_23:
+   \   00000000   0x........         DC32     postmortem_MMAR
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_24:
+   \   00000000   0xE000ED34         DC32     0xe000ed34
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_25:
+   \   00000000   0x........         DC32     postmortem_BFAR
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_26:
+   \   00000000   0xE000ED38         DC32     0xe000ed38
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_27:
+   \   00000000   0x........         DC32     postmortem_SCB_SHCSR
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_28:
+   \   00000000   0xE000ED24         DC32     0xe000ed24
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_29:
+   \   00000000   0xE000EDF0         DC32     0xe000edf0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_30:
+   \   00000000   0x........         DC32     `?<Constant "H IACCVIOL">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_31:
+   \   00000000   0x........         DC32     `?<Constant "H IBUSERR">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_32:
+   \   00000000   0x........         DC32     `?<Constant "H INVSTATE">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_33:
+   \   00000000   0x........         DC32     `?<Constant "HardFaultVector">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_34:
+   \   00000000   0x........         DC32     SPID1
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_35:
+   \   00000000   0x........         DC32     SPID2
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_36:
+   \   00000000   0x........         DC32     SPID3
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_37:
+   \   00000000   0x........         DC32     isSpiInitialized
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_38:
+   \   00000000   0x........         DC32     boardConfiguration
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_39:
+   \   00000000   0x........         DC32     `?<Constant "SPI clock">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_40:
+   \   00000000   0x........         DC32     `?<Constant "SPI master out">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_41:
+   \   00000000   0x........         DC32     `?<Constant "SPI master in ">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable10_42:
+   \   00000000   0x........         DC32     `?<Constant "chip select">`
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "DebugMonitorVector">`:
+   \   00000000   0x44 0x65          DC8 "DebugMonitorVector"
+   \              0x62 0x75    
+   \              0x67 0x4D    
+   \              0x6F 0x6E    
+   \              0x69 0x74    
+   \              0x6F 0x72    
+   \              0x56 0x65    
+   \              0x63 0x74    
+   \              0x6F 0x72    
+   \              0x00         
+   \   00000013   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "F:\\\\stuff\\\\rusefi_sourc...">`:
+   \   00000000   0x46 0x3A          DC8 46H, 3AH, 5CH, 73H, 74H, 75H, 66H, 66H
+   \              0x5C 0x73    
+   \              0x74 0x75    
+   \              0x66 0x66    
+   \   00000008   0x5C 0x72          DC8 5CH, 72H, 75H, 73H, 65H, 66H, 69H, 5FH
+   \              0x75 0x73    
+   \              0x65 0x66    
+   \              0x69 0x5F    
+   \   00000010   0x73 0x6F          DC8 73H, 6FH, 75H, 72H, 63H, 65H, 66H, 6FH
+   \              0x75 0x72    
+   \              0x63 0x65    
+   \              0x66 0x6F    
+   \   00000018   0x72 0x67          DC8 72H, 67H, 65H, 5CH, 66H, 69H, 72H, 6DH
+   \              0x65 0x5C    
+   \              0x66 0x69    
+   \              0x72 0x6D    
+   \   00000020   0x77 0x61          DC8 77H, 61H, 72H, 65H, 5CH, 68H, 77H, 5FH
+   \              0x72 0x65    
+   \              0x5C 0x68    
+   \              0x77 0x5F    
+   \   00000028   0x6C 0x61          DC8 6CH, 61H, 79H, 65H, 72H, 5CH, 73H, 74H
+   \              0x79 0x65    
+   \              0x72 0x5C    
+   \              0x73 0x74    
+   \   00000030   0x6D 0x33          DC8 6DH, 33H, 32H, 66H, 34H, 5CH, 6DH, 70H
+   \              0x32 0x66    
+   \              0x34 0x5C    
+   \              0x6D 0x70    
+   \   00000038   0x75 0x5F          DC8 75H, 5FH, 75H, 74H, 69H, 6CH, 2EH, 63H
+   \              0x75 0x74    
+   \              0x69 0x6C    
+   \              0x2E 0x63    
+   \   00000040   0x70 0x70          DC8 70H, 70H, 0
+   \              0x00         
+   \   00000043   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "UsageFaultVector">`:
+   \   00000000   0x55 0x73          DC8 "UsageFaultVector"
+   \              0x61 0x67    
+   \              0x65 0x46    
+   \              0x61 0x75    
+   \              0x6C 0x74    
+   \              0x56 0x65    
+   \              0x63 0x74    
+   \              0x6F 0x72    
+   \              0x00         
+   \   00000011   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "BusFaultVector">`:
+   \   00000000   0x42 0x75          DC8 "BusFaultVector"
+   \              0x73 0x46    
+   \              0x61 0x75    
+   \              0x6C 0x74    
+   \              0x56 0x65    
+   \              0x63 0x74    
+   \              0x6F 0x72    
+   \              0x00         
+   \   0000000F   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "H IACCVIOL">`:
+   \   00000000   0x48 0x20          DC8 "H IACCVIOL"
+   \              0x49 0x41    
+   \              0x43 0x43    
+   \              0x56 0x49    
+   \              0x4F 0x4C    
+   \              0x00         
+   \   0000000B   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "H IBUSERR">`:
+   \   00000000   0x48 0x20          DC8 "H IBUSERR"
+   \              0x49 0x42    
+   \              0x55 0x53    
+   \              0x45 0x52    
+   \              0x52 0x00    
+   \   0000000A   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "H INVSTATE">`:
+   \   00000000   0x48 0x20          DC8 "H INVSTATE"
+   \              0x49 0x4E    
+   \              0x56 0x53    
+   \              0x54 0x41    
+   \              0x54 0x45    
+   \              0x00         
+   \   0000000B   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "HardFaultVector">`:
+   \   00000000   0x48 0x61          DC8 "HardFaultVector"
+   \              0x72 0x64    
+   \              0x46 0x61    
+   \              0x75 0x6C    
+   \              0x74 0x56    
+   \              0x65 0x63    
+   \              0x74 0x6F    
+   \              0x72 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "SPI clock">`:
+   \   00000000   0x53 0x50          DC8 "SPI clock"
+   \              0x49 0x20    
+   \              0x63 0x6C    
+   \              0x6F 0x63    
+   \              0x6B 0x00    
+   \   0000000A   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "SPI master out">`:
+   \   00000000   0x53 0x50          DC8 "SPI master out"
+   \              0x49 0x20    
+   \              0x6D 0x61    
+   \              0x73 0x74    
+   \              0x65 0x72    
+   \              0x20 0x6F    
+   \              0x75 0x74    
+   \              0x00         
+   \   0000000F   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "SPI master in ">`:
+   \   00000000   0x53 0x50          DC8 "SPI master in "
+   \              0x49 0x20    
+   \              0x6D 0x61    
+   \              0x73 0x74    
+   \              0x65 0x72    
+   \              0x20 0x69    
+   \              0x6E 0x20    
+   \              0x00         
+   \   0000000F   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "chip select">`:
+   \   00000000   0x63 0x68          DC8 "chip select"
+   \              0x69 0x70    
+   \              0x20 0x73    
+   \              0x65 0x6C    
+   \              0x65 0x63    
+   \              0x74 0x00    
+    273          
+    274          #endif
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   BusFaultVector
+         8   -> chDbgPanic3
+       8   DebugMonitorVector
+         8   -> chDbgPanic3
+       8   HardFaultVector
+         8   -> chDbgPanic3
+       8   UsageFaultVector
+         8   -> chDbgPanic3
+       0   baseHardwareInit()
+       0   getRemainingStack
+       0   getSpiAf(SPIDriver *)
+      24   initSpiCs
+        24   -> getHwPin(brain_pin_e)
+        24   -> getHwPort(brain_pin_e)
+        24   -> mySetPadMode(char const *, ioportid_t, uint32_t, iomode_t)
+      24   initSpiModule
+        24   -> getSpiAf(SPIDriver *)
+        24   -> mySetPadMode2(char const *, brain_pin_e, iomode_t)
+       0   prvGetRegistersFromStack
+       8   turnOnSpi(spi_device_e)
+         8   -> initSpiModule
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      16  ?<Constant "BusFaultVector">
+      20  ?<Constant "DebugMonitorVector">
+      68  ?<Constant "F:\\stuff\\rusefi_sourc...">
+      12  ?<Constant "H IACCVIOL">
+      12  ?<Constant "H IBUSERR">
+      12  ?<Constant "H INVSTATE">
+      16  ?<Constant "HardFaultVector">
+      12  ?<Constant "SPI clock">
+      16  ?<Constant "SPI master in ">
+      16  ?<Constant "SPI master out">
+      20  ?<Constant "UsageFaultVector">
+      12  ?<Constant "chip select">
+       4  ??DataTable10
+       4  ??DataTable10_1
+       4  ??DataTable10_10
+       4  ??DataTable10_11
+       4  ??DataTable10_12
+       4  ??DataTable10_13
+       4  ??DataTable10_14
+       4  ??DataTable10_15
+       4  ??DataTable10_16
+       4  ??DataTable10_17
+       4  ??DataTable10_18
+       4  ??DataTable10_19
+       4  ??DataTable10_2
+       4  ??DataTable10_20
+       4  ??DataTable10_21
+       4  ??DataTable10_22
+       4  ??DataTable10_23
+       4  ??DataTable10_24
+       4  ??DataTable10_25
+       4  ??DataTable10_26
+       4  ??DataTable10_27
+       4  ??DataTable10_28
+       4  ??DataTable10_29
+       4  ??DataTable10_3
+       4  ??DataTable10_30
+       4  ??DataTable10_31
+       4  ??DataTable10_32
+       4  ??DataTable10_33
+       4  ??DataTable10_34
+       4  ??DataTable10_35
+       4  ??DataTable10_36
+       4  ??DataTable10_37
+       4  ??DataTable10_38
+       4  ??DataTable10_39
+       4  ??DataTable10_4
+       4  ??DataTable10_40
+       4  ??DataTable10_41
+       4  ??DataTable10_42
+       4  ??DataTable10_5
+       4  ??DataTable10_6
+       4  ??DataTable10_7
+       4  ??DataTable10_8
+       4  ??DataTable10_9
+      14  BusFaultVector
+      14  DebugMonitorVector
+      66  HardFaultVector
+      14  UsageFaultVector
+       8  baseHardwareInit()
+      36  getRemainingStack
+      38  getSpiAf(SPIDriver *)
+      44  initSpiCs
+      72  initSpiModule
+       8  isSpiInitialized
+       4  postmortem_AFSR
+       4  postmortem_BFAR
+       4  postmortem_CFSR
+       4  postmortem_DFSR
+       4  postmortem_HFSR
+       4  postmortem_MMAR
+       4  postmortem_SCB_SHCSR
+       4  postmortem_lr
+       4  postmortem_pc
+       4  postmortem_psr
+       4  postmortem_r0
+       4  postmortem_r1
+       4  postmortem_r12
+       4  postmortem_r2
+       4  postmortem_r3
+     116  prvGetRegistersFromStack
+     122  turnOnSpi(spi_device_e)
+
+ 
+  68 bytes in section .bss
+ 232 bytes in section .rodata
+ 716 bytes in section .text
+ 
+ 716 bytes of CODE  memory
+ 232 bytes of CONST memory
+  68 bytes of DATA  memory
+
+Errors: none
+Warnings: 1

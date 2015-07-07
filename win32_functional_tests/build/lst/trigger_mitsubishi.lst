@@ -1,0 +1,378 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc1Hvg28.s 			page 1
+
+
+   1              		.file	"trigger_mitsubishi.cpp"
+   2              		.section	.text$_Z31configureFordAspireTriggerShapeP12TriggerShape,"x"
+   3              		.p2align 4,,15
+   4              		.globl	__Z31configureFordAspireTriggerShapeP12TriggerShape
+   5              		.def	__Z31configureFordAspireTriggerShapeP12TriggerShape;	.scl	2;	.type	32;	.endef
+   6              	__Z31configureFordAspireTriggerShapeP12TriggerShape:
+   7              	LFB54:
+   8              		.cfi_startproc
+   9 0000 53       		pushl	%ebx
+  10              		.cfi_def_cfa_offset 8
+  11              		.cfi_offset 3, -8
+  12 0001 83EC18   		subl	$24, %esp
+  13              		.cfi_def_cfa_offset 32
+  14 0004 8B5C2420 		movl	32(%esp), %ebx
+  15 0008 C60300   		movb	$0, (%ebx)
+  16 000b 89D9     		movl	%ebx, %ecx
+  17 000d C7442404 		movl	$1, 4(%esp)
+  17      01000000 
+  18 0015 C7042402 		movl	$2, (%esp)
+  18      000000
+  19 001c E8000000 		call	__ZN12TriggerShape5resetE16operation_mode_eb
+  19      00
+  20              		.cfi_def_cfa_offset 24
+  21 0021 89D9     		movl	%ebx, %ecx
+  22 0023 83EC08   		subl	$8, %esp
+  23              		.cfi_def_cfa_offset 32
+  24 0026 C7442408 		movl	$1, 8(%esp)
+  24      01000000 
+  25 002e C7442404 		movl	$1, 4(%esp)
+  25      01000000 
+  26 0036 C7042440 		movl	$0x42530a40, (%esp)
+  26      0A5342
+  27 003d E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+  27      00
+  28              		.cfi_def_cfa_offset 20
+  29 0042 89D9     		movl	%ebx, %ecx
+  30 0044 83EC0C   		subl	$12, %esp
+  31              		.cfi_def_cfa_offset 32
+  32 0047 C7442408 		movl	$0, 8(%esp)
+  32      00000000 
+  33 004f C7442404 		movl	$1, 4(%esp)
+  33      01000000 
+  34 0057 C70424CD 		movl	$0x42f3cccd, (%esp)
+  34      CCF342
+  35 005e E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+  35      00
+  36              		.cfi_def_cfa_offset 20
+  37 0063 89D9     		movl	%ebx, %ecx
+  38 0065 83EC0C   		subl	$12, %esp
+  39              		.cfi_def_cfa_offset 32
+  40 0068 C7442408 		movl	$1, 8(%esp)
+  40      01000000 
+  41 0070 C7442404 		movl	$1, 4(%esp)
+  41      01000000 
+  42 0078 C7042490 		movl	$0x4368c290, (%esp)
+  42      C26843
+  43 007f E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc1Hvg28.s 			page 2
+
+
+  43      00
+  44              		.cfi_def_cfa_offset 20
+  45 0084 89D9     		movl	%ebx, %ecx
+  46 0086 83EC0C   		subl	$12, %esp
+  47              		.cfi_def_cfa_offset 32
+  48 0089 C7442408 		movl	$0, 8(%esp)
+  48      00000000 
+  49 0091 C7442404 		movl	$1, 4(%esp)
+  49      01000000 
+  50 0099 C7042433 		movl	$0x4396f333, (%esp)
+  50      F39643
+  51 00a0 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+  51      00
+  52              		.cfi_def_cfa_offset 20
+  53 00a5 89D9     		movl	%ebx, %ecx
+  54 00a7 83EC0C   		subl	$12, %esp
+  55              		.cfi_def_cfa_offset 32
+  56 00aa C7442408 		movl	$1, 8(%esp)
+  56      01000000 
+  57 00b2 C7442404 		movl	$0, 4(%esp)
+  57      00000000 
+  58 00ba C7042400 		movl	$0x43b40000, (%esp)
+  58      00B443
+  59 00c1 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+  59      00
+  60              		.cfi_def_cfa_offset 20
+  61 00c6 89D9     		movl	%ebx, %ecx
+  62 00c8 83EC0C   		subl	$12, %esp
+  63              		.cfi_def_cfa_offset 32
+  64 00cb C7442408 		movl	$1, 8(%esp)
+  64      01000000 
+  65 00d3 C7442404 		movl	$1, 4(%esp)
+  65      01000000 
+  66 00db C7042448 		movl	$0x43ce6148, (%esp)
+  66      61CE43
+  67 00e2 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+  67      00
+  68              		.cfi_def_cfa_offset 20
+  69 00e7 89D9     		movl	%ebx, %ecx
+  70 00e9 83EC0C   		subl	$12, %esp
+  71              		.cfi_def_cfa_offset 32
+  72 00ec C7442408 		movl	$0, 8(%esp)
+  72      00000000 
+  73 00f4 C7442404 		movl	$1, 4(%esp)
+  73      01000000 
+  74 00fc C7042433 		movl	$0x43f0f333, (%esp)
+  74      F3F043
+  75 0103 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+  75      00
+  76              		.cfi_def_cfa_offset 20
+  77 0108 89D9     		movl	%ebx, %ecx
+  78 010a 83EC0C   		subl	$12, %esp
+  79              		.cfi_def_cfa_offset 32
+  80 010d C7442408 		movl	$1, 8(%esp)
+  80      01000000 
+  81 0115 C7442404 		movl	$1, 4(%esp)
+  81      01000000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc1Hvg28.s 			page 3
+
+
+  82 011d C70424A4 		movl	$0x441430a4, (%esp)
+  82      301444
+  83 0124 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+  83      00
+  84              		.cfi_def_cfa_offset 20
+  85 0129 89D9     		movl	%ebx, %ecx
+  86 012b 83EC0C   		subl	$12, %esp
+  87              		.cfi_def_cfa_offset 32
+  88 012e C7442408 		movl	$0, 8(%esp)
+  88      00000000 
+  89 0136 C7442404 		movl	$1, 4(%esp)
+  89      01000000 
+  90 013e C704249A 		movl	$0x4425799a, (%esp)
+  90      792544
+  91 0145 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+  91      00
+  92              		.cfi_def_cfa_offset 20
+  93 014a 89D9     		movl	%ebx, %ecx
+  94 014c 83EC0C   		subl	$12, %esp
+  95              		.cfi_def_cfa_offset 32
+  96 014f C7442408 		movl	$0, 8(%esp)
+  96      00000000 
+  97 0157 C7442404 		movl	$0, 4(%esp)
+  97      00000000 
+  98 015f C7042400 		movl	$0x44340000, (%esp)
+  98      003444
+  99 0166 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+  99      00
+ 100              		.cfi_def_cfa_offset 20
+ 101 016b 83EC0C   		subl	$12, %esp
+ 102              		.cfi_def_cfa_offset 32
+ 103 016e 83C418   		addl	$24, %esp
+ 104              		.cfi_def_cfa_offset 8
+ 105 0171 5B       		popl	%ebx
+ 106              		.cfi_restore 3
+ 107              		.cfi_def_cfa_offset 4
+ 108 0172 C3       		ret
+ 109              		.cfi_endproc
+ 110              	LFE54:
+ 111 0173 90909090 		.section	.text$_Z24initializeMitsubishi4g18P12TriggerShape,"x"
+ 111      90909090 
+ 111      90909090 
+ 111      90
+ 112              		.p2align 4,,15
+ 113              		.globl	__Z24initializeMitsubishi4g18P12TriggerShape
+ 114              		.def	__Z24initializeMitsubishi4g18P12TriggerShape;	.scl	2;	.type	32;	.endef
+ 115              	__Z24initializeMitsubishi4g18P12TriggerShape:
+ 116              	LFB55:
+ 117              		.cfi_startproc
+ 118 0000 53       		pushl	%ebx
+ 119              		.cfi_def_cfa_offset 8
+ 120              		.cfi_offset 3, -8
+ 121 0001 83EC18   		subl	$24, %esp
+ 122              		.cfi_def_cfa_offset 32
+ 123 0004 8B5C2420 		movl	32(%esp), %ebx
+ 124 0008 C7442404 		movl	$1, 4(%esp)
+ 124      01000000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc1Hvg28.s 			page 4
+
+
+ 125 0010 C7042402 		movl	$2, (%esp)
+ 125      000000
+ 126 0017 89D9     		movl	%ebx, %ecx
+ 127 0019 E8000000 		call	__ZN12TriggerShape5resetE16operation_mode_eb
+ 127      00
+ 128              		.cfi_def_cfa_offset 24
+ 129 001e 89D9     		movl	%ebx, %ecx
+ 130 0020 C683640B 		movb	$0, 2916(%ebx)
+ 130      000000
+ 131 0027 83EC08   		subl	$8, %esp
+ 132              		.cfi_def_cfa_offset 32
+ 133 002a C7042426 		movl	$0x3fd55326, (%esp)
+ 133      53D53F
+ 134 0031 E8000000 		call	__ZN12TriggerShape28setTriggerSynchronizationGapEf
+ 134      00
+ 135              		.cfi_def_cfa_offset 28
+ 136 0036 89D9     		movl	%ebx, %ecx
+ 137 0038 83EC04   		subl	$4, %esp
+ 138              		.cfi_def_cfa_offset 32
+ 139 003b C7442408 		movl	$1, 8(%esp)
+ 139      01000000 
+ 140 0043 C7442404 		movl	$0, 4(%esp)
+ 140      00000000 
+ 141 004b C7042400 		movl	$0x42580000, (%esp)
+ 141      005842
+ 142 0052 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 142      00
+ 143              		.cfi_def_cfa_offset 20
+ 144 0057 89D9     		movl	%ebx, %ecx
+ 145 0059 83EC0C   		subl	$12, %esp
+ 146              		.cfi_def_cfa_offset 32
+ 147 005c C7442408 		movl	$1, 8(%esp)
+ 147      01000000 
+ 148 0064 C7442404 		movl	$1, 4(%esp)
+ 148      01000000 
+ 149 006c C7042400 		movl	$0x42dc0000, (%esp)
+ 149      00DC42
+ 150 0073 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 150      00
+ 151              		.cfi_def_cfa_offset 20
+ 152 0078 89D9     		movl	%ebx, %ecx
+ 153 007a 83EC0C   		subl	$12, %esp
+ 154              		.cfi_def_cfa_offset 32
+ 155 007d C7442408 		movl	$0, 8(%esp)
+ 155      00000000 
+ 156 0085 C7442404 		movl	$1, 4(%esp)
+ 156      01000000 
+ 157 008d C7042400 		movl	$0x43340000, (%esp)
+ 157      003443
+ 158 0094 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 158      00
+ 159              		.cfi_def_cfa_offset 20
+ 160 0099 89D9     		movl	%ebx, %ecx
+ 161 009b 83EC0C   		subl	$12, %esp
+ 162              		.cfi_def_cfa_offset 32
+ 163 009e C7442408 		movl	$0, 8(%esp)
+ 163      00000000 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc1Hvg28.s 			page 5
+
+
+ 164 00a6 C7442404 		movl	$0, 4(%esp)
+ 164      00000000 
+ 165 00ae C7042400 		movl	$0x436a0000, (%esp)
+ 165      006A43
+ 166 00b5 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 166      00
+ 167              		.cfi_def_cfa_offset 20
+ 168 00ba 89D9     		movl	%ebx, %ecx
+ 169 00bc 83EC0C   		subl	$12, %esp
+ 170              		.cfi_def_cfa_offset 32
+ 171 00bf C7442408 		movl	$1, 8(%esp)
+ 171      01000000 
+ 172 00c7 C7442404 		movl	$1, 4(%esp)
+ 172      01000000 
+ 173 00cf C7042400 		movl	$0x43910000, (%esp)
+ 173      009143
+ 174 00d6 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 174      00
+ 175              		.cfi_def_cfa_offset 20
+ 176 00db 89D9     		movl	%ebx, %ecx
+ 177 00dd 83EC0C   		subl	$12, %esp
+ 178              		.cfi_def_cfa_offset 32
+ 179 00e0 C7442408 		movl	$0, 8(%esp)
+ 179      00000000 
+ 180 00e8 C7442404 		movl	$1, 4(%esp)
+ 180      01000000 
+ 181 00f0 C7042400 		movl	$0x43b40000, (%esp)
+ 181      00B443
+ 182 00f7 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 182      00
+ 183              		.cfi_def_cfa_offset 20
+ 184 00fc 89D9     		movl	%ebx, %ecx
+ 185 00fe 83EC0C   		subl	$12, %esp
+ 186              		.cfi_def_cfa_offset 32
+ 187 0101 C7442408 		movl	$1, 8(%esp)
+ 187      01000000 
+ 188 0109 C7442404 		movl	$0, 4(%esp)
+ 188      00000000 
+ 189 0111 C7042400 		movl	$0x43cf0000, (%esp)
+ 189      00CF43
+ 190 0118 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 190      00
+ 191              		.cfi_def_cfa_offset 20
+ 192 011d 89D9     		movl	%ebx, %ecx
+ 193 011f 83EC0C   		subl	$12, %esp
+ 194              		.cfi_def_cfa_offset 32
+ 195 0122 C7442408 		movl	$1, 8(%esp)
+ 195      01000000 
+ 196 012a C7442404 		movl	$1, 4(%esp)
+ 196      01000000 
+ 197 0132 C7042400 		movl	$0x43eb0000, (%esp)
+ 197      00EB43
+ 198 0139 E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 198      00
+ 199              		.cfi_def_cfa_offset 20
+ 200 013e 89D9     		movl	%ebx, %ecx
+ 201 0140 83EC0C   		subl	$12, %esp
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc1Hvg28.s 			page 6
+
+
+ 202              		.cfi_def_cfa_offset 32
+ 203 0143 C7442408 		movl	$0, 8(%esp)
+ 203      00000000 
+ 204 014b C7442404 		movl	$0, 4(%esp)
+ 204      00000000 
+ 205 0153 C7042400 		movl	$0x43fc0000, (%esp)
+ 205      00FC43
+ 206 015a E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 206      00
+ 207              		.cfi_def_cfa_offset 20
+ 208 015f 89D9     		movl	%ebx, %ecx
+ 209 0161 83EC0C   		subl	$12, %esp
+ 210              		.cfi_def_cfa_offset 32
+ 211 0164 C7442408 		movl	$0, 8(%esp)
+ 211      00000000 
+ 212 016c C7442404 		movl	$1, 4(%esp)
+ 212      01000000 
+ 213 0174 C7042400 		movl	$0x44070000, (%esp)
+ 213      000744
+ 214 017b E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 214      00
+ 215              		.cfi_def_cfa_offset 20
+ 216 0180 89D9     		movl	%ebx, %ecx
+ 217 0182 83EC0C   		subl	$12, %esp
+ 218              		.cfi_def_cfa_offset 32
+ 219 0185 C7442408 		movl	$1, 8(%esp)
+ 219      01000000 
+ 220 018d C7442404 		movl	$1, 4(%esp)
+ 220      01000000 
+ 221 0195 C7042400 		movl	$0x44228000, (%esp)
+ 221      802244
+ 222 019c E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 222      00
+ 223              		.cfi_def_cfa_offset 20
+ 224 01a1 89D9     		movl	%ebx, %ecx
+ 225 01a3 83EC0C   		subl	$12, %esp
+ 226              		.cfi_def_cfa_offset 32
+ 227 01a6 C7442408 		movl	$0, 8(%esp)
+ 227      00000000 
+ 228 01ae C7442404 		movl	$1, 4(%esp)
+ 228      01000000 
+ 229 01b6 C7042400 		movl	$0x44340000, (%esp)
+ 229      003444
+ 230 01bd E8000000 		call	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 230      00
+ 231              		.cfi_def_cfa_offset 20
+ 232 01c2 83EC0C   		subl	$12, %esp
+ 233              		.cfi_def_cfa_offset 32
+ 234 01c5 83C418   		addl	$24, %esp
+ 235              		.cfi_def_cfa_offset 8
+ 236 01c8 5B       		popl	%ebx
+ 237              		.cfi_restore 3
+ 238              		.cfi_def_cfa_offset 4
+ 239 01c9 C3       		ret
+ 240              		.cfi_endproc
+ 241              	LFE55:
+ 242              		.def	__ZN12TriggerShape5resetE16operation_mode_eb;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc1Hvg28.s 			page 7
+
+
+ 243              		.def	__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e;	.scl	2;	.type	32;	.endef
+ 244 01ca 90909090 		.def	__ZN12TriggerShape28setTriggerSynchronizationGapEf;	.scl	2;	.type	32;	.endef
+ 244      9090
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/cc1Hvg28.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 trigger_mitsubishi.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc1Hvg28.s:6      .text$_Z31configureFordAspireTriggerShapeP12TriggerShape:00000000 __Z31configureFordAspireTriggerShapeP12TriggerShape
+/cygdrive/c/Users/pc/AppData/Local/Temp/cc1Hvg28.s:115    .text$_Z24initializeMitsubishi4g18P12TriggerShape:00000000 __Z24initializeMitsubishi4g18P12TriggerShape
+
+UNDEFINED SYMBOLS
+__ZN12TriggerShape5resetE16operation_mode_eb
+__ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+__ZN12TriggerShape28setTriggerSynchronizationGapEf

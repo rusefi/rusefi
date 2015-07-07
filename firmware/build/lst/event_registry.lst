@@ -1,0 +1,129 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccGeviPC.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"event_registry.cpp"
+  16              		.section	.text._ZN14InjectionEventC2Ev,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_ZN14InjectionEventC2Ev
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_ZN14InjectionEventC2Ev, %function
+  23              	_ZN14InjectionEventC2Ev:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 38B5     		push	{r3, r4, r5, lr}
+  27 0002 0023     		movs	r3, #0
+  28 0004 0025     		movs	r5, #0
+  29 0006 0446     		mov	r4, r0
+  30 0008 4360     		str	r3, [r0, #4]	@ float
+  31 000a 8360     		str	r3, [r0, #8]	@ float
+  32 000c 0560     		str	r5, [r0]
+  33 000e 1830     		adds	r0, r0, #24
+  34 0010 FFF7FEFF 		bl	_ZN12scheduling_sC1Ev
+  35 0014 04F13000 		add	r0, r4, #48
+  36 0018 FFF7FEFF 		bl	_ZN12scheduling_sC1Ev
+  37 001c 04F14800 		add	r0, r4, #72
+  38 0020 FFF7FEFF 		bl	_ZN12scheduling_sC1Ev
+  39 0024 04F16000 		add	r0, r4, #96
+  40 0028 FFF7FEFF 		bl	_ZN12scheduling_sC1Ev
+  41 002c 84F87850 		strb	r5, [r4, #120]
+  42 0030 2046     		mov	r0, r4
+  43 0032 38BD     		pop	{r3, r4, r5, pc}
+  44              		.size	_ZN14InjectionEventC2Ev, .-_ZN14InjectionEventC2Ev
+  45              		.global	_ZN14InjectionEventC1Ev
+  46              		.thumb_set _ZN14InjectionEventC1Ev,_ZN14InjectionEventC2Ev
+  47 0034 AFF30080 		.section	.text._ZN24event_trigger_position_sC2Ev,"ax",%progbits
+  47      AFF30080 
+  47      AFF30080 
+  48              		.align	2
+  49              		.p2align 4,,15
+  50              		.global	_ZN24event_trigger_position_sC2Ev
+  51              		.thumb
+  52              		.thumb_func
+  53              		.type	_ZN24event_trigger_position_sC2Ev, %function
+  54              	_ZN24event_trigger_position_sC2Ev:
+  55              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccGeviPC.s 			page 2
+
+
+  56              		@ frame_needed = 0, uses_anonymous_args = 0
+  57              		@ link register save eliminated.
+  58 0000 0022     		movs	r2, #0
+  59 0002 0021     		movs	r1, #0
+  60 0004 0160     		str	r1, [r0]
+  61 0006 4260     		str	r2, [r0, #4]	@ float
+  62 0008 8260     		str	r2, [r0, #8]	@ float
+  63 000a 7047     		bx	lr
+  64              		.size	_ZN24event_trigger_position_sC2Ev, .-_ZN24event_trigger_position_sC2Ev
+  65              		.global	_ZN24event_trigger_position_sC1Ev
+  66              		.thumb_set _ZN24event_trigger_position_sC1Ev,_ZN24event_trigger_position_sC2Ev
+  67 000c AFF30080 		.section	.text._ZN13IgnitionEventC2Ev,"ax",%progbits
+  68              		.align	2
+  69              		.p2align 4,,15
+  70              		.global	_ZN13IgnitionEventC2Ev
+  71              		.thumb
+  72              		.thumb_func
+  73              		.type	_ZN13IgnitionEventC2Ev, %function
+  74              	_ZN13IgnitionEventC2Ev:
+  75              		@ args = 0, pretend = 0, frame = 0
+  76              		@ frame_needed = 0, uses_anonymous_args = 0
+  77 0000 10B5     		push	{r4, lr}
+  78 0002 0446     		mov	r4, r0
+  79 0004 0830     		adds	r0, r0, #8
+  80 0006 FFF7FEFF 		bl	_ZN12scheduling_sC1Ev
+  81 000a 04F12000 		add	r0, r4, #32
+  82 000e FFF7FEFF 		bl	_ZN12scheduling_sC1Ev
+  83 0012 0021     		movs	r1, #0
+  84 0014 0023     		movs	r3, #0
+  85 0016 0022     		movs	r2, #0
+  86 0018 C7F6C071 		movt	r1, 32704
+  87 001c A163     		str	r1, [r4, #56]	@ float
+  88 001e E363     		str	r3, [r4, #60]
+  89 0020 A364     		str	r3, [r4, #72]
+  90 0022 A365     		str	r3, [r4, #88]
+  91 0024 6365     		str	r3, [r4, #84]
+  92 0026 2360     		str	r3, [r4]
+  93 0028 2264     		str	r2, [r4, #64]	@ float
+  94 002a 6264     		str	r2, [r4, #68]	@ float
+  95 002c E264     		str	r2, [r4, #76]	@ float
+  96 002e 2265     		str	r2, [r4, #80]	@ float
+  97 0030 2046     		mov	r0, r4
+  98 0032 10BD     		pop	{r4, pc}
+  99              		.size	_ZN13IgnitionEventC2Ev, .-_ZN13IgnitionEventC2Ev
+ 100              		.global	_ZN13IgnitionEventC1Ev
+ 101              		.thumb_set _ZN13IgnitionEventC1Ev,_ZN13IgnitionEventC2Ev
+ 102 0034 AFF30080 		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ 102      AFF30080 
+ 102      AFF30080 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccGeviPC.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 event_registry.cpp
+C:\Users\pc\AppData\Local\Temp\ccGeviPC.s:17     .text._ZN14InjectionEventC2Ev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccGeviPC.s:23     .text._ZN14InjectionEventC2Ev:00000000 _ZN14InjectionEventC2Ev
+C:\Users\pc\AppData\Local\Temp\ccGeviPC.s:23     .text._ZN14InjectionEventC2Ev:00000000 _ZN14InjectionEventC1Ev
+C:\Users\pc\AppData\Local\Temp\ccGeviPC.s:48     .text._ZN24event_trigger_position_sC2Ev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccGeviPC.s:54     .text._ZN24event_trigger_position_sC2Ev:00000000 _ZN24event_trigger_position_sC2Ev
+C:\Users\pc\AppData\Local\Temp\ccGeviPC.s:54     .text._ZN24event_trigger_position_sC2Ev:00000000 _ZN24event_trigger_position_sC1Ev
+C:\Users\pc\AppData\Local\Temp\ccGeviPC.s:68     .text._ZN13IgnitionEventC2Ev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccGeviPC.s:74     .text._ZN13IgnitionEventC2Ev:00000000 _ZN13IgnitionEventC2Ev
+C:\Users\pc\AppData\Local\Temp\ccGeviPC.s:74     .text._ZN13IgnitionEventC2Ev:00000000 _ZN13IgnitionEventC1Ev
+
+UNDEFINED SYMBOLS
+_ZN12scheduling_sC1Ev

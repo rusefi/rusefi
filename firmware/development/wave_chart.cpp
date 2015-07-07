@@ -72,10 +72,10 @@ uint32_t skipUntilEngineCycle = 0;
 
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 extern WaveChart waveChart;
-//static void resetWaveChartNow(void) {
-//	skipUntilEngineCycle = engine->rpmCalculator.getRevolutionCounter() + 3;
-//	waveChart.resetWaveChart();
-//}
+static void resetWaveChartNow(void) {
+	skipUntilEngineCycle = engine->rpmCalculator.getRevolutionCounter() + 3;
+	waveChart.resetWaveChart();
+}
 #endif
 
 void WaveChart::resetWaveChart() {
@@ -97,7 +97,7 @@ bool_t WaveChart::isStartedTooLongAgo() {
 	 * engineChartSize/20 is the longest meaningful chart.
 	 *
 	 */
-	uint64_t chartDurationNt = getTimeNowNt() - startTimeNt;
+	efitime_t chartDurationNt = getTimeNowNt() - startTimeNt;
 	return startTimeNt != 0 && NT2US(chartDurationNt) > engineConfiguration->engineChartSize * 1000000 / 20;
 }
 
@@ -132,11 +132,14 @@ void WaveChart::publishChartIfFull() {
 }
 
 WaveChart::WaveChart() {
+	isInitialized = false;
+	startTimeNt = 0;
+	counter = 0;
 }
 
 void WaveChart::init() {
 	initLoggingExt(&logging, "wave chart", WAVE_LOGGING_BUFFER, sizeof(WAVE_LOGGING_BUFFER));
-	isInitialized = TRUE;
+	isInitialized = true;
 	resetWaveChart();
 }
 
@@ -182,7 +185,7 @@ void WaveChart::addWaveChartEvent3(const char *name, const char * msg) {
 	int beforeCallback = hal_lld_get_counter_value();
 #endif
 
-	uint64_t nowNt = getTimeNowNt();
+	efitick_t nowNt = getTimeNowNt();
 
 	bool alreadyLocked = lockOutputBuffer(); // we have multiple threads writing to the same output buffer
 
@@ -260,9 +263,9 @@ void initWaveChart(WaveChart *chart) {
 
 	addConsoleActionI("chartsize", setChartSize);
 	addConsoleActionI("chart", setChartActive);
-//#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
-//	addConsoleAction("reset_engine_chart", resetWaveChartNow);
-//#endif
+#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+	addConsoleAction("reset_engine_chart", resetWaveChartNow);
+#endif
 }
 
 #endif /* EFI_WAVE_CHART */

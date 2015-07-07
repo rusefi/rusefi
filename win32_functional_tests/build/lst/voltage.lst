@@ -1,0 +1,111 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccp32JLx.s 			page 1
+
+
+   1              		.file	"voltage.cpp"
+   2              		.section .rdata,"dr"
+   3              	LC0:
+   4 0000 76726566 		.ascii "vref\0"
+   4      00
+   5              		.section	.text$_Z7getVRefv,"x"
+   6              		.p2align 4,,15
+   7              		.globl	__Z7getVRefv
+   8              		.def	__Z7getVRefv;	.scl	2;	.type	32;	.endef
+   9              	__Z7getVRefv:
+  10              	LFB85:
+  11              		.cfi_startproc
+  12 0000 83EC2C   		subl	$44, %esp
+  13              		.cfi_def_cfa_offset 48
+  14 0003 A1000000 		movl	_engineConfiguration, %eax
+  14      00
+  15 0008 8B800006 		movl	1536(%eax), %eax
+  15      0000
+  16 000e C7042400 		movl	$LC0, (%esp)
+  16      000000
+  17 0015 89442404 		movl	%eax, 4(%esp)
+  18 0019 E8000000 		call	__Z11getAdcValuePKci
+  18      00
+  19 001e 8944241C 		movl	%eax, 28(%esp)
+  20 0022 A1000000 		movl	_engineConfiguration, %eax
+  20      00
+  21 0027 DB44241C 		fildl	28(%esp)
+  22 002b D80D0C00 		fmuls	LC1
+  22      0000
+  23 0031 D888D001 		fmuls	464(%eax)
+  23      0000
+  24 0037 83C42C   		addl	$44, %esp
+  25              		.cfi_def_cfa_offset 4
+  26 003a C3       		ret
+  27              		.cfi_endproc
+  28              	LFE85:
+  29 003b 90909090 		.section	.text$_Z8hasVBattv,"x"
+  29      90
+  30              		.p2align 4,,15
+  31              		.globl	__Z8hasVBattv
+  32              		.def	__Z8hasVBattv;	.scl	2;	.type	32;	.endef
+  33              	__Z8hasVBattv:
+  34              	LFB86:
+  35              		.cfi_startproc
+  36 0000 A1000000 		movl	_engineConfiguration, %eax
+  36      00
+  37 0005 83B8D801 		cmpl	$16, 472(%eax)
+  37      000010
+  38 000c 0F95C0   		setne	%al
+  39 000f C3       		ret
+  40              		.cfi_endproc
+  41              	LFE86:
+  42              		.section .rdata,"dr"
+  43              	LC3:
+  44 0005 76626174 		.ascii "vbatt\0"
+  44      7400
+  45              		.section	.text$_Z8getVBattv,"x"
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccp32JLx.s 			page 2
+
+
+  46              		.p2align 4,,15
+  47              		.globl	__Z8getVBattv
+  48              		.def	__Z8getVBattv;	.scl	2;	.type	32;	.endef
+  49              	__Z8getVBattv:
+  50              	LFB87:
+  51              		.cfi_startproc
+  52 0000 83EC2C   		subl	$44, %esp
+  53              		.cfi_def_cfa_offset 48
+  54 0003 A1000000 		movl	_engineConfiguration, %eax
+  54      00
+  55 0008 8B80D801 		movl	472(%eax), %eax
+  55      0000
+  56 000e C7042405 		movl	$LC3, (%esp)
+  56      000000
+  57 0015 89442404 		movl	%eax, 4(%esp)
+  58 0019 E8000000 		call	__Z11getAdcValuePKci
+  58      00
+  59 001e 8944241C 		movl	%eax, 28(%esp)
+  60 0022 A1000000 		movl	_engineConfiguration, %eax
+  60      00
+  61 0027 DB44241C 		fildl	28(%esp)
+  62 002b D80D0C00 		fmuls	LC1
+  62      0000
+  63 0031 D888D401 		fmuls	468(%eax)
+  63      0000
+  64 0037 83C42C   		addl	$44, %esp
+  65              		.cfi_def_cfa_offset 4
+  66 003a C3       		ret
+  67              		.cfi_endproc
+  68              	LFE87:
+  69 003b 90909090 		.section .rdata,"dr"
+  69      90
+  70 000b 00       		.align 4
+  71              	LC1:
+  72 000c 010C403A 		.long	977275905
+  73              		.def	__Z11getAdcValuePKci;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccp32JLx.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 voltage.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccp32JLx.s:9      .text$_Z7getVRefv:00000000 __Z7getVRefv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccp32JLx.s:33     .text$_Z8hasVBattv:00000000 __Z8hasVBattv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccp32JLx.s:49     .text$_Z8getVBattv:00000000 __Z8getVBattv
+
+UNDEFINED SYMBOLS
+_engineConfiguration
+__Z11getAdcValuePKci

@@ -1,0 +1,1363 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s 			page 1
+
+
+   1              		.file	"efilib.cpp"
+   2              		.section	.text$_ZL13ltoa_internalPclj.constprop.1,"x"
+   3              		.p2align 4,,15
+   4              		.def	__ZL13ltoa_internalPclj.constprop.1;	.scl	3;	.type	32;	.endef
+   5              	__ZL13ltoa_internalPclj.constprop.1:
+   6              	LFB76:
+   7              		.cfi_startproc
+   8 0000 55       		pushl	%ebp
+   9              		.cfi_def_cfa_offset 8
+  10              		.cfi_offset 5, -8
+  11 0001 57       		pushl	%edi
+  12              		.cfi_def_cfa_offset 12
+  13              		.cfi_offset 7, -12
+  14 0002 89C7     		movl	%eax, %edi
+  15 0004 56       		pushl	%esi
+  16              		.cfi_def_cfa_offset 16
+  17              		.cfi_offset 6, -16
+  18 0005 BECDCCCC 		movl	$-858993459, %esi
+  18      CC
+  19 000a 8D680B   		leal	11(%eax), %ebp
+  20 000d 53       		pushl	%ebx
+  21              		.cfi_def_cfa_offset 20
+  22              		.cfi_offset 3, -20
+  23 000e 89E9     		movl	%ebp, %ecx
+  24 0010 89D3     		movl	%edx, %ebx
+  25              		.p2align 4,,7
+  26              	L2:
+  27 0012 89D8     		movl	%ebx, %eax
+  28 0014 83E901   		subl	$1, %ecx
+  29 0017 F7E6     		mull	%esi
+  30 0019 C1EA03   		shrl	$3, %edx
+  31 001c 89D0     		movl	%edx, %eax
+  32 001e 8D1492   		leal	(%edx,%edx,4), %edx
+  33 0021 01D2     		addl	%edx, %edx
+  34 0023 29D3     		subl	%edx, %ebx
+  35 0025 85C0     		testl	%eax, %eax
+  36 0027 8D5B30   		leal	48(%ebx), %ebx
+  37 002a 89DA     		movl	%ebx, %edx
+  38 002c 8819     		movb	%bl, (%ecx)
+  39 002e 89C3     		movl	%eax, %ebx
+  40 0030 75E0     		jne	L2
+  41 0032 29CD     		subl	%ecx, %ebp
+  42 0034 89FB     		movl	%edi, %ebx
+  43 0036 8D3429   		leal	(%ecx,%ebp), %esi
+  44 0039 EB08     		jmp	L4
+  45 003b 908D7426 		.p2align 4,,7
+  45      00
+  46              	L8:
+  47 0040 0FB611   		movzbl	(%ecx), %edx
+  48              	L4:
+  49 0043 83C101   		addl	$1, %ecx
+  50 0046 8813     		movb	%dl, (%ebx)
+  51 0048 83C301   		addl	$1, %ebx
+  52 004b 39F1     		cmpl	%esi, %ecx
+  53 004d 75F1     		jne	L8
+  54 004f 8D042F   		leal	(%edi,%ebp), %eax
+  55 0052 5B       		popl	%ebx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s 			page 2
+
+
+  56              		.cfi_restore 3
+  57              		.cfi_def_cfa_offset 16
+  58 0053 5E       		popl	%esi
+  59              		.cfi_restore 6
+  60              		.cfi_def_cfa_offset 12
+  61 0054 5F       		popl	%edi
+  62              		.cfi_restore 7
+  63              		.cfi_def_cfa_offset 8
+  64 0055 5D       		popl	%ebp
+  65              		.cfi_restore 5
+  66              		.cfi_def_cfa_offset 4
+  67 0056 C3       		ret
+  68              		.cfi_endproc
+  69              	LFE76:
+  70 0057 90909090 		.section .rdata,"dr"
+  70      90909090 
+  70      90
+  71              	LC0:
+  72 0000 59657300 		.ascii "Yes\0"
+  73              	LC1:
+  74 0004 4E6F00   		.ascii "No\0"
+  75              		.section	.text$_Z12boolToStringb,"x"
+  76              		.p2align 4,,15
+  77              		.globl	__Z12boolToStringb
+  78              		.def	__Z12boolToStringb;	.scl	2;	.type	32;	.endef
+  79              	__Z12boolToStringb:
+  80              	LFB54:
+  81              		.cfi_startproc
+  82 0000 807C2404 		cmpb	$0, 4(%esp)
+  82      00
+  83 0005 BA040000 		movl	$LC1, %edx
+  83      00
+  84 000a B8000000 		movl	$LC0, %eax
+  84      00
+  85 000f 0F44C2   		cmove	%edx, %eax
+  86 0012 C3       		ret
+  87              		.cfi_endproc
+  88              	LFE54:
+  89 0013 90909090 		.section	.text$minI,"x"
+  89      90909090 
+  89      90909090 
+  89      90
+  90              		.p2align 4,,15
+  91              		.globl	_minI
+  92              		.def	_minI;	.scl	2;	.type	32;	.endef
+  93              	_minI:
+  94              	LFB55:
+  95              		.cfi_startproc
+  96 0000 8B442404 		movl	4(%esp), %eax
+  97 0004 8B542408 		movl	8(%esp), %edx
+  98 0008 39C2     		cmpl	%eax, %edx
+  99 000a 0F4EC2   		cmovle	%edx, %eax
+ 100 000d C3       		ret
+ 101              		.cfi_endproc
+ 102              	LFE55:
+ 103 000e 9090     		.section	.text$efiRound,"x"
+ 104              		.p2align 4,,15
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s 			page 3
+
+
+ 105              		.globl	_efiRound
+ 106              		.def	_efiRound;	.scl	2;	.type	32;	.endef
+ 107              	_efiRound:
+ 108              	LFB56:
+ 109              		.cfi_startproc
+ 110 0000 83EC08   		subl	$8, %esp
+ 111              		.cfi_def_cfa_offset 12
+ 112 0003 D9442410 		flds	16(%esp)
+ 113 0007 D944240C 		flds	12(%esp)
+ 114 000b D8F1     		fdiv	%st(1), %st
+ 115 000d D97C2406 		fnstcw	6(%esp)
+ 116 0011 0FB74424 		movzwl	6(%esp), %eax
+ 116      06
+ 117 0016 B40C     		movb	$12, %ah
+ 118 0018 66894424 		movw	%ax, 4(%esp)
+ 118      04
+ 119 001d D96C2404 		fldcw	4(%esp)
+ 120 0021 DB1C24   		fistpl	(%esp)
+ 121 0024 D96C2406 		fldcw	6(%esp)
+ 122 0028 8B0424   		movl	(%esp), %eax
+ 123 002b 890424   		movl	%eax, (%esp)
+ 124 002e DB0424   		fildl	(%esp)
+ 125 0031 83C408   		addl	$8, %esp
+ 126              		.cfi_def_cfa_offset 4
+ 127 0034 DEC9     		fmulp	%st, %st(1)
+ 128 0036 C3       		ret
+ 129              		.cfi_endproc
+ 130              	LFE56:
+ 131 0037 90909090 		.section	.text$absF,"x"
+ 131      90909090 
+ 131      90
+ 132              		.p2align 4,,15
+ 133              		.globl	_absF
+ 134              		.def	_absF;	.scl	2;	.type	32;	.endef
+ 135              	_absF:
+ 136              	LFB57:
+ 137              		.cfi_startproc
+ 138 0000 D9442404 		flds	4(%esp)
+ 139 0004 D9EE     		fldz
+ 140 0006 D9C9     		fxch	%st(1)
+ 141 0008 DBE9     		fucomi	%st(1), %st
+ 142 000a DDD9     		fstp	%st(1)
+ 143 000c 7602     		jbe	L17
+ 144 000e F3       		rep
+ 145 000f C3       		ret
+ 146              		.p2align 4,,7
+ 147              	L17:
+ 148 0010 D9E0     		fchs
+ 149 0012 C3       		ret
+ 150              		.cfi_endproc
+ 151              	LFE57:
+ 152 0013 90909090 		.section	.text$absI,"x"
+ 152      90909090 
+ 152      90909090 
+ 152      90
+ 153              		.p2align 4,,15
+ 154              		.globl	_absI
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s 			page 4
+
+
+ 155              		.def	_absI;	.scl	2;	.type	32;	.endef
+ 156              	_absI:
+ 157              	LFB58:
+ 158              		.cfi_startproc
+ 159 0000 8B442404 		movl	4(%esp), %eax
+ 160 0004 89C2     		movl	%eax, %edx
+ 161 0006 C1FA1F   		sarl	$31, %edx
+ 162 0009 31D0     		xorl	%edx, %eax
+ 163 000b 29D0     		subl	%edx, %eax
+ 164 000d C3       		ret
+ 165              		.cfi_endproc
+ 166              	LFE58:
+ 167 000e 9090     		.section	.text$maxI,"x"
+ 168              		.p2align 4,,15
+ 169              		.globl	_maxI
+ 170              		.def	_maxI;	.scl	2;	.type	32;	.endef
+ 171              	_maxI:
+ 172              	LFB59:
+ 173              		.cfi_startproc
+ 174 0000 8B442404 		movl	4(%esp), %eax
+ 175 0004 8B542408 		movl	8(%esp), %edx
+ 176 0008 39C2     		cmpl	%eax, %edx
+ 177 000a 0F4DC2   		cmovge	%edx, %eax
+ 178 000d C3       		ret
+ 179              		.cfi_endproc
+ 180              	LFE59:
+ 181 000e 9090     		.section	.text$maxF,"x"
+ 182              		.p2align 4,,15
+ 183              		.globl	_maxF
+ 184              		.def	_maxF;	.scl	2;	.type	32;	.endef
+ 185              	_maxF:
+ 186              	LFB60:
+ 187              		.cfi_startproc
+ 188 0000 D9442404 		flds	4(%esp)
+ 189 0004 D9442408 		flds	8(%esp)
+ 190 0008 D9C9     		fxch	%st(1)
+ 191 000a DBE9     		fucomi	%st(1), %st
+ 192 000c DAD1     		fcmovbe	%st(1), %st
+ 193 000e DDD9     		fstp	%st(1)
+ 194 0010 C3       		ret
+ 195              		.cfi_endproc
+ 196              	LFE60:
+ 197 0011 90909090 		.section	.text$minF,"x"
+ 197      90909090 
+ 197      90909090 
+ 197      909090
+ 198              		.p2align 4,,15
+ 199              		.globl	_minF
+ 200              		.def	_minF;	.scl	2;	.type	32;	.endef
+ 201              	_minF:
+ 202              	LFB61:
+ 203              		.cfi_startproc
+ 204 0000 D9442404 		flds	4(%esp)
+ 205 0004 D9442408 		flds	8(%esp)
+ 206 0008 DBE9     		fucomi	%st(1), %st
+ 207 000a DBD1     		fcmovnbe	%st(1), %st
+ 208 000c DDD9     		fstp	%st(1)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s 			page 5
+
+
+ 209 000e C3       		ret
+ 210              		.cfi_endproc
+ 211              	LFE61:
+ 212 000f 90       		.section	.text$efiStrlen,"x"
+ 213              		.p2align 4,,15
+ 214              		.globl	_efiStrlen
+ 215              		.def	_efiStrlen;	.scl	2;	.type	32;	.endef
+ 216              	_efiStrlen:
+ 217              	LFB62:
+ 218              		.cfi_startproc
+ 219 0000 8B542404 		movl	4(%esp), %edx
+ 220 0004 803A00   		cmpb	$0, (%edx)
+ 221 0007 7412     		je	L31
+ 222 0009 89D0     		movl	%edx, %eax
+ 223 000b 908D7426 		.p2align 4,,7
+ 223      00
+ 224              	L30:
+ 225 0010 83C001   		addl	$1, %eax
+ 226 0013 803800   		cmpb	$0, (%eax)
+ 227 0016 75F8     		jne	L30
+ 228 0018 29D0     		subl	%edx, %eax
+ 229 001a C3       		ret
+ 230              	L31:
+ 231 001b 31C0     		xorl	%eax, %eax
+ 232 001d C3       		ret
+ 233              		.cfi_endproc
+ 234              	LFE62:
+ 235 001e 9090     		.section	.text$efiTrim,"x"
+ 236              		.p2align 4,,15
+ 237              		.globl	_efiTrim
+ 238              		.def	_efiTrim;	.scl	2;	.type	32;	.endef
+ 239              	_efiTrim:
+ 240              	LFB63:
+ 241              		.cfi_startproc
+ 242 0000 8B442404 		movl	4(%esp), %eax
+ 243 0004 0FB610   		movzbl	(%eax), %edx
+ 244 0007 80FA20   		cmpb	$32, %dl
+ 245 000a 750F     		jne	L34
+ 246 000c 8D742600 		.p2align 4,,7
+ 247              	L48:
+ 248 0010 83C001   		addl	$1, %eax
+ 249 0013 0FB610   		movzbl	(%eax), %edx
+ 250 0016 80FA20   		cmpb	$32, %dl
+ 251 0019 74F5     		je	L48
+ 252              	L34:
+ 253 001b 84D2     		testb	%dl, %dl
+ 254 001d 7418     		je	L44
+ 255 001f 89C2     		movl	%eax, %edx
+ 256              		.p2align 4,,7
+ 257              	L37:
+ 258 0021 83C201   		addl	$1, %edx
+ 259 0024 803A00   		cmpb	$0, (%edx)
+ 260 0027 75F8     		jne	L37
+ 261 0029 89D1     		movl	%edx, %ecx
+ 262 002b 29C1     		subl	%eax, %ecx
+ 263 002d 85C9     		testl	%ecx, %ecx
+ 264 002f 7E06     		jle	L44
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s 			page 6
+
+
+ 265 0031 807AFF20 		cmpb	$32, -1(%edx)
+ 266 0035 7409     		je	L47
+ 267              	L44:
+ 268 0037 F3       		rep
+ 269 0038 C3       		ret
+ 270 0039 8DB42600 		.p2align 4,,7
+ 270      000000
+ 271              	L47:
+ 272 0040 C64408FF 		movb	$0, -1(%eax,%ecx)
+ 272      00
+ 273 0045 83E901   		subl	$1, %ecx
+ 274 0048 74ED     		je	L44
+ 275 004a 807C08FF 		cmpb	$32, -1(%eax,%ecx)
+ 275      20
+ 276 004f 74EF     		je	L47
+ 277 0051 F3       		rep
+ 278 0052 C3       		ret
+ 279              		.cfi_endproc
+ 280              	LFE63:
+ 281 0053 90909090 		.section	.text$startsWith,"x"
+ 281      90909090 
+ 281      90909090 
+ 281      90
+ 282              		.p2align 4,,15
+ 283              		.globl	_startsWith
+ 284              		.def	_startsWith;	.scl	2;	.type	32;	.endef
+ 285              	_startsWith:
+ 286              	LFB64:
+ 287              		.cfi_startproc
+ 288 0000 55       		pushl	%ebp
+ 289              		.cfi_def_cfa_offset 8
+ 290              		.cfi_offset 5, -8
+ 291 0001 57       		pushl	%edi
+ 292              		.cfi_def_cfa_offset 12
+ 293              		.cfi_offset 7, -12
+ 294 0002 56       		pushl	%esi
+ 295              		.cfi_def_cfa_offset 16
+ 296              		.cfi_offset 6, -16
+ 297 0003 53       		pushl	%ebx
+ 298              		.cfi_def_cfa_offset 20
+ 299              		.cfi_offset 3, -20
+ 300 0004 83EC04   		subl	$4, %esp
+ 301              		.cfi_def_cfa_offset 24
+ 302 0007 8B5C241C 		movl	28(%esp), %ebx
+ 303 000b 8B4C2418 		movl	24(%esp), %ecx
+ 304 000f 0FB603   		movzbl	(%ebx), %eax
+ 305 0012 84C0     		testb	%al, %al
+ 306 0014 88442403 		movb	%al, 3(%esp)
+ 307 0018 7474     		je	L64
+ 308 001a 89D8     		movl	%ebx, %eax
+ 309 001c 8D742600 		.p2align 4,,7
+ 310              	L57:
+ 311 0020 83C001   		addl	$1, %eax
+ 312 0023 803800   		cmpb	$0, (%eax)
+ 313 0026 75F8     		jne	L57
+ 314 0028 89C6     		movl	%eax, %esi
+ 315 002a 29DE     		subl	%ebx, %esi
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s 			page 7
+
+
+ 316              	L56:
+ 317 002c 0FB639   		movzbl	(%ecx), %edi
+ 318 002f 89FA     		movl	%edi, %edx
+ 319 0031 84D2     		testb	%dl, %dl
+ 320 0033 7455     		je	L65
+ 321 0035 89C8     		movl	%ecx, %eax
+ 322              		.p2align 4,,7
+ 323              	L59:
+ 324 0037 83C001   		addl	$1, %eax
+ 325 003a 803800   		cmpb	$0, (%eax)
+ 326 003d 75F8     		jne	L59
+ 327 003f 89C5     		movl	%eax, %ebp
+ 328 0041 29CD     		subl	%ecx, %ebp
+ 329              	L58:
+ 330 0043 31C0     		xorl	%eax, %eax
+ 331 0045 39EE     		cmpl	%ebp, %esi
+ 332 0047 772C     		ja	L60
+ 333 0049 85F6     		testl	%esi, %esi
+ 334 004b 7423     		je	L67
+ 335 004d 89FA     		movl	%edi, %edx
+ 336 004f 3A542403 		cmpb	3(%esp), %dl
+ 337 0053 7520     		jne	L60
+ 338 0055 31D2     		xorl	%edx, %edx
+ 339 0057 EB10     		jmp	L62
+ 340 0059 8DB42600 		.p2align 4,,7
+ 340      000000
+ 341              	L63:
+ 342 0060 0FB60413 		movzbl	(%ebx,%edx), %eax
+ 343 0064 380411   		cmpb	%al, (%ecx,%edx)
+ 344 0067 7517     		jne	L69
+ 345              	L62:
+ 346 0069 83C201   		addl	$1, %edx
+ 347 006c 39F2     		cmpl	%esi, %edx
+ 348 006e 75F0     		jne	L63
+ 349              	L67:
+ 350 0070 B8010000 		movl	$1, %eax
+ 350      00
+ 351              	L60:
+ 352 0075 83C404   		addl	$4, %esp
+ 353              		.cfi_remember_state
+ 354              		.cfi_def_cfa_offset 20
+ 355 0078 5B       		popl	%ebx
+ 356              		.cfi_restore 3
+ 357              		.cfi_def_cfa_offset 16
+ 358 0079 5E       		popl	%esi
+ 359              		.cfi_restore 6
+ 360              		.cfi_def_cfa_offset 12
+ 361 007a 5F       		popl	%edi
+ 362              		.cfi_restore 7
+ 363              		.cfi_def_cfa_offset 8
+ 364 007b 5D       		popl	%ebp
+ 365              		.cfi_restore 5
+ 366              		.cfi_def_cfa_offset 4
+ 367 007c C3       		ret
+ 368 007d 8D7600   		.p2align 4,,7
+ 369              	L69:
+ 370              		.cfi_restore_state
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s 			page 8
+
+
+ 371 0080 83C404   		addl	$4, %esp
+ 372              		.cfi_remember_state
+ 373              		.cfi_def_cfa_offset 20
+ 374 0083 31C0     		xorl	%eax, %eax
+ 375 0085 5B       		popl	%ebx
+ 376              		.cfi_restore 3
+ 377              		.cfi_def_cfa_offset 16
+ 378 0086 5E       		popl	%esi
+ 379              		.cfi_restore 6
+ 380              		.cfi_def_cfa_offset 12
+ 381 0087 5F       		popl	%edi
+ 382              		.cfi_restore 7
+ 383              		.cfi_def_cfa_offset 8
+ 384 0088 5D       		popl	%ebp
+ 385              		.cfi_restore 5
+ 386              		.cfi_def_cfa_offset 4
+ 387 0089 C3       		ret
+ 388              	L65:
+ 389              		.cfi_restore_state
+ 390 008a 31ED     		xorl	%ebp, %ebp
+ 391 008c EBB5     		jmp	L58
+ 392              	L64:
+ 393 008e 31F6     		xorl	%esi, %esi
+ 394 0090 EB9A     		jmp	L56
+ 395              		.cfi_endproc
+ 396              	LFE64:
+ 397 0092 90909090 		.section	.text$indexOf,"x"
+ 397      90909090 
+ 397      90909090 
+ 397      9090
+ 398              		.p2align 4,,15
+ 399              		.globl	_indexOf
+ 400              		.def	_indexOf;	.scl	2;	.type	32;	.endef
+ 401              	_indexOf:
+ 402              	LFB65:
+ 403              		.cfi_startproc
+ 404 0000 56       		pushl	%esi
+ 405              		.cfi_def_cfa_offset 8
+ 406              		.cfi_offset 6, -8
+ 407 0001 53       		pushl	%ebx
+ 408              		.cfi_def_cfa_offset 12
+ 409              		.cfi_offset 3, -12
+ 410 0002 8B54240C 		movl	12(%esp), %edx
+ 411 0006 0FB65C24 		movzbl	16(%esp), %ebx
+ 411      10
+ 412 000b 0FB632   		movzbl	(%edx), %esi
+ 413 000e 89F0     		movl	%esi, %eax
+ 414 0010 84C0     		testb	%al, %al
+ 415 0012 742E     		je	L80
+ 416 0014 89D0     		movl	%edx, %eax
+ 417              		.p2align 4,,7
+ 418              	L75:
+ 419 0016 83C001   		addl	$1, %eax
+ 420 0019 803800   		cmpb	$0, (%eax)
+ 421 001c 75F8     		jne	L75
+ 422 001e 89C1     		movl	%eax, %ecx
+ 423 0020 29D1     		subl	%edx, %ecx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s 			page 9
+
+
+ 424 0022 85C9     		testl	%ecx, %ecx
+ 425 0024 7E1C     		jle	L80
+ 426 0026 89F0     		movl	%esi, %eax
+ 427 0028 38C3     		cmpb	%al, %bl
+ 428 002a B8000000 		movl	$0, %eax
+ 428      00
+ 429 002f 7507     		jne	L77
+ 430 0031 EB14     		jmp	L74
+ 431              		.p2align 4,,7
+ 432              	L78:
+ 433 0033 381C02   		cmpb	%bl, (%edx,%eax)
+ 434 0036 740F     		je	L74
+ 435              	L77:
+ 436 0038 83C001   		addl	$1, %eax
+ 437 003b 39C8     		cmpl	%ecx, %eax
+ 438 003d 8D7600   		.p2align 4,,3
+ 439 0040 75F1     		jne	L78
+ 440              	L80:
+ 441 0042 B8FFFFFF 		movl	$-1, %eax
+ 441      FF
+ 442              	L74:
+ 443 0047 5B       		popl	%ebx
+ 444              		.cfi_restore 3
+ 445              		.cfi_def_cfa_offset 8
+ 446 0048 5E       		popl	%esi
+ 447              		.cfi_restore 6
+ 448              		.cfi_def_cfa_offset 4
+ 449 0049 C3       		ret
+ 450              		.cfi_endproc
+ 451              	LFE65:
+ 452 004a 90909090 		.section	.text$atoi,"x"
+ 452      9090
+ 453              		.p2align 4,,15
+ 454              		.globl	_atoi
+ 455              		.def	_atoi;	.scl	2;	.type	32;	.endef
+ 456              	_atoi:
+ 457              	LFB66:
+ 458              		.cfi_startproc
+ 459 0000 55       		pushl	%ebp
+ 460              		.cfi_def_cfa_offset 8
+ 461              		.cfi_offset 5, -8
+ 462 0001 57       		pushl	%edi
+ 463              		.cfi_def_cfa_offset 12
+ 464              		.cfi_offset 7, -12
+ 465 0002 56       		pushl	%esi
+ 466              		.cfi_def_cfa_offset 16
+ 467              		.cfi_offset 6, -16
+ 468 0003 BE010000 		movl	$1, %esi
+ 468      00
+ 469 0008 53       		pushl	%ebx
+ 470              		.cfi_def_cfa_offset 20
+ 471              		.cfi_offset 3, -20
+ 472 0009 83EC1C   		subl	$28, %esp
+ 473              		.cfi_def_cfa_offset 48
+ 474 000c 8B5C2430 		movl	48(%esp), %ebx
+ 475 0010 EB0D     		jmp	L90
+ 476              		.p2align 4,,7
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s 			page 10
+
+
+ 477              	L85:
+ 478 0012 0FBE13   		movsbl	(%ebx), %edx
+ 479 0015 80FA2D   		cmpb	$45, %dl
+ 480 0018 7526     		jne	L96
+ 481 001a 83C301   		addl	$1, %ebx
+ 482 001d F7DE     		negl	%esi
+ 483              	L90:
+ 484 001f 891C24   		movl	%ebx, (%esp)
+ 485 0022 E8000000 		call	_strlen
+ 485      00
+ 486 0027 85C0     		testl	%eax, %eax
+ 487 0029 75E7     		jne	L85
+ 488 002b 69C6D01B 		imull	$-311223344, %esi, %eax
+ 488      73ED
+ 489              	L86:
+ 490 0031 83C41C   		addl	$28, %esp
+ 491              		.cfi_remember_state
+ 492              		.cfi_def_cfa_offset 20
+ 493 0034 5B       		popl	%ebx
+ 494              		.cfi_restore 3
+ 495              		.cfi_def_cfa_offset 16
+ 496 0035 5E       		popl	%esi
+ 497              		.cfi_restore 6
+ 498              		.cfi_def_cfa_offset 12
+ 499 0036 5F       		popl	%edi
+ 500              		.cfi_restore 7
+ 501              		.cfi_def_cfa_offset 8
+ 502 0037 5D       		popl	%ebp
+ 503              		.cfi_restore 5
+ 504              		.cfi_def_cfa_offset 4
+ 505 0038 C3       		ret
+ 506 0039 8DB42600 		.p2align 4,,7
+ 506      000000
+ 507              	L96:
+ 508              		.cfi_restore_state
+ 509 0040 85C0     		testl	%eax, %eax
+ 510 0042 7E4A     		jle	L92
+ 511 0044 8D4AD0   		leal	-48(%edx), %ecx
+ 512 0047 80F909   		cmpb	$9, %cl
+ 513 004a 7734     		ja	L95
+ 514 004c 8D2C03   		leal	(%ebx,%eax), %ebp
+ 515 004f 31C0     		xorl	%eax, %eax
+ 516 0051 8D4B01   		leal	1(%ebx), %ecx
+ 517 0054 EB10     		jmp	L89
+ 518              		.p2align 4,,7
+ 519              	L91:
+ 520 0056 0FBE11   		movsbl	(%ecx), %edx
+ 521 0059 83C101   		addl	$1, %ecx
+ 522 005c 8D7AD0   		leal	-48(%edx), %edi
+ 523 005f 89FB     		movl	%edi, %ebx
+ 524 0061 80FB09   		cmpb	$9, %bl
+ 525 0064 771A     		ja	L95
+ 526              	L89:
+ 527 0066 8D3C80   		leal	(%eax,%eax,4), %edi
+ 528 0069 39E9     		cmpl	%ebp, %ecx
+ 529 006b 8D447AD0 		leal	-48(%edx,%edi,2), %eax
+ 530 006f 75E5     		jne	L91
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s 			page 11
+
+
+ 531 0071 83C41C   		addl	$28, %esp
+ 532              		.cfi_remember_state
+ 533              		.cfi_def_cfa_offset 20
+ 534 0074 5B       		popl	%ebx
+ 535              		.cfi_restore 3
+ 536              		.cfi_def_cfa_offset 16
+ 537 0075 0FAFC6   		imull	%esi, %eax
+ 538 0078 5E       		popl	%esi
+ 539              		.cfi_restore 6
+ 540              		.cfi_def_cfa_offset 12
+ 541 0079 5F       		popl	%edi
+ 542              		.cfi_restore 7
+ 543              		.cfi_def_cfa_offset 8
+ 544 007a 5D       		popl	%ebp
+ 545              		.cfi_restore 5
+ 546              		.cfi_def_cfa_offset 4
+ 547 007b C3       		ret
+ 548 007c 8D742600 		.p2align 4,,7
+ 549              	L95:
+ 550              		.cfi_restore_state
+ 551 0080 83C41C   		addl	$28, %esp
+ 552              		.cfi_remember_state
+ 553              		.cfi_def_cfa_offset 20
+ 554 0083 5B       		popl	%ebx
+ 555              		.cfi_restore 3
+ 556              		.cfi_def_cfa_offset 16
+ 557 0084 69C630E4 		imull	$311223344, %esi, %eax
+ 557      8C12
+ 558 008a 5E       		popl	%esi
+ 559              		.cfi_restore 6
+ 560              		.cfi_def_cfa_offset 12
+ 561 008b 5F       		popl	%edi
+ 562              		.cfi_restore 7
+ 563              		.cfi_def_cfa_offset 8
+ 564 008c 5D       		popl	%ebp
+ 565              		.cfi_restore 5
+ 566              		.cfi_def_cfa_offset 4
+ 567 008d C3       		ret
+ 568              	L92:
+ 569              		.cfi_restore_state
+ 570 008e 31C0     		xorl	%eax, %eax
+ 571 0090 EB9F     		jmp	L86
+ 572              		.cfi_endproc
+ 573              	LFE66:
+ 574 0092 90909090 		.section	.text$itoa10,"x"
+ 574      90909090 
+ 574      90909090 
+ 574      9090
+ 575              		.p2align 4,,15
+ 576              		.globl	_itoa10
+ 577              		.def	_itoa10;	.scl	2;	.type	32;	.endef
+ 578              	_itoa10:
+ 579              	LFB69:
+ 580              		.cfi_startproc
+ 581 0000 8B542408 		movl	8(%esp), %edx
+ 582 0004 8B442404 		movl	4(%esp), %eax
+ 583 0008 85D2     		testl	%edx, %edx
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s 			page 12
+
+
+ 584 000a 7809     		js	L100
+ 585 000c E8000000 		call	__ZL13ltoa_internalPclj.constprop.1
+ 585      00
+ 586 0011 C60000   		movb	$0, (%eax)
+ 587 0014 C3       		ret
+ 588              		.p2align 4,,7
+ 589              	L100:
+ 590 0015 C6002D   		movb	$45, (%eax)
+ 591 0018 F7DA     		negl	%edx
+ 592 001a 83C001   		addl	$1, %eax
+ 593 001d E8000000 		call	__ZL13ltoa_internalPclj.constprop.1
+ 593      00
+ 594 0022 C60000   		movb	$0, (%eax)
+ 595 0025 C3       		ret
+ 596              		.cfi_endproc
+ 597              	LFE69:
+ 598 0026 90909090 		.section	.text$isSameF,"x"
+ 598      90909090 
+ 598      9090
+ 599              		.p2align 4,,15
+ 600              		.globl	_isSameF
+ 601              		.def	_isSameF;	.scl	2;	.type	32;	.endef
+ 602              	_isSameF:
+ 603              	LFB70:
+ 604              		.cfi_startproc
+ 605 0000 D9442408 		flds	8(%esp)
+ 606 0004 D86C2404 		fsubrs	4(%esp)
+ 607 0008 D9EE     		fldz
+ 608 000a D9C9     		fxch	%st(1)
+ 609 000c DBE9     		fucomi	%st(1), %st
+ 610 000e DDD9     		fstp	%st(1)
+ 611 0010 7702     		ja	L102
+ 612 0012 D9E0     		fchs
+ 613              	L102:
+ 614 0014 DD054800 		fldl	LC4
+ 614      0000
+ 615 001a DFE9     		fucomip	%st(1), %st
+ 616 001c DDD8     		fstp	%st(0)
+ 617 001e 0F97C0   		seta	%al
+ 618 0021 C3       		ret
+ 619              		.cfi_endproc
+ 620              	LFE70:
+ 621 0022 90909090 		.section	.text$efiPow10,"x"
+ 621      90909090 
+ 621      90909090 
+ 621      9090
+ 622              		.p2align 4,,15
+ 623              		.globl	_efiPow10
+ 624              		.def	_efiPow10;	.scl	2;	.type	32;	.endef
+ 625              	_efiPow10:
+ 626              	LFB71:
+ 627              		.cfi_startproc
+ 628 0000 8B442404 		movl	4(%esp), %eax
+ 629 0004 83F808   		cmpl	$8, %eax
+ 630 0007 7607     		jbe	L117
+ 631              	L116:
+ 632 0009 EBFE     		jmp	L116
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s 			page 13
+
+
+ 633 000b 908D7426 		.p2align 4,,7
+ 633      00
+ 634              	L117:
+ 635 0010 FF248508 		jmp	*L114(,%eax,4)
+ 635      000000
+ 636              		.section .rdata,"dr"
+ 637 0007 00       		.align 4
+ 638              	L114:
+ 639 0008 21000000 		.long	L105
+ 640 000c 27000000 		.long	L115
+ 641 0010 30000000 		.long	L107
+ 642 0014 36000000 		.long	L108
+ 643 0018 40000000 		.long	L109
+ 644 001c 46000000 		.long	L110
+ 645 0020 50000000 		.long	L111
+ 646 0024 56000000 		.long	L112
+ 647 0028 17000000 		.long	L113
+ 648              		.section	.text$efiPow10,"x"
+ 649              		.p2align 4,,7
+ 650              	L113:
+ 651 0017 B800E1F5 		movl	$100000000, %eax
+ 651      05
+ 652 001c 8D742600 		.p2align 4,,6
+ 653 0020 C3       		ret
+ 654              		.p2align 4,,7
+ 655              	L105:
+ 656 0021 B8010000 		movl	$1, %eax
+ 656      00
+ 657              		.p2align 4,,2
+ 658 0026 C3       		ret
+ 659              		.p2align 4,,7
+ 660              	L115:
+ 661 0027 B80A0000 		movl	$10, %eax
+ 661      00
+ 662 002c C3       		ret
+ 663 002d 8D7600   		.p2align 4,,7
+ 664              	L107:
+ 665 0030 B8640000 		movl	$100, %eax
+ 665      00
+ 666 0035 C3       		ret
+ 667              		.p2align 4,,7
+ 668              	L108:
+ 669 0036 B8E80300 		movl	$1000, %eax
+ 669      00
+ 670 003b C3       		ret
+ 671 003c 8D742600 		.p2align 4,,7
+ 672              	L109:
+ 673 0040 B8102700 		movl	$10000, %eax
+ 673      00
+ 674 0045 C3       		ret
+ 675              		.p2align 4,,7
+ 676              	L110:
+ 677 0046 B8A08601 		movl	$100000, %eax
+ 677      00
+ 678 004b C3       		ret
+ 679 004c 8D742600 		.p2align 4,,7
+ 680              	L111:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s 			page 14
+
+
+ 681 0050 B840420F 		movl	$1000000, %eax
+ 681      00
+ 682 0055 C3       		ret
+ 683              		.p2align 4,,7
+ 684              	L112:
+ 685 0056 B8809698 		movl	$10000000, %eax
+ 685      00
+ 686 005b C3       		ret
+ 687              		.cfi_endproc
+ 688              	LFE71:
+ 689 005c 90909090 		.section	.text$atoff,"x"
+ 690              		.p2align 4,,15
+ 691              		.globl	_atoff
+ 692              		.def	_atoff;	.scl	2;	.type	32;	.endef
+ 693              	_atoff:
+ 694              	LFB72:
+ 695              		.cfi_startproc
+ 696 0000 57       		pushl	%edi
+ 697              		.cfi_def_cfa_offset 8
+ 698              		.cfi_offset 7, -8
+ 699 0001 56       		pushl	%esi
+ 700              		.cfi_def_cfa_offset 12
+ 701              		.cfi_offset 6, -12
+ 702 0002 53       		pushl	%ebx
+ 703              		.cfi_def_cfa_offset 16
+ 704              		.cfi_offset 3, -16
+ 705 0003 83EC20   		subl	$32, %esp
+ 706              		.cfi_def_cfa_offset 48
+ 707 0006 8B5C2430 		movl	48(%esp), %ebx
+ 708 000a 891C24   		movl	%ebx, (%esp)
+ 709 000d E8000000 		call	_strlen
+ 709      00
+ 710 0012 83F863   		cmpl	$99, %eax
+ 711 0015 760D     		jbe	L119
+ 712              	L127:
+ 713 0017 D9054400 		flds	LC2
+ 713      0000
+ 714              	L120:
+ 715 001d 83C420   		addl	$32, %esp
+ 716              		.cfi_remember_state
+ 717              		.cfi_def_cfa_offset 16
+ 718 0020 5B       		popl	%ebx
+ 719              		.cfi_restore 3
+ 720              		.cfi_def_cfa_offset 12
+ 721 0021 5E       		popl	%esi
+ 722              		.cfi_restore 6
+ 723              		.cfi_def_cfa_offset 8
+ 724 0022 5F       		popl	%edi
+ 725              		.cfi_restore 7
+ 726              		.cfi_def_cfa_offset 4
+ 727 0023 C3       		ret
+ 728              		.p2align 4,,7
+ 729              	L119:
+ 730              		.cfi_restore_state
+ 731 0024 83C001   		addl	$1, %eax
+ 732 0027 89442408 		movl	%eax, 8(%esp)
+ 733 002b 895C2404 		movl	%ebx, 4(%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s 			page 15
+
+
+ 734 002f C7042400 		movl	$__ZL23todofixthismesswithcopy, (%esp)
+ 734      000000
+ 735 0036 E8000000 		call	_memcpy
+ 735      00
+ 736 003b 0FB60D00 		movzbl	__ZL23todofixthismesswithcopy, %ecx
+ 736      000000
+ 737 0042 84C9     		testb	%cl, %cl
+ 738 0044 7443     		je	L121
+ 739 0046 B8000000 		movl	$__ZL23todofixthismesswithcopy, %eax
+ 739      00
+ 740 004b 908D7426 		.p2align 4,,7
+ 740      00
+ 741              	L122:
+ 742 0050 83C001   		addl	$1, %eax
+ 743 0053 803800   		cmpb	$0, (%eax)
+ 744 0056 75F8     		jne	L122
+ 745 0058 89C2     		movl	%eax, %edx
+ 746 005a 81EA0000 		subl	$__ZL23todofixthismesswithcopy, %edx
+ 746      0000
+ 747 0060 85D2     		testl	%edx, %edx
+ 748 0062 7E25     		jle	L121
+ 749 0064 80F92E   		cmpb	$46, %cl
+ 750 0067 0F84E100 		je	L130
+ 750      0000
+ 751 006d 31C0     		xorl	%eax, %eax
+ 752 006f EB11     		jmp	L124
+ 753              		.p2align 4,,7
+ 754              	L126:
+ 755 0071 80B80000 		cmpb	$46, __ZL23todofixthismesswithcopy(%eax)
+ 755      00002E
+ 756 0078 89C3     		movl	%eax, %ebx
+ 757 007a 8D880000 		leal	__ZL23todofixthismesswithcopy(%eax), %ecx
+ 757      0000
+ 758 0080 743E     		je	L125
+ 759              	L124:
+ 760 0082 83C001   		addl	$1, %eax
+ 761 0085 39D0     		cmpl	%edx, %eax
+ 762 0087 75E8     		jne	L126
+ 763              	L121:
+ 764 0089 C7042400 		movl	$__ZL23todofixthismesswithcopy, (%esp)
+ 764      000000
+ 765 0090 E8000000 		call	_atoi
+ 765      00
+ 766 0095 89C1     		movl	%eax, %ecx
+ 767 0097 C1F91F   		sarl	$31, %ecx
+ 768 009a 89CA     		movl	%ecx, %edx
+ 769 009c 31C2     		xorl	%eax, %edx
+ 770 009e 29CA     		subl	%ecx, %edx
+ 771 00a0 81FA30E4 		cmpl	$311223344, %edx
+ 771      8C12
+ 772 00a6 0F846BFF 		je	L127
+ 772      FFFF
+ 773 00ac 8944241C 		movl	%eax, 28(%esp)
+ 774 00b0 DB44241C 		fildl	28(%esp)
+ 775 00b4 E964FFFF 		jmp	L120
+ 775      FF
+ 776 00b9 8DB42600 		.p2align 4,,7
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s 			page 16
+
+
+ 776      000000
+ 777              	L125:
+ 778 00c0 83F8FF   		cmpl	$-1, %eax
+ 779 00c3 74C4     		je	L121
+ 780              	L123:
+ 781 00c5 C60100   		movb	$0, (%ecx)
+ 782 00c8 C7042400 		movl	$__ZL23todofixthismesswithcopy, (%esp)
+ 782      000000
+ 783 00cf E8000000 		call	_atoi
+ 783      00
+ 784 00d4 89C7     		movl	%eax, %edi
+ 785 00d6 C1F81F   		sarl	$31, %eax
+ 786 00d9 89C2     		movl	%eax, %edx
+ 787 00db 31FA     		xorl	%edi, %edx
+ 788 00dd 29C2     		subl	%eax, %edx
+ 789 00df 81FA30E4 		cmpl	$311223344, %edx
+ 789      8C12
+ 790 00e5 0F842CFF 		je	L127
+ 790      FFFF
+ 791 00eb 81C30100 		addl	$__ZL23todofixthismesswithcopy+1, %ebx
+ 791      0000
+ 792 00f1 891C24   		movl	%ebx, (%esp)
+ 793 00f4 E8000000 		call	_strlen
+ 793      00
+ 794 00f9 891C24   		movl	%ebx, (%esp)
+ 795 00fc 89C6     		movl	%eax, %esi
+ 796 00fe E8000000 		call	_atoi
+ 796      00
+ 797 0103 89C1     		movl	%eax, %ecx
+ 798 0105 C1F91F   		sarl	$31, %ecx
+ 799 0108 89CA     		movl	%ecx, %edx
+ 800 010a 31C2     		xorl	%eax, %edx
+ 801 010c 29CA     		subl	%ecx, %edx
+ 802 010e 81FA30E4 		cmpl	$311223344, %edx
+ 802      8C12
+ 803 0114 0F84FDFE 		je	L127
+ 803      FFFF
+ 804 011a 85F6     		testl	%esi, %esi
+ 805 011c 7E3C     		jle	L131
+ 806 011e D9E8     		fld1
+ 807 0120 31D2     		xorl	%edx, %edx
+ 808 0122 D9055000 		flds	LC6
+ 808      0000
+ 809              		.p2align 4,,7
+ 810              	L129:
+ 811 0128 83C201   		addl	$1, %edx
+ 812 012b 39D6     		cmpl	%edx, %esi
+ 813 012d DCC9     		fmul	%st, %st(1)
+ 814 012f 75F7     		jne	L129
+ 815 0131 DDD8     		fstp	%st(0)
+ 816              	L128:
+ 817 0133 897C241C 		movl	%edi, 28(%esp)
+ 818 0137 DB44241C 		fildl	28(%esp)
+ 819 013b 8944241C 		movl	%eax, 28(%esp)
+ 820 013f DB44241C 		fildl	28(%esp)
+ 821 0143 83C420   		addl	$32, %esp
+ 822              		.cfi_remember_state
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s 			page 17
+
+
+ 823              		.cfi_def_cfa_offset 16
+ 824 0146 DEF2     		fdivp	%st, %st(2)
+ 825 0148 5B       		popl	%ebx
+ 826              		.cfi_restore 3
+ 827              		.cfi_def_cfa_offset 12
+ 828 0149 5E       		popl	%esi
+ 829              		.cfi_restore 6
+ 830              		.cfi_def_cfa_offset 8
+ 831 014a 5F       		popl	%edi
+ 832              		.cfi_restore 7
+ 833              		.cfi_def_cfa_offset 4
+ 834 014b DEC1     		faddp	%st, %st(1)
+ 835 014d C3       		ret
+ 836              	L130:
+ 837              		.cfi_restore_state
+ 838 014e B9000000 		movl	$__ZL23todofixthismesswithcopy, %ecx
+ 838      00
+ 839 0153 31DB     		xorl	%ebx, %ebx
+ 840 0155 E96BFFFF 		jmp	L123
+ 840      FF
+ 841              	L131:
+ 842 015a D9E8     		fld1
+ 843 015c EBD5     		jmp	L128
+ 844              		.cfi_endproc
+ 845              	LFE72:
+ 846 015e 9090     		.section	.text$strEqualCaseInsensitive,"x"
+ 847              		.p2align 4,,15
+ 848              		.globl	_strEqualCaseInsensitive
+ 849              		.def	_strEqualCaseInsensitive;	.scl	2;	.type	32;	.endef
+ 850              	_strEqualCaseInsensitive:
+ 851              	LFB73:
+ 852              		.cfi_startproc
+ 853 0000 55       		pushl	%ebp
+ 854              		.cfi_def_cfa_offset 8
+ 855              		.cfi_offset 5, -8
+ 856 0001 57       		pushl	%edi
+ 857              		.cfi_def_cfa_offset 12
+ 858              		.cfi_offset 7, -12
+ 859 0002 56       		pushl	%esi
+ 860              		.cfi_def_cfa_offset 16
+ 861              		.cfi_offset 6, -16
+ 862 0003 53       		pushl	%ebx
+ 863              		.cfi_def_cfa_offset 20
+ 864              		.cfi_offset 3, -20
+ 865 0004 83EC2C   		subl	$44, %esp
+ 866              		.cfi_def_cfa_offset 64
+ 867 0007 8B442440 		movl	64(%esp), %eax
+ 868 000b 8B7C2444 		movl	68(%esp), %edi
+ 869 000f 890424   		movl	%eax, (%esp)
+ 870 0012 E8000000 		call	_strlen
+ 870      00
+ 871 0017 893C24   		movl	%edi, (%esp)
+ 872 001a 89C6     		movl	%eax, %esi
+ 873 001c E8000000 		call	_strlen
+ 873      00
+ 874 0021 31D2     		xorl	%edx, %edx
+ 875 0023 39C6     		cmpl	%eax, %esi
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s 			page 18
+
+
+ 876 0025 740A     		je	L159
+ 877 0027 83C42C   		addl	$44, %esp
+ 878              		.cfi_remember_state
+ 879              		.cfi_def_cfa_offset 20
+ 880 002a 89D0     		movl	%edx, %eax
+ 881 002c 5B       		popl	%ebx
+ 882              		.cfi_restore 3
+ 883              		.cfi_def_cfa_offset 16
+ 884 002d 5E       		popl	%esi
+ 885              		.cfi_restore 6
+ 886              		.cfi_def_cfa_offset 12
+ 887 002e 5F       		popl	%edi
+ 888              		.cfi_restore 7
+ 889              		.cfi_def_cfa_offset 8
+ 890 002f 5D       		popl	%ebp
+ 891              		.cfi_restore 5
+ 892              		.cfi_def_cfa_offset 4
+ 893 0030 C3       		ret
+ 894              		.p2align 4,,7
+ 895              	L159:
+ 896              		.cfi_restore_state
+ 897 0031 85F6     		testl	%esi, %esi
+ 898 0033 7E4B     		jle	L155
+ 899 0035 8974241C 		movl	%esi, 28(%esp)
+ 900 0039 31DB     		xorl	%ebx, %ebx
+ 901 003b 8B742440 		movl	64(%esp), %esi
+ 902 003f EB09     		jmp	L153
+ 903              		.p2align 4,,7
+ 904              	L160:
+ 905 0041 83C301   		addl	$1, %ebx
+ 906 0044 395C241C 		cmpl	%ebx, 28(%esp)
+ 907 0048 7436     		je	L155
+ 908              	L153:
+ 909 004a 0FBE141E 		movsbl	(%esi,%ebx), %edx
+ 910 004e 8D42BF   		leal	-65(%edx), %eax
+ 911 0051 3C19     		cmpb	$25, %al
+ 912 0053 0FBE041F 		movsbl	(%edi,%ebx), %eax
+ 913 0057 8D4A20   		leal	32(%edx), %ecx
+ 914 005a 0F46D1   		cmovbe	%ecx, %edx
+ 915 005d 8D48BF   		leal	-65(%eax), %ecx
+ 916 0060 80F919   		cmpb	$25, %cl
+ 917 0063 8D6820   		leal	32(%eax), %ebp
+ 918 0066 0F46C5   		cmovbe	%ebp, %eax
+ 919 0069 39C2     		cmpl	%eax, %edx
+ 920 006b 74D4     		je	L160
+ 921 006d 83C42C   		addl	$44, %esp
+ 922              		.cfi_remember_state
+ 923              		.cfi_def_cfa_offset 20
+ 924 0070 31D2     		xorl	%edx, %edx
+ 925 0072 5B       		popl	%ebx
+ 926              		.cfi_restore 3
+ 927              		.cfi_def_cfa_offset 16
+ 928 0073 89D0     		movl	%edx, %eax
+ 929 0075 5E       		popl	%esi
+ 930              		.cfi_restore 6
+ 931              		.cfi_def_cfa_offset 12
+ 932 0076 5F       		popl	%edi
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s 			page 19
+
+
+ 933              		.cfi_restore 7
+ 934              		.cfi_def_cfa_offset 8
+ 935 0077 5D       		popl	%ebp
+ 936              		.cfi_restore 5
+ 937              		.cfi_def_cfa_offset 4
+ 938 0078 C3       		ret
+ 939 0079 8DB42600 		.p2align 4,,7
+ 939      000000
+ 940              	L155:
+ 941              		.cfi_restore_state
+ 942 0080 83C42C   		addl	$44, %esp
+ 943              		.cfi_def_cfa_offset 20
+ 944 0083 BA010000 		movl	$1, %edx
+ 944      00
+ 945 0088 5B       		popl	%ebx
+ 946              		.cfi_restore 3
+ 947              		.cfi_def_cfa_offset 16
+ 948 0089 89D0     		movl	%edx, %eax
+ 949 008b 5E       		popl	%esi
+ 950              		.cfi_restore 6
+ 951              		.cfi_def_cfa_offset 12
+ 952 008c 5F       		popl	%edi
+ 953              		.cfi_restore 7
+ 954              		.cfi_def_cfa_offset 8
+ 955 008d 5D       		popl	%ebp
+ 956              		.cfi_restore 5
+ 957              		.cfi_def_cfa_offset 4
+ 958 008e C3       		ret
+ 959              		.cfi_endproc
+ 960              	LFE73:
+ 961 008f 90       		.section	.text$strEqual,"x"
+ 962              		.p2align 4,,15
+ 963              		.globl	_strEqual
+ 964              		.def	_strEqual;	.scl	2;	.type	32;	.endef
+ 965              	_strEqual:
+ 966              	LFB74:
+ 967              		.cfi_startproc
+ 968 0000 83EC1C   		subl	$28, %esp
+ 969              		.cfi_def_cfa_offset 32
+ 970 0003 89742414 		movl	%esi, 20(%esp)
+ 971              		.cfi_offset 6, -12
+ 972 0007 8B742420 		movl	32(%esp), %esi
+ 973 000b 895C2410 		movl	%ebx, 16(%esp)
+ 974 000f 897C2418 		movl	%edi, 24(%esp)
+ 975              		.cfi_offset 3, -16
+ 976              		.cfi_offset 7, -8
+ 977 0013 8B7C2424 		movl	36(%esp), %edi
+ 978 0017 893424   		movl	%esi, (%esp)
+ 979 001a E8000000 		call	_strlen
+ 979      00
+ 980 001f 893C24   		movl	%edi, (%esp)
+ 981 0022 89C3     		movl	%eax, %ebx
+ 982 0024 E8000000 		call	_strlen
+ 982      00
+ 983 0029 31D2     		xorl	%edx, %edx
+ 984 002b 39C3     		cmpl	%eax, %ebx
+ 985 002d 7412     		je	L171
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s 			page 20
+
+
+ 986              	L162:
+ 987 002f 89D0     		movl	%edx, %eax
+ 988 0031 8B5C2410 		movl	16(%esp), %ebx
+ 989 0035 8B742414 		movl	20(%esp), %esi
+ 990 0039 8B7C2418 		movl	24(%esp), %edi
+ 991 003d 83C41C   		addl	$28, %esp
+ 992              		.cfi_remember_state
+ 993              		.cfi_restore 7
+ 994              		.cfi_restore 6
+ 995              		.cfi_restore 3
+ 996              		.cfi_def_cfa_offset 4
+ 997 0040 C3       		ret
+ 998              		.p2align 4,,7
+ 999              	L171:
+ 1000              		.cfi_restore_state
+ 1001 0041 85DB     		testl	%ebx, %ebx
+ 1002 0043 7E1D     		jle	L167
+ 1003 0045 0FB607   		movzbl	(%edi), %eax
+ 1004 0048 3806     		cmpb	%al, (%esi)
+ 1005 004a 75E3     		jne	L162
+ 1006 004c 31D2     		xorl	%edx, %edx
+ 1007 004e 6690     		.p2align 4,,2
+ 1008 0050 EB09     		jmp	L164
+ 1009              		.p2align 4,,7
+ 1010              	L165:
+ 1011 0052 0FB60417 		movzbl	(%edi,%edx), %eax
+ 1012 0056 380416   		cmpb	%al, (%esi,%edx)
+ 1013 0059 7515     		jne	L169
+ 1014              	L164:
+ 1015 005b 83C201   		addl	$1, %edx
+ 1016 005e 39D3     		cmpl	%edx, %ebx
+ 1017 0060 75F0     		jne	L165
+ 1018              	L167:
+ 1019 0062 BA010000 		movl	$1, %edx
+ 1019      00
+ 1020 0067 EBC6     		jmp	L162
+ 1021 0069 8DB42600 		.p2align 4,,7
+ 1021      000000
+ 1022              	L169:
+ 1023 0070 31D2     		xorl	%edx, %edx
+ 1024 0072 EBBB     		jmp	L162
+ 1025              		.cfi_endproc
+ 1026              	LFE74:
+ 1027 0074 90909090 		.section .rdata,"dr"
+ 1027      90909090 
+ 1027      90909090 
+ 1028              	LC7:
+ 1029 002c 68697374 		.ascii "histogram %s *\0"
+ 1029      6F677261 
+ 1029      6D202573 
+ 1029      202A00
+ 1030              	LC8:
+ 1031 003b 2A00     		.ascii "*\0"
+ 1032              	LC9:
+ 1033 003d 25642000 		.ascii "%d \0"
+ 1034              		.section	.text$_Z14printHistogramP7LoggingP11histogram_s,"x"
+ 1035              		.p2align 4,,15
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s 			page 21
+
+
+ 1036              		.globl	__Z14printHistogramP7LoggingP11histogram_s
+ 1037              		.def	__Z14printHistogramP7LoggingP11histogram_s;	.scl	2;	.type	32;	.endef
+ 1038              	__Z14printHistogramP7LoggingP11histogram_s:
+ 1039              	LFB75:
+ 1040              		.cfi_startproc
+ 1041 0000 55       		pushl	%ebp
+ 1042              		.cfi_def_cfa_offset 8
+ 1043              		.cfi_offset 5, -8
+ 1044 0001 57       		pushl	%edi
+ 1045              		.cfi_def_cfa_offset 12
+ 1046              		.cfi_offset 7, -12
+ 1047 0002 56       		pushl	%esi
+ 1048              		.cfi_def_cfa_offset 16
+ 1049              		.cfi_offset 6, -16
+ 1050 0003 53       		pushl	%ebx
+ 1051              		.cfi_def_cfa_offset 20
+ 1052              		.cfi_offset 3, -20
+ 1053 0004 83EC3C   		subl	$60, %esp
+ 1054              		.cfi_def_cfa_offset 80
+ 1055 0007 8B5C2454 		movl	84(%esp), %ebx
+ 1056 000b 8D6C241C 		leal	28(%esp), %ebp
+ 1057 000f 896C2404 		movl	%ebp, 4(%esp)
+ 1058 0013 8B742450 		movl	80(%esp), %esi
+ 1059 0017 891C24   		movl	%ebx, (%esp)
+ 1060 001a E8000000 		call	_hsReport
+ 1060      00
+ 1061 001f 893424   		movl	%esi, (%esp)
+ 1062 0022 89C7     		movl	%eax, %edi
+ 1063 0024 E8000000 		call	__Z12resetLoggingP7Logging
+ 1063      00
+ 1064 0029 893424   		movl	%esi, (%esp)
+ 1065 002c E8000000 		call	__Z15appendMsgPrefixP7Logging
+ 1065      00
+ 1066 0031 895C2408 		movl	%ebx, 8(%esp)
+ 1067 0035 31DB     		xorl	%ebx, %ebx
+ 1068 0037 C7442404 		movl	$LC7, 4(%esp)
+ 1068      2C000000 
+ 1069 003f 893424   		movl	%esi, (%esp)
+ 1070 0042 E8000000 		call	_appendPrintf
+ 1070      00
+ 1071 0047 85FF     		testl	%edi, %edi
+ 1072 0049 7E24     		jle	L174
+ 1073 004b 908D7426 		.p2align 4,,7
+ 1073      00
+ 1074              	L176:
+ 1075 0050 8B549D00 		movl	0(%ebp,%ebx,4), %edx
+ 1076 0054 83C301   		addl	$1, %ebx
+ 1077 0057 C7442404 		movl	$LC9, 4(%esp)
+ 1077      3D000000 
+ 1078 005f 893424   		movl	%esi, (%esp)
+ 1079 0062 89542408 		movl	%edx, 8(%esp)
+ 1080 0066 E8000000 		call	_appendPrintf
+ 1080      00
+ 1081 006b 39FB     		cmpl	%edi, %ebx
+ 1082 006d 75E1     		jne	L176
+ 1083              	L174:
+ 1084 006f 893424   		movl	%esi, (%esp)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s 			page 22
+
+
+ 1085 0072 C7442404 		movl	$LC8, 4(%esp)
+ 1085      3B000000 
+ 1086 007a E8000000 		call	_appendPrintf
+ 1086      00
+ 1087 007f 893424   		movl	%esi, (%esp)
+ 1088 0082 E8000000 		call	__Z16appendMsgPostfixP7Logging
+ 1088      00
+ 1089 0087 893424   		movl	%esi, (%esp)
+ 1090 008a E8000000 		call	_scheduleLogging
+ 1090      00
+ 1091 008f 83C43C   		addl	$60, %esp
+ 1092              		.cfi_def_cfa_offset 20
+ 1093 0092 5B       		popl	%ebx
+ 1094              		.cfi_restore 3
+ 1095              		.cfi_def_cfa_offset 16
+ 1096 0093 5E       		popl	%esi
+ 1097              		.cfi_restore 6
+ 1098              		.cfi_def_cfa_offset 12
+ 1099 0094 5F       		popl	%edi
+ 1100              		.cfi_restore 7
+ 1101              		.cfi_def_cfa_offset 8
+ 1102 0095 5D       		popl	%ebp
+ 1103              		.cfi_restore 5
+ 1104              		.cfi_def_cfa_offset 4
+ 1105 0096 C3       		ret
+ 1106              		.cfi_endproc
+ 1107              	LFE75:
+ 1108 0097 90909090 		.section	.data$_ZL23todofixthismesswithcopy,"w"
+ 1108      90909090 
+ 1108      90
+ 1109              		.align 32
+ 1110              	__ZL23todofixthismesswithcopy:
+ 1111 0000 00000000 		.space 100
+ 1111      00000000 
+ 1111      00000000 
+ 1111      00000000 
+ 1111      00000000 
+ 1112 0064 00000000 		.section .rdata,"dr"
+ 1112      00000000 
+ 1112      00000000 
+ 1112      00000000 
+ 1112      00000000 
+ 1113 0041 000000   		.align 4
+ 1114              	LC2:
+ 1115 0044 0000C07F 		.long	2143289344
+ 1116              		.align 8
+ 1117              	LC4:
+ 1118 0048 2D431CEB 		.long	-350469331
+ 1119 004c E2361A3F 		.long	1058682594
+ 1120              		.align 4
+ 1121              	LC6:
+ 1122 0050 00002041 		.long	1092616192
+ 1123              		.def	_strlen;	.scl	2;	.type	32;	.endef
+ 1124              		.def	_memcpy;	.scl	2;	.type	32;	.endef
+ 1125              		.def	_hsReport;	.scl	2;	.type	32;	.endef
+ 1126              		.def	__Z12resetLoggingP7Logging;	.scl	2;	.type	32;	.endef
+ 1127              		.def	__Z15appendMsgPrefixP7Logging;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s 			page 23
+
+
+ 1128              		.def	_appendPrintf;	.scl	2;	.type	32;	.endef
+ 1129              		.def	__Z16appendMsgPostfixP7Logging;	.scl	2;	.type	32;	.endef
+ 1130 0054 00000000 		.def	_scheduleLogging;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s 			page 24
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 efilib.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s:5      .text$_ZL13ltoa_internalPclj.constprop.1:00000000 __ZL13ltoa_internalPclj.constprop.1
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s:79     .text$_Z12boolToStringb:00000000 __Z12boolToStringb
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s:93     .text$minI:00000000 _minI
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s:107    .text$efiRound:00000000 _efiRound
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s:135    .text$absF:00000000 _absF
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s:156    .text$absI:00000000 _absI
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s:171    .text$maxI:00000000 _maxI
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s:185    .text$maxF:00000000 _maxF
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s:201    .text$minF:00000000 _minF
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s:216    .text$efiStrlen:00000000 _efiStrlen
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s:239    .text$efiTrim:00000000 _efiTrim
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s:285    .text$startsWith:00000000 _startsWith
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s:401    .text$indexOf:00000000 _indexOf
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s:456    .text$atoi:00000000 _atoi
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s:578    .text$itoa10:00000000 _itoa10
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s:602    .text$isSameF:00000000 _isSameF
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s:625    .text$efiPow10:00000000 _efiPow10
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s:693    .text$atoff:00000000 _atoff
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s:1110   .data$_ZL23todofixthismesswithcopy:00000000 __ZL23todofixthismesswithcopy
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s:850    .text$strEqualCaseInsensitive:00000000 _strEqualCaseInsensitive
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s:965    .text$strEqual:00000000 _strEqual
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccGp3Itz.s:1038   .text$_Z14printHistogramP7LoggingP11histogram_s:00000000 __Z14printHistogramP7LoggingP11histogram_s
+
+UNDEFINED SYMBOLS
+_strlen
+_memcpy
+_hsReport
+__Z12resetLoggingP7Logging
+__Z15appendMsgPrefixP7Logging
+_appendPrintf
+__Z16appendMsgPostfixP7Logging
+_scheduleLogging

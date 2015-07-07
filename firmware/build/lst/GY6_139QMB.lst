@@ -1,0 +1,405 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccG5EBQ0.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"GY6_139QMB.cpp"
+  16              		.section	.text._Z38setGy6139qmbDefaultEngineConfigurationv,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_Z38setGy6139qmbDefaultEngineConfigurationv
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_Z38setGy6139qmbDefaultEngineConfigurationv, %function
+  23              	_Z38setGy6139qmbDefaultEngineConfigurationv:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  27 0002 49F69A17 		movw	r7, #39322
+  28 0006 4CF6CD46 		movw	r6, #52429
+  29 000a C3F69977 		movt	r7, 16281
+  30 000e C4F28C06 		movt	r6, 16524
+  31 0012 0025     		movs	r5, #0
+  32 0014 4FF46044 		mov	r4, #57344
+  33 0018 C4F27A45 		movt	r5, 17530
+  34 001c C4F22B64 		movt	r4, 17963
+  35 0020 3846     		mov	r0, r7	@ float
+  36 0022 3146     		mov	r1, r6	@ float
+  37 0024 FFF7FEFF 		bl	_Z14setFuelLoadBinff
+  38 0028 2846     		mov	r0, r5	@ float
+  39 002a 2146     		mov	r1, r4	@ float
+  40 002c FFF7FEFF 		bl	_Z13setFuelRpmBinff
+  41 0030 3846     		mov	r0, r7	@ float
+  42 0032 3146     		mov	r1, r6	@ float
+  43 0034 FFF7FEFF 		bl	_Z16setTimingLoadBinff
+  44 0038 2846     		mov	r0, r5	@ float
+  45 003a 2146     		mov	r1, r4	@ float
+  46 003c FFF7FEFF 		bl	_Z15setTimingRpmBinff
+  47 0040 40F20003 		movw	r3, #:lower16:config
+  48 0044 C0F20003 		movt	r3, #:upper16:config
+  49 0048 40F20004 		movw	r4, #:lower16:engineConfiguration
+  50 004c 1968     		ldr	r1, [r3]
+  51 004e C0F20004 		movt	r4, #:upper16:engineConfiguration
+  52 0052 40F20000 		movw	r0, #:lower16:.LANCHOR0
+  53 0056 01F52651 		add	r1, r1, #10624
+  54 005a 3831     		adds	r1, r1, #56
+  55 005c C0F20000 		movt	r0, #:upper16:.LANCHOR0
+  56 0060 FFF7FEFF 		bl	_Z13copyFuelTablePA16_KfPA16_f
+  57 0064 2068     		ldr	r0, [r4]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccG5EBQ0.s 			page 2
+
+
+  58 0066 0321     		movs	r1, #3
+  59 0068 00F51270 		add	r0, r0, #584
+  60 006c FFF7FEFF 		bl	_Z13initEgoSensorP12afr_sensor_s12ego_sensor_e
+  61 0070 47F2BC47 		movw	r7, #29884
+  62 0074 2068     		ldr	r0, [r4]
+  63 0076 4FF0000E 		mov	lr, #0
+  64 007a 0223     		movs	r3, #2
+  65 007c 0125     		movs	r5, #1
+  66 007e 4FF4FA62 		mov	r2, #2000
+  67 0082 C4F2342E 		movt	lr, 16948
+  68 0086 40F24C41 		movw	r1, #1100
+  69 008a 4FF07E5C 		mov	ip, #1065353216
+  70 008e C3F69357 		movt	r7, 15763
+  71 0092 42F22836 		movw	r6, #9000
+  72 0096 A0F86010 		strh	r1, [r0, #96]	@ movhi
+  73 009a C0F8EC25 		str	r2, [r0, #1516]
+  74 009e C0F8A831 		str	r3, [r0, #424]
+  75 00a2 C0F88035 		str	r3, [r0, #1408]
+  76 00a6 C0F89451 		str	r5, [r0, #404]
+  77 00aa 2946     		mov	r1, r5
+  78 00ac C0F8A461 		str	r6, [r0, #420]
+  79 00b0 C0F8D0C1 		str	ip, [r0, #464]	@ float
+  80 00b4 C0F8CCE1 		str	lr, [r0, #460]	@ float
+  81 00b8 C0F89071 		str	r7, [r0, #400]	@ float
+  82 00bc FFF7FEFF 		bl	_Z16setOperationModeP22engine_configuration_s16operation_mode_e
+  83 00c0 40F20002 		movw	r2, #:lower16:boardConfiguration
+  84 00c4 C0F20002 		movt	r2, #:upper16:boardConfiguration
+  85 00c8 2368     		ldr	r3, [r4]
+  86 00ca 1268     		ldr	r2, [r2]
+  87 00cc C3F82452 		str	r5, [r3, #548]
+  88 00d0 0021     		movs	r1, #0
+  89 00d2 0825     		movs	r5, #8
+  90 00d4 2924     		movs	r4, #41
+  91 00d6 2820     		movs	r0, #40
+  92 00d8 C3F82052 		str	r5, [r3, #544]
+  93 00dc C3F89811 		str	r1, [r3, #408]
+  94 00e0 C3F81812 		str	r1, [r3, #536]
+  95 00e4 1462     		str	r4, [r2, #32]
+  96 00e6 5065     		str	r0, [r2, #84]
+  97 00e8 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+  98              		.size	_Z38setGy6139qmbDefaultEngineConfigurationv, .-_Z38setGy6139qmbDefaultEngineConfigurationv
+  99 00ea 00BFAFF3 		.section	.rodata._ZL25default_139qmb_fuel_table,"a",%progbits
+  99      0080
+ 100              		.align	2
+ 101              		.set	.LANCHOR0,. + 0
+ 102              		.type	_ZL25default_139qmb_fuel_table, %object
+ 103              		.size	_ZL25default_139qmb_fuel_table, 1024
+ 104              	_ZL25default_139qmb_fuel_table:
+ 105 0000 0000C040 		.word	1086324736
+ 106 0004 0000C040 		.word	1086324736
+ 107 0008 0000C040 		.word	1086324736
+ 108 000c 0000C040 		.word	1086324736
+ 109 0010 0000C040 		.word	1086324736
+ 110 0014 0000C040 		.word	1086324736
+ 111 0018 0000C040 		.word	1086324736
+ 112 001c 0000C040 		.word	1086324736
+ 113 0020 0000C040 		.word	1086324736
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccG5EBQ0.s 			page 3
+
+
+ 114 0024 0000C040 		.word	1086324736
+ 115 0028 0000C040 		.word	1086324736
+ 116 002c 0000C040 		.word	1086324736
+ 117 0030 0000C040 		.word	1086324736
+ 118 0034 0000C040 		.word	1086324736
+ 119 0038 0000C040 		.word	1086324736
+ 120 003c 0000C040 		.word	1086324736
+ 121 0040 0000C040 		.word	1086324736
+ 122 0044 0000C040 		.word	1086324736
+ 123 0048 0000C040 		.word	1086324736
+ 124 004c 0000C040 		.word	1086324736
+ 125 0050 0000C040 		.word	1086324736
+ 126 0054 0000C040 		.word	1086324736
+ 127 0058 0000C040 		.word	1086324736
+ 128 005c 0000C040 		.word	1086324736
+ 129 0060 0000C040 		.word	1086324736
+ 130 0064 0000C040 		.word	1086324736
+ 131 0068 0000C040 		.word	1086324736
+ 132 006c 0000C040 		.word	1086324736
+ 133 0070 0000C040 		.word	1086324736
+ 134 0074 0000C040 		.word	1086324736
+ 135 0078 0000C040 		.word	1086324736
+ 136 007c 0000C040 		.word	1086324736
+ 137 0080 0000C040 		.word	1086324736
+ 138 0084 0000C040 		.word	1086324736
+ 139 0088 0000C040 		.word	1086324736
+ 140 008c 0000C040 		.word	1086324736
+ 141 0090 0000C040 		.word	1086324736
+ 142 0094 0000C040 		.word	1086324736
+ 143 0098 0000C040 		.word	1086324736
+ 144 009c 0000C040 		.word	1086324736
+ 145 00a0 0000C040 		.word	1086324736
+ 146 00a4 0000C040 		.word	1086324736
+ 147 00a8 0000C040 		.word	1086324736
+ 148 00ac 0000C040 		.word	1086324736
+ 149 00b0 0000C040 		.word	1086324736
+ 150 00b4 0000C040 		.word	1086324736
+ 151 00b8 0000C040 		.word	1086324736
+ 152 00bc 0000C040 		.word	1086324736
+ 153 00c0 0000C040 		.word	1086324736
+ 154 00c4 0000C040 		.word	1086324736
+ 155 00c8 0000C040 		.word	1086324736
+ 156 00cc 0000C040 		.word	1086324736
+ 157 00d0 0000C040 		.word	1086324736
+ 158 00d4 0000C040 		.word	1086324736
+ 159 00d8 0000C040 		.word	1086324736
+ 160 00dc 0000C040 		.word	1086324736
+ 161 00e0 0000C040 		.word	1086324736
+ 162 00e4 0000C040 		.word	1086324736
+ 163 00e8 0000C040 		.word	1086324736
+ 164 00ec 0000C040 		.word	1086324736
+ 165 00f0 0000C040 		.word	1086324736
+ 166 00f4 0000C040 		.word	1086324736
+ 167 00f8 0000C040 		.word	1086324736
+ 168 00fc 0000C040 		.word	1086324736
+ 169 0100 0000C040 		.word	1086324736
+ 170 0104 0000C040 		.word	1086324736
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccG5EBQ0.s 			page 4
+
+
+ 171 0108 0000C040 		.word	1086324736
+ 172 010c 0000C040 		.word	1086324736
+ 173 0110 0000C040 		.word	1086324736
+ 174 0114 0000C040 		.word	1086324736
+ 175 0118 0000C040 		.word	1086324736
+ 176 011c 0000C040 		.word	1086324736
+ 177 0120 0000C040 		.word	1086324736
+ 178 0124 0000C040 		.word	1086324736
+ 179 0128 0000C040 		.word	1086324736
+ 180 012c 0000C040 		.word	1086324736
+ 181 0130 0000C040 		.word	1086324736
+ 182 0134 0000C040 		.word	1086324736
+ 183 0138 0000C040 		.word	1086324736
+ 184 013c 0000C040 		.word	1086324736
+ 185 0140 0000C040 		.word	1086324736
+ 186 0144 0000C040 		.word	1086324736
+ 187 0148 0000C040 		.word	1086324736
+ 188 014c 0000C040 		.word	1086324736
+ 189 0150 0000C040 		.word	1086324736
+ 190 0154 0000C040 		.word	1086324736
+ 191 0158 0000C040 		.word	1086324736
+ 192 015c 0000C040 		.word	1086324736
+ 193 0160 0000C040 		.word	1086324736
+ 194 0164 0000C040 		.word	1086324736
+ 195 0168 0000C040 		.word	1086324736
+ 196 016c 0000C040 		.word	1086324736
+ 197 0170 0000C040 		.word	1086324736
+ 198 0174 0000C040 		.word	1086324736
+ 199 0178 0000C040 		.word	1086324736
+ 200 017c 0000C040 		.word	1086324736
+ 201 0180 0000C040 		.word	1086324736
+ 202 0184 0000C040 		.word	1086324736
+ 203 0188 0000C040 		.word	1086324736
+ 204 018c 0000C040 		.word	1086324736
+ 205 0190 0000C040 		.word	1086324736
+ 206 0194 0000C040 		.word	1086324736
+ 207 0198 0000C040 		.word	1086324736
+ 208 019c 0000C040 		.word	1086324736
+ 209 01a0 0000C040 		.word	1086324736
+ 210 01a4 0000C040 		.word	1086324736
+ 211 01a8 0000C040 		.word	1086324736
+ 212 01ac 0000C040 		.word	1086324736
+ 213 01b0 0000C040 		.word	1086324736
+ 214 01b4 0000C040 		.word	1086324736
+ 215 01b8 0000C040 		.word	1086324736
+ 216 01bc 0000C040 		.word	1086324736
+ 217 01c0 0000C040 		.word	1086324736
+ 218 01c4 0000C040 		.word	1086324736
+ 219 01c8 0000C040 		.word	1086324736
+ 220 01cc 0000C040 		.word	1086324736
+ 221 01d0 0000C040 		.word	1086324736
+ 222 01d4 0000C040 		.word	1086324736
+ 223 01d8 0000C040 		.word	1086324736
+ 224 01dc 0000C040 		.word	1086324736
+ 225 01e0 0000C040 		.word	1086324736
+ 226 01e4 0000C040 		.word	1086324736
+ 227 01e8 0000C040 		.word	1086324736
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccG5EBQ0.s 			page 5
+
+
+ 228 01ec 0000C040 		.word	1086324736
+ 229 01f0 0000C040 		.word	1086324736
+ 230 01f4 0000C040 		.word	1086324736
+ 231 01f8 0000C040 		.word	1086324736
+ 232 01fc 0000C040 		.word	1086324736
+ 233 0200 0000C040 		.word	1086324736
+ 234 0204 0000C040 		.word	1086324736
+ 235 0208 0000C040 		.word	1086324736
+ 236 020c 0000C040 		.word	1086324736
+ 237 0210 0000C040 		.word	1086324736
+ 238 0214 0000C040 		.word	1086324736
+ 239 0218 0000C040 		.word	1086324736
+ 240 021c 0000C040 		.word	1086324736
+ 241 0220 0000C040 		.word	1086324736
+ 242 0224 0000C040 		.word	1086324736
+ 243 0228 0000C040 		.word	1086324736
+ 244 022c 0000C040 		.word	1086324736
+ 245 0230 0000C040 		.word	1086324736
+ 246 0234 0000C040 		.word	1086324736
+ 247 0238 0000C040 		.word	1086324736
+ 248 023c 0000C040 		.word	1086324736
+ 249 0240 0000C040 		.word	1086324736
+ 250 0244 0000C040 		.word	1086324736
+ 251 0248 0000C040 		.word	1086324736
+ 252 024c 0000C040 		.word	1086324736
+ 253 0250 0000C040 		.word	1086324736
+ 254 0254 0000C040 		.word	1086324736
+ 255 0258 0000C040 		.word	1086324736
+ 256 025c 0000C040 		.word	1086324736
+ 257 0260 0000C040 		.word	1086324736
+ 258 0264 0000C040 		.word	1086324736
+ 259 0268 0000C040 		.word	1086324736
+ 260 026c 0000C040 		.word	1086324736
+ 261 0270 0000C040 		.word	1086324736
+ 262 0274 0000C040 		.word	1086324736
+ 263 0278 0000C040 		.word	1086324736
+ 264 027c 0000C040 		.word	1086324736
+ 265 0280 0000C040 		.word	1086324736
+ 266 0284 0000C040 		.word	1086324736
+ 267 0288 0000C040 		.word	1086324736
+ 268 028c 0000C040 		.word	1086324736
+ 269 0290 0000C040 		.word	1086324736
+ 270 0294 0000C040 		.word	1086324736
+ 271 0298 0000C040 		.word	1086324736
+ 272 029c 0000C040 		.word	1086324736
+ 273 02a0 0000C040 		.word	1086324736
+ 274 02a4 0000C040 		.word	1086324736
+ 275 02a8 0000C040 		.word	1086324736
+ 276 02ac 0000C040 		.word	1086324736
+ 277 02b0 0000C040 		.word	1086324736
+ 278 02b4 0000C040 		.word	1086324736
+ 279 02b8 0000C040 		.word	1086324736
+ 280 02bc 0000C040 		.word	1086324736
+ 281 02c0 0000C040 		.word	1086324736
+ 282 02c4 0000C040 		.word	1086324736
+ 283 02c8 0000C040 		.word	1086324736
+ 284 02cc 0000C040 		.word	1086324736
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccG5EBQ0.s 			page 6
+
+
+ 285 02d0 0000C040 		.word	1086324736
+ 286 02d4 0000C040 		.word	1086324736
+ 287 02d8 0000C040 		.word	1086324736
+ 288 02dc 0000C040 		.word	1086324736
+ 289 02e0 0000C040 		.word	1086324736
+ 290 02e4 0000C040 		.word	1086324736
+ 291 02e8 0000C040 		.word	1086324736
+ 292 02ec 0000C040 		.word	1086324736
+ 293 02f0 0000C040 		.word	1086324736
+ 294 02f4 0000C040 		.word	1086324736
+ 295 02f8 0000C040 		.word	1086324736
+ 296 02fc 0000C040 		.word	1086324736
+ 297 0300 0000C040 		.word	1086324736
+ 298 0304 0000C040 		.word	1086324736
+ 299 0308 0000C040 		.word	1086324736
+ 300 030c 0000C040 		.word	1086324736
+ 301 0310 0000C040 		.word	1086324736
+ 302 0314 0000C040 		.word	1086324736
+ 303 0318 0000C040 		.word	1086324736
+ 304 031c 0000C040 		.word	1086324736
+ 305 0320 0000C040 		.word	1086324736
+ 306 0324 0000C040 		.word	1086324736
+ 307 0328 0000C040 		.word	1086324736
+ 308 032c 0000C040 		.word	1086324736
+ 309 0330 0000C040 		.word	1086324736
+ 310 0334 0000C040 		.word	1086324736
+ 311 0338 0000C040 		.word	1086324736
+ 312 033c 0000C040 		.word	1086324736
+ 313 0340 0000C040 		.word	1086324736
+ 314 0344 0000C040 		.word	1086324736
+ 315 0348 0000C040 		.word	1086324736
+ 316 034c 0000C040 		.word	1086324736
+ 317 0350 0000C040 		.word	1086324736
+ 318 0354 0000C040 		.word	1086324736
+ 319 0358 0000C040 		.word	1086324736
+ 320 035c 0000C040 		.word	1086324736
+ 321 0360 0000C040 		.word	1086324736
+ 322 0364 0000C040 		.word	1086324736
+ 323 0368 0000C040 		.word	1086324736
+ 324 036c 0000C040 		.word	1086324736
+ 325 0370 0000C040 		.word	1086324736
+ 326 0374 0000C040 		.word	1086324736
+ 327 0378 0000C040 		.word	1086324736
+ 328 037c 0000C040 		.word	1086324736
+ 329 0380 0000C040 		.word	1086324736
+ 330 0384 0000C040 		.word	1086324736
+ 331 0388 0000C040 		.word	1086324736
+ 332 038c 0000C040 		.word	1086324736
+ 333 0390 0000C040 		.word	1086324736
+ 334 0394 0000C040 		.word	1086324736
+ 335 0398 0000C040 		.word	1086324736
+ 336 039c 0000C040 		.word	1086324736
+ 337 03a0 0000C040 		.word	1086324736
+ 338 03a4 0000C040 		.word	1086324736
+ 339 03a8 0000C040 		.word	1086324736
+ 340 03ac 0000C040 		.word	1086324736
+ 341 03b0 0000C040 		.word	1086324736
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccG5EBQ0.s 			page 7
+
+
+ 342 03b4 0000C040 		.word	1086324736
+ 343 03b8 0000C040 		.word	1086324736
+ 344 03bc 0000C040 		.word	1086324736
+ 345 03c0 0000C040 		.word	1086324736
+ 346 03c4 0000C040 		.word	1086324736
+ 347 03c8 0000C040 		.word	1086324736
+ 348 03cc 0000C040 		.word	1086324736
+ 349 03d0 0000C040 		.word	1086324736
+ 350 03d4 0000C040 		.word	1086324736
+ 351 03d8 0000C040 		.word	1086324736
+ 352 03dc 0000C040 		.word	1086324736
+ 353 03e0 0000C040 		.word	1086324736
+ 354 03e4 0000C040 		.word	1086324736
+ 355 03e8 0000C040 		.word	1086324736
+ 356 03ec 0000C040 		.word	1086324736
+ 357 03f0 0000C040 		.word	1086324736
+ 358 03f4 0000C040 		.word	1086324736
+ 359 03f8 0000C040 		.word	1086324736
+ 360 03fc 0000C040 		.word	1086324736
+ 361              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccG5EBQ0.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 GY6_139QMB.cpp
+C:\Users\pc\AppData\Local\Temp\ccG5EBQ0.s:17     .text._Z38setGy6139qmbDefaultEngineConfigurationv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccG5EBQ0.s:23     .text._Z38setGy6139qmbDefaultEngineConfigurationv:00000000 _Z38setGy6139qmbDefaultEngineConfigurationv
+C:\Users\pc\AppData\Local\Temp\ccG5EBQ0.s:101    .rodata._ZL25default_139qmb_fuel_table:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccG5EBQ0.s:100    .rodata._ZL25default_139qmb_fuel_table:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccG5EBQ0.s:104    .rodata._ZL25default_139qmb_fuel_table:00000000 _ZL25default_139qmb_fuel_table
+
+UNDEFINED SYMBOLS
+_Z14setFuelLoadBinff
+_Z13setFuelRpmBinff
+_Z16setTimingLoadBinff
+_Z15setTimingRpmBinff
+config
+engineConfiguration
+_Z13copyFuelTablePA16_KfPA16_f
+_Z13initEgoSensorP12afr_sensor_s12ego_sensor_e
+_Z16setOperationModeP22engine_configuration_s16operation_mode_e
+boardConfiguration

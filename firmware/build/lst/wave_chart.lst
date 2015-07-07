@@ -1,0 +1,767 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccugCmFL.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"wave_chart.cpp"
+  16              		.section	.text._ZL11printStatusv,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	_ZL11printStatusv, %function
+  22              	_ZL11printStatusv:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25 0000 38B5     		push	{r3, r4, r5, lr}
+  26 0002 40F20005 		movw	r5, #:lower16:engineConfiguration
+  27 0006 C0F20005 		movt	r5, #:upper16:engineConfiguration
+  28 000a 40F20004 		movw	r4, #:lower16:.LANCHOR0
+  29 000e 2B68     		ldr	r3, [r5]
+  30 0010 93F8D805 		ldrb	r0, [r3, #1496]	@ zero_extendqisi2
+  31 0014 C0F34010 		ubfx	r0, r0, #5, #1
+  32 0018 FFF7FEFF 		bl	_Z12boolToStringb
+  33 001c C0F20004 		movt	r4, #:upper16:.LANCHOR0
+  34 0020 40F20001 		movw	r1, #:lower16:.LC0
+  35 0024 0246     		mov	r2, r0
+  36 0026 C0F20001 		movt	r1, #:upper16:.LC0
+  37 002a 2046     		mov	r0, r4
+  38 002c FFF7FEFF 		bl	scheduleMsg
+  39 0030 2B68     		ldr	r3, [r5]
+  40 0032 40F20001 		movw	r1, #:lower16:.LC1
+  41 0036 D3F8E825 		ldr	r2, [r3, #1512]
+  42 003a 2046     		mov	r0, r4
+  43 003c C0F20001 		movt	r1, #:upper16:.LC1
+  44 0040 BDE83840 		pop	{r3, r4, r5, lr}
+  45 0044 FFF7FEBF 		b	scheduleMsg
+  46              		.size	_ZL11printStatusv, .-_ZL11printStatusv
+  47 0048 AFF30080 		.section	.text._Z12setChartSizei,"ax",%progbits
+  47      AFF30080 
+  48              		.align	2
+  49              		.p2align 4,,15
+  50              		.global	_Z12setChartSizei
+  51              		.thumb
+  52              		.thumb_func
+  53              		.type	_Z12setChartSizei, %function
+  54              	_Z12setChartSizei:
+  55              		@ args = 0, pretend = 0, frame = 0
+  56              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccugCmFL.s 			page 2
+
+
+  57              		@ link register save eliminated.
+  58 0000 0428     		cmp	r0, #4
+  59 0002 00DC     		bgt	.L5
+  60 0004 7047     		bx	lr
+  61              	.L5:
+  62 0006 40F20003 		movw	r3, #:lower16:engineConfiguration
+  63 000a C0F20003 		movt	r3, #:upper16:engineConfiguration
+  64 000e 1B68     		ldr	r3, [r3]
+  65 0010 C3F8E805 		str	r0, [r3, #1512]
+  66 0014 FFF7FEBF 		b	_ZL11printStatusv
+  67              		.size	_Z12setChartSizei, .-_Z12setChartSizei
+  68 0018 AFF30080 		.section	.text._ZL14setChartActivei,"ax",%progbits
+  68      AFF30080 
+  69              		.align	2
+  70              		.p2align 4,,15
+  71              		.thumb
+  72              		.thumb_func
+  73              		.type	_ZL14setChartActivei, %function
+  74              	_ZL14setChartActivei:
+  75              		@ args = 0, pretend = 0, frame = 0
+  76              		@ frame_needed = 0, uses_anonymous_args = 0
+  77 0000 08B5     		push	{r3, lr}
+  78 0002 40F20003 		movw	r3, #:lower16:engineConfiguration
+  79 0006 C0F20003 		movt	r3, #:upper16:engineConfiguration
+  80 000a 0030     		adds	r0, r0, #0
+  81 000c 1B68     		ldr	r3, [r3]
+  82 000e 93F8D825 		ldrb	r2, [r3, #1496]	@ zero_extendqisi2
+  83 0012 18BF     		it	ne
+  84 0014 0120     		movne	r0, #1
+  85 0016 60F34512 		bfi	r2, r0, #5, #1
+  86 001a 83F8D825 		strb	r2, [r3, #1496]
+  87 001e FFF7FEFF 		bl	_ZL11printStatusv
+  88 0022 40F20003 		movw	r3, #:lower16:maxLockTime
+  89 0026 C0F20003 		movt	r3, #:upper16:maxLockTime
+  90 002a 0022     		movs	r2, #0
+  91 002c 1A60     		str	r2, [r3]
+  92 002e 08BD     		pop	{r3, pc}
+  93              		.size	_ZL14setChartActivei, .-_ZL14setChartActivei
+  94              		.section	.text._ZN9WaveChart14resetWaveChartEv,"ax",%progbits
+  95              		.align	2
+  96              		.p2align 4,,15
+  97              		.global	_ZN9WaveChart14resetWaveChartEv
+  98              		.thumb
+  99              		.thumb_func
+ 100              		.type	_ZN9WaveChart14resetWaveChartEv, %function
+ 101              	_ZN9WaveChart14resetWaveChartEv:
+ 102              		@ args = 0, pretend = 0, frame = 0
+ 103              		@ frame_needed = 0, uses_anonymous_args = 0
+ 104 0000 70B5     		push	{r4, r5, r6, lr}
+ 105 0002 0646     		mov	r6, r0
+ 106 0004 0024     		movs	r4, #0
+ 107 0006 FFF7FEFF 		bl	resetLogging
+ 108 000a 0025     		movs	r5, #0
+ 109 000c 0023     		movs	r3, #0
+ 110 000e 40F20001 		movw	r1, #:lower16:.LC2
+ 111 0012 40F20002 		movw	r2, #:lower16:.LC3
+ 112 0016 F363     		str	r3, [r6, #60]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccugCmFL.s 			page 3
+
+
+ 113 0018 C6E91045 		strd	r4, [r6, #64]
+ 114 001c 3046     		mov	r0, r6
+ 115 001e C0F20001 		movt	r1, #:upper16:.LC2
+ 116 0022 C0F20002 		movt	r2, #:upper16:.LC3
+ 117 0026 BDE87040 		pop	{r4, r5, r6, lr}
+ 118 002a FFF7FEBF 		b	appendPrintf
+ 119              		.size	_ZN9WaveChart14resetWaveChartEv, .-_ZN9WaveChart14resetWaveChartEv
+ 120              		.global	__aeabi_uldivmod
+ 121 002e 00BF     		.section	.text._ZN9WaveChart19isStartedTooLongAgoEv,"ax",%progbits
+ 122              		.align	2
+ 123              		.p2align 4,,15
+ 124              		.global	_ZN9WaveChart19isStartedTooLongAgoEv
+ 125              		.thumb
+ 126              		.thumb_func
+ 127              		.type	_ZN9WaveChart19isStartedTooLongAgoEv, %function
+ 128              	_ZN9WaveChart19isStartedTooLongAgoEv:
+ 129              		@ args = 0, pretend = 0, frame = 0
+ 130              		@ frame_needed = 0, uses_anonymous_args = 0
+ 131 0000 10B5     		push	{r4, lr}
+ 132 0002 0446     		mov	r4, r0
+ 133 0004 FFF7FEFF 		bl	getTimeNowNt
+ 134 0008 D4E91023 		ldrd	r2, [r4, #64]
+ 135 000c 52EA0304 		orrs	r4, r2, r3
+ 136 0010 22D0     		beq	.L10
+ 137 0012 801A     		subs	r0, r0, r2
+ 138 0014 61EB0301 		sbc	r1, r1, r3
+ 139 0018 A822     		movs	r2, #168
+ 140 001a 0023     		movs	r3, #0
+ 141 001c FFF7FEFF 		bl	__aeabi_uldivmod
+ 142 0020 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 143 0024 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 144 0028 44F24022 		movw	r2, #16960
+ 145 002c 1B68     		ldr	r3, [r3]
+ 146 002e D3F8E845 		ldr	r4, [r3, #1512]
+ 147 0032 C0F20F02 		movt	r2, 15
+ 148 0036 4CF6CD43 		movw	r3, #52429
+ 149 003a 02FB04F2 		mul	r2, r2, r4
+ 150 003e CCF6CC43 		movt	r3, 52428
+ 151 0042 A3FB0242 		umull	r4, r2, r3, r2
+ 152 0046 1209     		lsrs	r2, r2, #4
+ 153 0048 0023     		movs	r3, #0
+ 154 004a 8B42     		cmp	r3, r1
+ 155 004c 08BF     		it eq
+ 156 004e 8242     		cmpeq	r2, r0
+ 157 0050 2CBF     		ite	cs
+ 158 0052 0020     		movcs	r0, #0
+ 159 0054 0120     		movcc	r0, #1
+ 160 0056 10BD     		pop	{r4, pc}
+ 161              	.L10:
+ 162 0058 0020     		movs	r0, #0
+ 163 005a 10BD     		pop	{r4, pc}
+ 164              		.size	_ZN9WaveChart19isStartedTooLongAgoEv, .-_ZN9WaveChart19isStartedTooLongAgoEv
+ 165 005c AFF30080 		.section	.text._ZN9WaveChart15isWaveChartFullEv,"ax",%progbits
+ 166              		.align	2
+ 167              		.p2align 4,,15
+ 168              		.global	_ZN9WaveChart15isWaveChartFullEv
+ 169              		.thumb
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccugCmFL.s 			page 4
+
+
+ 170              		.thumb_func
+ 171              		.type	_ZN9WaveChart15isWaveChartFullEv, %function
+ 172              	_ZN9WaveChart15isWaveChartFullEv:
+ 173              		@ args = 0, pretend = 0, frame = 0
+ 174              		@ frame_needed = 0, uses_anonymous_args = 0
+ 175              		@ link register save eliminated.
+ 176 0000 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 177 0004 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 178 0008 C06B     		ldr	r0, [r0, #60]
+ 179 000a 1B68     		ldr	r3, [r3]
+ 180 000c D3F8E835 		ldr	r3, [r3, #1512]
+ 181 0010 9842     		cmp	r0, r3
+ 182 0012 34BF     		ite	cc
+ 183 0014 0020     		movcc	r0, #0
+ 184 0016 0120     		movcs	r0, #1
+ 185 0018 7047     		bx	lr
+ 186              		.size	_ZN9WaveChart15isWaveChartFullEv, .-_ZN9WaveChart15isWaveChartFullEv
+ 187 001a 00BFAFF3 		.section	.text._ZN9WaveChartC2Ev,"ax",%progbits
+ 187      0080
+ 188              		.align	2
+ 189              		.p2align 4,,15
+ 190              		.global	_ZN9WaveChartC2Ev
+ 191              		.thumb
+ 192              		.thumb_func
+ 193              		.type	_ZN9WaveChartC2Ev, %function
+ 194              	_ZN9WaveChartC2Ev:
+ 195              		@ args = 0, pretend = 0, frame = 0
+ 196              		@ frame_needed = 0, uses_anonymous_args = 0
+ 197 0000 10B5     		push	{r4, lr}
+ 198 0002 0446     		mov	r4, r0
+ 199 0004 FFF7FEFF 		bl	_ZN7LoggingC1Ev
+ 200 0008 0021     		movs	r1, #0
+ 201 000a 0022     		movs	r2, #0
+ 202 000c 0023     		movs	r3, #0
+ 203 000e C4E91023 		strd	r2, [r4, #64]
+ 204 0012 A164     		str	r1, [r4, #72]
+ 205 0014 E163     		str	r1, [r4, #60]
+ 206 0016 2046     		mov	r0, r4
+ 207 0018 10BD     		pop	{r4, pc}
+ 208              		.size	_ZN9WaveChartC2Ev, .-_ZN9WaveChartC2Ev
+ 209              		.global	_ZN9WaveChartC1Ev
+ 210              		.thumb_set _ZN9WaveChartC1Ev,_ZN9WaveChartC2Ev
+ 211 001a 00BFAFF3 		.section	.text._ZN9WaveChart4initEv,"ax",%progbits
+ 211      0080
+ 212              		.align	2
+ 213              		.p2align 4,,15
+ 214              		.global	_ZN9WaveChart4initEv
+ 215              		.thumb
+ 216              		.thumb_func
+ 217              		.type	_ZN9WaveChart4initEv, %function
+ 218              	_ZN9WaveChart4initEv:
+ 219              		@ args = 0, pretend = 0, frame = 0
+ 220              		@ frame_needed = 0, uses_anonymous_args = 0
+ 221 0000 10B5     		push	{r4, lr}
+ 222 0002 40F20001 		movw	r1, #:lower16:.LC4
+ 223 0006 40F20002 		movw	r2, #:lower16:.LANCHOR1
+ 224 000a 0446     		mov	r4, r0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccugCmFL.s 			page 5
+
+
+ 225 000c 41F28833 		movw	r3, #5000
+ 226 0010 C0F20001 		movt	r1, #:upper16:.LC4
+ 227 0014 C0F20002 		movt	r2, #:upper16:.LANCHOR1
+ 228 0018 FFF7FEFF 		bl	initLoggingExt
+ 229 001c 0123     		movs	r3, #1
+ 230 001e A364     		str	r3, [r4, #72]
+ 231 0020 2046     		mov	r0, r4
+ 232 0022 BDE81040 		pop	{r4, lr}
+ 233 0026 FFF7FEBF 		b	_ZN9WaveChart14resetWaveChartEv
+ 234              		.size	_ZN9WaveChart4initEv, .-_ZN9WaveChart4initEv
+ 235 002a 00BFAFF3 		.section	.text._ZN9WaveChart12publishChartEv,"ax",%progbits
+ 235      0080
+ 236              		.align	2
+ 237              		.p2align 4,,15
+ 238              		.global	_ZN9WaveChart12publishChartEv
+ 239              		.thumb
+ 240              		.thumb_func
+ 241              		.type	_ZN9WaveChart12publishChartEv, %function
+ 242              	_ZN9WaveChart12publishChartEv:
+ 243              		@ args = 0, pretend = 0, frame = 0
+ 244              		@ frame_needed = 0, uses_anonymous_args = 0
+ 245 0000 10B5     		push	{r4, lr}
+ 246 0002 40F20001 		movw	r1, #:lower16:.LC3
+ 247 0006 0446     		mov	r4, r0
+ 248 0008 C0F20001 		movt	r1, #:upper16:.LC3
+ 249 000c FFF7FEFF 		bl	appendPrintf
+ 250 0010 216B     		ldr	r1, [r4, #48]
+ 251 0012 E26A     		ldr	r2, [r4, #44]
+ 252 0014 40F20003 		movw	r3, #:lower16:.LANCHOR2
+ 253 0018 C0F20003 		movt	r3, #:upper16:.LANCHOR2
+ 254 001c 8A1A     		subs	r2, r1, r2
+ 255 001e 1A60     		str	r2, [r3]
+ 256 0020 FFF7FEFF 		bl	_Z10getFullLogv
+ 257 0024 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 258 0028 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 259 002c 1B68     		ldr	r3, [r3]
+ 260 002e 93F8D835 		ldrb	r3, [r3, #1496]	@ zero_extendqisi2
+ 261 0032 9B06     		lsls	r3, r3, #26
+ 262 0034 00D5     		bpl	.L14
+ 263 0036 00B9     		cbnz	r0, .L22
+ 264              	.L14:
+ 265 0038 10BD     		pop	{r4, pc}
+ 266              	.L22:
+ 267 003a 2046     		mov	r0, r4
+ 268 003c BDE81040 		pop	{r4, lr}
+ 269 0040 FFF7FEBF 		b	scheduleLogging
+ 270              		.size	_ZN9WaveChart12publishChartEv, .-_ZN9WaveChart12publishChartEv
+ 271 0044 AFF30080 		.section	.text._ZN9WaveChart18publishChartIfFullEv,"ax",%progbits
+ 271      AFF30080 
+ 271      AFF30080 
+ 272              		.align	2
+ 273              		.p2align 4,,15
+ 274              		.global	_ZN9WaveChart18publishChartIfFullEv
+ 275              		.thumb
+ 276              		.thumb_func
+ 277              		.type	_ZN9WaveChart18publishChartIfFullEv, %function
+ 278              	_ZN9WaveChart18publishChartIfFullEv:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccugCmFL.s 			page 6
+
+
+ 279              		@ args = 0, pretend = 0, frame = 0
+ 280              		@ frame_needed = 0, uses_anonymous_args = 0
+ 281 0000 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 282 0004 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 283 0008 10B5     		push	{r4, lr}
+ 284 000a 1A68     		ldr	r2, [r3]
+ 285 000c C36B     		ldr	r3, [r0, #60]
+ 286 000e D2F8E825 		ldr	r2, [r2, #1512]
+ 287 0012 9342     		cmp	r3, r2
+ 288 0014 0446     		mov	r4, r0
+ 289 0016 07D3     		bcc	.L26
+ 290              	.L24:
+ 291 0018 2046     		mov	r0, r4
+ 292 001a FFF7FEFF 		bl	_ZN9WaveChart12publishChartEv
+ 293 001e 2046     		mov	r0, r4
+ 294 0020 BDE81040 		pop	{r4, lr}
+ 295 0024 FFF7FEBF 		b	_ZN9WaveChart14resetWaveChartEv
+ 296              	.L26:
+ 297 0028 FFF7FEFF 		bl	_ZN9WaveChart19isStartedTooLongAgoEv
+ 298 002c 0028     		cmp	r0, #0
+ 299 002e F3D1     		bne	.L24
+ 300 0030 10BD     		pop	{r4, pc}
+ 301              		.size	_ZN9WaveChart18publishChartIfFullEv, .-_ZN9WaveChart18publishChartIfFullEv
+ 302 0032 00BFAFF3 		.section	.text._ZN9WaveChart18addWaveChartEvent3EPKcS1_,"ax",%progbits
+ 302      0080AFF3 
+ 302      0080AFF3 
+ 302      0080
+ 303              		.align	2
+ 304              		.p2align 4,,15
+ 305              		.global	_ZN9WaveChart18addWaveChartEvent3EPKcS1_
+ 306              		.thumb
+ 307              		.thumb_func
+ 308              		.type	_ZN9WaveChart18addWaveChartEvent3EPKcS1_, %function
+ 309              	_ZN9WaveChart18addWaveChartEvent3EPKcS1_:
+ 310              		@ args = 0, pretend = 0, frame = 0
+ 311              		@ frame_needed = 0, uses_anonymous_args = 0
+ 312 0000 2DE9F843 		push	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 313 0004 40F20003 		movw	r3, #:lower16:engine
+ 314 0008 C0F20003 		movt	r3, #:upper16:engine
+ 315 000c 0546     		mov	r5, r0
+ 316 000e 1868     		ldr	r0, [r3]
+ 317 0010 0E46     		mov	r6, r1
+ 318 0012 1746     		mov	r7, r2
+ 319 0014 FFF7FEFF 		bl	_ZN13RpmCalculator20getRevolutionCounterEv
+ 320 0018 40F20003 		movw	r3, #:lower16:.LANCHOR3
+ 321 001c C0F20003 		movt	r3, #:upper16:.LANCHOR3
+ 322 0020 1B68     		ldr	r3, [r3]
+ 323 0022 9842     		cmp	r0, r3
+ 324 0024 0AD3     		bcc	.L27
+ 325 0026 002E     		cmp	r6, #0
+ 326 0028 7ED0     		beq	.L40
+ 327 002a 40F20004 		movw	r4, #:lower16:engineConfiguration
+ 328 002e C0F20004 		movt	r4, #:upper16:engineConfiguration
+ 329 0032 2368     		ldr	r3, [r4]
+ 330 0034 93F8D835 		ldrb	r3, [r3, #1496]	@ zero_extendqisi2
+ 331 0038 9A06     		lsls	r2, r3, #26
+ 332 003a 01D4     		bmi	.L41
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccugCmFL.s 			page 7
+
+
+ 333              	.L27:
+ 334 003c BDE8F883 		pop	{r3, r4, r5, r6, r7, r8, r9, pc}
+ 335              	.L41:
+ 336 0040 40F20003 		movw	r3, #:lower16:rlist
+ 337 0044 C0F20003 		movt	r3, #:upper16:rlist
+ 338 0048 9869     		ldr	r0, [r3, #24]
+ 339 004a FFF7FEFF 		bl	getRemainingStack
+ 340 004e 2028     		cmp	r0, #32
+ 341 0050 2BDD     		ble	.L42
+ 342 0052 AB6C     		ldr	r3, [r5, #72]
+ 343 0054 002B     		cmp	r3, #0
+ 344 0056 5FD0     		beq	.L43
+ 345 0058 2268     		ldr	r2, [r4]
+ 346 005a EB6B     		ldr	r3, [r5, #60]
+ 347 005c D2F8E825 		ldr	r2, [r2, #1512]
+ 348 0060 9342     		cmp	r3, r2
+ 349 0062 EBD2     		bcs	.L27
+ 350 0064 FFF7FEFF 		bl	getTimeNowNt
+ 351 0068 8046     		mov	r8, r0
+ 352 006a 8946     		mov	r9, r1
+ 353 006c FFF7FEFF 		bl	lockOutputBuffer
+ 354 0070 EB6B     		ldr	r3, [r5, #60]
+ 355 0072 0446     		mov	r4, r0
+ 356 0074 0BB3     		cbz	r3, .L34
+ 357 0076 296C     		ldr	r1, [r5, #64]
+ 358 0078 44F60562 		movw	r2, #19973
+ 359 007c C1EB0808 		rsb	r8, r1, r8
+ 360 0080 4FEA1818 		lsr	r8, r8, #4
+ 361 0084 C0F2E042 		movt	r2, 1248
+ 362 0088 A2FB0812 		umull	r1, r2, r2, r8
+ 363 008c 4FEA5208 		lsr	r8, r2, #1
+ 364              	.L35:
+ 365 0090 0133     		adds	r3, r3, #1
+ 366 0092 EB63     		str	r3, [r5, #60]
+ 367 0094 2846     		mov	r0, r5
+ 368 0096 FFF7FEFF 		bl	remainingSize
+ 369 009a 2328     		cmp	r0, #35
+ 370 009c 13D8     		bhi	.L44
+ 371              	.L36:
+ 372 009e 002C     		cmp	r4, #0
+ 373 00a0 CCD1     		bne	.L27
+ 374 00a2 BDE8F843 		pop	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 375 00a6 FFF7FEBF 		b	unlockOutputBuffer
+ 376              	.L42:
+ 377 00aa 40F20000 		movw	r0, #:lower16:.LC6
+ 378 00ae C0F20000 		movt	r0, #:upper16:.LC6
+ 379 00b2 BDE8F843 		pop	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 380 00b6 FFF7FEBF 		b	firmwareError
+ 381              	.L34:
+ 382 00ba C5F84080 		str	r8, [r5, #64]
+ 383 00be C5F84490 		str	r9, [r5, #68]
+ 384 00c2 9846     		mov	r8, r3
+ 385 00c4 E4E7     		b	.L35
+ 386              	.L44:
+ 387 00c6 3146     		mov	r1, r6
+ 388 00c8 2846     		mov	r0, r5
+ 389 00ca FFF7FEFF 		bl	appendFast
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccugCmFL.s 			page 8
+
+
+ 390 00ce 2B6B     		ldr	r3, [r5, #48]
+ 391 00d0 2126     		movs	r6, #33
+ 392 00d2 1E70     		strb	r6, [r3]
+ 393 00d4 2B6B     		ldr	r3, [r5, #48]
+ 394 00d6 0133     		adds	r3, r3, #1
+ 395 00d8 3946     		mov	r1, r7
+ 396 00da 2B63     		str	r3, [r5, #48]
+ 397 00dc 2846     		mov	r0, r5
+ 398 00de FFF7FEFF 		bl	appendFast
+ 399 00e2 2B6B     		ldr	r3, [r5, #48]
+ 400 00e4 1E70     		strb	r6, [r3]
+ 401 00e6 2B6B     		ldr	r3, [r5, #48]
+ 402 00e8 40F20000 		movw	r0, #:lower16:.LANCHOR4
+ 403 00ec 0133     		adds	r3, r3, #1
+ 404 00ee 2B63     		str	r3, [r5, #48]
+ 405 00f0 4146     		mov	r1, r8
+ 406 00f2 C0F20000 		movt	r0, #:upper16:.LANCHOR4
+ 407 00f6 FFF7FEFF 		bl	itoa10
+ 408 00fa 40F20001 		movw	r1, #:lower16:.LANCHOR4
+ 409 00fe C0F20001 		movt	r1, #:upper16:.LANCHOR4
+ 410 0102 2846     		mov	r0, r5
+ 411 0104 FFF7FEFF 		bl	appendFast
+ 412 0108 2B6B     		ldr	r3, [r5, #48]
+ 413 010a 1E70     		strb	r6, [r3]
+ 414 010c 2B6B     		ldr	r3, [r5, #48]
+ 415 010e 0022     		movs	r2, #0
+ 416 0110 591C     		adds	r1, r3, #1
+ 417 0112 2963     		str	r1, [r5, #48]
+ 418 0114 5A70     		strb	r2, [r3, #1]
+ 419 0116 C2E7     		b	.L36
+ 420              	.L43:
+ 421 0118 40F20000 		movw	r0, #:lower16:.LC7
+ 422 011c C0F20000 		movt	r0, #:upper16:.LC7
+ 423 0120 BDE8F843 		pop	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 424 0124 FFF7FEBF 		b	firmwareError
+ 425              	.L40:
+ 426 0128 40F20000 		movw	r0, #:lower16:.LC5
+ 427 012c C0F20000 		movt	r0, #:upper16:.LC5
+ 428 0130 BDE8F843 		pop	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 429 0134 FFF7FEBF 		b	firmwareError
+ 430              		.size	_ZN9WaveChart18addWaveChartEvent3EPKcS1_, .-_ZN9WaveChart18addWaveChartEvent3EPKcS1_
+ 431 0138 AFF30080 		.section	.text._Z22showWaveChartHistogramv,"ax",%progbits
+ 431      AFF30080 
+ 432              		.align	2
+ 433              		.p2align 4,,15
+ 434              		.global	_Z22showWaveChartHistogramv
+ 435              		.thumb
+ 436              		.thumb_func
+ 437              		.type	_Z22showWaveChartHistogramv, %function
+ 438              	_Z22showWaveChartHistogramv:
+ 439              		@ args = 0, pretend = 0, frame = 0
+ 440              		@ frame_needed = 0, uses_anonymous_args = 0
+ 441              		@ link register save eliminated.
+ 442 0000 7047     		bx	lr
+ 443              		.size	_Z22showWaveChartHistogramv, .-_Z22showWaveChartHistogramv
+ 444 0002 00BFAFF3 		.section	.text._Z13initWaveChartP9WaveChart,"ax",%progbits
+ 444      0080AFF3 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccugCmFL.s 			page 9
+
+
+ 444      0080AFF3 
+ 444      0080
+ 445              		.align	2
+ 446              		.p2align 4,,15
+ 447              		.global	_Z13initWaveChartP9WaveChart
+ 448              		.thumb
+ 449              		.thumb_func
+ 450              		.type	_Z13initWaveChartP9WaveChart, %function
+ 451              	_Z13initWaveChartP9WaveChart:
+ 452              		@ args = 0, pretend = 0, frame = 0
+ 453              		@ frame_needed = 0, uses_anonymous_args = 0
+ 454 0000 10B5     		push	{r4, lr}
+ 455 0002 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 456 0006 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 457 000a 0446     		mov	r4, r0
+ 458 000c 1B68     		ldr	r3, [r3]
+ 459 000e 93F8D835 		ldrb	r3, [r3, #1496]	@ zero_extendqisi2
+ 460 0012 9906     		lsls	r1, r3, #26
+ 461 0014 09D4     		bmi	.L47
+ 462 0016 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 463 001a 40F20001 		movw	r1, #:lower16:.LC8
+ 464 001e C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 465 0022 C0F20001 		movt	r1, #:upper16:.LC8
+ 466 0026 FFF7FEFF 		bl	printMsg
+ 467              	.L47:
+ 468 002a 2046     		mov	r0, r4
+ 469 002c FFF7FEFF 		bl	_ZN9WaveChart4initEv
+ 470 0030 FFF7FEFF 		bl	_ZL11printStatusv
+ 471 0034 40F20000 		movw	r0, #:lower16:.LC9
+ 472 0038 40F20001 		movw	r1, #:lower16:_Z12setChartSizei
+ 473 003c C0F20000 		movt	r0, #:upper16:.LC9
+ 474 0040 C0F20001 		movt	r1, #:upper16:_Z12setChartSizei
+ 475 0044 FFF7FEFF 		bl	addConsoleActionI
+ 476 0048 40F20000 		movw	r0, #:lower16:.LC10
+ 477 004c 40F20001 		movw	r1, #:lower16:_ZL14setChartActivei
+ 478 0050 C0F20000 		movt	r0, #:upper16:.LC10
+ 479 0054 C0F20001 		movt	r1, #:upper16:_ZL14setChartActivei
+ 480 0058 BDE81040 		pop	{r4, lr}
+ 481 005c FFF7FEBF 		b	addConsoleActionI
+ 482              		.size	_Z13initWaveChartP9WaveChart, .-_Z13initWaveChartP9WaveChart
+ 483              		.section	.text.startup._GLOBAL__sub_I_waveChartUsedSize,"ax",%progbits
+ 484              		.align	2
+ 485              		.p2align 4,,15
+ 486              		.thumb
+ 487              		.thumb_func
+ 488              		.type	_GLOBAL__sub_I_waveChartUsedSize, %function
+ 489              	_GLOBAL__sub_I_waveChartUsedSize:
+ 490              		@ args = 0, pretend = 0, frame = 0
+ 491              		@ frame_needed = 0, uses_anonymous_args = 0
+ 492              		@ link register save eliminated.
+ 493 0000 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 494 0004 40F20001 		movw	r1, #:lower16:.LC11
+ 495 0008 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 496 000c C0F20001 		movt	r1, #:upper16:.LC11
+ 497 0010 FFF7FEBF 		b	_ZN18LoggingWithStorageC1EPKc
+ 498              		.size	_GLOBAL__sub_I_waveChartUsedSize, .-_GLOBAL__sub_I_waveChartUsedSize
+ 499 0014 AFF30080 		.section	.init_array,"aw",%init_array
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccugCmFL.s 			page 10
+
+
+ 499      AFF30080 
+ 499      AFF30080 
+ 500              		.align	2
+ 501 0000 00000000 		.word	_GLOBAL__sub_I_waveChartUsedSize(target1)
+ 502              		.global	skipUntilEngineCycle
+ 503              		.global	waveChartUsedSize
+ 504              		.section	.ccm,"aw",%progbits
+ 505              		.align	2
+ 506              		.set	.LANCHOR1,. + 0
+ 507              		.type	_ZL19WAVE_LOGGING_BUFFER, %object
+ 508              		.size	_ZL19WAVE_LOGGING_BUFFER, 5000
+ 509              	_ZL19WAVE_LOGGING_BUFFER:
+ 510 0000 00000000 		.space	5000
+ 510      00000000 
+ 510      00000000 
+ 510      00000000 
+ 510      00000000 
+ 511              		.section	.bss.waveChartUsedSize,"aw",%nobits
+ 512              		.align	2
+ 513              		.set	.LANCHOR2,. + 0
+ 514              		.type	waveChartUsedSize, %object
+ 515              		.size	waveChartUsedSize, 4
+ 516              	waveChartUsedSize:
+ 517 0000 00000000 		.space	4
+ 518              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 519              		.align	2
+ 520              	.LC0:
+ 521 0000 656E6769 		.ascii	"engine chart: %s\000"
+ 521      6E652063 
+ 521      68617274 
+ 521      3A202573 
+ 521      00
+ 522 0011 000000   		.space	3
+ 523              	.LC1:
+ 524 0014 656E6769 		.ascii	"engine chart size=%d\000"
+ 524      6E652063 
+ 524      68617274 
+ 524      2073697A 
+ 524      653D2564 
+ 525 0029 000000   		.space	3
+ 526              	.LC2:
+ 527 002c 77617665 		.ascii	"wave_chart%s\000"
+ 527      5F636861 
+ 527      72742573 
+ 527      00
+ 528 0039 000000   		.space	3
+ 529              	.LC3:
+ 530 003c 2C00     		.ascii	",\000"
+ 531 003e 0000     		.space	2
+ 532              	.LC4:
+ 533 0040 77617665 		.ascii	"wave chart\000"
+ 533      20636861 
+ 533      727400
+ 534 004b 00       		.space	1
+ 535              	.LC5:
+ 536 004c 57433A20 		.ascii	"WC: NULL name\000"
+ 536      4E554C4C 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccugCmFL.s 			page 11
+
+
+ 536      206E616D 
+ 536      6500
+ 537 005a 0000     		.space	2
+ 538              	.LC6:
+ 539 005c 6C6F7773 		.ascii	"lowstck#2c\000"
+ 539      74636B23 
+ 539      326300
+ 540 0067 00       		.space	1
+ 541              	.LC7:
+ 542 0068 63686172 		.ascii	"chart not initialized\000"
+ 542      74206E6F 
+ 542      7420696E 
+ 542      69746961 
+ 542      6C697A65 
+ 543 007e 0000     		.space	2
+ 544              	.LC8:
+ 545 0080 21212121 		.ascii	"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+ 545      21212121 
+ 545      21212121 
+ 545      21212121 
+ 545      21212121 
+ 546 00b3 21212121 		.ascii	"!!!!!!!!!!!!!!!!!!! chart disabled\000"
+ 546      21212121 
+ 546      21212121 
+ 546      21212121 
+ 546      21212120 
+ 547 00d6 0000     		.space	2
+ 548              	.LC9:
+ 549 00d8 63686172 		.ascii	"chartsize\000"
+ 549      7473697A 
+ 549      6500
+ 550 00e2 0000     		.space	2
+ 551              	.LC10:
+ 552 00e4 63686172 		.ascii	"chart\000"
+ 552      7400
+ 553 00ea 0000     		.space	2
+ 554              	.LC11:
+ 555 00ec 77617665 		.ascii	"wave info\000"
+ 555      20696E66 
+ 555      6F00
+ 556 00f6 0000     		.section	.bss._ZL10timeBuffer,"aw",%nobits
+ 557              		.align	2
+ 558              		.set	.LANCHOR4,. + 0
+ 559              		.type	_ZL10timeBuffer, %object
+ 560              		.size	_ZL10timeBuffer, 10
+ 561              	_ZL10timeBuffer:
+ 562 0000 00000000 		.space	10
+ 562      00000000 
+ 562      0000
+ 563 000a 0000     		.section	.bss._ZL6logger,"aw",%nobits
+ 564              		.align	2
+ 565              		.set	.LANCHOR0,. + 0
+ 566              		.type	_ZL6logger, %object
+ 567              		.size	_ZL6logger, 260
+ 568              	_ZL6logger:
+ 569 0000 00000000 		.space	260
+ 569      00000000 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccugCmFL.s 			page 12
+
+
+ 569      00000000 
+ 569      00000000 
+ 569      00000000 
+ 570              		.section	.bss.skipUntilEngineCycle,"aw",%nobits
+ 571              		.align	2
+ 572              		.set	.LANCHOR3,. + 0
+ 573              		.type	skipUntilEngineCycle, %object
+ 574              		.size	skipUntilEngineCycle, 4
+ 575              	skipUntilEngineCycle:
+ 576 0000 00000000 		.space	4
+ 577              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccugCmFL.s 			page 13
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 wave_chart.cpp
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:17     .text._ZL11printStatusv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:22     .text._ZL11printStatusv:00000000 _ZL11printStatusv
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:565    .bss._ZL6logger:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:520    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:523    .rodata.str1.4:00000014 .LC1
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:48     .text._Z12setChartSizei:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:54     .text._Z12setChartSizei:00000000 _Z12setChartSizei
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:69     .text._ZL14setChartActivei:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:74     .text._ZL14setChartActivei:00000000 _ZL14setChartActivei
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:95     .text._ZN9WaveChart14resetWaveChartEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:101    .text._ZN9WaveChart14resetWaveChartEv:00000000 _ZN9WaveChart14resetWaveChartEv
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:526    .rodata.str1.4:0000002c .LC2
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:529    .rodata.str1.4:0000003c .LC3
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:122    .text._ZN9WaveChart19isStartedTooLongAgoEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:128    .text._ZN9WaveChart19isStartedTooLongAgoEv:00000000 _ZN9WaveChart19isStartedTooLongAgoEv
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:166    .text._ZN9WaveChart15isWaveChartFullEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:172    .text._ZN9WaveChart15isWaveChartFullEv:00000000 _ZN9WaveChart15isWaveChartFullEv
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:188    .text._ZN9WaveChartC2Ev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:194    .text._ZN9WaveChartC2Ev:00000000 _ZN9WaveChartC2Ev
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:194    .text._ZN9WaveChartC2Ev:00000000 _ZN9WaveChartC1Ev
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:212    .text._ZN9WaveChart4initEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:218    .text._ZN9WaveChart4initEv:00000000 _ZN9WaveChart4initEv
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:532    .rodata.str1.4:00000040 .LC4
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:506    .ccm:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:236    .text._ZN9WaveChart12publishChartEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:242    .text._ZN9WaveChart12publishChartEv:00000000 _ZN9WaveChart12publishChartEv
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:513    .bss.waveChartUsedSize:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:272    .text._ZN9WaveChart18publishChartIfFullEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:278    .text._ZN9WaveChart18publishChartIfFullEv:00000000 _ZN9WaveChart18publishChartIfFullEv
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:303    .text._ZN9WaveChart18addWaveChartEvent3EPKcS1_:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:309    .text._ZN9WaveChart18addWaveChartEvent3EPKcS1_:00000000 _ZN9WaveChart18addWaveChartEvent3EPKcS1_
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:572    .bss.skipUntilEngineCycle:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:538    .rodata.str1.4:0000005c .LC6
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:558    .bss._ZL10timeBuffer:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:541    .rodata.str1.4:00000068 .LC7
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:535    .rodata.str1.4:0000004c .LC5
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:432    .text._Z22showWaveChartHistogramv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:438    .text._Z22showWaveChartHistogramv:00000000 _Z22showWaveChartHistogramv
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:445    .text._Z13initWaveChartP9WaveChart:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:451    .text._Z13initWaveChartP9WaveChart:00000000 _Z13initWaveChartP9WaveChart
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:544    .rodata.str1.4:00000080 .LC8
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:548    .rodata.str1.4:000000d8 .LC9
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:551    .rodata.str1.4:000000e4 .LC10
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:484    .text.startup._GLOBAL__sub_I_waveChartUsedSize:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:489    .text.startup._GLOBAL__sub_I_waveChartUsedSize:00000000 _GLOBAL__sub_I_waveChartUsedSize
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:554    .rodata.str1.4:000000ec .LC11
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:500    .init_array:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:575    .bss.skipUntilEngineCycle:00000000 skipUntilEngineCycle
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:516    .bss.waveChartUsedSize:00000000 waveChartUsedSize
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:505    .ccm:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:509    .ccm:00000000 _ZL19WAVE_LOGGING_BUFFER
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:512    .bss.waveChartUsedSize:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:519    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:557    .bss._ZL10timeBuffer:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:561    .bss._ZL10timeBuffer:00000000 _ZL10timeBuffer
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccugCmFL.s 			page 14
+
+
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:564    .bss._ZL6logger:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:568    .bss._ZL6logger:00000000 _ZL6logger
+C:\Users\pc\AppData\Local\Temp\ccugCmFL.s:571    .bss.skipUntilEngineCycle:00000000 $d
+
+UNDEFINED SYMBOLS
+engineConfiguration
+_Z12boolToStringb
+scheduleMsg
+maxLockTime
+resetLogging
+appendPrintf
+__aeabi_uldivmod
+getTimeNowNt
+_ZN7LoggingC1Ev
+initLoggingExt
+_Z10getFullLogv
+scheduleLogging
+engine
+_ZN13RpmCalculator20getRevolutionCounterEv
+rlist
+getRemainingStack
+lockOutputBuffer
+remainingSize
+unlockOutputBuffer
+firmwareError
+appendFast
+itoa10
+printMsg
+addConsoleActionI
+_ZN18LoggingWithStorageC1EPKc

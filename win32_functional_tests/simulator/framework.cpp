@@ -8,11 +8,11 @@
 #include "main.h"
 #include "framework.h"
 
-uint64_t getTimeNowNt(void) {
+efitick_t getTimeNowNt(void) {
 	return getTimeNowUs() * US_TO_NT_MULTIPLIER;
 }
 
-uint64_t getTimeNowUs(void) {
+efitimeus_t getTimeNowUs(void) {
 	return chTimeNow() * (1000000 / CH_FREQUENCY);
 }
 

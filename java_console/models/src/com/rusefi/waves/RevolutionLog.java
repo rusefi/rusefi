@@ -2,7 +2,7 @@ package com.rusefi.waves;
 
 import java.util.*;
 
-import static com.rusefi.io.tcp.TcpConnector.parseIntWithReason;
+import static com.rusefi.models.Utils.parseIntWithReason;
 
 /**
  * 1/11/14.

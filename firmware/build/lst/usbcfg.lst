@@ -1,0 +1,529 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"usbcfg.c"
+  16              		.section	.text.get_descriptor,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	get_descriptor, %function
+  22              	get_descriptor:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25              		@ link register save eliminated.
+  26 0000 0229     		cmp	r1, #2
+  27 0002 09D0     		beq	.L6
+  28 0004 0329     		cmp	r1, #3
+  29 0006 0CD0     		beq	.L4
+  30 0008 40F20000 		movw	r0, #:lower16:.LANCHOR0
+  31 000c C0F20000 		movt	r0, #:upper16:.LANCHOR0
+  32 0010 0129     		cmp	r1, #1
+  33 0012 18BF     		it	ne
+  34 0014 0020     		movne	r0, #0
+  35 0016 7047     		bx	lr
+  36              	.L6:
+  37 0018 40F20000 		movw	r0, #:lower16:.LANCHOR1
+  38 001c C0F20000 		movt	r0, #:upper16:.LANCHOR1
+  39 0020 7047     		bx	lr
+  40              	.L4:
+  41 0022 032A     		cmp	r2, #3
+  42 0024 06D8     		bhi	.L7
+  43 0026 40F20000 		movw	r0, #:lower16:.LANCHOR2
+  44 002a C0F20000 		movt	r0, #:upper16:.LANCHOR2
+  45 002e 00EBC200 		add	r0, r0, r2, lsl #3
+  46 0032 7047     		bx	lr
+  47              	.L7:
+  48 0034 0020     		movs	r0, #0
+  49 0036 7047     		bx	lr
+  50              		.size	get_descriptor, .-get_descriptor
+  51 0038 AFF30080 		.section	.text.usb_event,"ax",%progbits
+  51      AFF30080 
+  52              		.align	2
+  53              		.p2align 4,,15
+  54              		.thumb
+  55              		.thumb_func
+  56              		.type	usb_event, %function
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s 			page 2
+
+
+  57              	usb_event:
+  58              		@ args = 0, pretend = 0, frame = 0
+  59              		@ frame_needed = 0, uses_anonymous_args = 0
+  60 0000 0229     		cmp	r1, #2
+  61 0002 10B5     		push	{r4, lr}
+  62 0004 0446     		mov	r4, r0
+  63 0006 1FD1     		bne	.L9
+  64 0008 2023     		movs	r3, #32
+  65              	@ 274 "./hw_layer/serial_over_usb/usbcfg.c" 1
+  66 000a 83F31188 		msr     BASEPRI, r3
+  67              	@ 0 "" 2
+  68              		.thumb
+  69 000e FFF7FEFF 		bl	dbg_check_lock_from_isr
+  70 0012 40F20002 		movw	r2, #:lower16:.LANCHOR3
+  71 0016 2046     		mov	r0, r4
+  72 0018 C0F20002 		movt	r2, #:upper16:.LANCHOR3
+  73 001c 0121     		movs	r1, #1
+  74 001e FFF7FEFF 		bl	usbInitEndpointI
+  75 0022 40F20002 		movw	r2, #:lower16:.LANCHOR4
+  76 0026 C0F20002 		movt	r2, #:upper16:.LANCHOR4
+  77 002a 0221     		movs	r1, #2
+  78 002c 2046     		mov	r0, r4
+  79 002e FFF7FEFF 		bl	usbInitEndpointI
+  80 0032 40F20000 		movw	r0, #:lower16:.LANCHOR5
+  81 0036 C0F20000 		movt	r0, #:upper16:.LANCHOR5
+  82 003a FFF7FEFF 		bl	sduConfigureHookI
+  83 003e FFF7FEFF 		bl	dbg_check_unlock_from_isr
+  84 0042 0023     		movs	r3, #0
+  85              	@ 285 "./hw_layer/serial_over_usb/usbcfg.c" 1
+  86 0044 83F31188 		msr     BASEPRI, r3
+  87              	@ 0 "" 2
+  88              		.thumb
+  89              	.L9:
+  90 0048 10BD     		pop	{r4, pc}
+  91              		.size	usb_event, .-usb_event
+  92              		.global	SDU1
+  93              		.global	serusbcfg
+  94              		.global	usbcfg
+  95 004a 00BFAFF3 		.section	.rodata.ep1config,"a",%progbits
+  95      0080
+  96              		.align	2
+  97              		.set	.LANCHOR3,. + 0
+  98              		.type	ep1config, %object
+  99              		.size	ep1config, 36
+ 100              	ep1config:
+ 101 0000 02000000 		.word	2
+ 102 0004 00000000 		.word	0
+ 103 0008 00000000 		.word	sduDataTransmitted
+ 104 000c 00000000 		.word	sduDataReceived
+ 105 0010 4000     		.short	64
+ 106 0012 4000     		.short	64
+ 107 0014 00000000 		.word	ep1instate
+ 108 0018 00000000 		.word	ep1outstate
+ 109 001c 0200     		.short	2
+ 110 001e 0000     		.space	2
+ 111 0020 00000000 		.word	0
+ 112              		.section	.bss.ep2instate,"aw",%nobits
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s 			page 3
+
+
+ 113              		.align	2
+ 114              		.type	ep2instate, %object
+ 115              		.size	ep2instate, 20
+ 116              	ep2instate:
+ 117 0000 00000000 		.space	20
+ 117      00000000 
+ 117      00000000 
+ 117      00000000 
+ 117      00000000 
+ 118              		.section	.bss.SDU1,"aw",%nobits
+ 119              		.align	2
+ 120              		.set	.LANCHOR5,. + 0
+ 121              		.type	SDU1, %object
+ 122              		.size	SDU1, 600
+ 123              	SDU1:
+ 124 0000 00000000 		.space	600
+ 124      00000000 
+ 124      00000000 
+ 124      00000000 
+ 124      00000000 
+ 125              		.section	.bss.ep1instate,"aw",%nobits
+ 126              		.align	2
+ 127              		.type	ep1instate, %object
+ 128              		.size	ep1instate, 20
+ 129              	ep1instate:
+ 130 0000 00000000 		.space	20
+ 130      00000000 
+ 130      00000000 
+ 130      00000000 
+ 130      00000000 
+ 131              		.section	.rodata.vcom_configuration_descriptor,"a",%progbits
+ 132              		.align	2
+ 133              		.set	.LANCHOR1,. + 0
+ 134              		.type	vcom_configuration_descriptor, %object
+ 135              		.size	vcom_configuration_descriptor, 8
+ 136              	vcom_configuration_descriptor:
+ 137 0000 43000000 		.word	67
+ 138 0004 00000000 		.word	vcom_configuration_descriptor_data
+ 139              		.section	.rodata.ep2config,"a",%progbits
+ 140              		.align	2
+ 141              		.set	.LANCHOR4,. + 0
+ 142              		.type	ep2config, %object
+ 143              		.size	ep2config, 36
+ 144              	ep2config:
+ 145 0000 03000000 		.word	3
+ 146 0004 00000000 		.word	0
+ 147 0008 00000000 		.word	sduInterruptTransmitted
+ 148 000c 00000000 		.word	0
+ 149 0010 1000     		.short	16
+ 150 0012 0000     		.short	0
+ 151 0014 00000000 		.word	ep2instate
+ 152 0018 00000000 		.word	0
+ 153 001c 0100     		.short	1
+ 154 001e 0000     		.space	2
+ 155 0020 00000000 		.word	0
+ 156              		.section	.rodata.usbcfg,"a",%progbits
+ 157              		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s 			page 4
+
+
+ 158              		.type	usbcfg, %object
+ 159              		.size	usbcfg, 16
+ 160              	usbcfg:
+ 161 0000 00000000 		.word	usb_event
+ 162 0004 00000000 		.word	get_descriptor
+ 163 0008 00000000 		.word	sduRequestsHook
+ 164 000c 00000000 		.word	0
+ 165              		.section	.rodata.vcom_configuration_descriptor_data,"a",%progbits
+ 166              		.align	2
+ 167              		.type	vcom_configuration_descriptor_data, %object
+ 168              		.size	vcom_configuration_descriptor_data, 67
+ 169              	vcom_configuration_descriptor_data:
+ 170 0000 09       		.byte	9
+ 171 0001 02       		.byte	2
+ 172 0002 43       		.byte	67
+ 173 0003 00       		.byte	0
+ 174 0004 02       		.byte	2
+ 175 0005 01       		.byte	1
+ 176 0006 00       		.byte	0
+ 177 0007 C0       		.byte	-64
+ 178 0008 32       		.byte	50
+ 179 0009 09       		.byte	9
+ 180 000a 04       		.byte	4
+ 181 000b 00       		.byte	0
+ 182 000c 00       		.byte	0
+ 183 000d 01       		.byte	1
+ 184 000e 02       		.byte	2
+ 185 000f 02       		.byte	2
+ 186 0010 01       		.byte	1
+ 187 0011 00       		.byte	0
+ 188 0012 05       		.byte	5
+ 189 0013 24       		.byte	36
+ 190 0014 00       		.byte	0
+ 191 0015 10       		.byte	16
+ 192 0016 01       		.byte	1
+ 193 0017 05       		.byte	5
+ 194 0018 24       		.byte	36
+ 195 0019 01       		.byte	1
+ 196 001a 00       		.byte	0
+ 197 001b 01       		.byte	1
+ 198 001c 04       		.byte	4
+ 199 001d 24       		.byte	36
+ 200 001e 02       		.byte	2
+ 201 001f 02       		.byte	2
+ 202 0020 05       		.byte	5
+ 203 0021 24       		.byte	36
+ 204 0022 06       		.byte	6
+ 205 0023 00       		.byte	0
+ 206 0024 01       		.byte	1
+ 207 0025 07       		.byte	7
+ 208 0026 05       		.byte	5
+ 209 0027 82       		.byte	-126
+ 210 0028 03       		.byte	3
+ 211 0029 08       		.byte	8
+ 212 002a 00       		.byte	0
+ 213 002b FF       		.byte	-1
+ 214 002c 09       		.byte	9
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s 			page 5
+
+
+ 215 002d 04       		.byte	4
+ 216 002e 01       		.byte	1
+ 217 002f 00       		.byte	0
+ 218 0030 02       		.byte	2
+ 219 0031 0A       		.byte	10
+ 220 0032 00       		.byte	0
+ 221 0033 00       		.byte	0
+ 222 0034 00       		.byte	0
+ 223 0035 07       		.byte	7
+ 224 0036 05       		.byte	5
+ 225 0037 01       		.byte	1
+ 226 0038 02       		.byte	2
+ 227 0039 40       		.byte	64
+ 228 003a 00       		.byte	0
+ 229 003b 00       		.byte	0
+ 230 003c 07       		.byte	7
+ 231 003d 05       		.byte	5
+ 232 003e 81       		.byte	-127
+ 233 003f 02       		.byte	2
+ 234 0040 40       		.byte	64
+ 235 0041 00       		.byte	0
+ 236 0042 00       		.byte	0
+ 237 0043 00       		.section	.rodata.vcom_device_descriptor_data,"a",%progbits
+ 238              		.align	2
+ 239              		.type	vcom_device_descriptor_data, %object
+ 240              		.size	vcom_device_descriptor_data, 18
+ 241              	vcom_device_descriptor_data:
+ 242 0000 12       		.byte	18
+ 243 0001 01       		.byte	1
+ 244 0002 10       		.byte	16
+ 245 0003 01       		.byte	1
+ 246 0004 02       		.byte	2
+ 247 0005 00       		.byte	0
+ 248 0006 00       		.byte	0
+ 249 0007 40       		.byte	64
+ 250 0008 83       		.byte	-125
+ 251 0009 04       		.byte	4
+ 252 000a 40       		.byte	64
+ 253 000b 57       		.byte	87
+ 254 000c 00       		.byte	0
+ 255 000d 02       		.byte	2
+ 256 000e 01       		.byte	1
+ 257 000f 02       		.byte	2
+ 258 0010 03       		.byte	3
+ 259 0011 01       		.byte	1
+ 260 0012 0000     		.section	.bss.ep1outstate,"aw",%nobits
+ 261              		.align	2
+ 262              		.type	ep1outstate, %object
+ 263              		.size	ep1outstate, 20
+ 264              	ep1outstate:
+ 265 0000 00000000 		.space	20
+ 265      00000000 
+ 265      00000000 
+ 265      00000000 
+ 265      00000000 
+ 266              		.section	.rodata.vcom_string0,"a",%progbits
+ 267              		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s 			page 6
+
+
+ 268              		.type	vcom_string0, %object
+ 269              		.size	vcom_string0, 4
+ 270              	vcom_string0:
+ 271 0000 04       		.byte	4
+ 272 0001 03       		.byte	3
+ 273 0002 09       		.byte	9
+ 274 0003 04       		.byte	4
+ 275              		.section	.rodata.vcom_string1,"a",%progbits
+ 276              		.align	2
+ 277              		.type	vcom_string1, %object
+ 278              		.size	vcom_string1, 38
+ 279              	vcom_string1:
+ 280 0000 26       		.byte	38
+ 281 0001 03       		.byte	3
+ 282 0002 53       		.byte	83
+ 283 0003 00       		.byte	0
+ 284 0004 54       		.byte	84
+ 285 0005 00       		.byte	0
+ 286 0006 4D       		.byte	77
+ 287 0007 00       		.byte	0
+ 288 0008 69       		.byte	105
+ 289 0009 00       		.byte	0
+ 290 000a 63       		.byte	99
+ 291 000b 00       		.byte	0
+ 292 000c 72       		.byte	114
+ 293 000d 00       		.byte	0
+ 294 000e 6F       		.byte	111
+ 295 000f 00       		.byte	0
+ 296 0010 65       		.byte	101
+ 297 0011 00       		.byte	0
+ 298 0012 6C       		.byte	108
+ 299 0013 00       		.byte	0
+ 300 0014 65       		.byte	101
+ 301 0015 00       		.byte	0
+ 302 0016 63       		.byte	99
+ 303 0017 00       		.byte	0
+ 304 0018 74       		.byte	116
+ 305 0019 00       		.byte	0
+ 306 001a 72       		.byte	114
+ 307 001b 00       		.byte	0
+ 308 001c 6F       		.byte	111
+ 309 001d 00       		.byte	0
+ 310 001e 6E       		.byte	110
+ 311 001f 00       		.byte	0
+ 312 0020 69       		.byte	105
+ 313 0021 00       		.byte	0
+ 314 0022 63       		.byte	99
+ 315 0023 00       		.byte	0
+ 316 0024 73       		.byte	115
+ 317 0025 00       		.byte	0
+ 318 0026 0000     		.section	.rodata.vcom_string2,"a",%progbits
+ 319              		.align	2
+ 320              		.type	vcom_string2, %object
+ 321              		.size	vcom_string2, 56
+ 322              	vcom_string2:
+ 323 0000 38       		.byte	56
+ 324 0001 03       		.byte	3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s 			page 7
+
+
+ 325 0002 43       		.byte	67
+ 326 0003 00       		.byte	0
+ 327 0004 68       		.byte	104
+ 328 0005 00       		.byte	0
+ 329 0006 69       		.byte	105
+ 330 0007 00       		.byte	0
+ 331 0008 62       		.byte	98
+ 332 0009 00       		.byte	0
+ 333 000a 69       		.byte	105
+ 334 000b 00       		.byte	0
+ 335 000c 4F       		.byte	79
+ 336 000d 00       		.byte	0
+ 337 000e 53       		.byte	83
+ 338 000f 00       		.byte	0
+ 339 0010 2F       		.byte	47
+ 340 0011 00       		.byte	0
+ 341 0012 52       		.byte	82
+ 342 0013 00       		.byte	0
+ 343 0014 54       		.byte	84
+ 344 0015 00       		.byte	0
+ 345 0016 20       		.byte	32
+ 346 0017 00       		.byte	0
+ 347 0018 56       		.byte	86
+ 348 0019 00       		.byte	0
+ 349 001a 69       		.byte	105
+ 350 001b 00       		.byte	0
+ 351 001c 72       		.byte	114
+ 352 001d 00       		.byte	0
+ 353 001e 74       		.byte	116
+ 354 001f 00       		.byte	0
+ 355 0020 75       		.byte	117
+ 356 0021 00       		.byte	0
+ 357 0022 61       		.byte	97
+ 358 0023 00       		.byte	0
+ 359 0024 6C       		.byte	108
+ 360 0025 00       		.byte	0
+ 361 0026 20       		.byte	32
+ 362 0027 00       		.byte	0
+ 363 0028 43       		.byte	67
+ 364 0029 00       		.byte	0
+ 365 002a 4F       		.byte	79
+ 366 002b 00       		.byte	0
+ 367 002c 4D       		.byte	77
+ 368 002d 00       		.byte	0
+ 369 002e 20       		.byte	32
+ 370 002f 00       		.byte	0
+ 371 0030 50       		.byte	80
+ 372 0031 00       		.byte	0
+ 373 0032 6F       		.byte	111
+ 374 0033 00       		.byte	0
+ 375 0034 72       		.byte	114
+ 376 0035 00       		.byte	0
+ 377 0036 74       		.byte	116
+ 378 0037 00       		.byte	0
+ 379              		.section	.rodata.vcom_string3,"a",%progbits
+ 380              		.align	2
+ 381              		.type	vcom_string3, %object
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s 			page 8
+
+
+ 382              		.size	vcom_string3, 8
+ 383              	vcom_string3:
+ 384 0000 08       		.byte	8
+ 385 0001 03       		.byte	3
+ 386 0002 32       		.byte	50
+ 387 0003 00       		.byte	0
+ 388 0004 36       		.byte	54
+ 389 0005 00       		.byte	0
+ 390 0006 38       		.byte	56
+ 391 0007 00       		.byte	0
+ 392              		.section	.rodata.vcom_strings,"a",%progbits
+ 393              		.align	2
+ 394              		.set	.LANCHOR2,. + 0
+ 395              		.type	vcom_strings, %object
+ 396              		.size	vcom_strings, 32
+ 397              	vcom_strings:
+ 398 0000 04000000 		.word	4
+ 399 0004 00000000 		.word	vcom_string0
+ 400 0008 26000000 		.word	38
+ 401 000c 00000000 		.word	vcom_string1
+ 402 0010 38000000 		.word	56
+ 403 0014 00000000 		.word	vcom_string2
+ 404 0018 08000000 		.word	8
+ 405 001c 00000000 		.word	vcom_string3
+ 406              		.section	.rodata.serusbcfg,"a",%progbits
+ 407              		.align	2
+ 408              		.type	serusbcfg, %object
+ 409              		.size	serusbcfg, 8
+ 410              	serusbcfg:
+ 411 0000 00000000 		.word	USBD1
+ 412 0004 01       		.byte	1
+ 413 0005 01       		.byte	1
+ 414 0006 02       		.byte	2
+ 415 0007 00       		.space	1
+ 416              		.section	.rodata.vcom_device_descriptor,"a",%progbits
+ 417              		.align	2
+ 418              		.set	.LANCHOR0,. + 0
+ 419              		.type	vcom_device_descriptor, %object
+ 420              		.size	vcom_device_descriptor, 8
+ 421              	vcom_device_descriptor:
+ 422 0000 12000000 		.word	18
+ 423 0004 00000000 		.word	vcom_device_descriptor_data
+ 424              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 usbcfg.c
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:17     .text.get_descriptor:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:22     .text.get_descriptor:00000000 get_descriptor
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:418    .rodata.vcom_device_descriptor:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:133    .rodata.vcom_configuration_descriptor:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:394    .rodata.vcom_strings:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:52     .text.usb_event:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:57     .text.usb_event:00000000 usb_event
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:97     .rodata.ep1config:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:141    .rodata.ep2config:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:120    .bss.SDU1:00000000 .LANCHOR5
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:123    .bss.SDU1:00000000 SDU1
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:410    .rodata.serusbcfg:00000000 serusbcfg
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:160    .rodata.usbcfg:00000000 usbcfg
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:96     .rodata.ep1config:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:100    .rodata.ep1config:00000000 ep1config
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:129    .bss.ep1instate:00000000 ep1instate
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:264    .bss.ep1outstate:00000000 ep1outstate
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:113    .bss.ep2instate:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:116    .bss.ep2instate:00000000 ep2instate
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:119    .bss.SDU1:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:126    .bss.ep1instate:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:132    .rodata.vcom_configuration_descriptor:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:136    .rodata.vcom_configuration_descriptor:00000000 vcom_configuration_descriptor
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:169    .rodata.vcom_configuration_descriptor_data:00000000 vcom_configuration_descriptor_data
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:140    .rodata.ep2config:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:144    .rodata.ep2config:00000000 ep2config
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:157    .rodata.usbcfg:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:166    .rodata.vcom_configuration_descriptor_data:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:238    .rodata.vcom_device_descriptor_data:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:241    .rodata.vcom_device_descriptor_data:00000000 vcom_device_descriptor_data
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:261    .bss.ep1outstate:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:267    .rodata.vcom_string0:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:270    .rodata.vcom_string0:00000000 vcom_string0
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:276    .rodata.vcom_string1:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:279    .rodata.vcom_string1:00000000 vcom_string1
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:319    .rodata.vcom_string2:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:322    .rodata.vcom_string2:00000000 vcom_string2
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:380    .rodata.vcom_string3:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:383    .rodata.vcom_string3:00000000 vcom_string3
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:393    .rodata.vcom_strings:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:397    .rodata.vcom_strings:00000000 vcom_strings
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:407    .rodata.serusbcfg:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:417    .rodata.vcom_device_descriptor:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s:421    .rodata.vcom_device_descriptor:00000000 vcom_device_descriptor
+
+UNDEFINED SYMBOLS
+dbg_check_lock_from_isr
+usbInitEndpointI
+sduConfigureHookI
+dbg_check_unlock_from_isr
+sduDataTransmitted
+sduDataReceived
+sduInterruptTransmitted
+sduRequestsHook
+USBD1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccMbBaIp.s 			page 10
+
+

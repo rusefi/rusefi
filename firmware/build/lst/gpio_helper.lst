@@ -1,0 +1,99 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cceqNMAn.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"gpio_helper.cpp"
+  16              		.section	.text._Z16initOutputPinExtPKcP9OutputPinP12GPIO_TypeDefmm,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_Z16initOutputPinExtPKcP9OutputPinP12GPIO_TypeDefmm
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_Z16initOutputPinExtPKcP9OutputPinP12GPIO_TypeDefmm, %function
+  23              	_Z16initOutputPinExtPKcP9OutputPinP12GPIO_TypeDefmm:
+  24              		@ args = 4, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 70B4     		push	{r4, r5, r6}
+  28 0002 0D68     		ldr	r5, [r1]
+  29 0004 039E     		ldr	r6, [sp, #12]
+  30 0006 0C46     		mov	r4, r1
+  31 0008 0146     		mov	r1, r0
+  32 000a 45B1     		cbz	r5, .L2
+  33 000c 40F20000 		movw	r0, #:lower16:.LC0
+  34 0010 2A46     		mov	r2, r5
+  35 0012 6368     		ldr	r3, [r4, #4]
+  36 0014 C0F20000 		movt	r0, #:upper16:.LC0
+  37 0018 70BC     		pop	{r4, r5, r6}
+  38 001a FFF7FEBF 		b	firmwareError
+  39              	.L2:
+  40 001e 4FF0FF35 		mov	r5, #-1
+  41 0022 84E80C00 		stmia	r4, {r2, r3}
+  42 0026 1146     		mov	r1, r2
+  43 0028 E560     		str	r5, [r4, #12]
+  44 002a 1A46     		mov	r2, r3
+  45 002c 3346     		mov	r3, r6
+  46 002e 70BC     		pop	{r4, r5, r6}
+  47 0030 FFF7FEBF 		b	_Z12mySetPadModePKcP12GPIO_TypeDefmm
+  48              		.size	_Z16initOutputPinExtPKcP9OutputPinP12GPIO_TypeDefmm, .-_Z16initOutputPinExtPKcP9OutputPinP12
+  49 0034 AFF30080 		.section	.text._Z13initOutputPinPKcP9OutputPinP12GPIO_TypeDefm,"ax",%progbits
+  49      AFF30080 
+  49      AFF30080 
+  50              		.align	2
+  51              		.p2align 4,,15
+  52              		.global	_Z13initOutputPinPKcP9OutputPinP12GPIO_TypeDefm
+  53              		.thumb
+  54              		.thumb_func
+  55              		.type	_Z13initOutputPinPKcP9OutputPinP12GPIO_TypeDefm, %function
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cceqNMAn.s 			page 2
+
+
+  56              	_Z13initOutputPinPKcP9OutputPinP12GPIO_TypeDefm:
+  57              		@ args = 0, pretend = 0, frame = 0
+  58              		@ frame_needed = 0, uses_anonymous_args = 0
+  59 0000 10B5     		push	{r4, lr}
+  60 0002 82B0     		sub	sp, sp, #8
+  61 0004 0124     		movs	r4, #1
+  62 0006 0094     		str	r4, [sp]
+  63 0008 FFF7FEFF 		bl	_Z16initOutputPinExtPKcP9OutputPinP12GPIO_TypeDefmm
+  64 000c 02B0     		add	sp, sp, #8
+  65              		@ sp needed
+  66 000e 10BD     		pop	{r4, pc}
+  67              		.size	_Z13initOutputPinPKcP9OutputPinP12GPIO_TypeDefm, .-_Z13initOutputPinPKcP9OutputPinP12GPIO_Ty
+  68              		.section	.rodata.str1.4,"aMS",%progbits,1
+  69              		.align	2
+  70              	.LC0:
+  71 0000 6F757470 		.ascii	"outputPin [%s] already assigned to %x%d\000"
+  71      75745069 
+  71      6E205B25 
+  71      735D2061 
+  71      6C726561 
+  72              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cceqNMAn.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 gpio_helper.cpp
+C:\Users\pc\AppData\Local\Temp\cceqNMAn.s:17     .text._Z16initOutputPinExtPKcP9OutputPinP12GPIO_TypeDefmm:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cceqNMAn.s:23     .text._Z16initOutputPinExtPKcP9OutputPinP12GPIO_TypeDefmm:00000000 _Z16initOutputPinExtPKcP9OutputPinP12GPIO_TypeDefmm
+C:\Users\pc\AppData\Local\Temp\cceqNMAn.s:70     .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\cceqNMAn.s:50     .text._Z13initOutputPinPKcP9OutputPinP12GPIO_TypeDefm:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cceqNMAn.s:56     .text._Z13initOutputPinPKcP9OutputPinP12GPIO_TypeDefm:00000000 _Z13initOutputPinPKcP9OutputPinP12GPIO_TypeDefm
+C:\Users\pc\AppData\Local\Temp\cceqNMAn.s:69     .rodata.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+firmwareError
+_Z12mySetPadModePKcP12GPIO_TypeDefmm

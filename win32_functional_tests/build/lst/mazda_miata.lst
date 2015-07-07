@@ -1,0 +1,1361 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s 			page 1
+
+
+   1              		.file	"mazda_miata.cpp"
+   2              		.section	.text$_ZL13commonMiataNav,"x"
+   3              		.p2align 4,,15
+   4              		.def	__ZL13commonMiataNav;	.scl	3;	.type	32;	.endef
+   5              	__ZL13commonMiataNav:
+   6              	LFB86:
+   7              		.cfi_startproc
+   8 0000 83EC2C   		subl	$44, %esp
+   9              		.cfi_def_cfa_offset 48
+  10 0003 A1000000 		movl	_engineConfiguration, %eax
+  10      00
+  11 0008 8B150000 		movl	_boardConfiguration, %edx
+  11      0000
+  12 000e C7801802 		movl	$3, 536(%eax)
+  12      00000300 
+  12      0000
+  13 0018 C780E805 		movl	$100, 1512(%eax)
+  13      00006400 
+  13      0000
+  14 0022 C7822801 		movl	$38, 296(%edx)
+  14      00002600 
+  14      0000
+  15 002c C7822C01 		movl	$5, 300(%edx)
+  15      00000500 
+  15      0000
+  16 0036 C780BC01 		movl	$2, 444(%eax)
+  16      00000200 
+  16      0000
+  17 0040 C7442404 		movl	$0x408ccccd, 4(%esp)
+  17      CDCC8C40 
+  18 0048 C704249A 		movl	$0x3f99999a, (%esp)
+  18      99993F
+  19 004f E8000000 		call	__Z14setFuelLoadBinff
+  19      00
+  20 0054 C7442404 		movl	$0x45dac000, 4(%esp)
+  20      00C0DA45 
+  21 005c C7042400 		movl	$0x44480000, (%esp)
+  21      004844
+  22 0063 E8000000 		call	__Z13setFuelRpmBinff
+  22      00
+  23 0068 A1000000 		movl	_boardConfiguration, %eax
+  23      00
+  24 006d 8B150000 		movl	_engineConfiguration, %edx
+  24      0000
+  25 0073 C74008A0 		movl	$160, 8(%eax)
+  25      000000
+  26 007a C782CC01 		movl	$0x43930000, 460(%edx)
+  26      00000000 
+  26      9343
+  27 0084 C740544C 		movl	$76, 84(%eax)
+  27      000000
+  28 008b C740584E 		movl	$78, 88(%eax)
+  28      000000
+  29 0092 C7405C50 		movl	$80, 92(%eax)
+  29      000000
+  30 0099 C7406050 		movl	$80, 96(%eax)
+  30      000000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s 			page 2
+
+
+  31 00a0 C7808400 		movl	$0, 132(%eax)
+  31      00000000 
+  31      0000
+  32 00aa C7425C00 		movl	$0x40a00000, 92(%edx)
+  32      00A040
+  33 00b1 81C20001 		addl	$256, %edx
+  33      0000
+  34 00b7 C7806C01 		movl	$2, 364(%eax)
+  34      00000200 
+  34      0000
+  35 00c1 C7807001 		movl	$2, 368(%eax)
+  35      00000200 
+  35      0000
+  36 00cb 891424   		movl	%edx, (%esp)
+  37 00ce E8000000 		call	__Z18setCommonNTCSensorP14ThermistorConf
+  37      00
+  38 00d3 A1000000 		movl	_engineConfiguration, %eax
+  38      00
+  39 00d8 D9050400 		flds	LC6
+  39      0000
+  40 00de D9901801 		fsts	280(%eax)
+  40      0000
+  41 00e4 05200100 		addl	$288, %eax
+  41      00
+  42 00e9 890424   		movl	%eax, (%esp)
+  43 00ec D95C2410 		fstps	16(%esp)
+  44 00f0 E8000000 		call	__Z18setCommonNTCSensorP14ThermistorConf
+  44      00
+  45 00f5 A1000000 		movl	_engineConfiguration, %eax
+  45      00
+  46 00fa D9442410 		flds	16(%esp)
+  47 00fe D9983801 		fstps	312(%eax)
+  47      0000
+  48 0104 83C42C   		addl	$44, %esp
+  49              		.cfi_def_cfa_offset 4
+  50 0107 C3       		ret
+  51              		.cfi_endproc
+  52              	LFE86:
+  53 0108 90909090 		.section	.text$_ZL19setMiata1994_commonv,"x"
+  53      90909090 
+  54              		.p2align 4,,15
+  55              		.def	__ZL19setMiata1994_commonv;	.scl	3;	.type	32;	.endef
+  56              	__ZL19setMiata1994_commonv:
+  57              	LFB90:
+  58              		.cfi_startproc
+  59 0000 83EC1C   		subl	$28, %esp
+  60              		.cfi_def_cfa_offset 32
+  61 0003 E8000000 		call	__ZL13commonMiataNav
+  61      00
+  62 0008 A1000000 		movl	_engineConfiguration, %eax
+  62      00
+  63 000d C7809001 		movl	$0x3feb645a, 400(%eax)
+  63      00005A64 
+  63      EB3F
+  64 0017 C780B801 		movl	$0x00000000, 440(%eax)
+  64      00000000 
+  64      0000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s 			page 3
+
+
+  65 0021 C7406C00 		movl	$0x428c0000, 108(%eax)
+  65      008C42
+  66 0028 A1000000 		movl	_config, %eax
+  66      00
+  67 002d C7042400 		movl	$__ZL20miata_maf_fuel_table, (%esp)
+  67      000000
+  68 0034 05B82900 		addl	$10680, %eax
+  68      00
+  69 0039 89442404 		movl	%eax, 4(%esp)
+  70 003d E8000000 		call	__Z13copyFuelTablePA16_KfPA16_f
+  70      00
+  71 0042 A1000000 		movl	_config, %eax
+  71      00
+  72 0047 C7042400 		movl	$__ZL23miata_maf_advance_table, (%esp)
+  72      000000
+  73 004e 05382E00 		addl	$11832, %eax
+  73      00
+  74 0053 89442404 		movl	%eax, 4(%esp)
+  75 0057 E8000000 		call	__Z15copyTimingTablePA16_KfPA16_f
+  75      00
+  76 005c A1000000 		movl	_boardConfiguration, %eax
+  76      00
+  77 0061 C7809000 		movl	$70, 144(%eax)
+  77      00004600 
+  77      0000
+  78 006b C7807801 		movl	$80, 376(%eax)
+  78      00005000 
+  78      0000
+  79 0075 C7401844 		movl	$68, 24(%eax)
+  79      000000
+  80 007c C7403050 		movl	$80, 48(%eax)
+  80      000000
+  81 0083 C7403450 		movl	$80, 52(%eax)
+  81      000000
+  82 008a C7405000 		movl	$0, 80(%eax)
+  82      000000
+  83 0091 C7001900 		movl	$25, (%eax)
+  83      0000
+  84 0097 C740544E 		movl	$78, 84(%eax)
+  84      000000
+  85 009e C7405850 		movl	$80, 88(%eax)
+  85      000000
+  86 00a5 C7405C27 		movl	$39, 92(%eax)
+  86      000000
+  87 00ac C7406050 		movl	$80, 96(%eax)
+  87      000000
+  88 00b3 C7808400 		movl	$0, 132(%eax)
+  88      00000000 
+  88      0000
+  89 00bd 890424   		movl	%eax, (%esp)
+  90 00c0 E8000000 		call	__Z19setFrankenso_01_LCDP21board_configuration_s
+  90      00
+  91 00c5 A1000000 		movl	_engineConfiguration, %eax
+  91      00
+  92 00ca 890424   		movl	%eax, (%esp)
+  93 00cd E8000000 		call	__Z27commonFrankensoAnalogInputsP22engine_configuration_s
+  93      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s 			page 4
+
+
+  94 00d2 A1000000 		movl	_engineConfiguration, %eax
+  94      00
+  95 00d7 C7800C02 		movl	$2, 524(%eax)
+  95      00000200 
+  95      0000
+  96 00e1 C780FC00 		movl	$4, 252(%eax)
+  96      00000400 
+  96      0000
+  97 00eb C7804402 		movl	$0, 580(%eax)
+  97      00000000 
+  97      0000
+  98 00f5 C7801C01 		movl	$12, 284(%eax)
+  98      00000C00 
+  98      0000
+  99 00ff C7803C01 		movl	$11, 316(%eax)
+  99      00000B00 
+  99      0000
+ 100 0109 83C41C   		addl	$28, %esp
+ 101              		.cfi_def_cfa_offset 4
+ 102 010c C3       		ret
+ 103              		.cfi_endproc
+ 104              	LFE90:
+ 105 010d 909090   		.section	.text$_Z12setMiata1990v,"x"
+ 106              		.p2align 4,,15
+ 107              		.globl	__Z12setMiata1990v
+ 108              		.def	__Z12setMiata1990v;	.scl	2;	.type	32;	.endef
+ 109              	__Z12setMiata1990v:
+ 110              	LFB88:
+ 111              		.cfi_startproc
+ 112 0000 83EC0C   		subl	$12, %esp
+ 113              		.cfi_def_cfa_offset 16
+ 114 0003 A1000000 		movl	_engineConfiguration, %eax
+ 114      00
+ 115 0008 8B150000 		movl	_boardConfiguration, %edx
+ 115      0000
+ 116 000e C780E805 		movl	$150, 1512(%eax)
+ 116      00009600 
+ 116      0000
+ 117 0018 C7809401 		movl	$4, 404(%eax)
+ 117      00000400 
+ 117      0000
+ 118 0022 C7809801 		movl	$1, 408(%eax)
+ 118      00000100 
+ 118      0000
+ 119 002c C7421850 		movl	$80, 24(%edx)
+ 119      000000
+ 120 0033 C780AC01 		movl	$0, 428(%eax)
+ 120      00000000 
+ 120      0000
+ 121 003d C780B001 		movl	$2, 432(%eax)
+ 121      00000200 
+ 121      0000
+ 122 0047 C7804402 		movl	$1, 580(%eax)
+ 122      00000100 
+ 122      0000
+ 123 0051 C7800C02 		movl	$3, 524(%eax)
+ 123      00000300 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s 			page 5
+
+
+ 123      0000
+ 124 005b C7801C01 		movl	$11, 284(%eax)
+ 124      00000B00 
+ 124      0000
+ 125 0065 E8000000 		call	__ZL13commonMiataNav
+ 125      00
+ 126 006a A1000000 		movl	_boardConfiguration, %eax
+ 126      00
+ 127 006f C7402019 		movl	$25, 32(%eax)
+ 127      000000
+ 128 0076 C7402418 		movl	$24, 36(%eax)
+ 128      000000
+ 129 007d C7402850 		movl	$80, 40(%eax)
+ 129      000000
+ 130 0084 C7402C50 		movl	$80, 44(%eax)
+ 130      000000
+ 131 008b C7403050 		movl	$80, 48(%eax)
+ 131      000000
+ 132 0092 C7403450 		movl	$80, 52(%eax)
+ 132      000000
+ 133 0099 C7405000 		movl	$0, 80(%eax)
+ 133      000000
+ 134 00a0 83C40C   		addl	$12, %esp
+ 135              		.cfi_def_cfa_offset 4
+ 136 00a3 C3       		ret
+ 137              		.cfi_endproc
+ 138              	LFE88:
+ 139 00a4 90909090 		.section	.text$_Z15setFordEscortGtv,"x"
+ 139      90909090 
+ 139      90909090 
+ 140              		.p2align 4,,15
+ 141              		.globl	__Z15setFordEscortGtv
+ 142              		.def	__Z15setFordEscortGtv;	.scl	2;	.type	32;	.endef
+ 143              	__Z15setFordEscortGtv:
+ 144              	LFB89:
+ 145              		.cfi_startproc
+ 146 0000 83EC2C   		subl	$44, %esp
+ 147              		.cfi_def_cfa_offset 48
+ 148 0003 A1000000 		movl	_engineConfiguration, %eax
+ 148      00
+ 149 0008 8B150000 		movl	_boardConfiguration, %edx
+ 149      0000
+ 150 000e C7801802 		movl	$15, 536(%eax)
+ 150      00000F00 
+ 150      0000
+ 151 0018 C780E805 		movl	$150, 1512(%eax)
+ 151      00009600 
+ 151      0000
+ 152 0022 C7809401 		movl	$4, 404(%eax)
+ 152      00000400 
+ 152      0000
+ 153 002c C7809801 		movl	$1, 408(%eax)
+ 153      00000100 
+ 153      0000
+ 154 0036 C7421850 		movl	$80, 24(%edx)
+ 154      000000
+ 155 003d C780AC01 		movl	$0, 428(%eax)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s 			page 6
+
+
+ 155      00000000 
+ 155      0000
+ 156 0047 C780B001 		movl	$2, 432(%eax)
+ 156      00000200 
+ 156      0000
+ 157 0051 C7804402 		movl	$1, 580(%eax)
+ 157      00000100 
+ 157      0000
+ 158 005b C7800C02 		movl	$3, 524(%eax)
+ 158      00000300 
+ 158      0000
+ 159 0065 C7801C01 		movl	$11, 284(%eax)
+ 159      00000B00 
+ 159      0000
+ 160 006f 891424   		movl	%edx, (%esp)
+ 161 0072 E8000000 		call	__Z19setFrankenso_01_LCDP21board_configuration_s
+ 161      00
+ 162 0077 A1000000 		movl	_engineConfiguration, %eax
+ 162      00
+ 163 007c 890424   		movl	%eax, (%esp)
+ 164 007f E8000000 		call	__Z24setFrankenso0_1_joystickP22engine_configuration_s
+ 164      00
+ 165 0084 A1000000 		movl	_config, %eax
+ 165      00
+ 166 0089 890424   		movl	%eax, (%esp)
+ 167 008c E8000000 		call	__Z12setDensoTODOP19persistent_config_s
+ 167      00
+ 168 0091 A1000000 		movl	_engineConfiguration, %eax
+ 168      00
+ 169 0096 C7803802 		movl	$0x3f400000, 568(%eax)
+ 169      00000000 
+ 169      403F
+ 170 00a0 C7809001 		movl	$0x3feb645a, 400(%eax)
+ 170      00005A64 
+ 170      EB3F
+ 171 00aa C780A801 		movl	$3, 424(%eax)
+ 171      00000300 
+ 171      0000
+ 172 00b4 A1000000 		movl	_boardConfiguration, %eax
+ 172      00
+ 173 00b9 C7804C01 		movl	$9600, 332(%eax)
+ 173      00008025 
+ 173      0000
+ 174 00c3 C7442404 		movl	$0x408ccccd, 4(%esp)
+ 174      CDCC8C40 
+ 175 00cb C704249A 		movl	$0x3f99999a, (%esp)
+ 175      99993F
+ 176 00d2 E8000000 		call	__Z14setFuelLoadBinff
+ 176      00
+ 177 00d7 C7442404 		movl	$0x45dac000, 4(%esp)
+ 177      00C0DA45 
+ 178 00df C7042400 		movl	$0x44480000, (%esp)
+ 178      004844
+ 179 00e6 E8000000 		call	__Z13setFuelRpmBinff
+ 179      00
+ 180 00eb 8B0D0000 		movl	_boardConfiguration, %ecx
+ 180      0000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s 			page 7
+
+
+ 181 00f1 A1000000 		movl	_engineConfiguration, %eax
+ 181      00
+ 182 00f6 C7812801 		movl	$38, 296(%ecx)
+ 182      00002600 
+ 182      0000
+ 183 0100 C7812C01 		movl	$5, 300(%ecx)
+ 183      00000500 
+ 183      0000
+ 184 010a 0FB690D8 		movzbl	1496(%eax), %edx
+ 184      050000
+ 185 0111 C7400800 		movl	$0x43848000, 8(%eax)
+ 185      808443
+ 186 0118 83E2FB   		andl	$-5, %edx
+ 187 011b 83CA01   		orl	$1, %edx
+ 188 011e 8890D805 		movb	%dl, 1496(%eax)
+ 188      0000
+ 189 0124 80898001 		orb	$16, 384(%ecx)
+ 189      000010
+ 190 012b C780F800 		movl	$1, 248(%eax)
+ 190      00000100 
+ 190      0000
+ 191 0135 C780FC00 		movl	$4, 252(%eax)
+ 191      00000400 
+ 191      0000
+ 192 013f C7042400 		movl	$0, (%esp)
+ 192      000000
+ 193 0146 E8000000 		call	__Z12setEgoSensor12ego_sensor_e
+ 193      00
+ 194 014b A1000000 		movl	_engineConfiguration, %eax
+ 194      00
+ 195 0150 C7804802 		movl	$2, 584(%eax)
+ 195      00000200 
+ 195      0000
+ 196 015a C780CC01 		movl	$0xc2200000, 460(%eax)
+ 196      00000000 
+ 196      20C2
+ 197 0164 D9EE     		fldz
+ 198 0166 D990C001 		fsts	448(%eax)
+ 198      0000
+ 199 016c D998B401 		fstps	436(%eax)
+ 199      0000
+ 200 0172 C780B801 		movl	$0x40400000, 440(%eax)
+ 200      00000000 
+ 200      4040
+ 201 017c C7406C00 		movl	$0x428c0000, 108(%eax)
+ 201      008C42
+ 202 0183 C7042400 		movl	$0x41200000, (%esp)
+ 202      002041
+ 203 018a E8000000 		call	__Z19setWholeTimingTablef
+ 203      00
+ 204 018f D9050000 		flds	LC5
+ 204      0000
+ 205 0195 D91424   		fsts	(%esp)
+ 206 0198 D95C2410 		fstps	16(%esp)
+ 207 019c E8000000 		call	__Z15setWholeFuelMapf
+ 207      00
+ 208 01a1 A1000000 		movl	_engineConfiguration, %eax
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s 			page 8
+
+
+ 208      00
+ 209 01a6 890424   		movl	%eax, (%esp)
+ 210 01a9 E8000000 		call	__Z18setSingleCoilDwellP22engine_configuration_s
+ 210      00
+ 211 01ae A1000000 		movl	_boardConfiguration, %eax
+ 211      00
+ 212 01b3 8B150000 		movl	_engineConfiguration, %edx
+ 212      0000
+ 213 01b9 C782BC01 		movl	$0, 444(%edx)
+ 213      00000000 
+ 213      0000
+ 214 01c3 D9442410 		flds	16(%esp)
+ 215 01c7 C7806C01 		movl	$2, 364(%eax)
+ 215      00000200 
+ 215      0000
+ 216 01d1 C7807001 		movl	$2, 368(%eax)
+ 216      00000200 
+ 216      0000
+ 217 01db C740544E 		movl	$78, 84(%eax)
+ 217      000000
+ 218 01e2 C7405850 		movl	$80, 88(%eax)
+ 218      000000
+ 219 01e9 C7405C50 		movl	$80, 92(%eax)
+ 219      000000
+ 220 01f0 C7406050 		movl	$80, 96(%eax)
+ 220      000000
+ 221 01f7 C7808400 		movl	$0, 132(%eax)
+ 221      00000000 
+ 221      0000
+ 222 0201 C7402033 		movl	$51, 32(%eax)
+ 222      000000
+ 223 0208 C7402442 		movl	$66, 36(%eax)
+ 223      000000
+ 224 020f D95A5C   		fstps	92(%edx)
+ 225 0212 C740082C 		movl	$300, 8(%eax)
+ 225      010000
+ 226 0219 C7001900 		movl	$25, (%eax)
+ 226      0000
+ 227 021f C7808800 		movl	$69, 136(%eax)
+ 227      00004500 
+ 227      0000
+ 228 0229 C7808C00 		movl	$0, 140(%eax)
+ 228      00000000 
+ 228      0000
+ 229 0233 C7804C01 		movl	$9600, 332(%eax)
+ 229      00008025 
+ 229      0000
+ 230 023d 891424   		movl	%edx, (%esp)
+ 231 0240 E8000000 		call	__Z27commonFrankensoAnalogInputsP22engine_configuration_s
+ 231      00
+ 232 0245 A1000000 		movl	_engineConfiguration, %eax
+ 232      00
+ 233 024a 05000100 		addl	$256, %eax
+ 233      00
+ 234 024f 890424   		movl	%eax, (%esp)
+ 235 0252 E8000000 		call	__Z18setCommonNTCSensorP14ThermistorConf
+ 235      00
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s 			page 9
+
+
+ 236 0257 A1000000 		movl	_engineConfiguration, %eax
+ 236      00
+ 237 025c D9050400 		flds	LC6
+ 237      0000
+ 238 0262 D9901801 		fsts	280(%eax)
+ 238      0000
+ 239 0268 05200100 		addl	$288, %eax
+ 239      00
+ 240 026d 890424   		movl	%eax, (%esp)
+ 241 0270 D95C2410 		fstps	16(%esp)
+ 242 0274 E8000000 		call	__Z18setCommonNTCSensorP14ThermistorConf
+ 242      00
+ 243 0279 A1000000 		movl	_engineConfiguration, %eax
+ 243      00
+ 244 027e D9442410 		flds	16(%esp)
+ 245 0282 D9983801 		fstps	312(%eax)
+ 245      0000
+ 246 0288 80A0D905 		andb	$127, 1497(%eax)
+ 246      00007F
+ 247 028f C7800C02 		movl	$16, 524(%eax)
+ 247      00001000 
+ 247      0000
+ 248 0299 C7804402 		movl	$0, 580(%eax)
+ 248      00000000 
+ 248      0000
+ 249 02a3 C7801C01 		movl	$12, 284(%eax)
+ 249      00000C00 
+ 249      0000
+ 250 02ad C7803C01 		movl	$11, 316(%eax)
+ 250      00000B00 
+ 250      0000
+ 251 02b7 C780D401 		movl	$0x4109999a, 468(%eax)
+ 251      00009A99 
+ 251      0941
+ 252 02c1 83C42C   		addl	$44, %esp
+ 253              		.cfi_def_cfa_offset 4
+ 254 02c4 C3       		ret
+ 255              		.cfi_endproc
+ 256              	LFE89:
+ 257 02c5 90909090 		.section	.text$_Z14setMiata1994_dv,"x"
+ 257      90909090 
+ 257      909090
+ 258              		.p2align 4,,15
+ 259              		.globl	__Z14setMiata1994_dv
+ 260              		.def	__Z14setMiata1994_dv;	.scl	2;	.type	32;	.endef
+ 261              	__Z14setMiata1994_dv:
+ 262              	LFB91:
+ 263              		.cfi_startproc
+ 264 0000 83EC0C   		subl	$12, %esp
+ 265              		.cfi_def_cfa_offset 16
+ 266 0003 E8000000 		call	__ZL19setMiata1994_commonv
+ 266      00
+ 267 0008 A1000000 		movl	_engineConfiguration, %eax
+ 267      00
+ 268 000d C780D401 		movl	$0x4120c7ce, 468(%eax)
+ 268      0000CEC7 
+ 268      2041
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s 			page 10
+
+
+ 269 0017 A1000000 		movl	_boardConfiguration, %eax
+ 269      00
+ 270 001c C7402037 		movl	$55, 32(%eax)
+ 270      000000
+ 271 0023 C7402442 		movl	$66, 36(%eax)
+ 271      000000
+ 272 002a C7402818 		movl	$24, 40(%eax)
+ 272      000000
+ 273 0031 C7402C17 		movl	$23, 44(%eax)
+ 273      000000
+ 274 0038 C7005000 		movl	$80, (%eax)
+ 274      0000
+ 275 003e 83C40C   		addl	$12, %esp
+ 276              		.cfi_def_cfa_offset 4
+ 277 0041 C3       		ret
+ 278              		.cfi_endproc
+ 279              	LFE91:
+ 280 0042 90909090 		.section	.text$_Z14setMiata1994_sv,"x"
+ 280      90909090 
+ 280      90909090 
+ 280      9090
+ 281              		.p2align 4,,15
+ 282              		.globl	__Z14setMiata1994_sv
+ 283              		.def	__Z14setMiata1994_sv;	.scl	2;	.type	32;	.endef
+ 284              	__Z14setMiata1994_sv:
+ 285              	LFB92:
+ 286              		.cfi_startproc
+ 287 0000 83EC1C   		subl	$28, %esp
+ 288              		.cfi_def_cfa_offset 32
+ 289 0003 E8000000 		call	__ZL19setMiata1994_commonv
+ 289      00
+ 290 0008 A1000000 		movl	_engineConfiguration, %eax
+ 290      00
+ 291 000d 8B150000 		movl	_boardConfiguration, %edx
+ 291      0000
+ 292 0013 C780D401 		movl	$0x4109999a, 468(%eax)
+ 292      00009A99 
+ 292      0941
+ 293 001d C7826801 		movl	$80, 360(%edx)
+ 293      00005000 
+ 293      0000
+ 294 0027 C780F005 		movl	$1, 1520(%eax)
+ 294      00000100 
+ 294      0000
+ 295 0031 C7804802 		movl	$3, 584(%eax)
+ 295      00000300 
+ 295      0000
+ 296 003b C7042401 		movl	$1, (%esp)
+ 296      000000
+ 297 0042 E8000000 		call	__Z12setEgoSensor12ego_sensor_e
+ 297      00
+ 298 0047 A1000000 		movl	_engineConfiguration, %eax
+ 298      00
+ 299 004c 8B150000 		movl	_boardConfiguration, %edx
+ 299      0000
+ 300 0052 C7422033 		movl	$51, 32(%edx)
+ 300      000000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s 			page 11
+
+
+ 301 0059 C7422442 		movl	$66, 36(%edx)
+ 301      000000
+ 302 0060 C7422818 		movl	$24, 40(%edx)
+ 302      000000
+ 303 0067 C7422C17 		movl	$23, 44(%edx)
+ 303      000000
+ 304 006e C74208F4 		movl	$500, 8(%edx)
+ 304      010000
+ 305 0075 66C780F8 		movw	$400, 1528(%eax)
+ 305      05000090 
+ 305      01
+ 306 007e 66C780FA 		movw	$4500, 1530(%eax)
+ 306      05000094 
+ 306      11
+ 307 0087 66C780FC 		movw	$200, 1532(%eax)
+ 307      050000C8 
+ 307      00
+ 308 0090 C780EC05 		movl	$800, 1516(%eax)
+ 308      00002003 
+ 308      0000
+ 309 009a C780E001 		movl	$0x42b40000, 480(%eax)
+ 309      00000000 
+ 309      B442
+ 310 00a4 C780DC01 		movl	$0x42be0000, 476(%eax)
+ 310      00000000 
+ 310      BE42
+ 311 00ae 66C74052 		movw	$86, 82(%eax)
+ 311      5600
+ 312 00b4 66C74054 		movw	$596, 84(%eax)
+ 312      5402
+ 313 00ba C7828800 		movl	$69, 136(%edx)
+ 313      00004500 
+ 313      0000
+ 314 00c4 C7828C00 		movl	$0, 140(%edx)
+ 314      00000000 
+ 314      0000
+ 315 00ce C780A801 		movl	$4, 424(%eax)
+ 315      00000400 
+ 315      0000
+ 316 00d8 A1000000 		movl	_config, %eax
+ 316      00
+ 317 00dd 890424   		movl	%eax, (%esp)
+ 318 00e0 E8000000 		call	__Z18setMazdaMiataNAMafP19persistent_config_s
+ 318      00
+ 319 00e5 A1000000 		movl	_engineConfiguration, %eax
+ 319      00
+ 320 00ea C7400800 		movl	$0x43660000, 8(%eax)
+ 320      006643
+ 321 00f1 83C41C   		addl	$28, %esp
+ 322              		.cfi_def_cfa_offset 4
+ 323 00f4 C3       		ret
+ 324              		.cfi_endproc
+ 325              	LFE92:
+ 326 00f5 90909090 		.section	.text$_Z12setMiata1996v,"x"
+ 326      90909090 
+ 326      909090
+ 327              		.p2align 4,,15
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s 			page 12
+
+
+ 328              		.globl	__Z12setMiata1996v
+ 329              		.def	__Z12setMiata1996v;	.scl	2;	.type	32;	.endef
+ 330              	__Z12setMiata1996v:
+ 331              	LFB93:
+ 332              		.cfi_startproc
+ 333 0000 83EC1C   		subl	$28, %esp
+ 334              		.cfi_def_cfa_offset 32
+ 335 0003 E8000000 		call	__ZL13commonMiataNav
+ 335      00
+ 336 0008 A1000000 		movl	_engineConfiguration, %eax
+ 336      00
+ 337 000d C7809001 		movl	$0x3feb645a, 400(%eax)
+ 337      00005A64 
+ 337      EB3F
+ 338 0017 A1000000 		movl	_config, %eax
+ 338      00
+ 339 001c C7042400 		movl	$__ZL20miata_maf_fuel_table, (%esp)
+ 339      000000
+ 340 0023 05B82900 		addl	$10680, %eax
+ 340      00
+ 341 0028 89442404 		movl	%eax, 4(%esp)
+ 342 002c E8000000 		call	__Z13copyFuelTablePA16_KfPA16_f
+ 342      00
+ 343 0031 A1000000 		movl	_config, %eax
+ 343      00
+ 344 0036 C7042400 		movl	$__ZL23miata_maf_advance_table, (%esp)
+ 344      000000
+ 345 003d 05382E00 		addl	$11832, %eax
+ 345      00
+ 346 0042 89442404 		movl	%eax, 4(%esp)
+ 347 0046 E8000000 		call	__Z15copyTimingTablePA16_KfPA16_f
+ 347      00
+ 348 004b A1000000 		movl	_boardConfiguration, %eax
+ 348      00
+ 349 0050 8B150000 		movl	_engineConfiguration, %edx
+ 349      0000
+ 350 0056 C7802801 		movl	$5, 296(%eax)
+ 350      00000500 
+ 350      0000
+ 351 0060 C7802C01 		movl	$38, 300(%eax)
+ 351      00002600 
+ 351      0000
+ 352 006a C7401844 		movl	$68, 24(%eax)
+ 352      000000
+ 353 0071 C7004500 		movl	$69, (%eax)
+ 353      0000
+ 354 0077 C7824402 		movl	$1, 580(%edx)
+ 354      00000100 
+ 354      0000
+ 355 0081 C7821C01 		movl	$11, 284(%edx)
+ 355      00000B00 
+ 355      0000
+ 356 008b C7820C02 		movl	$13, 524(%edx)
+ 356      00000D00 
+ 356      0000
+ 357 0095 C740544C 		movl	$76, 84(%eax)
+ 357      000000
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s 			page 13
+
+
+ 358 009c C7405850 		movl	$80, 88(%eax)
+ 358      000000
+ 359 00a3 C7405C4E 		movl	$78, 92(%eax)
+ 359      000000
+ 360 00aa C7406050 		movl	$80, 96(%eax)
+ 360      000000
+ 361 00b1 C7808400 		movl	$0, 132(%eax)
+ 361      00000000 
+ 361      0000
+ 362 00bb C782AC01 		movl	$2, 428(%edx)
+ 362      00000200 
+ 362      0000
+ 363 00c5 C782B001 		movl	$2, 432(%edx)
+ 363      00000200 
+ 363      0000
+ 364 00cf C7402019 		movl	$25, 32(%eax)
+ 364      000000
+ 365 00d6 C7402418 		movl	$24, 36(%eax)
+ 365      000000
+ 366 00dd C7402850 		movl	$80, 40(%eax)
+ 366      000000
+ 367 00e4 C7402C50 		movl	$80, 44(%eax)
+ 367      000000
+ 368 00eb C7403050 		movl	$80, 48(%eax)
+ 368      000000
+ 369 00f2 C7403450 		movl	$80, 52(%eax)
+ 369      000000
+ 370 00f9 C7405000 		movl	$0, 80(%eax)
+ 370      000000
+ 371 0100 83C41C   		addl	$28, %esp
+ 372              		.cfi_def_cfa_offset 4
+ 373 0103 C3       		ret
+ 374              		.cfi_endproc
+ 375              	LFE93:
+ 376 0104 90909090 		.section	.rdata$_ZL20miata_maf_fuel_table,"dr"
+ 376      90909090 
+ 376      90909090 
+ 377              		.align 32
+ 378              	__ZL20miata_maf_fuel_table:
+ 379 0000 0AD7C33F 		.long	1069799178
+ 380 0004 1F856B3F 		.long	1064011039
+ 381 0008 A4703D3F 		.long	1060991140
+ 382 000c D7A3303F 		.long	1060152279
+ 383 0010 D7A3303F 		.long	1060152279
+ 384 0014 1F852B3F 		.long	1059816735
+ 385 0018 1F852B3F 		.long	1059816735
+ 386 001c 1F852B3F 		.long	1059816735
+ 387 0020 1F852B3F 		.long	1059816735
+ 388 0024 5C8F823F 		.long	1065520988
+ 389 0028 48E17A3F 		.long	1065017672
+ 390 002c 48E17A3F 		.long	1065017672
+ 391 0030 1F856B3F 		.long	1064011039
+ 392 0034 0AD7633F 		.long	1063507722
+ 393 0038 85EB513F 		.long	1062333317
+ 394 003c 52B85E3F 		.long	1063172178
+ 395 0040 52B83E40 		.long	1077852242
+ 396 0044 E17A0440 		.long	1074035425
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s 			page 14
+
+
+ 397 0048 52B8DE3F 		.long	1071560786
+ 398 004c 6666C63F 		.long	1069966950
+ 399 0050 3D0AB73F 		.long	1068960317
+ 400 0054 3D0A973F 		.long	1066863165
+ 401 0058 00000000 		.long	0
+ 402 005c 00000000 		.long	0
+ 403 0060 00000000 		.long	0
+ 404 0064 00000000 		.long	0
+ 405 0068 00000000 		.long	0
+ 406 006c 00000000 		.long	0
+ 407 0070 00000000 		.long	0
+ 408 0074 00000000 		.long	0
+ 409 0078 00000000 		.long	0
+ 410 007c 00000000 		.long	0
+ 411 0080 CDCC9C40 		.long	1084017869
+ 412 0084 CDCC5C40 		.long	1079823565
+ 413 0088 D7A33040 		.long	1076929495
+ 414 008c 66661640 		.long	1075209830
+ 415 0090 B81E0540 		.long	1074077368
+ 416 0094 1F85EB3F 		.long	1072399647
+ 417 0098 00000000 		.long	0
+ 418 009c 00000000 		.long	0
+ 419 00a0 00000000 		.long	0
+ 420 00a4 00000000 		.long	0
+ 421 00a8 00000000 		.long	0
+ 422 00ac 00000000 		.long	0
+ 423 00b0 00000000 		.long	0
+ 424 00b4 00000000 		.long	0
+ 425 00b8 00000000 		.long	0
+ 426 00bc 00000000 		.long	0
+ 427 00c0 7B14DE40 		.long	1088296059
+ 428 00c4 85EB9940 		.long	1083829125
+ 429 00c8 5C8F7240 		.long	1081249628
+ 430 00cc C3F54840 		.long	1078523331
+ 431 00d0 7B142E40 		.long	1076761723
+ 432 00d4 48E11A40 		.long	1075503432
+ 433 00d8 3D0AF73F 		.long	1073154621
+ 434 00dc 6666E63F 		.long	1072064102
+ 435 00e0 00000000 		.long	0
+ 436 00e4 00000000 		.long	0
+ 437 00e8 00000000 		.long	0
+ 438 00ec 00000000 		.long	0
+ 439 00f0 00000000 		.long	0
+ 440 00f4 00000000 		.long	0
+ 441 00f8 00000000 		.long	0
+ 442 00fc 00000000 		.long	0
+ 443 0100 3D0A3F41 		.long	1094650429
+ 444 0104 A470D540 		.long	1087729828
+ 445 0108 CDCCA440 		.long	1084542157
+ 446 010c 295C8740 		.long	1082612777
+ 447 0110 EC516840 		.long	1080578540
+ 448 0114 F6284C40 		.long	1078733046
+ 449 0118 B81E3540 		.long	1077223096
+ 450 011c 8FC22540 		.long	1076216463
+ 451 0120 C3F51840 		.long	1075377603
+ 452 0124 295C0F40 		.long	1074748457
+ 453 0128 00000000 		.long	0
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s 			page 15
+
+
+ 454 012c 00000000 		.long	0
+ 455 0130 00000000 		.long	0
+ 456 0134 00000000 		.long	0
+ 457 0138 00000000 		.long	0
+ 458 013c 00000000 		.long	0
+ 459 0140 7B144A41 		.long	1095373947
+ 460 0144 F6282841 		.long	1093150966
+ 461 0148 B81EDD40 		.long	1088233144
+ 462 014c F628B440 		.long	1085548790
+ 463 0150 9A999940 		.long	1083808154
+ 464 0154 52B88640 		.long	1082570834
+ 465 0158 00007040 		.long	1081081856
+ 466 015c 9A995940 		.long	1079613850
+ 467 0160 8FC24540 		.long	1078313615
+ 468 0164 14AE3740 		.long	1077390868
+ 469 0168 33333340 		.long	1077097267
+ 470 016c 1F852B40 		.long	1076593951
+ 471 0170 AE472140 		.long	1075922862
+ 472 0174 EC511840 		.long	1075335660
+ 473 0178 5C8F1240 		.long	1074958172
+ 474 017c 00000000 		.long	0
+ 475 0180 8FC24141 		.long	1094828687
+ 476 0184 00004841 		.long	1095237632
+ 477 0188 D7A32041 		.long	1092658135
+ 478 018c 14AEE740 		.long	1088925204
+ 479 0190 1F85C340 		.long	1086555423
+ 480 0194 713DAA40 		.long	1084898673
+ 481 0198 295C9740 		.long	1083661353
+ 482 019c C3F58840 		.long	1082717635
+ 483 01a0 C3F57840 		.long	1081669059
+ 484 01a4 3D0A6740 		.long	1080494653
+ 485 01a8 5C8F6240 		.long	1080201052
+ 486 01ac E17A5440 		.long	1079278305
+ 487 01b0 EC514840 		.long	1078481388
+ 488 01b4 48E13A40 		.long	1077600584
+ 489 01b8 E17A3440 		.long	1077181153
+ 490 01bc 00000000 		.long	0
+ 491 01c0 A4704141 		.long	1094807716
+ 492 01c4 3D0A4341 		.long	1094912573
+ 493 01c8 48E14641 		.long	1095164232
+ 494 01cc 3D0A2B41 		.long	1093339709
+ 495 01d0 A470FD40 		.long	1090351268
+ 496 01d4 0AD7DB40 		.long	1088149258
+ 497 01d8 48E1C240 		.long	1086513480
+ 498 01dc 14AEAF40 		.long	1085255188
+ 499 01e0 3D0A9F40 		.long	1084164669
+ 500 01e4 48E19240 		.long	1083367752
+ 501 01e8 7B148E40 		.long	1083053179
+ 502 01ec 52B88640 		.long	1082570834
+ 503 01f0 7B147E40 		.long	1082004603
+ 504 01f4 CDCC6C40 		.long	1080872141
+ 505 01f8 33336340 		.long	1080242995
+ 506 01fc 00000000 		.long	0
+ 507 0200 A4704141 		.long	1094807716
+ 508 0204 48E14241 		.long	1094902088
+ 509 0208 A4704541 		.long	1095069860
+ 510 020c 14AE4741 		.long	1095216660
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s 			page 16
+
+
+ 511 0210 8FC23541 		.long	1094042255
+ 512 0214 14AE1741 		.long	1092070932
+ 513 0218 8FC2F540 		.long	1089847951
+ 514 021c E17ADC40 		.long	1088191201
+ 515 0220 295CC740 		.long	1086807081
+ 516 0224 EC51B840 		.long	1085821420
+ 517 0228 CDCCB440 		.long	1085590733
+ 518 022c 713DAA40 		.long	1084898673
+ 519 0230 3D0A9F40 		.long	1084164669
+ 520 0234 33339340 		.long	1083388723
+ 521 0238 CDCC8C40 		.long	1082969293
+ 522 023c 00000000 		.long	0
+ 523 0240 AE474141 		.long	1094797230
+ 524 0244 52B84241 		.long	1094891602
+ 525 0248 A4704541 		.long	1095069860
+ 526 024c 5C8F4641 		.long	1095143260
+ 527 0250 F6284C41 		.long	1095510262
+ 528 0254 1F854741 		.long	1095206175
+ 529 0258 EC513041 		.long	1093685740
+ 530 025c 52B81A41 		.long	1092270162
+ 531 0260 D7A30441 		.long	1090823127
+ 532 0264 295CE740 		.long	1088904233
+ 533 0268 0000E040 		.long	1088421888
+ 534 026c 713DDA40 		.long	1088044401
+ 535 0270 7B14CE40 		.long	1087247483
+ 536 0274 85EBC140 		.long	1086450565
+ 537 0278 EC51B840 		.long	1085821420
+ 538 027c 00000000 		.long	0
+ 539 0280 AE474141 		.long	1094797230
+ 540 0284 48E14241 		.long	1094902088
+ 541 0288 A4704541 		.long	1095069860
+ 542 028c 48E14641 		.long	1095164232
+ 543 0290 33334B41 		.long	1095447347
+ 544 0294 48E14E41 		.long	1095688520
+ 545 0298 E17A4C41 		.long	1095531233
+ 546 029c 66664641 		.long	1095132774
+ 547 02a0 66663641 		.long	1094084198
+ 548 02a4 5C8F2241 		.long	1092783964
+ 549 02a8 3D0A1741 		.long	1092028989
+ 550 02ac F6281041 		.long	1091578102
+ 551 02b0 8FC20541 		.long	1090896527
+ 552 02b4 5C8FFA40 		.long	1090162524
+ 553 02b8 6666EE40 		.long	1089365606
+ 554 02bc 00000000 		.long	0
+ 555 02c0 A4704141 		.long	1094807716
+ 556 02c4 52B84241 		.long	1094891602
+ 557 02c8 A4704541 		.long	1095069860
+ 558 02cc 48E14641 		.long	1095164232
+ 559 02d0 33334B41 		.long	1095447347
+ 560 02d4 713D4E41 		.long	1095646577
+ 561 02d8 1F854B41 		.long	1095468319
+ 562 02dc CDCC4841 		.long	1095290061
+ 563 02e0 14AE4F41 		.long	1095740948
+ 564 02e4 295C4F41 		.long	1095719977
+ 565 02e8 CDCC4441 		.long	1095027917
+ 566 02ec A4703941 		.long	1094283428
+ 567 02f0 66662E41 		.long	1093559910
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s 			page 17
+
+
+ 568 02f4 B81E2141 		.long	1092689592
+ 569 02f8 A4701941 		.long	1092186276
+ 570 02fc 00000000 		.long	0
+ 571 0300 AE474141 		.long	1094797230
+ 572 0304 48E14241 		.long	1094902088
+ 573 0308 A4704541 		.long	1095069860
+ 574 030c 48E14641 		.long	1095164232
+ 575 0310 33334B41 		.long	1095447347
+ 576 0314 48E14E41 		.long	1095688520
+ 577 0318 1F854B41 		.long	1095468319
+ 578 031c 7B144A41 		.long	1095373947
+ 579 0320 85EB4D41 		.long	1095625605
+ 580 0324 C3F55841 		.long	1096349123
+ 581 0328 F6286C41 		.long	1097607414
+ 582 032c 85EB6941 		.long	1097460613
+ 583 0330 713D6241 		.long	1096957297
+ 584 0334 713D5641 		.long	1096170865
+ 585 0338 3D0A4341 		.long	1094912573
+ 586 033c 00000000 		.long	0
+ 587 0340 A4704141 		.long	1094807716
+ 588 0344 52B84241 		.long	1094891602
+ 589 0348 A4704541 		.long	1095069860
+ 590 034c 48E14641 		.long	1095164232
+ 591 0350 295C4B41 		.long	1095457833
+ 592 0354 52B84E41 		.long	1095678034
+ 593 0358 0AD74B41 		.long	1095489290
+ 594 035c B81E4941 		.long	1095311032
+ 595 0360 7B144E41 		.long	1095636091
+ 596 0364 B81E5D41 		.long	1096621752
+ 597 0368 66667241 		.long	1098016358
+ 598 036c B81E7941 		.long	1098456760
+ 599 0370 8FC28141 		.long	1099022991
+ 600 0374 66668041 		.long	1098933862
+ 601 0378 A4707941 		.long	1098477732
+ 602 037c 00000000 		.long	0
+ 603 0380 AE474141 		.long	1094797230
+ 604 0384 48E14241 		.long	1094902088
+ 605 0388 A4704541 		.long	1095069860
+ 606 038c 66664641 		.long	1095132774
+ 607 0390 295C4B41 		.long	1095457833
+ 608 0394 52B84E41 		.long	1095678034
+ 609 0398 295C4B41 		.long	1095457833
+ 610 039c E17A4841 		.long	1095269089
+ 611 03a0 1F854F41 		.long	1095730463
+ 612 03a4 CDCC5841 		.long	1096338637
+ 613 03a8 85EB6D41 		.long	1097722757
+ 614 03ac 52B87A41 		.long	1098561618
+ 615 03b0 AE478141 		.long	1098991534
+ 616 03b4 9A998141 		.long	1099012506
+ 617 03b8 713D7E41 		.long	1098792305
+ 618 03bc 00000000 		.long	0
+ 619 03c0 AE474141 		.long	1094797230
+ 620 03c4 52B84241 		.long	1094891602
+ 621 03c8 A4704541 		.long	1095069860
+ 622 03cc 48E14641 		.long	1095164232
+ 623 03d0 0AD74B41 		.long	1095489290
+ 624 03d4 5C8F4E41 		.long	1095667548
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s 			page 18
+
+
+ 625 03d8 295C4B41 		.long	1095457833
+ 626 03dc D7A34841 		.long	1095279575
+ 627 03e0 1F854F41 		.long	1095730463
+ 628 03e4 E17A5841 		.long	1096317665
+ 629 03e8 85EB6D41 		.long	1097722757
+ 630 03ec 14AE7741 		.long	1098362388
+ 631 03f0 CDCC8041 		.long	1098960077
+ 632 03f4 A4708141 		.long	1099002020
+ 633 03f8 48E17E41 		.long	1098834248
+ 634 03fc 00000000 		.long	0
+ 635              		.section	.rdata$_ZL23miata_maf_advance_table,"dr"
+ 636              		.align 32
+ 637              	__ZL23miata_maf_advance_table:
+ 638 0000 9EEF8F40 		.long	1083174814
+ 639 0004 E17A3E41 		.long	1094613729
+ 640 0008 1058BB41 		.long	1102796816
+ 641 000c 23DBCA41 		.long	1103813411
+ 642 0010 2B87CB41 		.long	1103857451
+ 643 0014 77BECB41 		.long	1103871607
+ 644 0018 6666EB41 		.long	1105946214
+ 645 001c 1DDA0242 		.long	1107483165
+ 646 0020 58390E42 		.long	1108228440
+ 647 0024 42601642 		.long	1108762690
+ 648 0028 F6A81042 		.long	1108388086
+ 649 002c BE9FF441 		.long	1106550718
+ 650 0030 F628E941 		.long	1105799414
+ 651 0034 1F85E841 		.long	1105757471
+ 652 0038 6891D841 		.long	1104712040
+ 653 003c 8941E241 		.long	1105346953
+ 654 0040 0AD79B40 		.long	1083954954
+ 655 0044 3F354241 		.long	1094858047
+ 656 0048 AC1CBB41 		.long	1102781612
+ 657 004c 0C02CC41 		.long	1103888908
+ 658 0050 2B87CB41 		.long	1103857451
+ 659 0054 77BECB41 		.long	1103871607
+ 660 0058 0000E941 		.long	1105788928
+ 661 005c C74B0442 		.long	1107577799
+ 662 0060 DFCF0842 		.long	1107873759
+ 663 0064 75131742 		.long	1108808565
+ 664 0068 93980F42 		.long	1108318355
+ 665 006c E926F441 		.long	1106519785
+ 666 0070 3D0AE741 		.long	1105660477
+ 667 0074 85EBE541 		.long	1105587077
+ 668 0078 1283D941 		.long	1104773906
+ 669 007c A69BDE41 		.long	1105107878
+ 670 0080 DD249A40 		.long	1083843805
+ 671 0084 27314441 		.long	1094988071
+ 672 0088 6666BF41 		.long	1103062630
+ 673 008c 0C02CC41 		.long	1103888908
+ 674 0090 0000CC41 		.long	1103888384
+ 675 0094 77BECB41 		.long	1103871607
+ 676 0098 79E9EA41 		.long	1105914233
+ 677 009c BCF40542 		.long	1107686588
+ 678 00a0 235B0B42 		.long	1108040483
+ 679 00a4 142E1642 		.long	1108749844
+ 680 00a8 00800F42 		.long	1108312064
+ 681 00ac F2D2F241 		.long	1106432754
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s 			page 19
+
+
+ 682 00b0 7F6AE841 		.long	1105750655
+ 683 00b4 C3F5E241 		.long	1105393091
+ 684 00b8 7593D841 		.long	1104712565
+ 685 00bc BE9FD641 		.long	1104584638
+ 686 00c0 1B2F9140 		.long	1083256603
+ 687 00c4 6ABC4641 		.long	1095154794
+ 688 00c8 46B6B941 		.long	1102689862
+ 689 00cc E926CB41 		.long	1103832809
+ 690 00d0 C74BCB41 		.long	1103842247
+ 691 00d4 48E1CB41 		.long	1103880520
+ 692 00d8 6666EB41 		.long	1105946214
+ 693 00dc 3FB50542 		.long	1107670335
+ 694 00e0 2F5D0842 		.long	1107844399
+ 695 00e4 4A8C1342 		.long	1108577354
+ 696 00e8 21301042 		.long	1108357153
+ 697 00ec CBA1F041 		.long	1106289099
+ 698 00f0 BE9FE341 		.long	1105436606
+ 699 00f4 8D97E041 		.long	1105237901
+ 700 00f8 1283D941 		.long	1104773906
+ 701 00fc C520D541 		.long	1104486597
+ 702 0100 39B49040 		.long	1083225145
+ 703 0104 F6283C41 		.long	1094461686
+ 704 0108 EC51BF41 		.long	1103057388
+ 705 010c EC51CB41 		.long	1103843820
+ 706 0110 7368CC41 		.long	1103915123
+ 707 0114 B81EC941 		.long	1103699640
+ 708 0118 9CC4EA41 		.long	1105904796
+ 709 011c 02AB0342 		.long	1107536642
+ 710 0120 8F420B42 		.long	1108034191
+ 711 0124 10D81442 		.long	1108662288
+ 712 0128 9C440F42 		.long	1108296860
+ 713 012c 508DED41 		.long	1106087248
+ 714 0130 5A64E641 		.long	1105618010
+ 715 0134 448BDE41 		.long	1105103684
+ 716 0138 B4C8E041 		.long	1105250484
+ 717 013c C74BDD41 		.long	1105021895
+ 718 0140 2DB29540 		.long	1083552301
+ 719 0144 8D973E41 		.long	1094621069
+ 720 0148 54E3BB41 		.long	1102832468
+ 721 014c 3108CB41 		.long	1103824945
+ 722 0150 7368CC41 		.long	1103915123
+ 723 0154 4C37CC41 		.long	1103902540
+ 724 0158 17D9EE41 		.long	1106172183
+ 725 015c 440B0642 		.long	1107692356
+ 726 0160 DD240B42 		.long	1108026589
+ 727 0164 1DDA1742 		.long	1108859421
+ 728 0168 02AB0F42 		.long	1108323074
+ 729 016c 8195F841 		.long	1106810241
+ 730 0170 54E3E241 		.long	1105388372
+ 731 0174 77BEE341 		.long	1105444471
+ 732 0178 0681D941 		.long	1104773382
+ 733 017c FED4D541 		.long	1104532734
+ 734 0180 448B9040 		.long	1083214660
+ 735 0184 C9764041 		.long	1094743753
+ 736 0188 E5D0BB41 		.long	1102827749
+ 737 018c D7A3CB41 		.long	1103864791
+ 738 0190 560ECB41 		.long	1103826518
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s 			page 20
+
+
+ 739 0194 1B2FCF41 		.long	1104097051
+ 740 0198 0E2DE941 		.long	1105800462
+ 741 019c DF4F0642 		.long	1107709919
+ 742 01a0 E17A0842 		.long	1107852001
+ 743 01a4 B21D1142 		.long	1108417970
+ 744 01a8 5EBA1142 		.long	1108458078
+ 745 01ac 60E5FA41 		.long	1106961760
+ 746 01b0 08ACE041 		.long	1105243144
+ 747 01b4 39B4E341 		.long	1105441849
+ 748 01b8 2B87DD41 		.long	1105037099
+ 749 01bc D7A3DE41 		.long	1105109975
+ 750 01c0 25069140 		.long	1083246117
+ 751 01c4 27314441 		.long	1094988071
+ 752 01c8 E17ABF41 		.long	1103067873
+ 753 01cc 79E9CB41 		.long	1103882617
+ 754 01d0 8FC2CC41 		.long	1103938191
+ 755 01d4 2B87D641 		.long	1104578347
+ 756 01d8 0C02F241 		.long	1106379276
+ 757 01dc CB210642 		.long	1107698123
+ 758 01e0 0E2D0B42 		.long	1108028686
+ 759 01e4 2B871742 		.long	1108838187
+ 760 01e8 7F6A1042 		.long	1108372095
+ 761 01ec CBA1F041 		.long	1106289099
+ 762 01f0 295CE441 		.long	1105484841
+ 763 01f4 986EEA41 		.long	1105882776
+ 764 01f8 5C8FD841 		.long	1104711516
+ 765 01fc 8D97E241 		.long	1105368973
+ 766 0200 25069140 		.long	1083246117
+ 767 0204 75934041 		.long	1094751093
+ 768 0208 1058BB41 		.long	1102796816
+ 769 020c A01ACC41 		.long	1103895200
+ 770 0210 560ECB41 		.long	1103826518
+ 771 0214 23DBCA41 		.long	1103813411
+ 772 0218 D578EF41 		.long	1106213077
+ 773 021c 35DE0542 		.long	1107680821
+ 774 0220 F4FD0A42 		.long	1108016628
+ 775 0224 E9261542 		.long	1108682473
+ 776 0228 1F851142 		.long	1108444447
+ 777 022c C520EC41 		.long	1105993925
+ 778 0230 5A64E641 		.long	1105618010
+ 779 0234 8941E341 		.long	1105412489
+ 780 0238 A69BD741 		.long	1104649126
+ 781 023c BE9FE141 		.long	1105305534
+ 782 0240 25069140 		.long	1083246117
+ 783 0244 E3A53F41 		.long	1094690275
+ 784 0248 0AD7BD41 		.long	1102960394
+ 785 024c 0C02CC41 		.long	1103888908
+ 786 0250 F4FDCC41 		.long	1103953396
+ 787 0254 BE9FD241 		.long	1104322494
+ 788 0258 B81EF041 		.long	1106255544
+ 789 025c 7DBF0442 		.long	1107607421
+ 790 0260 25860B42 		.long	1108051493
+ 791 0264 0E2D1842 		.long	1108880654
+ 792 0268 713D0F42 		.long	1108295025
+ 793 026c 77BEEE41 		.long	1106165367
+ 794 0270 B072EA41 		.long	1105883824
+ 795 0274 DBF9E741 		.long	1105721819
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s 			page 21
+
+
+ 796 0278 3BDFD841 		.long	1104731963
+ 797 027c 46B6EA41 		.long	1105901126
+ 798 0280 2FDD9040 		.long	1083235631
+ 799 0284 93184241 		.long	1094850707
+ 800 0288 54E3BB41 		.long	1102832468
+ 801 028c A470CB41 		.long	1103851684
+ 802 0290 7368CC41 		.long	1103915123
+ 803 0294 3F35D241 		.long	1104295231
+ 804 0298 AC1CED41 		.long	1106058412
+ 805 029c 1F050442 		.long	1107559711
+ 806 02a0 12030942 		.long	1107886866
+ 807 02a4 E9261742 		.long	1108813545
+ 808 02a8 D94E1042 		.long	1108365017
+ 809 02ac 0681F141 		.long	1106346246
+ 810 02b0 2DB2E841 		.long	1105769005
+ 811 02b4 17D9E341 		.long	1105451287
+ 812 02b8 B4C8DA41 		.long	1104857268
+ 813 02bc 4C37DE41 		.long	1105082188
+ 814 02c0 B0729C40 		.long	1083994800
+ 815 02c4 CDCC4241 		.long	1094896845
+ 816 02c8 022BBA41 		.long	1102719746
+ 817 02cc 23DBCA41 		.long	1103813411
+ 818 02d0 7368CC41 		.long	1103915123
+ 819 02d4 48E1CB41 		.long	1103880520
+ 820 02d8 2731EF41 		.long	1106194727
+ 821 02dc 3F350342 		.long	1107506495
+ 822 02e0 DD240B42 		.long	1108026589
+ 823 02e4 77BE1A42 		.long	1109048951
+ 824 02e8 54E30E42 		.long	1108271956
+ 825 02ec A8C6FA41 		.long	1106953896
+ 826 02f0 C520E741 		.long	1105666245
+ 827 02f4 FCA9E241 		.long	1105373692
+ 828 02f8 2731D941 		.long	1104752935
+ 829 02fc 54E3D941 		.long	1104798548
+ 830 0300 1B2F9140 		.long	1083256603
+ 831 0304 022B4141 		.long	1094789890
+ 832 0308 022BBF41 		.long	1103047426
+ 833 030c 3333CC41 		.long	1103901491
+ 834 0310 8FC2CC41 		.long	1103938191
+ 835 0314 A69BCB41 		.long	1103862694
+ 836 0318 8B6CF341 		.long	1106472075
+ 837 031c 23DB0642 		.long	1107745571
+ 838 0320 EC510842 		.long	1107841516
+ 839 0324 A01A1642 		.long	1108744864
+ 840 0328 9C440F42 		.long	1108296860
+ 841 032c 2FDDF541 		.long	1106631983
+ 842 0330 77BEE541 		.long	1105575543
+ 843 0334 DD24E441 		.long	1105470685
+ 844 0338 DD24DC41 		.long	1104946397
+ 845 033c EE7CD441 		.long	1104444654
+ 846 0340 1F859B40 		.long	1083933983
+ 847 0344 C5203E41 		.long	1094590661
+ 848 0348 8B6CBB41 		.long	1102802059
+ 849 034c 79E9CB41 		.long	1103882617
+ 850 0350 BA49CC41 		.long	1103907258
+ 851 0354 6DE7CC41 		.long	1103947629
+ 852 0358 F628EF41 		.long	1106192630
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s 			page 22
+
+
+ 853 035c 8D970642 		.long	1107728269
+ 854 0360 31080B42 		.long	1108019249
+ 855 0364 B6F31742 		.long	1108865974
+ 856 0368 21301042 		.long	1108357153
+ 857 036c CDCCF141 		.long	1106365645
+ 858 0370 8195E541 		.long	1105565057
+ 859 0374 60E5E341 		.long	1105454432
+ 860 0378 54E3D841 		.long	1104733012
+ 861 037c FCA9DD41 		.long	1105046012
+ 862 0380 23DB9540 		.long	1083562787
+ 863 0384 355E3E41 		.long	1094606389
+ 864 0388 4A0CBC41 		.long	1102842954
+ 865 038c FA7ECC41 		.long	1103920890
+ 866 0390 48E1CC41 		.long	1103946056
+ 867 0394 E926CC41 		.long	1103898345
+ 868 0398 9A99EF41 		.long	1106221466
+ 869 039c F8530642 		.long	1107710968
+ 870 03a0 27310A42 		.long	1107964199
+ 871 03a4 D3CD1042 		.long	1108397523
+ 872 03a8 E9260F42 		.long	1108289257
+ 873 03ac 8B6CF041 		.long	1106275467
+ 874 03b0 0456E241 		.long	1105352196
+ 875 03b4 6F12E241 		.long	1105334895
+ 876 03b8 E926DA41 		.long	1104815849
+ 877 03bc 6DE7D641 		.long	1104602989
+ 878 03c0 33339B40 		.long	1083913011
+ 879 03c4 0AD74341 		.long	1094965002
+ 880 03c8 5EBAC041 		.long	1103149662
+ 881 03cc E926CB41 		.long	1103832809
+ 882 03d0 8195CA41 		.long	1103795585
+ 883 03d4 1D5ACC41 		.long	1103911453
+ 884 03d8 EC51EF41 		.long	1106203116
+ 885 03dc 7F6A0442 		.long	1107585663
+ 886 03e0 62101042 		.long	1108349026
+ 887 03e4 64BB1742 		.long	1108851556
+ 888 03e8 19041142 		.long	1108411417
+ 889 03ec 2DB2ED41 		.long	1106096685
+ 890 03f0 3F35E541 		.long	1105540415
+ 891 03f4 295CE041 		.long	1105222697
+ 892 03f8 F2D2D941 		.long	1104794354
+ 893 03fc A245DE41 		.long	1105085858
+ 894              		.section .rdata,"dr"
+ 895              		.align 4
+ 896              	LC5:
+ 897 0000 0000A040 		.long	1084227584
+ 898              		.align 4
+ 899              	LC6:
+ 900 0004 00C02845 		.long	1160298496
+ 901              		.def	__Z14setFuelLoadBinff;	.scl	2;	.type	32;	.endef
+ 902              		.def	__Z13setFuelRpmBinff;	.scl	2;	.type	32;	.endef
+ 903              		.def	__Z18setCommonNTCSensorP14ThermistorConf;	.scl	2;	.type	32;	.endef
+ 904              		.def	__Z13copyFuelTablePA16_KfPA16_f;	.scl	2;	.type	32;	.endef
+ 905              		.def	__Z15copyTimingTablePA16_KfPA16_f;	.scl	2;	.type	32;	.endef
+ 906              		.def	__Z19setFrankenso_01_LCDP21board_configuration_s;	.scl	2;	.type	32;	.endef
+ 907              		.def	__Z27commonFrankensoAnalogInputsP22engine_configuration_s;	.scl	2;	.type	32;	.endef
+ 908              		.def	__Z24setFrankenso0_1_joystickP22engine_configuration_s;	.scl	2;	.type	32;	.endef
+ 909              		.def	__Z12setDensoTODOP19persistent_config_s;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s 			page 23
+
+
+ 910              		.def	__Z12setEgoSensor12ego_sensor_e;	.scl	2;	.type	32;	.endef
+ 911              		.def	__Z19setWholeTimingTablef;	.scl	2;	.type	32;	.endef
+ 912              		.def	__Z15setWholeFuelMapf;	.scl	2;	.type	32;	.endef
+ 913              		.def	__Z18setSingleCoilDwellP22engine_configuration_s;	.scl	2;	.type	32;	.endef
+ 914              		.def	__Z18setMazdaMiataNAMafP19persistent_config_s;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s 			page 24
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 mazda_miata.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s:5      .text$_ZL13commonMiataNav:00000000 __ZL13commonMiataNav
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s:56     .text$_ZL19setMiata1994_commonv:00000000 __ZL19setMiata1994_commonv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s:378    .rdata$_ZL20miata_maf_fuel_table:00000000 __ZL20miata_maf_fuel_table
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s:637    .rdata$_ZL23miata_maf_advance_table:00000000 __ZL23miata_maf_advance_table
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s:109    .text$_Z12setMiata1990v:00000000 __Z12setMiata1990v
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s:143    .text$_Z15setFordEscortGtv:00000000 __Z15setFordEscortGtv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s:261    .text$_Z14setMiata1994_dv:00000000 __Z14setMiata1994_dv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s:284    .text$_Z14setMiata1994_sv:00000000 __Z14setMiata1994_sv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccQe2PB0.s:330    .text$_Z12setMiata1996v:00000000 __Z12setMiata1996v
+
+UNDEFINED SYMBOLS
+_engineConfiguration
+_boardConfiguration
+_config
+__Z14setFuelLoadBinff
+__Z13setFuelRpmBinff
+__Z18setCommonNTCSensorP14ThermistorConf
+__Z13copyFuelTablePA16_KfPA16_f
+__Z15copyTimingTablePA16_KfPA16_f
+__Z19setFrankenso_01_LCDP21board_configuration_s
+__Z27commonFrankensoAnalogInputsP22engine_configuration_s
+__Z24setFrankenso0_1_joystickP22engine_configuration_s
+__Z12setDensoTODOP19persistent_config_s
+__Z12setEgoSensor12ego_sensor_e
+__Z19setWholeTimingTablef
+__Z15setWholeFuelMapf
+__Z18setSingleCoilDwellP22engine_configuration_s
+__Z18setMazdaMiataNAMafP19persistent_config_s

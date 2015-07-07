@@ -1,0 +1,5117 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"ff.c"
+  16              		.section	.text.move_window,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	move_window, %function
+  22              	move_window:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+  26 0004 C56A     		ldr	r5, [r0, #44]
+  27 0006 8D42     		cmp	r5, r1
+  28 0008 0446     		mov	r4, r0
+  29 000a 0E46     		mov	r6, r1
+  30 000c 02D0     		beq	.L6
+  31 000e 0379     		ldrb	r3, [r0, #4]	@ zero_extendqisi2
+  32 0010 73B9     		cbnz	r3, .L4
+  33              	.L8:
+  34 0012 16B9     		cbnz	r6, .L16
+  35              	.L6:
+  36 0014 0020     		movs	r0, #0
+  37 0016 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+  38              	.L16:
+  39 001a 6078     		ldrb	r0, [r4, #1]	@ zero_extendqisi2
+  40 001c 04F13001 		add	r1, r4, #48
+  41 0020 3246     		mov	r2, r6
+  42 0022 0123     		movs	r3, #1
+  43 0024 FFF7FEFF 		bl	disk_read
+  44 0028 20BB     		cbnz	r0, .L10
+  45 002a E662     		str	r6, [r4, #44]
+  46 002c BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+  47              	.L4:
+  48 0030 00F13008 		add	r8, r0, #48
+  49 0034 4146     		mov	r1, r8
+  50 0036 4078     		ldrb	r0, [r0, #1]	@ zero_extendqisi2
+  51 0038 2A46     		mov	r2, r5
+  52 003a 0123     		movs	r3, #1
+  53 003c FFF7FEFF 		bl	disk_write
+  54 0040 C0B9     		cbnz	r0, .L10
+  55 0042 E369     		ldr	r3, [r4, #28]
+  56 0044 226A     		ldr	r2, [r4, #32]
+  57 0046 2071     		strb	r0, [r4, #4]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 2
+
+
+  58 0048 1A44     		add	r2, r2, r3
+  59 004a 9542     		cmp	r5, r2
+  60 004c E1D2     		bcs	.L8
+  61 004e E778     		ldrb	r7, [r4, #3]	@ zero_extendqisi2
+  62 0050 012F     		cmp	r7, #1
+  63 0052 01D8     		bhi	.L9
+  64 0054 DDE7     		b	.L8
+  65              	.L17:
+  66 0056 E369     		ldr	r3, [r4, #28]
+  67              	.L9:
+  68 0058 1D44     		add	r5, r5, r3
+  69 005a 013F     		subs	r7, r7, #1
+  70 005c 2A46     		mov	r2, r5
+  71 005e 6078     		ldrb	r0, [r4, #1]	@ zero_extendqisi2
+  72 0060 4146     		mov	r1, r8
+  73 0062 0123     		movs	r3, #1
+  74 0064 FFB2     		uxtb	r7, r7
+  75 0066 FFF7FEFF 		bl	disk_write
+  76 006a 012F     		cmp	r7, #1
+  77 006c F3D1     		bne	.L17
+  78 006e 002E     		cmp	r6, #0
+  79 0070 D0D0     		beq	.L6
+  80 0072 D2E7     		b	.L16
+  81              	.L10:
+  82 0074 0120     		movs	r0, #1
+  83 0076 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+  84              		.size	move_window, .-move_window
+  85 007a 00BFAFF3 		.section	.text.get_fileinfo,"ax",%progbits
+  85      0080
+  86              		.align	2
+  87              		.p2align 4,,15
+  88              		.thumb
+  89              		.thumb_func
+  90              		.type	get_fileinfo, %function
+  91              	get_fileinfo:
+  92              		@ args = 0, pretend = 0, frame = 0
+  93              		@ frame_needed = 0, uses_anonymous_args = 0
+  94 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  95 0002 0369     		ldr	r3, [r0, #16]
+  96 0004 0E46     		mov	r6, r1
+  97 0006 01F10904 		add	r4, r1, #9
+  98 000a 002B     		cmp	r3, #0
+  99 000c 50D0     		beq	.L19
+ 100 000e 4569     		ldr	r5, [r0, #20]
+ 101 0010 95F80CC0 		ldrb	ip, [r5, #12]	@ zero_extendqisi2
+ 102 0014 0CF00807 		and	r7, ip, #8
+ 103 0018 FFB2     		uxtb	r7, r7
+ 104 001a 0022     		movs	r2, #0
+ 105              	.L23:
+ 106 001c AB5C     		ldrb	r3, [r5, r2]	@ zero_extendqisi2
+ 107 001e 202B     		cmp	r3, #32
+ 108 0020 02F10102 		add	r2, r2, #1
+ 109 0024 0ED0     		beq	.L20
+ 110 0026 052B     		cmp	r3, #5
+ 111 0028 08BF     		it	eq
+ 112 002a E523     		moveq	r3, #229
+ 113 002c A3F14101 		sub	r1, r3, #65
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 3
+
+
+ 114 0030 C9B2     		uxtb	r1, r1
+ 115 0032 1FB1     		cbz	r7, .L22
+ 116 0034 1929     		cmp	r1, #25
+ 117 0036 9CBF     		itt	ls
+ 118 0038 2033     		addls	r3, r3, #32
+ 119 003a DBB2     		uxtbls	r3, r3
+ 120              	.L22:
+ 121 003c 082A     		cmp	r2, #8
+ 122 003e 04F8013B 		strb	r3, [r4], #1
+ 123 0042 EBD1     		bne	.L23
+ 124              	.L20:
+ 125 0044 2B7A     		ldrb	r3, [r5, #8]	@ zero_extendqisi2
+ 126 0046 202B     		cmp	r3, #32
+ 127 0048 1BD0     		beq	.L24
+ 128 004a 2146     		mov	r1, r4
+ 129 004c 2E23     		movs	r3, #46
+ 130 004e 0CF0100C 		and	ip, ip, #16
+ 131 0052 01F8043B 		strb	r3, [r1], #4
+ 132 0056 5FFA8CFC 		uxtb	ip, ip
+ 133 005a 0134     		adds	r4, r4, #1
+ 134 005c EA1D     		adds	r2, r5, #7
+ 135              	.L26:
+ 136 005e 12F8013F 		ldrb	r3, [r2, #1]!	@ zero_extendqisi2
+ 137 0062 A3F14107 		sub	r7, r3, #65
+ 138 0066 202B     		cmp	r3, #32
+ 139 0068 FFB2     		uxtb	r7, r7
+ 140 006a 0AD0     		beq	.L24
+ 141 006c BCF1000F 		cmp	ip, #0
+ 142 0070 03D0     		beq	.L25
+ 143 0072 192F     		cmp	r7, #25
+ 144 0074 9CBF     		itt	ls
+ 145 0076 2033     		addls	r3, r3, #32
+ 146 0078 DBB2     		uxtbls	r3, r3
+ 147              	.L25:
+ 148 007a 04F8013B 		strb	r3, [r4], #1
+ 149 007e 8C42     		cmp	r4, r1
+ 150 0080 EDD1     		bne	.L26
+ 151              	.L24:
+ 152 0082 EB7A     		ldrb	r3, [r5, #11]	@ zero_extendqisi2
+ 153 0084 3372     		strb	r3, [r6, #8]
+ 154 0086 AB7F     		ldrb	r3, [r5, #30]	@ zero_extendqisi2
+ 155 0088 EF7F     		ldrb	r7, [r5, #31]	@ zero_extendqisi2
+ 156 008a 297F     		ldrb	r1, [r5, #28]	@ zero_extendqisi2
+ 157 008c 6A7F     		ldrb	r2, [r5, #29]	@ zero_extendqisi2
+ 158 008e 1B04     		lsls	r3, r3, #16
+ 159 0090 43EA0763 		orr	r3, r3, r7, lsl #24
+ 160 0094 0B43     		orrs	r3, r3, r1
+ 161 0096 43EA0223 		orr	r3, r3, r2, lsl #8
+ 162 009a 3360     		str	r3, [r6]
+ 163 009c 6A7E     		ldrb	r2, [r5, #25]	@ zero_extendqisi2
+ 164 009e 2B7E     		ldrb	r3, [r5, #24]	@ zero_extendqisi2
+ 165 00a0 43EA0223 		orr	r3, r3, r2, lsl #8
+ 166 00a4 B380     		strh	r3, [r6, #4]	@ movhi
+ 167 00a6 EA7D     		ldrb	r2, [r5, #23]	@ zero_extendqisi2
+ 168 00a8 AB7D     		ldrb	r3, [r5, #22]	@ zero_extendqisi2
+ 169 00aa 43EA0223 		orr	r3, r3, r2, lsl #8
+ 170 00ae F380     		strh	r3, [r6, #6]	@ movhi
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 4
+
+
+ 171              	.L19:
+ 172 00b0 0023     		movs	r3, #0
+ 173 00b2 2370     		strb	r3, [r4]
+ 174 00b4 B569     		ldr	r5, [r6, #24]
+ 175 00b6 35B1     		cbz	r5, .L18
+ 176 00b8 F269     		ldr	r2, [r6, #28]
+ 177 00ba 22B1     		cbz	r2, .L18
+ 178 00bc 0269     		ldr	r2, [r0, #16]
+ 179 00be 1AB9     		cbnz	r2, .L28
+ 180              	.L30:
+ 181 00c0 0024     		movs	r4, #0
+ 182              	.L29:
+ 183 00c2 0023     		movs	r3, #0
+ 184 00c4 2B55     		strb	r3, [r5, r4]
+ 185              	.L18:
+ 186 00c6 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 187              	.L28:
+ 188 00c8 018C     		ldrh	r1, [r0, #32]
+ 189 00ca 4FF6FF72 		movw	r2, #65535
+ 190 00ce 9142     		cmp	r1, r2
+ 191 00d0 F6D0     		beq	.L30
+ 192 00d2 C769     		ldr	r7, [r0, #28]
+ 193 00d4 3888     		ldrh	r0, [r7]
+ 194 00d6 0028     		cmp	r0, #0
+ 195 00d8 F2D0     		beq	.L30
+ 196 00da 1C46     		mov	r4, r3
+ 197 00dc 0DE0     		b	.L31
+ 198              	.L70:
+ 199 00de F369     		ldr	r3, [r6, #28]
+ 200 00e0 013B     		subs	r3, r3, #1
+ 201 00e2 9C42     		cmp	r4, r3
+ 202 00e4 04F10104 		add	r4, r4, #1
+ 203 00e8 05EB0403 		add	r3, r5, r4
+ 204 00ec E8D2     		bcs	.L30
+ 205 00ee 03F8010C 		strb	r0, [r3, #-1]
+ 206 00f2 37F8020F 		ldrh	r0, [r7, #2]!
+ 207 00f6 0028     		cmp	r0, #0
+ 208 00f8 E3D0     		beq	.L29
+ 209              	.L31:
+ 210 00fa 0021     		movs	r1, #0
+ 211 00fc FFF7FEFF 		bl	ff_convert
+ 212 0100 0028     		cmp	r0, #0
+ 213 0102 ECD1     		bne	.L70
+ 214 0104 DCE7     		b	.L30
+ 215              		.size	get_fileinfo, .-get_fileinfo
+ 216 0106 00BFAFF3 		.section	.text.sync,"ax",%progbits
+ 216      0080AFF3 
+ 216      0080
+ 217              		.align	2
+ 218              		.p2align 4,,15
+ 219              		.thumb
+ 220              		.thumb_func
+ 221              		.type	sync, %function
+ 222              	sync:
+ 223              		@ args = 0, pretend = 0, frame = 0
+ 224              		@ frame_needed = 0, uses_anonymous_args = 0
+ 225 0000 2DE9F84F 		push	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 5
+
+
+ 226 0004 0021     		movs	r1, #0
+ 227 0006 0546     		mov	r5, r0
+ 228 0008 FFF7FEFF 		bl	move_window
+ 229 000c 0346     		mov	r3, r0
+ 230 000e 50B9     		cbnz	r0, .L72
+ 231 0010 2B78     		ldrb	r3, [r5]	@ zero_extendqisi2
+ 232 0012 032B     		cmp	r3, #3
+ 233 0014 0AD0     		beq	.L80
+ 234              	.L73:
+ 235 0016 0021     		movs	r1, #0
+ 236 0018 6878     		ldrb	r0, [r5, #1]	@ zero_extendqisi2
+ 237 001a 0A46     		mov	r2, r1
+ 238 001c FFF7FEFF 		bl	disk_ioctl
+ 239 0020 031C     		adds	r3, r0, #0
+ 240 0022 18BF     		it	ne
+ 241 0024 0123     		movne	r3, #1
+ 242              	.L72:
+ 243 0026 1846     		mov	r0, r3
+ 244 0028 BDE8F88F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 245              	.L80:
+ 246 002c 6B79     		ldrb	r3, [r5, #5]	@ zero_extendqisi2
+ 247 002e 002B     		cmp	r3, #0
+ 248 0030 F1D0     		beq	.L73
+ 249 0032 05F13001 		add	r1, r5, #48
+ 250 0036 E862     		str	r0, [r5, #44]
+ 251 0038 0B46     		mov	r3, r1
+ 252 003a 05F50C72 		add	r2, r5, #560
+ 253              	.L75:
+ 254 003e 03F8010B 		strb	r0, [r3], #1
+ 255 0042 9342     		cmp	r3, r2
+ 256 0044 4FF00004 		mov	r4, #0
+ 257 0048 F9D1     		bne	.L75
+ 258 004a 2A69     		ldr	r2, [r5, #16]
+ 259 004c EB68     		ldr	r3, [r5, #12]
+ 260 004e 85F81822 		strb	r2, [r5, #536]
+ 261 0052 C2F3072B 		ubfx	fp, r2, #8, #8
+ 262 0056 4FEA124A 		lsr	r10, r2, #16
+ 263 005a 4FEA134C 		lsr	ip, r3, #16
+ 264 005e 4FEA136E 		lsr	lr, r3, #24
+ 265 0062 5220     		movs	r0, #82
+ 266 0064 4FEA1269 		lsr	r9, r2, #24
+ 267 0068 C3F30728 		ubfx	r8, r3, #8, #8
+ 268 006c 6122     		movs	r2, #97
+ 269 006e 85F819B2 		strb	fp, [r5, #537]
+ 270 0072 85F81AA2 		strb	r10, [r5, #538]
+ 271 0076 4FF0410B 		mov	fp, #65
+ 272 007a 4FF0720A 		mov	r10, #114
+ 273 007e 5527     		movs	r7, #85
+ 274 0080 AA26     		movs	r6, #170
+ 275 0082 85F81C32 		strb	r3, [r5, #540]
+ 276 0086 85F83000 		strb	r0, [r5, #48]
+ 277 008a 85F83100 		strb	r0, [r5, #49]
+ 278 008e 85F83220 		strb	r2, [r5, #50]
+ 279 0092 85F81722 		strb	r2, [r5, #535]
+ 280 0096 85F81B92 		strb	r9, [r5, #539]
+ 281 009a 85F81D82 		strb	r8, [r5, #541]
+ 282 009e 85F81EC2 		strb	ip, [r5, #542]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 6
+
+
+ 283 00a2 85F81FE2 		strb	lr, [r5, #543]
+ 284 00a6 85F82E72 		strb	r7, [r5, #558]
+ 285 00aa 85F82F62 		strb	r6, [r5, #559]
+ 286 00ae 85F833B0 		strb	fp, [r5, #51]
+ 287 00b2 85F816B2 		strb	fp, [r5, #534]
+ 288 00b6 85F814A2 		strb	r10, [r5, #532]
+ 289 00ba 85F815A2 		strb	r10, [r5, #533]
+ 290 00be 6878     		ldrb	r0, [r5, #1]	@ zero_extendqisi2
+ 291 00c0 6A69     		ldr	r2, [r5, #20]
+ 292 00c2 0123     		movs	r3, #1
+ 293 00c4 FFF7FEFF 		bl	disk_write
+ 294 00c8 6C71     		strb	r4, [r5, #5]
+ 295 00ca A4E7     		b	.L73
+ 296              		.size	sync, .-sync
+ 297 00cc AFF30080 		.section	.text.check_fs,"ax",%progbits
+ 298              		.align	2
+ 299              		.p2align 4,,15
+ 300              		.thumb
+ 301              		.thumb_func
+ 302              		.type	check_fs, %function
+ 303              	check_fs:
+ 304              		@ args = 0, pretend = 0, frame = 0
+ 305              		@ frame_needed = 0, uses_anonymous_args = 0
+ 306 0000 38B5     		push	{r3, r4, r5, lr}
+ 307 0002 0446     		mov	r4, r0
+ 308 0004 0A46     		mov	r2, r1
+ 309 0006 4078     		ldrb	r0, [r0, #1]	@ zero_extendqisi2
+ 310 0008 04F13001 		add	r1, r4, #48
+ 311 000c 0123     		movs	r3, #1
+ 312 000e FFF7FEFF 		bl	disk_read
+ 313 0012 08B1     		cbz	r0, .L86
+ 314 0014 0320     		movs	r0, #3
+ 315 0016 38BD     		pop	{r3, r4, r5, pc}
+ 316              	.L86:
+ 317 0018 94F82F12 		ldrb	r1, [r4, #559]	@ zero_extendqisi2
+ 318 001c 94F82E22 		ldrb	r2, [r4, #558]	@ zero_extendqisi2
+ 319 0020 4AF65523 		movw	r3, #43605
+ 320 0024 42EA0122 		orr	r2, r2, r1, lsl #8
+ 321 0028 12B2     		sxth	r2, r2
+ 322 002a CFF6FF73 		movt	r3, 65535
+ 323 002e 9A42     		cmp	r2, r3
+ 324 0030 18BF     		it	ne
+ 325 0032 0220     		movne	r0, #2
+ 326 0034 00D0     		beq	.L87
+ 327              	.L82:
+ 328 0036 38BD     		pop	{r3, r4, r5, pc}
+ 329              	.L87:
+ 330 0038 94F86830 		ldrb	r3, [r4, #104]	@ zero_extendqisi2
+ 331 003c 94F86950 		ldrb	r5, [r4, #105]	@ zero_extendqisi2
+ 332 0040 94F86610 		ldrb	r1, [r4, #102]	@ zero_extendqisi2
+ 333 0044 94F86720 		ldrb	r2, [r4, #103]	@ zero_extendqisi2
+ 334 0048 1B04     		lsls	r3, r3, #16
+ 335 004a 43EA0563 		orr	r3, r3, r5, lsl #24
+ 336 004e 0B43     		orrs	r3, r3, r1
+ 337 0050 43EA0222 		orr	r2, r3, r2, lsl #8
+ 338 0054 44F24613 		movw	r3, #16710
+ 339 0058 22F07F42 		bic	r2, r2, #-16777216
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 7
+
+
+ 340 005c C0F25403 		movt	r3, 84
+ 341 0060 9A42     		cmp	r2, r3
+ 342 0062 E8D0     		beq	.L82
+ 343 0064 94F88420 		ldrb	r2, [r4, #132]	@ zero_extendqisi2
+ 344 0068 94F88550 		ldrb	r5, [r4, #133]	@ zero_extendqisi2
+ 345 006c 94F88210 		ldrb	r1, [r4, #130]	@ zero_extendqisi2
+ 346 0070 94F88300 		ldrb	r0, [r4, #131]	@ zero_extendqisi2
+ 347 0074 1204     		lsls	r2, r2, #16
+ 348 0076 42EA0562 		orr	r2, r2, r5, lsl #24
+ 349 007a 0A43     		orrs	r2, r2, r1
+ 350 007c 42EA0020 		orr	r0, r2, r0, lsl #8
+ 351 0080 20F07F40 		bic	r0, r0, #-16777216
+ 352 0084 C01A     		subs	r0, r0, r3
+ 353 0086 18BF     		it	ne
+ 354 0088 0120     		movne	r0, #1
+ 355 008a 38BD     		pop	{r3, r4, r5, pc}
+ 356              		.size	check_fs, .-check_fs
+ 357 008c AFF30080 		.section	.text.chk_mounted,"ax",%progbits
+ 358              		.align	2
+ 359              		.p2align 4,,15
+ 360              		.thumb
+ 361              		.thumb_func
+ 362              		.type	chk_mounted, %function
+ 363              	chk_mounted:
+ 364              		@ args = 0, pretend = 0, frame = 0
+ 365              		@ frame_needed = 0, uses_anonymous_args = 0
+ 366 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 367 0004 0368     		ldr	r3, [r0]
+ 368 0006 1C78     		ldrb	r4, [r3]	@ zero_extendqisi2
+ 369 0008 303C     		subs	r4, r4, #48
+ 370 000a 092C     		cmp	r4, #9
+ 371 000c 1546     		mov	r5, r2
+ 372 000e 02D8     		bhi	.L92
+ 373 0010 5A78     		ldrb	r2, [r3, #1]	@ zero_extendqisi2
+ 374 0012 3A2A     		cmp	r2, #58
+ 375 0014 18D0     		beq	.L140
+ 376              	.L92:
+ 377 0016 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 378 001a C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 379 001e 1C68     		ldr	r4, [r3]
+ 380 0020 0C60     		str	r4, [r1]
+ 381 0022 74B1     		cbz	r4, .L141
+ 382 0024 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 383 0026 B3B1     		cbz	r3, .L93
+ 384 0028 6078     		ldrb	r0, [r4, #1]	@ zero_extendqisi2
+ 385 002a FFF7FEFF 		bl	disk_status
+ 386 002e C207     		lsls	r2, r0, #31
+ 387 0030 11D4     		bmi	.L93
+ 388 0032 05B3     		cbz	r5, .L111
+ 389 0034 10F0040F 		tst	r0, #4
+ 390 0038 0CBF     		ite	eq
+ 391 003a 0020     		moveq	r0, #0
+ 392 003c 0A20     		movne	r0, #10
+ 393 003e BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 394              	.L141:
+ 395 0042 0C20     		movs	r0, #12
+ 396 0044 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 8
+
+
+ 397              	.L140:
+ 398 0048 0233     		adds	r3, r3, #2
+ 399 004a 0360     		str	r3, [r0]
+ 400 004c 002C     		cmp	r4, #0
+ 401 004e E2D0     		beq	.L92
+ 402 0050 0B20     		movs	r0, #11
+ 403 0052 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 404              	.L93:
+ 405 0056 0020     		movs	r0, #0
+ 406 0058 2070     		strb	r0, [r4]
+ 407 005a 6070     		strb	r0, [r4, #1]
+ 408 005c FFF7FEFF 		bl	disk_initialize
+ 409 0060 C307     		lsls	r3, r0, #31
+ 410 0062 02D5     		bpl	.L142
+ 411 0064 0320     		movs	r0, #3
+ 412 0066 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 413              	.L142:
+ 414 006a 3DB1     		cbz	r5, .L94
+ 415 006c 4707     		lsls	r7, r0, #29
+ 416 006e 05D5     		bpl	.L94
+ 417 0070 0A20     		movs	r0, #10
+ 418 0072 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 419              	.L111:
+ 420 0076 2846     		mov	r0, r5
+ 421 0078 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 422              	.L94:
+ 423 007c 2046     		mov	r0, r4
+ 424 007e 0021     		movs	r1, #0
+ 425 0080 FFF7FEFF 		bl	check_fs
+ 426 0084 0128     		cmp	r0, #1
+ 427 0086 18BF     		it	ne
+ 428 0088 0025     		movne	r5, #0
+ 429 008a 06D0     		beq	.L143
+ 430              	.L95:
+ 431 008c 0328     		cmp	r0, #3
+ 432 008e 00F0BA80 		beq	.L116
+ 433 0092 C8B1     		cbz	r0, .L144
+ 434              	.L97:
+ 435 0094 0D20     		movs	r0, #13
+ 436 0096 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 437              	.L143:
+ 438 009a 94F8F231 		ldrb	r3, [r4, #498]	@ zero_extendqisi2
+ 439 009e 002B     		cmp	r3, #0
+ 440 00a0 F8D0     		beq	.L97
+ 441 00a2 94F8F821 		ldrb	r2, [r4, #504]	@ zero_extendqisi2
+ 442 00a6 94F8F911 		ldrb	r1, [r4, #505]	@ zero_extendqisi2
+ 443 00aa 94F8F631 		ldrb	r3, [r4, #502]	@ zero_extendqisi2
+ 444 00ae 94F8F751 		ldrb	r5, [r4, #503]	@ zero_extendqisi2
+ 445 00b2 1204     		lsls	r2, r2, #16
+ 446 00b4 42EA0162 		orr	r2, r2, r1, lsl #24
+ 447 00b8 1343     		orrs	r3, r3, r2
+ 448 00ba 43EA0525 		orr	r5, r3, r5, lsl #8
+ 449 00be 2946     		mov	r1, r5
+ 450 00c0 2046     		mov	r0, r4
+ 451 00c2 FFF7FEFF 		bl	check_fs
+ 452 00c6 E1E7     		b	.L95
+ 453              	.L144:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 9
+
+
+ 454 00c8 94F83C20 		ldrb	r2, [r4, #60]	@ zero_extendqisi2
+ 455 00cc 94F83B30 		ldrb	r3, [r4, #59]	@ zero_extendqisi2
+ 456 00d0 43EA0223 		orr	r3, r3, r2, lsl #8
+ 457 00d4 B3F5007F 		cmp	r3, #512
+ 458 00d8 DCD1     		bne	.L97
+ 459 00da 94F84710 		ldrb	r1, [r4, #71]	@ zero_extendqisi2
+ 460 00de 94F84630 		ldrb	r3, [r4, #70]	@ zero_extendqisi2
+ 461 00e2 53EA0121 		orrs	r1, r3, r1, lsl #8
+ 462 00e6 0DD1     		bne	.L98
+ 463 00e8 94F85620 		ldrb	r2, [r4, #86]	@ zero_extendqisi2
+ 464 00ec 94F85700 		ldrb	r0, [r4, #87]	@ zero_extendqisi2
+ 465 00f0 94F85430 		ldrb	r3, [r4, #84]	@ zero_extendqisi2
+ 466 00f4 94F85510 		ldrb	r1, [r4, #85]	@ zero_extendqisi2
+ 467 00f8 1204     		lsls	r2, r2, #16
+ 468 00fa 42EA0062 		orr	r2, r2, r0, lsl #24
+ 469 00fe 1343     		orrs	r3, r3, r2
+ 470 0100 43EA0121 		orr	r1, r3, r1, lsl #8
+ 471              	.L98:
+ 472 0104 94F84000 		ldrb	r0, [r4, #64]	@ zero_extendqisi2
+ 473 0108 E161     		str	r1, [r4, #28]
+ 474 010a 431E     		subs	r3, r0, #1
+ 475 010c DBB2     		uxtb	r3, r3
+ 476 010e 012B     		cmp	r3, #1
+ 477 0110 E070     		strb	r0, [r4, #3]
+ 478 0112 BFD8     		bhi	.L97
+ 479 0114 94F83D20 		ldrb	r2, [r4, #61]	@ zero_extendqisi2
+ 480 0118 A270     		strb	r2, [r4, #2]
+ 481 011a 002A     		cmp	r2, #0
+ 482 011c BAD0     		beq	.L97
+ 483 011e 531E     		subs	r3, r2, #1
+ 484 0120 1342     		tst	r3, r2
+ 485 0122 B7D1     		bne	.L97
+ 486 0124 94F84260 		ldrb	r6, [r4, #66]	@ zero_extendqisi2
+ 487 0128 94F84130 		ldrb	r3, [r4, #65]	@ zero_extendqisi2
+ 488 012c 43EA0623 		orr	r3, r3, r6, lsl #8
+ 489 0130 1E07     		lsls	r6, r3, #28
+ 490 0132 2381     		strh	r3, [r4, #8]	@ movhi
+ 491 0134 AED1     		bne	.L97
+ 492 0136 94F84470 		ldrb	r7, [r4, #68]	@ zero_extendqisi2
+ 493 013a 94F84360 		ldrb	r6, [r4, #67]	@ zero_extendqisi2
+ 494 013e 56EA0726 		orrs	r6, r6, r7, lsl #8
+ 495 0142 0FD1     		bne	.L99
+ 496 0144 94F852C0 		ldrb	ip, [r4, #82]	@ zero_extendqisi2
+ 497 0148 94F85380 		ldrb	r8, [r4, #83]	@ zero_extendqisi2
+ 498 014c 94F85060 		ldrb	r6, [r4, #80]	@ zero_extendqisi2
+ 499 0150 94F85170 		ldrb	r7, [r4, #81]	@ zero_extendqisi2
+ 500 0154 4FEA0C4C 		lsl	ip, ip, #16
+ 501 0158 4CEA086C 		orr	ip, ip, r8, lsl #24
+ 502 015c 4CEA0606 		orr	r6, ip, r6
+ 503 0160 46EA0726 		orr	r6, r6, r7, lsl #8
+ 504              	.L99:
+ 505 0164 94F83FC0 		ldrb	ip, [r4, #63]	@ zero_extendqisi2
+ 506 0168 94F83E70 		ldrb	r7, [r4, #62]	@ zero_extendqisi2
+ 507 016c 57EA0C27 		orrs	r7, r7, ip, lsl #8
+ 508 0170 90D0     		beq	.L97
+ 509 0172 00FB01FC 		mul	ip, r0, r1
+ 510 0176 07EB1310 		add	r0, r7, r3, lsr #4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 10
+
+
+ 511 017a 6044     		add	r0, r0, ip
+ 512 017c 8642     		cmp	r6, r0
+ 513 017e 89D3     		bcc	.L97
+ 514 0180 361A     		subs	r6, r6, r0
+ 515 0182 B6FBF2F2 		udiv	r2, r6, r2
+ 516 0186 002A     		cmp	r2, #0
+ 517 0188 84D0     		beq	.L97
+ 518 018a 40F6F576 		movw	r6, #4085
+ 519 018e B242     		cmp	r2, r6
+ 520 0190 40F2BC80 		bls	.L117
+ 521 0194 06F57046 		add	r6, r6, #61440
+ 522 0198 B242     		cmp	r2, r6
+ 523 019a 00F29C80 		bhi	.L101
+ 524 019e 0226     		movs	r6, #2
+ 525              	.L100:
+ 526 01a0 0232     		adds	r2, r2, #2
+ 527 01a2 2844     		add	r0, r0, r5
+ 528 01a4 2F44     		add	r7, r7, r5
+ 529 01a6 A261     		str	r2, [r4, #24]
+ 530 01a8 A062     		str	r0, [r4, #40]
+ 531 01aa 2762     		str	r7, [r4, #32]
+ 532 01ac 002B     		cmp	r3, #0
+ 533 01ae 3FF471AF 		beq	.L97
+ 534 01b2 022E     		cmp	r6, #2
+ 535 01b4 1CBF     		itt	ne
+ 536 01b6 0323     		movne	r3, #3
+ 537 01b8 5343     		mulne	r3, r3, r2
+ 538 01ba 6744     		add	r7, r7, ip
+ 539 01bc 18BF     		it	ne
+ 540 01be 02F00102 		andne	r2, r2, #1
+ 541 01c2 6762     		str	r7, [r4, #36]
+ 542 01c4 0EBF     		itee	eq
+ 543 01c6 5200     		lsleq	r2, r2, #1
+ 544 01c8 02EB5302 		addne	r2, r2, r3, lsr #1
+ 545 01cc 0126     		movne	r6, #1
+ 546              	.L102:
+ 547 01ce 02F2FF12 		addw	r2, r2, #511
+ 548 01d2 B1EB522F 		cmp	r1, r2, lsr #9
+ 549 01d6 FFF45DAF 		bcc	.L97
+ 550 01da 4FF0FF32 		mov	r2, #-1
+ 551 01de 0023     		movs	r3, #0
+ 552 01e0 032E     		cmp	r6, #3
+ 553 01e2 2261     		str	r2, [r4, #16]
+ 554 01e4 E360     		str	r3, [r4, #12]
+ 555 01e6 11D0     		beq	.L145
+ 556              	.L105:
+ 557 01e8 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 558 01ec C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ 559 01f0 0020     		movs	r0, #0
+ 560 01f2 1A88     		ldrh	r2, [r3]
+ 561 01f4 2670     		strb	r6, [r4]
+ 562 01f6 0132     		adds	r2, r2, #1
+ 563 01f8 92B2     		uxth	r2, r2
+ 564 01fa 2071     		strb	r0, [r4, #4]
+ 565 01fc 1A80     		strh	r2, [r3]	@ movhi
+ 566 01fe E280     		strh	r2, [r4, #6]	@ movhi
+ 567 0200 E062     		str	r0, [r4, #44]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 11
+
+
+ 568 0202 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 569              	.L116:
+ 570 0206 0120     		movs	r0, #1
+ 571 0208 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 572              	.L145:
+ 573 020c 94F86110 		ldrb	r1, [r4, #97]	@ zero_extendqisi2
+ 574 0210 94F86020 		ldrb	r2, [r4, #96]	@ zero_extendqisi2
+ 575 0214 6371     		strb	r3, [r4, #5]
+ 576 0216 42EA0122 		orr	r2, r2, r1, lsl #8
+ 577 021a 2A44     		add	r2, r2, r5
+ 578 021c 6261     		str	r2, [r4, #20]
+ 579 021e 6078     		ldrb	r0, [r4, #1]	@ zero_extendqisi2
+ 580 0220 04F13001 		add	r1, r4, #48
+ 581 0224 0123     		movs	r3, #1
+ 582 0226 FFF7FEFF 		bl	disk_read
+ 583 022a 0028     		cmp	r0, #0
+ 584 022c DCD1     		bne	.L105
+ 585 022e 94F82F12 		ldrb	r1, [r4, #559]	@ zero_extendqisi2
+ 586 0232 94F82E22 		ldrb	r2, [r4, #558]	@ zero_extendqisi2
+ 587 0236 4AF65523 		movw	r3, #43605
+ 588 023a 42EA0122 		orr	r2, r2, r1, lsl #8
+ 589 023e 12B2     		sxth	r2, r2
+ 590 0240 CFF6FF73 		movt	r3, 65535
+ 591 0244 9A42     		cmp	r2, r3
+ 592 0246 CFD1     		bne	.L105
+ 593 0248 94F83220 		ldrb	r2, [r4, #50]	@ zero_extendqisi2
+ 594 024c 94F83300 		ldrb	r0, [r4, #51]	@ zero_extendqisi2
+ 595 0250 94F83030 		ldrb	r3, [r4, #48]	@ zero_extendqisi2
+ 596 0254 94F83110 		ldrb	r1, [r4, #49]	@ zero_extendqisi2
+ 597 0258 1204     		lsls	r2, r2, #16
+ 598 025a 42EA0062 		orr	r2, r2, r0, lsl #24
+ 599 025e 1A43     		orrs	r2, r2, r3
+ 600 0260 45F25223 		movw	r3, #21074
+ 601 0264 42EA0122 		orr	r2, r2, r1, lsl #8
+ 602 0268 C4F26113 		movt	r3, 16737
+ 603 026c 9A42     		cmp	r2, r3
+ 604 026e BBD1     		bne	.L105
+ 605 0270 94F81622 		ldrb	r2, [r4, #534]	@ zero_extendqisi2
+ 606 0274 94F81702 		ldrb	r0, [r4, #535]	@ zero_extendqisi2
+ 607 0278 94F81432 		ldrb	r3, [r4, #532]	@ zero_extendqisi2
+ 608 027c 94F81512 		ldrb	r1, [r4, #533]	@ zero_extendqisi2
+ 609 0280 1204     		lsls	r2, r2, #16
+ 610 0282 42EA0062 		orr	r2, r2, r0, lsl #24
+ 611 0286 1A43     		orrs	r2, r2, r3
+ 612 0288 47F27223 		movw	r3, #29298
+ 613 028c 42EA0122 		orr	r2, r2, r1, lsl #8
+ 614 0290 C6F24113 		movt	r3, 24897
+ 615 0294 9A42     		cmp	r2, r3
+ 616 0296 A7D1     		bne	.L105
+ 617 0298 94F81E72 		ldrb	r7, [r4, #542]	@ zero_extendqisi2
+ 618 029c 94F81A52 		ldrb	r5, [r4, #538]	@ zero_extendqisi2
+ 619 02a0 94F81F82 		ldrb	r8, [r4, #543]	@ zero_extendqisi2
+ 620 02a4 94F81BC2 		ldrb	ip, [r4, #539]	@ zero_extendqisi2
+ 621 02a8 94F81C22 		ldrb	r2, [r4, #540]	@ zero_extendqisi2
+ 622 02ac 94F81832 		ldrb	r3, [r4, #536]	@ zero_extendqisi2
+ 623 02b0 94F81D02 		ldrb	r0, [r4, #541]	@ zero_extendqisi2
+ 624 02b4 94F81912 		ldrb	r1, [r4, #537]	@ zero_extendqisi2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 12
+
+
+ 625 02b8 3F04     		lsls	r7, r7, #16
+ 626 02ba 2D04     		lsls	r5, r5, #16
+ 627 02bc 47EA0867 		orr	r7, r7, r8, lsl #24
+ 628 02c0 45EA0C65 		orr	r5, r5, ip, lsl #24
+ 629 02c4 3A43     		orrs	r2, r2, r7
+ 630 02c6 2B43     		orrs	r3, r3, r5
+ 631 02c8 42EA0022 		orr	r2, r2, r0, lsl #8
+ 632 02cc 43EA0123 		orr	r3, r3, r1, lsl #8
+ 633 02d0 E260     		str	r2, [r4, #12]
+ 634 02d2 2361     		str	r3, [r4, #16]
+ 635 02d4 88E7     		b	.L105
+ 636              	.L101:
+ 637 02d6 0232     		adds	r2, r2, #2
+ 638 02d8 2844     		add	r0, r0, r5
+ 639 02da 2F44     		add	r7, r7, r5
+ 640 02dc A261     		str	r2, [r4, #24]
+ 641 02de A062     		str	r0, [r4, #40]
+ 642 02e0 2762     		str	r7, [r4, #32]
+ 643 02e2 002B     		cmp	r3, #0
+ 644 02e4 7FF4D6AE 		bne	.L97
+ 645 02e8 94F85E60 		ldrb	r6, [r4, #94]	@ zero_extendqisi2
+ 646 02ec 94F85F70 		ldrb	r7, [r4, #95]	@ zero_extendqisi2
+ 647 02f0 94F85C30 		ldrb	r3, [r4, #92]	@ zero_extendqisi2
+ 648 02f4 94F85D00 		ldrb	r0, [r4, #93]	@ zero_extendqisi2
+ 649 02f8 3604     		lsls	r6, r6, #16
+ 650 02fa 46EA0766 		orr	r6, r6, r7, lsl #24
+ 651 02fe 3343     		orrs	r3, r3, r6
+ 652 0300 43EA0023 		orr	r3, r3, r0, lsl #8
+ 653 0304 9200     		lsls	r2, r2, #2
+ 654 0306 6362     		str	r3, [r4, #36]
+ 655 0308 0326     		movs	r6, #3
+ 656 030a 60E7     		b	.L102
+ 657              	.L117:
+ 658 030c 0126     		movs	r6, #1
+ 659 030e 47E7     		b	.L100
+ 660              		.size	chk_mounted, .-chk_mounted
+ 661              		.section	.text.validate,"ax",%progbits
+ 662              		.align	2
+ 663              		.p2align 4,,15
+ 664              		.thumb
+ 665              		.thumb_func
+ 666              		.type	validate, %function
+ 667              	validate:
+ 668              		@ args = 0, pretend = 0, frame = 0
+ 669              		@ frame_needed = 0, uses_anonymous_args = 0
+ 670 0000 08B5     		push	{r3, lr}
+ 671 0002 08B1     		cbz	r0, .L151
+ 672 0004 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 673 0006 0BB9     		cbnz	r3, .L153
+ 674              	.L151:
+ 675 0008 0920     		movs	r0, #9
+ 676 000a 08BD     		pop	{r3, pc}
+ 677              	.L153:
+ 678 000c C388     		ldrh	r3, [r0, #6]
+ 679 000e 8B42     		cmp	r3, r1
+ 680 0010 FAD1     		bne	.L151
+ 681 0012 4078     		ldrb	r0, [r0, #1]	@ zero_extendqisi2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 13
+
+
+ 682 0014 FFF7FEFF 		bl	disk_status
+ 683 0018 10F0010F 		tst	r0, #1
+ 684 001c 0CBF     		ite	eq
+ 685 001e 0020     		moveq	r0, #0
+ 686 0020 0320     		movne	r0, #3
+ 687 0022 08BD     		pop	{r3, pc}
+ 688              		.size	validate, .-validate
+ 689 0024 AFF30080 		.section	.text.get_fat.part.3,"ax",%progbits
+ 689      AFF30080 
+ 689      AFF30080 
+ 690              		.align	2
+ 691              		.p2align 4,,15
+ 692              		.thumb
+ 693              		.thumb_func
+ 694              		.type	get_fat.part.3, %function
+ 695              	get_fat.part.3:
+ 696              		@ args = 0, pretend = 0, frame = 0
+ 697              		@ frame_needed = 0, uses_anonymous_args = 0
+ 698 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 699 0002 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 700 0004 022B     		cmp	r3, #2
+ 701 0006 0446     		mov	r4, r0
+ 702 0008 0D46     		mov	r5, r1
+ 703 000a 46D0     		beq	.L156
+ 704 000c 032B     		cmp	r3, #3
+ 705 000e 28D0     		beq	.L157
+ 706 0010 012B     		cmp	r3, #1
+ 707 0012 02D0     		beq	.L164
+ 708              	.L163:
+ 709 0014 4FF0FF30 		mov	r0, #-1
+ 710 0018 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 711              	.L164:
+ 712 001a 016A     		ldr	r1, [r0, #32]
+ 713 001c 05EB5506 		add	r6, r5, r5, lsr #1
+ 714 0020 01EB5621 		add	r1, r1, r6, lsr #9
+ 715 0024 FFF7FEFF 		bl	move_window
+ 716 0028 0028     		cmp	r0, #0
+ 717 002a F3D1     		bne	.L163
+ 718 002c C6F30803 		ubfx	r3, r6, #0, #9
+ 719 0030 216A     		ldr	r1, [r4, #32]
+ 720 0032 2344     		add	r3, r3, r4
+ 721 0034 0136     		adds	r6, r6, #1
+ 722 0036 01EB5621 		add	r1, r1, r6, lsr #9
+ 723 003a 2046     		mov	r0, r4
+ 724 003c 93F83070 		ldrb	r7, [r3, #48]	@ zero_extendqisi2
+ 725 0040 FFF7FEFF 		bl	move_window
+ 726 0044 0028     		cmp	r0, #0
+ 727 0046 E5D1     		bne	.L163
+ 728 0048 C6F30806 		ubfx	r6, r6, #0, #9
+ 729 004c 3444     		add	r4, r4, r6
+ 730 004e E907     		lsls	r1, r5, #31
+ 731 0050 94F83030 		ldrb	r3, [r4, #48]	@ zero_extendqisi2
+ 732 0054 47EA0320 		orr	r0, r7, r3, lsl #8
+ 733 0058 4CBF     		ite	mi
+ 734 005a 0009     		lsrmi	r0, r0, #4
+ 735 005c C0F30B00 		ubfxpl	r0, r0, #0, #12
+ 736 0060 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 14
+
+
+ 737              	.L157:
+ 738 0062 016A     		ldr	r1, [r0, #32]
+ 739 0064 01EBD511 		add	r1, r1, r5, lsr #7
+ 740 0068 FFF7FEFF 		bl	move_window
+ 741 006c 0028     		cmp	r0, #0
+ 742 006e D1D1     		bne	.L163
+ 743 0070 AD00     		lsls	r5, r5, #2
+ 744 0072 05F4FE75 		and	r5, r5, #508
+ 745 0076 05F13003 		add	r3, r5, #48
+ 746 007a 2344     		add	r3, r3, r4
+ 747 007c 2C44     		add	r4, r4, r5
+ 748 007e D878     		ldrb	r0, [r3, #3]	@ zero_extendqisi2
+ 749 0080 9978     		ldrb	r1, [r3, #2]	@ zero_extendqisi2
+ 750 0082 5A78     		ldrb	r2, [r3, #1]	@ zero_extendqisi2
+ 751 0084 94F83030 		ldrb	r3, [r4, #48]	@ zero_extendqisi2
+ 752 0088 0006     		lsls	r0, r0, #24
+ 753 008a 40EA0140 		orr	r0, r0, r1, lsl #16
+ 754 008e 40EA0220 		orr	r0, r0, r2, lsl #8
+ 755 0092 1843     		orrs	r0, r0, r3
+ 756 0094 20F07040 		bic	r0, r0, #-268435456
+ 757 0098 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 758              	.L156:
+ 759 009a 016A     		ldr	r1, [r0, #32]
+ 760 009c 01EB1521 		add	r1, r1, r5, lsr #8
+ 761 00a0 FFF7FEFF 		bl	move_window
+ 762 00a4 0028     		cmp	r0, #0
+ 763 00a6 B5D1     		bne	.L163
+ 764 00a8 6D00     		lsls	r5, r5, #1
+ 765 00aa 05F4FF75 		and	r5, r5, #510
+ 766 00ae 6319     		adds	r3, r4, r5
+ 767 00b0 1C46     		mov	r4, r3
+ 768 00b2 93F83030 		ldrb	r3, [r3, #48]	@ zero_extendqisi2
+ 769 00b6 94F83100 		ldrb	r0, [r4, #49]	@ zero_extendqisi2
+ 770 00ba 43EA0020 		orr	r0, r3, r0, lsl #8
+ 771 00be F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 772              		.size	get_fat.part.3, .-get_fat.part.3
+ 773              		.section	.text.dir_sdi,"ax",%progbits
+ 774              		.align	2
+ 775              		.p2align 4,,15
+ 776              		.thumb
+ 777              		.thumb_func
+ 778              		.type	dir_sdi, %function
+ 779              	dir_sdi:
+ 780              		@ args = 0, pretend = 0, frame = 0
+ 781              		@ frame_needed = 0, uses_anonymous_args = 0
+ 782 0000 8368     		ldr	r3, [r0, #8]
+ 783 0002 70B5     		push	{r4, r5, r6, lr}
+ 784 0004 0446     		mov	r4, r0
+ 785 0006 012B     		cmp	r3, #1
+ 786 0008 0D46     		mov	r5, r1
+ 787 000a E180     		strh	r1, [r4, #6]	@ movhi
+ 788 000c 03D0     		beq	.L178
+ 789 000e 0068     		ldr	r0, [r0]
+ 790 0010 8269     		ldr	r2, [r0, #24]
+ 791 0012 9342     		cmp	r3, r2
+ 792 0014 01D3     		bcc	.L182
+ 793              	.L178:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 15
+
+
+ 794 0016 0220     		movs	r0, #2
+ 795 0018 70BD     		pop	{r4, r5, r6, pc}
+ 796              	.L182:
+ 797 001a B3B9     		cbnz	r3, .L169
+ 798 001c 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 799 001e 032B     		cmp	r3, #3
+ 800 0020 10D0     		beq	.L183
+ 801              	.L170:
+ 802 0022 0389     		ldrh	r3, [r0, #8]
+ 803 0024 0022     		movs	r2, #0
+ 804 0026 AB42     		cmp	r3, r5
+ 805 0028 E260     		str	r2, [r4, #12]
+ 806 002a F4D9     		bls	.L178
+ 807 002c 436A     		ldr	r3, [r0, #36]
+ 808 002e 03EB1513 		add	r3, r3, r5, lsr #4
+ 809 0032 2361     		str	r3, [r4, #16]
+ 810              	.L171:
+ 811 0034 05F00F05 		and	r5, r5, #15
+ 812 0038 00EB4510 		add	r0, r0, r5, lsl #5
+ 813 003c 3030     		adds	r0, r0, #48
+ 814 003e 6061     		str	r0, [r4, #20]
+ 815 0040 0020     		movs	r0, #0
+ 816 0042 70BD     		pop	{r4, r5, r6, pc}
+ 817              	.L183:
+ 818 0044 436A     		ldr	r3, [r0, #36]
+ 819 0046 002B     		cmp	r3, #0
+ 820 0048 EBD0     		beq	.L170
+ 821              	.L169:
+ 822 004a 8678     		ldrb	r6, [r0, #2]	@ zero_extendqisi2
+ 823 004c 3601     		lsls	r6, r6, #4
+ 824 004e B542     		cmp	r5, r6
+ 825 0050 19D3     		bcc	.L172
+ 826 0052 012B     		cmp	r3, #1
+ 827 0054 DFD9     		bls	.L178
+ 828 0056 AD1B     		subs	r5, r5, r6
+ 829 0058 9A42     		cmp	r2, r3
+ 830 005a ADB2     		uxth	r5, r5
+ 831 005c DBD9     		bls	.L178
+ 832 005e 08E0     		b	.L175
+ 833              	.L184:
+ 834 0060 012B     		cmp	r3, #1
+ 835 0062 D8D9     		bls	.L178
+ 836 0064 2068     		ldr	r0, [r4]
+ 837 0066 8269     		ldr	r2, [r0, #24]
+ 838 0068 9A42     		cmp	r2, r3
+ 839 006a D4D9     		bls	.L178
+ 840 006c AE42     		cmp	r6, r5
+ 841 006e 0AD8     		bhi	.L172
+ 842 0070 0D46     		mov	r5, r1
+ 843              	.L175:
+ 844 0072 1946     		mov	r1, r3
+ 845 0074 FFF7FEFF 		bl	get_fat.part.3
+ 846 0078 A91B     		subs	r1, r5, r6
+ 847 007a 0346     		mov	r3, r0
+ 848 007c 0130     		adds	r0, r0, #1
+ 849 007e 89B2     		uxth	r1, r1
+ 850 0080 EED1     		bne	.L184
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 16
+
+
+ 851 0082 0120     		movs	r0, #1
+ 852 0084 70BD     		pop	{r4, r5, r6, pc}
+ 853              	.L172:
+ 854 0086 991E     		subs	r1, r3, #2
+ 855 0088 023A     		subs	r2, r2, #2
+ 856 008a 9142     		cmp	r1, r2
+ 857 008c E360     		str	r3, [r4, #12]
+ 858 008e 3BBF     		ittet	cc
+ 859 0090 8278     		ldrbcc	r2, [r0, #2]	@ zero_extendqisi2
+ 860 0092 836A     		ldrcc	r3, [r0, #40]
+ 861 0094 0021     		movcs	r1, #0
+ 862 0096 02FB0131 		mlacc	r1, r2, r1, r3
+ 863 009a 01EB1511 		add	r1, r1, r5, lsr #4
+ 864 009e 2161     		str	r1, [r4, #16]
+ 865 00a0 C8E7     		b	.L171
+ 866              		.size	dir_sdi, .-dir_sdi
+ 867 00a2 00BFAFF3 		.section	.text.put_fat.part.4,"ax",%progbits
+ 867      0080AFF3 
+ 867      0080AFF3 
+ 867      0080
+ 868              		.align	2
+ 869              		.p2align 4,,15
+ 870              		.thumb
+ 871              		.thumb_func
+ 872              		.type	put_fat.part.4, %function
+ 873              	put_fat.part.4:
+ 874              		@ args = 0, pretend = 0, frame = 0
+ 875              		@ frame_needed = 0, uses_anonymous_args = 0
+ 876 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 877 0002 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 878 0004 022B     		cmp	r3, #2
+ 879 0006 0446     		mov	r4, r0
+ 880 0008 0D46     		mov	r5, r1
+ 881 000a 1646     		mov	r6, r2
+ 882 000c 5BD0     		beq	.L187
+ 883 000e 032B     		cmp	r3, #3
+ 884 0010 3AD0     		beq	.L188
+ 885 0012 012B     		cmp	r3, #1
+ 886 0014 18BF     		it	ne
+ 887 0016 0220     		movne	r0, #2
+ 888 0018 02D0     		beq	.L196
+ 889              	.L186:
+ 890 001a 0123     		movs	r3, #1
+ 891 001c 2371     		strb	r3, [r4, #4]
+ 892 001e F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 893              	.L196:
+ 894 0020 216A     		ldr	r1, [r4, #32]
+ 895 0022 05EB5507 		add	r7, r5, r5, lsr #1
+ 896 0026 01EB5721 		add	r1, r1, r7, lsr #9
+ 897 002a FFF7FEFF 		bl	move_window
+ 898 002e 0028     		cmp	r0, #0
+ 899 0030 F3D1     		bne	.L186
+ 900 0032 C7F30803 		ubfx	r3, r7, #0, #9
+ 901 0036 2344     		add	r3, r3, r4
+ 902 0038 15F00105 		ands	r5, r5, #1
+ 903 003c 18BF     		it	ne
+ 904 003e 93F83010 		ldrbne	r1, [r3, #48]	@ zero_extendqisi2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 17
+
+
+ 905 0042 F2B2     		uxtb	r2, r6
+ 906 0044 1EBF     		ittt	ne
+ 907 0046 01F00F01 		andne	r1, r1, #15
+ 908 004a 41EA0212 		orrne	r2, r1, r2, lsl #4
+ 909 004e D2B2     		uxtbne	r2, r2
+ 910 0050 216A     		ldr	r1, [r4, #32]
+ 911 0052 83F83020 		strb	r2, [r3, #48]
+ 912 0056 0137     		adds	r7, r7, #1
+ 913 0058 0123     		movs	r3, #1
+ 914 005a 01EB5721 		add	r1, r1, r7, lsr #9
+ 915 005e 2371     		strb	r3, [r4, #4]
+ 916 0060 2046     		mov	r0, r4
+ 917 0062 FFF7FEFF 		bl	move_window
+ 918 0066 0028     		cmp	r0, #0
+ 919 0068 D7D1     		bne	.L186
+ 920 006a C7F30807 		ubfx	r7, r7, #0, #9
+ 921 006e 002D     		cmp	r5, #0
+ 922 0070 3DD1     		bne	.L197
+ 923 0072 2744     		add	r7, r7, r4
+ 924 0074 C6F30326 		ubfx	r6, r6, #8, #4
+ 925 0078 97F83030 		ldrb	r3, [r7, #48]	@ zero_extendqisi2
+ 926 007c 23F00F03 		bic	r3, r3, #15
+ 927 0080 1E43     		orrs	r6, r6, r3
+ 928              	.L193:
+ 929 0082 87F83060 		strb	r6, [r7, #48]
+ 930 0086 C8E7     		b	.L186
+ 931              	.L188:
+ 932 0088 016A     		ldr	r1, [r0, #32]
+ 933 008a 01EBD511 		add	r1, r1, r5, lsr #7
+ 934 008e FFF7FEFF 		bl	move_window
+ 935 0092 0028     		cmp	r0, #0
+ 936 0094 C1D1     		bne	.L186
+ 937 0096 AD00     		lsls	r5, r5, #2
+ 938 0098 05F4FE75 		and	r5, r5, #508
+ 939 009c 05F13003 		add	r3, r5, #48
+ 940 00a0 2344     		add	r3, r3, r4
+ 941 00a2 2544     		add	r5, r5, r4
+ 942 00a4 DA78     		ldrb	r2, [r3, #3]	@ zero_extendqisi2
+ 943 00a6 1206     		lsls	r2, r2, #24
+ 944 00a8 02F07042 		and	r2, r2, #-268435456
+ 945 00ac 1643     		orrs	r6, r6, r2
+ 946 00ae C6F30727 		ubfx	r7, r6, #8, #8
+ 947 00b2 310C     		lsrs	r1, r6, #16
+ 948 00b4 320E     		lsrs	r2, r6, #24
+ 949 00b6 85F83060 		strb	r6, [r5, #48]
+ 950 00ba 5F70     		strb	r7, [r3, #1]
+ 951 00bc 9970     		strb	r1, [r3, #2]
+ 952 00be DA70     		strb	r2, [r3, #3]
+ 953 00c0 0123     		movs	r3, #1
+ 954 00c2 2371     		strb	r3, [r4, #4]
+ 955 00c4 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 956              	.L187:
+ 957 00c6 016A     		ldr	r1, [r0, #32]
+ 958 00c8 01EB1521 		add	r1, r1, r5, lsr #8
+ 959 00cc FFF7FEFF 		bl	move_window
+ 960 00d0 0028     		cmp	r0, #0
+ 961 00d2 A2D1     		bne	.L186
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 18
+
+
+ 962 00d4 6D00     		lsls	r5, r5, #1
+ 963 00d6 05F4FF75 		and	r5, r5, #510
+ 964 00da 6219     		adds	r2, r4, r5
+ 965 00dc C6F30723 		ubfx	r3, r6, #8, #8
+ 966 00e0 82F83130 		strb	r3, [r2, #49]
+ 967 00e4 0123     		movs	r3, #1
+ 968 00e6 82F83060 		strb	r6, [r2, #48]
+ 969 00ea 2371     		strb	r3, [r4, #4]
+ 970 00ec F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 971              	.L197:
+ 972 00ee C6F30716 		ubfx	r6, r6, #4, #8
+ 973 00f2 2744     		add	r7, r7, r4
+ 974 00f4 C5E7     		b	.L193
+ 975              		.size	put_fat.part.4, .-put_fat.part.4
+ 976 00f6 00BFAFF3 		.section	.text.create_chain,"ax",%progbits
+ 976      0080AFF3 
+ 976      0080
+ 977              		.align	2
+ 978              		.p2align 4,,15
+ 979              		.thumb
+ 980              		.thumb_func
+ 981              		.type	create_chain, %function
+ 982              	create_chain:
+ 983              		@ args = 0, pretend = 0, frame = 0
+ 984              		@ frame_needed = 0, uses_anonymous_args = 0
+ 985 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 986 0002 0646     		mov	r6, r0
+ 987 0004 0F46     		mov	r7, r1
+ 988 0006 69B9     		cbnz	r1, .L199
+ 989 0008 C568     		ldr	r5, [r0, #12]
+ 990 000a 8369     		ldr	r3, [r0, #24]
+ 991 000c CDB9     		cbnz	r5, .L200
+ 992              	.L215:
+ 993 000e 0125     		movs	r5, #1
+ 994              	.L201:
+ 995 0010 2C46     		mov	r4, r5
+ 996              	.L210:
+ 997 0012 0134     		adds	r4, r4, #1
+ 998 0014 A342     		cmp	r3, r4
+ 999 0016 17D8     		bhi	.L205
+ 1000 0018 012D     		cmp	r5, #1
+ 1001 001a 25D9     		bls	.L209
+ 1002 001c 022B     		cmp	r3, #2
+ 1003 001e 52D8     		bhi	.L220
+ 1004              	.L211:
+ 1005 0020 0120     		movs	r0, #1
+ 1006 0022 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 1007              	.L199:
+ 1008 0024 0129     		cmp	r1, #1
+ 1009 0026 FBD9     		bls	.L211
+ 1010 0028 8369     		ldr	r3, [r0, #24]
+ 1011 002a 9942     		cmp	r1, r3
+ 1012 002c F8D2     		bcs	.L211
+ 1013 002e FFF7FEFF 		bl	get_fat.part.3
+ 1014 0032 0128     		cmp	r0, #1
+ 1015 0034 F4D9     		bls	.L211
+ 1016 0036 B369     		ldr	r3, [r6, #24]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 19
+
+
+ 1017 0038 8342     		cmp	r3, r0
+ 1018 003a 98BF     		it	ls
+ 1019 003c 3D46     		movls	r5, r7
+ 1020 003e E7D9     		bls	.L201
+ 1021              	.L203:
+ 1022 0040 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 1023              	.L200:
+ 1024 0042 9D42     		cmp	r5, r3
+ 1025 0044 E3D2     		bcs	.L215
+ 1026 0046 E3E7     		b	.L201
+ 1027              	.L205:
+ 1028 0048 012C     		cmp	r4, #1
+ 1029 004a E9D9     		bls	.L211
+ 1030              	.L207:
+ 1031 004c 3046     		mov	r0, r6
+ 1032 004e 2146     		mov	r1, r4
+ 1033 0050 FFF7FEFF 		bl	get_fat.part.3
+ 1034 0054 50B1     		cbz	r0, .L208
+ 1035 0056 B0F1FF3F 		cmp	r0, #-1
+ 1036 005a 18BF     		it	ne
+ 1037 005c 0128     		cmpne	r0, #1
+ 1038 005e EFD0     		beq	.L203
+ 1039 0060 A542     		cmp	r5, r4
+ 1040 0062 01D0     		beq	.L209
+ 1041 0064 B369     		ldr	r3, [r6, #24]
+ 1042 0066 D4E7     		b	.L210
+ 1043              	.L209:
+ 1044 0068 0020     		movs	r0, #0
+ 1045 006a F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 1046              	.L208:
+ 1047 006c B369     		ldr	r3, [r6, #24]
+ 1048 006e 9C42     		cmp	r4, r3
+ 1049 0070 D6D2     		bcs	.L211
+ 1050 0072 3046     		mov	r0, r6
+ 1051 0074 2146     		mov	r1, r4
+ 1052 0076 6FF07042 		mvn	r2, #-268435456
+ 1053 007a FFF7FEFF 		bl	put_fat.part.4
+ 1054 007e D0F10103 		rsbs	r3, r0, #1
+ 1055 0082 38BF     		it	cc
+ 1056 0084 0023     		movcc	r3, #0
+ 1057 0086 002F     		cmp	r7, #0
+ 1058 0088 08BF     		it	eq
+ 1059 008a 0023     		moveq	r3, #0
+ 1060 008c 4BB1     		cbz	r3, .L212
+ 1061 008e 012F     		cmp	r7, #1
+ 1062 0090 C6D9     		bls	.L211
+ 1063 0092 B369     		ldr	r3, [r6, #24]
+ 1064 0094 9F42     		cmp	r7, r3
+ 1065 0096 C3D2     		bcs	.L211
+ 1066 0098 3946     		mov	r1, r7
+ 1067 009a 3046     		mov	r0, r6
+ 1068 009c 2246     		mov	r2, r4
+ 1069 009e FFF7FEFF 		bl	put_fat.part.4
+ 1070              	.L212:
+ 1071 00a2 58B9     		cbnz	r0, .L214
+ 1072 00a4 3369     		ldr	r3, [r6, #16]
+ 1073 00a6 F460     		str	r4, [r6, #12]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 20
+
+
+ 1074 00a8 5D1C     		adds	r5, r3, #1
+ 1075 00aa 05D0     		beq	.L216
+ 1076 00ac 0122     		movs	r2, #1
+ 1077 00ae 013B     		subs	r3, r3, #1
+ 1078 00b0 7271     		strb	r2, [r6, #5]
+ 1079 00b2 3361     		str	r3, [r6, #16]
+ 1080 00b4 2046     		mov	r0, r4
+ 1081 00b6 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 1082              	.L216:
+ 1083 00b8 2046     		mov	r0, r4
+ 1084 00ba C1E7     		b	.L203
+ 1085              	.L214:
+ 1086 00bc 0128     		cmp	r0, #1
+ 1087 00be AFD1     		bne	.L211
+ 1088 00c0 4FF0FF30 		mov	r0, #-1
+ 1089 00c4 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 1090              	.L220:
+ 1091 00c6 0224     		movs	r4, #2
+ 1092 00c8 C0E7     		b	.L207
+ 1093              		.size	create_chain, .-create_chain
+ 1094 00ca 00BFAFF3 		.section	.text.dir_next,"ax",%progbits
+ 1094      0080
+ 1095              		.align	2
+ 1096              		.p2align 4,,15
+ 1097              		.thumb
+ 1098              		.thumb_func
+ 1099              		.type	dir_next, %function
+ 1100              	dir_next:
+ 1101              		@ args = 0, pretend = 0, frame = 0
+ 1102              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1103 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 1104 0004 C588     		ldrh	r5, [r0, #6]
+ 1105 0006 0135     		adds	r5, r5, #1
+ 1106 0008 ADB2     		uxth	r5, r5
+ 1107 000a 0446     		mov	r4, r0
+ 1108 000c 0E46     		mov	r6, r1
+ 1109 000e 15B9     		cbnz	r5, .L222
+ 1110              	.L224:
+ 1111 0010 0420     		movs	r0, #4
+ 1112 0012 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 1113              	.L222:
+ 1114 0016 0369     		ldr	r3, [r0, #16]
+ 1115 0018 002B     		cmp	r3, #0
+ 1116 001a F9D0     		beq	.L224
+ 1117 001c 15F00F07 		ands	r7, r5, #15
+ 1118 0020 08D0     		beq	.L225
+ 1119 0022 0368     		ldr	r3, [r0]
+ 1120              	.L226:
+ 1121 0024 03EB4713 		add	r3, r3, r7, lsl #5
+ 1122 0028 3033     		adds	r3, r3, #48
+ 1123 002a 6361     		str	r3, [r4, #20]
+ 1124 002c E580     		strh	r5, [r4, #6]	@ movhi
+ 1125 002e 0020     		movs	r0, #0
+ 1126 0030 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 1127              	.L225:
+ 1128 0034 C168     		ldr	r1, [r0, #12]
+ 1129 0036 0133     		adds	r3, r3, #1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 21
+
+
+ 1130 0038 0361     		str	r3, [r0, #16]
+ 1131 003a 0368     		ldr	r3, [r0]
+ 1132 003c 61B1     		cbz	r1, .L256
+ 1133 003e 9A78     		ldrb	r2, [r3, #2]	@ zero_extendqisi2
+ 1134 0040 013A     		subs	r2, r2, #1
+ 1135 0042 12EA1512 		ands	r2, r2, r5, lsr #4
+ 1136 0046 EDD1     		bne	.L226
+ 1137 0048 0129     		cmp	r1, #1
+ 1138 004a 02D9     		bls	.L229
+ 1139 004c 9A69     		ldr	r2, [r3, #24]
+ 1140 004e 9142     		cmp	r1, r2
+ 1141 0050 06D3     		bcc	.L257
+ 1142              	.L229:
+ 1143 0052 0220     		movs	r0, #2
+ 1144 0054 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 1145              	.L256:
+ 1146 0058 1A89     		ldrh	r2, [r3, #8]
+ 1147 005a AA42     		cmp	r2, r5
+ 1148 005c D8D9     		bls	.L224
+ 1149 005e E1E7     		b	.L226
+ 1150              	.L257:
+ 1151 0060 1846     		mov	r0, r3
+ 1152 0062 FFF7FEFF 		bl	get_fat.part.3
+ 1153 0066 0128     		cmp	r0, #1
+ 1154 0068 8046     		mov	r8, r0
+ 1155 006a F2D9     		bls	.L229
+ 1156 006c B0F1FF3F 		cmp	r0, #-1
+ 1157 0070 1BD0     		beq	.L232
+ 1158 0072 2368     		ldr	r3, [r4]
+ 1159 0074 9A69     		ldr	r2, [r3, #24]
+ 1160 0076 8242     		cmp	r2, r0
+ 1161 0078 0AD8     		bhi	.L239
+ 1162 007a 002E     		cmp	r6, #0
+ 1163 007c C8D0     		beq	.L224
+ 1164 007e 1846     		mov	r0, r3
+ 1165 0080 E168     		ldr	r1, [r4, #12]
+ 1166 0082 FFF7FEFF 		bl	create_chain
+ 1167 0086 8046     		mov	r8, r0
+ 1168 0088 90B9     		cbnz	r0, .L258
+ 1169 008a 0720     		movs	r0, #7
+ 1170 008c BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 1171              	.L239:
+ 1172 0090 861E     		subs	r6, r0, #2
+ 1173              	.L231:
+ 1174 0092 023A     		subs	r2, r2, #2
+ 1175 0094 9642     		cmp	r6, r2
+ 1176 0096 C4F80C80 		str	r8, [r4, #12]
+ 1177 009a 3BBF     		ittet	cc
+ 1178 009c 9978     		ldrbcc	r1, [r3, #2]	@ zero_extendqisi2
+ 1179 009e 9A6A     		ldrcc	r2, [r3, #40]
+ 1180 00a0 0026     		movcs	r6, #0
+ 1181 00a2 01FB0626 		mlacc	r6, r1, r6, r2
+ 1182 00a6 2661     		str	r6, [r4, #16]
+ 1183 00a8 BCE7     		b	.L226
+ 1184              	.L232:
+ 1185 00aa 0120     		movs	r0, #1
+ 1186 00ac BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 22
+
+
+ 1187              	.L258:
+ 1188 00b0 0128     		cmp	r0, #1
+ 1189 00b2 CED0     		beq	.L229
+ 1190 00b4 B0F1FF3F 		cmp	r0, #-1
+ 1191 00b8 F7D0     		beq	.L232
+ 1192 00ba 2068     		ldr	r0, [r4]
+ 1193 00bc 0021     		movs	r1, #0
+ 1194 00be FFF7FEFF 		bl	move_window
+ 1195 00c2 0028     		cmp	r0, #0
+ 1196 00c4 F1D1     		bne	.L232
+ 1197 00c6 2268     		ldr	r2, [r4]
+ 1198 00c8 0146     		mov	r1, r0
+ 1199 00ca 02F13003 		add	r3, r2, #48
+ 1200 00ce 02F50C72 		add	r2, r2, #560
+ 1201              	.L234:
+ 1202 00d2 03F8011B 		strb	r1, [r3], #1
+ 1203 00d6 9342     		cmp	r3, r2
+ 1204 00d8 FBD1     		bne	.L234
+ 1205 00da 2268     		ldr	r2, [r4]
+ 1206 00dc 9369     		ldr	r3, [r2, #24]
+ 1207 00de A8F10206 		sub	r6, r8, #2
+ 1208 00e2 023B     		subs	r3, r3, #2
+ 1209 00e4 9E42     		cmp	r6, r3
+ 1210 00e6 3BBF     		ittet	cc
+ 1211 00e8 936A     		ldrcc	r3, [r2, #40]
+ 1212 00ea 9178     		ldrbcc	r1, [r2, #2]	@ zero_extendqisi2
+ 1213 00ec 0023     		movcs	r3, #0
+ 1214 00ee 01FB0633 		mlacc	r3, r1, r6, r3
+ 1215 00f2 D362     		str	r3, [r2, #44]
+ 1216 00f4 4FF00009 		mov	r9, #0
+ 1217 00f8 4FF0010A 		mov	r10, #1
+ 1218 00fc 0EE0     		b	.L236
+ 1219              	.L237:
+ 1220 00fe 82F804A0 		strb	r10, [r2, #4]
+ 1221 0102 2068     		ldr	r0, [r4]
+ 1222 0104 FFF7FEFF 		bl	move_window
+ 1223 0108 09F10109 		add	r9, r9, #1
+ 1224 010c 0028     		cmp	r0, #0
+ 1225 010e CCD1     		bne	.L232
+ 1226 0110 2268     		ldr	r2, [r4]
+ 1227 0112 D36A     		ldr	r3, [r2, #44]
+ 1228 0114 0133     		adds	r3, r3, #1
+ 1229 0116 5FFA89F9 		uxtb	r9, r9
+ 1230 011a D362     		str	r3, [r2, #44]
+ 1231              	.L236:
+ 1232 011c 9078     		ldrb	r0, [r2, #2]	@ zero_extendqisi2
+ 1233 011e 4845     		cmp	r0, r9
+ 1234 0120 4FF00001 		mov	r1, #0
+ 1235 0124 1346     		mov	r3, r2
+ 1236 0126 EAD8     		bhi	.L237
+ 1237 0128 D16A     		ldr	r1, [r2, #44]
+ 1238 012a 9269     		ldr	r2, [r2, #24]
+ 1239 012c C9EB0101 		rsb	r1, r9, r1
+ 1240 0130 D962     		str	r1, [r3, #44]
+ 1241 0132 AEE7     		b	.L231
+ 1242              		.size	dir_next, .-dir_next
+ 1243 0134 AFF30080 		.section	.text.dir_read,"ax",%progbits
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 23
+
+
+ 1243      AFF30080 
+ 1243      AFF30080 
+ 1244              		.align	2
+ 1245              		.p2align 4,,15
+ 1246              		.thumb
+ 1247              		.thumb_func
+ 1248              		.type	dir_read, %function
+ 1249              	dir_read:
+ 1250              		@ args = 0, pretend = 0, frame = 0
+ 1251              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1252 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 1253 0004 FF26     		movs	r6, #255
+ 1254 0006 0446     		mov	r4, r0
+ 1255 0008 3546     		mov	r5, r6
+ 1256 000a 0420     		movs	r0, #4
+ 1257 000c 424F     		ldr	r7, .L301
+ 1258 000e 4FF6FF78 		movw	r8, #65535
+ 1259 0012 4FF00009 		mov	r9, #0
+ 1260 0016 09E0     		b	.L260
+ 1261              	.L297:
+ 1262 0018 BCF10F0F 		cmp	ip, #15
+ 1263 001c 1ED0     		beq	.L264
+ 1264              	.L285:
+ 1265 001e FF25     		movs	r5, #255
+ 1266              	.L262:
+ 1267 0020 2046     		mov	r0, r4
+ 1268 0022 0021     		movs	r1, #0
+ 1269 0024 FFF7FEFF 		bl	dir_next
+ 1270 0028 0028     		cmp	r0, #0
+ 1271 002a 4BD1     		bne	.L280
+ 1272              	.L260:
+ 1273 002c 2169     		ldr	r1, [r4, #16]
+ 1274 002e 0029     		cmp	r1, #0
+ 1275 0030 4CD0     		beq	.L296
+ 1276 0032 2068     		ldr	r0, [r4]
+ 1277 0034 FFF7FEFF 		bl	move_window
+ 1278 0038 0028     		cmp	r0, #0
+ 1279 003a 43D1     		bne	.L280
+ 1280 003c 6269     		ldr	r2, [r4, #20]
+ 1281 003e 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 1282 0040 002B     		cmp	r3, #0
+ 1283 0042 3ED0     		beq	.L281
+ 1284 0044 E52B     		cmp	r3, #229
+ 1285 0046 18BF     		it	ne
+ 1286 0048 2E2B     		cmpne	r3, #46
+ 1287 004a D17A     		ldrb	r1, [r2, #11]	@ zero_extendqisi2
+ 1288 004c E7D0     		beq	.L285
+ 1289 004e 01F03F0C 		and	ip, r1, #63
+ 1290 0052 0907     		lsls	r1, r1, #28
+ 1291 0054 E0D4     		bmi	.L297
+ 1292 0056 BCF10F0F 		cmp	ip, #15
+ 1293 005a 47D1     		bne	.L265
+ 1294              	.L264:
+ 1295 005c 5906     		lsls	r1, r3, #25
+ 1296 005e 2DD5     		bpl	.L266
+ 1297 0060 E188     		ldrh	r1, [r4, #6]
+ 1298 0062 567B     		ldrb	r6, [r2, #13]	@ zero_extendqisi2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 24
+
+
+ 1299 0064 2184     		strh	r1, [r4, #32]	@ movhi
+ 1300 0066 03F0BF05 		and	r5, r3, #191
+ 1301              	.L267:
+ 1302 006a 92F80DE0 		ldrb	lr, [r2, #13]	@ zero_extendqisi2
+ 1303 006e B645     		cmp	lr, r6
+ 1304 0070 D5D1     		bne	.L285
+ 1305 0072 1178     		ldrb	r1, [r2]	@ zero_extendqisi2
+ 1306 0074 D4F81CC0 		ldr	ip, [r4, #28]
+ 1307 0078 284B     		ldr	r3, .L301+4
+ 1308 007a 01F03F01 		and	r1, r1, #63
+ 1309 007e 0139     		subs	r1, r1, #1
+ 1310 0080 01EB4100 		add	r0, r1, r1, lsl #1
+ 1311 0084 01EB8000 		add	r0, r1, r0, lsl #2
+ 1312 0088 0126     		movs	r6, #1
+ 1313 008a 07E0     		b	.L272
+ 1314              	.L299:
+ 1315 008c FE28     		cmp	r0, #254
+ 1316 008e 12D8     		bhi	.L269
+ 1317 0090 2CF81010 		strh	r1, [ip, r0, lsl #1]	@ movhi
+ 1318 0094 0E46     		mov	r6, r1
+ 1319 0096 0130     		adds	r0, r0, #1
+ 1320              	.L270:
+ 1321 0098 BB42     		cmp	r3, r7
+ 1322 009a 1BD0     		beq	.L298
+ 1323              	.L272:
+ 1324 009c 13F8011F 		ldrb	r1, [r3, #1]!	@ zero_extendqisi2
+ 1325 00a0 02EB010A 		add	r10, r2, r1
+ 1326 00a4 515C     		ldrb	r1, [r2, r1]	@ zero_extendqisi2
+ 1327 00a6 9AF801A0 		ldrb	r10, [r10, #1]	@ zero_extendqisi2
+ 1328 00aa 41EA0A21 		orr	r1, r1, r10, lsl #8
+ 1329 00ae 002E     		cmp	r6, #0
+ 1330 00b0 ECD1     		bne	.L299
+ 1331 00b2 4145     		cmp	r1, r8
+ 1332 00b4 F0D0     		beq	.L270
+ 1333              	.L269:
+ 1334 00b6 7646     		mov	r6, lr
+ 1335 00b8 FF25     		movs	r5, #255
+ 1336 00ba B1E7     		b	.L262
+ 1337              	.L266:
+ 1338 00bc 9D42     		cmp	r5, r3
+ 1339 00be AED1     		bne	.L285
+ 1340 00c0 D3E7     		b	.L267
+ 1341              	.L281:
+ 1342 00c2 0420     		movs	r0, #4
+ 1343              	.L280:
+ 1344 00c4 0023     		movs	r3, #0
+ 1345 00c6 2361     		str	r3, [r4, #16]
+ 1346 00c8 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 1347              	.L296:
+ 1348 00cc 0028     		cmp	r0, #0
+ 1349 00ce F9D1     		bne	.L280
+ 1350              	.L289:
+ 1351 00d0 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 1352              	.L298:
+ 1353 00d4 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 1354 00d6 5E06     		lsls	r6, r3, #25
+ 1355 00d8 04D5     		bpl	.L273
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 25
+
+
+ 1356 00da FE28     		cmp	r0, #254
+ 1357 00dc 98BF     		it	ls
+ 1358 00de 2CF81090 		strhls	r9, [ip, r0, lsl #1]	@ movhi
+ 1359 00e2 E8D8     		bhi	.L269
+ 1360              	.L273:
+ 1361 00e4 013D     		subs	r5, r5, #1
+ 1362 00e6 EDB2     		uxtb	r5, r5
+ 1363 00e8 7646     		mov	r6, lr
+ 1364 00ea 99E7     		b	.L262
+ 1365              	.L265:
+ 1366 00ec 7DB9     		cbnz	r5, .L274
+ 1367 00ee 02F10A07 		add	r7, r2, #10
+ 1368 00f2 0146     		mov	r1, r0
+ 1369 00f4 01E0     		b	.L276
+ 1370              	.L300:
+ 1371 00f6 12F8013F 		ldrb	r3, [r2, #1]!	@ zero_extendqisi2
+ 1372              	.L276:
+ 1373 00fa CD01     		lsls	r5, r1, #7
+ 1374 00fc 45EA5101 		orr	r1, r5, r1, lsr #1
+ 1375 0100 53FA81F1 		uxtab	r1, r3, r1
+ 1376 0104 BA42     		cmp	r2, r7
+ 1377 0106 C9B2     		uxtb	r1, r1
+ 1378 0108 F5D1     		bne	.L300
+ 1379 010a 8E42     		cmp	r6, r1
+ 1380 010c E0D0     		beq	.L289
+ 1381              	.L274:
+ 1382 010e 4FF6FF73 		movw	r3, #65535
+ 1383 0112 2384     		strh	r3, [r4, #32]	@ movhi
+ 1384 0114 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 1385              	.L302:
+ 1386              		.align	2
+ 1387              	.L301:
+ 1388 0118 0C000000 		.word	.LANCHOR2+12
+ 1389 011c FFFFFFFF 		.word	.LANCHOR2-1
+ 1390              		.size	dir_read, .-dir_read
+ 1391              		.section	.text.dir_remove,"ax",%progbits
+ 1392              		.align	2
+ 1393              		.p2align 4,,15
+ 1394              		.thumb
+ 1395              		.thumb_func
+ 1396              		.type	dir_remove, %function
+ 1397              	dir_remove:
+ 1398              		@ args = 0, pretend = 0, frame = 0
+ 1399              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1400 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 1401 0002 018C     		ldrh	r1, [r0, #32]
+ 1402 0004 C588     		ldrh	r5, [r0, #6]
+ 1403 0006 4FF6FF73 		movw	r3, #65535
+ 1404 000a 9942     		cmp	r1, r3
+ 1405 000c 08BF     		it	eq
+ 1406 000e 2946     		moveq	r1, r5
+ 1407 0010 0446     		mov	r4, r0
+ 1408 0012 FFF7FEFF 		bl	dir_sdi
+ 1409 0016 0346     		mov	r3, r0
+ 1410 0018 C8B9     		cbnz	r0, .L305
+ 1411 001a E527     		movs	r7, #229
+ 1412 001c 0126     		movs	r6, #1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 26
+
+
+ 1413 001e 0AE0     		b	.L308
+ 1414              	.L311:
+ 1415 0020 6269     		ldr	r2, [r4, #20]
+ 1416 0022 1770     		strb	r7, [r2]
+ 1417 0024 2268     		ldr	r2, [r4]
+ 1418 0026 1671     		strb	r6, [r2, #4]
+ 1419 0028 E288     		ldrh	r2, [r4, #6]
+ 1420 002a AA42     		cmp	r2, r5
+ 1421 002c 0FD2     		bcs	.L305
+ 1422 002e FFF7FEFF 		bl	dir_next
+ 1423 0032 0346     		mov	r3, r0
+ 1424 0034 40B9     		cbnz	r0, .L306
+ 1425              	.L308:
+ 1426 0036 2169     		ldr	r1, [r4, #16]
+ 1427 0038 2068     		ldr	r0, [r4]
+ 1428 003a FFF7FEFF 		bl	move_window
+ 1429 003e 0346     		mov	r3, r0
+ 1430 0040 0146     		mov	r1, r0
+ 1431 0042 2046     		mov	r0, r4
+ 1432 0044 002B     		cmp	r3, #0
+ 1433 0046 EBD0     		beq	.L311
+ 1434              	.L306:
+ 1435 0048 042B     		cmp	r3, #4
+ 1436 004a 08BF     		it	eq
+ 1437 004c 0223     		moveq	r3, #2
+ 1438              	.L305:
+ 1439 004e 1846     		mov	r0, r3
+ 1440 0050 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 1441              		.size	dir_remove, .-dir_remove
+ 1442 0052 00BFAFF3 		.section	.text.dir_find.part.5,"ax",%progbits
+ 1442      0080AFF3 
+ 1442      0080AFF3 
+ 1442      0080
+ 1443              		.align	2
+ 1444              		.p2align 4,,15
+ 1445              		.thumb
+ 1446              		.thumb_func
+ 1447              		.type	dir_find.part.5, %function
+ 1448              	dir_find.part.5:
+ 1449              		@ args = 0, pretend = 0, frame = 16
+ 1450              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1451 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 1452 0004 FF27     		movs	r7, #255
+ 1453 0006 85B0     		sub	sp, sp, #20
+ 1454 0008 DFF85081 		ldr	r8, .L354+4
+ 1455 000c 0546     		mov	r5, r0
+ 1456 000e B946     		mov	r9, r7
+ 1457 0010 4FF6FF76 		movw	r6, #65535
+ 1458 0014 09E0     		b	.L332
+ 1459              	.L351:
+ 1460 0016 0F29     		cmp	r1, #15
+ 1461 0018 42D0     		beq	.L316
+ 1462              	.L338:
+ 1463 001a 4FF0FF09 		mov	r9, #255
+ 1464              	.L314:
+ 1465 001e 2846     		mov	r0, r5
+ 1466 0020 0021     		movs	r1, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 27
+
+
+ 1467 0022 FFF7FEFF 		bl	dir_next
+ 1468 0026 0028     		cmp	r0, #0
+ 1469 0028 37D1     		bne	.L342
+ 1470              	.L332:
+ 1471 002a 2868     		ldr	r0, [r5]
+ 1472 002c 2969     		ldr	r1, [r5, #16]
+ 1473 002e FFF7FEFF 		bl	move_window
+ 1474 0032 0028     		cmp	r0, #0
+ 1475 0034 31D1     		bne	.L342
+ 1476 0036 6C69     		ldr	r4, [r5, #20]
+ 1477 0038 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 1478 003a 002B     		cmp	r3, #0
+ 1479 003c 75D0     		beq	.L333
+ 1480 003e E27A     		ldrb	r2, [r4, #11]	@ zero_extendqisi2
+ 1481 0040 E52B     		cmp	r3, #229
+ 1482 0042 02F03F01 		and	r1, r2, #63
+ 1483 0046 E8D0     		beq	.L338
+ 1484 0048 1207     		lsls	r2, r2, #28
+ 1485 004a E4D4     		bmi	.L351
+ 1486 004c 0F29     		cmp	r1, #15
+ 1487 004e 27D0     		beq	.L316
+ 1488 0050 B9F1000F 		cmp	r9, #0
+ 1489 0054 11D1     		bne	.L326
+ 1490 0056 9C46     		mov	ip, r3
+ 1491 0058 2246     		mov	r2, r4
+ 1492 005a 04F10A09 		add	r9, r4, #10
+ 1493 005e 0346     		mov	r3, r0
+ 1494 0060 01E0     		b	.L328
+ 1495              	.L352:
+ 1496 0062 12F801CF 		ldrb	ip, [r2, #1]!	@ zero_extendqisi2
+ 1497              	.L328:
+ 1498 0066 D901     		lsls	r1, r3, #7
+ 1499 0068 41EA5303 		orr	r3, r1, r3, lsr #1
+ 1500 006c 5CFA83F3 		uxtab	r3, ip, r3
+ 1501 0070 4A45     		cmp	r2, r9
+ 1502 0072 DBB2     		uxtb	r3, r3
+ 1503 0074 F5D1     		bne	.L352
+ 1504 0076 BB42     		cmp	r3, r7
+ 1505 0078 0FD0     		beq	.L342
+ 1506              	.L326:
+ 1507 007a AB69     		ldr	r3, [r5, #24]
+ 1508 007c 2E84     		strh	r6, [r5, #32]	@ movhi
+ 1509 007e DA7A     		ldrb	r2, [r3, #11]	@ zero_extendqisi2
+ 1510 0080 D207     		lsls	r2, r2, #31
+ 1511 0082 58BF     		it	pl
+ 1512 0084 04F10B0C 		addpl	ip, r4, #11
+ 1513 0088 C7D4     		bmi	.L338
+ 1514              	.L329:
+ 1515 008a 14F8011B 		ldrb	r1, [r4], #1	@ zero_extendqisi2
+ 1516 008e 13F8012B 		ldrb	r2, [r3], #1	@ zero_extendqisi2
+ 1517 0092 9142     		cmp	r1, r2
+ 1518 0094 C1D1     		bne	.L338
+ 1519 0096 6445     		cmp	r4, ip
+ 1520 0098 F7D1     		bne	.L329
+ 1521              	.L342:
+ 1522 009a 05B0     		add	sp, sp, #20
+ 1523              		@ sp needed
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 28
+
+
+ 1524 009c BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 1525              	.L316:
+ 1526 00a0 EA69     		ldr	r2, [r5, #28]
+ 1527 00a2 002A     		cmp	r2, #0
+ 1528 00a4 BBD0     		beq	.L314
+ 1529 00a6 5806     		lsls	r0, r3, #25
+ 1530 00a8 3BD5     		bpl	.L318
+ 1531 00aa E988     		ldrh	r1, [r5, #6]
+ 1532 00ac 677B     		ldrb	r7, [r4, #13]	@ zero_extendqisi2
+ 1533 00ae 2984     		strh	r1, [r5, #32]	@ movhi
+ 1534 00b0 03F0BF09 		and	r9, r3, #191
+ 1535              	.L319:
+ 1536 00b4 94F80DA0 		ldrb	r10, [r4, #13]	@ zero_extendqisi2
+ 1537 00b8 BA45     		cmp	r10, r7
+ 1538 00ba AED1     		bne	.L338
+ 1539 00bc 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 1540 00be 264F     		ldr	r7, .L354
+ 1541 00c0 23F04003 		bic	r3, r3, #64
+ 1542 00c4 013B     		subs	r3, r3, #1
+ 1543 00c6 03EB430C 		add	ip, r3, r3, lsl #1
+ 1544 00ca 03EB8C0C 		add	ip, r3, ip, lsl #2
+ 1545 00ce 4FF0010B 		mov	fp, #1
+ 1546 00d2 03E0     		b	.L324
+ 1547              	.L320:
+ 1548 00d4 B042     		cmp	r0, r6
+ 1549 00d6 35D1     		bne	.L321
+ 1550              	.L322:
+ 1551 00d8 4745     		cmp	r7, r8
+ 1552 00da 2AD0     		beq	.L353
+ 1553              	.L324:
+ 1554 00dc 17F8013F 		ldrb	r3, [r7, #1]!	@ zero_extendqisi2
+ 1555 00e0 E018     		adds	r0, r4, r3
+ 1556 00e2 E35C     		ldrb	r3, [r4, r3]	@ zero_extendqisi2
+ 1557 00e4 4078     		ldrb	r0, [r0, #1]	@ zero_extendqisi2
+ 1558 00e6 43EA0020 		orr	r0, r3, r0, lsl #8
+ 1559 00ea BBF1000F 		cmp	fp, #0
+ 1560 00ee F1D0     		beq	.L320
+ 1561 00f0 0CF10103 		add	r3, ip, #1
+ 1562 00f4 0192     		str	r2, [sp, #4]
+ 1563 00f6 CDF808C0 		str	ip, [sp, #8]
+ 1564 00fa 0393     		str	r3, [sp, #12]
+ 1565 00fc FFF7FEFF 		bl	ff_wtoupper
+ 1566 0100 DDF808C0 		ldr	ip, [sp, #8]
+ 1567 0104 019A     		ldr	r2, [sp, #4]
+ 1568 0106 BCF1FE0F 		cmp	ip, #254
+ 1569 010a 8346     		mov	fp, r0
+ 1570 010c 1AD8     		bhi	.L321
+ 1571 010e 32F81C00 		ldrh	r0, [r2, ip, lsl #1]
+ 1572 0112 FFF7FEFF 		bl	ff_wtoupper
+ 1573 0116 8345     		cmp	fp, r0
+ 1574 0118 019A     		ldr	r2, [sp, #4]
+ 1575 011a 13D1     		bne	.L321
+ 1576 011c DDF80CC0 		ldr	ip, [sp, #12]
+ 1577 0120 DAE7     		b	.L322
+ 1578              	.L318:
+ 1579 0122 4B45     		cmp	r3, r9
+ 1580 0124 7FF479AF 		bne	.L338
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 29
+
+
+ 1581 0128 C4E7     		b	.L319
+ 1582              	.L333:
+ 1583 012a 0420     		movs	r0, #4
+ 1584 012c 05B0     		add	sp, sp, #20
+ 1585              		@ sp needed
+ 1586 012e BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 1587              	.L353:
+ 1588 0132 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 1589 0134 5906     		lsls	r1, r3, #25
+ 1590 0136 09D5     		bpl	.L325
+ 1591 0138 BBF1000F 		cmp	fp, #0
+ 1592 013c 06D0     		beq	.L325
+ 1593 013e 32F81C30 		ldrh	r3, [r2, ip, lsl #1]
+ 1594 0142 1BB1     		cbz	r3, .L325
+ 1595              	.L321:
+ 1596 0144 5746     		mov	r7, r10
+ 1597 0146 4FF0FF09 		mov	r9, #255
+ 1598 014a 68E7     		b	.L314
+ 1599              	.L325:
+ 1600 014c 09F1FF39 		add	r9, r9, #-1
+ 1601 0150 5FFA89F9 		uxtb	r9, r9
+ 1602 0154 5746     		mov	r7, r10
+ 1603 0156 62E7     		b	.L314
+ 1604              	.L355:
+ 1605              		.align	2
+ 1606              	.L354:
+ 1607 0158 FFFFFFFF 		.word	.LANCHOR2-1
+ 1608 015c 0C000000 		.word	.LANCHOR2+12
+ 1609              		.size	dir_find.part.5, .-dir_find.part.5
+ 1610              		.section	.text.remove_chain.part.6,"ax",%progbits
+ 1611              		.align	2
+ 1612              		.p2align 4,,15
+ 1613              		.thumb
+ 1614              		.thumb_func
+ 1615              		.type	remove_chain.part.6, %function
+ 1616              	remove_chain.part.6:
+ 1617              		@ args = 0, pretend = 0, frame = 0
+ 1618              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1619 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 1620 0002 0446     		mov	r4, r0
+ 1621 0004 0D46     		mov	r5, r1
+ 1622 0006 A369     		ldr	r3, [r4, #24]
+ 1623 0008 9D42     		cmp	r5, r3
+ 1624 000a 4FF00107 		mov	r7, #1
+ 1625 000e 21D2     		bcs	.L364
+ 1626              	.L363:
+ 1627 0010 012D     		cmp	r5, #1
+ 1628 0012 0CD9     		bls	.L361
+ 1629 0014 2046     		mov	r0, r4
+ 1630 0016 2946     		mov	r1, r5
+ 1631 0018 FFF7FEFF 		bl	get_fat.part.3
+ 1632 001c 0646     		mov	r6, r0
+ 1633 001e C8B1     		cbz	r0, .L364
+ 1634 0020 0128     		cmp	r0, #1
+ 1635 0022 04D0     		beq	.L361
+ 1636 0024 0130     		adds	r0, r0, #1
+ 1637 0026 17D0     		beq	.L365
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 30
+
+
+ 1638 0028 A369     		ldr	r3, [r4, #24]
+ 1639 002a 9D42     		cmp	r5, r3
+ 1640 002c 01D3     		bcc	.L372
+ 1641              	.L361:
+ 1642 002e 0220     		movs	r0, #2
+ 1643 0030 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 1644              	.L372:
+ 1645 0032 2946     		mov	r1, r5
+ 1646 0034 2046     		mov	r0, r4
+ 1647 0036 0022     		movs	r2, #0
+ 1648 0038 FFF7FEFF 		bl	put_fat.part.4
+ 1649 003c 68B9     		cbnz	r0, .L359
+ 1650 003e 2369     		ldr	r3, [r4, #16]
+ 1651 0040 591C     		adds	r1, r3, #1
+ 1652 0042 1CBF     		itt	ne
+ 1653 0044 0133     		addne	r3, r3, #1
+ 1654 0046 2361     		strne	r3, [r4, #16]
+ 1655 0048 A369     		ldr	r3, [r4, #24]
+ 1656 004a 18BF     		it	ne
+ 1657 004c 6771     		strbne	r7, [r4, #5]
+ 1658 004e 3546     		mov	r5, r6
+ 1659 0050 9D42     		cmp	r5, r3
+ 1660 0052 DDD3     		bcc	.L363
+ 1661              	.L364:
+ 1662 0054 0020     		movs	r0, #0
+ 1663 0056 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 1664              	.L365:
+ 1665 0058 0120     		movs	r0, #1
+ 1666              	.L359:
+ 1667 005a F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 1668              		.size	remove_chain.part.6, .-remove_chain.part.6
+ 1669 005c AFF30080 		.section	.text.follow_path,"ax",%progbits
+ 1670              		.align	2
+ 1671              		.p2align 4,,15
+ 1672              		.thumb
+ 1673              		.thumb_func
+ 1674              		.type	follow_path, %function
+ 1675              	follow_path:
+ 1676              		@ args = 0, pretend = 0, frame = 16
+ 1677              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1678 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 1679 0004 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+ 1680 0006 2F2B     		cmp	r3, #47
+ 1681 0008 18BF     		it	ne
+ 1682 000a 5C2B     		cmpne	r3, #92
+ 1683 000c 8946     		mov	r9, r1
+ 1684 000e 4FF00004 		mov	r4, #0
+ 1685 0012 08BF     		it	eq
+ 1686 0014 01F10109 		addeq	r9, r1, #1
+ 1687 0018 8460     		str	r4, [r0, #8]
+ 1688 001a 0546     		mov	r5, r0
+ 1689 001c 99F80000 		ldrb	r0, [r9]	@ zero_extendqisi2
+ 1690 0020 1F28     		cmp	r0, #31
+ 1691 0022 88BF     		it	hi
+ 1692 0024 40F20007 		movwhi	r7, #:lower16:.LANCHOR3
+ 1693 0028 85B0     		sub	sp, sp, #20
+ 1694 002a 84BF     		itt	hi
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 31
+
+
+ 1695 002c A046     		movhi	r8, r4
+ 1696 002e C0F20007 		movthi	r7, #:upper16:.LANCHOR3
+ 1697 0032 40F26D81 		bls	.L479
+ 1698              	.L421:
+ 1699 0036 5C28     		cmp	r0, #92
+ 1700 0038 18BF     		it	ne
+ 1701 003a 2F28     		cmpne	r0, #47
+ 1702 003c 09D1     		bne	.L377
+ 1703 003e 09F10103 		add	r3, r9, #1
+ 1704              	.L378:
+ 1705 0042 9946     		mov	r9, r3
+ 1706 0044 0133     		adds	r3, r3, #1
+ 1707 0046 99F80000 		ldrb	r0, [r9]	@ zero_extendqisi2
+ 1708 004a 2F28     		cmp	r0, #47
+ 1709 004c 18BF     		it	ne
+ 1710 004e 5C28     		cmpne	r0, #92
+ 1711 0050 F7D0     		beq	.L378
+ 1712              	.L377:
+ 1713 0052 2F28     		cmp	r0, #47
+ 1714 0054 18BF     		it	ne
+ 1715 0056 1F28     		cmpne	r0, #31
+ 1716 0058 EE69     		ldr	r6, [r5, #28]
+ 1717 005a 8CBF     		ite	hi
+ 1718 005c 0024     		movhi	r4, #0
+ 1719 005e 0124     		movls	r4, #1
+ 1720 0060 31D9     		bls	.L429
+ 1721 0062 5C28     		cmp	r0, #92
+ 1722 0064 51D0     		beq	.L430
+ 1723 0066 0121     		movs	r1, #1
+ 1724 0068 A6F1020B 		sub	fp, r6, #2
+ 1725 006c CA46     		mov	r10, r9
+ 1726 006e 0124     		movs	r4, #1
+ 1727 0070 FFF7FEFF 		bl	ff_convert
+ 1728 0074 18B3     		cbz	r0, .L382
+ 1729              	.L481:
+ 1730 0076 7F28     		cmp	r0, #127
+ 1731 0078 0CD8     		bhi	.L383
+ 1732 007a 2228     		cmp	r0, #34
+ 1733 007c 1FD0     		beq	.L382
+ 1734 007e 40F20002 		movw	r2, #:lower16:.LC0
+ 1735 0082 C0F20002 		movt	r2, #:upper16:.LC0
+ 1736 0086 01E0     		b	.L384
+ 1737              	.L480:
+ 1738 0088 9842     		cmp	r0, r3
+ 1739 008a 18D0     		beq	.L382
+ 1740              	.L384:
+ 1741 008c 12F8013F 		ldrb	r3, [r2, #1]!	@ zero_extendqisi2
+ 1742 0090 002B     		cmp	r3, #0
+ 1743 0092 F9D1     		bne	.L480
+ 1744              	.L383:
+ 1745 0094 2BF8020F 		strh	r0, [fp, #2]!	@ movhi
+ 1746 0098 1AF8010F 		ldrb	r0, [r10, #1]!	@ zero_extendqisi2
+ 1747 009c 2F28     		cmp	r0, #47
+ 1748 009e 18BF     		it	ne
+ 1749 00a0 1F28     		cmpne	r0, #31
+ 1750 00a2 04F10103 		add	r3, r4, #1
+ 1751 00a6 10D9     		bls	.L379
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 32
+
+
+ 1752 00a8 5C28     		cmp	r0, #92
+ 1753 00aa 2FD0     		beq	.L380
+ 1754 00ac B3F5807F 		cmp	r3, #256
+ 1755 00b0 05D0     		beq	.L382
+ 1756 00b2 0121     		movs	r1, #1
+ 1757 00b4 1C46     		mov	r4, r3
+ 1758 00b6 FFF7FEFF 		bl	ff_convert
+ 1759 00ba 0028     		cmp	r0, #0
+ 1760 00bc DBD1     		bne	.L481
+ 1761              	.L382:
+ 1762 00be 0620     		movs	r0, #6
+ 1763              	.L450:
+ 1764 00c0 05B0     		add	sp, sp, #20
+ 1765              		@ sp needed
+ 1766 00c2 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 1767              	.L429:
+ 1768 00c6 0024     		movs	r4, #0
+ 1769 00c8 0123     		movs	r3, #1
+ 1770              	.L379:
+ 1771 00ca 1F28     		cmp	r0, #31
+ 1772 00cc 9944     		add	r9, r9, r3
+ 1773 00ce 98BF     		it	ls
+ 1774 00d0 4FF0040B 		movls	fp, #4
+ 1775 00d4 1BD8     		bhi	.L422
+ 1776              	.L386:
+ 1777 00d6 002C     		cmp	r4, #0
+ 1778 00d8 F1D0     		beq	.L382
+ 1779 00da 04F10043 		add	r3, r4, #-2147483648
+ 1780 00de 013B     		subs	r3, r3, #1
+ 1781 00e0 5A00     		lsls	r2, r3, #1
+ 1782 00e2 36F81330 		ldrh	r3, [r6, r3, lsl #1]
+ 1783 00e6 2E2B     		cmp	r3, #46
+ 1784 00e8 18BF     		it	ne
+ 1785 00ea 202B     		cmpne	r3, #32
+ 1786 00ec 12D1     		bne	.L387
+ 1787 00ee 931C     		adds	r3, r2, #2
+ 1788 00f0 3344     		add	r3, r3, r6
+ 1789 00f2 07E0     		b	.L388
+ 1790              	.L389:
+ 1791 00f4 33F8042C 		ldrh	r2, [r3, #-4]
+ 1792 00f8 2E2A     		cmp	r2, #46
+ 1793 00fa 18BF     		it	ne
+ 1794 00fc 202A     		cmpne	r2, #32
+ 1795 00fe A3F10203 		sub	r3, r3, #2
+ 1796 0102 07D1     		bne	.L387
+ 1797              	.L388:
+ 1798 0104 013C     		subs	r4, r4, #1
+ 1799 0106 F5D1     		bne	.L389
+ 1800 0108 D9E7     		b	.L382
+ 1801              	.L430:
+ 1802 010a 0123     		movs	r3, #1
+ 1803              	.L380:
+ 1804 010c 9944     		add	r9, r9, r3
+ 1805              	.L422:
+ 1806 010e 4FF0000B 		mov	fp, #0
+ 1807 0112 E0E7     		b	.L386
+ 1808              	.L387:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 33
+
+
+ 1809 0114 AB69     		ldr	r3, [r5, #24]
+ 1810 0116 26F81480 		strh	r8, [r6, r4, lsl #1]	@ movhi
+ 1811 011a 03F10B01 		add	r1, r3, #11
+ 1812 011e 06EB440E 		add	lr, r6, r4, lsl #1
+ 1813 0122 2022     		movs	r2, #32
+ 1814              	.L423:
+ 1815 0124 03F8012B 		strb	r2, [r3], #1
+ 1816 0128 8B42     		cmp	r3, r1
+ 1817 012a FBD1     		bne	.L423
+ 1818 012c 3388     		ldrh	r3, [r6]
+ 1819 012e 202B     		cmp	r3, #32
+ 1820 0130 18BF     		it	ne
+ 1821 0132 2E2B     		cmpne	r3, #46
+ 1822 0134 14BF     		ite	ne
+ 1823 0136 4FF0000A 		movne	r10, #0
+ 1824 013a 4FF0010A 		moveq	r10, #1
+ 1825 013e 40F0F380 		bne	.L432
+ 1826 0142 3246     		mov	r2, r6
+ 1827 0144 4FF0000A 		mov	r10, #0
+ 1828              	.L393:
+ 1829 0148 32F8020F 		ldrh	r0, [r2, #2]!
+ 1830 014c 2028     		cmp	r0, #32
+ 1831 014e 18BF     		it	ne
+ 1832 0150 2E28     		cmpne	r0, #46
+ 1833 0152 0AF1010A 		add	r10, r10, #1
+ 1834 0156 F7D0     		beq	.L393
+ 1835 0158 4BF0030B 		orr	fp, fp, #3
+ 1836              	.L391:
+ 1837 015c 7346     		mov	r3, lr
+ 1838              	.L394:
+ 1839 015e 33F8022D 		ldrh	r2, [r3, #-2]!
+ 1840 0162 2E2A     		cmp	r2, #46
+ 1841 0164 01D0     		beq	.L398
+ 1842 0166 013C     		subs	r4, r4, #1
+ 1843 0168 F9D1     		bne	.L394
+ 1844              	.L398:
+ 1845 016a 0023     		movs	r3, #0
+ 1846 016c 9C46     		mov	ip, r3
+ 1847 016e 0822     		movs	r2, #8
+ 1848              	.L396:
+ 1849 0170 0AF1010A 		add	r10, r10, #1
+ 1850 0174 00B3     		cbz	r0, .L399
+ 1851 0176 2028     		cmp	r0, #32
+ 1852 0178 64D0     		beq	.L400
+ 1853 017a B4EB0A0E 		subs	lr, r4, r10
+ 1854 017e 18BF     		it	ne
+ 1855 0180 4FF0010E 		movne	lr, #1
+ 1856 0184 2E28     		cmp	r0, #46
+ 1857 0186 14BF     		ite	ne
+ 1858 0188 0021     		movne	r1, #0
+ 1859 018a 0EF00101 		andeq	r1, lr, #1
+ 1860 018e 0029     		cmp	r1, #0
+ 1861 0190 58D1     		bne	.L400
+ 1862 0192 5445     		cmp	r4, r10
+ 1863 0194 18BF     		it	ne
+ 1864 0196 9342     		cmpne	r3, r2
+ 1865 0198 34BF     		ite	cc
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 34
+
+
+ 1866 019a 0021     		movcc	r1, #0
+ 1867 019c 0121     		movcs	r1, #1
+ 1868 019e 62D3     		bcc	.L403
+ 1869 01a0 0B2A     		cmp	r2, #11
+ 1870 01a2 00F0C380 		beq	.L482
+ 1871 01a6 BEF1000F 		cmp	lr, #0
+ 1872 01aa 00F09080 		beq	.L405
+ 1873 01ae A245     		cmp	r10, r4
+ 1874 01b0 4BF0030B 		orr	fp, fp, #3
+ 1875 01b4 40F28B80 		bls	.L405
+ 1876              	.L399:
+ 1877 01b8 AB69     		ldr	r3, [r5, #24]
+ 1878 01ba 1978     		ldrb	r1, [r3]	@ zero_extendqisi2
+ 1879 01bc E529     		cmp	r1, #229
+ 1880 01be 02BF     		ittt	eq
+ 1881 01c0 0521     		moveq	r1, #5
+ 1882 01c2 1970     		strbeq	r1, [r3]
+ 1883 01c4 AB69     		ldreq	r3, [r5, #24]
+ 1884 01c6 082A     		cmp	r2, #8
+ 1885 01c8 04BF     		itt	eq
+ 1886 01ca 4FEA8C0C 		lsleq	ip, ip, #2
+ 1887 01ce 5FFA8CFC 		uxtbeq	ip, ip
+ 1888 01d2 0CF00C02 		and	r2, ip, #12
+ 1889 01d6 0C2A     		cmp	r2, #12
+ 1890 01d8 00F08180 		beq	.L415
+ 1891 01dc 0CF00301 		and	r1, ip, #3
+ 1892 01e0 0329     		cmp	r1, #3
+ 1893 01e2 7CD0     		beq	.L415
+ 1894              	.L416:
+ 1895 01e4 1BF0020F 		tst	fp, #2
+ 1896 01e8 0AD1     		bne	.L417
+ 1897 01ea 0CF0030C 		and	ip, ip, #3
+ 1898 01ee BCF1010F 		cmp	ip, #1
+ 1899 01f2 08BF     		it	eq
+ 1900 01f4 4BF0100B 		orreq	fp, fp, #16
+ 1901 01f8 042A     		cmp	r2, #4
+ 1902 01fa 08BF     		it	eq
+ 1903 01fc 4BF0080B 		orreq	fp, fp, #8
+ 1904              	.L417:
+ 1905 0200 83F80BB0 		strb	fp, [r3, #11]
+ 1906 0204 2846     		mov	r0, r5
+ 1907 0206 0021     		movs	r1, #0
+ 1908 0208 FFF7FEFF 		bl	dir_sdi
+ 1909 020c F8B9     		cbnz	r0, .L419
+ 1910 020e 2846     		mov	r0, r5
+ 1911 0210 FFF7FEFF 		bl	dir_find.part.5
+ 1912 0214 AB69     		ldr	r3, [r5, #24]
+ 1913 0216 DB7A     		ldrb	r3, [r3, #11]	@ zero_extendqisi2
+ 1914 0218 D8B9     		cbnz	r0, .L426
+ 1915 021a 5E07     		lsls	r6, r3, #29
+ 1916 021c 3FF550AF 		bmi	.L450
+ 1917 0220 6B69     		ldr	r3, [r5, #20]
+ 1918 0222 DA7A     		ldrb	r2, [r3, #11]	@ zero_extendqisi2
+ 1919 0224 D406     		lsls	r4, r2, #27
+ 1920 0226 7BD5     		bpl	.L436
+ 1921 0228 587D     		ldrb	r0, [r3, #21]	@ zero_extendqisi2
+ 1922 022a 1A7D     		ldrb	r2, [r3, #20]	@ zero_extendqisi2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 35
+
+
+ 1923 022c D97E     		ldrb	r1, [r3, #27]	@ zero_extendqisi2
+ 1924 022e 9B7E     		ldrb	r3, [r3, #26]	@ zero_extendqisi2
+ 1925 0230 42EA0022 		orr	r2, r2, r0, lsl #8
+ 1926 0234 43EA0123 		orr	r3, r3, r1, lsl #8
+ 1927 0238 43EA0243 		orr	r3, r3, r2, lsl #16
+ 1928 023c AB60     		str	r3, [r5, #8]
+ 1929 023e 99F80000 		ldrb	r0, [r9]	@ zero_extendqisi2
+ 1930 0242 F8E6     		b	.L421
+ 1931              	.L400:
+ 1932 0244 4BF0030B 		orr	fp, fp, #3
+ 1933              	.L402:
+ 1934 0248 36F81A00 		ldrh	r0, [r6, r10, lsl #1]
+ 1935 024c 90E7     		b	.L396
+ 1936              	.L419:
+ 1937 024e AB69     		ldr	r3, [r5, #24]
+ 1938 0250 DB7A     		ldrb	r3, [r3, #11]	@ zero_extendqisi2
+ 1939              	.L426:
+ 1940 0252 0428     		cmp	r0, #4
+ 1941 0254 7FF434AF 		bne	.L450
+ 1942 0258 13F0040F 		tst	r3, #4
+ 1943 025c 08BF     		it	eq
+ 1944 025e 0520     		moveq	r0, #5
+ 1945 0260 05B0     		add	sp, sp, #20
+ 1946              		@ sp needed
+ 1947 0262 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 1948              	.L403:
+ 1949 0266 7F28     		cmp	r0, #127
+ 1950 0268 19D8     		bhi	.L483
+ 1951              	.L406:
+ 1952 026a 2B28     		cmp	r0, #43
+ 1953 026c 28D0     		beq	.L408
+ 1954 026e 40F2000E 		movw	lr, #:lower16:.LC1
+ 1955 0272 C0F2000E 		movt	lr, #:upper16:.LC1
+ 1956 0276 01E0     		b	.L427
+ 1957              	.L484:
+ 1958 0278 8842     		cmp	r0, r1
+ 1959 027a 21D0     		beq	.L408
+ 1960              	.L427:
+ 1961 027c 1EF8011F 		ldrb	r1, [lr, #1]!	@ zero_extendqisi2
+ 1962 0280 0029     		cmp	r1, #0
+ 1963 0282 F9D1     		bne	.L484
+ 1964 0284 A0F14101 		sub	r1, r0, #65
+ 1965 0288 89B2     		uxth	r1, r1
+ 1966 028a 1929     		cmp	r1, #25
+ 1967 028c 9CBF     		itt	ls
+ 1968 028e 4CF0020C 		orrls	ip, ip, #2
+ 1969 0292 C0B2     		uxtbls	r0, r0
+ 1970 0294 2CD8     		bhi	.L485
+ 1971 0296 A969     		ldr	r1, [r5, #24]
+ 1972 0298 C854     		strb	r0, [r1, r3]
+ 1973 029a 0133     		adds	r3, r3, #1
+ 1974 029c D4E7     		b	.L402
+ 1975              	.L483:
+ 1976 029e 0192     		str	r2, [sp, #4]
+ 1977 02a0 0293     		str	r3, [sp, #8]
+ 1978 02a2 CDF80CC0 		str	ip, [sp, #12]
+ 1979 02a6 FFF7FEFF 		bl	ff_convert
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 36
+
+
+ 1980 02aa 01AA     		add	r2, sp, #4
+ 1981 02ac 92E80C10 		ldmia	r2, {r2, r3, ip}
+ 1982 02b0 C0B1     		cbz	r0, .L407
+ 1983 02b2 3844     		add	r0, r0, r7
+ 1984 02b4 4BF0020B 		orr	fp, fp, #2
+ 1985 02b8 10F8800C 		ldrb	r0, [r0, #-128]	@ zero_extendqisi2
+ 1986 02bc 0028     		cmp	r0, #0
+ 1987 02be D4D1     		bne	.L406
+ 1988              	.L408:
+ 1989 02c0 4BF0030B 		orr	fp, fp, #3
+ 1990 02c4 5F20     		movs	r0, #95
+ 1991              	.L486:
+ 1992 02c6 A969     		ldr	r1, [r5, #24]
+ 1993 02c8 C854     		strb	r0, [r1, r3]
+ 1994 02ca 0133     		adds	r3, r3, #1
+ 1995 02cc BCE7     		b	.L402
+ 1996              	.L405:
+ 1997 02ce 4FEA8C0C 		lsl	ip, ip, #2
+ 1998 02d2 5FFA8CFC 		uxtb	ip, ip
+ 1999 02d6 A246     		mov	r10, r4
+ 2000 02d8 0B22     		movs	r2, #11
+ 2001 02da 0823     		movs	r3, #8
+ 2002 02dc B4E7     		b	.L402
+ 2003              	.L415:
+ 2004 02de 4BF0020B 		orr	fp, fp, #2
+ 2005 02e2 7FE7     		b	.L416
+ 2006              	.L407:
+ 2007 02e4 4BF0020B 		orr	fp, fp, #2
+ 2008 02e8 4BF0030B 		orr	fp, fp, #3
+ 2009 02ec 5F20     		movs	r0, #95
+ 2010 02ee EAE7     		b	.L486
+ 2011              	.L485:
+ 2012 02f0 A0F16101 		sub	r1, r0, #97
+ 2013 02f4 89B2     		uxth	r1, r1
+ 2014 02f6 1929     		cmp	r1, #25
+ 2015 02f8 98BF     		it	ls
+ 2016 02fa 2038     		subls	r0, r0, #32
+ 2017 02fc A969     		ldr	r1, [r5, #24]
+ 2018 02fe 8CBF     		ite	hi
+ 2019 0300 C0B2     		uxtbhi	r0, r0
+ 2020 0302 C0B2     		uxtbls	r0, r0
+ 2021 0304 C854     		strb	r0, [r1, r3]
+ 2022 0306 98BF     		it	ls
+ 2023 0308 4CF0010C 		orrls	ip, ip, #1
+ 2024 030c 0133     		adds	r3, r3, #1
+ 2025 030e 9BE7     		b	.L402
+ 2026              	.L479:
+ 2027 0310 2846     		mov	r0, r5
+ 2028 0312 2146     		mov	r1, r4
+ 2029 0314 FFF7FEFF 		bl	dir_sdi
+ 2030 0318 6C61     		str	r4, [r5, #20]
+ 2031 031a 05B0     		add	sp, sp, #20
+ 2032              		@ sp needed
+ 2033 031c BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 2034              	.L436:
+ 2035 0320 0520     		movs	r0, #5
+ 2036 0322 05B0     		add	sp, sp, #20
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 37
+
+
+ 2037              		@ sp needed
+ 2038 0324 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 2039              	.L432:
+ 2040 0328 1846     		mov	r0, r3
+ 2041 032a 17E7     		b	.L391
+ 2042              	.L482:
+ 2043 032c 4BF0030B 		orr	fp, fp, #3
+ 2044 0330 42E7     		b	.L399
+ 2045              		.size	follow_path, .-follow_path
+ 2046 0332 00BFAFF3 		.section	.text.clust2sect,"ax",%progbits
+ 2046      0080AFF3 
+ 2046      0080AFF3 
+ 2046      0080
+ 2047              		.align	2
+ 2048              		.p2align 4,,15
+ 2049              		.global	clust2sect
+ 2050              		.thumb
+ 2051              		.thumb_func
+ 2052              		.type	clust2sect, %function
+ 2053              	clust2sect:
+ 2054              		@ args = 0, pretend = 0, frame = 0
+ 2055              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2056              		@ link register save eliminated.
+ 2057 0000 8369     		ldr	r3, [r0, #24]
+ 2058 0002 0239     		subs	r1, r1, #2
+ 2059 0004 023B     		subs	r3, r3, #2
+ 2060 0006 9942     		cmp	r1, r3
+ 2061 0008 3DBF     		ittte	cc
+ 2062 000a 8278     		ldrbcc	r2, [r0, #2]	@ zero_extendqisi2
+ 2063 000c 836A     		ldrcc	r3, [r0, #40]
+ 2064 000e 02FB0130 		mlacc	r0, r2, r1, r3
+ 2065 0012 0020     		movcs	r0, #0
+ 2066 0014 7047     		bx	lr
+ 2067              		.size	clust2sect, .-clust2sect
+ 2068 0016 00BFAFF3 		.section	.text.get_fat,"ax",%progbits
+ 2068      0080AFF3 
+ 2068      0080
+ 2069              		.align	2
+ 2070              		.p2align 4,,15
+ 2071              		.global	get_fat
+ 2072              		.thumb
+ 2073              		.thumb_func
+ 2074              		.type	get_fat, %function
+ 2075              	get_fat:
+ 2076              		@ args = 0, pretend = 0, frame = 0
+ 2077              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2078              		@ link register save eliminated.
+ 2079 0000 0129     		cmp	r1, #1
+ 2080 0002 04D9     		bls	.L491
+ 2081 0004 8269     		ldr	r2, [r0, #24]
+ 2082 0006 9142     		cmp	r1, r2
+ 2083 0008 01D2     		bcs	.L491
+ 2084 000a FFF7FEBF 		b	get_fat.part.3
+ 2085              	.L491:
+ 2086 000e 0120     		movs	r0, #1
+ 2087 0010 7047     		bx	lr
+ 2088              		.size	get_fat, .-get_fat
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 38
+
+
+ 2089 0012 00BFAFF3 		.section	.text.put_fat,"ax",%progbits
+ 2089      0080AFF3 
+ 2089      0080AFF3 
+ 2089      0080
+ 2090              		.align	2
+ 2091              		.p2align 4,,15
+ 2092              		.global	put_fat
+ 2093              		.thumb
+ 2094              		.thumb_func
+ 2095              		.type	put_fat, %function
+ 2096              	put_fat:
+ 2097              		@ args = 0, pretend = 0, frame = 0
+ 2098              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2099              		@ link register save eliminated.
+ 2100 0000 0129     		cmp	r1, #1
+ 2101 0002 10B4     		push	{r4}
+ 2102 0004 02D9     		bls	.L495
+ 2103 0006 8469     		ldr	r4, [r0, #24]
+ 2104 0008 A142     		cmp	r1, r4
+ 2105 000a 03D3     		bcc	.L498
+ 2106              	.L495:
+ 2107 000c 0220     		movs	r0, #2
+ 2108 000e 5DF8044B 		ldr	r4, [sp], #4
+ 2109 0012 7047     		bx	lr
+ 2110              	.L498:
+ 2111 0014 5DF8044B 		ldr	r4, [sp], #4
+ 2112 0018 FFF7FEBF 		b	put_fat.part.4
+ 2113              		.size	put_fat, .-put_fat
+ 2114 001c AFF30080 		.section	.text.gen_numname,"ax",%progbits
+ 2115              		.align	2
+ 2116              		.p2align 4,,15
+ 2117              		.global	gen_numname
+ 2118              		.thumb
+ 2119              		.thumb_func
+ 2120              		.type	gen_numname, %function
+ 2121              	gen_numname:
+ 2122              		@ args = 0, pretend = 0, frame = 8
+ 2123              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2124              		@ link register save eliminated.
+ 2125 0000 70B4     		push	{r4, r5, r6}
+ 2126 0002 01F10B06 		add	r6, r1, #11
+ 2127 0006 83B0     		sub	sp, sp, #12
+ 2128 0008 0446     		mov	r4, r0
+ 2129              	.L501:
+ 2130 000a 11F8015B 		ldrb	r5, [r1], #1	@ zero_extendqisi2
+ 2131 000e B142     		cmp	r1, r6
+ 2132 0010 04F8015B 		strb	r5, [r4], #1
+ 2133 0014 F9D1     		bne	.L501
+ 2134 0016 052B     		cmp	r3, #5
+ 2135 0018 0CD9     		bls	.L502
+ 2136 001a 1488     		ldrh	r4, [r2]
+ 2137 001c 00E0     		b	.L503
+ 2138              	.L524:
+ 2139 001e 0C46     		mov	r4, r1
+ 2140              	.L503:
+ 2141 0020 D903     		lsls	r1, r3, #15
+ 2142 0022 41EA5303 		orr	r3, r1, r3, lsr #1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 39
+
+
+ 2143 0026 32F8021F 		ldrh	r1, [r2, #2]!
+ 2144 002a 14FA83F3 		uxtah	r3, r4, r3
+ 2145 002e 9BB2     		uxth	r3, r3
+ 2146 0030 0029     		cmp	r1, #0
+ 2147 0032 F4D1     		bne	.L524
+ 2148              	.L502:
+ 2149 0034 0722     		movs	r2, #7
+ 2150              	.L506:
+ 2151 0036 03F00F04 		and	r4, r3, #15
+ 2152 003a 04F13001 		add	r1, r4, #48
+ 2153 003e 013A     		subs	r2, r2, #1
+ 2154 0040 00AD     		add	r5, sp, #0
+ 2155 0042 3929     		cmp	r1, #57
+ 2156 0044 1544     		add	r5, r5, r2
+ 2157 0046 88BF     		it	hi
+ 2158 0048 04F13701 		addhi	r1, r4, #55
+ 2159 004c 1B09     		lsrs	r3, r3, #4
+ 2160 004e 6970     		strb	r1, [r5, #1]
+ 2161 0050 F1D1     		bne	.L506
+ 2162 0052 02A9     		add	r1, sp, #8
+ 2163 0054 1144     		add	r1, r1, r2
+ 2164 0056 7E24     		movs	r4, #126
+ 2165 0058 01F8084C 		strb	r4, [r1, #-8]
+ 2166 005c E2B1     		cbz	r2, .L512
+ 2167 005e 0178     		ldrb	r1, [r0]	@ zero_extendqisi2
+ 2168 0060 2029     		cmp	r1, #32
+ 2169 0062 08D0     		beq	.L511
+ 2170 0064 0146     		mov	r1, r0
+ 2171 0066 03E0     		b	.L508
+ 2172              	.L525:
+ 2173 0068 11F8014F 		ldrb	r4, [r1, #1]!	@ zero_extendqisi2
+ 2174 006c 202C     		cmp	r4, #32
+ 2175 006e 02D0     		beq	.L511
+ 2176              	.L508:
+ 2177 0070 0133     		adds	r3, r3, #1
+ 2178 0072 9342     		cmp	r3, r2
+ 2179 0074 F8D1     		bne	.L525
+ 2180              	.L511:
+ 2181 0076 072A     		cmp	r2, #7
+ 2182 0078 9BBF     		ittet	ls
+ 2183 007a 02A9     		addls	r1, sp, #8
+ 2184 007c 8918     		addls	r1, r1, r2
+ 2185 007e 2021     		movhi	r1, #32
+ 2186 0080 11F8081C 		ldrbls	r1, [r1, #-8]	@ zero_extendqisi2
+ 2187 0084 C154     		strb	r1, [r0, r3]
+ 2188 0086 03F10103 		add	r3, r3, #1
+ 2189 008a 98BF     		it	ls
+ 2190 008c 0132     		addls	r2, r2, #1
+ 2191 008e 072B     		cmp	r3, #7
+ 2192 0090 F1D9     		bls	.L511
+ 2193 0092 03B0     		add	sp, sp, #12
+ 2194              		@ sp needed
+ 2195 0094 70BC     		pop	{r4, r5, r6}
+ 2196 0096 7047     		bx	lr
+ 2197              	.L512:
+ 2198 0098 1346     		mov	r3, r2
+ 2199 009a ECE7     		b	.L511
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 40
+
+
+ 2200              		.size	gen_numname, .-gen_numname
+ 2201 009c AFF30080 		.section	.text.dir_register,"ax",%progbits
+ 2202              		.align	2
+ 2203              		.p2align 4,,15
+ 2204              		.thumb
+ 2205              		.thumb_func
+ 2206              		.type	dir_register, %function
+ 2207              	dir_register:
+ 2208              		@ args = 0, pretend = 0, frame = 24
+ 2209              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2210 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 2211 0004 8769     		ldr	r7, [r0, #24]
+ 2212 0006 D0F81C90 		ldr	r9, [r0, #28]
+ 2213 000a 87B0     		sub	sp, sp, #28
+ 2214 000c 0446     		mov	r4, r0
+ 2215 000e 0023     		movs	r3, #0
+ 2216 0010 0DF10C08 		add	r8, sp, #12
+ 2217              	.L528:
+ 2218 0014 FA5C     		ldrb	r2, [r7, r3]	@ zero_extendqisi2
+ 2219 0016 08F80320 		strb	r2, [r8, r3]
+ 2220 001a 0133     		adds	r3, r3, #1
+ 2221 001c 0C2B     		cmp	r3, #12
+ 2222 001e F9D1     		bne	.L528
+ 2223 0020 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 2224 0024 DA07     		lsls	r2, r3, #31
+ 2225 0026 28D5     		bpl	.L529
+ 2226 0028 0023     		movs	r3, #0
+ 2227 002a FB72     		strb	r3, [r7, #11]
+ 2228 002c 0126     		movs	r6, #1
+ 2229 002e E361     		str	r3, [r4, #28]
+ 2230 0030 08E0     		b	.L532
+ 2231              	.L583:
+ 2232 0032 FFF7FEFF 		bl	dir_find.part.5
+ 2233 0036 0136     		adds	r6, r6, #1
+ 2234 0038 0546     		mov	r5, r0
+ 2235 003a B6B2     		uxth	r6, r6
+ 2236 003c 80B9     		cbnz	r0, .L530
+ 2237 003e 642E     		cmp	r6, #100
+ 2238 0040 00F0FC80 		beq	.L582
+ 2239              	.L532:
+ 2240 0044 3846     		mov	r0, r7
+ 2241 0046 4146     		mov	r1, r8
+ 2242 0048 4A46     		mov	r2, r9
+ 2243 004a 3346     		mov	r3, r6
+ 2244 004c FFF7FEFF 		bl	gen_numname
+ 2245 0050 2046     		mov	r0, r4
+ 2246 0052 0021     		movs	r1, #0
+ 2247 0054 FFF7FEFF 		bl	dir_sdi
+ 2248 0058 0546     		mov	r5, r0
+ 2249 005a 2046     		mov	r0, r4
+ 2250 005c 002D     		cmp	r5, #0
+ 2251 005e E8D0     		beq	.L583
+ 2252              	.L530:
+ 2253 0060 042D     		cmp	r5, #4
+ 2254 0062 03D0     		beq	.L584
+ 2255              	.L537:
+ 2256 0064 2846     		mov	r0, r5
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 41
+
+
+ 2257              	.L577:
+ 2258 0066 07B0     		add	sp, sp, #28
+ 2259              		@ sp needed
+ 2260 0068 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 2261              	.L584:
+ 2262 006c 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 2263 0070 FB72     		strb	r3, [r7, #11]
+ 2264 0072 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 2265 0076 C4F81C90 		str	r9, [r4, #28]
+ 2266              	.L529:
+ 2267 007a 9F07     		lsls	r7, r3, #30
+ 2268 007c 29D4     		bmi	.L585
+ 2269              	.L563:
+ 2270 007e 0127     		movs	r7, #1
+ 2271              	.L533:
+ 2272 0080 2046     		mov	r0, r4
+ 2273 0082 0021     		movs	r1, #0
+ 2274 0084 FFF7FEFF 		bl	dir_sdi
+ 2275 0088 0028     		cmp	r0, #0
+ 2276 008a ECD1     		bne	.L577
+ 2277 008c 8046     		mov	r8, r0
+ 2278 008e 0646     		mov	r6, r0
+ 2279 0090 0AE0     		b	.L541
+ 2280              	.L587:
+ 2281 0092 0EB9     		cbnz	r6, .L539
+ 2282 0094 B4F80680 		ldrh	r8, [r4, #6]
+ 2283              	.L539:
+ 2284 0098 96B2     		uxth	r6, r2
+ 2285 009a BE42     		cmp	r6, r7
+ 2286 009c 30D0     		beq	.L586
+ 2287              	.L538:
+ 2288 009e FFF7FEFF 		bl	dir_next
+ 2289 00a2 0546     		mov	r5, r0
+ 2290 00a4 0028     		cmp	r0, #0
+ 2291 00a6 DDD1     		bne	.L537
+ 2292              	.L541:
+ 2293 00a8 2169     		ldr	r1, [r4, #16]
+ 2294 00aa 2068     		ldr	r0, [r4]
+ 2295 00ac FFF7FEFF 		bl	move_window
+ 2296 00b0 0546     		mov	r5, r0
+ 2297 00b2 721C     		adds	r2, r6, #1
+ 2298 00b4 2046     		mov	r0, r4
+ 2299 00b6 0121     		movs	r1, #1
+ 2300 00b8 002D     		cmp	r5, #0
+ 2301 00ba D3D1     		bne	.L537
+ 2302 00bc 6369     		ldr	r3, [r4, #20]
+ 2303 00be 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 2304 00c0 E52B     		cmp	r3, #229
+ 2305 00c2 18BF     		it	ne
+ 2306 00c4 002B     		cmpne	r3, #0
+ 2307 00c6 14BF     		ite	ne
+ 2308 00c8 0023     		movne	r3, #0
+ 2309 00ca 0123     		moveq	r3, #1
+ 2310 00cc E1D0     		beq	.L587
+ 2311 00ce 1E46     		mov	r6, r3
+ 2312 00d0 E5E7     		b	.L538
+ 2313              	.L585:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 42
+
+
+ 2314 00d2 B9F80030 		ldrh	r3, [r9]
+ 2315 00d6 002B     		cmp	r3, #0
+ 2316 00d8 D1D0     		beq	.L563
+ 2317 00da 0023     		movs	r3, #0
+ 2318              	.L536:
+ 2319 00dc 0133     		adds	r3, r3, #1
+ 2320 00de 9BB2     		uxth	r3, r3
+ 2321 00e0 39F81320 		ldrh	r2, [r9, r3, lsl #1]
+ 2322 00e4 002A     		cmp	r2, #0
+ 2323 00e6 F9D1     		bne	.L536
+ 2324 00e8 4EF64F42 		movw	r2, #60495
+ 2325 00ec 1933     		adds	r3, r3, #25
+ 2326 00ee C4F6C462 		movt	r2, 20164
+ 2327 00f2 82FB0317 		smull	r1, r7, r2, r3
+ 2328 00f6 DB17     		asrs	r3, r3, #31
+ 2329 00f8 C3EBA707 		rsb	r7, r3, r7, asr #2
+ 2330 00fc BFB2     		uxth	r7, r7
+ 2331 00fe BFE7     		b	.L533
+ 2332              	.L586:
+ 2333 0100 012F     		cmp	r7, #1
+ 2334 0102 78D0     		beq	.L542
+ 2335 0104 4146     		mov	r1, r8
+ 2336 0106 2046     		mov	r0, r4
+ 2337 0108 FFF7FEFF 		bl	dir_sdi
+ 2338 010c 0028     		cmp	r0, #0
+ 2339 010e AAD1     		bne	.L577
+ 2340 0110 A369     		ldr	r3, [r4, #24]
+ 2341 0112 8246     		mov	r10, r0
+ 2342 0114 03F10B00 		add	r0, r3, #11
+ 2343              	.L545:
+ 2344 0118 13F8012B 		ldrb	r2, [r3], #1	@ zero_extendqisi2
+ 2345 011c 4FEACA11 		lsl	r1, r10, #7
+ 2346 0120 41EA5A0A 		orr	r10, r1, r10, lsr #1
+ 2347 0124 52FA8AFA 		uxtab	r10, r2, r10
+ 2348 0128 8342     		cmp	r3, r0
+ 2349 012a 5FFA8AFA 		uxtb	r10, r10
+ 2350 012e F3D1     		bne	.L545
+ 2351 0130 013F     		subs	r7, r7, #1
+ 2352 0132 40F20008 		movw	r8, #:lower16:.LANCHOR2
+ 2353 0136 BBB2     		uxth	r3, r7
+ 2354 0138 CDF804A0 		str	r10, [sp, #4]
+ 2355 013c C0F20008 		movt	r8, #:upper16:.LANCHOR2
+ 2356 0140 A246     		mov	r10, r4
+ 2357 0142 4FF6FF76 		movw	r6, #65535
+ 2358 0146 4FF0FF09 		mov	r9, #255
+ 2359 014a 1C46     		mov	r4, r3
+ 2360              	.L554:
+ 2361 014c DAF80000 		ldr	r0, [r10]
+ 2362 0150 DAF81010 		ldr	r1, [r10, #16]
+ 2363 0154 FFF7FEFF 		bl	move_window
+ 2364 0158 0346     		mov	r3, r0
+ 2365 015a 0028     		cmp	r0, #0
+ 2366 015c 70D1     		bne	.L581
+ 2367 015e 5FFA84FB 		uxtb	fp, r4
+ 2368 0162 0BF1FF32 		add	r2, fp, #-1
+ 2369 0166 DAF81450 		ldr	r5, [r10, #20]
+ 2370 016a 019B     		ldr	r3, [sp, #4]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 43
+
+
+ 2371 016c DAF81CC0 		ldr	ip, [r10, #28]
+ 2372 0170 6B73     		strb	r3, [r5, #13]
+ 2373 0172 02EB4201 		add	r1, r2, r2, lsl #1
+ 2374 0176 02EB8101 		add	r1, r2, r1, lsl #2
+ 2375 017a 4FF00F02 		mov	r2, #15
+ 2376 017e EA72     		strb	r2, [r5, #11]
+ 2377 0180 0346     		mov	r3, r0
+ 2378 0182 2873     		strb	r0, [r5, #12]
+ 2379 0184 A876     		strb	r0, [r5, #26]
+ 2380 0186 E876     		strb	r0, [r5, #27]
+ 2381 0188 0246     		mov	r2, r0
+ 2382 018a 0FE0     		b	.L549
+ 2383              	.L589:
+ 2384 018c 3CF81130 		ldrh	r3, [ip, r1, lsl #1]
+ 2385 0190 2F18     		adds	r7, r5, r0
+ 2386 0192 0132     		adds	r2, r2, #1
+ 2387 0194 4FEA132E 		lsr	lr, r3, #8
+ 2388 0198 2B54     		strb	r3, [r5, r0]
+ 2389 019a 002B     		cmp	r3, #0
+ 2390 019c 08BF     		it	eq
+ 2391 019e 3346     		moveq	r3, r6
+ 2392 01a0 0D2A     		cmp	r2, #13
+ 2393 01a2 01F10101 		add	r1, r1, #1
+ 2394 01a6 87F801E0 		strb	lr, [r7, #1]
+ 2395 01aa 0BD0     		beq	.L588
+ 2396              	.L549:
+ 2397 01ac B342     		cmp	r3, r6
+ 2398 01ae 18F80200 		ldrb	r0, [r8, r2]	@ zero_extendqisi2
+ 2399 01b2 EBD1     		bne	.L589
+ 2400 01b4 2F18     		adds	r7, r5, r0
+ 2401 01b6 0132     		adds	r2, r2, #1
+ 2402 01b8 0D2A     		cmp	r2, #13
+ 2403 01ba 05F80090 		strb	r9, [r5, r0]
+ 2404 01be 87F80190 		strb	r9, [r7, #1]
+ 2405 01c2 F3D1     		bne	.L549
+ 2406              	.L588:
+ 2407 01c4 B342     		cmp	r3, r6
+ 2408 01c6 02D0     		beq	.L550
+ 2409 01c8 3CF81130 		ldrh	r3, [ip, r1, lsl #1]
+ 2410 01cc 0BB9     		cbnz	r3, .L551
+ 2411              	.L550:
+ 2412 01ce 4BF0400B 		orr	fp, fp, #64
+ 2413              	.L551:
+ 2414 01d2 85F800B0 		strb	fp, [r5]
+ 2415 01d6 DAF80030 		ldr	r3, [r10]
+ 2416 01da 4FF00101 		mov	r1, #1
+ 2417 01de 1971     		strb	r1, [r3, #4]
+ 2418 01e0 5046     		mov	r0, r10
+ 2419 01e2 0021     		movs	r1, #0
+ 2420 01e4 FFF7FEFF 		bl	dir_next
+ 2421 01e8 0346     		mov	r3, r0
+ 2422 01ea 48BB     		cbnz	r0, .L581
+ 2423 01ec 013C     		subs	r4, r4, #1
+ 2424 01ee A4B2     		uxth	r4, r4
+ 2425 01f0 002C     		cmp	r4, #0
+ 2426 01f2 ABD1     		bne	.L554
+ 2427 01f4 5446     		mov	r4, r10
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 44
+
+
+ 2428              	.L542:
+ 2429 01f6 2068     		ldr	r0, [r4]
+ 2430 01f8 2169     		ldr	r1, [r4, #16]
+ 2431 01fa FFF7FEFF 		bl	move_window
+ 2432 01fe 0028     		cmp	r0, #0
+ 2433 0200 7FF431AF 		bne	.L577
+ 2434 0204 6669     		ldr	r6, [r4, #20]
+ 2435 0206 06F12002 		add	r2, r6, #32
+ 2436 020a 3346     		mov	r3, r6
+ 2437              	.L556:
+ 2438 020c 03F8010B 		strb	r0, [r3], #1
+ 2439 0210 9342     		cmp	r3, r2
+ 2440 0212 FBD1     		bne	.L556
+ 2441 0214 A269     		ldr	r2, [r4, #24]
+ 2442 0216 06F10B00 		add	r0, r6, #11
+ 2443 021a 3346     		mov	r3, r6
+ 2444              	.L558:
+ 2445 021c 12F8011B 		ldrb	r1, [r2], #1	@ zero_extendqisi2
+ 2446 0220 03F8011B 		strb	r1, [r3], #1
+ 2447 0224 8342     		cmp	r3, r0
+ 2448 0226 F9D1     		bne	.L558
+ 2449 0228 A369     		ldr	r3, [r4, #24]
+ 2450 022a DB7A     		ldrb	r3, [r3, #11]	@ zero_extendqisi2
+ 2451 022c 03F01803 		and	r3, r3, #24
+ 2452 0230 3373     		strb	r3, [r6, #12]
+ 2453 0232 2368     		ldr	r3, [r4]
+ 2454 0234 0122     		movs	r2, #1
+ 2455 0236 1A71     		strb	r2, [r3, #4]
+ 2456 0238 0020     		movs	r0, #0
+ 2457 023a 14E7     		b	.L577
+ 2458              	.L582:
+ 2459 023c 0720     		movs	r0, #7
+ 2460 023e 12E7     		b	.L577
+ 2461              	.L581:
+ 2462 0240 1846     		mov	r0, r3
+ 2463 0242 10E7     		b	.L577
+ 2464              		.size	dir_register, .-dir_register
+ 2465 0244 AFF30080 		.section	.text.f_mount,"ax",%progbits
+ 2465      AFF30080 
+ 2465      AFF30080 
+ 2466              		.align	2
+ 2467              		.p2align 4,,15
+ 2468              		.global	f_mount
+ 2469              		.thumb
+ 2470              		.thumb_func
+ 2471              		.type	f_mount, %function
+ 2472              	f_mount:
+ 2473              		@ args = 0, pretend = 0, frame = 0
+ 2474              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2475              		@ link register save eliminated.
+ 2476 0000 08B1     		cbz	r0, .L601
+ 2477 0002 0B20     		movs	r0, #11
+ 2478 0004 7047     		bx	lr
+ 2479              	.L601:
+ 2480 0006 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 2481 000a C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 2482 000e 1A68     		ldr	r2, [r3]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 45
+
+
+ 2483 0010 02B1     		cbz	r2, .L592
+ 2484 0012 1070     		strb	r0, [r2]
+ 2485              	.L592:
+ 2486 0014 09B1     		cbz	r1, .L593
+ 2487 0016 0022     		movs	r2, #0
+ 2488 0018 0A70     		strb	r2, [r1]
+ 2489              	.L593:
+ 2490 001a 1960     		str	r1, [r3]
+ 2491 001c 0020     		movs	r0, #0
+ 2492 001e 7047     		bx	lr
+ 2493              		.size	f_mount, .-f_mount
+ 2494              		.section	.text.f_open,"ax",%progbits
+ 2495              		.align	2
+ 2496              		.p2align 4,,15
+ 2497              		.global	f_open
+ 2498              		.thumb
+ 2499              		.thumb_func
+ 2500              		.type	f_open, %function
+ 2501              	f_open:
+ 2502              		@ args = 0, pretend = 0, frame = 56
+ 2503              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2504 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 2505 0004 8EB0     		sub	sp, sp, #56
+ 2506 0006 0EAB     		add	r3, sp, #56
+ 2507 0008 1746     		mov	r7, r2
+ 2508 000a 43F8341D 		str	r1, [r3, #-52]!
+ 2509 000e 0022     		movs	r2, #0
+ 2510 0010 0260     		str	r2, [r0]
+ 2511 0012 05A9     		add	r1, sp, #20
+ 2512 0014 07F01E02 		and	r2, r7, #30
+ 2513 0018 0446     		mov	r4, r0
+ 2514 001a 1846     		mov	r0, r3
+ 2515 001c FFF7FEFF 		bl	chk_mounted
+ 2516 0020 8046     		mov	r8, r0
+ 2517 0022 4FF40070 		mov	r0, #512
+ 2518 0026 FFF7FEFF 		bl	ff_memalloc
+ 2519 002a 0646     		mov	r6, r0
+ 2520 002c 1120     		movs	r0, #17
+ 2521 002e 002E     		cmp	r6, #0
+ 2522 0030 4FD0     		beq	.L638
+ 2523 0032 02AB     		add	r3, sp, #8
+ 2524 0034 0C96     		str	r6, [sp, #48]
+ 2525 0036 0B93     		str	r3, [sp, #44]
+ 2526 0038 07F01F09 		and	r9, r7, #31
+ 2527 003c B8F1000F 		cmp	r8, #0
+ 2528 0040 4AD0     		beq	.L642
+ 2529              	.L604:
+ 2530 0042 17F01C0F 		tst	r7, #28
+ 2531 0046 40D0     		beq	.L612
+ 2532 0048 B8F1040F 		cmp	r8, #4
+ 2533 004c 3DD1     		bne	.L612
+ 2534 004e 05A8     		add	r0, sp, #20
+ 2535 0050 FFF7FEFF 		bl	dir_register
+ 2536 0054 49F00809 		orr	r9, r9, #8
+ 2537 0058 8046     		mov	r8, r0
+ 2538 005a 0A9D     		ldr	r5, [sp, #40]
+ 2539 005c A8BB     		cbnz	r0, .L612
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 46
+
+
+ 2540              	.L606:
+ 2541 005e 19F0080F 		tst	r9, #8
+ 2542 0062 08BF     		it	eq
+ 2543 0064 059B     		ldreq	r3, [sp, #20]
+ 2544 0066 59D0     		beq	.L615
+ 2545 0068 FFF7FEFF 		bl	get_fattime
+ 2546 006c 95F815E0 		ldrb	lr, [r5, #21]	@ zero_extendqisi2
+ 2547 0070 AA7E     		ldrb	r2, [r5, #26]	@ zero_extendqisi2
+ 2548 0072 2F7D     		ldrb	r7, [r5, #20]	@ zero_extendqisi2
+ 2549 0074 E97E     		ldrb	r1, [r5, #27]	@ zero_extendqisi2
+ 2550 0076 059B     		ldr	r3, [sp, #20]
+ 2551 0078 A873     		strb	r0, [r5, #14]
+ 2552 007a 47EA0E27 		orr	r7, r7, lr, lsl #8
+ 2553 007e 42EA0121 		orr	r1, r2, r1, lsl #8
+ 2554 0082 C0F30728 		ubfx	r8, r0, #8, #8
+ 2555 0086 0022     		movs	r2, #0
+ 2556 0088 4FEA104C 		lsr	ip, r0, #16
+ 2557 008c 4FF0010E 		mov	lr, #1
+ 2558 0090 000E     		lsrs	r0, r0, #24
+ 2559 0092 51EA0747 		orrs	r7, r1, r7, lsl #16
+ 2560 0096 85F80F80 		strb	r8, [r5, #15]
+ 2561 009a 85F810C0 		strb	ip, [r5, #16]
+ 2562 009e 6874     		strb	r0, [r5, #17]
+ 2563 00a0 EA72     		strb	r2, [r5, #11]
+ 2564 00a2 2A77     		strb	r2, [r5, #28]
+ 2565 00a4 6A77     		strb	r2, [r5, #29]
+ 2566 00a6 AA77     		strb	r2, [r5, #30]
+ 2567 00a8 EA77     		strb	r2, [r5, #31]
+ 2568 00aa AA76     		strb	r2, [r5, #26]
+ 2569 00ac EA76     		strb	r2, [r5, #27]
+ 2570 00ae 2A75     		strb	r2, [r5, #20]
+ 2571 00b0 6A75     		strb	r2, [r5, #21]
+ 2572 00b2 83F804E0 		strb	lr, [r3, #4]
+ 2573 00b6 2FD0     		beq	.L610
+ 2574 00b8 7745     		cmp	r7, lr
+ 2575 00ba D3F82CA0 		ldr	r10, [r3, #44]
+ 2576 00be 02D0     		beq	.L624
+ 2577 00c0 9A69     		ldr	r2, [r3, #24]
+ 2578 00c2 9742     		cmp	r7, r2
+ 2579 00c4 5DD3     		bcc	.L643
+ 2580              	.L624:
+ 2581 00c6 4FF00208 		mov	r8, #2
+ 2582              	.L612:
+ 2583 00ca 3046     		mov	r0, r6
+ 2584 00cc FFF7FEFF 		bl	ff_memfree
+ 2585 00d0 4046     		mov	r0, r8
+ 2586              	.L638:
+ 2587 00d2 0EB0     		add	sp, sp, #56
+ 2588              		@ sp needed
+ 2589 00d4 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 2590              	.L642:
+ 2591 00d8 05A8     		add	r0, sp, #20
+ 2592 00da 0199     		ldr	r1, [sp, #4]
+ 2593 00dc FFF7FEFF 		bl	follow_path
+ 2594 00e0 0A9D     		ldr	r5, [sp, #40]
+ 2595 00e2 8046     		mov	r8, r0
+ 2596 00e4 0028     		cmp	r0, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 47
+
+
+ 2597 00e6 ACD1     		bne	.L604
+ 2598 00e8 002D     		cmp	r5, #0
+ 2599 00ea 42D0     		beq	.L644
+ 2600 00ec 17F01C0F 		tst	r7, #28
+ 2601 00f0 08D0     		beq	.L645
+ 2602 00f2 EB7A     		ldrb	r3, [r5, #11]	@ zero_extendqisi2
+ 2603 00f4 13F0110F 		tst	r3, #17
+ 2604 00f8 40D1     		bne	.L626
+ 2605 00fa 7907     		lsls	r1, r7, #29
+ 2606 00fc AFD5     		bpl	.L606
+ 2607 00fe 4FF00808 		mov	r8, #8
+ 2608 0102 E2E7     		b	.L612
+ 2609              	.L645:
+ 2610 0104 EB7A     		ldrb	r3, [r5, #11]	@ zero_extendqisi2
+ 2611 0106 DA06     		lsls	r2, r3, #27
+ 2612 0108 30D4     		bmi	.L625
+ 2613 010a B807     		lsls	r0, r7, #30
+ 2614 010c 34D4     		bmi	.L613
+ 2615              	.L641:
+ 2616 010e 07F00807 		and	r7, r7, #8
+ 2617 0112 FFB2     		uxtb	r7, r7
+ 2618 0114 059B     		ldr	r3, [sp, #20]
+ 2619 0116 0FB1     		cbz	r7, .L615
+ 2620              	.L610:
+ 2621 0118 49F02009 		orr	r9, r9, #32
+ 2622              	.L615:
+ 2623 011c DB6A     		ldr	r3, [r3, #44]
+ 2624 011e 2562     		str	r5, [r4, #32]
+ 2625 0120 E361     		str	r3, [r4, #28]
+ 2626 0122 3046     		mov	r0, r6
+ 2627 0124 FFF7FEFF 		bl	ff_memfree
+ 2628 0128 84F80690 		strb	r9, [r4, #6]
+ 2629 012c 6E7D     		ldrb	r6, [r5, #21]	@ zero_extendqisi2
+ 2630 012e A87E     		ldrb	r0, [r5, #26]	@ zero_extendqisi2
+ 2631 0130 297D     		ldrb	r1, [r5, #20]	@ zero_extendqisi2
+ 2632 0132 EA7E     		ldrb	r2, [r5, #27]	@ zero_extendqisi2
+ 2633 0134 059B     		ldr	r3, [sp, #20]
+ 2634 0136 41EA0621 		orr	r1, r1, r6, lsl #8
+ 2635 013a 40EA0222 		orr	r2, r0, r2, lsl #8
+ 2636 013e 42EA0142 		orr	r2, r2, r1, lsl #16
+ 2637 0142 2261     		str	r2, [r4, #16]
+ 2638 0144 AF7F     		ldrb	r7, [r5, #30]	@ zero_extendqisi2
+ 2639 0146 EE7F     		ldrb	r6, [r5, #31]	@ zero_extendqisi2
+ 2640 0148 287F     		ldrb	r0, [r5, #28]	@ zero_extendqisi2
+ 2641 014a 697F     		ldrb	r1, [r5, #29]	@ zero_extendqisi2
+ 2642 014c DA88     		ldrh	r2, [r3, #6]
+ 2643 014e 2360     		str	r3, [r4]
+ 2644 0150 3B04     		lsls	r3, r7, #16
+ 2645 0152 43EA0663 		orr	r3, r3, r6, lsl #24
+ 2646 0156 0343     		orrs	r3, r3, r0
+ 2647 0158 43EA0123 		orr	r3, r3, r1, lsl #8
+ 2648 015c 0020     		movs	r0, #0
+ 2649 015e E360     		str	r3, [r4, #12]
+ 2650 0160 A280     		strh	r2, [r4, #4]	@ movhi
+ 2651 0162 A060     		str	r0, [r4, #8]
+ 2652 0164 A061     		str	r0, [r4, #24]
+ 2653 0166 0EB0     		add	sp, sp, #56
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 48
+
+
+ 2654              		@ sp needed
+ 2655 0168 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 2656              	.L625:
+ 2657 016c 4FF00408 		mov	r8, #4
+ 2658 0170 ABE7     		b	.L612
+ 2659              	.L644:
+ 2660 0172 4FF00608 		mov	r8, #6
+ 2661 0176 64E7     		b	.L604
+ 2662              	.L613:
+ 2663 0178 D907     		lsls	r1, r3, #31
+ 2664 017a C8D5     		bpl	.L641
+ 2665              	.L626:
+ 2666 017c 4FF00708 		mov	r8, #7
+ 2667 0180 A3E7     		b	.L612
+ 2668              	.L643:
+ 2669 0182 1846     		mov	r0, r3
+ 2670 0184 3946     		mov	r1, r7
+ 2671 0186 FFF7FEFF 		bl	remove_chain.part.6
+ 2672 018a 8046     		mov	r8, r0
+ 2673 018c 0028     		cmp	r0, #0
+ 2674 018e 9CD1     		bne	.L612
+ 2675 0190 0598     		ldr	r0, [sp, #20]
+ 2676 0192 013F     		subs	r7, r7, #1
+ 2677 0194 5146     		mov	r1, r10
+ 2678 0196 C760     		str	r7, [r0, #12]
+ 2679 0198 FFF7FEFF 		bl	move_window
+ 2680 019c 059B     		ldr	r3, [sp, #20]
+ 2681 019e 8046     		mov	r8, r0
+ 2682 01a0 0028     		cmp	r0, #0
+ 2683 01a2 B9D0     		beq	.L610
+ 2684 01a4 91E7     		b	.L612
+ 2685              		.size	f_open, .-f_open
+ 2686 01a6 00BFAFF3 		.section	.text.f_read,"ax",%progbits
+ 2686      0080AFF3 
+ 2686      0080
+ 2687              		.align	2
+ 2688              		.p2align 4,,15
+ 2689              		.global	f_read
+ 2690              		.thumb
+ 2691              		.thumb_func
+ 2692              		.type	f_read, %function
+ 2693              	f_read:
+ 2694              		@ args = 0, pretend = 0, frame = 0
+ 2695              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2696 0000 2DE9F84F 		push	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 2697 0004 0746     		mov	r7, r0
+ 2698 0006 9A46     		mov	r10, r3
+ 2699 0008 0023     		movs	r3, #0
+ 2700 000a 0C46     		mov	r4, r1
+ 2701 000c CAF80030 		str	r3, [r10]
+ 2702 0010 0068     		ldr	r0, [r0]
+ 2703 0012 B988     		ldrh	r1, [r7, #4]
+ 2704 0014 1546     		mov	r5, r2
+ 2705 0016 FFF7FEFF 		bl	validate
+ 2706 001a 30B9     		cbnz	r0, .L647
+ 2707 001c BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 2708 001e 1806     		lsls	r0, r3, #24
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 49
+
+
+ 2709 0020 05D4     		bmi	.L675
+ 2710 0022 D907     		lsls	r1, r3, #31
+ 2711 0024 58BF     		it	pl
+ 2712 0026 0720     		movpl	r0, #7
+ 2713 0028 04D4     		bmi	.L690
+ 2714              	.L647:
+ 2715 002a BDE8F88F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 2716              	.L675:
+ 2717 002e 0220     		movs	r0, #2
+ 2718 0030 BDE8F88F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 2719              	.L690:
+ 2720 0034 B968     		ldr	r1, [r7, #8]
+ 2721 0036 FB68     		ldr	r3, [r7, #12]
+ 2722 0038 5B1A     		subs	r3, r3, r1
+ 2723 003a 9D42     		cmp	r5, r3
+ 2724 003c 34BF     		ite	cc
+ 2725 003e A846     		movcc	r8, r5
+ 2726 0040 9846     		movcs	r8, r3
+ 2727 0042 07F12409 		add	r9, r7, #36
+ 2728 0046 B8F1000F 		cmp	r8, #0
+ 2729 004a 49D0     		beq	.L672
+ 2730              	.L673:
+ 2731 004c C1F30805 		ubfx	r5, r1, #0, #9
+ 2732 0050 002D     		cmp	r5, #0
+ 2733 0052 65D1     		bne	.L649
+ 2734 0054 3868     		ldr	r0, [r7]
+ 2735 0056 8278     		ldrb	r2, [r0, #2]	@ zero_extendqisi2
+ 2736 0058 013A     		subs	r2, r2, #1
+ 2737 005a 02EA5122 		and	r2, r2, r1, lsr #9
+ 2738 005e 12F0FF0B 		ands	fp, r2, #255
+ 2739 0062 70D0     		beq	.L650
+ 2740 0064 7969     		ldr	r1, [r7, #20]
+ 2741              	.L651:
+ 2742 0066 8269     		ldr	r2, [r0, #24]
+ 2743 0068 0239     		subs	r1, r1, #2
+ 2744 006a 023A     		subs	r2, r2, #2
+ 2745 006c 9142     		cmp	r1, r2
+ 2746 006e 79D2     		bcs	.L657
+ 2747 0070 8278     		ldrb	r2, [r0, #2]	@ zero_extendqisi2
+ 2748 0072 856A     		ldr	r5, [r0, #40]
+ 2749 0074 02FB0155 		mla	r5, r2, r1, r5
+ 2750 0078 002D     		cmp	r5, #0
+ 2751 007a 73D0     		beq	.L657
+ 2752 007c 5FEA5826 		lsrs	r6, r8, #9
+ 2753 0080 5D44     		add	r5, r5, fp
+ 2754 0082 30D0     		beq	.L659
+ 2755 0084 0BEB0601 		add	r1, fp, r6
+ 2756 0088 9142     		cmp	r1, r2
+ 2757 008a 88BF     		it	hi
+ 2758 008c CBEB0206 		rsbhi	r6, fp, r2
+ 2759 0090 F3B2     		uxtb	r3, r6
+ 2760 0092 4078     		ldrb	r0, [r0, #1]	@ zero_extendqisi2
+ 2761 0094 2146     		mov	r1, r4
+ 2762 0096 2A46     		mov	r2, r5
+ 2763 0098 FFF7FEFF 		bl	disk_read
+ 2764 009c BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 2765 009e 0028     		cmp	r0, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 50
+
+
+ 2766 00a0 68D1     		bne	.L689
+ 2767 00a2 5B06     		lsls	r3, r3, #25
+ 2768 00a4 0ED5     		bpl	.L664
+ 2769 00a6 BB69     		ldr	r3, [r7, #24]
+ 2770 00a8 5D1B     		subs	r5, r3, r5
+ 2771 00aa AE42     		cmp	r6, r5
+ 2772 00ac 0AD9     		bls	.L664
+ 2773 00ae 04EB4525 		add	r5, r4, r5, lsl #9
+ 2774 00b2 05F50071 		add	r1, r5, #512
+ 2775 00b6 4B46     		mov	r3, r9
+ 2776              	.L665:
+ 2777 00b8 13F8012B 		ldrb	r2, [r3], #1	@ zero_extendqisi2
+ 2778 00bc 05F8012B 		strb	r2, [r5], #1
+ 2779 00c0 8D42     		cmp	r5, r1
+ 2780 00c2 F9D1     		bne	.L665
+ 2781              	.L664:
+ 2782 00c4 7302     		lsls	r3, r6, #9
+ 2783 00c6 B968     		ldr	r1, [r7, #8]
+ 2784 00c8 E018     		adds	r0, r4, r3
+ 2785              	.L663:
+ 2786 00ca DAF80020 		ldr	r2, [r10]
+ 2787 00ce 1944     		add	r1, r1, r3
+ 2788 00d0 1A44     		add	r2, r2, r3
+ 2789 00d2 B8EB0308 		subs	r8, r8, r3
+ 2790 00d6 B960     		str	r1, [r7, #8]
+ 2791 00d8 0446     		mov	r4, r0
+ 2792 00da CAF80020 		str	r2, [r10]
+ 2793 00de B5D1     		bne	.L673
+ 2794              	.L672:
+ 2795 00e0 0020     		movs	r0, #0
+ 2796 00e2 BDE8F88F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 2797              	.L659:
+ 2798 00e6 BA69     		ldr	r2, [r7, #24]
+ 2799 00e8 AA42     		cmp	r2, r5
+ 2800 00ea 15D0     		beq	.L666
+ 2801 00ec B979     		ldrb	r1, [r7, #6]	@ zero_extendqisi2
+ 2802 00ee 4E06     		lsls	r6, r1, #25
+ 2803 00f0 0BD5     		bpl	.L668
+ 2804 00f2 4078     		ldrb	r0, [r0, #1]	@ zero_extendqisi2
+ 2805 00f4 4946     		mov	r1, r9
+ 2806 00f6 0123     		movs	r3, #1
+ 2807 00f8 FFF7FEFF 		bl	disk_write
+ 2808 00fc 0028     		cmp	r0, #0
+ 2809 00fe 38D1     		bne	.L688
+ 2810 0100 BA79     		ldrb	r2, [r7, #6]	@ zero_extendqisi2
+ 2811 0102 3868     		ldr	r0, [r7]
+ 2812 0104 22F04002 		bic	r2, r2, #64
+ 2813 0108 BA71     		strb	r2, [r7, #6]
+ 2814              	.L668:
+ 2815 010a 4078     		ldrb	r0, [r0, #1]	@ zero_extendqisi2
+ 2816 010c 4946     		mov	r1, r9
+ 2817 010e 2A46     		mov	r2, r5
+ 2818 0110 0123     		movs	r3, #1
+ 2819 0112 FFF7FEFF 		bl	disk_read
+ 2820 0116 60BB     		cbnz	r0, .L688
+ 2821              	.L666:
+ 2822 0118 B968     		ldr	r1, [r7, #8]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 51
+
+
+ 2823 011a BD61     		str	r5, [r7, #24]
+ 2824 011c C1F30805 		ubfx	r5, r1, #0, #9
+ 2825              	.L649:
+ 2826 0120 C5F50073 		rsb	r3, r5, #512
+ 2827 0124 4345     		cmp	r3, r8
+ 2828 0126 28BF     		it	cs
+ 2829 0128 4346     		movcs	r3, r8
+ 2830 012a 3D44     		add	r5, r5, r7
+ 2831 012c 2435     		adds	r5, r5, #36
+ 2832 012e 2046     		mov	r0, r4
+ 2833 0130 002B     		cmp	r3, #0
+ 2834 0132 CAD0     		beq	.L663
+ 2835 0134 E018     		adds	r0, r4, r3
+ 2836              	.L671:
+ 2837 0136 15F8016B 		ldrb	r6, [r5], #1	@ zero_extendqisi2
+ 2838 013a 04F8016B 		strb	r6, [r4], #1
+ 2839 013e 8442     		cmp	r4, r0
+ 2840 0140 F9D1     		bne	.L671
+ 2841 0142 B968     		ldr	r1, [r7, #8]
+ 2842 0144 C1E7     		b	.L663
+ 2843              	.L650:
+ 2844 0146 39B9     		cbnz	r1, .L652
+ 2845 0148 3969     		ldr	r1, [r7, #16]
+ 2846              	.L653:
+ 2847 014a 0129     		cmp	r1, #1
+ 2848 014c 0AD9     		bls	.L657
+ 2849 014e 4A1C     		adds	r2, r1, #1
+ 2850 0150 0FD0     		beq	.L688
+ 2851 0152 3868     		ldr	r0, [r7]
+ 2852 0154 7961     		str	r1, [r7, #20]
+ 2853 0156 86E7     		b	.L651
+ 2854              	.L652:
+ 2855 0158 7969     		ldr	r1, [r7, #20]
+ 2856 015a 0129     		cmp	r1, #1
+ 2857 015c 02D9     		bls	.L657
+ 2858 015e 8269     		ldr	r2, [r0, #24]
+ 2859 0160 9142     		cmp	r1, r2
+ 2860 0162 0DD3     		bcc	.L691
+ 2861              	.L657:
+ 2862 0164 BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 2863 0166 63F07F03 		orn	r3, r3, #127
+ 2864 016a BB71     		strb	r3, [r7, #6]
+ 2865 016c 0220     		movs	r0, #2
+ 2866 016e BDE8F88F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 2867              	.L688:
+ 2868 0172 BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 2869              	.L689:
+ 2870 0174 63F07F03 		orn	r3, r3, #127
+ 2871 0178 BB71     		strb	r3, [r7, #6]
+ 2872 017a 0120     		movs	r0, #1
+ 2873 017c BDE8F88F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 2874              	.L691:
+ 2875 0180 FFF7FEFF 		bl	get_fat.part.3
+ 2876 0184 0146     		mov	r1, r0
+ 2877 0186 E0E7     		b	.L653
+ 2878              		.size	f_read, .-f_read
+ 2879 0188 AFF30080 		.section	.text.f_write,"ax",%progbits
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 52
+
+
+ 2879      AFF30080 
+ 2880              		.align	2
+ 2881              		.p2align 4,,15
+ 2882              		.global	f_write
+ 2883              		.thumb
+ 2884              		.thumb_func
+ 2885              		.type	f_write, %function
+ 2886              	f_write:
+ 2887              		@ args = 0, pretend = 0, frame = 8
+ 2888              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2889 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 2890 0004 0746     		mov	r7, r0
+ 2891 0006 9B46     		mov	fp, r3
+ 2892 0008 0023     		movs	r3, #0
+ 2893 000a 83B0     		sub	sp, sp, #12
+ 2894 000c 0C46     		mov	r4, r1
+ 2895 000e CBF80030 		str	r3, [fp]
+ 2896 0012 0068     		ldr	r0, [r0]
+ 2897 0014 B988     		ldrh	r1, [r7, #4]
+ 2898 0016 9146     		mov	r9, r2
+ 2899 0018 FFF7FEFF 		bl	validate
+ 2900 001c 40B9     		cbnz	r0, .L693
+ 2901 001e BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 2902 0020 1906     		lsls	r1, r3, #24
+ 2903 0022 48BF     		it	mi
+ 2904 0024 0220     		movmi	r0, #2
+ 2905 0026 03D4     		bmi	.L693
+ 2906 0028 9A07     		lsls	r2, r3, #30
+ 2907 002a 58BF     		it	pl
+ 2908 002c 0720     		movpl	r0, #7
+ 2909 002e 02D4     		bmi	.L736
+ 2910              	.L693:
+ 2911 0030 03B0     		add	sp, sp, #12
+ 2912              		@ sp needed
+ 2913 0032 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 2914              	.L736:
+ 2915 0036 FA68     		ldr	r2, [r7, #12]
+ 2916 0038 B968     		ldr	r1, [r7, #8]
+ 2917 003a 19EB020F 		cmn	r9, r2
+ 2918 003e 07D3     		bcc	.L694
+ 2919              	.L695:
+ 2920 0040 9142     		cmp	r1, r2
+ 2921 0042 43F02003 		orr	r3, r3, #32
+ 2922 0046 88BF     		it	hi
+ 2923 0048 F960     		strhi	r1, [r7, #12]
+ 2924 004a BB71     		strb	r3, [r7, #6]
+ 2925 004c 0020     		movs	r0, #0
+ 2926 004e EFE7     		b	.L693
+ 2927              	.L694:
+ 2928 0050 B9F1000F 		cmp	r9, #0
+ 2929 0054 F4D0     		beq	.L695
+ 2930 0056 07F12403 		add	r3, r7, #36
+ 2931 005a 0193     		str	r3, [sp, #4]
+ 2932 005c 07F50978 		add	r8, r7, #548
+ 2933              	.L722:
+ 2934 0060 C1F30805 		ubfx	r5, r1, #0, #9
+ 2935 0064 002D     		cmp	r5, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 53
+
+
+ 2936 0066 67D1     		bne	.L697
+ 2937 0068 3B68     		ldr	r3, [r7]
+ 2938 006a 9D78     		ldrb	r5, [r3, #2]	@ zero_extendqisi2
+ 2939 006c 013D     		subs	r5, r5, #1
+ 2940 006e 05EA5125 		and	r5, r5, r1, lsr #9
+ 2941 0072 15F0FF05 		ands	r5, r5, #255
+ 2942 0076 0DD1     		bne	.L698
+ 2943 0078 0029     		cmp	r1, #0
+ 2944 007a 40F08680 		bne	.L699
+ 2945 007e 3869     		ldr	r0, [r7, #16]
+ 2946 0080 0028     		cmp	r0, #0
+ 2947 0082 00F08D80 		beq	.L737
+ 2948              	.L700:
+ 2949 0086 0128     		cmp	r0, #1
+ 2950 0088 00F09D80 		beq	.L706
+ 2951 008c 431C     		adds	r3, r0, #1
+ 2952 008e 76D0     		beq	.L717
+ 2953 0090 3B68     		ldr	r3, [r7]
+ 2954 0092 7861     		str	r0, [r7, #20]
+ 2955              	.L698:
+ 2956 0094 BA79     		ldrb	r2, [r7, #6]	@ zero_extendqisi2
+ 2957 0096 5606     		lsls	r6, r2, #25
+ 2958 0098 64D4     		bmi	.L738
+ 2959              	.L704:
+ 2960 009a 7969     		ldr	r1, [r7, #20]
+ 2961 009c 9A69     		ldr	r2, [r3, #24]
+ 2962 009e A1F1020C 		sub	ip, r1, #2
+ 2963 00a2 023A     		subs	r2, r2, #2
+ 2964 00a4 9445     		cmp	ip, r2
+ 2965 00a6 80F08E80 		bcs	.L706
+ 2966 00aa 9978     		ldrb	r1, [r3, #2]	@ zero_extendqisi2
+ 2967 00ac 9A6A     		ldr	r2, [r3, #40]
+ 2968 00ae 0CFB0122 		mla	r2, ip, r1, r2
+ 2969 00b2 002A     		cmp	r2, #0
+ 2970 00b4 00F08780 		beq	.L706
+ 2971 00b8 5FEA5926 		lsrs	r6, r9, #9
+ 2972 00bc 05EB020A 		add	r10, r5, r2
+ 2973 00c0 2FD0     		beq	.L708
+ 2974 00c2 AA19     		adds	r2, r5, r6
+ 2975 00c4 8A42     		cmp	r2, r1
+ 2976 00c6 88BF     		it	hi
+ 2977 00c8 C5EB0106 		rsbhi	r6, r5, r1
+ 2978 00cc 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 2979 00ce 2146     		mov	r1, r4
+ 2980 00d0 5246     		mov	r2, r10
+ 2981 00d2 F3B2     		uxtb	r3, r6
+ 2982 00d4 FFF7FEFF 		bl	disk_write
+ 2983 00d8 0028     		cmp	r0, #0
+ 2984 00da 50D1     		bne	.L717
+ 2985 00dc BB69     		ldr	r3, [r7, #24]
+ 2986 00de CAEB030C 		rsb	ip, r10, r3
+ 2987 00e2 6645     		cmp	r6, ip
+ 2988 00e4 0CD9     		bls	.L711
+ 2989 00e6 019D     		ldr	r5, [sp, #4]
+ 2990 00e8 04EB4C23 		add	r3, r4, ip, lsl #9
+ 2991              	.L713:
+ 2992 00ec 13F8012B 		ldrb	r2, [r3], #1	@ zero_extendqisi2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 54
+
+
+ 2993 00f0 05F8012B 		strb	r2, [r5], #1
+ 2994 00f4 4545     		cmp	r5, r8
+ 2995 00f6 F9D1     		bne	.L713
+ 2996 00f8 BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 2997 00fa 23F04003 		bic	r3, r3, #64
+ 2998 00fe BB71     		strb	r3, [r7, #6]
+ 2999              	.L711:
+ 3000 0100 7202     		lsls	r2, r6, #9
+ 3001 0102 B968     		ldr	r1, [r7, #8]
+ 3002 0104 A318     		adds	r3, r4, r2
+ 3003              	.L714:
+ 3004 0106 DBF80000 		ldr	r0, [fp]
+ 3005 010a 1144     		add	r1, r1, r2
+ 3006 010c 1044     		add	r0, r0, r2
+ 3007 010e B9EB0209 		subs	r9, r9, r2
+ 3008 0112 B960     		str	r1, [r7, #8]
+ 3009 0114 1C46     		mov	r4, r3
+ 3010 0116 CBF80000 		str	r0, [fp]
+ 3011 011a A1D1     		bne	.L722
+ 3012 011c FA68     		ldr	r2, [r7, #12]
+ 3013 011e BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 3014 0120 8EE7     		b	.L695
+ 3015              	.L708:
+ 3016 0122 BA69     		ldr	r2, [r7, #24]
+ 3017 0124 B968     		ldr	r1, [r7, #8]
+ 3018 0126 5245     		cmp	r2, r10
+ 3019 0128 02D0     		beq	.L716
+ 3020 012a FA68     		ldr	r2, [r7, #12]
+ 3021 012c 9142     		cmp	r1, r2
+ 3022 012e 40D3     		bcc	.L739
+ 3023              	.L716:
+ 3024 0130 C7F818A0 		str	r10, [r7, #24]
+ 3025 0134 C1F30805 		ubfx	r5, r1, #0, #9
+ 3026              	.L697:
+ 3027 0138 C5F50072 		rsb	r2, r5, #512
+ 3028 013c 4A45     		cmp	r2, r9
+ 3029 013e 28BF     		it	cs
+ 3030 0140 4A46     		movcs	r2, r9
+ 3031 0142 3D44     		add	r5, r5, r7
+ 3032 0144 2435     		adds	r5, r5, #36
+ 3033 0146 2346     		mov	r3, r4
+ 3034 0148 3AB1     		cbz	r2, .L718
+ 3035 014a A318     		adds	r3, r4, r2
+ 3036              	.L720:
+ 3037 014c 14F8016B 		ldrb	r6, [r4], #1	@ zero_extendqisi2
+ 3038 0150 9C42     		cmp	r4, r3
+ 3039 0152 05F8016B 		strb	r6, [r5], #1
+ 3040 0156 F9D1     		bne	.L720
+ 3041 0158 B968     		ldr	r1, [r7, #8]
+ 3042              	.L718:
+ 3043 015a B879     		ldrb	r0, [r7, #6]	@ zero_extendqisi2
+ 3044 015c 40F04000 		orr	r0, r0, #64
+ 3045 0160 B871     		strb	r0, [r7, #6]
+ 3046 0162 D0E7     		b	.L714
+ 3047              	.L738:
+ 3048 0164 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 3049 0166 BA69     		ldr	r2, [r7, #24]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 55
+
+
+ 3050 0168 0199     		ldr	r1, [sp, #4]
+ 3051 016a 0123     		movs	r3, #1
+ 3052 016c FFF7FEFF 		bl	disk_write
+ 3053 0170 28B9     		cbnz	r0, .L717
+ 3054 0172 BA79     		ldrb	r2, [r7, #6]	@ zero_extendqisi2
+ 3055 0174 3B68     		ldr	r3, [r7]
+ 3056 0176 22F04002 		bic	r2, r2, #64
+ 3057 017a BA71     		strb	r2, [r7, #6]
+ 3058 017c 8DE7     		b	.L704
+ 3059              	.L717:
+ 3060 017e BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 3061 0180 63F07F03 		orn	r3, r3, #127
+ 3062 0184 BB71     		strb	r3, [r7, #6]
+ 3063 0186 0120     		movs	r0, #1
+ 3064 0188 52E7     		b	.L693
+ 3065              	.L699:
+ 3066 018a 1846     		mov	r0, r3
+ 3067 018c 7969     		ldr	r1, [r7, #20]
+ 3068 018e FFF7FEFF 		bl	create_chain
+ 3069 0192 0028     		cmp	r0, #0
+ 3070 0194 7FF477AF 		bne	.L700
+ 3071              	.L740:
+ 3072 0198 B968     		ldr	r1, [r7, #8]
+ 3073 019a FA68     		ldr	r2, [r7, #12]
+ 3074 019c BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 3075 019e 4FE7     		b	.L695
+ 3076              	.L737:
+ 3077 01a0 1846     		mov	r0, r3
+ 3078 01a2 2946     		mov	r1, r5
+ 3079 01a4 FFF7FEFF 		bl	create_chain
+ 3080 01a8 3861     		str	r0, [r7, #16]
+ 3081 01aa 0028     		cmp	r0, #0
+ 3082 01ac 7FF46BAF 		bne	.L700
+ 3083 01b0 F2E7     		b	.L740
+ 3084              	.L739:
+ 3085 01b2 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 3086 01b4 0199     		ldr	r1, [sp, #4]
+ 3087 01b6 5246     		mov	r2, r10
+ 3088 01b8 0123     		movs	r3, #1
+ 3089 01ba FFF7FEFF 		bl	disk_read
+ 3090 01be 0028     		cmp	r0, #0
+ 3091 01c0 DDD1     		bne	.L717
+ 3092 01c2 B968     		ldr	r1, [r7, #8]
+ 3093 01c4 B4E7     		b	.L716
+ 3094              	.L706:
+ 3095 01c6 BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 3096 01c8 63F07F03 		orn	r3, r3, #127
+ 3097 01cc BB71     		strb	r3, [r7, #6]
+ 3098 01ce 0220     		movs	r0, #2
+ 3099 01d0 2EE7     		b	.L693
+ 3100              		.size	f_write, .-f_write
+ 3101 01d2 00BFAFF3 		.section	.text.f_sync,"ax",%progbits
+ 3101      0080AFF3 
+ 3101      0080AFF3 
+ 3101      0080
+ 3102              		.align	2
+ 3103              		.p2align 4,,15
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 56
+
+
+ 3104              		.global	f_sync
+ 3105              		.thumb
+ 3106              		.thumb_func
+ 3107              		.type	f_sync, %function
+ 3108              	f_sync:
+ 3109              		@ args = 0, pretend = 0, frame = 0
+ 3110              		@ frame_needed = 0, uses_anonymous_args = 0
+ 3111 0000 38B5     		push	{r3, r4, r5, lr}
+ 3112 0002 0446     		mov	r4, r0
+ 3113 0004 0068     		ldr	r0, [r0]
+ 3114 0006 A188     		ldrh	r1, [r4, #4]
+ 3115 0008 FFF7FEFF 		bl	validate
+ 3116 000c D0B9     		cbnz	r0, .L742
+ 3117 000e A279     		ldrb	r2, [r4, #6]	@ zero_extendqisi2
+ 3118 0010 02F02003 		and	r3, r2, #32
+ 3119 0014 03F0FF00 		and	r0, r3, #255
+ 3120 0018 A3B1     		cbz	r3, .L742
+ 3121 001a 5006     		lsls	r0, r2, #25
+ 3122 001c 0DD5     		bpl	.L743
+ 3123 001e 2146     		mov	r1, r4
+ 3124 0020 A269     		ldr	r2, [r4, #24]
+ 3125 0022 51F8240B 		ldr	r0, [r1], #36
+ 3126 0026 0123     		movs	r3, #1
+ 3127 0028 4078     		ldrb	r0, [r0, #1]	@ zero_extendqisi2
+ 3128 002a FFF7FEFF 		bl	disk_write
+ 3129 002e 0028     		cmp	r0, #0
+ 3130 0030 37D1     		bne	.L746
+ 3131 0032 A379     		ldrb	r3, [r4, #6]	@ zero_extendqisi2
+ 3132 0034 23F04003 		bic	r3, r3, #64
+ 3133 0038 A371     		strb	r3, [r4, #6]
+ 3134              	.L743:
+ 3135 003a 2068     		ldr	r0, [r4]
+ 3136 003c E169     		ldr	r1, [r4, #28]
+ 3137 003e FFF7FEFF 		bl	move_window
+ 3138 0042 00B1     		cbz	r0, .L751
+ 3139              	.L742:
+ 3140 0044 38BD     		pop	{r3, r4, r5, pc}
+ 3141              	.L751:
+ 3142 0046 256A     		ldr	r5, [r4, #32]
+ 3143 0048 EB7A     		ldrb	r3, [r5, #11]	@ zero_extendqisi2
+ 3144 004a 43F02003 		orr	r3, r3, #32
+ 3145 004e EB72     		strb	r3, [r5, #11]
+ 3146 0050 E368     		ldr	r3, [r4, #12]
+ 3147 0052 2B77     		strb	r3, [r5, #28]
+ 3148 0054 A389     		ldrh	r3, [r4, #12]
+ 3149 0056 1B0A     		lsrs	r3, r3, #8
+ 3150 0058 6B77     		strb	r3, [r5, #29]
+ 3151 005a E389     		ldrh	r3, [r4, #14]
+ 3152 005c AB77     		strb	r3, [r5, #30]
+ 3153 005e E37B     		ldrb	r3, [r4, #15]	@ zero_extendqisi2
+ 3154 0060 EB77     		strb	r3, [r5, #31]
+ 3155 0062 2369     		ldr	r3, [r4, #16]
+ 3156 0064 AB76     		strb	r3, [r5, #26]
+ 3157 0066 238A     		ldrh	r3, [r4, #16]
+ 3158 0068 1B0A     		lsrs	r3, r3, #8
+ 3159 006a EB76     		strb	r3, [r5, #27]
+ 3160 006c 638A     		ldrh	r3, [r4, #18]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 57
+
+
+ 3161 006e 2B75     		strb	r3, [r5, #20]
+ 3162 0070 638A     		ldrh	r3, [r4, #18]
+ 3163 0072 1B0A     		lsrs	r3, r3, #8
+ 3164 0074 6B75     		strb	r3, [r5, #21]
+ 3165 0076 FFF7FEFF 		bl	get_fattime
+ 3166 007a C0F30721 		ubfx	r1, r0, #8, #8
+ 3167 007e 020C     		lsrs	r2, r0, #16
+ 3168 0080 030E     		lsrs	r3, r0, #24
+ 3169 0082 2A76     		strb	r2, [r5, #24]
+ 3170 0084 A875     		strb	r0, [r5, #22]
+ 3171 0086 E975     		strb	r1, [r5, #23]
+ 3172 0088 6B76     		strb	r3, [r5, #25]
+ 3173 008a A179     		ldrb	r1, [r4, #6]	@ zero_extendqisi2
+ 3174 008c 2368     		ldr	r3, [r4]
+ 3175 008e 21F02001 		bic	r1, r1, #32
+ 3176 0092 0122     		movs	r2, #1
+ 3177 0094 A171     		strb	r1, [r4, #6]
+ 3178 0096 1A71     		strb	r2, [r3, #4]
+ 3179 0098 2068     		ldr	r0, [r4]
+ 3180 009a BDE83840 		pop	{r3, r4, r5, lr}
+ 3181 009e FFF7FEBF 		b	sync
+ 3182              	.L746:
+ 3183 00a2 0120     		movs	r0, #1
+ 3184 00a4 CEE7     		b	.L742
+ 3185              		.size	f_sync, .-f_sync
+ 3186 00a6 00BFAFF3 		.section	.text.f_close,"ax",%progbits
+ 3186      0080AFF3 
+ 3186      0080
+ 3187              		.align	2
+ 3188              		.p2align 4,,15
+ 3189              		.global	f_close
+ 3190              		.thumb
+ 3191              		.thumb_func
+ 3192              		.type	f_close, %function
+ 3193              	f_close:
+ 3194              		@ args = 0, pretend = 0, frame = 0
+ 3195              		@ frame_needed = 0, uses_anonymous_args = 0
+ 3196 0000 10B5     		push	{r4, lr}
+ 3197 0002 0446     		mov	r4, r0
+ 3198 0004 FFF7FEFF 		bl	f_sync
+ 3199 0008 00B9     		cbnz	r0, .L753
+ 3200 000a 2060     		str	r0, [r4]
+ 3201              	.L753:
+ 3202 000c 10BD     		pop	{r4, pc}
+ 3203              		.size	f_close, .-f_close
+ 3204 000e 00BF     		.section	.text.f_lseek,"ax",%progbits
+ 3205              		.align	2
+ 3206              		.p2align 4,,15
+ 3207              		.global	f_lseek
+ 3208              		.thumb
+ 3209              		.thumb_func
+ 3210              		.type	f_lseek, %function
+ 3211              	f_lseek:
+ 3212              		@ args = 0, pretend = 0, frame = 0
+ 3213              		@ frame_needed = 0, uses_anonymous_args = 0
+ 3214 0000 70B5     		push	{r4, r5, r6, lr}
+ 3215 0002 0446     		mov	r4, r0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 58
+
+
+ 3216 0004 0D46     		mov	r5, r1
+ 3217 0006 0068     		ldr	r0, [r0]
+ 3218 0008 A188     		ldrh	r1, [r4, #4]
+ 3219 000a FFF7FEFF 		bl	validate
+ 3220 000e 0028     		cmp	r0, #0
+ 3221 0010 54D1     		bne	.L755
+ 3222 0012 A379     		ldrb	r3, [r4, #6]	@ zero_extendqisi2
+ 3223 0014 1E06     		lsls	r6, r3, #24
+ 3224 0016 63D4     		bmi	.L801
+ 3225 0018 E268     		ldr	r2, [r4, #12]
+ 3226 001a AA42     		cmp	r2, r5
+ 3227 001c 03D2     		bcs	.L756
+ 3228 001e 13F0020F 		tst	r3, #2
+ 3229 0022 08BF     		it	eq
+ 3230 0024 1546     		moveq	r5, r2
+ 3231              	.L756:
+ 3232 0026 0023     		movs	r3, #0
+ 3233 0028 A268     		ldr	r2, [r4, #8]
+ 3234 002a A360     		str	r3, [r4, #8]
+ 3235 002c 002D     		cmp	r5, #0
+ 3236 002e 59D0     		beq	.L786
+ 3237 0030 2068     		ldr	r0, [r4]
+ 3238 0032 8678     		ldrb	r6, [r0, #2]	@ zero_extendqisi2
+ 3239 0034 7602     		lsls	r6, r6, #9
+ 3240 0036 42B1     		cbz	r2, .L757
+ 3241 0038 013A     		subs	r2, r2, #1
+ 3242 003a 691E     		subs	r1, r5, #1
+ 3243 003c B2FBF6F3 		udiv	r3, r2, r6
+ 3244 0040 B1FBF6F1 		udiv	r1, r1, r6
+ 3245 0044 9942     		cmp	r1, r3
+ 3246 0046 80F08A80 		bcs	.L802
+ 3247              	.L757:
+ 3248 004a 2169     		ldr	r1, [r4, #16]
+ 3249 004c 0029     		cmp	r1, #0
+ 3250 004e 4BD0     		beq	.L803
+ 3251              	.L759:
+ 3252 0050 6161     		str	r1, [r4, #20]
+ 3253              	.L758:
+ 3254 0052 0029     		cmp	r1, #0
+ 3255 0054 33D1     		bne	.L762
+ 3256 0056 A368     		ldr	r3, [r4, #8]
+ 3257 0058 0D46     		mov	r5, r1
+ 3258              	.L763:
+ 3259 005a C3F30802 		ubfx	r2, r3, #0, #9
+ 3260 005e 002A     		cmp	r2, #0
+ 3261 0060 00F08380 		beq	.L797
+ 3262 0064 A269     		ldr	r2, [r4, #24]
+ 3263 0066 AA42     		cmp	r2, r5
+ 3264 0068 7FD0     		beq	.L797
+ 3265 006a A379     		ldrb	r3, [r4, #6]	@ zero_extendqisi2
+ 3266 006c 5E06     		lsls	r6, r3, #25
+ 3267 006e 58BF     		it	pl
+ 3268 0070 04F12406 		addpl	r6, r4, #36
+ 3269 0074 0DD5     		bpl	.L780
+ 3270 0076 2368     		ldr	r3, [r4]
+ 3271 0078 04F12406 		add	r6, r4, #36
+ 3272 007c 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 59
+
+
+ 3273 007e 3146     		mov	r1, r6
+ 3274 0080 0123     		movs	r3, #1
+ 3275 0082 FFF7FEFF 		bl	disk_write
+ 3276 0086 A379     		ldrb	r3, [r4, #6]	@ zero_extendqisi2
+ 3277 0088 0028     		cmp	r0, #0
+ 3278 008a 37D1     		bne	.L799
+ 3279 008c 23F04003 		bic	r3, r3, #64
+ 3280 0090 A371     		strb	r3, [r4, #6]
+ 3281              	.L780:
+ 3282 0092 2368     		ldr	r3, [r4]
+ 3283 0094 3146     		mov	r1, r6
+ 3284 0096 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 3285 0098 2A46     		mov	r2, r5
+ 3286 009a 0123     		movs	r3, #1
+ 3287 009c FFF7FEFF 		bl	disk_read
+ 3288 00a0 58BB     		cbnz	r0, .L798
+ 3289 00a2 A368     		ldr	r3, [r4, #8]
+ 3290 00a4 E268     		ldr	r2, [r4, #12]
+ 3291 00a6 A561     		str	r5, [r4, #24]
+ 3292              	.L777:
+ 3293 00a8 9A42     		cmp	r2, r3
+ 3294 00aa 06D2     		bcs	.L791
+ 3295 00ac A279     		ldrb	r2, [r4, #6]	@ zero_extendqisi2
+ 3296 00ae E360     		str	r3, [r4, #12]
+ 3297 00b0 42F02003 		orr	r3, r2, #32
+ 3298 00b4 A371     		strb	r3, [r4, #6]
+ 3299 00b6 0020     		movs	r0, #0
+ 3300 00b8 70BD     		pop	{r4, r5, r6, pc}
+ 3301              	.L791:
+ 3302 00ba 0020     		movs	r0, #0
+ 3303              	.L755:
+ 3304 00bc 70BD     		pop	{r4, r5, r6, pc}
+ 3305              	.L762:
+ 3306 00be B542     		cmp	r5, r6
+ 3307 00c0 88BF     		it	hi
+ 3308 00c2 2068     		ldrhi	r0, [r4]
+ 3309 00c4 56D9     		bls	.L796
+ 3310              	.L773:
+ 3311 00c6 A379     		ldrb	r3, [r4, #6]	@ zero_extendqisi2
+ 3312 00c8 9A07     		lsls	r2, r3, #30
+ 3313 00ca C6EB0505 		rsb	r5, r6, r5
+ 3314 00ce 1AD4     		bmi	.L804
+ 3315 00d0 0129     		cmp	r1, #1
+ 3316 00d2 02D9     		bls	.L800
+ 3317 00d4 8269     		ldr	r2, [r0, #24]
+ 3318 00d6 8A42     		cmp	r2, r1
+ 3319 00d8 3DD8     		bhi	.L805
+ 3320              	.L800:
+ 3321 00da 63F07F03 		orn	r3, r3, #127
+ 3322 00de A371     		strb	r3, [r4, #6]
+ 3323              	.L801:
+ 3324 00e0 0220     		movs	r0, #2
+ 3325 00e2 70BD     		pop	{r4, r5, r6, pc}
+ 3326              	.L786:
+ 3327 00e4 2846     		mov	r0, r5
+ 3328 00e6 70BD     		pop	{r4, r5, r6, pc}
+ 3329              	.L803:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 60
+
+
+ 3330 00e8 FFF7FEFF 		bl	create_chain
+ 3331 00ec 0128     		cmp	r0, #1
+ 3332 00ee 0146     		mov	r1, r0
+ 3333 00f0 2FD0     		beq	.L774
+ 3334 00f2 0130     		adds	r0, r0, #1
+ 3335 00f4 18BF     		it	ne
+ 3336 00f6 2161     		strne	r1, [r4, #16]
+ 3337 00f8 AAD1     		bne	.L759
+ 3338              	.L798:
+ 3339 00fa A379     		ldrb	r3, [r4, #6]	@ zero_extendqisi2
+ 3340              	.L799:
+ 3341 00fc 63F07F03 		orn	r3, r3, #127
+ 3342 0100 A371     		strb	r3, [r4, #6]
+ 3343 0102 0120     		movs	r0, #1
+ 3344 0104 70BD     		pop	{r4, r5, r6, pc}
+ 3345              	.L804:
+ 3346 0106 FFF7FEFF 		bl	create_chain
+ 3347 010a 0146     		mov	r1, r0
+ 3348 010c 0028     		cmp	r0, #0
+ 3349 010e 30D0     		beq	.L806
+ 3350              	.L767:
+ 3351 0110 4B1C     		adds	r3, r1, #1
+ 3352 0112 F2D0     		beq	.L798
+ 3353 0114 0129     		cmp	r1, #1
+ 3354 0116 1CD9     		bls	.L774
+ 3355 0118 2068     		ldr	r0, [r4]
+ 3356 011a 8369     		ldr	r3, [r0, #24]
+ 3357 011c 9942     		cmp	r1, r3
+ 3358 011e 18D2     		bcs	.L774
+ 3359 0120 A368     		ldr	r3, [r4, #8]
+ 3360 0122 6161     		str	r1, [r4, #20]
+ 3361 0124 3344     		add	r3, r3, r6
+ 3362 0126 AE42     		cmp	r6, r5
+ 3363 0128 A360     		str	r3, [r4, #8]
+ 3364 012a CCD3     		bcc	.L773
+ 3365              	.L765:
+ 3366 012c 2B44     		add	r3, r3, r5
+ 3367 012e C5F30802 		ubfx	r2, r5, #0, #9
+ 3368 0132 A360     		str	r3, [r4, #8]
+ 3369 0134 DAB1     		cbz	r2, .L790
+ 3370 0136 2668     		ldr	r6, [r4]
+ 3371 0138 B069     		ldr	r0, [r6, #24]
+ 3372 013a 8A1E     		subs	r2, r1, #2
+ 3373 013c 0238     		subs	r0, r0, #2
+ 3374 013e 8242     		cmp	r2, r0
+ 3375 0140 07D2     		bcs	.L774
+ 3376 0142 B078     		ldrb	r0, [r6, #2]	@ zero_extendqisi2
+ 3377 0144 B16A     		ldr	r1, [r6, #40]
+ 3378 0146 00FB0212 		mla	r2, r0, r2, r1
+ 3379 014a 02EB5525 		add	r5, r2, r5, lsr #9
+ 3380 014e 002A     		cmp	r2, #0
+ 3381 0150 83D1     		bne	.L763
+ 3382              	.L774:
+ 3383 0152 A379     		ldrb	r3, [r4, #6]	@ zero_extendqisi2
+ 3384 0154 C1E7     		b	.L800
+ 3385              	.L805:
+ 3386 0156 FFF7FEFF 		bl	get_fat.part.3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 61
+
+
+ 3387 015a 0146     		mov	r1, r0
+ 3388 015c D8E7     		b	.L767
+ 3389              	.L802:
+ 3390 015e 7342     		negs	r3, r6
+ 3391 0160 1A40     		ands	r2, r2, r3
+ 3392 0162 A260     		str	r2, [r4, #8]
+ 3393 0164 AD1A     		subs	r5, r5, r2
+ 3394 0166 6169     		ldr	r1, [r4, #20]
+ 3395 0168 73E7     		b	.L758
+ 3396              	.L797:
+ 3397 016a E268     		ldr	r2, [r4, #12]
+ 3398 016c 9CE7     		b	.L777
+ 3399              	.L790:
+ 3400 016e 1546     		mov	r5, r2
+ 3401 0170 73E7     		b	.L763
+ 3402              	.L806:
+ 3403 0172 3546     		mov	r5, r6
+ 3404              	.L796:
+ 3405 0174 A368     		ldr	r3, [r4, #8]
+ 3406 0176 D9E7     		b	.L765
+ 3407              		.size	f_lseek, .-f_lseek
+ 3408 0178 AFF30080 		.section	.text.f_opendir,"ax",%progbits
+ 3408      AFF30080 
+ 3409              		.align	2
+ 3410              		.p2align 4,,15
+ 3411              		.global	f_opendir
+ 3412              		.thumb
+ 3413              		.thumb_func
+ 3414              		.type	f_opendir, %function
+ 3415              	f_opendir:
+ 3416              		@ args = 0, pretend = 0, frame = 24
+ 3417              		@ frame_needed = 0, uses_anonymous_args = 0
+ 3418 0000 70B5     		push	{r4, r5, r6, lr}
+ 3419 0002 86B0     		sub	sp, sp, #24
+ 3420 0004 06AB     		add	r3, sp, #24
+ 3421 0006 0446     		mov	r4, r0
+ 3422 0008 43F8141D 		str	r1, [r3, #-20]!
+ 3423 000c 0022     		movs	r2, #0
+ 3424 000e 1846     		mov	r0, r3
+ 3425 0010 2146     		mov	r1, r4
+ 3426 0012 FFF7FEFF 		bl	chk_mounted
+ 3427 0016 08B1     		cbz	r0, .L820
+ 3428              	.L819:
+ 3429 0018 06B0     		add	sp, sp, #24
+ 3430              		@ sp needed
+ 3431 001a 70BD     		pop	{r4, r5, r6, pc}
+ 3432              	.L820:
+ 3433 001c 4FF40070 		mov	r0, #512
+ 3434 0020 FFF7FEFF 		bl	ff_memalloc
+ 3435 0024 0546     		mov	r5, r0
+ 3436 0026 1120     		movs	r0, #17
+ 3437 0028 002D     		cmp	r5, #0
+ 3438 002a F5D0     		beq	.L819
+ 3439 002c 03AB     		add	r3, sp, #12
+ 3440 002e E561     		str	r5, [r4, #28]
+ 3441 0030 A361     		str	r3, [r4, #24]
+ 3442 0032 2046     		mov	r0, r4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 62
+
+
+ 3443 0034 0199     		ldr	r1, [sp, #4]
+ 3444 0036 FFF7FEFF 		bl	follow_path
+ 3445 003a 0646     		mov	r6, r0
+ 3446 003c 2846     		mov	r0, r5
+ 3447 003e FFF7FEFF 		bl	ff_memfree
+ 3448 0042 BEB9     		cbnz	r6, .L809
+ 3449 0044 6369     		ldr	r3, [r4, #20]
+ 3450 0046 6BB1     		cbz	r3, .L810
+ 3451 0048 DA7A     		ldrb	r2, [r3, #11]	@ zero_extendqisi2
+ 3452 004a D206     		lsls	r2, r2, #27
+ 3453 004c 17D5     		bpl	.L814
+ 3454 004e 5D7D     		ldrb	r5, [r3, #21]	@ zero_extendqisi2
+ 3455 0050 1A7D     		ldrb	r2, [r3, #20]	@ zero_extendqisi2
+ 3456 0052 D87E     		ldrb	r0, [r3, #27]	@ zero_extendqisi2
+ 3457 0054 997E     		ldrb	r1, [r3, #26]	@ zero_extendqisi2
+ 3458 0056 42EA0522 		orr	r2, r2, r5, lsl #8
+ 3459 005a 41EA0023 		orr	r3, r1, r0, lsl #8
+ 3460 005e 43EA0243 		orr	r3, r3, r2, lsl #16
+ 3461 0062 A360     		str	r3, [r4, #8]
+ 3462              	.L810:
+ 3463 0064 2368     		ldr	r3, [r4]
+ 3464 0066 DB88     		ldrh	r3, [r3, #6]
+ 3465 0068 2046     		mov	r0, r4
+ 3466 006a A380     		strh	r3, [r4, #4]	@ movhi
+ 3467 006c 0021     		movs	r1, #0
+ 3468 006e FFF7FEFF 		bl	dir_sdi
+ 3469 0072 0646     		mov	r6, r0
+ 3470              	.L809:
+ 3471 0074 042E     		cmp	r6, #4
+ 3472 0076 04D0     		beq	.L821
+ 3473              	.L811:
+ 3474 0078 3046     		mov	r0, r6
+ 3475 007a 06B0     		add	sp, sp, #24
+ 3476              		@ sp needed
+ 3477 007c 70BD     		pop	{r4, r5, r6, pc}
+ 3478              	.L814:
+ 3479 007e 0526     		movs	r6, #5
+ 3480 0080 FAE7     		b	.L811
+ 3481              	.L821:
+ 3482 0082 0520     		movs	r0, #5
+ 3483 0084 C8E7     		b	.L819
+ 3484              		.size	f_opendir, .-f_opendir
+ 3485 0086 00BFAFF3 		.section	.text.f_readdir,"ax",%progbits
+ 3485      0080AFF3 
+ 3485      0080
+ 3486              		.align	2
+ 3487              		.p2align 4,,15
+ 3488              		.global	f_readdir
+ 3489              		.thumb
+ 3490              		.thumb_func
+ 3491              		.type	f_readdir, %function
+ 3492              	f_readdir:
+ 3493              		@ args = 0, pretend = 0, frame = 16
+ 3494              		@ frame_needed = 0, uses_anonymous_args = 0
+ 3495 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 3496 0004 0446     		mov	r4, r0
+ 3497 0006 84B0     		sub	sp, sp, #16
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 63
+
+
+ 3498 0008 0E46     		mov	r6, r1
+ 3499 000a 0068     		ldr	r0, [r0]
+ 3500 000c A188     		ldrh	r1, [r4, #4]
+ 3501 000e FFF7FEFF 		bl	validate
+ 3502 0012 0546     		mov	r5, r0
+ 3503 0014 BDB9     		cbnz	r5, .L823
+ 3504 0016 CEB1     		cbz	r6, .L830
+ 3505 0018 4FF40070 		mov	r0, #512
+ 3506 001c FFF7FEFF 		bl	ff_memalloc
+ 3507 0020 0746     		mov	r7, r0
+ 3508 0022 1120     		movs	r0, #17
+ 3509 0024 7FB1     		cbz	r7, .L823
+ 3510 0026 01AB     		add	r3, sp, #4
+ 3511 0028 E761     		str	r7, [r4, #28]
+ 3512 002a A361     		str	r3, [r4, #24]
+ 3513 002c 2046     		mov	r0, r4
+ 3514 002e FFF7FEFF 		bl	dir_read
+ 3515 0032 0428     		cmp	r0, #4
+ 3516 0034 8046     		mov	r8, r0
+ 3517 0036 08BF     		it	eq
+ 3518 0038 2561     		streq	r5, [r4, #16]
+ 3519 003a 0CD0     		beq	.L826
+ 3520 003c 58B1     		cbz	r0, .L826
+ 3521              	.L827:
+ 3522 003e 3846     		mov	r0, r7
+ 3523 0040 FFF7FEFF 		bl	ff_memfree
+ 3524 0044 4046     		mov	r0, r8
+ 3525              	.L823:
+ 3526 0046 04B0     		add	sp, sp, #16
+ 3527              		@ sp needed
+ 3528 0048 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 3529              	.L830:
+ 3530 004c 2046     		mov	r0, r4
+ 3531 004e 3146     		mov	r1, r6
+ 3532 0050 FFF7FEFF 		bl	dir_sdi
+ 3533 0054 F7E7     		b	.L823
+ 3534              	.L826:
+ 3535 0056 3146     		mov	r1, r6
+ 3536 0058 2046     		mov	r0, r4
+ 3537 005a FFF7FEFF 		bl	get_fileinfo
+ 3538 005e 2046     		mov	r0, r4
+ 3539 0060 0021     		movs	r1, #0
+ 3540 0062 FFF7FEFF 		bl	dir_next
+ 3541 0066 0428     		cmp	r0, #4
+ 3542 0068 8046     		mov	r8, r0
+ 3543 006a 02BF     		ittt	eq
+ 3544 006c 0020     		moveq	r0, #0
+ 3545 006e 2061     		streq	r0, [r4, #16]
+ 3546 0070 8046     		moveq	r8, r0
+ 3547 0072 E4E7     		b	.L827
+ 3548              		.size	f_readdir, .-f_readdir
+ 3549 0074 AFF30080 		.section	.text.f_stat,"ax",%progbits
+ 3549      AFF30080 
+ 3549      AFF30080 
+ 3550              		.align	2
+ 3551              		.p2align 4,,15
+ 3552              		.global	f_stat
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 64
+
+
+ 3553              		.thumb
+ 3554              		.thumb_func
+ 3555              		.type	f_stat, %function
+ 3556              	f_stat:
+ 3557              		@ args = 0, pretend = 0, frame = 56
+ 3558              		@ frame_needed = 0, uses_anonymous_args = 0
+ 3559 0000 70B5     		push	{r4, r5, r6, lr}
+ 3560 0002 8EB0     		sub	sp, sp, #56
+ 3561 0004 0EAB     		add	r3, sp, #56
+ 3562 0006 0C46     		mov	r4, r1
+ 3563 0008 43F8340D 		str	r0, [r3, #-52]!
+ 3564 000c 05A9     		add	r1, sp, #20
+ 3565 000e 1846     		mov	r0, r3
+ 3566 0010 0022     		movs	r2, #0
+ 3567 0012 FFF7FEFF 		bl	chk_mounted
+ 3568 0016 08B1     		cbz	r0, .L837
+ 3569              	.L832:
+ 3570 0018 0EB0     		add	sp, sp, #56
+ 3571              		@ sp needed
+ 3572 001a 70BD     		pop	{r4, r5, r6, pc}
+ 3573              	.L837:
+ 3574 001c 4FF40070 		mov	r0, #512
+ 3575 0020 FFF7FEFF 		bl	ff_memalloc
+ 3576 0024 0546     		mov	r5, r0
+ 3577 0026 1120     		movs	r0, #17
+ 3578 0028 002D     		cmp	r5, #0
+ 3579 002a F5D0     		beq	.L832
+ 3580 002c 02AB     		add	r3, sp, #8
+ 3581 002e 05A8     		add	r0, sp, #20
+ 3582 0030 0199     		ldr	r1, [sp, #4]
+ 3583 0032 0C95     		str	r5, [sp, #48]
+ 3584 0034 0B93     		str	r3, [sp, #44]
+ 3585 0036 FFF7FEFF 		bl	follow_path
+ 3586 003a 0646     		mov	r6, r0
+ 3587 003c 28B9     		cbnz	r0, .L833
+ 3588 003e 0A9B     		ldr	r3, [sp, #40]
+ 3589 0040 4BB1     		cbz	r3, .L836
+ 3590 0042 05A8     		add	r0, sp, #20
+ 3591 0044 2146     		mov	r1, r4
+ 3592 0046 FFF7FEFF 		bl	get_fileinfo
+ 3593              	.L833:
+ 3594 004a 2846     		mov	r0, r5
+ 3595 004c FFF7FEFF 		bl	ff_memfree
+ 3596 0050 3046     		mov	r0, r6
+ 3597 0052 0EB0     		add	sp, sp, #56
+ 3598              		@ sp needed
+ 3599 0054 70BD     		pop	{r4, r5, r6, pc}
+ 3600              	.L836:
+ 3601 0056 0626     		movs	r6, #6
+ 3602 0058 F7E7     		b	.L833
+ 3603              		.size	f_stat, .-f_stat
+ 3604 005a 00BFAFF3 		.section	.text.f_getfree,"ax",%progbits
+ 3604      0080
+ 3605              		.align	2
+ 3606              		.p2align 4,,15
+ 3607              		.global	f_getfree
+ 3608              		.thumb
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 65
+
+
+ 3609              		.thumb_func
+ 3610              		.type	f_getfree, %function
+ 3611              	f_getfree:
+ 3612              		@ args = 0, pretend = 0, frame = 8
+ 3613              		@ frame_needed = 0, uses_anonymous_args = 0
+ 3614 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 3615 0004 83B0     		sub	sp, sp, #12
+ 3616 0006 02AB     		add	r3, sp, #8
+ 3617 0008 0091     		str	r1, [sp]
+ 3618 000a 43F8040D 		str	r0, [r3, #-4]!
+ 3619 000e 1146     		mov	r1, r2
+ 3620 0010 9146     		mov	r9, r2
+ 3621 0012 1846     		mov	r0, r3
+ 3622 0014 0022     		movs	r2, #0
+ 3623 0016 FFF7FEFF 		bl	chk_mounted
+ 3624 001a 8346     		mov	fp, r0
+ 3625 001c 0028     		cmp	r0, #0
+ 3626 001e 34D1     		bne	.L862
+ 3627 0020 D9F80060 		ldr	r6, [r9]
+ 3628 0024 B569     		ldr	r5, [r6, #24]
+ 3629 0026 3369     		ldr	r3, [r6, #16]
+ 3630 0028 AA1E     		subs	r2, r5, #2
+ 3631 002a 9342     		cmp	r3, r2
+ 3632 002c 31D9     		bls	.L866
+ 3633 002e 96F800A0 		ldrb	r10, [r6]	@ zero_extendqisi2
+ 3634 0032 BAF1010F 		cmp	r10, #1
+ 3635 0036 4AD0     		beq	.L867
+ 3636 0038 326A     		ldr	r2, [r6, #32]
+ 3637 003a 0346     		mov	r3, r0
+ 3638 003c 0446     		mov	r4, r0
+ 3639 003e 0746     		mov	r7, r0
+ 3640 0040 9046     		mov	r8, r2
+ 3641 0042 3046     		mov	r0, r6
+ 3642              	.L859:
+ 3643 0044 5CB3     		cbz	r4, .L868
+ 3644 0046 BAF1020F 		cmp	r10, #2
+ 3645 004a 37D0     		beq	.L869
+ 3646              	.L855:
+ 3647 004c 93F802C0 		ldrb	ip, [r3, #2]	@ zero_extendqisi2
+ 3648 0050 DE78     		ldrb	r6, [r3, #3]	@ zero_extendqisi2
+ 3649 0052 1978     		ldrb	r1, [r3]	@ zero_extendqisi2
+ 3650 0054 5A78     		ldrb	r2, [r3, #1]	@ zero_extendqisi2
+ 3651 0056 4FEA0C4C 		lsl	ip, ip, #16
+ 3652 005a 4CEA066C 		orr	ip, ip, r6, lsl #24
+ 3653 005e 4CEA010C 		orr	ip, ip, r1
+ 3654 0062 4CEA0222 		orr	r2, ip, r2, lsl #8
+ 3655 0066 22F07042 		bic	r2, r2, #-268435456
+ 3656 006a 02B9     		cbnz	r2, .L858
+ 3657 006c 0137     		adds	r7, r7, #1
+ 3658              	.L858:
+ 3659 006e 0433     		adds	r3, r3, #4
+ 3660 0070 043C     		subs	r4, r4, #4
+ 3661              	.L857:
+ 3662 0072 013D     		subs	r5, r5, #1
+ 3663 0074 E6D1     		bne	.L859
+ 3664 0076 0646     		mov	r6, r0
+ 3665              	.L854:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 66
+
+
+ 3666 0078 BAF1030F 		cmp	r10, #3
+ 3667 007c 08BF     		it	eq
+ 3668 007e 0123     		moveq	r3, #1
+ 3669 0080 3761     		str	r7, [r6, #16]
+ 3670 0082 08BF     		it	eq
+ 3671 0084 7371     		strbeq	r3, [r6, #5]
+ 3672              	.L860:
+ 3673 0086 009B     		ldr	r3, [sp]
+ 3674 0088 1F60     		str	r7, [r3]
+ 3675              	.L862:
+ 3676 008a 5846     		mov	r0, fp
+ 3677 008c 03B0     		add	sp, sp, #12
+ 3678              		@ sp needed
+ 3679 008e BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 3680              	.L866:
+ 3681 0092 009A     		ldr	r2, [sp]
+ 3682 0094 5846     		mov	r0, fp
+ 3683 0096 1360     		str	r3, [r2]
+ 3684 0098 03B0     		add	sp, sp, #12
+ 3685              		@ sp needed
+ 3686 009a BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 3687              	.L868:
+ 3688 009e 4146     		mov	r1, r8
+ 3689 00a0 08F10108 		add	r8, r8, #1
+ 3690 00a4 FFF7FEFF 		bl	move_window
+ 3691 00a8 C0B9     		cbnz	r0, .L870
+ 3692 00aa D9F80000 		ldr	r0, [r9]
+ 3693 00ae BAF1020F 		cmp	r10, #2
+ 3694 00b2 00F13003 		add	r3, r0, #48
+ 3695 00b6 4FF40074 		mov	r4, #512
+ 3696 00ba C7D1     		bne	.L855
+ 3697              	.L869:
+ 3698 00bc 5978     		ldrb	r1, [r3, #1]	@ zero_extendqisi2
+ 3699 00be 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 3700 00c0 52EA0122 		orrs	r2, r2, r1, lsl #8
+ 3701 00c4 08BF     		it	eq
+ 3702 00c6 0137     		addeq	r7, r7, #1
+ 3703 00c8 0233     		adds	r3, r3, #2
+ 3704 00ca 023C     		subs	r4, r4, #2
+ 3705 00cc D1E7     		b	.L857
+ 3706              	.L867:
+ 3707 00ce 022D     		cmp	r5, #2
+ 3708 00d0 0746     		mov	r7, r0
+ 3709 00d2 07D8     		bhi	.L871
+ 3710              	.L843:
+ 3711 00d4 4FF0020B 		mov	fp, #2
+ 3712              	.L848:
+ 3713 00d8 3761     		str	r7, [r6, #16]
+ 3714 00da D4E7     		b	.L860
+ 3715              	.L870:
+ 3716 00dc D9F80060 		ldr	r6, [r9]
+ 3717 00e0 8346     		mov	fp, r0
+ 3718 00e2 C9E7     		b	.L854
+ 3719              	.L871:
+ 3720 00e4 0224     		movs	r4, #2
+ 3721 00e6 3046     		mov	r0, r6
+ 3722              	.L846:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 67
+
+
+ 3723 00e8 2146     		mov	r1, r4
+ 3724 00ea FFF7FEFF 		bl	get_fat.part.3
+ 3725 00ee 411C     		adds	r1, r0, #1
+ 3726 00f0 04F10104 		add	r4, r4, #1
+ 3727 00f4 0CD0     		beq	.L872
+ 3728 00f6 0128     		cmp	r0, #1
+ 3729 00f8 11D0     		beq	.L873
+ 3730 00fa 00B9     		cbnz	r0, .L850
+ 3731 00fc 0137     		adds	r7, r7, #1
+ 3732              	.L850:
+ 3733 00fe D9F80000 		ldr	r0, [r9]
+ 3734 0102 8369     		ldr	r3, [r0, #24]
+ 3735 0104 9C42     		cmp	r4, r3
+ 3736 0106 08D2     		bcs	.L874
+ 3737 0108 012C     		cmp	r4, #1
+ 3738 010a EDD8     		bhi	.L846
+ 3739 010c 0646     		mov	r6, r0
+ 3740 010e E1E7     		b	.L843
+ 3741              	.L872:
+ 3742 0110 D9F80060 		ldr	r6, [r9]
+ 3743 0114 4FF0010B 		mov	fp, #1
+ 3744 0118 DEE7     		b	.L848
+ 3745              	.L874:
+ 3746 011a 0646     		mov	r6, r0
+ 3747 011c DCE7     		b	.L848
+ 3748              	.L873:
+ 3749 011e D9F80060 		ldr	r6, [r9]
+ 3750 0122 4FF0020B 		mov	fp, #2
+ 3751 0126 D7E7     		b	.L848
+ 3752              		.size	f_getfree, .-f_getfree
+ 3753 0128 AFF30080 		.section	.text.f_truncate,"ax",%progbits
+ 3753      AFF30080 
+ 3754              		.align	2
+ 3755              		.p2align 4,,15
+ 3756              		.global	f_truncate
+ 3757              		.thumb
+ 3758              		.thumb_func
+ 3759              		.type	f_truncate, %function
+ 3760              	f_truncate:
+ 3761              		@ args = 0, pretend = 0, frame = 0
+ 3762              		@ frame_needed = 0, uses_anonymous_args = 0
+ 3763 0000 70B5     		push	{r4, r5, r6, lr}
+ 3764 0002 0446     		mov	r4, r0
+ 3765 0004 0068     		ldr	r0, [r0]
+ 3766 0006 A188     		ldrh	r1, [r4, #4]
+ 3767 0008 FFF7FEFF 		bl	validate
+ 3768 000c 0546     		mov	r5, r0
+ 3769 000e 00BB     		cbnz	r0, .L902
+ 3770 0010 A379     		ldrb	r3, [r4, #6]	@ zero_extendqisi2
+ 3771 0012 1A06     		lsls	r2, r3, #24
+ 3772 0014 48BF     		it	mi
+ 3773 0016 0225     		movmi	r5, #2
+ 3774 0018 1BD4     		bmi	.L902
+ 3775 001a 9E07     		lsls	r6, r3, #30
+ 3776 001c 58BF     		it	pl
+ 3777 001e 0725     		movpl	r5, #7
+ 3778 0020 17D5     		bpl	.L902
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 68
+
+
+ 3779 0022 A268     		ldr	r2, [r4, #8]
+ 3780 0024 E168     		ldr	r1, [r4, #12]
+ 3781 0026 9142     		cmp	r1, r2
+ 3782 0028 13D9     		bls	.L902
+ 3783 002a 43F02003 		orr	r3, r3, #32
+ 3784 002e A371     		strb	r3, [r4, #6]
+ 3785 0030 E260     		str	r2, [r4, #12]
+ 3786 0032 82B9     		cbnz	r2, .L878
+ 3787 0034 2169     		ldr	r1, [r4, #16]
+ 3788 0036 2068     		ldr	r0, [r4]
+ 3789 0038 0129     		cmp	r1, #1
+ 3790 003a 02D9     		bls	.L898
+ 3791 003c 8369     		ldr	r3, [r0, #24]
+ 3792 003e 9942     		cmp	r1, r3
+ 3793 0040 12D3     		bcc	.L907
+ 3794              	.L898:
+ 3795 0042 0225     		movs	r5, #2
+ 3796              	.L879:
+ 3797 0044 0023     		movs	r3, #0
+ 3798 0046 2361     		str	r3, [r4, #16]
+ 3799              	.L880:
+ 3800 0048 1DB1     		cbz	r5, .L902
+ 3801              	.L906:
+ 3802 004a A379     		ldrb	r3, [r4, #6]	@ zero_extendqisi2
+ 3803              	.L893:
+ 3804 004c 63F07F03 		orn	r3, r3, #127
+ 3805 0050 A371     		strb	r3, [r4, #6]
+ 3806              	.L902:
+ 3807 0052 2846     		mov	r0, r5
+ 3808 0054 70BD     		pop	{r4, r5, r6, pc}
+ 3809              	.L878:
+ 3810 0056 6169     		ldr	r1, [r4, #20]
+ 3811 0058 2068     		ldr	r0, [r4]
+ 3812 005a 0129     		cmp	r1, #1
+ 3813 005c 02D9     		bls	.L881
+ 3814 005e 8269     		ldr	r2, [r0, #24]
+ 3815 0060 9142     		cmp	r1, r2
+ 3816 0062 05D3     		bcc	.L908
+ 3817              	.L881:
+ 3818 0064 0225     		movs	r5, #2
+ 3819 0066 F1E7     		b	.L893
+ 3820              	.L907:
+ 3821 0068 FFF7FEFF 		bl	remove_chain.part.6
+ 3822 006c 0546     		mov	r5, r0
+ 3823 006e E9E7     		b	.L879
+ 3824              	.L908:
+ 3825 0070 FFF7FEFF 		bl	get_fat.part.3
+ 3826 0074 0646     		mov	r6, r0
+ 3827 0076 0130     		adds	r0, r0, #1
+ 3828 0078 02D1     		bne	.L882
+ 3829 007a A379     		ldrb	r3, [r4, #6]	@ zero_extendqisi2
+ 3830 007c 0125     		movs	r5, #1
+ 3831 007e E5E7     		b	.L893
+ 3832              	.L882:
+ 3833 0080 012E     		cmp	r6, #1
+ 3834 0082 1DD0     		beq	.L909
+ 3835 0084 2068     		ldr	r0, [r4]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 69
+
+
+ 3836 0086 8369     		ldr	r3, [r0, #24]
+ 3837 0088 B342     		cmp	r3, r6
+ 3838 008a E2D9     		bls	.L902
+ 3839 008c 6169     		ldr	r1, [r4, #20]
+ 3840 008e 0129     		cmp	r1, #1
+ 3841 0090 01D9     		bls	.L889
+ 3842 0092 8B42     		cmp	r3, r1
+ 3843 0094 02D8     		bhi	.L910
+ 3844              	.L889:
+ 3845 0096 A379     		ldrb	r3, [r4, #6]	@ zero_extendqisi2
+ 3846 0098 0225     		movs	r5, #2
+ 3847 009a D7E7     		b	.L893
+ 3848              	.L910:
+ 3849 009c 6FF07042 		mvn	r2, #-268435456
+ 3850 00a0 FFF7FEFF 		bl	put_fat.part.4
+ 3851 00a4 0546     		mov	r5, r0
+ 3852 00a6 0028     		cmp	r0, #0
+ 3853 00a8 CFD1     		bne	.L906
+ 3854 00aa 012E     		cmp	r6, #1
+ 3855 00ac 2068     		ldr	r0, [r4]
+ 3856 00ae F2D9     		bls	.L889
+ 3857 00b0 8369     		ldr	r3, [r0, #24]
+ 3858 00b2 9E42     		cmp	r6, r3
+ 3859 00b4 EFD2     		bcs	.L889
+ 3860 00b6 3146     		mov	r1, r6
+ 3861 00b8 FFF7FEFF 		bl	remove_chain.part.6
+ 3862 00bc 0546     		mov	r5, r0
+ 3863 00be C3E7     		b	.L880
+ 3864              	.L909:
+ 3865 00c0 A379     		ldrb	r3, [r4, #6]	@ zero_extendqisi2
+ 3866 00c2 CFE7     		b	.L881
+ 3867              		.size	f_truncate, .-f_truncate
+ 3868 00c4 AFF30080 		.section	.text.f_unlink,"ax",%progbits
+ 3868      AFF30080 
+ 3868      AFF30080 
+ 3869              		.align	2
+ 3870              		.p2align 4,,15
+ 3871              		.global	f_unlink
+ 3872              		.thumb
+ 3873              		.thumb_func
+ 3874              		.type	f_unlink, %function
+ 3875              	f_unlink:
+ 3876              		@ args = 0, pretend = 0, frame = 96
+ 3877              		@ frame_needed = 0, uses_anonymous_args = 0
+ 3878 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 3879 0002 99B0     		sub	sp, sp, #100
+ 3880 0004 18AB     		add	r3, sp, #96
+ 3881 0006 06A9     		add	r1, sp, #24
+ 3882 0008 43F85C0D 		str	r0, [r3, #-92]!
+ 3883 000c 0122     		movs	r2, #1
+ 3884 000e 1846     		mov	r0, r3
+ 3885 0010 FFF7FEFF 		bl	chk_mounted
+ 3886 0014 08B1     		cbz	r0, .L941
+ 3887              	.L940:
+ 3888 0016 19B0     		add	sp, sp, #100
+ 3889              		@ sp needed
+ 3890 0018 F0BD     		pop	{r4, r5, r6, r7, pc}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 70
+
+
+ 3891              	.L941:
+ 3892 001a 4FF40070 		mov	r0, #512
+ 3893 001e FFF7FEFF 		bl	ff_memalloc
+ 3894 0022 0546     		mov	r5, r0
+ 3895 0024 1120     		movs	r0, #17
+ 3896 0026 002D     		cmp	r5, #0
+ 3897 0028 F5D0     		beq	.L940
+ 3898 002a 03AB     		add	r3, sp, #12
+ 3899 002c 06A8     		add	r0, sp, #24
+ 3900 002e 0199     		ldr	r1, [sp, #4]
+ 3901 0030 0D95     		str	r5, [sp, #52]
+ 3902 0032 0C93     		str	r3, [sp, #48]
+ 3903 0034 FFF7FEFF 		bl	follow_path
+ 3904 0038 0646     		mov	r6, r0
+ 3905 003a 0028     		cmp	r0, #0
+ 3906 003c 35D1     		bne	.L913
+ 3907 003e 0B9B     		ldr	r3, [sp, #44]
+ 3908 0040 0626     		movs	r6, #6
+ 3909 0042 002B     		cmp	r3, #0
+ 3910 0044 31D0     		beq	.L913
+ 3911 0046 DA7A     		ldrb	r2, [r3, #11]	@ zero_extendqisi2
+ 3912 0048 D007     		lsls	r0, r2, #31
+ 3913 004a 34D4     		bmi	.L927
+ 3914 004c D97E     		ldrb	r1, [r3, #27]	@ zero_extendqisi2
+ 3915 004e 5F7D     		ldrb	r7, [r3, #21]	@ zero_extendqisi2
+ 3916 0050 187D     		ldrb	r0, [r3, #20]	@ zero_extendqisi2
+ 3917 0052 9B7E     		ldrb	r3, [r3, #26]	@ zero_extendqisi2
+ 3918 0054 40EA0727 		orr	r7, r0, r7, lsl #8
+ 3919 0058 43EA0123 		orr	r3, r3, r1, lsl #8
+ 3920 005c D106     		lsls	r1, r2, #27
+ 3921 005e 43EA0747 		orr	r7, r3, r7, lsl #16
+ 3922 0062 18D5     		bpl	.L919
+ 3923 0064 012F     		cmp	r7, #1
+ 3924 0066 28D9     		bls	.L931
+ 3925 0068 0FA8     		add	r0, sp, #60
+ 3926 006a 0346     		mov	r3, r0
+ 3927 006c 06AC     		add	r4, sp, #24
+ 3928              	.L918:
+ 3929 006e 14F8012B 		ldrb	r2, [r4], #1	@ zero_extendqisi2
+ 3930 0072 8442     		cmp	r4, r0
+ 3931 0074 03F8012B 		strb	r2, [r3], #1
+ 3932 0078 F9D1     		bne	.L918
+ 3933 007a 2046     		mov	r0, r4
+ 3934 007c 0221     		movs	r1, #2
+ 3935 007e 1197     		str	r7, [sp, #68]
+ 3936 0080 FFF7FEFF 		bl	dir_sdi
+ 3937 0084 0646     		mov	r6, r0
+ 3938 0086 80B9     		cbnz	r0, .L913
+ 3939 0088 2046     		mov	r0, r4
+ 3940 008a FFF7FEFF 		bl	dir_read
+ 3941 008e 0646     		mov	r6, r0
+ 3942 0090 88B1     		cbz	r0, .L927
+ 3943 0092 0428     		cmp	r0, #4
+ 3944 0094 09D1     		bne	.L913
+ 3945              	.L919:
+ 3946 0096 06A8     		add	r0, sp, #24
+ 3947 0098 FFF7FEFF 		bl	dir_remove
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 71
+
+
+ 3948 009c 0646     		mov	r6, r0
+ 3949 009e 20B9     		cbnz	r0, .L913
+ 3950 00a0 6FB9     		cbnz	r7, .L920
+ 3951              	.L921:
+ 3952 00a2 0698     		ldr	r0, [sp, #24]
+ 3953 00a4 FFF7FEFF 		bl	sync
+ 3954 00a8 0646     		mov	r6, r0
+ 3955              	.L913:
+ 3956 00aa 2846     		mov	r0, r5
+ 3957 00ac FFF7FEFF 		bl	ff_memfree
+ 3958 00b0 3046     		mov	r0, r6
+ 3959 00b2 19B0     		add	sp, sp, #100
+ 3960              		@ sp needed
+ 3961 00b4 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 3962              	.L927:
+ 3963 00b6 0726     		movs	r6, #7
+ 3964 00b8 F7E7     		b	.L913
+ 3965              	.L931:
+ 3966 00ba 0226     		movs	r6, #2
+ 3967 00bc F5E7     		b	.L913
+ 3968              	.L920:
+ 3969 00be 012F     		cmp	r7, #1
+ 3970 00c0 0698     		ldr	r0, [sp, #24]
+ 3971 00c2 FAD0     		beq	.L931
+ 3972 00c4 8369     		ldr	r3, [r0, #24]
+ 3973 00c6 9F42     		cmp	r7, r3
+ 3974 00c8 F7D2     		bcs	.L931
+ 3975 00ca 3946     		mov	r1, r7
+ 3976 00cc FFF7FEFF 		bl	remove_chain.part.6
+ 3977 00d0 0646     		mov	r6, r0
+ 3978 00d2 0028     		cmp	r0, #0
+ 3979 00d4 E9D1     		bne	.L913
+ 3980 00d6 E4E7     		b	.L921
+ 3981              		.size	f_unlink, .-f_unlink
+ 3982 00d8 AFF30080 		.section	.text.f_mkdir,"ax",%progbits
+ 3982      AFF30080 
+ 3983              		.align	2
+ 3984              		.p2align 4,,15
+ 3985              		.global	f_mkdir
+ 3986              		.thumb
+ 3987              		.thumb_func
+ 3988              		.type	f_mkdir, %function
+ 3989              	f_mkdir:
+ 3990              		@ args = 0, pretend = 0, frame = 88
+ 3991              		@ frame_needed = 0, uses_anonymous_args = 0
+ 3992 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 3993 0004 97B0     		sub	sp, sp, #92
+ 3994 0006 16AC     		add	r4, sp, #88
+ 3995 0008 44F8340D 		str	r0, [r4, #-52]!
+ 3996 000c FFF7FEFF 		bl	get_fattime
+ 3997 0010 0DA9     		add	r1, sp, #52
+ 3998 0012 0546     		mov	r5, r0
+ 3999 0014 0122     		movs	r2, #1
+ 4000 0016 2046     		mov	r0, r4
+ 4001 0018 FFF7FEFF 		bl	chk_mounted
+ 4002 001c 0446     		mov	r4, r0
+ 4003 001e 14B1     		cbz	r4, .L985
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 72
+
+
+ 4004              	.L980:
+ 4005 0020 17B0     		add	sp, sp, #92
+ 4006              		@ sp needed
+ 4007 0022 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 4008              	.L985:
+ 4009 0026 4FF40070 		mov	r0, #512
+ 4010 002a FFF7FEFF 		bl	ff_memalloc
+ 4011 002e 0746     		mov	r7, r0
+ 4012 0030 1120     		movs	r0, #17
+ 4013 0032 002F     		cmp	r7, #0
+ 4014 0034 F4D0     		beq	.L980
+ 4015 0036 0AAB     		add	r3, sp, #40
+ 4016 0038 0DA8     		add	r0, sp, #52
+ 4017 003a 0999     		ldr	r1, [sp, #36]
+ 4018 003c 1497     		str	r7, [sp, #80]
+ 4019 003e 1393     		str	r3, [sp, #76]
+ 4020 0040 FFF7FEFF 		bl	follow_path
+ 4021 0044 8246     		mov	r10, r0
+ 4022 0046 40B1     		cbz	r0, .L966
+ 4023 0048 0428     		cmp	r0, #4
+ 4024 004a 09D0     		beq	.L986
+ 4025              	.L944:
+ 4026 004c 3846     		mov	r0, r7
+ 4027 004e FFF7FEFF 		bl	ff_memfree
+ 4028 0052 5046     		mov	r0, r10
+ 4029 0054 17B0     		add	sp, sp, #92
+ 4030              		@ sp needed
+ 4031 0056 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 4032              	.L966:
+ 4033 005a 4FF0080A 		mov	r10, #8
+ 4034 005e F5E7     		b	.L944
+ 4035              	.L986:
+ 4036 0060 0D98     		ldr	r0, [sp, #52]
+ 4037 0062 2146     		mov	r1, r4
+ 4038 0064 FFF7FEFF 		bl	create_chain
+ 4039 0068 0090     		str	r0, [sp]
+ 4040 006a 78B1     		cbz	r0, .L967
+ 4041 006c 0128     		cmp	r0, #1
+ 4042 006e 08BF     		it	eq
+ 4043 0070 4FF0020A 		moveq	r10, #2
+ 4044 0074 0DD1     		bne	.L987
+ 4045              	.L961:
+ 4046 0076 009A     		ldr	r2, [sp]
+ 4047 0078 0D98     		ldr	r0, [sp, #52]
+ 4048 007a 012A     		cmp	r2, #1
+ 4049 007c E6D9     		bls	.L944
+ 4050 007e 8169     		ldr	r1, [r0, #24]
+ 4051 0080 8A42     		cmp	r2, r1
+ 4052 0082 E3D2     		bcs	.L944
+ 4053 0084 1146     		mov	r1, r2
+ 4054 0086 FFF7FEFF 		bl	remove_chain.part.6
+ 4055 008a DFE7     		b	.L944
+ 4056              	.L967:
+ 4057 008c 4FF0070A 		mov	r10, #7
+ 4058 0090 F1E7     		b	.L961
+ 4059              	.L987:
+ 4060 0092 0130     		adds	r0, r0, #1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 73
+
+
+ 4061 0094 08BF     		it	eq
+ 4062 0096 4FF0010A 		moveq	r10, #1
+ 4063 009a ECD0     		beq	.L961
+ 4064 009c 2146     		mov	r1, r4
+ 4065 009e 0D98     		ldr	r0, [sp, #52]
+ 4066 00a0 FFF7FEFF 		bl	move_window
+ 4067 00a4 8246     		mov	r10, r0
+ 4068 00a6 0028     		cmp	r0, #0
+ 4069 00a8 E5D1     		bne	.L961
+ 4070 00aa 0D9A     		ldr	r2, [sp, #52]
+ 4071 00ac 009B     		ldr	r3, [sp]
+ 4072 00ae 9069     		ldr	r0, [r2, #24]
+ 4073 00b0 991E     		subs	r1, r3, #2
+ 4074 00b2 0238     		subs	r0, r0, #2
+ 4075 00b4 8142     		cmp	r1, r0
+ 4076 00b6 3CBF     		itt	cc
+ 4077 00b8 9078     		ldrbcc	r0, [r2, #2]	@ zero_extendqisi2
+ 4078 00ba 936A     		ldrcc	r3, [r2, #40]
+ 4079 00bc 02F13006 		add	r6, r2, #48
+ 4080 00c0 34BF     		ite	cc
+ 4081 00c2 00FB0133 		mlacc	r3, r0, r1, r3
+ 4082 00c6 5346     		movcs	r3, r10
+ 4083 00c8 3146     		mov	r1, r6
+ 4084 00ca 02F50C74 		add	r4, r2, #560
+ 4085 00ce 0020     		movs	r0, #0
+ 4086              	.L949:
+ 4087 00d0 01F8010B 		strb	r0, [r1], #1
+ 4088 00d4 A142     		cmp	r1, r4
+ 4089 00d6 FBD1     		bne	.L949
+ 4090 00d8 02F13B0C 		add	ip, r2, #59
+ 4091 00dc 3146     		mov	r1, r6
+ 4092 00de 2020     		movs	r0, #32
+ 4093              	.L951:
+ 4094 00e0 01F8010B 		strb	r0, [r1], #1
+ 4095 00e4 6145     		cmp	r1, ip
+ 4096 00e6 FBD1     		bne	.L951
+ 4097 00e8 0098     		ldr	r0, [sp]
+ 4098 00ea 010C     		lsrs	r1, r0, #16
+ 4099 00ec 5FFA81FE 		uxtb	lr, r1
+ 4100 00f0 CDF81CE0 		str	lr, [sp, #28]
+ 4101 00f4 5FFA85FE 		uxtb	lr, r5
+ 4102 00f8 CDF804E0 		str	lr, [sp, #4]
+ 4103 00fc C5F3072E 		ubfx	lr, r5, #8, #8
+ 4104 0100 CDF808E0 		str	lr, [sp, #8]
+ 4105 0104 C5F3074E 		ubfx	lr, r5, #16, #8
+ 4106 0108 2D0E     		lsrs	r5, r5, #24
+ 4107 010a 0495     		str	r5, [sp, #16]
+ 4108 010c 009D     		ldr	r5, [sp]
+ 4109 010e CDF80CE0 		str	lr, [sp, #12]
+ 4110 0112 EDB2     		uxtb	r5, r5
+ 4111 0114 0595     		str	r5, [sp, #20]
+ 4112 0116 009D     		ldr	r5, [sp]
+ 4113 0118 DDF804E0 		ldr	lr, [sp, #4]
+ 4114 011c C5F30725 		ubfx	r5, r5, #8, #8
+ 4115 0120 090A     		lsrs	r1, r1, #8
+ 4116 0122 0695     		str	r5, [sp, #24]
+ 4117 0124 079D     		ldr	r5, [sp, #28]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 74
+
+
+ 4118 0126 0891     		str	r1, [sp, #32]
+ 4119 0128 82F84450 		strb	r5, [r2, #68]
+ 4120 012c 089D     		ldr	r5, [sp, #32]
+ 4121 012e 82F846E0 		strb	lr, [r2, #70]
+ 4122 0132 2E20     		movs	r0, #46
+ 4123 0134 1021     		movs	r1, #16
+ 4124 0136 82F84550 		strb	r5, [r2, #69]
+ 4125 013a 82F83000 		strb	r0, [r2, #48]
+ 4126 013e 0546     		mov	r5, r0
+ 4127 0140 82F83B10 		strb	r1, [r2, #59]
+ 4128 0144 0298     		ldr	r0, [sp, #8]
+ 4129 0146 0399     		ldr	r1, [sp, #12]
+ 4130 0148 82F84700 		strb	r0, [r2, #71]
+ 4131 014c 82F84810 		strb	r1, [r2, #72]
+ 4132 0150 0598     		ldr	r0, [sp, #20]
+ 4133 0152 0699     		ldr	r1, [sp, #24]
+ 4134 0154 DDF810E0 		ldr	lr, [sp, #16]
+ 4135 0158 82F84A00 		strb	r0, [r2, #74]
+ 4136 015c 82F84B10 		strb	r1, [r2, #75]
+ 4137 0160 82F849E0 		strb	lr, [r2, #73]
+ 4138 0164 02F15001 		add	r1, r2, #80
+ 4139 0168 3046     		mov	r0, r6
+ 4140 016a 02F1700C 		add	ip, r2, #112
+ 4141 016e 01E0     		b	.L953
+ 4142              	.L988:
+ 4143 0170 10F8015F 		ldrb	r5, [r0, #1]!	@ zero_extendqisi2
+ 4144              	.L953:
+ 4145 0174 01F8015B 		strb	r5, [r1], #1
+ 4146 0178 6145     		cmp	r1, ip
+ 4147 017a F9D1     		bne	.L988
+ 4148 017c 2E21     		movs	r1, #46
+ 4149 017e 0D98     		ldr	r0, [sp, #52]
+ 4150 0180 82F85110 		strb	r1, [r2, #81]
+ 4151 0184 0178     		ldrb	r1, [r0]	@ zero_extendqisi2
+ 4152 0186 0F9D     		ldr	r5, [sp, #60]
+ 4153 0188 0329     		cmp	r1, #3
+ 4154 018a 51D0     		beq	.L954
+ 4155              	.L984:
+ 4156 018c 290C     		lsrs	r1, r5, #16
+ 4157 018e 5FFA81FC 		uxtb	ip, r1
+ 4158 0192 5FFA85F8 		uxtb	r8, r5
+ 4159 0196 090A     		lsrs	r1, r1, #8
+ 4160 0198 C5F30725 		ubfx	r5, r5, #8, #8
+ 4161              	.L955:
+ 4162 019c 82F86A80 		strb	r8, [r2, #106]
+ 4163 01a0 82F86B50 		strb	r5, [r2, #107]
+ 4164 01a4 82F864C0 		strb	ip, [r2, #100]
+ 4165 01a8 82F86510 		strb	r1, [r2, #101]
+ 4166 01ac 8178     		ldrb	r1, [r0, #2]	@ zero_extendqisi2
+ 4167 01ae E9B1     		cbz	r1, .L956
+ 4168 01b0 0139     		subs	r1, r1, #1
+ 4169 01b2 5FFA81F9 		uxtb	r9, r1
+ 4170 01b6 09F10109 		add	r9, r9, #1
+ 4171 01ba 9944     		add	r9, r9, r3
+ 4172 01bc 4FF00108 		mov	r8, #1
+ 4173 01c0 0025     		movs	r5, #0
+ 4174              	.L960:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 75
+
+
+ 4175 01c2 C362     		str	r3, [r0, #44]
+ 4176 01c4 80F80480 		strb	r8, [r0, #4]
+ 4177 01c8 0021     		movs	r1, #0
+ 4178 01ca 03F1010B 		add	fp, r3, #1
+ 4179 01ce FFF7FEFF 		bl	move_window
+ 4180 01d2 48B9     		cbnz	r0, .L982
+ 4181 01d4 3346     		mov	r3, r6
+ 4182              	.L959:
+ 4183 01d6 03F8015B 		strb	r5, [r3], #1
+ 4184 01da A342     		cmp	r3, r4
+ 4185 01dc FBD1     		bne	.L959
+ 4186 01de CB45     		cmp	fp, r9
+ 4187 01e0 04D0     		beq	.L956
+ 4188 01e2 5B46     		mov	r3, fp
+ 4189 01e4 0D98     		ldr	r0, [sp, #52]
+ 4190 01e6 ECE7     		b	.L960
+ 4191              	.L982:
+ 4192 01e8 8246     		mov	r10, r0
+ 4193 01ea 44E7     		b	.L961
+ 4194              	.L956:
+ 4195 01ec 0DA8     		add	r0, sp, #52
+ 4196 01ee FFF7FEFF 		bl	dir_register
+ 4197 01f2 8246     		mov	r10, r0
+ 4198 01f4 0028     		cmp	r0, #0
+ 4199 01f6 7FF43EAF 		bne	.L961
+ 4200 01fa 129B     		ldr	r3, [sp, #72]
+ 4201 01fc 019D     		ldr	r5, [sp, #4]
+ 4202 01fe 029A     		ldr	r2, [sp, #8]
+ 4203 0200 9D75     		strb	r5, [r3, #22]
+ 4204 0202 DA75     		strb	r2, [r3, #23]
+ 4205 0204 039D     		ldr	r5, [sp, #12]
+ 4206 0206 049A     		ldr	r2, [sp, #16]
+ 4207 0208 1D76     		strb	r5, [r3, #24]
+ 4208 020a 5A76     		strb	r2, [r3, #25]
+ 4209 020c 059D     		ldr	r5, [sp, #20]
+ 4210 020e 069A     		ldr	r2, [sp, #24]
+ 4211 0210 0D99     		ldr	r1, [sp, #52]
+ 4212 0212 9D76     		strb	r5, [r3, #26]
+ 4213 0214 DA76     		strb	r2, [r3, #27]
+ 4214 0216 079D     		ldr	r5, [sp, #28]
+ 4215 0218 089A     		ldr	r2, [sp, #32]
+ 4216 021a 1D75     		strb	r5, [r3, #20]
+ 4217 021c 1020     		movs	r0, #16
+ 4218 021e 0124     		movs	r4, #1
+ 4219 0220 D872     		strb	r0, [r3, #11]
+ 4220 0222 5A75     		strb	r2, [r3, #21]
+ 4221 0224 0846     		mov	r0, r1
+ 4222 0226 0C71     		strb	r4, [r1, #4]
+ 4223 0228 FFF7FEFF 		bl	sync
+ 4224 022c 8246     		mov	r10, r0
+ 4225 022e 0DE7     		b	.L944
+ 4226              	.L954:
+ 4227 0230 416A     		ldr	r1, [r0, #36]
+ 4228 0232 A942     		cmp	r1, r5
+ 4229 0234 AAD1     		bne	.L984
+ 4230 0236 0021     		movs	r1, #0
+ 4231 0238 8C46     		mov	ip, r1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 76
+
+
+ 4232 023a 0D46     		mov	r5, r1
+ 4233 023c 8846     		mov	r8, r1
+ 4234 023e ADE7     		b	.L955
+ 4235              		.size	f_mkdir, .-f_mkdir
+ 4236              		.section	.text.f_chmod,"ax",%progbits
+ 4237              		.align	2
+ 4238              		.p2align 4,,15
+ 4239              		.global	f_chmod
+ 4240              		.thumb
+ 4241              		.thumb_func
+ 4242              		.type	f_chmod, %function
+ 4243              	f_chmod:
+ 4244              		@ args = 0, pretend = 0, frame = 56
+ 4245              		@ frame_needed = 0, uses_anonymous_args = 0
+ 4246 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 4247 0002 8FB0     		sub	sp, sp, #60
+ 4248 0004 0EAB     		add	r3, sp, #56
+ 4249 0006 0C46     		mov	r4, r1
+ 4250 0008 43F8340D 		str	r0, [r3, #-52]!
+ 4251 000c 1546     		mov	r5, r2
+ 4252 000e 1846     		mov	r0, r3
+ 4253 0010 05A9     		add	r1, sp, #20
+ 4254 0012 0122     		movs	r2, #1
+ 4255 0014 FFF7FEFF 		bl	chk_mounted
+ 4256 0018 08B1     		cbz	r0, .L995
+ 4257              	.L990:
+ 4258 001a 0FB0     		add	sp, sp, #60
+ 4259              		@ sp needed
+ 4260 001c F0BD     		pop	{r4, r5, r6, r7, pc}
+ 4261              	.L995:
+ 4262 001e 4FF40070 		mov	r0, #512
+ 4263 0022 FFF7FEFF 		bl	ff_memalloc
+ 4264 0026 0646     		mov	r6, r0
+ 4265 0028 1120     		movs	r0, #17
+ 4266 002a 002E     		cmp	r6, #0
+ 4267 002c F5D0     		beq	.L990
+ 4268 002e 02AB     		add	r3, sp, #8
+ 4269 0030 0199     		ldr	r1, [sp, #4]
+ 4270 0032 0B93     		str	r3, [sp, #44]
+ 4271 0034 05A8     		add	r0, sp, #20
+ 4272 0036 0C96     		str	r6, [sp, #48]
+ 4273 0038 FFF7FEFF 		bl	follow_path
+ 4274 003c 0746     		mov	r7, r0
+ 4275 003e 3046     		mov	r0, r6
+ 4276 0040 FFF7FEFF 		bl	ff_memfree
+ 4277 0044 3846     		mov	r0, r7
+ 4278 0046 002F     		cmp	r7, #0
+ 4279 0048 E7D1     		bne	.L990
+ 4280 004a 0A9B     		ldr	r3, [sp, #40]
+ 4281 004c 0620     		movs	r0, #6
+ 4282 004e 002B     		cmp	r3, #0
+ 4283 0050 E3D0     		beq	.L990
+ 4284 0052 D97A     		ldrb	r1, [r3, #11]	@ zero_extendqisi2
+ 4285 0054 059A     		ldr	r2, [sp, #20]
+ 4286 0056 05F02705 		and	r5, r5, #39
+ 4287 005a 2C40     		ands	r4, r4, r5
+ 4288 005c 21EA0505 		bic	r5, r1, r5
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 77
+
+
+ 4289 0060 2C43     		orrs	r4, r4, r5
+ 4290 0062 0121     		movs	r1, #1
+ 4291 0064 DC72     		strb	r4, [r3, #11]
+ 4292 0066 1046     		mov	r0, r2
+ 4293 0068 1171     		strb	r1, [r2, #4]
+ 4294 006a FFF7FEFF 		bl	sync
+ 4295 006e D4E7     		b	.L990
+ 4296              		.size	f_chmod, .-f_chmod
+ 4297              		.section	.text.f_utime,"ax",%progbits
+ 4298              		.align	2
+ 4299              		.p2align 4,,15
+ 4300              		.global	f_utime
+ 4301              		.thumb
+ 4302              		.thumb_func
+ 4303              		.type	f_utime, %function
+ 4304              	f_utime:
+ 4305              		@ args = 0, pretend = 0, frame = 56
+ 4306              		@ frame_needed = 0, uses_anonymous_args = 0
+ 4307 0000 70B5     		push	{r4, r5, r6, lr}
+ 4308 0002 8EB0     		sub	sp, sp, #56
+ 4309 0004 0EAB     		add	r3, sp, #56
+ 4310 0006 0C46     		mov	r4, r1
+ 4311 0008 43F8340D 		str	r0, [r3, #-52]!
+ 4312 000c 05A9     		add	r1, sp, #20
+ 4313 000e 1846     		mov	r0, r3
+ 4314 0010 0122     		movs	r2, #1
+ 4315 0012 FFF7FEFF 		bl	chk_mounted
+ 4316 0016 08B1     		cbz	r0, .L1002
+ 4317              	.L997:
+ 4318 0018 0EB0     		add	sp, sp, #56
+ 4319              		@ sp needed
+ 4320 001a 70BD     		pop	{r4, r5, r6, pc}
+ 4321              	.L1002:
+ 4322 001c 4FF40070 		mov	r0, #512
+ 4323 0020 FFF7FEFF 		bl	ff_memalloc
+ 4324 0024 0546     		mov	r5, r0
+ 4325 0026 1120     		movs	r0, #17
+ 4326 0028 002D     		cmp	r5, #0
+ 4327 002a F5D0     		beq	.L997
+ 4328 002c 02AB     		add	r3, sp, #8
+ 4329 002e 0199     		ldr	r1, [sp, #4]
+ 4330 0030 0B93     		str	r3, [sp, #44]
+ 4331 0032 05A8     		add	r0, sp, #20
+ 4332 0034 0C95     		str	r5, [sp, #48]
+ 4333 0036 FFF7FEFF 		bl	follow_path
+ 4334 003a 0646     		mov	r6, r0
+ 4335 003c 2846     		mov	r0, r5
+ 4336 003e FFF7FEFF 		bl	ff_memfree
+ 4337 0042 3046     		mov	r0, r6
+ 4338 0044 002E     		cmp	r6, #0
+ 4339 0046 E7D1     		bne	.L997
+ 4340 0048 0A9B     		ldr	r3, [sp, #40]
+ 4341 004a 0620     		movs	r0, #6
+ 4342 004c 002B     		cmp	r3, #0
+ 4343 004e E3D0     		beq	.L997
+ 4344 0050 E188     		ldrh	r1, [r4, #6]
+ 4345 0052 059A     		ldr	r2, [sp, #20]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 78
+
+
+ 4346 0054 9975     		strb	r1, [r3, #22]
+ 4347 0056 E188     		ldrh	r1, [r4, #6]
+ 4348 0058 090A     		lsrs	r1, r1, #8
+ 4349 005a D975     		strb	r1, [r3, #23]
+ 4350 005c A188     		ldrh	r1, [r4, #4]
+ 4351 005e 1976     		strb	r1, [r3, #24]
+ 4352 0060 A088     		ldrh	r0, [r4, #4]
+ 4353 0062 0121     		movs	r1, #1
+ 4354 0064 000A     		lsrs	r0, r0, #8
+ 4355 0066 5876     		strb	r0, [r3, #25]
+ 4356 0068 1046     		mov	r0, r2
+ 4357 006a 1171     		strb	r1, [r2, #4]
+ 4358 006c FFF7FEFF 		bl	sync
+ 4359 0070 D2E7     		b	.L997
+ 4360              		.size	f_utime, .-f_utime
+ 4361 0072 00BFAFF3 		.section	.text.f_rename,"ax",%progbits
+ 4361      0080AFF3 
+ 4361      0080AFF3 
+ 4361      0080
+ 4362              		.align	2
+ 4363              		.p2align 4,,15
+ 4364              		.global	f_rename
+ 4365              		.thumb
+ 4366              		.thumb_func
+ 4367              		.type	f_rename, %function
+ 4368              	f_rename:
+ 4369              		@ args = 0, pretend = 0, frame = 120
+ 4370              		@ frame_needed = 0, uses_anonymous_args = 0
+ 4371 0000 70B5     		push	{r4, r5, r6, lr}
+ 4372 0002 9EB0     		sub	sp, sp, #120
+ 4373 0004 1EAB     		add	r3, sp, #120
+ 4374 0006 0D46     		mov	r5, r1
+ 4375 0008 43F8740D 		str	r0, [r3, #-116]!
+ 4376 000c 0CA9     		add	r1, sp, #48
+ 4377 000e 1846     		mov	r0, r3
+ 4378 0010 0122     		movs	r2, #1
+ 4379 0012 FFF7FEFF 		bl	chk_mounted
+ 4380 0016 08B1     		cbz	r0, .L1034
+ 4381              	.L1033:
+ 4382 0018 1EB0     		add	sp, sp, #120
+ 4383              		@ sp needed
+ 4384 001a 70BD     		pop	{r4, r5, r6, pc}
+ 4385              	.L1034:
+ 4386 001c 0C9B     		ldr	r3, [sp, #48]
+ 4387 001e 4FF40070 		mov	r0, #512
+ 4388 0022 1593     		str	r3, [sp, #84]
+ 4389 0024 FFF7FEFF 		bl	ff_memalloc
+ 4390 0028 0646     		mov	r6, r0
+ 4391 002a 1120     		movs	r0, #17
+ 4392 002c 002E     		cmp	r6, #0
+ 4393 002e F3D0     		beq	.L1033
+ 4394 0030 03AB     		add	r3, sp, #12
+ 4395 0032 0CA8     		add	r0, sp, #48
+ 4396 0034 0199     		ldr	r1, [sp, #4]
+ 4397 0036 1396     		str	r6, [sp, #76]
+ 4398 0038 1293     		str	r3, [sp, #72]
+ 4399 003a FFF7FEFF 		bl	follow_path
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 79
+
+
+ 4400 003e 0446     		mov	r4, r0
+ 4401 0040 0028     		cmp	r0, #0
+ 4402 0042 68D1     		bne	.L1005
+ 4403 0044 119A     		ldr	r2, [sp, #68]
+ 4404 0046 0424     		movs	r4, #4
+ 4405 0048 002A     		cmp	r2, #0
+ 4406 004a 64D0     		beq	.L1005
+ 4407 004c 0B32     		adds	r2, r2, #11
+ 4408 004e 06AB     		add	r3, sp, #24
+ 4409 0050 0DF12D01 		add	r1, sp, #45
+ 4410              	.L1007:
+ 4411 0054 12F8014B 		ldrb	r4, [r2], #1	@ zero_extendqisi2
+ 4412 0058 03F8014B 		strb	r4, [r3], #1
+ 4413 005c 8B42     		cmp	r3, r1
+ 4414 005e F9D1     		bne	.L1007
+ 4415 0060 15AB     		add	r3, sp, #84
+ 4416 0062 0CAA     		add	r2, sp, #48
+ 4417              	.L1009:
+ 4418 0064 12F8014B 		ldrb	r4, [r2], #1	@ zero_extendqisi2
+ 4419 0068 03F8014B 		strb	r4, [r3], #1
+ 4420 006c 1EA9     		add	r1, sp, #120
+ 4421 006e 8B42     		cmp	r3, r1
+ 4422 0070 F8D1     		bne	.L1009
+ 4423 0072 2946     		mov	r1, r5
+ 4424 0074 15A8     		add	r0, sp, #84
+ 4425 0076 FFF7FEFF 		bl	follow_path
+ 4426 007a 0446     		mov	r4, r0
+ 4427 007c 0028     		cmp	r0, #0
+ 4428 007e 50D0     		beq	.L1021
+ 4429 0080 0428     		cmp	r0, #4
+ 4430 0082 48D1     		bne	.L1005
+ 4431 0084 15A8     		add	r0, sp, #84
+ 4432 0086 FFF7FEFF 		bl	dir_register
+ 4433 008a 0446     		mov	r4, r0
+ 4434 008c 0028     		cmp	r0, #0
+ 4435 008e 42D1     		bne	.L1005
+ 4436 0090 1A9C     		ldr	r4, [sp, #104]
+ 4437 0092 0DF11A02 		add	r2, sp, #26
+ 4438 0096 04F10D03 		add	r3, r4, #13
+ 4439 009a 04F12000 		add	r0, r4, #32
+ 4440              	.L1011:
+ 4441 009e 12F8011B 		ldrb	r1, [r2], #1	@ zero_extendqisi2
+ 4442 00a2 03F8011B 		strb	r1, [r3], #1
+ 4443 00a6 8342     		cmp	r3, r0
+ 4444 00a8 F9D1     		bne	.L1011
+ 4445 00aa 9DF81810 		ldrb	r1, [sp, #24]	@ zero_extendqisi2
+ 4446 00ae 0C9B     		ldr	r3, [sp, #48]
+ 4447 00b0 0122     		movs	r2, #1
+ 4448 00b2 41F02001 		orr	r1, r1, #32
+ 4449 00b6 E172     		strb	r1, [r4, #11]
+ 4450 00b8 1A71     		strb	r2, [r3, #4]
+ 4451 00ba 0E9A     		ldr	r2, [sp, #56]
+ 4452 00bc 179B     		ldr	r3, [sp, #92]
+ 4453 00be 9A42     		cmp	r2, r3
+ 4454 00c0 20D0     		beq	.L1016
+ 4455 00c2 E37A     		ldrb	r3, [r4, #11]	@ zero_extendqisi2
+ 4456 00c4 DD06     		lsls	r5, r3, #27
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 80
+
+
+ 4457 00c6 1DD5     		bpl	.L1016
+ 4458 00c8 E27E     		ldrb	r2, [r4, #27]	@ zero_extendqisi2
+ 4459 00ca 657D     		ldrb	r5, [r4, #21]	@ zero_extendqisi2
+ 4460 00cc 217D     		ldrb	r1, [r4, #20]	@ zero_extendqisi2
+ 4461 00ce A37E     		ldrb	r3, [r4, #26]	@ zero_extendqisi2
+ 4462 00d0 1598     		ldr	r0, [sp, #84]
+ 4463 00d2 43EA0223 		orr	r3, r3, r2, lsl #8
+ 4464 00d6 41EA0521 		orr	r1, r1, r5, lsl #8
+ 4465 00da 8269     		ldr	r2, [r0, #24]
+ 4466 00dc 43EA0143 		orr	r3, r3, r1, lsl #16
+ 4467 00e0 023B     		subs	r3, r3, #2
+ 4468 00e2 023A     		subs	r2, r2, #2
+ 4469 00e4 9342     		cmp	r3, r2
+ 4470 00e6 1ED2     		bcs	.L1023
+ 4471 00e8 8178     		ldrb	r1, [r0, #2]	@ zero_extendqisi2
+ 4472 00ea 826A     		ldr	r2, [r0, #40]
+ 4473 00ec 01FB0321 		mla	r1, r1, r3, r2
+ 4474 00f0 C9B1     		cbz	r1, .L1023
+ 4475 00f2 FFF7FEFF 		bl	move_window
+ 4476 00f6 159B     		ldr	r3, [sp, #84]
+ 4477 00f8 0446     		mov	r4, r0
+ 4478 00fa 60B9     		cbnz	r0, .L1005
+ 4479 00fc 93F85120 		ldrb	r2, [r3, #81]	@ zero_extendqisi2
+ 4480 0100 2E2A     		cmp	r2, #46
+ 4481 0102 12D0     		beq	.L1035
+ 4482              	.L1016:
+ 4483 0104 0CA8     		add	r0, sp, #48
+ 4484 0106 FFF7FEFF 		bl	dir_remove
+ 4485 010a 0446     		mov	r4, r0
+ 4486 010c 18B9     		cbnz	r0, .L1005
+ 4487 010e 0C98     		ldr	r0, [sp, #48]
+ 4488 0110 FFF7FEFF 		bl	sync
+ 4489 0114 0446     		mov	r4, r0
+ 4490              	.L1005:
+ 4491 0116 3046     		mov	r0, r6
+ 4492 0118 FFF7FEFF 		bl	ff_memfree
+ 4493 011c 2046     		mov	r0, r4
+ 4494 011e 1EB0     		add	sp, sp, #120
+ 4495              		@ sp needed
+ 4496 0120 70BD     		pop	{r4, r5, r6, pc}
+ 4497              	.L1021:
+ 4498 0122 0824     		movs	r4, #8
+ 4499 0124 F7E7     		b	.L1005
+ 4500              	.L1023:
+ 4501 0126 0224     		movs	r4, #2
+ 4502 0128 F5E7     		b	.L1005
+ 4503              	.L1035:
+ 4504 012a 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 4505 012c 032A     		cmp	r2, #3
+ 4506 012e 179A     		ldr	r2, [sp, #92]
+ 4507 0130 0FD0     		beq	.L1032
+ 4508              	.L1014:
+ 4509 0132 1446     		mov	r4, r2
+ 4510              	.L1015:
+ 4511 0134 220C     		lsrs	r2, r4, #16
+ 4512 0136 150A     		lsrs	r5, r2, #8
+ 4513 0138 C4F30720 		ubfx	r0, r4, #8, #8
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 81
+
+
+ 4514 013c 0121     		movs	r1, #1
+ 4515 013e 83F86A40 		strb	r4, [r3, #106]
+ 4516 0142 83F86420 		strb	r2, [r3, #100]
+ 4517 0146 83F86550 		strb	r5, [r3, #101]
+ 4518 014a 83F86B00 		strb	r0, [r3, #107]
+ 4519 014e 1971     		strb	r1, [r3, #4]
+ 4520 0150 D8E7     		b	.L1016
+ 4521              	.L1032:
+ 4522 0152 596A     		ldr	r1, [r3, #36]
+ 4523 0154 8A42     		cmp	r2, r1
+ 4524 0156 ECD1     		bne	.L1014
+ 4525 0158 ECE7     		b	.L1015
+ 4526              		.size	f_rename, .-f_rename
+ 4527 015a 00BFAFF3 		.section	.rodata.excvt.5263,"a",%progbits
+ 4527      0080
+ 4528              		.align	2
+ 4529              		.set	.LANCHOR3,. + 0
+ 4530              		.type	excvt.5263, %object
+ 4531              		.size	excvt.5263, 128
+ 4532              	excvt.5263:
+ 4533 0000 80       		.byte	-128
+ 4534 0001 81       		.byte	-127
+ 4535 0002 82       		.byte	-126
+ 4536 0003 82       		.byte	-126
+ 4537 0004 84       		.byte	-124
+ 4538 0005 85       		.byte	-123
+ 4539 0006 86       		.byte	-122
+ 4540 0007 87       		.byte	-121
+ 4541 0008 88       		.byte	-120
+ 4542 0009 89       		.byte	-119
+ 4543 000a 8A       		.byte	-118
+ 4544 000b 8B       		.byte	-117
+ 4545 000c 8C       		.byte	-116
+ 4546 000d 8D       		.byte	-115
+ 4547 000e 8E       		.byte	-114
+ 4548 000f 8F       		.byte	-113
+ 4549 0010 80       		.byte	-128
+ 4550 0011 91       		.byte	-111
+ 4551 0012 92       		.byte	-110
+ 4552 0013 93       		.byte	-109
+ 4553 0014 94       		.byte	-108
+ 4554 0015 95       		.byte	-107
+ 4555 0016 96       		.byte	-106
+ 4556 0017 97       		.byte	-105
+ 4557 0018 98       		.byte	-104
+ 4558 0019 99       		.byte	-103
+ 4559 001a 8A       		.byte	-118
+ 4560 001b 9B       		.byte	-101
+ 4561 001c 8C       		.byte	-116
+ 4562 001d 8D       		.byte	-115
+ 4563 001e 8E       		.byte	-114
+ 4564 001f 8F       		.byte	-113
+ 4565 0020 A0       		.byte	-96
+ 4566 0021 A2       		.byte	-94
+ 4567 0022 A2       		.byte	-94
+ 4568 0023 A3       		.byte	-93
+ 4569 0024 A4       		.byte	-92
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 82
+
+
+ 4570 0025 A5       		.byte	-91
+ 4571 0026 A6       		.byte	-90
+ 4572 0027 A7       		.byte	-89
+ 4573 0028 A8       		.byte	-88
+ 4574 0029 A9       		.byte	-87
+ 4575 002a AA       		.byte	-86
+ 4576 002b AB       		.byte	-85
+ 4577 002c AC       		.byte	-84
+ 4578 002d AD       		.byte	-83
+ 4579 002e AE       		.byte	-82
+ 4580 002f AF       		.byte	-81
+ 4581 0030 B0       		.byte	-80
+ 4582 0031 B1       		.byte	-79
+ 4583 0032 B2       		.byte	-78
+ 4584 0033 B2       		.byte	-78
+ 4585 0034 A5       		.byte	-91
+ 4586 0035 B5       		.byte	-75
+ 4587 0036 B6       		.byte	-74
+ 4588 0037 B7       		.byte	-73
+ 4589 0038 A8       		.byte	-88
+ 4590 0039 B9       		.byte	-71
+ 4591 003a AA       		.byte	-86
+ 4592 003b BB       		.byte	-69
+ 4593 003c A3       		.byte	-93
+ 4594 003d BD       		.byte	-67
+ 4595 003e BD       		.byte	-67
+ 4596 003f AF       		.byte	-81
+ 4597 0040 C0       		.byte	-64
+ 4598 0041 C1       		.byte	-63
+ 4599 0042 C2       		.byte	-62
+ 4600 0043 C3       		.byte	-61
+ 4601 0044 C4       		.byte	-60
+ 4602 0045 C5       		.byte	-59
+ 4603 0046 C6       		.byte	-58
+ 4604 0047 C7       		.byte	-57
+ 4605 0048 C8       		.byte	-56
+ 4606 0049 C9       		.byte	-55
+ 4607 004a CA       		.byte	-54
+ 4608 004b CB       		.byte	-53
+ 4609 004c CC       		.byte	-52
+ 4610 004d CD       		.byte	-51
+ 4611 004e CE       		.byte	-50
+ 4612 004f CF       		.byte	-49
+ 4613 0050 D0       		.byte	-48
+ 4614 0051 D1       		.byte	-47
+ 4615 0052 D2       		.byte	-46
+ 4616 0053 D3       		.byte	-45
+ 4617 0054 D4       		.byte	-44
+ 4618 0055 D5       		.byte	-43
+ 4619 0056 D6       		.byte	-42
+ 4620 0057 D7       		.byte	-41
+ 4621 0058 D8       		.byte	-40
+ 4622 0059 D9       		.byte	-39
+ 4623 005a DA       		.byte	-38
+ 4624 005b DB       		.byte	-37
+ 4625 005c DC       		.byte	-36
+ 4626 005d DD       		.byte	-35
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 83
+
+
+ 4627 005e DE       		.byte	-34
+ 4628 005f DF       		.byte	-33
+ 4629 0060 C0       		.byte	-64
+ 4630 0061 C1       		.byte	-63
+ 4631 0062 C2       		.byte	-62
+ 4632 0063 C3       		.byte	-61
+ 4633 0064 C4       		.byte	-60
+ 4634 0065 C5       		.byte	-59
+ 4635 0066 C6       		.byte	-58
+ 4636 0067 C7       		.byte	-57
+ 4637 0068 C8       		.byte	-56
+ 4638 0069 C9       		.byte	-55
+ 4639 006a CA       		.byte	-54
+ 4640 006b CB       		.byte	-53
+ 4641 006c CC       		.byte	-52
+ 4642 006d CD       		.byte	-51
+ 4643 006e CE       		.byte	-50
+ 4644 006f CF       		.byte	-49
+ 4645 0070 D0       		.byte	-48
+ 4646 0071 D1       		.byte	-47
+ 4647 0072 D2       		.byte	-46
+ 4648 0073 D3       		.byte	-45
+ 4649 0074 D4       		.byte	-44
+ 4650 0075 D5       		.byte	-43
+ 4651 0076 D6       		.byte	-42
+ 4652 0077 D7       		.byte	-41
+ 4653 0078 D8       		.byte	-40
+ 4654 0079 D9       		.byte	-39
+ 4655 007a DA       		.byte	-38
+ 4656 007b DB       		.byte	-37
+ 4657 007c DC       		.byte	-36
+ 4658 007d DD       		.byte	-35
+ 4659 007e DE       		.byte	-34
+ 4660 007f DF       		.byte	-33
+ 4661              		.section	.bss.Fsid,"aw",%nobits
+ 4662              		.align	1
+ 4663              		.set	.LANCHOR1,. + 0
+ 4664              		.type	Fsid, %object
+ 4665              		.size	Fsid, 2
+ 4666              	Fsid:
+ 4667 0000 0000     		.space	2
+ 4668              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 4669              		.align	2
+ 4670              	.LC0:
+ 4671 0000 222A3A3C 		.ascii	"\"*:<>?|\177\000"
+ 4671      3E3F7C7F 
+ 4671      00
+ 4672 0009 000000   		.space	3
+ 4673              	.LC1:
+ 4674 000c 2B2C3B3D 		.ascii	"+,;=[]\000"
+ 4674      5B5D00
+ 4675 0013 00       		.section	.rodata.LfnOfs,"a",%progbits
+ 4676              		.align	2
+ 4677              		.set	.LANCHOR2,. + 0
+ 4678              		.type	LfnOfs, %object
+ 4679              		.size	LfnOfs, 13
+ 4680              	LfnOfs:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 84
+
+
+ 4681 0000 01       		.byte	1
+ 4682 0001 03       		.byte	3
+ 4683 0002 05       		.byte	5
+ 4684 0003 07       		.byte	7
+ 4685 0004 09       		.byte	9
+ 4686 0005 0E       		.byte	14
+ 4687 0006 10       		.byte	16
+ 4688 0007 12       		.byte	18
+ 4689 0008 14       		.byte	20
+ 4690 0009 16       		.byte	22
+ 4691 000a 18       		.byte	24
+ 4692 000b 1C       		.byte	28
+ 4693 000c 1E       		.byte	30
+ 4694 000d 000000   		.section	.bss.FatFs,"aw",%nobits
+ 4695              		.align	2
+ 4696              		.set	.LANCHOR0,. + 0
+ 4697              		.type	FatFs, %object
+ 4698              		.size	FatFs, 4
+ 4699              	FatFs:
+ 4700 0000 00000000 		.space	4
+ 4701              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 85
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 ff.c
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:17     .text.move_window:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:22     .text.move_window:00000000 move_window
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:86     .text.get_fileinfo:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:91     .text.get_fileinfo:00000000 get_fileinfo
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:217    .text.sync:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:222    .text.sync:00000000 sync
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:298    .text.check_fs:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:303    .text.check_fs:00000000 check_fs
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:358    .text.chk_mounted:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:363    .text.chk_mounted:00000000 chk_mounted
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:4696   .bss.FatFs:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:4663   .bss.Fsid:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:662    .text.validate:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:667    .text.validate:00000000 validate
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:690    .text.get_fat.part.3:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:695    .text.get_fat.part.3:00000000 get_fat.part.3
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:774    .text.dir_sdi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:779    .text.dir_sdi:00000000 dir_sdi
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:868    .text.put_fat.part.4:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:873    .text.put_fat.part.4:00000000 put_fat.part.4
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:977    .text.create_chain:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:982    .text.create_chain:00000000 create_chain
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:1095   .text.dir_next:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:1100   .text.dir_next:00000000 dir_next
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:1244   .text.dir_read:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:1249   .text.dir_read:00000000 dir_read
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:1388   .text.dir_read:00000118 $d
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:1392   .text.dir_remove:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:1397   .text.dir_remove:00000000 dir_remove
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:1443   .text.dir_find.part.5:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:1448   .text.dir_find.part.5:00000000 dir_find.part.5
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:1607   .text.dir_find.part.5:00000158 $d
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:1611   .text.remove_chain.part.6:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:1616   .text.remove_chain.part.6:00000000 remove_chain.part.6
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:1670   .text.follow_path:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:1675   .text.follow_path:00000000 follow_path
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:4529   .rodata.excvt.5263:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:4670   .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:4673   .rodata.str1.4:0000000c .LC1
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:2047   .text.clust2sect:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:2053   .text.clust2sect:00000000 clust2sect
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:2069   .text.get_fat:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:2075   .text.get_fat:00000000 get_fat
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:2090   .text.put_fat:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:2096   .text.put_fat:00000000 put_fat
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:2115   .text.gen_numname:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:2121   .text.gen_numname:00000000 gen_numname
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:2202   .text.dir_register:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:2207   .text.dir_register:00000000 dir_register
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:4677   .rodata.LfnOfs:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:2466   .text.f_mount:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:2472   .text.f_mount:00000000 f_mount
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:2495   .text.f_open:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:2501   .text.f_open:00000000 f_open
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:2687   .text.f_read:00000000 $t
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccnjXh41.s 			page 86
+
+
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:2693   .text.f_read:00000000 f_read
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:2880   .text.f_write:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:2886   .text.f_write:00000000 f_write
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:3102   .text.f_sync:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:3108   .text.f_sync:00000000 f_sync
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:3187   .text.f_close:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:3193   .text.f_close:00000000 f_close
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:3205   .text.f_lseek:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:3211   .text.f_lseek:00000000 f_lseek
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:3409   .text.f_opendir:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:3415   .text.f_opendir:00000000 f_opendir
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:3486   .text.f_readdir:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:3492   .text.f_readdir:00000000 f_readdir
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:3550   .text.f_stat:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:3556   .text.f_stat:00000000 f_stat
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:3605   .text.f_getfree:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:3611   .text.f_getfree:00000000 f_getfree
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:3754   .text.f_truncate:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:3760   .text.f_truncate:00000000 f_truncate
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:3869   .text.f_unlink:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:3875   .text.f_unlink:00000000 f_unlink
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:3983   .text.f_mkdir:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:3989   .text.f_mkdir:00000000 f_mkdir
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:4237   .text.f_chmod:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:4243   .text.f_chmod:00000000 f_chmod
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:4298   .text.f_utime:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:4304   .text.f_utime:00000000 f_utime
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:4362   .text.f_rename:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:4368   .text.f_rename:00000000 f_rename
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:4528   .rodata.excvt.5263:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:4532   .rodata.excvt.5263:00000000 excvt.5263
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:4662   .bss.Fsid:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:4666   .bss.Fsid:00000000 Fsid
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:4669   .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:4676   .rodata.LfnOfs:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:4680   .rodata.LfnOfs:00000000 LfnOfs
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:4695   .bss.FatFs:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccnjXh41.s:4699   .bss.FatFs:00000000 FatFs
+
+UNDEFINED SYMBOLS
+disk_read
+disk_write
+ff_convert
+disk_ioctl
+disk_status
+disk_initialize
+ff_wtoupper
+ff_memalloc
+get_fattime
+ff_memfree

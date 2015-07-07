@@ -1,0 +1,332 @@
+###############################################################################
+#                                                                             #
+# IAR ANSI C/C++ Compiler V6.50.3.4676/W32 for ARM      30/Jun/2015  23:10:03 #
+# Copyright 1999-2013 IAR Systems AB.                                         #
+#                                                                             #
+#    Cpu mode        =  thumb                                                 #
+#    Endian          =  little                                                #
+#    Source file     =  F:\stuff\rusefi_sourceforge\firmware\controllers\core #
+#                       \signal_filtering.c                                   #
+#    Command line    =  F:\stuff\rusefi_sourceforge\firmware\controllers\core #
+#                       \signal_filtering.c -lCN F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\Debug\List\ -lA                          #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\  #
+#                       -o F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj #
+#                       \ --no_cse --no_unroll --no_inline --no_code_motion   #
+#                       --no_tbaa --no_clustering --no_scheduling --debug     #
+#                       --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp     #
+#                       --dlib_config "C:\Program Files (x86)\IAR             #
+#                       Systems\Embedded Workbench                            #
+#                       6.5\arm\INC\c\DLib_Config_Normal.h"                   #
+#                       --misrac2004=1.2-1.4,2.3,3.4,4.2,6.5-7,8.2-8.3,9.3,   #
+#                       12.3,13.6-13,15.5,17.3,19.17,20.7-20.9,20.11 -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\ -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\kernel\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\ports\common\ARMCMx\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\common\ARMCMx\CMSIS\include\ -I               #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\IAR\ARMCMx\ -I F:\stuff\rusefi_sourceforge\fi #
+#                       rmware\iar\..\chibios\os\ports\IAR\ARMCMx\STM32F4xx\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\chibio #
+#                       s\os\hal\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\hal\platforms\STM32\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\DMAv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\GPIOv2\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\I2Cv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\SPIv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\TIMv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\RTCv2\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\USARTv1\ -I                     #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\OTGv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32F4xx\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\various\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\chibios\os\various\devices_lib\accel\ -I         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\b #
+#                       oards\ST_STM32F4_DISCOVERY\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\co #
+#                       ntrollers\algo\ -I F:\stuff\rusefi_sourceforge\firmwa #
+#                       re\iar\..\controllers\core\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\system\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\controllers\sensors\ -I                          #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\math\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\controllers\trigger\ -I                            #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\config #
+#                       \ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\conf #
+#                       ig\engines\ -I F:\stuff\rusefi_sourceforge\firmware\i #
+#                       ar\..\config\stm32f4ems\ -I                           #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\b #
+#                       inary\ -I F:\stuff\rusefi_sourceforge\firmware\iar\.. #
+#                       \console_util\ -I F:\stuff\rusefi_sourceforge\firmwar #
+#                       e\iar\..\development\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\development\test\ -I                  #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\developme #
+#                       nt\hw_layer\ -I F:\stuff\rusefi_sourceforge\firmware\ #
+#                       iar\..\hw_layer\algo\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\hw_layer\lcd\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                       stm32f4\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\hw_layer\serial_over_usb\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                        -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext_al #
+#                       go\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\de #
+#                       velopment\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\development\hw_layer\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\util\ -On #
+#    MISRA C version =  2004                                                  #
+#      Enabled       =  1.2-1.4 2.3 3.4 4.2 6.5 7 8.2 8.3 9.3 12.3 13.6 13.7  #
+#                       15.5 17.3 19.17 20.7-20.9 20.11                       #
+#      Checked       =  1.4 2.3 4.2 6.5 7 8.2 8.3 9.3 12.3 13.7 15.5          #
+#                       20.7-20.9 20.11                                       #
+#      Not checked   =  1.1-1.3 1.5-2.2 2.4-4.1 5-6.4 8.1 8.4-9.2 10-12.2     #
+#                       12.4-13.6 14-15.4 16-20.6 20.10 20.12 21              #
+#    List file       =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\s #
+#                       ignal_filtering.lst                                   #
+#    Object file     =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\si #
+#                       gnal_filtering.o                                      #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+F:\stuff\rusefi_sourceforge\firmware\controllers\core\signal_filtering.c
+      1          /*
+      2           * signal_filtering.c
+      3           *
+      4           * @date Aug 5, 2013
+      5           * @author pc
+      6           */
+      7          
+      8          #ifndef SIGNAL_FILTERING_C_
+      9          #define SIGNAL_FILTERING_C_
+     10          
+     11          #include "signal_filtering.h"
+     12          
+
+   \                                 In section .text, align 2, keep-with-next
+     13          void sfInit(SignalFiltering *fs, float K, float initialValue) {
+     14          	fs->pointer = 0;
+   \                     sfInit:
+   \   00000000   0x2100             MOVS     R1,#+0
+   \   00000002   0x6281             STR      R1,[R0, #+40]
+     15          	fs->K = K;
+   \   00000004   0xED80 0x0A0B      VSTR     S0,[R0, #+44]
+     16          	fs->Vout = initialValue;
+   \   00000008   0xEDC0 0x0A0D      VSTR     S1,[R0, #+52]
+     17          	fs->Vacc = initialValue * K;
+   \   0000000C   0xEE20 0x1A80      VMUL.F32 S2,S1,S0
+   \   00000010   0xED80 0x1A0C      VSTR     S2,[R0, #+48]
+     18          }
+   \   00000014   0x4770             BX       LR               ;; return
+     19          
+
+   \                                 In section .text, align 2, keep-with-next
+     20          static void addCopyAndSort(SignalFiltering *fs, float value) {
+   \                     addCopyAndSort:
+   \   00000000   0xB410             PUSH     {R4}
+     21          	fs->values[fs->pointer] = value;
+   \   00000002   0x6A81             LDR      R1,[R0, #+40]
+   \   00000004   0xEB10 0x0181      ADDS     R1,R0,R1, LSL #+2
+   \   00000008   0xED81 0x0A00      VSTR     S0,[R1, #0]
+     22          	fs->pointer = ++fs->pointer == FILTER_SIZE ? 0 : fs->pointer;
+   \   0000000C   0x6A81             LDR      R1,[R0, #+40]
+   \   0000000E   0x1C49             ADDS     R1,R1,#+1
+   \   00000010   0x6281             STR      R1,[R0, #+40]
+   \   00000012   0x2905             CMP      R1,#+5
+   \   00000014   0xD101             BNE.N    ??addCopyAndSort_0
+   \   00000016   0x2100             MOVS     R1,#+0
+   \   00000018   0xE000             B.N      ??addCopyAndSort_1
+   \                     ??addCopyAndSort_0:
+   \   0000001A   0x6A81             LDR      R1,[R0, #+40]
+   \                     ??addCopyAndSort_1:
+   \   0000001C   0x6281             STR      R1,[R0, #+40]
+     23          
+     24          	for (int i = 0; i < FILTER_SIZE; i++)
+   \   0000001E   0x2100             MOVS     R1,#+0
+   \                     ??addCopyAndSort_2:
+   \   00000020   0x2905             CMP      R1,#+5
+   \   00000022   0xDA06             BGE.N    ??addCopyAndSort_3
+     25          		fs->sorted[i] = fs->values[i];
+   \   00000024   0xEB10 0x0281      ADDS     R2,R0,R1, LSL #+2
+   \   00000028   0xF850 0x3021      LDR      R3,[R0, R1, LSL #+2]
+   \   0000002C   0x6153             STR      R3,[R2, #+20]
+   \   0000002E   0x1C49             ADDS     R1,R1,#+1
+   \   00000030   0xE7F6             B.N      ??addCopyAndSort_2
+     26          
+     27          	for (int i = 0; i < FILTER_SIZE; i++)
+   \                     ??addCopyAndSort_3:
+   \   00000032   0x2100             MOVS     R1,#+0
+   \                     ??addCopyAndSort_4:
+   \   00000034   0x2905             CMP      R1,#+5
+   \   00000036   0xDA21             BGE.N    ??addCopyAndSort_5
+     28          		for (int j = i + 1; j < FILTER_SIZE; j++)
+   \   00000038   0x1C4A             ADDS     R2,R1,#+1
+   \                     ??addCopyAndSort_6:
+   \   0000003A   0x2A05             CMP      R2,#+5
+   \   0000003C   0xDA1C             BGE.N    ??addCopyAndSort_7
+     29          			if (fs->sorted[i] < fs->sorted[j]) {
+   \   0000003E   0xEB10 0x0381      ADDS     R3,R0,R1, LSL #+2
+   \   00000042   0xEDD3 0x0A05      VLDR     S1,[R3, #+20]
+   \   00000046   0xEB10 0x0382      ADDS     R3,R0,R2, LSL #+2
+   \   0000004A   0xED93 0x1A05      VLDR     S2,[R3, #+20]
+   \   0000004E   0xEEF4 0x0A41      VCMP.F32 S1,S2
+   \   00000052   0xEEF1 0xFA10      FMSTAT   
+   \   00000056   0xD50D             BPL.N    ??addCopyAndSort_8
+     30          				float temp = fs->sorted[i];
+   \   00000058   0xEB10 0x0381      ADDS     R3,R0,R1, LSL #+2
+   \   0000005C   0xEDD3 0x0A05      VLDR     S1,[R3, #+20]
+     31          				fs->sorted[i] = fs->sorted[j];
+   \   00000060   0xEB10 0x0381      ADDS     R3,R0,R1, LSL #+2
+   \   00000064   0xEB10 0x0482      ADDS     R4,R0,R2, LSL #+2
+   \   00000068   0x6964             LDR      R4,[R4, #+20]
+   \   0000006A   0x615C             STR      R4,[R3, #+20]
+     32          				fs->sorted[j] = temp;
+   \   0000006C   0xEB10 0x0382      ADDS     R3,R0,R2, LSL #+2
+   \   00000070   0xEDC3 0x0A05      VSTR     S1,[R3, #+20]
+     33          			}
+   \                     ??addCopyAndSort_8:
+   \   00000074   0x1C52             ADDS     R2,R2,#+1
+   \   00000076   0xE7E0             B.N      ??addCopyAndSort_6
+   \                     ??addCopyAndSort_7:
+   \   00000078   0x1C49             ADDS     R1,R1,#+1
+   \   0000007A   0xE7DB             B.N      ??addCopyAndSort_4
+     34          }
+   \                     ??addCopyAndSort_5:
+   \   0000007C   0xBC10             POP      {R4}
+   \   0000007E   0x4770             BX       LR               ;; return
+     35          
+
+   \                                 In section .text, align 2, keep-with-next
+     36          void sfAddValue(SignalFiltering *fs, float value) {
+   \                     sfAddValue:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0xED2D 0x8B02      VPUSH    {D8}
+   \   00000006   0x0004             MOVS     R4,R0
+   \   00000008   0xEEB0 0x8A40      VMOV.F32 S16,S0
+     37          	addCopyAndSort(fs, value);
+   \   0000000C   0xEEB0 0x0A48      VMOV.F32 S0,S16
+   \   00000010   0x0020             MOVS     R0,R4
+   \   00000012   0x.... 0x....      BL       addCopyAndSort
+     38          	float Vin = fs->sorted[FILTER_SIZE / 2];
+   \   00000016   0xED94 0x0A07      VLDR     S0,[R4, #+28]
+     39          
+     40          	fs->Vacc += Vin - fs->Vout;
+   \   0000001A   0xEDD4 0x0A0D      VLDR     S1,[R4, #+52]
+   \   0000001E   0xEE70 0x0A60      VSUB.F32 S1,S0,S1
+   \   00000022   0xED94 0x1A0C      VLDR     S2,[R4, #+48]
+   \   00000026   0xEE70 0x0A81      VADD.F32 S1,S1,S2
+   \   0000002A   0xEDC4 0x0A0C      VSTR     S1,[R4, #+48]
+     41          	fs->Vout = fs->Vacc / fs->K;
+   \   0000002E   0xEDD4 0x0A0C      VLDR     S1,[R4, #+48]
+   \   00000032   0xED94 0x1A0B      VLDR     S2,[R4, #+44]
+   \   00000036   0xEEC0 0x0A81      VDIV.F32 S1,S1,S2
+   \   0000003A   0xEDC4 0x0A0D      VSTR     S1,[R4, #+52]
+     42          }
+   \   0000003E   0xECBD 0x8B02      VPOP     {D8}
+   \   00000042   0xBD10             POP      {R4,PC}          ;; return
+     43          
+
+   \                                 In section .text, align 4, keep-with-next
+     44          void sfAddValue2(SignalFiltering *fs, float value) {
+   \                     sfAddValue2:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0xED2D 0x8B02      VPUSH    {D8}
+   \   00000006   0x0004             MOVS     R4,R0
+   \   00000008   0xEEB0 0x8A40      VMOV.F32 S16,S0
+     45          	addCopyAndSort(fs, value);
+   \   0000000C   0xEEB0 0x0A48      VMOV.F32 S0,S16
+   \   00000010   0x0020             MOVS     R0,R4
+   \   00000012   0x.... 0x....      BL       addCopyAndSort
+     46          
+     47          	int fromIndex = FILTER_SIZE / 4;
+   \   00000016   0x2001             MOVS     R0,#+1
+     48          	int toIndex = FILTER_SIZE / 4 + FILTER_SIZE / 2;
+   \   00000018   0x2103             MOVS     R1,#+3
+     49          
+     50          	/**
+     51          	 * this implementation takes the average of the middle hald of the sorted values
+     52          	 */
+     53          	float result = 0;
+   \   0000001A   0xED9F 0x....      VLDR.W   S0,??DataTable0  ;; 0x0
+     54          	for (int i = fromIndex; i < toIndex; i++)
+   \   0000001E   0x0002             MOVS     R2,R0
+   \                     ??sfAddValue2_0:
+   \   00000020   0x428A             CMP      R2,R1
+   \   00000022   0xDA07             BGE.N    ??sfAddValue2_1
+     55          		result += fs->sorted[i];
+   \   00000024   0xEB14 0x0382      ADDS     R3,R4,R2, LSL #+2
+   \   00000028   0xEDD3 0x0A05      VLDR     S1,[R3, #+20]
+   \   0000002C   0xEE30 0x0A20      VADD.F32 S0,S0,S1
+   \   00000030   0x1C52             ADDS     R2,R2,#+1
+   \   00000032   0xE7F5             B.N      ??sfAddValue2_0
+     56          
+     57          	fs->Vout = result / (FILTER_SIZE / 2);
+   \                     ??sfAddValue2_1:
+   \   00000034   0xEEF0 0x0A00      VMOV.F32 S1,#2.0
+   \   00000038   0xEEC0 0x0A20      VDIV.F32 S1,S0,S1
+   \   0000003C   0xEDC4 0x0A0D      VSTR     S1,[R4, #+52]
+     58          }
+   \   00000040   0xECBD 0x8B02      VPOP     {D8}
+   \   00000044   0xBD10             POP      {R4,PC}          ;; return
+     59          
+
+   \                                 In section .text, align 2, keep-with-next
+     60          float sfGetValue(SignalFiltering *fs) {
+     61          	return fs->Vout;
+   \                     sfGetValue:
+   \   00000000   0xED90 0x0A0D      VLDR     S0,[R0, #+52]
+   \   00000004   0x4770             BX       LR               ;; return
+     62          }
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable0:
+   \   00000000   0x00000000         DC32     0x0
+     63          
+     64          #endif /* SIGNAL_FILTERING_C_ */
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       4   addCopyAndSort
+      16   sfAddValue
+        16   -> addCopyAndSort
+      16   sfAddValue2
+        16   -> addCopyAndSort
+       0   sfGetValue
+       0   sfInit
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable0
+     128  addCopyAndSort
+      68  sfAddValue
+      70  sfAddValue2
+       6  sfGetValue
+      22  sfInit
+
+ 
+ 298 bytes in section .text
+ 
+ 298 bytes of CODE memory
+
+Errors: none
+Warnings: none

@@ -1,0 +1,324 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc2SqUUw.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"stepper.cpp"
+  16              		.section	.text._ZN12StepperMotorC2Ev,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_ZN12StepperMotorC2Ev
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_ZN12StepperMotorC2Ev, %function
+  23              	_ZN12StepperMotorC2Ev:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 0022     		movs	r2, #0
+  28 0002 0021     		movs	r1, #0
+  29 0004 C160     		str	r1, [r0, #12]	@ float
+  30 0006 8260     		str	r2, [r0, #8]
+  31 0008 4261     		str	r2, [r0, #20]
+  32 000a 0260     		str	r2, [r0]
+  33 000c 4260     		str	r2, [r0, #4]
+  34 000e 0262     		str	r2, [r0, #32]
+  35 0010 4262     		str	r2, [r0, #36]
+  36 0012 8261     		str	r2, [r0, #24]
+  37 0014 C261     		str	r2, [r0, #28]
+  38 0016 0261     		str	r2, [r0, #16]
+  39 0018 7047     		bx	lr
+  40              		.size	_ZN12StepperMotorC2Ev, .-_ZN12StepperMotorC2Ev
+  41              		.global	_ZN12StepperMotorC1Ev
+  42              		.thumb_set _ZN12StepperMotorC1Ev,_ZN12StepperMotorC2Ev
+  43 001a 00BFAFF3 		.section	.text._ZN12StepperMotor17getTargetPositionEv,"ax",%progbits
+  43      0080
+  44              		.align	2
+  45              		.p2align 4,,15
+  46              		.global	_ZN12StepperMotor17getTargetPositionEv
+  47              		.thumb
+  48              		.thumb_func
+  49              		.type	_ZN12StepperMotor17getTargetPositionEv, %function
+  50              	_ZN12StepperMotor17getTargetPositionEv:
+  51              		@ args = 0, pretend = 0, frame = 0
+  52              		@ frame_needed = 0, uses_anonymous_args = 0
+  53              		@ link register save eliminated.
+  54 0000 4069     		ldr	r0, [r0, #20]
+  55 0002 7047     		bx	lr
+  56              		.size	_ZN12StepperMotor17getTargetPositionEv, .-_ZN12StepperMotor17getTargetPositionEv
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc2SqUUw.s 			page 2
+
+
+  57 0004 AFF30080 		.section	.text._ZN12StepperMotor17setTargetPositionEi,"ax",%progbits
+  57      AFF30080 
+  57      AFF30080 
+  58              		.align	2
+  59              		.p2align 4,,15
+  60              		.global	_ZN12StepperMotor17setTargetPositionEi
+  61              		.thumb
+  62              		.thumb_func
+  63              		.type	_ZN12StepperMotor17setTargetPositionEi, %function
+  64              	_ZN12StepperMotor17setTargetPositionEi:
+  65              		@ args = 0, pretend = 0, frame = 0
+  66              		@ frame_needed = 0, uses_anonymous_args = 0
+  67              		@ link register save eliminated.
+  68 0000 4161     		str	r1, [r0, #20]
+  69 0002 7047     		bx	lr
+  70              		.size	_ZN12StepperMotor17setTargetPositionEi, .-_ZN12StepperMotor17setTargetPositionEi
+  71 0004 AFF30080 		.section	.text._ZN12StepperMotor5pulseEv,"ax",%progbits
+  71      AFF30080 
+  71      AFF30080 
+  72              		.align	2
+  73              		.p2align 4,,15
+  74              		.global	_ZN12StepperMotor5pulseEv
+  75              		.thumb
+  76              		.thumb_func
+  77              		.type	_ZN12StepperMotor5pulseEv, %function
+  78              	_ZN12StepperMotor5pulseEv:
+  79              		@ args = 0, pretend = 0, frame = 0
+  80              		@ frame_needed = 0, uses_anonymous_args = 0
+  81 0000 426A     		ldr	r2, [r0, #36]
+  82 0002 38B5     		push	{r3, r4, r5, lr}
+  83 0004 1032     		adds	r2, r2, #16
+  84 0006 036A     		ldr	r3, [r0, #32]
+  85 0008 0125     		movs	r5, #1
+  86 000a 05FA02F2 		lsl	r2, r5, r2
+  87 000e 9A61     		str	r2, [r3, #24]
+  88 0010 C269     		ldr	r2, [r0, #28]
+  89 0012 8369     		ldr	r3, [r0, #24]
+  90 0014 0446     		mov	r4, r0
+  91 0016 05FA02F2 		lsl	r2, r5, r2
+  92 001a 9A61     		str	r2, [r3, #24]
+  93 001c 0A20     		movs	r0, #10
+  94 001e FFF7FEFF 		bl	chThdSleep
+  95 0022 E269     		ldr	r2, [r4, #28]
+  96 0024 A369     		ldr	r3, [r4, #24]
+  97 0026 1032     		adds	r2, r2, #16
+  98 0028 05FA02F2 		lsl	r2, r5, r2
+  99 002c 9A61     		str	r2, [r3, #24]
+ 100 002e 0A20     		movs	r0, #10
+ 101 0030 FFF7FEFF 		bl	chThdSleep
+ 102 0034 626A     		ldr	r2, [r4, #36]
+ 103 0036 236A     		ldr	r3, [r4, #32]
+ 104 0038 9540     		lsls	r5, r5, r2
+ 105 003a 9D61     		str	r5, [r3, #24]
+ 106 003c 38BD     		pop	{r3, r4, r5, pc}
+ 107              		.size	_ZN12StepperMotor5pulseEv, .-_ZN12StepperMotor5pulseEv
+ 108 003e 00BF     		.section	.text._ZL8stThreadP12StepperMotor,"ax",%progbits
+ 109              		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc2SqUUw.s 			page 3
+
+
+ 110              		.p2align 4,,15
+ 111              		.thumb
+ 112              		.thumb_func
+ 113              		.type	_ZL8stThreadP12StepperMotor, %function
+ 114              	_ZL8stThreadP12StepperMotor:
+ 115              		@ args = 0, pretend = 0, frame = 0
+ 116              		@ frame_needed = 0, uses_anonymous_args = 0
+ 117 0000 90E80600 		ldmia	r0, {r1, r2}
+ 118 0004 40F20003 		movw	r3, #:lower16:rlist
+ 119 0008 C0F20003 		movt	r3, #:upper16:rlist
+ 120 000c 70B5     		push	{r4, r5, r6, lr}
+ 121 000e 1032     		adds	r2, r2, #16
+ 122 0010 0446     		mov	r4, r0
+ 123 0012 0125     		movs	r5, #1
+ 124 0014 9869     		ldr	r0, [r3, #24]
+ 125 0016 40F20003 		movw	r3, #:lower16:.LC0
+ 126 001a C0F20003 		movt	r3, #:upper16:.LC0
+ 127 001e 05FA02F2 		lsl	r2, r5, r2
+ 128 0022 8361     		str	r3, [r0, #24]
+ 129 0024 8A61     		str	r2, [r1, #24]
+ 130 0026 2369     		ldr	r3, [r4, #16]
+ 131 0028 002B     		cmp	r3, #0
+ 132 002a 0CDD     		ble	.L7
+ 133 002c 0025     		movs	r5, #0
+ 134              	.L9:
+ 135 002e 2046     		mov	r0, r4
+ 136 0030 FFF7FEFF 		bl	_ZN12StepperMotor5pulseEv
+ 137 0034 2369     		ldr	r3, [r4, #16]
+ 138 0036 0135     		adds	r5, r5, #1
+ 139 0038 AB42     		cmp	r3, r5
+ 140 003a F8DC     		bgt	.L9
+ 141 003c 03E0     		b	.L7
+ 142              	.L16:
+ 143 003e A060     		str	r0, [r4, #8]
+ 144              	.L13:
+ 145 0040 2046     		mov	r0, r4
+ 146 0042 FFF7FEFF 		bl	_ZN12StepperMotor5pulseEv
+ 147              	.L7:
+ 148 0046 6369     		ldr	r3, [r4, #20]
+ 149 0048 A268     		ldr	r2, [r4, #8]
+ 150 004a 9A42     		cmp	r2, r3
+ 151 004c ACBF     		ite	ge
+ 152 004e 0023     		movge	r3, #0
+ 153 0050 0123     		movlt	r3, #1
+ 154 0052 83F00100 		eor	r0, r3, #1
+ 155 0056 0ED0     		beq	.L15
+ 156 0058 6168     		ldr	r1, [r4, #4]
+ 157 005a 2568     		ldr	r5, [r4]
+ 158 005c 01F11006 		add	r6, r1, #16
+ 159 0060 B040     		lsls	r0, r0, r6
+ 160 0062 03FA01F1 		lsl	r1, r3, r1
+ 161 0066 0143     		orrs	r1, r1, r0
+ 162 0068 A961     		str	r1, [r5, #24]
+ 163 006a 501C     		adds	r0, r2, #1
+ 164 006c 013A     		subs	r2, r2, #1
+ 165 006e 002B     		cmp	r3, #0
+ 166 0070 E5D1     		bne	.L16
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc2SqUUw.s 			page 4
+
+
+ 167 0072 A260     		str	r2, [r4, #8]
+ 168 0074 E4E7     		b	.L13
+ 169              	.L15:
+ 170 0076 0A20     		movs	r0, #10
+ 171 0078 FFF7FEFF 		bl	chThdSleep
+ 172 007c E3E7     		b	.L7
+ 173              		.size	_ZL8stThreadP12StepperMotor, .-_ZL8stThreadP12StepperMotor
+ 174 007e 00BF     		.section	.text._ZN12StepperMotor10initializeE11brain_pin_eS0_fiS0_,"ax",%progbits
+ 175              		.align	2
+ 176              		.p2align 4,,15
+ 177              		.global	_ZN12StepperMotor10initializeE11brain_pin_eS0_fiS0_
+ 178              		.thumb
+ 179              		.thumb_func
+ 180              		.type	_ZN12StepperMotor10initializeE11brain_pin_eS0_fiS0_, %function
+ 181              	_ZN12StepperMotor10initializeE11brain_pin_eS0_fiS0_:
+ 182              		@ args = 8, pretend = 0, frame = 0
+ 183              		@ frame_needed = 0, uses_anonymous_args = 0
+ 184 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 185 0004 0446     		mov	r4, r0
+ 186 0006 0E46     		mov	r6, r1
+ 187 0008 4FF07E50 		mov	r0, #1065353216
+ 188 000c 1946     		mov	r1, r3	@ float
+ 189 000e 1546     		mov	r5, r2
+ 190 0010 DDF81880 		ldr	r8, [sp, #24]
+ 191 0014 079F     		ldr	r7, [sp, #28]
+ 192 0016 FFF7FEFF 		bl	maxF
+ 193 001a 4146     		mov	r1, r8
+ 194 001c E060     		str	r0, [r4, #12]	@ float
+ 195 001e 0320     		movs	r0, #3
+ 196 0020 FFF7FEFF 		bl	maxI
+ 197 0024 502D     		cmp	r5, #80
+ 198 0026 18BF     		it	ne
+ 199 0028 502E     		cmpne	r6, #80
+ 200 002a 2061     		str	r0, [r4, #16]
+ 201 002c 01D1     		bne	.L19
+ 202 002e BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 203              	.L19:
+ 204 0032 3046     		mov	r0, r6
+ 205 0034 FFF7FEFF 		bl	_Z9getHwPort11brain_pin_e
+ 206 0038 A061     		str	r0, [r4, #24]
+ 207 003a 3046     		mov	r0, r6
+ 208 003c FFF7FEFF 		bl	_Z8getHwPin11brain_pin_e
+ 209 0040 E061     		str	r0, [r4, #28]
+ 210 0042 2846     		mov	r0, r5
+ 211 0044 FFF7FEFF 		bl	_Z9getHwPort11brain_pin_e
+ 212 0048 2060     		str	r0, [r4]
+ 213 004a 2846     		mov	r0, r5
+ 214 004c FFF7FEFF 		bl	_Z8getHwPin11brain_pin_e
+ 215 0050 6060     		str	r0, [r4, #4]
+ 216 0052 3846     		mov	r0, r7
+ 217 0054 FFF7FEFF 		bl	_Z9getHwPort11brain_pin_e
+ 218 0058 2062     		str	r0, [r4, #32]
+ 219 005a 3846     		mov	r0, r7
+ 220 005c FFF7FEFF 		bl	_Z8getHwPin11brain_pin_e
+ 221 0060 6062     		str	r0, [r4, #36]
+ 222 0062 40F20000 		movw	r0, #:lower16:.LC1
+ 223 0066 3146     		mov	r1, r6
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc2SqUUw.s 			page 5
+
+
+ 224 0068 C0F20000 		movt	r0, #:upper16:.LC1
+ 225 006c 0122     		movs	r2, #1
+ 226 006e FFF7FEFF 		bl	_Z13mySetPadMode2PKc11brain_pin_em
+ 227 0072 40F20000 		movw	r0, #:lower16:.LC2
+ 228 0076 2946     		mov	r1, r5
+ 229 0078 C0F20000 		movt	r0, #:upper16:.LC2
+ 230 007c 0122     		movs	r2, #1
+ 231 007e FFF7FEFF 		bl	_Z13mySetPadMode2PKc11brain_pin_em
+ 232 0082 40F20000 		movw	r0, #:lower16:.LC3
+ 233 0086 3946     		mov	r1, r7
+ 234 0088 C0F20000 		movt	r0, #:upper16:.LC3
+ 235 008c 0122     		movs	r2, #1
+ 236 008e FFF7FEFF 		bl	_Z13mySetPadMode2PKc11brain_pin_em
+ 237 0092 226A     		ldr	r2, [r4, #32]
+ 238 0094 0123     		movs	r3, #1
+ 239 0096 03FA07F7 		lsl	r7, r3, r7
+ 240 009a 9761     		str	r7, [r2, #24]
+ 241 009c 40F20003 		movw	r3, #:lower16:_ZL8stThreadP12StepperMotor
+ 242 00a0 04F12800 		add	r0, r4, #40
+ 243 00a4 0694     		str	r4, [sp, #24]
+ 244 00a6 C0F20003 		movt	r3, #:upper16:_ZL8stThreadP12StepperMotor
+ 245 00aa 4FF43A71 		mov	r1, #744
+ 246 00ae 4022     		movs	r2, #64
+ 247 00b0 BDE8F041 		pop	{r4, r5, r6, r7, r8, lr}
+ 248 00b4 FFF7FEBF 		b	chThdCreateStatic
+ 249              		.size	_ZN12StepperMotor10initializeE11brain_pin_eS0_fiS0_, .-_ZN12StepperMotor10initializeE11brain
+ 250 00b8 AFF30080 		.section	.rodata.str1.4,"aMS",%progbits,1
+ 250      AFF30080 
+ 251              		.align	2
+ 252              	.LC0:
+ 253 0000 73746570 		.ascii	"stepper\000"
+ 253      70657200 
+ 254              	.LC1:
+ 255 0008 73746570 		.ascii	"stepper step\000"
+ 255      70657220 
+ 255      73746570 
+ 255      00
+ 256 0015 000000   		.space	3
+ 257              	.LC2:
+ 258 0018 73746570 		.ascii	"stepper dir\000"
+ 258      70657220 
+ 258      64697200 
+ 259              	.LC3:
+ 260 0024 73746570 		.ascii	"stepper enable\000"
+ 260      70657220 
+ 260      656E6162 
+ 260      6C6500
+ 261 0033 00       		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc2SqUUw.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 stepper.cpp
+C:\Users\pc\AppData\Local\Temp\cc2SqUUw.s:17     .text._ZN12StepperMotorC2Ev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc2SqUUw.s:23     .text._ZN12StepperMotorC2Ev:00000000 _ZN12StepperMotorC2Ev
+C:\Users\pc\AppData\Local\Temp\cc2SqUUw.s:23     .text._ZN12StepperMotorC2Ev:00000000 _ZN12StepperMotorC1Ev
+C:\Users\pc\AppData\Local\Temp\cc2SqUUw.s:44     .text._ZN12StepperMotor17getTargetPositionEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc2SqUUw.s:50     .text._ZN12StepperMotor17getTargetPositionEv:00000000 _ZN12StepperMotor17getTargetPositionEv
+C:\Users\pc\AppData\Local\Temp\cc2SqUUw.s:58     .text._ZN12StepperMotor17setTargetPositionEi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc2SqUUw.s:64     .text._ZN12StepperMotor17setTargetPositionEi:00000000 _ZN12StepperMotor17setTargetPositionEi
+C:\Users\pc\AppData\Local\Temp\cc2SqUUw.s:72     .text._ZN12StepperMotor5pulseEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc2SqUUw.s:78     .text._ZN12StepperMotor5pulseEv:00000000 _ZN12StepperMotor5pulseEv
+C:\Users\pc\AppData\Local\Temp\cc2SqUUw.s:109    .text._ZL8stThreadP12StepperMotor:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc2SqUUw.s:114    .text._ZL8stThreadP12StepperMotor:00000000 _ZL8stThreadP12StepperMotor
+C:\Users\pc\AppData\Local\Temp\cc2SqUUw.s:252    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\cc2SqUUw.s:175    .text._ZN12StepperMotor10initializeE11brain_pin_eS0_fiS0_:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc2SqUUw.s:181    .text._ZN12StepperMotor10initializeE11brain_pin_eS0_fiS0_:00000000 _ZN12StepperMotor10initializeE11brain_pin_eS0_fiS0_
+C:\Users\pc\AppData\Local\Temp\cc2SqUUw.s:254    .rodata.str1.4:00000008 .LC1
+C:\Users\pc\AppData\Local\Temp\cc2SqUUw.s:257    .rodata.str1.4:00000018 .LC2
+C:\Users\pc\AppData\Local\Temp\cc2SqUUw.s:259    .rodata.str1.4:00000024 .LC3
+C:\Users\pc\AppData\Local\Temp\cc2SqUUw.s:251    .rodata.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+chThdSleep
+rlist
+maxF
+maxI
+_Z9getHwPort11brain_pin_e
+_Z8getHwPin11brain_pin_e
+_Z13mySetPadMode2PKc11brain_pin_em
+chThdCreateStatic

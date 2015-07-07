@@ -14,5 +14,6 @@ void setFrankenso_01_LCD(board_configuration_s *boardConfiguration);
 void setHondaAccordConfigurationTwoWires(DECLARE_ENGINE_PARAMETER_F);
 void setHondaAccordConfigurationThreeWires(DECLARE_ENGINE_PARAMETER_F);
 void setHondaAccordConfigurationDip(DECLARE_ENGINE_PARAMETER_F);
+void setHondaAccordConfiguration1_24(DECLARE_ENGINE_PARAMETER_F);
 
 #endif /* HONDA_ACCORD_H_ */

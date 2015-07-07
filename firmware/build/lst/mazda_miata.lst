@@ -1,0 +1,1182 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"mazda_miata.cpp"
+  16              		.section	.text._ZL13commonMiataNav,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	_ZL13commonMiataNav, %function
+  22              	_ZL13commonMiataNav:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+  26 0004 40F20004 		movw	r4, #:lower16:engineConfiguration
+  27 0008 40F20005 		movw	r5, #:lower16:boardConfiguration
+  28 000c C0F20004 		movt	r4, #:upper16:engineConfiguration
+  29 0010 C0F20005 		movt	r5, #:upper16:boardConfiguration
+  30 0014 2368     		ldr	r3, [r4]
+  31 0016 2A68     		ldr	r2, [r5]
+  32 0018 4FF0640C 		mov	ip, #100
+  33 001c 4FF0260E 		mov	lr, #38
+  34 0020 0226     		movs	r6, #2
+  35 0022 4FF00308 		mov	r8, #3
+  36 0026 0527     		movs	r7, #5
+  37 0028 49F69A10 		movw	r0, #39322
+  38 002c 4CF6CD41 		movw	r1, #52429
+  39 0030 C3F81882 		str	r8, [r3, #536]
+  40 0034 C3F8E8C5 		str	ip, [r3, #1512]
+  41 0038 C3F69970 		movt	r0, 16281
+  42 003c C2F828E1 		str	lr, [r2, #296]
+  43 0040 C2F82C71 		str	r7, [r2, #300]
+  44 0044 C4F28C01 		movt	r1, 16524
+  45 0048 C3F8BC61 		str	r6, [r3, #444]
+  46 004c FFF7FEFF 		bl	_Z14setFuelLoadBinff
+  47 0050 0020     		movs	r0, #0
+  48 0052 4FF44041 		mov	r1, #49152
+  49 0056 C4F24840 		movt	r0, 17480
+  50 005a C4F2DA51 		movt	r1, 17882
+  51 005e FFF7FEFF 		bl	_Z13setFuelRpmBinff
+  52 0062 4FF00008 		mov	r8, #0
+  53 0066 2B68     		ldr	r3, [r5]
+  54 0068 2268     		ldr	r2, [r4]
+  55 006a 4FF0000C 		mov	ip, #0
+  56 006e 5021     		movs	r1, #80
+  57 0070 4FF04C0E 		mov	lr, #76
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s 			page 2
+
+
+  58 0074 C4F2A00C 		movt	ip, 16544
+  59 0078 A020     		movs	r0, #160
+  60 007a 0025     		movs	r5, #0
+  61 007c C4F29338 		movt	r8, 17299
+  62 0080 4E27     		movs	r7, #78
+  63 0082 9860     		str	r0, [r3, #8]
+  64 0084 C2F8CC81 		str	r8, [r2, #460]	@ float
+  65 0088 02F58070 		add	r0, r2, #256
+  66 008c C3F88450 		str	r5, [r3, #132]
+  67 0090 C3F854E0 		str	lr, [r3, #84]
+  68 0094 9F65     		str	r7, [r3, #88]
+  69 0096 D965     		str	r1, [r3, #92]
+  70 0098 1966     		str	r1, [r3, #96]
+  71 009a C2F85CC0 		str	ip, [r2, #92]	@ float
+  72 009e C3F86C61 		str	r6, [r3, #364]
+  73 00a2 C3F87061 		str	r6, [r3, #368]
+  74 00a6 FFF7FEFF 		bl	_Z18setCommonNTCSensorP14ThermistorConf
+  75 00aa 4FF44045 		mov	r5, #49152
+  76 00ae 2068     		ldr	r0, [r4]
+  77 00b0 C4F22855 		movt	r5, 17704
+  78 00b4 C0F81851 		str	r5, [r0, #280]	@ float
+  79 00b8 00F59070 		add	r0, r0, #288
+  80 00bc FFF7FEFF 		bl	_Z18setCommonNTCSensorP14ThermistorConf
+  81 00c0 2368     		ldr	r3, [r4]
+  82 00c2 C3F83851 		str	r5, [r3, #312]	@ float
+  83 00c6 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+  84              		.size	_ZL13commonMiataNav, .-_ZL13commonMiataNav
+  85 00ca 00BFAFF3 		.section	.text._ZL19setMiata1994_commonv,"ax",%progbits
+  85      0080
+  86              		.align	2
+  87              		.p2align 4,,15
+  88              		.thumb
+  89              		.thumb_func
+  90              		.type	_ZL19setMiata1994_commonv, %function
+  91              	_ZL19setMiata1994_commonv:
+  92              		@ args = 0, pretend = 0, frame = 0
+  93              		@ frame_needed = 0, uses_anonymous_args = 0
+  94 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  95 0002 40F20005 		movw	r5, #:lower16:config
+  96 0006 C0F20005 		movt	r5, #:upper16:config
+  97 000a 40F20004 		movw	r4, #:lower16:engineConfiguration
+  98 000e C0F20004 		movt	r4, #:upper16:engineConfiguration
+  99 0012 FFF7FEFF 		bl	_ZL13commonMiataNav
+ 100 0016 2968     		ldr	r1, [r5]
+ 101 0018 2368     		ldr	r3, [r4]
+ 102 001a 46F25A47 		movw	r7, #25690
+ 103 001e 0022     		movs	r2, #0
+ 104 0020 C4F28C22 		movt	r2, 17036
+ 105 0024 C3F6EB77 		movt	r7, 16363
+ 106 0028 0026     		movs	r6, #0
+ 107 002a 01F52651 		add	r1, r1, #10624
+ 108 002e 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 109 0032 C3F89071 		str	r7, [r3, #400]	@ float
+ 110 0036 C3F8B861 		str	r6, [r3, #440]	@ float
+ 111 003a DA66     		str	r2, [r3, #108]	@ float
+ 112 003c 3831     		adds	r1, r1, #56
+ 113 003e C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s 			page 3
+
+
+ 114 0042 FFF7FEFF 		bl	_Z13copyFuelTablePA16_KfPA16_f
+ 115 0046 2968     		ldr	r1, [r5]
+ 116 0048 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 117 004c 01F53851 		add	r1, r1, #11776
+ 118 0050 3831     		adds	r1, r1, #56
+ 119 0052 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 120 0056 FFF7FEFF 		bl	_Z15copyTimingTablePA16_KfPA16_f
+ 121 005a 40F20003 		movw	r3, #:lower16:boardConfiguration
+ 122 005e C0F20003 		movt	r3, #:upper16:boardConfiguration
+ 123 0062 4E21     		movs	r1, #78
+ 124 0064 1868     		ldr	r0, [r3]
+ 125 0066 2722     		movs	r2, #39
+ 126 0068 5023     		movs	r3, #80
+ 127 006a 4FF0460E 		mov	lr, #70
+ 128 006e 0025     		movs	r5, #0
+ 129 0070 4427     		movs	r7, #68
+ 130 0072 1926     		movs	r6, #25
+ 131 0074 4165     		str	r1, [r0, #84]
+ 132 0076 C265     		str	r2, [r0, #92]
+ 133 0078 C0F87831 		str	r3, [r0, #376]
+ 134 007c 0363     		str	r3, [r0, #48]
+ 135 007e 4363     		str	r3, [r0, #52]
+ 136 0080 8365     		str	r3, [r0, #88]
+ 137 0082 0366     		str	r3, [r0, #96]
+ 138 0084 C0F890E0 		str	lr, [r0, #144]
+ 139 0088 8761     		str	r7, [r0, #24]
+ 140 008a 0660     		str	r6, [r0]
+ 141 008c 0565     		str	r5, [r0, #80]
+ 142 008e C0F88450 		str	r5, [r0, #132]
+ 143 0092 FFF7FEFF 		bl	_Z19setFrankenso_01_LCDP21board_configuration_s
+ 144 0096 2068     		ldr	r0, [r4]
+ 145 0098 FFF7FEFF 		bl	_Z27commonFrankensoAnalogInputsP22engine_configuration_s
+ 146 009c 2368     		ldr	r3, [r4]
+ 147 009e 0420     		movs	r0, #4
+ 148 00a0 0224     		movs	r4, #2
+ 149 00a2 0C21     		movs	r1, #12
+ 150 00a4 0B22     		movs	r2, #11
+ 151 00a6 C3F84452 		str	r5, [r3, #580]
+ 152 00aa C3F80C42 		str	r4, [r3, #524]
+ 153 00ae C3F8FC00 		str	r0, [r3, #252]
+ 154 00b2 C3F81C11 		str	r1, [r3, #284]
+ 155 00b6 C3F83C21 		str	r2, [r3, #316]
+ 156 00ba F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 157              		.size	_ZL19setMiata1994_commonv, .-_ZL19setMiata1994_commonv
+ 158 00bc AFF30080 		.section	.text._Z12setMiata1990v,"ax",%progbits
+ 159              		.align	2
+ 160              		.p2align 4,,15
+ 161              		.global	_Z12setMiata1990v
+ 162              		.thumb
+ 163              		.thumb_func
+ 164              		.type	_Z12setMiata1990v, %function
+ 165              	_Z12setMiata1990v:
+ 166              		@ args = 0, pretend = 0, frame = 0
+ 167              		@ frame_needed = 0, uses_anonymous_args = 0
+ 168 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 169 0004 40F20003 		movw	r3, #:lower16:engineConfiguration
+ 170 0008 40F20005 		movw	r5, #:lower16:boardConfiguration
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s 			page 4
+
+
+ 171 000c C0F20005 		movt	r5, #:upper16:boardConfiguration
+ 172 0010 C0F20003 		movt	r3, #:upper16:engineConfiguration
+ 173 0014 D5F800E0 		ldr	lr, [r5]
+ 174 0018 1B68     		ldr	r3, [r3]
+ 175 001a 5024     		movs	r4, #80
+ 176 001c 0122     		movs	r2, #1
+ 177 001e 0221     		movs	r1, #2
+ 178 0020 4FF0040C 		mov	ip, #4
+ 179 0024 0B20     		movs	r0, #11
+ 180 0026 0026     		movs	r6, #0
+ 181 0028 4FF09608 		mov	r8, #150
+ 182 002c 0327     		movs	r7, #3
+ 183 002e C3F89821 		str	r2, [r3, #408]
+ 184 0032 C3F8E885 		str	r8, [r3, #1512]
+ 185 0036 C3F894C1 		str	ip, [r3, #404]
+ 186 003a CEF81840 		str	r4, [lr, #24]
+ 187 003e C3F84422 		str	r2, [r3, #580]
+ 188 0042 C3F8B011 		str	r1, [r3, #432]
+ 189 0046 C3F80C72 		str	r7, [r3, #524]
+ 190 004a C3F81C01 		str	r0, [r3, #284]
+ 191 004e C3F8AC61 		str	r6, [r3, #428]
+ 192 0052 FFF7FEFF 		bl	_ZL13commonMiataNav
+ 193 0056 2B68     		ldr	r3, [r5]
+ 194 0058 1921     		movs	r1, #25
+ 195 005a 1822     		movs	r2, #24
+ 196 005c 9C62     		str	r4, [r3, #40]
+ 197 005e DC62     		str	r4, [r3, #44]
+ 198 0060 1C63     		str	r4, [r3, #48]
+ 199 0062 5C63     		str	r4, [r3, #52]
+ 200 0064 1E65     		str	r6, [r3, #80]
+ 201 0066 1962     		str	r1, [r3, #32]
+ 202 0068 5A62     		str	r2, [r3, #36]
+ 203 006a BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 204              		.size	_Z12setMiata1990v, .-_Z12setMiata1990v
+ 205 006e 00BF     		.section	.text._Z15setFordEscortGtv,"ax",%progbits
+ 206              		.align	2
+ 207              		.p2align 4,,15
+ 208              		.global	_Z15setFordEscortGtv
+ 209              		.thumb
+ 210              		.thumb_func
+ 211              		.type	_Z15setFordEscortGtv, %function
+ 212              	_Z15setFordEscortGtv:
+ 213              		@ args = 0, pretend = 0, frame = 8
+ 214              		@ frame_needed = 0, uses_anonymous_args = 0
+ 215 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 216 0004 40F20004 		movw	r4, #:lower16:engineConfiguration
+ 217 0008 40F20006 		movw	r6, #:lower16:boardConfiguration
+ 218 000c C0F20004 		movt	r4, #:upper16:engineConfiguration
+ 219 0010 C0F20006 		movt	r6, #:upper16:boardConfiguration
+ 220 0014 2368     		ldr	r3, [r4]
+ 221 0016 D6F800E0 		ldr	lr, [r6]
+ 222 001a 83B0     		sub	sp, sp, #12
+ 223 001c 4FF00F0C 		mov	ip, #15
+ 224 0020 0422     		movs	r2, #4
+ 225 0022 0025     		movs	r5, #0
+ 226 0024 0321     		movs	r1, #3
+ 227 0026 4FF0010B 		mov	fp, #1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s 			page 5
+
+
+ 228 002a 5027     		movs	r7, #80
+ 229 002c 4FF0020A 		mov	r10, #2
+ 230 0030 4FF00B09 		mov	r9, #11
+ 231 0034 9620     		movs	r0, #150
+ 232 0036 C3F818C2 		str	ip, [r3, #536]
+ 233 003a C3F89421 		str	r2, [r3, #404]
+ 234 003e C3F8E805 		str	r0, [r3, #1512]
+ 235 0042 C3F898B1 		str	fp, [r3, #408]
+ 236 0046 7046     		mov	r0, lr
+ 237 0048 CEF81870 		str	r7, [lr, #24]
+ 238 004c C3F80C12 		str	r1, [r3, #524]
+ 239 0050 C3F844B2 		str	fp, [r3, #580]
+ 240 0054 C3F8AC51 		str	r5, [r3, #428]
+ 241 0058 C3F8B0A1 		str	r10, [r3, #432]
+ 242 005c C3F81C91 		str	r9, [r3, #284]
+ 243 0060 0092     		str	r2, [sp]
+ 244 0062 0191     		str	r1, [sp, #4]
+ 245 0064 FFF7FEFF 		bl	_Z19setFrankenso_01_LCDP21board_configuration_s
+ 246 0068 2068     		ldr	r0, [r4]
+ 247 006a FFF7FEFF 		bl	_Z24setFrankenso0_1_joystickP22engine_configuration_s
+ 248 006e 40F20003 		movw	r3, #:lower16:config
+ 249 0072 C0F20003 		movt	r3, #:upper16:config
+ 250 0076 4FF41658 		mov	r8, #9600
+ 251 007a 1868     		ldr	r0, [r3]
+ 252 007c FFF7FEFF 		bl	_Z12setDensoTODOP19persistent_config_s
+ 253 0080 0199     		ldr	r1, [sp, #4]
+ 254 0082 2068     		ldr	r0, [r4]
+ 255 0084 3368     		ldr	r3, [r6]
+ 256 0086 C0F8A811 		str	r1, [r0, #424]
+ 257 008a 46F25A41 		movw	r1, #25690
+ 258 008e 4FF07D5E 		mov	lr, #1061158912
+ 259 0092 C3F6EB71 		movt	r1, 16363
+ 260 0096 C0F838E2 		str	lr, [r0, #568]	@ float
+ 261 009a C0F89011 		str	r1, [r0, #400]	@ float
+ 262 009e 49F69A10 		movw	r0, #39322
+ 263 00a2 4CF6CD41 		movw	r1, #52429
+ 264 00a6 C3F84C81 		str	r8, [r3, #332]
+ 265 00aa C3F69970 		movt	r0, 16281
+ 266 00ae C4F28C01 		movt	r1, 16524
+ 267 00b2 FFF7FEFF 		bl	_Z14setFuelLoadBinff
+ 268 00b6 0020     		movs	r0, #0
+ 269 00b8 4FF44041 		mov	r1, #49152
+ 270 00bc C4F24840 		movt	r0, 17480
+ 271 00c0 C4F2DA51 		movt	r1, 17882
+ 272 00c4 FFF7FEFF 		bl	_Z13setFuelRpmBinff
+ 273 00c8 3168     		ldr	r1, [r6]
+ 274 00ca 2368     		ldr	r3, [r4]
+ 275 00cc 4FF0260E 		mov	lr, #38
+ 276 00d0 0520     		movs	r0, #5
+ 277 00d2 C1F828E1 		str	lr, [r1, #296]
+ 278 00d6 C1F82C01 		str	r0, [r1, #300]
+ 279 00da 93F8D805 		ldrb	r0, [r3, #1496]	@ zero_extendqisi2
+ 280 00de 4FF4004E 		mov	lr, #32768
+ 281 00e2 00F0FB00 		and	r0, r0, #251
+ 282 00e6 C4F2843E 		movt	lr, 17284
+ 283 00ea 40EA0B00 		orr	r0, r0, fp
+ 284 00ee C3F808E0 		str	lr, [r3, #8]	@ float
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s 			page 6
+
+
+ 285 00f2 83F8D805 		strb	r0, [r3, #1496]
+ 286 00f6 91F88001 		ldrb	r0, [r1, #384]	@ zero_extendqisi2
+ 287 00fa 40F01000 		orr	r0, r0, #16
+ 288 00fe 81F88001 		strb	r0, [r1, #384]
+ 289 0102 009A     		ldr	r2, [sp]
+ 290 0104 C3F8F8B0 		str	fp, [r3, #248]
+ 291 0108 03F51270 		add	r0, r3, #584
+ 292 010c C3F8FC20 		str	r2, [r3, #252]
+ 293 0110 2946     		mov	r1, r5
+ 294 0112 FFF7FEFF 		bl	_Z13initEgoSensorP12afr_sensor_s12ego_sensor_e
+ 295 0116 2368     		ldr	r3, [r4]
+ 296 0118 4FF0000C 		mov	ip, #0
+ 297 011c 0021     		movs	r1, #0
+ 298 011e 4FF0000E 		mov	lr, #0
+ 299 0122 0022     		movs	r2, #0
+ 300 0124 CCF2202C 		movt	ip, 49696
+ 301 0128 C4F28C21 		movt	r1, 17036
+ 302 012c C4F2400E 		movt	lr, 16448
+ 303 0130 0020     		movs	r0, #0
+ 304 0132 C3F848A2 		str	r10, [r3, #584]
+ 305 0136 C3F8CCC1 		str	ip, [r3, #460]	@ float
+ 306 013a C3F8B8E1 		str	lr, [r3, #440]	@ float
+ 307 013e D966     		str	r1, [r3, #108]	@ float
+ 308 0140 C3F8C021 		str	r2, [r3, #448]	@ float
+ 309 0144 C3F8B421 		str	r2, [r3, #436]	@ float
+ 310 0148 C4F22010 		movt	r0, 16672
+ 311 014c FFF7FEFF 		bl	_Z19setWholeTimingTablef
+ 312 0150 0020     		movs	r0, #0
+ 313 0152 C4F2A000 		movt	r0, 16544
+ 314 0156 FFF7FEFF 		bl	_Z15setWholeFuelMapf
+ 315 015a 2068     		ldr	r0, [r4]
+ 316 015c FFF7FEFF 		bl	_Z18setSingleCoilDwellP22engine_configuration_s
+ 317 0160 3368     		ldr	r3, [r6]
+ 318 0162 2268     		ldr	r2, [r4]
+ 319 0164 4FF0330C 		mov	ip, #51
+ 320 0168 F1EE047A 		fconsts	s15, #20
+ 321 016c 4FF4967E 		mov	lr, #300
+ 322 0170 4521     		movs	r1, #69
+ 323 0172 4FF04E0B 		mov	fp, #78
+ 324 0176 4220     		movs	r0, #66
+ 325 0178 1926     		movs	r6, #25
+ 326 017a C2F8BC51 		str	r5, [r2, #444]
+ 327 017e C3F86CA1 		str	r10, [r3, #364]
+ 328 0182 C3F870A1 		str	r10, [r3, #368]
+ 329 0186 9F65     		str	r7, [r3, #88]
+ 330 0188 DF65     		str	r7, [r3, #92]
+ 331 018a 1F66     		str	r7, [r3, #96]
+ 332 018c C3F88450 		str	r5, [r3, #132]
+ 333 0190 C3F854B0 		str	fp, [r3, #84]
+ 334 0194 C3F820C0 		str	ip, [r3, #32]
+ 335 0198 5862     		str	r0, [r3, #36]
+ 336 019a C2ED177A 		fsts	s15, [r2, #92]
+ 337 019e 1046     		mov	r0, r2
+ 338 01a0 C3F84C81 		str	r8, [r3, #332]
+ 339 01a4 C3F88C50 		str	r5, [r3, #140]
+ 340 01a8 C3F808E0 		str	lr, [r3, #8]
+ 341 01ac 1E60     		str	r6, [r3]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s 			page 7
+
+
+ 342 01ae C3F88810 		str	r1, [r3, #136]
+ 343 01b2 FFF7FEFF 		bl	_Z27commonFrankensoAnalogInputsP22engine_configuration_s
+ 344 01b6 2068     		ldr	r0, [r4]
+ 345 01b8 00F58070 		add	r0, r0, #256
+ 346 01bc FFF7FEFF 		bl	_Z18setCommonNTCSensorP14ThermistorConf
+ 347 01c0 4FF44046 		mov	r6, #49152
+ 348 01c4 2068     		ldr	r0, [r4]
+ 349 01c6 C4F22856 		movt	r6, 17704
+ 350 01ca C0F81861 		str	r6, [r0, #280]	@ float
+ 351 01ce 00F59070 		add	r0, r0, #288
+ 352 01d2 FFF7FEFF 		bl	_Z18setCommonNTCSensorP14ThermistorConf
+ 353 01d6 2368     		ldr	r3, [r4]
+ 354 01d8 49F69A11 		movw	r1, #39322
+ 355 01dc 93F8D925 		ldrb	r2, [r3, #1497]	@ zero_extendqisi2
+ 356 01e0 C3F83C91 		str	r9, [r3, #316]
+ 357 01e4 C4F20911 		movt	r1, 16649
+ 358 01e8 C3F8D411 		str	r1, [r3, #468]	@ float
+ 359 01ec 65F3C712 		bfi	r2, r5, #7, #1
+ 360 01f0 4FF45E70 		mov	r0, #888
+ 361 01f4 0C21     		movs	r1, #12
+ 362 01f6 C3F83861 		str	r6, [r3, #312]	@ float
+ 363 01fa C3F84452 		str	r5, [r3, #580]
+ 364 01fe 83F8D925 		strb	r2, [r3, #1497]
+ 365 0202 C3F80C02 		str	r0, [r3, #524]
+ 366 0206 C3F81C11 		str	r1, [r3, #284]
+ 367 020a 03B0     		add	sp, sp, #12
+ 368              		@ sp needed
+ 369 020c BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 370              		.size	_Z15setFordEscortGtv, .-_Z15setFordEscortGtv
+ 371              		.section	.text._Z14setMiata1994_dv,"ax",%progbits
+ 372              		.align	2
+ 373              		.p2align 4,,15
+ 374              		.global	_Z14setMiata1994_dv
+ 375              		.thumb
+ 376              		.thumb_func
+ 377              		.type	_Z14setMiata1994_dv, %function
+ 378              	_Z14setMiata1994_dv:
+ 379              		@ args = 0, pretend = 0, frame = 0
+ 380              		@ frame_needed = 0, uses_anonymous_args = 0
+ 381 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 382 0002 FFF7FEFF 		bl	_ZL19setMiata1994_commonv
+ 383 0006 40F20002 		movw	r2, #:lower16:engineConfiguration
+ 384 000a 40F20003 		movw	r3, #:lower16:boardConfiguration
+ 385 000e C0F20002 		movt	r2, #:upper16:engineConfiguration
+ 386 0012 C0F20003 		movt	r3, #:upper16:boardConfiguration
+ 387 0016 1668     		ldr	r6, [r2]
+ 388 0018 1B68     		ldr	r3, [r3]
+ 389 001a 4CF2CE77 		movw	r7, #51150
+ 390 001e C4F22017 		movt	r7, 16672
+ 391 0022 3725     		movs	r5, #55
+ 392 0024 4224     		movs	r4, #66
+ 393 0026 1820     		movs	r0, #24
+ 394 0028 1721     		movs	r1, #23
+ 395 002a 5022     		movs	r2, #80
+ 396 002c C6F8D471 		str	r7, [r6, #468]	@ float
+ 397 0030 1D62     		str	r5, [r3, #32]
+ 398 0032 5C62     		str	r4, [r3, #36]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s 			page 8
+
+
+ 399 0034 9862     		str	r0, [r3, #40]
+ 400 0036 D962     		str	r1, [r3, #44]
+ 401 0038 1A60     		str	r2, [r3]
+ 402 003a F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 403              		.size	_Z14setMiata1994_dv, .-_Z14setMiata1994_dv
+ 404 003c AFF30080 		.section	.text._Z14setMiata1994_sv,"ax",%progbits
+ 405              		.align	2
+ 406              		.p2align 4,,15
+ 407              		.global	_Z14setMiata1994_sv
+ 408              		.thumb
+ 409              		.thumb_func
+ 410              		.type	_Z14setMiata1994_sv, %function
+ 411              	_Z14setMiata1994_sv:
+ 412              		@ args = 0, pretend = 0, frame = 0
+ 413              		@ frame_needed = 0, uses_anonymous_args = 0
+ 414 0000 2DE9F84F 		push	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 415 0004 40F20004 		movw	r4, #:lower16:engineConfiguration
+ 416 0008 40F20005 		movw	r5, #:lower16:boardConfiguration
+ 417 000c C0F20004 		movt	r4, #:upper16:engineConfiguration
+ 418 0010 C0F20005 		movt	r5, #:upper16:boardConfiguration
+ 419 0014 FFF7FEFF 		bl	_ZL19setMiata1994_commonv
+ 420 0018 2368     		ldr	r3, [r4]
+ 421 001a 2968     		ldr	r1, [r5]
+ 422 001c 49F69A10 		movw	r0, #39322
+ 423 0020 0122     		movs	r2, #1
+ 424 0022 C4F20910 		movt	r0, 16649
+ 425 0026 5027     		movs	r7, #80
+ 426 0028 0326     		movs	r6, #3
+ 427 002a C3F8D401 		str	r0, [r3, #468]	@ float
+ 428 002e C1F86871 		str	r7, [r1, #360]
+ 429 0032 03F51270 		add	r0, r3, #584
+ 430 0036 1146     		mov	r1, r2
+ 431 0038 C3F84862 		str	r6, [r3, #584]
+ 432 003c C3F8F025 		str	r2, [r3, #1520]
+ 433 0040 FFF7FEFF 		bl	_Z13initEgoSensorP12afr_sensor_s12ego_sensor_e
+ 434 0044 2368     		ldr	r3, [r4]
+ 435 0046 2A68     		ldr	r2, [r5]
+ 436 0048 40F20001 		movw	r1, #:lower16:config
+ 437 004c C0F20001 		movt	r1, #:upper16:config
+ 438 0050 4FF0330C 		mov	ip, #51
+ 439 0054 4FF0420E 		mov	lr, #66
+ 440 0058 1820     		movs	r0, #24
+ 441 005a 1727     		movs	r7, #23
+ 442 005c 4FF4FA76 		mov	r6, #500
+ 443 0060 4FF4C875 		mov	r5, #400
+ 444 0064 4FF0000B 		mov	fp, #0
+ 445 0068 4FF0000A 		mov	r10, #0
+ 446 006c C2F820C0 		str	ip, [r2, #32]
+ 447 0070 C2F824E0 		str	lr, [r2, #36]
+ 448 0074 9062     		str	r0, [r2, #40]
+ 449 0076 D762     		str	r7, [r2, #44]
+ 450 0078 9660     		str	r6, [r2, #8]
+ 451 007a 4FF4487C 		mov	ip, #800
+ 452 007e A3F8F855 		strh	r5, [r3, #1528]	@ movhi
+ 453 0082 4FF0560E 		mov	lr, #86
+ 454 0086 4FF41570 		mov	r0, #596
+ 455 008a C4F2B42B 		movt	fp, 17076
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s 			page 9
+
+
+ 456 008e C4F2BE2A 		movt	r10, 17086
+ 457 0092 41F29419 		movw	r9, #4500
+ 458 0096 4FF0C808 		mov	r8, #200
+ 459 009a 4527     		movs	r7, #69
+ 460 009c 0026     		movs	r6, #0
+ 461 009e 0425     		movs	r5, #4
+ 462 00a0 A3F85400 		strh	r0, [r3, #84]	@ movhi
+ 463 00a4 A3F8FA95 		strh	r9, [r3, #1530]	@ movhi
+ 464 00a8 A3F8FC85 		strh	r8, [r3, #1532]	@ movhi
+ 465 00ac C3F8ECC5 		str	ip, [r3, #1516]
+ 466 00b0 C3F8E0B1 		str	fp, [r3, #480]	@ float
+ 467 00b4 C3F8DCA1 		str	r10, [r3, #476]	@ float
+ 468 00b8 A3F852E0 		strh	lr, [r3, #82]	@ movhi
+ 469 00bc 0868     		ldr	r0, [r1]
+ 470 00be C2F88870 		str	r7, [r2, #136]
+ 471 00c2 C2F88C60 		str	r6, [r2, #140]
+ 472 00c6 C3F8A851 		str	r5, [r3, #424]
+ 473 00ca FFF7FEFF 		bl	_Z18setMazdaMiataNAMafP19persistent_config_s
+ 474 00ce 2368     		ldr	r3, [r4]
+ 475 00d0 0022     		movs	r2, #0
+ 476 00d2 C4F26632 		movt	r2, 17254
+ 477 00d6 9A60     		str	r2, [r3, #8]	@ float
+ 478 00d8 BDE8F88F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 479              		.size	_Z14setMiata1994_sv, .-_Z14setMiata1994_sv
+ 480 00dc AFF30080 		.section	.text._Z12setMiata1996v,"ax",%progbits
+ 481              		.align	2
+ 482              		.p2align 4,,15
+ 483              		.global	_Z12setMiata1996v
+ 484              		.thumb
+ 485              		.thumb_func
+ 486              		.type	_Z12setMiata1996v, %function
+ 487              	_Z12setMiata1996v:
+ 488              		@ args = 0, pretend = 0, frame = 0
+ 489              		@ frame_needed = 0, uses_anonymous_args = 0
+ 490 0000 2DE9F84F 		push	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 491 0004 40F20005 		movw	r5, #:lower16:config
+ 492 0008 C0F20005 		movt	r5, #:upper16:config
+ 493 000c 40F20004 		movw	r4, #:lower16:engineConfiguration
+ 494 0010 C0F20004 		movt	r4, #:upper16:engineConfiguration
+ 495 0014 FFF7FEFF 		bl	_ZL13commonMiataNav
+ 496 0018 2968     		ldr	r1, [r5]
+ 497 001a 2368     		ldr	r3, [r4]
+ 498 001c 46F25A42 		movw	r2, #25690
+ 499 0020 C3F6EB72 		movt	r2, 16363
+ 500 0024 01F52651 		add	r1, r1, #10624
+ 501 0028 40F20000 		movw	r0, #:lower16:.LANCHOR0
+ 502 002c C3F89021 		str	r2, [r3, #400]	@ float
+ 503 0030 3831     		adds	r1, r1, #56
+ 504 0032 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+ 505 0036 FFF7FEFF 		bl	_Z13copyFuelTablePA16_KfPA16_f
+ 506 003a 2968     		ldr	r1, [r5]
+ 507 003c 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 508 0040 01F53851 		add	r1, r1, #11776
+ 509 0044 3831     		adds	r1, r1, #56
+ 510 0046 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 511 004a FFF7FEFF 		bl	_Z15copyTimingTablePA16_KfPA16_f
+ 512 004e 40F20003 		movw	r3, #:lower16:boardConfiguration
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s 			page 10
+
+
+ 513 0052 C0F20003 		movt	r3, #:upper16:boardConfiguration
+ 514 0056 2168     		ldr	r1, [r4]
+ 515 0058 1B68     		ldr	r3, [r3]
+ 516 005a 0526     		movs	r6, #5
+ 517 005c 2625     		movs	r5, #38
+ 518 005e 4C27     		movs	r7, #76
+ 519 0060 4FF0440B 		mov	fp, #68
+ 520 0064 4FF0450A 		mov	r10, #69
+ 521 0068 4FF00109 		mov	r9, #1
+ 522 006c 4FF00B08 		mov	r8, #11
+ 523 0070 4FF00D0C 		mov	ip, #13
+ 524 0074 5022     		movs	r2, #80
+ 525 0076 C3F82861 		str	r6, [r3, #296]
+ 526 007a C3F82C51 		str	r5, [r3, #300]
+ 527 007e C3F818B0 		str	fp, [r3, #24]
+ 528 0082 C3F800A0 		str	r10, [r3]
+ 529 0086 0020     		movs	r0, #0
+ 530 0088 C1F84492 		str	r9, [r1, #580]
+ 531 008c C1F81C81 		str	r8, [r1, #284]
+ 532 0090 C1F80CC2 		str	ip, [r1, #524]
+ 533 0094 0224     		movs	r4, #2
+ 534 0096 5F65     		str	r7, [r3, #84]
+ 535 0098 1926     		movs	r6, #25
+ 536 009a 1825     		movs	r5, #24
+ 537 009c 4E27     		movs	r7, #78
+ 538 009e DF65     		str	r7, [r3, #92]
+ 539 00a0 9A65     		str	r2, [r3, #88]
+ 540 00a2 1A66     		str	r2, [r3, #96]
+ 541 00a4 C3F88400 		str	r0, [r3, #132]
+ 542 00a8 C1F8AC41 		str	r4, [r1, #428]
+ 543 00ac C1F8B041 		str	r4, [r1, #432]
+ 544 00b0 9A62     		str	r2, [r3, #40]
+ 545 00b2 DA62     		str	r2, [r3, #44]
+ 546 00b4 1A63     		str	r2, [r3, #48]
+ 547 00b6 5A63     		str	r2, [r3, #52]
+ 548 00b8 1865     		str	r0, [r3, #80]
+ 549 00ba 1E62     		str	r6, [r3, #32]
+ 550 00bc 5D62     		str	r5, [r3, #36]
+ 551 00be BDE8F88F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 552              		.size	_Z12setMiata1996v, .-_Z12setMiata1996v
+ 553 00c2 00BFAFF3 		.section	.rodata._ZL23miata_maf_advance_table,"a",%progbits
+ 553      0080AFF3 
+ 553      0080AFF3 
+ 553      0080
+ 554              		.align	2
+ 555              		.set	.LANCHOR1,. + 0
+ 556              		.type	_ZL23miata_maf_advance_table, %object
+ 557              		.size	_ZL23miata_maf_advance_table, 1024
+ 558              	_ZL23miata_maf_advance_table:
+ 559 0000 9EEF8F40 		.word	1083174814
+ 560 0004 E17A3E41 		.word	1094613729
+ 561 0008 1058BB41 		.word	1102796816
+ 562 000c 23DBCA41 		.word	1103813411
+ 563 0010 2B87CB41 		.word	1103857451
+ 564 0014 77BECB41 		.word	1103871607
+ 565 0018 6666EB41 		.word	1105946214
+ 566 001c 1DDA0242 		.word	1107483165
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s 			page 11
+
+
+ 567 0020 58390E42 		.word	1108228440
+ 568 0024 42601642 		.word	1108762690
+ 569 0028 F6A81042 		.word	1108388086
+ 570 002c BE9FF441 		.word	1106550718
+ 571 0030 F628E941 		.word	1105799414
+ 572 0034 1F85E841 		.word	1105757471
+ 573 0038 6891D841 		.word	1104712040
+ 574 003c 8941E241 		.word	1105346953
+ 575 0040 0AD79B40 		.word	1083954954
+ 576 0044 3F354241 		.word	1094858047
+ 577 0048 AC1CBB41 		.word	1102781612
+ 578 004c 0C02CC41 		.word	1103888908
+ 579 0050 2B87CB41 		.word	1103857451
+ 580 0054 77BECB41 		.word	1103871607
+ 581 0058 0000E941 		.word	1105788928
+ 582 005c C74B0442 		.word	1107577799
+ 583 0060 DFCF0842 		.word	1107873759
+ 584 0064 75131742 		.word	1108808565
+ 585 0068 93980F42 		.word	1108318355
+ 586 006c E926F441 		.word	1106519785
+ 587 0070 3D0AE741 		.word	1105660477
+ 588 0074 85EBE541 		.word	1105587077
+ 589 0078 1283D941 		.word	1104773906
+ 590 007c A69BDE41 		.word	1105107878
+ 591 0080 DD249A40 		.word	1083843805
+ 592 0084 27314441 		.word	1094988071
+ 593 0088 6666BF41 		.word	1103062630
+ 594 008c 0C02CC41 		.word	1103888908
+ 595 0090 0000CC41 		.word	1103888384
+ 596 0094 77BECB41 		.word	1103871607
+ 597 0098 79E9EA41 		.word	1105914233
+ 598 009c BCF40542 		.word	1107686588
+ 599 00a0 235B0B42 		.word	1108040483
+ 600 00a4 142E1642 		.word	1108749844
+ 601 00a8 00800F42 		.word	1108312064
+ 602 00ac F2D2F241 		.word	1106432754
+ 603 00b0 7F6AE841 		.word	1105750655
+ 604 00b4 C3F5E241 		.word	1105393091
+ 605 00b8 7593D841 		.word	1104712565
+ 606 00bc BE9FD641 		.word	1104584638
+ 607 00c0 1B2F9140 		.word	1083256603
+ 608 00c4 6ABC4641 		.word	1095154794
+ 609 00c8 46B6B941 		.word	1102689862
+ 610 00cc E926CB41 		.word	1103832809
+ 611 00d0 C74BCB41 		.word	1103842247
+ 612 00d4 48E1CB41 		.word	1103880520
+ 613 00d8 6666EB41 		.word	1105946214
+ 614 00dc 3FB50542 		.word	1107670335
+ 615 00e0 2F5D0842 		.word	1107844399
+ 616 00e4 4A8C1342 		.word	1108577354
+ 617 00e8 21301042 		.word	1108357153
+ 618 00ec CBA1F041 		.word	1106289099
+ 619 00f0 BE9FE341 		.word	1105436606
+ 620 00f4 8D97E041 		.word	1105237901
+ 621 00f8 1283D941 		.word	1104773906
+ 622 00fc C520D541 		.word	1104486597
+ 623 0100 39B49040 		.word	1083225145
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s 			page 12
+
+
+ 624 0104 F6283C41 		.word	1094461686
+ 625 0108 EC51BF41 		.word	1103057388
+ 626 010c EC51CB41 		.word	1103843820
+ 627 0110 7368CC41 		.word	1103915123
+ 628 0114 B81EC941 		.word	1103699640
+ 629 0118 9CC4EA41 		.word	1105904796
+ 630 011c 02AB0342 		.word	1107536642
+ 631 0120 8F420B42 		.word	1108034191
+ 632 0124 10D81442 		.word	1108662288
+ 633 0128 9C440F42 		.word	1108296860
+ 634 012c 508DED41 		.word	1106087248
+ 635 0130 5A64E641 		.word	1105618010
+ 636 0134 448BDE41 		.word	1105103684
+ 637 0138 B4C8E041 		.word	1105250484
+ 638 013c C74BDD41 		.word	1105021895
+ 639 0140 2DB29540 		.word	1083552301
+ 640 0144 8D973E41 		.word	1094621069
+ 641 0148 54E3BB41 		.word	1102832468
+ 642 014c 3108CB41 		.word	1103824945
+ 643 0150 7368CC41 		.word	1103915123
+ 644 0154 4C37CC41 		.word	1103902540
+ 645 0158 17D9EE41 		.word	1106172183
+ 646 015c 440B0642 		.word	1107692356
+ 647 0160 DD240B42 		.word	1108026589
+ 648 0164 1DDA1742 		.word	1108859421
+ 649 0168 02AB0F42 		.word	1108323074
+ 650 016c 8195F841 		.word	1106810241
+ 651 0170 54E3E241 		.word	1105388372
+ 652 0174 77BEE341 		.word	1105444471
+ 653 0178 0681D941 		.word	1104773382
+ 654 017c FED4D541 		.word	1104532734
+ 655 0180 448B9040 		.word	1083214660
+ 656 0184 C9764041 		.word	1094743753
+ 657 0188 E5D0BB41 		.word	1102827749
+ 658 018c D7A3CB41 		.word	1103864791
+ 659 0190 560ECB41 		.word	1103826518
+ 660 0194 1B2FCF41 		.word	1104097051
+ 661 0198 0E2DE941 		.word	1105800462
+ 662 019c DF4F0642 		.word	1107709919
+ 663 01a0 E17A0842 		.word	1107852001
+ 664 01a4 B21D1142 		.word	1108417970
+ 665 01a8 5EBA1142 		.word	1108458078
+ 666 01ac 60E5FA41 		.word	1106961760
+ 667 01b0 08ACE041 		.word	1105243144
+ 668 01b4 39B4E341 		.word	1105441849
+ 669 01b8 2B87DD41 		.word	1105037099
+ 670 01bc D7A3DE41 		.word	1105109975
+ 671 01c0 25069140 		.word	1083246117
+ 672 01c4 27314441 		.word	1094988071
+ 673 01c8 E17ABF41 		.word	1103067873
+ 674 01cc 79E9CB41 		.word	1103882617
+ 675 01d0 8FC2CC41 		.word	1103938191
+ 676 01d4 2B87D641 		.word	1104578347
+ 677 01d8 0C02F241 		.word	1106379276
+ 678 01dc CB210642 		.word	1107698123
+ 679 01e0 0E2D0B42 		.word	1108028686
+ 680 01e4 2B871742 		.word	1108838187
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s 			page 13
+
+
+ 681 01e8 7F6A1042 		.word	1108372095
+ 682 01ec CBA1F041 		.word	1106289099
+ 683 01f0 295CE441 		.word	1105484841
+ 684 01f4 986EEA41 		.word	1105882776
+ 685 01f8 5C8FD841 		.word	1104711516
+ 686 01fc 8D97E241 		.word	1105368973
+ 687 0200 25069140 		.word	1083246117
+ 688 0204 75934041 		.word	1094751093
+ 689 0208 1058BB41 		.word	1102796816
+ 690 020c A01ACC41 		.word	1103895200
+ 691 0210 560ECB41 		.word	1103826518
+ 692 0214 23DBCA41 		.word	1103813411
+ 693 0218 D578EF41 		.word	1106213077
+ 694 021c 35DE0542 		.word	1107680821
+ 695 0220 F4FD0A42 		.word	1108016628
+ 696 0224 E9261542 		.word	1108682473
+ 697 0228 1F851142 		.word	1108444447
+ 698 022c C520EC41 		.word	1105993925
+ 699 0230 5A64E641 		.word	1105618010
+ 700 0234 8941E341 		.word	1105412489
+ 701 0238 A69BD741 		.word	1104649126
+ 702 023c BE9FE141 		.word	1105305534
+ 703 0240 25069140 		.word	1083246117
+ 704 0244 E3A53F41 		.word	1094690275
+ 705 0248 0AD7BD41 		.word	1102960394
+ 706 024c 0C02CC41 		.word	1103888908
+ 707 0250 F4FDCC41 		.word	1103953396
+ 708 0254 BE9FD241 		.word	1104322494
+ 709 0258 B81EF041 		.word	1106255544
+ 710 025c 7DBF0442 		.word	1107607421
+ 711 0260 25860B42 		.word	1108051493
+ 712 0264 0E2D1842 		.word	1108880654
+ 713 0268 713D0F42 		.word	1108295025
+ 714 026c 77BEEE41 		.word	1106165367
+ 715 0270 B072EA41 		.word	1105883824
+ 716 0274 DBF9E741 		.word	1105721819
+ 717 0278 3BDFD841 		.word	1104731963
+ 718 027c 46B6EA41 		.word	1105901126
+ 719 0280 2FDD9040 		.word	1083235631
+ 720 0284 93184241 		.word	1094850707
+ 721 0288 54E3BB41 		.word	1102832468
+ 722 028c A470CB41 		.word	1103851684
+ 723 0290 7368CC41 		.word	1103915123
+ 724 0294 3F35D241 		.word	1104295231
+ 725 0298 AC1CED41 		.word	1106058412
+ 726 029c 1F050442 		.word	1107559711
+ 727 02a0 12030942 		.word	1107886866
+ 728 02a4 E9261742 		.word	1108813545
+ 729 02a8 D94E1042 		.word	1108365017
+ 730 02ac 0681F141 		.word	1106346246
+ 731 02b0 2DB2E841 		.word	1105769005
+ 732 02b4 17D9E341 		.word	1105451287
+ 733 02b8 B4C8DA41 		.word	1104857268
+ 734 02bc 4C37DE41 		.word	1105082188
+ 735 02c0 B0729C40 		.word	1083994800
+ 736 02c4 CDCC4241 		.word	1094896845
+ 737 02c8 022BBA41 		.word	1102719746
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s 			page 14
+
+
+ 738 02cc 23DBCA41 		.word	1103813411
+ 739 02d0 7368CC41 		.word	1103915123
+ 740 02d4 48E1CB41 		.word	1103880520
+ 741 02d8 2731EF41 		.word	1106194727
+ 742 02dc 3F350342 		.word	1107506495
+ 743 02e0 DD240B42 		.word	1108026589
+ 744 02e4 77BE1A42 		.word	1109048951
+ 745 02e8 54E30E42 		.word	1108271956
+ 746 02ec A8C6FA41 		.word	1106953896
+ 747 02f0 C520E741 		.word	1105666245
+ 748 02f4 FCA9E241 		.word	1105373692
+ 749 02f8 2731D941 		.word	1104752935
+ 750 02fc 54E3D941 		.word	1104798548
+ 751 0300 1B2F9140 		.word	1083256603
+ 752 0304 022B4141 		.word	1094789890
+ 753 0308 022BBF41 		.word	1103047426
+ 754 030c 3333CC41 		.word	1103901491
+ 755 0310 8FC2CC41 		.word	1103938191
+ 756 0314 A69BCB41 		.word	1103862694
+ 757 0318 8B6CF341 		.word	1106472075
+ 758 031c 23DB0642 		.word	1107745571
+ 759 0320 EC510842 		.word	1107841516
+ 760 0324 A01A1642 		.word	1108744864
+ 761 0328 9C440F42 		.word	1108296860
+ 762 032c 2FDDF541 		.word	1106631983
+ 763 0330 77BEE541 		.word	1105575543
+ 764 0334 DD24E441 		.word	1105470685
+ 765 0338 DD24DC41 		.word	1104946397
+ 766 033c EE7CD441 		.word	1104444654
+ 767 0340 1F859B40 		.word	1083933983
+ 768 0344 C5203E41 		.word	1094590661
+ 769 0348 8B6CBB41 		.word	1102802059
+ 770 034c 79E9CB41 		.word	1103882617
+ 771 0350 BA49CC41 		.word	1103907258
+ 772 0354 6DE7CC41 		.word	1103947629
+ 773 0358 F628EF41 		.word	1106192630
+ 774 035c 8D970642 		.word	1107728269
+ 775 0360 31080B42 		.word	1108019249
+ 776 0364 B6F31742 		.word	1108865974
+ 777 0368 21301042 		.word	1108357153
+ 778 036c CDCCF141 		.word	1106365645
+ 779 0370 8195E541 		.word	1105565057
+ 780 0374 60E5E341 		.word	1105454432
+ 781 0378 54E3D841 		.word	1104733012
+ 782 037c FCA9DD41 		.word	1105046012
+ 783 0380 23DB9540 		.word	1083562787
+ 784 0384 355E3E41 		.word	1094606389
+ 785 0388 4A0CBC41 		.word	1102842954
+ 786 038c FA7ECC41 		.word	1103920890
+ 787 0390 48E1CC41 		.word	1103946056
+ 788 0394 E926CC41 		.word	1103898345
+ 789 0398 9A99EF41 		.word	1106221466
+ 790 039c F8530642 		.word	1107710968
+ 791 03a0 27310A42 		.word	1107964199
+ 792 03a4 D3CD1042 		.word	1108397523
+ 793 03a8 E9260F42 		.word	1108289257
+ 794 03ac 8B6CF041 		.word	1106275467
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s 			page 15
+
+
+ 795 03b0 0456E241 		.word	1105352196
+ 796 03b4 6F12E241 		.word	1105334895
+ 797 03b8 E926DA41 		.word	1104815849
+ 798 03bc 6DE7D641 		.word	1104602989
+ 799 03c0 33339B40 		.word	1083913011
+ 800 03c4 0AD74341 		.word	1094965002
+ 801 03c8 5EBAC041 		.word	1103149662
+ 802 03cc E926CB41 		.word	1103832809
+ 803 03d0 8195CA41 		.word	1103795585
+ 804 03d4 1D5ACC41 		.word	1103911453
+ 805 03d8 EC51EF41 		.word	1106203116
+ 806 03dc 7F6A0442 		.word	1107585663
+ 807 03e0 62101042 		.word	1108349026
+ 808 03e4 64BB1742 		.word	1108851556
+ 809 03e8 19041142 		.word	1108411417
+ 810 03ec 2DB2ED41 		.word	1106096685
+ 811 03f0 3F35E541 		.word	1105540415
+ 812 03f4 295CE041 		.word	1105222697
+ 813 03f8 F2D2D941 		.word	1104794354
+ 814 03fc A245DE41 		.word	1105085858
+ 815              		.section	.rodata._ZL20miata_maf_fuel_table,"a",%progbits
+ 816              		.align	2
+ 817              		.set	.LANCHOR0,. + 0
+ 818              		.type	_ZL20miata_maf_fuel_table, %object
+ 819              		.size	_ZL20miata_maf_fuel_table, 1024
+ 820              	_ZL20miata_maf_fuel_table:
+ 821 0000 0AD7C33F 		.word	1069799178
+ 822 0004 1F856B3F 		.word	1064011039
+ 823 0008 A4703D3F 		.word	1060991140
+ 824 000c D7A3303F 		.word	1060152279
+ 825 0010 D7A3303F 		.word	1060152279
+ 826 0014 1F852B3F 		.word	1059816735
+ 827 0018 1F852B3F 		.word	1059816735
+ 828 001c 1F852B3F 		.word	1059816735
+ 829 0020 1F852B3F 		.word	1059816735
+ 830 0024 5C8F823F 		.word	1065520988
+ 831 0028 48E17A3F 		.word	1065017672
+ 832 002c 48E17A3F 		.word	1065017672
+ 833 0030 1F856B3F 		.word	1064011039
+ 834 0034 0AD7633F 		.word	1063507722
+ 835 0038 85EB513F 		.word	1062333317
+ 836 003c 52B85E3F 		.word	1063172178
+ 837 0040 52B83E40 		.word	1077852242
+ 838 0044 E17A0440 		.word	1074035425
+ 839 0048 52B8DE3F 		.word	1071560786
+ 840 004c 6666C63F 		.word	1069966950
+ 841 0050 3D0AB73F 		.word	1068960317
+ 842 0054 3D0A973F 		.word	1066863165
+ 843 0058 00000000 		.word	0
+ 844 005c 00000000 		.word	0
+ 845 0060 00000000 		.word	0
+ 846 0064 00000000 		.word	0
+ 847 0068 00000000 		.word	0
+ 848 006c 00000000 		.word	0
+ 849 0070 00000000 		.word	0
+ 850 0074 00000000 		.word	0
+ 851 0078 00000000 		.word	0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s 			page 16
+
+
+ 852 007c 00000000 		.word	0
+ 853 0080 CDCC9C40 		.word	1084017869
+ 854 0084 CDCC5C40 		.word	1079823565
+ 855 0088 D7A33040 		.word	1076929495
+ 856 008c 66661640 		.word	1075209830
+ 857 0090 B81E0540 		.word	1074077368
+ 858 0094 1F85EB3F 		.word	1072399647
+ 859 0098 00000000 		.word	0
+ 860 009c 00000000 		.word	0
+ 861 00a0 00000000 		.word	0
+ 862 00a4 00000000 		.word	0
+ 863 00a8 00000000 		.word	0
+ 864 00ac 00000000 		.word	0
+ 865 00b0 00000000 		.word	0
+ 866 00b4 00000000 		.word	0
+ 867 00b8 00000000 		.word	0
+ 868 00bc 00000000 		.word	0
+ 869 00c0 7B14DE40 		.word	1088296059
+ 870 00c4 85EB9940 		.word	1083829125
+ 871 00c8 5C8F7240 		.word	1081249628
+ 872 00cc C3F54840 		.word	1078523331
+ 873 00d0 7B142E40 		.word	1076761723
+ 874 00d4 48E11A40 		.word	1075503432
+ 875 00d8 3D0AF73F 		.word	1073154621
+ 876 00dc 6666E63F 		.word	1072064102
+ 877 00e0 00000000 		.word	0
+ 878 00e4 00000000 		.word	0
+ 879 00e8 00000000 		.word	0
+ 880 00ec 00000000 		.word	0
+ 881 00f0 00000000 		.word	0
+ 882 00f4 00000000 		.word	0
+ 883 00f8 00000000 		.word	0
+ 884 00fc 00000000 		.word	0
+ 885 0100 3D0A3F41 		.word	1094650429
+ 886 0104 A470D540 		.word	1087729828
+ 887 0108 CDCCA440 		.word	1084542157
+ 888 010c 295C8740 		.word	1082612777
+ 889 0110 EC516840 		.word	1080578540
+ 890 0114 F6284C40 		.word	1078733046
+ 891 0118 B81E3540 		.word	1077223096
+ 892 011c 8FC22540 		.word	1076216463
+ 893 0120 C3F51840 		.word	1075377603
+ 894 0124 295C0F40 		.word	1074748457
+ 895 0128 00000000 		.word	0
+ 896 012c 00000000 		.word	0
+ 897 0130 00000000 		.word	0
+ 898 0134 00000000 		.word	0
+ 899 0138 00000000 		.word	0
+ 900 013c 00000000 		.word	0
+ 901 0140 7B144A41 		.word	1095373947
+ 902 0144 F6282841 		.word	1093150966
+ 903 0148 B81EDD40 		.word	1088233144
+ 904 014c F628B440 		.word	1085548790
+ 905 0150 9A999940 		.word	1083808154
+ 906 0154 52B88640 		.word	1082570834
+ 907 0158 00007040 		.word	1081081856
+ 908 015c 9A995940 		.word	1079613850
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s 			page 17
+
+
+ 909 0160 8FC24540 		.word	1078313615
+ 910 0164 14AE3740 		.word	1077390868
+ 911 0168 33333340 		.word	1077097267
+ 912 016c 1F852B40 		.word	1076593951
+ 913 0170 AE472140 		.word	1075922862
+ 914 0174 EC511840 		.word	1075335660
+ 915 0178 5C8F1240 		.word	1074958172
+ 916 017c 00000000 		.word	0
+ 917 0180 8FC24141 		.word	1094828687
+ 918 0184 00004841 		.word	1095237632
+ 919 0188 D7A32041 		.word	1092658135
+ 920 018c 14AEE740 		.word	1088925204
+ 921 0190 1F85C340 		.word	1086555423
+ 922 0194 713DAA40 		.word	1084898673
+ 923 0198 295C9740 		.word	1083661353
+ 924 019c C3F58840 		.word	1082717635
+ 925 01a0 C3F57840 		.word	1081669059
+ 926 01a4 3D0A6740 		.word	1080494653
+ 927 01a8 5C8F6240 		.word	1080201052
+ 928 01ac E17A5440 		.word	1079278305
+ 929 01b0 EC514840 		.word	1078481388
+ 930 01b4 48E13A40 		.word	1077600584
+ 931 01b8 E17A3440 		.word	1077181153
+ 932 01bc 00000000 		.word	0
+ 933 01c0 A4704141 		.word	1094807716
+ 934 01c4 3D0A4341 		.word	1094912573
+ 935 01c8 48E14641 		.word	1095164232
+ 936 01cc 3D0A2B41 		.word	1093339709
+ 937 01d0 A470FD40 		.word	1090351268
+ 938 01d4 0AD7DB40 		.word	1088149258
+ 939 01d8 48E1C240 		.word	1086513480
+ 940 01dc 14AEAF40 		.word	1085255188
+ 941 01e0 3D0A9F40 		.word	1084164669
+ 942 01e4 48E19240 		.word	1083367752
+ 943 01e8 7B148E40 		.word	1083053179
+ 944 01ec 52B88640 		.word	1082570834
+ 945 01f0 7B147E40 		.word	1082004603
+ 946 01f4 CDCC6C40 		.word	1080872141
+ 947 01f8 33336340 		.word	1080242995
+ 948 01fc 00000000 		.word	0
+ 949 0200 A4704141 		.word	1094807716
+ 950 0204 48E14241 		.word	1094902088
+ 951 0208 A4704541 		.word	1095069860
+ 952 020c 14AE4741 		.word	1095216660
+ 953 0210 8FC23541 		.word	1094042255
+ 954 0214 14AE1741 		.word	1092070932
+ 955 0218 8FC2F540 		.word	1089847951
+ 956 021c E17ADC40 		.word	1088191201
+ 957 0220 295CC740 		.word	1086807081
+ 958 0224 EC51B840 		.word	1085821420
+ 959 0228 CDCCB440 		.word	1085590733
+ 960 022c 713DAA40 		.word	1084898673
+ 961 0230 3D0A9F40 		.word	1084164669
+ 962 0234 33339340 		.word	1083388723
+ 963 0238 CDCC8C40 		.word	1082969293
+ 964 023c 00000000 		.word	0
+ 965 0240 AE474141 		.word	1094797230
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s 			page 18
+
+
+ 966 0244 52B84241 		.word	1094891602
+ 967 0248 A4704541 		.word	1095069860
+ 968 024c 5C8F4641 		.word	1095143260
+ 969 0250 F6284C41 		.word	1095510262
+ 970 0254 1F854741 		.word	1095206175
+ 971 0258 EC513041 		.word	1093685740
+ 972 025c 52B81A41 		.word	1092270162
+ 973 0260 D7A30441 		.word	1090823127
+ 974 0264 295CE740 		.word	1088904233
+ 975 0268 0000E040 		.word	1088421888
+ 976 026c 713DDA40 		.word	1088044401
+ 977 0270 7B14CE40 		.word	1087247483
+ 978 0274 85EBC140 		.word	1086450565
+ 979 0278 EC51B840 		.word	1085821420
+ 980 027c 00000000 		.word	0
+ 981 0280 AE474141 		.word	1094797230
+ 982 0284 48E14241 		.word	1094902088
+ 983 0288 A4704541 		.word	1095069860
+ 984 028c 48E14641 		.word	1095164232
+ 985 0290 33334B41 		.word	1095447347
+ 986 0294 48E14E41 		.word	1095688520
+ 987 0298 E17A4C41 		.word	1095531233
+ 988 029c 66664641 		.word	1095132774
+ 989 02a0 66663641 		.word	1094084198
+ 990 02a4 5C8F2241 		.word	1092783964
+ 991 02a8 3D0A1741 		.word	1092028989
+ 992 02ac F6281041 		.word	1091578102
+ 993 02b0 8FC20541 		.word	1090896527
+ 994 02b4 5C8FFA40 		.word	1090162524
+ 995 02b8 6666EE40 		.word	1089365606
+ 996 02bc 00000000 		.word	0
+ 997 02c0 A4704141 		.word	1094807716
+ 998 02c4 52B84241 		.word	1094891602
+ 999 02c8 A4704541 		.word	1095069860
+ 1000 02cc 48E14641 		.word	1095164232
+ 1001 02d0 33334B41 		.word	1095447347
+ 1002 02d4 713D4E41 		.word	1095646577
+ 1003 02d8 1F854B41 		.word	1095468319
+ 1004 02dc CDCC4841 		.word	1095290061
+ 1005 02e0 14AE4F41 		.word	1095740948
+ 1006 02e4 295C4F41 		.word	1095719977
+ 1007 02e8 CDCC4441 		.word	1095027917
+ 1008 02ec A4703941 		.word	1094283428
+ 1009 02f0 66662E41 		.word	1093559910
+ 1010 02f4 B81E2141 		.word	1092689592
+ 1011 02f8 A4701941 		.word	1092186276
+ 1012 02fc 00000000 		.word	0
+ 1013 0300 AE474141 		.word	1094797230
+ 1014 0304 48E14241 		.word	1094902088
+ 1015 0308 A4704541 		.word	1095069860
+ 1016 030c 48E14641 		.word	1095164232
+ 1017 0310 33334B41 		.word	1095447347
+ 1018 0314 48E14E41 		.word	1095688520
+ 1019 0318 1F854B41 		.word	1095468319
+ 1020 031c 7B144A41 		.word	1095373947
+ 1021 0320 85EB4D41 		.word	1095625605
+ 1022 0324 C3F55841 		.word	1096349123
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s 			page 19
+
+
+ 1023 0328 F6286C41 		.word	1097607414
+ 1024 032c 85EB6941 		.word	1097460613
+ 1025 0330 713D6241 		.word	1096957297
+ 1026 0334 713D5641 		.word	1096170865
+ 1027 0338 3D0A4341 		.word	1094912573
+ 1028 033c 00000000 		.word	0
+ 1029 0340 A4704141 		.word	1094807716
+ 1030 0344 52B84241 		.word	1094891602
+ 1031 0348 A4704541 		.word	1095069860
+ 1032 034c 48E14641 		.word	1095164232
+ 1033 0350 295C4B41 		.word	1095457833
+ 1034 0354 52B84E41 		.word	1095678034
+ 1035 0358 0AD74B41 		.word	1095489290
+ 1036 035c B81E4941 		.word	1095311032
+ 1037 0360 7B144E41 		.word	1095636091
+ 1038 0364 B81E5D41 		.word	1096621752
+ 1039 0368 66667241 		.word	1098016358
+ 1040 036c B81E7941 		.word	1098456760
+ 1041 0370 8FC28141 		.word	1099022991
+ 1042 0374 66668041 		.word	1098933862
+ 1043 0378 A4707941 		.word	1098477732
+ 1044 037c 00000000 		.word	0
+ 1045 0380 AE474141 		.word	1094797230
+ 1046 0384 48E14241 		.word	1094902088
+ 1047 0388 A4704541 		.word	1095069860
+ 1048 038c 66664641 		.word	1095132774
+ 1049 0390 295C4B41 		.word	1095457833
+ 1050 0394 52B84E41 		.word	1095678034
+ 1051 0398 295C4B41 		.word	1095457833
+ 1052 039c E17A4841 		.word	1095269089
+ 1053 03a0 1F854F41 		.word	1095730463
+ 1054 03a4 CDCC5841 		.word	1096338637
+ 1055 03a8 85EB6D41 		.word	1097722757
+ 1056 03ac 52B87A41 		.word	1098561618
+ 1057 03b0 AE478141 		.word	1098991534
+ 1058 03b4 9A998141 		.word	1099012506
+ 1059 03b8 713D7E41 		.word	1098792305
+ 1060 03bc 00000000 		.word	0
+ 1061 03c0 AE474141 		.word	1094797230
+ 1062 03c4 52B84241 		.word	1094891602
+ 1063 03c8 A4704541 		.word	1095069860
+ 1064 03cc 48E14641 		.word	1095164232
+ 1065 03d0 0AD74B41 		.word	1095489290
+ 1066 03d4 5C8F4E41 		.word	1095667548
+ 1067 03d8 295C4B41 		.word	1095457833
+ 1068 03dc D7A34841 		.word	1095279575
+ 1069 03e0 1F854F41 		.word	1095730463
+ 1070 03e4 E17A5841 		.word	1096317665
+ 1071 03e8 85EB6D41 		.word	1097722757
+ 1072 03ec 14AE7741 		.word	1098362388
+ 1073 03f0 CDCC8041 		.word	1098960077
+ 1074 03f4 A4708141 		.word	1099002020
+ 1075 03f8 48E17E41 		.word	1098834248
+ 1076 03fc 00000000 		.word	0
+ 1077              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s 			page 20
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 mazda_miata.cpp
+C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s:17     .text._ZL13commonMiataNav:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s:22     .text._ZL13commonMiataNav:00000000 _ZL13commonMiataNav
+C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s:86     .text._ZL19setMiata1994_commonv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s:91     .text._ZL19setMiata1994_commonv:00000000 _ZL19setMiata1994_commonv
+C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s:817    .rodata._ZL20miata_maf_fuel_table:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s:555    .rodata._ZL23miata_maf_advance_table:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s:159    .text._Z12setMiata1990v:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s:165    .text._Z12setMiata1990v:00000000 _Z12setMiata1990v
+C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s:206    .text._Z15setFordEscortGtv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s:212    .text._Z15setFordEscortGtv:00000000 _Z15setFordEscortGtv
+C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s:372    .text._Z14setMiata1994_dv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s:378    .text._Z14setMiata1994_dv:00000000 _Z14setMiata1994_dv
+C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s:405    .text._Z14setMiata1994_sv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s:411    .text._Z14setMiata1994_sv:00000000 _Z14setMiata1994_sv
+C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s:481    .text._Z12setMiata1996v:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s:487    .text._Z12setMiata1996v:00000000 _Z12setMiata1996v
+C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s:554    .rodata._ZL23miata_maf_advance_table:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s:558    .rodata._ZL23miata_maf_advance_table:00000000 _ZL23miata_maf_advance_table
+C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s:816    .rodata._ZL20miata_maf_fuel_table:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccqzTqUe.s:820    .rodata._ZL20miata_maf_fuel_table:00000000 _ZL20miata_maf_fuel_table
+
+UNDEFINED SYMBOLS
+engineConfiguration
+boardConfiguration
+_Z14setFuelLoadBinff
+_Z13setFuelRpmBinff
+_Z18setCommonNTCSensorP14ThermistorConf
+config
+_Z13copyFuelTablePA16_KfPA16_f
+_Z15copyTimingTablePA16_KfPA16_f
+_Z19setFrankenso_01_LCDP21board_configuration_s
+_Z27commonFrankensoAnalogInputsP22engine_configuration_s
+_Z24setFrankenso0_1_joystickP22engine_configuration_s
+_Z12setDensoTODOP19persistent_config_s
+_Z13initEgoSensorP12afr_sensor_s12ego_sensor_e
+_Z19setWholeTimingTablef
+_Z15setWholeFuelMapf
+_Z18setSingleCoilDwellP22engine_configuration_s
+_Z18setMazdaMiataNAMafP19persistent_config_s

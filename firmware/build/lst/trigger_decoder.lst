@@ -1,0 +1,1645 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"trigger_decoder.cpp"
+  16              		.section	.text._ZL11onFindIndexP12TriggerState,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	_ZL11onFindIndexP12TriggerState, %function
+  22              	_ZL11onFindIndexP12TriggerState:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25              		@ link register save eliminated.
+  26 0000 00F11801 		add	r1, r0, #24
+  27 0004 0EC9     		ldmia	r1, {r1, r2, r3}
+  28 0006 0163     		str	r1, [r0, #48]
+  29 0008 4263     		str	r2, [r0, #52]
+  30 000a 8363     		str	r3, [r0, #56]
+  31 000c 7047     		bx	lr
+  32              		.size	_ZL11onFindIndexP12TriggerState, .-_ZL11onFindIndexP12TriggerState
+  33 000e 00BF     		.section	.text._Z21isTriggerDecoderErrorv,"ax",%progbits
+  34              		.align	2
+  35              		.p2align 4,,15
+  36              		.global	_Z21isTriggerDecoderErrorv
+  37              		.thumb
+  38              		.thumb_func
+  39              		.type	_Z21isTriggerDecoderErrorv, %function
+  40              	_Z21isTriggerDecoderErrorv:
+  41              		@ args = 0, pretend = 0, frame = 0
+  42              		@ frame_needed = 0, uses_anonymous_args = 0
+  43              		@ link register save eliminated.
+  44 0000 70B4     		push	{r4, r5, r6}
+  45 0002 40F20005 		movw	r5, #:lower16:.LANCHOR0
+  46 0006 C0F20005 		movt	r5, #:upper16:.LANCHOR0
+  47 000a D5F80431 		ldr	r3, [r5, #260]
+  48 000e 052B     		cmp	r3, #5
+  49 0010 1EDC     		bgt	.L3
+  50 0012 D5F80461 		ldr	r6, [r5, #260]
+  51 0016 D5F80011 		ldr	r1, [r5, #256]
+  52 001a 002E     		cmp	r6, #0
+  53 001c D8BF     		it	le
+  54 001e 0020     		movle	r0, #0
+  55 0020 14DD     		ble	.L11
+  56              	.L4:
+  57 0022 0024     		movs	r4, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 2
+
+
+  58 0024 D5F80821 		ldr	r2, [r5, #264]
+  59 0028 2046     		mov	r0, r4
+  60              	.L9:
+  61 002a 0029     		cmp	r1, #0
+  62 002c 0B46     		mov	r3, r1
+  63 002e 01DA     		bge	.L6
+  64              	.L7:
+  65 0030 9B18     		adds	r3, r3, r2
+  66 0032 FDD4     		bmi	.L7
+  67              	.L6:
+  68 0034 55F82330 		ldr	r3, [r5, r3, lsl #2]
+  69 0038 0130     		adds	r0, r0, #1
+  70 003a B042     		cmp	r0, r6
+  71 003c 1C44     		add	r4, r4, r3
+  72 003e 01F1FF31 		add	r1, r1, #-1
+  73 0042 F2DB     		blt	.L9
+  74 0044 042C     		cmp	r4, #4
+  75 0046 D4BF     		ite	le
+  76 0048 0020     		movle	r0, #0
+  77 004a 0120     		movgt	r0, #1
+  78              	.L11:
+  79 004c 70BC     		pop	{r4, r5, r6}
+  80 004e 7047     		bx	lr
+  81              	.L3:
+  82 0050 D5F80011 		ldr	r1, [r5, #256]
+  83 0054 0626     		movs	r6, #6
+  84 0056 E4E7     		b	.L4
+  85              		.size	_Z21isTriggerDecoderErrorv, .-_Z21isTriggerDecoderErrorv
+  86              		.global	__aeabi_ul2f
+  87 0058 AFF30080 		.section	.text._ZN12TriggerState19getTriggerDutyCycleEi,"ax",%progbits
+  87      AFF30080 
+  88              		.align	2
+  89              		.p2align 4,,15
+  90              		.global	_ZN12TriggerState19getTriggerDutyCycleEi
+  91              		.thumb
+  92              		.thumb_func
+  93              		.type	_ZN12TriggerState19getTriggerDutyCycleEi, %function
+  94              	_ZN12TriggerState19getTriggerDutyCycleEi:
+  95              		@ args = 0, pretend = 0, frame = 0
+  96              		@ frame_needed = 0, uses_anonymous_args = 0
+  97 0000 08B5     		push	{r3, lr}
+  98 0002 00EB8101 		add	r1, r0, r1, lsl #2
+  99 0006 2DED028B 		fstmfdd	sp!, {d8}
+ 100 000a 91ED098A 		flds	s16, [r1, #36]	@ int
+ 101 000e DFED097A 		flds	s15, .L14
+ 102 0012 B8EE488A 		fuitos	s16, s16
+ 103 0016 D0E92A01 		ldrd	r0, [r0, #168]
+ 104 001a 28EE278A 		fmuls	s16, s16, s15
+ 105 001e FFF7FEFF 		bl	__aeabi_ul2f
+ 106 0022 07EE100A 		fmsr	s14, r0
+ 107 0026 88EE077A 		fdivs	s14, s16, s14
+ 108 002a BDEC028B 		fldmfdd	sp!, {d8}
+ 109 002e 17EE100A 		fmrs	r0, s14
+ 110 0032 08BD     		pop	{r3, pc}
+ 111              	.L15:
+ 112              		.align	2
+ 113              	.L14:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 3
+
+
+ 114 0034 0000C842 		.word	1120403456
+ 115              		.size	_ZN12TriggerState19getTriggerDutyCycleEi, .-_ZN12TriggerState19getTriggerDutyCycleEi
+ 116              		.global	__aeabi_f2d
+ 117 0038 AFF30080 		.section	.text._ZN12TriggerState18decodeTriggerEventE15trigger_event_ey,"ax",%progbits
+ 117      AFF30080 
+ 118              		.align	2
+ 119              		.p2align 4,,15
+ 120              		.global	_ZN12TriggerState18decodeTriggerEventE15trigger_event_ey
+ 121              		.thumb
+ 122              		.thumb_func
+ 123              		.type	_ZN12TriggerState18decodeTriggerEventE15trigger_event_ey, %function
+ 124              	_ZN12TriggerState18decodeTriggerEventE15trigger_event_ey:
+ 125              		@ args = 0, pretend = 0, frame = 16
+ 126              		@ frame_needed = 0, uses_anonymous_args = 0
+ 127 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 128 0004 0529     		cmp	r1, #5
+ 129 0006 8BB0     		sub	sp, sp, #44
+ 130 0008 0646     		mov	r6, r0
+ 131 000a CDE90623 		strd	r2, [sp, #24]
+ 132 000e 00F2D180 		bhi	.L79
+ 133 0012 40F20008 		movw	r8, #:lower16:engineConfiguration
+ 134 0016 C0F20008 		movt	r8, #:upper16:engineConfiguration
+ 135 001a 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 136 001e D8F80000 		ldr	r0, [r8]
+ 137 0022 90F8E525 		ldrb	r2, [r0, #1509]	@ zero_extendqisi2
+ 138 0026 C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ 139 002a 5506     		lsls	r5, r2, #25
+ 140 002c 13F801A0 		ldrb	r10, [r3, r1]	@ zero_extendqisi2
+ 141 0030 96F86030 		ldrb	r3, [r6, #96]	@ zero_extendqisi2
+ 142 0034 06D4     		bmi	.L19
+ 143 0036 96F86120 		ldrb	r2, [r6, #97]	@ zero_extendqisi2
+ 144 003a 9A42     		cmp	r2, r3
+ 145 003c 02BF     		ittt	eq
+ 146 003e 726C     		ldreq	r2, [r6, #68]
+ 147 0040 0132     		addeq	r2, r2, #1
+ 148 0042 7264     		streq	r2, [r6, #68]
+ 149              	.L19:
+ 150 0044 06EB8A09 		add	r9, r6, r10, lsl #2
+ 151 0048 86F86130 		strb	r3, [r6, #97]
+ 152 004c 86F86010 		strb	r1, [r6, #96]
+ 153 0050 D9F85420 		ldr	r2, [r9, #84]
+ 154 0054 06EB8103 		add	r3, r6, r1, lsl #2
+ 155 0058 0132     		adds	r2, r2, #1
+ 156 005a C9F85420 		str	r2, [r9, #84]
+ 157 005e 5A6E     		ldr	r2, [r3, #100]
+ 158 0060 0132     		adds	r2, r2, #1
+ 159 0062 5A66     		str	r2, [r3, #100]
+ 160 0064 96F8A430 		ldrb	r3, [r6, #164]	@ zero_extendqisi2
+ 161 0068 4FF0000C 		mov	ip, #0
+ 162 006c 0024     		movs	r4, #0
+ 163 006e 002B     		cmp	r3, #0
+ 164 0070 36D0     		beq	.L80
+ 165              	.L20:
+ 166 0072 40F20007 		movw	r7, #:lower16:_engine
+ 167 0076 C0F20007 		movt	r7, #:upper16:_engine
+ 168 007a C6F80CC0 		str	ip, [r6, #12]
+ 169 007e 97F8E8CD 		ldrb	ip, [r7, #3560]	@ zero_extendqisi2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 4
+
+
+ 170 0082 BCF1000F 		cmp	ip, #0
+ 171 0086 3CD0     		beq	.L22
+ 172 0088 0129     		cmp	r1, #1
+ 173 008a 3CD0     		beq	.L24
+ 174              	.L23:
+ 175 008c 06EBCA0A 		add	r10, r6, r10, lsl #3
+ 176 0090 DAE92023 		ldrd	r2, [r10, #128]
+ 177 0094 52EA0304 		orrs	r4, r2, r3
+ 178 0098 00F09580 		beq	.L25
+ 179 009c D9F81830 		ldr	r3, [r9, #24]
+ 180 00a0 0699     		ldr	r1, [sp, #24]
+ 181 00a2 0B44     		add	r3, r3, r1
+ 182 00a4 991A     		subs	r1, r3, r2
+ 183 00a6 0022     		movs	r2, #0
+ 184 00a8 0023     		movs	r3, #0
+ 185 00aa C9F81810 		str	r1, [r9, #24]
+ 186 00ae CAE92023 		strd	r2, [r10, #128]
+ 187              	.L26:
+ 188 00b2 90F8E535 		ldrb	r3, [r0, #1509]	@ zero_extendqisi2
+ 189 00b6 F26C     		ldr	r2, [r6, #76]
+ 190 00b8 5C06     		lsls	r4, r3, #25
+ 191 00ba 48BF     		it	mi
+ 192 00bc 0132     		addmi	r2, r2, #1
+ 193 00be 97F8E93D 		ldrb	r3, [r7, #3561]	@ zero_extendqisi2
+ 194 00c2 0132     		adds	r2, r2, #1
+ 195 00c4 F264     		str	r2, [r6, #76]
+ 196 00c6 43B1     		cbz	r3, .L16
+ 197 00c8 DDE90601 		ldrd	r0, [sp, #24]
+ 198 00cc F368     		ldr	r3, [r6, #12]
+ 199 00ce C6E90401 		strd	r0, [r6, #16]
+ 200 00d2 0022     		movs	r2, #0
+ 201 00d4 B360     		str	r3, [r6, #8]
+ 202 00d6 86F8A420 		strb	r2, [r6, #164]
+ 203              	.L16:
+ 204 00da 0BB0     		add	sp, sp, #44
+ 205              		@ sp needed
+ 206 00dc BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 207              	.L80:
+ 208 00e0 D6E90423 		ldrd	r2, [r6, #16]
+ 209 00e4 DDE90645 		ldrd	r4, [sp, #24]
+ 210 00e8 A41A     		subs	r4, r4, r2
+ 211 00ea 65EB0305 		sbc	r5, r5, r3
+ 212 00ee BFA3     		adr	r3, .L85+4
+ 213 00f0 D3E90023 		ldrd	r2, [r3]
+ 214 00f4 AB42     		cmp	r3, r5
+ 215 00f6 08BF     		it eq
+ 216 00f8 A242     		cmpeq	r2, r4
+ 217 00fa 38BF     		it	cc
+ 218 00fc 1446     		movcc	r4, r2
+ 219 00fe A446     		mov	ip, r4
+ 220 0100 B7E7     		b	.L20
+ 221              	.L22:
+ 222 0102 0029     		cmp	r1, #0
+ 223 0104 C2D1     		bne	.L23
+ 224              	.L24:
+ 225 0106 97F88412 		ldrb	r1, [r7, #644]	@ zero_extendqisi2
+ 226 010a 4FF0000B 		mov	fp, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 5
+
+
+ 227 010e 86F8A4B0 		strb	fp, [r6, #164]
+ 228 0112 0029     		cmp	r1, #0
+ 229 0114 5CD0     		beq	.L30
+ 230 0116 96ED026A 		flds	s12, [r6, #8]	@ int
+ 231 011a B34B     		ldr	r3, .L85
+ 232 011c F8EE467A 		fuitos	s15, s12
+ 233 0120 D3ED006A 		flds	s13, [r3]
+ 234 0124 06EE104A 		fmsr	s12, r4	@ int
+ 235 0128 67EEA66A 		fmuls	s13, s15, s13
+ 236 012c B8EEC67A 		fsitos	s14, s12
+ 237 0130 B4EEE67A 		fcmpes	s14, s13
+ 238 0134 F1EE10FA 		fmstat
+ 239 0138 0CDD     		ble	.L31
+ 240 013a D3ED016A 		flds	s13, [r3, #4]
+ 241 013e 67EEA66A 		fmuls	s13, s15, s13
+ 242 0142 B4EEE67A 		fcmpes	s14, s13
+ 243 0146 F1EE10FA 		fmstat
+ 244 014a 54BF     		ite	pl
+ 245 014c 4FF0000B 		movpl	fp, #0
+ 246 0150 4FF0010B 		movmi	fp, #1
+ 247              	.L31:
+ 248 0154 90F8E535 		ldrb	r3, [r0, #1509]	@ zero_extendqisi2
+ 249 0158 1807     		lsls	r0, r3, #28
+ 250 015a 00F1D980 		bmi	.L81
+ 251              	.L33:
+ 252 015e BBF1000F 		cmp	fp, #0
+ 253 0162 40F02181 		bne	.L82
+ 254              	.L39:
+ 255 0166 06EBCA0A 		add	r10, r6, r10, lsl #3
+ 256 016a DAE92023 		ldrd	r2, [r10, #128]
+ 257 016e 52EA0301 		orrs	r1, r2, r3
+ 258 0172 00F0E980 		beq	.L49
+ 259 0176 D9F81830 		ldr	r3, [r9, #24]
+ 260 017a 069C     		ldr	r4, [sp, #24]
+ 261 017c 2344     		add	r3, r3, r4
+ 262 017e 9A1A     		subs	r2, r3, r2
+ 263 0180 0020     		movs	r0, #0
+ 264 0182 0021     		movs	r1, #0
+ 265 0184 C9F81820 		str	r2, [r9, #24]
+ 266 0188 CAE92001 		strd	r0, [r10, #128]
+ 267              	.L50:
+ 268 018c D8F80030 		ldr	r3, [r8]
+ 269 0190 93F8E535 		ldrb	r3, [r3, #1509]	@ zero_extendqisi2
+ 270 0194 13F0400F 		tst	r3, #64
+ 271 0198 F36C     		ldr	r3, [r6, #76]
+ 272 019a 18BF     		it	ne
+ 273 019c 0133     		addne	r3, r3, #1
+ 274 019e 0133     		adds	r3, r3, #1
+ 275 01a0 F364     		str	r3, [r6, #76]
+ 276              	.L48:
+ 277 01a2 DDE90601 		ldrd	r0, [sp, #24]
+ 278 01a6 F368     		ldr	r3, [r6, #12]
+ 279 01a8 C6E90401 		strd	r0, [r6, #16]
+ 280 01ac B360     		str	r3, [r6, #8]
+ 281 01ae 0BB0     		add	sp, sp, #44
+ 282              		@ sp needed
+ 283 01b0 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 6
+
+
+ 284              	.L79:
+ 285 01b4 40F20000 		movw	r0, #:lower16:.LC0
+ 286 01b8 C0F20000 		movt	r0, #:upper16:.LC0
+ 287 01bc 0BB0     		add	sp, sp, #44
+ 288              		@ sp needed
+ 289 01be BDE8F04F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 290 01c2 FFF7FEBF 		b	firmwareError
+ 291              	.L25:
+ 292 01c6 DDE90623 		ldrd	r2, [sp, #24]
+ 293 01ca CAE92023 		strd	r2, [r10, #128]
+ 294 01ce 70E7     		b	.L26
+ 295              	.L30:
+ 296 01d0 90F8E525 		ldrb	r2, [r0, #1509]	@ zero_extendqisi2
+ 297 01d4 3379     		ldrb	r3, [r6, #4]	@ zero_extendqisi2
+ 298 01d6 DFF81CB2 		ldr	fp, .L85+12
+ 299 01da 12F0400F 		tst	r2, #64
+ 300 01de 0CBF     		ite	eq
+ 301 01e0 0122     		moveq	r2, #1
+ 302 01e2 0222     		movne	r2, #2
+ 303 01e4 2BB1     		cbz	r3, .L38
+ 304 01e6 DBF81010 		ldr	r1, [fp, #16]
+ 305 01ea F36C     		ldr	r3, [r6, #76]
+ 306 01ec 8A1A     		subs	r2, r1, r2
+ 307 01ee 9342     		cmp	r3, r2
+ 308 01f0 B9D3     		bcc	.L39
+ 309              	.L38:
+ 310 01f2 716D     		ldr	r1, [r6, #84]
+ 311 01f4 D7F8EC2D 		ldr	r2, [r7, #3564]
+ 312 01f8 40F20003 		movw	r3, #:lower16:_engine
+ 313 01fc 9142     		cmp	r1, r2
+ 314 01fe C0F20003 		movt	r3, #:upper16:_engine
+ 315 0202 00F0BC80 		beq	.L83
+ 316              	.L36:
+ 317 0206 40F20000 		movw	r0, #:lower16:.LANCHOR3
+ 318 020a C0F20000 		movt	r0, #:upper16:.LANCHOR3
+ 319 020e 0121     		movs	r1, #1
+ 320 0210 FFF7FEFF 		bl	_ZN9OutputPin8setValueEi
+ 321 0214 FFF7FEFF 		bl	getTimeNowNt
+ 322 0218 F36B     		ldr	r3, [r6, #60]
+ 323 021a D8F80020 		ldr	r2, [r8]
+ 324 021e 0133     		adds	r3, r3, #1
+ 325 0220 F363     		str	r3, [r6, #60]
+ 326 0222 92F8E525 		ldrb	r2, [r2, #1509]	@ zero_extendqisi2
+ 327 0226 40F20003 		movw	r3, #:lower16:.LANCHOR4
+ 328 022a C0F20003 		movt	r3, #:upper16:.LANCHOR4
+ 329 022e C3E90001 		strd	r0, [r3]
+ 330 0232 1307     		lsls	r3, r2, #28
+ 331 0234 00F1BB80 		bmi	.L53
+ 332              	.L78:
+ 333 0238 0120     		movs	r0, #1
+ 334              	.L54:
+ 335 023a 40F20003 		movw	r3, #:lower16:.LANCHOR0
+ 336 023e C0F20003 		movt	r3, #:upper16:.LANCHOR0
+ 337 0242 D3F80011 		ldr	r1, [r3, #256]
+ 338 0246 D3F80821 		ldr	r2, [r3, #264]
+ 339 024a 0131     		adds	r1, r1, #1
+ 340 024c C3F80011 		str	r1, [r3, #256]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 7
+
+
+ 341 0250 D3F80011 		ldr	r1, [r3, #256]
+ 342 0254 9142     		cmp	r1, r2
+ 343 0256 04BF     		itt	eq
+ 344 0258 0022     		moveq	r2, #0
+ 345 025a C3F80021 		streq	r2, [r3, #256]
+ 346 025e D3F80021 		ldr	r2, [r3, #256]
+ 347 0262 43F82200 		str	r0, [r3, r2, lsl #2]
+ 348 0266 D3F80421 		ldr	r2, [r3, #260]
+ 349 026a 0132     		adds	r2, r2, #1
+ 350 026c C3F80421 		str	r2, [r3, #260]
+ 351 0270 FFF7FEFF 		bl	_Z21isTriggerDecoderErrorv
+ 352 0274 0028     		cmp	r0, #0
+ 353 0276 6CD1     		bne	.L84
+ 354              	.L42:
+ 355 0278 0123     		movs	r3, #1
+ 356 027a 06EBCA0A 		add	r10, r6, r10, lsl #3
+ 357 027e 3371     		strb	r3, [r6, #4]
+ 358 0280 DAE92023 		ldrd	r2, [r10, #128]
+ 359 0284 52EA0300 		orrs	r0, r2, r3
+ 360 0288 59D0     		beq	.L43
+ 361 028a D9F81830 		ldr	r3, [r9, #24]
+ 362 028e 0699     		ldr	r1, [sp, #24]
+ 363 0290 0B44     		add	r3, r3, r1
+ 364 0292 9A1A     		subs	r2, r3, r2
+ 365 0294 0020     		movs	r0, #0
+ 366 0296 0021     		movs	r1, #0
+ 367 0298 C9F81820 		str	r2, [r9, #24]
+ 368 029c CAE92001 		strd	r0, [r10, #128]
+ 369              	.L44:
+ 370 02a0 D8F80030 		ldr	r3, [r8]
+ 371 02a4 F26C     		ldr	r2, [r6, #76]
+ 372 02a6 93F8E535 		ldrb	r3, [r3, #1509]	@ zero_extendqisi2
+ 373 02aa 5906     		lsls	r1, r3, #25
+ 374 02ac 48BF     		it	mi
+ 375 02ae 0132     		addmi	r2, r2, #1
+ 376 02b0 3368     		ldr	r3, [r6]
+ 377 02b2 0132     		adds	r2, r2, #1
+ 378 02b4 F264     		str	r2, [r6, #76]
+ 379 02b6 0BB1     		cbz	r3, .L47
+ 380 02b8 3046     		mov	r0, r6
+ 381 02ba 9847     		blx	r3
+ 382              	.L47:
+ 383 02bc 3346     		mov	r3, r6
+ 384 02be 06F12400 		add	r0, r6, #36
+ 385 02c2 53F8187F 		ldr	r7, [r3, #24]!	@ unaligned
+ 386 02c6 5968     		ldr	r1, [r3, #4]	@ unaligned
+ 387 02c8 9A68     		ldr	r2, [r3, #8]	@ unaligned
+ 388 02ca 7762     		str	r7, [r6, #36]	@ unaligned
+ 389 02cc 4160     		str	r1, [r0, #4]	@ unaligned
+ 390 02ce 8260     		str	r2, [r0, #8]	@ unaligned
+ 391 02d0 D6E92C23 		ldrd	r2, [r6, #176]
+ 392 02d4 DDE90601 		ldrd	r0, [sp, #24]
+ 393 02d8 821A     		subs	r2, r0, r2
+ 394 02da 61EB0303 		sbc	r3, r1, r3
+ 395 02de C6E92C01 		strd	r0, [r6, #176]
+ 396 02e2 C6E92A23 		strd	r2, [r6, #168]
+ 397 02e6 3046     		mov	r0, r6
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 8
+
+
+ 398 02e8 FFF7FEFF 		bl	_ZN12TriggerState5clearEv
+ 399 02ec D6E92623 		ldrd	r2, [r6, #152]
+ 400 02f0 DBF81070 		ldr	r7, [fp, #16]
+ 401 02f4 D6F8A000 		ldr	r0, [r6, #160]
+ 402 02f8 316D     		ldr	r1, [r6, #80]
+ 403 02fa D219     		adds	r2, r2, r7
+ 404 02fc 43EBE773 		adc	r3, r3, r7, asr #31
+ 405 0300 0130     		adds	r0, r0, #1
+ 406 0302 0131     		adds	r1, r1, #1
+ 407 0304 C6E92623 		strd	r2, [r6, #152]
+ 408 0308 C6F8A000 		str	r0, [r6, #160]
+ 409 030c 3165     		str	r1, [r6, #80]
+ 410 030e 48E7     		b	.L48
+ 411              	.L81:
+ 412 0310 C7EE276A 		fdivs	s13, s14, s15
+ 413 0314 40F20003 		movw	r3, #:lower16:.LANCHOR2
+ 414 0318 C0F20003 		movt	r3, #:upper16:.LANCHOR2
+ 415 031c 1C68     		ldr	r4, [r3]
+ 416 031e 16EE900A 		fmrs	r0, s13
+ 417 0322 FFF7FEFF 		bl	__aeabi_f2d
+ 418 0326 F56C     		ldr	r5, [r6, #76]
+ 419 0328 0B46     		mov	r3, r1
+ 420 032a 40F20001 		movw	r1, #:lower16:.LC1
+ 421 032e 0246     		mov	r2, r0
+ 422 0330 0095     		str	r5, [sp]
+ 423 0332 2046     		mov	r0, r4
+ 424 0334 C0F20001 		movt	r1, #:upper16:.LC1
+ 425 0338 FFF7FEFF 		bl	scheduleMsg
+ 426 033c 0FE7     		b	.L33
+ 427              	.L43:
+ 428 033e DDE90623 		ldrd	r2, [sp, #24]
+ 429 0342 CAE92023 		strd	r2, [r10, #128]
+ 430 0346 ABE7     		b	.L44
+ 431              	.L49:
+ 432 0348 DDE90601 		ldrd	r0, [sp, #24]
+ 433 034c CAE92001 		strd	r0, [r10, #128]
+ 434 0350 1CE7     		b	.L50
+ 435              	.L84:
+ 436 0352 D7F8F41D 		ldr	r1, [r7, #3572]
+ 437 0356 D7F8EC2D 		ldr	r2, [r7, #3564]
+ 438 035a D7F8F03D 		ldr	r3, [r7, #3568]
+ 439 035e 706D     		ldr	r0, [r6, #84]
+ 440 0360 B76D     		ldr	r7, [r6, #88]
+ 441 0362 F56D     		ldr	r5, [r6, #92]
+ 442 0364 0091     		str	r1, [sp]
+ 443 0366 40F20001 		movw	r1, #:lower16:.LC3
+ 444 036a 0190     		str	r0, [sp, #4]
+ 445 036c 0297     		str	r7, [sp, #8]
+ 446 036e 0395     		str	r5, [sp, #12]
+ 447 0370 C0F20001 		movt	r1, #:upper16:.LC3
+ 448 0374 40F25E20 		movw	r0, #606
+ 449 0378 FFF7FEFF 		bl	warning
+ 450 037c 7CE7     		b	.L42
+ 451              	.L83:
+ 452 037e B16D     		ldr	r1, [r6, #88]
+ 453 0380 D3F8F02D 		ldr	r2, [r3, #3568]
+ 454 0384 9142     		cmp	r1, r2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 9
+
+
+ 455 0386 7FF43EAF 		bne	.L36
+ 456 038a D3F8F42D 		ldr	r2, [r3, #3572]
+ 457 038e F36D     		ldr	r3, [r6, #92]
+ 458 0390 9342     		cmp	r3, r2
+ 459 0392 7FF438AF 		bne	.L36
+ 460 0396 40F20000 		movw	r0, #:lower16:.LANCHOR3
+ 461 039a C0F20000 		movt	r0, #:upper16:.LANCHOR3
+ 462 039e 0021     		movs	r1, #0
+ 463 03a0 FFF7FEFF 		bl	_ZN9OutputPin8setValueEi
+ 464 03a4 0020     		movs	r0, #0
+ 465 03a6 48E7     		b	.L54
+ 466              	.L82:
+ 467 03a8 DFF848B0 		ldr	fp, .L85+12
+ 468 03ac 21E7     		b	.L38
+ 469              	.L53:
+ 470 03ae 40F20003 		movw	r3, #:lower16:.LANCHOR2
+ 471 03b2 D7F8F05D 		ldr	r5, [r7, #3568]
+ 472 03b6 716D     		ldr	r1, [r6, #84]
+ 473 03b8 F26C     		ldr	r2, [r6, #76]
+ 474 03ba C0F20003 		movt	r3, #:upper16:.LANCHOR2
+ 475 03be 1868     		ldr	r0, [r3]
+ 476 03c0 D7F8EC3D 		ldr	r3, [r7, #3564]
+ 477 03c4 0095     		str	r5, [sp]
+ 478 03c6 D7F8F44D 		ldr	r4, [r7, #3572]
+ 479 03ca D6F858E0 		ldr	lr, [r6, #88]
+ 480 03ce 0194     		str	r4, [sp, #4]
+ 481 03d0 F56D     		ldr	r5, [r6, #92]
+ 482 03d2 0291     		str	r1, [sp, #8]
+ 483 03d4 40F20001 		movw	r1, #:lower16:.LC2
+ 484 03d8 CDF80CE0 		str	lr, [sp, #12]
+ 485 03dc 0495     		str	r5, [sp, #16]
+ 486 03de C0F20001 		movt	r1, #:upper16:.LC2
+ 487 03e2 FFF7FEFF 		bl	scheduleMsg
+ 488 03e6 27E7     		b	.L78
+ 489              	.L86:
+ 490              		.align	3
+ 491              	.L85:
+ 492 03e8 DC0D0000 		.word	_engine+3548
+ 493 03ec 00C42264 		.word	1680000000
+ 494 03f0 00000000 		.word	0
+ 495 03f4 E0160000 		.word	_engine+5856
+ 496              		.size	_ZN12TriggerState18decodeTriggerEventE15trigger_event_ey, .-_ZN12TriggerState18decodeTrigger
+ 497 03f8 AFF30080 		.section	.text._Z14getEngineCycle16operation_mode_e,"ax",%progbits
+ 497      AFF30080 
+ 498              		.align	2
+ 499              		.p2align 4,,15
+ 500              		.global	_Z14getEngineCycle16operation_mode_e
+ 501              		.thumb
+ 502              		.thumb_func
+ 503              		.type	_Z14getEngineCycle16operation_mode_e, %function
+ 504              	_Z14getEngineCycle16operation_mode_e:
+ 505              		@ args = 0, pretend = 0, frame = 0
+ 506              		@ frame_needed = 0, uses_anonymous_args = 0
+ 507              		@ link register save eliminated.
+ 508 0000 9FED057A 		flds	s14, .L90
+ 509 0004 DFED057A 		flds	s15, .L90+4
+ 510 0008 0328     		cmp	r0, #3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 10
+
+
+ 511 000a 0CBF     		ite	eq
+ 512 000c 17EE900A 		fmrseq	r0, s15
+ 513 0010 17EE100A 		fmrsne	r0, s14
+ 514 0014 7047     		bx	lr
+ 515              	.L91:
+ 516 0016 00BF     		.align	2
+ 517              	.L90:
+ 518 0018 00003444 		.word	1144258560
+ 519 001c 0000B443 		.word	1135869952
+ 520              		.size	_Z14getEngineCycle16operation_mode_e, .-_Z14getEngineCycle16operation_mode_e
+ 521              		.section	.text._Z28addSkippedToothTriggerEvents15trigger_wheel_eP12TriggerShapeiifffff,"ax",%progb
+ 522              		.align	2
+ 523              		.p2align 4,,15
+ 524              		.global	_Z28addSkippedToothTriggerEvents15trigger_wheel_eP12TriggerShapeiifffff
+ 525              		.thumb
+ 526              		.thumb_func
+ 527              		.type	_Z28addSkippedToothTriggerEvents15trigger_wheel_eP12TriggerShapeiifffff, %function
+ 528              	_Z28addSkippedToothTriggerEvents15trigger_wheel_eP12TriggerShapeiifffff:
+ 529              		@ args = 20, pretend = 0, frame = 0
+ 530              		@ frame_needed = 0, uses_anonymous_args = 0
+ 531 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+ 532 0004 2DED088B 		fstmfdd	sp!, {d8, d9, d10, d11}
+ 533 0008 002A     		cmp	r2, #0
+ 534 000a 83B0     		sub	sp, sp, #12
+ 535 000c 0546     		mov	r5, r0
+ 536 000e D8BF     		it	le
+ 537 0010 40F20000 		movwle	r0, #:lower16:.LC4
+ 538 0014 0E46     		mov	r6, r1
+ 539 0016 DDED12AA 		flds	s21, [sp, #72]
+ 540 001a DDED138A 		flds	s17, [sp, #76]
+ 541 001e 9DED14AA 		flds	s20, [sp, #80]
+ 542 0022 159F     		ldr	r7, [sp, #84]	@ float
+ 543 0024 DDF85880 		ldr	r8, [sp, #88]	@ float
+ 544 0028 D8BF     		it	le
+ 545 002a C0F20000 		movtle	r0, #:upper16:.LC4
+ 546 002e 69DD     		ble	.L98
+ 547 0030 002B     		cmp	r3, #0
+ 548 0032 63DB     		blt	.L94
+ 549 0034 C3EB0209 		rsb	r9, r3, r2
+ 550 0038 09F1FF39 		add	r9, r9, #-1
+ 551 003c B9F1000F 		cmp	r9, #0
+ 552 0040 67DD     		ble	.L99
+ 553 0042 07EE902A 		fmsr	s15, r2	@ int
+ 554 0046 B8EEE7BA 		fsitos	s22, s15
+ 555 004a F7EE009A 		fconsts	s19, #112
+ 556 004e 8AEE0B9A 		fdivs	s18, s20, s22
+ 557 0052 0024     		movs	r4, #0
+ 558 0054 79EEEA9A 		fsubs	s19, s19, s21
+ 559 0058 9FED308A 		flds	s16, .L100
+ 560              	.L97:
+ 561 005c 38EE298A 		fadds	s16, s16, s19
+ 562 0060 F0EE686A 		fcpys	s13, s17
+ 563 0064 E8EE096A 		vfma.f32	s13, s16, s18
+ 564 0068 0134     		adds	r4, r4, #1
+ 565 006a 16EE901A 		fmrs	r1, s13
+ 566 006e 3046     		mov	r0, r6
+ 567 0070 2A46     		mov	r2, r5
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 11
+
+
+ 568 0072 0123     		movs	r3, #1
+ 569 0074 0097     		str	r7, [sp]	@ float
+ 570 0076 CDF80480 		str	r8, [sp, #4]	@ float
+ 571 007a FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_eff
+ 572 007e 07EE104A 		fmsr	s14, r4	@ int
+ 573 0082 B8EEC78A 		fsitos	s16, s14
+ 574 0086 F0EE687A 		fcpys	s15, s17
+ 575 008a E8EE097A 		vfma.f32	s15, s16, s18
+ 576 008e 0097     		str	r7, [sp]	@ float
+ 577 0090 CDF80480 		str	r8, [sp, #4]	@ float
+ 578 0094 17EE901A 		fmrs	r1, s15
+ 579 0098 3046     		mov	r0, r6
+ 580 009a 2A46     		mov	r2, r5
+ 581 009c 0023     		movs	r3, #0
+ 582 009e FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_eff
+ 583 00a2 4C45     		cmp	r4, r9
+ 584 00a4 DAD1     		bne	.L97
+ 585              	.L96:
+ 586 00a6 CAEE0B7A 		fdivs	s15, s20, s22
+ 587 00aa 3046     		mov	r0, r6
+ 588 00ac 2A46     		mov	r2, r5
+ 589 00ae 0123     		movs	r3, #1
+ 590 00b0 0097     		str	r7, [sp]	@ float
+ 591 00b2 CDF80480 		str	r8, [sp, #4]	@ float
+ 592 00b6 06EE909A 		fmsr	s13, r9	@ int
+ 593 00ba B7EE007A 		fconsts	s14, #112
+ 594 00be 77EE6AAA 		fsubs	s21, s14, s21
+ 595 00c2 B8EEE67A 		fsitos	s14, s13
+ 596 00c6 77EE2AAA 		fadds	s21, s14, s21
+ 597 00ca B0EE687A 		fcpys	s14, s17
+ 598 00ce A7EEAA7A 		vfma.f32	s14, s15, s21
+ 599 00d2 17EE101A 		fmrs	r1, s14
+ 600 00d6 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_eff
+ 601 00da 38EE8AAA 		fadds	s20, s17, s20
+ 602 00de 3046     		mov	r0, r6
+ 603 00e0 1AEE101A 		fmrs	r1, s20
+ 604 00e4 2A46     		mov	r2, r5
+ 605 00e6 0023     		movs	r3, #0
+ 606 00e8 1297     		str	r7, [sp, #72]	@ float
+ 607 00ea CDF84C80 		str	r8, [sp, #76]	@ float
+ 608 00ee 03B0     		add	sp, sp, #12
+ 609              		@ sp needed
+ 610 00f0 BDEC088B 		fldmfdd	sp!, {d8-d11}
+ 611 00f4 BDE8F043 		pop	{r4, r5, r6, r7, r8, r9, lr}
+ 612 00f8 FFF7FEBF 		b	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_eff
+ 613              	.L94:
+ 614 00fc 40F20000 		movw	r0, #:lower16:.LC5
+ 615 0100 C0F20000 		movt	r0, #:upper16:.LC5
+ 616              	.L98:
+ 617 0104 03B0     		add	sp, sp, #12
+ 618              		@ sp needed
+ 619 0106 BDEC088B 		fldmfdd	sp!, {d8-d11}
+ 620 010a BDE8F043 		pop	{r4, r5, r6, r7, r8, r9, lr}
+ 621 010e FFF7FEBF 		b	firmwareError
+ 622              	.L99:
+ 623 0112 06EE902A 		fmsr	s13, r2	@ int
+ 624 0116 B8EEE6BA 		fsitos	s22, s13
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 12
+
+
+ 625 011a C4E7     		b	.L96
+ 626              	.L101:
+ 627              		.align	2
+ 628              	.L100:
+ 629 011c 00000000 		.word	0
+ 630              		.size	_Z28addSkippedToothTriggerEvents15trigger_wheel_eP12TriggerShapeiifffff, .-_Z28addSkippedToo
+ 631              		.section	.text._Z37initializeSkippedToothTriggerShapeExtP12TriggerShapeii16operation_mode_e,"ax",%
+ 632              		.align	2
+ 633              		.p2align 4,,15
+ 634              		.global	_Z37initializeSkippedToothTriggerShapeExtP12TriggerShapeii16operation_mode_e
+ 635              		.thumb
+ 636              		.thumb_func
+ 637              		.type	_Z37initializeSkippedToothTriggerShapeExtP12TriggerShapeii16operation_mode_e, %function
+ 638              	_Z37initializeSkippedToothTriggerShapeExtP12TriggerShapeii16operation_mode_e:
+ 639              		@ args = 0, pretend = 0, frame = 0
+ 640              		@ frame_needed = 0, uses_anonymous_args = 0
+ 641 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 642 0002 0F1E     		subs	r7, r1, #0
+ 643 0004 87B0     		sub	sp, sp, #28
+ 644 0006 1546     		mov	r5, r2
+ 645 0008 1E46     		mov	r6, r3
+ 646 000a 0446     		mov	r4, r0
+ 647 000c 37DD     		ble	.L106
+ 648 000e 511C     		adds	r1, r2, #1
+ 649 0010 07EE901A 		fmsr	s15, r1	@ int
+ 650 0014 F8EEE77A 		fsitos	s15, s15
+ 651 0018 4760     		str	r7, [r0, #4]
+ 652 001a 17EE901A 		fmrs	r1, s15
+ 653 001e A260     		str	r2, [r4, #8]
+ 654 0020 FFF7FEFF 		bl	_ZN12TriggerShape28setTriggerSynchronizationGapEf
+ 655 0024 2B1C     		adds	r3, r5, #0
+ 656 0026 18BF     		it	ne
+ 657 0028 0123     		movne	r3, #1
+ 658 002a 2370     		strb	r3, [r4]
+ 659 002c 2046     		mov	r0, r4
+ 660 002e 3146     		mov	r1, r6
+ 661 0030 0022     		movs	r2, #0
+ 662 0032 FFF7FEFF 		bl	_ZN12TriggerShape5resetE16operation_mode_eb
+ 663 0036 9FED167A 		flds	s14, .L107
+ 664 003a DFED167A 		flds	s15, .L107+4
+ 665 003e 032E     		cmp	r6, #3
+ 666 0040 4FF0000E 		mov	lr, #0
+ 667 0044 4FF00000 		mov	r0, #0
+ 668 0048 4FF0000C 		mov	ip, #0
+ 669 004c C4F27A4E 		movt	lr, 17530
+ 670 0050 18BF     		it	ne
+ 671 0052 F0EE477A 		fcpysne	s15, s14
+ 672 0056 4FF07C56 		mov	r6, #1056964608
+ 673 005a CBF68070 		movt	r0, 49024
+ 674 005e 0390     		str	r0, [sp, #12]	@ float
+ 675 0060 2146     		mov	r1, r4
+ 676 0062 3A46     		mov	r2, r7
+ 677 0064 2B46     		mov	r3, r5
+ 678 0066 CDED027A 		fsts	s15, [sp, #8]
+ 679 006a CDF804C0 		str	ip, [sp, #4]	@ float
+ 680 006e CDF810E0 		str	lr, [sp, #16]	@ float
+ 681 0072 0096     		str	r6, [sp]	@ float
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 13
+
+
+ 682 0074 0020     		movs	r0, #0
+ 683 0076 FFF7FEFF 		bl	_Z28addSkippedToothTriggerEvents15trigger_wheel_eP12TriggerShapeiifffff
+ 684 007a 07B0     		add	sp, sp, #28
+ 685              		@ sp needed
+ 686 007c F0BD     		pop	{r4, r5, r6, r7, pc}
+ 687              	.L106:
+ 688 007e 40F20000 		movw	r0, #:lower16:.LC6
+ 689 0082 C0F20000 		movt	r0, #:upper16:.LC6
+ 690 0086 07B0     		add	sp, sp, #28
+ 691              		@ sp needed
+ 692 0088 BDE8F040 		pop	{r4, r5, r6, r7, lr}
+ 693 008c FFF7FEBF 		b	firmwareError
+ 694              	.L108:
+ 695              		.align	2
+ 696              	.L107:
+ 697 0090 00003444 		.word	1144258560
+ 698 0094 0000B443 		.word	1135869952
+ 699              		.size	_Z37initializeSkippedToothTriggerShapeExtP12TriggerShapeii16operation_mode_e, .-_Z37initiali
+ 700 0098 AFF30080 		.section	.text._ZN12TriggerShape22initializeTriggerShapeEP7Logging,"ax",%progbits
+ 700      AFF30080 
+ 701              		.align	2
+ 702              		.p2align 4,,15
+ 703              		.global	_ZN12TriggerShape22initializeTriggerShapeEP7Logging
+ 704              		.thumb
+ 705              		.thumb_func
+ 706              		.type	_ZN12TriggerShape22initializeTriggerShapeEP7Logging, %function
+ 707              	_ZN12TriggerShape22initializeTriggerShapeEP7Logging:
+ 708              		@ args = 0, pretend = 0, frame = 0
+ 709              		@ frame_needed = 0, uses_anonymous_args = 0
+ 710 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+ 711 0004 40F20005 		movw	r5, #:lower16:engineConfiguration
+ 712 0008 0446     		mov	r4, r0
+ 713 000a C0F20005 		movt	r5, #:upper16:engineConfiguration
+ 714 000e 0846     		mov	r0, r1
+ 715 0010 40F20001 		movw	r1, #:lower16:.LC7
+ 716 0014 C0F20001 		movt	r1, #:upper16:.LC7
+ 717 0018 87B0     		sub	sp, sp, #28
+ 718 001a FFF7FEFF 		bl	scheduleMsg
+ 719 001e 2E68     		ldr	r6, [r5]
+ 720 0020 2046     		mov	r0, r4
+ 721 0022 FFF7FEFF 		bl	_ZN12TriggerShape5clearEv
+ 722 0026 D6F81812 		ldr	r1, [r6, #536]
+ 723 002a 1429     		cmp	r1, #20
+ 724 002c 00F20781 		bhi	.L110
+ 725 0030 DFE811F0 		tbh	[pc, r1, lsl #1]
+ 726              	.L112:
+ 727 0034 4800     		.2byte	(.L111-.L112)/2
+ 728 0036 1500     		.2byte	(.L117-.L112)/2
+ 729 0038 3200     		.2byte	(.L114-.L112)/2
+ 730 003a 2E00     		.2byte	(.L115-.L112)/2
+ 731 003c 2A00     		.2byte	(.L116-.L112)/2
+ 732 003e 1500     		.2byte	(.L117-.L112)/2
+ 733 0040 2600     		.2byte	(.L118-.L112)/2
+ 734 0042 0101     		.2byte	(.L119-.L112)/2
+ 735 0044 F800     		.2byte	(.L120-.L112)/2
+ 736 0046 EF00     		.2byte	(.L121-.L112)/2
+ 737 0048 EA00     		.2byte	(.L122-.L112)/2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 14
+
+
+ 738 004a E600     		.2byte	(.L123-.L112)/2
+ 739 004c E100     		.2byte	(.L124-.L112)/2
+ 740 004e DD00     		.2byte	(.L125-.L112)/2
+ 741 0050 D900     		.2byte	(.L126-.L112)/2
+ 742 0052 D500     		.2byte	(.L127-.L112)/2
+ 743 0054 AD00     		.2byte	(.L128-.L112)/2
+ 744 0056 6000     		.2byte	(.L129-.L112)/2
+ 745 0058 5700     		.2byte	(.L130-.L112)/2
+ 746 005a 5300     		.2byte	(.L131-.L112)/2
+ 747 005c 3600     		.2byte	(.L132-.L112)/2
+ 748              	.L117:
+ 749 005e 2046     		mov	r0, r4
+ 750 0060 FFF7FEFF 		bl	_Z31configureFordAspireTriggerShapeP12TriggerShape
+ 751              	.L133:
+ 752 0064 2046     		mov	r0, r4
+ 753 0066 FFF7FEFF 		bl	_ZNK12TriggerShape7getSizeEv
+ 754 006a 0146     		mov	r1, r0
+ 755 006c 04F67430 		addw	r0, r4, #2932
+ 756 0070 FFF7FEFF 		bl	_ZN12multi_wave_s16checkSwitchTimesEi
+ 757 0074 2046     		mov	r0, r4
+ 758 0076 07B0     		add	sp, sp, #28
+ 759              		@ sp needed
+ 760 0078 BDE8F043 		pop	{r4, r5, r6, r7, r8, r9, lr}
+ 761 007c FFF7FEBF 		b	_ZN12TriggerShape26calculateTriggerSynchPointEv
+ 762              	.L118:
+ 763 0080 2046     		mov	r0, r4
+ 764 0082 FFF7FEFF 		bl	_Z31configureMiniCooperTriggerShapeP12TriggerShape
+ 765 0086 EDE7     		b	.L133
+ 766              	.L116:
+ 767 0088 2046     		mov	r0, r4
+ 768 008a FFF7FEFF 		bl	_Z27initializeMazdaMiataNbShapeP12TriggerShape
+ 769 008e E9E7     		b	.L133
+ 770              	.L115:
+ 771 0090 2046     		mov	r0, r4
+ 772 0092 FFF7FEFF 		bl	_Z27initializeMazdaMiataNaShapeP12TriggerShape
+ 773 0096 E5E7     		b	.L133
+ 774              	.L114:
+ 775 0098 2046     		mov	r0, r4
+ 776 009a FFF7FEFF 		bl	_Z29configureNeon1995TriggerShapeP12TriggerShape
+ 777 009e E1E7     		b	.L133
+ 778              	.L132:
+ 779 00a0 2B68     		ldr	r3, [r5]
+ 780 00a2 2046     		mov	r0, r4
+ 781 00a4 D3F8F431 		ldr	r3, [r3, #500]
+ 782 00a8 3C21     		movs	r1, #60
+ 783 00aa 0222     		movs	r2, #2
+ 784 00ac FFF7FEFF 		bl	_Z28setToothedWheelConfigurationP12TriggerShapeii16operation_mode_e
+ 785 00b0 46F26661 		movw	r1, #26214
+ 786 00b4 2046     		mov	r0, r4
+ 787 00b6 C3F6E671 		movt	r1, 16358
+ 788 00ba 4FF08142 		mov	r2, #1082130432
+ 789 00be FFF7FEFF 		bl	_ZN12TriggerShape29setTriggerSynchronizationGap2Eff
+ 790 00c2 CFE7     		b	.L133
+ 791              	.L111:
+ 792 00c4 2B68     		ldr	r3, [r5]
+ 793 00c6 D6F82012 		ldr	r1, [r6, #544]
+ 794 00ca D3F8F431 		ldr	r3, [r3, #500]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 15
+
+
+ 795 00ce D6F82422 		ldr	r2, [r6, #548]
+ 796 00d2 2046     		mov	r0, r4
+ 797 00d4 FFF7FEFF 		bl	_Z37initializeSkippedToothTriggerShapeExtP12TriggerShapeii16operation_mode_e
+ 798 00d8 C4E7     		b	.L133
+ 799              	.L131:
+ 800 00da 2046     		mov	r0, r4
+ 801 00dc FFF7FEFF 		bl	_Z12initDodgeRamP12TriggerShape
+ 802 00e0 C0E7     		b	.L133
+ 803              	.L130:
+ 804 00e2 2B68     		ldr	r3, [r5]
+ 805 00e4 2046     		mov	r0, r4
+ 806 00e6 D3F8F431 		ldr	r3, [r3, #500]
+ 807 00ea 0121     		movs	r1, #1
+ 808 00ec 0022     		movs	r2, #0
+ 809 00ee FFF7FEFF 		bl	_Z28setToothedWheelConfigurationP12TriggerShapeii16operation_mode_e
+ 810 00f2 B7E7     		b	.L133
+ 811              	.L129:
+ 812 00f4 2046     		mov	r0, r4
+ 813 00f6 0221     		movs	r1, #2
+ 814 00f8 0122     		movs	r2, #1
+ 815 00fa FFF7FEFF 		bl	_ZN12TriggerShape5resetE16operation_mode_eb
+ 816 00fe 0025     		movs	r5, #0
+ 817 0100 2046     		mov	r0, r4
+ 818 0102 4FF08041 		mov	r1, #1073741824
+ 819 0106 0022     		movs	r2, #0
+ 820 0108 0123     		movs	r3, #1
+ 821 010a 0026     		movs	r6, #0
+ 822 010c FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 823 0110 C4F2B435 		movt	r5, 17332
+ 824 0114 4FF07C57 		mov	r7, #1056964608
+ 825 0118 C4F2A016 		movt	r6, 16800
+ 826 011c 4FF00009 		mov	r9, #0
+ 827 0120 4FF08043 		mov	r3, #1073741824
+ 828 0124 0393     		str	r3, [sp, #12]	@ float
+ 829 0126 0120     		movs	r0, #1
+ 830 0128 2146     		mov	r1, r4
+ 831 012a 3C22     		movs	r2, #60
+ 832 012c 0223     		movs	r3, #2
+ 833 012e CDF80490 		str	r9, [sp, #4]	@ float
+ 834 0132 0295     		str	r5, [sp, #8]	@ float
+ 835 0134 0097     		str	r7, [sp]	@ float
+ 836 0136 0496     		str	r6, [sp, #16]	@ float
+ 837 0138 FFF7FEFF 		bl	_Z28addSkippedToothTriggerEvents15trigger_wheel_eP12TriggerShapeiifffff
+ 838 013c 4FF00008 		mov	r8, #0
+ 839 0140 0022     		movs	r2, #0
+ 840 0142 1346     		mov	r3, r2
+ 841 0144 2046     		mov	r0, r4
+ 842 0146 3146     		mov	r1, r6	@ float
+ 843 0148 C4F27A48 		movt	r8, 17530
+ 844 014c FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 845 0150 0120     		movs	r0, #1
+ 846 0152 2146     		mov	r1, r4
+ 847 0154 3C22     		movs	r2, #60
+ 848 0156 0223     		movs	r3, #2
+ 849 0158 CDF80490 		str	r9, [sp, #4]	@ float
+ 850 015c 0097     		str	r7, [sp]	@ float
+ 851 015e 0295     		str	r5, [sp, #8]	@ float
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 16
+
+
+ 852 0160 0396     		str	r6, [sp, #12]	@ float
+ 853 0162 CDF81080 		str	r8, [sp, #16]	@ float
+ 854 0166 FFF7FEFF 		bl	_Z28addSkippedToothTriggerEvents15trigger_wheel_eP12TriggerShapeiifffff
+ 855 016a 0023     		movs	r3, #0
+ 856 016c CBF68073 		movt	r3, 49024
+ 857 0170 0393     		str	r3, [sp, #12]	@ float
+ 858 0172 0097     		str	r7, [sp]	@ float
+ 859 0174 0223     		movs	r3, #2
+ 860 0176 0195     		str	r5, [sp, #4]	@ float
+ 861 0178 0295     		str	r5, [sp, #8]	@ float
+ 862 017a CDF81080 		str	r8, [sp, #16]	@ float
+ 863 017e 0120     		movs	r0, #1
+ 864 0180 2146     		mov	r1, r4
+ 865 0182 3C22     		movs	r2, #60
+ 866 0184 FFF7FEFF 		bl	_Z28addSkippedToothTriggerEvents15trigger_wheel_eP12TriggerShapeiifffff
+ 867 0188 0023     		movs	r3, #0
+ 868 018a 2370     		strb	r3, [r4]
+ 869 018c 6AE7     		b	.L133
+ 870              	.L128:
+ 871 018e 2046     		mov	r0, r4
+ 872 0190 0221     		movs	r1, #2
+ 873 0192 0122     		movs	r2, #1
+ 874 0194 FFF7FEFF 		bl	_ZN12TriggerShape5resetE16operation_mode_eb
+ 875 0198 0021     		movs	r1, #0
+ 876 019a 2046     		mov	r0, r4
+ 877 019c C4F23431 		movt	r1, 17204
+ 878 01a0 0022     		movs	r2, #0
+ 879 01a2 0123     		movs	r3, #1
+ 880 01a4 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 881 01a8 0022     		movs	r2, #0
+ 882 01aa 0021     		movs	r1, #0
+ 883 01ac 1346     		mov	r3, r2
+ 884 01ae 2046     		mov	r0, r4
+ 885 01b0 C4F2B431 		movt	r1, 17332
+ 886 01b4 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 887 01b8 0122     		movs	r2, #1
+ 888 01ba 0021     		movs	r1, #0
+ 889 01bc 1346     		mov	r3, r2
+ 890 01be 2046     		mov	r0, r4
+ 891 01c0 C4F20741 		movt	r1, 17415
+ 892 01c4 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 893 01c8 0021     		movs	r1, #0
+ 894 01ca 0023     		movs	r3, #0
+ 895 01cc 2046     		mov	r0, r4
+ 896 01ce C4F23441 		movt	r1, 17460
+ 897 01d2 0122     		movs	r2, #1
+ 898 01d4 FFF7FEFF 		bl	_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+ 899 01d8 0023     		movs	r3, #0
+ 900 01da 2370     		strb	r3, [r4]
+ 901 01dc 42E7     		b	.L133
+ 902              	.L127:
+ 903 01de 2046     		mov	r0, r4
+ 904 01e0 FFF7FEFF 		bl	_Z23configureMazdaProtegeLxP12TriggerShape
+ 905 01e4 3EE7     		b	.L133
+ 906              	.L126:
+ 907 01e6 2046     		mov	r0, r4
+ 908 01e8 FFF7FEFF 		bl	_Z29configureNeon2003TriggerShapeP12TriggerShape
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 17
+
+
+ 909 01ec 3AE7     		b	.L133
+ 910              	.L125:
+ 911 01ee 2046     		mov	r0, r4
+ 912 01f0 FFF7FEFF 		bl	_Z25configureHondaAccordCDDipP12TriggerShape
+ 913 01f4 36E7     		b	.L133
+ 914              	.L124:
+ 915 01f6 2046     		mov	r0, r4
+ 916 01f8 0021     		movs	r1, #0
+ 917 01fa FFF7FEFF 		bl	_Z22configureHondaAccordCDP12TriggerShapeb
+ 918 01fe 31E7     		b	.L133
+ 919              	.L123:
+ 920 0200 2046     		mov	r0, r4
+ 921 0202 FFF7FEFF 		bl	_Z24initializeMitsubishi4g18P12TriggerShape
+ 922 0206 2DE7     		b	.L133
+ 923              	.L122:
+ 924 0208 2046     		mov	r0, r4
+ 925 020a 0121     		movs	r1, #1
+ 926 020c FFF7FEFF 		bl	_Z22configureHondaAccordCDP12TriggerShapeb
+ 927 0210 28E7     		b	.L133
+ 928              	.L121:
+ 929 0212 2B68     		ldr	r3, [r5]
+ 930 0214 2046     		mov	r0, r4
+ 931 0216 D3F8F431 		ldr	r3, [r3, #500]
+ 932 021a 2421     		movs	r1, #36
+ 933 021c 0122     		movs	r2, #1
+ 934 021e FFF7FEFF 		bl	_Z28setToothedWheelConfigurationP12TriggerShapeii16operation_mode_e
+ 935 0222 1FE7     		b	.L133
+ 936              	.L120:
+ 937 0224 2B68     		ldr	r3, [r5]
+ 938 0226 2046     		mov	r0, r4
+ 939 0228 D3F8F431 		ldr	r3, [r3, #500]
+ 940 022c 3C21     		movs	r1, #60
+ 941 022e 0222     		movs	r2, #2
+ 942 0230 FFF7FEFF 		bl	_Z28setToothedWheelConfigurationP12TriggerShapeii16operation_mode_e
+ 943 0234 16E7     		b	.L133
+ 944              	.L119:
+ 945 0236 2046     		mov	r0, r4
+ 946 0238 FFF7FEFF 		bl	_Z25configureMazdaProtegeSOHCP12TriggerShape
+ 947 023c 12E7     		b	.L133
+ 948              	.L110:
+ 949 023e 40F20000 		movw	r0, #:lower16:.LC8
+ 950 0242 C0F20000 		movt	r0, #:upper16:.LC8
+ 951 0246 07B0     		add	sp, sp, #28
+ 952              		@ sp needed
+ 953 0248 BDE8F043 		pop	{r4, r5, r6, r7, r8, r9, lr}
+ 954 024c FFF7FEBF 		b	firmwareError
+ 955              		.size	_ZN12TriggerShape22initializeTriggerShapeEP7Logging, .-_ZN12TriggerShape22initializeTriggerS
+ 956              		.section	.text._ZN23TriggerStimulatorHelperC2Ev,"ax",%progbits
+ 957              		.align	2
+ 958              		.p2align 4,,15
+ 959              		.global	_ZN23TriggerStimulatorHelperC2Ev
+ 960              		.thumb
+ 961              		.thumb_func
+ 962              		.type	_ZN23TriggerStimulatorHelperC2Ev, %function
+ 963              	_ZN23TriggerStimulatorHelperC2Ev:
+ 964              		@ args = 0, pretend = 0, frame = 0
+ 965              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 18
+
+
+ 966              		@ link register save eliminated.
+ 967 0000 7047     		bx	lr
+ 968              		.size	_ZN23TriggerStimulatorHelperC2Ev, .-_ZN23TriggerStimulatorHelperC2Ev
+ 969              		.global	_ZN23TriggerStimulatorHelperC1Ev
+ 970              		.thumb_set _ZN23TriggerStimulatorHelperC1Ev,_ZN23TriggerStimulatorHelperC2Ev
+ 971 0002 00BFAFF3 		.section	.text._ZN23TriggerStimulatorHelper8nextStepEP12TriggerStateP12TriggerShapeiPK16trigger_co
+ 971      0080AFF3 
+ 971      0080AFF3 
+ 971      0080
+ 972              		.align	2
+ 973              		.p2align 4,,15
+ 974              		.global	_ZN23TriggerStimulatorHelper8nextStepEP12TriggerStateP12TriggerShapeiPK16trigger_config_s
+ 975              		.thumb
+ 976              		.thumb_func
+ 977              		.type	_ZN23TriggerStimulatorHelper8nextStepEP12TriggerStateP12TriggerShapeiPK16trigger_config_s, %
+ 978              	_ZN23TriggerStimulatorHelper8nextStepEP12TriggerStateP12TriggerShapeiPK16trigger_config_s:
+ 979              		@ args = 4, pretend = 0, frame = 0
+ 980              		@ frame_needed = 0, uses_anonymous_args = 0
+ 981 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 982 0004 1046     		mov	r0, r2
+ 983 0006 81B0     		sub	sp, sp, #4
+ 984 0008 1646     		mov	r6, r2
+ 985 000a 9846     		mov	r8, r3
+ 986 000c 8946     		mov	r9, r1
+ 987 000e FFF7FEFF 		bl	_ZNK12TriggerShape7getSizeEv
+ 988 0012 98FBF0F5 		sdiv	r5, r8, r0
+ 989 0016 05FB1085 		mls	r5, r5, r0, r8
+ 990 001a 3046     		mov	r0, r6
+ 991 001c FFF7FEFF 		bl	_ZNK12TriggerShape7getSizeEv
+ 992 0020 0746     		mov	r7, r0
+ 993 0022 3046     		mov	r0, r6
+ 994 0024 FFF7FEFF 		bl	_ZNK12TriggerShape7getSizeEv
+ 995 0028 2F44     		add	r7, r7, r5
+ 996 002a 013F     		subs	r7, r7, #1
+ 997 002c 97FBF0F3 		sdiv	r3, r7, r0
+ 998 0030 03FB1077 		mls	r7, r3, r0, r7
+ 999 0034 3046     		mov	r0, r6
+ 1000 0036 FFF7FEFF 		bl	_ZNK12TriggerShape7getSizeEv
+ 1001 003a 06F67434 		addw	r4, r6, #2932
+ 1002 003e 2946     		mov	r1, r5
+ 1003 0040 0646     		mov	r6, r0
+ 1004 0042 2046     		mov	r0, r4
+ 1005 0044 FFF7FEFF 		bl	_ZNK12multi_wave_s13getSwitchTimeEi
+ 1006 0048 98FBF6F8 		sdiv	r8, r8, r6
+ 1007 004c 07EE908A 		fmsr	s15, r8	@ int
+ 1008 0050 06EE900A 		fmsr	s13, r0
+ 1009 0054 F8EEE77A 		fsitos	s15, s15
+ 1010 0058 9FED337A 		flds	s14, .L144
+ 1011 005c 77EEA67A 		fadds	s15, s15, s13
+ 1012 0060 3A46     		mov	r2, r7
+ 1013 0062 67EE877A 		fmuls	s15, s15, s14
+ 1014 0066 2046     		mov	r0, r4
+ 1015 0068 FDEEE77A 		ftosizs	s15, s15
+ 1016 006c 0021     		movs	r1, #0
+ 1017 006e 17EE906A 		fmrs	r6, s15	@ int
+ 1018 0072 FFF7FEFF 		bl	_ZNK12multi_wave_s15getChannelStateEii
+ 1019 0076 2A46     		mov	r2, r5
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 19
+
+
+ 1020 0078 8346     		mov	fp, r0
+ 1021 007a 0021     		movs	r1, #0
+ 1022 007c 2046     		mov	r0, r4
+ 1023 007e FFF7FEFF 		bl	_ZNK12multi_wave_s15getChannelStateEii
+ 1024 0082 3A46     		mov	r2, r7
+ 1025 0084 10F1000A 		adds	r10, r0, #0
+ 1026 0088 4FF00101 		mov	r1, #1
+ 1027 008c 2046     		mov	r0, r4
+ 1028 008e 18BF     		it	ne
+ 1029 0090 4FF0010A 		movne	r10, #1
+ 1030 0094 FFF7FEFF 		bl	_ZNK12multi_wave_s15getChannelStateEii
+ 1031 0098 2A46     		mov	r2, r5
+ 1032 009a 10F10008 		adds	r8, r0, #0
+ 1033 009e 4FF00101 		mov	r1, #1
+ 1034 00a2 2046     		mov	r0, r4
+ 1035 00a4 18BF     		it	ne
+ 1036 00a6 4FF00108 		movne	r8, #1
+ 1037 00aa FFF7FEFF 		bl	_ZNK12multi_wave_s15getChannelStateEii
+ 1038 00ae 3A46     		mov	r2, r7
+ 1039 00b0 0221     		movs	r1, #2
+ 1040 00b2 071C     		adds	r7, r0, #0
+ 1041 00b4 2046     		mov	r0, r4
+ 1042 00b6 18BF     		it	ne
+ 1043 00b8 0127     		movne	r7, #1
+ 1044 00ba FFF7FEFF 		bl	_ZNK12multi_wave_s15getChannelStateEii
+ 1045 00be 2A46     		mov	r2, r5
+ 1046 00c0 0221     		movs	r1, #2
+ 1047 00c2 051C     		adds	r5, r0, #0
+ 1048 00c4 2046     		mov	r0, r4
+ 1049 00c6 18BF     		it	ne
+ 1050 00c8 0125     		movne	r5, #1
+ 1051 00ca FFF7FEFF 		bl	_ZNK12multi_wave_s15getChannelStateEii
+ 1052 00ce 1BF1000B 		adds	fp, fp, #0
+ 1053 00d2 18BF     		it	ne
+ 1054 00d4 4FF0010B 		movne	fp, #1
+ 1055 00d8 041C     		adds	r4, r0, #0
+ 1056 00da 18BF     		it	ne
+ 1057 00dc 0124     		movne	r4, #1
+ 1058 00de D345     		cmp	fp, r10
+ 1059 00e0 05D0     		beq	.L137
+ 1060 00e2 5146     		mov	r1, r10
+ 1061 00e4 4846     		mov	r0, r9
+ 1062 00e6 3246     		mov	r2, r6
+ 1063 00e8 F317     		asrs	r3, r6, #31
+ 1064 00ea FFF7FEFF 		bl	_ZN12TriggerState18decodeTriggerEventE15trigger_event_ey
+ 1065              	.L137:
+ 1066 00ee B845     		cmp	r8, r7
+ 1067 00f0 08D0     		beq	.L138
+ 1068 00f2 002F     		cmp	r7, #0
+ 1069 00f4 0CBF     		ite	eq
+ 1070 00f6 0221     		moveq	r1, #2
+ 1071 00f8 0321     		movne	r1, #3
+ 1072 00fa 4846     		mov	r0, r9
+ 1073 00fc 3246     		mov	r2, r6
+ 1074 00fe F317     		asrs	r3, r6, #31
+ 1075 0100 FFF7FEFF 		bl	_ZN12TriggerState18decodeTriggerEventE15trigger_event_ey
+ 1076              	.L138:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 20
+
+
+ 1077 0104 A542     		cmp	r5, r4
+ 1078 0106 0BD0     		beq	.L136
+ 1079 0108 4846     		mov	r0, r9
+ 1080 010a 002C     		cmp	r4, #0
+ 1081 010c 0CBF     		ite	eq
+ 1082 010e 0421     		moveq	r1, #4
+ 1083 0110 0521     		movne	r1, #5
+ 1084 0112 3246     		mov	r2, r6
+ 1085 0114 F317     		asrs	r3, r6, #31
+ 1086 0116 01B0     		add	sp, sp, #4
+ 1087              		@ sp needed
+ 1088 0118 BDE8F04F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 1089 011c FFF7FEBF 		b	_ZN12TriggerState18decodeTriggerEventE15trigger_event_ey
+ 1090              	.L136:
+ 1091 0120 01B0     		add	sp, sp, #4
+ 1092              		@ sp needed
+ 1093 0122 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 1094              	.L145:
+ 1095 0126 00BF     		.align	2
+ 1096              	.L144:
+ 1097 0128 0050C347 		.word	1203982336
+ 1098              		.size	_ZN23TriggerStimulatorHelper8nextStepEP12TriggerStateP12TriggerShapeiPK16trigger_config_s, .
+ 1099 012c AFF30080 		.section	.text._Z25findTriggerZeroEventIndexP12TriggerShapePK16trigger_config_s,"ax",%progbits
+ 1100              		.align	2
+ 1101              		.p2align 4,,15
+ 1102              		.global	_Z25findTriggerZeroEventIndexP12TriggerShapePK16trigger_config_s
+ 1103              		.thumb
+ 1104              		.thumb_func
+ 1105              		.type	_Z25findTriggerZeroEventIndexP12TriggerShapePK16trigger_config_s, %function
+ 1106              	_Z25findTriggerZeroEventIndexP12TriggerShapePK16trigger_config_s:
+ 1107              		@ args = 0, pretend = 0, frame = 192
+ 1108              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1109 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 1110 0004 40F20007 		movw	r7, #:lower16:.LANCHOR0
+ 1111 0008 B2B0     		sub	sp, sp, #200
+ 1112 000a C0F20007 		movt	r7, #:upper16:.LANCHOR0
+ 1113 000e 0546     		mov	r5, r0
+ 1114 0010 04A8     		add	r0, sp, #16
+ 1115 0012 0E46     		mov	r6, r1
+ 1116 0014 FFF7FEFF 		bl	_ZN12TriggerStateC1Ev
+ 1117 0018 3846     		mov	r0, r7
+ 1118 001a 0021     		movs	r1, #0
+ 1119 001c 4FF48072 		mov	r2, #256
+ 1120 0020 FFF7FEFF 		bl	memset
+ 1121 0024 0023     		movs	r3, #0
+ 1122 0026 C7F80431 		str	r3, [r7, #260]
+ 1123 002a 1C46     		mov	r4, r3
+ 1124 002c C7F80431 		str	r3, [r7, #260]
+ 1125 0030 03E0     		b	.L151
+ 1126              	.L147:
+ 1127 0032 0134     		adds	r4, r4, #1
+ 1128 0034 B4F57C7F 		cmp	r4, #1008
+ 1129 0038 52D0     		beq	.L165
+ 1130              	.L151:
+ 1131 003a 2346     		mov	r3, r4
+ 1132 003c 0096     		str	r6, [sp]
+ 1133 003e 03A8     		add	r0, sp, #12
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 21
+
+
+ 1134 0040 04A9     		add	r1, sp, #16
+ 1135 0042 2A46     		mov	r2, r5
+ 1136 0044 FFF7FEFF 		bl	_ZN23TriggerStimulatorHelper8nextStepEP12TriggerStateP12TriggerShapeiPK16trigger_config_s
+ 1137 0048 9DF81430 		ldrb	r3, [sp, #20]	@ zero_extendqisi2
+ 1138 004c 002B     		cmp	r3, #0
+ 1139 004e F0D0     		beq	.L147
+ 1140 0050 04A8     		add	r0, sp, #16
+ 1141 0052 FFF7FEFF 		bl	_ZN12TriggerState25getTotalRevolutionCounterEv
+ 1142 0056 0128     		cmp	r0, #1
+ 1143 0058 0AD0     		beq	.L166
+ 1144 005a 40F20000 		movw	r0, #:lower16:.LC10
+ 1145 005e C0F20000 		movt	r0, #:upper16:.LC10
+ 1146 0062 FFF7FEFF 		bl	firmwareError
+ 1147 0066 4FF0FF30 		mov	r0, #-1
+ 1148              	.L152:
+ 1149 006a 32B0     		add	sp, sp, #200
+ 1150              		@ sp needed
+ 1151 006c BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 1152              	.L166:
+ 1153 0070 40F20008 		movw	r8, #:lower16:engineConfiguration
+ 1154 0074 C0F20008 		movt	r8, #:upper16:engineConfiguration
+ 1155 0078 40F20003 		movw	r3, #:lower16:_ZL11onFindIndexP12TriggerState
+ 1156 007c D8F80020 		ldr	r2, [r8]
+ 1157 0080 92F8E525 		ldrb	r2, [r2, #1509]	@ zero_extendqisi2
+ 1158 0084 C0F20003 		movt	r3, #:upper16:_ZL11onFindIndexP12TriggerState
+ 1159 0088 5206     		lsls	r2, r2, #25
+ 1160 008a 0493     		str	r3, [sp, #16]
+ 1161 008c 4CBF     		ite	mi
+ 1162 008e A71C     		addmi	r7, r4, #2
+ 1163 0090 671C     		addpl	r7, r4, #1
+ 1164 0092 0AE0     		b	.L155
+ 1165              	.L157:
+ 1166 0094 0096     		str	r6, [sp]
+ 1167 0096 FFF7FEFF 		bl	_ZN23TriggerStimulatorHelper8nextStepEP12TriggerStateP12TriggerShapeiPK16trigger_config_s
+ 1168 009a D8F80030 		ldr	r3, [r8]
+ 1169 009e 93F8E535 		ldrb	r3, [r3, #1509]	@ zero_extendqisi2
+ 1170 00a2 5B06     		lsls	r3, r3, #25
+ 1171 00a4 48BF     		it	mi
+ 1172 00a6 0137     		addmi	r7, r7, #1
+ 1173 00a8 0137     		adds	r7, r7, #1
+ 1174              	.L155:
+ 1175 00aa 2846     		mov	r0, r5
+ 1176 00ac FFF7FEFF 		bl	_ZNK12TriggerShape7getSizeEv
+ 1177 00b0 04EB400E 		add	lr, r4, r0, lsl #1
+ 1178 00b4 7745     		cmp	r7, lr
+ 1179 00b6 3B46     		mov	r3, r7
+ 1180 00b8 04A9     		add	r1, sp, #16
+ 1181 00ba 2A46     		mov	r2, r5
+ 1182 00bc 03A8     		add	r0, sp, #12
+ 1183 00be E9D9     		bls	.L157
+ 1184 00c0 0846     		mov	r0, r1
+ 1185 00c2 FFF7FEFF 		bl	_ZN12TriggerState25getTotalRevolutionCounterEv
+ 1186 00c6 0328     		cmp	r0, #3
+ 1187 00c8 15D0     		beq	.L158
+ 1188 00ca 40F20000 		movw	r0, #:lower16:.LC11
+ 1189 00ce C0F20000 		movt	r0, #:upper16:.LC11
+ 1190 00d2 FFF7FEFF 		bl	firmwareError
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 22
+
+
+ 1191 00d6 4FF0FF30 		mov	r0, #-1
+ 1192 00da 32B0     		add	sp, sp, #200
+ 1193              		@ sp needed
+ 1194 00dc BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 1195              	.L165:
+ 1196 00e0 40F20000 		movw	r0, #:lower16:.LC9
+ 1197 00e4 C0F20000 		movt	r0, #:upper16:.LC9
+ 1198 00e8 FFF7FEFF 		bl	firmwareError
+ 1199 00ec 4FF0FF30 		mov	r0, #-1
+ 1200 00f0 32B0     		add	sp, sp, #200
+ 1201              		@ sp needed
+ 1202 00f2 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 1203              	.L158:
+ 1204 00f6 9FED0C7A 		flds	s14, .L167
+ 1205 00fa 0023     		movs	r3, #0
+ 1206              	.L160:
+ 1207 00fc 04A9     		add	r1, sp, #16
+ 1208 00fe 1944     		add	r1, r1, r3
+ 1209 0100 D1ED0C7A 		flds	s15, [r1, #48]	@ int
+ 1210 0104 F8EEE77A 		fsitos	s15, s15
+ 1211 0108 EA18     		adds	r2, r5, r3
+ 1212 010a C7EE877A 		fdivs	s15, s15, s14
+ 1213 010e 0433     		adds	r3, r3, #4
+ 1214 0110 0C2B     		cmp	r3, #12
+ 1215 0112 C2ED037A 		fsts	s15, [r2, #12]
+ 1216 0116 F1D1     		bne	.L160
+ 1217 0118 2846     		mov	r0, r5
+ 1218 011a FFF7FEFF 		bl	_ZNK12TriggerShape7getSizeEv
+ 1219 011e B4FBF0F3 		udiv	r3, r4, r0
+ 1220 0122 03FB1040 		mls	r0, r3, r0, r4
+ 1221 0126 A0E7     		b	.L152
+ 1222              	.L168:
+ 1223              		.align	2
+ 1224              	.L167:
+ 1225 0128 0050C347 		.word	1203982336
+ 1226              		.size	_Z25findTriggerZeroEventIndexP12TriggerShapePK16trigger_config_s, .-_Z25findTriggerZeroEvent
+ 1227 012c AFF30080 		.section	.text._Z24initTriggerDecoderLoggerP7Logging,"ax",%progbits
+ 1228              		.align	2
+ 1229              		.p2align 4,,15
+ 1230              		.global	_Z24initTriggerDecoderLoggerP7Logging
+ 1231              		.thumb
+ 1232              		.thumb_func
+ 1233              		.type	_Z24initTriggerDecoderLoggerP7Logging, %function
+ 1234              	_Z24initTriggerDecoderLoggerP7Logging:
+ 1235              		@ args = 0, pretend = 0, frame = 0
+ 1236              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1237              		@ link register save eliminated.
+ 1238 0000 40F20003 		movw	r3, #:lower16:.LANCHOR2
+ 1239 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR2
+ 1240 0008 1860     		str	r0, [r3]
+ 1241 000a 7047     		bx	lr
+ 1242              		.size	_Z24initTriggerDecoderLoggerP7Logging, .-_Z24initTriggerDecoderLoggerP7Logging
+ 1243 000c AFF30080 		.section	.text._Z18initTriggerDecoderv,"ax",%progbits
+ 1244              		.align	2
+ 1245              		.p2align 4,,15
+ 1246              		.global	_Z18initTriggerDecoderv
+ 1247              		.thumb
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 23
+
+
+ 1248              		.thumb_func
+ 1249              		.type	_Z18initTriggerDecoderv, %function
+ 1250              	_Z18initTriggerDecoderv:
+ 1251              		@ args = 0, pretend = 0, frame = 0
+ 1252              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1253              		@ link register save eliminated.
+ 1254 0000 40F20003 		movw	r3, #:lower16:boardConfiguration
+ 1255 0004 C0F20003 		movt	r3, #:upper16:boardConfiguration
+ 1256 0008 40F20000 		movw	r0, #:lower16:.LC12
+ 1257 000c 1B68     		ldr	r3, [r3]
+ 1258 000e 40F20001 		movw	r1, #:lower16:.LANCHOR3
+ 1259 0012 D3F85822 		ldr	r2, [r3, #600]
+ 1260 0016 C0F20000 		movt	r0, #:upper16:.LC12
+ 1261 001a 03F51773 		add	r3, r3, #604
+ 1262 001e C0F20001 		movt	r1, #:upper16:.LANCHOR3
+ 1263 0022 FFF7FEBF 		b	_Z21outputPinRegisterExt2PKcP9OutputPin11brain_pin_eP17pin_output_mode_e
+ 1264              		.size	_Z18initTriggerDecoderv, .-_Z18initTriggerDecoderv
+ 1265 0026 00BFAFF3 		.section	.text.startup._GLOBAL__sub_I_lastDecodingErrorTime,"ax",%progbits
+ 1265      0080AFF3 
+ 1265      0080
+ 1266              		.align	2
+ 1267              		.p2align 4,,15
+ 1268              		.thumb
+ 1269              		.thumb_func
+ 1270              		.type	_GLOBAL__sub_I_lastDecodingErrorTime, %function
+ 1271              	_GLOBAL__sub_I_lastDecodingErrorTime:
+ 1272              		@ args = 0, pretend = 0, frame = 0
+ 1273              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1274 0000 38B5     		push	{r3, r4, r5, lr}
+ 1275 0002 40F20000 		movw	r0, #:lower16:.LANCHOR3
+ 1276 0006 40F20004 		movw	r4, #:lower16:.LANCHOR0
+ 1277 000a C0F20004 		movt	r4, #:upper16:.LANCHOR0
+ 1278 000e 0025     		movs	r5, #0
+ 1279 0010 C0F20000 		movt	r0, #:upper16:.LANCHOR3
+ 1280 0014 FFF7FEFF 		bl	_ZN9OutputPinC1Ev
+ 1281 0018 2046     		mov	r0, r4
+ 1282 001a 2946     		mov	r1, r5
+ 1283 001c 4FF48072 		mov	r2, #256
+ 1284 0020 C4F80051 		str	r5, [r4, #256]
+ 1285 0024 FFF7FEFF 		bl	memset
+ 1286 0028 4023     		movs	r3, #64
+ 1287 002a C4F80451 		str	r5, [r4, #260]
+ 1288 002e C4F80831 		str	r3, [r4, #264]
+ 1289 0032 C4F80451 		str	r5, [r4, #260]
+ 1290 0036 38BD     		pop	{r3, r4, r5, pc}
+ 1291              		.size	_GLOBAL__sub_I_lastDecodingErrorTime, .-_GLOBAL__sub_I_lastDecodingErrorTime
+ 1292 0038 AFF30080 		.section	.init_array,"aw",%init_array
+ 1292      AFF30080 
+ 1293              		.align	2
+ 1294 0000 00000000 		.word	_GLOBAL__sub_I_lastDecodingErrorTime(target1)
+ 1295              		.global	lastDecodingErrorTime
+ 1296              		.section	.rodata._ZL10eventIndex,"a",%progbits
+ 1297              		.align	2
+ 1298              		.set	.LANCHOR1,. + 0
+ 1299              		.type	_ZL10eventIndex, %object
+ 1300              		.size	_ZL10eventIndex, 6
+ 1301              	_ZL10eventIndex:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 24
+
+
+ 1302 0000 00       		.byte	0
+ 1303 0001 00       		.byte	0
+ 1304 0002 01       		.byte	1
+ 1305 0003 01       		.byte	1
+ 1306 0004 02       		.byte	2
+ 1307 0005 02       		.byte	2
+ 1308 0006 0000     		.section	.data.lastDecodingErrorTime,"aw",%progbits
+ 1309              		.align	3
+ 1310              		.set	.LANCHOR4,. + 0
+ 1311              		.type	lastDecodingErrorTime, %object
+ 1312              		.size	lastDecodingErrorTime, 8
+ 1313              	lastDecodingErrorTime:
+ 1314 0000 003CDD9B 		.word	-1680000000
+ 1315 0004 FFFFFFFF 		.word	-1
+ 1316              		.section	.bss._ZL22triggerDecoderErrorPin,"aw",%nobits
+ 1317              		.align	2
+ 1318              		.set	.LANCHOR3,. + 0
+ 1319              		.type	_ZL22triggerDecoderErrorPin, %object
+ 1320              		.size	_ZL22triggerDecoderErrorPin, 16
+ 1321              	_ZL22triggerDecoderErrorPin:
+ 1322 0000 00000000 		.space	16
+ 1322      00000000 
+ 1322      00000000 
+ 1322      00000000 
+ 1323              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 1324              		.align	2
+ 1325              	.LC0:
+ 1326 0000 756E6578 		.ascii	"unexpected signal\000"
+ 1326      70656374 
+ 1326      65642073 
+ 1326      69676E61 
+ 1326      6C00
+ 1327 0012 0000     		.space	2
+ 1328              	.LC1:
+ 1329 0014 6761703D 		.ascii	"gap=%f @ %d\000"
+ 1329      25662040 
+ 1329      20256400 
+ 1330              	.LC2:
+ 1331 0020 6572726F 		.ascii	"error: synchronizationPoint @ index %d expected %d/"
+ 1331      723A2073 
+ 1331      796E6368 
+ 1331      726F6E69 
+ 1331      7A617469 
+ 1332 0053 25642F25 		.ascii	"%d/%d got %d/%d/%d\000"
+ 1332      6420676F 
+ 1332      74202564 
+ 1332      2F25642F 
+ 1332      256400
+ 1333 0066 0000     		.space	2
+ 1334              	.LC3:
+ 1335 0068 74726967 		.ascii	"trigger decoding issue. expected %d/%d/%d got %d/%d"
+ 1335      67657220 
+ 1335      6465636F 
+ 1335      64696E67 
+ 1335      20697373 
+ 1336 009b 2F256400 		.ascii	"/%d\000"
+ 1337 009f 00       		.space	1
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 25
+
+
+ 1338              	.LC4:
+ 1339 00a0 746F7461 		.ascii	"total count\000"
+ 1339      6C20636F 
+ 1339      756E7400 
+ 1340              	.LC5:
+ 1341 00ac 736B6970 		.ascii	"skipped count\000"
+ 1341      70656420 
+ 1341      636F756E 
+ 1341      7400
+ 1342 00ba 0000     		.space	2
+ 1343              	.LC6:
+ 1344 00bc 746F7461 		.ascii	"totalTeethCount is zero\000"
+ 1344      6C546565 
+ 1344      7468436F 
+ 1344      756E7420 
+ 1344      6973207A 
+ 1345              	.LC7:
+ 1346 00d4 696E6974 		.ascii	"initializeTriggerShape()\000"
+ 1346      69616C69 
+ 1346      7A655472 
+ 1346      69676765 
+ 1346      72536861 
+ 1347 00ed 000000   		.space	3
+ 1348              	.LC8:
+ 1349 00f0 696E6974 		.ascii	"initializeTriggerShape() not implemented: %d\000"
+ 1349      69616C69 
+ 1349      7A655472 
+ 1349      69676765 
+ 1349      72536861 
+ 1350 011d 000000   		.space	3
+ 1351              	.LC9:
+ 1352 0120 66696E64 		.ascii	"findTriggerZeroEventIndex() failed\000"
+ 1352      54726967 
+ 1352      6765725A 
+ 1352      65726F45 
+ 1352      76656E74 
+ 1353 0143 00       		.space	1
+ 1354              	.LC10:
+ 1355 0144 746F7461 		.ascii	"totalRevolutionCounter\000"
+ 1355      6C526576 
+ 1355      6F6C7574 
+ 1355      696F6E43 
+ 1355      6F756E74 
+ 1356 015b 00       		.space	1
+ 1357              	.LC11:
+ 1358 015c 746F7461 		.ascii	"totalRevolutionCounter2 expected 3\000"
+ 1358      6C526576 
+ 1358      6F6C7574 
+ 1358      696F6E43 
+ 1358      6F756E74 
+ 1359 017f 00       		.space	1
+ 1360              	.LC12:
+ 1361 0180 7472675F 		.ascii	"trg_err\000"
+ 1361      65727200 
+ 1362              		.section	.bss._ZL6logger,"aw",%nobits
+ 1363              		.align	2
+ 1364              		.set	.LANCHOR2,. + 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 26
+
+
+ 1365              		.type	_ZL6logger, %object
+ 1366              		.size	_ZL6logger, 4
+ 1367              	_ZL6logger:
+ 1368 0000 00000000 		.space	4
+ 1369              		.section	.bss._ZL14errorDetection,"aw",%nobits
+ 1370              		.align	2
+ 1371              		.set	.LANCHOR0,. + 0
+ 1372              		.type	_ZL14errorDetection, %object
+ 1373              		.size	_ZL14errorDetection, 268
+ 1374              	_ZL14errorDetection:
+ 1375 0000 00000000 		.space	268
+ 1375      00000000 
+ 1375      00000000 
+ 1375      00000000 
+ 1375      00000000 
+ 1376              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 27
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 trigger_decoder.cpp
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:17     .text._ZL11onFindIndexP12TriggerState:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:22     .text._ZL11onFindIndexP12TriggerState:00000000 _ZL11onFindIndexP12TriggerState
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:34     .text._Z21isTriggerDecoderErrorv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:40     .text._Z21isTriggerDecoderErrorv:00000000 _Z21isTriggerDecoderErrorv
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1371   .bss._ZL14errorDetection:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:88     .text._ZN12TriggerState19getTriggerDutyCycleEi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:94     .text._ZN12TriggerState19getTriggerDutyCycleEi:00000000 _ZN12TriggerState19getTriggerDutyCycleEi
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:114    .text._ZN12TriggerState19getTriggerDutyCycleEi:00000034 $d
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:118    .text._ZN12TriggerState18decodeTriggerEventE15trigger_event_ey:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:124    .text._ZN12TriggerState18decodeTriggerEventE15trigger_event_ey:00000000 _ZN12TriggerState18decodeTriggerEventE15trigger_event_ey
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1298   .rodata._ZL10eventIndex:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1325   .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1318   .bss._ZL22triggerDecoderErrorPin:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1310   .data.lastDecodingErrorTime:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1364   .bss._ZL6logger:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1328   .rodata.str1.4:00000014 .LC1
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1334   .rodata.str1.4:00000068 .LC3
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1330   .rodata.str1.4:00000020 .LC2
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:492    .text._ZN12TriggerState18decodeTriggerEventE15trigger_event_ey:000003e8 $d
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:498    .text._Z14getEngineCycle16operation_mode_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:504    .text._Z14getEngineCycle16operation_mode_e:00000000 _Z14getEngineCycle16operation_mode_e
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:518    .text._Z14getEngineCycle16operation_mode_e:00000018 $d
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:522    .text._Z28addSkippedToothTriggerEvents15trigger_wheel_eP12TriggerShapeiifffff:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:528    .text._Z28addSkippedToothTriggerEvents15trigger_wheel_eP12TriggerShapeiifffff:00000000 _Z28addSkippedToothTriggerEvents15trigger_wheel_eP12TriggerShapeiifffff
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1338   .rodata.str1.4:000000a0 .LC4
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1340   .rodata.str1.4:000000ac .LC5
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:629    .text._Z28addSkippedToothTriggerEvents15trigger_wheel_eP12TriggerShapeiifffff:0000011c $d
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:632    .text._Z37initializeSkippedToothTriggerShapeExtP12TriggerShapeii16operation_mode_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:638    .text._Z37initializeSkippedToothTriggerShapeExtP12TriggerShapeii16operation_mode_e:00000000 _Z37initializeSkippedToothTriggerShapeExtP12TriggerShapeii16operation_mode_e
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1343   .rodata.str1.4:000000bc .LC6
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:697    .text._Z37initializeSkippedToothTriggerShapeExtP12TriggerShapeii16operation_mode_e:00000090 $d
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:701    .text._ZN12TriggerShape22initializeTriggerShapeEP7Logging:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:707    .text._ZN12TriggerShape22initializeTriggerShapeEP7Logging:00000000 _ZN12TriggerShape22initializeTriggerShapeEP7Logging
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1345   .rodata.str1.4:000000d4 .LC7
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:727    .text._ZN12TriggerShape22initializeTriggerShapeEP7Logging:00000034 $d
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:749    .text._ZN12TriggerShape22initializeTriggerShapeEP7Logging:0000005e $t
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1348   .rodata.str1.4:000000f0 .LC8
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:957    .text._ZN23TriggerStimulatorHelperC2Ev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:963    .text._ZN23TriggerStimulatorHelperC2Ev:00000000 _ZN23TriggerStimulatorHelperC2Ev
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:963    .text._ZN23TriggerStimulatorHelperC2Ev:00000000 _ZN23TriggerStimulatorHelperC1Ev
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:972    .text._ZN23TriggerStimulatorHelper8nextStepEP12TriggerStateP12TriggerShapeiPK16trigger_config_s:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:978    .text._ZN23TriggerStimulatorHelper8nextStepEP12TriggerStateP12TriggerShapeiPK16trigger_config_s:00000000 _ZN23TriggerStimulatorHelper8nextStepEP12TriggerStateP12TriggerShapeiPK16trigger_config_s
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1097   .text._ZN23TriggerStimulatorHelper8nextStepEP12TriggerStateP12TriggerShapeiPK16trigger_config_s:00000128 $d
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1100   .text._Z25findTriggerZeroEventIndexP12TriggerShapePK16trigger_config_s:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1106   .text._Z25findTriggerZeroEventIndexP12TriggerShapePK16trigger_config_s:00000000 _Z25findTriggerZeroEventIndexP12TriggerShapePK16trigger_config_s
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1354   .rodata.str1.4:00000144 .LC10
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1357   .rodata.str1.4:0000015c .LC11
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1351   .rodata.str1.4:00000120 .LC9
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1225   .text._Z25findTriggerZeroEventIndexP12TriggerShapePK16trigger_config_s:00000128 $d
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1228   .text._Z24initTriggerDecoderLoggerP7Logging:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1234   .text._Z24initTriggerDecoderLoggerP7Logging:00000000 _Z24initTriggerDecoderLoggerP7Logging
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1244   .text._Z18initTriggerDecoderv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1250   .text._Z18initTriggerDecoderv:00000000 _Z18initTriggerDecoderv
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1360   .rodata.str1.4:00000180 .LC12
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1266   .text.startup._GLOBAL__sub_I_lastDecodingErrorTime:00000000 $t
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 28
+
+
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1271   .text.startup._GLOBAL__sub_I_lastDecodingErrorTime:00000000 _GLOBAL__sub_I_lastDecodingErrorTime
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1293   .init_array:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1313   .data.lastDecodingErrorTime:00000000 lastDecodingErrorTime
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1297   .rodata._ZL10eventIndex:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1301   .rodata._ZL10eventIndex:00000000 _ZL10eventIndex
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1309   .data.lastDecodingErrorTime:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1317   .bss._ZL22triggerDecoderErrorPin:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1321   .bss._ZL22triggerDecoderErrorPin:00000000 _ZL22triggerDecoderErrorPin
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1324   .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1363   .bss._ZL6logger:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1367   .bss._ZL6logger:00000000 _ZL6logger
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1370   .bss._ZL14errorDetection:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1374   .bss._ZL14errorDetection:00000000 _ZL14errorDetection
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:117    .text._ZN12TriggerState19getTriggerDutyCycleEi:00000038 $t
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:497    .text._ZN12TriggerState18decodeTriggerEventE15trigger_event_ey:000003f8 $t
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:700    .text._Z37initializeSkippedToothTriggerShapeExtP12TriggerShapeii16operation_mode_e:00000098 $t
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1099   .text._ZN23TriggerStimulatorHelper8nextStepEP12TriggerStateP12TriggerShapeiPK16trigger_config_s:0000012c $t
+C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s:1227   .text._Z25findTriggerZeroEventIndexP12TriggerShapePK16trigger_config_s:0000012c $t
+
+UNDEFINED SYMBOLS
+__aeabi_ul2f
+__aeabi_f2d
+engineConfiguration
+_engine
+firmwareError
+_ZN9OutputPin8setValueEi
+getTimeNowNt
+_ZN12TriggerState5clearEv
+scheduleMsg
+warning
+_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_eff
+_ZN12TriggerShape28setTriggerSynchronizationGapEf
+_ZN12TriggerShape5resetE16operation_mode_eb
+_ZN12TriggerShape5clearEv
+_Z31configureFordAspireTriggerShapeP12TriggerShape
+_ZNK12TriggerShape7getSizeEv
+_ZN12multi_wave_s16checkSwitchTimesEi
+_ZN12TriggerShape26calculateTriggerSynchPointEv
+_Z31configureMiniCooperTriggerShapeP12TriggerShape
+_Z27initializeMazdaMiataNbShapeP12TriggerShape
+_Z27initializeMazdaMiataNaShapeP12TriggerShape
+_Z29configureNeon1995TriggerShapeP12TriggerShape
+_Z28setToothedWheelConfigurationP12TriggerShapeii16operation_mode_e
+_ZN12TriggerShape29setTriggerSynchronizationGap2Eff
+_Z12initDodgeRamP12TriggerShape
+_ZN12TriggerShape8addEventEf15trigger_wheel_e15trigger_value_e
+_Z23configureMazdaProtegeLxP12TriggerShape
+_Z29configureNeon2003TriggerShapeP12TriggerShape
+_Z25configureHondaAccordCDDipP12TriggerShape
+_Z22configureHondaAccordCDP12TriggerShapeb
+_Z24initializeMitsubishi4g18P12TriggerShape
+_Z25configureMazdaProtegeSOHCP12TriggerShape
+_ZNK12multi_wave_s13getSwitchTimeEi
+_ZNK12multi_wave_s15getChannelStateEii
+_ZN12TriggerStateC1Ev
+memset
+_ZN12TriggerState25getTotalRevolutionCounterEv
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc3QPBwk.s 			page 29
+
+
+boardConfiguration
+_Z21outputPinRegisterExt2PKcP9OutputPin11brain_pin_eP17pin_output_mode_e
+_ZN9OutputPinC1Ev

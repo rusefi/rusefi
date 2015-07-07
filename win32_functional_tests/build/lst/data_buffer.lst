@@ -1,0 +1,137 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccV9r1mj.s 			page 1
+
+
+   1              		.file	"data_buffer.c"
+   2              		.section	.text$dbIsFull,"x"
+   3              		.p2align 4,,15
+   4              		.globl	_dbIsFull
+   5              		.def	_dbIsFull;	.scl	2;	.type	32;	.endef
+   6              	_dbIsFull:
+   7              	LFB68:
+   8              		.cfi_startproc
+   9 0000 8B442404 		movl	4(%esp), %eax
+  10 0004 81B80010 		cmpl	$1024, 4096(%eax)
+  10      00000004 
+  10      0000
+  11 000e 0F94C0   		sete	%al
+  12 0011 0FB6C0   		movzbl	%al, %eax
+  13 0014 C3       		ret
+  14              		.cfi_endproc
+  15              	LFE68:
+  16 0015 90909090 		.section	.text$dbClear,"x"
+  16      90909090 
+  16      909090
+  17              		.p2align 4,,15
+  18              		.globl	_dbClear
+  19              		.def	_dbClear;	.scl	2;	.type	32;	.endef
+  20              	_dbClear:
+  21              	LFB69:
+  22              		.cfi_startproc
+  23 0000 8B442404 		movl	4(%esp), %eax
+  24 0004 C7800010 		movl	$0, 4096(%eax)
+  24      00000000 
+  24      0000
+  25 000e C3       		ret
+  26              		.cfi_endproc
+  27              	LFE69:
+  28 000f 90       		.section	.text$dbCopy,"x"
+  29              		.p2align 4,,15
+  30              		.globl	_dbCopy
+  31              		.def	_dbCopy;	.scl	2;	.type	32;	.endef
+  32              	_dbCopy:
+  33              	LFB70:
+  34              		.cfi_startproc
+  35 0000 56       		pushl	%esi
+  36              		.cfi_def_cfa_offset 8
+  37              		.cfi_offset 6, -8
+  38 0001 53       		pushl	%ebx
+  39              		.cfi_def_cfa_offset 12
+  40              		.cfi_offset 3, -12
+  41 0002 8B5C240C 		movl	12(%esp), %ebx
+  42 0006 8B742410 		movl	16(%esp), %esi
+  43 000a 8B8B0010 		movl	4096(%ebx), %ecx
+  43      0000
+  44 0010 85C9     		testl	%ecx, %ecx
+  45 0012 898E0010 		movl	%ecx, 4096(%esi)
+  45      0000
+  46 0018 7E13     		jle	L3
+  47 001a 31C0     		xorl	%eax, %eax
+  48 001c 8D742600 		.p2align 4,,7
+  49              	L4:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccV9r1mj.s 			page 2
+
+
+  50 0020 8B1483   		movl	(%ebx,%eax,4), %edx
+  51 0023 891486   		movl	%edx, (%esi,%eax,4)
+  52 0026 83C001   		addl	$1, %eax
+  53 0029 39C8     		cmpl	%ecx, %eax
+  54 002b 75F3     		jne	L4
+  55              	L3:
+  56 002d 5B       		popl	%ebx
+  57              		.cfi_restore 3
+  58              		.cfi_def_cfa_offset 8
+  59 002e 5E       		popl	%esi
+  60              		.cfi_restore 6
+  61              		.cfi_def_cfa_offset 4
+  62 002f C3       		ret
+  63              		.cfi_endproc
+  64              	LFE70:
+  65              		.section	.text$dbAdd,"x"
+  66              		.p2align 4,,15
+  67              		.globl	_dbAdd
+  68              		.def	_dbAdd;	.scl	2;	.type	32;	.endef
+  69              	_dbAdd:
+  70              	LFB71:
+  71              		.cfi_startproc
+  72 0000 8B442404 		movl	4(%esp), %eax
+  73 0004 8B900010 		movl	4096(%eax), %edx
+  73      0000
+  74 000a 81FA0004 		cmpl	$1024, %edx
+  74      0000
+  75 0010 7410     		je	L10
+  76 0012 8B4C2408 		movl	8(%esp), %ecx
+  77 0016 890C90   		movl	%ecx, (%eax,%edx,4)
+  78 0019 83C201   		addl	$1, %edx
+  79 001c 89900010 		movl	%edx, 4096(%eax)
+  79      0000
+  80              	L10:
+  81 0022 F3       		rep
+  82 0023 C3       		ret
+  83              		.cfi_endproc
+  84              	LFE71:
+  85 0024 90909090 		.section	.text$modp,"x"
+  85      90909090 
+  85      90909090 
+  86              		.p2align 4,,15
+  87              		.globl	_modp
+  88              		.def	_modp;	.scl	2;	.type	32;	.endef
+  89              	_modp:
+  90              	LFB72:
+  91              		.cfi_startproc
+  92 0000 8B442404 		movl	4(%esp), %eax
+  93 0004 8D90001F 		leal	-100000000(%eax), %edx
+  93      0AFA
+  94 000a 3D01E1F5 		cmpl	$100000001, %eax
+  94      05
+  95 000f 0F4DC2   		cmovge	%edx, %eax
+  96 0012 C3       		ret
+  97              		.cfi_endproc
+  98 0013 90909090 	LFE72:
+  98      90909090 
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccV9r1mj.s 			page 3
+
+
+  98      90909090 
+  98      90
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccV9r1mj.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 data_buffer.c
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccV9r1mj.s:6      .text$dbIsFull:00000000 _dbIsFull
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccV9r1mj.s:20     .text$dbClear:00000000 _dbClear
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccV9r1mj.s:32     .text$dbCopy:00000000 _dbCopy
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccV9r1mj.s:69     .text$dbAdd:00000000 _dbAdd
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccV9r1mj.s:89     .text$modp:00000000 _modp
+
+NO UNDEFINED SYMBOLS

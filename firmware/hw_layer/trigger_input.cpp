@@ -67,14 +67,14 @@ shaft_icu_width_callback, shaft_icu_period_callback };
 
 static ICUDriver *turnOnTriggerInputPin(brain_pin_e hwPin) {
 	// configure pin
-	turnOnCapturePin(hwPin);
+	turnOnCapturePin("trigger", hwPin);
 	shaft_icucfg.channel = ICU_CHANNEL_1;
 
 	ICUDriver *driver = getInputCaptureDriver(hwPin);
 	scheduleMsg(logger, "turnOnTriggerInputPin %s", hwPortname(hwPin));
 	// todo: reuse 'setWaveReaderMode' method here?
 	if (driver != NULL) {
-          // todo: once http://forum.chibios.org/phpbb/viewtopic.php?f=16&t=1757 is fixed
+		// todo: once http://forum.chibios.org/phpbb/viewtopic.php?f=16&t=1757 is fixed
 //		bool_t needWidthCallback = !CONFIG(useOnlyFrontForTrigger) || TRIGGER_SHAPE(useRiseEdge);
 //		shaft_icucfg.width_cb = needWidthCallback ? shaft_icu_width_callback : NULL;
 
@@ -82,7 +82,12 @@ static ICUDriver *turnOnTriggerInputPin(brain_pin_e hwPin) {
 //		shaft_icucfg.period_cb = needPeriodCallback ? shaft_icu_period_callback : NULL;
 
 		efiIcuStart(driver, &shaft_icucfg);
-		icuEnable(driver);
+		if (driver->state == ICU_READY) {
+			icuEnable(driver);
+		} else {
+			// we would be here for example if same pin is used for multiple input capture purposes
+			firmwareError("ICU unexpected state [%s]", hwPortname(hwPin));
+		}
 	}
 	return driver;
 }
@@ -113,25 +118,25 @@ void turnOnTriggerInputPins(Logging *sharedLogger) {
 extern engine_configuration_s activeConfiguration;
 
 void stopTriggerInputPins(void) {
-	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
-		if (boardConfiguration->triggerInputPins[i] != activeConfiguration.bc.triggerInputPins[i]) {
-			turnOffTriggerInputPin(activeConfiguration.bc.triggerInputPins[i]);
-		}
+for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
+	if (boardConfiguration->triggerInputPins[i] != activeConfiguration.bc.triggerInputPins[i]) {
+		turnOffTriggerInputPin(activeConfiguration.bc.triggerInputPins[i]);
 	}
+}
 }
 
 void applyNewTriggerInputPins(void) {
-	// first we will turn off all the changed pins
-	stopTriggerInputPins();
+// first we will turn off all the changed pins
+stopTriggerInputPins();
 
-	// then we will enable all the changed pins
-	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
-		if (boardConfiguration->triggerInputPins[i] != activeConfiguration.bc.triggerInputPins[i]) {
-			turnOnTriggerInputPin(boardConfiguration->triggerInputPins[i]);
-		}
+// then we will enable all the changed pins
+for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
+	if (boardConfiguration->triggerInputPins[i] != activeConfiguration.bc.triggerInputPins[i]) {
+		turnOnTriggerInputPin(boardConfiguration->triggerInputPins[i]);
 	}
+}
 
-	rememberPrimaryChannel();
+rememberPrimaryChannel();
 }
 
 #endif /* EFI_SHAFT_POSITION_INPUT */

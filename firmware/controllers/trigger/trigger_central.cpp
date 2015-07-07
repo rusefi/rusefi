@@ -19,6 +19,7 @@
 #include "pwm_generator_logic.h"
 #include "efilib2.h"
 #include "settings.h"
+#include "auto_generated_enums.h"
 
 #include "rpm_calculator.h"
 #if EFI_PROD_CODE
@@ -34,17 +35,17 @@ WaveChart waveChart;
 static histogram_s triggerCallback;
 
 // we need this initial to have not_running at first invocation
-static volatile uint64_t previousShaftEventTimeNt = (efitimems_t) -10 * US2NT(US_PER_SECOND_LL);
+static volatile efitime_t previousShaftEventTimeNt = (efitimems_t) -10 * US2NT(US_PER_SECOND_LL);
 
 TriggerCentral triggerCentral;
 
 static Logging *logger;
 
-uint64_t getCrankEventCounter() {
+efitime_t getCrankEventCounter() {
 	return triggerCentral.triggerState.getTotalEventCounter();
 }
 
-uint64_t getStartOfRevolutionIndex() {
+efitime_t getStartOfRevolutionIndex() {
 	return triggerCentral.triggerState.getStartOfRevolutionIndex();
 }
 
@@ -208,9 +209,9 @@ void printAllCallbacksHistogram(void) {
 EXTERN_ENGINE
 ;
 
-static void triggerShapeInfo(Engine *engine) {
+static void triggerShapeInfo(void) {
+#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 	TriggerShape *s = &engine->triggerShape;
-#if EFI_PROD_CODE || EFI_SIMULATOR
 	scheduleMsg(logger, "useRise=%s", boolToString(s->useRiseEdge));
 	scheduleMsg(logger, "gap from %f to %f", s->syncRatioFrom, s->syncRatioTo);
 
@@ -220,7 +221,55 @@ static void triggerShapeInfo(Engine *engine) {
 #endif
 }
 
-#if EFI_PROD_CODE
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#include <stdio.h>
+#include <stdlib.h>
+
+
+/**
+ * This is used to generate trigger info which is later used by TODO to generate images for documentation
+ */
+void printAllTriggers() {
+
+	FILE * fp = fopen ("triggers.txt", "w+");
+
+	for (int triggerId = 1; triggerId < TT_UNUSED; triggerId++) {
+		trigger_type_e tt = (trigger_type_e) triggerId;
+
+		printf("Exporting %s\r\n", getTrigger_type_e(tt));
+
+		persistent_config_s pc;
+		Engine e(&pc);
+		Engine *engine = &e;
+		persistent_config_s *config = &pc;
+		engine_configuration_s *engineConfiguration = &pc.engineConfiguration;
+		board_configuration_s *boardConfiguration = &engineConfiguration->bc;
+
+		engineConfiguration->engineCycle = 720;
+		engineConfiguration->trigger.type = tt;
+		engineConfiguration->operationMode = FOUR_STROKE_CAM_SENSOR;
+
+		TriggerShape *s = &engine->triggerShape;
+		s->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER);
+
+		fprintf(fp, "TRIGGERTYPE %d %d %s\r\n", triggerId, s->getSize(), getTrigger_type_e(tt));
+		for (int i = 0; i < s->getSize(); i++) {
+
+			int triggerDefinitionCoordinate = (s->getTriggerShapeSynchPointIndex() + i) % s->getLength();
+
+
+			fprintf(fp, "event %d %d %f\r\n", i, s->events[triggerDefinitionCoordinate], s->eventAngles[i]);
+		}
+
+	}
+	fclose(fp);
+	printf("All triggers exported\r\n");
+}
+
+#endif
+
+
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 extern PwmConfig triggerSignal;
 #endif /* #if EFI_PROD_CODE */
 
@@ -232,7 +281,7 @@ extern uint32_t hwSetTimerTime;
 extern int maxHowFarOff;
 extern uint32_t *cyccnt;
 
-void triggerInfo(Engine *engine) {
+void triggerInfo(void) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 
 	TriggerShape *ts = &engine->triggerShape;
@@ -241,6 +290,11 @@ void triggerInfo(Engine *engine) {
 			getConfigurationName(engineConfiguration->engineType), engineConfiguration->engineType,
 			getTrigger_type_e(engineConfiguration->trigger.type), engineConfiguration->trigger.type,
 			boolToString(TRIGGER_SHAPE(useRiseEdge)), boolToString(engineConfiguration->useOnlyFrontForTrigger));
+
+	if (engineConfiguration->trigger.type == TT_TOOTHED_WHEEL) {
+		scheduleMsg(logger, "total %d/skipped %d", engineConfiguration->trigger.customTotalToothCount,
+				engineConfiguration->trigger.customSkippedToothCount);
+	}
 
 	scheduleMsg(logger, "trigger#1 event counters up=%d/down=%d", triggerCentral.getHwEventCounter(0),
 			triggerCentral.getHwEventCounter(1));
@@ -330,7 +384,7 @@ float getTriggerDutyCycle(int index) {
 static void resetRunningTriggerCounters() {
 	triggerCentral.resetCounters();
 #if EFI_PROD_CODE
-	triggerInfo(engine);
+	triggerInfo();
 #endif
 }
 
@@ -343,8 +397,8 @@ void initTriggerCentral(Logging *sharedLogger, Engine *engine) {
 #endif /* EFI_WAVE_CHART */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	addConsoleActionP("triggerinfo", (VoidPtr) triggerInfo, engine);
-	addConsoleActionP("trigger_shape_info", (VoidPtr) triggerShapeInfo, engine);
+	addConsoleAction("triggerinfo", triggerInfo);
+	addConsoleAction("trigger_shape_info", triggerShapeInfo);
 	addConsoleAction("reset_trigger", resetRunningTriggerCounters);
 #endif
 

@@ -58,7 +58,10 @@ RTCDriver RTCD1;
  *
  * @notapi
  */
-#define rtc_lld_apb1_sync() {while ((RTCD1.id_rtc->ISR & RTC_ISR_RSF) == 0);}
+#define rtc_lld_apb1_sync() {                                                \
+    int counter = 0;                                                         \
+	while ((RTCD1.id_rtc->ISR & RTC_ISR_RSF) == 0 && ++counter <LSE_TIMEOUT);\
+	}
 
 /**
  * @brief   Beginning of configuration procedure.
@@ -67,7 +70,8 @@ RTCDriver RTCD1;
  */
 #define rtc_lld_enter_init() {                                              \
   RTCD1.id_rtc->ISR |= RTC_ISR_INIT;                                        \
-  while ((RTCD1.id_rtc->ISR & RTC_ISR_INITF) == 0)                          \
+  int counter = 0;                                                          \
+  while ((RTCD1.id_rtc->ISR & RTC_ISR_INITF) == 0 && ++counter <LSE_TIMEOUT)\
     ;                                                                       \
 }
 

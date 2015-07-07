@@ -1,0 +1,1023 @@
+###############################################################################
+#                                                                             #
+# IAR ANSI C/C++ Compiler V6.50.3.4676/W32 for ARM      30/Jun/2015  23:09:05 #
+# Copyright 1999-2013 IAR Systems AB.                                         #
+#                                                                             #
+#    Cpu mode        =  thumb                                                 #
+#    Endian          =  little                                                #
+#    Source file     =  F:\stuff\rusefi_sourceforge\firmware\chibios\os\hal\s #
+#                       rc\gpt.c                                              #
+#    Command line    =  F:\stuff\rusefi_sourceforge\firmware\chibios\os\hal\s #
+#                       rc\gpt.c -lCN F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\Debug\List\ -lA F:\stuff\rusefi_sourceforge\firmwar #
+#                       e\iar\Debug\List\ -o F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\Debug\Obj\ --no_cse --no_unroll --no_inline  #
+#                       --no_code_motion --no_tbaa --no_clustering            #
+#                       --no_scheduling --debug --endian=little               #
+#                       --cpu=Cortex-M4 -e --fpu=VFPv4_sp --dlib_config       #
+#                       "C:\Program Files (x86)\IAR Systems\Embedded          #
+#                       Workbench 6.5\arm\INC\c\DLib_Config_Normal.h"         #
+#                       --misrac2004=1.2-1.4,2.3,3.4,4.2,6.5-7,8.2-8.3,9.3,   #
+#                       12.3,13.6-13,15.5,17.3,19.17,20.7-20.9,20.11 -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\ -I       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\kernel\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\ports\common\ARMCMx\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\common\ARMCMx\CMSIS\include\ -I               #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\ports\IAR\ARMCMx\ -I F:\stuff\rusefi_sourceforge\fi #
+#                       rmware\iar\..\chibios\os\ports\IAR\ARMCMx\STM32F4xx\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\chibio #
+#                       s\os\hal\include\ -I F:\stuff\rusefi_sourceforge\firm #
+#                       ware\iar\..\chibios\os\hal\platforms\STM32\ -I        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\DMAv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\GPIOv2\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\I2Cv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\SPIv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\TIMv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\RTCv2\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\USARTv1\ -I                     #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32\OTGv1\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\hal\platforms\STM32F4xx\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\o #
+#                       s\various\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\chibios\os\various\devices_lib\accel\ -I         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\chibios\b #
+#                       oards\ST_STM32F4_DISCOVERY\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\co #
+#                       ntrollers\algo\ -I F:\stuff\rusefi_sourceforge\firmwa #
+#                       re\iar\..\controllers\core\ -I                        #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\system\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\controllers\sensors\ -I                          #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\controlle #
+#                       rs\math\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\controllers\trigger\ -I                            #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\config #
+#                       \ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\conf #
+#                       ig\engines\ -I F:\stuff\rusefi_sourceforge\firmware\i #
+#                       ar\..\config\stm32f4ems\ -I                           #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\console\b #
+#                       inary\ -I F:\stuff\rusefi_sourceforge\firmware\iar\.. #
+#                       \console_util\ -I F:\stuff\rusefi_sourceforge\firmwar #
+#                       e\iar\..\development\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\development\test\ -I                  #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\developme #
+#                       nt\hw_layer\ -I F:\stuff\rusefi_sourceforge\firmware\ #
+#                       iar\..\hw_layer\algo\ -I F:\stuff\rusefi_sourceforge\ #
+#                       firmware\iar\..\hw_layer\lcd\ -I                      #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                       stm32f4\ -I F:\stuff\rusefi_sourceforge\firmware\iar\ #
+#                       ..\hw_layer\serial_over_usb\ -I                       #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\hw_layer\ #
+#                        -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext\  #
+#                       -I F:\stuff\rusefi_sourceforge\firmware\iar\..\ext_al #
+#                       go\ -I F:\stuff\rusefi_sourceforge\firmware\iar\..\de #
+#                       velopment\ -I F:\stuff\rusefi_sourceforge\firmware\ia #
+#                       r\..\development\hw_layer\ -I                         #
+#                       F:\stuff\rusefi_sourceforge\firmware\iar\..\util\ -On #
+#    MISRA C version =  2004                                                  #
+#      Enabled       =  1.2-1.4 2.3 3.4 4.2 6.5 7 8.2 8.3 9.3 12.3 13.6 13.7  #
+#                       15.5 17.3 19.17 20.7-20.9 20.11                       #
+#      Checked       =  1.4 2.3 4.2 6.5 7 8.2 8.3 9.3 12.3 13.7 15.5          #
+#                       20.7-20.9 20.11                                       #
+#      Not checked   =  1.1-1.3 1.5-2.2 2.4-4.1 5-6.4 8.1 8.4-9.2 10-12.2     #
+#                       12.4-13.6 14-15.4 16-20.6 20.10 20.12 21              #
+#    List file       =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\List\g #
+#                       pt.lst                                                #
+#    Object file     =  F:\stuff\rusefi_sourceforge\firmware\iar\Debug\Obj\gp #
+#                       t.o                                                   #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+F:\stuff\rusefi_sourceforge\firmware\chibios\os\hal\src\gpt.c
+      1          /*
+      2              ChibiOS/RT - Copyright (C) 2006,2007,2008,2009,2010,
+      3                           2011,2012,2013 Giovanni Di Sirio.
+      4          
+      5              This file is part of ChibiOS/RT.
+      6          
+      7              ChibiOS/RT is free software; you can redistribute it and/or modify
+      8              it under the terms of the GNU General Public License as published by
+      9              the Free Software Foundation; either version 3 of the License, or
+     10              (at your option) any later version.
+     11          
+     12              ChibiOS/RT is distributed in the hope that it will be useful,
+     13              but WITHOUT ANY WARRANTY; without even the implied warranty of
+     14              MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     15              GNU General Public License for more details.
+     16          
+     17              You should have received a copy of the GNU General Public License
+     18              along with this program.  If not, see <http://www.gnu.org/licenses/>.
+     19          
+     20                                                ---
+     21          
+     22              A special exception to the GPL can be applied should you wish to distribute
+     23              a combined work that includes ChibiOS/RT, without being obliged to provide
+     24              the source code for any proprietary components. See the file exception.txt
+     25              for full details of how and when the exception can be applied.
+     26          */
+     27          
+     28          /**
+     29           * @file    gpt.c
+     30           * @brief   GPT Driver code.
+     31           *
+     32           * @addtogroup GPT
+     33           * @{
+     34           */
+     35          
+     36          #include "ch.h"
+     37          #include "hal.h"
+     38          
+     39          #if HAL_USE_GPT || defined(__DOXYGEN__)
+     40          
+     41          /*===========================================================================*/
+     42          /* Driver local definitions.                                                 */
+     43          /*===========================================================================*/
+     44          
+     45          /*===========================================================================*/
+     46          /* Driver exported variables.                                                */
+     47          /*===========================================================================*/
+     48          
+     49          /*===========================================================================*/
+     50          /* Driver local variables and types.                                         */
+     51          /*===========================================================================*/
+     52          
+     53          /*===========================================================================*/
+     54          /* Driver local functions.                                                   */
+     55          /*===========================================================================*/
+     56          
+     57          /*===========================================================================*/
+     58          /* Driver exported functions.                                                */
+     59          /*===========================================================================*/
+     60          
+     61          /**
+     62           * @brief   GPT Driver initialization.
+     63           * @note    This function is implicitly invoked by @p halInit(), there is
+     64           *          no need to explicitly initialize the driver.
+     65           *
+     66           * @init
+     67           */
+
+   \                                 In section .text, align 2, keep-with-next
+     68          void gptInit(void) {
+   \                     gptInit:
+   \   00000000   0xB580             PUSH     {R7,LR}
+     69          
+     70            gpt_lld_init();
+   \   00000002   0x.... 0x....      BL       gpt_lld_init
+     71          }
+   \   00000006   0xBD01             POP      {R0,PC}          ;; return
+     72          
+     73          /**
+     74           * @brief   Initializes the standard part of a @p GPTDriver structure.
+     75           *
+     76           * @param[out] gptp     pointer to the @p GPTDriver object
+     77           *
+     78           * @init
+     79           */
+
+   \                                 In section .text, align 2, keep-with-next
+     80          void gptObjectInit(GPTDriver *gptp) {
+     81          
+     82            gptp->state  = GPT_STOP;
+   \                     gptObjectInit:
+   \   00000000   0x2101             MOVS     R1,#+1
+   \   00000002   0x7001             STRB     R1,[R0, #+0]
+     83            gptp->config = NULL;
+   \   00000004   0x2100             MOVS     R1,#+0
+   \   00000006   0x6041             STR      R1,[R0, #+4]
+     84          }
+   \   00000008   0x4770             BX       LR               ;; return
+     85          
+     86          /**
+     87           * @brief   Configures and activates the GPT peripheral.
+     88           *
+     89           * @param[in] gptp      pointer to the @p GPTDriver object
+     90           * @param[in] config    pointer to the @p GPTConfig object
+     91           *
+     92           * @api
+     93           */
+
+   \                                 In section .text, align 2, keep-with-next
+     94          void gptStart(GPTDriver *gptp, const GPTConfig *config) {
+   \                     gptStart:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+     95          
+     96            chDbgCheck((gptp != NULL) && (config != NULL), "gptStart");
+   \   00000006   0x2C00             CMP      R4,#+0
+   \   00000008   0xD001             BEQ.N    ??gptStart_0
+   \   0000000A   0x2D00             CMP      R5,#+0
+   \   0000000C   0xD104             BNE.N    ??gptStart_1
+   \                     ??gptStart_0:
+   \   0000000E   0x2260             MOVS     R2,#+96
+   \   00000010   0x....             LDR.N    R1,??DataTable6
+   \   00000012   0x....             LDR.N    R0,??DataTable6_1
+   \   00000014   0x.... 0x....      BL       chDbgPanic3
+     97          
+     98            chSysLock();
+   \                     ??gptStart_1:
+   \   00000018   0x2020             MOVS     R0,#+32
+   \   0000001A   0xF380 0x8811      MSR      BASEPRI,R0
+   \   0000001E   0x.... 0x....      BL       dbg_check_lock
+     99            chDbgAssert((gptp->state == GPT_STOP) || (gptp->state == GPT_READY),
+    100                        "gptStart(), #1", "invalid state");
+   \   00000022   0x7820             LDRB     R0,[R4, #+0]
+   \   00000024   0x2801             CMP      R0,#+1
+   \   00000026   0xD005             BEQ.N    ??gptStart_2
+   \   00000028   0x7820             LDRB     R0,[R4, #+0]
+   \   0000002A   0x2802             CMP      R0,#+2
+   \   0000002C   0xD002             BEQ.N    ??gptStart_2
+   \   0000002E   0x....             LDR.N    R0,??DataTable6_2
+   \   00000030   0x.... 0x....      BL       chDbgPanic
+    101            gptp->config = config;
+   \                     ??gptStart_2:
+   \   00000034   0x6065             STR      R5,[R4, #+4]
+    102            gpt_lld_start(gptp);
+   \   00000036   0x0020             MOVS     R0,R4
+   \   00000038   0x.... 0x....      BL       gpt_lld_start
+    103            gptp->state = GPT_READY;
+   \   0000003C   0x2002             MOVS     R0,#+2
+   \   0000003E   0x7020             STRB     R0,[R4, #+0]
+    104            chSysUnlock();
+   \   00000040   0x.... 0x....      BL       dbg_check_unlock
+   \   00000044   0x2000             MOVS     R0,#+0
+   \   00000046   0xF380 0x8811      MSR      BASEPRI,R0
+    105          }
+   \   0000004A   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+    106          
+    107          /**
+    108           * @brief   Deactivates the GPT peripheral.
+    109           *
+    110           * @param[in] gptp      pointer to the @p GPTDriver object
+    111           *
+    112           * @api
+    113           */
+
+   \                                 In section .text, align 2, keep-with-next
+    114          void gptStop(GPTDriver *gptp) {
+   \                     gptStop:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    115          
+    116            chDbgCheck(gptp != NULL, "gptStop");
+   \   00000004   0x2C00             CMP      R4,#+0
+   \   00000006   0xD104             BNE.N    ??gptStop_0
+   \   00000008   0x2274             MOVS     R2,#+116
+   \   0000000A   0x....             LDR.N    R1,??DataTable6
+   \   0000000C   0x....             LDR.N    R0,??DataTable6_3
+   \   0000000E   0x.... 0x....      BL       chDbgPanic3
+    117          
+    118            chSysLock();
+   \                     ??gptStop_0:
+   \   00000012   0x2020             MOVS     R0,#+32
+   \   00000014   0xF380 0x8811      MSR      BASEPRI,R0
+   \   00000018   0x.... 0x....      BL       dbg_check_lock
+    119            chDbgAssert((gptp->state == GPT_STOP) || (gptp->state == GPT_READY),
+    120                        "gptStop(), #1", "invalid state");
+   \   0000001C   0x7820             LDRB     R0,[R4, #+0]
+   \   0000001E   0x2801             CMP      R0,#+1
+   \   00000020   0xD005             BEQ.N    ??gptStop_1
+   \   00000022   0x7820             LDRB     R0,[R4, #+0]
+   \   00000024   0x2802             CMP      R0,#+2
+   \   00000026   0xD002             BEQ.N    ??gptStop_1
+   \   00000028   0x....             LDR.N    R0,??DataTable6_4
+   \   0000002A   0x.... 0x....      BL       chDbgPanic
+    121            gpt_lld_stop(gptp);
+   \                     ??gptStop_1:
+   \   0000002E   0x0020             MOVS     R0,R4
+   \   00000030   0x.... 0x....      BL       gpt_lld_stop
+    122            gptp->state = GPT_STOP;
+   \   00000034   0x2001             MOVS     R0,#+1
+   \   00000036   0x7020             STRB     R0,[R4, #+0]
+    123            chSysUnlock();
+   \   00000038   0x.... 0x....      BL       dbg_check_unlock
+   \   0000003C   0x2000             MOVS     R0,#+0
+   \   0000003E   0xF380 0x8811      MSR      BASEPRI,R0
+    124          }
+   \   00000042   0xBD10             POP      {R4,PC}          ;; return
+    125          
+    126          /**
+    127           * @brief   Changes the interval of GPT peripheral.
+    128           * @details This function changes the interval of a running GPT unit.
+    129           * @pre     The GPT unit must have been activated using @p gptStart().
+    130           * @pre     The GPT unit must have been running in continuous mode using
+    131           *          @p gptStartContinuous().
+    132           * @post    The GPT unit interval is changed to the new value.
+    133           *
+    134           * @param[in] gptp      pointer to a @p GPTDriver object
+    135           * @param[in] interval  new cycle time in timer ticks
+    136           *
+    137           * @api
+    138           */
+
+   \                                 In section .text, align 2, keep-with-next
+    139          void gptChangeInterval(GPTDriver *gptp, gptcnt_t interval) {
+   \                     gptChangeInterval:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+    140          
+    141            chDbgCheck(gptp != NULL, "gptChangeInterval");
+   \   00000006   0x2C00             CMP      R4,#+0
+   \   00000008   0xD104             BNE.N    ??gptChangeInterval_0
+   \   0000000A   0x228D             MOVS     R2,#+141
+   \   0000000C   0x....             LDR.N    R1,??DataTable6
+   \   0000000E   0x....             LDR.N    R0,??DataTable6_5
+   \   00000010   0x.... 0x....      BL       chDbgPanic3
+    142          
+    143            chSysLock();
+   \                     ??gptChangeInterval_0:
+   \   00000014   0x2020             MOVS     R0,#+32
+   \   00000016   0xF380 0x8811      MSR      BASEPRI,R0
+   \   0000001A   0x.... 0x....      BL       dbg_check_lock
+    144            chDbgAssert(gptp->state == GPT_CONTINUOUS,
+    145                        "gptChangeInterval(), #1", "invalid state");
+   \   0000001E   0x7820             LDRB     R0,[R4, #+0]
+   \   00000020   0x2803             CMP      R0,#+3
+   \   00000022   0xD002             BEQ.N    ??gptChangeInterval_1
+   \   00000024   0x....             LDR.N    R0,??DataTable6_6
+   \   00000026   0x.... 0x....      BL       chDbgPanic
+    146            gptChangeIntervalI(gptp, interval);
+   \                     ??gptChangeInterval_1:
+   \   0000002A   0x68E0             LDR      R0,[R4, #+12]
+   \   0000002C   0x1E69             SUBS     R1,R5,#+1
+   \   0000002E   0x62C1             STR      R1,[R0, #+44]
+    147            chSysUnlock();
+   \   00000030   0x.... 0x....      BL       dbg_check_unlock
+   \   00000034   0x2000             MOVS     R0,#+0
+   \   00000036   0xF380 0x8811      MSR      BASEPRI,R0
+    148          }
+   \   0000003A   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+    149          
+    150          /**
+    151           * @brief   Starts the timer in continuous mode.
+    152           *
+    153           * @param[in] gptp      pointer to the @p GPTDriver object
+    154           * @param[in] interval  period in ticks
+    155           *
+    156           * @api
+    157           */
+
+   \                                 In section .text, align 2, keep-with-next
+    158          void gptStartContinuous(GPTDriver *gptp, gptcnt_t interval) {
+   \                     gptStartContinuous:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+    159          
+    160            chSysLock();
+   \   00000006   0x2020             MOVS     R0,#+32
+   \   00000008   0xF380 0x8811      MSR      BASEPRI,R0
+   \   0000000C   0x.... 0x....      BL       dbg_check_lock
+    161            gptStartContinuousI(gptp, interval);
+   \   00000010   0x0029             MOVS     R1,R5
+   \   00000012   0x0020             MOVS     R0,R4
+   \   00000014   0x.... 0x....      BL       gptStartContinuousI
+    162            chSysUnlock();
+   \   00000018   0x.... 0x....      BL       dbg_check_unlock
+   \   0000001C   0x2000             MOVS     R0,#+0
+   \   0000001E   0xF380 0x8811      MSR      BASEPRI,R0
+    163          }
+   \   00000022   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+    164          
+    165          /**
+    166           * @brief   Starts the timer in continuous mode.
+    167           *
+    168           * @param[in] gptp      pointer to the @p GPTDriver object
+    169           * @param[in] interval  period in ticks
+    170           *
+    171           * @iclass
+    172           */
+
+   \                                 In section .text, align 2, keep-with-next
+    173          void gptStartContinuousI(GPTDriver *gptp, gptcnt_t interval) {
+   \                     gptStartContinuousI:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+    174          
+    175            chDbgCheckClassI();
+   \   00000006   0x.... 0x....      BL       chDbgCheckClassI
+    176            chDbgCheck(gptp != NULL, "gptStartContinuousI");
+   \   0000000A   0x2C00             CMP      R4,#+0
+   \   0000000C   0xD104             BNE.N    ??gptStartContinuousI_0
+   \   0000000E   0x22B0             MOVS     R2,#+176
+   \   00000010   0x....             LDR.N    R1,??DataTable6
+   \   00000012   0x....             LDR.N    R0,??DataTable6_7
+   \   00000014   0x.... 0x....      BL       chDbgPanic3
+    177            chDbgAssert(gptp->state == GPT_READY,
+    178                        "gptStartContinuousI(), #1", "invalid state");
+   \                     ??gptStartContinuousI_0:
+   \   00000018   0x7820             LDRB     R0,[R4, #+0]
+   \   0000001A   0x2802             CMP      R0,#+2
+   \   0000001C   0xD002             BEQ.N    ??gptStartContinuousI_1
+   \   0000001E   0x....             LDR.N    R0,??DataTable6_8
+   \   00000020   0x.... 0x....      BL       chDbgPanic
+    179          
+    180            gptp->state = GPT_CONTINUOUS;
+   \                     ??gptStartContinuousI_1:
+   \   00000024   0x2003             MOVS     R0,#+3
+   \   00000026   0x7020             STRB     R0,[R4, #+0]
+    181            gpt_lld_start_timer(gptp, interval);
+   \   00000028   0x0029             MOVS     R1,R5
+   \   0000002A   0x0020             MOVS     R0,R4
+   \   0000002C   0x.... 0x....      BL       gpt_lld_start_timer
+    182          }
+   \   00000030   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+    183          
+    184          /**
+    185           * @brief   Starts the timer in one shot mode.
+    186           *
+    187           * @param[in] gptp      pointer to the @p GPTDriver object
+    188           * @param[in] interval  time interval in ticks
+    189           *
+    190           * @api
+    191           */
+
+   \                                 In section .text, align 2, keep-with-next
+    192          void gptStartOneShot(GPTDriver *gptp, gptcnt_t interval) {
+   \                     gptStartOneShot:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+    193          
+    194            chSysLock();
+   \   00000006   0x2020             MOVS     R0,#+32
+   \   00000008   0xF380 0x8811      MSR      BASEPRI,R0
+   \   0000000C   0x.... 0x....      BL       dbg_check_lock
+    195            gptStartOneShotI(gptp, interval);
+   \   00000010   0x0029             MOVS     R1,R5
+   \   00000012   0x0020             MOVS     R0,R4
+   \   00000014   0x.... 0x....      BL       gptStartOneShotI
+    196            chSysUnlock();
+   \   00000018   0x.... 0x....      BL       dbg_check_unlock
+   \   0000001C   0x2000             MOVS     R0,#+0
+   \   0000001E   0xF380 0x8811      MSR      BASEPRI,R0
+    197          }
+   \   00000022   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+    198          
+    199          /**
+    200           * @brief   Starts the timer in one shot mode.
+    201           *
+    202           * @param[in] gptp      pointer to the @p GPTDriver object
+    203           * @param[in] interval  time interval in ticks
+    204           *
+    205           * @api
+    206           */
+
+   \                                 In section .text, align 2, keep-with-next
+    207          void gptStartOneShotI(GPTDriver *gptp, gptcnt_t interval) {
+   \                     gptStartOneShotI:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+    208          
+    209            chDbgCheckClassI();
+   \   00000006   0x.... 0x....      BL       chDbgCheckClassI
+    210            chDbgCheck(gptp != NULL, "gptStartOneShotI");
+   \   0000000A   0x2C00             CMP      R4,#+0
+   \   0000000C   0xD104             BNE.N    ??gptStartOneShotI_0
+   \   0000000E   0x22D2             MOVS     R2,#+210
+   \   00000010   0x....             LDR.N    R1,??DataTable6
+   \   00000012   0x....             LDR.N    R0,??DataTable6_9
+   \   00000014   0x.... 0x....      BL       chDbgPanic3
+    211            chDbgAssert(gptp->state == GPT_READY,
+    212                        "gptStartOneShotI(), #1", "invalid state");
+   \                     ??gptStartOneShotI_0:
+   \   00000018   0x7820             LDRB     R0,[R4, #+0]
+   \   0000001A   0x2802             CMP      R0,#+2
+   \   0000001C   0xD002             BEQ.N    ??gptStartOneShotI_1
+   \   0000001E   0x....             LDR.N    R0,??DataTable6_10
+   \   00000020   0x.... 0x....      BL       chDbgPanic
+    213          
+    214            gptp->state = GPT_ONESHOT;
+   \                     ??gptStartOneShotI_1:
+   \   00000024   0x2004             MOVS     R0,#+4
+   \   00000026   0x7020             STRB     R0,[R4, #+0]
+    215            gpt_lld_start_timer(gptp, interval);
+   \   00000028   0x0029             MOVS     R1,R5
+   \   0000002A   0x0020             MOVS     R0,R4
+   \   0000002C   0x.... 0x....      BL       gpt_lld_start_timer
+    216          }
+   \   00000030   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+    217          
+    218          /**
+    219           * @brief   Stops the timer.
+    220           *
+    221           * @param[in] gptp      pointer to the @p GPTDriver object
+    222           *
+    223           * @api
+    224           */
+
+   \                                 In section .text, align 2, keep-with-next
+    225          void gptStopTimer(GPTDriver *gptp) {
+   \                     gptStopTimer:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    226          
+    227            chSysLock();
+   \   00000004   0x2020             MOVS     R0,#+32
+   \   00000006   0xF380 0x8811      MSR      BASEPRI,R0
+   \   0000000A   0x.... 0x....      BL       dbg_check_lock
+    228            gptStopTimerI(gptp);
+   \   0000000E   0x0020             MOVS     R0,R4
+   \   00000010   0x.... 0x....      BL       gptStopTimerI
+    229            chSysUnlock();
+   \   00000014   0x.... 0x....      BL       dbg_check_unlock
+   \   00000018   0x2000             MOVS     R0,#+0
+   \   0000001A   0xF380 0x8811      MSR      BASEPRI,R0
+    230          }
+   \   0000001E   0xBD10             POP      {R4,PC}          ;; return
+    231          
+    232          /**
+    233           * @brief   Stops the timer.
+    234           *
+    235           * @param[in] gptp      pointer to the @p GPTDriver object
+    236           *
+    237           * @api
+    238           */
+
+   \                                 In section .text, align 2, keep-with-next
+    239          void gptStopTimerI(GPTDriver *gptp) {
+   \                     gptStopTimerI:
+   \   00000000   0xB510             PUSH     {R4,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+    240          
+    241            chDbgCheckClassI();
+   \   00000004   0x.... 0x....      BL       chDbgCheckClassI
+    242            chDbgCheck(gptp != NULL, "gptStopTimerI");
+   \   00000008   0x2C00             CMP      R4,#+0
+   \   0000000A   0xD104             BNE.N    ??gptStopTimerI_0
+   \   0000000C   0x22F2             MOVS     R2,#+242
+   \   0000000E   0x....             LDR.N    R1,??DataTable6
+   \   00000010   0x....             LDR.N    R0,??DataTable6_11
+   \   00000012   0x.... 0x....      BL       chDbgPanic3
+    243            chDbgAssert((gptp->state == GPT_READY) || (gptp->state == GPT_CONTINUOUS) ||
+    244                        (gptp->state == GPT_ONESHOT),
+    245                        "gptStopTimerI(), #1", "invalid state");
+   \                     ??gptStopTimerI_0:
+   \   00000016   0x7820             LDRB     R0,[R4, #+0]
+   \   00000018   0x2802             CMP      R0,#+2
+   \   0000001A   0xD008             BEQ.N    ??gptStopTimerI_1
+   \   0000001C   0x7820             LDRB     R0,[R4, #+0]
+   \   0000001E   0x2803             CMP      R0,#+3
+   \   00000020   0xD005             BEQ.N    ??gptStopTimerI_1
+   \   00000022   0x7820             LDRB     R0,[R4, #+0]
+   \   00000024   0x2804             CMP      R0,#+4
+   \   00000026   0xD002             BEQ.N    ??gptStopTimerI_1
+   \   00000028   0x....             LDR.N    R0,??DataTable6_12
+   \   0000002A   0x.... 0x....      BL       chDbgPanic
+    246          
+    247            gptp->state = GPT_READY;
+   \                     ??gptStopTimerI_1:
+   \   0000002E   0x2002             MOVS     R0,#+2
+   \   00000030   0x7020             STRB     R0,[R4, #+0]
+    248            gpt_lld_stop_timer(gptp);
+   \   00000032   0x0020             MOVS     R0,R4
+   \   00000034   0x.... 0x....      BL       gpt_lld_stop_timer
+    249          }
+   \   00000038   0xBD10             POP      {R4,PC}          ;; return
+    250          
+    251          /**
+    252           * @brief   Starts the timer in one shot mode and waits for completion.
+    253           * @details This function specifically polls the timer waiting for completion
+    254           *          in order to not have extra delays caused by interrupt servicing,
+    255           *          this function is only recommended for short delays.
+    256           * @note    The configured callback is not invoked when using this function.
+    257           *
+    258           * @param[in] gptp      pointer to the @p GPTDriver object
+    259           * @param[in] interval  time interval in ticks
+    260           *
+    261           * @api
+    262           */
+
+   \                                 In section .text, align 2, keep-with-next
+    263          void gptPolledDelay(GPTDriver *gptp, gptcnt_t interval) {
+   \                     gptPolledDelay:
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0004             MOVS     R4,R0
+   \   00000004   0x000D             MOVS     R5,R1
+    264          
+    265            chDbgAssert(gptp->state == GPT_READY,
+    266                        "gptPolledDelay(), #1", "invalid state");
+   \   00000006   0x7820             LDRB     R0,[R4, #+0]
+   \   00000008   0x2802             CMP      R0,#+2
+   \   0000000A   0xD002             BEQ.N    ??gptPolledDelay_0
+   \   0000000C   0x....             LDR.N    R0,??DataTable6_13
+   \   0000000E   0x.... 0x....      BL       chDbgPanic
+    267          
+    268            gptp->state = GPT_ONESHOT;
+   \                     ??gptPolledDelay_0:
+   \   00000012   0x2004             MOVS     R0,#+4
+   \   00000014   0x7020             STRB     R0,[R4, #+0]
+    269            gpt_lld_polled_delay(gptp, interval);
+   \   00000016   0x0029             MOVS     R1,R5
+   \   00000018   0x0020             MOVS     R0,R4
+   \   0000001A   0x.... 0x....      BL       gpt_lld_polled_delay
+    270            gptp->state = GPT_READY;
+   \   0000001E   0x2002             MOVS     R0,#+2
+   \   00000020   0x7020             STRB     R0,[R4, #+0]
+    271          }
+   \   00000022   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6:
+   \   00000000   0x........         DC32     `?<Constant "F:\\\\stuff\\\\rusefi_sourc...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_1:
+   \   00000000   0x........         DC32     `?<Constant "\\"gptStart\\"()">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_2:
+   \   00000000   0x........         DC32     `?<Constant "gptStart(), #1">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_3:
+   \   00000000   0x........         DC32     `?<Constant "\\"gptStop\\"()">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_4:
+   \   00000000   0x........         DC32     `?<Constant "gptStop(), #1">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_5:
+   \   00000000   0x........         DC32     `?<Constant "\\"gptChangeInterval\\"()">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_6:
+   \   00000000   0x........         DC32     `?<Constant "gptChangeInterval(), #1">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_7:
+   \   00000000   0x........         DC32     `?<Constant "\\"gptStartContinuousI\\"()">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_8:
+   \   00000000   0x........         DC32     `?<Constant "gptStartContinuousI()...">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_9:
+   \   00000000   0x........         DC32     `?<Constant "\\"gptStartOneShotI\\"()">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_10:
+   \   00000000   0x........         DC32     `?<Constant "gptStartOneShotI(), #1">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_11:
+   \   00000000   0x........         DC32     `?<Constant "\\"gptStopTimerI\\"()">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_12:
+   \   00000000   0x........         DC32     `?<Constant "gptStopTimerI(), #1">`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_13:
+   \   00000000   0x........         DC32     `?<Constant "gptPolledDelay(), #1">`
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "\\"gptStart\\"()">`:
+   \   00000000   0x22 0x67          DC8 "\"gptStart\"()"
+   \              0x70 0x74    
+   \              0x53 0x74    
+   \              0x61 0x72    
+   \              0x74 0x22    
+   \              0x28 0x29    
+   \              0x00         
+   \   0000000D   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "F:\\\\stuff\\\\rusefi_sourc...">`:
+   \   00000000   0x46 0x3A          DC8 46H, 3AH, 5CH, 73H, 74H, 75H, 66H, 66H
+   \              0x5C 0x73    
+   \              0x74 0x75    
+   \              0x66 0x66    
+   \   00000008   0x5C 0x72          DC8 5CH, 72H, 75H, 73H, 65H, 66H, 69H, 5FH
+   \              0x75 0x73    
+   \              0x65 0x66    
+   \              0x69 0x5F    
+   \   00000010   0x73 0x6F          DC8 73H, 6FH, 75H, 72H, 63H, 65H, 66H, 6FH
+   \              0x75 0x72    
+   \              0x63 0x65    
+   \              0x66 0x6F    
+   \   00000018   0x72 0x67          DC8 72H, 67H, 65H, 5CH, 66H, 69H, 72H, 6DH
+   \              0x65 0x5C    
+   \              0x66 0x69    
+   \              0x72 0x6D    
+   \   00000020   0x77 0x61          DC8 77H, 61H, 72H, 65H, 5CH, 63H, 68H, 69H
+   \              0x72 0x65    
+   \              0x5C 0x63    
+   \              0x68 0x69    
+   \   00000028   0x62 0x69          DC8 62H, 69H, 6FH, 73H, 5CH, 6FH, 73H, 5CH
+   \              0x6F 0x73    
+   \              0x5C 0x6F    
+   \              0x73 0x5C    
+   \   00000030   0x68 0x61          DC8 68H, 61H, 6CH, 5CH, 73H, 72H, 63H, 5CH
+   \              0x6C 0x5C    
+   \              0x73 0x72    
+   \              0x63 0x5C    
+   \   00000038   0x67 0x70          DC8 67H, 70H, 74H, 2EH, 63H, 0
+   \              0x74 0x2E    
+   \              0x63 0x00    
+   \   0000003E   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "gptStart(), #1">`:
+   \   00000000   0x67 0x70          DC8 "gptStart(), #1"
+   \              0x74 0x53    
+   \              0x74 0x61    
+   \              0x72 0x74    
+   \              0x28 0x29    
+   \              0x2C 0x20    
+   \              0x23 0x31    
+   \              0x00         
+   \   0000000F   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "\\"gptStop\\"()">`:
+   \   00000000   0x22 0x67          DC8 "\"gptStop\"()"
+   \              0x70 0x74    
+   \              0x53 0x74    
+   \              0x6F 0x70    
+   \              0x22 0x28    
+   \              0x29 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "gptStop(), #1">`:
+   \   00000000   0x67 0x70          DC8 "gptStop(), #1"
+   \              0x74 0x53    
+   \              0x74 0x6F    
+   \              0x70 0x28    
+   \              0x29 0x2C    
+   \              0x20 0x23    
+   \              0x31 0x00    
+   \   0000000E   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "\\"gptChangeInterval\\"()">`:
+   \   00000000   0x22 0x67          DC8 "\"gptChangeInterval\"()"
+   \              0x70 0x74    
+   \              0x43 0x68    
+   \              0x61 0x6E    
+   \              0x67 0x65    
+   \              0x49 0x6E    
+   \              0x74 0x65    
+   \              0x72 0x76    
+   \              0x61 0x6C    
+   \              0x22 0x28    
+   \              0x29 0x00    
+   \   00000016   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "gptChangeInterval(), #1">`:
+   \   00000000   0x67 0x70          DC8 "gptChangeInterval(), #1"
+   \              0x74 0x43    
+   \              0x68 0x61    
+   \              0x6E 0x67    
+   \              0x65 0x49    
+   \              0x6E 0x74    
+   \              0x65 0x72    
+   \              0x76 0x61    
+   \              0x6C 0x28    
+   \              0x29 0x2C    
+   \              0x20 0x23    
+   \              0x31 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "\\"gptStartContinuousI\\"()">`:
+   \   00000000   0x22 0x67          DC8 "\"gptStartContinuousI\"()"
+   \              0x70 0x74    
+   \              0x53 0x74    
+   \              0x61 0x72    
+   \              0x74 0x43    
+   \              0x6F 0x6E    
+   \              0x74 0x69    
+   \              0x6E 0x75    
+   \              0x6F 0x75    
+   \              0x73 0x49    
+   \              0x22 0x28    
+   \              0x29 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "gptStartContinuousI()...">`:
+   \   00000000   0x67 0x70          DC8 "gptStartContinuousI(), #1"
+   \              0x74 0x53    
+   \              0x74 0x61    
+   \              0x72 0x74    
+   \              0x43 0x6F    
+   \              0x6E 0x74    
+   \              0x69 0x6E    
+   \              0x75 0x6F    
+   \              0x75 0x73    
+   \              0x49 0x28    
+   \              0x29 0x2C    
+   \              0x20 0x23    
+   \              0x31 0x00    
+   \   0000001A   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "\\"gptStartOneShotI\\"()">`:
+   \   00000000   0x22 0x67          DC8 "\"gptStartOneShotI\"()"
+   \              0x70 0x74    
+   \              0x53 0x74    
+   \              0x61 0x72    
+   \              0x74 0x4F    
+   \              0x6E 0x65    
+   \              0x53 0x68    
+   \              0x6F 0x74    
+   \              0x49 0x22    
+   \              0x28 0x29    
+   \              0x00         
+   \   00000015   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "gptStartOneShotI(), #1">`:
+   \   00000000   0x67 0x70          DC8 "gptStartOneShotI(), #1"
+   \              0x74 0x53    
+   \              0x74 0x61    
+   \              0x72 0x74    
+   \              0x4F 0x6E    
+   \              0x65 0x53    
+   \              0x68 0x6F    
+   \              0x74 0x49    
+   \              0x28 0x29    
+   \              0x2C 0x20    
+   \              0x23 0x31    
+   \              0x00         
+   \   00000017   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "\\"gptStopTimerI\\"()">`:
+   \   00000000   0x22 0x67          DC8 "\"gptStopTimerI\"()"
+   \              0x70 0x74    
+   \              0x53 0x74    
+   \              0x6F 0x70    
+   \              0x54 0x69    
+   \              0x6D 0x65    
+   \              0x72 0x49    
+   \              0x22 0x28    
+   \              0x29 0x00    
+   \   00000012   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "gptStopTimerI(), #1">`:
+   \   00000000   0x67 0x70          DC8 "gptStopTimerI(), #1"
+   \              0x74 0x53    
+   \              0x74 0x6F    
+   \              0x70 0x54    
+   \              0x69 0x6D    
+   \              0x65 0x72    
+   \              0x49 0x28    
+   \              0x29 0x2C    
+   \              0x20 0x23    
+   \              0x31 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "gptPolledDelay(), #1">`:
+   \   00000000   0x67 0x70          DC8 "gptPolledDelay(), #1"
+   \              0x74 0x50    
+   \              0x6F 0x6C    
+   \              0x6C 0x65    
+   \              0x64 0x44    
+   \              0x65 0x6C    
+   \              0x61 0x79    
+   \              0x28 0x29    
+   \              0x2C 0x20    
+   \              0x23 0x31    
+   \              0x00         
+   \   00000015   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+    272          
+    273          #endif /* HAL_USE_GPT */
+    274          
+    275          /** @} */
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      16   gptChangeInterval
+        16   -> chDbgPanic
+        16   -> chDbgPanic3
+        16   -> dbg_check_lock
+        16   -> dbg_check_unlock
+       8   gptInit
+         8   -> gpt_lld_init
+       0   gptObjectInit
+      16   gptPolledDelay
+        16   -> chDbgPanic
+        16   -> gpt_lld_polled_delay
+      16   gptStart
+        16   -> chDbgPanic
+        16   -> chDbgPanic3
+        16   -> dbg_check_lock
+        16   -> dbg_check_unlock
+        16   -> gpt_lld_start
+      16   gptStartContinuous
+        16   -> dbg_check_lock
+        16   -> dbg_check_unlock
+        16   -> gptStartContinuousI
+      16   gptStartContinuousI
+        16   -> chDbgCheckClassI
+        16   -> chDbgPanic
+        16   -> chDbgPanic3
+        16   -> gpt_lld_start_timer
+      16   gptStartOneShot
+        16   -> dbg_check_lock
+        16   -> dbg_check_unlock
+        16   -> gptStartOneShotI
+      16   gptStartOneShotI
+        16   -> chDbgCheckClassI
+        16   -> chDbgPanic
+        16   -> chDbgPanic3
+        16   -> gpt_lld_start_timer
+       8   gptStop
+         8   -> chDbgPanic
+         8   -> chDbgPanic3
+         8   -> dbg_check_lock
+         8   -> dbg_check_unlock
+         8   -> gpt_lld_stop
+       8   gptStopTimer
+         8   -> dbg_check_lock
+         8   -> dbg_check_unlock
+         8   -> gptStopTimerI
+       8   gptStopTimerI
+         8   -> chDbgCheckClassI
+         8   -> chDbgPanic
+         8   -> chDbgPanic3
+         8   -> gpt_lld_stop_timer
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      64  ?<Constant "F:\\stuff\\rusefi_sourc...">
+      24  ?<Constant "\"gptChangeInterval\"()">
+      24  ?<Constant "\"gptStartContinuousI\"()">
+      24  ?<Constant "\"gptStartOneShotI\"()">
+      16  ?<Constant "\"gptStart\"()">
+      20  ?<Constant "\"gptStopTimerI\"()">
+      12  ?<Constant "\"gptStop\"()">
+      24  ?<Constant "gptChangeInterval(), #1">
+      24  ?<Constant "gptPolledDelay(), #1">
+      16  ?<Constant "gptStart(), #1">
+      28  ?<Constant "gptStartContinuousI()...">
+      24  ?<Constant "gptStartOneShotI(), #1">
+      16  ?<Constant "gptStop(), #1">
+      20  ?<Constant "gptStopTimerI(), #1">
+       4  ??DataTable6
+       4  ??DataTable6_1
+       4  ??DataTable6_10
+       4  ??DataTable6_11
+       4  ??DataTable6_12
+       4  ??DataTable6_13
+       4  ??DataTable6_2
+       4  ??DataTable6_3
+       4  ??DataTable6_4
+       4  ??DataTable6_5
+       4  ??DataTable6_6
+       4  ??DataTable6_7
+       4  ??DataTable6_8
+       4  ??DataTable6_9
+      60  gptChangeInterval
+       8  gptInit
+      10  gptObjectInit
+      36  gptPolledDelay
+      76  gptStart
+      36  gptStartContinuous
+      50  gptStartContinuousI
+      36  gptStartOneShot
+      50  gptStartOneShotI
+      68  gptStop
+      32  gptStopTimer
+      58  gptStopTimerI
+
+ 
+ 336 bytes in section .rodata
+ 576 bytes in section .text
+ 
+ 576 bytes of CODE  memory
+ 336 bytes of CONST memory
+
+Errors: none
+Warnings: none

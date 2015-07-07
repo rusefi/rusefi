@@ -138,32 +138,11 @@ static void updateErrorCodes(void) {
 	/**
 	 * technically we can set error codes right inside the getMethods, but I a bit on a fence about it
 	 */
-	setError(isValidIntakeAirTemperature(getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F)),
+	setError(!isValidIntakeAirTemperature(getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F)),
 			OBD_Intake_Air_Temperature_Circuit_Malfunction);
-	setError(isValidCoolantTemperature(getCoolantTemperature(PASS_ENGINE_PARAMETER_F)),
+	setError(!isValidCoolantTemperature(getCoolantTemperature(PASS_ENGINE_PARAMETER_F)),
 			OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
 }
-
-//static void fanRelayControl(void) {
-//	if (boardConfiguration->fanPin == GPIO_UNASSIGNED)
-//		return;
-//
-//	int isCurrentlyOn = getLogicPinValue(&en);
-//	int newValue;
-//	if (isCurrentlyOn) {
-//		// if the fan is already on, we keep it on till the 'fanOff' temperature
-//		newValue = getCoolantTemperature(engine) > engineConfiguration->fanOffTemperature;
-//	} else {
-//		newValue = getCoolantTemperature(engine) > engineConfiguration->fanOnTemperature;
-//	}
-//
-//	if (isCurrentlyOn != newValue) {
-//		if (isRunningBenchTest())
-//			return; // let's not mess with bench testing
-//		scheduleMsg(&logger, "FAN relay: %s", newValue ? "ON" : "OFF");
-//		setOutputPinValue(FAN_RELAY, newValue);
-//	}
-//}
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 Overflow64Counter halTime;
@@ -321,7 +300,10 @@ static void printAnalogChannelInfo(const char *name, adc_channel_e hwChannel) {
 }
 
 static void printAnalogInfo(void) {
+	scheduleMsg(&logger, "analogInputDividerCoefficient: %f", engineConfiguration->analogInputDividerCoefficient);
+
 	printAnalogChannelInfo("hip9011", engineConfiguration->hipOutputChannel);
+	printAnalogChannelInfo("fuel gauge", engineConfiguration->fuelLevelSensor);
 	printAnalogChannelInfo("TPS", engineConfiguration->tpsAdcChannel);
 	printAnalogChannelInfo("pPS", engineConfiguration->pedalPositionChannel);
 	printAnalogChannelInfo("CLT", engineConfiguration->clt.adcChannel);
@@ -350,7 +332,7 @@ static void printAnalogInfo(void) {
 
 static THD_WORKING_AREA(csThreadStack, UTILITY_THREAD_STACK_SIZE);	// declare thread stack
 
-#define isOutOfBounds(offset) ((offset<0) || (offset) >= sizeof(engine_configuration_s))
+#define isOutOfBounds(offset) ((offset<0) || (offset) >= (int) sizeof(engine_configuration_s))
 
 static void getShort(int offset) {
 	if (isOutOfBounds(offset))
@@ -527,7 +509,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	 * there is an implicit dependency on the fact that 'tachometer' listener is the 1st listener - this case
 	 * other listeners can access current RPM value
 	 */
-	initRpmCalculator(engine);
+	initRpmCalculator(sharedLogger, engine);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
 // multiple issues with this	initMapAdjusterThread();
@@ -560,7 +542,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 
 #if EFI_MALFUNCTION_INDICATOR || defined(__DOXYGEN__)
 	if (engineConfiguration->isMilEnabled) {
-		initMalfunctionIndicator(engine);
+		initMalfunctionIndicator();
 	}
 #endif /* EFI_MALFUNCTION_INDICATOR */
 

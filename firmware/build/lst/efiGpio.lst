@@ -1,0 +1,396 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc7pxpez.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"efiGpio.cpp"
+  16              		.section	.text._ZN14NamedOutputPinC2Ev,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_ZN14NamedOutputPinC2Ev
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_ZN14NamedOutputPinC2Ev, %function
+  23              	_ZN14NamedOutputPinC2Ev:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 40F20001 		movw	r1, #:lower16:.LANCHOR0
+  28 0004 0022     		movs	r2, #0
+  29 0006 10B4     		push	{r4}
+  30 0008 4FF0FF34 		mov	r4, #-1
+  31 000c C0F20001 		movt	r1, #:upper16:.LANCHOR0
+  32 0010 C460     		str	r4, [r0, #12]
+  33 0012 8160     		str	r1, [r0, #8]
+  34 0014 0260     		str	r2, [r0]
+  35 0016 4260     		str	r2, [r0, #4]
+  36 0018 0261     		str	r2, [r0, #16]
+  37 001a 5DF8044B 		ldr	r4, [sp], #4
+  38 001e 7047     		bx	lr
+  39              		.size	_ZN14NamedOutputPinC2Ev, .-_ZN14NamedOutputPinC2Ev
+  40              		.global	_ZN14NamedOutputPinC1Ev
+  41              		.thumb_set _ZN14NamedOutputPinC1Ev,_ZN14NamedOutputPinC2Ev
+  42              		.section	.text._ZN14NamedOutputPinC2EPKc,"ax",%progbits
+  43              		.align	2
+  44              		.p2align 4,,15
+  45              		.global	_ZN14NamedOutputPinC2EPKc
+  46              		.thumb
+  47              		.thumb_func
+  48              		.type	_ZN14NamedOutputPinC2EPKc, %function
+  49              	_ZN14NamedOutputPinC2EPKc:
+  50              		@ args = 0, pretend = 0, frame = 0
+  51              		@ frame_needed = 0, uses_anonymous_args = 0
+  52              		@ link register save eliminated.
+  53 0000 30B4     		push	{r4, r5}
+  54 0002 40F20002 		movw	r2, #:lower16:.LANCHOR0
+  55 0006 0024     		movs	r4, #0
+  56 0008 4FF0FF35 		mov	r5, #-1
+  57 000c C0F20002 		movt	r2, #:upper16:.LANCHOR0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc7pxpez.s 			page 2
+
+
+  58 0010 C560     		str	r5, [r0, #12]
+  59 0012 0460     		str	r4, [r0]
+  60 0014 4460     		str	r4, [r0, #4]
+  61 0016 8260     		str	r2, [r0, #8]
+  62 0018 0161     		str	r1, [r0, #16]
+  63 001a 30BC     		pop	{r4, r5}
+  64 001c 7047     		bx	lr
+  65              		.size	_ZN14NamedOutputPinC2EPKc, .-_ZN14NamedOutputPinC2EPKc
+  66              		.global	_ZN14NamedOutputPinC1EPKc
+  67              		.thumb_set _ZN14NamedOutputPinC1EPKc,_ZN14NamedOutputPinC2EPKc
+  68 001e 00BF     		.section	.text._ZN9OutputPinC2Ev,"ax",%progbits
+  69              		.align	2
+  70              		.p2align 4,,15
+  71              		.global	_ZN9OutputPinC2Ev
+  72              		.thumb
+  73              		.thumb_func
+  74              		.type	_ZN9OutputPinC2Ev, %function
+  75              	_ZN9OutputPinC2Ev:
+  76              		@ args = 0, pretend = 0, frame = 0
+  77              		@ frame_needed = 0, uses_anonymous_args = 0
+  78              		@ link register save eliminated.
+  79 0000 40F20002 		movw	r2, #:lower16:.LANCHOR0
+  80 0004 10B4     		push	{r4}
+  81 0006 4FF0FF34 		mov	r4, #-1
+  82 000a 0021     		movs	r1, #0
+  83 000c C0F20002 		movt	r2, #:upper16:.LANCHOR0
+  84 0010 C460     		str	r4, [r0, #12]
+  85 0012 8260     		str	r2, [r0, #8]
+  86 0014 0160     		str	r1, [r0]
+  87 0016 4160     		str	r1, [r0, #4]
+  88 0018 5DF8044B 		ldr	r4, [sp], #4
+  89 001c 7047     		bx	lr
+  90              		.size	_ZN9OutputPinC2Ev, .-_ZN9OutputPinC2Ev
+  91              		.global	_ZN9OutputPinC1Ev
+  92              		.thumb_set _ZN9OutputPinC1Ev,_ZN9OutputPinC2Ev
+  93 001e 00BF     		.section	.text._ZN9OutputPin13isInitializedEv,"ax",%progbits
+  94              		.align	2
+  95              		.p2align 4,,15
+  96              		.global	_ZN9OutputPin13isInitializedEv
+  97              		.thumb
+  98              		.thumb_func
+  99              		.type	_ZN9OutputPin13isInitializedEv, %function
+ 100              	_ZN9OutputPin13isInitializedEv:
+ 101              		@ args = 0, pretend = 0, frame = 0
+ 102              		@ frame_needed = 0, uses_anonymous_args = 0
+ 103              		@ link register save eliminated.
+ 104 0000 0068     		ldr	r0, [r0]
+ 105 0002 0030     		adds	r0, r0, #0
+ 106 0004 18BF     		it	ne
+ 107 0006 0120     		movne	r0, #1
+ 108 0008 7047     		bx	lr
+ 109              		.size	_ZN9OutputPin13isInitializedEv, .-_ZN9OutputPin13isInitializedEv
+ 110 000a 00BFAFF3 		.section	.text._ZN9OutputPin8setValueEi,"ax",%progbits
+ 110      0080
+ 111              		.align	2
+ 112              		.p2align 4,,15
+ 113              		.global	_ZN9OutputPin8setValueEi
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc7pxpez.s 			page 3
+
+
+ 114              		.thumb
+ 115              		.thumb_func
+ 116              		.type	_ZN9OutputPin8setValueEi, %function
+ 117              	_ZN9OutputPin8setValueEi:
+ 118              		@ args = 0, pretend = 0, frame = 0
+ 119              		@ frame_needed = 0, uses_anonymous_args = 0
+ 120              		@ link register save eliminated.
+ 121 0000 0268     		ldr	r2, [r0]
+ 122 0002 70B4     		push	{r4, r5, r6}
+ 123 0004 CAB1     		cbz	r2, .L5
+ 124 0006 8368     		ldr	r3, [r0, #8]
+ 125 0008 33B3     		cbz	r3, .L15
+ 126 000a 1B68     		ldr	r3, [r3]
+ 127 000c 032B     		cmp	r3, #3
+ 128 000e 1CDC     		bgt	.L16
+ 129 0010 A9B9     		cbnz	r1, .L17
+ 130 0012 23F00203 		bic	r3, r3, #2
+ 131 0016 5C1E     		subs	r4, r3, #1
+ 132 0018 6342     		rsbs	r3, r4, #0
+ 133 001a 6341     		adcs	r3, r3, r4
+ 134              	.L10:
+ 135 001c C468     		ldr	r4, [r0, #12]
+ 136 001e 8C42     		cmp	r4, r1
+ 137 0020 0BD0     		beq	.L5
+ 138 0022 4468     		ldr	r4, [r0, #4]
+ 139 0024 83F00106 		eor	r6, r3, #1
+ 140 0028 04F11005 		add	r5, r4, #16
+ 141 002c 03FA04F4 		lsl	r4, r3, r4
+ 142 0030 06FA05F3 		lsl	r3, r6, r5
+ 143 0034 2343     		orrs	r3, r3, r4
+ 144 0036 9361     		str	r3, [r2, #24]
+ 145 0038 C160     		str	r1, [r0, #12]
+ 146              	.L5:
+ 147 003a 70BC     		pop	{r4, r5, r6}
+ 148 003c 7047     		bx	lr
+ 149              	.L17:
+ 150 003e 33F00204 		bics	r4, r3, #2
+ 151 0042 14BF     		ite	ne
+ 152 0044 0023     		movne	r3, #0
+ 153 0046 0123     		moveq	r3, #1
+ 154 0048 E8E7     		b	.L10
+ 155              	.L16:
+ 156 004a 40F20000 		movw	r0, #:lower16:.LC1
+ 157 004e C0F20000 		movt	r0, #:upper16:.LC1
+ 158 0052 70BC     		pop	{r4, r5, r6}
+ 159 0054 FFF7FEBF 		b	firmwareError
+ 160              	.L15:
+ 161 0058 40F20000 		movw	r0, #:lower16:.LC0
+ 162 005c C0F20000 		movt	r0, #:upper16:.LC0
+ 163 0060 70BC     		pop	{r4, r5, r6}
+ 164 0062 FFF7FEBF 		b	firmwareError
+ 165              		.size	_ZN9OutputPin8setValueEi, .-_ZN9OutputPin8setValueEi
+ 166 0066 00BFAFF3 		.section	.text._ZN9OutputPin13getLogicValueEv,"ax",%progbits
+ 166      0080AFF3 
+ 166      0080
+ 167              		.align	2
+ 168              		.p2align 4,,15
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc7pxpez.s 			page 4
+
+
+ 169              		.global	_ZN9OutputPin13getLogicValueEv
+ 170              		.thumb
+ 171              		.thumb_func
+ 172              		.type	_ZN9OutputPin13getLogicValueEv, %function
+ 173              	_ZN9OutputPin13getLogicValueEv:
+ 174              		@ args = 0, pretend = 0, frame = 0
+ 175              		@ frame_needed = 0, uses_anonymous_args = 0
+ 176              		@ link register save eliminated.
+ 177 0000 C068     		ldr	r0, [r0, #12]
+ 178 0002 0030     		adds	r0, r0, #0
+ 179 0004 18BF     		it	ne
+ 180 0006 0120     		movne	r0, #1
+ 181 0008 7047     		bx	lr
+ 182              		.size	_ZN9OutputPin13getLogicValueEv, .-_ZN9OutputPin13getLogicValueEv
+ 183 000a 00BFAFF3 		.section	.text._ZN9OutputPin10unregisterEv,"ax",%progbits
+ 183      0080
+ 184              		.align	2
+ 185              		.p2align 4,,15
+ 186              		.global	_ZN9OutputPin10unregisterEv
+ 187              		.thumb
+ 188              		.thumb_func
+ 189              		.type	_ZN9OutputPin10unregisterEv, %function
+ 190              	_ZN9OutputPin10unregisterEv:
+ 191              		@ args = 0, pretend = 0, frame = 0
+ 192              		@ frame_needed = 0, uses_anonymous_args = 0
+ 193              		@ link register save eliminated.
+ 194 0000 0023     		movs	r3, #0
+ 195 0002 0360     		str	r3, [r0]
+ 196 0004 7047     		bx	lr
+ 197              		.size	_ZN9OutputPin10unregisterEv, .-_ZN9OutputPin10unregisterEv
+ 198 0006 00BFAFF3 		.section	.text._ZN9OutputPin18setDefaultPinStateEP17pin_output_mode_e,"ax",%progbits
+ 198      0080AFF3 
+ 198      0080
+ 199              		.align	2
+ 200              		.p2align 4,,15
+ 201              		.global	_ZN9OutputPin18setDefaultPinStateEP17pin_output_mode_e
+ 202              		.thumb
+ 203              		.thumb_func
+ 204              		.type	_ZN9OutputPin18setDefaultPinStateEP17pin_output_mode_e, %function
+ 205              	_ZN9OutputPin18setDefaultPinStateEP17pin_output_mode_e:
+ 206              		@ args = 0, pretend = 0, frame = 0
+ 207              		@ frame_needed = 0, uses_anonymous_args = 0
+ 208              		@ link register save eliminated.
+ 209 0000 0B68     		ldr	r3, [r1]
+ 210 0002 032B     		cmp	r3, #3
+ 211 0004 03DC     		bgt	.L22
+ 212 0006 8160     		str	r1, [r0, #8]
+ 213 0008 0021     		movs	r1, #0
+ 214 000a FFF7FEBF 		b	_ZN9OutputPin8setValueEi
+ 215              	.L22:
+ 216 000e 40F20000 		movw	r0, #:lower16:.LC1
+ 217 0012 C0F20000 		movt	r0, #:upper16:.LC1
+ 218 0016 FFF7FEBF 		b	firmwareError
+ 219              		.size	_ZN9OutputPin18setDefaultPinStateEP17pin_output_mode_e, .-_ZN9OutputPin18setDefaultPinStateE
+ 220 001a 00BFAFF3 		.section	.text.startup._GLOBAL__sub_I_OUTPUT_MODE_DEFAULT,"ax",%progbits
+ 220      0080
+ 221              		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc7pxpez.s 			page 5
+
+
+ 222              		.p2align 4,,15
+ 223              		.thumb
+ 224              		.thumb_func
+ 225              		.type	_GLOBAL__sub_I_OUTPUT_MODE_DEFAULT, %function
+ 226              	_GLOBAL__sub_I_OUTPUT_MODE_DEFAULT:
+ 227              		@ args = 0, pretend = 0, frame = 0
+ 228              		@ frame_needed = 0, uses_anonymous_args = 0
+ 229              		@ link register save eliminated.
+ 230 0000 40F20000 		movw	r0, #:lower16:.LANCHOR1
+ 231 0004 C0F20000 		movt	r0, #:upper16:.LANCHOR1
+ 232 0008 40F20001 		movw	r1, #:lower16:.LANCHOR0
+ 233 000c 10B4     		push	{r4}
+ 234 000e 0022     		movs	r2, #0
+ 235 0010 C0F20001 		movt	r1, #:upper16:.LANCHOR0
+ 236 0014 4FF0FF34 		mov	r4, #-1
+ 237 0018 8160     		str	r1, [r0, #8]
+ 238 001a 8161     		str	r1, [r0, #24]
+ 239 001c 8162     		str	r1, [r0, #40]
+ 240 001e 8163     		str	r1, [r0, #56]
+ 241 0020 8164     		str	r1, [r0, #72]
+ 242 0022 8165     		str	r1, [r0, #88]
+ 243 0024 0260     		str	r2, [r0]
+ 244 0026 4260     		str	r2, [r0, #4]
+ 245 0028 0261     		str	r2, [r0, #16]
+ 246 002a 4261     		str	r2, [r0, #20]
+ 247 002c 0262     		str	r2, [r0, #32]
+ 248 002e 4262     		str	r2, [r0, #36]
+ 249 0030 0263     		str	r2, [r0, #48]
+ 250 0032 4263     		str	r2, [r0, #52]
+ 251 0034 0264     		str	r2, [r0, #64]
+ 252 0036 4264     		str	r2, [r0, #68]
+ 253 0038 0265     		str	r2, [r0, #80]
+ 254 003a 4265     		str	r2, [r0, #84]
+ 255 003c C460     		str	r4, [r0, #12]
+ 256 003e C461     		str	r4, [r0, #28]
+ 257 0040 C462     		str	r4, [r0, #44]
+ 258 0042 C463     		str	r4, [r0, #60]
+ 259 0044 C464     		str	r4, [r0, #76]
+ 260 0046 C465     		str	r4, [r0, #92]
+ 261 0048 00F17403 		add	r3, r0, #116
+ 262 004c 00F5B270 		add	r0, r0, #356
+ 263              	.L25:
+ 264 0050 43F80C1C 		str	r1, [r3, #-12]
+ 265 0054 43F8142C 		str	r2, [r3, #-20]
+ 266 0058 43F8102C 		str	r2, [r3, #-16]
+ 267 005c 43F8084C 		str	r4, [r3, #-8]
+ 268 0060 43F8042C 		str	r2, [r3, #-4]
+ 269 0064 1433     		adds	r3, r3, #20
+ 270 0066 8342     		cmp	r3, r0
+ 271 0068 F2D1     		bne	.L25
+ 272 006a 0A4B     		ldr	r3, .L30
+ 273 006c 0022     		movs	r2, #0
+ 274 006e 03F1F004 		add	r4, r3, #240
+ 275 0072 4FF0FF30 		mov	r0, #-1
+ 276              	.L27:
+ 277 0076 43F80C1C 		str	r1, [r3, #-12]
+ 278 007a 43F8142C 		str	r2, [r3, #-20]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc7pxpez.s 			page 6
+
+
+ 279 007e 43F8102C 		str	r2, [r3, #-16]
+ 280 0082 03E90500 		stmdb	r3, {r0, r2}
+ 281 0086 1433     		adds	r3, r3, #20
+ 282 0088 A342     		cmp	r3, r4
+ 283 008a F4D1     		bne	.L27
+ 284 008c 5DF8044B 		ldr	r4, [sp], #4
+ 285 0090 7047     		bx	lr
+ 286              	.L31:
+ 287 0092 00BF     		.align	2
+ 288              	.L30:
+ 289 0094 64010000 		.word	.LANCHOR1+356
+ 290              		.size	_GLOBAL__sub_I_OUTPUT_MODE_DEFAULT, .-_GLOBAL__sub_I_OUTPUT_MODE_DEFAULT
+ 291 0098 AFF30080 		.section	.init_array,"aw",%init_array
+ 291      AFF30080 
+ 292              		.align	2
+ 293 0000 00000000 		.word	_GLOBAL__sub_I_OUTPUT_MODE_DEFAULT(target1)
+ 294              		.global	enginePins
+ 295              		.global	OUTPUT_MODE_DEFAULT
+ 296              		.section	.bss.enginePins,"aw",%nobits
+ 297              		.align	2
+ 298              		.set	.LANCHOR1,. + 0
+ 299              		.type	enginePins, %object
+ 300              		.size	enginePins, 576
+ 301              	enginePins:
+ 302 0000 00000000 		.space	576
+ 302      00000000 
+ 302      00000000 
+ 302      00000000 
+ 302      00000000 
+ 303              		.section	.bss.OUTPUT_MODE_DEFAULT,"aw",%nobits
+ 304              		.align	2
+ 305              		.set	.LANCHOR0,. + 0
+ 306              		.type	OUTPUT_MODE_DEFAULT, %object
+ 307              		.size	OUTPUT_MODE_DEFAULT, 4
+ 308              	OUTPUT_MODE_DEFAULT:
+ 309 0000 00000000 		.space	4
+ 310              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 311              		.align	2
+ 312              	.LC0:
+ 313 0000 70696E20 		.ascii	"pin mode not initialized\000"
+ 313      6D6F6465 
+ 313      206E6F74 
+ 313      20696E69 
+ 313      7469616C 
+ 314 0019 000000   		.space	3
+ 315              	.LC1:
+ 316 001c 696E7661 		.ascii	"invalid pin_output_mode_e\000"
+ 316      6C696420 
+ 316      70696E5F 
+ 316      6F757470 
+ 316      75745F6D 
+ 317 0036 0000     		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cc7pxpez.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 efiGpio.cpp
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:17     .text._ZN14NamedOutputPinC2Ev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:23     .text._ZN14NamedOutputPinC2Ev:00000000 _ZN14NamedOutputPinC2Ev
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:305    .bss.OUTPUT_MODE_DEFAULT:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:23     .text._ZN14NamedOutputPinC2Ev:00000000 _ZN14NamedOutputPinC1Ev
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:43     .text._ZN14NamedOutputPinC2EPKc:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:49     .text._ZN14NamedOutputPinC2EPKc:00000000 _ZN14NamedOutputPinC2EPKc
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:49     .text._ZN14NamedOutputPinC2EPKc:00000000 _ZN14NamedOutputPinC1EPKc
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:69     .text._ZN9OutputPinC2Ev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:75     .text._ZN9OutputPinC2Ev:00000000 _ZN9OutputPinC2Ev
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:75     .text._ZN9OutputPinC2Ev:00000000 _ZN9OutputPinC1Ev
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:94     .text._ZN9OutputPin13isInitializedEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:100    .text._ZN9OutputPin13isInitializedEv:00000000 _ZN9OutputPin13isInitializedEv
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:111    .text._ZN9OutputPin8setValueEi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:117    .text._ZN9OutputPin8setValueEi:00000000 _ZN9OutputPin8setValueEi
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:315    .rodata.str1.4:0000001c .LC1
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:312    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:167    .text._ZN9OutputPin13getLogicValueEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:173    .text._ZN9OutputPin13getLogicValueEv:00000000 _ZN9OutputPin13getLogicValueEv
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:184    .text._ZN9OutputPin10unregisterEv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:190    .text._ZN9OutputPin10unregisterEv:00000000 _ZN9OutputPin10unregisterEv
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:199    .text._ZN9OutputPin18setDefaultPinStateEP17pin_output_mode_e:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:205    .text._ZN9OutputPin18setDefaultPinStateEP17pin_output_mode_e:00000000 _ZN9OutputPin18setDefaultPinStateEP17pin_output_mode_e
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:221    .text.startup._GLOBAL__sub_I_OUTPUT_MODE_DEFAULT:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:226    .text.startup._GLOBAL__sub_I_OUTPUT_MODE_DEFAULT:00000000 _GLOBAL__sub_I_OUTPUT_MODE_DEFAULT
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:298    .bss.enginePins:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:289    .text.startup._GLOBAL__sub_I_OUTPUT_MODE_DEFAULT:00000094 $d
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:292    .init_array:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:301    .bss.enginePins:00000000 enginePins
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:308    .bss.OUTPUT_MODE_DEFAULT:00000000 OUTPUT_MODE_DEFAULT
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:297    .bss.enginePins:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:304    .bss.OUTPUT_MODE_DEFAULT:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:311    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cc7pxpez.s:291    .text.startup._GLOBAL__sub_I_OUTPUT_MODE_DEFAULT:00000098 $t
+
+UNDEFINED SYMBOLS
+firmwareError

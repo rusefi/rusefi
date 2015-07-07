@@ -78,7 +78,7 @@ static void setDefault139qmbMaps(DECLARE_ENGINE_PARAMETER_F) {
 void setGy6139qmbDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setDefault139qmbMaps(PASS_ENGINE_PARAMETER_F);
 //        engineConfiguration->map.sensor.type = MT_3V_SENSOR;
-	initEgoSensor(&engineConfiguration->afr, ES_NarrowBand);
+	setEgoSensor(ES_NarrowBand PASS_ENGINE_PARAMETER);
 
 	engineConfiguration->rpmHardLimit = 9000;
 	engineConfiguration->cranking.rpm = 1100;

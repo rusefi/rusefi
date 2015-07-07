@@ -272,6 +272,10 @@ void printHistogram(Logging *logging, histogram_s *histogram) {
 	appendPrintf(logging, "*");
 	appendMsgPostfix(logging);
 	scheduleLogging(logging);
+#else
+	UNUSED(logging);
+	UNUSED(histogram);
+	
 #endif /* EFI_HISTOGRAMS */
 }
 

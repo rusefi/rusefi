@@ -1,0 +1,728 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cco21zci.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"board_test.cpp"
+  16              		.section	.text._ZL8nextStepv,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	_ZL8nextStepv, %function
+  22              	_ZL8nextStepv:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25              		@ link register save eliminated.
+  26 0000 40F20003 		movw	r3, #:lower16:.LANCHOR0
+  27 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+  28 0008 1A68     		ldr	r2, [r3]
+  29 000a 0132     		adds	r2, r2, #1
+  30 000c 1A60     		str	r2, [r3]
+  31 000e 7047     		bx	lr
+  32              		.size	_ZL8nextStepv, .-_ZL8nextStepv
+  33              		.section	.text._ZL8setIndexi,"ax",%progbits
+  34              		.align	2
+  35              		.p2align 4,,15
+  36              		.thumb
+  37              		.thumb_func
+  38              		.type	_ZL8setIndexi, %function
+  39              	_ZL8setIndexi:
+  40              		@ args = 0, pretend = 0, frame = 0
+  41              		@ frame_needed = 0, uses_anonymous_args = 0
+  42              		@ link register save eliminated.
+  43 0000 40F20002 		movw	r2, #:lower16:.LANCHOR1
+  44 0004 C0F20002 		movt	r2, #:upper16:.LANCHOR1
+  45 0008 40F20003 		movw	r3, #:lower16:.LANCHOR0
+  46 000c C0F20003 		movt	r3, #:upper16:.LANCHOR0
+  47 0010 1060     		str	r0, [r2]
+  48 0012 1A68     		ldr	r2, [r3]
+  49 0014 0132     		adds	r2, r2, #1
+  50 0016 1A60     		str	r2, [r3]
+  51 0018 7047     		bx	lr
+  52              		.size	_ZL8setIndexi, .-_ZL8setIndexi
+  53 001a 00BFAFF3 		.section	.text._ZL18setCurrentPinValueb,"ax",%progbits
+  53      0080
+  54              		.align	2
+  55              		.p2align 4,,15
+  56              		.thumb
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cco21zci.s 			page 2
+
+
+  57              		.thumb_func
+  58              		.type	_ZL18setCurrentPinValueb, %function
+  59              	_ZL18setCurrentPinValueb:
+  60              		@ args = 0, pretend = 0, frame = 0
+  61              		@ frame_needed = 0, uses_anonymous_args = 0
+  62 0000 70B5     		push	{r4, r5, r6, lr}
+  63 0002 40F20004 		movw	r4, #:lower16:.LANCHOR2
+  64 0006 C0F20004 		movt	r4, #:upper16:.LANCHOR2
+  65 000a 0546     		mov	r5, r0
+  66 000c 2068     		ldr	r0, [r4]
+  67 000e FFF7FEFF 		bl	_Z9getHwPort11brain_pin_e
+  68 0012 0646     		mov	r6, r0
+  69 0014 2068     		ldr	r0, [r4]
+  70 0016 FFF7FEFF 		bl	_Z8getHwPin11brain_pin_e
+  71 001a 85F00102 		eor	r2, r5, #1
+  72 001e 00F11003 		add	r3, r0, #16
+  73 0022 8540     		lsls	r5, r5, r0
+  74 0024 02FA03F0 		lsl	r0, r2, r3
+  75 0028 2843     		orrs	r0, r0, r5
+  76 002a B061     		str	r0, [r6, #24]
+  77 002c 70BD     		pop	{r4, r5, r6, pc}
+  78              		.size	_ZL18setCurrentPinValueb, .-_ZL18setCurrentPinValueb
+  79 002e 00BF     		.section	.text._ZL8ivThreadi,"ax",%progbits
+  80              		.align	2
+  81              		.p2align 4,,15
+  82              		.thumb
+  83              		.thumb_func
+  84              		.type	_ZL8ivThreadi, %function
+  85              	_ZL8ivThreadi:
+  86              		@ args = 0, pretend = 0, frame = 0
+  87              		@ frame_needed = 0, uses_anonymous_args = 0
+  88 0000 40F20002 		movw	r2, #:lower16:rlist
+  89 0004 C0F20002 		movt	r2, #:upper16:rlist
+  90 0008 40F20003 		movw	r3, #:lower16:.LC0
+  91 000c 9269     		ldr	r2, [r2, #24]
+  92 000e C0F20003 		movt	r3, #:upper16:.LC0
+  93 0012 10B5     		push	{r4, lr}
+  94 0014 9361     		str	r3, [r2, #24]
+  95 0016 0024     		movs	r4, #0
+  96              	.L5:
+  97 0018 C4F10104 		rsb	r4, r4, #1
+  98 001c FA20     		movs	r0, #250
+  99 001e FFF7FEFF 		bl	chThdSleep
+ 100 0022 04F00100 		and	r0, r4, #1
+ 101 0026 FFF7FEFF 		bl	_ZL18setCurrentPinValueb
+ 102 002a F5E7     		b	.L5
+ 103              		.size	_ZL8ivThreadi, .-_ZL8ivThreadi
+ 104 002c AFF30080 		.section	.text.isBoardTestMode,"ax",%progbits
+ 105              		.align	2
+ 106              		.p2align 4,,15
+ 107              		.global	isBoardTestMode
+ 108              		.thumb
+ 109              		.thumb_func
+ 110              		.type	isBoardTestMode, %function
+ 111              	isBoardTestMode:
+ 112              		@ args = 0, pretend = 0, frame = 0
+ 113              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cco21zci.s 			page 3
+
+
+ 114              		@ link register save eliminated.
+ 115 0000 40F20003 		movw	r3, #:lower16:.LANCHOR3
+ 116 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR3
+ 117 0008 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 118 000a 7047     		bx	lr
+ 119              		.size	isBoardTestMode, .-isBoardTestMode
+ 120 000c AFF30080 		.section	.text.printBoardTestState,"ax",%progbits
+ 121              		.align	2
+ 122              		.p2align 4,,15
+ 123              		.global	printBoardTestState
+ 124              		.thumb
+ 125              		.thumb_func
+ 126              		.type	printBoardTestState, %function
+ 127              	printBoardTestState:
+ 128              		@ args = 0, pretend = 0, frame = 0
+ 129              		@ frame_needed = 0, uses_anonymous_args = 0
+ 130 0000 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 131 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ 132 0008 40F20000 		movw	r0, #:lower16:.LC1
+ 133 000c 1968     		ldr	r1, [r3]
+ 134 000e 10B5     		push	{r4, lr}
+ 135 0010 C0F20000 		movt	r0, #:upper16:.LC1
+ 136 0014 FFF7FEFF 		bl	print
+ 137 0018 40F20000 		movw	r0, #:lower16:.LC2
+ 138 001c C0F20000 		movt	r0, #:upper16:.LC2
+ 139 0020 FFF7FEFF 		bl	print
+ 140 0024 40F20000 		movw	r0, #:lower16:slowAdc
+ 141 0028 C0F20000 		movt	r0, #:upper16:slowAdc
+ 142 002c FFF7FEFF 		bl	_ZN9AdcDevice4sizeEv
+ 143 0030 0446     		mov	r4, r0
+ 144 0032 40F20000 		movw	r0, #:lower16:fastAdc
+ 145 0036 C0F20000 		movt	r0, #:upper16:fastAdc
+ 146 003a FFF7FEFF 		bl	_ZN9AdcDevice4sizeEv
+ 147 003e 0246     		mov	r2, r0
+ 148 0040 40F20000 		movw	r0, #:lower16:.LC3
+ 149 0044 2146     		mov	r1, r4
+ 150 0046 C0F20000 		movt	r0, #:upper16:.LC3
+ 151 004a FFF7FEFF 		bl	print
+ 152 004e 40F20003 		movw	r3, #:lower16:.LANCHOR2
+ 153 0052 C0F20003 		movt	r3, #:upper16:.LANCHOR2
+ 154 0056 1A68     		ldr	r2, [r3]
+ 155 0058 502A     		cmp	r2, #80
+ 156 005a 0BD0     		beq	.L8
+ 157 005c 1868     		ldr	r0, [r3]
+ 158 005e FFF7FEFF 		bl	_Z10hwPortname11brain_pin_e
+ 159 0062 0146     		mov	r1, r0
+ 160 0064 40F20000 		movw	r0, #:lower16:.LC4
+ 161 0068 C0F20000 		movt	r0, #:upper16:.LC4
+ 162 006c BDE81040 		pop	{r4, lr}
+ 163 0070 FFF7FEBF 		b	print
+ 164              	.L8:
+ 165 0074 10BD     		pop	{r4, pc}
+ 166              		.size	printBoardTestState, .-printBoardTestState
+ 167              		.global	__aeabi_f2d
+ 168 0076 00BFAFF3 		.section	.text._Z13initBoardTestv,"ax",%progbits
+ 168      0080AFF3 
+ 168      0080
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cco21zci.s 			page 4
+
+
+ 169              		.align	2
+ 170              		.p2align 4,,15
+ 171              		.global	_Z13initBoardTestv
+ 172              		.thumb
+ 173              		.thumb_func
+ 174              		.type	_Z13initBoardTestv, %function
+ 175              	_Z13initBoardTestv:
+ 176              		@ args = 0, pretend = 0, frame = 16
+ 177              		@ frame_needed = 0, uses_anonymous_args = 0
+ 178 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 179 0004 2DED028B 		fstmfdd	sp!, {d8}
+ 180 0008 40F20003 		movw	r3, #:lower16:.LANCHOR3
+ 181 000c C0F20003 		movt	r3, #:upper16:.LANCHOR3
+ 182 0010 40F20000 		movw	r0, #:lower16:.LC5
+ 183 0014 40F20001 		movw	r1, #:lower16:_ZL8nextStepv
+ 184 0018 0122     		movs	r2, #1
+ 185 001a 87B0     		sub	sp, sp, #28
+ 186 001c C0F20000 		movt	r0, #:upper16:.LC5
+ 187 0020 C0F20001 		movt	r1, #:upper16:_ZL8nextStepv
+ 188 0024 40F20005 		movw	r5, #:lower16:.LANCHOR4
+ 189 0028 1A70     		strb	r2, [r3]
+ 190 002a C0F20005 		movt	r5, #:upper16:.LANCHOR4
+ 191 002e FFF7FEFF 		bl	addConsoleAction
+ 192 0032 40F20000 		movw	r0, #:lower16:.LC6
+ 193 0036 40F20001 		movw	r1, #:lower16:_ZL8setIndexi
+ 194 003a C0F20000 		movt	r0, #:upper16:.LC6
+ 195 003e C0F20001 		movt	r1, #:upper16:_ZL8setIndexi
+ 196 0042 FFF7FEFF 		bl	addConsoleActionI
+ 197 0046 2B68     		ldr	r3, [r5]
+ 198 0048 002B     		cmp	r3, #0
+ 199 004a 40F2000B 		movw	fp, #:lower16:.LANCHOR2
+ 200 004e 40F33B81 		ble	.L37
+ 201 0052 9F4E     		ldr	r6, .L49
+ 202 0054 C0F2000B 		movt	fp, #:upper16:.LANCHOR2
+ 203 0058 0024     		movs	r4, #0
+ 204              	.L12:
+ 205 005a 56F8043F 		ldr	r3, [r6, #4]!
+ 206 005e 40F20000 		movw	r0, #:lower16:.LC7
+ 207 0062 CBF80030 		str	r3, [fp]
+ 208 0066 DBF80010 		ldr	r1, [fp]
+ 209 006a C0F20000 		movt	r0, #:upper16:.LC7
+ 210 006e 0122     		movs	r2, #1
+ 211 0070 FFF7FEFF 		bl	_Z13mySetPadMode2PKc11brain_pin_em
+ 212 0074 2B68     		ldr	r3, [r5]
+ 213 0076 0134     		adds	r4, r4, #1
+ 214 0078 9C42     		cmp	r4, r3
+ 215 007a EEDB     		blt	.L12
+ 216              	.L11:
+ 217 007c 4FF00008 		mov	r8, #0
+ 218              	.L36:
+ 219 0080 002B     		cmp	r3, #0
+ 220 0082 0EDD     		ble	.L15
+ 221 0084 924E     		ldr	r6, .L49
+ 222 0086 08F00107 		and	r7, r8, #1
+ 223 008a 0024     		movs	r4, #0
+ 224              	.L16:
+ 225 008c 56F8043F 		ldr	r3, [r6, #4]!
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cco21zci.s 			page 5
+
+
+ 226 0090 3846     		mov	r0, r7
+ 227 0092 CBF80030 		str	r3, [fp]
+ 228 0096 FFF7FEFF 		bl	_ZL18setCurrentPinValueb
+ 229 009a 2B68     		ldr	r3, [r5]
+ 230 009c 0134     		adds	r4, r4, #1
+ 231 009e 9C42     		cmp	r4, r3
+ 232 00a0 F4DB     		blt	.L16
+ 233              	.L15:
+ 234 00a2 40F20000 		movw	r0, #:lower16:.LC8
+ 235 00a6 4146     		mov	r1, r8
+ 236 00a8 C0F20000 		movt	r0, #:upper16:.LC8
+ 237 00ac FFF7FEFF 		bl	print
+ 238 00b0 08F10108 		add	r8, r8, #1
+ 239 00b4 FA20     		movs	r0, #250
+ 240 00b6 FFF7FEFF 		bl	chThdSleep
+ 241 00ba B8F1060F 		cmp	r8, #6
+ 242 00be 01D0     		beq	.L14
+ 243 00c0 2B68     		ldr	r3, [r5]
+ 244 00c2 DDE7     		b	.L36
+ 245              	.L14:
+ 246 00c4 5023     		movs	r3, #80
+ 247 00c6 CBF80030 		str	r3, [fp]
+ 248 00ca 2B68     		ldr	r3, [r5]
+ 249 00cc 002B     		cmp	r3, #0
+ 250 00ce 4FF00209 		mov	r9, #2
+ 251 00d2 2ADD     		ble	.L39
+ 252              	.L45:
+ 253 00d4 7E4F     		ldr	r7, .L49
+ 254 00d6 4646     		mov	r6, r8
+ 255 00d8 00E0     		b	.L22
+ 256              	.L19:
+ 257 00da 2646     		mov	r6, r4
+ 258              	.L22:
+ 259 00dc DBF80030 		ldr	r3, [fp]
+ 260 00e0 502B     		cmp	r3, #80
+ 261 00e2 06F10104 		add	r4, r6, #1
+ 262 00e6 4FF00000 		mov	r0, #0
+ 263 00ea 01D0     		beq	.L18
+ 264 00ec FFF7FEFF 		bl	_ZL18setCurrentPinValueb
+ 265              	.L18:
+ 266 00f0 57F8043F 		ldr	r3, [r7, #4]!
+ 267 00f4 0120     		movs	r0, #1
+ 268 00f6 CBF80030 		str	r3, [fp]
+ 269 00fa FFF7FEFF 		bl	_ZL18setCurrentPinValueb
+ 270 00fe 40F20000 		movw	r0, #:lower16:.LC9
+ 271 0102 3146     		mov	r1, r6
+ 272 0104 C0F20000 		movt	r0, #:upper16:.LC9
+ 273 0108 FFF7FEFF 		bl	print
+ 274 010c FA20     		movs	r0, #250
+ 275 010e FFF7FEFF 		bl	chThdSleep
+ 276 0112 2B68     		ldr	r3, [r5]
+ 277 0114 C8EB0402 		rsb	r2, r8, r4
+ 278 0118 9342     		cmp	r3, r2
+ 279 011a DEDC     		bgt	.L19
+ 280 011c B9F10109 		subs	r9, r9, #1
+ 281 0120 07D0     		beq	.L20
+ 282              	.L46:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cco21zci.s 			page 6
+
+
+ 283 0122 2B68     		ldr	r3, [r5]
+ 284 0124 002B     		cmp	r3, #0
+ 285 0126 A046     		mov	r8, r4
+ 286 0128 D4DC     		bgt	.L45
+ 287              	.L39:
+ 288 012a B9F10109 		subs	r9, r9, #1
+ 289 012e 4446     		mov	r4, r8
+ 290 0130 F7D1     		bne	.L46
+ 291              	.L20:
+ 292 0132 4846     		mov	r0, r9
+ 293 0134 FFF7FEFF 		bl	_ZL18setCurrentPinValueb
+ 294 0138 40F20006 		movw	r6, #:lower16:.LANCHOR1
+ 295 013c 40F20000 		movw	r0, #:lower16:.LANCHOR6
+ 296 0140 40F20003 		movw	r3, #:lower16:_ZL8ivThreadi
+ 297 0144 5024     		movs	r4, #80
+ 298 0146 CDF80090 		str	r9, [sp]
+ 299 014a C0F20000 		movt	r0, #:upper16:.LANCHOR6
+ 300 014e C0F20003 		movt	r3, #:upper16:_ZL8ivThreadi
+ 301 0152 4FF43A71 		mov	r1, #744
+ 302 0156 4022     		movs	r2, #64
+ 303 0158 C0F20006 		movt	r6, #:upper16:.LANCHOR1
+ 304 015c 40F2000A 		movw	r10, #:lower16:.LANCHOR0
+ 305 0160 CBF80040 		str	r4, [fp]
+ 306 0164 DFED5B8A 		flds	s17, .L49+4
+ 307 0168 0396     		str	r6, [sp, #12]
+ 308 016a C0F2000A 		movt	r10, #:upper16:.LANCHOR0
+ 309 016e FFF7FEFF 		bl	chThdCreateStatic
+ 310 0172 CDF810B0 		str	fp, [sp, #16]
+ 311 0176 0595     		str	r5, [sp, #20]
+ 312              	.L23:
+ 313 0178 40F20000 		movw	r0, #:lower16:slowAdc
+ 314 017c C0F20000 		movt	r0, #:upper16:slowAdc
+ 315 0180 FFF7FEFF 		bl	_ZN9AdcDevice4sizeEv
+ 316 0184 039E     		ldr	r6, [sp, #12]
+ 317 0186 3268     		ldr	r2, [r6]
+ 318 0188 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 319 018c 9042     		cmp	r0, r2
+ 320 018e C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ 321 0192 57DD     		ble	.L47
+ 322 0194 40F20002 		movw	r2, #:lower16:.LANCHOR1
+ 323 0198 C0F20002 		movt	r2, #:upper16:.LANCHOR1
+ 324 019c 40F20000 		movw	r0, #:lower16:slowAdc
+ 325 01a0 1568     		ldr	r5, [r2]
+ 326 01a2 C0F20000 		movt	r0, #:upper16:slowAdc
+ 327 01a6 2946     		mov	r1, r5
+ 328 01a8 FFF7FEFF 		bl	_ZN9AdcDevice34getAdcHardwareIndexByInternalIndexEi
+ 329 01ac 0746     		mov	r7, r0
+ 330 01ae FFF7FEFF 		bl	_Z17getAdcChannelPort13adc_channel_e
+ 331 01b2 8146     		mov	r9, r0
+ 332 01b4 3846     		mov	r0, r7
+ 333 01b6 FFF7FEFF 		bl	_Z16getAdcChannelPin13adc_channel_e
+ 334 01ba DAF80080 		ldr	r8, [r10]
+ 335 01be DAF80030 		ldr	r3, [r10]
+ 336 01c2 0290     		str	r0, [sp, #8]
+ 337 01c4 9845     		cmp	r8, r3
+ 338 01c6 38D1     		bne	.L25
+ 339 01c8 0024     		movs	r4, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cco21zci.s 			page 7
+
+
+ 340 01ca 00E0     		b	.L27
+ 341              	.L48:
+ 342 01cc 3446     		mov	r4, r6
+ 343              	.L27:
+ 344 01ce 4846     		mov	r0, r9
+ 345 01d0 FFF7FEFF 		bl	_Z8portnameP12GPIO_TypeDef
+ 346 01d4 029E     		ldr	r6, [sp, #8]
+ 347 01d6 0346     		mov	r3, r0
+ 348 01d8 40F20000 		movw	r0, #:lower16:.LC10
+ 349 01dc 3A46     		mov	r2, r7
+ 350 01de 0096     		str	r6, [sp]
+ 351 01e0 C0F20000 		movt	r0, #:upper16:.LC10
+ 352 01e4 2946     		mov	r1, r5
+ 353 01e6 FFF7FEFF 		bl	print
+ 354 01ea 40F20000 		movw	r0, #:lower16:slowAdc
+ 355 01ee 2946     		mov	r1, r5
+ 356 01f0 C0F20000 		movt	r0, #:upper16:slowAdc
+ 357 01f4 FFF7FEFF 		bl	_ZN9AdcDevice18getAdcValueByIndexEi
+ 358 01f8 07EE100A 		fmsr	s14, r0	@ int
+ 359 01fc F8EEC77A 		fsitos	s15, s14
+ 360 0200 8346     		mov	fp, r0
+ 361 0202 67EEA87A 		fmuls	s15, s15, s17
+ 362 0206 661C     		adds	r6, r4, #1
+ 363 0208 77EEA77A 		fadds	s15, s15, s15
+ 364 020c 17EE900A 		fmrs	r0, s15
+ 365 0210 FFF7FEFF 		bl	__aeabi_f2d
+ 366 0214 0246     		mov	r2, r0
+ 367 0216 40F20000 		movw	r0, #:lower16:.LC11
+ 368 021a 0B46     		mov	r3, r1
+ 369 021c C0F20000 		movt	r0, #:upper16:.LC11
+ 370 0220 CDF800B0 		str	fp, [sp]
+ 371 0224 0194     		str	r4, [sp, #4]
+ 372 0226 FFF7FEFF 		bl	print
+ 373 022a 4FF49670 		mov	r0, #300
+ 374 022e FFF7FEFF 		bl	chThdSleep
+ 375 0232 DAF80030 		ldr	r3, [r10]
+ 376 0236 9845     		cmp	r8, r3
+ 377 0238 C8D0     		beq	.L48
+ 378              	.L25:
+ 379 023a 039E     		ldr	r6, [sp, #12]
+ 380 023c 3368     		ldr	r3, [r6]
+ 381 023e 0133     		adds	r3, r3, #1
+ 382 0240 3360     		str	r3, [r6]
+ 383 0242 99E7     		b	.L23
+ 384              	.L47:
+ 385 0244 0022     		movs	r2, #0
+ 386 0246 40F20006 		movw	r6, #:lower16:.LANCHOR5
+ 387 024a DDF810B0 		ldr	fp, [sp, #16]
+ 388 024e 059D     		ldr	r5, [sp, #20]
+ 389 0250 1A60     		str	r2, [r3]
+ 390 0252 1F46     		mov	r7, r3
+ 391 0254 C0F20006 		movt	r6, #:upper16:.LANCHOR5
+ 392              	.L29:
+ 393 0258 039B     		ldr	r3, [sp, #12]
+ 394 025a 1A68     		ldr	r2, [r3]
+ 395 025c 2B68     		ldr	r3, [r5]
+ 396 025e 9A42     		cmp	r2, r3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cco21zci.s 			page 8
+
+
+ 397 0260 21DA     		bge	.L43
+ 398              	.L34:
+ 399 0262 3B68     		ldr	r3, [r7]
+ 400 0264 56F82330 		ldr	r3, [r6, r3, lsl #2]
+ 401 0268 CBF80030 		str	r3, [fp]
+ 402 026c FFF7FEFF 		bl	printBoardTestState
+ 403 0270 3B68     		ldr	r3, [r7]
+ 404 0272 40F20000 		movw	r0, #:lower16:.LC12
+ 405 0276 0133     		adds	r3, r3, #1
+ 406 0278 C0F20000 		movt	r0, #:upper16:.LC12
+ 407 027c 3B60     		str	r3, [r7]
+ 408 027e FFF7FEFF 		bl	print
+ 409 0282 DAF80040 		ldr	r4, [r10]
+ 410 0286 DAF80030 		ldr	r3, [r10]
+ 411 028a 9C42     		cmp	r4, r3
+ 412 028c E4D1     		bne	.L29
+ 413              	.L33:
+ 414 028e C820     		movs	r0, #200
+ 415 0290 FFF7FEFF 		bl	chThdSleep
+ 416 0294 DAF80030 		ldr	r3, [r10]
+ 417 0298 9C42     		cmp	r4, r3
+ 418 029a F8D0     		beq	.L33
+ 419 029c 039B     		ldr	r3, [sp, #12]
+ 420 029e 1A68     		ldr	r2, [r3]
+ 421 02a0 2B68     		ldr	r3, [r5]
+ 422 02a2 9A42     		cmp	r2, r3
+ 423 02a4 DDDB     		blt	.L34
+ 424              	.L43:
+ 425 02a6 40F20000 		movw	r0, #:lower16:.LC13
+ 426 02aa C0F20000 		movt	r0, #:upper16:.LC13
+ 427 02ae FFF7FEFF 		bl	print
+ 428 02b2 40F20000 		movw	r0, #:lower16:.LC14
+ 429 02b6 C0F20000 		movt	r0, #:upper16:.LC14
+ 430 02ba FFF7FEFF 		bl	print
+ 431 02be 4FF47A70 		mov	r0, #1000
+ 432 02c2 FFF7FEFF 		bl	chThdSleep
+ 433 02c6 EEE7     		b	.L43
+ 434              	.L37:
+ 435 02c8 C0F2000B 		movt	fp, #:upper16:.LANCHOR2
+ 436 02cc D6E6     		b	.L11
+ 437              	.L50:
+ 438 02ce 00BF     		.align	2
+ 439              	.L49:
+ 440 02d0 FCFFFFFF 		.word	.LANCHOR5-4
+ 441 02d4 010C403A 		.word	977275905
+ 442              		.size	_Z13initBoardTestv, .-_Z13initBoardTestv
+ 443              		.global	pinsCount
+ 444 02d8 AFF30080 		.section	.bss._ZL12currentIndex,"aw",%nobits
+ 444      AFF30080 
+ 445              		.align	2
+ 446              		.set	.LANCHOR1,. + 0
+ 447              		.type	_ZL12currentIndex, %object
+ 448              		.size	_ZL12currentIndex, 4
+ 449              	_ZL12currentIndex:
+ 450 0000 00000000 		.space	4
+ 451              		.section	.bss._ZL13btThreadStack,"aw",%nobits
+ 452              		.align	3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cco21zci.s 			page 9
+
+
+ 453              		.set	.LANCHOR6,. + 0
+ 454              		.type	_ZL13btThreadStack, %object
+ 455              		.size	_ZL13btThreadStack, 744
+ 456              	_ZL13btThreadStack:
+ 457 0000 00000000 		.space	744
+ 457      00000000 
+ 457      00000000 
+ 457      00000000 
+ 457      00000000 
+ 458              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 459              		.align	2
+ 460              	.LC0:
+ 461 0000 626F6172 		.ascii	"board test blinking\000"
+ 461      64207465 
+ 461      73742062 
+ 461      6C696E6B 
+ 461      696E6700 
+ 462              	.LC1:
+ 463 0014 43757272 		.ascii	"Current index=%d\015\012\000"
+ 463      656E7420 
+ 463      696E6465 
+ 463      783D2564 
+ 463      0D0A00
+ 464 0027 00       		.space	1
+ 465              	.LC2:
+ 466 0028 276E2720 		.ascii	"'n' for next step and 'set X' to return to step X\015"
+ 466      666F7220 
+ 466      6E657874 
+ 466      20737465 
+ 466      7020616E 
+ 467 005a 0A00     		.ascii	"\012\000"
+ 468              	.LC3:
+ 469 005c 41444320 		.ascii	"ADC count: slow %d/fast %d\015\012\000"
+ 469      636F756E 
+ 469      743A2073 
+ 469      6C6F7720 
+ 469      25642F66 
+ 470 0079 000000   		.space	3
+ 471              	.LC4:
+ 472 007c 426C696E 		.ascii	"Blinking %s\015\012\000"
+ 472      6B696E67 
+ 472      2025730D 
+ 472      0A00
+ 473 008a 0000     		.space	2
+ 474              	.LC5:
+ 475 008c 6E00     		.ascii	"n\000"
+ 476 008e 0000     		.space	2
+ 477              	.LC6:
+ 478 0090 73657400 		.ascii	"set\000"
+ 479              	.LC7:
+ 480 0094 74657374 		.ascii	"test\000"
+ 480      00
+ 481 0099 000000   		.space	3
+ 482              	.LC8:
+ 483 009c 626C696E 		.ascii	"blinking %d\015\012\000"
+ 483      6B696E67 
+ 483      2025640D 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cco21zci.s 			page 10
+
+
+ 483      0A00
+ 484 00aa 0000     		.space	2
+ 485              	.LC9:
+ 486 00ac 626C696E 		.ascii	"blinking %d!\015\012\000"
+ 486      6B696E67 
+ 486      20256421 
+ 486      0D0A00
+ 487 00bb 00       		.space	1
+ 488              	.LC10:
+ 489 00bc 63682564 		.ascii	"ch%d hwIndex=%d %s%d\015\012\000"
+ 489      20687749 
+ 489      6E646578 
+ 489      3D256420 
+ 489      25732564 
+ 490 00d3 00       		.space	1
+ 491              	.LC11:
+ 492 00d4 763D2566 		.ascii	"v=%f  adc=%d  c=%d (hit 'n'<ENTER> for next step\015"
+ 492      20206164 
+ 492      633D2564 
+ 492      2020633D 
+ 492      25642028 
+ 493 0105 0A00     		.ascii	"\012\000"
+ 494 0107 00       		.space	1
+ 495              	.LC12:
+ 496 0108 506C6561 		.ascii	"Please hit N<ENTER> to continue\015\012\000"
+ 496      73652068 
+ 496      6974204E 
+ 496      3C454E54 
+ 496      45523E20 
+ 497 012a 0000     		.space	2
+ 498              	.LC13:
+ 499 012c 426F6172 		.ascii	"Board test done, thank you! Time to remove that jum"
+ 499      64207465 
+ 499      73742064 
+ 499      6F6E652C 
+ 499      20746861 
+ 500 015f 70657220 		.ascii	"per and reboot\015\012\000"
+ 500      616E6420 
+ 500      7265626F 
+ 500      6F740D0A 
+ 500      00
+ 501              	.LC14:
+ 502 0170 42796521 		.ascii	"Bye!\015\012\000"
+ 502      0D0A00
+ 503 0177 00       		.section	.data._ZL10currentPin,"aw",%progbits
+ 504              		.align	2
+ 505              		.set	.LANCHOR2,. + 0
+ 506              		.type	_ZL10currentPin, %object
+ 507              		.size	_ZL10currentPin, 4
+ 508              	_ZL10currentPin:
+ 509 0000 50000000 		.word	80
+ 510              		.section	.data.pinsCount,"aw",%progbits
+ 511              		.align	2
+ 512              		.set	.LANCHOR4,. + 0
+ 513              		.type	pinsCount, %object
+ 514              		.size	pinsCount, 4
+ 515              	pinsCount:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cco21zci.s 			page 11
+
+
+ 516 0000 16000000 		.word	22
+ 517              		.section	.bss._ZL18is_board_test_mode,"aw",%nobits
+ 518              		.set	.LANCHOR3,. + 0
+ 519              		.type	_ZL18is_board_test_mode, %object
+ 520              		.size	_ZL18is_board_test_mode, 1
+ 521              	_ZL18is_board_test_mode:
+ 522 0000 00       		.space	1
+ 523              		.section	.rodata._ZL10BLINK_PINS,"a",%progbits
+ 524              		.align	2
+ 525              		.set	.LANCHOR5,. + 0
+ 526              		.type	_ZL10BLINK_PINS, %object
+ 527              		.size	_ZL10BLINK_PINS, 88
+ 528              	_ZL10BLINK_PINS:
+ 529 0000 48000000 		.word	72
+ 530 0004 4A000000 		.word	74
+ 531 0008 4C000000 		.word	76
+ 532 000c 4E000000 		.word	78
+ 533 0010 29000000 		.word	41
+ 534 0014 27000000 		.word	39
+ 535 0018 2E000000 		.word	46
+ 536 001c 2F000000 		.word	47
+ 537 0020 46000000 		.word	70
+ 538 0024 2D000000 		.word	45
+ 539 0028 44000000 		.word	68
+ 540 002c 45000000 		.word	69
+ 541 0030 42000000 		.word	66
+ 542 0034 43000000 		.word	67
+ 543 0038 40000000 		.word	64
+ 544 003c 41000000 		.word	65
+ 545 0040 18000000 		.word	24
+ 546 0044 19000000 		.word	25
+ 547 0048 33000000 		.word	51
+ 548 004c 35000000 		.word	53
+ 549 0050 37000000 		.word	55
+ 550 0054 17000000 		.word	23
+ 551              		.section	.bss._ZL11stepCoutner,"aw",%nobits
+ 552              		.align	2
+ 553              		.set	.LANCHOR0,. + 0
+ 554              		.type	_ZL11stepCoutner, %object
+ 555              		.size	_ZL11stepCoutner, 4
+ 556              	_ZL11stepCoutner:
+ 557 0000 00000000 		.space	4
+ 558              		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cco21zci.s 			page 12
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 board_test.cpp
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:17     .text._ZL8nextStepv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:22     .text._ZL8nextStepv:00000000 _ZL8nextStepv
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:553    .bss._ZL11stepCoutner:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:34     .text._ZL8setIndexi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:39     .text._ZL8setIndexi:00000000 _ZL8setIndexi
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:446    .bss._ZL12currentIndex:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:54     .text._ZL18setCurrentPinValueb:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:59     .text._ZL18setCurrentPinValueb:00000000 _ZL18setCurrentPinValueb
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:505    .data._ZL10currentPin:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:80     .text._ZL8ivThreadi:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:85     .text._ZL8ivThreadi:00000000 _ZL8ivThreadi
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:460    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:105    .text.isBoardTestMode:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:111    .text.isBoardTestMode:00000000 isBoardTestMode
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:518    .bss._ZL18is_board_test_mode:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:121    .text.printBoardTestState:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:127    .text.printBoardTestState:00000000 printBoardTestState
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:462    .rodata.str1.4:00000014 .LC1
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:465    .rodata.str1.4:00000028 .LC2
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:468    .rodata.str1.4:0000005c .LC3
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:471    .rodata.str1.4:0000007c .LC4
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:169    .text._Z13initBoardTestv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:175    .text._Z13initBoardTestv:00000000 _Z13initBoardTestv
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:474    .rodata.str1.4:0000008c .LC5
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:512    .data.pinsCount:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:477    .rodata.str1.4:00000090 .LC6
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:479    .rodata.str1.4:00000094 .LC7
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:482    .rodata.str1.4:0000009c .LC8
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:485    .rodata.str1.4:000000ac .LC9
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:453    .bss._ZL13btThreadStack:00000000 .LANCHOR6
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:488    .rodata.str1.4:000000bc .LC10
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:491    .rodata.str1.4:000000d4 .LC11
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:525    .rodata._ZL10BLINK_PINS:00000000 .LANCHOR5
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:495    .rodata.str1.4:00000108 .LC12
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:498    .rodata.str1.4:0000012c .LC13
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:501    .rodata.str1.4:00000170 .LC14
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:440    .text._Z13initBoardTestv:000002d0 $d
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:515    .data.pinsCount:00000000 pinsCount
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:445    .bss._ZL12currentIndex:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:449    .bss._ZL12currentIndex:00000000 _ZL12currentIndex
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:452    .bss._ZL13btThreadStack:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:456    .bss._ZL13btThreadStack:00000000 _ZL13btThreadStack
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:459    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:504    .data._ZL10currentPin:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:508    .data._ZL10currentPin:00000000 _ZL10currentPin
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:511    .data.pinsCount:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:521    .bss._ZL18is_board_test_mode:00000000 _ZL18is_board_test_mode
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:522    .bss._ZL18is_board_test_mode:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:524    .rodata._ZL10BLINK_PINS:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:528    .rodata._ZL10BLINK_PINS:00000000 _ZL10BLINK_PINS
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:552    .bss._ZL11stepCoutner:00000000 $d
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:556    .bss._ZL11stepCoutner:00000000 _ZL11stepCoutner
+C:\Users\pc\AppData\Local\Temp\cco21zci.s:444    .text._Z13initBoardTestv:000002d8 $t
+
+UNDEFINED SYMBOLS
+ARM GAS  C:\Users\pc\AppData\Local\Temp\cco21zci.s 			page 13
+
+
+_Z9getHwPort11brain_pin_e
+_Z8getHwPin11brain_pin_e
+rlist
+chThdSleep
+print
+slowAdc
+_ZN9AdcDevice4sizeEv
+fastAdc
+_Z10hwPortname11brain_pin_e
+__aeabi_f2d
+addConsoleAction
+addConsoleActionI
+_Z13mySetPadMode2PKc11brain_pin_em
+chThdCreateStatic
+_ZN9AdcDevice34getAdcHardwareIndexByInternalIndexEi
+_Z17getAdcChannelPort13adc_channel_e
+_Z16getAdcChannelPin13adc_channel_e
+_Z8portnameP12GPIO_TypeDef
+_ZN9AdcDevice18getAdcValueByIndexEi

@@ -105,7 +105,7 @@ static void testMil(void) {
 	addError(OBD_Intake_Air_Temperature_Circuit_Malfunction);
 }
 
-void initMalfunctionIndicator(Engine *engine) {
+void initMalfunctionIndicator(void) {
 	// create static thread
 	chThdCreateStatic(mfiThreadStack, sizeof(mfiThreadStack), LOWPRIO, (tfunc_t) mfiThread, NULL);
 

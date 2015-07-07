@@ -1,0 +1,219 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccTF15PA.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"chvt.c"
+  16              		.section	.text._vt_init,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.global	_vt_init
+  20              		.thumb
+  21              		.thumb_func
+  22              		.type	_vt_init, %function
+  23              	_vt_init:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 40F20003 		movw	r3, #:lower16:.LANCHOR0
+  28 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR0
+  29 0008 4FF0FF31 		mov	r1, #-1
+  30 000c 0022     		movs	r2, #0
+  31 000e 5B60     		str	r3, [r3, #4]
+  32 0010 1B60     		str	r3, [r3]
+  33 0012 9960     		str	r1, [r3, #8]
+  34 0014 DA60     		str	r2, [r3, #12]
+  35 0016 7047     		bx	lr
+  36              		.size	_vt_init, .-_vt_init
+  37 0018 AFF30080 		.section	.text.chVTSetI,"ax",%progbits
+  37      AFF30080 
+  38              		.align	2
+  39              		.p2align 4,,15
+  40              		.global	chVTSetI
+  41              		.thumb
+  42              		.thumb_func
+  43              		.type	chVTSetI, %function
+  44              	chVTSetI:
+  45              		@ args = 0, pretend = 0, frame = 0
+  46              		@ frame_needed = 0, uses_anonymous_args = 0
+  47 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  48 0002 0546     		mov	r5, r0
+  49 0004 1646     		mov	r6, r2
+  50 0006 0C46     		mov	r4, r1
+  51 0008 1F46     		mov	r7, r3
+  52 000a FFF7FEFF 		bl	chDbgCheckClassI
+  53 000e 002E     		cmp	r6, #0
+  54 0010 18BF     		it	ne
+  55 0012 002D     		cmpne	r5, #0
+  56 0014 1CD0     		beq	.L3
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccTF15PA.s 			page 2
+
+
+  57 0016 DCB1     		cbz	r4, .L3
+  58              	.L4:
+  59 0018 40F20001 		movw	r1, #:lower16:.LANCHOR0
+  60 001c C0F20001 		movt	r1, #:upper16:.LANCHOR0
+  61 0020 2F61     		str	r7, [r5, #16]
+  62 0022 0B68     		ldr	r3, [r1]
+  63 0024 EE60     		str	r6, [r5, #12]
+  64 0026 9A68     		ldr	r2, [r3, #8]
+  65 0028 9442     		cmp	r4, r2
+  66 002a 04D9     		bls	.L5
+  67              	.L6:
+  68 002c 1B68     		ldr	r3, [r3]
+  69 002e A41A     		subs	r4, r4, r2
+  70 0030 9A68     		ldr	r2, [r3, #8]
+  71 0032 A242     		cmp	r2, r4
+  72 0034 FAD3     		bcc	.L6
+  73              	.L5:
+  74 0036 5A68     		ldr	r2, [r3, #4]
+  75 0038 2B60     		str	r3, [r5]
+  76 003a 6A60     		str	r2, [r5, #4]
+  77 003c 8B42     		cmp	r3, r1
+  78 003e 5D60     		str	r5, [r3, #4]
+  79 0040 1560     		str	r5, [r2]
+  80 0042 AC60     		str	r4, [r5, #8]
+  81 0044 1EBF     		ittt	ne
+  82 0046 9A68     		ldrne	r2, [r3, #8]
+  83 0048 C4EB0204 		rsbne	r4, r4, r2
+  84 004c 9C60     		strne	r4, [r3, #8]
+  85 004e F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+  86              	.L3:
+  87 0050 40F20000 		movw	r0, #:lower16:.LC0
+  88 0054 40F20001 		movw	r1, #:lower16:.LC1
+  89 0058 C0F20000 		movt	r0, #:upper16:.LC0
+  90 005c C0F20001 		movt	r1, #:upper16:.LC1
+  91 0060 5122     		movs	r2, #81
+  92 0062 FFF7FEFF 		bl	chDbgPanic3
+  93 0066 D7E7     		b	.L4
+  94              		.size	chVTSetI, .-chVTSetI
+  95 0068 AFF30080 		.section	.text.chVTResetI,"ax",%progbits
+  95      AFF30080 
+  96              		.align	2
+  97              		.p2align 4,,15
+  98              		.global	chVTResetI
+  99              		.thumb
+ 100              		.thumb_func
+ 101              		.type	chVTResetI, %function
+ 102              	chVTResetI:
+ 103              		@ args = 0, pretend = 0, frame = 0
+ 104              		@ frame_needed = 0, uses_anonymous_args = 0
+ 105 0000 10B5     		push	{r4, lr}
+ 106 0002 0446     		mov	r4, r0
+ 107 0004 FFF7FEFF 		bl	chDbgCheckClassI
+ 108 0008 9CB1     		cbz	r4, .L13
+ 109              	.L10:
+ 110 000a E368     		ldr	r3, [r4, #12]
+ 111 000c EBB1     		cbz	r3, .L14
+ 112              	.L11:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccTF15PA.s 			page 3
+
+
+ 113 000e 2368     		ldr	r3, [r4]
+ 114 0010 40F20002 		movw	r2, #:lower16:.LANCHOR0
+ 115 0014 C0F20002 		movt	r2, #:upper16:.LANCHOR0
+ 116 0018 9342     		cmp	r3, r2
+ 117 001a 1FBF     		itttt	ne
+ 118 001c 9968     		ldrne	r1, [r3, #8]
+ 119 001e A268     		ldrne	r2, [r4, #8]
+ 120 0020 5218     		addne	r2, r2, r1
+ 121 0022 9A60     		strne	r2, [r3, #8]
+ 122 0024 6268     		ldr	r2, [r4, #4]
+ 123 0026 1360     		str	r3, [r2]
+ 124 0028 2368     		ldr	r3, [r4]
+ 125 002a 0021     		movs	r1, #0
+ 126 002c 5A60     		str	r2, [r3, #4]
+ 127 002e E160     		str	r1, [r4, #12]
+ 128 0030 10BD     		pop	{r4, pc}
+ 129              	.L13:
+ 130 0032 40F20000 		movw	r0, #:lower16:.LC2
+ 131 0036 40F20001 		movw	r1, #:lower16:.LC1
+ 132 003a C0F20000 		movt	r0, #:upper16:.LC2
+ 133 003e C0F20001 		movt	r1, #:upper16:.LC1
+ 134 0042 6D22     		movs	r2, #109
+ 135 0044 FFF7FEFF 		bl	chDbgPanic3
+ 136 0048 DFE7     		b	.L10
+ 137              	.L14:
+ 138 004a 40F20000 		movw	r0, #:lower16:.LC3
+ 139 004e C0F20000 		movt	r0, #:upper16:.LC3
+ 140 0052 FFF7FEFF 		bl	chDbgPanic
+ 141 0056 DAE7     		b	.L11
+ 142              		.size	chVTResetI, .-chVTResetI
+ 143              		.global	vtlist
+ 144              		.section	.bss.vtlist,"aw",%nobits
+ 145              		.align	2
+ 146              		.set	.LANCHOR0,. + 0
+ 147              		.type	vtlist, %object
+ 148              		.size	vtlist, 16
+ 149              	vtlist:
+ 150 0000 00000000 		.space	16
+ 150      00000000 
+ 150      00000000 
+ 150      00000000 
+ 151              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 152              		.align	2
+ 153              	.LC0:
+ 154 0000 22636856 		.ascii	"\"chVTSetI\"()\000"
+ 154      54536574 
+ 154      49222829 
+ 154      00
+ 155 000d 000000   		.space	3
+ 156              	.LC1:
+ 157 0010 63686962 		.ascii	"chibios/os/kernel/src/chvt.c\000"
+ 157      696F732F 
+ 157      6F732F6B 
+ 157      65726E65 
+ 157      6C2F7372 
+ 158 002d 000000   		.space	3
+ 159              	.LC2:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccTF15PA.s 			page 4
+
+
+ 160 0030 22636856 		.ascii	"\"chVTResetI\"()\000"
+ 160      54526573 
+ 160      65744922 
+ 160      282900
+ 161 003f 00       		.space	1
+ 162              	.LC3:
+ 163 0040 63685654 		.ascii	"chVTResetI(), #1\000"
+ 163      52657365 
+ 163      74492829 
+ 163      2C202331 
+ 163      00
+ 164 0051 000000   		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccTF15PA.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 chvt.c
+C:\Users\pc\AppData\Local\Temp\ccTF15PA.s:17     .text._vt_init:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccTF15PA.s:23     .text._vt_init:00000000 _vt_init
+C:\Users\pc\AppData\Local\Temp\ccTF15PA.s:146    .bss.vtlist:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccTF15PA.s:38     .text.chVTSetI:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccTF15PA.s:44     .text.chVTSetI:00000000 chVTSetI
+C:\Users\pc\AppData\Local\Temp\ccTF15PA.s:153    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccTF15PA.s:156    .rodata.str1.4:00000010 .LC1
+C:\Users\pc\AppData\Local\Temp\ccTF15PA.s:96     .text.chVTResetI:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccTF15PA.s:102    .text.chVTResetI:00000000 chVTResetI
+C:\Users\pc\AppData\Local\Temp\ccTF15PA.s:159    .rodata.str1.4:00000030 .LC2
+C:\Users\pc\AppData\Local\Temp\ccTF15PA.s:162    .rodata.str1.4:00000040 .LC3
+C:\Users\pc\AppData\Local\Temp\ccTF15PA.s:149    .bss.vtlist:00000000 vtlist
+C:\Users\pc\AppData\Local\Temp\ccTF15PA.s:145    .bss.vtlist:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccTF15PA.s:152    .rodata.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+chDbgCheckClassI
+chDbgPanic3
+chDbgPanic

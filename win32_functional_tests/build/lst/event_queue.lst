@@ -1,0 +1,707 @@
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s 			page 1
+
+
+   1              		.file	"event_queue.cpp"
+   2              		.section	.text$_ZN12scheduling_sC2Ev,"x"
+   3              		.align 2
+   4              		.p2align 4,,15
+   5              		.globl	__ZN12scheduling_sC2Ev
+   6              		.def	__ZN12scheduling_sC2Ev;	.scl	2;	.type	32;	.endef
+   7              	__ZN12scheduling_sC2Ev:
+   8              	LFB56:
+   9              		.cfi_startproc
+  10 0000 C7411800 		movl	$0, 24(%ecx)
+  10      000000
+  11 0007 C7412000 		movl	$0, 32(%ecx)
+  11      000000
+  12 000e C7412800 		movl	$0, 40(%ecx)
+  12      000000
+  13 0015 C7412400 		movl	$0, 36(%ecx)
+  13      000000
+  14 001c C6412C00 		movb	$0, 44(%ecx)
+  15 0020 C7411C00 		movl	$0, 28(%ecx)
+  15      000000
+  16 0027 C3       		ret
+  17              		.cfi_endproc
+  18              	LFE56:
+  19              		.globl	__ZN12scheduling_sC1Ev
+  20              		.def	__ZN12scheduling_sC1Ev;	.scl	2;	.type	32;	.endef
+  21              		.set	__ZN12scheduling_sC1Ev,__ZN12scheduling_sC2Ev
+  22 0028 90909090 		.section	.text$_ZN10EventQueueC2Ev,"x"
+  22      90909090 
+  23              		.align 2
+  24              		.p2align 4,,15
+  25              		.globl	__ZN10EventQueueC2Ev
+  26              		.def	__ZN10EventQueueC2Ev;	.scl	2;	.type	32;	.endef
+  27              	__ZN10EventQueueC2Ev:
+  28              	LFB59:
+  29              		.cfi_startproc
+  30 0000 C7010000 		movl	$0, (%ecx)
+  30      0000
+  31 0006 C7410864 		movl	$100, 8(%ecx)
+  31      000000
+  32 000d C7410C00 		movl	$0, 12(%ecx)
+  32      000000
+  33 0014 C3       		ret
+  34              		.cfi_endproc
+  35              	LFE59:
+  36              		.globl	__ZN10EventQueueC1Ev
+  37              		.def	__ZN10EventQueueC1Ev;	.scl	2;	.type	32;	.endef
+  38              		.set	__ZN10EventQueueC1Ev,__ZN10EventQueueC2Ev
+  39 0015 90909090 		.section .rdata,"dr"
+  39      90909090 
+  39      909090
+  40              	LC0:
+  41 0000 4C6F6F70 		.ascii "Looped queue?\0"
+  41      65642071 
+  41      75657565 
+  41      3F00
+  42 000e 0000     		.align 4
+  43              	LC1:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s 			page 2
+
+
+  44 0010 72652D61 		.ascii "re-adding element into event_queue\0"
+  44      6464696E 
+  44      6720656C 
+  44      656D656E 
+  44      7420696E 
+  45              		.section	.text$_ZN10EventQueue14checkIfPendingEP12scheduling_s,"x"
+  46              		.align 2
+  47              		.p2align 4,,15
+  48              		.globl	__ZN10EventQueue14checkIfPendingEP12scheduling_s
+  49              		.def	__ZN10EventQueue14checkIfPendingEP12scheduling_s;	.scl	2;	.type	32;	.endef
+  50              	__ZN10EventQueue14checkIfPendingEP12scheduling_s:
+  51              	LFB61:
+  52              		.cfi_startproc
+  53 0000 53       		pushl	%ebx
+  54              		.cfi_def_cfa_offset 8
+  55              		.cfi_offset 3, -8
+  56 0001 83EC18   		subl	$24, %esp
+  57              		.cfi_def_cfa_offset 32
+  58 0004 8B01     		movl	(%ecx), %eax
+  59 0006 8B5C2420 		movl	32(%esp), %ebx
+  60 000a 85C0     		testl	%eax, %eax
+  61 000c 745E     		je	L9
+  62 000e 39D8     		cmpl	%ebx, %eax
+  63 0010 7425     		je	L5
+  64 0012 BAE80300 		movl	$1000, %edx
+  64      00
+  65 0017 EB10     		jmp	L6
+  66 0019 8DB42600 		.p2align 4,,7
+  66      000000
+  67              	L8:
+  68 0020 83EA01   		subl	$1, %edx
+  69 0023 7432     		je	L13
+  70 0025 39C3     		cmpl	%eax, %ebx
+  71 0027 740E     		je	L5
+  72              	L6:
+  73 0029 8B4028   		movl	40(%eax), %eax
+  74 002c 85C0     		testl	%eax, %eax
+  75 002e 75F0     		jne	L8
+  76              	L4:
+  77 0030 83C418   		addl	$24, %esp
+  78              		.cfi_remember_state
+  79              		.cfi_def_cfa_offset 8
+  80 0033 5B       		popl	%ebx
+  81              		.cfi_restore 3
+  82              		.cfi_def_cfa_offset 4
+  83 0034 C20400   		ret	$4
+  84              		.p2align 4,,7
+  85              	L5:
+  86              		.cfi_restore_state
+  87 0037 C7442404 		movl	$LC1, 4(%esp)
+  87      10000000 
+  88 003f C704245E 		movl	$606, (%esp)
+  88      020000
+  89 0046 E8000000 		call	_warning
+  89      00
+  90 004b 83C418   		addl	$24, %esp
+  91              		.cfi_remember_state
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s 			page 3
+
+
+  92              		.cfi_def_cfa_offset 8
+  93 004e B8010000 		movl	$1, %eax
+  93      00
+  94 0053 5B       		popl	%ebx
+  95              		.cfi_restore 3
+  96              		.cfi_def_cfa_offset 4
+  97 0054 C20400   		ret	$4
+  98              	L13:
+  99              		.cfi_restore_state
+ 100 0057 C7042400 		movl	$LC0, (%esp)
+ 100      000000
+ 101 005e E8000000 		call	_firmwareError
+ 101      00
+ 102 0063 83C418   		addl	$24, %esp
+ 103              		.cfi_remember_state
+ 104              		.cfi_def_cfa_offset 8
+ 105 0066 31C0     		xorl	%eax, %eax
+ 106 0068 5B       		popl	%ebx
+ 107              		.cfi_restore 3
+ 108              		.cfi_def_cfa_offset 4
+ 109 0069 C20400   		ret	$4
+ 110              	L9:
+ 111              		.cfi_restore_state
+ 112 006c 31C0     		xorl	%eax, %eax
+ 113 006e EBC0     		jmp	L4
+ 114              		.cfi_endproc
+ 115              	LFE61:
+ 116              		.section .rdata,"dr"
+ 117              	LC2:
+ 118 0033 4E554C4C 		.ascii "NULL callback\0"
+ 118      2063616C 
+ 118      6C626163 
+ 118      6B00
+ 119              		.section	.text$_ZN10EventQueue10insertTaskEP12scheduling_sxPFvPvES2_,"x"
+ 120              		.align 2
+ 121              		.p2align 4,,15
+ 122              		.globl	__ZN10EventQueue10insertTaskEP12scheduling_sxPFvPvES2_
+ 123              		.def	__ZN10EventQueue10insertTaskEP12scheduling_sxPFvPvES2_;	.scl	2;	.type	32;	.endef
+ 124              	__ZN10EventQueue10insertTaskEP12scheduling_sxPFvPvES2_:
+ 125              	LFB62:
+ 126              		.cfi_startproc
+ 127 0000 83EC2C   		subl	$44, %esp
+ 128              		.cfi_def_cfa_offset 48
+ 129 0003 8B54243C 		movl	60(%esp), %edx
+ 130 0007 895C241C 		movl	%ebx, 28(%esp)
+ 131              		.cfi_offset 3, -20
+ 132 000b 8B5C2430 		movl	48(%esp), %ebx
+ 133 000f 89742420 		movl	%esi, 32(%esp)
+ 134              		.cfi_offset 6, -16
+ 135 0013 8B742434 		movl	52(%esp), %esi
+ 136 0017 897C2424 		movl	%edi, 36(%esp)
+ 137              		.cfi_offset 7, -12
+ 138 001b 8B7C2438 		movl	56(%esp), %edi
+ 139 001f 85D2     		testl	%edx, %edx
+ 140 0021 896C2428 		movl	%ebp, 40(%esp)
+ 141              		.cfi_offset 5, -8
+ 142 0025 747C     		je	L31
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s 			page 4
+
+
+ 143 0027 31C0     		xorl	%eax, %eax
+ 144 0029 807B2C00 		cmpb	$0, 44(%ebx)
+ 145 002d 754E     		jne	L27
+ 146 002f 8B29     		movl	(%ecx), %ebp
+ 147 0031 8B442440 		movl	64(%esp), %eax
+ 148 0035 897318   		movl	%esi, 24(%ebx)
+ 149 0038 895320   		movl	%edx, 32(%ebx)
+ 150 003b 85ED     		testl	%ebp, %ebp
+ 151 003d 897B1C   		movl	%edi, 28(%ebx)
+ 152 0040 894324   		movl	%eax, 36(%ebx)
+ 153 0043 C6432C01 		movb	$1, 44(%ebx)
+ 154 0047 744E     		je	L17
+ 155 0049 8B4518   		movl	24(%ebp), %eax
+ 156 004c 8B551C   		movl	28(%ebp), %edx
+ 157 004f 39D7     		cmpl	%edx, %edi
+ 158 0051 7C44     		jl	L17
+ 159 0053 7E3E     		jle	L32
+ 160              	L28:
+ 161 0055 8B4D28   		movl	40(%ebp), %ecx
+ 162 0058 85C9     		testl	%ecx, %ecx
+ 163 005a 7419     		je	L22
+ 164              	L19:
+ 165 005c 8B4118   		movl	24(%ecx), %eax
+ 166 005f 8B511C   		movl	28(%ecx), %edx
+ 167 0062 39D7     		cmpl	%edx, %edi
+ 168 0064 7F06     		jg	L24
+ 169 0066 7C0D     		jl	L22
+ 170 0068 39C6     		cmpl	%eax, %esi
+ 171 006a 7609     		jbe	L22
+ 172              	L24:
+ 173 006c 89CD     		movl	%ecx, %ebp
+ 174 006e 8B4D28   		movl	40(%ebp), %ecx
+ 175 0071 85C9     		testl	%ecx, %ecx
+ 176              		.p2align 4,,2
+ 177 0073 75E7     		jne	L19
+ 178              		.p2align 4,,7
+ 179              	L22:
+ 180 0075 894B28   		movl	%ecx, 40(%ebx)
+ 181 0078 31C0     		xorl	%eax, %eax
+ 182 007a 895D28   		movl	%ebx, 40(%ebp)
+ 183              	L27:
+ 184 007d 8B5C241C 		movl	28(%esp), %ebx
+ 185 0081 8B742420 		movl	32(%esp), %esi
+ 186 0085 8B7C2424 		movl	36(%esp), %edi
+ 187 0089 8B6C2428 		movl	40(%esp), %ebp
+ 188 008d 83C42C   		addl	$44, %esp
+ 189              		.cfi_remember_state
+ 190              		.cfi_restore 5
+ 191              		.cfi_restore 7
+ 192              		.cfi_restore 6
+ 193              		.cfi_restore 3
+ 194              		.cfi_def_cfa_offset 4
+ 195 0090 C21400   		ret	$20
+ 196              		.p2align 4,,7
+ 197              	L32:
+ 198              		.cfi_restore_state
+ 199 0093 39C6     		cmpl	%eax, %esi
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s 			page 5
+
+
+ 200 0095 73BE     		jae	L28
+ 201              		.p2align 4,,7
+ 202              	L17:
+ 203 0097 896B28   		movl	%ebp, 40(%ebx)
+ 204 009a B8010000 		movl	$1, %eax
+ 204      00
+ 205 009f 8919     		movl	%ebx, (%ecx)
+ 206 00a1 EBDA     		jmp	L27
+ 207              		.p2align 4,,7
+ 208              	L31:
+ 209 00a3 C7042433 		movl	$LC2, (%esp)
+ 209      000000
+ 210 00aa E8000000 		call	_firmwareError
+ 210      00
+ 211 00af 31C0     		xorl	%eax, %eax
+ 212 00b1 EBCA     		jmp	L27
+ 213              		.cfi_endproc
+ 214              	LFE62:
+ 215 00b3 90909090 		.section	.text$_ZN10EventQueue16getNextEventTimeEx,"x"
+ 215      90909090 
+ 215      90909090 
+ 215      90
+ 216              		.align 2
+ 217              		.p2align 4,,15
+ 218              		.globl	__ZN10EventQueue16getNextEventTimeEx
+ 219              		.def	__ZN10EventQueue16getNextEventTimeEx;	.scl	2;	.type	32;	.endef
+ 220              	__ZN10EventQueue16getNextEventTimeEx:
+ 221              	LFB63:
+ 222              		.cfi_startproc
+ 223 0000 83EC0C   		subl	$12, %esp
+ 224              		.cfi_def_cfa_offset 16
+ 225 0003 B8FFFFFF 		movl	$-1, %eax
+ 225      FF
+ 226 0008 891C24   		movl	%ebx, (%esp)
+ 227              		.cfi_offset 3, -16
+ 228 000b 8B19     		movl	(%ecx), %ebx
+ 229 000d BAFFFFFF 		movl	$268435455, %edx
+ 229      0F
+ 230 0012 89742404 		movl	%esi, 4(%esp)
+ 231              		.cfi_offset 6, -12
+ 232 0016 8B742410 		movl	16(%esp), %esi
+ 233 001a 897C2408 		movl	%edi, 8(%esp)
+ 234              		.cfi_offset 7, -8
+ 235 001e 8B7C2414 		movl	20(%esp), %edi
+ 236 0022 85DB     		testl	%ebx, %ebx
+ 237 0024 7410     		je	L34
+ 238 0026 8B4318   		movl	24(%ebx), %eax
+ 239 0029 8B531C   		movl	28(%ebx), %edx
+ 240 002c 39FA     		cmpl	%edi, %edx
+ 241 002e 7E17     		jle	L41
+ 242              	L35:
+ 243 0030 8B4318   		movl	24(%ebx), %eax
+ 244 0033 8B531C   		movl	28(%ebx), %edx
+ 245              	L34:
+ 246 0036 8B1C24   		movl	(%esp), %ebx
+ 247 0039 8B742404 		movl	4(%esp), %esi
+ 248 003d 8B7C2408 		movl	8(%esp), %edi
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s 			page 6
+
+
+ 249 0041 83C40C   		addl	$12, %esp
+ 250              		.cfi_remember_state
+ 251              		.cfi_restore 7
+ 252              		.cfi_restore 6
+ 253              		.cfi_restore 3
+ 254              		.cfi_def_cfa_offset 4
+ 255 0044 C20800   		ret	$8
+ 256              		.p2align 4,,7
+ 257              	L41:
+ 258              		.cfi_restore_state
+ 259 0047 7D0C     		jge	L42
+ 260              	L38:
+ 261 0049 89F0     		movl	%esi, %eax
+ 262 004b 89FA     		movl	%edi, %edx
+ 263 004d 034108   		addl	8(%ecx), %eax
+ 264 0050 13510C   		adcl	12(%ecx), %edx
+ 265 0053 EBE1     		jmp	L34
+ 266              		.p2align 4,,7
+ 267              	L42:
+ 268 0055 39F0     		cmpl	%esi, %eax
+ 269 0057 77D7     		ja	L35
+ 270 0059 EBEE     		jmp	L38
+ 271              		.cfi_endproc
+ 272              	LFE63:
+ 273 005b 90909090 		.section .rdata,"dr"
+ 273      90
+ 274              	LC3:
+ 275 0041 49732074 		.ascii "Is this list looped?\0"
+ 275      68697320 
+ 275      6C697374 
+ 275      206C6F6F 
+ 275      7065643F 
+ 276              	LC4:
+ 277 0056 72656D6F 		.ascii "removing from head\0"
+ 277      76696E67 
+ 277      2066726F 
+ 277      6D206865 
+ 277      616400
+ 278 0069 000000   		.section	.text$_ZN10EventQueue10executeAllEx,"x"
+ 279              		.align 2
+ 280              		.p2align 4,,15
+ 281              		.globl	__ZN10EventQueue10executeAllEx
+ 282              		.def	__ZN10EventQueue10executeAllEx;	.scl	2;	.type	32;	.endef
+ 283              	__ZN10EventQueue10executeAllEx:
+ 284              	LFB64:
+ 285              		.cfi_startproc
+ 286 0000 55       		pushl	%ebp
+ 287              		.cfi_def_cfa_offset 8
+ 288              		.cfi_offset 5, -8
+ 289 0001 57       		pushl	%edi
+ 290              		.cfi_def_cfa_offset 12
+ 291              		.cfi_offset 7, -12
+ 292 0002 56       		pushl	%esi
+ 293              		.cfi_def_cfa_offset 16
+ 294              		.cfi_offset 6, -16
+ 295 0003 53       		pushl	%ebx
+ 296              		.cfi_def_cfa_offset 20
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s 			page 7
+
+
+ 297              		.cfi_offset 3, -20
+ 298 0004 83EC3C   		subl	$60, %esp
+ 299              		.cfi_def_cfa_offset 80
+ 300 0007 894C242C 		movl	%ecx, 44(%esp)
+ 301 000b 8B4C2454 		movl	84(%esp), %ecx
+ 302 000f 8B442450 		movl	80(%esp), %eax
+ 303 0013 894C2424 		movl	%ecx, 36(%esp)
+ 304 0017 8B4C242C 		movl	44(%esp), %ecx
+ 305 001b 89442428 		movl	%eax, 40(%esp)
+ 306 001f 8B19     		movl	(%ecx), %ebx
+ 307 0021 85DB     		testl	%ebx, %ebx
+ 308 0023 0F84D500 		je	L62
+ 308      0000
+ 309 0029 8B4318   		movl	24(%ebx), %eax
+ 310 002c 8B531C   		movl	28(%ebx), %edx
+ 311 002f 39542424 		cmpl	%edx, 36(%esp)
+ 312 0033 8B4B28   		movl	40(%ebx), %ecx
+ 313 0036 0F8EB600 		jle	L63
+ 313      0000
+ 314              	L55:
+ 315 003c 89CE     		movl	%ecx, %esi
+ 316 003e 31ED     		xorl	%ebp, %ebp
+ 317 0040 C744241C 		movl	$1, 28(%esp)
+ 317      01000000 
+ 318              		.p2align 4,,7
+ 319              	L45:
+ 320 0048 85C9     		testl	%ecx, %ecx
+ 321 004a 896B28   		movl	%ebp, 40(%ebx)
+ 322 004d 7428     		je	L59
+ 323 004f 8B7C241C 		movl	28(%esp), %edi
+ 324 0053 8B4128   		movl	40(%ecx), %eax
+ 325 0056 83C701   		addl	$1, %edi
+ 326 0059 81FFE903 		cmpl	$1001, %edi
+ 326      0000
+ 327 005f 89442420 		movl	%eax, 32(%esp)
+ 328 0063 0F84C800 		je	L64
+ 328      0000
+ 329 0069 8B4118   		movl	24(%ecx), %eax
+ 330 006c 8B511C   		movl	28(%ecx), %edx
+ 331 006f 3B542424 		cmpl	36(%esp), %edx
+ 332 0073 7C64     		jl	L47
+ 333 0075 7E5C     		jle	L65
+ 334              	L59:
+ 335 0077 8B4C242C 		movl	44(%esp), %ecx
+ 336 007b 8B7C2428 		movl	40(%esp), %edi
+ 337 007f 8931     		movl	%esi, (%ecx)
+ 338 0081 89EE     		movl	%ebp, %esi
+ 339 0083 EB05     		jmp	L49
+ 340              		.p2align 4,,7
+ 341              	L66:
+ 342 0085 89F3     		movl	%esi, %ebx
+ 343 0087 8B7628   		movl	40(%esi), %esi
+ 344              	L49:
+ 345 008a 8B4318   		movl	24(%ebx), %eax
+ 346 008d 89F9     		movl	%edi, %ecx
+ 347 008f 8B531C   		movl	28(%ebx), %edx
+ 348 0092 C6432C00 		movb	$0, 44(%ebx)
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s 			page 8
+
+
+ 349 0096 29C1     		subl	%eax, %ecx
+ 350 0098 A1000000 		movl	_maxHowFarOff, %eax
+ 350      00
+ 351 009d 894C2404 		movl	%ecx, 4(%esp)
+ 352 00a1 890424   		movl	%eax, (%esp)
+ 353 00a4 E8000000 		call	_maxI
+ 353      00
+ 354 00a9 A3000000 		movl	%eax, _maxHowFarOff
+ 354      00
+ 355 00ae 8B4324   		movl	36(%ebx), %eax
+ 356 00b1 890424   		movl	%eax, (%esp)
+ 357 00b4 FF5320   		call	*32(%ebx)
+ 358 00b7 85F6     		testl	%esi, %esi
+ 359 00b9 C7050000 		movl	$0, _lastEventQueueTime
+ 359      00000000 
+ 359      0000
+ 360 00c3 75C0     		jne	L66
+ 361 00c5 8B44241C 		movl	28(%esp), %eax
+ 362 00c9 83C43C   		addl	$60, %esp
+ 363              		.cfi_remember_state
+ 364              		.cfi_def_cfa_offset 20
+ 365 00cc 5B       		popl	%ebx
+ 366              		.cfi_restore 3
+ 367              		.cfi_def_cfa_offset 16
+ 368 00cd 5E       		popl	%esi
+ 369              		.cfi_restore 6
+ 370              		.cfi_def_cfa_offset 12
+ 371 00ce 5F       		popl	%edi
+ 372              		.cfi_restore 7
+ 373              		.cfi_def_cfa_offset 8
+ 374 00cf 5D       		popl	%ebp
+ 375              		.cfi_restore 5
+ 376              		.cfi_def_cfa_offset 4
+ 377 00d0 C20800   		ret	$8
+ 378              		.p2align 4,,7
+ 379              	L65:
+ 380              		.cfi_restore_state
+ 381 00d3 3B442428 		cmpl	40(%esp), %eax
+ 382 00d7 779E     		ja	L59
+ 383              	L47:
+ 384 00d9 39F1     		cmpl	%esi, %ecx
+ 385 00db 89C8     		movl	%ecx, %eax
+ 386 00dd 89DD     		movl	%ebx, %ebp
+ 387 00df 752F     		jne	L67
+ 388 00e1 8B742420 		movl	32(%esp), %esi
+ 389 00e5 89C3     		movl	%eax, %ebx
+ 390 00e7 897C241C 		movl	%edi, 28(%esp)
+ 391 00eb 89F1     		movl	%esi, %ecx
+ 392 00ed E956FFFF 		jmp	L45
+ 392      FF
+ 393              		.p2align 4,,7
+ 394              	L63:
+ 395 00f2 7C0A     		jl	L62
+ 396 00f4 39442428 		cmpl	%eax, 40(%esp)
+ 397 00f8 0F833EFF 		jae	L55
+ 397      FFFF
+ 398              	L62:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s 			page 9
+
+
+ 399 00fe 31C0     		xorl	%eax, %eax
+ 400              	L68:
+ 401 0100 83C43C   		addl	$60, %esp
+ 402              		.cfi_remember_state
+ 403              		.cfi_def_cfa_offset 20
+ 404 0103 5B       		popl	%ebx
+ 405              		.cfi_restore 3
+ 406              		.cfi_def_cfa_offset 16
+ 407 0104 5E       		popl	%esi
+ 408              		.cfi_restore 6
+ 409              		.cfi_def_cfa_offset 12
+ 410 0105 5F       		popl	%edi
+ 411              		.cfi_restore 7
+ 412              		.cfi_def_cfa_offset 8
+ 413 0106 5D       		popl	%ebp
+ 414              		.cfi_restore 5
+ 415              		.cfi_def_cfa_offset 4
+ 416 0107 C20800   		ret	$8
+ 417 010a 8DB60000 		.p2align 4,,7
+ 417      0000
+ 418              	L67:
+ 419              		.cfi_restore_state
+ 420 0110 8B4C242C 		movl	44(%esp), %ecx
+ 421 0114 8931     		movl	%esi, (%ecx)
+ 422 0116 C7042456 		movl	$LC4, (%esp)
+ 422      000000
+ 423 011d E8000000 		call	_firmwareError
+ 423      00
+ 424 0122 83C43C   		addl	$60, %esp
+ 425              		.cfi_remember_state
+ 426              		.cfi_def_cfa_offset 20
+ 427 0125 B8FFFFFF 		movl	$-1, %eax
+ 427      FF
+ 428 012a 5B       		popl	%ebx
+ 429              		.cfi_restore 3
+ 430              		.cfi_def_cfa_offset 16
+ 431 012b 5E       		popl	%esi
+ 432              		.cfi_restore 6
+ 433              		.cfi_def_cfa_offset 12
+ 434 012c 5F       		popl	%edi
+ 435              		.cfi_restore 7
+ 436              		.cfi_def_cfa_offset 8
+ 437 012d 5D       		popl	%ebp
+ 438              		.cfi_restore 5
+ 439              		.cfi_def_cfa_offset 4
+ 440 012e C20800   		ret	$8
+ 441              	L64:
+ 442              		.cfi_restore_state
+ 443 0131 8B4C242C 		movl	44(%esp), %ecx
+ 444 0135 8931     		movl	%esi, (%ecx)
+ 445 0137 C7042441 		movl	$LC3, (%esp)
+ 445      000000
+ 446 013e E8000000 		call	_firmwareError
+ 446      00
+ 447 0143 31C0     		xorl	%eax, %eax
+ 448 0145 EBB9     		jmp	L68
+ 449              		.cfi_endproc
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s 			page 10
+
+
+ 450              	LFE64:
+ 451 0147 90909090 		.section	.text$_ZN10EventQueue4sizeEv,"x"
+ 451      90909090 
+ 451      90
+ 452              		.align 2
+ 453              		.p2align 4,,15
+ 454              		.globl	__ZN10EventQueue4sizeEv
+ 455              		.def	__ZN10EventQueue4sizeEv;	.scl	2;	.type	32;	.endef
+ 456              	__ZN10EventQueue4sizeEv:
+ 457              	LFB65:
+ 458              		.cfi_startproc
+ 459 0000 8B11     		movl	(%ecx), %edx
+ 460 0002 31C0     		xorl	%eax, %eax
+ 461 0004 85D2     		testl	%edx, %edx
+ 462 0006 740C     		je	L72
+ 463              		.p2align 4,,7
+ 464              	L71:
+ 465 0008 8B5228   		movl	40(%edx), %edx
+ 466 000b 83C001   		addl	$1, %eax
+ 467 000e 85D2     		testl	%edx, %edx
+ 468 0010 75F6     		jne	L71
+ 469 0012 F3       		rep
+ 470 0013 C3       		ret
+ 471              	L72:
+ 472              		.p2align 4,,3
+ 473 0014 F3       		rep
+ 474 0015 C3       		ret
+ 475              		.cfi_endproc
+ 476              	LFE65:
+ 477 0016 90909090 		.section	.text$_ZN10EventQueue12setLateDelayEi,"x"
+ 477      90909090 
+ 477      9090
+ 478              		.align 2
+ 479              		.p2align 4,,15
+ 480              		.globl	__ZN10EventQueue12setLateDelayEi
+ 481              		.def	__ZN10EventQueue12setLateDelayEi;	.scl	2;	.type	32;	.endef
+ 482              	__ZN10EventQueue12setLateDelayEi:
+ 483              	LFB66:
+ 484              		.cfi_startproc
+ 485 0000 8B442404 		movl	4(%esp), %eax
+ 486 0004 89C2     		movl	%eax, %edx
+ 487 0006 C1FA1F   		sarl	$31, %edx
+ 488 0009 894108   		movl	%eax, 8(%ecx)
+ 489 000c 89510C   		movl	%edx, 12(%ecx)
+ 490 000f C20400   		ret	$4
+ 491              		.cfi_endproc
+ 492              	LFE66:
+ 493 0012 90909090 		.section	.text$_ZN10EventQueue7getHeadEv,"x"
+ 493      90909090 
+ 493      90909090 
+ 493      9090
+ 494              		.align 2
+ 495              		.p2align 4,,15
+ 496              		.globl	__ZN10EventQueue7getHeadEv
+ 497              		.def	__ZN10EventQueue7getHeadEv;	.scl	2;	.type	32;	.endef
+ 498              	__ZN10EventQueue7getHeadEv:
+ 499              	LFB67:
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s 			page 11
+
+
+ 500              		.cfi_startproc
+ 501 0000 8B01     		movl	(%ecx), %eax
+ 502 0002 C3       		ret
+ 503              		.cfi_endproc
+ 504              	LFE67:
+ 505 0003 90909090 		.section	.text$_ZN10EventQueue14getForUnitTextEi,"x"
+ 505      90909090 
+ 505      90909090 
+ 505      90
+ 506              		.align 2
+ 507              		.p2align 4,,15
+ 508              		.globl	__ZN10EventQueue14getForUnitTextEi
+ 509              		.def	__ZN10EventQueue14getForUnitTextEi;	.scl	2;	.type	32;	.endef
+ 510              	__ZN10EventQueue14getForUnitTextEi:
+ 511              	LFB68:
+ 512              		.cfi_startproc
+ 513 0000 8B01     		movl	(%ecx), %eax
+ 514 0002 8B542404 		movl	4(%esp), %edx
+ 515 0006 85C0     		testl	%eax, %eax
+ 516 0008 7414     		je	L77
+ 517 000a 85D2     		testl	%edx, %edx
+ 518 000c 7506     		jne	L90
+ 519 000e EB11     		jmp	L92
+ 520              		.p2align 4,,7
+ 521              	L80:
+ 522 0010 85D2     		testl	%edx, %edx
+ 523              		.p2align 4,,7
+ 524 0012 740A     		je	L77
+ 525              	L90:
+ 526 0014 8B4028   		movl	40(%eax), %eax
+ 527 0017 83EA01   		subl	$1, %edx
+ 528 001a 85C0     		testl	%eax, %eax
+ 529 001c 75F2     		jne	L80
+ 530              	L77:
+ 531 001e C20400   		ret	$4
+ 532              	L92:
+ 533              		.p2align 4,,3
+ 534 0021 C20400   		ret	$4
+ 535              		.cfi_endproc
+ 536              	LFE68:
+ 537 0024 90909090 		.section	.text$_ZN10EventQueue5clearEv,"x"
+ 537      90909090 
+ 537      90909090 
+ 538              		.align 2
+ 539              		.p2align 4,,15
+ 540              		.globl	__ZN10EventQueue5clearEv
+ 541              		.def	__ZN10EventQueue5clearEv;	.scl	2;	.type	32;	.endef
+ 542              	__ZN10EventQueue5clearEv:
+ 543              	LFB69:
+ 544              		.cfi_startproc
+ 545 0000 C7010000 		movl	$0, (%ecx)
+ 545      0000
+ 546 0006 C3       		ret
+ 547              		.cfi_endproc
+ 548              	LFE69:
+ 549              		.globl	_lastEventQueueTime
+ 550 0007 90909090 		.section	.data$lastEventQueueTime,"w"
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s 			page 12
+
+
+ 550      90909090 
+ 550      90
+ 551              		.align 4
+ 552              	_lastEventQueueTime:
+ 553 0000 00000000 		.space 4
+ 554              		.globl	_maxEventQueueTime
+ 555              		.section	.data$maxEventQueueTime,"w"
+ 556              		.align 4
+ 557              	_maxEventQueueTime:
+ 558 0000 00000000 		.space 4
+ 559              		.globl	_maxHowFarOff
+ 560              		.section	.data$maxHowFarOff,"w"
+ 561              		.align 4
+ 562              	_maxHowFarOff:
+ 563 0000 00000000 		.space 4
+ 564              		.def	_warning;	.scl	2;	.type	32;	.endef
+ 565              		.def	_firmwareError;	.scl	2;	.type	32;	.endef
+ 566              		.def	_maxI;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s 			page 13
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 event_queue.cpp
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s:7      .text$_ZN12scheduling_sC2Ev:00000000 __ZN12scheduling_sC2Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s:7      .text$_ZN12scheduling_sC2Ev:00000000 __ZN12scheduling_sC1Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s:27     .text$_ZN10EventQueueC2Ev:00000000 __ZN10EventQueueC2Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s:27     .text$_ZN10EventQueueC2Ev:00000000 __ZN10EventQueueC1Ev
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s:50     .text$_ZN10EventQueue14checkIfPendingEP12scheduling_s:00000000 __ZN10EventQueue14checkIfPendingEP12scheduling_s
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s:124    .text$_ZN10EventQueue10insertTaskEP12scheduling_sxPFvPvES2_:00000000 __ZN10EventQueue10insertTaskEP12scheduling_sxPFvPvES2_
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s:220    .text$_ZN10EventQueue16getNextEventTimeEx:00000000 __ZN10EventQueue16getNextEventTimeEx
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s:283    .text$_ZN10EventQueue10executeAllEx:00000000 __ZN10EventQueue10executeAllEx
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s:562    .data$maxHowFarOff:00000000 _maxHowFarOff
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s:552    .data$lastEventQueueTime:00000000 _lastEventQueueTime
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s:456    .text$_ZN10EventQueue4sizeEv:00000000 __ZN10EventQueue4sizeEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s:482    .text$_ZN10EventQueue12setLateDelayEi:00000000 __ZN10EventQueue12setLateDelayEi
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s:498    .text$_ZN10EventQueue7getHeadEv:00000000 __ZN10EventQueue7getHeadEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s:510    .text$_ZN10EventQueue14getForUnitTextEi:00000000 __ZN10EventQueue14getForUnitTextEi
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s:542    .text$_ZN10EventQueue5clearEv:00000000 __ZN10EventQueue5clearEv
+/cygdrive/c/Users/pc/AppData/Local/Temp/ccAlLFYF.s:557    .data$maxEventQueueTime:00000000 _maxEventQueueTime
+
+UNDEFINED SYMBOLS
+_warning
+_firmwareError
+_maxI

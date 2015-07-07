@@ -1,0 +1,1275 @@
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.fpu fpv4-sp-d16
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 2
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.thumb
+  15              		.file	"mmc_card.cpp"
+  16              		.section	.text._ZL14incLogFileNamev,"ax",%progbits
+  17              		.align	2
+  18              		.p2align 4,,15
+  19              		.thumb
+  20              		.thumb_func
+  21              		.type	_ZL14incLogFileNamev, %function
+  22              	_ZL14incLogFileNamev:
+  23              		@ args = 0, pretend = 0, frame = 16
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25 0000 70B5     		push	{r4, r5, r6, lr}
+  26 0002 0020     		movs	r0, #0
+  27 0004 84B0     		sub	sp, sp, #16
+  28 0006 FFF7FEFF 		bl	_Z7lockSpi12spi_device_e
+  29 000a 40F20000 		movw	r0, #:lower16:.LANCHOR0
+  30 000e 0021     		movs	r1, #0
+  31 0010 4FF40972 		mov	r2, #548
+  32 0014 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+  33 0018 FFF7FEFF 		bl	memset
+  34 001c 40F20000 		movw	r0, #:lower16:.LANCHOR0
+  35 0020 40F20001 		movw	r1, #:lower16:.LC0
+  36 0024 0122     		movs	r2, #1
+  37 0026 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+  38 002a C0F20001 		movt	r1, #:upper16:.LC0
+  39 002e FFF7FEFF 		bl	f_open
+  40 0032 0022     		movs	r2, #0
+  41 0034 10F0F704 		ands	r4, r0, #247
+  42 0038 0346     		mov	r3, r0
+  43 003a 0092     		str	r2, [sp]
+  44 003c 55D1     		bne	.L8
+  45 003e 01AD     		add	r5, sp, #4
+  46 0040 40F20000 		movw	r0, #:lower16:.LANCHOR0
+  47 0044 2946     		mov	r1, r5
+  48 0046 6B46     		mov	r3, sp
+  49 0048 0A22     		movs	r2, #10
+  50 004a C0F20000 		movt	r0, #:upper16:.LANCHOR0
+  51 004e FFF7FEFF 		bl	f_read
+  52 0052 40F20000 		movw	r0, #:lower16:.LANCHOR2
+  53 0056 40F20001 		movw	r1, #:lower16:.LC2
+  54 005a 009B     		ldr	r3, [sp]
+  55 005c 2A46     		mov	r2, r5
+  56 005e C0F20000 		movt	r0, #:upper16:.LANCHOR2
+  57 0062 C0F20001 		movt	r1, #:upper16:.LC2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s 			page 2
+
+
+  58 0066 FFF7FEFF 		bl	scheduleMsg
+  59 006a 40F20000 		movw	r0, #:lower16:.LANCHOR0
+  60 006e C0F20000 		movt	r0, #:upper16:.LANCHOR0
+  61 0072 FFF7FEFF 		bl	f_close
+  62 0076 009B     		ldr	r3, [sp]
+  63 0078 042B     		cmp	r3, #4
+  64 007a 84BF     		itt	hi
+  65 007c 40F20004 		movwhi	r4, #:lower16:.LANCHOR1
+  66 0080 C0F20004 		movthi	r4, #:upper16:.LANCHOR1
+  67 0084 47D9     		bls	.L9
+  68              	.L6:
+  69 0086 0123     		movs	r3, #1
+  70 0088 2360     		str	r3, [r4]
+  71              	.L3:
+  72 008a 40F20000 		movw	r0, #:lower16:.LANCHOR0
+  73 008e 40F20001 		movw	r1, #:lower16:.LC0
+  74 0092 1222     		movs	r2, #18
+  75 0094 C0F20001 		movt	r1, #:upper16:.LC0
+  76 0098 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+  77 009c FFF7FEFF 		bl	f_open
+  78 00a0 2168     		ldr	r1, [r4]
+  79 00a2 2846     		mov	r0, r5
+  80 00a4 FFF7FEFF 		bl	itoa10
+  81 00a8 2846     		mov	r0, r5
+  82 00aa FFF7FEFF 		bl	strlen
+  83 00ae 0246     		mov	r2, r0
+  84 00b0 40F20000 		movw	r0, #:lower16:.LANCHOR0
+  85 00b4 6B46     		mov	r3, sp
+  86 00b6 2946     		mov	r1, r5
+  87 00b8 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+  88 00bc FFF7FEFF 		bl	f_write
+  89 00c0 40F20000 		movw	r0, #:lower16:.LANCHOR0
+  90 00c4 C0F20000 		movt	r0, #:upper16:.LANCHOR0
+  91 00c8 FFF7FEFF 		bl	f_close
+  92 00cc 40F20000 		movw	r0, #:lower16:.LANCHOR2
+  93 00d0 40F20001 		movw	r1, #:lower16:.LC3
+  94 00d4 2268     		ldr	r2, [r4]
+  95 00d6 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+  96 00da C0F20001 		movt	r1, #:upper16:.LC3
+  97 00de FFF7FEFF 		bl	scheduleMsg
+  98 00e2 FFF7FEFF 		bl	_Z9unlockSpiv
+  99 00e6 04B0     		add	sp, sp, #16
+ 100              		@ sp needed
+ 101 00e8 70BD     		pop	{r4, r5, r6, pc}
+ 102              	.L8:
+ 103 00ea 40F20004 		movw	r4, #:lower16:.LANCHOR1
+ 104 00ee C0F20004 		movt	r4, #:upper16:.LANCHOR1
+ 105 00f2 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 106 00f6 40F20001 		movw	r1, #:lower16:.LC1
+ 107 00fa 40F20002 		movw	r2, #:lower16:.LC0
+ 108 00fe 0125     		movs	r5, #1
+ 109 0100 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 110 0104 C0F20001 		movt	r1, #:upper16:.LC1
+ 111 0108 C0F20002 		movt	r2, #:upper16:.LC0
+ 112 010c 2560     		str	r5, [r4]
+ 113 010e 01AD     		add	r5, sp, #4
+ 114 0110 FFF7FEFF 		bl	scheduleMsg
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s 			page 3
+
+
+ 115 0114 B9E7     		b	.L3
+ 116              	.L9:
+ 117 0116 04AA     		add	r2, sp, #16
+ 118 0118 1344     		add	r3, r3, r2
+ 119 011a 2846     		mov	r0, r5
+ 120 011c 03F80C4C 		strb	r4, [r3, #-12]
+ 121 0120 FFF7FEFF 		bl	atoi
+ 122 0124 40F20004 		movw	r4, #:lower16:.LANCHOR1
+ 123 0128 C0F20004 		movt	r4, #:upper16:.LANCHOR1
+ 124 012c 2060     		str	r0, [r4]
+ 125 012e FFF7FEFF 		bl	absI
+ 126 0132 4EF23043 		movw	r3, #58416
+ 127 0136 C1F28C23 		movt	r3, 4748
+ 128 013a 9842     		cmp	r0, r3
+ 129 013c A3D0     		beq	.L6
+ 130 013e 2368     		ldr	r3, [r4]
+ 131 0140 0133     		adds	r3, r3, #1
+ 132 0142 2360     		str	r3, [r4]
+ 133 0144 A1E7     		b	.L3
+ 134              		.size	_ZL14incLogFileNamev, .-_ZL14incLogFileNamev
+ 135 0146 00BFAFF3 		.section	.text._ZL13listDirectoryPKc,"ax",%progbits
+ 135      0080AFF3 
+ 135      0080
+ 136              		.align	2
+ 137              		.p2align 4,,15
+ 138              		.thumb
+ 139              		.thumb_func
+ 140              		.type	_ZL13listDirectoryPKc, %function
+ 141              	_ZL13listDirectoryPKc:
+ 142              		@ args = 0, pretend = 0, frame = 72
+ 143              		@ frame_needed = 0, uses_anonymous_args = 0
+ 144 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+ 145 0004 40F20003 		movw	r3, #:lower16:.LANCHOR3
+ 146 0008 C0F20003 		movt	r3, #:upper16:.LANCHOR3
+ 147 000c 93B0     		sub	sp, sp, #76
+ 148 000e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 149 0010 0646     		mov	r6, r0
+ 150 0012 63B9     		cbnz	r3, .L11
+ 151 0014 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 152 0018 40F20001 		movw	r1, #:lower16:.LC4
+ 153 001c C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 154 0020 C0F20001 		movt	r1, #:upper16:.LC4
+ 155 0024 FFF7FEFF 		bl	scheduleMsg
+ 156 0028 13B0     		add	sp, sp, #76
+ 157              		@ sp needed
+ 158 002a BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ 159              	.L11:
+ 160 002e 0020     		movs	r0, #0
+ 161 0030 FFF7FEFF 		bl	_Z7lockSpi12spi_device_e
+ 162 0034 09A8     		add	r0, sp, #36
+ 163 0036 3146     		mov	r1, r6
+ 164 0038 FFF7FEFF 		bl	f_opendir
+ 165 003c 0746     		mov	r7, r0
+ 166 003e 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 167 0042 002F     		cmp	r7, #0
+ 168 0044 36D1     		bne	.L26
+ 169 0046 40F20001 		movw	r1, #:lower16:.LC6
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s 			page 4
+
+
+ 170 004a C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 171 004e C0F20001 		movt	r1, #:upper16:.LC6
+ 172 0052 FFF7FEFF 		bl	scheduleMsg
+ 173 0056 3046     		mov	r0, r6
+ 174 0058 FFF7FEFF 		bl	strlen
+ 175 005c 4FF02F09 		mov	r9, #47
+ 176 0060 8046     		mov	r8, r0
+ 177 0062 04E0     		b	.L19
+ 178              	.L18:
+ 179 0064 FFF7FEFF 		bl	strncmp
+ 180 0068 90B3     		cbz	r0, .L27
+ 181              	.L17:
+ 182 006a 132F     		cmp	r7, #19
+ 183 006c 3FDC     		bgt	.L16
+ 184              	.L19:
+ 185 006e 01A9     		add	r1, sp, #4
+ 186 0070 09A8     		add	r0, sp, #36
+ 187 0072 FFF7FEFF 		bl	f_readdir
+ 188 0076 0446     		mov	r4, r0
+ 189 0078 40F20000 		movw	r0, #:lower16:.LC7
+ 190 007c 0DF10D01 		add	r1, sp, #13
+ 191 0080 0322     		movs	r2, #3
+ 192 0082 C0F20000 		movt	r0, #:upper16:.LC7
+ 193 0086 94BB     		cbnz	r4, .L16
+ 194 0088 9DF80D30 		ldrb	r3, [sp, #13]	@ zero_extendqisi2
+ 195 008c 7BB3     		cbz	r3, .L16
+ 196 008e 079B     		ldr	r3, [sp, #28]
+ 197 0090 1D78     		ldrb	r5, [r3]	@ zero_extendqisi2
+ 198 0092 2E2D     		cmp	r5, #46
+ 199 0094 E9D0     		beq	.L17
+ 200 0096 9DF80C50 		ldrb	r5, [sp, #12]	@ zero_extendqisi2
+ 201 009a ED06     		lsls	r5, r5, #27
+ 202 009c E2D5     		bpl	.L18
+ 203 009e 08F10105 		add	r5, r8, #1
+ 204 00a2 06F80890 		strb	r9, [r6, r8]
+ 205 00a6 1946     		mov	r1, r3
+ 206 00a8 7019     		adds	r0, r6, r5
+ 207 00aa FFF7FEFF 		bl	strcpy
+ 208 00ae A846     		mov	r8, r5
+ 209 00b0 7455     		strb	r4, [r6, r5]
+ 210 00b2 DAE7     		b	.L17
+ 211              	.L26:
+ 212 00b4 40F20001 		movw	r1, #:lower16:.LC5
+ 213 00b8 3246     		mov	r2, r6
+ 214 00ba C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 215 00be C0F20001 		movt	r1, #:upper16:.LC5
+ 216 00c2 FFF7FEFF 		bl	scheduleMsg
+ 217 00c6 FFF7FEFF 		bl	_Z9unlockSpiv
+ 218 00ca 13B0     		add	sp, sp, #76
+ 219              		@ sp needed
+ 220 00cc BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ 221              	.L27:
+ 222 00d0 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 223 00d4 40F20001 		movw	r1, #:lower16:.LC8
+ 224 00d8 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 225 00dc C0F20001 		movt	r1, #:upper16:.LC8
+ 226 00e0 019A     		ldr	r2, [sp, #4]
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s 			page 5
+
+
+ 227 00e2 0DF10D03 		add	r3, sp, #13
+ 228 00e6 FFF7FEFF 		bl	scheduleMsg
+ 229 00ea 0137     		adds	r7, r7, #1
+ 230 00ec BDE7     		b	.L17
+ 231              	.L16:
+ 232 00ee FFF7FEFF 		bl	_Z9unlockSpiv
+ 233 00f2 13B0     		add	sp, sp, #76
+ 234              		@ sp needed
+ 235 00f4 BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ 236              		.size	_ZL13listDirectoryPKc, .-_ZL13listDirectoryPKc
+ 237 00f8 AFF30080 		.section	.text._ZL12sdStatisticsv,"ax",%progbits
+ 237      AFF30080 
+ 238              		.align	2
+ 239              		.p2align 4,,15
+ 240              		.thumb
+ 241              		.thumb_func
+ 242              		.type	_ZL12sdStatisticsv, %function
+ 243              	_ZL12sdStatisticsv:
+ 244              		@ args = 0, pretend = 0, frame = 0
+ 245              		@ frame_needed = 0, uses_anonymous_args = 0
+ 246 0000 30B5     		push	{r4, r5, lr}
+ 247 0002 40F20005 		movw	r5, #:lower16:boardConfiguration
+ 248 0006 C0F20005 		movt	r5, #:upper16:boardConfiguration
+ 249 000a 83B0     		sub	sp, sp, #12
+ 250 000c 2B68     		ldr	r3, [r5]
+ 251 000e D3F84401 		ldr	r0, [r3, #324]
+ 252 0012 FFF7FEFF 		bl	_Z10hwPortname11brain_pin_e
+ 253 0016 40F20004 		movw	r4, #:lower16:.LANCHOR2
+ 254 001a C0F20004 		movt	r4, #:upper16:.LANCHOR2
+ 255 001e 40F20001 		movw	r1, #:lower16:.LC9
+ 256 0022 0246     		mov	r2, r0
+ 257 0024 C0F20001 		movt	r1, #:upper16:.LC9
+ 258 0028 2046     		mov	r0, r4
+ 259 002a FFF7FEFF 		bl	scheduleMsg
+ 260 002e 2B68     		ldr	r3, [r5]
+ 261 0030 93F88001 		ldrb	r0, [r3, #384]	@ zero_extendqisi2
+ 262 0034 C0F3C000 		ubfx	r0, r0, #3, #1
+ 263 0038 FFF7FEFF 		bl	_Z12boolToStringb
+ 264 003c 40F20001 		movw	r1, #:lower16:.LC10
+ 265 0040 40F20003 		movw	r3, #:lower16:.LANCHOR4
+ 266 0044 0246     		mov	r2, r0
+ 267 0046 C0F20001 		movt	r1, #:upper16:.LC10
+ 268 004a 2046     		mov	r0, r4
+ 269 004c C0F20003 		movt	r3, #:upper16:.LANCHOR4
+ 270 0050 FFF7FEFF 		bl	scheduleMsg
+ 271 0054 40F20001 		movw	r1, #:lower16:.LANCHOR1
+ 272 0058 C0F20001 		movt	r1, #:upper16:.LANCHOR1
+ 273 005c 40F20002 		movw	r2, #:lower16:.LANCHOR3
+ 274 0060 40F20003 		movw	r3, #:lower16:.LANCHOR5
+ 275 0064 0D68     		ldr	r5, [r1]
+ 276 0066 C0F20002 		movt	r2, #:upper16:.LANCHOR3
+ 277 006a C0F20003 		movt	r3, #:upper16:.LANCHOR5
+ 278 006e 40F20001 		movw	r1, #:lower16:.LC11
+ 279 0072 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+ 280 0074 1B68     		ldr	r3, [r3]
+ 281 0076 0095     		str	r5, [sp]
+ 282 0078 2046     		mov	r0, r4
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s 			page 6
+
+
+ 283 007a C0F20001 		movt	r1, #:upper16:.LC11
+ 284 007e FFF7FEFF 		bl	scheduleMsg
+ 285 0082 03B0     		add	sp, sp, #12
+ 286              		@ sp needed
+ 287 0084 30BD     		pop	{r4, r5, pc}
+ 288              		.size	_ZL12sdStatisticsv, .-_ZL12sdStatisticsv
+ 289 0086 00BFAFF3 		.section	.text.appendToLog,"ax",%progbits
+ 289      0080AFF3 
+ 289      0080
+ 290              		.align	2
+ 291              		.p2align 4,,15
+ 292              		.global	appendToLog
+ 293              		.thumb
+ 294              		.thumb_func
+ 295              		.type	appendToLog, %function
+ 296              	appendToLog:
+ 297              		@ args = 0, pretend = 0, frame = 8
+ 298              		@ frame_needed = 0, uses_anonymous_args = 0
+ 299 0000 30B5     		push	{r4, r5, lr}
+ 300 0002 40F20003 		movw	r3, #:lower16:.LANCHOR3
+ 301 0006 C0F20003 		movt	r3, #:upper16:.LANCHOR3
+ 302 000a 83B0     		sub	sp, sp, #12
+ 303 000c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 304 000e 0446     		mov	r4, r0
+ 305 0010 A3B9     		cbnz	r3, .L30
+ 306 0012 40F20004 		movw	r4, #:lower16:.LANCHOR6
+ 307 0016 C0F20004 		movt	r4, #:upper16:.LANCHOR6
+ 308 001a 2368     		ldr	r3, [r4]
+ 309 001c 1BB1     		cbz	r3, .L34
+ 310              	.L31:
+ 311 001e 0123     		movs	r3, #1
+ 312 0020 2360     		str	r3, [r4]
+ 313 0022 03B0     		add	sp, sp, #12
+ 314              		@ sp needed
+ 315 0024 30BD     		pop	{r4, r5, pc}
+ 316              	.L34:
+ 317 0026 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 318 002a 40F20001 		movw	r1, #:lower16:.LC12
+ 319 002e C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 320 0032 C0F20001 		movt	r1, #:upper16:.LC12
+ 321 0036 FFF7FEFF 		bl	scheduleMsg
+ 322 003a F0E7     		b	.L31
+ 323              	.L30:
+ 324 003c FFF7FEFF 		bl	strlen
+ 325 0040 40F20003 		movw	r3, #:lower16:.LANCHOR5
+ 326 0044 C0F20003 		movt	r3, #:upper16:.LANCHOR5
+ 327 0048 0546     		mov	r5, r0
+ 328 004a 1A68     		ldr	r2, [r3]
+ 329 004c 0020     		movs	r0, #0
+ 330 004e 2A44     		add	r2, r2, r5
+ 331 0050 1A60     		str	r2, [r3]
+ 332 0052 FFF7FEFF 		bl	_Z7lockSpi12spi_device_e
+ 333 0056 40F20000 		movw	r0, #:lower16:.LANCHOR7
+ 334 005a 2A46     		mov	r2, r5
+ 335 005c 01AB     		add	r3, sp, #4
+ 336 005e 2146     		mov	r1, r4
+ 337 0060 C0F20000 		movt	r0, #:upper16:.LANCHOR7
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s 			page 7
+
+
+ 338 0064 FFF7FEFF 		bl	f_write
+ 339 0068 019A     		ldr	r2, [sp, #4]
+ 340 006a 9542     		cmp	r5, r2
+ 341 006c 0346     		mov	r3, r0
+ 342 006e 09D8     		bhi	.L35
+ 343              	.L33:
+ 344 0070 40F20000 		movw	r0, #:lower16:.LANCHOR7
+ 345 0074 C0F20000 		movt	r0, #:upper16:.LANCHOR7
+ 346 0078 FFF7FEFF 		bl	f_sync
+ 347 007c FFF7FEFF 		bl	_Z9unlockSpiv
+ 348 0080 03B0     		add	sp, sp, #12
+ 349              		@ sp needed
+ 350 0082 30BD     		pop	{r4, r5, pc}
+ 351              	.L35:
+ 352 0084 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 353 0088 40F20001 		movw	r1, #:lower16:.LC13
+ 354 008c 40F20002 		movw	r2, #:lower16:.LC14
+ 355 0090 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 356 0094 C0F20001 		movt	r1, #:upper16:.LC13
+ 357 0098 C0F20002 		movt	r2, #:upper16:.LC14
+ 358 009c FFF7FEFF 		bl	scheduleMsg
+ 359 00a0 E6E7     		b	.L33
+ 360              		.size	appendToLog, .-appendToLog
+ 361 00a2 00BFAFF3 		.section	.text._ZL10removeFilePKc,"ax",%progbits
+ 361      0080AFF3 
+ 361      0080AFF3 
+ 361      0080
+ 362              		.align	2
+ 363              		.p2align 4,,15
+ 364              		.thumb
+ 365              		.thumb_func
+ 366              		.type	_ZL10removeFilePKc, %function
+ 367              	_ZL10removeFilePKc:
+ 368              		@ args = 0, pretend = 0, frame = 0
+ 369              		@ frame_needed = 0, uses_anonymous_args = 0
+ 370 0000 40F20003 		movw	r3, #:lower16:.LANCHOR3
+ 371 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR3
+ 372 0008 10B5     		push	{r4, lr}
+ 373 000a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 374 000c 0446     		mov	r4, r0
+ 375 000e 4BB1     		cbz	r3, .L38
+ 376 0010 0020     		movs	r0, #0
+ 377 0012 FFF7FEFF 		bl	_Z7lockSpi12spi_device_e
+ 378 0016 2046     		mov	r0, r4
+ 379 0018 FFF7FEFF 		bl	f_unlink
+ 380 001c BDE81040 		pop	{r4, lr}
+ 381 0020 FFF7FEBF 		b	_Z9unlockSpiv
+ 382              	.L38:
+ 383 0024 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 384 0028 40F20001 		movw	r1, #:lower16:.LC4
+ 385 002c C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 386 0030 C0F20001 		movt	r1, #:upper16:.LC4
+ 387 0034 BDE81040 		pop	{r4, lr}
+ 388 0038 FFF7FEBF 		b	scheduleMsg
+ 389              		.size	_ZL10removeFilePKc, .-_ZL10removeFilePKc
+ 390 003c AFF30080 		.section	.text._ZL9MMCumountv,"ax",%progbits
+ 391              		.align	2
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s 			page 8
+
+
+ 392              		.p2align 4,,15
+ 393              		.thumb
+ 394              		.thumb_func
+ 395              		.type	_ZL9MMCumountv, %function
+ 396              	_ZL9MMCumountv:
+ 397              		@ args = 0, pretend = 0, frame = 0
+ 398              		@ frame_needed = 0, uses_anonymous_args = 0
+ 399 0000 10B5     		push	{r4, lr}
+ 400 0002 40F20004 		movw	r4, #:lower16:.LANCHOR3
+ 401 0006 C0F20004 		movt	r4, #:upper16:.LANCHOR3
+ 402 000a 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 403 000c 93B3     		cbz	r3, .L41
+ 404 000e 40F20000 		movw	r0, #:lower16:.LANCHOR7
+ 405 0012 C0F20000 		movt	r0, #:upper16:.LANCHOR7
+ 406 0016 FFF7FEFF 		bl	f_close
+ 407 001a 40F20000 		movw	r0, #:lower16:.LANCHOR7
+ 408 001e C0F20000 		movt	r0, #:upper16:.LANCHOR7
+ 409 0022 FFF7FEFF 		bl	f_sync
+ 410 0026 40F20000 		movw	r0, #:lower16:.LANCHOR8
+ 411 002a C0F20000 		movt	r0, #:upper16:.LANCHOR8
+ 412 002e FFF7FEFF 		bl	mmcDisconnect
+ 413 0032 40F20000 		movw	r0, #:lower16:.LANCHOR8
+ 414 0036 C0F20000 		movt	r0, #:upper16:.LANCHOR8
+ 415 003a FFF7FEFF 		bl	mmcStop
+ 416 003e 0020     		movs	r0, #0
+ 417 0040 0146     		mov	r1, r0
+ 418 0042 FFF7FEFF 		bl	f_mount
+ 419 0046 40F20000 		movw	r0, #:lower16:.LANCHOR7
+ 420 004a 0021     		movs	r1, #0
+ 421 004c C0F20000 		movt	r0, #:upper16:.LANCHOR7
+ 422 0050 4FF40972 		mov	r2, #548
+ 423 0054 FFF7FEFF 		bl	memset
+ 424 0058 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 425 005c 40F20001 		movw	r1, #:lower16:.LC16
+ 426 0060 0023     		movs	r3, #0
+ 427 0062 2370     		strb	r3, [r4]
+ 428 0064 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 429 0068 C0F20001 		movt	r1, #:upper16:.LC16
+ 430 006c BDE81040 		pop	{r4, lr}
+ 431 0070 FFF7FEBF 		b	scheduleMsg
+ 432              	.L41:
+ 433 0074 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 434 0078 40F20001 		movw	r1, #:lower16:.LC15
+ 435 007c C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 436 0080 C0F20001 		movt	r1, #:upper16:.LC15
+ 437 0084 BDE81040 		pop	{r4, lr}
+ 438 0088 FFF7FEBF 		b	scheduleMsg
+ 439              		.size	_ZL9MMCumountv, .-_ZL9MMCumountv
+ 440 008c AFF30080 		.section	.text._ZL8MMCmountv,"ax",%progbits
+ 441              		.align	2
+ 442              		.p2align 4,,15
+ 443              		.thumb
+ 444              		.thumb_func
+ 445              		.type	_ZL8MMCmountv, %function
+ 446              	_ZL8MMCmountv:
+ 447              		@ args = 0, pretend = 0, frame = 0
+ 448              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s 			page 9
+
+
+ 449 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 450 0002 40F20004 		movw	r4, #:lower16:.LANCHOR3
+ 451 0006 C0F20004 		movt	r4, #:upper16:.LANCHOR3
+ 452 000a 2578     		ldrb	r5, [r4]	@ zero_extendqisi2
+ 453 000c 002D     		cmp	r5, #0
+ 454 000e 3BD1     		bne	.L49
+ 455 0010 40F20000 		movw	r0, #:lower16:.LANCHOR8
+ 456 0014 C0F20000 		movt	r0, #:upper16:.LANCHOR8
+ 457 0018 FFF7FEFF 		bl	mmcObjectInit
+ 458 001c 40F20000 		movw	r0, #:lower16:.LANCHOR8
+ 459 0020 40F20001 		movw	r1, #:lower16:.LANCHOR9
+ 460 0024 C0F20001 		movt	r1, #:upper16:.LANCHOR9
+ 461 0028 C0F20000 		movt	r0, #:upper16:.LANCHOR8
+ 462 002c FFF7FEFF 		bl	mmcStart
+ 463 0030 2846     		mov	r0, r5
+ 464 0032 FFF7FEFF 		bl	_Z7lockSpi12spi_device_e
+ 465 0036 40F20000 		movw	r0, #:lower16:.LANCHOR8
+ 466 003a C0F20000 		movt	r0, #:upper16:.LANCHOR8
+ 467 003e FFF7FEFF 		bl	mmcConnect
+ 468 0042 0546     		mov	r5, r0
+ 469 0044 A0B9     		cbnz	r0, .L50
+ 470 0046 FFF7FEFF 		bl	_Z9unlockSpiv
+ 471 004a 40F20000 		movw	r0, #:lower16:.LANCHOR10
+ 472 004e 2946     		mov	r1, r5
+ 473 0050 4FF40C72 		mov	r2, #560
+ 474 0054 C0F20000 		movt	r0, #:upper16:.LANCHOR10
+ 475 0058 FFF7FEFF 		bl	memset
+ 476 005c 40F20001 		movw	r1, #:lower16:.LANCHOR10
+ 477 0060 2846     		mov	r0, r5
+ 478 0062 C0F20001 		movt	r1, #:upper16:.LANCHOR10
+ 479 0066 FFF7FEFF 		bl	f_mount
+ 480 006a 0546     		mov	r5, r0
+ 481 006c C0B1     		cbz	r0, .L51
+ 482 006e F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 483              	.L50:
+ 484 0070 40F20001 		movw	r1, #:lower16:.LC18
+ 485 0074 C0F20001 		movt	r1, #:upper16:.LC18
+ 486 0078 40F25E20 		movw	r0, #606
+ 487 007c FFF7FEFF 		bl	warning
+ 488 0080 BDE8F840 		pop	{r3, r4, r5, r6, r7, lr}
+ 489 0084 FFF7FEBF 		b	_Z9unlockSpiv
+ 490              	.L49:
+ 491 0088 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 492 008c 40F20001 		movw	r1, #:lower16:.LC17
+ 493 0090 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 494 0094 C0F20001 		movt	r1, #:upper16:.LC17
+ 495 0098 BDE8F840 		pop	{r3, r4, r5, r6, r7, lr}
+ 496 009c FFF7FEBF 		b	scheduleMsg
+ 497              	.L51:
+ 498 00a0 40F20006 		movw	r6, #:lower16:.LANCHOR7
+ 499 00a4 FFF7FEFF 		bl	_ZL14incLogFileNamev
+ 500 00a8 C0F20006 		movt	r6, #:upper16:.LANCHOR7
+ 501 00ac 2846     		mov	r0, r5
+ 502 00ae FFF7FEFF 		bl	_Z7lockSpi12spi_device_e
+ 503 00b2 40F20007 		movw	r7, #:lower16:.LANCHOR4
+ 504 00b6 2946     		mov	r1, r5
+ 505 00b8 4FF40972 		mov	r2, #548
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s 			page 10
+
+
+ 506 00bc 3046     		mov	r0, r6
+ 507 00be FFF7FEFF 		bl	memset
+ 508 00c2 C0F20007 		movt	r7, #:upper16:.LANCHOR4
+ 509 00c6 40F20003 		movw	r3, #:lower16:.LANCHOR1
+ 510 00ca C0F20003 		movt	r3, #:upper16:.LANCHOR1
+ 511 00ce 3846     		mov	r0, r7
+ 512 00d0 47F27252 		movw	r2, #30066
+ 513 00d4 C0F27302 		movt	r2, 115
+ 514 00d8 1968     		ldr	r1, [r3]
+ 515 00da 40F8032B 		str	r2, [r0], #3
+ 516 00de FFF7FEFF 		bl	itoa10
+ 517 00e2 0546     		mov	r5, r0
+ 518 00e4 FFF7FEFF 		bl	strlen
+ 519 00e8 40F20003 		movw	r3, #:lower16:.LC19
+ 520 00ec C0F20003 		movt	r3, #:upper16:.LC19
+ 521 00f0 05EB000E 		add	lr, r5, r0
+ 522 00f4 0246     		mov	r2, r0
+ 523 00f6 1868     		ldr	r0, [r3]	@ unaligned
+ 524 00f8 1B79     		ldrb	r3, [r3, #4]	@ zero_extendqisi2
+ 525 00fa A850     		str	r0, [r5, r2]	@ unaligned
+ 526 00fc 3946     		mov	r1, r7
+ 527 00fe 8EF80430 		strb	r3, [lr, #4]
+ 528 0102 3046     		mov	r0, r6
+ 529 0104 1222     		movs	r2, #18
+ 530 0106 FFF7FEFF 		bl	f_open
+ 531 010a 10F0F70F 		tst	r0, #247
+ 532 010e 0546     		mov	r5, r0
+ 533 0110 18D1     		bne	.L52
+ 534 0112 3046     		mov	r0, r6
+ 535 0114 F168     		ldr	r1, [r6, #12]
+ 536 0116 FFF7FEFF 		bl	f_lseek
+ 537 011a 0546     		mov	r5, r0
+ 538 011c 20BB     		cbnz	r0, .L53
+ 539 011e 3046     		mov	r0, r6
+ 540 0120 FFF7FEFF 		bl	f_sync
+ 541 0124 0123     		movs	r3, #1
+ 542 0126 2370     		strb	r3, [r4]
+ 543 0128 FFF7FEFF 		bl	_Z9unlockSpiv
+ 544              	.L47:
+ 545 012c 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 546 0130 40F20001 		movw	r1, #:lower16:.LC22
+ 547 0134 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 548 0138 C0F20001 		movt	r1, #:upper16:.LC22
+ 549 013c BDE8F840 		pop	{r3, r4, r5, r6, r7, lr}
+ 550 0140 FFF7FEBF 		b	scheduleMsg
+ 551              	.L52:
+ 552 0144 FFF7FEFF 		bl	_Z9unlockSpiv
+ 553 0148 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 554 014c 40F20001 		movw	r1, #:lower16:.LC13
+ 555 0150 40F20002 		movw	r2, #:lower16:.LC20
+ 556 0154 2B46     		mov	r3, r5
+ 557 0156 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 558 015a C0F20001 		movt	r1, #:upper16:.LC13
+ 559 015e C0F20002 		movt	r2, #:upper16:.LC20
+ 560 0162 FFF7FEFF 		bl	scheduleMsg
+ 561 0166 E1E7     		b	.L47
+ 562              	.L53:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s 			page 11
+
+
+ 563 0168 FFF7FEFF 		bl	_Z9unlockSpiv
+ 564 016c 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 565 0170 40F20001 		movw	r1, #:lower16:.LC13
+ 566 0174 40F20002 		movw	r2, #:lower16:.LC21
+ 567 0178 2B46     		mov	r3, r5
+ 568 017a C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 569 017e C0F20001 		movt	r1, #:upper16:.LC13
+ 570 0182 C0F20002 		movt	r2, #:upper16:.LC21
+ 571 0186 FFF7FEFF 		bl	scheduleMsg
+ 572 018a CFE7     		b	.L47
+ 573              		.size	_ZL8MMCmountv, .-_ZL8MMCmountv
+ 574 018c AFF30080 		.section	.text._ZL12MMCmonThreadv,"ax",%progbits
+ 575              		.align	2
+ 576              		.p2align 4,,15
+ 577              		.thumb
+ 578              		.thumb_func
+ 579              		.type	_ZL12MMCmonThreadv, %function
+ 580              	_ZL12MMCmonThreadv:
+ 581              		@ Volatile: function does not return.
+ 582              		@ args = 0, pretend = 0, frame = 0
+ 583              		@ frame_needed = 0, uses_anonymous_args = 0
+ 584 0000 40F20002 		movw	r2, #:lower16:rlist
+ 585 0004 C0F20002 		movt	r2, #:upper16:rlist
+ 586 0008 08B5     		push	{r3, lr}
+ 587 000a 9269     		ldr	r2, [r2, #24]
+ 588 000c 40F20003 		movw	r3, #:lower16:.LC23
+ 589 0010 C0F20003 		movt	r3, #:upper16:.LC23
+ 590 0014 40F20005 		movw	r5, #:lower16:.LANCHOR8
+ 591 0018 40F20004 		movw	r4, #:lower16:.LANCHOR3
+ 592 001c 9361     		str	r3, [r2, #24]
+ 593 001e C0F20005 		movt	r5, #:upper16:.LANCHOR8
+ 594 0022 C0F20004 		movt	r4, #:upper16:.LANCHOR3
+ 595 0026 06E0     		b	.L59
+ 596              	.L63:
+ 597 0028 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 598 002a 8BB1     		cbz	r3, .L56
+ 599              	.L58:
+ 600 002c FFF7FEFF 		bl	_Z12writeLogLinev
+ 601              	.L57:
+ 602 0030 C820     		movs	r0, #200
+ 603 0032 FFF7FEFF 		bl	chThdSleep
+ 604              	.L59:
+ 605 0036 2B68     		ldr	r3, [r5]
+ 606 0038 40F20000 		movw	r0, #:lower16:.LANCHOR8
+ 607 003c 1B68     		ldr	r3, [r3]
+ 608 003e C0F20000 		movt	r0, #:upper16:.LANCHOR8
+ 609 0042 9847     		blx	r3
+ 610 0044 0028     		cmp	r0, #0
+ 611 0046 EFD1     		bne	.L63
+ 612 0048 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 613 004a 002B     		cmp	r3, #0
+ 614 004c F0D0     		beq	.L57
+ 615 004e EDE7     		b	.L58
+ 616              	.L56:
+ 617 0050 FFF7FEFF 		bl	_ZL8MMCmountv
+ 618 0054 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 619 0056 002B     		cmp	r3, #0
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s 			page 12
+
+
+ 620 0058 EAD0     		beq	.L57
+ 621 005a E7E7     		b	.L58
+ 622              		.size	_ZL12MMCmonThreadv, .-_ZL12MMCmonThreadv
+ 623 005c AFF30080 		.section	.text.isSdCardAlive,"ax",%progbits
+ 624              		.align	2
+ 625              		.p2align 4,,15
+ 626              		.global	isSdCardAlive
+ 627              		.thumb
+ 628              		.thumb_func
+ 629              		.type	isSdCardAlive, %function
+ 630              	isSdCardAlive:
+ 631              		@ args = 0, pretend = 0, frame = 0
+ 632              		@ frame_needed = 0, uses_anonymous_args = 0
+ 633              		@ link register save eliminated.
+ 634 0000 40F20003 		movw	r3, #:lower16:.LANCHOR3
+ 635 0004 C0F20003 		movt	r3, #:upper16:.LANCHOR3
+ 636 0008 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 637 000a 7047     		bx	lr
+ 638              		.size	isSdCardAlive, .-isSdCardAlive
+ 639 000c AFF30080 		.section	.text.initMmcCard,"ax",%progbits
+ 640              		.align	2
+ 641              		.p2align 4,,15
+ 642              		.global	initMmcCard
+ 643              		.thumb
+ 644              		.thumb_func
+ 645              		.type	initMmcCard, %function
+ 646              	initMmcCard:
+ 647              		@ args = 0, pretend = 0, frame = 0
+ 648              		@ frame_needed = 0, uses_anonymous_args = 0
+ 649 0000 70B5     		push	{r4, r5, r6, lr}
+ 650 0002 40F20003 		movw	r3, #:lower16:.LANCHOR4
+ 651 0006 40F20004 		movw	r4, #:lower16:boardConfiguration
+ 652 000a C0F20003 		movt	r3, #:upper16:.LANCHOR4
+ 653 000e 40F20000 		movw	r0, #:lower16:.LC24
+ 654 0012 40F20001 		movw	r1, #:lower16:_ZL12sdStatisticsv
+ 655 0016 C0F20004 		movt	r4, #:upper16:boardConfiguration
+ 656 001a 82B0     		sub	sp, sp, #8
+ 657 001c 0025     		movs	r5, #0
+ 658 001e C0F20000 		movt	r0, #:upper16:.LC24
+ 659 0022 C0F20001 		movt	r1, #:upper16:_ZL12sdStatisticsv
+ 660 0026 1D70     		strb	r5, [r3]
+ 661 0028 FFF7FEFF 		bl	addConsoleAction
+ 662 002c 2368     		ldr	r3, [r4]
+ 663 002e 93F88021 		ldrb	r2, [r3, #384]	@ zero_extendqisi2
+ 664 0032 1607     		lsls	r6, r2, #28
+ 665 0034 01D4     		bmi	.L67
+ 666 0036 02B0     		add	sp, sp, #8
+ 667              		@ sp needed
+ 668 0038 70BD     		pop	{r4, r5, r6, pc}
+ 669              	.L67:
+ 670 003a D3F84401 		ldr	r0, [r3, #324]
+ 671 003e FFF7FEFF 		bl	_Z9getHwPort11brain_pin_e
+ 672 0042 40F20006 		movw	r6, #:lower16:.LANCHOR11
+ 673 0046 2268     		ldr	r2, [r4]
+ 674 0048 40F20004 		movw	r4, #:lower16:.LANCHOR12
+ 675 004c C0F20006 		movt	r6, #:upper16:.LANCHOR11
+ 676 0050 C0F20004 		movt	r4, #:upper16:.LANCHOR12
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s 			page 13
+
+
+ 677 0054 0346     		mov	r3, r0
+ 678 0056 D2F84401 		ldr	r0, [r2, #324]
+ 679 005a 7360     		str	r3, [r6, #4]
+ 680 005c 6360     		str	r3, [r4, #4]
+ 681 005e FFF7FEFF 		bl	_Z8getHwPin11brain_pin_e
+ 682 0062 83B2     		uxth	r3, r0
+ 683 0064 40F20000 		movw	r0, #:lower16:.LANCHOR8
+ 684 0068 C0F20000 		movt	r0, #:upper16:.LANCHOR8
+ 685 006c 3381     		strh	r3, [r6, #8]	@ movhi
+ 686 006e 2381     		strh	r3, [r4, #8]	@ movhi
+ 687 0070 FFF7FEFF 		bl	mmcObjectInit
+ 688 0074 40F20000 		movw	r0, #:lower16:.LANCHOR8
+ 689 0078 40F20001 		movw	r1, #:lower16:.LANCHOR9
+ 690 007c C0F20000 		movt	r0, #:upper16:.LANCHOR8
+ 691 0080 C0F20001 		movt	r1, #:upper16:.LANCHOR9
+ 692 0084 FFF7FEFF 		bl	mmcStart
+ 693 0088 40F20000 		movw	r0, #:lower16:.LANCHOR13
+ 694 008c 40F20003 		movw	r3, #:lower16:_ZL12MMCmonThreadv
+ 695 0090 C0F20003 		movt	r3, #:upper16:_ZL12MMCmonThreadv
+ 696 0094 0222     		movs	r2, #2
+ 697 0096 0095     		str	r5, [sp]
+ 698 0098 4FF43A71 		mov	r1, #744
+ 699 009c C0F20000 		movt	r0, #:upper16:.LANCHOR13
+ 700 00a0 FFF7FEFF 		bl	chThdCreateStatic
+ 701 00a4 40F20000 		movw	r0, #:lower16:.LC25
+ 702 00a8 40F20001 		movw	r1, #:lower16:_ZL8MMCmountv
+ 703 00ac C0F20000 		movt	r0, #:upper16:.LC25
+ 704 00b0 C0F20001 		movt	r1, #:upper16:_ZL8MMCmountv
+ 705 00b4 FFF7FEFF 		bl	addConsoleAction
+ 706 00b8 40F20000 		movw	r0, #:lower16:.LC26
+ 707 00bc 40F20001 		movw	r1, #:lower16:appendToLog
+ 708 00c0 C0F20000 		movt	r0, #:upper16:.LC26
+ 709 00c4 C0F20001 		movt	r1, #:upper16:appendToLog
+ 710 00c8 FFF7FEFF 		bl	addConsoleActionS
+ 711 00cc 40F20000 		movw	r0, #:lower16:.LC27
+ 712 00d0 40F20001 		movw	r1, #:lower16:_ZL9MMCumountv
+ 713 00d4 C0F20000 		movt	r0, #:upper16:.LC27
+ 714 00d8 C0F20001 		movt	r1, #:upper16:_ZL9MMCumountv
+ 715 00dc FFF7FEFF 		bl	addConsoleAction
+ 716 00e0 40F20000 		movw	r0, #:lower16:.LC28
+ 717 00e4 40F20001 		movw	r1, #:lower16:_ZL13listDirectoryPKc
+ 718 00e8 C0F20000 		movt	r0, #:upper16:.LC28
+ 719 00ec C0F20001 		movt	r1, #:upper16:_ZL13listDirectoryPKc
+ 720 00f0 FFF7FEFF 		bl	addConsoleActionS
+ 721 00f4 40F20000 		movw	r0, #:lower16:.LC29
+ 722 00f8 40F20001 		movw	r1, #:lower16:_ZL10removeFilePKc
+ 723 00fc C0F20000 		movt	r0, #:upper16:.LC29
+ 724 0100 C0F20001 		movt	r1, #:upper16:_ZL10removeFilePKc
+ 725 0104 FFF7FEFF 		bl	addConsoleActionS
+ 726 0108 40F20000 		movw	r0, #:lower16:.LC30
+ 727 010c 40F20001 		movw	r1, #:lower16:_ZL14incLogFileNamev
+ 728 0110 C0F20000 		movt	r0, #:upper16:.LC30
+ 729 0114 C0F20001 		movt	r1, #:upper16:_ZL14incLogFileNamev
+ 730 0118 02B0     		add	sp, sp, #8
+ 731              		@ sp needed
+ 732 011a BDE87040 		pop	{r4, r5, r6, lr}
+ 733 011e FFF7FEBF 		b	addConsoleAction
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s 			page 14
+
+
+ 734              		.size	initMmcCard, .-initMmcCard
+ 735 0122 00BFAFF3 		.section	.text.startup._GLOBAL__sub_I_MMCD1,"ax",%progbits
+ 735      0080AFF3 
+ 735      0080AFF3 
+ 735      0080
+ 736              		.align	2
+ 737              		.p2align 4,,15
+ 738              		.thumb
+ 739              		.thumb_func
+ 740              		.type	_GLOBAL__sub_I_MMCD1, %function
+ 741              	_GLOBAL__sub_I_MMCD1:
+ 742              		@ args = 0, pretend = 0, frame = 0
+ 743              		@ frame_needed = 0, uses_anonymous_args = 0
+ 744              		@ link register save eliminated.
+ 745 0000 40F20000 		movw	r0, #:lower16:.LANCHOR2
+ 746 0004 40F20001 		movw	r1, #:lower16:.LC31
+ 747 0008 C0F20000 		movt	r0, #:upper16:.LANCHOR2
+ 748 000c C0F20001 		movt	r1, #:upper16:.LC31
+ 749 0010 FFF7FEBF 		b	_ZN18LoggingWithStorageC1EPKc
+ 750              		.size	_GLOBAL__sub_I_MMCD1, .-_GLOBAL__sub_I_MMCD1
+ 751 0014 AFF30080 		.section	.init_array,"aw",%init_array
+ 751      AFF30080 
+ 751      AFF30080 
+ 752              		.align	2
+ 753 0000 00000000 		.word	_GLOBAL__sub_I_MMCD1(target1)
+ 754              		.global	MMCD1
+ 755              		.section	.bss._ZL13errorReported,"aw",%nobits
+ 756              		.align	2
+ 757              		.set	.LANCHOR6,. + 0
+ 758              		.type	_ZL13errorReported, %object
+ 759              		.size	_ZL13errorReported, 4
+ 760              	_ZL13errorReported:
+ 761 0000 00000000 		.space	4
+ 762              		.section	.bss._ZL6MMC_FS,"aw",%nobits
+ 763              		.align	2
+ 764              		.set	.LANCHOR10,. + 0
+ 765              		.type	_ZL6MMC_FS, %object
+ 766              		.size	_ZL6MMC_FS, 560
+ 767              	_ZL6MMC_FS:
+ 768 0000 00000000 		.space	560
+ 768      00000000 
+ 768      00000000 
+ 768      00000000 
+ 768      00000000 
+ 769              		.section	.data._ZL6mmccfg,"aw",%progbits
+ 770              		.align	2
+ 771              		.set	.LANCHOR9,. + 0
+ 772              		.type	_ZL6mmccfg, %object
+ 773              		.size	_ZL6mmccfg, 12
+ 774              	_ZL6mmccfg:
+ 775 0000 00000000 		.word	SPID3
+ 776 0004 00000000 		.word	_ZL9ls_spicfg
+ 777 0008 00000000 		.word	_ZL9hs_spicfg
+ 778              		.section	.bss._ZL14mmcThreadStack,"aw",%nobits
+ 779              		.align	3
+ 780              		.set	.LANCHOR13,. + 0
+ 781              		.type	_ZL14mmcThreadStack, %object
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s 			page 15
+
+
+ 782              		.size	_ZL14mmcThreadStack, 744
+ 783              	_ZL14mmcThreadStack:
+ 784 0000 00000000 		.space	744
+ 784      00000000 
+ 784      00000000 
+ 784      00000000 
+ 784      00000000 
+ 785              		.section	.bss._ZL8fs_ready,"aw",%nobits
+ 786              		.set	.LANCHOR3,. + 0
+ 787              		.type	_ZL8fs_ready, %object
+ 788              		.size	_ZL8fs_ready, 1
+ 789              	_ZL8fs_ready:
+ 790 0000 00       		.space	1
+ 791              		.section	.data._ZL12logFileIndex,"aw",%progbits
+ 792              		.align	2
+ 793              		.set	.LANCHOR1,. + 0
+ 794              		.type	_ZL12logFileIndex, %object
+ 795              		.size	_ZL12logFileIndex, 4
+ 796              	_ZL12logFileIndex:
+ 797 0000 01000000 		.word	1
+ 798              		.section	.data._ZL9hs_spicfg,"aw",%progbits
+ 799              		.align	2
+ 800              		.set	.LANCHOR12,. + 0
+ 801              		.type	_ZL9hs_spicfg, %object
+ 802              		.size	_ZL9hs_spicfg, 12
+ 803              	_ZL9hs_spicfg:
+ 804 0000 00000000 		.word	0
+ 805 0004 00000000 		.word	0
+ 806 0008 0000     		.short	0
+ 807 000a 1000     		.short	16
+ 808              		.section	.bss.MMCD1,"aw",%nobits
+ 809              		.align	2
+ 810              		.set	.LANCHOR8,. + 0
+ 811              		.type	MMCD1, %object
+ 812              		.size	MMCD1, 52
+ 813              	MMCD1:
+ 814 0000 00000000 		.space	52
+ 814      00000000 
+ 814      00000000 
+ 814      00000000 
+ 814      00000000 
+ 815              		.section	.bss._ZL9FDLogFile,"aw",%nobits
+ 816              		.align	2
+ 817              		.set	.LANCHOR7,. + 0
+ 818              		.type	_ZL9FDLogFile, %object
+ 819              		.size	_ZL9FDLogFile, 548
+ 820              	_ZL9FDLogFile:
+ 821 0000 00000000 		.space	548
+ 821      00000000 
+ 821      00000000 
+ 821      00000000 
+ 821      00000000 
+ 822              		.section	.bss._ZL10FDCurrFile,"aw",%nobits
+ 823              		.align	2
+ 824              		.set	.LANCHOR0,. + 0
+ 825              		.type	_ZL10FDCurrFile, %object
+ 826              		.size	_ZL10FDCurrFile, 548
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s 			page 16
+
+
+ 827              	_ZL10FDCurrFile:
+ 828 0000 00000000 		.space	548
+ 828      00000000 
+ 828      00000000 
+ 828      00000000 
+ 828      00000000 
+ 829              		.section	.bss._ZL16totalLoggedBytes,"aw",%nobits
+ 830              		.align	2
+ 831              		.set	.LANCHOR5,. + 0
+ 832              		.type	_ZL16totalLoggedBytes, %object
+ 833              		.size	_ZL16totalLoggedBytes, 4
+ 834              	_ZL16totalLoggedBytes:
+ 835 0000 00000000 		.space	4
+ 836              		.section	.data._ZL9ls_spicfg,"aw",%progbits
+ 837              		.align	2
+ 838              		.set	.LANCHOR11,. + 0
+ 839              		.type	_ZL9ls_spicfg, %object
+ 840              		.size	_ZL9ls_spicfg, 12
+ 841              	_ZL9ls_spicfg:
+ 842 0000 00000000 		.word	0
+ 843 0004 00000000 		.word	0
+ 844 0008 0000     		.short	0
+ 845 000a 3800     		.short	56
+ 846              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 847              		.align	2
+ 848              	.LC0:
+ 849 0000 696E6465 		.ascii	"index.txt\000"
+ 849      782E7478 
+ 849      7400
+ 850 000a 0000     		.space	2
+ 851              	.LC1:
+ 852 000c 25733A20 		.ascii	"%s: not found or error: %d\000"
+ 852      6E6F7420 
+ 852      666F756E 
+ 852      64206F72 
+ 852      20657272 
+ 853 0027 00       		.space	1
+ 854              	.LC2:
+ 855 0028 476F7420 		.ascii	"Got content [%s] size %d\000"
+ 855      636F6E74 
+ 855      656E7420 
+ 855      5B25735D 
+ 855      2073697A 
+ 856 0041 000000   		.space	3
+ 857              	.LC3:
+ 858 0044 446F6E65 		.ascii	"Done %d\000"
+ 858      20256400 
+ 859              	.LC4:
+ 860 004c 4572726F 		.ascii	"Error: No File system is mounted\000"
+ 860      723A204E 
+ 860      6F204669 
+ 860      6C652073 
+ 860      79737465 
+ 861 006d 000000   		.space	3
+ 862              	.LC5:
+ 863 0070 4572726F 		.ascii	"Error opening directory %s\000"
+ 863      72206F70 
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s 			page 17
+
+
+ 863      656E696E 
+ 863      67206469 
+ 863      72656374 
+ 864 008b 00       		.space	1
+ 865              	.LC6:
+ 866 008c 6C735F72 		.ascii	"ls_result\000"
+ 866      6573756C 
+ 866      7400
+ 867 0096 0000     		.space	2
+ 868              	.LC7:
+ 869 0098 72757300 		.ascii	"rus\000"
+ 870              	.LC8:
+ 871 009c 6C6F6766 		.ascii	"logfile%lu:%s\000"
+ 871      696C6525 
+ 871      6C753A25 
+ 871      7300
+ 872 00aa 0000     		.space	2
+ 873              	.LC9:
+ 874 00ac 4D4D4320 		.ascii	"MMC CS %s\000"
+ 874      43532025 
+ 874      7300
+ 875 00b6 0000     		.space	2
+ 876              	.LC10:
+ 877 00b8 53442065 		.ascii	"SD enabled: %s [%s]\000"
+ 877      6E61626C 
+ 877      65643A20 
+ 877      2573205B 
+ 877      25735D00 
+ 878              	.LC11:
+ 879 00cc 66735F72 		.ascii	"fs_ready=%d totalLoggedBytes=%d %d\000"
+ 879      65616479 
+ 879      3D256420 
+ 879      746F7461 
+ 879      6C4C6F67 
+ 880 00ef 00       		.space	1
+ 881              	.LC12:
+ 882 00f0 61707065 		.ascii	"appendToLog Error: No File system is mounted\000"
+ 882      6E64546F 
+ 882      4C6F6720 
+ 882      4572726F 
+ 882      723A204E 
+ 883 011d 000000   		.space	3
+ 884              	.LC13:
+ 885 0120 46415466 		.ascii	"FATfs Error \"%s\" %d\000"
+ 885      73204572 
+ 885      726F7220 
+ 885      22257322 
+ 885      20256400 
+ 886              	.LC14:
+ 887 0134 77726974 		.ascii	"write error or disk full\000"
+ 887      65206572 
+ 887      726F7220 
+ 887      6F722064 
+ 887      69736B20 
+ 888 014d 000000   		.space	3
+ 889              	.LC15:
+ 890 0150 4572726F 		.ascii	"Error: No File system is mounted. \"mountsd\" first"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s 			page 18
+
+
+ 890      723A204E 
+ 890      6F204669 
+ 890      6C652073 
+ 890      79737465 
+ 891 0181 00       		.ascii	"\000"
+ 892 0182 0000     		.space	2
+ 893              	.LC16:
+ 894 0184 4D4D432F 		.ascii	"MMC/SD card removed\000"
+ 894      53442063 
+ 894      61726420 
+ 894      72656D6F 
+ 894      76656400 
+ 895              	.LC17:
+ 896 0198 4572726F 		.ascii	"Error: Already mounted. \"umountsd\" first\000"
+ 896      723A2041 
+ 896      6C726561 
+ 896      6479206D 
+ 896      6F756E74 
+ 897 01c1 000000   		.space	3
+ 898              	.LC18:
+ 899 01c4 43616E27 		.ascii	"Can't connect or mount MMC/SD\000"
+ 899      7420636F 
+ 899      6E6E6563 
+ 899      74206F72 
+ 899      206D6F75 
+ 900 01e2 0000     		.space	2
+ 901              	.LC19:
+ 902 01e4 2E6C6F67 		.ascii	".log\000"
+ 902      00
+ 903 01e9 000000   		.space	3
+ 904              	.LC20:
+ 905 01ec 4653206D 		.ascii	"FS mount failed\000"
+ 905      6F756E74 
+ 905      20666169 
+ 905      6C656400 
+ 906              	.LC21:
+ 907 01fc 5365656B 		.ascii	"Seek error\000"
+ 907      20657272 
+ 907      6F7200
+ 908 0207 00       		.space	1
+ 909              	.LC22:
+ 910 0208 4D4D432F 		.ascii	"MMC/SD mounted!\000"
+ 910      5344206D 
+ 910      6F756E74 
+ 910      65642100 
+ 911              	.LC23:
+ 912 0218 4D4D435F 		.ascii	"MMC_Monitor\000"
+ 912      4D6F6E69 
+ 912      746F7200 
+ 913              	.LC24:
+ 914 0224 7364696E 		.ascii	"sdinfo\000"
+ 914      666F00
+ 915 022b 00       		.space	1
+ 916              	.LC25:
+ 917 022c 6D6F756E 		.ascii	"mountsd\000"
+ 917      74736400 
+ 918              	.LC26:
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s 			page 19
+
+
+ 919 0234 61707065 		.ascii	"appendToLog\000"
+ 919      6E64546F 
+ 919      4C6F6700 
+ 920              	.LC27:
+ 921 0240 756D6F75 		.ascii	"umountsd\000"
+ 921      6E747364 
+ 921      00
+ 922 0249 000000   		.space	3
+ 923              	.LC28:
+ 924 024c 6C7300   		.ascii	"ls\000"
+ 925 024f 00       		.space	1
+ 926              	.LC29:
+ 927 0250 64656C00 		.ascii	"del\000"
+ 928              	.LC30:
+ 929 0254 696E6366 		.ascii	"incfilename\000"
+ 929      696C656E 
+ 929      616D6500 
+ 930              	.LC31:
+ 931 0260 6D6D6343 		.ascii	"mmcCard\000"
+ 931      61726400 
+ 932              		.section	.bss._ZL6logger,"aw",%nobits
+ 933              		.align	2
+ 934              		.set	.LANCHOR2,. + 0
+ 935              		.type	_ZL6logger, %object
+ 936              		.size	_ZL6logger, 260
+ 937              	_ZL6logger:
+ 938 0000 00000000 		.space	260
+ 938      00000000 
+ 938      00000000 
+ 938      00000000 
+ 938      00000000 
+ 939              		.section	.bss._ZL7logName,"aw",%nobits
+ 940              		.align	2
+ 941              		.set	.LANCHOR4,. + 0
+ 942              		.type	_ZL7logName, %object
+ 943              		.size	_ZL7logName, 15
+ 944              	_ZL7logName:
+ 945 0000 00000000 		.space	15
+ 945      00000000 
+ 945      00000000 
+ 945      000000
+ 946 000f 00       		.ident	"GCC: (Sourcery CodeBench Lite 2013.11-24) 4.8.1"
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s 			page 20
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 mmc_card.cpp
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:17     .text._ZL14incLogFileNamev:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:22     .text._ZL14incLogFileNamev:00000000 _ZL14incLogFileNamev
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:824    .bss._ZL10FDCurrFile:00000000 .LANCHOR0
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:848    .rodata.str1.4:00000000 .LC0
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:934    .bss._ZL6logger:00000000 .LANCHOR2
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:854    .rodata.str1.4:00000028 .LC2
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:793    .data._ZL12logFileIndex:00000000 .LANCHOR1
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:857    .rodata.str1.4:00000044 .LC3
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:851    .rodata.str1.4:0000000c .LC1
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:136    .text._ZL13listDirectoryPKc:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:141    .text._ZL13listDirectoryPKc:00000000 _ZL13listDirectoryPKc
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:786    .bss._ZL8fs_ready:00000000 .LANCHOR3
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:859    .rodata.str1.4:0000004c .LC4
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:865    .rodata.str1.4:0000008c .LC6
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:868    .rodata.str1.4:00000098 .LC7
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:862    .rodata.str1.4:00000070 .LC5
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:870    .rodata.str1.4:0000009c .LC8
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:238    .text._ZL12sdStatisticsv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:243    .text._ZL12sdStatisticsv:00000000 _ZL12sdStatisticsv
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:873    .rodata.str1.4:000000ac .LC9
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:876    .rodata.str1.4:000000b8 .LC10
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:941    .bss._ZL7logName:00000000 .LANCHOR4
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:831    .bss._ZL16totalLoggedBytes:00000000 .LANCHOR5
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:878    .rodata.str1.4:000000cc .LC11
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:290    .text.appendToLog:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:296    .text.appendToLog:00000000 appendToLog
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:757    .bss._ZL13errorReported:00000000 .LANCHOR6
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:881    .rodata.str1.4:000000f0 .LC12
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:817    .bss._ZL9FDLogFile:00000000 .LANCHOR7
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:884    .rodata.str1.4:00000120 .LC13
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:886    .rodata.str1.4:00000134 .LC14
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:362    .text._ZL10removeFilePKc:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:367    .text._ZL10removeFilePKc:00000000 _ZL10removeFilePKc
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:391    .text._ZL9MMCumountv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:396    .text._ZL9MMCumountv:00000000 _ZL9MMCumountv
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:810    .bss.MMCD1:00000000 .LANCHOR8
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:893    .rodata.str1.4:00000184 .LC16
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:889    .rodata.str1.4:00000150 .LC15
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:441    .text._ZL8MMCmountv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:446    .text._ZL8MMCmountv:00000000 _ZL8MMCmountv
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:771    .data._ZL6mmccfg:00000000 .LANCHOR9
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:764    .bss._ZL6MMC_FS:00000000 .LANCHOR10
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:898    .rodata.str1.4:000001c4 .LC18
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:895    .rodata.str1.4:00000198 .LC17
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:901    .rodata.str1.4:000001e4 .LC19
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:909    .rodata.str1.4:00000208 .LC22
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:904    .rodata.str1.4:000001ec .LC20
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:906    .rodata.str1.4:000001fc .LC21
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:575    .text._ZL12MMCmonThreadv:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:580    .text._ZL12MMCmonThreadv:00000000 _ZL12MMCmonThreadv
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:911    .rodata.str1.4:00000218 .LC23
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:624    .text.isSdCardAlive:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:630    .text.isSdCardAlive:00000000 isSdCardAlive
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:640    .text.initMmcCard:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:646    .text.initMmcCard:00000000 initMmcCard
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s 			page 21
+
+
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:913    .rodata.str1.4:00000224 .LC24
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:838    .data._ZL9ls_spicfg:00000000 .LANCHOR11
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:800    .data._ZL9hs_spicfg:00000000 .LANCHOR12
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:780    .bss._ZL14mmcThreadStack:00000000 .LANCHOR13
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:916    .rodata.str1.4:0000022c .LC25
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:918    .rodata.str1.4:00000234 .LC26
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:920    .rodata.str1.4:00000240 .LC27
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:923    .rodata.str1.4:0000024c .LC28
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:926    .rodata.str1.4:00000250 .LC29
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:928    .rodata.str1.4:00000254 .LC30
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:736    .text.startup._GLOBAL__sub_I_MMCD1:00000000 $t
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:741    .text.startup._GLOBAL__sub_I_MMCD1:00000000 _GLOBAL__sub_I_MMCD1
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:930    .rodata.str1.4:00000260 .LC31
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:752    .init_array:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:813    .bss.MMCD1:00000000 MMCD1
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:756    .bss._ZL13errorReported:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:760    .bss._ZL13errorReported:00000000 _ZL13errorReported
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:763    .bss._ZL6MMC_FS:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:767    .bss._ZL6MMC_FS:00000000 _ZL6MMC_FS
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:770    .data._ZL6mmccfg:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:774    .data._ZL6mmccfg:00000000 _ZL6mmccfg
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:841    .data._ZL9ls_spicfg:00000000 _ZL9ls_spicfg
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:803    .data._ZL9hs_spicfg:00000000 _ZL9hs_spicfg
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:779    .bss._ZL14mmcThreadStack:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:783    .bss._ZL14mmcThreadStack:00000000 _ZL14mmcThreadStack
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:789    .bss._ZL8fs_ready:00000000 _ZL8fs_ready
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:790    .bss._ZL8fs_ready:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:792    .data._ZL12logFileIndex:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:796    .data._ZL12logFileIndex:00000000 _ZL12logFileIndex
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:799    .data._ZL9hs_spicfg:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:809    .bss.MMCD1:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:816    .bss._ZL9FDLogFile:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:820    .bss._ZL9FDLogFile:00000000 _ZL9FDLogFile
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:823    .bss._ZL10FDCurrFile:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:827    .bss._ZL10FDCurrFile:00000000 _ZL10FDCurrFile
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:830    .bss._ZL16totalLoggedBytes:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:834    .bss._ZL16totalLoggedBytes:00000000 _ZL16totalLoggedBytes
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:837    .data._ZL9ls_spicfg:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:847    .rodata.str1.4:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:933    .bss._ZL6logger:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:937    .bss._ZL6logger:00000000 _ZL6logger
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:940    .bss._ZL7logName:00000000 $d
+C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s:944    .bss._ZL7logName:00000000 _ZL7logName
+
+UNDEFINED SYMBOLS
+_Z7lockSpi12spi_device_e
+memset
+f_open
+f_read
+scheduleMsg
+f_close
+itoa10
+strlen
+f_write
+_Z9unlockSpiv
+atoi
+absI
+ARM GAS  C:\Users\pc\AppData\Local\Temp\ccpg4ATK.s 			page 22
+
+
+f_opendir
+strncmp
+f_readdir
+strcpy
+boardConfiguration
+_Z10hwPortname11brain_pin_e
+_Z12boolToStringb
+f_sync
+f_unlink
+mmcDisconnect
+mmcStop
+f_mount
+mmcObjectInit
+mmcStart
+mmcConnect
+warning
+f_lseek
+rlist
+_Z12writeLogLinev
+chThdSleep
+addConsoleAction
+_Z9getHwPort11brain_pin_e
+_Z8getHwPin11brain_pin_e
+chThdCreateStatic
+addConsoleActionS
+_ZN18LoggingWithStorageC1EPKc
+SPID3

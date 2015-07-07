@@ -60,6 +60,7 @@ BaseChannel * getTsSerialDevice(void) {
 }
 
 void tunerStudioWriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
+        efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "tunerStudioWriteData");
 	int transferred = chSequentialStreamWrite(tsChannel->channel, buffer, size);
 	if (transferred != size) {
 		scheduleMsg(&tsLogger, "!!! NOT ACCEPTED %d out of %d !!!", transferred, size);
