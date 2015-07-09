@@ -1,0 +1,86 @@
+<project default="jar">
+    <property name="jar_file" value="../java_console_binary/rusefi_console.jar"/>
+
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="build/classes"/>
+        <javac debug="yes" destdir="build/classes"
+               classpath="lib/jcip-annotations-1.0.jar:lib/swing-layout-1.0.jar:lib/jep.jar:lib/log4j.jar:lib/junit.jar:lib/jssc.jar:lib/SteelSeries-3.9.30.jar:lib/annotations.jar:lib/miglayout-4.0.jar:lib/surfaceplotter-2.0.1.jar">
+            <src path="autotest/src"/>
+            <src path="io/src"/>
+            <src path="models/src"/>
+            <src path="ui/src"/>
+            <src path="romraider/src"/>
+            <src path="logging/src"/>
+        </javac>
+
+        <junit fork="no"
+               maxmemory="512m"
+               printsummary="yes"
+               haltonfailure="yes">
+
+            <jvmarg value="-ea"/>
+            <jvmarg value="-XX:+HeapDumpOnOutOfMemoryError"/>
+            <formatter type="brief"/>
+            <classpath path="lib/jssc.jar:build/classes:lib/junit.jar:lib/SteelSeries-3.9.30.jar"/>
+            <batchtest todir="build">
+                <fileset dir="autotest/src" includes="**/test/**/*Test.java"/>
+                <fileset dir="io/src" includes="**/test/**/*Test.java"/>
+                <fileset dir="models/src" includes="**/test/**/*Test.java"/>
+                <fileset dir="ui/src" includes="**/test/**/*Test.java"/>
+                <fileset dir="romraider/src" includes="**/test/**/*Test.java"/>
+                <fileset dir="logging/src" includes="**/test/**/*Test.java"/>
+            </batchtest>
+        </junit>
+
+    </target>
+
+    <target name="jar" depends="compile">
+        <mkdir dir="build/jar"/>
+        <delete file="${jar_file}"/>
+        <echo message="Building ${jar_file}"/>
+
+        <copy todir="build/classes">
+            <fileset dir="ui/resources" includes="**/*.gif"/>
+            <fileset dir="ui/resources" includes="**/*.png"/>
+            <fileset dir="ui/resources" includes="**/*.jpg"/>
+            <fileset dir="romraider/resources" includes="**/*.*"/>
+        </copy>
+
+        <jar destfile="${jar_file}" basedir="build/classes">
+            <manifest>
+                <attribute name="Main-Class" value="com.rusefi.Launcher"/>
+            </manifest>
+            <zipfileset src="lib/SteelSeries-3.9.30.jar" includes="**/*.class"/>
+            <zipfileset src="lib/trident-6.2.jar" includes="**/*.class"/>
+            <zipfileset src="lib/swing-layout-1.0.jar" includes="**/*.class"/>
+            <zipfileset src="lib/log4j.jar" includes="**/*.class"/>
+            <zipfileset src="lib/jep.jar" includes="**/*.class"/>
+            <zipfileset src="lib/jssc.jar" includes="**/*.class **/*.so **/*.dll **/*.jnilib"/>
+            <zipfileset src="lib/annotations.jar" includes="**/*.class"/>
+            <zipfileset src="lib/miglayout-4.0.jar" includes="**/*.class"/>
+            <zipfileset src="lib/surfaceplotter-2.0.1.jar" includes="**/*.class **/*.properties"/>
+            <zipfileset src="lib/batik/batik-svggen.jar" includes="**/*.class"/>
+            <zipfileset src="lib/batik/batik-awt-util.jar" includes="**/*.class"/>
+            <zipfileset src="lib/batik/batik-util.jar" includes="**/*.class"/>
+        </jar>
+    </target>
+
+    <target name="run" depends="jar">
+        <java jar="${jar_file}" fork="true"/>
+    </target>
+
+    <target name="autotest" depends="jar">
+        <java classpath="${jar_file}" classname="com.rusefi.AutoTest" failonerror="true">
+        </java>
+
+    </target>
+
+    <target name="realtest" depends="jar">
+        <java classpath="${jar_file}" classname="com.rusefi.RealHwTest" failonerror="true">
+        </java>
+    </target>
+</project>
