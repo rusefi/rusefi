@@ -1,4 +1,0 @@
-1) minor issue: silkscreen error on the back, 'CS2' next to 5v is in fact GND
-2) minor issue: silkscreen font is too small
-3) major issue: USB connector pins are in the wrong order
-4) major issue: at least the left side connector RX and TX pins are messed up

@@ -1,8 +1,0 @@
-1,670-1190-1-ND,mini USB socket
-4,P1.0KACT-ND,some reference
-12,P20.0CCT-ND,driver current limiting
-1,296-11654-1-ND,CAN driver
-12,497-11082-1-ND,12A low-side MOSFET
-1,MAX9926UAEE+TCT-ND,VR chip
-3,497-4943-1-ND,quad op-amp
-1,768-1007-1-ND,USB TTL chip

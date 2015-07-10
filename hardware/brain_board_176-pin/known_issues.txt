@@ -1,5 +1,0 @@
-1)                  on the back, battery holder overlaps five caps and one resistor
-2) RESOLVED IN R0.2 FB1 BOM missing.
-3) RESOLVED IN R0.2 BYPASS_REG to GND
-4) RESOLVED IN R0.2 back side silkscreen does not match front side silkscreen (multiple instances)
-5) RESOLVED IN R0.2 X2 pinout what is connected to pin 2, should be connected to pin 4. 
