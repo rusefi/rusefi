@@ -11,7 +11,7 @@ import java.awt.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SettingsTab {
-    private final JPanel panel = new JPanel(new GridLayout(6, 3));
+    private final JPanel panel = new JPanel(new GridLayout(8, 3));
     private final JPanel content = new JPanel(new BorderLayout());
 
     public SettingsTab() {
@@ -28,6 +28,7 @@ public class SettingsTab {
         panel.add(UiUtils.wrap(new EnumConfigField(Fields.ALGORITHM, "algorithm").getContent()));
         panel.add(UiUtils.wrap(new EnumConfigField(Fields.TRIGGER_TYPE, "trigger type").getContent()));
         panel.add(new BitConfigField(Fields.USEONLYFRONTFORTRIGGER, "Only Front").getContent());
+        panel.add(new BitConfigField(Fields.ISPRINTTRIGGERSYNCHDETAILS, "gap info").getContent());
         panel.add(UiUtils.wrap(new EnumConfigField(Fields.TRIGGERINPUTPINS1, "trigger #1 input").getContent()));
         panel.add(UiUtils.wrap(new EnumConfigField(Fields.TRIGGERINPUTPINS2, "trigger #2 input").getContent()));
 //        panel.add(UiUtils.wrap(new EnumConfigField(Fields.TRIGGERINPUTPINS3, "trigger #3 input").getContent()));
@@ -38,6 +39,8 @@ public class SettingsTab {
         panel.add(UiUtils.wrap(new EnumConfigField(Fields.HIP9011INTHOLDPIN, "int/hold pin").getContent()));
         panel.add(UiUtils.wrap(new EnumConfigField(Fields.HIP9011INTHOLDPINMODE, "int/hold pin mode").getContent()));
 
+        panel.add(UiUtils.wrap(new EnumConfigField(Fields.IGNITIONPINS1, "ign #1").getContent()));
+        panel.add(UiUtils.wrap(new EnumConfigField(Fields.IGNITIONPINS3, "ign #3").getContent()));
 
         panel.add(UiUtils.wrap(new EnumConfigField(Fields.AFR_HWCHANNEL, "AFR channel").getContent()));
         panel.add(UiUtils.wrap(new EnumConfigField(Fields.MAFADCCHANNEL, "MAF channel").getContent()));
