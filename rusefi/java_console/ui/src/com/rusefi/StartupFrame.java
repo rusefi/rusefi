@@ -30,6 +30,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @author Andrey Belomutskiy
  *         <p/>
  *         2/14/14
+ * @see SimulatorHelper
  */
 public class StartupFrame {
     // todo: figure out a better way to work with absolute path

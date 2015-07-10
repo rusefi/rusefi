@@ -68,6 +68,9 @@ float getMap(void) {
 }
 
 void rusEfiFunctionalTest(void) {
+	printToWin32Console("Running version:");
+	printToWin32Console("TODO");
+
 	initializeConsole(&sharedLogger);
 
 	initFakeBoard();

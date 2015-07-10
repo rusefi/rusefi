@@ -49,7 +49,10 @@ public class TcpIoStream implements IoStream {
                 byte b[] = new byte[1];
                 while (true) {
                     try {
-                        stream.read(b);
+                        int result = stream.read(b);
+                        if (result == -1) {
+                            System.err.println("End of stream?");
+                        }
                         listener.onDataArrived(b);
                     } catch (IOException e) {
                         System.err.println("End of connection");
