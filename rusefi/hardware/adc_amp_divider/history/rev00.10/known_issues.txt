@@ -1,2 +1,0 @@
-0) typo in project name, should be dividEr
-1) ground zones are not connected - four jump wires are required to connect all ground zones together 

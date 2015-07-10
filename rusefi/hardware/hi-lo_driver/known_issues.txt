@@ -1,1 +1,0 @@
-1) the part number is for SOIC package but the board has MSOP package. Part number should be TC4427AEUA
