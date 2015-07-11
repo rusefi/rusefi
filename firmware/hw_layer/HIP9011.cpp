@@ -112,8 +112,9 @@ static void checkResponse(void) {
 	spiUnselect(driver); \
 	checkResponse();
 
-// todo: make this configurable
-static SPIDriver *driver = &SPID2;
+spi_device_e spiDevice = SPI_DEVICE_2;
+
+static SPIDriver *driver;
 
 EXTERN_ENGINE
 ;
@@ -141,7 +142,9 @@ static void showHipInfo(void) {
 	            currentIntergratorIndex, engineConfiguration->knockVThreshold,
 	            engine->knockCount, engineConfiguration->maxKnockSubDeg);
 
-	scheduleMsg(logger, "spi= IntHold@%s response count=%d incorrect response=%d", hwPortname(boardConfiguration->hip9011IntHoldPin),
+	scheduleMsg(logger, "spi=%s IntHold@%s response count=%d incorrect response=%d",
+			getSpi_device_e(spiDevice),
+			hwPortname(boardConfiguration->hip9011IntHoldPin),
 			correctResponse, invalidResponse);
 	scheduleMsg(logger, "CS@%s updateCount=%d", hwPortname(boardConfiguration->hip9011CsPin), settingUpdateCount);
 
@@ -151,6 +154,9 @@ static void showHipInfo(void) {
 			getPinNameByAdcChannel(engineConfiguration->hipOutputChannel, pinNameBuffer),
 			hipValueMax,
 			spiCount, boardConfiguration->useTpicAdvancedMode);
+	scheduleMsg(logger, "mosi=%s", hwPortname(getMosiPin(spiDevice)));
+	scheduleMsg(logger, "miso=%s", hwPortname(getMisoPin(spiDevice)));
+	scheduleMsg(logger, "sck=%s", hwPortname(getSckPin(spiDevice)));
 
 	scheduleMsg(logger, "start %f end %f", engineConfiguration->knockDetectionWindowStart,
 			engineConfiguration->knockDetectionWindowEnd);
@@ -348,6 +354,10 @@ static void hipStartupCode(void) {
 
 	chThdSleepMilliseconds(10);
 
+	if (correctResponse == 0) {
+		warning(OBD_PCM_Processor_Fault, "TPIC/HIP does not respond");
+	}
+
 	if (boardConfiguration->useTpicAdvancedMode) {
 		// enable advanced mode for digital integrator output
 		SPI_SYNCHRONOUS(SET_ADVANCED_MODE);
@@ -381,6 +391,7 @@ static msg_t hipThread(void *arg) {
 }
 
 void initHip9011(Logging *sharedLogger) {
+	driver = getSpiDevice(spiDevice);
 	logger = sharedLogger;
 	addConsoleAction("hipinfo", showHipInfo);
 	if (!boardConfiguration->isHip9011Enabled)
