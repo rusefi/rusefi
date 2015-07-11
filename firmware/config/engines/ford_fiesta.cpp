@@ -27,6 +27,7 @@ void setFordFiestaDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->specs.firingOrder = FO_1_THEN_3_THEN_4_THEN2;
 	engineConfiguration->hasMafSensor = true;
+	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
 	engineConfiguration->mafAdcChannel = EFI_ADC_14;
 //	engineConfiguration->mafAdcChannel = EFI_ADC_NONE; this would kill functional tests
 
@@ -35,6 +36,7 @@ void setFordFiestaDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 //	boardConfiguration->clutchUpPin
 	boardConfiguration->etbControlPin1 = GPIOD_3;
 	engineConfiguration->pedalPositionChannel = EFI_ADC_1;
+	boardConfiguration->etbDirectionPin2 = GPIOD_5;
 
 	engineConfiguration->tpsMin = 337;
 	engineConfiguration->tpsMax = 896;
