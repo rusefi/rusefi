@@ -35,6 +35,9 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice);
 void turnOnSpi(spi_device_e device);
 void lockSpi(spi_device_e device);
 void unlockSpi(void);
+brain_pin_e getMisoPin(spi_device_e device);
+brain_pin_e getMosiPin(spi_device_e device);
+brain_pin_e getSckPin(spi_device_e device);
 
 #endif /* HAL_USE_SPI */
 
