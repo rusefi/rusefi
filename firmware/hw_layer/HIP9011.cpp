@@ -58,8 +58,6 @@ static int settingUpdateCount = 0;
 static int totalKnockEventsCount = 0;
 static int currentPrescaler;
 static float hipValueMax = 0;
-// todo: move this to engine state
-float knockVolts = 0;
 static int spiCount = 0;
 
 static unsigned char tx_buff[1];
@@ -150,7 +148,7 @@ static void showHipInfo(void) {
 	scheduleMsg(logger, "CS@%s updateCount=%d", hwPortname(boardConfiguration->hip9011CsPin), settingUpdateCount);
 
 	scheduleMsg(logger, "hip %fv/last=%f@%s/max=%f spiCount=%d adv=%d",
-			knockVolts,
+			engine->knockVolts,
 			getVoltage("hipinfo", engineConfiguration->hipOutputChannel),
 			getPinNameByAdcChannel(engineConfiguration->hipOutputChannel, pinNameBuffer),
 			hipValueMax,
@@ -274,9 +272,9 @@ void hipAdcCallback(adcsample_t value) {
 	if (state == WAITING_FOR_ADC_TO_SKIP) {
 		state = WAITING_FOR_RESULT_ADC;
 	} else if (state == WAITING_FOR_RESULT_ADC) {
-		knockVolts = adcToVoltsDivided(value);
-		hipValueMax = maxF(knockVolts, hipValueMax);
-		engine->knockLogic(knockVolts);
+		engine->knockVolts = adcToVoltsDivided(value);
+		hipValueMax = maxF(engine->knockVolts, hipValueMax);
+		engine->knockLogic(engine->knockVolts);
 
 		float angleWindowWidth =
 		engineConfiguration->knockDetectionWindowEnd - engineConfiguration->knockDetectionWindowStart;

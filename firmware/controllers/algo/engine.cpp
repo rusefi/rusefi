@@ -85,6 +85,8 @@ Engine::Engine(persistent_config_s *config) {
 	knockEver = false;
 	knockCount = 0;
 	knockDebug = false;
+	knockVolts = 0;
+
 	timeOfLastKnockEvent = 0;
 	injectorLagMs = fuelMs = 0;
 	clutchDownState = clutchUpState = false;
@@ -144,6 +146,7 @@ void Engine::printKnockState(void) {
 }
 
 void Engine::knockLogic(float knockVolts) {
+	this->knockVolts = knockVolts;
     knockNow = knockVolts > engineConfiguration->knockVThreshold;
     /**
      * KnockCount is directly proportional to the degrees of ignition

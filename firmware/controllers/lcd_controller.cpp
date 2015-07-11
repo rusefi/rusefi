@@ -33,8 +33,6 @@ static MenuItem ROOT(NULL, NULL);
 
 static MenuTree tree(&ROOT);
 
-extern float knockVolts; // todo: nicer getter
-
 static MenuItem miRpm(tree.root, LL_RPM);
 static MenuItem miSensors(tree.root, "sensors");
 static MenuItem miBench(tree.root, "bench test");
@@ -239,7 +237,7 @@ static void showLine(lcd_line_e line, int screenY) {
 		return;
 	case LL_KNOCK:
 		getPinNameByAdcChannel(engineConfiguration->hipOutputChannel, buffer);
-		lcdPrintf("Knock %s %fv", buffer, knockVolts);
+		lcdPrintf("Knock %s %fv", buffer, engine->knockVolts);
 		return;
 
 #if	EFI_ANALOG_SENSORS || defined(__DOXYGEN__)

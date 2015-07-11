@@ -211,6 +211,8 @@ public:
      */
     int knockCount;
 
+    float knockVolts;
+
     bool_t knockDebug;
 
 	efitimeus_t timeOfLastKnockEvent;
