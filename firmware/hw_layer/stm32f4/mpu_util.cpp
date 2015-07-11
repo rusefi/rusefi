@@ -223,6 +223,48 @@ static int getSpiAf(SPIDriver *driver) {
 	return -1;
 }
 
+brain_pin_e getMisoPin(spi_device_e device) {
+	switch(device) {
+	case SPI_DEVICE_1:
+		return boardConfiguration->spi1misoPin;
+	case SPI_DEVICE_2:
+		return boardConfiguration->spi2misoPin;
+	case SPI_DEVICE_3:
+		return boardConfiguration->spi3misoPin;
+	default:
+		break;
+	}
+	return GPIO_UNASSIGNED;
+}
+
+brain_pin_e getMosiPin(spi_device_e device) {
+	switch(device) {
+	case SPI_DEVICE_1:
+		return boardConfiguration->spi1mosiPin;
+	case SPI_DEVICE_2:
+		return boardConfiguration->spi2mosiPin;
+	case SPI_DEVICE_3:
+		return boardConfiguration->spi3mosiPin;
+	default:
+		break;
+	}
+	return GPIO_UNASSIGNED;
+}
+
+brain_pin_e getSckPin(spi_device_e device) {
+	switch(device) {
+	case SPI_DEVICE_1:
+		return boardConfiguration->spi1sckPin;
+	case SPI_DEVICE_2:
+		return boardConfiguration->spi2sckPin;
+	case SPI_DEVICE_3:
+		return boardConfiguration->spi3sckPin;
+	default:
+		break;
+	}
+	return GPIO_UNASSIGNED;
+}
+
 void turnOnSpi(spi_device_e device) {
 	if (isSpiInitialized[device])
 		return; // already initialized
@@ -230,25 +272,25 @@ void turnOnSpi(spi_device_e device) {
 	if (device == SPI_DEVICE_1) {
 #if STM32_SPI_USE_SPI1
 //	scheduleMsg(&logging, "Turning on SPI1 pins");
-		initSpiModule(&SPID1, boardConfiguration->spi1sckPin,
-				boardConfiguration->spi1misoPin,
-				boardConfiguration->spi1mosiPin);
+		initSpiModule(&SPID1, getSckPin(device),
+				getMisoPin(device),
+				getMosiPin(device));
 #endif /* STM32_SPI_USE_SPI1 */
 	}
 	if (device == SPI_DEVICE_2) {
 #if STM32_SPI_USE_SPI2
 //	scheduleMsg(&logging, "Turning on SPI2 pins");
-		initSpiModule(&SPID2, boardConfiguration->spi2sckPin,
-				boardConfiguration->spi2misoPin,
-				boardConfiguration->spi2mosiPin);
+		initSpiModule(&SPID2, getSckPin(device),
+				getMisoPin(device),
+				getMosiPin(device));
 #endif /* STM32_SPI_USE_SPI2 */
 	}
 	if (device == SPI_DEVICE_3) {
 #if STM32_SPI_USE_SPI3
 //	scheduleMsg(&logging, "Turning on SPI3 pins");
-		initSpiModule(&SPID3, boardConfiguration->spi3sckPin,
-				boardConfiguration->spi3misoPin,
-				boardConfiguration->spi3mosiPin);
+		initSpiModule(&SPID3, getSckPin(device),
+				getMisoPin(device),
+				getMosiPin(device));
 #endif /* STM32_SPI_USE_SPI3 */
 	}
 }
