@@ -58,6 +58,7 @@ static int settingUpdateCount = 0;
 static int totalKnockEventsCount = 0;
 static int currentPrescaler;
 static float hipValueMax = 0;
+// todo: move this to engine state
 float knockVolts = 0;
 static int spiCount = 0;
 
@@ -379,9 +380,17 @@ static THD_WORKING_AREA(hipTreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static msg_t hipThread(void *arg) {
 	chRegSetThreadName("hip9011 init");
+
+	// some time to let the hardware start
+	hipCs.setValue(true);
+	chThdSleepMilliseconds(100);
+	hipCs.setValue(false);
+	chThdSleepMilliseconds(100);
+	hipCs.setValue(true);
+
 	while (true) {
-		// some time to let the hardware start
-		chThdSleepMilliseconds(500);
+		chThdSleepMilliseconds(100);
+
 		if (needToInit) {
 			hipStartupCode();
 			needToInit = false;
