@@ -103,6 +103,7 @@ public class SensorCentral {
         addDoubleSensor(Sensor.ADVANCE2, es);
         addDoubleSensor(Sensor.ADVANCE3, es);
         addDoubleSensor(Sensor.KS, es);
+        addDoubleSensor(Sensor.KV, es);
 
         addDoubleSensor("tch", Sensor.T_CHARGE, es);
         addDoubleSensor(Sensor.AFR, es);

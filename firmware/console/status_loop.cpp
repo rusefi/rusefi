@@ -55,6 +55,8 @@
 #include "settings.h"
 #include "rusefi_outputs.h"
 
+extern float knockVolts;
+
 extern bool_t main_loop_started;
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -185,6 +187,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 #endif /* EFI_PROD_CODE */
 
 	reportSensorF(log, fileFormat, "ks", "count", engine->knockCount, 0);
+	reportSensorF(log, fileFormat, "kv", "v", knockVolts, 2);
 
 
 //	reportSensorF(log, fileFormat, "vref", "V", getVRef(engineConfiguration), 2);
@@ -592,6 +595,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->baroCorrection = engine->engineState.baroCorrection;
 	tsOutputChannels->pedalPosition = getPedalPosition(PASS_ENGINE_PARAMETER_F);
 	tsOutputChannels->knockCount = engine->knockCount;
+	tsOutputChannels->knockLevel = knockVolts;
 	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER);
 	tsOutputChannels->fuelLevel = engine->engineState.fuelLevel;
 	tsOutputChannels->hasFatalError = hasFirmwareError();
