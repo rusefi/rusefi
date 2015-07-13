@@ -58,7 +58,7 @@ $Descr A3 16535 11693
 encoding utf-8
 Sheet 10 15
 Title "Frankenso"
-Date "17 jun 2015"
+Date "13 jul 2015"
 Rev ".05"
 Comp "rusEFI.com"
 Comment1 ""

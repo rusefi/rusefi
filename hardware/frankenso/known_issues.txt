@@ -98,8 +98,9 @@
 97)                   idle valve SMD diode?
 98)                   silkscreen for analog inputs - PA1/PC1/etc?
 99)                   Swap brain board for 176 pin brain board. 
-100) RESOLVED IN R0.5 update TPIC chip for 100k's, 3.3nF, and DNP 1M. 
+100) RESOLVED IN R0.5 update TPIC chip for 39k's, 3.3nF, and DNP 1M. 
 101)                  connector middle mounting holes - need a 5.5mm diameter area for screw head on the back
+102) RESOLVED IN R0.5 TPIC/HIP knock SPI was not working properly, R171 changed to 5k and R172 to R174 removed to correct the SPI bus. 
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol

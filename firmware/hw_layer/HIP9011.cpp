@@ -43,6 +43,7 @@ static NamedOutputPin intHold("HIP");
 static OutputPin hipCs;
 
 extern pin_output_mode_e DEFAULT_OUTPUT;
+extern pin_output_mode_e OPENDRAIN_OUTPUT;
 
 extern uint32_t lastExecutionCount;
 
@@ -418,7 +419,7 @@ void initHip9011(Logging *sharedLogger) {
 
 	outputPinRegisterExt2("hip int/hold", &intHold, boardConfiguration->hip9011IntHoldPin,
 			&boardConfiguration->hip9011IntHoldPinMode);
-	outputPinRegisterExt2("hip CS", &hipCs, boardConfiguration->hip9011CsPin, &DEFAULT_OUTPUT);
+	outputPinRegisterExt2("hip CS", &hipCs, boardConfiguration->hip9011CsPin, &OPENDRAIN_OUTPUT);
 
 	scheduleMsg(logger, "Starting HIP9011/TPIC8101 driver");
 	spiStart(driver, &spicfg);

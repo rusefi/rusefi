@@ -36,6 +36,7 @@ static GPIO_TypeDef *PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOF};
 #endif
 
 pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
+pin_output_mode_e OPENDRAIN_OUTPUT = OM_OPENDRAIN;
 
 static void outputPinRegisterExt(const char *msg, OutputPin *output, GPIO_TypeDef *port, uint32_t pin,
 		pin_output_mode_e *outputMode) {
