@@ -287,9 +287,9 @@ void turnOnSpi(spi_device_e device) {
 		initSpiModule(&SPID2, getSckPin(device),
 				getMisoPin(device),
 				getMosiPin(device),
-				0,
-				0,
-				0);
+				engineConfiguration->spi2SckMode,
+				engineConfiguration->spi2MosiMode,
+				engineConfiguration->spi2MisoMode);
 #endif /* STM32_SPI_USE_SPI2 */
 	}
 	if (device == SPI_DEVICE_3) {

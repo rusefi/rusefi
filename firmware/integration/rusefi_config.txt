@@ -370,7 +370,8 @@ float etbIFactor;
 	float fuelLevelFullTankVoltage;;"V",      1,      0,       0,10,      2
 	ego_sensor_e afr_type;AFR, WBO, EGO - whatever you like to call it;
 	int etbDT;
-	float[3] unusedADC;
+	pin_output_mode_e hip9011CsPinMode;
+	float[2] unusedADC;
 
 	brain_input_pin_e[3 iterate] triggerInputPins;
 	brain_pin_e mainRelayPin;
