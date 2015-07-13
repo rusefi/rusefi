@@ -171,6 +171,7 @@ void setHip9011FrankensoPinout(void) {
 	 */
 	boardConfiguration->isHip9011Enabled = true;
 	boardConfiguration->hip9011CsPin = GPIOD_0;
+	engineConfiguration->hip9011PrescalerAndSDO = 6; // 8MHz chip
 	boardConfiguration->hip9011IntHoldPin = GPIOB_11;
 	boardConfiguration->hip9011IntHoldPinMode = OM_OPENDRAIN;
 	boardConfiguration->is_enabled_spi_2 = true;
@@ -341,7 +342,8 @@ static void hipStartupCode(void) {
 //	D[4:1] = 1000 : 24 MHz
 
 
-// '0' for 4MHz
+// 0 for 4MHz
+// 6 for 8 MHz
 	currentPrescaler = engineConfiguration->hip9011PrescalerAndSDO;
 	SPI_SYNCHRONOUS(SET_PRESCALER_CMD + currentPrescaler);
 
