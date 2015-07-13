@@ -172,8 +172,11 @@ void setHip9011FrankensoPinout(void) {
 	boardConfiguration->isHip9011Enabled = true;
 	boardConfiguration->hip9011CsPin = GPIOD_0;
 	boardConfiguration->hip9011IntHoldPin = GPIOB_11;
-	boardConfiguration->hip9011IntHoldPinMode = OM_DEFAULT;
+	boardConfiguration->hip9011IntHoldPinMode = OM_OPENDRAIN;
 	boardConfiguration->is_enabled_spi_2 = true;
+	engineConfiguration->spi2SckMode = PAL_STM32_OTYPE_OPENDRAIN;
+	engineConfiguration->spi2MosiMode = PAL_STM32_OTYPE_OPENDRAIN;
+	engineConfiguration->spi2MisoMode = PAL_STM32_PUDR_PULLUP;
 
 	boardConfiguration->hip9011Gain = 1;
 	engineConfiguration->knockVThreshold = 4;
