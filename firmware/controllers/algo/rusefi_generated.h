@@ -641,7 +641,10 @@
 #define baroCorrRpmBins_offset_hex 684
 #define baroCorrTable_offset 1684
 #define baroCorrTable_offset_hex 694
-#define unused3_offset 1748
+#define spi2SckMode_offset 1748
+#define spi2MosiMode_offset 1752
+#define spi2MisoMode_offset 1756
+#define unused3_offset 1760
 #define targetVBatt_offset 2156
 #define alternatorOffAboveTps_offset 2160
 #define alternatorOffAboveTps_offset_hex 870

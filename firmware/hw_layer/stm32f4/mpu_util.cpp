@@ -270,11 +270,15 @@ void turnOnSpi(spi_device_e device) {
 		return; // already initialized
 	isSpiInitialized[device] = true;
 	if (device == SPI_DEVICE_1) {
+// todo: introduce a nice structure with all fields for same SPI
 #if STM32_SPI_USE_SPI1
 //	scheduleMsg(&logging, "Turning on SPI1 pins");
 		initSpiModule(&SPID1, getSckPin(device),
 				getMisoPin(device),
-				getMosiPin(device));
+				getMosiPin(device),
+				0,
+				0,
+				0);
 #endif /* STM32_SPI_USE_SPI1 */
 	}
 	if (device == SPI_DEVICE_2) {
@@ -282,7 +286,10 @@ void turnOnSpi(spi_device_e device) {
 //	scheduleMsg(&logging, "Turning on SPI2 pins");
 		initSpiModule(&SPID2, getSckPin(device),
 				getMisoPin(device),
-				getMosiPin(device));
+				getMosiPin(device),
+				0,
+				0,
+				0);
 #endif /* STM32_SPI_USE_SPI2 */
 	}
 	if (device == SPI_DEVICE_3) {
@@ -290,18 +297,24 @@ void turnOnSpi(spi_device_e device) {
 //	scheduleMsg(&logging, "Turning on SPI3 pins");
 		initSpiModule(&SPID3, getSckPin(device),
 				getMisoPin(device),
-				getMosiPin(device));
+				getMosiPin(device),
+				0,
+				0,
+				0);
 #endif /* STM32_SPI_USE_SPI3 */
 	}
 }
 
 void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
-		brain_pin_e mosi) {
+		brain_pin_e mosi,
+		int sckMode,
+		int mosiMode,
+		int misoMode) {
 
-	mySetPadMode2("SPI clock", sck,	PAL_MODE_ALTERNATE(getSpiAf(driver)));
+	mySetPadMode2("SPI clock", sck,	PAL_MODE_ALTERNATE(getSpiAf(driver)) + sckMode);
 
-	mySetPadMode2("SPI master out", mosi, PAL_MODE_ALTERNATE(getSpiAf(driver)));
-	mySetPadMode2("SPI master in ", miso, PAL_MODE_ALTERNATE(getSpiAf(driver)));
+	mySetPadMode2("SPI master out", mosi, PAL_MODE_ALTERNATE(getSpiAf(driver)) + mosiMode);
+	mySetPadMode2("SPI master in ", miso, PAL_MODE_ALTERNATE(getSpiAf(driver)) + misoMode);
 }
 
 void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
