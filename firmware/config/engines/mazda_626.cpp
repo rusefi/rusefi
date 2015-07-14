@@ -63,7 +63,7 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	commonFrankensoAnalogInputs(engineConfiguration);
 //	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
-	engineConfiguration->mafAdcChannel = EFI_ADC_0;
+	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
 
 	// todo: 8.2 or 10k?
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
