@@ -41,8 +41,6 @@ brain_pin_e getSckPin(spi_device_e device);
 
 #endif /* HAL_USE_SPI */
 
-#define GET_BOARD_TEST_MODE_VALUE() (!palReadPad(getHwPort(boardConfiguration->boardTestModeJumperPin), getHwPin(boardConfiguration->boardTestModeJumperPin)))
-
 #ifdef __cplusplus
 
 #if EFI_PROD_CODE

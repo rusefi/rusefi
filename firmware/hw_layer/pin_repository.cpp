@@ -149,6 +149,9 @@ void initPinRepository(void) {
 	addConsoleAction("pins", reportPins);
 }
 
+/**
+ * See also unmarkPin()
+ */
 static inline void markUsed(int index, const char *msg) {
 	PIN_USED[index] = msg;
 	totalPinsUsed++;
