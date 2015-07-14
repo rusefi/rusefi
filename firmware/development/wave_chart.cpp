@@ -68,7 +68,7 @@ static LoggingWithStorage logger("wave info");
 /**
  * We want to skip some engine cycles to skip what was scheduled before parameters were changed
  */
-uint32_t skipUntilEngineCycle = 0;
+static uint32_t skipUntilEngineCycle = 0;
 
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 extern WaveChart waveChart;
@@ -162,7 +162,7 @@ static char timeBuffer[10];
  * @brief	Register an event for digital sniffer
  */
 void WaveChart::addWaveChartEvent3(const char *name, const char * msg) {
-	if (engine->rpmCalculator.getRevolutionCounter() < skipUntilEngineCycle)
+	if (skipUntilEngineCycle != 0 && engine->rpmCalculator.getRevolutionCounter() < skipUntilEngineCycle)
 		return;
 	efiAssertVoid(name!=NULL, "WC: NULL name");
 	if (!engineConfiguration->isEngineChartEnabled) {
