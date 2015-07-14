@@ -26,40 +26,11 @@ void initDodgeRam(TriggerShape *s) {
 
 void configureNeon2003TriggerShape(TriggerShape *s) {
 	s->reset(FOUR_STROKE_CAM_SENSOR, false);
-
-	// voodoo magic - we always need 720 at the end
-	int base = 10;
-	float b = 0;
 	s->useRiseEdge = true;
-
 	s->gapBothDirections = true;
 
 	// are these non-default values really needed here now that the gap is finally precise?
 	s->setTriggerSynchronizationGap2(0.5 * CHRYSLER_NGC_GAP, 1.5 * CHRYSLER_NGC_GAP);
-
-	/*
-	s->addEvent(base + 26, T_PRIMARY, TV_HIGH);
-	s->addEvent(base + 62, T_PRIMARY, TV_LOW);
-
-	s->addEvent(base + 98, T_PRIMARY, TV_HIGH);
-	s->addEvent(base + 134, T_PRIMARY, TV_LOW);
-
-	s->addEvent(base + 180, T_PRIMARY, TV_HIGH);
-	s->addEvent(base + 314, T_PRIMARY, TV_LOW);
-
-	s->addEvent(base + 350, T_PRIMARY, TV_HIGH);
-	s->addEvent(base + 386, T_PRIMARY, TV_LOW);
-
-	s->addEvent(base + 422, T_PRIMARY, TV_HIGH);
-	s->addEvent(base + 458, T_PRIMARY, TV_LOW);
-
-	s->addEvent(base + 494, T_PRIMARY, TV_HIGH);
-	s->addEvent(base + 530, T_PRIMARY, TV_LOW);
-
-	s->addEvent(base + 674, T_PRIMARY, TV_HIGH);
-	s->addEvent(base + 710, T_PRIMARY, TV_LOW);
-	 *
-	 */
 
 	s->addEvent(143.0712499, T_PRIMARY, TV_HIGH);
 	s->addEvent(182.684791, T_PRIMARY, TV_LOW);

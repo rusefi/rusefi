@@ -42,9 +42,6 @@
 static NamedOutputPin intHold("HIP");
 static OutputPin hipCs;
 
-extern pin_output_mode_e DEFAULT_OUTPUT;
-extern pin_output_mode_e OPENDRAIN_OUTPUT;
-
 extern uint32_t lastExecutionCount;
 
 uint32_t hipLastExecutionCount;
@@ -169,15 +166,19 @@ void setHip9011FrankensoPinout(void) {
 	/**
 	 * SPI on PB13/14/15
 	 */
+	//	boardConfiguration->hip9011CsPin = GPIOD_0; // rev 0.1
+
 	boardConfiguration->isHip9011Enabled = true;
-	boardConfiguration->hip9011CsPin = GPIOD_0;
+	boardConfiguration->hip9011CsPin = GPIOB_0; // rev 0.4
+	boardConfiguration->hip9011CsPinMode = OM_OPENDRAIN;
 	engineConfiguration->hip9011PrescalerAndSDO = 6; // 8MHz chip
 	boardConfiguration->hip9011IntHoldPin = GPIOB_11;
 	boardConfiguration->hip9011IntHoldPinMode = OM_OPENDRAIN;
 	boardConfiguration->is_enabled_spi_2 = true;
-	engineConfiguration->spi2SckMode = PAL_STM32_OTYPE_OPENDRAIN;
-	engineConfiguration->spi2MosiMode = PAL_STM32_OTYPE_OPENDRAIN;
-	engineConfiguration->spi2MisoMode = PAL_STM32_PUDR_PULLUP;
+	// todo: convert this to rusEfi, hardware-independent enum
+	engineConfiguration->spi2SckMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
+	engineConfiguration->spi2MosiMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
+	engineConfiguration->spi2MisoMode = PAL_STM32_PUDR_PULLUP; // 32
 
 	boardConfiguration->hip9011Gain = 1;
 	engineConfiguration->knockVThreshold = 4;
@@ -424,7 +425,8 @@ void initHip9011(Logging *sharedLogger) {
 
 	outputPinRegisterExt2("hip int/hold", &intHold, boardConfiguration->hip9011IntHoldPin,
 			&boardConfiguration->hip9011IntHoldPinMode);
-	outputPinRegisterExt2("hip CS", &hipCs, boardConfiguration->hip9011CsPin, &OPENDRAIN_OUTPUT);
+	outputPinRegisterExt2("hip CS", &hipCs, boardConfiguration->hip9011CsPin,
+			&boardConfiguration->hip9011CsPinMode);
 
 	scheduleMsg(logger, "Starting HIP9011/TPIC8101 driver");
 	spiStart(driver, &spicfg);
