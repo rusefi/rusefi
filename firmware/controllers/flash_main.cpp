@@ -14,6 +14,9 @@
 #include "flash.h"
 #include "rusefi.h"
 
+// this message is part of console API, see FLASH_SUCCESS_MSG in java code
+#define FLASH_SUCCESS_MSG "FLASH_SUCESS"
+
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 #include "tunerstudio.h"
 #endif
@@ -67,15 +70,20 @@ void writeToFlashNow(void) {
 	persistentState.size = PERSISTENT_SIZE;
 	persistentState.version = FLASH_DATA_VERSION;
 	scheduleMsg(logger, "flash compatible with %d", persistentState.version);
-	crc_t result = flashStateCrc(&persistentState);
-	persistentState.value = result;
+	crc_t crcResult = flashStateCrc(&persistentState);
+	persistentState.value = crcResult;
 	scheduleMsg(logger, "Reseting flash: size=%d", PERSISTENT_SIZE);
 	flashErase(FLASH_ADDR, PERSISTENT_SIZE);
-	scheduleMsg(logger, "Flashing with CRC=%d", result);
+	scheduleMsg(logger, "Flashing with CRC=%d", crcResult);
 	efitimems_t nowMs = currentTimeMillis();
-	result = flashWrite(FLASH_ADDR, (const char *) &persistentState, PERSISTENT_SIZE);
-	scheduleMsg(logger, "Flash programmed in (ms): %d", currentTimeMillis() - nowMs);
-	scheduleMsg(logger, "Flashing result: %d", result);
+	int result = flashWrite(FLASH_ADDR, (const char *) &persistentState, PERSISTENT_SIZE);
+	scheduleMsg(logger, "Flash programmed in %dms", currentTimeMillis() - nowMs);
+	bool_t isSuccess = result == FLASH_RETURN_SUCCESS;
+	if (isSuccess) {
+		scheduleMsg(logger, FLASH_SUCCESS_MSG);
+	} else {
+		scheduleMsg(logger, "Flashing failed");
+	}
 	maxLockTime = 0;
 }
 

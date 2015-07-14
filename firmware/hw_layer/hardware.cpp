@@ -282,7 +282,12 @@ void initHardware(Logging *l) {
 
 	mySetPadMode2("board test", boardConfiguration->boardTestModeJumperPin,
 	PAL_MODE_INPUT_PULLUP);
-	bool isBoardTestMode_b = GET_BOARD_TEST_MODE_VALUE();
+	bool isBoardTestMode_b = (!palReadPad(getHwPort(boardConfiguration->boardTestModeJumperPin), getHwPin(boardConfiguration->boardTestModeJumperPin)));
+
+	// we can now relese this pin, it is actually used as output sometimes
+	unmarkPin(boardConfiguration->boardTestModeJumperPin);
+
+
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 	initAdcInputs(isBoardTestMode_b);

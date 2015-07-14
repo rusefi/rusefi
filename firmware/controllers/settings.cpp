@@ -915,7 +915,6 @@ static void printAllInfo(void) {
 #endif
 #if EFI_PROD_CODE
 	scheduleMsg(&logger, "console mode jumper: %s", boolToString(!GET_CONSOLE_MODE_VALUE()));
-	scheduleMsg(&logger, "board test mode jumper: %s", boolToString(GET_BOARD_TEST_MODE_VALUE()));
 #endif
 }
 
