@@ -27,8 +27,8 @@ public class SerialPortReader implements SerialPortEventListener {
             } catch (SerialPortException e) {
                 e.printStackTrace(System.err);
             }
-        } else {
-            FileLog.MAIN.logLine("less expected SerialPortReader serialEvent " + spe);
+        } else if (spe.getEventType() != SerialPortEvent.TXEMPTY) {
+            FileLog.MAIN.logLine("less expected SerialPortReader serialEvent " + spe.getEventType());
         }
     }
 
