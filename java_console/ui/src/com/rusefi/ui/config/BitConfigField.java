@@ -1,5 +1,6 @@
 package com.rusefi.ui.config;
 
+import com.rusefi.ConfigurationImage;
 import com.rusefi.config.Field;
 import com.rusefi.core.MessagesCentral;
 
@@ -13,8 +14,8 @@ public class BitConfigField extends BaseConfigField {
 
     public BitConfigField(final Field field, String caption) {
         super(field);
-
         createUi(caption, view);
+        requestInitialValue(field); // this is not in base constructor so that view is created by the time we invoke it
 
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override
@@ -24,11 +25,7 @@ public class BitConfigField extends BaseConfigField {
                     if (message.startsWith(expectedPrefix) && message.length() == expectedPrefix.length() + 1) {
                         message = message.substring(expectedPrefix.length());
                         Boolean value = message.equals("1");
-                        ec = true;
-                        view.setEnabled(true);
-                        view.setSelected(value);
-                        onValueArrived();
-                        ec = false;
+                        setValue(value);
                     }
                 }
             }
@@ -42,5 +39,20 @@ public class BitConfigField extends BaseConfigField {
                 sendValue(field, view.isSelected() ? "1" : "0");
             }
         });
+    }
+
+    private void setValue(boolean value) {
+        ec = true;
+        view.setEnabled(true);
+        view.setSelected(value);
+        onValueArrived();
+        ec = false;
+    }
+
+    @Override
+    protected void loadValue(ConfigurationImage ci) {
+        int bits = getByteBuffer(ci).getInt();
+        boolean bit = ((bits >> field.getBitOffset()) & 1) == 1;
+        setValue(bit);
     }
 }
