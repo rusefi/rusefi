@@ -10,7 +10,9 @@
  * http://rusefi.com/forum/viewtopic.php?f=3&t=621
  *
  * set_engine_type 6
+ *
  * set_engine_type 17
+ *   1+24 signal, JM Predule
  *
  * @date Jan 12, 2014
  * @author Andrey Belomutskiy, (c) 2012-2015
@@ -170,11 +172,13 @@ static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->idle.solenoidFrequency = 500;
 }
 
+/*
 void setHondaAccordConfigurationTwoWires(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->engineType = HONDA_ACCORD_CD_TWO_WIRES;
 	engineConfiguration->trigger.type = TT_HONDA_ACCORD_CD_TWO_WIRES;
 	setHondaAccordConfigurationCommon(PASS_ENGINE_PARAMETER_F);
 }
+*/
 
 void setHondaAccordConfigurationThreeWires(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->engineType = HONDA_ACCORD_CD;
