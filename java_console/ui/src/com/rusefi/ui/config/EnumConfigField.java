@@ -38,11 +38,17 @@ public class EnumConfigField extends BaseConfigField {
                     Pair<Integer, ?> p = Field.parseResponse(message);
                     if (p != null && p.first == field.getOffset()) {
                         int ordinal = (Integer) p.second;
-                        if (ordinal >= options.length)
-                            throw new IllegalStateException("Unexpected ordinal " + ordinal + " for " + field);
+                        String item;
+                        if (ordinal >= options.length) {
+                            item = "unexpected_" + ordinal;
+                            view.addItem(item);
+                        } else {
+                            item = options[ordinal];
+                        }
+
                         ec = true;
                         view.setEnabled(true);
-                        view.setSelectedItem(options[ordinal]);
+                        view.setSelectedItem(item);
                         onValueArrived();
                         ec = false;
                     }
