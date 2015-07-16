@@ -10,7 +10,7 @@ import java.util.Map;
  * Andrey Belomutskiy (c) 2012-2014
  */
 public class EngineChartParser {
-    private static final String DELI = "!";
+    public static final String DELI = "!";
 
     /**
      * This method unpacks a mixed-key message into a Map of messages by key

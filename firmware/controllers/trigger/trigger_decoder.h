@@ -104,10 +104,11 @@ void initTriggerDecoderLogger(Logging *sharedLogger);
 
 bool_t isTriggerDecoderError(void);
 
+#define considerEventForGap() (!TRIGGER_SHAPE(useOnlyPrimaryForSync) || isPrimary)
+
 #define isLessImportant(signal) ((TRIGGER_SHAPE(useRiseEdge) && signal != SHAFT_PRIMARY_UP) \
 		|| (!TRIGGER_SHAPE(useRiseEdge) && signal != SHAFT_PRIMARY_DOWN) \
-		|| (!isPrimary && TRIGGER_SHAPE(useOnlyPrimaryForSync)) \
+		|| (!considerEventForGap()) \
 	)
-
 
 #endif /* TRIGGER_DECODER_H_ */
