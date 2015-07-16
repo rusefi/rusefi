@@ -40,7 +40,7 @@ import static com.rusefi.ui.util.LocalizedMessages.PAUSE;
  */
 public class EngineSnifferPanel {
     private static final int EFI_DEFAULT_CHART_SIZE = 180;
-    public static final Comparator<String> INSTANCE = new NameUtil.ImageOrderComparator();
+    public static final Comparator<String> INSTANCE = new ImageOrderComparator();
     private static final String HELP_URL = "http://rusefi.com/wiki/index.php?title=Manual:DevConsole#Digital_Chart";
     public static final String HELP_TEXT = "Click here for online help";
 
@@ -270,5 +270,25 @@ public class EngineSnifferPanel {
     public void reloadFile() {
         displayChart(ChartRepository.getInstance().getChart(0));
         scrollControl.reset();
+    }
+
+    /**
+     * The job of this comparator is to place Spark charts before Injection charts
+     */
+    static class ImageOrderComparator implements Comparator<String> {
+        @Override
+        public int compare(String o1, String o2) {
+            return fixNameForNicerOrder(o1).compareTo(fixNameForNicerOrder(o2));
+        }
+
+        String fixNameForNicerOrder(String s) {
+            if (s.toLowerCase().startsWith("t"))
+                return "a" + s; // let's place this at the top
+            if (s.toLowerCase().startsWith("hip"))
+                return "z" + s; // let's place this at the bottom
+            if (s.toLowerCase().startsWith("spa"))
+                return "d" + s;
+            return s;
+        }
     }
 }

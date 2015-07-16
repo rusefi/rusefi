@@ -77,6 +77,9 @@ public class EngineReport implements TimeAxisTranslator {
         return minTime;
     }
 
+    /**
+     * @see EngineChartParser#unpackToMap(String)
+     */
     @NotNull
     public static List<UpDown> parse(String report) {
         String[] array = report.split("!");

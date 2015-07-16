@@ -27,7 +27,6 @@ public class EngineChart {
     public static final String SPARK_3 = "c3";
     public static final String SPARK_4 = "c4";
 
-    public static final String TRIGGER_1 = "t1";
     public static final String TRIGGER_2 = "t2";
     public static final String MAP_AVERAGING = "map";
 
