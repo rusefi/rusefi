@@ -129,6 +129,8 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	currentDuration =
 			currentDurationLong > 10 * US2NT(US_PER_SECOND_LL) ? 10 * US2NT(US_PER_SECOND_LL) : currentDurationLong;
 
+	bool_t isPrimary = triggerWheel == T_PRIMARY;
+
 	if (isLessImportant(signal)) {
 #if EFI_UNIT_TEST
 		if (printTriggerDebug) {

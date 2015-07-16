@@ -39,6 +39,7 @@ TriggerShape::TriggerShape() :
 	wave.waves = h.waves;
 	// todo: false here, true in clear() what a mess!
 	useRiseEdge = false;
+	useOnlyPrimaryForSync = false;
 	gapBothDirections = false;
 	isSynchronizationNeeded = false;
 	// todo: reuse 'clear' method?
