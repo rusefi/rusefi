@@ -87,10 +87,10 @@ static bool isEmulating = true;
 static Logging *logger;
 static LocalVersionHolder emulatorConfigVersion;
 
-#if EFI_WAVE_CHART
-#include "wave_chart.h"
+#if EFI_ENGINE_SNIFFER
+#include "engine_sniffer.h"
 extern WaveChart waveChart;
-#endif /* EFI_WAVE_CHART */
+#endif /* EFI_ENGINE_SNIFFER */
 
 void setTriggerEmulatorRPM(int rpm, Engine *engine) {
 	engineConfiguration->bc.triggerSimulatorFrequency = rpm;
@@ -105,10 +105,10 @@ void setTriggerEmulatorRPM(int rpm, Engine *engine) {
 		float gRpm = rpm * rpmM / 60.0; // per minute converted to per second
 		triggerSignal.periodNt = US2NT(frequency2periodUs(gRpm));
 	}
-#if EFI_WAVE_CHART
+#if EFI_ENGINE_SNIFFER
 	if (engine->isTestMode)
 		waveChart.resetWaveChart();
-#endif /* EFI_WAVE_CHART */
+#endif /* EFI_ENGINE_SNIFFER */
 
 	scheduleMsg(logger, "Emulating position sensor(s). RPM=%d", rpm);
 }

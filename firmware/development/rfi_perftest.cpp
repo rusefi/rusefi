@@ -285,7 +285,7 @@ static void runChibioTest(void) {
 	print("EFI_HD44780_LCD=%d\r\n", EFI_HD44780_LCD);
 	print("EFI_MAP_AVERAGING=%d\r\n", EFI_MAP_AVERAGING);
 	print("EFI_WAVE_ANALYZER=%d\r\n", EFI_WAVE_ANALYZER);
-	print("EFI_WAVE_CHART=%d\r\n", EFI_WAVE_CHART);
+	print("EFI_ENGINE_SNIFFER=%d\r\n", EFI_ENGINE_SNIFFER);
 	print("EFI_ANALOG_CHART=%d\r\n", EFI_ANALOG_CHART);
 	print("EFI_SHAFT_POSITION_INPUT=%d\r\n", EFI_SHAFT_POSITION_INPUT);
 	print("EFI_ENGINE_CONTROL=%d\r\n", EFI_ENGINE_CONTROL);

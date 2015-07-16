@@ -1,5 +1,5 @@
 /**
- * @file	wave_chart.h
+ * @file	engine_sniffer.h
  * @brief	Dev console wave sniffer
  *
  * @date Jun 23, 2013
@@ -11,7 +11,7 @@
 
 #include "global.h"
 
-#if EFI_WAVE_CHART || defined(__DOXYGEN__)
+#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 #include "datalogging.h"
 
 /**
@@ -38,6 +38,6 @@ void initWaveChart(WaveChart *chart);
 void showWaveChartHistogram(void);
 void setChartSize(int newSize);
 
-#endif /* EFI_WAVE_CHART */
+#endif /* EFI_ENGINE_SNIFFER */
 
 #endif /* WAVE_CHART_H_ */
