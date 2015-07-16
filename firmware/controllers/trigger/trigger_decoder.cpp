@@ -145,7 +145,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		 */
 		nextTriggerEvent()
 		;
-		if (TRIGGER_SHAPE(gapBothDirections)) {
+		if (TRIGGER_SHAPE(gapBothDirections) && considerEventForGap()) {
 			toothed_previous_duration = currentDuration;
 			isFirstEvent = false;
 			toothed_previous_time = nowNt;
