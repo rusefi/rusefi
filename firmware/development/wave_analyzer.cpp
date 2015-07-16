@@ -23,7 +23,7 @@
 #include "engine_math.h"
 #include "engine.h"
 #include "rpm_calculator.h"
-#include "wave_chart.h"
+#include "engine_sniffer.h"
 
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
 
@@ -32,7 +32,7 @@ EXTERN_ENGINE;
 #define CHART_RESET_DELAY 1
 #define MAX_ICU_COUNT 5
 
-#if EFI_WAVE_CHART || defined(__DOXYGEN__)
+#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 extern WaveChart waveChart;
 #endif
 extern bool hasFirmwareErrorFlag;
@@ -154,13 +154,13 @@ static void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index
 static msg_t waThread(void *arg) {
 	(void)arg;
 	chRegSetThreadName("Wave Analyzer");
-#if EFI_WAVE_CHART
+#if EFI_ENGINE_SNIFFER
 	while (TRUE) {
 		chThdSleepSeconds(CHART_RESET_DELAY);
 
 		waveChart.publishChartIfFull();
 	}
-#endif /* EFI_WAVE_CHART */
+#endif /* EFI_ENGINE_SNIFFER */
 #if defined __GNUC__
 	return -1;
 #endif

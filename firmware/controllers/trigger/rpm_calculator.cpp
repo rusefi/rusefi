@@ -30,10 +30,10 @@
 
 #include "efilib2.h"
 
-#if EFI_WAVE_CHART
-#include "wave_chart.h"
+#if EFI_ENGINE_SNIFFER
+#include "engine_sniffer.h"
 extern WaveChart waveChart;
-#endif /* EFI_WAVE_CHART */
+#endif /* EFI_ENGINE_SNIFFER */
 
 EXTERN_ENGINE
 ;

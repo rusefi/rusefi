@@ -17,7 +17,7 @@
 #include "datalogging.h"
 #include "algo.h"
 #include "rpm_calculator.h"
-#include "wave_chart.h"
+#include "engine_sniffer.h"
 #include "status_loop.h"
 #include "trigger_emulator_algo.h"
 #include "main_trigger_callback.h"

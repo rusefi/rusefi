@@ -34,8 +34,8 @@
 
 EXTERN_ENGINE;
 
-#if EFI_WAVE_CHART
-#include "wave_chart.h"
+#if EFI_ENGINE_SNIFFER
+#include "engine_sniffer.h"
 extern WaveChart waveChart;
 #endif
 
@@ -74,7 +74,7 @@ void turnPinHigh(NamedOutputPin *output) {
 	doSetOutputPinValue2(output, true);
 	// sleep for the needed duration
 #endif
-#if EFI_WAVE_CHART
+#if EFI_ENGINE_SNIFFER
 	// explicit check here is a performance optimization to speed up no-chart mode
 	if (CONFIG(isEngineChartEnabled)) {
 		// this is a performance optimization - array index is cheaper then invoking a method with 'switch'
@@ -100,7 +100,7 @@ void turnPinLow(NamedOutputPin *output) {
 	scheduleLogging(&signal->logging);
 #endif /* EFI_DEFAILED_LOGGING */
 
-#if EFI_WAVE_CHART
+#if EFI_ENGINE_SNIFFER
 	if (CONFIG(isEngineChartEnabled)) {
 		// this is a performance optimization - array index is cheaper then invoking a method with 'switch'
 		const char *pinName = output->name;

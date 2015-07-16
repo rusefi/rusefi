@@ -1,5 +1,5 @@
 /**
- * @file	wave_chart.cpp
+ * @file	engine_sniffer.cpp
  * @brief	Dev console wave sniffer logic
  *
  * Here we have our own build-in logic analyzer. The data we aggregate here is sent to the
@@ -25,9 +25,9 @@
  */
 
 #include "main.h"
-#include "wave_chart.h"
+#include "engine_sniffer.h"
 
-#if EFI_WAVE_CHART || defined(__DOXYGEN__)
+#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 
 #include "engine_configuration.h"
 #include "eficonsole.h"
@@ -268,4 +268,4 @@ void initWaveChart(WaveChart *chart) {
 #endif
 }
 
-#endif /* EFI_WAVE_CHART */
+#endif /* EFI_ENGINE_SNIFFER */

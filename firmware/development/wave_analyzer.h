@@ -16,7 +16,7 @@
 #include "datalogging.h"
 
 #include "digital_input_hw.h"
-#include "wave_chart.h"
+#include "engine_sniffer.h"
 
 #define WA_CHANNEL_1 "input1"
 #define WA_CHANNEL_2 "input2"

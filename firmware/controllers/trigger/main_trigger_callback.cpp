@@ -425,14 +425,14 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	}
 }
 
-#if EFI_WAVE_CHART || defined(__DOXYGEN__)
-#include "wave_chart.h"
+#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
+#include "engine_sniffer.h"
 #endif
 
 static void showTriggerHistogram(void) {
 	printAllCallbacksHistogram();
 	showMainHistogram();
-#if EFI_WAVE_CHART || defined(__DOXYGEN__)
+#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 	showWaveChartHistogram();
 #endif
 }

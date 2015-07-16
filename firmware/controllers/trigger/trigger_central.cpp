@@ -27,10 +27,10 @@
 #include "pin_repository.h"
 #endif
 
-#if EFI_WAVE_CHART
-#include "wave_chart.h"
+#if EFI_ENGINE_SNIFFER
+#include "engine_sniffer.h"
 WaveChart waveChart;
-#endif /* EFI_WAVE_CHART */
+#endif /* EFI_ENGINE_SNIFFER */
 
 static histogram_s triggerCallback;
 
@@ -392,9 +392,9 @@ void initTriggerCentral(Logging *sharedLogger, Engine *engine) {
 	logger = sharedLogger;
 	strcpy((char*) shaft_signal_msg_index, "x_");
 
-#if EFI_WAVE_CHART
+#if EFI_ENGINE_SNIFFER
 	initWaveChart(&waveChart);
-#endif /* EFI_WAVE_CHART */
+#endif /* EFI_ENGINE_SNIFFER */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	addConsoleAction("triggerinfo", triggerInfo);

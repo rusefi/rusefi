@@ -35,11 +35,11 @@
 #include "flash_main.h"
 #endif /* EFI_INTERNAL_FLASH */
 
-#if EFI_WAVE_CHART || defined(__DOXYGEN__)
-#include "wave_chart.h"
+#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
+#include "engine_sniffer.h"
 extern int waveChartUsedSize;
 extern WaveChart waveChart;
-#endif /* EFI_WAVE_CHART */
+#endif /* EFI_ENGINE_SNIFFER */
 
 static char LOGGING_BUFFER[1000];
 static Logging logger("settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
@@ -303,7 +303,7 @@ static void setTimingMode(int value) {
 void setEngineType(int value) {
 	engineConfiguration->engineType = (engine_type_e) value;
 	resetConfigurationExt(&logger, (engine_type_e) value PASS_ENGINE_PARAMETER);
-#if EFI_WAVE_CHART || defined(__DOXYGEN__)
+#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 	if (engine->isTestMode)
 		waveChart.resetWaveChart();
 #endif
@@ -910,7 +910,7 @@ void stopEngine(void) {
 static void printAllInfo(void) {
 	printTemperatureInfo();
 	printTPSInfo();
-#if EFI_WAVE_CHART
+#if EFI_ENGINE_SNIFFER
 	scheduleMsg(&logger, "waveChartUsedSize=%d", waveChartUsedSize);
 #endif
 #if EFI_PROD_CODE

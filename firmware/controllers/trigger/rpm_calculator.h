@@ -97,11 +97,11 @@ bool isCranking(void);
 
 #define isValidRpm(rpm) ((rpm) > 0 && (rpm) < UNREALISTIC_RPM)
 
-#if EFI_WAVE_CHART
+#if EFI_ENGINE_SNIFFER
 #define addWaveChartEvent(name, msg) waveChart.addWaveChartEvent3((name), (msg))
  #else
 #define addWaveChartEvent(n, msg) {}
-#endif /* EFI_WAVE_CHART */
+#endif /* EFI_ENGINE_SNIFFER */
 
 void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle, schfunc_t callback, void *param, RpmCalculator *calc);
 
