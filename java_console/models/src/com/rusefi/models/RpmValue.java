@@ -1,6 +1,8 @@
 package com.rusefi.models;
 
 /**
+ * Type-safe immutable RPM value
+ *
  * @author Andrey Belomutskiy
  *         1/29/13
  */

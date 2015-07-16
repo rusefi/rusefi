@@ -39,6 +39,9 @@ public class SettingsTab {
 
         panel.add(UiUtils.wrap(new EnumConfigField(Fields.HIP9011INTHOLDPIN, "int/hold pin").getContent()));
         panel.add(UiUtils.wrap(new EnumConfigField(Fields.HIP9011INTHOLDPINMODE, "int/hold pin mode").getContent()));
+        panel.add(UiUtils.wrap(new ConfigField(Fields.HIP9011GAIN, "k gain").getContent()));
+        panel.add(UiUtils.wrap(new ConfigField(Fields.KNOCKDETECTIONWINDOWSTART, "kw start").getContent()));
+        panel.add(UiUtils.wrap(new ConfigField(Fields.KNOCKDETECTIONWINDOWEND, "kw end").getContent()));
 
         panel.add(UiUtils.wrap(new EnumConfigField(Fields.IGNITIONPINS1, "ign #1").getContent()));
         panel.add(UiUtils.wrap(new EnumConfigField(Fields.IGNITIONPINS3, "ign #3").getContent()));
