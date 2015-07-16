@@ -59,6 +59,8 @@ public:
 	 * Should we use falls or rises for gap ratio detection?
 	 */
 	bool_t useRiseEdge;
+
+	bool_t useOnlyPrimaryForSync;
 	/**
 	 * Should we measure gaps with events of both kinds?
 	 */
