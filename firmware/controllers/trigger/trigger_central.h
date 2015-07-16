@@ -20,6 +20,7 @@ typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index DEC
 
 #define HW_EVENT_TYPES 6
 
+// todo: maybe merge TriggerCentral and TriggerState classes into one class?
 class TriggerCentral {
 public:
 	TriggerCentral();
