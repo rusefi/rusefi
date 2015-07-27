@@ -164,11 +164,20 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#2z");
 #endif
 
+#if EFI_ANALOG_CHART || defined(__DOXYGEN__)
+	angle_t crankAngle;
+	int signal;
+	if (boardConfiguration->sensorChartMode == SC_TRIGGER) {
+		crankAngle = getCrankshaftAngleNt(nowNt PASS_ENGINE_PARAMETER);
+		signal = 1000 * ckpSignalType + index;
+	}
+#endif
+
 	if (index != 0) {
 #if EFI_ANALOG_CHART || defined(__DOXYGEN__)
-		if (boardConfiguration->sensorChartMode == SC_TRIGGER)
-			scAddData(getCrankshaftAngleNt(nowNt PASS_ENGINE_PARAMETER),
-					1000 * ckpSignalType + index);
+		if (boardConfiguration->sensorChartMode == SC_TRIGGER) {
+			scAddData(crankAngle, signal);
+		}
 #endif
 		return;
 	}
@@ -195,8 +204,9 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	rpmState->onNewEngineCycle();
 	rpmState->lastRpmEventTimeNt = nowNt;
 #if EFI_ANALOG_CHART || defined(__DOXYGEN__)
-	if (boardConfiguration->sensorChartMode == SC_TRIGGER)
-		scAddData(getCrankshaftAngleNt(nowNt PASS_ENGINE_PARAMETER), index);
+	if (boardConfiguration->sensorChartMode == SC_TRIGGER) {
+		scAddData(crankAngle, signal);
+	}
 #endif
 	engine->m.rpmCbTime = GET_TIMESTAMP() - engine->m.beforeRpmCb;
 }
