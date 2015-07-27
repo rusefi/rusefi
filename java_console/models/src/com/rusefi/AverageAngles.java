@@ -18,7 +18,7 @@ public class AverageAngles {
 
     private static final int MAX_RPM_CHANGE = 20;
     private int rpmAtPrevChart;
-    Map<Integer, List<Double>> angleData = new TreeMap<>();
+    Map<Integer, List<AngleEvent>> angleData = new TreeMap<>();
 
     public AverageAngles() {
         clear();
@@ -50,19 +50,20 @@ public class AverageAngles {
         String v[] = line.split("\\|");
         System.out.println("rpm " + rpm + ": " + v.length + " values");
 
-        List<Double> current = new ArrayList<>();
+        List<AngleEvent> current = new ArrayList<>();
 
         for (int i = 0; i < v.length / 2; i++) {
-            Double value = Double.parseDouble(v[2 * i]);
-            if (Double.isNaN(value)) {
+            Double angle = Double.parseDouble(v[2 * i]);
+            int signal = (int)Double.parseDouble(v[2 * i + 1]);
+            if (Double.isNaN(angle)) {
                 System.out.println("Skipping due to NaN");
                 return;
             }
-            current.add(value);
+            current.add(new AngleEvent(angle));
         }
 
         for (int i = 0; i < current.size(); i++) {
-            List<Double> list = angleData.get(i);
+            List<AngleEvent> list = angleData.get(i);
             if (list == null) {
                 list = new ArrayList<>();
                 angleData.put(i, list);
@@ -80,12 +81,12 @@ public class AverageAngles {
 
         double prev = 0;
 
-        for (Map.Entry<Integer, List<Double>> e : angleData.entrySet()) {
+        for (Map.Entry<Integer, List<AngleEvent>> e : angleData.entrySet()) {
             int k = e.getKey();
-            List<Double> v = e.getValue();
+            List<AngleEvent> v = e.getValue();
             double values[] = new double[v.size()];
             for (int i = 0; i < v.size(); i++)
-                values[i] = v.get(i);
+                values[i] = v.get(i).getAngle();
 
             Mean m = new Mean();
             double mean = m.evaluate(values);
@@ -106,6 +107,18 @@ public class AverageAngles {
         double delta = 720 - lastValue;
         for (double v : angles) {
             stream.append((delta + v) + "\r\n");
+        }
+    }
+
+    private static class AngleEvent {
+        private final double angle;
+
+        public AngleEvent(double angle) {
+            this.angle = angle;
+        }
+
+        public double getAngle() {
+            return angle;
         }
     }
 }
