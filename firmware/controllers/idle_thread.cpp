@@ -57,7 +57,7 @@ static float actualIdlePosition = -100.0f;
 static IdleValveState idleMath;
 
 void idleDebug(const char *msg, percent_t value) {
-	scheduleMsg(logger, "%s%f", msg, value);
+	scheduleMsg(logger, "idle debug: %s%f", msg, value);
 }
 
 static void showIdleInfo(void) {
