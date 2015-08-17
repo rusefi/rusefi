@@ -45,6 +45,8 @@ static FastInterpolation gm3bar(0.631, 40, 4.914, 304);
 
 static FastInterpolation mpx4250(0, 8, 5, 260);
 
+static FastInterpolation mpx4100(0.3, 20, 4.9, 105);
+
 static FastInterpolation dodgeNeon2003(0.5, 0, 4.5, 100);
 
 /**
@@ -70,6 +72,8 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * config) {
 		return subyDenso.getValue(voltage);
 	case MT_GM_3_BAR:
 		return gm3bar.getValue(voltage);
+	case MT_MPX4100:
+		return mpx4100.getValue(voltage);
 	default:
 		firmwareError("Unknown MAP type: %d", config->type);
 		return NAN;

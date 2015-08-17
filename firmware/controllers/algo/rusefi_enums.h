@@ -536,6 +536,9 @@ typedef enum {
 typedef enum {
 	MT_CUSTOM = 0,
 	MT_DENSO183 = 1,
+	/**
+	 * 20 to 250 kPa (2.9 to 36.3 psi) 0.2 to 4.9 V OUTPUT
+	 */
 	MT_MPX4250 = 2,
 	MT_HONDA3BAR = 3,
 	MT_DODGE_NEON_2003 = 4,
@@ -547,6 +550,11 @@ typedef enum {
 	 * 16040749
 	 */
 	MT_GM_3_BAR = 6,
+
+	/**
+	 * 20 to 105 kPa (2.9 to 15.2 psi) 0.3 to 4.9 V Output
+	 */
+	MT_MPX4100 = 7,
 
 	Force_4b_cranking_map_type = ENUM_32_BITS,
 } air_pressure_sensor_type_e;
