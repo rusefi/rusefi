@@ -52,6 +52,9 @@ public:
 	 */
 	uint32_t prevTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
 	int expectedTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
+	/**
+	 * how many times since ECU reboot we had unexpected number of teeth in trigger cycle
+	 */
 	uint32_t totalTriggerErrorCounter;
 	uint32_t runningTriggerErrorCounter;
 	uint32_t orderingErrorCounter;
