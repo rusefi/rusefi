@@ -319,8 +319,10 @@
 #define etbDT_offset 904
 #define etbDT_offset_hex 388
 #define hip9011CsPinMode_offset 908
-#define unusedADC_offset 912
-#define unusedADC_offset_hex 390
+#define tachOutputPin_offset 912
+#define tachOutputPin_offset_hex 390
+#define tachOutputPinMode_offset 916
+#define tachOutputPinMode_offset_hex 394
 #define triggerInputPins1_offset 920
 #define triggerInputPins1_offset_hex 398
 #define triggerInputPins2_offset 924
@@ -649,8 +651,10 @@
 #define crankingTpsCoef_offset 1760
 #define crankingTpsBins_offset 1792
 #define crankingTpsBins_offset_hex 700
-#define unused3_offset 1824
-#define unused3_offset_hex 720
+#define tachPulseDuractionMs_offset 1824
+#define tachPulseDuractionMs_offset_hex 720
+#define unused3_offset 1828
+#define unused3_offset_hex 724
 #define targetVBatt_offset 2156
 #define alternatorOffAboveTps_offset 2160
 #define alternatorOffAboveTps_offset_hex 870
