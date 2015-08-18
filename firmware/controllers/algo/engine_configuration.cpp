@@ -195,6 +195,8 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 	boardConfiguration->etbDirectionPin2 = GPIO_UNASSIGNED;
 	boardConfiguration->o2heaterPin = GPIO_UNASSIGNED;
 
+	boardConfiguration->tachOutputPin = GPIO_UNASSIGNED;
+
 	boardConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
 
