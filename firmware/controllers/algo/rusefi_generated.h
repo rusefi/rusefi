@@ -646,7 +646,11 @@
 #define spi2SckMode_offset 1748
 #define spi2MosiMode_offset 1752
 #define spi2MisoMode_offset 1756
-#define unused3_offset 1760
+#define crankingTpsCoef_offset 1760
+#define crankingTpsBins_offset 1792
+#define crankingTpsBins_offset_hex 700
+#define unused3_offset 1824
+#define unused3_offset_hex 720
 #define targetVBatt_offset 2156
 #define alternatorOffAboveTps_offset 2160
 #define alternatorOffAboveTps_offset_hex 870

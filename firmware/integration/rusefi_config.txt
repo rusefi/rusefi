@@ -565,7 +565,11 @@ baro_corr_table_t baroCorrTable;
 	int spi2SckMode;
 	int spi2MosiMode;
 	int spi2MisoMode;
-	int[99] unused3;
+	
+	float[CRANKING_CURVE_SIZE] crankingTpsCoef;;"%",      1,     0,      0.0,    700.0,   2
+	float[CRANKING_CURVE_SIZE] crankingTpsBins;;"%",        1,     0,    0.0,    100.0,  2
+	
+	int[83] unused3;
 	
 	float targetVBatt;;"Volts",      1,      0,       0,30,      1
 	float alternatorOffAboveTps;Turn off alternator output above specified TPS;"%",  1,      0,       0, 200,      2
