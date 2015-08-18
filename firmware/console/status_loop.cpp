@@ -597,6 +597,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER);
 	tsOutputChannels->fuelLevel = engine->engineState.fuelLevel;
 	tsOutputChannels->hasFatalError = hasFirmwareError();
+	tsOutputChannels->totalTriggerErrorCounter = triggerCentral.triggerState.totalTriggerErrorCounter;
 
 	tsOutputChannels->checkEngine = hasErrorCodes();
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
