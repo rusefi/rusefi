@@ -101,6 +101,7 @@
 100) RESOLVED IN R0.5 update TPIC chip for 39k's, 3.3nF, and DNP 1M. 
 101)                  connector middle mounting holes - need a 5.5mm diameter area for screw head on the back
 102) RESOLVED IN R0.5 TPIC/HIP knock SPI was not working properly, R171 changed to 5k and R172 to R174 removed to correct the SPI bus. 
+103)		      button silkscreen notch is barely visible
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
