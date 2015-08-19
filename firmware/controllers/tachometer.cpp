@@ -15,11 +15,16 @@ static OutputPin tachOut;
 
 static void tachSignalCallback(trigger_event_e ckpSignalType,
 		uint32_t index DECLARE_ENGINE_PARAMETER_S) {
+	if (index != engineConfiguration->tachPulseTriggerIndex) {
+		return;
+	}
+	tachOut.setValue(true);
 }
 
 void initTachometer(void) {
-	if (boardConfiguration->tachOutputPin == GPIO_UNASSIGNED)
+	if (boardConfiguration->tachOutputPin == GPIO_UNASSIGNED) {
 		return;
+	}
 
 	outputPinRegisterExt2("tach", &tachOut, boardConfiguration->tachOutputPin, &boardConfiguration->tachOutputPinMode);
 
