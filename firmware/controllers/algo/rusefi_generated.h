@@ -653,8 +653,10 @@
 #define crankingTpsBins_offset_hex 700
 #define tachPulseDuractionMs_offset 1824
 #define tachPulseDuractionMs_offset_hex 720
-#define unused3_offset 1828
-#define unused3_offset_hex 724
+#define tachPulseTriggerIndex_offset 1828
+#define tachPulseTriggerIndex_offset_hex 724
+#define unused3_offset 1832
+#define unused3_offset_hex 728
 #define targetVBatt_offset 2156
 #define alternatorOffAboveTps_offset 2160
 #define alternatorOffAboveTps_offset_hex 870

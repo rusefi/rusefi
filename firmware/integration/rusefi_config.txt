@@ -571,7 +571,8 @@ baro_corr_table_t baroCorrTable;
 	float[CRANKING_CURVE_SIZE] crankingTpsBins;;"%",        1,     0,    0.0,    100.0,  2
 	
 	float tachPulseDuractionMs;
-	int[82] unused3;
+	int tachPulseTriggerIndex;trigger cycle index at which we start tach pulse (performance consideration);"index",     1,     0,    0.0,    360.0,  0
+	int[81] unused3;
 	
 	float targetVBatt;;"Volts",      1,      0,       0,30,      1
 	float alternatorOffAboveTps;Turn off alternator output above specified TPS;"%",  1,      0,       0, 200,      2
