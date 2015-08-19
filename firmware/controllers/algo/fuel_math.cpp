@@ -223,7 +223,7 @@ floatms_t getCrankingFuel3(float coolantTemperature,
 	float coolantTempCoef = interpolate2d(coolantTemperature, config->crankingFuelBins,
 			config->crankingFuelCoef, CRANKING_CURVE_SIZE);
 
-	float tpsCoef = interpolate2d(getTPS(), engineConfiguration->crankingTpsBins,
+	float tpsCoef = interpolate2d(getTPS(PASS_ENGINE_PARAMETER_F), engineConfiguration->crankingTpsBins,
 			engineConfiguration->crankingTpsCoef, CRANKING_CURVE_SIZE);
 
 	return baseCrankingFuel * durationCoef * coolantTempCoef * tpsCoef;
