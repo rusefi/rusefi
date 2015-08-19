@@ -55,7 +55,7 @@
 #include "AdcConfiguration.h"
 #endif
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "pwm_generator.h"
 #include "adc_inputs.h"
 #include "efilib2.h"
@@ -63,6 +63,7 @@
 #include "pwm_generator.h"
 #include "lcd_controller.h"
 #include "pin_repository.h"
+#include "tachometer.h"
 #endif
 
 extern bool hasFirmwareErrorFlag;
@@ -584,5 +585,9 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 
 #if EFI_HD44780_LCD || defined(__DOXYGEN__)
 	initLcdController();
+#endif
+
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	initTachometer();
 #endif
 }

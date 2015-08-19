@@ -12,6 +12,11 @@
 EXTERN_ENGINE;
 
 static OutputPin tachOut;
+static scheduling_s tachTurnSignalOff;
+
+static void turnTachPinLow(void) {
+
+}
 
 static void tachSignalCallback(trigger_event_e ckpSignalType,
 		uint32_t index DECLARE_ENGINE_PARAMETER_S) {
@@ -19,6 +24,7 @@ static void tachSignalCallback(trigger_event_e ckpSignalType,
 		return;
 	}
 	tachOut.setValue(true);
+	scheduleTask("tach off", &tachTurnSignalOff, (int)MS2US(engineConfiguration->tachPulseDuractionMs), (schfunc_t) &turnTachPinLow, NULL);
 }
 
 void initTachometer(void) {
