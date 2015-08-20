@@ -2550,6 +2550,12 @@
     <file>
       <name>$PROJ_DIR$\..\controllers\settings.h</name>
     </file>
+    <file>
+      <name>$PROJ_DIR$\..\controllers\tachometer.cpp</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\controllers\tachometer.h</name>
+    </file>
   </group>
   <group>
     <name>development</name>
@@ -2584,6 +2590,12 @@
       <name>$PROJ_DIR$\..\development\engine_emulator.h</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\development\engine_sniffer.cpp</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\development\engine_sniffer.h</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\development\rfi_perftest.cpp</name>
     </file>
     <file>
@@ -2606,12 +2618,6 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\development\wave_analyzer.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\development\wave_chart.cpp</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\development\wave_chart.h</name>
     </file>
   </group>
   <group>
