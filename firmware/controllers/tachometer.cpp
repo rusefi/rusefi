@@ -15,7 +15,7 @@ static OutputPin tachOut;
 static scheduling_s tachTurnSignalOff;
 
 static void turnTachPinLow(void) {
-
+	tachOut.setValue(false);
 }
 
 static void tachSignalCallback(trigger_event_e ckpSignalType,
@@ -32,7 +32,7 @@ void initTachometer(void) {
 		return;
 	}
 
-	outputPinRegisterExt2("tach", &tachOut, boardConfiguration->tachOutputPin, &boardConfiguration->tachOutputPinMode);
+	outputPinRegisterExt2("analog tach output", &tachOut, boardConfiguration->tachOutputPin, &boardConfiguration->tachOutputPinMode);
 
 	addTriggerEventListener(tachSignalCallback, "tach", engine);
 
