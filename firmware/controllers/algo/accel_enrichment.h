@@ -13,8 +13,9 @@
 #include "engine_configuration.h"
 #include "cyclic_buffer.h"
 
-//#define MAX_ACCEL_ARRAY_SIZE 64
-
+/**
+ * this object is used for MAP rate-of-change and TPS rate-of-change corrections
+ */
 class AccelEnrichmemnt {
 public:
 	AccelEnrichmemnt();
@@ -31,6 +32,17 @@ public:
 private:
 	float currentValue;
 	void onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_S);
+};
+
+class WallFuel {
+	WallFuel();
+	floatms_t adjust(floatms_t target DECLARE_ENGINE_PARAMETER_S);
+
+private:
+	/**
+	 * Amount of fuel on the wall, in injector open time scale
+	 */
+	floatms_t wallFuel;
 };
 
 void initAccelEnrichment(Logging *sharedLogger);
