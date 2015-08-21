@@ -2,6 +2,19 @@
  * @file    accel_enrichment.cpp
  * @brief   Acceleration enrichment calculator
  *
+ * In this file we have three strategies for acceleration/deceleration fuel correction
+ *
+ * 1) MAP rate-of-change correction
+ * 2) TPS rate-of-change correction
+ * 3) fuel film/wal wetting correction
+ *   AWC Added to Wall Coefficient, %
+ *   AWA Added to Wall Amount
+ *   SOC Sucked Off wall Coefficient, %
+ *   SOA Sucked Off wall amount
+ *   WF  current on-Wall Fuel amount
+ *
+ *
+ * http://rusefi.com/wiki/index.php?title=Manual:Software:Fuel_Control
  * @date Apr 21, 2014
  * @author Dmitry Sidin
  * @author Andrey Belomutskiy, (c) 2012-2015
@@ -18,6 +31,23 @@ EXTERN_ENGINE
 ;
 
 static Logging *logger;
+
+WallFuel::WallFuel() {
+	wallFuel = 0;
+}
+
+floatms_t WallFuel::adjust(floatms_t target DECLARE_ENGINE_PARAMETER_S) {
+	float suckedOffCoef = 0;
+	float addedToWallCoef = 0;
+
+	floatms_t suckedOffWallsAmount = wallFuel * suckedOffCoef;
+
+	floatms_t result = (target - suckedOffWallsAmount) / (1 - addedToWallCoef);
+
+	float addedToWallsAmount = result * addedToWallCoef;
+	wallFuel = wallFuel + addedToWallsAmount - suckedOffWallsAmount;
+	return result;
+}
 
 float AccelEnrichmemnt::getDelta() {
 	return cb.maxValue(cb.getSize());
