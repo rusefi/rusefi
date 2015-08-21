@@ -655,8 +655,14 @@
 #define tachPulseDuractionMs_offset_hex 720
 #define tachPulseTriggerIndex_offset 1828
 #define tachPulseTriggerIndex_offset_hex 724
-#define unused3_offset 1832
-#define unused3_offset_hex 728
+#define suckedOffCoef_offset 1832
+#define suckedOffCoef_offset_hex 728
+#define unused71_offset 1836
+#define addedToWallCoef_offset 1864
+#define addedToWallCoef_offset_hex 748
+#define unused72_offset 1868
+#define unused3_offset 1896
+#define unused3_offset_hex 768
 #define targetVBatt_offset 2156
 #define alternatorOffAboveTps_offset 2160
 #define alternatorOffAboveTps_offset_hex 870
