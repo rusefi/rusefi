@@ -47,9 +47,9 @@ public class GaugesPanel {
     };
     private static final String GAUGES_ROWS = "gauges_rows";
     private static final String GAUGES_COLUMNS = "gauges_cols";
-    public static final String SHOW_MESSAGES = "show_messages";
-    public static final String SHOW_RPM = "show_rpm";
-    public static final String SPLIT_LOCATION = "SPLIT_LOCATION";
+    private static final String SHOW_MESSAGES = "show_messages";
+    private static final String SHOW_RPM = "show_rpm";
+    private static final String SPLIT_LOCATION = "SPLIT_LOCATION";
 
     static {
         if (DEFAULT_LAYOUT.length != SizeSelectorPanel.WIDTH * SizeSelectorPanel.HEIGHT)
@@ -209,33 +209,12 @@ public class GaugesPanel {
         gauges.removeAll();
 
         for (int i = 0; i < rows * columns; i++) {
-            String gaugeName = config.getProperty(getKey(i), DEFAULT_LAYOUT[i].name());
-            Sensor sensor = lookup(i, gaugeName);
-            final int currentGaugeIndex = i;
-            gauges.add(GaugesGridElement.createGauge(sensor, new SensorGauge.GaugeChangeListener() {
-                @Override
-                public void onSensorChange(Sensor sensor) {
-                    config.setProperty(getKey(currentGaugeIndex), sensor.name());
-                }
-            }));
+            Component element = GaugesGridElement.read(config.getChild("element_" + i), DEFAULT_LAYOUT[i]);
+
+            gauges.add(element);
         }
 
         saveConfig(rows, columns);
-    }
-
-    private Sensor lookup(int i, String gaugeName) {
-        Sensor sensor;
-        try {
-            sensor = Sensor.valueOf(Sensor.class, gaugeName);
-        } catch (IllegalArgumentException e) {
-            sensor = DEFAULT_LAYOUT[i];
-        }
-        return sensor;
-    }
-
-    @NotNull
-    private String getKey(int i) {
-        return "gauge_" + i;
     }
 
     private void saveConfig(int rows, int columns) {

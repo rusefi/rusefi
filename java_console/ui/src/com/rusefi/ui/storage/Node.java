@@ -40,6 +40,10 @@ public class Node {
         }
     }
 
+    public boolean getBoolProperty(String key) {
+        return getBoolProperty(key, false);
+    }
+
     public boolean getBoolProperty(String key, boolean defaultValue) {
         String value = (String) config.get(key);
         if (value == null)
@@ -57,6 +61,10 @@ public class Node {
 
     public void setProperty(String key, boolean value) {
         config.put(key, "" + value);
+    }
+
+    public void setBoolProperty(String key, boolean b) {
+        setProperty(key, "" + b);
     }
 
     public String getProperty(String key, String defaultValue) {

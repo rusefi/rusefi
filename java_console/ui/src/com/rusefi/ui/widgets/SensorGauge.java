@@ -22,10 +22,10 @@ public class SensorGauge {
     private static final String HINT_LINE_1 = "Double-click to detach";
     private static final String HINT_LINE_2 = "Right-click to change";
 
-    public static Component createGauge(Sensor sensor, GaugeChangeListener listener) {
+    public static Component createGauge(Sensor sensor, GaugeChangeListener listener, JMenuItem extraMenuItem) {
         JPanelWithListener wrapper = new JPanelWithListener(new BorderLayout());
 
-        createGaugeBody(sensor, wrapper, listener);
+        createGaugeBody(sensor, wrapper, listener, extraMenuItem);
 
         return wrapper;
     }
@@ -46,7 +46,8 @@ public class SensorGauge {
         void onSensorChange(Sensor sensor);
     }
 
-    private static void createGaugeBody(final Sensor sensor, final JPanelWithListener wrapper, final GaugeChangeListener listener) {
+    public static void createGaugeBody(final Sensor sensor, final JPanelWithListener wrapper, final GaugeChangeListener listener,
+                                        final JMenuItem extraMenuItem) {
         final Radial gauge = createRadial(sensor.getName(), sensor.getUnits(), sensor.getMaxValue(), sensor.getMinValue());
 
         UiUtils.setTwoLineToolTip(gauge, HINT_LINE_1, HINT_LINE_2);
@@ -66,28 +67,30 @@ public class SensorGauge {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e)) {
-                    showPopupMenu(e, wrapper, listener);
+                    showPopupMenu(e, wrapper, listener, extraMenuItem);
                 } else if (e.getClickCount() == 2) {
                     handleDoubleClick(e, gauge, sensor);
                 }
             }
         };
         gauge.addMouseListener(mouseListener);
-        wrapper.removeAllMouseListeners();
+        wrapper.removeAllChildrenAndListeners();
         wrapper.addMouseListener(mouseListener);
-        wrapper.removeAll();
         wrapper.add(gauge, BorderLayout.CENTER);
         UiUtils.trueRepaint(wrapper.getParent());
         UiUtils.trueLayout(wrapper.getParent());
     }
 
-    private static void showPopupMenu(MouseEvent e, JPanelWithListener wrapper, GaugeChangeListener listener) {
+    private static void showPopupMenu(MouseEvent e, JPanelWithListener wrapper, GaugeChangeListener listener,
+                                      JMenuItem extraMenuItem) {
         JPopupMenu pm = new JPopupMenu();
-        fillGaugeMenuItems(pm, wrapper, listener);
+        fillGaugeMenuItems(pm, wrapper, listener, extraMenuItem);
+        if (extraMenuItem != null)
+            pm.add(extraMenuItem);
         pm.show(e.getComponent(), e.getX(), e.getY());
     }
 
-    private static void fillGaugeMenuItems(JPopupMenu popupMenu, final JPanelWithListener wrapper, final GaugeChangeListener listener) {
+    private static void fillGaugeMenuItems(JPopupMenu popupMenu, final JPanelWithListener wrapper, final GaugeChangeListener listener, final JMenuItem extraMenuItem) {
         for (final SensorCategory sc : SensorCategory.values()) {
             JMenuItem cmi = new JMenu(sc.getName());
             popupMenu.add(cmi);
@@ -97,7 +100,7 @@ public class SensorGauge {
                 mi.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        createGaugeBody(s, wrapper, listener);
+                        createGaugeBody(s, wrapper, listener, extraMenuItem);
                         listener.onSensorChange(s);
                     }
                 });
@@ -116,7 +119,7 @@ public class SensorGauge {
                 ds.onChange(sensor);
             }
         };
-        ds.content.add(createGauge(sensor, listener), BorderLayout.CENTER);
+        ds.content.add(createGauge(sensor, listener, null), BorderLayout.CENTER);
         ds.content.add(ds.mockControlPanel, BorderLayout.SOUTH);
 
         ds.frame.add(ds.content);
