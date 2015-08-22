@@ -32,9 +32,18 @@ void testCrc(void) {
 	const char * A = "A";
 
 	assertEqualsM("crc8", 168, calc_crc((const crc_t *) A, 1));
-	int c = crc32(A, 1);
+	uint32_t c = crc32(A, 1);
 	printf("crc32(A)=%x\r\n", c);
-	assertEqualsM("crc32", 0xd3d99e8b, crc32(A, 1));
+	assertEqualsM("crc32 1", 0xd3d99e8b, c);
+
+	const char * line = "AbcDEFGF";
+	c = crc32(line, 8);
+	printf("crc32(line)=%x\r\n", c);
+	assertEqualsM("crc32 line", 0x4775a7b1, c);
+
+	c = crc32(line, 1);
+	c = crc32inc(line + 1, c, 8 - 1);
+	assertEqualsM("crc32 line inc", 0x4775a7b1, c);
 }
 
 static cyclic_buffer<int> sb;
