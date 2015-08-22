@@ -18,6 +18,7 @@ import java.beans.PropertyChangeListener;
 /**
  * Date: 2/5/13
  * (c) Andrey Belomutskiy
+ * @see SensorGauge
  */
 public class GaugesPanel {
     private static final Sensor[] DEFAULT_LAYOUT = {
@@ -77,7 +78,7 @@ public class GaugesPanel {
         int rows = config.getIntProperty(GAUGES_ROWS, SizeSelectorPanel.HEIGHT);
         int columns = config.getIntProperty(GAUGES_COLUMNS, SizeSelectorPanel.WIDTH);
 
-        applySize(rows, columns);
+        setSensorGridDimensions(rows, columns);
 
         middleSplitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, createMiddleLeftPanel(), messagesPanel);
 
@@ -127,7 +128,7 @@ public class GaugesPanel {
             @Override
             public void onSelected(int row, int column) {
                 System.out.println("new size " + row + "/" + column);
-                applySize(row, column);
+                setSensorGridDimensions(row, column);
             }
         }));
 
@@ -203,20 +204,15 @@ public class GaugesPanel {
         return saveImageButton;
     }
 
-    private void applySize(int rows, int columns) {
+    private void setSensorGridDimensions(int rows, int columns) {
         gauges.setLayout(new GridLayout(rows, columns));
         gauges.removeAll();
 
         for (int i = 0; i < rows * columns; i++) {
             String gaugeName = config.getProperty(getKey(i), DEFAULT_LAYOUT[i].name());
-            Sensor sensor;
-            try {
-                sensor = Sensor.valueOf(Sensor.class, gaugeName);
-            } catch (IllegalArgumentException e) {
-                sensor = DEFAULT_LAYOUT[i];
-            }
+            Sensor sensor = lookup(i, gaugeName);
             final int currentGaugeIndex = i;
-            gauges.add(SensorGauge.createGauge(sensor, new SensorGauge.GaugeChangeListener() {
+            gauges.add(GaugesGridElement.createGauge(sensor, new SensorGauge.GaugeChangeListener() {
                 @Override
                 public void onSensorChange(Sensor sensor) {
                     config.setProperty(getKey(currentGaugeIndex), sensor.name());
@@ -225,6 +221,16 @@ public class GaugesPanel {
         }
 
         saveConfig(rows, columns);
+    }
+
+    private Sensor lookup(int i, String gaugeName) {
+        Sensor sensor;
+        try {
+            sensor = Sensor.valueOf(Sensor.class, gaugeName);
+        } catch (IllegalArgumentException e) {
+            sensor = DEFAULT_LAYOUT[i];
+        }
+        return sensor;
     }
 
     @NotNull

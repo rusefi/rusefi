@@ -10,8 +10,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.text.DecimalFormat;
+import java.text.Format;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Hashtable;
 
 /**
  * (c) Andrey Belomutskiy
@@ -20,6 +23,17 @@ import java.util.Collection;
 public class DetachedSensor {
     private static final Collection<Sensor> MOCKABLE = Arrays.asList(Sensor.CLT, Sensor.AFR, Sensor.IAT, Sensor.MAF,
             Sensor.TPS);
+
+    private final static Hashtable<Integer, JComponent> SLIDER_LABELS = new Hashtable<>();
+
+    static {
+        Format f = new DecimalFormat("0.0");
+        for (int i = 0; i <= 50; i += 5) {
+            JLabel label = new JLabel(f.format(i * 0.1));
+            label.setFont(label.getFont().deriveFont(Font.PLAIN));
+            SLIDER_LABELS.put(i, label);
+        }
+    }
 
     /**
      * We need to trick the JSlider into displaying float values
@@ -72,7 +86,7 @@ public class DetachedSensor {
         /**
          */
         final JSlider slider = new JSlider(0, _5_VOLTS_WITH_DECIMAL);
-        slider.setLabelTable(SensorGauge.SLIDER_LABELS);
+        slider.setLabelTable(SLIDER_LABELS);
         slider.setPaintLabels(true);
         slider.setPaintTicks(true);
         slider.setMajorTickSpacing(10);

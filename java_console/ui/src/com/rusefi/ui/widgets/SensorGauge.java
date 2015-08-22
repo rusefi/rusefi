@@ -3,29 +3,24 @@ package com.rusefi.ui.widgets;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCategory;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.ui.GaugesPanel;
 import com.rusefi.ui.util.UiUtils;
 import eu.hansolo.steelseries.gauges.Radial;
 import eu.hansolo.steelseries.tools.ColorDef;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.text.DecimalFormat;
-import java.text.Format;
-import java.util.Hashtable;
+import java.awt.event.*;
 
 /**
  * Date: 7/9/14
  * (c) Andrey Belomutskiy 2012-2014
+ * @see GaugesPanel
  */
 
 public class SensorGauge {
-    public static Component createGauge(final Sensor sensor) {
-        return createGauge(sensor, GaugeChangeListener.VOID);
-    }
+    private static final String HINT_LINE_1 = "Double-click to detach";
+    private static final String HINT_LINE_2 = "Right-click to change";
 
     public static Component createGauge(Sensor sensor, GaugeChangeListener listener) {
         JPanelWithListener wrapper = new JPanelWithListener(new BorderLayout());
@@ -54,7 +49,8 @@ public class SensorGauge {
     private static void createGaugeBody(final Sensor sensor, final JPanelWithListener wrapper, final GaugeChangeListener listener) {
         final Radial gauge = createRadial(sensor.getName(), sensor.getUnits(), sensor.getMaxValue(), sensor.getMinValue());
 
-        UiUtils.setTwoLineToolTip(gauge, "Double-click to detach", "Right-click to change");
+        UiUtils.setTwoLineToolTip(gauge, HINT_LINE_1, HINT_LINE_2);
+        UiUtils.setTwoLineToolTip(wrapper, HINT_LINE_1, HINT_LINE_2);
 
         gauge.setBackgroundColor(sensor.getColor());
 
@@ -66,7 +62,7 @@ public class SensorGauge {
         gauge.setValue(sensor.translateValue(SensorCentral.getInstance().getValue(sensor)));
         gauge.setLcdDecimals(2);
 
-        gauge.addMouseListener(new MouseAdapter() {
+        MouseListener mouseListener = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e)) {
@@ -75,7 +71,10 @@ public class SensorGauge {
                     handleDoubleClick(e, gauge, sensor);
                 }
             }
-        });
+        };
+        gauge.addMouseListener(mouseListener);
+        wrapper.removeAllMouseListeners();
+        wrapper.addMouseListener(mouseListener);
         wrapper.removeAll();
         wrapper.add(gauge, BorderLayout.CENTER);
         UiUtils.trueRepaint(wrapper.getParent());
@@ -84,11 +83,11 @@ public class SensorGauge {
 
     private static void showPopupMenu(MouseEvent e, JPanelWithListener wrapper, GaugeChangeListener listener) {
         JPopupMenu pm = new JPopupMenu();
-        fillGaugeItems(pm, wrapper, listener);
+        fillGaugeMenuItems(pm, wrapper, listener);
         pm.show(e.getComponent(), e.getX(), e.getY());
     }
 
-    private static void fillGaugeItems(JPopupMenu popupMenu, final JPanelWithListener wrapper, final GaugeChangeListener listener) {
+    private static void fillGaugeMenuItems(JPopupMenu popupMenu, final JPanelWithListener wrapper, final GaugeChangeListener listener) {
         for (final SensorCategory sc : SensorCategory.values()) {
             JMenuItem cmi = new JMenu(sc.getName());
             popupMenu.add(cmi);
@@ -120,22 +119,9 @@ public class SensorGauge {
         ds.content.add(createGauge(sensor, listener), BorderLayout.CENTER);
         ds.content.add(ds.mockControlPanel, BorderLayout.SOUTH);
 
-
         ds.frame.add(ds.content);
         ds.show(e);
     }
-
-    final static Hashtable<Integer, JComponent> SLIDER_LABELS = new Hashtable<>();
-
-    static {
-        Format f = new DecimalFormat("0.0");
-        for (int i = 0; i <= 50; i += 5) {
-            JLabel label = new JLabel(f.format(i * 0.1));
-            label.setFont(label.getFont().deriveFont(Font.PLAIN));
-            SLIDER_LABELS.put(i, label);
-        }
-    }
-
 
     public static Radial createRadial(String title, String units, double maxValue, double minValue) {
 //        final Section[] SECTIONS =
