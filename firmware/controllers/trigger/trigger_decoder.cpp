@@ -103,7 +103,10 @@ static trigger_value_e eventType[6] = { TV_LOW, TV_HIGH, TV_LOW, TV_HIGH, TV_LOW
 
 /**
  * @brief Trigger decoding happens here
+ * This method is invoked every time we have a fall or rise on one of the trigger sensors.
  * This method changes the state of trigger_state_s data structure according to the trigger event
+ * @param signal type of event which just happened
+ * @param nowNt current time
  */
 void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_S) {
 	efiAssertVoid(signal <= SHAFT_3RD_UP, "unexpected signal");
