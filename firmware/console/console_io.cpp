@@ -163,8 +163,6 @@ bool_t consoleInBinaryMode = false;
 
 ts_channel_s binaryConsole;
 
-uint8_t buffer[DL_OUTPUT_BUFFER];
-
 static THD_WORKING_AREA(consoleThreadStack, 2 * UTILITY_THREAD_STACK_SIZE);
 static msg_t consoleThreadThreadEntryPoint(void *arg) {
 	(void) arg;
@@ -180,8 +178,6 @@ static msg_t consoleThreadThreadEntryPoint(void *arg) {
 #endif /* EFI_PROD_CODE */
 
 	binaryConsole.channel = (BaseChannel *) getConsoleChannel();
-	// todo: clean this spot!
-	binaryConsole.writeBuffer = buffer;
 
 	while (true) {
 		efiAssert(getRemainingStack(chThdSelf()) > 256, "lowstck#9e", 0);

@@ -35,7 +35,11 @@ typedef enum {
 
 typedef struct {
 	BaseChannel * channel;
-	uint8_t *writeBuffer;
+	/**
+	 * we use 'blockingFactor = 256' in rusefi.ini
+	 * todo: should we just do (256 + CRC_WRAPPING_SIZE) ?
+	 */
+	uint8_t writeBuffer[300];
 	char crcReadBuffer[300];
 } ts_channel_s;
 

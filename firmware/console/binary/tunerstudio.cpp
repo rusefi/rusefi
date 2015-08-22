@@ -759,13 +759,6 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 	return true;
 }
 
-/**
- * we use 'blockingFactor = 256' in rusefi.ini
- * todo: should we just do (256 + CRC_WRAPPING_SIZE) ?
- */
-
-static uint8_t tsCrcWriteBuffer[300];
-
 void startTunerStudioConnectivity(void) {
 	if (sizeof(persistent_config_s) != getTunerStudioPageSize(0))
 		firmwareError("TS page size mismatch: %d/%d", sizeof(persistent_config_s), getTunerStudioPageSize(0));
@@ -781,7 +774,6 @@ void startTunerStudioConnectivity(void) {
 	addConsoleActionI("set_ts_speed", setTsSpeed);
 
 	tsChannel.channel = getTsSerialDevice();
-	tsChannel.writeBuffer = tsCrcWriteBuffer;
 
 	chThdCreateStatic(tsThreadStack, sizeof(tsThreadStack), NORMALPRIO, tsThreadEntryPoint, NULL);
 }
