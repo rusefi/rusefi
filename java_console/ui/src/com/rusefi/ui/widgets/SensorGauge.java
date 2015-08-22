@@ -28,7 +28,7 @@ public class SensorGauge {
     }
 
     public static Component createGauge(Sensor sensor, GaugeChangeListener listener) {
-        JPanel wrapper = new JPanel(new BorderLayout());
+        JPanelWithListener wrapper = new JPanelWithListener(new BorderLayout());
 
         createGaugeBody(sensor, wrapper, listener);
 
@@ -51,7 +51,7 @@ public class SensorGauge {
         void onSensorChange(Sensor sensor);
     }
 
-    private static void createGaugeBody(final Sensor sensor, final JPanel wrapper, final GaugeChangeListener listener) {
+    private static void createGaugeBody(final Sensor sensor, final JPanelWithListener wrapper, final GaugeChangeListener listener) {
         final Radial gauge = createRadial(sensor.getName(), sensor.getUnits(), sensor.getMaxValue(), sensor.getMinValue());
 
         UiUtils.setTwoLineToolTip(gauge, "Double-click to detach", "Right-click to change");
@@ -82,13 +82,13 @@ public class SensorGauge {
         UiUtils.trueLayout(wrapper.getParent());
     }
 
-    private static void showPopupMenu(MouseEvent e, JPanel wrapper, GaugeChangeListener listener) {
+    private static void showPopupMenu(MouseEvent e, JPanelWithListener wrapper, GaugeChangeListener listener) {
         JPopupMenu pm = new JPopupMenu();
         fillGaugeItems(pm, wrapper, listener);
         pm.show(e.getComponent(), e.getX(), e.getY());
     }
 
-    private static void fillGaugeItems(JPopupMenu popupMenu, final JPanel wrapper, final GaugeChangeListener listener) {
+    private static void fillGaugeItems(JPopupMenu popupMenu, final JPanelWithListener wrapper, final GaugeChangeListener listener) {
         for (final SensorCategory sc : SensorCategory.values()) {
             JMenuItem cmi = new JMenu(sc.getName());
             popupMenu.add(cmi);
