@@ -30,8 +30,13 @@ public class JPanelWithListener extends JPanel {
     }
 
     public synchronized void removeAllMouseListeners() {
-        for(MouseListener l : listeners)
+        for (MouseListener l : listeners)
             super.removeMouseListener(l);
         listeners.clear();
+    }
+
+    public void removeAllChildrenAndListeners() {
+        removeAll();
+        removeAllMouseListeners();
     }
 }
