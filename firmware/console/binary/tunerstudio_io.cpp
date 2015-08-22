@@ -83,21 +83,22 @@ void tunerStudioWriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int s
  * Adds size to the beginning of a packet and a crc32 at the end. Then send the packet.
  */
 void tunerStudioWriteCrcPacket(ts_channel_s *tsChannel, const uint8_t command, const void *buf, const uint16_t size) {
-
 	uint8_t *writeBuffer = tsChannel->writeBuffer;
 
-	// todo: max size validation
 	*(uint16_t *) writeBuffer = SWAP_UINT16(size + 1);   // packet size including command
 	*(uint8_t *) (writeBuffer + 2) = command;
-	if (size != 0)
-		memcpy(writeBuffer + 3, buf, size);
+	tunerStudioWriteData(tsChannel, writeBuffer, 3);      // header
+
 	// CRC on whole packet
-	uint32_t crc = crc32((void *) (writeBuffer + 2), (uint32_t) (size + 1));
-	*(uint32_t *) (writeBuffer + 2 + 1 + size) = SWAP_UINT32(crc);
+	uint32_t crc = crc32((void *) (writeBuffer + 2), 1); // command part of CRC
+	crc = crc32inc((void *) buf, crc, (uint32_t) (size)); // combined with packet CRC
+	*(uint32_t *) (writeBuffer) = SWAP_UINT32(crc);
 
-//	scheduleMsg(logger, "TunerStudio: CRC command %x size %d", command, size);
+	if (size > 0) {
+		tunerStudioWriteData(tsChannel, (const uint8_t*)buf, size);      // body
+	}
 
-	tunerStudioWriteData(tsChannel, writeBuffer, size + 2 + 1 + 4);      // with size, command and CRC
+	tunerStudioWriteData(tsChannel, writeBuffer, 4);      // CRC footer
 }
 
 void tsSendResponse(ts_channel_s *tsChannel, ts_response_format_e mode, const uint8_t * buffer, int size) {

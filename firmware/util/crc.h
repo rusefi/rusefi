@@ -18,6 +18,7 @@ extern "C" {
 
 crc_t calc_crc(const crc_t message[], int nBytes);
 uint32_t crc32(const void *buf, uint32_t size);
+uint32_t crc32inc(const void *buf, uint32_t crc, uint32_t size);
 
 #ifdef __cplusplus
 }
