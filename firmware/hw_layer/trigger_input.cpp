@@ -53,7 +53,8 @@ static void shaft_icu_period_callback(ICUDriver *icup) {
 
 	// todo: add support for 3rd channel
 	//	icucnt_t last_period = icuGetPeriod(icup); so far we are fine with system time
-	trigger_event_e signal = isPrimary ? SHAFT_PRIMARY_DOWN : SHAFT_SECONDARY_DOWN;
+	trigger_event_e signal =
+			isPrimary ? SHAFT_PRIMARY_DOWN : SHAFT_SECONDARY_DOWN;
 	if (isLessImportant(signal) && CONFIG(useOnlyFrontForTrigger))
 		return;
 	hwHandleShaftSignal(signal);
@@ -103,7 +104,8 @@ static void turnOffTriggerInputPin(brain_pin_e hwPin) {
 }
 
 static void rememberPrimaryChannel(void) {
-	primaryCrankDriver = getInputCaptureDriver(boardConfiguration->triggerInputPins[0]);
+	primaryCrankDriver = getInputCaptureDriver(
+			boardConfiguration->triggerInputPins[0]);
 }
 
 void turnOnTriggerInputPins(Logging *sharedLogger) {
@@ -118,25 +120,27 @@ void turnOnTriggerInputPins(Logging *sharedLogger) {
 extern engine_configuration_s activeConfiguration;
 
 void stopTriggerInputPins(void) {
-for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
-	if (boardConfiguration->triggerInputPins[i] != activeConfiguration.bc.triggerInputPins[i]) {
-		turnOffTriggerInputPin(activeConfiguration.bc.triggerInputPins[i]);
+	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
+		if (boardConfiguration->triggerInputPins[i]
+				!= activeConfiguration.bc.triggerInputPins[i]) {
+			turnOffTriggerInputPin(activeConfiguration.bc.triggerInputPins[i]);
+		}
 	}
-}
 }
 
 void applyNewTriggerInputPins(void) {
 // first we will turn off all the changed pins
-stopTriggerInputPins();
+	stopTriggerInputPins();
 
 // then we will enable all the changed pins
-for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
-	if (boardConfiguration->triggerInputPins[i] != activeConfiguration.bc.triggerInputPins[i]) {
-		turnOnTriggerInputPin(boardConfiguration->triggerInputPins[i]);
+	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
+		if (boardConfiguration->triggerInputPins[i]
+				!= activeConfiguration.bc.triggerInputPins[i]) {
+			turnOnTriggerInputPin(boardConfiguration->triggerInputPins[i]);
+		}
 	}
-}
 
-rememberPrimaryChannel();
+	rememberPrimaryChannel();
 }
 
 #endif /* EFI_SHAFT_POSITION_INPUT */
