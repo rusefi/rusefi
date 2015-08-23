@@ -25,12 +25,22 @@ public class GaugesGridElement {
         this.config = config;
     }
 
-    private Component createLiveBarElement(Sensor defaultSensor) {
+    private Component createLiveBarElement(final Node config, final Sensor defaultSensor) {
         wrapper.setLayout(new GridLayout(2, 1));
 
-        wrapper.add(new SensorLiveGraph());
-        wrapper.add(new SensorLiveGraph());
+        JMenuItem switchToGauge = new JMenuItem("Switch to Gauge Mode");
+        switchToGauge.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                wrapper.removeAllChildrenAndListeners();
+                config.setBoolProperty(IS_LIVE_GRAPH, false);
 
+                createGauge(defaultSensor);
+            }
+        });
+
+        wrapper.add(new SensorLiveGraph(config.getChild("top"), defaultSensor, switchToGauge));
+        wrapper.add(new SensorLiveGraph(config.getChild("bottom"), Sensor.RPM, switchToGauge));
         return wrapper;
     }
 
@@ -42,16 +52,14 @@ public class GaugesGridElement {
             }
         };
 
-        JMenuItem switchToLiveGraph = new JMenuItem("Live Graph");
+        JMenuItem switchToLiveGraph = new JMenuItem("Switch to Live Graph");
         switchToLiveGraph.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 wrapper.removeAllChildrenAndListeners();
-
                 config.setBoolProperty(IS_LIVE_GRAPH, true);
 
-                createLiveBarElement(sensor);
-
+                createLiveBarElement(config, sensor);
             }
         });
 
@@ -64,21 +72,12 @@ public class GaugesGridElement {
     public static Component read(final Node config, Sensor defaultSensor) {
 
         if (config.getBoolProperty(IS_LIVE_GRAPH)) {
-            return new GaugesGridElement(config).createLiveBarElement(defaultSensor);
+            return new GaugesGridElement(config).createLiveBarElement(config, defaultSensor);
         }
 
         String gaugeName = config.getProperty(GAUGE_TYPE, defaultSensor.name());
-        Sensor sensor = lookup(gaugeName, defaultSensor);
+        Sensor sensor = Sensor.lookup(gaugeName, defaultSensor);
         return new GaugesGridElement(config).createGauge(sensor);
     }
 
-    private static Sensor lookup(String gaugeName, Sensor defaultValue) {
-        Sensor sensor;
-        try {
-            sensor = Sensor.valueOf(Sensor.class, gaugeName);
-        } catch (IllegalArgumentException e) {
-            sensor = defaultValue;
-        }
-        return sensor;
-    }
 }

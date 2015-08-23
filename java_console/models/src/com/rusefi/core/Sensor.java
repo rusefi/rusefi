@@ -135,6 +135,16 @@ public enum Sensor {
         return advance > 360 ? advance - 720 : advance;
     }
 
+    public static Sensor lookup(String gaugeName, Sensor defaultValue) {
+        Sensor sensor;
+        try {
+            sensor = valueOf(Sensor.class, gaugeName);
+        } catch (IllegalArgumentException e) {
+            sensor = defaultValue;
+        }
+        return sensor;
+    }
+
     public String getName() {
         return name;
     }
