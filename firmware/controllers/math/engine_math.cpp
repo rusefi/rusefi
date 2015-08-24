@@ -128,6 +128,7 @@ void FuelSchedule::registerInjectionEvent(int injectorIndex, float angle,
 		return;
 	}
 
+	ev->injectorIndex = injectorIndex;
 	ev->actuator.output = output;
 
 	ev->isSimultanious = isSimultanious;

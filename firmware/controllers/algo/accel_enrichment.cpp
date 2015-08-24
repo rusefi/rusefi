@@ -35,24 +35,23 @@ static Logging *logger;
 WallFuel wallFuel;
 
 WallFuel::WallFuel() {
-	wallFuel = 0;
+	memset(wallFuel, 0, sizeof(wallFuel));
 }
 
-floatms_t WallFuel::adjust(floatms_t target DECLARE_ENGINE_PARAMETER_S) {
-	float suckedOffCoef = 0;
-	float addedToWallCoef = 0;
+floatms_t WallFuel::adjust(int injectorIndex, floatms_t target DECLARE_ENGINE_PARAMETER_S) {
+	float addedToWallCoef = engineConfiguration->addedToWallCoef;
 
-	floatms_t suckedOffWallsAmount = wallFuel * suckedOffCoef;
+	floatms_t suckedOffWallsAmount = wallFuel[injectorIndex] * engineConfiguration->suckedOffCoef;
 
 	floatms_t result = (target - suckedOffWallsAmount) / (1 - addedToWallCoef);
 
 	float addedToWallsAmount = result * addedToWallCoef;
-	wallFuel = wallFuel + addedToWallsAmount - suckedOffWallsAmount;
+	wallFuel[injectorIndex] = wallFuel[injectorIndex] + addedToWallsAmount - suckedOffWallsAmount;
 	return result;
 }
 
-floatms_t WallFuel::getWallFuel() {
-	return wallFuel;
+floatms_t WallFuel::getWallFuel(int injectorIndex) {
+	return wallFuel[injectorIndex];
 }
 
 float AccelEnrichmemnt::getDelta() {

@@ -89,6 +89,9 @@ public:
 	float iat;
 	float clt;
 
+	/**
+	 * that's fuel in tank - just a gauge
+	 */
 	percent_t fuelLevel;
 
 	ThermistorMath iatCurve;
@@ -185,9 +188,14 @@ public:
 	AccelEnrichmemnt tpsAccelEnrichment;
 
 	/**
-	 * Fuel injection duration for current engine cycle
+	 * Fuel injection duration for current engine cycle, without wall wetting
 	 */
 	floatms_t fuelMs;
+
+	/**
+	 * This one with wall wetting accounted for, used for logging.
+	 */
+	floatms_t actualLastInjection;
 
 
 	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_F);

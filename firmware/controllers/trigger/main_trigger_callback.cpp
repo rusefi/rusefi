@@ -101,8 +101,17 @@ static void endSimultaniousInjection(Engine *engine) {
 	}
 }
 
+extern WallFuel wallFuel;
+
 static ALWAYS_INLINE void handleFuelInjectionEvent(InjectionEvent *event, int rpm DECLARE_ENGINE_PARAMETER_S) {
-	floatms_t injectionDuration = ENGINE(fuelMs);
+	/**
+	 * todo: this is a bit tricky with batched injection. is it? Does the same
+	 * wetting coefficient works the same way for any injection mode, or is something
+	 * x2 or /2?
+	 */
+	floatms_t injectionDuration = ENGINE(fuelMs);//wallFuel.adjust(event->injectorIndex, ENGINE(fuelMs));
+
+	ENGINE(actualLastInjection) = injectionDuration;
 	if (cisnan(injectionDuration)) {
 		warning(OBD_PCM_Processor_Fault, "NaN injection pulse");
 		return;
