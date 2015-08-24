@@ -114,7 +114,7 @@ percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_S) {
 }
 
 /**
- * @returns	Length of fuel injection, in milliseconds
+ * @returns	Length of each individual fuel injection, in milliseconds
  */
 floatms_t getFuelMs(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	float theoreticalInjectionLength;

@@ -43,7 +43,7 @@ public:
 	int eventsCount;
 private:
 	void clear();
-	void registerInjectionEvent(NamedOutputPin *output, float angle, bool_t isSimultanious DECLARE_ENGINE_PARAMETER_S);
+	void registerInjectionEvent(int injectorIndex, float angle, bool_t isSimultanious DECLARE_ENGINE_PARAMETER_S);
 };
 
 /**

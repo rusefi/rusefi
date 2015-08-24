@@ -88,6 +88,9 @@ public enum Sensor {
     INJECTOR_4_DWELL("inj #4", SensorCategory.SNIFFING),
 
     CURRENT_VE(SensorCategory.OPERATIONS, FieldType.FLOAT, 112, BackgroundColor.MUD),
+    MAP_ACCEL_DELTA(SensorCategory.OPERATIONS, FieldType.FLOAT, 124, BackgroundColor.MUD),
+    TPS_ACCEL_FUEL(SensorCategory.OPERATIONS, FieldType.FLOAT, 128, BackgroundColor.MUD),
+    WALL_FUEL(SensorCategory.OPERATIONS, FieldType.FLOAT, 160, BackgroundColor.MUD),
 
     INJ_1_2_DELTA("inj 1-2 delta", SensorCategory.SNIFFING),
     INJ_3_4_DELTA("inj 3-4 delta", SensorCategory.SNIFFING),
