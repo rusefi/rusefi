@@ -19,7 +19,13 @@
 class AccelEnrichmemnt {
 public:
 	AccelEnrichmemnt();
+	/**
+	 * @return Extra MAP value for Speed Density calculation
+	 */
 	float getMapEnrichment(DECLARE_ENGINE_PARAMETER_F);
+	/**
+	 * @return Extra fuel squirt duration for TPS acceleration
+	 */
 	floatms_t getTpsEnrichment(DECLARE_ENGINE_PARAMETER_F);
 	float getDelta();
 
@@ -35,8 +41,10 @@ private:
 };
 
 class WallFuel {
+public:
 	WallFuel();
 	floatms_t adjust(floatms_t target DECLARE_ENGINE_PARAMETER_S);
+	floatms_t getWallFuel();
 
 private:
 	/**
