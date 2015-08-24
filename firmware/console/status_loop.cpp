@@ -385,7 +385,7 @@ void updateDevConsoleState(Engine *engine) {
 	scheduleLogging(&logger);
 }
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 
 /*
  * command example:
@@ -428,7 +428,7 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 #endif
 }
 
-#if EFI_ENGINE_CONTROL
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 static void showFuelInfo(void) {
 	showFuelInfo2((float) getRpmE(engine), getEngineLoadT(PASS_ENGINE_PARAMETER_F));
 }
@@ -453,12 +453,12 @@ extern engine_pins_s enginePins;
 static OutputPin *leds[] = { &warningPin, &runningPin, &enginePins.errorLedPin, &communicationPin, &checkEnginePin };
 
 static void initStatisLeds() {
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	outputPinRegister("communication status 1", &communicationPin,
 	LED_COMMUNICATION_PORT, LED_COMMUNICATION_PIN);
 #endif
 
-#if EFI_WARNING_LED
+#if EFI_WARNING_LED || defined(__DOXYGEN__)
 	outputPinRegister("warning", &warningPin, LED_WARNING_PORT,
 	LED_WARNING_PIN);
 	outputPinRegister("is running status", &runningPin, LED_RUNNING_STATUS_PORT,
@@ -544,7 +544,9 @@ static void lcdThread(void *arg) {
 	}
 }
 
-#if EFI_TUNER_STUDIO
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+
+extern WallFuel wallFuel;
 
 extern fuel_Map3D_t veMap;
 
@@ -598,6 +600,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->fuelLevel = engine->engineState.fuelLevel;
 	tsOutputChannels->hasFatalError = hasFirmwareError();
 	tsOutputChannels->totalTriggerErrorCounter = triggerCentral.triggerState.totalTriggerErrorCounter;
+	tsOutputChannels->wallFuelAmount = wallFuel.getWallFuel();
 
 	tsOutputChannels->checkEngine = hasErrorCodes();
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
