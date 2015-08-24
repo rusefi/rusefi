@@ -43,14 +43,14 @@ private:
 class WallFuel {
 public:
 	WallFuel();
-	floatms_t adjust(floatms_t target DECLARE_ENGINE_PARAMETER_S);
-	floatms_t getWallFuel();
+	floatms_t adjust(int injectorIndex, floatms_t target DECLARE_ENGINE_PARAMETER_S);
+	floatms_t getWallFuel(int injectorIndex);
 
 private:
 	/**
-	 * Amount of fuel on the wall, in injector open time scale
+	 * Amount of fuel on the wall, in injector open time scale, for specific injector.
 	 */
-	floatms_t wallFuel;
+	floatms_t wallFuel[INJECTION_PIN_COUNT];
 };
 
 void initAccelEnrichment(Logging *sharedLogger);

@@ -198,7 +198,6 @@ static void printSensors(Logging *log, bool fileFormat) {
 	if (fileFormat) {
 		reportSensorF(log, fileFormat, "tpsacc", "ms", engine->tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_F), 2);
 		reportSensorF(log, fileFormat, "advance", "deg", engine->tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_F), 2);
-		reportSensorF(log, fileFormat, "advance", "deg", getFuelMs(rpm PASS_ENGINE_PARAMETER), 2);
 	}
 
 	if (engineConfiguration->hasCltSensor) {
@@ -261,7 +260,7 @@ static void printState(void) {
 //	debugFloat(&logger, "fuel_iat", getIatCorrection(getIntakeAirTemperature()), 2);
 //	debugFloat(&logger, "fuel_clt", getCltCorrection(getCoolantTemperature()), 2);
 	debugFloat(&logger, "fuel_lag", engine->injectorLagMs, 2);
-	debugFloat(&logger, "fuel", getFuelMs(rpm PASS_ENGINE_PARAMETER), 2);
+	debugFloat(&logger, "fuel", ENGINE(actualLastInjection), 2);
 
 	debugFloat(&logger, "timing", engine->engineState.timingAdvance, 2);
 
@@ -600,7 +599,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->fuelLevel = engine->engineState.fuelLevel;
 	tsOutputChannels->hasFatalError = hasFirmwareError();
 	tsOutputChannels->totalTriggerErrorCounter = triggerCentral.triggerState.totalTriggerErrorCounter;
-	tsOutputChannels->wallFuelAmount = wallFuel.getWallFuel();
+	tsOutputChannels->wallFuelAmount = wallFuel.getWallFuel(0);
 
 	tsOutputChannels->checkEngine = hasErrorCodes();
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -642,7 +641,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->ignitionAdvance = timing > 360 ? timing - 720 : timing;
 	tsOutputChannels->sparkDwell = ENGINE(engineState.sparkDwell);
 	tsOutputChannels->baseFuel = baseFuelMs;
-	tsOutputChannels->pulseWidthMs = getFuelMs(rpm PASS_ENGINE_PARAMETER);
+	tsOutputChannels->pulseWidthMs = ENGINE(actualLastInjection);
 	tsOutputChannels->crankingFuelMs = getCrankingFuel(PASS_ENGINE_PARAMETER_F);
 }
 

@@ -36,6 +36,7 @@ public:
 	InjectionEvent();
 	event_trigger_position_s injectionStart;
 	OutputSignal actuator;
+	int injectorIndex;
 	/**
 	 * This is a performance optimization - it's more efficient to handle all
 	 * injectors together if that's the case
