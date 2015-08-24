@@ -41,7 +41,7 @@ WallFuel::WallFuel() {
 floatms_t WallFuel::adjust(int injectorIndex, floatms_t target DECLARE_ENGINE_PARAMETER_S) {
 	float addedToWallCoef = engineConfiguration->addedToWallCoef;
 
-	floatms_t suckedOffWallsAmount = wallFuel[injectorIndex] * engineConfiguration->suckedOffCoef;
+	floatms_t suckedOffWallsAmount = 0;//wallFuel[injectorIndex] * engineConfiguration->suckedOffCoef;
 
 	floatms_t result = (target - suckedOffWallsAmount) / (1 - addedToWallCoef);
 

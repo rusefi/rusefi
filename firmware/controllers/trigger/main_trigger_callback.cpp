@@ -109,7 +109,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(InjectionEvent *event, int rp
 	 * wetting coefficient works the same way for any injection mode, or is something
 	 * x2 or /2?
 	 */
-	floatms_t injectionDuration = ENGINE(fuelMs);//wallFuel.adjust(event->injectorIndex, ENGINE(fuelMs));
+	floatms_t injectionDuration = wallFuel.adjust(event->injectorIndex, ENGINE(fuelMs) PASS_ENGINE_PARAMETER);
 
 	ENGINE(actualLastInjection) = injectionDuration;
 	if (cisnan(injectionDuration)) {
