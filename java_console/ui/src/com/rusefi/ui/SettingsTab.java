@@ -65,6 +65,9 @@ public class SettingsTab {
         panel.add(UiUtils.wrap(new ConfigField(Fields.IGNITIONOFFSET, "Ignition offset").getContent()));
         panel.add(UiUtils.wrap(new ConfigField(Fields.CRANKINGTIMINGANGLE, "Cranking timing").getContent()));
 
+        panel.add(UiUtils.wrap(new ConfigField(Fields.ADDEDTOWALLCOEF, "Added to wall").getContent()));
+        panel.add(UiUtils.wrap(new ConfigField(Fields.SUCKEDOFFCOEF, "Sucked off wall").getContent()));
+
         panel.add(UiUtils.wrap(RecentCommands.createButton(new AtomicBoolean(), "writeconfig")));
 
         content.add(panel);
