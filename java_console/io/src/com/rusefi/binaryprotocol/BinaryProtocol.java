@@ -1,8 +1,12 @@
 package com.rusefi.binaryprotocol;
 
 import com.rusefi.*;
+import com.rusefi.config.Field;
+import com.rusefi.config.FieldType;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Pair;
+import com.rusefi.core.Sensor;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.DataListener;
 import com.rusefi.io.IoStream;
@@ -10,12 +14,13 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.CommunicationLoggingHolder;
 import com.rusefi.io.serial.PortHolder;
 import com.rusefi.io.serial.SerialIoStream;
-import etch.util.CircularByteBuffer;
 import jssc.SerialPort;
 import jssc.SerialPortException;
 
 import java.io.EOFException;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -29,6 +34,8 @@ import static com.rusefi.binaryprotocol.IoHelper.*;
  * 3/6/2015
  */
 public class BinaryProtocol {
+    private static final int OUTPUT_CHANNELS_SIZE = 196;
+
     private static final int BLOCKING_FACTOR = 256;
     private static final byte RESPONSE_OK = 0;
     private static final byte RESPONSE_BURN_OK = 0x04;
@@ -117,6 +124,7 @@ public class BinaryProtocol {
 
     /**
      * this method would switch controller to binary protocol and read configuration snapshot from controller
+     *
      * @return true if everything fine
      */
     public boolean connectAndReadConfiguration(DataListener listener) {
@@ -142,7 +150,8 @@ public class BinaryProtocol {
                         LinkManager.COMMUNICATION_EXECUTOR.submit(new Runnable() {
                             @Override
                             public void run() {
-                                String text = requestText();
+                                requestOutputChannels();
+                                String text = requestPendingMessages();
                                 if (text != null)
                                     listener.onDataArrived((text + "\r\n").getBytes());
                             }
@@ -426,7 +435,7 @@ public class BinaryProtocol {
         return true;
     }
 
-    public String requestText() {
+    public String requestPendingMessages() {
         if (isClosed)
             return null;
         try {
@@ -438,5 +447,30 @@ public class BinaryProtocol {
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    public void requestOutputChannels() {
+        if (isClosed)
+            return;
+//        try {
+        byte[] response = executeCommand(new byte[]{'O'}, "output channels", false);
+        if (response == null || response.length != (OUTPUT_CHANNELS_SIZE + 1) || response[0] != RESPONSE_OK)
+            return;
+
+        for (Sensor sensor : Sensor.values()) {
+            if (sensor.getType() == FieldType.FLOAT) {
+
+                ByteBuffer bb = ByteBuffer.wrap(response, 1 + sensor.getOffset(), 4);
+                bb.order(ByteOrder.LITTLE_ENDIAN);
+
+                double value = bb.getFloat();
+
+                SensorCentral.getInstance().setValue(value, sensor);
+            }
+        }
+
+//        } catch (InterruptedException e) {
+//            throw new IllegalStateException(e);
+//        }
     }
 }

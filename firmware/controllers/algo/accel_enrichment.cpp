@@ -32,6 +32,8 @@ EXTERN_ENGINE
 
 static Logging *logger;
 
+WallFuel wallFuel;
+
 WallFuel::WallFuel() {
 	wallFuel = 0;
 }
@@ -47,6 +49,10 @@ floatms_t WallFuel::adjust(floatms_t target DECLARE_ENGINE_PARAMETER_S) {
 	float addedToWallsAmount = result * addedToWallCoef;
 	wallFuel = wallFuel + addedToWallsAmount - suckedOffWallsAmount;
 	return result;
+}
+
+floatms_t WallFuel::getWallFuel() {
+	return wallFuel;
 }
 
 float AccelEnrichmemnt::getDelta() {

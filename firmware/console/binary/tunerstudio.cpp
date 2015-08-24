@@ -26,8 +26,6 @@
  * These two commands are enough to get working gauges. In order to start configuring the ECU using
  * tuner studio, three more commands should be implemented:
  *
- * todo: merge this file with tunerstudio.c?
- *
  *
  * @date Oct 22, 2013
  * @author Andrey Belomutskiy, (c) 2012-2015
@@ -45,7 +43,6 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Andrey Belomutskiy, (c) 2012-2015
  *
  * This file is part of rusEfi - see http://rusefi.com
  *

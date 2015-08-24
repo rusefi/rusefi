@@ -1,5 +1,6 @@
 package com.rusefi.core;
 
+import com.rusefi.config.FieldType;
 import eu.hansolo.steelseries.tools.BackgroundColor;
 
 import java.util.ArrayList;
@@ -86,6 +87,7 @@ public enum Sensor {
     INJECTOR_3_DWELL("inj #3", SensorCategory.SNIFFING),
     INJECTOR_4_DWELL("inj #4", SensorCategory.SNIFFING),
 
+    CURRENT_VE(SensorCategory.OPERATIONS, FieldType.FLOAT, 112, BackgroundColor.MUD),
 
     INJ_1_2_DELTA("inj 1-2 delta", SensorCategory.SNIFFING),
     INJ_3_4_DELTA("inj 3-4 delta", SensorCategory.SNIFFING),
@@ -97,6 +99,19 @@ public enum Sensor {
     private final double minValue;
     private final double maxValue;
     private final BackgroundColor color;
+    private final FieldType type;
+    private final int offset;
+
+    Sensor(SensorCategory category, FieldType type, int offset, BackgroundColor color) {
+        name = name();
+        this.type = type;
+        this.offset = offset;
+        this.category = category;
+        this.color = color;
+        units = "n/a";
+        minValue = 0;
+        maxValue = 100;
+    }
 
     Sensor(String name, SensorCategory category) {
         this(name, category, "", 255);
@@ -117,6 +132,8 @@ public enum Sensor {
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.color = color;
+        type = null;
+        offset = -1;
     }
 
     public static ArrayList<Sensor> getSensorsForCategory(String category) {
@@ -167,6 +184,14 @@ public enum Sensor {
 
     public BackgroundColor getColor() {
         return color;
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public FieldType getType() {
+        return type;
     }
 
     public double translateValue(double value) {
