@@ -25,7 +25,9 @@ void initDodgeRam(TriggerShape *s) {
 }
 
 void configureNeon2003TriggerShape(TriggerShape *s) {
-	s->reset(FOUR_STROKE_CAM_SENSOR, true);
+	bool_t useOnlyPrimary = false;
+
+	s->reset(FOUR_STROKE_CAM_SENSOR, !useOnlyPrimary);
 	s->useRiseEdge = true;
 	s->gapBothDirections = true;
 
@@ -33,7 +35,9 @@ void configureNeon2003TriggerShape(TriggerShape *s) {
 	s->setTriggerSynchronizationGap2(0.5 * CHRYSLER_NGC_GAP, 1.5 * CHRYSLER_NGC_GAP);
 
 	s->useOnlyPrimaryForSync = true;
-/*
+
+	if (useOnlyPrimary) {
+
 
 	s->addEvent(143.0712499, T_PRIMARY, TV_HIGH);
 	s->addEvent(182.684791, T_PRIMARY, TV_LOW);
@@ -55,7 +59,8 @@ void configureNeon2003TriggerShape(TriggerShape *s) {
 
 	s->addEvent(684.1080, T_PRIMARY, TV_HIGH);
 	s->addEvent(720, T_PRIMARY, TV_LOW);
-*/
+
+	} else {
 
 	s->addEvent(25.557796298609748, T_SECONDARY, TV_LOW);
 	s->addEvent(29.669658950975318, T_SECONDARY, TV_HIGH);
@@ -199,6 +204,8 @@ void configureNeon2003TriggerShape(TriggerShape *s) {
 	s->addEvent(714.0634982956473, T_SECONDARY, TV_LOW);
 	s->addEvent(718.9463351953314, T_SECONDARY, TV_HIGH);
 	s->addEvent(720.0, T_PRIMARY, TV_LOW);
+
+	}
 }
 
 void configureNeon1995TriggerShape(TriggerShape *s) {
