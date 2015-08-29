@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.rusefi.trigger.WaveState;
 import com.rusefi.ui.engine.UpDownImage;
 import com.rusefi.ui.util.FrameHelper;
 import com.rusefi.ui.util.UiUtils;
@@ -11,6 +12,7 @@ import java.awt.*;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,7 +28,7 @@ public class TriggerImage {
     /**
      * number of extra frames
      */
-    private static int EXTRA_COUNT = 1;
+    public static int EXTRA_COUNT = 1;
 
     private static int WAVE_COUNT = 2;
 
@@ -40,7 +42,7 @@ public class TriggerImage {
 
         FrameHelper f = new FrameHelper();
 
-        final TriggerPanel triggerPanel = new TriggerPanel(new GridLayout(WAVE_COUNT, 1)) {
+        final TriggerPanel triggerPanel = new TriggerPanel() {
             @Override
             public Dimension getPreferredSize() {
                 return new Dimension((1 + EXTRA_COUNT) * WIDTH, 480);
@@ -103,7 +105,11 @@ public class TriggerImage {
 
         UpDownImage upDownImage1 = new UpDownImage(re1, "trigger");
         upDownImage1.showText = false;
-        if (!re1.getList().isEmpty())
+        boolean isSingleSenssor = re1.getList().isEmpty();
+
+        triggerPanel.setLayout(new GridLayout(isSingleSenssor ? 1 : 2, 1));
+
+        if (!isSingleSenssor)
             triggerPanel.add(upDownImage1);
 
         triggerPanel.name = triggerName;
@@ -161,7 +167,7 @@ public class TriggerImage {
         return waves;
     }
 
-    private static int angleToTime(double prevUp) {
+    public static int angleToTime(double prevUp) {
         return (int) (prevUp);
     }
 
@@ -183,55 +189,26 @@ public class TriggerImage {
         }
     }
 
-    private static class WaveState {
-        double unusedDown = Double.NaN;
-        double prevUp = Double.NaN;
-
-        List<EngineReport.UpDown> list = new ArrayList<>();
-
-        public void handle(int signal, double angle) {
-            if (signal == 1) {
-                // down signal
-                if (Double.isNaN(prevUp)) {
-                    // we have down before up, we would need to use it later
-                    unusedDown = angle;
-                } else {
-                    EngineReport.UpDown ud = new EngineReport.UpDown(angleToTime(prevUp), 0, angleToTime(angle), 0);
-                    list.add(ud);
-                }
-                prevUp = Double.NaN;
-            } else {
-                // up signal handling
-                prevUp = angle;
-            }
-        }
-
-        public void wrap() {
-            if (!Double.isNaN(unusedDown)) {
-                list.add(0, new EngineReport.UpDown(angleToTime(prevUp), 0, angleToTime(unusedDown + 720 * (3 + EXTRA_COUNT)), 0));
-            }
-        }
-
-        public int getMaxTime() {
-            if (list.isEmpty())
-                return 0;
-            return list.get(list.size() - 1).downTime;
-        }
-    }
-
     private static class TriggerPanel extends JPanel {
         public String name = "";
         public int id;
-
-        public TriggerPanel(LayoutManager layout) {
-            super(layout);
-        }
 
         @Override
         public void paint(Graphics g) {
             super.paint(g);
 
             g.setColor(Color.black);
+
+            int w = getWidth();
+
+            String line = "(c) rusEfi 2015";
+            int off = g.getFontMetrics().stringWidth(line);
+            g.drawString(line, w - off, g.getFont().getSize());
+
+            line = new Date().toString();
+            off = g.getFontMetrics().stringWidth(line);
+            g.drawString(line, w - off, 2 * g.getFont().getSize());
+
             Font f = g.getFont();
             g.setFont(new Font(f.getName(), Font.BOLD, f.getSize() * 3));
 
