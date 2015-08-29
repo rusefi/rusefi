@@ -225,13 +225,15 @@ static void triggerShapeInfo(void) {
 #include <stdio.h>
 #include <stdlib.h>
 
+#define TRIGGERS_FILE_NAME "triggers.txt"
 
 /**
- * This is used to generate trigger info which is later used by TODO to generate images for documentation
+ * This is used to generate trigger info which is later used by TriggerImage java class
+ * to generate images for documentation
  */
 void printAllTriggers() {
 
-	FILE * fp = fopen ("triggers.txt", "w+");
+	FILE * fp = fopen (TRIGGERS_FILE_NAME, "w+");
 
 	for (int triggerId = 1; triggerId < TT_UNUSED; triggerId++) {
 		trigger_type_e tt = (trigger_type_e) triggerId;
@@ -263,7 +265,7 @@ void printAllTriggers() {
 
 	}
 	fclose(fp);
-	printf("All triggers exported\r\n");
+	printf("All triggers exported to %s\r\n", TRIGGERS_FILE_NAME);
 }
 
 #endif
