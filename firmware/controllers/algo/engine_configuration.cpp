@@ -554,6 +554,9 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->logicAnalyzerMode[0] = false;
 	boardConfiguration->logicAnalyzerMode[1] = false;
 
+	engineConfiguration->mapErrorLowValue = 5;
+	engineConfiguration->mapErrorHighValue = 250;
+
 	boardConfiguration->idleThreadPeriod = 100;
 	boardConfiguration->consoleLoopPeriod = 200;
 	boardConfiguration->lcdThreadPeriod = 300;

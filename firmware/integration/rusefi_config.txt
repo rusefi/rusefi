@@ -577,7 +577,9 @@ baro_corr_table_t baroCorrTable;
 	float[7] unused71;
 	float addedToWallCoef;;"%",        1,     0,    0.0,    300.0,  2
 	float[7] unused72;
-	int[65] unused3;
+	float mapErrorLowValue;kPa value which is too low to be true;"kPa",        1,     0,    -100.0,    100.0,  2
+	float mapErrorHighValue;kPa value which is too high to be true;"kPa",        1,     0,    -100.0,    800.0,  2
+	int[63] unused3;
 	
 	float targetVBatt;;"Volts",      1,      0,       0,30,      1
 	float alternatorOffAboveTps;Turn off alternator output above specified TPS;"%",  1,      0,       0, 200,      2
