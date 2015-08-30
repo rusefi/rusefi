@@ -122,7 +122,7 @@ void FuelSchedule::registerInjectionEvent(int injectorIndex, float angle,
 		warning(OBD_PCM_Processor_Fault, "no_pin_inj #%s", output->name);
 	}
 
-	InjectionEvent *ev = events.add();
+	InjectionEvent *ev = injectionEvents.add();
 	if (ev == NULL) {
 		// error already reported
 		return;
@@ -155,7 +155,7 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 	clear(); // this method is relatively heavy
 //	sourceList->reset();
 
-	events.reset();
+	injectionEvents.reset();
 
 	efiAssertVoid(engine!=NULL, "engine is NULL");
 

@@ -16,8 +16,13 @@ public class WaveState {
 
     public List<EngineReport.UpDown> list = new ArrayList<>();
 
-    public void handle(int signal, double angle) {
-        if (signal == 1) {
+    public enum trigger_value_e {
+        TV_LOW,
+        TV_HIGH
+    }
+
+    public void handle(WaveState.trigger_value_e signal, double angle) {
+        if (signal == trigger_value_e.TV_LOW) {
             // down signal
             if (Double.isNaN(prevUp)) {
                 // we have down before up, we would need to use it later

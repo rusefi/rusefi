@@ -265,7 +265,7 @@ void printAllTriggers() {
 			int triggerDefinitionCoordinate = (s->getTriggerShapeSynchPointIndex() + i) % s->getLength();
 
 
-			fprintf(fp, "event %d %d %f\r\n", i, s->events[triggerDefinitionCoordinate], s->eventAngles[i]);
+			fprintf(fp, "event %d %d %f\r\n", i, s->triggerSignals[triggerDefinitionCoordinate], s->eventAngles[i]);
 		}
 
 	}

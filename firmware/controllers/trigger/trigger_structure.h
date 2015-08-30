@@ -71,8 +71,11 @@ public:
 	 */
 	uint32_t expectedEventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
 
-#if EFI_UNIT_TEST
-	int events[PWM_PHASE_MAX_COUNT];
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+	/**
+	 * These signals are used for trigger export only
+	 */
+	int triggerSignals[PWM_PHASE_MAX_COUNT];
 #endif
 
 	multi_wave_s wave;

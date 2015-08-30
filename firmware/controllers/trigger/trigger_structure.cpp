@@ -51,10 +51,9 @@ TriggerShape::TriggerShape() :
 	memset(frontOnlyIndexes, 0, sizeof(frontOnlyIndexes));
 	memset(isFrontEvent, 0, sizeof(isFrontEvent));
 	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
-#if EFI_UNIT_TEST
-	memset(&events, 0, sizeof(events));
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+	memset(&triggerSignals, 0, sizeof(triggerSignals));
 #endif
-
 }
 
 int TriggerShape::getSize() const {
@@ -250,9 +249,9 @@ void TriggerShape::addEvent(float angle, trigger_wheel_e const waveIndex, trigge
 		state = stateParam;
 	}
 
-#if EFI_UNIT_TEST
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	int signal = waveIndex * 1000 + stateParam;
-	events[size] = signal;
+	triggerSignals[size] = signal;
 #endif
 
 	float engineCycle = getEngineCycle(operationMode);
@@ -263,7 +262,7 @@ void TriggerShape::addEvent(float angle, trigger_wheel_e const waveIndex, trigge
 	 */
 	angle /= engineCycle;
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 // todo: PASS_ENGINE?
 	if (!engineConfiguration->useOnlyFrontForTrigger || stateParam == TV_HIGH) {
 		expectedEventCount[waveIndex]++;
@@ -372,7 +371,7 @@ void setVwConfiguration(TriggerShape *s) {
 
 void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped,
 		operation_mode_e operationMode) {
-#if EFI_ENGINE_CONTROL
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 
 	s->useRiseEdge = true;
 
