@@ -209,7 +209,7 @@ void testMazdaMianaNbDecoder(void) {
 
 	engine_configuration_s *ec = eth.ec;
 	TriggerShape * shape = &eth.engine.triggerShape;
-	assertEquals(11, shape->getTriggerShapeSynchPointIndex());
+	assertEquals(12, shape->getTriggerShapeSynchPointIndex());
 
 	TriggerState state;
 
@@ -251,13 +251,13 @@ void testMazdaMianaNbDecoder(void) {
 	event_trigger_position_s position;
 	assertEqualsM("globalTriggerAngleOffset", 276, ec->globalTriggerAngleOffset);
 	findTriggerPosition(&position, 0 PASS_ENGINE_PARAMETER);
-	assertTriggerPosition(&position, 7, 46);
+	assertTriggerPosition(&position, 7, 0);
 
 	findTriggerPosition(&position, 180 PASS_ENGINE_PARAMETER);
-	assertTriggerPosition(&position, 13, 46);
+	assertTriggerPosition(&position, 13, 0);
 
 	findTriggerPosition(&position, 360 PASS_ENGINE_PARAMETER);
-	assertTriggerPosition(&position, 17, 46);
+	assertTriggerPosition(&position, 17, 0.0);
 
 	findTriggerPosition(&position, 444 PASS_ENGINE_PARAMETER);
 	assertTriggerPosition(&position, 0, 0);
@@ -269,10 +269,10 @@ void testMazdaMianaNbDecoder(void) {
 	assertTriggerPosition(&position, 0, 1);
 
 	findTriggerPosition(&position, 494 PASS_ENGINE_PARAMETER);
-	assertTriggerPosition(&position, 3, 0);
+	assertTriggerPosition(&position, 2, 20);
 
 	findTriggerPosition(&position, 719 PASS_ENGINE_PARAMETER);
-	assertTriggerPosition(&position, 7, 45);
+	assertTriggerPosition(&position, 6, 65);
 
 	ec->globalTriggerAngleOffset = 0;
 	findTriggerPosition(&position, 0 PASS_ENGINE_PARAMETER);
