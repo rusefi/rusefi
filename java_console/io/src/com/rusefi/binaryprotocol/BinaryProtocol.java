@@ -54,7 +54,8 @@ public class BinaryProtocol {
     private final IncomingDataBuffer incomingData;
     private boolean isBurnPending;
 
-    private final Object lock = new Object();
+    private final Object ioLock = new Object();
+    private final Object imageLock = new Object();
     private ConfigurationImage controller;
 
     // todo: fix this, this is HORRIBLE!
@@ -185,7 +186,7 @@ public class BinaryProtocol {
                 dropPending();
 
                 stream.write((SWITCH_TO_BINARY_COMMAND + "\n").getBytes());
-                synchronized (lock) {
+                synchronized (ioLock) {
                     boolean isTimeout = incomingData.waitForBytes(2, start, "switch to binary");
                     if (isTimeout) {
                         close();
@@ -211,7 +212,7 @@ public class BinaryProtocol {
     }
 
     private void dropPending() throws IOException {
-        synchronized (lock) {
+        synchronized (ioLock) {
             if (isClosed)
                 return;
             incomingData.dropPending();
@@ -246,7 +247,7 @@ public class BinaryProtocol {
 
     private byte[] receivePacket(String msg, boolean allowLongResponse) throws InterruptedException, EOFException {
         long start = System.currentTimeMillis();
-        synchronized (lock) {
+        synchronized (ioLock) {
             boolean isTimeout = incomingData.waitForBytes(2, start, msg + " header");
             if (isTimeout)
                 return null;
@@ -263,11 +264,8 @@ public class BinaryProtocol {
                 return null;
 
             byte[] packet = new byte[packetSize];
-            int packetCrc;
-            synchronized (lock) {
                 incomingData.getData(packet);
-                packetCrc = swap32(incomingData.getInt());
-            }
+            int packetCrc = swap32(incomingData.getInt());
             int actualCrc = crc32(packet);
 
             boolean isCrcOk = actualCrc == packetCrc;
@@ -393,13 +391,13 @@ public class BinaryProtocol {
     }
 
     public void setController(ConfigurationImage controller) {
-        synchronized (lock) {
+        synchronized (imageLock) {
             this.controller = controller.clone();
         }
     }
 
     public ConfigurationImage getController() {
-        synchronized (lock) {
+        synchronized (imageLock) {
             if (controller == null)
                 return null;
             return controller.clone();
