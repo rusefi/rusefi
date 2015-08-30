@@ -661,8 +661,11 @@
 #define addedToWallCoef_offset 1864
 #define addedToWallCoef_offset_hex 748
 #define unused72_offset 1868
-#define unused3_offset 1896
-#define unused3_offset_hex 768
+#define mapErrorLowValue_offset 1896
+#define mapErrorLowValue_offset_hex 768
+#define mapErrorHighValue_offset 1900
+#define unused3_offset 1904
+#define unused3_offset_hex 770
 #define targetVBatt_offset 2156
 #define alternatorOffAboveTps_offset 2160
 #define alternatorOffAboveTps_offset_hex 870
