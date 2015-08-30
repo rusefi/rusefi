@@ -32,6 +32,9 @@
 #include "wave_analyzer.h"
 #endif
 
+// see RUS_EFI_VERSION_TAG in console source code
+#define RUS_EFI_VERSION_TAG "rusEfiVersion"
+
 #include "trigger_central.h"
 #include "engine_state.h"
 #include "io_pins.h"
@@ -302,8 +305,10 @@ static void printInfo(systime_t nowSeconds) {
 		return;
 	}
 	timeOfPreviousPrintVersion = nowSeconds;
-	appendPrintf(&logger, "rusEfiVersion%s%d@%s %s%s", DELIMETER, getRusEfiVersion(), VCS_VERSION,
+	appendPrintf(&logger, "%s%s%d@%s %s %d%s", RUS_EFI_VERSION_TAG, DELIMETER,
+			getRusEfiVersion(), VCS_VERSION,
 			getConfigurationName(engineConfiguration->engineType),
+			getTimeNowSeconds(),
 			DELIMETER);
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	printOutPin(CRANK1, boardConfiguration->triggerInputPins[0]);
