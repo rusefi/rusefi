@@ -213,6 +213,18 @@ float getMapVoltage(void) {
 	return v_averagedMapValue;
 }
 
+/**
+ * This function adds an error if MAP sensor value is outside of expected range
+ * @return unchanged mapKPa paramenter
+ */
+float validateMap(float mapKPa DECLARE_ENGINE_PARAMETER_S) {
+	if (cisnan(mapKPa) || mapKPa < CONFIG(mapErrorLowValue) || mapKPa > CONFIG(mapErrorHighValue)) {
+		warning(OBD_PCM_Processor_Fault, "invalid MAP value: %f", mapKPa);
+		return 0;
+	}
+	return mapKPa;
+}
+
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 
 /**
@@ -226,8 +238,8 @@ float getMap(void) {
 
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	if (!isValidRpm(engine->rpmCalculator.rpmValue))
-		return getRawMap(); // maybe return NaN in case of stopped engine?
-	return getMapByVoltage(v_averagedMapValue);
+		return validateMap(getRawMap()); // maybe return NaN in case of stopped engine?
+	return validateMap(getMapByVoltage(v_averagedMapValue));
 #else
 	return 100;
 #endif

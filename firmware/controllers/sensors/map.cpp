@@ -165,10 +165,12 @@ static void printMAPInfo(void) {
 		}
 	}
 
-	scheduleMsg(logger, "baro type=%d value=%f", engineConfiguration->baroSensor.type, getBaroPressure());
-	if (engineConfiguration->baroSensor.type == MT_CUSTOM) {
-		scheduleMsg(logger, "min=%f max=%f", engineConfiguration->baroSensor.valueAt0,
-				engineConfiguration->baroSensor.valueAt5);
+	if (hasBaroSensor(PASS_ENGINE_PARAMETER_F)) {
+		scheduleMsg(logger, "baro type=%d value=%f", engineConfiguration->baroSensor.type, getBaroPressure());
+		if (engineConfiguration->baroSensor.type == MT_CUSTOM) {
+			scheduleMsg(logger, "min=%f max=%f", engineConfiguration->baroSensor.valueAt0,
+					engineConfiguration->baroSensor.valueAt5);
+		}
 	}
 #endif /* EFI_ANALOG_SENSORS */
 }
