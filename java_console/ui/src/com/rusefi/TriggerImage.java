@@ -16,6 +16,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * This utility produces images of trigger signals supported by rusEfi
+ *
  * 06235/15
  * (c) Andrey Belomutskiy 2013-2015
  */
@@ -29,8 +31,6 @@ public class TriggerImage {
      * number of extra frames
      */
     public static int EXTRA_COUNT = 1;
-
-    private static int WAVE_COUNT = 2;
 
     public static void main(String[] args) throws IOException, InvocationTargetException, InterruptedException {
         final String path;
@@ -127,8 +127,11 @@ public class TriggerImage {
         String[] tokens;
         List<Signal> signals = new ArrayList<>();
 
-        for (int index = 0; index < count; index++) {
+        int index = 0;
+        while (index < count) {
             line = reader.readLine();
+            if (line.trim().startsWith("#"))
+                continue;
             tokens = line.split(" ");
             String signalStr = tokens[2];
             int signal = Integer.parseInt(signalStr);
@@ -136,6 +139,7 @@ public class TriggerImage {
             double angle = Double.parseDouble(angleStr);
 
             signals.add(new Signal(signal, angle));
+            index++;
         }
 
         List<Signal> toShow = new ArrayList<>(signals);
