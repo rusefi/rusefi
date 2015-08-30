@@ -191,7 +191,7 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 
 int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 	if (hwChannel == EFI_ADC_NONE) {
-		warning(OBD_PCM_Processor_Fault, "ADC: should not be asking for NONE %s", msg);
+		warning(OBD_PCM_Processor_Fault, "ADC: %s input is not configured", msg);
 		return -1;
 	}
 
