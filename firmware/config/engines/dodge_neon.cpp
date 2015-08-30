@@ -396,7 +396,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	boardConfiguration->clutchDownPin = GPIOC_12;
 	boardConfiguration->clutchDownPinMode = PI_PULLUP;
-	boardConfiguration->clutchUpPin = GPIOA_14;
+//	boardConfiguration->clutchUpPin = GPIOA_14; // note SWCLK - conflict with SWD
 	boardConfiguration->clutchUpPinMode = PI_PULLUP;
 
 	// alt GPIOC_12

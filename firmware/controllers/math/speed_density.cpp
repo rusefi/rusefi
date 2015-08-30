@@ -52,10 +52,6 @@ float getTCharge(int rpm, float tps, float coolantTemp, float airTemp) {
  * @return per cylinder injection time, in seconds
  */
 float sdMath(engine_configuration_s *engineConfiguration, float VE, float MAP, float AFR, float tempK) {
-	if (MAP < 0.001 || cisnan(MAP)) {
-		warning(OBD_PCM_Processor_Fault, "invalid MAP value");
-		return 0;
-	}
 
 	/**
 	 * todo: pre-calculate gramm/second injector flow to save one multiplication
