@@ -168,7 +168,7 @@ static ALWAYS_INLINE void handleFuel(uint32_t eventIndex, int rpm DECLARE_ENGINE
 	isCrankingR(rpm) ?
 			&ENGINE(engineConfiguration2)->crankingInjectionEvents : &engine->engineConfiguration2->injectionEvents;
 
-	InjectionEventList *source = &fs->events;
+	InjectionEventList *source = &fs->injectionEvents;
 
 	if (!fs->hasEvents[eventIndex])
 		return;

@@ -154,7 +154,7 @@ public class TriggerImage {
 
         for (Signal s : toShow) {
             int waveIndex = s.signal / 1000;
-            int signal = s.signal % 1000;
+            WaveState.trigger_value_e signal = (s.signal % 1000 == 0) ?WaveState.trigger_value_e.TV_LOW : WaveState.trigger_value_e.TV_HIGH;
 
             if (waveIndex > 1) {
                 // TT_HONDA_ACCORD_CD
