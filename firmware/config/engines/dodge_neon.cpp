@@ -2,6 +2,7 @@
  * @file	dodge_neon.cpp
  *
  * DODGE_NEON_1995 = 2
+ * set_engine_type 2
  *
  * DODGE_NEON_2003 = 23
  * set_engine_type 23
@@ -438,8 +439,8 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->tpsAccelEnrichmentThreshold = 10;
 	engineConfiguration->tpsAccelEnrichmentMultiplier = 0.15;
 
-//	engineConfiguration->suckedOffCoef = 0.05;
-//	engineConfiguration->addedToWallCoef = 0.40;
+	engineConfiguration->suckedOffCoef = 0.05;
+	engineConfiguration->addedToWallCoef = 0.40;
 
 }
 

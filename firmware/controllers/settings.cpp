@@ -955,6 +955,10 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->step1rpm = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "step1timing")) {
 		engineConfiguration->step1timing = valueI;
+	} else if (strEqualCaseInsensitive(paramStr, "suckedOffCoef")) {
+		engineConfiguration->suckedOffCoef = valueF;
+	} else if (strEqualCaseInsensitive(paramStr, "addedToWallCoef")) {
+		engineConfiguration->addedToWallCoef = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "targetvbatt")) {
 		engineConfiguration->targetVBatt = valueF;
 #if EFI_RTC || defined(__DOXYGEN__)
@@ -1035,7 +1039,10 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 
 	addConsoleActionFF("set_fan", setFanSetting);
 
-#if EFI_PROD_CODE
+	addConsoleActionSS("set", setValue);
+	addConsoleActionS("get", getValue);
+
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	addConsoleActionS("showpin", showPinFunction);
 	addConsoleActionSS("set_injection_pin", setInjectionPin);
 	addConsoleActionSS("set_ignition_pin", setIgnitionPin);
@@ -1051,9 +1058,6 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionS("set_alternator_pin", setAlternatorPin);
 	addConsoleActionS("set_idle_pin", setIdlePin);
 	addConsoleActionS("set_main_relay_pin", setMainRelayPin);
-
-	addConsoleActionSS("set", setValue);
-	addConsoleActionS("get", getValue);
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 	addConsoleActionSS("set_analog_input_pin", setAnalogInputPin);

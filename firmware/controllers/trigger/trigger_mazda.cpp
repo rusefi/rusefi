@@ -52,6 +52,7 @@ void initializeMazdaMiataNbShape(TriggerShape *s) {
 	s->useRiseEdge = false;
 
 	s->reset(FOUR_STROKE_CAM_SENSOR, true);
+	s->invertOnAdd = true;
 
 	/**
 	 * cam sensor is primary, crank sensor is secondary

@@ -102,6 +102,8 @@ public class AutoTest {
 
     private static void test2003DodgeNeon() {
         setEngineType(23);
+        sendCommand("set suckedOffCoef 0");
+        sendCommand("set addedToWallCoef 0");
         EngineChart chart;
         String msg = "2003 Neon cranking ";
         IoUtil.changeRpm(200);

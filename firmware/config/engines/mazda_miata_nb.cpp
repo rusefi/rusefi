@@ -2,6 +2,7 @@
  * @file	mazda_miata_nb.cpp
  *
  * MAZDA_MIATA_NB = 9
+ * set_engine_type 9
  *
  * @date Feb 18, 2014
  * @author Andrey Belomutskiy, (c) 2012-2015
