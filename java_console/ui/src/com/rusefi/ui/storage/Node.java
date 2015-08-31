@@ -72,6 +72,10 @@ public class Node {
         return value == null ? defaultValue : value;
     }
 
+    public String getProperty(String key) {
+        return getProperty(key, "");
+    }
+
     public String getPrefix() {
         return prefix;
     }

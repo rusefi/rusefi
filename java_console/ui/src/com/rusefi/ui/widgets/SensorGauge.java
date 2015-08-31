@@ -13,6 +13,8 @@ import java.awt.*;
 import java.awt.event.*;
 
 /**
+ * Round gauge
+ *
  * Date: 7/9/14
  * (c) Andrey Belomutskiy 2012-2014
  * @see GaugesPanel

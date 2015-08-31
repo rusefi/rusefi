@@ -32,7 +32,7 @@ public class AnyCommand {
     private int index;
 
     public AnyCommand(final Node config, boolean listenToCommands, boolean withCommandCaption) {
-        this(config, config.getProperty(KEY, ""), listenToCommands, withCommandCaption);
+        this(config, config.getProperty(KEY), listenToCommands, withCommandCaption);
     }
 
     public AnyCommand(final Node config, String defaultCommand, final boolean listenToCommands, boolean withCommandCaption) {

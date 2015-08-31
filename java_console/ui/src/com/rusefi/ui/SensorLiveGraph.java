@@ -20,11 +20,16 @@ import java.util.LinkedList;
 public class SensorLiveGraph extends JPanel {
     private static final int COUNT = 30;
     private static final String SENSOR_TYPE = "sensor";
+    private static final String PERIOD = "period";
+    private static final String USE_AUTO_SCALE = "auto_scale";
 
     private final LinkedList<Double> values = new LinkedList<>();
     private final Node config;
     private final JMenuItem extraItem;
+    @NotNull
+    private ChangePeriod period = ChangePeriod._100;
     private Sensor sensor;
+    private boolean autoScale;
 
     public SensorLiveGraph(Node config, final Sensor defaultSensor, JMenuItem extraItem) {
         this.config = config;
@@ -35,6 +40,8 @@ public class SensorLiveGraph extends JPanel {
         Thread thread = new Thread(createRunnable());
         thread.setDaemon(true);
         thread.start();
+        period = ChangePeriod.lookup(config.getProperty(PERIOD));
+        autoScale = config.getBoolProperty(USE_AUTO_SCALE);
 
         MouseListener mouseListener = new MouseAdapter() {
             @Override
@@ -59,7 +66,7 @@ public class SensorLiveGraph extends JPanel {
             public void run() {
                 while (true) {
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(period.getMs());
                     } catch (InterruptedException e) {
                         throw new IllegalStateException(e);
                     }
@@ -79,6 +86,74 @@ public class SensorLiveGraph extends JPanel {
     private void showPopupMenu(MouseEvent e) {
         JPopupMenu pm = new JPopupMenu();
 
+        addChangeSensorItems(pm);
+        pm.add(new JSeparator());
+        addChangePeriodItems(pm);
+        final JCheckBoxMenuItem as = new JCheckBoxMenuItem("Auto scale");
+        as.setSelected(autoScale);
+        as.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                autoScale = as.isSelected();
+                config.setBoolProperty(USE_AUTO_SCALE, autoScale);
+            }
+        });
+        pm.add(as);
+
+        pm.add(extraItem);
+        pm.show(e.getComponent(), e.getX(), e.getY());
+    }
+
+    enum ChangePeriod {
+        _3000(3000, "3 seconds"),
+        _1000(1000, "1 second"),
+        _200(200, "second / 5"),
+        _100(100, "second / 10"),
+        _50(50, "second / 20"),;
+
+        private final int ms;
+        private final String text;
+
+        ChangePeriod(int ms, String text) {
+            this.ms = ms;
+            this.text = text;
+        }
+
+        public int getMs() {
+            return ms;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public static ChangePeriod lookup(String value) {
+            for (ChangePeriod cp : ChangePeriod.values()) {
+                if ((cp.getMs() + "").equals(value))
+                    return cp;
+            }
+            return ChangePeriod._200;
+        }
+    }
+
+    private void addChangePeriodItems(JPopupMenu pm) {
+        JMenuItem mi = new JMenu("Refresh period");
+        pm.add(mi);
+        for (final ChangePeriod cp : ChangePeriod.values()) {
+            JCheckBoxMenuItem i = new JCheckBoxMenuItem(cp.getText());
+            i.setSelected(cp == period);
+            i.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    period = cp;
+                    config.setProperty(PERIOD, period.getMs());
+                }
+            });
+            mi.add(i);
+        }
+    }
+
+    private void addChangeSensorItems(JPopupMenu pm) {
         for (final SensorCategory sc : SensorCategory.values()) {
             JMenuItem cmi = new JMenu(sc.getName());
             pm.add(cmi);
@@ -94,8 +169,6 @@ public class SensorLiveGraph extends JPanel {
                 cmi.add(mi);
             }
         }
-        pm.add(extraItem);
-        pm.show(e.getComponent(), e.getX(), e.getY());
     }
 
     private synchronized void setSensor(Sensor sensor) {
@@ -119,21 +192,15 @@ public class SensorLiveGraph extends JPanel {
             return; // it's hopeless
         g.setColor(Color.black);
 
-        double minValue = Double.MAX_VALUE;
-        double maxValue = -Double.MAX_VALUE;
-        for (double value : values) {
-            minValue = Math.min(minValue, value);
-            maxValue = Math.max(maxValue, value);
-        }
-
-        if (minValue == maxValue) { // double equals should work here, should it?
-            minValue = 0.9 * maxValue - 1;
-            maxValue = 1.1 * maxValue + 1;
+        double minValue;
+        double maxValue;
+        if (autoScale) {
+            VisibleRange getVisibleRange = new VisibleRange().invoke();
+            minValue = getVisibleRange.getMinValue();
+            maxValue = getVisibleRange.getMaxValue();
         } else {
-            // expand the range just a bit for borders
-            double diff = maxValue - minValue;
-            minValue -= 0.05 * diff;
-            maxValue += 0.05 * diff;
+            minValue = sensor.getMinValue();
+            maxValue = sensor.getMaxValue();
         }
 
         int index = 0;
@@ -166,5 +233,38 @@ public class SensorLiveGraph extends JPanel {
         String sensorName = sensor.getName() + " ";
         int nameWidth = g.getFontMetrics().stringWidth(sensorName);
         g.drawString(sensorName, d.width - nameWidth, g.getFont().getSize());
+    }
+
+    private class VisibleRange {
+        private double minValue;
+        private double maxValue;
+
+        public double getMinValue() {
+            return minValue;
+        }
+
+        public double getMaxValue() {
+            return maxValue;
+        }
+
+        public VisibleRange invoke() {
+            minValue = Double.MAX_VALUE;
+            maxValue = -Double.MAX_VALUE;
+            for (double value : values) {
+                minValue = Math.min(minValue, value);
+                maxValue = Math.max(maxValue, value);
+            }
+
+            if (minValue == maxValue) { // double equals should work here, should it?
+                minValue = 0.9 * maxValue - 1;
+                maxValue = 1.1 * maxValue + 1;
+            } else {
+                // expand the range just a bit for borders
+                double diff = maxValue - minValue;
+                minValue -= 0.05 * diff;
+                maxValue += 0.05 * diff;
+            }
+            return this;
+        }
     }
 }

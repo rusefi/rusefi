@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
+ * This panel contains either a {@link SensorGauge} or {@link SensorLiveGraph}
+ *
  * (c) Andrey Belomutskiy
  * 8/21/2015.
  */
@@ -79,5 +81,4 @@ public class GaugesGridElement {
         Sensor sensor = Sensor.lookup(gaugeName, defaultSensor);
         return new GaugesGridElement(config).createGauge(sensor);
     }
-
 }
