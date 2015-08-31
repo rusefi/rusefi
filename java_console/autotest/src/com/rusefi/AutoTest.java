@@ -104,6 +104,8 @@ public class AutoTest {
         setEngineType(23);
         sendCommand("set suckedOffCoef 0");
         sendCommand("set addedToWallCoef 0");
+        if (!TestingUtils.isRealHardware)
+            sendCommand("set_mock_map_voltage 1");
         EngineChart chart;
         String msg = "2003 Neon cranking ";
         IoUtil.changeRpm(200);
@@ -126,18 +128,17 @@ public class AutoTest {
         msg = "2003 Neon running";
         IoUtil.changeRpm(2000);
         chart = nextChart();
-//        x = 113.28;
-        x = 115.8;
+        x = 100.8;
         assertWave(true, msg, chart, EngineChart.SPARK_1, 0.13299999999999998, 0.005, EngineReport.RATIO, x + 180, x + 540);
         assertWaveNull(msg, chart, EngineChart.SPARK_2);
         assertWave(true, msg, chart, EngineChart.SPARK_3, 0.13299999999999998, 0.005, EngineReport.RATIO, x, x + 360);
         assertWaveNull(msg, chart, EngineChart.SPARK_4);
 
-        x = 168.12;
-        assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.03333333333333302, 0.01, 0.1, x + 360);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.03333333333333302, 0.01, 0.1, x + 180);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.03333333333333302, 0.01, 0.1, x + 540);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.03333333333333302, 0.01, 0.1, x);
+        x = 124.12;
+        assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.1553333333333329, 0.01, 0.1, x + 360);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.1553333333333329, 0.01, 0.1, x + 180);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.1553333333333329, 0.01, 0.1, x + 540);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.1553333333333329, 0.01, 0.1, x);
     }
 
     private static void testMazdaProtege() {
