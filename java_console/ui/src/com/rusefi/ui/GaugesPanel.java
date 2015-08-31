@@ -18,7 +18,7 @@ import java.beans.PropertyChangeListener;
 /**
  * Date: 2/5/13
  * (c) Andrey Belomutskiy
- * @see SensorGauge
+ * @see GaugesGridElement
  */
 public class GaugesPanel {
     private static final Sensor[] DEFAULT_LAYOUT = {

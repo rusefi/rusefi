@@ -132,7 +132,7 @@ public class StartupFrame {
         for (final String port : ports)
             comboPorts.addItem(port);
         panel.add(comboPorts);
-        String defaultPort =  getConfig().getRoot().getProperty(Launcher.PORT_KEY, "");
+        String defaultPort =  getConfig().getRoot().getProperty(Launcher.PORT_KEY);
         comboPorts.setSelectedItem(defaultPort);
 
         final JComboBox<String> comboSpeeds = createSpeedCombo();
