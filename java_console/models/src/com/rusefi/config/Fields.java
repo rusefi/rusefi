@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar Sun Aug 30 15:14:44 EDT 2015
+// this file was generated automatically by ConfigDefinition.jar Mon Aug 31 13:06:37 EDT 2015
 public class Fields {
 	public static final Field ENGINETYPE = new Field("ENGINETYPE", 0, FieldType.INT);
 	public static final Field HEADERMAGICVALUE = new Field("HEADERMAGICVALUE", 4, FieldType.INT);
@@ -80,6 +80,7 @@ public class Fields {
 	public static final Field TRIGGER_TYPE = new Field("TRIGGER_TYPE", 536, FieldType.INT, trigger_type_e);
 	public static final Field TRIGGER_CUSTOMISSYNCHRONIZATIONNEEDED = new Field("TRIGGER_CUSTOMISSYNCHRONIZATIONNEEDED", 540, FieldType.BIT, 0);
 	public static final Field TRIGGER_CUSTOMNEEDSECONDTRIGGERINPUT = new Field("TRIGGER_CUSTOMNEEDSECONDTRIGGERINPUT", 540, FieldType.BIT, 1);
+	public static final Field TRIGGER_USEONLYFIRSTCHANNEL = new Field("TRIGGER_USEONLYFIRSTCHANNEL", 540, FieldType.BIT, 2);
 	public static final Field TRIGGER_CUSTOMTOTALTOOTHCOUNT = new Field("TRIGGER_CUSTOMTOTALTOOTHCOUNT", 544, FieldType.INT);
 	public static final Field TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT = new Field("TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT", 548, FieldType.INT);
 	public static final Field TRIGGER_CUSTOMSYNCRATIOFROM = new Field("TRIGGER_CUSTOMSYNCRATIOFROM", 552, FieldType.FLOAT);
