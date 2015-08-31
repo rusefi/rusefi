@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar Fri Aug 21 15:51:57 EDT 2015
+// this file was generated automatically by ConfigDefinition.jar Sun Aug 30 15:14:44 EDT 2015
 public class Fields {
 	public static final Field ENGINETYPE = new Field("ENGINETYPE", 0, FieldType.INT);
 	public static final Field HEADERMAGICVALUE = new Field("HEADERMAGICVALUE", 4, FieldType.INT);
@@ -420,6 +420,8 @@ public class Fields {
 	public static final Field TACHPULSETRIGGERINDEX = new Field("TACHPULSETRIGGERINDEX", 1828, FieldType.INT);
 	public static final Field SUCKEDOFFCOEF = new Field("SUCKEDOFFCOEF", 1832, FieldType.FLOAT);
 	public static final Field ADDEDTOWALLCOEF = new Field("ADDEDTOWALLCOEF", 1864, FieldType.FLOAT);
+	public static final Field MAPERRORLOWVALUE = new Field("MAPERRORLOWVALUE", 1896, FieldType.FLOAT);
+	public static final Field MAPERRORHIGHVALUE = new Field("MAPERRORHIGHVALUE", 1900, FieldType.FLOAT);
 	public static final Field TARGETVBATT = new Field("TARGETVBATT", 2156, FieldType.FLOAT);
 	public static final Field ALTERNATOROFFABOVETPS = new Field("ALTERNATOROFFABOVETPS", 2160, FieldType.FLOAT);
 	public static final Field ALTERNATORDT = new Field("ALTERNATORDT", 2164, FieldType.INT);
