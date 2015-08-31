@@ -389,8 +389,6 @@ void updateDevConsoleState(Engine *engine) {
 	scheduleLogging(&logger);
 }
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-
 /*
  * command example:
  * sfm 3500 400
@@ -408,11 +406,11 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 	scheduleMsg(&logger2, "algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->algorithm),
 			boolToString(enginePins.fuelPumpRelay.getLogicValue()));
 
-	scheduleMsg(&logger2, "phase=%f correction=%f", getinjectionOffset(rpm), engineConfiguration->globalFuelCorrection);
+	scheduleMsg(&logger2, "injection phase=%f/global fuel correction=%f", getinjectionOffset(rpm), engineConfiguration->globalFuelCorrection);
 
 	scheduleMsg(&logger2, "baro correction=%f", engine->engineState.baroCorrection);
 
-#if EFI_ENGINE_CONTROL
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	scheduleMsg(&logger, "base cranking fuel %f", engineConfiguration->cranking.baseFuel);
 	scheduleMsg(&logger2, "cranking fuel: %f", getCrankingFuel(PASS_ENGINE_PARAMETER_F));
 
@@ -437,8 +435,6 @@ static void showFuelInfo(void) {
 	showFuelInfo2((float) getRpmE(engine), getEngineLoadT(PASS_ENGINE_PARAMETER_F));
 }
 #endif
-
-#endif /* EFI_PROD_CODE */
 
 static THD_WORKING_AREA(lcdThreadStack, UTILITY_THREAD_STACK_SIZE);
 
@@ -671,13 +667,12 @@ void initStatusLoop(Engine *engine) {
 	addConsoleActionI(FULL_LOGGING_KEY, setFullLog);
 	addConsoleActionI("warn", setWarningEnabled);
 
-#if EFI_PROD_CODE
-
-#if EFI_ENGINE_CONTROL
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	addConsoleActionFF("fuelinfo2", (VoidFloatFloat) showFuelInfo2);
 	addConsoleAction("fuelinfo", showFuelInfo);
 #endif
 
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	subscription[(int) RO_TRG1_DUTY] = true;
 	subscription[(int) RO_TRG2_DUTY] = true;
 	subscription[(int) RO_TRG3_DUTY] = false;
