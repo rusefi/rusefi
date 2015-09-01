@@ -11,6 +11,7 @@
 #include "vw.h"
 #include "custom_engine.h"
 #include "ego.h"
+#include "engine_math.h"
 
 EXTERN_ENGINE;
 
@@ -53,6 +54,6 @@ void setVwAba(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	setEgoSensor(ES_PLX PASS_ENGINE_PARAMETER);
+	setFuelTablesLoadBin(20, 320 PASS_ENGINE_PARAMETER);
+	setTimingLoadBin(20, 320 PASS_ENGINE_PARAMETER);
 }
-
-
