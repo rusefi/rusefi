@@ -203,6 +203,36 @@ public class SensorLiveGraph extends JPanel {
             maxValue = sensor.getMaxValue();
         }
 
+        paintGraph(g, d, minValue, maxValue);
+
+        g.setColor(Color.red);
+        int minY = d.height;
+        int maxY = g.getFont().getSize();
+        g.drawString(String.format("%.2f", minValue), 5, minY);
+        g.drawString(String.format("%.2f", (minValue + maxValue) / 2), 5, (minY + maxY) / 2);
+        g.drawString(String.format("%.2f", maxValue), 5, maxY);
+
+        g.setColor(Color.blue);
+        String sensorName = sensor.getName() + " ";
+        int nameWidth = g.getFontMetrics().stringWidth(sensorName);
+        g.drawString(sensorName, d.width - nameWidth, g.getFont().getSize());
+
+        Font f = g.getFont();
+        g.setFont(new Font(f.getName(), f.getStyle(), 3 * f.getSize()));
+
+        if (!values.isEmpty())
+            paintLastValue(g, d);
+    }
+
+    private void paintLastValue(Graphics g, Dimension d) {
+        Double last = values.getLast();
+        if (!Double.isNaN(last)) {
+            String currentValue = String.format("%.2f", last);
+            g.drawString(currentValue, (d.width - g.getFontMetrics().stringWidth(currentValue)) / 2, d.height / 2 + g.getFont().getSize() / 2);
+        }
+    }
+
+    private void paintGraph(Graphics g, Dimension d, double minValue, double maxValue) {
         int index = 0;
         int prevX = 0;
         int prevY = 0;
@@ -221,18 +251,6 @@ public class SensorLiveGraph extends JPanel {
             prevY = y;
             index++;
         }
-
-        g.setColor(Color.red);
-        int minY = d.height;
-        int maxY = g.getFont().getSize();
-        g.drawString(String.format("%.2f", minValue), 5, minY);
-        g.drawString(String.format("%.2f", (minValue + maxValue) / 2), 5, (minY + maxY) / 2);
-        g.drawString(String.format("%.2f", maxValue), 5, maxY);
-
-        g.setColor(Color.blue);
-        String sensorName = sensor.getName() + " ";
-        int nameWidth = g.getFontMetrics().stringWidth(sensorName);
-        g.drawString(sensorName, d.width - nameWidth, g.getFont().getSize());
     }
 
     private class VisibleRange {
