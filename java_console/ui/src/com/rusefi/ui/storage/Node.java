@@ -23,6 +23,16 @@ public class Node {
         }
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public static boolean isNumeric(String str) {
+        try {
+            Double.parseDouble(str);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
     public Node getChild(String name) {
         Node child = (Node) config.get(name);
         if (child == null) {
@@ -76,10 +86,14 @@ public class Node {
         return getProperty(key, "");
     }
 
+    // this method is used by serializer
+    @SuppressWarnings("unused")
     public String getPrefix() {
         return prefix;
     }
 
+    // this method is used by serializer
+    @SuppressWarnings("unused")
     public void setPrefix(String prefix) {
         this.prefix = prefix;
     }
@@ -101,5 +115,14 @@ public class Node {
 
     public void setProperty(String key, double value) {
         setProperty(key, Double.toString(value));
+    }
+
+    public double getDoubleProperty(String key, double defaultValue) {
+        String value = getProperty(key);
+        if (isNumeric(value)) {
+            return Double.parseDouble(value);
+        } else {
+            return defaultValue;
+        }
     }
 }
