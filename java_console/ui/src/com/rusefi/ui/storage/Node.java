@@ -98,4 +98,8 @@ public class Node {
                 "prefix='" + prefix + '\'' +
                 '}';
     }
+
+    public void setProperty(String key, double value) {
+        setProperty(key, Double.toString(value));
+    }
 }

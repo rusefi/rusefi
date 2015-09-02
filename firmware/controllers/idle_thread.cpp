@@ -118,6 +118,28 @@ static void setIdleValvePosition(int positionPercent) {
 	doSetIdleValvePosition(positionPercent);
 }
 
+static int idlePositionBeforeBlip;
+static efitimeus_t timeToStopBlip = 0;
+
+/**
+ * I use this questionable feature to tune acceleration enrichment
+ */
+static void blipIdle(int idlePosition, int durationMs) {
+	if (timeToStopBlip != 0) {
+		return; // already in idle blip
+	}
+	idlePositionBeforeBlip = boardConfiguration->idlePosition;
+	setIdleValvePosition(idlePosition);
+	timeToStopBlip = getTimeNowUs() + 1000 * durationMs;
+}
+
+static void undoIdleBlipIfNeeded() {
+	if (timeToStopBlip != 0 && getTimeNowUs() > timeToStopBlip) {
+		timeToStopBlip = 0;
+		setIdleValvePosition(idlePositionBeforeBlip);
+	}
+}
+
 static msg_t ivThread(int param) {
 	(void) param;
 	chRegSetThreadName("IdleValve");
@@ -135,6 +157,8 @@ static msg_t ivThread(int param) {
 			engine->clutchUpState = palReadPad(getHwPort(boardConfiguration->clutchUpPin),
 					getHwPin(boardConfiguration->clutchUpPin));
 		}
+
+		undoIdleBlipIfNeeded();
 
 		if (engineConfiguration->idleMode != IM_AUTO) {
 			// let's re-apply CLT correction
@@ -208,6 +232,8 @@ void startIdleThread(Logging*sharedLogger, Engine *engine) {
 	addConsoleActionI("set_idle_position", setIdleValvePosition);
 
 	addConsoleActionI("set_idle_enabled", (VoidInt) setIdleControlEnabled);
+
+	addConsoleActionII("blipidle", blipIdle);
 }
 
 #endif
