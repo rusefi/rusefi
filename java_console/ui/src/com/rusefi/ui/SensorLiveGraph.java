@@ -22,6 +22,8 @@ public class SensorLiveGraph extends JPanel {
     private static final String SENSOR_TYPE = "sensor";
     private static final String PERIOD = "period";
     private static final String USE_AUTO_SCALE = "auto_scale";
+    private static final String UPPER = "upper";
+    private static final String LOWER = "lower";
 
     private final LinkedList<Double> values = new LinkedList<>();
     private final Node config;
@@ -30,6 +32,8 @@ public class SensorLiveGraph extends JPanel {
     private ChangePeriod period = ChangePeriod._100;
     private Sensor sensor;
     private boolean autoScale;
+    private double customUpper;
+    private double customLower;
 
     public SensorLiveGraph(Node config, final Sensor defaultSensor, JMenuItem extraItem) {
         this.config = config;
@@ -42,6 +46,8 @@ public class SensorLiveGraph extends JPanel {
         thread.start();
         period = ChangePeriod.lookup(config.getProperty(PERIOD));
         autoScale = config.getBoolProperty(USE_AUTO_SCALE);
+        customUpper = config.getDoubleProperty(UPPER, Double.NaN);
+        customLower = config.getDoubleProperty(LOWER, Double.NaN);
 
         MouseListener mouseListener = new MouseAdapter() {
             @Override
@@ -89,6 +95,8 @@ public class SensorLiveGraph extends JPanel {
         addChangeSensorItems(pm);
         pm.add(new JSeparator());
         addChangePeriodItems(pm);
+        JMenuItem scale = new JMenu("Scale");
+
         final JCheckBoxMenuItem as = new JCheckBoxMenuItem("Auto scale");
         as.setSelected(autoScale);
         as.addActionListener(new ActionListener() {
@@ -98,7 +106,42 @@ public class SensorLiveGraph extends JPanel {
                 config.setBoolProperty(USE_AUTO_SCALE, autoScale);
             }
         });
-        pm.add(as);
+        scale.add(as);
+
+        final JCheckBoxMenuItem lowerValue = new JCheckBoxMenuItem("Use custom lower");
+        lowerValue.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (lowerValue.isSelected()) {
+                    String initial = Double.isNaN(customLower) ? "" : Double.toString(customLower);
+                    String lower = JOptionPane.showInputDialog("Enter lower value", initial);
+                    if (!Node.isNumeric(lower))
+                        return;
+                    customLower = Double.parseDouble(lower);
+                    config.setProperty(LOWER, customUpper);
+                }
+            }
+        });
+
+        final JCheckBoxMenuItem upperValue = new JCheckBoxMenuItem("Use custom upper");
+        upperValue.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (upperValue.isSelected()) {
+                    String initial = Double.isNaN(customUpper) ? "" : Double.toString(customUpper);
+                    String upper = JOptionPane.showInputDialog("Enter upper value", initial);
+                    if (!Node.isNumeric(upper))
+                        return;
+                    customUpper = Double.parseDouble(upper);
+                    config.setProperty(UPPER, customUpper);
+                }
+            }
+        });
+
+        scale.add(upperValue);
+        scale.add(lowerValue);
+
+        pm.add(scale);
 
         pm.add(extraItem);
         pm.show(e.getComponent(), e.getX(), e.getY());
@@ -220,7 +263,8 @@ public class SensorLiveGraph extends JPanel {
         if (autoScale) {
             range = VisibleRange.findRange(values);
         } else {
-            range = new VisibleRange(sensor.getMinValue(), sensor.getMaxValue());
+            range = new VisibleRange(Double.isNaN(customLower) ? sensor.getMinValue() : customLower,
+                    Double.isNaN(customUpper) ? sensor.getMaxValue() : customUpper);
         }
         return range;
     }
