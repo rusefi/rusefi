@@ -48,7 +48,7 @@ public class SensorLiveGraph extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e)) {
                     showPopupMenu(e);
-                } else if (e.getClickCount() == 2) {
+//                } else if (e.getClickCount() == 2) {
 //                    handleDoubleClick(e, gauge, sensor);
                 }
             }
@@ -192,25 +192,16 @@ public class SensorLiveGraph extends JPanel {
             return; // it's hopeless
         g.setColor(Color.black);
 
-        double minValue;
-        double maxValue;
-        if (autoScale) {
-            VisibleRange getVisibleRange = new VisibleRange().invoke();
-            minValue = getVisibleRange.getMinValue();
-            maxValue = getVisibleRange.getMaxValue();
-        } else {
-            minValue = sensor.getMinValue();
-            maxValue = sensor.getMaxValue();
-        }
+        VisibleRange range = getRange();
 
-        paintGraph(g, d, minValue, maxValue);
+        paintGraph(g, d, range.minValue, range.maxValue);
 
         g.setColor(Color.red);
         int minY = d.height;
         int maxY = g.getFont().getSize();
-        g.drawString(String.format("%.2f", minValue), 5, minY);
-        g.drawString(String.format("%.2f", (minValue + maxValue) / 2), 5, (minY + maxY) / 2);
-        g.drawString(String.format("%.2f", maxValue), 5, maxY);
+        g.drawString(String.format("%.2f", range.minValue), 5, minY);
+        g.drawString(String.format("%.2f", (range.minValue + range.maxValue) / 2), 5, (minY + maxY) / 2);
+        g.drawString(String.format("%.2f", range.maxValue), 5, maxY);
 
         g.setColor(Color.blue);
         String sensorName = sensor.getName() + " ";
@@ -222,6 +213,16 @@ public class SensorLiveGraph extends JPanel {
 
         if (!values.isEmpty())
             paintLastValue(g, d);
+    }
+
+    private VisibleRange getRange() {
+        VisibleRange range;
+        if (autoScale) {
+            range = VisibleRange.findRange(values);
+        } else {
+            range = new VisibleRange(sensor.getMinValue(), sensor.getMaxValue());
+        }
+        return range;
     }
 
     private void paintLastValue(Graphics g, Dimension d) {
@@ -253,21 +254,18 @@ public class SensorLiveGraph extends JPanel {
         }
     }
 
-    private class VisibleRange {
-        private double minValue;
-        private double maxValue;
+    private static class VisibleRange {
+        private final double minValue;
+        private final double maxValue;
 
-        public double getMinValue() {
-            return minValue;
+        public VisibleRange(double minValue, double maxValue) {
+            this.minValue = minValue;
+            this.maxValue = maxValue;
         }
 
-        public double getMaxValue() {
-            return maxValue;
-        }
-
-        public VisibleRange invoke() {
-            minValue = Double.MAX_VALUE;
-            maxValue = -Double.MAX_VALUE;
+        public static VisibleRange findRange(LinkedList<Double> values) {
+            double minValue = Double.MAX_VALUE;
+            double maxValue = -Double.MAX_VALUE;
             for (double value : values) {
                 minValue = Math.min(minValue, value);
                 maxValue = Math.max(maxValue, value);
@@ -282,7 +280,7 @@ public class SensorLiveGraph extends JPanel {
                 minValue -= 0.05 * diff;
                 maxValue += 0.05 * diff;
             }
-            return this;
+            return new VisibleRange(minValue, maxValue);
         }
     }
 }
