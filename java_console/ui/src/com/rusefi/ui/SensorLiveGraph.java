@@ -118,7 +118,7 @@ public class SensorLiveGraph extends JPanel {
                     if (!Node.isNumeric(lower))
                         return;
                     customLower = Double.parseDouble(lower);
-                    config.setProperty(LOWER, customUpper);
+                    config.setProperty(LOWER, customLower);
                 }
             }
         });

@@ -38,6 +38,10 @@ WallFuel::WallFuel() {
 	memset(wallFuel, 0, sizeof(wallFuel));
 }
 
+void WallFuel::reset() {
+
+}
+
 floatms_t WallFuel::adjust(int injectorIndex, floatms_t target DECLARE_ENGINE_PARAMETER_S) {
 	if (cisnan(target)) {
 		return target;
@@ -50,6 +54,7 @@ floatms_t WallFuel::adjust(int injectorIndex, floatms_t target DECLARE_ENGINE_PA
 
 	float addedToWallsAmount = result * addedToWallCoef;
 	wallFuel[injectorIndex] = wallFuel[injectorIndex] + addedToWallsAmount - suckedOffWallsAmount;
+	engine->wallFuelCorrection = result - target;
 	return result;
 }
 
