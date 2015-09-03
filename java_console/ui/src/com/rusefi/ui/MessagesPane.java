@@ -5,6 +5,7 @@ import com.rusefi.Launcher;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.URLLabel;
+import com.rusefi.ui.widgets.AnyCommand;
 import com.rusefi.ui.widgets.IdleLabel;
 
 import javax.swing.*;
@@ -27,7 +28,8 @@ public class MessagesPane {
     public MessagesPane(final Node config) {
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
-        final MessagesPanel upperPanel = new MessagesPanel(config, true);
+        AnyCommand command = new AnyCommand(config, true, false);
+        final MessagesPanel upperPanel = new MessagesPanel(command.getContent());
         upperPanel.loadFont(config);
 
         JPanel middlePanel = new JPanel(new BorderLayout());

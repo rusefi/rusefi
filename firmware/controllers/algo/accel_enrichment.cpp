@@ -153,7 +153,7 @@ static void setDecelMult(float value) {
 
 static void setTpsAccelLen(int len) {
 	if (len < 1) {
-		scheduleMsg(logger, "Length shoold be positive");
+		scheduleMsg(logger, "Length should be positive");
 		return;
 	}
 	engine->tpsAccelEnrichment.cb.setSize(len);
@@ -162,7 +162,7 @@ static void setTpsAccelLen(int len) {
 
 static void setMapAccelLen(int len) {
 	if (len < 1) {
-		scheduleMsg(logger, "Length shoold be positive");
+		scheduleMsg(logger, "Length should be positive");
 		return;
 	}
 	engine->mapAccelEnrichment.cb.setSize(len);

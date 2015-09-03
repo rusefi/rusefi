@@ -4,8 +4,8 @@ import com.rusefi.FileLog;
 import com.rusefi.core.Sensor;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.UiUtils;
+import com.rusefi.ui.widgets.AnyCommand;
 import com.rusefi.ui.widgets.PopupMenuButton;
-import com.rusefi.ui.widgets.SensorGauge;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -63,6 +63,9 @@ public class GaugesPanel {
     private boolean showRpmPanel = true;
     private boolean showMessagesPanel = true;
     private final JPanel lowerRpmPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+    /**
+     * this panel is displayed on the right
+     */
     private final JPanel messagesPanel = new JPanel(new BorderLayout());
     private final JSplitPane middleSplitPanel;
 
@@ -71,7 +74,7 @@ public class GaugesPanel {
         showRpmPanel = config.getBoolProperty(SHOW_RPM, true);
         showMessagesPanel = config.getBoolProperty(SHOW_MESSAGES, true);
 
-        prepareMessagesPanel(config);
+        prepareMessagesPanel();
 
         lowerRpmPanel.add(new RpmLabel(15).getContent());
 
@@ -176,8 +179,8 @@ public class GaugesPanel {
         return menu;
     }
 
-    private void prepareMessagesPanel(Node config) {
-        MessagesPanel mp = new MessagesPanel(config, false);
+    private void prepareMessagesPanel() {
+        MessagesPanel mp = new MessagesPanel(null);
         messagesPanel.add(BorderLayout.NORTH, mp.getButtonPanel());
         messagesPanel.add(BorderLayout.CENTER, mp.getMessagesScroll());
     }
@@ -187,6 +190,8 @@ public class GaugesPanel {
         JPanel leftUpperPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         leftUpperPanel.add(createSaveImageButton());
         leftUpperPanel.add(new RpmLabel(2).getContent());
+        AnyCommand command = new AnyCommand(config, false, false);
+        leftUpperPanel.add(command.getContent());
         return leftUpperPanel;
     }
 
