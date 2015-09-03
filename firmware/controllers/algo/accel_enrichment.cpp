@@ -35,11 +35,11 @@ static Logging *logger;
 WallFuel wallFuel;
 
 WallFuel::WallFuel() {
-	memset(wallFuel, 0, sizeof(wallFuel));
+	reset();
 }
 
 void WallFuel::reset() {
-
+	memset(wallFuel, 0, sizeof(wallFuel));
 }
 
 floatms_t WallFuel::adjust(int injectorIndex, floatms_t target DECLARE_ENGINE_PARAMETER_S) {

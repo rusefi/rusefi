@@ -67,6 +67,7 @@
 #endif
 
 extern bool hasFirmwareErrorFlag;
+extern WallFuel wallFuel;
 
 persistent_config_container_s persistentState CCM_OPTIONAL;
 
@@ -226,11 +227,12 @@ static void periodicSlowCallback(Engine *engine) {
 	}
 #endif
 
-#if (EFI_PROD_CODE && EFI_ENGINE_CONTROL && EFI_INTERNAL_FLASH) || defined(__DOXYGEN__)
 	if (!engine->rpmCalculator.isRunning()) {
+#if (EFI_PROD_CODE && EFI_ENGINE_CONTROL && EFI_INTERNAL_FLASH) || defined(__DOXYGEN__)
 		writeToFlashIfPending();
-	}
 #endif
+		wallFuel.reset();
+	}
 
 	if (versionForConfigurationListeners.isOld()) {
 		/**

@@ -600,6 +600,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->hasFatalError = hasFirmwareError();
 	tsOutputChannels->totalTriggerErrorCounter = triggerCentral.triggerState.totalTriggerErrorCounter;
 	tsOutputChannels->wallFuelAmount = wallFuel.getWallFuel(0);
+	tsOutputChannels->totalFuelCorrection = engine->totalFuelCorrection;
+	tsOutputChannels->wallFuelCorrection = engine->wallFuelCorrection;
 
 	tsOutputChannels->checkEngine = hasErrorCodes();
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
