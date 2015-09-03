@@ -45,7 +45,7 @@ public:
 	WallFuel();
 	floatms_t adjust(int injectorIndex, floatms_t target DECLARE_ENGINE_PARAMETER_S);
 	floatms_t getWallFuel(int injectorIndex);
-
+	void reset();
 private:
 	/**
 	 * Amount of fuel on the wall, in injector open time scale, for specific injector.

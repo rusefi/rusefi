@@ -191,6 +191,8 @@ public:
 	 * Fuel injection duration for current engine cycle, without wall wetting
 	 */
 	floatms_t fuelMs;
+	float totalFuelCorrection;
+	floatms_t wallFuelCorrection;
 
 	/**
 	 * This one with wall wetting accounted for, used for logging.
