@@ -25,12 +25,11 @@ public class MessagesPanel {
     private static final String FONT_SIZE = "font_size";
     private static final String FONT_NAME = "font_name";
 
-    private final AnyCommand anyCommand;
     private final MessagesView messagesView = new MessagesView();
 
     private final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
 
-    public MessagesPanel(Node config, boolean listenToCommands) {
+    public MessagesPanel(JComponent extraButton) {
         JPanel middlePanel = new JPanel(new BorderLayout());
         middlePanel.add(messagesView.messagesScroll, BorderLayout.CENTER);
 //        buttonPanel.setBorder(BorderFactory.createLineBorder(Color.cyan));
@@ -56,8 +55,8 @@ public class MessagesPanel {
 
         buttonPanel.add(resetButton);
         buttonPanel.add(pauseButton);
-        anyCommand = new AnyCommand(config, listenToCommands, false);
-        buttonPanel.add(anyCommand.getContent());
+        if (extraButton != null)
+            buttonPanel.add(extraButton);
     }
 
     public JPanel getButtonPanel() {
