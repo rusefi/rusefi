@@ -98,7 +98,9 @@ typedef struct {
 	float knockLevel;
 	int totalTriggerErrorCounter;
 	float wallFuelAmount;
-	int unused3[8];
+	float totalFuelCorrection;
+	floatms_t wallFuelCorrection;
+	int unused3[6];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */

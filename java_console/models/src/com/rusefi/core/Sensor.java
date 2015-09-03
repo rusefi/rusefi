@@ -91,6 +91,8 @@ public enum Sensor {
     MAP_ACCEL_DELTA(SensorCategory.OPERATIONS, FieldType.FLOAT, 124, BackgroundColor.MUD),
     TPS_ACCEL_FUEL(SensorCategory.OPERATIONS, FieldType.FLOAT, 128, BackgroundColor.MUD),
     WALL_FUEL(SensorCategory.OPERATIONS, FieldType.FLOAT, 160, BackgroundColor.MUD),
+    temperatureFuelCorrection(SensorCategory.OPERATIONS, FieldType.FLOAT, 164, BackgroundColor.MUD),
+    wallFuelCorrection(SensorCategory.OPERATIONS, FieldType.FLOAT, 168, BackgroundColor.MUD),
 
     INJ_1_2_DELTA("inj 1-2 delta", SensorCategory.SNIFFING),
     INJ_3_4_DELTA("inj 3-4 delta", SensorCategory.SNIFFING),
