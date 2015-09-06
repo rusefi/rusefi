@@ -92,6 +92,8 @@ case TEST_ENGINE:
   return "TEST_ENGINE";
 case VW_ABA:
   return "VW_ABA";
+case DODGE_STRATUS:
+	return "DODGE_STRATUS";
   }
  return NULL;
 }
