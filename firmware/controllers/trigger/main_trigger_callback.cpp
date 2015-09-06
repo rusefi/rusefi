@@ -399,12 +399,15 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 
 		// todo: add some check for dwell overflow? like 4 times 6 ms while engine cycle is less then that
 
+		IgnitionEventList *list = &engine->engineConfiguration2->ignitionEvents[revolutionIndex];
+
 		if (cisnan(engine->engineState.advance)) {
 			// error should already be reported
+			list->reset(); // reset is needed to clear previous ignition schedule
 			return;
 		}
 		initializeIgnitionActions(engine->engineState.advance, engine->engineState.dwellAngle,
-				&engine->engineConfiguration2->ignitionEvents[revolutionIndex] PASS_ENGINE_PARAMETER);
+				list PASS_ENGINE_PARAMETER);
 		engine->m.ignitionSchTime = GET_TIMESTAMP() - engine->m.beforeIgnitionSch;
 
 		engine->m.beforeInjectonSch = GET_TIMESTAMP();
@@ -476,7 +479,7 @@ void initMainEventListener(Logging *sharedLogger, Engine *engine) {
 		printMsg(logger, "!!!!!!!!!!!!!!!!!!! injection disabled");
 #endif
 
-#if EFI_HISTOGRAMS
+#if EFI_HISTOGRAMS || defined(__DOXYGEN__)
 	initHistogram(&mainLoopHisto, "main callback");
 #endif /* EFI_HISTOGRAMS */
 
