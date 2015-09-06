@@ -74,7 +74,6 @@ public enum Sensor {
     IDLE_SWITCH("idle switch", SensorCategory.OTHERS),
 
     DEFAULT_FUEL("map fuel", SensorCategory.OPERATIONS, "ms", 0, 40),
-    T_CHARGE("T Charge", SensorCategory.OPERATIONS, "f", 0, 200),
 
     CHARTSIZE("CHARTSIZE", SensorCategory.OTHERS),
     CHART_STATUS("CHART_STATUS", SensorCategory.OTHERS),
@@ -87,6 +86,8 @@ public enum Sensor {
     INJECTOR_3_DWELL("inj #3", SensorCategory.SNIFFING),
     INJECTOR_4_DWELL("inj #4", SensorCategory.SNIFFING),
 
+    T_CHARGE(SensorCategory.OPERATIONS, FieldType.FLOAT, 52, BackgroundColor.MUD, 30, 140),
+    DWELL(SensorCategory.OPERATIONS, FieldType.FLOAT, 60, BackgroundColor.MUD, 1, 10),
     CURRENT_VE(SensorCategory.OPERATIONS, FieldType.FLOAT, 112, BackgroundColor.MUD),
     MAP_ACCEL_DELTA(SensorCategory.OPERATIONS, FieldType.FLOAT, 124, BackgroundColor.MUD),
     TPS_ACCEL_FUEL(SensorCategory.OPERATIONS, FieldType.FLOAT, 128, BackgroundColor.MUD),
@@ -107,15 +108,19 @@ public enum Sensor {
     private final FieldType type;
     private final int offset;
 
-    Sensor(SensorCategory category, FieldType type, int offset, BackgroundColor color) {
+    Sensor(SensorCategory category, FieldType type, int offset, BackgroundColor color, double minValue, double maxValue) {
         name = name();
         this.type = type;
         this.offset = offset;
         this.category = category;
         this.color = color;
         units = "n/a";
-        minValue = 0;
-        maxValue = 100;
+        this.minValue = minValue;
+        this.maxValue = maxValue;
+    }
+
+    Sensor(SensorCategory category, FieldType type, int offset, BackgroundColor color) {
+        this(category, type, offset, color, 0, 100);
     }
 
     Sensor(String name, SensorCategory category) {

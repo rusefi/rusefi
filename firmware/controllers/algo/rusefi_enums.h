@@ -101,7 +101,9 @@ typedef enum {
 
 	VW_ABA = 32,
 
-	ET_UNUSED = 33,
+	DODGE_STRATUS = 33,
+
+	ET_UNUSED = 34,
 
 	Force_4b_engine_type = ENUM_32_BITS,
 } engine_type_e;
