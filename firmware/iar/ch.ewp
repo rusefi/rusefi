@@ -1947,6 +1947,12 @@
         <name>$PROJ_DIR$\..\config\engines\dodge_ram.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\config\engines\dodge_stratus.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\dodge_stratus.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\config\engines\engines.h</name>
       </file>
       <file>

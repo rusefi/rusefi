@@ -542,8 +542,11 @@ void testTriggerDecoder(void) {
 	testTriggerDecoder3("miata 1994", MIATA_1994_DEVIATOR, 11, 0.2985, 0.3890, MIATA_NA_GAP);
 	testTriggerDecoder3("citroen", CITROEN_TU3JP, 0, 0.4833, 0.0, 2.9994);
 
-	testTriggerDecoder3("neon NGC", DODGE_NEON_2003, 24, 0.4744, 0.4600, CHRYSLER_NGC_GAP);
+	testTriggerDecoder3("neon NGC4", DODGE_NEON_2003, 24, 0.4744, 0.4600, CHRYSLER_NGC4_GAP);
 	testTriggerDecoder2("sachs", SACHS, 0, 0.4800, 0.000);
+
+	printTriggerDebug = true;
+	testTriggerDecoder3("stratus NGC6", DODGE_STRATUS, 12, 0.8930, 0.0, CHRYSLER_NGC6_GAP);
 
 	testTriggerDecoder2("vw ABA", VW_ABA, 114, 0.5000, 0.0);
 
