@@ -10,10 +10,13 @@
 
 #include "trigger_structure.h"
 
-#define CHRYSLER_NGC_GAP 3.4390
+#define CHRYSLER_NGC4_GAP 3.4390
+#define CHRYSLER_NGC6_GAP 5
 
 void configureNeon1995TriggerShape(TriggerShape *s);
 void configureNeon2003TriggerShape(TriggerShape *s);
 void initDodgeRam(TriggerShape *s);
+
+void configureDodgeStratusTriggerShape(TriggerShape *s);
 
 #endif /* TRIGGER_CHRYSLER_H_ */

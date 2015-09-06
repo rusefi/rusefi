@@ -45,7 +45,7 @@ EXTERN_ENGINE
 
 static cyclic_buffer<int> errorDetection;
 
-#if ! EFI_PROD_CODE
+#if ! EFI_PROD_CODE || defined(__DOXYGEN__)
 bool printTriggerDebug = false;
 float actualSynchGap;
 #endif /* ! EFI_PROD_CODE */
@@ -353,6 +353,10 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 
 	case TT_DODGE_NEON_1995:
 		configureNeon1995TriggerShape(triggerShape);
+		break;
+
+	case TT_DODGE_STRATUS:
+		configureDodgeStratusTriggerShape(triggerShape);
 		break;
 
 	case TT_DODGE_NEON_2003:
