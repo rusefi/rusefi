@@ -22,11 +22,11 @@
  */
 
 #include "main.h"
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include <nvic.h>
 #endif
 
-#if !EFI_PROD_CODE && !EFI_SIMULATOR
+#if (!EFI_PROD_CODE && !EFI_SIMULATOR) || defined(__DOXYGEN__)
 
 #define chThdSelf() 0
 #define getRemainingStack(x) (999999)
@@ -49,7 +49,7 @@
 #include "histogram.h"
 #include "fuel_math.h"
 #include "histogram.h"
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "rfiutil.h"
 #endif /* EFI_HISTOGRAMS */
 #include "LocalVersionHolder.h"
@@ -199,7 +199,7 @@ static ALWAYS_INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *i
 	int isIgnitionError = chargeDelayUs < 0;
 	ignitionErrorDetection.add(isIgnitionError);
 	if (isIgnitionError) {
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 		scheduleMsg(logger, "Negative spark delay=%f", chargeDelayUs);
 #endif
 		chargeDelayUs = 0;
@@ -285,12 +285,13 @@ static ALWAYS_INLINE void handleSpark(uint32_t eventIndex, int rpm,
 static histogram_s mainLoopHisto;
 
 void showMainHistogram(void) {
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	printHistogram(logger, &mainLoopHisto);
 #endif
 }
 
-static void ignitionCalc(int rpm DECLARE_ENGINE_PARAMETER_S) {
+// todo: the method name is not correct any more - no calc is done here anymore
+static ALWAYS_INLINE void ignitionMathCalc(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	/**
 	 * Within one engine cycle all cylinders are fired with same timing advance.
 	 * todo: one day we can control cylinders individually?
@@ -305,12 +306,64 @@ static void ignitionCalc(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	engine->engineState.advance = -ENGINE(engineState.timingAdvance);
 }
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 /**
  * this field is used as an Expression in IAR debugger
  */
 uint32_t *cyccnt = (uint32_t*)&DWT_CYCCNT;
 #endif
+
+static ALWAYS_INLINE void scheduleIgnitionAndFuelEvents(int rpm, int revolutionIndex DECLARE_ENGINE_PARAMETER_S) {
+	engine->m.beforeFuelCalc = GET_TIMESTAMP();
+	ENGINE(fuelMs) = getFuelMs(rpm PASS_ENGINE_PARAMETER) * engineConfiguration->globalFuelCorrection;
+	engine->m.fuelCalcTime = GET_TIMESTAMP() - engine->m.beforeFuelCalc;
+
+	engine->m.beforeIgnitionSch = GET_TIMESTAMP();
+	/**
+	 * TODO: warning. there is a bit of a hack here, todo: improve.
+	 * currently output signals/times signalTimerUp from the previous revolutions could be
+	 * still used because they have crossed the revolution boundary
+	 * but we are already re-purposing the output signals, but everything works because we
+	 * are not affecting that space in memory. todo: use two instances of 'ignitionSignals'
+	 */
+	float maxAllowedDwellAngle = (int) (engineConfiguration->engineCycle / 2); // the cast is about making Coverity happy
+
+	if (engineConfiguration->ignitionMode == IM_ONE_COIL) {
+		maxAllowedDwellAngle = engineConfiguration->engineCycle / engineConfiguration->specs.cylindersCount / 1.1;
+	}
+
+	if (engine->engineState.dwellAngle == 0) {
+		warning(OBD_PCM_Processor_Fault, "dwell is zero?");
+	}
+	if (engine->engineState.dwellAngle > maxAllowedDwellAngle) {
+		warning(OBD_PCM_Processor_Fault, "dwell angle too long: %f", engine->engineState.dwellAngle);
+	}
+
+	// todo: add some check for dwell overflow? like 4 times 6 ms while engine cycle is less then that
+
+	IgnitionEventList *list = &engine->engineConfiguration2->ignitionEvents[revolutionIndex];
+
+	if (cisnan(engine->engineState.advance)) {
+		// error should already be reported
+		list->reset(); // reset is needed to clear previous ignition schedule
+		return;
+	}
+	initializeIgnitionActions(engine->engineState.advance, engine->engineState.dwellAngle,
+			list PASS_ENGINE_PARAMETER);
+	engine->m.ignitionSchTime = GET_TIMESTAMP() - engine->m.beforeIgnitionSch;
+
+	engine->m.beforeInjectonSch = GET_TIMESTAMP();
+
+	if (isCrankingR(rpm)) {
+		ENGINE(engineConfiguration2)->crankingInjectionEvents.addFuelEvents(
+				engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER);
+	} else {
+		ENGINE(engineConfiguration2)->injectionEvents.addFuelEvents(
+				engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
+	}
+	engine->m.injectonSchTime = GET_TIMESTAMP() - engine->m.beforeInjectonSch;
+
+}
 
 /**
  * This is the main trigger event handler.
@@ -345,7 +398,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 		return;
 	}
 
-#if EFI_HISTOGRAMS && EFI_PROD_CODE
+#if (EFI_HISTOGRAMS && EFI_PROD_CODE) || defined(__DOXYGEN__)
 	int beforeCallback = hal_lld_get_counter_value();
 #endif
 
@@ -367,66 +420,19 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 		}
 
 		engine->m.beforeIgnitionMath = GET_TIMESTAMP();
-		ignitionCalc(rpm PASS_ENGINE_PARAMETER);
+		ignitionMathCalc(rpm PASS_ENGINE_PARAMETER);
 		engine->m.ignitionMathTime = GET_TIMESTAMP() - engine->m.beforeIgnitionMath;
 	}
 
 	if (eventIndex == 0) {
-		engine->m.beforeFuelCalc = GET_TIMESTAMP();
-		ENGINE(fuelMs) = getFuelMs(rpm PASS_ENGINE_PARAMETER) * engineConfiguration->globalFuelCorrection;
-		engine->m.fuelCalcTime = GET_TIMESTAMP() - engine->m.beforeFuelCalc;
-
-		engine->m.beforeIgnitionSch = GET_TIMESTAMP();
-		/**
-		 * TODO: warning. there is a bit of a hack here, todo: improve.
-		 * currently output signals/times signalTimerUp from the previous revolutions could be
-		 * still used because they have crossed the revolution boundary
-		 * but we are already repurposing the output signals, but everything works because we
-		 * are not affecting that space in memory. todo: use two instances of 'ignitionSignals'
-		 */
-		float maxAllowedDwellAngle = (int) (engineConfiguration->engineCycle / 2); // the cast is about making Coverity happy
-
-		if (engineConfiguration->ignitionMode == IM_ONE_COIL) {
-			maxAllowedDwellAngle = engineConfiguration->engineCycle / engineConfiguration->specs.cylindersCount / 1.1;
-		}
-
-		if (engine->engineState.dwellAngle == 0) {
-			warning(OBD_PCM_Processor_Fault, "dwell is zero?");
-		}
-		if (engine->engineState.dwellAngle > maxAllowedDwellAngle) {
-			warning(OBD_PCM_Processor_Fault, "dwell angle too long: %f", engine->engineState.dwellAngle);
-		}
-
-		// todo: add some check for dwell overflow? like 4 times 6 ms while engine cycle is less then that
-
-		IgnitionEventList *list = &engine->engineConfiguration2->ignitionEvents[revolutionIndex];
-
-		if (cisnan(engine->engineState.advance)) {
-			// error should already be reported
-			list->reset(); // reset is needed to clear previous ignition schedule
-			return;
-		}
-		initializeIgnitionActions(engine->engineState.advance, engine->engineState.dwellAngle,
-				list PASS_ENGINE_PARAMETER);
-		engine->m.ignitionSchTime = GET_TIMESTAMP() - engine->m.beforeIgnitionSch;
-
-		engine->m.beforeInjectonSch = GET_TIMESTAMP();
-
-		if (isCrankingR(rpm)) {
-			ENGINE(engineConfiguration2)->crankingInjectionEvents.addFuelEvents(
-					engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER);
-		} else {
-			ENGINE(engineConfiguration2)->injectionEvents.addFuelEvents(
-					engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
-		}
-		engine->m.injectonSchTime = GET_TIMESTAMP() - engine->m.beforeInjectonSch;
+		scheduleIgnitionAndFuelEvents(rpm, revolutionIndex PASS_ENGINE_PARAMETER);
 	}
 
 //	triggerEventsQueue.executeAll(getCrankEventCounter());
 
 	handleFuel(eventIndex, rpm PASS_ENGINE_PARAMETER);
 	handleSpark(eventIndex, rpm, &engine->engineConfiguration2->ignitionEvents[revolutionIndex] PASS_ENGINE_PARAMETER);
-#if EFI_HISTOGRAMS && EFI_PROD_CODE
+#if (EFI_HISTOGRAMS && EFI_PROD_CODE) || defined(__DOXYGEN__)
 	int diff = hal_lld_get_counter_value() - beforeCallback;
 	if (diff > 0)
 	hsAdd(&mainLoopHisto, diff);
