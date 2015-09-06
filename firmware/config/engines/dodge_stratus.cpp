@@ -18,6 +18,8 @@ void setDodgeStratus(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->specs.cylindersCount = 6;
 	engineConfiguration->specs.firingOrder = FO_1_THEN_2_THEN_3_THEN_4_THEN_5_THEN_6;
 
+	engineConfiguration->map.sensor.type = MT_DODGE_NEON_2003;
+	engineConfiguration->algorithm = LM_SPEED_DENSITY;
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
 	boardConfiguration->ignitionPins[0] = GPIOC_9;
