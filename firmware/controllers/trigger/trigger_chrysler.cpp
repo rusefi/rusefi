@@ -212,14 +212,18 @@ void configureDodgeStratusTriggerShape(TriggerShape *s) {
 	s->reset(FOUR_STROKE_CAM_SENSOR, false);
 	s->isSynchronizationNeeded = true;
 
-	s->tdcPosition = 510;
+	s->tdcPosition = 150;
 
 	float w = 7;
 	float g = 20;
-	s->setTriggerSynchronizationGap2(CHRYSLER_NGC6_GAP - 0.5, CHRYSLER_NGC6_GAP + 0.5);
+	s->setTriggerSynchronizationGap2(CHRYSLER_NGC6_GAP - 0.25, CHRYSLER_NGC6_GAP + 0.4);
 
 	float base = 0;
+	// 2 teeth
 	float angle = base + 120.0 - w;
+	s->addEvent(angle, T_PRIMARY, TV_HIGH);
+	s->addEvent(angle + w, T_PRIMARY, TV_LOW);
+	angle += g;
 	s->addEvent(angle, T_PRIMARY, TV_HIGH);
 	s->addEvent(angle + w, T_PRIMARY, TV_LOW);
 
@@ -251,6 +255,7 @@ void configureDodgeStratusTriggerShape(TriggerShape *s) {
 	s->addEvent(angle + w, T_PRIMARY, TV_LOW);
 
 	base += 120;
+	// 3 teeth
 	angle = base + 120.0 - w;
 	s->addEvent(angle, T_PRIMARY, TV_HIGH);
 	s->addEvent(angle + w, T_PRIMARY, TV_LOW);
