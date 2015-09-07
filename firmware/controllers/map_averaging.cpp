@@ -34,7 +34,7 @@
 #include "engine.h"
 #include "engine_math.h"
 
-#if EFI_ANALOG_CHART
+#if EFI_ANALOG_CHART || defined(__DOXYGEN__)
 #include <sensor_chart.h>
 #endif /* EFI_ANALOG_CHART */
 
@@ -46,11 +46,11 @@ static NamedOutputPin mapAveragingPin("map");
 /**
  * Running counter of measurements per revolution
  */
-static volatile int perRevolutionCounter = 0;
+static volatile int measurementsPerRevolutionCounter = 0;
 /**
  * Number of measurements in previous shaft revolution
  */
-static volatile int perRevolution = 0;
+static volatile int measurementsPerRevolution = 0;
 
 /**
  * In this lock-free imlementation 'readIndex' is always pointing
@@ -108,22 +108,23 @@ static void startAveraging(void *arg) {
  * as fast as possible
  */
 void mapAveragingCallback(adcsample_t adcValue) {
-	if(!isAveraging && boardConfiguration->sensorChartMode != SC_MAP) {
+	if (!isAveraging && boardConfiguration->sensorChartMode != SC_MAP) {
 		return;
 	}
 
 	/* Calculates the average values from the ADC samples.*/
-	perRevolutionCounter++;
+	measurementsPerRevolutionCounter++;
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#9a");
 
 
 #if (EFI_ANALOG_CHART && EFI_ANALOG_SENSORS) || defined(__DOXYGEN__)
-	if (boardConfiguration->sensorChartMode == SC_MAP)
-		if (perRevolutionCounter % FAST_MAP_CHART_SKIP_FACTOR == 0) {
+	if (boardConfiguration->sensorChartMode == SC_MAP) {
+		if (measurementsPerRevolutionCounter % FAST_MAP_CHART_SKIP_FACTOR == 0) {
 			float voltage = adcToVoltsDivided(adcValue);
 			float currentPressure = getMapByVoltage(voltage);
 			scAddData(getCrankshaftAngleNt(getTimeNowNt() PASS_ENGINE_PARAMETER), currentPressure);
 		}
+	}
 #endif /* EFI_ANALOG_CHART */
 
 	/**
@@ -177,12 +178,10 @@ static void mapAveragingCallback(trigger_event_e ckpEventType, uint32_t index DE
 	if (!isValidRpm(rpm))
 		return;
 
-	perRevolution = perRevolutionCounter;
-	perRevolutionCounter = 0;
+	measurementsPerRevolution = measurementsPerRevolutionCounter;
+	measurementsPerRevolutionCounter = 0;
 
-	angle_t currentAngle = TRIGGER_SHAPE(eventAngles[index]);
-
-	angle_t samplingStart = ENGINE(engineState.mapAveragingStart) - currentAngle;
+	angle_t samplingStart = ENGINE(engineState.mapAveragingStart[0]);
 	fixAngle(samplingStart);
 
 	angle_t samplingDuration = ENGINE(engineState.mapAveragingDuration);
@@ -206,23 +205,11 @@ static void mapAveragingCallback(trigger_event_e ckpEventType, uint32_t index DE
 }
 
 static void showMapStats(void) {
-	scheduleMsg(logger, "per revolution %d", perRevolution);
+	scheduleMsg(logger, "per revolution %d", measurementsPerRevolution);
 }
 
 float getMapVoltage(void) {
 	return v_averagedMapValue;
-}
-
-/**
- * This function adds an error if MAP sensor value is outside of expected range
- * @return unchanged mapKPa paramenter
- */
-float validateMap(float mapKPa DECLARE_ENGINE_PARAMETER_S) {
-	if (cisnan(mapKPa) || mapKPa < CONFIG(mapErrorLowValue) || mapKPa > CONFIG(mapErrorHighValue)) {
-		warning(OBD_PCM_Processor_Fault, "invalid MAP value: %f", mapKPa);
-		return 0;
-	}
-	return mapKPa;
 }
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -260,7 +247,7 @@ void initMapAveraging(Logging *sharedLogger, Engine *engine) {
 
 #else
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 
 float getMap(void) {
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)

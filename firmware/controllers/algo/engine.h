@@ -97,7 +97,10 @@ public:
 	ThermistorMath iatCurve;
 	ThermistorMath cltCurve;
 
-	angle_t mapAveragingStart;
+	/**
+	 * MAP averaging angle start, in relation to 'mapAveragingSchedulingAtIndex' trigger index index
+	 */
+	angle_t mapAveragingStart[INJECTION_PIN_COUNT];
 	angle_t mapAveragingDuration;
 
 	// spark-related
