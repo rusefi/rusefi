@@ -60,7 +60,6 @@ static int readIndex = 0;
 static float accumulators[2];
 static int counters[2];
 
-
 /**
  * Running MAP accumulator
  */
@@ -75,10 +74,11 @@ static volatile int mapMeasurementsCounter = 0;
  */
 static float v_averagedMapValue;
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 
-static scheduling_s startTimer[2];
-static scheduling_s endTimer[2];
+static scheduling_s startTimer[INJECTION_PIN_COUNT][2];
+static scheduling_s endTimer[INJECTION_PIN_COUNT][2];
 
 /**
  * that's a performance optimization: let's not bother averaging
@@ -116,13 +116,15 @@ void mapAveragingCallback(adcsample_t adcValue) {
 	measurementsPerRevolutionCounter++;
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#9a");
 
-
 #if (EFI_ANALOG_CHART && EFI_ANALOG_SENSORS) || defined(__DOXYGEN__)
 	if (boardConfiguration->sensorChartMode == SC_MAP) {
-		if (measurementsPerRevolutionCounter % FAST_MAP_CHART_SKIP_FACTOR == 0) {
+		if (measurementsPerRevolutionCounter % FAST_MAP_CHART_SKIP_FACTOR
+				== 0) {
 			float voltage = adcToVoltsDivided(adcValue);
 			float currentPressure = getMapByVoltage(voltage);
-			scAddData(getCrankshaftAngleNt(getTimeNowNt() PASS_ENGINE_PARAMETER), currentPressure);
+			scAddData(
+					getCrankshaftAngleNt(getTimeNowNt() PASS_ENGINE_PARAMETER),
+					currentPressure);
 		}
 	}
 #endif /* EFI_ANALOG_CHART */
@@ -156,7 +158,8 @@ static void endAveraging(void *arg) {
 	isAveraging = false;
 	// with locking we would have a consistent state
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	v_averagedMapValue = adcToVoltsDivided(mapAccumulator / mapMeasurementsCounter);
+	v_averagedMapValue = adcToVoltsDivided(
+			mapAccumulator / mapMeasurementsCounter);
 #endif
 	if (!wasLocked)
 		chSysUnlockFromIsr()
@@ -167,9 +170,10 @@ static void endAveraging(void *arg) {
 /**
  * Shaft Position callback used to schedule start and end of MAP averaging
  */
-static void mapAveragingCallback(trigger_event_e ckpEventType, uint32_t index DECLARE_ENGINE_PARAMETER_S) {
+static void mapAveragingCallback(trigger_event_e ckpEventType,
+		uint32_t index DECLARE_ENGINE_PARAMETER_S) {
 	// this callback is invoked on interrupt thread
-        UNUSED(ckpEventType);
+	UNUSED(ckpEventType);
 	engine->m.beforeMapAveragingCb = GET_TIMESTAMP();
 	if (index != CONFIG(mapAveragingSchedulingAtIndex))
 		return;
@@ -181,27 +185,30 @@ static void mapAveragingCallback(trigger_event_e ckpEventType, uint32_t index DE
 	measurementsPerRevolution = measurementsPerRevolutionCounter;
 	measurementsPerRevolutionCounter = 0;
 
-	angle_t samplingStart = ENGINE(engineState.mapAveragingStart[0]);
-	fixAngle(samplingStart);
+	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+		angle_t samplingStart = ENGINE(engineState.mapAveragingStart[i]);
 
-	angle_t samplingDuration = ENGINE(engineState.mapAveragingDuration);
-	if (samplingDuration <= 0) {
-		firmwareError("map sampling angle should be positive");
-		return;
+		angle_t samplingDuration = ENGINE(engineState.mapAveragingDuration);
+		if (samplingDuration <= 0) {
+			firmwareError("map sampling angle should be positive");
+			return;
+		}
+
+		angle_t samplingEnd = samplingStart + samplingDuration;
+		fixAngle(samplingEnd);
+		if (!cisnan(samplingEnd)) {
+			// only if value is already prepared
+			int structIndex = getRevolutionCounter() % 2;
+			// todo: schedule this based on closest trigger event, same as ignition works
+			scheduleByAngle(rpm, &startTimer[i][structIndex], samplingStart,
+					startAveraging, NULL, &engine->rpmCalculator);
+			scheduleByAngle(rpm, &endTimer[i][structIndex], samplingEnd,
+					endAveraging, NULL, &engine->rpmCalculator);
+			engine->m.mapAveragingCbTime = GET_TIMESTAMP()
+					- engine->m.beforeMapAveragingCb;
+		}
 	}
 
-	angle_t samplingEnd = samplingStart + samplingDuration;
-	fixAngle(samplingEnd);
-	if (cisnan(samplingEnd)) {
-		// value is not yet prepared
-		return;
-	}
-
-	int structIndex = getRevolutionCounter() % 2;
-	// todo: schedule this based on closest trigger event, same as ignition works
-	scheduleByAngle(rpm, &startTimer[structIndex], samplingStart, startAveraging, NULL, &engine->rpmCalculator);
-	scheduleByAngle(rpm, &endTimer[structIndex], samplingEnd, endAveraging, NULL, &engine->rpmCalculator);
-	engine->m.mapAveragingCbTime = GET_TIMESTAMP() - engine->m.beforeMapAveragingCb;
 }
 
 static void showMapStats(void) {
