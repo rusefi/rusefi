@@ -81,6 +81,18 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * config) {
 }
 
 /**
+ * This function adds an error if MAP sensor value is outside of expected range
+ * @return unchanged mapKPa parameter
+ */
+float validateMap(float mapKPa DECLARE_ENGINE_PARAMETER_S) {
+	if (cisnan(mapKPa) || mapKPa < CONFIG(mapErrorLowValue) || mapKPa > CONFIG(mapErrorHighValue)) {
+		warning(OBD_PCM_Processor_Fault, "invalid MAP value: %f", mapKPa);
+		return 0;
+	}
+	return mapKPa;
+}
+
+/**
  * @brief	MAP value decoded according to current settings
  * @returns kPa value
  */
