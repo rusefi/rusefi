@@ -91,6 +91,7 @@ public enum Sensor {
     CURRENT_VE(SensorCategory.OPERATIONS, FieldType.FLOAT, 112, BackgroundColor.MUD),
     MAP_ACCEL_DELTA(SensorCategory.OPERATIONS, FieldType.FLOAT, 124, BackgroundColor.MUD),
     TPS_ACCEL_FUEL(SensorCategory.OPERATIONS, FieldType.FLOAT, 128, BackgroundColor.MUD),
+    Injector_duty(SensorCategory.OPERATIONS, FieldType.FLOAT, 140, BackgroundColor.MUD),
     WALL_FUEL(SensorCategory.OPERATIONS, FieldType.FLOAT, 160, BackgroundColor.MUD),
     temperatureFuelCorrection(SensorCategory.OPERATIONS, FieldType.FLOAT, 164, BackgroundColor.MUD, 0, 5),
     wallFuelCorrection(SensorCategory.OPERATIONS, FieldType.FLOAT, 168, BackgroundColor.MUD),

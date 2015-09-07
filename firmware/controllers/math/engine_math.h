@@ -54,7 +54,7 @@ void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
  */
 #define getOneDegreeTimeNt(rpm) (US2NT(1000000) * 60.0f / 360 / (rpm))
 
-float getCrankshaftRevolutionTimeMs(int rpm);
+floatms_t getCrankshaftRevolutionTimeMs(int rpm);
 
 #define isCrankingR(rpm) ((rpm) > 0 && (rpm) < CONFIG(cranking.rpm))
 
