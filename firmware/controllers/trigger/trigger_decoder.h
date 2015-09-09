@@ -19,6 +19,24 @@ class TriggerState;
 
 typedef void (*TriggerStateCallback)(TriggerState *);
 
+typedef struct {
+	/**
+	 * Here we accumulate the amount of time this signal was ON within current trigger cycle
+	 */
+	int totalTimeNt[PWM_PHASE_MAX_WAVE_PER_PWM];
+	/**
+	 * index within trigger revolution, from 0 to trigger event count
+	 */
+	uint32_t current_index;
+	/**
+	 * Number of actual events within current trigger cycle
+	 * see TriggerShape
+	 */
+	uint32_t eventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
+	efitime_t timeOfPreviousEventNt[PWM_PHASE_MAX_WAVE_PER_PWM];
+
+} current_cycle_state_s;
+
 class TriggerState {
 public:
 	TriggerState();
@@ -43,10 +61,7 @@ public:
 	uint32_t currentDuration;
 	efitime_t toothed_previous_time;
 
-	/**
-	 * Here we accumulate the amount of time this signal was ON within current trigger cycle
-	 */
-	int totalTimeNt[PWM_PHASE_MAX_WAVE_PER_PWM];
+	current_cycle_state_s currentCycle;
 	/**
 	 * Total time result for previous trigger cycle
 	 */
@@ -62,23 +77,12 @@ public:
 
 	void resetRunningCounters();
 
-
-	/**
-	 * index within trigger revolution, from 0 to trigger event count
-	 */
-	uint32_t current_index;
 	uint32_t runningRevolutionCounter;
 private:
-	void clear();
-	/**
-	 * Number of actual events within current trigger cycle
-	 * see TriggerShape
-	 */
-	uint32_t eventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
+	void resetCurrentCycleState();
+
 	trigger_event_e curSignal;
 	trigger_event_e prevSignal;
-	uint32_t eventCountExt[2 * PWM_PHASE_MAX_WAVE_PER_PWM];
-	efitime_t timeOfPreviousEventNt[PWM_PHASE_MAX_WAVE_PER_PWM];
 	efitime_t totalEventCountBase;
 	uint32_t totalRevolutionCounter;
 	bool isFirstEvent;
