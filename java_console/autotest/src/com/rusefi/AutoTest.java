@@ -54,16 +54,19 @@ public class AutoTest {
         IoUtil.changeRpm(200);
         chart = nextChart();
         double x = 173.988;
+        // something is wrong here - it's a 6 cylinder here, why 4 cylinder cycle?
         assertWave(msg, chart, EngineChart.SPARK_1, 0.0199666, x, x + 180, x + 360, x + 540);
-
 
         IoUtil.changeRpm(1200);
         chart = nextChart();
 
         x = 688.464;
+        // something is wrong here - it's a 6 cylinder here, why 4 cylinder cycle?
         assertWave(msg, chart, EngineChart.SPARK_1, 0.0597999999, x, x + 180, x + 360, x + 540);
 
-        assertWave(msg, chart, EngineChart.MAP_AVERAGING, 0.139, 17.784);
+        x = 101;
+        // 6 cylinder
+        assertWave(msg, chart, EngineChart.MAP_AVERAGING, 0.139, x, x + 120, x + 240, x + 360, x + 480, x + 600);
     }
 
     private static void testMitsu() {
