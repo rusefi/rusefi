@@ -75,27 +75,27 @@ static trigger_wheel_e eventIndex[6] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SE
 
 #define nextTriggerEvent() \
  { \
-	efitime_t prevTime = timeOfPreviousEventNt[triggerWheel]; \
+	efitime_t prevTime = currentCycle.timeOfPreviousEventNt[triggerWheel]; \
 	if (prevTime != 0) { \
 		/* even event - apply the value*/ \
-		totalTimeNt[triggerWheel] += (nowNt - prevTime); \
-		timeOfPreviousEventNt[triggerWheel] = 0; \
+		currentCycle.totalTimeNt[triggerWheel] += (nowNt - prevTime); \
+		currentCycle.timeOfPreviousEventNt[triggerWheel] = 0; \
 	} else { \
 		/* odd event - start accumulation */ \
-		timeOfPreviousEventNt[triggerWheel] = nowNt; \
+		currentCycle.timeOfPreviousEventNt[triggerWheel] = nowNt; \
 	} \
-	if (engineConfiguration->useOnlyFrontForTrigger) {current_index++;} \
-	current_index++; \
+	if (engineConfiguration->useOnlyFrontForTrigger) {currentCycle.current_index++;} \
+	currentCycle.current_index++; \
 }
 
 #define nextRevolution() { \
 	if (cycleCallback != NULL) { \
 		cycleCallback(this); \
 	} \
-	memcpy(prevTotalTime, totalTimeNt, sizeof(prevTotalTime)); \
+	memcpy(prevTotalTime, currentCycle.totalTimeNt, sizeof(prevTotalTime)); \
 	prevCycleDuration = nowNt - startOfCycleNt; \
 	startOfCycleNt = nowNt; \
-	clear(); \
+	resetCurrentCycleState(); \
 	totalRevolutionCounter++; \
 	runningRevolutionCounter++; \
 	totalEventCountBase += TRIGGER_SHAPE(size); \
@@ -120,7 +120,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	prevSignal = curSignal;
 	curSignal = signal;
 
-	eventCount[triggerWheel]++;
+	currentCycle.eventCount[triggerWheel]++;
 
 	efitime_t currentDurationLong = getCurrentGapDuration(nowNt);
 
@@ -181,7 +181,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 #endif /* EFI_PROD_CODE */
 			float gap = 1.0 * currentDuration / toothed_previous_duration;
 #if EFI_PROD_CODE
-			scheduleMsg(logger, "gap=%f @ %d", gap, current_index);
+			scheduleMsg(logger, "gap=%f @ %d", gap, currentCycle.current_index);
 #else
 			actualSynchGap = gap;
 			print("current gap %f\r\n", gap);
@@ -193,7 +193,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		 * in case of noise the counter could be above the expected number of events
 		 */
 		int d = engineConfiguration->useOnlyFrontForTrigger ? 2 : 1;
-		isSynchronizationPoint = !shaft_is_synchronized || (current_index >= TRIGGER_SHAPE(size) - d);
+		isSynchronizationPoint = !shaft_is_synchronized || (currentCycle.current_index >= TRIGGER_SHAPE(size) - d);
 
 	}
 
@@ -201,7 +201,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		if (printTriggerDebug) {
 			printf("%s isSynchronizationPoint=%d index=%d %s\r\n",
 					getTrigger_type_e(engineConfiguration->trigger.type),
-					isSynchronizationPoint, current_index,
+					isSynchronizationPoint, currentCycle.current_index,
 					getTrigger_event_e(signal));
 		}
 #endif
@@ -211,9 +211,9 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		/**
 		 * We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
 		 */
-		bool isDecodingError = eventCount[0] != TRIGGER_SHAPE(expectedEventCount[0])
-				|| eventCount[1] != TRIGGER_SHAPE(expectedEventCount[1])
-				|| eventCount[2] != TRIGGER_SHAPE(expectedEventCount[2]);
+		bool isDecodingError = currentCycle.eventCount[0] != TRIGGER_SHAPE(expectedEventCount[0])
+				|| currentCycle.eventCount[1] != TRIGGER_SHAPE(expectedEventCount[1])
+				|| currentCycle.eventCount[2] != TRIGGER_SHAPE(expectedEventCount[2]);
 
 		triggerDecoderErrorPin.setValue(isDecodingError);
 		if (isDecodingError) {
@@ -221,9 +221,9 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			totalTriggerErrorCounter++;
 			if (engineConfiguration->isPrintTriggerSynchDetails) {
 #if EFI_PROD_CODE
-				scheduleMsg(logger, "error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d", current_index,
+				scheduleMsg(logger, "error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d", currentCycle.current_index,
 						TRIGGER_SHAPE(expectedEventCount[0]), TRIGGER_SHAPE(expectedEventCount[1]),
-						TRIGGER_SHAPE(expectedEventCount[2]), eventCount[0], eventCount[1], eventCount[2]);
+						TRIGGER_SHAPE(expectedEventCount[2]), currentCycle.eventCount[0], currentCycle.eventCount[1], currentCycle.eventCount[2]);
 #endif /* EFI_PROD_CODE */
 			}
 		}
@@ -233,7 +233,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		if (isTriggerDecoderError()) {
 			warning(OBD_PCM_Processor_Fault, "trigger decoding issue. expected %d/%d/%d got %d/%d/%d",
 					TRIGGER_SHAPE(expectedEventCount[0]), TRIGGER_SHAPE(expectedEventCount[1]),
-					TRIGGER_SHAPE(expectedEventCount[2]), eventCount[0], eventCount[1], eventCount[2]);
+					TRIGGER_SHAPE(expectedEventCount[2]), currentCycle.eventCount[0], currentCycle.eventCount[1], currentCycle.eventCount[2]);
 		}
 
 		shaft_is_synchronized = true;
@@ -484,7 +484,7 @@ void TriggerStimulatorHelper::nextStep(TriggerState *state, TriggerShape * shape
 static void onFindIndex(TriggerState *state) {
 	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 		// todo: that's not the best place for this intermediate data storage, fix it!
-		state->expectedTotalTime[i] = state->totalTimeNt[i];
+		state->expectedTotalTime[i] = state->currentCycle.totalTimeNt[i];
 	}
 }
 

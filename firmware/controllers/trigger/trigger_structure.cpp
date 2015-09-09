@@ -164,14 +164,14 @@ TriggerState::TriggerState() {
 	startOfCycleNt = 0;
 
 	resetRunningCounters();
-	clear();
+	resetCurrentCycleState();
 	memset(expectedTotalTime, 0, sizeof(expectedTotalTime));
 	totalEventCountBase = 0;
 	isFirstEvent = true;
 }
 
 int TriggerState::getCurrentIndex() {
-	return current_index;
+	return currentCycle.current_index;
 }
 
 efitime_t TriggerState::getStartOfRevolutionIndex() {
@@ -185,18 +185,18 @@ void TriggerState::resetRunningCounters() {
 }
 
 efitime_t TriggerState::getTotalEventCounter() {
-	return totalEventCountBase + current_index;
+	return totalEventCountBase + currentCycle.current_index;
 }
 
 int TriggerState::getTotalRevolutionCounter() {
 	return totalRevolutionCounter;
 }
 
-void TriggerState::clear() {
-	memset(eventCount, 0, sizeof(eventCount));
-	memset(timeOfPreviousEventNt, 0, sizeof(timeOfPreviousEventNt));
-	memset(totalTimeNt, 0, sizeof(totalTimeNt));
-	current_index = 0;
+void TriggerState::resetCurrentCycleState() {
+	memset(currentCycle.eventCount, 0, sizeof(currentCycle.eventCount));
+	memset(currentCycle.timeOfPreviousEventNt, 0, sizeof(currentCycle.timeOfPreviousEventNt));
+	memset(currentCycle.totalTimeNt, 0, sizeof(currentCycle.totalTimeNt));
+	currentCycle.current_index = 0;
 }
 
 /**

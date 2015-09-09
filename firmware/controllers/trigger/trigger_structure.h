@@ -90,6 +90,9 @@ public:
 	 */
 	float eventAngles[PWM_PHASE_MAX_COUNT];
 
+	uint32_t timeOfLastEvent[PWM_PHASE_MAX_COUNT];
+	float instantRpmValue[PWM_PHASE_MAX_COUNT];
+
 	int8_t isFrontEvent[PWM_PHASE_MAX_COUNT];
 	/**
 	 * this table translates trigger definition index into 'front-only' index. This translation is not so trivial
