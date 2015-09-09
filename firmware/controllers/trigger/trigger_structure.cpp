@@ -194,7 +194,6 @@ int TriggerState::getTotalRevolutionCounter() {
 
 void TriggerState::clear() {
 	memset(eventCount, 0, sizeof(eventCount));
-	memset(eventCountExt, 0, sizeof(eventCountExt));
 	memset(timeOfPreviousEventNt, 0, sizeof(timeOfPreviousEventNt));
 	memset(totalTimeNt, 0, sizeof(totalTimeNt));
 	current_index = 0;

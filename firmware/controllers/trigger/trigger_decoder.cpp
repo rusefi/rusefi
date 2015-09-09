@@ -68,7 +68,7 @@ float TriggerState::getTriggerDutyCycle(int index) {
 }
 
 static trigger_wheel_e eventIndex[6] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SECONDARY, T_CHANNEL_3, T_CHANNEL_3 };
-static trigger_value_e eventType[6] = { TV_LOW, TV_HIGH, TV_LOW, TV_HIGH, TV_LOW, TV_HIGH };
+//static trigger_value_e eventType[6] = { TV_LOW, TV_HIGH, TV_LOW, TV_HIGH, TV_LOW, TV_HIGH };
 
 #define getCurrentGapDuration(nowNt) \
 	(isFirstEvent ? 0 : (nowNt) - toothed_previous_time)
@@ -121,7 +121,6 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	curSignal = signal;
 
 	eventCount[triggerWheel]++;
-	eventCountExt[signal]++;
 
 	efitime_t currentDurationLong = getCurrentGapDuration(nowNt);
 
