@@ -22,12 +22,12 @@
 #include "auto_generated_enums.h"
 
 #include "rpm_calculator.h"
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "rfiutil.h"
 #include "pin_repository.h"
 #endif
 
-#if EFI_ENGINE_SNIFFER
+#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 #include "engine_sniffer.h"
 WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
