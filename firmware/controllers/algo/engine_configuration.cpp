@@ -582,7 +582,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	boardConfiguration->spi1mosiPin = GPIOB_5;
 	boardConfiguration->spi1misoPin = GPIOB_4;
-	boardConfiguration->spi1sckPin = GPIOB_3;
+	boardConfiguration->spi1sckPin = GPIOB_3; // please note that this pin is also SWO/SWD - Single Wire debug Output
 
 	boardConfiguration->spi2mosiPin = GPIOB_15;
 	boardConfiguration->spi2misoPin = GPIOB_14;
