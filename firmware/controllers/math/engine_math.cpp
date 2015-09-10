@@ -297,6 +297,8 @@ static int order_1_8_4_3_6_5_7_2[] = { 1, 8, 4, 3, 6, 5, 7, 2 };
 
 static int order_1_2[] = {1, 2};
 
+static int order_1_2_3[] = {1, 2, 3};
+
 /**
  * @param index from zero to cylindersCount - 1
  * @return cylinderId from one to cylindersCount
@@ -306,9 +308,12 @@ int getCylinderId(firing_order_e firingOrder, int index) {
 	switch (firingOrder) {
 	case FO_ONE_CYLINDER:
 		return 1;
-
+// 2 cylinder
 	case FO_1_THEN_2:
 		return order_1_2[index];
+// 3 cylinder
+	case FO_1_2_3:
+		return order_1_2_3[index];
 // 4 cylinder
 	case FO_1_THEN_3_THEN_4_THEN2:
 		return order_1_THEN_3_THEN_4_THEN2[index];
