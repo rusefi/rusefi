@@ -311,6 +311,8 @@ case FO_1_THEN_2_THEN_3_THEN_4_THEN_5_THEN_6:
 	return "FO_1_THEN_2_THEN_3_THEN_4_THEN_5_THEN_6";
 case FO_ONE_CYLINDER:
   return "FO_ONE_CYLINDER";
+case FO_1_2_3:
+	return "FO_1_2_3";
 case Force_4b_firing_order:
   return "Force_4b_firing_order";
   }
