@@ -236,10 +236,20 @@ operation_mode_e TriggerShape::getOperationMode() {
 	return operationMode;
 }
 
+#if EFI_UNIT_TEST
+extern bool printTriggerDebug;
+#endif
+
 void TriggerShape::addEvent(float angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam) {
 	efiAssertVoid(operationMode != OM_NONE, "operationMode not set");
 
 	efiAssertVoid(waveIndex!= T_SECONDARY || needSecondTriggerInput, "secondary needed or not?");
+
+#if EFI_UNIT_TEST
+	if (printTriggerDebug) {
+		printf("addEvent %f\r\n", angle);
+	}
+#endif
 
 	trigger_value_e state;
 	if (invertOnAdd) {
@@ -271,7 +281,7 @@ void TriggerShape::addEvent(float angle, trigger_wheel_e const waveIndex, trigge
 	efiAssertVoid(angle > 0, "angle should be positive");
 	if (size > 0) {
 		if (angle <= previousAngle) {
-			firmwareError("invalid angle order: %f and %f", angle, previousAngle);
+			firmwareError("invalid angle order: %f and %f, size=%d", angle, previousAngle, size);
 			return;
 		}
 	}
