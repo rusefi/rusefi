@@ -30,6 +30,7 @@
 #include "trigger_gm.h"
 #include "trigger_bmw.h"
 #include "trigger_mitsubishi.h"
+#include "trigger_subaru.h"
 #include "auto_generated_enums.h"
 #include "trigger_structure.h"
 #include "efiGpio.h"
@@ -41,7 +42,7 @@ EXTERN_ENGINE
 ;
 
 // todo: better name for this constant
-#define HELPER_PERIOD 100000
+#define HELPER_PERIOD 720000
 
 static cyclic_buffer<int> errorDetection;
 
@@ -184,7 +185,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			scheduleMsg(logger, "gap=%f @ %d", gap, currentCycle.current_index);
 #else
 			actualSynchGap = gap;
-			print("current gap %f\r\n", gap);
+			print("current gap %f c=%d prev=%d\r\n", gap, currentDuration, toothed_previous_duration);
 #endif /* EFI_PROD_CODE */
 		}
 
@@ -429,6 +430,10 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 
 	case TT_DODGE_RAM:
 		initDodgeRam(triggerShape);
+		break;
+
+	case TT_36_2_2_2:
+		initialize36_2_2_2(triggerShape);
 		break;
 
 	default:
