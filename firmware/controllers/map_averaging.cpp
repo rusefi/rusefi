@@ -35,7 +35,7 @@
 #include "engine_math.h"
 
 #if EFI_ANALOG_CHART || defined(__DOXYGEN__)
-#include <sensor_chart.h>
+#include "sensor_chart.h"
 #endif /* EFI_ANALOG_CHART */
 
 #define FAST_MAP_CHART_SKIP_FACTOR 16

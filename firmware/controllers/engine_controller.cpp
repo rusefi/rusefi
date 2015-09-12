@@ -21,7 +21,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <sensor_chart.h>
+#include "sensor_chart.h"
 #include "main.h"
 #include "engine_configuration.h"
 #include "trigger_central.h"
