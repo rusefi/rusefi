@@ -45,7 +45,7 @@ TriggerShape::TriggerShape() :
 	// todo: reuse 'clear' method?
 	invertOnAdd = false;
 	tdcPosition = 0;
-	skippedToothCount = totalToothCount = 0;
+//	skippedToothCount = totalToothCount = 0;
 	syncRatioFrom = syncRatioTo = 0;
 	secondSyncRatioFrom = 0.000001;
 	secondSyncRatioTo = 100000;
@@ -230,7 +230,7 @@ float TriggerShape::getAngle(int index) const {
 	}
 }
 
-void TriggerShape::addEvent(float angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam, float filterLeft, float filterRight) {
+void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam, float filterLeft, float filterRight) {
 	if (angle > filterLeft && angle < filterRight)
 		addEvent(angle, waveIndex, stateParam);
 }
@@ -243,7 +243,7 @@ operation_mode_e TriggerShape::getOperationMode() {
 extern bool printTriggerDebug;
 #endif
 
-void TriggerShape::addEvent(float angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam) {
+void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam) {
 	efiAssertVoid(operationMode != OM_NONE, "operationMode not set");
 
 	efiAssertVoid(waveIndex!= T_SECONDARY || needSecondTriggerInput, "secondary needed or not?");

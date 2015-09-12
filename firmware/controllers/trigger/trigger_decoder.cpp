@@ -121,6 +121,8 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	prevSignal = curSignal;
 	curSignal = signal;
 
+	timeOfLastEvent[currentCycle.current_index] = nowNt;
+
 	currentCycle.eventCount[triggerWheel]++;
 
 	efitime_t currentDurationLong = getCurrentGapDuration(nowNt);
@@ -288,8 +290,8 @@ void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount,
 		operation_mode_e operationMode) {
 	efiAssertVoid(totalTeethCount > 0, "totalTeethCount is zero");
 
-	s->totalToothCount = totalTeethCount;
-	s->skippedToothCount = skippedCount;
+//	s->totalToothCount = totalTeethCount;
+//	s->skippedToothCount = skippedCount;
 
 	s->setTriggerSynchronizationGap(skippedCount + 1);
 	s->isSynchronizationNeeded = (skippedCount != 0);
