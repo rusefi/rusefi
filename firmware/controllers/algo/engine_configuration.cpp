@@ -62,6 +62,7 @@
 #include "dodge_ram.h"
 #include "vw.h"
 #include "dodge_stratus.h"
+#include "daihatsu.h"
 
 EXTERN_ENGINE;
 
@@ -736,6 +737,10 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	case SACHS:
 		setSachs(PASS_ENGINE_PARAMETER_F);
 		break;
+	case DAIHATSU:
+		setDaihatsu(PASS_ENGINE_PARAMETER_F);
+		break;
+
 	default:
 		warning(OBD_PCM_Processor_Fault, "Unexpected engine type: %d", engineType);
 	}

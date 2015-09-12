@@ -1,6 +1,8 @@
 /**
  * @file daihatsu.cpp
  *
+ * set_engine_type 34
+ *
  * @date Sep 10, 2015
  * @author Andrey Belomutskiy, (c) 2012-2015
  */
@@ -11,7 +13,9 @@
 EXTERN_ENGINE;
 
 void setDaihatsu(DECLARE_ENGINE_PARAMETER_F) {
+	engineConfiguration->trigger.type = TT_36_2_2_2;
+
 	engineConfiguration->specs.cylindersCount = 3;
-	engineConfiguration->specs.firingOrder = FO_1_THEN_2_THEN_3_THEN_4_THEN_5_THEN_6;
+	engineConfiguration->specs.firingOrder = FO_1_2_3;
 
 }

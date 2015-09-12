@@ -28,6 +28,8 @@ case AUDI_AAN:
   return "AUDI_AAN";
 case SACHS:
   return "SACHS";
+case DAIHATSU:
+	return "DAIHATSU";
 case GM_2_2:
   return "GM_2_2";
 case DODGE_RAM:

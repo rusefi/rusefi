@@ -7,13 +7,18 @@
 
 #include "trigger_subaru.h"
 
+/**
+ * This trigger is also used by Nissan and Mazda
+ */
 void initialize36_2_2_2(TriggerShape *s) {
 	s->reset(FOUR_STROKE_CAM_SENSOR, true);
 
 	float wide = 30 * 2;
 	float narrow = 10 * 2;
 
-	s->isSynchronizationNeeded = false;
+	s->isSynchronizationNeeded = true;
+	s->setTriggerSynchronizationGap(0.5);
+	s->setSecondTriggerSynchronizationGap(1);
 
 	float base = 0;
 
