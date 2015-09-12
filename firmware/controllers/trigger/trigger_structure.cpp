@@ -47,6 +47,8 @@ TriggerShape::TriggerShape() :
 	tdcPosition = 0;
 	skippedToothCount = totalToothCount = 0;
 	syncRatioFrom = syncRatioTo = 0;
+	secondSyncRatioFrom = 0.000001;
+	secondSyncRatioTo = 100000;
 	memset(eventAngles, 0, sizeof(eventAngles));
 	memset(frontOnlyIndexes, 0, sizeof(frontOnlyIndexes));
 	memset(isFrontEvent, 0, sizeof(isFrontEvent));
@@ -153,6 +155,7 @@ TriggerState::TriggerState() {
 	shaft_is_synchronized = false;
 	toothed_previous_time = 0;
 	toothed_previous_duration = 0;
+	durationBeforePrevious = 0;
 
 	totalRevolutionCounter = 0;
 	totalTriggerErrorCounter = 0;
@@ -236,7 +239,7 @@ operation_mode_e TriggerShape::getOperationMode() {
 	return operationMode;
 }
 
-#if EFI_UNIT_TEST
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
 extern bool printTriggerDebug;
 #endif
 
@@ -245,7 +248,7 @@ void TriggerShape::addEvent(float angle, trigger_wheel_e const waveIndex, trigge
 
 	efiAssertVoid(waveIndex!= T_SECONDARY || needSecondTriggerInput, "secondary needed or not?");
 
-#if EFI_UNIT_TEST
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	if (printTriggerDebug) {
 		printf("addEvent %f\r\n", angle);
 	}

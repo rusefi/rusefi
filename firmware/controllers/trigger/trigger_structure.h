@@ -50,6 +50,13 @@ public:
 	float syncRatioTo;
 
 	/**
+	 * Usually this is not needed, but some crazy triggers like 36-2-2-2 require two consecutive
+	 * gaps ratios to sync
+	 */
+	float secondSyncRatioFrom;
+	float secondSyncRatioTo;
+
+	/**
 	 * that's the angle distance from trigger event #0 and actual engine TDC
 	 * see also globalTriggerAngleOffset
 	 */

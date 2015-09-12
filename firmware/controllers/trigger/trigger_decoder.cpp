@@ -149,8 +149,9 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		nextTriggerEvent()
 		;
 		if (TRIGGER_SHAPE(gapBothDirections) && considerEventForGap()) {
-			toothed_previous_duration = currentDuration;
 			isFirstEvent = false;
+			durationBeforePrevious = toothed_previous_duration;
+			toothed_previous_duration = currentDuration;
 			toothed_previous_time = nowNt;
 		}
 		return;
@@ -172,20 +173,27 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	bool_t isSynchronizationPoint;
 
 	if (TRIGGER_SHAPE(isSynchronizationNeeded)) {
-		isSynchronizationPoint = currentDuration > toothed_previous_duration * TRIGGER_SHAPE(syncRatioFrom)
-				&& currentDuration < toothed_previous_duration * TRIGGER_SHAPE(syncRatioTo);
+		/**
+		 * Here I prefer to have two multiplications instead of one division, that's a micro-optimization
+		 */
+		isSynchronizationPoint = currentDuration > toothed_previous_duration * TRIGGER_SHAPE(syncRatioFrom) &&
+				currentDuration < toothed_previous_duration * TRIGGER_SHAPE(syncRatioTo) &&
+				toothed_previous_duration > durationBeforePrevious * TRIGGER_SHAPE(secondSyncRatioFrom) &&
+				toothed_previous_duration < durationBeforePrevious * TRIGGER_SHAPE(secondSyncRatioTo)
+				;
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 		if (engineConfiguration->isPrintTriggerSynchDetails) {
 #else
 		if (printTriggerDebug) {
 #endif /* EFI_PROD_CODE */
 			float gap = 1.0 * currentDuration / toothed_previous_duration;
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 			scheduleMsg(logger, "gap=%f @ %d", gap, currentCycle.current_index);
 #else
 			actualSynchGap = gap;
-			print("current gap %f c=%d prev=%d\r\n", gap, currentDuration, toothed_previous_duration);
+			float prevGap = 1.0 * toothed_previous_duration / durationBeforePrevious;
+			print("current gap %f/%f c=%d prev=%d\r\n", gap, prevGap, currentDuration, toothed_previous_duration);
 #endif /* EFI_PROD_CODE */
 		}
 
@@ -248,6 +256,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		;
 	}
 
+	durationBeforePrevious = toothed_previous_duration;
 	toothed_previous_duration = currentDuration;
 	toothed_previous_time = nowNt;
 }

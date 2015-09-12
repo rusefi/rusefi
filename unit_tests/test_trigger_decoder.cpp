@@ -201,91 +201,6 @@ void testMazda323(void) {
 	assertEquals(0, eth.engine.triggerShape.getTriggerShapeSynchPointIndex());
 }
 
-void testMazdaMianaNbDecoder(void) {
-	printf("*************************************************** testMazdaMianaNbDecoder\r\n");
-
-	EngineTestHelper eth(MAZDA_MIATA_NB);
-	EXPAND_EngineTestHelper;
-
-	engine_configuration_s *ec = eth.ec;
-	TriggerShape * shape = &eth.engine.triggerShape;
-	assertEquals(12, shape->getTriggerShapeSynchPointIndex());
-
-	TriggerState state;
-
-	int a = 0;
-	state.decodeTriggerEvent(SHAFT_PRIMARY_DOWN, a + 20 PASS_ENGINE_PARAMETER);
-	assertFalseM("0a shaft_is_synchronized", state.shaft_is_synchronized);
-	state.decodeTriggerEvent(SHAFT_PRIMARY_UP, a + 340 PASS_ENGINE_PARAMETER);
-	assertFalseM("0b shaft_is_synchronized", state.shaft_is_synchronized);
-
-	state.decodeTriggerEvent(SHAFT_PRIMARY_DOWN, a + 360 PASS_ENGINE_PARAMETER);
-	assertFalseM("0c shaft_is_synchronized", state.shaft_is_synchronized);
-	state.decodeTriggerEvent(SHAFT_PRIMARY_UP, a + 380 PASS_ENGINE_PARAMETER);
-	assertFalseM("0d shaft_is_synchronized", state.shaft_is_synchronized);
-	state.decodeTriggerEvent(SHAFT_PRIMARY_DOWN, a + 400 PASS_ENGINE_PARAMETER);
-	assertTrueM("0e shaft_is_synchronized", state.shaft_is_synchronized);
-
-	state.decodeTriggerEvent(SHAFT_PRIMARY_UP, a + 720 PASS_ENGINE_PARAMETER);
-	assertTrueM("0f shaft_is_synchronized", state.shaft_is_synchronized);
-
-	a = 720;
-	state.decodeTriggerEvent(SHAFT_PRIMARY_DOWN, a + 20 PASS_ENGINE_PARAMETER);
-	assertTrueM("1a shaft_is_synchronized", state.shaft_is_synchronized);
-	state.decodeTriggerEvent(SHAFT_PRIMARY_UP, a + 340 PASS_ENGINE_PARAMETER);
-	assertTrueM("1b shaft_is_synchronized", state.shaft_is_synchronized);
-
-	state.decodeTriggerEvent(SHAFT_PRIMARY_DOWN, a + 360 PASS_ENGINE_PARAMETER);
-	assertTrueM("1c shaft_is_synchronized", state.shaft_is_synchronized);
-	state.decodeTriggerEvent(SHAFT_PRIMARY_UP, a + 380 PASS_ENGINE_PARAMETER);
-	assertTrueM("1d shaft_is_synchronized", state.shaft_is_synchronized);
-	assertEquals(5, state.getCurrentIndex());
-
-	state.decodeTriggerEvent(SHAFT_PRIMARY_DOWN, a + 400 PASS_ENGINE_PARAMETER);
-	assertTrueM("1e shaft_is_synchronized", state.shaft_is_synchronized);
-	assertEquals(0, state.getCurrentIndex());
-
-	state.decodeTriggerEvent(SHAFT_PRIMARY_UP, a + 720 PASS_ENGINE_PARAMETER);
-	assertTrueM("1f shaft_is_synchronized", state.shaft_is_synchronized);
-
-	event_trigger_position_s position;
-	assertEqualsM("globalTriggerAngleOffset", 276, ec->globalTriggerAngleOffset);
-	findTriggerPosition(&position, 0 PASS_ENGINE_PARAMETER);
-	assertTriggerPosition(&position, 7, 0);
-
-	findTriggerPosition(&position, 180 PASS_ENGINE_PARAMETER);
-	assertTriggerPosition(&position, 13, 0);
-
-	findTriggerPosition(&position, 360 PASS_ENGINE_PARAMETER);
-	assertTriggerPosition(&position, 17, 0.0);
-
-	findTriggerPosition(&position, 444 PASS_ENGINE_PARAMETER);
-	assertTriggerPosition(&position, 0, 0);
-
-	findTriggerPosition(&position, 444.1 PASS_ENGINE_PARAMETER);
-	assertTriggerPosition(&position, 0, 0.1);
-
-	findTriggerPosition(&position, 445 PASS_ENGINE_PARAMETER);
-	assertTriggerPosition(&position, 0, 1);
-
-	findTriggerPosition(&position, 494 PASS_ENGINE_PARAMETER);
-	assertTriggerPosition(&position, 2, 20);
-
-	findTriggerPosition(&position, 719 PASS_ENGINE_PARAMETER);
-	assertTriggerPosition(&position, 6, 65);
-
-	ec->globalTriggerAngleOffset = 0;
-	findTriggerPosition(&position, 0 PASS_ENGINE_PARAMETER);
-	assertTriggerPosition(&position, 0, 0);
-
-	ec->globalTriggerAngleOffset = 10;
-	findTriggerPosition(&position, 0 PASS_ENGINE_PARAMETER);
-	assertTriggerPosition(&position, 0, 10);
-
-	findTriggerPosition(&position, -10 PASS_ENGINE_PARAMETER);
-	assertTriggerPosition(&position, 0, 0);
-}
-
 static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty) {
 	printf("*************************************************** %s\r\n", msg);
 
@@ -358,7 +273,6 @@ static void assertREquals(void *expected, void *actual) {
 	assertEquals((float)(uint64_t)expected, (float)(uint64_t)actual);
 }
 
-extern engine_pins_s enginePins;
 extern bool_t debugSignalExecutor;
 
 static void testRpmCalculator(void) {
@@ -518,7 +432,7 @@ void testTriggerDecoder(void) {
 	testTriggerDecoder2("bmw", BMW_E34, 0, 0.4667, 0.0);
 
 	test1995FordInline6TriggerDecoder();
-	testMazdaMianaNbDecoder();
+	testTriggerDecoder2("Miata NB", MAZDA_MIATA_NB, 12, 0.0833, 0.0444);
 
 	testTriggerDecoder2("test engine", TEST_ENGINE, 0, 0.0, 0.0);
 	testTriggerDecoder2("testGY6_139QMB", GY6_139QMB, 0, 0.4375, 0.0);
