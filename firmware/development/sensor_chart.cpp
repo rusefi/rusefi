@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
-#include <sensor_chart.h>
+#include "sensor_chart.h"
 #include "main.h"
 #include "engine.h"
 #include "rpm_calculator.h"

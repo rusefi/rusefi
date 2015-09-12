@@ -24,8 +24,8 @@
 #include "engine.h"
 #endif
 
-#if ! EFI_UNIT_TEST
-#include <sensor_chart.h>
+#if EFI_ANALOG_CHART || defined(__DOXYGEN__)
+#include "sensor_chart.h"
 #endif
 
 #include "efilib2.h"
