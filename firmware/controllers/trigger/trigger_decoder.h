@@ -21,20 +21,27 @@ typedef void (*TriggerStateCallback)(TriggerState *);
 
 typedef struct {
 	/**
-	 * Here we accumulate the amount of time this signal was ON within current trigger cycle
-	 */
-	int totalTimeNt[PWM_PHASE_MAX_WAVE_PER_PWM];
-	/**
 	 * index within trigger revolution, from 0 to trigger event count
 	 */
 	uint32_t current_index;
 	/**
-	 * Number of actual events within current trigger cycle
+	 * Number of actual events of each channel within current trigger cycle, these
+	 * values are used to detect trigger signal errors.
 	 * see TriggerShape
 	 */
 	uint32_t eventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
-	efitime_t timeOfPreviousEventNt[PWM_PHASE_MAX_WAVE_PER_PWM];
-
+	/**
+	 * This array is used to calculate duty cycle of each trigger channel.
+	 * Current implementation is a bit funny - it does not really consider if an event
+	 * is a rise or a fall, it works based on the event order within synchronization cycle.
+	 *
+	 * 32 bit value is good enough here, overflows will happen but they would work just fine.
+	 */
+	uint32_t timeOfPreviousEventNt[PWM_PHASE_MAX_WAVE_PER_PWM];
+	/**
+	 * Here we accumulate the amount of time this signal was ON within current trigger cycle
+	 */
+	uint32_t totalTimeNt[PWM_PHASE_MAX_WAVE_PER_PWM];
 } current_cycle_state_s;
 
 class TriggerState {
@@ -65,6 +72,7 @@ public:
 	current_cycle_state_s currentCycle;
 	/**
 	 * Total time result for previous trigger cycle
+	 * See totalTimeNt
 	 */
 	uint32_t prevTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
 	int expectedTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];

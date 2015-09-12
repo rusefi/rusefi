@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar Mon Aug 31 13:06:37 EDT 2015
+// this file was generated automatically by ConfigDefinition.jar Sat Sep 12 14:31:14 EDT 2015
 public class Fields {
 	public static final Field ENGINETYPE = new Field("ENGINETYPE", 0, FieldType.INT);
 	public static final Field HEADERMAGICVALUE = new Field("HEADERMAGICVALUE", 4, FieldType.INT);
@@ -76,7 +76,7 @@ public class Fields {
 	public static final Field TPSADCCHANNEL = new Field("TPSADCCHANNEL", 524, FieldType.INT, adc_channel_e);
 	public static final Field OVERRIDECRANKINGIGNITION = new Field("OVERRIDECRANKINGIGNITION", 528, FieldType.INT);
 	public static final Field SENSORCHARTFREQUENCY = new Field("SENSORCHARTFREQUENCY", 532, FieldType.INT);
-	public static final String[] trigger_type_e = {"custom toothed wheel", "ford aspire", "dodge neon", "Miata NA", "Miata NB", "GM_7X", "Cooper", "Mazda SOHC 4", "60/2", "36/1", "Accord CD", "MITSU", "ACCORD 2", "ACCORD DIP", "Neon 2003", "MAZDA D 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Accord 1+24", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"};
+	public static final String[] trigger_type_e = {"custom toothed wheel", "ford aspire", "dodge neon", "Miata NA", "Miata NB", "GM_7X", "Cooper", "Mazda SOHC 4", "60/2", "36/1", "Accord CD", "MITSU", "ACCORD 2", "ACCORD DIP", "Neon 2003", "MAZDA D 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Accord 1+24", "DODGE STRATUS", "36_2_2_2", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"};
 	public static final Field TRIGGER_TYPE = new Field("TRIGGER_TYPE", 536, FieldType.INT, trigger_type_e);
 	public static final Field TRIGGER_CUSTOMISSYNCHRONIZATIONNEEDED = new Field("TRIGGER_CUSTOMISSYNCHRONIZATIONNEEDED", 540, FieldType.BIT, 0);
 	public static final Field TRIGGER_CUSTOMNEEDSECONDTRIGGERINPUT = new Field("TRIGGER_CUSTOMNEEDSECONDTRIGGERINPUT", 540, FieldType.BIT, 1);

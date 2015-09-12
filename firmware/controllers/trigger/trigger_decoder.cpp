@@ -76,7 +76,7 @@ static trigger_wheel_e eventIndex[6] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SE
 
 #define nextTriggerEvent() \
  { \
-	efitime_t prevTime = currentCycle.timeOfPreviousEventNt[triggerWheel]; \
+	uint32_t prevTime = currentCycle.timeOfPreviousEventNt[triggerWheel]; \
 	if (prevTime != 0) { \
 		/* even event - apply the value*/ \
 		currentCycle.totalTimeNt[triggerWheel] += (nowNt - prevTime); \
