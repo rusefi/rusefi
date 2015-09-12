@@ -558,6 +558,7 @@ typedef enum {
 	 * You would use this value if you want to see a detailed graph of your trigger events
 	 */
 	SC_TRIGGER = 1, SC_MAP = 2,
+	SC_RPM_ACCEL = 3,
 
 	Internal_ForceMyEnumIntSize_sensor_chart = ENUM_32_BITS,
 } sensor_chart_e;

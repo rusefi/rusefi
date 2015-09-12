@@ -252,7 +252,7 @@ static int findAngleIndex(float angleOffset DECLARE_ENGINE_PARAMETER_S) {
 	 */
 	while (true) {
 		middle = (left + right) / 2;
-		float eventAngle = TRIGGER_SHAPE(eventAngles[middle]);
+		angle_t eventAngle = TRIGGER_SHAPE(eventAngles[middle]);
 
 		if (middle == left) {
 			return middle;
