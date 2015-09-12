@@ -402,6 +402,16 @@ void TriggerShape::setTriggerSynchronizationGap(float synchRatio) {
 	setTriggerSynchronizationGap2(synchRatio * 0.75f, synchRatio * 1.25f);
 }
 
+void TriggerShape::setSecondTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo) {
+	isSynchronizationNeeded = true;
+	this->secondSyncRatioFrom = syncRatioFrom;
+	this->secondSyncRatioTo = syncRatioTo;
+}
+
+void TriggerShape::setSecondTriggerSynchronizationGap(float synchRatio) {
+	setSecondTriggerSynchronizationGap2(synchRatio * 0.75f, synchRatio * 1.25f);
+}
+
 #define S24 (720.0f / 24 / 2)
 
 static float addAccordPair(TriggerShape *s, float sb, trigger_wheel_e const waveIndex) {

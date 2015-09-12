@@ -46,11 +46,11 @@ typedef enum {
 	NISSAN_PRIMERA = 5,
 	HONDA_ACCORD_CD = 6,
 	FORD_INLINE_6_1995 = 7,
-/**
- * one cylinder engine
- * 139qmb 50-90cc
- * http://rusefi.com/forum/viewtopic.php?f=3&t=332
- */
+	/**
+	 * one cylinder engine
+	 * 139qmb 50-90cc
+	 * http://rusefi.com/forum/viewtopic.php?f=3&t=332
+	 */
 	GY6_139QMB = 8,
 
 	MAZDA_MIATA_NB = 9,
@@ -103,7 +103,9 @@ typedef enum {
 
 	DODGE_STRATUS = 33,
 
-	ET_UNUSED = 34,
+	DAIHATSU = 34,
+
+	ET_UNUSED = 35,
 
 	Force_4b_engine_type = ENUM_32_BITS,
 } engine_type_e;
@@ -153,23 +155,19 @@ typedef enum {
 } trigger_type_e;
 
 typedef enum {
-	ADC_OFF = 0,
-	ADC_SLOW = 1,
-	ADC_FAST = 2,
+	ADC_OFF = 0, ADC_SLOW = 1, ADC_FAST = 2,
 
 	Force_4b_adc_channel_mode = ENUM_32_BITS,
 } adc_channel_mode_e;
 
 // todo: better names?
 typedef enum {
-	TV_LOW = 0,
-	TV_HIGH = 1
+	TV_LOW = 0, TV_HIGH = 1
 } trigger_value_e;
 
 // todo: better names?
 typedef enum {
-	T_PRIMARY = 0,
-	T_SECONDARY = 1,
+	T_PRIMARY = 0, T_SECONDARY = 1,
 	// todo: I really do not want to call this 'tertiary'. maybe we should rename all of these?
 	T_CHANNEL_3 = 2
 } trigger_wheel_e;
@@ -215,9 +213,7 @@ typedef enum {
 } engine_load_mode_e;
 
 typedef enum {
-	DM_NONE = 0,
-	DM_HD44780 = 1,
-	DM_HD44780_OVER_PCF8574 = 2,
+	DM_NONE = 0, DM_HD44780 = 1, DM_HD44780_OVER_PCF8574 = 2,
 
 	Force_4b_display_mode = ENUM_32_BITS,
 
@@ -234,11 +230,8 @@ typedef enum {
 	Force_4b_log_format = ENUM_32_BITS,
 } log_format_e;
 
-
 typedef enum {
-	IM_AUTO = 0,
-	IM_MANUAL = 1,
-	Force_4b_idle_mode = ENUM_32_BITS,
+	IM_AUTO = 0, IM_MANUAL = 1, Force_4b_idle_mode = ENUM_32_BITS,
 } idle_mode_e;
 
 typedef enum {
@@ -253,8 +246,7 @@ typedef enum {
 	/**
 	 * logical OFF is floating, logical ON is GND
 	 */
-	OM_OPENDRAIN = 2,
-	OM_OPENDRAIN_INVERTED = 3,
+	OM_OPENDRAIN = 2, OM_OPENDRAIN_INVERTED = 3,
 
 	Force_4b_pin_output_mode = ENUM_32_BITS,
 } pin_output_mode_e;
@@ -265,9 +257,7 @@ typedef enum {
 } gpio_mode_e;
 
 typedef enum {
-	PI_DEFAULT = 0,
-	PI_PULLUP = 1,
-	PI_PULLDOWN = 2,
+	PI_DEFAULT = 0, PI_PULLUP = 1, PI_PULLDOWN = 2,
 
 	Force_4b_pin_input_mode = ENUM_32_BITS,
 } pin_input_mode_e;
@@ -295,7 +285,6 @@ typedef enum {
 	FO_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6 = 7,
 	FO_1_THEN_2_THEN_3_THEN_4_THEN_5_THEN_6 = 9,
 
-
 	Force_4b_firing_order = ENUM_32_BITS,
 } firing_order_e;
 
@@ -320,16 +309,13 @@ typedef enum {
 	/**
 	 * in this mode we use as many coils as we have cylinders
 	 */
-	IM_INDIVIDUAL_COILS = 1,
-	IM_WASTED_SPARK = 2,
+	IM_INDIVIDUAL_COILS = 1, IM_WASTED_SPARK = 2,
 
 	Force_4b_ignition_mode = ENUM_32_BITS,
 } ignition_mode_e;
 
 typedef enum {
-	IM_SIMULTANEOUS = 0,
-	IM_SEQUENTIAL = 1,
-	IM_BATCH = 2,
+	IM_SIMULTANEOUS = 0, IM_SEQUENTIAL = 1, IM_BATCH = 2,
 
 	Force_4b_injection_mode = ENUM_32_BITS,
 } injection_mode_e;
@@ -338,8 +324,7 @@ typedef enum {
  * @brief Ignition Mode while cranking
  */
 typedef enum {
-	CIM_DEFAULT = 0,
-	CIM_FIXED_ANGLE = 1,
+	CIM_DEFAULT = 0, CIM_FIXED_ANGLE = 1,
 
 	Force_4b_cranking_ignition_mode = ENUM_32_BITS,
 } cranking_ignition_mode_e;
@@ -372,21 +357,18 @@ typedef enum {
 	EFI_ADC_14 = 14,
 	EFI_ADC_15 = 15,
 
-
 	EFI_ADC_NONE = 16,
 	EFI_ADC_ERROR = 999,
 
 	Force_4b_cranking_adc_channel = ENUM_32_BITS,
 } adc_channel_e;
 
-
 typedef enum {
 	ES_BPSX_D1 = 0,
 	/**
 	 * same as innovate LC2
 	 */
-	ES_Innovate_MTX_L = 1,
-	ES_14Point7_Free = 2,
+	ES_Innovate_MTX_L = 1, ES_14Point7_Free = 2,
 
 	ES_NarrowBand = 3,
 
@@ -394,8 +376,6 @@ typedef enum {
 
 	Force_4b_ego_sensor = ENUM_32_BITS,
 } ego_sensor_e;
-
-
 
 /**
  * Hardware pin. This enum is platform-specific.
@@ -544,14 +524,11 @@ typedef enum {
 } brain_pin_e;
 
 typedef enum {
-	MT_CUSTOM = 0,
-	MT_DENSO183 = 1,
+	MT_CUSTOM = 0, MT_DENSO183 = 1,
 	/**
 	 * 20 to 250 kPa (2.9 to 36.3 psi) 0.2 to 4.9 V OUTPUT
 	 */
-	MT_MPX4250 = 2,
-	MT_HONDA3BAR = 3,
-	MT_DODGE_NEON_2003 = 4,
+	MT_MPX4250 = 2, MT_HONDA3BAR = 3, MT_DODGE_NEON_2003 = 4,
 	/**
 	 * 22012AA090
 	 */
@@ -570,9 +547,7 @@ typedef enum {
 } air_pressure_sensor_type_e;
 
 typedef enum {
-	CD_OFF = 0,
-	CD_USE_CAN1 = 1,
-	CD_USE_CAN2 = 2,
+	CD_OFF = 0, CD_USE_CAN1 = 1, CD_USE_CAN2 = 2,
 
 	Internal_ForceMyEnumIntSize_can_device_mode = ENUM_32_BITS,
 } can_device_mode_e;
