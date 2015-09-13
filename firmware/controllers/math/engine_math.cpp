@@ -234,7 +234,7 @@ float getSparkDwellMsT(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	return interpolate2d(rpm, engineConfiguration->sparkDwellBins, engineConfiguration->sparkDwell, DWELL_CURVE_SIZE);
 }
 
-static int findAngleIndex(float angleOffset DECLARE_ENGINE_PARAMETER_S) {
+static int findAngleIndex(float target DECLARE_ENGINE_PARAMETER_S) {
 	/**
 	 * Here we rely on this to be pre-calculated, that's a performance optimization
 	 */
@@ -242,7 +242,6 @@ static int findAngleIndex(float angleOffset DECLARE_ENGINE_PARAMETER_S) {
 
 	efiAssert(engineCycleEventCount > 0, "engineCycleEventCount", 0);
 
-	uint32_t middle;
 	uint32_t left = 0;
 	uint32_t right = engineCycleEventCount - 1;
 
@@ -250,21 +249,21 @@ static int findAngleIndex(float angleOffset DECLARE_ENGINE_PARAMETER_S) {
 	 * Let's find the last trigger angle which is less or equal to the desired angle
 	 * todo: extract binary search as template method?
 	 */
-	while (true) {
-		middle = (left + right) / 2;
+    while (left <= right) {
+        int middle = (left + right) / 2;
 		angle_t eventAngle = TRIGGER_SHAPE(eventAngles[middle]);
 
-		if (middle == left) {
-			return middle;
-		}
-		if (angleOffset < eventAngle) {
-			right = middle;
-		} else if (angleOffset > eventAngle) {
-			left = middle;
-		} else {
-			return middle;
-		}
-	}
+        if (eventAngle < target) {
+            left = middle + 1;
+        } else if (eventAngle > target) {
+            right = middle - 1;
+        } else {
+                 // Values are equal
+                return middle;             // Key found
+        }
+    }
+    return left - 1;
+
 }
 
 void findTriggerPosition(event_trigger_position_s *position, angle_t angleOffset DECLARE_ENGINE_PARAMETER_S) {
@@ -367,6 +366,7 @@ static NamedOutputPin * getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_S
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 
+int is700 = 0;
 void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 
 	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
@@ -379,6 +379,9 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 	}
 
 	for (int angle = 0; angle < CONFIG(engineCycle); angle++) {
+		if (angle==700) {
+			is700++;
+		}
 		int triggerShapeIndex = findAngleIndex(angle PASS_ENGINE_PARAMETER);
 		if (engineConfiguration->useOnlyFrontForTrigger)
 			triggerShapeIndex = triggerShapeIndex & 0xFFFFFFFE; // we need even index for front_only
