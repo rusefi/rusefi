@@ -48,7 +48,7 @@ int getTheAngle(engine_type_e engineType) {
 	initDataStructures(PASS_ENGINE_PARAMETER_F);
 
 	TriggerShape * shape = &eth.engine.triggerShape;
-	return findTriggerZeroEventIndex(shape, &engineConfiguration->trigger PASS_ENGINE_PARAMETER);
+	return findTriggerZeroEventIndex(&eth.triggerCentral.triggerState, shape, &engineConfiguration->trigger PASS_ENGINE_PARAMETER);
 }
 
 static void testDodgeNeonDecoder(void) {
@@ -476,6 +476,14 @@ void testTriggerDecoder(void) {
 		assertEquals(666, t->eventAngles[11]);
 		assertEqualsM("index for 665", 10, t->triggerIndexByAngle[665]);
 		assertEqualsM("index for 668", 11, t->triggerIndexByAngle[668]);
+
+
+		eth.persistentConfig.engineConfiguration.useOnlyFrontForTrigger = false;
+		eth.persistentConfig.engineConfiguration.bc.sensorChartMode = SC_RPM_ACCEL;
+		applyNonPersistentConfiguration(NULL PASS_ENGINE_PARAMETER);
+
+//		assertEqualsM("abc", 0, eth.triggerCentral.triggerState.instantRpmValue[0]);
+//		assertEqualsM("abc", 0, eth.triggerCentral.triggerState.instantRpmValue[1]);
 
 	}
 //	testTriggerDecoder2("miata 1990", MIATA_1990, 0, 0.6280, 0.0);

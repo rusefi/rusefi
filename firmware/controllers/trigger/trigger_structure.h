@@ -26,6 +26,7 @@ private:
 };
 
 class Engine;
+class TriggerState;
 
 /**
  * @brief Trigger shape has all the fields needed to describe and decode trigger signal.
@@ -173,7 +174,7 @@ private:
 	float getAngle(int phaseIndex) const;
 
 	int getCycleDuration() const;
-	void calculateTriggerSynchPoint(DECLARE_ENGINE_PARAMETER_F);
+	void calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE_PARAMETER_S);
 };
 
 void setVwConfiguration(TriggerShape *s);

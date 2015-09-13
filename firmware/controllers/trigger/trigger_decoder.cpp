@@ -36,11 +36,13 @@
 #include "efiGpio.h"
 #include "engine.h"
 #include "engine_math.h"
+#include "trigger_central.h"
 
 #if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 #include "sensor_chart.h"
 #endif
 
+extern TriggerCentral triggerCentral;
 static OutputPin triggerDecoderErrorPin;
 
 EXTERN_ENGINE
@@ -126,30 +128,6 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	prevSignal = curSignal;
 	curSignal = signal;
 
-#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
-	if (boardConfiguration->sensorChartMode == SC_RPM_ACCEL) {
-		angle_t currentAngle = TRIGGER_SHAPE(eventAngles[currentCycle.current_index]);
-		// todo: make this '90' depend on cylinder count?
-		angle_t prevAngle = currentAngle - 90;
-		fixAngle(prevAngle);
-		int prevIndex = TRIGGER_SHAPE(triggerIndexByAngle[(int)prevAngle]);
-		// now let's get precise angle for that event
-		prevAngle = TRIGGER_SHAPE(eventAngles[prevIndex]);
-		uint32_t time = nowNt - timeOfLastEvent[prevIndex];
-		angle_t angleDiff = currentAngle - prevAngle;
-		// todo: angle diff should be pre-calculated
-		fixAngle(angleDiff);
-
-		float r = (angleDiff / 360.0) / (NT2US(time) / 60000000.0);
-
-		scAddData(currentAngle, r);
-		instantRpmValue[currentCycle.current_index] = r;
-	}
-#endif
-
-
-	timeOfLastEvent[currentCycle.current_index] = nowNt;
-
 	currentCycle.eventCount[triggerWheel]++;
 
 	efitime_t currentDurationLong = getCurrentGapDuration(nowNt);
@@ -183,8 +161,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			toothed_previous_duration = currentDuration;
 			toothed_previous_time = nowNt;
 		}
-		return;
-	}
+	} else {
 
 	isFirstEvent = false;
 // todo: skip a number of signal from the beginning
@@ -288,6 +265,31 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	durationBeforePrevious = toothed_previous_duration;
 	toothed_previous_duration = currentDuration;
 	toothed_previous_time = nowNt;
+	}
+	if (boardConfiguration->sensorChartMode == SC_RPM_ACCEL) {
+		angle_t currentAngle = TRIGGER_SHAPE(eventAngles[currentCycle.current_index]);
+		// todo: make this '90' depend on cylinder count?
+		angle_t prevAngle = currentAngle - 90;
+		fixAngle(prevAngle);
+//		int prevIndex = TRIGGER_SHAPE(triggerIndexByAngle[(int)prevAngle]);
+		int prevIndex = currentCycle.current_index - 1;
+		if (prevIndex == -1)
+			prevIndex = engine->triggerShape.getSize() - 1;
+		// now let's get precise angle for that event
+		prevAngle = TRIGGER_SHAPE(eventAngles[prevIndex]);
+		uint32_t time = nowNt - timeOfLastEvent[prevIndex];
+		angle_t angleDiff = currentAngle - prevAngle;
+		// todo: angle diff should be pre-calculated
+		fixAngle(angleDiff);
+
+		float r = (angleDiff / 360.0) / (NT2US(time) / 60000000.0);
+
+#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
+		scAddData(currentAngle, r);
+#endif
+		instantRpmValue[currentCycle.current_index] = r;
+		timeOfLastEvent[currentCycle.current_index] = nowNt;
+	}
 }
 
 float getEngineCycle(operation_mode_e operationMode) {
@@ -481,7 +483,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		return;
 	}
 	wave.checkSwitchTimes(getSize());
-	calculateTriggerSynchPoint(PASS_ENGINE_PARAMETER_F);
+	calculateTriggerSynchPoint(&triggerCentral.triggerState PASS_ENGINE_PARAMETER);
 }
 
 TriggerStimulatorHelper::TriggerStimulatorHelper() {
@@ -544,32 +546,30 @@ static uint32_t doFindTrigger(TriggerStimulatorHelper *helper, TriggerShape * sh
 	return EFI_ERROR_CODE;
 }
 
-// todo: reuse trigger central state here to reduce RAM usage?
-static TriggerState state;
-
 /**
  * Trigger shape is defined in a way which is convenient for trigger shape definition
  * On the other hand, trigger decoder indexing begins from synchronization event.
  *
  * This function finds the index of synchronization event within TriggerShape
  */
-uint32_t findTriggerZeroEventIndex(TriggerShape * shape, trigger_config_s const*triggerConfig
+uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape, trigger_config_s const*triggerConfig
 DECLARE_ENGINE_PARAMETER_S) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
     efiAssert(getRemainingStack(chThdSelf()) > 128, "findPos", -1);
 #endif
 	errorDetection.clear();
+	efiAssert(state != NULL, "NULL state", -1);
 
-	state.reset();
+	state->reset();
 
 	// todo: should this variable be declared 'static' to reduce stack usage?
 	TriggerStimulatorHelper helper;
 
-	uint32_t index = doFindTrigger(&helper, shape, triggerConfig, &state PASS_ENGINE_PARAMETER);
+	uint32_t index = doFindTrigger(&helper, shape, triggerConfig, state PASS_ENGINE_PARAMETER);
 	if (index == EFI_ERROR_CODE) {
 		return index;
 	}
-	efiAssert(state.getTotalRevolutionCounter() == 1, "totalRevolutionCounter", EFI_ERROR_CODE);
+	efiAssert(state->getTotalRevolutionCounter() == 1, "totalRevolutionCounter", EFI_ERROR_CODE);
 
 	/**
 	 * Now that we have just located the synch point, we can simulate the whole cycle
@@ -577,19 +577,19 @@ DECLARE_ENGINE_PARAMETER_S) {
 	 *
 	 * todo: add a comment why are we doing '2 * shape->getSize()' here?
 	 */
-	state.cycleCallback = onFindIndex;
+	state->cycleCallback = onFindIndex;
 
 	int startIndex = engineConfiguration->useOnlyFrontForTrigger ? index + 2 : index + 1;
 
 	for (uint32_t i = startIndex; i <= index + 2 * shape->getSize(); i++) {
-		helper.nextStep(&state, shape, i, triggerConfig PASS_ENGINE_PARAMETER);
+		helper.nextStep(state, shape, i, triggerConfig PASS_ENGINE_PARAMETER);
 		if (engineConfiguration->useOnlyFrontForTrigger)
 			i++;
 	}
-	efiAssert(state.getTotalRevolutionCounter() == 3, "totalRevolutionCounter2 expected 3", EFI_ERROR_CODE);
+	efiAssert(state->getTotalRevolutionCounter() == 3, "totalRevolutionCounter2 expected 3", EFI_ERROR_CODE);
 
 	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-		shape->dutyCycle[i] = 1.0 * state.expectedTotalTime[i] / HELPER_PERIOD;
+		shape->dutyCycle[i] = 1.0 * state->expectedTotalTime[i] / HELPER_PERIOD;
 	}
 
 	return index % shape->getSize();
