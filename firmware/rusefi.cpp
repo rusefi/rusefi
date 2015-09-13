@@ -164,6 +164,8 @@ void applyNewConfiguration(void) {
 }
 
 void runRusEfi(void) {
+        efiAssertVoid(getRemainingStack(chThdSelf()) > 512, "init s");
+
 	msObjectInit(&firmwareErrorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
@@ -203,7 +205,7 @@ void runRusEfi(void) {
 #if EFI_PERF_METRICS || defined(__DOXYGEN__)
 	initTimePerfActions(&sharedLogger);
 #endif
-
+        
 #if EFI_ENGINE_EMULATOR || defined(__DOXYGEN__)
 	initEngineEmulator(&sharedLogger, engine);
 #endif
@@ -273,5 +275,5 @@ int getRusEfiVersion(void) {
 		return 123; // this is here to make the compiler happy about the unused array
 	if (UNUSED_CCM_SIZE[0] * 0 != 0)
 		return 3211; // this is here to make the compiler happy about the unused array
-	return 20150912;
+	return 20150913;
 }

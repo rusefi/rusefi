@@ -106,6 +106,7 @@ static bool hasValidEngineType(engine_configuration_s *engineConfiguration) {
 }
 
 void readFromFlash(void) {
+        efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "read f");
 	printMsg(logger, "readFromFlash()");
 	flashRead(FLASH_ADDR, (char *) &persistentState, PERSISTENT_SIZE);
 
