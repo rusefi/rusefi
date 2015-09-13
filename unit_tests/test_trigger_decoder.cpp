@@ -475,7 +475,7 @@ void testTriggerDecoder(void) {
 
 		assertEquals(666, t->eventAngles[11]);
 		assertEqualsM("index for 665", 10, t->triggerIndexByAngle[665]);
-		assertEqualsM("index for 668", 10, t->triggerIndexByAngle[668]); // todo: WHY? looks like a bug with last index?
+		assertEqualsM("index for 668", 11, t->triggerIndexByAngle[668]);
 
 	}
 //	testTriggerDecoder2("miata 1990", MIATA_1990, 0, 0.6280, 0.0);
