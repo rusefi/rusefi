@@ -452,6 +452,32 @@ void testTriggerDecoder(void) {
 	testTriggerDecoder2("testAccordCdDip", HONDA_ACCORD_CD_DIP, 27, 0.5000, 0.5000);
 
 	testTriggerDecoder2("testMitsu", MITSU_4G93, 3, 0.3750, 0.3889);
+	{
+		EngineTestHelper eth(MITSU_4G93);
+		EXPAND_EngineTestHelper;
+
+		initSpeedDensity(PASS_ENGINE_PARAMETER_F);
+
+		TriggerShape *t = &eth.engine.triggerShape;
+		assertEquals(56, t->eventAngles[1]);
+		assertEqualsM("index at 0", 0, t->triggerIndexByAngle[56]);
+		assertEqualsM("index at 1", 1, t->triggerIndexByAngle[57]);
+
+		assertEquals(270, t->eventAngles[5]);
+		assertEqualsM("index at 269", 4, t->triggerIndexByAngle[269]);
+		assertEqualsM("index at 270", 5, t->triggerIndexByAngle[270]);
+		assertEqualsM("index at 271", 5, t->triggerIndexByAngle[271]);
+
+		assertEquals(306, t->eventAngles[6]);
+		assertEquals(5, t->triggerIndexByAngle[305]);
+		assertEquals(6, t->triggerIndexByAngle[306]);
+		assertEquals(6, t->triggerIndexByAngle[307]);
+
+		assertEquals(666, t->eventAngles[11]);
+		assertEqualsM("index for 665", 10, t->triggerIndexByAngle[665]);
+		assertEqualsM("index for 668", 10, t->triggerIndexByAngle[668]); // todo: WHY? looks like a bug with last index?
+
+	}
 //	testTriggerDecoder2("miata 1990", MIATA_1990, 0, 0.6280, 0.0);
 	testTriggerDecoder3("miata 1994", MIATA_1994_DEVIATOR, 11, 0.2985, 0.3890, MIATA_NA_GAP);
 	testTriggerDecoder3("citroen", CITROEN_TU3JP, 0, 0.4833, 0.0, 2.9994);
