@@ -28,7 +28,7 @@ public class SensorSnifferPane {
     private static final String HELP_URL = "http://rusefi.com/wiki/index.php?title=Manual:DevConsole#Analog_Chart";
 
     private final TreeMap<Double, Double> values = new TreeMap<>();
-    private final AnalogChartCanvas canvas = new AnalogChartCanvas();
+    private final SensorSnifferCanvas canvas = new SensorSnifferCanvas();
 
     private double minX;
     private double maxX;
@@ -134,7 +134,7 @@ public class SensorSnifferPane {
         return content;
     }
 
-    private class AnalogChartCanvas extends JComponent {
+    private class SensorSnifferCanvas extends JComponent {
         @Override
         public void paint(Graphics g) {
             super.paint(g);

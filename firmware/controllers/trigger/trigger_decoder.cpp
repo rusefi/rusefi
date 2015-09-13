@@ -265,15 +265,13 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	toothed_previous_duration = currentDuration;
 	toothed_previous_time = nowNt;
 	}
-	if (boardConfiguration->sensorChartMode == SC_RPM_ACCEL) {
+	if (boardConfiguration->sensorChartMode == SC_RPM_ACCEL || boardConfiguration->sensorChartMode == SC_DETAILED_RPM) {
 		angle_t currentAngle = TRIGGER_SHAPE(eventAngles[currentCycle.current_index]);
 		// todo: make this '90' depend on cylinder count?
 		angle_t prevAngle = currentAngle - 90;
 		fixAngle(prevAngle);
-//		int prevIndex = TRIGGER_SHAPE(triggerIndexByAngle[(int)prevAngle]);
-		int prevIndex = currentCycle.current_index - 1;
-		if (prevIndex == -1)
-			prevIndex = engine->triggerShape.getSize() - 1;
+		// todo: prevIndex should be pre-calculated
+		int prevIndex = TRIGGER_SHAPE(triggerIndexByAngle[(int)prevAngle]);
 		// now let's get precise angle for that event
 		prevAngle = TRIGGER_SHAPE(eventAngles[prevIndex]);
 		uint32_t time = nowNt - timeOfLastEvent[prevIndex];
@@ -284,7 +282,11 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		float r = (60000000.0 / 360 * US_TO_NT_MULTIPLIER) * angleDiff / time;
 
 #if EFI_SENSOR_CHART || defined(__DOXYGEN__)
-		scAddData(currentAngle, r);
+		if (boardConfiguration->sensorChartMode == SC_DETAILED_RPM) {
+			scAddData(currentAngle, r);
+		} else {
+			scAddData(currentAngle, r / instantRpmValue[prevIndex]);
+		}
 #endif
 		instantRpmValue[currentCycle.current_index] = r;
 		timeOfLastEvent[currentCycle.current_index] = nowNt;
