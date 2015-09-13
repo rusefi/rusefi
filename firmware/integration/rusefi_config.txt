@@ -460,8 +460,8 @@ custom fsio_setting_t 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       0, 
 	brain_pin_e joystickCPin;
 	brain_pin_e joystickDPin;
 
-#define sensor_chart_e_enum "none", "trigger", "MAP", "RPM ACCEL", "INVALID"
-custom sensor_chart_e 4 bits, S32, @OFFSET@, [0:1], @@sensor_chart_e_enum@@
+#define sensor_chart_e_enum "none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "INVALID"
+custom sensor_chart_e 4 bits, S32, @OFFSET@, [0:2], @@sensor_chart_e_enum@@
 sensor_chart_e sensorChartMode;
 
 #define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX"

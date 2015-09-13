@@ -48,7 +48,7 @@ int getTheAngle(engine_type_e engineType) {
 	initDataStructures(PASS_ENGINE_PARAMETER_F);
 
 	TriggerShape * shape = &eth.engine.triggerShape;
-	return findTriggerZeroEventIndex(&eth.triggerCentral.triggerState, shape, &engineConfiguration->trigger PASS_ENGINE_PARAMETER);
+	return findTriggerZeroEventIndex(&eth.engine.triggerCentral.triggerState, shape, &engineConfiguration->trigger PASS_ENGINE_PARAMETER);
 }
 
 static void testDodgeNeonDecoder(void) {
@@ -305,11 +305,11 @@ static void testRpmCalculator(void) {
 
 	eth.fireTriggerEvents();
 	assertEqualsM("RPM", 1500, eth.engine.rpmCalculator.rpm(PASS_ENGINE_PARAMETER_F));
-	assertEqualsM("index #1", 15, eth.triggerCentral.triggerState.getCurrentIndex());
+	assertEqualsM("index #1", 15, eth.engine.triggerCentral.triggerState.getCurrentIndex());
 
 	static MainTriggerCallback triggerCallbackInstance;
 	triggerCallbackInstance.init(&eth.engine);
-	eth.triggerCentral.addEventListener(mainTriggerCallback, "main loop", &eth.engine);
+	eth.engine.triggerCentral.addEventListener(mainTriggerCallback, "main loop", &eth.engine);
 
 //	engine.rpmCalculator = &eth.rpmState;
 	prepareTimingMap(PASS_ENGINE_PARAMETER_F);
@@ -322,16 +322,16 @@ static void testRpmCalculator(void) {
 
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 
-	eth.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
 
 	assertEqualsM("dwell", 4.5, eth.engine.engineState.dwellAngle);
 	assertEqualsM("fuel", 3.03, eth.engine.fuelMs);
 	assertEqualsM("one degree", 111.1111, eth.engine.rpmCalculator.oneDegreeUs);
 	assertEqualsM("size", 6, ilist->size);
 	assertEqualsM("dwell angle", 0, ilist->elements[0].dwellPosition.eventAngle);
-	assertEqualsM("dwell offset", 14.0316, ilist->elements[0].dwellPosition.angleOffset);
+	assertEqualsM("dwell offset", 0, ilist->elements[0].dwellPosition.angleOffset);
 
-	assertEqualsM("index #2", 0, eth.triggerCentral.triggerState.getCurrentIndex());
+	assertEqualsM("index #2", 0, eth.engine.triggerCentral.triggerState.getCurrentIndex());
 	assertEqualsM("queue size/6", 6, schedulingQueue.size());
 	scheduling_s *ev1 = schedulingQueue.getForUnitText(0);
 	assertREquals((void*)ev1->callback, (void*)turnPinHigh);
@@ -341,12 +341,12 @@ static void testRpmCalculator(void) {
 	schedulingQueue.clear();
 
 	timeNow += 5000;
-	eth.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN PASS_ENGINE_PARAMETER);
 	timeNow += 5000; // 5ms
-	eth.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
 	timeNow += 5000;
-	eth.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN PASS_ENGINE_PARAMETER);
-	assertEqualsM("index #3", 3, eth.triggerCentral.triggerState.getCurrentIndex());
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN PASS_ENGINE_PARAMETER);
+	assertEqualsM("index #3", 3, eth.engine.triggerCentral.triggerState.getCurrentIndex());
 	assertEqualsM("queue size 3", 6, schedulingQueue.size());
 	assertEqualsM("ev 3", 258333, schedulingQueue.getForUnitText(0)->momentX);
 	assertEqualsM("ev 4", 258333, schedulingQueue.getForUnitText(1)->momentX);
@@ -355,24 +355,24 @@ static void testRpmCalculator(void) {
 	schedulingQueue.clear();
 
 	timeNow += 5000;
-	eth.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN PASS_ENGINE_PARAMETER);
 	timeNow += 5000; // 5ms
-	eth.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
 	timeNow += 5000; // 5ms
-	eth.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
-	assertEqualsM("index #4", 6, eth.triggerCentral.triggerState.getCurrentIndex());
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
+	assertEqualsM("index #4", 6, eth.engine.triggerCentral.triggerState.getCurrentIndex());
 	assertEqualsM("queue size 4", 6, schedulingQueue.size());
 	assertEqualsM("4/0", 271666, schedulingQueue.getForUnitText(0)->momentX);
 	schedulingQueue.clear();
 
 	timeNow += 5000;
-	eth.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN PASS_ENGINE_PARAMETER);
 	assertEqualsM("queue size 5", 0, schedulingQueue.size());
 //	assertEqualsM("5/1", 284500, schedulingQueue.getForUnitText(0)->momentUs);
 	schedulingQueue.clear();
 
 	timeNow += 5000; // 5ms
-	eth.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
 	assertEqualsM("queue size 6", 6, schedulingQueue.size());
 	assertEqualsM("6/0", 285000, schedulingQueue.getForUnitText(0)->momentX);
 	assertEqualsM("6/1", 285000, schedulingQueue.getForUnitText(1)->momentX);
@@ -380,12 +380,12 @@ static void testRpmCalculator(void) {
 	schedulingQueue.clear();
 
 	timeNow += 5000;
-	eth.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN PASS_ENGINE_PARAMETER);
 	assertEqualsM("queue size 7", 0, schedulingQueue.size());
 	schedulingQueue.clear();
 
 	timeNow += 5000; // 5ms
-	eth.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
 	assertEqualsM("queue size 8", 5, schedulingQueue.size());
 	assertEqualsM("8/0", 298333, schedulingQueue.getForUnitText(0)->momentX);
 	assertEqualsM("8/1", 298333, schedulingQueue.getForUnitText(1)->momentX);
@@ -394,12 +394,12 @@ static void testRpmCalculator(void) {
 	schedulingQueue.clear();
 
 	timeNow += 5000;
-	eth.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN PASS_ENGINE_PARAMETER);
 	assertEqualsM("queue size 9", 1, schedulingQueue.size());
 	schedulingQueue.clear();
 
 	timeNow += 5000; // 5ms
-	eth.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
 	assertEqualsM("queue size 10", 0, schedulingQueue.size());
 	schedulingQueue.clear();
 }
@@ -482,8 +482,8 @@ void testTriggerDecoder(void) {
 		eth.persistentConfig.engineConfiguration.bc.sensorChartMode = SC_RPM_ACCEL;
 		applyNonPersistentConfiguration(NULL PASS_ENGINE_PARAMETER);
 
-//		assertEqualsM("abc", 0, eth.triggerCentral.triggerState.instantRpmValue[0]);
-//		assertEqualsM("abc", 0, eth.triggerCentral.triggerState.instantRpmValue[1]);
+		assertEqualsM2("rpm#1", 16666.9746, eth.engine.triggerCentral.triggerState.instantRpmValue[0], 0.5);
+		assertEqualsM2("rpm#2", 16666.3750, eth.engine.triggerCentral.triggerState.instantRpmValue[1], 0.5);
 
 	}
 //	testTriggerDecoder2("miata 1990", MIATA_1990, 0, 0.6280, 0.0);

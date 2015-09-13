@@ -51,9 +51,9 @@ void EngineTestHelper::fireTriggerEvents() {
 	for (int i = 0; i < 24; i++) {
 		timeNow += 5000; // 5ms
 		board_configuration_s * boardConfiguration = &engine.engineConfiguration->bc;
-		triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
+		engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
 		timeNow += 5000;
-		triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
+		engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
 	}
 }
 
@@ -67,6 +67,6 @@ void EngineTestHelper::initTriggerShapeAndRpmCalculator() {
 
 	incrementGlobalConfigurationVersion();
 
-	triggerCentral.addEventListener(rpmShaftPositionCallback, "rpm reporter", engine);
+	engine->triggerCentral.addEventListener(rpmShaftPositionCallback, "rpm reporter", engine);
 
 }

@@ -559,6 +559,7 @@ typedef enum {
 	 */
 	SC_TRIGGER = 1, SC_MAP = 2,
 	SC_RPM_ACCEL = 3,
+	SC_DETAILED_RPM = 4,
 
 	Internal_ForceMyEnumIntSize_sensor_chart = ENUM_32_BITS,
 } sensor_chart_e;

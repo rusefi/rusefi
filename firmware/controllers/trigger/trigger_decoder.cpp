@@ -42,7 +42,6 @@
 #include "sensor_chart.h"
 #endif
 
-extern TriggerCentral triggerCentral;
 static OutputPin triggerDecoderErrorPin;
 
 EXTERN_ENGINE
@@ -282,7 +281,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		// todo: angle diff should be pre-calculated
 		fixAngle(angleDiff);
 
-		float r = (angleDiff / 360.0) / (NT2US(time) / 60000000.0);
+		float r = (60000000.0 / 360 * US_TO_NT_MULTIPLIER) * angleDiff / time;
 
 #if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 		scAddData(currentAngle, r);
@@ -483,7 +482,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		return;
 	}
 	wave.checkSwitchTimes(getSize());
-	calculateTriggerSynchPoint(&triggerCentral.triggerState PASS_ENGINE_PARAMETER);
+	calculateTriggerSynchPoint(&engine->triggerCentral.triggerState PASS_ENGINE_PARAMETER);
 }
 
 TriggerStimulatorHelper::TriggerStimulatorHelper() {

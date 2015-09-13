@@ -16,7 +16,7 @@ class Engine;
 typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index DECLARE_ENGINE_PARAMETER_S);
 
 #ifdef __cplusplus
-#include "engine.h"
+class Engine;
 
 #define HW_EVENT_TYPES 6
 
@@ -37,8 +37,8 @@ private:
 #endif
 
 void triggerInfo(void);
-efitime_t getCrankEventCounter(void);
-efitime_t getStartOfRevolutionIndex(void);
+efitime_t getCrankEventCounter(DECLARE_ENGINE_PARAMETER_F);
+efitime_t getStartOfRevolutionIndex(DECLARE_ENGINE_PARAMETER_F);
 void hwHandleShaftSignal(trigger_event_e signal);
 float getTriggerDutyCycle(int index);
 void initTriggerCentral(Logging *sharedLogger, Engine *engine);
