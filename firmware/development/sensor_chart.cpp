@@ -1,5 +1,5 @@
 /**
- * @file	analog_chart.cpp
+ * @file	sensor_chart.cpp
  *
  * @date Dec 20, 2013
  * @author Andrey Belomutskiy, (c) 2012-2015
@@ -9,7 +9,9 @@
 #include "main.h"
 #include "engine.h"
 #include "rpm_calculator.h"
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "status_loop.h"
+#endif
 
 #if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 
@@ -47,9 +49,11 @@ void scAddData(float angle, float value) {
 			// message terminator
 			appendPrintf(&logging, DELIMETER);
 			// output pending data
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 			if (getFullLog()) {
 				scheduleLogging(&logging);
 			}
+#endif
 			pendingData = false;
 		}
 		return;
