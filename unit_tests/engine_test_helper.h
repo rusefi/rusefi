@@ -24,7 +24,6 @@ public:
 	engine_configuration_s *ec;
 	engine_configuration_s *engineConfiguration;
 
-	TriggerCentral triggerCentral;
 };
 
 #endif /* ENGINE_TEST_HELPER_H_ */

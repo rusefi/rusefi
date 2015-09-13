@@ -18,6 +18,7 @@
 #include "table_helper.h"
 #include "listener_array.h"
 #include "accel_enrichment.h"
+#include "trigger_central.h"
 
 /**
  * This class knows about when to inject fuel
@@ -189,6 +190,8 @@ public:
 
 	AccelEnrichmemnt mapAccelEnrichment;
 	AccelEnrichmemnt tpsAccelEnrichment;
+
+	TriggerCentral triggerCentral;
 
 	/**
 	 * Fuel injection duration for current engine cycle, without wall wetting

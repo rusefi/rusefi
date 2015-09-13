@@ -32,21 +32,21 @@
 WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
+EXTERN_ENGINE;
+
 static histogram_s triggerCallback;
 
 // we need this initial to have not_running at first invocation
 static volatile efitime_t previousShaftEventTimeNt = (efitimems_t) -10 * US2NT(US_PER_SECOND_LL);
 
-TriggerCentral triggerCentral;
-
 static Logging *logger;
 
-efitime_t getCrankEventCounter() {
-	return triggerCentral.triggerState.getTotalEventCounter();
+efitime_t getCrankEventCounter(DECLARE_ENGINE_PARAMETER_F) {
+	return engine->triggerCentral.triggerState.getTotalEventCounter();
 }
 
-efitime_t getStartOfRevolutionIndex() {
-	return triggerCentral.triggerState.getStartOfRevolutionIndex();
+efitime_t getStartOfRevolutionIndex(DECLARE_ENGINE_PARAMETER_F) {
+	return engine->triggerCentral.triggerState.getStartOfRevolutionIndex();
 }
 
 void TriggerCentral::addEventListener(ShaftPositionListener listener, const char *name, Engine *engine) {
@@ -61,7 +61,7 @@ void TriggerCentral::addEventListener(ShaftPositionListener listener, const char
  * that would be 116 events: 58 SHAFT_PRIMARY_UP and 58 SHAFT_PRIMARY_DOWN events.
  */
 void addTriggerEventListener(ShaftPositionListener listener, const char *name, Engine *engine) {
-	triggerCentral.addEventListener(listener, name, engine);
+	engine->triggerCentral.addEventListener(listener, name, engine);
 }
 
 uint32_t triggerHanlderEntryTime;
@@ -84,7 +84,7 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 		maxTriggerReentraint = triggerReentraint;
 	triggerReentraint++;
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#8");
-	triggerCentral.handleShaftSignal(signal PASS_ENGINE_PARAMETER);
+	engine->triggerCentral.handleShaftSignal(signal PASS_ENGINE_PARAMETER);
 	triggerReentraint--;
 	triggerDuration = GET_TIMESTAMP() - triggerHanlderEntryTime;
 	isInsideTriggerHandler = false;
@@ -97,6 +97,7 @@ TriggerCentral::TriggerCentral() {
 	nowNt = 0;
 	memset(hwEventCounters, 0, sizeof(hwEventCounters));
 	clearCallbacks(&triggerListeneres);
+	triggerState.reset();
 }
 
 int TriggerCentral::getHwEventCounter(int index) {
@@ -304,12 +305,12 @@ void triggerInfo(void) {
 				engineConfiguration->trigger.customSkippedToothCount);
 	}
 
-	scheduleMsg(logger, "trigger#1 event counters up=%d/down=%d", triggerCentral.getHwEventCounter(0),
-			triggerCentral.getHwEventCounter(1));
+	scheduleMsg(logger, "trigger#1 event counters up=%d/down=%d", engine->triggerCentral.getHwEventCounter(0),
+			engine->triggerCentral.getHwEventCounter(1));
 
 	if (engine->triggerShape.needSecondTriggerInput) {
-		scheduleMsg(logger, "trigger#2 event counters up=%d/down=%d", triggerCentral.getHwEventCounter(2),
-				triggerCentral.getHwEventCounter(3));
+		scheduleMsg(logger, "trigger#2 event counters up=%d/down=%d", engine->triggerCentral.getHwEventCounter(2),
+				engine->triggerCentral.getHwEventCounter(3));
 	}
 	scheduleMsg(logger, "expected cycle events %d/%d/%d", ts->expectedEventCount[0],
 			engine->triggerShape.expectedEventCount[1], ts->expectedEventCount[2]);
@@ -320,8 +321,8 @@ void triggerInfo(void) {
 
 	scheduleMsg(logger, "synchronizationNeeded=%s/isError=%s/total errors=%d ord_err=%d/total revolutions=%d/self=%s",
 			boolToString(ts->isSynchronizationNeeded),
-			boolToString(isTriggerDecoderError()), triggerCentral.triggerState.totalTriggerErrorCounter,
-			triggerCentral.triggerState.orderingErrorCounter, triggerCentral.triggerState.getTotalRevolutionCounter(),
+			boolToString(isTriggerDecoderError()), engine->triggerCentral.triggerState.totalTriggerErrorCounter,
+			engine->triggerCentral.triggerState.orderingErrorCounter, engine->triggerCentral.triggerState.getTotalRevolutionCounter(),
 			boolToString(engineConfiguration->directSelfStimulation));
 
 	if (ts->isSynchronizationNeeded) {
@@ -385,13 +386,15 @@ void triggerInfo(void) {
 #endif /* EFI_PROD_CODE */
 }
 
+#if ! EFI_UNIT_TEST
 float getTriggerDutyCycle(int index) {
-	return triggerCentral.triggerState.getTriggerDutyCycle(index);
+	return engine->triggerCentral.triggerState.getTriggerDutyCycle(index);
 }
+#endif
 
 static void resetRunningTriggerCounters() {
-	triggerCentral.resetCounters();
-#if EFI_PROD_CODE
+#if !EFI_UNIT_TEST
+	engine->triggerCentral.resetCounters();
 	triggerInfo();
 #endif
 }

@@ -72,7 +72,6 @@ extern bool_t main_loop_started;
 #endif
 
 extern engine_pins_s enginePins;
-extern TriggerCentral triggerCentral;
 
 static bool_t subscription[(int) RO_LAST_ELEMENT];
 
@@ -242,13 +241,13 @@ static void printState(void) {
 	if (subscription[(int) RO_TOTAL_REVOLUTION_COUNTER])
 		debugInt(&logger, "ckp_c", getCrankEventCounter());
 	if (subscription[(int) RO_RUNNING_REVOLUTION_COUNTER])
-		debugInt(&logger, "ckp_r", triggerCentral.triggerState.runningRevolutionCounter);
+		debugInt(&logger, "ckp_r", engine->triggerCentral.triggerState.runningRevolutionCounter);
 
 	if (subscription[(int) RO_RUNNING_TRIGGER_ERROR])
-		debugInt(&logger, "trg_r_errors", triggerCentral.triggerState.runningTriggerErrorCounter);
+		debugInt(&logger, "trg_r_errors", engine->triggerCentral.triggerState.runningTriggerErrorCounter);
 
 	if (subscription[(int) RO_RUNNING_ORDERING_TRIGGER_ERROR])
-		debugInt(&logger, "trg_r_order_errors", triggerCentral.triggerState.runningOrderingErrorCounter);
+		debugInt(&logger, "trg_r_order_errors", engine->triggerCentral.triggerState.runningOrderingErrorCounter);
 
 	if (subscription[(int) RO_WAVE_CHART_CURRENT_SIZE])
 		debugInt(&logger, "wave_chart_current", 0);
@@ -590,7 +589,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->currentMapAccelDelta = engine->mapAccelEnrichment.getMapEnrichment(PASS_ENGINE_PARAMETER_F) * 100 / getMap();
 	tsOutputChannels->tpsAccelFuel = engine->tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_F);
 	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getDelta();
-	tsOutputChannels->triggerErrorsCounter = triggerCentral.triggerState.totalTriggerErrorCounter;
+	tsOutputChannels->triggerErrorsCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 	tsOutputChannels->baroCorrection = engine->engineState.baroCorrection;
 	tsOutputChannels->pedalPosition = hasPedalPositionSensor(PASS_ENGINE_PARAMETER_F) ? getPedalPosition(PASS_ENGINE_PARAMETER_F) : 0;
 	tsOutputChannels->knockCount = engine->knockCount;
@@ -598,7 +597,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER);
 	tsOutputChannels->fuelLevel = engine->engineState.fuelLevel;
 	tsOutputChannels->hasFatalError = hasFirmwareError();
-	tsOutputChannels->totalTriggerErrorCounter = triggerCentral.triggerState.totalTriggerErrorCounter;
+	tsOutputChannels->totalTriggerErrorCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 	tsOutputChannels->wallFuelAmount = wallFuel.getWallFuel(0);
 	tsOutputChannels->totalFuelCorrection = engine->totalFuelCorrection;
 	tsOutputChannels->wallFuelCorrection = engine->wallFuelCorrection;

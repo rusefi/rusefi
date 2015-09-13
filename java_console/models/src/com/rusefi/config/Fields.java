@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar Sat Sep 12 17:18:32 EDT 2015
+// this file was generated automatically by ConfigDefinition.jar Sun Sep 13 16:57:36 EDT 2015
 public class Fields {
 	public static final Field ENGINETYPE = new Field("ENGINETYPE", 0, FieldType.INT);
 	public static final Field HEADERMAGICVALUE = new Field("HEADERMAGICVALUE", 4, FieldType.INT);
@@ -320,7 +320,7 @@ public class Fields {
 	public static final Field JOYSTICKBPIN = new Field("JOYSTICKBPIN", 1396, FieldType.INT, brain_pin_e);
 	public static final Field JOYSTICKCPIN = new Field("JOYSTICKCPIN", 1400, FieldType.INT, brain_pin_e);
 	public static final Field JOYSTICKDPIN = new Field("JOYSTICKDPIN", 1404, FieldType.INT, brain_pin_e);
-	public static final String[] sensor_chart_e = {"none", "trigger", "MAP", "RPM ACCEL", "INVALID"};
+	public static final String[] sensor_chart_e = {"none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "INVALID"};
 	public static final Field SENSORCHARTMODE = new Field("SENSORCHARTMODE", 1408, FieldType.INT, sensor_chart_e);
 	public static final Field MAFSENSORTYPE = new Field("MAFSENSORTYPE", 1412, FieldType.INT);
 	public static final Field VEHICLESPEEDSENSORINPUTPIN = new Field("VEHICLESPEEDSENSORINPUTPIN", 1416, FieldType.INT, brain_input_pin_e);
