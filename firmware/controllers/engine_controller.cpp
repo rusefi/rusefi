@@ -506,9 +506,9 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	initPwmGenerator();
 #endif
 
-#if EFI_ANALOG_CHART || defined(__DOXYGEN__)
+#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 	initSensorChart();
-#endif /* EFI_ANALOG_CHART */
+#endif /* EFI_SENSOR_CHART */
 
 	initAlgo(sharedLogger, engineConfiguration);
 

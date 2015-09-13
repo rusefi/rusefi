@@ -41,9 +41,6 @@
 #include "rfiutil.h"
 #include "loggingcentral.h"
 
-// we use this magic constant to make sure it's not just a random non-zero int in memory
-#define MAGIC_LOGGING_FLAG 45234441
-
 static MemoryStream intermediateLoggingBuffer;
 static uint8_t intermediateLoggingBufferData[INTERMEDIATE_LOGGING_BUFFER_SIZE] CCM_OPTIONAL;
 //todo define max-printf-buffer
@@ -142,11 +139,11 @@ void initLoggingExt(Logging *logging, const char *name, char *buffer, int buffer
 	logging->buffer = buffer;
 	logging->bufferSize = bufferSize;
 	resetLogging(logging);
-	logging->isInitialized = MAGIC_LOGGING_FLAG;
+	logging->isInitialized = true;
 }
 
 int isInitialized(Logging *logging) {
-	return logging->isInitialized == MAGIC_LOGGING_FLAG;
+	return logging->isInitialized;
 }
 
 void debugInt(Logging *logging, const char *caption, int value) {

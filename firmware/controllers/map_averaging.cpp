@@ -34,9 +34,9 @@
 #include "engine.h"
 #include "engine_math.h"
 
-#if EFI_ANALOG_CHART || defined(__DOXYGEN__)
+#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 #include "sensor_chart.h"
-#endif /* EFI_ANALOG_CHART */
+#endif /* EFI_SENSOR_CHART */
 
 #define FAST_MAP_CHART_SKIP_FACTOR 16
 
@@ -116,7 +116,7 @@ void mapAveragingCallback(adcsample_t adcValue) {
 	measurementsPerRevolutionCounter++;
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#9a");
 
-#if (EFI_ANALOG_CHART && EFI_ANALOG_SENSORS) || defined(__DOXYGEN__)
+#if (EFI_SENSOR_CHART && EFI_ANALOG_SENSORS) || defined(__DOXYGEN__)
 	if (boardConfiguration->sensorChartMode == SC_MAP) {
 		if (measurementsPerRevolutionCounter % FAST_MAP_CHART_SKIP_FACTOR
 				== 0) {
@@ -127,7 +127,7 @@ void mapAveragingCallback(adcsample_t adcValue) {
 					currentPressure);
 		}
 	}
-#endif /* EFI_ANALOG_CHART */
+#endif /* EFI_SENSOR_CHART */
 
 	/**
 	 * Local copy is now safe, but it's an overkill: we only
