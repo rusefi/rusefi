@@ -479,7 +479,7 @@ void testTriggerDecoder(void) {
 
 
 		eth.persistentConfig.engineConfiguration.useOnlyFrontForTrigger = false;
-		eth.persistentConfig.engineConfiguration.bc.sensorChartMode = SC_RPM_ACCEL;
+		eth.persistentConfig.engineConfiguration.bc.sensorChartMode = SC_DETAILED_RPM;
 		applyNonPersistentConfiguration(NULL PASS_ENGINE_PARAMETER);
 
 		assertEqualsM2("rpm#1", 16666.9746, eth.engine.triggerCentral.triggerState.instantRpmValue[0], 0.5);
