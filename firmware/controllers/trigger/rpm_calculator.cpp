@@ -24,7 +24,7 @@
 #include "engine.h"
 #endif
 
-#if EFI_ANALOG_CHART || defined(__DOXYGEN__)
+#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 #include "sensor_chart.h"
 #endif
 
@@ -164,7 +164,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#2z");
 #endif
 
-#if EFI_ANALOG_CHART || defined(__DOXYGEN__)
+#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 	angle_t crankAngle = NAN;
 	int signal = -1;
 	if (boardConfiguration->sensorChartMode == SC_TRIGGER) {
@@ -174,7 +174,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 #endif
 
 	if (index != 0) {
-#if EFI_ANALOG_CHART || defined(__DOXYGEN__)
+#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 		if (boardConfiguration->sensorChartMode == SC_TRIGGER) {
 			scAddData(crankAngle, signal);
 		}
@@ -203,7 +203,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	}
 	rpmState->onNewEngineCycle();
 	rpmState->lastRpmEventTimeNt = nowNt;
-#if EFI_ANALOG_CHART || defined(__DOXYGEN__)
+#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 	if (boardConfiguration->sensorChartMode == SC_TRIGGER) {
 		scAddData(crankAngle, signal);
 	}

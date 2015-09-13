@@ -92,9 +92,9 @@ void rusEfiFunctionalTest(void) {
 
 	initRpmCalculator(&sharedLogger, engine);
 
-#if EFI_ANALOG_CHART || defined(__DOXYGEN__)
+#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 	initSensorChart();
-#endif /* EFI_ANALOG_CHART */
+#endif /* EFI_SENSOR_CHART */
 
 	initTriggerCentral(&sharedLogger, engine);
 

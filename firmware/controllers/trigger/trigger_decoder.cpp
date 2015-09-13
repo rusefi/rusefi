@@ -37,7 +37,7 @@
 #include "engine.h"
 #include "engine_math.h"
 
-#if EFI_ANALOG_CHART || defined(__DOXYGEN__)
+#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 #include "sensor_chart.h"
 #endif
 
@@ -126,7 +126,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	prevSignal = curSignal;
 	curSignal = signal;
 
-#if EFI_ANALOG_CHART || defined(__DOXYGEN__)
+#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 	if (boardConfiguration->sensorChartMode == SC_RPM_ACCEL) {
 		angle_t currentAngle = TRIGGER_SHAPE(eventAngles[currentCycle.current_index]);
 		// todo: make this '90' depend on cylinder count?

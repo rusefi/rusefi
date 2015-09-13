@@ -11,7 +11,7 @@
 #include "rpm_calculator.h"
 #include "status_loop.h"
 
-#if EFI_ANALOG_CHART || defined(__DOXYGEN__)
+#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 
 static char LOGGING_BUFFER[5000];
 static Logging logging("analog chart", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
@@ -76,4 +76,4 @@ void initSensorChart(void) {
 	initialized = true;
 }
 
-#endif /* EFI_ANALOG_CHART */
+#endif /* EFI_SENSOR_CHART */
