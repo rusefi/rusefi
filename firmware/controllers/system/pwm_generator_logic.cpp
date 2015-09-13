@@ -22,6 +22,7 @@ SimplePwm::SimplePwm() {
 	sr[0] = waveInstance;
 	init(_switchTimes, sr);
 }
+
 void PwmConfig::baseConstructor() {
 	memset(&scheduling, 0, sizeof(scheduling));
 	memset(&safe, 0, sizeof(safe));

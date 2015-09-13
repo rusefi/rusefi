@@ -29,7 +29,7 @@
 #include "engine_math.h"
 #include "speed_density.h"
 #include "advance_map.h"
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "electronic_throttle.h"
 #include "alternatorController.h"
 #endif
@@ -66,7 +66,7 @@
 
 EXTERN_ENGINE;
 
-#if EFI_TUNER_STUDIO
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 #include "tunerstudio.h"
 #endif
 
@@ -177,7 +177,7 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 	boardConfiguration->acRelayPin = GPIO_UNASSIGNED;
 	boardConfiguration->acRelayPinMode = OM_DEFAULT;
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	setDefaultAlternatorParameters();
 	setDefaultEtbParameters();
 #endif
@@ -228,7 +228,7 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
  * and the settings saves in flash memory.
  */
 void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
-#if ! EFI_UNIT_TEST
+#if (! EFI_UNIT_TEST) || defined(__DOXYGEN__)
 	memset(&persistentState.persistentConfiguration, 0, sizeof(persistentState.persistentConfiguration));
 #endif
 	prepareVoidConfiguration(engineConfiguration);
@@ -472,7 +472,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->idleStepperReactionTime = 10;
 	engineConfiguration->idleStepperTotalSteps = 150;
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	engineConfiguration->engineChartSize = 300;
 #else
 	// need more events for automated test
@@ -618,7 +618,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	 * Let's apply global defaults first
 	 */
 	setDefaultConfiguration(PASS_ENGINE_PARAMETER_F);
-#if EFI_SIMULATOR
+#if EFI_SIMULATOR || defined(__DOXYGEN__)
 	engineConfiguration->directSelfStimulation = true;
 #endif /* */
 	engineConfiguration->engineType = engineType;
@@ -758,13 +758,14 @@ engine_configuration2_s::engine_configuration2_s() {
 }
 
 void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S) {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "apply c");
+	scheduleMsg(logger, "applyNonPersistentConfiguration()");
+#endif
 
 // todo: this would require 'initThermistors() to re-establish a reference, todo: fix
 //	memset(engineConfiguration2, 0, sizeof(engine_configuration2_s));
-#if EFI_PROD_CODE
-	scheduleMsg(logger, "applyNonPersistentConfiguration()");
-#endif
-#if EFI_ENGINE_CONTROL
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	engine->triggerShape.initializeTriggerShape(logger PASS_ENGINE_PARAMETER);
 #endif
 	if (engine->triggerShape.getSize() == 0) {

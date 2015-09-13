@@ -88,6 +88,7 @@ public:
 	uint32_t orderingErrorCounter;
 	uint32_t runningOrderingErrorCounter;
 
+	void reset();
 	void resetRunningCounters();
 
 	uint32_t runningRevolutionCounter;
