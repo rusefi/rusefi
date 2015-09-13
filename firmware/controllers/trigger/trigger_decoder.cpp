@@ -35,6 +35,11 @@
 #include "trigger_structure.h"
 #include "efiGpio.h"
 #include "engine.h"
+#include "engine_math.h"
+
+#if EFI_ANALOG_CHART || defined(__DOXYGEN__)
+#include "sensor_chart.h"
+#endif
 
 static OutputPin triggerDecoderErrorPin;
 
@@ -120,6 +125,28 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 	prevSignal = curSignal;
 	curSignal = signal;
+
+#if EFI_ANALOG_CHART || defined(__DOXYGEN__)
+	if (boardConfiguration->sensorChartMode == SC_RPM_ACCEL) {
+		angle_t currentAngle = TRIGGER_SHAPE(eventAngles[currentCycle.current_index]);
+		// todo: make this '90' depend on cylinder count?
+		angle_t prevAngle = currentAngle - 90;
+		fixAngle(prevAngle);
+		int prevIndex = TRIGGER_SHAPE(triggerIndexByAngle[(int)prevAngle]);
+		// now let's get precise angle for that event
+		prevAngle = TRIGGER_SHAPE(eventAngles[prevIndex]);
+		uint32_t time = nowNt - timeOfLastEvent[prevIndex];
+		angle_t angleDiff = currentAngle - prevAngle;
+		// todo: angle diff should be pre-calculated
+		fixAngle(angleDiff);
+
+		float r = (angleDiff / 360.0) / (NT2US(time) / 60000000.0);
+
+		scAddData(currentAngle, r);
+		instantRpmValue[currentCycle.current_index] = r;
+	}
+#endif
+
 
 	timeOfLastEvent[currentCycle.current_index] = nowNt;
 
