@@ -1935,6 +1935,12 @@
         <name>$PROJ_DIR$\..\config\engines\custom_engine.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\config\engines\daihatsu.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\daihatsu.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\config\engines\dodge_neon.cpp</name>
       </file>
       <file>
@@ -2476,6 +2482,12 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\trigger\trigger_structure.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\trigger\trigger_subaru.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\trigger\trigger_subaru.h</name>
       </file>
     </group>
     <file>
