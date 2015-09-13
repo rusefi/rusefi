@@ -66,13 +66,13 @@ int TriggerShape::getTriggerShapeSynchPointIndex() {
 	return triggerShapeSynchPointIndex;
 }
 
-void TriggerShape::calculateTriggerSynchPoint(DECLARE_ENGINE_PARAMETER_F) {
+void TriggerShape::calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE_PARAMETER_S) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "calc s");
 #endif
 	trigger_config_s const*triggerConfig = &engineConfiguration->trigger;
 
-	triggerShapeSynchPointIndex = findTriggerZeroEventIndex(this, triggerConfig PASS_ENGINE_PARAMETER);
+	triggerShapeSynchPointIndex = findTriggerZeroEventIndex(state, this, triggerConfig PASS_ENGINE_PARAMETER);
 
 	engine->engineCycleEventCount = getLength();
 
