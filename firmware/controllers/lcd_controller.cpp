@@ -23,6 +23,7 @@
 #include "settings.h"
 #include "injector_central.h"
 #include "engine_controller.h"
+#include "mmc_card.h"
 
 #if EFI_HD44780_LCD || defined(__DOXYGEN__)
 
@@ -203,9 +204,15 @@ static void showLine(lcd_line_e line, int screenY) {
 	case LL_RPM:
 		lcdPrintf("RPM %d", getRpmE(engine));
 		{
+			char sdState;
+			if (boardConfiguration->isSdCardEnabled) {
+				sdState = isSdCardAlive() ? 'L' : 'n';
+			} else {
+				sdState = 'D';
+			}
 			int seconds = getTimeNowSeconds();
 			if (seconds < 10000) {
-				lcdPrintf("  %d", seconds);
+				lcdPrintf("  %d%c", seconds, sdState);
 			}
 		}
 		return;
