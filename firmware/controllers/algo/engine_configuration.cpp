@@ -563,6 +563,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->consoleLoopPeriod = 200;
 	boardConfiguration->lcdThreadPeriod = 300;
 	boardConfiguration->generalPeriodicThreadPeriod = 50;
+	boardConfiguration->useLcdScreen = true;
 
 	boardConfiguration->boardTestModeJumperPin = GPIOB_0;
 

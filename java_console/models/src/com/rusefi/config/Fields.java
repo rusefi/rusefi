@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar Sun Sep 13 16:57:36 EDT 2015
+// this file was generated automatically by ConfigDefinition.jar Tue Sep 15 20:29:15 EDT 2015
 public class Fields {
 	public static final Field ENGINETYPE = new Field("ENGINETYPE", 0, FieldType.INT);
 	public static final Field HEADERMAGICVALUE = new Field("HEADERMAGICVALUE", 4, FieldType.INT);
@@ -214,6 +214,7 @@ public class Fields {
 	public static final Field USESTEPPERIDLE = new Field("USESTEPPERIDLE", 1008, FieldType.BIT, 9);
 	public static final Field ENABLEDSTEP1LIMITER = new Field("ENABLEDSTEP1LIMITER", 1008, FieldType.BIT, 10);
 	public static final Field USETPICADVANCEDMODE = new Field("USETPICADVANCEDMODE", 1008, FieldType.BIT, 11);
+	public static final Field USELCDSCREEN = new Field("USELCDSCREEN", 1008, FieldType.BIT, 12);
 	public static final Field LOGICANALYZERPINS1 = new Field("LOGICANALYZERPINS1", 1012, FieldType.INT, brain_input_pin_e);
 	public static final Field LOGICANALYZERPINS2 = new Field("LOGICANALYZERPINS2", 1016, FieldType.INT, brain_input_pin_e);
 	public static final Field LOGICANALYZERPINS3 = new Field("LOGICANALYZERPINS3", 1020, FieldType.INT, brain_input_pin_e);

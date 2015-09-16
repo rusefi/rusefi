@@ -359,6 +359,7 @@
 #define useStepperIdle_offset 1008
 #define enabledStep1Limiter_offset 1008
 #define useTpicAdvancedMode_offset 1008
+#define useLcdScreen_offset 1008
 #define logicAnalyzerPins1_offset 1012
 #define logicAnalyzerPins2_offset 1016
 #define logicAnalyzerPins3_offset 1020

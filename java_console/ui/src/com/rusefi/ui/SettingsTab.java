@@ -36,6 +36,7 @@ public class SettingsTab {
         panel.add(UiUtils.wrap(new EnumConfigField(Fields.INJECTIONPINS1, "injector #1").getContent()));
 
         panel.add(UiUtils.wrap(new BitConfigField(Fields.ISSDCARDENABLED, "SD card enabled").getContent()));
+        panel.add(UiUtils.wrap(new BitConfigField(Fields.USELCDSCREEN, "Use LCD").getContent()));
 
         panel.add(UiUtils.wrap(new EnumConfigField(Fields.HIP9011INTHOLDPIN, "int/hold pin").getContent()));
         panel.add(UiUtils.wrap(new EnumConfigField(Fields.HIP9011INTHOLDPINMODE, "int/hold pin mode").getContent()));

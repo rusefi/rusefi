@@ -411,6 +411,7 @@ bit is_enabled_spi_2
 	
 	bit enabledStep1Limiter;
 	bit useTpicAdvancedMode;
+	bit useLcdScreen;
 
 	brain_input_pin_e[LOGIC_ANALYZER_CHANNEL_COUNT iterate] logicAnalyzerPins;
 	uint8_t[LOGIC_ANALYZER_CHANNEL_COUNT] logicAnalyzerMode;default or inverted input
