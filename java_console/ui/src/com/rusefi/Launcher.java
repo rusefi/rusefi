@@ -32,7 +32,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see com.rusefi.StartupFrame
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20150915;
+    public static final int CONSOLE_VERSION = 20150918;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -83,7 +83,7 @@ public class Launcher {
 
         tabbedPane.addTab("Gauges", new GaugesPanel(getConfig().getRoot().getChild("gauges")).getContent());
         tabbedPane.addTab("Engine Sniffer", engineSnifferPanel.getPanel());
-        tabbedPane.addTab("Sensor Sniffer", new SensorSnifferPane().getPanel());
+        tabbedPane.addTab("Sensor Sniffer", new SensorSnifferPane(getConfig().getRoot().getChild("sensor_sniffer")).getPanel());
 
 
 //        tabbedPane.addTab("LE controls", new FlexibleControls().getPanel());
