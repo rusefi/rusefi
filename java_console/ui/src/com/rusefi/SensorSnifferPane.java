@@ -4,10 +4,12 @@ import com.rusefi.config.Fields;
 import com.rusefi.ui.RpmLabel;
 import com.rusefi.ui.RpmModel;
 import com.rusefi.ui.config.EnumConfigField;
+import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.config.ConfigField;
 import com.rusefi.ui.util.URLLabel;
+import com.rusefi.ui.widgets.AnyCommand;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +41,7 @@ public class SensorSnifferPane {
 
     private boolean paused = false;
 
-    public SensorSnifferPane() {
+    public SensorSnifferPane(Node config) {
         SensorSnifferCentral.addListener(new SensorSnifferCentral.AnalogChartListener() {
             @Override
             public void onAnalogChart(final String message) {
@@ -86,6 +88,8 @@ public class SensorSnifferPane {
         final JButton pauseButton = new JButton(PAUSE.getMessage());
         upperPanel.add(pauseButton);
         upperPanel.add(new RpmLabel(2).getContent());
+
+        upperPanel.add(new AnyCommand(config, true, false).getContent());
 
         upperPanel.add(new URLLabel(EngineSnifferPanel.HELP_TEXT, HELP_URL));
         pauseButton.addActionListener(new
