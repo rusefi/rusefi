@@ -153,6 +153,8 @@ case TT_DODGE_RAM:
 	return "TT_DODGE_RAM";
 case TT_UNUSED:
 	return "TT_UNUSED";
+case TT_NISSAN:
+	return "TT_NISSAN";
   }
  return NULL;
 }
