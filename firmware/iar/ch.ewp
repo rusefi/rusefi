@@ -2478,6 +2478,12 @@
         <name>$PROJ_DIR$\..\controllers\trigger\trigger_mitsubishi.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\controllers\trigger\trigger_nissan.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\trigger\trigger_nissan.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\controllers\trigger\trigger_structure.cpp</name>
       </file>
       <file>

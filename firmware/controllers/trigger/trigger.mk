@@ -8,6 +8,7 @@ TRIGGER_DECODERS_SRC_CPP = \
 	$(PROJECT_DIR)/controllers/trigger/trigger_structure.cpp \
 	$(PROJECT_DIR)/controllers/trigger/trigger_decoder.cpp \
 	$(PROJECT_DIR)/controllers/trigger/trigger_mitsubishi.cpp \
+	$(PROJECT_DIR)/controllers/trigger/trigger_nissan.cpp \
 	$(PROJECT_DIR)/controllers/trigger/trigger_subaru.cpp \
 	$(PROJECT_DIR)/controllers/trigger/trigger_gm.cpp
 
