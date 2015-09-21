@@ -88,7 +88,7 @@ public class EngineSnifferPanel {
         });
 
 
-        statusPanel.setWaveReport(crank.createTranslator());
+        statusPanel.setTimeAxisTranslator(crank.createTranslator());
 
         JButton clearButton = new JButton(CLEAR.getMessage());
         clearButton.setMnemonic('c');

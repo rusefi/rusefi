@@ -49,6 +49,7 @@ public class UpDownImage extends JPanel {
         }
     });
     public boolean showText = true;
+    private int currentMouseX = -100;
 
     public UpDownImage(final String name) {
         this(EngineReport.MOCK, name);
@@ -68,6 +69,13 @@ public class UpDownImage extends JPanel {
         setWaveReport(wr, null);
         setOpaque(true);
         translator = createTranslator();
+        addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                currentMouseX = e.getX();
+                UiUtils.trueRepaint(UpDownImage.this);
+            }
+        });
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -217,9 +225,15 @@ public class UpDownImage extends JPanel {
 
         int y = (int) (0.2 * d.height);
 
+        /**
+         * signal body
+         */
         g.setColor(Color.lightGray);
         g.fillRect(x1, y, x2 - x1, d.height - y);
 
+        /**
+         * signal out-line
+         */
         g.setColor(Color.blue);
         g.drawLine(x1, y, x2, y);
         g.drawLine(x1, y, x1, d.height);
@@ -231,25 +245,35 @@ public class UpDownImage extends JPanel {
         if (showText) {
             g.drawString(durationString, x1, (int) (0.5 * d.height));
 
-            String fromAngle = time2rpm.getCrankAngleByTimeString(upDown.upTime);
-            String toAngle = time2rpm.getCrankAngleByTimeString(upDown.downTime);
+            double fromAngle = time2rpm.getCrankAngleByTime((double) upDown.upTime);
+            double toAngle = time2rpm.getCrankAngleByTime((double) upDown.downTime);
+
+            String fromAngleStr = RevolutionLog.angle2string(fromAngle);
 
             g.setColor(Color.darkGray);
             if (upDown.upIndex != -1) {
                 g.drawString("" + upDown.upIndex, x1, (int) (0.25 * d.height));
-//            System.out.println("digital_event," + upDown.upIndex + "," + fromAngle);
+//            System.out.println("digital_event," + upDown.upIndex + "," + fromAngleStr);
             }
             if (upDown.downIndex != -1) {
                 g.drawString("" + upDown.downIndex, x2, (int) (0.25 * d.height));
-//            System.out.println("digital_event," + upDown.downIndex + "," + toAngle);
+//            System.out.println("digital_event," + upDown.downIndex + "," + toAngleStr);
             }
 
             int offset = 3;
             g.setColor(Color.black);
-            g.drawString(fromAngle, x1 + offset, (int) (0.75 * d.height));
+            g.drawString(fromAngleStr, x1 + offset, (int) (0.75 * d.height));
 
-            g.setColor(Color.green);
-            g.drawString(toAngle, x1 + offset, (int) (1.0 * d.height));
+            g.setColor(Color.black);
+
+            if (Math.abs(x1 - currentMouseX) < 5) {
+                double angleDuration = toAngle - fromAngle;
+                String durationStr = RevolutionLog.angle2string(angleDuration);
+                g.drawString(durationStr, x1 + offset, (int) (1.0 * d.height));
+            } else {
+                String toAngleStr = RevolutionLog.angle2string(toAngle);
+                g.drawString(toAngleStr, x1 + offset, (int) (1.0 * d.height));
+            }
         }
     }
 

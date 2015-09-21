@@ -35,8 +35,11 @@ public class RevolutionLog {
     }
 
     public String getCrankAngleByTimeString(double time) {
-        double result = getCrankAngleByTime(time);
-        return Double.isNaN(result) ? "n/a" : String.format("%.2f", result);
+        return angle2string(getCrankAngleByTime(time));
+    }
+
+    public static String angle2string(double angle) {
+        return Double.isNaN(angle) ? "n/a" : String.format("%.2f", angle);
     }
 
     public double getCrankAngleByTime(double time) {
