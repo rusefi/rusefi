@@ -46,10 +46,11 @@ public class EngineSnifferStatusPanel {
             angleLabel.setText(text);
 
             Map.Entry<Integer, Integer> e = time2rpm.getTimeAndRpm(time);
-            if (e == null)
+            if (e == null) {
                 rpmLabel.setText("n/a");
-            else
+            } else {
                 rpmLabel.setText("" + e.getValue());
+            }
         }
     };
 
@@ -77,7 +78,7 @@ public class EngineSnifferStatusPanel {
         infoPanel.add(red);
     }
 
-    public void setWaveReport(TimeAxisTranslator translator) {
+    public void setTimeAxisTranslator(TimeAxisTranslator translator) {
         this.translator = translator;
     }
 
