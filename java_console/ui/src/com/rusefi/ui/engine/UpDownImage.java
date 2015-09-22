@@ -42,7 +42,7 @@ public class UpDownImage extends JPanel {
     private RevolutionLog time2rpm = RevolutionLog.parseRevolutions(null);
     private String pin = "";
     private long mouseEnterTime;
-    private Timer repaintTimer = new Timer(1000, new ActionListener() {
+    private final Timer repaintTimer = new Timer(1000, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             UiUtils.trueRepaint(UpDownImage.this);
@@ -111,6 +111,11 @@ public class UpDownImage extends JPanel {
             @Override
             public int getMinTime() {
                 return UpDownImage.this.wr.getMinTime();
+            }
+
+            @Override
+            public String toString() {
+                return "TimeAxisTranslator " + zoomProvider;
             }
         };
     }
@@ -284,5 +289,12 @@ public class UpDownImage extends JPanel {
     public void setPhysicalPin(String pin) {
         this.pin = pin;
         setToolTip();
+    }
+
+    @Override
+    public String toString() {
+        return "UpDownImage{" +
+                "zoomProvider=" + zoomProvider +
+                "} " + super.toString();
     }
 }
