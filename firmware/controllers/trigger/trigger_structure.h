@@ -39,9 +39,6 @@ public:
 	bool_t isSynchronizationNeeded;
 	bool_t needSecondTriggerInput;
 
-//	int totalToothCount;
-//	int skippedToothCount;
-
 	/**
 	 * duty cycle for each individual trigger channel
 	 */
@@ -75,15 +72,15 @@ public:
 	angle_t tdcPosition;
 
 	/**
-	 * Should we use falls or rises for gap ratio detection?
-	 */
-	bool_t useRiseEdge;
-
-	/**
 	 * In case of a multi-channel trigger, do we want to sync based on primary channel only?
 	 * See also gapBothDirections
 	 */
 	bool_t useOnlyPrimaryForSync;
+	/**
+	 * Should we use falls or rises for gap ratio detection?
+	 * todo: combine this flag with gapBothDirections?
+	 */
+	bool_t useRiseEdge;
 	/**
 	 * This is about selecting signal edges within partictular trigger channels.
 	 * Should we measure gaps with both fall and rise signal edges?
