@@ -81,10 +81,13 @@ public:
 
 	/**
 	 * In case of a multi-channel trigger, do we want to sync based on primary channel only?
+	 * See also gapBothDirections
 	 */
 	bool_t useOnlyPrimaryForSync;
 	/**
-	 * Should we measure gaps with events of both kinds?
+	 * This is about selecting signal edges within partictular trigger channels.
+	 * Should we measure gaps with both fall and rise signal edges?
+	 * See also useOnlyPrimaryForSync
 	 */
 	bool_t gapBothDirections;
 
