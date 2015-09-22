@@ -155,6 +155,7 @@ public class EngineSnifferPanel {
         zoomControl.listener = new ZoomControl.ZoomControlListener() {
             @Override
             public void onZoomChange() {
+                System.out.println("onZoomChange");
                 UiUtils.trueRepaint(imagePanel);
             }
         };
@@ -217,6 +218,7 @@ public class EngineSnifferPanel {
         /**
          * this is to fix the UI glitch when images tab shows a tiny square
          */
+        System.out.println("displayChart");
         UiUtils.trueRepaint(chartPanel.getParent());
     }
 
