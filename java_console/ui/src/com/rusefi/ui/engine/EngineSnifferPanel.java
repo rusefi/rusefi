@@ -58,8 +58,11 @@ public class EngineSnifferPanel {
         @Override
         public Dimension getPreferredSize() {
             Dimension d = chartPanel.getSize();
+            System.out.println("chartPanel size " + d);
             Dimension s = super.getPreferredSize();
-            return new Dimension((int) (d.width * zoomControl.getZoomProvider().getZoomValue()), s.height);
+            Dimension dimension = new Dimension((int) (d.width * zoomControl.getZoomProvider().getZoomValue()), s.height);
+            System.out.println("imagePanel getPreferredSize" + dimension);
+            return dimension;
         }
     };
 
@@ -156,7 +159,10 @@ public class EngineSnifferPanel {
             @Override
             public void onZoomChange() {
                 System.out.println("onZoomChange");
-                UiUtils.trueRepaint(imagePanel);
+                /**
+                 * We have scroll pane size which depends on zoom, that's a long chain of dependencies
+                 */
+                UiUtils.trueLayout(imagePanel.getParent());
             }
         };
 
