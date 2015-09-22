@@ -106,6 +106,7 @@ class ZoomControl extends JPanel {
     }
 
     private void setValue(double value) {
+        System.out.println("Zoom setValue " + value);
         this.value = value;
         //currentValue.setText(String.format(" %.4fms", value));
         resetZoom.setEnabled(Math.abs(1 - value) > 0.01);
