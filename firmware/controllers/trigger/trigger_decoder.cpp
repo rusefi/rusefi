@@ -144,9 +144,10 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	if (isLessImportant(signal)) {
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 		if (printTriggerDebug) {
-			printf("%s isLessImportant %s\r\n",
+			printf("%s isLessImportant %s %d\r\n",
 					getTrigger_type_e(engineConfiguration->trigger.type),
-					getTrigger_event_e(signal));
+					getTrigger_event_e(signal),
+					nowNt);
 		}
 #endif
 
@@ -162,6 +163,16 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			toothed_previous_time = nowNt;
 		}
 	} else {
+
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+		if (printTriggerDebug) {
+			printf("%s event %s %d\r\n",
+					getTrigger_type_e(engineConfiguration->trigger.type),
+					getTrigger_event_e(signal),
+					nowNt);
+		}
+#endif
+
 
 	isFirstEvent = false;
 // todo: skip a number of signal from the beginning
