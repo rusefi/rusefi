@@ -423,18 +423,17 @@ void testTriggerDecoder(void) {
 	testTriggerDecoder2("dodge neon", DODGE_NEON_1995, 8, 0.4931, 0.2070);
 
 	testFordAspire();
-	// lame duty cycle implementation!
-	testTriggerDecoder2("ford aspire", FORD_ASPIRE_1996, 4, 0.0, 0.5);
+	testTriggerDecoder2("ford aspire", FORD_ASPIRE_1996, 4, 0.5000, 0.3841);
 
 	testTriggerDecoder2("dodge ram", DODGE_RAM, 16, 0.5000, 0.06);
 
 	//testTriggerDecoder2("bmw", BMW_E34, 0, 0.9750, 0.5167);
-	testTriggerDecoder2("bmw", BMW_E34, 0, 0.4667, 0.0);
+	testTriggerDecoder2("bmw", BMW_E34, 0, 0.4833, 0.0);
 
 	test1995FordInline6TriggerDecoder();
 	testTriggerDecoder2("Miata NB", MAZDA_MIATA_NB, 12, 0.0833, 0.0444);
 
-	testTriggerDecoder2("test engine", TEST_ENGINE, 0, 0.0, 0.0);
+	testTriggerDecoder2("test engine", TEST_ENGINE, 0, 0.7500, 0.2500);
 	testTriggerDecoder2("testGY6_139QMB", GY6_139QMB, 0, 0.4375, 0.0);
 	testTriggerDecoder2("testSubary", SUBARU_2003_WRX, 0, 0.4000, 0.0);
 
@@ -491,6 +490,29 @@ void testTriggerDecoder(void) {
 	testTriggerDecoder3("citroen", CITROEN_TU3JP, 0, 0.4833, 0.0, 2.9994);
 
 	testTriggerDecoder3("neon NGC4", DODGE_NEON_2003, 70, 0.5000, 0.4983, CHRYSLER_NGC4_GAP);
+
+	{
+		printTriggerDebug = true;
+
+		EngineTestHelper eth(DODGE_NEON_2003);
+		EXPAND_EngineTestHelper;
+//
+//		printf("!!!!!!!!!!!!!!!!!! Now trying with only front events !!!!!!!!!!!!!!!!!\r\n");
+//
+//		engineConfiguration->useOnlyFrontForTrigger = true;
+//
+//		applyNonPersistentConfiguration(NULL PASS_ENGINE_PARAMETER);
+//		prepareShapes(PASS_ENGINE_PARAMETER_F);
+//
+//		initSpeedDensity(PASS_ENGINE_PARAMETER_F);
+//
+//		TriggerShape *t = &eth.engine.triggerShape;
+
+
+		printTriggerDebug = false;
+
+	}
+
 	testTriggerDecoder2("sachs", SACHS, 0, 0.4800, 0.000);
 
 	printTriggerDebug = true;
