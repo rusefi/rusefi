@@ -1,6 +1,15 @@
 /**
  * @file trigger_emulator_algo.cpp
  *
+ * This file is about producing real electrical signals which emulate trigger signal based on
+ * a known TriggerShape.
+ *
+ * Historically this implementation was implemented based on PwmConfig which is maybe not the
+ * best way to implement it. (todo: why is not the best way?)
+ *
+ * A newer implementation of pretty much the same thing is TriggerStimulatorHelper
+ * todo: one emulator should be enough! another one should be eliminated
+ *
  * @date Mar 3, 2014
  * @author Andrey Belomutskiy, (c) 2012-2015
  */
