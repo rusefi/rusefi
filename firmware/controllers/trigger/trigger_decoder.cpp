@@ -171,55 +171,54 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		}
 #endif
 
-
-	isFirstEvent = false;
+		isFirstEvent = false;
 // todo: skip a number of signal from the beginning
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 //	scheduleMsg(&logger, "from %f to %f %d %d", triggerConfig->syncRatioFrom, triggerConfig->syncRatioTo, currentDuration, shaftPositionState->toothed_previous_duration);
 //	scheduleMsg(&logger, "ratio %f", 1.0 * currentDuration/ shaftPositionState->toothed_previous_duration);
 #else
-	if (toothed_previous_duration != 0) {
+		if (toothed_previous_duration != 0) {
 //		printf("ratio %f: cur=%d pref=%d\r\n", 1.0 * currentDuration / shaftPositionState->toothed_previous_duration,
 //				currentDuration, shaftPositionState->toothed_previous_duration);
-	}
+		}
 #endif
 
-	bool_t isSynchronizationPoint;
+		bool_t isSynchronizationPoint;
 
-	if (TRIGGER_SHAPE(isSynchronizationNeeded)) {
-		/**
-		 * Here I prefer to have two multiplications instead of one division, that's a micro-optimization
-		 */
-		isSynchronizationPoint = currentDuration > toothed_previous_duration * TRIGGER_SHAPE(syncRatioFrom) &&
-				currentDuration < toothed_previous_duration * TRIGGER_SHAPE(syncRatioTo) &&
-				toothed_previous_duration > durationBeforePrevious * TRIGGER_SHAPE(secondSyncRatioFrom) &&
-				toothed_previous_duration < durationBeforePrevious * TRIGGER_SHAPE(secondSyncRatioTo)
-				;
+		if (TRIGGER_SHAPE(isSynchronizationNeeded)) {
+			/**
+			 * Here I prefer to have two multiplications instead of one division, that's a micro-optimization
+			 */
+			isSynchronizationPoint = currentDuration > toothed_previous_duration * TRIGGER_SHAPE(syncRatioFrom)
+					&& currentDuration < toothed_previous_duration * TRIGGER_SHAPE(syncRatioTo)
+					&& toothed_previous_duration > durationBeforePrevious * TRIGGER_SHAPE(secondSyncRatioFrom)
+					&& toothed_previous_duration < durationBeforePrevious * TRIGGER_SHAPE(secondSyncRatioTo)
+			;
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-		if (engineConfiguration->isPrintTriggerSynchDetails) {
+			if (engineConfiguration->isPrintTriggerSynchDetails) {
 #else
-		if (printTriggerDebug) {
+				if (printTriggerDebug) {
 #endif /* EFI_PROD_CODE */
-			float gap = 1.0 * currentDuration / toothed_previous_duration;
+				float gap = 1.0 * currentDuration / toothed_previous_duration;
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-			scheduleMsg(logger, "gap=%f @ %d", gap, currentCycle.current_index);
+				scheduleMsg(logger, "gap=%f @ %d", gap, currentCycle.current_index);
 #else
-			actualSynchGap = gap;
-			float prevGap = 1.0 * toothed_previous_duration / durationBeforePrevious;
-			print("current gap %f/%f c=%d prev=%d\r\n", gap, prevGap, currentDuration, toothed_previous_duration);
+				actualSynchGap = gap;
+				float prevGap = 1.0 * toothed_previous_duration / durationBeforePrevious;
+				print("current gap %f/%f c=%d prev=%d\r\n", gap, prevGap, currentDuration, toothed_previous_duration);
 #endif /* EFI_PROD_CODE */
+			}
+
+		} else {
+			/**
+			 * in case of noise the counter could be above the expected number of events
+			 */
+			int d = engineConfiguration->useOnlyFrontForTrigger ? 2 : 1;
+			isSynchronizationPoint = !shaft_is_synchronized || (currentCycle.current_index >= TRIGGER_SHAPE(size) - d);
+
 		}
-
-	} else {
-		/**
-		 * in case of noise the counter could be above the expected number of events
-		 */
-		int d = engineConfiguration->useOnlyFrontForTrigger ? 2 : 1;
-		isSynchronizationPoint = !shaft_is_synchronized || (currentCycle.current_index >= TRIGGER_SHAPE(size) - d);
-
-	}
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 		if (printTriggerDebug) {
@@ -230,50 +229,52 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		}
 #endif
 
-	if (isSynchronizationPoint) {
+		if (isSynchronizationPoint) {
 
-		/**
-		 * We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
-		 */
-		bool isDecodingError = currentCycle.eventCount[0] != TRIGGER_SHAPE(expectedEventCount[0])
-				|| currentCycle.eventCount[1] != TRIGGER_SHAPE(expectedEventCount[1])
-				|| currentCycle.eventCount[2] != TRIGGER_SHAPE(expectedEventCount[2]);
+			/**
+			 * We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
+			 */
+			bool isDecodingError = currentCycle.eventCount[0] != TRIGGER_SHAPE(expectedEventCount[0])
+					|| currentCycle.eventCount[1] != TRIGGER_SHAPE(expectedEventCount[1])
+					|| currentCycle.eventCount[2] != TRIGGER_SHAPE(expectedEventCount[2]);
 
-		triggerDecoderErrorPin.setValue(isDecodingError);
-		if (isDecodingError) {
-			lastDecodingErrorTime = getTimeNowNt();
-			totalTriggerErrorCounter++;
-			if (engineConfiguration->isPrintTriggerSynchDetails) {
+			triggerDecoderErrorPin.setValue(isDecodingError);
+			if (isDecodingError) {
+				lastDecodingErrorTime = getTimeNowNt();
+				totalTriggerErrorCounter++;
+				if (engineConfiguration->isPrintTriggerSynchDetails) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-				scheduleMsg(logger, "error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d", currentCycle.current_index,
-						TRIGGER_SHAPE(expectedEventCount[0]), TRIGGER_SHAPE(expectedEventCount[1]),
-						TRIGGER_SHAPE(expectedEventCount[2]), currentCycle.eventCount[0], currentCycle.eventCount[1], currentCycle.eventCount[2]);
+					scheduleMsg(logger, "error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d",
+							currentCycle.current_index, TRIGGER_SHAPE(expectedEventCount[0]),
+							TRIGGER_SHAPE(expectedEventCount[1]), TRIGGER_SHAPE(expectedEventCount[2]),
+							currentCycle.eventCount[0], currentCycle.eventCount[1], currentCycle.eventCount[2]);
 #endif /* EFI_PROD_CODE */
+				}
 			}
+
+			errorDetection.add(isDecodingError);
+
+			if (isTriggerDecoderError()) {
+				warning(OBD_PCM_Processor_Fault, "trigger decoding issue. expected %d/%d/%d got %d/%d/%d",
+						TRIGGER_SHAPE(expectedEventCount[0]), TRIGGER_SHAPE(expectedEventCount[1]),
+						TRIGGER_SHAPE(expectedEventCount[2]), currentCycle.eventCount[0], currentCycle.eventCount[1],
+						currentCycle.eventCount[2]);
+			}
+
+			shaft_is_synchronized = true;
+			// this call would update duty cycle values
+			nextTriggerEvent()
+			;
+
+			nextRevolution();
+		} else {
+			nextTriggerEvent()
+			;
 		}
 
-		errorDetection.add(isDecodingError);
-
-		if (isTriggerDecoderError()) {
-			warning(OBD_PCM_Processor_Fault, "trigger decoding issue. expected %d/%d/%d got %d/%d/%d",
-					TRIGGER_SHAPE(expectedEventCount[0]), TRIGGER_SHAPE(expectedEventCount[1]),
-					TRIGGER_SHAPE(expectedEventCount[2]), currentCycle.eventCount[0], currentCycle.eventCount[1], currentCycle.eventCount[2]);
-		}
-
-		shaft_is_synchronized = true;
-		// this call would update duty cycle values
-		nextTriggerEvent()
-		;
-
-		nextRevolution();
-	} else {
-		nextTriggerEvent()
-		;
-	}
-
-	durationBeforePrevious = toothed_previous_duration;
-	toothed_previous_duration = currentDuration;
-	toothed_previous_time = nowNt;
+		durationBeforePrevious = toothed_previous_duration;
+		toothed_previous_duration = currentDuration;
+		toothed_previous_time = nowNt;
 	}
 	if (boardConfiguration->sensorChartMode == SC_RPM_ACCEL || boardConfiguration->sensorChartMode == SC_DETAILED_RPM) {
 		angle_t currentAngle = TRIGGER_SHAPE(eventAngles[currentCycle.current_index]);
@@ -307,10 +308,8 @@ float getEngineCycle(operation_mode_e operationMode) {
 	return operationMode == TWO_STROKE ? 360 : 720;
 }
 
-void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerShape *s,
-		int totalTeethCount, int skippedCount,
-		float toothWidth,
-		float offset, float engineCycle, float filterLeft, float filterRight) {
+void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerShape *s, int totalTeethCount, int skippedCount,
+		float toothWidth, float offset, float engineCycle, float filterLeft, float filterRight) {
 	efiAssertVoid(totalTeethCount > 0, "total count");
 	efiAssertVoid(skippedCount >= 0, "skipped count");
 
@@ -321,7 +320,7 @@ void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerShape *s,
 		s->addEvent(offset + angleUp, wheel, TV_LOW, filterLeft, filterRight);
 	}
 
-	float angleDown = engineCycle / totalTeethCount * (totalTeethCount - skippedCount - 1 + (1 - toothWidth) );
+	float angleDown = engineCycle / totalTeethCount * (totalTeethCount - skippedCount - 1 + (1 - toothWidth));
 	s->addEvent(offset + angleDown, wheel, TV_HIGH, filterLeft, filterRight);
 	s->addEvent(offset + engineCycle, wheel, TV_LOW, filterLeft, filterRight);
 }
@@ -340,7 +339,7 @@ void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount,
 	s->reset(operationMode, false);
 
 	addSkippedToothTriggerEvents(T_PRIMARY, s, totalTeethCount, skippedCount, 0.5, 0, getEngineCycle(operationMode),
-			NO_LEFT_FILTER, NO_RIGHT_FILTER);
+	NO_LEFT_FILTER, NO_RIGHT_FILTER);
 }
 
 static void configureOnePlusOne(TriggerShape *s, operation_mode_e operationMode) {
@@ -369,7 +368,7 @@ static void configureOnePlus60_2(TriggerShape *s, operation_mode_e operationMode
 	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 20, NO_RIGHT_FILTER);
 
 	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 360, 360, NO_LEFT_FILTER,
-			NO_RIGHT_FILTER);
+	NO_RIGHT_FILTER);
 
 	s->isSynchronizationNeeded = false;
 }
@@ -514,10 +513,10 @@ static void onFindIndex(TriggerState *state) {
  *
  * This function finds the index of synchronization event within TriggerShape
  */
-uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape, trigger_config_s const*triggerConfig
-DECLARE_ENGINE_PARAMETER_S) {
+uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
+		trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-    efiAssert(getRemainingStack(chThdSelf()) > 128, "findPos", -1);
+	efiAssert(getRemainingStack(chThdSelf()) > 128, "findPos", -1);
 #endif
 	errorDetection.clear();
 	efiAssert(state != NULL, "NULL state", -1);
@@ -541,7 +540,7 @@ DECLARE_ENGINE_PARAMETER_S) {
 	 */
 	state->cycleCallback = onFindIndex;
 
-	helper.assertSyncPositionAndSetDutyCycle(index, state, shape,triggerConfig PASS_ENGINE_PARAMETER);
+	helper.assertSyncPositionAndSetDutyCycle(index, state, shape, triggerConfig PASS_ENGINE_PARAMETER);
 
 	return index % shape->getSize();
 }
@@ -552,7 +551,8 @@ void initTriggerDecoderLogger(Logging *sharedLogger) {
 
 void initTriggerDecoder(void) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
-	outputPinRegisterExt2("trg_err", &triggerDecoderErrorPin, boardConfiguration->triggerErrorPin, &boardConfiguration->triggerErrorPinMode);
+	outputPinRegisterExt2("trg_err", &triggerDecoderErrorPin, boardConfiguration->triggerErrorPin,
+			&boardConfiguration->triggerErrorPinMode);
 #endif
 }
 
