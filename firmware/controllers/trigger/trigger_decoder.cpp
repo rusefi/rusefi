@@ -38,6 +38,7 @@
 #include "engine.h"
 #include "engine_math.h"
 #include "trigger_central.h"
+#include "trigger_simulator.h"
 
 #if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 #include "sensor_chart.h"
@@ -47,9 +48,6 @@ static OutputPin triggerDecoderErrorPin;
 
 EXTERN_ENGINE
 ;
-
-// todo: better name for this constant
-#define HELPER_PERIOD 720000
 
 static cyclic_buffer<int> errorDetection;
 
@@ -503,64 +501,11 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 	calculateTriggerSynchPoint(&engine->triggerCentral.triggerState PASS_ENGINE_PARAMETER);
 }
 
-TriggerStimulatorHelper::TriggerStimulatorHelper() {
-}
-
-void TriggerStimulatorHelper::nextStep(TriggerState *state, TriggerShape * shape, int i,
-		trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S) {
-	int stateIndex = i % shape->getSize();
-	int prevIndex = (stateIndex + shape->getSize() - 1 ) % shape->getSize();
-
-
-	int loopIndex = i / shape->getSize();
-
-	int time = (int) (HELPER_PERIOD * (loopIndex + shape->wave.getSwitchTime(stateIndex)));
-
-	bool_t primaryWheelState = shape->wave.getChannelState(0, prevIndex);
-	bool_t newPrimaryWheelState = shape->wave.getChannelState(0, stateIndex);
-
-	bool_t secondaryWheelState = shape->wave.getChannelState(1, prevIndex);
-	bool_t newSecondaryWheelState = shape->wave.getChannelState(1, stateIndex);
-
-	bool_t thirdWheelState = shape->wave.getChannelState(2, prevIndex);
-	bool_t new3rdWheelState = shape->wave.getChannelState(2, stateIndex);
-
-	if (primaryWheelState != newPrimaryWheelState) {
-		primaryWheelState = newPrimaryWheelState;
-		trigger_event_e s = primaryWheelState ? SHAFT_PRIMARY_UP : SHAFT_PRIMARY_DOWN;
-		state->decodeTriggerEvent(s, time PASS_ENGINE_PARAMETER);
-	}
-
-	if (secondaryWheelState != newSecondaryWheelState) {
-		secondaryWheelState = newSecondaryWheelState;
-		trigger_event_e s = secondaryWheelState ? SHAFT_SECONDARY_UP : SHAFT_SECONDARY_DOWN;
-		state->decodeTriggerEvent(s, time PASS_ENGINE_PARAMETER);
-	}
-
-	if (thirdWheelState != new3rdWheelState) {
-		thirdWheelState = new3rdWheelState;
-		trigger_event_e s = thirdWheelState ? SHAFT_3RD_UP : SHAFT_3RD_DOWN;
-		state->decodeTriggerEvent(s, time PASS_ENGINE_PARAMETER);
-	}
-}
-
 static void onFindIndex(TriggerState *state) {
 	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 		// todo: that's not the best place for this intermediate data storage, fix it!
 		state->expectedTotalTime[i] = state->currentCycle.totalTimeNt[i];
 	}
-}
-
-static uint32_t doFindTrigger(TriggerStimulatorHelper *helper, TriggerShape * shape,
-		trigger_config_s const*triggerConfig, TriggerState *state DECLARE_ENGINE_PARAMETER_S) {
-	for (int i = 0; i < 4 * PWM_PHASE_MAX_COUNT; i++) {
-		helper->nextStep(state, shape, i, triggerConfig PASS_ENGINE_PARAMETER);
-
-		if (state->shaft_is_synchronized)
-			return i;
-	}
-	firmwareError("findTriggerZeroEventIndex() failed");
-	return EFI_ERROR_CODE;
 }
 
 /**
@@ -582,7 +527,7 @@ DECLARE_ENGINE_PARAMETER_S) {
 	// todo: should this variable be declared 'static' to reduce stack usage?
 	TriggerStimulatorHelper helper;
 
-	uint32_t index = doFindTrigger(&helper, shape, triggerConfig, state PASS_ENGINE_PARAMETER);
+	uint32_t index = helper.doFindTrigger(shape, triggerConfig, state PASS_ENGINE_PARAMETER);
 	if (index == EFI_ERROR_CODE) {
 		return index;
 	}
@@ -596,18 +541,7 @@ DECLARE_ENGINE_PARAMETER_S) {
 	 */
 	state->cycleCallback = onFindIndex;
 
-	int startIndex = engineConfiguration->useOnlyFrontForTrigger ? index + 2 : index + 1;
-
-	for (uint32_t i = startIndex; i <= index + 2 * shape->getSize(); i++) {
-		helper.nextStep(state, shape, i, triggerConfig PASS_ENGINE_PARAMETER);
-		if (engineConfiguration->useOnlyFrontForTrigger)
-			i++;
-	}
-	efiAssert(state->getTotalRevolutionCounter() == 3, "totalRevolutionCounter2 expected 3", EFI_ERROR_CODE);
-
-	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-		shape->dutyCycle[i] = 1.0 * state->expectedTotalTime[i] / HELPER_PERIOD;
-	}
+	helper.assertSyncPositionAndSetDutyCycle(index, state, shape,triggerConfig PASS_ENGINE_PARAMETER);
 
 	return index % shape->getSize();
 }
