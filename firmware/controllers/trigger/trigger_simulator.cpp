@@ -60,8 +60,6 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(uint32_t index, 
 
 	for (uint32_t i = startIndex; i <= index + 2 * shape->getSize(); i++) {
 		nextStep(state, shape, i, triggerConfig PASS_ENGINE_PARAMETER);
-		if (engineConfiguration->useOnlyFrontForTrigger)
-			i++;
 	}
 	// todo: nicer error handling?
 	efiAssertVoid(state->getTotalRevolutionCounter() == 3, "totalRevolutionCounter2 expected 3");
