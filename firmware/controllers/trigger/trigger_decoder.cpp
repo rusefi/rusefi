@@ -59,6 +59,8 @@ float actualSynchGap;
 static Logging * logger;
 
 efitick_t lastDecodingErrorTime = US2NT(-10000000LL);
+// the boolean flag is a performance optimization so that complex comparison is avoided if no error
+bool_t someSortOfTriggerError = false;
 
 /**
  * @return TRUE is something is wrong with trigger decoding
@@ -201,16 +203,16 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			;
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-			if (engineConfiguration->isPrintTriggerSynchDetails) {
+			if (engineConfiguration->isPrintTriggerSynchDetails || someSortOfTriggerError) {
 #else
 				if (printTriggerDebug) {
 #endif /* EFI_PROD_CODE */
 				float gap = 1.0 * currentDuration / toothed_previous_duration;
+				float prevGap = 1.0 * toothed_previous_duration / durationBeforePrevious;
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-				scheduleMsg(logger, "gap=%f @ %d", gap, currentCycle.current_index);
+				scheduleMsg(logger, "gap=%f/%f @ %d while expected %f/%f and %f/%f", gap, prevGap, currentCycle.current_index, TRIGGER_SHAPE(syncRatioFrom), TRIGGER_SHAPE(syncRatioTo), TRIGGER_SHAPE(secondSyncRatioFrom), TRIGGER_SHAPE(secondSyncRatioTo));
 #else
 				actualSynchGap = gap;
-				float prevGap = 1.0 * toothed_previous_duration / durationBeforePrevious;
 				print("current gap %f/%f c=%d prev=%d\r\n", gap, prevGap, currentDuration, toothed_previous_duration);
 #endif /* EFI_PROD_CODE */
 			}
@@ -245,8 +247,10 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			triggerDecoderErrorPin.setValue(isDecodingError);
 			if (isDecodingError) {
 				lastDecodingErrorTime = getTimeNowNt();
+				someSortOfTriggerError = true;
+
 				totalTriggerErrorCounter++;
-				if (engineConfiguration->isPrintTriggerSynchDetails) {
+				if (engineConfiguration->isPrintTriggerSynchDetails || someSortOfTriggerError) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 					scheduleMsg(logger, "error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d",
 							currentCycle.current_index, TRIGGER_SHAPE(expectedEventCount[0]),
@@ -282,6 +286,13 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	}
 	if (!isValidIndex(PASS_ENGINE_PARAMETER_F)) {
 		warning(OBD_PCM_Processor_Fault, "unexpected eventIndex=%d while size %d", currentCycle.current_index, TRIGGER_SHAPE(size));
+		lastDecodingErrorTime = getTimeNowNt();
+		someSortOfTriggerError = true;
+	}
+	if (someSortOfTriggerError) {
+		if (getTimeNowNt() - lastDecodingErrorTime > US2NT(US_PER_SECOND_LL)) {
+			someSortOfTriggerError = false;
+		}
 	}
 
 	if (boardConfiguration->sensorChartMode == SC_RPM_ACCEL || boardConfiguration->sensorChartMode == SC_DETAILED_RPM) {

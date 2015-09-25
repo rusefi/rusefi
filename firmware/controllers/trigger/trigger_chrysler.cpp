@@ -35,8 +35,8 @@ void configureNeon2003TriggerShape(TriggerShape *s) {
 	s->tdcPosition = 496;
 
 	// are these non-default values really needed here now that the gap is finally precise?
-	s->setTriggerSynchronizationGap(1);
-	s->setSecondTriggerSynchronizationGap(1);
+	s->setTriggerSynchronizationGap2(0.75, 1.40);
+	s->setSecondTriggerSynchronizationGap2(0.7, 1.25);
 
 	float EPS_ANGLE = 0.3;
 
