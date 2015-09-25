@@ -179,7 +179,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 	}
 
 	if (triggerState.currentCycle.current_index >= TRIGGER_SHAPE(size)) {
-		warning(OBD_PCM_Processor_Fault, "unexpected eventIndex=%d", triggerState.currentCycle.current_index);
+		warning(OBD_PCM_Processor_Fault, "unexpected eventIndex=%d while size %d", triggerState.currentCycle.current_index, TRIGGER_SHAPE(size));
 	} else {
 
 		/**

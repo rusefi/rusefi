@@ -2484,6 +2484,12 @@
         <name>$PROJ_DIR$\..\controllers\trigger\trigger_nissan.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\controllers\trigger\trigger_simulator.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\trigger\trigger_simulator.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\controllers\trigger\trigger_structure.cpp</name>
       </file>
       <file>
