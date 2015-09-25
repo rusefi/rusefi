@@ -496,21 +496,14 @@ void testTriggerDecoder(void) {
 
 		EngineTestHelper eth(DODGE_NEON_2003);
 		EXPAND_EngineTestHelper;
-//
-//		printf("!!!!!!!!!!!!!!!!!! Now trying with only front events !!!!!!!!!!!!!!!!!\r\n");
-//
-//		engineConfiguration->useOnlyFrontForTrigger = true;
-//
-//		applyNonPersistentConfiguration(NULL PASS_ENGINE_PARAMETER);
-//		prepareShapes(PASS_ENGINE_PARAMETER_F);
-//
-//		initSpeedDensity(PASS_ENGINE_PARAMETER_F);
-//
-//		TriggerShape *t = &eth.engine.triggerShape;
 
+		printf("!!!!!!!!!!!!!!!!!! Now trying with only front events !!!!!!!!!!!!!!!!!\r\n");
+		engineConfiguration->useOnlyFrontForTrigger = true;
+
+		applyNonPersistentConfiguration(NULL PASS_ENGINE_PARAMETER);
+		prepareShapes(PASS_ENGINE_PARAMETER_F);
 
 		printTriggerDebug = false;
-
 	}
 
 	testTriggerDecoder2("sachs", SACHS, 0, 0.4800, 0.000);
