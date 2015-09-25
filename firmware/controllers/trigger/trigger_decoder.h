@@ -53,6 +53,7 @@ public:
 	efitime_t getStartOfRevolutionIndex();
 	void decodeTriggerEvent(trigger_event_e const signal, efitime_t nowUs DECLARE_ENGINE_PARAMETER_S);
 
+	bool_t isValidIndex(DECLARE_ENGINE_PARAMETER_F);
 	float getTriggerDutyCycle(int index);
 	TriggerStateCallback cycleCallback;
 
