@@ -67,6 +67,10 @@ bool_t isTriggerDecoderError(void) {
 	return errorDetection.sum(6) > 4;
 }
 
+bool_t TriggerState::isValidIndex(DECLARE_ENGINE_PARAMETER_F) {
+	return currentCycle.current_index < TRIGGER_SHAPE(size);
+}
+
 float TriggerState::getTriggerDutyCycle(int index) {
 	float time = prevTotalTime[index];
 
@@ -276,6 +280,10 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		toothed_previous_duration = currentDuration;
 		toothed_previous_time = nowNt;
 	}
+	if (!isValidIndex(PASS_ENGINE_PARAMETER_F)) {
+		warning(OBD_PCM_Processor_Fault, "unexpected eventIndex=%d while size %d", currentCycle.current_index, TRIGGER_SHAPE(size));
+	}
+
 	if (boardConfiguration->sensorChartMode == SC_RPM_ACCEL || boardConfiguration->sensorChartMode == SC_DETAILED_RPM) {
 		angle_t currentAngle = TRIGGER_SHAPE(eventAngles[currentCycle.current_index]);
 		// todo: make this '90' depend on cylinder count?
