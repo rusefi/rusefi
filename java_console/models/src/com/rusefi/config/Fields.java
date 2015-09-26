@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar Tue Sep 15 20:29:15 EDT 2015
+// this file was generated automatically by ConfigDefinition.jar Sat Sep 26 08:19:27 EDT 2015
 public class Fields {
 	public static final Field ENGINETYPE = new Field("ENGINETYPE", 0, FieldType.INT);
 	public static final Field HEADERMAGICVALUE = new Field("HEADERMAGICVALUE", 4, FieldType.INT);
