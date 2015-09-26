@@ -224,8 +224,14 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 
 /**
  * @brief	Global default engine configuration
- * This method sets the default global engine configuration. These values are later overridden by engine-specific defaults
- * and the settings saves in flash memory.
+ * This method sets the global engine configuration defaults. These default values are then
+ * overridden by engine-specific defaults and the settings are saved in flash memory.
+ *
+ * This method is invoked only when new configuration is needed:
+ *  * recently re-flashed chip
+ *  * flash version of configuration failed CRC check or appears to be older then FLASH_DATA_VERSION
+ *  * 'rewriteconfig' command
+ *  * 'set_engine_type X' command
  */
 void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 #if (! EFI_UNIT_TEST) || defined(__DOXYGEN__)
