@@ -68,6 +68,8 @@ public class SettingsTab {
 
         panel.add(UiUtils.wrap(new ConfigField(Fields.ADDEDTOWALLCOEF, "Added to wall").getContent()));
         panel.add(UiUtils.wrap(new ConfigField(Fields.SUCKEDOFFCOEF, "Sucked off wall").getContent()));
+//        panel.add(UiUtils.wrap(new ConfigField(Fields.TPSACCELENRICHMENTTHRESHOLD, "TPS accel threshold").getContent()));
+        panel.add(UiUtils.wrap(new ConfigField(Fields.TPSACCELENRICHMENTMULTIPLIER, "TPS accel coef").getContent()));
 
         panel.add(UiUtils.wrap(RecentCommands.createButton(new AtomicBoolean(), "writeconfig")));
 
