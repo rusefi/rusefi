@@ -103,7 +103,7 @@ static void endSimultaniousInjection(Engine *engine) {
 
 extern WallFuel wallFuel;
 
-static ALWAYS_INLINE void handleFuelInjectionEvent(InjectionEvent *event, int rpm DECLARE_ENGINE_PARAMETER_S) {
+static ALWAYS_INLINE void handleFuelInjectionEvent(bool_t limitedFuel, InjectionEvent *event, int rpm DECLARE_ENGINE_PARAMETER_S) {
 	/**
 	 * todo: this is a bit tricky with batched injection. is it? Does the same
 	 * wetting coefficient works the same way for any injection mode, or is something
@@ -146,15 +146,19 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(InjectionEvent *event, int rp
 		scheduling_s * sUp = &signal->signalTimerUp[index];
 		scheduling_s * sDown = &signal->signalTimerDown[index];
 
-		scheduleTask("out up", sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, engine);
-		scheduleTask("out down", sDown, (int) injectionStartDelayUs + MS2US(injectionDuration), (schfunc_t) &endSimultaniousInjection, engine);
+		if (!limitedFuel) {
+			scheduleTask("out up", sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, engine);
+			scheduleTask("out down", sDown, (int) injectionStartDelayUs + MS2US(injectionDuration), (schfunc_t) &endSimultaniousInjection, engine);
+		}
 
 	} else {
-		scheduleOutput(&event->actuator, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration));
+		if (!limitedFuel) {
+			scheduleOutput(&event->actuator, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration));
+		}
 	}
 }
 
-static ALWAYS_INLINE void handleFuel(uint32_t eventIndex, int rpm DECLARE_ENGINE_PARAMETER_S) {
+static ALWAYS_INLINE void handleFuel(bool_t limitedFuel, uint32_t eventIndex, int rpm DECLARE_ENGINE_PARAMETER_S) {
 	if (!isInjectionEnabled(engine->engineConfiguration))
 		return;
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#3");
@@ -182,11 +186,11 @@ static ALWAYS_INLINE void handleFuel(uint32_t eventIndex, int rpm DECLARE_ENGINE
 		InjectionEvent *event = &source->elements[i];
 		if (event->injectionStart.eventIndex != eventIndex)
 			continue;
-		handleFuelInjectionEvent(event, rpm PASS_ENGINE_PARAMETER);
+		handleFuelInjectionEvent(limitedFuel, event, rpm PASS_ENGINE_PARAMETER);
 	}
 }
 
-static ALWAYS_INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *iEvent,
+static ALWAYS_INLINE void handleSparkEvent(bool_t limitedSpark, uint32_t eventIndex, IgnitionEvent *iEvent,
 		int rpm DECLARE_ENGINE_PARAMETER_S) {
 
 	float dwellMs = engine->engineState.sparkDwell;
@@ -221,7 +225,14 @@ static ALWAYS_INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *i
 	/**
 	 * The start of charge is always within the current trigger event range, so just plain time-based scheduling
 	 */
-	scheduleTask("spark up", sUp, chargeDelayUs, (schfunc_t) &turnPinHigh, iEvent->output);
+	if (!limitedSpark) {
+		/**
+		 * Note how we do not check if spark is limited or not while scheduling 'spark down'
+		 * This way we make sure that coil dwell started while spark was enabled would fire and not burn
+		 * the coil.
+		 */
+		scheduleTask("spark up", sUp, chargeDelayUs, (schfunc_t) &turnPinHigh, iEvent->output);
+	}
 	/**
 	 * Spark event is often happening during a later trigger event timeframe
 	 * TODO: improve precision
@@ -235,7 +246,7 @@ static ALWAYS_INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *i
 		 */
 		float timeTillIgnitionUs = engine->rpmCalculator.oneDegreeUs * iEvent->sparkPosition.angleOffset;
 
-		scheduleTask("spark 1down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnPinLow, iEvent->output);
+		scheduleTask("spark1 down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnPinLow, iEvent->output);
 	} else {
 		/**
 		 * Spark should be scheduled in relation to some future trigger event, this way we get better firing precision
@@ -248,7 +259,7 @@ static ALWAYS_INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *i
 	}
 }
 
-static ALWAYS_INLINE void handleSpark(uint32_t eventIndex, int rpm,
+static ALWAYS_INLINE void handleSpark(bool_t limitedSpark, uint32_t eventIndex, int rpm,
 		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
 	if (!isValidRpm(rpm) || !engineConfiguration->isIgnitionEnabled)
 		return; // this might happen for instance in case of a single trigger event after a pause
@@ -278,7 +289,7 @@ static ALWAYS_INLINE void handleSpark(uint32_t eventIndex, int rpm,
 		IgnitionEvent *event = &list->elements[i];
 		if (event->dwellPosition.eventIndex != eventIndex)
 			continue;
-		handleSparkEvent(eventIndex, event, rpm PASS_ENGINE_PARAMETER);
+		handleSparkEvent(limitedSpark, eventIndex, event, rpm PASS_ENGINE_PARAMETER);
 	}
 }
 
@@ -374,7 +385,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	if (hasFirmwareError()) {
 		/**
 		 * In case on a major error we should not process any more events.
-		 * TODO: add 'pin shutdown' invocation somewhere
+		 * TODO: add 'pin shutdown' invocation somewhere - coils might be still open here!
 		 */
 		return;
 	}
@@ -387,15 +398,18 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	if (rpm == 0) {
 		// this happens while we just start cranking
 		// todo: check for 'trigger->is_synchnonized?'
+		// TODO: add 'pin shutdown' invocation somewhere - coils might be still open here!
 		return;
 	}
 	if (rpm == NOISY_RPM) {
 		warning(OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, "noisy trigger");
+		// TODO: add 'pin shutdown' invocation somewhere - coils might be still open here!
 		return;
 	}
-	if (rpm > engineConfiguration->rpmHardLimit) {
+	bool_t limitedSpark = rpm > engineConfiguration->rpmHardLimit;
+	bool_t limitedFuel = rpm > engineConfiguration->rpmHardLimit;
+	if (limitedSpark || limitedFuel) {
 		warning(OBD_PCM_Processor_Fault, "skipping stroke due to rpm=%d", rpm);
-		return;
 	}
 
 #if (EFI_HISTOGRAMS && EFI_PROD_CODE) || defined(__DOXYGEN__)
@@ -434,11 +448,11 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	 * For fuel we schedule start of injection based on trigger angle, and then inject for
 	 * specified duration of time
 	 */
-	handleFuel(eventIndex, rpm PASS_ENGINE_PARAMETER);
+	handleFuel(limitedFuel, eventIndex, rpm PASS_ENGINE_PARAMETER);
 	/**
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
 	 */
-	handleSpark(eventIndex, rpm, &engine->engineConfiguration2->ignitionEvents[revolutionIndex] PASS_ENGINE_PARAMETER);
+	handleSpark(limitedSpark, eventIndex, rpm, &engine->engineConfiguration2->ignitionEvents[revolutionIndex] PASS_ENGINE_PARAMETER);
 #if (EFI_HISTOGRAMS && EFI_PROD_CODE) || defined(__DOXYGEN__)
 	int diff = hal_lld_get_counter_value() - beforeCallback;
 	if (diff > 0)
