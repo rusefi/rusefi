@@ -567,6 +567,8 @@
 #define hasTpsSensor_offset 1496
 #define cutFuelOnHardLimit_offset 1496
 #define cutSparkOnHardLimit_offset 1496
+#define step1fuelCutEnable_offset 1496
+#define step1SparkCutEnable_offset 1496
 #define hasFrequencyReportingMapSensor_offset 1496
 #define hipOutputChannel_offset 1500
 #define idleMode_offset 1504
@@ -666,8 +668,10 @@
 #define mapErrorLowValue_offset 1896
 #define mapErrorLowValue_offset_hex 768
 #define mapErrorHighValue_offset 1900
-#define unused3_offset 1904
-#define unused3_offset_hex 770
+#define step1RpmWindow_offset 1904
+#define step1RpmWindow_offset_hex 770
+#define unused3_offset 1908
+#define unused3_offset_hex 774
 #define targetVBatt_offset 2156
 #define alternatorOffAboveTps_offset 2160
 #define alternatorOffAboveTps_offset_hex 870
