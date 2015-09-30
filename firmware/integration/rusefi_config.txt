@@ -161,8 +161,8 @@ MAP_sensor_config_s map;@see hasMapSensor\n@see isMapAveragingEnabled
 ThermistorConf clt;todo: merge with channel settings, use full-scale Thermistor here!
 ThermistorConf iat;
 	
-	int step1rpm;
-	int step1timing;
+	int step1rpm;;"rpm",    1,      0,       0, 20000.0,        2
+	int step1timing;;"deg",    1,      0,       -180, 180,        2
 	int hip9011PrescalerAndSDO;;"integer", 1, 0.0, 0.0, 32, 0
 	float knockBandCustom;kHz knock band override;"kHz", 1, 0.0, 0.0, 10.0, 2
 
@@ -501,6 +501,8 @@ bit hasMapSensor;@see isMapAveragingEnabled
 	bit hasTpsSensor
 bit cutFuelOnHardLimit
 bit cutSparkOnHardLimit
+bit step1fuelCutEnable
+bit step1SparkCutEnable
 bit hasFrequencyReportingMapSensor;
 	adc_channel_e hipOutputChannel;
 
@@ -581,7 +583,8 @@ baro_corr_table_t baroCorrTable;
 	float[7] unused72;
 	float mapErrorLowValue;kPa value which is too low to be true;"kPa",        1,     0,    -100.0,    100.0,  2
 	float mapErrorHighValue;kPa value which is too high to be true;"kPa",        1,     0,    -100.0,    800.0,  2
-	int[63] unused3;
+	int step1RpmWindow;;"rpm",    1,      0,       0, 3000.0,        2
+	int[62] unused3;
 	
 	float targetVBatt;;"Volts",      1,      0,       0,30,      1
 	float alternatorOffAboveTps;Turn off alternator output above specified TPS;"%",  1,      0,       0, 200,      2

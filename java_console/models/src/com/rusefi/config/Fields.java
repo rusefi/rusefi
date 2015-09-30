@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar Sat Sep 26 08:19:27 EDT 2015
+// this file was generated automatically by ConfigDefinition.jar Tue Sep 29 21:15:38 EDT 2015
 public class Fields {
 	public static final Field ENGINETYPE = new Field("ENGINETYPE", 0, FieldType.INT);
 	public static final Field HEADERMAGICVALUE = new Field("HEADERMAGICVALUE", 4, FieldType.INT);
@@ -362,7 +362,9 @@ public class Fields {
 	public static final Field HASTPSSENSOR = new Field("HASTPSSENSOR", 1496, FieldType.BIT, 15);
 	public static final Field CUTFUELONHARDLIMIT = new Field("CUTFUELONHARDLIMIT", 1496, FieldType.BIT, 16);
 	public static final Field CUTSPARKONHARDLIMIT = new Field("CUTSPARKONHARDLIMIT", 1496, FieldType.BIT, 17);
-	public static final Field HASFREQUENCYREPORTINGMAPSENSOR = new Field("HASFREQUENCYREPORTINGMAPSENSOR", 1496, FieldType.BIT, 18);
+	public static final Field STEP1FUELCUTENABLE = new Field("STEP1FUELCUTENABLE", 1496, FieldType.BIT, 18);
+	public static final Field STEP1SPARKCUTENABLE = new Field("STEP1SPARKCUTENABLE", 1496, FieldType.BIT, 19);
+	public static final Field HASFREQUENCYREPORTINGMAPSENSOR = new Field("HASFREQUENCYREPORTINGMAPSENSOR", 1496, FieldType.BIT, 20);
 	public static final Field HIPOUTPUTCHANNEL = new Field("HIPOUTPUTCHANNEL", 1500, FieldType.INT, adc_channel_e);
 	public static final Field IDLEMODE = new Field("IDLEMODE", 1504, FieldType.INT);
 	public static final Field ISINJECTIONENABLED = new Field("ISINJECTIONENABLED", 1508, FieldType.BIT, 0);
@@ -424,6 +426,7 @@ public class Fields {
 	public static final Field ADDEDTOWALLCOEF = new Field("ADDEDTOWALLCOEF", 1864, FieldType.FLOAT);
 	public static final Field MAPERRORLOWVALUE = new Field("MAPERRORLOWVALUE", 1896, FieldType.FLOAT);
 	public static final Field MAPERRORHIGHVALUE = new Field("MAPERRORHIGHVALUE", 1900, FieldType.FLOAT);
+	public static final Field STEP1RPMWINDOW = new Field("STEP1RPMWINDOW", 1904, FieldType.INT);
 	public static final Field TARGETVBATT = new Field("TARGETVBATT", 2156, FieldType.FLOAT);
 	public static final Field ALTERNATOROFFABOVETPS = new Field("ALTERNATOROFFABOVETPS", 2160, FieldType.FLOAT);
 	public static final Field ALTERNATORDT = new Field("ALTERNATORDT", 2164, FieldType.INT);
