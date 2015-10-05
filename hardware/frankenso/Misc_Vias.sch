@@ -51,6 +51,7 @@ LIBS:itead_hc-0X_bluetooth
 LIBS:joystick_SKRHAAE010
 LIBS:STM32F407IGT6
 LIBS:slc_oem
+LIBS:mos_n_numbered-pins
 LIBS:frankenso-cache
 EELAYER 27 0
 EELAYER END
@@ -58,7 +59,7 @@ $Descr B 17000 11000
 encoding utf-8
 Sheet 15 15
 Title "Frankenso"
-Date "13 jul 2015"
+Date "1 oct 2015"
 Rev ".05"
 Comp "rusEFI.com"
 Comment1 ""

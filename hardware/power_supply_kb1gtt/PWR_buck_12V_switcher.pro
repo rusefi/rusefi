@@ -1,4 +1,4 @@
-update=6/15/2014 5:40:55 AM
+update=10/4/2015 7:41:00 PM
 last_client=eeschema
 [common]
 NetDir=
@@ -32,13 +32,14 @@ DrawSegmentWidth=0.254000000000
 BoardOutlineThickness=0.254000000000
 ModuleOutlineThickness=0.099060000000
 [pcbnew/libraries]
-LibDir=
+LibDir=../rusefi_lib
 LibName1=connect
 LibName2=discret
 LibName3=pin_array
 LibName4=divers
 LibName5=libcms
 LibName6=display
+LibName7=d2pak_TO263AB
 [eeschema]
 version=1
 LibDir=../rusefi_lib
@@ -74,3 +75,4 @@ LibName23=siliconi
 LibName24=contrib
 LibName25=lm2596
 LibName26=mos_p_numbered-pins
+LibName27=mos_n_numbered-pins

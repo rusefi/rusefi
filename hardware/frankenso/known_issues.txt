@@ -67,7 +67,7 @@
 66)                   JP04 & JP05 are defined on the main schematics sheet. It would be better to define then on Page 8 with the rest of cam/crank stuff
 67) RESOLVED IN R0.4  Updated silk screen notes, draws .12 amps normal, with a typical inrush of .3A. 
 68) RESOLVED IN R0.4  Look into LCD dimming R99, perhaps replace with a POT. Perhaps connect to a GPIO
-69)                   Change F1 to a wire wound resistor which will also be the weak link and act like a fuse before the PCB breaks, while also snubbing RF
+69) RESOLVED IN R0.5 Clamp input voltage, as of R0.4 a surge will likely blow an upstream fuse. FIXED, ADDED Q1003 AND FRIENDS
 70) RESOLVED IN R0.4  Some USB connectors are wider and hit the PCB making it hard to insert. MOVED PCB EDGE TO BE CLOSER TO USB CONNECTOR.
 71) RESOLVED IN R0.4  TI TPIC8101 part number instead of HIP9011
 72) RESOLVED IN R0.4  more holes for proto
@@ -100,8 +100,9 @@
 99)                   Swap brain board for 176 pin brain board. 
 100) RESOLVED IN R0.5 update TPIC chip for 39k's, 3.3nF, and DNP 1M. 
 101)                  connector middle mounting holes - need a 5.5mm diameter area for screw head on the back
-102) RESOLVED IN R0.5 TPIC/HIP knock SPI was not working properly, R171 changed to 5k and R172 to R174 removed to correct the SPI bus. 
+102) RESOLVED IN R0.5 TPIC/HIP knock SPI was not working properly, R170 changed to 5k and R172 to R174 removed to correct the SPI bus. 
 103)		      button silkscreen notch is barely visible
+
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol

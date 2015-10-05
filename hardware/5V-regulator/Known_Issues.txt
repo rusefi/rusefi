@@ -1,0 +1,2 @@
+1)  Add polarity indicator silk screen to D1001
+2)  Add reverse diode D1 noted http://datasheet.octopart.com/LM317MDTG-ON-Semiconductor-datasheet-512589.pdf
