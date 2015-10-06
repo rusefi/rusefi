@@ -324,6 +324,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->step1RpmWindow = 500;
 	engineConfiguration->step1fuelCutEnable = false;
 	engineConfiguration->step1SparkCutEnable = false;
+	engineConfiguration->step1RpmWindow = 500;
 
 	engineConfiguration->rpmHardLimit = 7000;
 	engineConfiguration->cranking.rpm = 550;
