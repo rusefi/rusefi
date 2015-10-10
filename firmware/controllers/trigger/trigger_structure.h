@@ -124,6 +124,7 @@ public:
 	 */
 	int size;
 
+	void addEvent2(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const state DECLARE_ENGINE_PARAMETER_S);
 	void addEvent(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const state);
 	void addEvent(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam, float filterLeft, float filterRight);
 	operation_mode_e getOperationMode();

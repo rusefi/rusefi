@@ -251,6 +251,10 @@ operation_mode_e TriggerShape::getOperationMode() {
 extern bool printTriggerDebug;
 #endif
 
+void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam DECLARE_ENGINE_PARAMETER_S) {
+	addEvent(angle, waveIndex, stateParam);
+}
+
 void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam) {
 	efiAssertVoid(operationMode != OM_NONE, "operationMode not set");
 
