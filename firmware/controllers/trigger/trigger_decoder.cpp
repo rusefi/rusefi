@@ -414,23 +414,23 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_MAZDA_MIATA_NA:
-		initializeMazdaMiataNaShape(triggerShape);
+		initializeMazdaMiataNaShape(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_MAZDA_MIATA_NB:
-		initializeMazdaMiataNbShape(triggerShape);
+		initializeMazdaMiataNbShape(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_DODGE_NEON_1995:
-		configureNeon1995TriggerShape(triggerShape);
+		configureNeon1995TriggerShape(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_DODGE_STRATUS:
-		configureDodgeStratusTriggerShape(triggerShape);
+		configureDodgeStratusTriggerShape(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_DODGE_NEON_2003:
-		configureNeon2003TriggerShape(triggerShape);
+		configureNeon2003TriggerShape(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_FORD_ASPIRE:
@@ -443,7 +443,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_MAZDA_DOHC_1_4:
-		configureMazdaProtegeLx(triggerShape);
+		configureMazdaProtegeLx(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_ONE_PLUS_ONE:
@@ -459,7 +459,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_MAZDA_SOHC_4:
-		configureMazdaProtegeSOHC(triggerShape);
+		configureMazdaProtegeSOHC(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_MINI_COOPER_R50:
@@ -499,7 +499,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_DODGE_RAM:
-		initDodgeRam(triggerShape);
+		initDodgeRam(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_36_2_2_2:

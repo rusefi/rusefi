@@ -20,7 +20,7 @@
 
 #include "trigger_mazda.h"
 
-void initializeMazdaMiataNaShape(TriggerShape *s) {
+void initializeMazdaMiataNaShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->reset(FOUR_STROKE_CAM_SENSOR, true);
 	s->setTriggerSynchronizationGap(MIATA_NA_GAP);
 	s->useRiseEdge = false;
@@ -47,7 +47,7 @@ void initializeMazdaMiataNaShape(TriggerShape *s) {
 	s->addEvent(720.0f, T_PRIMARY, TV_LOW);
 }
 
-void initializeMazdaMiataNbShape(TriggerShape *s) {
+void initializeMazdaMiataNbShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->setTriggerSynchronizationGap(0.11f);
 	s->useRiseEdge = false;
 
@@ -86,7 +86,7 @@ void initializeMazdaMiataNbShape(TriggerShape *s) {
 	s->addEvent(720.0f, T_PRIMARY, TV_LOW);
 }
 
-void configureMazdaProtegeSOHC(TriggerShape *s) {
+void configureMazdaProtegeSOHC(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 
 	// todo: move to into configuration definition s->needSecondTriggerInput = FALSE;
 
@@ -114,28 +114,28 @@ void configureMazdaProtegeSOHC(TriggerShape *s) {
 	s->isSynchronizationNeeded = false;
 }
 
-void configureMazdaProtegeLx(TriggerShape *s) {
+void configureMazdaProtegeLx(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	// todo: move to into configuration definition s->needSecondTriggerInput = FALSE;
 	s->reset(FOUR_STROKE_CAM_SENSOR, true);
 
 	/**
 	 * based on https://svn.code.sf.net/p/rusefi/code/trunk/misc/logs/1993_escort_gt/MAIN_rfi_report_2015-02-01%2017_39.csv
 	 */
-	s->addEvent(95.329254, T_PRIMARY, TV_HIGH);
+	s->addEvent2(95.329254, T_PRIMARY, TV_HIGH PASS_ENGINE_PARAMETER);
 
-	s->addEvent(95.329254 + 14.876692, T_SECONDARY, TV_HIGH);
-	s->addEvent(95.329254 + 82.693557, T_SECONDARY, TV_LOW);
+	s->addEvent2(95.329254 + 14.876692, T_SECONDARY, TV_HIGH PASS_ENGINE_PARAMETER);
+	s->addEvent2(95.329254 + 82.693557, T_SECONDARY, TV_LOW PASS_ENGINE_PARAMETER);
 
-	s->addEvent(95.329254 + 137.119154, T_PRIMARY, TV_LOW);
+	s->addEvent2(95.329254 + 137.119154, T_PRIMARY, TV_LOW PASS_ENGINE_PARAMETER);
 
-	s->addEvent(95.329254 + 192.378308, T_SECONDARY, TV_HIGH);
-	s->addEvent(95.329254 + 261.556418, T_SECONDARY, TV_LOW);
+	s->addEvent2(95.329254 + 192.378308, T_SECONDARY, TV_HIGH PASS_ENGINE_PARAMETER);
+	s->addEvent2(95.329254 + 261.556418, T_SECONDARY, TV_LOW PASS_ENGINE_PARAMETER);
 
-	s->addEvent(95.329254 + 373.060597, T_SECONDARY, TV_HIGH);
-	s->addEvent(95.329254 + 443.503184, T_SECONDARY, TV_LOW);
+	s->addEvent2(95.329254 + 373.060597, T_SECONDARY, TV_HIGH PASS_ENGINE_PARAMETER);
+	s->addEvent2(95.329254 + 443.503184, T_SECONDARY, TV_LOW PASS_ENGINE_PARAMETER);
 
-	s->addEvent(95.329254 + 555.349776, T_SECONDARY, TV_HIGH);
-	s->addEvent(720, T_SECONDARY, TV_LOW);
+	s->addEvent2(95.329254 + 555.349776, T_SECONDARY, TV_HIGH PASS_ENGINE_PARAMETER);
+	s->addEvent2(720, T_SECONDARY, TV_LOW PASS_ENGINE_PARAMETER);
 
 	s->tdcPosition = 137.119154;
 	s->isSynchronizationNeeded = false;

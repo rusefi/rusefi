@@ -13,9 +13,9 @@
 
 #define MIATA_NA_GAP 1.4930f
 
-void initializeMazdaMiataNaShape(TriggerShape *s);
-void initializeMazdaMiataNbShape(TriggerShape *s);
-void configureMazdaProtegeSOHC(TriggerShape *s);
-void configureMazdaProtegeLx(TriggerShape *s);
+void initializeMazdaMiataNaShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S);
+void initializeMazdaMiataNbShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S);
+void configureMazdaProtegeSOHC(TriggerShape *s DECLARE_ENGINE_PARAMETER_S);
+void configureMazdaProtegeLx(TriggerShape *s DECLARE_ENGINE_PARAMETER_S);
 
 #endif /* TRIGGER_MAZDA_H_ */

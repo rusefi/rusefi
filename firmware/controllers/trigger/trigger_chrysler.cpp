@@ -8,7 +8,7 @@
 #include "trigger_chrysler.h"
 #include "trigger_decoder.h"
 
-void initDodgeRam(TriggerShape *s) {
+void initDodgeRam(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 
 	s->reset(FOUR_STROKE_CAM_SENSOR, true);
 	s->useRiseEdge = true;
@@ -25,7 +25,7 @@ void initDodgeRam(TriggerShape *s) {
 	s->addEvent(720, T_PRIMARY, TV_LOW);
 }
 
-void configureNeon2003TriggerShape(TriggerShape *s) {
+void configureNeon2003TriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	bool_t useOnlyPrimary = false;
 
 	s->reset(FOUR_STROKE_CAM_SENSOR, !useOnlyPrimary);
@@ -236,7 +236,7 @@ void configureNeon2003TriggerShape(TriggerShape *s) {
 	}
 }
 
-void configureDodgeStratusTriggerShape(TriggerShape *s) {
+void configureDodgeStratusTriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->reset(FOUR_STROKE_CAM_SENSOR, false);
 	s->isSynchronizationNeeded = true;
 
@@ -302,7 +302,7 @@ void configureDodgeStratusTriggerShape(TriggerShape *s) {
 	s->addEvent(angle + w, T_PRIMARY, TV_LOW);
 }
 
-void configureNeon1995TriggerShape(TriggerShape *s) {
+void configureNeon1995TriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->reset(FOUR_STROKE_CAM_SENSOR, true);
 
 	s->setTriggerSynchronizationGap(0.72);
