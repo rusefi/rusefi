@@ -59,7 +59,7 @@ $Descr B 17000 11000
 encoding utf-8
 Sheet 1 15
 Title "Frankenso"
-Date "1 oct 2015"
+Date "13 oct 2015"
 Rev ".05"
 Comp "rusEFI.com"
 Comment1 ""
