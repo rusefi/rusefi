@@ -63,6 +63,7 @@
 #include "vw.h"
 #include "dodge_stratus.h"
 #include "daihatsu.h"
+#include "chevrolet_camaro_4.h"
 
 EXTERN_ENGINE;
 
@@ -750,6 +751,9 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		break;
 	case DAIHATSU:
 		setDaihatsu(PASS_ENGINE_PARAMETER_F);
+		break;
+	case CAMARO_4:
+		setCamaro4(PASS_ENGINE_PARAMETER_F);
 		break;
 
 	default:
