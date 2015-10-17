@@ -107,7 +107,9 @@ typedef enum {
 
 	CAMARO_4 = 35,
 
-	ET_UNUSED = 36,
+	SUZUKI_VITARA = 36,
+
+	ET_UNUSED = 37,
 
 	Force_4b_engine_type = ENUM_32_BITS,
 } engine_type_e;

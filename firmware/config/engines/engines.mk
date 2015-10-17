@@ -30,5 +30,6 @@ ENGINES_SRC_CPP = $(PROJECT_DIR)/config/engines/ford_aspire.cpp \
 	$(PROJECT_DIR)/config/engines/vw.cpp \
 	$(PROJECT_DIR)/config/engines/dodge_stratus.cpp \
 	$(PROJECT_DIR)/config/engines/chevrolet_camaro_4.cpp \
+	$(PROJECT_DIR)/config/engines/suzuki_vitara.cpp \
 	$(PROJECT_DIR)/config/engines/daihatsu.cpp
 	

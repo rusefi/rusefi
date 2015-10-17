@@ -30,6 +30,8 @@ case SACHS:
   return "SACHS";
 case DAIHATSU:
 	return "DAIHATSU";
+case SUZUKI_VITARA:
+	return "SUZUKI_VITARA";
 case CAMARO_4:
 	return "CAMARO_4";
 case GM_2_2:

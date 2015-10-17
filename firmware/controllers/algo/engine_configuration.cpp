@@ -64,6 +64,7 @@
 #include "dodge_stratus.h"
 #include "daihatsu.h"
 #include "chevrolet_camaro_4.h"
+#include "suzuki_vitara.h"
 
 EXTERN_ENGINE;
 
@@ -702,6 +703,9 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		break;
 	case SATURN_ION_2004:
 		setSaturnIonEngineConfiguration(engineConfiguration);
+		break;
+	case SUZUKI_VITARA:
+		setSuzukiVitara(PASS_ENGINE_PARAMETER_F);
 		break;
 	case MINI_COOPER_R50:
 		setMiniCooperR50(engineConfiguration);
