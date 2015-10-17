@@ -5,6 +5,9 @@
 
 PROJECT_DIR = .
 
+# by default EXTRA_PARAMS is empty and we create 'debug' version of the firmware with additional assertions and statistics
+# for 'release' options see 'clean_compile_two_versions.bat' file
+
 
 # Compiler options here.
 ifeq ($(USE_OPT),)

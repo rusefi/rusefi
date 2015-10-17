@@ -180,6 +180,8 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	setDefaultAlternatorParameters();
+#endif
+#if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
 	setDefaultEtbParameters();
 #endif
 
