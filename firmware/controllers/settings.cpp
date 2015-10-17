@@ -180,6 +180,10 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "SACHS";
 	case DAIHATSU:
 		return "DAIHATSU";
+	case SUZUKI_VITARA:
+		return "SUZUKI_VITARA";
+	case CAMARO_4:
+		return "CAMARO_4";
 	case GM_2_2:
 	  return "GM_2_2";
 	case DODGE_RAM:
