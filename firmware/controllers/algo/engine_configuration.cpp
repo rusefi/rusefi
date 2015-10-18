@@ -468,7 +468,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	boardConfiguration->idle.solenoidFrequency = 200;
 	// set_idle_position 50
-	boardConfiguration->idlePosition = 50;
+	boardConfiguration->manIdlePosition = 50;
 	engineConfiguration->targetIdleRpm = 1200;
 //	engineConfiguration->idleMode = IM_AUTO;
 	engineConfiguration->idleMode = IM_MANUAL;

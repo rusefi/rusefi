@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar Mon Oct 12 18:03:28 EDT 2015
+// this file was generated automatically by ConfigDefinition.jar Sun Oct 18 13:05:04 EDT 2015
 public class Fields {
 	public static final Field ENGINETYPE = new Field("ENGINETYPE", 0, FieldType.INT);
 	public static final Field HEADERMAGICVALUE = new Field("HEADERMAGICVALUE", 4, FieldType.INT);
@@ -109,7 +109,7 @@ public class Fields {
 	public static final Field IDLE_SOLENOIDFREQUENCY = new Field("IDLE_SOLENOIDFREQUENCY", 632, FieldType.INT);
 	public static final Field IDLE_STEPPERDIRECTIONPIN = new Field("IDLE_STEPPERDIRECTIONPIN", 636, FieldType.INT, brain_pin_e);
 	public static final Field IDLE_STEPPERSTEPPIN = new Field("IDLE_STEPPERSTEPPIN", 640, FieldType.INT, brain_pin_e);
-	public static final Field IDLEPOSITION = new Field("IDLEPOSITION", 644, FieldType.FLOAT);
+	public static final Field MANIDLEPOSITION = new Field("MANIDLEPOSITION", 644, FieldType.FLOAT);
 	public static final Field FUELPUMPPIN = new Field("FUELPUMPPIN", 648, FieldType.INT, brain_pin_e);
 	public static final Field FUELPUMPPINMODE = new Field("FUELPUMPPINMODE", 652, FieldType.INT, pin_output_mode_e);
 	public static final Field INJECTIONPINS1 = new Field("INJECTIONPINS1", 656, FieldType.INT, brain_pin_e);

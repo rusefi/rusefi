@@ -11,6 +11,7 @@
 
 #include "engine.h"
 
+percent_t getIdlePosition(void);
 void startIdleThread(Logging*sharedLogger, Engine *engine);
 
 #endif /* IDLE_THREAD_H_ */

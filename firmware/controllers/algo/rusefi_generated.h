@@ -221,8 +221,8 @@
 #define idle_stepperDirectionPin_offset 636
 #define idle_stepperStepPin_offset 640
 #define idle_stepperStepPin_offset_hex 280
-#define idlePosition_offset 644
-#define idlePosition_offset_hex 284
+#define manIdlePosition_offset 644
+#define manIdlePosition_offset_hex 284
 #define fuelPumpPin_offset 648
 #define fuelPumpPin_offset_hex 288
 #define fuelPumpPinMode_offset 652

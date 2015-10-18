@@ -314,7 +314,7 @@ struct_no_prefix board_configuration_s
 	idle_hardware_s idle;
 
 
-	float idlePosition;value between 0 and 100 used in Manual mode;"%", 1, 0, 0, 100, 0
+	float manIdlePosition;value between 0 and 100 used in Manual mode;"%", 1, 0, 0, 100, 0
 
 	brain_pin_e fuelPumpPin;
 	pin_output_mode_e fuelPumpPinMode;

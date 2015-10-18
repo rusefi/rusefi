@@ -124,7 +124,7 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->idle.solenoidPin = GPIOC_14;
 	boardConfiguration->idle.solenoidPinMode = OM_INVERTED;
 	boardConfiguration->idle.solenoidFrequency = 300;
-	boardConfiguration->idlePosition = 50; // set_idle_pwm 50
+	boardConfiguration->manIdlePosition = 50; // set_idle_pwm 50
 
 	// disable sd_card
 	boardConfiguration->sdCardCsPin = GPIO_UNASSIGNED;
