@@ -7,6 +7,7 @@ import com.rusefi.ui.storage.Node;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -47,7 +48,7 @@ public class AnyCommand {
         go.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                go();
+                send();
             }
         });
         content.add(go);
@@ -76,7 +77,7 @@ public class AnyCommand {
         text.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                go();
+                send();
             }
         });
         text.getDocument().addDocumentListener(new DocumentListener() {
@@ -109,7 +110,7 @@ public class AnyCommand {
         // todo: limit the length of text in the text field
     }
 
-    private void go() {
+    private void send() {
         index = 0;
         String cmd = text.getText();
         if (!isValidInput(text))
@@ -120,11 +121,7 @@ public class AnyCommand {
         reentrant = false;
     }
 
-    public JTextField getText() {
-        return text;
-    }
-
-    private static boolean isValidInput(JTextField text) {
+    private static boolean isValidInput(JTextComponent text) {
         boolean isOk = true;
         for (char c : text.getText().toCharArray()) {
             if (c > 127) {
