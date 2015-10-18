@@ -62,7 +62,7 @@ void idleDebug(const char *msg, percent_t value) {
 
 static void showIdleInfo(void) {
 	scheduleMsg(logger, "idleMode=%s position=%f isStepper=%s", getIdle_mode_e(engineConfiguration->idleMode),
-			boardConfiguration->idlePosition, boolToString(boardConfiguration->useStepperIdle));
+			getIdlePosition(), boolToString(boardConfiguration->useStepperIdle));
 	if (boardConfiguration->useStepperIdle) {
 		scheduleMsg(logger, "direction=%s reactionTime=%f", hwPortname(boardConfiguration->idle.stepperDirectionPin),
 				engineConfiguration->idleStepperReactionTime);
@@ -89,7 +89,8 @@ static void setIdleValvePwm(percent_t value) {
 }
 
 static void doSetIdleValvePosition(int positionPercent) {
-	boardConfiguration->idlePosition = positionPercent;
+	// todo: this is not great that we have to write into configuration here
+	boardConfiguration->manIdlePosition = positionPercent;
 
 	percent_t cltCorrectedPosition = interpolate2d(engine->engineState.clt, config->cltIdleCorrBins, config->cltIdleCorr,
 	CLT_CURVE_SIZE) * positionPercent;
@@ -128,7 +129,7 @@ static void blipIdle(int idlePosition, int durationMs) {
 	if (timeToStopBlip != 0) {
 		return; // already in idle blip
 	}
-	idlePositionBeforeBlip = boardConfiguration->idlePosition;
+	idlePositionBeforeBlip = boardConfiguration->manIdlePosition;
 	setIdleValvePosition(idlePosition);
 	timeToStopBlip = getTimeNowUs() + 1000 * durationMs;
 }
@@ -140,11 +141,20 @@ static void undoIdleBlipIfNeeded() {
 	}
 }
 
+static percent_t currentIdleValve = -1;
+
+percent_t getIdlePosition(void) {
+	if (engineConfiguration->idleMode == IM_AUTO) {
+		return currentIdleValve;
+	} else {
+		return boardConfiguration->manIdlePosition;
+	}
+}
+
 static msg_t ivThread(int param) {
 	(void) param;
 	chRegSetThreadName("IdleValve");
 
-	percent_t currentIdleValve = -1;
 	while (true) {
 		chThdSleepMilliseconds(boardConfiguration->idleThreadPeriod);
 
@@ -162,7 +172,7 @@ static msg_t ivThread(int param) {
 
 		if (engineConfiguration->idleMode != IM_AUTO) {
 			// let's re-apply CLT correction
-			doSetIdleValvePosition(boardConfiguration->idlePosition);
+			doSetIdleValvePosition(boardConfiguration->manIdlePosition);
 			continue;
 		}
 
@@ -172,6 +182,8 @@ static msg_t ivThread(int param) {
 
 		if (currentIdleValve != newValue) {
 			currentIdleValve = newValue;
+
+			// todo: looks like in auto mode stepper value is not set, only solenoid?
 
 			setIdleValvePwm(newValue);
 		}
@@ -207,7 +219,7 @@ void startIdleThread(Logging*sharedLogger, Engine *engine) {
 		 * Start PWM for idleValvePin
 		 */
 		startSimplePwmExt(&idleSolenoid, "Idle Valve", boardConfiguration->idle.solenoidPin, &idleSolenoidPin,
-				boardConfiguration->idle.solenoidFrequency, boardConfiguration->idlePosition / 100,
+				boardConfiguration->idle.solenoidFrequency, boardConfiguration->manIdlePosition / 100,
 				applyIdleSolenoidPinState);
 	}
 

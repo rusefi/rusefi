@@ -603,6 +603,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->wallFuelAmount = wallFuel.getWallFuel(0);
 	tsOutputChannels->totalFuelCorrection = engine->totalFuelCorrection;
 	tsOutputChannels->wallFuelCorrection = engine->wallFuelCorrection;
+	tsOutputChannels->idlePosition = getIdlePosition();
+
 
 	tsOutputChannels->checkEngine = hasErrorCodes();
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
