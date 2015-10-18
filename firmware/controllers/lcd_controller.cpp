@@ -203,6 +203,7 @@ static void showLine(lcd_line_e line, int screenY) {
 		return;
 	case LL_RPM:
 		lcdPrintf("RPM %d", getRpmE(engine));
+#if EFI_FILE_LOGGING || defined(__DOXYGEN__)
 		{
 			char sdState;
 			if (boardConfiguration->isSdCardEnabled) {
@@ -215,6 +216,7 @@ static void showLine(lcd_line_e line, int screenY) {
 				lcdPrintf("  %d%c", seconds, sdState);
 			}
 		}
+#endif
 		return;
 	case LL_CLT_TEMPERATURE:
 		lcdPrintf("Coolant %f", getCoolantTemperature(PASS_ENGINE_PARAMETER_F));
