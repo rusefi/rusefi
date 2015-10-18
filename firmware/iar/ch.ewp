@@ -2076,6 +2076,12 @@
         <name>$PROJ_DIR$\..\config\engines\subaru.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\config\engines\suzuki_vitara.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\suzuki_vitara.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\config\engines\test_engine.cpp</name>
       </file>
       <file>
