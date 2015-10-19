@@ -28,7 +28,7 @@ public class MessagesPane {
     public MessagesPane(final Node config) {
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
-        AnyCommand command = new AnyCommand(config, true, false);
+        AnyCommand command = AnyCommand.createArea(config, config.getProperty(AnyCommand.KEY), true, false);
         final MessagesPanel upperPanel = new MessagesPanel(command.getContent());
         upperPanel.loadFont(config);
 

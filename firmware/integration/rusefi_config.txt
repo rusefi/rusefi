@@ -488,7 +488,7 @@ bit hasMapSensor;@see isMapAveragingEnabled
 	bit hasBaroSensor
 	bit hasAfrSensor
 	bit useConstantDwellDuringCranking 
-	bit isEngineChartEnabled 
+	bit isEngineChartEnabled;This options enables data for 'engine sniffer' tab in console, which comes at some CPU price 
 	bit isCanEnabled
 	bit hasCltSensor
 	bit canReadEnabled
