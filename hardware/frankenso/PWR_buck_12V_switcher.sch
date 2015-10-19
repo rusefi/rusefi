@@ -59,7 +59,7 @@ $Descr A 11000 8500
 encoding utf-8
 Sheet 9 15
 Title "Frankenso"
-Date "13 oct 2015"
+Date "18 oct 2015"
 Rev ".05"
 Comp "rusEFI.com"
 Comment1 ""
@@ -236,7 +236,7 @@ L FUSE F1001
 U 1 1 533A8E21
 P 3850 6400
 F 0 "F1001" H 3950 6450 40  0000 C CNN
-F 1 "5A" H 3750 6350 40  0000 C CNN
+F 1 "1.5A" H 3750 6350 40  0000 C CNN
 F 2 "SIL-2" H 3850 6400 60  0001 C CNN
 F 3 "~" H 3850 6400 60  0000 C CNN
 F 4 "0R,jumperwire" H 3850 6400 60  0001 C CNN "mfg,mfg#"
@@ -487,4 +487,8 @@ Wire Wire Line
 Connection ~ 4600 6600
 Text Notes 850  5350 0    60   ~ 0
 Brief overview\n-- Q1002, R1003, D1002 preform an active transient protection. It will suppress voltages up to 200V. \n-- Q1001, R1001, D1001 preform a reverse polarity protection. If the input signal is the wrong polarity, the gate will not conduct which will prevent current from flowing. \n-- D1003 is a second transient suppressor, it would catch faster transients allowing a brief amount of time for Q1002 to preform it's duty. \n-- C1001 is a bulk cap, it simply stores energy locally such that the regulator can draw large currents in short periods of time. \n-- U1001 and the components to the right, are a buck style switching regulator, that will pull the 5V line up to 5V. It will now pull it down from 5V if there is an external voltage. 
+Text Notes 9750 6100 0    60   ~ 0
+5V  5mVp-p 3A\nSuggested \nexternal wires\n18awg min
+Text Notes 3400 6000 0    60   ~ 0
+200V surge, 18V to 7V typical. \nSuggested mininium 16awg \nUpstream 1A fuse littel fuse 0287001
 $EndSCHEMATC

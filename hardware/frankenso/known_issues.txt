@@ -104,6 +104,7 @@
 104) RESOLVED IN R0.5 U5 button silkscreen notch is barely visible
 105) RESOLVED IN R0.5 D161 TPIC8101 silk screen is a bit messed up. 
 106) RESOLVED IN R0.5 Change X161 to same 8MHz X1.
+107)                  Per this PDF http://www.ti.com/lit/an/snva538/snva538.pdf the switch mode power supply may have some EMC noise issues. 
 
 
 For honda add-on / rewiring board
