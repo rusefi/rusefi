@@ -89,7 +89,7 @@ public class SensorSnifferPane {
         upperPanel.add(pauseButton);
         upperPanel.add(new RpmLabel(2).getContent());
 
-        upperPanel.add(new AnyCommand(config, true, false).getContent());
+        upperPanel.add(AnyCommand.createField(config, true, false).getContent());
 
         upperPanel.add(new URLLabel(EngineSnifferPanel.HELP_TEXT, HELP_URL));
         pauseButton.addActionListener(new

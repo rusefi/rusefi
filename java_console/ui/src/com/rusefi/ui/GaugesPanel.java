@@ -190,7 +190,7 @@ public class GaugesPanel {
         JPanel leftUpperPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         leftUpperPanel.add(createSaveImageButton());
         leftUpperPanel.add(new RpmLabel(2).getContent());
-        AnyCommand command = new AnyCommand(config, false, false);
+        AnyCommand command = AnyCommand.createField(config, false, false);
         leftUpperPanel.add(command.getContent());
         return leftUpperPanel;
     }
