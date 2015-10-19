@@ -132,6 +132,10 @@ void setWholeFuelMap(float value DECLARE_ENGINE_PARAMETER_S) {
 	setMap(config->fuelTable, value);
 }
 
+void setWholeIgnitionIatCorr(float value DECLARE_ENGINE_PARAMETER_S) {
+	setMap(config->ignitionIatCorrTable, value);
+}
+
 void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_ENGINE_PARAMETER_S) {
 	setTableBin2(config->injPhaseLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
 	setTableBin2(config->veLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);

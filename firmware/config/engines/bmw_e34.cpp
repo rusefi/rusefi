@@ -43,6 +43,7 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	// Trigger configuration
 //	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	// set_global_trigger_offset_angle 84
 	engineConfiguration->globalTriggerAngleOffset = 84;
 
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
