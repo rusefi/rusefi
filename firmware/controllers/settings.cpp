@@ -1017,6 +1017,7 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionF("set_whole_timing_map", setWholeTimingMapCmd);
 	addConsoleActionF("set_whole_fuel_map", setWholeFuelMapCmd);
 	addConsoleActionF("set_whole_ve_map", setWholeVeCmd);
+	addConsoleActionF("set_whole_ign_corr_map", setWholeIgnitionIatCorr);
 	addConsoleActionSSS("set_fuel_map", setFuelMap);
 
 	addConsoleActionF("set_whole_timing_map", setWholeTimingMap);

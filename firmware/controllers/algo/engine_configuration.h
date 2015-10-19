@@ -49,6 +49,7 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
 void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F);
 void setMap(fuel_table_t table, float value);
 void setWholeFuelMap(float value DECLARE_ENGINE_PARAMETER_S);
+void setWholeIgnitionIatCorr(float value DECLARE_ENGINE_PARAMETER_S);
 void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_ENGINE_PARAMETER_S);
 void setWholeIatCorrTimingTable(float value DECLARE_ENGINE_PARAMETER_S);
 void setWholeTimingTable(angle_t value DECLARE_ENGINE_PARAMETER_S);
