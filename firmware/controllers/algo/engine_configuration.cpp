@@ -31,6 +31,7 @@
 #include "advance_map.h"
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "electronic_throttle.h"
+#include "idle_thread.h"
 #include "alternatorController.h"
 #endif
 
@@ -189,7 +190,9 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 #if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
 	setDefaultEtbParameters();
 #endif
-
+#if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
+	setDefaultIdleParameters();
+#endif
 	boardConfiguration->wboHeaterPin = GPIO_UNASSIGNED;
 	boardConfiguration->wboPumpPin = GPIO_UNASSIGNED;
 

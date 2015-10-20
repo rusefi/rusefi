@@ -13,5 +13,6 @@
 
 percent_t getIdlePosition(void);
 void startIdleThread(Logging*sharedLogger, Engine *engine);
+void setDefaultIdleParameters(void);
 
 #endif /* IDLE_THREAD_H_ */
