@@ -103,7 +103,8 @@ static void endSimultaniousInjection(Engine *engine) {
 
 extern WallFuel wallFuel;
 
-static ALWAYS_INLINE void handleFuelInjectionEvent(bool_t limitedFuel, InjectionEvent *event, int rpm DECLARE_ENGINE_PARAMETER_S) {
+static ALWAYS_INLINE void handleFuelInjectionEvent(bool_t limitedFuel, InjectionEvent *event,
+		int rpm DECLARE_ENGINE_PARAMETER_S) {
 	/**
 	 * todo: this is a bit tricky with batched injection. is it? Does the same
 	 * wetting coefficient works the same way for any injection mode, or is something
@@ -148,7 +149,8 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(bool_t limitedFuel, Injection
 
 		if (!limitedFuel) {
 			scheduleTask("out up", sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, engine);
-			scheduleTask("out down", sDown, (int) injectionStartDelayUs + MS2US(injectionDuration), (schfunc_t) &endSimultaniousInjection, engine);
+			scheduleTask("out down", sDown, (int) injectionStartDelayUs + MS2US(injectionDuration),
+					(schfunc_t) &endSimultaniousInjection, engine);
 		}
 
 	} else {
@@ -321,7 +323,7 @@ static ALWAYS_INLINE void ignitionMathCalc(int rpm DECLARE_ENGINE_PARAMETER_S) {
 /**
  * this field is used as an Expression in IAR debugger
  */
-uint32_t *cyccnt = (uint32_t*)&DWT_CYCCNT;
+uint32_t *cyccnt = (uint32_t*) &DWT_CYCCNT;
 #endif
 
 static ALWAYS_INLINE void scheduleIgnitionAndFuelEvents(int rpm, int revolutionIndex DECLARE_ENGINE_PARAMETER_S) {
@@ -359,8 +361,7 @@ static ALWAYS_INLINE void scheduleIgnitionAndFuelEvents(int rpm, int revolutionI
 		list->reset(); // reset is needed to clear previous ignition schedule
 		return;
 	}
-	initializeIgnitionActions(engine->engineState.advance, engine->engineState.dwellAngle,
-			list PASS_ENGINE_PARAMETER);
+	initializeIgnitionActions(engine->engineState.advance, engine->engineState.dwellAngle, list PASS_ENGINE_PARAMETER);
 	engine->m.ignitionSchTime = GET_TIMESTAMP() - engine->m.beforeIgnitionSch;
 
 	engine->m.beforeInjectonSch = GET_TIMESTAMP();
@@ -452,7 +453,8 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	/**
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
 	 */
-	handleSpark(limitedSpark, eventIndex, rpm, &engine->engineConfiguration2->ignitionEvents[revolutionIndex] PASS_ENGINE_PARAMETER);
+	handleSpark(limitedSpark, eventIndex, rpm,
+			&engine->engineConfiguration2->ignitionEvents[revolutionIndex] PASS_ENGINE_PARAMETER);
 #if (EFI_HISTOGRAMS && EFI_PROD_CODE) || defined(__DOXYGEN__)
 	int diff = hal_lld_get_counter_value() - beforeCallback;
 	if (diff > 0)
@@ -486,8 +488,7 @@ static void showMainInfo(Engine *engine) {
 	int rpm = engine->rpmCalculator.rpm(PASS_ENGINE_PARAMETER_F);
 	float el = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
 	scheduleMsg(logger, "rpm %d engine_load %f", rpm, el);
-	scheduleMsg(logger, "fuel %fms timing %f", getFuelMs(rpm PASS_ENGINE_PARAMETER),
-			engine->engineState.timingAdvance);
+	scheduleMsg(logger, "fuel %fms timing %f", getFuelMs(rpm PASS_ENGINE_PARAMETER), engine->engineState.timingAdvance);
 #endif
 }
 

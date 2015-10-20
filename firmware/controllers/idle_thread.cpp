@@ -73,6 +73,11 @@ static void showIdleInfo(void) {
 		scheduleMsg(logger, "idle valve freq=%d on %s", boardConfiguration->idle.solenoidFrequency,
 				hwPortname(boardConfiguration->idle.solenoidPin));
 	}
+	scheduleMsg(logger, "idleControl=%s", getIdle_control_e(engineConfiguration->idleControl));
+	scheduleMsg(logger, "idle P=%f I=%f D=%f dT=%d", engineConfiguration->idlePFactor,
+			engineConfiguration->idleIFactor,
+			engineConfiguration->idleDFactor,
+			engineConfiguration->idleDT);
 }
 
 static void setIdleControlEnabled(int value) {
@@ -197,6 +202,40 @@ static void setIdleRpmAction(int value) {
 	idleMath.setTargetRpm(value);
 	scheduleMsg(logger, "target idle RPM %d", value);
 }
+static void apply(void) {
+//	idleMath.updateFactors(engineConfiguration->idlePFactor, engineConfiguration->idleIFactor, engineConfiguration->idleDFactor, engineConfiguration->idleDT);
+}
+
+static void setIdlePFactor(float value) {
+	engineConfiguration->idlePFactor = value;
+	apply();
+	showIdleInfo();
+}
+
+static void setIdleIFactor(float value) {
+	engineConfiguration->idleIFactor = value;
+	apply();
+	showIdleInfo();
+}
+
+static void setIdleDFactor(float value) {
+	engineConfiguration->idleDFactor = value;
+	apply();
+	showIdleInfo();
+}
+
+static void setIdleDT(int value) {
+	engineConfiguration->idleDT = value;
+	apply();
+	showIdleInfo();
+}
+
+void setDefaultIdleParameters(void) {
+	engineConfiguration->idlePFactor = 0.1f;
+	engineConfiguration->idleIFactor = 0.05f;
+	engineConfiguration->idleDFactor = 0.0f;
+	engineConfiguration->idleDT = 10;
+}
 
 static void applyIdleSolenoidPinState(PwmConfig *state, int stateIndex) {
 	efiAssertVoid(stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
@@ -246,6 +285,13 @@ void startIdleThread(Logging*sharedLogger, Engine *engine) {
 	addConsoleActionI("set_idle_enabled", (VoidInt) setIdleControlEnabled);
 
 	addConsoleActionII("blipidle", blipIdle);
+
+	addConsoleActionF("set_idle_p", setIdlePFactor);
+	addConsoleActionF("set_idle_i", setIdleIFactor);
+	addConsoleActionF("set_idle_d", setIdleDFactor);
+	addConsoleActionI("set_idle_dt", setIdleDT);
+
+	apply();
 }
 
 #endif

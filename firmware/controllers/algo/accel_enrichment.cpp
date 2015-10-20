@@ -118,7 +118,7 @@ AccelEnrichmemnt::AccelEnrichmemnt() {
 static void accelInfo() {
 //	scheduleMsg(logger, "MAP accel length=%d", mapInstance.cb.getSize());
 	scheduleMsg(logger, "MAP accel th=%f/mult=%f", engineConfiguration->mapAccelEnrichmentThreshold, engineConfiguration->mapAccelEnrichmentMultiplier);
-	scheduleMsg(logger, "MAP decel th=%f/mult=%f", engineConfiguration->decelEnrichmentThreshold, engineConfiguration->decelEnrichmentMultiplier);
+	scheduleMsg(logger, "MAP decel th=%f/mult=%f", engineConfiguration->decelEnleanmentThreshold, engineConfiguration->decelEnleanmentMultiplier);
 
 //	scheduleMsg(logger, "TPS accel length=%d", tpsInstance.cb.getSize());
 	scheduleMsg(logger, "TPS accel th=%f/mult=%f", engineConfiguration->tpsAccelEnrichmentThreshold, engineConfiguration->tpsAccelEnrichmentMultiplier);
@@ -147,12 +147,12 @@ static void setTpsAccelMult(float value) {
 }
 
 static void setDecelThr(float value) {
-	engineConfiguration->decelEnrichmentThreshold = value;
+	engineConfiguration->decelEnleanmentThreshold = value;
 	accelInfo();
 }
 
 static void setDecelMult(float value) {
-	engineConfiguration->decelEnrichmentMultiplier = value;
+	engineConfiguration->decelEnleanmentMultiplier = value;
 	accelInfo();
 }
 

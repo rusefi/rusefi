@@ -241,6 +241,12 @@ typedef enum {
 } idle_mode_e;
 
 typedef enum {
+	IC_LINEAR = 0,
+	IC_PID = 1,
+	Force_4b_idle_control = ENUM_32_BITS,
+} idle_control_e;
+
+typedef enum {
 	/**
 	 * GND for logical OFF, VCC for logical ON
 	 */
