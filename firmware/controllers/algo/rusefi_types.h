@@ -53,7 +53,7 @@ typedef char le_formula_t[LE_COMMAND_LENGTH];
 
 typedef brain_pin_e egt_cs_array_t[EGT_CHANNEL_COUNT];
 
-// todo: merge these two types together?
+// todo: merge these two types together? but these tables have different TS parameters like ranges etc
 typedef float fuel_table_t[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
 typedef float ignition_table_t[IGN_LOAD_COUNT][IGN_RPM_COUNT];
 

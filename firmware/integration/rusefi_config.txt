@@ -66,7 +66,7 @@ custom baro_corr_table_t 64 array,   F32,   @OFFSET@, [@@BARO_CORR_SIZE@@x@@BARO
 
 
 ! please note that 1024 here is 4 * IGN_LOAD_COUNT * IGN_RPM_COUNT  
-custom ignition_table_t	1024 array,   F32,   @OFFSET@, [16x16],"deg",	   1,     0,     -360,  360,    2
+custom ignition_table_t	1024 array,   F32,   @OFFSET@, [16x16],"deg",	   1,     0,     -720,  720,    2
 
 
 struct cranking_parameters_s
@@ -197,7 +197,7 @@ engine_load_mode_e algorithm;This setting controls which algorithm is used for E
 custom injection_mode_e 4 bits, U32, @OFFSET@, [0:1], "Simultaneous", "Sequential", "Batch", "INVALID"
 injection_mode_e crankingInjectionMode;
 injection_mode_e injectionMode;
-angle_t injectionOffset;this is about deciding when the injector starts it's squirt\nSee also injectionPhase map;"deg",    1,      0.0,       0,  1000.0,        2
+angle_t injectionOffset;this is about deciding when the injector starts it's squirt\nSee also injectionPhase map;"deg",    1,      0.0,       -720,     720,        2
 angle_t crankingTimingAngle;Timing advance while cranking enginee;     "deg",    1,      0.0,    -360,     360,        2
 
 custom ignition_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "One coil", "Individual Coils", "Wasted", "INVALID"
@@ -640,7 +640,7 @@ ignition_table_t ignitionIatCorrTable;
 float[IGN_LOAD_COUNT] ignitionIatCorrLoadBins;;"Load",   1,   0.0,        0,  300.0,   2
 float[IGN_RPM_COUNT] ignitionIatCorrRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
-fuel_table_t injectionPhase;
+ignition_table_t injectionPhase;
 float[FUEL_LOAD_COUNT] injPhaseLoadBins;;"Load",   1,   0.0,        0,  300.0,   2
 float[FUEL_RPM_COUNT] injPhaseRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
