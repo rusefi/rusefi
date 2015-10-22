@@ -271,18 +271,14 @@
 #define EFI_CONSOLE_TX_PIN 10
 #define EFI_CONSOLE_RX_PORT GPIOC
 #define EFI_CONSOLE_RX_PIN 11
+// todo: this should be detected automatically based on pin selection
 #define EFI_CONSOLE_AF 7
-
-//#define TS_SERIAL_TX_PORT GPIOD
-//#define TS_SERIAL_TX_PIN 8
-//#define TS_SERIAL_RX_PORT GPIOD
-//#define TS_SERIAL_RX_PIN 9
-//#define TS_SERIAL_AF 7
 
 #define TS_SERIAL_TX_PORT GPIOC
 #define TS_SERIAL_TX_PIN 10
 #define TS_SERIAL_RX_PORT GPIOC
 #define TS_SERIAL_RX_PIN 11
+// todo: this should be detected automatically based on pin selection
 #define TS_SERIAL_AF 7
 
 #define LED_WARNING_PORT GPIOD

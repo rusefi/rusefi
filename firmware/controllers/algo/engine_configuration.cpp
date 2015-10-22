@@ -546,6 +546,11 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->communicationPin = GPIOD_15;
 	engineConfiguration->runningPin = GPIOD_12;
+	engineConfiguration->binarySerialTxPin = GPIOC_10;
+	engineConfiguration->binarySerialRxPin = GPIOC_11;
+	engineConfiguration->serialSerialTxPin = GPIOC_10;
+	engineConfiguration->serialSerialRxPin = GPIOC_11;
+
 
 	boardConfiguration->triggerSimulatorPins[0] = GPIOD_1;
 	boardConfiguration->triggerSimulatorPins[1] = GPIOD_2;
