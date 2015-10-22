@@ -544,6 +544,9 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 		engineConfiguration->fsioInputModes[i] = PI_DEFAULT;
 	}
 
+	engineConfiguration->communicationPin = GPIOD_15;
+	engineConfiguration->runningPin = GPIOD_12;
+
 	boardConfiguration->triggerSimulatorPins[0] = GPIOD_1;
 	boardConfiguration->triggerSimulatorPins[1] = GPIOD_2;
 	boardConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
