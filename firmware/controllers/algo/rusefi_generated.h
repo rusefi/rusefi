@@ -679,8 +679,11 @@
 #define idleDT_offset_hex 780
 #define idleControl_offset 1924
 #define idleControl_offset_hex 784
-#define unused3_offset 1928
-#define unused3_offset_hex 788
+#define communicationPin_offset 1928
+#define communicationPin_offset_hex 788
+#define runningPin_offset 1932
+#define unused3_offset 1936
+#define unused3_offset_hex 790
 #define targetVBatt_offset 2156
 #define alternatorOffAboveTps_offset 2160
 #define alternatorOffAboveTps_offset_hex 870
