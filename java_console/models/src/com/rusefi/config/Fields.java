@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar Sun Oct 18 13:05:04 EDT 2015
+// this file was generated automatically by ConfigDefinition.jar Thu Oct 22 12:50:06 EDT 2015
 public class Fields {
 	public static final Field ENGINETYPE = new Field("ENGINETYPE", 0, FieldType.INT);
 	public static final Field HEADERMAGICVALUE = new Field("HEADERMAGICVALUE", 4, FieldType.INT);
@@ -427,6 +427,17 @@ public class Fields {
 	public static final Field MAPERRORLOWVALUE = new Field("MAPERRORLOWVALUE", 1896, FieldType.FLOAT);
 	public static final Field MAPERRORHIGHVALUE = new Field("MAPERRORHIGHVALUE", 1900, FieldType.FLOAT);
 	public static final Field STEP1RPMWINDOW = new Field("STEP1RPMWINDOW", 1904, FieldType.INT);
+	public static final Field IDLEPFACTOR = new Field("IDLEPFACTOR", 1908, FieldType.FLOAT);
+	public static final Field IDLEIFACTOR = new Field("IDLEIFACTOR", 1912, FieldType.FLOAT);
+	public static final Field IDLEDFACTOR = new Field("IDLEDFACTOR", 1916, FieldType.FLOAT);
+	public static final Field IDLEDT = new Field("IDLEDT", 1920, FieldType.INT);
+	public static final Field IDLECONTROL = new Field("IDLECONTROL", 1924, FieldType.INT);
+	public static final Field COMMUNICATIONPIN = new Field("COMMUNICATIONPIN", 1928, FieldType.INT, brain_pin_e);
+	public static final Field RUNNINGPIN = new Field("RUNNINGPIN", 1932, FieldType.INT, brain_pin_e);
+	public static final Field BINARYSERIALTXPIN = new Field("BINARYSERIALTXPIN", 1936, FieldType.INT, brain_pin_e);
+	public static final Field BINARYSERIALRXPIN = new Field("BINARYSERIALRXPIN", 1940, FieldType.INT, brain_pin_e);
+	public static final Field CONSOLESERIALTXPIN = new Field("CONSOLESERIALTXPIN", 1944, FieldType.INT, brain_pin_e);
+	public static final Field CONSOLESERIALRXPIN = new Field("CONSOLESERIALRXPIN", 1948, FieldType.INT, brain_pin_e);
 	public static final Field TARGETVBATT = new Field("TARGETVBATT", 2156, FieldType.FLOAT);
 	public static final Field ALTERNATOROFFABOVETPS = new Field("ALTERNATOROFFABOVETPS", 2160, FieldType.FLOAT);
 	public static final Field ALTERNATORDT = new Field("ALTERNATORDT", 2164, FieldType.INT);
@@ -438,8 +449,8 @@ public class Fields {
 	public static final Field TPSACCELENRICHMENTTHRESHOLD = new Field("TPSACCELENRICHMENTTHRESHOLD", 2188, FieldType.FLOAT);
 	public static final Field TPSACCELENRICHMENTMULTIPLIER = new Field("TPSACCELENRICHMENTMULTIPLIER", 2192, FieldType.FLOAT);
 	public static final Field MAPACCELLENGTH = new Field("MAPACCELLENGTH", 2196, FieldType.INT);
-	public static final Field DECELENRICHMENTTHRESHOLD = new Field("DECELENRICHMENTTHRESHOLD", 2200, FieldType.FLOAT);
-	public static final Field DECELENRICHMENTMULTIPLIER = new Field("DECELENRICHMENTMULTIPLIER", 2204, FieldType.FLOAT);
+	public static final Field DECELENLEANMENTTHRESHOLD = new Field("DECELENLEANMENTTHRESHOLD", 2200, FieldType.FLOAT);
+	public static final Field DECELENLEANMENTMULTIPLIER = new Field("DECELENLEANMENTMULTIPLIER", 2204, FieldType.FLOAT);
 	public static final Field MAPACCELENRICHMENTTHRESHOLD = new Field("MAPACCELENRICHMENTTHRESHOLD", 2208, FieldType.FLOAT);
 	public static final Field MAPACCELENRICHMENTMULTIPLIER = new Field("MAPACCELENRICHMENTMULTIPLIER", 2212, FieldType.FLOAT);
 	public static final Field LE_FORMULAS1 = new Field("LE_FORMULAS1", 2216, FieldType.INT);

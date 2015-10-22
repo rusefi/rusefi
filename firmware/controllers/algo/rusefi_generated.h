@@ -682,8 +682,14 @@
 #define communicationPin_offset 1928
 #define communicationPin_offset_hex 788
 #define runningPin_offset 1932
-#define unused3_offset 1936
-#define unused3_offset_hex 790
+#define binarySerialTxPin_offset 1936
+#define binarySerialTxPin_offset_hex 790
+#define binarySerialRxPin_offset 1940
+#define binarySerialRxPin_offset_hex 794
+#define consoleSerialTxPin_offset 1944
+#define consoleSerialTxPin_offset_hex 798
+#define consoleSerialRxPin_offset 1948
+#define unused3_offset 1952
 #define targetVBatt_offset 2156
 #define alternatorOffAboveTps_offset 2160
 #define alternatorOffAboveTps_offset_hex 870

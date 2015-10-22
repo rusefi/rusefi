@@ -590,8 +590,12 @@ baro_corr_table_t baroCorrTable;
 	int idleDT;
 	idle_control_e idleControl;
 	brain_pin_e communicationPin;	
-	brain_pin_e runningPin;	
-	int[55] unused3;
+	brain_pin_e runningPin;
+	brain_pin_e binarySerialTxPin;	
+	brain_pin_e binarySerialRxPin;	
+	brain_pin_e consoleSerialTxPin;	
+	brain_pin_e consoleSerialRxPin;	
+	int[51] unused3;
 	
 	float targetVBatt;;"Volts",      1,      0,       0,30,      1
 	float alternatorOffAboveTps;Turn off alternator output above specified TPS;"%",  1,      0,       0, 200,      2
