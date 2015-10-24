@@ -29,13 +29,17 @@ extern SerialUSBDriver SDU1;
 static SerialConfig tsSerialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
 
 void startTsPort(void) {
+#if EFI_USB_SERIAL || defined(__DOXYGEN__)
 	if (isSerialOverUart()) {
 		print("TunerStudio over USB serial");
 		/**
 		 * This method contains a long delay, that's the reason why this is not done on the main thread
 		 */
 		usb_serial_start();
-	} else if (boardConfiguration->useSerialPort) {
+	} else
+#endif
+	{
+		if (boardConfiguration->useSerialPort) {
 
 		print("TunerStudio over USART");
 		mySetPadMode("tunerstudio rx", TS_SERIAL_RX_PORT, TS_SERIAL_RX_PIN, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
@@ -44,6 +48,7 @@ void startTsPort(void) {
 		tsSerialConfig.speed = boardConfiguration->tunerStudioSerialSpeed;
 
 		sdStart(TS_SERIAL_UART_DEVICE, &tsSerialConfig);
+	}
 	}
 }
 

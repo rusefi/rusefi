@@ -168,7 +168,7 @@ static msg_t consoleThreadThreadEntryPoint(void *arg) {
 	(void) arg;
 	chRegSetThreadName("console thread");
 
-#if EFI_PROD_CODE
+#if (EFI_PROD_CODE && EFI_USB_SERIAL) || defined(__DOXYGEN__)
 	if (!isSerialOverUart()) {
 		/**
 		 * This method contains a long delay, that's the reason why this is not done on the main thread
