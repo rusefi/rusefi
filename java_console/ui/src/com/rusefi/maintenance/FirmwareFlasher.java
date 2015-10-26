@@ -15,6 +15,7 @@ public class FirmwareFlasher extends ProcessStatusWindow {
     static final String OPENOCD_BIN = "openocd/bin/openocd-0.8.0.exe";
     private static final String SUCCESS_MESSAGE_TAG = "shutdown command invoked";
     private static final String FAILED_MESSAGE_TAG = "failed";
+    private static final String NO_DRIVER_MESSAGE_TAG = "failed with LIBUSB_ERROR_NOT_SUPPORTED";
 
     private final JButton button;
     private String fileName;
@@ -52,7 +53,9 @@ public class FirmwareFlasher extends ProcessStatusWindow {
         StringBuffer error = executeCommand(OPENOCD_BIN + " -f interface/stlink-v2.cfg -f board/stm32f4discovery.cfg -c \"program " +
                 fileName +
                 " verify reset exit 0x08000000\"");
-        if (error.toString().contains(SUCCESS_MESSAGE_TAG) && !error.toString().contains(FAILED_MESSAGE_TAG)) {
+        if (error.toString().contains(NO_DRIVER_MESSAGE_TAG)) {
+            wnd.appendMsg(" !!! ERROR: looks like stm32 driver is not installe? !!!");
+        } else if (error.toString().contains(SUCCESS_MESSAGE_TAG) && !error.toString().contains(FAILED_MESSAGE_TAG)) {
             wnd.appendMsg("!!! Looks good!!!");
         } else {
             wnd.appendMsg("!!! FIRMWARE FLASH: DOES NOT LOOK RIGHT !!!");
