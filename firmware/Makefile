@@ -122,7 +122,7 @@ LDSCRIPT= config/stm32f4ems/STM32F407xG_CCM.ld
 # setting.
 CSRC = $(PORTSRC) \
 	$(KERNSRC) \
-	$(VARIOUSSRC) \
+	chibios/os/various/syscalls.c \
 	chibios/os/various/chprintf.c \
 	chibios/os/various/memstreams.c \
 	chibios/os/various/chrtclib.c  \
