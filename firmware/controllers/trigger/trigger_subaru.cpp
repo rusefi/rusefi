@@ -11,7 +11,7 @@
  * This trigger is also used by Nissan and Mazda
  */
 void initialize36_2_2_2(TriggerShape *s) {
-	s->reset(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 	float wide = 30 * 2;
 	float narrow = 10 * 2;

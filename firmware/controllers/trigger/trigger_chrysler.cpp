@@ -10,7 +10,7 @@
 
 void initDodgeRam(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 
-	s->reset(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 	s->useRiseEdge = true;
 
 	s->isSynchronizationNeeded = false;
@@ -28,7 +28,7 @@ void initDodgeRam(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 void configureNeon2003TriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	bool_t useOnlyPrimary = false;
 
-	s->reset(FOUR_STROKE_CAM_SENSOR, !useOnlyPrimary);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, !useOnlyPrimary);
 	s->useRiseEdge = true;
 	s->gapBothDirections = false;
 
@@ -237,7 +237,7 @@ void configureNeon2003TriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 }
 
 void configureDodgeStratusTriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
-	s->reset(FOUR_STROKE_CAM_SENSOR, false);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, false);
 	s->isSynchronizationNeeded = true;
 
 	s->tdcPosition = 150;
@@ -303,7 +303,7 @@ void configureDodgeStratusTriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_
 }
 
 void configureNeon1995TriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
-	s->reset(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 	s->setTriggerSynchronizationGap(0.72);
 

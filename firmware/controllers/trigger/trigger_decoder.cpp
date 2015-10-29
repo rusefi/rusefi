@@ -355,7 +355,7 @@ void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount,
 	s->isSynchronizationNeeded = (skippedCount != 0);
 
 	efiAssertVoid(s != NULL, "TriggerShape is NULL");
-	s->reset(operationMode, false);
+	s->initialize(operationMode, false);
 
 	addSkippedToothTriggerEvents(T_PRIMARY, s, totalTeethCount, skippedCount, 0.5, 0, getEngineCycle(operationMode),
 	NO_LEFT_FILTER, NO_RIGHT_FILTER);
@@ -364,7 +364,7 @@ void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount,
 static void configureOnePlusOne(TriggerShape *s, operation_mode_e operationMode) {
 	float engineCycle = getEngineCycle(operationMode);
 
-	s->reset(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 	s->addEvent(180, T_PRIMARY, TV_HIGH);
 	s->addEvent(360, T_PRIMARY, TV_LOW);
@@ -376,7 +376,7 @@ static void configureOnePlusOne(TriggerShape *s, operation_mode_e operationMode)
 }
 
 static void configureOnePlus60_2(TriggerShape *s, operation_mode_e operationMode) {
-	s->reset(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 	int totalTeethCount = 60;
 	int skippedCount = 2;

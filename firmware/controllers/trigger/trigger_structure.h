@@ -66,7 +66,11 @@ public:
 	float secondSyncRatioTo;
 
 	/**
-	 * that's the angle distance from trigger event #0 and actual engine TDC
+	 * Trigger indexes within trigger cycle are counted from synchronization point, and all
+	 * engine processes are defined in angles from TDC.
+	 *
+	 * That's the angle distance from trigger event #0 and actual engine TDC
+	 *
 	 * see also globalTriggerAngleOffset
 	 */
 	angle_t tdcPosition;
@@ -129,9 +133,11 @@ public:
 	void addEvent(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam, float filterLeft, float filterRight);
 	operation_mode_e getOperationMode();
 
-	// todo: these two methods here, something could be improved
+	/**
+	 * This method resets
+	 */
 	void clear();
-	void reset(operation_mode_e operationMode, bool needSecondTriggerInput);
+	void initialize(operation_mode_e operationMode, bool needSecondTriggerInput);
 	void setTriggerSynchronizationGap(float synchRatio);
 	void setTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo);
 	void setSecondTriggerSynchronizationGap(float synchRatio);

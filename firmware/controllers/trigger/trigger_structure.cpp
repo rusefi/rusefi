@@ -35,8 +35,8 @@ trigger_shape_helper::trigger_shape_helper() {
 
 TriggerShape::TriggerShape() :
 		wave(switchTimesBuffer, NULL) {
-	reset(OM_NONE, false);
 	clear();
+	initialize(OM_NONE, false);
 	wave.waves = h.waves;
 	// todo: false here, true in clear() what a mess!
 	useRiseEdge = false;
@@ -118,7 +118,7 @@ void TriggerShape::clear() {
 	gapBothDirections = false;
 }
 
-void TriggerShape::reset(operation_mode_e operationMode, bool needSecondTriggerInput) {
+void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTriggerInput) {
 	this->operationMode = operationMode;
 	size = 0;
 	this->needSecondTriggerInput = needSecondTriggerInput;
@@ -375,7 +375,7 @@ void setVwConfiguration(TriggerShape *s) {
 
 	s->isSynchronizationNeeded = true;
 
-	s->reset(operationMode, false);
+	s->initialize(operationMode, false);
 
 	int totalTeethCount = 60;
 	int skippedCount = 2;
@@ -450,7 +450,7 @@ static float addAccordPair3(TriggerShape *s, float sb) {
  * http://forum.pgmfi.org/viewtopic.php?f=2&t=15570start=210#p139007
  */
 void configureHondaAccordCDDip(TriggerShape *s) {
-	s->reset(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 	s->initialState[T_SECONDARY] = TV_HIGH;
 	float sb = 0;
@@ -516,7 +516,7 @@ void configureHondaAccordCD(TriggerShape *s, bool withOneEventSignal, bool withF
 		trigger_wheel_e const oneEventWave,
 		trigger_wheel_e const fourEventWave,
 		float prefix) {
-	s->reset(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 //	trigger_wheel_e const oneEventWave = T_CHANNEL_3;
 //	bool withFourEventSignal = true;

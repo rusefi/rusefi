@@ -9,7 +9,7 @@
 
 void configureFordAspireTriggerShape(TriggerShape * s) {
 	s->isSynchronizationNeeded = false;
-	s->reset(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 
 	float x = 121.90;
@@ -29,7 +29,7 @@ void configureFordAspireTriggerShape(TriggerShape * s) {
 }
 
 void initializeMitsubishi4g18(TriggerShape *s) {
-	s->reset(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 	s->useRiseEdge = false;
 
 	s->setTriggerSynchronizationGap(1.6666);

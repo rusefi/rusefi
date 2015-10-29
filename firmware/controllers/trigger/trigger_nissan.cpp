@@ -8,7 +8,7 @@
 #include "trigger_nissan.h"
 
 void initializeNissan(TriggerShape *s) {
-	s->reset(FOUR_STROKE_CAM_SENSOR, false);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, false);
 	s->isSynchronizationNeeded = false;
 
 	float w = 5;
