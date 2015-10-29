@@ -21,7 +21,7 @@
 #include "trigger_mazda.h"
 
 void initializeMazdaMiataNaShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
-	s->reset(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 	s->setTriggerSynchronizationGap(MIATA_NA_GAP);
 	s->useRiseEdge = false;
 
@@ -51,7 +51,7 @@ void initializeMazdaMiataNbShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->setTriggerSynchronizationGap(0.11f);
 	s->useRiseEdge = false;
 
-	s->reset(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 	s->invertOnAdd = true;
 
 	/**
@@ -90,7 +90,7 @@ void configureMazdaProtegeSOHC(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 
 	// todo: move to into configuration definition s->needSecondTriggerInput = FALSE;
 
-	s->reset(FOUR_STROKE_CAM_SENSOR, false);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, false);
 //	s->initialState[0] = 1;
 
 //	float w = 720 / 4 * 0.215;
@@ -116,7 +116,7 @@ void configureMazdaProtegeSOHC(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 
 void configureMazdaProtegeLx(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	// todo: move to into configuration definition s->needSecondTriggerInput = FALSE;
-	s->reset(FOUR_STROKE_CAM_SENSOR, true);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 	/**
 	 * based on https://svn.code.sf.net/p/rusefi/code/trunk/misc/logs/1993_escort_gt/MAIN_rfi_report_2015-02-01%2017_39.csv
