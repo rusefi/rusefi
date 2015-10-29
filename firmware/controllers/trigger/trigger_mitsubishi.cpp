@@ -8,9 +8,8 @@
 #include "trigger_mitsubishi.h"
 
 void configureFordAspireTriggerShape(TriggerShape * s) {
-	s->isSynchronizationNeeded = false;
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
-
+	s->isSynchronizationNeeded = false;
 
 	float x = 121.90;
 	float y = 110.86;

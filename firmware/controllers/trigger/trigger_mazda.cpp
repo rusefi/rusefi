@@ -48,10 +48,10 @@ void initializeMazdaMiataNaShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 }
 
 void initializeMazdaMiataNbShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 	s->setTriggerSynchronizationGap(0.11f);
 	s->useRiseEdge = false;
 
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 	s->invertOnAdd = true;
 
 	/**
