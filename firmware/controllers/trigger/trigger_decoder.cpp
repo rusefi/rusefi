@@ -347,15 +347,11 @@ void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerShape *s, int to
 void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount, int skippedCount,
 		operation_mode_e operationMode) {
 	efiAssertVoid(totalTeethCount > 0, "totalTeethCount is zero");
-
-//	s->totalToothCount = totalTeethCount;
-//	s->skippedToothCount = skippedCount;
+	efiAssertVoid(s != NULL, "TriggerShape is NULL");
+	s->initialize(operationMode, false);
 
 	s->setTriggerSynchronizationGap(skippedCount + 1);
 	s->isSynchronizationNeeded = (skippedCount != 0);
-
-	efiAssertVoid(s != NULL, "TriggerShape is NULL");
-	s->initialize(operationMode, false);
 
 	addSkippedToothTriggerEvents(T_PRIMARY, s, totalTeethCount, skippedCount, 0.5, 0, getEngineCycle(operationMode),
 	NO_LEFT_FILTER, NO_RIGHT_FILTER);
