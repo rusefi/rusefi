@@ -21,7 +21,7 @@ void initializeNissan(TriggerShape *s) {
 	// todo
 	base += 180;
 
-	s->addEvent(base - w, T_PRIMARY, TV_HIGH);
-	s->addEvent(base, T_PRIMARY, TV_LOW);
+	s->addEvent(base - w, T_PRIMARY, TV_RISE);
+	s->addEvent(base, T_PRIMARY, TV_FALL);
 
 }

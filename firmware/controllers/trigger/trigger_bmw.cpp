@@ -8,9 +8,9 @@
 #include "trigger_bmw.h"
 
 static inline float addPair(TriggerShape *s, float a, float w) {
-	s->addEvent(a, T_SECONDARY, TV_HIGH);
+	s->addEvent(a, T_SECONDARY, TV_RISE);
 	a += w;
-	s->addEvent(a, T_SECONDARY, TV_LOW);
+	s->addEvent(a, T_SECONDARY, TV_FALL);
 	a += w;
 	return a;
 }
@@ -22,7 +22,7 @@ void configureMiniCooperTriggerShape(TriggerShape *s) {
 
 	float w = 360.0 / 121;
 	float a = w / 2;
-	s->addEvent(a, T_SECONDARY, TV_LOW);
+	s->addEvent(a, T_SECONDARY, TV_FALL);
 	a += w;
 
 	for (int i = 0; i <= 22; i++) {
@@ -33,16 +33,16 @@ void configureMiniCooperTriggerShape(TriggerShape *s) {
 
 	float firstGapAngle = a;
 
-	s->addEvent(a, T_SECONDARY, TV_HIGH);
+	s->addEvent(a, T_SECONDARY, TV_RISE);
 	a += 3 * w;
-	s->addEvent(a, T_SECONDARY, TV_LOW);
+	s->addEvent(a, T_SECONDARY, TV_FALL);
 	a += w;
 
 	for (int i = 0; i < 36; i++) {
 		a = addPair(s, a, w);
 	}
 
-	s->addEvent(376, T_PRIMARY, TV_HIGH);
+	s->addEvent(376, T_PRIMARY, TV_RISE);
 
 	for (int i = 0; i < 21; i++) {
 		a = addPair(s, a, w);
@@ -51,9 +51,9 @@ void configureMiniCooperTriggerShape(TriggerShape *s) {
 
 	efiAssertVoid(absF(firstGapAngle + 360 - a) < 0.1, "shape constraint");
 
-	s->addEvent(a, T_SECONDARY, TV_HIGH);
+	s->addEvent(a, T_SECONDARY, TV_RISE);
 	a += 3 * w;
-	s->addEvent(a, T_SECONDARY, TV_LOW);
+	s->addEvent(a, T_SECONDARY, TV_FALL);
 	a += w;
 
 	for (int i = 0; i < 33; i++) {
@@ -61,9 +61,9 @@ void configureMiniCooperTriggerShape(TriggerShape *s) {
 	}
 
 	efiAssertVoid(absF(720 - w / 2 - a) < 0.1, "shape constraint");
-	s->addEvent(a, T_SECONDARY, TV_HIGH);
+	s->addEvent(a, T_SECONDARY, TV_RISE);
 
-	s->addEvent(720.0, T_PRIMARY, TV_LOW);
+	s->addEvent(720.0, T_PRIMARY, TV_FALL);
 
 	/**
 	 * With just one tooth on camshaft synchronization is not needed

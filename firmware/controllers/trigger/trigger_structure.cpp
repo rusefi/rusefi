@@ -265,7 +265,7 @@ void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const waveIndex, trig
 
 	trigger_value_e state;
 	if (invertOnAdd) {
-		state = (stateParam == TV_LOW) ? TV_HIGH : TV_LOW;
+		state = (stateParam == TV_FALL) ? TV_RISE : TV_FALL;
 	} else {
 		state = stateParam;
 	}
@@ -285,7 +285,7 @@ void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const waveIndex, trig
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 // todo: PASS_ENGINE?
-	if (!engineConfiguration->useOnlyFrontForTrigger || stateParam == TV_HIGH) {
+	if (!engineConfiguration->useOnlyFrontForTrigger || stateParam == TV_RISE) {
 		expectedEventCount[waveIndex]++;
 	}
 #endif
@@ -310,7 +310,7 @@ void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const waveIndex, trig
 			wave->pinStates[0] = initialState[i];
 		}
 
-		isFrontEvent[0] = TV_HIGH == stateParam;
+		isFrontEvent[0] = TV_RISE == stateParam;
 		wave.setSwitchTime(0, angle);
 		wave.waves[waveIndex].pinStates[0] = state;
 		return;
@@ -333,7 +333,7 @@ void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const waveIndex, trig
 		wave.setSwitchTime(i + 1, wave.getSwitchTime(i));
 	}
 
-	isFrontEvent[index] = TV_HIGH == stateParam;
+	isFrontEvent[index] = TV_RISE == stateParam;
 
 	if (index != size) {
 		firmwareError("are we ever here?");
@@ -384,8 +384,8 @@ void setVwConfiguration(TriggerShape *s) {
 			NO_LEFT_FILTER, 690);
 
 	float angleDown = engineCycle / totalTeethCount * (totalTeethCount - skippedCount - 1 + (1 - toothWidth) );
-	s->addEvent(0 + angleDown + 12, T_PRIMARY, TV_HIGH, NO_LEFT_FILTER, NO_RIGHT_FILTER);
-	s->addEvent(0 + engineCycle, T_PRIMARY, TV_LOW, NO_LEFT_FILTER, NO_RIGHT_FILTER);
+	s->addEvent(0 + angleDown + 12, T_PRIMARY, TV_RISE, NO_LEFT_FILTER, NO_RIGHT_FILTER);
+	s->addEvent(0 + engineCycle, T_PRIMARY, TV_FALL, NO_LEFT_FILTER, NO_RIGHT_FILTER);
 
 	s->setTriggerSynchronizationGap2(1.6, 4);
 }
@@ -424,9 +424,9 @@ void TriggerShape::setSecondTriggerSynchronizationGap(float synchRatio) {
 #define S24 (720.0f / 24 / 2)
 
 static float addAccordPair(TriggerShape *s, float sb, trigger_wheel_e const waveIndex) {
-	s->addEvent(sb, waveIndex, TV_HIGH);
+	s->addEvent(sb, waveIndex, TV_RISE);
 	sb += S24;
-	s->addEvent(sb, waveIndex, TV_LOW);
+	s->addEvent(sb, waveIndex, TV_FALL);
 	sb += S24;
 
 	return sb;
@@ -435,9 +435,9 @@ static float addAccordPair(TriggerShape *s, float sb, trigger_wheel_e const wave
 #define DIP 7.5f
 static float addAccordPair3(TriggerShape *s, float sb) {
 	sb += DIP;
-	s->addEvent(sb, T_CHANNEL_3, TV_HIGH);
+	s->addEvent(sb, T_CHANNEL_3, TV_RISE);
 	sb += DIP;
-	s->addEvent(sb, T_CHANNEL_3, TV_LOW);
+	s->addEvent(sb, T_CHANNEL_3, TV_FALL);
 	sb += 2 * DIP;
 	return sb;
 }
@@ -449,62 +449,62 @@ static float addAccordPair3(TriggerShape *s, float sb) {
 void configureHondaAccordCDDip(TriggerShape *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
-	s->initialState[T_SECONDARY] = TV_HIGH;
+	s->initialState[T_SECONDARY] = TV_RISE;
 	float sb = 0;
 	sb = addAccordPair3(s, sb);
 	sb = addAccordPair3(s, sb);
 	sb = addAccordPair3(s, sb);
 
-	s->addEvent(90, T_SECONDARY, TV_LOW);
+	s->addEvent(90, T_SECONDARY, TV_FALL);
 	sb = 90;
 	sb = addAccordPair3(s, sb);
 	sb = addAccordPair3(s, sb);
 	sb = addAccordPair3(s, sb);
 
-	s->addEvent(180, T_SECONDARY, TV_HIGH);
+	s->addEvent(180, T_SECONDARY, TV_RISE);
 	sb = 180;
 	sb = addAccordPair3(s, sb);
 	sb = addAccordPair3(s, sb);
 	sb = addAccordPair3(s, sb);
 
-	s->addEvent(270, T_SECONDARY, TV_LOW);
+	s->addEvent(270, T_SECONDARY, TV_FALL);
 	sb = 270;
 	sb = addAccordPair3(s, sb);
 	sb = addAccordPair3(s, sb);
 	sb = addAccordPair3(s, sb);
 
 
-	s->addEvent(360.0f - DIP, T_PRIMARY, TV_HIGH);
-	s->addEvent(360, T_SECONDARY, TV_HIGH);
+	s->addEvent(360.0f - DIP, T_PRIMARY, TV_RISE);
+	s->addEvent(360, T_SECONDARY, TV_RISE);
 	sb = 360;
 	sb = addAccordPair3(s, sb);
 	sb = addAccordPair3(s, sb);
 	sb = addAccordPair3(s, sb);
 
-	s->addEvent(450, T_SECONDARY, TV_LOW);
+	s->addEvent(450, T_SECONDARY, TV_FALL);
 	sb = 450;
 	sb = addAccordPair3(s, sb);
 	sb = addAccordPair3(s, sb);
 	sb = addAccordPair3(s, sb);
 
-	s->addEvent(540, T_SECONDARY, TV_HIGH);
+	s->addEvent(540, T_SECONDARY, TV_RISE);
 	sb = 540;
 	sb = addAccordPair3(s, sb);
 	sb = addAccordPair3(s, sb);
 	sb = addAccordPair3(s, sb);
 
-	s->addEvent(630, T_SECONDARY, TV_LOW);
+	s->addEvent(630, T_SECONDARY, TV_FALL);
 	sb = 630;
 	sb = addAccordPair3(s, sb);
 	sb = addAccordPair3(s, sb);
 	sb = addAccordPair3(s, sb);
 
-	s->addEvent(720.0f - DIP, T_PRIMARY, TV_LOW);
+	s->addEvent(720.0f - DIP, T_PRIMARY, TV_FALL);
 
-//	s->addEvent(720.0f - 12 * sb, T_SECONDARY, TV_LOW);
-//	s->addEvent(720.0f, T_SECONDARY, TV_LOW);
+//	s->addEvent(720.0f - 12 * sb, T_SECONDARY, TV_FALL);
+//	s->addEvent(720.0f, T_SECONDARY, TV_FALL);
 
-	s->addEvent(720.0f, T_SECONDARY, TV_HIGH);
+	s->addEvent(720.0f, T_SECONDARY, TV_RISE);
 
 	s->isSynchronizationNeeded = false;
 }
@@ -528,20 +528,20 @@ void configureHondaAccordCD(TriggerShape *s, bool withOneEventSignal, bool withF
 	sb = addAccordPair(s, sb, T_SECONDARY);
 
 	if (withOneEventSignal)
-		s->addEvent(sb - S24 / 2, oneEventWave, TV_HIGH);
+		s->addEvent(sb - S24 / 2, oneEventWave, TV_RISE);
 
 	sb = addAccordPair(s, sb, T_SECONDARY);
 	sb = addAccordPair(s, sb, T_SECONDARY);
 	if (withOneEventSignal)
-		s->addEvent(sb - S24 / 2, oneEventWave, TV_LOW);
+		s->addEvent(sb - S24 / 2, oneEventWave, TV_FALL);
 	sb = addAccordPair(s, sb, T_SECONDARY);
 	sb = addAccordPair(s, sb, T_SECONDARY);
 	if (withFourEventSignal) {
-		s->addEvent(1 * 180.0f + prefix - tdcWidth, fourEventWave, TV_HIGH);
+		s->addEvent(1 * 180.0f + prefix - tdcWidth, fourEventWave, TV_RISE);
 	}
 	sb = addAccordPair(s, sb, T_SECONDARY);
 	if (withFourEventSignal) {
-		s->addEvent(1 * 180.0f + prefix, fourEventWave, TV_LOW);
+		s->addEvent(1 * 180.0f + prefix, fourEventWave, TV_FALL);
 	}
 
 	sb = addAccordPair(s, sb, T_SECONDARY);
@@ -551,11 +551,11 @@ void configureHondaAccordCD(TriggerShape *s, bool withOneEventSignal, bool withF
 	sb = addAccordPair(s, sb, T_SECONDARY);
 
 	if (withFourEventSignal) {
-		s->addEvent(2 * 180.0f + prefix - tdcWidth, fourEventWave, TV_HIGH);
+		s->addEvent(2 * 180.0f + prefix - tdcWidth, fourEventWave, TV_RISE);
 	}
 	sb = addAccordPair(s, sb, T_SECONDARY);
 	if (withFourEventSignal) {
-		s->addEvent(2 * 180.0f + prefix, fourEventWave, TV_LOW);
+		s->addEvent(2 * 180.0f + prefix, fourEventWave, TV_FALL);
 	}
 
 	for (int i = 3; i <= 4; i++) {
@@ -566,11 +566,11 @@ void configureHondaAccordCD(TriggerShape *s, bool withOneEventSignal, bool withF
 		sb = addAccordPair(s, sb, T_SECONDARY);
 
 		if (withFourEventSignal) {
-			s->addEvent(i * 180.0f + prefix - tdcWidth, fourEventWave, TV_HIGH);
+			s->addEvent(i * 180.0f + prefix - tdcWidth, fourEventWave, TV_RISE);
 		}
 		sb = addAccordPair(s, sb, T_SECONDARY);
 		if (withFourEventSignal) {
-			s->addEvent(i * 180.0f + prefix, fourEventWave, TV_LOW);
+			s->addEvent(i * 180.0f + prefix, fourEventWave, TV_FALL);
 		}
 	}
 }

@@ -166,9 +166,8 @@ typedef enum {
 	Force_4b_adc_channel_mode = ENUM_32_BITS,
 } adc_channel_mode_e;
 
-// todo: better names?
 typedef enum {
-	TV_LOW = 0, TV_HIGH = 1
+	TV_FALL = 0, TV_RISE = 1
 } trigger_value_e;
 
 // todo: better names?

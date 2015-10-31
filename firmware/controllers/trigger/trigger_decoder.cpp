@@ -80,7 +80,7 @@ float TriggerState::getTriggerDutyCycle(int index) {
 }
 
 static trigger_wheel_e eventIndex[6] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SECONDARY, T_CHANNEL_3, T_CHANNEL_3 };
-//static trigger_value_e eventType[6] = { TV_LOW, TV_HIGH, TV_LOW, TV_HIGH, TV_LOW, TV_HIGH };
+//static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_FALL, TV_RISE };
 
 #define getCurrentGapDuration(nowNt) \
 	(isFirstEvent ? 0 : (nowNt) - toothed_previous_time)
@@ -335,13 +335,13 @@ void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerShape *s, int to
 	for (int i = 0; i < totalTeethCount - skippedCount - 1; i++) {
 		float angleDown = engineCycle / totalTeethCount * (i + (1 - toothWidth));
 		float angleUp = engineCycle / totalTeethCount * (i + 1);
-		s->addEvent(offset + angleDown, wheel, TV_HIGH, filterLeft, filterRight);
-		s->addEvent(offset + angleUp, wheel, TV_LOW, filterLeft, filterRight);
+		s->addEvent(offset + angleDown, wheel, TV_RISE, filterLeft, filterRight);
+		s->addEvent(offset + angleUp, wheel, TV_FALL, filterLeft, filterRight);
 	}
 
 	float angleDown = engineCycle / totalTeethCount * (totalTeethCount - skippedCount - 1 + (1 - toothWidth));
-	s->addEvent(offset + angleDown, wheel, TV_HIGH, filterLeft, filterRight);
-	s->addEvent(offset + engineCycle, wheel, TV_LOW, filterLeft, filterRight);
+	s->addEvent(offset + angleDown, wheel, TV_RISE, filterLeft, filterRight);
+	s->addEvent(offset + engineCycle, wheel, TV_FALL, filterLeft, filterRight);
 }
 
 void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount, int skippedCount,
@@ -362,11 +362,11 @@ static void configureOnePlusOne(TriggerShape *s, operation_mode_e operationMode)
 
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
-	s->addEvent(180, T_PRIMARY, TV_HIGH);
-	s->addEvent(360, T_PRIMARY, TV_LOW);
+	s->addEvent(180, T_PRIMARY, TV_RISE);
+	s->addEvent(360, T_PRIMARY, TV_FALL);
 
-	s->addEvent(540, T_SECONDARY, TV_HIGH);
-	s->addEvent(720, T_SECONDARY, TV_LOW);
+	s->addEvent(540, T_SECONDARY, TV_RISE);
+	s->addEvent(720, T_SECONDARY, TV_FALL);
 
 	s->isSynchronizationNeeded = false;
 }
@@ -377,9 +377,9 @@ static void configureOnePlus60_2(TriggerShape *s, operation_mode_e operationMode
 	int totalTeethCount = 60;
 	int skippedCount = 2;
 
-	s->addEvent(2, T_PRIMARY, TV_HIGH);
+	s->addEvent(2, T_PRIMARY, TV_RISE);
 	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 2, 20);
-	s->addEvent(20, T_PRIMARY, TV_LOW);
+	s->addEvent(20, T_PRIMARY, TV_FALL);
 	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 20, NO_RIGHT_FILTER);
 
 	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 360, 360, NO_LEFT_FILTER,

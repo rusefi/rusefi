@@ -177,10 +177,10 @@ case Force_4b_adc_channel_mode:
 }
 const char *getTrigger_value_e(trigger_value_e value){
 switch(value) {
-case TV_HIGH:
-  return "TV_HIGH";
-case TV_LOW:
-  return "TV_LOW";
+case TV_RISE:
+  return "TV_RISE";
+case TV_FALL:
+  return "TV_FALL";
   }
  return NULL;
 }
