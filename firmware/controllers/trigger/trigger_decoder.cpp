@@ -400,8 +400,6 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 
 	const trigger_config_s *triggerConfig = &engineConfiguration->trigger;
 
-	clear();
-
 	switch (triggerConfig->type) {
 
 	case TT_TOOTHED_WHEEL:

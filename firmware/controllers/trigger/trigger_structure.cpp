@@ -35,7 +35,6 @@ trigger_shape_helper::trigger_shape_helper() {
 
 TriggerShape::TriggerShape() :
 		wave(switchTimesBuffer, NULL) {
-	clear();
 	initialize(OM_NONE, false);
 	wave.waves = h.waves;
 	// todo: false here, true in clear() what a mess!
@@ -109,6 +108,9 @@ void TriggerShape::calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE
 }
 
 void TriggerShape::clear() {
+}
+
+void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTriggerInput) {
 	tdcPosition = 0;
 	setTriggerSynchronizationGap(2);
 	// todo: true here, false in constructor() what a mess!
@@ -116,10 +118,7 @@ void TriggerShape::clear() {
 
 	invertOnAdd = false;
 	gapBothDirections = false;
-}
 
-void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTriggerInput) {
-	clear();
 	this->operationMode = operationMode;
 	size = 0;
 	this->needSecondTriggerInput = needSecondTriggerInput;
