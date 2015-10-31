@@ -107,9 +107,6 @@ void TriggerShape::calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE
 	}
 }
 
-void TriggerShape::clear() {
-}
-
 void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTriggerInput) {
 	tdcPosition = 0;
 	setTriggerSynchronizationGap(2);
