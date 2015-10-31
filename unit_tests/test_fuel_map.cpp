@@ -124,17 +124,17 @@ extern engine_configuration_s *engineConfiguration;
 static void confgiureFordAspireTriggerShape(TriggerShape * s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
-	s->addEvent(53.747, T_SECONDARY, TV_HIGH);
-	s->addEvent(121.90, T_SECONDARY, TV_LOW);
-	s->addEvent(232.76, T_SECONDARY, TV_HIGH);
-	s->addEvent(300.54, T_SECONDARY, TV_LOW);
-	s->addEvent(360, T_PRIMARY, TV_HIGH);
+	s->addEvent(53.747, T_SECONDARY, TV_RISE);
+	s->addEvent(121.90, T_SECONDARY, TV_FALL);
+	s->addEvent(232.76, T_SECONDARY, TV_RISE);
+	s->addEvent(300.54, T_SECONDARY, TV_FALL);
+	s->addEvent(360, T_PRIMARY, TV_RISE);
 
-	s->addEvent(409.8412, T_SECONDARY, TV_HIGH);
-	s->addEvent(478.6505, T_SECONDARY, TV_LOW);
-	s->addEvent(588.045, T_SECONDARY, TV_HIGH);
-	s->addEvent(657.03, T_SECONDARY, TV_LOW);
-	s->addEvent(720, T_PRIMARY, TV_LOW);
+	s->addEvent(409.8412, T_SECONDARY, TV_RISE);
+	s->addEvent(478.6505, T_SECONDARY, TV_FALL);
+	s->addEvent(588.045, T_SECONDARY, TV_RISE);
+	s->addEvent(657.03, T_SECONDARY, TV_FALL);
+	s->addEvent(720, T_PRIMARY, TV_FALL);
 
 	assertEquals(53.747 / 720, s->wave.getSwitchTime(0));
 	assertEqualsM("@0", 1, s->wave.getChannelState(1, 0));
