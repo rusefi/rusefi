@@ -119,6 +119,7 @@ void TriggerShape::clear() {
 }
 
 void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTriggerInput) {
+	clear();
 	this->operationMode = operationMode;
 	size = 0;
 	this->needSecondTriggerInput = needSecondTriggerInput;
