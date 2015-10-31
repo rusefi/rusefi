@@ -451,17 +451,19 @@ extern engine_pins_s enginePins;
 
 static OutputPin *leds[] = { &warningPin, &runningPin, &enginePins.errorLedPin, &communicationPin, &checkEnginePin };
 
+extern pin_output_mode_e DEFAULT_OUTPUT;
+
 static void initStatisLeds() {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	outputPinRegister("communication status 1", &communicationPin,
-	LED_COMMUNICATION_PORT, LED_COMMUNICATION_PIN);
+	outputPinRegisterExt2("communication status 1", &communicationPin,
+			engineConfiguration->communicationPin, &DEFAULT_OUTPUT);
 #endif
 
 #if EFI_WARNING_LED || defined(__DOXYGEN__)
 	outputPinRegister("warning", &warningPin, LED_WARNING_PORT,
 	LED_WARNING_PIN);
-	outputPinRegister("is running status", &runningPin, LED_RUNNING_STATUS_PORT,
-	LED_RUNNING_STATUS_PIN);
+	outputPinRegisterExt2("is running status", &runningPin, engineConfiguration->runningPin,
+			&DEFAULT_OUTPUT);
 #endif /* EFI_WARNING_LED */
 }
 
