@@ -38,6 +38,9 @@ static GPIO_TypeDef *PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOF};
 pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
 pin_output_mode_e OPENDRAIN_OUTPUT = OM_OPENDRAIN;
 
+/**
+ * This method is used for digital GPIO pins only, for peripheral pins see mySetPadMode
+ */
 static void outputPinRegisterExt(const char *msg, OutputPin *output, GPIO_TypeDef *port, uint32_t pin,
 		pin_output_mode_e *outputMode) {
 #if EFI_GPIO
