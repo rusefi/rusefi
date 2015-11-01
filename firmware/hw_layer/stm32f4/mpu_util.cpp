@@ -323,7 +323,7 @@ void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
 	ioportmask_t pin = getHwPin(csPin);
 	spiConfig->ssport = port;
 	spiConfig->sspad = pin;
-	mySetPadMode("chip select", port, pin, PAL_STM32_MODE_OUTPUT);
+	mySetPadMode2("chip select", csPin, PAL_STM32_MODE_OUTPUT);
 }
 
 #endif
