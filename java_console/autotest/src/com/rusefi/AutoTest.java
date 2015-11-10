@@ -132,7 +132,7 @@ public class AutoTest {
         msg = "2003 Neon running";
         IoUtil.changeRpm(2000);
         chart = nextChart();
-        x = 100.8;
+        x = 95.04;
         assertWave(true, msg, chart, EngineChart.SPARK_1, 0.13299999999999998, 0.005, EngineReport.RATIO, x + 180, x + 540);
         assertWaveNull(msg, chart, EngineChart.SPARK_2);
         assertWave(true, msg, chart, EngineChart.SPARK_3, 0.13299999999999998, 0.005, EngineReport.RATIO, x, x + 360);
@@ -297,7 +297,7 @@ public class AutoTest {
         assertWaveFall(msg, chart, EngineChart.INJECTOR_3, 0.086, 417.04);
         assertWaveFall(msg, chart, EngineChart.INJECTOR_4, 0.086, 594.04);
 
-        x = 22.32;
+        x = 16.44;
         assertWave(chart, EngineChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
 
         sendCommand("set_fuel_map 2200 4 15.66");
@@ -315,14 +315,14 @@ public class AutoTest {
         assertWaveFall(msg + " fuel", chart, EngineChart.INJECTOR_3, 0.555, 417.04);
         assertWaveFall(msg + " fuel", chart, EngineChart.INJECTOR_4, 0.555, 594.04);
 
-        x = 45;
+        x = 39.12;
         assertWave(chart, EngineChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
         assertWaveNull(chart, EngineChart.SPARK_2);
 
         sendComplexCommand("set_global_trigger_offset_angle 130");
         sendComplexCommand("set_injection_offset 369");
         chart = nextChart();
-        x = 585;
+        x = 39.12;
         assertWave(chart, EngineChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
 
         // let's enable more channels dynamically
