@@ -21,6 +21,7 @@
  *
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 #include "main.h"
@@ -41,6 +42,7 @@ static Logging *logger;
 EXTERN_ENGINE
 ;
 
+// todo: extract interface for idle valve hardware, with solenoid and stepper implementations?
 static OutputPin idleSolenoidPin;
 static SimplePwm idleSolenoid;
 
@@ -53,8 +55,9 @@ static float actualIdlePosition = -100.0f;
 
 /**
  * Idle level calculation algorithm lives in idle_controller.cpp
+ * todo: replace this with a PID regulator?
  */
-static IdleValveState idleMath;
+static IdleValveState idlePositionController;
 
 void idleDebug(const char *msg, percent_t value) {
 	scheduleMsg(logger, "idle debug: %s%f", msg, value);
@@ -93,7 +96,7 @@ static void setIdleValvePwm(percent_t value) {
 	idleSolenoid.setSimplePwmDutyCycle(value / 100);
 }
 
-static void doSetIdleValvePosition(int positionPercent) {
+static void manualIdleController(int positionPercent) {
 	// todo: this is not great that we have to write into configuration here
 	boardConfiguration->manIdlePosition = positionPercent;
 
@@ -121,7 +124,7 @@ static void setIdleValvePosition(int positionPercent) {
 		return;
 	scheduleMsg(logger, "setting idle valve position %d", positionPercent);
 	showIdleInfo();
-	doSetIdleValvePosition(positionPercent);
+	manualIdleController(positionPercent);
 }
 
 static int idlePositionBeforeBlip;
@@ -131,6 +134,7 @@ static efitimeus_t timeToStopBlip = 0;
  * I use this questionable feature to tune acceleration enrichment
  */
 static void blipIdle(int idlePosition, int durationMs) {
+	// todo: add 'blip' feature for automatic target control
 	if (timeToStopBlip != 0) {
 		return; // already in idle blip
 	}
@@ -177,13 +181,13 @@ static msg_t ivThread(int param) {
 
 		if (engineConfiguration->idleMode != IM_AUTO) {
 			// let's re-apply CLT correction
-			doSetIdleValvePosition(boardConfiguration->manIdlePosition);
+			manualIdleController(boardConfiguration->manIdlePosition);
 			continue;
 		}
 
 		efitimems_t now = currentTimeMillis();
 
-		percent_t newValue = idleMath.getIdle(getRpm(), now PASS_ENGINE_PARAMETER);
+		percent_t newValue = idlePositionController.getIdle(getRpm(), now PASS_ENGINE_PARAMETER);
 
 		if (currentIdleValve != newValue) {
 			currentIdleValve = newValue;
@@ -198,10 +202,11 @@ static msg_t ivThread(int param) {
 #endif
 }
 
-static void setIdleRpmAction(int value) {
-	idleMath.setTargetRpm(value);
+static void setTargetRpm(int value) {
+	idlePositionController.setTargetRpm(value);
 	scheduleMsg(logger, "target idle RPM %d", value);
 }
+
 static void apply(void) {
 //	idleMath.updateFactors(engineConfiguration->idlePFactor, engineConfiguration->idleIFactor, engineConfiguration->idleDFactor, engineConfiguration->idleDT);
 }
@@ -246,9 +251,7 @@ static void applyIdleSolenoidPinState(PwmConfig *state, int stateIndex) {
 		output->setValue(value);
 }
 
-void startIdleThread(Logging*sharedLogger, Engine *engine) {
-	logger = sharedLogger;
-
+static void initIdleHardware() {
 	if (boardConfiguration->useStepperIdle) {
 		iacMotor.initialize(boardConfiguration->idle.stepperStepPin, boardConfiguration->idle.stepperDirectionPin,
 				engineConfiguration->idleStepperReactionTime, engineConfiguration->idleStepperTotalSteps,
@@ -261,9 +264,16 @@ void startIdleThread(Logging*sharedLogger, Engine *engine) {
 				boardConfiguration->idle.solenoidFrequency, boardConfiguration->manIdlePosition / 100,
 				applyIdleSolenoidPinState);
 	}
+}
 
-	idleMath.init();
-	scheduleMsg(logger, "initial idle %d", idleMath.value);
+void startIdleThread(Logging*sharedLogger, Engine *engine) {
+	logger = sharedLogger;
+
+	// todo: re-initialize idle pins on the fly
+	initIdleHardware();
+
+	idlePositionController.init();
+	scheduleMsg(logger, "initial idle %d", idlePositionController.value);
 
 	chThdCreateStatic(ivThreadStack, sizeof(ivThreadStack), NORMALPRIO, (tfunc_t) ivThread, NULL);
 
@@ -278,7 +288,6 @@ void startIdleThread(Logging*sharedLogger, Engine *engine) {
 				getInputMode(boardConfiguration->clutchUpPinMode));
 
 	addConsoleAction("idleinfo", showIdleInfo);
-	addConsoleActionI("set_idle_rpm", setIdleRpmAction);
 
 	addConsoleActionI("set_idle_position", setIdleValvePosition);
 
@@ -286,6 +295,9 @@ void startIdleThread(Logging*sharedLogger, Engine *engine) {
 
 	addConsoleActionII("blipidle", blipIdle);
 
+	// split this whole file into manual controller and auto controller? move these commands into the file
+	// which would be dedicated to just auto-controller?
+	addConsoleActionI("set_idle_rpm", setTargetRpm);
 	addConsoleActionF("set_idle_p", setIdlePFactor);
 	addConsoleActionF("set_idle_i", setIdleIFactor);
 	addConsoleActionF("set_idle_d", setIdleDFactor);

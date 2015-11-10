@@ -146,8 +146,10 @@ static void printErrorCounters(void) {
 void printTsStats(void) {
 #if EFI_PROD_CODE
 	if (!isSerialOverUart()) {
-		scheduleMsg(&tsLogger, "TS RX on %s%d/TX on %s%d @%d", portname(TS_SERIAL_RX_PORT), TS_SERIAL_RX_PIN,
-				portname(TS_SERIAL_TX_PORT), TS_SERIAL_TX_PIN, boardConfiguration->tunerStudioSerialSpeed);
+		scheduleMsg(&tsLogger, "TS RX on %s", hwPortname(engineConfiguration->binarySerialRxPin));
+
+		scheduleMsg(&tsLogger, "TS TX on %s @%d", hwPortname(engineConfiguration->binarySerialTxPin),
+				boardConfiguration->tunerStudioSerialSpeed);
 	}
 #endif /* EFI_PROD_CODE */
 

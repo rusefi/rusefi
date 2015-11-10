@@ -350,8 +350,8 @@ static void testRpmCalculator(void) {
 	assertEqualsM("queue size 3", 6, schedulingQueue.size());
 	assertEqualsM("ev 3", 258333, schedulingQueue.getForUnitText(0)->momentX);
 	assertEqualsM("ev 4", 258333, schedulingQueue.getForUnitText(1)->momentX);
-	assertEqualsM2("ev 5", 259892, schedulingQueue.getForUnitText(2)->momentX, 2);
-	assertEqualsM("3/3", 260392, schedulingQueue.getForUnitText(3)->momentX);
+	assertEqualsM2("ev 5", 259277, schedulingQueue.getForUnitText(2)->momentX, 2);
+	assertEqualsM("3/3", 259777, schedulingQueue.getForUnitText(3)->momentX);
 	schedulingQueue.clear();
 
 	timeNow += 5000;
@@ -376,7 +376,7 @@ static void testRpmCalculator(void) {
 	assertEqualsM("queue size 6", 6, schedulingQueue.size());
 	assertEqualsM("6/0", 285000, schedulingQueue.getForUnitText(0)->momentX);
 	assertEqualsM("6/1", 285000, schedulingQueue.getForUnitText(1)->momentX);
-	assertEqualsM2("6/2", 286559, schedulingQueue.getForUnitText(2)->momentX, 1);
+	assertEqualsM2("6/2", 285944, schedulingQueue.getForUnitText(2)->momentX, 1);
 	schedulingQueue.clear();
 
 	timeNow += 5000;
@@ -386,16 +386,16 @@ static void testRpmCalculator(void) {
 
 	timeNow += 5000; // 5ms
 	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
-	assertEqualsM("queue size 8", 5, schedulingQueue.size());
+	assertEqualsM("queue size 8", 6, schedulingQueue.size());
 	assertEqualsM("8/0", 298333, schedulingQueue.getForUnitText(0)->momentX);
 	assertEqualsM("8/1", 298333, schedulingQueue.getForUnitText(1)->momentX);
-	assertEqualsM2("8/2", 299892, schedulingQueue.getForUnitText(2)->momentX, 0);
-	assertEqualsM2("8/3", 301363, schedulingQueue.getForUnitText(3)->momentX, 0);
+	assertEqualsM2("8/2", 299277, schedulingQueue.getForUnitText(2)->momentX, 0);
+	assertEqualsM2("8/3", 299777, schedulingQueue.getForUnitText(3)->momentX, 0);
 	schedulingQueue.clear();
 
 	timeNow += 5000;
 	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN PASS_ENGINE_PARAMETER);
-	assertEqualsM("queue size 9", 1, schedulingQueue.size());
+	assertEqualsM("queue size 9", 0, schedulingQueue.size());
 	schedulingQueue.clear();
 
 	timeNow += 5000; // 5ms

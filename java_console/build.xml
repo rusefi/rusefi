@@ -15,6 +15,8 @@
             <src path="ui/src"/>
             <src path="romraider/src"/>
             <src path="logging/src"/>
+		<!-- not really used at the moment but let's compile for the sake of Eclipse users -->
+            <src path="tools/src"/>
         </javac>
 
         <junit fork="no"
