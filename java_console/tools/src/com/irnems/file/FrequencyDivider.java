@@ -1,6 +1,7 @@
 package com.irnems.file;
 
-import com.irnems.core.EngineState;
+import com.rusefi.core.EngineState;
+import com.rusefi.file.FileUtils;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

@@ -11,7 +11,7 @@ import java.util.List;
  * (c) Andrey Belomutskiy
  */
 public class FileUtils {
-    static void readFile(String filename, EngineState.EngineStateListener listener) {
+    public static void readFile(String filename, EngineState.EngineStateListener listener) {
         readFile2(filename, new EngineState(listener));
     }
 

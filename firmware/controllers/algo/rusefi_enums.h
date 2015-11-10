@@ -236,7 +236,18 @@ typedef enum {
 } log_format_e;
 
 typedef enum {
-	IM_AUTO = 0, IM_MANUAL = 1, Force_4b_idle_mode = ENUM_32_BITS,
+	/**
+	 * In auto mode we currently have some pid-like-but-not really PID logic which is trying
+	 * to get idle RPM to desired value by dynamically adjusting idle valve position.
+	 * TODO: convert to PID
+	 */
+	IM_AUTO = 0,
+	/**
+	 * Manual idle control is extremely simple: user just specifies desired idle valve position
+	 * which could be adjusted according to current CLT
+	 */
+	IM_MANUAL = 1,
+	Force_4b_idle_mode = ENUM_32_BITS,
 } idle_mode_e;
 
 typedef enum {

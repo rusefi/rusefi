@@ -41,14 +41,14 @@ void startTsPort(void) {
 	{
 		if (boardConfiguration->useSerialPort) {
 
-		print("TunerStudio over USART");
-		mySetPadMode("tunerstudio rx", TS_SERIAL_RX_PORT, TS_SERIAL_RX_PIN, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
-		mySetPadMode("tunerstudio tx", TS_SERIAL_TX_PORT, TS_SERIAL_TX_PIN, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
+			print("TunerStudio over USART");
+			mySetPadMode2("tunerstudio rx", engineConfiguration->binarySerialRxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
+			mySetPadMode2("tunerstudio tx", engineConfiguration->binarySerialTxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
 
-		tsSerialConfig.speed = boardConfiguration->tunerStudioSerialSpeed;
+			tsSerialConfig.speed = boardConfiguration->tunerStudioSerialSpeed;
 
-		sdStart(TS_SERIAL_UART_DEVICE, &tsSerialConfig);
-	}
+			sdStart(TS_SERIAL_UART_DEVICE, &tsSerialConfig);
+		}
 	}
 }
 
