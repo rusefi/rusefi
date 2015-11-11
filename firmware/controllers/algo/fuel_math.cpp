@@ -37,9 +37,6 @@
 #include "engine_math.h"
 #include "rpm_calculator.h"
 #include "speed_density.h"
-#if EFI_ACCEL_ENRICHMENT || defined(__DOXYGEN__)
-#include "accel_enrichment.h"
-#endif /* EFI_ACCEL_ENRICHMENT */
 
 EXTERN_ENGINE
 ;
@@ -134,11 +131,6 @@ floatms_t getFuelMs(int rpm DECLARE_ENGINE_PARAMETER_S) {
 floatms_t getRunningFuel(floatms_t baseFuel, int rpm DECLARE_ENGINE_PARAMETER_S) {
 	float iatCorrection = ENGINE(engineState.iatFuelCorrection);
 	float cltCorrection = ENGINE(engineState.cltFuelCorrection);
-
-#if EFI_ACCEL_ENRICHMENT || defined(__DOXYGEN__)
-	float accelEnrichment = getAccelEnrichment();
-	// todo: accelEnrichment
-#endif /* EFI_ACCEL_ENRICHMENT */
 
 	engine->totalFuelCorrection = cltCorrection * iatCorrection;
 
