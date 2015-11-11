@@ -198,8 +198,6 @@ void turnOnHardware(Logging *sharedLogger) {
 #endif /* EFI_SHAFT_POSITION_INPUT */
 }
 
-extern engine_configuration_s activeConfiguration;
-
 void applyNewHardwareSettings(void) {
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	applyNewTriggerInputPins();
