@@ -305,9 +305,7 @@
 #define etbControlPin2_offset_hex 364
 #define electronicThrottlePin1Mode_offset 872
 #define electronicThrottlePin1Mode_offset_hex 368
-#define etbPFactor_offset 876
-#define etbIFactor_offset 880
-#define etbIFactor_offset_hex 370
+#define unused2_offset 876
 #define wboHeaterPin_offset 884
 #define wboHeaterPin_offset_hex 374
 #define wboPumpPin_offset 888
@@ -689,7 +687,12 @@
 #define consoleSerialTxPin_offset 1944
 #define consoleSerialTxPin_offset_hex 798
 #define consoleSerialRxPin_offset 1948
-#define unused3_offset 1952
+#define knockNoiseBins_offset 1952
+#define knockNoise_offset 1984
+#define etbPFactor_offset 2016
+#define etbIFactor_offset 2020
+#define etbDFactor_offset 2024
+#define unused3_offset 2028
 #define targetVBatt_offset 2156
 #define alternatorOffAboveTps_offset 2160
 #define alternatorOffAboveTps_offset_hex 870

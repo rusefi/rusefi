@@ -1,6 +1,22 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Nov 08 18:16:16 EST 2015
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Nov 11 21:40:26 EST 2015
 // begin
 #include "rusefi_types.h"
+typedef struct {
+	/**
+	 * offset 0
+	 */
+	float pFactor;
+	/**
+	 * offset 4
+	 */
+	float iFactor;
+	/**
+	 * offset 8
+	 */
+	float dFactor;
+	/** total size 12*/
+} pid_s;
+
 typedef struct {
 	/**
 	 * offset 0
@@ -420,11 +436,7 @@ typedef struct {
 	/**
 	 * offset 252
 	 */
-	float etbPFactor;
-	/**
-	 * offset 256
-	 */
-	float etbIFactor;
+	float unused2[2];
 	/**
 	 * offset 260
 	 */
@@ -1351,7 +1363,27 @@ typedef struct {
 	/**
 	 * offset 1952
 	 */
-	int unused3[51];
+	float knockNoiseBins[8];
+	/**
+	 * offset 1984
+	 */
+	float knockNoise[8];
+	/**
+	 * offset 2016
+	 */
+	float etbPFactor;
+	/**
+	 * offset 2020
+	 */
+	float etbIFactor;
+	/**
+	 * offset 2024
+	 */
+	float etbDFactor;
+	/**
+	 * offset 2028
+	 */
+	int unused3[32];
 	/**
 	 * offset 2156
 	 */
@@ -1563,4 +1595,4 @@ typedef struct {
 } persistent_config_s;
 
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Nov 08 18:16:16 EST 2015
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Nov 11 21:40:26 EST 2015
