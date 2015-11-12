@@ -68,6 +68,11 @@ custom baro_corr_table_t 64 array,   F32,   @OFFSET@, [@@BARO_CORR_SIZE@@x@@BARO
 ! please note that 1024 here is 4 * IGN_LOAD_COUNT * IGN_RPM_COUNT  
 custom ignition_table_t	1024 array,   F32,   @OFFSET@, [16x16],"deg",	   1,     0,     -720,  720,    2
 
+struct pid_s
+	float pFactor;;"value",      1,      0,       0, 1000,      2
+	float iFactor;;"value",      1,      0,       0, 1000,      2
+	float dFactor;;"value",      1,      0,       0, 1000,      2
+end_struct
 
 struct cranking_parameters_s
 float baseFuel;;"ms",       1,     0,    0, 200,     1
@@ -362,8 +367,7 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fas
 	brain_pin_e etbControlPin2;
 	pin_output_mode_e electronicThrottlePin1Mode;
 
-float etbPFactor;
-float etbIFactor;
+float[2] unused2;
 
 	brain_pin_e wboHeaterPin;
 	brain_pin_e wboPumpPin;
@@ -594,8 +598,14 @@ baro_corr_table_t baroCorrTable;
 	brain_pin_e binarySerialTxPin;	
 	brain_pin_e binarySerialRxPin;	
 	brain_pin_e consoleSerialTxPin;	
-	brain_pin_e consoleSerialRxPin;	
-	int[51] unused3;
+	brain_pin_e consoleSerialRxPin;
+	float[8] knockNoiseBins;
+	float[8] knockNoise;
+	float etbPFactor;
+float etbIFactor;
+float etbDFactor;
+	
+	int[32] unused3;
 	
 	float targetVBatt;;"Volts",      1,      0,       0,30,      1
 	float alternatorOffAboveTps;Turn off alternator output above specified TPS;"%",  1,      0,       0, 200,      2

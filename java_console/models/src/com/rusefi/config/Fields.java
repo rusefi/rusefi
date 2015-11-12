@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar Thu Oct 22 12:50:06 EDT 2015
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Nov 11 21:40:26 EST 2015
 public class Fields {
 	public static final Field ENGINETYPE = new Field("ENGINETYPE", 0, FieldType.INT);
 	public static final Field HEADERMAGICVALUE = new Field("HEADERMAGICVALUE", 4, FieldType.INT);
@@ -167,8 +167,6 @@ public class Fields {
 	public static final Field ETBCONTROLPIN1 = new Field("ETBCONTROLPIN1", 864, FieldType.INT, brain_pin_e);
 	public static final Field ETBCONTROLPIN2 = new Field("ETBCONTROLPIN2", 868, FieldType.INT, brain_pin_e);
 	public static final Field ELECTRONICTHROTTLEPIN1MODE = new Field("ELECTRONICTHROTTLEPIN1MODE", 872, FieldType.INT, pin_output_mode_e);
-	public static final Field ETBPFACTOR = new Field("ETBPFACTOR", 876, FieldType.FLOAT);
-	public static final Field ETBIFACTOR = new Field("ETBIFACTOR", 880, FieldType.FLOAT);
 	public static final Field WBOHEATERPIN = new Field("WBOHEATERPIN", 884, FieldType.INT, brain_pin_e);
 	public static final Field WBOPUMPPIN = new Field("WBOPUMPPIN", 888, FieldType.INT, brain_pin_e);
 	public static final Field FUELLEVELEMPTYTANKVOLTAGE = new Field("FUELLEVELEMPTYTANKVOLTAGE", 892, FieldType.FLOAT);
@@ -438,6 +436,9 @@ public class Fields {
 	public static final Field BINARYSERIALRXPIN = new Field("BINARYSERIALRXPIN", 1940, FieldType.INT, brain_pin_e);
 	public static final Field CONSOLESERIALTXPIN = new Field("CONSOLESERIALTXPIN", 1944, FieldType.INT, brain_pin_e);
 	public static final Field CONSOLESERIALRXPIN = new Field("CONSOLESERIALRXPIN", 1948, FieldType.INT, brain_pin_e);
+	public static final Field ETBPFACTOR = new Field("ETBPFACTOR", 2016, FieldType.FLOAT);
+	public static final Field ETBIFACTOR = new Field("ETBIFACTOR", 2020, FieldType.FLOAT);
+	public static final Field ETBDFACTOR = new Field("ETBDFACTOR", 2024, FieldType.FLOAT);
 	public static final Field TARGETVBATT = new Field("TARGETVBATT", 2156, FieldType.FLOAT);
 	public static final Field ALTERNATOROFFABOVETPS = new Field("ALTERNATOROFFABOVETPS", 2160, FieldType.FLOAT);
 	public static final Field ALTERNATORDT = new Field("ALTERNATORDT", 2164, FieldType.INT);
