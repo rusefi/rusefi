@@ -193,7 +193,7 @@ public class AutoTest {
         assertWaveFall(msg, chart, EngineChart.INJECTOR_1, 0.133, x + 180);
         assertWaveFall(msg, chart, EngineChart.INJECTOR_3, 0.133, x + 360);
 
-        x = 115.92;
+        x = 112.92;
         assertWave(msg, chart, EngineChart.SPARK_4, 0.13333, x + 540);
         assertWave(msg, chart, EngineChart.SPARK_2, 0.13333, x);
         assertWave(msg, chart, EngineChart.SPARK_1, 0.13333, x + 180);
@@ -230,7 +230,7 @@ public class AutoTest {
 
         String msg = "ford 6";
 
-        double x = 8.16;
+        double x = 7;
         assertWave(msg, chart, EngineChart.SPARK_1, 0.01666, x, x + 120, x + 240, x + 360, x + 480, x + 600);
 
         assertWaveNull(msg, chart, EngineChart.TRIGGER_2);
@@ -328,14 +328,13 @@ public class AutoTest {
         // let's enable more channels dynamically
         sendComplexCommand("set_ignition_mode 1");
         chart = nextChart();
-        assertWave("Switching Aspire into INDIVIDUAL_COILS mode", chart, EngineChart.SPARK_2, 0.133, x);
-        assertWave(chart, EngineChart.SPARK_3, 0.133, x + 360);
+        assertWave("Switching Aspire into INDIVIDUAL_COILS mode", chart, EngineChart.SPARK_2, 0.133, x + 540);
+        assertWave(chart, EngineChart.SPARK_3, 0.133, x + 180);
 
         sendCommand("set_whole_timing_map 520");
         chart = nextChart();
-        x = 64.8;
+        x = 58.92;
         assertWave(chart, EngineChart.SPARK_2, 0.133, x);
-
 
         // switching to Speed Density
         if (!TestingUtils.isRealHardware)
