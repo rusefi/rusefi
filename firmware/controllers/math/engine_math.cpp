@@ -176,14 +176,14 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 			int index = getCylinderId(engineConfiguration->specs.firingOrder, i) - 1;
 			float angle = baseAngle
-					+ (float) CONFIG(engineCycle) * i / CONFIG(specs.cylindersCount);
+					+ (float) CONFIG(engineCycleDuration) * i / CONFIG(specs.cylindersCount);
 			registerInjectionEvent(index, angle, false PASS_ENGINE_PARAMETER);
 		}
 		break;
 	case IM_SIMULTANEOUS:
 		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 			float angle = baseAngle
-					+ (float) CONFIG(engineCycle) * i / CONFIG(specs.cylindersCount);
+					+ (float) CONFIG(engineCycleDuration) * i / CONFIG(specs.cylindersCount);
 
 			/**
 			 * We do not need injector pin here because we will control all injectors
@@ -196,7 +196,7 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 			int index = i % (engineConfiguration->specs.cylindersCount / 2);
 			float angle = baseAngle
-					+ i * (float) CONFIG(engineCycle) / CONFIG(specs.cylindersCount);
+					+ i * (float) CONFIG(engineCycleDuration) / CONFIG(specs.cylindersCount);
 			registerInjectionEvent(index, angle, false PASS_ENGINE_PARAMETER);
 
 			if (CONFIG(twoWireBatch)) {
@@ -372,13 +372,13 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 
 	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
-		ENGINE(angleExtra[i])= (float) CONFIG(engineCycle) * i / CONFIG(specs.cylindersCount);
+		ENGINE(angleExtra[i])= (float) CONFIG(engineCycleDuration) * i / CONFIG(specs.cylindersCount);
 
 		ENGINE(ignitionPin[i]) = getIgnitionPinForIndex(i PASS_ENGINE_PARAMETER);
 
 	}
 
-	for (int angle = 0; angle < CONFIG(engineCycle); angle++) {
+	for (int angle = 0; angle < CONFIG(engineCycleDuration); angle++) {
 		if (angle==700) {
 			is700++;
 		}

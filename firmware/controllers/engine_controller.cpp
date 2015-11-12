@@ -207,7 +207,7 @@ static void periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 		angle_t offsetAngle = TRIGGER_SHAPE(eventAngles[CONFIG(mapAveragingSchedulingAtIndex)]);
 
 		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-			angle_t cylinderOffset = engineConfiguration->engineCycle * i / engineConfiguration->specs.cylindersCount;
+			angle_t cylinderOffset = engineConfiguration->engineCycleDuration * i / engineConfiguration->specs.cylindersCount;
 			float cylinderStart = start + cylinderOffset - offsetAngle + tdcPosition();
 			fixAngle(cylinderStart);
 			engine->engineState.mapAveragingStart[i] = cylinderStart;

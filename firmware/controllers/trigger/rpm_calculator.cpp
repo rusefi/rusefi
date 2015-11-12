@@ -196,7 +196,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		if (diffNt == 0) {
 			rpmState->setRpmValue(NOISY_RPM);
 		} else {
-			int mult = engineConfiguration->engineCycle / 360;
+			int mult = engineConfiguration->engineCycleDuration / 360;
 			int rpm = (int) (60 * US2NT(US_PER_SECOND_LL) * mult / diffNt);
 			rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm);
 		}

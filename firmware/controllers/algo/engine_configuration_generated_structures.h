@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Nov 11 21:47:19 EST 2015
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 12 10:32:55 EST 2015
 // begin
 #include "rusefi_types.h"
 typedef struct {
@@ -859,7 +859,7 @@ typedef struct {
 	 * 720 for four-stroke
 	 * offset 416
 	 */
-	int engineCycle;
+	int engineCycleDuration;
 	/**
 	 * offset 420
 	 */
@@ -1571,4 +1571,4 @@ typedef struct {
 } persistent_config_s;
 
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Nov 11 21:47:19 EST 2015
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 12 10:32:55 EST 2015
