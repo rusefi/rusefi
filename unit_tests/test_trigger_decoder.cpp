@@ -283,8 +283,8 @@ static void testRpmCalculator(void) {
 	IgnitionEventList *ilist = &eth.engine.engineConfiguration2->ignitionEvents[0];
 	assertEqualsM("size", 6, ilist->size);
 
-	assertEquals(720, eth.engine.engineConfiguration->engineCycle);
-	assertEquals(720, eth.ec->engineCycle);
+	assertEquals(720, eth.engine.engineConfiguration->engineCycleDuration);
+	assertEquals(720, eth.ec->engineCycleDuration);
 
 	efiAssertVoid(eth.engine.engineConfiguration!=NULL, "null config in engine");
 

@@ -339,10 +339,10 @@ static ALWAYS_INLINE void scheduleIgnitionAndFuelEvents(int rpm, int revolutionI
 	 * but we are already re-purposing the output signals, but everything works because we
 	 * are not affecting that space in memory. todo: use two instances of 'ignitionSignals'
 	 */
-	float maxAllowedDwellAngle = (int) (engineConfiguration->engineCycle / 2); // the cast is about making Coverity happy
+	float maxAllowedDwellAngle = (int) (engineConfiguration->engineCycleDuration / 2); // the cast is about making Coverity happy
 
 	if (engineConfiguration->ignitionMode == IM_ONE_COIL) {
-		maxAllowedDwellAngle = engineConfiguration->engineCycle / engineConfiguration->specs.cylindersCount / 1.1;
+		maxAllowedDwellAngle = engineConfiguration->engineCycleDuration / engineConfiguration->specs.cylindersCount / 1.1;
 	}
 
 	if (engine->engineState.dwellAngle == 0) {

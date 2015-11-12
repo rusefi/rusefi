@@ -28,14 +28,20 @@ void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
  * @brief Shifts angle into the [0..720) range for four stroke and [0..360) for two stroke
  * I guess this implementation would be faster than 'angle % engineCycle'
  */
-#define fixAngle(angle)                     \
-	if (CONFIG(engineCycle) == 0) {         \
-       firmwareError("zero engineCycle");   \
-    }                                       \
-	while (angle < 0)                       \
-		angle += CONFIG(engineCycle);       \
-	while (angle >= CONFIG(engineCycle))    \
-		angle -= CONFIG(engineCycle);
+#define fixAngle(angle)															\
+	{																			\
+		float engineCycleDurationLocalCopy = CONFIG(engineCycleDuration);		\
+		/* 																		\
+		 * could be zero if the middle of setDefaultConfiguration 				\
+		 * todo: anything else should be done to handle this condition?			\
+		 */ 																	\
+		if (engineCycleDurationLocalCopy != 0) { 								\
+			while (angle < 0)                       							\
+				angle += engineCycleDurationLocalCopy;   						\
+			while (angle >= engineCycleDurationLocalCopy)						\
+				angle -= engineCycleDurationLocalCopy;   						\
+		}                                       								\
+	}
 
 /**
  * @return time needed to rotate crankshaft by one degree, in milliseconds.

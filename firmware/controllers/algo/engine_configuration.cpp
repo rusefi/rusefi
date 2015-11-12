@@ -500,7 +500,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->engineChartSize = 400;
 #endif
 
-	engineConfiguration->engineCycle = 720;
+	engineConfiguration->engineCycleDuration = 720;
 
 	engineConfiguration->primingSquirtDurationMs = 5;
 
