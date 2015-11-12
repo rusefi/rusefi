@@ -51,21 +51,21 @@ static msg_t AltCtrlThread(int param) {
 }
 
 static void applySettings(void) {
-	altPid.updateFactors(engineConfiguration->alternatorControlPFactor, 0, 0);
+	altPid.updateFactors(engineConfiguration->alternatorControl.pFactor, 0, 0);
 }
 
 void showAltInfo(void) {
 	scheduleMsg(logger, "alt=%s @%s t=%dms", boolToString(engineConfiguration->isAlternatorControlEnabled),
 			hwPortname(boardConfiguration->alternatorControlPin),
 			engineConfiguration->alternatorDT);
-	scheduleMsg(logger, "p=%f/i=%f/d=%f offset=%f", engineConfiguration->alternatorControlPFactor,
+	scheduleMsg(logger, "p=%f/i=%f/d=%f offset=%f", engineConfiguration->alternatorControl.pFactor,
 			0, 0, engineConfiguration->alternatorOffset); // todo: i & d
 	scheduleMsg(logger, "vbatt=%f/duty=%f/target=%f", getVBatt(PASS_ENGINE_PARAMETER_F), currentAltDuty,
 			engineConfiguration->targetVBatt);
 }
 
 void setAltPFactor(float p) {
-	engineConfiguration->alternatorControlPFactor = p;
+	engineConfiguration->alternatorControl.pFactor = p;
 	scheduleMsg(logger, "setAltPid: %f", p);
 	applySettings();
 	showAltInfo();
@@ -88,7 +88,7 @@ void setDefaultAlternatorParameters(void) {
 	engineConfiguration->targetVBatt = 14;
 
 	engineConfiguration->alternatorOffset = 0;
-	engineConfiguration->alternatorControlPFactor = 30;
+	engineConfiguration->alternatorControl.pFactor = 30;
 	engineConfiguration->alternatorDT = 100;
 }
 

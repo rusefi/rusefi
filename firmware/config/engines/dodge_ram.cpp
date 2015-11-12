@@ -72,7 +72,7 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_F) {
 
 
 	boardConfiguration->alternatorControlPin = GPIOD_7;
-	engineConfiguration->alternatorControlPFactor = 22;
+	engineConfiguration->alternatorControl.pFactor = 22;
 
 	boardConfiguration->idle.solenoidPin = GPIOC_13;
 	boardConfiguration->idle.solenoidFrequency = 300;

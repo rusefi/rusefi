@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Nov 11 21:40:26 EST 2015
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Nov 11 21:47:19 EST 2015
 // begin
 #include "rusefi_types.h"
 typedef struct {
@@ -1319,15 +1319,7 @@ typedef struct {
 	/**
 	 * offset 1908
 	 */
-	float idlePFactor;
-	/**
-	 * offset 1912
-	 */
-	float idleIFactor;
-	/**
-	 * offset 1916
-	 */
-	float idleDFactor;
+	pid_s idlePid;
 	/**
 	 * offset 1920
 	 */
@@ -1371,15 +1363,7 @@ typedef struct {
 	/**
 	 * offset 2016
 	 */
-	float etbPFactor;
-	/**
-	 * offset 2020
-	 */
-	float etbIFactor;
-	/**
-	 * offset 2024
-	 */
-	float etbDFactor;
+	pid_s etb;
 	/**
 	 * offset 2028
 	 */
@@ -1406,15 +1390,7 @@ typedef struct {
 	/**
 	 * offset 2172
 	 */
-	float alternatorControlPFactor;
-	/**
-	 * offset 2176
-	 */
-	float alternatorControlIFactor;
-	/**
-	 * offset 2180
-	 */
-	float alternatorControlDFactor;
+	pid_s alternatorControl;
 	/**
 	 * offset 2184
 	 */
@@ -1595,4 +1571,4 @@ typedef struct {
 } persistent_config_s;
 
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Nov 11 21:40:26 EST 2015
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Nov 11 21:47:19 EST 2015

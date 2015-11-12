@@ -77,9 +77,9 @@ static void showIdleInfo(void) {
 				hwPortname(boardConfiguration->idle.solenoidPin));
 	}
 	scheduleMsg(logger, "idleControl=%s", getIdle_control_e(engineConfiguration->idleControl));
-	scheduleMsg(logger, "idle P=%f I=%f D=%f dT=%d", engineConfiguration->idlePFactor,
-			engineConfiguration->idleIFactor,
-			engineConfiguration->idleDFactor,
+	scheduleMsg(logger, "idle P=%f I=%f D=%f dT=%d", engineConfiguration->idlePid.pFactor,
+			engineConfiguration->idlePid.iFactor,
+			engineConfiguration->idlePid.dFactor,
 			engineConfiguration->idleDT);
 }
 
@@ -212,19 +212,19 @@ static void apply(void) {
 }
 
 static void setIdlePFactor(float value) {
-	engineConfiguration->idlePFactor = value;
+	engineConfiguration->idlePid.pFactor = value;
 	apply();
 	showIdleInfo();
 }
 
 static void setIdleIFactor(float value) {
-	engineConfiguration->idleIFactor = value;
+	engineConfiguration->idlePid.iFactor = value;
 	apply();
 	showIdleInfo();
 }
 
 static void setIdleDFactor(float value) {
-	engineConfiguration->idleDFactor = value;
+	engineConfiguration->idlePid.dFactor = value;
 	apply();
 	showIdleInfo();
 }
@@ -236,9 +236,9 @@ static void setIdleDT(int value) {
 }
 
 void setDefaultIdleParameters(void) {
-	engineConfiguration->idlePFactor = 0.1f;
-	engineConfiguration->idleIFactor = 0.05f;
-	engineConfiguration->idleDFactor = 0.0f;
+	engineConfiguration->idlePid.pFactor = 0.1f;
+	engineConfiguration->idlePid.iFactor = 0.05f;
+	engineConfiguration->idlePid.dFactor = 0.0f;
 	engineConfiguration->idleDT = 10;
 }
 

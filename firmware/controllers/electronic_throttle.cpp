@@ -114,32 +114,32 @@ static void showEthInfo(void) {
 	scheduleMsg(&logger, "etbControlPin1=%s duty=%f", hwPortname(boardConfiguration->etbControlPin1),
 			currentEtbDuty);
 	scheduleMsg(&logger, "close dir=%s", hwPortname(boardConfiguration->etbDirectionPin2));
-	scheduleMsg(&logger, "etb P=%f I=%f D=%f dT=%d", engineConfiguration->etbPFactor,
-			engineConfiguration->etbIFactor,
+	scheduleMsg(&logger, "etb P=%f I=%f D=%f dT=%d", engineConfiguration->etb.pFactor,
+			engineConfiguration->etb.iFactor,
 			0.0,
 			boardConfiguration->etbDT);
 }
 
 static void apply(void) {
-	pid.updateFactors(engineConfiguration->etbPFactor, engineConfiguration->etbIFactor, 0);
+	pid.updateFactors(engineConfiguration->etb.pFactor, engineConfiguration->etb.iFactor, 0);
 }
 
 static void setEtbPFactor(float value) {
-	engineConfiguration->etbPFactor = value;
+	engineConfiguration->etb.pFactor = value;
 	apply();
 	showEthInfo();
 }
 
 static void setEtbIFactor(float value) {
-	engineConfiguration->etbIFactor = value;
+	engineConfiguration->etb.iFactor = value;
 	apply();
 	showEthInfo();
 }
 
 void setDefaultEtbParameters(void) {
 	engineConfiguration->pedalPositionMax = 6;
-	engineConfiguration->etbPFactor = 1;
-	engineConfiguration->etbIFactor = 0.5;
+	engineConfiguration->etb.pFactor = 1;
+	engineConfiguration->etb.iFactor = 0.5;
 	boardConfiguration->etbDT = 100;
 }
 
