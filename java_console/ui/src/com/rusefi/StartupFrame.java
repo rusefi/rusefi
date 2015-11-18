@@ -7,9 +7,10 @@ import com.rusefi.maintenance.EraseChip;
 import com.rusefi.maintenance.FirmwareFlasher;
 import com.rusefi.maintenance.ProcessStatusWindow;
 import com.rusefi.ui.util.HorizontalLine;
-import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.util.URLLabel;
+import com.rusefi.ui.util.UiUtils;
 import jssc.SerialPortList;
+import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -41,6 +42,25 @@ public class StartupFrame {
     private static final String URI = "http://rusefi.com/?java_console";
 
     private final JFrame frame;
+    private final Timer scanPortsTimes = new Timer(1000, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            findAndApplyPorts();
+        }
+    });
+    private final JPanel connectPanel = new JPanel(new FlowLayout());
+    // todo: move this line to the connectPanel
+    private HorizontalLine horizontalLine = new HorizontalLine();
+    private final JComboBox<String> comboPorts = new JComboBox<>();
+    @NotNull
+    private List<String> currentlyDisplayedPorts = new ArrayList<>();
+    private boolean isFirstTimeApplyingPorts = true;
+    JPanel leftPanel;
+
+    /**
+     * this flag tells us if we are closing the startup frame in order to proceed with console start or if we are
+     * closing the application.
+     */
     private boolean isProceeding;
 
     public StartupFrame() {
@@ -54,6 +74,7 @@ public class StartupFrame {
             }
         });
         setAppIcon(frame);
+        scanPortsTimes.start();
     }
 
     public static void setAppIcon(JFrame frame) {
@@ -63,20 +84,29 @@ public class StartupFrame {
     }
 
     public void chooseSerialPort() {
-        List<String> ports = new ArrayList<>();
-        ports.addAll(Arrays.asList(SerialPortList.getPortNames()));
-        ports.addAll(TcpConnector.getAvailablePorts());
 
-        JPanel leftPanel = new JPanel(new VerticalFlowLayout());
+        leftPanel = new JPanel(new VerticalFlowLayout());
         leftPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10),
                 BorderFactory.createLineBorder(Color.darkGray)));
 
-        if (!ports.isEmpty()) {
-            final JPanel connectPanel = new JPanel(new FlowLayout());
-            addPortSelection(ports, connectPanel);
-            leftPanel.add(connectPanel);
-            leftPanel.add(new HorizontalLine());
-        }
+        connectPanel.add(comboPorts);
+        final JComboBox<String> comboSpeeds = createSpeedCombo();
+
+        final JButton connect = new JButton("Connect");
+        connectPanel.add(connect);
+        connect.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                disposeFrameAndProceed();
+                PortHolder.BAUD_RATE = Integer.parseInt((String) comboSpeeds.getSelectedItem());
+                new Launcher(comboPorts.getSelectedItem().toString());
+            }
+        });
+
+        leftPanel.add(connectPanel);
+        leftPanel.add(horizontalLine);
+
+        findAndApplyPorts();
 
         final JButton buttonLogViewer = new JButton();
         buttonLogViewer.setText("Start " + LinkManager.LOG_VIEWER);
@@ -123,32 +153,40 @@ public class StartupFrame {
         UiUtils.centerWindow(frame);
     }
 
+    private void findAndApplyPorts() {
+        List<String> ports = findAllAvailablePorts();
+        if (!currentlyDisplayedPorts.equals(ports) || isFirstTimeApplyingPorts) {
+            isFirstTimeApplyingPorts = false;
+            connectPanel.setVisible(!ports.isEmpty());
+//        panel.add(comboSpeeds); // todo: finish speed selector UI component
+            horizontalLine.setVisible(!ports.isEmpty());
+
+            addPortSelection(ports);
+            currentlyDisplayedPorts = ports;
+            UiUtils.trueLayout(connectPanel);
+            frame.pack();
+        }
+    }
+
+    @NotNull
+    private List<String> findAllAvailablePorts() {
+        List<String> ports = new ArrayList<>();
+        ports.addAll(Arrays.asList(SerialPortList.getPortNames()));
+        ports.addAll(TcpConnector.getAvailablePorts());
+        return ports;
+    }
+
     public void disposeFrameAndProceed() {
         isProceeding = true;
         frame.dispose();
     }
 
-    private void addPortSelection(List<String> ports, JPanel panel) {
-        final JComboBox<String> comboPorts = new JComboBox<>();
+    private void addPortSelection(List<String> ports) {
+        comboPorts.removeAll();
         for (final String port : ports)
             comboPorts.addItem(port);
-        panel.add(comboPorts);
         String defaultPort =  getConfig().getRoot().getProperty(Launcher.PORT_KEY);
         comboPorts.setSelectedItem(defaultPort);
-
-        final JComboBox<String> comboSpeeds = createSpeedCombo();
-//        panel.add(comboSpeeds);
-
-        final JButton connect = new JButton("Connect");
-        panel.add(connect);
-        connect.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                disposeFrameAndProceed();
-                PortHolder.BAUD_RATE = Integer.parseInt((String) comboSpeeds.getSelectedItem());
-                new Launcher(comboPorts.getSelectedItem().toString());
-            }
-        });
     }
 
     private static JComboBox<String> createSpeedCombo() {
