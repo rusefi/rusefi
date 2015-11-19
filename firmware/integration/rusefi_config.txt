@@ -601,7 +601,7 @@ baro_corr_table_t baroCorrTable;
 	float[8] knockNoise;
 	pid_s etb;
 	
-	float[CLT_CURVE_SIZE] cltIdleCorrRpmBins;CLT-based target RPM for automatic idle controller;"C",        1,     0,   -100.0,    250.0,  2
+	float[CLT_CURVE_SIZE] cltIdleRpmBins;CLT-based target RPM for automatic idle controller;"C",        1,     0,   -100.0,    250.0,  2
 	float[CLT_CURVE_SIZE] cltIdleRpm;;"RPM",      1,     0,      0.0,    400.0,   0
 	
 	float targetVBatt;;"Volts",      1,      0,       0,30,      1

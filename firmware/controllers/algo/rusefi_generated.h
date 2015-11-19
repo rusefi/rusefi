@@ -695,7 +695,7 @@
 #define etb_pFactor_offset 2016
 #define etb_iFactor_offset 2020
 #define etb_dFactor_offset 2024
-#define cltIdleCorrRpmBins_offset 2028
+#define cltIdleRpmBins_offset 2028
 #define cltIdleRpm_offset 2092
 #define targetVBatt_offset 2156
 #define alternatorOffAboveTps_offset 2160
