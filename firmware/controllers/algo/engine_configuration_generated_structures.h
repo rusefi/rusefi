@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 12 12:52:17 EST 2015
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Nov 18 18:02:47 EST 2015
 // begin
 #include "rusefi_types.h"
 typedef struct {
@@ -1365,9 +1365,14 @@ typedef struct {
 	 */
 	pid_s etb;
 	/**
+	 * CLT-based target RPM for automatic idle controller
 	 * offset 2028
 	 */
-	int unused3[32];
+	float cltIdleCorrRpmBins[CLT_CURVE_SIZE];
+	/**
+	 * offset 2092
+	 */
+	float cltIdleRpm[CLT_CURVE_SIZE];
 	/**
 	 * offset 2156
 	 */
@@ -1571,4 +1576,4 @@ typedef struct {
 } persistent_config_s;
 
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 12 12:52:17 EST 2015
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Nov 18 18:02:47 EST 2015

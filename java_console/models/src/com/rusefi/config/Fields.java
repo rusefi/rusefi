@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Nov 11 21:40:26 EST 2015
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Nov 18 18:02:47 EST 2015
 public class Fields {
 	public static final Field ENGINETYPE = new Field("ENGINETYPE", 0, FieldType.INT);
 	public static final Field HEADERMAGICVALUE = new Field("HEADERMAGICVALUE", 4, FieldType.INT);
@@ -45,7 +45,7 @@ public class Fields {
 	public static final Field CYLINDERSCOUNT = new Field("CYLINDERSCOUNT", 404, FieldType.INT);
 	public static final Field FIRINGORDER = new Field("FIRINGORDER", 408, FieldType.INT);
 	public static final Field CYLINDERBORE = new Field("CYLINDERBORE", 412, FieldType.FLOAT);
-	public static final Field ENGINECYCLE = new Field("ENGINECYCLE", 416, FieldType.INT);
+	public static final Field ENGINECYCLEDURATION = new Field("ENGINECYCLEDURATION", 416, FieldType.INT);
 	public static final Field RPMHARDLIMIT = new Field("RPMHARDLIMIT", 420, FieldType.INT);
 	public static final String[] engine_load_mode_e = {"MAF", "Alpha-N/TPS", "MAP", "SPEED DENSITY"};
 	public static final Field ALGORITHM = new Field("ALGORITHM", 424, FieldType.INT, engine_load_mode_e);
@@ -425,9 +425,9 @@ public class Fields {
 	public static final Field MAPERRORLOWVALUE = new Field("MAPERRORLOWVALUE", 1896, FieldType.FLOAT);
 	public static final Field MAPERRORHIGHVALUE = new Field("MAPERRORHIGHVALUE", 1900, FieldType.FLOAT);
 	public static final Field STEP1RPMWINDOW = new Field("STEP1RPMWINDOW", 1904, FieldType.INT);
-	public static final Field IDLEPFACTOR = new Field("IDLEPFACTOR", 1908, FieldType.FLOAT);
-	public static final Field IDLEIFACTOR = new Field("IDLEIFACTOR", 1912, FieldType.FLOAT);
-	public static final Field IDLEDFACTOR = new Field("IDLEDFACTOR", 1916, FieldType.FLOAT);
+	public static final Field IDLEPID_PFACTOR = new Field("IDLEPID_PFACTOR", 1908, FieldType.FLOAT);
+	public static final Field IDLEPID_IFACTOR = new Field("IDLEPID_IFACTOR", 1912, FieldType.FLOAT);
+	public static final Field IDLEPID_DFACTOR = new Field("IDLEPID_DFACTOR", 1916, FieldType.FLOAT);
 	public static final Field IDLEDT = new Field("IDLEDT", 1920, FieldType.INT);
 	public static final Field IDLECONTROL = new Field("IDLECONTROL", 1924, FieldType.INT);
 	public static final Field COMMUNICATIONPIN = new Field("COMMUNICATIONPIN", 1928, FieldType.INT, brain_pin_e);
@@ -436,16 +436,16 @@ public class Fields {
 	public static final Field BINARYSERIALRXPIN = new Field("BINARYSERIALRXPIN", 1940, FieldType.INT, brain_pin_e);
 	public static final Field CONSOLESERIALTXPIN = new Field("CONSOLESERIALTXPIN", 1944, FieldType.INT, brain_pin_e);
 	public static final Field CONSOLESERIALRXPIN = new Field("CONSOLESERIALRXPIN", 1948, FieldType.INT, brain_pin_e);
-	public static final Field ETBPFACTOR = new Field("ETBPFACTOR", 2016, FieldType.FLOAT);
-	public static final Field ETBIFACTOR = new Field("ETBIFACTOR", 2020, FieldType.FLOAT);
-	public static final Field ETBDFACTOR = new Field("ETBDFACTOR", 2024, FieldType.FLOAT);
+	public static final Field ETB_PFACTOR = new Field("ETB_PFACTOR", 2016, FieldType.FLOAT);
+	public static final Field ETB_IFACTOR = new Field("ETB_IFACTOR", 2020, FieldType.FLOAT);
+	public static final Field ETB_DFACTOR = new Field("ETB_DFACTOR", 2024, FieldType.FLOAT);
 	public static final Field TARGETVBATT = new Field("TARGETVBATT", 2156, FieldType.FLOAT);
 	public static final Field ALTERNATOROFFABOVETPS = new Field("ALTERNATOROFFABOVETPS", 2160, FieldType.FLOAT);
 	public static final Field ALTERNATORDT = new Field("ALTERNATORDT", 2164, FieldType.INT);
 	public static final Field ALTERNATOROFFSET = new Field("ALTERNATOROFFSET", 2168, FieldType.FLOAT);
-	public static final Field ALTERNATORCONTROLPFACTOR = new Field("ALTERNATORCONTROLPFACTOR", 2172, FieldType.FLOAT);
-	public static final Field ALTERNATORCONTROLIFACTOR = new Field("ALTERNATORCONTROLIFACTOR", 2176, FieldType.FLOAT);
-	public static final Field ALTERNATORCONTROLDFACTOR = new Field("ALTERNATORCONTROLDFACTOR", 2180, FieldType.FLOAT);
+	public static final Field ALTERNATORCONTROL_PFACTOR = new Field("ALTERNATORCONTROL_PFACTOR", 2172, FieldType.FLOAT);
+	public static final Field ALTERNATORCONTROL_IFACTOR = new Field("ALTERNATORCONTROL_IFACTOR", 2176, FieldType.FLOAT);
+	public static final Field ALTERNATORCONTROL_DFACTOR = new Field("ALTERNATORCONTROL_DFACTOR", 2180, FieldType.FLOAT);
 	public static final Field TPSACCELLENGTH = new Field("TPSACCELLENGTH", 2184, FieldType.INT);
 	public static final Field TPSACCELENRICHMENTTHRESHOLD = new Field("TPSACCELENRICHMENTTHRESHOLD", 2188, FieldType.FLOAT);
 	public static final Field TPSACCELENRICHMENTMULTIPLIER = new Field("TPSACCELENRICHMENTMULTIPLIER", 2192, FieldType.FLOAT);
