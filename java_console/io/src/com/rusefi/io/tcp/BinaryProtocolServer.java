@@ -2,7 +2,9 @@ package com.rusefi.io.tcp;
 
 import com.rusefi.FileLog;
 
+import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -33,7 +35,11 @@ public class BinaryProtocolServer {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                runProxy(clientSocket);
+                                try {
+                                    runProxy(clientSocket);
+                                } catch (IOException e) {
+                                    FileLog.MAIN.logLine("proxy connection: " + e);
+                                }
                             }
                         }, "proxy connection").start();
                     }
@@ -44,7 +50,28 @@ public class BinaryProtocolServer {
         new Thread(runnable, "BinaryProtocolServer").start();
     }
 
-    private static void runProxy(Socket clientSocket) {
+    private static void runProxy(Socket clientSocket) throws IOException {
+        DataInputStream in = new DataInputStream(clientSocket.getInputStream());
+
+        while (true) {
+            short length = in.readShort();
+
+            System.out.println("Got [" + length + "] length promise");
+
+            byte command = (byte) in.read();
+            System.out.println("Got [" + (char)command + "] command");
+
+            byte[] packet = new byte[length - 1];
+
+
+
+            in.read(packet);
+
+            int crc = in.readInt();
+
+
+
+        }
 
     }
 }
