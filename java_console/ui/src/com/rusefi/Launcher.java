@@ -4,6 +4,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.ui.*;
 import com.rusefi.ui.engine.EngineSnifferPanel;
@@ -32,7 +33,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see com.rusefi.StartupFrame
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20151117;
+    public static final int CONSOLE_VERSION = 20151124;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -80,6 +81,7 @@ public class Launcher {
             tabbedPane.add("Log Viewer", new LogViewer(engineSnifferPanel));
 
         ConnectionWatchdog.start();
+        BinaryProtocolServer.start();
 
         tabbedPane.addTab("Gauges", new GaugesPanel(getConfig().getRoot().getChild("gauges")).getContent());
         tabbedPane.addTab("Engine Sniffer", engineSnifferPanel.getPanel());
