@@ -163,7 +163,7 @@ bool_t consoleInBinaryMode = false;
 
 ts_channel_s binaryConsole;
 
-static THD_WORKING_AREA(consoleThreadStack, 2 * UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(consoleThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);
 static msg_t consoleThreadThreadEntryPoint(void *arg) {
 	(void) arg;
 	chRegSetThreadName("console thread");

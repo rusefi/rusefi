@@ -18,9 +18,7 @@ public class TcpConnector implements LinkConnector {
     public final static int DEFAULT_PORT = 29001;
     public static final String LOCALHOST = "localhost";
     private final int port;
-    private boolean withError;
-    private BufferedInputStream stream;
-//    private IoStream ioStream;
+    //    private IoStream ioStream;
     private BinaryProtocol bp;
 
     public TcpConnector(String port) {
@@ -39,7 +37,7 @@ public class TcpConnector implements LinkConnector {
             return false;
         }
     }
-
+/*
     public static String doUnpackConfirmation(String message) {
         String confirmation = message.substring(CommandQueue.CONFIRMATION_PREFIX.length());
         int index = confirmation.indexOf(":");
@@ -58,7 +56,7 @@ public class TcpConnector implements LinkConnector {
         }
         return confirmation.substring(0, length);
     }
-
+*/
     static class InvalidTcpPort extends Exception {
     }
 
@@ -72,12 +70,12 @@ public class TcpConnector implements LinkConnector {
 
     /**
      * this implementation is blocking
-     * @param listener
      */
     @Override
     public void connect(LinkManager.LinkStateListener listener) {
         FileLog.MAIN.logLine("Connecting to " + port);
         OutputStream os;
+        BufferedInputStream stream;
         try {
             Socket socket = new Socket(LOCALHOST, port);
             os = socket.getOutputStream();
@@ -119,7 +117,7 @@ public class TcpConnector implements LinkConnector {
 
     @Override
     public boolean hasError() {
-        return withError;
+        return false;
     }
 
     @Override
