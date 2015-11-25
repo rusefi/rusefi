@@ -39,6 +39,6 @@ public class JustOneInstance {
                 }
             }
         };
-        new Thread(runnable).start();
+        new Thread(runnable, "JustOneInstance").start();
     }
 }
