@@ -1,10 +1,11 @@
 package com.rusefi.io.tcp;
 
 import com.rusefi.FileLog;
+import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.IoHelper;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -18,6 +19,7 @@ import java.net.Socket;
 
 public class BinaryProtocolServer {
     private static final int PROXY_PORT = 2390;
+    private static final String TS_SIGNATURE = "\0MShift v0.01";
 
     public static void start() {
         FileLog.MAIN.logLine("BinaryProtocolServer on " + PROXY_PORT);
@@ -58,17 +60,23 @@ public class BinaryProtocolServer {
 
             System.out.println("Got [" + length + "] length promise");
 
-            byte command = (byte) in.read();
-            System.out.println("Got [" + (char)command + "] command");
+            if (length == 0)
+                throw new IOException("Zero length not expected");
 
-            byte[] packet = new byte[length - 1];
-
-
-
+            byte[] packet = new byte[length];
             in.read(packet);
 
-            int crc = in.readInt();
+            byte command = packet[0];
+            System.out.println("Got [" + (char) command + "] command");
 
+            int crc = in.readInt();
+            if (crc != IoHelper.crc32(packet))
+                throw new IllegalStateException("CRC mismatch");
+
+            if (command == BinaryProtocol.COMMAND_HELLO) {
+                TcpIoStream stream = new TcpIoStream(clientSocket.getOutputStream(), null);
+                BinaryProtocol.sendCrcPacket(TS_SIGNATURE.getBytes(), FileLog.LOGGER, stream);
+            }
 
 
         }

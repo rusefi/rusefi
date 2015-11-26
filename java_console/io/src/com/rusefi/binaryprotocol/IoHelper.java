@@ -11,7 +11,7 @@ import java.util.zip.CRC32;
 public class IoHelper {
     public static int crc32(byte[] packet) {
         CRC32 c = new CRC32();
-        c.update(packet, 0, packet.length);
+        c.update(packet);
         return (int) c.getValue();
     }
 

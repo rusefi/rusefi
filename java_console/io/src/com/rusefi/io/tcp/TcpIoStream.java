@@ -7,6 +7,7 @@ import com.rusefi.io.LinkManager;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
@@ -15,9 +16,9 @@ import java.io.OutputStream;
  */
 public class TcpIoStream implements IoStream {
     private final OutputStream os;
-    private final BufferedInputStream stream;
+    private final InputStream stream;
 
-    public TcpIoStream(OutputStream os, BufferedInputStream stream) {
+    public TcpIoStream(OutputStream os, InputStream stream) {
         this.os = os;
         this.stream = stream;
     }
