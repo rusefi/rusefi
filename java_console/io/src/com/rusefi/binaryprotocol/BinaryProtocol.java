@@ -1,7 +1,6 @@
 package com.rusefi.binaryprotocol;
 
 import com.rusefi.*;
-import com.rusefi.config.Field;
 import com.rusefi.config.FieldType;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Pair;
@@ -48,6 +47,8 @@ public class BinaryProtocol {
      * See SWITCH_TO_BINARY_COMMAND in firmware source code
      */
     private static final String SWITCH_TO_BINARY_COMMAND = "~";
+    public static final char COMMAND_OUTPUTS = 'O';
+    public static final char COMMAND_HELLO = 'S';
 
     private final Logger logger;
     private final IoStream stream;
@@ -404,8 +405,11 @@ public class BinaryProtocol {
         }
     }
 
-
     private void sendCrcPacket(byte[] command) throws IOException {
+        sendCrcPacket(command, logger, stream);
+    }
+
+    public static void sendCrcPacket(byte[] command, Logger logger, IoStream stream) throws IOException {
         byte[] packet = IoHelper.makeCrc32Packet(command);
         logger.info("Sending " + Arrays.toString(packet));
         stream.write(packet);
@@ -451,7 +455,7 @@ public class BinaryProtocol {
         if (isClosed)
             return;
 //        try {
-        byte[] response = executeCommand(new byte[]{'O'}, "output channels", false);
+        byte[] response = executeCommand(new byte[]{COMMAND_OUTPUTS}, "output channels", false);
         if (response == null || response.length != (OUTPUT_CHANNELS_SIZE + 1) || response[0] != RESPONSE_OK)
             return;
 
