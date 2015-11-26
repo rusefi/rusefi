@@ -49,6 +49,8 @@ public class BinaryProtocol {
     private static final String SWITCH_TO_BINARY_COMMAND = "~";
     public static final char COMMAND_OUTPUTS = 'O';
     public static final char COMMAND_HELLO = 'S';
+    public static final char COMMAND_PROTOCOL = 'F';
+    public static final char COMMAND_CRC_CHECK_COMMAND = 'k';
 
     private final Logger logger;
     private final IoStream stream;

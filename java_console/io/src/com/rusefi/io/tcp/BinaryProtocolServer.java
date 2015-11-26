@@ -4,8 +4,10 @@ import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IoHelper;
 
+import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -19,7 +21,10 @@ import java.net.Socket;
 
 public class BinaryProtocolServer {
     private static final int PROXY_PORT = 2390;
-    private static final String TS_SIGNATURE = "\0MShift v0.01";
+    private static final String TS_OK = "\0";
+
+    private static final String TS_SIGNATURE = "MShift v0.01";
+    private static final String TS_PROTOCOL = "001";
 
     public static void start() {
         FileLog.MAIN.logLine("BinaryProtocolServer on " + PROXY_PORT);
@@ -56,7 +61,17 @@ public class BinaryProtocolServer {
         DataInputStream in = new DataInputStream(clientSocket.getInputStream());
 
         while (true) {
-            short length = in.readShort();
+            byte first = in.readByte();
+            if (first == BinaryProtocol.COMMAND_PROTOCOL) {
+                //System.out.println("Ignoring plain F command");
+                System.out.println("Got plain F command");
+                OutputStream outputStream = clientSocket.getOutputStream();
+                outputStream.write(TS_PROTOCOL.getBytes());
+                outputStream.flush();
+                continue;
+            }
+
+            int length = first * 256 + in.readByte();
 
             System.out.println("Got [" + length + "] length promise");
 
@@ -66,16 +81,26 @@ public class BinaryProtocolServer {
             byte[] packet = new byte[length];
             in.read(packet);
 
-            byte command = packet[0];
-            System.out.println("Got [" + (char) command + "] command");
+            DataInputStream dis = new DataInputStream(new ByteArrayInputStream(packet));
+            byte command = (byte) dis.read();
+            System.out.println("Got [" + (char) command + "/" + command + "] command");
 
             int crc = in.readInt();
             if (crc != IoHelper.crc32(packet))
                 throw new IllegalStateException("CRC mismatch");
 
+
+            TcpIoStream stream = new TcpIoStream(clientSocket.getOutputStream(), null);
             if (command == BinaryProtocol.COMMAND_HELLO) {
-                TcpIoStream stream = new TcpIoStream(clientSocket.getOutputStream(), null);
-                BinaryProtocol.sendCrcPacket(TS_SIGNATURE.getBytes(), FileLog.LOGGER, stream);
+                BinaryProtocol.sendCrcPacket((TS_OK + TS_SIGNATURE).getBytes(), FileLog.LOGGER, stream);
+            } else if (command == BinaryProtocol.COMMAND_PROTOCOL) {
+//                System.out.println("Ignoring crc F command");
+                BinaryProtocol.sendCrcPacket((TS_OK + TS_PROTOCOL).getBytes(), FileLog.LOGGER, stream);
+            } else if (command == BinaryProtocol.COMMAND_CRC_CHECK_COMMAND) {
+                short page = dis.readShort();
+                short offset = dis.readShort();
+                short count = dis.readShort();
+                System.out.println("CRC check " + page + "/" + offset + "/" + count);
             }
 
 
