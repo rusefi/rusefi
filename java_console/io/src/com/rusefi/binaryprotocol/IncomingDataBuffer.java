@@ -29,7 +29,7 @@ public class IncomingDataBuffer {
         logger.trace(freshData.length + " byte(s) arrived");
         synchronized (cbb) {
             if (cbb.size() - cbb.length() < freshData.length) {
-                logger.error("buffer overflow not expected");
+                logger.error("IncomingDataBuffer: buffer overflow not expected");
                 cbb.clear();
             }
             cbb.put(freshData);

@@ -93,6 +93,11 @@ abstract class BaseConfigField {
 
     @NotNull
     protected ByteBuffer getByteBuffer(ConfigurationImage ci) {
+        return getByteBuffer(ci, field);
+    }
+
+    @NotNull
+    public static ByteBuffer getByteBuffer(ConfigurationImage ci, Field field) {
         byte data[] = ci.getRange(field.getOffset(), 4);
         ByteBuffer wrapped = ByteBuffer.wrap(data);
         wrapped.order(ByteOrder.LITTLE_ENDIAN);

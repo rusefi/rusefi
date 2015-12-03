@@ -11,7 +11,8 @@
 
 float getTCharge(int rpm, float tps, float coolantTemp, float airTemp);
 void setDetaultVETable(persistent_config_s *config);
-float sdMath(engine_configuration_s *engineConfiguration, float VE, float MAP, float AFR, float tempK);
+float getAirMass(engine_configuration_s *engineConfiguration, float VE, float MAP, float tempK);
+float sdMath(engine_configuration_s *engineConfiguration, float airMass, float AFR);
 
 #define gramm_second_to_cc_minute(gs) ((gs) / 0.0119997981)
 

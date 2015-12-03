@@ -9,11 +9,9 @@ import com.rusefi.ui.util.JTextFieldWithWidth;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 public class ConfigField extends BaseConfigField {
     private final JTextField view = new JTextFieldWithWidth(200);
@@ -54,14 +52,20 @@ public class ConfigField extends BaseConfigField {
 
     @Override
     protected void loadValue(ConfigurationImage ci) {
+        Number value = getValue(ci, field);
+        setValue(value);
+    }
+
+    @NotNull
+    public static Number getValue(ConfigurationImage ci, Field field) {
         Number value;
-        ByteBuffer wrapped = getByteBuffer(ci);
+        ByteBuffer wrapped = getByteBuffer(ci, field);
         if (field.getType() == FieldType.INT) {
             value = wrapped.getInt();
         } else {
             value = wrapped.getFloat();
         }
-        setValue(value);
+        return value;
     }
 
 }

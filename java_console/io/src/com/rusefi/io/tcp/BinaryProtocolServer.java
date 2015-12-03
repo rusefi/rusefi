@@ -4,10 +4,7 @@ import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IoHelper;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -86,11 +83,11 @@ public class BinaryProtocolServer {
             System.out.println("Got [" + (char) command + "/" + command + "] command");
 
             int crc = in.readInt();
-            if (crc != IoHelper.crc32(packet))
+            if (crc != IoHelper.getCrc32(packet))
                 throw new IllegalStateException("CRC mismatch");
 
 
-            TcpIoStream stream = new TcpIoStream(clientSocket.getOutputStream(), null);
+            TcpIoStream stream = new TcpIoStream(clientSocket.getInputStream(), clientSocket.getOutputStream());
             if (command == BinaryProtocol.COMMAND_HELLO) {
                 BinaryProtocol.sendCrcPacket((TS_OK + TS_SIGNATURE).getBytes(), FileLog.LOGGER, stream);
             } else if (command == BinaryProtocol.COMMAND_PROTOCOL) {
@@ -99,12 +96,42 @@ public class BinaryProtocolServer {
             } else if (command == BinaryProtocol.COMMAND_CRC_CHECK_COMMAND) {
                 short page = dis.readShort();
                 short offset = dis.readShort();
-                short count = dis.readShort();
+                short count = dis.readShort(); // no swap here? interesting!
                 System.out.println("CRC check " + page + "/" + offset + "/" + count);
+                BinaryProtocol bp = BinaryProtocol.instance;
+                int result = IoHelper.getCrc32(bp.getController().getContent(), offset, count);
+                ByteArrayOutputStream response = new ByteArrayOutputStream();
+                response.write(TS_OK.charAt(0));
+                new DataOutputStream(response).write(result);
+                BinaryProtocol.sendCrcPacket(response.toByteArray(), FileLog.LOGGER, stream);
+            } else if (command == BinaryProtocol.COMMAND_PAGE) {
+                BinaryProtocol.sendCrcPacket(TS_OK.getBytes(), FileLog.LOGGER, stream);
+            } else if (command == BinaryProtocol.COMMAND_READ) {
+                short page = dis.readShort();
+                short offset = swap16(dis.readShort());
+                short count = swap16(dis.readShort());
+                System.out.println("read " + page + "/" + offset + "/" + count);
+                BinaryProtocol bp = BinaryProtocol.instance;
+
+                byte[] response = new byte[1 + count];
+                response[0] = (byte) TS_OK.charAt(0);
+                System.arraycopy(bp.getController().getContent(), offset, response, 1, count);
+                BinaryProtocol.sendCrcPacket(response, FileLog.LOGGER, stream);
+            } else if (command == BinaryProtocol.COMMAND_OUTPUTS) {
+
+                byte[] response = new byte[1 + BinaryProtocol.OUTPUT_CHANNELS_SIZE];
+                response[0] = (byte) TS_OK.charAt(0);
+                byte[] currentOutputs = BinaryProtocol.currentOutputs;
+                if (currentOutputs != null)
+                    System.arraycopy(currentOutputs, 1, response, 1, BinaryProtocol.OUTPUT_CHANNELS_SIZE);
+                BinaryProtocol.sendCrcPacket(response, FileLog.LOGGER, stream);
+            } else {
+                FileLog.MAIN.logLine("Error: unknown command " + command);
             }
-
-
         }
+    }
 
+    private static short swap16(short x) {
+        return (short) (((x) << 8) | ((x) >> 8));
     }
 }

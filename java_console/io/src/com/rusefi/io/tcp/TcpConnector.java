@@ -100,7 +100,7 @@ public class TcpConnector implements LinkConnector {
         };
 //        ioStream.setDataListener(listener1);
 
-        bp = new BinaryProtocol(FileLog.LOGGER, new TcpIoStream(os, stream));
+        bp = new BinaryProtocol(FileLog.LOGGER, new TcpIoStream(stream, os));
 
         boolean result = bp.connectAndReadConfiguration(listener1);
         if (result) {

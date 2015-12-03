@@ -398,7 +398,9 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 
 	float baseFuelMs = getBaseTableFuel(engineConfiguration, (int) rpm, engineLoad);
 
-	scheduleMsg(&logger, "SD magic fuel %f", sdMath(engineConfiguration, 100, 100, 14.7, convertCelsiusToKelvin(20)));
+	float magicAir = getAirMass(engineConfiguration, 1, 100, convertCelsiusToKelvin(20));
+
+	scheduleMsg(&logger, "SD magic fuel %f", sdMath(engineConfiguration, magicAir, 14.7));
 	scheduleMsg(&logger, "inj flow %fcc/min displacement %fL", engineConfiguration->injector.flow,
 			engineConfiguration->specs.displacement);
 
@@ -552,6 +554,7 @@ static void lcdThread(void *arg) {
 extern WallFuel wallFuel;
 
 extern fuel_Map3D_t veMap;
+extern fuel_Map3D_t afrMap;
 
 void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_S) {
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
@@ -579,6 +582,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
     tsOutputChannels->massAirFlowValue = hasMafSensor() ? getRealMaf() : 0;
           
 	tsOutputChannels->veValue = veMap.getValue(getMap(), rpm);
+	tsOutputChannels->currentTargetAfr = afrMap.getValue(getMap(), rpm);
 	tsOutputChannels->airFuelRatio = getAfr();
 	if (hasVBatt(PASS_ENGINE_PARAMETER_F)) {
 		tsOutputChannels->vBatt = getVBatt(PASS_ENGINE_PARAMETER_F);
@@ -650,6 +654,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->baseFuel = baseFuelMs;
 	tsOutputChannels->pulseWidthMs = ENGINE(actualLastInjection);
 	tsOutputChannels->crankingFuelMs = getCrankingFuel(PASS_ENGINE_PARAMETER_F);
+	tsOutputChannels->chargeAirMass = engine->engineState.airMass;
 }
 
 extern TunerStudioOutputChannels tsOutputChannels;

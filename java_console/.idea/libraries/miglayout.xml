@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="jcip-annotations-1.0">
+  <library name="miglayout">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/jcip-annotations-1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/miglayout-4.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

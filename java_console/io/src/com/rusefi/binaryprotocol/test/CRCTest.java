@@ -17,11 +17,11 @@ public class CRCTest {
     public void testCrc() {
         {
             byte[] a = {'A'};
-            assertEquals(0xD3D99E8B, IoHelper.crc32(a));
+            assertEquals(0xD3D99E8B, IoHelper.getCrc32(a));
         }
         {
             byte[] a = {'S'};
-            assertEquals(0x2060EFC3, IoHelper.crc32(a));
+            assertEquals(0x2060EFC3, IoHelper.getCrc32(a));
         }
     }
 

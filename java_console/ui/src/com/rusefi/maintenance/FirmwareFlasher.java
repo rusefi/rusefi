@@ -26,7 +26,7 @@ public class FirmwareFlasher extends ProcessStatusWindow {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                int dialogResult = JOptionPane.showConfirmDialog(button, "Do you really want to update firmware? Please disconnect battery before erasing.",
+                int dialogResult = JOptionPane.showConfirmDialog(button, "Do you really want to update firmware? Please disconnect vehicle battery before erasing.",
                         "Please disconnect from vehicle", JOptionPane.YES_NO_OPTION);
                 if (dialogResult != JOptionPane.YES_OPTION)
                     return;
@@ -54,7 +54,7 @@ public class FirmwareFlasher extends ProcessStatusWindow {
                 fileName +
                 " verify reset exit 0x08000000\"");
         if (error.toString().contains(NO_DRIVER_MESSAGE_TAG)) {
-            wnd.appendMsg(" !!! ERROR: looks like stm32 driver is not installe? !!!");
+            wnd.appendMsg(" !!! ERROR: looks like stm32 driver is not installed? The link is above !!!");
         } else if (error.toString().contains(SUCCESS_MESSAGE_TAG) && !error.toString().contains(FAILED_MESSAGE_TAG)) {
             wnd.appendMsg("!!! Looks good!!!");
         } else {
