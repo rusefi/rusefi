@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Nov 18 19:07:01 EST 2015
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 01 20:29:19 EST 2015
 public class Fields {
 	public static final Field ENGINETYPE = new Field("ENGINETYPE", 0, FieldType.INT);
 	public static final Field HEADERMAGICVALUE = new Field("HEADERMAGICVALUE", 4, FieldType.INT);
@@ -454,28 +454,31 @@ public class Fields {
 	public static final Field DECELENLEANMENTMULTIPLIER = new Field("DECELENLEANMENTMULTIPLIER", 2204, FieldType.FLOAT);
 	public static final Field MAPACCELENRICHMENTTHRESHOLD = new Field("MAPACCELENRICHMENTTHRESHOLD", 2208, FieldType.FLOAT);
 	public static final Field MAPACCELENRICHMENTMULTIPLIER = new Field("MAPACCELENRICHMENTMULTIPLIER", 2212, FieldType.FLOAT);
-	public static final Field LE_FORMULAS1 = new Field("LE_FORMULAS1", 2216, FieldType.INT);
-	public static final Field LE_FORMULAS2 = new Field("LE_FORMULAS2", 2416, FieldType.INT);
-	public static final Field LE_FORMULAS3 = new Field("LE_FORMULAS3", 2616, FieldType.INT);
-	public static final Field LE_FORMULAS4 = new Field("LE_FORMULAS4", 2816, FieldType.INT);
-	public static final Field LE_FORMULAS5 = new Field("LE_FORMULAS5", 3016, FieldType.INT);
-	public static final Field LE_FORMULAS6 = new Field("LE_FORMULAS6", 3216, FieldType.INT);
-	public static final Field LE_FORMULAS7 = new Field("LE_FORMULAS7", 3416, FieldType.INT);
-	public static final Field LE_FORMULAS8 = new Field("LE_FORMULAS8", 3616, FieldType.INT);
-	public static final Field LE_FORMULAS9 = new Field("LE_FORMULAS9", 3816, FieldType.INT);
-	public static final Field LE_FORMULAS10 = new Field("LE_FORMULAS10", 4016, FieldType.INT);
-	public static final Field LE_FORMULAS11 = new Field("LE_FORMULAS11", 4216, FieldType.INT);
-	public static final Field LE_FORMULAS12 = new Field("LE_FORMULAS12", 4416, FieldType.INT);
-	public static final Field LE_FORMULAS13 = new Field("LE_FORMULAS13", 4616, FieldType.INT);
-	public static final Field LE_FORMULAS14 = new Field("LE_FORMULAS14", 4816, FieldType.INT);
-	public static final Field LE_FORMULAS15 = new Field("LE_FORMULAS15", 5016, FieldType.INT);
-	public static final Field LE_FORMULAS16 = new Field("LE_FORMULAS16", 5216, FieldType.INT);
-	public static final Field TIMINGMULTIPLIER = new Field("TIMINGMULTIPLIER", 5416, FieldType.INT);
-	public static final Field TIMINGADDITIVE = new Field("TIMINGADDITIVE", 5616, FieldType.INT);
-	public static final Field IGNITIONIATCORRTABLE = new Field("IGNITIONIATCORRTABLE", 8376, FieldType.INT);
-	public static final Field INJECTIONPHASE = new Field("INJECTIONPHASE", 9528, FieldType.INT);
-	public static final Field FUELTABLE = new Field("FUELTABLE", 10680, FieldType.INT);
-	public static final Field IGNITIONTABLE = new Field("IGNITIONTABLE", 11832, FieldType.INT);
-	public static final Field VETABLE = new Field("VETABLE", 12984, FieldType.INT);
-	public static final Field AFRTABLE = new Field("AFRTABLE", 14136, FieldType.INT);
+	public static final Field FATALERRORPIN = new Field("FATALERRORPIN", 2216, FieldType.INT, brain_pin_e);
+	public static final Field WARNINIGPIN = new Field("WARNINIGPIN", 2220, FieldType.INT, brain_pin_e);
+	public static final Field CONFIGRESETPIN = new Field("CONFIGRESETPIN", 2224, FieldType.INT, brain_pin_e);
+	public static final Field LE_FORMULAS1 = new Field("LE_FORMULAS1", 3016, FieldType.INT);
+	public static final Field LE_FORMULAS2 = new Field("LE_FORMULAS2", 3216, FieldType.INT);
+	public static final Field LE_FORMULAS3 = new Field("LE_FORMULAS3", 3416, FieldType.INT);
+	public static final Field LE_FORMULAS4 = new Field("LE_FORMULAS4", 3616, FieldType.INT);
+	public static final Field LE_FORMULAS5 = new Field("LE_FORMULAS5", 3816, FieldType.INT);
+	public static final Field LE_FORMULAS6 = new Field("LE_FORMULAS6", 4016, FieldType.INT);
+	public static final Field LE_FORMULAS7 = new Field("LE_FORMULAS7", 4216, FieldType.INT);
+	public static final Field LE_FORMULAS8 = new Field("LE_FORMULAS8", 4416, FieldType.INT);
+	public static final Field LE_FORMULAS9 = new Field("LE_FORMULAS9", 4616, FieldType.INT);
+	public static final Field LE_FORMULAS10 = new Field("LE_FORMULAS10", 4816, FieldType.INT);
+	public static final Field LE_FORMULAS11 = new Field("LE_FORMULAS11", 5016, FieldType.INT);
+	public static final Field LE_FORMULAS12 = new Field("LE_FORMULAS12", 5216, FieldType.INT);
+	public static final Field LE_FORMULAS13 = new Field("LE_FORMULAS13", 5416, FieldType.INT);
+	public static final Field LE_FORMULAS14 = new Field("LE_FORMULAS14", 5616, FieldType.INT);
+	public static final Field LE_FORMULAS15 = new Field("LE_FORMULAS15", 5816, FieldType.INT);
+	public static final Field LE_FORMULAS16 = new Field("LE_FORMULAS16", 6016, FieldType.INT);
+	public static final Field TIMINGMULTIPLIER = new Field("TIMINGMULTIPLIER", 6216, FieldType.INT);
+	public static final Field TIMINGADDITIVE = new Field("TIMINGADDITIVE", 6416, FieldType.INT);
+	public static final Field IGNITIONIATCORRTABLE = new Field("IGNITIONIATCORRTABLE", 9176, FieldType.INT);
+	public static final Field INJECTIONPHASE = new Field("INJECTIONPHASE", 10328, FieldType.INT);
+	public static final Field FUELTABLE = new Field("FUELTABLE", 11480, FieldType.INT);
+	public static final Field IGNITIONTABLE = new Field("IGNITIONTABLE", 12632, FieldType.INT);
+	public static final Field VETABLE = new Field("VETABLE", 13784, FieldType.INT);
+	public static final Field AFRTABLE = new Field("AFRTABLE", 14936, FieldType.INT);
 }

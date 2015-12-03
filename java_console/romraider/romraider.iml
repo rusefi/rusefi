@@ -10,7 +10,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="log4j" level="project" />
     <orderEntry type="library" name="jep" level="project" />
-    <orderEntry type="library" name="swing-layout-1.0" level="project" />
+    <orderEntry type="library" name="swing-layout" level="project" />
     <orderEntry type="module" module-name="ui" />
     <orderEntry type="module" module-name="io" />
     <orderEntry type="module" module-name="models" />

@@ -74,13 +74,15 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	floatms_t tpsAccelEnrich = ENGINE(tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_F));
 
 	if (CONFIG(algorithm) == LM_SPEED_DENSITY) {
-		return tpsAccelEnrich + getSpeedDensityFuel(rpm PASS_ENGINE_PARAMETER);
+		engine->engineState.baseFuel = getSpeedDensityFuel(rpm PASS_ENGINE_PARAMETER);
 	} else if (engineConfiguration->algorithm == LM_REAL_MAF) {
 		float maf = getRealMaf(PASS_ENGINE_PARAMETER_F) + engine->mapAccelEnrichment.getMapEnrichment(PASS_ENGINE_PARAMETER_F);
-		return tpsAccelEnrich + getRealMafFuel(maf, rpm PASS_ENGINE_PARAMETER);
+		engine->engineState.baseFuel = getRealMafFuel(maf, rpm PASS_ENGINE_PARAMETER);
 	} else {
-		return tpsAccelEnrich + engine->engineState.baseTableFuel;
+		engine->engineState.baseFuel = engine->engineState.baseTableFuel;
 	}
+
+	return tpsAccelEnrich + engine->engineState.baseFuel;
 }
 
 float getinjectionOffset(int rpm DECLARE_ENGINE_PARAMETER_S) {

@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Nov 18 19:07:01 EST 2015
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 01 20:29:19 EST 2015
 // begin
 #include "rusefi_types.h"
 typedef struct {
@@ -1428,7 +1428,23 @@ typedef struct {
 	 * offset 2212
 	 */
 	float mapAccelEnrichmentMultiplier;
-	/** total size 2216*/
+	/**
+	 * offset 2216
+	 */
+	brain_pin_e fatalErrorPin;
+	/**
+	 * offset 2220
+	 */
+	brain_pin_e warninigPin;
+	/**
+	 * offset 2224
+	 */
+	brain_pin_e configResetPin;
+	/**
+	 * offset 2228
+	 */
+	int unused[197];
+	/** total size 3016*/
 } engine_configuration_s;
 
 typedef struct {
@@ -1437,143 +1453,143 @@ typedef struct {
 	 */
 	engine_configuration_s engineConfiguration;
 	/**
-	 * offset 2216
+	 * offset 3016
 	 */
 	le_formula_t le_formulas[LE_COMMAND_COUNT];
 	/**
-	 * offset 5416
+	 * offset 6216
 	 */
 	le_formula_t timingMultiplier;
 	/**
-	 * offset 5616
+	 * offset 6416
 	 */
 	le_formula_t timingAdditive;
 	/**
-	 * offset 5816
+	 * offset 6616
 	 */
 	float cltFuelCorrBins[CLT_CURVE_SIZE];
 	/**
-	 * offset 5880
+	 * offset 6680
 	 */
 	float cltFuelCorr[CLT_CURVE_SIZE];
 	/**
-	 * offset 5944
+	 * offset 6744
 	 */
 	float iatFuelCorrBins[IAT_CURVE_SIZE];
 	/**
-	 * offset 6008
+	 * offset 6808
 	 */
 	float iatFuelCorr[IAT_CURVE_SIZE];
 	/**
-	 * offset 6072
+	 * offset 6872
 	 */
 	float crankingFuelCoef[CRANKING_CURVE_SIZE];
 	/**
-	 * offset 6104
+	 * offset 6904
 	 */
 	float crankingFuelBins[CRANKING_CURVE_SIZE];
 	/**
-	 * offset 6136
+	 * offset 6936
 	 */
 	float crankingCycleCoef[CRANKING_CURVE_SIZE];
 	/**
-	 * offset 6168
+	 * offset 6968
 	 */
 	float crankingCycleBins[CRANKING_CURVE_SIZE];
 	/**
 	 * CLT-based adjustment for simple manual idle controller
-	 * offset 6200
+	 * offset 7000
 	 */
 	float cltIdleCorrBins[CLT_CURVE_SIZE];
 	/**
-	 * offset 6264
+	 * offset 7064
 	 */
 	float cltIdleCorr[CLT_CURVE_SIZE];
 	/**
 	 * kg/hour value.
 	 * By the way 2.081989116 kg/h = 1 ft³/m
-	 * offset 6328
+	 * offset 7128
 	 */
 	float mafDecoding[MAF_DECODING_COUNT];
 	/**
-	 * offset 7352
+	 * offset 8152
 	 */
 	float mafDecodingBins[MAF_DECODING_COUNT];
 	/**
-	 * offset 8376
+	 * offset 9176
 	 */
 	ignition_table_t ignitionIatCorrTable;
 	/**
-	 * offset 9400
+	 * offset 10200
 	 */
 	float ignitionIatCorrLoadBins[IGN_LOAD_COUNT];
 	/**
-	 * offset 9464
+	 * offset 10264
 	 */
 	float ignitionIatCorrRpmBins[IGN_RPM_COUNT];
 	/**
-	 * offset 9528
+	 * offset 10328
 	 */
 	ignition_table_t injectionPhase;
 	/**
-	 * offset 10552
+	 * offset 11352
 	 */
 	float injPhaseLoadBins[FUEL_LOAD_COUNT];
 	/**
-	 * offset 10616
+	 * offset 11416
 	 */
 	float injPhaseRpmBins[FUEL_RPM_COUNT];
 	/**
-	 * offset 10680
+	 * offset 11480
 	 */
 	fuel_table_t fuelTable;
 	/**
-	 * offset 11704
+	 * offset 12504
 	 */
 	float fuelLoadBins[FUEL_LOAD_COUNT];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
-	 * offset 11768
+	 * offset 12568
 	 */
 	float fuelRpmBins[FUEL_RPM_COUNT];
 	/**
-	 * offset 11832
+	 * offset 12632
 	 */
 	ignition_table_t ignitionTable;
 	/**
-	 * offset 12856
+	 * offset 13656
 	 */
 	float ignitionLoadBins[IGN_LOAD_COUNT];
 	/**
-	 * offset 12920
+	 * offset 13720
 	 */
 	float ignitionRpmBins[IGN_RPM_COUNT];
 	/**
-	 * offset 12984
+	 * offset 13784
 	 */
 	ve_table_t veTable;
 	/**
-	 * offset 14008
+	 * offset 14808
 	 */
 	float veLoadBins[FUEL_LOAD_COUNT];
 	/**
-	 * offset 14072
+	 * offset 14872
 	 */
 	float veRpmBins[FUEL_RPM_COUNT];
 	/**
-	 * offset 14136
+	 * offset 14936
 	 */
 	afr_table_t afrTable;
 	/**
-	 * offset 15160
+	 * offset 15960
 	 */
 	float afrLoadBins[FUEL_LOAD_COUNT];
 	/**
-	 * offset 15224
+	 * offset 16024
 	 */
 	float afrRpmBins[FUEL_RPM_COUNT];
-	/** total size 15288*/
+	/** total size 16088*/
 } persistent_config_s;
 
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Nov 18 19:07:01 EST 2015
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 01 20:29:19 EST 2015

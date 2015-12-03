@@ -12,6 +12,6 @@
     <orderEntry type="library" name="junit" level="project" />
     <orderEntry type="module" module-name="models" />
     <orderEntry type="module" module-name="logging" exported="" />
-    <orderEntry type="library" name="jcip-annotations-1.0" level="project" />
+    <orderEntry type="library" name="jcip-annotations" level="project" />
   </component>
 </module>

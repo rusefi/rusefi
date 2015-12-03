@@ -33,7 +33,8 @@ import static com.rusefi.binaryprotocol.IoHelper.*;
  * 3/6/2015
  */
 public class BinaryProtocol {
-    private static final int OUTPUT_CHANNELS_SIZE = 196;
+    // todo: is this auto-synched with rusefi.ini?
+    public static final int OUTPUT_CHANNELS_SIZE = 196;
 
     private static final int BLOCKING_FACTOR = 256;
     private static final byte RESPONSE_OK = 0;
@@ -51,6 +52,10 @@ public class BinaryProtocol {
     public static final char COMMAND_HELLO = 'S';
     public static final char COMMAND_PROTOCOL = 'F';
     public static final char COMMAND_CRC_CHECK_COMMAND = 'k';
+    public static final char COMMAND_PAGE = 'P';
+    public static final char COMMAND_READ = 'R';
+    public static final char COMMAND_CHUNK_WRITE = 'C';
+    public static final char COMMAND_BURN = 'B';
 
     private final Logger logger;
     private final IoStream stream;
@@ -65,6 +70,8 @@ public class BinaryProtocol {
     @Deprecated
     public static BinaryProtocol instance;
     public boolean isClosed;
+    // todo: make a singleton?
+    public static byte[] currentOutputs;
 
     public BinaryProtocol(final Logger logger, IoStream stream) {
         this.logger = logger;
@@ -269,7 +276,7 @@ public class BinaryProtocol {
             byte[] packet = new byte[packetSize];
                 incomingData.getData(packet);
             int packetCrc = swap32(incomingData.getInt());
-            int actualCrc = crc32(packet);
+            int actualCrc = getCrc32(packet);
 
             boolean isCrcOk = actualCrc == packetCrc;
             if (!isCrcOk) {
@@ -298,7 +305,7 @@ public class BinaryProtocol {
             int requestSize = Math.min(remainingSize, BLOCKING_FACTOR);
 
             byte packet[] = new byte[7];
-            packet[0] = 'R';
+            packet[0] = COMMAND_READ;
             putShort(packet, 1, 0); // page
             putShort(packet, 3, swap16(offset));
             putShort(packet, 5, swap16(requestSize));
@@ -357,7 +364,7 @@ public class BinaryProtocol {
         isBurnPending = true;
 
         byte packet[] = new byte[7 + size];
-        packet[0] = 'C';
+        packet[0] = COMMAND_CHUNK_WRITE;
         putShort(packet, 1, 0); // page
         putShort(packet, 3, swap16(offset));
         putShort(packet, 5, swap16(size));
@@ -383,7 +390,7 @@ public class BinaryProtocol {
         while (true) {
             if (isClosed)
                 return;
-            byte[] response = executeCommand(new byte[]{'B'}, "burn", false);
+            byte[] response = executeCommand(new byte[]{COMMAND_BURN}, "burn", false);
             if (!checkResponseCode(response, RESPONSE_BURN_OK) || response.length != 1) {
                 continue;
             }
@@ -460,6 +467,8 @@ public class BinaryProtocol {
         byte[] response = executeCommand(new byte[]{COMMAND_OUTPUTS}, "output channels", false);
         if (response == null || response.length != (OUTPUT_CHANNELS_SIZE + 1) || response[0] != RESPONSE_OK)
             return;
+
+        currentOutputs = response;
 
         for (Sensor sensor : Sensor.values()) {
             if (sensor.getType() == FieldType.FLOAT) {

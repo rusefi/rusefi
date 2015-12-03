@@ -85,7 +85,7 @@ typedef struct {
 	egt_values_s egtValues;
 	float rpmAcceleration;
 	float massAirFlowValue;
-	float veValue;
+	float veValue; // current volumetric efficiency
 	float deltaTps;
 	int triggerErrorsCounter;
 	float currentMapAccelDelta;
@@ -101,7 +101,9 @@ typedef struct {
 	float totalFuelCorrection;
 	floatms_t wallFuelCorrection;
 	float idlePosition;
-	int unused3[5];
+	float currentTargetAfr;
+	float chargeAirMass;
+	int unused3[3];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */

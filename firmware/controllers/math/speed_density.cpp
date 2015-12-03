@@ -48,19 +48,22 @@ float getTCharge(int rpm, float tps, float coolantTemp, float airTemp) {
  */
 #define GAS_R 0.28705
 
+float getAirMass(engine_configuration_s *engineConfiguration, float VE, float MAP, float tempK) {
+	// todo: pre-calculate cylinder displacement to save one division
+	float cylinderDisplacement = engineConfiguration->specs.displacement / engineConfiguration->specs.cylindersCount;
+	return (cylinderDisplacement * VE * MAP) / (GAS_R * tempK);
+}
+
 /**
  * @return per cylinder injection time, in seconds
  */
-float sdMath(engine_configuration_s *engineConfiguration, float VE, float MAP, float AFR, float tempK) {
+float sdMath(engine_configuration_s *engineConfiguration, float airMass, float AFR) {
 
 	/**
 	 * todo: pre-calculate gramm/second injector flow to save one multiplication
 	 * open question if that's needed since that's just a multiplication
 	 */
 	float injectorFlowRate = cc_minute_to_gramm_second(engineConfiguration->injector.flow);
-	// todo: pre-calculate cylinder displacement to save one division
-	float cylinderDisplacement = engineConfiguration->specs.displacement / engineConfiguration->specs.cylindersCount;
-	float airMass = (cylinderDisplacement * VE * MAP) / (GAS_R * tempK);
 	/**
 	 * injection_pulse_duration = fuel_mass / injector_flow
 	 * fuel_mass = air_mass / target_afr
@@ -86,7 +89,9 @@ float getSpeedDensityFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 
 	float adjMap = map + engine->mapAccelEnrichment.getMapEnrichment(PASS_ENGINE_PARAMETER_F);
 
-	return sdMath(engineConfiguration, ENGINE(engineState.currentVE), adjMap, ENGINE(engineState.targerAFR), tChargeK) * 1000;
+	engine->engineState.airMass = getAirMass(engineConfiguration, ENGINE(engineState.currentVE), adjMap, tChargeK);
+
+	return sdMath(engineConfiguration, engine->engineState.airMass, ENGINE(engineState.targerAFR)) * 1000;
 }
 
 static const baro_corr_table_t default_baro_corr = {

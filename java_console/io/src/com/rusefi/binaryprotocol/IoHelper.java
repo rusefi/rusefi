@@ -9,9 +9,13 @@ import java.util.zip.CRC32;
  * 3/6/2015
  */
 public class IoHelper {
-    public static int crc32(byte[] packet) {
+    public static int getCrc32(byte[] packet) {
+        return getCrc32(packet, 0, packet.length);
+    }
+
+    public static int getCrc32(byte[] packet, int offset, int length) {
         CRC32 c = new CRC32();
-        c.update(packet);
+        c.update(packet, offset, length);
         return (int) c.getValue();
     }
 
@@ -25,7 +29,7 @@ public class IoHelper {
         packet[1] = (byte) command.length;
 
         System.arraycopy(command, 0, packet, 2, command.length);
-        int crc = crc32(command);
+        int crc = getCrc32(command);
 
         putInt(packet, packet.length - 4, crc);
         return packet;

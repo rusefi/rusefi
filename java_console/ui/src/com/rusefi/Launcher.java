@@ -29,11 +29,10 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * (c) Andrey Belomutskiy 2013-2015
  *
  * @see StartupFrame
- * @see com.rusefi.ui.engine.EngineSnifferPanel
- * @see com.rusefi.StartupFrame
+ * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20151124;
+    public static final int CONSOLE_VERSION = 20151202;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -81,9 +80,9 @@ public class Launcher {
             tabbedPane.add("Log Viewer", new LogViewer(engineSnifferPanel));
 
         ConnectionWatchdog.start();
-        BinaryProtocolServer.start();
 
         tabbedPane.addTab("Gauges", new GaugesPanel(getConfig().getRoot().getChild("gauges")).getContent());
+        tabbedPane.addTab("Formulas", new FormulasPane().getContent());
         tabbedPane.addTab("Engine Sniffer", engineSnifferPanel.getPanel());
         tabbedPane.addTab("Sensor Sniffer", new SensorSnifferPane(getConfig().getRoot().getChild("sensor_sniffer")).getPanel());
 
@@ -134,6 +133,7 @@ public class Launcher {
                 tableEditor.showContent();
                 settingsTab.showContent();
                 logsManager.showContent();
+                BinaryProtocolServer.start();
             }
         });
 

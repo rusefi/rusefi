@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="swing-layout-1.0">
+  <library name="jcip-annotations">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/swing-layout-1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jcip-annotations-1.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
