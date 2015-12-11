@@ -20,7 +20,7 @@ struct_no_prefix engine_configuration_s
 !
 ! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
 ! 
-#define TS_FILE_VERSION 20150625
+#define TS_FILE_VERSION 20151201
 
 
 #define MAP_ANGLE_SIZE 8
@@ -203,7 +203,7 @@ custom injection_mode_e 4 bits, U32, @OFFSET@, [0:1], "Simultaneous", "Sequentia
 injection_mode_e crankingInjectionMode;
 injection_mode_e injectionMode;
 angle_t injectionOffset;this is about deciding when the injector starts it's squirt\nSee also injectionPhase map;"deg",    1,      0.0,       -720,     720,        2
-angle_t crankingTimingAngle;Timing advance while cranking enginee;     "deg",    1,      0.0,    -360,     360,        2
+angle_t crankingTimingAngle;Timing advance while cranking engine;     "deg",    1,      0.0,    -360,     360,        2
 
 custom ignition_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "One coil", "Individual Coils", "Wasted", "INVALID"
 ignition_mode_e ignitionMode;

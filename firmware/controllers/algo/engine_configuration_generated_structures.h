@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 01 20:29:19 EST 2015
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 08 10:02:06 EST 2015
 // begin
 #include "rusefi_types.h"
 typedef struct {
@@ -884,7 +884,7 @@ typedef struct {
 	 */
 	angle_t injectionOffset;
 	/**
-	 * Timing advance while cranking enginee
+	 * Timing advance while cranking engine
 	 * offset 440
 	 */
 	angle_t crankingTimingAngle;
@@ -1592,4 +1592,4 @@ typedef struct {
 } persistent_config_s;
 
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 01 20:29:19 EST 2015
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 08 10:02:06 EST 2015
