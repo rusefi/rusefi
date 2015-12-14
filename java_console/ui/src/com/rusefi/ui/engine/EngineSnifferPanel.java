@@ -127,8 +127,10 @@ public class EngineSnifferPanel {
         upperPanel.add(pauseButton);
         upperPanel.add(new RpmLabel(2).getContent());
 
-        JComponent command = AnyCommand.createField(config, "chartsize " + EFI_DEFAULT_CHART_SIZE, true, true).getContent();
-        upperPanel.add(command);
+        if (!LinkManager.isLogViewer()) {
+            JComponent command = AnyCommand.createField(config, "chartsize " + EFI_DEFAULT_CHART_SIZE, true, true).getContent();
+            upperPanel.add(command);
+        }
 
         upperPanel.add(zoomControl);
 
@@ -143,12 +145,15 @@ public class EngineSnifferPanel {
 
         upperPanel.add(new URLLabel(HELP_TEXT, HELP_URL));
 
-        JPanel lowerButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
-        lowerButtons.add(new BitConfigField(Fields.ISENGINECHARTENABLED, "Collect Engine Data").getContent());
-        lowerButtons.add(new ConfigField(Fields.ENGINECHARTSIZE, "Engine Sniffer size").getContent());
-
         JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.add(lowerButtons, BorderLayout.NORTH);
+
+        if (!LinkManager.isLogViewer()) {
+            JPanel lowerButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+            lowerButtons.add(new BitConfigField(Fields.ISENGINECHARTENABLED, "Collect Engine Data").getContent());
+            lowerButtons.add(new ConfigField(Fields.ENGINECHARTSIZE, "Engine Sniffer size").getContent());
+            bottomPanel.add(lowerButtons, BorderLayout.NORTH);
+        }
+
         bottomPanel.add(statusPanel.infoPanel, BorderLayout.SOUTH);
 
         chartPanel.add(upperPanel, BorderLayout.NORTH);

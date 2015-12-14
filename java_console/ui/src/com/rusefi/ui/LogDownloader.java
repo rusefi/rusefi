@@ -3,6 +3,7 @@ package com.rusefi.ui;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.InvocationConfirmationListener;
+import com.rusefi.ui.logview.LogViewer;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
@@ -13,10 +14,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
+ * This tab is about uploading log files from ECU.
+ * 
  * (c) Andrey Belomutskiy
  * 6/20/2015.
+ * @see LogViewer
  */
-public class LogsManager {
+public class LogDownloader {
     /**
      * see LS_RESPONSE in firmware source code
      */
@@ -26,7 +30,7 @@ public class LogsManager {
 
     private final JPanel logFiles = new JPanel(new VerticalFlowLayout());
 
-    public LogsManager() {
+    public LogDownloader() {
         UiUtils.showLoadingMessage(content);
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override

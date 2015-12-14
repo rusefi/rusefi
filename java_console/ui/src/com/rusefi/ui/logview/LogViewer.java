@@ -4,6 +4,7 @@ import com.rusefi.FileLog;
 import com.rusefi.core.EngineState;
 import com.rusefi.file.FileUtils;
 import com.rusefi.ui.ChartRepository;
+import com.rusefi.ui.LogDownloader;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.io.LinkManager;
@@ -25,6 +26,7 @@ import java.util.TreeMap;
  * <p/>
  * 7/27/13
  * (c) Andrey Belomutskiy
+ * @see LogDownloader
  */
 public class LogViewer extends JPanel {
     public static final FileFilter FILE_FILTER = new FileFilter() {
@@ -41,9 +43,6 @@ public class LogViewer extends JPanel {
     private final EngineSnifferPanel engineSnifferPanel;
     private String currentFolder;
     private static JPanel descPanel = new JPanel();
-
-
-//    int currentChartIndex = 0;
 
     public LogViewer(EngineSnifferPanel engineSnifferPanel) {
         super(new BorderLayout());
