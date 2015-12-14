@@ -32,7 +32,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20151202;
+    public static final int CONSOLE_VERSION = 20151214;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -43,7 +43,7 @@ public class Launcher {
     private static Frame staticFrame;
     private final TableEditorPane tableEditor = new TableEditorPane();
     private final SettingsTab settingsTab = new SettingsTab();
-    private final LogsManager logsManager = new LogsManager();
+    private final LogDownloader logsManager = new LogDownloader();
 
     FrameHelper frame = new FrameHelper() {
         @Override
@@ -81,10 +81,16 @@ public class Launcher {
 
         ConnectionWatchdog.start();
 
-        tabbedPane.addTab("Gauges", new GaugesPanel(getConfig().getRoot().getChild("gauges")).getContent());
-        tabbedPane.addTab("Formulas", new FormulasPane().getContent());
+        if (!LinkManager.isLogViewer())
+            tabbedPane.addTab("Gauges", new GaugesPanel(getConfig().getRoot().getChild("gauges")).getContent());
+
+        if (!LinkManager.isLogViewer())
+            tabbedPane.addTab("Formulas", new FormulasPane().getContent());
+
         tabbedPane.addTab("Engine Sniffer", engineSnifferPanel.getPanel());
-        tabbedPane.addTab("Sensor Sniffer", new SensorSnifferPane(getConfig().getRoot().getChild("sensor_sniffer")).getPanel());
+
+        if (!LinkManager.isLogViewer())
+            tabbedPane.addTab("Sensor Sniffer", new SensorSnifferPane(getConfig().getRoot().getChild("sensor_sniffer")).getPanel());
 
 
 //        tabbedPane.addTab("LE controls", new FlexibleControls().getPanel());
@@ -96,13 +102,18 @@ public class Launcher {
             tabbedPane.add("ECU stimulation", stimulator.getPanel());
         }
 //        tabbedPane.addTab("live map adjustment", new Live3DReport().getControl());
-        tabbedPane.add("Messages", new MessagesPane(getConfig().getRoot().getChild("messages")).getContent());
-        tabbedPane.addTab("Table Editor", tableEditor);
+        if (!LinkManager.isLogViewer())
+            tabbedPane.add("Messages", new MessagesPane(getConfig().getRoot().getChild("messages")).getContent());
+        if (!LinkManager.isLogViewer())
+            tabbedPane.addTab("Table Editor", tableEditor);
 //        tabbedPane.add("Wizards", new Wizard().createPane());
 
-        tabbedPane.add("Settings", settingsTab.createPane());
-        tabbedPane.add("Bench Test", new BenchTestPane().getContent());
-        tabbedPane.add("Logs Manager", logsManager.getContent());
+        if (!LinkManager.isLogViewer())
+            tabbedPane.add("Settings", settingsTab.createPane());
+        if (!LinkManager.isLogViewer())
+            tabbedPane.add("Bench Test", new BenchTestPane().getContent());
+        if (!LinkManager.isLogViewer() && false) // todo: fix it & better name?
+            tabbedPane.add("Logs Manager", logsManager.getContent());
 
         if (!LinkManager.isLogViewerMode(port)) {
             int selectedIndex = getConfig().getRoot().getIntProperty(TAB_INDEX, 2);
