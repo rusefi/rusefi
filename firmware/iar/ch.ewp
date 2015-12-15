@@ -2513,6 +2513,12 @@
       <file>
         <name>$PROJ_DIR$\..\controllers\trigger\trigger_subaru.h</name>
       </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\trigger\trigger_toyota.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\trigger\trigger_toyota.h</name>
+      </file>
     </group>
     <file>
       <name>$PROJ_DIR$\..\controllers\alternatorController.cpp</name>
