@@ -9,4 +9,14 @@
 
 #include "trigger_toyota.h"
 
+EXTERN_ENGINE;
 
+void initialize2jzGE(TriggerShape *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR, false);
+
+	initializeSkippedToothTriggerShapeExt(s, 3, 0,
+			FOUR_STROKE_CAM_SENSOR);
+
+	s->isSynchronizationNeeded = false;
+
+}

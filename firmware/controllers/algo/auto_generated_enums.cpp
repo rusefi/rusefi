@@ -159,6 +159,8 @@ case TT_UNUSED:
 	return "TT_UNUSED";
 case TT_NISSAN:
 	return "TT_NISSAN";
+case TT_2JZ:
+	return "TT_2JZ";
   }
  return NULL;
 }
