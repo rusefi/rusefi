@@ -236,6 +236,9 @@ void printAllTriggers() {
 	for (int triggerId = 1; triggerId < TT_UNUSED; triggerId++) {
 		trigger_type_e tt = (trigger_type_e) triggerId;
 
+//		if (triggerId != 20)
+//			continue;
+
 		printf("Exporting %s\r\n", getTrigger_type_e(tt));
 
 		persistent_config_s pc;
@@ -252,13 +255,13 @@ void printAllTriggers() {
 		TriggerShape *s = &engine->triggerShape;
 		s->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER);
 
-		fprintf(fp, "TRIGGERTYPE %d %d %s\r\n", triggerId, s->getSize(), getTrigger_type_e(tt));
+		fprintf(fp, "TRIGGERTYPE %d %d %s\r\n", triggerId, s->getLength(), getTrigger_type_e(tt));
 
 		fprintf(fp, "# duty %f %f\r\n", s->dutyCycle[0], s->dutyCycle[1]);
 
-		for (int i = 0; i < s->getSize(); i++) {
+		for (int i = 0; i < s->getLength(); i++) {
 
-			int triggerDefinitionCoordinate = (s->getTriggerShapeSynchPointIndex() + i) % s->getLength();
+			int triggerDefinitionCoordinate = (s->getTriggerShapeSynchPointIndex() + i) % s->getSize();
 
 
 			fprintf(fp, "event %d %d %f\r\n", i, s->triggerSignals[triggerDefinitionCoordinate], s->eventAngles[i]);
