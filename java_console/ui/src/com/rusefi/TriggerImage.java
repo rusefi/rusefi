@@ -88,7 +88,7 @@ public class TriggerImage {
         int eventCount = Integer.parseInt(eventCountStr);
         int id = Integer.parseInt(idStr);
 
-//        if (id != 4)
+//        if (id != 20)
 //            return;
 
         System.out.println("id=" + id + ", count=" + eventCount + ", name=" + triggerName);
@@ -96,6 +96,7 @@ public class TriggerImage {
         List<WaveState> waves = readTrigger(reader, eventCount);
 
         EngineReport re0 = new EngineReport(waves.get(0).list, 720, 720 * (1 + EXTRA_COUNT));
+        System.out.println(re0);
         EngineReport re1 = new EngineReport(waves.get(1).list, 720, 720 * (1 + EXTRA_COUNT));
 
         triggerPanel.removeAll();
@@ -138,7 +139,9 @@ public class TriggerImage {
             String angleStr = tokens[3];
             double angle = Double.parseDouble(angleStr);
 
-            signals.add(new Signal(signal, angle));
+            Signal s = new Signal(signal, angle);
+//            System.out.println(s);
+            signals.add(s);
             index++;
         }
 
