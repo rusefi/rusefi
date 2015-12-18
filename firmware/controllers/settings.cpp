@@ -494,6 +494,19 @@ static void setIgnitionMode(int value) {
 	doPrintConfiguration(engine);
 }
 
+static void setOneCoilIgnition(void) {
+	setIgnitionMode((int)IM_ONE_COIL);
+}
+
+static void setWastedIgnition(void) {
+	setIgnitionMode((int)IM_WASTED_SPARK);
+}
+
+static void setIndividualCoilsIgnition(void) {
+	setIgnitionMode((int)IM_INDIVIDUAL_COILS);
+}
+
+
 static void setTriggerType(int value) {
 	engineConfiguration->trigger.type = (trigger_type_e) value;
 	incrementGlobalConfigurationVersion();
@@ -1009,7 +1022,13 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionI("set_cranking_rpm", setCrankingRpm);
 	addConsoleActionF("set_cranking_timing_angle", setCrankingTimingAngle);
 	addConsoleActionF("set_cranking_charge_angle", setCrankingChargeAngle);
+
+	addConsoleAction("set_one_coil_ignition", setOneCoilIgnition);
+	addConsoleAction("set_wasted_spark_ignition", setWastedIgnition);
+	addConsoleAction("set_individual_coils_ignition", setIndividualCoilsIgnition);
+
 	addConsoleActionI("set_ignition_mode", setIgnitionMode);
+
 	addConsoleActionI("set_cranking_injection_mode", setCrankingInjectionMode);
 	addConsoleActionI("set_injection_mode", setInjectionMode);
 
