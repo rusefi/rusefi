@@ -179,7 +179,7 @@ public class AutoTest {
         setEngineType(2);
         EngineChart chart;
         sendComplexCommand("set_whole_fuel_map 3");
-        sendComplexCommand("set_ignition_mode 1");
+        sendComplexCommand("set_individual_coils_ignition");
         /**
          * note that command order matters - RPM change resets wave chart
          */
@@ -326,7 +326,7 @@ public class AutoTest {
         assertWave(chart, EngineChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
 
         // let's enable more channels dynamically
-        sendComplexCommand("set_ignition_mode 1");
+        sendComplexCommand("set_individual_coils_ignition");
         chart = nextChart();
         assertWave("Switching Aspire into INDIVIDUAL_COILS mode", chart, EngineChart.SPARK_2, 0.133, x + 540);
         assertWave(chart, EngineChart.SPARK_3, 0.133, x + 180);
