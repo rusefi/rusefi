@@ -363,22 +363,37 @@ typedef enum {
 	Force_4b_spi_device = ENUM_32_BITS,
 } spi_device_e;
 
+/**
+ * Frankenso analog #1 PC2 ADC12
+ * Frankenso analog #2 PC1 ADC11
+ * Frankenso analog #3 PA0 ADC0
+ * Frankenso analog #4 PC3 ADC13
+ * Frankenso analog #5 PA2 ADC2
+ * Frankenso analog #6 PA1 ADC1
+ * Frankenso analog #7 PA4 ADC4
+ * Frankenso analog #8 PA3 ADC3
+ * Frankenso analog #9 PA7 ADC7
+ * Frankenso analog #10 PA6 ADC6
+ * Frankenso analog #11 PC5 ADC15
+ * Frankenso analog #12 PC4 ADC14
+ */
+
 typedef enum {
-	EFI_ADC_0 = 0,
-	EFI_ADC_1 = 1,
-	EFI_ADC_2 = 2,
-	EFI_ADC_3 = 3,
-	EFI_ADC_4 = 4,
-	EFI_ADC_5 = 5,
-	EFI_ADC_6 = 6,
-	EFI_ADC_7 = 7,
+	EFI_ADC_0 = 0, // PA0
+	EFI_ADC_1 = 1, // PA1
+	EFI_ADC_2 = 2, // PA2
+	EFI_ADC_3 = 3, // PA3
+	EFI_ADC_4 = 4, // PA4
+	EFI_ADC_5 = 5, // PA5
+	EFI_ADC_6 = 6, // PA6
+	EFI_ADC_7 = 7, // PA7
 	EFI_ADC_8 = 8,
 	EFI_ADC_9 = 9,
 	EFI_ADC_10 = 10,
-	EFI_ADC_11 = 11,
-	EFI_ADC_12 = 12,
-	EFI_ADC_13 = 13,
-	EFI_ADC_14 = 14,
+	EFI_ADC_11 = 11, // PC11
+	EFI_ADC_12 = 12, // PC12
+	EFI_ADC_13 = 13, // PC13
+	EFI_ADC_14 = 14, // PC14
 	EFI_ADC_15 = 15,
 
 	EFI_ADC_NONE = 16,
@@ -391,6 +406,7 @@ typedef enum {
 	ES_BPSX_D1 = 0,
 	/**
 	 * same as innovate LC2
+	 * 0v->7.35afr, 5v->22.39
 	 */
 	ES_Innovate_MTX_L = 1, ES_14Point7_Free = 2,
 

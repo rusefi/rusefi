@@ -261,7 +261,7 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 //	boardConfiguration->triggerInputPins[0] = GPIOA_5; // 2E White CKP
 //	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 
-	// in case of SOHC distributor we only have one signal
+	// in case of DOHC distributor we have two signals
 	boardConfiguration->triggerInputPins[0] = GPIOC_6;
 	boardConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
 
@@ -275,8 +275,12 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 
-	setEgoSensor(ES_BPSX_D1 PASS_ENGINE_PARAMETER);
-	engineConfiguration->afr.hwChannel = EFI_ADC_2;
+	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER);
+	engineConfiguration->afr.hwChannel = EFI_ADC_2; // Frankenso analog #5
+
+	// set_idle_position 35
+	boardConfiguration->manIdlePosition = 35;
+
 
 
 	// set_global_trigger_offset_angle -40
