@@ -1,6 +1,7 @@
 /*
  * @file chevrolet_c20_1973.cpp
  *
+ * most stuff is from a 1991
  * 5.7L SBC
  * 4 wire IAC
  * 8 pin HEI module
