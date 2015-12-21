@@ -66,6 +66,7 @@
 #include "daihatsu.h"
 #include "chevrolet_camaro_4.h"
 #include "suzuki_vitara.h"
+#include "chevrolet_c20_1973.h"
 
 EXTERN_ENGINE;
 
@@ -799,6 +800,10 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	case CAMARO_4:
 		setCamaro4(PASS_ENGINE_PARAMETER_F);
 		break;
+	case CHEVY_C20_1973:
+		set1973c20(PASS_ENGINE_PARAMETER_F);
+		break;
+
 
 	default:
 		warning(OBD_PCM_Processor_Fault, "Unexpected engine type: %d", engineType);
