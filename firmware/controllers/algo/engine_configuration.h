@@ -21,9 +21,6 @@
 
 // WARNING: by default, our small enums are ONE BYTE. this one is made 4-byte with the 'ENUM_32_BITS' hack
 
-// 19010105 decimal
-#define HEADER_MAGIC_NUMBER 0x1221239
-
 /**
  * @brief	Engine configuration.
  * 		Values in this data structure are adjustable and persisted in on-board flash RAM.

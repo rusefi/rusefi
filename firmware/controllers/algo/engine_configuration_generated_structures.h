@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 21 19:26:52 EST 2015
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 21 21:22:24 EST 2015
 // begin
 #include "rusefi_types.h"
 typedef struct {
@@ -751,10 +751,9 @@ typedef struct {
 	 */
 	engine_type_e engineType;
 	/**
-	 * this magic number is used to make sure that what we read from Flash is in fact some configuration
 	 * offset 4
 	 */
-	int headerMagicValue;
+	int unusedOffset4;
 	/**
 	 * offset 8
 	 */
@@ -1596,4 +1595,4 @@ typedef struct {
 } persistent_config_s;
 
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 21 19:26:52 EST 2015
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 21 21:22:24 EST 2015
