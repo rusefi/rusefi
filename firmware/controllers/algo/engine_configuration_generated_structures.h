@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 08 10:02:06 EST 2015
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 21 19:26:52 EST 2015
 // begin
 #include "rusefi_types.h"
 typedef struct {
@@ -1443,7 +1443,11 @@ typedef struct {
 	/**
 	 * offset 2228
 	 */
-	int unused[197];
+	uint32_t uartConsoleSerialSpeed;
+	/**
+	 * offset 2232
+	 */
+	int unused[196];
 	/** total size 3016*/
 } engine_configuration_s;
 
@@ -1592,4 +1596,4 @@ typedef struct {
 } persistent_config_s;
 
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 08 10:02:06 EST 2015
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 21 19:26:52 EST 2015

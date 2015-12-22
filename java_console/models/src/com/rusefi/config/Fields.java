@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 01 20:29:19 EST 2015
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 21 19:26:52 EST 2015
 public class Fields {
 	public static final Field ENGINETYPE = new Field("ENGINETYPE", 0, FieldType.INT);
 	public static final Field HEADERMAGICVALUE = new Field("HEADERMAGICVALUE", 4, FieldType.INT);
@@ -457,6 +457,7 @@ public class Fields {
 	public static final Field FATALERRORPIN = new Field("FATALERRORPIN", 2216, FieldType.INT, brain_pin_e);
 	public static final Field WARNINIGPIN = new Field("WARNINIGPIN", 2220, FieldType.INT, brain_pin_e);
 	public static final Field CONFIGRESETPIN = new Field("CONFIGRESETPIN", 2224, FieldType.INT, brain_pin_e);
+	public static final Field UARTCONSOLESERIALSPEED = new Field("UARTCONSOLESERIALSPEED", 2228, FieldType.INT);
 	public static final Field LE_FORMULAS1 = new Field("LE_FORMULAS1", 3016, FieldType.INT);
 	public static final Field LE_FORMULAS2 = new Field("LE_FORMULAS2", 3216, FieldType.INT);
 	public static final Field LE_FORMULAS3 = new Field("LE_FORMULAS3", 3416, FieldType.INT);

@@ -725,7 +725,8 @@
 #define fatalErrorPin_offset 2216
 #define warninigPin_offset 2220
 #define configResetPin_offset 2224
-#define unused_offset 2228
+#define uartConsoleSerialSpeed_offset 2228
+#define unused_offset 2232
 #define le_formulas1_offset 3016
 #define le_formulas2_offset 3216
 #define le_formulas3_offset 3416

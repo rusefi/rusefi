@@ -248,6 +248,9 @@ void setDefaultBasePins(DECLARE_ENGINE_PARAMETER_F) {
  *  * flash version of configuration failed CRC check or appears to be older then FLASH_DATA_VERSION
  *  * 'rewriteconfig' command
  *  * 'set_engine_type X' command
+ *
+ * This method should only change the state of the configuration data structure but should NOT change the state of
+ * anything else.
  */
 void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 #if (! EFI_UNIT_TEST) || defined(__DOXYGEN__)
@@ -657,6 +660,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->isVerboseAlternator = false;
 
 	boardConfiguration->tunerStudioSerialSpeed = TS_DEFAULT_SPEED;
+	engineConfiguration->uartConsoleSerialSpeed = 115200;
+
 
 	engineConfiguration->mapAccelLength = 6;
 	engineConfiguration->mapAccelEnrichmentThreshold = 5; // kPa
