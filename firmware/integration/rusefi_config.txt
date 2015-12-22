@@ -132,7 +132,7 @@ end_struct
 custom engine_type_e 4 bits, S32, @OFFSET@,   [0:2], "AUDI_AAN", "DODGE_NEON_1995", "FORD_ASPIRE_1996", "FORD_FIESTA", "NISSAN_PRIMERA", "HONDA_ACCORD", "FORD_INLINE_6_1995", "GY6_139QMB"
 engine_type_e engineType;http://rusefi.com/wiki/index.php?title=Manual:Engine_Type
 
-int headerMagicValue;this magic number is used to make sure that what we read from Flash is in fact some configuration
+int unusedOffset4;
 
 struct injector_s
 	float flow;cc/min, cubic centimeter per minute\nBy the way, g/s = 0.125997881 * (lb/hr)\ng/s = 0.125997881 * (cc/min)/10.5\ng/s = 0.0119997981 * cc/min;"cm3/min",  1,     0,      0,   1000,   2

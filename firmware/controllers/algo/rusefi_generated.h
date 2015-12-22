@@ -26,8 +26,8 @@
 #define engineConfiguration_offset_hex 0
 #define engineType_offset 0
 #define engineType_offset_hex 0
-#define headerMagicValue_offset 4
-#define headerMagicValue_offset_hex 4
+#define unusedOffset4_offset 4
+#define unusedOffset4_offset_hex 4
 #define injector_offset 8
 #define injector_offset_hex 8
 #define injector_flow_offset 8

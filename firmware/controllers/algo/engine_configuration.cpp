@@ -236,6 +236,7 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 void setDefaultBasePins(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->fatalErrorPin = GPIOD_14;
 	engineConfiguration->warninigPin = GPIOD_13;
+	engineConfiguration->configResetPin = GPIOB_1;
 }
 
 /**
@@ -681,7 +682,6 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	engineConfiguration->directSelfStimulation = true;
 #endif /* */
 	engineConfiguration->engineType = engineType;
-	engineConfiguration->headerMagicValue = HEADER_MAGIC_NUMBER;
 
 	/**
 	 * And override them with engine-specific defaults

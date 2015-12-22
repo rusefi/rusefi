@@ -100,31 +100,45 @@ static void doResetConfiguration(void) {
 	resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER);
 }
 
-static bool hasValidEngineType(engine_configuration_s *engineConfiguration) {
-	uint32_t ordinal = (uint32_t)engineConfiguration->engineType;
-	return ordinal < ET_UNUSED && engineConfiguration->headerMagicValue == HEADER_MAGIC_NUMBER;
-}
+typedef enum {
+	OK = 0,
+	CRC_FAILED = 1,
+	INCOMPATIBLE_VERSION = 2,
+	RESET_REQUESTED = 3
+} persisted_configuration_state_e;
+
+persisted_configuration_state_e flashState;
 
 void readFromFlash(void) {
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "read f");
 	printMsg(logger, "readFromFlash()");
 	flashRead(FLASH_ADDR, (char *) &persistentState, PERSISTENT_SIZE);
 
+	persisted_configuration_state_e result;
+
 	if (!isValidCrc(&persistentState)) {
-		printMsg(logger, "Need to reset flash to default due to CRC");
+		result = CRC_FAILED;
 		resetConfigurationExt(logger, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER);
-	} else if (persistentState.version == FLASH_DATA_VERSION && persistentState.size == PERSISTENT_SIZE) {
-		printMsg(logger, "Got valid configuration from flash!");
-		applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER);
-	} else if (hasValidEngineType(engineConfiguration)) {
-		printMsg(logger, "Resetting but saving engine type [%d]", engineConfiguration->engineType);
+	} else if (persistentState.version != FLASH_DATA_VERSION || persistentState.size != PERSISTENT_SIZE) {
+		result = INCOMPATIBLE_VERSION;
 		resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER);
 	} else {
-		printMsg(logger, "Need to reset flash to default due to version change");
-		resetConfigurationExt(logger, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER);
+		/**
+		 * At this point we know that CRC and version number is what we expect. Safe to assume it's a valid configuration.
+		 */
+		result = OK;
+		applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER);
 	}
 	// we can only change the state after the CRC check
 	engineConfiguration->firmwareVersion = getRusEfiVersion();
+
+	if (result == CRC_FAILED) {
+		printMsg(logger, "Need to reset flash to default due to CRC");
+	} else if (result == INCOMPATIBLE_VERSION) {
+		printMsg(logger, "Resetting but saving engine type [%d]", engineConfiguration->engineType);
+	} else {
+		printMsg(logger, "Got valid configuration from flash!");
+	}
 }
 
 static void rewriteConfig(void) {
