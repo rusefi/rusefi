@@ -210,7 +210,7 @@ void applyNewHardwareSettings(void) {
 }
 
 void initHardware(Logging *l) {
-        efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "init h");
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "init h");
 	sharedLogger = l;
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 	efiAssertVoid(engineConfiguration!=NULL, "engineConfiguration");

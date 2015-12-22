@@ -625,7 +625,8 @@ baro_corr_table_t baroCorrTable;
 	brain_pin_e fatalErrorPin;
 	brain_pin_e warninigPin; 
 	brain_pin_e configResetPin;
-	int[197] unused;
+	uint32_t uartConsoleSerialSpeed;;"BPs",      1,      0,       0,1000000,      0
+	int[196] unused;
 	
 
 end_struct

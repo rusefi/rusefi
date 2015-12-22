@@ -164,7 +164,7 @@ void applyNewConfiguration(void) {
 }
 
 void runRusEfi(void) {
-        efiAssertVoid(getRemainingStack(chThdSelf()) > 512, "init s");
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 512, "init s");
 
 	msObjectInit(&firmwareErrorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
 

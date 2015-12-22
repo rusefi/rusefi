@@ -48,11 +48,12 @@ private:
 };
 
 /**
- * this part of the structure is separate just because so far
- * these fields are not integrated with Tuner Studio. Step by step :)
+ * This structure is still separate from Engine simply because this goes into CCM memory and Engine is in main memory
+ * todo: re-arrange global variables to put something else into CCM so that this can go into main
+ * so that this could be mergeed into Engine
+ * todo: move these fields into Engine class, eliminate this class
  */
 class engine_configuration2_s {
-	// todo: move these fields into Engine class, eliminate this class
 public:
 	engine_configuration2_s();
 
