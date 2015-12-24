@@ -182,6 +182,7 @@ public class StartupFrame {
     public void disposeFrameAndProceed() {
         isProceeding = true;
         frame.dispose();
+        scanPortsTimes.stop();
     }
 
     private void addPortSelection(List<String> ports) {
