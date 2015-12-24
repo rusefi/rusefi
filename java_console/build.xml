@@ -52,9 +52,15 @@
             <fileset dir="romraider/resources" includes="**/*.*"/>
         </copy>
 
+        <tstamp>
+            <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
+        </tstamp>
+
         <jar destfile="${jar_file}" basedir="build/classes">
             <manifest>
                 <attribute name="Main-Class" value="com.rusefi.Launcher"/>
+                <attribute name="Built-Date" value="${TODAY}"/>
+                <attribute name="Signature-Vendor" value="rusEfi LLC"/>
             </manifest>
             <zipfileset src="lib/SteelSeries-3.9.30.jar" includes="**/*.class"/>
             <zipfileset src="lib/trident-6.2.jar" includes="**/*.class"/>
