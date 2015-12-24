@@ -140,6 +140,7 @@ int main(void) {
 
 	testMenuTree();
 	testMafLookup();
+	testIgnitionMapGenerator();
 	testMafFuelMath();
 
 	testPidController();

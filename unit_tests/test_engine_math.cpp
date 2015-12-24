@@ -13,6 +13,7 @@
 #include "speed_density.h"
 #include "engine_test_helper.h"
 #include "maf.h"
+#include "advance_map.h"
 
 void testIgnitionPlanning(void) {
 	printf("*************************************************** testIgnitionPlanning\r\n");
@@ -43,6 +44,17 @@ void testEngineMath(void) {
 	assertEquals(312.5, getTCharge(4000, 0, 300, 350));
 	assertEquals(320.0833, getTCharge(4000, 50, 300, 350));
 	assertEquals(327.6667, getTCharge(4000, 100, 300, 350));
+}
+
+void testIgnitionMapGenerator(void) {
+	printf("*************************************************** testIgnitionMapGenerator\r\n");
+
+	assertEquals(35, getTopAdvanceForBore(CS_OPEN, 98, 8, 101.6));
+	assertEquals(33, getTopAdvanceForBore(CS_OPEN, 98, 11, 101.6));
+
+    assertEquals(22.0, getTopAdvanceForBore(CS_SWIRL_TUMBLE, 89, 9, 101.6));
+    assertEquals(32.2, getTopAdvanceForBore(CS_SWIRL_TUMBLE, 89, 9, 145));
+
 }
 
 void testMafLookup(void) {

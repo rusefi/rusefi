@@ -11,5 +11,6 @@
 void testEngineMath(void);
 void testIgnitionPlanning(void);
 void testMafLookup(void);
+void testIgnitionMapGenerator(void);
 
 #endif /* TEST_ENGINE_MATH_H_ */

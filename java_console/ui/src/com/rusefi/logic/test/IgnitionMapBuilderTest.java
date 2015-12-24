@@ -27,7 +27,7 @@ public class IgnitionMapBuilderTest {
         assertEquals(35.0, getTopAdvanceForBore(OPEN_CHAMBER, 98, 8, 101.6));
         assertEquals(33.0, getTopAdvanceForBore(OPEN_CHAMBER, 98, 11, 101.6));
 
-        assertEquals(22.0, getTopAdvanceForBore(SWITL_TUMBLE, 89, 9, 101.6));
-        assertEquals(32.2, getTopAdvanceForBore(SWITL_TUMBLE, 89, 9, 145));
+        assertEquals(22.0, getTopAdvanceForBore(SWIRL_TUMBLE, 89, 9, 101.6));
+        assertEquals(32.2, getTopAdvanceForBore(SWIRL_TUMBLE, 89, 9, 145));
     }
 }
