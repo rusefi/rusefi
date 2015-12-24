@@ -93,4 +93,11 @@
         <java classpath="${jar_file}" classname="com.rusefi.RealHwTest" failonerror="true">
         </java>
     </target>
+
+    <target name="before_IDEA_Build">
+        <copy todir=".">
+            <fileset dir="../firmware/tunerstudio" includes="rusefi.ini"/>
+        </copy>
+
+    </target>
 </project>
