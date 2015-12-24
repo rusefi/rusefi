@@ -628,4 +628,13 @@ typedef enum {
 	Internal_ForceMyEnumIntSize_timing_mode = ENUM_32_BITS,
 } timing_mode_e;
 
+typedef enum {
+    CS_OPEN = 0,
+    CS_CLOSED = 1,
+    CS_SWIRL_TUMBLE = 2,
+
+	Internal_ForceMyEnumIntSize_chamber_stype = ENUM_32_BITS,
+} chamber_style_e;
+
+
 #endif /* RUSEFI_ENUMS_H_ */

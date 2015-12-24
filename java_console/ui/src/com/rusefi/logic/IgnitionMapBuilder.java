@@ -8,17 +8,13 @@ public class IgnitionMapBuilder {
     public enum ChamberStyle {
         OPEN_CHAMBER(33),
         CLOSED_CHAMBER(28),
-        SWITL_TUMBLE(22);
+        SWIRL_TUMBLE(22);
 
 
         private final int advance;
 
         ChamberStyle(int advance) {
             this.advance = advance;
-        }
-
-        public int getAdvance() {
-            return advance;
         }
     }
 
