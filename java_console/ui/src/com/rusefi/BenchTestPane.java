@@ -11,7 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class BenchTestPane {
-    private final JPanel content = new JPanel(new GridLayout(2, 3));
+    private final JPanel content = new JPanel(new GridLayout(2, 4));
 
     public BenchTestPane() {
         content.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -21,6 +21,7 @@ public class BenchTestPane {
         content.add(createSparkTest());
         content.add(createInjectorTest());
         content.add(createMILTest());
+        content.add(createIdleTest());
         content.add(new MessagesView().messagesScroll);
     }
 
@@ -29,6 +30,16 @@ public class BenchTestPane {
             @NotNull
             protected String getCommand() {
                 return "milbench";
+            }
+        };
+        return panel.getContent();
+    }
+
+    private Component createIdleTest() {
+        BenchTestPanel panel = new BenchTestPanel("idle_valve.png", "Idle Valve") {
+            @NotNull
+            protected String getCommand() {
+                return "idlebench";
             }
         };
         return panel.getContent();
