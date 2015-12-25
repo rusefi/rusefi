@@ -26,14 +26,13 @@ LIBS:contrib
 LIBS:lm2596
 LIBS:mos_p_numbered-pins
 LIBS:mos_n_numbered-pins
-LIBS:PWR_buck_12V_switcher-cache
 EELAYER 27 0
 EELAYER END
 $Descr A 11000 8500
 encoding utf-8
 Sheet 1 1
 Title "PWR buck 12V switcher regulator"
-Date "4 oct 2015"
+Date "28 nov 2015"
 Rev ".04"
 Comp "https://sourceforge.net/p/rusefi/"
 Comment1 ""
@@ -196,12 +195,12 @@ L MOS_PRO Q1
 U 1 1 5611B0E6
 P 5350 6500
 F 0 "Q1" H 5350 6650 60  0000 R CNN
-F 1 "30V" V 5550 6550 60  0000 R CNN
+F 1 "20V" V 5550 6550 60  0000 R CNN
 F 2 "SOT23" H 5350 6500 60  0001 C CNN
 F 3 "~" H 5350 6500 60  0000 C CNN
-F 4 "Alpha,AO3401A" H 5350 6500 60  0001 C CNN "mfg,mfg"
-F 5 "DIGI,785-1001-1-ND" H 5350 6500 60  0001 C CNN "vend1,vend1"
-F 6 "sky-macau.com,4824167646" H 5350 6500 60  0001 C CNN "vend2,vend2#"
+F 4 "Vishay,SQ2301ES-T1-GE3" H 5350 6500 60  0001 C CNN "mfg,mfg"
+F 5 "Newark,64T4128" H 5350 6500 60  0001 C CNN "vend1,vend1"
+F 6 "Mouser,78-SQ2301ES-T1_GE3" H 5350 6500 60  0001 C CNN "vend2,vend2#"
 	1    5350 6500
 	0    -1   -1   0   
 $EndComp
@@ -323,12 +322,12 @@ L ZENERSMALL D2
 U 1 1 5611B0F0
 P 4600 6750
 F 0 "D2" H 4600 6850 40  0000 C CNN
-F 1 "15V" H 4600 6650 30  0000 C CNN
+F 1 "14V" H 4600 6650 30  0000 C CNN
 F 2 "D3" H 4600 6750 60  0001 C CNN
 F 3 "~" H 4600 6750 60  0000 C CNN
-F 4 "FAIRCHILD,1N5245B" H 4600 6750 60  0001 C CNN "mfg,mfg#"
-F 5 "DIGI,1N5245BFS-ND" H 4600 6750 60  0001 C CNN "vend1,vend1#"
-F 6 "sky-macau.com,9197428750" H 4600 6750 60  0001 C CNN "vend2,vend2#"
+F 4 "FAIRCHILD,1N5244B" H 4600 6750 60  0001 C CNN "mfg,mfg#"
+F 5 "DIGI,1N5244B-ND" H 4600 6750 60  0001 C CNN "vend1,vend1#"
+F 6 " " H 4600 6750 60  0001 C CNN "vend2,vend2#"
 	1    4600 6750
 	0    -1   -1   0   
 $EndComp
@@ -446,7 +445,7 @@ Wire Wire Line
 	4700 6600 4600 6600
 Connection ~ 4600 6600
 Text Notes 850  5350 0    60   ~ 0
-Brief overview\n-- Q1002, R1003, D1002 preform an active transient protection. It will suppress voltages up to 200V. \n-- Q1001, R1001, D1001 preform a reverse polarity protection. If the input signal is the wrong polarity, the gate will not conduct which will prevent current from flowing. \n-- D1003 is a second transient suppressor, it would catch faster transients allowing a brief amount of time for Q1002 to preform it's duty. \n-- C1001 is a bulk cap, it simply stores energy locally such that the regulator can draw large currents in short periods of time. \n-- U1001 and the components to the right, are a buck style switching regulator, that will pull the 5V line up to 5V. It will now pull it down from 5V if there is an external voltage. 
+Brief overview\n-- Q1002, R1003, D1002 preform an active transient protection. It will suppress voltages up to 200V, down to 19V.\n-- Q1001, R1001, D1001 preform a reverse polarity protection. If the input signal is the wrong polarity, the gate will not conduct which will prevent current from flowing. \n-- D1003 is a second transient suppressor, it would catch faster transients allowing a brief amount of time for Q1002 to preform it's duty. \n-- C1001 is a bulk cap, it simply stores energy locally such that the regulator can draw large currents in short periods of time. \n-- U1001 and the components to the right, are a buck style switching regulator, that will pull the 5V line up to 5V. It will now pull it down from 5V if there is an external voltage. 
 Text Label 3600 6400 2    60   ~ 0
 Vin
 Text Label 3500 6600 0    60   ~ 0
