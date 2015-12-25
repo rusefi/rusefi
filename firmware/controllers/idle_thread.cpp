@@ -129,6 +129,7 @@ static void setIdleValvePosition(int positionPercent) {
 
 static int idlePositionBeforeBlip;
 static efitimeus_t timeToStopBlip = 0;
+static efitimeus_t timeToStopIdleTest = 0;
 
 /**
  * I use this questionable feature to tune acceleration enrichment
@@ -141,6 +142,11 @@ static void blipIdle(int idlePosition, int durationMs) {
 	idlePositionBeforeBlip = boardConfiguration->manIdlePosition;
 	setIdleValvePosition(idlePosition);
 	timeToStopBlip = getTimeNowUs() + 1000 * durationMs;
+}
+
+static void finishIdleTestIfNeeded() {
+	if (timeToStopIdleTest != 0 && getTimeNowUs() > timeToStopIdleTest)
+		timeToStopIdleTest = 0;
 }
 
 static void undoIdleBlipIfNeeded() {
@@ -177,6 +183,7 @@ static msg_t ivThread(int param) {
 					getHwPin(boardConfiguration->clutchUpPin));
 		}
 
+		finishIdleTestIfNeeded();
 		undoIdleBlipIfNeeded();
 
 		if (engineConfiguration->idleMode != IM_AUTO) {
@@ -235,6 +242,10 @@ static void setIdleDT(int value) {
 	showIdleInfo();
 }
 
+static void startIdleBench(void) {
+	timeToStopIdleTest = getTimeNowUs() + MS2US(3000); // 3 seconds
+}
+
 void setDefaultIdleParameters(void) {
 	engineConfiguration->idlePid.pFactor = 0.1f;
 	engineConfiguration->idlePid.iFactor = 0.05f;
@@ -247,7 +258,9 @@ static void applyIdleSolenoidPinState(PwmConfig *state, int stateIndex) {
 	efiAssertVoid(state->multiWave.waveCount == 1, "invalid idle waveCount");
 	OutputPin *output = state->outputPins[0];
 	int value = state->multiWave.waves[0].pinStates[stateIndex];
-	if (!value || engine->rpmCalculator.rpmValue != 0)
+	if (!value /* always allow tuning solenoid down */ ||
+			(engine->rpmCalculator.rpmValue != 0 || timeToStopIdleTest != 0) /* do not run solenoid unless engine is spinning or bench testing in progress */
+			)
 		output->setValue(value);
 }
 
@@ -303,6 +316,7 @@ void startIdleThread(Logging*sharedLogger, Engine *engine) {
 	addConsoleActionF("set_idle_d", setIdleDFactor);
 	addConsoleActionI("set_idle_dt", setIdleDT);
 
+	addConsoleAction("idlebench", startIdleBench);
 	apply();
 }
 
