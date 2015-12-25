@@ -1,9 +1,9 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 21 19:26:52 EST 2015
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 21 21:22:24 EST 2015
 public class Fields {
 	public static final Field ENGINETYPE = new Field("ENGINETYPE", 0, FieldType.INT);
-	public static final Field HEADERMAGICVALUE = new Field("HEADERMAGICVALUE", 4, FieldType.INT);
+	public static final Field UNUSEDOFFSET4 = new Field("UNUSEDOFFSET4", 4, FieldType.INT);
 	public static final Field INJECTOR_FLOW = new Field("INJECTOR_FLOW", 8, FieldType.FLOAT);
 	public static final Field INJECTOR_LAG = new Field("INJECTOR_LAG", 12, FieldType.FLOAT);
 	public static final Field DIRECTSELFSTIMULATION = new Field("DIRECTSELFSTIMULATION", 80, FieldType.BIT, 0);
