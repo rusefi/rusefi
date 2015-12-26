@@ -21,8 +21,15 @@ EXTERN_ENGINE;
 void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 
-	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;
+	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+//	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
+	engineConfiguration->trigger.type = TT_60_2_VW;
+//	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;
 
+
+	engineConfiguration->injectionMode = IM_BATCH;
+
+	// chartsize 150
 	engineConfiguration->engineChartSize = 150;
 
 	boardConfiguration->sensorChartMode = SC_TRIGGER;
