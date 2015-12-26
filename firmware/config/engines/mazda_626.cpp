@@ -29,8 +29,8 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->injectionMode = IM_BATCH;
 
-	// chartsize 150
-	engineConfiguration->engineChartSize = 150;
+	// chartsize 600
+	engineConfiguration->engineChartSize = 600;
 
 	boardConfiguration->sensorChartMode = SC_TRIGGER;
 	engineConfiguration->sensorChartFrequency = 2;
@@ -38,8 +38,8 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->injector.flow = 330;
 	engineConfiguration->specs.displacement = 2.0;
 
-	// set_global_trigger_offset_angle -42
-	engineConfiguration->globalTriggerAngleOffset = -42;
+	// set_global_trigger_offset_angle 0
+	engineConfiguration->globalTriggerAngleOffset = 0;
 
 	// set_cranking_timing_angle 15
 	engineConfiguration->crankingTimingAngle = 8;
