@@ -110,13 +110,16 @@ public class BinaryProtocolServer {
                 short page = dis.readShort();
                 short offset = swap16(dis.readShort());
                 short count = swap16(dis.readShort());
-                System.out.println("read " + page + "/" + offset + "/" + count);
-                BinaryProtocol bp = BinaryProtocol.instance;
-
-                byte[] response = new byte[1 + count];
-                response[0] = (byte) TS_OK.charAt(0);
-                System.arraycopy(bp.getController().getContent(), offset, response, 1, count);
-                BinaryProtocol.sendCrcPacket(response, FileLog.LOGGER, stream);
+                if (count <= 0) {
+                    FileLog.MAIN.logLine("Error: negative read request " + offset + "/" + count);
+                } else {
+                    System.out.println("read " + page + "/" + offset + "/" + count);
+                    BinaryProtocol bp = BinaryProtocol.instance;
+                    byte[] response = new byte[1 + count];
+                    response[0] = (byte) TS_OK.charAt(0);
+                    System.arraycopy(bp.getController().getContent(), offset, response, 1, count);
+                    BinaryProtocol.sendCrcPacket(response, FileLog.LOGGER, stream);
+                }
             } else if (command == BinaryProtocol.COMMAND_OUTPUTS) {
 
                 byte[] response = new byte[1 + BinaryProtocol.OUTPUT_CHANNELS_SIZE];
