@@ -66,7 +66,6 @@ public enum Sensor {
     DUTY0("Duty0", SensorCategory.SNIFFING, "%", 0, 100, BackgroundColor.RED),
     DUTY1("Duty1", SensorCategory.SNIFFING, "%", 0, 100, BackgroundColor.RED),
     FUEL("Fuel", SensorCategory.OPERATIONS, "ms", 0, 30),
-    FUEL_BASE("Fuel Base", SensorCategory.OPERATIONS, "ms", 0, 30),
     FUEL_IAT("F IAT", SensorCategory.OPERATIONS, "", 0, 10),
     FUEL_CLT("F CLT", SensorCategory.OPERATIONS, "", 0, 10),
     FUEL_LAG("F Lag", SensorCategory.OPERATIONS, "", 0, 30),
@@ -86,6 +85,7 @@ public enum Sensor {
     INJECTOR_3_DWELL("inj #3", SensorCategory.SNIFFING),
     INJECTOR_4_DWELL("inj #4", SensorCategory.SNIFFING),
 
+    FUEL_BASE(SensorCategory.OPERATIONS, FieldType.FLOAT, 48, BackgroundColor.MUD, 0, 30, "ms"),
     T_CHARGE(SensorCategory.OPERATIONS, FieldType.FLOAT, 52, BackgroundColor.MUD, 30, 140),
     DWELL(SensorCategory.OPERATIONS, FieldType.FLOAT, 60, BackgroundColor.MUD, 1, 10),
     CURRENT_VE(SensorCategory.OPERATIONS, FieldType.FLOAT, 112, BackgroundColor.MUD),
@@ -93,11 +93,13 @@ public enum Sensor {
     TPS_ACCEL_FUEL(SensorCategory.OPERATIONS, FieldType.FLOAT, 128, BackgroundColor.MUD),
     Injector_duty(SensorCategory.OPERATIONS, FieldType.FLOAT, 140, BackgroundColor.MUD),
     WALL_FUEL(SensorCategory.OPERATIONS, FieldType.FLOAT, 160, BackgroundColor.MUD),
-    temperatureFuelCorrection(SensorCategory.OPERATIONS, FieldType.FLOAT, 164, BackgroundColor.MUD, 0, 5),
+    iatCorrection(SensorCategory.OPERATIONS, FieldType.FLOAT, 164, BackgroundColor.MUD, 0, 5),
     wallFuelCorrection(SensorCategory.OPERATIONS, FieldType.FLOAT, 168, BackgroundColor.MUD),
     idlePosition(SensorCategory.OPERATIONS, FieldType.FLOAT, 172, BackgroundColor.MUD),
     TARGET_AFR(SensorCategory.OPERATIONS, FieldType.FLOAT, 176, BackgroundColor.MUD),
     CHARGE_AIR_MASS(SensorCategory.OPERATIONS, FieldType.FLOAT, 180, BackgroundColor.MUD),
+    cltCorrection(SensorCategory.OPERATIONS, FieldType.FLOAT, 184, BackgroundColor.MUD, 0, 5),
+    runningFuel(SensorCategory.OPERATIONS, FieldType.FLOAT, 188, BackgroundColor.MUD, 0, 15, "ms"),
 
     INJ_1_2_DELTA("inj 1-2 delta", SensorCategory.SNIFFING),
     INJ_3_4_DELTA("inj 3-4 delta", SensorCategory.SNIFFING),
@@ -112,15 +114,19 @@ public enum Sensor {
     private final FieldType type;
     private final int offset;
 
-    Sensor(SensorCategory category, FieldType type, int offset, BackgroundColor color, double minValue, double maxValue) {
+    Sensor(SensorCategory category, FieldType type, int offset, BackgroundColor color, double minValue, double maxValue, String units) {
         name = name();
         this.type = type;
         this.offset = offset;
         this.category = category;
         this.color = color;
-        units = "n/a";
+        this.units = units;
         this.minValue = minValue;
         this.maxValue = maxValue;
+    }
+
+    Sensor(SensorCategory category, FieldType type, int offset, BackgroundColor color, double minValue, double maxValue) {
+        this(category, type, offset, color, minValue, maxValue, "n/a");
     }
 
     Sensor(SensorCategory category, FieldType type, int offset, BackgroundColor color) {
