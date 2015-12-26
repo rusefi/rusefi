@@ -43,7 +43,7 @@ void Engine::updateSlowSensors() {
 
 	if (engineConfiguration->fuelLevelSensor != EFI_ADC_NONE) {
 		float fuelLevelVoltage = getVoltageDivided("fuel", engineConfiguration->fuelLevelSensor);
-		engineState.fuelLevel = interpolate(boardConfiguration->fuelLevelEmptyTankVoltage, 0,
+		engineState.fuelTankGauge = interpolate(boardConfiguration->fuelLevelEmptyTankVoltage, 0,
 				boardConfiguration->fuelLevelFullTankVoltage, 100,
 				fuelLevelVoltage);
 	}

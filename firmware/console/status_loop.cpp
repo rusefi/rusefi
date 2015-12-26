@@ -568,7 +568,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	float intake = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F);
 
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
-	float baseFuelMs = getBaseFuel(rpm PASS_ENGINE_PARAMETER);
 
 	// header
 	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
@@ -595,7 +594,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->engineLoad = engineLoad;
 	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
 	tsOutputChannels->currentMapAccelDelta = engine->mapAccelEnrichment.getMapEnrichment(PASS_ENGINE_PARAMETER_F) * 100 / getMap();
-	tsOutputChannels->tpsAccelFuel = engine->tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_F);
+	tsOutputChannels->tpsAccelFuel = engine->engineState.tpsAccelEnrich;
 	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getDelta();
 	tsOutputChannels->triggerErrorsCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 	tsOutputChannels->baroCorrection = engine->engineState.baroCorrection;
@@ -603,13 +602,16 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->knockCount = engine->knockCount;
 	tsOutputChannels->knockLevel = engine->knockVolts;
 	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER);
-	tsOutputChannels->fuelLevel = engine->engineState.fuelLevel;
+	tsOutputChannels->fuelTankGauge = engine->engineState.fuelTankGauge;
 	tsOutputChannels->hasFatalError = hasFirmwareError();
 	tsOutputChannels->totalTriggerErrorCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 	tsOutputChannels->wallFuelAmount = wallFuel.getWallFuel(0);
-	tsOutputChannels->totalFuelCorrection = engine->totalFuelCorrection;
-	tsOutputChannels->wallFuelCorrection = engine->wallFuelCorrection;
 
+	tsOutputChannels->iatCorrection = ENGINE(engineState.iatFuelCorrection);
+	tsOutputChannels->cltCorrection = ENGINE(engineState.cltFuelCorrection);
+	tsOutputChannels->runningFuel = ENGINE(engineState.runningFuel);
+
+	tsOutputChannels->wallFuelCorrection = engine->wallFuelCorrection;
 
 	tsOutputChannels->checkEngine = hasErrorCodes();
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -651,7 +653,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	float timing = engine->engineState.timingAdvance;
 	tsOutputChannels->ignitionAdvance = timing > 360 ? timing - 720 : timing;
 	tsOutputChannels->sparkDwell = ENGINE(engineState.sparkDwell);
-	tsOutputChannels->baseFuel = baseFuelMs;
+	tsOutputChannels->baseFuel = engine->engineState.baseFuel;
 	tsOutputChannels->pulseWidthMs = ENGINE(actualLastInjection);
 	tsOutputChannels->crankingFuelMs = getCrankingFuel(PASS_ENGINE_PARAMETER_F);
 	tsOutputChannels->chargeAirMass = engine->engineState.airMass;

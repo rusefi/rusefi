@@ -70,8 +70,9 @@ float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_S) {
 	return 1000 * fuelMassGramm / injectorFlowRate;
 }
 
+// todo: rename this method since it's now base+TPSaccel
 floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
-	floatms_t tpsAccelEnrich = ENGINE(tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_F));
+	ENGINE(engineState.tpsAccelEnrich) = ENGINE(tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_F));
 
 	if (CONFIG(algorithm) == LM_SPEED_DENSITY) {
 		engine->engineState.baseFuel = getSpeedDensityFuel(rpm PASS_ENGINE_PARAMETER);
@@ -82,7 +83,7 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 		engine->engineState.baseFuel = engine->engineState.baseTableFuel;
 	}
 
-	return tpsAccelEnrich + engine->engineState.baseFuel;
+	return ENGINE(engineState.tpsAccelEnrich) + ENGINE(engineState.baseFuel);
 }
 
 float getinjectionOffset(int rpm DECLARE_ENGINE_PARAMETER_S) {
@@ -134,9 +135,9 @@ floatms_t getRunningFuel(floatms_t baseFuel, int rpm DECLARE_ENGINE_PARAMETER_S)
 	float iatCorrection = ENGINE(engineState.iatFuelCorrection);
 	float cltCorrection = ENGINE(engineState.cltFuelCorrection);
 
-	engine->totalFuelCorrection = cltCorrection * iatCorrection;
+	ENGINE(engineState.runningFuel) = baseFuel * iatCorrection * cltCorrection;
 
-	return baseFuel * engine->totalFuelCorrection;
+	return ENGINE(engineState.runningFuel);
 }
 
 /**
