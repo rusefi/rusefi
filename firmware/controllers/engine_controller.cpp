@@ -149,6 +149,9 @@ static void updateErrorCodes(void) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 Overflow64Counter halTime;
 
+/**
+ * 64-bit result would not overflow, but that's complex stuff for our 32-bit MCU
+ */
 //todo: macro to save method invocation
 efitimeus_t getTimeNowUs(void) {
 	return getTimeNowNt() / (CORE_CLOCK / 1000000);
