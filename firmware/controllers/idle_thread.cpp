@@ -244,6 +244,8 @@ static void setIdleDT(int value) {
 
 static void startIdleBench(void) {
 	timeToStopIdleTest = getTimeNowUs() + MS2US(3000); // 3 seconds
+	scheduleMsg(logger, "idle valve bench test");
+	showIdleInfo();
 }
 
 void setDefaultIdleParameters(void) {
@@ -258,7 +260,7 @@ static void applyIdleSolenoidPinState(PwmConfig *state, int stateIndex) {
 	efiAssertVoid(state->multiWave.waveCount == 1, "invalid idle waveCount");
 	OutputPin *output = state->outputPins[0];
 	int value = state->multiWave.waves[0].pinStates[stateIndex];
-	if (!value /* always allow tuning solenoid down */ ||
+	if (!value /* always allow turning solenoid off */ ||
 			(engine->rpmCalculator.rpmValue != 0 || timeToStopIdleTest != 0) /* do not run solenoid unless engine is spinning or bench testing in progress */
 			)
 		output->setValue(value);
