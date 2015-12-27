@@ -29,6 +29,8 @@ public class FormulasPane {
     public FormulasPane() {
         content.add(centerProxy, BorderLayout.CENTER);
 
+        centerProxy.add(new JLabel("Waiting for data..."), BorderLayout.CENTER);
+
         final JButton pauseButton = new JButton(PAUSE.getMessage());
         pauseButton.setMnemonic('p');
         pauseButton.addActionListener(new ActionListener() {
