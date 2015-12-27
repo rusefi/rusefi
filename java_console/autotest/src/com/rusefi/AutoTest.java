@@ -139,18 +139,18 @@ public class AutoTest {
         assertWaveNull(msg, chart, EngineChart.SPARK_4);
 
         x = 124.12;
-        assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.1553333333333329, 0.02, 0.2, x + 360);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.1553333333333329, 0.02, 0.2, x + 180);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.1553333333333329, 0.02, 0.2, x + 540);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.1553333333333329, 0.02, 0.2, x);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.1553333333333329, 0.04, 0.2, x + 360);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.1553333333333329, 0.04, 0.2, x + 180);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.1553333333333329, 0.04, 0.2, x + 540);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.1553333333333329, 0.04, 0.2, x);
 
         sendCommand("enable trigger_only_front");
         chart = nextChart();
         x = 124.12;
-        assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.1553333333333329, 0.02, 0.2, x + 360);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.1553333333333329, 0.02, 0.2, x + 180);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.1553333333333329, 0.02, 0.2, x + 540);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.1553333333333329, 0.02, 0.2, x);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.1553333333333329, 0.04, 0.2, x + 360);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.1553333333333329, 0.04, 0.2, x + 180);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.1553333333333329, 0.04, 0.2, x + 540);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.1553333333333329, 0.04, 0.2, x);
     }
 
     private static void testMazdaProtege() {
