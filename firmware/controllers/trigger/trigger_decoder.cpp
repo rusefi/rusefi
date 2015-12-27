@@ -211,7 +211,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 				float gap = 1.0 * currentDuration / toothed_previous_duration;
 				float prevGap = 1.0 * toothed_previous_duration / durationBeforePrevious;
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-				scheduleMsg(logger, "gap=%f/%f @ %d while expected %f/%f and %f/%f", gap, prevGap, currentCycle.current_index, TRIGGER_SHAPE(syncRatioFrom), TRIGGER_SHAPE(syncRatioTo), TRIGGER_SHAPE(secondSyncRatioFrom), TRIGGER_SHAPE(secondSyncRatioTo));
+				scheduleMsg(logger, "gap=%f/%f @ %d while expected %f/%f and %f/%f error=%d", gap, prevGap, currentCycle.current_index, TRIGGER_SHAPE(syncRatioFrom), TRIGGER_SHAPE(syncRatioTo), TRIGGER_SHAPE(secondSyncRatioFrom), TRIGGER_SHAPE(secondSyncRatioTo), someSortOfTriggerError);
 #else
 				actualSynchGap = gap;
 				print("current gap %f/%f c=%d prev=%d\r\n", gap, prevGap, currentDuration, toothed_previous_duration);

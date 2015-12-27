@@ -34,9 +34,21 @@ void configureNeon2003TriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 
 	s->tdcPosition = 496;
 
-	// are these non-default values really needed here now that the gap is finally precise?
-	s->setTriggerSynchronizationGap2(0.75, 1.40);
-	s->setSecondTriggerSynchronizationGap2(0.7, 1.25);
+	/**
+	 * ratio sequence is:
+gap=2.17/1.46
+gap=0.33/2.17
+gap=1.06/0.33
+gap=2.73/1.06
+gap=0.47/2.73
+gap=0.71/0.47
+gap=1.43/0.71
+	 *
+	 */
+
+	// these values only work well for 'useFronOnly' mode!!!
+	s->setTriggerSynchronizationGap2(0.75, 1.5);
+	s->setSecondTriggerSynchronizationGap2(0.65, 1.25);
 
 	float EPS_ANGLE = 0.3;
 
