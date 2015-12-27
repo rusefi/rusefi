@@ -2502,6 +2502,12 @@
         <name>$PROJ_DIR$\..\controllers\trigger\trigger_nissan.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\controllers\trigger\trigger_rover.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\trigger\trigger_rover.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\controllers\trigger\trigger_simulator.cpp</name>
       </file>
       <file>
