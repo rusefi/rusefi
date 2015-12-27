@@ -45,6 +45,25 @@ public class IgnitionMapBuilder {
         return round10(result);
     }
 
+    public static double interpolate(double x1, double y1, double x2, double y2, double x) {
+        double a = ((y1 - y2) / (x1 - x2));
+        double b = y1 - a * x1;
+        return a * x + b;
+    }
+
+    public static double getAdvanceForRpm(int rpm, double advanceMax) {
+        if (rpm >= 3000)
+            return advanceMax;
+        if (rpm < 600)
+            return 10;
+        return interpolate(600, 10, 3000, advanceMax, rpm);
+    }
+
+    public static double getInitialAdvance(int rpm, double map, double advanceMax) {
+        double advance = getAdvanceForRpm(rpm, advanceMax);
+        return round10(advance + 0.3 * (100 - map));
+    }
+
     public static double round10(double result) {
         return ((int)(result * 10)) / 10.0;
     }
