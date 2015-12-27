@@ -27,8 +27,8 @@
 
 EXTERN_ENGINE;
 
-static ign_Map3D_t advanceMap;
-static ign_Map3D_t iatAdvanceCorrectionMap;
+static ign_Map3D_t advanceMap("advance");
+static ign_Map3D_t iatAdvanceCorrectionMap("iat corr");
 
 static const float iatTimingRpmBins[IGN_LOAD_COUNT] = {880,	1260,	1640,	2020,	2400,	2780,	3000,	3380,	3760,	4140,	4520,	5000,	5700,	6500,	7200,	8000};
 

@@ -22,10 +22,10 @@
 #define rpmMin 500
 #define rpmMax 8000
 
-fuel_Map3D_t veMap;
-fuel_Map3D_t ve2Map;
-fuel_Map3D_t afrMap;
-baroCorr_Map3D_t baroCorrMap;
+fuel_Map3D_t veMap("VE");
+fuel_Map3D_t ve2Map("VE2");
+fuel_Map3D_t afrMap("AFR");
+baroCorr_Map3D_t baroCorrMap("baro");
 
 #define tpMin 0
 #define tpMax 100
