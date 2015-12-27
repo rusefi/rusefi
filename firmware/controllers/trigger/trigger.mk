@@ -12,7 +12,8 @@ TRIGGER_DECODERS_SRC_CPP = \
 	$(PROJECT_DIR)/controllers/trigger/trigger_nissan.cpp \
 	$(PROJECT_DIR)/controllers/trigger/trigger_subaru.cpp \
 	$(PROJECT_DIR)/controllers/trigger/trigger_toyota.cpp \
-	$(PROJECT_DIR)/controllers/trigger/trigger_gm.cpp
+	$(PROJECT_DIR)/controllers/trigger/trigger_gm.cpp \
+	$(PROJECT_DIR)/controllers/trigger/trigger_rover.cpp
 
 TRIGGER_SRC_CPP = \
 	$(PROJECT_DIR)/controllers/trigger/trigger_emulator_algo.cpp \

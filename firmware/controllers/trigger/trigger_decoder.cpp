@@ -33,6 +33,7 @@
 #include "trigger_subaru.h"
 #include "trigger_nissan.h"
 #include "trigger_toyota.h"
+#include "trigger_rover.h"
 #include "auto_generated_enums.h"
 #include "trigger_structure.h"
 #include "efiGpio.h"
@@ -507,6 +508,10 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 
 	case TT_NISSAN:
 		initializeNissan(triggerShape);
+		break;
+
+	case TT_ROVER_K:
+		initializeRoverK(triggerShape);
 		break;
 
 	default:
