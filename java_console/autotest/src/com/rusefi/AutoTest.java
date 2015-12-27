@@ -124,10 +124,10 @@ public class AutoTest {
         // todo: why is width precision so low here? is that because of loaded Windows with 1ms precision?
         double widthRatio = 0.25;
         // WAT? this was just 0.009733333333333387?
-        assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.006266666666666905, 0.01, widthRatio, x, x + 180, x + 360, x + 540);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.006266666666666905, 0.01, widthRatio, x, x + 180, x + 360, x + 540);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.006266666666666905, 0.01, widthRatio, x, x + 180, x + 360, x + 540);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.006266666666666905, 0.01, widthRatio, x, x + 180, x + 360, x + 540);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.006266666666666905, 0.02, widthRatio, x, x + 180, x + 360, x + 540);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.006266666666666905, 0.02, widthRatio, x, x + 180, x + 360, x + 540);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.006266666666666905, 0.02, widthRatio, x, x + 180, x + 360, x + 540);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.006266666666666905, 0.02, widthRatio, x, x + 180, x + 360, x + 540);
 
         msg = "2003 Neon running";
         IoUtil.changeRpm(2000);
@@ -139,18 +139,18 @@ public class AutoTest {
         assertWaveNull(msg, chart, EngineChart.SPARK_4);
 
         x = 124.12;
-        assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.1553333333333329, 0.01, 0.1, x + 360);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.1553333333333329, 0.01, 0.1, x + 180);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.1553333333333329, 0.01, 0.1, x + 540);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.1553333333333329, 0.01, 0.1, x);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.1553333333333329, 0.02, 0.2, x + 360);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.1553333333333329, 0.02, 0.2, x + 180);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.1553333333333329, 0.02, 0.2, x + 540);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.1553333333333329, 0.02, 0.2, x);
 
         sendCommand("enable trigger_only_front");
         chart = nextChart();
         x = 124.12;
-        assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.1553333333333329, 0.02, 0.1, x + 360);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.1553333333333329, 0.02, 0.1, x + 180);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.1553333333333329, 0.02, 0.1, x + 540);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.1553333333333329, 0.02, 0.1, x);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.1553333333333329, 0.02, 0.2, x + 360);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.1553333333333329, 0.02, 0.2, x + 180);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.1553333333333329, 0.02, 0.2, x + 540);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.1553333333333329, 0.02, 0.2, x);
     }
 
     private static void testMazdaProtege() {
