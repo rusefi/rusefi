@@ -49,6 +49,8 @@ TriggerShape::TriggerShape() :
 	syncRatioFrom = syncRatioTo = 0;
 	secondSyncRatioFrom = 0.000001;
 	secondSyncRatioTo = 100000;
+	thirdSyncRatioFrom = 0.000001;
+	thirdSyncRatioTo = 100000;
 	memset(eventAngles, 0, sizeof(eventAngles));
 	memset(frontOnlyIndexes, 0, sizeof(frontOnlyIndexes));
 	memset(isFrontEvent, 0, sizeof(isFrontEvent));
@@ -161,6 +163,7 @@ void TriggerState::reset() {
 	toothed_previous_time = 0;
 	toothed_previous_duration = 0;
 	durationBeforePrevious = 0;
+	thirdPreviousDuration = 0;
 
 	totalRevolutionCounter = 0;
 	totalTriggerErrorCounter = 0;
@@ -407,8 +410,8 @@ void TriggerShape::setTriggerSynchronizationGap2(float syncRatioFrom, float sync
 	this->syncRatioTo = syncRatioTo;
 }
 
-void TriggerShape::setTriggerSynchronizationGap(float synchRatio) {
-	setTriggerSynchronizationGap2(synchRatio * 0.75f, synchRatio * 1.25f);
+void TriggerShape::setTriggerSynchronizationGap(float syncRatio) {
+	setTriggerSynchronizationGap2(syncRatio * 0.75f, syncRatio * 1.25f);
 }
 
 void TriggerShape::setSecondTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo) {
@@ -417,8 +420,18 @@ void TriggerShape::setSecondTriggerSynchronizationGap2(float syncRatioFrom, floa
 	this->secondSyncRatioTo = syncRatioTo;
 }
 
-void TriggerShape::setSecondTriggerSynchronizationGap(float synchRatio) {
-	setSecondTriggerSynchronizationGap2(synchRatio * 0.75f, synchRatio * 1.25f);
+void TriggerShape::setThirdTriggerSynchronizationGap(float syncRatio) {
+	setThirdTriggerSynchronizationGap2(syncRatio * 0.75f, syncRatio * 1.25f);
+}
+
+void TriggerShape::setThirdTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo) {
+	isSynchronizationNeeded = true;
+	this->thirdSyncRatioFrom = syncRatioFrom;
+	this->thirdSyncRatioTo = syncRatioTo;
+}
+
+void TriggerShape::setSecondTriggerSynchronizationGap(float syncRatio) {
+	setSecondTriggerSynchronizationGap2(syncRatio * 0.75f, syncRatio * 1.25f);
 }
 
 #define S24 (720.0f / 24 / 2)

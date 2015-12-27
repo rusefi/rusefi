@@ -62,8 +62,10 @@ public:
 	 */
 	bool shaft_is_synchronized;
 
-	uint32_t durationBeforePrevious;
-	uint32_t toothed_previous_duration;
+	uint32_t toothed_previous_duration; // todo: unify Camel_notation, what a mess :(
+	uint32_t durationBeforePrevious; // this one is before 'toothed_previous_duration'
+	uint32_t thirdPreviousDuration; // this one is before durationBeforePrevious, todo: better field names?
+
 	/**
 	 * this could be a local variable, but it's better for debugging to have it as a field
 	 */

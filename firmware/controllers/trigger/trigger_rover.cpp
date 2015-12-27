@@ -12,8 +12,9 @@ void initializeRoverK(TriggerShape *s) {
 
 	float tooth = 20;
 
-//	s->setTriggerSynchronizationGap(2.0);
-	s->isSynchronizationNeeded = false;
+	s->setTriggerSynchronizationGap(2.0);
+	s->setThirdTriggerSynchronizationGap(2);
+	s->isSynchronizationNeeded = true;
 
 	float base = 0;
 

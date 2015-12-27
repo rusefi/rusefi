@@ -65,6 +65,10 @@ public:
 	float secondSyncRatioFrom;
 	float secondSyncRatioTo;
 
+	float thirdSyncRatioFrom;
+	float thirdSyncRatioTo;
+
+
 	/**
 	 * Trigger indexes within trigger cycle are counted from synchronization point, and all
 	 * engine processes are defined in angles from TDC.
@@ -134,10 +138,12 @@ public:
 	operation_mode_e getOperationMode();
 
 	void initialize(operation_mode_e operationMode, bool needSecondTriggerInput);
-	void setTriggerSynchronizationGap(float synchRatio);
+	void setTriggerSynchronizationGap(float syncRatio);
 	void setTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo);
-	void setSecondTriggerSynchronizationGap(float synchRatio);
+	void setSecondTriggerSynchronizationGap(float syncRatio);
 	void setSecondTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo);
+	void setThirdTriggerSynchronizationGap(float syncRatio);
+	void setThirdTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo);
 	/**
 	 * this one is per CRANKshaft revolution
 	 */

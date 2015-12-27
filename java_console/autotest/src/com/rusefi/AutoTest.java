@@ -138,7 +138,7 @@ public class AutoTest {
         assertWave(true, msg, chart, EngineChart.SPARK_3, 0.13299999999999998, 0.005, EngineReport.RATIO, x, x + 360);
         assertWaveNull(msg, chart, EngineChart.SPARK_4);
 
-        x = 124.12;
+        x = 117.0;
         assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.1553333333333329, 0.04, 0.2, x + 360);
         assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.1553333333333329, 0.04, 0.2, x + 180);
         assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.1553333333333329, 0.04, 0.2, x + 540);
@@ -146,7 +146,6 @@ public class AutoTest {
 
         sendCommand("enable trigger_only_front");
         chart = nextChart();
-        x = 124.12;
         assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.1553333333333329, 0.04, 0.2, x + 360);
         assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.1553333333333329, 0.04, 0.2, x + 180);
         assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.1553333333333329, 0.04, 0.2, x + 540);

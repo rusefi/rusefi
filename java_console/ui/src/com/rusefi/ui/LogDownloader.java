@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.rusefi.Launcher;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.InvocationConfirmationListener;
@@ -26,9 +27,17 @@ public class LogDownloader {
      */
     private static final String LS_RESPONSE = "ls_result";
     private static final String LS_ENTRY_PREFIX = "logfile";
+    private static final String DELETE = "[delete]";
+    private static final String DOWNLOAD = "[download]";
     private final JPanel content = new JPanel(new BorderLayout());
 
     private final JPanel logFiles = new JPanel(new VerticalFlowLayout());
+    private final Timer timer = new Timer(3000, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            listDirectory();
+        }
+    });
 
     public LogDownloader() {
         UiUtils.showLoadingMessage(content);
@@ -51,6 +60,7 @@ public class LogDownloader {
                     JPanel logFileEntry = createFilePanel(message.substring(colonIndex + 1), size);
 
                     logFiles.add(logFileEntry);
+                    UiUtils.trueLayout(logFiles.getParent());
                 }
             }
         });
@@ -63,15 +73,29 @@ public class LogDownloader {
         JPanel logFileEntry = new JPanel(new FlowLayout());
         logFileEntry.add(label);
 
-        JButton removeFile = new JButton("[delete]");
+        JButton removeFile = new JButton(DELETE);
         removeFile.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CommandQueue.getInstance().write("del " + name);
+                int i = JOptionPane.showConfirmDialog(Launcher.getFrame(), "Do you really want to delete " + name + "?");
+                if (i == JOptionPane.YES_OPTION) {
+                    CommandQueue.getInstance().write("del " + name);
+                    timer.restart();
+                }
             }
         });
 
+        JButton downloadFile = new JButton(DOWNLOAD);
+        downloadFile.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CommandQueue.getInstance().write("get_file 0 " + name);
+            }
+        });
+
+
         logFileEntry.add(removeFile);
+        logFileEntry.add(downloadFile);
         return logFileEntry;
     }
 
@@ -100,7 +124,7 @@ public class LogDownloader {
     }
 
     private void listDirectory() {
-//        CommandQueue.getInstance().write("ls /", CommandQueue.DEFAULT_TIMEOUT, InvocationConfirmationListener.VOID,
-//                false);
+        CommandQueue.getInstance().write("ls /", CommandQueue.DEFAULT_TIMEOUT, InvocationConfirmationListener.VOID,
+                false);
     }
 }
