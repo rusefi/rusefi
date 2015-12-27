@@ -28,6 +28,7 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 
 	engineConfiguration->injectionMode = IM_BATCH;
+	engineConfiguration->twoWireBatch = true;
 
 	// chartsize 600
 	engineConfiguration->engineChartSize = 600;
@@ -38,8 +39,8 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->injector.flow = 330;
 	engineConfiguration->specs.displacement = 2.0;
 
-	// set_global_trigger_offset_angle 0
-	engineConfiguration->globalTriggerAngleOffset = 0;
+	// set_global_trigger_offset_angle 282
+	engineConfiguration->globalTriggerAngleOffset = 282;
 
 	// set_cranking_timing_angle 15
 	engineConfiguration->crankingTimingAngle = 8;
@@ -62,10 +63,10 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 // set_whole_timing_map 10
 	setWholeTimingTable(10 PASS_ENGINE_PARAMETER);
 
-	// http://i.imgur.com/fclVzvu.jpg
-	setCommonNTCSensor(&engineConfiguration->clt);
-	// http://i.imgur.com/2hI67yW.jpg
-	setThermistorConfiguration(&engineConfiguration->iat, 13, 56000, 50, 9000, 80.0, 2700);
+	// http://s1.micp.ru/tOb0U.png
+	setThermistorConfiguration(&engineConfiguration->clt, -15, 5900, 23, 1750, 97, 165);
+	// http://s2.micp.ru/I6Cfe.png
+	setThermistorConfiguration(&engineConfiguration->iat, 23, 1750, 41, 810, 97, 165);
 	engineConfiguration->iat.config.bias_resistor = 1820;
 
 	commonFrankensoAnalogInputs(engineConfiguration);
@@ -76,6 +77,15 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
 
 	engineConfiguration->map.sensor.type = MT_SUBY_DENSO;
+
+	// http://s2.micp.ru/vJ9Sd.png
+	engineConfiguration->mapAccelLength = 12;
+	engineConfiguration->mapAccelEnrichmentThreshold = 1;
+	engineConfiguration->mapAccelEnrichmentMultiplier = 0.25;
+
+	engineConfiguration->tpsAccelLength = 12;
+	engineConfiguration->tpsAccelEnrichmentThreshold = 10;
+	engineConfiguration->tpsAccelEnrichmentMultiplier = 0.06;
 
 
 // todo	engineConfiguration->afr.hwChannel = EFI_ADC_3;
