@@ -50,7 +50,7 @@ public class EngineSnifferPanel {
     /**
      * imageName -> UpDownImage
      */
-    private final Map<String, UpDownImage> images = new TreeMap<>(INSTANCE);
+    private final TreeMap<String, UpDownImage> images = new TreeMap<>(INSTANCE);
     /**
      * this is the panel which displays all {@link UpDownImage} using {@link GridLayout}
      */
@@ -65,8 +65,6 @@ public class EngineSnifferPanel {
             return dimension;
         }
     };
-
-    private final JScrollPane pane = new JScrollPane(imagePanel, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
     private final ZoomControl zoomControl = new ZoomControl();
     private final EngineSnifferStatusPanel statusPanel = new EngineSnifferStatusPanel(zoomControl.getZoomProvider());
@@ -157,6 +155,7 @@ public class EngineSnifferPanel {
         bottomPanel.add(statusPanel.infoPanel, BorderLayout.SOUTH);
 
         chartPanel.add(upperPanel, BorderLayout.NORTH);
+        JScrollPane pane = new JScrollPane(imagePanel, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         chartPanel.add(pane, BorderLayout.CENTER);
         chartPanel.add(bottomPanel, BorderLayout.SOUTH);
 
@@ -274,8 +273,34 @@ public class EngineSnifferPanel {
         UiUtils.saveImageWithPrompt(fileName, panel, imagePanel);
     }
 
-    private UpDownImage createImage(String name) {
-        UpDownImage image = new UpDownImage(name);
+    private UpDownImage createImage(final String name) {
+        Color signalBody = Color.lightGray;
+        Color signalBorder = Color.blue;
+        if (name.startsWith("t")) {
+            // trigger
+        } else if (name.startsWith("c")) {
+            // coil
+            signalBody = Color.darkGray;
+        } else if (name.startsWith("HIP")) {
+            signalBody = Color.white;
+        } else if (name.startsWith("i")) {
+            // injection
+            signalBody = Color.green;
+        } else {
+            signalBody = Color.gray;
+        }
+
+        UpDownImage image = new UpDownImage(name) {
+            @Override
+            protected boolean isShowTdcLabel() {
+                /**
+                 * TDC label is only displayed on the bottom UpDown image
+                 */
+                return name.equals(images.lastKey());
+            }
+        };
+        image.setSignalBody(signalBody);
+        image.setSignalBorder(signalBorder);
         image.addMouseMotionListener(statusPanel.motionAdapter);
         return image;
     }

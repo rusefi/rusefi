@@ -42,6 +42,9 @@ public class UpDownImage extends JPanel {
     private RevolutionLog time2rpm = RevolutionLog.parseRevolutions(null);
     private String pin = "";
     private long mouseEnterTime;
+    private Color signalBody = Color.lightGray;
+    private Color signalBorder = Color.blue;
+
     private final Timer repaintTimer = new Timer(1000, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -54,6 +57,14 @@ public class UpDownImage extends JPanel {
     public UpDownImage(final String name) {
         this(EngineReport.MOCK, name);
         setToolTip();
+    }
+
+    public void setSignalBody(Color signalBody) {
+        this.signalBody = signalBody;
+    }
+
+    public void setSignalBorder(Color signalBorder) {
+        this.signalBorder = signalBorder;
     }
 
     public void setToolTip() {
@@ -192,7 +203,17 @@ public class UpDownImage extends JPanel {
             int x = translator.timeToScreen(time, d.width, zoomProvider);
             g2.setColor(ENGINE_CYCLE_COLOR);
             g2.drawLine(x, 0, x, d.height);
+
+            if (isShowTdcLabel()) {
+                g2.rotate(Math.PI / 2);
+                g2.drawString("#1 TDC", 0, -x - 3);
+                g2.rotate(-Math.PI / 2);
+            }
         }
+    }
+
+    protected boolean isShowTdcLabel() {
+        return false;
     }
 
     private static final BasicStroke LONG_STROKE = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10.0f,
@@ -230,16 +251,10 @@ public class UpDownImage extends JPanel {
 
         int y = (int) (0.2 * d.height);
 
-        /**
-         * signal body
-         */
-        g.setColor(Color.lightGray);
+        g.setColor(signalBody);
         g.fillRect(x1, y, x2 - x1, d.height - y);
 
-        /**
-         * signal out-line
-         */
-        g.setColor(Color.blue);
+        g.setColor(signalBorder);
         g.drawLine(x1, y, x2, y);
         g.drawLine(x1, y, x1, d.height);
         g.drawLine(x2, y, x2, d.height);
