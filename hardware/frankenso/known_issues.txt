@@ -108,6 +108,7 @@
 108) RESOLVED IN R0.5 Q1001 was Alpha,AO3401A and changed to Vishay SQ2301ES-T1-GE3 which is automotive AEC-Q101 qualified. 
 109)                  Move D12-D23 schematics from the main page to the inj12ch page
 110)                  Part number for D19 (PB9-INJ09/PB9) as Miata Idle Valve Solenoid
+111)                  GND and +12v rails? at least some 1.1mm holes in the prototyping area.
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
