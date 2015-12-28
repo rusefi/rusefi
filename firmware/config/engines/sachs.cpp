@@ -26,6 +26,7 @@ void setSachs(DECLARE_ENGINE_PARAMETER_F) {
 	 // set_injection_offset 0
 	engineConfiguration->injectionOffset = 0;
 
+	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER);
 
 	/**
 	 * 50/2 trigger
