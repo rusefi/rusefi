@@ -15,6 +15,9 @@ void initializeNissan(TriggerShape *s) {
 
 	float base = 180;
 
+	// todo: what was this about? :) what Nissan? Need to dig the forum around Sep 19, 2015
+	// was is the the one with 360 opto sensor?
+
 	base += 180;
 	// todo
 	base += 180;

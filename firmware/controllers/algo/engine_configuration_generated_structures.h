@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 21 21:22:24 EST 2015
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 28 17:33:44 EST 2015
 // begin
 #include "rusefi_types.h"
 typedef struct {
@@ -1595,4 +1595,4 @@ typedef struct {
 } persistent_config_s;
 
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 21 21:22:24 EST 2015
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 28 17:33:44 EST 2015
