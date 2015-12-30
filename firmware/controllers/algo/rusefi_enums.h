@@ -111,7 +111,9 @@ typedef enum {
 
 	CHEVY_C20_1973 = 37,
 
-	ET_UNUSED = 38,
+	TOYOTA_JZS147 = 38,
+
+	ET_UNUSED = 39,
 
 	Force_4b_engine_type = ENUM_32_BITS,
 } engine_type_e;
