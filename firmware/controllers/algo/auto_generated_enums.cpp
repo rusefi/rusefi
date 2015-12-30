@@ -36,6 +36,8 @@ case CAMARO_4:
 	return "CAMARO_4";
 case CHEVY_C20_1973:
 	return "CHEVY C20";
+case TOYOTA_JZS147:
+	return "TOYOTA_JZS147";
 case GM_2_2:
   return "GM_2_2";
 case DODGE_RAM:
