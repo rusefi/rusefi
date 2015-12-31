@@ -79,9 +79,9 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->map.sensor.type = MT_SUBY_DENSO;
 
 	// http://s2.micp.ru/vJ9Sd.png
-	engineConfiguration->mapAccelLength = 12;
-	engineConfiguration->mapAccelEnrichmentThreshold = 1;
-	engineConfiguration->mapAccelEnrichmentMultiplier = 0.25;
+	engineConfiguration->engineLoadAccelLength = 12;
+	engineConfiguration->engineLoadAccelEnrichmentThreshold = 1;
+	engineConfiguration->engineLoadAccelEnrichmentMultiplier = 0.25;
 
 	engineConfiguration->tpsAccelLength = 12;
 	engineConfiguration->tpsAccelEnrichmentThreshold = 10;

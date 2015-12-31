@@ -614,12 +614,12 @@ baro_corr_table_t baroCorrTable;
 	float tpsAccelEnrichmentThreshold;;"roc",        1,     0,    0, 200,     3
 	float tpsAccelEnrichmentMultiplier;;"coeff",        1,     0,    0, 200,     3
 	
-	int mapAccelLength;;"len",        1,     0,    1, 200,     3
+	int engineLoadAccelLength;;"len",        1,     0,    1, 200,     3
 	
 	float decelEnleanmentThreshold;;"roc",        1,     0,    0, 200,     3
 	float decelEnleanmentMultiplier;;"coeff",        1,     0,    0, 200,     3
-	float mapAccelEnrichmentThreshold;;"roc",        1,     0,    0, 200,     3
-	float mapAccelEnrichmentMultiplier;;"coeff",        1,     0,    0, 200,     3
+	float engineLoadAccelEnrichmentThreshold;;"roc",        1,     0,    0, 200,     3
+	float engineLoadAccelEnrichmentMultiplier;;"coeff",        1,     0,    0, 200,     3
 
 
 	brain_pin_e fatalErrorPin;

@@ -76,8 +76,8 @@ floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_F) {
 
 float AccelEnrichmemnt::getMapEnrichment(DECLARE_ENGINE_PARAMETER_F) {
 	float d = getDelta();
-	if (d > engineConfiguration->mapAccelEnrichmentThreshold) {
-		return d * engineConfiguration->mapAccelEnrichmentMultiplier;
+	if (d > engineConfiguration->engineLoadAccelEnrichmentThreshold) {
+		return d * engineConfiguration->engineLoadAccelEnrichmentMultiplier;
 	}
 //	if (d < engineConfiguration->deaccelEnrichmentThreshold) {
 //		return d * engineConfiguration->deaccelEnrichmentMultiplier;
@@ -117,7 +117,7 @@ AccelEnrichmemnt::AccelEnrichmemnt() {
 
 static void accelInfo() {
 //	scheduleMsg(logger, "MAP accel length=%d", mapInstance.cb.getSize());
-	scheduleMsg(logger, "MAP accel th=%f/mult=%f", engineConfiguration->mapAccelEnrichmentThreshold, engineConfiguration->mapAccelEnrichmentMultiplier);
+	scheduleMsg(logger, "MAP accel th=%f/mult=%f", engineConfiguration->engineLoadAccelEnrichmentThreshold, engineConfiguration->engineLoadAccelEnrichmentMultiplier);
 	scheduleMsg(logger, "MAP decel th=%f/mult=%f", engineConfiguration->decelEnleanmentThreshold, engineConfiguration->decelEnleanmentMultiplier);
 
 //	scheduleMsg(logger, "TPS accel length=%d", tpsInstance.cb.getSize());
@@ -126,13 +126,13 @@ static void accelInfo() {
 	scheduleMsg(logger, "added to wall=%f/sucked=%f", engineConfiguration->addedToWallCoef, engineConfiguration->suckedOffCoef);
 }
 
-static void setMapAccelThr(float value) {
-	engineConfiguration->mapAccelEnrichmentThreshold = value;
+static void setengineLoadAccelThr(float value) {
+	engineConfiguration->engineLoadAccelEnrichmentThreshold = value;
 	accelInfo();
 }
 
-static void setMapAccelMult(float value) {
-	engineConfiguration->mapAccelEnrichmentMultiplier = value;
+static void setengineLoadAccelMult(float value) {
+	engineConfiguration->engineLoadAccelEnrichmentMultiplier = value;
 	accelInfo();
 }
 
@@ -165,12 +165,12 @@ static void setTpsAccelLen(int len) {
 	accelInfo();
 }
 
-static void setMapAccelLen(int len) {
+static void setengineLoadAccelLen(int len) {
 	if (len < 1) {
 		scheduleMsg(logger, "Length should be positive");
 		return;
 	}
-	engine->mapAccelEnrichment.cb.setSize(len);
+	engine->engineLoadAccelEnrichment.cb.setSize(len);
 	accelInfo();
 }
 
@@ -180,14 +180,14 @@ void initAccelEnrichment(Logging *sharedLogger) {
 	addConsoleActionF("set_tps_accel_threshold", setTpsAccelThr);
 	addConsoleActionF("set_tps_accel_multiplier", setTpsAccelMult);
 
-	addConsoleActionI("set_map_accel_len", setMapAccelLen);
-	addConsoleActionF("set_map_accel_threshold", setMapAccelThr);
-	addConsoleActionF("set_map_accel_multiplier", setMapAccelMult);
+	addConsoleActionI("set_map_accel_len", setengineLoadAccelLen);
+	addConsoleActionF("set_map_accel_threshold", setengineLoadAccelThr);
+	addConsoleActionF("set_map_accel_multiplier", setengineLoadAccelMult);
 	addConsoleActionF("set_decel_threshold", setDecelThr);
 	addConsoleActionF("set_decel_multiplier", setDecelMult);
 	addConsoleAction("accelinfo", accelInfo);
 
-	setMapAccelLen(engineConfiguration->mapAccelLength);
+	setengineLoadAccelLen(engineConfiguration->engineLoadAccelLength);
 	setTpsAccelLen(engineConfiguration->tpsAccelLength);
 }
 #endif /* ! EFI_UNIT_TEST */

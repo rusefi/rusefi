@@ -88,7 +88,7 @@ typedef struct {
 	float veValue; // current volumetric efficiency, offset 112
 	float deltaTps;
 	int triggerErrorsCounter;
-	float currentMapAccelDelta;
+	float currentEngineLoadAccelDelta;
 	float tpsAccelFuel; // offset 128
 	float baroCorrection;
 	float pedalPosition;

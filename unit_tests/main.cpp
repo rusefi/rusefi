@@ -170,10 +170,10 @@ void print(const char *format, ...) {
 	va_end(ap);
 }
 
-void fatal3(char *msg, char *file, int line) {
-  printf(msg);
-  exit(-1);
-}
+//void fatal3(char *msg, char *file, int line) {
+//  printf(msg);
+//  exit(-1);
+//}
 
 int warning(const char *fmt, ...) {
 	 printf(fmt);

@@ -715,13 +715,13 @@
 #define tpsAccelEnrichmentThreshold_offset 2188
 #define tpsAccelEnrichmentMultiplier_offset 2192
 #define tpsAccelEnrichmentMultiplier_offset_hex 890
-#define mapAccelLength_offset 2196
-#define mapAccelLength_offset_hex 894
+#define engineLoadAccelLength_offset 2196
+#define engineLoadAccelLength_offset_hex 894
 #define decelEnleanmentThreshold_offset 2200
 #define decelEnleanmentThreshold_offset_hex 898
 #define decelEnleanmentMultiplier_offset 2204
-#define mapAccelEnrichmentThreshold_offset 2208
-#define mapAccelEnrichmentMultiplier_offset 2212
+#define engineLoadAccelEnrichmentThreshold_offset 2208
+#define engineLoadAccelEnrichmentMultiplier_offset 2212
 #define fatalErrorPin_offset 2216
 #define warninigPin_offset 2220
 #define configResetPin_offset 2224

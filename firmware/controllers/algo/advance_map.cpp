@@ -147,3 +147,37 @@ float getTopAdvanceForBore(chamber_style_e style, int octane, double compression
     float result = base + octaneCorrection + compressionCorrection + boreCorrection;
     return ((int)(result * 10)) / 10.0;
 }
+
+float getAdvanceForRpm(int rpm, float advanceMax) {
+        if (rpm >= 3000)
+            return advanceMax;
+        if (rpm < 600)
+            return 10;
+       return interpolate(600, 10, 3000, advanceMax, rpm);
+}
+
+#define round10(x) efiRound(x, 0.1)
+
+float getInitialAdvance(int rpm, float map, float advanceMax) {
+	float advance = getAdvanceForRpm(rpm, advanceMax);
+	return round10(advance + 0.3 * (100 - map));
+}
+
+void buildTimingMap(float advanceMax DECLARE_ENGINE_PARAMETER_S) {
+	if (engineConfiguration->algorithm != LM_SPEED_DENSITY &&
+			engineConfiguration->algorithm != LM_MAP) {
+		warning(OBD_PCM_Processor_Fault, "wrong algorithm for MAP-based timing");
+		return;
+	}
+	/**
+	 * good enough (but do not trust us!) default timing map in case of MAP-based engine load
+	 */
+	for (int loadIndex = 0; loadIndex < IGN_LOAD_COUNT; loadIndex++) {
+		float load = config->ignitionLoadBins[loadIndex];
+		for (int rpmIndex = 0;rpmIndex<IGN_RPM_COUNT;rpmIndex++) {
+			float rpm = config->ignitionLoadBins[loadIndex];
+			config->ignitionTable[loadIndex][rpmIndex] = getInitialAdvance(rpm, load, advanceMax);
+		}
+	}
+}
+
