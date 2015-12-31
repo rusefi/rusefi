@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Dec 31 12:46:57 EST 2015
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Dec 31 16:50:15 EST 2015
 public class Fields {
 	public static final Field ENGINETYPE = new Field("ENGINETYPE", 0, FieldType.INT);
 	public static final Field UNUSEDOFFSET4 = new Field("UNUSEDOFFSET4", 4, FieldType.INT);
@@ -450,14 +450,16 @@ public class Fields {
 	public static final Field TPSACCELENRICHMENTTHRESHOLD = new Field("TPSACCELENRICHMENTTHRESHOLD", 2188, FieldType.FLOAT);
 	public static final Field TPSACCELENRICHMENTMULTIPLIER = new Field("TPSACCELENRICHMENTMULTIPLIER", 2192, FieldType.FLOAT);
 	public static final Field ENGINELOADACCELLENGTH = new Field("ENGINELOADACCELLENGTH", 2196, FieldType.INT);
-	public static final Field DECELENLEANMENTTHRESHOLD = new Field("DECELENLEANMENTTHRESHOLD", 2200, FieldType.FLOAT);
-	public static final Field DECELENLEANMENTMULTIPLIER = new Field("DECELENLEANMENTMULTIPLIER", 2204, FieldType.FLOAT);
+	public static final Field ENGINELOADDECELENLEANMENTTHRESHOLD = new Field("ENGINELOADDECELENLEANMENTTHRESHOLD", 2200, FieldType.FLOAT);
+	public static final Field ENGINELOADDECELENLEANMENTMULTIPLIER = new Field("ENGINELOADDECELENLEANMENTMULTIPLIER", 2204, FieldType.FLOAT);
 	public static final Field ENGINELOADACCELENRICHMENTTHRESHOLD = new Field("ENGINELOADACCELENRICHMENTTHRESHOLD", 2208, FieldType.FLOAT);
 	public static final Field ENGINELOADACCELENRICHMENTMULTIPLIER = new Field("ENGINELOADACCELENRICHMENTMULTIPLIER", 2212, FieldType.FLOAT);
 	public static final Field FATALERRORPIN = new Field("FATALERRORPIN", 2216, FieldType.INT, brain_pin_e);
 	public static final Field WARNINIGPIN = new Field("WARNINIGPIN", 2220, FieldType.INT, brain_pin_e);
 	public static final Field CONFIGRESETPIN = new Field("CONFIGRESETPIN", 2224, FieldType.INT, brain_pin_e);
 	public static final Field UARTCONSOLESERIALSPEED = new Field("UARTCONSOLESERIALSPEED", 2228, FieldType.INT);
+	public static final Field TPSDECELENRICHMENTTHRESHOLD = new Field("TPSDECELENRICHMENTTHRESHOLD", 2232, FieldType.FLOAT);
+	public static final Field TPSDECELENRICHMENTMULTIPLIER = new Field("TPSDECELENRICHMENTMULTIPLIER", 2236, FieldType.FLOAT);
 	public static final Field LE_FORMULAS1 = new Field("LE_FORMULAS1", 3016, FieldType.INT);
 	public static final Field LE_FORMULAS2 = new Field("LE_FORMULAS2", 3216, FieldType.INT);
 	public static final Field LE_FORMULAS3 = new Field("LE_FORMULAS3", 3416, FieldType.INT);

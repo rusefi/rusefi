@@ -116,9 +116,9 @@ AccelEnrichmemnt::AccelEnrichmemnt() {
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 
 static void accelInfo() {
-//	scheduleMsg(logger, "MAP accel length=%d", mapInstance.cb.getSize());
-	scheduleMsg(logger, "MAP accel th=%f/mult=%f", engineConfiguration->engineLoadAccelEnrichmentThreshold, engineConfiguration->engineLoadAccelEnrichmentMultiplier);
-	scheduleMsg(logger, "MAP decel th=%f/mult=%f", engineConfiguration->decelEnleanmentThreshold, engineConfiguration->decelEnleanmentMultiplier);
+//	scheduleMsg(logger, "EL accel length=%d", mapInstance.cb.getSize());
+	scheduleMsg(logger, "EL accel th=%f/mult=%f", engineConfiguration->engineLoadAccelEnrichmentThreshold, engineConfiguration->engineLoadAccelEnrichmentMultiplier);
+	scheduleMsg(logger, "EL decel th=%f/mult=%f", engineConfiguration->engineLoadDecelEnleanmentThreshold, engineConfiguration->engineLoadDecelEnleanmentMultiplier);
 
 //	scheduleMsg(logger, "TPS accel length=%d", tpsInstance.cb.getSize());
 	scheduleMsg(logger, "TPS accel th=%f/mult=%f", engineConfiguration->tpsAccelEnrichmentThreshold, engineConfiguration->tpsAccelEnrichmentMultiplier);
@@ -126,12 +126,12 @@ static void accelInfo() {
 	scheduleMsg(logger, "added to wall=%f/sucked=%f", engineConfiguration->addedToWallCoef, engineConfiguration->suckedOffCoef);
 }
 
-static void setengineLoadAccelThr(float value) {
+void setEngineLoadAccelThr(float value) {
 	engineConfiguration->engineLoadAccelEnrichmentThreshold = value;
 	accelInfo();
 }
 
-static void setengineLoadAccelMult(float value) {
+void setEngineLoadAccelMult(float value) {
 	engineConfiguration->engineLoadAccelEnrichmentMultiplier = value;
 	accelInfo();
 }
@@ -146,13 +146,23 @@ static void setTpsAccelMult(float value) {
 	accelInfo();
 }
 
+static void setTpsDecelThr(float value) {
+	engineConfiguration->tpsDecelEnleanmentThreshold = value;
+	accelInfo();
+}
+
+static void setTpsDecelMult(float value) {
+	engineConfiguration->tpsDecelEnleanmentMultiplier = value;
+	accelInfo();
+}
+
 static void setDecelThr(float value) {
-	engineConfiguration->decelEnleanmentThreshold = value;
+	engineConfiguration->engineLoadDecelEnleanmentThreshold = value;
 	accelInfo();
 }
 
 static void setDecelMult(float value) {
-	engineConfiguration->decelEnleanmentMultiplier = value;
+	engineConfiguration->engineLoadDecelEnleanmentMultiplier = value;
 	accelInfo();
 }
 
@@ -165,7 +175,7 @@ static void setTpsAccelLen(int len) {
 	accelInfo();
 }
 
-static void setengineLoadAccelLen(int len) {
+void setEngineLoadAccelLen(int len) {
 	if (len < 1) {
 		scheduleMsg(logger, "Length should be positive");
 		return;
@@ -179,15 +189,20 @@ void initAccelEnrichment(Logging *sharedLogger) {
 	addConsoleActionI("set_tps_accel_len", setTpsAccelLen);
 	addConsoleActionF("set_tps_accel_threshold", setTpsAccelThr);
 	addConsoleActionF("set_tps_accel_multiplier", setTpsAccelMult);
+	addConsoleActionF("set_tps_decel_threshold", setTpsDecelThr);
+	addConsoleActionF("set_tps_decel_multiplier", setTpsDecelMult);
 
-	addConsoleActionI("set_map_accel_len", setengineLoadAccelLen);
-	addConsoleActionF("set_map_accel_threshold", setengineLoadAccelThr);
-	addConsoleActionF("set_map_accel_multiplier", setengineLoadAccelMult);
-	addConsoleActionF("set_decel_threshold", setDecelThr);
-	addConsoleActionF("set_decel_multiplier", setDecelMult);
+	addConsoleActionI("set_engine_load_accel_len", setEngineLoadAccelLen);
+	addConsoleActionF("set_engine_load_accel_threshold", setEngineLoadAccelThr);
+	addConsoleActionF("set_engine_load_accel_multiplier", setEngineLoadAccelMult);
+	addConsoleActionF("set_engine_decel_threshold", setDecelThr);
+	addConsoleActionF("set_engine_decel_multiplier", setDecelMult);
 	addConsoleAction("accelinfo", accelInfo);
 
-	setengineLoadAccelLen(engineConfiguration->engineLoadAccelLength);
+	/**
+	 * This would initialize data structures
+	 */
+	setEngineLoadAccelLen(engineConfiguration->engineLoadAccelLength);
 	setTpsAccelLen(engineConfiguration->tpsAccelLength);
 }
 #endif /* ! EFI_UNIT_TEST */
