@@ -15,7 +15,7 @@
  *   1+24 signal, JM Predule
  *
  * @date Jan 12, 2014
- * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
 #include "main.h"

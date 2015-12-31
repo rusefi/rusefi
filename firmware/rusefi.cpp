@@ -3,7 +3,7 @@
  * @brief Initialization code and main status reporting look
  *
  * @date Dec 25, 2013
- * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
 /**
@@ -275,5 +275,5 @@ int getRusEfiVersion(void) {
 		return 123; // this is here to make the compiler happy about the unused array
 	if (UNUSED_CCM_SIZE[0] * 0 != 0)
 		return 3211; // this is here to make the compiler happy about the unused array
-	return 20151230;
+	return 20160101;
 }

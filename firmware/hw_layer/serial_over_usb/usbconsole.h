@@ -2,7 +2,7 @@
  * @file    usbconsole.h
  *
  * @date Oct 14, 2013
- * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
 #ifndef USBCONSOLE_H_

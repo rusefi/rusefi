@@ -3,7 +3,7 @@
  * @brief This is about driving external analog tachometers
  *
  * @date Aug 18, 2015
- * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
 #include "tachometer.h"

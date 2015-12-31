@@ -2,7 +2,8 @@
  * @file trigger_rover.h
  *
  * @date Dec 27, 2015
- * todo: ask PhilTheGeek to sign contributor agreement
+ * @author PhilTheGeek
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
 #ifndef CONTROLLERS_TRIGGER_TRIGGER_ROVER_H_

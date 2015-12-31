@@ -11,7 +11,7 @@
  * todo: one emulator should be enough! another one should be eliminated
  *
  * @date Mar 3, 2014
- * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 #include "main.h"
 

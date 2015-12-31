@@ -2,7 +2,7 @@
  * @file trigger_toyota.h
  *
  * @date Dec 14, 2015
- * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
 #ifndef CONTROLLERS_TRIGGER_TRIGGER_TOYOTA_H_

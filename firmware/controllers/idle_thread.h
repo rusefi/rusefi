@@ -3,7 +3,7 @@
  * @brief	Idle Valve Control thread
  *
  * @date May 23, 2013
- * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
 #ifndef IDLE_THREAD_H_

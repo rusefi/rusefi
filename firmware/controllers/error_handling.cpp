@@ -2,7 +2,7 @@
  * @file error_handling.cpp
  *
  * @date Apr 1, 2014
- * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
 #include "main.h"

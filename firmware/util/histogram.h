@@ -10,7 +10,7 @@
  *
  *
  * @date Dec 18, 2013
- * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
 #ifndef HISTOGRAM_H_

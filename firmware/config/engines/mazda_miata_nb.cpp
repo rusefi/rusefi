@@ -5,7 +5,7 @@
  * set_engine_type 9
  *
  * @date Feb 18, 2014
- * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
 #include "mazda_miata_nb.h"

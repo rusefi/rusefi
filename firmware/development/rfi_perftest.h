@@ -2,7 +2,7 @@
  * @file rfi_perftest.h
  *
  * @date Nov 30, 2012
- * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
 #ifndef RFI_PERFTEST_H_

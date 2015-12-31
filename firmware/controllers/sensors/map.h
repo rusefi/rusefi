@@ -1,3 +1,6 @@
+/**
+ * @author Andrey Belomutskiy, (c) 2012-2016
+ */
 #ifndef MAP_H_
 #define MAP_H_
 
