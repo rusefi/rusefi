@@ -582,9 +582,9 @@ baro_corr_table_t baroCorrTable;
 	int tachPulseTriggerIndex;trigger cycle index at which we start tach pulse (performance consideration);"index",     1,     0,    0.0,    360.0,  0
 	
 	float suckedOffCoef;;"%",        1,     0,    0.0,    300.0,  2
-	float[7] unused71;
+	float[7] unused71;TODO make suckedOffCoef an array by RPM;
 	float addedToWallCoef;;"%",        1,     0,    0.0,    300.0,  2
-	float[7] unused72;
+	float[7] unused72;TODO make addedToWallCoef an array by RPM;
 	float mapErrorLowValue;kPa value which is too low to be true;"kPa",        1,     0,    -100.0,    100.0,  2
 	float mapErrorHighValue;kPa value which is too high to be true;"kPa",        1,     0,    -100.0,    800.0,  2
 	int step1RpmWindow;RPMs prior to step1rpm point where ignition advance is retarded;"rpm",    1,      0,       0, 3000.0,        2
@@ -616,8 +616,8 @@ baro_corr_table_t baroCorrTable;
 	
 	int engineLoadAccelLength;;"len",        1,     0,    1, 200,     3
 	
-	float decelEnleanmentThreshold;;"roc",        1,     0,    0, 200,     3
-	float decelEnleanmentMultiplier;;"coeff",        1,     0,    0, 200,     3
+	float engineLoadDecelEnleanmentThreshold;;"roc",        1,     0,    0, 200,     3
+	float engineLoadDecelEnleanmentMultiplier;;"coeff",        1,     0,    0, 200,     3
 	float engineLoadAccelEnrichmentThreshold;;"roc",        1,     0,    0, 200,     3
 	float engineLoadAccelEnrichmentMultiplier;;"coeff",        1,     0,    0, 200,     3
 
@@ -626,7 +626,9 @@ baro_corr_table_t baroCorrTable;
 	brain_pin_e warninigPin; 
 	brain_pin_e configResetPin;
 	uint32_t uartConsoleSerialSpeed;;"BPs",      1,      0,       0,1000000,      0
-	int[196] unused;
+	float tpsDecelEnleanmentThreshold;;"roc",        1,     0,    0, 200,     3
+	float tpsDecelEnleanmentMultiplier;;"coeff",        1,     0,    0, 200,     3
+	int[194] unused;
 	
 
 end_struct
