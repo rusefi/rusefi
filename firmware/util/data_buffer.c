@@ -2,7 +2,7 @@
  * @file	data_buffer.c
  *
  * @date Dec 8, 2012
- * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
 #include "data_buffer.h"

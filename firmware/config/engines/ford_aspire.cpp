@@ -6,7 +6,7 @@
  * set_engine_type 3
  *
  * @date Sep 9, 2013
- * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
 #include "main.h"

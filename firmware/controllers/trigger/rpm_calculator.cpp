@@ -7,7 +7,7 @@
  * since the start of previous shaft revolution.
  *
  * @date Jan 1, 2013
- * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
 #include "main.h"

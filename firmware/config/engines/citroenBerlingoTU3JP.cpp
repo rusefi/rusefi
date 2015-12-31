@@ -9,7 +9,7 @@
  *
  *
  * @date Apr 15, 2014
- * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
 #include "engine_math.h"

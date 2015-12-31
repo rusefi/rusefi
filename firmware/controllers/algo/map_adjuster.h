@@ -4,7 +4,7 @@
  * Auto-tuning core algorithm
  *
  * @date Jul 23, 2013
- * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
 #ifndef MAP_ADJUSTER_H_

@@ -4,7 +4,7 @@
  *
  *
  * @date Nov 15, 2013
- * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
 #ifndef EGO_H_

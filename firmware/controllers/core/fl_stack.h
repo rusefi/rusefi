@@ -3,7 +3,7 @@
  * @brief Fixed-length stack
  *
  * @date Jul 9, 2014
- * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
 #ifndef FL_STACK_H_

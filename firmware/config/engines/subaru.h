@@ -2,7 +2,7 @@
  * @file	subaru.h
  *
  * @date Sep 14, 2014
- * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 #ifndef SUBARU_H_
 #define SUBARU_H_

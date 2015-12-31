@@ -5,7 +5,7 @@
  * todo: make this a class
  *
  * @date Dec 20, 2013
- * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
 #include "malfunction_central.h"

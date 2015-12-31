@@ -8,7 +8,7 @@
  * set_engine_type 38
  *
  * @date Dec 30, 2015
- * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
 #include "toyota_jzs147.h"
