@@ -205,7 +205,7 @@ public:
 	 */
 	efitick_t stopEngineRequestTimeNt;
 
-	AccelEnrichmemnt mapAccelEnrichment;
+	AccelEnrichmemnt engineLoadAccelEnrichment;
 	AccelEnrichmemnt tpsAccelEnrichment;
 
 	TriggerCentral triggerCentral;

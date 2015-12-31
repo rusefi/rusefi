@@ -31,17 +31,17 @@
 
 static LoggingWithStorage logger("console");
 
-static char fatalErrorMessage[200];
+//static char fatalErrorMessage[200];
 
-void fatal3(char *msg, char *file, int line) {
-	strncpy(fatalErrorMessage, msg, sizeof(fatalErrorMessage) - 1);
-	fatalErrorMessage[sizeof(fatalErrorMessage) - 1] = 0; // just to be sure
-#if EFI_CUSTOM_PANIC_METHOD
-	chDbgPanic3(fatalErrorMessage, file, line);
-#else
-	chDbgPanic(fatalErrorMessage);
-#endif
-}
+//void fatal3(char *msg, char *file, int line) {
+//	strncpy(fatalErrorMessage, msg, sizeof(fatalErrorMessage) - 1);
+//	fatalErrorMessage[sizeof(fatalErrorMessage) - 1] = 0; // just to be sure
+//#if EFI_CUSTOM_PANIC_METHOD
+//	chDbgPanic3(fatalErrorMessage, file, line);
+//#else
+//	chDbgPanic(fatalErrorMessage);
+//#endif
+//}
 
 static void myfatal(void) {
 	chDbgCheck(0, "my fatal");

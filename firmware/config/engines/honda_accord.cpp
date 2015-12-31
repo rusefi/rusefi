@@ -24,6 +24,7 @@
 #include "honda_accord.h"
 #include "engine_math.h"
 #include "settings.h"
+#include "advance_map.h"
 
 void setFrankenso_01_LCD(board_configuration_s *boardConfiguration) {
 	boardConfiguration->HD44780_rs = GPIOE_7;
@@ -53,10 +54,10 @@ static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_F) {
 	// Keihin 06164-P0A-A00
 	engineConfiguration->injector.flow = 248;
 
-//	engineConfiguration->algorithm = LM_SPEED_DENSITY;
-	// I want to start with a simple Alpha-N
-	setAlgorithm(LM_ALPHA_N PASS_ENGINE_PARAMETER);
+	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
 	setFuelLoadBin(0, 100 PASS_ENGINE_PARAMETER);
+
+	buildTimingMap(35 PASS_ENGINE_PARAMETER);
 
 	/**
 	 * 18K Ohm @ -20C
