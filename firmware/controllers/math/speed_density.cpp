@@ -87,9 +87,9 @@ float getSpeedDensityFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	float tChargeK = ENGINE(engineState.tChargeK);
 	float map = getMap();
 
-	float adjMap = map + engine->mapAccelEnrichment.getMapEnrichment(PASS_ENGINE_PARAMETER_F);
+	float adjustedMap = map + engine->engineLoadAccelEnrichment.getMapEnrichment(PASS_ENGINE_PARAMETER_F);
 
-	engine->engineState.airMass = getAirMass(engineConfiguration, ENGINE(engineState.currentVE), adjMap, tChargeK);
+	engine->engineState.airMass = getAirMass(engineConfiguration, ENGINE(engineState.currentVE), adjustedMap, tChargeK);
 
 	return sdMath(engineConfiguration, engine->engineState.airMass, ENGINE(engineState.targerAFR)) * 1000;
 }

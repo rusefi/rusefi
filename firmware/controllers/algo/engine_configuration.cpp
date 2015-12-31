@@ -665,9 +665,9 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->uartConsoleSerialSpeed = 115200;
 
 
-	engineConfiguration->mapAccelLength = 6;
-	engineConfiguration->mapAccelEnrichmentThreshold = 5; // kPa
-	engineConfiguration->mapAccelEnrichmentMultiplier = 2;
+	engineConfiguration->engineLoadAccelLength = 6;
+	engineConfiguration->engineLoadAccelEnrichmentThreshold = 5; // kPa
+	engineConfiguration->engineLoadAccelEnrichmentMultiplier = 2;
 
 	engineConfiguration->tpsAccelLength = 12;
 	engineConfiguration->tpsAccelEnrichmentThreshold = 40; // TPS % change, per engine cycle

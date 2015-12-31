@@ -461,7 +461,7 @@ static void setFloat(const char *offsetStr, const char *valueStr) {
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 static void resetAccel(void) {
-	engine->mapAccelEnrichment.reset();
+	engine->engineLoadAccelEnrichment.reset();
 	engine->tpsAccelEnrichment.reset();
 }
 #endif
