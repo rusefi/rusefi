@@ -169,7 +169,7 @@ static void test1995FordInline6TriggerDecoder(void) {
 	state.decodeTriggerEvent(SHAFT_PRIMARY_UP, r++ PASS_ENGINE_PARAMETER);
 	assertEquals(0, state.getCurrentIndex()); // new revolution
 
-	assertEqualsM("running dwell", 0.5, getSparkDwellMsT(2000 PASS_ENGINE_PARAMETER));
+	assertEqualsM("running dwell", 0.5, getSparkDwell(2000 PASS_ENGINE_PARAMETER));
 }
 
 void testFordAspire(void) {
@@ -188,10 +188,10 @@ void testFordAspire(void) {
 	engineConfiguration->crankingChargeAngle = 65;
 	engineConfiguration->crankingTimingAngle = 31;
 
-	assertEqualsM("cranking dwell", 54.166670, getSparkDwellMsT(200 PASS_ENGINE_PARAMETER));
-	assertEqualsM("running dwell", 4, getSparkDwellMsT(2000 PASS_ENGINE_PARAMETER));
+	assertEqualsM("cranking dwell", 54.166670, getSparkDwell(200 PASS_ENGINE_PARAMETER));
+	assertEqualsM("running dwell", 4, getSparkDwell(2000 PASS_ENGINE_PARAMETER));
 
-	assertEqualsM("higher rpm dwell", 3.25, getSparkDwellMsT(6000 PASS_ENGINE_PARAMETER));
+	assertEqualsM("higher rpm dwell", 3.25, getSparkDwell(6000 PASS_ENGINE_PARAMETER));
 }
 
 void testMazda323(void) {
@@ -289,7 +289,7 @@ static void testRpmCalculator(void) {
 	efiAssertVoid(eth.engine.engineConfiguration!=NULL, "null config in engine");
 
 	initThermistors(NULL PASS_ENGINE_PARAMETER);
-	engine->updateSlowSensors();
+	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_F);
 
 	engineConfiguration->trigger.customTotalToothCount = 8;
 	engineConfiguration->globalFuelCorrection = 3;
@@ -299,7 +299,7 @@ static void testRpmCalculator(void) {
 //	engine.engineConfiguration = eth.engine.engineConfiguration;
 	eth.engine.engineConfiguration->injector.lag = 0.0;
 
-	engine->updateSlowSensors();
+	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_F);
 	timeNow = 0;
 	assertEquals(0, eth.engine.rpmCalculator.rpm(PASS_ENGINE_PARAMETER_F));
 
