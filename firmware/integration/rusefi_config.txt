@@ -576,7 +576,7 @@ baro_corr_table_t baroCorrTable;
 	int spi2MosiMode;
 	int spi2MisoMode;
 	
-	float[CRANKING_CURVE_SIZE] crankingTpsCoef;;"%",      1,     0,      0.0,    700.0,   2
+	float[CRANKING_CURVE_SIZE] crankingTpsCoef;Cranking fuel correction coefficient based on TPS;"%",      1,     0,      0.0,    700.0,   2
 	float[CRANKING_CURVE_SIZE] crankingTpsBins;;"%",        1,     0,    0.0,    100.0,  2
 	
 	float tachPulseDuractionMs;;"ms",        1,     0,    0.0,    100.0,  2
@@ -598,8 +598,8 @@ baro_corr_table_t baroCorrTable;
 	brain_pin_e binarySerialRxPin;	
 	brain_pin_e consoleSerialTxPin;	
 	brain_pin_e consoleSerialRxPin;
-	float[ENGINE_NOISE_CURVE_SIZE] knockNoiseBins;
-	float[ENGINE_NOISE_CURVE_SIZE] knockNoise;
+	float[ENGINE_NOISE_CURVE_SIZE] knockNoise;Knock sensor output knock detection threshold depending on current RPM;;"v",      1,     0,   0.0,    10,   2
+	float[ENGINE_NOISE_CURVE_SIZE] knockNoiseRpmBins;;"RPM",      1,     0,   0.0,    18000,   2
 	pid_s etb;
 	
 	float[CLT_CURVE_SIZE] cltIdleRpmBins;CLT-based target RPM for automatic idle controller;"C",        1,     0,   -100.0,    250.0,  2

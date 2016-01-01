@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 01 16:03:19 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 01 17:06:33 EST 2016
 // begin
 #include "rusefi_types.h"
 typedef struct {
@@ -1268,6 +1268,7 @@ typedef struct {
 	 */
 	int spi2MisoMode;
 	/**
+	 * Cranking fuel correction coefficient based on TPS
 	 * offset 1760
 	 */
 	float crankingTpsCoef[CRANKING_CURVE_SIZE];
@@ -1354,13 +1355,14 @@ typedef struct {
 	 */
 	brain_pin_e consoleSerialRxPin;
 	/**
+	 * Knock sensor output knock detection threshold depending on current RPM
 	 * offset 1952
 	 */
-	float knockNoiseBins[ENGINE_NOISE_CURVE_SIZE];
+	float knockNoise[ENGINE_NOISE_CURVE_SIZE];
 	/**
 	 * offset 1984
 	 */
-	float knockNoise[ENGINE_NOISE_CURVE_SIZE];
+	float knockNoiseRpmBins[ENGINE_NOISE_CURVE_SIZE];
 	/**
 	 * offset 2016
 	 */
@@ -1605,4 +1607,4 @@ typedef struct {
 } persistent_config_s;
 
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 01 16:03:19 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 01 17:06:33 EST 2016
