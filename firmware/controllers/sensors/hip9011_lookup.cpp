@@ -80,3 +80,10 @@ int getHip9011GainIndex(float gain) {
 int getHip9011BandIndex(float frequency) {
 	return findIndex(bandFreqLookup, BAND_LOOKUP_SIZE, frequency);
 }
+
+EXTERN_ENGINE;
+
+void initEngineNoiseTable(DECLARE_ENGINE_PARAMETER_F) {
+	setRpmTableBin(engineConfiguration->knockNoiseBins, ENGINE_NOISE_CURVE_SIZE);
+
+}

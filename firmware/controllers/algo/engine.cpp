@@ -34,10 +34,9 @@ EXTERN_ENGINE
 
 /**
  * We are executing these heavy (logarithm) methods from outside the trigger callbacks for performance reasons.
+ * See also periodicFastCallback
  */
-void Engine::updateSlowSensors() {
-	Engine *engine = this;
-	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
+void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_F) {
 	engineState.iat = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F);
 	engineState.clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_F);
 
@@ -97,7 +96,20 @@ Engine::Engine(persistent_config_s *config) {
 
 EngineState::EngineState() {
 	advance = dwellAngle = 0;
+	engineNoiseHipLevel = 0;
 }
+
+void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
+	int rpm = ENGINE(rpmCalculator.rpmValue);
+
+	sparkDwell = getSparkDwell(rpm PASS_ENGINE_PARAMETER);
+	dwellAngle = sparkDwell / getOneDegreeTimeMs(rpm);
+
+	iatFuelCorrection = getIatCorrection(iat PASS_ENGINE_PARAMETER);
+	cltFuelCorrection = getCltCorrection(clt PASS_ENGINE_PARAMETER);
+
+}
+
 
 /**
  * Here we have a bunch of stuff which should invoked after configuration change
@@ -218,18 +230,36 @@ extern fuel_Map3D_t afrMap;
 
 /**
  * The idea of this method is to execute all heavy calculations in a lower-priority thread,
- * so that trigger event handler/IO scheduler tasks are faster. Th
+ * so that trigger event handler/IO scheduler tasks are faster.
  */
 void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 	int rpm = rpmCalculator.rpmValue;
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
 
-	engineState.sparkDwell = getSparkDwellMsT(rpm PASS_ENGINE_PARAMETER);
-	// todo: move this field to engineState
-	engine->engineState.dwellAngle = engineState.sparkDwell / getOneDegreeTimeMs(rpm);
+	if (isValidRpm(rpm)) {
+		MAP_sensor_config_s * c = &engineConfiguration->map;
+		angle_t start = interpolate2d(rpm, c->samplingAngleBins, c->samplingAngle, MAP_ANGLE_SIZE);
 
-	engine->engineState.iatFuelCorrection = getIatCorrection(engine->engineState.iat PASS_ENGINE_PARAMETER);
-	engine->engineState.cltFuelCorrection = getCltCorrection(engine->engineState.clt PASS_ENGINE_PARAMETER);
+		angle_t offsetAngle = TRIGGER_SHAPE(eventAngles[CONFIG(mapAveragingSchedulingAtIndex)]);
+
+		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+			angle_t cylinderOffset = getEngineCycle(engineConfiguration->operationMode) * i / engineConfiguration->specs.cylindersCount;
+			float cylinderStart = start + cylinderOffset - offsetAngle + tdcPosition();
+			fixAngle(cylinderStart);
+			engine->engineState.mapAveragingStart[i] = cylinderStart;
+		}
+		engine->engineState.mapAveragingDuration = interpolate2d(rpm, c->samplingWindowBins, c->samplingWindow, MAP_WINDOW_SIZE);
+	} else {
+		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+			engine->engineState.mapAveragingStart[i] = NAN;
+		}
+		engine->engineState.mapAveragingDuration = NAN;
+	}
+
+	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+
+	//engineState.engineNoiseHipLevel = interpolate2d(rpm)
+
 
 	engine->engineState.baroCorrection = getBaroCorrection(PASS_ENGINE_PARAMETER_F);
 

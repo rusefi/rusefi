@@ -219,7 +219,7 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 /**
  * @return Spark dwell time, in milliseconds.
  */
-float getSparkDwellMsT(int rpm DECLARE_ENGINE_PARAMETER_S) {
+floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	if (isCrankingR(rpm)) {
 		if (engineConfiguration->useConstantDwellDuringCranking) {
 			return engineConfiguration->ignitionDwellForCrankingMs;

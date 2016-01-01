@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Dec 31 17:15:37 EST 2015
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 01 16:03:19 EST 2016
 // begin
 #include "rusefi_types.h"
 typedef struct {
@@ -1356,11 +1356,11 @@ typedef struct {
 	/**
 	 * offset 1952
 	 */
-	float knockNoiseBins[8];
+	float knockNoiseBins[ENGINE_NOISE_CURVE_SIZE];
 	/**
 	 * offset 1984
 	 */
-	float knockNoise[8];
+	float knockNoise[ENGINE_NOISE_CURVE_SIZE];
 	/**
 	 * offset 2016
 	 */
@@ -1605,4 +1605,4 @@ typedef struct {
 } persistent_config_s;
 
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Dec 31 17:15:37 EST 2015
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 01 16:03:19 EST 2016

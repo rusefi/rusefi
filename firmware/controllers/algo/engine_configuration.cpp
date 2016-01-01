@@ -35,6 +35,8 @@
 #include "alternatorController.h"
 #endif
 
+#include "hip9011_lookup.h"
+
 #include "custom_engine.h"
 #include "acura_rsx.h"
 #include "audi_aan.h"
@@ -331,6 +333,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setRpmTableBin(config->injPhaseRpmBins, FUEL_RPM_COUNT);
 	setFuelTablesLoadBin(10, 160 PASS_ENGINE_PARAMETER);
 	setDefaultIatTimingCorrection(PASS_ENGINE_PARAMETER_F);
+
+	initEngineNoiseTable(PASS_ENGINE_PARAMETER_F);
 
 	setThermistorConfiguration(&engineConfiguration->clt, 0, 9500, 23.8889, 2100, 48.8889, 1000);
 	engineConfiguration->clt.config.bias_resistor = 1500;

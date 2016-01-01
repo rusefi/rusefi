@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Dec 31 16:50:15 EST 2015
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 01 16:03:19 EST 2016
 public class Fields {
 	public static final Field ENGINETYPE = new Field("ENGINETYPE", 0, FieldType.INT);
 	public static final Field UNUSEDOFFSET4 = new Field("UNUSEDOFFSET4", 4, FieldType.INT);
@@ -458,8 +458,8 @@ public class Fields {
 	public static final Field WARNINIGPIN = new Field("WARNINIGPIN", 2220, FieldType.INT, brain_pin_e);
 	public static final Field CONFIGRESETPIN = new Field("CONFIGRESETPIN", 2224, FieldType.INT, brain_pin_e);
 	public static final Field UARTCONSOLESERIALSPEED = new Field("UARTCONSOLESERIALSPEED", 2228, FieldType.INT);
-	public static final Field TPSDECELENRICHMENTTHRESHOLD = new Field("TPSDECELENRICHMENTTHRESHOLD", 2232, FieldType.FLOAT);
-	public static final Field TPSDECELENRICHMENTMULTIPLIER = new Field("TPSDECELENRICHMENTMULTIPLIER", 2236, FieldType.FLOAT);
+	public static final Field TPSDECELENLEANMENTTHRESHOLD = new Field("TPSDECELENLEANMENTTHRESHOLD", 2232, FieldType.FLOAT);
+	public static final Field TPSDECELENLEANMENTMULTIPLIER = new Field("TPSDECELENLEANMENTMULTIPLIER", 2236, FieldType.FLOAT);
 	public static final Field LE_FORMULAS1 = new Field("LE_FORMULAS1", 3016, FieldType.INT);
 	public static final Field LE_FORMULAS2 = new Field("LE_FORMULAS2", 3216, FieldType.INT);
 	public static final Field LE_FORMULAS3 = new Field("LE_FORMULAS3", 3416, FieldType.INT);

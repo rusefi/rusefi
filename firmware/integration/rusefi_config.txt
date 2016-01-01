@@ -27,6 +27,7 @@ struct_no_prefix engine_configuration_s
 #define MAP_WINDOW_SIZE 8
 
 #define CLT_CURVE_SIZE 16
+#define ENGINE_NOISE_CURVE_SIZE 8
 
 #define IAT_CURVE_SIZE 16
 
@@ -597,8 +598,8 @@ baro_corr_table_t baroCorrTable;
 	brain_pin_e binarySerialRxPin;	
 	brain_pin_e consoleSerialTxPin;	
 	brain_pin_e consoleSerialRxPin;
-	float[8] knockNoiseBins;
-	float[8] knockNoise;
+	float[ENGINE_NOISE_CURVE_SIZE] knockNoiseBins;
+	float[ENGINE_NOISE_CURVE_SIZE] knockNoise;
 	pid_s etb;
 	
 	float[CLT_CURVE_SIZE] cltIdleRpmBins;CLT-based target RPM for automatic idle controller;"C",        1,     0,   -100.0,    250.0,  2

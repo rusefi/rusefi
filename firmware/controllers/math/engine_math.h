@@ -66,7 +66,7 @@ floatms_t getCrankshaftRevolutionTimeMs(int rpm);
 
 float getEngineLoadT(DECLARE_ENGINE_PARAMETER_F);
 
-float getSparkDwellMsT(int rpm DECLARE_ENGINE_PARAMETER_S);
+floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_S);
 
 int getCylinderId(firing_order_e firingOrder, int index);
 

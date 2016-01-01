@@ -67,7 +67,7 @@ void testFuelMap(void) {
 		eth.engine.engineConfiguration->injector.battLagCorr[i] = 2 * i;
 	}
 
-	eth.engine.updateSlowSensors();
+	eth.engine.updateSlowSensors(PASS_ENGINE_PARAMETER_F);
 
 	// because all the correction tables are zero
 	printf("*************************************************** getRunningFuel 1\r\n");

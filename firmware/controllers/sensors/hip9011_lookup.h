@@ -7,6 +7,8 @@
 #ifndef CONTROLLERS_SENSORS_HIP9011_LOOKUP_H_
 #define CONTROLLERS_SENSORS_HIP9011_LOOKUP_H_
 
+#include "engine.h"
+
 #define INT_LOOKUP_SIZE 32
 #define GAIN_LOOKUP_SIZE 64
 #define BAND_LOOKUP_SIZE 64
@@ -28,5 +30,6 @@ void prepareHip9011RpmLookup(float angleWindowWidth);
 
 extern float rpmLookup[INT_LOOKUP_SIZE];
 int getIntegrationIndexByRpm(float rpm);
+void initEngineNoiseTable(DECLARE_ENGINE_PARAMETER_F);
 
 #endif /* CONTROLLERS_SENSORS_HIP9011_LOOKUP_H_ */
