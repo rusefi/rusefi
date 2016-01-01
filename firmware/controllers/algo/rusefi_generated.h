@@ -690,8 +690,8 @@
 #define consoleSerialTxPin_offset 1944
 #define consoleSerialTxPin_offset_hex 798
 #define consoleSerialRxPin_offset 1948
-#define knockNoiseBins_offset 1952
-#define knockNoise_offset 1984
+#define knockNoise_offset 1952
+#define knockNoiseRpmBins_offset 1984
 #define etb_offset 2016
 #define etb_pFactor_offset 2016
 #define etb_iFactor_offset 2020
