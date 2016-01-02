@@ -598,7 +598,7 @@ baro_corr_table_t baroCorrTable;
 	brain_pin_e binarySerialRxPin;	
 	brain_pin_e consoleSerialTxPin;	
 	brain_pin_e consoleSerialRxPin;
-	float[ENGINE_NOISE_CURVE_SIZE] knockNoise;Knock sensor output knock detection threshold depending on current RPM;;"v",      1,     0,   0.0,    10,   2
+	float[ENGINE_NOISE_CURVE_SIZE] knockNoise;Knock sensor output knock detection threshold depending on current RPM;"v",      1,     0,   0.0,    10,   2
 	float[ENGINE_NOISE_CURVE_SIZE] knockNoiseRpmBins;;"RPM",      1,     0,   0.0,    18000,   2
 	pid_s etb;
 	

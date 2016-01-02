@@ -86,6 +86,13 @@ EXTERN_ENGINE;
 void initEngineNoiseTable(DECLARE_ENGINE_PARAMETER_F) {
 	setRpmTableBin(engineConfiguration->knockNoiseRpmBins, ENGINE_NOISE_CURVE_SIZE);
 
-	// engineConfiguration->knockNoiseBins[0]
+	engineConfiguration->knockNoise[0] = 2; // 800
+	engineConfiguration->knockNoise[1] = 2; // 1700
+	engineConfiguration->knockNoise[2] = 2; // 2600
+	engineConfiguration->knockNoise[3] = 2; // 3400
+	engineConfiguration->knockNoise[4] = 2; // 4300
+	engineConfiguration->knockNoise[5] = 2; // 5200
+	engineConfiguration->knockNoise[6] = 2; // 6100
+	engineConfiguration->knockNoise[7] = 2; // 7000
 
 }

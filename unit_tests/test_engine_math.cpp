@@ -55,8 +55,8 @@ void testIgnitionMapGenerator(void) {
     assertEquals(22.0, getTopAdvanceForBore(CS_SWIRL_TUMBLE, 89, 9, 101.6));
     assertEquals(32.2, getTopAdvanceForBore(CS_SWIRL_TUMBLE, 89, 9, 145));
 
-    assertEquals(47.5, getInitialAdvance(2400, 40, 36));
-    assertEquals(54.0, getInitialAdvance(4400, 40, 36));
+    assertEqualsM2("2400", 47.4, getInitialAdvance(2400, 40, 36), 0.1);
+    assertEqualsM2("4400", 53.9, getInitialAdvance(4400, 40, 36), 0.1);
 }
 
 void testMafLookup(void) {
