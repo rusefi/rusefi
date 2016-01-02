@@ -18,6 +18,7 @@
 #include "engine_math.h"
 #include "advance_map.h"
 #include "speed_density.h"
+#include "advance_map.h"
 
 #if EFI_PROD_CODE
 #include "injector_central.h"
@@ -28,6 +29,9 @@
 static LoggingWithStorage logger("engine");
 
 extern engine_pins_s enginePins;
+extern fuel_Map3D_t veMap;
+extern fuel_Map3D_t afrMap;
+
 
 EXTERN_ENGINE
 ;
@@ -107,6 +111,31 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 
 	iatFuelCorrection = getIatCorrection(iat PASS_ENGINE_PARAMETER);
 	cltFuelCorrection = getCltCorrection(clt PASS_ENGINE_PARAMETER);
+
+	engineNoiseHipLevel = interpolate2d(rpm, engineConfiguration->knockNoiseRpmBins,
+					engineConfiguration->knockNoise, ENGINE_NOISE_CURVE_SIZE);
+
+	baroCorrection = getBaroCorrection(PASS_ENGINE_PARAMETER_F);
+
+	injectionOffset = getinjectionOffset(rpm PASS_ENGINE_PARAMETER);
+	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
+	timingAdvance = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER);
+
+	if (engineConfiguration->algorithm == LM_SPEED_DENSITY) {
+		float coolantC = ENGINE(engineState.clt);
+		float intakeC = ENGINE(engineState.iat);
+		float tps = getTPS(PASS_ENGINE_PARAMETER_F);
+		tChargeK = convertCelsiusToKelvin(getTCharge(rpm, tps, coolantC, intakeC));
+		float map = getMap();
+
+		/**
+		 * *0.01 because of https://sourceforge.net/p/rusefi/tickets/153/
+		 */
+		currentVE = baroCorrection * veMap.getValue(map, rpm) * 0.01;
+		targerAFR = afrMap.getValue(map, rpm);
+	} else {
+		baseTableFuel = getBaseTableFuel(engineConfiguration, rpm, engineLoad);
+	}
 
 }
 
@@ -225,8 +254,6 @@ void Engine::watchdog() {
 #endif
 }
 
-extern fuel_Map3D_t veMap;
-extern fuel_Map3D_t afrMap;
 
 /**
  * The idea of this method is to execute all heavy calculations in a lower-priority thread,
@@ -234,7 +261,6 @@ extern fuel_Map3D_t afrMap;
  */
 void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 	int rpm = rpmCalculator.rpmValue;
-	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
 
 	if (isValidRpm(rpm)) {
 		MAP_sensor_config_s * c = &engineConfiguration->map;
@@ -257,30 +283,6 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 	}
 
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
-
-	//engineState.engineNoiseHipLevel = interpolate2d(rpm)
-
-
-	engine->engineState.baroCorrection = getBaroCorrection(PASS_ENGINE_PARAMETER_F);
-
-	engine->engineState.injectionOffset = getinjectionOffset(rpm PASS_ENGINE_PARAMETER);
-	engine->engineState.timingAdvance = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER);
-
-	if (engineConfiguration->algorithm == LM_SPEED_DENSITY) {
-		float coolantC = ENGINE(engineState.clt);
-		float intakeC = ENGINE(engineState.iat);
-		float tps = getTPS(PASS_ENGINE_PARAMETER_F);
-		engine->engineState.tChargeK = convertCelsiusToKelvin(getTCharge(rpm, tps, coolantC, intakeC));
-		float map = getMap();
-
-		/**
-		 * *0.01 because of https://sourceforge.net/p/rusefi/tickets/153/
-		 */
-		engine->engineState.currentVE = engine->engineState.baroCorrection * veMap.getValue(map, rpm) * 0.01;
-		engine->engineState.targerAFR = afrMap.getValue(map, rpm);
-	} else {
-		engine->engineState.baseTableFuel = getBaseTableFuel(engineConfiguration, rpm, engineLoad);
-	}
 }
 
 StartupFuelPumping::StartupFuelPumping() {

@@ -392,6 +392,20 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 	setHip9011FrankensoPinout();
 #endif
+	boardConfiguration->hip9011Gain = 0.3;
+
+	float t = 0.5;
+
+	engineConfiguration->knockNoise[0] = 2.1 + t; // 800
+	engineConfiguration->knockNoise[1] = 2.1 + t; // 1700
+	engineConfiguration->knockNoise[2] = 2.2 + t; // 2600
+	engineConfiguration->knockNoise[3] = 2.2 + t; // 3400
+	engineConfiguration->knockNoise[4] = 2.3 + t; // 4300
+	engineConfiguration->knockNoise[5] = 2.7 + t; // 5200
+	engineConfiguration->knockNoise[6] = 3.1 + t; // 6100
+	engineConfiguration->knockNoise[7] = 3.3 + t; // 7000
+
+
 	engineConfiguration->cylinderBore = 87.5;
 
 	boardConfiguration->clutchDownPin = GPIOC_12;

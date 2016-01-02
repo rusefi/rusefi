@@ -25,5 +25,5 @@ void setTableBin(float array[], int size, float from, float to) {
 }
 
 void setRpmTableBin(float array[], int size) {
-	setTableBin2(array, size, 800, 7000, 1);
+	setTableBin2(array, size, 800, 7000, 100);
 }
