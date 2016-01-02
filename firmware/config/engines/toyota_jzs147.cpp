@@ -5,6 +5,8 @@
  * https://en.wikipedia.org/wiki/Lexus_GS
  * http://rusefi.com/forum/viewtopic.php?f=15&t=969
  *
+ * http://wilbo666.pbworks.com/w/page/37134472/2JZ-GTE%20JZS147%20Aristo%20Engine%20Wiring
+ *
  * set_engine_type 38
  *
  * @date Dec 30, 2015
