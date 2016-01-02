@@ -20,9 +20,9 @@ class AccelEnrichmemnt {
 public:
 	AccelEnrichmemnt();
 	/**
-	 * @return Extra MAP value for Speed Density calculation
+	 * @return Extra engine load value for fuel logic calculation
 	 */
-	float getMapEnrichment(DECLARE_ENGINE_PARAMETER_F);
+	float getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_F);
 	/**
 	 * @return Extra fuel squirt duration for TPS acceleration
 	 */

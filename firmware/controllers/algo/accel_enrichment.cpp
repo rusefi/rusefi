@@ -66,22 +66,26 @@ float AccelEnrichmemnt::getDelta() {
 	return cb.maxValue(cb.getSize());
 }
 
+// todo: eliminate code duplication between these two methods! Some pointer magic would help.
 floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_F) {
 	float d = getDelta();
 	if (d > engineConfiguration->tpsAccelEnrichmentThreshold) {
 		return d * engineConfiguration->tpsAccelEnrichmentMultiplier;
 	}
+	if (d < -engineConfiguration->tpsDecelEnleanmentThreshold) {
+		return d * engineConfiguration->tpsDecelEnleanmentMultiplier;
+	}
 	return 0;
 }
 
-float AccelEnrichmemnt::getMapEnrichment(DECLARE_ENGINE_PARAMETER_F) {
+float AccelEnrichmemnt::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_F) {
 	float d = getDelta();
 	if (d > engineConfiguration->engineLoadAccelEnrichmentThreshold) {
 		return d * engineConfiguration->engineLoadAccelEnrichmentMultiplier;
 	}
-//	if (d < engineConfiguration->deaccelEnrichmentThreshold) {
-//		return d * engineConfiguration->deaccelEnrichmentMultiplier;
-//	}
+	if (d < -engineConfiguration->engineLoadDecelEnleanmentThreshold) {
+		return d * engineConfiguration->engineLoadAccelEnrichmentMultiplier;
+	}
 	return 0;
 }
 
