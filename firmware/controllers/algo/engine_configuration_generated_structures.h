@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 01 17:06:33 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 03 09:10:53 EST 2016
 // begin
 #include "rusefi_types.h"
 typedef struct {
@@ -1154,12 +1154,17 @@ typedef struct {
 	offset 1508 bit 12 */
 	bool_t isManualSpinningMode : 1;
 	/**
+	 * This is needed if batched injection and individual injector wiring
 	offset 1508 bit 13 */
-	bool_t twoWireBatch : 1;
+	bool_t twoWireBatchInjection : 1;
 	/**
 	 * See #172
 	offset 1508 bit 14 */
 	bool_t useOnlyFrontForTrigger : 1;
+	/**
+	 * This is needed if batched igniton (waster spark) and individual coil wiring
+	offset 1508 bit 15 */
+	bool_t twoWireBatchIgnition : 1;
 	/**
 	 * offset 1512
 	 */
@@ -1607,4 +1612,4 @@ typedef struct {
 } persistent_config_s;
 
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 01 17:06:33 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 03 09:10:53 EST 2016

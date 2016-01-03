@@ -28,7 +28,7 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 
 	engineConfiguration->injectionMode = IM_BATCH;
-	engineConfiguration->twoWireBatch = true;
+	engineConfiguration->twoWireBatchInjection = true;
 
 	// chartsize 600
 	engineConfiguration->engineChartSize = 600;

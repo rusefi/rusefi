@@ -584,8 +584,9 @@
 #define isIdleThreadEnabled_offset 1508
 #define isPrintTriggerSynchDetails_offset 1508
 #define isManualSpinningMode_offset 1508
-#define twoWireBatch_offset 1508
+#define twoWireBatchInjection_offset 1508
 #define useOnlyFrontForTrigger_offset 1508
+#define twoWireBatchIgnition_offset 1508
 #define engineChartSize_offset 1512
 #define targetIdleRpm_offset 1516
 #define acSwitchAdc_offset 1520

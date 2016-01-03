@@ -199,7 +199,7 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 					+ i * (float) CONFIG(engineCycleDuration) / CONFIG(specs.cylindersCount);
 			registerInjectionEvent(index, angle, false PASS_ENGINE_PARAMETER);
 
-			if (CONFIG(twoWireBatch)) {
+			if (CONFIG(twoWireBatchInjection)) {
 
 				/**
 				 * also fire the 2nd half of the injectors so that we can implement a batch mode on individual wires

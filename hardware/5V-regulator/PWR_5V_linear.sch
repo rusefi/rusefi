@@ -59,7 +59,7 @@ $Descr A 11000 8500
 encoding utf-8
 Sheet 1 1
 Title "Adjustable Linear Regulator"
-Date "5 oct 2015"
+Date "2 jan 2016"
 Rev ".02"
 Comp "rusEFI.com"
 Comment1 ""
@@ -106,7 +106,7 @@ F 4 "Panasonic,ERA-6AEB102V" V 1530 2600 60  0001 C CNN "mfg,mfg#"
 F 5 "DIGI,P1.0KDACT-ND" V 1530 2600 60  0001 C CNN "vend1,vend1#"
 F 6 "sky-macau,7768409796" V 9050 6600 60  0001 C CNN "vend2,vend2#"
 	1    9050 6600
-	0    1    1    0   
+	0    1    -1   0   
 $EndComp
 $Comp
 L LED D1005
@@ -122,23 +122,6 @@ F 6 "sky-macau,1562597916" H 9000 6750 60  0001 C CNN "vend2,vend2#"
 	1    9000 6750
 	1    0    0    -1  
 $EndComp
-Connection ~ -4675 3450
-Connection ~ 9450 6850
-Connection ~ 7850 6850
-Wire Wire Line
-	7200 6850 7200 6800
-Connection ~ 7200 6850
-Wire Wire Line
-	9200 6850 9200 6750
-Connection ~ 9200 6850
-Wire Wire Line
-	8800 6750 8800 6600
-Wire Wire Line
-	5550 6400 7450 6400
-Connection ~ 7200 6400
-Wire Wire Line
-	10400 6850 10400 6650
-Connection ~ 10050 6450
 Text Label 7200 6400 0    60   ~ 0
 VBAT
 $Comp
@@ -157,7 +140,7 @@ L MOS_PRO Q1001
 U 1 1 5611BCD0
 P 5350 6500
 F 0 "Q1001" H 5350 6690 60  0000 R CNN
-F 1 "30V" V 5550 6550 60  0000 R CNN
+F 1 "20V" V 5550 6550 60  0000 R CNN
 F 2 "SOT23" H 5350 6500 60  0001 C CNN
 F 3 "~" H 5350 6500 60  0000 C CNN
 F 4 "vishay,SI2323DS-T1-E3" H 5350 6500 60  0001 C CNN "mfg,mfg"
@@ -166,10 +149,6 @@ F 6 "sky-macau.com,4824167646" H 5350 6500 60  0001 C CNN "vend2,vend2#"
 	1    5350 6500
 	0    -1   -1   0   
 $EndComp
-Connection ~ 6750 6400
-Wire Wire Line
-	6750 6850 6750 6800
-Connection ~ 6750 6850
 $Comp
 L R R1001
 U 1 1 5611BCD1
@@ -198,16 +177,6 @@ F 6 "sky-macau.com,5633100308" H 5650 6600 60  0001 C CNN "vend2,vend2#"
 	1    5650 6600
 	0    -1   -1   0   
 $EndComp
-Wire Wire Line
-	6150 6700 6150 6850
-Connection ~ 6150 6850
-Wire Wire Line
-	5650 6700 5350 6700
-Wire Wire Line
-	5650 6500 5650 6400
-Connection ~ 5650 6400
-Wire Wire Line
-	3500 6850 10400 6850
 $Comp
 L CP1 C1002
 U 1 1 5611BCD4
@@ -221,20 +190,6 @@ F 5 "blah,blah" H 9450 6650 60  0001 C CNN "VEND1,VEND1#"
 F 6 "sky-macau.com,5761275017" H 9450 6650 60  0001 C CNN "vend2,vend2#"
 	1    9450 6650
 	-1   0    0    -1  
-$EndComp
-$Comp
-L DIODE D1003
-U 1 1 5611BCD5
-P 6750 6600
-F 0 "D1003" H 6750 6700 40  0000 C CNN
-F 1 "24V" H 6750 6500 40  0000 C CNN
-F 2 "D3" H 6750 6600 60  0001 C CNN
-F 3 "~" H 6750 6600 60  0000 C CNN
-F 4 "fairchild,BZX79C20" H 6750 6600 60  0001 C CNN "mfg,mfg#"
-F 5 "DIGI,BZX79C20-ND" H 6750 6600 60  0001 C CNN "vend1,vend1"
-F 6 "sky-macau.com,8262743708" H 6750 6600 60  0001 C CNN "vend2,vend2#"
-	1    6750 6600
-	0    -1   -1   0   
 $EndComp
 $Comp
 L CONN_1 P902
@@ -263,11 +218,6 @@ F 6 "sky-macau,9372473499" H 7850 6450 60  0001 C CNN "vend2,vend2#"
 	1    7850 6450
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	8250 6400 8750 6400
-Wire Wire Line
-	9300 6600 9300 6450
-Connection ~ 9300 6450
 Text Label 10050 6450 1    60   ~ 0
 5V-REG
 $Comp
@@ -320,24 +270,6 @@ F 6 "sky-macau,5622933558" V 8500 6500 60  0001 C CNN "vend2,vend2#"
 	1    8500 6500
 	0    -1   1    0   
 $EndComp
-Wire Wire Line
-	8750 6400 8750 6500
-Wire Wire Line
-	8750 6450 10400 6450
-Connection ~ 8750 6450
-Connection ~ 8750 6400
-Wire Wire Line
-	7850 6700 8250 6700
-Wire Wire Line
-	8250 6700 8250 6500
-Wire Wire Line
-	8750 6700 8750 6850
-Connection ~ 8750 6850
-Connection ~ 8500 6850
-Connection ~ 8250 6700
-Wire Wire Line
-	7850 6850 7850 6900
-Connection ~ 9450 6450
 $Comp
 L CONN_1 P1004
 U 1 1 5611BCDE
@@ -356,7 +288,7 @@ L FUSE F1001
 U 1 1 5611BCEB
 P 3850 6400
 F 0 "F1001" H 3950 6450 40  0000 C CNN
-F 1 "5A" H 3750 6350 40  0000 C CNN
+F 1 "0.5A" H 3750 6350 40  0000 C CNN
 F 2 "SIL-2" H 3850 6400 60  0001 C CNN
 F 3 "~" H 3850 6400 60  0000 C CNN
 F 4 "0R,jumperwire" H 3850 6400 60  0001 C CNN "mfg,mfg#"
@@ -423,6 +355,79 @@ F 5 "DIGI,P100KDACT-ND" V -20 2500 60  0001 C CNN "vend1,vend1#"
 	1    4350 6600
 	0    -1   -1   0   
 $EndComp
+Text Label 5000 6400 0    60   ~ 0
+Vs2
+Text Label 4700 6600 2    60   ~ 0
+Vs1
+Text Notes 550  5350 0    60   ~ 0
+Brief overview\n-- Q1002, R1003, D1002 preform an active transient protection. It will suppress voltages up to 150V to 200V. This limits to 15V(diode) + 4.5V(MOSFET gate) 19.5V down stream.\n-- Q1001, R1001, D1001 preform a reverse polarity protection. If the input signal is the wrong polarity, the gate will not conduct which will prevent current from flowing.  Above 19.5V is below 20Vmax of Q1001.\n-- D1003 is a second transient suppressor, it would catch faster transients allowing a brief amount of time for Q1002 to preform it's duty. \n-- C1001 is a bulk cap, it simply stores energy locally such that the regulator can draw large currents in short periods of time. \n-- U1001 and the components to the right, are a buck style linear regulator, that will pull the 5V line up to 5V. It will now pull it down from 5V if there is an external voltage. 
+$Comp
+L ZENERSMALL D1003
+U 1 1 5687F3A8
+P 6750 6750
+F 0 "D1003" H 6750 6850 40  0000 C CNN
+F 1 "24V" H 6750 6650 30  0000 C CNN
+F 2 "D3" H 6750 6750 60  0001 C CNN
+F 3 "~" H 6750 6750 60  0000 C CNN
+F 4 "fairchild,BZX79C20" H 6750 6750 60  0001 C CNN "mfg,mfg#"
+F 5 "DIGI,BZX79C20-ND" H 6750 6750 60  0001 C CNN "vend1,vend1#"
+	1    6750 6750
+	0    -1   -1   0   
+$EndComp
+Text Notes 5850 7200 0    60   ~ 0
+For 5V, install 715 ohm between pins 3 and 2 (or 1) on RV1001\n1.25v * (1 + (715 / 240)) + 50uA * 715 = 5.01
+Connection ~ -4675 3450
+Connection ~ 9450 6850
+Connection ~ 7850 6850
+Wire Wire Line
+	7200 6850 7200 6800
+Connection ~ 7200 6850
+Wire Wire Line
+	9200 6850 9200 6750
+Connection ~ 9200 6850
+Wire Wire Line
+	8800 6750 8800 6600
+Wire Wire Line
+	5550 6400 7450 6400
+Connection ~ 7200 6400
+Wire Wire Line
+	10400 6850 10400 6650
+Connection ~ 10050 6450
+Connection ~ 6750 6400
+Wire Wire Line
+	3500 6850 10400 6850
+Connection ~ 6750 6850
+Wire Wire Line
+	6150 6850 6150 6700
+Connection ~ 6150 6850
+Wire Wire Line
+	5650 6700 5350 6700
+Wire Wire Line
+	5650 6500 5650 6400
+Connection ~ 5650 6400
+Wire Wire Line
+	8250 6400 8750 6400
+Wire Wire Line
+	9300 6600 9300 6450
+Connection ~ 9300 6450
+Wire Wire Line
+	8750 6400 8750 6500
+Wire Wire Line
+	8750 6450 10400 6450
+Connection ~ 8750 6450
+Connection ~ 8750 6400
+Wire Wire Line
+	7850 6700 8250 6700
+Wire Wire Line
+	8250 6700 8250 6500
+Wire Wire Line
+	8750 6700 8750 6850
+Connection ~ 8750 6850
+Connection ~ 8500 6850
+Connection ~ 8250 6700
+Wire Wire Line
+	7850 6850 7850 6900
+Connection ~ 9450 6450
 Wire Wire Line
 	3500 6850 3500 6600
 Wire Wire Line
@@ -442,13 +447,38 @@ Wire Wire Line
 	4700 6700 4800 6700
 Wire Wire Line
 	4700 6600 4700 6700
-Text Label 5000 6400 0    60   ~ 0
-Vs2
-Text Label 4700 6600 2    60   ~ 0
-Vs1
 Wire Wire Line
 	4700 6600 4600 6600
 Connection ~ 4600 6600
-Text Notes 850  5350 0    60   ~ 0
-Brief overview\n-- Q1002, R1003, D1002 preform an active transient protection. It will suppress voltages up to 150V to 200V. \n-- Q1001, R1001, D1001 preform a reverse polarity protection. If the input signal is the wrong polarity, the gate will not conduct which will prevent current from flowing. \n-- D1003 is a second transient suppressor, it would catch faster transients allowing a brief amount of time for Q1002 to preform it's duty. \n-- C1001 is a bulk cap, it simply stores energy locally such that the regulator can draw large currents in short periods of time. \n-- U1001 and the components to the right, are a buck style linear regulator, that will pull the 5V line up to 5V. It will now pull it down from 5V if there is an external voltage. 
+Wire Wire Line
+	6750 6650 6750 6400
+Wire Notes Line
+	8100 7100 8300 6900
+Wire Notes Line
+	8300 6900 8250 6900
+Wire Notes Line
+	8250 6900 8300 6950
+Wire Notes Line
+	8300 6950 8300 6900
+$Comp
+L ZENERSMALL D1004
+U 1 1 5687F710
+P 7800 6050
+F 0 "D1004" H 7800 6150 40  0000 C CNN
+F 1 "24V" H 7800 5950 30  0000 C CNN
+F 2 "D3" H 7800 6050 60  0001 C CNN
+F 3 "~" H 7800 6050 60  0000 C CNN
+F 4 "fairchild,BZX79C20" H 7800 6050 60  0001 C CNN "mfg,mfg#"
+F 5 "DIGI,BZX79C20-ND" H 7800 6050 60  0001 C CNN "vend1,vend1#"
+	1    7800 6050
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	7450 6400 7450 6050
+Wire Wire Line
+	7450 6050 7700 6050
+Wire Wire Line
+	7900 6050 8250 6050
+Wire Wire Line
+	8250 6050 8250 6400
 $EndSCHEMATC
