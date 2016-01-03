@@ -593,25 +593,26 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->manifold_air_pressure = getMap();
 	tsOutputChannels->engineLoad = engineLoad;
 	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
-	tsOutputChannels->currentEngineLoadAccelDelta = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_F) * 100 / getMap();
-	tsOutputChannels->tpsAccelFuel = engine->engineState.tpsAccelEnrich;
 	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getDelta();
 	tsOutputChannels->triggerErrorsCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 	tsOutputChannels->baroCorrection = engine->engineState.baroCorrection;
 	tsOutputChannels->pedalPosition = hasPedalPositionSensor(PASS_ENGINE_PARAMETER_F) ? getPedalPosition(PASS_ENGINE_PARAMETER_F) : 0;
 	tsOutputChannels->knockCount = engine->knockCount;
 	tsOutputChannels->knockLevel = engine->knockVolts;
-	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER);
 	tsOutputChannels->fuelTankGauge = engine->engineState.fuelTankGauge;
+
 	tsOutputChannels->hasFatalError = hasFirmwareError();
 	tsOutputChannels->totalTriggerErrorCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
+
+	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER);
+	tsOutputChannels->runningFuel = ENGINE(engineState.runningFuel);
 	tsOutputChannels->wallFuelAmount = wallFuel.getWallFuel(0);
+	tsOutputChannels->wallFuelCorrection = engine->wallFuelCorrection;
+	tsOutputChannels->engineLoadAccelDelta = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_F) * 100 / getMap();
+	tsOutputChannels->tpsAccelFuel = engine->engineState.tpsAccelEnrich;
 
 	tsOutputChannels->iatCorrection = ENGINE(engineState.iatFuelCorrection);
 	tsOutputChannels->cltCorrection = ENGINE(engineState.cltFuelCorrection);
-	tsOutputChannels->runningFuel = ENGINE(engineState.runningFuel);
-
-	tsOutputChannels->wallFuelCorrection = engine->wallFuelCorrection;
 
 	tsOutputChannels->checkEngine = hasErrorCodes();
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
