@@ -2,6 +2,7 @@ package com.rusefi.core;
 
 public enum SensorCategory {
     OPERATIONS("Operations"),
+    FUEL("Fuel-related"),
     SNIFFING("Sniffing"),
     SENSOR_INPUTS("Sensor inputs"),
     OTHERS("Others");

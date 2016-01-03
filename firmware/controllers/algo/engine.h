@@ -137,18 +137,18 @@ public:
 	/**
 	 * pre-calculated value from simple fuel lookup
 	 */
-	float baseTableFuel;
+	floatms_t baseTableFuel;
 	/**
-	 * fuel regardless of fuel logic mode
+	 * fuel injection duration regardless of fuel logic mode
 	 */
-	float baseFuel;
+	floatms_t baseFuel;
 
 	/**
-	 * Fuel with CLT, IAT and TPS acceleration corrections.
+	 * Fuel with CLT, IAT and TPS acceleration corrections, as squirt duration.
 	 */
-	float runningFuel;
+	floatms_t runningFuel;
 
-	float tpsAccelEnrich;
+	floatms_t tpsAccelEnrich;
 
 	angle_t injectionOffset;
 };
@@ -218,6 +218,9 @@ public:
 	 * Fuel injection duration for current engine cycle, without wall wetting
 	 */
 	floatms_t fuelMs;
+	/**
+	 * fuel injection time correction to account for wall wetting effect, for current cycle
+	 */
 	floatms_t wallFuelCorrection;
 
 	/**
