@@ -103,7 +103,7 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->ignitionPins[0] = GPIOE_14;
 	boardConfiguration->ignitionPins[1] = GPIOC_9;
 	boardConfiguration->ignitionPins[2] = GPIOC_7;
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED; // todo: update this value
+	boardConfiguration->ignitionPins[3] = GPIOE_10;
 #endif
 
 	// todo: 8.2 or 10k?

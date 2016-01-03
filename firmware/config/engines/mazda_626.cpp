@@ -39,8 +39,10 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->injector.flow = 330;
 	engineConfiguration->specs.displacement = 2.0;
 
-	// set_global_trigger_offset_angle 282
-	engineConfiguration->globalTriggerAngleOffset = 282;
+	// set_global_trigger_offset_angle 284
+	engineConfiguration->globalTriggerAngleOffset = 284;
+	// set_ignition_mode 2
+	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
 	// set_cranking_timing_angle 15
 	engineConfiguration->crankingTimingAngle = 8;
