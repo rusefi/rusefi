@@ -837,8 +837,11 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 	} else if (strEqualCaseInsensitive(param, "use_only_first_channel")) {
 		engineConfiguration->trigger.useOnlyFirstChannel = isEnabled;
 		incrementGlobalConfigurationVersion();
-	} else if (strEqualCaseInsensitive(param, "two_wire_batch")) {
-		engineConfiguration->twoWireBatch = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "two_wire_batch_injection")) {
+		engineConfiguration->twoWireBatchInjection = isEnabled;
+		incrementGlobalConfigurationVersion();
+	} else if (strEqualCaseInsensitive(param, "two_wire_wasted_spark")) {
+		engineConfiguration->twoWireBatchIgnition = isEnabled;
 		incrementGlobalConfigurationVersion();
 	} else if (strEqualCaseInsensitive(param, "joystick")) {
 		engineConfiguration->isJoystickEnabled = isEnabled;
