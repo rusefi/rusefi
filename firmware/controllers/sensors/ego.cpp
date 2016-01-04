@@ -1,8 +1,7 @@
 /**
  * @author Andrey Belomutskiy, (c) 2012-2016
  */
-#include "main.h"
-#include "engine_configuration.h"
+#include "ego.h"
 #include "interpolation.h"
 #include "adc_inputs.h"
 #include "engine.h"
