@@ -167,7 +167,7 @@ static void commonMiataNa(DECLARE_ENGINE_PARAMETER_F) {
 
 }
 
-static void common079721_2351(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+void common079721_2351(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 
 	engineConfiguration->engineChartSize = 150;
 
@@ -229,138 +229,6 @@ void setMiata1990(DECLARE_ENGINE_PARAMETER_F) {
 // todo: idleValvePin
 }
 
-
-/**
- * pin 1I/W9 - extra +5v
- * set_engine_type 14
- */
-void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
-	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;
-
-	common079721_2351(engineConfiguration, boardConfiguration);
-
-	setFrankenso_01_LCD(boardConfiguration);
-	setFrankenso0_1_joystick(engineConfiguration);
-
-	setDensoTODO(config);
-
-	engineConfiguration->globalFuelCorrection = 0.75;
-	engineConfiguration->specs.displacement = 1.839;
-//	engineConfiguration->algorithm = LM_PLAIN_MAF;
-	engineConfiguration->algorithm = LM_SPEED_DENSITY;
-//	engineConfiguration->algorithm = LM_REAL_MAF;
-	boardConfiguration->tunerStudioSerialSpeed = 9600;
-
-	setFuelLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER);
-	setFuelRpmBin(800, 7000 PASS_ENGINE_PARAMETER);
-
-//	boardConfiguration->triggerInputPins[0] = GPIOC_6; // 2G YEL/BLU
-//	boardConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
-
-	// in case of SOHC distributor we only have one signal
-//	boardConfiguration->triggerInputPins[0] = GPIOA_5; // 2E White CKP
-//	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-
-	// in case of DOHC distributor we have two signals
-	boardConfiguration->triggerInputPins[0] = GPIOC_6;
-	boardConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
-
-	// Denso 195500-2180
-	engineConfiguration->injector.flow = 265;
-
-	engineConfiguration->hasBaroSensor = false;
-
-	engineConfiguration->hasMapSensor = true;
-	boardConfiguration->isFastAdcEnabled = true;
-	engineConfiguration->map.sensor.type = MT_DENSO183;
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
-
-	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER);
-	engineConfiguration->afr.hwChannel = EFI_ADC_2; // Frankenso analog #5
-
-	// set_idle_position 35
-	boardConfiguration->manIdlePosition = 35;
-
-
-
-	// set_global_trigger_offset_angle -40
-	engineConfiguration->globalTriggerAngleOffset = -40;
-	// set_ignition_offset 0
-	engineConfiguration->ignitionOffset = 0;
-	// set_injection_offset 0
-	engineConfiguration->injectionOffset = 0;
-
-	// todo: change to 15?
-	// set_cranking_timing_angle 3
-	engineConfiguration->crankingTimingAngle = 3;
-	engineConfiguration->crankingChargeAngle = 70;
-
-	setWholeTimingTable(10 PASS_ENGINE_PARAMETER);
-	// set_whole_fuel_map 5
-	setWholeFuelMap(5 PASS_ENGINE_PARAMETER);
-
-	setSingleCoilDwell(engineConfiguration);
-	engineConfiguration->ignitionMode = IM_ONE_COIL;
-
-	boardConfiguration->triggerSimulatorPinModes[0] = OM_OPENDRAIN;
-	boardConfiguration->triggerSimulatorPinModes[1] = OM_OPENDRAIN;
-
-	boardConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPinMode = OM_DEFAULT;
-
-	/**
-	 * Outputs
-	 */
-	// Frankenso low out #1: PE6
-	// Frankenso low out #2: PE5 MIL
-	// Frankenso low out #3:
-	// Frankenso low out #4:
-	// Frankenso low out #5: PE3
-	// Frankenso low out #6: PE4
-	// Frankenso low out #7: PE0<>PD5
-	// Frankenso low out #8: PE2 INJ
-	// Frankenso low out #9: PB9 IDLE
-	// Frankenso low out #10: PE1<>PD3 INJ 1&3
-	// Frankenso low out #11: PB8
-	// Frankenso low out #12: PB7
-
-	boardConfiguration->injectionPins[0] = GPIOD_3;
-	boardConfiguration->injectionPins[1] = GPIOE_2;
-
-
-	//setDefaultCrankingFuel(engineConfiguration);
-	engineConfiguration->cranking.baseFuel = 5;
-
-	// 40% idle is good default
-	boardConfiguration->idle.solenoidFrequency = 300;
-	boardConfiguration->idle.solenoidPin = GPIOB_9;
-
-	boardConfiguration->malfunctionIndicatorPin = GPIOE_5;
-	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
-
-	boardConfiguration->tunerStudioSerialSpeed = 9600;
-
-	commonFrankensoAnalogInputs(engineConfiguration);
-	setCommonNTCSensor(&engineConfiguration->clt);
-	engineConfiguration->clt.config.bias_resistor = 2700;
-	setCommonNTCSensor(&engineConfiguration->iat);
-	engineConfiguration->iat.config.bias_resistor = 2700;
-
-	engineConfiguration->hasTpsSensor = false;
-	engineConfiguration->tpsAdcChannel = EFI_ADC_NONE;
-//	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
-	engineConfiguration->mafAdcChannel = EFI_ADC_0;
-	engineConfiguration->clt.adcChannel = EFI_ADC_12;
-	engineConfiguration->iat.adcChannel = EFI_ADC_11;
-
-	// todo: 8.2 or 10k?
-	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
-
-	// end of Ford Escort GT config
-}
 
 static void setMiata1994_common(DECLARE_ENGINE_PARAMETER_F) {
 	commonMiataNa(PASS_ENGINE_PARAMETER_F);

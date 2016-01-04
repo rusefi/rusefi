@@ -70,6 +70,7 @@
 #include "suzuki_vitara.h"
 #include "chevrolet_c20_1973.h"
 #include "toyota_jzs147.h"
+#include "ford_festiva.h"
 
 EXTERN_ENGINE;
 
