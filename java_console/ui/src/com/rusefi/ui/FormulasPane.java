@@ -76,14 +76,16 @@ public class FormulasPane {
         if (ci == null)
             return;
 
-        int algorithm = ConfigField.getValue(ci, Fields.ALGORITHM).intValue();
+        int algorithm = ConfigField.getIntValue(ci, Fields.ALGORITHM);
         engine_load_mode_e algo = engine_load_mode_e.values()[algorithm];
+
+        String acceleration = getAccelerationVariables(ci);
 
         String page;
         if (algo == engine_load_mode_e.LM_SPEED_DENSITY) {
-            page = getSpeedDensity(ci);
+            page = getSpeedDensity(ci, acceleration);
         } else {
-            page = "todo";
+            page = acceleration + "todo";
         }
 
         TeXFormula formula = new TeXFormula("\r\n" +
@@ -101,7 +103,37 @@ public class FormulasPane {
     }
 
     @NotNull
-    private String getSpeedDensity(ConfigurationImage ci) {
+    private String getAccelerationVariables(ConfigurationImage ci) {
+        String tpsDelta = oneDecimal(Sensor.TPS_DELTA);
+        String elDelta = oneDecimal(Sensor.ENGINE_LOAD_ACCEL_DELTA);
+
+        int tpsEnrichLength = ConfigField.getIntValue(ci, Fields.TPSACCELLENGTH);
+        int elEnrichLength = ConfigField.getIntValue(ci, Fields.ENGINELOADACCELLENGTH);
+
+        String tpsEnrichDelta = "$deltaTps = max(currentTps - previousTps, length = " + tpsEnrichLength +
+                ") = " + tpsDelta +"$";
+
+        double tpsAccelThreshold = ConfigField.getFloatValue(ci, Fields.TPSACCELENRICHMENTTHRESHOLD);
+        double tpsAccelMult = ConfigField.getFloatValue(ci, Fields.TPSACCELENRICHMENTMULTIPLIER);
+        String tpsAccelValue = oneDecimal(Sensor.TPS_ACCEL_FUEL);
+
+        double tpsDecelThreshold = ConfigField.getFloatValue(ci, Fields.TPSDECELENLEANMENTTHRESHOLD);
+        double tpsDecelMult = ConfigField.getFloatValue(ci, Fields.TPSDECELENLEANMENTMULTIPLIER);
+
+        String tpsEnrich = "$tpsAccelEnrich = if (" +
+                "(tpsDelta = " + tpsDelta + ") > (tpsThreshold = " + tpsAccelThreshold +"), tpsDelta, 0) * " +
+                "(tpsAccelMultiplier = " + tpsAccelMult +  ") = " + tpsAccelValue +  "$";
+
+        String loadEnrichDelta = "$deltaLoad = max(currentLoad - previousLoad, length = " + elEnrichLength +
+                ") = " + elDelta + "$";
+
+        return tpsEnrichDelta + newLine +
+                tpsEnrich + newLine +
+                loadEnrichDelta + newLine;
+    }
+
+    @NotNull
+    private String getSpeedDensity(ConfigurationImage ci, String acceleration) {
         String IAT = oneDecimal(Sensor.IAT);
         String MAP = oneDecimal(Sensor.MAP);
         String T_CHARGE = oneDecimal(Sensor.T_CHARGE);
@@ -113,8 +145,8 @@ public class FormulasPane {
         String tpsStr = oneDecimal(Sensor.TPS);
         String chargeAirMass = String.format("%.3fgm", SensorCentral.getInstance().getValue(Sensor.CHARGE_AIR_MASS));
 
-        float displacement = (Float) ConfigField.getValue(ci, Fields.DISPLACEMENT);
-        int cylinderCount = (int) ConfigField.getValue(ci, Fields.CYLINDERSCOUNT);
+        double displacement = ConfigField.getFloatValue(ci, Fields.DISPLACEMENT);
+        int cylinderCount = ConfigField.getIntValue(ci, Fields.CYLINDERSCOUNT);
         String cylinderDisplacement = oneDecimal(displacement / cylinderCount);
         String injectorFlow = oneDecimal((float) ConfigField.getValue(ci, Fields.INJECTOR_FLOW));
 
@@ -150,7 +182,8 @@ public class FormulasPane {
                 "(Base_Fuel (" + baseFuelStr + "ms) + Tps_Accel_Corr = (" + tpsAccel + "ms))" + tempCorrections +
                 " = " + runningFuel + "ms$";
 
-        return tCharge + newLine +
+        return acceleration +
+                tCharge + newLine +
                 mCharge + newLine +
                 baseFuel + newLine +
                 injTime + newLine;
