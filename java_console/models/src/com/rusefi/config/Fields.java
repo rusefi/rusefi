@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 01 16:03:19 EST 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 03 09:10:53 EST 2016
 public class Fields {
 	public static final Field ENGINETYPE = new Field("ENGINETYPE", 0, FieldType.INT);
 	public static final Field UNUSEDOFFSET4 = new Field("UNUSEDOFFSET4", 4, FieldType.INT);
@@ -378,8 +378,9 @@ public class Fields {
 	public static final Field ISIDLETHREADENABLED = new Field("ISIDLETHREADENABLED", 1508, FieldType.BIT, 10);
 	public static final Field ISPRINTTRIGGERSYNCHDETAILS = new Field("ISPRINTTRIGGERSYNCHDETAILS", 1508, FieldType.BIT, 11);
 	public static final Field ISMANUALSPINNINGMODE = new Field("ISMANUALSPINNINGMODE", 1508, FieldType.BIT, 12);
-	public static final Field TWOWIREBATCH = new Field("TWOWIREBATCH", 1508, FieldType.BIT, 13);
+	public static final Field TWOWIREBATCHINJECTION = new Field("TWOWIREBATCHINJECTION", 1508, FieldType.BIT, 13);
 	public static final Field USEONLYFRONTFORTRIGGER = new Field("USEONLYFRONTFORTRIGGER", 1508, FieldType.BIT, 14);
+	public static final Field TWOWIREBATCHIGNITION = new Field("TWOWIREBATCHIGNITION", 1508, FieldType.BIT, 15);
 	public static final Field ENGINECHARTSIZE = new Field("ENGINECHARTSIZE", 1512, FieldType.INT);
 	public static final Field TARGETIDLERPM = new Field("TARGETIDLERPM", 1516, FieldType.INT);
 	public static final Field ACSWITCHADC = new Field("ACSWITCHADC", 1520, FieldType.INT, adc_channel_e);
