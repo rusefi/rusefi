@@ -94,12 +94,10 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER);
 
 
-#if EFI_FSIO || defined(__DOXYGEN__)
-	// backup main relay pin
-	setFsio(0, GPIOE_6, "1" PASS_ENGINE_PARAMETER);
-#endif
+//#if EFI_FSIO || defined(__DOXYGEN__)
+//	// backup main relay pin
+//	setFsio(0, GPIOE_6, "1" PASS_ENGINE_PARAMETER);
+//#endif
 
 	engineConfiguration->externalKnockSenseAdc = EFI_ADC_4;
-
-
 }
