@@ -17,6 +17,8 @@
 
 static const short CB_MAX_SIZE = 64;
 
+#define BUFFER_MAX_VALUE 200123
+
 template<typename T>
 class cyclic_buffer
 {
@@ -40,12 +42,16 @@ class cyclic_buffer
     T minValue(int length);
     void setSize(int size);
     int getSize();
+    int getCount();
     void clear();
 
   private:
     void baseC(int size);
     volatile T elements[CB_MAX_SIZE];
     volatile int currentIndex;
+    /**
+     * number of elements added into this buffer, would be eventually bigger then size
+     */
     volatile int count;
     int size;
 };
@@ -116,6 +122,11 @@ int cyclic_buffer<T>::getSize() {
 }
 
 template<typename T>
+int cyclic_buffer<T>::getCount() {
+	return count;
+}
+
+template<typename T>
 T cyclic_buffer<T>::get(int index) {
 	while (index < 0) {
 		index += size;
@@ -129,10 +140,11 @@ T cyclic_buffer<T>::get(int index) {
 template<typename T>
 T cyclic_buffer<T>::maxValue(int length) {
 	if (length > count) {
+		// not enough data in buffer
 		length = count;
 	}
 	int ci = currentIndex; // local copy to increase thread-safety
-	T result = -2000000; // todo: better min value?
+	T result = -BUFFER_MAX_VALUE; // todo: better min value?
 	for (int i = 0; i < length; ++i) {
 		int index = ci - i;
 		while (index < 0) {
@@ -152,7 +164,7 @@ T cyclic_buffer<T>::minValue(int length) {
 		length = count;
 	}
 	int ci = currentIndex; // local copy to increase thread-safety
-	T result = +2000000; // todo: better max value?
+	T result = +BUFFER_MAX_VALUE; // todo: better max value?
 	for (int i = 0; i < length; ++i) {
 		int index = ci - i;
 		while (index < 0) {
@@ -191,7 +203,7 @@ template<typename T>
 void cyclic_buffer<T>::clear() {
 	memset((void*) elements, 0, sizeof(elements)); // I would usually use static_cast, but due to the elements being volatile we cannot.
 	count = 0;
-	count = 0;
+	currentIndex = 0;
 }
 
 #endif //CYCLIC_BUFFER_H

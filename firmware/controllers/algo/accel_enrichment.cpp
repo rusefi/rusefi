@@ -63,6 +63,8 @@ floatms_t WallFuel::getWallFuel(int injectorIndex) {
 }
 
 float AccelEnrichmemnt::getDelta() {
+	if (cb.getCount() == 0)
+		return 0; // no recent data
 	return cb.maxValue(cb.getSize());
 }
 
@@ -90,6 +92,7 @@ float AccelEnrichmemnt::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 void AccelEnrichmemnt::reset() {
+	cb.clear();
 	delta = 0;
 	currentValue = NAN;
 }
