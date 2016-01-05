@@ -68,4 +68,13 @@ public class ConfigField extends BaseConfigField {
         return value;
     }
 
+    public static double getFloatValue(ConfigurationImage ci, Field field) {
+        // this hack is trying to restore lost precision. It's a lame hack
+        float value = getValue(ci, field).floatValue();
+        return Double.parseDouble(String.format("%.4f", value));
+    }
+
+    public static int getIntValue(ConfigurationImage ci, Field field) {
+        return getValue(ci, field).intValue();
+    }
 }
