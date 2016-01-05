@@ -1986,6 +1986,12 @@
         <name>$PROJ_DIR$\..\config\engines\ford_aspire.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\config\engines\ford_festiva.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\ford_festiva.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\config\engines\ford_fiesta.cpp</name>
       </file>
       <file>
@@ -2092,6 +2098,12 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\config\engines\test_engine.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\toyota_jzs147.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\toyota_jzs147.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\config\engines\vw.cpp</name>
