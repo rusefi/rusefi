@@ -170,8 +170,8 @@ public class AutoTest {
         x = 127.92;
         assertWave(msg, chart, EngineChart.SPARK_1, 0.13333333333333333, x, x + 180, x + 360, x + 540);
         x = 0;
-        assertWaveFall(msg, chart, EngineChart.INJECTOR_1, 0.09766666666666689, x + 180, x + 540);
-        assertWaveFall(msg, chart, EngineChart.INJECTOR_2, 0.09766666666666689, x, x + 360);
+        assertWaveFall(msg, chart, EngineChart.INJECTOR_1, 0.036999999999999825, x + 180, x + 540);
+        assertWaveFall(msg, chart, EngineChart.INJECTOR_2, 0.036999999999999825, x, x + 360);
     }
 
     private static void test1995DodgeNeon() {
