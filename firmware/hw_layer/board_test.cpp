@@ -81,12 +81,15 @@ static void setIndex(int index) {
 	nextStep();
 }
 
-static brain_pin_e BLINK_PINS[] = { GPIOE_8, // HIGH DRIVER 1
+static brain_pin_e BLINK_PINS[] = {
+		GPIOE_8, // HIGH DRIVER 1
 		GPIOE_10, // HIGH DRIVER 2
 		GPIOE_12, // HIGH DRIVER 3
 		GPIOE_14, // HIGH DRIVER 4
 		GPIOC_9, // HIGH DRIVER 5
 		GPIOC_7, // HIGH DRIVER 6
+		GPIOD_8, // HIGH DRIVER 7
+		GPIOD_9, // HIGH DRIVER 8
 		// index = 6
 		GPIOC_14, // OUT 1
 		GPIOC_15, // OUT2
