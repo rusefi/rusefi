@@ -50,6 +50,12 @@ static FastInterpolation mpx4250(0, 8, 5, 260);
 
 static FastInterpolation mpx4100(0.3, 20, 4.9, 105);
 
+/**
+ * http://easyautodiagnostics.com/chrysler/2.0L-2.4L/map-sensor-diagnostic-test-1
+ * or maybe
+ * https://books.google.com/books?id=3q85p56_PxIC page 132
+ * https://books.google.com/books?id=3q85p56_PxIC&q=chrysler+map#v=snippet&q=chrysler%20map&f=false
+ */
 static FastInterpolation dodgeNeon2003(0.5, 0, 4.5, 100);
 
 /**
