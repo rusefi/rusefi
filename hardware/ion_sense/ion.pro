@@ -1,4 +1,4 @@
-update=06.01.2016 18:49:12
+update=07.01.2016 1:36:02
 version=1
 last_client=kicad
 [pcbnew]
@@ -56,5 +56,3 @@ LibName26=opto
 LibName27=atmel
 LibName28=contrib
 LibName29=valves
-[general]
-version=1
