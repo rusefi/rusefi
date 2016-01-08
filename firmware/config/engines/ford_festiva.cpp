@@ -55,7 +55,7 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->globalFuelCorrection = 0.75;
 	engineConfiguration->specs.displacement = 1.839;
 //	engineConfiguration->algorithm = LM_PLAIN_MAF;
-	engineConfiguration->algorithm = LM_SPEED_DENSITY;
+	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
 //	engineConfiguration->algorithm = LM_REAL_MAF;
 	boardConfiguration->tunerStudioSerialSpeed = 14400;
 
