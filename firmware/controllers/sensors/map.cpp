@@ -56,7 +56,8 @@ static FastInterpolation mpx4100(0.3, 20, 4.9, 105);
  * https://books.google.com/books?id=3q85p56_PxIC page 132
  * https://books.google.com/books?id=3q85p56_PxIC&q=chrysler+map#v=snippet&q=chrysler%20map&f=false
  */
-static FastInterpolation dodgeNeon2003(0.5, 0, 4.5, 100);
+//static FastInterpolation dodgeNeon2003(0.5 /* volts */, 0 /* kPa */, 4.5 /* volts */ , 100 /* kPa */);
+static FastInterpolation dodgeNeon2003(0.4 /* volts */, 15.34 /* kPa */, 4.5 /* volts */ , 100 /* kPa */);
 
 /**
  * We hold a reference to current decoder to reduce code branching

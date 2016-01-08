@@ -157,8 +157,12 @@ void milBench(void) {
 	pinbench("0", "3000", "100", "1", &checkEnginePin, boardConfiguration->malfunctionIndicatorPin);
 }
 
+void fuelPumpBenchExt(const char *durationMs) {
+	pinbench("0", durationMs, "100", "1", &enginePins.fuelPumpRelay, boardConfiguration->fuelPumpPin);
+}
+
 void fuelPumpBench(void) {
-	pinbench("0", "3000", "100", "1", &enginePins.fuelPumpRelay, boardConfiguration->fuelPumpPin);
+	fuelPumpBenchExt("3000");
 }
 
 // fuelbench 5 1000 2
@@ -272,6 +276,7 @@ void initInjectorCentral(void) {
 	addConsoleActionII("injector", setInjectorEnabled);
 
 	addConsoleAction("fuelpumpbench", fuelPumpBench);
+	addConsoleActionS("fuelpumpbench2", fuelPumpBenchExt);
 	addConsoleAction("fanbench", fanBench);
 
 	addConsoleAction("milbench", milBench);
