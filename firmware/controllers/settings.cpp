@@ -914,26 +914,6 @@ static void disableSpi(int index) {
 	setSpiMode(index, false);
 }
 
-static void enableInjection(void) {
-	engineConfiguration->isInjectionEnabled = true;
-	scheduleMsg(&logger, "injection enabled");
-}
-
-static void disableInjection(void) {
-	engineConfiguration->isInjectionEnabled = false;
-	scheduleMsg(&logger, "injection disabled");
-}
-
-static void enableIgnition(void) {
-	engineConfiguration->isIgnitionEnabled = true;
-	scheduleMsg(&logger, "ignition enabled");
-}
-
-static void disableIgnition(void) {
-	engineConfiguration->isIgnitionEnabled = false;
-	scheduleMsg(&logger, "ignition disabled");
-}
-
 void stopEngine(void) {
 	engine->stopEngineRequestTimeNt = getTimeNowNt();
 }
@@ -1053,11 +1033,6 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleAction("stopengine", (Void) stopEngine);
 
 	// todo: refactor this - looks like all boolean flags should be controlled with less code duplication
-	addConsoleAction("enable_injection", enableInjection);
-	addConsoleAction("disable_injection", disableInjection);
-	addConsoleAction("enable_ignition", enableIgnition);
-	addConsoleAction("disable_ignition", disableIgnition);
-
 	addConsoleActionI("enable_spi", enableSpi);
 	addConsoleActionI("disable_spi", disableSpi);
 
