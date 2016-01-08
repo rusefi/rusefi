@@ -2,6 +2,11 @@
  * @file	adc_inputs.cpp
  * @brief	Low level ADC code
  *
+ * We are using two ADC devices here.
+ * Slow ADC group is used for IAT, CLT, AFR, VBATT etc - this one is currently sampled at 10Hz
+ *
+ * Fast ADC group is used for TPS, MAP, MAF HIP
+ *
  * @date Jan 14, 2013
  * @author Andrey Belomutskiy, (c) 2012-2016
  */
@@ -38,7 +43,7 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 
 // todo: migrate from hardware timer to software ADC conversion triggering
 // todo: I guess we would have to use ChibiOS timer and not our own timer because
-// todo: adcStartConversionI requires OS lock. currently slow ADC is 10Hz (?)
+// todo: adcStartConversionI requires OS lock. currently slow ADC is 10Hz
 #define PWM_FREQ_SLOW 5000   /* PWM clock frequency. I wonder what does this setting mean?  */
 #define PWM_PERIOD_SLOW 500  /* PWM period (in PWM ticks).    */
 
