@@ -44,9 +44,9 @@
 #define tpsMin_offset_hex 54
 #define tpsMax_offset 86
 #define tpsMax_offset_hex 56
-#define tpsErrorLowValue_offset 88
-#define tpsErrorLowValue_offset_hex 58
-#define tpsErrorHighValue_offset 90
+#define tpsErrorDetectionTooLow_offset 88
+#define tpsErrorDetectionTooLow_offset_hex 58
+#define tpsErrorDetectionTooHigh_offset 90
 #define cranking_offset 92
 #define cranking_baseFuel_offset 92
 #define cranking_rpm_offset 96
@@ -665,9 +665,9 @@
 #define addedToWallCoef_offset 1864
 #define addedToWallCoef_offset_hex 748
 #define unused72_offset 1868
-#define mapErrorLowValue_offset 1896
-#define mapErrorLowValue_offset_hex 768
-#define mapErrorHighValue_offset 1900
+#define mapErrorDetectionTooLow_offset 1896
+#define mapErrorDetectionTooLow_offset_hex 768
+#define mapErrorDetectionTooHigh_offset 1900
 #define step1RpmWindow_offset 1904
 #define step1RpmWindow_offset_hex 770
 #define idlePid_offset 1908

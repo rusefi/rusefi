@@ -450,8 +450,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->tpsMin = convertVoltageTo10bitADC(1.250);
 	engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);
-	engineConfiguration->tpsErrorLowValue = convertVoltageTo10bitADC(0.2);
-	engineConfiguration->tpsErrorHighValue = convertVoltageTo10bitADC(6);
+	engineConfiguration->tpsErrorDetectionTooLow = -10; // -10% open
+	engineConfiguration->tpsErrorDetectionTooHigh = 110; // 110% open
 
 	engineConfiguration->canNbcType = CAN_BUS_NBC_BMW;
 	engineConfiguration->canSleepPeriod = 50;
@@ -619,8 +619,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->logicAnalyzerMode[0] = false;
 	boardConfiguration->logicAnalyzerMode[1] = false;
 
-	engineConfiguration->mapErrorLowValue = 5;
-	engineConfiguration->mapErrorHighValue = 250;
+	engineConfiguration->mapErrorDetectionTooLow = 5;
+	engineConfiguration->mapErrorDetectionTooHigh = 250;
 
 	boardConfiguration->idleThreadPeriod = 100;
 	boardConfiguration->consoleLoopPeriod = 200;

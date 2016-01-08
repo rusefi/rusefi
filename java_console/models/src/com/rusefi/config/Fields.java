@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 03 09:10:53 EST 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 07 13:56:04 EST 2016
 public class Fields {
 	public static final Field ENGINETYPE = new Field("ENGINETYPE", 0, FieldType.INT);
 	public static final Field UNUSEDOFFSET4 = new Field("UNUSEDOFFSET4", 4, FieldType.INT);
@@ -9,8 +9,8 @@ public class Fields {
 	public static final Field DIRECTSELFSTIMULATION = new Field("DIRECTSELFSTIMULATION", 80, FieldType.BIT, 0);
 	public static final Field TPSMIN = new Field("TPSMIN", 84, FieldType.INT);
 	public static final Field TPSMAX = new Field("TPSMAX", 86, FieldType.INT);
-	public static final Field TPSERRORLOWVALUE = new Field("TPSERRORLOWVALUE", 88, FieldType.INT);
-	public static final Field TPSERRORHIGHVALUE = new Field("TPSERRORHIGHVALUE", 90, FieldType.INT);
+	public static final Field TPSERRORDETECTIONTOOLOW = new Field("TPSERRORDETECTIONTOOLOW", 88, FieldType.INT);
+	public static final Field TPSERRORDETECTIONTOOHIGH = new Field("TPSERRORDETECTIONTOOHIGH", 90, FieldType.INT);
 	public static final Field CRANKING_BASEFUEL = new Field("CRANKING_BASEFUEL", 92, FieldType.FLOAT);
 	public static final Field CRANKING_RPM = new Field("CRANKING_RPM", 96, FieldType.INT);
 	public static final Field PRIMINGSQUIRTDURATIONMS = new Field("PRIMINGSQUIRTDURATIONMS", 100, FieldType.FLOAT);
@@ -423,8 +423,8 @@ public class Fields {
 	public static final Field TACHPULSETRIGGERINDEX = new Field("TACHPULSETRIGGERINDEX", 1828, FieldType.INT);
 	public static final Field SUCKEDOFFCOEF = new Field("SUCKEDOFFCOEF", 1832, FieldType.FLOAT);
 	public static final Field ADDEDTOWALLCOEF = new Field("ADDEDTOWALLCOEF", 1864, FieldType.FLOAT);
-	public static final Field MAPERRORLOWVALUE = new Field("MAPERRORLOWVALUE", 1896, FieldType.FLOAT);
-	public static final Field MAPERRORHIGHVALUE = new Field("MAPERRORHIGHVALUE", 1900, FieldType.FLOAT);
+	public static final Field MAPERRORDETECTIONTOOLOW = new Field("MAPERRORDETECTIONTOOLOW", 1896, FieldType.FLOAT);
+	public static final Field MAPERRORDETECTIONTOOHIGH = new Field("MAPERRORDETECTIONTOOHIGH", 1900, FieldType.FLOAT);
 	public static final Field STEP1RPMWINDOW = new Field("STEP1RPMWINDOW", 1904, FieldType.INT);
 	public static final Field IDLEPID_PFACTOR = new Field("IDLEPID_PFACTOR", 1908, FieldType.FLOAT);
 	public static final Field IDLEPID_IFACTOR = new Field("IDLEPID_IFACTOR", 1912, FieldType.FLOAT);

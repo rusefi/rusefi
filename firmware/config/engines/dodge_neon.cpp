@@ -209,6 +209,8 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->fuelPumpPin = GPIOC_13; // Frankenstein: low side - out #4
 	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
+	engineConfiguration->mapErrorDetectionTooHigh = 120;
+
 	// set_injection_pin_mode 0
 	boardConfiguration->injectionPinMode = OM_DEFAULT;
 
