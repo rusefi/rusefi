@@ -11,6 +11,7 @@
 #include "dodge_ram.h"
 #include "custom_engine.h"
 #include "allsensors.h"
+#include "engine_math.h"
 
 EXTERN_ENGINE
 ;
@@ -22,7 +23,7 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->trigger.type = TT_DODGE_RAM;
 	engineConfiguration->injector.flow = 243.6; // 23.2lb/h
 	engineConfiguration->map.sensor.type = MT_DODGE_NEON_2003;
-	engineConfiguration->algorithm = LM_SPEED_DENSITY;
+	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
 
 	// set_cranking_charge_angle 30
 	engineConfiguration->crankingChargeAngle = 30;

@@ -29,6 +29,7 @@
 #include "event_registry.h"
 #include "efiGpio.h"
 #include "fuel_math.h"
+#include "advance_map.h"
 
 EXTERN_ENGINE
 ;
@@ -36,7 +37,7 @@ EXTERN_ENGINE
 extern engine_pins_s enginePins;
 
 /**
- * @return number of milliseconds in one crankshaft revolution
+ * @return number of milliseconds in one crank shaft revolution
  */
 floatms_t getCrankshaftRevolutionTimeMs(int rpm) {
 	return 360 * getOneDegreeTimeMs(rpm);
@@ -425,6 +426,7 @@ void setAlgorithm(engine_load_mode_e algo DECLARE_ENGINE_PARAMETER_S) {
 	if (algo == LM_ALPHA_N) {
 		setTimingLoadBin(0, 100 PASS_ENGINE_PARAMETER);
 	} else if (algo == LM_SPEED_DENSITY) {
+		buildTimingMap(35 PASS_ENGINE_PARAMETER);
 		setTimingLoadBin(0, 160 PASS_ENGINE_PARAMETER);
 	}
 }

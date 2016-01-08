@@ -206,6 +206,12 @@ static void periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 	chVTSetAny(&periodicFastTimer, 20 * TICKS_IN_MS, (vtfunc_t) &periodicFastCallback, engine);
 }
 
+static void resetAccel(void) {
+	engine->engineLoadAccelEnrichment.reset();
+	engine->tpsAccelEnrichment.reset();
+	wallFuel.reset();
+}
+
 static void periodicSlowCallback(Engine *engine) {
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
@@ -223,7 +229,7 @@ static void periodicSlowCallback(Engine *engine) {
 #if (EFI_PROD_CODE && EFI_ENGINE_CONTROL && EFI_INTERNAL_FLASH) || defined(__DOXYGEN__)
 		writeToFlashIfPending();
 #endif
-		wallFuel.reset();
+		resetAccel();
 	}
 
 	if (versionForConfigurationListeners.isOld()) {
@@ -436,13 +442,6 @@ static void setFloat(const char *offsetStr, const char *valueStr) {
 	*ptr = value;
 	getFloat(offset);
 }
-
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-static void resetAccel(void) {
-	engine->engineLoadAccelEnrichment.reset();
-	engine->tpsAccelEnrichment.reset();
-}
-#endif
 
 void initConfigActions(void) {
 	addConsoleActionSS("set_float", (VoidCharPtrCharPtr) setFloat);

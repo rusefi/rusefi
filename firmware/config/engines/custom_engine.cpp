@@ -10,6 +10,7 @@
 #include "custom_engine.h"
 #include "honda_accord.h"
 #include "allsensors.h"
+#include "engine_math.h"
 
 EXTERN_ENGINE;
 
@@ -73,6 +74,8 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->injectionPins[1] = GPIOE_2; // #2
 	boardConfiguration->injectionPins[2] = GPIOB_8; // #3
 	boardConfiguration->injectionPins[3] = GPIOB_7; // #4
+
+	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
 
 #if EFI_PWM_TESTER
 	boardConfiguration->injectionPins[4] = GPIOC_8; // #5

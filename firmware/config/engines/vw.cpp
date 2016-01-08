@@ -42,7 +42,7 @@ void setVwAba(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->specs.displacement = 2.5;
 	engineConfiguration->injector.flow = 320; // 30lb/h
 	// set_algorithm 3
-	engineConfiguration->algorithm = LM_SPEED_DENSITY;
+	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
 	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
