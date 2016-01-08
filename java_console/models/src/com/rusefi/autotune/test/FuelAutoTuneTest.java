@@ -27,10 +27,25 @@ public class FuelAutoTuneTest {
         dataPoints.add(new FuelAutoTune.stDataOnline(15, 1400, 70));
         dataPoints.add(new FuelAutoTune.stDataOnline(16, 1500, 90));
 
+        for (int i = 0; i < 2000; i++)
+            dataPoints.add(new FuelAutoTune.stDataOnline(16, 1500 + i, 90));
+
         {
-            FuelAutoTune.Result r = FuelAutoTune.process(false, dataPoints, 0.1);
+            FuelAutoTune.Result r = FuelAutoTune.process(false, dataPoints, 0.01);
             printNotDefault(r.getKgbcRES(), 1);
         }
+
+        for (int i = 0; i < 2000; i++)
+            dataPoints.add(new FuelAutoTune.stDataOnline(15, 1500 + i, 90));
+
+        {
+            FuelAutoTune.Result r = FuelAutoTune.process(false, dataPoints, 0.01);
+            printNotDefault(r.getKgbcRES(), 1);
+        }
+
+
+        // todo: validate results
+
     }
 
     /**
@@ -45,7 +60,7 @@ public class FuelAutoTuneTest {
     private static void printNotDefault(double[] array, int index, double defaultValue) {
         for (int i = 0; i < array.length; i++) {
             if (array[i] != defaultValue)
-                System.out.println(index + " " + i + ": " + array[i]);
+                System.out.println("Found value: " + index + " " + i + ": " + array[i]);
         }
     }
 }

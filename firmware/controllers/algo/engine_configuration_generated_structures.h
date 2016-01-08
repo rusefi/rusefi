@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 03 09:10:53 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 07 13:56:04 EST 2016
 // begin
 #include "rusefi_types.h"
 typedef struct {
@@ -775,14 +775,14 @@ typedef struct {
 	 */
 	int16_t tpsMax;
 	/**
-	 * todo: finish implementation. These values are used for TPS disconnect detection
+	 * TPS error detection, what TPS % value is unrealistically low
 	 * offset 88
 	 */
-	int16_t tpsErrorLowValue;
+	int16_t tpsErrorDetectionTooLow;
 	/**
 	 * offset 90
 	 */
-	int16_t tpsErrorHighValue;
+	int16_t tpsErrorDetectionTooHigh;
 	/**
 	 * offset 92
 	 */
@@ -1312,12 +1312,12 @@ typedef struct {
 	 * kPa value which is too low to be true
 	 * offset 1896
 	 */
-	float mapErrorLowValue;
+	float mapErrorDetectionTooLow;
 	/**
 	 * kPa value which is too high to be true
 	 * offset 1900
 	 */
-	float mapErrorHighValue;
+	float mapErrorDetectionTooHigh;
 	/**
 	 * RPMs prior to step1rpm point where ignition advance is retarded
 	 * offset 1904
@@ -1612,4 +1612,4 @@ typedef struct {
 } persistent_config_s;
 
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 03 09:10:53 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 07 13:56:04 EST 2016

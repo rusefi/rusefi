@@ -70,8 +70,6 @@ public class FuelAutoTune {
         double ke = 100; //???? ??????????
         double kg = 100; //???? ?????
 
-        int minK = 0; // todo: what is this?
-        int mink = 0; // todo: what is this?
 
         // let's could how many data points we have for each cell
         int bkGBC[][] = new int[SIZE][SIZE];
@@ -113,17 +111,21 @@ public class FuelAutoTune {
             }
         }
 
-        int gMinRT = 20; // todo: what is this?
+        int gMinRT = 20; // minimal number of measurments in cell to be considered
 
+        int minK = 0; // todo: what is this?
         while (true) {
             for (int r = 0; r < SIZE; r++) {
                 for (int c = 0; c < SIZE; c++) {
                     if (bkGBC[r][c] < gMinRT)
-                        continue; //****
+                        continue;
+
+                    //log("Processing " + r + "/c" + c);
+
                     minSQ = 1e+16;
                     kgbcSQsum = 1e+16;
                     step = STEP;
-                    mink = 0;
+                    double mink = 0;
                     while (true) {
                         ////////////////////////////////////
                         //????????? ?????????? ? ????????
@@ -133,58 +135,24 @@ public class FuelAutoTune {
                             }
                         }
                         kgbcSQsumLast = kgbcSQsum;
-                        for (stDataOnline dataPoint : dataECU) {
-                            // double targetAFR = 14.7; // todo: target AFR? is this target AFR or not?
-                            double corrInit = 1; // addGbcTwatINIT_190[dataPoint.twat + 40];
-                            double corrRes = 1; //addGbcTwatRES_190[dataPoint.twat + 40];
-                            double tpsCorrInit = 1; //ktgbcINIT[dataPoint.THR_RT_16][dataPoint.RPM_RT_32()];
-                            double tpsCorrRes = 1; //ktgbcRES[dataPoint.THR_RT_16][dataPoint.RPM_RT_32()];
 
-                            double ALF = dataPoint.AFR / 14.7;
-                            double tmp = (dataPoint.AFR / 14.7 - ALF * (kgbcRES[dataPoint.PRESS_RT_32()][dataPoint.RPM_RT_32()] * tpsCorrRes * corrRes) /
-                                    (kgbcINIT[dataPoint.PRESS_RT_32()][dataPoint.RPM_RT_32()] * tpsCorrInit * corrInit));
+                        countDeviation(dataECU, kgbcSQ, kgbcRES, kgbcINIT, r, c);
 
-                            if (isLogEnabled())
-                                log(r + "/" + c + ": tmp=" + tmp);
+                        kgbcSQsum = sumArray(kgbcSQ);
 
-                            kgbcSQ[dataPoint.PRESS_RT_32()][dataPoint.RPM_RT_32()] += tmp * tmp;
-                        }
-                        kgbcSQsum = 0;
-                        for (int i = 0; i < SIZE; i++) {
-                            for (int j = 0; j < SIZE; j++) {
-                                kgbcSQsum += kgbcSQ[i][j];
-                            }
-                        }
                         if (smooth) {
-                            kgbcSQsum = ksq * kgbcSQsum;
-                            e = 0;
-                            // todo: add a comment while 'SIZE - 1' here?
-                            for (int i = 0; i < SIZE - 1; i++) {
-                                for (int j = 0; j < SIZE; j++) {
-                                    double tmp = kgbcRES[i][j] - kgbcRES[i + 1][j];
-                                    e += tmp * tmp;
-                                    tmp = kgbcRES[j][i] - kgbcRES[j][i + 1];
-                                    e += tmp * tmp;
-                                }
-                            }
-                            g = 0;
-                            for (int i = 0; i < SIZE - 2; i++) {
-                                for (int j = 0; j < SIZE; j++) {
-                                    double tmp = kgbcRES[i][j] - 2 * kgbcRES[i + 1][j] + kgbcRES[i + 2][j];
-                                    g += tmp * tmp;
-                                    tmp = kgbcRES[j][i] - 2 * kgbcRES[j][i + 1] + kgbcRES[j][i + 2];
-                                    g += tmp * tmp;
-                                }
-                            }
-                            kgbcSQsum += ke * e + kg * g;
+                            kgbcSQsum = smooth(kgbcSQsum, ksq, ke, kg, kgbcRES);
                         }
                         ////////////////////////////////////
                         if (kgbcSQsum >= kgbcSQsumLast)
                             step = -step;
                         //???? ?????? ?? ??????? ????? ???, ?? ? ?? ?????????? ??
                     /*if(bkGBC[r][c]) */
+
+//                        log("Adjusting " + step);
                         kgbcRES[r][c] += step;
-                        if (kgbcSQsum < minSQ) minSQ = kgbcSQsum;
+                        if (kgbcSQsum < minSQ)
+                            minSQ = kgbcSQsum;
 
                         if (Math.abs(minSQ - kgbcSQsumLast) < 1e-10)
                             mink++;
@@ -197,7 +165,8 @@ public class FuelAutoTune {
                     }
                 }
             }
-            if (kgbcSQsum < minSQtotal) minSQtotal = kgbcSQsum;
+            if (kgbcSQsum < minSQtotal)
+                minSQtotal = kgbcSQsum;
             if (Math.abs(minSQtotal - kgbcSQsumLastTotal) < 1e-10)
                 minK++;
             if (minK > 4) {
@@ -211,6 +180,62 @@ public class FuelAutoTune {
             //updateTableGBC();
 
         }
+    }
+
+    private static void countDeviation(Collection<stDataOnline> dataECU, double[][] kgbcSQ, double[][] kgbcRES, double[][] kgbcINIT, int r, int c) {
+        for (stDataOnline dataPoint : dataECU) {
+            double targetAFR = 13.0; // todo: target AFR? is this target AFR or not?
+            double corrInit = 1; // addGbcTwatINIT_190[dataPoint.twat + 40];
+            double corrRes = 1; //addGbcTwatRES_190[dataPoint.twat + 40];
+            double tpsCorrInit = 1; //ktgbcINIT[dataPoint.THR_RT_16][dataPoint.RPM_RT_32()];
+            double tpsCorrRes = 1; //ktgbcRES[dataPoint.THR_RT_16][dataPoint.RPM_RT_32()];
+
+            double ALF = targetAFR / 14.7;
+            double tmp = (dataPoint.AFR / 14.7 - ALF * (kgbcRES[dataPoint.PRESS_RT_32()][dataPoint.RPM_RT_32()] * tpsCorrRes * corrRes) /
+                    (kgbcINIT[dataPoint.PRESS_RT_32()][dataPoint.RPM_RT_32()] * tpsCorrInit * corrInit));
+
+//            if (isLogEnabled())
+//                log("r=" + r + "/c=" + c + ": tmp=" + tmp);
+
+            kgbcSQ[dataPoint.PRESS_RT_32()][dataPoint.RPM_RT_32()] += tmp * tmp;
+        }
+    }
+
+    private static double sumArray(double[][] kgbcSQ) {
+        double kgbcSQsum = 0;
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                kgbcSQsum += kgbcSQ[i][j];
+            }
+        }
+        return kgbcSQsum;
+    }
+
+    private static double smooth(double kgbcSQsum, double ksq, double ke, double kg, double[][] kgbcRES) {
+        double e;
+        double g;
+        kgbcSQsum = ksq * kgbcSQsum;
+        e = 0;
+        // todo: add a comment while 'SIZE - 1' here?
+        for (int i = 0; i < SIZE - 1; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                double tmp = kgbcRES[i][j] - kgbcRES[i + 1][j];
+                e += tmp * tmp;
+                tmp = kgbcRES[j][i] - kgbcRES[j][i + 1];
+                e += tmp * tmp;
+            }
+        }
+        g = 0;
+        for (int i = 0; i < SIZE - 2; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                double tmp = kgbcRES[i][j] - 2 * kgbcRES[i + 1][j] + kgbcRES[i + 2][j];
+                g += tmp * tmp;
+                tmp = kgbcRES[j][i] - 2 * kgbcRES[j][i + 1] + kgbcRES[j][i + 2];
+                g += tmp * tmp;
+            }
+        }
+        kgbcSQsum += ke * e + kg * g;
+        return kgbcSQsum;
     }
 
     private static void log(String s) {
