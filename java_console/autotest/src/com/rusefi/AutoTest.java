@@ -132,10 +132,10 @@ public class AutoTest {
         msg = "2003 Neon running";
         IoUtil.changeRpm(2000);
         chart = nextChart();
-        x = 97.04;
-        assertWave(true, msg, chart, EngineChart.SPARK_1, 0.13299999999999998, 0.005, EngineReport.RATIO, x + 180, x + 540);
+        x = 101.0;
+        assertWave(true, msg, chart, EngineChart.SPARK_1, 0.13299999999999998, 0.02, EngineReport.RATIO, x + 180, x + 540);
         assertWaveNull(msg, chart, EngineChart.SPARK_2);
-        assertWave(true, msg, chart, EngineChart.SPARK_3, 0.13299999999999998, 0.005, EngineReport.RATIO, x, x + 360);
+        assertWave(true, msg, chart, EngineChart.SPARK_3, 0.13299999999999998, 0.02, EngineReport.RATIO, x, x + 360);
         assertWaveNull(msg, chart, EngineChart.SPARK_4);
 
         x = 106.0;
