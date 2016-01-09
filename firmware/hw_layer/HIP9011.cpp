@@ -66,12 +66,12 @@ static char pinNameBuffer[16];
 static float currentAngleWindowWidth;
 
 /**
- * Int/Hold pin is controlled from scheduler callbacks which are set according to current RPM
+ * Int/Hold pin is controlled from scheduler call-backs which are set according to current RPM
  *
  * The following state makes sure that we only have SPI communication while not integrating and that we take
  * a good ADC reading after integrating.
  *
- * Once integtation window is over, we wait for the 2nd ADC callback and then initiate SPI communication if needed
+ * Once integration window is over, we wait for the 2nd ADC callback and then initiate SPI communication if needed
  *
  * hipOutput should be set to used FAST adc device
  */

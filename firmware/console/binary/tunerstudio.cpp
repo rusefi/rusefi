@@ -446,7 +446,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool_t isConsoleRedirect) {
 
 		recieved = chnReadTimeout(tsChannel->channel, &secondByte, 1, TS_READ_TIMEOUT);
 		if (recieved != 1) {
-			tunerStudioError("ERROR: no second");
+			tunerStudioError("TS: ERROR: no second byte");
 			continue;
 		}
 //		scheduleMsg(logger, "Got secondByte=%x=[%c]", secondByte, secondByte);
