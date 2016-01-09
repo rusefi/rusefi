@@ -27,6 +27,7 @@ public class StatusWindow {
         log.setLineWrap(true);
     }
 
+    // todo: make this method more abstract. table editor use-case does not need stm32 driver
     public void showFrame(String title) {
         content.add(new URLLabel("stm32 driver", CONSOLE_DRIVER_URI), BorderLayout.NORTH);
         content.add(messagesScroll, BorderLayout.CENTER);
