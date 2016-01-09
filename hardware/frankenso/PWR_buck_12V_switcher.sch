@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:KICAD_Older_Version
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -10,7 +11,6 @@ LIBS:cmos4000
 LIBS:adc-dac
 LIBS:memory
 LIBS:xilinx
-LIBS:special
 LIBS:microcontrollers
 LIBS:dsp
 LIBS:microchip
@@ -53,7 +53,7 @@ LIBS:STM32F407IGT6
 LIBS:slc_oem
 LIBS:mos_n_numbered-pins
 LIBS:frankenso-cache
-EELAYER 27 0
+EELAYER 25 0
 EELAYER END
 $Descr A 11000 8500
 encoding utf-8
@@ -191,7 +191,7 @@ F 3 "" H 7450 6900 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L MOS_PRO Q1001
+L MOS_Pro Q1001
 U 1 1 52C6272D
 P 5350 6500
 F 0 "Q1001" H 5350 6650 60  0000 R CNN
@@ -218,7 +218,7 @@ F 5 "DIGI,P39KDACT-ND" V 1530 2600 60  0001 C CNN "vend1,vend1#"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L ZENERSMALL D1001
+L ZENERsmall D1001
 U 1 1 533A08FB
 P 5650 6500
 F 0 "D1001" H 5650 6600 40  0000 C CNN
@@ -322,7 +322,7 @@ F 5 "dnp,dnp" H 5650 6250 60  0001 C CNN "Field5"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L MOS_NRO Q1002
+L MOS_Nro Q1002
 U 1 1 56093CF9
 P 4800 6500
 F 0 "Q1002" H 4800 6350 60  0000 R CNN
@@ -335,7 +335,7 @@ F 5 "digikey,IXTA6N50D2-ND" H 4800 6500 60  0001 C CNN "vend1,vend1#"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L ZENERSMALL D1002
+L ZENERsmall D1002
 U 1 1 560A5DFC
 P 4600 6750
 F 0 "D1002" H 4600 6850 40  0000 C CNN
@@ -440,7 +440,7 @@ Wire Wire Line
 Wire Wire Line
 	4700 6600 4700 6700
 $Comp
-L MOS_NRO Q1003
+L MOS_Nro Q1003
 U 1 1 560A63BF
 P 4900 7450
 F 0 "Q1003" H 4900 7300 60  0000 R CNN
@@ -453,7 +453,7 @@ F 5 "digi,CPC3703CCT-ND" H 4900 7450 60  0001 C CNN "vend1,vend1#"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L ZENERSMALL D1003
+L ZENERsmall D1003
 U 1 1 560C6855
 P 6350 6500
 F 0 "D1003" H 6350 6600 40  0000 C CNN

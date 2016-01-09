@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:KICAD_Older_Version
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -10,7 +11,6 @@ LIBS:cmos4000
 LIBS:adc-dac
 LIBS:memory
 LIBS:xilinx
-LIBS:special
 LIBS:microcontrollers
 LIBS:dsp
 LIBS:microchip
@@ -53,7 +53,7 @@ LIBS:STM32F407IGT6
 LIBS:slc_oem
 LIBS:mos_n_numbered-pins
 LIBS:frankenso-cache
-EELAYER 27 0
+EELAYER 25 0
 EELAYER END
 $Descr B 17000 11000
 encoding utf-8
@@ -476,7 +476,7 @@ F 5 "DIGI,P0.0ADKR-ND" V 1030 3150 60  0001 C CNN "vend1,vend1#"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L 176122-6_2ND P99
+L 176122-6_2nd P99
 U 1 1 5398DBFC
 P 5850 1200
 F 0 "P99" H 6350 1250 50  0000 C CNN
@@ -489,7 +489,7 @@ F 5 "DIGI,176122-6_2ND" H 5850 1200 60  0001 C CNN "VEND1,VEND1#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L 176122-6_2ND P99
+L 176122-6_2nd P99
 U 2 1 5398DC09
 P 8400 1200
 F 0 "P99" H 8900 1250 50  0000 C CNN
@@ -500,7 +500,7 @@ F 3 "DOCUMENTATION" H 7900 1350 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L 176122-6_2ND P99
+L 176122-6_2nd P99
 U 3 1 5398DC0F
 P 10900 1200
 F 0 "P99" H 11400 1250 50  0000 C CNN
