@@ -63,6 +63,7 @@ public class RecentCommands {
         COMMAND_ICONS.put(SDINFO, infoIcon);
         COMMAND_ICONS.put(FSIOINFO, infoIcon);
         COMMAND_ICONS.put(PINS, infoIcon);
+        COMMAND_ICONS.put(SettingsTab.WRITECONFIG, UiUtils.loadIcon("writeconfig.jpg"));
     }
 
     private final JPanel content = new JPanel(new GridLayout(NUMBER_OF_COMMANDS + 1, 1));
@@ -109,7 +110,7 @@ public class RecentCommands {
         add(ANALOGINFO);
         add(TRIGGERINFO);
         add(TSINFO);
-        add("writeconfig");
+        add(SettingsTab.WRITECONFIG);
         add("rewriteconfig");
         add("enable injection");
         add("disable injection");

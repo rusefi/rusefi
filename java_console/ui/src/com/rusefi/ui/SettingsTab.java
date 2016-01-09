@@ -11,6 +11,7 @@ import java.awt.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SettingsTab {
+    public static final String WRITECONFIG = "writeconfig";
     private final JPanel panel = new JPanel(new GridLayout(8, 3));
     private final JPanel content = new JPanel(new BorderLayout());
 
@@ -71,7 +72,7 @@ public class SettingsTab {
 //        panel.add(UiUtils.wrap(new ConfigField(Fields.TPSACCELENRICHMENTTHRESHOLD, "TPS accel threshold").getContent()));
         panel.add(UiUtils.wrap(new ConfigField(Fields.TPSACCELENRICHMENTMULTIPLIER, "TPS accel coef").getContent()));
 
-        panel.add(UiUtils.wrap(RecentCommands.createButton(new AtomicBoolean(), "writeconfig")));
+        panel.add(UiUtils.wrap(RecentCommands.createButton(new AtomicBoolean(), WRITECONFIG)));
 
         content.add(panel);
         UiUtils.trueLayout(content);

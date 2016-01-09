@@ -37,6 +37,8 @@ import com.romraider.maps.Rom;
 import com.romraider.util.SettingsManager;
 import com.rusefi.ConfigurationImage;
 import com.rusefi.binaryprotocol.BinaryProtocolCmd;
+import com.rusefi.io.CommandQueue;
+import com.rusefi.ui.SettingsTab;
 
 public class ECUEditorToolBar extends JToolBar {
 
@@ -44,6 +46,7 @@ public class ECUEditorToolBar extends JToolBar {
     //    private final JButton saveImage = new JButton();
     private final JButton uploadImage = new JButton();
     private final JButton downloadImage = new JButton();
+    private final JButton burnImage = new JButton();
 
     public ECUEditorToolBar(String name) {
         super(name);
@@ -58,8 +61,9 @@ public class ECUEditorToolBar extends JToolBar {
 //        this.add(saveImage);
         this.add(downloadImage);
         this.add(uploadImage);
+        this.add(burnImage);
 
-        uploadImage.setToolTipText("Burn changes into controller");
+        uploadImage.setToolTipText("Send changes to controller");
         downloadImage.setToolTipText("Read configuration from controller");
 
 
@@ -81,7 +85,7 @@ public class ECUEditorToolBar extends JToolBar {
             public void actionPerformed(ActionEvent e) {
                 Rom lastSelectedRom = ECUEditorManager.getECUEditor().getLastSelectedRom();
                 byte[] newVersion = ConfigurationImage.extractContent(lastSelectedRom.saveFile());
-                System.out.println(newVersion.length);
+                System.out.println("new version size: " + newVersion.length);
                 BinaryProtocolCmd.scheduleBurn(new ConfigurationImage(newVersion));
             }
         });
@@ -91,6 +95,12 @@ public class ECUEditorToolBar extends JToolBar {
 
             }
         });
+        burnImage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CommandQueue.getInstance().write(SettingsTab.WRITECONFIG);
+            }
+        });
     }
 
     public void updateIcons() {
@@ -98,6 +108,7 @@ public class ECUEditorToolBar extends JToolBar {
 //        saveImage.setIcon(rescaleImageIcon(new ImageIcon(getClass().getResource("/graphics/icon-save.png")), iconScale));
         uploadImage.setIcon(rescaleImageIcon(new ImageIcon(getClass().getResource("/com/rusefi/upload48.jpg")), iconScale));
         downloadImage.setIcon(rescaleImageIcon(new ImageIcon(getClass().getResource("/com/rusefi/download48.jpg")), iconScale));
+        burnImage.setIcon(rescaleImageIcon(new ImageIcon(getClass().getResource("/com/rusefi/writeconfig48.jpg")), iconScale));
 //        closeImage.setIcon(rescaleImageIcon(new ImageIcon( getClass().getResource("/graphics/icon-close.png")), iconScale));
         repaint();
     }
