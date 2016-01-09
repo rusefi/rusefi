@@ -52,7 +52,6 @@ public class StartupFrame {
     });
     private final JPanel connectPanel = new JPanel(new FlowLayout());
     // todo: move this line to the connectPanel
-    private HorizontalLine horizontalLine = new HorizontalLine();
     private final JComboBox<String> comboPorts = new JComboBox<>();
     @NotNull
     private List<String> currentlyDisplayedPorts = new ArrayList<>();
@@ -64,9 +63,10 @@ public class StartupFrame {
      * closing the application.
      */
     private boolean isProceeding;
+    private JLabel noPortsMessage = new JLabel("No ports found!");
 
     public StartupFrame() {
-        frame = new JFrame(Launcher.CONSOLE_VERSION + ": Serial port selection");
+        frame = new JFrame("rusEfi console v" + Launcher.CONSOLE_VERSION);
         frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -106,8 +106,10 @@ public class StartupFrame {
         });
 
         leftPanel.add(connectPanel);
+        leftPanel.add(noPortsMessage);
+        installMessage(noPortsMessage, "Check you cables. Check your drivers. Do you want to start simulator maybe?");
         leftPanel.add(new URLLabel(VCP_DRIVER_TEXT, VCP_DRIVER_URI));
-        leftPanel.add(horizontalLine);
+        leftPanel.add(new HorizontalLine());
 
         findAndApplyPorts();
 
@@ -156,13 +158,18 @@ public class StartupFrame {
         UiUtils.centerWindow(frame);
     }
 
+    private void installMessage(JComponent component, String s) {
+        component.setToolTipText(s);
+    }
+
     private void findAndApplyPorts() {
         List<String> ports = findAllAvailablePorts();
         if (!currentlyDisplayedPorts.equals(ports) || isFirstTimeApplyingPorts) {
             isFirstTimeApplyingPorts = false;
             connectPanel.setVisible(!ports.isEmpty());
+            noPortsMessage.setVisible(ports.isEmpty());
 //        panel.add(comboSpeeds); // todo: finish speed selector UI component
-            horizontalLine.setVisible(!ports.isEmpty());
+//            horizontalLine.setVisible(!ports.isEmpty());
 
             addPortSelection(ports);
             currentlyDisplayedPorts = ports;
