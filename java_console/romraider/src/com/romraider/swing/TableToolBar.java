@@ -128,18 +128,24 @@ public class TableToolBar extends JToolBar implements MouseListener, ItemListene
         finePanel.add(decrementFine);
         finePanel.add(incrementByFine);
         this.add(finePanel);
+        finePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3),
+                BorderFactory.createLineBorder(Color.black)));
 
         JPanel coarsePanel = new JPanel();
         coarsePanel.add(incrementCoarse);
         coarsePanel.add(decrementCoarse);
         coarsePanel.add(incrementByCoarse);
         this.add(coarsePanel);
+        coarsePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3),
+                BorderFactory.createLineBorder(Color.red)));
 
         JPanel setValuePanel = new JPanel();
         setValuePanel.add(setValueText);
         setValuePanel.add(setValue);
         setValuePanel.add(multiply);
         this.add(setValuePanel);
+        setValuePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3),
+                BorderFactory.createLineBorder(Color.green)));
 
         colorCells.setEnabled(false);
         refreshCompare.setEnabled(false);

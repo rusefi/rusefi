@@ -23,6 +23,11 @@ public class FrameHelper {
     }
 
     public void showFrame(JComponent component, final boolean maximizeOnStart) {
+        initFrame(component, maximizeOnStart);
+        frame.setVisible(true);
+    }
+
+    public void initFrame(JComponent component, final boolean maximizeOnStart) {
         frame.setSize(800, 500);
         frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
@@ -45,7 +50,6 @@ public class FrameHelper {
                 defaultFontSize = frame.getFont().getSize();
             }
         });
-        frame.setVisible(true);
     }
 
     protected void onWindowOpened() {

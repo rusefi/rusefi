@@ -1,7 +1,6 @@
 package com.rusefi.binaryprotocol;
 
 import com.romraider.editor.ecu.ECUEditor;
-import com.romraider.util.SettingsManager;
 import com.rusefi.*;
 import com.rusefi.io.serial.PortHolder;
 import jssc.SerialPort;
@@ -60,7 +59,7 @@ public class BinaryProtocolCmd {
         return true;
     }
 
-    public static void scheduleBurn(ConfigurationImage newVersion) {
-        UploadChanges.scheduleBurn(newVersion, bp);
+    public static void scheduleUpload(ConfigurationImage newVersion) {
+        UploadChanges.scheduleUpload(newVersion, bp);
     }
 }

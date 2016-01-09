@@ -3,6 +3,7 @@ package com.rusefi.ui;
 import com.rusefi.ui.util.FrameHelper;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,20 +23,33 @@ public class StatusWindow {
             return new Dimension(400, 400);
         }
     };
+    @NotNull
+    protected final FrameHelper frameHelper = new FrameHelper();
 
     public StatusWindow() {
         log.setLineWrap(true);
-    }
-
-    // todo: make this method more abstract. table editor use-case does not need stm32 driver
-    public void showFrame(String title) {
+        // todo: move this somewhere else. table editor use-case does not need stm32 driver
         content.add(new URLLabel("stm32 driver", CONSOLE_DRIVER_URI), BorderLayout.NORTH);
         content.add(messagesScroll, BorderLayout.CENTER);
+    }
 
-        FrameHelper f = new FrameHelper();
-        f.getFrame().setTitle(title);
-        f.showFrame(content, false);
-        UiUtils.centerWindow(f.getFrame());
+    @NotNull
+    public FrameHelper getFrameHelper() {
+        return frameHelper;
+    }
+
+    public JPanel getContent() {
+        return content;
+    }
+
+    public JFrame getFrame() {
+        return frameHelper.getFrame();
+    }
+
+    public void showFrame(String title) {
+        frameHelper.getFrame().setTitle(title);
+        frameHelper.showFrame(content, false);
+        UiUtils.centerWindow(frameHelper.getFrame());
         log.setText(""); // let's remove stuff from previous invocation
     }
 

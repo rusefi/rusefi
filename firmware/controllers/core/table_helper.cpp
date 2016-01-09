@@ -12,7 +12,7 @@
 
 void setTableBin2(float array[], int size, float l, float r, float precision) {
 	for (int i = 0; i < size; i++) {
-		float value = interpolate(0, l, size - 1, r, i);
+		float value = interpolateMsg("setTable", 0, l, size - 1, r, i);
 		/**
 		 * rounded values look nicer, also we want to avoid precision mismatch with Tuner Studio
 		 */
