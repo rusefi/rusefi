@@ -110,7 +110,7 @@
         category="Fuel"
         storageaddress="1a18" sizex="16"
                storagetype="float" endian="big">
-            <scaling units="Target Boost (psia) Compensation (%)" expression="x" to_byte="x" format="0.00"
+            <scaling units="Compensation (%)" expression="x" to_byte="x" format="0.00"
                      fineincrement=".01" coarseincrement="0.1"/>
             <table type="X Axis" storageaddress="19d8" storagetype="float" endian="big">
                 <scaling units="uni" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
@@ -119,7 +119,7 @@
 
         <table type="2D" name="Intake air temperature-based extra idle air" storageaddress="1b98"
                sizex="16" storagetype="float" endian="big">
-            <scaling units="Target Boost (psia) Compensation (%)" expression="x" to_byte="x" format="0.00"
+            <scaling units="Compensation (%)" expression="x" to_byte="x" format="0.00"
                      fineincrement=".01" coarseincrement="0.1"/>
             <table type="X Axis" storageaddress="1b58" storagetype="float" endian="big">
                 <scaling units="uni" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>

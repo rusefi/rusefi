@@ -230,7 +230,7 @@ public class BinaryProtocol {
         }
     }
 
-    public void burnChanges(ConfigurationImage newVersion, Logger logger) throws InterruptedException, EOFException, SerialPortException {
+    public void uploadChanges(ConfigurationImage newVersion, Logger logger) throws InterruptedException, EOFException, SerialPortException {
         ConfigurationImage current = getController();
         // let's have our own copy which no one would be able to change
         newVersion = newVersion.clone();

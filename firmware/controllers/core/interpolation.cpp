@@ -98,13 +98,13 @@ float FastInterpolation::getValue(float x) {
  *
  * @note	For example, "interpolate(engineConfiguration.tpsMin, 0, engineConfiguration.tpsMax, 100, adc);"
  */
-float interpolate(float x1, float y1, float x2, float y2, float x) {
+float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, float x) {
 	// todo: double comparison using EPS
 	if (x1 == x2) {
 		/**
 		 * we could end up here for example while resetting bins while changing engine type
 		 */
-		warning(OBD_PCM_Processor_Fault, "interpolate: Same x1 and x2 in interpolate: %f/%f", x1, x2);
+		warning(OBD_PCM_Processor_Fault, "interpolate%s: Same x1 and x2 in interpolate: %f/%f", msg, x1, x2);
 		return NAN;
 	}
 
@@ -119,6 +119,10 @@ float interpolate(float x1, float y1, float x2, float y2, float x) {
 	printf("a=%f b=%f result=%f\r\n", a, b, result);
 #endif
 	return result;
+}
+
+float interpolate(float x1, float y1, float x2, float y2, float x) {
+	return interpolateMsg("", x1, y1, x2, y2, x);
 }
 
 int findIndex2(const float array[], unsigned size, float value) {
@@ -200,7 +204,7 @@ float interpolate2d(float value, float bin[], float values[], int size) {
 	if (index == size - 1)
 		return values[size - 1];
 
-	return interpolate(bin[index], values[index], bin[index + 1], values[index + 1], value);
+	return interpolateMsg("2d", bin[index], values[index], bin[index + 1], values[index + 1], value);
 }
 
 /**
@@ -242,7 +246,7 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 		float rpmMinValue = map[0][yIndex];
 		float rpmMaxValue = map[0][yIndex + 1];
 
-		return interpolate(keyMin, rpmMinValue, keyMax, rpmMaxValue, y);
+		return interpolateMsg("3d", keyMin, rpmMinValue, keyMax, rpmMaxValue, y);
 	}
 
 	if (yIndex < 0) {
@@ -305,7 +309,7 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 	float rpmMinKeyMaxValue = map[xIndex][keyMaxIndex];
 	float rpmMaxKeyMaxValue = map[rpmMaxIndex][keyMaxIndex];
 
-	float keyMaxValue = interpolate(xMin, rpmMinKeyMaxValue, xMax, rpmMaxKeyMaxValue, x);
+	float keyMaxValue = interpolateMsg("3d", xMin, rpmMinKeyMaxValue, xMax, rpmMaxKeyMaxValue, x);
 
 #if	DEBUG_INTERPOLATION
 	if (needInterpolationLogging) {
@@ -314,7 +318,7 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 	}
 #endif
 
-	float result = interpolate(keyMin, keyMinValue, keyMax, keyMaxValue, y);
+	float result = interpolateMsg("3d", keyMin, keyMinValue, keyMax, keyMaxValue, y);
 	return result;
 }
 
