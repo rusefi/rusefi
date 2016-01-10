@@ -193,7 +193,7 @@ public class StartupFrame {
     }
 
     private void addPortSelection(List<String> ports) {
-        comboPorts.removeAll();
+        comboPorts.removeAllItems();
         for (final String port : ports)
             comboPorts.addItem(port);
         String defaultPort =  getConfig().getRoot().getProperty(Launcher.PORT_KEY);
