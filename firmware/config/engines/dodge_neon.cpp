@@ -431,6 +431,8 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->fanOnTemperature = 92;
 	engineConfiguration->fanOffTemperature = 89;
+	engineConfiguration->fanOnTemperature = 115; // knock testing - value is a bit high
+	engineConfiguration->fanOffTemperature = 100;
 
 //	boardConfiguration->tunerStudioSerialSpeed = 9600;
 	boardConfiguration->tunerStudioSerialSpeed = 19200;
