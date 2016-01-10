@@ -4,7 +4,7 @@ import java.util.Collection;
 
 /**
  * 1/5/2016
- * (c) Andrey Belomutskiy 2013-2015
+ * (c) Andrey Belomutskiy 2013-2016
  */
 public class FuelAutoTune {
     private static final int SIZE = 16;

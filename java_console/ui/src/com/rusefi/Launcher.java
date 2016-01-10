@@ -26,7 +26,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * <p/>
  * <p/>
  * 12/25/12
- * (c) Andrey Belomutskiy 2013-2015
+ * (c) Andrey Belomutskiy 2013-2016
  *
  * @see StartupFrame
  * @see EngineSnifferPanel
@@ -44,6 +44,7 @@ public class Launcher {
     private final TableEditorPane tableEditor = new TableEditorPane();
     private final SettingsTab settingsTab = new SettingsTab();
     private final LogDownloader logsManager = new LogDownloader();
+    private final FuelTunePane fuelTunePane = new FuelTunePane();
 
     FrameHelper frame = new FrameHelper() {
         @Override
@@ -114,6 +115,8 @@ public class Launcher {
             tabbedPane.add("Bench Test", new BenchTestPane().getContent());
         if (!LinkManager.isLogViewer() && false) // todo: fix it & better name?
             tabbedPane.add("Logs Manager", logsManager.getContent());
+        if (false)
+            tabbedPane.add("Fuel Tune", fuelTunePane.getContent());
 
         if (!LinkManager.isLogViewerMode(port)) {
             int selectedIndex = getConfig().getRoot().getIntProperty(TAB_INDEX, 2);
@@ -144,6 +147,7 @@ public class Launcher {
                 tableEditor.showContent();
                 settingsTab.showContent();
                 logsManager.showContent();
+                fuelTunePane.showContent();
                 BinaryProtocolServer.start();
             }
         });

@@ -21,7 +21,7 @@ import java.awt.image.BufferedImage;
 import static com.rusefi.ui.util.LocalizedMessages.PAUSE;
 
 /**
- * (c) Andrey Belomutskiy 2013-2015
+ * (c) Andrey Belomutskiy 2013-2016
  */
 public class FormulasPane {
     private final JPanel content = new JPanel(new BorderLayout());

@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * 1/5/2016
- * (c) Andrey Belomutskiy 2013-2015
+ * (c) Andrey Belomutskiy 2013-2016
  */
 public class FuelAutoTuneTest {
 
