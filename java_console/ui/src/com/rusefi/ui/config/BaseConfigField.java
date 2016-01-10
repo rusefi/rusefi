@@ -13,7 +13,7 @@ import java.awt.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-abstract class BaseConfigField {
+public abstract class BaseConfigField {
     protected final JLabel status = new JLabel("P");
     protected final JPanel panel = new JPanel(new BorderLayout());
     protected final Field field;
@@ -98,7 +98,12 @@ abstract class BaseConfigField {
 
     @NotNull
     public static ByteBuffer getByteBuffer(ConfigurationImage ci, Field field) {
-        byte data[] = ci.getRange(field.getOffset(), 4);
+        return getByteBuffer(ci, field.getOffset());
+    }
+
+    @NotNull
+    public static ByteBuffer getByteBuffer(ConfigurationImage ci, int offset) {
+        byte data[] = ci.getRange(offset, 4);
         ByteBuffer wrapped = ByteBuffer.wrap(data);
         wrapped.order(ByteOrder.LITTLE_ENDIAN);
         return wrapped;
