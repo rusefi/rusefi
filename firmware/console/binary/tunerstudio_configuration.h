@@ -97,10 +97,10 @@ typedef struct {
 	float baroCorrection;
 	float pedalPosition;
 	float injectorDutyCycle;
-	int knockCount;
-	float fuelTankGauge;
-	float knockLevel;
-	int totalTriggerErrorCounter;
+	int knockCount; // 144
+	float fuelTankGauge; // 148
+	float knockLevel; // 152
+	int totalTriggerErrorCounter; // 156
 	float wallFuelAmount; // 160
 	float iatCorrection; // 164
 	floatms_t wallFuelCorrection; // 168
