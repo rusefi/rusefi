@@ -439,7 +439,8 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
 
 	boardConfiguration->alternatorControlPin = GPIOD_5;
-	engineConfiguration->alternatorControl.pFactor = 22;
+//	engineConfiguration->alternatorControl.pFactor = 22;
+	engineConfiguration->alternatorControl.pFactor = 55; // looks to work better, maybe time for some iFactor
 
 //	engineConfiguration->isCanEnabled = true;
 	boardConfiguration->canTxPin = GPIOB_6;
