@@ -15,31 +15,31 @@ public class FuelAutoTuneTest {
     @Test
     public void testAutoTune() {
         List<FuelAutoTune.stDataOnline> dataPoints = new ArrayList<>();
-        dataPoints.add(new FuelAutoTune.stDataOnline(13, 1200, 80));
+        dataPoints.add(FuelAutoTune.stDataOnline.valueOf(13, 1200, 80));
 
         {
-            FuelAutoTune.Result r = FuelAutoTune.process(false, dataPoints, 0.1);
+            FuelAutoTune.Result r = FuelAutoTune.process(false, dataPoints, 0.1, 13);
             printNotDefault(r.getKgbcRES(), 1);
         }
 
-        dataPoints.add(new FuelAutoTune.stDataOnline(13, 1200, 80));
-        dataPoints.add(new FuelAutoTune.stDataOnline(14, 1300, 60));
-        dataPoints.add(new FuelAutoTune.stDataOnline(15, 1400, 70));
-        dataPoints.add(new FuelAutoTune.stDataOnline(16, 1500, 90));
+        dataPoints.add(FuelAutoTune.stDataOnline.valueOf(13, 1200, 80));
+        dataPoints.add(FuelAutoTune.stDataOnline.valueOf(14, 1300, 60));
+        dataPoints.add(FuelAutoTune.stDataOnline.valueOf(15, 1400, 70));
+        dataPoints.add(FuelAutoTune.stDataOnline.valueOf(16, 1500, 90));
 
         for (int i = 0; i < 2000; i++)
-            dataPoints.add(new FuelAutoTune.stDataOnline(16, 1500 + i, 90));
+            dataPoints.add(FuelAutoTune.stDataOnline.valueOf(16, 1500 + i, 90));
 
         {
-            FuelAutoTune.Result r = FuelAutoTune.process(false, dataPoints, 0.01);
+            FuelAutoTune.Result r = FuelAutoTune.process(false, dataPoints, 0.01, 13);
             printNotDefault(r.getKgbcRES(), 1);
         }
 
         for (int i = 0; i < 2000; i++)
-            dataPoints.add(new FuelAutoTune.stDataOnline(15, 1500 + i, 90));
+            dataPoints.add(FuelAutoTune.stDataOnline.valueOf(15, 1500 + i, 90));
 
         {
-            FuelAutoTune.Result r = FuelAutoTune.process(false, dataPoints, 0.01);
+            FuelAutoTune.Result r = FuelAutoTune.process(false, dataPoints, 0.01, 13);
             printNotDefault(r.getKgbcRES(), 1);
         }
 

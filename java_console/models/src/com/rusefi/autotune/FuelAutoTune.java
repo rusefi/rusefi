@@ -1,5 +1,7 @@
 package com.rusefi.autotune;
 
+import com.rusefi.config.Fields;
+
 import java.util.Collection;
 
 /**
@@ -7,6 +9,9 @@ import java.util.Collection;
  * (c) Andrey Belomutskiy 2013-2016
  */
 public class FuelAutoTune {
+    // todo: eliminate this
+    // Fields.FUEL_RPM_COUNT
+    // Fields.FUEL_LOAD_COUNT
     private static final int SIZE = 16;
 
     private static boolean isLogEnabled() {
@@ -18,21 +23,25 @@ public class FuelAutoTune {
 
     public static class stDataOnline {
         public final double AFR;
-        private final int rpm;
-        private final double engineLoad;
+        int rpmIndex;
+        int engineLoadIndex;
 
-        public stDataOnline(double AFR, int rpm, double engineLoad) {
+        public stDataOnline(double AFR, int rpmIndex, int engineLoadIndex) {
             this.AFR = AFR;
-            this.rpm = rpm;
-            this.engineLoad = engineLoad;
+            this.rpmIndex = rpmIndex;
+            this.engineLoadIndex = engineLoadIndex;
+        }
+
+        public static stDataOnline valueOf(double AFR, int rpm, double engineLoad) {
+            return new stDataOnline(AFR, (int) (rpm / 7000.0 * SIZE), (int) (engineLoad / 120.0 * SIZE));
         }
 
         int getRpmIndex() {
-            return (int) (rpm / 7000.0 * SIZE);
+            return rpmIndex;
         }
 
         private int getEngineLoadIndex() {
-            return (int) (engineLoad / 120.0 * SIZE);
+            return (int) engineLoadIndex;
         }
 
         public int PRESS_RT_32() {
@@ -45,7 +54,6 @@ public class FuelAutoTune {
     }
 
     public static class Result {
-
         private final double[][] kgbcRES;
 
         public Result(double[][] kgbcRES) {
@@ -58,11 +66,11 @@ public class FuelAutoTune {
     }
 
     // void MainWindow::calckGBC(double STEP)
-    public static Result process(boolean smooth, Collection<stDataOnline> dataECU, double STEP) {
+    public static Result process(boolean smooth, Collection<stDataOnline> dataECU, double STEP, double targetAFR) {
         double kgbcSQ[][] = new double[SIZE][SIZE];
         double kgbcSQsum = 0;
-        double kgbcSQsumLast = 0;
-        double minSQ, e, g;
+        double kgbcSQsumLast;
+        double minSQ;
         double step;
         double minSQtotal = 1e+15;
         double kgbcSQsumLastTotal = 1e+16;
@@ -72,18 +80,18 @@ public class FuelAutoTune {
 
 
         // let's could how many data points we have for each cell
-        int bkGBC[][] = new int[SIZE][SIZE];
+        int bkGBC[][] = new int[Fields.FUEL_LOAD_COUNT][Fields.FUEL_RPM_COUNT];
         for (stDataOnline data : dataECU) {
             bkGBC[data.PRESS_RT_32()][data.RPM_RT_32()]++;
         }
         // todo: add a comment what is this?
-        double kgbcRES[][] = new double[SIZE][SIZE];
-        double kgbcINIT[][] = new double[SIZE][SIZE];
+        double kgbcRES[][] = new double[Fields.FUEL_LOAD_COUNT][Fields.FUEL_RPM_COUNT];
+        double kgbcINIT[][] = new double[Fields.FUEL_LOAD_COUNT][Fields.FUEL_RPM_COUNT];
 
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                kgbcINIT[i][j] = 1;
-                kgbcRES[i][j] = 1;
+        for (int engineLoadIndex = 0; engineLoadIndex < Fields.FUEL_LOAD_COUNT; engineLoadIndex++) {
+            for (int rpmIndex = 0; rpmIndex < Fields.FUEL_RPM_COUNT; rpmIndex++) {
+                kgbcINIT[engineLoadIndex][rpmIndex] = 1;
+                kgbcRES[engineLoadIndex][rpmIndex] = 1;
             }
         }
 //        double addGbcTwatRES[] = new double[TEMP_CORR];
@@ -136,7 +144,7 @@ public class FuelAutoTune {
                         }
                         kgbcSQsumLast = kgbcSQsum;
 
-                        countDeviation(dataECU, kgbcSQ, kgbcRES, kgbcINIT, r, c);
+                        countDeviation(dataECU, kgbcSQ, kgbcRES, kgbcINIT, targetAFR);
 
                         kgbcSQsum = sumArray(kgbcSQ);
 
@@ -182,9 +190,8 @@ public class FuelAutoTune {
         }
     }
 
-    private static void countDeviation(Collection<stDataOnline> dataECU, double[][] kgbcSQ, double[][] kgbcRES, double[][] kgbcINIT, int r, int c) {
+    private static void countDeviation(Collection<stDataOnline> dataECU, double[][] kgbcSQ, double[][] kgbcRES, double[][] kgbcINIT, double targetAFR) {
         for (stDataOnline dataPoint : dataECU) {
-            double targetAFR = 13.0; // todo: target AFR? is this target AFR or not?
             double corrInit = 1; // addGbcTwatINIT_190[dataPoint.twat + 40];
             double corrRes = 1; //addGbcTwatRES_190[dataPoint.twat + 40];
             double tpsCorrInit = 1; //ktgbcINIT[dataPoint.THR_RT_16][dataPoint.RPM_RT_32()];
