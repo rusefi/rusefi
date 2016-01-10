@@ -19,6 +19,13 @@
 #include "rpm_calculator.h"
 #include "tps.h"
 
+// 60% duty cycle by default
+#define DEFAULT_IDLE_DUTY 60
+#define TPS_IDLE_LOCKOUT 5.0
+
+// todo: is not this value a bit too high?
+#define IDLE_PERIOD 1000
+
 static int lastGoodValue = DEFAULT_IDLE_DUTY;
 
 EXTERN_ENGINE
@@ -56,8 +63,16 @@ static percent_t setNewValue(IdleValveState *idle, int currentRpm, efitimems_t n
 	return newValue;
 }
 
+bool_t isTpsLockout(DECLARE_ENGINE_PARAMETER_F) {
+	// if we have TPS sensor, then use it
+	if (engineConfiguration->hasTpsSensor)
+		return getTPS(PASS_ENGINE_PARAMETER_F) > TPS_IDLE_LOCKOUT;
+	// TODO: if no TPS sensor then idle switch is our
+	return true;
+}
+
 static percent_t changeValue(IdleValveState *idle, int currentRpm, int now, const char * msg, percent_t delta DECLARE_ENGINE_PARAMETER_S) {
-	if (getTPS(PASS_ENGINE_PARAMETER_F) > 5.0) {
+	if (isTpsLockout(PASS_ENGINE_PARAMETER_F)) {
 		// We are not supposed to be in idle mode. Don't touch anything
 		idleDebug("TPS Lockout, TPS=", getTPS(PASS_ENGINE_PARAMETER_F));
 		return idle->value;
@@ -71,6 +86,7 @@ static percent_t changeValue(IdleValveState *idle, int currentRpm, int now, cons
  */
 percent_t IdleValveState::getIdle(int currentRpm, efitimems_t now DECLARE_ENGINE_PARAMETER_S) {
 	if (currentRpm == 0 || isCranking()) {
+		// todo: why hard-coded value during cranking
 		return setNewValue(this, currentRpm, now, "cranking value: ", DEFAULT_IDLE_DUTY);
 	}
 
