@@ -78,7 +78,7 @@ void writeToFlashNow(void) {
 	efitimems_t nowMs = currentTimeMillis();
 	int result = flashWrite(FLASH_ADDR, (const char *) &persistentState, PERSISTENT_SIZE);
 	scheduleMsg(logger, "Flash programmed in %dms", currentTimeMillis() - nowMs);
-	bool_t isSuccess = result == FLASH_RETURN_SUCCESS;
+	bool isSuccess = result == FLASH_RETURN_SUCCESS;
 	if (isSuccess) {
 		scheduleMsg(logger, FLASH_SUCCESS_MSG);
 	} else {

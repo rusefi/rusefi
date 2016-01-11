@@ -62,16 +62,16 @@ static Logging * logger;
 
 efitick_t lastDecodingErrorTime = US2NT(-10000000LL);
 // the boolean flag is a performance optimization so that complex comparison is avoided if no error
-bool_t someSortOfTriggerError = false;
+bool someSortOfTriggerError = false;
 
 /**
  * @return TRUE is something is wrong with trigger decoding
  */
-bool_t isTriggerDecoderError(void) {
+bool isTriggerDecoderError(void) {
 	return errorDetection.sum(6) > 4;
 }
 
-bool_t TriggerState::isValidIndex(DECLARE_ENGINE_PARAMETER_F) {
+bool TriggerState::isValidIndex(DECLARE_ENGINE_PARAMETER_F) {
 	return currentCycle.current_index < TRIGGER_SHAPE(size);
 }
 
@@ -145,7 +145,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	currentDuration =
 			currentDurationLong > 10 * US2NT(US_PER_SECOND_LL) ? 10 * US2NT(US_PER_SECOND_LL) : currentDurationLong;
 
-	bool_t isPrimary = triggerWheel == T_PRIMARY;
+	bool isPrimary = triggerWheel == T_PRIMARY;
 
 	if (isLessImportant(signal)) {
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
@@ -193,7 +193,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		}
 #endif
 
-		bool_t isSynchronizationPoint;
+		bool isSynchronizationPoint;
 
 		if (TRIGGER_SHAPE(isSynchronizationNeeded)) {
 			/**

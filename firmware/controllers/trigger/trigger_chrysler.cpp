@@ -26,7 +26,7 @@ void initDodgeRam(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 }
 
 void configureNeon2003TriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
-	bool_t useOnlyPrimary = false;
+	bool useOnlyPrimary = false;
 
 	s->initialize(FOUR_STROKE_CAM_SENSOR, !useOnlyPrimary);
 	s->useRiseEdge = true;

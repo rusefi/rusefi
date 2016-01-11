@@ -126,7 +126,7 @@ void LECalculator::push(le_action_e action, float value) {
 /**
  * @return true in case of error, false otherwise
  */
-bool_t LECalculator::doJob(Engine *engine, LEElement *element) {
+bool LECalculator::doJob(Engine *engine, LEElement *element) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	efiAssert(getRemainingStack(chThdSelf()) > 64, "FSIO logic", false);
 #endif
@@ -278,7 +278,7 @@ float LECalculator::getValue(Engine *engine) {
 	while (element != NULL) {
 		efiAssert(counter < 200, "FSIOcount", NAN); // just in case
 
-		bool_t isError = doJob(engine, element);
+		bool isError = doJob(engine, element);
 		if (isError) {
 			// error already reported
 			return NAN;

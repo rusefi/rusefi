@@ -124,7 +124,7 @@ float getRawMap(DECLARE_ENGINE_PARAMETER_F) {
 	return getMapByVoltage(voltage PASS_ENGINE_PARAMETER);
 }
 
-bool_t hasBaroSensor(DECLARE_ENGINE_PARAMETER_F) {
+bool hasBaroSensor(DECLARE_ENGINE_PARAMETER_F) {
 	return engineConfiguration->hasBaroSensor && engineConfiguration->baroSensor.hwChannel != EFI_ADC_NONE;
 }
 

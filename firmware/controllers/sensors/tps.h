@@ -13,7 +13,7 @@
 #include "global.h"
 #include "engine_configuration.h"
 
-bool_t hasPedalPositionSensor(DECLARE_ENGINE_PARAMETER_F);
+bool hasPedalPositionSensor(DECLARE_ENGINE_PARAMETER_F);
 percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_F);
 /**
  * Throttle Position Sensor

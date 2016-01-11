@@ -103,7 +103,7 @@ static void endSimultaniousInjection(Engine *engine) {
 
 extern WallFuel wallFuel;
 
-static ALWAYS_INLINE void handleFuelInjectionEvent(bool_t limitedFuel, InjectionEvent *event,
+static ALWAYS_INLINE void handleFuelInjectionEvent(bool limitedFuel, InjectionEvent *event,
 		int rpm DECLARE_ENGINE_PARAMETER_S) {
 	/**
 	 * todo: this is a bit tricky with batched injection. is it? Does the same
@@ -160,7 +160,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(bool_t limitedFuel, Injection
 	}
 }
 
-static ALWAYS_INLINE void handleFuel(bool_t limitedFuel, uint32_t eventIndex, int rpm DECLARE_ENGINE_PARAMETER_S) {
+static ALWAYS_INLINE void handleFuel(bool limitedFuel, uint32_t eventIndex, int rpm DECLARE_ENGINE_PARAMETER_S) {
 	if (!isInjectionEnabled(engine->engineConfiguration))
 		return;
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#3");
@@ -192,7 +192,7 @@ static ALWAYS_INLINE void handleFuel(bool_t limitedFuel, uint32_t eventIndex, in
 	}
 }
 
-static ALWAYS_INLINE void handleSparkEvent(bool_t limitedSpark, uint32_t eventIndex, IgnitionEvent *iEvent,
+static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t eventIndex, IgnitionEvent *iEvent,
 		int rpm DECLARE_ENGINE_PARAMETER_S) {
 
 	float dwellMs = engine->engineState.sparkDwell;
@@ -261,7 +261,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool_t limitedSpark, uint32_t eventIn
 	}
 }
 
-static ALWAYS_INLINE void handleSpark(bool_t limitedSpark, uint32_t eventIndex, int rpm,
+static ALWAYS_INLINE void handleSpark(bool limitedSpark, uint32_t eventIndex, int rpm,
 		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
 	if (!isValidRpm(rpm) || !engineConfiguration->isIgnitionEnabled)
 		return; // this might happen for instance in case of a single trigger event after a pause
@@ -323,7 +323,7 @@ static ALWAYS_INLINE void ignitionMathCalc(int rpm DECLARE_ENGINE_PARAMETER_S) {
 /**
  * this field is used as an Expression in IAR debugger
  */
-uint32_t *cyccnt = (uint32_t*) &DWT_CYCCNT;
+uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
 #endif
 
 static ALWAYS_INLINE void scheduleIgnitionAndFuelEvents(int rpm, int revolutionIndex DECLARE_ENGINE_PARAMETER_S) {
@@ -407,8 +407,8 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 		// TODO: add 'pin shutdown' invocation somewhere - coils might be still open here!
 		return;
 	}
-	bool_t limitedSpark = rpm > engineConfiguration->rpmHardLimit;
-	bool_t limitedFuel = rpm > engineConfiguration->rpmHardLimit;
+	bool limitedSpark = rpm > engineConfiguration->rpmHardLimit;
+	bool limitedFuel = rpm > engineConfiguration->rpmHardLimit;
 	if (limitedSpark || limitedFuel) {
 		warning(OBD_PCM_Processor_Fault, "skipping stroke due to rpm=%d", rpm);
 	}

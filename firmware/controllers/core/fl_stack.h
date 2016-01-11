@@ -20,7 +20,7 @@ public:
 	void reset();
 	T pop();
 	T get(int index);
-	bool_t remove(T value);
+	bool remove(T value);
 	int size();
 	bool isEmpty();
 private:
@@ -45,7 +45,7 @@ void FLStack<T, MAXSIZE>::reset() {
 }
 
 template<typename T, int MAXSIZE>
-bool_t FLStack<T, MAXSIZE>::remove(T value) {
+bool FLStack<T, MAXSIZE>::remove(T value) {
 	for (int i = 0; i < currentSize; i++) {
 		if (values[i] == value) {
 			values[0] = values[currentSize - 1];

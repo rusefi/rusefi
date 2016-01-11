@@ -44,7 +44,7 @@ void removeError(obd_code_e errorCode) {
 	}
 }
 
-void setError(bool_t isError, obd_code_e errorCode) {
+void setError(bool isError, obd_code_e errorCode) {
 	if (isError)
 		addError(errorCode);
 	else

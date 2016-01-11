@@ -114,7 +114,7 @@ void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
 }
 
 void FuelSchedule::registerInjectionEvent(int injectorIndex, float angle,
-		bool_t isSimultanious DECLARE_ENGINE_PARAMETER_S) {
+		bool isSimultanious DECLARE_ENGINE_PARAMETER_S) {
 
 	NamedOutputPin *output = &enginePins.injectors[injectorIndex];
 

@@ -53,7 +53,7 @@ public:
 	efitime_t getStartOfRevolutionIndex();
 	void decodeTriggerEvent(trigger_event_e const signal, efitime_t nowUs DECLARE_ENGINE_PARAMETER_S);
 
-	bool_t isValidIndex(DECLARE_ENGINE_PARAMETER_F);
+	bool isValidIndex(DECLARE_ENGINE_PARAMETER_F);
 	float getTriggerDutyCycle(int index);
 	TriggerStateCallback cycleCallback;
 
@@ -120,7 +120,7 @@ class Engine;
 void initTriggerDecoder(void);
 void initTriggerDecoderLogger(Logging *sharedLogger);
 
-bool_t isTriggerDecoderError(void);
+bool isTriggerDecoderError(void);
 
 #define considerEventForGap() (!TRIGGER_SHAPE(useOnlyPrimaryForSync) || isPrimary)
 

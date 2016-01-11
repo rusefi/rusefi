@@ -37,13 +37,13 @@ static LoggingWithStorage logger("InjectorCentral");
 EXTERN_ENGINE
 ;
 
-static bool_t isRunningBench = false;
+static bool isRunningBench = false;
 
 static int is_injector_enabled[MAX_INJECTOR_COUNT];
 
 extern engine_pins_s enginePins;
 
-bool_t isRunningBenchTest(void) {
+bool isRunningBenchTest(void) {
 	return isRunningBench;
 }
 
@@ -112,7 +112,7 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 	isRunningBench = false;
 }
 
-static volatile bool_t needToRunBench = false;
+static volatile bool needToRunBench = false;
 static float onTime;
 static float offTime;
 static float delayMs;

@@ -23,7 +23,7 @@ public:
 	schfunc_t callback;
 	void *param;
 	scheduling_s *next;
-	bool_t isScheduled;
+	bool isScheduled;
 };
 
 void scheduleTask(const char *prefix, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param);

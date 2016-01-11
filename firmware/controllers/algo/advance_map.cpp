@@ -52,7 +52,7 @@ static const ignition_table_t defaultIatTiming = {
 		{-4.4, -4.9, -5.9, -5.9, -5.9, -5.9, -4.9, -4.9, -4.9, -4.9, -4.9, -3.9, -3.9, -3.9, -3.9, -3.9},
 };
 
-bool_t isStep1Condition(int rpm DECLARE_ENGINE_PARAMETER_S) {
+bool isStep1Condition(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	return  boardConfiguration->enabledStep1Limiter && rpm >= engineConfiguration->step1rpm;
 }
 

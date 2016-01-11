@@ -21,10 +21,10 @@
 class OutputPin {
 public:
 	OutputPin();
-	bool_t isInitialized();
+	bool isInitialized();
 	void setValue(int logicValue);
 	void setDefaultPinState(pin_output_mode_e *defaultState);
-	bool_t getLogicValue();
+	bool getLogicValue();
 	void unregister();
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	GPIO_TypeDef *port;

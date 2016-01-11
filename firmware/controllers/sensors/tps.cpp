@@ -102,7 +102,7 @@ static float getPrimatyRawTPS(DECLARE_ENGINE_PARAMETER_F) {
 
 #define NO_TPS_MAGIC_VALUE 66.611
 
-bool_t hasPedalPositionSensor(DECLARE_ENGINE_PARAMETER_F) {
+bool hasPedalPositionSensor(DECLARE_ENGINE_PARAMETER_F) {
 	return engineConfiguration->pedalPositionChannel != EFI_ADC_NONE;
 }
 

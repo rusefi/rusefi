@@ -74,7 +74,7 @@ bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_F) {
 	 * note that the result of this subtraction could be negative, that would happen if
 	 * we have a trigger event between the time we've invoked 'getTimeNow' and here
 	 */
-	bool_t result = nowNt - lastRpmEventTimeNt < US2NT(US_PER_SECOND_LL);
+	bool result = nowNt - lastRpmEventTimeNt < US2NT(US_PER_SECOND_LL);
 	if (!result) {
 		notRunnintNow = nowNt;
 		notRunningPrev = lastRpmEventTimeNt;
