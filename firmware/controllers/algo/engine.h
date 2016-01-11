@@ -44,7 +44,7 @@ public:
 	int eventsCount;
 private:
 	void clear();
-	void registerInjectionEvent(int injectorIndex, float angle, bool_t isSimultanious DECLARE_ENGINE_PARAMETER_S);
+	void registerInjectionEvent(int injectorIndex, float angle, bool isSimultanious DECLARE_ENGINE_PARAMETER_S);
 };
 
 /**
@@ -231,19 +231,19 @@ public:
 	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_F);
 	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_F);
 
-	bool_t clutchUpState;
-	bool_t clutchDownState;
+	bool clutchUpState;
+	bool clutchDownState;
 
-	bool_t isRunningPwmTest;
+	bool isRunningPwmTest;
 
 	/**
 	 * Are we experiencing knock right now?
 	 */
-	bool_t knockNow;
+	bool knockNow;
 	/**
 	 * Have we experienced knock since engine was started?
 	 */
-	bool_t knockEver;
+	bool knockEver;
 	/**
      * KnockCount is directly proportional to the degrees of ignition
      * advance removed
@@ -252,7 +252,7 @@ public:
 
     float knockVolts;
 
-    bool_t knockDebug;
+    bool knockDebug;
 
 	efitimeus_t timeOfLastKnockEvent;
 
@@ -260,7 +260,7 @@ public:
 	 * are we running any kind of functional test? this affect
 	 * some areas
 	 */
-	bool_t isTestMode;
+	bool isTestMode;
 
 	TriggerShape triggerShape;
 
@@ -296,7 +296,7 @@ public:
 	 * This field is true if we are in 'cylinder cleanup' state right now
 	 * see isCylinderCleanupEnabled
 	 */
-	bool_t isCylinderCleanupMode;
+	bool isCylinderCleanupMode;
 
 	/**
 	 * value of 'triggerShape.getLength()'
@@ -339,8 +339,8 @@ private:
 	 * 'running' means RPM are above crankingRpm
 	 * 'spinning' means the engine is not stopped
 	 */
-	bool_t isSpinning;
-	bool_t stopPins();
+	bool isSpinning;
+	bool stopPins();
 };
 
 /**

@@ -41,7 +41,7 @@ public:
 	 * This is a performance optimization - it's more efficient to handle all
 	 * injectors together if that's the case
 	 */
-	bool_t isSimultanious;
+	bool isSimultanious;
 };
 
 class IgnitionEvent {

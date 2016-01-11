@@ -214,14 +214,14 @@ typedef struct {
 	trigger_type_e type;
 	/**
 	offset 4 bit 0 */
-	bool_t customIsSynchronizationNeeded : 1;
+	bool customIsSynchronizationNeeded : 1;
 	/**
 	offset 4 bit 1 */
-	bool_t customNeedSecondTriggerInput : 1;
+	bool customNeedSecondTriggerInput : 1;
 	/**
 	 * This option could be used if your second trigger channel is broken
 	offset 4 bit 2 */
-	bool_t useOnlyFirstChannel : 1;
+	bool useOnlyFirstChannel : 1;
 	/**
 	 * offset 8
 	 */
@@ -540,43 +540,43 @@ typedef struct {
 	pin_output_mode_e o2heaterPinModeTodO;
 	/**
 	offset 384 bit 0 */
-	bool_t is_enabled_spi_1 : 1;
+	bool is_enabled_spi_1 : 1;
 	/**
 	offset 384 bit 1 */
-	bool_t is_enabled_spi_2 : 1;
+	bool is_enabled_spi_2 : 1;
 	/**
 	offset 384 bit 2 */
-	bool_t is_enabled_spi_3 : 1;
+	bool is_enabled_spi_3 : 1;
 	/**
 	offset 384 bit 3 */
-	bool_t isSdCardEnabled : 1;
+	bool isSdCardEnabled : 1;
 	/**
 	offset 384 bit 4 */
-	bool_t isFastAdcEnabled : 1;
+	bool isFastAdcEnabled : 1;
 	/**
 	offset 384 bit 5 */
-	bool_t isEngineControlEnabled : 1;
+	bool isEngineControlEnabled : 1;
 	/**
 	offset 384 bit 6 */
-	bool_t isHip9011Enabled : 1;
+	bool isHip9011Enabled : 1;
 	/**
 	offset 384 bit 7 */
-	bool_t isVerboseAlternator : 1;
+	bool isVerboseAlternator : 1;
 	/**
 	offset 384 bit 8 */
-	bool_t useSerialPort : 1;
+	bool useSerialPort : 1;
 	/**
 	offset 384 bit 9 */
-	bool_t useStepperIdle : 1;
+	bool useStepperIdle : 1;
 	/**
 	offset 384 bit 10 */
-	bool_t enabledStep1Limiter : 1;
+	bool enabledStep1Limiter : 1;
 	/**
 	offset 384 bit 11 */
-	bool_t useTpicAdvancedMode : 1;
+	bool useTpicAdvancedMode : 1;
 	/**
 	offset 384 bit 12 */
-	bool_t useLcdScreen : 1;
+	bool useLcdScreen : 1;
 	/**
 	 * offset 388
 	 */
@@ -762,7 +762,7 @@ typedef struct {
 	 * Should the trigger emulator push data right into trigger input, eliminating the need for physical jumper wires?
 	 * PS: Funny name, right? :)
 	offset 80 bit 0 */
-	bool_t directSelfStimulation : 1;
+	bool directSelfStimulation : 1;
 	/**
 	 * todo: extract these two fields into a structure
 	 * todo: we need two sets of TPS parameters - modern ETBs have two sensors
@@ -1041,68 +1041,68 @@ typedef struct {
 	/**
 	 * @see isMapAveragingEnabled
 	offset 1496 bit 0 */
-	bool_t hasMapSensor : 1;
+	bool hasMapSensor : 1;
 	/**
 	offset 1496 bit 1 */
-	bool_t hasIatSensor : 1;
+	bool hasIatSensor : 1;
 	/**
 	offset 1496 bit 2 */
-	bool_t hasBaroSensor : 1;
+	bool hasBaroSensor : 1;
 	/**
 	offset 1496 bit 3 */
-	bool_t hasAfrSensor : 1;
+	bool hasAfrSensor : 1;
 	/**
 	offset 1496 bit 4 */
-	bool_t useConstantDwellDuringCranking : 1;
+	bool useConstantDwellDuringCranking : 1;
 	/**
 	 * This options enables data for 'engine sniffer' tab in console, which comes at some CPU price
 	offset 1496 bit 5 */
-	bool_t isEngineChartEnabled : 1;
+	bool isEngineChartEnabled : 1;
 	/**
 	offset 1496 bit 6 */
-	bool_t isCanEnabled : 1;
+	bool isCanEnabled : 1;
 	/**
 	offset 1496 bit 7 */
-	bool_t hasCltSensor : 1;
+	bool hasCltSensor : 1;
 	/**
 	offset 1496 bit 8 */
-	bool_t canReadEnabled : 1;
+	bool canReadEnabled : 1;
 	/**
 	offset 1496 bit 9 */
-	bool_t canWriteEnabled : 1;
+	bool canWriteEnabled : 1;
 	/**
 	offset 1496 bit 10 */
-	bool_t hasVehicleSpeedSensor : 1;
+	bool hasVehicleSpeedSensor : 1;
 	/**
 	offset 1496 bit 11 */
-	bool_t isJoystickEnabled : 1;
+	bool isJoystickEnabled : 1;
 	/**
 	offset 1496 bit 12 */
-	bool_t isGpsEnabled : 1;
+	bool isGpsEnabled : 1;
 	/**
 	offset 1496 bit 13 */
-	bool_t isAlternatorControlEnabled : 1;
+	bool isAlternatorControlEnabled : 1;
 	/**
 	offset 1496 bit 14 */
-	bool_t hasMafSensor : 1;
+	bool hasMafSensor : 1;
 	/**
 	offset 1496 bit 15 */
-	bool_t hasTpsSensor : 1;
+	bool hasTpsSensor : 1;
 	/**
 	offset 1496 bit 16 */
-	bool_t cutFuelOnHardLimit : 1;
+	bool cutFuelOnHardLimit : 1;
 	/**
 	offset 1496 bit 17 */
-	bool_t cutSparkOnHardLimit : 1;
+	bool cutSparkOnHardLimit : 1;
 	/**
 	offset 1496 bit 18 */
-	bool_t step1fuelCutEnable : 1;
+	bool step1fuelCutEnable : 1;
 	/**
 	offset 1496 bit 19 */
-	bool_t step1SparkCutEnable : 1;
+	bool step1SparkCutEnable : 1;
 	/**
 	offset 1496 bit 20 */
-	bool_t hasFrequencyReportingMapSensor : 1;
+	bool hasFrequencyReportingMapSensor : 1;
 	/**
 	 * offset 1500
 	 */
@@ -1113,58 +1113,58 @@ typedef struct {
 	idle_mode_e idleMode;
 	/**
 	offset 1508 bit 0 */
-	bool_t isInjectionEnabled : 1;
+	bool isInjectionEnabled : 1;
 	/**
 	offset 1508 bit 1 */
-	bool_t isIgnitionEnabled : 1;
+	bool isIgnitionEnabled : 1;
 	/**
 	offset 1508 bit 2 */
-	bool_t isCylinderCleanupEnabled : 1;
+	bool isCylinderCleanupEnabled : 1;
 	/**
 	offset 1508 bit 3 */
-	bool_t secondTriggerChannelEnabled : 1;
+	bool secondTriggerChannelEnabled : 1;
 	/**
 	offset 1508 bit 4 */
-	bool_t needSecondTriggerInputDeprecated : 1;
+	bool needSecondTriggerInputDeprecated : 1;
 	/**
 	offset 1508 bit 5 */
-	bool_t isMapAveragingEnabled : 1;
+	bool isMapAveragingEnabled : 1;
 	/**
 	offset 1508 bit 6 */
-	bool_t isMilEnabled : 1;
+	bool isMilEnabled : 1;
 	/**
 	offset 1508 bit 7 */
-	bool_t isFuelPumpEnabled : 1;
+	bool isFuelPumpEnabled : 1;
 	/**
 	offset 1508 bit 8 */
-	bool_t isTunerStudioEnabled : 1;
+	bool isTunerStudioEnabled : 1;
 	/**
 	offset 1508 bit 9 */
-	bool_t isWaveAnalyzerEnabled : 1;
+	bool isWaveAnalyzerEnabled : 1;
 	/**
 	offset 1508 bit 10 */
-	bool_t isIdleThreadEnabled : 1;
+	bool isIdleThreadEnabled : 1;
 	/**
 	offset 1508 bit 11 */
-	bool_t isPrintTriggerSynchDetails : 1;
+	bool isPrintTriggerSynchDetails : 1;
 	/**
 	 * Usually if we have no trigger events that means engine is stopped
 	 * Unless we are troubleshooting and spinning the engine by hand - this case a longer
 	 * delay is needed
 	offset 1508 bit 12 */
-	bool_t isManualSpinningMode : 1;
+	bool isManualSpinningMode : 1;
 	/**
 	 * This is needed if batched injection and individual injector wiring
 	offset 1508 bit 13 */
-	bool_t twoWireBatchInjection : 1;
+	bool twoWireBatchInjection : 1;
 	/**
 	 * See #172
 	offset 1508 bit 14 */
-	bool_t useOnlyFrontForTrigger : 1;
+	bool useOnlyFrontForTrigger : 1;
 	/**
 	 * This is needed if batched igniton (waster spark) and individual coil wiring
 	offset 1508 bit 15 */
-	bool_t twoWireBatchIgnition : 1;
+	bool twoWireBatchIgnition : 1;
 	/**
 	 * offset 1512
 	 */

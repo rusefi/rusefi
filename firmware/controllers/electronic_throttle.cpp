@@ -62,7 +62,7 @@ static float currentEtbDuty;
 
 EXTERN_ENGINE;
 
-static bool_t wasEtbBraking = false;
+static bool wasEtbBraking = false;
 
 static msg_t etbThread(void *arg) {
         UNUSED(arg);
@@ -74,7 +74,7 @@ static msg_t etbThread(void *arg) {
 
 		etbPwmUp.setSimplePwmDutyCycle(currentEtbDuty / 100);
 
-		bool_t needEtbBraking = absF(pedal - tps) < 3;
+		bool needEtbBraking = absF(pedal - tps) < 3;
 		if (needEtbBraking != wasEtbBraking) {
 			scheduleMsg(&logger, "need ETB braking: %d", needEtbBraking);
 			wasEtbBraking = needEtbBraking;

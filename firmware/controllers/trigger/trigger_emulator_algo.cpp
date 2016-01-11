@@ -33,7 +33,7 @@ TriggerEmulatorHelper::TriggerEmulatorHelper() {
 }
 
 // this is not the only place where we have 'isUpEvent'. todo: reuse
-static bool_t isUpEvent[6] = { false, true, false, true, false, true };
+static bool isUpEvent[6] = { false, true, false, true, false, true };
 
 EXTERN_ENGINE
 ;
@@ -46,13 +46,13 @@ static void fireShaftSignal(trigger_event_e signal) {
 void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIndex) {
 	int prevIndex = (stateIndex + state->phaseCount - 1) % state->phaseCount;
 
-	bool_t primaryWheelState = state->multiWave.waves[0].pinStates[prevIndex];
+	bool primaryWheelState = state->multiWave.waves[0].pinStates[prevIndex];
 	int newPrimaryWheelState = state->multiWave.waves[0].pinStates[stateIndex];
 
-	bool_t secondaryWheelState = state->multiWave.waves[1].pinStates[prevIndex];
+	bool secondaryWheelState = state->multiWave.waves[1].pinStates[prevIndex];
 	int newSecondaryWheelState = state->multiWave.waves[1].pinStates[stateIndex];
 
-	bool_t thirdWheelState = state->multiWave.waves[2].pinStates[prevIndex];
+	bool thirdWheelState = state->multiWave.waves[2].pinStates[prevIndex];
 	int new3rdWheelState = state->multiWave.waves[2].pinStates[stateIndex];
 
 	if (primaryWheelState != newPrimaryWheelState) {

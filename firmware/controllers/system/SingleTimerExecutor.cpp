@@ -73,7 +73,7 @@ void Executor::scheduleByTime(scheduling_s *scheduling, efitimeus_t timeUs, schf
 		// this would guard the queue and disable interrupts
 		lockAnyContext();
 	}
-	bool_t needToResetTimer = queue.insertTask(scheduling, US2NT(timeUs), callback, param);
+	bool needToResetTimer = queue.insertTask(scheduling, US2NT(timeUs), callback, param);
 	if (!reentrantFlag) {
 		doExecute();
 		if (needToResetTimer) {

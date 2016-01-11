@@ -36,8 +36,8 @@ public:
 	TriggerShape();
 	void initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_S);
 
-	bool_t isSynchronizationNeeded;
-	bool_t needSecondTriggerInput;
+	bool isSynchronizationNeeded;
+	bool needSecondTriggerInput;
 
 	/**
 	 * duty cycle for each individual trigger channel
@@ -83,18 +83,18 @@ public:
 	 * In case of a multi-channel trigger, do we want to sync based on primary channel only?
 	 * See also gapBothDirections
 	 */
-	bool_t useOnlyPrimaryForSync;
+	bool useOnlyPrimaryForSync;
 	/**
 	 * Should we use falls or rises for gap ratio detection?
 	 * todo: combine this flag with gapBothDirections?
 	 */
-	bool_t useRiseEdge;
+	bool useRiseEdge;
 	/**
 	 * This is about selecting signal edges within partictular trigger channels.
 	 * Should we measure gaps with both fall and rise signal edges?
 	 * See also useOnlyPrimaryForSync
 	 */
-	bool_t gapBothDirections;
+	bool gapBothDirections;
 
 	/**
 	 * This is used for signal validation
@@ -124,7 +124,7 @@ public:
 	/**
 	 * This is a pretty questionable option which is considered by 'addEvent' method
 	 */
-	bool_t invertOnAdd;
+	bool invertOnAdd;
 	/**
 	 * Total count of shaft events per CAM or CRANK shaft revolution.
 	 * TODO this should be migrated to CRANKshaft revolution, this would go together

@@ -26,14 +26,14 @@ void TriggerStimulatorHelper::nextStep(TriggerState *state, TriggerShape * shape
 
 	int time = (int) (SIMULATION_CYCLE_PERIOD * (loopIndex + shape->wave.getSwitchTime(stateIndex)));
 
-	bool_t primaryWheelState = shape->wave.getChannelState(0, prevIndex);
-	bool_t newPrimaryWheelState = shape->wave.getChannelState(0, stateIndex);
+	bool primaryWheelState = shape->wave.getChannelState(0, prevIndex);
+	bool newPrimaryWheelState = shape->wave.getChannelState(0, stateIndex);
 
-	bool_t secondaryWheelState = shape->wave.getChannelState(1, prevIndex);
-	bool_t newSecondaryWheelState = shape->wave.getChannelState(1, stateIndex);
+	bool secondaryWheelState = shape->wave.getChannelState(1, prevIndex);
+	bool newSecondaryWheelState = shape->wave.getChannelState(1, stateIndex);
 
-	bool_t thirdWheelState = shape->wave.getChannelState(2, prevIndex);
-	bool_t new3rdWheelState = shape->wave.getChannelState(2, stateIndex);
+	bool thirdWheelState = shape->wave.getChannelState(2, prevIndex);
+	bool new3rdWheelState = shape->wave.getChannelState(2, stateIndex);
 
 	if (primaryWheelState != newPrimaryWheelState) {
 		primaryWheelState = newPrimaryWheelState;

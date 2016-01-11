@@ -13,7 +13,7 @@ float getMaf(DECLARE_ENGINE_PARAMETER_F) {
 	return getMafT(engineConfiguration);
 }
 
-bool_t hasMafSensor(DECLARE_ENGINE_PARAMETER_F) {
+bool hasMafSensor(DECLARE_ENGINE_PARAMETER_F) {
 	return engineConfiguration->hasMafSensor && engineConfiguration->mafAdcChannel != EFI_ADC_NONE;
 }
 

@@ -21,7 +21,7 @@ static LoggingWithStorage logger("error handling");
 #define WARNING_PREFIX "WARNING: "
 
 extern int warningEnabled;
-extern bool_t main_loop_started;
+extern bool main_loop_started;
 
 const char *dbg_panic_file;
 int dbg_panic_line;
@@ -111,7 +111,7 @@ void initErrorHandling(void) {
 }
 
 extern VTList vtlist;
-extern bool_t main_loop_started;
+extern bool main_loop_started;
 
 int getVtSizeEstimate(void) {
 	VirtualTimer *first = vtlist.vt_next;

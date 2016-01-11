@@ -14,7 +14,7 @@ void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S);
  */
 float getRawMap(DECLARE_ENGINE_PARAMETER_F);
 float getBaroPressure(DECLARE_ENGINE_PARAMETER_F);
-bool_t hasBaroSensor(DECLARE_ENGINE_PARAMETER_F);
+bool hasBaroSensor(DECLARE_ENGINE_PARAMETER_F);
 /**
  * @return MAP value averaged within a window of measurement
  */

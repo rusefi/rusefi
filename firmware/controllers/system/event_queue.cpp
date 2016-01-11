@@ -38,7 +38,7 @@ bool EventQueue::checkIfPending(scheduling_s *scheduling) {
 /**
  * @return true if inserted into the head of the list
  */
-bool_t EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t callback, void *param) {
+bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t callback, void *param) {
 #if EFI_UNIT_TEST
 	assertListIsSorted();
 #endif

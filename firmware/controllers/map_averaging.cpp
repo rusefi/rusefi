@@ -84,7 +84,7 @@ static scheduling_s endTimer[INJECTION_PIN_COUNT][2];
  * that's a performance optimization: let's not bother averaging
  * if we are outside of of the window
  */
-static bool_t isAveraging = false;
+static bool isAveraging = false;
 
 static void startAveraging(void *arg) {
 	(void) arg;

@@ -219,7 +219,7 @@ ThermistorMath::ThermistorMath() {
 }
 
 void ThermistorMath::init(thermistor_conf_s *config) {
-	bool_t isSameConfig = memcmp(config, &currentConfig, sizeof(currentConfig)) == 0;
+	bool isSameConfig = memcmp(config, &currentConfig, sizeof(currentConfig)) == 0;
 	if (isSameConfig) {
 		return;
 	}
