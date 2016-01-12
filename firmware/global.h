@@ -59,6 +59,8 @@ typedef EventListener event_listener_t;
 typedef Thread thread_t;
 
 #define THD_WORKING_AREA WORKING_AREA
+#define THD_FUNCTION(tname, arg) void tname(void *arg)
+
 
 #if EFI_PROD_CODE
 
