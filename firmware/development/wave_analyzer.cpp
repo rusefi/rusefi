@@ -151,7 +151,7 @@ static void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index
 	previousEngineCycleTimeUs = nowUs;
 }
 
-static msg_t waThread(void *arg) {
+static THD_FUNCTION(waThread, arg) {
 	(void)arg;
 	chRegSetThreadName("Wave Analyzer");
 #if EFI_ENGINE_SNIFFER
@@ -161,9 +161,6 @@ static msg_t waThread(void *arg) {
 		waveChart.publishChartIfFull();
 	}
 #endif /* EFI_ENGINE_SNIFFER */
-#if defined __GNUC__
-	return -1;
-#endif
 }
 
 static uint32_t getWaveLowWidth(int index) {
@@ -256,7 +253,7 @@ void initWaveAnalyzer(Logging *sharedLogger) {
 
 	addConsoleActionII("set_logic_input_mode", setWaveModeSilent);
 
-	chThdCreateStatic(waThreadStack, sizeof(waThreadStack), NORMALPRIO, waThread, (void*) NULL);
+	chThdCreateStatic(waThreadStack, sizeof(waThreadStack), NORMALPRIO, (tfunc_t)waThread, NULL);
 
 #else
 	print("wave disabled\r\n");
