@@ -131,6 +131,8 @@ static void setFsioOutputPin(const char *indexStr, const char *pinName) {
 }
 #endif /* EFI_PROD_CODE */
 
+#endif
+
 void setFsioExt(int index, brain_pin_e pin, const char * exp, int freq DECLARE_ENGINE_PARAMETER_S) {
 	boardConfiguration->fsioPins[index] = pin;
 	int len = strlen(exp);
@@ -144,8 +146,6 @@ void setFsioExt(int index, brain_pin_e pin, const char * exp, int freq DECLARE_E
 void setFsio(int index, brain_pin_e pin, const char * exp DECLARE_ENGINE_PARAMETER_S) {
 	setFsioExt(index, pin, exp, NO_PWM PASS_ENGINE_PARAMETER);
 }
-
-#endif
 
 void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
@@ -321,6 +321,7 @@ static pin_output_mode_e defa = OM_DEFAULT;
 #endif /* EFI_PROD_CODE */
 
 static void showFsio(const char *msg, LEElement *element) {
+#if EFI_PROD_CODE || EFI_SIMULATOR
 	if (msg != NULL)
 		scheduleMsg(logger, "%s:", msg);
 	while (element != NULL) {
@@ -328,9 +329,11 @@ static void showFsio(const char *msg, LEElement *element) {
 		element = element->next;
 	}
 	scheduleMsg(logger, "<end>");
+#endif
 }
 
 static void showFsioInfo(void) {
+#if EFI_PROD_CODE || EFI_SIMULATOR
 	scheduleMsg(logger, "sys used %d/user used %d", sysPool.getSize(), userPool.getSize());
 	showFsio("a/c", acRelayLogic);
 	showFsio("fuel", fuelPumpLogic);
@@ -363,12 +366,14 @@ static void showFsioInfo(void) {
 			scheduleMsg(logger, "FSIO digital input #%d: %s", i, hwPortname(inputPin));
 		}
 	}
+#endif
 }
 
 /**
  * set_fsio_setting 0 0.11
  */
 static void setFsioSetting(float indexF, float value) {
+#if EFI_PROD_CODE || EFI_SIMULATOR
 	int index = indexF;
 	if (index < 0 || index >= LE_COMMAND_COUNT) {
 		scheduleMsg(logger, "invalid index %d", index);
@@ -376,9 +381,11 @@ static void setFsioSetting(float indexF, float value) {
 	}
 	engineConfiguration->bc.fsio_setting[index] = value;
 	showFsioInfo();
+#endif
 }
 
 static void setFsioExpression(const char *indexStr, const char *quotedLine, Engine *engine) {
+#if EFI_PROD_CODE || EFI_SIMULATOR
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= LE_COMMAND_COUNT) {
 		scheduleMsg(logger, "invalid index %d", index);
@@ -395,9 +402,11 @@ static void setFsioExpression(const char *indexStr, const char *quotedLine, Engi
 	// this would apply the changes
 	applyFsioConfiguration(PASS_ENGINE_PARAMETER_F);
 	showFsioInfo();
+#endif
 }
 
 static void eval(char *line, Engine *engine) {
+#if EFI_PROD_CODE || EFI_SIMULATOR
 	line = unquote(line);
 	scheduleMsg(logger, "Parsing [%s]", line);
 	evalPool.reset();
@@ -408,10 +417,13 @@ static void eval(char *line, Engine *engine) {
 		float result = evalCalc.getValue2(e, engine);
 		scheduleMsg(logger, "Eval result: %f", result);
 	}
+#endif
 }
 
 void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
+#if EFI_PROD_CODE || EFI_SIMULATOR
 	logger = sharedLogger;
+#endif
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		fsioLogics[i] = NULL;
 	}
@@ -453,13 +465,12 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 
 #endif /* EFI_PROD_CODE */
 
+#if EFI_PROD_CODE || EFI_SIMULATOR
 	addConsoleActionSSP("set_fsio_expression", (VoidCharPtrCharPtrVoidPtr) setFsioExpression, engine);
-
 	addConsoleActionFF("set_fsio_setting", setFsioSetting);
-
 	addConsoleAction("fsioinfo", showFsioInfo);
-
 	addConsoleActionSP("eval", (VoidCharPtrVoidPtr) eval, engine);
+#endif
 }
 
 
