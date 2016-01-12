@@ -9,7 +9,6 @@
 #include "rfi_perftest.h"
 #include "fuel_math.h"
 
-#include "test.h"
 #include "eficonsole.h"
 #include "time.h"
 #include "engine_math.h"
@@ -19,6 +18,7 @@
 #include "engine.h"
 
 #if EFI_PERF_METRICS || defined(__DOXYGEN__)
+#include "test.h"
 
 static Logging* logger;
 
