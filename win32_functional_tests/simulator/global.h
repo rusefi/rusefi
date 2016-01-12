@@ -93,7 +93,8 @@ typedef EventListener event_listener_t;
 		extern engine_configuration_s *engineConfiguration; \
 		extern board_configuration_s *boardConfiguration; \
 		extern persistent_config_s *config; \
-		extern persistent_config_container_s persistentState
+		extern persistent_config_container_s persistentState; \
+		extern engine_configuration2_s * engineConfiguration2
 
 #define DECLARE_ENGINE_PARAMETER_F void
 #define DECLARE_ENGINE_PARAMETER_S

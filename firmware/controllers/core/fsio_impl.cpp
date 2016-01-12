@@ -90,7 +90,6 @@ float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 	}
 }
 
-#endif
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 
@@ -130,7 +129,7 @@ static void setFsioOutputPin(const char *indexStr, const char *pinName) {
 	boardConfiguration->fsioPins[index] = pin;
 	scheduleMsg(logger, "FSIO output pin #%d [%s]", (index + 1), hwPortname(pin));
 }
-#endif
+#endif /* EFI_PROD_CODE */
 
 void setFsioExt(int index, brain_pin_e pin, const char * exp, int freq DECLARE_ENGINE_PARAMETER_S) {
 	boardConfiguration->fsioPins[index] = pin;
@@ -145,6 +144,8 @@ void setFsioExt(int index, brain_pin_e pin, const char * exp, int freq DECLARE_E
 void setFsio(int index, brain_pin_e pin, const char * exp DECLARE_ENGINE_PARAMETER_S) {
 	setFsioExt(index, pin, exp, NO_PWM PASS_ENGINE_PARAMETER);
 }
+
+#endif
 
 void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
@@ -272,6 +273,53 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element, En
 	}
 }
 
+static void setFsioFrequency(int index, int frequency) {
+	index--;
+	if (index < 0 || index >= LE_COMMAND_COUNT) {
+		scheduleMsg(logger, "invalid index %d", index);
+		return;
+	}
+	boardConfiguration->fsioFrequency[index] = frequency;
+	scheduleMsg(logger, "Setting FSIO frequency %d on #%d", frequency, index + 1);
+}
+
+void runFsio(void) {
+	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
+		handleFsio(engine, i);
+	}
+
+#if EFI_FUEL_PUMP || defined(__DOXYGEN__)
+	if (boardConfiguration->fuelPumpPin != GPIO_UNASSIGNED && engineConfiguration->isFuelPumpEnabled) {
+		setPinState("pump", &enginePins.fuelPumpRelay, fuelPumpLogic, engine);
+	}
+#endif /* EFI_FUEL_PUMP */
+
+	/**
+	 * main relay is always on if ECU is on, that's a good enough initial implementation
+	 */
+	if (boardConfiguration->mainRelayPin != GPIO_UNASSIGNED)
+		enginePins.mainRelay.setValue(true);
+
+	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
+
+	if (boardConfiguration->acRelayPin != GPIO_UNASSIGNED) {
+		setPinState("A/C", &enginePins.acRelay, acRelayLogic, engine);
+	}
+
+//	if (boardConfiguration->alternatorControlPin != GPIO_UNASSIGNED) {
+//		setPinState("alternator", &enginePins.alternatorField, alternatorLogic, engine);
+//	}
+
+	if (boardConfiguration->fanPin != GPIO_UNASSIGNED) {
+		setPinState("fan", &enginePins.fanRelay, radiatorFanLogic, engine);
+	}
+
+}
+
+static pin_output_mode_e defa = OM_DEFAULT;
+
+#endif /* EFI_PROD_CODE */
+
 static void showFsio(const char *msg, LEElement *element) {
 	if (msg != NULL)
 		scheduleMsg(logger, "%s:", msg);
@@ -315,7 +363,6 @@ static void showFsioInfo(void) {
 			scheduleMsg(logger, "FSIO digital input #%d: %s", i, hwPortname(inputPin));
 		}
 	}
-
 }
 
 /**
@@ -329,16 +376,6 @@ static void setFsioSetting(float indexF, float value) {
 	}
 	engineConfiguration->bc.fsio_setting[index] = value;
 	showFsioInfo();
-}
-
-static void setFsioFrequency(int index, int frequency) {
-	index--;
-	if (index < 0 || index >= LE_COMMAND_COUNT) {
-		scheduleMsg(logger, "invalid index %d", index);
-		return;
-	}
-	boardConfiguration->fsioFrequency[index] = frequency;
-	scheduleMsg(logger, "Setting FSIO frequency %d on #%d", frequency, index + 1);
 }
 
 static void setFsioExpression(const char *indexStr, const char *quotedLine, Engine *engine) {
@@ -373,51 +410,15 @@ static void eval(char *line, Engine *engine) {
 	}
 }
 
-void runFsio(void) {
-	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
-		handleFsio(engine, i);
-	}
-
-#if EFI_FUEL_PUMP
-	if (boardConfiguration->fuelPumpPin != GPIO_UNASSIGNED && engineConfiguration->isFuelPumpEnabled) {
-		setPinState("pump", &enginePins.fuelPumpRelay, fuelPumpLogic, engine);
-	}
-#endif
-
-	/**
-	 * main relay is always on if ECU is on, that's a good enough initial implementation
-	 */
-	if (boardConfiguration->mainRelayPin != GPIO_UNASSIGNED)
-		enginePins.mainRelay.setValue(true);
-
-	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
-
-	if (boardConfiguration->acRelayPin != GPIO_UNASSIGNED) {
-		setPinState("A/C", &enginePins.acRelay, acRelayLogic, engine);
-	}
-
-//	if (boardConfiguration->alternatorControlPin != GPIO_UNASSIGNED) {
-//		setPinState("alternator", &enginePins.alternatorField, alternatorLogic, engine);
-//	}
-
-	if (boardConfiguration->fanPin != GPIO_UNASSIGNED) {
-		setPinState("fan", &enginePins.fanRelay, radiatorFanLogic, engine);
-	}
-
-}
-
-static pin_output_mode_e defa = OM_DEFAULT;
-
-void initFsioImpl(Logging *sharedLogger, Engine *engine) {
+void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	logger = sharedLogger;
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		fsioLogics[i] = NULL;
 	}
 
-
-#if EFI_FUEL_PUMP
+#if EFI_FUEL_PUMP || defined(__DOXYGEN__)
 	fuelPumpLogic = sysPool.parseExpression(FUEL_PUMP_LOGIC);
-#endif
+#endif /* EFI_FUEL_PUMP */
 
 	acRelayLogic = sysPool.parseExpression(AC_RELAY_LOGIC);
 	radiatorFanLogic = sysPool.parseExpression(FAN_CONTROL_LOGIC);
@@ -446,20 +447,20 @@ void initFsioImpl(Logging *sharedLogger, Engine *engine) {
 		}
 	}
 
+	addConsoleActionSS("set_fsio_output_pin", (VoidCharPtrCharPtr) setFsioOutputPin);
+	addConsoleActionII("set_fsio_output_frequency", (VoidIntInt) setFsioFrequency);
+	addConsoleActionSS("set_fsio_input_pin", (VoidCharPtrCharPtr) setFsioInputPin);
+
 #endif /* EFI_PROD_CODE */
 
 	addConsoleActionSSP("set_fsio_expression", (VoidCharPtrCharPtrVoidPtr) setFsioExpression, engine);
-	addConsoleActionSS("set_fsio_output_pin", (VoidCharPtrCharPtr) setFsioOutputPin);
-	addConsoleActionII("set_fsio_output_frequency", (VoidIntInt) setFsioFrequency);
 
 	addConsoleActionFF("set_fsio_setting", setFsioSetting);
 
-	addConsoleActionSS("set_fsio_input_pin", (VoidCharPtrCharPtr) setFsioInputPin);
 	addConsoleAction("fsioinfo", showFsioInfo);
 
 	addConsoleActionSP("eval", (VoidCharPtrVoidPtr) eval, engine);
 }
 
-#endif
 
 #endif /* EFI_FSIO */
