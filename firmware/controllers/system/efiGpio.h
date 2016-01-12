@@ -27,7 +27,7 @@ public:
 	bool getLogicValue();
 	void unregister();
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	GPIO_TypeDef *port;
+	ioportid_t port;
 	int pin;
 #endif /* EFI_PROD_CODE */
 	pin_output_mode_e *modePtr;
