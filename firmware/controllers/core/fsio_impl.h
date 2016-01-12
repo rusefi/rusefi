@@ -33,7 +33,7 @@ float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action);
 void setFsio(int index, brain_pin_e pin, const char * exp DECLARE_ENGINE_PARAMETER_S);
 void setFsioExt(int index, brain_pin_e pin, const char * exp, int freq DECLARE_ENGINE_PARAMETER_S);
 
-void initFsioImpl(Logging *sharedLogger, Engine *engine);
+void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S);
 void runFsio(void);
 void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_F);
 

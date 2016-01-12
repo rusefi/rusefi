@@ -572,8 +572,8 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	addConsoleAction("reset_accel", resetAccel);
 #endif
 
-#if (EFI_PROD_CODE && EFI_FSIO) || defined(__DOXYGEN__)
-	initFsioImpl(sharedLogger, engine);
+#if EFI_FSIO || defined(__DOXYGEN__)
+	initFsioImpl(sharedLogger PASS_ENGINE_PARAMETER);
 #endif
 
 #if EFI_HD44780_LCD || defined(__DOXYGEN__)
