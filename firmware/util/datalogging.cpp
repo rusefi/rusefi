@@ -44,12 +44,12 @@
 static MemoryStream intermediateLoggingBuffer;
 static uint8_t intermediateLoggingBufferData[INTERMEDIATE_LOGGING_BUFFER_SIZE] CCM_OPTIONAL;
 //todo define max-printf-buffer
-static bool_t intermediateLoggingBufferInited = false;
+static bool intermediateLoggingBufferInited = false;
 
 /**
  * @returns true if data does not fit into this buffer
  */
-static INLINE bool_t validateBuffer(Logging *logging, uint32_t extraLen) {
+static INLINE bool validateBuffer(Logging *logging, uint32_t extraLen) {
 	if (logging->buffer == NULL) {
 		firmwareError("Logging not initialized: %s", logging->name);
 		return true;
@@ -67,7 +67,7 @@ static INLINE bool_t validateBuffer(Logging *logging, uint32_t extraLen) {
 void append(Logging *logging, const char *text) {
 	efiAssertVoid(text != NULL, "append NULL");
 	uint32_t extraLen = efiStrlen(text);
-	bool_t isError = validateBuffer(logging, extraLen);
+	bool isError = validateBuffer(logging, extraLen);
 	if (isError) {
 		return;
 	}

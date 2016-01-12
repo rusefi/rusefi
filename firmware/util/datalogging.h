@@ -35,7 +35,7 @@ public:
 	 */
 	char *linePointer;
 	int bufferSize;
-	volatile bool_t isInitialized;
+	volatile bool isInitialized;
 };
 
 class LoggingWithStorage : public Logging {

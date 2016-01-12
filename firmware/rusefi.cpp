@@ -119,7 +119,7 @@
 
 static LoggingWithStorage sharedLogger("main");
 
-bool_t main_loop_started = false;
+bool main_loop_started = false;
 
 static MemoryStream firmwareErrorMessageStream;
 static char panicMessage[200];

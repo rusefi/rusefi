@@ -23,8 +23,8 @@ public:
 	void init();
 	void publishChart();
 	void resetWaveChart();
-	bool_t isWaveChartFull();
-	bool_t isStartedTooLongAgo();
+	bool isWaveChartFull();
+	bool isStartedTooLongAgo();
 	void publishChartIfFull();
 	void addWaveChartEvent3(const char *name, const char *msg);
 private:

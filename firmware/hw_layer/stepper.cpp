@@ -30,7 +30,7 @@ static msg_t stThread(StepperMotor *motor) {
 			chThdSleepMilliseconds(ST_DELAY_MS);
 			continue;
 		}
-		bool_t isIncrementing = targetPosition > currentPosition;
+		bool isIncrementing = targetPosition > currentPosition;
 		palWritePad(motor->directionPort, motor->directionPin, isIncrementing);
 		if (isIncrementing) {
 			motor->currentPosition++;

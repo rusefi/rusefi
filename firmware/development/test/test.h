@@ -84,10 +84,10 @@ extern "C" {
   void test_print(const char *msgp);
   void test_println(const char *msgp);
   void test_emit_token(char token);
-  bool_t _test_fail(unsigned point);
-  bool_t _test_assert(unsigned point, bool_t condition);
-  bool_t _test_assert_sequence(unsigned point, char *expected);
-  bool_t _test_assert_time_window(unsigned point, systime_t start, systime_t end);
+  bool _test_fail(unsigned point);
+  bool _test_assert(unsigned point, bool condition);
+  bool _test_assert_sequence(unsigned point, char *expected);
+  bool _test_assert_time_window(unsigned point, systime_t start, systime_t end);
   void test_terminate_threads(void);
   void test_wait_threads(void);
   systime_t test_wait_tick(void);
@@ -165,7 +165,7 @@ extern "C" {
 extern Thread *threads[MAX_THREADS];
 extern union test_buffers test;
 extern void * ROMCONST wa[];
-extern bool_t test_timer_done;
+extern bool test_timer_done;
 #endif
 
 #endif /* _TEST_H_ */

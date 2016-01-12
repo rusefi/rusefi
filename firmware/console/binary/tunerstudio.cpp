@@ -107,7 +107,7 @@ ts_channel_s tsChannel;
 
 extern uint8_t crcWriteBuffer[300];
 
-static int ts_serial_ready(bool_t isConsoleRedirect) {
+static int ts_serial_ready(bool isConsoleRedirect) {
 #if EFI_PROD_CODE
 	if (isSerialOverUart() ^ isConsoleRedirect) {
 		// TS uses USB when console uses serial
@@ -413,7 +413,7 @@ static bool isKnownCommand(char command) {
 static uint8_t firstByte;
 static uint8_t secondByte;
 
-void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool_t isConsoleRedirect) {
+void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 	int wasReady = false;
 	while (true) {
 		int isReady = ts_serial_ready(isConsoleRedirect);

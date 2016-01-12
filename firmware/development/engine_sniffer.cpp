@@ -90,7 +90,7 @@ void WaveChart::resetWaveChart() {
 
 static char WAVE_LOGGING_BUFFER[WAVE_LOGGING_SIZE] CCM_OPTIONAL;
 
-bool_t WaveChart::isStartedTooLongAgo() {
+bool WaveChart::isStartedTooLongAgo() {
 	/**
 	 * Say at 300rpm we should get at least four events per revolution.
 	 * That's 300/60*4=20 events per second
@@ -101,7 +101,7 @@ bool_t WaveChart::isStartedTooLongAgo() {
 	return startTimeNt != 0 && NT2US(chartDurationNt) > engineConfiguration->engineChartSize * 1000000 / 20;
 }
 
-bool_t WaveChart::isWaveChartFull() {
+bool WaveChart::isWaveChartFull() {
 	return counter >= engineConfiguration->engineChartSize;
 }
 

@@ -24,7 +24,7 @@
 
 #include "main.h"
 
-#if EFI_PERF_METRICS
+#if EFI_PERF_METRICS || defined(__DOXYGEN__)
 
 #include "test.h"
 #include "testbmk.h"
@@ -37,7 +37,7 @@ static ROMCONST struct testcase * ROMCONST *patterns[] = {
   NULL
 };
 
-static bool_t local_fail, global_fail;
+static bool local_fail, global_fail;
 static unsigned failpoint;
 static char tokens_buffer[MAX_TOKENS];
 static char *tokp;
@@ -51,7 +51,7 @@ union test_buffers test;
 /*
  * Pointers to the spawned threads.
  */
-Thread *threads[MAX_THREADS];
+thread_t *threads[MAX_THREADS];
 
 /*
  * Pointers to the working areas.
@@ -135,7 +135,7 @@ void test_emit_token(char token) {
 /*
  * Assertions.
  */
-bool_t _test_fail(unsigned point) {
+bool _test_fail(unsigned point) {
 
   local_fail = TRUE;
   global_fail = TRUE;
@@ -143,14 +143,14 @@ bool_t _test_fail(unsigned point) {
   return TRUE;
 }
 
-bool_t _test_assert(unsigned point, bool_t condition) {
+bool _test_assert(unsigned point, bool condition) {
 
   if (!condition)
     return _test_fail(point);
   return FALSE;
 }
 
-bool_t _test_assert_sequence(unsigned point, char *expected) {
+bool _test_assert_sequence(unsigned point, char *expected) {
   char *cp = tokens_buffer;
   while (cp < tokp) {
     if (*cp++ != *expected++)
@@ -162,7 +162,7 @@ bool_t _test_assert_sequence(unsigned point, char *expected) {
   return FALSE;
 }
 
-bool_t _test_assert_time_window(unsigned point, systime_t start, systime_t end) {
+bool _test_assert_time_window(unsigned point, systime_t start, systime_t end) {
 
   return _test_assert(point, chTimeIsWithin(start, end));
 }
@@ -236,7 +236,7 @@ systime_t test_wait_tick(void) {
 /**
  * @brief   Set to @p TRUE when the test timer reaches its deadline.
  */
-bool_t test_timer_done;
+bool test_timer_done;
 
 static VirtualTimer vt;
 static void tmr(void *p) {

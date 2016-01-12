@@ -94,7 +94,7 @@ char * swapOutputBuffers(int *actualOutputBufferSize) {
 	return outputBuffer;
 }
 
-extern bool_t consoleInBinaryMode;
+extern bool consoleInBinaryMode;
 
 /**
  * This method actually sends all the pending data to the communication layer.
