@@ -159,7 +159,7 @@ bool isConsoleReady(void) {
 }
 #endif /* EFI_PROD_CODE || EFI_EGT */
 
-bool_t consoleInBinaryMode = false;
+bool consoleInBinaryMode = false;
 
 ts_channel_s binaryConsole;
 

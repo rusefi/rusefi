@@ -58,7 +58,7 @@
 #include "settings.h"
 #include "rusefi_outputs.h"
 
-extern bool_t main_loop_started;
+extern bool main_loop_started;
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 // todo: move this logic to algo folder!
@@ -73,7 +73,7 @@ extern bool_t main_loop_started;
 
 extern engine_pins_s enginePins;
 
-static bool_t subscription[(int) RO_LAST_ELEMENT];
+static bool subscription[(int) RO_LAST_ELEMENT];
 
 // this 'true' value is needed for simulator
 static volatile bool fullLog = true;
@@ -497,8 +497,8 @@ static void setBlinkingPeriod(int value) {
 
 extern efitick_t lastDecodingErrorTime;
 
-static bool_t isTriggerErrorNow() {
-	bool_t justHadError = (getTimeNowNt() - lastDecodingErrorTime) < US2NT(2 * 1000 * 3 * blinkingPeriod);
+static bool isTriggerErrorNow() {
+	bool justHadError = (getTimeNowNt() - lastDecodingErrorTime) < US2NT(2 * 1000 * 3 * blinkingPeriod);
 	return justHadError || isTriggerDecoderError();
 }
 

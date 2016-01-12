@@ -49,7 +49,7 @@ typedef struct {
 #define adcToVoltsDivided(adc) (adcToVolts(adc) * engineConfiguration->analogInputDividerCoefficient)
 
 #else
-#define getAdcValue(channel) 0
+#define getAdcValue(msg, channel) 0
 #endif /* HAL_USE_ADC */
 
 #endif /* ADC_INPUTS_H_ */

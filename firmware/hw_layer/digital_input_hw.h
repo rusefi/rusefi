@@ -16,8 +16,8 @@
 
 typedef struct {
 	ICUDriver *driver;
-	bool_t isActiveHigh; // false for ICU_INPUT_ACTIVE_LOW, true for ICU_INPUT_ACTIVE_HIGH
-	volatile bool_t started;
+	bool isActiveHigh; // false for ICU_INPUT_ACTIVE_LOW, true for ICU_INPUT_ACTIVE_HIGH
+	volatile bool started;
 
 	// todo: make this a template & reduce number of listeners?
 	// todo: would one listener be enough?

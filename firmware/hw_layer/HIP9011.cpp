@@ -329,7 +329,7 @@ void hipAdcCallback(adcsample_t value) {
 		}
 	}
 }
-static bool_t needToInit = true;
+static bool needToInit = true;
 
 static void hipStartupCode(void) {
 //	D[4:1] = 0000 : 4 MHz
