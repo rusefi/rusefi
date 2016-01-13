@@ -101,7 +101,7 @@ float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 static void setFsioInputPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= LE_COMMAND_COUNT) {
-		scheduleMsg(logger, "invalid index %d", index);
+		scheduleMsg(logger, "invalid FSIO index: %d", index);
 		return;
 	}
 	brain_pin_e pin = parseBrainPin(pinName);
@@ -117,7 +117,7 @@ static void setFsioInputPin(const char *indexStr, const char *pinName) {
 static void setFsioOutputPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= LE_COMMAND_COUNT) {
-		scheduleMsg(logger, "invalid index %d", index);
+		scheduleMsg(logger, "invalid FSIO index: %d", index);
 		return;
 	}
 	brain_pin_e pin = parseBrainPin(pinName);
@@ -133,6 +133,9 @@ static void setFsioOutputPin(const char *indexStr, const char *pinName) {
 
 #endif
 
+/**
+ * index is between zero and LE_COMMAND_LENGTH-1
+ */
 void setFsioExt(int index, brain_pin_e pin, const char * exp, int freq DECLARE_ENGINE_PARAMETER_S) {
 	boardConfiguration->fsioPins[index] = pin;
 	int len = strlen(exp);
@@ -276,7 +279,7 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element, En
 static void setFsioFrequency(int index, int frequency) {
 	index--;
 	if (index < 0 || index >= LE_COMMAND_COUNT) {
-		scheduleMsg(logger, "invalid index %d", index);
+		scheduleMsg(logger, "invalid FSIO index: %d", index);
 		return;
 	}
 	boardConfiguration->fsioFrequency[index] = frequency;
@@ -376,7 +379,7 @@ static void setFsioSetting(float indexF, float value) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	int index = indexF;
 	if (index < 0 || index >= LE_COMMAND_COUNT) {
-		scheduleMsg(logger, "invalid index %d", index);
+		scheduleMsg(logger, "invalid FSIO index: %d", index);
 		return;
 	}
 	engineConfiguration->bc.fsio_setting[index] = value;
@@ -388,7 +391,7 @@ static void setFsioExpression(const char *indexStr, const char *quotedLine, Engi
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= LE_COMMAND_COUNT) {
-		scheduleMsg(logger, "invalid index %d", index);
+		scheduleMsg(logger, "invalid FSIO index: %d", index);
 		return;
 	}
 	char * l = unquote((char*) quotedLine);
