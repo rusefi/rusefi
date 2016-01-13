@@ -443,7 +443,7 @@ static void setFloat(const char *offsetStr, const char *valueStr) {
 	getFloat(offset);
 }
 
-void initConfigActions(void) {
+static void initConfigActions(void) {
 	addConsoleActionSS("set_float", (VoidCharPtrCharPtr) setFloat);
 	addConsoleActionII("set_int", (VoidIntInt) setInt);
 	addConsoleActionII("set_short", (VoidIntInt) setShort);
@@ -462,8 +462,8 @@ static void getKnockInfo(void) {
 	engine->printKnockState();
 }
 
-void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
-	addConsoleAction("analoginfo", printAnalogInfo);
+// this method is used by real firmware and simulator
+void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	initConfigActions();
 #if EFI_PROD_CODE
 	// todo: this is a mess, remove code duplication with simulator
@@ -479,8 +479,21 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	if (hasFirmwareError()) {
 		return;
 	}
-
 	initSensors(sharedLogger PASS_ENGINE_PARAMETER_F);
+
+#if EFI_FSIO || defined(__DOXYGEN__)
+	initFsioImpl(sharedLogger PASS_ENGINE_PARAMETER);
+#endif
+}
+
+void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
+	addConsoleAction("analoginfo", printAnalogInfo);
+	commonInitEngineController(sharedLogger);
+
+	if (hasFirmwareError()) {
+		return;
+	}
+
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	initPwmGenerator();
@@ -567,13 +580,8 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 
 	initAccelEnrichment(sharedLogger);
 
-	initConfigActions();
 #if EFI_PROD_CODE
 	addConsoleAction("reset_accel", resetAccel);
-#endif
-
-#if EFI_FSIO || defined(__DOXYGEN__)
-	initFsioImpl(sharedLogger PASS_ENGINE_PARAMETER);
 #endif
 
 #if EFI_HD44780_LCD || defined(__DOXYGEN__)
