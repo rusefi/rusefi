@@ -27,13 +27,21 @@ public class FuelAutoTune {
         int engineLoadIndex;
 
         public stDataOnline(double AFR, int rpmIndex, int engineLoadIndex) {
+            if (rpmIndex < 0 || rpmIndex >= Fields.FUEL_RPM_COUNT)
+                throw new IllegalStateException("rpmIndex " + rpmIndex);
+            if (engineLoadIndex < 0 || engineLoadIndex >= Fields.FUEL_LOAD_COUNT)
+                throw new IllegalStateException("engineLoadIndex " + engineLoadIndex);
             this.AFR = AFR;
             this.rpmIndex = rpmIndex;
             this.engineLoadIndex = engineLoadIndex;
         }
 
         public static stDataOnline valueOf(double AFR, int rpm, double engineLoad) {
-            return new stDataOnline(AFR, (int) (rpm / 7000.0 * SIZE), (int) (engineLoad / 120.0 * SIZE));
+            int rpmIndex = (int) (rpm / 7000.0 * SIZE);
+            if (rpmIndex < 0 || rpmIndex >= Fields.FUEL_RPM_COUNT)
+                return null;
+            int engineLoadIndex = (int) (engineLoad / 120.0 * SIZE);
+            return new stDataOnline(AFR, rpmIndex, engineLoadIndex);
         }
 
         int getRpmIndex() {
