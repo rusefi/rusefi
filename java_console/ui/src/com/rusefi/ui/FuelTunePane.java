@@ -62,6 +62,17 @@ public class FuelTunePane {
 
         content.add(topPanel, BorderLayout.NORTH);
 
+
+        JPanel rightPanel = new JPanel(new GridLayout(2, 1));
+        rightPanel.add(new JLabel("top"));
+        rightPanel.add(new JLabel("bottom"));
+
+        JPanel middlePanel = new JPanel(new GridLayout(1, 2));
+        middlePanel.add(veTable);
+        middlePanel.add(rightPanel);
+
+        content.add(middlePanel, BorderLayout.CENTER);
+
         // todo: which one is which?
         veTable.setSizeX(Fields.FUEL_LOAD_COUNT);
         veTable.setSizeY(Fields.FUEL_RPM_COUNT);
@@ -71,7 +82,6 @@ public class FuelTunePane {
         veTable.getXAxis().setAxisParent(veTable);
         veTable.getYAxis().setAxisParent(veTable);
 
-        content.add(veTable, BorderLayout.CENTER);
         veTable.setBorder(BorderFactory.createLineBorder(Color.red));
         veTable.addScale(new Scale());
         veTable.getXAxis().addScale(new Scale());
@@ -158,8 +168,9 @@ public class FuelTunePane {
             this.rpm = rpm;
             this.engineLoad = engineLoad;
             this.afr = afr;
-            rpmIndex = BinarySearch.binarySearch(rpm, veRpmBins);
-            engineLoadIndex = BinarySearch.binarySearch(engineLoad, veLoadBins);
+            // too low values are returning '-1' indeces
+            rpmIndex = Math.max(0, BinarySearch.binarySearch(rpm, veRpmBins));
+            engineLoadIndex = Math.max(0, BinarySearch.binarySearch(engineLoad, veLoadBins));
         }
 
         public FuelAutoTune.stDataOnline asDataOnline() {
