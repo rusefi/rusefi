@@ -1,5 +1,8 @@
 package com.rusefi.ui;
 
+import com.romraider.Settings;
+import com.romraider.maps.Scale;
+import com.romraider.maps.Table3D;
 import com.rusefi.BinarySearch;
 import com.rusefi.FileLog;
 import com.rusefi.autotune.FuelAutoTune;
@@ -28,6 +31,7 @@ public class FuelTunePane {
     private final List<FuelDataPoint> incomingDataPoints = new ArrayList<>();
     private final double veLoadBins[] = new double[Fields.FUEL_LOAD_COUNT];
     private final double veRpmBins[] = new double[Fields.FUEL_RPM_COUNT];
+    private final Table3D veTable = new Table3D();
 
     public FuelTunePane() {
         final JLabel incomingBufferSize = new JLabel();
@@ -57,7 +61,22 @@ public class FuelTunePane {
         timer.start();
 
         content.add(topPanel, BorderLayout.NORTH);
-//        UiUtils.trueLayout(content.getParent());
+
+        // todo: which one is which?
+        veTable.setSizeX(Fields.FUEL_LOAD_COUNT);
+        veTable.setSizeY(Fields.FUEL_RPM_COUNT);
+        veTable.getXAxis().setDataSize(Fields.FUEL_LOAD_COUNT);
+        veTable.getYAxis().setDataSize(Fields.FUEL_RPM_COUNT);
+
+        veTable.getXAxis().setAxisParent(veTable);
+        veTable.getYAxis().setAxisParent(veTable);
+
+        content.add(veTable, BorderLayout.CENTER);
+        veTable.setBorder(BorderFactory.createLineBorder(Color.red));
+        veTable.addScale(new Scale());
+        veTable.getXAxis().addScale(new Scale());
+        veTable.getYAxis().addScale(new Scale());
+
     }
 
     private void doJob() {
@@ -95,6 +114,16 @@ public class FuelTunePane {
 
         loadArray(veLoadBins, Fields.VETABLE.getOffset() + Fields.FUEL_RPM_COUNT * Fields.FUEL_LOAD_COUNT * 4);
         loadArray(veRpmBins, Fields.VETABLE.getOffset() + Fields.FUEL_RPM_COUNT * Fields.FUEL_LOAD_COUNT * 4 + Fields.FUEL_LOAD_COUNT * 4);
+
+        BinaryProtocol bp = BinaryProtocol.instance;
+
+        byte[] content = bp.getController().getContent();
+        veTable.setStorageAddress(Fields.VETABLE.getOffset());
+        veTable.setStorageType(Settings.STORAGE_TYPE_FLOAT);
+        veTable.populateTable(content, 0);
+        veTable.drawTable();
+
+//        UiUtils.trueLayout(content.getParent());
     }
 
     private void loadMap(double[][] map, int offset) {
