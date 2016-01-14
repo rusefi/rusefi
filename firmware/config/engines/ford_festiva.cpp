@@ -110,7 +110,7 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	setWholeTimingTable(10 PASS_ENGINE_PARAMETER);
 	// set_whole_fuel_map 5
 	setWholeFuelMap(5 PASS_ENGINE_PARAMETER);
-	setMap(config->veTable, 13.5);
+	setMap(config->afrTable, 13.5);
 
 	setSingleCoilDwell(engineConfiguration);
 	engineConfiguration->ignitionMode = IM_ONE_COIL;

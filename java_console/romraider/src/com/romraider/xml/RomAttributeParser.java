@@ -140,7 +140,7 @@ public final class RomAttributeParser {
             }
             return output;
         } catch (IndexOutOfBoundsException ex) {
-            throw new IndexOutOfBoundsException();
+            throw ex;
         }
     }
 

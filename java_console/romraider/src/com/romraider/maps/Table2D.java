@@ -19,13 +19,13 @@
 
 package com.romraider.maps;
 
-import static com.romraider.util.ParamChecker.isNullOrEmpty;
+import com.romraider.Settings;
+import com.romraider.util.SettingsManager;
+import com.rusefi.Launcher;
 
-import java.awt.BorderLayout;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.Window;
+import javax.naming.NameNotFoundException;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -33,15 +33,7 @@ import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
-import javax.naming.NameNotFoundException;
-import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
-
-import com.romraider.Settings;
-import com.romraider.editor.ecu.ECUEditorManager;
-import com.romraider.util.SettingsManager;
-import com.rusefi.Launcher;
+import static com.romraider.util.ParamChecker.isNullOrEmpty;
 
 /**
  * A better implementation would be a composition of two Table1D - one for axis another one for data
@@ -53,7 +45,6 @@ public class Table2D extends TableWithData {
     private Table1D axis = new Table1D();
     private JLabel axisLabel;
 
-    private CopyTable2DWorker copyTable2DWorker;
     private CopySelection2DWorker copySelection2DWorker;
 
     public Table2D() {
@@ -269,7 +260,7 @@ public class Table2D extends TableWithData {
         }
         Launcher.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        copyTable2DWorker = new CopyTable2DWorker(this);
+        CopyTable2DWorker copyTable2DWorker = new CopyTable2DWorker(this);
         copyTable2DWorker.execute();
     }
 
@@ -280,8 +271,7 @@ public class Table2D extends TableWithData {
         try {
             input = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null).getTransferData(DataFlavor.stringFlavor);
             st = new StringTokenizer(input);
-        } catch (UnsupportedFlavorException ex) { /* wrong paste type -- do nothing */
-        } catch (IOException ex) {
+        } catch (UnsupportedFlavorException | IOException ex) { /* wrong paste type -- do nothing */
         }
 
         String pasteType = st.nextToken();

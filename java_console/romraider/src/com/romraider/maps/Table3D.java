@@ -162,7 +162,7 @@ public class Table3D extends Table {
             xAxis.populateTable(input, romRamOffset);
             yAxis.populateTable(input, romRamOffset);
         } catch (ArrayIndexOutOfBoundsException ex) {
-            throw new ArrayIndexOutOfBoundsException();
+            throw ex;
         }
 
         for (int x = 0; x < xAxis.getDataSize(); x++) {

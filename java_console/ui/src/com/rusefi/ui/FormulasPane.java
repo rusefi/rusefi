@@ -80,7 +80,10 @@ public class FormulasPane {
             return;
 
         int algorithm = ConfigField.getIntValue(ci, Fields.ALGORITHM);
-        engine_load_mode_e algo = engine_load_mode_e.values()[algorithm];
+        engine_load_mode_e[] values = engine_load_mode_e.values();
+        if (algorithm >= values.length)
+            throw new IllegalStateException("Unexpected "+ algorithm);
+        engine_load_mode_e algo = values[algorithm];
 
         String acceleration = getAccelerationVariables(ci);
 
