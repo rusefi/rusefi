@@ -168,9 +168,12 @@ private:
 	/**
 	 * These angles are in trigger DESCRIPTION coordinates - i.e. the way you add events while declaring trigger shape
 	 */
-	float getSwitchAngle(int index) const;
+	angle_t getSwitchAngle(int index) const;
 
-	float previousAngle;
+	/**
+	 * This variable is used to confirm that events are added in the right order.
+	 */
+	angle_t previousAngle;
 	/**
 	 * this is part of performance optimization
 	 */
@@ -180,9 +183,9 @@ private:
 	 * This private method should only be used to prepare the array of pre-calculated values
 	 * See eventAngles array
 	 */
-	float getAngle(int phaseIndex) const;
+	angle_t getAngle(int phaseIndex) const;
 
-	int getCycleDuration() const;
+	angle_t getCycleDuration() const;
 	void calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE_PARAMETER_S);
 };
 

@@ -62,20 +62,30 @@ public class FuelAutoTune {
     }
 
     public static class Result {
-        private final double[][] kgbcRES;
+        private final float[][] kgbcRES;
 
-        public Result(double[][] kgbcRES) {
+        public Result(float[][] kgbcRES) {
             this.kgbcRES = kgbcRES;
         }
 
-        public double[][] getKgbcRES() {
+        public float[][] getKgbcRES() {
             return kgbcRES;
         }
     }
 
+    private static float[][] deepCopy(float[][] input) {
+        if (input == null)
+            return null;
+        float[][] result = new float[input.length][];
+        for (int r = 0; r < input.length; r++) {
+            result[r] = input[r].clone();
+        }
+        return result;
+    }
+
     // void MainWindow::calckGBC(double STEP)
-    public static Result process(boolean smooth, Collection<stDataOnline> dataECU, double STEP, double targetAFR) {
-        double kgbcSQ[][] = new double[SIZE][SIZE];
+    public static Result process(boolean smooth, Collection<stDataOnline> dataECU, double STEP, double targetAFR, float[][] kgbcINIT) {
+        float kgbcSQ[][] = new float[SIZE][SIZE];
         double kgbcSQsum = 0;
         double kgbcSQsumLast;
         double minSQ;
@@ -92,16 +102,9 @@ public class FuelAutoTune {
         for (stDataOnline data : dataECU) {
             bkGBC[data.PRESS_RT_32()][data.RPM_RT_32()]++;
         }
-        // todo: add a comment what is this?
-        double kgbcRES[][] = new double[Fields.FUEL_LOAD_COUNT][Fields.FUEL_RPM_COUNT];
-        double kgbcINIT[][] = new double[Fields.FUEL_LOAD_COUNT][Fields.FUEL_RPM_COUNT];
 
-        for (int engineLoadIndex = 0; engineLoadIndex < Fields.FUEL_LOAD_COUNT; engineLoadIndex++) {
-            for (int rpmIndex = 0; rpmIndex < Fields.FUEL_RPM_COUNT; rpmIndex++) {
-                kgbcINIT[engineLoadIndex][rpmIndex] = 1;
-                kgbcRES[engineLoadIndex][rpmIndex] = 1;
-            }
-        }
+        float result[][] = deepCopy(kgbcINIT);
+
 //        double addGbcTwatRES[] = new double[TEMP_CORR];
 //        double addGbcTwatINIT[] = new double[TEMP_CORR];
 //
@@ -152,12 +155,12 @@ public class FuelAutoTune {
                         }
                         kgbcSQsumLast = kgbcSQsum;
 
-                        countDeviation(dataECU, kgbcSQ, kgbcRES, kgbcINIT, targetAFR);
+                        countDeviation(dataECU, kgbcSQ, result, kgbcINIT, targetAFR);
 
                         kgbcSQsum = sumArray(kgbcSQ);
 
                         if (smooth) {
-                            kgbcSQsum = smooth(kgbcSQsum, ksq, ke, kg, kgbcRES);
+                            kgbcSQsum = smooth(kgbcSQsum, ksq, ke, kg, result);
                         }
                         ////////////////////////////////////
                         if (kgbcSQsum >= kgbcSQsumLast)
@@ -166,7 +169,7 @@ public class FuelAutoTune {
                     /*if(bkGBC[r][c]) */
 
 //                        log("Adjusting " + step);
-                        kgbcRES[r][c] += step;
+                        result[r][c] += step;
                         if (kgbcSQsum < minSQ)
                             minSQ = kgbcSQsum;
 
@@ -189,7 +192,7 @@ public class FuelAutoTune {
                 //updateTablekGBC();
                 //ui->statusBar->showMessage(QString::number(kgbcSQsum), 500);
                 log("return " + minK);
-                return new Result(kgbcRES);
+                return new Result(result);
             }
             kgbcSQsumLastTotal = kgbcSQsum;
             //ui->statusBar->showMessage(QString::number(gbcSQsum));
@@ -198,7 +201,7 @@ public class FuelAutoTune {
         }
     }
 
-    private static void countDeviation(Collection<stDataOnline> dataECU, double[][] kgbcSQ, double[][] kgbcRES, double[][] kgbcINIT, double targetAFR) {
+    private static void countDeviation(Collection<stDataOnline> dataECU, float[][] kgbcSQ, float[][] kgbcRES, float[][] kgbcINIT, double targetAFR) {
         for (stDataOnline dataPoint : dataECU) {
             double corrInit = 1; // addGbcTwatINIT_190[dataPoint.twat + 40];
             double corrRes = 1; //addGbcTwatRES_190[dataPoint.twat + 40];
@@ -216,7 +219,7 @@ public class FuelAutoTune {
         }
     }
 
-    private static double sumArray(double[][] kgbcSQ) {
+    private static double sumArray(float[][] kgbcSQ) {
         double kgbcSQsum = 0;
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
@@ -226,7 +229,7 @@ public class FuelAutoTune {
         return kgbcSQsum;
     }
 
-    private static double smooth(double kgbcSQsum, double ksq, double ke, double kg, double[][] kgbcRES) {
+    private static double smooth(double kgbcSQsum, double ksq, double ke, double kg, float[][] kgbcRES) {
         double e;
         double g;
         kgbcSQsum = ksq * kgbcSQsum;
