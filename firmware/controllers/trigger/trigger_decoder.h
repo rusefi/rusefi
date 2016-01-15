@@ -107,7 +107,7 @@ private:
 	efitick_t startOfCycleNt;
 };
 
-float getEngineCycle(operation_mode_e operationMode);
+angle_t getEngineCycle(operation_mode_e operationMode);
 void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerShape *s,
 		int totalTeethCount, int skippedCount,
 		float toothWidth,

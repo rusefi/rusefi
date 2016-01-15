@@ -188,8 +188,7 @@ end_struct
 
     specs_s specs
 	float cylinderBore;Cylinder diameter, in mm.
-int engineCycleDuration;todo:see getEngineCycle(operation_mode_e operationMode) eliminate this?\ntodo:operationMode should be enough\n360 for two-stroke\n720 for four-stroke;"engine cycle",      1,      0,       0, 1000,      0
-
+int unused34234;
 	int rpmHardLimit;;"rpm",    1,      0,       0, 20000.0,        2
 
 

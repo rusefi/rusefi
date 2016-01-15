@@ -209,6 +209,8 @@ public:
 	 */
 	efitick_t stopEngineRequestTimeNt;
 
+	angle_t engineCycle;
+
 	AccelEnrichmemnt engineLoadAccelEnrichment;
 	AccelEnrichmemnt tpsAccelEnrichment;
 

@@ -169,7 +169,7 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 	 * injection phase is scheduled by injection end, so we need to step the angle back
 	 * for the duration of the injection
 	 */
-	float baseAngle = ENGINE(engineState.injectionOffset)
+	angle_t baseAngle = ENGINE(engineState.injectionOffset)
 			+ CONFIG(injectionOffset) - MS2US(ENGINE(fuelMs)) / ENGINE(rpmCalculator.oneDegreeUs);
 
 	switch (mode) {
@@ -177,14 +177,14 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 			int index = getCylinderId(engineConfiguration->specs.firingOrder, i) - 1;
 			float angle = baseAngle
-					+ (float) CONFIG(engineCycleDuration) * i / CONFIG(specs.cylindersCount);
+					+ ENGINE(engineCycle) * i / CONFIG(specs.cylindersCount);
 			registerInjectionEvent(index, angle, false PASS_ENGINE_PARAMETER);
 		}
 		break;
 	case IM_SIMULTANEOUS:
 		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 			float angle = baseAngle
-					+ (float) CONFIG(engineCycleDuration) * i / CONFIG(specs.cylindersCount);
+					+ ENGINE(engineCycle) * i / CONFIG(specs.cylindersCount);
 
 			/**
 			 * We do not need injector pin here because we will control all injectors
@@ -197,7 +197,7 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 			int index = i % (engineConfiguration->specs.cylindersCount / 2);
 			float angle = baseAngle
-					+ i * (float) CONFIG(engineCycleDuration) / CONFIG(specs.cylindersCount);
+					+ i * ENGINE(engineCycle) / CONFIG(specs.cylindersCount);
 			registerInjectionEvent(index, angle, false PASS_ENGINE_PARAMETER);
 
 			if (CONFIG(twoWireBatchInjection)) {
@@ -368,22 +368,23 @@ static NamedOutputPin * getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_S
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 
-int is700 = 0;
+/**
+ * This heavy method is only invoked in case of a configuration change or initialization.
+ */
 void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
+	ENGINE(engineCycle) = getEngineCycle(CONFIG(operationMode));
 
 	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 
 	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
-		ENGINE(angleExtra[i])= (float) CONFIG(engineCycleDuration) * i / CONFIG(specs.cylindersCount);
+		ENGINE(angleExtra[i])= ENGINE(engineCycle) * i / CONFIG(specs.cylindersCount);
 
 		ENGINE(ignitionPin[i]) = getIgnitionPinForIndex(i PASS_ENGINE_PARAMETER);
 
 	}
 
-	for (int angle = 0; angle < CONFIG(engineCycleDuration); angle++) {
-		if (angle==700) {
-			is700++;
-		}
+	int engineCycleInt = (int) ENGINE(engineCycle);
+	for (int angle = 0; angle < engineCycleInt; angle++) {
 		int triggerShapeIndex = findAngleIndex(angle PASS_ENGINE_PARAMETER);
 		if (engineConfiguration->useOnlyFrontForTrigger)
 			triggerShapeIndex = triggerShapeIndex & 0xFFFFFFFE; // we need even index for front_only

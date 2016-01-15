@@ -533,8 +533,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->engineChartSize = 400;
 #endif
 
-	engineConfiguration->engineCycleDuration = 720;
-
 	engineConfiguration->primingSquirtDurationMs = 5;
 
 	engineConfiguration->isInjectionEnabled = true;

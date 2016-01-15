@@ -248,7 +248,6 @@ void printAllTriggers() {
 		engine_configuration_s *engineConfiguration = &pc.engineConfiguration;
 		board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
-		engineConfiguration->engineCycleDuration = 720;
 		engineConfiguration->trigger.type = tt;
 		engineConfiguration->operationMode = FOUR_STROKE_CAM_SENSOR;
 
