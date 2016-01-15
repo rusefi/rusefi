@@ -23,15 +23,17 @@ import java.util.List;
 /**
  * (c) Andrey Belomutskiy 2013-2016
  * 1/9/2016
+ *
  * @see FuelAutoTune
  */
 public class FuelTunePane {
     private final JPanel content = new JPanel(new BorderLayout());
 
     private final List<FuelDataPoint> incomingDataPoints = new ArrayList<>();
-    private final double veLoadBins[] = new double[Fields.FUEL_LOAD_COUNT];
-    private final double veRpmBins[] = new double[Fields.FUEL_RPM_COUNT];
+    private final float veLoadBins[] = new float[Fields.FUEL_LOAD_COUNT];
+    private final float veRpmBins[] = new float[Fields.FUEL_RPM_COUNT];
     private final Table3D veTable = new Table3D();
+    private final Table3D changeMap = new Table3D();
 
     public FuelTunePane() {
         final JLabel incomingBufferSize = new JLabel();
@@ -64,7 +66,7 @@ public class FuelTunePane {
 
 
         JPanel rightPanel = new JPanel(new GridLayout(2, 1));
-        rightPanel.add(new JLabel("top"));
+        rightPanel.add(changeMap);
         rightPanel.add(new JLabel("bottom"));
 
         JPanel middlePanel = new JPanel(new GridLayout(1, 2));
@@ -72,25 +74,28 @@ public class FuelTunePane {
         middlePanel.add(rightPanel);
 
         content.add(middlePanel, BorderLayout.CENTER);
+        initTable(veTable);
+        initTable(changeMap);
+    }
 
+    private void initTable(Table3D table) {
         // todo: which one is which?
-        veTable.setSizeX(Fields.FUEL_LOAD_COUNT);
-        veTable.setSizeY(Fields.FUEL_RPM_COUNT);
-        veTable.getXAxis().setDataSize(Fields.FUEL_LOAD_COUNT);
-        veTable.getYAxis().setDataSize(Fields.FUEL_RPM_COUNT);
+        table.setSizeX(Fields.FUEL_LOAD_COUNT);
+        table.setSizeY(Fields.FUEL_RPM_COUNT);
+        table.getXAxis().setDataSize(Fields.FUEL_LOAD_COUNT);
+        table.getYAxis().setDataSize(Fields.FUEL_RPM_COUNT);
 
-        veTable.getXAxis().setAxisParent(veTable);
-        veTable.getYAxis().setAxisParent(veTable);
+        table.getXAxis().setAxisParent(table);
+        table.getYAxis().setAxisParent(table);
 
-        veTable.setBorder(BorderFactory.createLineBorder(Color.red));
-        veTable.addScale(new Scale());
-        veTable.getXAxis().addScale(new Scale());
-        veTable.getYAxis().addScale(new Scale());
-
+        table.setBorder(BorderFactory.createLineBorder(Color.red));
+        table.addScale(new Scale());
+        table.getXAxis().addScale(new Scale());
+        table.getYAxis().addScale(new Scale());
     }
 
     private void doJob() {
-        double veTable[][] = new double[Fields.FUEL_LOAD_COUNT][Fields.FUEL_RPM_COUNT];
+        float veTable[][] = new float[Fields.FUEL_LOAD_COUNT][Fields.FUEL_RPM_COUNT];
         loadMap(veTable, Fields.VETABLE.getOffset());
 
         List<FuelAutoTune.stDataOnline> data = new ArrayList<>();
@@ -99,7 +104,22 @@ public class FuelTunePane {
                 data.add(point.asDataOnline());
         }
 
-        FuelAutoTune.process(false, data, 0.1, 14.7);
+        // todo: move this away from AWT thread
+        FuelAutoTune.Result a = FuelAutoTune.process(false, data, 0.1, 14.7, veTable);
+
+
+        changeMap.setStorageAddress(0);
+        changeMap.setStorageType(Settings.STORAGE_TYPE_FLOAT);
+        changeMap.populateTable(new byte[4 * 16 * 16], 0);
+
+        for (int i = 0; i < 16; i++) {
+            for (int rpmIndex = 0; rpmIndex < 16; rpmIndex++) {
+                changeMap.get3dData()[i][rpmIndex].setBinValue(a.getKgbcRES()[i][rpmIndex]);
+            }
+        }
+
+        changeMap.drawTable();
+
     }
 
     public void showContent() {
@@ -136,13 +156,13 @@ public class FuelTunePane {
 //        UiUtils.trueLayout(content.getParent());
     }
 
-    private void loadMap(double[][] map, int offset) {
-        for (int engineLoadIndex = 0;engineLoadIndex < map.length; engineLoadIndex++) {
+    private void loadMap(float[][] map, int offset) {
+        for (int engineLoadIndex = 0; engineLoadIndex < map.length; engineLoadIndex++) {
             loadArray(map[engineLoadIndex], offset + engineLoadIndex * 4 * Fields.FUEL_RPM_COUNT);
         }
     }
 
-    private void loadArray(double[] array, int offset) {
+    private void loadArray(float[] array, int offset) {
         BinaryProtocol bp = BinaryProtocol.instance;
         if (bp == null) {
             FileLog.MAIN.logLine("bp not ready");

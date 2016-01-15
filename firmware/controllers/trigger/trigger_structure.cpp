@@ -218,7 +218,7 @@ uint32_t TriggerShape::getLength() const {
 	return operationMode == FOUR_STROKE_CAM_SENSOR ? getSize() : 2 * getSize();
 }
 
-float TriggerShape::getAngle(int index) const {
+angle_t TriggerShape::getAngle(int index) const {
 	// todo: why is this check here? looks like the code below could be used universally
 	if (operationMode == FOUR_STROKE_CAM_SENSOR) {
 		return getSwitchAngle(index);
@@ -352,11 +352,11 @@ void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const waveIndex, trig
 	wave.waves[waveIndex].pinStates[index] = state;
 }
 
-int TriggerShape::getCycleDuration() const {
+angle_t TriggerShape::getCycleDuration() const {
 	return (operationMode == FOUR_STROKE_CAM_SENSOR) ? 720 : 360;
 }
 
-float TriggerShape::getSwitchAngle(int index) const {
+angle_t TriggerShape::getSwitchAngle(int index) const {
 	return getCycleDuration() * wave.getSwitchTime(index);
 }
 

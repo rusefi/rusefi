@@ -124,8 +124,8 @@ void setConstantDwell(floatms_t dwellMs DECLARE_ENGINE_PARAMETER_S) {
 
 void setMap(fuel_table_t table, float value) {
 	for (int l = 0; l < FUEL_LOAD_COUNT; l++) {
-		for (int r = 0; r < FUEL_RPM_COUNT; r++) {
-			table[l][r] = value;
+		for (int rpmIndex = 0; rpmIndex < FUEL_RPM_COUNT; rpmIndex++) {
+			table[l][rpmIndex] = value;
 		}
 	}
 }
@@ -906,17 +906,17 @@ void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {
 }
 
 void copyFuelTable(fuel_table_t const source, fuel_table_t destination) {
-	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {
-		for (int r = 0; r < FUEL_RPM_COUNT; r++) {
-			destination[k][r] = source[k][r];
+	for (int loadIndex = 0; loadIndex < FUEL_LOAD_COUNT; loadIndex++) {
+		for (int rpmIndex = 0; rpmIndex < FUEL_RPM_COUNT; rpmIndex++) {
+			destination[loadIndex][rpmIndex] = source[loadIndex][rpmIndex];
 		}
 	}
 }
 
 void copyTimingTable(ignition_table_t const source, ignition_table_t destination) {
 	for (int k = 0; k < IGN_LOAD_COUNT; k++) {
-		for (int r = 0; r < IGN_RPM_COUNT; r++) {
-			destination[k][r] = source[k][r];
+		for (int rpmIndex = 0; rpmIndex < IGN_RPM_COUNT; rpmIndex++) {
+			destination[k][rpmIndex] = source[k][rpmIndex];
 		}
 	}
 }

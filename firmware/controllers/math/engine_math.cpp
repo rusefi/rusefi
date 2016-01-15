@@ -259,8 +259,8 @@ static int findAngleIndex(float target DECLARE_ENGINE_PARAMETER_S) {
         } else if (eventAngle > target) {
             right = middle - 1;
         } else {
-                 // Values are equal
-                return middle;             // Key found
+            // Values are equal
+            return middle;             // Key found
         }
     }
     return left - 1;
@@ -268,6 +268,7 @@ static int findAngleIndex(float target DECLARE_ENGINE_PARAMETER_S) {
 }
 
 void findTriggerPosition(event_trigger_position_s *position, angle_t angleOffset DECLARE_ENGINE_PARAMETER_S) {
+	// convert engine cycle angle into trigger cycle angle
 	angleOffset += tdcPosition();
 	fixAngle(angleOffset);
 

@@ -1,6 +1,7 @@
 package com.rusefi.autotune.test;
 
 import com.rusefi.autotune.FuelAutoTune;
+import com.rusefi.config.Fields;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class FuelAutoTuneTest {
         dataPoints.add(FuelAutoTune.stDataOnline.valueOf(13, 1200, 80));
 
         {
-            FuelAutoTune.Result r = FuelAutoTune.process(false, dataPoints, 0.1, 13);
+            FuelAutoTune.Result r = FuelAutoTune.process(false, dataPoints, 0.1, 13, createVeTable());
             printNotDefault(r.getKgbcRES(), 1);
         }
 
@@ -31,7 +32,7 @@ public class FuelAutoTuneTest {
             dataPoints.add(FuelAutoTune.stDataOnline.valueOf(16, 1500 + i, 90));
 
         {
-            FuelAutoTune.Result r = FuelAutoTune.process(false, dataPoints, 0.01, 13);
+            FuelAutoTune.Result r = FuelAutoTune.process(false, dataPoints, 0.01, 13, createVeTable());
             printNotDefault(r.getKgbcRES(), 1);
         }
 
@@ -39,7 +40,7 @@ public class FuelAutoTuneTest {
             dataPoints.add(FuelAutoTune.stDataOnline.valueOf(15, 1500 + i, 90));
 
         {
-            FuelAutoTune.Result r = FuelAutoTune.process(false, dataPoints, 0.01, 13);
+            FuelAutoTune.Result r = FuelAutoTune.process(false, dataPoints, 0.01, 13, createVeTable());
             printNotDefault(r.getKgbcRES(), 1);
         }
 
@@ -51,16 +52,27 @@ public class FuelAutoTuneTest {
     /**
      * this method prints all values which do not equal default value
      */
-    private static void printNotDefault(double[][] array, double defaultValue) {
+    private static void printNotDefault(float[][] array, double defaultValue) {
         for (int i = 0; i < array.length; i++) {
             printNotDefault(array[i], i, defaultValue);
         }
     }
 
-    private static void printNotDefault(double[] array, int index, double defaultValue) {
+    private static void printNotDefault(float[] array, int index, double defaultValue) {
         for (int i = 0; i < array.length; i++) {
             if (array[i] != defaultValue)
                 System.out.println("Found value: " + index + " " + i + ": " + array[i]);
         }
     }
+
+    private static float[][] createVeTable() {
+        float kgbcINIT[][] = new float[Fields.FUEL_LOAD_COUNT][Fields.FUEL_RPM_COUNT];
+        for (int engineLoadIndex = 0; engineLoadIndex < Fields.FUEL_LOAD_COUNT; engineLoadIndex++) {
+            for (int rpmIndex = 0; rpmIndex < Fields.FUEL_RPM_COUNT; rpmIndex++) {
+                kgbcINIT[engineLoadIndex][rpmIndex] = 1;
+            }
+        }
+        return kgbcINIT;
+    }
+
 }
