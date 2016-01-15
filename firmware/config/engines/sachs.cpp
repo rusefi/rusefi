@@ -17,7 +17,6 @@ EXTERN_ENGINE;
 void setSachs(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->specs.displacement = 0.1; // 100cc
 	engineConfiguration->specs.cylindersCount = 1;
-	engineConfiguration->engineCycleDuration = 360;
 
 	setOperationMode(engineConfiguration, TWO_STROKE);
 	engineConfiguration->specs.firingOrder = FO_ONE_CYLINDER;

@@ -127,7 +127,7 @@
 #define firingOrder_offset 408
 #define firingOrder_offset_hex 198
 #define cylinderBore_offset 412
-#define engineCycleDuration_offset 416
+#define unused34234_offset 416
 #define rpmHardLimit_offset 420
 #define algorithm_offset 424
 #define crankingInjectionMode_offset 428

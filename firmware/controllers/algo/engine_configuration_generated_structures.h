@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 07 13:56:04 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 14 23:21:45 EST 2016
 // begin
 #include "rusefi_types.h"
 typedef struct {
@@ -852,13 +852,9 @@ typedef struct {
 	 */
 	float cylinderBore;
 	/**
-	 * todo:see getEngineCycle(operation_mode_e operationMode) eliminate this?
-	 * todo:operationMode should be enough
-	 * 360 for two-stroke
-	 * 720 for four-stroke
 	 * offset 416
 	 */
-	int engineCycleDuration;
+	int unused34234;
 	/**
 	 * offset 420
 	 */
@@ -1612,4 +1608,4 @@ typedef struct {
 } persistent_config_s;
 
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 07 13:56:04 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 14 23:21:45 EST 2016

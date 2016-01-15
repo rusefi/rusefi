@@ -69,6 +69,10 @@ void Engine::addConfigurationListener(configuration_callback_t callback) {
 }
 
 Engine::Engine(persistent_config_s *config) {
+	/**
+	 * it's important for fixAngle() that engineCycle field never has zero
+	 */
+	engineCycle = getEngineCycle(FOUR_STROKE_CRANK_SENSOR);
 	lastTriggerEventTimeNt = 0;
 	isCylinderCleanupMode = false;
 	engineCycleEventCount = 0;

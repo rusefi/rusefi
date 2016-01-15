@@ -332,7 +332,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	}
 }
 
-float getEngineCycle(operation_mode_e operationMode) {
+angle_t getEngineCycle(operation_mode_e operationMode) {
 	return operationMode == TWO_STROKE ? 360 : 720;
 }
 
