@@ -267,7 +267,7 @@ adc_channel_e getAdcChannel(brain_pin_e pin) {
 	}
 }
 
-GPIO_TypeDef* getAdcChannelPort(adc_channel_e hwChannel) {
+stm32_gpio_t* getAdcChannelPort(adc_channel_e hwChannel) {
 	// todo: replace this with an array :)
 	switch (hwChannel) {
 	case ADC_CHANNEL_IN0:
@@ -360,7 +360,7 @@ int getAdcChannelPin(adc_channel_e hwChannel) {
 }
 
 static void initAdcHwChannel(adc_channel_e hwChannel) {
-	GPIO_TypeDef* port = getAdcChannelPort(hwChannel);
+	stm32_gpio_t* port = getAdcChannelPort(hwChannel);
 	int pin = getAdcChannelPin(hwChannel);
 
 	initAdcPin(port, pin, "hw");
@@ -427,7 +427,7 @@ static void printFullAdcReport(void) {
 		appendMsgPrefix(&logger);
 
 		adc_channel_e hwIndex = slowAdc.getAdcHardwareIndexByInternalIndex(index);
-		GPIO_TypeDef* port = getAdcChannelPort(hwIndex);
+		stm32_gpio_t* port = getAdcChannelPort(hwIndex);
 		int pin = getAdcChannelPin(hwIndex);
 
 		int adcValue = slowAdc.getAdcValueByIndex(index);

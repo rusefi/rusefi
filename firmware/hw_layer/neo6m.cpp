@@ -77,7 +77,7 @@ static void onGpsMessage(char *buffer) {
 // we do not want this on stack, right?
 static char gps_str[GPS_MAX_STRING];
 
-static msg_t GpsThreadEntryPoint(void *arg) {
+static THD_FUNCTION(GpsThreadEntryPoint, arg) {
 	(void) arg;
 	chRegSetThreadName("GPS thread");
 
@@ -99,9 +99,6 @@ static msg_t GpsThreadEntryPoint(void *arg) {
 			gps_str[count++] = charbuf;
 		}
 	}
-#if defined __GNUC__
-	return 0;
-#endif
 }
 
 void initGps(void) {
@@ -115,7 +112,7 @@ void initGps(void) {
 	mySetPadMode2("GPS rx", boardConfiguration->gps_rx_pin, PAL_MODE_ALTERNATE(7));
 
 // todo: add a thread which would save location. If the GPS 5Hz - we should save the location each 200 ms
-	chThdCreateStatic(gpsThreadStack, sizeof(gpsThreadStack), LOWPRIO, GpsThreadEntryPoint, NULL);
+	chThdCreateStatic(gpsThreadStack, sizeof(gpsThreadStack), LOWPRIO, (tfunc_t)GpsThreadEntryPoint, NULL);
 
 	addConsoleAction("gpsinfo", &printGpsInfo);
 }

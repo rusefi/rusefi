@@ -38,31 +38,56 @@ public class IniFileModel {
             State state = State.SKIPPING;
 
             while ((line = d.readLine()) != null) {
-                LinkedList<String> list = new LinkedList<>(Arrays.asList(line.split("[\t =,]")));
-
-                trim(list);
-
-                if (list.isEmpty())
-                    continue;
-                String first = list.getFirst();
-
-                if ("dialog".equals(first)) {
-                    list.removeFirst();
-                    state = State.DIALOG;
-                    trim(list);
-                    String keyword = list.removeFirst();
-                    trim(list);
-                    String name = list.isEmpty() ? null : list.removeFirst();
-
-                    System.out.println("Dialog " + keyword + ": " + name);
-
-                }
+                handleLine(line);
 
 
             }
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    private void handleLine(String line) {
+        try {
+            LinkedList<String> list = new LinkedList<>(Arrays.asList(split(line)));
+
+            trim(list);
+
+            if (list.isEmpty())
+                return;
+            String first = list.getFirst();
+
+            if ("dialog".equals(first)) {
+                handleDialog(list);
+
+            } else if ("field".equals(first)) {
+                handleField(list);
+            }
+        } catch (RuntimeException e) {
+            throw new IllegalStateException("While [" + line + "]", e);
+        }
+    }
+
+    private void handleField(LinkedList<String> list) {
+        list.removeFirst(); // "field"
+
+        String label = list.isEmpty() ? "" : list.removeFirst();
+
+        String name = list.isEmpty() ? null : list.removeFirst();
+
+        System.out.println("Field label=[" + label + "] : name=[" + name + "]");
+    }
+
+    private void handleDialog(LinkedList<String> list) {
+        State state;
+        list.removeFirst(); // "dialog"
+        state = State.DIALOG;
+//                    trim(list);
+        String keyword = list.removeFirst();
+//                    trim(list);
+        String name = list.isEmpty() ? null : list.removeFirst();
+
+        System.out.println("Dialog key=" + keyword + ": name=[" + name + "]");
     }
 
     private void trim(LinkedList<String> list) {
@@ -81,7 +106,7 @@ public class IniFileModel {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
-            if (c == '\"' || c == ' ' && !inQuote) {
+            if (c == '\"' || isWhitespace(c) && !inQuote) {
                 if (c == '\"')
                     inQuote = !inQuote;
                 if (!inQuote && sb.length() > 0) {
@@ -95,6 +120,10 @@ public class IniFileModel {
             strings.add(sb.toString());
 
         return strings.toArray(new String[strings.size()]);
+    }
+
+    private static boolean isWhitespace(int c) {
+        return c == ' ' || c == '\t' || c == '=' || c == ',';
     }
 
 }
