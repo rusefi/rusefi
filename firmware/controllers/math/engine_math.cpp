@@ -90,6 +90,20 @@ void setSingleCoilDwell(engine_configuration_s *engineConfiguration) {
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 
+
+static void addIgnitionEvent(angle_t localAdvance, angle_t dwellAngle, IgnitionEventList *list, NamedOutputPin *output DECLARE_ENGINE_PARAMETER_S) {
+	IgnitionEvent *event = list->add();
+
+	if (!isPinAssigned(output)) {
+		// todo: extact method for this index math
+		warning(OBD_PCM_Processor_Fault, "no_pin_cl #%s", output->name);
+	}
+	event->output = output;
+	event->advance = localAdvance;
+
+	findTriggerPosition(&event->dwellPosition, localAdvance - dwellAngle PASS_ENGINE_PARAMETER);
+}
+
 void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
 		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
 	efiAssertVoid(engineConfiguration->specs.cylindersCount > 0, "cylindersCount");
@@ -97,19 +111,23 @@ void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
 	list->reset();
 
 	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
+		// todo: clean up this implementation? does not look too nice as is.
+
 		angle_t localAdvance = advance + ENGINE(angleExtra[i]);
-		NamedOutputPin *output = ENGINE(ignitionPin[i]);
+		int index = ENGINE(ignitionPin[i]);
+		int cylinderIndex = ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), index));
+		NamedOutputPin *output = &enginePins.coils[cylinderIndex];
 
-		IgnitionEvent *event = list->add();
+		addIgnitionEvent(localAdvance, dwellAngle, list, output PASS_ENGINE_PARAMETER);
 
-		if (!isPinAssigned(output)) {
-			// todo: extact method for this index math
-			warning(OBD_PCM_Processor_Fault, "no_pin_cl #%s", output->name);
+		if (CONFIG(ignitionMode) == IM_WASTED_SPARK && CONFIG(twoWireBatchIgnition)) {
+			index += CONFIG(specs.cylindersCount) / 2;
+			cylinderIndex = ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), index));
+			output = &enginePins.coils[cylinderIndex];
+
+			addIgnitionEvent(localAdvance, dwellAngle, list, output PASS_ENGINE_PARAMETER);
 		}
-		event->output = output;
-		event->advance = localAdvance;
 
-		findTriggerPosition(&event->dwellPosition, localAdvance - dwellAngle PASS_ENGINE_PARAMETER);
 	}
 }
 
@@ -344,25 +362,23 @@ int getCylinderId(firing_order_e firingOrder, int index) {
 	return 1;
 }
 
-static NamedOutputPin * getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_S
+static int getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_S
 ) {
 	switch (CONFIG(ignitionMode)) {
 	case IM_ONE_COIL:
-		return &enginePins.coils[0];
+		return 0;
 		break;
 	case IM_WASTED_SPARK: {
-		int wastedIndex = i % (CONFIG(specs.cylindersCount) / 2);
-		int id = getCylinderId(CONFIG(specs.firingOrder), wastedIndex);
-		return &enginePins.coils[ID2INDEX(id)];
+		return i % (CONFIG(specs.cylindersCount) / 2);
 	}
 		break;
 	case IM_INDIVIDUAL_COILS:
-		return &enginePins.coils[ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), i))];
+		return i;
 		break;
 
 	default:
 		warning(OBD_PCM_Processor_Fault, "unsupported ignitionMode %d in initializeIgnitionActions()", engineConfiguration->ignitionMode);
-		return &enginePins.coils[0];
+		return 0;
 	}
 }
 
@@ -378,6 +394,8 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 
 	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 		ENGINE(angleExtra[i])= ENGINE(engineCycle) * i / CONFIG(specs.cylindersCount);
+
+
 
 		ENGINE(ignitionPin[i]) = getIgnitionPinForIndex(i PASS_ENGINE_PARAMETER);
 
