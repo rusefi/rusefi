@@ -28,7 +28,10 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 
 	engineConfiguration->injectionMode = IM_BATCH;
+	// enable two_wire_batch_injection
 	engineConfiguration->twoWireBatchInjection = true;
+	// enable two_wire_wasted_spark
+	engineConfiguration->twoWireBatchIgnition = true;
 
 	// chartsize 600
 	engineConfiguration->engineChartSize = 600;
