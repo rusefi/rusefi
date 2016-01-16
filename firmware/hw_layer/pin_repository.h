@@ -18,7 +18,7 @@
 #ifdef __cplusplus
 #include "efiGpio.h"
 // does not exactly belong here, but that works better for tests
-void outputPinRegister(const char *msg, OutputPin *output, GPIO_TypeDef *port, uint32_t pin);
+void outputPinRegister(const char *msg, OutputPin *output, stm32_gpio_t *port, uint32_t pin);
 #endif /* __cplusplus */
 
 #define PORT_SIZE 16
@@ -29,12 +29,12 @@ void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t m
 const char *hwPortname(brain_pin_e brainPin);
 const char * getPinFunction(brain_input_pin_e brainPin);
 void mySetPadMode2(const char *msg, brain_pin_e pin, iomode_t mode);
-const char *portname(GPIO_TypeDef* GPIOx);
+const char *portname(stm32_gpio_t* GPIOx);
 void unmarkPin(brain_pin_e brainPin);
 
 iomode_t getInputMode(pin_input_mode_e mode);
 void efiIcuStart(ICUDriver *icup, const ICUConfig *config);
 ioportmask_t getHwPin(brain_pin_e brainPin);
-GPIO_TypeDef * getHwPort(brain_pin_e brainPin);
+stm32_gpio_t * getHwPort(brain_pin_e brainPin);
 
 #endif /* PIN_REPOSITORY_H_ */

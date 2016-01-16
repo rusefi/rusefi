@@ -283,12 +283,7 @@ static void MMCmount(void) {
 	}
 }
 
-#if defined __GNUC__
-__attribute__((noreturn))        static msg_t MMCmonThread(void)
-#else
-static msg_t MMCmonThread(void)
-#endif
-{
+static THD_FUNCTION(MMCmonThread, arg) {
 	chRegSetThreadName("MMC_Monitor");
 
 	while (true) {

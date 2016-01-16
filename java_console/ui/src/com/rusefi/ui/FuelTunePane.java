@@ -102,6 +102,7 @@ public class FuelTunePane {
         synchronized (incomingDataPoints) {
             for (FuelDataPoint point : incomingDataPoints)
                 data.add(point.asDataOnline());
+            incomingDataPoints.clear();
         }
 
         // todo: move this away from AWT thread

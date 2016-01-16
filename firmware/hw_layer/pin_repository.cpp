@@ -23,7 +23,7 @@ static int initialized = FALSE;
 static LoggingWithStorage logger("pin repos");
 static int totalPinsUsed = 0;
 
-static GPIO_TypeDef* ports[7] = {GPIOA,
+static stm32_gpio_t* ports[7] = {GPIOA,
 		GPIOB,
 		GPIOC,
 		GPIOD,
@@ -35,7 +35,7 @@ static GPIO_TypeDef* ports[7] = {GPIOA,
 /**
  * @deprecated - use hwPortname() instead
  */
-const char *portname(GPIO_TypeDef* GPIOx) {
+const char *portname(stm32_gpio_t* GPIOx) {
 	if (GPIOx == GPIOA)
 		return "PA";
 	if (GPIOx == GPIOB)
@@ -55,7 +55,7 @@ const char *portname(GPIO_TypeDef* GPIOx) {
 	return "unknown";
 }
 
-static int getPortIndex(GPIO_TypeDef* port) {
+static int getPortIndex(stm32_gpio_t* port) {
 	if (port == GPIOA)
 		return 0;
 	if (port == GPIOB)
@@ -83,7 +83,7 @@ static void reportPins(void) {
 		const char *name = PIN_USED[i];
 		int portIndex = i / PORT_SIZE;
 		int pin = i % PORT_SIZE;
-		GPIO_TypeDef* port = ports[portIndex];
+		stm32_gpio_t* port = ports[portIndex];
 		if (name != NULL) {
 			scheduleMsg(&logger, "pin %s%d: %s", portname(port), pin, name);
 		}
@@ -125,7 +125,7 @@ const char *hwPortname(brain_pin_e brainPin) {
 	if (brainPin == GPIO_INVALID) {
 		return "INVALID";
 	}
-	GPIO_TypeDef *hwPort = getHwPort(brainPin);
+	stm32_gpio_t *hwPort = getHwPort(brainPin);
 	if (hwPort == GPIO_NULL) {
 		return "NONE";
 	}
