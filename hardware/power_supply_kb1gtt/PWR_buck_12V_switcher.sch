@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:KICAD_Older_Version
 LIBS:power
 LIBS:device
 LIBS:conn
@@ -9,7 +10,6 @@ LIBS:cmos4000
 LIBS:adc-dac
 LIBS:memory
 LIBS:xilinx
-LIBS:special
 LIBS:microcontrollers
 LIBS:microchip
 LIBS:analog_switches
@@ -26,7 +26,8 @@ LIBS:contrib
 LIBS:lm2596
 LIBS:mos_p_numbered-pins
 LIBS:mos_n_numbered-pins
-EELAYER 27 0
+LIBS:PWR_buck_12V_switcher-cache
+EELAYER 25 0
 EELAYER END
 $Descr A 11000 8500
 encoding utf-8
@@ -191,7 +192,7 @@ F 3 "" H 7450 6900 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L MOS_PRO Q1
+L MOS_Pro Q1
 U 1 1 5611B0E6
 P 5350 6500
 F 0 "Q1" H 5350 6650 60  0000 R CNN
@@ -218,7 +219,7 @@ F 5 "DIGI,P39KDACT-ND" V 1530 2600 60  0001 C CNN "vend1,vend1#"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L ZENERSMALL D1
+L ZENERsmall D1
 U 1 1 5611B0E8
 P 5650 6500
 F 0 "D1" H 5650 6600 40  0000 C CNN
@@ -305,7 +306,7 @@ F 5 "dnp,dnp" H 5650 6250 60  0001 C CNN "Field5"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L MOS_NRO Q2
+L MOS_Nro Q2
 U 1 1 5611B0EF
 P 4800 6500
 F 0 "Q2" H 4800 6350 60  0000 R CNN
@@ -318,7 +319,7 @@ F 5 "digikey,IXTA6N50D2-ND" H 4800 6500 60  0001 C CNN "vend1,vend1#"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L ZENERSMALL D2
+L ZENERsmall D2
 U 1 1 5611B0F0
 P 4600 6750
 F 0 "D2" H 4600 6850 40  0000 C CNN
@@ -359,8 +360,6 @@ Wire Wire Line
 Wire Wire Line
 	8900 6450 9050 6450
 Connection ~ 9050 6450
-Wire Wire Line
-	5550 6400 7000 6400
 Connection ~ 6800 6400
 Wire Wire Line
 	7000 6850 7000 6550
@@ -420,7 +419,7 @@ Wire Wire Line
 Wire Wire Line
 	4700 6600 4700 6700
 $Comp
-L ZENERSMALL D3
+L ZENERsmall D3
 U 1 1 5611B0F3
 P 6350 6500
 F 0 "D3" H 6350 6600 40  0000 C CNN
@@ -450,4 +449,32 @@ Text Label 3600 6400 2    60   ~ 0
 Vin
 Text Label 3500 6600 0    60   ~ 0
 GND
+$Comp
+L INDUCTOR L3
+U 1 1 56A0BD42
+P 6000 6400
+F 0 "L3" V 5950 6400 40  0000 C CNN
+F 1 "38uH" V 6100 6400 40  0000 C CNN
+F 2 "SM100uH" H 6000 6400 60  0001 C CNN
+F 3 "" H 6000 6400 60  0001 C CNN
+F 4 "ref_PULSE_ref,ref_PE-54040-S_ref-use-sky-macau-number" V 6000 6400 60  0001 C CNN "MFG,MFG#"
+F 5 "sky-macau.com,3817361683" V 6000 6400 60  0001 C CNN "VEND1,VEND1#"
+	1    6000 6400
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	5700 6400 5550 6400
+Wire Wire Line
+	6300 6400 7000 6400
+$Comp
+L PWR_FLAG #FLG02
+U 1 1 56A0D7DE
+P 9650 6850
+F 0 "#FLG02" H 9650 6945 30  0001 C CNN
+F 1 "PWR_FLAG" H 9650 7030 30  0000 C CNN
+F 2 "" H 9650 6850 60  0000 C CNN
+F 3 "" H 9650 6850 60  0000 C CNN
+	1    9650 6850
+	-1   0    0    1   
+$EndComp
 $EndSCHEMATC

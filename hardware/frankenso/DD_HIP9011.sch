@@ -55,7 +55,7 @@ LIBS:mos_n_numbered-pins
 LIBS:frankenso-cache
 EELAYER 25 0
 EELAYER END
-$Descr A4 11693 8268
+$Descr A 11000 8500
 encoding utf-8
 Sheet 5 15
 Title "Frankenso"
@@ -477,8 +477,8 @@ F 5 "DNP,DNP" V 30  2250 60  0001 C CNN "vend1,vend1#"
 	1    4350 4850
 	0    1    1    0   
 $EndComp
-Text Notes 2550 6900 0    60   ~ 0
-http://www.crystek.com/documents/appnotes/Pierce-GateIntroduction.pdf\nPCB per predictions with SaturnPCB has less then 3.5pF traces, \nTPIC pins assumed 5pF\nESR = 80ohms max\nRf = 2meg could be between 1meg and 10meg.\nCload = 18pF per XTAL datasheet\nCload = ([Cin+C1][C2+Cout])/(Cin+C1+C2_Cout)+PCBstray\nCload = ([5+24][24+5])/(5+24+24+5)+3.5= 18pF\nC1=C2=C166=C167 = 24pF\nRs = 1/(2piFC2) = 1/(2*pi*8MHz*24pF) = 829ohms, 820ohms is close enough = R177
+Text Notes 1950 7400 0    60   ~ 0
+http://www.crystek.com/documents/appnotes/Pierce-GateIntroduction.pdf\nPCB per predictions with SaturnPCB has less then 3.5pF traces, \nTPIC pins assumed 5pF\nESR = 80ohms max\nRf = 2meg could be between 1meg and 10meg.\nCload should be 18pF per XTAL datasheet\nCload = ([Cin+C1][C2+Cout])/(Cin+C1+C2_Cout)+PCBstray\nCload = ([5+24][24+5])/(5+24+24+5)+3.5= 18.0pF\nC1=C2=C166=C167 = 24pF\nRs = 1/(2piFC2) = 1/(2*pi*8MHz*24pF) = 829ohms, 820ohms is close enough = R177
 $Comp
 L R R161
 U 1 1 5581A409

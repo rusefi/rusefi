@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:KICAD_Older_Version
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -10,7 +11,6 @@ LIBS:cmos4000
 LIBS:adc-dac
 LIBS:memory
 LIBS:xilinx
-LIBS:special
 LIBS:microcontrollers
 LIBS:dsp
 LIBS:microchip
@@ -53,7 +53,7 @@ LIBS:STM32F407IGT6
 LIBS:slc_oem
 LIBS:mos_n_numbered-pins
 LIBS:PWR_5V_linear-cache
-EELAYER 27 0
+EELAYER 25 0
 EELAYER END
 $Descr A 11000 8500
 encoding utf-8
@@ -136,7 +136,7 @@ F 3 "" H 7850 6900 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L MOS_PRO Q1001
+L MOS_Pro Q1001
 U 1 1 5611BCD0
 P 5350 6500
 F 0 "Q1001" H 5350 6690 60  0000 R CNN
@@ -164,7 +164,7 @@ F 6 "sky-macau,7768409796" V 5900 6700 60  0001 C CNN "vend2,vend2#"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L ZENERSMALL D1001
+L ZENERsmall D1001
 U 1 1 5611BCD2
 P 5650 6600
 F 0 "D1001" H 5650 6700 40  0000 C CNN
@@ -274,7 +274,7 @@ $Comp
 L CONN_1 P1004
 U 1 1 5611BCDE
 P 9200 7000
-F 0 "P1004" H 9280 7000 40  0000 L CNN
+F 0 "P1004" H 9250 7000 40  0000 L CNN
 F 1 "CONN_1" H 9200 7055 30  0001 C CNN
 F 2 "SIL-1" V 2580 2900 60  0001 C CNN
 F 3 "" H 9200 7000 60  0001 C CNN
@@ -316,7 +316,7 @@ F 5 "dnp,dnp" H 3450 6250 60  0001 C CNN "Field5"
 	-1   0    0    1   
 $EndComp
 $Comp
-L MOS_NRO Q1002
+L MOS_Nro Q1002
 U 1 1 5611BCF1
 P 4800 6500
 F 0 "Q1002" H 4800 6350 60  0000 R CNN
@@ -329,7 +329,7 @@ F 5 "digikey,IXTA6N50D2-ND" H 4800 6500 60  0001 C CNN "vend1,vend1#"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L ZENERSMALL D1002
+L ZENERsmall D1002
 U 1 1 5611BCF2
 P 4600 6750
 F 0 "D1002" H 4600 6850 40  0000 C CNN
@@ -362,7 +362,7 @@ Vs1
 Text Notes 550  5350 0    60   ~ 0
 Brief overview\n-- Q1002, R1003, D1002 preform an active transient protection. It will suppress voltages up to 150V to 200V. This limits to 15V(diode) + 4.5V(MOSFET gate) 19.5V down stream.\n-- Q1001, R1001, D1001 preform a reverse polarity protection. If the input signal is the wrong polarity, the gate will not conduct which will prevent current from flowing.  Above 19.5V is below 20Vmax of Q1001.\n-- D1003 is a second transient suppressor, it would catch faster transients allowing a brief amount of time for Q1002 to preform it's duty. \n-- C1001 is a bulk cap, it simply stores energy locally such that the regulator can draw large currents in short periods of time. \n-- U1001 and the components to the right, are a buck style linear regulator, that will pull the 5V line up to 5V. It will now pull it down from 5V if there is an external voltage. 
 $Comp
-L ZENERSMALL D1003
+L ZENERsmall D1003
 U 1 1 5687F3A8
 P 6750 6750
 F 0 "D1003" H 6750 6850 40  0000 C CNN
@@ -461,7 +461,7 @@ Wire Notes Line
 Wire Notes Line
 	8300 6950 8300 6900
 $Comp
-L ZENERSMALL D1004
+L ZENERsmall D1004
 U 1 1 5687F710
 P 7800 6050
 F 0 "D1004" H 7800 6150 40  0000 C CNN
