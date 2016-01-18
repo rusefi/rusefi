@@ -395,7 +395,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	efiAssertVoid(eventIndex < 2 * engine->triggerShape.getSize(), "trigger/event index");
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#2");
 
-	int rpm = getRpmE(engine);
+	int rpm = ENGINE(rpmCalculator.rpmValue);
 	if (rpm == 0) {
 		// this happens while we just start cranking
 		// todo: check for 'trigger->is_synchnonized?'
@@ -407,8 +407,8 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 		// TODO: add 'pin shutdown' invocation somewhere - coils might be still open here!
 		return;
 	}
-	bool limitedSpark = rpm > engineConfiguration->rpmHardLimit;
-	bool limitedFuel = rpm > engineConfiguration->rpmHardLimit;
+	bool limitedSpark = rpm > CONFIG(rpmHardLimit);
+	bool limitedFuel = rpm > CONFIG(rpmHardLimit);
 	if (limitedSpark || limitedFuel) {
 		warning(OBD_PCM_Processor_Fault, "skipping stroke due to rpm=%d", rpm);
 	}
@@ -417,16 +417,14 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	int beforeCallback = hal_lld_get_counter_value();
 #endif
 
-	int revolutionIndex = engine->rpmCalculator.getRevolutionCounter() % 2;
+	int revolutionIndex = ENGINE(rpmCalculator).getRevolutionCounter() % 2;
 
 	if (eventIndex == 0) {
 		if (triggerVersion.isOld())
 			prepareOutputSignals(PASS_ENGINE_PARAMETER_F);
 	}
 
-	if (engineConfiguration->useOnlyFrontForTrigger && engineConfiguration->ignMathCalculateAtIndex % 2 != 0) {
-		firmwareError("invalid ignMathCalculateAtIndex %d", engineConfiguration->ignMathCalculateAtIndex);
-	}
+	efiAssertVoid(!CONFIG(useOnlyFrontForTrigger) || CONFIG(ignMathCalculateAtIndex) % 2 == 0, "invalid ignMathCalculateAtIndex");
 
 	if (eventIndex == engineConfiguration->ignMathCalculateAtIndex) {
 		if (engineConfiguration->externalKnockSenseAdc != EFI_ADC_NONE) {
