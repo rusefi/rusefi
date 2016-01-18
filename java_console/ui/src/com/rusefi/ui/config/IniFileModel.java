@@ -12,6 +12,9 @@ public class IniFileModel {
     private static final String FILENAME = "rusefi.ini";
 
     private final static IniFileModel INSTANCE = new IniFileModel();
+    private String dialogName;
+    private List<String> fields = new ArrayList<>();
+    private List<DialogModel> dialogs = new ArrayList<>();
 
     public static void main(String[] args) {
         System.out.println(IniFileModel.INSTANCE);
@@ -42,9 +45,19 @@ public class IniFileModel {
 
 
             }
+            finishDialog();
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    private void finishDialog() {
+        if (fields.isEmpty())
+            return;
+        dialogs.add(new DialogModel(dialogName, fields));
+
+        dialogName = null;
+        fields.clear();
     }
 
     private void handleLine(String line) {
@@ -75,10 +88,12 @@ public class IniFileModel {
 
         String name = list.isEmpty() ? null : list.removeFirst();
 
+        fields.add(label);
         System.out.println("Field label=[" + label + "] : name=[" + name + "]");
     }
 
     private void handleDialog(LinkedList<String> list) {
+        finishDialog();
         State state;
         list.removeFirst(); // "dialog"
         state = State.DIALOG;
@@ -87,6 +102,7 @@ public class IniFileModel {
 //                    trim(list);
         String name = list.isEmpty() ? null : list.removeFirst();
 
+        dialogName = keyword;
         System.out.println("Dialog key=" + keyword + ": name=[" + name + "]");
     }
 

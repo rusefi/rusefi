@@ -113,4 +113,26 @@ public class Field {
                 ", type=" + type +
                 '}';
     }
+
+    private static void register(Field field) {
+
+    }
+
+    public static Field create(String name, int offset, FieldType type, int bitOffset) {
+        Field field = new Field(name, offset, type, bitOffset);
+        register(field);
+        return field;
+    }
+
+    public static Field create(String name, int offset, FieldType type, String... options) {
+        Field field = new Field(name, offset, type, options);
+        register(field);
+        return field;
+    }
+
+    public static Field create(String name, int offset, FieldType type) {
+        Field field = new Field(name, offset, type);
+        register(field);
+        return field;
+    }
 }
