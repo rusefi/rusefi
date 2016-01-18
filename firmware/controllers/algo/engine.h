@@ -119,8 +119,6 @@ public:
 	 * ignition dwell duration as crankshaft angle
 	 */
 	angle_t dwellAngle;
-	angle_t advance;
-
 
 	// fuel-related;
 	float iatFuelCorrection;

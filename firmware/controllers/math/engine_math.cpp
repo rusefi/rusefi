@@ -113,7 +113,8 @@ void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
 	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 		// todo: clean up this implementation? does not look too nice as is.
 
-		angle_t localAdvance = advance + ENGINE(angleExtra[i]);
+		// change of sign here from 'before TDC' to 'after TDC'
+		angle_t localAdvance = -advance + ENGINE(angleExtra[i]);
 		int index = ENGINE(ignitionPin[i]);
 		int cylinderIndex = ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), index));
 		NamedOutputPin *output = &enginePins.coils[cylinderIndex];
