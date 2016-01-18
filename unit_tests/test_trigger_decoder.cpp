@@ -300,10 +300,10 @@ static void testRpmCalculator(void) {
 
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_F);
 	timeNow = 0;
-	assertEquals(0, eth.engine.rpmCalculator.rpm(PASS_ENGINE_PARAMETER_F));
+	assertEquals(0, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
 
 	eth.fireTriggerEvents();
-	assertEqualsM("RPM", 1500, eth.engine.rpmCalculator.rpm(PASS_ENGINE_PARAMETER_F));
+	assertEqualsM("RPM", 1500, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
 	assertEqualsM("index #1", 15, eth.engine.triggerCentral.triggerState.getCurrentIndex());
 
 	static MainTriggerCallback triggerCallbackInstance;

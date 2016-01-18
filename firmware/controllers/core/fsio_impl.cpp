@@ -75,7 +75,7 @@ float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 	case LE_METHOD_INTAKE_AIR:
 		return getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F);
 	case LE_METHOD_RPM:
-		return engine->rpmCalculator.rpm();
+		return engine->rpmCalculator.getRpm();
 	case LE_METHOD_TIME_SINCE_BOOT:
 		return getTimeNowSeconds();
 	case LE_METHOD_FAN_OFF_SETTING:

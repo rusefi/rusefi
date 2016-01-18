@@ -227,7 +227,7 @@ static void reportWave(Logging *logging, int index) {
 		appendPrintf(logging, "%s", DELIMETER);
 
 		uint32_t offsetUs = getWaveOffset(index);
-		int rpm = getRpm();
+		int rpm = getRpmE(engine);
 		float oneDegreeUs = rpm == 0 ? NAN : getOneDegreeTimeUs(rpm);
 
 		appendPrintf(logging, "advance%d%s", index, DELIMETER);

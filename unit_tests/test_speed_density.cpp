@@ -19,7 +19,7 @@ void testSpeedDensity(void) {
 	eth.initTriggerShapeAndRpmCalculator();
 
 	eth.fireTriggerEvents();
-	assertEqualsM("RPM", 1500, eth.engine.rpmCalculator.rpm(PASS_ENGINE_PARAMETER_F));
+	assertEqualsM("RPM", 1500, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
 
 	// 427 cubic inches, that's a LOT of engine
 	eth.ec->specs.displacement = 6.99728;
