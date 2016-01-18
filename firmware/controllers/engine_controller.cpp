@@ -117,7 +117,7 @@ static msg_t csThread(void) {
 	chRegSetThreadName("status");
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	while (true) {
-		int rpm = getRpm();
+		int rpm = getRpmE(engine);
 		int is_cranking = isCrankingR(rpm);
 		int is_running = rpm > 0 && !is_cranking;
 		if (is_running) {

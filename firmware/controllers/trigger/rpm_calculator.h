@@ -41,7 +41,7 @@ public:
 	 * Please note that this is a relatively heavy method due to getTimeNowNt() usage
 	 */
 	bool isRunning(DECLARE_ENGINE_PARAMETER_F);
-	int rpm(DECLARE_ENGINE_PARAMETER_F);
+	int getRpm(DECLARE_ENGINE_PARAMETER_F);
 	/**
 	 * This method is invoked once per engine cycle right after we calculate new RPM value
 	 */
@@ -73,12 +73,10 @@ private:
 	volatile uint32_t revolutionCounterSinceStart;
 };
 
-#define getRpm() getRpmE(engine)
-
 /**
  * @brief   Current RPM
  */
-#define getRpmE(engine) (engine)->rpmCalculator.rpm(PASS_ENGINE_PARAMETER_F)
+#define getRpmE(engine) (engine)->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F)
 
 bool isCrankingE(Engine *engine);
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECLARE_ENGINE_PARAMETER_S);

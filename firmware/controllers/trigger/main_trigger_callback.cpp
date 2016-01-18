@@ -485,7 +485,7 @@ void MainTriggerCallback::init(Engine *engine) {
 
 static void showMainInfo(Engine *engine) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	int rpm = engine->rpmCalculator.rpm(PASS_ENGINE_PARAMETER_F);
+	int rpm = engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F);
 	float el = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
 	scheduleMsg(logger, "rpm %d engine_load %f", rpm, el);
 	scheduleMsg(logger, "fuel %fms timing %f", getFuelMs(rpm PASS_ENGINE_PARAMETER), engine->engineState.timingAdvance);

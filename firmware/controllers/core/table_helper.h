@@ -12,9 +12,9 @@
 #include "interpolation.h"
 #include "efilib.h"
 
-// 'random' value to be sure we are not treating any non-zero trash as TRUE
-#define MAGIC_TRUE_VALUE 153351512
-
+/**
+ * this helper class brings together 3D table with two 2D axis curves
+ */
 template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE>
 class Map3D {
 public:
@@ -26,7 +26,7 @@ private:
 	float *pointers[LOAD_BIN_SIZE];
 	float *loadBins;
 	float *rpmBins;
-	int initialized;
+	bool initialized;
 	const char *name;
 };
 
@@ -73,14 +73,14 @@ void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::init(float table[RPM_BIN_SIZE][LOAD_BIN
   for (int k = 0; k < LOAD_BIN_SIZE; k++) {
 		pointers[k] = table[k];
   }
-	initialized = MAGIC_TRUE_VALUE;
+	initialized = true;
 	this->loadBins = loadBins;
 	this->rpmBins = rpmBins;
 }
 
 template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE>
 float Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::getValue(float x, float rpm) {
-	efiAssert(initialized == MAGIC_TRUE_VALUE, "map not initialized", NAN);
+	efiAssert(initialized, "map not initialized", NAN);
 	if (cisnan(x)) {
 		warning(OBD_PCM_Processor_Fault, "%s: x is NaN", name);
 		return NAN;
@@ -99,7 +99,7 @@ Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::Map3D(const char *name) {
 
 template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE>
 void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::setAll(float value) {
-	efiAssertVoid(initialized == MAGIC_TRUE_VALUE, "map not initialized");
+	efiAssertVoid(initialized, "map not initialized");
 	for (int l = 0; l < LOAD_BIN_SIZE; l++) {
 		for (int r = 0; r < RPM_BIN_SIZE; r++) {
 			pointers[l][r] = value;

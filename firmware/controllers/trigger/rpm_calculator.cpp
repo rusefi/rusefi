@@ -116,7 +116,7 @@ float RpmCalculator::getRpmAcceleration() {
  */
 // todo: migrate to float return result or add a float version? this would have with calculations
 // todo: add a version which does not check time & saves time? need to profile
-int RpmCalculator::rpm(DECLARE_ENGINE_PARAMETER_F) {
+int RpmCalculator::getRpm(DECLARE_ENGINE_PARAMETER_F) {
 #if !EFI_PROD_CODE
 	if (mockRpm != MOCK_UNDEFINED)
 	return mockRpm;
@@ -221,7 +221,7 @@ static char rpmBuffer[10];
  * digital sniffer.
  */
 static void onTdcCallback(void) {
-	itoa10(rpmBuffer, getRpm());
+	itoa10(rpmBuffer, getRpmE(engine));
 	addWaveChartEvent(TOP_DEAD_CENTER_MESSAGE, (char* ) rpmBuffer);
 }
 
@@ -235,7 +235,7 @@ static void tdcMarkCallback(trigger_event_e ckpSignalType,
 	if (isTriggerSynchronizationPoint
 			&& engineConfiguration->isEngineChartEnabled) {
 		int revIndex2 = engine->rpmCalculator.getRevolutionCounter() % 2;
-		int rpm = getRpm();
+		int rpm = getRpmE(engine);
 		// todo: use event-based scheduling, not just time-based scheduling
 		if (isValidRpm(rpm)) {
 			scheduleByAngle(rpm, &tdcScheduler[revIndex2], tdcPosition(),
@@ -263,7 +263,7 @@ float getCrankshaftAngleNt(efitime_t timeNt DECLARE_ENGINE_PARAMETER_S) {
 	 * compiler is not smart enough to figure out that "A / ( B / C)" could be optimized into
 	 * "A * C / B" in order to replace a slower division with a faster multiplication.
 	 */
-	int rpm = engine->rpmCalculator.rpm(PASS_ENGINE_PARAMETER_F);
+	int rpm = engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F);
 	return rpm == 0 ? NAN : timeSinceZeroAngleNt / getOneDegreeTimeNt(rpm);
 }
 
