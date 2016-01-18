@@ -1,9 +1,9 @@
 EESchema Schematic File Version 2
+LIBS:KICAD_Older_Version
 LIBS:power
 LIBS:device
 LIBS:conn
 LIBS:linear
-LIBS:special
 LIBS:stm32
 LIBS:logo_flipped
 LIBS:art-electro-conn
@@ -14,7 +14,7 @@ LIBS:art-electro-power
 LIBS:art-electro-max
 LIBS:crystal(mc306)
 LIBS:176-pin_board-cache
-EELAYER 27 0
+EELAYER 25 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8

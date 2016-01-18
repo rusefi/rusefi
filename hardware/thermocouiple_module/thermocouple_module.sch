@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:KICAD_Older_Version
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -10,7 +11,6 @@ LIBS:cmos4000
 LIBS:adc-dac
 LIBS:memory
 LIBS:xilinx
-LIBS:special
 LIBS:microcontrollers
 LIBS:dsp
 LIBS:microchip
@@ -30,8 +30,14 @@ LIBS:atmel
 LIBS:contrib
 LIBS:valves
 LIBS:max31855
+LIBS:art-electro-conn_2
+LIBS:art-electro-conn
+LIBS:art-electro-ic
+LIBS:art-electro-max
+LIBS:art-electro-power
+LIBS:art-electro-stm32
 LIBS:thermocouple_module-cache
-EELAYER 27 0
+EELAYER 25 0
 EELAYER END
 $Descr A 11000 8500
 encoding utf-8
@@ -48,30 +54,30 @@ $EndDescr
 NoConn ~ 4075 4350
 NoConn ~ 3875 4350
 $Comp
-L VIA V802
+L CONN_1 V802
 U 1 1 4F629521
-P 3875 4350
-F 0 "V802" V 3900 4450 20  0000 C CNN
-F 1 "VIA" H 3875 4550 60  0001 C CNN
-F 2 "1pin" H 3875 4650 60  0001 C CNN
-F 3 "" H 3875 4350 60  0001 C CNN
-	1    3875 4350
-	0    1    1    0   
+P 3875 4200
+F 0 "V802" V 3900 4300 20  0000 C CNN
+F 1 "VIA" H 3875 4400 60  0001 C CNN
+F 2 "1pin" H 3875 4500 60  0001 C CNN
+F 3 "" H 3875 4200 60  0001 C CNN
+	1    3875 4200
+	0    -1   -1   0   
 $EndComp
 Text Notes 3900 4950 0    40   ~ 0
 We want a big mass of copper in the\nTCPL joints, to dampen the cold junction\ntemperature and to make it more measurable\nwith this IC
 Text Notes 3725 4450 0    40   ~ 0
 Via for cable tie
 $Comp
-L VIA V801
+L CONN_1 V801
 U 1 1 4F627FCA
-P 4075 4350
-F 0 "V801" V 4100 4450 20  0000 C CNN
-F 1 "VIA" H 4075 4550 60  0001 C CNN
-F 2 "1pin" H 4075 4350 60  0001 C CNN
-F 3 "" H 4075 4350 60  0001 C CNN
-	1    4075 4350
-	0    1    1    0   
+P 4075 4200
+F 0 "V801" V 4100 4300 20  0000 C CNN
+F 1 "VIA" H 4075 4400 60  0001 C CNN
+F 2 "1pin" H 4075 4200 60  0001 C CNN
+F 3 "" H 4075 4200 60  0001 C CNN
+	1    4075 4200
+	0    -1   -1   0   
 $EndComp
 Connection ~ 4800 4650
 Wire Wire Line

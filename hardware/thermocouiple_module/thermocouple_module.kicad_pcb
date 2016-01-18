@@ -92,9 +92,9 @@
       (subtractmaskfromsilk false)
       (outputformat 1)
       (mirror false)
-      (drillshape 0)
+      (drillshape 1)
       (scaleselection 1)
-      (outputdirectory thermocouple_gerbers))
+      (outputdirectory gerbers/gerbers_Spin2/))
   )
 
   (net 0 "")

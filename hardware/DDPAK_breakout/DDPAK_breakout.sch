@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:KICAD_Older_Version
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -10,7 +11,6 @@ LIBS:cmos4000
 LIBS:adc-dac
 LIBS:memory
 LIBS:xilinx
-LIBS:special
 LIBS:microcontrollers
 LIBS:dsp
 LIBS:microchip
@@ -29,8 +29,7 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
-LIBS:DDPAK_breakout-cache
-EELAYER 27 0
+EELAYER 25 0
 EELAYER END
 $Descr A 11000 8500
 encoding utf-8
