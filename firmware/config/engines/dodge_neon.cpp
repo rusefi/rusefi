@@ -461,6 +461,9 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->suckedOffCoef = 0.05;
 	engineConfiguration->addedToWallCoef = 0.40;
 
+	boardConfiguration->isSdCardEnabled = false;
+	boardConfiguration->manIdlePosition = 40; // set_idle_pwm 40
+
 }
 
 #endif /* EFI_SUPPORT_DODGE_NEON */
