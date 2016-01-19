@@ -465,6 +465,11 @@ static void getKnockInfo(void) {
 // this method is used by real firmware and simulator
 void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	initConfigActions();
+
+#if EFI_PROD_CODE || EFI_SIMULATOR
+	initSignalExecutor();
+#endif
+
 #if EFI_PROD_CODE
 	// todo: this is a mess, remove code duplication with simulator
 	initSettings(engineConfiguration);
@@ -488,9 +493,6 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 
 void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	addConsoleAction("analoginfo", printAnalogInfo);
-#if EFI_PROD_CODE || EFI_SIMULATOR
-	initSignalExecutor();
-#endif
 	commonInitEngineController(sharedLogger);
 
 	if (hasFirmwareError()) {
