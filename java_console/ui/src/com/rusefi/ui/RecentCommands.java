@@ -120,6 +120,7 @@ public class RecentCommands {
         add("enable self_stimulation");
         add("disable self_stimulation");
 
+        add("blipidle 80 2000");
         add("set_idle_position 50");
         add("sparkbench 5 400 2");
         add("fuelbench 5 400 2");
