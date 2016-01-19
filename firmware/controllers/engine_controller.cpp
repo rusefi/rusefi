@@ -488,6 +488,9 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 
 void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	addConsoleAction("analoginfo", printAnalogInfo);
+#if EFI_PROD_CODE || EFI_SIMULATOR
+	initSignalExecutor();
+#endif
 	commonInitEngineController(sharedLogger);
 
 	if (hasFirmwareError()) {
