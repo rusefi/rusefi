@@ -41,8 +41,4 @@ void initAlgo(Logging *sharedLogger, engine_configuration_s *engineConfiguration
 	// todo: this is a mess, remove code duplication with PROD
 	initSettings(engineConfiguration);
 #endif
-
-#if EFI_PROD_CODE || EFI_SIMULATOR
-	initSignalExecutor();
-#endif
 }

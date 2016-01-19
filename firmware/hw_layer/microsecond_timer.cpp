@@ -37,6 +37,8 @@ static const char * msg;
 
 static char buff[32];
 
+extern bool hasFirmwareErrorFlag;
+
 /**
  * sets the alarm to the specified number of microseconds from now.
  * This function should be invoked under kernel lock which would disable interrupts.
@@ -49,6 +51,9 @@ void setHardwareUsTimer(int32_t timeUs) {
 
 	if (GPTDEVICE.state == GPT_ONESHOT)
 		gptStopTimerI(&GPTDEVICE);
+	efiAssertVoid(GPTDEVICE.state == GPT_READY, "hw timer");
+	if (hasFirmwareError())
+		return;
 	gptStartOneShotI(&GPTDEVICE, timeUs);
 
 	lastSetTimerTimeNt = getTimeNowNt();
