@@ -1,5 +1,7 @@
 package com.rusefi.ui.config;
 
+import com.rusefi.config.Field;
+
 import java.io.*;
 import java.util.*;
 
@@ -14,7 +16,7 @@ public class IniFileModel {
     private final static IniFileModel INSTANCE = new IniFileModel();
     private String dialogId;
     private String dialogUiName;
-    private List<String> fields = new ArrayList<>();
+    private List<DialogModel.Field> fields = new ArrayList<>();
     private Map<String, DialogModel> dialogs = new TreeMap<>();
 
     public static void main(String[] args) {
@@ -85,12 +87,12 @@ public class IniFileModel {
     private void handleField(LinkedList<String> list) {
         list.removeFirst(); // "field"
 
-        String label = list.isEmpty() ? "" : list.removeFirst();
+        String uiLabel = list.isEmpty() ? "" : list.removeFirst();
 
-        String name = list.isEmpty() ? null : list.removeFirst();
+        String key = list.isEmpty() ? null : list.removeFirst();
 
-        fields.add(label);
-        System.out.println("Field label=[" + label + "] : name=[" + name + "]");
+        fields.add(new DialogModel.Field(key, uiLabel));
+        System.out.println("Field label=[" + uiLabel + "] : key=[" + key + "]");
     }
 
     private void handleDialog(LinkedList<String> list) {

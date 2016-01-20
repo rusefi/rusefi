@@ -2,6 +2,9 @@ package com.rusefi.config;
 
 import com.rusefi.core.Pair;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @see Fields
  */
@@ -11,6 +14,8 @@ public class Field {
     private static final String INT_VALUE_PREFIX = "int @";
     private static final String FLOAT_VALUE_PREFIX = "float @";
     public static final int NO_BIT_OFFSET = -1;
+
+    public final static Map<String, Field> VALUES = new HashMap<>();
 
     private final String name;
     private final int offset;
@@ -36,6 +41,10 @@ public class Field {
         this.type = type;
         this.bitOffset = bitOffset;
         this.options = options;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String setCommand() {
@@ -115,7 +124,7 @@ public class Field {
     }
 
     private static void register(Field field) {
-
+        VALUES.put(field.name, field);
     }
 
     public static Field create(String name, int offset, FieldType type, int bitOffset) {
