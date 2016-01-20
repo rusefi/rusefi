@@ -23,7 +23,7 @@ adc_channel_e getAdcChannel(brain_pin_e pin);
 
 int getAdcHardwareIndexByInternalIndex(int index);
 
-void pokeAdcInputs(void);
+void printFullAdcReportIfNeeded(void);
 int getInternalAdcValue(const char *msg, adc_channel_e index);
 
 /* Depth of the conversion buffer, channels are sampled X times each.*/

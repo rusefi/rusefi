@@ -357,7 +357,7 @@ void updateDevConsoleState(Engine *engine) {
 #endif
 
 #if (EFI_PROD_CODE && HAL_USE_ADC) || defined(__DOXYGEN__)
-	pokeAdcInputs();
+	printFullAdcReportIfNeeded();
 #endif
 
 	if (!fullLog) {
@@ -574,11 +574,11 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	// engine state
 	tsOutputChannels->rpm = rpm;
-	tsOutputChannels->coolant_temperature = coolant;
+	tsOutputChannels->coolantTemperature = coolant;
 	tsOutputChannels->intakeAirTemperature = intake;
 	tsOutputChannels->throttlePositon = tps;
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMaf() : 0;
-    tsOutputChannels->massAirFlowValue = hasMafSensor() ? getRealMaf() : 0;
+    tsOutputChannels->massAirFlow = hasMafSensor() ? getRealMaf() : 0;
           
 	tsOutputChannels->veValue = veMap.getValue(getMap(), rpm);
 	tsOutputChannels->currentTargetAfr = afrMap.getValue(getMap(), rpm);
@@ -590,7 +590,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	tsOutputChannels->baroPressure = hasBaroSensor() ? getBaroPressure() : 0;
 #endif /* EFI_ANALOG_SENSORS */
-	tsOutputChannels->manifold_air_pressure = getMap();
+	tsOutputChannels->manifoldAirPressure = getMap();
 	tsOutputChannels->engineLoad = engineLoad;
 	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
 	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getDelta();
@@ -634,9 +634,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->isFanOn = enginePins.fanRelay.getLogicValue();
 	tsOutputChannels->isO2HeaterOn = enginePins.o2heater.getLogicValue();
 	tsOutputChannels->isIgnitionEnabled = engineConfiguration->isIgnitionEnabled;
-	tsOutputChannels->injection_enabled = engineConfiguration->isInjectionEnabled;
-	tsOutputChannels->cylinder_cleanup_enabled = engineConfiguration->isCylinderCleanupEnabled;
-	tsOutputChannels->cylinder_cleanup_activated = engine->isCylinderCleanupMode;
+	tsOutputChannels->isInjectionEnabled = engineConfiguration->isInjectionEnabled;
+	tsOutputChannels->isCylinderCleanupEnabled = engineConfiguration->isCylinderCleanupEnabled;
+	tsOutputChannels->isCylinderCleanupActivated = engine->isCylinderCleanupMode;
 	tsOutputChannels->secondTriggerChannelEnabled = engineConfiguration->secondTriggerChannelEnabled;
 #if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
 	tsOutputChannels->vehicleSpeedKph = getVehicleSpeed();

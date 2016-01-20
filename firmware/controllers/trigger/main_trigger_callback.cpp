@@ -105,6 +105,9 @@ extern WallFuel wallFuel;
 
 static ALWAYS_INLINE void handleFuelInjectionEvent(bool limitedFuel, InjectionEvent *event,
 		int rpm DECLARE_ENGINE_PARAMETER_S) {
+	if (limitedFuel)
+		return; // todo: move this check up
+
 	/**
 	 * todo: this is a bit tricky with batched injection. is it? Does the same
 	 * wetting coefficient works the same way for any injection mode, or is something
@@ -147,16 +150,12 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(bool limitedFuel, InjectionEv
 		scheduling_s * sUp = &signal->signalTimerUp[index];
 		scheduling_s * sDown = &signal->signalTimerDown[index];
 
-		if (!limitedFuel) {
-			scheduleTask("out up", sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, engine);
-			scheduleTask("out down", sDown, (int) injectionStartDelayUs + MS2US(injectionDuration),
+		scheduleTask("out up", sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, engine);
+		scheduleTask("out down", sDown, (int) injectionStartDelayUs + MS2US(injectionDuration),
 					(schfunc_t) &endSimultaniousInjection, engine);
-		}
 
 	} else {
-		if (!limitedFuel) {
-			scheduleOutput(&event->actuator, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration));
-		}
+		scheduleOutput(&event->actuator, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration));
 	}
 }
 
