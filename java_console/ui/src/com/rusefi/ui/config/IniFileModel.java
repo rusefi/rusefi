@@ -12,12 +12,13 @@ public class IniFileModel {
     private static final String FILENAME = "rusefi.ini";
 
     private final static IniFileModel INSTANCE = new IniFileModel();
-    private String dialogName;
+    private String dialogId;
+    private String dialogUiName;
     private List<String> fields = new ArrayList<>();
-    private List<DialogModel> dialogs = new ArrayList<>();
+    private Map<String, DialogModel> dialogs = new TreeMap<>();
 
     public static void main(String[] args) {
-        System.out.println(IniFileModel.INSTANCE);
+        System.out.println(IniFileModel.INSTANCE.dialogs);
     }
 
     private IniFileModel() {
@@ -54,9 +55,9 @@ public class IniFileModel {
     private void finishDialog() {
         if (fields.isEmpty())
             return;
-        dialogs.add(new DialogModel(dialogName, fields));
+        dialogs.put(dialogUiName, new DialogModel(dialogId, dialogUiName, fields));
 
-        dialogName = null;
+        dialogId = null;
         fields.clear();
     }
 
@@ -102,7 +103,8 @@ public class IniFileModel {
 //                    trim(list);
         String name = list.isEmpty() ? null : list.removeFirst();
 
-        dialogName = keyword;
+        dialogId = keyword;
+        dialogUiName = name;
         System.out.println("Dialog key=" + keyword + ": name=[" + name + "]");
     }
 
@@ -142,4 +144,11 @@ public class IniFileModel {
         return c == ' ' || c == '\t' || c == '=' || c == ',';
     }
 
+    public static IniFileModel getinstance() {
+        return INSTANCE;
+    }
+
+    public Map<String, DialogModel> getDialogs() {
+        return dialogs;
+    }
 }
