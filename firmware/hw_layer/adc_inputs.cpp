@@ -15,7 +15,7 @@
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 
-#include "engine_configuration.h"
+#include "engine.h"
 #include "adc_inputs.h"
 #include "AdcConfiguration.h"
 #include "mpu_util.h"
@@ -64,9 +64,10 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 
 static char LOGGING_BUFFER[500];
 static Logging logger("ADC", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
-static int adcCallbackCounter_slow = 0;
+static int adcSlowCallbackCounter = 0;
 
-static int adcDebugReporting = FALSE;
+// todo: move this flag to Engine god object
+static int adcDebugReporting = false;
 
 extern engine_configuration_s *engineConfiguration;
 extern board_configuration_s *boardConfiguration;
@@ -441,13 +442,9 @@ static void printFullAdcReport(void) {
 	}
 }
 
-static void printStatus(void) {
-	scheduleMsg(&logger, "adcDebug=%d", adcDebugReporting);
-}
-
 static void setAdcDebugReporting(int value) {
 	adcDebugReporting = value;
-	printStatus();
+	scheduleMsg(&logger, "adcDebug=%d", adcDebugReporting);
 }
 
 static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
@@ -459,7 +456,7 @@ static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	if (adcp->state == ADC_COMPLETE) {
 		/* Calculates the average values from the ADC samples.*/
 
-		adcCallbackCounter_slow++;
+		adcSlowCallbackCounter++;
 
 //		newState.time = chimeNow();
 		for (int i = 0; i < slowAdc.size(); i++) {
@@ -511,9 +508,7 @@ void initAdcInputs(bool boardTestMode) {
 
 	configureInputs();
 
-
-	printStatus();
-
+	// migrate to 'enable adcdebug'
 	addConsoleActionI("adcDebug", &setAdcDebugReporting);
 
 #if EFI_INTERNAL_ADC
@@ -572,7 +567,7 @@ void initAdcInputs(bool boardTestMode) {
 #endif
 }
 
-void pokeAdcInputs() {
+void printFullAdcReportIfNeeded(void) {
 	if (!adcDebugReporting)
 		return;
 	printFullAdcReport();
