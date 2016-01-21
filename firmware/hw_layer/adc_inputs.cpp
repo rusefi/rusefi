@@ -74,8 +74,7 @@ extern board_configuration_s *boardConfiguration;
 
 static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth, int numChannels) {
 	adcsample_t result = 0;
-	int i;
-	for (i = 0; i < bufDepth; i++) {
+	for (int i = 0; i < bufDepth; i++) {
 		result += samples[index];
 		index += numChannels;
 	}
