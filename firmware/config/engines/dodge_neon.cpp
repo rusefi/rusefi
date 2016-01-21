@@ -284,10 +284,14 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->injector.flow = 199;
 
 	// I want to start with a simple Alpha-N
-	engineConfiguration->algorithm = LM_ALPHA_N;
-//	engineConfiguration->algorithm = LM_SPEED_DENSITY;
+	//engineConfiguration->algorithm = LM_ALPHA_N;
+
 	setFuelLoadBin(0, 100 PASS_ENGINE_PARAMETER);
-	setTimingLoadBin(0, 100 PASS_ENGINE_PARAMETER);
+	setTimingLoadBin(20, 120 PASS_ENGINE_PARAMETER);
+
+	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
+
+	setFuelTablesLoadBin(20, 120 PASS_ENGINE_PARAMETER);
 
 	boardConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 
@@ -464,6 +468,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->isSdCardEnabled = false;
 	boardConfiguration->manIdlePosition = 40; // set_idle_pwm 40
 
+	// end of setDodgeNeonNGCEngineConfiguration
 }
 
 #endif /* EFI_SUPPORT_DODGE_NEON */
