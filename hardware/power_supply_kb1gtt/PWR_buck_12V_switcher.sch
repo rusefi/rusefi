@@ -443,8 +443,8 @@ Vs1
 Wire Wire Line
 	4700 6600 4600 6600
 Connection ~ 4600 6600
-Text Notes 850  5350 0    60   ~ 0
-Brief overview\n-- Q1002, R1003, D1002 preform an active transient protection. It will suppress voltages up to 200V, down to 19V.\n-- Q1001, R1001, D1001 preform a reverse polarity protection. If the input signal is the wrong polarity, the gate will not conduct which will prevent current from flowing. \n-- D1003 is a second transient suppressor, it would catch faster transients allowing a brief amount of time for Q1002 to preform it's duty. \n-- C1001 is a bulk cap, it simply stores energy locally such that the regulator can draw large currents in short periods of time. \n-- U1001 and the components to the right, are a buck style switching regulator, that will pull the 5V line up to 5V. It will now pull it down from 5V if there is an external voltage. 
+Text Notes 2825 5900 0    60   ~ 0
+Brief overview\n-- F1 is a fuse, you should have an up stream fuse at the source, but in the event you over draw this board, this fuse will blow before traces burn off.\n-- Q2, R3, D2 preform an active transient protection. It will suppress voltages up to 200V, down to 19V.\n-- Q1, R1, D1 preform a reverse polarity protection. If the input signal is the wrong polarity, the gate will not conduct which will prevent current from flowing. \n-- L3 is an RF choke\n-- D3 is a second transient suppressor, it would catch faster transients allowing a brief amount of time for Q2 to preform it's duty. \n-- C1 is a bulk cap, it simply stores energy locally such that the regulator can draw large currents in short periods of time. \n-- U1, D6 L1, C2 are a buck style switching regulator, that will pull the 5V line up to 5V.\n-- R2, D5 is a power indicator, which simply shows you have power\n-- L2, C3  is a low pass filter which prevents RF ripple from getting onto the 5V node. 
 Text Label 3600 6400 2    60   ~ 0
 Vin
 Text Label 3500 6600 0    60   ~ 0
@@ -476,5 +476,18 @@ F 2 "" H 9650 6850 60  0000 C CNN
 F 3 "" H 9650 6850 60  0000 C CNN
 	1    9650 6850
 	-1   0    0    1   
+$EndComp
+$Comp
+L CONN_1 P5
+U 1 1 56A0E175
+P 6350 6250
+F 0 "P5" H 6430 6250 40  0000 L CNN
+F 1 "CONN_1" H 6350 6305 30  0001 C CNN
+F 2 "SIL-1" H 6350 6250 60  0001 C CNN
+F 3 "" H 6350 6250 60  0000 C CNN
+F 4 "dnp,dnp" H 6350 6250 60  0001 C CNN "Field4"
+F 5 "dnp,dnp" H 6350 6250 60  0001 C CNN "Field5"
+	1    6350 6250
+	0    -1   -1   0   
 $EndComp
 $EndSCHEMATC

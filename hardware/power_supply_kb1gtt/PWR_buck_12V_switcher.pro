@@ -1,4 +1,4 @@
-update=1/17/2016 11:58:43 AM
+update=1/21/2016 5:23:21 AM
 last_client=kicad
 [common]
 NetDir=
@@ -43,16 +43,6 @@ LibName24=contrib
 LibName25=lm2596
 LibName26=mos_p_numbered-pins
 LibName27=mos_n_numbered-pins
-[schematic_editor]
-version=1
-PageLayoutDescrFile=../rusefi_lib/Border.kicad_wks
-PlotDirectoryName=
-SubpartIdSeparator=0
-SubpartFirstId=65
-NetFmtName=
-SpiceForceRefPrefix=0
-SpiceUseNetNumbers=0
-LabSize=60
 [pcbnew]
 version=1
 PageLayoutDescrFile=../rusefi_lib/Border.kicad_wks
@@ -72,3 +62,13 @@ SolderMaskMinWidth=0
 DrawSegmentWidth=0.254
 BoardOutlineThickness=0.254
 ModuleOutlineThickness=0.09906
+[schematic_editor]
+version=1
+PageLayoutDescrFile=../rusefi_lib/Border.kicad_wks
+PlotDirectoryName=
+SubpartIdSeparator=0
+SubpartFirstId=65
+NetFmtName=
+SpiceForceRefPrefix=0
+SpiceUseNetNumbers=0
+LabSize=60
