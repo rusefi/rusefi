@@ -163,6 +163,9 @@ float getInitialAdvance(int rpm, float map, float advanceMax) {
 	return round10(advance + 0.3 * (100 - map));
 }
 
+/**
+ * this method builds a good-enough base timing advance map bases on a number of heuristics
+ */
 void buildTimingMap(float advanceMax DECLARE_ENGINE_PARAMETER_S) {
 	if (engineConfiguration->algorithm != LM_SPEED_DENSITY &&
 			engineConfiguration->algorithm != LM_MAP) {

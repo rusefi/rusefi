@@ -64,7 +64,6 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 
 static char LOGGING_BUFFER[500];
 static Logging logger("ADC", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
-static int adcSlowCallbackCounter = 0;
 
 // todo: move this flag to Engine god object
 static int adcDebugReporting = false;
@@ -453,8 +452,6 @@ static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	 * an intermediate callback when the buffer is half full. */
 	if (adcp->state == ADC_COMPLETE) {
 		/* Calculates the average values from the ADC samples.*/
-
-		adcSlowCallbackCounter++;
 
 //		newState.time = chimeNow();
 		for (int i = 0; i < slowAdc.size(); i++) {
