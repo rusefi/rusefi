@@ -71,6 +71,7 @@
 #include "chevrolet_c20_1973.h"
 #include "toyota_jzs147.h"
 #include "ford_festiva.h"
+#include "lada_kalina.h"
 
 EXTERN_ENGINE;
 
@@ -704,6 +705,10 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	case DODGE_NEON_2003:
 		setDodgeNeonNGCEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;
+	case LADA_KALINA:
+		setLadaKalina(PASS_ENGINE_PARAMETER_F);
+		break;
+
 #endif /* EFI_SUPPORT_DODGE_NEON */
 #if EFI_SUPPORT_FORD_ASPIRE || defined(__DOXYGEN__)
 	case FORD_ASPIRE_1996:
