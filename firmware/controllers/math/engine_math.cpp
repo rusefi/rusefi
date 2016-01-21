@@ -445,9 +445,9 @@ int isInjectionEnabled(engine_configuration_s *engineConfiguration) {
 void setAlgorithm(engine_load_mode_e algo DECLARE_ENGINE_PARAMETER_S) {
 	engineConfiguration->algorithm = algo;
 	if (algo == LM_ALPHA_N) {
-		setTimingLoadBin(0, 100 PASS_ENGINE_PARAMETER);
+		setTimingLoadBin(20, 120 PASS_ENGINE_PARAMETER);
 	} else if (algo == LM_SPEED_DENSITY) {
+		setTimingLoadBin(20, 120 PASS_ENGINE_PARAMETER);
 		buildTimingMap(35 PASS_ENGINE_PARAMETER);
-		setTimingLoadBin(0, 160 PASS_ENGINE_PARAMETER);
 	}
 }

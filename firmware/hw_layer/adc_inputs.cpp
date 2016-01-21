@@ -83,9 +83,8 @@ static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth,
 
 static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n);
 
-#define MY_SAMPLING_SLOW ADC_SAMPLE_480
-#define MY_SAMPLING_FAST ADC_SAMPLE_28
-
+#define ADC_SAMPLING_SLOW ADC_SAMPLE_480
+#define ADC_SAMPLING_FAST ADC_SAMPLE_28
 /*
  * ADC conversion group.
  */
@@ -94,22 +93,22 @@ static ADCConversionGroup adcgrpcfgSlow = { FALSE, 0, adc_callback_slow, NULL,
 ADC_TwoSamplingDelay_20Cycles,   // cr1
 		ADC_CR2_SWSTART, // cr2
 
-		ADC_SMPR1_SMP_AN10(MY_SAMPLING_SLOW) |
-		ADC_SMPR1_SMP_AN11(MY_SAMPLING_SLOW) |
-		ADC_SMPR1_SMP_AN12(MY_SAMPLING_SLOW) |
-		ADC_SMPR1_SMP_AN13(MY_SAMPLING_SLOW) |
-		ADC_SMPR1_SMP_AN14(MY_SAMPLING_SLOW) |
-		ADC_SMPR1_SMP_AN15(MY_SAMPLING_SLOW)
+		ADC_SMPR1_SMP_AN10(ADC_SAMPLING_SLOW) |
+		ADC_SMPR1_SMP_AN11(ADC_SAMPLING_SLOW) |
+		ADC_SMPR1_SMP_AN12(ADC_SAMPLING_SLOW) |
+		ADC_SMPR1_SMP_AN13(ADC_SAMPLING_SLOW) |
+		ADC_SMPR1_SMP_AN14(ADC_SAMPLING_SLOW) |
+		ADC_SMPR1_SMP_AN15(ADC_SAMPLING_SLOW)
 		, // sample times for channels 10...18
-		ADC_SMPR2_SMP_AN0(MY_SAMPLING_SLOW) |
-		ADC_SMPR2_SMP_AN1(MY_SAMPLING_SLOW) |
-		ADC_SMPR2_SMP_AN3(MY_SAMPLING_SLOW) |
-		ADC_SMPR2_SMP_AN4(MY_SAMPLING_SLOW) |
-		ADC_SMPR2_SMP_AN5(MY_SAMPLING_SLOW) |
-		ADC_SMPR2_SMP_AN6(MY_SAMPLING_SLOW) |
-		ADC_SMPR2_SMP_AN7(MY_SAMPLING_SLOW) |
-		ADC_SMPR2_SMP_AN8(MY_SAMPLING_SLOW) |
-		ADC_SMPR2_SMP_AN9(MY_SAMPLING_SLOW)
+		ADC_SMPR2_SMP_AN0(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN1(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN3(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN4(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN5(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN6(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN7(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN8(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN9(ADC_SAMPLING_SLOW)
 
 		, // In this field must be specified the sample times for channels 0...9
 
@@ -127,7 +126,7 @@ ADC_TwoSamplingDelay_5Cycles,   // cr1
 
 		0, // sample times for channels 10...18
 		   // todo: IS SOMETHING MISSING HERE?
-		ADC_SMPR2_SMP_AN0(MY_SAMPLING_FAST), // In this field must be specified the sample times for channels 0...9
+		ADC_SMPR2_SMP_AN0(ADC_SAMPLING_FAST), // In this field must be specified the sample times for channels 0...9
 
 		0, // Conversion group sequence 13...16 + sequence length
 
