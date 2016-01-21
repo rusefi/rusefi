@@ -1,5 +1,9 @@
 // this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 14 23:21:45 EST 2016
 // begin
+
+#ifndef ENGINE_CONFIGURATION_GENERATED_H_
+#define ENGINE_CONFIGURATION_GENERATED_H_
+
 #include "rusefi_types.h"
 typedef struct {
 	/**
@@ -1607,5 +1611,6 @@ typedef struct {
 	/** total size 16088*/
 } persistent_config_s;
 
+#endif
 // end
 // this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 14 23:21:45 EST 2016

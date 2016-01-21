@@ -18,7 +18,6 @@
 
 #include "pin_repository.h"
 #include "engine_state.h"
-#include "can_header.h"
 #include "engine_configuration.h"
 #include "vehicle_speed.h"
 #endif /* EFI_PROD_CODE */

@@ -16,6 +16,9 @@
 #include "voltage.h"
 #include "pid.h"
 
+#if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)
+
+
 EXTERN_ENGINE
 ;
 
@@ -25,7 +28,8 @@ static Logging *logger;
 
 static SimplePwm alternatorControl;
 static OutputPin alternatorPin;
-static Pid altPid(10, 0, 0, 1, 90);
+static pid_s *altPidS = &persistentState.persistentConfiguration.engineConfiguration.alternatorControl;
+static Pid altPid(altPidS, 1, 90);
 
 static THD_WORKING_AREA(alternatorControlThreadStack, UTILITY_THREAD_STACK_SIZE);
 
@@ -108,3 +112,5 @@ void initAlternatorCtrl(Logging *sharedLogger) {
 
 	applySettings();
 }
+
+#endif /* EFI_ALTERNATOR_CONTROL */

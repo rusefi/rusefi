@@ -11,7 +11,6 @@
 
 #include "efifeatures.h"
 #include "crc.h"
-#include "can_header.h"
 #include "rusefi_enums.h"
 #include "global.h"
 #include "rusefi_types.h"

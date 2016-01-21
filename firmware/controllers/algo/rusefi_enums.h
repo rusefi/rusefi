@@ -640,5 +640,16 @@ typedef enum {
 	Internal_ForceMyEnumIntSize_chamber_stype = ENUM_32_BITS,
 } chamber_style_e;
 
+/**
+ * Net Body Computer types
+ */
+typedef enum {
+	CAN_BUS_NBC_BMW = 0,
+	CAN_BUS_NBC_FIAT = 1,
+	CAN_BUS_NBC_VAG = 2,
+	CAN_BUS_MAZDA_RX8 = 3,
+
+	Internal_ForceMyEnumIntSize_can_nbc = ENUM_32_BITS,
+} can_nbc_e;
 
 #endif /* RUSEFI_ENUMS_H_ */
