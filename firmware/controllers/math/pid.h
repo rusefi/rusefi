@@ -8,10 +8,12 @@
 #ifndef PID_H_
 #define PID_H_
 
+#include "engine_configuration_generated_structures.h"
+
 class Pid {
 
 public:
-	Pid(float pFactor, float iFactor, float dFactor, float minResult, float maxResult);
+	Pid(pid_s *pid, float minResult, float maxResult);
 	float getValue(float target, float input, float dTime);
 	void updateFactors(float pFactor, float iFactor, float dFactor);
 	void reset(void);
@@ -20,15 +22,12 @@ public:
 	float getIntegration(void);
 	float getD(void);
 private:
-	float pFactor;
-	float iFactor;
-	float dFactor;
+	pid_s *pid;
 	float minResult;
 	float maxResult;
 
 	float iTerm;
 	float prevError;
-
 };
 
 #endif /* PID_H_ */

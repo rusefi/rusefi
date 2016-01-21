@@ -9,10 +9,8 @@
 
 #include "pid.h"
 
-Pid::Pid(float pFactor, float iFactor, float dFactor, float minResult, float maxResult) {
-	this->pFactor = pFactor;
-	this->iFactor = iFactor;
-	this->dFactor = dFactor;
+Pid::Pid(pid_s *pid, float minResult, float maxResult) {
+	this->pid = pid;
 	this->minResult = minResult;
 	this->maxResult = maxResult;
 
@@ -23,9 +21,9 @@ Pid::Pid(float pFactor, float iFactor, float dFactor, float minResult, float max
 float Pid::getValue(float target, float input, float dTime) {
 	float error = target - input;
 
-	float pTerm = pFactor * error;
-	iTerm += iFactor * dTime * error;
-	float dTerm = dFactor / dTime * (error - prevError);
+	float pTerm = pid->pFactor * error;
+	iTerm += pid->iFactor * dTime * error;
+	float dTerm = pid->dFactor / dTime * (error - prevError);
 
 	prevError = error;
 
@@ -41,9 +39,9 @@ float Pid::getValue(float target, float input, float dTime) {
 }
 
 void Pid::updateFactors(float pFactor, float iFactor, float dFactor) {
-	this->pFactor = pFactor;
-	this->iFactor = iFactor;
-	this->dFactor = dFactor;
+	pid->pFactor = pFactor;
+	pid->iFactor = iFactor;
+	pid->dFactor = dFactor;
 	reset();
 }
 
@@ -53,11 +51,11 @@ void Pid::reset(void) {
 }
 
 float Pid::getP(void) {
-	return pFactor;
+	return pid->pFactor;
 }
 
 float Pid::getI(void) {
-	return iFactor;
+	return pid->iFactor;
 }
 
 float Pid::getIntegration(void) {
@@ -65,7 +63,7 @@ float Pid::getIntegration(void) {
 }
 
 float Pid::getD(void) {
-	return dFactor;
+	return pid->dFactor;
 }
 
 
