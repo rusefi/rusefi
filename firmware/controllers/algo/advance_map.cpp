@@ -159,8 +159,12 @@ float getAdvanceForRpm(int rpm, float advanceMax) {
 #define round10(x) efiRound(x, 0.1)
 
 float getInitialAdvance(int rpm, float map, float advanceMax) {
+	map = minF(map, 100);
 	float advance = getAdvanceForRpm(rpm, advanceMax);
-	return round10(advance + 0.3 * (100 - map));
+
+	if (rpm >= 3000)
+		return round10(advance + 0.1 * (100 - map));
+	return round10(advance + 0.1 * (100 - map) * rpm / 3000);
 }
 
 /**
@@ -178,7 +182,7 @@ void buildTimingMap(float advanceMax DECLARE_ENGINE_PARAMETER_S) {
 	for (int loadIndex = 0; loadIndex < IGN_LOAD_COUNT; loadIndex++) {
 		float load = config->ignitionLoadBins[loadIndex];
 		for (int rpmIndex = 0;rpmIndex<IGN_RPM_COUNT;rpmIndex++) {
-			float rpm = config->ignitionLoadBins[loadIndex];
+			float rpm = config->ignitionRpmBins[rpmIndex];
 			config->ignitionTable[loadIndex][rpmIndex] = getInitialAdvance(rpm, load, advanceMax);
 		}
 	}

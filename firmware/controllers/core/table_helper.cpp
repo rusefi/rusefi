@@ -20,10 +20,18 @@ void setTableBin2(float array[], int size, float l, float r, float precision) {
 	}
 }
 
+void setRpmBin(float array[], int size, float idleRpm, float topRpm) {
+	array[0] = idleRpm - 150;
+	int rpmStep = efiRound((topRpm - idleRpm) / (size - 2), 50) - 150;
+	for (int i = 1; i < size - 1;i++)
+		array[i] = idleRpm + rpmStep * (i - 1);
+	array[size - 1] = topRpm;
+}
+
 void setTableBin(float array[], int size, float from, float to) {
 	setTableBin2(array, size, from, to, 0.01);
 }
 
 void setRpmTableBin(float array[], int size) {
-	setTableBin2(array, size, 800, 7000, 100);
+	setRpmBin(array, size, 800, 7000);
 }
