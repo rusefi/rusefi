@@ -16,6 +16,7 @@
 #include "voltage.h"
 #include "pid.h"
 #include "LocalVersionHolder.h"
+#include "tunerstudio_configuration.h"
 
 #if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)
 
