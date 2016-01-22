@@ -61,7 +61,11 @@ public class IgnitionMapBuilder {
 
     public static double getInitialAdvance(int rpm, double map, double advanceMax) {
         double advance = getAdvanceForRpm(rpm, advanceMax);
-        return round10(advance + 0.3 * (100 - map));
+
+        if (rpm > 3000)
+            return round10(advance + 0.1 * (100 - map));
+
+        return round10(advance + 0.1 * (100 - map) * rpm / 3000);
     }
 
     public static double round10(double result) {

@@ -111,6 +111,8 @@ typedef Map3D<IGN_RPM_COUNT, IGN_LOAD_COUNT> ign_Map3D_t;
 typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT> fuel_Map3D_t;
 typedef Map3D<BARO_CORR_SIZE, BARO_CORR_SIZE> baroCorr_Map3D_t;
 
+void setRpmBin(float array[], int size, float idleRpm, float topRpm);
+
 void setTableBin(float array[], int size, float l, float r);
 void setTableBin2(float array[], int size, float l, float r, float precision);
 void setRpmTableBin(float array[], int size);

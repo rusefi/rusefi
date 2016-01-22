@@ -38,7 +38,13 @@ public class IgnitionMapBuilderTest {
         assertEquals(16.5, getAdvanceForRpm(1200, 36));
         assertEquals(29.5, getAdvanceForRpm(2400, 36));
 
-        assertEquals(47.5, getInitialAdvance(2400, 40, 36));
-        assertEquals(54.0, getInitialAdvance(4400, 40, 36));
+        assertEquals(36.0, getInitialAdvance(6000, 100, 36));
+        assertEquals(10.0, getInitialAdvance(600, 100, 36));
+
+        assertEquals(44.0, getInitialAdvance(6000, 20, 36));
+
+        assertEquals(34.3, getInitialAdvance(2400, 40, 36));
+        assertEquals(42.0, getInitialAdvance(4400, 40, 36));
+        assertEquals(11.6, getInitialAdvance(600, 20, 36));
     }
 }
