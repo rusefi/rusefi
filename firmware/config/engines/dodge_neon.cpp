@@ -281,11 +281,11 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	/**
 	 * bosch 4G1139
 	 * http://forum.2gn.org/viewtopic.php?t=21657
+	 * or is it 225 as mentioned at http://turbobazar.ru/showpost.php?p=750815&postcount=796 ?
 	 */
 	engineConfiguration->injector.flow = 199;
 
-	// I want to start with a simple Alpha-N
-	//engineConfiguration->algorithm = LM_ALPHA_N;
+	//engineConfiguration->algorithm = LM_ALPHA_N; // I want to start with a simple Alpha-N
 
 	setFuelLoadBin(0, 100 PASS_ENGINE_PARAMETER);
 	setTableBin2(config->ignitionLoadBins, IGN_LOAD_COUNT, 20, 120, 1);
