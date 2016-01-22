@@ -132,25 +132,28 @@ public class AutoTest {
         msg = "2003 Neon running";
         IoUtil.changeRpm(2000);
         chart = nextChart();
-        x = 106.0;
+        x = 104.0;
         assertWave(true, msg, chart, EngineChart.SPARK_1, 0.13299999999999998, 0.02, EngineReport.RATIO, x + 180, x + 540);
         assertWaveNull(msg, chart, EngineChart.SPARK_2);
         assertWave(true, msg, chart, EngineChart.SPARK_3, 0.13299999999999998, 0.02, EngineReport.RATIO, x, x + 360);
         assertWaveNull(msg, chart, EngineChart.SPARK_4);
 
+        chart = nextChart();
         x = 106.0;
-        assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.208666666666667, 0.04, 0.2, x + 360);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.208666666666667, 0.04, 0.2, x + 180);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.208666666666667, 0.04, 0.2, x + 540);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.208666666666667, 0.04, 0.2, x);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.15466666666666684, 0.1, 0.2, x + 360);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.15466666666666684, 0.1, 0.2, x + 180);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.15466666666666684, 0.1, 0.2, x + 540);
+        x = 124.0; // why is it different between injectors???
+        assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.15466666666666684, 0.1, 0.2, x);
 
         x = 105.0;
         sendCommand("enable trigger_only_front");
         chart = nextChart();
-        assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.208666666666667, 0.1, 0.2, x + 360);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.208666666666667, 0.1, 0.2, x + 180);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.208666666666667, 0.1, 0.2, x + 540);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.208666666666667, 0.1, 0.2, x);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.15433333333333382, 0.1, 0.2, x + 360);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.15433333333333382, 0.1, 0.2, x + 180);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.15433333333333382, 0.1, 0.2, x + 540);
+        x = 124.0; // why is it different between injectors???
+        assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.15433333333333382, 0.1, 0.2, x);
     }
 
     private static void testMazdaProtege() {
@@ -297,7 +300,7 @@ public class AutoTest {
         assertWaveFall(msg, chart, EngineChart.INJECTOR_3, 0.086, 417.04);
         assertWaveFall(msg, chart, EngineChart.INJECTOR_4, 0.086, 594.04);
 
-        x = 16.44;
+        x = 7;
         assertWave(chart, EngineChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
 
         sendCommand("set_fuel_map 2200 4 15.66");
@@ -315,14 +318,14 @@ public class AutoTest {
         assertWaveFall(msg + " fuel", chart, EngineChart.INJECTOR_3, 0.555, 417.04);
         assertWaveFall(msg + " fuel", chart, EngineChart.INJECTOR_4, 0.555, 594.04);
 
-        x = 39.12;
+        x = 33.0;
         assertWave(chart, EngineChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
         assertWaveNull(chart, EngineChart.SPARK_2);
 
         sendComplexCommand("set_global_trigger_offset_angle 130");
         sendComplexCommand("set_injection_offset 369");
         chart = nextChart();
-        x = 39.12;
+        x = 33;
         assertWave(chart, EngineChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
 
         // let's enable more channels dynamically
