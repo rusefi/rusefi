@@ -452,12 +452,7 @@ static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	 * an intermediate callback when the buffer is half full. */
 	if (adcp->state == ADC_COMPLETE) {
 		/* Calculates the average values from the ADC samples.*/
-
-//		newState.time = chimeNow();
 		for (int i = 0; i < slowAdc.size(); i++) {
-			/**
-			 * todo: No need to average since DEPTH is '1'
-			 */
 			int value = getAvgAdcValue(i, slowAdc.samples, ADC_BUF_DEPTH_SLOW, slowAdc.size());
 			slowAdc.values.adc_data[i] = value;
 		}
