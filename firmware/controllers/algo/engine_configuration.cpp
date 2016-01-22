@@ -105,6 +105,10 @@ static fuel_table_t alphaNfuel = {
 
 static volatile int globalConfigurationVersion = 0;
 
+/**
+ * This counter is incremented every time user adjusts ECU parameters online (either via dev console or other
+ * tuning software)
+ */
 int getGlobalConfigurationVersion(void) {
 	return globalConfigurationVersion;
 }

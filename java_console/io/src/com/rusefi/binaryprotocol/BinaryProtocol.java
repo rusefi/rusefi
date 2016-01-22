@@ -34,7 +34,7 @@ import static com.rusefi.binaryprotocol.IoHelper.*;
  */
 public class BinaryProtocol {
     // todo: is this auto-synched with rusefi.ini?
-    public static final int OUTPUT_CHANNELS_SIZE = 196;
+    public static final int OUTPUT_CHANNELS_SIZE = 276;
 
     private static final int BLOCKING_FACTOR = 256;
     private static final byte RESPONSE_OK = 0;
