@@ -266,7 +266,7 @@ public class BinaryProtocol {
             logger.trace("Got packet size " + packetSize);
             if (packetSize < 0)
                 return null;
-            if (!allowLongResponse && packetSize > BLOCKING_FACTOR + 10)
+            if (!allowLongResponse && packetSize > Math.max(BLOCKING_FACTOR, OUTPUT_CHANNELS_SIZE) + 10)
                 return null;
 
             isTimeout = incomingData.waitForBytes(packetSize + 4, start, msg + " body");
