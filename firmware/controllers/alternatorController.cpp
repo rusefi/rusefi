@@ -18,7 +18,6 @@
 
 #if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)
 
-
 EXTERN_ENGINE
 ;
 
@@ -39,7 +38,8 @@ static msg_t AltCtrlThread(int param) {
         UNUSED(param);
 	chRegSetThreadName("AlternatorController");
 	while (true) {
-		chThdSleepMilliseconds(engineConfiguration->alternatorDT);
+		int dt = maxI(20, engineConfiguration->alternatorDT);
+		chThdSleepMilliseconds(dt);
 
 		currentAltDuty = engineConfiguration->alternatorOffset + altPid.getValue(engineConfiguration->targetVBatt, getVBatt(PASS_ENGINE_PARAMETER_F), 1);
 		if (boardConfiguration->isVerboseAlternator) {
