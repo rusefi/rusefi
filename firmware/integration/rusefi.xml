@@ -13,17 +13,17 @@
         <table type="3D" name="Ignition Advance"
         category="Ignition"
         storageaddress="@@ignitionTable_offset_hex@@"
-               sizex="@@IGN_LOAD_COUNT@@" sizey="@@IGN_RPM_COUNT@@" storagetype="float" endian="big">
+               sizex="@@IGN_RPM_COUNT@@" sizey="@@IGN_LOAD_COUNT@@" storagetype="float" endian="big">
             <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                      coarseincrement="1"/>
-            <table type="X Axis" storageaddress="@@ignitionLoadBins_offset_hex@@" storagetype="float" endian="big"
+            <table type="X Axis" storageaddress="@@ignitionRpmBins_offset_hex@@" storagetype="float" endian="big"
+                   logparam="rpm">
+                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
+            </table>
+            <table type="Y Axis" storageaddress="@@ignitionLoadBins_offset_hex@@" storagetype="float" endian="big"
                    logparam="engine_load">
                 <scaling units="degree" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
-            </table>
-            <table type="Y Axis" storageaddress="@@ignitionRpmBins_offset_hex@@" storagetype="float" endian="big"
-                   logparam="rpm">
-                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
 
@@ -33,14 +33,14 @@
                sizex="@@IGN_LOAD_COUNT@@" sizey="@@IGN_RPM_COUNT@@" storagetype="float" endian="big">
             <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                      coarseincrement="1"/>
-            <table type="X Axis" storageaddress="@@ignitionIatCorrLoadBins_offset_hex@@" storagetype="float"
+            <table type="X Axis" storageaddress="@@ignitionIatCorrRpmBins_offset_hex@@" storagetype="float" endian="big"
+                   logparam="rpm">
+                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
+            </table>
+            <table type="Y Axis" storageaddress="@@ignitionIatCorrLoadBins_offset_hex@@" storagetype="float"
                    endian="big" logparam="engine_load">
                 <scaling units="temperature, C" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
-            </table>
-            <table type="Y Axis" storageaddress="@@ignitionIatCorrRpmBins_offset_hex@@" storagetype="float" endian="big"
-                   logparam="rpm">
-                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
 
@@ -50,14 +50,14 @@
                sizex="@@FUEL_LOAD_COUNT@@" sizey="@@FUEL_RPM_COUNT@@" storagetype="float" endian="big">
             <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                      coarseincrement="1"/>
-            <table type="X Axis" storageaddress="@@veLoadBins_offset_hex@@" storagetype="float" endian="big"
+            <table type="X Axis" storageaddress="@@veRpmBins_offset_hex@@" storagetype="float" endian="big"
+                   logparam="rpm">
+                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
+            </table>
+            <table type="Y Axis" storageaddress="@@veLoadBins_offset_hex@@" storagetype="float" endian="big"
                    logparam="engine_load">
                 <scaling units="degree" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
-            </table>
-            <table type="Y Axis" storageaddress="@@veRpmBins_offset_hex@@" storagetype="float" endian="big"
-                   logparam="rpm">
-                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
 

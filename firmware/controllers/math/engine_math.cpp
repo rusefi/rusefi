@@ -427,7 +427,7 @@ void setFuelLoadBin(float from, float to DECLARE_ENGINE_PARAMETER_S) {
 }
 
 void setTimingRpmBin(float from, float to DECLARE_ENGINE_PARAMETER_S) {
-	setTableBin(config->ignitionRpmBins, IGN_RPM_COUNT, from, to);
+	setRpmBin(config->ignitionRpmBins, IGN_RPM_COUNT, from, to);
 }
 
 void setTimingLoadBin(float from, float to DECLARE_ENGINE_PARAMETER_S) {
@@ -447,7 +447,7 @@ void setAlgorithm(engine_load_mode_e algo DECLARE_ENGINE_PARAMETER_S) {
 	if (algo == LM_ALPHA_N) {
 		setTimingLoadBin(20, 120 PASS_ENGINE_PARAMETER);
 	} else if (algo == LM_SPEED_DENSITY) {
-		setTimingLoadBin(20, 120 PASS_ENGINE_PARAMETER);
+		setTableBin2(config->ignitionLoadBins, IGN_LOAD_COUNT, 20, 120, 3);
 		buildTimingMap(35 PASS_ENGINE_PARAMETER);
 	}
 }

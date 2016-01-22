@@ -52,11 +52,25 @@ void testIgnitionMapGenerator(void) {
 	assertEquals(35, getTopAdvanceForBore(CS_OPEN, 98, 8, 101.6));
 	assertEquals(33, getTopAdvanceForBore(CS_OPEN, 98, 11, 101.6));
 
+	float rpmBin[16];
+	setRpmBin(rpmBin, 16, 800, 7000);
+	assertEquals(650, rpmBin[0]);
+	assertEqualsM("@1", 800, rpmBin[1]);
+	assertEqualsM("@2", 1050, rpmBin[2]);
+	assertEqualsM("@3", 1300, rpmBin[3]);
+	assertEqualsM("@14", 4050, rpmBin[14]);
+	assertEquals(7000, rpmBin[15]);
+
+
     assertEquals(22.0, getTopAdvanceForBore(CS_SWIRL_TUMBLE, 89, 9, 101.6));
     assertEquals(32.2, getTopAdvanceForBore(CS_SWIRL_TUMBLE, 89, 9, 145));
 
-    assertEqualsM2("2400", 47.4, getInitialAdvance(2400, 40, 36), 0.1);
-    assertEqualsM2("4400", 53.9, getInitialAdvance(4400, 40, 36), 0.1);
+    assertEqualsM2("100@6000", 36.0, getInitialAdvance(6000, 100, 36), 0.1);
+    assertEqualsM2("100@600", 9.9, getInitialAdvance(600, 100, 36), 0.2);
+
+    assertEqualsM2("2400", 34.2, getInitialAdvance(2400, 40, 36), 0.1);
+    assertEqualsM2("4400", 41.9, getInitialAdvance(4400, 40, 36), 0.1);
+    assertEqualsM2("20@800", 14.2, getInitialAdvance(800, 20, 36), 0.2);
 }
 
 void testMafLookup(void) {
