@@ -147,10 +147,10 @@ public class AutoTest {
         x = 105.0;
         sendCommand("enable trigger_only_front");
         chart = nextChart();
-        assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.208666666666667, 0.04, 0.2, x + 360);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.208666666666667, 0.04, 0.2, x + 180);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.208666666666667, 0.04, 0.2, x + 540);
-        assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.208666666666667, 0.04, 0.2, x);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.208666666666667, 0.1, 0.2, x + 360);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.208666666666667, 0.1, 0.2, x + 180);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.208666666666667, 0.1, 0.2, x + 540);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.208666666666667, 0.1, 0.2, x);
     }
 
     private static void testMazdaProtege() {
