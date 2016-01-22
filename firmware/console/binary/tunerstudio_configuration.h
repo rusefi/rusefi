@@ -53,7 +53,7 @@ typedef struct {
 	 * With all corrections. See also baseFuel
 	 */
 	float pulseWidthMs; // 64
-	float unused68;	// 68
+	float debugFloatField;	// 68
 	/**
 	 * Yes, I do not really enjoy packing bits into integers but we simply have too many boolean flags and I cannot
 	 * water 4 bytes per traffic - I want gauges to work as fast as possible
@@ -104,12 +104,13 @@ typedef struct {
 	float wallFuelAmount; // 160
 	float iatCorrection; // 164
 	floatms_t wallFuelCorrection; // 168
-	float idlePosition;
-	float currentTargetAfr;
-	float chargeAirMass;
-	float cltCorrection;
-	float runningFuel;
-	int unused3[1];
+	float idlePosition; // 172
+	float currentTargetAfr; // 176
+	float chargeAirMass; // 180
+	float cltCorrection; // 184
+	float runningFuel; // 188
+	int debugIntField;	// 192
+	int unused3[20];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */
