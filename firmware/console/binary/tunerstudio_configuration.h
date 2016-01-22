@@ -17,7 +17,7 @@
 
 //#define PAGE_1_SIZE 1152
 
-#define TS_OUTPUT_SIZE 196
+#define TS_OUTPUT_SIZE 276
 
 typedef struct {
 	uint16_t values[EGT_CHANNEL_COUNT];
