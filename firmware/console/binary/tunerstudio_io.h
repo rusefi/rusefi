@@ -33,14 +33,18 @@ typedef enum {
 	TS_CRC = 1
 } ts_response_format_e;
 
+// see 'blockingFactor' in rusefi.ini todo: move to rusefi_config.txt
+// see BLOCKING_FACTOR in java console code
+#define BLOCKING_FACTOR 320
+
 typedef struct {
 	BaseChannel * channel;
 	uint8_t writeBuffer[4];
 	/**
-	 * we use 'blockingFactor = 256' in rusefi.ini
-	 * todo: should we just do (256 + CRC_WRAPPING_SIZE) ?
+	 * we use 'blockingFactor = 320' in rusefi.ini
+	 * todo: should we just do (320 + CRC_WRAPPING_SIZE) ?
 	 */
-	char crcReadBuffer[300];
+	char crcReadBuffer[350];
 } ts_channel_s;
 
 #define TS_HELLO_COMMAND_DEPRECATED 'H'
