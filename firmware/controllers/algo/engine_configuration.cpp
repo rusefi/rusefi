@@ -248,6 +248,35 @@ void setDefaultBasePins(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->configResetPin = GPIOB_1;
 }
 
+// todo: move injector calibration somewhere else?
+// todo: add a enum? if we have enough data?
+static void setBosch02880155868(DECLARE_ENGINE_PARAMETER_F) {
+	// http://www.boschdealer.com/specsheets/0280155868cs.jpg
+	engineConfiguration->injector.battLagCorrBins[0] = 6;
+	engineConfiguration->injector.battLagCorr[0] = 3.371;
+
+	engineConfiguration->injector.battLagCorrBins[1] = 8;
+	engineConfiguration->injector.battLagCorr[1] = 1.974;
+
+	engineConfiguration->injector.battLagCorrBins[2] = 10;
+	engineConfiguration->injector.battLagCorr[2] = 1.383;
+
+	engineConfiguration->injector.battLagCorrBins[3] = 11;
+	engineConfiguration->injector.battLagCorr[3] = 1.194;
+
+	engineConfiguration->injector.battLagCorrBins[4] = 12;
+	engineConfiguration->injector.battLagCorr[4] = 1.04;
+
+	engineConfiguration->injector.battLagCorrBins[5] = 13;
+	engineConfiguration->injector.battLagCorr[5] = 0.914;
+
+	engineConfiguration->injector.battLagCorrBins[6] = 14;
+	engineConfiguration->injector.battLagCorr[6] = 0.797;
+
+	engineConfiguration->injector.battLagCorrBins[7] = 15;
+	engineConfiguration->injector.battLagCorr[7] = 0.726;
+}
+
 /**
  * @brief	Global default engine configuration
  * This method sets the global engine configuration defaults. These default values are then
@@ -271,7 +300,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->mafSensorType = Bosch0280218037;
 	setBosch0280218037(config);
 
-	engineConfiguration->injector.lag = 1.0;
+	engineConfiguration->injector.lag = 0.0;
+	setBosch02880155868(PASS_ENGINE_PARAMETER_F);
 
 	engineConfiguration->acCutoffLowRpm = 700;
 	engineConfiguration->acCutoffHighRpm = 5000;
@@ -310,11 +340,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 50, 1.06);
 	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 60, 1.03);
 	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 70, 1.01);
-
-	for (int i = 0; i < VBAT_INJECTOR_CURVE_SIZE; i++) {
-		engineConfiguration->injector.battLagCorrBins[i] = 12 - VBAT_INJECTOR_CURVE_SIZE / 2 + i;
-		engineConfiguration->injector.battLagCorr[i] = 0; // zero extra time by default
-	}
 
 	setConstantDwell(4 PASS_ENGINE_PARAMETER); // 4ms is global default dwell
 	engineConfiguration->useConstantDwellDuringCranking = false;
