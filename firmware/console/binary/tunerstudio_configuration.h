@@ -110,7 +110,8 @@ typedef struct {
 	float cltCorrection; // 184
 	float runningFuel; // 188
 	int debugIntField;	// 192
-	int unused3[20];
+	float injectorLagMs; // 196
+	int unused3[19];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */

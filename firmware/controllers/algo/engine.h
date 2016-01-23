@@ -282,6 +282,8 @@ public:
 	efitick_t lastTriggerEventTimeNt;
 
 	/**
+	 * Global injector lag + injectorLag(VBatt)
+	 *
 	 * this value depends on a slow-changing VBatt value, so
 	 * we update it once in a while
 	 */
