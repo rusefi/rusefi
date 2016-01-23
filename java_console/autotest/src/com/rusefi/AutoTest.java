@@ -107,11 +107,14 @@ public class AutoTest {
         setEngineType(23);
         sendCommand("set suckedOffCoef 0");
         sendCommand("set addedToWallCoef 0");
-        if (!TestingUtils.isRealHardware)
+        if (!TestingUtils.isRealHardware) {
             sendCommand("set_mock_map_voltage 1");
+            sendCommand("set_mock_vbatt_voltage 1.20");
+        }
         EngineChart chart;
         String msg = "2003 Neon cranking ";
         IoUtil.changeRpm(200);
+        assertEquals(12, SensorCentral.getInstance().getValue(Sensor.VBATT));
 
         chart = nextChart();
         double x = 100;
@@ -159,9 +162,11 @@ public class AutoTest {
     private static void testMazdaProtege() {
         setEngineType(14);
         EngineChart chart;
+        sendCommand("set_mock_vbatt_voltage 1.395");
         IoUtil.changeRpm(200);
         String msg = "ProtegeLX cranking";
         chart = nextChart();
+        assertEquals("", 12, SensorCentral.getInstance().getValue(Sensor.VBATT), 0.1);
         double x = 107;
         assertWave(msg, chart, EngineChart.SPARK_1, 0.194433, x, x + 180, x + 360, x + 540);
         x = 0;
@@ -249,9 +254,11 @@ public class AutoTest {
         // todo: interesting changeRpm(100);
         sendComplexCommand("set_cranking_rpm 500");
         IoUtil.changeRpm(200);
+        sendCommand("set_mock_vbatt_voltage 2.2");
 
         double x;
         chart = nextChart();
+        assertEquals(12, SensorCentral.getInstance().getValue(Sensor.VBATT));
         x = 55;
         assertWave("aspire default cranking ", chart, EngineChart.SPARK_1, 0.1944, x, x + 180, x + 360, x + 540);
 
@@ -342,12 +349,11 @@ public class AutoTest {
         // switching to Speed Density
         if (!TestingUtils.isRealHardware)
             sendCommand("set_mock_maf_voltage 2");
-        if (!TestingUtils.isRealHardware)
-            sendCommand("set_mock_map_voltage 1");
+        sendCommand("set_mock_map_voltage 1");
         sendComplexCommand("set_algorithm 3");
         nextChart();
         chart = nextChart();
-        assertEquals(1, SensorCentral.getInstance().getValue(Sensor.MAP));
+        assertEquals(69.12, SensorCentral.getInstance().getValue(Sensor.MAP));
         //assertEquals(1, SensorCentral.getInstance().getValue(Sensor.));
         x = 8.88;
         assertWaveFall(msg + " fuel SD #1", chart, EngineChart.INJECTOR_1, 0.329, x + 180);
@@ -366,7 +372,11 @@ public class AutoTest {
     }
 
     private static void assertEquals(String msg, double expected, double actual) {
-        if (isCloseEnough(expected, actual))
+        assertEquals(msg, expected, actual, EngineReport.RATIO);
+    }
+
+    private static void assertEquals(String msg, double expected, double actual, double ratio) {
+        if (!isCloseEnough(expected, actual, ratio))
             throw new IllegalStateException(msg + " Expected " + expected + " but got " + actual);
     }
 
