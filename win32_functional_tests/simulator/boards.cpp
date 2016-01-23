@@ -9,19 +9,20 @@
 #include "boards.h"
 #include "engine_configuration.h"
 #include "adc_math.h"
+#include "engine_sniffer.h"
 
 static LoggingWithStorage logger("simulator board");
 extern engine_configuration_s *engineConfiguration;
 
-static float fakeAdcValues[16];
+MockAdcState mockAdcState;
 
 int getAdcValue(const char *msg, int hwChannel) {
-	return fakeAdcValues[hwChannel];
+	return mockAdcState.getMockAdcValue(hwChannel);
 }
 
 static void setVoltage(int hwChannel, float voltage) {
 	scheduleMsg(&logger, "fake voltage: channel %d value %f", hwChannel, voltage);
-	fakeAdcValues[hwChannel] = voltsToAdc(voltage);
+	mockAdcState.setMockVoltage(hwChannel, voltage);
 }
 
 static void setCltVoltage(float voltage) {
