@@ -62,7 +62,6 @@
 									<listOptionValue builtIn="false" value="&quot;../console/binary&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config/engines&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../config/boards&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers/algo&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers/core&quot;"/>
@@ -75,16 +74,10 @@
 									<listOptionValue builtIn="false" value="&quot;../development/test&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../development/hw_layer&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../hw_layer/flash&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer/lcd&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer/serial_over_usb&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../russianefi&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../russianefi/algo&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../russianefi/ckp&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../russianefi/adc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config/system&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config/stm32f4ems&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../splib&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/kernel/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/boards/ST_STM32F4_DISCOVERY&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/src&quot;"/>
@@ -123,7 +116,6 @@
 									<listOptionValue builtIn="false" value="&quot;../console/binary&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config/engines&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../config/boards&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers/algo&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers/core&quot;"/>
@@ -136,16 +128,10 @@
 									<listOptionValue builtIn="false" value="&quot;../development/test&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../development/hw_layer&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../hw_layer/flash&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer/lcd&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer/serial_over_usb&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../russianefi&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../russianefi/algo&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../russianefi/ckp&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../russianefi/adc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config/system&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config/stm32f4ems&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../splib&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/kernel/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/boards/ST_STM32F4_DISCOVERY&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/src&quot;"/>
@@ -354,7 +340,6 @@
 									<listOptionValue builtIn="false" value="&quot;../console/binary&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config/engines&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../config/boards&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers/algo&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers/core&quot;"/>
@@ -367,16 +352,10 @@
 									<listOptionValue builtIn="false" value="&quot;../development/test&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../development/hw_layer&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../hw_layer/flash&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer/lcd&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer/serial_over_usb&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../russianefi&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../russianefi/algo&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../russianefi/ckp&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../russianefi/adc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config/system&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config/stm32f1egt&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../splib&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/kernel/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/boards/ST_NUCLEO_F103RB&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/src&quot;"/>
@@ -410,7 +389,6 @@
 									<listOptionValue builtIn="false" value="&quot;../console/binary&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config/engines&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../config/boards&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers/algo&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers/core&quot;"/>
@@ -425,7 +403,6 @@
 									<listOptionValue builtIn="false" value="&quot;../hw_layer&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer/stm32f1&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer/algo&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../hw_layer/flash&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer/lcd&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer/serial_over_usb&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../russianefi&quot;"/>
@@ -535,7 +512,6 @@
 									<listOptionValue builtIn="false" value="&quot;../console/binary&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config/engines&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../config/boards&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers/algo&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers/core&quot;"/>
@@ -550,7 +526,6 @@
 									<listOptionValue builtIn="false" value="&quot;../hw_layer&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer/stm32f1&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer/algo&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../hw_layer/flash&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer/lcd&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer/serial_over_usb&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../russianefi&quot;"/>
@@ -655,7 +630,6 @@
 									<listOptionValue builtIn="false" value="&quot;../console/binary&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config/engines&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../config/boards&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers/algo&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers/core&quot;"/>
@@ -668,16 +642,10 @@
 									<listOptionValue builtIn="false" value="&quot;../development/test&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../development/hw_layer&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../hw_layer/flash&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer/lcd&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer/serial_over_usb&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../russianefi&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../russianefi/algo&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../russianefi/ckp&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../russianefi/adc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config/system&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config/stm32f4ems&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../splib&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/kernel/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/boards/ST_STM32F4_DISCOVERY&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/src&quot;"/>
@@ -716,7 +684,6 @@
 									<listOptionValue builtIn="false" value="&quot;../console/binary&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config/engines&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../config/boards&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers/algo&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers/core&quot;"/>
@@ -729,16 +696,10 @@
 									<listOptionValue builtIn="false" value="&quot;../development/test&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../development/hw_layer&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../hw_layer/flash&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer/lcd&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer/serial_over_usb&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../russianefi&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../russianefi/algo&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../russianefi/ckp&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../russianefi/adc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config/system&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config/stm32f4ems&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../splib&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/kernel/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/boards/ST_STM32F4_DISCOVERY&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/src&quot;"/>
