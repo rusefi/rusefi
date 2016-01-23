@@ -11,6 +11,19 @@
 
 #include "global.h"
 
+#define MOCK_ADC_SIZE 16
+
+class MockAdcState {
+public:
+	MockAdcState();
+	bool hasMockAdc[MOCK_ADC_SIZE];
+	int fakeAdcValues[MOCK_ADC_SIZE];
+
+	void setMockVoltage(int hwChannel, float voltage);
+	int getMockAdcValue(int hwChannel);
+};
+
+
 #if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 #include "datalogging.h"
 

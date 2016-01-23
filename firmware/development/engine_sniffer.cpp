@@ -26,6 +26,21 @@
 
 #include "main.h"
 #include "engine_sniffer.h"
+#include "adc_math.h"
+
+MockAdcState::MockAdcState() {
+	memset(hasMockAdc, 0, sizeof(hasMockAdc));
+}
+
+void MockAdcState::setMockVoltage(int hwChannel, float voltage) {
+	fakeAdcValues[hwChannel] = voltsToAdc(voltage);
+	hasMockAdc[hwChannel] = true;
+}
+
+int MockAdcState::getMockAdcValue(int hwChannel) {
+	return fakeAdcValues[hwChannel];
+}
+
 
 #if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 
