@@ -58,7 +58,7 @@ void testFuelMap(void) {
 	initThermistors(NULL PASS_ENGINE_PARAMETER);
 
 	printf("*** getInjectorLag\r\n");
-	assertEquals(1.0, getInjectorLag(12 PASS_ENGINE_PARAMETER));
+	assertEqualsM("lag", 1.04, getInjectorLag(12 PASS_ENGINE_PARAMETER));
 
 	eth.engine.engineConfiguration->injector.lag = 0.5;
 
