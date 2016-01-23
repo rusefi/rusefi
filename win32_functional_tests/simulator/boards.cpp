@@ -48,6 +48,10 @@ static void setMapVoltage(float voltage) {
 	setVoltage(engineConfiguration->map.sensor.hwChannel, voltage);
 }
 
+static void setVBattVoltage(float voltage) {
+	setVoltage(engineConfiguration->vbattAdcChannel, voltage);
+}
+
 void initFakeBoard(void) {
 
 	addConsoleActionF("set_mock_clt_voltage", setCltVoltage);
@@ -56,6 +60,7 @@ void initFakeBoard(void) {
 	addConsoleActionF("set_mock_afr_voltage", setAfrVoltage);
 	addConsoleActionF("set_mock_tps_voltage", setTpsVoltage);
 	addConsoleActionF("set_mock_map_voltage", setMapVoltage);
+	addConsoleActionF("set_mock_vbatt_voltage", setVBattVoltage);
 }
 
 

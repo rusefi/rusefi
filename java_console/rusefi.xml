@@ -132,7 +132,16 @@
             <scaling units="Volts" expression="x" to_byte="x" format="0.00"
                      fineincrement=".01" coarseincrement="0.1"/>
             <table type="X Axis" storageaddress="7c0" storagetype="float" endian="big">
-                <scaling units="uni" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
+                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
+            </table>
+        </table>
+
+        <table type="2D" name="Injector Lag" storageaddress="30"
+               sizex="8" storagetype="float" endian="big">
+            <scaling units="ms" expression="x" to_byte="x" format="0.00"
+                     fineincrement=".01" coarseincrement="0.1"/>
+            <table type="X Axis" storageaddress="10" storagetype="float" endian="big">
+                <scaling units="Volts" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
 
