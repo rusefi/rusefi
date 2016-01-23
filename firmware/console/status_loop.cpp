@@ -606,6 +606,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER);
 	tsOutputChannels->runningFuel = ENGINE(engineState.runningFuel);
+	tsOutputChannels->injectorLagMs = ENGINE(injectorLagMs);
 	tsOutputChannels->wallFuelAmount = wallFuel.getWallFuel(0);
 	tsOutputChannels->wallFuelCorrection = engine->wallFuelCorrection;
 	tsOutputChannels->engineLoadAccelDelta = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_F) * 100 / getMap();

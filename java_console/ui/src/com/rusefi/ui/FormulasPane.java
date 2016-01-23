@@ -150,6 +150,7 @@ public class FormulasPane {
         String TARGET_AFR = oneDecimal(Sensor.TARGET_AFR);
         String tpsStr = oneDecimal(Sensor.TPS);
         String chargeAirMass = String.format("%.3fgm", SensorCentral.getInstance().getValue(Sensor.CHARGE_AIR_MASS));
+        String vBatt = oneDecimal(Sensor.VBATT);
 
         double displacement = ConfigField.getFloatValue(ci, Fields.DISPLACEMENT);
         int cylinderCount = ConfigField.getIntValue(ci, Fields.CYLINDERSCOUNT);
@@ -184,8 +185,11 @@ public class FormulasPane {
 
         String tempCorrections = " * cltCorr(" + CLTcorr + ") * iatCorr(" + IATcorr + ")";
 
+        String injectorLag = "+ ( injectorLag(VBatt = " + vBatt + ") = " + oneDecimal(Sensor.injectorLagMs) + ")";
+
         String injTime = "$Fuel (ms) = " +
-                "(Base_Fuel (" + baseFuelStr + "ms) + Tps_Accel_Corr = (" + tpsAccel + "ms))" + tempCorrections +
+                "(Base_Fuel (" + baseFuelStr + "ms) + Tps_Accel_Corr = (" + tpsAccel + "ms))" +
+                tempCorrections + injectorLag +
                 " = " + runningFuel + "ms$";
 
         return acceleration +
