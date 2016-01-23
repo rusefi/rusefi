@@ -20,6 +20,18 @@
 #include "accel_enrichment.h"
 #include "trigger_central.h"
 
+#define MOCK_ADC_SIZE 16
+
+class MockAdcState {
+public:
+	MockAdcState();
+	bool hasMockAdc[MOCK_ADC_SIZE];
+	int fakeAdcValues[MOCK_ADC_SIZE];
+
+	void setMockVoltage(int hwChannel, float voltage);
+	int getMockAdcValue(int hwChannel);
+};
+
 /**
  * This class knows about when to inject fuel
  */
@@ -149,6 +161,9 @@ public:
 	floatms_t tpsAccelEnrich;
 
 	angle_t injectionOffset;
+
+// todo: surround with EFI_ENABLE_MOCK_ADC checks
+	MockAdcState mockAdcState;
 };
 
 class RpmCalculator;

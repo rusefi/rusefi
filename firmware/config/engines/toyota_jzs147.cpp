@@ -14,10 +14,12 @@
  */
 
 #include "toyota_jzs147.h"
+#include "custom_engine.h"
 
 EXTERN_ENGINE;
 
 void setToyota_jzs147EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
+	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F); // default pinout
 
 	engineConfiguration->specs.displacement = 3.0;
 	engineConfiguration->specs.cylindersCount = 6;
@@ -25,6 +27,13 @@ void setToyota_jzs147EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->trigger.type = TT_2JZ;
+
+	boardConfiguration->ignitionPins[0] = GPIOE_14;
+	boardConfiguration->ignitionPins[1] = GPIOC_7;
+	boardConfiguration->ignitionPins[2] = GPIOC_9;
+	boardConfiguration->ignitionPins[3] = GPIOE_10;
+	boardConfiguration->ignitionPins[3] = GPIOE_10;
+	boardConfiguration->ignitionPins[3] = GPIOE_10;
 
 }
 
