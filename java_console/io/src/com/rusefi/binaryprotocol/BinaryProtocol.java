@@ -36,7 +36,8 @@ public class BinaryProtocol {
     // todo: is this auto-synched with rusefi.ini?
     public static final int OUTPUT_CHANNELS_SIZE = 276;
 
-    private static final int BLOCKING_FACTOR = 256;
+    // see BLOCKING_FACTOR in firmware code
+    private static final int BLOCKING_FACTOR = 320;
     private static final byte RESPONSE_OK = 0;
     private static final byte RESPONSE_BURN_OK = 0x04;
     private static final byte RESPONSE_COMMAND_OK = 0x07;
