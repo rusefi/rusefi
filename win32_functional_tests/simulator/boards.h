@@ -20,8 +20,6 @@
 #define EFI_CONSOLE_UART_DEVICE (&testStream)
 
 int getAdcValue(const char *msg, int channel);
-void initFakeBoard(void);
-
 
 #ifdef __cplusplus
 extern "C"

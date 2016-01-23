@@ -20,11 +20,11 @@
 #include "speed_density.h"
 #include "advance_map.h"
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "injector_central.h"
 #else
 #define isRunningBenchTest() true
-#endif
+#endif /* EFI_PROD_CODE */
 
 static LoggingWithStorage logger("engine");
 
@@ -35,6 +35,25 @@ extern fuel_Map3D_t afrMap;
 
 EXTERN_ENGINE
 ;
+
+MockAdcState::MockAdcState() {
+	memset(hasMockAdc, 0, sizeof(hasMockAdc));
+}
+
+#if EFI_ENABLE_MOCK_ADC || EFI_SIMULATOR
+void MockAdcState::setMockVoltage(int hwChannel, float voltage) {
+	scheduleMsg(&logger, "fake voltage: channel %d value %f", hwChannel, voltage);
+
+	fakeAdcValues[hwChannel] = voltsToAdc(voltage);
+	hasMockAdc[hwChannel] = true;
+}
+#endif /* EFI_ENABLE_MOCK_ADC */
+
+int MockAdcState::getMockAdcValue(int hwChannel) {
+	return fakeAdcValues[hwChannel];
+}
+
+
 
 /**
  * We are executing these heavy (logarithm) methods from outside the trigger callbacks for performance reasons.

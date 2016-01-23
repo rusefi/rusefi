@@ -73,8 +73,6 @@ void rusEfiFunctionalTest(void) {
 
 	initializeConsole(&sharedLogger);
 
-	initFakeBoard();
-
 	initStatusLoop(engine);
 	initDataStructures(PASS_ENGINE_PARAMETER_F);
 

@@ -10,6 +10,8 @@
 
 #define EFI_ENABLE_ASSERTS TRUE
 
+#define EFI_ENABLE_MOCK_ADC TRUE
+
 #define EFI_GPIO TRUE
 
 #define EFI_FSIO TRUE

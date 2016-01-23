@@ -443,6 +443,52 @@ static void setFloat(const char *offsetStr, const char *valueStr) {
 	getFloat(offset);
 }
 
+#if EFI_ENABLE_MOCK_ADC || EFI_SIMULATOR
+
+static void setMockVoltage(int hwChannel, float voltage) {
+	engine->engineState.mockAdcState.setMockVoltage(hwChannel, voltage);
+}
+
+static void setCltVoltage(float voltage) {
+	setMockVoltage(engineConfiguration->clt.adcChannel, voltage);
+}
+
+static void setIatVoltage(float voltage) {
+	setMockVoltage(engineConfiguration->iat.adcChannel, voltage);
+}
+
+static void setMafVoltage(float voltage) {
+	setMockVoltage(engineConfiguration->mafAdcChannel, voltage);
+}
+
+static void setAfrVoltage(float voltage) {
+	setMockVoltage(engineConfiguration->afr.hwChannel, voltage);
+}
+
+static void setTpsVoltage(float voltage) {
+	setMockVoltage(engineConfiguration->tpsAdcChannel, voltage);
+}
+
+static void setMapVoltage(float voltage) {
+	setMockVoltage(engineConfiguration->map.sensor.hwChannel, voltage);
+}
+
+static void setVBattVoltage(float voltage) {
+	setMockVoltage(engineConfiguration->vbattAdcChannel, voltage);
+}
+
+static void initMockVoltage(void) {
+	addConsoleActionF("set_mock_clt_voltage", setCltVoltage);
+	addConsoleActionF("set_mock_iat_voltage", setIatVoltage);
+	addConsoleActionF("set_mock_maf_voltage", setMafVoltage);
+	addConsoleActionF("set_mock_afr_voltage", setAfrVoltage);
+	addConsoleActionF("set_mock_tps_voltage", setTpsVoltage);
+	addConsoleActionF("set_mock_map_voltage", setMapVoltage);
+	addConsoleActionF("set_mock_vbatt_voltage", setVBattVoltage);
+}
+
+#endif /* EFI_ENABLE_MOCK_ADC */
+
 static void initConfigActions(void) {
 	addConsoleActionSS("set_float", (VoidCharPtrCharPtr) setFloat);
 	addConsoleActionII("set_int", (VoidIntInt) setInt);
@@ -465,12 +511,13 @@ static void getKnockInfo(void) {
 // this method is used by real firmware and simulator
 void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	initConfigActions();
+	initMockVoltage();
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	initSignalExecutor();
 #endif
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || EFI_SIMULATOR
 	// todo: this is a mess, remove code duplication with simulator
 	initSettings(engineConfiguration);
 #endif
