@@ -296,7 +296,7 @@ static void testRpmCalculator(void) {
 
 	// this is a very dirty and sad hack.  todo: eliminate
 //	engine.engineConfiguration = eth.engine.engineConfiguration;
-	eth.engine.engineConfiguration->injector.lag = 0.0;
+	eth.engine.engineConfiguration->injector.lag = -1.04;
 
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_F);
 	timeNow = 0;
