@@ -192,6 +192,10 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "DODGE_RAM";
 	case MAZDA_626:
 		return "Mazda626";
+	case TOYOTA_JZS147:
+		return "TOYOTA_JZS147";
+	case LADA_KALINA:
+		return "LADA_KALINA";
 	default:
 		return "UnknownType";
 	}
@@ -508,7 +512,6 @@ static void setIndividualCoilsIgnition(void) {
 	setIgnitionMode((int)IM_INDIVIDUAL_COILS);
 }
 
-
 static void setTriggerType(int value) {
 	engineConfiguration->trigger.type = (trigger_type_e) value;
 	incrementGlobalConfigurationVersion();
@@ -516,6 +519,7 @@ static void setTriggerType(int value) {
 }
 
 static void setToothedWheel(int total, int skipped) {
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 	scheduleMsg(&logger, "toothed: total=%d/skipped=%d", total, skipped);
 	setToothedWheelConfiguration(&engine->triggerShape, total, skipped, engineConfiguration->operationMode);
 //	initializeTriggerShape(&logger, engineConfiguration, engineConfiguration2);
