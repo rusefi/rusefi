@@ -21,6 +21,8 @@
 
 static ICUDriver *primaryCrankDriver;
 
+extern bool hasFirmwareErrorFlag;
+
 EXTERN_ENGINE
 ;
 static Logging *logger;
@@ -32,6 +34,8 @@ static Logging *logger;
 static void shaft_icu_width_callback(ICUDriver *icup) {
 // todo: support for 3rd trigger input channel
 // todo: start using real event time from HW event, not just software timer?
+	if (hasFirmwareErrorFlag)
+		return;
 	int isPrimary = icup == primaryCrankDriver;
 	if (!isPrimary && !engine->triggerShape.needSecondTriggerInput) {
 		return;
@@ -44,6 +48,8 @@ static void shaft_icu_width_callback(ICUDriver *icup) {
 }
 
 static void shaft_icu_period_callback(ICUDriver *icup) {
+	if (hasFirmwareErrorFlag)
+		return;
 	int isPrimary = icup == primaryCrankDriver;
 	if (!isPrimary && !engine->triggerShape.needSecondTriggerInput) {
 		return;

@@ -61,7 +61,10 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(uint32_t index, 
 	for (uint32_t i = startIndex; i <= index + 2 * shape->getSize(); i++) {
 		nextStep(state, shape, i, triggerConfig PASS_ENGINE_PARAMETER);
 	}
-	efiAssertVoid(state->getTotalRevolutionCounter() == 3, "sync failed, wrong gap parameters?");
+	if (state->getTotalRevolutionCounter() != 3) {
+		firmwareError("sync failed/wrong gap parameters trigger=%s", getTrigger_type_e(engineConfiguration->trigger.type));
+		return;
+	}
 
 	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 		shape->dutyCycle[i] = 1.0 * state->expectedTotalTime[i] / SIMULATION_CYCLE_PERIOD;
