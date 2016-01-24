@@ -117,7 +117,7 @@ typedef struct {
 	float debugFloatField5;
 	int debugIntField2;
 	int debugIntField3;
-	int unused3[12];
+	int unused3[13];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */
