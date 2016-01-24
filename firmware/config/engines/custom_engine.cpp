@@ -12,6 +12,10 @@
 #include "allsensors.h"
 #include "engine_math.h"
 
+#if EFI_PROD_CODE
+#include "can_hw.h"
+#endif
+
 EXTERN_ENGINE;
 
 void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
@@ -112,6 +116,9 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	// todo: 8.2 or 10k?
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
 
+#if EFI_PROD_CODE
+	enableFrankensoCan();
+#endif
 }
 
 #endif /* CONFIG_ENGINES_CUSTOM_ENGINE_CPP_ */

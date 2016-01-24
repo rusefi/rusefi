@@ -252,6 +252,12 @@ static void canInfo(void) {
 
 #endif /* EFI_PROD_CODE */
 
+void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_F) {
+	//	engineConfiguration->isCanEnabled = true;
+	boardConfiguration->canTxPin = GPIOB_6;
+	boardConfiguration->canRxPin = GPIOB_12;
+	engineConfiguration->canReadEnabled = false;
+}
 
 void initCan(void) {
 #if EFI_PROD_CODE

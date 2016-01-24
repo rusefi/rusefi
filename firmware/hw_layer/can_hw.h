@@ -30,5 +30,6 @@ void initCan(void);
 void commonTxInit(int eid);
 void sendMessage();
 void setTxBit(int offset, int index);
+void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_F);
 
 #endif /* CAN_HW_H_ */
