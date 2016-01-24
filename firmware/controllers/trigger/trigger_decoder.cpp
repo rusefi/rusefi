@@ -34,7 +34,6 @@
 #include "trigger_nissan.h"
 #include "trigger_toyota.h"
 #include "trigger_rover.h"
-#include "auto_generated_enums.h"
 #include "trigger_structure.h"
 #include "efiGpio.h"
 #include "engine.h"

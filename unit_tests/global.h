@@ -13,6 +13,7 @@
 #include <stdbool.h>
 
 #include "efitime.h"
+#include "auto_generated_enums.h"
 
 #define US_TO_NT_MULTIPLIER 100
 

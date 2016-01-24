@@ -19,7 +19,6 @@
 #include "pwm_generator_logic.h"
 #include "efilib2.h"
 #include "settings.h"
-#include "auto_generated_enums.h"
 
 #include "rpm_calculator.h"
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
