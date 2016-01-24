@@ -12,9 +12,12 @@ import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.nio.ByteBuffer;
+import java.text.DecimalFormat;
+import java.text.ParseException;
 
 public class ConfigField extends BaseConfigField {
     private final JTextField view = new JTextFieldWithWidth(200);
+    private final static DecimalFormat df = new DecimalFormat("0.0000");
 
     public ConfigField(final Field field, String topLabel) {
         super(field);
@@ -69,9 +72,14 @@ public class ConfigField extends BaseConfigField {
     }
 
     public static double getFloatValue(ConfigurationImage ci, Field field) {
-        // this hack is trying to restore lost precision. It's a lame hack
         float value = getValue(ci, field).floatValue();
-        return Double.parseDouble(String.format("%.4f", value));
+        // this hack is trying to restore lost precision. It's a lame hack
+        String str = df.format(value);
+        try {
+            return df.parse(str).doubleValue();
+        } catch (ParseException e) {
+            throw new IllegalStateException("While parsing [" + str + "]");
+        }
     }
 
     public static int getIntValue(ConfigurationImage ci, Field field) {
