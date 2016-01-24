@@ -53,8 +53,6 @@ int MockAdcState::getMockAdcValue(int hwChannel) {
 	return fakeAdcValues[hwChannel];
 }
 
-
-
 /**
  * We are executing these heavy (logarithm) methods from outside the trigger callbacks for performance reasons.
  * See also periodicFastCallback
