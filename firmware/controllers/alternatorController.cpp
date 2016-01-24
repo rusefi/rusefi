@@ -60,7 +60,9 @@ static msg_t AltCtrlThread(int param) {
 		}
 
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
-		tsOutputChannels.debugFloatField = currentAltDuty;
+		tsOutputChannels.debugFloatField1 = currentAltDuty;
+		tsOutputChannels.debugFloatField2 = altPid.getIntegration();
+		tsOutputChannels.debugFloatField3 = altPid.getPrevError();
 #endif
 
 		alternatorControl.setSimplePwmDutyCycle(currentAltDuty / 100);

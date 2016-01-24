@@ -19,8 +19,9 @@ public:
 	void reset(void);
 	float getP(void);
 	float getI(void);
-	float getIntegration(void);
 	float getD(void);
+	float getIntegration(void);
+	float getPrevError(void);
 private:
 	pid_s *pid;
 	float minResult;
