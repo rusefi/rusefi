@@ -447,11 +447,8 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 //	engineConfiguration->alternatorControl.pFactor = 22;
 	engineConfiguration->alternatorControl.pFactor = 55; // looks to work better, maybe time for some iFactor
 
-//	engineConfiguration->isCanEnabled = true;
-	boardConfiguration->canTxPin = GPIOB_6;
-	boardConfiguration->canRxPin = GPIOB_12;
+//	enableFrankensoCan();
 	engineConfiguration->canWriteEnabled = true;
-	engineConfiguration->canReadEnabled = false;
 	engineConfiguration->canNbcType = CAN_BUS_NBC_BMW;
 //	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 
