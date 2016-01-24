@@ -68,8 +68,7 @@ static Logging logger("ADC", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 // todo: move this flag to Engine god object
 static int adcDebugReporting = false;
 
-extern engine_configuration_s *engineConfiguration;
-extern board_configuration_s *boardConfiguration;
+EXTERN_ENGINE;
 
 static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth, int numChannels) {
 	adcsample_t result = 0;
@@ -197,6 +196,12 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 		warning(OBD_PCM_Processor_Fault, "ADC: %s input is not configured", msg);
 		return -1;
 	}
+#if EFI_ENABLE_MOCK_ADC || EFI_SIMULATOR
+	if (engine->engineState.mockAdcState.hasMockAdc[hwChannel])
+		return engine->engineState.mockAdcState.getMockAdcValue(hwChannel);
+
+#endif
+
 
 	if (adcHwChannelEnabled[hwChannel] == ADC_FAST) {
 		int internalIndex = fastAdc.internalAdcIndexByHardwareIndex[hwChannel];

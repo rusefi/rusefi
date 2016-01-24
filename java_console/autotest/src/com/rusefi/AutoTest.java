@@ -107,10 +107,8 @@ public class AutoTest {
         setEngineType(23);
         sendCommand("set suckedOffCoef 0");
         sendCommand("set addedToWallCoef 0");
-        if (!TestingUtils.isRealHardware) {
-            sendCommand("set_mock_map_voltage 1");
-            sendCommand("set_mock_vbatt_voltage 1.20");
-        }
+        sendCommand("set_mock_map_voltage 1");
+        sendCommand("set_mock_vbatt_voltage 1.20");
         EngineChart chart;
         String msg = "2003 Neon cranking ";
         IoUtil.changeRpm(200);
@@ -208,8 +206,7 @@ public class AutoTest {
         assertWave(msg, chart, EngineChart.SPARK_3, 0.13333, x + 360);
 
         // switching to Speed Density
-        if (!TestingUtils.isRealHardware)
-            sendCommand("set_mock_map_voltage 1");
+        sendCommand("set_mock_map_voltage 1");
         sendComplexCommand("set_algorithm 3");
         chart = nextChart();
         x = -70;
@@ -315,8 +312,7 @@ public class AutoTest {
         sendCommand("set_fuel_map 2200 4.2 15.66");
         sendCommand("set_fuel_map 2000 4.2 15.66");
         // mock 2 means 4 on the gauge because of the divider. should we simplify this?
-        if (!TestingUtils.isRealHardware)
-            sendCommand("set_mock_maf_voltage 2");
+        sendCommand("set_mock_maf_voltage 2");
         sendComplexCommand("set_global_trigger_offset_angle 175");
         chart = nextChart();
 
@@ -347,8 +343,7 @@ public class AutoTest {
         assertWave(chart, EngineChart.SPARK_2, 0.133, x);
 
         // switching to Speed Density
-        if (!TestingUtils.isRealHardware)
-            sendCommand("set_mock_maf_voltage 2");
+        sendCommand("set_mock_maf_voltage 2");
         sendCommand("set_mock_map_voltage 1");
         sendComplexCommand("set_algorithm 3");
         nextChart();
