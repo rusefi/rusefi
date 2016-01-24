@@ -58,6 +58,10 @@ float Pid::getI(void) {
 	return pid->iFactor;
 }
 
+float Pid::getPrevError(void) {
+	return prevError;
+}
+
 float Pid::getIntegration(void) {
 	return iTerm;
 }
