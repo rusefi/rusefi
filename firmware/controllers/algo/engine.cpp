@@ -277,6 +277,24 @@ void Engine::watchdog() {
 #endif
 }
 
+void Engine::prepareFuelSchedule(DECLARE_ENGINE_PARAMETER_F) {
+	int rpm = rpmCalculator.rpmValue;
+
+	ENGINE(m.beforeInjectonSch) = GET_TIMESTAMP();
+
+	injection_mode_e mode = isCrankingR(rpm) ? CONFIG(crankingInjectionMode) : CONFIG(injectionMode);
+
+	ENGINE(engineConfiguration2)->processing->addFuelEvents(
+			mode PASS_ENGINE_PARAMETER);
+	ENGINE(m.injectonSchTime) = GET_TIMESTAMP() - ENGINE(m.beforeInjectonSch);
+
+	/**
+	 * Swap pointers. This way we are always reading from one instance while adjusting scheduling of another instance.
+	 */
+	FuelSchedule * t = ENGINE(engineConfiguration2)->injectionEvents;
+	ENGINE(engineConfiguration2)->injectionEvents = ENGINE(engineConfiguration2)->processing;
+	ENGINE(engineConfiguration2)->processing = t;
+}
 
 /**
  * The idea of this method is to execute all heavy calculations in a lower-priority thread,
@@ -307,20 +325,7 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 
-	ENGINE(m.beforeInjectonSch) = GET_TIMESTAMP();
-
-	injection_mode_e mode = isCrankingR(rpm) ? CONFIG(crankingInjectionMode) : CONFIG(injectionMode);
-
-	ENGINE(engineConfiguration2)->processing->addFuelEvents(
-			mode PASS_ENGINE_PARAMETER);
-	ENGINE(m.injectonSchTime) = GET_TIMESTAMP() - ENGINE(m.beforeInjectonSch);
-
-	/**
-	 * Swap pointers. This way we are always reading from one instance while adjusting scheduling of another instance.
-	 */
-	FuelSchedule * t = ENGINE(engineConfiguration2)->injectionEvents;
-	ENGINE(engineConfiguration2)->injectionEvents = ENGINE(engineConfiguration2)->processing;
-	ENGINE(engineConfiguration2)->processing = t;
+//	prepareFuelSchedule(PASS_ENGINE_PARAMETER_F);
 }
 
 StartupFuelPumping::StartupFuelPumping() {

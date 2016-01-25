@@ -360,6 +360,7 @@ static ALWAYS_INLINE void scheduleIgnitionAndFuelEvents(int rpm, int revolutionI
 	initializeIgnitionActions(ENGINE(engineState.timingAdvance), ENGINE(engineState.dwellAngle), list PASS_ENGINE_PARAMETER);
 	engine->m.ignitionSchTime = GET_TIMESTAMP() - engine->m.beforeIgnitionSch;
 
+	engine->prepareFuelSchedule(PASS_ENGINE_PARAMETER_F);
 }
 
 /**
