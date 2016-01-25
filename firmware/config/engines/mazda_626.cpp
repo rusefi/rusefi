@@ -26,6 +26,9 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->trigger.type = TT_60_2_VW;
 //	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;
 
+	// with this complex trigger we do not need this by default
+	boardConfiguration->sensorChartMode = SC_OFF;
+
 
 	engineConfiguration->injectionMode = IM_BATCH;
 	// enable two_wire_batch_injection
