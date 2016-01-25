@@ -216,6 +216,8 @@ class Engine {
 public:
 	Engine(persistent_config_s *config);
 	void init(persistent_config_s *config);
+	void prepareFuelSchedule(DECLARE_ENGINE_PARAMETER_F);
+
 	RpmCalculator rpmCalculator;
 	persistent_config_s *config;
 	engine_configuration_s *engineConfiguration;
