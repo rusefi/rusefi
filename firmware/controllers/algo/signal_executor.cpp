@@ -34,7 +34,7 @@
 
 EXTERN_ENGINE;
 
-#if EFI_ENGINE_SNIFFER
+#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 #include "engine_sniffer.h"
 extern WaveChart waveChart;
 #endif
@@ -59,22 +59,19 @@ void initSignalExecutor(void) {
 	}
 }
 
-//uint32_t dbgStart;
-//uint32_t dbgDurr;
-
 void turnPinHigh(NamedOutputPin *output) {
 	efiAssertVoid(output!=NULL, "NULL @ turnPinHigh");
-#if EFI_DEFAILED_LOGGING
+#if EFI_DEFAILED_LOGGING || defined(__DOXYGEN__)
 //	signal->hi_time = hTimeNow();
 #endif /* EFI_DEFAILED_LOGGING */
 
-#if EFI_GPIO
+#if EFI_GPIO || defined(__DOXYGEN__)
 	// turn the output level ACTIVE
 	// todo: this XOR should go inside the setOutputPinValue method
 	doSetOutputPinValue2(output, true);
 	// sleep for the needed duration
 #endif
-#if EFI_ENGINE_SNIFFER
+#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 	// explicit check here is a performance optimization to speed up no-chart mode
 	if (CONFIG(isEngineChartEnabled)) {
 		// this is a performance optimization - array index is cheaper then invoking a method with 'switch'
@@ -83,31 +80,31 @@ void turnPinHigh(NamedOutputPin *output) {
 
 		addWaveChartEvent(pinName, WC_UP);
 	}
-#endif /* EFI_WAVE_ANALYZER */
+#endif /* EFI_ENGINE_SNIFFER */
 //	dbgDurr = hal_lld_get_counter_value() - dbgStart;
 }
 
 void turnPinLow(NamedOutputPin *output) {
 	efiAssertVoid(output!=NULL, "NULL turnPinLow");
-#if EFI_GPIO
+#if EFI_GPIO || defined(__DOXYGEN__)
 	// turn off the output
 	doSetOutputPinValue2(output, false);
-#endif
+#endif /* EFI_GPIO */
 
-#if EFI_DEFAILED_LOGGING
+#if EFI_DEFAILED_LOGGING || defined(__DOXYGEN__)
 	systime_t after = hTimeNow();
 	debugInt(&signal->logging, "a_time", after - signal->hi_time);
 	scheduleLogging(&signal->logging);
 #endif /* EFI_DEFAILED_LOGGING */
 
-#if EFI_ENGINE_SNIFFER
+#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 	if (CONFIG(isEngineChartEnabled)) {
 		// this is a performance optimization - array index is cheaper then invoking a method with 'switch'
 		const char *pinName = output->name;
 
 		addWaveChartEvent(pinName, WC_DOWN);
 	}
-#endif /* EFI_WAVE_ANALYZER */
+#endif /* EFI_ENGINE_SNIFFER */
 }
 
 int getRevolutionCounter(void);
@@ -119,7 +116,7 @@ int getRevolutionCounter(void);
  * @param	dwell	the number of ticks of output duration
  *
  */
-void scheduleOutput(OutputSignal *signal, efitimeus_t nowUs, float delayUs, float durationUs) {
+void scheduleOutput(OutputSignal *signal, efitimeus_t nowUs, float delayUs, float durationUs, NamedOutputPin *output) {
 #if EFI_GPIO
 	if (durationUs < 0) {
 		warning(OBD_PCM_Processor_Fault, "duration cannot be negative: %d", durationUs);
@@ -135,7 +132,7 @@ void scheduleOutput(OutputSignal *signal, efitimeus_t nowUs, float delayUs, floa
 	scheduling_s * sUp = &signal->signalTimerUp[index];
 	scheduling_s * sDown = &signal->signalTimerDown[index];
 
-	scheduleByTime("out up", sUp, nowUs + (int) delayUs, (schfunc_t) &turnPinHigh, signal->output);
-	scheduleByTime("out down", sDown, nowUs + (int) (delayUs + durationUs), (schfunc_t) &turnPinLow, signal->output);
+	scheduleByTime("out up", sUp, nowUs + (int) delayUs, (schfunc_t) &turnPinHigh, output);
+	scheduleByTime("out down", sDown, nowUs + (int) (delayUs + durationUs), (schfunc_t) &turnPinLow, output);
 #endif
 }

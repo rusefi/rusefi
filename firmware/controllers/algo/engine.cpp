@@ -180,7 +180,7 @@ void Engine::preCalculate() {
 	}
 }
 
-void Engine::init() {
+void Engine::init(persistent_config_s *config) {
 }
 
 static bool stopPin(NamedOutputPin *output) {

@@ -149,7 +149,7 @@ void FuelSchedule::registerInjectionEvent(int injectorIndex, float angle,
 	}
 
 	ev->injectorIndex = injectorIndex;
-	ev->actuator.output = output;
+	ev->output = output;
 
 	ev->isSimultanious = isSimultanious;
 
@@ -396,10 +396,7 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 		ENGINE(angleExtra[i])= ENGINE(engineCycle) * i / CONFIG(specs.cylindersCount);
 
-
-
 		ENGINE(ignitionPin[i]) = getIgnitionPinForIndex(i PASS_ENGINE_PARAMETER);
-
 	}
 
 	int engineCycleInt = (int) ENGINE(engineCycle);
@@ -410,10 +407,8 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 		TRIGGER_SHAPE(triggerIndexByAngle[angle]) = triggerShapeIndex;
 	}
 
-	engineConfiguration2->crankingInjectionEvents.addFuelEvents(
-			engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER);
 	engineConfiguration2->injectionEvents.addFuelEvents(
-			engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
+			engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER);
 }
 
 #endif

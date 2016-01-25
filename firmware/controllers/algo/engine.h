@@ -44,6 +44,7 @@ public:
 	void addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S);
 
 	InjectionEventList injectionEvents;
+
 	/**
 	 * This is a performance optimization for https://sourceforge.net/p/rusefi/tickets/64/
 	 * TODO: better data structure? better algorithm?
@@ -69,9 +70,10 @@ public:
 	engine_configuration2_s();
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
-	FuelSchedule crankingInjectionEvents;
 	FuelSchedule injectionEvents;
 #endif
+
+	OutputSignal fuelActuators[MAX_INJECTION_OUTPUT_COUNT];
 
 	float fsioLastValue[LE_COMMAND_COUNT];
 
@@ -210,7 +212,7 @@ typedef void (*configuration_callback_t)(Engine*);
 class Engine {
 public:
 	Engine(persistent_config_s *config);
-	void init();
+	void init(persistent_config_s *config);
 	RpmCalculator rpmCalculator;
 	persistent_config_s *config;
 	engine_configuration_s *engineConfiguration;
