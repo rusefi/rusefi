@@ -275,7 +275,7 @@ static void assertREquals(void *expected, void *actual) {
 
 extern bool_t debugSignalExecutor;
 
-static void testRpmCalculator(void) {
+void testRpmCalculator(void) {
 	printf("*************************************************** testRpmCalculator\r\n");
 
 	EngineTestHelper eth(FORD_INLINE_6_1995);

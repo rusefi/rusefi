@@ -9,5 +9,6 @@
 #define TEST_TRIGGER_DECODER_H_
 
 void testTriggerDecoder(void);
+void testRpmCalculator(void);
 
 #endif /* TEST_TRIGGER_DECODER_H_ */
