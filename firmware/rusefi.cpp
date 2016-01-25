@@ -186,7 +186,7 @@ void runRusEfi(void) {
 	 */
 	initializeConsole(&sharedLogger);
 
-	engine->init();
+	engine->init(config);
 
 	addConsoleAction("reboot", scheduleReboot);
 

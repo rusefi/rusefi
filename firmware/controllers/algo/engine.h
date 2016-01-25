@@ -70,7 +70,10 @@ public:
 	engine_configuration2_s();
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
-	FuelSchedule injectionEvents;
+	FuelSchedule injectionEvents0;
+	FuelSchedule injectionEvents1;
+	FuelSchedule *injectionEvents;
+	FuelSchedule *processing;
 #endif
 
 	OutputSignal fuelActuators[MAX_INJECTION_OUTPUT_COUNT];

@@ -19,6 +19,7 @@
 #include "advance_map.h"
 #include "speed_density.h"
 #include "advance_map.h"
+#include "efilib2.h"
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "injector_central.h"
@@ -86,6 +87,7 @@ void Engine::addConfigurationListener(configuration_callback_t callback) {
 }
 
 Engine::Engine(persistent_config_s *config) {
+	init(config);
 	/**
 	 * it's important for fixAngle() that engineCycle field never has zero
 	 */
@@ -98,12 +100,9 @@ Engine::Engine(persistent_config_s *config) {
 	isTestMode = false;
 	isSpinning = false;
 	adcToVoltageInputDividerCoefficient = NAN;
-	this->config = config;
-	engineConfiguration = &config->engineConfiguration;
 	engineConfiguration2 = NULL;
 	engineState.iat = engineState.clt = NAN;
 	memset(&ignitionPin, 0, sizeof(ignitionPin));
-	memset(config, 0, sizeof(persistent_config_s));
 
 	knockNow = false;
 	knockEver = false;
@@ -181,6 +180,9 @@ void Engine::preCalculate() {
 }
 
 void Engine::init(persistent_config_s *config) {
+	this->config = config;
+	engineConfiguration = &config->engineConfiguration;
+	memset(config, 0, sizeof(persistent_config_s));
 }
 
 static bool stopPin(NamedOutputPin *output) {
@@ -304,6 +306,21 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 	}
 
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+
+	ENGINE(m.beforeInjectonSch) = GET_TIMESTAMP();
+
+	injection_mode_e mode = isCrankingR(rpm) ? CONFIG(crankingInjectionMode) : CONFIG(injectionMode);
+
+	ENGINE(engineConfiguration2)->processing->addFuelEvents(
+			mode PASS_ENGINE_PARAMETER);
+	ENGINE(m.injectonSchTime) = GET_TIMESTAMP() - ENGINE(m.beforeInjectonSch);
+
+	/**
+	 * Swap pointers. This way we are always reading from one instance while adjusting scheduling of another instance.
+	 */
+	FuelSchedule * t = ENGINE(engineConfiguration2)->injectionEvents;
+	ENGINE(engineConfiguration2)->injectionEvents = ENGINE(engineConfiguration2)->processing;
+	ENGINE(engineConfiguration2)->processing = t;
 }
 
 StartupFuelPumping::StartupFuelPumping() {

@@ -100,7 +100,7 @@ void AccelEnrichmemnt::reset() {
 void AccelEnrichmemnt::onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_S) {
 	if (!cisnan(this->currentValue)) {
 		delta = currentValue - this->currentValue;
-		FuelSchedule *fs = &engine->engineConfiguration2->injectionEvents;
+		FuelSchedule *fs = engine->engineConfiguration2->injectionEvents;
 		cb.add(delta * fs->eventsCount);
 	}
 
