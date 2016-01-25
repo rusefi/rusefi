@@ -36,6 +36,7 @@ public class RecentCommands {
     private static final String IDLEINFO = "idleinfo";
     private static final String ALTINFO = "altinfo";
     private static final String ACCELINFO = "accelinfo";
+    private static final String CANINFO = "caninfo";
     private static final String TSINFO = "tsinfo";
     private static final String FUELINFO = "fuelinfo";
     private static final String TEMPINFO = "tempinfo";
@@ -57,6 +58,7 @@ public class RecentCommands {
         COMMAND_ICONS.put(ALTINFO, UiUtils.loadIcon("alternator.jpg"));
         COMMAND_ICONS.put(ACCELINFO, infoIcon);
         COMMAND_ICONS.put(TSINFO, infoIcon);
+        COMMAND_ICONS.put(CANINFO, infoIcon);
         COMMAND_ICONS.put(FUELINFO, infoIcon);
         COMMAND_ICONS.put(TEMPINFO, infoIcon);
         COMMAND_ICONS.put(HIPINFO, UiUtils.loadIcon("knock.jpg"));
@@ -110,6 +112,7 @@ public class RecentCommands {
         add(ANALOGINFO);
         add(TRIGGERINFO);
         add(TSINFO);
+        add(CANINFO);
         add(SettingsTab.WRITECONFIG);
         add("rewriteconfig");
         add("enable injection");
