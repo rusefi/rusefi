@@ -29,7 +29,6 @@
  */
 typedef struct OutputSignal_struct OutputSignal;
 struct OutputSignal_struct {
-	NamedOutputPin *output;
 
 	/**
 	 * We are alternating instances so that events which extend into next revolution are not reused while
@@ -39,7 +38,7 @@ struct OutputSignal_struct {
 	scheduling_s signalTimerDown[2];
 };
 
-void scheduleOutput(OutputSignal *signal, efitimeus_t nowUs, float delayUs, float durationUs);
+void scheduleOutput(OutputSignal *signal, efitimeus_t nowUs, float delayUs, float durationUs, NamedOutputPin *output);
 void initSignalExecutor(void);
 
 void initSignalExecutorImpl(void);

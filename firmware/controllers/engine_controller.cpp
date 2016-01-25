@@ -98,6 +98,7 @@ engine_configuration2_s * engineConfiguration2 = &ec2;
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 
 /**
+ * todo: eliminate constructor parameter so that _engine could be moved to CCM_OPTIONAL
  * todo: this should probably become 'static', i.e. private, and propagated around explicitly?
  */
 Engine _engine(&persistentState.persistentConfiguration);

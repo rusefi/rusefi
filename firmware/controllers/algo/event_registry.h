@@ -12,8 +12,6 @@
 #include "signal_executor.h"
 #include "fl_stack.h"
 
-#define MAX_EVENT_COUNT 80
-
 /**
  * This structure defines an angle position within the trigger
  */
@@ -34,14 +32,15 @@ public:
 class InjectionEvent {
 public:
 	InjectionEvent();
-	event_trigger_position_s injectionStart;
-	OutputSignal actuator;
-	int injectorIndex;
 	/**
 	 * This is a performance optimization - it's more efficient to handle all
 	 * injectors together if that's the case
 	 */
 	bool isSimultanious;
+	NamedOutputPin *output;
+	int injectorIndex;
+
+	event_trigger_position_s injectionStart;
 };
 
 class IgnitionEvent {
@@ -57,10 +56,11 @@ public:
 	char *name;
 };
 
-#define OUTPUT_SIGNAL_MAX_SIZE2 45
+#define MAX_INJECTION_OUTPUT_COUNT 45
+#define MAX_IGNITION_EVENT_COUNT 80
 
-typedef ArrayList<InjectionEvent, OUTPUT_SIGNAL_MAX_SIZE2> InjectionEventList;
+typedef ArrayList<InjectionEvent, MAX_INJECTION_OUTPUT_COUNT> InjectionEventList;
 
-typedef ArrayList<IgnitionEvent, MAX_EVENT_COUNT> IgnitionEventList;
+typedef ArrayList<IgnitionEvent, MAX_IGNITION_EVENT_COUNT> IgnitionEventList;
 
 #endif /* EVENT_REGISTRY_H_ */
