@@ -15,7 +15,7 @@ class EngineTestHelper {
 public:
 	EngineTestHelper(engine_type_e engineType);
 	void initTriggerShapeAndRpmCalculator();
-	void fireTriggerEvents();
+	void fireTriggerEvents(int count);
 
 	persistent_config_s persistentConfig;
 	engine_configuration2_s ec2;

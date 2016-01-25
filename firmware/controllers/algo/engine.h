@@ -38,13 +38,12 @@ public:
 class FuelSchedule {
 public:
 	FuelSchedule();
-	InjectionEventList injectionEvents;
-
 	/**
 	 * this method schedules all fuel events for an engine cycle
 	 */
 	void addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S);
 
+	InjectionEventList injectionEvents;
 	/**
 	 * This is a performance optimization for https://sourceforge.net/p/rusefi/tickets/64/
 	 * TODO: better data structure? better algorithm?

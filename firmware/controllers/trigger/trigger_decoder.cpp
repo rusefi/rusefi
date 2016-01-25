@@ -312,22 +312,23 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		int prevIndex = TRIGGER_SHAPE(triggerIndexByAngle[(int)prevAngle]);
 		// now let's get precise angle for that event
 		prevAngle = TRIGGER_SHAPE(eventAngles[prevIndex]);
-		uint32_t time = nowNt - timeOfLastEvent[prevIndex];
+// todo: re-implement this as a subclass. we need two instances of
+//		uint32_t time = nowNt - timeOfLastEvent[prevIndex];
 		angle_t angleDiff = currentAngle - prevAngle;
 		// todo: angle diff should be pre-calculated
 		fixAngle(angleDiff);
 
-		float r = (60000000.0 / 360 * US_TO_NT_MULTIPLIER) * angleDiff / time;
+//		float r = (60000000.0 / 360 * US_TO_NT_MULTIPLIER) * angleDiff / time;
 
 #if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 		if (boardConfiguration->sensorChartMode == SC_DETAILED_RPM) {
-			scAddData(currentAngle, r);
+//			scAddData(currentAngle, r);
 		} else {
-			scAddData(currentAngle, r / instantRpmValue[prevIndex]);
+//			scAddData(currentAngle, r / instantRpmValue[prevIndex]);
 		}
 #endif
-		instantRpmValue[currentCycle.current_index] = r;
-		timeOfLastEvent[currentCycle.current_index] = nowNt;
+//		instantRpmValue[currentCycle.current_index] = r;
+//		timeOfLastEvent[currentCycle.current_index] = nowNt;
 	}
 }
 
@@ -526,7 +527,13 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		return;
 	}
 	wave.checkSwitchTimes(getSize());
-	calculateTriggerSynchPoint(&engine->triggerCentral.triggerState PASS_ENGINE_PARAMETER);
+	/**
+	 * this instance is used only to initialize 'this' TriggerShape instance
+	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
+	 */
+	TriggerState state;
+	state.reset();
+	calculateTriggerSynchPoint(&state PASS_ENGINE_PARAMETER);
 }
 
 static void onFindIndex(TriggerState *state) {
