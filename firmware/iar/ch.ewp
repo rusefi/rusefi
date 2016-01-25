@@ -2016,6 +2016,12 @@
         <name>$PROJ_DIR$\..\config\engines\honda_accord.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\config\engines\lada_kalina.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\lada_kalina.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\config\engines\mazda_323.cpp</name>
       </file>
       <file>
