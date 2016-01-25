@@ -80,8 +80,10 @@ public:
 	uint32_t prevTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
 	int expectedTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
 
-	uint32_t timeOfLastEvent[PWM_PHASE_MAX_COUNT];
-	float instantRpmValue[PWM_PHASE_MAX_COUNT];
+	// we need two instances of TriggerState
+	// todo: re-imiplement as a sub-class to reduce memory consumption
+//	uint32_t timeOfLastEvent[PWM_PHASE_MAX_COUNT];
+//	float instantRpmValue[PWM_PHASE_MAX_COUNT];
 
 	/**
 	 * how many times since ECU reboot we had unexpected number of teeth in trigger cycle

@@ -18,7 +18,7 @@ void testSpeedDensity(void) {
 	eth.ec->trigger.customTotalToothCount = 8;
 	eth.initTriggerShapeAndRpmCalculator();
 
-	eth.fireTriggerEvents();
+	eth.fireTriggerEvents(36);
 	assertEqualsM("RPM", 1500, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
 
 	// 427 cubic inches, that's a LOT of engine

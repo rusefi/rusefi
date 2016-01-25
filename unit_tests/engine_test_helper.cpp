@@ -47,8 +47,8 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	engine->engineConfiguration->mafAdcChannel = (adc_channel_e)TEST_MAF_CHANNEL;
 }
 
-void EngineTestHelper::fireTriggerEvents() {
-	for (int i = 0; i < 24; i++) {
+void EngineTestHelper::fireTriggerEvents(int count) {
+	for (int i = 0; i < count; i++) {
 		timeNow += 5000; // 5ms
 		board_configuration_s * boardConfiguration = &engine.engineConfiguration->bc;
 		engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
