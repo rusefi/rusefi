@@ -407,8 +407,6 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 		TRIGGER_SHAPE(triggerIndexByAngle[angle]) = triggerShapeIndex;
 	}
 
-	engineConfiguration2->injectionEvents->addFuelEvents(
-			engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER);
 }
 
 #endif
