@@ -241,6 +241,11 @@ static msg_t canThread(void *arg) {
 }
 
 static void canInfo(void) {
+	if (!engineConfiguration->isCanEnabled) {
+		scheduleMsg(&logger, "CAN is not enabled, please enable & restart");
+		return;
+	}
+
 	scheduleMsg(&logger, "CAN TX %s", hwPortname(boardConfiguration->canTxPin));
 	scheduleMsg(&logger, "CAN RX %s", hwPortname(boardConfiguration->canRxPin));
 	scheduleMsg(&logger, "type=%d canReadEnabled=%s canWriteEnabled=%s period=%d", engineConfiguration->canNbcType,
@@ -260,12 +265,13 @@ void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 void initCan(void) {
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	addConsoleAction("caninfo", canInfo);
 	if (!engineConfiguration->isCanEnabled)
 		return;
 #endif /* EFI_PROD_CODE */
 
-#if STM32_CAN_USE_CAN2
+#if STM32_CAN_USE_CAN2 || defined(__DOXYGEN__)
 	// CAN1 is required for CAN2
 	canStart(&CAND1, &canConfig);
 	canStart(&CAND2, &canConfig);
@@ -274,14 +280,13 @@ void initCan(void) {
 #endif
 
 	canStart(&EFI_CAN_DEVICE, &canConfig);
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 
 	chThdCreateStatic(canTreadStack, sizeof(canTreadStack), NORMALPRIO, (tfunc_t) canThread, NULL);
 
 	mySetPadMode2("CAN TX", boardConfiguration->canTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
 	mySetPadMode2("CAN RX", boardConfiguration->canRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 
-	addConsoleAction("caninfo", canInfo);
 #endif /* EFI_PROD_CODE */
 }
 
