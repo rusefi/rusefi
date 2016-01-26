@@ -21,6 +21,8 @@ EXTERN_ENGINE;
 void setToyota_jzs147EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F); // default pinout
 
+	engineConfiguration->isCanEnabled = true;
+
 	engineConfiguration->specs.displacement = 3.0;
 	engineConfiguration->specs.cylindersCount = 6;
 	engineConfiguration->specs.firingOrder = FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4;
