@@ -343,23 +343,23 @@ void testRpmCalculator(void) {
 
 	assertREquals((void*)ev0->callback, (void*)turnPinHigh);
 	assertEqualsM("ev 0", st, ev0->momentX);
-	assertEqualsIM("o 0", (int)&enginePins.injectors[0], (int)ev0->param);
+	assertEqualsLM("o 0", (long)&enginePins.injectors[0], (long)ev0->param);
 
 	scheduling_s *ev1 = schedulingQueue.getForUnitText(1);
 	assertEqualsM("ev 1", st, ev1->momentX);
-	assertEqualsIM("o 1", (int)&enginePins.injectors[3], (int)ev1->param);
+	assertEqualsLM("o 1", (long)&enginePins.injectors[3], (long)ev1->param);
 
 	scheduling_s *ev2 = schedulingQueue.getForUnitText(2);
-	assertEqualsIM("o 2", (int)&enginePins.coils[0], (int)ev2->param);
+	assertEqualsLM("o 2", (long)&enginePins.coils[0], (long)ev2->param);
 
 	scheduling_s *ev3 = schedulingQueue.getForUnitText(3);
-	assertEqualsIM("o 3", (int)&enginePins.coils[0], (int)ev3->param);
+	assertEqualsLM("o 3", (long)&enginePins.coils[0], (long)ev3->param);
 
 	scheduling_s *ev4 = schedulingQueue.getForUnitText(4);
-	assertEqualsIM("o 4", (int)&enginePins.injectors[3], (int)ev4->param);
+	assertEqualsLM("o 4", (long)&enginePins.injectors[3], (long)ev4->param);
 
 	scheduling_s *ev5 = schedulingQueue.getForUnitText(5);
-	assertEqualsIM("o 5", (int)&enginePins.injectors[0], (int)ev5->param);
+	assertEqualsLM("o 5", (long)&enginePins.injectors[0], (long)ev5->param);
 
 	schedulingQueue.clear();
 

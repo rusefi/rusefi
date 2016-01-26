@@ -44,7 +44,7 @@ void print(const char *fmt, ...);
 
 void assertEqualsM2(const char *msg, float expected, float actual, float EPS);
 void assertEqualsM(const char *msg, float expected, float actual);
-void assertEqualsIM(const char *msg, int expected, int actual);
+void assertEqualsLM(const char *msg, long expected, long actual);
 void assertEquals(float expected, float actual);
 void assertTrue(float actual);
 void assertTrueM(const char *msg, float actual);
