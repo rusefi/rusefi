@@ -63,6 +63,12 @@ void assertEqualsM2(const char *msg, float expected, float actual, float EPS) {
 	printf("Validated %s: %f\r\n", msg, expected);
 }
 
+void assertEqualsIM(const char *msg, int expected, int actual) {
+	if (expected != actual) {
+		printf("Assert failed: %s %d while expected %d\r\n", msg, actual, expected);
+		exit(-1);
+	}
+}
 
 void assertEqualsM(const char *msg, float expected, float actual) {
 	assertEqualsM2(msg, expected, actual, 0.0001);

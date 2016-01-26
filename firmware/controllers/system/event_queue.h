@@ -42,12 +42,15 @@ bool assertNotInList(T *head, T*element) {
 	return false;
 }
 
+/**
+ * Execution sorted linked list
+ */
 class EventQueue {
 public:
 	EventQueue();
 
 	/**
-	 * O(size)
+	 * O(size) - linear search in sorted linked list
 	 */
 	bool insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t callback, void *param);
 
