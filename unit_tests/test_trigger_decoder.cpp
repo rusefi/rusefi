@@ -274,6 +274,7 @@ static void assertREquals(void *expected, void *actual) {
 }
 
 extern bool_t debugSignalExecutor;
+extern engine_pins_s enginePins;
 
 void testRpmCalculator(void) {
 	printf("*************************************************** testRpmCalculator\r\n");
@@ -338,11 +339,28 @@ void testRpmCalculator(void) {
 
 	assertEqualsM("index #2", 0, eth.engine.triggerCentral.triggerState.getCurrentIndex());
 	assertEqualsM("queue size/6", 6, schedulingQueue.size());
-	scheduling_s *ev1 = schedulingQueue.getForUnitText(0);
-	assertREquals((void*)ev1->callback, (void*)turnPinHigh);
+	scheduling_s *ev0 = schedulingQueue.getForUnitText(0);
 
+	assertREquals((void*)ev0->callback, (void*)turnPinHigh);
+	assertEqualsM("ev 0", st, ev0->momentX);
+	assertEqualsIM("o 0", (int)&enginePins.injectors[0], (int)ev0->param);
+
+	scheduling_s *ev1 = schedulingQueue.getForUnitText(1);
 	assertEqualsM("ev 1", st, ev1->momentX);
-	assertEqualsM("ev 2", st, schedulingQueue.getForUnitText(1)->momentX);
+	assertEqualsIM("o 1", (int)&enginePins.injectors[3], (int)ev1->param);
+
+	scheduling_s *ev2 = schedulingQueue.getForUnitText(2);
+	assertEqualsIM("o 2", (int)&enginePins.coils[0], (int)ev2->param);
+
+	scheduling_s *ev3 = schedulingQueue.getForUnitText(3);
+	assertEqualsIM("o 3", (int)&enginePins.coils[0], (int)ev3->param);
+
+	scheduling_s *ev4 = schedulingQueue.getForUnitText(4);
+	assertEqualsIM("o 4", (int)&enginePins.injectors[3], (int)ev4->param);
+
+	scheduling_s *ev5 = schedulingQueue.getForUnitText(5);
+	assertEqualsIM("o 5", (int)&enginePins.injectors[0], (int)ev5->param);
+
 	schedulingQueue.clear();
 
 	timeNow += 5000;
