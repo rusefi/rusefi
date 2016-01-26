@@ -246,12 +246,13 @@ public class AutoTest {
 
     private static void testFordAspire() {
         setEngineType(3);
+        sendCommand("set_mock_map_voltage 1");
+        sendCommand("set_mock_vbatt_voltage 2.2");
         String msg;
         EngineChart chart;
         // todo: interesting changeRpm(100);
         sendComplexCommand("set_cranking_rpm 500");
         IoUtil.changeRpm(200);
-        sendCommand("set_mock_vbatt_voltage 2.2");
 
         double x;
         chart = nextChart();
@@ -344,7 +345,6 @@ public class AutoTest {
 
         // switching to Speed Density
         sendCommand("set_mock_maf_voltage 2");
-        sendCommand("set_mock_map_voltage 1");
         sendComplexCommand("set_algorithm 3");
         nextChart();
         chart = nextChart();
@@ -375,6 +375,9 @@ public class AutoTest {
             throw new IllegalStateException(msg + " Expected " + expected + " but got " + actual);
     }
 
+    /**
+     * This method waits for longer then usual.
+     */
     private static void sendComplexCommand(String command) {
         sendCommand(command, COMPLEX_COMMAND_RETRY, Timeouts.CMD_TIMEOUT);
     }
