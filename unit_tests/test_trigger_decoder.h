@@ -10,5 +10,6 @@
 
 void testTriggerDecoder(void);
 void testRpmCalculator(void);
+void test1995FordInline6TriggerDecoder(void);
 
 #endif /* TEST_TRIGGER_DECODER_H_ */

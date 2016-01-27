@@ -35,9 +35,6 @@ EXTERN_ENGINE;
 
 static histogram_s triggerCallback;
 
-// we need this initial to have not_running at first invocation
-static volatile efitime_t previousShaftEventTimeNt = (efitimems_t) -10 * US2NT(US_PER_SECOND_LL);
-
 static Logging *logger;
 
 efitime_t getCrankEventCounter(DECLARE_ENGINE_PARAMETER_F) {
@@ -94,6 +91,9 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 
 TriggerCentral::TriggerCentral() {
 	nowNt = 0;
+	// we need this initial to have not_running at first invocation
+	previousShaftEventTimeNt = (efitimems_t) -10 * US2NT(US_PER_SECOND_LL);
+
 	memset(hwEventCounters, 0, sizeof(hwEventCounters));
 	clearCallbacks(&triggerListeneres);
 	triggerState.reset();
