@@ -219,6 +219,12 @@ public:
 	void init(persistent_config_s *config);
 	void prepareFuelSchedule(DECLARE_ENGINE_PARAMETER_F);
 
+	/**
+	 * That's the list of pending spark firing events
+	 */
+	IgnitionEvent *iHead;
+
+
 	RpmCalculator rpmCalculator;
 	persistent_config_s *config;
 	engine_configuration_s *engineConfiguration;
