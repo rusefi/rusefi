@@ -67,11 +67,6 @@ extern engine_pins_s enginePins;
 static MainTriggerCallback mainTriggerCallbackInstance;
 
 /**
- * That's the list of pending spark firing events
- */
-static IgnitionEvent *iHead = NULL;
-
-/**
  * In order to archive higher event precision, we are using a hybrid approach
  * where we are scheduling events based on the closest trigger event with a time offset.
  *
@@ -251,11 +246,11 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t eventInde
 		/**
 		 * Spark should be scheduled in relation to some future trigger event, this way we get better firing precision
 		 */
-		bool isPending = assertNotInList<IgnitionEvent>(iHead, iEvent);
+		bool isPending = assertNotInList<IgnitionEvent>(ENGINE(iHead), iEvent);
 		if (isPending)
 			return;
 
-		LL_APPEND(iHead, iEvent);
+		LL_APPEND(ENGINE(iHead), iEvent);
 	}
 }
 
@@ -271,11 +266,11 @@ static ALWAYS_INLINE void handleSpark(bool limitedSpark, uint32_t eventIndex, in
 
 	IgnitionEvent *current, *tmp;
 
-	LL_FOREACH_SAFE(iHead, current, tmp)
+	LL_FOREACH_SAFE(ENGINE(iHead), current, tmp)
 	{
 		if (current->sparkPosition.eventIndex == eventIndex) {
 			// time to fire a spark which was scheduled previously
-			LL_DELETE(iHead, current);
+			LL_DELETE(ENGINE(iHead), current);
 
 			scheduling_s * sDown = &current->signalTimerDown;
 

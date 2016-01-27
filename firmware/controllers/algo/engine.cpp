@@ -109,6 +109,8 @@ Engine::Engine(persistent_config_s *config) {
 	knockCount = 0;
 	knockDebug = false;
 	knockVolts = 0;
+	iHead = NULL;
+
 
 	timeOfLastKnockEvent = 0;
 	injectorLagMs = fuelMs = 0;
