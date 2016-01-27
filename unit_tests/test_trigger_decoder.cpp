@@ -107,7 +107,7 @@ static void assertTriggerPosition(event_trigger_position_s *position, int eventI
 	assertEqualsM("angleOffset", angleOffset, position->angleOffset);
 }
 
-static void test1995FordInline6TriggerDecoder(void) {
+void test1995FordInline6TriggerDecoder(void) {
 	printf("*************************************************** test1995FordInline6TriggerDecoder\r\n");
 
 	assertEqualsM("triggerIndex ", 0, getTheAngle(FORD_INLINE_6_1995));
@@ -121,6 +121,10 @@ static void test1995FordInline6TriggerDecoder(void) {
 
 	assertEqualsM("triggerShapeSynchPointIndex", 0, shape->getTriggerShapeSynchPointIndex());
 
+	// this is needed to have valid CLT and IAT. todo: extract method
+	initThermistors(NULL PASS_ENGINE_PARAMETER);
+	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_F);
+
 	event_trigger_position_s position;
 	assertEqualsM("globalTriggerAngleOffset", 0, engineConfiguration->globalTriggerAngleOffset);
 	findTriggerPosition(&position, 0 PASS_ENGINE_PARAMETER);
@@ -132,14 +136,22 @@ static void test1995FordInline6TriggerDecoder(void) {
 	findTriggerPosition(&position, 360 PASS_ENGINE_PARAMETER);
 	assertTriggerPosition(&position, 6, 0);
 
+	eth.initTriggerShapeAndRpmCalculator();
+	eth.engine.triggerCentral.addEventListener(mainTriggerCallback, "main loop", &eth.engine);
+
+	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+//	eth.fireTriggerEvents(48);
+//	assertEquals(2000, eth.engine.rpmCalculator.rpmValue);
+//	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+//	eth.fireTriggerEvents(48);
 
 	IgnitionEventList *ecl = &eth.ec2.ignitionEvents[0];
 	assertEqualsM("ignition events size", 6, ecl->size);
 	assertEqualsM("event index", 0, ecl->elements[0].dwellPosition.eventIndex);
-	assertEquals(0, ecl->elements[0].dwellPosition.angleOffset);
+	assertEqualsM("angle offset#1", 0, ecl->elements[0].dwellPosition.angleOffset);
 
 	assertEqualsM("event index", 10, ecl->elements[5].dwellPosition.eventIndex);
-	assertEquals(0, ecl->elements[5].dwellPosition.angleOffset);
+	assertEqualsM("angle offset#2", 0, ecl->elements[5].dwellPosition.angleOffset);
 
 	TriggerState state;
 
@@ -278,6 +290,7 @@ extern engine_pins_s enginePins;
 
 void testRpmCalculator(void) {
 	printf("*************************************************** testRpmCalculator\r\n");
+	timeNow = 0;
 
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 	EXPAND_EngineTestHelper;

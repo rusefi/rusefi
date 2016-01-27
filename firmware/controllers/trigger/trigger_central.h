@@ -30,6 +30,7 @@ public:
 	void resetCounters();
 	TriggerState triggerState;
 	efitick_t nowNt;
+	volatile efitime_t previousShaftEventTimeNt;
 private:
 	IntListenerArray triggerListeneres;
 	int hwEventCounters[HW_EVENT_TYPES];
