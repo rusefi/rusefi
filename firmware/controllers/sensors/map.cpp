@@ -107,6 +107,12 @@ float validateMap(float mapKPa DECLARE_ENGINE_PARAMETER_S) {
  * @returns kPa value
  */
 float getMapByVoltage(float voltage DECLARE_ENGINE_PARAMETER_S) {
+#if EFI_ENABLE_MOCK_ADC || defined(__DOXYGEN__)
+	int mapChannel = engineConfiguration->map.sensor.hwChannel;
+	if (engine->engineState.mockAdcState.hasMockAdc[mapChannel])
+		voltage = adcToVolts(engine->engineState.mockAdcState.getMockAdcValue(mapChannel) * engineConfiguration->analogInputDividerCoefficient);
+#endif
+
 	// todo: migrate to mapDecoder once parameter listeners are ready
 	air_pressure_sensor_config_s * apConfig = &engineConfiguration->map.sensor;
 	return decodePressure(voltage, apConfig);
