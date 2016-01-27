@@ -328,7 +328,10 @@ void testRpmCalculator(void) {
 
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 
+	assertEquals(0, eth.engine.engineConfiguration2->injectionEvents->injectionEvents.elements[0].injectionStart.angleOffset);
+
 	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
+	assertEquals(1500, eth.engine.rpmCalculator.rpmValue);
 
 	assertEqualsM("dwell", 4.5, eth.engine.engineState.dwellAngle);
 	assertEqualsM("fuel", 3.03, eth.engine.fuelMs);
