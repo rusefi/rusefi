@@ -901,10 +901,6 @@ void prepareShapes(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration2->injectionEvents->addFuelEvents(
 			engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER);
-
-
-	// todo: looks like this is here only for unit tests. todo: remove
-	initializeIgnitionActions(0, 0, &engineConfiguration2->ignitionEvents[0] PASS_ENGINE_PARAMETER);
 }
 
 #endif
