@@ -397,6 +397,8 @@ static void configureOnePlus60_2(TriggerShape *s, operation_mode_e operationMode
 	s->isSynchronizationNeeded = false;
 }
 
+static TriggerState state CCM_OPTIONAL;
+
 /**
  * External logger is needed because at this point our logger is not yet initialized
  */
@@ -530,7 +532,6 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 	 * this instance is used only to initialize 'this' TriggerShape instance
 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
 	 */
-	TriggerState state;
 	state.reset();
 	calculateTriggerSynchPoint(&state PASS_ENGINE_PARAMETER);
 }
