@@ -166,8 +166,9 @@ public:
 
 	angle_t injectionOffset;
 
-// todo: surround with EFI_ENABLE_MOCK_ADC checks
+#if EFI_ENABLE_MOCK_ADC || defined(__DOXYGEN__)
 	MockAdcState mockAdcState;
+#endif /* EFI_ENABLE_MOCK_ADC */
 };
 
 class RpmCalculator;
