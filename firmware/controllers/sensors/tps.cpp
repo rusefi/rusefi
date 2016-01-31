@@ -95,8 +95,8 @@ int getTPS10bitAdc(DECLARE_ENGINE_PARAMETER_F) {
 /**
  * @brief Position on physical primary TPS
  */
-static float getPrimatyRawTPS(DECLARE_ENGINE_PARAMETER_F) {
-	float tpsValue = getTpsValue(getTPS10bitAdc(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER);
+static percent_t getPrimatyRawTPS(DECLARE_ENGINE_PARAMETER_F) {
+	percent_t tpsValue = getTpsValue(getTPS10bitAdc(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER);
 	return tpsValue;
 }
 

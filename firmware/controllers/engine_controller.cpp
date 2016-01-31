@@ -240,6 +240,8 @@ static void periodicSlowCallback(Engine *engine) {
 		 * listeners we invoke them from here.
 		 */
 		engine->configurationListeners.invokeJustArgCallbacks();
+		// todo: convert to a callback?
+		updateAccelParameters();
 	}
 
 	engine->watchdog();
