@@ -30,7 +30,7 @@
 EXTERN_ENGINE
 ;
 
-static Logging *logger;
+static Logging *logger = NULL;
 
 WallFuel wallFuel;
 
@@ -128,6 +128,8 @@ AccelEnrichmemnt::AccelEnrichmemnt() {
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 
 static void accelInfo() {
+	if (logger == NULL)
+		return;
 //	scheduleMsg(logger, "EL accel length=%d", mapInstance.cb.getSize());
 	scheduleMsg(logger, "EL accel th=%f/mult=%f", engineConfiguration->engineLoadAccelEnrichmentThreshold, engineConfiguration->engineLoadAccelEnrichmentMultiplier);
 	scheduleMsg(logger, "EL decel th=%f/mult=%f", engineConfiguration->engineLoadDecelEnleanmentThreshold, engineConfiguration->engineLoadDecelEnleanmentMultiplier);
