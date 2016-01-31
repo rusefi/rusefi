@@ -43,6 +43,10 @@ private:
 class WallFuel {
 public:
 	WallFuel();
+	/**
+	 * @param target desired squirt duration
+	 * @return total adjusted fuel squirt duration once wall wetting is taken into effect
+	 */
 	floatms_t adjust(int injectorIndex, floatms_t target DECLARE_ENGINE_PARAMETER_S);
 	floatms_t getWallFuel(int injectorIndex);
 	void reset();
