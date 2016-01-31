@@ -18,12 +18,14 @@ public class TcpConnector implements LinkConnector {
     public final static int DEFAULT_PORT = 29001;
     public static final String LOCALHOST = "localhost";
     private final int port;
+    private final String hostname;
     //    private IoStream ioStream;
     private BinaryProtocol bp;
 
     public TcpConnector(String port) {
         try {
             this.port = getTcpPort(port);
+            this.hostname = getHostname(port);
         } catch (InvalidTcpPort e) {
             throw new IllegalStateException("Unexpected", e);
         }
@@ -56,18 +58,24 @@ public class TcpConnector implements LinkConnector {
         }
         return confirmation.substring(0, length);
     }
-*/
+    */
     static class InvalidTcpPort extends Exception {
     }
 
     public static int getTcpPort(String port) throws InvalidTcpPort {
         try {
-            return Integer.parseInt(port);
+            String[] portParts = port.split(":");
+            int index = (portParts.length == 1 ? 0 : 1);
+            return Integer.parseInt(portParts[index]);
         } catch (NumberFormatException e) {
             throw new InvalidTcpPort();
         }
     }
 
+    private static String getHostname(String port) {
+        String[] portParts = port.split(":");
+        return (portParts.length == 1 ? LOCALHOST : portParts[0].length() > 0 ? portParts[0] : LOCALHOST);
+    }
     /**
      * this implementation is blocking
      */
@@ -77,7 +85,7 @@ public class TcpConnector implements LinkConnector {
         OutputStream os;
         BufferedInputStream stream;
         try {
-            Socket socket = new Socket(LOCALHOST, port);
+            Socket socket = new Socket(hostname, port);
             os = socket.getOutputStream();
             stream = new BufferedInputStream(socket.getInputStream());
 //            ioStream = new TcpIoStream(os, stream);
