@@ -61,6 +61,7 @@ void initAccelEnrichment(Logging *sharedLogger);
 void setEngineLoadAccelLen(int len);
 void setEngineLoadAccelThr(float value);
 void setEngineLoadAccelMult(float value);
+void updateAccelParameters();
 
 #endif /* ACC_ENRICHMENT_H_ */
 

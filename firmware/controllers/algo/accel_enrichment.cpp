@@ -196,6 +196,11 @@ void setEngineLoadAccelLen(int len) {
 	accelInfo();
 }
 
+void updateAccelParameters() {
+	setEngineLoadAccelLen(engineConfiguration->engineLoadAccelLength);
+	setTpsAccelLen(engineConfiguration->tpsAccelLength);
+}
+
 void initAccelEnrichment(Logging *sharedLogger) {
 	logger = sharedLogger;
 	addConsoleActionI("set_tps_accel_len", setTpsAccelLen);
@@ -211,10 +216,6 @@ void initAccelEnrichment(Logging *sharedLogger) {
 	addConsoleActionF("set_engine_decel_multiplier", setDecelMult);
 	addConsoleAction("accelinfo", accelInfo);
 
-	/**
-	 * This would initialize data structures
-	 */
-	setEngineLoadAccelLen(engineConfiguration->engineLoadAccelLength);
-	setTpsAccelLen(engineConfiguration->tpsAccelLength);
+	updateAccelParameters();
 }
 #endif /* ! EFI_UNIT_TEST */
