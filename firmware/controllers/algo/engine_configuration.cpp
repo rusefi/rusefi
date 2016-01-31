@@ -382,6 +382,9 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->step1SparkCutEnable = false;
 	engineConfiguration->step1RpmWindow = 500;
 
+	engineConfiguration->slowAdcAlpha = 1;
+	engineConfiguration->engineSnifferRpmThreshold = 2500;
+	engineConfiguration->sensorSnifferRpmThreshold = 2500;
 	engineConfiguration->rpmHardLimit = 7000;
 	engineConfiguration->cranking.rpm = 550;
 	engineConfiguration->cutFuelOnHardLimit = true;

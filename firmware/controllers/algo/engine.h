@@ -162,6 +162,9 @@ public:
 	 */
 	floatms_t runningFuel;
 
+	/**
+	 * TPS acceleration: extra fuel amount
+	 */
 	floatms_t tpsAccelEnrich;
 
 	angle_t injectionOffset;
@@ -223,7 +226,14 @@ public:
 	 * That's the list of pending spark firing events
 	 */
 	IgnitionEvent *iHead;
-
+	/**
+	 * this is based on isEngineChartEnabled and engineSnifferRpmThreshold settings
+	 */
+	bool isEngineChartEnabled;
+	/**
+	 * this is based on sensorChartMode and sensorSnifferRpmThreshold settings
+	 */
+	sensor_chart_e sensorChartMode;
 
 	RpmCalculator rpmCalculator;
 	persistent_config_s *config;
@@ -235,6 +245,9 @@ public:
 	 */
 	efitick_t stopEngineRequestTimeNt;
 
+	/**
+	 * always 360 or 720, never zero
+	 */
 	angle_t engineCycle;
 
 	AccelEnrichmemnt engineLoadAccelEnrichment;

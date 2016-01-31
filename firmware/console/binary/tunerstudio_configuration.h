@@ -92,6 +92,9 @@ typedef struct {
 	 */
 	float deltaTps; // offset 116
 	int triggerErrorsCounter; // offset 120
+	/**
+	 * Engine load delta
+	 */
 	float engineLoadAccelDelta; // offset 124
 	float tpsAccelFuel; // offset 128
 	float baroCorrection;
@@ -111,12 +114,12 @@ typedef struct {
 	float runningFuel; // 188
 	int debugIntField1;	// 192
 	float injectorLagMs; // 196
-	float debugFloatField2;
-	float debugFloatField3;
-	float debugFloatField4;
-	float debugFloatField5;
-	int debugIntField2;
-	int debugIntField3;
+	float debugFloatField2; // 200
+	float debugFloatField3; // 204
+	float debugFloatField4; // 208
+	float debugFloatField5; // 212
+	int debugIntField2; // 216
+	int debugIntField3; // 220
 	int unused3[13];
 } TunerStudioOutputChannels;
 

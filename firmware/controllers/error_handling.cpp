@@ -51,18 +51,21 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 static char warningBuffer[WARNING_BUFFER_SIZE];
 static MemoryStream warningStream;
 
+static int warningCounter = 0;
 /**
  * OBD_PCM_Processor_Fault is the general error code for now
  *
  * @returns TRUE in case there are too many warnings
  */
 int warning(obd_code_e code, const char *fmt, ...) {
-        UNUSED(code);
+	UNUSED(code);
   
 	int now = getTimeNowSeconds();
 	if (absI(now - timeOfPreviousWarning) < 10 || !warningEnabled)
 		return true; // we just had another warning, let's not spam
 	timeOfPreviousWarning = now;
+
+	warningCounter++;
 
 	resetLogging(&logger); // todo: is 'reset' really needed here?
 	appendMsgPrefix(&logger);

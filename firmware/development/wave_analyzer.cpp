@@ -59,7 +59,7 @@ static void waAnaWidthCallback(WaveReader *reader) {
 	efitick_t nowUs = getTimeNowUs();
 	reader->eventCounter++;
 	reader->lastActivityTimeUs = nowUs;
-	addWaveChartEvent(reader->name, WC_UP);
+	addEngineSniffferEvent(reader->name, WC_UP);
 
 	uint32_t width = nowUs - reader->periodEventTimeUs;
 	reader->last_wave_low_widthUs = width;
@@ -72,7 +72,7 @@ void WaveReader::onFallEvent() {
 	efitick_t nowUs = getTimeNowUs();
 	eventCounter++;
 	lastActivityTimeUs = nowUs;
-	addWaveChartEvent(name, WC_DOWN);
+	addEngineSniffferEvent(name, WC_DOWN);
 
 	efitick_t width = nowUs - widthEventTimeUs;
 	last_wave_high_widthUs = width;
@@ -158,7 +158,7 @@ static THD_FUNCTION(waThread, arg) {
 	while (TRUE) {
 		chThdSleepSeconds(CHART_RESET_DELAY);
 
-		waveChart.publishChartIfFull();
+		waveChart.publishIfFull();
 	}
 #endif /* EFI_ENGINE_SNIFFER */
 }

@@ -96,9 +96,9 @@ bool isCranking(void);
 #define isValidRpm(rpm) ((rpm) > 0 && (rpm) < UNREALISTIC_RPM)
 
 #if EFI_ENGINE_SNIFFER
-#define addWaveChartEvent(name, msg) waveChart.addWaveChartEvent3((name), (msg))
+#define addEngineSniffferEvent(name, msg) waveChart.addEvent3((name), (msg))
  #else
-#define addWaveChartEvent(n, msg) {}
+#define addEngineSniffferEvent(n, msg) {}
 #endif /* EFI_ENGINE_SNIFFER */
 
 void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle, schfunc_t callback, void *param, RpmCalculator *calc);

@@ -21,12 +21,12 @@ class WaveChart {
 public:
 	WaveChart();
 	void init();
-	void publishChart();
-	void resetWaveChart();
-	bool isWaveChartFull();
+	void addEvent3(const char *name, const char *msg);
+	void reset();
+	void publishIfFull();
+	void publish();
+	bool isFull();
 	bool isStartedTooLongAgo();
-	void publishChartIfFull();
-	void addWaveChartEvent3(const char *name, const char *msg);
 private:
 	Logging logging;
 	uint32_t counter;

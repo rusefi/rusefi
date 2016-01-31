@@ -593,7 +593,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->manifoldAirPressure = getMap();
 	tsOutputChannels->engineLoad = engineLoad;
 	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
-	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getDelta();
 	tsOutputChannels->triggerErrorsCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 	tsOutputChannels->baroCorrection = engine->engineState.baroCorrection;
 	tsOutputChannels->pedalPosition = hasPedalPositionSensor(PASS_ENGINE_PARAMETER_F) ? getPedalPosition(PASS_ENGINE_PARAMETER_F) : 0;
@@ -607,10 +606,14 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER);
 	tsOutputChannels->runningFuel = ENGINE(engineState.runningFuel);
 	tsOutputChannels->injectorLagMs = ENGINE(injectorLagMs);
+
 	tsOutputChannels->wallFuelAmount = wallFuel.getWallFuel(0);
 	tsOutputChannels->wallFuelCorrection = engine->wallFuelCorrection;
-	tsOutputChannels->engineLoadAccelDelta = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_F) * 100 / getMap();
+	// TPS acceleration
+	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getDelta();
 	tsOutputChannels->tpsAccelFuel = engine->engineState.tpsAccelEnrich;
+	// engine load acceleration
+	tsOutputChannels->engineLoadAccelDelta = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_F) * 100 / getMap();
 
 	tsOutputChannels->iatCorrection = ENGINE(engineState.iatFuelCorrection);
 	tsOutputChannels->cltCorrection = ENGINE(engineState.cltFuelCorrection);

@@ -133,7 +133,7 @@ end_struct
 custom engine_type_e 4 bits, S32, @OFFSET@,   [0:2], "AUDI_AAN", "DODGE_NEON_1995", "FORD_ASPIRE_1996", "FORD_FIESTA", "NISSAN_PRIMERA", "HONDA_ACCORD", "FORD_INLINE_6_1995", "GY6_139QMB"
 engine_type_e engineType;http://rusefi.com/wiki/index.php?title=Manual:Engine_Type
 
-int unusedOffset4;
+int engineSnifferRpmThreshold;Disable engine sniffer above this rpm;"RPM",      1,     0,    0,30000,      0
 
 struct injector_s
 	float flow;cc/min, cubic centimeter per minute\nBy the way, g/s = 0.125997881 * (lb/hr)\ng/s = 0.125997881 * (cc/min)/10.5\ng/s = 0.0119997981 * cc/min;"cm3/min",  1,     0,      0,   1000,   2
@@ -188,7 +188,7 @@ end_struct
 
     specs_s specs
 	float cylinderBore;Cylinder diameter, in mm.
-int unused34234;
+int sensorSnifferRpmThreshold;Disable sensor sniffer above this rpm;"RPM",      1,     0,    0,30000,      0
 	int rpmHardLimit;;"rpm",    1,      0,       0, 20000.0,        2
 
 
@@ -630,7 +630,8 @@ baro_corr_table_t baroCorrTable;
 	uint32_t uartConsoleSerialSpeed;;"BPs",      1,      0,       0,1000000,      0
 	float tpsDecelEnleanmentThreshold;;"roc",        1,     0,    0, 200,     3
 	float tpsDecelEnleanmentMultiplier;;"coeff",        1,     0,    0, 200,     3
-	int[194] unused;
+	float slowAdcAlpha;;"coeff",        1,     0,    0, 200,     3
+	int[193] unused;
 	
 
 end_struct

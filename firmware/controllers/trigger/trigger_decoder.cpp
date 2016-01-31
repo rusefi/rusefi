@@ -217,7 +217,11 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 				float prevGap = 1.0 * toothed_previous_duration / durationBeforePrevious;
 				float gap3 = 1.0 * durationBeforePrevious / thirdPreviousDuration;
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-				scheduleMsg(logger, "gap=%f/%f/%f @ %d while expected %f/%f/%f and %f/%f error=%d", gap, prevGap, gap3, currentCycle.current_index, TRIGGER_SHAPE(syncRatioFrom), TRIGGER_SHAPE(syncRatioTo), TRIGGER_SHAPE(secondSyncRatioFrom), TRIGGER_SHAPE(secondSyncRatioTo), someSortOfTriggerError);
+				scheduleMsg(logger, "gap=%f/%f/%f @ %d while expected %f/%f and %f/%f error=%d",
+						gap, prevGap, gap3,
+						currentCycle.current_index,
+						TRIGGER_SHAPE(syncRatioFrom), TRIGGER_SHAPE(syncRatioTo),
+						TRIGGER_SHAPE(secondSyncRatioFrom), TRIGGER_SHAPE(secondSyncRatioTo), someSortOfTriggerError);
 #else
 				actualSynchGap = gap;
 				print("current gap %f/%f/%f c=%d prev=%d\r\n", gap, prevGap, gap3, currentDuration, toothed_previous_duration);
@@ -303,7 +307,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		}
 	}
 
-	if (boardConfiguration->sensorChartMode == SC_RPM_ACCEL || boardConfiguration->sensorChartMode == SC_DETAILED_RPM) {
+	if (ENGINE(sensorChartMode) == SC_RPM_ACCEL || ENGINE(sensorChartMode) == SC_DETAILED_RPM) {
 		angle_t currentAngle = TRIGGER_SHAPE(eventAngles[currentCycle.current_index]);
 		// todo: make this '90' depend on cylinder count?
 		angle_t prevAngle = currentAngle - 90;

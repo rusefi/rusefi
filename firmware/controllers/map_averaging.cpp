@@ -108,7 +108,7 @@ static void startAveraging(void *arg) {
  * as fast as possible
  */
 void mapAveragingCallback(adcsample_t adcValue) {
-	if (!isAveraging && boardConfiguration->sensorChartMode != SC_MAP) {
+	if (!isAveraging && ENGINE(sensorChartMode) != SC_MAP) {
 		return;
 	}
 
@@ -117,7 +117,7 @@ void mapAveragingCallback(adcsample_t adcValue) {
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#9a");
 
 #if (EFI_SENSOR_CHART && EFI_ANALOG_SENSORS) || defined(__DOXYGEN__)
-	if (boardConfiguration->sensorChartMode == SC_MAP) {
+	if (ENGINE(sensorChartMode) == SC_MAP) {
 		if (measurementsPerRevolutionCounter % FAST_MAP_CHART_SKIP_FACTOR
 				== 0) {
 			float voltage = adcToVoltsDivided(adcValue);

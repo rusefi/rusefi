@@ -73,12 +73,12 @@ void turnPinHigh(NamedOutputPin *output) {
 #endif
 #if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 	// explicit check here is a performance optimization to speed up no-chart mode
-	if (CONFIG(isEngineChartEnabled)) {
+	if (ENGINE(isEngineChartEnabled)) {
 		// this is a performance optimization - array index is cheaper then invoking a method with 'switch'
 		const char *pinName = output->name;
 //	dbgDurr = hal_lld_get_counter_value() - dbgStart;
 
-		addWaveChartEvent(pinName, WC_UP);
+		addEngineSniffferEvent(pinName, WC_UP);
 	}
 #endif /* EFI_ENGINE_SNIFFER */
 //	dbgDurr = hal_lld_get_counter_value() - dbgStart;
@@ -98,11 +98,11 @@ void turnPinLow(NamedOutputPin *output) {
 #endif /* EFI_DEFAILED_LOGGING */
 
 #if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
-	if (CONFIG(isEngineChartEnabled)) {
+	if (ENGINE(isEngineChartEnabled)) {
 		// this is a performance optimization - array index is cheaper then invoking a method with 'switch'
 		const char *pinName = output->name;
 
-		addWaveChartEvent(pinName, WC_DOWN);
+		addEngineSniffferEvent(pinName, WC_DOWN);
 	}
 #endif /* EFI_ENGINE_SNIFFER */
 }
@@ -117,7 +117,7 @@ int getRevolutionCounter(void);
  *
  */
 void scheduleOutput(OutputSignal *signal, efitimeus_t nowUs, float delayUs, float durationUs, NamedOutputPin *output) {
-#if EFI_GPIO
+#if EFI_GPIO || defined(__DOXYGEN__)
 	if (durationUs < 0) {
 		warning(OBD_PCM_Processor_Fault, "duration cannot be negative: %d", durationUs);
 		return;
@@ -131,6 +131,9 @@ void scheduleOutput(OutputSignal *signal, efitimeus_t nowUs, float delayUs, floa
 	int index = getRevolutionCounter() % 2;
 	scheduling_s * sUp = &signal->signalTimerUp[index];
 	scheduling_s * sDown = &signal->signalTimerDown[index];
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+	printf("scheduling output %s\r\n", output->name);
+#endif
 
 	scheduleByTime("out up", sUp, nowUs + (int) delayUs, (schfunc_t) &turnPinHigh, output);
 	scheduleByTime("out down", sDown, nowUs + (int) (delayUs + durationUs), (schfunc_t) &turnPinLow, output);

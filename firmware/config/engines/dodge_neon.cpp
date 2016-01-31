@@ -444,8 +444,9 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
 
 	boardConfiguration->alternatorControlPin = GPIOD_5;
-//	engineConfiguration->alternatorControl.pFactor = 22;
-	engineConfiguration->alternatorControl.pFactor = 55; // looks to work better, maybe time for some iFactor
+	engineConfiguration->targetVBatt = 14.5;
+	engineConfiguration->alternatorOffset = 20;
+	engineConfiguration->alternatorControl.pFactor = 20; // looks to work better, maybe time for some iFactor
 
 //	enableFrankensoCan();
 	engineConfiguration->canWriteEnabled = true;
@@ -462,6 +463,10 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->suckedOffCoef = 0.05;
 	engineConfiguration->addedToWallCoef = 0.40;
+
+	engineConfiguration->tpsAccelEnrichmentMultiplier = 0;
+	engineConfiguration->suckedOffCoef = 0;
+	engineConfiguration->addedToWallCoef = 0;
 
 	boardConfiguration->isSdCardEnabled = false;
 	boardConfiguration->manIdlePosition = 40; // set_idle_pwm 40

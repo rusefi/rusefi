@@ -3,7 +3,7 @@
  * @brief	Low level ADC code
  *
  * We are using two ADC devices here.
- * Slow ADC group is used for IAT, CLT, AFR, VBATT etc - this one is currently sampled at 10Hz
+ * Slow ADC group is used for IAT, CLT, AFR, VBATT etc - this one is currently sampled at 20Hz
  *
  * Fast ADC group is used for TPS, MAP, MAF HIP
  *
@@ -43,9 +43,9 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 
 // todo: migrate from hardware timer to software ADC conversion triggering
 // todo: I guess we would have to use ChibiOS timer and not our own timer because
-// todo: adcStartConversionI requires OS lock. currently slow ADC is 10Hz
+// todo: adcStartConversionI requires OS lock. currently slow ADC is 20Hz
 #define PWM_FREQ_SLOW 5000   /* PWM clock frequency. I wonder what does this setting mean?  */
-#define PWM_PERIOD_SLOW 500  /* PWM period (in PWM ticks).    */
+#define PWM_PERIOD_SLOW 250  /* PWM period (in PWM ticks).    */
 
 /**
  * 8000 RPM is 133Hz
@@ -62,6 +62,7 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 // is there a reason to have this configurable?
 #define ADC_FAST_DEVICE ADCD2
 
+static int slowAdcCounter = 0;
 static char LOGGING_BUFFER[500];
 static Logging logger("ADC", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 
@@ -459,8 +460,11 @@ static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 		/* Calculates the average values from the ADC samples.*/
 		for (int i = 0; i < slowAdc.size(); i++) {
 			int value = getAvgAdcValue(i, slowAdc.samples, ADC_BUF_DEPTH_SLOW, slowAdc.size());
-			slowAdc.values.adc_data[i] = value;
+			adcsample_t prev = slowAdc.values.adc_data[i];
+			slowAdc.values.adc_data[i] = (slowAdcCounter == 0) ? value :
+					CONFIG(slowAdcAlpha) * value + (1 - CONFIG(slowAdcAlpha)) * prev;
 		}
+		slowAdcCounter++;
 	}
 }
 

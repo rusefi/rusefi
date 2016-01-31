@@ -167,7 +167,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 #if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 	angle_t crankAngle = NAN;
 	int signal = -1;
-	if (boardConfiguration->sensorChartMode == SC_TRIGGER) {
+	if (ENGINE(sensorChartMode) == SC_TRIGGER) {
 		crankAngle = getCrankshaftAngleNt(nowNt PASS_ENGINE_PARAMETER);
 		signal = 1000 * ckpSignalType + index;
 	}
@@ -175,7 +175,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 
 	if (index != 0) {
 #if EFI_SENSOR_CHART || defined(__DOXYGEN__)
-		if (boardConfiguration->sensorChartMode == SC_TRIGGER) {
+		if (ENGINE(sensorChartMode) == SC_TRIGGER) {
 			scAddData(crankAngle, signal);
 		}
 #endif
@@ -204,7 +204,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	rpmState->onNewEngineCycle();
 	rpmState->lastRpmEventTimeNt = nowNt;
 #if EFI_SENSOR_CHART || defined(__DOXYGEN__)
-	if (boardConfiguration->sensorChartMode == SC_TRIGGER) {
+	if (ENGINE(sensorChartMode) == SC_TRIGGER) {
 		scAddData(crankAngle, signal);
 	}
 #endif
@@ -222,7 +222,7 @@ static char rpmBuffer[10];
  */
 static void onTdcCallback(void) {
 	itoa10(rpmBuffer, getRpmE(engine));
-	addWaveChartEvent(TOP_DEAD_CENTER_MESSAGE, (char* ) rpmBuffer);
+	addEngineSniffferEvent(TOP_DEAD_CENTER_MESSAGE, (char* ) rpmBuffer);
 }
 
 /**
@@ -232,8 +232,7 @@ static void tdcMarkCallback(trigger_event_e ckpSignalType,
 		uint32_t index0 DECLARE_ENGINE_PARAMETER_S) {
 	(void) ckpSignalType;
 	bool isTriggerSynchronizationPoint = index0 == 0;
-	if (isTriggerSynchronizationPoint
-			&& engineConfiguration->isEngineChartEnabled) {
+	if (isTriggerSynchronizationPoint && ENGINE(isEngineChartEnabled)) {
 		int revIndex2 = engine->rpmCalculator.getRevolutionCounter() % 2;
 		int rpm = getRpmE(engine);
 		// todo: use event-based scheduling, not just time-based scheduling

@@ -109,7 +109,7 @@ void rusEfiFunctionalTest(void) {
 
 void printPendingMessages(void) {
 	updateDevConsoleState(engine);
-	waveChart.publishChartIfFull();
+	waveChart.publishIfFull();
 }
 
 int isSerialOverTcpReady;
