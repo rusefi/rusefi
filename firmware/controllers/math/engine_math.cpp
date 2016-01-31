@@ -156,6 +156,10 @@ void FuelSchedule::registerInjectionEvent(int injectorIndex, float angle,
 	efiAssertVoid(TRIGGER_SHAPE(getSize()) > 0, "uninitialized TriggerShape");
 
 	findTriggerPosition(&ev->injectionStart, angle PASS_ENGINE_PARAMETER);
+#if EFI_UNIT_TEST
+	printf("registerInjectionEvent angle=%f index=%d\r\n", angle, ev->injectionStart.eventIndex);
+#endif
+
 	if (!hasEvents[ev->injectionStart.eventIndex]) {
 		hasEvents[ev->injectionStart.eventIndex] = true;
 		eventsCount++;

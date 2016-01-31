@@ -318,6 +318,9 @@ void testRpmCalculator(void) {
 	timeNow = 0;
 	assertEquals(0, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
 
+	assertEquals(4, engine->triggerShape.triggerIndexByAngle[240]);
+	assertEquals(4, engine->triggerShape.triggerIndexByAngle[241]);
+
 	eth.fireTriggerEvents(48);
 
 	assertEqualsM("RPM", 1500, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
@@ -341,10 +344,14 @@ void testRpmCalculator(void) {
 	int st = timeNow;
 	assertEqualsM("st value", 485000, st);
 
+	// todo: why is this required here? we already have one 'prepareOutputSignals' in constructor, what's wrong with it?
+	prepareOutputSignals(PASS_ENGINE_PARAMETER_F);
+
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 
+	assertEqualsM("fuel #1", 3.03, eth.engine.fuelMs);
 	InjectionEvent *ie0 = &eth.engine.engineConfiguration2->injectionEvents->injectionEvents.elements[0];
-	assertEquals(0, ie0->injectionStart.angleOffset);
+	assertEqualsM("injection angle", 0, ie0->injectionStart.angleOffset);
 
 	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
 	assertEquals(1500, eth.engine.rpmCalculator.rpmValue);
@@ -358,6 +365,7 @@ void testRpmCalculator(void) {
 
 	assertEqualsM("index #2", 0, eth.engine.triggerCentral.triggerState.getCurrentIndex());
 	assertEqualsM("queue size/6", 6, schedulingQueue.size());
+	{
 	scheduling_s *ev0 = schedulingQueue.getForUnitText(0);
 
 	assertREquals((void*)ev0->callback, (void*)turnPinHigh);
@@ -379,6 +387,7 @@ void testRpmCalculator(void) {
 
 	scheduling_s *ev5 = schedulingQueue.getForUnitText(5);
 	assertEqualsLM("o 5", (long)&enginePins.injectors[0], (long)ev5->param);
+	}
 
 	schedulingQueue.clear();
 
@@ -396,15 +405,40 @@ void testRpmCalculator(void) {
 	assertEqualsM("3/3", st + 14777, schedulingQueue.getForUnitText(3)->momentX);
 	schedulingQueue.clear();
 
+	assertEquals(5, engine->triggerShape.triggerIndexByAngle[240]);
+	assertEquals(5, engine->triggerShape.triggerIndexByAngle[241]);
+
 	timeNow += 5000;
+	assertEqualsM("Size 4.1", 6, engine->engineConfiguration2->injectionEvents->eventsCount);
+	assertFalseM("No squirts expected 4.1", engine->engineConfiguration2->injectionEvents->hasEvents[4]);
 	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN PASS_ENGINE_PARAMETER);
+	assertEqualsM("queue size 4.1", 0, schedulingQueue.size());
+
 	timeNow += 5000; // 5ms
 	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
+	assertEqualsM("queue size 4.2", 6, schedulingQueue.size());
+
 	timeNow += 5000; // 5ms
 	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
+	assertEqualsM("queue size 4.3", 6, schedulingQueue.size());
+
+	assertEqualsM("dwell", 4.5, eth.engine.engineState.dwellAngle);
+	assertEqualsM("fuel", 3.03, eth.engine.fuelMs);
+	assertEquals(1500, eth.engine.rpmCalculator.rpmValue);
+	{
+	scheduling_s *ev0 = schedulingQueue.getForUnitText(0);
+
+	assertREquals((void*)ev0->callback, (void*)turnPinHigh);
+	assertEqualsM("ev 0/2", st + 26666, ev0->momentX);
+	assertEqualsLM("o 0/2", (long)&enginePins.injectors[2], (long)ev0->param);
+
+	scheduling_s *ev1 = schedulingQueue.getForUnitText(1);
+	assertEqualsM("ev 1/2", st + 26666, ev1->momentX);
+	assertEqualsLM("o 1/2", (long)&enginePins.injectors[5], (long)ev1->param);
+	}
+
 	assertEqualsM("index #4", 6, eth.engine.triggerCentral.triggerState.getCurrentIndex());
 	assertEqualsM("queue size 4", 6, schedulingQueue.size());
-	assertEqualsM("4/0", st + 26666, schedulingQueue.getForUnitText(0)->momentX);
 	schedulingQueue.clear();
 
 	timeNow += 5000;

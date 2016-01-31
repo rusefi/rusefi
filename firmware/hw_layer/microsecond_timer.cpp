@@ -37,6 +37,8 @@ static const char * msg;
 
 static char buff[32];
 
+static int timerFreezeCounter = 0;
+
 extern bool hasFirmwareErrorFlag;
 
 /**
@@ -44,7 +46,15 @@ extern bool hasFirmwareErrorFlag;
  * This function should be invoked under kernel lock which would disable interrupts.
  */
 void setHardwareUsTimer(int32_t timeUs) {
-	if (timeUs == 1)
+	/**
+	 * #259 BUG error: not positive timeUs
+	 * Once in a while we night get an interrupt where we do not expect it
+	 */
+	if (timeUs <= 0) {
+		timerFreezeCounter++;
+		warning(OBD_PCM_Processor_Fault, "local freeze cnt=%d", timerFreezeCounter);
+	}
+	if (timeUs < 2)
 		timeUs = 2; // for some reason '1' does not really work
 	efiAssertVoid(timeUs > 0, "not positive timeUs");
 	efiAssertVoid(timeUs < 10 * US_PER_SECOND, "setHardwareUsTimer() too large");

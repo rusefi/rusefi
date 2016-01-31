@@ -110,8 +110,8 @@ public class FormulasPane {
 
     @NotNull
     private String getAccelerationVariables(ConfigurationImage ci) {
-        String tpsDelta = oneDecimal(Sensor.TPS_DELTA);
-        String elDelta = oneDecimal(Sensor.ENGINE_LOAD_ACCEL_DELTA);
+        String tpsDelta = oneDecimal(Sensor.deltaTps);
+        String elDelta = oneDecimal(Sensor.engineLoadAccelDelta);
 
         int tpsEnrichLength = ConfigField.getIntValue(ci, Fields.TPSACCELLENGTH);
         int elEnrichLength = ConfigField.getIntValue(ci, Fields.ENGINELOADACCELLENGTH);
@@ -121,7 +121,7 @@ public class FormulasPane {
 
         double tpsAccelThreshold = ConfigField.getFloatValue(ci, Fields.TPSACCELENRICHMENTTHRESHOLD);
         double tpsAccelMult = ConfigField.getFloatValue(ci, Fields.TPSACCELENRICHMENTMULTIPLIER);
-        String tpsAccelValue = oneDecimal(Sensor.TPS_ACCEL_FUEL);
+        String tpsAccelValue = oneDecimal(Sensor.tpsAccelFuel);
 
         double tpsDecelThreshold = ConfigField.getFloatValue(ci, Fields.TPSDECELENLEANMENTTHRESHOLD);
         double tpsDecelMult = ConfigField.getFloatValue(ci, Fields.TPSDECELENLEANMENTMULTIPLIER);
@@ -179,7 +179,7 @@ public class FormulasPane {
 
         String IATcorr = oneDecimal(Sensor.iatCorrection);
         String CLTcorr = oneDecimal(Sensor.cltCorrection);
-        String tpsAccel = oneDecimal(Sensor.TPS_ACCEL_FUEL);
+        String tpsAccel = oneDecimal(Sensor.tpsAccelFuel);
 
         String runningFuel = oneDecimal(Sensor.runningFuel);
 

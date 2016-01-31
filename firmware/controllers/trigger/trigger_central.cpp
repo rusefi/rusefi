@@ -118,11 +118,11 @@ static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, 
 	bool isUp = isUpEvent[(int) ckpSignalType];
 	shaft_signal_msg_index[0] = isUp ? 'u' : 'd';
 
-	addWaveChartEvent(eventId[(int )ckpSignalType], (char* ) shaft_signal_msg_index);
+	addEngineSniffferEvent(eventId[(int )ckpSignalType], (char* ) shaft_signal_msg_index);
 	if (engineConfiguration->useOnlyFrontForTrigger) {
 		// let's add the opposite event right away
 		shaft_signal_msg_index[0] = isUp ? 'd' : 'u';
-		addWaveChartEvent(eventId[(int )ckpSignalType], (char* ) shaft_signal_msg_index);
+		addEngineSniffferEvent(eventId[(int )ckpSignalType], (char* ) shaft_signal_msg_index);
 	}
 }
 

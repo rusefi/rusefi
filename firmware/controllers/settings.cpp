@@ -319,7 +319,7 @@ void setEngineType(int value) {
 	resetConfigurationExt(&logger, (engine_type_e) value PASS_ENGINE_PARAMETER);
 #if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 	if (engine->isTestMode)
-		waveChart.resetWaveChart();
+		waveChart.reset();
 #endif
 
 #if EFI_INTERNAL_FLASH

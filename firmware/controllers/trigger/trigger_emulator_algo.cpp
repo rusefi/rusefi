@@ -116,7 +116,7 @@ void setTriggerEmulatorRPM(int rpm, Engine *engine) {
 	}
 #if EFI_ENGINE_SNIFFER
 	if (engine->isTestMode)
-		waveChart.resetWaveChart();
+		waveChart.reset();
 #endif /* EFI_ENGINE_SNIFFER */
 
 	scheduleMsg(logger, "Emulating position sensor(s). RPM=%d", rpm);

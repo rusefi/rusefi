@@ -132,7 +132,7 @@ public class FuelTunePane {
                 double engineLoad = sc.getValue(Sensor.MAP);
                 double afr = sc.getValue(Sensor.AFR);
                 // todo: add UI for pre-conditions
-                double deltaTps = sc.getValue(Sensor.TPS_DELTA);
+                double deltaTps = sc.getValue(Sensor.deltaTps);
                 double clt = sc.getValue(Sensor.CLT);
 //                if (clt < 80)
 //                    return;

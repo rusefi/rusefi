@@ -27,8 +27,8 @@
 #define engineConfiguration_offset_hex 0
 #define engineType_offset 0
 #define engineType_offset_hex 0
-#define unusedOffset4_offset 4
-#define unusedOffset4_offset_hex 4
+#define engineSnifferRpmThreshold_offset 4
+#define engineSnifferRpmThreshold_offset_hex 4
 #define injector_offset 8
 #define injector_offset_hex 8
 #define injector_flow_offset 8
@@ -127,7 +127,7 @@
 #define firingOrder_offset 408
 #define firingOrder_offset_hex 198
 #define cylinderBore_offset 412
-#define unused34234_offset 416
+#define sensorSnifferRpmThreshold_offset 416
 #define rpmHardLimit_offset 420
 #define algorithm_offset 424
 #define crankingInjectionMode_offset 428
@@ -730,7 +730,8 @@
 #define uartConsoleSerialSpeed_offset 2228
 #define tpsDecelEnleanmentThreshold_offset 2232
 #define tpsDecelEnleanmentMultiplier_offset 2236
-#define unused_offset 2240
+#define slowAdcAlpha_offset 2240
+#define unused_offset 2244
 #define le_formulas1_offset 3016
 #define le_formulas2_offset 3216
 #define le_formulas3_offset 3416
