@@ -46,16 +46,19 @@ floatms_t WallFuel::adjust(int injectorIndex, floatms_t target DECLARE_ENGINE_PA
 	if (cisnan(target)) {
 		return target;
 	}
-	float addedToWallCoef = engineConfiguration->addedToWallCoef;
+	float addedToWallCoef = CONFIG(addedToWallCoef);
 
-	floatms_t suckedOffWallsAmount = wallFuel[injectorIndex] * engineConfiguration->suckedOffCoef;
+	/**
+	 * What amount of fuel is sucked of the walls, based on current amount of fuel on the wall.
+	 */
+	floatms_t suckedOffWallsAmount = wallFuel[injectorIndex] * CONFIG(suckedOffCoef);
 
-	floatms_t result = (target - suckedOffWallsAmount) / (1 - addedToWallCoef);
+	floatms_t adjustedFuelPulse = (target - suckedOffWallsAmount) / (1 - addedToWallCoef);
 
-	float addedToWallsAmount = result * addedToWallCoef;
-	wallFuel[injectorIndex] = wallFuel[injectorIndex] + addedToWallsAmount - suckedOffWallsAmount;
-	engine->wallFuelCorrection = result - target;
-	return result;
+	float addedToWallsAmount = adjustedFuelPulse * addedToWallCoef;
+	wallFuel[injectorIndex] += addedToWallsAmount - suckedOffWallsAmount;
+	engine->wallFuelCorrection = adjustedFuelPulse - target;
+	return adjustedFuelPulse;
 }
 
 floatms_t WallFuel::getWallFuel(int injectorIndex) {
