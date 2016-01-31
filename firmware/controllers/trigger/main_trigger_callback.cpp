@@ -176,7 +176,7 @@ static ALWAYS_INLINE void handleFuel(bool limitedFuel, uint32_t eventIndex, int 
 	if (!fs->hasEvents[eventIndex])
 		return;
 
-	ENGINE(tpsAccelEnrichment.onEngineCycleTps(PASS_ENGINE_PARAMETER_F));
+	ENGINE(tpsAccelEnrichment.onNewValue(getTPS(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
 	ENGINE(engineLoadAccelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_F));
 
 	ENGINE(fuelMs) = getFuelMs(rpm PASS_ENGINE_PARAMETER) * CONFIG(globalFuelCorrection);

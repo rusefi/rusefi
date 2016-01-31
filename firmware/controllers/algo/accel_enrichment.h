@@ -27,17 +27,16 @@ public:
 	 * @return Extra fuel squirt duration for TPS acceleration
 	 */
 	floatms_t getTpsEnrichment(DECLARE_ENGINE_PARAMETER_F);
-	float getDelta();
+	float getMaxDelta();
 
 	void onEngineCycle(DECLARE_ENGINE_PARAMETER_F);
 	void onEngineCycleTps(DECLARE_ENGINE_PARAMETER_F);
 	void reset();
-	float delta;
 	cyclic_buffer<float> cb;
+	void onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_S);
 
 private:
-	float currentValue;
-	void onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_S);
+	float previousValue;
 };
 
 class WallFuel {
@@ -52,7 +51,7 @@ public:
 	void reset();
 private:
 	/**
-	 * Amount of fuel on the wall, in injector open time scale, for specific injector.
+	 * Amount of fuel on the wall, in ms of injector open time, for specific injector.
 	 */
 	floatms_t wallFuel[INJECTION_PIN_COUNT];
 };

@@ -65,7 +65,7 @@ floatms_t WallFuel::getWallFuel(int injectorIndex) {
 	return wallFuel[injectorIndex];
 }
 
-float AccelEnrichmemnt::getDelta() {
+float AccelEnrichmemnt::getMaxDelta() {
 	if (cb.getCount() == 0)
 		return 0; // no recent data
 	return cb.maxValue(cb.getSize());
@@ -73,7 +73,7 @@ float AccelEnrichmemnt::getDelta() {
 
 // todo: eliminate code duplication between these two methods! Some pointer magic would help.
 floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_F) {
-	float d = getDelta();
+	float d = getMaxDelta();
 	if (d > engineConfiguration->tpsAccelEnrichmentThreshold) {
 		return d * engineConfiguration->tpsAccelEnrichmentMultiplier;
 	}
@@ -84,7 +84,7 @@ floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 float AccelEnrichmemnt::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_F) {
-	float d = getDelta();
+	float d = getMaxDelta();
 	if (d > engineConfiguration->engineLoadAccelEnrichmentThreshold) {
 		return d * engineConfiguration->engineLoadAccelEnrichmentMultiplier;
 	}
@@ -96,18 +96,20 @@ float AccelEnrichmemnt::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_F) {
 
 void AccelEnrichmemnt::reset() {
 	cb.clear();
-	delta = 0;
-	currentValue = NAN;
+	previousValue = NAN;
 }
 
 void AccelEnrichmemnt::onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_S) {
-	if (!cisnan(this->currentValue)) {
-		delta = currentValue - this->currentValue;
+	if (!cisnan(previousValue)) {
+		/**
+		 * this could be negative, zero or positive
+		 */
+		float delta = currentValue - previousValue;
 		FuelSchedule *fs = engine->engineConfiguration2->injectionEvents;
 		cb.add(delta * fs->eventsCount);
 	}
 
-	this->currentValue = currentValue;
+	previousValue = currentValue;
 }
 
 void AccelEnrichmemnt::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_F) {
