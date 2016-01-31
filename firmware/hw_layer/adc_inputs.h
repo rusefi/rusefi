@@ -26,10 +26,6 @@ int getAdcHardwareIndexByInternalIndex(int index);
 void printFullAdcReportIfNeeded(void);
 int getInternalAdcValue(const char *msg, adc_channel_e index);
 
-/* Depth of the conversion buffer, channels are sampled X times each.*/
-#define ADC_BUF_DEPTH_SLOW      8
-#define ADC_BUF_DEPTH_FAST      1
-
 // max(ADC_BUF_DEPTH_SLOW, ADC_BUF_DEPTH_FAST)
 #define MAX_ADC_GRP_BUF_DEPTH 8
 

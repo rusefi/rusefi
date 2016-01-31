@@ -25,6 +25,11 @@
 #include "board_test.h"
 #include "engine_controller.h"
 
+/* Depth of the conversion buffer, channels are sampled X times each.*/
+#define ADC_BUF_DEPTH_SLOW      8
+#define ADC_BUF_DEPTH_FAST      4
+
+
 static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
 static const char * adcHwChannelUsage[HW_MAX_ADC_INDEX];
 
@@ -206,7 +211,10 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 
 	if (adcHwChannelEnabled[hwChannel] == ADC_FAST) {
 		int internalIndex = fastAdc.internalAdcIndexByHardwareIndex[hwChannel];
-		return fastAdc.samples[internalIndex];
+// todo if ADC_BUF_DEPTH_FAST EQ 1
+//		return fastAdc.samples[internalIndex];
+		int value = getAvgAdcValue(internalIndex, fastAdc.samples, ADC_BUF_DEPTH_FAST, fastAdc.size());
+		return value;
 	}
 	if (adcHwChannelEnabled[hwChannel] != ADC_SLOW) {
 		warning(OBD_PCM_Processor_Fault, "ADC is off [%s] index=%d", msg, hwChannel);
@@ -504,6 +512,10 @@ static void configureInputs(void) {
 
 void initAdcInputs(bool boardTestMode) {
 	printMsg(&logger, "initAdcInputs()");
+	if (ADC_BUF_DEPTH_FAST > MAX_ADC_GRP_BUF_DEPTH)
+		firmwareError("ADC_BUF_DEPTH_FAST too high");
+	if (ADC_BUF_DEPTH_SLOW > MAX_ADC_GRP_BUF_DEPTH)
+		firmwareError("ADC_BUF_DEPTH_SLOW too high");
 
 	configureInputs();
 
