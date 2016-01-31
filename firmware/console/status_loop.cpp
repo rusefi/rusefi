@@ -610,7 +610,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->wallFuelAmount = wallFuel.getWallFuel(0);
 	tsOutputChannels->wallFuelCorrection = engine->wallFuelCorrection;
 	// TPS acceleration
-	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getDelta();
+	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getMaxDelta();
 	tsOutputChannels->tpsAccelFuel = engine->engineState.tpsAccelEnrich;
 	// engine load acceleration
 	tsOutputChannels->engineLoadAccelDelta = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_F) * 100 / getMap();
