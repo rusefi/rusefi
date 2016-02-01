@@ -15,7 +15,7 @@
 
 #include <string.h>
 
-static const short CB_MAX_SIZE = 64;
+static const short CB_MAX_SIZE = 128;
 
 #define BUFFER_MAX_VALUE 200123
 
