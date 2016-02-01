@@ -495,11 +495,11 @@ static void configureInputs(void) {
 	memset(adcHwChannelEnabled, 0, sizeof(adcHwChannelEnabled));
 	memset(adcHwChannelUsage, 0, sizeof(adcHwChannelUsage));
 
-	addChannel("TPS", engineConfiguration->tpsAdcChannel, ADC_FAST);
 	addChannel("MAP", engineConfiguration->map.sensor.hwChannel, ADC_FAST);
 	addChannel("MAF", engineConfiguration->mafAdcChannel, ADC_FAST);
 	addChannel("hip", engineConfiguration->hipOutputChannel, ADC_FAST);
 
+	addChannel("TPS", engineConfiguration->tpsAdcChannel, ADC_SLOW);
 	addChannel("fuel", engineConfiguration->fuelLevelSensor, ADC_SLOW);
 	addChannel("pPS", engineConfiguration->pedalPositionChannel, ADC_SLOW);
 	addChannel("VBatt", engineConfiguration->vbattAdcChannel, ADC_SLOW);

@@ -20,6 +20,7 @@
 #include "algo.h"
 #include "trigger_mazda.h"
 #include "trigger_chrysler.h"
+#include "tps.h"
 
 #include "trigger_central.h"
 #include "main_trigger_callback.h"
@@ -252,11 +253,11 @@ static void testStartupFuelPumping(void) {
 	engine->engineConfiguration->tpsMin = 0;
 	engine->engineConfiguration->tpsMax = 10;
 
-	mockTps = 6;
+	mockTps = TPS_TS_CONVERSION * 6;
 	sf.update(PASS_ENGINE_PARAMETER_F);
 	assertEqualsM("pc#1", 1, sf.pumpsCounter);
 
-	mockTps = 3;
+	mockTps = TPS_TS_CONVERSION * 3;
 	sf.update(PASS_ENGINE_PARAMETER_F);
 	assertEqualsM("pc#2", 1, sf.pumpsCounter);
 
@@ -267,16 +268,16 @@ static void testStartupFuelPumping(void) {
 	sf.update(PASS_ENGINE_PARAMETER_F);
 	assertEqualsM("pc#4", 0, sf.pumpsCounter);
 
-	mockTps = 7;
+	mockTps = TPS_TS_CONVERSION * 7;
 	engine->rpmCalculator.mockRpm = 0;
 	sf.update(PASS_ENGINE_PARAMETER_F);
 	assertEqualsM("pc#5", 1, sf.pumpsCounter);
 
-	mockTps = 3;
+	mockTps = TPS_TS_CONVERSION * 3;
 	sf.update(PASS_ENGINE_PARAMETER_F);
 	assertEqualsM("pc#6", 1, sf.pumpsCounter);
 
-	mockTps = 7;
+	mockTps = TPS_TS_CONVERSION * 7;
 	sf.update(PASS_ENGINE_PARAMETER_F);
 	assertEqualsM("pc#7", 2, sf.pumpsCounter);
 }

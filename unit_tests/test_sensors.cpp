@@ -35,12 +35,12 @@ void testTps(void) {
 	engineConfiguration->tpsMin = 43;
 	engineConfiguration->tpsMax = 193;
 
-	assertEquals(49.3333, getTpsValue(117 PASS_ENGINE_PARAMETER));
+	assertEquals(49.3333, getTpsValue(4 * 117 PASS_ENGINE_PARAMETER));
 
 
 	engineConfiguration->tpsMin = 193;
 	engineConfiguration->tpsMax = 43;
-	assertEquals(50.6667, getTpsValue(117 PASS_ENGINE_PARAMETER));
+	assertEqualsM("test#2", 50.6667, getTpsValue(4 * 117 PASS_ENGINE_PARAMETER));
 }
 
 void testTpsRateOfChange(void) {

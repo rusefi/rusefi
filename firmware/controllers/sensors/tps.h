@@ -13,6 +13,9 @@
 #include "global.h"
 #include "engine_configuration.h"
 
+// we have 12 bit precision and TS uses 10 bit precision
+#define TPS_TS_CONVERSION 4
+
 bool hasPedalPositionSensor(DECLARE_ENGINE_PARAMETER_F);
 percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_F);
 /**
@@ -22,7 +25,7 @@ percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_F);
  */
 percent_t getTPS(DECLARE_ENGINE_PARAMETER_F);
 int convertVoltageTo10bitADC(float voltage);
-int getTPS10bitAdc(DECLARE_ENGINE_PARAMETER_F);
+int getTPS12bitAdc(DECLARE_ENGINE_PARAMETER_F);
 float getTPSVoltage(DECLARE_ENGINE_PARAMETER_F);
 percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_S);
 
