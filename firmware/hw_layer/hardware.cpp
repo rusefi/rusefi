@@ -170,8 +170,8 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 			hipAdcCallback(fastAdc.samples[hipSampleIndex]);
 		}
 #endif
-		if(tpsSampleIndex!=TPS_IS_SLOW) {
-			tpsFastAdc = fastAdc.samples[tpsSampleIndex];
+		if (tpsSampleIndex != TPS_IS_SLOW) {
+//			tpsFastAdc = fastAdc.samples[tpsSampleIndex];
 		}
 	}
 }

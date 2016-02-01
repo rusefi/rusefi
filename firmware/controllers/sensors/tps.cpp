@@ -20,7 +20,8 @@
  */
 static tps_roc_s states[2];
 
-int tpsFastAdc = 0;
+// todo if TPS_FAST_ADC
+//int tpsFastAdc = 0;
 
 static volatile int tpsRocIndex = 0;
 
@@ -61,7 +62,7 @@ percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_S) {
 		warning(OBD_PCM_Processor_Fault, "Invalid TPS configuration: same value %d", engineConfiguration->tpsMin);
 		return NAN;
 	}
-	float result = interpolate(engineConfiguration->tpsMin, 0, engineConfiguration->tpsMax, 100, adc);
+	float result = interpolate(TPS_TS_CONVERSION * engineConfiguration->tpsMin, 0, TPS_TS_CONVERSION * engineConfiguration->tpsMax, 100, adc);
 	// this would put the value into the 0-100 range
 	return maxF(0, minF(100, result));
 }
@@ -78,15 +79,17 @@ float getTPSVoltage(DECLARE_ENGINE_PARAMETER_F) {
  * We need ADC value because TunerStudio has a nice TPS configuration wizard, and this wizard
  * wants a TPS value.
  */
-int getTPS10bitAdc(DECLARE_ENGINE_PARAMETER_F) {
+int getTPS12bitAdc(DECLARE_ENGINE_PARAMETER_F) {
 #if !EFI_PROD_CODE
 	if (mockTps != MOCK_UNDEFINED)
 		return mockTps;
 #endif
-	if(engineConfiguration->tpsAdcChannel==EFI_ADC_NONE)
+	if (engineConfiguration->tpsAdcChannel == EFI_ADC_NONE)
 		return -1;
 #if EFI_PROD_CODE
-	return tpsFastAdc / 4;
+
+	return getAdcValue("tps10", engineConfiguration->tpsAdcChannel);
+	//	return tpsFastAdc / 4;
 #else
 	return 0;
 #endif /* EFI_PROD_CODE */
@@ -96,7 +99,7 @@ int getTPS10bitAdc(DECLARE_ENGINE_PARAMETER_F) {
  * @brief Position on physical primary TPS
  */
 static percent_t getPrimatyRawTPS(DECLARE_ENGINE_PARAMETER_F) {
-	percent_t tpsValue = getTpsValue(getTPS10bitAdc(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER);
+	percent_t tpsValue = getTpsValue(getTPS12bitAdc(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER);
 	return tpsValue;
 }
 
