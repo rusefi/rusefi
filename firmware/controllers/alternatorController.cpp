@@ -53,6 +53,16 @@ static msg_t AltCtrlThread(int param) {
 		int dt = maxI(10, engineConfiguration->alternatorDT);
 		chThdSleepMilliseconds(dt);
 
+		// todo: migrate this to FSIO
+		bool alternatorShouldBeEnabledAtCurrentRpm = engine->rpmCalculator.rpmValue > 400;
+		engine->isAlternatorControlEnabled = CONFIG(isAlternatorControlEnabled) && alternatorShouldBeEnabledAtCurrentRpm;
+
+		if (!engine->isAlternatorControlEnabled) {
+			// we need to avoid accumulating iTerm while engine is not spinning
+			altPid.reset();
+			continue;
+		}
+
 		currentAltDuty = engineConfiguration->alternatorOffset + altPid.getValue(engineConfiguration->targetVBatt, getVBatt(PASS_ENGINE_PARAMETER_F), 1);
 		if (boardConfiguration->isVerboseAlternator) {
 			scheduleMsg(logger, "alt duty: %f/vbatt=%f/p=%f/i=%f/d=%f int=%f", currentAltDuty, getVBatt(PASS_ENGINE_PARAMETER_F),
@@ -95,7 +105,7 @@ static void applyAlternatorPinState(PwmConfig *state, int stateIndex) {
 	efiAssertVoid(state->multiWave.waveCount == 1, "invalid idle waveCount");
 	OutputPin *output = state->outputPins[0];
 	int value = state->multiWave.waves[0].pinStates[stateIndex];
-	if (!value || engineConfiguration->isAlternatorControlEnabled)
+	if (!value || engine->isAlternatorControlEnabled)
 		output->setValue(value);
 }
 
