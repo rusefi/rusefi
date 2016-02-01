@@ -234,6 +234,10 @@ public:
 	 * this is based on sensorChartMode and sensorSnifferRpmThreshold settings
 	 */
 	sensor_chart_e sensorChartMode;
+	/**
+	 * based on current RPM and isAlternatorControlEnabled setting
+	 */
+	bool isAlternatorControlEnabled;
 
 	RpmCalculator rpmCalculator;
 	persistent_config_s *config;
