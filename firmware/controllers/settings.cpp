@@ -412,7 +412,7 @@ static void printTPSInfo(void) {
 		return;
 	}
 
-	stm32_gpio_t* port = getAdcChannelPort(engineConfiguration->tpsAdcChannel);
+	ioportid_t port = getAdcChannelPort(engineConfiguration->tpsAdcChannel);
 	int pin = getAdcChannelPin(engineConfiguration->tpsAdcChannel);
 
 	scheduleMsg(&logger, "tps min %d/max %d v=%f @%s%d", engineConfiguration->tpsMin, engineConfiguration->tpsMax,
