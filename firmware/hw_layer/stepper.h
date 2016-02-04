@@ -18,17 +18,17 @@ public:
 	void setTargetPosition(int targetPosition);
 	int getTargetPosition();
 
-	GPIO_TypeDef * directionPort;
+	ioportid_t directionPort;
 	ioportmask_t directionPin;
 	int currentPosition;
 	float reactionTime;
 	int totalSteps;
 private:
 	int targetPosition;
-	GPIO_TypeDef * stepPort;
+	ioportid_t stepPort;
 	ioportmask_t stepPin;
 
-	GPIO_TypeDef * enablePort;
+	ioportid_t enablePort;
 	ioportmask_t enablePin;
 
 	THD_WORKING_AREA(stThreadStack, UTILITY_THREAD_STACK_SIZE);

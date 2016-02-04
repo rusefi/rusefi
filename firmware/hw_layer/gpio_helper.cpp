@@ -30,7 +30,7 @@
 /**
  * @brief Initialize the hardware output pin while also assigning it a logical name
  */
-void initOutputPinExt(const char *msg, OutputPin *outputPin, GPIO_TypeDef *port, uint32_t pinNumber, iomode_t mode) {
+void initOutputPinExt(const char *msg, OutputPin *outputPin, ioportid_t port, uint32_t pinNumber, iomode_t mode) {
 	if (outputPin->port != NULL) {
 		/**
 		 * here we check if another physical pin is already assigned to this logical output
@@ -46,7 +46,7 @@ void initOutputPinExt(const char *msg, OutputPin *outputPin, GPIO_TypeDef *port,
 	mySetPadMode(msg, port, pinNumber, mode);
 }
 
-void initOutputPin(const char *msg, OutputPin *outputPin, GPIO_TypeDef *port, uint32_t pinNumber) {
+void initOutputPin(const char *msg, OutputPin *outputPin, ioportid_t port, uint32_t pinNumber) {
 	initOutputPinExt(msg, outputPin, port, pinNumber, PAL_MODE_OUTPUT_PUSHPULL);
 }
 

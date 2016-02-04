@@ -30,9 +30,9 @@ static OutputPin sdCsPin;
 extern engine_pins_s enginePins;
 
 #if defined(STM32F4XX)
-static GPIO_TypeDef *PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH };
+static ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH };
 #else
-static GPIO_TypeDef *PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOF};
+static ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOF};
 #endif
 
 pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
@@ -41,7 +41,7 @@ pin_output_mode_e OPENDRAIN_OUTPUT = OM_OPENDRAIN;
 /**
  * This method is used for digital GPIO pins only, for peripheral pins see mySetPadMode
  */
-static void outputPinRegisterExt(const char *msg, OutputPin *output, GPIO_TypeDef *port, uint32_t pin,
+static void outputPinRegisterExt(const char *msg, OutputPin *output, ioportid_t port, uint32_t pin,
 		pin_output_mode_e *outputMode) {
 #if EFI_GPIO
 	if (port == GPIO_NULL) {
@@ -61,7 +61,7 @@ static void outputPinRegisterExt(const char *msg, OutputPin *output, GPIO_TypeDe
 #endif
 }
 
-GPIO_TypeDef * getHwPort(brain_pin_e brainPin) {
+ioportid_t getHwPort(brain_pin_e brainPin) {
 	if (brainPin == GPIO_UNASSIGNED)
 		return GPIO_NULL;
 	if (brainPin > GPIO_UNASSIGNED || brainPin < 0) {
@@ -84,13 +84,13 @@ ioportmask_t getHwPin(brain_pin_e brainPin) {
 void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
 	if (brainPin == GPIO_UNASSIGNED)
 		return;
-	GPIO_TypeDef *hwPort = getHwPort(brainPin);
+	ioportid_t hwPort = getHwPort(brainPin);
 	int hwPin = getHwPin(brainPin);
 
 	outputPinRegisterExt(msg, output, hwPort, hwPin, outputMode);
 }
 
-void outputPinRegister(const char *msg, OutputPin *output, GPIO_TypeDef *port, uint32_t pin) {
+void outputPinRegister(const char *msg, OutputPin *output, ioportid_t port, uint32_t pin) {
 	outputPinRegisterExt(msg, output, port, pin, &DEFAULT_OUTPUT);
 }
 

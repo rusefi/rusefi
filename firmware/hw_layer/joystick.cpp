@@ -102,7 +102,7 @@ static EXTConfig extcfg = { {
 /* CH#21 */{ EXT_CH_MODE_DISABLED, NULL },
 /* CH#22 */{ EXT_CH_MODE_DISABLED, NULL } } };
 
-static uint32_t getExtMode(GPIO_TypeDef * port) {
+static uint32_t getExtMode(ioportid_t port) {
 	if (port == GPIOA) {
 		return EXT_MODE_GPIOA;
 	} else if (port == GPIOB) {
@@ -125,7 +125,7 @@ static void applyPin(brain_pin_e pin) {
 		return;
 
 	int index = getHwPin(pin);
-	GPIO_TypeDef * port = getHwPort(pin);
+	ioportid_t port = getHwPort(pin);
 
 	extcfg.channels[index].mode = EXT_CH_MODE_RISING_EDGE | EXT_CH_MODE_AUTOSTART | getExtMode(port);
 	extcfg.channels[index].cb = extCallback;
