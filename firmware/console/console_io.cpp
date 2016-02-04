@@ -38,7 +38,7 @@ int lastWriteActual;
 
 static bool isSerialConsoleStarted = false;
 
-static EventListener consoleEventListener;
+static event_listener_t consoleEventListener;
 
 /**
  * @brief   Reads a whole line from the input channel.
@@ -164,7 +164,7 @@ bool consoleInBinaryMode = false;
 ts_channel_s binaryConsole;
 
 static THD_WORKING_AREA(consoleThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);
-static msg_t consoleThreadThreadEntryPoint(void *arg) {
+static THD_FUNCTION(consoleThreadThreadEntryPoint, arg) {
 	(void) arg;
 	chRegSetThreadName("console thread");
 
@@ -180,7 +180,7 @@ static msg_t consoleThreadThreadEntryPoint(void *arg) {
 	binaryConsole.channel = (BaseChannel *) getConsoleChannel();
 
 	while (true) {
-		efiAssert(getRemainingStack(chThdSelf()) > 256, "lowstck#9e", 0);
+		efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#9e");
 		bool end = getConsoleLine((BaseSequentialStream*) getConsoleChannel(), consoleInput, sizeof(consoleInput));
 		if (end) {
 			// firmware simulator is the only case when this happens
@@ -199,9 +199,6 @@ static msg_t consoleThreadThreadEntryPoint(void *arg) {
 			runBinaryProtocolLoop(&binaryConsole, true);
 		}
 	}
-#if defined __GNUC__
-	return false;
-#endif        
 }
 
 void consolePutChar(int x) {
@@ -250,13 +247,13 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 
 		isSerialConsoleStarted = true;
 
-		chEvtRegisterMask((EventSource *) chnGetEventSource(EFI_CONSOLE_UART_DEVICE), &consoleEventListener, 1);
+		chEvtRegisterMask((event_source_t *) chnGetEventSource(EFI_CONSOLE_UART_DEVICE), &consoleEventListener, 1);
 	}
 #else
 	is_serial_over_uart = false;
 #endif /* EFI_PROD_CODE */
 
-	chThdCreateStatic(consoleThreadStack, sizeof(consoleThreadStack), NORMALPRIO, consoleThreadThreadEntryPoint, NULL);
+	chThdCreateStatic(consoleThreadStack, sizeof(consoleThreadStack), NORMALPRIO, (tfunc_t)consoleThreadThreadEntryPoint, NULL);
 	addConsoleAction(SWITCH_TO_BINARY_COMMAND, switchToBinaryProtocol);
 }
 
