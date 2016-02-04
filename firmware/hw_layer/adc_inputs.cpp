@@ -439,7 +439,7 @@ static void printFullAdcReport(void) {
 		appendMsgPrefix(&logger);
 
 		adc_channel_e hwIndex = slowAdc.getAdcHardwareIndexByInternalIndex(index);
-		stm32_gpio_t* port = getAdcChannelPort(hwIndex);
+		ioportid_t port = getAdcChannelPort(hwIndex);
 		int pin = getAdcChannelPin(hwIndex);
 
 		int adcValue = slowAdc.getAdcValueByIndex(index);

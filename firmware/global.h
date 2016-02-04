@@ -57,12 +57,9 @@ typedef unsigned int time_t;
 typedef VirtualTimer virtual_timer_t;
 typedef EventListener event_listener_t;
 typedef Thread thread_t;
-typedef GPIO_TypeDef stm32_gpio_t;
-
 
 #define THD_WORKING_AREA WORKING_AREA
 #define THD_FUNCTION(tname, arg) void tname(void *arg)
-
 
 #if EFI_PROD_CODE
 
