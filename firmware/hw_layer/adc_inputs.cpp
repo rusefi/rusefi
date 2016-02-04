@@ -279,7 +279,7 @@ adc_channel_e getAdcChannel(brain_pin_e pin) {
 	}
 }
 
-stm32_gpio_t* getAdcChannelPort(adc_channel_e hwChannel) {
+ioportid_t getAdcChannelPort(adc_channel_e hwChannel) {
 	// todo: replace this with an array :)
 	switch (hwChannel) {
 	case ADC_CHANNEL_IN0:
@@ -372,7 +372,7 @@ int getAdcChannelPin(adc_channel_e hwChannel) {
 }
 
 static void initAdcHwChannel(adc_channel_e hwChannel) {
-	stm32_gpio_t* port = getAdcChannelPort(hwChannel);
+	ioportid_t port = getAdcChannelPort(hwChannel);
 	int pin = getAdcChannelPin(hwChannel);
 
 	initAdcPin(port, pin, "hw");
