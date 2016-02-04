@@ -57,6 +57,9 @@ typedef unsigned int time_t;
 typedef VirtualTimer virtual_timer_t;
 typedef EventListener event_listener_t;
 typedef Thread thread_t;
+typedef EventListener event_listener_t;
+typedef EventSource event_source_t;
+typedef VTList virtual_timers_list_t;
 
 #define THD_WORKING_AREA WORKING_AREA
 #define THD_FUNCTION(tname, arg) void tname(void *arg)

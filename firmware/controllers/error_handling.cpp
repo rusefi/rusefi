@@ -113,7 +113,7 @@ void initErrorHandling(void) {
 	msObjectInit(&warningStream, (uint8_t *) warningBuffer, WARNING_BUFFER_SIZE, 0);
 }
 
-extern VTList vtlist;
+extern virtual_timers_list_t vtlist;
 extern bool main_loop_started;
 
 int getVtSizeEstimate(void) {

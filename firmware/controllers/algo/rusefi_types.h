@@ -16,6 +16,7 @@
  * integer time in milliseconds
  * 32 bit 4B / 1000 = 4M seconds = 1111.11 hours = 46 days.
  * Please restart your ECU every 46 days? :)
+ * See getTimeNowUs()
  */
 typedef uint32_t efitimems_t;
 

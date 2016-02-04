@@ -65,7 +65,9 @@ static void sayHello(void) {
 	scheduleMsg(&logger, "*** Chibios Kernel:       %s", CH_KERNEL_VERSION);
 	scheduleMsg(&logger, "*** Compiled:     " __DATE__ " - " __TIME__ "");
 	scheduleMsg(&logger, "COMPILER=%s", __VERSION__);
+#ifdef CH_FREQUENCY
 	scheduleMsg(&logger, "CH_FREQUENCY=%d", CH_FREQUENCY);
+#endif
 #ifdef SERIAL_SPEED
 	scheduleMsg(&logger, "SERIAL_SPEED=%d", SERIAL_SPEED);
 #endif
@@ -87,7 +89,9 @@ static void sayHello(void) {
 	scheduleMsg(&logger, "PORT_IDLE_THREAD_STACK_SIZE=%d", PORT_IDLE_THREAD_STACK_SIZE);
 
 	scheduleMsg(&logger, "CH_DBG_ENABLE_ASSERTS=%d", CH_DBG_ENABLE_ASSERTS);
+#ifdef CH_DBG_ENABLED
 	scheduleMsg(&logger, "CH_DBG_ENABLED=%d", CH_DBG_ENABLED);
+#endif
 	scheduleMsg(&logger, "CH_DBG_SYSTEM_STATE_CHECK=%d", CH_DBG_SYSTEM_STATE_CHECK);
 	scheduleMsg(&logger, "CH_DBG_ENABLE_STACK_CHECK=%d", CH_DBG_ENABLE_STACK_CHECK);
 
