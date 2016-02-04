@@ -45,15 +45,15 @@ void testTps(void) {
 
 void testTpsRateOfChange(void) {
 	print("************************************************** testTpsRateOfChange\r\n");
-	saveTpsState(0, 0);
-	saveTpsState(CH_FREQUENCY, 50);
-	assertEquals(50, getTpsRateOfChange());
-
-	saveTpsState(2 * CH_FREQUENCY, 50);
-	assertEquals(0, getTpsRateOfChange());
-
-	saveTpsState(3 * CH_FREQUENCY, 75);
-	assertEquals(25, getTpsRateOfChange());
+//	saveTpsState(0, 0);
+//	saveTpsState(CH_FREQUENCY, 50);
+//	assertEquals(50, getTpsRateOfChange());
+//
+//	saveTpsState(2 * CH_FREQUENCY, 50);
+//	assertEquals(0, getTpsRateOfChange());
+//
+//	saveTpsState(3 * CH_FREQUENCY, 75);
+//	assertEquals(25, getTpsRateOfChange());
 }
 
 static void testHip9011lookup(void) {

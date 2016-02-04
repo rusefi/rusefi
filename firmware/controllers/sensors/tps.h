@@ -30,20 +30,17 @@ float getTPSVoltage(DECLARE_ENGINE_PARAMETER_F);
 percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_S);
 
 typedef struct {
-	// time in systicks
-	// todo: one day we should migrate all times to float seconds or milliseconds?
-	time_t prevTime;
+	efitimeus_t prevTime;
 	// value 0-100%
 	float prevValue;
-	// time in systicks
-	time_t curTime;
+	efitimeus_t curTime;
 	// value 0-100%
 	float curValue;
 	// % per second
 	float rateOfChange;
 } tps_roc_s;
 
-void saveTpsState(time_t now, float curValue);
+//void saveTpsState(efitimeus_t now, float curValue);
 float getTpsRateOfChange(void);
 
 #endif

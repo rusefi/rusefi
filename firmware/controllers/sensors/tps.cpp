@@ -28,7 +28,7 @@ static volatile int tpsRocIndex = 0;
 /**
  * this method is lock-free thread-safe if invoked only from one thread
  */
-void saveTpsState(time_t now, float curValue) {
+void saveTpsState(efitimeus_t now, float curValue) {
 	int tpsNextIndex = (tpsRocIndex + 1) % 2;
 	tps_roc_s *cur = &states[tpsRocIndex];
 	tps_roc_s *next = &states[tpsNextIndex];
@@ -39,7 +39,7 @@ void saveTpsState(time_t now, float curValue) {
 	next->curValue = curValue;
 
 	int diffSysticks = overflowDiff(now, cur->curTime);
-	float diffSeconds = diffSysticks * 1.0 / CH_FREQUENCY;
+	float diffSeconds = 0;// TODO: do we need this? diffSysticks * 1.0 / CH_FREQUENCY;
 	next->rateOfChange = (curValue - cur->curValue) / diffSeconds;
 
 	// here we update volatile index
