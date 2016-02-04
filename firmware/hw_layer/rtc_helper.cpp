@@ -10,10 +10,10 @@
 #include <time.h>
 #include "main.h"
 #include "rfiutil.h"
-#include "chrtclib.h"
 #include "rtc_helper.h"
 
 #if EFI_RTC || defined(__DOXYGEN__)
+#include "chrtclib.h"
 static LoggingWithStorage logger("RTC");
 
 #endif /* EFI_RTC */

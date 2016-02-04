@@ -155,7 +155,7 @@ static THD_FUNCTION(waThread, arg) {
 	(void)arg;
 	chRegSetThreadName("Wave Analyzer");
 #if EFI_ENGINE_SNIFFER
-	while (TRUE) {
+	while (true) {
 		chThdSleepSeconds(CHART_RESET_DELAY);
 
 		waveChart.publishIfFull();
