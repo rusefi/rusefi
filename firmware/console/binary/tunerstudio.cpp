@@ -523,7 +523,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 	}
 }
 
-static msg_t tsThreadEntryPoint(void *arg) {
+static THD_FUNCTION(tsThreadEntryPoint, arg) {
 	(void) arg;
 	chRegSetThreadName("tunerstudio thread");
 
@@ -532,10 +532,6 @@ static msg_t tsThreadEntryPoint(void *arg) {
 #endif
 
 	runBinaryProtocolLoop(&tsChannel, false);
-
-#if defined __GNUC__
-	return 0;
-#endif
 }
 
 void syncTunerStudioCopy(void) {
@@ -774,7 +770,7 @@ void startTunerStudioConnectivity(void) {
 
 	tsChannel.channel = getTsSerialDevice();
 
-	chThdCreateStatic(tsThreadStack, sizeof(tsThreadStack), NORMALPRIO, tsThreadEntryPoint, NULL);
+	chThdCreateStatic(tsThreadStack, sizeof(tsThreadStack), NORMALPRIO, (tfunc_t)tsThreadEntryPoint, NULL);
 }
 
 #endif

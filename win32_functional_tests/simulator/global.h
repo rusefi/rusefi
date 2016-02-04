@@ -19,6 +19,7 @@
 
 #define US2NT(x) (US_TO_NT_MULTIPLIER * (x))
 
+#define THD_FUNCTION(tname, arg) void tname(void *arg)
 #define NT2US(x) ((x) / US_TO_NT_MULTIPLIER)
 
 // need to fight 32bit int overflow

@@ -111,8 +111,8 @@ F 0 "TEST2" V 1100 10400 40  0000 C CNN
 F 1 "TEST-C-C" H 1100 10330 40  0001 C CNN
 F 2 "SIL-2" H 1100 10400 60  0001 C CNN
 F 3 "" H 1100 10400 60  0000 C CNN
-F 4 "dnp,dnp" V 1100 10400 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" V 1100 10400 60  0001 C CNN "Field5"
+F 4 "dnp,dnp" V 1100 10400 60  0001 C CNN "MFG,MFG#"
+F 5 "dnp,dnp" V 1100 10400 60  0001 C CNN "VEND1,VEND1#"
 	1    1100 10400
 	-1   0    0    1   
 $EndComp
@@ -126,8 +126,8 @@ F 0 "P7" H 1250 3750 60  0000 C CNN
 F 1 "pin_array_12x2" V 1250 3100 50  0000 C CNN
 F 2 "pin_array_12x2" H 1250 3100 60  0001 C CNN
 F 3 "" H 1250 3100 60  0000 C CNN
-F 4 "dnp,dnp" H 1250 3100 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" H 1250 3100 60  0001 C CNN "Field5"
+F 4 "dnp,dnp" H 1250 3100 60  0001 C CNN "MFG,MFG#"
+F 5 "dnp,dnp" H 1250 3100 60  0001 C CNN "VEND1,VEND1#"
 	1    1250 3100
 	1    0    0    -1  
 $EndComp
@@ -160,8 +160,8 @@ F 0 "P8" H 2450 3750 60  0000 C CNN
 F 1 "pin_array_12x2" V 2450 3100 50  0000 C CNN
 F 2 "pin_array_12x2" H 2450 3100 60  0001 C CNN
 F 3 "" H 2450 3100 60  0000 C CNN
-F 4 "dnp,dnp" H 2450 3100 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" H 2450 3100 60  0001 C CNN "Field5"
+F 4 "dnp,dnp" H 2450 3100 60  0001 C CNN "MFG,MFG#"
+F 5 "dnp,dnp" H 2450 3100 60  0001 C CNN "VEND1,VEND1#"
 	1    2450 3100
 	1    0    0    -1  
 $EndComp
@@ -197,8 +197,8 @@ F 0 "P14" H 3500 3750 60  0000 C CNN
 F 1 "pin_array_12x2" V 3500 3100 50  0000 C CNN
 F 2 "pin_array_12x2" H 3500 3100 60  0001 C CNN
 F 3 "" H 3500 3100 60  0000 C CNN
-F 4 "dnp,dnp" H 3500 3100 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" H 3500 3100 60  0001 C CNN "Field5"
+F 4 "dnp,dnp" H 3500 3100 60  0001 C CNN "MFG,MFG#"
+F 5 "dnp,dnp" H 3500 3100 60  0001 C CNN "VEND1,VEND1#"
 	1    3500 3100
 	1    0    0    -1  
 $EndComp
