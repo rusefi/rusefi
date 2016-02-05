@@ -73,6 +73,7 @@ struct pid_s
 	float pFactor;;"value",      1,      0,       0, 1000,      2
 	float iFactor;;"value",      1,      0,       0, 1000,      2
 	float dFactor;;"value",      1,      0,       0, 1000,      2
+	float offset;Linear addition to PID logic;"value",      1,      0,       0, 1000,      2
 end_struct
 
 struct cranking_parameters_s
@@ -371,8 +372,6 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fas
 	brain_pin_e etbControlPin2;
 	pin_output_mode_e electronicThrottlePin1Mode;
 
-float[2] unused2;
-
 	brain_pin_e wboHeaterPin;
 	brain_pin_e wboPumpPin;
 	float fuelLevelEmptyTankVoltage;;"V",      1,      0,       0,10,      2
@@ -614,7 +613,6 @@ baro_corr_table_t baroCorrTable;
 	float targetVBatt;;"Volts",      1,      0,       0,30,      1
 	float alternatorOffAboveTps;Turn off alternator output above specified TPS;"%",  1,      0,       0, 200,      2
 	int alternatorDT;PID dTime;"ms",      1,      0,       0, 3000,      0
-	float alternatorOffset;Linear addition to PID logic;"%",      1,      0,       0, 100,      2
 	pid_s alternatorControl;
 	
 	int tpsAccelLength;;"cycles",        1,     0,    1, 200,     0

@@ -574,7 +574,7 @@ typedef enum {
 typedef enum {
 	ALTERNATOR = 0,
 	TPS_ACCEL = 1,
-	mode2 = 2,
+	WARMUP_ENRICH = 2,
 	mode3 = 3,
 
 	Force_4b_debug_mode_e = ENUM_32_BITS,

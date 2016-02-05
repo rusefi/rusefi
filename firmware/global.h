@@ -68,7 +68,7 @@ typedef VirtualTimer virtual_timer_t;
 #define THD_WORKING_AREA WORKING_AREA
 #define THD_FUNCTION(tname, arg) void tname(void *arg)
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 
 /**
  * The following obscurantism is a hack to reduce stack usage, maybe even a questionable performance

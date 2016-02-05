@@ -95,13 +95,13 @@
 
         <table type="3D" name="Baro Correction"
         category="Fuel"
-        storageaddress="694" sizex="4"
+        storageaddress="68c" sizex="4"
                sizey="4" storagetype="float" endian="big">
             <scaling units="Pressure" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
-            <table type="X Axis" storageaddress="674" storagetype="float" endian="big">
+            <table type="X Axis" storageaddress="66c" storagetype="float" endian="big">
                 <scaling units="kPa" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
-            <table type="Y Axis" storageaddress="684" storagetype="float" endian="big">
+            <table type="Y Axis" storageaddress="67c" storagetype="float" endian="big">
                 <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
@@ -127,11 +127,11 @@
         </table>
 
 
-        <table type="2D" name="Engine Noise" storageaddress="7a0"
+        <table type="2D" name="Engine Noise" storageaddress="79c"
                sizex="8" storagetype="float" endian="big">
             <scaling units="Volts" expression="x" to_byte="x" format="0.00"
                      fineincrement=".01" coarseincrement="0.1"/>
-            <table type="X Axis" storageaddress="7c0" storagetype="float" endian="big">
+            <table type="X Axis" storageaddress="7bc" storagetype="float" endian="big">
                 <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>

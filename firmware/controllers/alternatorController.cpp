@@ -63,7 +63,7 @@ static msg_t AltCtrlThread(int param) {
 			continue;
 		}
 
-		currentAltDuty = engineConfiguration->alternatorOffset + altPid.getValue(engineConfiguration->targetVBatt, getVBatt(PASS_ENGINE_PARAMETER_F), 1);
+		currentAltDuty = engineConfiguration->alternatorControl.offset + altPid.getValue(engineConfiguration->targetVBatt, getVBatt(PASS_ENGINE_PARAMETER_F), 1);
 		if (boardConfiguration->isVerboseAlternator) {
 			scheduleMsg(logger, "alt duty: %f/vbatt=%f/p=%f/i=%f/d=%f int=%f", currentAltDuty, getVBatt(PASS_ENGINE_PARAMETER_F),
 					altPid.getP(), altPid.getI(), altPid.getD(), altPid.getIntegration());
@@ -77,7 +77,7 @@ static msg_t AltCtrlThread(int param) {
 			tsOutputChannels.debugFloatField4 = altPid.getI();
 			tsOutputChannels.debugFloatField5 = altPid.getD();
 			tsOutputChannels.debugIntField1 = altPid.getP();
-			tsOutputChannels.debugIntField2 = engineConfiguration->alternatorOffset;
+			tsOutputChannels.debugIntField2 = engineConfiguration->alternatorControl.offset;
 		}
 #endif
 
@@ -94,7 +94,7 @@ void showAltInfo(void) {
 			hwPortname(boardConfiguration->alternatorControlPin),
 			engineConfiguration->alternatorDT);
 	scheduleMsg(logger, "p=%f/i=%f/d=%f offset=%f", engineConfiguration->alternatorControl.pFactor,
-			0, 0, engineConfiguration->alternatorOffset); // todo: i & d
+			0, 0, engineConfiguration->alternatorControl.offset); // todo: i & d
 	scheduleMsg(logger, "vbatt=%f/duty=%f/target=%f", getVBatt(PASS_ENGINE_PARAMETER_F), currentAltDuty,
 			engineConfiguration->targetVBatt);
 }
@@ -122,7 +122,7 @@ void setDefaultAlternatorParameters(void) {
 	boardConfiguration->alternatorControlPinMode = OM_DEFAULT;
 	engineConfiguration->targetVBatt = 14;
 
-	engineConfiguration->alternatorOffset = 0;
+	engineConfiguration->alternatorControl.offset = 0;
 	engineConfiguration->alternatorControl.pFactor = 30;
 	engineConfiguration->alternatorDT = 100;
 }
