@@ -53,7 +53,7 @@ flashsector_t flashSectorAt(flashaddr_t address) {
 static bool flashUnlock(void) {
 	/* Check if unlock is really needed */
 	if (!(FLASH->CR & FLASH_CR_LOCK))
-		return CH_SUCCESS;
+		return HAL_SUCCESS;
 
 	/* Write magic unlock sequence */
 	FLASH->KEYR = 0x45670123;
@@ -61,8 +61,8 @@ static bool flashUnlock(void) {
 
 	/* Check if unlock was successful */
 	if (FLASH->CR & FLASH_CR_LOCK)
-		return CH_FAILED;
-	return CH_SUCCESS;
+		return HAL_FAILED;
+	return HAL_SUCCESS;
 }
 
 /**

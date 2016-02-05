@@ -85,8 +85,8 @@ board_configuration_s *boardConfiguration = &persistentState.persistentConfigura
  * CH_FREQUENCY is the number of system ticks in a second
  */
 
-static VirtualTimer periodicSlowTimer;
-static VirtualTimer periodicFastTimer;
+static virtual_timer_t periodicSlowTimer;
+static virtual_timer_t periodicFastTimer;
 
 static LoggingWithStorage logger("Engine Controller");
 
