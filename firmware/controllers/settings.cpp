@@ -962,7 +962,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		}
 		showAltInfo();
 	} else if (strEqualCaseInsensitive(paramStr, "alt_offset")) {
-		engineConfiguration->alternatorOffset = valueI;
+		engineConfiguration->alternatorControl.offset = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "alt_p")) {
 		setAltPFactor(valueF);
 #endif

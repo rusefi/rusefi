@@ -445,7 +445,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	boardConfiguration->alternatorControlPin = GPIOD_5;
 	engineConfiguration->targetVBatt = 14.5;
-	engineConfiguration->alternatorOffset = 20;
+	engineConfiguration->alternatorControl.offset = 20;
 	engineConfiguration->alternatorControl.pFactor = 20; // looks to work better, maybe time for some iFactor
 
 //	enableFrankensoCan();
