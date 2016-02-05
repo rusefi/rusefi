@@ -14,7 +14,7 @@
 /* Error codes */
 
 /** @brief Flash operation successful */
-#define FLASH_RETURN_SUCCESS CH_SUCCESS
+#define FLASH_RETURN_SUCCESS HAL_SUCCESS
 
 /** @brief Flash operation error because of denied access, corrupted memory.*/
 #define FLASH_RETURN_NO_PERMISSION -1

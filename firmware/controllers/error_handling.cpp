@@ -117,8 +117,8 @@ extern virtual_timers_list_t vtlist;
 extern bool main_loop_started;
 
 int getVtSizeEstimate(void) {
-	VirtualTimer *first = vtlist.vt_next;
-	VirtualTimer *cur = first->vt_next;
+	virtual_timer_t *first = vtlist.vt_next;
+	virtual_timer_t *cur = first->vt_next;
 	int c = 0;
 	while (c++ < 20 && cur != first) {
 		cur = cur->vt_next;
