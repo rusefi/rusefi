@@ -480,8 +480,8 @@ case Force_4b_ego_sensor:
 }
 const char *getBrain_pin_e(brain_pin_e value){
 switch(value) {
-case Force_4b_cranking_brain_pin:
-  return "Force_4b_cranking_brain_pin";
+case Force_4b_brain_pin_e:
+  return "Force_4b_brain_pin_e";
 case GPIOA_0:
   return "GPIOA_0";
 case GPIOA_1:

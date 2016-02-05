@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 29 20:39:58 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Feb 04 22:34:53 EST 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -579,6 +579,9 @@ typedef struct {
 	/**
 	offset 384 bit 12 */
 	bool useLcdScreen : 1;
+	/**
+	offset 384 bit 13 */
+	bool startConsoleInBinaryMode : 1;
 	/**
 	 * offset 388
 	 */
@@ -1467,7 +1470,16 @@ typedef struct {
 	/**
 	 * offset 2244
 	 */
-	int unused[193];
+	debug_mode_e debugMode;
+	/**
+	 * offset 2246
+	 */
+	int unused[192];
+	/**
+	 * need 4 byte alignment
+	 * offset 3014
+	 */
+	uint8_t alignmentFill[2];
 	/** total size 3016*/
 } engine_configuration_s;
 
@@ -1617,4 +1629,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 29 20:39:58 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Feb 04 22:34:53 EST 2016

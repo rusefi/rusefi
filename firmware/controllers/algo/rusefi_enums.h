@@ -568,8 +568,17 @@ typedef enum {
 	GPIO_UNASSIGNED = 80,
 	GPIO_INVALID = 81,
 
-	Force_4b_cranking_brain_pin = ENUM_32_BITS,
+	Force_4b_brain_pin_e = ENUM_32_BITS,
 } brain_pin_e;
+
+typedef enum {
+	ALTERNATOR = 0,
+	TPS_ACCEL = 1,
+	mode2 = 2,
+	mode3 = 3,
+
+	Force_4b_debug_mode_e = ENUM_32_BITS,
+} debug_mode_e;
 
 typedef enum {
 	MT_CUSTOM = 0, MT_DENSO183 = 1,
