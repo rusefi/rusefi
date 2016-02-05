@@ -200,8 +200,8 @@ public class BinaryProtocol {
                 synchronized (ioLock) {
                     boolean isTimeout = incomingData.waitForBytes(2, start, "switch to binary");
                     if (isTimeout) {
+                        logger.info("Timeout waiting for switch response");
                         close();
-                        System.out.println("Timeout waiting for switch response");
                         return;
                     }
                     int response = incomingData.getShort();
@@ -209,7 +209,7 @@ public class BinaryProtocol {
                         logger.error(String.format("Unexpected response [%x], re-trying", response));
                         continue;
                     }
-                    logger.info("Switched to binary protocol");
+                    logger.info(String.format("Got %x - switched to binary protocol", response));
                 }
             } catch (IOException e) {
                 close();
