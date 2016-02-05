@@ -53,12 +53,6 @@ extern "C"
  */
 #define NT2US(nt) ((nt) / US_TO_NT_MULTIPLIER)
 
-
-/**
- * number of SysClock ticks in one ms
- */
-#define TICKS_IN_MS  (CH_FREQUENCY / 1000)
-
 #define Delay(ms) chThdSleepMilliseconds(ms)
 #ifdef __cplusplus
 extern "C"
@@ -72,6 +66,5 @@ void unlockAnyContext(void);
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif /* MAIN_H_ */

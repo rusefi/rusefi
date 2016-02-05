@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Feb 05 14:17:22 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Feb 05 14:50:19 EST 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1330,7 +1330,7 @@ typedef struct {
 	/**
 	 * offset 1900
 	 */
-	pid_s idlePid;
+	pid_s idleRpmPid;
 	/**
 	 * offset 1916
 	 */
@@ -1470,7 +1470,11 @@ typedef struct {
 	/**
 	 * offset 2248
 	 */
-	int unused[192];
+	pid_s warmupAfrPid;
+	/**
+	 * offset 2264
+	 */
+	int unused[188];
 	/** total size 3016*/
 } engine_configuration_s;
 
@@ -1620,4 +1624,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Feb 05 14:17:22 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Feb 05 14:50:19 EST 2016

@@ -594,7 +594,7 @@ baro_corr_table_t baroCorrTable;
 	float mapErrorDetectionTooLow;kPa value which is too low to be true;"kPa",        1,     0,    -100.0,    100.0,  2
 	float mapErrorDetectionTooHigh;kPa value which is too high to be true;"kPa",        1,     0,    -100.0,    800.0,  2
 	int step1RpmWindow;RPMs prior to step1rpm point where ignition advance is retarded;"rpm",    1,      0,       0, 3000.0,        2
-	pid_s idlePid;
+	pid_s idleRpmPid;
 	int idleDT;
 	idle_control_e idleControl;
 	brain_pin_e communicationPin;	
@@ -635,7 +635,8 @@ baro_corr_table_t baroCorrTable;
 	float tpsDecelEnleanmentMultiplier;;"coeff",        1,     0,    0, 200,     3
 	float slowAdcAlpha;;"coeff",        1,     0,    0, 200,     3
 	debug_mode_e debugMode;
-	int[192] unused;
+	pid_s warmupAfrPid;
+	int[188] unused;
 	
 
 end_struct
