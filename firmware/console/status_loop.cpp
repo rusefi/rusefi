@@ -607,7 +607,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->runningFuel = ENGINE(engineState.runningFuel);
 	tsOutputChannels->injectorLagMs = ENGINE(injectorLagMs);
 
-	tsOutputChannels->debugIntField1 = engine->tpsAccelEnrichment.cb.getSize();
+	if (engineConfiguration->debugMode == TPS_ACCEL) {
+		tsOutputChannels->debugIntField1 = engine->tpsAccelEnrichment.cb.getSize();
+	}
 
 	tsOutputChannels->wallFuelAmount = wallFuel.getWallFuel(0);
 	tsOutputChannels->wallFuelCorrection = engine->wallFuelCorrection;

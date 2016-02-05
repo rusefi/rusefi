@@ -359,6 +359,7 @@
 #define enabledStep1Limiter_offset 1008
 #define useTpicAdvancedMode_offset 1008
 #define useLcdScreen_offset 1008
+#define startConsoleInBinaryMode_offset 1008
 #define logicAnalyzerPins1_offset 1012
 #define logicAnalyzerPins2_offset 1016
 #define logicAnalyzerPins3_offset 1020
@@ -731,7 +732,9 @@
 #define tpsDecelEnleanmentThreshold_offset 2232
 #define tpsDecelEnleanmentMultiplier_offset 2236
 #define slowAdcAlpha_offset 2240
-#define unused_offset 2244
+#define debugMode_offset 2244
+#define unused_offset 2246
+#define alignmentFill_offset 3014
 #define le_formulas1_offset 3016
 #define le_formulas2_offset 3216
 #define le_formulas3_offset 3416
