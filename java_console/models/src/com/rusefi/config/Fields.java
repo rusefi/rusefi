@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Feb 05 14:17:22 EST 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Feb 05 14:50:19 EST 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int TS_FILE_VERSION = 20160122;
@@ -671,14 +671,14 @@ public class Fields {
 	public static final int mapErrorDetectionTooHigh_offset_hex = 764;
 	public static final int step1RpmWindow_offset = 1896;
 	public static final int step1RpmWindow_offset_hex = 768;
-	public static final int idlePid_offset = 1900;
-	public static final int idlePid_pFactor_offset = 1900;
-	public static final int idlePid_iFactor_offset = 1904;
-	public static final int idlePid_iFactor_offset_hex = 770;
-	public static final int idlePid_dFactor_offset = 1908;
-	public static final int idlePid_dFactor_offset_hex = 774;
-	public static final int idlePid_offset_offset = 1912;
-	public static final int idlePid_offset_offset_hex = 778;
+	public static final int idleRpmPid_offset = 1900;
+	public static final int idleRpmPid_pFactor_offset = 1900;
+	public static final int idleRpmPid_iFactor_offset = 1904;
+	public static final int idleRpmPid_iFactor_offset_hex = 770;
+	public static final int idleRpmPid_dFactor_offset = 1908;
+	public static final int idleRpmPid_dFactor_offset_hex = 774;
+	public static final int idleRpmPid_offset_offset = 1912;
+	public static final int idleRpmPid_offset_offset_hex = 778;
 	public static final int idleDT_offset = 1916;
 	public static final int idleControl_offset = 1920;
 	public static final int idleControl_offset_hex = 780;
@@ -736,7 +736,12 @@ public class Fields {
 	public static final int tpsDecelEnleanmentMultiplier_offset = 2236;
 	public static final int slowAdcAlpha_offset = 2240;
 	public static final int debugMode_offset = 2244;
-	public static final int unused_offset = 2248;
+	public static final int warmupAfrPid_offset = 2248;
+	public static final int warmupAfrPid_pFactor_offset = 2248;
+	public static final int warmupAfrPid_iFactor_offset = 2252;
+	public static final int warmupAfrPid_dFactor_offset = 2256;
+	public static final int warmupAfrPid_offset_offset = 2260;
+	public static final int unused_offset = 2264;
 	public static final int le_formulas1_offset = 3016;
 	public static final int le_formulas2_offset = 3216;
 	public static final int le_formulas3_offset = 3416;
@@ -1226,10 +1231,10 @@ public class Fields {
 	public static final Field MAPERRORDETECTIONTOOLOW = Field.create("MAPERRORDETECTIONTOOLOW", 1888, FieldType.FLOAT);
 	public static final Field MAPERRORDETECTIONTOOHIGH = Field.create("MAPERRORDETECTIONTOOHIGH", 1892, FieldType.FLOAT);
 	public static final Field STEP1RPMWINDOW = Field.create("STEP1RPMWINDOW", 1896, FieldType.INT);
-	public static final Field IDLEPID_PFACTOR = Field.create("IDLEPID_PFACTOR", 1900, FieldType.FLOAT);
-	public static final Field IDLEPID_IFACTOR = Field.create("IDLEPID_IFACTOR", 1904, FieldType.FLOAT);
-	public static final Field IDLEPID_DFACTOR = Field.create("IDLEPID_DFACTOR", 1908, FieldType.FLOAT);
-	public static final Field IDLEPID_OFFSET = Field.create("IDLEPID_OFFSET", 1912, FieldType.FLOAT);
+	public static final Field IDLERPMPID_PFACTOR = Field.create("IDLERPMPID_PFACTOR", 1900, FieldType.FLOAT);
+	public static final Field IDLERPMPID_IFACTOR = Field.create("IDLERPMPID_IFACTOR", 1904, FieldType.FLOAT);
+	public static final Field IDLERPMPID_DFACTOR = Field.create("IDLERPMPID_DFACTOR", 1908, FieldType.FLOAT);
+	public static final Field IDLERPMPID_OFFSET = Field.create("IDLERPMPID_OFFSET", 1912, FieldType.FLOAT);
 	public static final Field IDLEDT = Field.create("IDLEDT", 1916, FieldType.INT);
 	public static final Field IDLECONTROL = Field.create("IDLECONTROL", 1920, FieldType.INT);
 	public static final Field COMMUNICATIONPIN = Field.create("COMMUNICATIONPIN", 1924, FieldType.INT, brain_pin_e);
@@ -1266,6 +1271,10 @@ public class Fields {
 	public static final Field SLOWADCALPHA = Field.create("SLOWADCALPHA", 2240, FieldType.FLOAT);
 	public static final String[] debug_mode_e = {"ALTERNATOR", "TPS_ACCEL", "mode2", "mode3"};
 	public static final Field DEBUGMODE = Field.create("DEBUGMODE", 2244, FieldType.INT, debug_mode_e);
+	public static final Field WARMUPAFRPID_PFACTOR = Field.create("WARMUPAFRPID_PFACTOR", 2248, FieldType.FLOAT);
+	public static final Field WARMUPAFRPID_IFACTOR = Field.create("WARMUPAFRPID_IFACTOR", 2252, FieldType.FLOAT);
+	public static final Field WARMUPAFRPID_DFACTOR = Field.create("WARMUPAFRPID_DFACTOR", 2256, FieldType.FLOAT);
+	public static final Field WARMUPAFRPID_OFFSET = Field.create("WARMUPAFRPID_OFFSET", 2260, FieldType.FLOAT);
 	public static final Field LE_FORMULAS1 = Field.create("LE_FORMULAS1", 3016, FieldType.INT);
 	public static final Field LE_FORMULAS2 = Field.create("LE_FORMULAS2", 3216, FieldType.INT);
 	public static final Field LE_FORMULAS3 = Field.create("LE_FORMULAS3", 3416, FieldType.INT);

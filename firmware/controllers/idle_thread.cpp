@@ -77,9 +77,9 @@ static void showIdleInfo(void) {
 				hwPortname(boardConfiguration->idle.solenoidPin));
 	}
 	scheduleMsg(logger, "idleControl=%s", getIdle_control_e(engineConfiguration->idleControl));
-	scheduleMsg(logger, "idle P=%f I=%f D=%f dT=%d", engineConfiguration->idlePid.pFactor,
-			engineConfiguration->idlePid.iFactor,
-			engineConfiguration->idlePid.dFactor,
+	scheduleMsg(logger, "idle P=%f I=%f D=%f dT=%d", engineConfiguration->idleRpmPid.pFactor,
+			engineConfiguration->idleRpmPid.iFactor,
+			engineConfiguration->idleRpmPid.dFactor,
 			engineConfiguration->idleDT);
 }
 
@@ -219,19 +219,19 @@ static void apply(void) {
 }
 
 static void setIdlePFactor(float value) {
-	engineConfiguration->idlePid.pFactor = value;
+	engineConfiguration->idleRpmPid.pFactor = value;
 	apply();
 	showIdleInfo();
 }
 
 static void setIdleIFactor(float value) {
-	engineConfiguration->idlePid.iFactor = value;
+	engineConfiguration->idleRpmPid.iFactor = value;
 	apply();
 	showIdleInfo();
 }
 
 static void setIdleDFactor(float value) {
-	engineConfiguration->idlePid.dFactor = value;
+	engineConfiguration->idleRpmPid.dFactor = value;
 	apply();
 	showIdleInfo();
 }
@@ -249,9 +249,9 @@ static void startIdleBench(void) {
 }
 
 void setDefaultIdleParameters(void) {
-	engineConfiguration->idlePid.pFactor = 0.1f;
-	engineConfiguration->idlePid.iFactor = 0.05f;
-	engineConfiguration->idlePid.dFactor = 0.0f;
+	engineConfiguration->idleRpmPid.pFactor = 0.1f;
+	engineConfiguration->idleRpmPid.iFactor = 0.05f;
+	engineConfiguration->idleRpmPid.dFactor = 0.0f;
 	engineConfiguration->idleDT = 10;
 }
 
@@ -262,8 +262,9 @@ static void applyIdleSolenoidPinState(PwmConfig *state, int stateIndex) {
 	int value = state->multiWave.waves[0].pinStates[stateIndex];
 	if (!value /* always allow turning solenoid off */ ||
 			(engine->rpmCalculator.rpmValue != 0 || timeToStopIdleTest != 0) /* do not run solenoid unless engine is spinning or bench testing in progress */
-			)
+			) {
 		output->setValue(value);
+	}
 }
 
 static void initIdleHardware() {

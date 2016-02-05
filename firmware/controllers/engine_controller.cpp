@@ -163,13 +163,21 @@ efitick_t getTimeNowNt(void) {
 	return halTime.get();
 }
 
+/**
+ * number of SysClock ticks in one ms
+ */
+#define TICKS_IN_MS  (CH_FREQUENCY / 1000)
+
+
+// todo: this overflows pretty fast!
 efitimems_t currentTimeMillis(void) {
 	// todo: migrate to getTimeNowUs? or not?
 	return chTimeNow() / TICKS_IN_MS;
 }
 
+// todo: this overflows pretty fast!
 int getTimeNowSeconds(void) {
-	return chTimeNow() / CH_FREQUENCY;
+	return currentTimeMillis() / 1000;
 }
 
 #endif /* EFI_PROD_CODE */
@@ -195,16 +203,16 @@ static void periodicSlowCallback(Engine *engine);
 
 static void scheduleNextSlowInvocation(void) {
 	// schedule next invocation
-	int period = boardConfiguration->generalPeriodicThreadPeriod;
-	if (period == 0)
-		period = 50; // this might happen while resetting config
-	chVTSetAny(&periodicSlowTimer, period * TICKS_IN_MS, (vtfunc_t) &periodicSlowCallback, engine);
+	int periodMs = boardConfiguration->generalPeriodicThreadPeriod;
+	if (periodMs == 0)
+		periodMs = 50; // this might happen while resetting configuration
+	chVTSetAny(&periodicSlowTimer, MS2ST(periodMs), (vtfunc_t) &periodicSlowCallback, engine);
 }
 
 static void periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 	engine->periodicFastCallback();
 
-	chVTSetAny(&periodicFastTimer, 20 * TICKS_IN_MS, (vtfunc_t) &periodicFastCallback, engine);
+	chVTSetAny(&periodicFastTimer, MS2ST(20), (vtfunc_t) &periodicFastCallback, engine);
 }
 
 static void resetAccel(void) {
