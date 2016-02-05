@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 29 20:39:58 EST 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Feb 04 23:55:22 EST 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int TS_FILE_VERSION = 20160122;
@@ -363,6 +363,7 @@ public class Fields {
 	public static final int enabledStep1Limiter_offset = 1008;
 	public static final int useTpicAdvancedMode_offset = 1008;
 	public static final int useLcdScreen_offset = 1008;
+	public static final int startConsoleInBinaryMode_offset = 1008;
 	public static final int logicAnalyzerPins1_offset = 1012;
 	public static final int logicAnalyzerPins2_offset = 1016;
 	public static final int logicAnalyzerPins3_offset = 1020;
@@ -735,7 +736,8 @@ public class Fields {
 	public static final int tpsDecelEnleanmentThreshold_offset = 2232;
 	public static final int tpsDecelEnleanmentMultiplier_offset = 2236;
 	public static final int slowAdcAlpha_offset = 2240;
-	public static final int unused_offset = 2244;
+	public static final int debugMode_offset = 2244;
+	public static final int unused_offset = 2248;
 	public static final int le_formulas1_offset = 3016;
 	public static final int le_formulas2_offset = 3216;
 	public static final int le_formulas3_offset = 3416;
@@ -1011,6 +1013,7 @@ public class Fields {
 	public static final Field ENABLEDSTEP1LIMITER = Field.create("ENABLEDSTEP1LIMITER", 1008, FieldType.BIT, 10);
 	public static final Field USETPICADVANCEDMODE = Field.create("USETPICADVANCEDMODE", 1008, FieldType.BIT, 11);
 	public static final Field USELCDSCREEN = Field.create("USELCDSCREEN", 1008, FieldType.BIT, 12);
+	public static final Field STARTCONSOLEINBINARYMODE = Field.create("STARTCONSOLEINBINARYMODE", 1008, FieldType.BIT, 13);
 	public static final Field LOGICANALYZERPINS1 = Field.create("LOGICANALYZERPINS1", 1012, FieldType.INT, brain_input_pin_e);
 	public static final Field LOGICANALYZERPINS2 = Field.create("LOGICANALYZERPINS2", 1016, FieldType.INT, brain_input_pin_e);
 	public static final Field LOGICANALYZERPINS3 = Field.create("LOGICANALYZERPINS3", 1020, FieldType.INT, brain_input_pin_e);
@@ -1260,6 +1263,8 @@ public class Fields {
 	public static final Field TPSDECELENLEANMENTTHRESHOLD = Field.create("TPSDECELENLEANMENTTHRESHOLD", 2232, FieldType.FLOAT);
 	public static final Field TPSDECELENLEANMENTMULTIPLIER = Field.create("TPSDECELENLEANMENTMULTIPLIER", 2236, FieldType.FLOAT);
 	public static final Field SLOWADCALPHA = Field.create("SLOWADCALPHA", 2240, FieldType.FLOAT);
+	public static final String[] debug_mode_e = {"ALTERNATOR", "TPS_ACCEL", "mode2", "mode3"};
+	public static final Field DEBUGMODE = Field.create("DEBUGMODE", 2244, FieldType.INT, debug_mode_e);
 	public static final Field LE_FORMULAS1 = Field.create("LE_FORMULAS1", 3016, FieldType.INT);
 	public static final Field LE_FORMULAS2 = Field.create("LE_FORMULAS2", 3216, FieldType.INT);
 	public static final Field LE_FORMULAS3 = Field.create("LE_FORMULAS3", 3416, FieldType.INT);

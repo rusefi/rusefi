@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Feb 04 22:34:53 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Feb 04 23:55:22 EST 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1472,14 +1472,9 @@ typedef struct {
 	 */
 	debug_mode_e debugMode;
 	/**
-	 * offset 2246
+	 * offset 2248
 	 */
 	int unused[192];
-	/**
-	 * need 4 byte alignment
-	 * offset 3014
-	 */
-	uint8_t alignmentFill[2];
 	/** total size 3016*/
 } engine_configuration_s;
 
@@ -1629,4 +1624,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Feb 04 22:34:53 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Feb 04 23:55:22 EST 2016
