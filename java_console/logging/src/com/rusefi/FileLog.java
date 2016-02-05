@@ -36,10 +36,12 @@ public enum FileLog {
     @Nullable
     private OutputStream fileLog; // null if not opened yet or already closed
 
-    private FileLog() {
+    FileLog() {
     }
 
     public void start() {
+        if (fileLog != null)
+            return;
         try {
             fileLog = openLog();
         } catch (FileNotFoundException e) {

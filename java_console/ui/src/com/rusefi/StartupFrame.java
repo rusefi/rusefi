@@ -165,6 +165,7 @@ public class StartupFrame {
     private void findAndApplyPorts() {
         List<String> ports = findAllAvailablePorts();
         if (!currentlyDisplayedPorts.equals(ports) || isFirstTimeApplyingPorts) {
+            FileLog.MAIN.logLine("Available ports " + ports);
             isFirstTimeApplyingPorts = false;
             connectPanel.setVisible(!ports.isEmpty());
             noPortsMessage.setVisible(ports.isEmpty());

@@ -69,7 +69,6 @@ public class Launcher {
     public Launcher(String port) {
         this.port = port;
         staticFrame = frame.getFrame();
-        FileLog.MAIN.start();
         FileLog.MAIN.logLine("Console " + CONSOLE_VERSION);
 
         getConfig().getRoot().setProperty(PORT_KEY, port);
@@ -183,6 +182,7 @@ public class Launcher {
     }
 
     public static void main(final String[] args) throws Exception {
+        FileLog.MAIN.start();
         getConfig().load();
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
         VersionChecker.start();
