@@ -176,7 +176,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 		reportSensorF(log, fileFormat, "baro", "kPa", getBaroPressure(), 2);
 	}
 	if (engineConfiguration->hasAfrSensor) {
-		reportSensorF(log, fileFormat, "afr", "AFR", getAfr(), 2);
+		reportSensorF(log, fileFormat, "afr", "AFR", getAfr(PASS_ENGINE_PARAMETER_F), 2);
 	}
 #endif
 
@@ -580,7 +580,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
           
 	tsOutputChannels->veValue = veMap.getValue(getMap(), rpm);
 	tsOutputChannels->currentTargetAfr = afrMap.getValue(getMap(), rpm);
-	tsOutputChannels->airFuelRatio = getAfr();
+	tsOutputChannels->airFuelRatio = getAfr(PASS_ENGINE_PARAMETER_F);
 	if (hasVBatt(PASS_ENGINE_PARAMETER_F)) {
 		tsOutputChannels->vBatt = getVBatt(PASS_ENGINE_PARAMETER_F);
 	}

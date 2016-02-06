@@ -249,6 +249,7 @@ static void periodicSlowCallback(Engine *engine) {
 		engine->configurationListeners.invokeJustArgCallbacks();
 		// todo: convert to a callback?
 		updateAccelParameters();
+		engine->engineState.warmupAfrPid.reset();
 	}
 
 	engine->watchdog();
