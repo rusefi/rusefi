@@ -67,7 +67,6 @@
 #endif
 
 extern bool hasFirmwareErrorFlag;
-extern WallFuel wallFuel;
 
 persistent_config_container_s persistentState CCM_OPTIONAL;
 
@@ -218,7 +217,7 @@ static void periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 static void resetAccel(void) {
 	engine->engineLoadAccelEnrichment.reset();
 	engine->tpsAccelEnrichment.reset();
-	wallFuel.reset();
+	engine->wallFuel.reset();
 }
 
 static void periodicSlowCallback(Engine *engine) {

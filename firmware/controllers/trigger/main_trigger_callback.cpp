@@ -96,8 +96,6 @@ static void endSimultaniousInjection(Engine *engine) {
 	}
 }
 
-extern WallFuel wallFuel;
-
 static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, bool limitedFuel, InjectionEvent *event,
 		int rpm DECLARE_ENGINE_PARAMETER_S) {
 	if (limitedFuel)
@@ -108,7 +106,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, bool limitedF
 	 * wetting coefficient works the same way for any injection mode, or is something
 	 * x2 or /2?
 	 */
-	floatms_t injectionDuration = wallFuel.adjust(event->injectorIndex, ENGINE(fuelMs) PASS_ENGINE_PARAMETER);
+	floatms_t injectionDuration = ENGINE(wallFuel).adjust(event->injectorIndex, ENGINE(fuelMs) PASS_ENGINE_PARAMETER);
 
 	ENGINE(actualLastInjection) = injectionDuration;
 	if (cisnan(injectionDuration)) {

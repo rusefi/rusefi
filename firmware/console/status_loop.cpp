@@ -551,8 +551,6 @@ static void lcdThread(void *arg) {
 
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 
-extern WallFuel wallFuel;
-
 extern fuel_Map3D_t veMap;
 extern fuel_Map3D_t afrMap;
 
@@ -611,8 +609,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugIntField1 = engine->tpsAccelEnrichment.cb.getSize();
 	}
 
-	tsOutputChannels->wallFuelAmount = wallFuel.getWallFuel(0);
-	tsOutputChannels->wallFuelCorrection = engine->wallFuelCorrection;
+	tsOutputChannels->wallFuelAmount = ENGINE(wallFuel).getWallFuel(0);
+	tsOutputChannels->wallFuelCorrection = ENGINE(wallFuelCorrection);
 	// TPS acceleration
 	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getMaxDelta();
 	tsOutputChannels->tpsAccelFuel = engine->engineState.tpsAccelEnrich;
