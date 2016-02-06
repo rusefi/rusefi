@@ -50,7 +50,7 @@ int getRemainingStack(thread_t *otp) {
 extern uint32_t CSTACK$$Base; /* symbol created by the IAR linker */
 extern uint32_t IRQSTACK$$Base; /* symbol created by the IAR linker */
 
-int getRemainingStack(thread_t *otp) {
+int getRemainingStack(Thread *otp) {
 #if CH_DBG_ENABLE_STACK_CHECK || defined(__DOXYGEN__)
 	int remainingStack;
 	if (dbg_isr_cnt > 0) {
