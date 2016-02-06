@@ -36,7 +36,7 @@ float Pid::getValue(float target, float input, float dTime) {
 
 	prevError = error;
 
-	float result = pTerm + iTerm + dTerm;
+	float result = pTerm + iTerm + dTerm + pid->offset;
 	if (result > maxResult) {
 //		iTerm -= result - maxResult;
 		result = maxResult;

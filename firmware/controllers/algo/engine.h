@@ -150,6 +150,9 @@ public:
 	 */
 	floatms_t injectorLag;
 
+	/**
+	 * See useWarmupPidAfr
+	 */
 	Pid warmupAfrPid;
 
 	float baroCorrection;
