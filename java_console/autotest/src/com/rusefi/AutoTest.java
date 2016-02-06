@@ -144,7 +144,7 @@ public class AutoTest {
         assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.15466666666666684, 0.1, 0.2, x + 360);
         assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.15466666666666684, 0.1, 0.2, x + 180);
         assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.15466666666666684, 0.1, 0.2, x + 540);
-        x = 124.0; // why is it different between injectors???
+        x = 110.76; // why is it different between injectors???
         assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.15466666666666684, 0.1, 0.2, x);
 
         x = 105.0;
@@ -153,7 +153,7 @@ public class AutoTest {
         assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.15433333333333382, 0.1, 0.2, x + 360);
         assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.15433333333333382, 0.1, 0.2, x + 180);
         assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.15433333333333382, 0.1, 0.2, x + 540);
-        x = 124.0; // why is it different between injectors???
+        x = 110.88; // why is it different between injectors???
         assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.15433333333333382, 0.1, 0.2, x);
     }
 
