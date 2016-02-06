@@ -213,6 +213,7 @@ typedef struct {
 } monitoring_timestamps_s;
 
 class Engine;
+class WallFuel;
 
 typedef void (*configuration_callback_t)(Engine*);
 
@@ -221,6 +222,8 @@ public:
 	Engine(persistent_config_s *config);
 	void init(persistent_config_s *config);
 	void prepareFuelSchedule(DECLARE_ENGINE_PARAMETER_F);
+
+	WallFuel wallFuel;
 
 	/**
 	 * That's the list of pending spark firing events

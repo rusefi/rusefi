@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Feb 05 14:50:19 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Feb 06 08:58:48 EST 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -583,6 +583,9 @@ typedef struct {
 	/**
 	offset 376 bit 13 */
 	bool startConsoleInBinaryMode : 1;
+	/**
+	offset 376 bit 14 */
+	bool useWarmupPidAfr : 1;
 	/**
 	 * offset 380
 	 */
@@ -1624,4 +1627,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Feb 05 14:50:19 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Feb 06 08:58:48 EST 2016

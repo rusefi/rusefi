@@ -32,8 +32,6 @@ EXTERN_ENGINE
 
 static Logging *logger = NULL;
 
-WallFuel wallFuel;
-
 WallFuel::WallFuel() {
 	reset();
 }
