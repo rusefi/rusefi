@@ -261,7 +261,7 @@ static void printState(void) {
 	debugFloat(&logger, "fuel_base", baseFuel, 2);
 //	debugFloat(&logger, "fuel_iat", getIatCorrection(getIntakeAirTemperature()), 2);
 //	debugFloat(&logger, "fuel_clt", getCltCorrection(getCoolantTemperature()), 2);
-	debugFloat(&logger, "fuel_lag", engine->injectorLagMs, 2);
+	debugFloat(&logger, "fuel_lag", engine->engineState.injectorLag, 2);
 	debugFloat(&logger, "fuel", ENGINE(actualLastInjection), 2);
 
 	debugFloat(&logger, "timing", engine->engineState.timingAdvance, 2);
@@ -418,7 +418,7 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 	if (engine->rpmCalculator.isRunning()) {
 		float iatCorrection = engine->engineState.iatFuelCorrection;
 		float cltCorrection = engine->engineState.cltFuelCorrection;
-		float injectorLag = engine->injectorLagMs;
+		floatms_t injectorLag = engine->engineState.injectorLag;
 		scheduleMsg(&logger2, "rpm=%f engineLoad=%f", rpm, engineLoad);
 		scheduleMsg(&logger2, "baseFuel=%f", baseFuelMs);
 
@@ -603,7 +603,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER);
 	tsOutputChannels->runningFuel = ENGINE(engineState.runningFuel);
-	tsOutputChannels->injectorLagMs = ENGINE(injectorLagMs);
+	tsOutputChannels->injectorLagMs = ENGINE(engineState.injectorLag);
 
 	if (engineConfiguration->debugMode == TPS_ACCEL) {
 		tsOutputChannels->debugIntField1 = engine->tpsAccelEnrichment.cb.getSize();
