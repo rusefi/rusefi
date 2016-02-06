@@ -81,7 +81,7 @@ float baseFuel;;"ms",       1,     0,    0, 200,     1
 int16_t rpm;This value controls what RPM values we consider 'cranking' (any RPM below 'crankingRpm')\nAnything above 'crankingRpm' would be 'running';"RPM",      1,     0,    0, 3000,      0
 end_struct
 
-#define debug_mode_e_enum "ALTERNATOR", "TPS_ACCEL", "mode2", "mode3"
+#define debug_mode_e_enum "ALTERNATOR", "TPS_ACCEL", "WARMUP_PID", "mode3"
 custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:1], @@debug_mode_e_enum@@
 
 
