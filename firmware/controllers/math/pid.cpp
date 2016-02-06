@@ -8,8 +8,17 @@
  */
 
 #include "pid.h"
+#include "math.h"
+
+Pid::Pid() {
+    init(NULL, NAN, NAN);
+}
 
 Pid::Pid(pid_s *pid, float minResult, float maxResult) {
+	init(pid, minResult, maxResult);
+}
+
+void Pid::init(pid_s *pid, float minResult, float maxResult) {
 	this->pid = pid;
 	this->minResult = minResult;
 	this->maxResult = maxResult;
@@ -70,4 +79,17 @@ float Pid::getD(void) {
 	return pid->dFactor;
 }
 
+float Pid::getOffset(void) {
+	return pid->offset;
+}
 
+#if EFI_PROD_CODE || EFI_SIMULATOR
+void Pid::postState(TunerStudioOutputChannels *tsOutputChannels) {
+	tsOutputChannels->debugFloatField2 = getIntegration();
+	tsOutputChannels->debugFloatField3 = getPrevError();
+	tsOutputChannels->debugFloatField4 = getI();
+	tsOutputChannels->debugFloatField5 = getD();
+	tsOutputChannels->debugIntField1 = getP();
+	tsOutputChannels->debugIntField2 = getOffset();
+}
+#endif

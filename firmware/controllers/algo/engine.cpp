@@ -33,7 +33,6 @@ extern engine_pins_s enginePins;
 extern fuel_Map3D_t veMap;
 extern fuel_Map3D_t afrMap;
 
-
 EXTERN_ENGINE
 ;
 
@@ -74,7 +73,7 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_F) {
 	}
 	float vBatt = hasVBatt(PASS_ENGINE_PARAMETER_F) ? getVBatt(PASS_ENGINE_PARAMETER_F) : 12;
 
-	injectorLagMs = getInjectorLag(vBatt PASS_ENGINE_PARAMETER);
+	engineState.injectorLag = getInjectorLag(vBatt PASS_ENGINE_PARAMETER);
 }
 
 void Engine::onTriggerEvent(efitick_t nowNt) {
@@ -92,6 +91,7 @@ void Engine::addConfigurationListener(configuration_callback_t callback) {
 
 Engine::Engine(persistent_config_s *config) {
 	init(config);
+	engineState.warmupAfrPid.init(&config->engineConfiguration.warmupAfrPid, 0.1, 10);
 	isEngineChartEnabled = false;
 	sensorChartMode = SC_OFF;
 	/**
@@ -119,7 +119,7 @@ Engine::Engine(persistent_config_s *config) {
 
 
 	timeOfLastKnockEvent = 0;
-	injectorLagMs = fuelMs = 0;
+	fuelMs = 0;
 	clutchDownState = clutchUpState = false;
 	memset(&m, 0, sizeof(m));
 
@@ -129,6 +129,7 @@ Engine::Engine(persistent_config_s *config) {
 EngineState::EngineState() {
 	dwellAngle = 0;
 	engineNoiseHipLevel = 0;
+	injectorLag = 0;
 }
 
 void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
@@ -138,7 +139,11 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 	dwellAngle = sparkDwell / getOneDegreeTimeMs(rpm);
 
 	iatFuelCorrection = getIatCorrection(iat PASS_ENGINE_PARAMETER);
-	cltFuelCorrection = getCltCorrection(clt PASS_ENGINE_PARAMETER);
+	if (boardConfiguration->useWarmupPidAfr && clt < 80) {
+
+	} else {
+		cltFuelCorrection = getCltCorrection(clt PASS_ENGINE_PARAMETER);
+	}
 
 	engineNoiseHipLevel = interpolate2d(rpm, engineConfiguration->knockNoiseRpmBins,
 					engineConfiguration->knockNoise, ENGINE_NOISE_CURVE_SIZE);

@@ -72,12 +72,7 @@ static msg_t AltCtrlThread(int param) {
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 		if (engineConfiguration->debugMode == ALTERNATOR) {
 			tsOutputChannels.debugFloatField1 = currentAltDuty;
-			tsOutputChannels.debugFloatField2 = altPid.getIntegration();
-			tsOutputChannels.debugFloatField3 = altPid.getPrevError();
-			tsOutputChannels.debugFloatField4 = altPid.getI();
-			tsOutputChannels.debugFloatField5 = altPid.getD();
-			tsOutputChannels.debugIntField1 = altPid.getP();
-			tsOutputChannels.debugIntField2 = engineConfiguration->alternatorControl.offset;
+			altPid.postState(&tsOutputChannels);
 		}
 #endif
 

@@ -7,11 +7,11 @@
 #ifndef ENGINE_H_
 #define ENGINE_H_
 
+#include "global.h"
 #include "main.h"
+#include "pid.h"
 #include "engine_configuration.h"
 #include "rpm_calculator.h"
-
-#include "global.h"
 #include "engine_configuration.h"
 #include "event_registry.h"
 #include "trigger_structure.h"
@@ -102,9 +102,12 @@ public:
 	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_F);
 
 	/**
-	 * WIP: accessing these values here would be a performance optimization since log() function needed for
-	 * thermistor logic is relatively heavy
+	 * Performance optimization:
+	 * log() function needed for thermistor logic is relatively heavy, to avoid it we have these
+	 * pre-calculated values
 	 * Access to these two fields is not synchronized in any way - that should work since float read/write are atomic.
+	 *
+	 * values are in Celsius
 	 */
 	float iat;
 	float clt;
@@ -139,7 +142,15 @@ public:
 	// fuel-related;
 	float iatFuelCorrection;
 	float cltFuelCorrection;
-	float injectorLag;
+	/**
+	 * Global injector lag + injectorLag(VBatt)
+	 *
+	 * this value depends on a slow-changing VBatt value, so
+	 * we update it once in a while
+	 */
+	floatms_t injectorLag;
+
+	Pid warmupAfrPid;
 
 	float baroCorrection;
 
@@ -329,13 +340,6 @@ public:
 	EngineState engineState;
 	efitick_t lastTriggerEventTimeNt;
 
-	/**
-	 * Global injector lag + injectorLag(VBatt)
-	 *
-	 * this value depends on a slow-changing VBatt value, so
-	 * we update it once in a while
-	 */
-	float injectorLagMs;
 
 	/**
 	 * This coefficient translates ADC value directly into voltage adjusted according to

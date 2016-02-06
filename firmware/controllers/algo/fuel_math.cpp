@@ -128,7 +128,7 @@ floatms_t getFuelMs(int rpm DECLARE_ENGINE_PARAMETER_S) {
 		theoreticalInjectionLength = fuelPerCycle
 				/ getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
 	}
-	return theoreticalInjectionLength + ENGINE(injectorLagMs);
+	return theoreticalInjectionLength + ENGINE(engineState.injectorLag);
 }
 
 floatms_t getRunningFuel(floatms_t baseFuel, int rpm DECLARE_ENGINE_PARAMETER_S) {
