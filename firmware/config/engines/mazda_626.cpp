@@ -29,6 +29,7 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	// with this complex trigger we do not need this by default
 	boardConfiguration->sensorChartMode = SC_OFF;
 
+	engineConfiguration->useOnlyFrontForTrigger = true;
 
 	engineConfiguration->injectionMode = IM_BATCH;
 	// enable two_wire_batch_injection
