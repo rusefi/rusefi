@@ -445,8 +445,10 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	boardConfiguration->alternatorControlPin = GPIOD_5;
 	engineConfiguration->targetVBatt = 14.5;
-	engineConfiguration->alternatorControl.offset = 20;
-	engineConfiguration->alternatorControl.pFactor = 20; // looks to work better, maybe time for some iFactor
+	engineConfiguration->alternatorControl.offset = 10;
+	engineConfiguration->alternatorControl.pFactor = 5;
+	engineConfiguration->alternatorControl.iFactor = 2;
+	engineConfiguration->alternatorControl.dFactor = 1;
 
 //	enableFrankensoCan();
 	engineConfiguration->canWriteEnabled = true;
