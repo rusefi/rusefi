@@ -140,9 +140,12 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 
 	iatFuelCorrection = getIatCorrection(iat PASS_ENGINE_PARAMETER);
 	if (boardConfiguration->useWarmupPidAfr && clt < 80) {
-		if (rpm < 200)
+		if (rpm < 200) {
+			cltFuelCorrection = 1;
 			warmupAfrPid.reset();
-		cltFuelCorrection = 1 + warmupAfrPid.getValue(13, getAfr(PASS_ENGINE_PARAMETER_F), 1);
+		} else {
+			cltFuelCorrection = 1 + warmupAfrPid.getValue(13, getAfr(PASS_ENGINE_PARAMETER_F), 1);
+		}
 
 	} else {
 		cltFuelCorrection = getCltCorrection(clt PASS_ENGINE_PARAMETER);
