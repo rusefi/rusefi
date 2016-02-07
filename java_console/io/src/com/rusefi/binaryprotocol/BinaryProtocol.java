@@ -63,6 +63,7 @@ public class BinaryProtocol {
     private final IncomingDataBuffer incomingData;
     private boolean isBurnPending;
 
+    // todo: this ioLock needs better documentation!
     private final Object ioLock = new Object();
     private final Object imageLock = new Object();
     private ConfigurationImage controller;
@@ -199,6 +200,7 @@ public class BinaryProtocol {
                 dropPending();
 
                 stream.write((SWITCH_TO_BINARY_COMMAND + "\n").getBytes());
+                // todo: document why is ioLock needed here?
                 synchronized (ioLock) {
                     boolean isTimeout = incomingData.waitForBytes(2, start, "switch to binary");
                     if (isTimeout) {
