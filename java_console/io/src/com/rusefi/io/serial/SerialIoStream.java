@@ -16,6 +16,7 @@ import java.io.IOException;
 public class SerialIoStream implements IoStream {
     private final SerialPort serialPort;
     private final Logger logger;
+    private boolean isClosed;
 
     public SerialIoStream(SerialPort serialPort, Logger logger) {
         this.serialPort = serialPort;
@@ -24,6 +25,7 @@ public class SerialIoStream implements IoStream {
 
     @Override
     public void close() {
+        isClosed = true;
         try {
             FileLog.MAIN.logLine("CLOSING PORT...");
             serialPort.closePort();
@@ -59,5 +61,10 @@ public class SerialIoStream implements IoStream {
         } catch (SerialPortException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    @Override
+    public boolean isClosed() {
+        return isClosed;
     }
 }

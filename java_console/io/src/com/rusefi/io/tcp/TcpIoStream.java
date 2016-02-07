@@ -16,6 +16,7 @@ import java.io.OutputStream;
 public class TcpIoStream implements IoStream {
     private final InputStream input;
     private final OutputStream output;
+    private boolean isClosed;
 
     public TcpIoStream(InputStream input, OutputStream output) {
         if (input == null)
@@ -28,7 +29,7 @@ public class TcpIoStream implements IoStream {
 
     @Override
     public void close() {
-
+        isClosed = true;
     }
 
     @Override
@@ -65,5 +66,10 @@ public class TcpIoStream implements IoStream {
             }
         });
 
+    }
+
+    @Override
+    public boolean isClosed() {
+        return isClosed;
     }
 }

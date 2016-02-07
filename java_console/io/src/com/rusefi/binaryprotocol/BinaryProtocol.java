@@ -194,6 +194,8 @@ public class BinaryProtocol {
 
         while (true) {
             try {
+                if (stream.isClosed())
+                    return;
                 dropPending();
 
                 stream.write((SWITCH_TO_BINARY_COMMAND + "\n").getBytes());
@@ -311,10 +313,11 @@ public class BinaryProtocol {
             putShort(packet, 3, swap16(offset));
             putShort(packet, 5, swap16(requestSize));
 
-            byte[] response = executeCommand(packet, "load image", false);
+            byte[] response = executeCommand(packet, "load image offset=" + offset, false);
 
             if (!checkResponseCode(response, RESPONSE_OK) || response.length != requestSize + 1) {
-                logger.error("readImage: Something is wrong, retrying...");
+                String info = response == null ? "null" : ("code " + response[0] + " size " + response.length);
+                logger.error("readImage: Something is wrong, retrying... " + info);
                 continue;
             }
 

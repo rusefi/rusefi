@@ -23,4 +23,6 @@ public interface IoStream {
     void close();
 
     void purge();
+
+    boolean isClosed();
 }
