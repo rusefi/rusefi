@@ -35,10 +35,12 @@ public class PortHolder {
         if (port == null)
             return false;
         boolean result = open(port, dataListener);
-        if (result) {
-            listener.onConnectionEstablished();
-        } else {
-            listener.onConnectionFailed();
+        if (listener != null) {
+            if (result) {
+                listener.onConnectionEstablished();
+            } else {
+                listener.onConnectionFailed();
+            }
         }
         return result;
     }
