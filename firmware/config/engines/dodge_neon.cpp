@@ -235,7 +235,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setFrankenso_01_LCD(boardConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
 
-	boardConfiguration->useWarmupPidAfr = true;
+//	boardConfiguration->useWarmupPidAfr = true;
 
 	// set_global_trigger_offset_angle 38
 	engineConfiguration->globalTriggerAngleOffset = 38;

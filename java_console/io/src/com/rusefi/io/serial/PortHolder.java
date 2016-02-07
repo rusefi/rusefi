@@ -80,10 +80,13 @@ public class PortHolder {
     }
 
     public static void setupPort(SerialPort serialPort, int baudRate) throws SerialPortException {
+        serialPort.setRTS(false);
+        serialPort.setDTR(false);
         serialPort.setParams(baudRate, 8, 1, 0);//Set params.
         int mask = SerialPort.MASK_RXCHAR;
         //Set the prepared mask
         serialPort.setEventsMask(mask);
+        serialPort.setFlowControlMode(0);
     }
 
     public void close() {
