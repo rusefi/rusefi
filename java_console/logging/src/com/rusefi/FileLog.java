@@ -14,7 +14,7 @@ public enum FileLog {
     MAIN,
     SIMULATOR_CONSOLE;
 
-    private static final String DIR = "out/";
+    public static final String DIR = "out/";
     public static String currentLogName;
     public static final String END_OF_TIMESTAND_TAG = "<EOT>: ";
     public static final Logger LOGGER = new Logger() {
