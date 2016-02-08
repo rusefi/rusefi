@@ -259,8 +259,6 @@ static void printState(void) {
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
 	float baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER);
 	debugFloat(&logger, "fuel_base", baseFuel, 2);
-//	debugFloat(&logger, "fuel_iat", getIatCorrection(getIntakeAirTemperature()), 2);
-//	debugFloat(&logger, "fuel_clt", getCltCorrection(getCoolantTemperature()), 2);
 	debugFloat(&logger, "fuel_lag", engine->engineState.injectorLag, 2);
 	debugFloat(&logger, "fuel", ENGINE(actualLastInjection), 2);
 

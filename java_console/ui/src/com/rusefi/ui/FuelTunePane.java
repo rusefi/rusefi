@@ -44,6 +44,8 @@ public class FuelTunePane {
     private final Table3D veTable = new Table3D();
     private final Table3D changeMap = new Table3D();
     private final JButton upload = new JButton("Upload");
+    private final JCheckBox collect = new JCheckBox("enable");
+    private final JButton clean = new JButton("clear");
     private byte[] newVeMap;
 
     public FuelTunePane() {
@@ -68,8 +70,19 @@ public class FuelTunePane {
                 UploadChanges.scheduleUpload(ci);
             }
         });
+        clean.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                synchronized (incomingDataPoints) {
+                    incomingDataPoints.clear();
+                }
+            }
+        });
 
+        collect.setSelected(true);
         JPanel topPanel = new JPanel(new FlowLayout());
+        topPanel.add(collect);
+        topPanel.add(clean);
         topPanel.add(incomingBufferSize);
         topPanel.add(runLogic);
         topPanel.add(upload);
@@ -166,6 +179,8 @@ public class FuelTunePane {
         sc.addListener(Sensor.RPM, new SensorCentral.SensorListener() {
             @Override
             public void onSensorUpdate(double value) {
+                if (!collect.isSelected())
+                    return;
                 int rpm = (int) value;
                 double engineLoad = sc.getValue(Sensor.MAP);
                 double afr = sc.getValue(Sensor.AFR);

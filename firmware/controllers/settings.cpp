@@ -439,6 +439,9 @@ static void printTemperatureInfo(void) {
 	scheduleMsg(&logger, "A/C relay=%s @ %s", boolToString(enginePins.acRelay.getLogicValue()),
 			hwPortname(boardConfiguration->acRelayPin));
 
+	scheduleMsg(&logger, "warmupPID=%d corr=%f", boardConfiguration->useWarmupPidAfr,
+			engine->engineState.cltFuelCorrection);
+
 #endif
 }
 
