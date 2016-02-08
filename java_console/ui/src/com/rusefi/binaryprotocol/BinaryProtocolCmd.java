@@ -60,6 +60,6 @@ public class BinaryProtocolCmd {
     }
 
     public static void scheduleUpload(ConfigurationImage newVersion) {
-        UploadChanges.scheduleUpload(newVersion, bp);
+        UploadChanges.scheduleUpload(newVersion);
     }
 }

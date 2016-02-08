@@ -73,10 +73,10 @@ public class UploadChanges {
         final BinaryProtocol bp = new BinaryProtocol(logger, serialPort);
         bp.setController(ci1);
 
-        scheduleUpload(ci2, bp);
+        scheduleUpload(ci2);
     }
 
-    public static void scheduleUpload(final ConfigurationImage newVersion, final BinaryProtocol bp) {
+    public static void scheduleUpload(final ConfigurationImage newVersion) {
         JFrame frame = wnd.getFrame();
         frame.setVisible(true);
         LinkManager.COMMUNICATION_EXECUTOR.execute(new Runnable() {

@@ -3,10 +3,16 @@ package com.rusefi;
 import com.rusefi.core.Pair;
 
 /**
+ * This class has the logic of finding all ranges of changes between who {@link ConfigurationImage}
+ * It's used to send just the diff to the ECU.
+ *
  * (c) Andrey Belomutskiy
  * 3/6/2015
  */
 public class ConfigurationImageDiff {
+    private ConfigurationImageDiff() {
+    }
+
     /**
      * @return NULL if images are the same from OFFSET and to the end
      */
