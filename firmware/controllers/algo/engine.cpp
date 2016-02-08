@@ -91,7 +91,7 @@ void Engine::addConfigurationListener(configuration_callback_t callback) {
 
 Engine::Engine(persistent_config_s *config) {
 	init(config);
-	engineState.warmupAfrPid.init(&config->engineConfiguration.warmupAfrPid, 0.1, 10);
+	engineState.warmupAfrPid.init(&config->engineConfiguration.warmupAfrPid, -0.8, 10);
 	isEngineChartEnabled = false;
 	sensorChartMode = SC_OFF;
 	/**
