@@ -21,12 +21,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -47,6 +46,7 @@ public class FuelTunePane {
     private final JCheckBox collect = new JCheckBox("enable");
     private final JButton clean = new JButton("clear");
     private byte[] newVeMap;
+    private DataOutputStream dos;
 
     public FuelTunePane() {
         final JLabel incomingBufferSize = new JLabel();
@@ -142,6 +142,7 @@ public class FuelTunePane {
     private void doJob() {
         float veTable[][] = new float[Fields.FUEL_LOAD_COUNT][Fields.FUEL_RPM_COUNT];
         loadMap(veTable, Fields.VETABLE.getOffset());
+        logMap("source", veTable);
 
         List<FuelAutoTune.stDataOnline> data = new ArrayList<>();
         synchronized (incomingDataPoints) {
@@ -149,14 +150,72 @@ public class FuelTunePane {
                 data.add(point.asDataOnline());
             incomingDataPoints.clear();
         }
+        writeDataPoints(data);
 
         // todo: move this away from AWT thread
         FuelAutoTune.Result a = FuelAutoTune.process(false, data, 0.1, 14.7, veTable);
 
-        newVeMap = toByteArray(a.getKgbcRES());
+        float[][] result = a.getKgbcRES();
+        logMap("result", result);
+        newVeMap = toByteArray(result);
 
         loadData(changeMap, newVeMap, 0);
         upload.setEnabled(true);
+    }
+
+    private void writeDataPoints(List<FuelAutoTune.stDataOnline> data) {
+        DataOutputStream dos = getTuneLogStream();
+        if (dos == null)
+            return;
+        try {
+            dos.writeBytes("Running with " + data.size() + " points\r\n");
+            dos.writeBytes("AFR\tRPM\tload\r\n");
+            for (FuelAutoTune.stDataOnline point : data)
+                dos.writeBytes(point.AFR  +"\t" + point.getRpm() + "\t" + point.getEngineLoad() + "\r\n");
+
+        } catch (IOException e) {
+            FileLog.MAIN.logLine("Error writing auto-tune log");
+        }
+    }
+
+    private void logMap(String msg, float[][] table) {
+        DataOutputStream dos = getTuneLogStream();
+        if (dos == null)
+            return;
+        try {
+            dos.writeBytes(new Date() + ": " + msg + "\r\n");
+
+            for (int rpmIndex = 0; rpmIndex < Fields.FUEL_RPM_COUNT; rpmIndex++) {
+                dos.writeChar('\t');
+                dos.writeBytes(Float.toString(veRpmBins[rpmIndex]));
+            }
+            dos.writeBytes("\r\n");
+
+            for (int loadIndex = 0; loadIndex < Fields.FUEL_LOAD_COUNT; loadIndex++) {
+                dos.writeBytes(Float.toString(veLoadBins[loadIndex]));
+                for (int rpmIndex = 0; rpmIndex < Fields.FUEL_RPM_COUNT; rpmIndex++) {
+                    dos.writeChar('\t');
+                    float v = table[loadIndex][rpmIndex];
+                    dos.writeBytes(Float.toString(v));
+                }
+                dos.writeBytes("\r\n");
+            }
+            dos.flush();
+        } catch (IOException e) {
+            FileLog.MAIN.logLine("Error writing auto-tune log");
+        }
+    }
+
+    private DataOutputStream getTuneLogStream() {
+        if (dos == null) {
+            String fileName = FileLog.DIR + "tune_" + FileLog.getDate() + ".txt";
+            try {
+                dos = new DataOutputStream(new FileOutputStream(fileName));
+            } catch (FileNotFoundException e) {
+                FileLog.MAIN.logLine("Error creating " + fileName + ":" + e);
+            }
+        }
+        return dos;
     }
 
     private byte[] toByteArray(float[][] output) {
@@ -250,7 +309,7 @@ public class FuelTunePane {
         }
 
         public FuelAutoTune.stDataOnline asDataOnline() {
-            return new FuelAutoTune.stDataOnline(afr, rpmIndex, engineLoadIndex);
+            return new FuelAutoTune.stDataOnline(afr, rpmIndex, engineLoadIndex, rpm, engineLoad);
         }
     }
 }

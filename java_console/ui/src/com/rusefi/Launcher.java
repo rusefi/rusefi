@@ -32,7 +32,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20160206;
+    public static final int CONSOLE_VERSION = 20160208;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -114,7 +114,7 @@ public class Launcher {
             tabbedPane.add("Bench Test", new BenchTestPane().getContent());
         if (!LinkManager.isLogViewer() && false) // todo: fix it & better name?
             tabbedPane.add("Logs Manager", logsManager.getContent());
-        if (false)
+        if (true)
             tabbedPane.add("Fuel Tune", fuelTunePane.getContent());
 
         if (!LinkManager.isLogViewerMode(port)) {
