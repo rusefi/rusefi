@@ -420,6 +420,10 @@ public abstract class Table extends JPanel implements Serializable {
         this.setInputMap(WHEN_FOCUSED, im);
     }
 
+    public void reset() {
+        centerPanel.removeAll();
+    }
+
     public DataCell[] getData() {
         return data;
     }
