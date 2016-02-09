@@ -70,9 +70,9 @@ custom baro_corr_table_t 64 array,   F32,   @OFFSET@, [@@BARO_CORR_SIZE@@x@@BARO
 custom ignition_table_t	1024 array,   F32,   @OFFSET@, [16x16],"deg",	   1,     0,     -720,  720,    2
 
 struct pid_s
-	float pFactor;;"value",      1,      0,       0, 1000,      3
-	float iFactor;;"value",      1,      0,       0, 1000,      3
-	float dFactor;;"value",      1,      0,       0, 1000,      3
+	float pFactor;;"value",      1,      0,       0, 1000,      5
+	float iFactor;;"value",      1,      0,       0, 1000,      5
+	float dFactor;;"value",      1,      0,       0, 1000,      5
 	float offset;Linear addition to PID logic;"value",      1,      0,       0, 1000,      3
 end_struct
 
