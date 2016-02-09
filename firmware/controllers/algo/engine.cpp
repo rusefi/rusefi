@@ -91,7 +91,7 @@ void Engine::addConfigurationListener(configuration_callback_t callback) {
 
 Engine::Engine(persistent_config_s *config) {
 	init(config);
-	engineState.warmupAfrPid.init(&config->engineConfiguration.warmupAfrPid, -0.8, 10);
+	engineState.warmupAfrPid.init(&config->engineConfiguration.warmupAfrPid,  0.5, 1.5);
 	isEngineChartEnabled = false;
 	sensorChartMode = SC_OFF;
 	/**
@@ -144,7 +144,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 			cltFuelCorrection = 1;
 			warmupAfrPid.reset();
 		} else {
-			cltFuelCorrection = 1 + warmupAfrPid.getValue(13, getAfr(PASS_ENGINE_PARAMETER_F), 1);
+			cltFuelCorrection = warmupAfrPid.getValue(13, getAfr(PASS_ENGINE_PARAMETER_F), 1);
 		}
 
 	} else {
