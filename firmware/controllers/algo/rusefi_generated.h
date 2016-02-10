@@ -1,5 +1,6 @@
 #define LE_COMMAND_LENGTH 200
 #define TS_FILE_VERSION 20160122
+#define WARMUP_TARGET_AFR_SIZE 4
 #define MAP_ANGLE_SIZE 8
 #define MAP_WINDOW_SIZE 8
 #define CLT_CURVE_SIZE 16
@@ -738,7 +739,10 @@
 #define warmupAfrPid_iFactor_offset 2252
 #define warmupAfrPid_dFactor_offset 2256
 #define warmupAfrPid_offset_offset 2260
-#define unused_offset 2264
+#define warmupTargetAfrBins_offset 2264
+#define warmupTargetAfr_offset 2280
+#define warmupAfrThreshold_offset 2296
+#define unused_offset 2300
 #define le_formulas1_offset 3016
 #define le_formulas2_offset 3216
 #define le_formulas3_offset 3416

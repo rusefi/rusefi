@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Feb 06 08:58:48 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Feb 10 12:21:21 EST 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1475,9 +1475,22 @@ typedef struct {
 	 */
 	pid_s warmupAfrPid;
 	/**
+	 * CLT-based target AFR for PID-based control
 	 * offset 2264
 	 */
-	int unused[188];
+	float warmupTargetAfrBins[WARMUP_TARGET_AFR_SIZE];
+	/**
+	 * offset 2280
+	 */
+	float warmupTargetAfr[WARMUP_TARGET_AFR_SIZE];
+	/**
+	 * offset 2296
+	 */
+	float warmupAfrThreshold;
+	/**
+	 * offset 2300
+	 */
+	int unused[179];
 	/** total size 3016*/
 } engine_configuration_s;
 
@@ -1627,4 +1640,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Feb 06 08:58:48 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Feb 10 12:21:21 EST 2016
