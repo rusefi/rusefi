@@ -100,6 +100,7 @@ class EngineState {
 public:
 	EngineState();
 	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_F);
+	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_F);
 
 	/**
 	 * Performance optimization:
@@ -154,6 +155,7 @@ public:
 	 * See useWarmupPidAfr
 	 */
 	Pid warmupAfrPid;
+	float warmupTargetAfr;
 
 	float baroCorrection;
 

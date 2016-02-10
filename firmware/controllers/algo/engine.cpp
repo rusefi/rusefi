@@ -62,8 +62,7 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_F) {
 	isEngineChartEnabled = CONFIG(isEngineChartEnabled) && rpm < CONFIG(engineSnifferRpmThreshold);
 	sensorChartMode = rpm < CONFIG(sensorSnifferRpmThreshold) ? boardConfiguration->sensorChartMode : SC_OFF;
 
-	engineState.iat = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F);
-	engineState.clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_F);
+	engineState.updateSlowSensors(PASS_ENGINE_PARAMETER_F);
 
 	if (engineConfiguration->fuelLevelSensor != EFI_ADC_NONE) {
 		float fuelLevelVoltage = getVoltageDivided("fuel", engineConfiguration->fuelLevelSensor);
@@ -130,6 +129,14 @@ EngineState::EngineState() {
 	dwellAngle = 0;
 	engineNoiseHipLevel = 0;
 	injectorLag = 0;
+}
+
+void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_F) {
+	iat = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F);
+	clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_F);
+
+	warmupTargetAfr = interpolate2d(clt, engineConfiguration->warmupTargetAfrBins,
+			engineConfiguration->warmupTargetAfr, WARMUP_TARGET_AFR_SIZE);
 }
 
 void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
