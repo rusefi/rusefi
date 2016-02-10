@@ -430,6 +430,15 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	config->crankingCycleBins[7] = 77;
 
 
+	engineConfiguration->warmupTargetAfrBins[0] = -12;
+	engineConfiguration->warmupTargetAfr[0] = 12.3;
+	engineConfiguration->warmupTargetAfrBins[1] = 0;
+	engineConfiguration->warmupTargetAfr[1] = 13;
+	engineConfiguration->warmupTargetAfrBins[2] = 30;
+	engineConfiguration->warmupTargetAfr[2] = 13.8;
+	engineConfiguration->warmupTargetAfrBins[3] = 60;
+	engineConfiguration->warmupTargetAfr[3] = 14.5;
+
 	// todo: set bins
 	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -30, 1350);
 	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -20, 1300);
@@ -703,6 +712,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->uartConsoleSerialSpeed = 115200;
 
 	engineConfiguration->warmupAfrPid.offset = 1;
+	engineConfiguration->warmupAfrThreshold = 60;
 
 	engineConfiguration->engineLoadAccelLength = 6;
 	engineConfiguration->engineLoadAccelEnrichmentThreshold = 5; // kPa
