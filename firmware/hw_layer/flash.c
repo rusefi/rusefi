@@ -47,8 +47,8 @@ flashsector_t flashSectorAt(flashaddr_t address) {
 
 /**
  * @brief Unlock the flash memory for write access.
- * @return CH_SUCCESS  Unlock was successful.
- * @return CH_FAILED    Unlock failed.
+ * @return HAL_SUCCESS  Unlock was successful.
+ * @return HAL_FAILED    Unlock failed.
  */
 static bool flashUnlock(void) {
 	/* Check if unlock is really needed */
@@ -72,7 +72,7 @@ static bool flashUnlock(void) {
 
 int flashSectorErase(flashsector_t sector) {
 	/* Unlock flash for write access */
-	if (flashUnlock() == CH_FAILED)
+	if (flashUnlock() == HAL_FAILED)
 		return FLASH_RETURN_NO_PERMISSION;
 
 	/* Wait for any busy flags. */
@@ -197,7 +197,7 @@ static void flashWriteData(flashaddr_t address, const flashdata_t data) {
 
 int flashWrite(flashaddr_t address, const char* buffer, size_t size) {
 	/* Unlock flash for write access */
-	if (flashUnlock() == CH_FAILED)
+	if (flashUnlock() == HAL_FAILED)
 		return FLASH_RETURN_NO_PERMISSION;
 
 	/* Wait for any busy flags */
