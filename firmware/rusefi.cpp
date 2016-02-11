@@ -148,7 +148,7 @@ static void rebootNow(void) {
 static void scheduleReboot(void) {
 	scheduleMsg(&sharedLogger, "Rebooting in 5 seconds...");
 	lockAnyContext();
-	chVTSetI(&resetTimer, 5 * CH_FREQUENCY, (vtfunc_t) rebootNow, NULL);
+	chVTSetI(&resetTimer, MS2ST(5000), (vtfunc_t) rebootNow, NULL);
 	unlockAnyContext();
 }
 
