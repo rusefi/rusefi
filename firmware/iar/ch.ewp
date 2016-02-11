@@ -329,7 +329,6 @@
           <state>$PROJ_DIR$\..\config\engines</state>
           <state>$PROJ_DIR$\..\config\stm32f4ems</state>
           <state>$PROJ_DIR$\..\console\binary</state>
-          <state>$PROJ_DIR$\..\console_util</state>
           <state>$PROJ_DIR$\..\development</state>
           <state>$PROJ_DIR$\..\development\test</state>
           <state>$PROJ_DIR$\..\development\hw_layer</state>
@@ -2174,15 +2173,6 @@
     </file>
   </group>
   <group>
-    <name>console_util</name>
-    <file>
-      <name>$PROJ_DIR$\..\console_util\rfiutil.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\console_util\rfiutil.h</name>
-    </file>
-  </group>
-  <group>
     <name>controllers</name>
     <group>
       <name>algo</name>
@@ -2265,7 +2255,7 @@
         <name>$PROJ_DIR$\..\controllers\algo\main_trigger_callback.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\algo\malfunction_central.c</name>
+        <name>$PROJ_DIR$\..\controllers\algo\malfunction_central.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\algo\malfunction_central.h</name>
@@ -3333,6 +3323,12 @@
   </group>
   <group>
     <name>util</name>
+    <file>
+      <name>$PROJ_DIR$\..\util\rfiutil.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\util\rfiutil.h</name>
+    </file>
     <file>
       <name>$PROJ_DIR$\..\util\cli_registry.cpp</name>
     </file>
