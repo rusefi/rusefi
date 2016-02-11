@@ -55,6 +55,8 @@
  }
  */
 
+#if !EFI_UNIT_TEST
+
 void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par) {
 	bool wasLocked = lockAnyContext();
 
@@ -71,3 +73,6 @@ void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par
 		unlockAnyContext();
 	}
 }
+
+#endif
+

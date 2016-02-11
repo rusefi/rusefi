@@ -10,6 +10,9 @@
 #define RFIUTIL_H_
 
 #include "global.h"
+
+#if !EFI_UNIT_TEST
+
 #include "histogram.h"
 
 #define isLocked() (dbg_lock_cnt > 0)
@@ -34,4 +37,7 @@ void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par
 void printHistogram(Logging *logging, histogram_s *histogram);
 #endif /* __cplusplus */
 
+#endif /* EFI_UNIT_TEST */
+
 #endif /* RFIUTIL_H_ */
+
