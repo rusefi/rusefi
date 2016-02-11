@@ -112,7 +112,7 @@ include $(PROJECT_DIR)/controllers/sensors/sensors.mk
 include $(PROJECT_DIR)/controllers/system/system.mk
 include $(PROJECT_DIR)/controllers/trigger/trigger.mk
 include $(PROJECT_DIR)/console/console.mk
-include $(PROJECT_DIR)/console_util/console_util.mk
+include $(PROJECT_DIR)/util/console_util.mk
 
 
 # Define linker script file here
@@ -198,7 +198,6 @@ INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
 	ext \
 	ext_algo \
 	util \
-	console_util \
 	console \
 	console/binary \
 	hw_layer \
