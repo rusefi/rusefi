@@ -73,10 +73,10 @@ public class UploadChanges {
         final BinaryProtocol bp = new BinaryProtocol(logger, serialPort);
         bp.setController(ci1);
 
-        scheduleUpload(ci2);
+        scheduleUpload(ci2, null);
     }
 
-    public static void scheduleUpload(final ConfigurationImage newVersion) {
+    public static void scheduleUpload(final ConfigurationImage newVersion, final Runnable afterUpload) {
         JFrame frame = wnd.getFrame();
         frame.setVisible(true);
         LinkManager.COMMUNICATION_EXECUTOR.execute(new Runnable() {
@@ -84,6 +84,8 @@ public class UploadChanges {
             public void run() {
                 try {
                     BinaryProtocol.instance.uploadChanges(newVersion, logger);
+                    if (afterUpload != null)
+                        afterUpload.run();
                 } catch (InterruptedException | EOFException | SerialPortException e) {
                     logger.error("Error: " + e);
                     throw new IllegalStateException(e);
