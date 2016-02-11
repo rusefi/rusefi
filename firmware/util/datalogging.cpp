@@ -49,7 +49,7 @@ static bool intermediateLoggingBufferInited = false;
 /**
  * @returns true if data does not fit into this buffer
  */
-static INLINE bool validateBuffer(Logging *logging, uint32_t extraLen) {
+static ALWAYS_INLINE bool validateBuffer(Logging *logging, uint32_t extraLen) {
 	if (logging->buffer == NULL) {
 		firmwareError("Logging not initialized: %s", logging->name);
 		return true;
