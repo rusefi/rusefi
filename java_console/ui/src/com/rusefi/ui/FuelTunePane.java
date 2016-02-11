@@ -11,22 +11,22 @@ import com.rusefi.FileLog;
 import com.rusefi.UploadChanges;
 import com.rusefi.autotune.FuelAutoTune;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.config.Field;
 import com.rusefi.config.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.config.BaseConfigField;
+import com.rusefi.ui.storage.Node;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.RunnableFuture;
 
 /**
  * (c) Andrey Belomutskiy 2013-2016
@@ -36,6 +36,10 @@ import java.util.List;
  */
 public class FuelTunePane {
     private final JPanel content = new JPanel(new BorderLayout());
+
+    private final static int veLoadOffset = Fields.VETABLE.getOffset() + Fields.FUEL_RPM_COUNT * Fields.FUEL_LOAD_COUNT * 4;
+    private final static int veRpmOffset = Fields.VETABLE.getOffset() + Fields.FUEL_RPM_COUNT * Fields.FUEL_LOAD_COUNT * 4 + Fields.FUEL_LOAD_COUNT * 4;
+
 
     private final List<FuelDataPoint> incomingDataPoints = new ArrayList<>();
     private final float veLoadBins[] = new float[Fields.FUEL_LOAD_COUNT];
@@ -48,7 +52,7 @@ public class FuelTunePane {
     private byte[] newVeMap;
     private DataOutputStream dos;
 
-    public FuelTunePane() {
+    public FuelTunePane(Node config) {
         final JLabel incomingBufferSize = new JLabel();
 
         JButton runLogic = new JButton("one iteration");
@@ -61,25 +65,17 @@ public class FuelTunePane {
         upload.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                byte[] newVeMap = FuelTunePane.this.newVeMap;
-                BinaryProtocol bp = BinaryProtocol.instance;
-                if (newVeMap == null || bp == null)
-                    return;
-                ConfigurationImage ci = bp.getController().clone();
-                System.arraycopy(newVeMap, 0, ci.getContent(), Fields.VETABLE.getOffset(), newVeMap.length);
-                UploadChanges.scheduleUpload(ci);
+                uploadCurrentResukt();
             }
         });
         clean.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                synchronized (incomingDataPoints) {
-                    incomingDataPoints.clear();
-                }
+                doClean();
             }
         });
 
-        collect.setSelected(true);
+        collect.setSelected(false);
         JPanel topPanel = new JPanel(new FlowLayout());
         topPanel.add(collect);
         topPanel.add(clean);
@@ -87,6 +83,23 @@ public class FuelTunePane {
         topPanel.add(runLogic);
         topPanel.add(upload);
 
+        Timer runTime = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean runJob;
+                synchronized (incomingDataPoints) {
+                    runJob = incomingDataPoints.size() > 50;
+                }
+                if (runJob) {
+                    doJob();
+                    uploadCurrentResukt();
+                }
+            }
+        });
+        runTime.start();
+
+
+        // todo: records based on change, not based on timer
         Timer timer = new Timer(300, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -104,7 +117,11 @@ public class FuelTunePane {
 
         JPanel rightPanel = new JPanel(new GridLayout(2, 1));
         rightPanel.add(changeMap);
-        rightPanel.add(new JLabel("bottom"));
+        GaugesGrid grid = new GaugesGrid(1, 3);
+        rightPanel.add(grid.panel);
+
+        grid.panel.add(GaugesGridElement.read(config.getChild("1"), Sensor.RPM));
+        grid.panel.add(GaugesGridElement.read(config.getChild("2"), Sensor.AFR));
 
         JPanel middlePanel = new JPanel(new GridLayout(1, 2));
         middlePanel.add(veTable);
@@ -113,6 +130,35 @@ public class FuelTunePane {
         content.add(middlePanel, BorderLayout.CENTER);
         initTable(veTable);
         initTable(changeMap);
+    }
+
+    private void uploadCurrentResukt() {
+        byte[] newVeMap = FuelTunePane.this.newVeMap;
+        BinaryProtocol bp = BinaryProtocol.instance;
+        if (newVeMap == null || bp == null)
+            return;
+        ConfigurationImage ci = bp.getController().clone();
+        System.arraycopy(newVeMap, 0, ci.getContent(), Fields.VETABLE.getOffset(), newVeMap.length);
+        Runnable afterBurn = new Runnable() {
+            @Override
+            public void run() {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        // let's clean so that we collect fresh datapoints based on new settings
+                        doClean();
+                        reloadVeTable();
+                    }
+                });
+            }
+        };
+        UploadChanges.scheduleUpload(ci, afterBurn);
+    }
+
+    private void doClean() {
+        synchronized (incomingDataPoints) {
+            incomingDataPoints.clear();
+        }
     }
 
     private static void loadData(Table table, byte[] content, int offset) {
@@ -255,20 +301,23 @@ public class FuelTunePane {
             }
         });
 
-        int veLoadOffset = Fields.VETABLE.getOffset() + Fields.FUEL_RPM_COUNT * Fields.FUEL_LOAD_COUNT * 4;
         loadArray(veLoadBins, veLoadOffset);
-        int veRpmOffset = Fields.VETABLE.getOffset() + Fields.FUEL_RPM_COUNT * Fields.FUEL_LOAD_COUNT * 4 + Fields.FUEL_LOAD_COUNT * 4;
         loadArray(veRpmBins, veRpmOffset);
 
+        byte[] content = reloadVeTable();
+
+        loadData(changeMap.getXAxis(), content, veRpmOffset);
+        loadData(changeMap.getYAxis(), content, veLoadOffset);
+    }
+
+    private byte[] reloadVeTable() {
         BinaryProtocol bp = BinaryProtocol.instance;
 
         byte[] content = bp.getController().getContent();
         loadData(veTable.getXAxis(), content, veRpmOffset);
         loadData(veTable.getYAxis(), content, veLoadOffset);
         loadData(veTable, content, Fields.VETABLE.getOffset());
-
-        loadData(changeMap.getXAxis(), content, veRpmOffset);
-        loadData(changeMap.getYAxis(), content, veLoadOffset);
+        return content;
     }
 
     private void loadMap(float[][] map, int offset) {

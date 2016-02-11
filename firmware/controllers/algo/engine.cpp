@@ -36,6 +36,10 @@ extern fuel_Map3D_t afrMap;
 EXTERN_ENGINE
 ;
 
+#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+extern TunerStudioOutputChannels tsOutputChannels;
+#endif
+
 MockAdcState::MockAdcState() {
 	memset(hasMockAdc, 0, sizeof(hasMockAdc));
 }
@@ -153,6 +157,11 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 		} else {
 			cltFuelCorrection = warmupAfrPid.getValue(13, getAfr(PASS_ENGINE_PARAMETER_F), 1);
 		}
+#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+		if (engineConfiguration->debugMode == WARMUP_ENRICH) {
+			warmupAfrPid.postState(&tsOutputChannels);
+		}
+#endif
 
 	} else {
 		cltFuelCorrection = getCltCorrection(clt PASS_ENGINE_PARAMETER);

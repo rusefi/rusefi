@@ -57,7 +57,7 @@ public class GaugesPanel {
     }
 
     private final JPanel content = new JPanel(new BorderLayout());
-    private final JPanel gauges = new JPanel(new GridLayout(3, 5));
+    private final GaugesGrid gauges = new GaugesGrid(3, 5);
     private final Node config;
 
     private boolean showRpmPanel = true;
@@ -109,7 +109,7 @@ public class GaugesPanel {
     @NotNull
     private JPanel createMiddleLeftPanel() {
         JPanel middleLeftPanel = new JPanel(new BorderLayout());
-        middleLeftPanel.add(gauges, BorderLayout.CENTER);
+        middleLeftPanel.add(gauges.panel, BorderLayout.CENTER);
         middleLeftPanel.add(lowerRpmPanel, BorderLayout.SOUTH);
         return middleLeftPanel;
     }
@@ -203,20 +203,20 @@ public class GaugesPanel {
             public void actionPerformed(ActionEvent e) {
                 String fileName = FileLog.getDate() + "_gauges.png";
 
-                UiUtils.saveImageWithPrompt(fileName, content, gauges);
+                UiUtils.saveImageWithPrompt(fileName, content, gauges.panel);
             }
         });
         return saveImageButton;
     }
 
     private void setSensorGridDimensions(int rows, int columns) {
-        gauges.setLayout(new GridLayout(rows, columns));
-        gauges.removeAll();
+        gauges.panel.setLayout(new GridLayout(rows, columns));
+        gauges.panel.removeAll();
 
         for (int i = 0; i < rows * columns; i++) {
             Component element = GaugesGridElement.read(config.getChild("element_" + i), DEFAULT_LAYOUT[i]);
 
-            gauges.add(element);
+            gauges.panel.add(element);
         }
 
         saveConfig(rows, columns);
