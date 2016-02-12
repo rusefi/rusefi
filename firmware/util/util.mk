@@ -1,6 +1,5 @@
 
 UTIL_TEST_SRC = $(PROJECT_DIR)/util/crc.c \
-	$(PROJECT_DIR)/rfiutil.c \
 	$(PROJECT_DIR)/util/data_buffer.c \
 	$(PROJECT_DIR)/util/histogram.c
 
