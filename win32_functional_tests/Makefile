@@ -80,7 +80,6 @@ include $(PROJECT_DIR)/controllers/trigger/trigger.mk
 include $(PROJECT_DIR)/controllers/system/system.mk
 include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/console/binary/tunerstudio.mk
-include $(PROJECT_DIR)/util/console_util.mk
 include $(PROJECT_DIR)/development/development.mk
 
 include $(CHIBIOS)/boards/simulator/board.mk
@@ -103,7 +102,6 @@ CSRC =	${PORTSRC} \
 	$(TRIGGER_SRC) \
 	$(SYSTEMSRC) \
 	$(CONSOLESRC) \
-	$(CONSOLEUTILSRC) \
 	$(CONTROLLERS_ALGO_SRC) \
 	$(CONTROLLERS_CORE_SRC) \
 	$(CONTROLLERS_MATH_SRC) \
