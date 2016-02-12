@@ -1,2 +1,0 @@
-
-CONSOLEUTILSRC = $(PROJECT_DIR)/rfiutil.c
