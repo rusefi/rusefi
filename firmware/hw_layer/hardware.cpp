@@ -372,9 +372,7 @@ void initHardware(Logging *l) {
 	initVehicleSpeed(sharedLogger);
 #endif
 
-#if HAL_USE_EXT || defined(__DOXYGEN__)
 	initJoystick(sharedLogger);
-#endif
 
 	calcFastAdcIndexes();
 	engine->addConfigurationListener(adcConfigListener);
