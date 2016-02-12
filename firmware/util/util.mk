@@ -1,12 +1,9 @@
 
-UTIL_TEST_SRC = $(PROJECT_DIR)/util/crc.c \
+UTILSRC = $(PROJECT_DIR)/util/crc.c \
 	$(PROJECT_DIR)/util/data_buffer.c \
+	$(PROJECT_DIR)/console_util/rfiutil.c \
 	$(PROJECT_DIR)/util/histogram.c
 
-UTILSRC = $(UTIL_TEST_SRC)
-
-CONSOLEUTILSRC = $(PROJECT_DIR)/console_util/rfiutil.c
-	
 UTILSRC_CPP = $(PROJECT_DIR)/util/cyclic_buffer.cpp \
 	$(PROJECT_DIR)/console_util/datalogging.cpp \
 	$(PROJECT_DIR)/console_util/loggingcentral.cpp \
