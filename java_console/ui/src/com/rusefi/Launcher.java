@@ -5,6 +5,7 @@ import com.rusefi.core.EngineState;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.ConnectionWatchdog;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.serial.PortHolder;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.ui.*;
@@ -33,10 +34,11 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20160209;
+    public static final int CONSOLE_VERSION = 20160212;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
+    protected static final String SPEED_KEY = "speed";
     private final String port;
     private final JTabbedPane tabbedPane = new JTabbedPane();
     private static AtomicReference<String> firmwareVersion = new AtomicReference<>("N/A");
@@ -73,6 +75,7 @@ public class Launcher {
         FileLog.MAIN.logLine("Console " + CONSOLE_VERSION);
 
         getConfig().getRoot().setProperty(PORT_KEY, port);
+        getConfig().getRoot().setProperty(SPEED_KEY, PortHolder.BAUD_RATE);
 
         LinkManager.start(port);
 

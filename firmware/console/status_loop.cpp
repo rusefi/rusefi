@@ -602,6 +602,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER);
 	tsOutputChannels->runningFuel = ENGINE(engineState.runningFuel);
 	tsOutputChannels->injectorLagMs = ENGINE(engineState.injectorLag);
+	tsOutputChannels->timeSeconds = getTimeNowSeconds();
 
 	if (engineConfiguration->debugMode == TPS_ACCEL) {
 		tsOutputChannels->debugIntField1 = engine->tpsAccelEnrichment.cb.getSize();

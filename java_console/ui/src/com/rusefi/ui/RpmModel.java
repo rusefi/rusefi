@@ -19,7 +19,7 @@ public class RpmModel {
     private static final double SMOOTHING_RATIO = 0.05;
     private int displayedValue;
     private int value;
-    private final List<RpmListener> listeners = new ArrayList<RpmListener>();
+    private final List<RpmListener> listeners = new ArrayList<>();
     private long timeAtLastUpdate;
 
     public static RpmModel getInstance() {

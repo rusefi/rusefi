@@ -2,6 +2,9 @@ package com.rusefi.ui;
 
 import com.rusefi.core.EngineTimeListener;
 import com.rusefi.core.MessagesCentral;
+import com.rusefi.core.Sensor;
+import com.rusefi.core.SensorCentral;
+import com.rusefi.io.ConnectionWatchdog;
 import com.rusefi.io.LinkManager;
 
 import javax.swing.*;
@@ -10,6 +13,9 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * todo: eliminate logic duplication with {@link ConnectionWatchdog}
+ */
 public class ConnectionStatus {
     // todo: react to any message as connected? how to know if message from controller, not internal message?
     private static final String FATAL_MESSAGE_PREFIX = "FATAL";
@@ -33,6 +39,13 @@ public class ConnectionStatus {
             }
         });
 
+        SensorCentral.getInstance().addListener(Sensor.TIME_SECONDS, new SensorCentral.SensorListener() {
+            @Override
+            public void onSensorUpdate(double value) {
+                setConnected(true);
+            }
+        });
+
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override
             public void onMessage(Class clazz, String message) {
@@ -42,12 +55,12 @@ public class ConnectionStatus {
         });
     }
 
-    private void markConnected(Timer timer1) {
+    private void markConnected(Timer timer) {
         setConnected(true);
         /**
          * this timer will catch engine inactivity and display a warning
          */
-        timer1.restart();
+        timer.restart();
     }
 
     private void setConnected(boolean isConnected) {

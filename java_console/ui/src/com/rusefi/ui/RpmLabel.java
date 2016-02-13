@@ -1,5 +1,8 @@
 package com.rusefi.ui;
 
+import com.rusefi.core.Sensor;
+import com.rusefi.core.SensorCentral;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -41,6 +44,7 @@ public class RpmLabel {
             @Override
             public void onConnectionStatus(boolean isConnected) {
                 if (isConnected) {
+                    rpmValue.setText("" + SensorCentral.getInstance().getValue(Sensor.RPM));
                     rpmValue.setForeground(Color.green);
                 } else {
                     rpmValue.setText(NO_CONNECTION);

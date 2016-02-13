@@ -10,7 +10,6 @@ import java.util.ArrayList;
  *         2/11/13
  */
 public enum Sensor {
-    RPM("RPM", SensorCategory.SENSOR_INPUTS, "rpm", 8000),
     MAP("MAP", SensorCategory.SENSOR_INPUTS),
     MAP_RAW("MAP_RAW", SensorCategory.SENSOR_INPUTS),
     BARO("Baro", SensorCategory.SENSOR_INPUTS),
@@ -108,6 +107,9 @@ public enum Sensor {
     debugFloatField3(SensorCategory.OPERATIONS, FieldType.FLOAT, 204, BackgroundColor.MUD, 0, 5),
     debugFloatField4(SensorCategory.OPERATIONS, FieldType.FLOAT, 208, BackgroundColor.MUD, 0, 5),
     debugFloatField5(SensorCategory.OPERATIONS, FieldType.FLOAT, 212, BackgroundColor.MUD, 0, 5),
+
+    RPM(SensorCategory.SENSOR_INPUTS, FieldType.INT, 0, BackgroundColor.RED, 0, 8000),
+    TIME_SECONDS(SensorCategory.OPERATIONS, FieldType.INT, 224, BackgroundColor.MUD, 0, 5),
 
     INJ_1_2_DELTA("inj 1-2 delta", SensorCategory.SNIFFING),
     INJ_3_4_DELTA("inj 3-4 delta", SensorCategory.SNIFFING),
