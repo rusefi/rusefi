@@ -10,5 +10,6 @@ public interface Timeouts {
     int BINARY_IO_TIMEOUT = 5 * SECOND;
     int CMD_TIMEOUT = 20;
     int READ_IMAGE_TIMEOUT = 60 * SECOND;
+    int CS_TIMEOUT = 3000;
 }
 
