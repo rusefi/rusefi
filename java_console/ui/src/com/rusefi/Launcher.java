@@ -3,6 +3,7 @@ package com.rusefi;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.MessagesCentral;
+import com.rusefi.io.ConnectionWatchdog;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.VersionChecker;

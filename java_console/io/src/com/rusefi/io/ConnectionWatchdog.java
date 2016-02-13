@@ -1,5 +1,6 @@
-package com.rusefi.ui;
+package com.rusefi.io;
 
+import com.rusefi.FileLog;
 import com.rusefi.Timeouts;
 import com.rusefi.core.EngineTimeListener;
 import com.rusefi.io.LinkManager;
@@ -9,9 +10,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ConnectionWatchdog {
-    static final Timer reconnectTimer = new Timer(Timeouts.CONNECTION_RESTART_DELAY, new ActionListener() {
+    private static final Timer reconnectTimer = new Timer(Timeouts.CONNECTION_RESTART_DELAY, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
+            FileLog.MAIN.logLine("ConnectionWatchdog.reconnectTimer restarting");
             LinkManager.restart();
             reconnectTimer.restart();
         }
@@ -32,5 +34,9 @@ public class ConnectionWatchdog {
                 reconnectTimer.restart();
             }
         });
+    }
+
+    public static void onDataArrived() {
+        reconnectTimer.restart();
     }
 }
