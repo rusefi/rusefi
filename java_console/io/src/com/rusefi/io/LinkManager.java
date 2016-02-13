@@ -46,6 +46,7 @@ public class LinkManager {
         @Override
         public void beforeLine(String fullLine) {
             FileLog.MAIN.logLine(fullLine);
+            ConnectionWatchdog.onDataArrived();
         }
     });
     public static LinkConnector connector;

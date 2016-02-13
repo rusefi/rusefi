@@ -93,6 +93,7 @@ public class StartupFrame {
 
         connectPanel.add(comboPorts);
         final JComboBox<String> comboSpeeds = createSpeedCombo();
+        connectPanel.add(comboSpeeds);
 
         final JButton connect = new JButton("Connect");
         connectPanel.add(connect);
@@ -197,17 +198,16 @@ public class StartupFrame {
         comboPorts.removeAllItems();
         for (final String port : ports)
             comboPorts.addItem(port);
-        String defaultPort =  getConfig().getRoot().getProperty(Launcher.PORT_KEY);
+        String defaultPort = getConfig().getRoot().getProperty(Launcher.PORT_KEY);
         comboPorts.setSelectedItem(defaultPort);
     }
 
     private static JComboBox<String> createSpeedCombo() {
         JComboBox<String> combo = new JComboBox<>();
-        int defaultSpeed = 115200;
-        for (int speed : new int[]{9600, 14400, 38400, 115200, 460800, 921600})
+        String defaultSpeed = getConfig().getRoot().getProperty(Launcher.SPEED_KEY, "115200");
+        for (int speed : new int[]{9600, 14400, 19200, 38400, 115200, 460800, 921600})
             combo.addItem(Integer.toString(speed));
-        combo.setSelectedItem(Integer.toString(defaultSpeed));
+        combo.setSelectedItem(defaultSpeed);
         return combo;
     }
-
 }

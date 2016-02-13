@@ -120,7 +120,8 @@ typedef struct {
 	float debugFloatField5; // 212
 	int debugIntField2; // 216
 	int debugIntField3; // 220
-	int unused3[13];
+	int timeSeconds; // 224
+	int unused3[12];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */

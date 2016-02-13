@@ -469,7 +469,6 @@ public class BinaryProtocol {
     public void requestOutputChannels() {
         if (isClosed)
             return;
-//        try {
         byte[] response = executeCommand(new byte[]{COMMAND_OUTPUTS}, "output channels", false);
         if (response == null || response.length != (OUTPUT_CHANNELS_SIZE + 1) || response[0] != RESPONSE_OK)
             return;
@@ -477,19 +476,16 @@ public class BinaryProtocol {
         currentOutputs = response;
 
         for (Sensor sensor : Sensor.values()) {
+            ByteBuffer bb = ByteBuffer.wrap(response, 1 + sensor.getOffset(), 4);
+            bb.order(ByteOrder.LITTLE_ENDIAN);
+
             if (sensor.getType() == FieldType.FLOAT) {
-
-                ByteBuffer bb = ByteBuffer.wrap(response, 1 + sensor.getOffset(), 4);
-                bb.order(ByteOrder.LITTLE_ENDIAN);
-
                 double value = bb.getFloat();
-
+                SensorCentral.getInstance().setValue(value, sensor);
+            } else if (sensor.getType() == FieldType.INT) {
+                int value = bb.getInt();
                 SensorCentral.getInstance().setValue(value, sensor);
             }
         }
-
-//        } catch (InterruptedException e) {
-//            throw new IllegalStateException(e);
-//        }
     }
 }
