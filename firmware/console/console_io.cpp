@@ -201,12 +201,12 @@ static THD_FUNCTION(consoleThreadThreadEntryPoint, arg) {
 	}
 }
 
-void consolePutChar(int x) {
-	chSequentialStreamPut(getConsoleChannel(), (uint8_t )(x));
-}
-
 // 10 seconds
 #define CONSOLE_WRITE_TIMEOUT 10000
+
+void consolePutChar(int x) {
+	chnWriteTimeout(getConsoleChannel(), (const uint8_t *)&x, 1, CONSOLE_WRITE_TIMEOUT);
+}
 
 void consoleOutputBuffer(const uint8_t *buf, int size) {
 	lastWriteSize = size;

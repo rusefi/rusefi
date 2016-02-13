@@ -153,7 +153,7 @@ public class SerialPort {
     public boolean openPort() throws SerialPortException {
         Throwable e = new Throwable();
         e.printStackTrace();
-        log("openPort");
+        log("openPort " + portName);
         if(portOpened){
             throw new SerialPortException(portName, "openPort()", SerialPortException.TYPE_PORT_ALREADY_OPENED);
         }
@@ -244,7 +244,7 @@ public class SerialPort {
      * @throws SerialPortException
      */
     public boolean purgePort(int flags) throws SerialPortException {
-        log("purgePort " + flags);
+        log("purgePort flags=" + flags);
         checkPortOpened("purgePort()");
         return serialInterface.purgePort(portHandle, flags);
     }
