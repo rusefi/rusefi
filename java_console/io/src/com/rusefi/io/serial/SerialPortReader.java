@@ -40,4 +40,8 @@ public class SerialPortReader implements SerialPortEventListener {
         }
     }
 
+    public void readInitial() throws SerialPortException {
+        int input = serialPort.getInputBufferBytesCount();
+        FileLog.MAIN.logLine(input + " bytes in input buffer");
+    }
 }
