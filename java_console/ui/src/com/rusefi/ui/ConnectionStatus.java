@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.rusefi.Timeouts;
 import com.rusefi.core.EngineTimeListener;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
@@ -25,7 +26,7 @@ public class ConnectionStatus {
     private List<Listener> listeners = new CopyOnWriteArrayList<>();
 
     private ConnectionStatus() {
-        final Timer timer = new Timer(3000, new ActionListener() {
+        final Timer timer = new Timer(Timeouts.CS_TIMEOUT, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 setConnected(false);
