@@ -39,6 +39,7 @@
 static THD_WORKING_AREA(ivThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static Logging *logger;
+extern TunerStudioOutputChannels tsOutputChannels;
 EXTERN_ENGINE
 ;
 
@@ -111,6 +112,10 @@ static void manualIdleController(int positionPercent) {
 		return; // value is pretty close, let's leave the poor valve alone
 	}
 	actualIdlePosition = cltCorrectedPosition;
+
+	if (engineConfiguration->debugMode == IDLE) {
+		tsOutputChannels.debugFloatField1 = actualIdlePosition;
+	}
 
 	if (boardConfiguration->useStepperIdle) {
 		iacMotor.setTargetPosition(cltCorrectedPosition / 100 * engineConfiguration->idleStepperTotalSteps);

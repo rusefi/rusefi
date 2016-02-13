@@ -6,6 +6,7 @@ import etch.util.CircularByteBuffer;
 import net.jcip.annotations.ThreadSafe;
 
 import java.io.EOFException;
+import java.util.Arrays;
 
 /**
  * (c) Andrey Belomutskiy
@@ -59,7 +60,9 @@ public class IncomingDataBuffer {
             int pending = cbb.length();
             if (pending > 0) {
                 logger.error("Unexpected pending data: " + pending + " byte(s)");
-                cbb.get(new byte[pending]);
+                byte[] bytes = new byte[pending];
+                cbb.get(bytes);
+                logger.error("data: " + Arrays.toString(bytes));
             }
         }
     }
