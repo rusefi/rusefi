@@ -38,7 +38,9 @@ public class SerialIoStream implements IoStream {
     @Override
     public void write(byte[] bytes) throws IOException {
         try {
-            serialPort.writeBytes(bytes);
+            synchronized (serialPort) {
+                serialPort.writeBytes(bytes);
+            }
         } catch (SerialPortException e) {
             throw new IOException(e);
         }
@@ -47,7 +49,9 @@ public class SerialIoStream implements IoStream {
     @Override
     public void purge() {
         try {
-            serialPort.purgePort(SerialPort.PURGE_RXCLEAR | SerialPort.PURGE_TXCLEAR);
+            synchronized (serialPort) {
+                serialPort.purgePort(SerialPort.PURGE_RXCLEAR | SerialPort.PURGE_TXCLEAR);
+            }
         } catch (SerialPortException e) {
             logger.info("Error while purge: " + e);
             close();

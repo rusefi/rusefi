@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -126,7 +127,7 @@ public class BinaryProtocol {
         } catch (ExecutionException e) {
             throw new IllegalStateException(e);
         } catch (TimeoutException e) {
-            getLogger().error("timeout, giving up: " + e);
+            getLogger().error("timeout sending [" + command + "] giving up: " + e);
             return;
         }
         /**
@@ -204,7 +205,7 @@ public class BinaryProtocol {
                 synchronized (ioLock) {
                     boolean isTimeout = incomingData.waitForBytes(2, start, "switch to binary");
                     if (isTimeout) {
-                        logger.info("Timeout waiting for switch response");
+                        logger.info(new Date() + ": Timeout waiting for switch response");
                         close();
                         return;
                     }

@@ -27,6 +27,7 @@ package jssc;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -137,6 +138,7 @@ public class SerialPort {
      * @return Method returns true if port is open, otherwise false
      */
     public boolean isOpened() {
+        log("isOpened " + portOpened);
         return portOpened;
     }
 
@@ -305,6 +307,7 @@ public class SerialPort {
      * @throws SerialPortException
      */
     public int getEventsMask() throws SerialPortException {
+        log("getEventsMask");
         checkPortOpened("getEventsMask()");
         if(SerialNativeInterface.getOsType() == SerialNativeInterface.OS_LINUX ||
            SerialNativeInterface.getOsType() == SerialNativeInterface.OS_SOLARIS ||
@@ -357,6 +360,7 @@ public class SerialPort {
      * @throws SerialPortException
      */
     public boolean writeBytes(byte[] buffer) throws SerialPortException {
+        log("writeBytes " + Arrays.toString(buffer));
         checkPortOpened("writeBytes()");
         return serialInterface.writeBytes(portHandle, buffer);
     }
@@ -371,6 +375,7 @@ public class SerialPort {
      * @since 0.8
      */
     public boolean writeByte(byte singleByte) throws SerialPortException {
+        log("writeByte " + singleByte);
         checkPortOpened("writeByte()");
         return writeBytes(new byte[]{singleByte});
     }
@@ -385,6 +390,7 @@ public class SerialPort {
      * @since 0.8
      */
     public boolean writeString(String string) throws SerialPortException {
+        log("writeString");
         checkPortOpened("writeString()");
         return writeBytes(string.getBytes());
     }
@@ -399,6 +405,7 @@ public class SerialPort {
      * @since 2.8.0
      */
     public boolean writeString(String string, String charsetName) throws SerialPortException, UnsupportedEncodingException {
+        log("writeString");
         checkPortOpened("writeString()");
         return writeBytes(string.getBytes(charsetName));
     }
@@ -413,6 +420,7 @@ public class SerialPort {
      * @since 0.8
      */
     public boolean writeInt(int singleInt) throws SerialPortException {
+        log("writeInt " + singleInt);
         checkPortOpened("writeInt()");
         return writeBytes(new byte[]{(byte)singleInt});
     }
@@ -427,6 +435,7 @@ public class SerialPort {
      * @since 0.8
      */
     public boolean writeIntArray(int[] buffer) throws SerialPortException {
+        log("writeIntArray");
         checkPortOpened("writeIntArray()");
         byte[] byteArray = new byte[buffer.length];
         for(int i = 0; i < buffer.length; i++){
@@ -462,6 +471,7 @@ public class SerialPort {
      * @since 0.8
      */
     public String readString(int byteCount) throws SerialPortException {
+        log("readString " + byteCount);
         checkPortOpened("readString()");
         return new String(readBytes(byteCount));
     }
@@ -478,6 +488,7 @@ public class SerialPort {
      * @since 0.8
      */
     public String readHexString(int byteCount) throws SerialPortException {
+        log("readHexString " + byteCount);
         checkPortOpened("readHexString()");
         return readHexString(byteCount, " ");
     }
@@ -494,6 +505,7 @@ public class SerialPort {
      * @since 0.8
      */
     public String readHexString(int byteCount, String separator) throws SerialPortException {
+        log("readHexString");
         checkPortOpened("readHexString()");
         String[] strBuffer = readHexStringArray(byteCount);
         String returnString = "";
@@ -709,6 +721,7 @@ public class SerialPort {
      * @since 0.8
      */
     public byte[] readBytes() throws SerialPortException {
+        log("readBytes all");
         checkPortOpened("readBytes()");
         int byteCount = getInputBufferBytesCount();
         if(byteCount <= 0){
@@ -865,6 +878,7 @@ public class SerialPort {
      * @since 0.8
      */
     public int getFlowControlMode() throws SerialPortException {
+        log("getFlowControlMode");
         checkPortOpened("getFlowControlMode()");
         return serialInterface.getFlowControlMode(portHandle);
     }
@@ -915,6 +929,7 @@ public class SerialPort {
      * @throws SerialPortException
      */
     public int[] getLinesStatus() throws SerialPortException {
+        log("getLinesStatus");
         checkPortOpened("getLinesStatus()");
         return serialInterface.getLinesStatus(portHandle);
     }
@@ -1086,6 +1101,7 @@ public class SerialPort {
      * @throws SerialPortException
      */
     public boolean removeEventListener() throws SerialPortException {
+        log("removeEventListener");
         checkPortOpened("removeEventListener()");
         if(!eventListenerAdded){
             throw new SerialPortException(portName, "removeEventListener()", SerialPortException.TYPE_CANT_REMOVE_LISTENER);
@@ -1115,6 +1131,7 @@ public class SerialPort {
      * @throws SerialPortException
      */
     public boolean closePort() throws SerialPortException {
+        log("closePort");
         checkPortOpened("closePort()");
         if(eventListenerAdded){
             removeEventListener();
