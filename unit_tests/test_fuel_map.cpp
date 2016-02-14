@@ -86,7 +86,7 @@ void testFuelMap(void) {
 	printf("*************************************************** setting CLT table\r\n");
 	for (int i = 0; i < CLT_CURVE_SIZE; i++) {
 		eth.engine.config->cltFuelCorrBins[i] = i;
-		eth.engine.config->cltFuelCorr[i] = 1;
+		eth.engine.config->cltFuelCorr[i] = 100;
 	}
 	eth.engine.engineConfiguration->injector.lag = 0;
 

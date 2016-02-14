@@ -300,6 +300,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->mafSensorType = Bosch0280218037;
 	setBosch0280218037(config);
 
+	boardConfiguration->startConsoleInBinaryMode = true;
+
 	engineConfiguration->injector.lag = 0.0;
 	setBosch02880155868(PASS_ENGINE_PARAMETER_F);
 
@@ -314,32 +316,32 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->tachPulseDuractionMs = 4;
 	engineConfiguration->tachPulseTriggerIndex = 4;
 
-	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -40, 1.5);
-	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -30, 1.5);
-	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -20, 1.42);
-	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -10, 1.36);
-	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 0, 1.28);
-	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 10, 1.19);
-	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 20, 1.12);
-	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 30, 1.10);
-	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 40, 1.06);
-	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 50, 1.06);
-	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 60, 1.03);
-	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 70, 1.01);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -40, 150);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -30, 150);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -20, 142);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -10, 136);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 0, 128);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 10, 119);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 20, 112);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 30, 110);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 40, 106);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 50, 106);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 60, 103);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 70, 101);
 
 
-	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
-	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -30, 1.5);
-	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -20, 1.42);
-	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -10, 1.36);
-	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 0, 1.28);
-	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 10, 1.19);
-	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 20, 1.12);
-	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 30, 1.10);
-	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 40, 1.06);
-	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 50, 1.06);
-	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 60, 1.03);
-	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 70, 1.01);
+	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -40, 150);
+	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -30, 150);
+	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -20, 142);
+	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -10, 136);
+	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 0, 128);
+	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 10, 119);
+	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 20, 112);
+	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 30, 110);
+	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 40, 106);
+	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 50, 106);
+	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 60, 103);
+	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 70, 101);
 
 	setConstantDwell(4 PASS_ENGINE_PARAMETER); // 4ms is global default dwell
 	engineConfiguration->useConstantDwellDuringCranking = false;

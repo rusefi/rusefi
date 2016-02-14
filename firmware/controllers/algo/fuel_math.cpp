@@ -171,7 +171,7 @@ void prepareFuelMap(DECLARE_ENGINE_PARAMETER_F) {
 float getCltCorrection(float clt DECLARE_ENGINE_PARAMETER_S) {
 	if (cisnan(clt))
 		return 1; // this error should be already reported somewhere else, let's just handle it
-	return interpolate2d(clt, config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE);
+	return interpolate2d(clt, config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE) / PERCENT_MULT;
 }
 
 float getIatCorrection(float iat DECLARE_ENGINE_PARAMETER_S) {
