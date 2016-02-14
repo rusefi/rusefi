@@ -40,6 +40,13 @@ static bool isSerialConsoleStarted = false;
 
 static event_listener_t consoleEventListener;
 
+bool consoleByteArrived = false;
+
+void onDataArrived(void) {
+	consoleByteArrived = true;
+}
+
+
 /**
  * @brief   Reads a whole line from the input channel.
  *
@@ -61,6 +68,7 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 		}
 
 		short c = (short) chSequentialStreamGet(chp);
+		onDataArrived();
 
 		if (isSerialOverUart()) {
 			uint32_t flags;

@@ -54,9 +54,8 @@ public class PortHolder {
             FileLog.MAIN.logLine("Opening " + port + " @ " + BAUD_RATE);
             boolean opened = serialPort.openPort();//Open serial port
             if (!opened)
-                FileLog.MAIN.logLine("not opened!");
+                FileLog.MAIN.logLine(port + ": not opened!");
             setupPort(serialPort, BAUD_RATE);
-//            serialPort.setDataListener(new SerialPortReader(serialPort, communicationLoggingListener));
         } catch (SerialPortException e) {
             FileLog.MAIN.logLine("ERROR " + e.getMessage());
             return false;

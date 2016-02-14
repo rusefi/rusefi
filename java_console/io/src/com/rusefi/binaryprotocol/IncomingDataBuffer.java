@@ -14,7 +14,7 @@ import java.util.Arrays;
  */
 @ThreadSafe
 public class IncomingDataBuffer {
-    private static final int BUFFER_SIZE = 10000;
+    private static final int BUFFER_SIZE = 32768;
     /**
      * buffer for response bytes from controller
      */

@@ -440,6 +440,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 //			tunerStudioError("ERROR: no command");
 			continue;
 		}
+		onDataArrived();
 //		scheduleMsg(logger, "Got first=%x=[%c]", firstByte, firstByte);
 		if (handlePlainCommand(tsChannel, firstByte))
 			continue;
