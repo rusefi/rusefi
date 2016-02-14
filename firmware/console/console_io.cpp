@@ -27,6 +27,8 @@
 #include "rusEfiFunctionalTest.h"
 #endif
 
+EXTERN_ENGINE;
+
 #if HAL_USE_SERIAL_USB || defined(__DOXYGEN__)
 #include "usbcfg.h"
 #include "usbconsole.h"
@@ -186,6 +188,11 @@ static THD_FUNCTION(consoleThreadThreadEntryPoint, arg) {
 #endif /* EFI_PROD_CODE */
 
 	binaryConsole.channel = (BaseChannel *) getConsoleChannel();
+
+	if (boardConfiguration->startConsoleInBinaryMode) {
+		// switch to binary protocol
+		runBinaryProtocolLoop(&binaryConsole, true);
+	}
 
 	while (true) {
 		efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#9e");
