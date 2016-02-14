@@ -102,7 +102,7 @@ static void manualIdleController(int positionPercent) {
 	boardConfiguration->manIdlePosition = positionPercent;
 
 	percent_t cltCorrectedPosition = interpolate2d(engine->engineState.clt, config->cltIdleCorrBins, config->cltIdleCorr,
-	CLT_CURVE_SIZE) * positionPercent;
+	CLT_CURVE_SIZE) / PERCENT_MULT * positionPercent;
 
 	// let's put the value into the right range
 	cltCorrectedPosition = maxF(cltCorrectedPosition, 0.01);
