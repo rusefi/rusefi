@@ -500,6 +500,8 @@ static bool isTriggerErrorNow() {
 	return justHadError || isTriggerDecoderError();
 }
 
+extern bool consoleByteArrived;
+
 /**
  * this thread has a lower-then-usual stack size so we cannot afford *print* methods here
  */
@@ -524,8 +526,10 @@ static void blinkingThread(void *arg) {
 
 		communicationPin.setValue(1);
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
-		if (isTriggerErrorNow() || isIgnitionTimingError())
+		if (isTriggerErrorNow() || isIgnitionTimingError() || consoleByteArrived) {
+			consoleByteArrived = false;
 			warningPin.setValue(1);
+		}
 #endif
 		chThdSleepMilliseconds(delayMs);
 

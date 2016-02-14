@@ -26,6 +26,7 @@ void consolePutChar(int x);
 void consoleOutputBuffer(const uint8_t *buf, int size);
 void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p);
 bool isSerialOverUart(void);
+void onDataArrived(void);
 
 #if EFI_PROD_CODE || EFI_SIMULATOR || EFI_EGT
 bool isConsoleReady(void);
