@@ -108,14 +108,15 @@ static void manualIdleController(int positionPercent) {
 	cltCorrectedPosition = maxF(cltCorrectedPosition, 0.01);
 	cltCorrectedPosition = minF(cltCorrectedPosition, 99.9);
 
+	if (engineConfiguration->debugMode == IDLE) {
+		tsOutputChannels.debugFloatField1 = actualIdlePosition;
+	}
+
 	if (absF(cltCorrectedPosition - actualIdlePosition) < 1) {
 		return; // value is pretty close, let's leave the poor valve alone
 	}
 	actualIdlePosition = cltCorrectedPosition;
 
-	if (engineConfiguration->debugMode == IDLE) {
-		tsOutputChannels.debugFloatField1 = actualIdlePosition;
-	}
 
 	if (boardConfiguration->useStepperIdle) {
 		iacMotor.setTargetPosition(cltCorrectedPosition / 100 * engineConfiguration->idleStepperTotalSteps);
