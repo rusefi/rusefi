@@ -150,15 +150,16 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 	dwellAngle = sparkDwell / getOneDegreeTimeMs(rpm);
 
 	iatFuelCorrection = getIatCorrection(iat PASS_ENGINE_PARAMETER);
-	if (boardConfiguration->useWarmupPidAfr && clt < 80) {
+	if (boardConfiguration->useWarmupPidAfr && clt < engineConfiguration->warmupAfrThreshold) {
 		if (rpm < 200) {
 			cltFuelCorrection = 1;
 			warmupAfrPid.reset();
 		} else {
-			cltFuelCorrection = warmupAfrPid.getValue(13, getAfr(PASS_ENGINE_PARAMETER_F), 1);
+			cltFuelCorrection = warmupAfrPid.getValue(warmupTargetAfr, getAfr(PASS_ENGINE_PARAMETER_F), 1);
 		}
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 		if (engineConfiguration->debugMode == WARMUP_ENRICH) {
+			tsOutputChannels.debugFloatField1 = warmupTargetAfr;
 			warmupAfrPid.postState(&tsOutputChannels);
 		}
 #endif
