@@ -475,7 +475,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->addedToWallCoef = 0;
 
 	boardConfiguration->isSdCardEnabled = false;
-	boardConfiguration->manIdlePosition = 40; // set_idle_pwm 40
+	boardConfiguration->manIdlePosition = 36; // set_idle_pwm 40
 
 	engineConfiguration->slowAdcAlpha = 0.33333;
 
