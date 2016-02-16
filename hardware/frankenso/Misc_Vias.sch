@@ -80,7 +80,7 @@ F 5 "dnp,dnp" V 1000 9200 60  0001 C CNN "Field5"
 	1    1000 9200
 	-1   0    0    1   
 $EndComp
-Text Notes 600  8900 0    60   ~ 0
+Text Notes 575  9050 0    60   ~ 0
 These two jumpers \nare here to accomodate \nstm32f4discovery
 $Comp
 L TEST JPO3
@@ -116,7 +116,7 @@ F 5 "dnp,dnp" V 1100 10400 60  0001 C CNN "VEND1,VEND1#"
 	1    1100 10400
 	-1   0    0    1   
 $EndComp
-Text Notes 600  9650 0    60   ~ 0
+Text Notes 550  10225 0    60   ~ 0
 That's alternative signal \nOUTPUT - these traces \nshould be routable to PC6 \nand PA5 via jumpers. \nAleternative to W212 and \nW212 routung of op-amps \nch 11 and ch 12
 $Comp
 L CONN_12X2 P7
@@ -366,7 +366,7 @@ Text Label 3300 9200 0    60   ~ 0
 5V
 Wire Wire Line
 	2100 9200 2500 9200
-Text Notes 2250 8900 0    60   ~ 0
+Text Notes 2325 9000 0    60   ~ 0
 These four jumpers \nare test points
 Wire Notes Line
 	3500 9500 500  9500
@@ -419,7 +419,7 @@ U 1 1 553A3914
 P 1250 6000
 F 0 "P29" H 1250 6300 60  0000 C CNN
 F 1 "CONN_5X2" V 1250 6000 50  0000 C CNN
-F 2 "PIN_ARRAY_5x2" H 1250 6000 60  0001 C CNN
+F 2 "Pin_Header_Straight_2x05" H 1250 6000 60  0001 C CNN
 F 3 "" H 1250 6000 60  0000 C CNN
 	1    1250 6000
 	1    0    0    -1  
@@ -452,7 +452,7 @@ U 1 1 553A3941
 P 1250 6700
 F 0 "P31" H 1250 6950 50  0000 C CNN
 F 1 "CONN_4X2" V 1250 6700 40  0000 C CNN
-F 2 "pin_array_4x2" H 1250 6700 60  0001 C CNN
+F 2 "Pin_Header_Straight_2x04" H 1250 6700 60  0001 C CNN
 F 3 "" H 1250 6700 60  0000 C CNN
 	1    1250 6700
 	1    0    0    -1  
@@ -573,7 +573,7 @@ U 1 1 553A8F8F
 P 2450 6000
 F 0 "P34" H 2450 6300 60  0000 C CNN
 F 1 "CONN_5X2" V 2450 6000 50  0000 C CNN
-F 2 "PIN_ARRAY_5x2" H 2450 6000 60  0001 C CNN
+F 2 "Pin_Header_Straight_2x05" H 2450 6000 60  0001 C CNN
 F 3 "" H 2450 6000 60  0000 C CNN
 	1    2450 6000
 	1    0    0    -1  
@@ -584,7 +584,7 @@ U 1 1 553A8F95
 P 3500 6000
 F 0 "P37" H 3500 6300 60  0000 C CNN
 F 1 "CONN_5X2" V 3500 6000 50  0000 C CNN
-F 2 "PIN_ARRAY_5x2" H 3500 6000 60  0001 C CNN
+F 2 "Pin_Header_Straight_2x05" H 3500 6000 60  0001 C CNN
 F 3 "" H 3500 6000 60  0000 C CNN
 	1    3500 6000
 	1    0    0    -1  
@@ -595,7 +595,7 @@ U 1 1 553A8F9B
 P 4450 6000
 F 0 "P38" H 4450 6300 60  0000 C CNN
 F 1 "CONN_5X2" V 4450 6000 50  0000 C CNN
-F 2 "PIN_ARRAY_5x2" H 4450 6000 60  0001 C CNN
+F 2 "Pin_Header_Straight_2x05" H 4450 6000 60  0001 C CNN
 F 3 "" H 4450 6000 60  0000 C CNN
 	1    4450 6000
 	1    0    0    -1  
@@ -606,7 +606,7 @@ U 1 1 553A8FA1
 P 5400 6000
 F 0 "P41" H 5400 6300 60  0000 C CNN
 F 1 "CONN_5X2" V 5400 6000 50  0000 C CNN
-F 2 "PIN_ARRAY_5x2" H 5400 6000 60  0001 C CNN
+F 2 "Pin_Header_Straight_2x05" H 5400 6000 60  0001 C CNN
 F 3 "" H 5400 6000 60  0000 C CNN
 	1    5400 6000
 	1    0    0    -1  
@@ -617,7 +617,7 @@ U 1 1 553A8FA7
 P 6300 6000
 F 0 "P45" H 6300 6300 60  0000 C CNN
 F 1 "CONN_5X2" V 6300 6000 50  0000 C CNN
-F 2 "PIN_ARRAY_5x2" H 6300 6000 60  0001 C CNN
+F 2 "Pin_Header_Straight_2x05" H 6300 6000 60  0001 C CNN
 F 3 "" H 6300 6000 60  0000 C CNN
 	1    6300 6000
 	1    0    0    -1  
@@ -628,7 +628,7 @@ U 1 1 553A8FAD
 P 7450 6000
 F 0 "P47" H 7450 6300 60  0000 C CNN
 F 1 "CONN_5X2" V 7450 6000 50  0000 C CNN
-F 2 "PIN_ARRAY_5x2" H 7450 6000 60  0001 C CNN
+F 2 "Pin_Header_Straight_2x05" H 7450 6000 60  0001 C CNN
 F 3 "" H 7450 6000 60  0000 C CNN
 	1    7450 6000
 	1    0    0    -1  
@@ -639,7 +639,7 @@ U 1 1 553A8FB3
 P 2450 6700
 F 0 "P32" H 2450 6950 50  0000 C CNN
 F 1 "CONN_4X2" V 2450 6700 40  0000 C CNN
-F 2 "pin_array_4x2" H 2450 6700 60  0001 C CNN
+F 2 "Pin_Header_Straight_2x04" H 2450 6700 60  0001 C CNN
 F 3 "" H 2450 6700 60  0000 C CNN
 	1    2450 6700
 	1    0    0    -1  
@@ -650,7 +650,7 @@ U 1 1 553A8FB9
 P 3500 6700
 F 0 "P48" H 3500 6950 50  0000 C CNN
 F 1 "CONN_4X2" V 3500 6700 40  0000 C CNN
-F 2 "pin_array_4x2" H 3500 6700 60  0001 C CNN
+F 2 "Pin_Header_Straight_2x04" H 3500 6700 60  0001 C CNN
 F 3 "" H 3500 6700 60  0000 C CNN
 	1    3500 6700
 	1    0    0    -1  
@@ -999,4 +999,44 @@ Text Label 7850 6200 0    60   ~ 0
 5V
 Text Label 7050 6200 2    60   ~ 0
 GND
+$Comp
+L CONN_5X2 P54
+U 1 1 56CA8F18
+P 8450 6000
+F 0 "P54" H 8450 6300 60  0000 C CNN
+F 1 "CONN_5X2" V 8450 6000 50  0000 C CNN
+F 2 "Pin_Header_Straight_2x05" H 8450 6000 60  0001 C CNN
+F 3 "" H 8450 6000 60  0000 C CNN
+	1    8450 6000
+	1    0    0    -1  
+$EndComp
+NoConn ~ 8850 5800
+NoConn ~ 8850 5900
+NoConn ~ 8850 6000
+NoConn ~ 8850 6100
+NoConn ~ 8850 6200
+NoConn ~ 8050 6200
+NoConn ~ 8050 6100
+NoConn ~ 8050 6000
+NoConn ~ 8050 5900
+NoConn ~ 8050 5800
+$Comp
+L CONN_4X2 P53
+U 1 1 56CA9222
+P 4425 6700
+F 0 "P53" H 4425 6950 50  0000 C CNN
+F 1 "CONN_4X2" V 4425 6700 40  0000 C CNN
+F 2 "Pin_Header_Straight_2x04" H 4425 6700 60  0001 C CNN
+F 3 "" H 4425 6700 60  0000 C CNN
+	1    4425 6700
+	1    0    0    -1  
+$EndComp
+NoConn ~ 4825 6550
+NoConn ~ 4025 6850
+NoConn ~ 4025 6750
+NoConn ~ 4025 6650
+NoConn ~ 4025 6550
+NoConn ~ 4825 6650
+NoConn ~ 4825 6750
+NoConn ~ 4825 6850
 $EndSCHEMATC

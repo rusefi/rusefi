@@ -85,7 +85,7 @@ L CP1 C1001
 U 1 1 51297942
 P 6800 6600
 F 0 "C1001" V 6650 6350 50  0000 L CNN
-F 1 "330uF 35V" V 7000 6350 50  0000 L CNN
+F 1 "330uF 35V" V 6950 6350 50  0000 L CNN
 F 2 "SMDSVP10" H 6800 6600 60  0001 C CNN
 F 3 "" H 6800 6600 60  0001 C CNN
 F 4 "unitedchem,EMVY350ADA331MJA0G" H 6800 6600 60  0001 C CNN "MFG,MFG#"
@@ -120,19 +120,6 @@ F 5 "DIGI,160-1423-1-ND" H 8600 6750 60  0001 C CNN "VEND1,VEND1#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L INDUCTOR L1001
-U 1 1 512921EB
-P 8600 6450
-F 0 "L1001" V 8550 6450 40  0000 C CNN
-F 1 "38uH" V 8700 6450 40  0000 C CNN
-F 2 "SM100uH" H 8600 6450 60  0001 C CNN
-F 3 "" H 8600 6450 60  0001 C CNN
-F 4 "PULSE,PE-54040-S" V 8600 6450 60  0001 C CNN "REF,REF#"
-F 5 "sky-macau.com,3817361683" V 8600 6450 60  0001 C CNN "VEND1,VEND1#"
-	1    8600 6450
-	0    -1   -1   0   
-$EndComp
-$Comp
 L LM2596 U1001
 U 1 1 52C4CA58
 P 7450 6550
@@ -145,33 +132,6 @@ F 5 "DIGI,LM2596S-5.0/NOPB-ND" H 7450 6550 60  0001 C CNN "VEND1,VEND1#"
 F 6 "sky-macau.com,6841999795" H 7450 6550 60  0001 C CNN "VEND2,VEND2#"
 	1    7450 6550
 	1    0    0    -1  
-$EndComp
-$Comp
-L INDUCTOR L1002
-U 1 1 52C4CD12
-P 9350 6450
-F 0 "L1002" V 9300 6400 40  0000 C CNN
-F 1 "38uH" V 9450 6450 40  0000 C CNN
-F 2 "SM100uH" H 9350 6450 60  0001 C CNN
-F 3 "" H 9350 6450 60  0001 C CNN
-F 4 "PULSE,PE-54040-S" V 9350 6450 60  0001 C CNN "REF,REF#"
-F 5 "sky-macau.com,3817361683" V 9350 6450 60  0001 C CNN "VEND1,VEND1#"
-	1    9350 6450
-	0    -1   -1   0   
-$EndComp
-$Comp
-L SCHDPAK D1004
-U 1 1 52C4CE0F
-P 8300 6650
-F 0 "D1004" H 8300 6750 40  0000 C CNN
-F 1 "SCHDPAK" H 8300 6550 40  0001 C CNN
-F 2 "DPAK2" H 8300 6650 60  0001 C CNN
-F 3 "~" H 8300 6650 60  0000 C CNN
-F 4 "VISHAY,VS-50WQ04FNPBF" H 8300 6650 60  0001 C CNN "MFG,MFG#"
-F 5 "DIGI,VS-50WQ04FNPBF-ND" H 8300 6650 60  0001 C CNN "VEND1,VEND1#"
-F 6 "DO NOT POPULATE" H 8300 6650 60  0001 C CNN "Field6"
-	1    8300 6650
-	0    -1   -1   0   
 $EndComp
 Text Label 6800 6400 0    60   ~ 0
 VBAT
@@ -237,7 +197,7 @@ U 1 1 533A8E21
 P 3850 6400
 F 0 "F1001" H 3950 6450 40  0000 C CNN
 F 1 "1.5A" H 3750 6350 40  0000 C CNN
-F 2 "SIL-2" H 3850 6400 60  0001 C CNN
+F 2 "BladeFuse-Mini" H 3850 6400 60  0001 C CNN
 F 3 "~" H 3850 6400 60  0000 C CNN
 F 4 "0R,jumperwire" H 3850 6400 60  0001 C CNN "MFG,MFG#"
 F 5 "0R,jumperwire" H 3850 6400 60  0001 C CNN "VEND1,VEND1#"
@@ -250,15 +210,14 @@ U 1 1 533B6631
 P 8100 6650
 F 0 "D1006" H 8100 6750 40  0000 C CNN
 F 1 "DIODESCH" H 8100 6550 40  0001 C CNN
-F 2 "D4" H 8100 6650 60  0001 C CNN
+F 2 "Diode_DO-41_SOD81_Vertical_AnodeUp" H 8100 6650 60  0001 C CNN
 F 3 "~" H 8100 6650 60  0000 C CNN
-F 4 "do no populate,DNP" H 8100 6650 60  0001 C CNN "MFG,MFG#"
-F 5 "sky-macau.com,1438219496" H 8100 6650 60  0001 C CNN "VEND1,VEND1#"
+F 4 "ONSEMI,MR854G" H 8100 6650 60  0001 C CNN "MFG,MFG#"
+F 5 "sky-macau.com,1438219496" H 8100 6650 60  0001 C CNN "VEND2,VEND2#"
+F 6 "digi,MR854GOS-ND" H 8100 6650 60  0001 C CNN "vend1,vend1#"
 	1    8100 6650
 	0    -1   -1   0   
 $EndComp
-Text Notes 7700 7150 0    60   ~ 0
-ALT DIODE FOR CHINA ASSEMBLER\nLIMITS OUTPUT TO 2.3A
 Text Label 4100 6400 0    60   ~ 0
 Vf
 $Comp
@@ -340,7 +299,7 @@ U 1 1 560A5DFC
 P 4600 6750
 F 0 "D1002" H 4600 6850 40  0000 C CNN
 F 1 "14V" H 4600 6650 30  0000 C CNN
-F 2 "D3" H 4600 6750 60  0001 C CNN
+F 2 "Diode_DO-41_SOD81_Vertical_AnodeUp" H 4600 6750 60  0001 C CNN
 F 3 "~" H 4600 6750 60  0000 C CNN
 F 4 "FAIRCHILD,1N5244B" H 4600 6750 60  0001 C CNN "MFG,MFG#"
 F 5 "DIGI,1N5244B-ND" H 4600 6750 60  0001 C CNN "VEND1,VEND1#"
@@ -400,9 +359,6 @@ Wire Wire Line
 Wire Wire Line
 	7900 6450 8300 6450
 Connection ~ 7900 6550
-Connection ~ 8300 6450
-Connection ~ 8250 6850
-Connection ~ 8350 6850
 Connection ~ 9650 6450
 Wire Wire Line
 	7450 6850 7450 6900
@@ -422,8 +378,6 @@ Wire Wire Line
 Connection ~ 5650 6400
 Connection ~ 8100 6450
 Connection ~ 8100 6850
-Wire Notes Line
-	8100 6900 8100 7050
 Wire Wire Line
 	3500 6850 10000 6850
 Wire Wire Line
@@ -442,25 +396,12 @@ Wire Wire Line
 Wire Wire Line
 	4700 6600 4700 6700
 $Comp
-L MOS_Nro Q1003
-U 1 1 560A63BF
-P 4900 7450
-F 0 "Q1003" H 4900 7300 60  0000 R CNN
-F 1 "DNP" V 5150 7550 60  0000 R CNN
-F 2 "SOT89-3" H 4900 7450 60  0001 C CNN
-F 3 "~" H 4900 7450 60  0001 C CNN
-F 4 "IXYS,CPC3703CTR" H 4900 7450 60  0001 C CNN "MFG,MFG#"
-F 5 "digi,CPC3703CCT-ND" H 4900 7450 60  0001 C CNN "VEND1,VEND1#"
-	1    4900 7450
-	0    -1   -1   0   
-$EndComp
-$Comp
 L ZENERsmall D1003
 U 1 1 560C6855
 P 6200 6500
 F 0 "D1003" H 6200 6600 40  0000 C CNN
 F 1 "24V" H 6200 6400 30  0000 C CNN
-F 2 "D3" H 6200 6500 60  0001 C CNN
+F 2 "Diode_DO-41_SOD81_Vertical_AnodeUp" H 6200 6500 60  0001 C CNN
 F 3 "~" H 6200 6500 60  0000 C CNN
 F 4 "MicroComercial,1N5359B-TP" H 6200 6500 60  0001 C CNN "MFG,MFG#"
 F 5 "DIGI,1N5359BTPMSCT-ND" H 6200 6500 60  0001 C CNN "VEND1,VEND1#"
@@ -470,25 +411,17 @@ F 6 "sky-macau.com,0533550982" H 6200 6500 60  0001 C CNN "VEND2,VEND2#"
 $EndComp
 Wire Wire Line
 	5650 6600 5650 6700
-Text Label 4700 7350 2    60   ~ 0
-Vf
 Text Label 5000 6400 0    60   ~ 0
 Vs2
 Text Label 4700 6600 2    60   ~ 0
 Vs1
-Text Label 4900 7650 2    60   ~ 0
-Vs1
-Text Label 5100 7350 0    60   ~ 0
-Vs2
-Text Notes 4150 7850 0    60   ~ 0
-alternative footprint for Q1002
 Wire Wire Line
 	4700 6600 4600 6600
 Connection ~ 4600 6600
 Text Notes 850  5350 0    60   ~ 0
-Brief overview\n-- Q1002, R1003, D1002 preform an active transient protection. It will suppress voltages up to 200V down to 19V.\n-- Q1001, R1001, D1001 preform a reverse polarity protection. If the input signal is the wrong polarity, the gate will not conduct which will prevent current from flowing. \n-- D1003 is a second transient suppressor, it would catch faster transients allowing a brief amount of time for Q1002 to preform it's duty. \n-- C1001 is a bulk cap, it simply stores energy locally such that the regulator can draw large currents in short periods of time. \n-- U1001 and the components to the right, are a buck style switching regulator, that will pull the 5V line up to 5V. It will now pull it down from 5V if there is an external voltage. 
+Brief overview\n-- Q1002, R1003, D1002 preform an active transient protection. It will suppress voltages up to 200V down to 19V.\n-- Q1001, R1001, D1001 preform a reverse polarity protection. If the input signal is the wrong polarity, the gate will not conduct which will prevent current from flowing. \n-- D1003 is a second transient suppressor, it would catch faster transients allowing a brief amount of time for Q1002 to preform it's duty. \n-- L1003 is a choke, it simple prevents switching noise from going up the power wire where it can get into other circuits. \n-- C1001 is a bulk cap, it simply stores energy locally such that the regulator can draw large currents in short periods of time. \n-- U1001 and the components to the right, are a buck style switching regulator, that will pull the 5V line up to 5V. It will now pull it down from 5V if there is an external voltage. \nThe U101 circuit has been designed for 1A output and up to 20V input, but typically 14.4V or 12.4V input. L1001 wants to be about 68uH to 100uH with less than 0.3 ohms resistance. 
 Text Notes 9750 6100 0    60   ~ 0
-5V  5mVp-p 3A\nSuggested \nexternal wires\n18awg min
+5V  5mVp-p 1A\nSuggested \nexternal wires\n18awg min
 Text Notes 3400 6000 0    60   ~ 0
 200V surge, 18V to 7V typical. \nSuggested mininium 16awg \nUpstream 1A fuse littel fuse 0287001
 $Comp
@@ -496,12 +429,41 @@ L INDUCTOR L1003
 U 1 1 56A514D5
 P 6500 6400
 F 0 "L1003" V 6450 6400 40  0000 C CNN
-F 1 "38uH" V 6600 6400 40  0000 C CNN
-F 2 "SM100uH" H 6500 6400 60  0001 C CNN
+F 1 "68uH" V 6600 6400 40  0000 C CNN
+F 2 "INDUCTOR_V" H 6500 6400 60  0001 C CNN
 F 3 "" H 6500 6400 60  0001 C CNN
-F 4 "PULSE,PE-54040-S" V 6500 6400 60  0001 C CNN "REF,REF#"
-F 5 "sky-macau.com,3817361683" V 6500 6400 60  0001 C CNN "VEND1,VEND1#"
+F 4 "BOURNS,5800-680-RC" V 6500 6400 60  0001 C CNN "MFG,MFG#"
+F 5 "digi,M8288-ND" V 6500 6400 60  0001 C CNN "VEND1,VEND1#"
+F 6 "sky-macau.com,2258345334" V 6500 6400 60  0001 C CNN "VEND2,VEND2#"
 	1    6500 6400
+	0    -1   -1   0   
+$EndComp
+$Comp
+L INDUCTOR L1001
+U 1 1 56C8D544
+P 8600 6450
+F 0 "L1001" V 8550 6450 40  0000 C CNN
+F 1 "68uH" V 8700 6450 40  0000 C CNN
+F 2 "INDUCTOR_V" H 8600 6450 60  0001 C CNN
+F 3 "" H 8600 6450 60  0001 C CNN
+F 4 "BOURNS,5800-680-RC" V 8600 6450 60  0001 C CNN "MFG,MFG#"
+F 5 "digi,M8288-ND" V 8600 6450 60  0001 C CNN "VEND1,VEND1#"
+F 6 "sky-macau.com,2258345334" V 8600 6450 60  0001 C CNN "VEND2,VEND2#"
+	1    8600 6450
+	0    -1   -1   0   
+$EndComp
+$Comp
+L INDUCTOR L1002
+U 1 1 56C8D61D
+P 9350 6450
+F 0 "L1002" V 9300 6450 40  0000 C CNN
+F 1 "68uH" V 9450 6450 40  0000 C CNN
+F 2 "INDUCTOR_V" H 9350 6450 60  0001 C CNN
+F 3 "" H 9350 6450 60  0001 C CNN
+F 4 "BOURNS,5800-680-RC" V 9350 6450 60  0001 C CNN "MFG,MFG#"
+F 5 "digi,M8288-ND" V 9350 6450 60  0001 C CNN "VEND1,VEND1#"
+F 6 "sky-macau.com,2258345334" V 9350 6450 60  0001 C CNN "VEND2,VEND2#"
+	1    9350 6450
 	0    -1   -1   0   
 $EndComp
 $EndSCHEMATC
