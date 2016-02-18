@@ -199,7 +199,7 @@ public class FuelTunePane {
         writeDataPoints(data);
 
         // todo: move this away from AWT thread
-        FuelAutoTune.Result a = FuelAutoTune.process(false, data, 0.1, 14.7, veTable);
+        FuelAutoTune.Result a = FuelAutoTune.INSTANCE.process(false, data, 0.1, 14.7, veTable);
 
         float[][] result = a.getKgbcRES();
         logMap("result", result);

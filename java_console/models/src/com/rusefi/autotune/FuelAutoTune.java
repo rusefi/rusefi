@@ -8,7 +8,9 @@ import java.util.Collection;
  * 1/5/2016
  * (c) Andrey Belomutskiy 2013-2016
  */
-public class FuelAutoTune {
+public enum FuelAutoTune implements FuelAutoLogic {
+    INSTANCE;
+
     // todo: eliminate this
     // Fields.FUEL_RPM_COUNT
     // Fields.FUEL_LOAD_COUNT
@@ -85,18 +87,9 @@ public class FuelAutoTune {
         }
     }
 
-    private static float[][] deepCopy(float[][] input) {
-        if (input == null)
-            return null;
-        float[][] result = new float[input.length][];
-        for (int r = 0; r < input.length; r++) {
-            result[r] = input[r].clone();
-        }
-        return result;
-    }
-
     // void MainWindow::calckGBC(double STEP)
-    public static Result process(boolean smooth, Collection<stDataOnline> dataECU, double STEP, double targetAFR, float[][] kgbcINIT) {
+    @Override
+    public Result process(boolean smooth, Collection<stDataOnline> dataECU, double STEP, double targetAFR, float[][] kgbcINIT) {
         float kgbcSQ[][] = new float[SIZE][SIZE];
         double kgbcSQsum = 0;
         double kgbcSQsumLast;
@@ -115,7 +108,7 @@ public class FuelAutoTune {
             bkGBC[data.PRESS_RT_32()][data.RPM_RT_32()]++;
         }
 
-        float result[][] = deepCopy(kgbcINIT);
+        float result[][] = MathUtil.deepCopy(kgbcINIT);
 
 //        double addGbcTwatRES[] = new double[TEMP_CORR];
 //        double addGbcTwatINIT[] = new double[TEMP_CORR];
@@ -169,7 +162,7 @@ public class FuelAutoTune {
 
                         countDeviation(dataECU, kgbcSQ, result, kgbcINIT, targetAFR);
 
-                        kgbcSQsum = sumArray(kgbcSQ);
+                        kgbcSQsum = MathUtil.sumArray(kgbcSQ);
 
                         if (smooth) {
                             kgbcSQsum = smooth(kgbcSQsum, ksq, ke, kg, result);
@@ -229,16 +222,6 @@ public class FuelAutoTune {
 
             kgbcSQ[dataPoint.PRESS_RT_32()][dataPoint.RPM_RT_32()] += tmp * tmp;
         }
-    }
-
-    private static double sumArray(float[][] kgbcSQ) {
-        double kgbcSQsum = 0;
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                kgbcSQsum += kgbcSQ[i][j];
-            }
-        }
-        return kgbcSQsum;
     }
 
     private static double smooth(double kgbcSQsum, double ksq, double ke, double kg, float[][] kgbcRES) {

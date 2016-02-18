@@ -19,7 +19,7 @@ public class FuelAutoTuneTest {
         dataPoints.add(FuelAutoTune.stDataOnline.valueOf(13, 1200, 80));
 
         {
-            FuelAutoTune.Result r = FuelAutoTune.process(false, dataPoints, 0.1, 13, createVeTable());
+            FuelAutoTune.Result r = FuelAutoTune.INSTANCE.process(false, dataPoints, 0.1, 13, createVeTable());
             printNotDefault(r.getKgbcRES(), 1);
         }
 
@@ -32,7 +32,7 @@ public class FuelAutoTuneTest {
             dataPoints.add(FuelAutoTune.stDataOnline.valueOf(16, 1500 + i, 90));
 
         {
-            FuelAutoTune.Result r = FuelAutoTune.process(false, dataPoints, 0.01, 13, createVeTable());
+            FuelAutoTune.Result r = FuelAutoTune.INSTANCE.process(false, dataPoints, 0.01, 13, createVeTable());
             printNotDefault(r.getKgbcRES(), 1);
         }
 
@@ -40,7 +40,7 @@ public class FuelAutoTuneTest {
             dataPoints.add(FuelAutoTune.stDataOnline.valueOf(15, 1500 + i, 90));
 
         {
-            FuelAutoTune.Result r = FuelAutoTune.process(false, dataPoints, 0.01, 13, createVeTable());
+            FuelAutoTune.Result r = FuelAutoTune.INSTANCE.process(false, dataPoints, 0.01, 13, createVeTable());
             printNotDefault(r.getKgbcRES(), 1);
         }
 
