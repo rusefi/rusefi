@@ -10,6 +10,8 @@ import com.rusefi.ConfigurationImage;
 import com.rusefi.FileLog;
 import com.rusefi.UploadChanges;
 import com.rusefi.autotune.FuelAutoTune;
+import com.rusefi.autotune.Result;
+import com.rusefi.autotune.stDataOnline;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.Fields;
 import com.rusefi.core.Sensor;
@@ -26,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.RunnableFuture;
 
 /**
  * (c) Andrey Belomutskiy 2013-2016
@@ -190,7 +191,7 @@ public class FuelTunePane {
         loadMap(veTable, Fields.VETABLE.getOffset());
         logMap("source", veTable);
 
-        List<FuelAutoTune.stDataOnline> data = new ArrayList<>();
+        List<stDataOnline> data = new ArrayList<>();
         synchronized (incomingDataPoints) {
             for (FuelDataPoint point : incomingDataPoints)
                 data.add(point.asDataOnline());
@@ -199,7 +200,7 @@ public class FuelTunePane {
         writeDataPoints(data);
 
         // todo: move this away from AWT thread
-        FuelAutoTune.Result a = FuelAutoTune.INSTANCE.process(false, data, 0.1, 14.7, veTable);
+        Result a = FuelAutoTune.INSTANCE.process(false, data, 0.1, 14.7, veTable);
 
         float[][] result = a.getKgbcRES();
         logMap("result", result);
@@ -209,14 +210,14 @@ public class FuelTunePane {
         upload.setEnabled(true);
     }
 
-    private void writeDataPoints(List<FuelAutoTune.stDataOnline> data) {
+    private void writeDataPoints(List<stDataOnline> data) {
         DataOutputStream dos = getTuneLogStream();
         if (dos == null)
             return;
         try {
             dos.writeBytes("Running with " + data.size() + " points\r\n");
             dos.writeBytes("AFR\tRPM\tload\r\n");
-            for (FuelAutoTune.stDataOnline point : data)
+            for (stDataOnline point : data)
                 dos.writeBytes(point.AFR  +"\t" + point.getRpm() + "\t" + point.getEngineLoad() + "\r\n");
 
         } catch (IOException e) {
@@ -357,8 +358,8 @@ public class FuelTunePane {
             engineLoadIndex = Math.max(0, BinarySearch.binarySearch(engineLoad, veLoadBins));
         }
 
-        public FuelAutoTune.stDataOnline asDataOnline() {
-            return new FuelAutoTune.stDataOnline(afr, rpmIndex, engineLoadIndex, rpm, engineLoad);
+        public stDataOnline asDataOnline() {
+            return new stDataOnline(afr, rpmIndex, engineLoadIndex, rpm, engineLoad);
         }
     }
 }
