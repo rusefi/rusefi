@@ -67,14 +67,14 @@ public class FuelAutoTuneTest {
         }
     }
 
-    private static float[][] createVeTable() {
-        float kgbcINIT[][] = new float[Fields.FUEL_LOAD_COUNT][Fields.FUEL_RPM_COUNT];
+    static float[][] createVeTable() {
+        float veMap[][] = new float[Fields.FUEL_LOAD_COUNT][Fields.FUEL_RPM_COUNT];
         for (int engineLoadIndex = 0; engineLoadIndex < Fields.FUEL_LOAD_COUNT; engineLoadIndex++) {
             for (int rpmIndex = 0; rpmIndex < Fields.FUEL_RPM_COUNT; rpmIndex++) {
-                kgbcINIT[engineLoadIndex][rpmIndex] = 1;
+                veMap[engineLoadIndex][rpmIndex] = 1;
             }
         }
-        return kgbcINIT;
+        return veMap;
     }
 
 }
