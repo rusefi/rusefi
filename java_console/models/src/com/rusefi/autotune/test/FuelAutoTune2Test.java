@@ -9,6 +9,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.rusefi.autotune.test.FuelAutoTuneTest.createVeTable;
+
 /**
  * 2/23/2016
  * (c) Andrey Belomutskiy 2013-2016
@@ -21,7 +23,7 @@ public class FuelAutoTune2Test {
         dataPoints.add(stDataOnline.valueOf(13, 1200, 80));
 
         {
-            System.out.println("Running with one datapoint");
+            System.out.println("Running with one datapoint already at target AFR");
             Result r = FuelAutoTune2.INSTANCE.process(false, dataPoints, 0.1, 13, createVeTable());
             FuelAutoTuneTest.printNotDefault(r.getKgbcRES(), 1);
         }
@@ -52,15 +54,5 @@ public class FuelAutoTune2Test {
 
         // todo: validate results
 
-    }
-
-    private static float[][] createVeTable() {
-        float kgbcINIT[][] = new float[Fields.FUEL_LOAD_COUNT][Fields.FUEL_RPM_COUNT];
-        for (int engineLoadIndex = 0; engineLoadIndex < Fields.FUEL_LOAD_COUNT; engineLoadIndex++) {
-            for (int rpmIndex = 0; rpmIndex < Fields.FUEL_RPM_COUNT; rpmIndex++) {
-                kgbcINIT[engineLoadIndex][rpmIndex] = 1;
-            }
-        }
-        return kgbcINIT;
     }
 }
