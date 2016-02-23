@@ -54,7 +54,7 @@ public class FuelAutoTuneTest {
     /**
      * this method prints all values which do not equal default value
      */
-    private static void printNotDefault(float[][] array, double defaultValue) {
+    static void printNotDefault(float[][] array, double defaultValue) {
         for (int i = 0; i < array.length; i++) {
             printNotDefault(array[i], i, defaultValue);
         }
@@ -63,7 +63,7 @@ public class FuelAutoTuneTest {
     private static void printNotDefault(float[] array, int index, double defaultValue) {
         for (int i = 0; i < array.length; i++) {
             if (array[i] != defaultValue)
-                System.out.println("Found value: " + index + " " + i + ": " + array[i]);
+                System.out.println("Found value: x=" + index + " y=" + i + ": " + array[i]);
         }
     }
 
