@@ -21,8 +21,9 @@ public class FuelAutoTune2Test {
         dataPoints.add(stDataOnline.valueOf(13, 1200, 80));
 
         {
+            System.out.println("Running with one datapoint");
             Result r = FuelAutoTune2.INSTANCE.process(false, dataPoints, 0.1, 13, createVeTable());
-            printNotDefault(r.getKgbcRES(), 1);
+            FuelAutoTuneTest.printNotDefault(r.getKgbcRES(), 1);
         }
 
         dataPoints.add(stDataOnline.valueOf(13, 1200, 80));
@@ -34,37 +35,23 @@ public class FuelAutoTune2Test {
             dataPoints.add(stDataOnline.valueOf(16, 1500 + i, 90));
 
         {
+            System.out.println("Running with more datapoints");
             Result r = FuelAutoTune2.INSTANCE.process(false, dataPoints, 0.01, 13, createVeTable());
-            printNotDefault(r.getKgbcRES(), 1);
+            FuelAutoTuneTest.printNotDefault(r.getKgbcRES(), 1);
         }
 
         for (int i = 0; i < 2000; i++)
             dataPoints.add(stDataOnline.valueOf(15, 1500 + i, 90));
 
         {
+            System.out.println("Running with more datapoints");
             Result r = FuelAutoTune2.INSTANCE.process(false, dataPoints, 0.01, 13, createVeTable());
-            printNotDefault(r.getKgbcRES(), 1);
+            FuelAutoTuneTest.printNotDefault(r.getKgbcRES(), 1);
         }
 
 
         // todo: validate results
 
-    }
-
-    /**
-     * this method prints all values which do not equal default value
-     */
-    private static void printNotDefault(float[][] array, double defaultValue) {
-        for (int i = 0; i < array.length; i++) {
-            printNotDefault(array[i], i, defaultValue);
-        }
-    }
-
-    private static void printNotDefault(float[] array, int index, double defaultValue) {
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] != defaultValue)
-                System.out.println("Found value: " + index + " " + i + ": " + array[i]);
-        }
     }
 
     private static float[][] createVeTable() {

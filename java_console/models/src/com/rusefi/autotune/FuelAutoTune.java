@@ -156,10 +156,10 @@ public enum FuelAutoTune implements FuelAutoLogic {
 //            if (isLogEnabled())
 //                log("r=" + r + "/c=" + c + ": tmp=" + tmp);
 
-            kgbcSQ[dataPoint.PRESS_RT_32()][dataPoint.RPM_RT_32()] += tmp * tmp;
+//            kgbcSQ[dataPoint.PRESS_RT_32()][dataPoint.RPM_RT_32()] += tmp * tmp; todo: what is this deviation called?
+            kgbcSQ[dataPoint.PRESS_RT_32()][dataPoint.RPM_RT_32()] += Math.abs(tmp); // todo: what is this deviation called?
         }
     }
-
     private static double smooth(double kgbcSQsum, double ksq, double ke, double kg, float[][] kgbcRES) {
         double e;
         double g;
