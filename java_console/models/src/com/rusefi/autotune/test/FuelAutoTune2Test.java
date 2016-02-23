@@ -1,6 +1,6 @@
 package com.rusefi.autotune.test;
 
-import com.rusefi.autotune.FuelAutoTune;
+import com.rusefi.autotune.FuelAutoTune2;
 import com.rusefi.autotune.Result;
 import com.rusefi.autotune.stDataOnline;
 import com.rusefi.config.Fields;
@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 1/5/2016
+ * 2/23/2016
  * (c) Andrey Belomutskiy 2013-2016
  */
-public class FuelAutoTuneTest {
+public class FuelAutoTune2Test {
 
     @Test
     public void testAutoTune() {
@@ -21,7 +21,7 @@ public class FuelAutoTuneTest {
         dataPoints.add(stDataOnline.valueOf(13, 1200, 80));
 
         {
-            Result r = FuelAutoTune.INSTANCE.process(false, dataPoints, 0.1, 13, createVeTable());
+            Result r = FuelAutoTune2.INSTANCE.process(false, dataPoints, 0.1, 13, createVeTable());
             printNotDefault(r.getKgbcRES(), 1);
         }
 
@@ -34,7 +34,7 @@ public class FuelAutoTuneTest {
             dataPoints.add(stDataOnline.valueOf(16, 1500 + i, 90));
 
         {
-            Result r = FuelAutoTune.INSTANCE.process(false, dataPoints, 0.01, 13, createVeTable());
+            Result r = FuelAutoTune2.INSTANCE.process(false, dataPoints, 0.01, 13, createVeTable());
             printNotDefault(r.getKgbcRES(), 1);
         }
 
@@ -42,7 +42,7 @@ public class FuelAutoTuneTest {
             dataPoints.add(stDataOnline.valueOf(15, 1500 + i, 90));
 
         {
-            Result r = FuelAutoTune.INSTANCE.process(false, dataPoints, 0.01, 13, createVeTable());
+            Result r = FuelAutoTune2.INSTANCE.process(false, dataPoints, 0.01, 13, createVeTable());
             printNotDefault(r.getKgbcRES(), 1);
         }
 
@@ -76,5 +76,4 @@ public class FuelAutoTuneTest {
         }
         return kgbcINIT;
     }
-
 }

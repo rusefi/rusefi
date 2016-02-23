@@ -8,5 +8,5 @@ import java.util.Collection;
  */
 public interface FuelAutoLogic {
     // void MainWindow::calckGBC(double STEP)
-    FuelAutoTune.Result process(boolean smooth, Collection<FuelAutoTune.stDataOnline> dataECU, double STEP, double targetAFR, float[][] kgbcINIT);
+    Result process(boolean smooth, Collection<stDataOnline> dataECU, double STEP, double targetAFR, float[][] kgbcINIT);
 }
