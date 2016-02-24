@@ -3,8 +3,8 @@ LIBS:power
 LIBS:device
 LIBS:conn
 LIBS:art-electro-conn_2
-LIBS:pin_board_1-cache
-EELAYER 24 0
+LIBS:KICAD_Older_Version
+EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
