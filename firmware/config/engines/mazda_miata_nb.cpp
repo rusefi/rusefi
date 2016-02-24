@@ -1,8 +1,12 @@
 /**
  * @file	mazda_miata_nb.cpp
  *
+ *
  * MAZDA_MIATA_NB = 9
  * set_engine_type 9
+ *
+ * http://rusefi.com/forum/viewtopic.php?t=467
+ * http://rusefi.com/forum/viewtopic.php?t=987
  *
  * @date Feb 18, 2014
  * @author Andrey Belomutskiy, (c) 2012-2016
