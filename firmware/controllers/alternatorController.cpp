@@ -1,6 +1,6 @@
 /**
  * @file    alternatorController.cpp
- * @brief   alternator controller - turn alternator off if you do not really need it
+ * @brief   alternator controller - some newer vehicles control alternator with ECU
  *
  * @date Apr 6, 2014
  * @author Dmitry Sidin
@@ -27,6 +27,8 @@ static Logging *logger;
 
 #define ALTERNATOR_VALVE_PWM_FREQUENCY 300
 
+extern pin_output_mode_e DEFAULT_OUTPUT;
+
 static SimplePwm alternatorControl;
 static OutputPin alternatorPin;
 static pid_s *altPidS = &persistentState.persistentConfiguration.engineConfiguration.alternatorControl;
@@ -40,6 +42,9 @@ static float currentAltDuty;
 static LocalVersionHolder parametersVersion;
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif
+
+static bool plainOnOffControlEnabled = false;
+static bool currentPlainOnOffState = false;
 
 static msg_t AltCtrlThread(int param) {
 	UNUSED(param);
@@ -63,7 +68,24 @@ static msg_t AltCtrlThread(int param) {
 			continue;
 		}
 
-		currentAltDuty = altPid.getValue(engineConfiguration->targetVBatt, getVBatt(PASS_ENGINE_PARAMETER_F), 1);
+		float vBatt = getVBatt(PASS_ENGINE_PARAMETER_F);
+		float targetVoltage = engineConfiguration->targetVBatt;
+
+		if (plainOnOffControlEnabled) {
+			float h = 0.1;
+			bool newState = (vBatt < targetVoltage - h) || (currentPlainOnOffState && vBatt < targetVoltage);
+			alternatorPin.setValue(newState);
+			currentPlainOnOffState = newState;
+			if (engineConfiguration->debugMode == ALTERNATOR) {
+				tsOutputChannels.debugIntField1 = newState;
+
+			}
+
+			continue;
+		}
+
+
+		currentAltDuty = altPid.getValue(targetVoltage, vBatt, 1);
 		if (boardConfiguration->isVerboseAlternator) {
 			scheduleMsg(logger, "alt duty: %f/vbatt=%f/p=%f/i=%f/d=%f int=%f", currentAltDuty, getVBatt(PASS_ENGINE_PARAMETER_F),
 					altPid.getP(), altPid.getI(), altPid.getD(), altPid.getIntegration());
@@ -128,9 +150,15 @@ void initAlternatorCtrl(Logging *sharedLogger) {
 	if (boardConfiguration->alternatorControlPin == GPIO_UNASSIGNED)
 		return;
 
-	startSimplePwmExt(&alternatorControl, "Alternator control", boardConfiguration->alternatorControlPin,
-			&alternatorPin,
-			ALTERNATOR_VALVE_PWM_FREQUENCY, 0.1, applyAlternatorPinState);
+	if (plainOnOffControlEnabled) {
+		outputPinRegisterExt2("on/off alternator", &alternatorPin, boardConfiguration->alternatorControlPin,
+				&DEFAULT_OUTPUT);
+
+	} else {
+		startSimplePwmExt(&alternatorControl, "Alternator control", boardConfiguration->alternatorControlPin,
+				&alternatorPin,
+				ALTERNATOR_VALVE_PWM_FREQUENCY, 0.1, applyAlternatorPinState);
+	}
 	chThdCreateStatic(alternatorControlThreadStack, sizeof(alternatorControlThreadStack), LOWPRIO,
 			(tfunc_t) AltCtrlThread, NULL);
 }
