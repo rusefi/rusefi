@@ -42,7 +42,8 @@ static THD_WORKING_AREA(canTreadStack, UTILITY_THREAD_STACK_SIZE);
  * speed = 42000000 / (BRP + 1) / (1 + TS1 + 1 + TS2 + 1)
  * 42000000 / 7 / 12 = 500000
  *
- *
+ * 29 bit would be CAN_TI0R_EXID (?) but we do not mention it here
+ * CAN_TI0R_STID "Standard Identifier or Extended Identifier"? not mentioned as well
  */
 static const CANConfig canConfig = {
 CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
@@ -108,7 +109,7 @@ void sendMessage() {
 	sendMessage2(8);
 }
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 
 static void canDashboardBMW(void) {
 	//BMW Dashboard
@@ -235,7 +236,7 @@ static msg_t canThread(void *arg) {
 
 		chThdSleepMilliseconds(engineConfiguration->canSleepPeriod);
 	}
-#if defined __GNUC__
+#if defined __GNUC__ || defined(__DOXYGEN__)
 	return -1;
 #endif
 }
