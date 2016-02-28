@@ -39,7 +39,7 @@ EXTERN_ENGINE
 ;
 
 static void fireShaftSignal(trigger_event_e signal) {
-	if (!engineConfiguration->useOnlyFrontForTrigger || isRisingEdge[(int) signal])
+	if (!engineConfiguration->useOnlyRisingEdgeForTrigger || isRisingEdge[(int) signal])
 		hwHandleShaftSignal(signal);
 }
 
@@ -57,17 +57,17 @@ void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIn
 
 	if (primaryWheelState != newPrimaryWheelState) {
 		primaryWheelState = newPrimaryWheelState;
-		fireShaftSignal(primaryWheelState ? SHAFT_PRIMARY_UP : SHAFT_PRIMARY_DOWN);
+		fireShaftSignal(primaryWheelState ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING);
 	}
 
 	if (secondaryWheelState != newSecondaryWheelState) {
 		secondaryWheelState = newSecondaryWheelState;
-		fireShaftSignal(secondaryWheelState ? SHAFT_SECONDARY_UP : SHAFT_SECONDARY_DOWN);
+		fireShaftSignal(secondaryWheelState ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
 	}
 
 	if (thirdWheelState != new3rdWheelState) {
 		thirdWheelState = new3rdWheelState;
-		fireShaftSignal(thirdWheelState ? SHAFT_3RD_UP : SHAFT_3RD_DOWN);
+		fireShaftSignal(thirdWheelState ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING);
 	}
 
 	//	print("hello %d\r\n", chTimeNow());

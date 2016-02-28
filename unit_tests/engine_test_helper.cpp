@@ -51,9 +51,9 @@ void EngineTestHelper::fireTriggerEvents(int count) {
 	for (int i = 0; i < count; i++) {
 		timeNow += 5000; // 5ms
 		board_configuration_s * boardConfiguration = &engine.engineConfiguration->bc;
-		engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
+		engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
 		timeNow += 5000;
-		engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
+		engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
 	}
 }
 

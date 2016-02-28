@@ -839,7 +839,7 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 	} else if (strEqualCaseInsensitive(param, "stepperidle")) {
 		boardConfiguration->useStepperIdle = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "trigger_only_front")) {
-		engineConfiguration->useOnlyFrontForTrigger = isEnabled;
+		engineConfiguration->useOnlyRisingEdgeForTrigger = isEnabled;
 		incrementGlobalConfigurationVersion();
 	} else if (strEqualCaseInsensitive(param, "use_only_first_channel")) {
 		engineConfiguration->trigger.useOnlyFirstChannel = isEnabled;

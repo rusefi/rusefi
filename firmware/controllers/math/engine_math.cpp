@@ -406,7 +406,7 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 	int engineCycleInt = (int) ENGINE(engineCycle);
 	for (int angle = 0; angle < engineCycleInt; angle++) {
 		int triggerShapeIndex = findAngleIndex(angle PASS_ENGINE_PARAMETER);
-		if (engineConfiguration->useOnlyFrontForTrigger)
+		if (engineConfiguration->useOnlyRisingEdgeForTrigger)
 			triggerShapeIndex = triggerShapeIndex & 0xFFFFFFFE; // we need even index for front_only
 		TRIGGER_SHAPE(triggerIndexByAngle[angle]) = triggerShapeIndex;
 	}

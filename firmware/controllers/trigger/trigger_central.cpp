@@ -54,7 +54,7 @@ void TriggerCentral::addEventListener(ShaftPositionListener listener, const char
  * @brief Adds a trigger event listener
  *
  * Trigger event listener would be invoked on each trigger event. For example, for a 60/2 wheel
- * that would be 116 events: 58 SHAFT_PRIMARY_UP and 58 SHAFT_PRIMARY_DOWN events.
+ * that would be 116 events: 58 SHAFT_PRIMARY_RISING and 58 SHAFT_PRIMARY_FALLING events.
  */
 void addTriggerEventListener(ShaftPositionListener listener, const char *name, Engine *engine) {
 	engine->triggerCentral.addEventListener(listener, name, engine);
@@ -119,7 +119,7 @@ static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, 
 	shaft_signal_msg_index[0] = isUp ? 'u' : 'd';
 
 	addEngineSniffferEvent(eventId[(int )ckpSignalType], (char* ) shaft_signal_msg_index);
-	if (engineConfiguration->useOnlyFrontForTrigger) {
+	if (engineConfiguration->useOnlyRisingEdgeForTrigger) {
 		// let's add the opposite event right away
 		shaft_signal_msg_index[0] = isUp ? 'd' : 'u';
 		addEngineSniffferEvent(eventId[(int )ckpSignalType], (char* ) shaft_signal_msg_index);
@@ -293,7 +293,7 @@ void triggerInfo(void) {
 	scheduleMsg(logger, "Template %s (%d) trigger %s (%d) useRiseEdge=%s onlyFront=%s gapBothDirections=%s useOnlyFirstChannel=%s",
 			getConfigurationName(engineConfiguration->engineType), engineConfiguration->engineType,
 			getTrigger_type_e(engineConfiguration->trigger.type), engineConfiguration->trigger.type,
-			boolToString(TRIGGER_SHAPE(useRiseEdge)), boolToString(engineConfiguration->useOnlyFrontForTrigger),
+			boolToString(TRIGGER_SHAPE(useRiseEdge)), boolToString(engineConfiguration->useOnlyRisingEdgeForTrigger),
 			boolToString(TRIGGER_SHAPE(gapBothDirections)),
 			boolToString(engineConfiguration->trigger.useOnlyFirstChannel));
 

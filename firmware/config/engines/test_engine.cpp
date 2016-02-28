@@ -22,7 +22,7 @@ void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	trigger_config_s *triggerConfig = &engineConfiguration->trigger;
 	triggerConfig->customTotalToothCount = 60;
 	triggerConfig->customSkippedToothCount = 0;
-	engineConfiguration->useOnlyFrontForTrigger = true;
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;

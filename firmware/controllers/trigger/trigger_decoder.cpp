@@ -97,7 +97,7 @@ static trigger_wheel_e eventIndex[6] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SE
 		/* odd event - start accumulation */ \
 		currentCycle.timeOfPreviousEventNt[triggerWheel] = nowNt; \
 	} \
-	if (engineConfiguration->useOnlyFrontForTrigger) {currentCycle.current_index++;} \
+	if (engineConfiguration->useOnlyRisingEdgeForTrigger) {currentCycle.current_index++;} \
 	currentCycle.current_index++; \
 }
 
@@ -122,11 +122,11 @@ static trigger_wheel_e eventIndex[6] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SE
  * @param nowNt current time
  */
 void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_S) {
-	efiAssertVoid(signal <= SHAFT_3RD_UP, "unexpected signal");
+	efiAssertVoid(signal <= SHAFT_3RD_RISING, "unexpected signal");
 
 	trigger_wheel_e triggerWheel = eventIndex[signal];
 
-	if (!engineConfiguration->useOnlyFrontForTrigger && curSignal == prevSignal) {
+	if (!engineConfiguration->useOnlyRisingEdgeForTrigger && curSignal == prevSignal) {
 		orderingErrorCounter++;
 	}
 
@@ -232,7 +232,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			/**
 			 * in case of noise the counter could be above the expected number of events
 			 */
-			int d = engineConfiguration->useOnlyFrontForTrigger ? 2 : 1;
+			int d = engineConfiguration->useOnlyRisingEdgeForTrigger ? 2 : 1;
 			isSynchronizationPoint = !shaft_is_synchronized || (currentCycle.current_index >= TRIGGER_SHAPE(size) - d);
 
 		}

@@ -76,10 +76,27 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 //	engineConfiguration->algorithm = LM_PLAIN_MAF;
 	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
 //	engineConfiguration->algorithm = LM_REAL_MAF;
-	boardConfiguration->tunerStudioSerialSpeed = 14400;
 
 	setFuelLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER);
 	setFuelRpmBin(800, 7000 PASS_ENGINE_PARAMETER);
+
+	config->veRpmBins[0] = 800;
+	config->veRpmBins[1] = 1200;
+	config->veRpmBins[2] = 1600;
+	config->veRpmBins[3] = 2000;
+	config->veRpmBins[4] = 2400;
+	config->veRpmBins[5] = 2800;
+	config->veRpmBins[6] = 3200;
+	config->veRpmBins[7] = 3600;
+	config->veRpmBins[8] = 4100;
+	config->veRpmBins[9] = 4500;
+	config->veRpmBins[10] = 4900;
+	config->veRpmBins[11] = 5300;
+	config->veRpmBins[12] = 5700;
+	config->veRpmBins[13] = 6100;
+	config->veRpmBins[14] = 6500;
+	config->veRpmBins[15] = 7000;
+
 	copyFuelTable(racingFestivaVeTable, config->veTable);
 
 //	boardConfiguration->triggerInputPins[0] = GPIOC_6; // 2G YEL/BLU
@@ -173,7 +190,7 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->malfunctionIndicatorPin = GPIOE_5;
 	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
 
-	boardConfiguration->tunerStudioSerialSpeed = 9600;
+	boardConfiguration->tunerStudioSerialSpeed = 19200;
 
 	commonFrankensoAnalogInputs(engineConfiguration);
 	setCommonNTCSensor(&engineConfiguration->clt);
@@ -204,7 +221,23 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	// set_fsio_expression 1 "rpm 0 fsio_setting >"
 	setFsioExt(0, GPIOE_3, "rpm 0 fsio_setting >", 150 PASS_ENGINE_PARAMETER);
 
-	copyTimingTable(racingFestivaIgnitionTable, config->veTable);
+	config->ignitionRpmBins[0] = 800;
+	config->ignitionRpmBins[1] = 1200;
+	config->ignitionRpmBins[2] = 1600;
+	config->ignitionRpmBins[3] = 2000;
+	config->ignitionRpmBins[4] = 2400;
+	config->ignitionRpmBins[5] = 2800;
+	config->ignitionRpmBins[6] = 3200;
+	config->ignitionRpmBins[7] = 3600;
+	config->ignitionRpmBins[8] = 4100;
+	config->ignitionRpmBins[9] = 4500;
+	config->ignitionRpmBins[10] = 4900;
+	config->ignitionRpmBins[11] = 5300;
+	config->ignitionRpmBins[12] = 5700;
+	config->ignitionRpmBins[13] = 6100;
+	config->ignitionRpmBins[14] = 6500;
+	config->ignitionRpmBins[15] = 7000;
+	copyTimingTable(racingFestivaIgnitionTable, config->ignitionTable);
 
 	// end of Ford Escort GT config
 }

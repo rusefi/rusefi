@@ -411,7 +411,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 			prepareOutputSignals(PASS_ENGINE_PARAMETER_F);
 	}
 
-	efiAssertVoid(!CONFIG(useOnlyFrontForTrigger) || CONFIG(ignMathCalculateAtIndex) % 2 == 0, "invalid ignMathCalculateAtIndex");
+	efiAssertVoid(!CONFIG(useOnlyRisingEdgeForTrigger) || CONFIG(ignMathCalculateAtIndex) % 2 == 0, "invalid ignMathCalculateAtIndex");
 
 	if (eventIndex == CONFIG(ignMathCalculateAtIndex)) {
 		if (CONFIG(externalKnockSenseAdc) != EFI_ADC_NONE) {
