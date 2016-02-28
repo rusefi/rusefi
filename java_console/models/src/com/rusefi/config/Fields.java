@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Feb 10 12:21:21 EST 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 28 00:51:58 EST 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int TS_FILE_VERSION = 20160122;
@@ -366,6 +366,7 @@ public class Fields {
 	public static final int useLcdScreen_offset = 1000;
 	public static final int startConsoleInBinaryMode_offset = 1000;
 	public static final int useWarmupPidAfr_offset = 1000;
+	public static final int onOffAlternatorLogic_offset = 1000;
 	public static final int logicAnalyzerPins1_offset = 1004;
 	public static final int logicAnalyzerPins2_offset = 1008;
 	public static final int logicAnalyzerPins3_offset = 1012;
@@ -592,7 +593,7 @@ public class Fields {
 	public static final int isPrintTriggerSynchDetails_offset = 1500;
 	public static final int isManualSpinningMode_offset = 1500;
 	public static final int twoWireBatchInjection_offset = 1500;
-	public static final int useOnlyFrontForTrigger_offset = 1500;
+	public static final int useOnlyRisingEdgeForTrigger_offset = 1500;
 	public static final int twoWireBatchIgnition_offset = 1500;
 	public static final int engineChartSize_offset = 1504;
 	public static final int targetIdleRpm_offset = 1508;
@@ -913,7 +914,7 @@ public class Fields {
 	public static final Field BAROSENSOR_HWCHANNEL = Field.create("BAROSENSOR_HWCHANNEL", 620, FieldType.INT, adc_channel_e);
 	public static final String[] brain_pin_e = {"PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15", "NONE", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"};
 	public static final Field IDLE_SOLENOIDPIN = Field.create("IDLE_SOLENOIDPIN", 624, FieldType.INT, brain_pin_e);
-	public static final String[] pin_output_mode_e = {"default", "default inverted", "open", "open inverted"};
+	public static final String[] pin_output_mode_e = {"default", "default inverted", "open collector", "open collector inverted"};
 	public static final Field IDLE_SOLENOIDPINMODE = Field.create("IDLE_SOLENOIDPINMODE", 628, FieldType.INT, pin_output_mode_e);
 	public static final Field IDLE_SOLENOIDFREQUENCY = Field.create("IDLE_SOLENOIDFREQUENCY", 632, FieldType.INT);
 	public static final Field IDLE_STEPPERDIRECTIONPIN = Field.create("IDLE_STEPPERDIRECTIONPIN", 636, FieldType.INT, brain_pin_e);
@@ -1024,6 +1025,7 @@ public class Fields {
 	public static final Field USELCDSCREEN = Field.create("USELCDSCREEN", 1000, FieldType.BIT, 12);
 	public static final Field STARTCONSOLEINBINARYMODE = Field.create("STARTCONSOLEINBINARYMODE", 1000, FieldType.BIT, 13);
 	public static final Field USEWARMUPPIDAFR = Field.create("USEWARMUPPIDAFR", 1000, FieldType.BIT, 14);
+	public static final Field ONOFFALTERNATORLOGIC = Field.create("ONOFFALTERNATORLOGIC", 1000, FieldType.BIT, 15);
 	public static final Field LOGICANALYZERPINS1 = Field.create("LOGICANALYZERPINS1", 1004, FieldType.INT, brain_input_pin_e);
 	public static final Field LOGICANALYZERPINS2 = Field.create("LOGICANALYZERPINS2", 1008, FieldType.INT, brain_input_pin_e);
 	public static final Field LOGICANALYZERPINS3 = Field.create("LOGICANALYZERPINS3", 1012, FieldType.INT, brain_input_pin_e);
@@ -1190,7 +1192,7 @@ public class Fields {
 	public static final Field ISPRINTTRIGGERSYNCHDETAILS = Field.create("ISPRINTTRIGGERSYNCHDETAILS", 1500, FieldType.BIT, 11);
 	public static final Field ISMANUALSPINNINGMODE = Field.create("ISMANUALSPINNINGMODE", 1500, FieldType.BIT, 12);
 	public static final Field TWOWIREBATCHINJECTION = Field.create("TWOWIREBATCHINJECTION", 1500, FieldType.BIT, 13);
-	public static final Field USEONLYFRONTFORTRIGGER = Field.create("USEONLYFRONTFORTRIGGER", 1500, FieldType.BIT, 14);
+	public static final Field USEONLYRISINGEDGEFORTRIGGER = Field.create("USEONLYRISINGEDGEFORTRIGGER", 1500, FieldType.BIT, 14);
 	public static final Field TWOWIREBATCHIGNITION = Field.create("TWOWIREBATCHIGNITION", 1500, FieldType.BIT, 15);
 	public static final Field ENGINECHARTSIZE = Field.create("ENGINECHARTSIZE", 1504, FieldType.INT);
 	public static final Field TARGETIDLERPM = Field.create("TARGETIDLERPM", 1508, FieldType.INT);
