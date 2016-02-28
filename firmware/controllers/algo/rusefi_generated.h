@@ -743,7 +743,9 @@
 #define warmupTargetAfrBins_offset 2264
 #define warmupTargetAfr_offset 2280
 #define warmupAfrThreshold_offset 2296
-#define unused_offset 2300
+#define boostCutPressure_offset 2300
+#define unused_offset 2304
+#define unused_offset_hex 900
 #define le_formulas1_offset 3016
 #define le_formulas2_offset 3216
 #define le_formulas3_offset 3416
