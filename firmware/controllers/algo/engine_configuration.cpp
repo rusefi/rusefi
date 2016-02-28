@@ -547,7 +547,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->hasBaroSensor = false;
 	engineConfiguration->isEngineChartEnabled = true;
 
-	engineConfiguration->useOnlyFrontForTrigger = false;
+	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 
 	boardConfiguration->idle.solenoidFrequency = 200;
 	// set_idle_position 50

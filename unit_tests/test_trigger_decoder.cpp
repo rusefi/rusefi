@@ -69,38 +69,38 @@ static void testDodgeNeonDecoder(void) {
 	assertFalseM("1 shaft_is_synchronized", state.shaft_is_synchronized);
 
 //	int r = 0;
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_UP, r + 60);
+//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 60);
 //	assertFalseM("2 shaft_is_synchronized", state.shaft_is_synchronized); // still no synchronization
 
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_DOWN, r + 210);
+//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 210);
 //	assertFalseM("3 shaft_is_synchronized", state.shaft_is_synchronized); // still no synchronization
 //
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_UP, r + 420);
+//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 420);
 //	assertFalseM("4 shaft_is_synchronized", state.shaft_is_synchronized); // still no synchronization
 //
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_DOWN, r + 630);
+//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 630);
 //	assertFalse(state.shaft_is_synchronized); // still no synchronization
 //
 //	printf("2nd camshaft revolution\r\n");
 //	r = 720;
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_UP, r + 60);
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_DOWN, r + 210);
+//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 60);
+//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 210);
 //	assertTrue(state.shaft_is_synchronized);
 //	assertEquals(0, state.current_index);
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_UP, r + 420);
+//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 420);
 //	assertEquals(1, state.current_index);
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_DOWN, r + 630);
+//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 630);
 //	assertEquals(2, state.current_index);
 //
 //	printf("3rd camshaft revolution\r\n");
 //	r = 2 * 720;
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_UP, r + 60);
+//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 60);
 //	assertEqualsM("current index", 3, state.current_index);
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_DOWN, r + 210);
+//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 210);
 //	assertTrue(state.shaft_is_synchronized);
 //	assertEqualsM("current index", 0, state.current_index);
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_UP, r + 420);
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_DOWN, r + 630);
+//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 420);
+//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 630);
 }
 
 static void assertTriggerPosition(event_trigger_position_s *position, int eventIndex, float angleOffset) {
@@ -158,28 +158,28 @@ void test1995FordInline6TriggerDecoder(void) {
 
 	assertFalseM("shaft_is_synchronized", state.shaft_is_synchronized);
 	int r = 10;
-	state.decodeTriggerEvent(SHAFT_PRIMARY_DOWN, r PASS_ENGINE_PARAMETER);
+	state.decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r PASS_ENGINE_PARAMETER);
 	assertFalseM("shaft_is_synchronized", state.shaft_is_synchronized); // still no synchronization
-	state.decodeTriggerEvent(SHAFT_PRIMARY_UP, ++r PASS_ENGINE_PARAMETER);
+	state.decodeTriggerEvent(SHAFT_PRIMARY_RISING, ++r PASS_ENGINE_PARAMETER);
 	assertTrue(state.shaft_is_synchronized); // first signal rise synchronize
 	assertEquals(0, state.getCurrentIndex());
-	state.decodeTriggerEvent(SHAFT_PRIMARY_DOWN, r++ PASS_ENGINE_PARAMETER);
+	state.decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER);
 	assertEquals(1, state.getCurrentIndex());
 
 	for (int i = 2; i < 10;) {
-		state.decodeTriggerEvent(SHAFT_PRIMARY_UP, r++ PASS_ENGINE_PARAMETER);
+		state.decodeTriggerEvent(SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER);
 		assertEqualsM("even", i++, state.getCurrentIndex());
-		state.decodeTriggerEvent(SHAFT_PRIMARY_DOWN, r++ PASS_ENGINE_PARAMETER);
+		state.decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER);
 		assertEqualsM("odd", i++, state.getCurrentIndex());
 	}
 
-	state.decodeTriggerEvent(SHAFT_PRIMARY_UP, r++ PASS_ENGINE_PARAMETER);
+	state.decodeTriggerEvent(SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER);
 	assertEquals(10, state.getCurrentIndex());
 
-	state.decodeTriggerEvent(SHAFT_PRIMARY_DOWN, r++ PASS_ENGINE_PARAMETER);
+	state.decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER);
 	assertEquals(11, state.getCurrentIndex());
 
-	state.decodeTriggerEvent(SHAFT_PRIMARY_UP, r++ PASS_ENGINE_PARAMETER);
+	state.decodeTriggerEvent(SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER);
 	assertEquals(0, state.getCurrentIndex()); // new revolution
 
 	assertEqualsM("running dwell", 0.5, getSparkDwell(2000 PASS_ENGINE_PARAMETER));
@@ -354,7 +354,7 @@ void testRpmCalculator(void) {
 	InjectionEvent *ie0 = &eth.engine.engineConfiguration2->injectionEvents->injectionEvents.elements[0];
 	assertEqualsM("injection angle", 0, ie0->injectionStart.angleOffset);
 
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER);
 	assertEquals(1500, eth.engine.rpmCalculator.rpmValue);
 
 	assertEqualsM("dwell", 4.5, eth.engine.engineState.dwellAngle);
@@ -393,11 +393,11 @@ void testRpmCalculator(void) {
 	schedulingQueue.clear();
 
 	timeNow += 5000;
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER);
 	timeNow += 5000; // 5ms
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER);
 	timeNow += 5000;
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER);
 	assertEqualsM("index #3", 3, eth.engine.triggerCentral.triggerState.getCurrentIndex());
 	assertEqualsM("queue size 3", 6, schedulingQueue.size());
 	assertEqualsM("ev 3", st + 13333, schedulingQueue.getForUnitText(0)->momentX);
@@ -412,15 +412,15 @@ void testRpmCalculator(void) {
 	timeNow += 5000;
 	assertEqualsM("Size 4.1", 6, engine->engineConfiguration2->injectionEvents->eventsCount);
 	assertFalseM("No squirts expected 4.1", engine->engineConfiguration2->injectionEvents->hasEvents[4]);
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER);
 	assertEqualsM("queue size 4.1", 0, schedulingQueue.size());
 
 	timeNow += 5000; // 5ms
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER);
 	assertEqualsM("queue size 4.2", 6, schedulingQueue.size());
 
 	timeNow += 5000; // 5ms
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER);
 	assertEqualsM("queue size 4.3", 6, schedulingQueue.size());
 
 	assertEqualsM("dwell", 4.5, eth.engine.engineState.dwellAngle);
@@ -443,12 +443,12 @@ void testRpmCalculator(void) {
 	schedulingQueue.clear();
 
 	timeNow += 5000;
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER);
 	assertEqualsM("queue size 5", 0, schedulingQueue.size());
 	schedulingQueue.clear();
 
 	timeNow += 5000; // 5ms
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER);
 	assertEqualsM("queue size 6", 6, schedulingQueue.size());
 	assertEqualsM("6/0", st + 40000, schedulingQueue.getForUnitText(0)->momentX);
 	assertEqualsM("6/1", st + 40000, schedulingQueue.getForUnitText(1)->momentX);
@@ -456,12 +456,12 @@ void testRpmCalculator(void) {
 	schedulingQueue.clear();
 
 	timeNow += 5000;
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER);
 	assertEqualsM("queue size 7", 0, schedulingQueue.size());
 	schedulingQueue.clear();
 
 	timeNow += 5000; // 5ms
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER);
 	assertEqualsM("queue size 8", 6, schedulingQueue.size());
 	assertEqualsM("8/0", st + 53333, schedulingQueue.getForUnitText(0)->momentX);
 	assertEqualsM("8/1", st + 53333, schedulingQueue.getForUnitText(1)->momentX);
@@ -470,12 +470,12 @@ void testRpmCalculator(void) {
 	schedulingQueue.clear();
 
 	timeNow += 5000;
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER);
 	assertEqualsM("queue size 9", 0, schedulingQueue.size());
 	schedulingQueue.clear();
 
 	timeNow += 5000; // 5ms
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER);
 	assertEqualsM("queue size 10", 0, schedulingQueue.size());
 	schedulingQueue.clear();
 }
@@ -553,7 +553,7 @@ void testTriggerDecoder(void) {
 		assertEqualsM("index for 668", 11, t->triggerIndexByAngle[668]);
 
 
-		eth.persistentConfig.engineConfiguration.useOnlyFrontForTrigger = false;
+		eth.persistentConfig.engineConfiguration.useOnlyRisingEdgeForTrigger = false;
 		eth.persistentConfig.engineConfiguration.bc.sensorChartMode = SC_DETAILED_RPM;
 		applyNonPersistentConfiguration(NULL PASS_ENGINE_PARAMETER);
 
@@ -574,8 +574,8 @@ void testTriggerDecoder(void) {
 		EngineTestHelper eth(DODGE_NEON_2003);
 		EXPAND_EngineTestHelper;
 
-		printf("!!!!!!!!!!!!!!!!!! Now trying with only front events !!!!!!!!!!!!!!!!!\r\n");
-		engineConfiguration->useOnlyFrontForTrigger = true;
+		printf("!!!!!!!!!!!!!!!!!! Now trying with only rising edges !!!!!!!!!!!!!!!!!\r\n");
+		engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 		applyNonPersistentConfiguration(NULL PASS_ENGINE_PARAMETER);
 		prepareShapes(PASS_ENGINE_PARAMETER_F);

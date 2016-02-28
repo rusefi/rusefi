@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Feb 10 12:21:21 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Feb 27 22:02:38 EST 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1167,7 +1167,7 @@ typedef struct {
 	/**
 	 * See #172
 	offset 1500 bit 14 */
-	bool useOnlyFrontForTrigger : 1;
+	bool useOnlyRisingEdgeForTrigger : 1;
 	/**
 	 * This is needed if batched igniton (waster spark) and individual coil wiring
 	offset 1500 bit 15 */
@@ -1640,4 +1640,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Feb 10 12:21:21 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Feb 27 22:02:38 EST 2016

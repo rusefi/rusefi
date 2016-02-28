@@ -36,7 +36,7 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->injectionMode = IM_BATCH;
 	engineConfiguration->twoWireBatchInjection = true;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-	engineConfiguration->useOnlyFrontForTrigger = true;
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	boardConfiguration->tachOutputPin = GPIOC_8;
 

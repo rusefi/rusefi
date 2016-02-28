@@ -37,26 +37,26 @@ void TriggerStimulatorHelper::nextStep(TriggerState *state, TriggerShape * shape
 
 	if (primaryWheelState != newPrimaryWheelState) {
 		primaryWheelState = newPrimaryWheelState;
-		trigger_event_e s = primaryWheelState ? SHAFT_PRIMARY_UP : SHAFT_PRIMARY_DOWN;
+		trigger_event_e s = primaryWheelState ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING;
 		state->decodeTriggerEvent(s, time PASS_ENGINE_PARAMETER);
 	}
 
 	if (secondaryWheelState != newSecondaryWheelState) {
 		secondaryWheelState = newSecondaryWheelState;
-		trigger_event_e s = secondaryWheelState ? SHAFT_SECONDARY_UP : SHAFT_SECONDARY_DOWN;
+		trigger_event_e s = secondaryWheelState ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING;
 		state->decodeTriggerEvent(s, time PASS_ENGINE_PARAMETER);
 	}
 
 	if (thirdWheelState != new3rdWheelState) {
 		thirdWheelState = new3rdWheelState;
-		trigger_event_e s = thirdWheelState ? SHAFT_3RD_UP : SHAFT_3RD_DOWN;
+		trigger_event_e s = thirdWheelState ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING;
 		state->decodeTriggerEvent(s, time PASS_ENGINE_PARAMETER);
 	}
 }
 
 void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(uint32_t index, TriggerState *state, TriggerShape * shape,
 		trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S) {
-	int startIndex = engineConfiguration->useOnlyFrontForTrigger ? index + 2 : index + 1;
+	int startIndex = engineConfiguration->useOnlyRisingEdgeForTrigger ? index + 2 : index + 1;
 
 	for (uint32_t i = startIndex; i <= index + 2 * shape->getSize(); i++) {
 		nextStep(state, shape, i, triggerConfig PASS_ENGINE_PARAMETER);

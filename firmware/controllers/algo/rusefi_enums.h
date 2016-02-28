@@ -191,14 +191,13 @@ typedef enum {
 	T_CHANNEL_3 = 2
 } trigger_wheel_e;
 
-// todo: better names?
 typedef enum {
-	SHAFT_PRIMARY_DOWN = 0,
-	SHAFT_PRIMARY_UP = 1,
-	SHAFT_SECONDARY_DOWN = 2,
-	SHAFT_SECONDARY_UP = 3,
-	SHAFT_3RD_DOWN = 4,
-	SHAFT_3RD_UP = 5,
+	SHAFT_PRIMARY_FALLING = 0,
+	SHAFT_PRIMARY_RISING = 1,
+	SHAFT_SECONDARY_FALLING = 2,
+	SHAFT_SECONDARY_RISING = 3,
+	SHAFT_3RD_FALLING = 4,
+	SHAFT_3RD_RISING = 5,
 } trigger_event_e;
 
 /**

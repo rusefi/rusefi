@@ -588,7 +588,7 @@
 #define isPrintTriggerSynchDetails_offset 1500
 #define isManualSpinningMode_offset 1500
 #define twoWireBatchInjection_offset 1500
-#define useOnlyFrontForTrigger_offset 1500
+#define useOnlyRisingEdgeForTrigger_offset 1500
 #define twoWireBatchIgnition_offset 1500
 #define engineChartSize_offset 1504
 #define targetIdleRpm_offset 1508

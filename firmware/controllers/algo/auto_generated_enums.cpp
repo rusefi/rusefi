@@ -207,18 +207,18 @@ case T_SECONDARY:
 }
 const char *getTrigger_event_e(trigger_event_e value){
 switch(value) {
-case SHAFT_3RD_DOWN:
-  return "SHAFT_3RD_DOWN";
-case SHAFT_3RD_UP:
-  return "SHAFT_3RD_UP";
-case SHAFT_PRIMARY_DOWN:
-  return "SHAFT_PRIMARY_DOWN";
-case SHAFT_PRIMARY_UP:
-  return "SHAFT_PRIMARY_UP";
-case SHAFT_SECONDARY_DOWN:
-  return "SHAFT_SECONDARY_DOWN";
-case SHAFT_SECONDARY_UP:
-  return "SHAFT_SECONDARY_UP";
+case SHAFT_3RD_FALLING:
+  return "SHAFT_3RD_FALLING";
+case SHAFT_3RD_RISING:
+  return "SHAFT_3RD_RISING";
+case SHAFT_PRIMARY_FALLING:
+  return "SHAFT_PRIMARY_FALLING";
+case SHAFT_PRIMARY_RISING:
+  return "SHAFT_PRIMARY_RISING";
+case SHAFT_SECONDARY_FALLING:
+  return "SHAFT_SECONDARY_FALLING";
+case SHAFT_SECONDARY_RISING:
+  return "SHAFT_SECONDARY_RISING";
   }
  return NULL;
 }
