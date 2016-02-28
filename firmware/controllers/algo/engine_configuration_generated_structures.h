@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 28 00:51:58 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 28 00:56:56 EST 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1491,9 +1491,14 @@ typedef struct {
 	 */
 	float warmupAfrThreshold;
 	/**
+	 * kPa value at which we need to cut fuel and spark, 0 if not enabled
 	 * offset 2300
 	 */
-	int unused[179];
+	float boostCutPressure;
+	/**
+	 * offset 2304
+	 */
+	int unused[178];
 	/** total size 3016*/
 } engine_configuration_s;
 
@@ -1643,4 +1648,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 28 00:51:58 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 28 00:56:56 EST 2016

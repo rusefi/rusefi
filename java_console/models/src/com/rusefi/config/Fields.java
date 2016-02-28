@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 28 00:51:58 EST 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 28 00:56:56 EST 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int TS_FILE_VERSION = 20160122;
@@ -747,7 +747,9 @@ public class Fields {
 	public static final int warmupTargetAfrBins_offset = 2264;
 	public static final int warmupTargetAfr_offset = 2280;
 	public static final int warmupAfrThreshold_offset = 2296;
-	public static final int unused_offset = 2300;
+	public static final int boostCutPressure_offset = 2300;
+	public static final int unused_offset = 2304;
+	public static final int unused_offset_hex = 900;
 	public static final int le_formulas1_offset = 3016;
 	public static final int le_formulas2_offset = 3216;
 	public static final int le_formulas3_offset = 3416;
@@ -1284,6 +1286,7 @@ public class Fields {
 	public static final Field WARMUPAFRPID_DFACTOR = Field.create("WARMUPAFRPID_DFACTOR", 2256, FieldType.FLOAT);
 	public static final Field WARMUPAFRPID_OFFSET = Field.create("WARMUPAFRPID_OFFSET", 2260, FieldType.FLOAT);
 	public static final Field WARMUPAFRTHRESHOLD = Field.create("WARMUPAFRTHRESHOLD", 2296, FieldType.FLOAT);
+	public static final Field BOOSTCUTPRESSURE = Field.create("BOOSTCUTPRESSURE", 2300, FieldType.FLOAT);
 	public static final Field LE_FORMULAS1 = Field.create("LE_FORMULAS1", 3016, FieldType.INT);
 	public static final Field LE_FORMULAS2 = Field.create("LE_FORMULAS2", 3216, FieldType.INT);
 	public static final Field LE_FORMULAS3 = Field.create("LE_FORMULAS3", 3416, FieldType.INT);
