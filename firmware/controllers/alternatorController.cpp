@@ -43,7 +43,6 @@ static LocalVersionHolder parametersVersion;
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif
 
-static bool plainOnOffControlEnabled = false;
 static bool currentPlainOnOffState = false;
 
 static msg_t AltCtrlThread(int param) {
@@ -71,7 +70,7 @@ static msg_t AltCtrlThread(int param) {
 		float vBatt = getVBatt(PASS_ENGINE_PARAMETER_F);
 		float targetVoltage = engineConfiguration->targetVBatt;
 
-		if (plainOnOffControlEnabled) {
+		if (boardConfiguration->onOffAlternatorLogic) {
 			float h = 0.1;
 			bool newState = (vBatt < targetVoltage - h) || (currentPlainOnOffState && vBatt < targetVoltage);
 			alternatorPin.setValue(newState);
@@ -150,7 +149,7 @@ void initAlternatorCtrl(Logging *sharedLogger) {
 	if (boardConfiguration->alternatorControlPin == GPIO_UNASSIGNED)
 		return;
 
-	if (plainOnOffControlEnabled) {
+	if (boardConfiguration->onOffAlternatorLogic) {
 		outputPinRegisterExt2("on/off alternator", &alternatorPin, boardConfiguration->alternatorControlPin,
 				&DEFAULT_OUTPUT);
 

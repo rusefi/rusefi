@@ -362,6 +362,7 @@
 #define useLcdScreen_offset 1000
 #define startConsoleInBinaryMode_offset 1000
 #define useWarmupPidAfr_offset 1000
+#define onOffAlternatorLogic_offset 1000
 #define logicAnalyzerPins1_offset 1004
 #define logicAnalyzerPins2_offset 1008
 #define logicAnalyzerPins3_offset 1012
