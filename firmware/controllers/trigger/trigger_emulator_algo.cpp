@@ -33,13 +33,13 @@ TriggerEmulatorHelper::TriggerEmulatorHelper() {
 }
 
 // this is not the only place where we have 'isUpEvent'. todo: reuse
-static bool isUpEvent[6] = { false, true, false, true, false, true };
+static bool isRisingEdge[6] = { false, true, false, true, false, true };
 
 EXTERN_ENGINE
 ;
 
 static void fireShaftSignal(trigger_event_e signal) {
-	if (!engineConfiguration->useOnlyFrontForTrigger || isUpEvent[(int) signal])
+	if (!engineConfiguration->useOnlyFrontForTrigger || isRisingEdge[(int) signal])
 		hwHandleShaftSignal(signal);
 }
 
