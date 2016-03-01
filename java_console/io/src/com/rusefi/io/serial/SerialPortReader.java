@@ -6,12 +6,14 @@ import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Date: 12/25/12
  * (c) Andrey Belomutskiy
  */
 public class SerialPortReader implements SerialPortEventListener {
+    private static final int[] SLEEP_DURATIONS = {2, 20, 50, 100};
     private final SerialPort serialPort;
     private DataListener listener;
 
@@ -23,23 +25,40 @@ public class SerialPortReader implements SerialPortEventListener {
             public void run() {
                 try {
                     while (serialPort.isOpened()) {
-                        byte[] data;
-                        synchronized (serialPort) {
-                            data = serialPort.readBytes();
-                        }
-                        if (data != null) {
+                        byte[] data = progressiveSleepRead(serialPort);
+                        if (data != null)
                             listener.onDataArrived(data);
-                        } else {
-                            Thread.sleep(100);
-                        }
                     }
                 } catch (SerialPortException e) {
                     e.printStackTrace();
-                } catch (InterruptedException e) {
-                    throw new IllegalStateException(e);
                 }
             }
         }, "Reader_" + serialPort).start();
+    }
+
+    /**
+     * This method starts with shorter sleeps (which we do not know to what extent Windows handle) and then we sleep
+     * a bit longer
+     * @param serialPort port to read from
+     * @return fresh data or null
+     */
+    @Nullable
+    private static byte[] progressiveSleepRead(SerialPort serialPort) throws SerialPortException {
+        for (int sleepDuration : SLEEP_DURATIONS) {
+            byte[] data;
+            synchronized (serialPort) {
+                data = serialPort.readBytes();
+            }
+            if (data != null)
+                return data;
+            try {
+                Thread.sleep(sleepDuration);
+            } catch (InterruptedException e) {
+                throw new IllegalStateException(e);
+            }
+        }
+
+        return null;
     }
 
     public void serialEvent(SerialPortEvent spe) {
