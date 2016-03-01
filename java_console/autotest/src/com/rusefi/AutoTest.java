@@ -174,7 +174,7 @@ public class AutoTest {
         msg = "ProtegeLX running";
         IoUtil.changeRpm(2000);
         chart = nextChart();
-        x = 127.92;
+        x = 112;
         assertWave(msg, chart, EngineChart.SPARK_1, 0.13333333333333333, x, x + 180, x + 360, x + 540);
         x = 0;
         assertWaveFall(msg, chart, EngineChart.INJECTOR_1, 0.04666666666666654, x + 180, x + 540);
