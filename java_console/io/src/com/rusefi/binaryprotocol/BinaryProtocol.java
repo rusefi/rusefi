@@ -6,11 +6,7 @@ import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Pair;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.io.CommandQueue;
-import com.rusefi.io.DataListener;
-import com.rusefi.io.IoStream;
-import com.rusefi.io.LinkManager;
-import com.rusefi.io.CommunicationLoggingHolder;
+import com.rusefi.io.*;
 import com.rusefi.io.serial.PortHolder;
 import com.rusefi.io.serial.SerialIoStream;
 import jssc.SerialPort;
@@ -324,11 +320,13 @@ public class BinaryProtocol {
                 continue;
             }
 
+            ConnectionStatus.INSTANCE.markConnected();
             System.arraycopy(response, 1, image.getContent(), offset, requestSize);
 
             offset += requestSize;
         }
         logger.info("Got configuration from controller.");
+        ConnectionStatus.INSTANCE.setValue(ConnectionStatus.Value.CONNECTED);
         setController(image);
     }
 

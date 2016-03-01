@@ -3,6 +3,7 @@ package com.rusefi;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.MessagesCentral;
+import com.rusefi.io.ConnectionStatus;
 import com.rusefi.io.ConnectionWatchdog;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.PortHolder;
@@ -15,6 +16,7 @@ import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.DefaultExceptionHandler;
 import com.rusefi.ui.util.FrameHelper;
 import com.rusefi.ui.util.JustOneInstance;
+import com.rusefi.ui.util.UiUtils;
 import jssc.SerialPortList;
 
 import javax.swing.*;
@@ -34,13 +36,38 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20160213;
+    public static final int CONSOLE_VERSION = 20160229;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
     protected static final String SPEED_KEY = "speed";
     private final String port;
-    private final JTabbedPane tabbedPane = new JTabbedPane();
+    private final JTabbedPane tabbedPane = new JTabbedPane() {
+        @Override
+        public void paint(Graphics g) {
+            super.paint(g);
+            paintStatusText(g);
+        }
+
+        private void paintStatusText(Graphics g) {
+            Font f = g.getFont();
+            g.setFont(new Font(f.getName(), f.getStyle(), f.getSize() * 4));
+            Dimension d = getSize();
+            String text;
+            switch (ConnectionStatus.INSTANCE.getValue()) {
+                case NOT_CONNECTED:
+                    text = "Not connected";
+                    break;
+                case LOADING:
+                    text = "Loading";
+                    break;
+                default:
+                    text = "";
+            }
+            int labelWidth = g.getFontMetrics().stringWidth(text);
+            g.drawString(text, (d.width - labelWidth) / 2, d.height / 2);
+        }
+    };
     private static AtomicReference<String> firmwareVersion = new AtomicReference<>("N/A");
 
     private static Frame staticFrame;
@@ -138,6 +165,7 @@ public class Launcher {
             @Override
             public void onConnectionStatus(boolean isConnected) {
                 setTitle();
+                UiUtils.trueRepaint(tabbedPane); // this would repaint status label
             }
         });
 

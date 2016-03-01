@@ -112,6 +112,13 @@ icuchannel_t getInputCaptureChannel(brain_pin_e hwPin) {
 	}
 }
 
+/**
+ * as of Feb 2016, TIM1, TIM2, TIM3 and TIM4 are used for input capture
+ * (that's the kind of event you need for shaft position sensor)
+ * ChibiOS limitation is that only channels #1 and #2 could be used for input capture
+ *
+ * TODO: migrate slow ADC to software timer so that TIM8 is also available for input capture
+ */
 ICUDriver * getInputCaptureDriver(brain_pin_e hwPin) {
 #if STM32_ICU_USE_TIM1
 	if (hwPin == GPIOA_8 ||
@@ -121,13 +128,23 @@ ICUDriver * getInputCaptureDriver(brain_pin_e hwPin) {
 	}
 #endif
 #if STM32_ICU_USE_TIM2
-	if (hwPin == GPIOA_5) {
+	if (hwPin == GPIOA_1 ||
+		hwPin == GPIOA_5 ||
+		hwPin == GPIOB_3) {
 		return &ICUD2;
 	}
 #endif
 #if STM32_ICU_USE_TIM3
-	if (hwPin == GPIOC_6) {
+	if (hwPin == GPIOA_7 ||
+		hwPin == GPIOC_6 ||
+		hwPin == GPIOC_7) {
 		return &ICUD3;
+	}
+#endif
+#if STM32_ICU_USE_TIM8
+	if (hwPin == GPIOC_6 ||
+		hwPin == GPIOC_7) {
+		return &ICUD9;
 	}
 #endif
 #if STM32_ICU_USE_TIM9

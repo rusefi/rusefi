@@ -5,7 +5,7 @@ import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.Field;
 import com.rusefi.io.CommandQueue;
-import com.rusefi.ui.ConnectionStatus;
+import com.rusefi.io.ConnectionStatus;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

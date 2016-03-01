@@ -2,6 +2,7 @@ package com.rusefi.ui;
 
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.io.ConnectionStatus;
 
 import javax.swing.*;
 import java.awt.*;
