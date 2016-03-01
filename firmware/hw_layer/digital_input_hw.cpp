@@ -113,7 +113,7 @@ icuchannel_t getInputCaptureChannel(brain_pin_e hwPin) {
 }
 
 /**
- * as of Feb 2016, TIM1, TIM2, TIM3 and TIM4 are used for input capture
+ * as of Feb 2016, TIM1, TIM2, TIM3 and TIM9 are used for input capture
  * (that's the kind of event you need for shaft position sensor)
  * ChibiOS limitation is that only channels #1 and #2 could be used for input capture
  *
