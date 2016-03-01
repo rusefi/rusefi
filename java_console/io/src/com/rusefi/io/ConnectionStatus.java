@@ -1,12 +1,11 @@
-package com.rusefi.ui;
+package com.rusefi.io;
 
 import com.rusefi.Timeouts;
 import com.rusefi.core.EngineTimeListener;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.io.ConnectionWatchdog;
-import com.rusefi.io.LinkManager;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -20,30 +19,38 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ConnectionStatus {
     // todo: react to any message as connected? how to know if message from controller, not internal message?
     private static final String FATAL_MESSAGE_PREFIX = "FATAL";
-    private boolean isConnected;
+    @NotNull
+    private Value value = Value.NOT_CONNECTED;
+
+    public enum Value {
+        NOT_CONNECTED,
+        LOADING,
+        CONNECTED
+    }
 
     public static ConnectionStatus INSTANCE = new ConnectionStatus();
     private List<Listener> listeners = new CopyOnWriteArrayList<>();
 
+    private final Timer timer = new Timer(Timeouts.CS_TIMEOUT, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            setValue(Value.NOT_CONNECTED);
+        }
+    });
+
     private ConnectionStatus() {
-        final Timer timer = new Timer(Timeouts.CS_TIMEOUT, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setConnected(false);
-            }
-        });
 
         LinkManager.engineState.timeListeners.add(new EngineTimeListener() {
             @Override
             public void onTime(double time) {
-                markConnected(timer);
+                markConnected();
             }
         });
 
         SensorCentral.getInstance().addListener(Sensor.TIME_SECONDS, new SensorCentral.SensorListener() {
             @Override
             public void onSensorUpdate(double value) {
-                setConnected(true);
+                markConnected();
             }
         });
 
@@ -51,33 +58,39 @@ public class ConnectionStatus {
             @Override
             public void onMessage(Class clazz, String message) {
                 if (message.startsWith(FATAL_MESSAGE_PREFIX))
-                    markConnected(timer);
+                    markConnected();
             }
         });
     }
 
-    private void markConnected(Timer timer) {
-        setConnected(true);
+    public void markConnected() {
+        if (value == Value.NOT_CONNECTED)
+            setValue(Value.LOADING);
         /**
          * this timer will catch engine inactivity and display a warning
          */
         timer.restart();
     }
 
-    private void setConnected(boolean isConnected) {
-        if (isConnected == this.isConnected)
+    public void setValue(@NotNull Value value) {
+        if (value == this.value)
             return;
-        this.isConnected = isConnected;
+        this.value = value;
         for (Listener listener : listeners)
-            listener.onConnectionStatus(isConnected);
+            listener.onConnectionStatus(isConnected());
     }
 
     public boolean isConnected() {
-        return isConnected;
+        return value != Value.NOT_CONNECTED;
+    }
+
+    @NotNull
+    public Value getValue() {
+        return value;
     }
 
     /**
-     * @see #setConnected(boolean)
+     * @see #setValue
      */
     public void addListener(Listener listener) {
         listeners.add(listener);
