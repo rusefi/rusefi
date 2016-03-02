@@ -89,7 +89,7 @@ Text Label 15350 2925 0    60   ~ 0
 5V
 Text Label 12400 2725 2    60   ~ 0
 5V
-Text Notes 12700 3700 0    60   ~ 0
+Text Notes 12700 3825 0    60   ~ 0
 The resistors across pins 9,10 and 15,16 are not typically installed, they \nare only used on really hot VR signals, to dampen the signal.\n\n
 NoConn ~ 13900 3125
 NoConn ~ 13900 2625
@@ -543,7 +543,7 @@ Wire Wire Line
 	14950 2925 14950 2975
 Wire Wire Line
 	15350 2975 15350 2825
-Text Notes 7850 1550 0    60   ~ 0
+Text Notes 8275 1700 0    60   ~ 0
 When configured for VR, do not populate W1002 or W1003. \nThese jumpers allow isolation which prevents the VR signal\nfrom getting into the 5V or GND.
 Wire Notes Line
 	10650 1850 9850 1700
@@ -771,7 +771,7 @@ A5 59 F5 B1 ED D5 9C E8 08 07 C1 10 44 1D F4 AD 07 F1 EE 83 D4 9E 31 37 D1 64 C2
 91 A1 43 C2 7E 0D F2 19 C8 78 B5 F5 02 22 D3 58 57 2B CC D7 85 6C 4C FF 31 A8 98 C5 16 50 F4 35 
 41 15 35 A0 12 56 8D 98 62 CC A4 7E EE 36 1A 96 19 07 03 43 5B C1 32 E3 60 60 68 37 58 F4 62 60 
 68 2B 58 F4 62 60 68 2B 58 F4 62 60 68 2B 38 8D 7C DE 00 03 03 43 3D D8 D8 8B 81 A1 AD FC 1F C1 
-73 C1 3C 5D 72 1D 52 00 00 00 00 49 45 4E 44 AE 42 60 82 00 
+73 C1 3C 5D 72 1D 52 00 00 00 00 49 45 4E 44 AE 42 60 82 0A 
 EndData
 $EndBitmap
 $Bitmap
@@ -1589,61 +1589,18 @@ D1 E0 5B BE B3 5C 1C 46 87 19 AC E5 66 43 BC 68 68 3B B2 C3 22 C5 ED 4F 8C 40 D0
 F9 FD F8 6F C3 B7 E1 FF 4A F8 1F 82 A1 9E E6 AC D5 18 79 00 00 00 00 49 45 4E 44 AE 42 60 82 00 
 EndData
 $EndBitmap
-Text Notes 12150 1400 0    60   ~ 0
+Text Notes 12200 1550 0    60   ~ 0
 Many Hall sensors are set as a open collector sinking topology. \nThose setups require a pull up resistor, and 1k ohm is a common size. \nThese pull up resistors are noted as R137 and R141 on this page.\nYou need to match these pull up resistors with your hall sensors requirements.\nOften you need about 5mA of drive. See snippet from Cherry hall sensors to the right.\nSome sensors are the inverse, and need a pull down resistor. These are less common.\nThese pull down resistors are noted as R801 and R802 on this page and are \nnot typically installed.\n
 Wire Notes Line
 	11550 1800 12100 1600
 Wire Notes Line
 	12300 3500 12650 3650
-Wire Wire Line
-	14075 4375 13600 4375
-Wire Wire Line
-	12325 4375 12800 4375
-Wire Wire Line
-	12325 4475 12800 4475
-Wire Wire Line
-	14075 4675 13600 4675
-Wire Wire Line
-	14075 4775 13600 4775
-Wire Wire Line
-	14075 4575 13600 4575
-Wire Wire Line
-	14075 4475 13600 4475
-Text Notes 12325 4175 0    60   ~ 0
+Text Notes 15250 2025 0    60   ~ 0
 FIRMWARE PINOUT
-Text Label 12575 4375 2    60   ~ 0
+Text Label 15425 2250 2    60   ~ 0
 CAM
-Text Label 12400 4475 0    60   ~ 0
+Text Label 15925 2250 0    60   ~ 0
 CRANK
-Entry Wire Line
-	14075 4475 14175 4575
-Entry Wire Line
-	14075 4575 14175 4675
-Entry Wire Line
-	14075 4775 14175 4875
-Entry Wire Line
-	14075 4675 14175 4775
-Entry Wire Line
-	12225 4675 12325 4575
-Entry Wire Line
-	12225 4575 12325 4475
-Entry Wire Line
-	14075 4375 14175 4475
-Entry Wire Line
-	12225 4475 12325 4375
-$Comp
-L CONN_5X2 P103
-U 1 1 56D5985D
-P 13200 4575
-F 0 "P103" H 13200 4875 60  0000 C CNN
-F 1 "CONN_5X2" V 13200 4575 50  0000 C CNN
-F 2 "PIN_ARRAY_5x2" H 13200 4575 60  0001 C CNN
-F 3 "" H 13200 4575 60  0000 C CNN
-	1    13200 4575
-	1    0    0    -1  
-$EndComp
-Text Label 12750 4575 2    60   ~ 0
-CS-KN1
 $Comp
 L CONN_4 P104
 U 1 1 56D5985E
@@ -1658,32 +1615,16 @@ $EndComp
 $Comp
 L GND #PWR07
 U 1 1 56D5985F
-P 12750 4675
-F 0 "#PWR07" H 12750 4675 30  0001 C CNN
-F 1 "GND" H 12750 4605 30  0001 C CNN
-F 2 "" H 12750 4675 60  0001 C CNN
-F 3 "" H 12750 4675 60  0001 C CNN
-	1    12750 4675
+P 15375 2350
+F 0 "#PWR07" H 15375 2350 30  0001 C CNN
+F 1 "GND" H 15375 2280 30  0001 C CNN
+F 2 "" H 15375 2350 60  0001 C CNN
+F 3 "" H 15375 2350 60  0001 C CNN
+	1    15375 2350
 	0    1    1    0   
 $EndComp
-Entry Wire Line
-	12225 4875 12325 4775
 Wire Wire Line
-	12325 4775 12800 4775
-Wire Wire Line
-	12325 4575 12800 4575
-Text Label 13650 4475 0    60   ~ 0
-5v stab
-Text Label 13750 4375 2    60   ~ 0
-5V
-Wire Wire Line
-	12800 4675 12750 4675
-Wire Bus Line
-	14175 3900 14175 4875
-Wire Bus Line
-	12225 3900 12225 4875
-Wire Bus Line
-	12225 3900 12600 3900
+	15425 2350 15375 2350
 Text Label 15150 2700 2    60   ~ 0
 CRANK
 Text Label 15150 3200 2    60   ~ 0
@@ -1708,4 +1649,40 @@ Wire Wire Line
 	10150 2725 10650 2725
 Wire Wire Line
 	10650 2725 10650 2625
+$Comp
+L CONN_02X02 P103
+U 1 1 56D6232B
+P 15675 2300
+F 0 "P103" H 15675 2450 50  0000 C CNN
+F 1 "CONN_02X02" H 15675 2150 50  0000 C CNN
+F 2 "Socket_Strip_Straight_2x02" H 15675 1100 50  0001 C CNN
+F 3 "" H 15675 1100 50  0000 C CNN
+	1    15675 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR08
+U 1 1 56D625BF
+P 15975 2350
+F 0 "#PWR08" H 15975 2350 30  0001 C CNN
+F 1 "GND" H 15975 2280 30  0001 C CNN
+F 2 "" H 15975 2350 60  0001 C CNN
+F 3 "" H 15975 2350 60  0001 C CNN
+	1    15975 2350
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	15925 2350 15975 2350
+$Comp
+L CONN_01X01 P105
+U 1 1 56D641A2
+P 14425 1925
+F 0 "P105" H 14425 2025 50  0000 C CNN
+F 1 "CONN_01X01" V 14525 1925 50  0001 C CNN
+F 2 "Socket_Strip_Straight_1x01" H 14425 1925 50  0001 C CNN
+F 3 "" H 14425 1925 50  0000 C CNN
+	1    14425 1925
+	0    -1   -1   0   
+$EndComp
+Connection ~ 14425 2125
 $EndSCHEMATC
