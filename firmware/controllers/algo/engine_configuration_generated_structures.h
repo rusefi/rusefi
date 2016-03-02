@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 28 00:56:56 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Mar 01 22:57:52 EST 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1573,7 +1573,7 @@ typedef struct {
 	/**
 	 * offset 9176
 	 */
-	ignition_table_t ignitionIatCorrTable;
+	angle_table_t ignitionIatCorrTable;
 	/**
 	 * offset 10200
 	 */
@@ -1585,7 +1585,7 @@ typedef struct {
 	/**
 	 * offset 10328
 	 */
-	ignition_table_t injectionPhase;
+	angle_table_t injectionPhase;
 	/**
 	 * offset 11352
 	 */
@@ -1648,4 +1648,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 28 00:56:56 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Mar 01 22:57:52 EST 2016

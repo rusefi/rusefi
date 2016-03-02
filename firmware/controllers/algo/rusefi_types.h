@@ -67,6 +67,9 @@ typedef struct {
 	ignition_table_t map;
 } full_i_table_s;
 
+// this is different type simply to have different hi/low range in rusefi.ini
+typedef ignition_table_t angle_table_t;
+
 typedef int cylinders_count_t;
 
 typedef int32_t bool32_t;
