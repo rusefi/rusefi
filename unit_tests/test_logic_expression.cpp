@@ -84,14 +84,18 @@ static void testParsing(void) {
 	assertTrue(element == NULL);
 }
 
-static void testExpression(const char *line, float expected) {
+static void testExpression2(float selfValue, const char *line, float expected) {
 	LEElement thepool[TEST_POOL_SIZE];
 	LEElementPool pool(thepool, TEST_POOL_SIZE);
 	LEElement * element = pool.parseExpression(line);
 	print("Parsing [%s]", line);
 	assertTrueM("Not NULL expected", element != NULL);
 	LECalculator c;
-	assertEqualsM(line, expected, c.getValue2(element, NULL));
+	assertEqualsM(line, expected, c.getValue2(selfValue, element, NULL));
+}
+
+static void testExpression(const char *line, float expected) {
+	testExpression2(0, line, expected);
 }
 
 void testLogicExpressions(void) {
@@ -105,7 +109,7 @@ void testLogicExpressions(void) {
 	value1.init(LE_NUMERIC_VALUE, 123.0);
 	c.add(&value1);
 
-	assertEqualsM("123", 123.0, c.getValue(NULL));
+	assertEqualsM("123", 123.0, c.getValue(0, NULL));
 
 	LEElement value2;
 	value2.init(LE_NUMERIC_VALUE, 321.0);
@@ -114,7 +118,7 @@ void testLogicExpressions(void) {
 	LEElement value3;
 	value3.init(LE_OPERATOR_AND);
 	c.add(&value3);
-	assertEqualsM("123 and 321", 1.0, c.getValue(NULL));
+	assertEqualsM("123 and 321", 1.0, c.getValue(0, NULL));
 
 	/**
 	 * fuel_pump = (time_since_boot < 4 seconds) OR (rpm > 0)
@@ -170,6 +174,8 @@ void testLogicExpressions(void) {
 	testExpression("100 200 1 if", 200);
 	testExpression("10 99 max", 99);
 
+	testExpression2(123, "10 self max", 123);
+
 	testExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR", 1);
 	{
 		LEElement thepool[TEST_POOL_SIZE];
@@ -177,7 +183,7 @@ void testLogicExpressions(void) {
 		LEElement * element = pool.parseExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR");
 		assertTrueM("Not NULL expected", element != NULL);
 		LECalculator c;
-		assertEqualsM("that expression", 1, c.getValue2(element, NULL));
+		assertEqualsM("that expression", 1, c.getValue2(0, element, NULL));
 
 		assertEquals(12, c.currentCalculationLogPosition);
 		assertEquals(102, c.calcLogAction[0]);
