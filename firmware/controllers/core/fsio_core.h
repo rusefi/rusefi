@@ -30,6 +30,7 @@ typedef enum {
 	LE_METHOD_MAX = 13,
 	LE_METHOD_MIN = 14,
 	LE_METHOD_IF = 15,
+	LE_METHOD_SELF = 16,
 
 	LE_METHOD_RPM = 100,
 	LE_METHOD_COOLANT = 101,
@@ -86,8 +87,8 @@ typedef FLStack<float, MAX_STACK_DEPTH> calc_stack_t;
 class LECalculator {
 public:
 	LECalculator();
-	float getValue(Engine *engine);
-	float getValue2(LEElement *element, Engine *engine);
+	float getValue(float selfValue, Engine *engine);
+	float getValue2(float selfValue, LEElement *fistElementInList, Engine *engine);
 	void add(LEElement *element);
 	void reset();
 	void reset(LEElement *element);
@@ -96,7 +97,7 @@ public:
 	int currentCalculationLogPosition;
 private:
 	void push(le_action_e action, float value);
-	bool doJob(Engine *engine, LEElement *element);
+	bool processElement(Engine *engine, LEElement *element);
 	float pop(le_action_e action);
 	LEElement *first;
 	calc_stack_t stack;

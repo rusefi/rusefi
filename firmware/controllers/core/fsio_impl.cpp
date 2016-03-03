@@ -220,7 +220,7 @@ static void handleFsio(Engine *engine, int index) {
 
 	bool isPwmMode = boardConfiguration->fsioFrequency[index] != NO_PWM;
 
-	float fvalue = calc.getValue2(fsioLogics[index], engine);
+	float fvalue = calc.getValue2(engine->engineConfiguration2->fsioLastValue[index], fsioLogics[index], engine);
 	engine->engineConfiguration2->fsioLastValue[index] = fvalue;
 
 	if (isPwmMode) {
@@ -260,7 +260,7 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element, En
 	if (element == NULL) {
 		warning(OBD_PCM_Processor_Fault, "invalid expression for %s", msg);
 	} else {
-		int value = calc.getValue2(element, engine);
+		int value = calc.getValue2(pin->getLogicValue(), element, engine);
 		if (pin->isInitialized() && value != pin->getLogicValue()) {
 			if (isRunningBenchTest()) {
 				return; // let's not mess with bench testing
@@ -417,7 +417,7 @@ static void eval(char *line, Engine *engine) {
 	if (e == NULL) {
 		scheduleMsg(logger, "parsing failed");
 	} else {
-		float result = evalCalc.getValue2(e, engine);
+		float result = evalCalc.getValue2(0, e, engine);
 		scheduleMsg(logger, "Eval result: %f", result);
 	}
 #endif

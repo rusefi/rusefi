@@ -46,6 +46,7 @@ static LENameOrdinalPair leLessOrEquals(LE_OPERATOR_LESS_OR_EQUAL, "<=");
 static LENameOrdinalPair leMax(LE_METHOD_MAX, "max");
 static LENameOrdinalPair leMin(LE_METHOD_MIN, "min");
 static LENameOrdinalPair leIf(LE_METHOD_IF, "if");
+static LENameOrdinalPair leSelf(LE_METHOD_SELF, "self");
 
 LENameOrdinalPair::LENameOrdinalPair(le_action_e action, const char *name) {
 	this->action = action;
@@ -126,7 +127,7 @@ void LECalculator::push(le_action_e action, float value) {
 /**
  * @return true in case of error, false otherwise
  */
-bool LECalculator::doJob(Engine *engine, LEElement *element) {
+bool LECalculator::processElement(Engine *engine, LEElement *element) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	efiAssert(getRemainingStack(chThdSelf()) > 64, "FSIO logic", false);
 #endif
@@ -260,12 +261,12 @@ bool LECalculator::doJob(Engine *engine, LEElement *element) {
 	return false;
 }
 
-float LECalculator::getValue2(LEElement *element, Engine *engine) {
-	reset(element);
-	return getValue(engine);
+float LECalculator::getValue2(float selfValue, LEElement *fistElementInList, Engine *engine) {
+	reset(fistElementInList);
+	return getValue(selfValue, engine);
 }
 
-float LECalculator::getValue(Engine *engine) {
+float LECalculator::getValue(float selfValue, Engine *engine) {
 	if (first == NULL) {
 		warning(OBD_PCM_Processor_Fault, "no FSIO code");
 		return NAN;
@@ -278,10 +279,14 @@ float LECalculator::getValue(Engine *engine) {
 	while (element != NULL) {
 		efiAssert(counter < 200, "FSIOcount", NAN); // just in case
 
-		bool isError = doJob(engine, element);
-		if (isError) {
-			// error already reported
-			return NAN;
+		if (element->action == LE_METHOD_SELF) {
+			push(element->action, selfValue);
+		} else {
+			bool isError = processElement(engine, element);
+			if (isError) {
+				// error already reported
+				return NAN;
+			}
 		}
 		element = element->next;
 		counter++;
