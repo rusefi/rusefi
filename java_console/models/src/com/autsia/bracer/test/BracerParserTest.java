@@ -99,6 +99,9 @@ public class BracerParserTest {
 
         bracerParser.parse("(time_since_boot <= 4) OR (rpm > 0)");
         assertEquals("time_since_boot 4 <= rpm 0 > OR", bracerParser.getRusEfi());
+
+        bracerParser.parse("(self and (rpm > 4800)) OR (rpm > 5000)");
+        assertEquals("self rpm 4800 > & rpm 5000 > OR", bracerParser.getRusEfi());
     }
 
     @Test
