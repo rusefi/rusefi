@@ -67,6 +67,13 @@ typedef struct {
 	ignition_table_t map;
 } full_i_table_s;
 
+typedef float fsio_table_8x8_t[FSIO_TABLE_8][FSIO_TABLE_8];
+typedef struct {
+	float loadBins[FSIO_TABLE_8];
+	float rpmBins[FSIO_TABLE_8];
+	fsio_table_8x8_t map;
+} full_fsio_8x8_table_s;
+
 // this is different type simply to have different hi/low range in rusefi.ini
 typedef ignition_table_t angle_table_t;
 

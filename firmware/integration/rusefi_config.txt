@@ -54,6 +54,8 @@ struct_no_prefix engine_configuration_s
 #define FUEL_RPM_COUNT 16
 #define FUEL_LOAD_COUNT 16
 
+#define FSIO_TABLE_8 8
+
 #define BARO_CORR_SIZE 4
 
 #define MAF_DECODING_COUNT 256
@@ -62,6 +64,9 @@ struct_no_prefix engine_configuration_s
 custom fuel_table_t	1024 array,   F32,   @OFFSET@, [16x16],"ms",      1,     0,      0.0,   300.0,   2
 custom ve_table_t 1024 array,   F32,   @OFFSET@, [16x16],"%", 1, 0, 0, 999.0, 2
 custom afr_table_t 1024 array,   F32,   @OFFSET@, [16x16],"deg",	   1,     0,        0,  25.0,     2 
+
+custom fsio_table_8x8_t	256 array,   F32,   @OFFSET@, [8x8],"value",      1,     0,      0.0,   30000.0,   2
+
 
 ! todo support table size multiplocation
 custom baro_corr_table_t 64 array,   F32,   @OFFSET@, [@@BARO_CORR_SIZE@@x@@BARO_CORR_SIZE@@],"%", 1, 0, 0, 999.0, 2
@@ -703,5 +708,13 @@ float[FUEL_RPM_COUNT] afrRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 ! ve_table_t ve2Table;
 ! float[FUEL_LOAD_COUNT] ve2LoadBins;;"%",	1,   0.0,        0,  300.0,   2
 ! float[FUEL_RPM_COUNT] ve2RpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
+
+fsio_table_8x8_t fsioTable1;
+float[FSIO_TABLE_8] fsioTable1LoadBins;;"L",	   1,      0,      0.0,  30000.0,   2
+float[FSIO_TABLE_8] fsioTable1RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	   1,      0,      0.0,  25500.0,   2
+
+fsio_table_8x8_t fsioTable2;
+float[FSIO_TABLE_8] fsioTable2LoadBins;;"L",	   1,      0,      0.0,  30000.0,   2
+float[FSIO_TABLE_8] fsioTable2RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	   1,      0,      0.0,  25500.0,   2
 
 end_struct

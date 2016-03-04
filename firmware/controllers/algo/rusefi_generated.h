@@ -22,6 +22,7 @@
 #define LE_COMMAND_COUNT 16
 #define FUEL_RPM_COUNT 16
 #define FUEL_LOAD_COUNT 16
+#define FSIO_TABLE_8 8
 #define BARO_CORR_SIZE 4
 #define MAF_DECODING_COUNT 256
 #define engineConfiguration_offset 0
