@@ -366,6 +366,11 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setFuelTablesLoadBin(10, 160 PASS_ENGINE_PARAMETER);
 	setDefaultIatTimingCorrection(PASS_ENGINE_PARAMETER_F);
 
+	setTableBin2(config->fsioTable1LoadBins, FSIO_TABLE_8, 20, 120, 10);
+	setRpmTableBin(config->fsioTable1RpmBins, FSIO_TABLE_8);
+	setTableBin2(config->fsioTable2LoadBins, FSIO_TABLE_8, 20, 120, 10);
+	setRpmTableBin(config->fsioTable2RpmBins, FSIO_TABLE_8);
+
 	initEngineNoiseTable(PASS_ENGINE_PARAMETER_F);
 
 	setThermistorConfiguration(&engineConfiguration->clt, 0, 9500, 23.8889, 2100, 48.8889, 1000);
