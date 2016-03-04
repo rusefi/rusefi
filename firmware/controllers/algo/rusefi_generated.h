@@ -810,4 +810,14 @@
 #define afrTable_offset 14936
 #define afrLoadBins_offset 15960
 #define afrRpmBins_offset 16024
-#define TOTAL_CONFIG_SIZE 16088
+#define fsioTable1_offset 16088
+#define fsioTable1LoadBins_offset 16344
+#define fsioTable1RpmBins_offset 16376
+#define fsioTable2_offset 16408
+#define fsioTable2_offset_hex 4018
+#define fsioTable2LoadBins_offset 16664
+#define fsioTable2LoadBins_offset_hex 4118
+#define fsioTable2RpmBins_offset 16696
+#define fsioTable2RpmBins_offset_hex 4138
+#define TOTAL_CONFIG_SIZE 16728
+#define TOTAL_CONFIG_SIZE_hex 4158
