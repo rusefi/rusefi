@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 28 00:56:56 EST 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Mar 03 21:43:13 EST 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int TS_FILE_VERSION = 20160122;
@@ -26,6 +26,7 @@ public class Fields {
 	public static final int LE_COMMAND_COUNT = 16;
 	public static final int FUEL_RPM_COUNT = 16;
 	public static final int FUEL_LOAD_COUNT = 16;
+	public static final int FSIO_TABLE_8 = 8;
 	public static final int BARO_CORR_SIZE = 4;
 	public static final int MAF_DECODING_COUNT = 256;
 	public static final int engineConfiguration_offset = 0;
@@ -813,7 +814,17 @@ public class Fields {
 	public static final int afrTable_offset = 14936;
 	public static final int afrLoadBins_offset = 15960;
 	public static final int afrRpmBins_offset = 16024;
-	public static final int TOTAL_CONFIG_SIZE = 16088;
+	public static final int fsioTable1_offset = 16088;
+	public static final int fsioTable1LoadBins_offset = 16344;
+	public static final int fsioTable1RpmBins_offset = 16376;
+	public static final int fsioTable2_offset = 16408;
+	public static final int fsioTable2_offset_hex = 4018;
+	public static final int fsioTable2LoadBins_offset = 16664;
+	public static final int fsioTable2LoadBins_offset_hex = 4118;
+	public static final int fsioTable2RpmBins_offset = 16696;
+	public static final int fsioTable2RpmBins_offset_hex = 4138;
+	public static final int TOTAL_CONFIG_SIZE = 16728;
+	public static final int TOTAL_CONFIG_SIZE_hex = 4158;
 	public static final Field ENGINETYPE = Field.create("ENGINETYPE", 0, FieldType.INT);
 	public static final Field ENGINESNIFFERRPMTHRESHOLD = Field.create("ENGINESNIFFERRPMTHRESHOLD", 4, FieldType.INT);
 	public static final Field INJECTOR_FLOW = Field.create("INJECTOR_FLOW", 8, FieldType.FLOAT);
@@ -1311,4 +1322,6 @@ public class Fields {
 	public static final Field IGNITIONTABLE = Field.create("IGNITIONTABLE", 12632, FieldType.INT);
 	public static final Field VETABLE = Field.create("VETABLE", 13784, FieldType.INT);
 	public static final Field AFRTABLE = Field.create("AFRTABLE", 14936, FieldType.INT);
+	public static final Field FSIOTABLE1 = Field.create("FSIOTABLE1", 16088, FieldType.INT);
+	public static final Field FSIOTABLE2 = Field.create("FSIOTABLE2", 16408, FieldType.INT);
 }

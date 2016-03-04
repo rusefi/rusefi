@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Mar 01 22:57:52 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Mar 03 21:43:13 EST 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1643,9 +1643,35 @@ typedef struct {
 	 * offset 16024
 	 */
 	float afrRpmBins[FUEL_RPM_COUNT];
-	/** total size 16088*/
+	/**
+	 * offset 16088
+	 */
+	fsio_table_8x8_t fsioTable1;
+	/**
+	 * offset 16344
+	 */
+	float fsioTable1LoadBins[FSIO_TABLE_8];
+	/**
+	 * RPM is float and not integer in order to use unified methods for interpolation
+	 * offset 16376
+	 */
+	float fsioTable1RpmBins[FSIO_TABLE_8];
+	/**
+	 * offset 16408
+	 */
+	fsio_table_8x8_t fsioTable2;
+	/**
+	 * offset 16664
+	 */
+	float fsioTable2LoadBins[FSIO_TABLE_8];
+	/**
+	 * RPM is float and not integer in order to use unified methods for interpolation
+	 * offset 16696
+	 */
+	float fsioTable2RpmBins[FSIO_TABLE_8];
+	/** total size 16728*/
 } persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Mar 01 22:57:52 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Mar 03 21:43:13 EST 2016
