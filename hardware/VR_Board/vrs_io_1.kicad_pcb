@@ -15,7 +15,7 @@
   (page A)
   (title_block
     (title "VR board")
-    (date 2016-02-29)
+    (date 2016-03-03)
     (company "rusEFI by DAECU")
   )
 
@@ -67,7 +67,7 @@
     (aux_axis_origin 0 0)
     (visible_elements 7FFFF77F)
     (pcbplotparams
-      (layerselection 0x00030_80000001)
+      (layerselection 0x010f0_80000001)
       (usegerberextensions true)
       (excludeedgelayer true)
       (linewidth 0.150000)
@@ -1133,7 +1133,7 @@
   (segment (start 193.04 127) (end 195.2625 127) (width 0.254) (layer F.Cu) (net 4))
   (segment (start 195.2625 124.46) (end 193.04 124.46) (width 0.254) (layer B.Cu) (net 5))
   (segment (start 193.04 124.46) (end 195.2625 124.46) (width 0.254) (layer F.Cu) (net 5))
-  (segment (start 213.36 132.08) (end 213.36 130.81) (width 0.254) (layer F.Cu) (net 6) (status 400000))
+  (segment (start 213.36 132.08) (end 213.36 130.81) (width 0.254) (layer F.Cu) (net 6))
   (via (at 210.82 128.905) (size 0.889) (drill 0.635) (layers F.Cu B.Cu) (net 6))
   (segment (start 211.455 128.905) (end 210.82 128.905) (width 0.254) (layer F.Cu) (net 6) (tstamp 56D81CB4))
   (segment (start 213.36 130.81) (end 211.455 128.905) (width 0.254) (layer F.Cu) (net 6) (tstamp 56D81CB2))

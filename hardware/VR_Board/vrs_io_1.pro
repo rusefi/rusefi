@@ -1,4 +1,4 @@
-update=2/29/2016 8:07:21 PM
+update=3/3/2016 7:43:37 PM
 last_client=kicad
 [common]
 NetDir=
@@ -9,16 +9,6 @@ version=1
 NetIExt=net
 [cvpcb/libraries]
 EquName1=devcms
-[schematic_editor]
-version=1
-PageLayoutDescrFile=C:/Users/Vista_64_D630/Desktop/Jared/code/Hardware/trunk/rusefi.com/rusefi_lib/Border.kicad_wks
-PlotDirectoryName=
-SubpartIdSeparator=0
-SubpartFirstId=65
-NetFmtName=
-SpiceForceRefPrefix=0
-SpiceUseNetNumbers=0
-LabSize=60
 [eeschema]
 version=1
 LibDir=../rusefi_lib
@@ -51,3 +41,13 @@ SolderMaskMinWidth=0
 DrawSegmentWidth=0.254
 BoardOutlineThickness=0.254
 ModuleOutlineThickness=0.09906
+[schematic_editor]
+version=1
+PageLayoutDescrFile=C:/Users/Vista_64_D630/Desktop/Jared/code/Hardware/trunk/rusefi.com/rusefi_lib/Border.kicad_wks
+PlotDirectoryName=
+SubpartIdSeparator=0
+SubpartFirstId=65
+NetFmtName=
+SpiceForceRefPrefix=0
+SpiceUseNetNumbers=0
+LabSize=60
