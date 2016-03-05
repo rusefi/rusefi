@@ -60,6 +60,7 @@ typedef struct {
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_CHUNK_WRITE_COMMAND 'C'
 #define TS_BURN_COMMAND 'B'
+#define TS_IO_TEST_COMMAND 'w'
 
 #define TS_CRC_CHECK_COMMAND 'k'
 
