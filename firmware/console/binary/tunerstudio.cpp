@@ -755,7 +755,7 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		 */
 	} else if (command == TS_IO_TEST_COMMAND) {
 		int subsystem = data[3];
-		int index = *(short*)data[0];
+		int index = *(short*)&data[0];
 
 		scheduleMsg(&tsLogger, "IO test %d %d %d", incomingPacketSize, subsystem, index);
 		testIoCommand();
