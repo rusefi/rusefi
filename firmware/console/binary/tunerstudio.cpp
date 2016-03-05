@@ -407,6 +407,7 @@ static bool isKnownCommand(char command) {
 	return command == TS_HELLO_COMMAND || command == TS_READ_COMMAND || command == TS_OUTPUT_COMMAND
 			|| command == TS_PAGE_COMMAND || command == TS_BURN_COMMAND || command == TS_SINGLE_WRITE_COMMAND
 			|| command == TS_LEGACY_HELLO_COMMAND || command == TS_CHUNK_WRITE_COMMAND || command == TS_EXECUTE
+			|| command == TS_IO_TEST_COMMAND
 			|| command == TS_GET_TEXT || command == TS_CRC_CHECK_COMMAND;
 }
 
@@ -694,6 +695,10 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 	}
 }
 
+static void testIoCommand(void) {
+
+}
+
 int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize) {
 	char command = data[0];
 	data++;
@@ -748,6 +753,12 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		 * If you are able to just make your firmware ignore the command that would work.
 		 * Currently on some firmware versions the F command is not used and is just ignored by the firmware as a unknown command."
 		 */
+	} else if (command == TS_IO_TEST_COMMAND) {
+		int subsystem = data[3];
+		int index = *(short*)data[0];
+
+		scheduleMsg(&tsLogger, "IO test %d %d %d", incomingPacketSize, subsystem, index);
+		testIoCommand();
 	} else {
 		tunerStudioError("ERROR: ignoring unexpected command");
 		return false;
