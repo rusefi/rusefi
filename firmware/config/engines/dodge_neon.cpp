@@ -305,7 +305,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->afr.hwChannel = EFI_ADC_4;
 
 	commonFrankensoAnalogInputs(engineConfiguration);
-	engineConfiguration->vbattDividerCoeff = ((float) (8.2 + 33)) / 8.2 * 2;
+	engineConfiguration->vbattDividerCoeff = 9.75;// ((float) (8.2 + 33)) / 8.2 * 2;
 
 	/**
 	 * http://rusefi.com/wiki/index.php?title=Manual:Hardware_Frankenso_board
