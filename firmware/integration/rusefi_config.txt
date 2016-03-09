@@ -89,8 +89,8 @@ struct pid_s
 end_struct
 
 struct cranking_parameters_s
-float baseFuel;;"ms",       1,     0,    0, 200,     1
-int16_t rpm;This value controls what RPM values we consider 'cranking' (any RPM below 'crankingRpm')\nAnything above 'crankingRpm' would be 'running';"RPM",      1,     0,    0, 3000,      0
+float baseFuel;+Fuel squirt duration while cranking\nA number of curves adjust this value according to CLT/IAT/TPS etc;"ms",       1,     0,    0, 200,     1
+int16_t rpm;+Cranking mode threshold. Special cranking logic controls fuel and spark while RPM is below this threshold;"RPM",      1,     0,    0, 3000,      0
 end_struct
 
 #define debug_mode_e_enum "ALTERNATOR", "TPS_ACCEL", "WARMUP_PID", "mode3"
@@ -153,8 +153,8 @@ engine_type_e engineType;http://rusefi.com/wiki/index.php?title=Manual:Engine_Ty
 int engineSnifferRpmThreshold;Disable engine sniffer above this rpm;"RPM",      1,     0,    0,30000,      0
 
 struct injector_s
-	float flow;cc/min, cubic centimeter per minute\nBy the way, g/s = 0.125997881 * (lb/hr)\ng/s = 0.125997881 * (cc/min)/10.5\ng/s = 0.0119997981 * cc/min;"cm3/min",  1,     0,      0,   1000,   2
-	float lag;;"msec",     1,     0,      -10,   25.50,  2
+	float flow;+cc/min, cubic centimeter per minute\nBy the way, g/s = 0.125997881 * (lb/hr)\ng/s = 0.125997881 * (cc/min)/10.5\ng/s = 0.0119997981 * cc/min;"cm3/min",  1,     0,      0,   1000,   2
+	float lag;+Base injector lag\nSee also vBatt correction curve;"msec",     1,     0,      -10,   25.50,  2
 
 float[VBAT_INJECTOR_CURVE_SIZE] battLagCorrBins;;"V",        1,     0,      0.0,    20.0,   2
 float[VBAT_INJECTOR_CURVE_SIZE] battLagCorr;;"ms/V",     1,     0,      0.0,    50.0,   2
