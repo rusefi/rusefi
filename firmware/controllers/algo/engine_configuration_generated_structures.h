@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Mar 08 21:51:11 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Mar 08 23:31:32 EST 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -26,12 +26,13 @@ typedef struct {
 
 typedef struct {
 	/**
+	 * Fuel squirt duration while cranking
+	 * A number of curves adjust this value according to CLT/IAT/TPS etc
 	 * offset 0
 	 */
 	float baseFuel;
 	/**
-	 * This value controls what RPM values we consider 'cranking' (any RPM below 'crankingRpm')
-	 * Anything above 'crankingRpm' would be 'running'
+	 * Cranking mode threshold. Special cranking logic controls fuel and spark while RPM is below this threshold
 	 * offset 4
 	 */
 	int16_t rpm;
@@ -178,6 +179,8 @@ typedef struct {
 	 */
 	float flow;
 	/**
+	 * Base injector lag
+	 * See also vBatt correction curve
 	 * offset 4
 	 */
 	float lag;
@@ -1691,4 +1694,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Mar 08 21:51:11 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Mar 08 23:31:32 EST 2016
