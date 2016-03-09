@@ -60,19 +60,9 @@ typedef float ignition_table_t[IGN_LOAD_COUNT][IGN_RPM_COUNT];
 
 typedef float baro_corr_table_t[BARO_CORR_SIZE][BARO_CORR_SIZE];
 
-// todo: rename this structure one all tables migrated
-typedef struct {
-	float loadBins[IGN_LOAD_COUNT];
-	float rpmBins[IGN_RPM_COUNT];
-	ignition_table_t map;
-} full_i_table_s;
-
 typedef float fsio_table_8x8_t[FSIO_TABLE_8][FSIO_TABLE_8];
-typedef struct {
-	float loadBins[FSIO_TABLE_8];
-	float rpmBins[FSIO_TABLE_8];
-	fsio_table_8x8_t map;
-} full_fsio_8x8_table_s;
+typedef float tps_tps_table_t[TPS_TPS_ACCEL_TABLE][TPS_TPS_ACCEL_TABLE];
+
 
 // this is different type simply to have different hi/low range in rusefi.ini
 typedef ignition_table_t angle_table_t;
