@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Mar 08 23:31:32 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Mar 09 14:59:13 EST 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -775,7 +775,7 @@ typedef struct {
 	 */
 	injector_s injector;
 	/**
-	 * Should the trigger emulator push data right into trigger input, eliminating the need for physical jumper wires?
+	 * Should trigger emulator push data right into trigger handling logic, eliminating the need for physical jumper wires?
 	 * PS: Funny name, right? :)
 	offset 80 bit 0 */
 	bool directSelfStimulation : 1;
@@ -896,7 +896,7 @@ typedef struct {
 	 */
 	angle_t injectionOffset;
 	/**
-	 * Timing advance while cranking engine
+	 * Timing advance while engine cranking
 	 * offset 440
 	 */
 	angle_t crankingTimingAngle;
@@ -920,13 +920,13 @@ typedef struct {
 	 */
 	angle_t fixedModeTiming;
 	/**
-	 * This field is the angle between Top Dead Center (TDC) and the first trigger event.
+	 * Angle between Top Dead Center (TDC) and the first trigger event.
 	 * Knowing this angle allows us to control timing and other angles in reference to TDC.
 	 * offset 460
 	 */
 	angle_t globalTriggerAngleOffset;
 	/**
-	 * This parameter holds the coefficient of input voltage dividers
+	 * Coefficient of input voltage dividers on your PCB
 	 * offset 464
 	 */
 	float analogInputDividerCoefficient;
@@ -1694,4 +1694,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Mar 08 23:31:32 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Mar 09 14:59:13 EST 2016
