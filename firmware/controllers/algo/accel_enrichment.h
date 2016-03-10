@@ -27,7 +27,7 @@ public:
 	 * @return Extra fuel squirt duration for TPS acceleration
 	 */
 	floatms_t getTpsEnrichment(DECLARE_ENGINE_PARAMETER_F);
-	float getMaxDelta();
+	float getMaxDelta(DECLARE_ENGINE_PARAMETER_F);
 
 	void onEngineCycle(DECLARE_ENGINE_PARAMETER_F);
 	void onEngineCycleTps(DECLARE_ENGINE_PARAMETER_F);

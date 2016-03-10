@@ -44,10 +44,10 @@ class cyclic_buffer
     int getSize();
     int getCount();
     void clear();
+    volatile T elements[CB_MAX_SIZE];
 
   private:
     void baseC(int size);
-    volatile T elements[CB_MAX_SIZE];
     volatile int currentIndex;
     /**
      * number of elements added into this buffer, would be eventually bigger then size
@@ -101,11 +101,12 @@ cyclic_buffer<T>::~cyclic_buffer() {
 
 template<typename T>
 void cyclic_buffer<T>::add(T value) {
+	elements[currentIndex] = value;
+
 	++currentIndex;
 	if (currentIndex == size) {
 		currentIndex = 0;
 	}
-	elements[currentIndex] = value;
 
 	++count;
 }
@@ -146,7 +147,7 @@ T cyclic_buffer<T>::maxValue(int length) {
 	int ci = currentIndex; // local copy to increase thread-safety
 	T result = -BUFFER_MAX_VALUE; // todo: better min value?
 	for (int i = 0; i < length; ++i) {
-		int index = ci - i;
+		int index = ci - i - 1;
 		while (index < 0) {
 			index += size;
 		}
@@ -166,7 +167,7 @@ T cyclic_buffer<T>::minValue(int length) {
 	int ci = currentIndex; // local copy to increase thread-safety
 	T result = +BUFFER_MAX_VALUE; // todo: better max value?
 	for (int i = 0; i < length; ++i) {
-		int index = ci - i;
+		int index = ci - i - 1;
 		while (index < 0) {
 			index += size;
 		}
@@ -188,7 +189,7 @@ T cyclic_buffer<T>::sum(int length) {
 	T result = 0;
 
 	for (int i = 0; i < length; ++i) {
-		int index = ci - i;
+		int index = ci - i - 1;
 		while (index < 0) {
 			index += size;
 		}

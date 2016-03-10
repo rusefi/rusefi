@@ -26,13 +26,15 @@ void testAccelEnrichment(void) {
 	engine->tpsAccelEnrichment.setLength(4);
 
 	engine->tpsAccelEnrichment.onNewValue(0 PASS_ENGINE_PARAMETER);
+	assertEqualsM("maxDelta", 0, engine->tpsAccelEnrichment.getMaxDelta(PASS_ENGINE_PARAMETER_F));
 	engine->tpsAccelEnrichment.onNewValue(10 PASS_ENGINE_PARAMETER);
+	assertEqualsM("maxDelta", 40, engine->tpsAccelEnrichment.getMaxDelta(PASS_ENGINE_PARAMETER_F));
 	engine->tpsAccelEnrichment.onNewValue(30 PASS_ENGINE_PARAMETER);
-	assertEqualsM("maxDelta", 80, engine->tpsAccelEnrichment.getMaxDelta());
+	assertEqualsM("maxDelta", 80, engine->tpsAccelEnrichment.getMaxDelta(PASS_ENGINE_PARAMETER_F));
 
 	engine->tpsAccelEnrichment.onNewValue(0 PASS_ENGINE_PARAMETER);
 	engine->tpsAccelEnrichment.onNewValue(0 PASS_ENGINE_PARAMETER);
 	engine->tpsAccelEnrichment.onNewValue(0 PASS_ENGINE_PARAMETER);
 	engine->tpsAccelEnrichment.onNewValue(0 PASS_ENGINE_PARAMETER);
-	assertEqualsM("maxDelta", 0, engine->tpsAccelEnrichment.getMaxDelta());
+	assertEqualsM("maxDelta", 0, engine->tpsAccelEnrichment.getMaxDelta(PASS_ENGINE_PARAMETER_F));
 }
