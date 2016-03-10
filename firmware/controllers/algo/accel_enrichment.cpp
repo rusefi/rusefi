@@ -63,15 +63,29 @@ floatms_t WallFuel::getWallFuel(int injectorIndex) {
 	return wallFuel[injectorIndex];
 }
 
-float AccelEnrichmemnt::getMaxDelta() {
-	if (cb.getCount() == 0)
-		return 0; // no recent data
-	return cb.maxValue(cb.getSize());
+float AccelEnrichmemnt::getMaxDelta(DECLARE_ENGINE_PARAMETER_F) {
+
+	int len = minI(cb.getSize(), cb.getCount());
+	if (len < 2)
+		return 0;
+	float maxValue = cb.elements[0] - cb.elements[len - 1];
+	int resultIndex = 0;
+
+	for (int i = 1; i<len;i++) {
+		float v = cb.elements[i] - cb.elements[i - 1];
+		if (v > maxValue) {
+			maxValue = v;
+			resultIndex = i;
+		}
+	}
+
+	FuelSchedule *fs = engine->engineConfiguration2->injectionEvents;
+	return maxValue * fs->eventsCount;
 }
 
 // todo: eliminate code duplication between these two methods! Some pointer magic would help.
 floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_F) {
-	float d = getMaxDelta();
+	float d = getMaxDelta(PASS_ENGINE_PARAMETER_F);
 	if (d > engineConfiguration->tpsAccelEnrichmentThreshold) {
 		return d * engineConfiguration->tpsAccelEnrichmentMultiplier;
 	}
@@ -82,7 +96,7 @@ floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 float AccelEnrichmemnt::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_F) {
-	float d = getMaxDelta();
+	float d = getMaxDelta(PASS_ENGINE_PARAMETER_F);
 	if (d > engineConfiguration->engineLoadAccelEnrichmentThreshold) {
 		return d * engineConfiguration->engineLoadAccelEnrichmentMultiplier;
 	}
@@ -102,16 +116,7 @@ void AccelEnrichmemnt::setLength(int length) {
 }
 
 void AccelEnrichmemnt::onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_S) {
-	if (!cisnan(previousValue)) {
-		/**
-		 * this could be negative, zero or positive
-		 */
-		float delta = currentValue - previousValue;
-		FuelSchedule *fs = engine->engineConfiguration2->injectionEvents;
-		cb.add(delta * fs->eventsCount);
-	}
-
-	previousValue = currentValue;
+	cb.add(currentValue);
 }
 
 void AccelEnrichmemnt::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_F) {
