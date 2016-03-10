@@ -123,13 +123,14 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER);
 	engineConfiguration->afr.hwChannel = EFI_ADC_2; // Frankenso analog #5
 
-	// set_idle_position 35
-	boardConfiguration->manIdlePosition = 35;
+	// set_idle_position 10
+	boardConfiguration->manIdlePosition = 10;
+
+	setWholeIatCorrTimingTable(0 PASS_ENGINE_PARAMETER);
 
 
-
-	// set_global_trigger_offset_angle -40
-	engineConfiguration->globalTriggerAngleOffset = -40;
+	// set_global_trigger_offset_angle -37
+	engineConfiguration->globalTriggerAngleOffset = -37;
 	// set_ignition_offset 0
 	engineConfiguration->ignitionOffset = 0;
 	// set_injection_offset 0
@@ -238,6 +239,12 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	config->ignitionRpmBins[14] = 6500;
 	config->ignitionRpmBins[15] = 7000;
 	copyTimingTable(racingFestivaIgnitionTable, config->ignitionTable);
+
+	//	boardConfiguration->useWarmupPidAfr = true;
+		engineConfiguration->warmupAfrPid.pFactor = -0.2;
+		engineConfiguration->warmupAfrPid.iFactor = -0.0005;
+	//	engineConfiguration->warmupAfrPid.dFactor = -0.02;
+		engineConfiguration->debugMode = WARMUP_ENRICH;
 
 	// end of Ford Escort GT config
 }
