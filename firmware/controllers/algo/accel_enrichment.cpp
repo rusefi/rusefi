@@ -97,6 +97,10 @@ void AccelEnrichmemnt::reset() {
 	previousValue = NAN;
 }
 
+void AccelEnrichmemnt::setLength(int length) {
+	cb.setSize(length);
+}
+
 void AccelEnrichmemnt::onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_S) {
 	if (!cisnan(previousValue)) {
 		/**
@@ -178,21 +182,21 @@ static void setDecelMult(float value) {
 	accelInfo();
 }
 
-static void setTpsAccelLen(int len) {
-	if (len < 1) {
+static void setTpsAccelLen(int length) {
+	if (length < 1) {
 		scheduleMsg(logger, "Length should be positive");
 		return;
 	}
-	engine->tpsAccelEnrichment.cb.setSize(len);
+	engine->tpsAccelEnrichment.setLength(length);
 	accelInfo();
 }
 
-void setEngineLoadAccelLen(int len) {
-	if (len < 1) {
+void setEngineLoadAccelLen(int length) {
+	if (length < 1) {
 		scheduleMsg(logger, "Length should be positive");
 		return;
 	}
-	engine->engineLoadAccelEnrichment.cb.setSize(len);
+	engine->engineLoadAccelEnrichment.setLength(length);
 	accelInfo();
 }
 
