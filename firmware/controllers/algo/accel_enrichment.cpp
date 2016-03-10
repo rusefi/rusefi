@@ -69,13 +69,13 @@ float AccelEnrichmemnt::getMaxDelta(DECLARE_ENGINE_PARAMETER_F) {
 	if (len < 2)
 		return 0;
 	float maxValue = cb.elements[0] - cb.elements[len - 1];
-	int resultIndex = 0;
+//	int resultIndex = 0;
 
 	for (int i = 1; i<len;i++) {
 		float v = cb.elements[i] - cb.elements[i - 1];
 		if (v > maxValue) {
 			maxValue = v;
-			resultIndex = i;
+//			resultIndex = i;
 		}
 	}
 
