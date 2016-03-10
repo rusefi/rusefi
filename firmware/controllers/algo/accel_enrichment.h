@@ -32,6 +32,7 @@ public:
 	void onEngineCycle(DECLARE_ENGINE_PARAMETER_F);
 	void onEngineCycleTps(DECLARE_ENGINE_PARAMETER_F);
 	void reset();
+	void setLength(int length);
 	cyclic_buffer<float> cb;
 	void onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_S);
 

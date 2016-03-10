@@ -10,15 +10,29 @@
 #include "accel_enrichment.h"
 #include "test_accel_enrichment.h"
 #include "engine_configuration.h"
+#include "engine_test_helper.h"
 
 void testAccelEnrichment(void) {
-
-	engine_configuration_s ec;
-	engine_configuration_s *engineConfiguration = &ec;
-
 	printf("*************************************************** testAccelEnrichment\r\n");
 
-	// todo: add test
-	AccelEnrichmemnt instance;
+	EngineTestHelper eth(FORD_ASPIRE_1996);
+	EXPAND_EngineTestHelper;
 
+	engine->rpmCalculator.setRpmValue(600);
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+
+	assertEqualsM("eventsCount", 4, engine->engineConfiguration2->injectionEvents->eventsCount);
+
+	engine->tpsAccelEnrichment.setLength(4);
+
+	engine->tpsAccelEnrichment.onNewValue(0 PASS_ENGINE_PARAMETER);
+	engine->tpsAccelEnrichment.onNewValue(10 PASS_ENGINE_PARAMETER);
+	engine->tpsAccelEnrichment.onNewValue(30 PASS_ENGINE_PARAMETER);
+	assertEqualsM("maxDelta", 80, engine->tpsAccelEnrichment.getMaxDelta());
+
+	engine->tpsAccelEnrichment.onNewValue(0 PASS_ENGINE_PARAMETER);
+	engine->tpsAccelEnrichment.onNewValue(0 PASS_ENGINE_PARAMETER);
+	engine->tpsAccelEnrichment.onNewValue(0 PASS_ENGINE_PARAMETER);
+	engine->tpsAccelEnrichment.onNewValue(0 PASS_ENGINE_PARAMETER);
+	assertEqualsM("maxDelta", 0, engine->tpsAccelEnrichment.getMaxDelta());
 }
