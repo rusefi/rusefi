@@ -63,24 +63,34 @@ floatms_t WallFuel::getWallFuel(int injectorIndex) {
 	return wallFuel[injectorIndex];
 }
 
-float AccelEnrichmemnt::getMaxDelta(DECLARE_ENGINE_PARAMETER_F) {
+int AccelEnrichmemnt::getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_F) {
 
 	int len = minI(cb.getSize(), cb.getCount());
 	if (len < 2)
 		return 0;
-	float maxValue = cb.elements[0] - cb.elements[len - 1];
-//	int resultIndex = 0;
+	int ci = cb.currentIndex - 1;
+	float maxValue = cb.get(ci) - cb.get(ci - 1);
+	int resultIndex = ci;
 
-	for (int i = 1; i<len;i++) {
-		float v = cb.elements[i] - cb.elements[i - 1];
+	// todo: 'get' method is maybe a bit heavy because of the branching
+	// todo: this could be optimized with some careful magic
+
+	for (int i = 1; i<len - 1;i++) {
+		float v = cb.get(ci - i) - cb.get(ci - i - 1);
 		if (v > maxValue) {
 			maxValue = v;
-//			resultIndex = i;
+			resultIndex = ci - i;
 		}
 	}
 
+	return resultIndex;
+}
+
+float AccelEnrichmemnt::getMaxDelta(DECLARE_ENGINE_PARAMETER_F) {
+	int index = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_F);
+
 	FuelSchedule *fs = engine->engineConfiguration2->injectionEvents;
-	return maxValue * fs->eventsCount;
+	return (cb.get(index) - (cb.get(index - 1))) * fs->eventsCount;
 }
 
 // todo: eliminate code duplication between these two methods! Some pointer magic would help.
