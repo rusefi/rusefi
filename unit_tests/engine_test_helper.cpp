@@ -10,6 +10,7 @@
 #include "trigger_decoder.h"
 #include "speed_density.h"
 #include "fuel_math.h"
+#include "accel_enrichment.h"
 
 extern int timeNow;
 
@@ -39,6 +40,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	Engine *engine = &this->engine;
 	prepareFuelMap(PASS_ENGINE_PARAMETER_F);
 
+	initAccelEnrichment(NULL PASS_ENGINE_PARAMETER);
 
 	initSpeedDensity(PASS_ENGINE_PARAMETER_F);
 

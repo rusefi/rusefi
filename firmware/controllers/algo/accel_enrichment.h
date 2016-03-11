@@ -61,7 +61,7 @@ private:
 	floatms_t wallFuel[INJECTION_PIN_COUNT];
 };
 
-void initAccelEnrichment(Logging *sharedLogger);
+void initAccelEnrichment(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S);
 
 void setEngineLoadAccelLen(int len);
 void setEngineLoadAccelThr(float value);
