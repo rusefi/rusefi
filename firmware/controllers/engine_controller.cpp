@@ -547,6 +547,9 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 #if EFI_FSIO || defined(__DOXYGEN__)
 	initFsioImpl(sharedLogger PASS_ENGINE_PARAMETER);
 #endif
+
+	initAccelEnrichment(sharedLogger);
+
 }
 
 void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
@@ -640,8 +643,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	if (engineConfiguration->externalKnockSenseAdc != EFI_ADC_NONE) {
 		addConsoleAction("knockinfo", getKnockInfo);
 	}
-
-	initAccelEnrichment(sharedLogger);
 
 #if EFI_PROD_CODE
 	addConsoleAction("reset_accel", resetAccel);
