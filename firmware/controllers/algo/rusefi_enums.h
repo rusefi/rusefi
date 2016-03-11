@@ -576,7 +576,7 @@ typedef enum {
 
 typedef enum {
 	ALTERNATOR = 0,
-	TPS_ACCEL = 1,
+	DBG_TPS_ACCEL = 1,
 	WARMUP_ENRICH = 2,
 	IDLE = 3,
 
