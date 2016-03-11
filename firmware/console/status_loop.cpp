@@ -580,8 +580,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMaf() : 0;
     tsOutputChannels->massAirFlow = hasMafSensor() ? getRealMaf() : 0;
           
-	tsOutputChannels->veValue = veMap.getValue(getMap(), rpm);
-	tsOutputChannels->currentTargetAfr = afrMap.getValue(getMap(), rpm);
+	tsOutputChannels->veValue = veMap.getValue(rpm, getMap());
+	tsOutputChannels->currentTargetAfr = afrMap.getValue(rpm, getMap());
 	tsOutputChannels->airFuelRatio = getAfr(PASS_ENGINE_PARAMETER_F);
 	if (hasVBatt(PASS_ENGINE_PARAMETER_F)) {
 		tsOutputChannels->vBatt = getVBatt(PASS_ENGINE_PARAMETER_F);

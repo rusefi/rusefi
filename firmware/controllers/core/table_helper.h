@@ -20,7 +20,7 @@ class Map3D {
 public:
 	Map3D(const char*name);
 	void init(float table[RPM_BIN_SIZE][LOAD_BIN_SIZE], float loadBins[LOAD_BIN_SIZE], float rpmBins[RPM_BIN_SIZE]);
-	float getValue(float x, float rpm);
+	float getValue(float xRpm, float y);
 	void setAll(float value);
 private:
 	float *pointers[LOAD_BIN_SIZE];
@@ -79,13 +79,14 @@ void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::init(float table[RPM_BIN_SIZE][LOAD_BIN
 }
 
 template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE>
-float Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::getValue(float x, float rpm) {
+float Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::getValue(float xRpm, float y) {
 	efiAssert(initialized, "map not initialized", NAN);
-	if (cisnan(x)) {
-		warning(OBD_PCM_Processor_Fault, "%s: x is NaN", name);
+	if (cisnan(y)) {
+		warning(OBD_PCM_Processor_Fault, "%s: y is NaN", name);
 		return NAN;
 	}
-	return interpolate3d(x, loadBins, LOAD_BIN_SIZE, rpm, rpmBins, RPM_BIN_SIZE, pointers);
+	// todo: we have a bit of a mess: in TunerStudio, RPM is X-axis
+	return interpolate3d(y, loadBins, LOAD_BIN_SIZE, xRpm, rpmBins, RPM_BIN_SIZE, pointers);
 }
 
 template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE>
