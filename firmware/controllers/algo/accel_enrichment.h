@@ -12,6 +12,9 @@
 
 #include "engine_configuration.h"
 #include "cyclic_buffer.h"
+#include "table_helper.h"
+
+typedef Map3D<TPS_TPS_ACCEL_TABLE, TPS_TPS_ACCEL_TABLE> tps_tps_Map3D_t;
 
 /**
  * this object is used for MAP rate-of-change and TPS rate-of-change corrections
