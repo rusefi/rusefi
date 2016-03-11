@@ -74,9 +74,9 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 		return engineConfiguration->step1timing;
 	}
 
-	float iatCorrection = iatAdvanceCorrectionMap.getValue(engine->engineState.iat, (float) rpm);
+	float iatCorrection = iatAdvanceCorrectionMap.getValue((float) rpm, engine->engineState.iat);
 
-	float result = advanceMap.getValue(engineLoad, (float) rpm) + iatCorrection
+	float result = advanceMap.getValue((float) rpm, engineLoad) + iatCorrection
 			// todo: uncomment once we get useable knock   - engine->knockCount
 			;
 	engine->m.advanceLookupTime = GET_TIMESTAMP() - engine->m.beforeAdvance;

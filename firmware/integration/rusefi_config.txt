@@ -717,8 +717,8 @@ float[FUEL_RPM_COUNT] afrRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 ! float[FUEL_RPM_COUNT] ve2RpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
 tps_tps_table_t tpsTpsAccelTable;
-float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelFromRpmBins;;"L",	   1,      0,      0.0,  30000.0,   2
-float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelToRpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	   1,      0,      0.0,  25500.0,   2
+float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelFromRpmBins;;"from",	   1,      0,      0.0,  30000.0,   2
+float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelToRpmBins;RPM is float and not integer in order to use unified methods for interpolation;"to",	   1,      0,      0.0,  25500.0,   2
 
 fsio_table_8x8_t fsioTable1;
 float[FSIO_TABLE_8] fsioTable1LoadBins;;"L",	   1,      0,      0.0,  30000.0,   2

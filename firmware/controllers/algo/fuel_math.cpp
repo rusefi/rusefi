@@ -64,7 +64,7 @@ float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_S) {
 	 */
 	float injectorFlowRate = cc_minute_to_gramm_second(engineConfiguration->injector.flow);
 
-	float afr = afrMap.getValue(airSpeed, rpm);
+	float afr = afrMap.getValue(rpm, airSpeed);
 	float fuelMassGramm = airMassKg / afr * 1000;
 
 	return 1000 * fuelMassGramm / injectorFlowRate;
@@ -88,7 +88,7 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 
 float getinjectionOffset(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
-	return fuelPhaseMap.getValue(engineLoad, rpm);
+	return fuelPhaseMap.getValue(rpm, engineLoad);
 }
 
 /**
@@ -188,12 +188,12 @@ floatms_t getBaseTableFuel(engine_configuration_s *engineConfiguration, int rpm,
 		warning(OBD_PCM_Processor_Fault, "NaN engine load");
 		return NAN;
 	}
-	return fuelMap.getValue(engineLoad, rpm);
+	return fuelMap.getValue(rpm, engineLoad);
 }
 
 float getBaroCorrection(DECLARE_ENGINE_PARAMETER_F) {
 	if (hasBaroSensor(PASS_ENGINE_PARAMETER_F)) {
-		return baroCorrMap.getValue(getBaroPressure(PASS_ENGINE_PARAMETER_F), getRpmE(engine));
+		return baroCorrMap.getValue(getRpmE(engine), getBaroPressure(PASS_ENGINE_PARAMETER_F));
 	} else {
 		return 1;
 	}

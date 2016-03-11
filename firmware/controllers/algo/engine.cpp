@@ -187,8 +187,8 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 		/**
 		 * *0.01 because of https://sourceforge.net/p/rusefi/tickets/153/
 		 */
-		currentVE = baroCorrection * veMap.getValue(map, rpm) * 0.01;
-		targerAFR = afrMap.getValue(map, rpm);
+		currentVE = baroCorrection * veMap.getValue(rpm, map) * 0.01;
+		targerAFR = afrMap.getValue(rpm, map);
 	} else {
 		baseTableFuel = getBaseTableFuel(engineConfiguration, rpm, engineLoad);
 	}
