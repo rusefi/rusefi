@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Mar 08 21:51:11 EST 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 12 09:18:24 EST 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int TS_FILE_VERSION = 20160122;
@@ -751,10 +751,12 @@ public class Fields {
 	public static final int warmupTargetAfr_offset = 2280;
 	public static final int warmupAfrThreshold_offset = 2296;
 	public static final int boostCutPressure_offset = 2300;
-	public static final int mapAccelTaper_offset = 2304;
-	public static final int mapAccelTaper_offset_hex = 900;
-	public static final int unused_offset = 2336;
-	public static final int unused_offset_hex = 920;
+	public static final int mapAccelTaperBins_offset = 2304;
+	public static final int mapAccelTaperBins_offset_hex = 900;
+	public static final int mapAccelTaperMult_offset = 2336;
+	public static final int mapAccelTaperMult_offset_hex = 920;
+	public static final int unused_offset = 2368;
+	public static final int unused_offset_hex = 940;
 	public static final int le_formulas1_offset = 3048;
 	public static final int le_formulas2_offset = 3248;
 	public static final int le_formulas3_offset = 3448;
