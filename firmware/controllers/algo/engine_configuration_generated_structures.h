@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Mar 09 14:59:13 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 12 09:18:24 EST 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1501,11 +1501,15 @@ typedef struct {
 	/**
 	 * offset 2304
 	 */
-	float mapAccelTaper[MAP_ACCEL_TAPER];
+	float mapAccelTaperBins[MAP_ACCEL_TAPER];
 	/**
 	 * offset 2336
 	 */
-	int unused[178];
+	float mapAccelTaperMult[MAP_ACCEL_TAPER];
+	/**
+	 * offset 2368
+	 */
+	int unused[170];
 	/** total size 3048*/
 } engine_configuration_s;
 
@@ -1694,4 +1698,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Mar 09 14:59:13 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 12 09:18:24 EST 2016

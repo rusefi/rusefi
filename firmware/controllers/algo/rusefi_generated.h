@@ -747,10 +747,12 @@
 #define warmupTargetAfr_offset 2280
 #define warmupAfrThreshold_offset 2296
 #define boostCutPressure_offset 2300
-#define mapAccelTaper_offset 2304
-#define mapAccelTaper_offset_hex 900
-#define unused_offset 2336
-#define unused_offset_hex 920
+#define mapAccelTaperBins_offset 2304
+#define mapAccelTaperBins_offset_hex 900
+#define mapAccelTaperMult_offset 2336
+#define mapAccelTaperMult_offset_hex 920
+#define unused_offset 2368
+#define unused_offset_hex 940
 #define le_formulas1_offset 3048
 #define le_formulas2_offset 3248
 #define le_formulas3_offset 3448
