@@ -26,7 +26,7 @@
 #include "engine_state.h"
 #include "engine_math.h"
 #include "signal_executor.h"
-#if !EFI_UNIT_TEST
+#if !EFI_UNIT_TEST || defined(__DOXYGEN__)
 #include "tunerstudio_configuration.h"
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif
@@ -111,38 +111,59 @@ floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_F) {
 
 	float deltaMult = tpsTpsMap.getValue(tpsFrom, tpsTo);
 
-
-	float result;
+	floatms_t extraFuel;
 	if (d > engineConfiguration->tpsAccelEnrichmentThreshold) {
-		result = deltaMult;
+		extraFuel = deltaMult;
 	} else if (d < -engineConfiguration->tpsDecelEnleanmentThreshold) {
-		result= d * engineConfiguration->tpsDecelEnleanmentMultiplier;
+		extraFuel = d * engineConfiguration->tpsDecelEnleanmentMultiplier;
 	} else {
-		result = 0;
+		extraFuel = 0;
 	}
 
-#if !EFI_UNIT_TEST
+#if !EFI_UNIT_TEST || defined(__DOXYGEN__)
 	if (engineConfiguration->debugMode == DBG_TPS_ACCEL) {
 		tsOutputChannels.debugFloatField1 = tpsFrom;
 		tsOutputChannels.debugFloatField2 = tpsTo;
 		tsOutputChannels.debugFloatField3 = deltaMult;
-		tsOutputChannels.debugFloatField4 = result;
+		tsOutputChannels.debugFloatField4 = extraFuel;
 	}
 #endif
 
 
-	return result;
+	return extraFuel;
 }
 
 float AccelEnrichmemnt::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_F) {
-	float d = getMaxDelta(PASS_ENGINE_PARAMETER_F);
+	int index = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_F);
+
+	FuelSchedule *fs = engine->engineConfiguration2->injectionEvents;
+	float d = (cb.get(index) - (cb.get(index - 1))) * fs->eventsCount;
+
+	float result = 0;
+	int distance = 0;
+	float taper = 0;
 	if (d > engineConfiguration->engineLoadAccelEnrichmentThreshold) {
-		return d * engineConfiguration->engineLoadAccelEnrichmentMultiplier;
+
+		int distance = cb.currentIndex - index;
+		if (distance <= 0) // checking if indexes are out of order due to circular buffer nature
+			distance += minI(cb.getCount(), cb.getSize());
+
+		taper = interpolate2d(distance, engineConfiguration->mapAccelTaperBins, engineConfiguration->mapAccelTaperMult, MAP_ACCEL_TAPER);
+
+		result = taper * d * engineConfiguration->engineLoadAccelEnrichmentMultiplier;
+	} else if (d < -engineConfiguration->engineLoadDecelEnleanmentThreshold) {
+		result = d * engineConfiguration->engineLoadAccelEnrichmentMultiplier;
 	}
-	if (d < -engineConfiguration->engineLoadDecelEnleanmentThreshold) {
-		return d * engineConfiguration->engineLoadAccelEnrichmentMultiplier;
+
+#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+	if (engineConfiguration->debugMode == DBG_EL_ACCEL) {
+		tsOutputChannels.debugIntField1 = distance;
+		tsOutputChannels.debugFloatField1 = result;
+		tsOutputChannels.debugFloatField2 = taper;
+
 	}
-	return 0;
+#endif
+	return result;
 }
 
 void AccelEnrichmemnt::reset() {

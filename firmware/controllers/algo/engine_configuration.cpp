@@ -367,6 +367,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setDefaultIatTimingCorrection(PASS_ENGINE_PARAMETER_F);
 
 	setTableBin2(engineConfiguration->mapAccelTaperBins, FSIO_TABLE_8, 0, 32, 4);
+	setTableBin2(engineConfiguration->mapAccelTaperMult, FSIO_TABLE_8, 1, 1, 1);
 
 	setTableBin2(config->tpsTpsAccelFromRpmBins, FSIO_TABLE_8, 0, 100, 10);
 	setTableBin2(config->tpsTpsAccelToRpmBins, FSIO_TABLE_8, 0, 100, 10);
