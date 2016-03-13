@@ -20,7 +20,7 @@ struct_no_prefix engine_configuration_s
 !
 ! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
 ! 
-#define TS_FILE_VERSION 20160122
+#define TS_FILE_VERSION 20160312
 
 #define WARMUP_TARGET_AFR_SIZE 4
 
@@ -93,8 +93,8 @@ float baseFuel;+Fuel squirt duration while cranking\nA number of curves adjust t
 int16_t rpm;+Cranking mode threshold. Special cranking logic controls fuel and spark while RPM is below this threshold;"RPM",      1,     0,    0, 3000,      0
 end_struct
 
-#define debug_mode_e_enum "ALTERNATOR", "TPS_ACCEL", "WARMUP_PID", "mode3"
-custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:1], @@debug_mode_e_enum@@
+#define debug_mode_e_enum "ALTERNATOR", "TPS_ACCEL", "WARMUP_PID", "mode3", "IDLE", "EL_ACCEL", "mode6", "mode7"
+custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:2], @@debug_mode_e_enum@@
 
 
 #define brain_input_pin_e_enum "INVALID", "INVALID", "PA2", "PA3", "INVALID", "PA5", "INVALID", "INVALID", "PA8", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID",  "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PC6", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PE5", "INVALID", "PE7", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID",    "NONE",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID"

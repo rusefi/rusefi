@@ -95,7 +95,7 @@ typedef struct {
 	/**
 	 * Engine load delta
 	 */
-	float engineLoadAccelDelta; // offset 124
+	float engineLoadAccelExtra; // offset 124
 	float tpsAccelFuel; // offset 128
 	float baroCorrection;
 	float pedalPosition;
@@ -121,7 +121,8 @@ typedef struct {
 	int debugIntField2; // 216
 	int debugIntField3; // 220
 	int timeSeconds; // 224
-	int unused3[12];
+	float engineLoadDelta; // 228
+	int unused3[11];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */
