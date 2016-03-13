@@ -579,6 +579,9 @@ typedef enum {
 	DBG_TPS_ACCEL = 1,
 	WARMUP_ENRICH = 2,
 	IDLE = 3,
+	DBG_EL_ACCEL = 4,
+	VALUE_5 = 5,
+	VALUE_6 = 6,
 
 	Force_4b_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;
