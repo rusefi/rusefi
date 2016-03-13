@@ -1,6 +1,8 @@
 /*
  * @file ford_festiva.cpp
  *
+ * set_engine_type 14
+ *
  * @date Jan 3, 2016
  * @author Andrey Belomutskiy, (c) 2012-2016
  */
@@ -160,6 +162,14 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPinMode = OM_DEFAULT;
+
+	// individual coils
+	// W6  PC9
+	// W8  PC7
+	// W12 PE8
+	// W13 PE12
+
+
 
 	/**
 	 * Outputs
