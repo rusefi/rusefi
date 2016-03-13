@@ -366,6 +366,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setFuelTablesLoadBin(10, 160 PASS_ENGINE_PARAMETER);
 	setDefaultIatTimingCorrection(PASS_ENGINE_PARAMETER_F);
 
+	setTableBin2(engineConfiguration->mapAccelTaperBins, FSIO_TABLE_8, 0, 32, 4);
 
 	setTableBin2(config->tpsTpsAccelFromRpmBins, FSIO_TABLE_8, 0, 100, 10);
 	setTableBin2(config->tpsTpsAccelToRpmBins, FSIO_TABLE_8, 0, 100, 10);

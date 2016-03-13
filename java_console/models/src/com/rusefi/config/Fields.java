@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 12 09:18:24 EST 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 12 17:59:43 EST 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int TS_FILE_VERSION = 20160122;
@@ -1300,7 +1300,7 @@ public class Fields {
 	public static final Field TPSDECELENLEANMENTTHRESHOLD = Field.create("TPSDECELENLEANMENTTHRESHOLD", 2232, FieldType.FLOAT);
 	public static final Field TPSDECELENLEANMENTMULTIPLIER = Field.create("TPSDECELENLEANMENTMULTIPLIER", 2236, FieldType.FLOAT);
 	public static final Field SLOWADCALPHA = Field.create("SLOWADCALPHA", 2240, FieldType.FLOAT);
-	public static final String[] debug_mode_e = {"ALTERNATOR", "TPS_ACCEL", "WARMUP_PID", "mode3"};
+	public static final String[] debug_mode_e = {"ALTERNATOR", "TPS_ACCEL", "WARMUP_PID", "mode3", "IDLE", "EL_ACCEL", "mode6", "mode7"};
 	public static final Field DEBUGMODE = Field.create("DEBUGMODE", 2244, FieldType.INT, debug_mode_e);
 	public static final Field WARMUPAFRPID_PFACTOR = Field.create("WARMUPAFRPID_PFACTOR", 2248, FieldType.FLOAT);
 	public static final Field WARMUPAFRPID_IFACTOR = Field.create("WARMUPAFRPID_IFACTOR", 2252, FieldType.FLOAT);
