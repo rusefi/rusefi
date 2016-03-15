@@ -33,10 +33,10 @@
 #include "pin_repository.h"
 #include "efiGpio.h"
 
-static LoggingWithStorage logger("InjectorCentral");
 EXTERN_ENGINE
 ;
 
+static Logging * logger;
 static bool isRunningBench = false;
 
 static int is_injector_enabled[MAX_INJECTOR_COUNT];
@@ -67,7 +67,7 @@ int isInjectorEnabled(int cylinderId) {
 
 static void printStatus(void) {
 	for (int id = 1; id <= engineConfiguration->specs.cylindersCount; id++) {
-		scheduleMsg(&logger, "injector_%d_%d", isInjectorEnabled(id));
+		scheduleMsg(logger, "injector_%d_%d", isInjectorEnabled(id));
 	}
 }
 
@@ -83,19 +83,19 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 	int onTimeSt = MS2ST(onTimeMs);
 	int offTimeSt = MS2ST(offTimeMs);
 	if (delaySt < 0) {
-		scheduleMsg(&logger, "Invalid delay %f", delayMs);
+		scheduleMsg(logger, "Invalid delay %f", delayMs);
 		return;
 	}
 	if (onTimeSt <= 0) {
-		scheduleMsg(&logger, "Invalid onTime %f", onTimeMs);
+		scheduleMsg(logger, "Invalid onTime %f", onTimeMs);
 		return;
 	}
 	if (offTimeSt <= 0) {
-		scheduleMsg(&logger, "Invalid offTime %f", offTimeMs);
+		scheduleMsg(logger, "Invalid offTime %f", offTimeMs);
 		return;
 	}
-	scheduleMsg(&logger, "Running bench: ON_TIME=%f ms OFF_TIME=%fms Counter=%d", onTimeMs, offTimeMs, count);
-	scheduleMsg(&logger, "output on %s", hwPortname(brainPin));
+	scheduleMsg(logger, "Running bench: ON_TIME=%f ms OFF_TIME=%fms Counter=%d", onTimeMs, offTimeMs, count);
+	scheduleMsg(logger, "output on %s", hwPortname(brainPin));
 
 	if (delaySt != 0) {
 		chThdSleep(delaySt);
@@ -108,7 +108,7 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 		output->setValue(false);
 		chThdSleep(offTimeSt);
 	}
-	scheduleMsg(&logger, "Done!");
+	scheduleMsg(logger, "Done!");
 	isRunningBench = false;
 }
 
@@ -140,7 +140,7 @@ static void fuelbench2(const char *delayStr, const char *indexStr, const char * 
 		const char *countStr) {
 	int index = atoi(indexStr);
 	if (index < 1 || index > engineConfiguration->specs.cylindersCount) {
-		scheduleMsg(&logger, "Invalid index: %d", index);
+		scheduleMsg(logger, "Invalid index: %d", index);
 		return;
 	}
 	brain_pin_e b = boardConfiguration->injectionPins[index - 1];
@@ -177,7 +177,7 @@ static void sparkbench2(const char *delayStr, const char *indexStr, const char *
 		const char *countStr) {
 	int index = atoi(indexStr);
 	if (index < 1 || index > engineConfiguration->specs.cylindersCount) {
-		scheduleMsg(&logger, "Invalid index: %d", index);
+		scheduleMsg(logger, "Invalid index: %d", index);
 		return;
 	}
 	brain_pin_e b = boardConfiguration->ignitionPins[index - 1];
@@ -215,7 +215,7 @@ extern engine_configuration_s activeConfiguration;
 static void unregister(brain_pin_e currentPin, OutputPin *output) {
 	if (currentPin == GPIO_UNASSIGNED)
 		return;
-	scheduleMsg(&logger, "unregistering %s", hwPortname(currentPin));
+	scheduleMsg(logger, "unregistering %s", hwPortname(currentPin));
 	unmarkPin(currentPin);
 	output->unregister();
 }
@@ -262,7 +262,13 @@ void startInjectionPins(void) {
 	}
 }
 
-void initInjectorCentral(void) {
+void runIoTest(int subsystem, int index) {
+	scheduleMsg(logger, "IO test subsystem=%d index=%d", subsystem, index);
+
+}
+
+void initInjectorCentral(Logging *sharedLogger) {
+	logger = sharedLogger;
 	chThdCreateStatic(benchThreadStack, sizeof(benchThreadStack), NORMALPRIO, (tfunc_t) benchThread, NULL);
 
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
