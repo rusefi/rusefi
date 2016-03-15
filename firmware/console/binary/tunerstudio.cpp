@@ -109,7 +109,7 @@ ts_channel_s tsChannel;
 extern uint8_t crcWriteBuffer[300];
 
 static int ts_serial_ready(bool isConsoleRedirect) {
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	if (isSerialOverUart() ^ isConsoleRedirect) {
 		// TS uses USB when console uses serial
 		return is_usb_serial_ready();
@@ -145,7 +145,7 @@ static void printErrorCounters(void) {
 }
 
 void printTsStats(void) {
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	if (!isSerialOverUart()) {
 		scheduleMsg(&tsLogger, "TS RX on %s", hwPortname(engineConfiguration->binarySerialRxPin));
 
@@ -178,7 +178,7 @@ static void setTsSpeed(int value) {
 }
 
 void tunerStudioDebug(const char *msg) {
-#if EFI_TUNER_STUDIO_VERBOSE
+#if EFI_TUNER_STUDIO_VERBOSE || defined(__DOXYGEN__)
 	scheduleMsg(&tsLogger, "%s", msg);
 #endif
 }
@@ -301,7 +301,7 @@ void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 
 	tunerStudioDebug("got W (Write)"); // we can get a lot of these
 
-#if EFI_TUNER_STUDIO_VERBOSE
+#if EFI_TUNER_STUDIO_VERBOSE || defined(__DOXYGEN__)
 //	scheduleMsg(logger, "Page number %d\r\n", pageId); // we can get a lot of these
 #endif
 
@@ -337,7 +337,7 @@ void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, u
 	tsState.readPageCommandsCounter++;
 	currentPageId = pageId;
 
-#if EFI_TUNER_STUDIO_VERBOSE
+#if EFI_TUNER_STUDIO_VERBOSE || defined(__DOXYGEN__)
 	scheduleMsg(&tsLogger, "READ mode=%d page=%d offset=%d size=%d", mode, (int) currentPageId, offset, count);
 #endif
 
@@ -358,13 +358,13 @@ void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, u
 
 	const uint8_t *addr = (const uint8_t *) (getWorkingPageAddr(currentPageId) + offset);
 	tsSendResponse(tsChannel, mode, addr, count);
-#if EFI_TUNER_STUDIO_VERBOSE
+#if EFI_TUNER_STUDIO_VERBOSE || defined(__DOXYGEN__)
 //	scheduleMsg(&tsLogger, "Sending %d done", count);
 #endif
 }
 
 void requestBurn(void) {
-#if EFI_INTERNAL_FLASH
+#if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
 	setNeedToWriteConfiguration();
 #endif
 	incrementGlobalConfigurationVersion();
@@ -387,7 +387,7 @@ void handleBurnCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint1
 
 	currentPageId = page;
 
-#if EFI_TUNER_STUDIO_VERBOSE
+#if EFI_TUNER_STUDIO_VERBOSE || defined(__DOXYGEN__)
 	// pointless since we only have one page now
 //	scheduleMsg(logger, "Page number %d", currentPageId);
 #endif
@@ -563,7 +563,7 @@ void tunerStudioError(const char *msg) {
  */
 void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
 	tsState.queryCommandCounter++;
-#if EFI_TUNER_STUDIO_VERBOSE
+#if EFI_TUNER_STUDIO_VERBOSE || defined(__DOXYGEN__)
 	scheduleMsg(&tsLogger, "got S/H (queryCommand) mode=%d", mode);
 	printTsStats();
 #endif
@@ -755,8 +755,9 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		uint16_t subsystem = SWAP_UINT16(*(short*)&data[0]);
 		uint16_t index = SWAP_UINT16(*(short*)&data[2]);
 
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 		runIoTest(subsystem, index);
-
+#endif
 	} else {
 		tunerStudioError("ERROR: ignoring unexpected command");
 		return false;

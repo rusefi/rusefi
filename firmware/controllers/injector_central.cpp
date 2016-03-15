@@ -132,6 +132,16 @@ static void pinbench(const char *delayStr, const char *onTimeStr, const char *of
 	needToRunBench = true;
 }
 
+static void doRunFuel(int humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
+		const char *countStr) {
+	if (humanIndex < 1 || humanIndex > engineConfiguration->specs.cylindersCount) {
+		scheduleMsg(logger, "Invalid index: %d", humanIndex);
+		return;
+	}
+	brain_pin_e b = boardConfiguration->injectionPins[humanIndex - 1];
+	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.injectors[humanIndex - 1], b);
+}
+
 /**
  * delay 100, cylinder #2, 5ms ON, 1000ms OFF, repeat 2 times
  * fuelbench2 100 2 5 1000 2
@@ -139,12 +149,7 @@ static void pinbench(const char *delayStr, const char *onTimeStr, const char *of
 static void fuelbench2(const char *delayStr, const char *indexStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
 	int index = atoi(indexStr);
-	if (index < 1 || index > engineConfiguration->specs.cylindersCount) {
-		scheduleMsg(logger, "Invalid index: %d", index);
-		return;
-	}
-	brain_pin_e b = boardConfiguration->injectionPins[index - 1];
-	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.injectors[index - 1], b);
+	doRunFuel(index, delayStr, onTimeStr, offTimeStr, countStr);
 }
 
 void fanBench(void) {
@@ -170,18 +175,24 @@ static void fuelbench(const char * onTimeStr, const char *offTimeStr, const char
 	fuelbench2("0", "1", onTimeStr, offTimeStr, countStr);
 }
 
+
+static void doRunSpark(int humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
+		const char *countStr) {
+	if (humanIndex < 1 || humanIndex > engineConfiguration->specs.cylindersCount) {
+		scheduleMsg(logger, "Invalid index: %d", humanIndex);
+		return;
+	}
+	brain_pin_e b = boardConfiguration->ignitionPins[humanIndex - 1];
+	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.coils[humanIndex - 1], b);
+}
+
 /**
  * sparkbench2 0 1 5 1000 2
  */
 static void sparkbench2(const char *delayStr, const char *indexStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
 	int index = atoi(indexStr);
-	if (index < 1 || index > engineConfiguration->specs.cylindersCount) {
-		scheduleMsg(logger, "Invalid index: %d", index);
-		return;
-	}
-	brain_pin_e b = boardConfiguration->ignitionPins[index - 1];
-	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.coils[index - 1], b);
+	doRunSpark(index, delayStr, onTimeStr, offTimeStr, countStr);
 }
 
 /**
@@ -264,6 +275,12 @@ void startInjectionPins(void) {
 
 void runIoTest(int subsystem, int index) {
 	scheduleMsg(logger, "IO test subsystem=%d index=%d", subsystem, index);
+
+	if (subsystem == 0x12) {
+		doRunSpark(index, "300", "4", "400", "3");
+	} else if (subsystem == 0x13) {
+
+	}
 
 }
 
