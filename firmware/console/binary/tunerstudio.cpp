@@ -75,6 +75,7 @@
 
 #include <string.h>
 #include "engine_configuration.h"
+#include "injector_central.h"
 #include "svnversion.h"
 #include "loggingcentral.h"
 #include "status_loop.h"
@@ -695,9 +696,6 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 	}
 }
 
-static void testIoCommand(void) {
-
-}
 
 int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize) {
 	char command = data[0];
@@ -754,11 +752,11 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		 * Currently on some firmware versions the F command is not used and is just ignored by the firmware as a unknown command."
 		 */
 	} else if (command == TS_IO_TEST_COMMAND) {
-		int subsystem = data[3];
-		int index = *(short*)&data[0];
+		uint16_t subsystem = SWAP_UINT16(*(short*)&data[0]);
+		uint16_t index = SWAP_UINT16(*(short*)&data[2]);
 
-		scheduleMsg(&tsLogger, "IO test %d %d %d", incomingPacketSize, subsystem, index);
-		testIoCommand();
+		runIoTest(subsystem, index);
+
 	} else {
 		tunerStudioError("ERROR: ignoring unexpected command");
 		return false;
