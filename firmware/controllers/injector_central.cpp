@@ -175,7 +175,6 @@ static void fuelbench(const char * onTimeStr, const char *offTimeStr, const char
 	fuelbench2("0", "1", onTimeStr, offTimeStr, countStr);
 }
 
-
 static void doRunSpark(int humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
 	if (humanIndex < 1 || humanIndex > engineConfiguration->specs.cylindersCount) {
@@ -279,9 +278,15 @@ void runIoTest(int subsystem, int index) {
 	if (subsystem == 0x12) {
 		doRunSpark(index, "300", "4", "400", "3");
 	} else if (subsystem == 0x13) {
-
+		doRunFuel(index, "300", "4", "400", "3");
+	} else if (subsystem == 0x14) {
+		fuelPumpBench();
+	} else if (subsystem == 0x15) {
+		fanBench();
+	} else if (subsystem == 0x16) {
+		milBench();
+	} else if (subsystem == 0x17) {
 	}
-
 }
 
 void initInjectorCentral(Logging *sharedLogger) {
