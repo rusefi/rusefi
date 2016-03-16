@@ -48,7 +48,7 @@ RpmCalculator::RpmCalculator() {
 	mockRpm = MOCK_UNDEFINED;
 #endif
 	rpmValue = 0;
-	setRpmValue(0);
+	assignRpmValue(0);
 
 	// we need this initial to have not_running at first invocation
 	lastRpmEventTimeNt = (efitime_t) -10 * US2NT(US_PER_SECOND_LL);
@@ -82,13 +82,26 @@ bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_F) {
 	return result;
 }
 
-void RpmCalculator::setRpmValue(int value) {
+
+// private method
+void RpmCalculator::assignRpmValue(int value) {
 	previousRpmValue = rpmValue;
 	rpmValue = value;
 	if (rpmValue <= 0) {
 		oneDegreeUs = NAN;
 	} else {
 		oneDegreeUs = getOneDegreeTimeUs(rpmValue);
+	}
+}
+
+void RpmCalculator::setRpmValue(int value DECLARE_ENGINE_PARAMETER_S) {
+	assignRpmValue(value);
+	if (previousRpmValue == 0 && rpmValue > 0) {
+		/**
+		 * this would make sure that we have good numbers for first cranking revolution
+		 * #275 cranking could be improved
+		 */
+		engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 	}
 }
 
@@ -194,11 +207,11 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		 *
 		 */
 		if (diffNt == 0) {
-			rpmState->setRpmValue(NOISY_RPM);
+			rpmState->setRpmValue(NOISY_RPM PASS_ENGINE_PARAMETER);
 		} else {
 			int mult = getEngineCycle(engineConfiguration->operationMode) / 360;
 			int rpm = (int) (60 * US2NT(US_PER_SECOND_LL) * mult / diffNt);
-			rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm);
+			rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm PASS_ENGINE_PARAMETER);
 		}
 	}
 	rpmState->onNewEngineCycle();

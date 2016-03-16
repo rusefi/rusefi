@@ -18,7 +18,7 @@ void testAccelEnrichment(void) {
 	EngineTestHelper eth(FORD_ASPIRE_1996);
 	EXPAND_EngineTestHelper;
 
-	engine->rpmCalculator.setRpmValue(600);
+	engine->rpmCalculator.setRpmValue(600 PASS_ENGINE_PARAMETER);
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 
 	assertEqualsM("eventsCount", 4, engine->engineConfiguration2->injectionEvents->eventsCount);

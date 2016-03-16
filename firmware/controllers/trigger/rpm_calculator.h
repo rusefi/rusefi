@@ -47,7 +47,7 @@ public:
 	 */
 	void onNewEngineCycle();
 	uint32_t getRevolutionCounter(void);
-	void setRpmValue(int value);
+	void setRpmValue(int value DECLARE_ENGINE_PARAMETER_S);
 	uint32_t getRevolutionCounterSinceStart(void);
 	float getRpmAcceleration();
 	/**
@@ -62,6 +62,7 @@ public:
 	volatile floatus_t oneDegreeUs;
 	volatile efitime_t lastRpmEventTimeNt;
 private:
+	void assignRpmValue(int value);
 	/**
 	 * This counter is incremented with each revolution of one of the shafts. Could be
 	 * crankshaft could be camshaft.
