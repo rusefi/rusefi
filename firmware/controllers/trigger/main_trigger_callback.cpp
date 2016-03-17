@@ -396,6 +396,14 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	}
 	bool limitedSpark = rpm > CONFIG(rpmHardLimit);
 	bool limitedFuel = rpm > CONFIG(rpmHardLimit);
+
+	if (CONFIG(boostCutPressure) !=0) {
+		if (getMap() > CONFIG(boostCutPressure)) {
+			limitedSpark = true;
+			limitedFuel = true;
+		}
+	}
+
 	if (limitedSpark || limitedFuel) {
 		warning(OBD_PCM_Processor_Fault, "skipping stroke due to rpm=%d", rpm);
 	}
