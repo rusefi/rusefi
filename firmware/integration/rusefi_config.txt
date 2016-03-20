@@ -150,7 +150,7 @@ end_struct
 custom engine_type_e 4 bits, S32, @OFFSET@,   [0:2], "AUDI_AAN", "DODGE_NEON_1995", "FORD_ASPIRE_1996", "FORD_FIESTA", "NISSAN_PRIMERA", "HONDA_ACCORD", "FORD_INLINE_6_1995", "GY6_139QMB"
 engine_type_e engineType;http://rusefi.com/wiki/index.php?title=Manual:Engine_Type
 
-int engineSnifferRpmThreshold;Disable engine sniffer above this rpm;"RPM",      1,     0,    0,30000,      0
+int engineSnifferRpmThreshold;Engine sniffer would be disabled above this rpm;"RPM",      1,     0,    0,30000,      0
 
 struct injector_s
 	float flow;+cc/min, cubic centimeter per minute\nBy the way, g/s = 0.125997881 * (lb/hr)\ng/s = 0.125997881 * (cc/min)/10.5\ng/s = 0.0119997981 * cc/min;"cm3/min",  1,     0,      0,   1000,   2
@@ -485,7 +485,7 @@ custom fsio_setting_t 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       0, 
 
 #define sensor_chart_e_enum "none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "INVALID"
 custom sensor_chart_e 4 bits, S32, @OFFSET@, [0:2], @@sensor_chart_e_enum@@
-sensor_chart_e sensorChartMode;
+sensor_chart_e sensorChartMode;+rusEfi console Sensor Sniffer mode
 
 #define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX"
 custom ego_sensor_e 4 bits, S32, @OFFSET@, [0:2], @@ego_sensor_e_enum@@
@@ -556,7 +556,7 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 
 	adc_channel_e acSwitchAdc;A/C button input handled as analog input
 
-	int ignMathCalculateAtIndex;At what trigger index should some ignition-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.;"index",      1,      0,       0, 7000,      0
+	int ignMathCalculateAtIndex;+At what trigger index should some ignition-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.;"index",      1,      0,       0, 7000,      0
 
 	int16_t acCutoffLowRpm;
 	int16_t acCutoffHighRpm;
@@ -583,7 +583,7 @@ custom pin_input_mode_e 4 scalar, F32,	@OFFSET@,	"ms", 1, 0, 0, 200, 1
 
 float noAccelAfterHardLimitPeriodSecs;;"sec",      1,      0,       0, 60,      0
 
-int mapAveragingSchedulingAtIndex;At what trigger index should some MAP-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.;"index",      1,      0,       0, 7000,      0
+int mapAveragingSchedulingAtIndex;+At what trigger index should some MAP-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.;"index",      1,      0,       0, 7000,      0
 
 float[BARO_CORR_SIZE] baroCorrPressureBins;;"kPa",      1,     0,   0.0,    200,   2
 float[BARO_CORR_SIZE] baroCorrRpmBins;;"RPM",      1,     0,   0.0,    18000,   2
