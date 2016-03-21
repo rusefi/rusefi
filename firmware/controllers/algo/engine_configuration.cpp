@@ -884,7 +884,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER);
 	// todo: eliminate triggerShape.operationMode?
 	if (engineConfiguration->operationMode != engine->triggerShape.getOperationMode())
-		firmwareError("operationMode mismatch");
+		firmwareError("operationMode/trigger mismatch");
 
 #if EFI_TUNER_STUDIO
 	syncTunerStudioCopy();
