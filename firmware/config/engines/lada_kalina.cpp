@@ -18,6 +18,7 @@ void setLadaKalina(DECLARE_ENGINE_PARAMETER_F) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	engineConfiguration->trigger.type = TT_60_2_VW;
 
 
 	// starter relay solenoid
