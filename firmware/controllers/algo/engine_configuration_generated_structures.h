@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 12 09:18:24 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Mar 20 15:05:16 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -727,6 +727,7 @@ typedef struct {
 	 */
 	brain_pin_e joystickDPin;
 	/**
+	 * rusEfi console Sensor Sniffer mode
 	 * offset 776
 	 */
 	sensor_chart_e sensorChartMode;
@@ -766,7 +767,7 @@ typedef struct {
 	 */
 	engine_type_e engineType;
 	/**
-	 * Disable engine sniffer above this rpm
+	 * Engine sniffer would be disabled above this rpm
 	 * offset 4
 	 */
 	int engineSnifferRpmThreshold;
@@ -1698,4 +1699,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 12 09:18:24 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Mar 20 15:05:16 EDT 2016
