@@ -249,6 +249,20 @@ bool LECalculator::processElement(Engine *engine, LEElement *element) {
 		}
 	}
 		break;
+	case LE_METHOD_FSIO_TABLE: {
+		float i = pop(LE_METHOD_FSIO_TABLE);
+		float xValue = pop(LE_METHOD_FSIO_TABLE);
+		float yValue = pop(LE_METHOD_FSIO_TABLE);
+		int index = (int) i;
+		if (index < 0 || index > 2) {
+			push(element->action, NAN);
+		} else {
+
+		}
+
+
+	}
+		break;
 	case LE_METHOD_KNOCK:
 		push(element->action, engine->knockCount);
 		break;
