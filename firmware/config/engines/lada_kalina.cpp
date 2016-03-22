@@ -17,6 +17,14 @@ EXTERN_ENGINE;
 void setLadaKalina(DECLARE_ENGINE_PARAMETER_F) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 
+	boardConfiguration->HD44780_rs = GPIO_UNASSIGNED;
+	boardConfiguration->HD44780_e = GPIO_UNASSIGNED;
+	boardConfiguration->HD44780_db4 = GPIO_UNASSIGNED;
+	boardConfiguration->HD44780_db5 = GPIO_UNASSIGNED;
+	boardConfiguration->HD44780_db6 = GPIO_UNASSIGNED;
+	boardConfiguration->HD44780_db7 = GPIO_UNASSIGNED;
+
+
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 
