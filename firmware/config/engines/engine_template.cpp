@@ -6,5 +6,10 @@
  */
 
 #include "engine_template.h"
+#include "custom_engine.h"
 
+EXTERN_ENGINE;
 
+void setEngineTemplateConfiguration(DECLARE_ENGINE_PARAMETER_F) {
+	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
+}

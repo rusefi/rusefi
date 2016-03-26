@@ -119,7 +119,9 @@ typedef enum {
 
 	LADA_KALINA = 39,
 
-	ET_UNUSED = 40,
+	GEO_STORM = 40,
+
+	ET_UNUSED = 41,
 
 	Force_4b_engine_type = ENUM_32_BITS,
 } engine_type_e;
