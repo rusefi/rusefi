@@ -5,6 +5,12 @@
  * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
+#include "geo_storm.h"
+#include "custom_engine.h"
 
+EXTERN_ENGINE;
 
+void setGeoStormConfiguration(DECLARE_ENGINE_PARAMETER_F) {
+	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
+}
 

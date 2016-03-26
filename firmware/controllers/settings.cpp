@@ -194,10 +194,8 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "Mazda626";
 	case TOYOTA_JZS147:
 		return "TOYOTA_JZS147";
-	case LADA_KALINA:
-		return "LADA_KALINA";
 	default:
-		return "UnknownType";
+		return getEngine_type_e(engineType);
 	}
 }
 

@@ -38,6 +38,7 @@
 #include "hip9011_lookup.h"
 
 #include "custom_engine.h"
+#include "engine_template.h"
 #include "acura_rsx.h"
 #include "audi_aan.h"
 #include "bmw_e34.h"
@@ -72,6 +73,8 @@
 #include "toyota_jzs147.h"
 #include "ford_festiva.h"
 #include "lada_kalina.h"
+#include "geo_storm.h"
+
 
 EXTERN_ENGINE;
 
@@ -876,6 +879,9 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		break;
 	case TOYOTA_JZS147:
 		setToyota_jzs147EngineConfiguration(PASS_ENGINE_PARAMETER_F);
+		break;
+	case GEO_STORM:
+		setGeoStormConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;
 
 	default:
