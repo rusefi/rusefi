@@ -56,7 +56,7 @@ void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brain
 //	return true;
 //}
 
-int getRemainingStack(Thread *otp) {
+int getRemainingStack(thread_t *otp) {
 	return 99999;
 }
 

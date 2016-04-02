@@ -13,13 +13,22 @@
 #include "efilib.h"
 #include "efitime.h"
 
+// this stuff is about ChibiOS 2.6 > Migration
+typedef VirtualTimer virtual_timer_t;
+typedef EventListener event_listener_t;
+typedef Thread thread_t;
+#define THD_WORKING_AREA WORKING_AREA
+#define THD_FUNCTION(tname, arg) void tname(void *arg)
+#define MSG_OK RDY_OK
+#define eventflags_t flagsmask_t
+
+
 #define US_TO_NT_MULTIPLIER 100
 
 #define ALWAYS_INLINE INLINE
 
 #define US2NT(x) (US_TO_NT_MULTIPLIER * (x))
 
-#define THD_FUNCTION(tname, arg) void tname(void *arg)
 #define NT2US(x) ((x) / US_TO_NT_MULTIPLIER)
 
 // need to fight 32bit int overflow
@@ -66,10 +75,10 @@ extern "C"
 
 void printToWin32Console(char *p);
 int systicks2ms(int systicks);
-int getRemainingStack(Thread *otp);
+int getRemainingStack(thread_t *otp);
 
 // todo: move somewhere else?
-bool_t lockAnyContext(void);
+bool lockAnyContext(void);
 void unlockAnyContext(void);
 void applyNewConfiguration(void);
 
@@ -84,11 +93,6 @@ void applyNewConfiguration(void);
 #define TICKS_IN_MS  (CH_FREQUENCY / 1000)
 
 #define hal_lld_get_counter_value() 0
-
-// this stuff is about ChibiOS 2.6 > Migration
-typedef VirtualTimer virtual_timer_t;
-typedef EventListener event_listener_t;
-#define THD_WORKING_AREA WORKING_AREA
 
 #define EXTERN_ENGINE extern Engine *engine; \
 		extern engine_configuration_s *engineConfiguration; \

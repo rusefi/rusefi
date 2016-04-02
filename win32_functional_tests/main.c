@@ -22,7 +22,7 @@
 #define SHELL_WA_SIZE       THD_WA_SIZE(4096)
 #define CONSOLE_WA_SIZE     THD_WA_SIZE(4096)
 
-static Thread *cdtp;
+static thread_t *cdtp;
 //static Thread *shelltp1;
 //static Thread *shelltp2;
 
@@ -43,10 +43,10 @@ static msg_t console_thread(void *arg) {
 
 	(void) arg;
 	while (!chThdShouldTerminate()) {
-		Thread *tp = chMsgWait();
+		thread_t *tp = chMsgWait();
 		puts((char *) chMsgGet(tp));
 		fflush(stdout);
-		chMsgRelease(tp, RDY_OK);
+		chMsgRelease(tp, MSG_OK);
 	}
 	return 0;
 }
@@ -80,7 +80,7 @@ static void termination_handler(eventid_t id) {
 //  }
 }
 
-static EventListener sd1fel, sd2fel;
+static event_listener_t sd1fel, sd2fel;
 
 /**
  * @brief SD1 status change handler.
@@ -88,7 +88,7 @@ static EventListener sd1fel, sd2fel;
  * @param[in] id event id.
  */
 static void sd1_handler(eventid_t id) {
-	flagsmask_t flags;
+	eventflags_t flags;
 
 	(void) id;
 	flags = chEvtGetAndClearFlags(&sd1fel);
@@ -112,7 +112,7 @@ static void sd1_handler(eventid_t id) {
  * @param[in] id event id.
  */
 static void sd2_handler(eventid_t id) {
-	flagsmask_t flags;
+	eventflags_t flags;
 
 	(void) id;
 	flags = chEvtGetAndClearFlags(&sd2fel);
@@ -136,7 +136,7 @@ int main(void) {
 
 	initTestStream(&testStream);
 
-	EventListener tel;
+	event_listener_t tel;
 
 	/*
 	 * System initializations.
