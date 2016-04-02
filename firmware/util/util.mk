@@ -1,7 +1,7 @@
 
 UTILSRC = $(PROJECT_DIR)/util/crc.c \
 	$(PROJECT_DIR)/util/data_buffer.c \
-	$(PROJECT_DIR)/console_util/rfiutil.c \
+	$(PROJECT_DIR)/util/rfiutil.c \
 	$(PROJECT_DIR)/util/histogram.c
 
 UTILSRC_CPP = $(PROJECT_DIR)/util/cyclic_buffer.cpp \
