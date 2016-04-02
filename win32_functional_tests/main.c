@@ -136,8 +136,6 @@ int main(void) {
 
 	initTestStream(&testStream);
 
-	event_listener_t tel;
-
 	/*
 	 * System initializations.
 	 * - HAL initialization, this also initializes the configured device drivers
