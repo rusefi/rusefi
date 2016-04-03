@@ -2,7 +2,7 @@
  * @file	test_util.c
  *
  * @date Dec 8, 2013
- * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
 #include <string.h>
