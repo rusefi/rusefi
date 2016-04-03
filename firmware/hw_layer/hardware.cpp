@@ -230,15 +230,6 @@ void initHardware(Logging *l) {
 	initHistogramsModule();
 #endif /* EFI_HISTOGRAMS */
 
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
-	/**
-	 * This is so early because we want to init logger
-	 * which would be used while finding trigger synch index
-	 * while reading configuration
-	 */
-	initTriggerDecoderLogger(sharedLogger);
-#endif
-
 	/**
 	 * We need the LED_ERROR pin even before we read configuration
 	 */

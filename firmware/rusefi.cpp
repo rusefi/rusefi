@@ -167,12 +167,22 @@ void applyNewConfiguration(void) {
 void runRusEfi(void) {
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 512, "init s");
 	initIntermediateLoggingBuffer();
+	initErrorHandling();
+
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+	/**
+	 * This is so early because we want to init logger
+	 * which would be used while finding trigger synch index
+	 * while reading configuration
+	 */
+	initTriggerDecoderLogger(&sharedLogger);
+#endif
 
 	/**
 	 * First thing is reading configuration from flash memory.
 	 * In order to have complete flexibility configuration has to go before anything else.
 	 */
-//	readConfiguration(&sharedLogger);
+	readConfiguration(&sharedLogger);
 
 	msObjectInit(&firmwareErrorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
 
@@ -180,7 +190,6 @@ void runRusEfi(void) {
 	engine->engineConfiguration2 = engineConfiguration2;
 #endif
 
-	initErrorHandling();
 
 	prepareVoidConfiguration(&activeConfiguration);
 

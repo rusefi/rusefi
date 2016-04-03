@@ -18,6 +18,24 @@
 
 EXTERN_ENGINE;
 
+void setFrankenso_01_LCD(board_configuration_s *boardConfiguration) {
+	boardConfiguration->HD44780_rs = GPIOE_7;
+	boardConfiguration->HD44780_e = GPIOE_9;
+	boardConfiguration->HD44780_db4 = GPIOE_11;
+	boardConfiguration->HD44780_db5 = GPIOE_13;
+	boardConfiguration->HD44780_db6 = GPIOE_15;
+	boardConfiguration->HD44780_db7 = GPIOB_10;
+}
+
+void disableLCD(board_configuration_s *boardConfiguration) {
+	boardConfiguration->HD44780_rs = GPIO_UNASSIGNED;
+	boardConfiguration->HD44780_e = GPIO_UNASSIGNED;
+	boardConfiguration->HD44780_db4 = GPIO_UNASSIGNED;
+	boardConfiguration->HD44780_db5 = GPIO_UNASSIGNED;
+	boardConfiguration->HD44780_db6 = GPIO_UNASSIGNED;
+	boardConfiguration->HD44780_db7 = GPIO_UNASSIGNED;
+}
+
 void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
 

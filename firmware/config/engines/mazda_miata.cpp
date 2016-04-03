@@ -20,7 +20,7 @@
 #include "engine_math.h"
 #include "advance_map.h"
 #include "allsensors.h"
-#include "honda_accord.h"
+#include "custom_engine.h"
 
 static const fuel_table_t miata_maf_fuel_table = { {/*0 engineLoad=1.2*//*0 800.0*/1.53, /*1 1213.0*/0.92, /*2 1626.0*/
 		0.74, /*3 2040.0*/0.69, /*4 2453.0*/0.69, /*5 2866.0*/0.67, /*6 3280.0*/0.67, /*7 3693.0*/0.67, /*8 4106.0*/
