@@ -2,12 +2,10 @@ package com.rusefi.binaryprotocol;
 
 import com.rusefi.*;
 import com.rusefi.config.FieldType;
-import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Pair;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.*;
-import com.rusefi.io.serial.PortHolder;
 import com.rusefi.io.serial.SerialIoStream;
 import jssc.SerialPort;
 import jssc.SerialPortException;
@@ -102,7 +100,7 @@ public class BinaryProtocol {
 
     public void doSend(final String command, boolean fireEvent) throws InterruptedException {
         FileLog.MAIN.logLine("Sending [" + command + "]");
-        if (fireEvent) {
+        if (fireEvent && LinkManager.LOG_LEVEL.isDebugEnabled()) {
             CommunicationLoggingHolder.communicationLoggingListener.onPortHolderMessage(BinaryProtocol.class, "Sending [" + command + "]");
         }
 
@@ -129,7 +127,7 @@ public class BinaryProtocol {
         /**
          * this here to make CommandQueue happy
          */
-        MessagesCentral.getInstance().postMessage(PortHolder.class, CommandQueue.CONFIRMATION_PREFIX + command);
+        CommandQueue.getInstance().handleConfirmationMessage(CommandQueue.CONFIRMATION_PREFIX + command);
     }
 
     /**

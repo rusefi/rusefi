@@ -36,7 +36,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20160321;
+    public static final int CONSOLE_VERSION = 20160402;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -236,6 +236,9 @@ public class Launcher {
         JustOneInstance.onStart();
         try {
             boolean isPortDefined = args.length > 0;
+            boolean isBaudRateDefined = args.length > 1;
+            if (isBaudRateDefined)
+                PortHolder.BAUD_RATE = Integer.parseInt(args[1]);
             if (isPortDefined) {
                 new Launcher(args[0]);
             } else {

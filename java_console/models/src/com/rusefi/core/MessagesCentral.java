@@ -5,6 +5,7 @@ import com.rusefi.io.CommunicationLoggingHolder;
 import com.rusefi.io.CommunicationLoggingListener;
 
 import javax.swing.*;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
