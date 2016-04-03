@@ -2,7 +2,7 @@
  * efifeatures.h
  *
  * @date Mar 7, 2014
- * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
 #ifndef EFIFEATURES_H_

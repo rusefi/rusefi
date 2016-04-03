@@ -2,7 +2,7 @@
  * @file	rusEfiFunctionalTest.h
  *
  * @date Mar 1, 2014
- * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
 #ifndef RUSEFIFUNCTIONALTEST_H_
