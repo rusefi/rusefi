@@ -166,6 +166,12 @@ void applyNewConfiguration(void) {
 void runRusEfi(void) {
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 512, "init s");
 
+	/**
+	 * First thing is reading configuration from flash memory.
+	 * In order to have complete flexibility configuration has to go before anything else.
+	 */
+	readConfiguration();
+
 	msObjectInit(&firmwareErrorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
