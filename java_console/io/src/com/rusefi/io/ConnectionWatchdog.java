@@ -15,7 +15,7 @@ public class ConnectionWatchdog {
         public void actionPerformed(ActionEvent e) {
             FileLog.MAIN.logLine("ConnectionWatchdog.reconnectTimer restarting");
             LinkManager.restart();
-            reconnectTimer.restart();
+            onDataArrived();
         }
     });
 
@@ -23,20 +23,20 @@ public class ConnectionWatchdog {
     }
 
     public static void start() {
-        reconnectTimer.restart();
+        onDataArrived();
 
         LinkManager.engineState.timeListeners.add(new EngineTimeListener() {
             @Override
             public void onTime(double time) {
-                /**
-                 * this timer will reconnect
-                 */
-                reconnectTimer.restart();
+                onDataArrived();
             }
         });
     }
 
     public static void onDataArrived() {
+        /**
+         * this timer will reconnect
+         */
         reconnectTimer.restart();
     }
 }

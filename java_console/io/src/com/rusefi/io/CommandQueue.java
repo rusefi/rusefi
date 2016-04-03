@@ -9,7 +9,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * This class keeps re-sending a command till a proper confirmation is received
+ * This singleton keeps re-sending commands till a proper confirmation is received
+ *
  * <p/>
  * Date: 1/7/13
  * (c) Andrey Belomutskiy
@@ -115,27 +116,23 @@ public class CommandQueue {
         Thread thread = new Thread(runnable, "Commands Queue");
         thread.setDaemon(true);
         thread.start();
-        final MessagesCentral mc = MessagesCentral.getInstance();
-        mc.addListener(new MessagesCentral.MessageListener() {
-            @Override
-            public void onMessage(Class clazz, String message) {
-                if (message.startsWith(CONFIRMATION_PREFIX))
-                    handleConfirmationMessage(message, mc);
-            }
-        });
     }
 
     /**
      * this method handles command confirmations packed as
      * TODO: add example, todo: refactor method and add unit test
      */
-    private void handleConfirmationMessage(final String message, MessagesCentral mc) {
+    public void handleConfirmationMessage(final String message) {
+        MessagesCentral mc = MessagesCentral.getInstance();
         String confirmation = LinkManager.unpackConfirmation(message);
         if (confirmation == null)
             mc.postMessage(CommandQueue.class, "Broken confirmation length: " + message);
         pendingConfirmations.add(confirmation);
-        mc.postMessage(CommandQueue.class, "got valid conf! " + confirmation + ", still pending: " + pendingCommands.size());
+        if (LinkManager.LOG_LEVEL.isDebugEnabled())
+            mc.postMessage(CommandQueue.class, "got valid conf! " + confirmation + ", still pending: " + pendingCommands.size());
+
 //        FileLog.MAIN.logLine("templog got valid conf " + confirmation + " " + System.currentTimeMillis() + " " + new Date());
+
         synchronized (lock) {
             lock.notifyAll();
         }

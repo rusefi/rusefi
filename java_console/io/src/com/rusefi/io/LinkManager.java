@@ -13,6 +13,19 @@ import java.util.concurrent.*;
  *         3/3/14
  */
 public class LinkManager {
+    public enum LogLevel {
+        INFO,
+        DEBUG,
+        TRACE;
+
+        public boolean isDebugEnabled() {
+            return this == DEBUG || this == TRACE;
+        }
+    }
+
+    @NotNull
+    public static LogLevel LOG_LEVEL = LogLevel.INFO;
+
     public static LinkDecoder ENCODER = new LinkDecoder() {
         @Override
         public String unpack(String packedLine) {
@@ -96,6 +109,7 @@ public class LinkManager {
     }
 
     public static void restart() {
+        ConnectionStatus.INSTANCE.setValue(ConnectionStatus.Value.NOT_CONNECTED);
         connector.restart();
     }
 

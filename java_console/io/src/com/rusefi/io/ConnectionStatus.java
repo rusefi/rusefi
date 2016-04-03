@@ -34,7 +34,7 @@ public class ConnectionStatus {
     private final Timer timer = new Timer(Timeouts.CS_TIMEOUT, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            setValue(Value.NOT_CONNECTED);
+//            setValue(Value.NOT_CONNECTED);
         }
     });
 
