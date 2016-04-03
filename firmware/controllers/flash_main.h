@@ -21,7 +21,7 @@ typedef enum {
 	PC_ERROR = 4
 } persisted_configuration_state_e;
 
-persisted_configuration_state_e readConfiguration(void);
+persisted_configuration_state_e readConfiguration(Logging * logger);
 void readFromFlash(void);
 void initFlash(Logging *sharedLogger);
 

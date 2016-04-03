@@ -106,7 +106,7 @@ persisted_configuration_state_e flashState;
  * this method could and should be executed before we have any
  * connectivity so no console output here
  */
-persisted_configuration_state_e readConfiguration(void) {
+persisted_configuration_state_e readConfiguration(Logging * logger) {
 	efiAssert(getRemainingStack(chThdSelf()) > 256, "read f", PC_ERROR);
 	flashRead(FLASH_ADDR, (char *) &persistentState, PERSISTENT_SIZE);
 
@@ -131,10 +131,7 @@ persisted_configuration_state_e readConfiguration(void) {
 
 void readFromFlash(void) {
 	printMsg(logger, "readFromFlash()");
-	readConfiguration();
-
-	persisted_configuration_state_e result = readConfiguration();
-
+	persisted_configuration_state_e result = readConfiguration(logger);
 
 	if (result == CRC_FAILED) {
 		printMsg(logger, "Need to reset flash to default due to CRC");

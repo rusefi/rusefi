@@ -166,12 +166,13 @@ void applyNewConfiguration(void) {
 
 void runRusEfi(void) {
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 512, "init s");
+	initIntermediateLoggingBuffer();
 
 	/**
 	 * First thing is reading configuration from flash memory.
 	 * In order to have complete flexibility configuration has to go before anything else.
 	 */
-	readConfiguration();
+//	readConfiguration(&sharedLogger);
 
 	msObjectInit(&firmwareErrorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
 
