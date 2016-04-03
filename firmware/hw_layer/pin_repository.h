@@ -19,6 +19,13 @@
 #include "efiGpio.h"
 // does not exactly belong here, but that works better for tests
 void outputPinRegister(const char *msg, OutputPin *output, ioportid_t port, uint32_t pin);
+
+class PinRepository {
+	public:
+	PinRepository();
+
+};
+
 #endif /* __cplusplus */
 
 #define PORT_SIZE 16

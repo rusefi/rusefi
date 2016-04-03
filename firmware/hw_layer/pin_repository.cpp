@@ -17,6 +17,7 @@
 #include "rusefi.h"
 
 #define PIN_REPO_SIZE 7 * PORT_SIZE
+// todo: move this into PinRepository class
 const char *PIN_USED[PIN_REPO_SIZE];
 static int initialized = FALSE;
 
@@ -31,6 +32,10 @@ static ioportid_t ports[7] = {GPIOA,
 		GPIOF,
 		GPIOH,
 };
+
+PinRepository::PinRepository() {
+
+}
 
 /**
  * @deprecated - use hwPortname() instead
