@@ -295,7 +295,7 @@ void initIntermediateLoggingBuffer(void) {
 	initLoggingCentral();
 
 	msObjectInit(&intermediateLoggingBuffer, intermediateLoggingBufferData, INTERMEDIATE_LOGGING_BUFFER_SIZE, 0);
-	intermediateLoggingBufferInited = TRUE;
+	intermediateLoggingBufferInited = true;
 }
 
 #endif /* ! EFI_UNIT_TEST */

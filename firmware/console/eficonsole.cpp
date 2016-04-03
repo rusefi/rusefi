@@ -165,7 +165,6 @@ void print(const char *format, ...) {
 }
 
 void initializeConsole(Logging *sharedLogger) {
-	initIntermediateLoggingBuffer();
 	initConsoleLogic(sharedLogger);
 
 	startConsole(sharedLogger, &handleConsoleLine);

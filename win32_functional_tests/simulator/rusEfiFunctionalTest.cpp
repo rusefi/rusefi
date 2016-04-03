@@ -71,6 +71,9 @@ void rusEfiFunctionalTest(void) {
 	printToWin32Console("Running version:");
 	printToWin32Console("TODO");
 
+	initIntermediateLoggingBuffer();
+//	initErrorHandling();
+
 	initializeConsole(&sharedLogger);
 
 	initStatusLoop(engine);

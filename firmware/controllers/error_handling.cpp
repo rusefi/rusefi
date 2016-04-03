@@ -49,6 +49,7 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 
 #define WARNING_BUFFER_SIZE 80
 static char warningBuffer[WARNING_BUFFER_SIZE];
+static bool isWarningStreamInitialized = false;
 static MemoryStream warningStream;
 
 static int warningCounter = 0;
@@ -58,6 +59,7 @@ static int warningCounter = 0;
  * @returns TRUE in case there are too many warnings
  */
 int warning(obd_code_e code, const char *fmt, ...) {
+	efiAssert(isWarningStreamInitialized, "warn stream", false);
 	UNUSED(code);
   
 	int now = getTimeNowSeconds();
@@ -111,6 +113,7 @@ void onUnlockHook(void) {
 
 void initErrorHandling(void) {
 	msObjectInit(&warningStream, (uint8_t *) warningBuffer, WARNING_BUFFER_SIZE, 0);
+	isWarningStreamInitialized = true;
 }
 
 extern virtual_timers_list_t vtlist;
