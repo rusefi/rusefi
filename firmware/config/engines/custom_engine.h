@@ -10,5 +10,7 @@
 #include "engine.h"
 
 void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_F);
+void setFrankenso_01_LCD(board_configuration_s *boardConfiguration);
+void disableLCD(board_configuration_s *boardConfiguration);
 
 #endif /* CONFIG_ENGINES_CUSTOM_ENGINE_H_ */

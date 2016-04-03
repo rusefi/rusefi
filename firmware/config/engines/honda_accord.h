@@ -10,7 +10,6 @@
 
 #include "engine.h"
 
-void setFrankenso_01_LCD(board_configuration_s *boardConfiguration);
 void setHondaAccordConfigurationTwoWires(DECLARE_ENGINE_PARAMETER_F);
 void setHondaAccordConfigurationThreeWires(DECLARE_ENGINE_PARAMETER_F);
 void setHondaAccordConfigurationDip(DECLARE_ENGINE_PARAMETER_F);

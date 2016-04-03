@@ -25,15 +25,7 @@
 #include "engine_math.h"
 #include "settings.h"
 #include "advance_map.h"
-
-void setFrankenso_01_LCD(board_configuration_s *boardConfiguration) {
-	boardConfiguration->HD44780_rs = GPIOE_7;
-	boardConfiguration->HD44780_e = GPIOE_9;
-	boardConfiguration->HD44780_db4 = GPIOE_11;
-	boardConfiguration->HD44780_db5 = GPIOE_13;
-	boardConfiguration->HD44780_db6 = GPIOE_15;
-	boardConfiguration->HD44780_db7 = GPIOB_10;
-}
+#include "custom_engine.h"
 
 EXTERN_ENGINE;
 

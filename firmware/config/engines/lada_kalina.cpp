@@ -16,6 +16,7 @@ EXTERN_ENGINE;
 
 void setLadaKalina(DECLARE_ENGINE_PARAMETER_F) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
+	disableLCD(boardConfiguration);
 
 	boardConfiguration->HD44780_rs = GPIO_UNASSIGNED;
 	boardConfiguration->HD44780_e = GPIO_UNASSIGNED;

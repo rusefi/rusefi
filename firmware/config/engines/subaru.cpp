@@ -9,7 +9,7 @@
  */
 
 #include "subaru.h"
-#include "honda_accord.h"
+#include "custom_engine.h"
 
 EXTERN_ENGINE;
 
