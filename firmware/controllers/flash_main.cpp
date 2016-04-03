@@ -100,22 +100,17 @@ static void doResetConfiguration(void) {
 	resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER);
 }
 
-typedef enum {
-	OK = 0,
-	CRC_FAILED = 1,
-	INCOMPATIBLE_VERSION = 2,
-	RESET_REQUESTED = 3
-} persisted_configuration_state_e;
-
 persisted_configuration_state_e flashState;
 
-void readFromFlash(void) {
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "read f");
-	printMsg(logger, "readFromFlash()");
+/**
+ * this method could and should be executed before we have any
+ * connectivity so no console output here
+ */
+persisted_configuration_state_e readConfiguration(void) {
+	efiAssert(getRemainingStack(chThdSelf()) > 256, "read f", PC_ERROR);
 	flashRead(FLASH_ADDR, (char *) &persistentState, PERSISTENT_SIZE);
 
 	persisted_configuration_state_e result;
-
 	if (!isValidCrc(&persistentState)) {
 		result = CRC_FAILED;
 		resetConfigurationExt(logger, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER);
@@ -131,6 +126,15 @@ void readFromFlash(void) {
 	}
 	// we can only change the state after the CRC check
 	engineConfiguration->firmwareVersion = getRusEfiVersion();
+	return result;
+}
+
+void readFromFlash(void) {
+	printMsg(logger, "readFromFlash()");
+	readConfiguration();
+
+	persisted_configuration_state_e result = readConfiguration();
+
 
 	if (result == CRC_FAILED) {
 		printMsg(logger, "Need to reset flash to default due to CRC");
