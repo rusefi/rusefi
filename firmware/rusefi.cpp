@@ -108,6 +108,7 @@
 #include "eficonsole.h"
 #include "status_loop.h"
 #include "pin_repository.h"
+#include "flash_main.h"
 
 #if EFI_HD44780_LCD
 #include "lcd_HD44780.h"

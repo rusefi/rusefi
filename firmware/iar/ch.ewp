@@ -1998,6 +1998,12 @@
         <name>$PROJ_DIR$\..\config\engines\ford_fiesta.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\config\engines\geo_storm.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\geo_storm.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\config\engines\gm_2_2.cpp</name>
       </file>
       <file>
@@ -3325,12 +3331,6 @@
   <group>
     <name>util</name>
     <file>
-      <name>$PROJ_DIR$\..\util\rfiutil.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\util\rfiutil.h</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\..\util\cli_registry.cpp</name>
     </file>
     <file>
@@ -3395,6 +3395,12 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\util\loggingcentral.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\util\rfiutil.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\util\rfiutil.h</name>
     </file>
   </group>
   <file>

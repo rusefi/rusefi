@@ -19,7 +19,6 @@
 #include "rusEfiFunctionalTest.h"
 #include "framework.h"
 
-#define SHELL_WA_SIZE       THD_WA_SIZE(4096)
 #define CONSOLE_WA_SIZE     THD_WA_SIZE(4096)
 
 static thread_t *cdtp;
