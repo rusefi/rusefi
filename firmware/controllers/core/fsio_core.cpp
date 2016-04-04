@@ -20,6 +20,9 @@
 #include "fsio_core.h"
 #include "fsio_impl.h"
 
+extern fsio8_Map3D_t fsioTable1;
+extern fsio8_Map3D_t fsioTable2;
+
 LENameOrdinalPair * LE_FIRST = NULL;
 
 /**
@@ -251,16 +254,16 @@ bool LECalculator::processElement(Engine *engine, LEElement *element) {
 		break;
 	case LE_METHOD_FSIO_TABLE: {
 		float i = pop(LE_METHOD_FSIO_TABLE);
-		float xValue = pop(LE_METHOD_FSIO_TABLE);
 		float yValue = pop(LE_METHOD_FSIO_TABLE);
+		float xValue = pop(LE_METHOD_FSIO_TABLE);
 		int index = (int) i;
-		if (index < 0 || index > 2) {
+		if (index < 1 || index > 2) {
 			push(element->action, NAN);
 		} else {
+			fsio8_Map3D_t *t = index == 1 ? &fsioTable1 : &fsioTable2;
 
+			push(element->action, t->getValue(xValue, yValue));
 		}
-
-
 	}
 		break;
 	case LE_METHOD_KNOCK:

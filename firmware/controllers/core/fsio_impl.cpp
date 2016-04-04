@@ -17,6 +17,10 @@
 
 #define NO_PWM 0
 
+fsio8_Map3D_t fsioTable1("fsio#1");
+fsio8_Map3D_t fsioTable2("fsio#2");
+
+
 /**
  * Here we define all rusEfi-specific methods
  */
@@ -475,6 +479,12 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	addConsoleAction("fsioinfo", showFsioInfo);
 	addConsoleActionSP("eval", (VoidCharPtrVoidPtr) eval, engine);
 #endif
+
+	fsioTable1.init(config->fsioTable1, config->fsioTable1LoadBins,
+			config->fsioTable1RpmBins);
+	fsioTable2.init(config->fsioTable2, config->fsioTable2LoadBins,
+			config->fsioTable2RpmBins);
+
 }
 
 
