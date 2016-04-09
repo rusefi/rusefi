@@ -612,6 +612,12 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugIntField1 = engine->tpsAccelEnrichment.cb.getSize();
 	}
 
+	if (engineConfiguration->debugMode == TRIGGER_COUNT) {
+		tsOutputChannels->debugIntField1 = engine->triggerCentral.getHwEventCounter(0);
+		tsOutputChannels->debugIntField2 = engine->triggerCentral.getHwEventCounter(1);
+		tsOutputChannels->debugIntField3 = engine->triggerCentral.getHwEventCounter(2);
+	}
+
 	tsOutputChannels->wallFuelAmount = ENGINE(wallFuel).getWallFuel(0);
 	tsOutputChannels->wallFuelCorrection = ENGINE(wallFuelCorrection);
 	// TPS acceleration
