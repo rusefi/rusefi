@@ -18,14 +18,15 @@ import java.util.List;
 /**
  * This utility produces images of trigger signals supported by rusEfi
  *
- * 06235/15
+ * 06/23/15
  * (c) Andrey Belomutskiy 2013-2016
  */
 public class TriggerImage {
-
-    public static final String TRIGGERTYPE = "TRIGGERTYPE";
-    public static final String TRIGGERS = "triggers";
-    public static final String TRIGGERS_TXT = "triggers.txt";
+    private static final String TRIGGERTYPE = "TRIGGERTYPE";
+    private static final String OUTPUT_FOLDER = "triggers";
+    private static final String INPUT_FILE_NAME = "triggers.txt";
+    private static final String TOP_MESSAGE = "(c) rusEfi 2016";
+    private static final String DEFAULT_WORK_FOLDER = ".." + File.separator + "unit_tests";
     private static int WIDTH = 320;
     /**
      * number of extra frames
@@ -33,11 +34,11 @@ public class TriggerImage {
     public static int EXTRA_COUNT = 1;
 
     public static void main(String[] args) throws IOException, InvocationTargetException, InterruptedException {
-        final String path;
+        final String workingFolder;
         if (args.length != 1) {
-            path = ".." + File.separator + "unit_tests";
+            workingFolder = DEFAULT_WORK_FOLDER;
         } else {
-            path = args[0];
+            workingFolder = args[0];
         }
 
         FrameHelper f = new FrameHelper();
@@ -55,7 +56,7 @@ public class TriggerImage {
             @Override
             public void run() {
                 try {
-                    generateImages(path, triggerPanel);
+                    generateImages(workingFolder, triggerPanel);
                 } catch (IOException e) {
                     throw new IllegalStateException(e);
                 }
@@ -64,8 +65,8 @@ public class TriggerImage {
         System.exit(-1);
     }
 
-    private static void generateImages(String path, TriggerPanel trigger) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(path + File.separator + TRIGGERS_TXT));
+    private static void generateImages(String workingFolder, TriggerPanel trigger) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(workingFolder + File.separator + INPUT_FILE_NAME));
 
         String line;
         while ((line = br.readLine()) != null) {
@@ -118,8 +119,8 @@ public class TriggerImage {
 
         UiUtils.trueLayout(triggerPanel);
         UiUtils.trueRepaint(triggerPanel);
-        new File(TRIGGERS).mkdir();
-        UiUtils.saveImage(TRIGGERS + File.separator + "trigger_" + id + ".png", triggerPanel);
+        new File(OUTPUT_FOLDER).mkdir();
+        UiUtils.saveImage(OUTPUT_FOLDER + File.separator + "trigger_" + id + ".png", triggerPanel);
     }
 
     @NotNull
@@ -208,11 +209,10 @@ public class TriggerImage {
 
             int w = getWidth();
 
-            String line = "(c) rusEfi 2015";
-            int off = g.getFontMetrics().stringWidth(line);
-            g.drawString(line, w - off, g.getFont().getSize());
+            int off = g.getFontMetrics().stringWidth(TOP_MESSAGE);
+            g.drawString(TOP_MESSAGE, w - off, g.getFont().getSize());
 
-            line = new Date().toString();
+            String line = new Date().toString();
             off = g.getFontMetrics().stringWidth(line);
             g.drawString(line, w - off, 2 * g.getFont().getSize());
 
