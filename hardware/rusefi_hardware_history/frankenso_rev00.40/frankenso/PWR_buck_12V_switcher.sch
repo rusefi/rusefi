@@ -1,4 +1,6 @@
 EESchema Schematic File Version 2
+LIBS:frankenso-rescue
+LIBS:KICAD_Older_Version
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -10,7 +12,6 @@ LIBS:cmos4000
 LIBS:adc-dac
 LIBS:memory
 LIBS:xilinx
-LIBS:special
 LIBS:microcontrollers
 LIBS:dsp
 LIBS:microchip
@@ -52,7 +53,7 @@ LIBS:joystick_SKRHAAE010
 LIBS:STM32F407IGT6
 LIBS:slc_oem
 LIBS:frankenso-cache
-EELAYER 27 0
+EELAYER 25 0
 EELAYER END
 $Descr A 11000 8500
 encoding utf-8
@@ -247,7 +248,7 @@ F 6 "sky-macau.com,8262743708" H 6100 6600 60  0001 C CNN "vend2,vend2#"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L MOS_PRO Q1001
+L MOS_Pro Q1001
 U 1 1 52C6272D
 P 4950 6500
 F 0 "Q1001" H 4950 6690 60  0000 R CNN
@@ -284,7 +285,7 @@ F 5 "DIGI,CRCW0805100KFKEA" V 1130 2600 60  0001 C CNN "vend1,vend1#"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L ZENERSMALL D1001
+L ZENERsmall D1001
 U 1 1 533A08FB
 P 5250 6600
 F 0 "D1001" H 5350 6500 40  0000 C CNN

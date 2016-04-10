@@ -1,4 +1,6 @@
 EESchema Schematic File Version 2
+LIBS:frankenso-rescue
+LIBS:KICAD_Older_Version
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -10,7 +12,6 @@ LIBS:cmos4000
 LIBS:adc-dac
 LIBS:memory
 LIBS:xilinx
-LIBS:special
 LIBS:microcontrollers
 LIBS:dsp
 LIBS:microchip
@@ -52,7 +53,7 @@ LIBS:joystick_SKRHAAE010
 LIBS:STM32F407IGT6
 LIBS:slc_oem
 LIBS:frankenso-cache
-EELAYER 27 0
+EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -701,7 +702,7 @@ Wire Wire Line
 	3825 2550 3825 2300
 Connection ~ 3825 2300
 $Comp
-L MOS_PRO Q701
+L MOS_Pro Q701
 U 1 1 53E7E9F8
 P 8100 1575
 F 0 "Q701" H 8100 1765 60  0000 R CNN
