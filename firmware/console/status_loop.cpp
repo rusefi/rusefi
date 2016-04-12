@@ -471,13 +471,19 @@ static void initStatisLeds() {
  * This method would blink all the LEDs just to test them
  */
 static void initialLedsBlink(void) {
+	if (hasFirmwareError()) {
+		// make sure we do not turn the fatal LED off if already have
+		// fatal error by now
+		return;
+	}
 	int size = sizeof(leds) / sizeof(leds[0]);
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < size && !hasFirmwareError(); i++)
 		leds[i]->setValue(1);
 
 	chThdSleepMilliseconds(100);
 
-	for (int i = 0; i < size; i++)
+	// re-checking in case the error has happened while we were sleeping
+	for (int i = 0; i < size && !hasFirmwareError(); i++)
 		leds[i]->setValue(0);
 }
 

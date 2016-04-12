@@ -36,12 +36,15 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20160402;
+    public static final int CONSOLE_VERSION = 20160411;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
     protected static final String SPEED_KEY = "speed";
+    public static final String FATAL_ERROR_PREFIX = "FATAL";
     private final String port;
+    // todo: the logic around 'fatalError' could be implemented nicer
+    private String fatalError;
     private final JTabbedPane tabbedPane = new JTabbedPane() {
         @Override
         public void paint(Graphics g) {
@@ -63,6 +66,10 @@ public class Launcher {
                     break;
                 default:
                     text = "";
+            }
+            if (fatalError != null) {
+                text = fatalError;
+                g.setColor(Color.red);
             }
             int labelWidth = g.getFontMetrics().stringWidth(text);
             g.drawString(text, (d.width - labelWidth) / 2, d.height / 2);
@@ -105,6 +112,14 @@ public class Launcher {
         getConfig().getRoot().setProperty(SPEED_KEY, PortHolder.BAUD_RATE);
 
         LinkManager.start(port);
+
+        MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
+            @Override
+            public void onMessage(Class clazz, String message) {
+                if (message.startsWith(FATAL_ERROR_PREFIX))
+                    fatalError = message;
+            }
+        });
 
         EngineSnifferPanel engineSnifferPanel = new EngineSnifferPanel(getConfig().getRoot().getChild("digital_sniffer"));
         if (LinkManager.isLogViewerMode(port))
