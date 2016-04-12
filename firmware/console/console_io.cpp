@@ -191,6 +191,7 @@ static THD_FUNCTION(consoleThreadThreadEntryPoint, arg) {
 
 	if (boardConfiguration->startConsoleInBinaryMode) {
 		// switch to binary protocol
+		consoleInBinaryMode = true;
 		runBinaryProtocolLoop(&binaryConsole, true);
 	}
 
