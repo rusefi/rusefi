@@ -1,6 +1,8 @@
 package com.rusefi.ui;
 
+import com.rusefi.Launcher;
 import com.rusefi.core.MessagesCentral;
+import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +17,13 @@ public class WarningPanel {
 
     private final JLabel label = new JLabel();
     private final JButton reset = new JButton("clear warning");
+    private final Timer fatalBlinking = new Timer(1000, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            label.setVisible(!label.isVisible());
+            UiUtils.trueRepaint(label);
+        }
+    });
 
     public WarningPanel() {
         label.setForeground(Color.red);
@@ -33,8 +42,19 @@ public class WarningPanel {
         });
 
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
+            boolean haveFatalError;
+
             @Override
             public void onMessage(Class clazz, String message) {
+                if (haveFatalError)
+                    return;
+
+                if (message.startsWith(Launcher.FATAL_ERROR_PREFIX)) {
+                    haveFatalError = true;
+                    fatalBlinking.start();
+                    label.setText(message);
+                    return;
+                }
                 if (message.startsWith(WARNING) || message.startsWith(ERROR)) {
                     label.setText(message);
                     reset.setEnabled(true);
