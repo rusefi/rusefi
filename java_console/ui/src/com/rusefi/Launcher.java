@@ -36,7 +36,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20160411;
+    public static final int CONSOLE_VERSION = 20160415;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -112,6 +112,7 @@ public class Launcher {
         getConfig().getRoot().setProperty(SPEED_KEY, PortHolder.BAUD_RATE);
 
         LinkManager.start(port);
+        SensorLogger.init();
 
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override
