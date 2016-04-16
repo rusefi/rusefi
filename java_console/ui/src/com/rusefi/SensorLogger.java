@@ -3,7 +3,6 @@ package com.rusefi;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -15,7 +14,9 @@ import java.io.Writer;
 public class SensorLogger {
     private static Writer logFile;
 
-    private static Sensor[] SENSORS = {Sensor.RPM, Sensor.CLT, Sensor.TPS, Sensor.VBATT};
+    private static Sensor[] SENSORS = {Sensor.RPM,
+            Sensor.CLT, Sensor.TPS, Sensor.VBATT,
+            Sensor.MAF, Sensor.IAT};
     private static long fileStartTime;
 
     private SensorLogger() {

@@ -22,6 +22,8 @@ const char *getTiming_mode_e(timing_mode_e value) {
 
 const char *getEngine_type_e(engine_type_e value){
 switch(value) {
+case MIATA_NA_1_6:
+	return "MIATA_NA_1_6";
 case ACURA_RSX:
 	return "ACURA_RSX";
 case AUDI_AAN:
