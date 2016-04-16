@@ -90,9 +90,6 @@ void writeToFlashNow(void) {
 static bool isValidCrc(persistent_config_container_s *state) {
 	crc_t result = flashStateCrc(state);
 	int isValidCrc_b = result == state->value;
-	if (!isValidCrc_b) {
-		scheduleMsg(logger, "CRC got %d while %d expected", result, state->value);
-	}
 	return isValidCrc_b;
 }
 

@@ -239,8 +239,6 @@ void initHardware(Logging *l) {
 		return;
 	}
 
-	initDataStructures(PASS_ENGINE_PARAMETER_F);
-
 #if EFI_INTERNAL_FLASH
 
 	palSetPadMode(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);

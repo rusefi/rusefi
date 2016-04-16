@@ -109,6 +109,7 @@
 #include "status_loop.h"
 #include "pin_repository.h"
 #include "flash_main.h"
+#include "algo.h"
 
 #if EFI_HD44780_LCD
 #include "lcd_HD44780.h"
@@ -177,6 +178,11 @@ void runRusEfi(void) {
 	 */
 	initTriggerDecoderLogger(&sharedLogger);
 #endif
+
+	/**
+	 * we need to initialize table objects before default configuration can set values
+	 */
+	initDataStructures(PASS_ENGINE_PARAMETER_F);
 
 	/**
 	 * First thing is reading configuration from flash memory.
@@ -292,5 +298,5 @@ int getRusEfiVersion(void) {
 		return 123; // this is here to make the compiler happy about the unused array
 	if (UNUSED_CCM_SIZE[0] * 0 != 0)
 		return 3211; // this is here to make the compiler happy about the unused array
-	return 20160411;
+	return 20160415;
 }
