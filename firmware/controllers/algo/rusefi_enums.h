@@ -121,7 +121,10 @@ typedef enum {
 
 	GEO_STORM = 40,
 
-	ET_UNUSED = 41,
+	// Frankenso board
+	MIATA_NA_1_6 = 41,
+
+	ET_UNUSED = 42,
 
 	Force_4b_engine_type = ENUM_32_BITS,
 } engine_type_e;
