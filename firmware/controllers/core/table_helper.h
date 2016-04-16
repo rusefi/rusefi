@@ -70,6 +70,10 @@ template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE>
 void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::init(float table[RPM_BIN_SIZE][LOAD_BIN_SIZE],
 		float loadBins[LOAD_BIN_SIZE],
 		float rpmBins[RPM_BIN_SIZE]) {
+	// this method cannot use logger because it's invoked before everything
+	// that's because this method needs to be invoked before initial configuration processing
+	// and initial configuration load is done prior to logging initialization
+
   for (int k = 0; k < LOAD_BIN_SIZE; k++) {
 		pointers[k] = table[k];
   }
@@ -92,7 +96,7 @@ float Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::getValue(float xRpm, float y) {
 template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE>
 Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::Map3D(const char *name) {
 	this->name = name;
-	initialized = 0;
+	initialized = false;
 	memset(&pointers, 0, sizeof(pointers));
 	loadBins = NULL;
 	rpmBins = NULL;
