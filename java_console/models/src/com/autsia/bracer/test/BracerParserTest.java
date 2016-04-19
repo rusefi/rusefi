@@ -63,6 +63,9 @@ public class BracerParserTest {
 
         bracerParser.parse("(rpm > false)");
         assertEquals("rpm 0 >", bracerParser.getRusEfi());
+
+        bracerParser.parse("(rpm > user0) or (clt > user2) or (vbatt > user1)");
+        assertEquals("rpm user0 > clt user2 > | vbatt user1 > |", bracerParser.getRusEfi());
     }
 
     @Test
