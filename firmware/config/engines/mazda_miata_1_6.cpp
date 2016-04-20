@@ -29,17 +29,18 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
 	// warning light
 	/**
 	 * to test
-	 * set_fsio_setting 0 6200
+	 * set_fsio_setting 0 1800
 	 * set_fsio_setting 1 95
 	 * set_fsio_setting 3 14
 	 *
-	 * eval "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting > |"
+	 * set_fsio_expression 1 "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
+	 * eval "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
 	 */
-	engineConfiguration->bc.fsio_setting[0] = 2000; // RPM threshold
-	engineConfiguration->bc.fsio_setting[1] = 40; // CLT threshold
-	engineConfiguration->bc.fsio_setting[2] = 13; // voltage threshold
+	engineConfiguration->bc.fsio_setting[0] = 6200; // RPM threshold
+	engineConfiguration->bc.fsio_setting[1] = 90; // CLT threshold
+	engineConfiguration->bc.fsio_setting[2] = 13.5; // voltage threshold
 
-	setFsio(0, GPIOC_13, "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting > |" PASS_ENGINE_PARAMETER);
+	setFsio(0, GPIOC_13, "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |" PASS_ENGINE_PARAMETER);
 
 }
 
