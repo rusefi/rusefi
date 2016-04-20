@@ -54,6 +54,7 @@ typedef enum {
 class LEElement {
 public:
 	LEElement();
+	void clear();
 //	void init(le_action_e action, int iValue);
 	void init(le_action_e action);
 	void init(le_action_e action, float fValue);
