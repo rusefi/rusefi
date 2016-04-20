@@ -59,11 +59,16 @@ LENameOrdinalPair::LENameOrdinalPair(le_action_e action, const char *name) {
 }
 
 LEElement::LEElement() {
+	clear();
+}
+
+void LEElement::clear() {
 	action = LE_UNDEFINED;
 	next = NULL;
 	fValue = NAN;
 	iValue = 0;
 }
+
 
 //void LEElement::init(le_action_e action, int iValue) {
 //	this->action = action;
@@ -112,7 +117,7 @@ static bool float2bool(float v) {
 
 float LECalculator::pop(le_action_e action) {
 	if (stack.size() == 0) {
-		warning(OBD_PCM_Processor_Fault, "empty stack for %d", action);
+		warning(OBD_PCM_Processor_Fault, "empty stack for action=%d", action);
 		return NAN;
 	}
 	return stack.pop();
@@ -335,7 +340,9 @@ LEElement *LEElementPool::next() {
 		firmwareError("LE_ELEMENT_POOL_SIZE overflow");
 		return NULL;
 	}
-	return &pool[index++];
+	LEElement *result = &pool[index++];
+	result->clear();
+	return result;
 }
 
 bool isNumeric(const char* line) {
