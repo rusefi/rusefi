@@ -16,6 +16,24 @@ public class SensorLogger {
 
     private static Sensor[] SENSORS = {Sensor.RPM,
             Sensor.CLT, Sensor.TPS, Sensor.VBATT,
+            Sensor.FUEL_BASE,
+            Sensor.T_CHARGE,
+            Sensor.DWELL,
+            Sensor.CURRENT_VE,
+            Sensor.deltaTps,
+            Sensor.engineLoadAccelDelta,
+            Sensor.tpsAccelFuel,
+            Sensor.Injector_duty,
+            Sensor.wallFuelAmount,
+            Sensor.iatCorrection,
+            Sensor.wallFuelCorrection,
+            Sensor.idlePosition,
+            Sensor.TARGET_AFR,
+            Sensor.CHARGE_AIR_MASS,
+            Sensor.cltCorrection,
+            Sensor.runningFuel,
+            Sensor.injectorLagMs,
+
             Sensor.MAF, Sensor.IAT};
     private static long fileStartTime;
 
