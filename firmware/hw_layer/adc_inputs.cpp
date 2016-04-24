@@ -484,7 +484,7 @@ static void addChannel(const char *name, adc_channel_e setting, adc_channel_mode
 	}
 	if (adcHwChannelEnabled[setting] != ADC_OFF) {
 		getPinNameByAdcChannel(setting, errorMsgBuff);
-		firmwareError("ADC mapping error: input %s for %s already used?", errorMsgBuff, name);
+		firmwareError("ADC mapping error: input %s for %s already used by %s?", errorMsgBuff, name, adcHwChannelUsage[setting]);
 	}
 
 	adcHwChannelUsage[setting] = name;

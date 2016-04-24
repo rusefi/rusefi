@@ -300,7 +300,7 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 	}
 
 	float voltage = adcVoltage * dividerCoeff;
-	scheduleMsg(&logger, "%s ADC%d %s %s rawValue=%f/divided=%fv/divider=%f", name, hwChannel, getAdcMode(hwChannel),
+	scheduleMsg(&logger, "%s ADC%d %s %s adc=%f/input=%fv/divider=%f", name, hwChannel, getAdcMode(hwChannel),
 			getPinNameByAdcChannel(hwChannel, pinNameBuffer), adcVoltage, voltage, dividerCoeff);
 #endif
 }

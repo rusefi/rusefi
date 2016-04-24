@@ -16,6 +16,7 @@
 
 void fanBench(void);
 void fuelPumpBench(void);
+void milBench(void);
 void initInjectorCentral(Logging *sharedLogger);
 bool isRunningBenchTest(void);
 int isInjectorEnabled(int cylinderId);

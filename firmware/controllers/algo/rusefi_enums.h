@@ -405,12 +405,12 @@ typedef enum {
 	EFI_ADC_7 = 7, // PA7
 	EFI_ADC_8 = 8,
 	EFI_ADC_9 = 9,
-	EFI_ADC_10 = 10,
-	EFI_ADC_11 = 11, // PC11
-	EFI_ADC_12 = 12, // PC12
-	EFI_ADC_13 = 13, // PC13
-	EFI_ADC_14 = 14, // PC14
-	EFI_ADC_15 = 15,
+	EFI_ADC_10 = 10, // PC0
+	EFI_ADC_11 = 11, // PC1
+	EFI_ADC_12 = 12, // PC2
+	EFI_ADC_13 = 13, // PC3
+	EFI_ADC_14 = 14, // PC4
+	EFI_ADC_15 = 15, // PC5
 
 	EFI_ADC_NONE = 16,
 	EFI_ADC_ERROR = 999,

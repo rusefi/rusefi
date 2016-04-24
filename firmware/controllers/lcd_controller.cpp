@@ -34,6 +34,9 @@ static MenuItem ROOT(NULL, NULL);
 
 static MenuTree tree(&ROOT);
 
+/**
+ * todo: add some comment explaining how this works
+ */
 static MenuItem miRpm(tree.root, LL_RPM);
 static MenuItem miSensors(tree.root, "sensors");
 static MenuItem miBench(tree.root, "bench test");
@@ -56,6 +59,8 @@ static MenuItem miKnock(&miSensors, LL_KNOCK);
 static MenuItem miStopEngine(&miBench, "stop engine", stopEngine);
 static MenuItem miTestFan(&miBench, "test fan", fanBench);
 static MenuItem miTestFuelPump(&miBench, "test pump", fuelPumpBench);
+static MenuItem miTestMIL(&miBench, "test MIL", milBench);
+// todo: looks like these are not finished yet?
 static MenuItem miTestSpark1(&miBench, "test spark1");
 static MenuItem miTestSpark2(&miBench, "test spark2");
 static MenuItem miTestSpark3(&miBench, "test spark3");
