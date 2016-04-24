@@ -77,7 +77,6 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setThermistorConfiguration(&engineConfiguration->iat, 23, 1750, 41, 810, 97, 165);
 	engineConfiguration->iat.config.bias_resistor = 1820;
 
-	commonFrankensoAnalogInputs(engineConfiguration);
 //	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
 

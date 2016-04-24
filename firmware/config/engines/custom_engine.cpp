@@ -40,6 +40,7 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
 
 	setFrankenso_01_LCD(boardConfiguration);
+	commonFrankensoAnalogInputs(engineConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
 
 	/**
