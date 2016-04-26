@@ -190,6 +190,8 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 
+	activeConfiguration->dizzySparkOutputPin = GPIO_UNASSIGNED;
+
 	for (int i = 0; i < JOYSTICK_PIN_COUNT; i++) {
 		boardConfiguration->joystickPins[i] = GPIO_UNASSIGNED;
 	}

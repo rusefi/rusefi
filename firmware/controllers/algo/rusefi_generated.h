@@ -751,8 +751,12 @@
 #define mapAccelTaperBins_offset_hex 900
 #define mapAccelTaperMult_offset 2336
 #define mapAccelTaperMult_offset_hex 920
-#define unused_offset 2368
-#define unused_offset_hex 940
+#define dizzySparkOutputPin_offset 2368
+#define dizzySparkOutputPin_offset_hex 940
+#define dizzySparkOutputPinMode_offset 2372
+#define dizzySparkOutputPinMode_offset_hex 944
+#define unused_offset 2376
+#define unused_offset_hex 948
 #define le_formulas1_offset 3048
 #define le_formulas2_offset 3248
 #define le_formulas3_offset 3448

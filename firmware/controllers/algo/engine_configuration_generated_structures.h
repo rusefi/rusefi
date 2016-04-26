@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Mar 20 15:05:16 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Apr 25 22:10:39 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1510,7 +1510,15 @@ typedef struct {
 	/**
 	 * offset 2368
 	 */
-	int unused[170];
+	brain_pin_e dizzySparkOutputPin;
+	/**
+	 * offset 2372
+	 */
+	pin_output_mode_e dizzySparkOutputPinMode;
+	/**
+	 * offset 2376
+	 */
+	int unused[168];
 	/** total size 3048*/
 } engine_configuration_s;
 
@@ -1699,4 +1707,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Mar 20 15:05:16 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Apr 25 22:10:39 EDT 2016

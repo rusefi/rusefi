@@ -11,7 +11,7 @@
 
 #include "engine.h"
 
-#define FLASH_DATA_VERSION 9200
+#define FLASH_DATA_VERSION 9300
 
 typedef enum {
 	OK = 0,
