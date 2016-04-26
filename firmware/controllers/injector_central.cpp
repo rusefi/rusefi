@@ -253,10 +253,17 @@ void stopInjectionPins(void) {
 void startIgnitionPins(void) {
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		NamedOutputPin *output = &enginePins.coils[i];
+		// todo: we need to check if mode has changed
 		if (boardConfiguration->ignitionPins[i] != activeConfiguration.bc.ignitionPins[i]) {
 			outputPinRegisterExt2(output->name, output, boardConfiguration->ignitionPins[i],
 				&boardConfiguration->ignitionPinMode);
 		}
+	}
+	// todo: we need to check if mode has changed
+	if (engineConfiguration->dizzySparkOutputPin != activeConfiguration.dizzySparkOutputPin) {
+		outputPinRegisterExt2("dizzy tach", &enginePins.dizzyOutput, engineConfiguration->dizzySparkOutputPin,
+				&engineConfiguration->dizzySparkOutputPinMode);
+
 	}
 }
 
@@ -264,6 +271,7 @@ void startInjectionPins(void) {
 	// todo: should we move this code closer to the injection logic?
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		NamedOutputPin *output = &enginePins.injectors[i];
+		// todo: we need to check if mode has changed
 		if (engineConfiguration->bc.injectionPins[i] != activeConfiguration.bc.injectionPins[i]) {
 
 			outputPinRegisterExt2(output->name, output, boardConfiguration->injectionPins[i],

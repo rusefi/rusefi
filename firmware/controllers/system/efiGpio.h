@@ -56,6 +56,7 @@ typedef struct {
 
 	NamedOutputPin injectors[INJECTION_PIN_COUNT];
 	NamedOutputPin coils[IGNITION_PIN_COUNT];
+	OutputPin dizzyOutput;
 } engine_pins_s;
 
 /**
