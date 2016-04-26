@@ -187,6 +187,14 @@ static ALWAYS_INLINE void handleFuel(bool limitedFuel, uint32_t eventIndex, int 
 	}
 }
 
+void turnSparkPinLow(NamedOutputPin *output) {
+	turnPinLow(output);
+}
+
+void turnSparkPinHigh(NamedOutputPin *output) {
+	turnPinHigh(output);
+}
+
 static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t eventIndex, IgnitionEvent *iEvent,
 		int rpm DECLARE_ENGINE_PARAMETER_S) {
 
@@ -231,7 +239,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t eventInde
 		 * This way we make sure that coil dwell started while spark was enabled would fire and not burn
 		 * the coil.
 		 */
-		scheduleTask("spark up", sUp, chargeDelayUs, (schfunc_t) &turnPinHigh, iEvent->output);
+		scheduleTask("spark up", sUp, chargeDelayUs, (schfunc_t) &turnSparkPinHigh, iEvent->output);
 	}
 	/**
 	 * Spark event is often happening during a later trigger event timeframe
@@ -250,7 +258,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t eventInde
 	printf("spark delay=%f angle=%f\r\n", timeTillIgnitionUs, iEvent->sparkPosition.angleOffset);
 #endif
 
-	scheduleTask("spark1 down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnPinLow, iEvent->output);
+	scheduleTask("spark1 down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, iEvent->output);
 	} else {
 		/**
 		 * Spark should be scheduled in relation to some future trigger event, this way we get better firing precision
@@ -284,7 +292,7 @@ static ALWAYS_INLINE void handleSpark(bool limitedSpark, uint32_t eventIndex, in
 			scheduling_s * sDown = &current->signalTimerDown;
 
 			float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * current->sparkPosition.angleOffset;
-			scheduleTask("spark 2down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnPinLow, current->output);
+			scheduleTask("spark 2down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, current->output);
 		}
 	}
 
@@ -415,8 +423,9 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	int revolutionIndex = ENGINE(rpmCalculator).getRevolutionCounter() % 2;
 
 	if (eventIndex == 0) {
-		if (triggerVersion.isOld())
+		if (triggerVersion.isOld()) {
 			prepareOutputSignals(PASS_ENGINE_PARAMETER_F);
+		}
 	}
 
 	efiAssertVoid(!CONFIG(useOnlyRisingEdgeForTrigger) || CONFIG(ignMathCalculateAtIndex) % 2 == 0, "invalid ignMathCalculateAtIndex");

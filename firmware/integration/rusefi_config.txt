@@ -660,7 +660,9 @@ baro_corr_table_t baroCorrTable;
 float[MAP_ACCEL_TAPER] mapAccelTaperBins;;"counter",      1,     0,   0.0,    300,   0
 float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300,   2
 
-	int[170] unused;
+	brain_pin_e dizzySparkOutputPin;
+	pin_output_mode_e dizzySparkOutputPinMode;
+	int[168] unused;
 	
 
 end_struct
