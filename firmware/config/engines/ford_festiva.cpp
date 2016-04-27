@@ -156,19 +156,21 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->triggerSimulatorPinModes[0] = OM_OPENDRAIN;
 	boardConfiguration->triggerSimulatorPinModes[1] = OM_OPENDRAIN;
 
-	boardConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPinMode = OM_DEFAULT;
-
 	// individual coils
 	// W6  PC9
 	// W8  PC7
 	// W12 PE8
 	// W13 PE12
 
+	boardConfiguration->ignitionPins[0] = GPIOC_9;
+	boardConfiguration->ignitionPins[1] = GPIOC_7;
+	boardConfiguration->ignitionPins[2] = GPIOE_8;
+	boardConfiguration->ignitionPins[3] = GPIOE_12;
+	boardConfiguration->ignitionPinMode = OM_DEFAULT;
 
+	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
+
+	engineConfiguration->dizzySparkOutputPin = GPIOE_14; // Frankenso high side - pin 1G;
 
 	/**
 	 * Outputs
@@ -272,6 +274,13 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 		engineConfiguration->warmupAfrPid.iFactor = -0.0005;
 	//	engineConfiguration->warmupAfrPid.dFactor = -0.02;
 		engineConfiguration->debugMode = WARMUP_ENRICH;
+
+
+	engineConfiguration->tpsAccelEnrichmentThreshold = 40;
+	engineConfiguration->tpsAccelEnrichmentMultiplier = 0.0;
+
+	engineConfiguration->engineLoadAccelEnrichmentThreshold = 5.0;
+	engineConfiguration->engineLoadAccelEnrichmentMultiplier = 1;
 
 	// end of Ford Escort GT config
 }

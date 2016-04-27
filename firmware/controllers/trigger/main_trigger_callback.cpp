@@ -181,18 +181,29 @@ static ALWAYS_INLINE void handleFuel(bool limitedFuel, uint32_t eventIndex, int 
 
 	for (int i = 0; i < source->size; i++) {
 		InjectionEvent *event = &source->elements[i];
-		if (event->injectionStart.eventIndex != eventIndex)
+		if (event->injectionStart.eventIndex != eventIndex) {
 			continue;
+		}
 		handleFuelInjectionEvent(i, limitedFuel, event, rpm PASS_ENGINE_PARAMETER);
 	}
 }
 
 void turnSparkPinLow(NamedOutputPin *output) {
 	turnPinLow(output);
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	if (CONFIG(dizzySparkOutputPin) != GPIO_UNASSIGNED) {
+		doSetOutputPinValue2(&enginePins.dizzyOutput, false);
+	}
+#endif
 }
 
 void turnSparkPinHigh(NamedOutputPin *output) {
 	turnPinHigh(output);
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	if (CONFIG(dizzySparkOutputPin) != GPIO_UNASSIGNED) {
+		doSetOutputPinValue2(&enginePins.dizzyOutput, true);
+	}
+#endif
 }
 
 static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t eventIndex, IgnitionEvent *iEvent,
