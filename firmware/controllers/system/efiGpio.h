@@ -109,9 +109,9 @@ typedef struct {
 
 #if EFI_PROD_CODE
 #define doSetOutputPinValue2(output, logicValue) {                                      \
-		if (output->port != GPIO_NULL) {                                                \
-			efiAssertVoid(output->modePtr!=NULL, "pin mode not initialized");           \
-			pin_output_mode_e mode = *output->modePtr;                                  \
+		if ((output)->port != GPIO_NULL) {                                                \
+			efiAssertVoid((output)->modePtr!=NULL, "pin mode not initialized");           \
+			pin_output_mode_e mode = *(output)->modePtr;                                  \
 			efiAssertVoid(mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e");  \
 			int eValue = getElectricalValue(logicValue, mode);                          \
 			setPinValue(output, eValue, logicValue);                                    \
