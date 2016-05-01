@@ -25,6 +25,8 @@ void initializeMazdaMiataNaShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->setTriggerSynchronizationGap(MIATA_NA_GAP);
 	s->useRiseEdge = false;
 
+	s->tdcPosition = 294;
+
 	s->isSynchronizationNeeded = true;
 
 	/**

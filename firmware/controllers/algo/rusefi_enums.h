@@ -80,6 +80,7 @@ typedef enum {
 
 	HONDA_ACCORD_CD_DIP = 18,
 
+	// Frankenstein board
 	MIATA_1990 = 19,
 	MIATA_1994_DEVIATOR = 20,
 	MIATA_1996 = 21,

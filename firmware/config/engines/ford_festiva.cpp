@@ -3,6 +3,10 @@
  *
  * set_engine_type 14
  *
+ * http://rusefi.com/wiki/index.php?title=Vehicle:Mazda_Protege_1993
+ * http://rusefi.com/forum/viewtopic.php?f=3&t=537
+ * http://rusefi.com/forum/viewtopic.php?f=3&t=822
+ *
  * @date Jan 3, 2016
  * @author Andrey Belomutskiy, (c) 2012-2016
  */

@@ -1,6 +1,7 @@
 /*
  * @file mazda_miata_1_6.cpp
  *
+ * Frankenso board
  * set_engine_type 41
  *
  * @date Apr 16, 2016
@@ -10,6 +11,7 @@
 #include "engine_template.h"
 #include "custom_engine.h"
 #include "fsio_impl.h"
+#include "thermistors.h"
 
 EXTERN_ENGINE;
 
@@ -23,7 +25,19 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->vbattDividerCoeff = 9.75;// ((float) (8.2 + 33)) / 8.2 * 2;
 
+	boardConfiguration->idle.solenoidFrequency = 160;
 	boardConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
+
+	setCommonNTCSensor(&engineConfiguration->clt);
+	engineConfiguration->clt.config.bias_resistor = 2700;
+	setCommonNTCSensor(&engineConfiguration->iat);
+	engineConfiguration->iat.config.bias_resistor = 2700;
+
+	/**
+	 * oil pressure line
+	 * adc4/pa4/W47
+	 */
+
 
 	// warning light
 	/**
