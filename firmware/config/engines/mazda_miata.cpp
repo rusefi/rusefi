@@ -5,7 +5,7 @@
  * set_engine_type 14
  * http://rusefi.com/wiki/index.php?title=Vehicle:Mazda_Protege_1993
  *
- * MIATA_1990 = 19
+ * MIATA_1990 = 19 (Frankenstein board)
  * MIATA_1994_DEVIATOR = 20
  * MIATA_1996 = 21
  * MIATA_1994_SPAGS = 24
@@ -140,8 +140,6 @@ static void commonMiataNa(DECLARE_ENGINE_PARAMETER_F) {
 
 	boardConfiguration->idle.solenoidFrequency = 160;
 
-	engineConfiguration->globalTriggerAngleOffset = 294;
-
 	// Frankenstein: high side #1 is PE8
 	// Frankenstein: high side #2 is PE10
 	// Frankenstein: high side #3 is PE12
@@ -200,6 +198,9 @@ void common079721_2351(engine_configuration_s *engineConfiguration, board_config
 
 }
 
+/**
+ * Frankenstein board
+ */
 void setMiata1990(DECLARE_ENGINE_PARAMETER_F) {
 	common079721_2351(engineConfiguration, boardConfiguration);
 
