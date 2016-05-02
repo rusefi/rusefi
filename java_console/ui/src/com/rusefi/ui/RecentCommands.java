@@ -38,6 +38,7 @@ public class RecentCommands {
     private static final String ACCELINFO = "accelinfo";
     private static final String CANINFO = "caninfo";
     private static final String TSINFO = "tsinfo";
+    private static final String joystickINFO = "joystickinfo";
     private static final String FUELINFO = "fuelinfo";
     private static final String TEMPINFO = "tempinfo";
     private static final String HIPINFO = "hipinfo";
@@ -58,6 +59,7 @@ public class RecentCommands {
         COMMAND_ICONS.put(ALTINFO, UiUtils.loadIcon("alternator.jpg"));
         COMMAND_ICONS.put(ACCELINFO, infoIcon);
         COMMAND_ICONS.put(TSINFO, infoIcon);
+        COMMAND_ICONS.put(joystickINFO, infoIcon);
         COMMAND_ICONS.put(CANINFO, infoIcon);
         COMMAND_ICONS.put(FUELINFO, infoIcon);
         COMMAND_ICONS.put(TEMPINFO, infoIcon);
@@ -112,6 +114,7 @@ public class RecentCommands {
         add(ANALOGINFO);
         add(TRIGGERINFO);
         add(TSINFO);
+        add(joystickINFO);
         add(CANINFO);
         add(SettingsTab.WRITECONFIG);
         add("rewriteconfig");
