@@ -52,6 +52,8 @@ RTCDriver RTCD1;
 /* Driver local functions.                                                   */
 /*===========================================================================*/
 
+extern int lseTimeout;
+
 /**
  * @brief   Wait for synchronization of RTC registers with APB1 bus.
  * @details This function must be invoked before trying to read RTC registers.
@@ -60,7 +62,7 @@ RTCDriver RTCD1;
  */
 #define rtc_lld_apb1_sync() {                                                \
     int counter = 0;                                                         \
-	while ((RTCD1.id_rtc->ISR & RTC_ISR_RSF) == 0 && ++counter <LSE_TIMEOUT);\
+	while ((RTCD1.id_rtc->ISR & RTC_ISR_RSF) == 0 && ++counter <lseTimeout);\
 	}
 
 /**
