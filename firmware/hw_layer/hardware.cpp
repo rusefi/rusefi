@@ -59,6 +59,9 @@ int maxNesting = 0;
 #if HAL_USE_SPI || defined(__DOXYGEN__)
 static bool isSpiInitialized[5] = { false, false, false, false, false };
 
+// todo: use larger value if LSE is available, make this a boardConfiguration option
+int lseTimeout = 0;
+
 /**
  * Only one consumer can use SPI bus at a given time
  */
