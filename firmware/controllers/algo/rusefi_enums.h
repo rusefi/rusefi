@@ -125,7 +125,9 @@ typedef enum {
 	// Frankenso board
 	MIATA_NA_1_6 = 41,
 
-	ET_UNUSED = 42,
+	ZIL_130 = 42,
+
+	ET_UNUSED = 43,
 
 	Force_4b_engine_type = ENUM_32_BITS,
 } engine_type_e;

@@ -75,6 +75,7 @@
 #include "lada_kalina.h"
 #include "geo_storm.h"
 #include "mazda_miata_1_6.h"
+#include "zil130.h"
 
 EXTERN_ENGINE;
 
@@ -789,6 +790,9 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 #endif
 	case HONDA_ACCORD_CD:
 		setHondaAccordConfigurationThreeWires(PASS_ENGINE_PARAMETER_F);
+		break;
+	case ZIL_130:
+		setZil130(PASS_ENGINE_PARAMETER_F);
 		break;
 	case MIATA_NA_1_6:
 		setMiataNA_1_6_Configuration(PASS_ENGINE_PARAMETER_F);
