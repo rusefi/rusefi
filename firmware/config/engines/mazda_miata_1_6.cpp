@@ -33,6 +33,9 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
 	setCommonNTCSensor(&engineConfiguration->iat);
 	engineConfiguration->iat.config.bias_resistor = 2700;
 
+	boardConfiguration->isSdCardEnabled = true;
+
+
 	/**
 	 * oil pressure line
 	 * adc4/pa4/W47
