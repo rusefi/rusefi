@@ -286,6 +286,8 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->engineLoadAccelEnrichmentThreshold = 5.0;
 	engineConfiguration->engineLoadAccelEnrichmentMultiplier = 1;
 
+	boardConfiguration->isSdCardEnabled = true;
+
 	// end of Ford Escort GT config
 }
 

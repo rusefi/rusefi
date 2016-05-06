@@ -85,7 +85,7 @@ static void sdStatistics(void) {
 	printMmcPinout();
 	scheduleMsg(&logger, "SD enabled: %s [%s]", boolToString(boardConfiguration->isSdCardEnabled),
 			logName);
-	scheduleMsg(&logger, "fs_ready=%d totalLoggedBytes=%d %d", fs_ready, totalLoggedBytes, logFileIndex);
+	scheduleMsg(&logger, "fs_ready=%s totalLoggedBytes=%d", boolToString(fs_ready), totalLoggedBytes);
 }
 
 static void incLogFileName(void) {
@@ -135,7 +135,7 @@ static void createLogFile(void) {
 	memset(&FDLogFile, 0, sizeof(FIL));						// clear the memory
 	strcpy(logName, RUSEFI_LOG_PREFIX);
 	char *ptr = itoa10(&logName[3], logFileIndex);
-	strcat(ptr, ".log");
+	strcat(ptr, ".msl");
 
 	FRESULT err = f_open(&FDLogFile, logName, FA_OPEN_ALWAYS | FA_WRITE);				// Create new file
 	if (err != FR_OK && err != FR_EXIST) {
