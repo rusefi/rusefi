@@ -59,12 +59,12 @@ public class RecentCommands {
         COMMAND_ICONS.put(ALTINFO, UiUtils.loadIcon("alternator.jpg"));
         COMMAND_ICONS.put(ACCELINFO, infoIcon);
         COMMAND_ICONS.put(TSINFO, infoIcon);
-        COMMAND_ICONS.put(joystickINFO, infoIcon);
+        COMMAND_ICONS.put(joystickINFO, UiUtils.loadIcon("joystick.png"));
         COMMAND_ICONS.put(CANINFO, infoIcon);
         COMMAND_ICONS.put(FUELINFO, infoIcon);
         COMMAND_ICONS.put(TEMPINFO, infoIcon);
         COMMAND_ICONS.put(HIPINFO, UiUtils.loadIcon("knock.jpg"));
-        COMMAND_ICONS.put(SDINFO, infoIcon);
+        COMMAND_ICONS.put(SDINFO, UiUtils.loadIcon("sdinfo.jpg"));
         COMMAND_ICONS.put(FSIOINFO, infoIcon);
         COMMAND_ICONS.put(PINS, infoIcon);
         COMMAND_ICONS.put(SettingsTab.WRITECONFIG, UiUtils.loadIcon("writeconfig.jpg"));
