@@ -19,6 +19,8 @@ void initMmcCard(void);
 bool isSdCardAlive(void);
 void appendToLog(const char *line);
 
+void readLogFileContent(char *buffer, short fileId, short offset, short length);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
