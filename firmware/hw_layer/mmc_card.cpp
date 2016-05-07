@@ -210,6 +210,11 @@ static void listDirectory(const char *path) {
 
 static int errorReported = FALSE; // this is used to report the error only once
 
+void readLogFileContent(char *buffer, short fileId, short offset, short length) {
+
+}
+
+
 /**
  * @brief Appends specified line to the current log file
  */

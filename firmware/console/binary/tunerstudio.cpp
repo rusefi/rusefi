@@ -79,6 +79,7 @@
 #include "svnversion.h"
 #include "loggingcentral.h"
 #include "status_loop.h"
+#include "mmc_card.h"
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
 #include "rusEfiFunctionalTest.h"
 #endif
@@ -248,6 +249,7 @@ void yellowMagic(int currentPageId, int offset, int count) {
  */
 static void handleReadFileContent(ts_channel_s *tsChannel, short fileId, short offset, short length) {
 
+	readLogFileContent(tsChannel->crcReadBuffer, fileId, offset, length);
 
 }
 
