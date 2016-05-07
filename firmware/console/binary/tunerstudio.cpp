@@ -244,6 +244,14 @@ void yellowMagic(int currentPageId, int offset, int count) {
 }
 
 /**
+ * read log file content for rusEfi console
+ */
+static void handleReadFileContent(ts_channel_s *tsChannel, short fileId, short offset, short length) {
+
+
+}
+
+/**
  * This command is needed to make the whole transfer a bit faster
  * @note See also handleWriteValueCommand
  */
@@ -409,6 +417,7 @@ static bool isKnownCommand(char command) {
 			|| command == TS_PAGE_COMMAND || command == TS_BURN_COMMAND || command == TS_SINGLE_WRITE_COMMAND
 			|| command == TS_LEGACY_HELLO_COMMAND || command == TS_CHUNK_WRITE_COMMAND || command == TS_EXECUTE
 			|| command == TS_IO_TEST_COMMAND
+			|| command == TS_GET_FILE_RANGE
 			|| command == TS_GET_TEXT || command == TS_CRC_CHECK_COMMAND;
 }
 
@@ -712,6 +721,11 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 	} else if (command == TS_PAGE_COMMAND) {
 		uint16_t page = *(uint16_t *) data;
 		handlePageSelectCommand(tsChannel, TS_CRC, page);
+	} else if (command == TS_GET_FILE_RANGE) {
+		short fileId = *(uint16_t *) data;
+		uint16_t offset = *(uint16_t *) (data + 2);
+		uint16_t length = *(uint16_t *) (data + 4);
+		handleReadFileContent(tsChannel, fileId, offset, length);
 	} else if (command == TS_CHUNK_WRITE_COMMAND) {
 		currentPageId = *(uint16_t *) data;
 		uint16_t offset = *(uint16_t *) (data + 2);
