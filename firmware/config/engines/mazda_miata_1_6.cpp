@@ -40,6 +40,7 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
 	 * oil pressure line
 	 * adc4/pa4/W47
 	 */
+	//engineConfiguration->fsioAdc[0] =
 
 
 	// warning light

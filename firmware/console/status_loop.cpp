@@ -144,6 +144,8 @@ static void reportSensorI(Logging *log, bool fileFormat, const char *caption, co
 EXTERN_ENGINE
 ;
 
+static char buf[6];
+
 static void printSensors(Logging *log, bool fileFormat) {
 	// current time, in milliseconds
 	int nowMs = currentTimeMillis();
@@ -165,6 +167,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 	}
 
 	reportSensorF(log, fileFormat, "ENGINE_LOAD", "x", getEngineLoadT(), 2);
+
 
 
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
@@ -209,6 +212,13 @@ static void printSensors(Logging *log, bool fileFormat) {
 	reportSensorF(log, fileFormat, "MAT", "C", getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F), 2);
 
 //	debugFloat(&logger, "tch", getTCharge1(tps), 2);
+
+	// todo: implement a proper loop
+	if (engineConfiguration->fsioAdc[0] != EFI_ADC_NONE) {
+		strcpy(buf, "adcX");
+		reportSensorF(log, fileFormat, "adc0", "", getVoltage("fsio", engineConfiguration->fsioAdc[0]), 2);
+	}
+
 
 }
 
