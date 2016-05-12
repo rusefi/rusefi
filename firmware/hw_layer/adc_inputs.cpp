@@ -508,6 +508,10 @@ static void configureInputs(void) {
 	addChannel("IAT", engineConfiguration->iat.adcChannel, ADC_SLOW);
 	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);
 	addChannel("AC", engineConfiguration->acSwitchAdc, ADC_SLOW);
+
+	for (int i = 0; i < FSIO_ADC_COUNT ; i++) {
+		addChannel("fsio", engineConfiguration->fsioAdc[i], ADC_SLOW);
+	}
 }
 
 void initAdcInputs(bool boardTestMode) {
@@ -541,6 +545,7 @@ void initAdcInputs(bool boardTestMode) {
 			fastAdc.addChannel((adc_channel_e) (ADC_CHANNEL_IN0 + adc));
 		}
 	}
+
 
 	slowAdc.init();
 	pwmStart(EFI_INTERNAL_SLOW_ADC_PWM, &pwmcfg_slow);
