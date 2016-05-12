@@ -187,6 +187,10 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 	memset(activeConfiguration, 0, sizeof(engine_configuration_s));
 	board_configuration_s *boardConfiguration = &activeConfiguration->bc;
 
+	for (int i = 0; i < FSIO_ADC_COUNT ; i++) {
+		activeConfiguration->fsioAdc[i] = EFI_ADC_NONE;
+	}
+
 	boardConfiguration->triggerInputPins[0] = GPIO_UNASSIGNED;
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
