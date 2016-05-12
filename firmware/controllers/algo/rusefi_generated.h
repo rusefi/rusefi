@@ -1,4 +1,5 @@
 #define LE_COMMAND_LENGTH 200
+#define FSIO_ADC_COUNT 4
 #define TS_FILE_VERSION 20160430
 #define WARMUP_TARGET_AFR_SIZE 4
 #define MAP_ANGLE_SIZE 8
@@ -755,8 +756,15 @@
 #define dizzySparkOutputPin_offset_hex 940
 #define dizzySparkOutputPinMode_offset 2372
 #define dizzySparkOutputPinMode_offset_hex 944
-#define unused_offset 2376
-#define unused_offset_hex 948
+#define fsioAdc1_offset 2376
+#define fsioAdc1_offset_hex 948
+#define fsioAdc2_offset 2380
+#define fsioAdc3_offset 2384
+#define fsioAdc3_offset_hex 950
+#define fsioAdc4_offset 2388
+#define fsioAdc4_offset_hex 954
+#define unused_offset 2392
+#define unused_offset_hex 958
 #define le_formulas1_offset 3048
 #define le_formulas2_offset 3248
 #define le_formulas3_offset 3448

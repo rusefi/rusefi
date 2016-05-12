@@ -17,6 +17,7 @@ struct_no_prefix engine_configuration_s
 ! todo there is still a spot where this 200 is hard-coded
 #define LE_COMMAND_LENGTH 200
 
+#define FSIO_ADC_COUNT 4
 !
 ! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
 ! so not forget to change fileVersion in rusefi.ini
@@ -662,7 +663,8 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 
 	brain_pin_e dizzySparkOutputPin;
 	pin_output_mode_e dizzySparkOutputPinMode;
-	int[168] unused;
+	adc_channel_e[FSIO_ADC_COUNT iterate] fsioAdc;
+	int[164] unused;
 	
 
 end_struct
