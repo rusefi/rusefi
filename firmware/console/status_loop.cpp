@@ -632,6 +632,13 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugIntField1 = engine->triggerCentral.getHwEventCounter(0);
 		tsOutputChannels->debugIntField2 = engine->triggerCentral.getHwEventCounter(1);
 		tsOutputChannels->debugIntField3 = engine->triggerCentral.getHwEventCounter(2);
+	} else if (engineConfiguration->debugMode == FSIO_ADC) {
+		// todo: implement a proper loop
+		if (engineConfiguration->fsioAdc[0] != EFI_ADC_NONE) {
+			strcpy(buf, "adcX");
+			tsOutputChannels->debugFloatField1 = getVoltage("fsio", engineConfiguration->fsioAdc[0]);
+		}
+
 	}
 
 	tsOutputChannels->wallFuelAmount = ENGINE(wallFuel).getWallFuel(0);

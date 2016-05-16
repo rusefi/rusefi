@@ -589,7 +589,7 @@ typedef enum {
 	IDLE = 3,
 	DBG_EL_ACCEL = 4,
 	TRIGGER_COUNT = 5,
-	VALUE_6 = 6,
+	FSIO_ADC = 6,
 
 	Force_4b_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;

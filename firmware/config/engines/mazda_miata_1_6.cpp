@@ -40,7 +40,7 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
 	 * oil pressure line
 	 * adc4/pa4/W47
 	 */
-	//engineConfiguration->fsioAdc[0] =
+	engineConfiguration->fsioAdc[0] = EFI_ADC_4;
 
 
 	// warning light
@@ -53,9 +53,9 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
 	 * set_fsio_expression 1 "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
 	 * eval "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
 	 */
-	engineConfiguration->bc.fsio_setting[0] = 6200; // RPM threshold
+	engineConfiguration->bc.fsio_setting[0] = 6000; // RPM threshold
 	engineConfiguration->bc.fsio_setting[1] = 90; // CLT threshold
-	engineConfiguration->bc.fsio_setting[2] = 13.5; // voltage threshold
+	engineConfiguration->bc.fsio_setting[2] = 13.0; // voltage threshold
 
 	setFsio(0, GPIOC_13, "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |" PASS_ENGINE_PARAMETER);
 
