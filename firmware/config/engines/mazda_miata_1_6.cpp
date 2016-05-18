@@ -59,6 +59,19 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
 
 	setFsio(0, GPIOC_13, "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |" PASS_ENGINE_PARAMETER);
 
+	boardConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G
+	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[2] = GPIOC_7; // Frankenso high side - pin 1H
+	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+
+	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
+
+	boardConfiguration->injectionPins[0] = GPIOB_9; // #1
+	boardConfiguration->injectionPins[1] = GPIOE_2; // #2
+	boardConfiguration->injectionPins[2] = GPIOB_8; // #3
+	boardConfiguration->injectionPins[3] = GPIOB_7; // #4
+
+
 }
 
 

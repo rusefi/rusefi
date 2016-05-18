@@ -2046,16 +2046,16 @@
         <name>$PROJ_DIR$\..\config\engines\mazda_miata.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\config\engines\mazda_miata_nb.cpp</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\config\engines\mazda_miata_nb.h</name>
-      </file>
-      <file>
         <name>$PROJ_DIR$\..\config\engines\mazda_miata_1_6.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\config\engines\mazda_miata_1_6.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\mazda_miata_nb.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\mazda_miata_nb.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\config\engines\MiniCooperR50.cpp</name>
@@ -2128,6 +2128,12 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\config\engines\vw.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\zil130.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\zil130.h</name>
       </file>
     </group>
     <group>
