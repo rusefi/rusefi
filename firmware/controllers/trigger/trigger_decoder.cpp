@@ -51,6 +51,7 @@ EXTERN_ENGINE
 ;
 
 static cyclic_buffer<int> errorDetection;
+static bool isInitializingTrigger = false; // #286 miata NA config - sync error on startup
 
 #if ! EFI_PROD_CODE || defined(__DOXYGEN__)
 bool printTriggerDebug = false;
@@ -296,7 +297,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		toothed_previous_duration = currentDuration;
 		toothed_previous_time = nowNt;
 	}
-	if (!isValidIndex(PASS_ENGINE_PARAMETER_F)) {
+	if (!isValidIndex(PASS_ENGINE_PARAMETER_F) && !isInitializingTrigger) {
 		warning(OBD_PCM_Processor_Fault, "sync error: index #%d above total size %d", currentCycle.current_index, TRIGGER_SHAPE(size));
 		lastDecodingErrorTime = getTimeNowNt();
 		someSortOfTriggerError = true;
@@ -558,6 +559,7 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	efiAssert(getRemainingStack(chThdSelf()) > 128, "findPos", -1);
 #endif
+	isInitializingTrigger = true;
 	errorDetection.clear();
 	efiAssert(state != NULL, "NULL state", -1);
 
@@ -568,6 +570,7 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 
 	uint32_t index = helper.doFindTrigger(shape, triggerConfig, state PASS_ENGINE_PARAMETER);
 	if (index == EFI_ERROR_CODE) {
+		isInitializingTrigger = false;
 		return index;
 	}
 	efiAssert(state->getTotalRevolutionCounter() == 1, "totalRevolutionCounter", EFI_ERROR_CODE);
@@ -582,6 +585,7 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 
 	helper.assertSyncPositionAndSetDutyCycle(index, state, shape, triggerConfig PASS_ENGINE_PARAMETER);
 
+	isInitializingTrigger = false;
 	return index % shape->getSize();
 }
 
