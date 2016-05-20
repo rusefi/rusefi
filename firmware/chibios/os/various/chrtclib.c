@@ -265,10 +265,11 @@ void rtcGetTimeTm(RTCDriver *rtcp, struct tm *timp) {
 #if defined __GNUC__
   localtime_r((time_t *)&(timespec.tv_sec), timp);
 #else
-  struct tm *t = localtime((time_t *)&(timespec.tv_sec));
-  memcpy(&timp, t, sizeof(struct tm));
+  {
+    struct tm *t = localtime((time_t *)&(timespec.tv_sec));
+    memcpy(&timp, t, sizeof(struct tm));
+  }
 #endif
-
 }
 
 /**

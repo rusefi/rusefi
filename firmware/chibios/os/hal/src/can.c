@@ -216,7 +216,7 @@ msg_t canReceive(CANDriver *canp,
                  CANRxFrame *crfp,
                  systime_t timeout) {
 
-  chDbgCheck((canp != NULL) && (crfp != NULL) && (mailbox < CAN_RX_MAILBOXES),
+  chDbgCheck((canp != NULL) && (crfp != NULL) && (mailbox <= CAN_RX_MAILBOXES),
              "canReceive");
 
   chSysLock();

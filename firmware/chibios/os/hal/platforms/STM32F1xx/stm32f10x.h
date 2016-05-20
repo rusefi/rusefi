@@ -15,15 +15,15 @@
   *          is using in the C source code, usually in main.c. This file contains:
   *           - Configuration section that allows to select:
   *              - The device used in the target application
-  *              - To use or not the peripheralï¿½s drivers in application code(i.e. 
-  *                code will be based on direct access to peripheralï¿½s registers 
+  *              - To use or not the peripheral’s drivers in application code(i.e. 
+  *                code will be based on direct access to peripheral’s registers 
   *                rather than drivers API), this option is controlled by 
   *                "#define USE_STDPERIPH_DRIVER"
   *              - To change few application-specific parameters such as the HSE 
   *                crystal frequency
   *           - Data structures and the address mapping for all peripherals
   *           - Peripheral's registers declarations and bits definition
-  *           - Macros to access peripheralï¿½s registers hardware
+  *           - Macros to access peripheral’s registers hardware
   *
   ******************************************************************************
   * @attention
@@ -154,6 +154,9 @@
 /**
  * @brief Configuration of the Cortex-M3 Processor and Core Peripherals 
  */
+/* CHIBIOS FIX */
+#define __CM3_REV                 0x0201  /*!< Core revision r2p1, not sure it is right */
+/* END CHIBIOS FIX */
 #ifdef STM32F10X_XL
  #define __MPU_PRESENT             1 /*!< STM32 XL-density devices provide an MPU */
 #else

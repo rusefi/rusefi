@@ -717,9 +717,9 @@
 /**
  * @brief   I2C1 frequency.
  */
-#if STM32_I2CSW == STM32_I2C1SW_HSI
+#if STM32_I2C1SW == STM32_I2C1SW_HSI
 #define STM32_I2C1CLK               STM32_HSICLK
-#elif STM32_I2CSW == STM32_I2C1SW_SYSCLK
+#elif STM32_I2C1SW == STM32_I2C1SW_SYSCLK
 #define STM32_I2C1CLK               STM32_SYSCLK
 #else
 #error "invalid source selected for I2C1 clock"
@@ -732,9 +732,9 @@
 #define STM32_USART1CLK             STM32_PCLK
 #elif STM32_USART1SW == STM32_USART1SW_SYSCLK
 #define STM32_USART1CLK             STM32_SYSCLK
-#elif STM32_USART1SW == STM32_USART1SW_LSECLK
+#elif STM32_USART1SW == STM32_USART1SW_LSE
 #define STM32_USART1CLK             STM32_LSECLK
-#elif STM32_USART1SW == STM32_USART1SW_HSICLK
+#elif STM32_USART1SW == STM32_USART1SW_HSI
 #define STM32_USART1CLK             STM32_HSICLK
 #else
 #error "invalid source selected for USART1 clock"
