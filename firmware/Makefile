@@ -189,7 +189,7 @@ INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
          $(HALINC) $(PLATFORMINC) $(BOARDINC) \
          $(CHCPPINC) \
          $(CHIBIOS)/os/various \
-         $(CHIBIOS)/os/various/devices_lib\accel \
+         $(CHIBIOS)/os/various/devices_lib/accel \
 	config/stm32f4ems \
 	config/engines \
 	config \
