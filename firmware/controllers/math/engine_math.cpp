@@ -319,6 +319,8 @@ static int order_1_THEN_2_THEN_3_THEN_4_THEN_5_THEN_6[] = { 1, 2, 3, 4, 5, 6 };
 
 static int order_1_8_4_3_6_5_7_2[] = { 1, 8, 4, 3, 6, 5, 7, 2 };
 
+static int order_1_8_7_2_6_5_4_3[] = { 1, 8, 7, 2, 6, 5, 4, 3 };
+
 static int order_1_2[] = {1, 2};
 
 static int order_1_2_3[] = {1, 2, 3};
@@ -360,6 +362,8 @@ int getCylinderId(firing_order_e firingOrder, int index) {
 // 8 cylinder
 	case FO_1_8_4_3_6_5_7_2:
 		return order_1_8_4_3_6_5_7_2[index];
+	case FO_1_8_7_2_6_5_4_3:
+		return order_1_8_7_2_6_5_4_3[index];
 
 	default:
 		warning(OBD_PCM_Processor_Fault, "getCylinderId not supported for %d", firingOrder);

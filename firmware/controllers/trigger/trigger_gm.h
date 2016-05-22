@@ -11,5 +11,6 @@
 #include "trigger_structure.h"
 
 void configureGmTriggerShape(TriggerShape *s);
+void initGmLS24(TriggerShape *s);
 
 #endif /* TRIGGER_GM_H_ */

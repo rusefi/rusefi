@@ -121,6 +121,8 @@ case Force_4b_trigger_type:
   return "Force_4b_trigger_type";
 case TT_DODGE_NEON_1995:
   return "TT_DODGE_NEON_1995";
+case TT_GM_LS_24:
+	return "TT_GM_LS_24";
 case TT_DODGE_NEON_2003:
   return "TT_DODGE_NEON_2003";
 case TT_FORD_ASPIRE:
@@ -350,6 +352,8 @@ case FO_ONE_CYLINDER:
   return "FO_ONE_CYLINDER";
 case FO_1_2_3:
 	return "FO_1_2_3";
+case FO_1_8_7_2_6_5_4_3:
+	return "FO_1_8_7_2_6_5_4_3";
 case Force_4b_firing_order:
   return "Force_4b_firing_order";
   }
