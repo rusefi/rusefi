@@ -320,6 +320,7 @@ typedef enum {
 	FO_1_THEN_3_THEN_2_THEN4 = 3,
 	// 8 cylinder
 	FO_1_8_4_3_6_5_7_2 = 5,
+	FO_1_8_7_2_6_5_4_3 = 11,
 	// 5 cylinder
 	FO_1_2_4_5_3 = 6,
 
