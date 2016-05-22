@@ -7,6 +7,7 @@
 
 #include "trigger_gm.h"
 
+// GM7X looks like this is not complete
 void configureGmTriggerShape(TriggerShape *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, false);
 
@@ -33,5 +34,18 @@ void configureGmTriggerShape(TriggerShape *s) {
 
 	s->addEvent(720 - w, T_PRIMARY, TV_RISE);
 	s->addEvent(720.0, T_PRIMARY, TV_FALL);
+}
+
+/**
+ * https://www.mediafire.com/?40mfgeoe4ctti
+ * http://www.ls1gto.com/forums/archive/index.php/t-190549.htm
+ * http://www.ls2.com/forums/showthread.php/834483-LS-Timing-Reluctor-Wheels-Explained
+ *
+ */
+void initGmLS24(TriggerShape *s) {
+
+	// todo: finish this
+	setToothedWheelConfiguration(s, 24, 0, FOUR_STROKE_CRANK_SENSOR);
+
 }
 

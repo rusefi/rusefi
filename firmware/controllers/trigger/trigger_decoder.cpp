@@ -528,6 +528,10 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		initializeRoverK(triggerShape);
 		break;
 
+	case TT_GM_LS_24:
+		initGmLS24(triggerShape);
+		break;
+
 	default:
 		firmwareError("initializeTriggerShape() not implemented: %d", triggerConfig->type);
 		return;
