@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed May 11 21:30:38 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon May 23 14:53:43 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1470,6 +1470,7 @@ typedef struct {
 	 */
 	float tpsDecelEnleanmentMultiplier;
 	/**
+	 * ExpAverage alpha coefficient
 	 * offset 2240
 	 */
 	float slowAdcAlpha;
@@ -1711,4 +1712,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed May 11 21:30:38 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon May 23 14:53:43 EDT 2016

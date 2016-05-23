@@ -1,8 +1,9 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Apr 30 09:55:07 EDT 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon May 23 14:53:43 EDT 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
+	public static final int FSIO_ADC_COUNT = 4;
 	public static final int TS_FILE_VERSION = 20160430;
 	public static final int WARMUP_TARGET_AFR_SIZE = 4;
 	public static final int MAP_ANGLE_SIZE = 8;
@@ -759,8 +760,15 @@ public class Fields {
 	public static final int dizzySparkOutputPin_offset_hex = 940;
 	public static final int dizzySparkOutputPinMode_offset = 2372;
 	public static final int dizzySparkOutputPinMode_offset_hex = 944;
-	public static final int unused_offset = 2376;
-	public static final int unused_offset_hex = 948;
+	public static final int fsioAdc1_offset = 2376;
+	public static final int fsioAdc1_offset_hex = 948;
+	public static final int fsioAdc2_offset = 2380;
+	public static final int fsioAdc3_offset = 2384;
+	public static final int fsioAdc3_offset_hex = 950;
+	public static final int fsioAdc4_offset = 2388;
+	public static final int fsioAdc4_offset_hex = 954;
+	public static final int unused_offset = 2392;
+	public static final int unused_offset_hex = 958;
 	public static final int le_formulas1_offset = 3048;
 	public static final int le_formulas2_offset = 3248;
 	public static final int le_formulas3_offset = 3448;
@@ -913,7 +921,7 @@ public class Fields {
 	public static final Field TPSADCCHANNEL = Field.create("TPSADCCHANNEL", 524, FieldType.INT, adc_channel_e);
 	public static final Field OVERRIDECRANKINGIGNITION = Field.create("OVERRIDECRANKINGIGNITION", 528, FieldType.INT);
 	public static final Field SENSORCHARTFREQUENCY = Field.create("SENSORCHARTFREQUENCY", 532, FieldType.INT);
-	public static final String[] trigger_type_e = {"custom toothed wheel", "ford aspire", "dodge neon", "Miata NA", "Miata NB", "GM_7X", "Cooper", "Mazda SOHC 4", "60/2", "36/1", "Accord CD", "MITSU", "ACCORD 2", "ACCORD DIP", "Neon 2003", "MAZDA D 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Accord 1+24", "DODGE STRATUS", "36_2_2_2", "Nissan", "2JZ", "Rover K", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"};
+	public static final String[] trigger_type_e = {"custom toothed wheel", "ford aspire", "dodge neon", "Miata NA", "Miata NB", "GM_7X", "Cooper", "Mazda SOHC 4", "60/2", "36/1", "Accord CD", "MITSU", "ACCORD 2", "ACCORD DIP", "Neon 2003", "MAZDA D 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Accord 1+24", "DODGE STRATUS", "36_2_2_2", "Nissan", "2JZ", "Rover K", "GM LS 23", "trg28", "trg29", "trg30", "INVALID"};
 	public static final Field TRIGGER_TYPE = Field.create("TRIGGER_TYPE", 536, FieldType.INT, trigger_type_e);
 	public static final Field TRIGGER_CUSTOMISSYNCHRONIZATIONNEEDED = Field.create("TRIGGER_CUSTOMISSYNCHRONIZATIONNEEDED", 540, FieldType.BIT, 0);
 	public static final Field TRIGGER_CUSTOMNEEDSECONDTRIGGERINPUT = Field.create("TRIGGER_CUSTOMNEEDSECONDTRIGGERINPUT", 540, FieldType.BIT, 1);
@@ -1314,6 +1322,10 @@ public class Fields {
 	public static final Field BOOSTCUTPRESSURE = Field.create("BOOSTCUTPRESSURE", 2300, FieldType.FLOAT);
 	public static final Field DIZZYSPARKOUTPUTPIN = Field.create("DIZZYSPARKOUTPUTPIN", 2368, FieldType.INT, brain_pin_e);
 	public static final Field DIZZYSPARKOUTPUTPINMODE = Field.create("DIZZYSPARKOUTPUTPINMODE", 2372, FieldType.INT, pin_output_mode_e);
+	public static final Field FSIOADC1 = Field.create("FSIOADC1", 2376, FieldType.INT, adc_channel_e);
+	public static final Field FSIOADC2 = Field.create("FSIOADC2", 2380, FieldType.INT, adc_channel_e);
+	public static final Field FSIOADC3 = Field.create("FSIOADC3", 2384, FieldType.INT, adc_channel_e);
+	public static final Field FSIOADC4 = Field.create("FSIOADC4", 2388, FieldType.INT, adc_channel_e);
 	public static final Field LE_FORMULAS1 = Field.create("LE_FORMULAS1", 3048, FieldType.INT);
 	public static final Field LE_FORMULAS2 = Field.create("LE_FORMULAS2", 3248, FieldType.INT);
 	public static final Field LE_FORMULAS3 = Field.create("LE_FORMULAS3", 3448, FieldType.INT);

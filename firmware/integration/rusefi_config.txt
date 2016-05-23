@@ -200,7 +200,7 @@ float displacement;Engine displacement, in liters\nsee also cylindersCount;"L", 
 custom cylinders_count_t 4 bits,    U32,    @OFFSET@, [0:3], "INVALID", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, "INVALID", "INVALID", "INVALID"
 cylinders_count_t cylindersCount;
 
-custom firing_order_e 4 bits,    U32,    @OFFSET@, [0:3], "One Cylinder", "1-3-4-2", "1-2-4-3", "1-3-2-4", "1-5-3-6-2-4", "1-8-4-3-6-5-7-2", "1-5-3-6-2-4", "1-4-2-5-3-6", "1-2", "1_2_3_4_5_6", "1-2-3", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
+custom firing_order_e 4 bits,    U32,    @OFFSET@, [0:3], "One Cylinder", "1-3-4-2", "1-2-4-3", "1-3-2-4", "1-5-3-6-2-4", "1-8-4-3-6-5-7-2", "1-5-3-6-2-4", "1-4-2-5-3-6", "1-2", "1_2_3_4_5_6", "1-2-3", "1-8-7-2-6-5-4-3", "fo12", "fo13", "fo14", "INVALID"
 firing_order_e firingOrder;
 end_struct
 
@@ -275,7 +275,7 @@ struct trigger_config_s @brief Trigger wheel(s) configuration
 
 custom bool32_t 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 
-#define trigger_type_e_enum "custom toothed wheel", "ford aspire", "dodge neon", "Miata NA", "Miata NB", "GM_7X", "Cooper", "Mazda SOHC 4", "60/2", "36/1", "Accord CD", "MITSU", "ACCORD 2", "ACCORD DIP", "Neon 2003", "MAZDA D 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Accord 1+24", "DODGE STRATUS",  "36_2_2_2", "Nissan", "2JZ", "Rover K", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID" 
+#define trigger_type_e_enum "custom toothed wheel", "ford aspire", "dodge neon", "Miata NA", "Miata NB", "GM_7X", "Cooper", "Mazda SOHC 4", "60/2", "36/1", "Accord CD", "MITSU", "ACCORD 2", "ACCORD DIP", "Neon 2003", "MAZDA D 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Accord 1+24", "DODGE STRATUS",  "36_2_2_2", "Nissan", "2JZ", "Rover K", "GM LS 23", "trg28", "trg29", "trg30", "INVALID" 
 
 custom trigger_type_e 4 bits,    U32,   @OFFSET@, [0:4], @@trigger_type_e_enum@@
 	trigger_type_e type;
@@ -648,7 +648,7 @@ baro_corr_table_t baroCorrTable;
 	uint32_t uartConsoleSerialSpeed;;"BPs",      1,      0,       0,1000000,      0
 	float tpsDecelEnleanmentThreshold;;"roc",        1,     0,    0, 200,     3
 	float tpsDecelEnleanmentMultiplier;;"coeff",        1,     0,    0, 200,     3
-	float slowAdcAlpha;;"coeff",        1,     0,    0, 200,     3
+	float slowAdcAlpha;+ExpAverage alpha coefficient;"coeff",        1,     0,    0, 200,     3
 	debug_mode_e debugMode;
 	pid_s warmupAfrPid;
 
