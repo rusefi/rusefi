@@ -404,7 +404,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->step1SparkCutEnable = false;
 	engineConfiguration->step1RpmWindow = 500;
 
-	engineConfiguration->slowAdcAlpha = 1;
+	engineConfiguration->slowAdcAlpha = 0.33333;
 	engineConfiguration->engineSnifferRpmThreshold = 2500;
 	engineConfiguration->sensorSnifferRpmThreshold = 2500;
 	engineConfiguration->rpmHardLimit = 7000;
