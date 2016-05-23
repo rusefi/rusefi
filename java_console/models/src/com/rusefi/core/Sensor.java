@@ -36,6 +36,11 @@ public enum Sensor {
     CLT_F("Coolant F", SensorCategory.SENSOR_INPUTS, "temperature, F", -40, 500),
     IAT_F("Intake Air F", SensorCategory.SENSOR_INPUTS, "temperature, F", -40, 350),
 
+    ADC0("adc0", SensorCategory.SENSOR_INPUTS, "%", 100),
+    ADC1("adc1", SensorCategory.SENSOR_INPUTS, "%", 100),
+    ADC2("adc2", SensorCategory.SENSOR_INPUTS, "%", 100),
+    ADC3("adc3", SensorCategory.SENSOR_INPUTS, "%", 100),
+
     TRG_0_DUTY("trg0 duty", SensorCategory.SENSOR_INPUTS, "%", 100),
     TRG_1_DUTY("trg1 duty", SensorCategory.SENSOR_INPUTS, "%", 100),
 
