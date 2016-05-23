@@ -126,6 +126,11 @@ public class SensorCentral {
         addDoubleSensor(Sensor.TRG_0_DUTY, es);
         addDoubleSensor(Sensor.TRG_1_DUTY, es);
 
+        addDoubleSensor(Sensor.ADC0, es);
+        addDoubleSensor(Sensor.ADC1, es);
+        addDoubleSensor(Sensor.ADC2, es);
+        addDoubleSensor(Sensor.ADC3, es);
+
         addDoubleSensor("idl", Sensor.IDLE_SWITCH, es);
 
         addDoubleSensor("chart", Sensor.CHART_STATUS, true, es);
