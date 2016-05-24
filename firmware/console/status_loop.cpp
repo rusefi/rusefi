@@ -622,6 +622,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER);
 	tsOutputChannels->runningFuel = ENGINE(engineState.runningFuel);
 	tsOutputChannels->injectorLagMs = ENGINE(engineState.injectorLag);
+	tsOutputChannels->baseFuel = engine->engineState.baseFuel;
+	tsOutputChannels->actualLastInjection = ENGINE(actualLastInjection);
+
 	tsOutputChannels->timeSeconds = getTimeNowSeconds();
 
 	if (engineConfiguration->debugMode == DBG_TPS_ACCEL) {
@@ -694,8 +697,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	float timing = engine->engineState.timingAdvance;
 	tsOutputChannels->ignitionAdvance = timing > 360 ? timing - 720 : timing;
 	tsOutputChannels->sparkDwell = ENGINE(engineState.sparkDwell);
-	tsOutputChannels->baseFuel = engine->engineState.baseFuel;
-	tsOutputChannels->pulseWidthMs = ENGINE(actualLastInjection);
 	tsOutputChannels->crankingFuelMs = getCrankingFuel(PASS_ENGINE_PARAMETER_F);
 	tsOutputChannels->chargeAirMass = engine->engineState.airMass;
 }

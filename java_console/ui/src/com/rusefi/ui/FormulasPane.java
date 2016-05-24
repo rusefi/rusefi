@@ -181,16 +181,15 @@ public class FormulasPane {
         String CLTcorr = oneDecimal(Sensor.cltCorrection);
         String tpsAccel = oneDecimal(Sensor.tpsAccelFuel);
 
-        String runningFuel = oneDecimal(Sensor.runningFuel);
-
         String tempCorrections = " * cltCorr(" + CLTcorr + ") * iatCorr(" + IATcorr + ")";
 
         String injectorLag = "+ ( injectorLag(VBatt = " + vBatt + ") = " + oneDecimal(Sensor.injectorLagMs) + ")";
 
+        String actualLastInjection = oneDecimal(Sensor.actualLastInjection);
         String injTime = "$Fuel (ms) = " +
                 "(Base_Fuel (" + baseFuelStr + "ms) + Tps_Accel_Corr = (" + tpsAccel + "ms))" +
                 tempCorrections + injectorLag +
-                " = " + runningFuel + "ms$";
+                " = " + actualLastInjection + "ms_per_injection$";
 
         return acceleration +
                 tCharge + newLine +
