@@ -52,7 +52,7 @@ typedef struct {
 	 * this one contains total resulting fuel squirt time, per event
 	 * With all corrections. See also baseFuel
 	 */
-	float pulseWidthMs; // 64
+	float actualLastInjection; // 64
 	float debugFloatField1;	// 68
 	/**
 	 * Yes, I do not really enjoy packing bits into integers but we simply have too many boolean flags and I cannot

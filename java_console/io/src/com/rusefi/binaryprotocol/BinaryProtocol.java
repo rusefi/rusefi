@@ -323,9 +323,9 @@ public class BinaryProtocol {
 
             offset += requestSize;
         }
+        setController(image);
         logger.info("Got configuration from controller.");
         ConnectionStatus.INSTANCE.setValue(ConnectionStatus.Value.CONNECTED);
-        setController(image);
     }
 
     /**

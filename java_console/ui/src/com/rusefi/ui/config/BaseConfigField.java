@@ -33,7 +33,8 @@ public abstract class BaseConfigField {
             ConnectionStatus.INSTANCE.addListener(new ConnectionStatus.Listener() {
                 @Override
                 public void onConnectionStatus(boolean isConnected) {
-                    processInitialValue(field);
+                    if (ConnectionStatus.INSTANCE.getValue() == ConnectionStatus.Value.CONNECTED)
+                        processInitialValue(field);
                 }
             });
         }
