@@ -2,6 +2,8 @@
  * @file tachometer.cpp
  * @brief This is about driving external analog tachometers
  *
+ * todo: these is a bit of duplication with dizzySparkOutputPin
+ *
  * @date Aug 18, 2015
  * @author Andrey Belomutskiy, (c) 2012-2016
  */
