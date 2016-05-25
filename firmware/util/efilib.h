@@ -43,17 +43,7 @@ int indexOf(const char *string, char ch);
 float atoff(const char *string);
 int atoi(const char *string);
 
-/**
- * there is some BS related to isnan in MinGW, so let's have all the issues in one place
- * JMT -  Screw that, isnan is isnan, if mingw cant make it goes in the naughty bin.
- *        This should probably be guarded by an STM32F4 specific macro as well.
- */
-#ifdef __MINGW32__
 #define cisnan(f) (*(((int*) (&f))) == 0x7FC00000)
-#else
-#define cisnan isnan
-#endif
-  
 #define UNUSED(x) (void)(x)
   
 int absI(int32_t value);
