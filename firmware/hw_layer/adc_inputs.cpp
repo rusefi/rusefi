@@ -24,6 +24,7 @@
 #include "engine_math.h"
 #include "board_test.h"
 #include "engine_controller.h"
+#include "maf.h"
 
 /* Depth of the conversion buffer, channels are sampled X times each.*/
 #define ADC_BUF_DEPTH_SLOW      8
@@ -496,7 +497,9 @@ static void configureInputs(void) {
 	memset(adcHwChannelUsage, 0, sizeof(adcHwChannelUsage));
 
 	addChannel("MAP", engineConfiguration->map.sensor.hwChannel, ADC_FAST);
-	addChannel("MAF", engineConfiguration->mafAdcChannel, ADC_FAST);
+	if (hasMafSensor()) {
+		addChannel("MAF", engineConfiguration->mafAdcChannel, ADC_FAST);
+	}
 	addChannel("hip", engineConfiguration->hipOutputChannel, ADC_FAST);
 
 	addChannel("TPS", engineConfiguration->tpsAdcChannel, ADC_SLOW);
