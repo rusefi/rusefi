@@ -34,6 +34,7 @@
 #include "trigger_nissan.h"
 #include "trigger_toyota.h"
 #include "trigger_rover.h"
+#include "trigger_honda.h"
 #include "trigger_structure.h"
 #include "efiGpio.h"
 #include "engine.h"
@@ -502,6 +503,10 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 
 	case TT_HONDA_ACCORD_CD_DIP:
 		configureHondaAccordCDDip(triggerShape);
+		break;
+
+	case TT_HONDA_CBR_600:
+		configureHondaCbr600(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_MITSU:

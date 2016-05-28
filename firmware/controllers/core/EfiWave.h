@@ -66,6 +66,5 @@ public:
 };
 
 void checkSwitchTimes2(int size, float *switchTimes);
-void configureHondaAccordCDDip(TriggerShape *s);
 
 #endif /* EFI_WAVE_H_ */
