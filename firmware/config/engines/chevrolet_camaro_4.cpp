@@ -18,6 +18,11 @@ void setCamaro4(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->specs.displacement = 5.7;
 	engineConfiguration->specs.cylindersCount = 8;
 
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_0; // PA0
+
+	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
+	engineConfiguration->hasMafSensor = false;
+
 }
 
 
