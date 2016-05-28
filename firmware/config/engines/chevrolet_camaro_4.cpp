@@ -28,6 +28,8 @@ void setCamaro4(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->hasMafSensor = false;
 
+	engineConfiguration->tpsAdcChannel = EFI_ADC_2;
+
 }
 
 
