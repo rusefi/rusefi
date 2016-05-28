@@ -9,17 +9,15 @@
 #include "main.h"
 #include "engine.h"
 #include "rpm_calculator.h"
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-#include "status_loop.h"
-#endif
 
 #if EFI_SENSOR_CHART || defined(__DOXYGEN__)
+#include "status_loop.h"
 
 static char LOGGING_BUFFER[5000];
 static Logging logging("analog chart", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 
-static int pendingData = FALSE;
-static int initialized = FALSE;
+static int pendingData = false;
+static int initialized = false;
 
 extern engine_configuration_s *engineConfiguration;
 
@@ -49,11 +47,9 @@ void scAddData(float angle, float value) {
 			// message terminator
 			appendPrintf(&logging, DELIMETER);
 			// output pending data
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
 			if (getFullLog()) {
 				scheduleLogging(&logging);
 			}
-#endif
 			pendingData = false;
 		}
 		return;

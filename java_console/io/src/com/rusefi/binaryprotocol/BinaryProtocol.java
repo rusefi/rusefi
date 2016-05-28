@@ -313,7 +313,8 @@ public class BinaryProtocol {
             byte[] response = executeCommand(packet, "load image offset=" + offset, false);
 
             if (!checkResponseCode(response, RESPONSE_OK) || response.length != requestSize + 1) {
-                String info = response == null ? "null" : ("code " + response[0] + " size " + response.length);
+                String code = (response == null || response.length == 0) ? "empty" : "code " + response[0];
+                String info = response == null ? "null" : (code + " size " + response.length);
                 logger.error("readImage: Something is wrong, retrying... " + info);
                 continue;
             }

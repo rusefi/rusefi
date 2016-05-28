@@ -535,6 +535,10 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	initSignalExecutor();
 #endif
 
+#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
+	initSensorChart();
+#endif /* EFI_SENSOR_CHART */
+
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	// todo: this is a mess, remove code duplication with simulator
 	initSettings(engineConfiguration);
@@ -571,10 +575,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	initPwmGenerator();
 #endif
-
-#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
-	initSensorChart();
-#endif /* EFI_SENSOR_CHART */
 
 	initAlgo(sharedLogger, engineConfiguration);
 
