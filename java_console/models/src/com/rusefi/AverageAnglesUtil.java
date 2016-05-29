@@ -15,8 +15,13 @@ public class AverageAnglesUtil {
     private static int currentRpm = -1;
 
     public static void main(String[] args) throws IOException {
-        runUtil("a.csv", Logger.CONSOLE);
-   }
+        if (args.length != 1) {
+            System.out.println("One parameter expected: log_file_name.csv");
+            System.exit(-1);
+        }
+        String fileName = args[0];
+        runUtil(fileName, Logger.CONSOLE);
+    }
 
     public static String runUtil(String fileName, Logger logger) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(fileName));
