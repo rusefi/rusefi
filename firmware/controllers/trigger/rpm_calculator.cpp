@@ -194,6 +194,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 #endif
 		return;
 	}
+	// todo: wrap this with if (index == 0) statement this would make scAddData logic simpler
 
 	bool hadRpmRecently = rpmState->isRunning(PASS_ENGINE_PARAMETER_F);
 
@@ -217,6 +218,8 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	rpmState->onNewEngineCycle();
 	rpmState->lastRpmEventTimeNt = nowNt;
 #if EFI_SENSOR_CHART || defined(__DOXYGEN__)
+	// this 'index==0' case is here so that it happens after cycle callback so
+	// it goes into sniffer report into the first position
 	if (ENGINE(sensorChartMode) == SC_TRIGGER) {
 		scAddData(crankAngle, signal);
 	}
