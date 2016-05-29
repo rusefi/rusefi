@@ -53,7 +53,9 @@ void setVwAba(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPinMode = OM_DEFAULT;
 
+	float mapRange = 110;
+
 	setEgoSensor(ES_PLX PASS_ENGINE_PARAMETER);
-	setFuelTablesLoadBin(20, 320 PASS_ENGINE_PARAMETER);
-	setTimingLoadBin(20, 320 PASS_ENGINE_PARAMETER);
+	setFuelTablesLoadBin(20, mapRange PASS_ENGINE_PARAMETER);
+	setTimingLoadBin(20, mapRange PASS_ENGINE_PARAMETER);
 }
