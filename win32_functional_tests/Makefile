@@ -11,18 +11,38 @@ ifeq ($(USE_OPT),)
 # this config if debugging is needed, but the binary is about 50M
 # USE_OPT = -c -Wall -O0 -ggdb -g3 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings
 # this config producec a smaller binary file
-  USE_OPT = -c -Wall -O2           -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings -Wno-error=strict-aliasing
+  USE_OPT = -c -Wall -O2           -Werror-implicit-function-declaration  -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings -Wno-error=strict-aliasing
+
+	ifeq ($(OS),Windows_NT)
+	else
+ 	 USE_OPT +=  -m32
+	endif
+
 endif
 
 # C specific options here (added to USE_OPT).
 ifeq ($(USE_COPT),)
   USE_COPT = -std=gnu99 -fgnu89-inline
+
+	ifeq ($(OS),Windows_NT)
+	else
+	  USE_COPT += -Wno-error=attributes -Wno-error=implicit-function-declaration -include stdio.h
+	endif
+
 endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
   USE_CPPOPT = -std=c++11 -fno-rtti -fpermissive -fno-exceptions -fno-use-cxa-atexit
+
+
+	ifeq ($(OS),Windows_NT)
+	else
+	  USE_CPPOPT += -include cstring -include cstdio -include cstdlib
+	endif
+
 endif
+
 
 # Enable this if you want the linker to remove unused code and data
 ifeq ($(USE_LINK_GC),)
@@ -84,7 +104,13 @@ include $(PROJECT_DIR)/development/development.mk
 
 include $(CHIBIOS)/boards/simulator/board.mk
 include ${CHIBIOS}/os/hal/hal.mk
-include ${CHIBIOS}/os/hal/platforms/Win32/platform.mk
+
+ifeq ($(OS),Windows_NT)
+  include ${CHIBIOS}/os/hal/platforms/Win32/platform.mk
+else
+  include ${CHIBIOS}/os/hal/platforms/Posix/platform.mk
+endif
+
 include ${CHIBIOS}/os/ports/GCC/SIMIA32/port.mk
 include ${CHIBIOS}/os/kernel/kernel.mk
 
@@ -239,7 +265,12 @@ DINCDIR =
 DLIBDIR =
 
 # List all default libraries here
-DLIBS = -static-libgcc -static-libstdc++ -lws2_32
+ifeq ($(OS),Windows_NT)
+  DLIBS = -static-libgcc -static-libstdc++ -lws2_32
+else
+  DLIBS = -static-libgcc -lgcc -static-libstdc++ -m32
+endif
+
 
 #
 # End of default section

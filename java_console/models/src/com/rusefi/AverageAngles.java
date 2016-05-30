@@ -59,7 +59,7 @@ public class AverageAngles {
                 System.out.println("Skipping due to NaN");
                 return;
             }
-            current.add(new AngleEvent(angle));
+            current.add(new AngleEvent(angle, signal));
         }
 
         for (int i = 0; i < current.size(); i++) {
@@ -73,7 +73,7 @@ public class AverageAngles {
     }
 
     public void printReport(Appendable stream) throws IOException {
-        List<Double> angles = new ArrayList<>();
+        List<AngleEvent> angles = new ArrayList<>();
 
         stream.append("Based on " + angleData.size() + " charts\r\n");
 
@@ -94,7 +94,7 @@ public class AverageAngles {
             StandardDeviation sd = new StandardDeviation();
             double sdv = sd.evaluate(values, mean);
 
-            angles.add(mean);
+            angles.add(new AngleEvent(mean, v.get(0).signal));
 
             double diff = mean - prev;
             prev = mean;
@@ -102,19 +102,28 @@ public class AverageAngles {
         }
         if (angleData.isEmpty())
             return;
-        Double lastValue = angles.get(angles.size() - 1);
-        stream.append("Last value = " + lastValue + "\r\n");
+        Double lastValue = angles.get(angles.size() - 1).angle;
+        stream.append("Last value = " + lastValue + ", using it to offset...\r\n");
         double delta = 720 - lastValue;
-        for (double v : angles) {
-            stream.append((delta + v) + "\r\n");
+        stream.append("And the " + angles.size() + " angles are:\r\n");
+        for (AngleEvent v : angles) {
+            stream.append((delta + v.angle) + "\r\n");
+        }
+
+        stream.append("And the " + angles.size() + " lines of code are:\r\n");
+        for (AngleEvent v : angles) {
+            String signal = (v.signal / 1000) % 2 == 0 ? "TV_FALL" : "TV_RISE";
+            stream.append("s->addEvent(" + (delta + v.angle) + ", ch, " + signal + ");\r\n");
         }
     }
 
     private static class AngleEvent {
         private final double angle;
+        private final int signal;
 
-        public AngleEvent(double angle) {
+        public AngleEvent(double angle, int signal) {
             this.angle = angle;
+            this.signal = signal;
         }
 
         public double getAngle() {
