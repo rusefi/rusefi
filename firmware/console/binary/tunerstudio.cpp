@@ -89,6 +89,9 @@
 EXTERN_ENGINE
 ;
 
+// todo: eliminate this magic constant, read from some relevant offset
+#define LIVE_TUNING 6200
+
 extern short currentPageId;
 
 // that's 3 seconds
@@ -237,7 +240,7 @@ void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 }
 
 void yellowMagic(int currentPageId, int offset, int count) {
-	if (offset > 6200) {
+	if (offset > LIVE_TUNING) {
 		scheduleMsg(&tsLogger, "applying soft change from %d length %d", offset, count);
 		memcpy(((char*) engineConfiguration) + offset, ((char*) &configWorkingCopy.engineConfiguration) + offset,
 				count);
