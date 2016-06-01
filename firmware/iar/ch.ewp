@@ -2511,6 +2511,12 @@
         <name>$PROJ_DIR$\..\controllers\trigger\trigger_gm.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\controllers\trigger\trigger_honda.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\trigger\trigger_honda.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\controllers\trigger\trigger_mazda.cpp</name>
       </file>
       <file>
