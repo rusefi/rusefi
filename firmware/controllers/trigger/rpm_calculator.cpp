@@ -40,6 +40,7 @@ EXTERN_ENGINE
 
 efitime_t notRunnintNow;
 efitime_t notRunningPrev;
+extern bool hasFirmwareErrorFlag;
 
 static Logging * logger;
 
@@ -284,6 +285,9 @@ float getCrankshaftAngleNt(efitime_t timeNt DECLARE_ENGINE_PARAMETER_S) {
 
 void initRpmCalculator(Logging *sharedLogger, Engine *engine) {
 	logger = sharedLogger;
+	if (hasFirmwareError()) {
+		return;
+	}
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 
 //	tdcScheduler[0].name = "tdc0";

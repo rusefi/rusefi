@@ -245,6 +245,9 @@ void printWave(Logging *logging) {
 
 void initWaveAnalyzer(Logging *sharedLogger) {
 	logger = sharedLogger;
+	if (hasFirmwareError()) {
+		return;
+	}
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
 	initWave(WA_CHANNEL_1, 0);
 	initWave(WA_CHANNEL_2, 1);
