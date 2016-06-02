@@ -189,8 +189,8 @@ static void printSensors(Logging *log, bool fileFormat) {
 	}
 #endif /* EFI_PROD_CODE */
 
-	reportSensorF(log, fileFormat, "ks", "count", engine->knockCount, 0);
-	reportSensorF(log, fileFormat, "kv", "v", engine->knockVolts, 2);
+	reportSensorF(log, fileFormat, "knck_c", "count", engine->knockCount, 0);
+	reportSensorF(log, fileFormat, "knck_v", "v", engine->knockVolts, 2);
 
 
 //	reportSensorF(log, fileFormat, "vref", "V", getVRef(engineConfiguration), 2);
@@ -202,7 +202,8 @@ static void printSensors(Logging *log, bool fileFormat) {
 
 	if (fileFormat) {
 		reportSensorF(log, fileFormat, "tpsacc", "ms", engine->tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_F), 2);
-		reportSensorF(log, fileFormat, "advance", "deg", engine->tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_F), 2);
+		reportSensorF(log, fileFormat, "advance", "deg", engine->engineState.timingAdvance, 2);
+		reportSensorF(log, fileFormat, "duty", "%", getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER), 2);
 	}
 
 	if (engineConfiguration->hasCltSensor) {
