@@ -567,9 +567,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	addConsoleAction("analoginfo", printAnalogInfo);
 	commonInitEngineController(sharedLogger);
 
-	if (hasFirmwareError()) {
-		return;
-	}
 
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -594,6 +591,10 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 
 // multiple issues with this	initMapAdjusterThread();
 	initPeriodicEvents(PASS_ENGINE_PARAMETER_F);
+
+	if (hasFirmwareError()) {
+		return;
+	}
 
 	chThdCreateStatic(csThreadStack, sizeof(csThreadStack), LOWPRIO, (tfunc_t) csThread, NULL);
 
