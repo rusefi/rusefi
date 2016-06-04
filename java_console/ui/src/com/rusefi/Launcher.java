@@ -45,6 +45,8 @@ public class Launcher {
     private final String port;
     // todo: the logic around 'fatalError' could be implemented nicer
     private String fatalError;
+    public static EngineSnifferPanel engineSnifferPanel;
+
     private final JTabbedPane tabbedPane = new JTabbedPane() {
         @Override
         public void paint(Graphics g) {
@@ -122,7 +124,10 @@ public class Launcher {
             }
         });
 
-        EngineSnifferPanel engineSnifferPanel = new EngineSnifferPanel(getConfig().getRoot().getChild("digital_sniffer"));
+        engineSnifferPanel = new EngineSnifferPanel(getConfig().getRoot().getChild("digital_sniffer"));
+        if (!LinkManager.isLogViewerMode(port))
+            engineSnifferPanel.setOutpinListener(LinkManager.engineState);
+
         if (LinkManager.isLogViewerMode(port))
             tabbedPane.add("Log Viewer", new LogViewer(engineSnifferPanel));
 

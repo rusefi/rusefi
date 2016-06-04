@@ -1,5 +1,6 @@
 package com.rusefi.ui.engine;
 
+import com.rusefi.Launcher;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.util.UiUtils;
@@ -51,12 +52,19 @@ public class UpDownImage extends JPanel {
             UiUtils.trueRepaint(UpDownImage.this);
         }
     });
-    public boolean showText = true;
+    public boolean showMouseOverText = true;
     private int currentMouseX = -100;
 
     public UpDownImage(final String name) {
         this(EngineReport.MOCK, name);
         setToolTip();
+        // this code is horrible, I am in a rush :(
+        EngineSnifferPanel p = Launcher.engineSnifferPanel;
+        if (p != null) {
+            String pin = p.channelName2PhysicalPin.get(name);
+            if (pin != null)
+                setPhysicalPin(pin);
+        }
     }
 
     public void setSignalBody(Color signalBody) {
@@ -162,7 +170,7 @@ public class UpDownImage extends JPanel {
         for (EngineReport.UpDown upDown : wr.getList())
             paintUpDown(d, upDown, g);
 
-        if (showText)
+        if (showMouseOverText)
             paintScaleLines(g2, d);
 
         int duration = wr.getDuration();
@@ -175,15 +183,19 @@ public class UpDownImage extends JPanel {
             g.setFont(f.deriveFont(Font.BOLD, f.getSize() * 3));
             g.setColor(Color.red);
         }
-        if (showText)
-            g.drawString(NameUtil.getUiName(name), 5, ++line * LINE_SIZE + (justEntered ? 30 : 0));
+        if (showMouseOverText) {
+            String mouseOverText = NameUtil.getUiName(name);
+            if (pin != null)
+                mouseOverText += "/" + pin;
+            g.drawString(mouseOverText, 5, ++line * LINE_SIZE + (justEntered ? 30 : 0));
+        }
         if (justEntered) {
             // revert font & color
             g.setFont(f);
             g.setColor(Color.black);
         }
 
-        if (showText) {
+        if (showMouseOverText) {
             g.drawString("Tick length: " + duration + "; count=" + wr.getList().size(), 5, ++line * LINE_SIZE);
             g.drawString("Total seconds: " + (duration / EngineReport.SYS_TICKS_PER_MS / 000.0), 5, ++line * LINE_SIZE);
             g.drawString(FORMAT.format(new Date(lastUpdateTime)), 5, ++line * LINE_SIZE);
@@ -262,7 +274,7 @@ public class UpDownImage extends JPanel {
         g.setColor(Color.red);
         String durationString = String.format(" %.2fms", upDown.getDuration() / EngineReport.SYS_TICKS_PER_MS);
 
-        if (showText) {
+        if (showMouseOverText) {
             g.drawString(durationString, x1, (int) (0.5 * d.height));
 
             double fromAngle = time2rpm.getCrankAngleByTime((double) upDown.upTime);
