@@ -36,6 +36,9 @@ public class EngineState {
         registerStringValueAction(key, callback);
     }
 
+    /**
+     * text protocol key and callback associated with this key
+     */
     private static class StringActionPair extends Pair<String, ValueCallback<String>> {
         public final String prefix;
 
@@ -206,8 +209,21 @@ public class EngineState {
         }
         if (originalResponse.length() == response.length()) {
             FileLog.MAIN.logLine("EngineState.unknown: " + response);
-            // discarding invalid line
-            return "";
+            int keyEnd = response.indexOf(SEPARATOR);
+            if (keyEnd == -1) {
+                // discarding invalid line
+                return "";
+            }
+            String unknownKey = response.substring(0, keyEnd);
+            int valueEnd = response.indexOf(SEPARATOR, keyEnd + 1);
+            if (valueEnd == -1) {
+                // discarding invalid line
+                return "";
+            }
+            String value = response.substring(keyEnd, valueEnd);
+            FileLog.MAIN.logLine("Invalid key [" + unknownKey + "] value [" + value + "]");
+            // trying to process the rest of the line
+            response = response.substring(valueEnd + SEPARATOR.length());
         }
         return response;
     }
