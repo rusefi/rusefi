@@ -1,6 +1,7 @@
 package com.rusefi.ui.logview;
 
 import com.rusefi.FileLog;
+import com.rusefi.Launcher;
 import com.rusefi.core.EngineState;
 import com.rusefi.file.FileUtils;
 import com.rusefi.ui.ChartRepository;
@@ -8,6 +9,7 @@ import com.rusefi.ui.LogDownloader;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.io.LinkManager;
+import com.rusefi.waves.EngineReport;
 
 import javax.swing.*;
 import java.awt.*;
@@ -176,7 +178,9 @@ public class LogViewer extends JPanel {
 
         ChartRepository.getInstance().clear();
         EngineState engineState = new EngineState(listener);
-        engineState.registerStringValueAction("wave_chart", new EngineState.ValueCallback<String>() {
+        // this is pretty dirty, better OOP desperately needed
+        Launcher.engineSnifferPanel.setOutpinListener(engineState);
+        engineState.registerStringValueAction(EngineReport.ENGINE_CHART, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
                 FileLog.MAIN.logLine("Got wave_chart: " + value);

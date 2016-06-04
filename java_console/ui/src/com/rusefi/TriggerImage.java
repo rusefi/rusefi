@@ -102,11 +102,11 @@ public class TriggerImage {
 
         triggerPanel.removeAll();
         UpDownImage upDownImage0 = new UpDownImage(re0, "trigger");
-        upDownImage0.showText = false;
+        upDownImage0.showMouseOverText = false;
         triggerPanel.add(upDownImage0);
 
         UpDownImage upDownImage1 = new UpDownImage(re1, "trigger");
-        upDownImage1.showText = false;
+        upDownImage1.showMouseOverText = false;
         boolean isSingleSenssor = re1.getList().isEmpty();
 
         triggerPanel.setLayout(new GridLayout(isSingleSenssor ? 1 : 2, 1));

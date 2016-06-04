@@ -4,6 +4,7 @@ import com.rusefi.FileLog;
 import com.rusefi.core.EngineState;
 import com.rusefi.models.Point3D;
 import com.rusefi.models.XYData;
+import com.rusefi.waves.EngineReport;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +51,7 @@ public class BaseMap {
             }
         };
         EngineState engineState = new EngineState(listener);
-        engineState.registerStringValueAction("wave_chart", new EngineState.ValueCallback<String>() {
+        engineState.registerStringValueAction(EngineReport.ENGINE_CHART, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
             }
