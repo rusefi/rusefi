@@ -19,10 +19,9 @@ void setZil130(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->specs.cylindersCount = 8;
 
-	engineConfiguration->specs.displacement = 6.66;
+	engineConfiguration->specs.displacement = 5.9;
 	engineConfiguration->specs.firingOrder = FO_1_5_4_2_6_3_7_8;
 	engineConfiguration->injectionMode = IM_BATCH;
-	engineConfiguration->twoWireBatchInjection = true;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
@@ -33,17 +32,22 @@ void setZil130(DECLARE_ENGINE_PARAMETER_F) {
 
 
 	boardConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
+//	engineConfiguration->twoWireBatchInjection = true;
 	boardConfiguration->injectionPinMode = OM_INVERTED;
 	boardConfiguration->injectionPins[0] = GPIOB_8; // #1
 	boardConfiguration->injectionPins[1] = GPIOE_2; // #2
 	boardConfiguration->injectionPins[2] = GPIOE_3; // #3
 	boardConfiguration->injectionPins[3] = GPIOE_4; // #4
-	boardConfiguration->injectionPins[4] = GPIOE_5; // #5
-	boardConfiguration->injectionPins[5] = GPIOE_6; // #6
+	boardConfiguration->injectionPins[4] = GPIO_UNASSIGNED; // #5
+	boardConfiguration->injectionPins[5] = GPIO_UNASSIGNED; // #6
+	boardConfiguration->injectionPins[6] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
 
 	boardConfiguration->ignitionPins[0] = GPIOB_5; // #1
-	boardConfiguration->ignitionPins[2] = GPIOB_6; // #3
-	boardConfiguration->ignitionPins[4] = GPIOB_7; // #5
+	boardConfiguration->ignitionPins[1] = GPIOB_6; // #2
+	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED; // #3
+	boardConfiguration->ignitionPins[3] = GPIOB_7; // #4
+	boardConfiguration->ignitionPins[4] = GPIOC_7; // #5
 
 	// fuel pump
 	boardConfiguration->fuelPumpPin = GPIOD_4;
