@@ -35,17 +35,17 @@ void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s *bc = &engineConfiguration->bc;
 	bc->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 
-	bc->ignitionPins[0] = GPIOC_7; // #1
-	bc->ignitionPins[1] = GPIO_UNASSIGNED; // #2
-	bc->ignitionPins[2] = GPIO_UNASSIGNED; // #3
-	bc->ignitionPins[3] = GPIO_UNASSIGNED; // #4
-	bc->ignitionPins[4] = GPIO_UNASSIGNED; // #5
-	bc->ignitionPins[5] = GPIO_UNASSIGNED; // #6
+	boardConfiguration->ignitionPins[0] = GPIOC_7; // #1
+	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED; // #2
+	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED; // #3
+	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED; // #4
+	boardConfiguration->ignitionPins[4] = GPIO_UNASSIGNED; // #5
+	boardConfiguration->ignitionPins[5] = GPIO_UNASSIGNED; // #6
 
-	bc->logicAnalyzerPins[0] = GPIO_UNASSIGNED;
-	bc->logicAnalyzerPins[1] = GPIO_UNASSIGNED;
-	bc->logicAnalyzerPins[2] = GPIO_UNASSIGNED;
-	bc->logicAnalyzerPins[3] = GPIO_UNASSIGNED;
+	boardConfiguration->logicAnalyzerPins[0] = GPIO_UNASSIGNED;
+	boardConfiguration->logicAnalyzerPins[1] = GPIO_UNASSIGNED;
+	boardConfiguration->logicAnalyzerPins[2] = GPIO_UNASSIGNED;
+	boardConfiguration->logicAnalyzerPins[3] = GPIO_UNASSIGNED;
 
 	engineConfiguration->hasCltSensor = false;
 	engineConfiguration->hasIatSensor = false;
