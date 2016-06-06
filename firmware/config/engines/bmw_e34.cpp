@@ -93,26 +93,25 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 
 	setWholeTimingTable(25 PASS_ENGINE_PARAMETER);
 
-	board_configuration_s *bc = &engineConfiguration->bc;
-	bc->malfunctionIndicatorPin = GPIO_UNASSIGNED;
+	boardConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 
 //	bc->isFastAdcEnabled = true;
 
-	bc->injectionPinMode = OM_INVERTED;
-	bc->injectionPins[0] = GPIOB_8; // #1
-	bc->injectionPins[1] = GPIOE_2; // #2
-	bc->injectionPins[2] = GPIOE_3; // #3
-	bc->injectionPins[3] = GPIOE_4; // #4
-	bc->injectionPins[4] = GPIOE_5; // #5
-	bc->injectionPins[5] = GPIOE_6; // #6
+	boardConfiguration->injectionPinMode = OM_INVERTED;
+	boardConfiguration->injectionPins[0] = GPIOB_8; // #1
+	boardConfiguration->injectionPins[1] = GPIOE_2; // #2
+	boardConfiguration->injectionPins[2] = GPIOE_3; // #3
+	boardConfiguration->injectionPins[3] = GPIOE_4; // #4
+	boardConfiguration->injectionPins[4] = GPIOE_5; // #5
+	boardConfiguration->injectionPins[5] = GPIOE_6; // #6
 
-	bc->ignitionPinMode = OM_INVERTED;
+	boardConfiguration->ignitionPinMode = OM_INVERTED;
 
-	bc->ignitionPins[0] = GPIOB_5; // #1
-	bc->ignitionPins[2] = GPIOB_6; // #3
-	bc->ignitionPins[4] = GPIOB_7; // #5
+	boardConfiguration->ignitionPins[0] = GPIOB_5; // #1
+	boardConfiguration->ignitionPins[2] = GPIOB_6; // #3
+	boardConfiguration->ignitionPins[4] = GPIOB_7; // #5
 
-	bc->triggerErrorPin = GPIO_UNASSIGNED;
+	boardConfiguration->triggerErrorPin = GPIO_UNASSIGNED;
 
 	// clutch up
 	boardConfiguration->clutchUpPin = GPIOD_3;
@@ -141,7 +140,7 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	 * emulating the 60-0 trigger takes some resources, let's keep it slow by default
 	 * rpm 200
 	 */
-	bc->triggerSimulatorFrequency = 200;
+	boardConfiguration->triggerSimulatorFrequency = 200;
 
 	// Configurating sensors:
 
@@ -165,5 +164,5 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 
 	boardConfiguration->triggerSimulatorPins[0] = GPIOD_1;
 	boardConfiguration->triggerSimulatorPins[1] = GPIOD_2;
-	bc->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
+	boardConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
 }
