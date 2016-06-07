@@ -19,6 +19,7 @@ void setCamaro4(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->specs.cylindersCount = 8;
 
 	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
+	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_GM_LS_24;
