@@ -306,6 +306,7 @@ void initRpmCalculator(Logging *sharedLogger, Engine *engine) {
  */
 void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle,
 		schfunc_t callback, void *param, RpmCalculator *calc) {
+	efiAssertVoid(!cisnan(angle), "NaN angle?");
 	efiAssertVoid(isValidRpm(rpm), "RPM check expected");
 	float delayUs = calc->oneDegreeUs * angle;
 	efiAssertVoid(!cisnan(delayUs), "NaN delay?");

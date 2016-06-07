@@ -472,6 +472,10 @@ static void setCrankingFuel(float timeMs) {
 }
 
 static void setGlobalTriggerAngleOffset(float value) {
+	if (cisnan(value)) {
+		warning(OBD_PCM_Processor_Fault, "Invalid argument");
+		return;
+	}
 	engineConfiguration->globalTriggerAngleOffset = value;
 	incrementGlobalConfigurationVersion();
 	doPrintConfiguration(engine);
