@@ -162,7 +162,7 @@ public:
 	// speed density
 	float tChargeK;
 	float currentVE;
-	float targerAFR;
+	float targetAFR;
 
 	/**
 	 * pre-calculated value from simple fuel lookup
