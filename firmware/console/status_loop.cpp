@@ -181,6 +181,8 @@ static void printSensors(Logging *log, bool fileFormat) {
 	if (engineConfiguration->hasAfrSensor) {
 		reportSensorF(log, fileFormat, "afr", "AFR", getAfr(PASS_ENGINE_PARAMETER_F), 2);
 	}
+	reportSensorF(log, fileFormat, "target", "AFR", engine->engineState.targetAFR, 2);
+
 #endif
 
 #if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
@@ -204,6 +206,9 @@ static void printSensors(Logging *log, bool fileFormat) {
 		reportSensorF(log, fileFormat, "tpsacc", "ms", engine->tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_F), 2);
 		reportSensorF(log, fileFormat, "advance", "deg", engine->engineState.timingAdvance, 2);
 		reportSensorF(log, fileFormat, "duty", "%", getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER), 2);
+
+
+		reportSensorF(log, fileFormat, "tCharge", "K", engine->engineState.tChargeK, 2);
 	}
 
 	if (engineConfiguration->hasCltSensor) {

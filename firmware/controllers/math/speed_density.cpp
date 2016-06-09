@@ -78,7 +78,7 @@ EXTERN_ENGINE;
 /**
  * @return per cylinder injection time, in Milliseconds
  */
-float getSpeedDensityFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
+floatms_t getSpeedDensityFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	//int rpm = engine->rpmCalculator->rpm();
 
 	/**
@@ -91,7 +91,7 @@ float getSpeedDensityFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 
 	engine->engineState.airMass = getAirMass(engineConfiguration, ENGINE(engineState.currentVE), adjustedMap, tChargeK);
 
-	return sdMath(engineConfiguration, engine->engineState.airMass, ENGINE(engineState.targerAFR)) * 1000;
+	return sdMath(engineConfiguration, engine->engineState.airMass, ENGINE(engineState.targetAFR)) * 1000;
 }
 
 static const baro_corr_table_t default_baro_corr = {
