@@ -25,7 +25,7 @@
 
 /* Default to disabled for USB Mass Storage */
 #if !defined(HAL_USE_MASS_STORAGE_USB)
-#  define HAL_USE_MASS_STORAGE_USB   FALSE
+#  define HAL_USE_MASS_STORAGE_USB   TRUE
 #endif
 
 #if HAL_USE_MASS_STORAGE_USB || defined(__DOXYGEN__)

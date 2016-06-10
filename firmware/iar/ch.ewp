@@ -336,6 +336,7 @@
           <state>$PROJ_DIR$\..\hw_layer\algo</state>
           <state>$PROJ_DIR$\..\hw_layer\lcd</state>
           <state>$PROJ_DIR$\..\hw_layer\stm32f4</state>
+          <state>$PROJ_DIR$\..\hw_layer\mass_storage</state>
           <state>$PROJ_DIR$\..\hw_layer\serial_over_usb</state>
           <state>$PROJ_DIR$\..\hw_layer</state>
           <state>$PROJ_DIR$\..\ext</state>
@@ -2752,6 +2753,21 @@
       </file>
     </group>
     <group>
+      <name>mass_storage</name>
+      <file>
+        <name>$PROJ_DIR$\..\hw_layer\mass_storage\usb_msd.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\hw_layer\mass_storage\usb_msd.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\hw_layer\mass_storage\usb_msd_cfg.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\hw_layer\mass_storage\usb_msd_cfg.h</name>
+      </file>
+    </group>
+    <group>
       <name>serial_over_usb</name>
       <file>
         <name>$PROJ_DIR$\..\hw_layer\serial_over_usb\usbcfg.c</name>
@@ -3241,6 +3257,12 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\chibios\os\hal\platforms\STM32\RTCv2\rtc_lld.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\chibios\os\hal\platforms\STM32\sdc_lld.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\chibios\os\hal\platforms\STM32\sdc_lld.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\chibios\os\hal\platforms\STM32\USARTv1\serial_lld.c</name>
