@@ -945,7 +945,7 @@ static msd_wait_mode_t SCSICommandStartStopUnit(USBMassStorageDriver *msdp) {
   scsi_start_stop_unit_request_t *ssu =
       (scsi_start_stop_unit_request_t *)&(msdp->cbw.scsi_cmd_data);
 
-  if ((ssu->loej_start & 0b00000011) == 0b00000010) {
+  if ((ssu->loej_start & 0x3) == 2) {
     /* device has been ejected */
     if (!msdp->disable_usb_bus_disconnect_on_eject) {
       chEvtBroadcast(&msdp->evt_ejected);
