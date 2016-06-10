@@ -99,7 +99,8 @@ include $(CHIBIOS)/os/kernel/kernel.mk
 include $(CHIBIOS)/os/various/fatfs_bindings/fatfs.mk
 include console/binary/tunerstudio.mk
 include ext/ext.mk
-include hw_layer/hw_layer.mk
+include $(PROJECT_DIR)/hw_layer/hw_layer.mk
+include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
 include development/development.mk
 include controllers/controllers.mk
 
@@ -125,6 +126,7 @@ CSRC = $(PORTSRC) \
 	chibios/os/various/chprintf.c \
 	chibios/os/various/memstreams.c \
 	chibios/os/various/chrtclib.c  \
+	${HW_MASS_STORAGE_SRC_C} \
 	$(UTILSRC) \
 	$(ENGINES_SRC) \
 	$(CONSOLESRC) \
@@ -201,6 +203,7 @@ INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
 	console \
 	console/binary \
 	hw_layer \
+	$(PROJECT_DIR)/mass_storage \
 	hw_layer/serial_over_usb \
 	hw_layer/algo \
 	hw_layer/lcd \
