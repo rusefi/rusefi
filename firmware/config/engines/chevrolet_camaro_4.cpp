@@ -19,6 +19,8 @@ void setCamaro4(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->specs.cylindersCount = 8;
 
 	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
+
+	// set_ignition_mode 2
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
@@ -30,6 +32,10 @@ void setCamaro4(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->hasMafSensor = false;
 
 	engineConfiguration->tpsAdcChannel = EFI_ADC_2;
+
+	// todo: move this into trigger definition
+	// set_global_trigger_offset_angle 230
+	engineConfiguration->globalTriggerAngleOffset = 230;
 
 }
 
