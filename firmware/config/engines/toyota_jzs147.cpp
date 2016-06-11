@@ -26,6 +26,8 @@ void setToyota_jzs147EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->specs.displacement = 3.0;
 	engineConfiguration->specs.cylindersCount = 6;
 	engineConfiguration->specs.firingOrder = FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4;
+	// set_ignition_mode 1
+	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->trigger.type = TT_2JZ;
@@ -34,8 +36,18 @@ void setToyota_jzs147EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->ignitionPins[1] = GPIOC_7;
 	boardConfiguration->ignitionPins[2] = GPIOC_9;
 	boardConfiguration->ignitionPins[3] = GPIOE_10;
-	boardConfiguration->ignitionPins[3] = GPIOE_10;
-	boardConfiguration->ignitionPins[3] = GPIOE_10;
+	boardConfiguration->ignitionPins[4] = GPIOE_8;
+	boardConfiguration->ignitionPins[5] = GPIOE_12;
+
+
+	boardConfiguration->injectionPins[0] = GPIOB_9; // #1
+	boardConfiguration->injectionPins[1] = GPIOE_2; // #2
+	boardConfiguration->injectionPins[2] = GPIOB_8; // #3
+	boardConfiguration->injectionPins[3] = GPIOB_7; // #4
+	boardConfiguration->injectionPins[4] = GPIOE_3; // #5
+	boardConfiguration->injectionPins[5] = GPIOE_4; // #6
+
+	boardConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
 
 }
 
