@@ -19,6 +19,7 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 
 	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
+	engineConfiguration->specs.displacement = 1.6;
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_THEN_3_THEN_4_THEN2;
@@ -70,6 +71,8 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->injectionPins[1] = GPIOE_2; // #2
 	boardConfiguration->injectionPins[2] = GPIOB_8; // #3
 	boardConfiguration->injectionPins[3] = GPIOB_7; // #4
+
+	engineConfiguration->injectionMode = IM_BATCH;
 
 
 }
