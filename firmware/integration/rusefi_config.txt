@@ -233,7 +233,7 @@ timing_mode_e timingMode;
 
 angle_t fixedModeTiming;+This value is used in 'fixed timing' mode, i.e. constant timing\nThis mode is useful for instance while adjusting distributor location;"RPM",    1,      0,       0,  3000.0,      0
 
-angle_t globalTriggerAngleOffset;+Angle between Top Dead Center (TDC) and the first trigger event.\nKnowing this angle allows us to control timing and other angles in reference to TDC.;"deg",    1,      0,       0,  720, 0
+angle_t globalTriggerAngleOffset;+Angle between Top Dead Center (TDC) and the first trigger event.\nKnowing this angle allows us to control timing and other angles in reference to TDC.;"deg",    1,      0,       -720,  720, 0
 
 
 
