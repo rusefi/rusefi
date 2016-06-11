@@ -205,7 +205,7 @@ firing_order_e firingOrder;
 end_struct
 
     specs_s specs
-	float cylinderBore;+Cylinder diameter, in mm.
+	float cylinderBore;+Cylinder diameter, in mm.;"mm",    1,      0,       0, 20000.0,        2
 int sensorSnifferRpmThreshold;+Disable sensor sniffer above this rpm;"RPM",      1,     0,    0,30000,      0
 	int rpmHardLimit;;"rpm",    1,      0,       0, 20000.0,        2
 
