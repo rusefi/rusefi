@@ -43,4 +43,5 @@ void initialize36_2_2_2(TriggerShape *s) {
 
 	s->addEvent(720 - wide / 2, T_PRIMARY, TV_RISE);
 	s->addEvent(720, T_PRIMARY, TV_FALL);
+	s->useOnlyPrimaryForSync = true;
 }
