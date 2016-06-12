@@ -620,6 +620,12 @@ typedef enum {
 	 */
 	MT_MPX4100 = 7,
 
+	/**
+	 * http://rusefi.com/forum/viewtopic.php?f=3&t=906&p=18976#p18976
+	 * Toyota 89420-02010
+	 */
+	MT_TOYOTA_89420_02010 = 8,
+
 	Force_4b_cranking_map_type = ENUM_32_BITS,
 } air_pressure_sensor_type_e;
 

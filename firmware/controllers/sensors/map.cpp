@@ -82,6 +82,8 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * config) {
 		return subyDenso.getValue(voltage);
 	case MT_GM_3_BAR:
 		return gm3bar.getValue(voltage);
+	case MT_TOYOTA_89420_02010:
+		// todo: add calibration
 	case MT_MPX4100:
 		return mpx4100.getValue(voltage);
 	default:
