@@ -25,6 +25,7 @@ void configureFordAspireTriggerShape(TriggerShape * s) {
 	s->addEvent(x + 360 + y, T_SECONDARY, TV_RISE);
 	s->addEvent(x + 540, T_SECONDARY, TV_FALL);
 	s->addEvent(720, T_PRIMARY, TV_FALL);
+	s->useOnlyPrimaryForSync = true;
 }
 
 void initializeMitsubishi4g18(TriggerShape *s) {
