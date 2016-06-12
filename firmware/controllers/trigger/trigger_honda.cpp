@@ -93,6 +93,7 @@ void configureHondaAccordCDDip(TriggerShape *s) {
 	s->addEvent(720.0f, T_SECONDARY, TV_RISE);
 
 	s->isSynchronizationNeeded = false;
+	s->useOnlyPrimaryForSync = true;
 }
 
 void configureHondaAccordCD(TriggerShape *s, bool withOneEventSignal, bool withFourEventSignal,
@@ -159,6 +160,7 @@ void configureHondaAccordCD(TriggerShape *s, bool withOneEventSignal, bool withF
 			s->addEvent(i * 180.0f + prefix, fourEventWave, TV_FALL);
 		}
 	}
+	s->useOnlyPrimaryForSync = true;
 }
 
 void configureHondaCbr600(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
