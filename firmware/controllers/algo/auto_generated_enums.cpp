@@ -683,6 +683,8 @@ case MT_GM_3_BAR:
   return "MT_GM_3_BAR";
 case MT_MPX4100:
   return "MT_MPX4100";
+case MT_TOYOTA_89420_02010:
+	return "MT_TOYOTA_89420_02010";
   }
  return NULL;
 }
