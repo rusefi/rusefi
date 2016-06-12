@@ -47,6 +47,7 @@ void initializeMazdaMiataNaShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->addEvent(592.878113, T_SECONDARY, TV_RISE);
 	s->addEvent(662.899708, T_SECONDARY, TV_FALL);
 	s->addEvent(720.0f, T_PRIMARY, TV_FALL);
+	s->useOnlyPrimaryForSync = true;
 }
 
 void initializeMazdaMiataNbShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
@@ -86,6 +87,7 @@ void initializeMazdaMiataNbShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->addEvent(680.0f, T_SECONDARY, TV_RISE);
 
 	s->addEvent(720.0f, T_PRIMARY, TV_FALL);
+	s->useOnlyPrimaryForSync = true;
 }
 
 void configureMazdaProtegeSOHC(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
