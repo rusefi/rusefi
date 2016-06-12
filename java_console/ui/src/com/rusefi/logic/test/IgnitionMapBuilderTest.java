@@ -8,7 +8,7 @@ import static com.rusefi.logic.IgnitionMapBuilder.ChamberStyle.*;
 import static junit.framework.Assert.assertEquals;
 
 /**
- * (c) Andrey Belomutskiy 2012-2015
+ * (c) Andrey Belomutskiy 2012-2016
  * 12/24/2015
  */
 public class IgnitionMapBuilderTest {

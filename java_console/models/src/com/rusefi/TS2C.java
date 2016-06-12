@@ -6,7 +6,7 @@ import java.util.Date;
 
 /**
  * 12/27/2014
- * Andrey Belomutskiy, (c) 2012-2015
+ * Andrey Belomutskiy, (c) 2012-2016
  */
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class TS2C {
