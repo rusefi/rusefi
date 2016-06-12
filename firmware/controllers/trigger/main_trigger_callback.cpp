@@ -388,6 +388,8 @@ static ALWAYS_INLINE void scheduleIgnitionAndFuelEvents(int rpm, int revolutionI
  * Both injection and ignition are controlled from this method.
  */
 void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECLARE_ENGINE_PARAMETER_S) {
+	(void) ckpSignalType;
+
 	ENGINE(m.beforeMainTrigger) = GET_TIMESTAMP();
 	if (hasFirmwareError()) {
 		/**
@@ -396,10 +398,15 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 		 */
 		return;
 	}
-
-	(void) ckpSignalType;
-	efiAssertVoid(eventIndex < 2 * engine->triggerShape.getSize(), "trigger/event index");
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#2");
+
+	if (eventIndex >= ENGINE(triggerShape.getLength())) {
+		/**
+		 * this could happen in case of a trigger error, just exit silently since the trigger error is supposed to be handled already
+		 * todo: should this check be somewhere higher so that no trigger listeners are invoked with noise?
+		 */
+		return;
+	}
 
 	int rpm = ENGINE(rpmCalculator.rpmValue);
 	if (rpm == 0) {
