@@ -90,7 +90,7 @@ public:
 	 */
 	bool useRiseEdge;
 	/**
-	 * This is about selecting signal edges within partictular trigger channels.
+	 * This is about selecting signal edges within particular trigger channels.
 	 * Should we measure gaps with both fall and rise signal edges?
 	 * See also useOnlyPrimaryForSync
 	 */

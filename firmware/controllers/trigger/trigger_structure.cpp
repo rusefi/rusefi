@@ -40,7 +40,6 @@ TriggerShape::TriggerShape() :
 	// todo: false here, true in clear() what a mess!
 	useRiseEdge = false;
 	useOnlyPrimaryForSync = false;
-	gapBothDirections = false;
 	isSynchronizationNeeded = false;
 	// todo: reuse 'clear' method?
 	invertOnAdd = false;

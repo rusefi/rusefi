@@ -126,6 +126,7 @@ bool isTriggerDecoderError(void);
 
 #define considerEventForGap() (!TRIGGER_SHAPE(useOnlyPrimaryForSync) || isPrimary)
 
+// todo: there is a bug here! signal is only allowed to be primary, but should be comparing for value, not signal!
 #define isLessImportant(signal) ((TRIGGER_SHAPE(useRiseEdge) && signal != SHAFT_PRIMARY_RISING) \
 		|| (!TRIGGER_SHAPE(useRiseEdge) && signal != SHAFT_PRIMARY_FALLING) \
 		|| (!considerEventForGap()) \
