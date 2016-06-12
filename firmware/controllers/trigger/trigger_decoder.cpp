@@ -83,7 +83,7 @@ float TriggerState::getTriggerDutyCycle(int index) {
 }
 
 static trigger_wheel_e eventIndex[6] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SECONDARY, T_CHANNEL_3, T_CHANNEL_3 };
-//static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_FALL, TV_RISE };
+static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_FALL, TV_RISE };
 
 #define getCurrentGapDuration(nowNt) \
 	(isFirstEvent ? 0 : (nowNt) - toothed_previous_time)
@@ -127,6 +127,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	efiAssertVoid(signal <= SHAFT_3RD_RISING, "unexpected signal");
 
 	trigger_wheel_e triggerWheel = eventIndex[signal];
+	trigger_value_e type = eventType[signal];
 
 	if (!engineConfiguration->useOnlyRisingEdgeForTrigger && curSignal == prevSignal) {
 		orderingErrorCounter++;

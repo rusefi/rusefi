@@ -12,10 +12,68 @@
 EXTERN_ENGINE;
 
 void initialize2jzGE(TriggerShape *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, false);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
-	initializeSkippedToothTriggerShapeExt(s, 3, 0,
-			FOUR_STROKE_CAM_SENSOR);
+	float camD = 720 / 6; // 120
+
+	float crankAngle = 20; // skipping two teeth
+
+	for (int i = 0; i < 10; i++) {
+		s->addEvent(crankAngle + 5, T_SECONDARY, TV_RISE, -1, 721);
+		s->addEvent(crankAngle + 9.9, T_SECONDARY, TV_FALL, -1, 721); // 120
+		crankAngle += 10;
+	} // 2 + 10
+
+	float camAngle = 0;
+	camAngle += camD;
+	s->addEvent(camAngle, T_PRIMARY, TV_RISE, -1, 721); // 120
+
+	for (int i = 0; i < 12; i++) {
+		s->addEvent(crankAngle + 5, T_SECONDARY, TV_RISE, -1, 721);
+		s->addEvent(crankAngle + 9.9, T_SECONDARY, TV_FALL, -1, 721); // 120
+		crankAngle += 10;
+	} // 2 + 22
+
+
+	camAngle += camD;
+	s->addEvent(camAngle, T_PRIMARY, TV_FALL, -1, 721); // 240
+
+	for (int i = 0; i < 12; i++) {
+		s->addEvent(crankAngle + 5, T_SECONDARY, TV_RISE, -1, 721);
+		s->addEvent(crankAngle + 9.9, T_SECONDARY, TV_FALL, -1, 721); // 120
+		crankAngle += 10;
+	} // 2 + 34
+
+	camAngle += camD;
+	s->addEvent(camAngle, T_PRIMARY, TV_RISE, -1, 721); // 360
+
+	crankAngle += 20; // skipping two teeth one more time
+	for (int i = 0; i < 10; i++) {
+		s->addEvent(crankAngle + 5, T_SECONDARY, TV_RISE, -1, 721);
+		s->addEvent(crankAngle + 9.9, T_SECONDARY, TV_FALL, -1, 721); // 120
+		crankAngle += 10;
+	} // 2 + 10
+
+	camAngle += camD;
+	s->addEvent(camAngle, T_PRIMARY, TV_FALL, -1, 721); // 480
+
+	for (int i = 0; i < 12; i++) {
+		s->addEvent(crankAngle + 5, T_SECONDARY, TV_RISE, -1, 721);
+		s->addEvent(crankAngle + 9.9, T_SECONDARY, TV_FALL, -1, 721); // 120
+		crankAngle += 10;
+	} // 2 + 22
+
+	camAngle += camD;
+	s->addEvent(camAngle, T_PRIMARY, TV_RISE, -1, 721); // 600
+
+
+	for (int i = 0; i < 12; i++) {
+		s->addEvent(crankAngle + 5, T_SECONDARY, TV_RISE, -1, 721);
+		s->addEvent(crankAngle + 9.9, T_SECONDARY, TV_FALL, -1, 721); // 120
+		crankAngle += 10;
+	} // 2 + 32
+	camAngle += camD;
+	s->addEvent(camAngle, T_PRIMARY, TV_FALL, -1, 721); // 720
 
 	s->isSynchronizationNeeded = false;
 

@@ -27,10 +27,24 @@ void setToyota_jzs147EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->specs.cylindersCount = 6;
 	engineConfiguration->specs.firingOrder = FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4;
 	// set_ignition_mode 1
-	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
+//	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
-	engineConfiguration->trigger.type = TT_2JZ;
+//	engineConfiguration->trigger.type = TT_2JZ;
+
+// temporary while I am fixing trigger bug
+	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+	engineConfiguration->trigger.customTotalToothCount = 36;
+	engineConfiguration->trigger.customSkippedToothCount = 2;
+
+	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
+	engineConfiguration->twoWireBatchIgnition = true;
+
+	engineConfiguration->crankingInjectionMode = IM_BATCH;
+	engineConfiguration->injectionMode = IM_BATCH;
+	engineConfiguration->twoWireBatchInjection = true;
+
 
 	boardConfiguration->ignitionPins[0] = GPIOE_14;
 	boardConfiguration->ignitionPins[1] = GPIOC_7;
@@ -49,6 +63,10 @@ void setToyota_jzs147EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	boardConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
 
+	// chartsize 450
+	engineConfiguration->engineChartSize = 450;
+
+	//	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 }
 
 
