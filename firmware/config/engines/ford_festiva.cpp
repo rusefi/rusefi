@@ -216,8 +216,8 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 
 	// we have a 1999 Auto Miata TB mounted on this car
 	engineConfiguration->hasTpsSensor = true;
-	engineConfiguration->tpsMin = 115; // convert 12to10 bit (ADC/4)
-	engineConfiguration->tpsMax = 630; // convert 12to10 bit (ADC/4)
+	engineConfiguration->tpsMin = 630; // convert 12to10 bit (ADC/4)
+	engineConfiguration->tpsMax = 115; // convert 12to10 bit (ADC/4)
 
 	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
 //	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;

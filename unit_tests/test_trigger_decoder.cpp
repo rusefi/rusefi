@@ -250,8 +250,8 @@ static void testStartupFuelPumping(void) {
 
 	engine->rpmCalculator.mockRpm = 0;
 
-	engine->engineConfiguration->tpsMin = 0;
-	engine->engineConfiguration->tpsMax = 10;
+	engine->engineConfiguration->tpsMin = 10;
+	engine->engineConfiguration->tpsMax = 0;
 
 	mockTps = TPS_TS_CONVERSION * 6;
 	sf.update(PASS_ENGINE_PARAMETER_F);

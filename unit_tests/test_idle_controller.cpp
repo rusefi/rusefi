@@ -28,13 +28,13 @@ void testIdleController(void) {
 
 	efitimems_t time = 0;
 
-	assertEquals(60, is.getIdle(900, time PASS_ENGINE_PARAMETER));
+	assertEqualsM("#1", 60.0, is.getIdle(900, time PASS_ENGINE_PARAMETER));
 
 	time += 2000;
-	assertEquals(60.5, is.getIdle(900, time PASS_ENGINE_PARAMETER));
+	assertEqualsM("2", 60.0, is.getIdle(900, time PASS_ENGINE_PARAMETER));
 
 	time += 2000;
-	assertEquals(60.6, is.getIdle(1050, time PASS_ENGINE_PARAMETER));
+	assertEquals(60.0, is.getIdle(1050, time PASS_ENGINE_PARAMETER));
 }
 
 void testPidController(void) {

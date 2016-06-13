@@ -177,8 +177,8 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	 * TPS <MAGNETI MARELLI>
 	 */
 	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
-	engineConfiguration->tpsMin = 108; // convert 12to10 bit (ADC/4)
-	engineConfiguration->tpsMax = 812; // convert 12to10 bit (ADC/4)
+	engineConfiguration->tpsMax = 108; // convert 12to10 bit (ADC/4)
+	engineConfiguration->tpsMin = 812; // convert 12to10 bit (ADC/4)
 	/**
 	 * IAT <OEM ECU>
 	 */
