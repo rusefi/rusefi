@@ -491,7 +491,7 @@
                                      PIN_MODE_INPUT(GPIOC_PIN4) |           \
                                      PIN_MODE_INPUT(GPIOC_PIN5) |           \
                                      PIN_MODE_INPUT(GPIOC_PIN6) |           \
-                                     PIN_MODE_ALTERNATE(GPIOC_MCLK) |       \
+                                     PIN_MODE_INPUT(GPIOC_MCLK) |       \
                                      PIN_MODE_INPUT(GPIOC_PIN8) |           \
                                      PIN_MODE_INPUT(GPIOC_PIN9) |           \
                                      PIN_MODE_ALTERNATE(GPIOC_SCLK) |       \
@@ -539,9 +539,9 @@
                                      PIN_PUPDR_PULLUP(GPIOC_PIN4) |         \
                                      PIN_PUPDR_PULLUP(GPIOC_PIN5) |         \
                                      PIN_PUPDR_PULLUP(GPIOC_PIN6) |         \
-                                     PIN_PUPDR_FLOATING(GPIOC_MCLK) |       \
+                                     PIN_PUPDR_PULLDOWN(GPIOC_MCLK) |       \
                                      PIN_PUPDR_PULLUP(GPIOC_PIN8) |         \
-                                     PIN_PUPDR_PULLUP(GPIOC_PIN9) |         \
+                                     PIN_PUPDR_PULLDOWN(GPIOC_PIN9) |         \
                                      PIN_PUPDR_FLOATING(GPIOC_SCLK) |       \
                                      PIN_PUPDR_PULLUP(GPIOC_PIN11) |        \
                                      PIN_PUPDR_FLOATING(GPIOC_SDIN) |       \
@@ -657,8 +657,8 @@
                                      PIN_PUPDR_FLOATING(GPIOD_OVER_CURRENT) |\
                                      PIN_PUPDR_PULLUP(GPIOD_PIN6) |         \
                                      PIN_PUPDR_PULLUP(GPIOD_PIN7) |         \
-                                     PIN_PUPDR_PULLUP(GPIOD_PIN8) |         \
-                                     PIN_PUPDR_PULLUP(GPIOD_PIN9) |         \
+                                     PIN_PUPDR_PULLDOWN(GPIOD_PIN8) |         \
+                                     PIN_PUPDR_PULLDOWN(GPIOD_PIN9) |         \
                                      PIN_PUPDR_PULLUP(GPIOD_PIN10) |        \
                                      PIN_PUPDR_PULLUP(GPIOD_PIN11) |        \
                                      PIN_PUPDR_FLOATING(GPIOD_LED4) |       \
@@ -774,13 +774,13 @@
                                      PIN_PUPDR_FLOATING(GPIOE_PIN5) |       \
                                      PIN_PUPDR_FLOATING(GPIOE_PIN6) |       \
                                      PIN_PUPDR_FLOATING(GPIOE_PIN7) |       \
-                                     PIN_PUPDR_FLOATING(GPIOE_PIN8) |       \
+                                     PIN_PUPDR_PULLDOWN(GPIOE_PIN8) |       \
                                      PIN_PUPDR_FLOATING(GPIOE_PIN9) |       \
-                                     PIN_PUPDR_FLOATING(GPIOE_PIN10) |      \
+                                     PIN_PUPDR_PULLDOWN(GPIOE_PIN10) |      \
                                      PIN_PUPDR_FLOATING(GPIOE_PIN11) |      \
-                                     PIN_PUPDR_FLOATING(GPIOE_PIN12) |      \
+                                     PIN_PUPDR_PULLDOWN(GPIOE_PIN12) |      \
                                      PIN_PUPDR_FLOATING(GPIOE_PIN13) |      \
-                                     PIN_PUPDR_FLOATING(GPIOE_PIN14) |      \
+                                     PIN_PUPDR_PULLDOWN(GPIOE_PIN14) |      \
                                      PIN_PUPDR_FLOATING(GPIOE_PIN15))
 #define VAL_GPIOE_ODR               (PIN_ODR_HIGH(GPIOE_INT1) |             \
                                      PIN_ODR_HIGH(GPIOE_INT2) |             \
