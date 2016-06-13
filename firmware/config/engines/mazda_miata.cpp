@@ -352,8 +352,8 @@ void setMiata1994_s(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->fanOffTemperature = 90;
 	engineConfiguration->fanOnTemperature = 95;
 
-	engineConfiguration->tpsMin = 86;
-	engineConfiguration->tpsMax = 596;
+	engineConfiguration->tpsMax = 86;
+	engineConfiguration->tpsMin = 596;
 
 	boardConfiguration->malfunctionIndicatorPin = GPIOE_5;
 	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;

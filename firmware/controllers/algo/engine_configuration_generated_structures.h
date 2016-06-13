@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jun 12 22:41:42 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jun 12 23:06:44 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -865,13 +865,13 @@ typedef struct {
 	offset 80 bit 28 */
 	bool issue_294_29 : 1;
 	/**
-	 * todo: extract these two fields into a structure
+	 * Closed throttle. todo: extract these two fields into a structure
 	 * todo: we need two sets of TPS parameters - modern ETBs have two sensors
 	 * offset 84
 	 */
 	int16_t tpsMin;
 	/**
-	 * tpsMax value as 10 bit ADC value. Not Voltage!
+	 * Full throtle. tpsMax value as 10 bit ADC value. Not Voltage!
 	 * offset 86
 	 */
 	int16_t tpsMax;
@@ -1798,4 +1798,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jun 12 22:41:42 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jun 12 23:06:44 EDT 2016
