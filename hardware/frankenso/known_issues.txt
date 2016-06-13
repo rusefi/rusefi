@@ -114,6 +114,7 @@
 114)                  PC0 - hip9011 vs USB OTG current limiting chip STMPS2141STR conflict
 115)                  PD5 vs USB OTG current limiting chip STMPS2141STR conflict
 116)                  better part number for D703 to avoid leakage
+117)                  Add pull down and series resistors to hi/low mosfet driver
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
