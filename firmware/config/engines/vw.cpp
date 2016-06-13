@@ -20,14 +20,14 @@ void setVwAba(DECLARE_ENGINE_PARAMETER_F) {
 
 	setWholeTimingTable(20 PASS_ENGINE_PARAMETER);
 	engineConfiguration->cranking.baseFuel = 12;
-	// set_cranking_timing_angle 0
-	engineConfiguration->crankingTimingAngle = 20;
+	// set_cranking_timing_angle 10
+	engineConfiguration->crankingTimingAngle = 10;
 
 	// set_whole_fuel_map 12
 	setWholeFuelMap(12 PASS_ENGINE_PARAMETER);
 
-	// set_global_trigger_offset_angle 90
-	engineConfiguration->globalTriggerAngleOffset = 100;
+	// set_global_trigger_offset_angle 93
+	engineConfiguration->globalTriggerAngleOffset = 93;
 
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
