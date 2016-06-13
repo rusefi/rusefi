@@ -522,8 +522,12 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		initialize36_2_2_2(triggerShape);
 		break;
 
-	case TT_2JZ:
-		initialize2jzGE(triggerShape);
+	case TT_2JZ_3_34:
+		initialize2jzGE3_34(triggerShape);
+		break;
+
+	case TT_2JZ_1_12:
+		initialize2jzGE1_12(triggerShape);
 		break;
 
 	case TT_NISSAN:

@@ -34,6 +34,7 @@ void setToyota_jzs147EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 // temporary while I am fixing trigger bug
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	//set_trigger_type 16
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 	engineConfiguration->trigger.customTotalToothCount = 36;
 	engineConfiguration->trigger.customSkippedToothCount = 2;

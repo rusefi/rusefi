@@ -173,7 +173,7 @@ typedef enum {
 
 	TT_NISSAN = 24,
 
-	TT_2JZ = 25,
+	TT_2JZ_3_34 = 25,
 
 	TT_ROVER_K = 26,
 
@@ -181,7 +181,10 @@ typedef enum {
 
 	TT_HONDA_CBR_600 = 28,
 
-	TT_UNUSED = 29, // this is used if we want to iterate over all trigger types
+	TT_2JZ_1_12 = 29,
+
+	TT_UNUSED = 30, // this is used if we want to iterate over all trigger types
+
 
 	Force_4b_trigger_type = ENUM_32_BITS,
 } trigger_type_e;

@@ -175,8 +175,10 @@ case TT_UNUSED:
 	return "TT_UNUSED";
 case TT_NISSAN:
 	return "TT_NISSAN";
-case TT_2JZ:
-	return "TT_2JZ";
+case TT_2JZ_1_12:
+	return "TT_2JZ_1_12";
+case TT_2JZ_3_34:
+	return "TT_2JZ_3_34";
 case TT_ROVER_K:
 	return "TT_ROVER_K";
   }
