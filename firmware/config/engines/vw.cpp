@@ -27,7 +27,7 @@ void setVwAba(DECLARE_ENGINE_PARAMETER_F) {
 	setWholeFuelMap(12 PASS_ENGINE_PARAMETER);
 
 	// set_global_trigger_offset_angle 90
-	engineConfiguration->globalTriggerAngleOffset = 90;
+	engineConfiguration->globalTriggerAngleOffset = 100;
 
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
