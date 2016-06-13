@@ -39,7 +39,7 @@ void setVwAba(DECLARE_ENGINE_PARAMETER_F) {
 
 	//Base engine setting
 	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.displacement = 2.5;
+	engineConfiguration->specs.displacement = 2.0;
 	engineConfiguration->injector.flow = 320; // 30lb/h
 	// set_algorithm 3
 	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
@@ -58,4 +58,8 @@ void setVwAba(DECLARE_ENGINE_PARAMETER_F) {
 	setEgoSensor(ES_PLX PASS_ENGINE_PARAMETER);
 	setFuelTablesLoadBin(20, mapRange PASS_ENGINE_PARAMETER);
 	setTimingLoadBin(20, mapRange PASS_ENGINE_PARAMETER);
+
+	boardConfiguration->isSdCardEnabled = false;
+	engineConfiguration->tpsMin = 740;
+	engineConfiguration->tpsMax = 135;
 }

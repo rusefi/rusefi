@@ -166,6 +166,35 @@ injector_s injector
 
 
 bit directSelfStimulation;+Should trigger emulator push data right into trigger handling logic, eliminating the need for physical jumper wires?\nPS: Funny name, right? :)
+bit issue_294_1;
+bit issue_294_2;
+bit issue_294_3;
+bit issue_294_4;
+bit issue_294_5;
+bit issue_294_6;
+bit issue_294_7;
+bit issue_294_8;
+bit issue_294_9;
+bit issue_294_10;
+bit issue_294_11;
+bit issue_294_12;
+bit issue_294_13;
+bit issue_294_14;
+bit issue_294_15;
+bit issue_294_16;
+bit issue_294_17;
+bit issue_294_18;
+bit issue_294_19;
+bit issue_294_21;
+bit issue_294_22;
+bit issue_294_23;
+bit issue_294_24;
+bit issue_294_25;
+bit issue_294_26;
+bit issue_294_27;
+bit issue_294_28;
+bit issue_294_29;
+
 
 int16_t tpsMin;todo: extract these two fields into a structure\ntodo: we need two sets of TPS parameters - modern ETBs have two sensors;"ADC",      1,     0,    0, 1023,      0
 int16_t tpsMax;tpsMax value as 10 bit ADC value. Not Voltage!;"ADC",      1,     0,    0, 1023,      0
@@ -238,7 +267,7 @@ angle_t globalTriggerAngleOffset;+Angle between Top Dead Center (TDC) and the fi
 
 
 float analogInputDividerCoefficient;+Coefficient of input voltage dividers on your PCB;"coef",    1,      0,    0.01,  10.0,   2
-float vbattDividerCoeff;+Battery Voltage input resistor divider coefficient;"coef",    1,      0,    0.01,  20.0,        2
+float vbattDividerCoeff;+Battery Voltage input resistor divider coefficient;"coef",    1,      0,    0.01,  99.0,        2
 adc_channel_e vbattAdcChannel;
 
 float fanOnTemperature;+Cooling fan turn-on temperature threshold, in Celsuis;"*C",    1,      0,       0,  1000.0,        2

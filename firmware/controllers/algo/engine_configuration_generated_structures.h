@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jun 10 18:45:59 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jun 12 22:41:42 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -780,6 +780,90 @@ typedef struct {
 	 * PS: Funny name, right? :)
 	offset 80 bit 0 */
 	bool directSelfStimulation : 1;
+	/**
+	offset 80 bit 1 */
+	bool issue_294_1 : 1;
+	/**
+	offset 80 bit 2 */
+	bool issue_294_2 : 1;
+	/**
+	offset 80 bit 3 */
+	bool issue_294_3 : 1;
+	/**
+	offset 80 bit 4 */
+	bool issue_294_4 : 1;
+	/**
+	offset 80 bit 5 */
+	bool issue_294_5 : 1;
+	/**
+	offset 80 bit 6 */
+	bool issue_294_6 : 1;
+	/**
+	offset 80 bit 7 */
+	bool issue_294_7 : 1;
+	/**
+	offset 80 bit 8 */
+	bool issue_294_8 : 1;
+	/**
+	offset 80 bit 9 */
+	bool issue_294_9 : 1;
+	/**
+	offset 80 bit 10 */
+	bool issue_294_10 : 1;
+	/**
+	offset 80 bit 11 */
+	bool issue_294_11 : 1;
+	/**
+	offset 80 bit 12 */
+	bool issue_294_12 : 1;
+	/**
+	offset 80 bit 13 */
+	bool issue_294_13 : 1;
+	/**
+	offset 80 bit 14 */
+	bool issue_294_14 : 1;
+	/**
+	offset 80 bit 15 */
+	bool issue_294_15 : 1;
+	/**
+	offset 80 bit 16 */
+	bool issue_294_16 : 1;
+	/**
+	offset 80 bit 17 */
+	bool issue_294_17 : 1;
+	/**
+	offset 80 bit 18 */
+	bool issue_294_18 : 1;
+	/**
+	offset 80 bit 19 */
+	bool issue_294_19 : 1;
+	/**
+	offset 80 bit 20 */
+	bool issue_294_21 : 1;
+	/**
+	offset 80 bit 21 */
+	bool issue_294_22 : 1;
+	/**
+	offset 80 bit 22 */
+	bool issue_294_23 : 1;
+	/**
+	offset 80 bit 23 */
+	bool issue_294_24 : 1;
+	/**
+	offset 80 bit 24 */
+	bool issue_294_25 : 1;
+	/**
+	offset 80 bit 25 */
+	bool issue_294_26 : 1;
+	/**
+	offset 80 bit 26 */
+	bool issue_294_27 : 1;
+	/**
+	offset 80 bit 27 */
+	bool issue_294_28 : 1;
+	/**
+	offset 80 bit 28 */
+	bool issue_294_29 : 1;
 	/**
 	 * todo: extract these two fields into a structure
 	 * todo: we need two sets of TPS parameters - modern ETBs have two sensors
@@ -1714,4 +1798,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jun 10 18:45:59 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jun 12 22:41:42 EDT 2016
