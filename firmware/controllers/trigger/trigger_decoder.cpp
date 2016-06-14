@@ -385,6 +385,7 @@ static void configureOnePlusOne(TriggerShape *s, operation_mode_e operationMode)
 	s->addEvent(720, T_SECONDARY, TV_FALL);
 
 	s->isSynchronizationNeeded = false;
+	s->useOnlyPrimaryForSync = true;
 }
 
 static void configureOnePlus60_2(TriggerShape *s, operation_mode_e operationMode) {
@@ -402,6 +403,7 @@ static void configureOnePlus60_2(TriggerShape *s, operation_mode_e operationMode
 	NO_RIGHT_FILTER);
 
 	s->isSynchronizationNeeded = false;
+	s->useOnlyPrimaryForSync = true;
 }
 
 static TriggerState state CCM_OPTIONAL;
