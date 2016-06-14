@@ -17,17 +17,27 @@ void initialize2jzGE1_12(TriggerShape *s) {
 	float crankD = 360 / 12 / 2; // 15
 
 	float crankAngle = 10;
+	s->addEvent(crankAngle, T_SECONDARY, TV_FALL, -1, 721); // 120
 
 	for (int i = 0; i < 2; i++) {
 		s->addEvent(crankAngle + crankD, T_SECONDARY, TV_RISE, -1, 721);
 		crankAngle += crankD;
 		s->addEvent(crankAngle + crankD, T_SECONDARY, TV_FALL, -1, 721); // 120
 		crankAngle += crankD;
-	} // 2 + 10
+	}
 
 
 	s->addEvent(75, T_PRIMARY, TV_RISE, -1, 721);
 
+	for (int i = 0; i < 21; i++) {
+		s->addEvent(crankAngle + crankD, T_SECONDARY, TV_RISE, -1, 721);
+		crankAngle += crankD;
+		s->addEvent(crankAngle + crankD, T_SECONDARY, TV_FALL, -1, 721); // 120
+		crankAngle += crankD;
+	}
+
+	s->addEvent(crankAngle + crankD, T_SECONDARY, TV_RISE, -1, 721);
+	crankAngle += crankD;
 
 
 	s->addEvent(720, T_PRIMARY, TV_FALL, -1, 721);
