@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jun 12 22:41:42 EDT 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jun 14 02:28:29 EDT 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -823,8 +823,9 @@ public class Fields {
 	public static final int fsioAdc3_offset_hex = 950;
 	public static final int fsioAdc4_offset = 2388;
 	public static final int fsioAdc4_offset_hex = 954;
-	public static final int unused_offset = 2392;
-	public static final int unused_offset_hex = 958;
+	public static final int fixedTiming_offset = 2392;
+	public static final int fixedTiming_offset_hex = 958;
+	public static final int unused_offset = 2396;
 	public static final int le_formulas1_offset = 3048;
 	public static final int le_formulas2_offset = 3248;
 	public static final int le_formulas3_offset = 3448;
@@ -1410,6 +1411,7 @@ public class Fields {
 	public static final Field FSIOADC2 = Field.create("FSIOADC2", 2380, FieldType.INT, adc_channel_e);
 	public static final Field FSIOADC3 = Field.create("FSIOADC3", 2384, FieldType.INT, adc_channel_e);
 	public static final Field FSIOADC4 = Field.create("FSIOADC4", 2388, FieldType.INT, adc_channel_e);
+	public static final Field FIXEDTIMING = Field.create("FIXEDTIMING", 2392, FieldType.FLOAT);
 	public static final Field LE_FORMULAS1 = Field.create("LE_FORMULAS1", 3048, FieldType.INT);
 	public static final Field LE_FORMULAS2 = Field.create("LE_FORMULAS2", 3248, FieldType.INT);
 	public static final Field LE_FORMULAS3 = Field.create("LE_FORMULAS3", 3448, FieldType.INT);

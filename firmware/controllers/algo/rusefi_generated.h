@@ -819,8 +819,9 @@
 #define fsioAdc3_offset_hex 950
 #define fsioAdc4_offset 2388
 #define fsioAdc4_offset_hex 954
-#define unused_offset 2392
-#define unused_offset_hex 958
+#define fixedTiming_offset 2392
+#define fixedTiming_offset_hex 958
+#define unused_offset 2396
 #define le_formulas1_offset 3048
 #define le_formulas2_offset 3248
 #define le_formulas3_offset 3448
