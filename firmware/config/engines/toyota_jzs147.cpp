@@ -46,8 +46,8 @@ void setToyota_jzs147EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 //	engineConfiguration->injectionMode = IM_BATCH;
 //	engineConfiguration->twoWireBatchInjection = true;
 
-	boardConfiguration->triggerInputPins[0] = GPIOA_5;
-	boardConfiguration->triggerInputPins[1] = GPIOC_6;
+//	boardConfiguration->triggerInputPins[0] = GPIOA_5;
+//	boardConfiguration->triggerInputPins[1] = GPIOC_6;
 
 
 	boardConfiguration->ignitionPins[0] = GPIOE_14;
