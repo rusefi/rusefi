@@ -51,4 +51,5 @@ void initializeMitsubishi4g18(TriggerShape *s) {
 
 	s->addEvent(720.0 - secondaryWidth, T_SECONDARY, TV_RISE);
 	s->addEvent(720.0, T_SECONDARY, TV_FALL);
+	s->useOnlyPrimaryForSync = true;
 }
