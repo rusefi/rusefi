@@ -69,4 +69,5 @@ void configureMiniCooperTriggerShape(TriggerShape *s) {
 	 * With just one tooth on camshaft synchronization is not needed
 	 */
 	s->isSynchronizationNeeded = false;
+	s->useOnlyPrimaryForSync = true;
 }

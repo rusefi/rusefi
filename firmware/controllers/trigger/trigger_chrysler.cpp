@@ -23,6 +23,7 @@ void initDodgeRam(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 			720);
 
 	s->addEvent(720, T_PRIMARY, TV_FALL);
+	s->useOnlyPrimaryForSync = true;
 }
 
 void configureNeon2003TriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
@@ -371,5 +372,6 @@ void configureNeon1995TriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->addEvent(base + 497, T_SECONDARY, TV_FALL);
 
 	s->addEvent(base + 560, T_PRIMARY, TV_RISE); // width =
+	s->useOnlyPrimaryForSync = true;
 }
 
