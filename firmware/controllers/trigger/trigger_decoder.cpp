@@ -149,7 +149,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 	bool isPrimary = triggerWheel == T_PRIMARY;
 
-	if (isLessImportant(signal)) {
+	if (isLessImportant(type)) {
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 		if (printTriggerDebug) {
 			printf("%s isLessImportant %s %d\r\n",
