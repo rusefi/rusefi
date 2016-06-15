@@ -601,7 +601,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->isInjectionEnabled = true;
 	engineConfiguration->isIgnitionEnabled = true;
-	engineConfiguration->isCylinderCleanupEnabled = true;
+	engineConfiguration->isCylinderCleanupEnabled = false; // this feature is evil if one does not have TPS, better turn off by default
 	engineConfiguration->secondTriggerChannelEnabled = true;
 
 	engineConfiguration->isMapAveragingEnabled = true;
