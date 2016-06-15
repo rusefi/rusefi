@@ -18,6 +18,15 @@ EXTERN_ENGINE;
 void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
+	engineConfiguration->mafAdcChannel = EFI_ADC_0;
+
+
+//	// set_cranking_fuel 9
+//	engineConfiguration->cranking.baseFuel = 9;
+
+	// engine sniffer 200
+
 	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
 	engineConfiguration->specs.displacement = 1.6;
 
