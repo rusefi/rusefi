@@ -15,6 +15,7 @@
 
 #include "toyota_jzs147.h"
 #include "custom_engine.h"
+#include "thermistors.h"
 
 EXTERN_ENGINE;
 
@@ -72,6 +73,14 @@ void setToyota_jzs147EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	//	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	boardConfiguration->isSdCardEnabled = false;
+
+	/**
+	 * http://thesafetyaversionsociety.com/wordpress/wp-content/uploads/2010/08/Troubleshooting-2JZ-GTE.pdf
+	 * pages 44&46
+	 */
+	setThermistorConfiguration(&engineConfiguration->clt, -20, 15000, 40, 1200, 120.0, 200.0);
+	setThermistorConfiguration(&engineConfiguration->iat, -20, 15000, 40, 1200, 120.0, 200.0);
+
 
 }
 
