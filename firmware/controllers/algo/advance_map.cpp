@@ -93,7 +93,11 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
 	if (isCrankingR(rpm)) {
 		angle = engineConfiguration->crankingTimingAngle;
 	} else {
-		angle = getRunningAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER);
+		if (CONFIG(timingMode) == TM_DYNAMIC) {
+			angle = getRunningAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER);
+		} else {
+			angle = engineConfiguration->fixedTiming;
+		}
 	}
 	angle -= engineConfiguration->ignitionOffset;
 	fixAngle(angle);
