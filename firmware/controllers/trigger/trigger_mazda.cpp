@@ -22,7 +22,7 @@
 
 void initializeMazdaMiataNaShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
-	s->setTriggerSynchronizationGap2(1.4930 * 0.7f, 1.4930 * 1.25f);
+	s->setTriggerSynchronizationGap2(1.4930 * 0.6f, 1.4930 * 1.3f);
 	s->useRiseEdge = false;
 
 	s->tdcPosition = 294;
