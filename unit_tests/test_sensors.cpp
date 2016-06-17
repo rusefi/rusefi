@@ -32,14 +32,14 @@ void testTps(void) {
 	EngineTestHelper eth(DODGE_RAM);
 	EXPAND_EngineTestHelper;
 
-	engineConfiguration->tpsMax = 43;
-	engineConfiguration->tpsMin = 193;
+	engineConfiguration->tpsMax = 193;
+	engineConfiguration->tpsMin = 43;
 
 	assertEquals(49.3333, getTpsValue(4 * 117 PASS_ENGINE_PARAMETER));
 
 
-	engineConfiguration->tpsMax = 193;
-	engineConfiguration->tpsMin = 43;
+	engineConfiguration->tpsMax = 43;
+	engineConfiguration->tpsMin = 193;
 	assertEqualsM("test#2", 50.6667, getTpsValue(4 * 117 PASS_ENGINE_PARAMETER));
 }
 
