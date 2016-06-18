@@ -65,11 +65,11 @@ static FastInterpolation dodgeNeon2003(0.4 /* volts */, 15.34 /* kPa */, 4.5 /* 
  */
 static FastInterpolation *mapDecoder;
 
-float decodePressure(float voltage, air_pressure_sensor_config_s * config) {
-	switch (config->type) {
+float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DECLARE_ENGINE_PARAMETER_S) {
+	switch (mapConfig->type) {
 	case MT_CUSTOM:
 		// todo: migrate to 'FastInterpolation customMap'
-		return interpolate(0, config->valueAt0, 5, config->valueAt5, voltage);
+		return interpolate(0, mapConfig->valueAt0, 5, mapConfig->valueAt5, voltage);
 	case MT_DENSO183:
 		return denso183.getValue(voltage);
 	case MT_MPX4250:
@@ -87,7 +87,7 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * config) {
 	case MT_MPX4100:
 		return mpx4100.getValue(voltage);
 	default:
-		firmwareError("Unknown MAP type: %d", config->type);
+		firmwareError("Unknown MAP type: %d", mapConfig->type);
 		return NAN;
 	}
 }
@@ -117,7 +117,7 @@ float getMapByVoltage(float voltage DECLARE_ENGINE_PARAMETER_S) {
 
 	// todo: migrate to mapDecoder once parameter listeners are ready
 	air_pressure_sensor_config_s * apConfig = &engineConfiguration->map.sensor;
-	return decodePressure(voltage, apConfig);
+	return decodePressure(voltage, apConfig PASS_ENGINE_PARAMETER);
 }
 
 /**
@@ -138,7 +138,7 @@ bool hasBaroSensor(DECLARE_ENGINE_PARAMETER_F) {
 
 float getBaroPressure(DECLARE_ENGINE_PARAMETER_F) {
 	float voltage = getVoltageDivided("baro", engineConfiguration->baroSensor.hwChannel);
-	return decodePressure(voltage, &engineConfiguration->baroSensor);
+	return decodePressure(voltage, &engineConfiguration->baroSensor PASS_ENGINE_PARAMETER);
 }
 
 static FastInterpolation *getDecoder(air_pressure_sensor_type_e type) {
