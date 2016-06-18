@@ -21,7 +21,7 @@ bool hasBaroSensor(DECLARE_ENGINE_PARAMETER_F);
 float getMap(void);
 float getMapVoltage(void);
 float getMapByVoltage(float voltage DECLARE_ENGINE_PARAMETER_S);
-float decodePressure(float voltage, air_pressure_sensor_config_s * config);
+float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DECLARE_ENGINE_PARAMETER_S);
 float validateMap(float mapKPa DECLARE_ENGINE_PARAMETER_S);
 
 #endif

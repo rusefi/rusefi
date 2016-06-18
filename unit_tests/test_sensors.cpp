@@ -14,16 +14,18 @@
 static ThermistorConf tc;
 
 static void testMapDecoding(void) {
+	EngineTestHelper eth(FORD_INLINE_6_1995);
+	EXPAND_EngineTestHelper;
 
 	air_pressure_sensor_config_s s;
 	s.type = MT_DENSO183;
 
-	assertEqualsM("denso 0 volts", -6.64, decodePressure(0, &s));
-	assertEquals(31.244, decodePressure(1, &s));
+	assertEqualsM("denso 0 volts", -6.64, decodePressure(0, &s PASS_ENGINE_PARAMETER));
+	assertEquals(31.244, decodePressure(1, &s PASS_ENGINE_PARAMETER));
 
 	s.type = MT_MPX4250;
-	assertEqualsM("MPX_4250 0 volts", 8, decodePressure(0, &s));
-	assertEquals(58.4, decodePressure(1, &s));
+	assertEqualsM("MPX_4250 0 volts", 8, decodePressure(0, &s PASS_ENGINE_PARAMETER));
+	assertEquals(58.4, decodePressure(1, &s PASS_ENGINE_PARAMETER));
 }
 
 void testTps(void) {
