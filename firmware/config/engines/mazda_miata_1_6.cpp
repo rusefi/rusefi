@@ -71,6 +71,12 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
 
 	setWholeFuelMap(6 PASS_ENGINE_PARAMETER);
 
+	/**
+	 * http://miataturbo.wikidot.com/fuel-injectors
+	 * 90-93 (Blue) - #195500-1970
+	 */
+	engineConfiguration->injector.flow = 230;
+
 
 	// set_cranking_timing_angle 10
 	engineConfiguration->crankingTimingAngle = 10;
