@@ -3,12 +3,12 @@ package com.rusefi;
 import com.rusefi.config.Fields;
 import com.rusefi.ui.RpmLabel;
 import com.rusefi.ui.RpmModel;
-import com.rusefi.ui.config.EnumConfigField;
-import com.rusefi.ui.storage.Node;
-import com.rusefi.ui.util.UiUtils;
-import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.config.ConfigField;
+import com.rusefi.ui.config.EnumConfigField;
+import com.rusefi.ui.engine.EngineSnifferPanel;
+import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.URLLabel;
+import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.AnyCommand;
 
 import javax.swing.*;
@@ -19,8 +19,6 @@ import java.util.*;
 import java.util.List;
 
 import static com.rusefi.ui.util.LocalizedMessages.CLEAR;
-import static com.rusefi.ui.util.LocalizedMessages.PAUSE;
-import static com.rusefi.ui.util.LocalizedMessages.RESUME;
 
 /**
  * Date: 12/21/13
@@ -85,7 +83,7 @@ public class SensorSnifferPane {
                                       }
         );
 
-        final JButton pauseButton = new JButton(PAUSE.getMessage());
+        final JButton pauseButton = UiUtils.createPauseButton();
         upperPanel.add(pauseButton);
         upperPanel.add(new RpmLabel(2).getContent());
 

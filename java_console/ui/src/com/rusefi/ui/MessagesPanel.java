@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import static com.rusefi.ui.util.LocalizedMessages.CLEAR;
-import static com.rusefi.ui.util.LocalizedMessages.PAUSE;
 
 /**
  * This panel displays plain-text 'msg' plain-text debug messages
@@ -43,8 +42,7 @@ public class MessagesPanel {
             }
         });
 
-        final JButton pauseButton = new JButton(PAUSE.getMessage());
-        pauseButton.setMnemonic('p');
+        final JButton pauseButton = UiUtils.createPauseButton();
         pauseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

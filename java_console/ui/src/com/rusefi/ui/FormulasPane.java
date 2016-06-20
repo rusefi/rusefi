@@ -18,8 +18,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
-import static com.rusefi.ui.util.LocalizedMessages.PAUSE;
-
 /**
  * (c) Andrey Belomutskiy 2013-2016
  */
@@ -34,8 +32,7 @@ public class FormulasPane {
 
         centerProxy.add(new JLabel("Waiting for data..."), BorderLayout.CENTER);
 
-        final JButton pauseButton = new JButton(PAUSE.getMessage());
-        pauseButton.setMnemonic('p');
+        final JButton pauseButton = UiUtils.createPauseButton();
         pauseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
