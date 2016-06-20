@@ -26,7 +26,6 @@ import java.util.*;
 import java.util.List;
 
 import static com.rusefi.ui.util.LocalizedMessages.CLEAR;
-import static com.rusefi.ui.util.LocalizedMessages.PAUSE;
 
 /**
  * Engine Sniffer control consists of a set of {@link UpDownImage}
@@ -98,8 +97,7 @@ public class EngineSnifferPanel {
             }
         });
 
-        final JButton pauseButton = new JButton(PAUSE.getMessage());
-        pauseButton.setMnemonic('p');
+        final JButton pauseButton = UiUtils.createPauseButton();
         pauseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

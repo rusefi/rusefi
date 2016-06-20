@@ -15,8 +15,6 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import static com.rusefi.ui.util.LocalizedMessages.PAUSE;
-
 /**
  * Date: 2/5/13
  * (c) Andrey Belomutskiy
@@ -200,7 +198,7 @@ public class GaugesPanel {
     }
 
     private Component createPauseButton() {
-        final JButton pauseButton = new JButton(PAUSE.getMessage());
+        final JButton pauseButton = UiUtils.createPauseButton();
         pauseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

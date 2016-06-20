@@ -133,4 +133,11 @@ public class UiUtils {
     public static void showLoadingMessage(JPanel panel) {
         panel.add(new JLabel("Loading..."), BorderLayout.CENTER);
     }
+
+    @NotNull
+    public static JButton createPauseButton() {
+        final JButton pauseButton = new JButton(PAUSE.getMessage());
+        pauseButton.setMnemonic('p');
+        return pauseButton;
+    }
 }
