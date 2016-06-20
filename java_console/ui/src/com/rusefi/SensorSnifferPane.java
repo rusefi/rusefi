@@ -97,7 +97,7 @@ public class SensorSnifferPane {
                                                   @Override
                                                   public void actionPerformed(ActionEvent e) {
                                                       paused = !paused;
-                                                      pauseButton.setText(paused ? RESUME.getMessage() : PAUSE.getMessage());
+                                                      UiUtils.setPauseButtonText(pauseButton, paused);
                                                   }
                                               }
         );

@@ -76,17 +76,22 @@ public class SensorLiveGraph extends JPanel {
                     } catch (InterruptedException e) {
                         throw new IllegalStateException(e);
                     }
-                    double value = SensorCentral.getInstance().getValue(sensor);
-                    addValue(value);
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            UiUtils.trueRepaint(SensorLiveGraph.this);
-                        }
-                    });
+                    if (!GaugesPanel.IS_PAUSED)
+                        grabNewValue();
                 }
             }
         };
+    }
+
+    private void grabNewValue() {
+        double value = SensorCentral.getInstance().getValue(sensor);
+        addValue(value);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                UiUtils.trueRepaint(SensorLiveGraph.this);
+            }
+        });
     }
 
     private void showPopupMenu(MouseEvent e) {

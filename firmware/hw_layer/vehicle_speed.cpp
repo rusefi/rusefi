@@ -41,8 +41,10 @@ static void vsAnaWidthCallback(void) {
 }
 
 static void speedInfo(void) {
-	scheduleMsg(logger, "VSS@%s c=%f eventCounter=%d speed=%f",
-			hwPortname(boardConfiguration->vehicleSpeedSensorInputPin),
+	scheduleMsg(logger, "VSS %s at %s", boolToString(engineConfiguration->hasVehicleSpeedSensor),
+			hwPortname(boardConfiguration->vehicleSpeedSensorInputPin));
+
+	scheduleMsg(logger, "c=%f eventCounter=%d speed=%f",
 			engineConfiguration->vehicleSpeedCoef,
 			vssCounter,
 			getVehicleSpeed());
@@ -52,13 +54,13 @@ static void speedInfo(void) {
 
 void initVehicleSpeed(Logging *l) {
 	logger = l;
+	addConsoleAction("speedinfo", speedInfo);
 	if (boardConfiguration->vehicleSpeedSensorInputPin == GPIO_UNASSIGNED)
 		return;
 	digital_input_s* vehicleSpeedInput = initWaveAnalyzerDriver("VSS", boardConfiguration->vehicleSpeedSensorInputPin);
 	startInputDriver(vehicleSpeedInput, true);
 
 	vehicleSpeedInput->widthListeners.registerCallback((VoidInt) vsAnaWidthCallback, NULL);
-	addConsoleAction("speedinfo", speedInfo);
 }
 
 #endif /* EFI_VEHICLE_SPEED */

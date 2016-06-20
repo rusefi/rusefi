@@ -15,6 +15,8 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import static com.rusefi.ui.util.LocalizedMessages.PAUSE;
+
 /**
  * Date: 2/5/13
  * (c) Andrey Belomutskiy
@@ -50,6 +52,7 @@ public class GaugesPanel {
     private static final String SHOW_MESSAGES = "show_messages";
     private static final String SHOW_RPM = "show_rpm";
     private static final String SPLIT_LOCATION = "SPLIT_LOCATION";
+    public static boolean IS_PAUSED; // dirty but works for not
 
     static {
         if (DEFAULT_LAYOUT.length != SizeSelectorPanel.WIDTH * SizeSelectorPanel.HEIGHT)
@@ -188,11 +191,24 @@ public class GaugesPanel {
     @NotNull
     private JPanel createLeftTopPanel() {
         JPanel leftUpperPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        leftUpperPanel.add(createPauseButton());
         leftUpperPanel.add(createSaveImageButton());
         leftUpperPanel.add(new RpmLabel(2).getContent());
         AnyCommand command = AnyCommand.createField(config, false, false);
         leftUpperPanel.add(command.getContent());
         return leftUpperPanel;
+    }
+
+    private Component createPauseButton() {
+        final JButton pauseButton = new JButton(PAUSE.getMessage());
+        pauseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                IS_PAUSED = !IS_PAUSED;
+                UiUtils.setPauseButtonText(pauseButton, IS_PAUSED);
+            }
+        });
+        return pauseButton;
     }
 
     @NotNull

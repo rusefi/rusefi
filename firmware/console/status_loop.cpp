@@ -688,7 +688,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->isCylinderCleanupActivated = engine->isCylinderCleanupMode;
 	tsOutputChannels->secondTriggerChannelEnabled = engineConfiguration->secondTriggerChannelEnabled;
 #if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
-	tsOutputChannels->vehicleSpeedKph = getVehicleSpeed();
+	float vehicleSpeed = getVehicleSpeed();
+	tsOutputChannels->vehicleSpeedKph = vehicleSpeed;
+	tsOutputChannels->speedToRpmRatio = vehicleSpeed / rpm;
+
 #endif /* EFI_VEHICLE_SPEED */
 	tsOutputChannels->isCltError = !isValidCoolantTemperature(getCoolantTemperature(PASS_ENGINE_PARAMETER_F));
 	tsOutputChannels->isIatError = !isValidIntakeAirTemperature(getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F));
