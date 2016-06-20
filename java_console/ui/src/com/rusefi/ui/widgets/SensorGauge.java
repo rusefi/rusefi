@@ -59,6 +59,8 @@ public class SensorGauge {
 
         SensorCentral.getInstance().addListener(sensor, new SensorCentral.SensorListener() {
             public void onSensorUpdate(double value) {
+                if (GaugesPanel.IS_PAUSED)
+                    return;
                 gauge.setValue(sensor.translateValue(value));
             }
         });
