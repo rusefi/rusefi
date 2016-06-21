@@ -33,6 +33,8 @@ public class SensorLogger {
             Sensor.cltCorrection,
             Sensor.runningFuel,
             Sensor.injectorLagMs,
+            Sensor.VSS,
+            Sensor.SPEED2RPM,
 
             Sensor.MAF, Sensor.IAT};
     private static long fileStartTime;

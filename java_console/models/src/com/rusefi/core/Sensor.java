@@ -25,7 +25,6 @@ public enum Sensor {
     MAFR("MAFR", SensorCategory.SENSOR_INPUTS, "kg/hr", 4),
     TPS("throttle", SensorCategory.SENSOR_INPUTS, "%", 100),
     PPS("pedal", SensorCategory.SENSOR_INPUTS, "%", 100),
-    VSS("Speed", SensorCategory.SENSOR_INPUTS, "kph", 100),
     KS("Knock", SensorCategory.SENSOR_INPUTS, "count", 30),
     KV("Knock level", SensorCategory.SENSOR_INPUTS, "v", 6),
 
@@ -93,6 +92,7 @@ public enum Sensor {
     T_CHARGE(SensorCategory.FUEL, FieldType.FLOAT, 52, BackgroundColor.MUD, 30, 140),
     DWELL(SensorCategory.OPERATIONS, FieldType.FLOAT, 60, BackgroundColor.MUD, 1, 10),
     actualLastInjection(SensorCategory.FUEL, FieldType.FLOAT, 64, BackgroundColor.MUD, 0, 30, "ms"),
+    VSS(SensorCategory.OPERATIONS, FieldType.FLOAT, 76, BackgroundColor.BLUE),
     CURRENT_VE(SensorCategory.FUEL, FieldType.FLOAT, 112, BackgroundColor.MUD),
 
     deltaTps(SensorCategory.FUEL, FieldType.FLOAT, 116, BackgroundColor.MUD),
@@ -116,6 +116,7 @@ public enum Sensor {
 
     RPM(SensorCategory.SENSOR_INPUTS, FieldType.INT, 0, BackgroundColor.RED, 0, 8000),
     TIME_SECONDS(SensorCategory.OPERATIONS, FieldType.INT, 224, BackgroundColor.MUD, 0, 5),
+    SPEED2RPM(SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 232, BackgroundColor.MUD, 0, 5),
 
     INJ_1_2_DELTA("inj 1-2 delta", SensorCategory.SNIFFING),
     INJ_3_4_DELTA("inj 3-4 delta", SensorCategory.SNIFFING),

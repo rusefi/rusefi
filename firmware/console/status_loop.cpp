@@ -185,11 +185,15 @@ static void printSensors(Logging *log, bool fileFormat) {
 
 #endif
 
-#if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
 	if (engineConfiguration->hasVehicleSpeedSensor) {
-		reportSensorF(log, fileFormat, "vss", "kph", getVehicleSpeed(), 2);
-	}
+#if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
+		float vehicleSpeed = getVehicleSpeed();
+#else
+		float vehicleSpeed = 0;
 #endif /* EFI_PROD_CODE */
+		reportSensorF(log, fileFormat, "vss", "kph", vehicleSpeed, 2);
+		reportSensorF(log, fileFormat, "sp2rpm", "x", vehicleSpeed / rpm, 2);
+	}
 
 	reportSensorF(log, fileFormat, "knck_c", "count", engine->knockCount, 0);
 	reportSensorF(log, fileFormat, "knck_v", "v", engine->knockVolts, 2);
