@@ -74,6 +74,10 @@ void setToyota_jzs147EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	//	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	boardConfiguration->isSdCardEnabled = false;
 
+	engineConfiguration->map.sensor.type = MT_CUSTOM;
+
+	engineConfiguration->injector.flow = 430;
+
 	/**
 	 * http://thesafetyaversionsociety.com/wordpress/wp-content/uploads/2010/08/Troubleshooting-2JZ-GTE.pdf
 	 * pages 44&46
