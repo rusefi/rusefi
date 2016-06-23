@@ -27,7 +27,7 @@ void initialize2jzGE1_12(TriggerShape *s) {
 	}
 
 
-	s->addEvent(75, T_PRIMARY, TV_RISE, -1, 721);
+	s->addEvent(75, T_PRIMARY, TV_FALL, -1, 721);
 
 	for (int i = 0; i < 21; i++) {
 		s->addEvent(crankAngle + crankD, T_SECONDARY, TV_RISE, -1, 721);
@@ -40,7 +40,7 @@ void initialize2jzGE1_12(TriggerShape *s) {
 	crankAngle += crankD;
 
 
-	s->addEvent(720, T_PRIMARY, TV_FALL, -1, 721);
+	s->addEvent(720, T_PRIMARY, TV_RISE, -1, 721);
 
 	s->isSynchronizationNeeded = false;
 }
