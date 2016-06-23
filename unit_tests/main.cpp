@@ -120,7 +120,6 @@ int main(void) {
 	testSensors();
 	testCyclicBuffer();
 	testCrc();
-	testMisc();
 
 	testSignalExecutor();
 

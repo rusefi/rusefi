@@ -29,6 +29,9 @@
 #include "eficonsole.h"
 #endif /* ! EFI_UNIT_TEST */
 
+// todo: support \t as well
+#define SPACE_CHAR ' '
+
 static Logging * logging;
 
 static int consoleActionCount = 0;
@@ -201,21 +204,41 @@ int findEndOfToken(const char *line) {
 		 */
 		return v + 2;
 	}
-	return indexOf(line, ' ');
+	return indexOf(line, SPACE_CHAR);
+}
+
+#define REPLACE_SPACES_WITH_ZERO { \
+	    while (parameter[spaceIndex + 1] == SPACE_CHAR) { \
+			parameter[spaceIndex++] = 0; \
+		} \
+		parameter[spaceIndex] = 0; \
 }
 
 void handleActionWithParameter(TokenCallback *current, char *parameter) {
-	if (current->parameterType == STRING_PARAMETER) {
+    while (parameter[0] == SPACE_CHAR) {
+		parameter[0] = 0;
+		parameter++;
+	}
+
+    switch (current->parameterType) {
+	case STRING_PARAMETER:
+	{
 		VoidCharPtr callbackS = (VoidCharPtr) current->callback;
 		(*callbackS)(parameter);
 		return;
 	}
-
-	if (current->parameterType == STRING_PARAMETER_P) {
-		VoidCharPtrVoidPtr callbackS = (VoidCharPtrVoidPtr) current->callback;
-		(*callbackS)(parameter, current->param);
-		return;
+	case STRING_PARAMETER_P:
+	{
+			VoidCharPtrVoidPtr callbackS = (VoidCharPtrVoidPtr) current->callback;
+			(*callbackS)(parameter, current->param);
+			return;
 	}
+	default:
+		// todo: handle all cases explicitly
+		break;
+	}
+
+
 
 	// todo: refactor this hell!
 	if (current->parameterType == STRING2_PARAMETER || current->parameterType == STRING2_PARAMETER_P) {
@@ -223,7 +246,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		if (spaceIndex == -1) {
 			return;
 		}
-		parameter[spaceIndex] = 0;
+		REPLACE_SPACES_WITH_ZERO;
 		char * param0 = parameter;
 
 		parameter += spaceIndex + 1;
@@ -244,14 +267,14 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		if (spaceIndex == -1) {
 			return;
 		}
-		parameter[spaceIndex] = 0;
+		REPLACE_SPACES_WITH_ZERO;
 		char * param0 = parameter;
 
 		parameter += spaceIndex + 1;
 		spaceIndex = findEndOfToken(parameter);
 		if (spaceIndex == -1)
 			return;
-		parameter[spaceIndex] = 0;
+		REPLACE_SPACES_WITH_ZERO;
 		char * param1 = parameter;
 		parameter += spaceIndex + 1;
 		char * param2 = parameter;
@@ -268,28 +291,28 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		if (spaceIndex == -1) {
 			return;
 		}
-		parameter[spaceIndex] = 0;
+		REPLACE_SPACES_WITH_ZERO;
 		char * param0 = parameter;
 
 		parameter += spaceIndex + 1;
 		spaceIndex = findEndOfToken(parameter);
 		if (spaceIndex == -1)
 			return;
-		parameter[spaceIndex] = 0;
+		REPLACE_SPACES_WITH_ZERO;
 		char * param1 = parameter;
 
 		parameter += spaceIndex + 1;
 		spaceIndex = findEndOfToken(parameter);
 		if (spaceIndex == -1)
 			return;
-		parameter[spaceIndex] = 0;
+		REPLACE_SPACES_WITH_ZERO;
 		char * param2 = parameter;
 
 		parameter += spaceIndex + 1;
 		spaceIndex = findEndOfToken(parameter);
 		if (spaceIndex == -1)
 			return;
-		parameter[spaceIndex] = 0;
+		REPLACE_SPACES_WITH_ZERO;
 		char * param3 = parameter;
 
 		parameter += spaceIndex + 1;
@@ -305,7 +328,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		int spaceIndex = findEndOfToken(parameter);
 		if (spaceIndex == -1)
 			return;
-		parameter[spaceIndex] = 0;
+		REPLACE_SPACES_WITH_ZERO;
 		int value1 = atoi(parameter);
 		if (absI(value1) == ERROR_CODE) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
@@ -328,6 +351,10 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 
 	if (current->parameterType == FLOAT_PARAMETER) {
 		float value = atoff(parameter);
+		if (cisnan(value)) {
+			print("invalid float [%s]\r\n", parameter);
+			return;
+		}
 		VoidFloat callbackF = (VoidFloat) current->callback;
 
 		// invoke callback function by reference
@@ -339,11 +366,21 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		int spaceIndex = findEndOfToken(parameter);
 		if (spaceIndex == -1)
 			return;
-		parameter[spaceIndex] = 0;
+		REPLACE_SPACES_WITH_ZERO;
 		float value1 = atoff(parameter);
+		if (cisnan(value1)) {
+			print("invalid float [%s]\r\n", parameter);
+			return;
+		}
+
 		parameter += spaceIndex + 1;
 		float value2 = atoff(parameter);
-		if (current->parameterType == FLOAT_FLOAT_PARAMETER) {
+
+		if (cisnan(value2)) {
+			print("invalid float [%s]\r\n", parameter);
+			return;
+		}
+if (current->parameterType == FLOAT_FLOAT_PARAMETER) {
 			VoidFloatFloat callbackS = (VoidFloatFloat) current->callback;
 			(*callbackS)(value1, value2);
 		} else {
@@ -379,7 +416,7 @@ int tokenLength(const char *msgp) {
 	int result = 0;
 	while (*msgp) {
 		char ch = *msgp++;
-		if (ch == ' ') {
+		if (ch == SPACE_CHAR) {
 			break;
 		}
 		result++;
