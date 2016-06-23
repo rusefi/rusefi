@@ -821,7 +821,13 @@
 #define fsioAdc4_offset_hex 954
 #define fixedTiming_offset 2392
 #define fixedTiming_offset_hex 958
-#define unused_offset 2396
+#define mapLowValueVoltage_offset 2396
+#define mapHighValueVoltage_offset 2400
+#define mapHighValueVoltage_offset_hex 960
+#define egoValueShift_offset 2404
+#define egoValueShift_offset_hex 964
+#define unused_offset 2408
+#define unused_offset_hex 968
 #define le_formulas1_offset 3048
 #define le_formulas2_offset 3248
 #define le_formulas3_offset 3448
