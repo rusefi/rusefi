@@ -190,9 +190,10 @@ int efiPow10(int param) {
 }
 
 /**
- * string to float
+ * string to float. NaN input is not supported
+ *
  * @return NAN in case of invalid string
- * todo: explicit value for error code?
+ * todo: explicit value for error code? probably not, NaN is only returned in case of an error
  */
 float atoff(const char *param) {
 	uint32_t totallen = strlen(param);
