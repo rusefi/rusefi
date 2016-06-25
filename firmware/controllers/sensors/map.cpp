@@ -69,7 +69,8 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DEC
 	switch (mapConfig->type) {
 	case MT_CUSTOM:
 		// todo: migrate to 'FastInterpolation customMap'
-		return interpolate(0, mapConfig->valueAt0, 5, mapConfig->valueAt5, voltage);
+		return interpolate(engineConfiguration->mapLowValueVoltage, mapConfig->valueAt0,
+				5, mapConfig->valueAt5, voltage);
 	case MT_DENSO183:
 		return denso183.getValue(voltage);
 	case MT_MPX4250:

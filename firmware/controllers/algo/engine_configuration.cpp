@@ -530,6 +530,10 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	 */
 	engineConfiguration->injector.flow = 200;
 
+	engineConfiguration->mapLowValueVoltage = 0;
+	// todo: start using this for custom MAP
+	engineConfiguration->mapHighValueVoltage = 5;
+
 	engineConfiguration->displayMode = DM_HD44780;
 
 	engineConfiguration->logFormat = LF_NATIVE;
