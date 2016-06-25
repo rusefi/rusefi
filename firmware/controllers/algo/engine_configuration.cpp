@@ -560,8 +560,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->map.sensor.type = MT_MPX4250;
 
 	engineConfiguration->baroSensor.type = MT_CUSTOM;
-	engineConfiguration->baroSensor.valueAt0 = 0;
-	engineConfiguration->baroSensor.valueAt5 = 500;
+	engineConfiguration->baroSensor.lowValue = 0;
+	engineConfiguration->baroSensor.highValue = 500;
 
 	engineConfiguration->hasMapSensor = true;
 	engineConfiguration->hasMafSensor = true;

@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Jun 22 23:17:14 EDT 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jun 25 15:31:56 EDT 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -132,8 +132,8 @@ public class Fields {
 	public static final int map_samplingWindowBins_offset = 176;
 	public static final int map_samplingWindow_offset = 208;
 	public static final int map_sensor_offset = 240;
-	public static final int map_sensor_valueAt0_offset = 240;
-	public static final int map_sensor_valueAt5_offset = 244;
+	public static final int map_sensor_lowValue_offset = 240;
+	public static final int map_sensor_highValue_offset = 244;
 	public static final int map_sensor_type_offset = 248;
 	public static final int map_sensor_hwChannel_offset = 252;
 	public static final int clt_offset = 256;
@@ -267,10 +267,10 @@ public class Fields {
 	public static final int pedalPositionChannel_offset = 604;
 	public static final int baroSensor_offset = 608;
 	public static final int baroSensor_offset_hex = 260;
-	public static final int baroSensor_valueAt0_offset = 608;
-	public static final int baroSensor_valueAt0_offset_hex = 260;
-	public static final int baroSensor_valueAt5_offset = 612;
-	public static final int baroSensor_valueAt5_offset_hex = 264;
+	public static final int baroSensor_lowValue_offset = 608;
+	public static final int baroSensor_lowValue_offset_hex = 260;
+	public static final int baroSensor_highValue_offset = 612;
+	public static final int baroSensor_highValue_offset_hex = 264;
 	public static final int baroSensor_type_offset = 616;
 	public static final int baroSensor_type_offset_hex = 268;
 	public static final int baroSensor_hwChannel_offset = 620;
@@ -952,8 +952,8 @@ public class Fields {
 	public static final Field PRIMINGSQUIRTDURATIONMS = Field.create("PRIMINGSQUIRTDURATIONMS", 100, FieldType.FLOAT);
 	public static final Field IGNITIONDWELLFORCRANKINGMS = Field.create("IGNITIONDWELLFORCRANKINGMS", 104, FieldType.FLOAT);
 	public static final Field CRANKINGCHARGEANGLE = Field.create("CRANKINGCHARGEANGLE", 108, FieldType.FLOAT);
-	public static final Field MAP_SENSOR_VALUEAT0 = Field.create("MAP_SENSOR_VALUEAT0", 240, FieldType.FLOAT);
-	public static final Field MAP_SENSOR_VALUEAT5 = Field.create("MAP_SENSOR_VALUEAT5", 244, FieldType.FLOAT);
+	public static final Field MAP_SENSOR_LOWVALUE = Field.create("MAP_SENSOR_LOWVALUE", 240, FieldType.FLOAT);
+	public static final Field MAP_SENSOR_HIGHVALUE = Field.create("MAP_SENSOR_HIGHVALUE", 244, FieldType.FLOAT);
 	public static final Field MAP_SENSOR_TYPE = Field.create("MAP_SENSOR_TYPE", 248, FieldType.INT);
 	public static final String[] adc_channel_e = {"PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "Disabled", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"};
 	public static final Field MAP_SENSOR_HWCHANNEL = Field.create("MAP_SENSOR_HWCHANNEL", 252, FieldType.INT, adc_channel_e);
@@ -1034,8 +1034,8 @@ public class Fields {
 	public static final Field AFR_V2 = Field.create("AFR_V2", 596, FieldType.FLOAT);
 	public static final Field AFR_VALUE2 = Field.create("AFR_VALUE2", 600, FieldType.FLOAT);
 	public static final Field PEDALPOSITIONCHANNEL = Field.create("PEDALPOSITIONCHANNEL", 604, FieldType.INT, adc_channel_e);
-	public static final Field BAROSENSOR_VALUEAT0 = Field.create("BAROSENSOR_VALUEAT0", 608, FieldType.FLOAT);
-	public static final Field BAROSENSOR_VALUEAT5 = Field.create("BAROSENSOR_VALUEAT5", 612, FieldType.FLOAT);
+	public static final Field BAROSENSOR_LOWVALUE = Field.create("BAROSENSOR_LOWVALUE", 608, FieldType.FLOAT);
+	public static final Field BAROSENSOR_HIGHVALUE = Field.create("BAROSENSOR_HIGHVALUE", 612, FieldType.FLOAT);
 	public static final Field BAROSENSOR_TYPE = Field.create("BAROSENSOR_TYPE", 616, FieldType.INT);
 	public static final Field BAROSENSOR_HWCHANNEL = Field.create("BAROSENSOR_HWCHANNEL", 620, FieldType.INT, adc_channel_e);
 	public static final String[] brain_pin_e = {"PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15", "NONE", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"};

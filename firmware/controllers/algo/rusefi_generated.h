@@ -128,8 +128,8 @@
 #define map_samplingWindowBins_offset 176
 #define map_samplingWindow_offset 208
 #define map_sensor_offset 240
-#define map_sensor_valueAt0_offset 240
-#define map_sensor_valueAt5_offset 244
+#define map_sensor_lowValue_offset 240
+#define map_sensor_highValue_offset 244
 #define map_sensor_type_offset 248
 #define map_sensor_hwChannel_offset 252
 #define clt_offset 256
@@ -263,10 +263,10 @@
 #define pedalPositionChannel_offset 604
 #define baroSensor_offset 608
 #define baroSensor_offset_hex 260
-#define baroSensor_valueAt0_offset 608
-#define baroSensor_valueAt0_offset_hex 260
-#define baroSensor_valueAt5_offset 612
-#define baroSensor_valueAt5_offset_hex 264
+#define baroSensor_lowValue_offset 608
+#define baroSensor_lowValue_offset_hex 260
+#define baroSensor_highValue_offset 612
+#define baroSensor_highValue_offset_hex 264
 #define baroSensor_type_offset 616
 #define baroSensor_type_offset_hex 268
 #define baroSensor_hwChannel_offset 620

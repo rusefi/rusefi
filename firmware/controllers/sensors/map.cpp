@@ -69,8 +69,8 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DEC
 	switch (mapConfig->type) {
 	case MT_CUSTOM:
 		// todo: migrate to 'FastInterpolation customMap'
-		return interpolate(engineConfiguration->mapLowValueVoltage, mapConfig->valueAt0,
-				5, mapConfig->valueAt5, voltage);
+		return interpolate(engineConfiguration->mapLowValueVoltage, mapConfig->lowValue,
+				5, mapConfig->highValue, voltage);
 	case MT_DENSO183:
 		return denso183.getValue(voltage);
 	case MT_MPX4250:
@@ -166,7 +166,7 @@ static FastInterpolation *getDecoder(air_pressure_sensor_type_e type) {
 
 static void applyConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	air_pressure_sensor_config_s * apConfig = &engineConfiguration->map.sensor;
-	customMap.init(0, apConfig->valueAt0, 5, apConfig->valueAt5);
+	customMap.init(0, apConfig->lowValue, 5, apConfig->highValue);
 	mapDecoder = getDecoder(engineConfiguration->map.sensor.type);
 }
 
@@ -191,16 +191,22 @@ static void printMAPInfo(void) {
 				getMap());
 
 		if (engineConfiguration->map.sensor.type == MT_CUSTOM) {
-			scheduleMsg(logger, "at0=%f at5=%f", engineConfiguration->map.sensor.valueAt0,
-					engineConfiguration->map.sensor.valueAt5);
+			scheduleMsg(logger, "at %f=%f at %f=%f",
+					engineConfiguration->mapLowValueVoltage,
+					engineConfiguration->map.sensor.lowValue,
+					engineConfiguration->mapHighValueVoltage,
+					engineConfiguration->map.sensor.highValue);
 		}
 	}
 
 	if (hasBaroSensor(PASS_ENGINE_PARAMETER_F)) {
 		scheduleMsg(logger, "baro type=%d value=%f", engineConfiguration->baroSensor.type, getBaroPressure());
 		if (engineConfiguration->baroSensor.type == MT_CUSTOM) {
-			scheduleMsg(logger, "min=%f max=%f", engineConfiguration->baroSensor.valueAt0,
-					engineConfiguration->baroSensor.valueAt5);
+			scheduleMsg(logger, "min=%f@%f max=%f@%f",
+					engineConfiguration->baroSensor.lowValue,
+					engineConfiguration->mapLowValueVoltage,
+					engineConfiguration->baroSensor.highValue,
+					engineConfiguration->mapHighValueVoltage);
 		}
 	}
 #endif /* EFI_ANALOG_SENSORS */
