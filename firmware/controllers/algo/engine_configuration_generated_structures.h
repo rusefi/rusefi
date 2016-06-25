@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Jun 22 23:17:14 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jun 25 15:31:56 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -46,15 +46,15 @@ typedef struct {
 
 typedef struct {
 	/**
-	 * kPa value at zero volts
+	 * kPa value at low volts
 	 * offset 0
 	 */
-	float valueAt0;
+	float lowValue;
 	/**
-	 * kPa value at 5 volts
+	 * kPa value at high volts
 	 * offset 4
 	 */
-	float valueAt5;
+	float highValue;
 	/**
 	 * offset 8
 	 */
@@ -1818,4 +1818,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Jun 22 23:17:14 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jun 25 15:31:56 EDT 2016

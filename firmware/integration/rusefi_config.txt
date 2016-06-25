@@ -112,8 +112,8 @@ custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:2]  "Custom", "DENSO
 custom adc_channel_e 4 bits, U32, @OFFSET@, [0:4]  @@adc_channel_e_enum@@
 
 struct air_pressure_sensor_config_s
-float valueAt0;kPa value at zero volts;"kpa",      1,     0,    -400, 800,     2
-float valueAt5;kPa value at 5 volts;"kpa",      1,     0,    -400, 800,     2
+float lowValue;kPa value at low volts;"kpa",      1,     0,    -400, 800,     2
+float highValue;kPa value at high volts;"kpa",      1,     0,    -400, 800,     2
 air_pressure_sensor_type_e type;
 adc_channel_e hwChannel;
 end_struct
