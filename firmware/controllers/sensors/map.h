@@ -24,4 +24,7 @@ float getMapByVoltage(float voltage DECLARE_ENGINE_PARAMETER_S);
 float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DECLARE_ENGINE_PARAMETER_S);
 float validateMap(float mapKPa DECLARE_ENGINE_PARAMETER_S);
 
+#define INHG2KPA(inhg) ((inhg * 3.386375))
+#define KPA2INHG(kpa) ((kpa) / 3.386375)
+
 #endif

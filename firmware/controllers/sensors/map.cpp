@@ -70,7 +70,7 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DEC
 	case MT_CUSTOM:
 		// todo: migrate to 'FastInterpolation customMap'
 		return interpolate(engineConfiguration->mapLowValueVoltage, mapConfig->lowValue,
-				5, mapConfig->highValue, voltage);
+				engineConfiguration->mapHighValueVoltage, mapConfig->highValue, voltage);
 	case MT_DENSO183:
 		return denso183.getValue(voltage);
 	case MT_MPX4250:
@@ -191,7 +191,8 @@ static void printMAPInfo(void) {
 				getMap());
 
 		if (engineConfiguration->map.sensor.type == MT_CUSTOM) {
-			scheduleMsg(logger, "at %f=%f at %f=%f",
+			scheduleMsg(logger, "MAP %fv", getVoltage("mapinfo", engineConfiguration->map.sensor.hwChannel));
+			scheduleMsg(logger, "at %fv=%f at %fv=%f",
 					engineConfiguration->mapLowValueVoltage,
 					engineConfiguration->map.sensor.lowValue,
 					engineConfiguration->mapHighValueVoltage,
