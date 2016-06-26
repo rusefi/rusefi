@@ -62,6 +62,15 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->hasMapSensor = true;
 	// Frankenso analog #6 pin 3R, W56 top <> W45 bottom jumper, not OEM
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_7;
+	engineConfiguration->map.sensor.type = MT_CUSTOM;
+
+	engineConfiguration->map.sensor.lowValue = 33.322271;
+	engineConfiguration->mapLowValueVoltage = 0.95;
+
+	engineConfiguration->map.sensor.highValue = 100;
+	engineConfiguration->mapHighValueVoltage = 2.95;
+
+
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_0;
 	copyTimingTable(mapBased16IgnitionTable, config->ignitionTable);
