@@ -166,7 +166,7 @@ injector_s injector
 
 
 bit directSelfStimulation;+Should trigger emulator push data right into trigger handling logic, eliminating the need for physical jumper wires?\nPS: Funny name, right? :)
-bit issue_294_1;
+bit activateAuxPid1;
 bit issue_294_2;
 bit issue_294_3;
 bit issue_294_4;
@@ -697,7 +697,8 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float mapLowValueVoltage;MAP voltage for low point;"v",      1,     0,   0.0,    10,   2 
 	float mapHighValueVoltage;MAP voltage for low point;"v",      1,     0,   0.0,    10,   2 
 	float egoValueShift;EGO value correction;"value",      1,     0,   -10.0,    10,   2 
-	int[160] unused;
+	pid_s auxPid1;
+	int[156] unused;
 	
 
 end_struct
