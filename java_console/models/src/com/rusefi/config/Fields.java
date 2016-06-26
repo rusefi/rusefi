@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jun 25 15:31:56 EDT 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jun 26 12:22:01 EDT 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -49,8 +49,8 @@ public class Fields {
 	public static final int injector_battLagCorr_offset_hex = 30;
 	public static final int directSelfStimulation_offset = 80;
 	public static final int directSelfStimulation_offset_hex = 50;
-	public static final int issue_294_1_offset = 80;
-	public static final int issue_294_1_offset_hex = 50;
+	public static final int activateAuxPid1_offset = 80;
+	public static final int activateAuxPid1_offset_hex = 50;
 	public static final int issue_294_2_offset = 80;
 	public static final int issue_294_2_offset_hex = 50;
 	public static final int issue_294_3_offset = 80;
@@ -830,8 +830,17 @@ public class Fields {
 	public static final int mapHighValueVoltage_offset_hex = 960;
 	public static final int egoValueShift_offset = 2404;
 	public static final int egoValueShift_offset_hex = 964;
-	public static final int unused_offset = 2408;
-	public static final int unused_offset_hex = 968;
+	public static final int auxPid1DT_offset = 2408;
+	public static final int auxPid1DT_offset_hex = 968;
+	public static final int auxPid1_offset = 2412;
+	public static final int auxPid1_pFactor_offset = 2412;
+	public static final int auxPid1_iFactor_offset = 2416;
+	public static final int auxPid1_iFactor_offset_hex = 970;
+	public static final int auxPid1_dFactor_offset = 2420;
+	public static final int auxPid1_dFactor_offset_hex = 974;
+	public static final int auxPid1_offset_offset = 2424;
+	public static final int auxPid1_offset_offset_hex = 978;
+	public static final int unused_offset = 2428;
 	public static final int le_formulas1_offset = 3048;
 	public static final int le_formulas2_offset = 3248;
 	public static final int le_formulas3_offset = 3448;
@@ -915,7 +924,7 @@ public class Fields {
 	public static final Field INJECTOR_FLOW = Field.create("INJECTOR_FLOW", 8, FieldType.FLOAT);
 	public static final Field INJECTOR_LAG = Field.create("INJECTOR_LAG", 12, FieldType.FLOAT);
 	public static final Field DIRECTSELFSTIMULATION = Field.create("DIRECTSELFSTIMULATION", 80, FieldType.BIT, 0);
-	public static final Field ISSUE_294_1 = Field.create("ISSUE_294_1", 80, FieldType.BIT, 1);
+	public static final Field ACTIVATEAUXPID1 = Field.create("ACTIVATEAUXPID1", 80, FieldType.BIT, 1);
 	public static final Field ISSUE_294_2 = Field.create("ISSUE_294_2", 80, FieldType.BIT, 2);
 	public static final Field ISSUE_294_3 = Field.create("ISSUE_294_3", 80, FieldType.BIT, 3);
 	public static final Field ISSUE_294_4 = Field.create("ISSUE_294_4", 80, FieldType.BIT, 4);
@@ -1421,6 +1430,11 @@ public class Fields {
 	public static final Field MAPLOWVALUEVOLTAGE = Field.create("MAPLOWVALUEVOLTAGE", 2396, FieldType.FLOAT);
 	public static final Field MAPHIGHVALUEVOLTAGE = Field.create("MAPHIGHVALUEVOLTAGE", 2400, FieldType.FLOAT);
 	public static final Field EGOVALUESHIFT = Field.create("EGOVALUESHIFT", 2404, FieldType.FLOAT);
+	public static final Field AUXPID1DT = Field.create("AUXPID1DT", 2408, FieldType.INT);
+	public static final Field AUXPID1_PFACTOR = Field.create("AUXPID1_PFACTOR", 2412, FieldType.FLOAT);
+	public static final Field AUXPID1_IFACTOR = Field.create("AUXPID1_IFACTOR", 2416, FieldType.FLOAT);
+	public static final Field AUXPID1_DFACTOR = Field.create("AUXPID1_DFACTOR", 2420, FieldType.FLOAT);
+	public static final Field AUXPID1_OFFSET = Field.create("AUXPID1_OFFSET", 2424, FieldType.FLOAT);
 	public static final Field LE_FORMULAS1 = Field.create("LE_FORMULAS1", 3048, FieldType.INT);
 	public static final Field LE_FORMULAS2 = Field.create("LE_FORMULAS2", 3248, FieldType.INT);
 	public static final Field LE_FORMULAS3 = Field.create("LE_FORMULAS3", 3448, FieldType.INT);
