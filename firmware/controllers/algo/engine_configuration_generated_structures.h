@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jun 25 15:31:56 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jun 26 11:58:16 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -782,7 +782,7 @@ typedef struct {
 	bool directSelfStimulation : 1;
 	/**
 	offset 80 bit 1 */
-	bool issue_294_1 : 1;
+	bool activateAuxPid1 : 1;
 	/**
 	offset 80 bit 2 */
 	bool issue_294_2 : 1;
@@ -1629,7 +1629,11 @@ typedef struct {
 	/**
 	 * offset 2408
 	 */
-	int unused[160];
+	pid_s auxPid1;
+	/**
+	 * offset 2424
+	 */
+	int unused[156];
 	/** total size 3048*/
 } engine_configuration_s;
 
@@ -1818,4 +1822,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jun 25 15:31:56 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jun 26 11:58:16 EDT 2016
