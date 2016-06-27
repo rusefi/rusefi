@@ -156,6 +156,7 @@ void setFsio(int index, brain_pin_e pin, const char * exp DECLARE_ENGINE_PARAMET
 }
 
 void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_F) {
+	userPool.reset();
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		brain_pin_e brainPin = boardConfiguration->fsioPins[i];
 

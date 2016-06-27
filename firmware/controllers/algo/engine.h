@@ -70,9 +70,18 @@ public:
 	engine_configuration2_s();
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+	/**
+	 * Lock-free multithreading: two instances, while one is being modified another one is used read-only
+	 */
 	FuelSchedule injectionEvents0;
 	FuelSchedule injectionEvents1;
+	/**
+	 * this points at an instance we use to run the engine
+	 */
 	FuelSchedule *injectionEvents;
+	/**
+	 * this variable is pointing at the instance which is being modified
+	 */
 	FuelSchedule *processing;
 #endif
 

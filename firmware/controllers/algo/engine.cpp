@@ -315,6 +315,7 @@ void Engine::watchdog() {
 
 void Engine::prepareFuelSchedule(DECLARE_ENGINE_PARAMETER_F) {
 	int rpm = rpmCalculator.rpmValue;
+	efiAssertVoid(ENGINE(engineConfiguration2)->injectionEvents != ENGINE(engineConfiguration2)->processing, "fuel pointers");
 
 	ENGINE(m.beforeInjectonSch) = GET_TIMESTAMP();
 
