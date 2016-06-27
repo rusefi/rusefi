@@ -699,7 +699,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float egoValueShift;EGO value correction;"value",      1,     0,   -10.0,    10,   2 
 	int auxPid1DT;Aux Pid #1 dTime;"ms",      1,      0,       0, 3000,      0
 	pid_s auxPid1;
-	float crankingIdleAdjustment;Extra idle while cranking;"value",      1,     0,   -100.0,    100,    
+	float crankingIdleAdjustment;Extra idle while cranking;"percent",      1,     0,   -100.0,    100,    
 	int[154] unused;
 	
 
