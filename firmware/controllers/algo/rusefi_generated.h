@@ -836,7 +836,9 @@
 #define auxPid1_dFactor_offset_hex 974
 #define auxPid1_offset_offset 2424
 #define auxPid1_offset_offset_hex 978
-#define unused_offset 2428
+#define crankingIdleAdjustment_offset 2428
+#define unused_offset 2432
+#define unused_offset_hex 980
 #define le_formulas1_offset 3048
 #define le_formulas2_offset 3248
 #define le_formulas3_offset 3448

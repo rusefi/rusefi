@@ -172,6 +172,20 @@ percent_t getIdlePosition(void) {
 	}
 }
 
+static void autoIdle() {
+	efitimems_t now = currentTimeMillis();
+
+	percent_t newValue = idlePositionController.getIdle(getRpmE(engine), now PASS_ENGINE_PARAMETER);
+
+	if (currentIdleValve != newValue) {
+		currentIdleValve = newValue;
+
+		// todo: looks like in auto mode stepper value is not set, only solenoid?
+
+		setIdleValvePwm(newValue);
+	}
+}
+
 static msg_t ivThread(int param) {
 	(void) param;
 	chRegSetThreadName("IdleValve");
@@ -192,23 +206,13 @@ static msg_t ivThread(int param) {
 		finishIdleTestIfNeeded();
 		undoIdleBlipIfNeeded();
 
-		if (engineConfiguration->idleMode != IM_AUTO) {
+		if (engineConfiguration->idleMode == IM_MANUAL) {
 			// let's re-apply CLT correction
 			manualIdleController(boardConfiguration->manIdlePosition);
-			continue;
+		} else {
+			autoIdle();
 		}
 
-		efitimems_t now = currentTimeMillis();
-
-		percent_t newValue = idlePositionController.getIdle(getRpmE(engine), now PASS_ENGINE_PARAMETER);
-
-		if (currentIdleValve != newValue) {
-			currentIdleValve = newValue;
-
-			// todo: looks like in auto mode stepper value is not set, only solenoid?
-
-			setIdleValvePwm(newValue);
-		}
 	}
 #if defined __GNUC__
 	return -1;
