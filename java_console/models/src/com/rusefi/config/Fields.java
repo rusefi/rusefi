@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jun 26 12:22:01 EDT 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jun 26 20:48:53 EDT 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -840,7 +840,9 @@ public class Fields {
 	public static final int auxPid1_dFactor_offset_hex = 974;
 	public static final int auxPid1_offset_offset = 2424;
 	public static final int auxPid1_offset_offset_hex = 978;
-	public static final int unused_offset = 2428;
+	public static final int crankingIdleAdjustment_offset = 2428;
+	public static final int unused_offset = 2432;
+	public static final int unused_offset_hex = 980;
 	public static final int le_formulas1_offset = 3048;
 	public static final int le_formulas2_offset = 3248;
 	public static final int le_formulas3_offset = 3448;
@@ -1435,6 +1437,7 @@ public class Fields {
 	public static final Field AUXPID1_IFACTOR = Field.create("AUXPID1_IFACTOR", 2416, FieldType.FLOAT);
 	public static final Field AUXPID1_DFACTOR = Field.create("AUXPID1_DFACTOR", 2420, FieldType.FLOAT);
 	public static final Field AUXPID1_OFFSET = Field.create("AUXPID1_OFFSET", 2424, FieldType.FLOAT);
+	public static final Field CRANKINGIDLEADJUSTMENT = Field.create("CRANKINGIDLEADJUSTMENT", 2428, FieldType.FLOAT);
 	public static final Field LE_FORMULAS1 = Field.create("LE_FORMULAS1", 3048, FieldType.INT);
 	public static final Field LE_FORMULAS2 = Field.create("LE_FORMULAS2", 3248, FieldType.INT);
 	public static final Field LE_FORMULAS3 = Field.create("LE_FORMULAS3", 3448, FieldType.INT);
