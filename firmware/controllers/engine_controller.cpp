@@ -50,6 +50,7 @@
 #include "alternatorController.h"
 #include "fuel_math.h"
 #include "settings.h"
+#include "aux_pid.h"
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 #include "AdcConfiguration.h"
@@ -615,6 +616,10 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 
 #if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)
 	initAlternatorCtrl(sharedLogger);
+#endif
+
+#if EFI_AUX_PID || defined(__DOXYGEN__)
+	initAuxPid(sharedLogger);
 #endif
 
 #if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
