@@ -43,6 +43,7 @@ typedef struct {
 
 void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
 void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F);
+void setAfrMap(afr_table_t table, float value);
 void setMap(fuel_table_t table, float value);
 void setWholeFuelMap(float value DECLARE_ENGINE_PARAMETER_S);
 void setWholeIgnitionIatCorr(float value DECLARE_ENGINE_PARAMETER_S);
