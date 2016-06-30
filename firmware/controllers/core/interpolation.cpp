@@ -23,7 +23,7 @@ int needInterpolationLogging = true;
 
 Logging * logger;
 
-#if BINARY_PERF
+#if BINARY_PERF && ! EFI_UNIT_TEST
 
 #define COUNT 10000
 
@@ -207,10 +207,12 @@ float interpolate2d(float value, float bin[], float values[], int size) {
 	return interpolateMsg("2d", bin[index], values[index], bin[index + 1], values[index + 1], value);
 }
 
+typedef float (*getTableValue_t)(int x, int y, void *table);
+
 /**
  * @brief	Two-dimensional table lookup with linear interpolation
  */
-float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], int yBinSize, float* map[]) {
+float interpolate3d_g(float x, float xBin[], int xBinSize, float y, float yBin[], int yBinSize, void* map, getTableValue_t getTableValue) {
 	if (cisnan(x)) {
 		warning(OBD_PCM_Processor_Fault, "%f: x is NaN in interpolate3d", x);
 		return NAN;
@@ -231,7 +233,7 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 		if (needInterpolationLogging)
 			printf("X and Y are smaller than smallest cell in table: %d\r\n", xIndex);
 #endif
-		return map[0][0];
+		return getTableValue(0, 0, map);
 	}
 
 	if (xIndex < 0) {
@@ -240,11 +242,11 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 			printf("X is smaller than smallest cell in table: %dr\n", xIndex);
 #endif
 		if (yIndex == yBinSize - 1)
-			return map[0][yIndex];
+			return getTableValue(0, yIndex, map);
 		float keyMin = yBin[yIndex];
 		float keyMax = yBin[yIndex + 1];
-		float rpmMinValue = map[0][yIndex];
-		float rpmMaxValue = map[0][yIndex + 1];
+		float rpmMinValue = getTableValue(0, yIndex, map);
+		float rpmMaxValue = getTableValue(0, yIndex + 1, map);
 
 		return interpolateMsg("3d", keyMin, rpmMinValue, keyMax, rpmMaxValue, y);
 	}
@@ -255,7 +257,7 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 			printf("Y is smaller than smallest cell in table: %d\r\n", yIndex);
 #endif
 		// no interpolation should be fine here.
-		return map[xIndex][0];
+		return getTableValue(xIndex, 0, map);
 	}
 
 	if (xIndex == xBinSize - 1 && yIndex == yBinSize - 1) {
@@ -263,7 +265,7 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 		if (needInterpolationLogging)
 			printf("X and Y are larger than largest cell in table: %d %d\r\n", xIndex, yIndex);
 #endif
-		return map[xBinSize - 1][yBinSize - 1];
+		return getTableValue(xBinSize - 1, yBinSize - 1, map);
 	}
 
 	if (xIndex == xBinSize - 1) {
@@ -272,7 +274,7 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 			printf("TODO BETTER LOGGING x overflow %d\r\n", yIndex);
 #endif
 		// todo: implement better handling - y interpolation
-		return map[xBinSize - 1][yIndex];
+		return getTableValue(xBinSize - 1, yIndex, map);
 	}
 
 	if (yIndex == yBinSize - 1) {
@@ -281,7 +283,7 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 			printf("Y is larger than largest cell in table: %d\r\n", yIndex);
 #endif
 		// todo: implement better handling - x interpolation
-		return map[xIndex][yBinSize - 1];
+		return getTableValue(xIndex, yBinSize - 1, map);
 	}
 
 	/*
@@ -291,8 +293,8 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 
 	float xMin = xBin[xIndex];
 	float xMax = xBin[xIndex + 1];
-	float rpmMinKeyMinValue = map[xIndex][yIndex];
-	float rpmMaxKeyMinValue = map[xIndex + 1][yIndex];
+	float rpmMinKeyMinValue = getTableValue(xIndex, yIndex, map);
+	float rpmMaxKeyMinValue = getTableValue(xIndex + 1, yIndex, map);
 
 	float keyMinValue = interpolate(xMin, rpmMinKeyMinValue, xMax, rpmMaxKeyMinValue, x);
 
@@ -306,8 +308,8 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 	int keyMaxIndex = yIndex + 1;
 	float keyMin = yBin[yIndex];
 	float keyMax = yBin[keyMaxIndex];
-	float rpmMinKeyMaxValue = map[xIndex][keyMaxIndex];
-	float rpmMaxKeyMaxValue = map[rpmMaxIndex][keyMaxIndex];
+	float rpmMinKeyMaxValue = getTableValue(xIndex, keyMaxIndex, map);
+	float rpmMaxKeyMaxValue = getTableValue(rpmMaxIndex, keyMaxIndex, map);
 
 	float keyMaxValue = interpolateMsg("3d", xMin, rpmMinKeyMaxValue, xMax, rpmMaxKeyMaxValue, x);
 
@@ -321,6 +323,17 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 	float result = interpolateMsg("3d", keyMin, keyMinValue, keyMax, keyMaxValue, y);
 	return result;
 }
+
+float getFloatTableValue(int x, int y, void* pointer) {
+	float** map = (float**)pointer;
+	return map[x][y];
+}
+
+float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], int yBinSize, float* map[]) {
+
+	return interpolate3d_g(x, xBin, xBinSize, y, yBin, yBinSize, map, getFloatTableValue);
+}
+
 
 void setTableValue(float bins[], float values[], int size, float key, float value) {
 	int index = findIndex(bins, size, key);
