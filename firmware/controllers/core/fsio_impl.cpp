@@ -17,8 +17,8 @@
 
 #define NO_PWM 0
 
-fsio8_Map3D_t fsioTable1("fsio#1");
-fsio8_Map3D_t fsioTable2("fsio#2");
+fsio8_Map3D_f32t fsioTable1("fsio#1");
+fsio8_Map3D_f32t fsioTable2("fsio#2");
 
 
 /**
