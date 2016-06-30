@@ -90,7 +90,7 @@ float Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::getValue(float xRpm, float y) {
 		return NAN;
 	}
 	// todo: we have a bit of a mess: in TunerStudio, RPM is X-axis
-	return interpolate3d(y, loadBins, LOAD_BIN_SIZE, xRpm, rpmBins, RPM_BIN_SIZE, pointers);
+	return interpolate3d<vType>(y, loadBins, LOAD_BIN_SIZE, xRpm, rpmBins, RPM_BIN_SIZE, pointers);
 }
 
 template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
