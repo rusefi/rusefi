@@ -13,7 +13,7 @@
 #include "engine.h"
 #include "table_helper.h"
 
-typedef Map3D<FSIO_TABLE_8, FSIO_TABLE_8> fsio8_Map3D_t;
+typedef Map3D<FSIO_TABLE_8, FSIO_TABLE_8, float> fsio8_Map3D_t;
 
 /**
  * In human language that's

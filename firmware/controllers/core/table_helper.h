@@ -15,15 +15,15 @@
 /**
  * this helper class brings together 3D table with two 2D axis curves
  */
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE>
+template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
 class Map3D {
 public:
 	Map3D(const char*name);
-	void init(float table[RPM_BIN_SIZE][LOAD_BIN_SIZE], float loadBins[LOAD_BIN_SIZE], float rpmBins[RPM_BIN_SIZE]);
+	void init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE], float loadBins[LOAD_BIN_SIZE], float rpmBins[RPM_BIN_SIZE]);
 	float getValue(float xRpm, float y);
-	void setAll(float value);
+	void setAll(vType value);
 private:
-	float *pointers[LOAD_BIN_SIZE];
+	vType *pointers[LOAD_BIN_SIZE];
 	float *loadBins;
 	float *rpmBins;
 	bool initialized;
@@ -66,8 +66,8 @@ void Table2D<SIZE>::preCalc(float *bin, float *values) {
 }
 
 
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE>
-void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::init(float table[RPM_BIN_SIZE][LOAD_BIN_SIZE],
+template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
+void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE],
 		float loadBins[LOAD_BIN_SIZE],
 		float rpmBins[RPM_BIN_SIZE]) {
 	// this method cannot use logger because it's invoked before everything
@@ -82,8 +82,8 @@ void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::init(float table[RPM_BIN_SIZE][LOAD_BIN
 	this->rpmBins = rpmBins;
 }
 
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE>
-float Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::getValue(float xRpm, float y) {
+template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
+float Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::getValue(float xRpm, float y) {
 	efiAssert(initialized, "map not initialized", NAN);
 	if (cisnan(y)) {
 		warning(OBD_PCM_Processor_Fault, "%s: y is NaN", name);
@@ -93,8 +93,8 @@ float Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::getValue(float xRpm, float y) {
 	return interpolate3d(y, loadBins, LOAD_BIN_SIZE, xRpm, rpmBins, RPM_BIN_SIZE, pointers);
 }
 
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE>
-Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::Map3D(const char *name) {
+template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
+Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::Map3D(const char *name) {
 	this->name = name;
 	initialized = false;
 	memset(&pointers, 0, sizeof(pointers));
@@ -102,8 +102,8 @@ Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::Map3D(const char *name) {
 	rpmBins = NULL;
 }
 
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE>
-void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::setAll(float value) {
+template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
+void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::setAll(vType value) {
 	efiAssertVoid(initialized, "map not initialized");
 	for (int l = 0; l < LOAD_BIN_SIZE; l++) {
 		for (int r = 0; r < RPM_BIN_SIZE; r++) {
@@ -112,9 +112,9 @@ void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::setAll(float value) {
 	}
 }
 
-typedef Map3D<IGN_RPM_COUNT, IGN_LOAD_COUNT> ign_Map3D_t;
-typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT> fuel_Map3D_t;
-typedef Map3D<BARO_CORR_SIZE, BARO_CORR_SIZE> baroCorr_Map3D_t;
+typedef Map3D<IGN_RPM_COUNT, IGN_LOAD_COUNT, float> ign_Map3D_t;
+typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, float> fuel_Map3D_t;
+typedef Map3D<BARO_CORR_SIZE, BARO_CORR_SIZE, float> baroCorr_Map3D_t;
 
 void setRpmBin(float array[], int size, float idleRpm, float topRpm);
 
