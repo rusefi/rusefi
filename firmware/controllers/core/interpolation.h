@@ -12,6 +12,7 @@
 #include "datalogging.h"
 #include "efilib.h"
 #include "obd_error_codes.h"
+#include "error_handling.h"
 
 #define INTERPOLATION_A(x1, y1, x2, y2) ((y1 - y2) / (x1 - x2))
 

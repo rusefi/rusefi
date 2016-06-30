@@ -17,8 +17,10 @@
 #include "efilib2.h"
 #include "interpolation.h"
 
+bool needInterpolationLoggingValue = true;
+
 int needInterpolationLogging(void) {
-	return true;
+	return needInterpolationLoggingValue;
 }
 
 #define BINARY_PERF true

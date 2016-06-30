@@ -131,6 +131,14 @@ void setConstantDwell(floatms_t dwellMs DECLARE_ENGINE_PARAMETER_S) {
 	}
 }
 
+void setAfrMap(afr_table_t table, float value) {
+	for (int l = 0; l < FUEL_LOAD_COUNT; l++) {
+		for (int rpmIndex = 0; rpmIndex < FUEL_RPM_COUNT; rpmIndex++) {
+			table[l][rpmIndex] = value;
+		}
+	}
+}
+
 void setMap(fuel_table_t table, float value) {
 	for (int l = 0; l < FUEL_LOAD_COUNT; l++) {
 		for (int rpmIndex = 0; rpmIndex < FUEL_RPM_COUNT; rpmIndex++) {
@@ -367,7 +375,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	// set_whole_timing_map 3
 	setWholeFuelMap(3 PASS_ENGINE_PARAMETER);
-	setMap(config->afrTable, 14.7);
+	setAfrMap(config->afrTable, 14.7);
 
 	setDefaultVETable(PASS_ENGINE_PARAMETER_F);
 

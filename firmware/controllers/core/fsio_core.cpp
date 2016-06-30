@@ -20,8 +20,8 @@
 #include "fsio_core.h"
 #include "fsio_impl.h"
 
-extern fsio8_Map3D_t fsioTable1;
-extern fsio8_Map3D_t fsioTable2;
+extern fsio8_Map3D_f32t fsioTable1;
+extern fsio8_Map3D_f32t fsioTable2;
 
 LENameOrdinalPair * LE_FIRST = NULL;
 
@@ -265,9 +265,15 @@ bool LECalculator::processElement(Engine *engine, LEElement *element) {
 		if (index < 1 || index > 2) {
 			push(element->action, NAN);
 		} else {
-			fsio8_Map3D_t *t = index == 1 ? &fsioTable1 : &fsioTable2;
+			if (index == 1) {
+				fsio8_Map3D_f32t *t = &fsioTable1;
 
-			push(element->action, t->getValue(xValue, yValue));
+				push(element->action, t->getValue(xValue, yValue));
+			} else {
+				fsio8_Map3D_f32t *t = &fsioTable2;
+
+				push(element->action, t->getValue(xValue, yValue));
+			}
 		}
 	}
 		break;

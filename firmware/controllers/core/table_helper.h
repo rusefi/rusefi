@@ -112,6 +112,7 @@ void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::setAll(vType value) {
 	}
 }
 
+typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, float> afr_Map3D_t;
 typedef Map3D<IGN_RPM_COUNT, IGN_LOAD_COUNT, float> ign_Map3D_t;
 typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, float> fuel_Map3D_t;
 typedef Map3D<BARO_CORR_SIZE, BARO_CORR_SIZE, float> baroCorr_Map3D_t;
