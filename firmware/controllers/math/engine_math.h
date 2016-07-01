@@ -24,12 +24,22 @@ int isInjectionEnabled(engine_configuration_s *engineConfiguration);
 void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
 		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S);
 
+#if EFI_ENABLE_ASSERTS
+//todo#define assertAngleRange(angle) if(angle > 10000000 || angle < 10000000) { firmwareError("angle range");angle = 0;}
+#define assertAngleRange(angle) {}
+#else
+#define assertAngleRange(angle) {}
+#endif
+
+
+
 /**
  * @brief Shifts angle into the [0..720) range for four stroke and [0..360) for two stroke
  * I guess this implementation would be faster than 'angle % engineCycle'
  */
-#define fixAngle(angle)															\
+#define fixAngle(angle)														\
 	{																		\
+		assertAngleRange(angle);											\
 		float engineCycleDurationLocalCopy = ENGINE(engineCycle);	        \
 		/* todo: split this method into 'fixAngleUp' and 'fixAngleDown'*/   \
 		/*       as a performance optimization?*/                           \
