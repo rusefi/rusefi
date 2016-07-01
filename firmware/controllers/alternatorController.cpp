@@ -86,7 +86,7 @@ static msg_t AltCtrlThread(int param) {
 
 		currentAltDuty = altPid.getValue(targetVoltage, vBatt, 1);
 		if (boardConfiguration->isVerboseAlternator) {
-			scheduleMsg(logger, "alt duty: %f/vbatt=%f/p=%f/i=%f/d=%f int=%f", currentAltDuty, getVBatt(PASS_ENGINE_PARAMETER_F),
+			scheduleMsg(logger, "alt duty: %f/vbatt=%f/p=%f/i=%f/d=%f int=%f", currentAltDuty, vBatt,
 					altPid.getP(), altPid.getI(), altPid.getD(), altPid.getIntegration());
 		}
 
