@@ -27,7 +27,7 @@ void testMafFuelMath(void) {
 	engineConfiguration->algorithm = LM_REAL_MAF;
 	engineConfiguration->injector.flow = 200;
 
-	setMap(config->afrTable, 13);
+	setAfrMap(config->afrTable, 13);
 
 	float fuelMs = getRealMafFuel(300, 6000 PASS_ENGINE_PARAMETER);
 	assertEquals(26.7099, fuelMs);
