@@ -25,8 +25,7 @@ void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
 		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S);
 
 #if EFI_ENABLE_ASSERTS
-//todo#define assertAngleRange(angle) if(angle > 10000000 || angle < 10000000) { firmwareError("angle range");angle = 0;}
-#define assertAngleRange(angle) {}
+#define assertAngleRange(angle) if(angle > 10000000 || angle < -10000000) { firmwareError("angle range");angle = 0;}
 #else
 #define assertAngleRange(angle) {}
 #endif
