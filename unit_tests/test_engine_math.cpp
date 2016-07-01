@@ -20,6 +20,9 @@ void testIgnitionPlanning(void) {
 	EngineTestHelper eth(FORD_ESCORT_GT);
 	EXPAND_EngineTestHelper;
 
+	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	assertEquals(13.5, eth.engine.engineState.targetAFR);
+
 	assertEquals(IM_BATCH, engineConfiguration->injectionMode);
 }
 

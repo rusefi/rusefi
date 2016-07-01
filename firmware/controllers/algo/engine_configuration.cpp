@@ -420,6 +420,13 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->cutFuelOnHardLimit = true;
 	engineConfiguration->cutSparkOnHardLimit = true;
 
+
+	engineConfiguration->tChargeMinRpmMinTps = 0.25;
+	engineConfiguration->tChargeMinRpmMaxTps = 0.25;
+	engineConfiguration->tChargeMaxRpmMinTps = 0.25;
+	engineConfiguration->tChargeMaxRpmMaxTps = 0.9;
+
+
 	engineConfiguration->noAccelAfterHardLimitPeriodSecs = 3;
 
 	setTableBin2(engineConfiguration->crankingTpsCoef, CRANKING_CURVE_SIZE, 1, 1, 1);
