@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jun 26 20:48:53 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jun 30 21:51:57 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -785,7 +785,7 @@ typedef struct {
 	bool activateAuxPid1 : 1;
 	/**
 	offset 80 bit 2 */
-	bool issue_294_2 : 1;
+	bool isVerboseAuxPid : 1;
 	/**
 	offset 80 bit 3 */
 	bool issue_294_3 : 1;
@@ -1832,4 +1832,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jun 26 20:48:53 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jun 30 21:51:57 EDT 2016

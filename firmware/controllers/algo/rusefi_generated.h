@@ -47,8 +47,8 @@
 #define directSelfStimulation_offset_hex 50
 #define activateAuxPid1_offset 80
 #define activateAuxPid1_offset_hex 50
-#define issue_294_2_offset 80
-#define issue_294_2_offset_hex 50
+#define isVerboseAuxPid_offset 80
+#define isVerboseAuxPid_offset_hex 50
 #define issue_294_3_offset 80
 #define issue_294_3_offset_hex 50
 #define issue_294_4_offset 80
