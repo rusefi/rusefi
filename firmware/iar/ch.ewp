@@ -2221,6 +2221,12 @@
         <name>$PROJ_DIR$\..\controllers\algo\auto_generated_enums.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\controllers\algo\aux_pid.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\algo\aux_pid.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\controllers\algo\can_header.h</name>
       </file>
       <file>

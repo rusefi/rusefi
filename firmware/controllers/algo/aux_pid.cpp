@@ -72,7 +72,7 @@ void initAuxPid(Logging *sharedLogger) {
 
 	logger = sharedLogger;
 
-	if (engineConfiguration->activateAuxPid1) {
+	if (!engineConfiguration->activateAuxPid1) {
 		return;
 	}
 
