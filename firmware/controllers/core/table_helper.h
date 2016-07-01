@@ -19,6 +19,8 @@ template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
 class Map3D {
 public:
 	Map3D(const char*name);
+	Map3D(const char*name, float multiplier);
+	void create(const char*name, float multiplier);
 	void init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE], float loadBins[LOAD_BIN_SIZE], float rpmBins[RPM_BIN_SIZE]);
 	float getValue(float xRpm, float y);
 	void setAll(vType value);
@@ -28,6 +30,7 @@ private:
 	float *rpmBins;
 	bool initialized;
 	const char *name;
+	float multiplier;
 };
 
 template<int SIZE>
@@ -90,12 +93,23 @@ float Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::getValue(float xRpm, float y) {
 		return NAN;
 	}
 	// todo: we have a bit of a mess: in TunerStudio, RPM is X-axis
-	return interpolate3d<vType>(y, loadBins, LOAD_BIN_SIZE, xRpm, rpmBins, RPM_BIN_SIZE, pointers);
+	return multiplier * interpolate3d<vType>(y, loadBins, LOAD_BIN_SIZE, xRpm, rpmBins, RPM_BIN_SIZE, pointers);
 }
 
 template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
 Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::Map3D(const char *name) {
+	create(name, 1);
+}
+
+template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
+Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::Map3D(const char *name, float multiplier) {
+	create(name, multiplier);
+}
+
+template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
+void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::create(const char *name, float multiplier) {
 	this->name = name;
+	this->multiplier = multiplier;
 	initialized = false;
 	memset(&pointers, 0, sizeof(pointers));
 	loadBins = NULL;
@@ -107,7 +121,7 @@ void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::setAll(vType value) {
 	efiAssertVoid(initialized, "map not initialized");
 	for (int l = 0; l < LOAD_BIN_SIZE; l++) {
 		for (int r = 0; r < RPM_BIN_SIZE; r++) {
-			pointers[l][r] = value;
+			pointers[l][r] = value / multiplier;
 		}
 	}
 }
