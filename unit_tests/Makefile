@@ -156,7 +156,7 @@ INCDIR = . \
 #MCU  = cortex-m4
 
 ifeq ($(OS),Windows_NT)
-  TRGT = i686-pc-mingw32-
+  TRGT = i686-w64-mingw32-
 else
   TRGT = 
 endif
