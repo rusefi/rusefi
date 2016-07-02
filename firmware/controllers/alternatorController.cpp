@@ -58,11 +58,11 @@ static msg_t AltCtrlThread(int param) {
 		chThdSleepMilliseconds(dt);
 
 		// todo: migrate this to FSIO
-		bool alternatorShouldBeEnabledAtCurrentRpm = engine->rpmCalculator.rpmValue > 400;
+		bool alternatorShouldBeEnabledAtCurrentRpm = engine->rpmCalculator.rpmValue > engineConfiguration->cranking.rpm;
 		engine->isAlternatorControlEnabled = CONFIG(isAlternatorControlEnabled) && alternatorShouldBeEnabledAtCurrentRpm;
 
 		if (!engine->isAlternatorControlEnabled) {
-			// we need to avoid accumulating iTerm while engine is not spinning
+			// we need to avoid accumulating iTerm while engine is not running
 			altPid.reset();
 			continue;
 		}
