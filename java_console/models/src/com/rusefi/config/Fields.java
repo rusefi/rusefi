@@ -1,10 +1,10 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jul 01 17:21:02 EDT 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jul 02 16:24:07 EDT 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
-	public static final int TS_FILE_VERSION = 20160430;
+	public static final int TS_FILE_VERSION = 20160702;
 	public static final int WARMUP_TARGET_AFR_SIZE = 4;
 	public static final int MAP_ANGLE_SIZE = 8;
 	public static final int MAP_WINDOW_SIZE = 8;
@@ -25,6 +25,7 @@ public class Fields {
 	public static final int TRIGGER_SIMULATOR_PIN_COUNT = 3;
 	public static final int LOGIC_ANALYZER_CHANNEL_COUNT = 4;
 	public static final int LE_COMMAND_COUNT = 16;
+	public static final int AUX_PID_COUNT = 4;
 	public static final int FUEL_RPM_COUNT = 16;
 	public static final int FUEL_LOAD_COUNT = 16;
 	public static final int FSIO_TABLE_8 = 8;
@@ -848,8 +849,19 @@ public class Fields {
 	public static final int tChargeMaxRpmMinTps_offset = 2440;
 	public static final int tChargeMaxRpmMinTps_offset_hex = 988;
 	public static final int tChargeMaxRpmMaxTps_offset = 2444;
-	public static final int unused_offset = 2448;
-	public static final int unused_offset_hex = 990;
+	public static final int auxPidPins1_offset = 2448;
+	public static final int auxPidPins1_offset_hex = 990;
+	public static final int auxPidPins2_offset = 2452;
+	public static final int auxPidPins2_offset_hex = 994;
+	public static final int auxPidPins3_offset = 2456;
+	public static final int auxPidPins3_offset_hex = 998;
+	public static final int auxPidPins4_offset = 2460;
+	public static final int auxPidFrequency1_offset = 2464;
+	public static final int auxPidFrequency2_offset = 2466;
+	public static final int auxPidFrequency3_offset = 2468;
+	public static final int auxPidFrequency4_offset = 2470;
+	public static final int alternatorPwmFrequency_offset = 2472;
+	public static final int unused_offset = 2476;
 	public static final int le_formulas1_offset = 3048;
 	public static final int le_formulas2_offset = 3248;
 	public static final int le_formulas3_offset = 3448;
@@ -1448,6 +1460,15 @@ public class Fields {
 	public static final Field TCHARGEMINRPMMAXTPS = Field.create("TCHARGEMINRPMMAXTPS", 2436, FieldType.FLOAT);
 	public static final Field TCHARGEMAXRPMMINTPS = Field.create("TCHARGEMAXRPMMINTPS", 2440, FieldType.FLOAT);
 	public static final Field TCHARGEMAXRPMMAXTPS = Field.create("TCHARGEMAXRPMMAXTPS", 2444, FieldType.FLOAT);
+	public static final Field AUXPIDPINS1 = Field.create("AUXPIDPINS1", 2448, FieldType.INT, brain_pin_e);
+	public static final Field AUXPIDPINS2 = Field.create("AUXPIDPINS2", 2452, FieldType.INT, brain_pin_e);
+	public static final Field AUXPIDPINS3 = Field.create("AUXPIDPINS3", 2456, FieldType.INT, brain_pin_e);
+	public static final Field AUXPIDPINS4 = Field.create("AUXPIDPINS4", 2460, FieldType.INT, brain_pin_e);
+	public static final Field AUXPIDFREQUENCY1 = Field.create("AUXPIDFREQUENCY1", 2464, FieldType.INT);
+	public static final Field AUXPIDFREQUENCY2 = Field.create("AUXPIDFREQUENCY2", 2466, FieldType.INT);
+	public static final Field AUXPIDFREQUENCY3 = Field.create("AUXPIDFREQUENCY3", 2468, FieldType.INT);
+	public static final Field AUXPIDFREQUENCY4 = Field.create("AUXPIDFREQUENCY4", 2470, FieldType.INT);
+	public static final Field ALTERNATORPWMFREQUENCY = Field.create("ALTERNATORPWMFREQUENCY", 2472, FieldType.INT);
 	public static final Field LE_FORMULAS1 = Field.create("LE_FORMULAS1", 3048, FieldType.INT);
 	public static final Field LE_FORMULAS2 = Field.create("LE_FORMULAS2", 3248, FieldType.INT);
 	public static final Field LE_FORMULAS3 = Field.create("LE_FORMULAS3", 3448, FieldType.INT);
