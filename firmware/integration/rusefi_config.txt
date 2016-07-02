@@ -51,6 +51,7 @@ struct_no_prefix engine_configuration_s
 #define TRIGGER_SIMULATOR_PIN_COUNT 3
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
 #define LE_COMMAND_COUNT 16
+#define AUX_PID_COUNT 4
 
 #define FUEL_RPM_COUNT 16
 #define FUEL_LOAD_COUNT 16
@@ -705,7 +706,9 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float tChargeMinRpmMaxTps;
 	float tChargeMaxRpmMinTps;
 	float tChargeMaxRpmMaxTps;    
-	int[150] unused;
+	brain_pin_e[AUX_PID_COUNT iterate] auxPidPins;
+	fsio_pwm_freq_t[AUX_PID_COUNT iterate] auxPidFrequency;
+	int[144] unused;
 	
 
 end_struct

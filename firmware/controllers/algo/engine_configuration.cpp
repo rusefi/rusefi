@@ -657,6 +657,9 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
 		boardConfiguration->max31855_cs[i] = GPIO_UNASSIGNED;
 	}
+	for (int i = 0; i < AUX_PID_COUNT; i++) {
+		engineConfiguration->auxPidPins[i] = GPIO_UNASSIGNED;
+	}
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		boardConfiguration->fsioPins[i] = GPIO_UNASSIGNED;
 		config->le_formulas[i][0] = 0;
