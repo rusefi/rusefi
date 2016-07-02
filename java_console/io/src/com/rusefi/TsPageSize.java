@@ -1,5 +1,5 @@
 package com.rusefi;
 
 public interface TsPageSize {
-    int IMAGE_SIZE = 17080;
+    int IMAGE_SIZE = 16376;
 }

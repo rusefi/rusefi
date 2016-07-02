@@ -67,9 +67,10 @@ struct_no_prefix engine_configuration_s
 ! please note that 1024 here is 4 * FUEL_RPM_COUNT * FUEL_LOAD_COUNT  
 custom fuel_table_t	1024 array,   F32,   @OFFSET@, [16x16],"ms",      1,     0,      0.0,   300.0,   2
 custom ve_table_t 1024 array,   F32,   @OFFSET@, [16x16],"%", 1, 0, 0, 999.0, 2
-custom afr_table_t 1024 array,   F32,   @OFFSET@, [16x16],"deg",	   1,     0,        0,  25.0,     2 
+custom afr_table_t 256 array,   U08,   @OFFSET@, [16x16],"deg",	   0.1,     0,        0,  25.0,     1 
 
-custom fsio_table_8x8_t	256 array,   F32,   @OFFSET@, [8x8],"value",      1,     0,      0.0,   30000.0,   2
+custom fsio_table_8x8_u8t	64 array,   U08,   @OFFSET@, [8x8],"value",      1,     0,      0.0,   255.0,   0
+custom fsio_table_8x8_f32t	256 array,   F32,   @OFFSET@, [8x8],"value",      1,     0,      0.0,   30000.0,   2
 custom tps_tps_table_t	256 array,   F32,   @OFFSET@, [8x8],"value",      1,     0,      0.0,   30000.0,   2
 
 
@@ -765,12 +766,20 @@ tps_tps_table_t tpsTpsAccelTable;
 float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelFromRpmBins;;"from",	   1,      0,      0.0,  30000.0,   2
 float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelToRpmBins;RPM is float and not integer in order to use unified methods for interpolation;"to",	   1,      0,      0.0,  25500.0,   2
 
-fsio_table_8x8_t fsioTable1;
+fsio_table_8x8_f32t fsioTable1;
 float[FSIO_TABLE_8] fsioTable1LoadBins;;"L",	   1,      0,      0.0,  30000.0,   2
 float[FSIO_TABLE_8] fsioTable1RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	   1,      0,      0.0,  25500.0,   2
 
-fsio_table_8x8_t fsioTable2;
-float[FSIO_TABLE_8] fsioTable2LoadBins;;"L",	   1,      0,      0.0,  30000.0,   2
+fsio_table_8x8_u8t fsioTable2;
+float[FSIO_TABLE_8] fsioTable2LoadBins;;"L",	   1,      0,      0.0,  255,   0
 float[FSIO_TABLE_8] fsioTable2RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	   1,      0,      0.0,  25500.0,   2
+
+fsio_table_8x8_u8t fsioTable3;
+float[FSIO_TABLE_8] fsioTable3LoadBins;;"L",	   1,      0,      0.0,  255,   0
+float[FSIO_TABLE_8] fsioTable3RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	   1,      0,      0.0,  25500.0,   2
+
+fsio_table_8x8_u8t fsioTable4;
+float[FSIO_TABLE_8] fsioTable4LoadBins;;"L",	   1,      0,      0.0,  255,   0
+float[FSIO_TABLE_8] fsioTable4RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	   1,      0,      0.0,  25500.0,   2
 
 end_struct
