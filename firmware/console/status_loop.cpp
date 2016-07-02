@@ -580,7 +580,7 @@ static void lcdThread(void *arg) {
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 
 extern fuel_Map3D_t veMap;
-extern fuel_Map3D_t afrMap;
+extern afr_Map3D_t afrMap;
 
 void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_S) {
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
