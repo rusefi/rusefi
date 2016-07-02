@@ -657,6 +657,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
 		boardConfiguration->max31855_cs[i] = GPIO_UNASSIGNED;
 	}
+
+	engineConfiguration->alternatorPwmFrequency = 300;
 	for (int i = 0; i < AUX_PID_COUNT; i++) {
 		engineConfiguration->auxPidPins[i] = GPIO_UNASSIGNED;
 	}

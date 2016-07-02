@@ -1,8 +1,11 @@
 package com.rusefi;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.config.Fields;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.MessagesCentral;
+import com.rusefi.core.Sensor;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.io.ConnectionStatus;
 import com.rusefi.io.ConnectionWatchdog;
 import com.rusefi.io.LinkManager;
@@ -46,6 +49,7 @@ public class Launcher {
     // todo: the logic around 'fatalError' could be implemented nicer
     private String fatalError;
     public static EngineSnifferPanel engineSnifferPanel;
+    private static SensorCentral.SensorListener wrongVersionListener;
 
     private final JTabbedPane tabbedPane = new JTabbedPane() {
         @Override
@@ -254,6 +258,20 @@ public class Launcher {
             if (result == JOptionPane.NO_OPTION)
                 System.exit(-1);
         }
+        wrongVersionListener = new SensorCentral.SensorListener() {
+            @Override
+            public void onSensorUpdate(double value) {
+                if (value != Fields.TS_FILE_VERSION) {
+                    String message = "This copy of rusEfi console is not compatible with this version of firmware\r\n" +
+                            "Console compatible with " + Fields.TS_FILE_VERSION + " while firmware compatible with " +
+                            (int)value;
+                    JOptionPane.showMessageDialog(Launcher.getFrame(), message);
+                    assert wrongVersionListener != null;
+                    SensorCentral.getInstance().removeListener(Sensor.FIRMWARE_VERSION, wrongVersionListener);
+                }
+            }
+        };
+        SensorCentral.getInstance().addListener(Sensor.FIRMWARE_VERSION, wrongVersionListener);
         JustOneInstance.onStart();
         try {
             boolean isPortDefined = args.length > 0;

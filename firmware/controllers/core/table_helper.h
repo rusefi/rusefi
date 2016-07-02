@@ -126,6 +126,15 @@ void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::setAll(vType value) {
 	}
 }
 
+template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
+void copy2DTable(const vType source[LOAD_BIN_SIZE][RPM_BIN_SIZE], vType destination[LOAD_BIN_SIZE][RPM_BIN_SIZE]) {
+	for (int k = 0; k < LOAD_BIN_SIZE; k++) {
+		for (int rpmIndex = 0; rpmIndex < RPM_BIN_SIZE; rpmIndex++) {
+			destination[k][rpmIndex] = source[k][rpmIndex];
+		}
+	}
+}
+
 /**
  * AFR value is packed into uint8_t with a multiplier of 10
  */
