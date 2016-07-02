@@ -708,7 +708,8 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float tChargeMaxRpmMaxTps;    
 	brain_pin_e[AUX_PID_COUNT iterate] auxPidPins;
 	fsio_pwm_freq_t[AUX_PID_COUNT iterate] auxPidFrequency;
-	int[144] unused;
+	int alternatorPwmFrequency;;"Hz",        1,     0,  0,    3000.0,  0
+	int[143] unused;
 	
 
 end_struct
