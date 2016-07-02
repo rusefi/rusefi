@@ -513,7 +513,7 @@ static void configureInputs(void) {
 	addChannel("AC", engineConfiguration->acSwitchAdc, ADC_SLOW);
 
 	for (int i = 0; i < FSIO_ADC_COUNT ; i++) {
-		addChannel("fsio", engineConfiguration->fsioAdc[i], ADC_SLOW);
+		addChannel("FSIOadc", engineConfiguration->fsioAdc[i], ADC_SLOW);
 	}
 }
 
