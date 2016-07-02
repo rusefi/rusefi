@@ -76,13 +76,13 @@ void initAuxPid(Logging *sharedLogger) {
 		return;
 	}
 
-	if (boardConfiguration->fsioPins[0] == GPIO_UNASSIGNED) {
+	if (engineConfiguration->auxPidPins[0] == GPIO_UNASSIGNED) {
 		return;
 	}
 
-	startSimplePwmExt(&auxPid1, "Aux PID", boardConfiguration->fsioPins[0],
+	startSimplePwmExt(&auxPid1, "Aux PID", engineConfiguration->auxPidPins[0],
 			&auxPid1Pin,
-			boardConfiguration->fsioFrequency[0], 0.1, applyPinState);
+			engineConfiguration->auxPidFrequency[0], 0.1, applyPinState);
 }
 
 #endif

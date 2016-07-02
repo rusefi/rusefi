@@ -856,7 +856,8 @@
 #define auxPidFrequency2_offset 2466
 #define auxPidFrequency3_offset 2468
 #define auxPidFrequency4_offset 2470
-#define unused_offset 2472
+#define alternatorPwmFrequency_offset 2472
+#define unused_offset 2476
 #define le_formulas1_offset 3048
 #define le_formulas2_offset 3248
 #define le_formulas3_offset 3448
