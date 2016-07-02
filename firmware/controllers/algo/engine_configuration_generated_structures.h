@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jul 01 14:38:02 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jul 01 17:21:02 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1797,55 +1797,81 @@ typedef struct {
 	 */
 	afr_table_t afrTable;
 	/**
-	 * offset 15992
+	 * offset 15224
 	 */
 	float afrLoadBins[FUEL_LOAD_COUNT];
 	/**
-	 * offset 16056
+	 * offset 15288
 	 */
 	float afrRpmBins[FUEL_RPM_COUNT];
 	/**
-	 * offset 16120
+	 * offset 15352
 	 */
 	tps_tps_table_t tpsTpsAccelTable;
 	/**
-	 * offset 16376
+	 * offset 15608
 	 */
 	float tpsTpsAccelFromRpmBins[TPS_TPS_ACCEL_TABLE];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
-	 * offset 16408
+	 * offset 15640
 	 */
 	float tpsTpsAccelToRpmBins[TPS_TPS_ACCEL_TABLE];
 	/**
-	 * offset 16440
+	 * offset 15672
 	 */
-	fsio_table_8x8_t fsioTable1;
+	fsio_table_8x8_f32t fsioTable1;
 	/**
-	 * offset 16696
+	 * offset 15928
 	 */
 	float fsioTable1LoadBins[FSIO_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
-	 * offset 16728
+	 * offset 15960
 	 */
 	float fsioTable1RpmBins[FSIO_TABLE_8];
 	/**
-	 * offset 16760
+	 * offset 15992
 	 */
-	fsio_table_8x8_t fsioTable2;
+	fsio_table_8x8_u8t fsioTable2;
 	/**
-	 * offset 17016
+	 * offset 16056
 	 */
 	float fsioTable2LoadBins[FSIO_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
-	 * offset 17048
+	 * offset 16088
 	 */
 	float fsioTable2RpmBins[FSIO_TABLE_8];
-	/** total size 17080*/
+	/**
+	 * offset 16120
+	 */
+	fsio_table_8x8_u8t fsioTable3;
+	/**
+	 * offset 16184
+	 */
+	float fsioTable3LoadBins[FSIO_TABLE_8];
+	/**
+	 * RPM is float and not integer in order to use unified methods for interpolation
+	 * offset 16216
+	 */
+	float fsioTable3RpmBins[FSIO_TABLE_8];
+	/**
+	 * offset 16248
+	 */
+	fsio_table_8x8_u8t fsioTable4;
+	/**
+	 * offset 16312
+	 */
+	float fsioTable4LoadBins[FSIO_TABLE_8];
+	/**
+	 * RPM is float and not integer in order to use unified methods for interpolation
+	 * offset 16344
+	 */
+	float fsioTable4RpmBins[FSIO_TABLE_8];
+	/** total size 16376*/
 } persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jul 01 14:38:02 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jul 01 17:21:02 EDT 2016

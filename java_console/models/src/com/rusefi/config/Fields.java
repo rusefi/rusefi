@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jun 26 20:48:53 EDT 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jul 01 17:21:02 EDT 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -51,8 +51,8 @@ public class Fields {
 	public static final int directSelfStimulation_offset_hex = 50;
 	public static final int activateAuxPid1_offset = 80;
 	public static final int activateAuxPid1_offset_hex = 50;
-	public static final int issue_294_2_offset = 80;
-	public static final int issue_294_2_offset_hex = 50;
+	public static final int isVerboseAuxPid_offset = 80;
+	public static final int isVerboseAuxPid_offset_hex = 50;
 	public static final int issue_294_3_offset = 80;
 	public static final int issue_294_3_offset_hex = 50;
 	public static final int issue_294_4_offset = 80;
@@ -841,8 +841,15 @@ public class Fields {
 	public static final int auxPid1_offset_offset = 2424;
 	public static final int auxPid1_offset_offset_hex = 978;
 	public static final int crankingIdleAdjustment_offset = 2428;
-	public static final int unused_offset = 2432;
-	public static final int unused_offset_hex = 980;
+	public static final int tChargeMinRpmMinTps_offset = 2432;
+	public static final int tChargeMinRpmMinTps_offset_hex = 980;
+	public static final int tChargeMinRpmMaxTps_offset = 2436;
+	public static final int tChargeMinRpmMaxTps_offset_hex = 984;
+	public static final int tChargeMaxRpmMinTps_offset = 2440;
+	public static final int tChargeMaxRpmMinTps_offset_hex = 988;
+	public static final int tChargeMaxRpmMaxTps_offset = 2444;
+	public static final int unused_offset = 2448;
+	public static final int unused_offset_hex = 990;
 	public static final int le_formulas1_offset = 3048;
 	public static final int le_formulas2_offset = 3248;
 	public static final int le_formulas3_offset = 3448;
@@ -902,32 +909,31 @@ public class Fields {
 	public static final int veLoadBins_offset = 14840;
 	public static final int veRpmBins_offset = 14904;
 	public static final int afrTable_offset = 14968;
-	public static final int afrLoadBins_offset = 15992;
-	public static final int afrRpmBins_offset = 16056;
-	public static final int tpsTpsAccelTable_offset = 16120;
-	public static final int tpsTpsAccelFromRpmBins_offset = 16376;
-	public static final int tpsTpsAccelToRpmBins_offset = 16408;
-	public static final int tpsTpsAccelToRpmBins_offset_hex = 4018;
-	public static final int fsioTable1_offset = 16440;
-	public static final int fsioTable1_offset_hex = 4038;
-	public static final int fsioTable1LoadBins_offset = 16696;
-	public static final int fsioTable1LoadBins_offset_hex = 4138;
-	public static final int fsioTable1RpmBins_offset = 16728;
-	public static final int fsioTable1RpmBins_offset_hex = 4158;
-	public static final int fsioTable2_offset = 16760;
-	public static final int fsioTable2_offset_hex = 4178;
-	public static final int fsioTable2LoadBins_offset = 17016;
-	public static final int fsioTable2LoadBins_offset_hex = 4278;
-	public static final int fsioTable2RpmBins_offset = 17048;
-	public static final int fsioTable2RpmBins_offset_hex = 4298;
-	public static final int TOTAL_CONFIG_SIZE = 17080;
+	public static final int afrLoadBins_offset = 15224;
+	public static final int afrRpmBins_offset = 15288;
+	public static final int tpsTpsAccelTable_offset = 15352;
+	public static final int tpsTpsAccelFromRpmBins_offset = 15608;
+	public static final int tpsTpsAccelToRpmBins_offset = 15640;
+	public static final int fsioTable1_offset = 15672;
+	public static final int fsioTable1LoadBins_offset = 15928;
+	public static final int fsioTable1RpmBins_offset = 15960;
+	public static final int fsioTable2_offset = 15992;
+	public static final int fsioTable2LoadBins_offset = 16056;
+	public static final int fsioTable2RpmBins_offset = 16088;
+	public static final int fsioTable3_offset = 16120;
+	public static final int fsioTable3LoadBins_offset = 16184;
+	public static final int fsioTable3RpmBins_offset = 16216;
+	public static final int fsioTable4_offset = 16248;
+	public static final int fsioTable4LoadBins_offset = 16312;
+	public static final int fsioTable4RpmBins_offset = 16344;
+	public static final int TOTAL_CONFIG_SIZE = 16376;
 	public static final Field ENGINETYPE = Field.create("ENGINETYPE", 0, FieldType.INT);
 	public static final Field ENGINESNIFFERRPMTHRESHOLD = Field.create("ENGINESNIFFERRPMTHRESHOLD", 4, FieldType.INT);
 	public static final Field INJECTOR_FLOW = Field.create("INJECTOR_FLOW", 8, FieldType.FLOAT);
 	public static final Field INJECTOR_LAG = Field.create("INJECTOR_LAG", 12, FieldType.FLOAT);
 	public static final Field DIRECTSELFSTIMULATION = Field.create("DIRECTSELFSTIMULATION", 80, FieldType.BIT, 0);
 	public static final Field ACTIVATEAUXPID1 = Field.create("ACTIVATEAUXPID1", 80, FieldType.BIT, 1);
-	public static final Field ISSUE_294_2 = Field.create("ISSUE_294_2", 80, FieldType.BIT, 2);
+	public static final Field ISVERBOSEAUXPID = Field.create("ISVERBOSEAUXPID", 80, FieldType.BIT, 2);
 	public static final Field ISSUE_294_3 = Field.create("ISSUE_294_3", 80, FieldType.BIT, 3);
 	public static final Field ISSUE_294_4 = Field.create("ISSUE_294_4", 80, FieldType.BIT, 4);
 	public static final Field ISSUE_294_5 = Field.create("ISSUE_294_5", 80, FieldType.BIT, 5);
@@ -1438,6 +1444,10 @@ public class Fields {
 	public static final Field AUXPID1_DFACTOR = Field.create("AUXPID1_DFACTOR", 2420, FieldType.FLOAT);
 	public static final Field AUXPID1_OFFSET = Field.create("AUXPID1_OFFSET", 2424, FieldType.FLOAT);
 	public static final Field CRANKINGIDLEADJUSTMENT = Field.create("CRANKINGIDLEADJUSTMENT", 2428, FieldType.FLOAT);
+	public static final Field TCHARGEMINRPMMINTPS = Field.create("TCHARGEMINRPMMINTPS", 2432, FieldType.FLOAT);
+	public static final Field TCHARGEMINRPMMAXTPS = Field.create("TCHARGEMINRPMMAXTPS", 2436, FieldType.FLOAT);
+	public static final Field TCHARGEMAXRPMMINTPS = Field.create("TCHARGEMAXRPMMINTPS", 2440, FieldType.FLOAT);
+	public static final Field TCHARGEMAXRPMMAXTPS = Field.create("TCHARGEMAXRPMMAXTPS", 2444, FieldType.FLOAT);
 	public static final Field LE_FORMULAS1 = Field.create("LE_FORMULAS1", 3048, FieldType.INT);
 	public static final Field LE_FORMULAS2 = Field.create("LE_FORMULAS2", 3248, FieldType.INT);
 	public static final Field LE_FORMULAS3 = Field.create("LE_FORMULAS3", 3448, FieldType.INT);
@@ -1462,7 +1472,9 @@ public class Fields {
 	public static final Field IGNITIONTABLE = Field.create("IGNITIONTABLE", 12664, FieldType.INT);
 	public static final Field VETABLE = Field.create("VETABLE", 13816, FieldType.INT);
 	public static final Field AFRTABLE = Field.create("AFRTABLE", 14968, FieldType.INT);
-	public static final Field TPSTPSACCELTABLE = Field.create("TPSTPSACCELTABLE", 16120, FieldType.INT);
-	public static final Field FSIOTABLE1 = Field.create("FSIOTABLE1", 16440, FieldType.INT);
-	public static final Field FSIOTABLE2 = Field.create("FSIOTABLE2", 16760, FieldType.INT);
+	public static final Field TPSTPSACCELTABLE = Field.create("TPSTPSACCELTABLE", 15352, FieldType.INT);
+	public static final Field FSIOTABLE1 = Field.create("FSIOTABLE1", 15672, FieldType.INT);
+	public static final Field FSIOTABLE2 = Field.create("FSIOTABLE2", 15992, FieldType.INT);
+	public static final Field FSIOTABLE3 = Field.create("FSIOTABLE3", 16120, FieldType.INT);
+	public static final Field FSIOTABLE4 = Field.create("FSIOTABLE4", 16248, FieldType.INT);
 }

@@ -24,7 +24,7 @@
 
 fuel_Map3D_t veMap("VE");
 fuel_Map3D_t ve2Map("VE2");
-afr_Map3D_t afrMap("AFR");
+afr_Map3D_t afrMap("AFR", 1.0 / AFR_STORAGE_MULT);
 baroCorr_Map3D_t baroCorrMap("baro");
 
 #define tpMin 0

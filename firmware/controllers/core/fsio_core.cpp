@@ -21,7 +21,7 @@
 #include "fsio_impl.h"
 
 extern fsio8_Map3D_f32t fsioTable1;
-extern fsio8_Map3D_f32t fsioTable2;
+extern fsio8_Map3D_u8t fsioTable2;
 
 LENameOrdinalPair * LE_FIRST = NULL;
 
@@ -270,7 +270,7 @@ bool LECalculator::processElement(Engine *engine, LEElement *element) {
 
 				push(element->action, t->getValue(xValue, yValue));
 			} else {
-				fsio8_Map3D_f32t *t = &fsioTable2;
+				fsio8_Map3D_u8t *t = &fsioTable2;
 
 				push(element->action, t->getValue(xValue, yValue));
 			}

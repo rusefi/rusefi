@@ -81,8 +81,8 @@
         <table type="3D" name="Target AFR"
         category="Fuel"
         storageaddress="@@afrTable_offset_hex@@" sizex="@@FUEL_LOAD_COUNT@@"
-               sizey="@@FUEL_RPM_COUNT@@" storagetype="float" endian="big">
-            <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
+               sizey="@@FUEL_RPM_COUNT@@" storagetype="uint8" endian="big">
+            <scaling units="Engine Load" expression="x/10" to_byte="x*10" format="0.00" fineincrement=".1"
                      coarseincrement="1"/>
             <table type="X Axis" storageaddress="@@afrLoadBins_offset_hex@@" storagetype="float" endian="big">
                 <scaling units="degree" expression="x" to_byte="x" format="0.00" fineincrement=".1"

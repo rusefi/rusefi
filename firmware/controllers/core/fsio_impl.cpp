@@ -18,7 +18,9 @@
 #define NO_PWM 0
 
 fsio8_Map3D_f32t fsioTable1("fsio#1");
-fsio8_Map3D_f32t fsioTable2("fsio#2");
+fsio8_Map3D_u8t fsioTable2("fsio#2");
+fsio8_Map3D_u8t fsioTable3("fsio#3");
+fsio8_Map3D_u8t fsioTable4("fsio#4");
 
 
 /**
@@ -485,6 +487,10 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 			config->fsioTable1RpmBins);
 	fsioTable2.init(config->fsioTable2, config->fsioTable2LoadBins,
 			config->fsioTable2RpmBins);
+	fsioTable3.init(config->fsioTable3, config->fsioTable3LoadBins,
+			config->fsioTable3RpmBins);
+	fsioTable4.init(config->fsioTable4, config->fsioTable4LoadBins,
+			config->fsioTable4RpmBins);
 
 }
 

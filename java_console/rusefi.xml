@@ -7,7 +7,7 @@
             <ecuid>RUSEFI</ecuid>
             <make>rusEfi</make>
             <model>rusEfi</model>
-            <filesize>17080</filesize>
+            <filesize>16376</filesize>
         </romid>
 
         <table type="3D" name="Ignition Advance"
@@ -81,14 +81,14 @@
         <table type="3D" name="Target AFR"
         category="Fuel"
         storageaddress="3a78" sizex="16"
-               sizey="16" storagetype="float" endian="big">
-            <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
+               sizey="16" storagetype="uint8" endian="big">
+            <scaling units="Engine Load" expression="x/10" to_byte="x*10" format="0.00" fineincrement=".1"
                      coarseincrement="1"/>
-            <table type="X Axis" storageaddress="3e78" storagetype="float" endian="big">
+            <table type="X Axis" storageaddress="3b78" storagetype="float" endian="big">
                 <scaling units="degree" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
             </table>
-            <table type="Y Axis" storageaddress="3eb8" storagetype="float" endian="big">
+            <table type="Y Axis" storageaddress="3bb8" storagetype="float" endian="big">
                 <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>

@@ -134,7 +134,7 @@ void setConstantDwell(floatms_t dwellMs DECLARE_ENGINE_PARAMETER_S) {
 void setAfrMap(afr_table_t table, float value) {
 	for (int l = 0; l < FUEL_LOAD_COUNT; l++) {
 		for (int rpmIndex = 0; rpmIndex < FUEL_RPM_COUNT; rpmIndex++) {
-			table[l][rpmIndex] = value;
+			table[l][rpmIndex] = (int)(value * AFR_STORAGE_MULT);
 		}
 	}
 }
@@ -394,6 +394,10 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setRpmTableBin(config->fsioTable1RpmBins, FSIO_TABLE_8);
 	setTableBin2(config->fsioTable2LoadBins, FSIO_TABLE_8, 20, 120, 10);
 	setRpmTableBin(config->fsioTable2RpmBins, FSIO_TABLE_8);
+	setTableBin2(config->fsioTable3LoadBins, FSIO_TABLE_8, 20, 120, 10);
+	setRpmTableBin(config->fsioTable3RpmBins, FSIO_TABLE_8);
+	setTableBin2(config->fsioTable4LoadBins, FSIO_TABLE_8, 20, 120, 10);
+	setRpmTableBin(config->fsioTable4RpmBins, FSIO_TABLE_8);
 
 	initEngineNoiseTable(PASS_ENGINE_PARAMETER_F);
 
