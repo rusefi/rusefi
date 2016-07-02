@@ -31,7 +31,7 @@ static LoggingWithStorage logger("engine");
 
 extern engine_pins_s enginePins;
 extern fuel_Map3D_t veMap;
-extern fuel_Map3D_t afrMap;
+extern afr_Map3D_t afrMap;
 
 EXTERN_ENGINE
 ;
