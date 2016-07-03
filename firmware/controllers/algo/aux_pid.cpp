@@ -14,9 +14,13 @@
 #if EFI_AUX_PID || defined(__DOXYGEN__)
 #include "pwm_generator.h"
 #include "tunerstudio_configuration.h"
+#include "fsio_impl.h"
+#include "engine_math.h"
 
 EXTERN_ENGINE
 ;
+
+extern fsio8_Map3D_f32t fsioTable1;
 
 // todo: this is to some extent a copy-paste of alternatorController. maybe same loop
 // for all PIDs?
@@ -42,8 +46,20 @@ static msg_t auxPidThread(int param) {
 			if (parametersVersion.isOld())
 				auxPid.reset();
 
+			float rpm = engine->rpmCalculator.rpmValue;
+
+			// todo: make this configurable?
+			bool enabledAtCurrentRpm = rpm > engineConfiguration->cranking.rpm;
+
+			if (!enabledAtCurrentRpm) {
+				// we need to avoid accumulating iTerm while engine is not running
+				auxPid.reset();
+				continue;
+			}
+
+
 			float value = getVBatt(PASS_ENGINE_PARAMETER_F); // that's temporary
-			float targetValue = engineConfiguration->targetVBatt; // that's temporary
+			float targetValue = fsioTable1.getValue(rpm, getEngineLoadT(PASS_ENGINE_PARAMETER_F));
 
 			float pwm = auxPid.getValue(targetValue, value, 1);
 			if (engineConfiguration->isVerboseAuxPid) {
@@ -55,6 +71,7 @@ static msg_t auxPidThread(int param) {
 			if (engineConfiguration->debugMode == AUX_PID_1) {
 				tsOutputChannels.debugFloatField1 = pwm;
 				auxPid.postState(&tsOutputChannels);
+				tsOutputChannels.debugIntField3 = 10 * targetValue;
 			}
 
 			auxPid1.setSimplePwmDutyCycle(pwm / 100);
