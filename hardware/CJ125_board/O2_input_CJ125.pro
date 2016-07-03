@@ -1,4 +1,4 @@
-update=2/4/2016 5:26:24 AM
+update=7/2/2016 9:37:38 PM
 version=1
 last_client=kicad
 [cvpcb]
@@ -86,7 +86,7 @@ PageLayoutDescrFile=C:/Users/Vista_64_D630/Desktop/Jared/code/Hardware/trunk/rus
 PlotDirectoryName=
 SubpartIdSeparator=0
 SubpartFirstId=65
-NetFmtName=
+NetFmtName=Pcbnew
 SpiceForceRefPrefix=0
 SpiceUseNetNumbers=0
 LabSize=60
