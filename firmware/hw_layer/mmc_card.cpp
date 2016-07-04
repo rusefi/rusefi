@@ -47,7 +47,7 @@ static SPIConfig ls_spicfg = { NULL, NULL, 0,
 SPI_BaudRatePrescaler_256 };
 
 /* MMC/SD over SPI driver configuration.*/
-// don't forget check if STM32_SPI_USE_SPI2 defined and spi has init with correct GPIO in hardware.c
+// don't forget check if STM32_SPI_USE_SPI2 defined and spi has init with correct GPIO in hardware.cpp
 static MMCConfig mmccfg = { &MMC_CARD_SPI, &ls_spicfg, &hs_spicfg };
 
 static bool fs_ready = false;
