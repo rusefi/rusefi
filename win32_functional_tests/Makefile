@@ -216,8 +216,11 @@ $(PORTINC) $(KERNINC) $(TESTINC) \
 
 #MCU  = cortex-m4
 
+
 ifeq ($(OS),Windows_NT)
-  TRGT = i686-pc-mingw32-
+  #Cygwin64 is used with mingw64 32-bit version
+
+  TRGT = i686-w64-mingw32-
 else
   TRGT = 
 endif
