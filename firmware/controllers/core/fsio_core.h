@@ -12,6 +12,8 @@
 #include "fl_stack.h"
 #include "engine.h"
 
+#define MAX_TABLE_INDEX 4
+
 typedef enum {
 
 	LE_UNDEFINED = 0 ,
