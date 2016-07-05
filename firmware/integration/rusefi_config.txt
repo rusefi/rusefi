@@ -99,6 +99,8 @@ end_struct
 #define debug_mode_e_enum "Alternator", "TPS accel enrich", "Warmup PID", "IDLE", "EL accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "mode8", "mode9", "mode10", "mode11", "mode12", "mode13", "mode14", "mode15"
 custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:3], @@debug_mode_e_enum@@
 
+#define mass_storage_e_enum "Auto", "Always", "Never"
+custom mass_storage_e 4 bits, U32, @OFFSET@, [0:1], @@mass_storage_e_enum@@
 
 #define brain_input_pin_e_enum "INVALID", "INVALID", "PA2", "PA3", "INVALID", "PA5", "INVALID", "INVALID", "PA8", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID",  "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PC6", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PE5", "INVALID", "PE7", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID",    "NONE",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID"
 custom brain_input_pin_e 4 bits,    U32,   @OFFSET@, [0:6], @@brain_input_pin_e_enum@@
@@ -709,7 +711,8 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	brain_pin_e[AUX_PID_COUNT iterate] auxPidPins;
 	fsio_pwm_freq_t[AUX_PID_COUNT iterate] auxPidFrequency;
 	int alternatorPwmFrequency;;"Hz",        1,     0,  0,    3000.0,  0
-	int[143] unused;
+	mass_storage_e storageMode;
+	int[142] unused;
 	
 
 end_struct

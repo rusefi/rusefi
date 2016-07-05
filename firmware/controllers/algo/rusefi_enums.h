@@ -431,6 +431,13 @@ typedef enum {
 } adc_channel_e;
 
 typedef enum {
+	MS_AUTO = 0,
+	MS_ALWAYS = 1,
+	MS_NEVER = 2,
+	Force_4b_mass_storage = ENUM_32_BITS,
+} mass_storage_e;
+
+typedef enum {
 	ES_BPSX_D1 = 0,
 	/**
 	 * same as innovate LC2
