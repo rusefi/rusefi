@@ -24,6 +24,11 @@
 #include "hardware.h"
 #include "engine_configuration.h"
 #include "status_loop.h"
+#include "usb_msd.h"
+#include "usb_msd_cfg.h"
+
+
+EXTERN_ENGINE;
 
 #define LOG_INDEX_FILENAME "index.txt"
 #define RUSEFI_LOG_PREFIX "rus"
@@ -31,6 +36,12 @@
 #define FILE_LIST_MAX_COUNT 20
 
 extern board_configuration_s *boardConfiguration;
+
+static USBDriver *ms_usb_driver = &USBD1;
+static USBMassStorageDriver UMSD1;
+extern const USBConfig msd_usb_config;
+
+
 
 #define PUSHPULLDELAY 500
 
@@ -278,6 +289,26 @@ static void MMCmount(void) {
 		return;
 
 	}
+
+	if (engineConfiguration->storageMode == MS_ALWAYS) {
+		  BaseBlockDevice *bbdp = (BaseBlockDevice*)&MMCD1;
+//		  const usb_msd_driver_state_t msd_driver_state = msdInit(ms_usb_driver, bbdp, &UMSD1, USB_MS_DATA_EP, USB_MSD_INTERFACE_NUMBER);
+//		  UMSD1.chp = NULL;
+//
+//		  /*Disconnect the USB Bus*/
+//		  usbDisconnectBus(ms_usb_driver);
+//		  chThdSleepMilliseconds(200);
+//
+//		  /*Start the useful functions*/
+//		  msdStart(&UMSD1);
+//		  usbStart(ms_usb_driver, &msd_usb_config);
+//
+//		  /*Connect the USB Bus*/
+//		  usbConnectBus(ms_usb_driver);
+
+	}
+
+
 	unlockSpi();
 	// if Ok - mount FS now
 	memset(&MMC_FS, 0, sizeof(FATFS));
@@ -325,9 +356,9 @@ void initMmcCard(void) {
 	 * FYI: SPI does not work with CCM memory, be sure to have main() stack in RAM, not in CCMRAM
 	 */
 
-	// start to initialize MMC/SD
-	mmcObjectInit(&MMCD1);
-	mmcStart(&MMCD1, &mmccfg);
+//	// start to initialize MMC/SD
+//	mmcObjectInit(&MMCD1);
+//	mmcStart(&MMCD1, &mmccfg);
 
 	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), LOWPRIO, (tfunc_t) MMCmonThread, NULL);
 

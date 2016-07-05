@@ -508,6 +508,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	// performance optimization
 	boardConfiguration->sensorChartMode = SC_OFF;
 
+	engineConfiguration->storageMode = MS_AUTO;
+
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 	engineConfiguration->baroSensor.hwChannel = EFI_ADC_NONE;
 
