@@ -207,6 +207,7 @@ INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
 	hw_layer/serial_over_usb \
 	hw_layer/algo \
 	hw_layer/lcd \
+	hw_layer/mass_storage \
 	hw_layer/stm32f4 \
 	development \
 	development/hw_layer \

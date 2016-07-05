@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jul 04 23:04:33 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jul 05 10:25:36 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1218,6 +1218,7 @@ typedef struct {
 	offset 1500 bit 1 */
 	bool isIgnitionEnabled : 1;
 	/**
+	 * If TPS above 95% no fuel would be injected during cranking
 	offset 1500 bit 2 */
 	bool isCylinderCleanupEnabled : 1;
 	/**
@@ -1890,4 +1891,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jul 04 23:04:33 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jul 05 10:25:36 EDT 2016

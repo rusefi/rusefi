@@ -23,6 +23,8 @@ void setVwAba(DECLARE_ENGINE_PARAMETER_F) {
 	// set_cranking_timing_angle 10
 	engineConfiguration->crankingTimingAngle = 10;
 
+	engineConfiguration->isCylinderCleanupEnabled = true;
+
 	// set_whole_fuel_map 12
 	setWholeFuelMap(12 PASS_ENGINE_PARAMETER);
 
