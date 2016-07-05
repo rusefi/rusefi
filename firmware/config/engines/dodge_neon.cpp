@@ -501,6 +501,8 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->slowAdcAlpha = 0.33333;
 
+	engineConfiguration->isCylinderCleanupEnabled = true;
+
 	// end of setDodgeNeonNGCEngineConfiguration
 }
 
