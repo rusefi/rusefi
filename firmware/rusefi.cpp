@@ -173,7 +173,7 @@ void runRusEfi(void) {
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	/**
 	 * This is so early because we want to init logger
-	 * which would be used while finding trigger synch index
+	 * which would be used while finding trigger sync index
 	 * while reading configuration
 	 */
 	initTriggerDecoderLogger(&sharedLogger);
