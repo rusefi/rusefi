@@ -32,7 +32,7 @@ public:
 	efitick_t nowNt;
 	volatile efitime_t previousShaftEventTimeNt;
 private:
-	IntListenerArray triggerListeneres;
+	IntListenerArray<15> triggerListeneres;
 	int hwEventCounters[HW_EVENT_TYPES];
 };
 #endif

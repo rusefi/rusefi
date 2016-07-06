@@ -103,14 +103,17 @@ extern short currentPageId;
  */
 LoggingWithStorage tsLogger("binary");
 
-extern persistent_config_s configWorkingCopy;
+/**
+ * this is a local copy of the configuration. Any changes to this copy
+ * have no effect until this copy is explicitly propagated to the main working copy
+ */
+persistent_config_s configWorkingCopy;
+
 extern persistent_config_container_s persistentState;
 
 static efitimems_t previousWriteReportMs = 0;
 
 ts_channel_s tsChannel;
-
-extern uint8_t crcWriteBuffer[300];
 
 static int ts_serial_ready(bool isConsoleRedirect) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -557,11 +560,6 @@ void syncTunerStudioCopy(void) {
 
 tunerstudio_counters_s tsState;
 TunerStudioOutputChannels tsOutputChannels;
-/**
- * this is a local copy of the configuration. Any changes to this copy
- * have no effect until this copy is explicitly propagated to the main working copy
- */
-persistent_config_s configWorkingCopy;
 
 short currentPageId;
 

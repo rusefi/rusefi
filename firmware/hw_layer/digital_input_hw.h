@@ -19,10 +19,8 @@ typedef struct {
 	bool isActiveHigh; // false for ICU_INPUT_ACTIVE_LOW, true for ICU_INPUT_ACTIVE_HIGH
 	volatile bool started;
 
-	// todo: make this a template & reduce number of listeners?
-	// todo: would one listener be enough?
-	IntListenerArray widthListeners;
-	IntListenerArray periodListeners;
+	IntListenerArray<1> widthListeners;
+	IntListenerArray<1> periodListeners;
 } digital_input_s;
 
 void turnOnCapturePin(const char *msg, brain_pin_e brainPin);

@@ -8,9 +8,9 @@
 #ifndef LISTENER_ARRAY_H_
 #define LISTENER_ARRAY_H_
 
+#include <stddef.h>
 #include "rusefi_types.h"
-
-#define MAX_INT_LISTENER_COUNT 15
+#include "error_handling.h"
 
 // todo: reorder parameters for consistency?
 typedef void (*IntIntVoidListener)(int value1, int value2, void *arg);
@@ -20,6 +20,7 @@ typedef void (*ArgListener)(void *arg);
 typedef void (*ArgIntListener)(void *arg, int value);
 
 // todo: rename this class, that's not just 'callback(int param) anymore
+template<int MAX_INT_LISTENER_COUNT>
 class IntListenerArray {
 public:
 	IntListenerArray();
@@ -31,11 +32,88 @@ public:
 	void * args[MAX_INT_LISTENER_COUNT];
 };
 
-void invokeCallbacks(IntListenerArray *array, int value);
-void invokeJustArgCallbacks(IntListenerArray *array);
-void invokeArgIntCallbacks(IntListenerArray *array, int value);
-void invokeIntIntCallbacks(IntListenerArray *array, int value, int value2);
-void invokeIntIntVoidCallbacks(IntListenerArray *array, int value, int value2);
-void clearCallbacks(IntListenerArray *array);
+//template<int MAX_INT_LISTENER_COUNT>
+//void invokeCallbacks(IntListenerArray *array, int value);
+//
+//template<int MAX_INT_LISTENER_COUNT>
+//void invokeJustArgCallbacks(IntListenerArray *array);
+//
+//template<int MAX_INT_LISTENER_COUNT>
+//void invokeArgIntCallbacks(IntListenerArray *array, int value);
+//
+//template<int MAX_INT_LISTENER_COUNT>
+//void invokeIntIntCallbacks(IntListenerArray *array, int value, int value2);
+//
+//template<int MAX_INT_LISTENER_COUNT>
+//void invokeIntIntVoidCallbacks(IntListenerArray *array, int value, int value2);
+
+//template<int MAX_INT_LISTENER_COUNT>
+//void clearCallbacks(IntListenerArray *array);
+
+template<int MAX_INT_LISTENER_COUNT>
+IntListenerArray<MAX_INT_LISTENER_COUNT>::IntListenerArray() {
+	currentListenersCount = 0;
+	memset(&args, 0, sizeof(args));
+	memset(&callbacks, 0, sizeof(callbacks));
+}
+
+template<int MAX_INT_LISTENER_COUNT>
+void IntListenerArray<MAX_INT_LISTENER_COUNT>::registerCallback(VoidInt handler, void *arg) {
+	efiAssertVoid(currentListenersCount < MAX_INT_LISTENER_COUNT, "Too many callbacks");
+	int index = currentListenersCount++;
+	callbacks[index] = handler;
+	args[index] = arg;
+}
+
+template<int MAX_INT_LISTENER_COUNT>
+void IntListenerArray<MAX_INT_LISTENER_COUNT>::registerCallback(Void listener) {
+	registerCallback((VoidInt)listener, NULL);
+}
+
+template<int MAX_INT_LISTENER_COUNT>
+void invokeCallbacks(IntListenerArray<MAX_INT_LISTENER_COUNT> *array, int value) {
+	for (int i = 0; i < array->currentListenersCount; i++)
+		(array->callbacks[i])(value);
+}
+
+template<int MAX_INT_LISTENER_COUNT>
+void IntListenerArray<MAX_INT_LISTENER_COUNT>::invokeJustArgCallbacks() {
+	for (int i = 0; i < currentListenersCount; i++) {
+		VoidPtr listener = (VoidPtr)callbacks[i];
+		void *arg = args[i];
+		(listener)(arg);
+	}
+}
+
+template<int MAX_INT_LISTENER_COUNT>
+void invokeArgIntCallbacks(IntListenerArray<MAX_INT_LISTENER_COUNT> *array, int value) {
+	for (int i = 0; i < array->currentListenersCount; i++) {
+		ArgIntListener listener = (ArgIntListener)array->callbacks[i];
+		void *arg = array->args[i];
+		(listener)(arg, value);
+	}
+}
+
+template<int MAX_INT_LISTENER_COUNT>
+void invokeIntIntCallbacks(IntListenerArray<MAX_INT_LISTENER_COUNT> *array, int value, int value2) {
+	for (int i = 0; i < array->currentListenersCount; i++) {
+		VoidIntInt listener = (VoidIntInt)array->callbacks[i];
+		(listener)(value, value2);
+	}
+}
+
+template<int MAX_INT_LISTENER_COUNT>
+void invokeIntIntVoidCallbacks(IntListenerArray<MAX_INT_LISTENER_COUNT> *array, int value, int value2) {
+	for (int i = 0; i < array->currentListenersCount; i++) {
+		IntIntVoidListener listener = (IntIntVoidListener)array->callbacks[i];
+		(listener)(value, value2, array->args[i]);
+	}
+}
+
+template<int MAX_INT_LISTENER_COUNT>
+void clearCallbacks(IntListenerArray<MAX_INT_LISTENER_COUNT> *array) {
+	array->currentListenersCount = 0;
+}
+
 
 #endif /* LISTENER_ARRAY_H_ */
