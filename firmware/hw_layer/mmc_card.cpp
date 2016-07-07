@@ -278,7 +278,6 @@ static void MMCmount(void) {
 		return;
 	}
 	// start to initialize MMC/SD
-	mmcObjectInit(&MMCD1);						// Initializes an instance.
 	mmcStart(&MMCD1, &mmccfg);					// Configures and activates the MMC peripheral.
 
 	// Performs the initialization procedure on the inserted card.
@@ -356,8 +355,8 @@ void initMmcCard(void) {
 	 * FYI: SPI does not work with CCM memory, be sure to have main() stack in RAM, not in CCMRAM
 	 */
 
-//	// start to initialize MMC/SD
-	mmcObjectInit(&MMCD1);
+	// start to initialize MMC/SD
+	mmcObjectInit(&MMCD1); 						// Initializes an instance.
 	mmcStart(&MMCD1, &mmccfg);
 
 	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), LOWPRIO, (tfunc_t) MMCmonThread, NULL);
