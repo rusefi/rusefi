@@ -37,9 +37,9 @@ EXTERN_ENGINE;
 
 extern board_configuration_s *boardConfiguration;
 
-static USBDriver *ms_usb_driver = &USBD1;
-static USBMassStorageDriver UMSD1;
-extern const USBConfig msd_usb_config;
+//static USBDriver *ms_usb_driver = &USBD1;
+//static USBMassStorageDriver UMSD1;
+//extern const USBConfig msd_usb_config;
 
 
 
@@ -291,7 +291,7 @@ static void MMCmount(void) {
 	}
 
 	if (engineConfiguration->storageMode == MS_ALWAYS) {
-		  BaseBlockDevice *bbdp = (BaseBlockDevice*)&MMCD1;
+//		  BaseBlockDevice *bbdp = (BaseBlockDevice*)&MMCD1;
 //		  const usb_msd_driver_state_t msd_driver_state = msdInit(ms_usb_driver, bbdp, &UMSD1, USB_MS_DATA_EP, USB_MSD_INTERFACE_NUMBER);
 //		  UMSD1.chp = NULL;
 //
@@ -357,8 +357,8 @@ void initMmcCard(void) {
 	 */
 
 //	// start to initialize MMC/SD
-//	mmcObjectInit(&MMCD1);
-//	mmcStart(&MMCD1, &mmccfg);
+	mmcObjectInit(&MMCD1);
+	mmcStart(&MMCD1, &mmccfg);
 
 	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), LOWPRIO, (tfunc_t) MMCmonThread, NULL);
 
