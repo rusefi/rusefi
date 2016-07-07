@@ -27,7 +27,7 @@ floatms_t getRealMafFuel(float airMass, int rpm DECLARE_ENGINE_PARAMETER_S);
 floatms_t getBaseTableFuel(engine_configuration_s *engineConfiguration, int rpm, float engineLoad);
 float getBaroCorrection(DECLARE_ENGINE_PARAMETER_F);
 
-float getinjectionOffset(int rpm DECLARE_ENGINE_PARAMETER_S);
+float getinjectionOffset(float rpm DECLARE_ENGINE_PARAMETER_S);
 float getIatCorrection(float iat DECLARE_ENGINE_PARAMETER_S);
 floatms_t getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_S);
 float getCltCorrection(float clt DECLARE_ENGINE_PARAMETER_S);
