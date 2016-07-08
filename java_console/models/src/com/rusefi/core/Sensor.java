@@ -68,10 +68,6 @@ public enum Sensor {
     PERIOD0("Period", SensorCategory.SNIFFING, "dg", 0, 400),
     DUTY0("Duty0", SensorCategory.SNIFFING, "%", 0, 100, BackgroundColor.RED),
     DUTY1("Duty1", SensorCategory.SNIFFING, "%", 0, 100, BackgroundColor.RED),
-    FUEL("Fuel", SensorCategory.FUEL, "ms", 0, 30),
-    FUEL_IAT("F IAT", SensorCategory.FUEL, "", 0, 10),
-    FUEL_CLT("F CLT", SensorCategory.FUEL, "", 0, 10),
-    FUEL_LAG("F Lag", SensorCategory.FUEL, "", 0, 30),
 
     IDLE_SWITCH("idle switch", SensorCategory.OTHERS),
 
@@ -88,6 +84,10 @@ public enum Sensor {
     INJECTOR_3_DWELL("inj #3", SensorCategory.SNIFFING),
     INJECTOR_4_DWELL("inj #4", SensorCategory.SNIFFING),
 
+    FUEL("Fuel", SensorCategory.FUEL, "ms", 0, 30),
+    FUEL_IAT("F IAT", SensorCategory.FUEL, "", 0, 10),
+    FUEL_CLT("F CLT", SensorCategory.FUEL, "", 0, 10),
+    FUEL_LAG("F Lag", SensorCategory.FUEL, "", 0, 30),
     FUEL_BASE(SensorCategory.FUEL, FieldType.FLOAT, 48, BackgroundColor.MUD, 0, 30, "ms"),
     T_CHARGE(SensorCategory.FUEL, FieldType.FLOAT, 52, BackgroundColor.MUD, 30, 140),
     DWELL(SensorCategory.OPERATIONS, FieldType.FLOAT, 60, BackgroundColor.MUD, 1, 10),
