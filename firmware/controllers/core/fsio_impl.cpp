@@ -29,6 +29,7 @@ fsio8_Map3D_u8t fsioTable4("fsio#4");
 static LENameOrdinalPair leRpm(LE_METHOD_RPM, "rpm");
 static LENameOrdinalPair leTps(LE_METHOD_TPS, "tps");
 static LENameOrdinalPair leMaf(LE_METHOD_MAF, "maf");
+static LENameOrdinalPair leMap(LE_METHOD_MAP, "map");
 static LENameOrdinalPair leVBatt(LE_METHOD_VBATT, "vbatt");
 static LENameOrdinalPair leFan(LE_METHOD_FAN, "fan");
 static LENameOrdinalPair leCoolant(LE_METHOD_COOLANT, "coolant");
@@ -83,6 +84,10 @@ float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 		return getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F);
 	case LE_METHOD_RPM:
 		return engine->rpmCalculator.getRpm();
+	case LE_METHOD_MAF:
+		return getMaf(PASS_ENGINE_PARAMETER_F);
+	case LE_METHOD_MAP:
+		return getMap();
 	case LE_METHOD_TIME_SINCE_BOOT:
 		return getTimeNowSeconds();
 	case LE_METHOD_FAN_OFF_SETTING:
@@ -358,7 +363,7 @@ static void showFsioInfo(void) {
 			 * in case of FSIO user interface indexes are starting with 0, the argument for that
 			 * is the fact that the target audience is more software developers
 			 */
-			scheduleMsg(logger, "FSIO #%d [%s] at %s@%dHz value=%f", i, exp,
+			scheduleMsg(logger, "FSIO #%d [%s] at %s@%dHz value=%f", (i + 1), exp,
 					hwPortname(boardConfiguration->fsioPins[i]), boardConfiguration->fsioFrequency[i],
 					engineConfiguration2->fsioLastValue[i]);
 //			scheduleMsg(logger, "user-defined #%d value=%f", i, engine->engineConfiguration2->fsioLastValue[i]);

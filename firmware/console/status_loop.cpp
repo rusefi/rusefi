@@ -162,11 +162,11 @@ static void printSensors(Logging *log, bool fileFormat) {
 #endif
 
 	if (hasMafSensor()) {
-		reportSensorF(log, fileFormat, "maf", "V", getMaf(), 2);
-		reportSensorF(log, fileFormat, "mafr", "kg/hr", getRealMaf(), 2);
+		reportSensorF(log, fileFormat, "maf", "V", getMaf(PASS_ENGINE_PARAMETER_F), 2);
+		reportSensorF(log, fileFormat, "mafr", "kg/hr", getRealMaf(PASS_ENGINE_PARAMETER_F), 2);
 	}
 
-	reportSensorF(log, fileFormat, "ENGINE_LOAD", "x", getEngineLoadT(), 2);
+	reportSensorF(log, fileFormat, "ENGINE_LOAD", "x", getEngineLoadT(PASS_ENGINE_PARAMETER_F), 2);
 
 
 
