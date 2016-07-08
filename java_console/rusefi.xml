@@ -67,14 +67,14 @@
                sizey="16" storagetype="float" endian="big">
             <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                      coarseincrement="1"/>
-            <table type="X Axis" storageaddress="30f8" storagetype="float" endian="big"
+            <table type="X Axis" storageaddress="3138" storagetype="float" endian="big"
                    logparam="engine_load">
-                <scaling units="degree" expression="x" to_byte="x" format="0.00" fineincrement=".1"
+                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
             </table>
-            <table type="Y Axis" storageaddress="3138" storagetype="float" endian="big"
+            <table type="Y Axis" storageaddress="30f8" storagetype="float" endian="big"
                    logparam="rpm">
-                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
+                <scaling units="engine_load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
 
@@ -84,14 +84,14 @@
                sizey="8" storagetype="float" endian="big">
             <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                      coarseincrement="1"/>
-            <table type="X Axis" storageaddress="3e38" storagetype="float" endian="big"
-                   logparam="engine_load">
-                <scaling units="degree" expression="x" to_byte="x" format="0.00" fineincrement=".1"
+            <table type="X Axis" storageaddress="3e58" storagetype="float" endian="big"
+                   logparam="">
+                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
             </table>
-            <table type="Y Axis" storageaddress="3e58" storagetype="float" endian="big"
+            <table type="Y Axis" storageaddress="3e38" storagetype="float" endian="big"
                    logparam="rpm">
-                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
+                <scaling units="engine_load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
 
@@ -101,14 +101,14 @@
                sizey="8" storagetype="uint8" endian="big">
             <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                      coarseincrement="1"/>
-            <table type="X Axis" storageaddress="3eb8" storagetype="float" endian="big"
+            <table type="X Axis" storageaddress="3ed8" storagetype="float" endian="big"
                    logparam="engine_load">
-                <scaling units="degree" expression="x" to_byte="x" format="0.00" fineincrement=".1"
+                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
             </table>
-            <table type="Y Axis" storageaddress="3ed8" storagetype="float" endian="big"
+            <table type="Y Axis" storageaddress="3eb8" storagetype="float" endian="big"
                    logparam="rpm">
-                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
+                <scaling units="engine_load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
 
@@ -118,14 +118,14 @@
                sizey="8" storagetype="uint8" endian="big">
             <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                      coarseincrement="1"/>
-            <table type="X Axis" storageaddress="3f38" storagetype="float" endian="big"
-                   logparam="engine_load">
-                <scaling units="degree" expression="x" to_byte="x" format="0.00" fineincrement=".1"
+            <table type="X Axis" storageaddress="3f58" storagetype="float" endian="big"
+                   logparam="">
+                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
             </table>
-            <table type="Y Axis" storageaddress="3f58" storagetype="float" endian="big"
+            <table type="Y Axis" storageaddress="3f38" storagetype="float" endian="big"
                    logparam="rpm">
-                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
+                <scaling units="engine_load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
 
@@ -135,14 +135,14 @@
                sizey="8" storagetype="uint8" endian="big">
             <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                      coarseincrement="1"/>
-            <table type="X Axis" storageaddress="3fb8" storagetype="float" endian="big"
+            <table type="X Axis" storageaddress="3fd8" storagetype="float" endian="big"
                    logparam="engine_load">
-                <scaling units="degree" expression="x" to_byte="x" format="0.00" fineincrement=".1"
+                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
             </table>
-            <table type="Y Axis" storageaddress="3fd8" storagetype="float" endian="big"
-                   logparam="rpm">
-                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
+            <table type="Y Axis" storageaddress="3fb8" storagetype="float" endian="big"
+                   logparam="engine_load">
+                <scaling units="engine_load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
 
@@ -152,12 +152,12 @@
                sizey="16" storagetype="uint8" endian="big">
             <scaling units="Engine Load" expression="x/10" to_byte="x*10" format="0.00" fineincrement=".1"
                      coarseincrement="1"/>
-            <table type="X Axis" storageaddress="3b78" storagetype="float" endian="big">
-                <scaling units="degree" expression="x" to_byte="x" format="0.00" fineincrement=".1"
+            <table type="X Axis" storageaddress="3bb8" storagetype="float" endian="big">
+                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
             </table>
-            <table type="Y Axis" storageaddress="3bb8" storagetype="float" endian="big">
-                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
+            <table type="Y Axis" storageaddress="3b78" storagetype="float" endian="big">
+                <scaling units="engine_load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
 
