@@ -78,6 +78,74 @@
             </table>
         </table>
 
+        <table type="3D" name="FSIO Table #1" 
+        category="FSIO"
+        storageaddress="3d38" sizex="8"
+               sizey="8" storagetype="float" endian="big">
+            <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
+                     coarseincrement="1"/>
+            <table type="X Axis" storageaddress="3e38" storagetype="float" endian="big"
+                   logparam="engine_load">
+                <scaling units="degree" expression="x" to_byte="x" format="0.00" fineincrement=".1"
+                         coarseincrement="1"/>
+            </table>
+            <table type="Y Axis" storageaddress="3e58" storagetype="float" endian="big"
+                   logparam="rpm">
+                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
+            </table>
+        </table>
+
+        <table type="3D" name="FSIO Table #2" 
+        category="FSIO"
+        storageaddress="3e78" sizex="8"
+               sizey="8" storagetype="uint8" endian="big">
+            <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
+                     coarseincrement="1"/>
+            <table type="X Axis" storageaddress="3eb8" storagetype="float" endian="big"
+                   logparam="engine_load">
+                <scaling units="degree" expression="x" to_byte="x" format="0.00" fineincrement=".1"
+                         coarseincrement="1"/>
+            </table>
+            <table type="Y Axis" storageaddress="3ed8" storagetype="float" endian="big"
+                   logparam="rpm">
+                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
+            </table>
+        </table>
+
+        <table type="3D" name="FSIO Table #3" 
+        category="FSIO"
+        storageaddress="3ef8" sizex="8"
+               sizey="8" storagetype="uint8" endian="big">
+            <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
+                     coarseincrement="1"/>
+            <table type="X Axis" storageaddress="3f38" storagetype="float" endian="big"
+                   logparam="engine_load">
+                <scaling units="degree" expression="x" to_byte="x" format="0.00" fineincrement=".1"
+                         coarseincrement="1"/>
+            </table>
+            <table type="Y Axis" storageaddress="3f58" storagetype="float" endian="big"
+                   logparam="rpm">
+                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
+            </table>
+        </table>
+
+        <table type="3D" name="FSIO Table #4" 
+        category="FSIO"
+        storageaddress="3f78" sizex="8"
+               sizey="8" storagetype="uint8" endian="big">
+            <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
+                     coarseincrement="1"/>
+            <table type="X Axis" storageaddress="3fb8" storagetype="float" endian="big"
+                   logparam="engine_load">
+                <scaling units="degree" expression="x" to_byte="x" format="0.00" fineincrement=".1"
+                         coarseincrement="1"/>
+            </table>
+            <table type="Y Axis" storageaddress="3fd8" storagetype="float" endian="big"
+                   logparam="rpm">
+                <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
+            </table>
+        </table>
+
         <table type="3D" name="Target AFR"
         category="Fuel"
         storageaddress="3a78" sizex="16"
