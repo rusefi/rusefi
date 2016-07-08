@@ -48,6 +48,7 @@ typedef enum {
 	LE_METHOD_KNOCK = 112,
 	LE_METHOD_FSIO_TABLE = 113,
 	LE_METHOD_SELF = 114,
+	LE_METHOD_MAP = 115,
 
 	Force_4b_le_action = ENUM_32_BITS,
 
