@@ -79,9 +79,9 @@ static void setInjectorEnabled(int id, int value) {
 
 static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, float onTimeMs, float offTimeMs,
 		int count) {
-	int delaySt = MS2ST(delayMs);
-	int onTimeSt = MS2ST(onTimeMs);
-	int offTimeSt = MS2ST(offTimeMs);
+    int delaySt = delayMs < 1 ? 1 : MS2ST(delayMs);
+	int onTimeSt = onTimeMs < 1 ? 1 : MS2ST(onTimeMs);
+	int offTimeSt = offTimeMs < 1 ? 1 : MS2ST(offTimeMs);
 	if (delaySt < 0) {
 		scheduleMsg(logger, "Invalid delay %f", delayMs);
 		return;
