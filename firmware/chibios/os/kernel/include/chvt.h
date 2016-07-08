@@ -58,6 +58,8 @@
  * @details Converts from milliseconds to system ticks number.
  * @note    The result is rounded upward to the next tick boundary.
  *
+ * WARNING! this macro does evil things in case of zero parameter!
+ *  
  * @param[in] msec      number of milliseconds
  * @return              The number of ticks.
  *
