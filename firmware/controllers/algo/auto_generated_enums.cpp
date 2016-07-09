@@ -121,6 +121,8 @@ case Force_4b_trigger_type:
   return "Force_4b_trigger_type";
 case TT_HONDA_CBR_600:
 	return "TT_HONDA_CBR_600";
+case TT_HONDA_CBR_600_CUSTOM:
+	return "TT_HONDA_CBR_600_CUSTOM";
 case TT_DODGE_NEON_1995:
   return "TT_DODGE_NEON_1995";
 case TT_GM_LS_24:
