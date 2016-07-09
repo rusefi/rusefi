@@ -127,7 +127,9 @@ typedef enum {
 
 	ZIL_130 = 42,
 
-	ET_UNUSED = 43,
+	HONDA_600 = 43,
+
+	ET_UNUSED = 44,
 
 	Force_4b_engine_type = ENUM_32_BITS,
 } engine_type_e;

@@ -2017,6 +2017,12 @@
         <name>$PROJ_DIR$\..\config\engines\GY6_139QMB.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\config\engines\honda_600.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\honda_600.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\config\engines\honda_accord.cpp</name>
       </file>
       <file>
