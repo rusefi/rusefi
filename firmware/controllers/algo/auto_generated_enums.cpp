@@ -26,6 +26,8 @@ case MIATA_NA_1_6:
 	return "MIATA_NA_1_6";
 case ZIL_130:
 	return "ZIL_130";
+case HONDA_600:
+	return "Honda 600";
 case ACURA_RSX:
 	return "ACURA_RSX";
 case AUDI_AAN:

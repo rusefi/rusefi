@@ -38,5 +38,6 @@ ENGINES_SRC_CPP = $(PROJECT_DIR)/config/engines/ford_aspire.cpp \
 	$(PROJECT_DIR)/config/engines/lada_kalina.cpp \
 	$(PROJECT_DIR)/config/engines/geo_storm.cpp \
 	$(PROJECT_DIR)/config/engines/zil130.cpp \
+	$(PROJECT_DIR)/config/engines/honda_600.cpp \
 	$(PROJECT_DIR)/config/engines/ford_festiva.cpp
 	
