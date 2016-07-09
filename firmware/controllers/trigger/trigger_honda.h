@@ -17,5 +17,6 @@ void configureHondaAccordCD(TriggerShape *s, bool withOneEventSignal, bool withF
 		float d);
 
 void configureHondaCbr600(TriggerShape *s DECLARE_ENGINE_PARAMETER_S);
+void configureHondaCbr600custom(TriggerShape *s DECLARE_ENGINE_PARAMETER_S);
 
 #endif /* CONTROLLERS_TRIGGER_TRIGGER_HONDA_H_ */

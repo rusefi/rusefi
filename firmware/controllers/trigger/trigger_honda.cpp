@@ -169,4 +169,77 @@ void configureHondaCbr600(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 
 }
 
+void configureHondaCbr600custom(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
+
+	float w = 720 / 2 / 24;
+//	s->initialize(FOUR_STROKE_CAM_SENSOR, false);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+
+	s->useOnlyPrimaryForSync = true;
+	s->isSynchronizationNeeded = true;
+	s->setTriggerSynchronizationGap2(0.7, 1);
+
+	float a = 0;
+
+	a += w;
+	s->addEvent(a, T_SECONDARY, TV_RISE);
+	a += w;
+	s->addEvent(a - 1, T_SECONDARY, TV_FALL); // 30
+
+	a += w;
+	s->addEvent(a, T_SECONDARY, TV_RISE);
+	s->addEvent(52.4, T_PRIMARY, TV_FALL);
+	a += w;
+	s->addEvent(a - 1, T_SECONDARY, TV_FALL); // 60
+
+	for (int i = 0;i<10;i++) {
+		a += w;
+		s->addEvent(a, T_SECONDARY, TV_RISE);
+		a += w;
+		s->addEvent(a, T_SECONDARY, TV_FALL);
+	}
+
+	a += w;
+	s->addEvent(a, T_SECONDARY, TV_RISE);
+
+	s->addEvent(381.34f, T_PRIMARY, TV_RISE);
+
+	a += w;
+	s->addEvent(a - 1, T_SECONDARY, TV_FALL);
+
+	for (int i = 0;i<1;i++) {
+		a += w;
+		s->addEvent(a, T_SECONDARY, TV_RISE);
+		a += w;
+		s->addEvent(a, T_SECONDARY, TV_FALL);
+	}
+
+	a += w;
+	s->addEvent(a, T_SECONDARY, TV_RISE);
+
+
+	s->addEvent(449.1f, T_PRIMARY, TV_FALL);
+
+	a += w;
+	s->addEvent(a, T_SECONDARY, TV_FALL);
+
+
+	for (int i = 0;i<8;i++) {
+		a += w;
+		s->addEvent(a, T_SECONDARY, TV_RISE);
+		a += w;
+		s->addEvent(a, T_SECONDARY, TV_FALL);
+	}
+
+	a += w;
+	s->addEvent(a, T_SECONDARY, TV_RISE);
+	a += w;
+	s->addEvent(a - 1, T_SECONDARY, TV_FALL);
+
+
+	s->addEvent(720.0f, T_PRIMARY, TV_RISE);
+
+}
+
+
 
