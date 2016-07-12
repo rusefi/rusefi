@@ -177,7 +177,9 @@ void configureHondaCbr600custom(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 
 	s->useOnlyPrimaryForSync = true;
 	s->isSynchronizationNeeded = true;
-	s->setTriggerSynchronizationGap2(0.7, 1);
+	s->setTriggerSynchronizationGap2(0.7, 1.1);
+
+	s->gapBothDirections = false;
 
 	float a = 0;
 
