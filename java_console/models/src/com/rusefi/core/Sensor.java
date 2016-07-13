@@ -92,6 +92,7 @@ public enum Sensor {
     T_CHARGE(SensorCategory.FUEL, FieldType.FLOAT, 52, BackgroundColor.MUD, 30, 140),
     DWELL(SensorCategory.OPERATIONS, FieldType.FLOAT, 60, BackgroundColor.MUD, 1, 10),
     actualLastInjection(SensorCategory.FUEL, FieldType.FLOAT, 64, BackgroundColor.MUD, 0, 30, "ms"),
+    debugFloatField1(SensorCategory.OPERATIONS, FieldType.FLOAT, 68, BackgroundColor.MUD, 0, 5),
     VSS(SensorCategory.OPERATIONS, FieldType.FLOAT, 76, BackgroundColor.BLUE),
     FIRMWARE_VERSION(SensorCategory.OPERATIONS, FieldType.INT, 84, BackgroundColor.BLUE),
     CURRENT_VE(SensorCategory.FUEL, FieldType.FLOAT, 112, BackgroundColor.MUD),
@@ -108,12 +109,17 @@ public enum Sensor {
     CHARGE_AIR_MASS(SensorCategory.OPERATIONS, FieldType.FLOAT, 180, BackgroundColor.MUD),
     cltCorrection(SensorCategory.OPERATIONS, FieldType.FLOAT, 184, BackgroundColor.MUD, 0, 5),
     runningFuel(SensorCategory.OPERATIONS, FieldType.FLOAT, 188, BackgroundColor.MUD, 0, 15, "ms"),
+    debugIntField1(SensorCategory.OPERATIONS, FieldType.INT, 192, BackgroundColor.MUD, 0, 5),
     injectorLagMs(SensorCategory.FUEL, FieldType.FLOAT, 196, BackgroundColor.MUD, 0, 15, "ms"),
 
     debugFloatField2(SensorCategory.OPERATIONS, FieldType.FLOAT, 200, BackgroundColor.MUD, 0, 5),
     debugFloatField3(SensorCategory.OPERATIONS, FieldType.FLOAT, 204, BackgroundColor.MUD, 0, 5),
     debugFloatField4(SensorCategory.OPERATIONS, FieldType.FLOAT, 208, BackgroundColor.MUD, 0, 5),
     debugFloatField5(SensorCategory.OPERATIONS, FieldType.FLOAT, 212, BackgroundColor.MUD, 0, 5),
+    debugIntField2(SensorCategory.OPERATIONS, FieldType.INT, 216, BackgroundColor.MUD, 0, 5),
+    debugIntField3(SensorCategory.OPERATIONS, FieldType.INT, 220, BackgroundColor.MUD, 0, 5),
+
+    warningCounter(SensorCategory.OPERATIONS, FieldType.INT, 236, BackgroundColor.MUD, 0, 5),
 
     RPM(SensorCategory.SENSOR_INPUTS, FieldType.INT, 0, BackgroundColor.RED, 0, 8000),
     TIME_SECONDS(SensorCategory.OPERATIONS, FieldType.INT, 224, BackgroundColor.MUD, 0, 5),

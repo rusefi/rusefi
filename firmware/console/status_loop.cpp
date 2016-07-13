@@ -195,6 +195,8 @@ static void printSensors(Logging *log, bool fileFormat) {
 		reportSensorF(log, fileFormat, "sp2rpm", "x", vehicleSpeed / rpm, 2);
 	}
 
+	reportSensorI(log, fileFormat, "warn", "count", engine->engineState.warningCounter);
+
 	reportSensorF(log, fileFormat, "knck_c", "count", engine->knockCount, 0);
 	reportSensorF(log, fileFormat, "knck_v", "v", engine->knockVolts, 2);
 
@@ -700,6 +702,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->isCltError = !isValidCoolantTemperature(getCoolantTemperature(PASS_ENGINE_PARAMETER_F));
 	tsOutputChannels->isIatError = !isValidIntakeAirTemperature(getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F));
 #endif /* EFI_PROD_CODE */
+
+	tsOutputChannels->warningCounter = engine->engineState.warningCounter;
 
 	tsOutputChannels->knockNowIndicator = engine->knockCount > 0;
 	tsOutputChannels->knockEverIndicator = engine->knockEver;
