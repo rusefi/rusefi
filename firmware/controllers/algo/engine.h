@@ -122,6 +122,8 @@ public:
 	float iat;
 	float clt;
 
+	int warningCounter;
+
 	float airMass;
 
 	float engineNoiseHipLevel;

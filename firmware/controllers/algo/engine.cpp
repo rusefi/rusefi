@@ -133,6 +133,7 @@ EngineState::EngineState() {
 	dwellAngle = 0;
 	engineNoiseHipLevel = 0;
 	injectorLag = 0;
+	warningCounter = 0;
 }
 
 void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_F) {

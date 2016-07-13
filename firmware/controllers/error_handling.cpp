@@ -10,6 +10,7 @@
 #include "io_pins.h"
 #include "memstreams.h"
 #include "efilib2.h"
+#include "engine.h"
 
 #if EFI_HD44780_LCD
 #include "lcd_HD44780.h"
@@ -17,6 +18,8 @@
 
 static time_t timeOfPreviousWarning = -10;
 static LoggingWithStorage logger("error handling");
+
+EXTERN_ENGINE;
 
 #define WARNING_PREFIX "WARNING: "
 
@@ -52,7 +55,6 @@ static char warningBuffer[WARNING_BUFFER_SIZE];
 static bool isWarningStreamInitialized = false;
 static MemoryStream warningStream;
 
-static int warningCounter = 0;
 /**
  * OBD_PCM_Processor_Fault is the general error code for now
  *
@@ -67,7 +69,7 @@ int warning(obd_code_e code, const char *fmt, ...) {
 		return true; // we just had another warning, let's not spam
 	timeOfPreviousWarning = now;
 
-	warningCounter++;
+	engine->engineState.warningCounter++;
 
 	resetLogging(&logger); // todo: is 'reset' really needed here?
 	appendMsgPrefix(&logger);

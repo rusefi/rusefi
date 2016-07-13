@@ -35,6 +35,15 @@ public class SensorLogger {
             Sensor.injectorLagMs,
             Sensor.VSS,
             Sensor.SPEED2RPM,
+            Sensor.debugFloatField1,
+            Sensor.debugFloatField2,
+            Sensor.debugFloatField3,
+            Sensor.debugFloatField4,
+            Sensor.debugFloatField5,
+            Sensor.debugIntField1,
+            Sensor.debugIntField2,
+            Sensor.debugIntField3,
+            Sensor.warningCounter,
 
             Sensor.MAF, Sensor.IAT};
     private static long fileStartTime;
