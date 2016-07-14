@@ -70,6 +70,7 @@ int warning(obd_code_e code, const char *fmt, ...) {
 	timeOfPreviousWarning = now;
 
 	engine->engineState.warningCounter++;
+	engine->engineState.lastErrorCode = code;
 
 	resetLogging(&logger); // todo: is 'reset' really needed here?
 	appendMsgPrefix(&logger);

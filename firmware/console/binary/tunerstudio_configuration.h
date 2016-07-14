@@ -124,7 +124,8 @@ typedef struct {
 	float engineLoadDelta; // 228
 	float speedToRpmRatio; // 232
 	int warningCounter; // 236
-	int unused3[9];
+	int lastErrorCode; // 240
+	int unused3[8];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */

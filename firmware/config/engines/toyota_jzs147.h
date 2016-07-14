@@ -11,5 +11,6 @@
 #include "engine.h"
 
 void setToyota_jzs147EngineConfiguration(DECLARE_ENGINE_PARAMETER_F);
+void setToyota_2jz_vics(DECLARE_ENGINE_PARAMETER_F);
 
 #endif /* CONFIG_ENGINES_TOYOTA_JZS147_H_ */

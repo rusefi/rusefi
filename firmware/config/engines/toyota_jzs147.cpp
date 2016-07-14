@@ -7,7 +7,11 @@
  *
  * http://wilbo666.pbworks.com/w/page/37134472/2JZ-GTE%20JZS147%20Aristo%20Engine%20Wiring
  *
+ * NON VVTi
  * set_engine_type 38
+ *
+ * VVTi
+ * set_engine_type 44
  *
  * @date Dec 30, 2015
  * @author Andrey Belomutskiy, (c) 2012-2016
@@ -19,7 +23,7 @@
 
 EXTERN_ENGINE;
 
-void setToyota_jzs147EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
+static void common2jz(DECLARE_ENGINE_PARAMETER_F) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F); // default pinout
 
 	engineConfiguration->isCanEnabled = true;
@@ -29,27 +33,6 @@ void setToyota_jzs147EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->specs.firingOrder = FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4;
 	// set_ignition_mode 1
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
-
-	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
-	engineConfiguration->trigger.type = TT_2JZ_1_12;
-
-//// temporary while I am fixing trigger bug
-//	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
-//	//set_trigger_type 16
-//	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
-//	engineConfiguration->trigger.customTotalToothCount = 36;
-//	engineConfiguration->trigger.customSkippedToothCount = 2;
-//
-//	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-//	engineConfiguration->twoWireBatchIgnition = true;
-//
-//	engineConfiguration->crankingInjectionMode = IM_BATCH;
-//	engineConfiguration->injectionMode = IM_BATCH;
-//	engineConfiguration->twoWireBatchInjection = true;
-
-//	boardConfiguration->triggerInputPins[0] = GPIOA_5;
-//	boardConfiguration->triggerInputPins[1] = GPIOC_6;
-
 
 	boardConfiguration->ignitionPins[0] = GPIOE_14;
 	boardConfiguration->ignitionPins[1] = GPIOC_7;
@@ -72,7 +55,6 @@ void setToyota_jzs147EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->engineChartSize = 450;
 
 	//	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	boardConfiguration->isSdCardEnabled = false;
 
 	engineConfiguration->map.sensor.type = MT_CUSTOM;
 
@@ -85,8 +67,41 @@ void setToyota_jzs147EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setThermistorConfiguration(&engineConfiguration->clt, -20, 15000, 40, 1200, 120.0, 200.0);
 	setThermistorConfiguration(&engineConfiguration->iat, -20, 15000, 40, 1200, 120.0, 200.0);
 
+}
+
+void setToyota_jzs147EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
+	common2jz(PASS_ENGINE_PARAMETER_F);
+
+	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
+	engineConfiguration->trigger.type = TT_2JZ_1_12;
+
+//// temporary while I am fixing trigger bug
+//	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+//	//set_trigger_type 16
+//	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+//	engineConfiguration->trigger.customTotalToothCount = 36;
+//	engineConfiguration->trigger.customSkippedToothCount = 2;
+//
+//	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
+//	engineConfiguration->twoWireBatchIgnition = true;
+//
+//	engineConfiguration->crankingInjectionMode = IM_BATCH;
+//	engineConfiguration->injectionMode = IM_BATCH;
+//	engineConfiguration->twoWireBatchInjection = true;
+
+//	boardConfiguration->triggerInputPins[0] = GPIOA_5;
+//	boardConfiguration->triggerInputPins[1] = GPIOC_6;
+
+	boardConfiguration->isSdCardEnabled = false;
+
 
 }
 
+void setToyota_2jz_vics(DECLARE_ENGINE_PARAMETER_F) {
+	common2jz(PASS_ENGINE_PARAMETER_F);
+
+	boardConfiguration->isSdCardEnabled = true;
+
+}
 
 

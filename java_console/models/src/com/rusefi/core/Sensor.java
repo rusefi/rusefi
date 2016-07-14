@@ -120,6 +120,7 @@ public enum Sensor {
     debugIntField3(SensorCategory.OPERATIONS, FieldType.INT, 220, BackgroundColor.MUD, 0, 5),
 
     warningCounter(SensorCategory.OPERATIONS, FieldType.INT, 236, BackgroundColor.MUD, 0, 5),
+    lastErrorCode(SensorCategory.OPERATIONS, FieldType.INT, 240, BackgroundColor.MUD, 0, 5),
 
     RPM(SensorCategory.SENSOR_INPUTS, FieldType.INT, 0, BackgroundColor.RED, 0, 8000),
     TIME_SECONDS(SensorCategory.OPERATIONS, FieldType.INT, 224, BackgroundColor.MUD, 0, 5),

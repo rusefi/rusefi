@@ -196,6 +196,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 	}
 
 	reportSensorI(log, fileFormat, "warn", "count", engine->engineState.warningCounter);
+	reportSensorI(log, fileFormat, "error", "code", engine->engineState.lastErrorCode);
 
 	reportSensorF(log, fileFormat, "knck_c", "count", engine->knockCount, 0);
 	reportSensorF(log, fileFormat, "knck_v", "v", engine->knockVolts, 2);
@@ -704,6 +705,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #endif /* EFI_PROD_CODE */
 
 	tsOutputChannels->warningCounter = engine->engineState.warningCounter;
+	tsOutputChannels->lastErrorCode = engine->engineState.lastErrorCode;
 
 	tsOutputChannels->knockNowIndicator = engine->knockCount > 0;
 	tsOutputChannels->knockEverIndicator = engine->knockEver;

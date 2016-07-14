@@ -134,6 +134,11 @@ EngineState::EngineState() {
 	engineNoiseHipLevel = 0;
 	injectorLag = 0;
 	warningCounter = 0;
+	lastErrorCode = 0;
+	targetAFR = 0;
+	tpsAccelEnrich = 0;
+	tChargeK = 0;
+	currentVE = 0;
 }
 
 void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_F) {
