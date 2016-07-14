@@ -62,7 +62,7 @@ bool isStep1Condition(int rpm DECLARE_ENGINE_PARAMETER_S) {
 static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
 	engine->m.beforeAdvance = GET_TIMESTAMP();
 	if (cisnan(engineLoad)) {
-		warning(OBD_PCM_Processor_Fault, "NaN engine load");
+		warning(CUSTOM_OBD_0, "NaN engine load");
 		return NAN;
 	}
 	efiAssert(!cisnan(engineLoad), "invalid el", NAN);
@@ -182,7 +182,7 @@ float getInitialAdvance(int rpm, float map, float advanceMax) {
 void buildTimingMap(float advanceMax DECLARE_ENGINE_PARAMETER_S) {
 	if (engineConfiguration->algorithm != LM_SPEED_DENSITY &&
 			engineConfiguration->algorithm != LM_MAP) {
-		warning(OBD_PCM_Processor_Fault, "wrong algorithm for MAP-based timing");
+		warning(CUSTOM_OBD_1, "wrong algorithm for MAP-based timing");
 		return;
 	}
 	/**

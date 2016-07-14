@@ -283,7 +283,7 @@ static void MMCmount(void) {
 	// Performs the initialization procedure on the inserted card.
 	lockSpi(SPI_NONE);
 	if (mmcConnect(&MMCD1) != CH_SUCCESS) {
-		warning(OBD_PCM_Processor_Fault, "Can't connect or mount MMC/SD");
+		warning(CUSTOM_OBD_43, "Can't connect or mount MMC/SD");
 		unlockSpi();
 		return;
 

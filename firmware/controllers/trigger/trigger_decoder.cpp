@@ -277,7 +277,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			errorDetection.add(isDecodingError);
 
 			if (isTriggerDecoderError()) {
-				warning(OBD_PCM_Processor_Fault, "trigger decoding issue. expected %d/%d/%d got %d/%d/%d",
+				warning(CUSTOM_OBD_35, "trigger decoding issue. expected %d/%d/%d got %d/%d/%d",
 						TRIGGER_SHAPE(expectedEventCount[0]), TRIGGER_SHAPE(expectedEventCount[1]),
 						TRIGGER_SHAPE(expectedEventCount[2]), currentCycle.eventCount[0], currentCycle.eventCount[1],
 						currentCycle.eventCount[2]);
@@ -300,7 +300,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		toothed_previous_time = nowNt;
 	}
 	if (!isValidIndex(PASS_ENGINE_PARAMETER_F) && !isInitializingTrigger) {
-		warning(OBD_PCM_Processor_Fault, "sync error: index #%d above total size %d", currentCycle.current_index, TRIGGER_SHAPE(size));
+		warning(CUSTOM_OBD_36, "sync error: index #%d above total size %d", currentCycle.current_index, TRIGGER_SHAPE(size));
 		lastDecodingErrorTime = getTimeNowNt();
 		someSortOfTriggerError = true;
 	}

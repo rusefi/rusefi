@@ -53,7 +53,7 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_F) {
 	switch (engineConfiguration->algorithm) {
 	case LM_PLAIN_MAF:
 		if (!hasMafSensor(PASS_ENGINE_PARAMETER_F)) {
-			warning(OBD_PCM_Processor_Fault, "MAF sensor needed for current fuel algorithm");
+			warning(CUSTOM_OBD_17, "MAF sensor needed for current fuel algorithm");
 			return NAN;
 		}
 		return getMafT(engineConfiguration);
@@ -67,7 +67,7 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_F) {
 		return getRealMaf(PASS_ENGINE_PARAMETER_F);
 	}
 	default:
-		warning(OBD_PCM_Processor_Fault, "Unexpected engine load parameter: %d", engineConfiguration->algorithm);
+		warning(CUSTOM_OBD_18, "Unexpected engine load parameter: %d", engineConfiguration->algorithm);
 		return -1;
 	}
 }
@@ -96,7 +96,7 @@ static void addIgnitionEvent(angle_t localAdvance, angle_t dwellAngle, IgnitionE
 
 	if (!isPinAssigned(output)) {
 		// todo: extact method for this index math
-		warning(OBD_PCM_Processor_Fault, "no_pin_cl #%s", output->name);
+		warning(CUSTOM_OBD_19, "no_pin_cl #%s", output->name);
 	}
 	event->output = output;
 	event->advance = localAdvance;
@@ -139,7 +139,7 @@ void FuelSchedule::registerInjectionEvent(int injectorIndex, float angle,
 
 	if (!isSimultanious && !isPinAssigned(output)) {
 		// todo: extact method for this index math
-		warning(OBD_PCM_Processor_Fault, "no_pin_inj #%s", output->name);
+		warning(CUSTOM_OBD_20, "no_pin_inj #%s", output->name);
 	}
 
 	InjectionEvent *ev = injectionEvents.add();
@@ -234,7 +234,7 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 		}
 		break;
 	default:
-		warning(OBD_PCM_Processor_Fault, "Unexpected injection mode %d", mode);
+		warning(CUSTOM_OBD_21, "Unexpected injection mode %d", mode);
 	}
 }
 
@@ -298,7 +298,7 @@ void findTriggerPosition(event_trigger_position_s *position, angle_t angleOffset
 	int index = TRIGGER_SHAPE(triggerIndexByAngle[(int)angleOffset]);
 	angle_t eventAngle = TRIGGER_SHAPE(eventAngles[index]);
 	if (angleOffset < eventAngle) {
-		warning(OBD_PCM_Processor_Fault, "angle constraint violation in findTriggerPosition(): %f/%f", angleOffset, eventAngle);
+		warning(CUSTOM_OBD_22, "angle constraint violation in findTriggerPosition(): %f/%f", angleOffset, eventAngle);
 		return;
 	}
 
@@ -369,7 +369,7 @@ int getCylinderId(firing_order_e firingOrder, int index) {
 		return order_1_5_4_2_6_3_7_8[index];
 
 	default:
-		warning(OBD_PCM_Processor_Fault, "getCylinderId not supported for %d", firingOrder);
+		warning(CUSTOM_OBD_23, "getCylinderId not supported for %d", firingOrder);
 	}
 	return 1;
 }
@@ -389,7 +389,7 @@ static int getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_S
 		break;
 
 	default:
-		warning(OBD_PCM_Processor_Fault, "unsupported ignitionMode %d in initializeIgnitionActions()", engineConfiguration->ignitionMode);
+		warning(CUSTOM_OBD_24, "unsupported ignitionMode %d in initializeIgnitionActions()", engineConfiguration->ignitionMode);
 		return 0;
 	}
 }

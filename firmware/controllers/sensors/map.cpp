@@ -99,7 +99,7 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DEC
  */
 float validateMap(float mapKPa DECLARE_ENGINE_PARAMETER_S) {
 	if (cisnan(mapKPa) || mapKPa < CONFIG(mapErrorDetectionTooLow) || mapKPa > CONFIG(mapErrorDetectionTooHigh)) {
-		warning(OBD_PCM_Processor_Fault, "unexpected MAP value: %f", mapKPa);
+		warning(CUSTOM_OBD_25, "unexpected MAP value: %f", mapKPa);
 		return 0;
 	}
 	return mapKPa;

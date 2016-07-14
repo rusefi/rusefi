@@ -97,7 +97,7 @@ float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 	case LE_METHOD_VBATT:
 		return getVBatt(PASS_ENGINE_PARAMETER_F);
 	default:
-		warning(OBD_PCM_Processor_Fault, "FSIO unexpected %d", action);
+		warning(CUSTOM_OBD_9, "FSIO unexpected %d", action);
 		return NAN;
 	}
 }
@@ -171,7 +171,7 @@ void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 			const char *formula = config->le_formulas[i];
 			LEElement *logic = userPool.parseExpression(formula);
 			if (logic == NULL) {
-				warning(OBD_PCM_Processor_Fault, "parsing [%s]", formula);
+				warning(CUSTOM_OBD_10, "parsing [%s]", formula);
 			}
 
 			fsioLogics[i] = logic;
@@ -271,7 +271,7 @@ static const char * action2String(le_action_e action) {
 
 static void setPinState(const char * msg, OutputPin *pin, LEElement *element, Engine *engine) {
 	if (element == NULL) {
-		warning(OBD_PCM_Processor_Fault, "invalid expression for %s", msg);
+		warning(CUSTOM_OBD_11, "invalid expression for %s", msg);
 	} else {
 		int value = calc.getValue2(pin->getLogicValue(), element, engine);
 		if (pin->isInitialized() && value != pin->getLogicValue()) {
