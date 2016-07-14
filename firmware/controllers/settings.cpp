@@ -190,10 +190,6 @@ const char* getConfigurationName(engine_type_e engineType) {
 	  return "GM_2_2";
 	case DODGE_RAM:
 		return "DODGE_RAM";
-	case MAZDA_626:
-		return "Mazda626";
-	case TOYOTA_JZS147:
-		return "TOYOTA_JZS147";
 	default:
 		return getEngine_type_e(engineType);
 	}

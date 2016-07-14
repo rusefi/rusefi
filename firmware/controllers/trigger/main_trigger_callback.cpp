@@ -110,11 +110,11 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, bool limitedF
 
 	ENGINE(actualLastInjection) = injectionDuration;
 	if (cisnan(injectionDuration)) {
-		warning(OBD_PCM_Processor_Fault, "NaN injection pulse");
+		warning(CUSTOM_OBD_30, "NaN injection pulse");
 		return;
 	}
 	if (injectionDuration < 0) {
-		warning(OBD_PCM_Processor_Fault, "Negative injection pulse %f", injectionDuration);
+		warning(CUSTOM_OBD_31, "Negative injection pulse %f", injectionDuration);
 		return;
 	}
 
@@ -362,10 +362,10 @@ static ALWAYS_INLINE void scheduleIgnitionAndFuelEvents(int rpm, int revolutionI
 	}
 
 	if (engine->engineState.dwellAngle == 0) {
-		warning(OBD_PCM_Processor_Fault, "dwell is zero?");
+		warning(CUSTOM_OBD_32, "dwell is zero?");
 	}
 	if (engine->engineState.dwellAngle > maxAllowedDwellAngle) {
-		warning(OBD_PCM_Processor_Fault, "dwell angle too long: %f", engine->engineState.dwellAngle);
+		warning(CUSTOM_OBD_33, "dwell angle too long: %f", engine->engineState.dwellAngle);
 	}
 
 	// todo: add some check for dwell overflow? like 4 times 6 ms while engine cycle is less then that
@@ -431,7 +431,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	}
 
 	if (limitedSpark || limitedFuel) {
-		warning(OBD_PCM_Processor_Fault, "skipping stroke due to rpm=%d", rpm);
+		warning(CUSTOM_OBD_34, "skipping stroke due to rpm=%d", rpm);
 	}
 
 #if (EFI_HISTOGRAMS && EFI_PROD_CODE) || defined(__DOXYGEN__)

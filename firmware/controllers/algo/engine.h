@@ -123,6 +123,7 @@ public:
 	float clt;
 
 	int warningCounter;
+	int lastErrorCode;
 
 	float airMass;
 

@@ -116,7 +116,7 @@ typedef enum {
 
 	CHEVY_C20_1973 = 37,
 
-	TOYOTA_JZS147 = 38,
+	TOYOTA_JZS147 = 38, // 2JZ-GTE NON VVTi
 
 	LADA_KALINA = 39,
 
@@ -129,7 +129,9 @@ typedef enum {
 
 	HONDA_600 = 43,
 
-	ET_UNUSED = 44,
+	TOYOTA_2JZ_GTE_VVTi = 44,
+
+	ET_UNUSED = 45,
 
 	Force_4b_engine_type = ENUM_32_BITS,
 } engine_type_e;

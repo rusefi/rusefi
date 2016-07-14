@@ -924,6 +924,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	case CHEVY_C20_1973:
 		set1973c20(PASS_ENGINE_PARAMETER_F);
 		break;
+	case TOYOTA_2JZ_GTE_VVTi:
 	case TOYOTA_JZS147:
 		setToyota_jzs147EngineConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;

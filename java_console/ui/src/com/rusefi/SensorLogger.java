@@ -44,6 +44,7 @@ public class SensorLogger {
             Sensor.debugIntField2,
             Sensor.debugIntField3,
             Sensor.warningCounter,
+            Sensor.lastErrorCode,
 
             Sensor.MAF, Sensor.IAT};
     private static long fileStartTime;

@@ -44,6 +44,8 @@ case CHEVY_C20_1973:
 	return "CHEVY C20";
 case TOYOTA_JZS147:
 	return "TOYOTA_JZS147";
+case TOYOTA_2JZ_GTE_VVTi:
+	return "2JZ_GTE_VVTi";
 case GEO_STORM:
 	return "GEO_STORM";
 case LADA_KALINA:
