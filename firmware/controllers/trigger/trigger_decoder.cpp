@@ -300,7 +300,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		toothed_previous_time = nowNt;
 	}
 	if (!isValidIndex(PASS_ENGINE_PARAMETER_F) && !isInitializingTrigger) {
-		warning(CUSTOM_OBD_36, "sync error: index #%d above total size %d", currentCycle.current_index, TRIGGER_SHAPE(size));
+		warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentCycle.current_index, TRIGGER_SHAPE(size));
 		lastDecodingErrorTime = getTimeNowNt();
 		someSortOfTriggerError = true;
 	}
