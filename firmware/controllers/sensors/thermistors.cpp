@@ -109,7 +109,7 @@ float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_F) {
 	if (!isValidCoolantTemperature(temperature)) {
 		efiAssert(engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
 		if (engineConfiguration->hasCltSensor) {
-			warning(OBD_PCM_Processor_Fault, "unrealistic CLT %f", temperature);
+			warning(CUSTOM_OBD_26, "unrealistic CLT %f", temperature);
 		}
 		return LIMPING_MODE_CLT_TEMPERATURE;
 	}
@@ -172,7 +172,7 @@ float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_F) {
 	if (!isValidIntakeAirTemperature(temperature)) {
 		efiAssert(engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
 		if (engineConfiguration->hasIatSensor) {
-			warning(OBD_PCM_Processor_Fault, "unrealistic IAT %f", temperature);
+			warning(CUSTOM_OBD_27, "unrealistic IAT %f", temperature);
 		}
 		return LIMPING_MODE_IAT_TEMPERATURE;
 	}

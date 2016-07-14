@@ -200,7 +200,7 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 
 int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 	if (hwChannel == EFI_ADC_NONE) {
-		warning(OBD_PCM_Processor_Fault, "ADC: %s input is not configured", msg);
+		warning(CUSTOM_OBD_38, "ADC: %s input is not configured", msg);
 		return -1;
 	}
 #if EFI_ENABLE_MOCK_ADC || EFI_SIMULATOR
@@ -218,7 +218,7 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 		return value;
 	}
 	if (adcHwChannelEnabled[hwChannel] != ADC_SLOW) {
-		warning(OBD_PCM_Processor_Fault, "ADC is off [%s] index=%d", msg, hwChannel);
+		warning(CUSTOM_OBD_39, "ADC is off [%s] index=%d", msg, hwChannel);
 	}
 
 	return slowAdc.getAdcValueByHwChannel(hwChannel);

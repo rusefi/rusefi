@@ -122,7 +122,7 @@ static bool float2bool(float v) {
 
 float LECalculator::pop(le_action_e action) {
 	if (stack.size() == 0) {
-		warning(OBD_PCM_Processor_Fault, "empty stack for action=%d", action);
+		warning(CUSTOM_OBD_5, "empty stack for action=%d", action);
 		return NAN;
 	}
 	return stack.pop();
@@ -286,7 +286,7 @@ bool LECalculator::processElement(Engine *engine, LEElement *element) {
 		push(element->action, engine->knockCount);
 		break;
 	case LE_UNDEFINED:
-		warning(OBD_PCM_Processor_Fault, "FSIO undefined action");
+		warning(CUSTOM_OBD_6, "FSIO undefined action");
 		return true;
 	default:
 		push(element->action, getLEValue(engine, &stack, element->action));
@@ -301,7 +301,7 @@ float LECalculator::getValue2(float selfValue, LEElement *fistElementInList, Eng
 
 float LECalculator::getValue(float selfValue, Engine *engine) {
 	if (first == NULL) {
-		warning(OBD_PCM_Processor_Fault, "no FSIO code");
+		warning(CUSTOM_OBD_7, "no FSIO code");
 		return NAN;
 	}
 	LEElement *element = first;
@@ -325,7 +325,7 @@ float LECalculator::getValue(float selfValue, Engine *engine) {
 		counter++;
 	}
 	if (stack.size() != 1) {
-		warning(OBD_PCM_Processor_Fault, "unexpected FSIO stack size: %d", stack.size());
+		warning(CUSTOM_OBD_8, "unexpected FSIO stack size: %d", stack.size());
 		return NAN;
 	}
 	return stack.pop();

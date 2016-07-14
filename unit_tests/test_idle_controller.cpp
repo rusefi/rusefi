@@ -43,13 +43,14 @@ void testPidController(void) {
 	pidS.pFactor = 50;
 	pidS.iFactor = 0.5;
 	pidS.dFactor = 0;
+	pidS.offset = 0;
 
 	Pid pid(&pidS, 10, 90);
 
-	assertEquals(90, pid.getValue(14, 12, 0.1));
+	assertEqualsM("getValue#90", 90, pid.getValue(14, 12, 0.1));
 
 
-	assertEquals(10, pid.getValue(14, 16, 0.1));
+	assertEqualsM("getValue#10", 10, pid.getValue(14, 16, 0.1));
 	assertEquals(10, pid.getValue(14, 16, 1));
 
 	pid.updateFactors(29, 0, 0);

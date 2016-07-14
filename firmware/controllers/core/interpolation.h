@@ -30,11 +30,11 @@ int needInterpolationLogging(void);
 template<typename vType>
 float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], int yBinSize, vType* map[]) {
 	if (cisnan(x)) {
-		warning(OBD_PCM_Processor_Fault, "%f: x is NaN in interpolate3d", x);
+		warning(CUSTOM_OBD_14, "%f: x is NaN in interpolate3d", x);
 		return NAN;
 	}
 	if (cisnan(y)) {
-		warning(OBD_PCM_Processor_Fault, "%f: y is NaN in interpolate3d", y);
+		warning(CUSTOM_OBD_13, "%f: y is NaN in interpolate3d", y);
 		return NAN;
 	}
 

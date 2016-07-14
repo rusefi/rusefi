@@ -52,7 +52,7 @@ void setHardwareUsTimer(int32_t timeUs) {
 	 */
 	if (timeUs <= 0) {
 		timerFreezeCounter++;
-		warning(OBD_PCM_Processor_Fault, "local freeze cnt=%d", timerFreezeCounter);
+		warning(CUSTOM_OBD_42, "local freeze cnt=%d", timerFreezeCounter);
 	}
 	if (timeUs < 2)
 		timeUs = 2; // for some reason '1' does not really work
