@@ -349,8 +349,17 @@ typedef enum {
 // todo: better enum name
 typedef enum {
 	OM_NONE = 0,
+	/**
+	 * 720 degree engine cycle but trigger is defined using a 360 cycle which is when repeated
+	 */
 	FOUR_STROKE_CRANK_SENSOR = 1,
+	/**
+	 * 720 degree engine and trigger cycle
+	 */
 	FOUR_STROKE_CAM_SENSOR = 2,
+	/**
+	 * 360 degree cycle
+	 */
 	TWO_STROKE = 3,
 
 	Force_4b_operation_mode_e = ENUM_32_BITS,
