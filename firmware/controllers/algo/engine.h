@@ -124,6 +124,7 @@ public:
 
 	int warningCounter;
 	int lastErrorCode;
+	efitimesec_t timeOfPreviousWarning;
 
 	float airMass;
 

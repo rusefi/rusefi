@@ -139,6 +139,7 @@ EngineState::EngineState() {
 	tpsAccelEnrich = 0;
 	tChargeK = 0;
 	currentVE = 0;
+	timeOfPreviousWarning = -10;
 }
 
 void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_F) {

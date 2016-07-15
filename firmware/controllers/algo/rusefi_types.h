@@ -8,9 +8,12 @@
 #define CONTROLLERS_ALGO_RUSEFI_TYPES_H_
 
 #include <stdint.h>
+#include <sys/types.h>
 #include "rusefi_enums.h"
 #include "rusefi_generated.h"
 
+// time in seconds
+typedef time_t efitimesec_t;
 
 /**
  * integer time in milliseconds

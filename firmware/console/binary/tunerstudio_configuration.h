@@ -81,6 +81,7 @@ typedef struct {
 	unsigned int isAcSwitchEngaged : 1; // bit 4
 	unsigned int isTriggerError : 1; // bit 5
 	unsigned int hasFatalError : 1; // bit 6
+	unsigned int isWarnNow : 1; // bit 7
 	int tsConfigVersion;
 	egt_values_s egtValues;
 	float rpmAcceleration;

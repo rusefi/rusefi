@@ -18,6 +18,7 @@ int getVtSizeEstimate(void);
 #include "obd_error_codes.h"
 #include "efifeatures.h"
 #include "stdbool.h"
+#include "rusefi_types.h"
 
 void assertVtList(void);
 
@@ -27,6 +28,7 @@ void assertVtList(void);
  *
  */
 int warning(obd_code_e code, const char *fmt, ...);
+bool isWarningNow(efitimesec_t now);
 /**
  * Something really bad had happened - firmware cannot function
  *

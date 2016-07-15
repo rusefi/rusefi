@@ -102,6 +102,9 @@ void setToyota_2jz_vics(DECLARE_ENGINE_PARAMETER_F) {
 
 	boardConfiguration->isSdCardEnabled = true;
 
+	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	engineConfiguration->trigger.type = TT_2JZ_3_34;
+
 }
 
 

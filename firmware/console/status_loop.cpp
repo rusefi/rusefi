@@ -638,7 +638,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->baseFuel = engine->engineState.baseFuel;
 	tsOutputChannels->actualLastInjection = ENGINE(actualLastInjection);
 
-	tsOutputChannels->timeSeconds = getTimeNowSeconds();
+	efitimesec_t now = getTimeNowSeconds();
+	tsOutputChannels->timeSeconds = now;
+
+	tsOutputChannels->isWarnNow = isWarningNow(now);
 
 	if (engineConfiguration->debugMode == DBG_TPS_ACCEL) {
 		tsOutputChannels->debugIntField1 = engine->tpsAccelEnrichment.cb.getSize();

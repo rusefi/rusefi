@@ -176,7 +176,7 @@ efitimems_t currentTimeMillis(void) {
 }
 
 // todo: this overflows pretty fast!
-int getTimeNowSeconds(void) {
+efitimesec_t getTimeNowSeconds(void) {
 	return currentTimeMillis() / 1000;
 }
 
