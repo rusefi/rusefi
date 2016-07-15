@@ -55,7 +55,7 @@ efitimems_t currentTimeMillis(void);
 /**
  * @brief   Current system time in seconds.
  */
-int getTimeNowSeconds(void);
+efitimesec_t getTimeNowSeconds(void);
 
 #ifdef __cplusplus
 }

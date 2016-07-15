@@ -16,7 +16,6 @@
 #include "lcd_HD44780.h"
 #endif /* EFI_HD44780_LCD */
 
-static time_t timeOfPreviousWarning = -10;
 static LoggingWithStorage logger("error handling");
 
 EXTERN_ENGINE;
@@ -55,6 +54,10 @@ static char warningBuffer[WARNING_BUFFER_SIZE];
 static bool isWarningStreamInitialized = false;
 static MemoryStream warningStream;
 
+bool isWarningNow(efitimesec_t now) {
+	return absI(now - engine->engineState.timeOfPreviousWarning) < 10;
+}
+
 /**
  * OBD_PCM_Processor_Fault is the general error code for now
  *
@@ -64,10 +67,10 @@ int warning(obd_code_e code, const char *fmt, ...) {
 	efiAssert(isWarningStreamInitialized, "warn stream", false);
 	UNUSED(code);
   
-	int now = getTimeNowSeconds();
-	if (absI(now - timeOfPreviousWarning) < 10 || !warningEnabled)
+	efitimesec_t now = getTimeNowSeconds();
+	if (isWarningNow(now) || !warningEnabled)
 		return true; // we just had another warning, let's not spam
-	timeOfPreviousWarning = now;
+	engine->engineState.timeOfPreviousWarning = now;
 
 	engine->engineState.warningCounter++;
 	engine->engineState.lastErrorCode = code;
