@@ -20,6 +20,7 @@ void initAdcInputs(bool boardTestMode);
 void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n);
 ioportid_t getAdcChannelPort(adc_channel_e hwChannel);
 adc_channel_e getAdcChannel(brain_pin_e pin);
+void doSlowAdc(void);
 
 int getAdcHardwareIndexByInternalIndex(int index);
 
