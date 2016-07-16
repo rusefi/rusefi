@@ -143,11 +143,11 @@ ADC_TwoSamplingDelay_5Cycles,   // cr1
 
 AdcDevice fastAdc(&adcgrpcfg_fast);
 
-static void pwmpcb_slow(PWMDriver *pwmp) {
+void doSlowAdc(void) {
+
 	efiAssertVoid(getRemainingStack(chThdSelf())> 32, "lwStAdcSlow");
 
 #if EFI_INTERNAL_ADC
-	(void) pwmp;
 
 	/* Starts an asynchronous ADC conversion operation, the conversion
 	 will be executed in parallel to the current PWM cycle and will
@@ -168,6 +168,11 @@ static void pwmpcb_slow(PWMDriver *pwmp) {
 	chSysUnlockFromIsr()
 	;
 #endif
+}
+
+static void pwmpcb_slow(PWMDriver *pwmp) {
+	(void) pwmp;
+	doSlowAdc();
 }
 
 static void pwmpcb_fast(PWMDriver *pwmp) {
