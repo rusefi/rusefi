@@ -106,15 +106,15 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, bool limitedF
 	 * wetting coefficient works the same way for any injection mode, or is something
 	 * x2 or /2?
 	 */
-	floatms_t injectionDuration = ENGINE(wallFuel).adjust(event->injectorIndex, ENGINE(fuelMs) PASS_ENGINE_PARAMETER);
+	const floatms_t injectionDuration = ENGINE(wallFuel).adjust(event->injectorIndex, ENGINE(fuelMs) PASS_ENGINE_PARAMETER);
 
 	ENGINE(actualLastInjection) = injectionDuration;
 	if (cisnan(injectionDuration)) {
-		warning(CUSTOM_OBD_30, "NaN injection pulse");
+		warning(CUSTOM_OBD_NAN_INJECTION, "NaN injection pulse");
 		return;
 	}
 	if (injectionDuration < 0) {
-		warning(CUSTOM_OBD_31, "Negative injection pulse %f", injectionDuration);
+		warning(CUSTOM_OBD_NEG_INJECTION, "Negative injection pulse %f", injectionDuration);
 		return;
 	}
 
@@ -126,14 +126,6 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, bool limitedF
 	OutputSignal *signal = &ENGINE(engineConfiguration2)->fuelActuators[eventIndex];
 
 	if (event->isSimultanious) {
-		if (injectionDuration < 0) {
-			firmwareError("duration cannot be negative: %d", injectionDuration);
-			return;
-		}
-		if (cisnan(injectionDuration)) {
-			firmwareError("NaN in scheduleOutput", injectionDuration);
-			return;
-		}
 		/**
 		 * this is pretty much copy-paste of 'scheduleOutput'
 		 * 'scheduleOutput' is currently only used for injection, so maybe it should be
