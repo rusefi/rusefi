@@ -216,7 +216,7 @@ static void showLine(lcd_line_e line, int screenY) {
 			} else {
 				sdState = 'D';
 			}
-			int seconds = getTimeNowSeconds();
+			efitimesec_t seconds = getTimeNowSeconds();
 			if (seconds < 10000) {
 				lcdPrintf("  %d%c", seconds, sdState);
 			}

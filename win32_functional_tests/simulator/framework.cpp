@@ -22,8 +22,12 @@ efitimems_t currentTimeMillis(void) {
 }
 
 // todo; reduce code duplication with prod code?
-int getTimeNowSeconds(void) {
+efitimesec_t getTimeNowSeconds(void) {
 	return chTimeNow() / CH_FREQUENCY;
+}
+
+bool isWarningNow(efitimesec_t now) {
+	return false;
 }
 
 int getRusEfiVersion(void) {
