@@ -1,10 +1,14 @@
 /*
  * @file CJ125.cpp
  *
+ * Based on Jeff "Turbo SOB" work
+ *
  * @date: Jun 24, 2016
  * @author Andrey Belomutskiy, (c) 2012-2016
  *
  */
+
+#include "CJ125.h"
 
 /**********************************************************************************
     INIT_REG1 - CJ125 Initialization Register 1

@@ -25,8 +25,6 @@ EXTERN_ENGINE
 
 static Logging *logger;
 
-#define ALTERNATOR_VALVE_PWM_FREQUENCY 300
-
 extern pin_output_mode_e DEFAULT_OUTPUT;
 
 static SimplePwm alternatorControl;
@@ -156,7 +154,7 @@ void initAlternatorCtrl(Logging *sharedLogger) {
 	} else {
 		startSimplePwmExt(&alternatorControl, "Alternator control", boardConfiguration->alternatorControlPin,
 				&alternatorPin,
-				ALTERNATOR_VALVE_PWM_FREQUENCY, 0.1, applyAlternatorPinState);
+				engineConfiguration->alternatorPwmFrequency, 0.1, applyAlternatorPinState);
 	}
 	chThdCreateStatic(alternatorControlThreadStack, sizeof(alternatorControlThreadStack), LOWPRIO,
 			(tfunc_t) AltCtrlThread, NULL);

@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jul 05 10:25:36 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jul 17 01:44:37 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -450,7 +450,7 @@ typedef struct {
 	/**
 	 * offset 256
 	 */
-	brain_pin_e wboPumpPin;
+	int unused3;
 	/**
 	 * offset 260
 	 */
@@ -592,6 +592,9 @@ typedef struct {
 	/**
 	offset 376 bit 15 */
 	bool onOffAlternatorLogic : 1;
+	/**
+	offset 376 bit 16 */
+	bool isCJ125Enabled : 1;
 	/**
 	 * offset 380
 	 */
@@ -1891,4 +1894,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jul 05 10:25:36 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jul 17 01:44:37 EDT 2016

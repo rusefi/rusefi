@@ -223,7 +223,6 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 	setDefaultIdleParameters();
 #endif
 	boardConfiguration->wboHeaterPin = GPIO_UNASSIGNED;
-	boardConfiguration->wboPumpPin = GPIO_UNASSIGNED;
 
 	boardConfiguration->mainRelayPin = GPIO_UNASSIGNED;
 	boardConfiguration->mainRelayPinMode = OM_DEFAULT;

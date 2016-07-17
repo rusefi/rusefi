@@ -369,8 +369,8 @@
 #define electronicThrottlePin1Mode_offset 872
 #define electronicThrottlePin1Mode_offset_hex 368
 #define wboHeaterPin_offset 876
-#define wboPumpPin_offset 880
-#define wboPumpPin_offset_hex 370
+#define unused3_offset 880
+#define unused3_offset_hex 370
 #define fuelLevelEmptyTankVoltage_offset 884
 #define fuelLevelEmptyTankVoltage_offset_hex 374
 #define fuelLevelFullTankVoltage_offset 888
@@ -424,6 +424,7 @@
 #define startConsoleInBinaryMode_offset 1000
 #define useWarmupPidAfr_offset 1000
 #define onOffAlternatorLogic_offset 1000
+#define isCJ125Enabled_offset 1000
 #define logicAnalyzerPins1_offset 1004
 #define logicAnalyzerPins2_offset 1008
 #define logicAnalyzerPins3_offset 1012
