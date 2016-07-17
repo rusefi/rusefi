@@ -161,7 +161,7 @@ static ALWAYS_INLINE void handleFuel(bool limitedFuel, uint32_t eventIndex, int 
 	 */
 	FuelSchedule *fs = ENGINE(engineConfiguration2)->injectionEvents;
 
-	InjectionEventList *source = &fs->injectionEvents;
+	InjectionEventList *injectionEvents = &fs->injectionEvents;
 
 	if (!fs->hasEvents[eventIndex])
 		return;
@@ -171,12 +171,12 @@ static ALWAYS_INLINE void handleFuel(bool limitedFuel, uint32_t eventIndex, int 
 
 	ENGINE(fuelMs) = getFuelMs(rpm PASS_ENGINE_PARAMETER) * CONFIG(globalFuelCorrection);
 
-	for (int i = 0; i < source->size; i++) {
-		InjectionEvent *event = &source->elements[i];
+	for (int eventIndex = 0; eventIndex < injectionEvents->size; eventIndex++) {
+		InjectionEvent *event = &injectionEvents->elements[eventIndex];
 		if (event->injectionStart.eventIndex != eventIndex) {
 			continue;
 		}
-		handleFuelInjectionEvent(i, limitedFuel, event, rpm PASS_ENGINE_PARAMETER);
+		handleFuelInjectionEvent(eventIndex, limitedFuel, event, rpm PASS_ENGINE_PARAMETER);
 	}
 }
 
@@ -203,7 +203,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t eventInde
 
 	float dwellMs = ENGINE(engineState.sparkDwell);
 	if (cisnan(dwellMs) || dwellMs < 0) {
-		firmwareError("invalid dwell: %f at %d", dwellMs, rpm);
+		warning(CUSTOM_OBD_45, "invalid dwell: %f at %d", dwellMs, rpm);
 		return;
 	}
 
@@ -276,9 +276,10 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t eventInde
 
 static ALWAYS_INLINE void handleSpark(bool limitedSpark, uint32_t eventIndex, int rpm,
 		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
-	if (!isValidRpm(rpm) || !CONFIG(isIgnitionEnabled))
-		return; // this might happen for instance in case of a single trigger event after a pause
-
+	if (!isValidRpm(rpm) || !CONFIG(isIgnitionEnabled)) {
+		 // this might happen for instance in case of a single trigger event after a pause
+		return;
+	}
 	/**
 	 * Ignition schedule is defined once per revolution
 	 * See initializeIgnitionActions()
@@ -371,8 +372,6 @@ static ALWAYS_INLINE void scheduleIgnitionAndFuelEvents(int rpm, int revolutionI
 	}
 	initializeIgnitionActions(ENGINE(engineState.timingAdvance), ENGINE(engineState.dwellAngle), list PASS_ENGINE_PARAMETER);
 	engine->m.ignitionSchTime = GET_TIMESTAMP() - engine->m.beforeIgnitionSch;
-
-//	engine->prepareFuelSchedule(PASS_ENGINE_PARAMETER_F);
 }
 
 /**
@@ -423,6 +422,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	}
 
 	if (limitedSpark || limitedFuel) {
+		// todo: this is not really a warning
 		warning(CUSTOM_OBD_34, "skipping stroke due to rpm=%d", rpm);
 	}
 
