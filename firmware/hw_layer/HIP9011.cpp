@@ -86,7 +86,7 @@ static Logging *logger;
 // SPI_CR1_CPHA Clock Phase
 // todo: nicer method which would mention SPI speed explicitly?
 
-static SPIConfig spicfg = { NULL,
+static SPIConfig hipSpiCfg = { NULL,
 /* HW dependent part.*/
 NULL, 0,
 SPI_CR1_MSTR |
@@ -109,7 +109,8 @@ static void checkResponse(void) {
 	spiUnselect(driver); \
 	checkResponse();
 
-spi_device_e spiDevice = SPI_DEVICE_2;
+// todo: make this configurable
+spi_device_e hipSpiDevice = SPI_DEVICE_2;
 
 static SPIDriver *driver;
 
@@ -140,7 +141,7 @@ static void showHipInfo(void) {
 	            engine->knockCount, engineConfiguration->maxKnockSubDeg);
 
 	scheduleMsg(logger, "spi=%s IntHold@%s response count=%d incorrect response=%d",
-			getSpi_device_e(spiDevice),
+			getSpi_device_e(hipSpiDevice),
 			hwPortname(boardConfiguration->hip9011IntHoldPin),
 			correctResponse, invalidResponse);
 	scheduleMsg(logger, "CS@%s updateCount=%d", hwPortname(boardConfiguration->hip9011CsPin), settingUpdateCount);
@@ -151,9 +152,9 @@ static void showHipInfo(void) {
 			getPinNameByAdcChannel(engineConfiguration->hipOutputChannel, pinNameBuffer),
 			hipValueMax,
 			spiCount, boardConfiguration->useTpicAdvancedMode);
-	scheduleMsg(logger, "mosi=%s", hwPortname(getMosiPin(spiDevice)));
-	scheduleMsg(logger, "miso=%s", hwPortname(getMisoPin(spiDevice)));
-	scheduleMsg(logger, "sck=%s", hwPortname(getSckPin(spiDevice)));
+	scheduleMsg(logger, "mosi=%s", hwPortname(getMosiPin(hipSpiDevice)));
+	scheduleMsg(logger, "miso=%s", hwPortname(getMisoPin(hipSpiDevice)));
+	scheduleMsg(logger, "sck=%s", hwPortname(getSckPin(hipSpiDevice)));
 
 	scheduleMsg(logger, "start %f end %f", engineConfiguration->knockDetectionWindowStart,
 			engineConfiguration->knockDetectionWindowEnd);
@@ -376,8 +377,8 @@ static void hipStartupCode(void) {
 	 * asynchronous mode
 	 */
 	spiStop(driver);
-	spicfg.end_cb = endOfSpiExchange;
-	spiStart(driver, &spicfg);
+	hipSpiCfg.end_cb = endOfSpiExchange;
+	spiStart(driver, &hipSpiCfg);
 	state = READY_TO_INTEGRATE;
 }
 
@@ -405,7 +406,6 @@ static msg_t hipThread(void *arg) {
 }
 
 void initHip9011(Logging *sharedLogger) {
-	driver = getSpiDevice(spiDevice);
 	logger = sharedLogger;
 	addConsoleAction("hipinfo", showHipInfo);
 	if (!boardConfiguration->isHip9011Enabled)
@@ -417,11 +417,10 @@ void initHip9011(Logging *sharedLogger) {
 
 	prepareHip9011RpmLookup(currentAngleWindowWidth);
 
-	// todo: configurable
-//	driver = getSpiDevice(boardConfiguration->hip9011SpiDevice);
+	driver = getSpiDevice(engineConfiguration->hip9011SpiDevice);
 
-	spicfg.ssport = getHwPort(boardConfiguration->hip9011CsPin);
-	spicfg.sspad = getHwPin(boardConfiguration->hip9011CsPin);
+	hipSpiCfg.ssport = getHwPort(boardConfiguration->hip9011CsPin);
+	hipSpiCfg.sspad = getHwPin(boardConfiguration->hip9011CsPin);
 
 	outputPinRegisterExt2("hip int/hold", &intHold, boardConfiguration->hip9011IntHoldPin,
 			&boardConfiguration->hip9011IntHoldPinMode);
@@ -429,7 +428,7 @@ void initHip9011(Logging *sharedLogger) {
 			&boardConfiguration->hip9011CsPinMode);
 
 	scheduleMsg(logger, "Starting HIP9011/TPIC8101 driver");
-	spiStart(driver, &spicfg);
+	spiStart(driver, &hipSpiCfg);
 
 	currentBandIndex = getBandIndex();
 

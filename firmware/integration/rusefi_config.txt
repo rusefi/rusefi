@@ -419,7 +419,7 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fas
 	pin_output_mode_e electronicThrottlePin1Mode;
 
 	brain_pin_e wboHeaterPin;
-	int unused3;
+	brain_pin_e cj125CsPin;
 	float fuelLevelEmptyTankVoltage;;"V",      1,      0,       0,10,      2
 	float fuelLevelFullTankVoltage;;"V",      1,      0,       0,10,      2
 	ego_sensor_e afr_type;AFR, WBO, EGO - whatever you like to call it;
@@ -713,7 +713,9 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	fsio_pwm_freq_t[AUX_PID_COUNT iterate] auxPidFrequency;
 	int alternatorPwmFrequency;;"Hz",        1,     0,  0,    3000.0,  0
 	mass_storage_e storageMode;
-	int[142] unused;
+	spi_device_e cj125SpiDevice;
+	pin_output_mode_e cj125CsPinMode;
+	int[140] unused;
 	
 
 end_struct

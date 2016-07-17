@@ -8,7 +8,31 @@
  *
  */
 
+#include "engine.h"
 #include "CJ125.h"
+#include "pwm_generator.h"
+#include "pid.h"
+#include "pin_repository.h"
+#include "hardware.h"
+
+EXTERN_ENGINE;
+
+static SimplePwm wboHeaderControl;
+static OutputPin wboHeaderPin;
+static OutputPin cj125Cs;
+
+// todo: make this configurable
+spi_device_e cj125SpiDevice = SPI_DEVICE_2;
+
+static SPIDriver *driver;
+
+
+static SPIConfig cj125spicfg = { NULL,
+/* HW dependent part.*/
+NULL, 0,
+SPI_CR1_MSTR |
+//SPI_CR1_BR_1 // 5MHz
+		SPI_CR1_CPHA | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 };
 
 /**********************************************************************************
     INIT_REG1 - CJ125 Initialization Register 1
@@ -39,6 +63,26 @@
 
 void initCJ125(void) {
 	// still a lot to be done here :)
+
+	if (!boardConfiguration->isCJ125Enabled)
+		return;
+
+	cj125spicfg.ssport = getHwPort(boardConfiguration->cj125CsPin);
+	cj125spicfg.sspad = getHwPin(boardConfiguration->cj125CsPin);
+
+	driver = getSpiDevice(engineConfiguration->cj125SpiDevice);
+
+	outputPinRegisterExt2("cj125 CS", &cj125Cs, boardConfiguration->cj125CsPin,
+			&engineConfiguration->cj125CsPinMode);
+
+	if (boardConfiguration->wboHeaterPin != GPIO_UNASSIGNED) {
+		// todo: use custom pin state method, turn pin off while not running
+		startSimplePwmExt(&wboHeaderControl, "heater control", boardConfiguration->wboHeaterPin,
+				&wboHeaderPin,
+				300, 0.1, applyPinState);
+
+
+	}
 }
 
 
