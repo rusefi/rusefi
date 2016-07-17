@@ -369,8 +369,8 @@
 #define electronicThrottlePin1Mode_offset 872
 #define electronicThrottlePin1Mode_offset_hex 368
 #define wboHeaterPin_offset 876
-#define unused3_offset 880
-#define unused3_offset_hex 370
+#define cj125CsPin_offset 880
+#define cj125CsPin_offset_hex 370
 #define fuelLevelEmptyTankVoltage_offset 884
 #define fuelLevelEmptyTankVoltage_offset_hex 374
 #define fuelLevelFullTankVoltage_offset 888
@@ -859,7 +859,9 @@
 #define auxPidFrequency4_offset 2470
 #define alternatorPwmFrequency_offset 2472
 #define storageMode_offset 2476
-#define unused_offset 2480
+#define cj125SpiDevice_offset 2480
+#define cj125CsPinMode_offset 2484
+#define unused_offset 2488
 #define le_formulas1_offset 3048
 #define le_formulas2_offset 3248
 #define le_formulas3_offset 3448

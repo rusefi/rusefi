@@ -223,6 +223,9 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 	setDefaultIdleParameters();
 #endif
 	boardConfiguration->wboHeaterPin = GPIO_UNASSIGNED;
+	boardConfiguration->cj125CsPin = GPIO_UNASSIGNED;
+
+	boardConfiguration->hip9011CsPin = GPIO_UNASSIGNED;
 
 	boardConfiguration->mainRelayPin = GPIO_UNASSIGNED;
 	boardConfiguration->mainRelayPinMode = OM_DEFAULT;
@@ -694,6 +697,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	strcpy(config->timingAdditive, "0");
 
 	engineConfiguration->hip9011SpiDevice = SPI_DEVICE_2;
+	engineConfiguration->cj125SpiDevice = SPI_DEVICE_2;
 
 	engineConfiguration->isAlternatorControlEnabled = true;
 

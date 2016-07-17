@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jul 17 01:44:37 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jul 17 02:23:45 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -450,7 +450,7 @@ typedef struct {
 	/**
 	 * offset 256
 	 */
-	int unused3;
+	brain_pin_e cj125CsPin;
 	/**
 	 * offset 260
 	 */
@@ -1679,7 +1679,15 @@ typedef struct {
 	/**
 	 * offset 2480
 	 */
-	int unused[142];
+	spi_device_e cj125SpiDevice;
+	/**
+	 * offset 2484
+	 */
+	pin_output_mode_e cj125CsPinMode;
+	/**
+	 * offset 2488
+	 */
+	int unused[140];
 	/** total size 3048*/
 } engine_configuration_s;
 
@@ -1894,4 +1902,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jul 17 01:44:37 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jul 17 02:23:45 EDT 2016
