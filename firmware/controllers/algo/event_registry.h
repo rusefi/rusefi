@@ -33,8 +33,8 @@ class InjectionEvent {
 public:
 	InjectionEvent();
 	/**
-	 * This is a performance optimization - it's more efficient to handle all
-	 * injectors together if that's the case
+	 * This is a performance optimization for IM_SIMULTANEOUS fuel strategy.
+	 * It's more efficient to handle all injectors together if that's the case
 	 */
 	bool isSimultanious;
 	NamedOutputPin *output;
