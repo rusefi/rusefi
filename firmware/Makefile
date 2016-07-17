@@ -100,6 +100,7 @@ include $(CHIBIOS)/os/various/fatfs_bindings/fatfs.mk
 include console/binary/tunerstudio.mk
 include ext/ext.mk
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
+include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
 include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
 include development/development.mk
 include controllers/controllers.mk
@@ -154,6 +155,7 @@ CPPSRC = $(CHCPPSRC) \
 	$(SYSTEMSRC_CPP) \
 	$(ENGINES_SRC_CPP) \
 	$(HW_LAYER_EMS_CPP) \
+	$(HW_SENSORS_SRC) \
 	$(TUNERSTUDIO_SRC_CPP) \
 	$(CONSOLE_SRC_CPP) \
 	$(CONTROLLERS_SENSORS_SRC_CPP) \
@@ -207,6 +209,7 @@ INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
 	hw_layer/serial_over_usb \
 	hw_layer/algo \
 	hw_layer/lcd \
+	hw_layer/sensors \
 	hw_layer/mass_storage \
 	hw_layer/stm32f4 \
 	development \

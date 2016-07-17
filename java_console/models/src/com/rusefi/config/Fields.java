@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jul 02 18:47:29 EDT 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jul 17 01:44:37 EDT 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -373,8 +373,8 @@ public class Fields {
 	public static final int electronicThrottlePin1Mode_offset = 872;
 	public static final int electronicThrottlePin1Mode_offset_hex = 368;
 	public static final int wboHeaterPin_offset = 876;
-	public static final int wboPumpPin_offset = 880;
-	public static final int wboPumpPin_offset_hex = 370;
+	public static final int unused3_offset = 880;
+	public static final int unused3_offset_hex = 370;
 	public static final int fuelLevelEmptyTankVoltage_offset = 884;
 	public static final int fuelLevelEmptyTankVoltage_offset_hex = 374;
 	public static final int fuelLevelFullTankVoltage_offset = 888;
@@ -428,6 +428,7 @@ public class Fields {
 	public static final int startConsoleInBinaryMode_offset = 1000;
 	public static final int useWarmupPidAfr_offset = 1000;
 	public static final int onOffAlternatorLogic_offset = 1000;
+	public static final int isCJ125Enabled_offset = 1000;
 	public static final int logicAnalyzerPins1_offset = 1004;
 	public static final int logicAnalyzerPins2_offset = 1008;
 	public static final int logicAnalyzerPins3_offset = 1012;
@@ -861,7 +862,8 @@ public class Fields {
 	public static final int auxPidFrequency3_offset = 2468;
 	public static final int auxPidFrequency4_offset = 2470;
 	public static final int alternatorPwmFrequency_offset = 2472;
-	public static final int unused_offset = 2476;
+	public static final int storageMode_offset = 2476;
+	public static final int unused_offset = 2480;
 	public static final int le_formulas1_offset = 3048;
 	public static final int le_formulas2_offset = 3248;
 	public static final int le_formulas3_offset = 3448;
@@ -1133,7 +1135,7 @@ public class Fields {
 	public static final Field ETBCONTROLPIN2 = Field.create("ETBCONTROLPIN2", 868, FieldType.INT, brain_pin_e);
 	public static final Field ELECTRONICTHROTTLEPIN1MODE = Field.create("ELECTRONICTHROTTLEPIN1MODE", 872, FieldType.INT, pin_output_mode_e);
 	public static final Field WBOHEATERPIN = Field.create("WBOHEATERPIN", 876, FieldType.INT, brain_pin_e);
-	public static final Field WBOPUMPPIN = Field.create("WBOPUMPPIN", 880, FieldType.INT, brain_pin_e);
+	public static final Field UNUSED3 = Field.create("UNUSED3", 880, FieldType.INT);
 	public static final Field FUELLEVELEMPTYTANKVOLTAGE = Field.create("FUELLEVELEMPTYTANKVOLTAGE", 884, FieldType.FLOAT);
 	public static final Field FUELLEVELFULLTANKVOLTAGE = Field.create("FUELLEVELFULLTANKVOLTAGE", 888, FieldType.FLOAT);
 	public static final String[] ego_sensor_e = {"BPSX", "Innovate", "14Point7", "Narrow", "PLX"};
@@ -1181,6 +1183,7 @@ public class Fields {
 	public static final Field STARTCONSOLEINBINARYMODE = Field.create("STARTCONSOLEINBINARYMODE", 1000, FieldType.BIT, 13);
 	public static final Field USEWARMUPPIDAFR = Field.create("USEWARMUPPIDAFR", 1000, FieldType.BIT, 14);
 	public static final Field ONOFFALTERNATORLOGIC = Field.create("ONOFFALTERNATORLOGIC", 1000, FieldType.BIT, 15);
+	public static final Field ISCJ125ENABLED = Field.create("ISCJ125ENABLED", 1000, FieldType.BIT, 16);
 	public static final Field LOGICANALYZERPINS1 = Field.create("LOGICANALYZERPINS1", 1004, FieldType.INT, brain_input_pin_e);
 	public static final Field LOGICANALYZERPINS2 = Field.create("LOGICANALYZERPINS2", 1008, FieldType.INT, brain_input_pin_e);
 	public static final Field LOGICANALYZERPINS3 = Field.create("LOGICANALYZERPINS3", 1012, FieldType.INT, brain_input_pin_e);
@@ -1469,6 +1472,8 @@ public class Fields {
 	public static final Field AUXPIDFREQUENCY3 = Field.create("AUXPIDFREQUENCY3", 2468, FieldType.INT);
 	public static final Field AUXPIDFREQUENCY4 = Field.create("AUXPIDFREQUENCY4", 2470, FieldType.INT);
 	public static final Field ALTERNATORPWMFREQUENCY = Field.create("ALTERNATORPWMFREQUENCY", 2472, FieldType.INT);
+	public static final String[] mass_storage_e = {"Auto", "Always", "Never"};
+	public static final Field STORAGEMODE = Field.create("STORAGEMODE", 2476, FieldType.INT, mass_storage_e);
 	public static final Field LE_FORMULAS1 = Field.create("LE_FORMULAS1", 3048, FieldType.INT);
 	public static final Field LE_FORMULAS2 = Field.create("LE_FORMULAS2", 3248, FieldType.INT);
 	public static final Field LE_FORMULAS3 = Field.create("LE_FORMULAS3", 3448, FieldType.INT);
