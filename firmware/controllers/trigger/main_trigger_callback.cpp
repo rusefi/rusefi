@@ -62,6 +62,7 @@ EXTERN_ENGINE
 extern bool hasFirmwareErrorFlag;
 
 static LocalVersionHolder triggerVersion;
+static const char *prevOutputName = NULL;
 
 extern engine_pins_s enginePins;
 static MainTriggerCallback mainTriggerCallbackInstance;
@@ -150,7 +151,10 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, bool limitedF
 		// we are in this branch of code only in case of NOT IM_SIMULTANEOUS injection
 		if (rpm > 2 * engineConfiguration->cranking.rpm) {
 			const char *outputName = event->output->name;
-
+			if (prevOutputName == outputName) {
+				warning(CUSTOM_OBD_46, "looks like skipped fuel event");
+			}
+			prevOutputName = outputName;
 		}
 
 		scheduleOutput(signal, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration), event->output);
