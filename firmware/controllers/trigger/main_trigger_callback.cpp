@@ -98,8 +98,9 @@ static void endSimultaniousInjection(Engine *engine) {
 
 static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, bool limitedFuel, InjectionEvent *event,
 		int rpm DECLARE_ENGINE_PARAMETER_S) {
-	if (limitedFuel)
+	if (limitedFuel) {
 		return; // todo: move this check up
+	}
 
 	/**
 	 * todo: this is a bit tricky with batched injection. is it? Does the same
@@ -118,8 +119,9 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, bool limitedF
 		return;
 	}
 
-	if (engine->isCylinderCleanupMode)
+	if (engine->isCylinderCleanupMode) {
 		return;
+	}
 
 	floatus_t injectionStartDelayUs = ENGINE(rpmCalculator.oneDegreeUs) * event->injectionStart.angleOffset;
 
@@ -144,6 +146,12 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, bool limitedF
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 		printf("scheduling injection angle=%f/delay=%f injectionDuration=%f\r\n", event->injectionStart.angleOffset, injectionStartDelayUs, injectionDuration);
 #endif
+
+		// we are in this branch of code only in case of NOT IM_SIMULTANEOUS injection
+		if (rpm > 2 * engineConfiguration->cranking.rpm) {
+			const char *outputName = event->output->name;
+
+		}
 
 		scheduleOutput(signal, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration), event->output);
 	}
@@ -171,12 +179,12 @@ static ALWAYS_INLINE void handleFuel(bool limitedFuel, uint32_t eventIndex, int 
 
 	ENGINE(fuelMs) = getFuelMs(rpm PASS_ENGINE_PARAMETER) * CONFIG(globalFuelCorrection);
 
-	for (int eventIndex = 0; eventIndex < injectionEvents->size; eventIndex++) {
-		InjectionEvent *event = &injectionEvents->elements[eventIndex];
+	for (int injEventIndex = 0; injEventIndex < injectionEvents->size; injEventIndex++) {
+		InjectionEvent *event = &injectionEvents->elements[injEventIndex];
 		if (event->injectionStart.eventIndex != eventIndex) {
 			continue;
 		}
-		handleFuelInjectionEvent(eventIndex, limitedFuel, event, rpm PASS_ENGINE_PARAMETER);
+		handleFuelInjectionEvent(injEventIndex, limitedFuel, event, rpm PASS_ENGINE_PARAMETER);
 	}
 }
 
