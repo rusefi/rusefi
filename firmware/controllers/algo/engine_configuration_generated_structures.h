@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jul 17 02:23:45 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jul 19 09:56:19 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -243,11 +243,11 @@ typedef struct {
 	/**
 	 * offset 16
 	 */
-	float customSyncRatioFrom;
+	float unusedcustomSyncRatioFrom;
 	/**
 	 * offset 20
 	 */
-	float customSyncRatioTo;
+	float unusedcustomSyncRatioTo;
 	/**
 	 * offset 24
 	 */
@@ -1902,4 +1902,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jul 17 02:23:45 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jul 19 09:56:19 EDT 2016

@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jul 17 02:23:45 EDT 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jul 19 09:56:19 EDT 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -239,9 +239,9 @@ public class Fields {
 	public static final int trigger_customTotalToothCount_offset_hex = 220;
 	public static final int trigger_customSkippedToothCount_offset = 548;
 	public static final int trigger_customSkippedToothCount_offset_hex = 224;
-	public static final int trigger_customSyncRatioFrom_offset = 552;
-	public static final int trigger_customSyncRatioFrom_offset_hex = 228;
-	public static final int trigger_customSyncRatioTo_offset = 556;
+	public static final int trigger_unusedcustomSyncRatioFrom_offset = 552;
+	public static final int trigger_unusedcustomSyncRatioFrom_offset_hex = 228;
+	public static final int trigger_unusedcustomSyncRatioTo_offset = 556;
 	public static final int trigger_customUseRiseEdge_offset = 560;
 	public static final int trigger_customUseRiseEdge_offset_hex = 230;
 	public static final int hip9011SpiDevice_offset = 564;
@@ -1052,8 +1052,8 @@ public class Fields {
 	public static final Field TRIGGER_USEONLYFIRSTCHANNEL = Field.create("TRIGGER_USEONLYFIRSTCHANNEL", 540, FieldType.BIT, 2);
 	public static final Field TRIGGER_CUSTOMTOTALTOOTHCOUNT = Field.create("TRIGGER_CUSTOMTOTALTOOTHCOUNT", 544, FieldType.INT);
 	public static final Field TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT = Field.create("TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT", 548, FieldType.INT);
-	public static final Field TRIGGER_CUSTOMSYNCRATIOFROM = Field.create("TRIGGER_CUSTOMSYNCRATIOFROM", 552, FieldType.FLOAT);
-	public static final Field TRIGGER_CUSTOMSYNCRATIOTO = Field.create("TRIGGER_CUSTOMSYNCRATIOTO", 556, FieldType.FLOAT);
+	public static final Field TRIGGER_UNUSEDCUSTOMSYNCRATIOFROM = Field.create("TRIGGER_UNUSEDCUSTOMSYNCRATIOFROM", 552, FieldType.FLOAT);
+	public static final Field TRIGGER_UNUSEDCUSTOMSYNCRATIOTO = Field.create("TRIGGER_UNUSEDCUSTOMSYNCRATIOTO", 556, FieldType.FLOAT);
 	public static final Field TRIGGER_CUSTOMUSERISEEDGE = Field.create("TRIGGER_CUSTOMUSERISEEDGE", 560, FieldType.INT);
 	public static final Field HIP9011SPIDEVICE = Field.create("HIP9011SPIDEVICE", 564, FieldType.INT);
 	public static final Field GLOBALFUELCORRECTION = Field.create("GLOBALFUELCORRECTION", 568, FieldType.FLOAT);
