@@ -235,9 +235,9 @@
 #define trigger_customTotalToothCount_offset_hex 220
 #define trigger_customSkippedToothCount_offset 548
 #define trigger_customSkippedToothCount_offset_hex 224
-#define trigger_customSyncRatioFrom_offset 552
-#define trigger_customSyncRatioFrom_offset_hex 228
-#define trigger_customSyncRatioTo_offset 556
+#define trigger_unusedcustomSyncRatioFrom_offset 552
+#define trigger_unusedcustomSyncRatioFrom_offset_hex 228
+#define trigger_unusedcustomSyncRatioTo_offset 556
 #define trigger_customUseRiseEdge_offset 560
 #define trigger_customUseRiseEdge_offset_hex 230
 #define hip9011SpiDevice_offset 564
