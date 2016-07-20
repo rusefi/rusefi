@@ -76,7 +76,7 @@ void setHonda600(DECLARE_ENGINE_PARAMETER_F) {
     engineConfiguration->specs.cylindersCount = 4;
     engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
-  engineConfiguration->specs.firingOrder = FO_1_THEN_3_THEN_4_THEN2;
+  engineConfiguration->specs.firingOrder = FO_1_3_4_2;
   engineConfiguration->injectionOffset = 320;
   engineConfiguration->cranking.rpm = 800;
 //	engineConfiguration->ignitionMode = IM_WASTED_SPARK; //IM_INDIVIDUAL_COILS;

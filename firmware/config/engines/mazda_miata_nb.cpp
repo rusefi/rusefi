@@ -32,7 +32,7 @@ void setMazdaMiataNbEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	// set_ignition_mode 2
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	// set_firing_order 2
-	engineConfiguration->specs.firingOrder = FO_1_THEN_3_THEN_4_THEN2;
+	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 
 	setThermistorConfiguration(&engineConfiguration->clt, 0, 32500, 30, 7550, 100, 700);
 	engineConfiguration->clt.config.bias_resistor = 2700;

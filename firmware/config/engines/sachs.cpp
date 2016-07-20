@@ -19,7 +19,7 @@ void setSachs(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->specs.cylindersCount = 1;
 
 	setOperationMode(engineConfiguration, TWO_STROKE);
-	engineConfiguration->specs.firingOrder = FO_ONE_CYLINDER;
+	engineConfiguration->specs.firingOrder = FO_1;
 	engineConfiguration->engineChartSize = 400;
 
 	 // set_injection_offset 0

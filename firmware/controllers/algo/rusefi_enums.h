@@ -11,11 +11,9 @@
 #ifndef RUSEFI_ENUMS_H_
 #define RUSEFI_ENUMS_H_
 
+#include "firing_order.h"
 #include "efifeatures.h"
 
-// for now I want most enums to be 32 bit integers. At some point maybe we will make the one-byte
-// this is about offsets and sizes in TunerStudio
-#define ENUM_32_BITS 2000000000
 
 #define ENUM_16_BITS 20000
 
@@ -317,34 +315,6 @@ typedef enum {
 
 	Force_4b_pin_input_mode = ENUM_32_BITS,
 } pin_input_mode_e;
-
-typedef enum {
-	FO_ONE_CYLINDER = 0,
-
-	// 2 cylinder
-	FO_1_THEN_2 = 8,
-
-	// 3 cylinder
-	FO_1_2_3 = 10,
-
-	// 4 cylinder
-	FO_1_THEN_3_THEN_4_THEN2 = 1,
-	FO_1_THEN_2_THEN_4_THEN3 = 2,
-	FO_1_THEN_3_THEN_2_THEN4 = 3,
-	// 8 cylinder
-	FO_1_8_4_3_6_5_7_2 = 5,
-	FO_1_8_7_2_6_5_4_3 = 11,
-	FO_1_5_4_2_6_3_7_8 = 12,
-	// 5 cylinder
-	FO_1_2_4_5_3 = 6,
-
-	// 6 cylinder
-	FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4 = 4,
-	FO_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6 = 7,
-	FO_1_THEN_2_THEN_3_THEN_4_THEN_5_THEN_6 = 9,
-
-	Force_4b_firing_order = ENUM_32_BITS,
-} firing_order_e;
 
 // todo: better enum name
 typedef enum {

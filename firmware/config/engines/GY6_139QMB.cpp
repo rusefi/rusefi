@@ -91,7 +91,7 @@ void setGy6139qmbDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->specs.cylindersCount = 1;
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 
-	engineConfiguration->specs.firingOrder = FO_ONE_CYLINDER;
+	engineConfiguration->specs.firingOrder = FO_1;
 
 	/**
 	 * We treat the trigger as 8-1 toothed wheel

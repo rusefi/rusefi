@@ -333,31 +333,31 @@ static int order_1_2_3[] = {1, 2, 3};
 int getCylinderId(firing_order_e firingOrder, int index) {
 
 	switch (firingOrder) {
-	case FO_ONE_CYLINDER:
+	case FO_1:
 		return 1;
 // 2 cylinder
-	case FO_1_THEN_2:
+	case FO_1_2:
 		return order_1_2[index];
 // 3 cylinder
 	case FO_1_2_3:
 		return order_1_2_3[index];
 // 4 cylinder
-	case FO_1_THEN_3_THEN_4_THEN2:
+	case FO_1_3_4_2:
 		return order_1_THEN_3_THEN_4_THEN2[index];
-	case FO_1_THEN_2_THEN_4_THEN3:
+	case FO_1_2_4_3:
 		return order_1_THEN_2_THEN_4_THEN3[index];
-	case FO_1_THEN_3_THEN_2_THEN4:
+	case FO_1_3_2_4:
 		return order_1_THEN_3_THEN_2_THEN4[index];
 // 5 cylinder
 	case FO_1_2_4_5_3:
 		return order_1_2_4_5_3[index];
 
 // 6 cylinder
-	case FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4:
+	case FO_1_5_3_6_2_4:
 		return order_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4[index];
-	case FO_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6:
+	case FO_1_4_2_5_3_6:
 		return order_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6[index];
-	case FO_1_THEN_2_THEN_3_THEN_4_THEN_5_THEN_6:
+	case FO_1_2_3_4_5_6:
 		return order_1_THEN_2_THEN_3_THEN_4_THEN_5_THEN_6[index];
 
 // 8 cylinder

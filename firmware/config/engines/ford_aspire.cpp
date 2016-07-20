@@ -101,7 +101,7 @@ void setFordAspireEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	// Denso 195500-2110
 	engineConfiguration->injector.flow = 119.8;
 
-	engineConfiguration->specs.firingOrder = FO_1_THEN_3_THEN_4_THEN2;
+	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 	engineConfiguration->globalTriggerAngleOffset = 175;
 	engineConfiguration->ignitionOffset = 87;
 	engineConfiguration->injectionOffset = 54 + 360;

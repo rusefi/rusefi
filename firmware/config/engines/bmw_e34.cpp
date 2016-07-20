@@ -32,7 +32,7 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 //Base engine setting
 	engineConfiguration->specs.cylindersCount = 6;
 	engineConfiguration->specs.displacement = 2.91;
-	engineConfiguration->specs.firingOrder = FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4;
+	engineConfiguration->specs.firingOrder = FO_1_5_3_6_2_4;
 	engineConfiguration->injectionMode = IM_BATCH;
 	engineConfiguration->twoWireBatchInjection = true;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
