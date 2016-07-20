@@ -201,8 +201,9 @@ static void printSensors(Logging *log, bool fileFormat) {
 	reportSensorF(log, fileFormat, "knck_c", "count", engine->knockCount, 0);
 	reportSensorF(log, fileFormat, "knck_v", "v", engine->knockVolts, 2);
 
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	reportSensorF(log, fileFormat, "int_temp", "C", getMCUInternalTemperature(), 2);
-
+#endif
 
 //	reportSensorF(log, fileFormat, "vref", "V", getVRef(engineConfiguration), 2);
 	if (hasVBatt(PASS_ENGINE_PARAMETER_F)) {
