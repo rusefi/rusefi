@@ -103,10 +103,12 @@ ADC_TwoSamplingDelay_20Cycles,   // cr1
 		ADC_SMPR1_SMP_AN12(ADC_SAMPLING_SLOW) |
 		ADC_SMPR1_SMP_AN13(ADC_SAMPLING_SLOW) |
 		ADC_SMPR1_SMP_AN14(ADC_SAMPLING_SLOW) |
-		ADC_SMPR1_SMP_AN15(ADC_SAMPLING_SLOW)
+		ADC_SMPR1_SMP_AN15(ADC_SAMPLING_SLOW) |
+		ADC_SMPR1_SMP_SENSOR(ADC_SAMPLE_144)
 		, // sample times for channels 10...18
 		ADC_SMPR2_SMP_AN0(ADC_SAMPLING_SLOW) |
 		ADC_SMPR2_SMP_AN1(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN2(ADC_SAMPLING_SLOW) |
 		ADC_SMPR2_SMP_AN3(ADC_SAMPLING_SLOW) |
 		ADC_SMPR2_SMP_AN4(ADC_SAMPLING_SLOW) |
 		ADC_SMPR2_SMP_AN5(ADC_SAMPLING_SLOW) |
@@ -201,6 +203,15 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 	;
 	fastAdc.conversionCount++;
 #endif
+}
+
+float getMCUInternalTemperature(void) {
+	float TemperatureValue = adcToVolts(slowAdc.getAdcValueByHwChannel(ADC_CHANNEL_SENSOR));
+	TemperatureValue -= 0.760; // Subtract the reference voltage at 25°C
+	TemperatureValue /= .0025; // Divide by slope 2.5mV
+
+	TemperatureValue += 25.0; // Add the 25°C
+	return TemperatureValue;
 }
 
 int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
@@ -544,6 +555,7 @@ void initAdcInputs(bool boardTestMode) {
 	 */
 	adcStart(&ADC_SLOW_DEVICE, NULL);
 	adcStart(&ADC_FAST_DEVICE, NULL);
+	adcSTM32EnableTSVREFE(); // Internal temperature sensor
 
 	for (int adc = 0; adc < HW_MAX_ADC_INDEX; adc++) {
 		adc_channel_mode_e mode = adcHwChannelEnabled[adc];
@@ -558,6 +570,8 @@ void initAdcInputs(bool boardTestMode) {
 		}
 	}
 
+	// Internal temperature sensor, Available on ADC1 only
+	slowAdc.enableChannel((adc_channel_e)ADC_CHANNEL_SENSOR);
 
 	slowAdc.init();
 	pwmStart(EFI_INTERNAL_SLOW_ADC_PWM, &pwmcfg_slow);

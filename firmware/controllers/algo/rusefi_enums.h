@@ -439,6 +439,7 @@ typedef enum {
 	EFI_ADC_14 = 14, // PC4
 	EFI_ADC_15 = 15, // PC5
 
+	// todo: bad choice of value since now we have ADC_CHANNEL_SENSOR and could end up with 17 and 18 also
 	EFI_ADC_NONE = 16,
 	EFI_ADC_ERROR = 999,
 
