@@ -126,7 +126,8 @@ typedef struct {
 	float speedToRpmRatio; // 232
 	int warningCounter; // 236
 	int lastErrorCode; // 240
-	int unused3[8];
+	float inrernalMcuTemperature; // 244
+	int unused3[7];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */

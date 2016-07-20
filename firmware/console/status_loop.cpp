@@ -675,6 +675,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	tsOutputChannels->checkEngine = hasErrorCodes();
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
+	tsOutputChannels->inrernalMcuTemperature = getMCUInternalTemperature();
 	tsOutputChannels->idlePosition = getIdlePosition();
 	tsOutputChannels->isTriggerError = isTriggerErrorNow();
 
