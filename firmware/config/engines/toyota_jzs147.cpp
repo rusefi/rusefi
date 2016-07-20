@@ -30,7 +30,7 @@ static void common2jz(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->specs.displacement = 3.0;
 	engineConfiguration->specs.cylindersCount = 6;
-	engineConfiguration->specs.firingOrder = FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4;
+	engineConfiguration->specs.firingOrder = FO_1_5_3_6_2_4;
 	// set_ignition_mode 1
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 

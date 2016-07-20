@@ -25,7 +25,7 @@ void setMitsubishiConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	// set_ignition_mode 2
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-	engineConfiguration->specs.firingOrder = FO_1_THEN_3_THEN_4_THEN2;
+	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 
 	// set_global_trigger_offset_angle 671
 	engineConfiguration->globalTriggerAngleOffset = 671;

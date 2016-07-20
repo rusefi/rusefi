@@ -100,7 +100,7 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->specs.displacement = 1.6;
 
 	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.firingOrder = FO_1_THEN_3_THEN_4_THEN2;
+	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 
 	engineConfiguration->vbattDividerCoeff = 9.75;// ((float) (8.2 + 33)) / 8.2 * 2;
 

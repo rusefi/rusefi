@@ -518,7 +518,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->pedalPositionChannel = EFI_ADC_NONE;
 
-	engineConfiguration->specs.firingOrder = FO_1_THEN_3_THEN_4_THEN2;
+	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 

@@ -31,7 +31,7 @@ void setFordInline6(DECLARE_ENGINE_PARAMETER_F) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
-	engineConfiguration->specs.firingOrder = FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4;
+	engineConfiguration->specs.firingOrder = FO_1_5_3_6_2_4;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_BATCH;
 	engineConfiguration->twoWireBatchInjection = true;

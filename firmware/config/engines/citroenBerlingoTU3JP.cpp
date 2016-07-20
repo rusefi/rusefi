@@ -80,7 +80,7 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->globalTriggerAngleOffset = 114;
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.displacement = 1.360;
-	engineConfiguration->specs.firingOrder = FO_1_THEN_3_THEN_4_THEN2;
+	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->injectionMode = IM_BATCH;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
