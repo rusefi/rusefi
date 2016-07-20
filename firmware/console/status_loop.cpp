@@ -201,6 +201,8 @@ static void printSensors(Logging *log, bool fileFormat) {
 	reportSensorF(log, fileFormat, "knck_c", "count", engine->knockCount, 0);
 	reportSensorF(log, fileFormat, "knck_v", "v", engine->knockVolts, 2);
 
+	reportSensorF(log, fileFormat, "int_temp", "C", getMCUInternalTemperature(), 2);
+
 
 //	reportSensorF(log, fileFormat, "vref", "V", getVRef(engineConfiguration), 2);
 	if (hasVBatt(PASS_ENGINE_PARAMETER_F)) {
@@ -675,7 +677,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	tsOutputChannels->checkEngine = hasErrorCodes();
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	tsOutputChannels->inrernalMcuTemperature = getMCUInternalTemperature();
+	tsOutputChannels->internalMcuTemperature = getMCUInternalTemperature();
 	tsOutputChannels->idlePosition = getIdlePosition();
 	tsOutputChannels->isTriggerError = isTriggerErrorNow();
 

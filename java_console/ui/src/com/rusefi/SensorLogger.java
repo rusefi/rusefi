@@ -15,6 +15,7 @@ public class SensorLogger {
     private static Writer logFile;
 
     private static Sensor[] SENSORS = {Sensor.RPM,
+            Sensor.INT_TEMP,
             Sensor.CLT, Sensor.TPS, Sensor.VBATT,
             Sensor.FUEL_BASE,
             Sensor.T_CHARGE,
