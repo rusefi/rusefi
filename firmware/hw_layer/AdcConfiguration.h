@@ -12,7 +12,8 @@
 class AdcDevice {
 public:
 	AdcDevice(ADCConversionGroup* hwConfig);
-	void addChannel(adc_channel_e hwChannelIndex);
+	void enableChannel(adc_channel_e hwChannelIndex);
+	void enableChannelAndPin(adc_channel_e hwChannelIndex);
 	adc_channel_e getAdcHardwareIndexByInternalIndex(int index);
 	int internalAdcIndexByHardwareIndex[20];
 	bool isHwUsed(adc_channel_e hwChannel);

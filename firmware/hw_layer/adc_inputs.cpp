@@ -411,7 +411,7 @@ bool AdcDevice::isHwUsed(adc_channel_e hwChannelIndex) {
 	return false;
 }
 
-void AdcDevice::addChannel(adc_channel_e hwChannel) {
+void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 	int logicChannel = channelCount++;
 
 	internalAdcIndexByHardwareIndex[hwChannel] = logicChannel;
@@ -424,6 +424,10 @@ void AdcDevice::addChannel(adc_channel_e hwChannel) {
 		hwConfig->sqr1 += (hwChannel) << (5 * (logicChannel - 12));
 	}
 	// todo: support for more then 12 channels? not sure how needed it would be
+}
+
+void AdcDevice::enableChannelAndPin(adc_channel_e hwChannel) {
+	enableChannel(hwChannel);
 
 	initAdcHwChannel(hwChannel);
 }
@@ -548,9 +552,9 @@ void initAdcInputs(bool boardTestMode) {
 		 * in board test mode all currently enabled ADC channels are running in slow mode
 		 */
 		if (mode == ADC_SLOW || (boardTestMode && mode == ADC_FAST)) {
-			slowAdc.addChannel((adc_channel_e) (ADC_CHANNEL_IN0 + adc));
+			slowAdc.enableChannelAndPin((adc_channel_e) (ADC_CHANNEL_IN0 + adc));
 		} else if (mode == ADC_FAST) {
-			fastAdc.addChannel((adc_channel_e) (ADC_CHANNEL_IN0 + adc));
+			fastAdc.enableChannelAndPin((adc_channel_e) (ADC_CHANNEL_IN0 + adc));
 		}
 	}
 

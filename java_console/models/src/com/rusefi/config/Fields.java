@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jul 19 09:56:19 EDT 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jul 19 20:52:56 EDT 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -21,7 +21,7 @@ public class Fields {
 	public static final int EGT_CHANNEL_COUNT = 8;
 	public static final int JOYSTICK_PIN_COUNT = 5;
 	public static final int DIGIPOT_COUNT = 4;
-	public static final int HW_MAX_ADC_INDEX = 16;
+	public static final int HW_MAX_ADC_INDEX = 17;
 	public static final int TRIGGER_SIMULATOR_PIN_COUNT = 3;
 	public static final int LOGIC_ANALYZER_CHANNEL_COUNT = 4;
 	public static final int LE_COMMAND_COUNT = 16;
