@@ -758,7 +758,7 @@ float[MAF_DECODING_COUNT] mafDecoding;kg/hour value.\nBy the way 2.081989116 kg/
 float[MAF_DECODING_COUNT] mafDecodingBins;; "V", 1, 0, -5.0, 150.0, 2
 
 angle_table_t ignitionIatCorrTable;
-float[IGN_LOAD_COUNT] ignitionIatCorrLoadBins;;"Load",   1,   0.0,        0,  300.0,   2
+float[IGN_LOAD_COUNT] ignitionIatCorrLoadBins;;"Temperature",   1,   0.0,        0,  300.0,   2
 float[IGN_RPM_COUNT] ignitionIatCorrRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
 angle_table_t injectionPhase;
