@@ -1,7 +1,6 @@
 package com.rusefi;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
@@ -76,8 +75,11 @@ public class FiringOrderTSLogic {
 
             }
         }
+        String result = logic.length() == 0 ? "" : "|| (" + logic + ")";
 
-        System.out.println("logic" + cylinderId + ": " + logic);
+
+
+        System.out.println("#define ignitionPin" + cylinderId + "logic"  + " " + result + "");
 
     }
 }
