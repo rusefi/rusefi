@@ -31,12 +31,12 @@ public class AutoTest {
         testMitsu();
         testCitroenBerlingo();
         testMazda626();
-        test2003DodgeNeon();
         testFordAspire();
         testMazdaProtege();
         test1995DodgeNeon();
         testFord6();
         testFordFiesta();
+        test2003DodgeNeon();
     }
 
     private static void testSachs() {
