@@ -611,7 +611,7 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 	int16_t acCutoffHighRpm;
 
 	int16_t acIdleRpmBump;
-	int16_t unusedShort;
+	int16_t warningPeriod;
 
 	adc_channel_e vRefAdcChannel;
 

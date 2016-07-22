@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jul 21 23:14:17 EDT 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jul 22 17:07:24 EDT 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -664,7 +664,7 @@ public class Fields {
 	public static final int acCutoffLowRpm_offset = 1520;
 	public static final int acCutoffHighRpm_offset = 1522;
 	public static final int acIdleRpmBump_offset = 1524;
-	public static final int unusedShort_offset = 1526;
+	public static final int warningPeriod_offset = 1526;
 	public static final int vRefAdcChannel_offset = 1528;
 	public static final int knockDetectionWindowStart_offset = 1532;
 	public static final int knockDetectionWindowEnd_offset = 1536;
@@ -1380,7 +1380,7 @@ public class Fields {
 	public static final Field ACCUTOFFLOWRPM = Field.create("ACCUTOFFLOWRPM", 1520, FieldType.INT);
 	public static final Field ACCUTOFFHIGHRPM = Field.create("ACCUTOFFHIGHRPM", 1522, FieldType.INT);
 	public static final Field ACIDLERPMBUMP = Field.create("ACIDLERPMBUMP", 1524, FieldType.INT);
-	public static final Field UNUSEDSHORT = Field.create("UNUSEDSHORT", 1526, FieldType.INT);
+	public static final Field WARNINGPERIOD = Field.create("WARNINGPERIOD", 1526, FieldType.INT);
 	public static final Field VREFADCCHANNEL = Field.create("VREFADCCHANNEL", 1528, FieldType.INT, adc_channel_e);
 	public static final Field KNOCKDETECTIONWINDOWSTART = Field.create("KNOCKDETECTIONWINDOWSTART", 1532, FieldType.FLOAT);
 	public static final Field KNOCKDETECTIONWINDOWEND = Field.create("KNOCKDETECTIONWINDOWEND", 1536, FieldType.FLOAT);
