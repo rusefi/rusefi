@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jul 19 09:56:19 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jul 21 22:52:35 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1631,10 +1631,9 @@ typedef struct {
 	 */
 	float egoValueShift;
 	/**
-	 * Aux Pid #1 dTime
 	 * offset 2408
 	 */
-	int auxPid1DT;
+	int unusedauxPid1DT;
 	/**
 	 * offset 2412
 	 */
@@ -1687,7 +1686,11 @@ typedef struct {
 	/**
 	 * offset 2488
 	 */
-	int unused[140];
+	pid_dt auxPidDT[AUX_PID_COUNT];
+	/**
+	 * offset 2504
+	 */
+	int unused[136];
 	/** total size 3048*/
 } engine_configuration_s;
 
@@ -1902,4 +1905,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jul 19 09:56:19 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jul 21 22:52:35 EDT 2016

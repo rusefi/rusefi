@@ -828,8 +828,8 @@
 #define mapHighValueVoltage_offset_hex 960
 #define egoValueShift_offset 2404
 #define egoValueShift_offset_hex 964
-#define auxPid1DT_offset 2408
-#define auxPid1DT_offset_hex 968
+#define unusedauxPid1DT_offset 2408
+#define unusedauxPid1DT_offset_hex 968
 #define auxPid1_offset 2412
 #define auxPid1_pFactor_offset 2412
 #define auxPid1_iFactor_offset 2416
@@ -861,7 +861,11 @@
 #define storageMode_offset 2476
 #define cj125SpiDevice_offset 2480
 #define cj125CsPinMode_offset 2484
-#define unused_offset 2488
+#define auxPidDT1_offset 2488
+#define auxPidDT2_offset 2492
+#define auxPidDT3_offset 2496
+#define auxPidDT4_offset 2500
+#define unused_offset 2504
 #define le_formulas1_offset 3048
 #define le_formulas2_offset 3248
 #define le_formulas3_offset 3448

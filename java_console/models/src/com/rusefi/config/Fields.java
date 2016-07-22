@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jul 19 20:52:56 EDT 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jul 21 22:52:35 EDT 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -832,8 +832,8 @@ public class Fields {
 	public static final int mapHighValueVoltage_offset_hex = 960;
 	public static final int egoValueShift_offset = 2404;
 	public static final int egoValueShift_offset_hex = 964;
-	public static final int auxPid1DT_offset = 2408;
-	public static final int auxPid1DT_offset_hex = 968;
+	public static final int unusedauxPid1DT_offset = 2408;
+	public static final int unusedauxPid1DT_offset_hex = 968;
 	public static final int auxPid1_offset = 2412;
 	public static final int auxPid1_pFactor_offset = 2412;
 	public static final int auxPid1_iFactor_offset = 2416;
@@ -865,7 +865,11 @@ public class Fields {
 	public static final int storageMode_offset = 2476;
 	public static final int cj125SpiDevice_offset = 2480;
 	public static final int cj125CsPinMode_offset = 2484;
-	public static final int unused_offset = 2488;
+	public static final int auxPidDT1_offset = 2488;
+	public static final int auxPidDT2_offset = 2492;
+	public static final int auxPidDT3_offset = 2496;
+	public static final int auxPidDT4_offset = 2500;
+	public static final int unused_offset = 2504;
 	public static final int le_formulas1_offset = 3048;
 	public static final int le_formulas2_offset = 3248;
 	public static final int le_formulas3_offset = 3448;
@@ -1455,7 +1459,7 @@ public class Fields {
 	public static final Field MAPLOWVALUEVOLTAGE = Field.create("MAPLOWVALUEVOLTAGE", 2396, FieldType.FLOAT);
 	public static final Field MAPHIGHVALUEVOLTAGE = Field.create("MAPHIGHVALUEVOLTAGE", 2400, FieldType.FLOAT);
 	public static final Field EGOVALUESHIFT = Field.create("EGOVALUESHIFT", 2404, FieldType.FLOAT);
-	public static final Field AUXPID1DT = Field.create("AUXPID1DT", 2408, FieldType.INT);
+	public static final Field UNUSEDAUXPID1DT = Field.create("UNUSEDAUXPID1DT", 2408, FieldType.INT);
 	public static final Field AUXPID1_PFACTOR = Field.create("AUXPID1_PFACTOR", 2412, FieldType.FLOAT);
 	public static final Field AUXPID1_IFACTOR = Field.create("AUXPID1_IFACTOR", 2416, FieldType.FLOAT);
 	public static final Field AUXPID1_DFACTOR = Field.create("AUXPID1_DFACTOR", 2420, FieldType.FLOAT);
@@ -1478,6 +1482,10 @@ public class Fields {
 	public static final Field STORAGEMODE = Field.create("STORAGEMODE", 2476, FieldType.INT, mass_storage_e);
 	public static final Field CJ125SPIDEVICE = Field.create("CJ125SPIDEVICE", 2480, FieldType.INT);
 	public static final Field CJ125CSPINMODE = Field.create("CJ125CSPINMODE", 2484, FieldType.INT, pin_output_mode_e);
+	public static final Field AUXPIDDT1 = Field.create("AUXPIDDT1", 2488, FieldType.INT);
+	public static final Field AUXPIDDT2 = Field.create("AUXPIDDT2", 2492, FieldType.INT);
+	public static final Field AUXPIDDT3 = Field.create("AUXPIDDT3", 2496, FieldType.INT);
+	public static final Field AUXPIDDT4 = Field.create("AUXPIDDT4", 2500, FieldType.INT);
 	public static final Field LE_FORMULAS1 = Field.create("LE_FORMULAS1", 3048, FieldType.INT);
 	public static final Field LE_FORMULAS2 = Field.create("LE_FORMULAS2", 3248, FieldType.INT);
 	public static final Field LE_FORMULAS3 = Field.create("LE_FORMULAS3", 3448, FieldType.INT);
