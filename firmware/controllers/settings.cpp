@@ -947,8 +947,8 @@ static void setInjectorLag(float value) {
 }
 
 static void getValue(const char *paramStr) {
-	if (strEqualCaseInsensitive(paramStr, "todo")) {
-		scheduleMsg(&logger, "something");
+	if (strEqualCaseInsensitive(paramStr, "warningPeriod")) {
+		scheduleMsg(&logger, "warningPeriod=%d", engineConfiguration->warningPeriod);
 	}
 
 #if EFI_RTC || defined(__DOXYGEN__)
@@ -975,6 +975,8 @@ static void setValue(const char *paramStr, const char *valueStr) {
 	} else if (strEqualCaseInsensitive(paramStr, "alt_p")) {
 		setAltPFactor(valueF);
 #endif
+	} else if (strEqualCaseInsensitive(paramStr, "warningPeriod")) {
+		engineConfiguration->warningPeriod = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "step1rpm")) {
 		engineConfiguration->step1rpm = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "step1timing")) {

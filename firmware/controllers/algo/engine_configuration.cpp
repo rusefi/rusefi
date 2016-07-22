@@ -412,6 +412,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->iat.config.bias_resistor = 2700;
 
 
+	engineConfiguration->warningPeriod = 10;
+
 	engineConfiguration->step1rpm = 3000;
  	engineConfiguration->step1timing = 10;
 	engineConfiguration->step1RpmWindow = 500;

@@ -55,7 +55,7 @@ static bool isWarningStreamInitialized = false;
 static MemoryStream warningStream;
 
 bool isWarningNow(efitimesec_t now) {
-	return absI(now - engine->engineState.timeOfPreviousWarning) < 10;
+	return absI(now - engine->engineState.timeOfPreviousWarning) < engineConfiguration->warningPeriod;
 }
 
 /**

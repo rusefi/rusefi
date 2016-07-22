@@ -660,7 +660,7 @@
 #define acCutoffLowRpm_offset 1520
 #define acCutoffHighRpm_offset 1522
 #define acIdleRpmBump_offset 1524
-#define unusedShort_offset 1526
+#define warningPeriod_offset 1526
 #define vRefAdcChannel_offset 1528
 #define knockDetectionWindowStart_offset 1532
 #define knockDetectionWindowEnd_offset 1536
