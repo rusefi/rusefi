@@ -1685,7 +1685,7 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		field = "PWM Frequency",						auxPidFrequency1
 		field = "verbose",								isVerboseAuxPid
 		field = "#target based on FSIO map#1"
-		field = "control period",						auxPid1DT, {activateAuxPid1 == 1}
+		field = "control period",						auxPidDT1, {activateAuxPid1 == 1}
 		field = "#PID control"
 		field = "offset",								auxPid1_offset, {activateAuxPid1 == 1}
 		field = "P factor",								auxPid1_pFactor, {activateAuxPid1 == 1}

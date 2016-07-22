@@ -40,7 +40,7 @@ static msg_t auxPidThread(int param) {
 	UNUSED(param);
 		chRegSetThreadName("AuxPidController");
 		while (true) {
-			int dt = maxI(10, engineConfiguration->auxPid1DT);
+			int dt = maxI(10, engineConfiguration->auxPidDT[0]);
 			chThdSleepMilliseconds(dt);
 
 			if (parametersVersion.isOld())
