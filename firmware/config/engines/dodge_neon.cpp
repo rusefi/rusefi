@@ -442,11 +442,11 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->auxPidPins[0] = GPIOD_5; // playing with AUX PID for alternator
 	engineConfiguration->auxPidFrequency[0] = 300;
 
-	engineConfiguration->isVerboseAuxPid = true;
-	engineConfiguration->auxPid1.offset = 10;
-	engineConfiguration->auxPid1.pFactor = 5;
-	engineConfiguration->auxPid1.iFactor = 0.1;
-	engineConfiguration->auxPid1.dFactor = 0.1;
+	engineConfiguration->isVerboseAuxPid1 = true;
+	engineConfiguration->auxPid[0].offset = 10;
+	engineConfiguration->auxPid[0].pFactor = 5;
+	engineConfiguration->auxPid[0].iFactor = 0.1;
+	engineConfiguration->auxPid[0].dFactor = 0.1;
 
 	
 #if EFI_FSIO || defined(__DOXYGEN__)

@@ -30,11 +30,26 @@ extern TunerStudioOutputChannels tsOutputChannels;
 static THD_WORKING_AREA(auxPidThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static LocalVersionHolder parametersVersion;
-static SimplePwm auxPid1;
-static OutputPin auxPid1Pin;
-static pid_s *auxPidS = &persistentState.persistentConfiguration.engineConfiguration.auxPid1;
+static SimplePwm auxPidPwm[AUX_PID_COUNT];
+static OutputPin auxPidPin[AUX_PID_COUNT];
+
+static pid_s *auxPidS = &persistentState.persistentConfiguration.engineConfiguration.auxPid[0];
 static Pid auxPid(auxPidS, 1, 90);
 static Logging *logger;
+
+static bool isEnabled(int index) {
+	// todo: implement bit arrays for configuration
+	switch(index) {
+	case 0:
+		return engineConfiguration->activateAuxPid1;
+	case 1:
+		return engineConfiguration->activateAuxPid2;
+	case 2:
+		return engineConfiguration->activateAuxPid3;
+	default:
+		return engineConfiguration->activateAuxPid4;
+	}
+}
 
 static msg_t auxPidThread(int param) {
 	UNUSED(param);
@@ -62,7 +77,7 @@ static msg_t auxPidThread(int param) {
 			float targetValue = fsioTable1.getValue(rpm, getEngineLoadT(PASS_ENGINE_PARAMETER_F));
 
 			float pwm = auxPid.getValue(targetValue, value, 1);
-			if (engineConfiguration->isVerboseAuxPid) {
+			if (engineConfiguration->isVerboseAuxPid1) {
 				scheduleMsg(logger, "aux duty: %f/value=%f/p=%f/i=%f/d=%f int=%f", pwm, value,
 						auxPid.getP(), auxPid.getI(), auxPid.getD(), auxPid.getIntegration());
 			}
@@ -74,7 +89,7 @@ static msg_t auxPidThread(int param) {
 				tsOutputChannels.debugIntField3 = 10 * targetValue;
 			}
 
-			auxPid1.setSimplePwmDutyCycle(pwm / 100);
+			auxPidPwm[0].setSimplePwmDutyCycle(pwm / 100);
 
 
 		}
@@ -83,23 +98,29 @@ static msg_t auxPidThread(int param) {
 #endif
 }
 
+static void turnAuxPidOn(int index) {
+	if (!isEnabled(index)) {
+		return;
+	}
+
+	if (engineConfiguration->auxPidPins[index] == GPIO_UNASSIGNED) {
+		return;
+	}
+
+	startSimplePwmExt(&auxPidPwm[index], "Aux PID", engineConfiguration->auxPidPins[index],
+			&auxPidPin[0],
+			engineConfiguration->auxPidFrequency[index], 0.1, applyPinState);
+}
+
 void initAuxPid(Logging *sharedLogger) {
 	chThdCreateStatic(auxPidThreadStack, sizeof(auxPidThreadStack), LOWPRIO,
 			(tfunc_t) auxPidThread, NULL);
 
 	logger = sharedLogger;
 
-	if (!engineConfiguration->activateAuxPid1) {
-		return;
+	for (int i = 0;i< AUX_PID_COUNT;i++) {
+		turnAuxPidOn(i);
 	}
-
-	if (engineConfiguration->auxPidPins[0] == GPIO_UNASSIGNED) {
-		return;
-	}
-
-	startSimplePwmExt(&auxPid1, "Aux PID", engineConfiguration->auxPidPins[0],
-			&auxPid1Pin,
-			engineConfiguration->auxPidFrequency[0], 0.1, applyPinState);
 }
 
 #endif

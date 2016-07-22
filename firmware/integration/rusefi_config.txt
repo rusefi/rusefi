@@ -184,13 +184,13 @@ injector_s injector
 
 bit directSelfStimulation;+Should trigger emulator push data right into trigger handling logic, eliminating the need for physical jumper wires?\nPS: Funny name, right? :)
 bit activateAuxPid1;
-bit isVerboseAuxPid;
-bit issue_294_3;
-bit issue_294_4;
-bit issue_294_5;
-bit issue_294_6;
-bit issue_294_7;
-bit issue_294_8;
+bit isVerboseAuxPid1;
+bit activateAuxPid2;
+bit isVerboseAuxPid2;
+bit activateAuxPid3;
+bit isVerboseAuxPid3;
+bit activateAuxPid4;
+bit isVerboseAuxPid4;
 bit issue_294_9;
 bit issue_294_10;
 bit issue_294_11;
@@ -506,7 +506,7 @@ bit is_enabled_spi_2
 	brain_pin_e acRelayPin;
 	pin_output_mode_e acRelayPinMode;
 
-custom pid_dt 4 U32 "ms",      1,      0,       0, 3000,      0
+custom pid_dt 4 scalar, U32,  @OFFSET@, "ms",      1,      0,       0, 3000,      0
 custom fsio_pwm_freq_t 2 scalar,  U16,   @OFFSET@,         "Hz",      1,      0,       0, 3000,      0
 	fsio_pwm_freq_t[LE_COMMAND_COUNT iterate] fsioFrequency;
 
@@ -717,7 +717,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float mapHighValueVoltage;MAP voltage for low point;"v",      1,     0,   0.0,    10,   2 
 	float egoValueShift;EGO value correction;"value",      1,     0,   -10.0,    10,   2 
 	int unusedauxPid1DT
-	pid_s auxPid1;
+	pid_dt[AUX_PID_COUNT iterate] auxPidDT;
 	float crankingIdleAdjustment;Extra idle while cranking;"percent",      1,     0,   -100.0,    100,    
 	float tChargeMinRpmMinTps;
 	float tChargeMinRpmMaxTps;
@@ -729,8 +729,8 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	mass_storage_e storageMode;
 	spi_device_e cj125SpiDevice;
 	pin_output_mode_e cj125CsPinMode;
-	pid_dt[AUX_PID_COUNT iterate] auxPidDT;
-	int[136] unused;
+	pid_s[AUX_PID_COUNT iterate] auxPid;
+	int[124] unused;
 	
 
 end_struct

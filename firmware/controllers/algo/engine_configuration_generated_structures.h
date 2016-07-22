@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jul 21 22:52:35 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jul 21 23:14:17 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -788,25 +788,25 @@ typedef struct {
 	bool activateAuxPid1 : 1;
 	/**
 	offset 80 bit 2 */
-	bool isVerboseAuxPid : 1;
+	bool isVerboseAuxPid1 : 1;
 	/**
 	offset 80 bit 3 */
-	bool issue_294_3 : 1;
+	bool activateAuxPid2 : 1;
 	/**
 	offset 80 bit 4 */
-	bool issue_294_4 : 1;
+	bool isVerboseAuxPid2 : 1;
 	/**
 	offset 80 bit 5 */
-	bool issue_294_5 : 1;
+	bool activateAuxPid3 : 1;
 	/**
 	offset 80 bit 6 */
-	bool issue_294_6 : 1;
+	bool isVerboseAuxPid3 : 1;
 	/**
 	offset 80 bit 7 */
-	bool issue_294_7 : 1;
+	bool activateAuxPid4 : 1;
 	/**
 	offset 80 bit 8 */
-	bool issue_294_8 : 1;
+	bool isVerboseAuxPid4 : 1;
 	/**
 	offset 80 bit 9 */
 	bool issue_294_9 : 1;
@@ -1637,7 +1637,7 @@ typedef struct {
 	/**
 	 * offset 2412
 	 */
-	pid_s auxPid1;
+	pid_dt auxPidDT[AUX_PID_COUNT];
 	/**
 	 * Extra idle while cranking
 	 * offset 2428
@@ -1686,11 +1686,11 @@ typedef struct {
 	/**
 	 * offset 2488
 	 */
-	pid_dt auxPidDT[AUX_PID_COUNT];
+	pid_s auxPid[AUX_PID_COUNT];
 	/**
-	 * offset 2504
+	 * offset 2552
 	 */
-	int unused[136];
+	int unused[124];
 	/** total size 3048*/
 } engine_configuration_s;
 
@@ -1905,4 +1905,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jul 21 22:52:35 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jul 21 23:14:17 EDT 2016
