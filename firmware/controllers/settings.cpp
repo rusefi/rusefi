@@ -852,8 +852,14 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->isJoystickEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "HIP9011")) {
 		boardConfiguration->isHip9011Enabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "auxdebug")) {
-		engineConfiguration->isVerboseAuxPid = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "auxdebug1")) {
+		engineConfiguration->isVerboseAuxPid1 = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "auxdebug2")) {
+		engineConfiguration->isVerboseAuxPid2 = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "auxdebug3")) {
+		engineConfiguration->isVerboseAuxPid3 = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "auxdebug4")) {
+		engineConfiguration->isVerboseAuxPid4 = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "altdebug")) {
 		boardConfiguration->isVerboseAlternator = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "tpic_advanced_mode")) {
