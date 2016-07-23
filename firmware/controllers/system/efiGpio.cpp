@@ -31,8 +31,8 @@ OutputPin::OutputPin() {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	port = NULL;
 	pin = 0;
-	currentLogicValue = INITIAL_PIN_STATE;
 #endif
+	currentLogicValue = INITIAL_PIN_STATE;
 }
 
 bool OutputPin::isInitialized() {

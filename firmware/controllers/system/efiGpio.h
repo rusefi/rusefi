@@ -10,6 +10,8 @@
 #include "main.h"
 #include "io_pins.h"
 
+#define INITIAL_PIN_STATE -1
+
 // mode >= 0  is always true since that's an unsigned
 #define assertOMode(mode) { \
 	efiAssertVoid(mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e"); \
