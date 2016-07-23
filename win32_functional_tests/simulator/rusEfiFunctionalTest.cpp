@@ -30,6 +30,10 @@
 #include "engine_controller.h"
 #include "map_averaging.h"
 
+#define DEFAULT_SIM_RPM 1200
+#define DEFAULT_ENGINE_TYPE FORD_ESCORT_GT
+#define DEFAULT_SNIFFER_THR 2500
+
 EXTERN_ENGINE;
 extern engine_configuration2_s * engineConfiguration2;
 
@@ -78,7 +82,7 @@ void rusEfiFunctionalTest(void) {
 
 	// todo: reduce code duplication with initEngineContoller
 
-	resetConfigurationExt(NULL, FORD_ESCORT_GT PASS_ENGINE_PARAMETER);
+	resetConfigurationExt(NULL, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER);
 	prepareShapes(PASS_ENGINE_PARAMETER_F);
 
 	initAlgo(&sharedLogger, engineConfiguration);
@@ -103,6 +107,9 @@ void rusEfiFunctionalTest(void) {
 	startStatusThreads(engine);
 
 	initPeriodicEvents(PASS_ENGINE_PARAMETER_F);
+
+	setTriggerEmulatorRPM(DEFAULT_SIM_RPM, engine);
+	engineConfiguration->engineSnifferRpmThreshold = DEFAULT_SNIFFER_THR;
 }
 
 void printPendingMessages(void) {
