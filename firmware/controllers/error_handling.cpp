@@ -11,8 +11,10 @@
 #include "memstreams.h"
 #include "efilib2.h"
 #include "engine.h"
+//todo: move into simulator global
+#include <chprintf.h>
 
-#if EFI_HD44780_LCD
+#if EFI_HD44780_LCD || defined(__DOXYGEN__)
 #include "lcd_HD44780.h"
 #endif /* EFI_HD44780_LCD */
 
@@ -33,12 +35,18 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 		return;
 	dbg_panic_file = file;
 	dbg_panic_line = line;
-#if CH_DBG_SYSTEM_STATE_CHECK
+#if CH_DBG_SYSTEM_STATE_CHECK || defined(__DOXYGEN__)
 	dbg_panic_msg = msg;
 #endif /* CH_DBG_SYSTEM_STATE_CHECK */
 
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	ON_FATAL_ERROR();
-#if EFI_HD44780_LCD
+#else
+	printf("chDbgPanic3 %s %s%d", msg, file, line);
+	exit(-1);
+#endif
+
+#if EFI_HD44780_LCD || defined(__DOXYGEN__)
 	lcdShowFatalMessage((char *) msg);
 #endif /* EFI_HD44780_LCD */
 
@@ -64,7 +72,7 @@ bool isWarningNow(efitimesec_t now) {
  * @returns TRUE in case there are too many warnings
  */
 int warning(obd_code_e code, const char *fmt, ...) {
-	efiAssert(isWarningStreamInitialized, "warn stream", false);
+	efiAssert(isWarningStreamInitialized, "warn stream not initialized", false);
 	UNUSED(code);
   
 	efitimesec_t now = getTimeNowSeconds();
@@ -100,6 +108,7 @@ char *getWarninig(void) {
 uint32_t lastLockTime;
 uint32_t maxLockTime = 0;
 
+// todo: move this field to trigger_central?
 bool isInsideTriggerHandler = false;
 
 void onLockHook(void) {
@@ -121,6 +130,9 @@ void initErrorHandling(void) {
 	msObjectInit(&warningStream, (uint8_t *) warningBuffer, WARNING_BUFFER_SIZE, 0);
 	isWarningStreamInitialized = true;
 }
+
+//todo: move into simulator global
+typedef VTList virtual_timers_list_t;
 
 extern virtual_timers_list_t vtlist;
 extern bool main_loop_started;
