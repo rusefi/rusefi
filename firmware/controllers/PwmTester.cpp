@@ -8,7 +8,7 @@
 
 #include "main.h"
 
-#if EFI_PWM_TESTER
+#if EFI_PWM_TESTER || defined(__DOXYGEN__)
 
 #include "PwmTester.h"
 #include "EfiWave.h"
