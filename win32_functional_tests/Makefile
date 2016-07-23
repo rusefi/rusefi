@@ -145,6 +145,7 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(CONTROLLERS_ALGO_SRC_CPP) \
 	$(PROJECT_DIR)/controllers/settings.cpp \
  	$(PROJECT_DIR)/controllers/engine_controller.cpp \
+ 	$(PROJECT_DIR)/controllers/error_handling.cpp \
 	$(PROJECT_DIR)/development/sensor_chart.cpp \
 	$(TRIGGER_SRC_CPP) \
 	$(TRIGGER_DECODERS_SRC_CPP) \

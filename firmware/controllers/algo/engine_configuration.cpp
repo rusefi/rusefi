@@ -412,7 +412,11 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->iat.config.bias_resistor = 2700;
 
 
+#if EFI_PROD_CODE
 	engineConfiguration->warningPeriod = 10;
+#else
+	engineConfiguration->warningPeriod = 0;
+#endif
 
 	engineConfiguration->step1rpm = 3000;
  	engineConfiguration->step1timing = 10;

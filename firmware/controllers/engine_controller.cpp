@@ -497,8 +497,12 @@ static void setVBattVoltage(float voltage) {
 }
 
 static void initMockVoltage(void) {
+	setCltVoltage(2);
 	addConsoleActionF("set_mock_clt_voltage", setCltVoltage);
+
+	setIatVoltage(2);
 	addConsoleActionF("set_mock_iat_voltage", setIatVoltage);
+
 	addConsoleActionF("set_mock_maf_voltage", setMafVoltage);
 	addConsoleActionF("set_mock_afr_voltage", setAfrVoltage);
 	addConsoleActionF("set_mock_tps_voltage", setTpsVoltage);

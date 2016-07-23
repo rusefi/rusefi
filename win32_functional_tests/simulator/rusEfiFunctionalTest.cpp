@@ -35,11 +35,6 @@ extern engine_configuration2_s * engineConfiguration2;
 
 extern WaveChart waveChart;
 
-uint32_t maxLockTime = 0;
-
-// todo: move this field to trigger_central
-bool isInsideTriggerHandler;
-
 //persistent_config_container_s persistentState;
 //static engine_configuration2_s ec2;
 
@@ -72,7 +67,7 @@ void rusEfiFunctionalTest(void) {
 	printToWin32Console("TODO");
 
 	initIntermediateLoggingBuffer();
-//	initErrorHandling();
+	initErrorHandling();
 
 	initializeConsole(&sharedLogger);
 
@@ -146,18 +141,6 @@ void logMsg(const char *format, ...) {
 //	fclose(fp);
 }
 
-static time_t timeOfPreviousWarning = -10;
-
-// todo: re-use primary firmware implementation?
-int warning(obd_code_e code, const char *fmt, ...) {
-	int now = currentTimeMillis() / 1000;
-	if (absI(now - timeOfPreviousWarning) < 10)
-		return TRUE; // we just had another warning, let's not spam
-	timeOfPreviousWarning = now;
-	printf("Warning: %s\r\n", fmt);
-	return FALSE;
-}
-
 void firmwareError(const char *fmt, ...) {
 	printf("firmwareError [%s]\r\n", fmt);
 
@@ -172,8 +155,4 @@ void firmwareError(const char *fmt, ...) {
 
 SerialDriver * getConsoleChannel(void) {
 	return (SerialDriver *)EFI_CONSOLE_UART_DEVICE;
-}
-
-void chDbgPanic3(const char *msg, const char * file, int line) {
-	onFatalError(msg, file, line);
 }

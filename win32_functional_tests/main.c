@@ -21,6 +21,8 @@
 
 #define CONSOLE_WA_SIZE     THD_WA_SIZE(4096)
 
+bool main_loop_started = false;
+
 static thread_t *cdtp;
 //static Thread *shelltp1;
 //static Thread *shelltp2;
