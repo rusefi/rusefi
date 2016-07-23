@@ -255,6 +255,7 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 	addEvent(angle, waveIndex, stateParam);
 }
 
+// todo: probably replace all usages with 'addEvent2'?
 void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam) {
 	efiAssertVoid(operationMode != OM_NONE, "operationMode not set");
 
@@ -286,8 +287,7 @@ void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const waveIndex, trig
 	 */
 	angle /= engineCycle;
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-// todo: PASS_ENGINE?
+#if !EFI_UNIT_TEST || defined(__DOXYGEN__)
 	if (!engineConfiguration->useOnlyRisingEdgeForTrigger || stateParam == TV_RISE) {
 		expectedEventCount[waveIndex]++;
 	}
