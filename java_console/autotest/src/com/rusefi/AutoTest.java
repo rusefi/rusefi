@@ -348,6 +348,8 @@ public class AutoTest {
         // switching to Speed Density
         sendCommand("set_mock_maf_voltage 2");
         sendComplexCommand("set_algorithm 3");
+        IoUtil.changeRpm(2400);
+        IoUtil.changeRpm(2000);
         nextChart();
         chart = nextChart();
         assertEquals(69.12, SensorCentral.getInstance().getValue(Sensor.MAP));
