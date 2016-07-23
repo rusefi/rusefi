@@ -355,10 +355,10 @@ public class AutoTest {
         assertEquals(69.12, SensorCentral.getInstance().getValue(Sensor.MAP));
         //assertEquals(1, SensorCentral.getInstance().getValue(Sensor.));
         x = 8.88;
-        assertWaveFall(msg + " fuel SD #1", chart, EngineChart.INJECTOR_1, 0.329, x + 180);
-        assertWaveFall(msg + " fuel SD #2", chart, EngineChart.INJECTOR_2, 0.329, x);
-        assertWaveFall(msg + " fuel SD #3", chart, EngineChart.INJECTOR_3, 0.329, x + 360);
-        assertWaveFall(msg + " fuel SD #4", chart, EngineChart.INJECTOR_4, 0.329, x + 540);
+        assertWave(false, msg + " fuel SD #1", chart, EngineChart.INJECTOR_1, 0.329, 0.1, 0.1, x + 180);
+        assertWave(false, msg + " fuel SD #2", chart, EngineChart.INJECTOR_2, 0.329, 0.1, 0.1, x);
+        assertWave(false, msg + " fuel SD #3", chart, EngineChart.INJECTOR_3, 0.329, 0.1, 0.1, x + 360);
+        assertWave(false, msg + " fuel SD #4", chart, EngineChart.INJECTOR_4, 0.329, 0.1, 0.1, x + 540);
 
         // above hard limit
         IoUtil.changeRpm(10000);
