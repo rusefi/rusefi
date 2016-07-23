@@ -210,6 +210,8 @@ public class AutoTest {
         // switching to Speed Density
         sendCommand("set_mock_map_voltage 1");
         sendComplexCommand("set_algorithm 3");
+        IoUtil.changeRpm(2600);
+        IoUtil.changeRpm(2000);
         chart = nextChart();
         x = -70;
         assertWaveFall(msg, chart, EngineChart.INJECTOR_4, 0.463, x + 540);
