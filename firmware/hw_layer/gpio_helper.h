@@ -11,8 +11,6 @@
 
 #include "efiGpio.h"
 
-#define INITIAL_PIN_STATE -1
-
 void initOutputPin(const char *msg, OutputPin *outputPin, ioportid_t port, uint32_t pinNumber);
 void initOutputPinExt(const char *msg, OutputPin *outputPin, ioportid_t port, uint32_t pinNumber, iomode_t mode);
 

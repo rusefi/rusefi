@@ -262,8 +262,6 @@ void chDbgStackOverflowPanic(Thread *otp) {
 	chDbgPanic3(panicMessage, __FILE__, __LINE__);
 }
 
-extern engine_pins_s enginePins;
-
 // todo: why is this method here and not in error_handling.cpp ?
 void firmwareError(const char *errorMsg, ...) {
 	if (hasFirmwareErrorFlag)
