@@ -112,6 +112,8 @@ public class AutoTest {
         EngineChart chart;
         String msg = "2003 Neon cranking ";
         IoUtil.changeRpm(200);
+        IoUtil.changeRpm(250); // another approach to artificial delay
+        IoUtil.changeRpm(200);
         assertEquals(12, SensorCentral.getInstance().getValue(Sensor.VBATT));
 
         chart = nextChart();
