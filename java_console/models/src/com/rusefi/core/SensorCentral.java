@@ -87,6 +87,11 @@ public class SensorCentral {
         addDoubleSensor("clt", Sensor.CLT, es);
         addDoubleSensor("tp", Sensor.TPS, es);
         addDoubleSensor("pps", Sensor.TPS, es);
+        addDoubleSensor("error", Sensor.lastErrorCode, es);
+        addDoubleSensor("warn", Sensor.warningCounter, es);
+        addDoubleSensor("knck_c", Sensor.knockCount, es);
+        addDoubleSensor("knck_v", Sensor.KnockValue, es);
+        addDoubleSensor("target", Sensor.TARGET_AFR, es);
 
         addDoubleSensor(Sensor.VSS, es);
         addDoubleSensor(Sensor.ENGINE_LOAD, es);
@@ -102,8 +107,8 @@ public class SensorCentral {
         addDoubleSensor(Sensor.ADVANCE1, es);
         addDoubleSensor(Sensor.ADVANCE2, es);
         addDoubleSensor(Sensor.ADVANCE3, es);
-        addDoubleSensor(Sensor.KS, es);
-        addDoubleSensor(Sensor.KV, es);
+        addDoubleSensor(Sensor.knockCount, es);
+        addDoubleSensor(Sensor.KnockValue, es);
 
         addDoubleSensor("tch", Sensor.T_CHARGE, es);
         addDoubleSensor(Sensor.AFR, es);
