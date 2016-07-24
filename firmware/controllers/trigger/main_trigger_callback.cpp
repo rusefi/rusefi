@@ -110,6 +110,14 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, bool limitedF
 	 */
 	const floatms_t injectionDuration = ENGINE(wallFuel).adjust(event->injectorIndex, ENGINE(fuelMs) PASS_ENGINE_PARAMETER);
 
+	// todo: pre-calculate 'numberOfInjections'
+	floatms_t totalPerCycle = injectionDuration * getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
+	floatus_t engineCycleDuration = engine->rpmCalculator.oneDegreeUs * engine->engineCycle;
+	if (MS2US(totalPerCycle) > engineCycleDuration) {
+		warning(CUSTOM_OBD_26, "injector duty cycle too high %fms @ %d", totalPerCycle,
+				getRevolutionCounter());
+	}
+
 	ENGINE(actualLastInjection) = injectionDuration;
 	if (cisnan(injectionDuration)) {
 		warning(CUSTOM_OBD_NAN_INJECTION, "NaN injection pulse");

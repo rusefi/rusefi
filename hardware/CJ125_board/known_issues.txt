@@ -1,0 +1,1 @@
+ 1) RESOLVED IN R0.2  SOIC24 wrong size

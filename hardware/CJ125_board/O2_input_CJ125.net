@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source C:/Users/Vista_64_D630/Desktop/Jared/code/Hardware/trunk/rusefi.com/CJ125_board/O2_input_CJ125.sch)
-    (date "7/3/2016 6:25:44 AM")
+    (date "7/23/2016 9:56:18 PM")
     (tool "Eeschema 4.0.1-stable")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -197,7 +197,7 @@
       (tstamp 4E39E9B9))
     (comp (ref U1)
       (value CJ125)
-      (footprint SMD_Packages:SOIC-24)
+      (footprint SOIC-24_7.5x15.4mm_Pitch1.27mm)
       (fields
         (field (name mfg,mfg#) bosh,CJ125-1267379259)
         (field (name vend1,vend1#) future,1267379259))
@@ -395,12 +395,12 @@
         (pin (num 1) (name 1) (type passive))
         (pin (num 2) (name 2) (type passive)))))
   (libraries
-    (library (logical cj125)
-      (uri C:\Users\Vista_64_D630\Desktop\Jared\code\Hardware\trunk\rusefi.com\rusefi_lib\cj125.lib))
+    (library (logical conn)
+      (uri "C:\\Program Files\\KiCad\\share\\kicad\\library\\conn.lib"))
     (library (logical KICAD_Older_Version)
       (uri C:\Users\Vista_64_D630\Desktop\Jared\code\Hardware\trunk\rusefi.com\rusefi_lib\KICAD_Older_Version.lib))
-    (library (logical conn)
-      (uri "C:\\Program Files\\KiCad\\share\\kicad\\library\\conn.lib")))
+    (library (logical cj125)
+      (uri C:\Users\Vista_64_D630\Desktop\Jared\code\Hardware\trunk\rusefi.com\rusefi_lib\cj125.lib)))
   (nets
     (net (code 1) (name "Net-(R2-Pad1)")
       (node (ref W1) (pin 2))

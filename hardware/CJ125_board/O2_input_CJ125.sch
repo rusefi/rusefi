@@ -37,8 +37,8 @@ $Descr A 11000 8500
 encoding utf-8
 Sheet 1 1
 Title "CJ125 Wide O2 "
-Date "2016-07-02"
-Rev "R0.1"
+Date "2016-07-23"
+Rev "R0.2"
 Comp "rusEFI.com"
 Comment1 ""
 Comment2 ""
@@ -421,7 +421,7 @@ U 1 1 4E39E9B7
 P 5350 5425
 F 0 "U1" H 5200 6075 70  0000 C CNN
 F 1 "CJ125" H 5250 4725 70  0000 C CNN
-F 2 "SMD_Packages:SOIC-24" V 1130 2600 60  0001 C CNN
+F 2 "SOIC-24_7.5x15.4mm_Pitch1.27mm" V 1130 2600 60  0001 C CNN
 F 3 "" H 5350 5425 60  0001 C CNN
 F 4 "bosh,CJ125-1267379259" V 1130 2600 60  0001 C CNN "mfg,mfg#"
 F 5 "future,1267379259" V 1130 2600 60  0001 C CNN "vend1,vend1#"
