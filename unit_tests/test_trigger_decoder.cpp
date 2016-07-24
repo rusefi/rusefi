@@ -286,6 +286,10 @@ static void assertREquals(void *expected, void *actual) {
 	assertEquals((float)(uint64_t)expected, (float)(uint64_t)actual);
 }
 
+static void assertREqualsM(const char *msg, void *expected, void *actual) {
+	assertEqualsM(msg, (float)(uint64_t)expected, (float)(uint64_t)actual);
+}
+
 extern bool_t debugSignalExecutor;
 extern engine_pins_s enginePins;
 
@@ -350,44 +354,34 @@ void testRpmCalculator(void) {
 
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 
-	assertEqualsM("fuel #1", 3.03, eth.engine.fuelMs);
+	assertEqualsM("fuel #1", 4.5450, eth.engine.fuelMs);
 	InjectionEvent *ie0 = &eth.engine.engineConfiguration2->injectionEvents->injectionEvents.elements[0];
-	assertEqualsM("injection angle", 0, ie0->injectionStart.angleOffset);
+	assertEqualsM("injection angle", 31.365, ie0->injectionStart.angleOffset);
 
 	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER);
 	assertEquals(1500, eth.engine.rpmCalculator.rpmValue);
 
 	assertEqualsM("dwell", 4.5, eth.engine.engineState.dwellAngle);
-	assertEqualsM("fuel", 3.03, eth.engine.fuelMs);
+	assertEqualsM("fuel #2", 4.5450, eth.engine.fuelMs);
 	assertEqualsM("one degree", 111.1111, eth.engine.rpmCalculator.oneDegreeUs);
 	assertEqualsM("size #2", 6, ilist->size);
 	assertEqualsM("dwell angle", 0, ilist->elements[0].dwellPosition.eventAngle);
 	assertEqualsM("dwell offset", 8.5, ilist->elements[0].dwellPosition.angleOffset);
 
 	assertEqualsM("index #2", 0, eth.engine.triggerCentral.triggerState.getCurrentIndex());
-	assertEqualsM("queue size/6", 6, schedulingQueue.size());
+	assertEqualsM("queue size/2", 2, schedulingQueue.size());
 	{
 	scheduling_s *ev0 = schedulingQueue.getForUnitText(0);
 
-	assertREquals((void*)ev0->callback, (void*)turnPinHigh);
-	assertEqualsM("ev 0", st, ev0->momentX);
-	assertEqualsLM("o 0", (long)&enginePins.injectors[0], (long)ev0->param);
+	assertREqualsM("Call@0", (void*)ev0->callback, (void*)turnSparkPinHigh);
+	assertEqualsM("ev 0", st + 944, ev0->momentX);
+	assertEqualsLM("o 0", (long)&enginePins.coils[0], (long)ev0->param);
 
 	scheduling_s *ev1 = schedulingQueue.getForUnitText(1);
-	assertEqualsM("ev 1", st, ev1->momentX);
-	assertEqualsLM("o 1", (long)&enginePins.injectors[3], (long)ev1->param);
+	assertREqualsM("Call@1", (void*)ev1->callback, (void*)turnSparkPinLow);
+	assertEqualsM("ev 1", st + 1444, ev1->momentX);
+	assertEqualsLM("o 1", (long)&enginePins.coils[0], (long)ev1->param);
 
-	scheduling_s *ev2 = schedulingQueue.getForUnitText(2);
-	assertEqualsLM("o 2", (long)&enginePins.coils[0], (long)ev2->param);
-
-	scheduling_s *ev3 = schedulingQueue.getForUnitText(3);
-	assertEqualsLM("o 3", (long)&enginePins.coils[0], (long)ev3->param);
-
-	scheduling_s *ev4 = schedulingQueue.getForUnitText(4);
-	assertEqualsLM("o 4", (long)&enginePins.injectors[3], (long)ev4->param);
-
-	scheduling_s *ev5 = schedulingQueue.getForUnitText(5);
-	assertEqualsLM("o 5", (long)&enginePins.injectors[0], (long)ev5->param);
 	}
 
 	schedulingQueue.clear();
@@ -400,8 +394,8 @@ void testRpmCalculator(void) {
 	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER);
 	assertEqualsM("index #3", 3, eth.engine.triggerCentral.triggerState.getCurrentIndex());
 	assertEqualsM("queue size 3", 6, schedulingQueue.size());
-	assertEqualsM("ev 3", st + 13333, schedulingQueue.getForUnitText(0)->momentX);
-	assertEqualsM("ev 4", st + 13333, schedulingQueue.getForUnitText(1)->momentX);
+	assertEqualsM("ev 3", st + 13333 - 1515, schedulingQueue.getForUnitText(0)->momentX);
+	assertEqualsM("ev 4", st + 13333 - 1515, schedulingQueue.getForUnitText(1)->momentX);
 	assertEqualsM2("ev 5", st + 14277, schedulingQueue.getForUnitText(2)->momentX, 2);
 	assertEqualsM("3/3", st + 14777, schedulingQueue.getForUnitText(3)->momentX);
 	schedulingQueue.clear();
@@ -424,17 +418,17 @@ void testRpmCalculator(void) {
 	assertEqualsM("queue size 4.3", 6, schedulingQueue.size());
 
 	assertEqualsM("dwell", 4.5, eth.engine.engineState.dwellAngle);
-	assertEqualsM("fuel", 3.03, eth.engine.fuelMs);
+	assertEqualsM("fuel #3", 4.5450, eth.engine.fuelMs);
 	assertEquals(1500, eth.engine.rpmCalculator.rpmValue);
 	{
 	scheduling_s *ev0 = schedulingQueue.getForUnitText(0);
 
 	assertREquals((void*)ev0->callback, (void*)turnPinHigh);
-	assertEqualsM("ev 0/2", st + 26666, ev0->momentX);
+	assertEqualsM("ev 0/2", st + 26666 - 1515, ev0->momentX);
 	assertEqualsLM("o 0/2", (long)&enginePins.injectors[2], (long)ev0->param);
 
 	scheduling_s *ev1 = schedulingQueue.getForUnitText(1);
-	assertEqualsM("ev 1/2", st + 26666, ev1->momentX);
+	assertEqualsM("ev 1/2", st + 26666 - 1515, ev1->momentX);
 	assertEqualsLM("o 1/2", (long)&enginePins.injectors[5], (long)ev1->param);
 	}
 
@@ -444,15 +438,15 @@ void testRpmCalculator(void) {
 
 	timeNow += 5000;
 	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER);
-	assertEqualsM("queue size 5", 0, schedulingQueue.size());
+	assertEqualsM("queue size 5", 4, schedulingQueue.size());
+// todo: assert queue elements
 	schedulingQueue.clear();
 
 	timeNow += 5000; // 5ms
 	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER);
-	assertEqualsM("queue size 6", 6, schedulingQueue.size());
-	assertEqualsM("6/0", st + 40000, schedulingQueue.getForUnitText(0)->momentX);
-	assertEqualsM("6/1", st + 40000, schedulingQueue.getForUnitText(1)->momentX);
-	assertEqualsM2("6/2", st + 40944, schedulingQueue.getForUnitText(2)->momentX, 1);
+	assertEqualsM("queue size 6", 2, schedulingQueue.size());
+	assertEqualsM("6/0", st + 40944, schedulingQueue.getForUnitText(0)->momentX);
+	assertEqualsM("6/1", st + 41444, schedulingQueue.getForUnitText(1)->momentX);
 	schedulingQueue.clear();
 
 	timeNow += 5000;
@@ -463,8 +457,9 @@ void testRpmCalculator(void) {
 	timeNow += 5000; // 5ms
 	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER);
 	assertEqualsM("queue size 8", 6, schedulingQueue.size());
-	assertEqualsM("8/0", st + 53333, schedulingQueue.getForUnitText(0)->momentX);
-	assertEqualsM("8/1", st + 53333, schedulingQueue.getForUnitText(1)->momentX);
+	// todo: assert queue elements completely
+	assertEqualsM("8/0", st + 53333 - 1515, schedulingQueue.getForUnitText(0)->momentX);
+	assertEqualsM("8/1", st + 53333 - 1515, schedulingQueue.getForUnitText(1)->momentX);
 	assertEqualsM2("8/2", st + 54277, schedulingQueue.getForUnitText(2)->momentX, 0);
 	assertEqualsM2("8/3", st + 54777, schedulingQueue.getForUnitText(3)->momentX, 0);
 	schedulingQueue.clear();
