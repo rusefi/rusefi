@@ -131,5 +131,7 @@ void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brain
 
 void turnPinHigh(NamedOutputPin *output);
 void turnPinLow(NamedOutputPin *output);
+void turnSparkPinHigh(NamedOutputPin *output);
+void turnSparkPinLow(NamedOutputPin *output);
 
 #endif /* EFIGPIO_H_ */
