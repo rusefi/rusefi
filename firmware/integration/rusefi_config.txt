@@ -301,7 +301,7 @@ int canSleepPeriod;CANbus thread period, ms;"ms",    1,      0,       0,  1000.0
 
 
 custom operation_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "INVALID", "4 stroke without cam sensor", "4 stroke with cam sensor", "2 stroke"
-operation_mode_e operationMode;
+operation_mode_e operationMode;See engineCycle
 
 custom display_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "none", "hd44780", "hd44780 over pcf8574", "INVALID"
 display_mode_e displayMode;

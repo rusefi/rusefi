@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jul 22 17:07:24 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jul 23 20:32:57 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1058,6 +1058,7 @@ typedef struct {
 	 */
 	int canSleepPeriod;
 	/**
+	 * See engineCycle
 	 * offset 500
 	 */
 	operation_mode_e operationMode;
@@ -1905,4 +1906,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jul 22 17:07:24 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jul 23 20:32:57 EDT 2016
