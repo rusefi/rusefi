@@ -94,14 +94,14 @@ float getinjectionOffset(float rpm DECLARE_ENGINE_PARAMETER_S) {
 /**
  * Number of injections into each cylinder per engine cycle
  */
-static int getNumberOfInjections(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S) {
+int getNumberOfInjections(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S) {
 	switch (mode) {
 	case IM_SIMULTANEOUS:
 		return engineConfiguration->specs.cylindersCount;
 	case IM_SEQUENTIAL:
 		return 1;
 	case IM_BATCH:
-		return engineConfiguration->specs.cylindersCount / 2;
+		return 2;
 	default:
 		firmwareError("Unexpected getFuelMultiplier %d", mode);
 		return 1;
@@ -110,8 +110,8 @@ static int getNumberOfInjections(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 
 percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	floatms_t totalPerCycle = getFuelMs(rpm PASS_ENGINE_PARAMETER) * getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
-	floatms_t engineCycleTime = getCrankshaftRevolutionTimeMs(rpm) * (engineConfiguration->operationMode == TWO_STROKE ? 1 : 2);
-	return 100 * totalPerCycle / engineCycleTime;
+	floatms_t engineCycleDuration = getCrankshaftRevolutionTimeMs(rpm) * (engineConfiguration->operationMode == TWO_STROKE ? 1 : 2);
+	return 100 * totalPerCycle / engineCycleDuration;
 }
 
 /**
