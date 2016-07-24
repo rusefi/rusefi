@@ -152,7 +152,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, bool limitedF
 		if (rpm > 2 * engineConfiguration->cranking.rpm) {
 			const char *outputName = event->output->name;
 			if (prevOutputName == outputName) {
-				warning(CUSTOM_OBD_SKIPPED_FUEL, "looks like skipped fuel event");
+				warning(CUSTOM_OBD_SKIPPED_FUEL, "looks like skipped fuel event %d", getRevolutionCounter());
 			}
 			prevOutputName = outputName;
 		}
