@@ -25,8 +25,8 @@ public enum Sensor {
     MAFR("MAFR", SensorCategory.SENSOR_INPUTS, "kg/hr", 4),
     TPS("throttle", SensorCategory.SENSOR_INPUTS, "%", 100),
     PPS("pedal", SensorCategory.SENSOR_INPUTS, "%", 100),
-    KS("Knock", SensorCategory.SENSOR_INPUTS, "count", 30),
-    KV("Knock level", SensorCategory.SENSOR_INPUTS, "v", 6),
+    knockCount("Knock", SensorCategory.SENSOR_INPUTS, "count", 30),
+    KnockValue("Knock level", SensorCategory.SENSOR_INPUTS, "v", 6),
 
     ENGINE_LOAD("Engine Load", SensorCategory.SENSOR_INPUTS, "x", 300),
 
