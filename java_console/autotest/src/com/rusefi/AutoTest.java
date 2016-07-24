@@ -300,6 +300,8 @@ public class AutoTest {
         IoUtil.changeRpm(2000);
         sendCommand("set_whole_fuel_map 1.57");
 
+        IoUtil.changeRpm(2600);
+        IoUtil.changeRpm(2000);
         chart = nextChart();
 
         msg = "aspire running";
