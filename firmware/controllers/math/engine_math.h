@@ -30,6 +30,7 @@ void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
 #define assertAngleRange(angle) {}
 #endif
 
+void setInjectorLag(float value DECLARE_ENGINE_PARAMETER_S);
 
 
 /**

@@ -60,11 +60,9 @@ void testFuelMap(void) {
 	printf("*** getInjectorLag\r\n");
 	assertEqualsM("lag", 1.04, getInjectorLag(12 PASS_ENGINE_PARAMETER));
 
-	eth.engine.engineConfiguration->injector.lag = 0.5;
-
 	for (int i = 0; i < VBAT_INJECTOR_CURVE_SIZE; i++) {
 		eth.engine.engineConfiguration->injector.battLagCorrBins[i] = i;
-		eth.engine.engineConfiguration->injector.battLagCorr[i] = 2 * i;
+		eth.engine.engineConfiguration->injector.battLagCorr[i] = 0.5 + 2 * i;
 	}
 
 	eth.engine.updateSlowSensors(PASS_ENGINE_PARAMETER_F);
@@ -88,7 +86,8 @@ void testFuelMap(void) {
 		eth.engine.config->cltFuelCorrBins[i] = i;
 		eth.engine.config->cltFuelCorr[i] = 100;
 	}
-	eth.engine.engineConfiguration->injector.lag = 0;
+
+	setInjectorLag(0 PASS_ENGINE_PARAMETER);
 
 	assertEquals(NAN, getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F));
 	float iatCorrection = getIatCorrection(-KELV PASS_ENGINE_PARAMETER);
@@ -96,7 +95,7 @@ void testFuelMap(void) {
 	float cltCorrection = getCltCorrection(getCoolantTemperature(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER);
 	assertEqualsM("CLT", 1, cltCorrection);
 	float injectorLag = getInjectorLag(getVBatt(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER);
-	assertEquals(0, injectorLag);
+	assertEqualsM("injectorLag", 0, injectorLag);
 
 	testMafValue = 5;
 

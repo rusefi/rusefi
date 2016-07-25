@@ -52,7 +52,8 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 
 
 	// Injection settings
-	engineConfiguration->injector.lag = 1.15;
+	setInjectorLag(1.15 PASS_ENGINE_PARAMETER);
+
 	engineConfiguration->injector.flow = 750;
 
 	// General settings
