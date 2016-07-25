@@ -323,7 +323,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	boardConfiguration->startConsoleInBinaryMode = true;
 
-	engineConfiguration->injector.lag = 0.0;
 	setBosch02880155868(PASS_ENGINE_PARAMETER_F);
 
 	engineConfiguration->acCutoffLowRpm = 700;

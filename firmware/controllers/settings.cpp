@@ -942,10 +942,6 @@ static void printAllInfo(void) {
 #endif
 }
 
-static void setInjectorLag(float value) {
-	engineConfiguration->injector.lag = value;
-}
-
 static void getValue(const char *paramStr) {
 	if (strEqualCaseInsensitive(paramStr, "warningPeriod")) {
 		scheduleMsg(&logger, "warningPeriod=%d", engineConfiguration->warningPeriod);

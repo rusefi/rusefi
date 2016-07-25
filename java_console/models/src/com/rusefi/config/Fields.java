@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jul 22 17:07:24 EDT 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jul 24 22:23:59 EDT 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -43,7 +43,7 @@ public class Fields {
 	public static final int injector_offset_hex = 8;
 	public static final int injector_flow_offset = 8;
 	public static final int injector_flow_offset_hex = 8;
-	public static final int injector_lag_offset = 12;
+	public static final int injector_unusedlag_offset = 12;
 	public static final int injector_battLagCorrBins_offset = 16;
 	public static final int injector_battLagCorrBins_offset_hex = 10;
 	public static final int injector_battLagCorr_offset = 48;
@@ -965,7 +965,7 @@ public class Fields {
 	public static final Field ENGINETYPE = Field.create("ENGINETYPE", 0, FieldType.INT);
 	public static final Field ENGINESNIFFERRPMTHRESHOLD = Field.create("ENGINESNIFFERRPMTHRESHOLD", 4, FieldType.INT);
 	public static final Field INJECTOR_FLOW = Field.create("INJECTOR_FLOW", 8, FieldType.FLOAT);
-	public static final Field INJECTOR_LAG = Field.create("INJECTOR_LAG", 12, FieldType.FLOAT);
+	public static final Field INJECTOR_UNUSEDLAG = Field.create("INJECTOR_UNUSEDLAG", 12, FieldType.FLOAT);
 	public static final Field DIRECTSELFSTIMULATION = Field.create("DIRECTSELFSTIMULATION", 80, FieldType.BIT, 0);
 	public static final Field ACTIVATEAUXPID1 = Field.create("ACTIVATEAUXPID1", 80, FieldType.BIT, 1);
 	public static final Field ISVERBOSEAUXPID1 = Field.create("ISVERBOSEAUXPID1", 80, FieldType.BIT, 2);
