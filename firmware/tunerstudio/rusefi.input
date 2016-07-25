@@ -897,7 +897,7 @@ fileVersion = { 20160702 }
       yBins       = map_samplingWindow
       gauge       = rpm
 
-   curve = injectorsDeadTime, "Injector Extra Dead Time Battery Correction"
+   curve = injectorsDeadTime, "Injector Dead Time by VBatt"
       columnLabel = "Voltage", "Dead Time"
       xAxis       =  8, 21, 10
       yAxis       = -3,  3, 10
@@ -1446,7 +1446,6 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 
 ;			Engine->Injection Settings
 	dialog = injChars, "Injector Settings",	yAxis
-		field = "Base Injector Dead Time",		injector_lag
 		field = "Injector Flow",			injector_flow
 		field = "phase offset",				injectionOffset
 		
