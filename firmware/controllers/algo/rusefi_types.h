@@ -8,7 +8,14 @@
 #define CONTROLLERS_ALGO_RUSEFI_TYPES_H_
 
 #include <stdint.h>
+#if defined __GNUC__
+// GCC
 #include <sys/types.h>
+#else
+// IAR
+typedef unsigned int time_t;
+#endif
+
 #include "rusefi_enums.h"
 #include "rusefi_generated.h"
 
