@@ -15,6 +15,8 @@
 #include "pin_repository.h"
 #include "hardware.h"
 
+#if EFI_CJ125 || defined(__DOXYGEN__)
+
 EXTERN_ENGINE;
 
 static SimplePwm wboHeaderControl;
@@ -64,11 +66,7 @@ SPI_CR1_MSTR |
 
 static cj125_state_e state = CJ125_IDLE;
 
-#if defined __GNUC__
-__attribute__((noreturn))    static msg_t cjThread(void)
-#else
-		static msg_t cjThread(void)
-#endif
+static msg_t cjThread(void)
 {
 	chRegSetThreadName("cj125");
 
@@ -111,5 +109,4 @@ void initCJ125(void) {
 
 }
 
-
-
+#endif /* EFI_CJ125 */
