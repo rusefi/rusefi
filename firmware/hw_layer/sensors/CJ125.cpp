@@ -21,6 +21,8 @@ static SimplePwm wboHeaderControl;
 static OutputPin wboHeaderPin;
 static OutputPin cj125Cs;
 
+static THD_WORKING_AREA(cjThreadStack, UTILITY_THREAD_STACK_SIZE);
+
 // todo: make this configurable
 spi_device_e cj125SpiDevice = SPI_DEVICE_2;
 
@@ -60,6 +62,25 @@ SPI_CR1_MSTR |
         |----------- ENABLE/HOLD - Must be set to 1 to enable
 ***********************************************************************************/
 
+static cj125_state_e state = CJ125_IDLE;
+
+#if defined __GNUC__
+__attribute__((noreturn))    static msg_t cjThread(void)
+#else
+		static msg_t cjThread(void)
+#endif
+{
+	chRegSetThreadName("cj125");
+
+//	while(1) {
+
+//	}
+
+}
+
+static void cj125test(void) {
+
+}
 
 void initCJ125(void) {
 	// still a lot to be done here :)
@@ -83,6 +104,11 @@ void initCJ125(void) {
 
 
 	}
+
+	addConsoleAction("cj125", cj125test);
+
+	chThdCreateStatic(cjThreadStack, sizeof(cjThreadStack), LOWPRIO, (tfunc_t) cjThread, NULL);
+
 }
 
 
