@@ -337,6 +337,7 @@
           <state>$PROJ_DIR$\..\hw_layer\lcd</state>
           <state>$PROJ_DIR$\..\hw_layer\stm32f4</state>
           <state>$PROJ_DIR$\..\hw_layer\mass_storage</state>
+          <state>$PROJ_DIR$\..\hw_layer\sensors</state>
           <state>$PROJ_DIR$\..\hw_layer\serial_over_usb</state>
           <state>$PROJ_DIR$\..\hw_layer</state>
           <state>$PROJ_DIR$\..\ext</state>
@@ -2780,6 +2781,15 @@
       </file>
     </group>
     <group>
+      <name>sensors</name>
+      <file>
+        <name>$PROJ_DIR$\..\hw_layer\sensors\CJ125.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\hw_layer\sensors\CJ125.h</name>
+      </file>
+    </group>
+    <group>
       <name>serial_over_usb</name>
       <file>
         <name>$PROJ_DIR$\..\hw_layer\serial_over_usb\usbcfg.c</name>
@@ -2934,12 +2944,6 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\hw_layer\vehicle_speed.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\hw_layer\wbo.cpp</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\hw_layer\wbo.h</name>
     </file>
   </group>
   <group>

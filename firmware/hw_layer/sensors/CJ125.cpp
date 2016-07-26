@@ -73,7 +73,7 @@ static msg_t cjThread(void)
 //	while(1) {
 
 //	}
-
+	return -1;
 }
 
 static void cj125test(void) {
