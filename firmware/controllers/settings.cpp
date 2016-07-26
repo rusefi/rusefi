@@ -828,6 +828,8 @@ static void setSpiMode(int index, bool mode) {
 static void enableOrDisable(const char *param, bool isEnabled) {
 	if (strEqualCaseInsensitive(param, "fastadc")) {
 		boardConfiguration->isFastAdcEnabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "cj125")) {
+		boardConfiguration->isCJ125Enabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "engine_sniffer")) {
 		engineConfiguration->isEngineChartEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "step1limimter")) {
