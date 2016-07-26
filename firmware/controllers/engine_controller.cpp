@@ -497,10 +497,16 @@ static void setVBattVoltage(float voltage) {
 }
 
 static void initMockVoltage(void) {
+#if EFI_SIMULATOR || defined(__DOXYGEN__)
 	setCltVoltage(2);
+#endif /* EFI_SIMULATOR */
+
 	addConsoleActionF("set_mock_clt_voltage", setCltVoltage);
 
+#if EFI_SIMULATOR || defined(__DOXYGEN__)
 	setIatVoltage(2);
+#endif /* EFI_SIMULATOR */
+
 	addConsoleActionF("set_mock_iat_voltage", setIatVoltage);
 
 	addConsoleActionF("set_mock_maf_voltage", setMafVoltage);
