@@ -372,7 +372,7 @@ void initHardware(Logging *l) {
 	engine->addConfigurationListener(adcConfigListener);
 
 #if EFI_CJ125 || defined(__DOXYGEN__)
-	initCJ125();
+	initCJ125(sharedLogger);
 #endif
 
 	printMsg(sharedLogger, "initHardware() OK!");

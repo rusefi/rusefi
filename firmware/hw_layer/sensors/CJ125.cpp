@@ -22,6 +22,7 @@ EXTERN_ENGINE;
 static SimplePwm wboHeaderControl;
 static OutputPin wboHeaderPin;
 static OutputPin cj125Cs;
+static Logging *logger;
 
 static THD_WORKING_AREA(cjThreadStack, UTILITY_THREAD_STACK_SIZE);
 
@@ -80,7 +81,8 @@ static void cj125test(void) {
 
 }
 
-void initCJ125(void) {
+void initCJ125(Logging *sharedLogger) {
+	logger = sharedLogger;
 	// still a lot to be done here :)
 
 	if (!boardConfiguration->isCJ125Enabled)
@@ -102,6 +104,9 @@ void initCJ125(void) {
 
 
 	}
+
+	scheduleMsg(logger, "Starting cj125 spi driver");
+	spiStart(driver, &cj125spicfg);
 
 	addConsoleAction("cj125", cj125test);
 
