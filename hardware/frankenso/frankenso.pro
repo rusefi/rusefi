@@ -1,4 +1,4 @@
-update=1/17/2016 12:02:00 PM
+update=6/30/2016 5:01:41 AM
 version=1
 last_client=kicad
 [cvpcb]
@@ -65,16 +65,6 @@ LibName50=joystick_SKRHAAE010
 LibName51=STM32F407IGT6
 LibName52=slc_oem
 LibName53=mos_n_numbered-pins
-[schematic_editor]
-version=1
-PageLayoutDescrFile=../rusefi_lib/Border.kicad_wks
-PlotDirectoryName=
-SubpartIdSeparator=0
-SubpartFirstId=65
-NetFmtName=
-SpiceForceRefPrefix=0
-SpiceUseNetNumbers=0
-LabSize=60
 [pcbnew]
 version=1
 PageLayoutDescrFile=../rusefi_lib/Border.kicad_wks
@@ -94,3 +84,13 @@ SolderMaskMinWidth=0
 DrawSegmentWidth=0.127
 BoardOutlineThickness=0.127
 ModuleOutlineThickness=0.254
+[schematic_editor]
+version=1
+PageLayoutDescrFile=../rusefi_lib/Border.kicad_wks
+PlotDirectoryName=
+SubpartIdSeparator=0
+SubpartFirstId=65
+NetFmtName=
+SpiceForceRefPrefix=0
+SpiceUseNetNumbers=0
+LabSize=60
