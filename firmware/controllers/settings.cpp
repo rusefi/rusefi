@@ -945,7 +945,9 @@ static void printAllInfo(void) {
 }
 
 static void getValue(const char *paramStr) {
-	if (strEqualCaseInsensitive(paramStr, "warningPeriod")) {
+	if (strEqualCaseInsensitive(paramStr, "isCJ125Enabled")) {
+		scheduleMsg(&logger, "isCJ125Enabled=%d", boardConfiguration->isCJ125Enabled);
+	} else if (strEqualCaseInsensitive(paramStr, "warningPeriod")) {
 		scheduleMsg(&logger, "warningPeriod=%d", engineConfiguration->warningPeriod);
 	}
 

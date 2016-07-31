@@ -13,6 +13,9 @@
 #define	CJ125_NORMAL	0x89 // 137 decimal
 #define	CJ125_CALBRT	0x9D // 157 decimal
 
+#define	CJ125_IDENTT	0x60
+
+
 void initCJ125(Logging *shared);
 
 typedef enum {
