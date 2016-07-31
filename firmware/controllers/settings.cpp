@@ -949,6 +949,8 @@ static void getValue(const char *paramStr) {
 		scheduleMsg(&logger, "isCJ125Enabled=%d", boardConfiguration->isCJ125Enabled);
 	} else if (strEqualCaseInsensitive(paramStr, "warningPeriod")) {
 		scheduleMsg(&logger, "warningPeriod=%d", engineConfiguration->warningPeriod);
+	} else if (strEqualCaseInsensitive(paramStr, "isHip9011Enabled")) {
+		scheduleMsg(&logger, "isHip9011Enabled=%d", boardConfiguration->isHip9011Enabled);
 	}
 
 #if EFI_RTC || defined(__DOXYGEN__)

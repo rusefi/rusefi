@@ -23,6 +23,9 @@ static SimplePwm wboHeaderControl;
 static OutputPin wboHeaderPin;
 static OutputPin cj125Cs;
 static Logging *logger;
+static unsigned char tx_buff[1];
+static unsigned char rx_buff[1];
+
 
 static THD_WORKING_AREA(cjThreadStack, UTILITY_THREAD_STACK_SIZE);
 
@@ -78,6 +81,20 @@ static msg_t cjThread(void)
 }
 
 static void cj125test(void) {
+
+	// read identity command
+	spiSelect(driver);
+	tx_buff[0] = IDENT_REG_RD;
+	spiSend(driver, 1, tx_buff);
+
+	spiReceive(driver, 1, rx_buff);
+	int value = rx_buff[0] & 0xF8;
+
+	spiUnselect(driver);
+
+	scheduleMsg(logger, "cj125 got %x", value);
+
+
 
 }
 
