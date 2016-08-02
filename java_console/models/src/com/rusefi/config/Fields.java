@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jul 24 22:23:59 EDT 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Aug 01 21:44:40 EDT 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -832,8 +832,8 @@ public class Fields {
 	public static final int mapHighValueVoltage_offset_hex = 960;
 	public static final int egoValueShift_offset = 2404;
 	public static final int egoValueShift_offset_hex = 964;
-	public static final int unusedauxPid1DT_offset = 2408;
-	public static final int unusedauxPid1DT_offset_hex = 968;
+	public static final int camInput_offset = 2408;
+	public static final int camInput_offset_hex = 968;
 	public static final int auxPidDT1_offset = 2412;
 	public static final int auxPidDT2_offset = 2416;
 	public static final int auxPidDT2_offset_hex = 970;
@@ -1474,7 +1474,7 @@ public class Fields {
 	public static final Field MAPLOWVALUEVOLTAGE = Field.create("MAPLOWVALUEVOLTAGE", 2396, FieldType.FLOAT);
 	public static final Field MAPHIGHVALUEVOLTAGE = Field.create("MAPHIGHVALUEVOLTAGE", 2400, FieldType.FLOAT);
 	public static final Field EGOVALUESHIFT = Field.create("EGOVALUESHIFT", 2404, FieldType.FLOAT);
-	public static final Field UNUSEDAUXPID1DT = Field.create("UNUSEDAUXPID1DT", 2408, FieldType.INT);
+	public static final Field CAMINPUT = Field.create("CAMINPUT", 2408, FieldType.INT, brain_input_pin_e);
 	public static final Field AUXPIDDT1 = Field.create("AUXPIDDT1", 2412, FieldType.INT);
 	public static final Field AUXPIDDT2 = Field.create("AUXPIDDT2", 2416, FieldType.INT);
 	public static final Field AUXPIDDT3 = Field.create("AUXPIDDT3", 2420, FieldType.INT);

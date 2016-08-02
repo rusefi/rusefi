@@ -12,10 +12,11 @@
 #include "CJ125.h"
 #include "pwm_generator.h"
 #include "pid.h"
-#include "pin_repository.h"
-#include "hardware.h"
 
 #if EFI_CJ125 || defined(__DOXYGEN__)
+
+#include "pin_repository.h"
+#include "hardware.h"
 
 EXTERN_ENGINE;
 
