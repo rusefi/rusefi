@@ -200,7 +200,7 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 		activeConfiguration->fsioAdc[i] = EFI_ADC_NONE;
 	}
 
-	engineConfiguration->camInput = GPIO_UNASSIGNED;
+	activeConfiguration->camInput = GPIO_UNASSIGNED;
 	boardConfiguration->triggerInputPins[0] = GPIO_UNASSIGNED;
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
