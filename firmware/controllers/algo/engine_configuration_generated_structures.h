@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jul 24 22:23:59 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Aug 01 21:44:40 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1632,7 +1632,7 @@ typedef struct {
 	/**
 	 * offset 2408
 	 */
-	int unusedauxPid1DT;
+	brain_input_pin_e camInput;
 	/**
 	 * offset 2412
 	 */
@@ -1904,4 +1904,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jul 24 22:23:59 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Aug 01 21:44:40 EDT 2016

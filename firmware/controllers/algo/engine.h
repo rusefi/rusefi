@@ -4,8 +4,8 @@
  * @date May 21, 2014
  * @author Andrey Belomutskiy, (c) 2012-2016
  */
-#ifndef ENGINE_H_
-#define ENGINE_H_
+#ifndef H_ENGINE_H_
+#define H_ENGINE_H_
 
 #include "global.h"
 #include "main.h"
@@ -440,4 +440,4 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S);
 void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F);
 
-#endif /* ENGINE_H_ */
+#endif /* H_ENGINE_H_ */

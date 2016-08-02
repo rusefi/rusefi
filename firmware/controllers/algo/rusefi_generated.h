@@ -39,7 +39,7 @@
 #define injector_offset_hex 8
 #define injector_flow_offset 8
 #define injector_flow_offset_hex 8
-#define injector_lag_offset 12
+#define injector_unusedlag_offset 12
 #define injector_battLagCorrBins_offset 16
 #define injector_battLagCorrBins_offset_hex 10
 #define injector_battLagCorr_offset 48
@@ -828,8 +828,8 @@
 #define mapHighValueVoltage_offset_hex 960
 #define egoValueShift_offset 2404
 #define egoValueShift_offset_hex 964
-#define unusedauxPid1DT_offset 2408
-#define unusedauxPid1DT_offset_hex 968
+#define camInput_offset 2408
+#define camInput_offset_hex 968
 #define auxPidDT1_offset 2412
 #define auxPidDT2_offset 2416
 #define auxPidDT2_offset_hex 970

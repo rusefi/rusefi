@@ -153,6 +153,14 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->algorithm = LM_ALPHA_N;
 
+	//	boardConfiguration->spi2mosiPin = GPIOB_15;
+	//	boardConfiguration->spi2misoPin = GPIOB_14;
+	//	boardConfiguration->spi2sckPin = GPIOB_13;
+	boardConfiguration->cj125CsPin = GPIOB_0; // rev 0.4
+	boardConfiguration->isCJ125Enabled = true;
+	boardConfiguration->is_enabled_spi_2 = true;
+
+
 	engineConfiguration->hasIatSensor = false;
 
 	// set_rpm_hard_limit 4000
