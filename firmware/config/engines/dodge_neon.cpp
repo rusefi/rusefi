@@ -153,6 +153,10 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->algorithm = LM_ALPHA_N;
 
+//	engineConfiguration->spi2SckMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
+//	engineConfiguration->spi2MosiMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
+//	engineConfiguration->spi2MisoMode = PAL_STM32_PUDR_PULLUP; // 32
+
 	//	boardConfiguration->spi2mosiPin = GPIOB_15;
 	//	boardConfiguration->spi2misoPin = GPIOB_14;
 	//	boardConfiguration->spi2sckPin = GPIOB_13;
