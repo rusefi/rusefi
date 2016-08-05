@@ -40,7 +40,6 @@ static SPIConfig cj125spicfg = { NULL,
 /* HW dependent part.*/
 NULL, 0,
 SPI_CR1_MSTR |
-//SPI_CR1_BR_1 // 5MHz
 		SPI_CR1_CPHA | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 };
 
 /**********************************************************************************
