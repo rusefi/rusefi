@@ -328,6 +328,13 @@ void Engine::prepareFuelSchedule(DECLARE_ENGINE_PARAMETER_F) {
 
 	injection_mode_e mode = isCrankingR(rpm) ? CONFIG(crankingInjectionMode) : CONFIG(injectionMode);
 
+	if (ENGINE(engineConfiguration2)->processing->usedAtEngineCycle != 0 &&
+			ENGINE(engineConfiguration2)->processing->usedAtEngineCycle == ENGINE(rpmCalculator).getRevolutionCounter()) {
+		// we are here if engine is still using this older fuel schedule, not yet time to override it
+//		scheduleMsg(&logger, "still need %d", ENGINE(rpmCalculator).getRevolutionCounter());
+		return;
+	}
+
 	ENGINE(engineConfiguration2)->processing->addFuelEvents(
 			mode PASS_ENGINE_PARAMETER);
 	ENGINE(m.injectonSchTime) = GET_TIMESTAMP() - ENGINE(m.beforeInjectonSch);

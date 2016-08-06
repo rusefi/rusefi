@@ -43,6 +43,8 @@ public:
 	 */
 	void addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S);
 
+	uint32_t usedAtEngineCycle;
+
 	InjectionEventList injectionEvents;
 
 	/**
@@ -257,6 +259,14 @@ public:
 	void prepareFuelSchedule(DECLARE_ENGINE_PARAMETER_F);
 
 	WallFuel wallFuel;
+
+	/**
+	 * we have a background thread preparing new fuel schedule while engine is running using existing
+	 * copy of fuel schedule. This pointer allows us to use the same schedule for the whole duration of an
+	 * engine cycle.
+	 *
+	 */
+	FuelSchedule *fuelScheduleForThisEngineCycle;
 
 	/**
 	 * That's the list of pending spark firing events
