@@ -128,11 +128,21 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, bool limitedF
 		return;
 	}
 
+	//	scheduleMsg(logger, "handleFuel totalPerCycle=%f", totalPerCycle);
+	//	scheduleMsg(logger, "handleFuel engineCycleDuration=%f", engineCycleDuration);
+
 	if (engine->isCylinderCleanupMode) {
 		return;
 	}
 
 	floatus_t injectionStartDelayUs = ENGINE(rpmCalculator.oneDegreeUs) * event->injectionStart.angleOffset;
+
+//	scheduleMsg(logger, "handleFuel pin=%s eventIndex %d duration=%fms %d", event->output->name,
+//			eventIndex,
+//			injectionDuration,
+//			getRevolutionCounter());
+//	scheduleMsg(logger, "handleFuel pin=%s delay=%f %d", event->output->name, injectionStartDelayUs,
+//			getRevolutionCounter());
 
 	OutputSignal *signal = &ENGINE(engineConfiguration2)->fuelActuators[eventIndex];
 
@@ -179,12 +189,14 @@ static ALWAYS_INLINE void handleFuel(bool limitedFuel, uint32_t eventIndex, int 
 	 * Ignition events are defined by addFuelEvents() according to selected
 	 * fueling strategy
 	 */
-	FuelSchedule *fs = ENGINE(engineConfiguration2)->injectionEvents;
+	FuelSchedule *fs = engine->fuelScheduleForThisEngineCycle;
 
 	InjectionEventList *injectionEvents = &fs->injectionEvents;
 
 	if (!fs->hasEvents[eventIndex])
 		return;
+
+//	scheduleMsg(logger, "handleFuel ind=%d %d", eventIndex, getRevolutionCounter());
 
 	ENGINE(tpsAccelEnrichment.onNewValue(getTPS(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
 	ENGINE(engineLoadAccelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_F));
@@ -453,6 +465,10 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	int revolutionIndex = ENGINE(rpmCalculator).getRevolutionCounter() % 2;
 
 	if (eventIndex == 0) {
+		// these two statements should be atomic, but in reality we should be fine, right?
+		engine->fuelScheduleForThisEngineCycle = ENGINE(engineConfiguration2)->injectionEvents;
+		engine->fuelScheduleForThisEngineCycle->usedAtEngineCycle = ENGINE(rpmCalculator).getRevolutionCounter();
+
 		if (triggerVersion.isOld()) {
 			prepareOutputSignals(PASS_ENGINE_PARAMETER_F);
 		}
