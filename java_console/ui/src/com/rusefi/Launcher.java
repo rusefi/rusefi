@@ -6,9 +6,7 @@ import com.rusefi.core.EngineState;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.io.ConnectionStatus;
-import com.rusefi.io.ConnectionWatchdog;
-import com.rusefi.io.LinkManager;
+import com.rusefi.io.*;
 import com.rusefi.io.serial.PortHolder;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.VersionChecker;
@@ -24,6 +22,7 @@ import jssc.SerialPortList;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
@@ -39,7 +38,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20160724;
+    public static final int CONSOLE_VERSION = 20160807;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -191,6 +190,12 @@ public class Launcher {
             public void onConnectionStatus(boolean isConnected) {
                 setTitle();
                 UiUtils.trueRepaint(tabbedPane); // this would repaint status label
+                if (ConnectionStatus.INSTANCE.getValue() == ConnectionStatus.Value.CONNECTED) {
+                    long unixTime = System.currentTimeMillis() / 1000L;
+                    long withOffset = unixTime + TimeZone.getDefault().getOffset(System.currentTimeMillis());
+                    CommandQueue.getInstance().write("set date " + withOffset, CommandQueue.DEFAULT_TIMEOUT,
+                            InvocationConfirmationListener.VOID, false);
+                }
             }
         });
 

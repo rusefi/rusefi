@@ -160,6 +160,7 @@ public class CommandQueue {
      *
      * @param command   dev console command
      * @param timeoutMs retry timeout
+     * @param fireEvent true if we want global even about this comment, i.e. recent commands list to know about this command
      */
     public void write(String command, int timeoutMs, InvocationConfirmationListener listener, boolean fireEvent) {
 
