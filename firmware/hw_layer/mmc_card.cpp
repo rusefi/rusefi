@@ -27,11 +27,16 @@
 #include "usb_msd.h"
 #include "usb_msd_cfg.h"
 
+#include "rtc_helper.h"
 
 EXTERN_ENGINE;
 
 #define LOG_INDEX_FILENAME "index.txt"
+
 #define RUSEFI_LOG_PREFIX "rus"
+#define PREFIX_LEN 3
+#define SHORT_TIME_LEN 11
+
 #define LS_RESPONSE "ls_result"
 #define FILE_LIST_MAX_COUNT 20
 
@@ -80,7 +85,7 @@ static void printError(const char *str, FRESULT f_error) {
 static FIL FDLogFile;
 static FIL FDCurrFile;
 static int logFileIndex = 1;
-static char logName[15];
+static char logName[20];
 
 static int totalLoggedBytes = 0;
 
@@ -135,6 +140,19 @@ static void incLogFileName(void) {
 	unlockSpi();
 }
 
+static void prepareLogFileName(void) {
+	strcpy(logName, RUSEFI_LOG_PREFIX);
+//	bool result = dateToStringShort(&logName[PREFIX_LEN]);
+	char *ptr;
+//	if (result) {
+//		ptr = &logName[PREFIX_LEN + SHORT_TIME_LEN];
+//	} else {
+		ptr = itoa10(&logName[PREFIX_LEN], logFileIndex);
+//	}
+	strcat(ptr, ".msl");
+
+}
+
 /**
  * @brief Create a new file with the specified name
  *
@@ -144,9 +162,7 @@ static void incLogFileName(void) {
 static void createLogFile(void) {
 	lockSpi(SPI_NONE);
 	memset(&FDLogFile, 0, sizeof(FIL));						// clear the memory
-	strcpy(logName, RUSEFI_LOG_PREFIX);
-	char *ptr = itoa10(&logName[3], logFileIndex);
-	strcat(ptr, ".msl");
+	prepareLogFileName();
 
 	FRESULT err = f_open(&FDLogFile, logName, FA_OPEN_ALWAYS | FA_WRITE);				// Create new file
 	if (err != FR_OK && err != FR_EXIST) {
