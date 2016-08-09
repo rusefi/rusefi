@@ -38,7 +38,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20160807;
+    public static final int CONSOLE_VERSION = 20160808;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -192,7 +192,7 @@ public class Launcher {
                 UiUtils.trueRepaint(tabbedPane); // this would repaint status label
                 if (ConnectionStatus.INSTANCE.getValue() == ConnectionStatus.Value.CONNECTED) {
                     long unixTime = System.currentTimeMillis() / 1000L;
-                    long withOffset = unixTime + TimeZone.getDefault().getOffset(System.currentTimeMillis());
+                    long withOffset = unixTime + TimeZone.getDefault().getOffset(System.currentTimeMillis()) / 1000;
                     CommandQueue.getInstance().write("set date " + withOffset, CommandQueue.DEFAULT_TIMEOUT,
                             InvocationConfirmationListener.VOID, false);
                 }

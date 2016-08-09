@@ -32,6 +32,41 @@ void date_get_tm(struct tm *timp) {
 #endif /* EFI_RTC */
 }
 
+static void put2(int offset, char *lcd_str, int value) {
+	static char buff[4];
+	itoa10(buff, value);
+	if (value < 10) {
+		lcd_str[offset] = '0';
+		lcd_str[offset + 1] = buff[0];
+	} else {
+		lcd_str[offset] = buff[0];
+		lcd_str[offset + 1] = buff[1];
+	}
+}
+
+bool dateToStringShort(char *lcd_str) {
+#if EFI_RTC || defined(__DOXYGEN__)
+	strcpy(lcd_str, "0000_000000\0");
+	struct tm timp;
+	rtcGetTimeTm(&RTCD1, &timp);
+	if (timp.tm_year < 116 || timp.tm_year > 130) {
+		// 2016 to 2030 is the valid range
+		lcd_str[0] = 0;
+		return false;
+	}
+	put2(0, lcd_str, timp.tm_mon + 1);
+	put2(2, lcd_str, timp.tm_mday);
+	put2(5, lcd_str, timp.tm_hour);
+	put2(7, lcd_str, timp.tm_min);
+	put2(9, lcd_str, timp.tm_sec);
+
+	return true;
+#else
+	lcd_str[0] = 0;
+	return false;
+#endif
+}
+
 void dateToString(char *lcd_str) {
 #if EFI_RTC || defined(__DOXYGEN__)
 	// todo:
@@ -40,50 +75,15 @@ void dateToString(char *lcd_str) {
 	// this would require a temporary mem stream - see datalogging and other existing usages
 
 	strcpy(lcd_str, "00/00 00:00:00\0");
-	static char buff[4];
 	struct tm timp;
 	rtcGetTimeTm(&RTCD1, &timp);			// get RTC date/time
 	
-	itoa10(buff, timp.tm_mon + 1);
-	if(timp.tm_mon < 9) { 
-		lcd_str[0] = '0';
-		lcd_str[1] = buff[0];
-	} else {
-		lcd_str[0] = buff[0];
-		lcd_str[1] = buff[1];
-	}
-	itoa10(buff, timp.tm_mday);
-	if(timp.tm_mday < 10) { 
-		lcd_str[3] = '0';
-		lcd_str[4] = buff[0];
-	} else {
-		lcd_str[3] = buff[0];
-		lcd_str[4] = buff[1];
-	}
-	itoa10(buff, timp.tm_hour);
-	if(timp.tm_hour < 10) { 
-		lcd_str[6] = '0';
-		lcd_str[7] = buff[0];
-	} else {
-		lcd_str[6] = buff[0];
-		lcd_str[7] = buff[1];
-	}
-	itoa10(buff, timp.tm_min);
-	if(timp.tm_min < 10) { 
-		lcd_str[9] = '0';
-		lcd_str[10] = buff[0];
-	} else {
-		lcd_str[9] = buff[0];
-		lcd_str[10] = buff[1];
-	}
-	itoa10(buff, timp.tm_sec);
-	if(timp.tm_sec < 10) { 
-		lcd_str[12] = '0';
-		lcd_str[13] = buff[0];
-	} else {
-		lcd_str[12] = buff[0];
-		lcd_str[13] = buff[1];
-	}
+	put2(0, lcd_str, timp.tm_mon + 1);
+	put2(3, lcd_str, timp.tm_mday);
+	put2(6, lcd_str, timp.tm_hour);
+	put2(9, lcd_str, timp.tm_min);
+	put2(12, lcd_str, timp.tm_sec);
+
 #else
 	lcd_str[0] = 0;
 #endif /* EFI_RTC */
