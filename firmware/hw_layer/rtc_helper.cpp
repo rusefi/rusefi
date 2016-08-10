@@ -111,7 +111,7 @@ void printDateTime(void) {
 
 void setDateTime(const char *strDate) {
 	if (strlen(strDate) > 0) {
-		time_t unix_time = (double) atoff(strDate);
+		time_t unix_time = atoi(strDate);
 		if (unix_time > 0) {
 			rtcSetTimeUnixSec(&RTCD1, unix_time);
 			printDateTime();
