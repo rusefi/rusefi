@@ -13,8 +13,6 @@
 #include "datalogging.h"
 #include "histogram.h"
 
-#define _MAX_FILLER 11
-
 const char * boolToString(bool value) {
 	return value ? "Yes" : "No";
 }
@@ -118,6 +116,9 @@ int atoi(const char *string) {
 
 static char todofixthismesswithcopy[100];
 
+/**
+ * WARNING: due to implementation details specifid buffer should be at least size of '_MAX_FILLER'
+ */
 static char *ltoa_internal(char *p, long num, unsigned radix) {
 	int i;
 	char *q;

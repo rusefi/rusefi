@@ -154,6 +154,8 @@ void rtc_lld_set_time(RTCDriver *rtcp, const RTCTime *timespec) {
 void rtc_lld_get_time(RTCDriver *rtcp, RTCTime *timespec) {
   (void)rtcp;
 
+  chDbgAssert(RTCD1.id_rtc == RTC, "RTC", "RTC");
+
   rtc_lld_apb1_sync();
 
 #if STM32_RTC_HAS_SUBSECONDS
