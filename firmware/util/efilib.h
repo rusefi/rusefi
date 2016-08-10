@@ -11,6 +11,8 @@
 #include <stdint.h>
 #include "global.h"
 
+#define _MAX_FILLER 11
+
 // http://en.wikipedia.org/wiki/Endianness
 
 #define SWAP_UINT16(x) ((x) << 8) | ((x) >> 8)
