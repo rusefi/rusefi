@@ -249,7 +249,7 @@ static void handleFsio(Engine *engine, int index) {
 
 
 static const char * action2String(le_action_e action) {
-	static char buffer[10];
+	static char buffer[_MAX_FILLER];
 	switch(action) {
 		case LE_METHOD_RPM:
 			return "RPM";
