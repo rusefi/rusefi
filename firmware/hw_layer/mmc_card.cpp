@@ -142,13 +142,13 @@ static void incLogFileName(void) {
 
 static void prepareLogFileName(void) {
 	strcpy(logName, RUSEFI_LOG_PREFIX);
-//	bool result = dateToStringShort(&logName[PREFIX_LEN]);
+	bool result = dateToStringShort(&logName[PREFIX_LEN]);
 	char *ptr;
-//	if (result) {
-//		ptr = &logName[PREFIX_LEN + SHORT_TIME_LEN];
-//	} else {
+	if (result) {
+		ptr = &logName[PREFIX_LEN + SHORT_TIME_LEN];
+	} else {
 		ptr = itoa10(&logName[PREFIX_LEN], logFileIndex);
-//	}
+	}
 	strcat(ptr, ".msl");
 
 }
@@ -193,6 +193,8 @@ static void removeFile(const char *pathx) {
 	unlockSpi();
 }
 
+static char lfNameBuff[100];
+
 static void listDirectory(const char *path) {
 
 	if (!fs_ready) {
@@ -215,15 +217,19 @@ static void listDirectory(const char *path) {
 	int i = strlen(path);
 	for (int count = 0;count < FILE_LIST_MAX_COUNT;) {
 		FILINFO fno;
+#if _USE_LFN
+  fno.lfname = lfNameBuff;
+  fno.lfsize = sizeof(lfNameBuff);
+#endif
 		res = f_readdir(&dir, &fno);
 		if (res != FR_OK || fno.fname[0] == 0)
 			break;
-		if (fno.lfname[0] == '.')
+		if (fno.fname[0] == '.')
 			continue;
-		if ((fno.fattrib & AM_DIR) || strncmp(RUSEFI_LOG_PREFIX, fno.fname, sizeof(RUSEFI_LOG_PREFIX) - 1)) {
+		if ((fno.fattrib & AM_DIR) || strncasecmp(RUSEFI_LOG_PREFIX, fno.fname, sizeof(RUSEFI_LOG_PREFIX) - 1)) {
 			continue;
 		}
-		scheduleMsg(&logger, "logfile%lu:%s", fno.fsize, fno.fname);
+		scheduleMsg(&logger, "logfile%lu:%s", fno.fsize, fno.lfname[0] == 0 ? fno.fname : fno.lfname);
 		count++;
 
 //			scheduleMsg(&logger, "%c%c%c%c%c %u/%02u/%02u %02u:%02u %9lu  %-12s", (fno.fattrib & AM_DIR) ? 'D' : '-',
