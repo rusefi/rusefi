@@ -193,6 +193,37 @@ static void removeFile(const char *pathx) {
 	unlockSpi();
 }
 
+/*
+** return lower-case of c if upper-case, else c
+*/
+int mytolower(const char c)  {
+
+  if(c<='Z' &&  c>='A') return (c+32);
+  return (c);
+
+}
+
+
+int
+    mystrncasecmp(const char *s1, const char *s2, size_t n)
+    {
+
+           if (n != 0) {
+                    const u_char *us1 = (const u_char *)s1;
+                    const u_char *us2 = (const u_char *)s2;
+
+                   do {
+                            if (mytolower(*us1) != mytolower(*us2))
+                                    return (mytolower(*us1) - mytolower(*us2));
+                           if (*us1++ == '\0')
+                                   break;
+                            us2++;
+                    } while (--n != 0);
+            }
+            return (0);
+    }
+
+
 static char lfNameBuff[100];
 
 static void listDirectory(const char *path) {
@@ -226,7 +257,7 @@ static void listDirectory(const char *path) {
 			break;
 		if (fno.fname[0] == '.')
 			continue;
-		if ((fno.fattrib & AM_DIR) || strncasecmp(RUSEFI_LOG_PREFIX, fno.fname, sizeof(RUSEFI_LOG_PREFIX) - 1)) {
+		if ((fno.fattrib & AM_DIR) || mystrncasecmp(RUSEFI_LOG_PREFIX, fno.fname, sizeof(RUSEFI_LOG_PREFIX) - 1)) {
 			continue;
 		}
 		scheduleMsg(&logger, "logfile%lu:%s", fno.fsize, fno.lfname[0] == 0 ? fno.fname : fno.lfname);
