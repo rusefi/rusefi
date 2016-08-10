@@ -85,7 +85,7 @@ static void printError(const char *str, FRESULT f_error) {
 static FIL FDLogFile;
 static FIL FDCurrFile;
 static int logFileIndex = 1;
-static char logName[20];
+static char logName[_MAX_FILLER + 20];
 
 static int totalLoggedBytes = 0;
 
@@ -109,7 +109,7 @@ static void incLogFileName(void) {
 	memset(&FDCurrFile, 0, sizeof(FIL));						// clear the memory
 	FRESULT err = f_open(&FDCurrFile, LOG_INDEX_FILENAME, FA_READ);				// This file has the index for next log file name
 
-	char data[10];
+	char data[_MAX_FILLER];
 	UINT result = 0;
 	if (err != FR_OK && err != FR_EXIST) {
 			logFileIndex = 1;

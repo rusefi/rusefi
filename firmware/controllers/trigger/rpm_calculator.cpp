@@ -230,7 +230,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 
 static scheduling_s tdcScheduler[2];
 
-static char rpmBuffer[10];
+static char rpmBuffer[_MAX_FILLER];
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 /**
