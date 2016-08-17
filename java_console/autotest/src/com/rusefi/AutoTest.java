@@ -267,8 +267,8 @@ public class AutoTest {
 
         IoUtil.changeRpm(600);
         chart = nextChart();
-        x = 82;
-        assertWave("aspire default running ", chart, EngineChart.SPARK_1, 0.04, x, x + 180, x + 360, x + 540);
+        x = 78;
+        assertWave(true, "aspire default running ", chart, EngineChart.SPARK_1, 0.04, 0.1, 0.1, x, x + 180, x + 360, x + 540);
 
         IoUtil.changeRpm(200);
 
@@ -413,7 +413,7 @@ public class AutoTest {
 
         boolean failed = false;
         try {
-            IoUtil.launchSimulator(false);
+            IoUtil.launchSimulator(true);
             mainTestBody();
         } catch (Throwable e) {
             e.printStackTrace();
