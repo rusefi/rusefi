@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Aug 01 21:44:40 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Aug 11 20:02:56 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -471,6 +471,7 @@ typedef struct {
 	 */
 	pin_output_mode_e hip9011CsPinMode;
 	/**
+	 * This implementation produces one pulse per engine cycle. See also dizzySparkOutputPin.
 	 * offset 280
 	 */
 	brain_pin_e tachOutputPin;
@@ -1439,10 +1440,12 @@ typedef struct {
 	 */
 	idle_control_e idleControl;
 	/**
+	 * blue LED on discovery by default
 	 * offset 1924
 	 */
 	brain_pin_e communicationPin;
 	/**
+	 * green LED on discovery by default
 	 * offset 1928
 	 */
 	brain_pin_e runningPin;
@@ -1535,10 +1538,12 @@ typedef struct {
 	 */
 	float engineLoadAccelEnrichmentMultiplier;
 	/**
+	 * RED led on Discovery by default. TODO: start using this property
 	 * offset 2216
 	 */
 	brain_pin_e fatalErrorPin;
 	/**
+	 * TODO: start using this property
 	 * offset 2220
 	 */
 	brain_pin_e warninigPin;
@@ -1598,6 +1603,7 @@ typedef struct {
 	 */
 	float mapAccelTaperMult[MAP_ACCEL_TAPER];
 	/**
+	 * This implementation makes a pulse every time one of the coils is charged. See also tachOutputPin
 	 * offset 2368
 	 */
 	brain_pin_e dizzySparkOutputPin;
@@ -1904,4 +1910,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Aug 01 21:44:40 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Aug 11 20:02:56 EDT 2016

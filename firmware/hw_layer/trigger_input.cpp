@@ -73,7 +73,7 @@ shaft_icu_width_callback, shaft_icu_period_callback };
 static ICUDriver *turnOnTriggerInputPin(brain_pin_e hwPin) {
 	// configure pin
 	turnOnCapturePin("trigger", hwPin);
-	shaft_icucfg.channel = ICU_CHANNEL_1;
+	shaft_icucfg.channel = getInputCaptureChannel(hwPin);
 
 	ICUDriver *driver = getInputCaptureDriver(hwPin);
 	scheduleMsg(logger, "turnOnTriggerInputPin %s", hwPortname(hwPin));

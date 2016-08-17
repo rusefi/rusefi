@@ -639,7 +639,7 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 		scheduleMsg(&tsLogger, "Got naked Query command");
 		handleQueryCommand(tsChannel, TS_PLAIN);
 		return true;
-	} else if (command == 't' || command == 'T') {
+	} else if (command == TS_TEST_COMMAND || command == 'T') {
 		handleTestCommand(tsChannel);
 		return true;
 	} else if (command == TS_PAGE_COMMAND) {

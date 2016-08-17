@@ -49,6 +49,7 @@ typedef struct {
 
 #define TS_HELLO_COMMAND_DEPRECATED 'H'
 #define TS_HELLO_COMMAND 'S'
+#define TS_TEST_COMMAND 't'
 #define TS_LEGACY_HELLO_COMMAND 'Q'
 #define TS_OUTPUT_COMMAND 'O'
 #define TS_READ_COMMAND 'R'

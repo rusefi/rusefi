@@ -187,7 +187,10 @@ typedef enum {
 
 	TT_HONDA_CBR_600_CUSTOM = 30,
 
-	TT_UNUSED = 31, // this is used if we want to iterate over all trigger types
+	// skipped 3/1 with cam sensor for testing
+	TT_3_1_CAM = 31,
+
+	TT_UNUSED = 32, // this is used if we want to iterate over all trigger types
 
 
 	Force_4b_trigger_type = ENUM_32_BITS,

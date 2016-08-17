@@ -373,6 +373,43 @@ void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount,
 	NO_LEFT_FILTER, NO_RIGHT_FILTER);
 }
 
+static void configure3_1_cam(TriggerShape *s, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_S) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+
+
+	const float crankW = 360 / 3 / 2;
+
+
+	trigger_wheel_e crank = T_SECONDARY;
+
+	s->addEvent2(10, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
+	s->addEvent2(50, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
+
+
+	float a = 2 * crankW;
+
+	// #1/3
+	s->addEvent2(a += crankW, crank, TV_RISE PASS_ENGINE_PARAMETER);
+	s->addEvent2(a += crankW, crank, TV_FALL PASS_ENGINE_PARAMETER);
+	// #2/3
+	s->addEvent2(a += crankW, crank, TV_RISE PASS_ENGINE_PARAMETER);
+	s->addEvent2(a += crankW, crank, TV_FALL PASS_ENGINE_PARAMETER);
+	// #3/3
+	a += crankW;
+	a += crankW;
+
+	// 2nd #1/3
+	s->addEvent2(a += crankW, crank, TV_RISE PASS_ENGINE_PARAMETER);
+	s->addEvent2(a += crankW, crank, TV_FALL PASS_ENGINE_PARAMETER);
+
+	// 2nd #2/3
+	s->addEvent2(a += crankW, crank, TV_RISE PASS_ENGINE_PARAMETER);
+	s->addEvent2(a += crankW, crank, TV_FALL PASS_ENGINE_PARAMETER);
+
+	s->isSynchronizationNeeded = false;
+}
+
+
 static void configureOnePlusOne(TriggerShape *s, operation_mode_e operationMode) {
 	float engineCycle = getEngineCycle(operationMode);
 
@@ -462,6 +499,10 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 
 	case TT_ONE_PLUS_ONE:
 		configureOnePlusOne(triggerShape, engineConfiguration->operationMode);
+		break;
+
+	case TT_3_1_CAM:
+		configure3_1_cam(triggerShape, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_ONE_PLUS_TOOTHED_WHEEL_60_2:

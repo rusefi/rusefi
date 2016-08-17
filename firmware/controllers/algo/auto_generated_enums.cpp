@@ -127,6 +127,8 @@ case TT_HONDA_CBR_600:
 	return "TT_HONDA_CBR_600";
 case TT_HONDA_CBR_600_CUSTOM:
 	return "TT_HONDA_CBR_600_CUSTOM";
+case TT_3_1_CAM:
+	return "TT_3_1_CAM";
 case TT_DODGE_NEON_1995:
   return "TT_DODGE_NEON_1995";
 case TT_GM_LS_24:
