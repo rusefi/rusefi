@@ -26,14 +26,14 @@ public class AutoTest {
 
     static void mainTestBody() {
         sendCommand("fl 1"); // just in case it was disabled
+        test1995DodgeNeon();
+        testMazdaProtege();
+        testFordAspire();
         testBmwE34();
         testSachs();
         testMitsu();
         testCitroenBerlingo();
         testMazda626();
-        testFordAspire();
-        testMazdaProtege();
-        test1995DodgeNeon();
         testFord6();
         testFordFiesta();
         test2003DodgeNeon();
@@ -170,8 +170,8 @@ public class AutoTest {
         double x = 107;
         assertWave(msg, chart, EngineChart.SPARK_1, 0.194433, x, x + 180, x + 360, x + 540);
         x = 0;
-        assertWaveFall(msg, chart, EngineChart.INJECTOR_1, 0.004666666666, x, x + 180, x + 360, x + 540);
-        assertWaveFall(msg, chart, EngineChart.INJECTOR_2, 0.004666666666, x, x + 180, x + 360, x + 540);
+        assertWaveFall(msg, chart, EngineChart.INJECTOR_1, 0.008566666666, x, x + 180, x + 360, x + 540);
+        assertWaveFall(msg, chart, EngineChart.INJECTOR_2, 0.008566666666, x, x + 180, x + 360, x + 540);
 
         msg = "ProtegeLX running";
         IoUtil.changeRpm(2000);
@@ -179,8 +179,8 @@ public class AutoTest {
         x = 112;
         assertWave(msg, chart, EngineChart.SPARK_1, 0.13333333333333333, x, x + 180, x + 360, x + 540);
         x = 0;
-        assertWaveFall(msg, chart, EngineChart.INJECTOR_1, 0.13633333333333345, x + 180, x + 540);
-        assertWaveFall(msg, chart, EngineChart.INJECTOR_2, 0.13633333333333345, x, x + 360);
+        assertWaveFall(msg, chart, EngineChart.INJECTOR_1, 0.21433333333333345, x + 180, x + 540);
+        assertWaveFall(msg, chart, EngineChart.INJECTOR_2, 0.21433333333333345, x, x + 360);
     }
 
     private static void test1995DodgeNeon() {
@@ -214,7 +214,7 @@ public class AutoTest {
         IoUtil.changeRpm(2000);
         chart = nextChart();
         x = -70;
-        assertWaveFall(msg, chart, EngineChart.INJECTOR_4, 0.463, x + 540);
+        assertWaveFall(msg, chart, EngineChart.INJECTOR_4, 0.493, x + 540);
     }
 
     private static void testFordFiesta() {
@@ -267,7 +267,7 @@ public class AutoTest {
 
         IoUtil.changeRpm(600);
         chart = nextChart();
-        x = 76;
+        x = 82;
         assertWave("aspire default running ", chart, EngineChart.SPARK_1, 0.04, x, x + 180, x + 360, x + 540);
 
         IoUtil.changeRpm(200);
@@ -306,12 +306,12 @@ public class AutoTest {
 
         msg = "aspire running";
 
-        assertWaveFall(msg, chart, EngineChart.INJECTOR_1, 0.086, 238.75);
-        assertWaveFall(msg, chart, EngineChart.INJECTOR_2, 0.086, 53.04);
-        assertWaveFall(msg, chart, EngineChart.INJECTOR_3, 0.086, 417.04);
-        assertWaveFall(msg, chart, EngineChart.INJECTOR_4, 0.086, 594.04);
+        assertWaveFall(msg, chart, EngineChart.INJECTOR_1, 0.109, 238.75);
+        assertWaveFall(msg, chart, EngineChart.INJECTOR_2, 0.109, 53.04);
+        assertWaveFall(msg, chart, EngineChart.INJECTOR_3, 0.109, 417.04);
+        assertWaveFall(msg, chart, EngineChart.INJECTOR_4, 0.109, 594.04);
 
-        x = 7;
+        x = 33;
         assertWave(chart, EngineChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
 
         sendCommand("set_fuel_map 2200 4 15.66");
@@ -323,10 +323,10 @@ public class AutoTest {
         sendComplexCommand("set_global_trigger_offset_angle 175");
         chart = nextChart();
 
-        assertWaveFall(msg + " fuel", chart, EngineChart.INJECTOR_1, 0.555, 238.75);
-        assertWaveFall(msg + " fuel", chart, EngineChart.INJECTOR_2, 0.555, 53.04);
-        assertWaveFall(msg + " fuel", chart, EngineChart.INJECTOR_3, 0.555, 417.04);
-        assertWaveFall(msg + " fuel", chart, EngineChart.INJECTOR_4, 0.555, 594.04);
+        assertWaveFall(msg + " fuel", chart, EngineChart.INJECTOR_1, 0.763, 238.75);
+        assertWaveFall(msg + " fuel", chart, EngineChart.INJECTOR_2, 0.763, 53.04);
+        assertWaveFall(msg + " fuel", chart, EngineChart.INJECTOR_3, 0.763, 417.04);
+        assertWaveFall(msg + " fuel", chart, EngineChart.INJECTOR_4, 0.763, 594.04);
 
         x = 33.0;
         assertWave(chart, EngineChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
@@ -359,10 +359,10 @@ public class AutoTest {
         assertEquals(69.12, SensorCentral.getInstance().getValue(Sensor.MAP));
         //assertEquals(1, SensorCentral.getInstance().getValue(Sensor.));
         x = 8.88;
-        assertWave(false, msg + " fuel SD #1", chart, EngineChart.INJECTOR_1, 0.329, 0.1, 0.1, x + 180);
-        assertWave(false, msg + " fuel SD #2", chart, EngineChart.INJECTOR_2, 0.329, 0.1, 0.1, x);
-        assertWave(false, msg + " fuel SD #3", chart, EngineChart.INJECTOR_3, 0.329, 0.1, 0.1, x + 360);
-        assertWave(false, msg + " fuel SD #4", chart, EngineChart.INJECTOR_4, 0.329, 0.1, 0.1, x + 540);
+        assertWave(false, msg + " fuel SD #1", chart, EngineChart.INJECTOR_1, 0.577, 0.1, 0.1, x + 180);
+        assertWave(false, msg + " fuel SD #2", chart, EngineChart.INJECTOR_2, 0.577, 0.1, 0.1, x);
+        assertWave(false, msg + " fuel SD #3", chart, EngineChart.INJECTOR_3, 0.577, 0.1, 0.1, x + 360);
+        assertWave(false, msg + " fuel SD #4", chart, EngineChart.INJECTOR_4, 0.577, 0.1, 0.1, x + 540);
 
         // above hard limit
         IoUtil.changeRpm(10000);
@@ -413,7 +413,7 @@ public class AutoTest {
 
         boolean failed = false;
         try {
-            IoUtil.launchSimulator(true);
+            IoUtil.launchSimulator(false);
             mainTestBody();
         } catch (Throwable e) {
             e.printStackTrace();
