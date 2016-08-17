@@ -680,8 +680,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 		engineConfiguration->fsioInputModes[i] = PI_DEFAULT;
 	}
 
-	engineConfiguration->communicationPin = GPIOD_15;
-	engineConfiguration->runningPin = GPIOD_12;
+	engineConfiguration->communicationPin = GPIOD_15; // blue LED on discovery
+	engineConfiguration->runningPin = GPIOD_12; // greeb LED on discovery
 	setDefaultBasePins(PASS_ENGINE_PARAMETER_F);
 	engineConfiguration->binarySerialTxPin = GPIOC_10;
 	engineConfiguration->binarySerialRxPin = GPIOC_11;
