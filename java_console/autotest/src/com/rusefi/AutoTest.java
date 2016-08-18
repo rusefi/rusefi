@@ -415,7 +415,7 @@ public class AutoTest {
 
         boolean failed = false;
         try {
-            IoUtil.launchSimulator(false);
+            IoUtil.launchSimulator(true);
             mainTestBody();
         } catch (Throwable e) {
             e.printStackTrace();
