@@ -26,13 +26,13 @@ public class AutoTest {
 
     static void mainTestBody() {
         sendCommand("fl 1"); // just in case it was disabled
+        testMitsu();
         test2003DodgeNeon();
         testFordAspire();
         test1995DodgeNeon();
         testMazdaProtege();
         testBmwE34();
         testSachs();
-        testMitsu();
         testCitroenBerlingo();
         testMazda626();
         testFord6();
@@ -71,6 +71,7 @@ public class AutoTest {
 
     private static void testMitsu() {
         setEngineType(16);
+        sendCommand("disable cylinder_cleanup");
         String msg = "Mitsubishi";
         IoUtil.changeRpm(200);
 
@@ -250,6 +251,7 @@ public class AutoTest {
 
     private static void testFordAspire() {
         setEngineType(3);
+        sendCommand("disable cylinder_cleanup");
         sendCommand("set_mock_map_voltage 1");
         sendCommand("set_mock_vbatt_voltage 2.2");
         String msg;
@@ -413,7 +415,7 @@ public class AutoTest {
 
         boolean failed = false;
         try {
-            IoUtil.launchSimulator(true);
+            IoUtil.launchSimulator(false);
             mainTestBody();
         } catch (Throwable e) {
             e.printStackTrace();
