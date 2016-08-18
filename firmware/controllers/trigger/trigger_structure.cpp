@@ -43,14 +43,12 @@ TriggerShape::TriggerShape() :
 	isSynchronizationNeeded = false;
 	// todo: reuse 'clear' method?
 	invertOnAdd = false;
-	tdcPosition = 0;
 //	skippedToothCount = totalToothCount = 0;
 	syncRatioFrom = syncRatioTo = 0;
 	secondSyncRatioFrom = 0.000001;
 	secondSyncRatioTo = 100000;
 	thirdSyncRatioFrom = 0.000001;
 	thirdSyncRatioTo = 100000;
-	memset(eventAngles, 0, sizeof(eventAngles));
 	memset(frontOnlyIndexes, 0, sizeof(frontOnlyIndexes));
 	memset(isFrontEvent, 0, sizeof(isFrontEvent));
 	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
@@ -109,6 +107,12 @@ void TriggerShape::calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE
 }
 
 void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTriggerInput) {
+	isSynchronizationNeeded = true; // that's default value
+	this->needSecondTriggerInput = needSecondTriggerInput;
+	memset(dutyCycle, 0, sizeof(dutyCycle));
+	memset(eventAngles, 0, sizeof(eventAngles));
+//	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
+
 	tdcPosition = 0;
 	setTriggerSynchronizationGap(2);
 	// todo: true here, false in constructor() what a mess!
@@ -119,7 +123,6 @@ void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTri
 
 	this->operationMode = operationMode;
 	size = 0;
-	this->needSecondTriggerInput = needSecondTriggerInput;
 	triggerShapeSynchPointIndex = 0;
 	memset(initialState, 0, sizeof(initialState));
 	memset(switchTimesBuffer, 0, sizeof(switchTimesBuffer));
@@ -370,12 +373,10 @@ void setVwConfiguration(TriggerShape *s) {
 
 	s->useRiseEdge = true;
 
-	initializeSkippedToothTriggerShapeExt(s, 60, 2,
-			operationMode);
+	s->initialize(operationMode, false);
 
 	s->isSynchronizationNeeded = true;
 
-	s->initialize(operationMode, false);
 
 	int totalTeethCount = 60;
 	int skippedCount = 2;

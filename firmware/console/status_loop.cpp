@@ -229,13 +229,13 @@ static void printSensors(Logging *log, bool fileFormat) {
 
 //	debugFloat(&logger, "tch", getTCharge1(tps), 2);
 
-	// todo: implement a proper loop
-	if (engineConfiguration->fsioAdc[0] != EFI_ADC_NONE) {
-		strcpy(buf, "adcX");
-		reportSensorF(log, fileFormat, "adc0", "", getVoltage("fsio", engineConfiguration->fsioAdc[0]), 2);
+	for (int i = 0;i<FSIO_ADC_COUNT;i++) {
+		if (engineConfiguration->fsioAdc[i] != EFI_ADC_NONE) {
+			strcpy(buf, "adcX");
+			buf[3] = '0' + i;
+			reportSensorF(log, fileFormat, buf, "", getVoltage("fsio", engineConfiguration->fsioAdc[i]), 2);
+		}
 	}
-
-
 }
 
 
