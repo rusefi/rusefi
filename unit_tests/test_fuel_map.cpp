@@ -188,19 +188,19 @@ void testAngleResolver(void) {
 	printf("*************************************************** testAngleResolver 0\r\n");
 	findTriggerPosition(&ae.add()->injectionStart, -122 PASS_ENGINE_PARAMETER);
 	assertEqualsM("size", 1, ae.size);
-	assertEquals(2, ae.elements[0].injectionStart.eventIndex);
+	assertEqualsM("eventIndex@0", 2, ae.elements[0].injectionStart.eventIndex);
 	assertEquals(0.24, ae.elements[0].injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 0.1\r\n");
 	ae.reset();
 	findTriggerPosition(&ae.add()->injectionStart, -80 PASS_ENGINE_PARAMETER);
-	assertEquals(2, ae.elements[0].injectionStart.eventIndex);
+	assertEqualsM("eventIndex@0", 2, ae.elements[0].injectionStart.eventIndex);
 	assertEquals(42.24, ae.elements[0].injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 0.2\r\n");
 	ae.reset();
 	findTriggerPosition(&ae.add()->injectionStart, -54 PASS_ENGINE_PARAMETER);
-	assertEquals(2, ae.elements[0].injectionStart.eventIndex);
+	assertEqualsM("eventIndex@0", 2, ae.elements[0].injectionStart.eventIndex);
 	assertEquals(68.2400, ae.elements[0].injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 0.3\r\n");
