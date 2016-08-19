@@ -165,11 +165,14 @@ public class AutoTest {
         EngineChart chart;
         sendCommand("set_mock_vbatt_voltage 1.395");
         IoUtil.changeRpm(200);
+        IoUtil.changeRpm(260);
+        IoUtil.changeRpm(200);
         String msg = "ProtegeLX cranking";
         chart = nextChart();
         assertEquals("", 12, SensorCentral.getInstance().getValue(Sensor.VBATT), 0.1);
         double x = 107;
-        assertWave(msg, chart, EngineChart.SPARK_1, 0.194433, x, x + 180, x + 360, x + 540);
+        assertWave(msg, chart, EngineChart.SPARK_3, 0.194433, x);
+        assertWave(msg, chart, EngineChart.SPARK_1, 0.194433, x + 540);
         x = 0;
         assertWaveFall(msg, chart, EngineChart.INJECTOR_1, 0.008566666666, x, x + 180, x + 360, x + 540);
         assertWaveFall(msg, chart, EngineChart.INJECTOR_2, 0.008566666666, x, x + 180, x + 360, x + 540);
