@@ -37,8 +37,7 @@ TriggerShape::TriggerShape() :
 		wave(switchTimesBuffer, NULL) {
 	initialize(OM_NONE, false);
 	wave.waves = h.waves;
-	// todo: false here, true in clear() what a mess!
-	useRiseEdge = false;
+
 	useOnlyPrimaryForSync = false;
 	isSynchronizationNeeded = false;
 	// todo: reuse 'clear' method?
@@ -117,7 +116,6 @@ void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTri
 
 
 	tdcPosition = 0;
-	// todo: true here, false in constructor() what a mess!
 	useRiseEdge = true;
 
 	invertOnAdd = false;
@@ -372,8 +370,6 @@ void multi_wave_s::checkSwitchTimes(int size) {
 void setVwConfiguration(TriggerShape *s) {
 	efiAssertVoid(s != NULL, "TriggerShape is NULL");
 	operation_mode_e operationMode = FOUR_STROKE_CRANK_SENSOR;
-
-	s->useRiseEdge = true;
 
 	s->initialize(operationMode, false);
 

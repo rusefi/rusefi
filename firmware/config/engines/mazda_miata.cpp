@@ -167,7 +167,7 @@ static void commonMiataNa(DECLARE_ENGINE_PARAMETER_F) {
 
 void common079721_2351(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 
-	engineConfiguration->engineChartSize = 150;
+	engineConfiguration->engineChartSize = 300;
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
