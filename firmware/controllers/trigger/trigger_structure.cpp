@@ -45,10 +45,6 @@ TriggerShape::TriggerShape() :
 	invertOnAdd = false;
 //	skippedToothCount = totalToothCount = 0;
 	syncRatioFrom = syncRatioTo = 0;
-	secondSyncRatioFrom = 0.000001;
-	secondSyncRatioTo = 100000;
-	thirdSyncRatioFrom = 0.000001;
-	thirdSyncRatioTo = 100000;
 	memset(frontOnlyIndexes, 0, sizeof(frontOnlyIndexes));
 	memset(isFrontEvent, 0, sizeof(isFrontEvent));
 	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
@@ -113,6 +109,12 @@ void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTri
 	memset(eventAngles, 0, sizeof(eventAngles));
 //	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
 	setTriggerSynchronizationGap(2);
+
+	secondSyncRatioFrom = 0.000001;
+	secondSyncRatioTo = 100000;
+	thirdSyncRatioFrom = 0.000001;
+	thirdSyncRatioTo = 100000;
+
 
 	tdcPosition = 0;
 	// todo: true here, false in constructor() what a mess!
