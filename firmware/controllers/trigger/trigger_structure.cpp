@@ -38,7 +38,6 @@ TriggerShape::TriggerShape() :
 	initialize(OM_NONE, false);
 	wave.waves = h.waves;
 
-	useOnlyPrimaryForSync = false;
 	isSynchronizationNeeded = false;
 	// todo: reuse 'clear' method?
 	invertOnAdd = false;
@@ -116,6 +115,8 @@ void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTri
 
 
 	tdcPosition = 0;
+	useOnlyPrimaryForSync = false;
+
 	useRiseEdge = true;
 
 	invertOnAdd = false;
