@@ -112,9 +112,9 @@ void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTri
 	memset(dutyCycle, 0, sizeof(dutyCycle));
 	memset(eventAngles, 0, sizeof(eventAngles));
 //	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
+	setTriggerSynchronizationGap(2);
 
 	tdcPosition = 0;
-	setTriggerSynchronizationGap(2);
 	// todo: true here, false in constructor() what a mess!
 	useRiseEdge = true;
 
