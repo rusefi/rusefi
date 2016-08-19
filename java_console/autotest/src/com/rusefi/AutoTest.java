@@ -26,13 +26,13 @@ public class AutoTest {
 
     static void mainTestBody() {
         sendCommand("fl 1"); // just in case it was disabled
-        testMitsu();
         test2003DodgeNeon();
         testFordAspire();
         test1995DodgeNeon();
         testMazdaProtege();
         testBmwE34();
         testSachs();
+        testMitsu();
         testCitroenBerlingo();
         testMazda626();
         testFord6();
