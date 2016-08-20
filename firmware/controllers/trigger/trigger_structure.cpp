@@ -38,12 +38,7 @@ TriggerShape::TriggerShape() :
 	initialize(OM_NONE, false);
 	wave.waves = h.waves;
 
-//	skippedToothCount = totalToothCount = 0;
-	syncRatioFrom = syncRatioTo = 0;
 	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
-	memset(&triggerSignals, 0, sizeof(triggerSignals));
-#endif
 }
 
 int TriggerShape::getSize() const {
@@ -126,6 +121,9 @@ void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTri
 	previousAngle = 0;
 	memset(frontOnlyIndexes, 0, sizeof(frontOnlyIndexes));
 	memset(isFrontEvent, 0, sizeof(isFrontEvent));
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+	memset(&triggerSignals, 0, sizeof(triggerSignals));
+#endif
 }
 
 int multi_wave_s::getChannelState(int channelIndex, int phaseIndex) const {
