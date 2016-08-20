@@ -27,6 +27,13 @@ EXTERN_ENGINE
 ;
 static Logging *logger;
 
+static void cam_icu_width_callback(ICUDriver *icup) {
+}
+
+static void cam_icu_period_callback(ICUDriver *icup) {
+
+}
+
 /**
  * that's hardware timer input capture IRQ entry point
  * 'width' events happens before the 'period' event
@@ -69,6 +76,13 @@ static void shaft_icu_period_callback(ICUDriver *icup) {
  */
 static ICUConfig shaft_icucfg = { ICU_INPUT_ACTIVE_LOW, 100000, /* 100kHz ICU clock frequency.   */
 shaft_icu_width_callback, shaft_icu_period_callback };
+
+/**
+ * this is about VTTi and stuff kind of cam sensor
+ */
+static ICUConfig cam_icucfg = { ICU_INPUT_ACTIVE_LOW, 100000, /* 100kHz ICU clock frequency.   */
+cam_icu_width_callback, cam_icu_period_callback };
+
 
 static ICUDriver *turnOnTriggerInputPin(brain_pin_e hwPin) {
 	// configure pin

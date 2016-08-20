@@ -41,14 +41,6 @@ TriggerShape::TriggerShape() :
 	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
 }
 
-int TriggerShape::getSize() const {
-	return size;
-}
-
-int TriggerShape::getTriggerShapeSynchPointIndex() {
-	return triggerShapeSynchPointIndex;
-}
-
 void TriggerShape::calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE_PARAMETER_S) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "calc s");
@@ -124,6 +116,14 @@ void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTri
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	memset(&triggerSignals, 0, sizeof(triggerSignals));
 #endif
+}
+
+int TriggerShape::getSize() const {
+	return size;
+}
+
+int TriggerShape::getTriggerShapeSynchPointIndex() {
+	return triggerShapeSynchPointIndex;
 }
 
 int multi_wave_s::getChannelState(int channelIndex, int phaseIndex) const {
