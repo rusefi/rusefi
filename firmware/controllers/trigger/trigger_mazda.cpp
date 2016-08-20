@@ -121,6 +121,7 @@ void configureMazdaProtegeSOHC(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 void configureMazdaProtegeLx(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	// todo: move to into configuration definition s->needSecondTriggerInput = FALSE;
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->useOnlyPrimaryForSync = true;
 
 	/**
 	 * based on https://svn.code.sf.net/p/rusefi/code/trunk/misc/logs/1993_escort_gt/MAIN_rfi_report_2015-02-01%2017_39.csv
