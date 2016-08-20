@@ -329,6 +329,11 @@ void triggerInfo(void) {
 #endif
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
+	if (engineConfiguration->camInput != GPIO_UNASSIGNED) {
+		scheduleMsg(logger, "CAM input: %s", hwPortname(engineConfiguration->camInput));
+
+	}
+
 
 	scheduleMsg(logger, "primary trigger input: %s", hwPortname(boardConfiguration->triggerInputPins[0]));
 	scheduleMsg(logger, "primary trigger simulator: %s %s freq=%d",
