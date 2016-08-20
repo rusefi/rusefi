@@ -84,10 +84,10 @@ static ICUConfig cam_icucfg = { ICU_INPUT_ACTIVE_LOW, 100000, /* 100kHz ICU cloc
 cam_icu_width_callback, cam_icu_period_callback };
 
 
-static ICUDriver *turnOnTriggerInputPin(brain_pin_e hwPin) {
+static ICUDriver *turnOnTriggerInputPin(brain_pin_e hwPin, ICUConfig *icucfg) {
 	// configure pin
 	turnOnCapturePin("trigger", hwPin);
-	shaft_icucfg.channel = getInputCaptureChannel(hwPin);
+	icucfg->channel = getInputCaptureChannel(hwPin);
 
 	ICUDriver *driver = getInputCaptureDriver(hwPin);
 	scheduleMsg(logger, "turnOnTriggerInputPin %s", hwPortname(hwPin));
@@ -100,7 +100,7 @@ static ICUDriver *turnOnTriggerInputPin(brain_pin_e hwPin) {
 //		bool needPeriodCallback = !CONFIG(useOnlyRisingEdgeForTrigger) || !TRIGGER_SHAPE(useRiseEdge);
 //		shaft_icucfg.period_cb = needPeriodCallback ? shaft_icu_period_callback : NULL;
 
-		efiIcuStart(driver, &shaft_icucfg);
+		efiIcuStart(driver, icucfg);
 		if (driver->state == ICU_READY) {
 			icuEnable(driver);
 		} else {
@@ -129,7 +129,7 @@ static void rememberPrimaryChannel(void) {
 void turnOnTriggerInputPins(Logging *sharedLogger) {
 	logger = sharedLogger;
 	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
-		turnOnTriggerInputPin(boardConfiguration->triggerInputPins[i]);
+		turnOnTriggerInputPin(boardConfiguration->triggerInputPins[i], &shaft_icucfg);
 	}
 
 	rememberPrimaryChannel();
@@ -154,9 +154,11 @@ void applyNewTriggerInputPins(void) {
 	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
 		if (boardConfiguration->triggerInputPins[i]
 				!= activeConfiguration.bc.triggerInputPins[i]) {
-			turnOnTriggerInputPin(boardConfiguration->triggerInputPins[i]);
+			turnOnTriggerInputPin(boardConfiguration->triggerInputPins[i], &shaft_icucfg);
 		}
 	}
+
+	turnOnTriggerInputPin(engineConfiguration->camInput, &cam_icucfg);
 
 	rememberPrimaryChannel();
 }
