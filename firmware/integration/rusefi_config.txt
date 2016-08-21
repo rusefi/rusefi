@@ -106,7 +106,7 @@ end_struct
 
 struct cranking_parameters_s
 float baseFuel;+Fuel squirt duration while cranking\nA number of curves adjust this value according to CLT/IAT/TPS etc;"ms",       1,     0,    0, 200,     1
-int16_t rpm;+Cranking mode threshold. Special cranking logic controls fuel and spark while RPM is below this threshold;"RPM",      1,     0,    0, 3000,      0
+int16_t rpm;+Cranking mode threshold. Special cranking logic controls fuel and spark while RPM is below this threshold\nset_cranking_rpm X;"RPM",      1,     0,    0, 3000,      0
 end_struct
 
 #define debug_mode_e_enum "Alternator", "TPS accel enrich", "Warmup PID", "IDLE", "EL accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "mode8", "mode9", "mode10", "mode11", "mode12", "mode13", "mode14", "mode15"
@@ -166,9 +166,9 @@ struct ThermistorConf @brief Thermistor curve parameters
 end_struct
 
 custom engine_type_e 4 bits, S32, @OFFSET@,   [0:2], "AUDI_AAN", "DODGE_NEON_1995", "FORD_ASPIRE_1996", "FORD_FIESTA", "NISSAN_PRIMERA", "HONDA_ACCORD", "FORD_INLINE_6_1995", "GY6_139QMB"
-engine_type_e engineType;http://rusefi.com/wiki/index.php?title=Manual:Engine_Type
+engine_type_e engineType;http://rusefi.com/wiki/index.php?title=Manual:Engine_Type\nset_engine_type X
 
-int engineSnifferRpmThreshold;Engine sniffer would be disabled above this rpm;"RPM",      1,     0,    0,30000,      0
+int engineSnifferRpmThreshold;Engine sniffer would be disabled above this rpm\nset engineSnifferRpmThreshold X;"RPM",      1,     0,    0,30000,      0
 
 struct injector_s
 	float flow;+cc/min, cubic centimeter per minute\nBy the way, g/s = 0.125997881 * (lb/hr)\ng/s = 0.125997881 * (cc/min)/10.5\ng/s = 0.0119997981 * cc/min;"cm3/min",  1,     0,      0,   1000,   2
@@ -222,7 +222,7 @@ int16_t tpsErrorDetectionTooHigh;;"%",       1,     0,    -40, 200,     0
 cranking_parameters_s cranking
 float primingSquirtDurationMs;;"*C",       1,     0,    -40, 200,     1
 	float ignitionDwellForCrankingMs;;"ms",        1,     0,    0, 200,     1
-float crankingChargeAngle;+While cranking (which causes battery voltage to drop) we can calculate dwell time in shaft\ndegrees, not in absolute time as in running mode.;"deg",    1,      0,       0,  3000.0,      0
+float crankingChargeAngle;+While cranking (which causes battery voltage to drop) we can calculate dwell time in shaft\ndegrees, not in absolute time as in running mode.\nset_cranking_charge_angle X;"deg",    1,      0,       0,  3000.0,      0
 
 
 MAP_sensor_config_s map;@see hasMapSensor\n@see isMapAveragingEnabled
@@ -267,7 +267,7 @@ custom injection_mode_e 4 bits, U32, @OFFSET@, [0:1], "Simultaneous", "Sequentia
 injection_mode_e crankingInjectionMode;
 injection_mode_e injectionMode;+'batched' means two injectors are wired together
 angle_t injectionOffset;+this is about deciding when the injector starts it's squirt\nSee also injectionPhase map;"deg",    1,      0.0,       -720,     720,        2
-angle_t crankingTimingAngle;+Timing advance while engine cranking;     "deg",    1,      0.0,    -360,     360,        2
+angle_t crankingTimingAngle;+Timing advance while engine cranking\nset_cranking_timing_angle X;     "deg",    1,      0.0,    -360,     360,        2
 
 custom ignition_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "One coil", "Individual Coils", "Wasted", "INVALID"
 ignition_mode_e ignitionMode;+'wasted' means one coil is driving two spark plugs in two cylinders, with one of the aparks not doing anything since it's happening on the exhaust cycle
@@ -279,7 +279,7 @@ timing_mode_e timingMode;
 
 angle_t fixedModeTiming;+This value is used in 'fixed timing' mode, i.e. constant timing\nThis mode is useful for instance while adjusting distributor location;"RPM",    1,      0,       0,  3000.0,      0
 
-angle_t globalTriggerAngleOffset;+Angle between Top Dead Center (TDC) and the first trigger event.\nKnowing this angle allows us to control timing and other angles in reference to TDC.;"deg",    1,      0,       -720,  720, 0
+angle_t globalTriggerAngleOffset;+Angle between Top Dead Center (TDC) and the first trigger event.\nKnowing this angle allows us to control timing and other angles in reference to TDC.\nset_global_trigger_offset_angle X;"deg",    1,      0,       -720,  720, 0
 
 
 
@@ -324,7 +324,7 @@ custom bool32_t 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 #define trigger_type_e_enum "custom toothed wheel", "ford aspire", "dodge neon", "Miata NA", "Miata NB", "GM_7X", "Cooper", "Mazda SOHC 4", "60/2", "36/1", "Accord CD", "MITSU", "ACCORD 2", "ACCORD DIP", "Neon 2003", "MAZDA D 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Accord 1+24", "DODGE STRATUS",  "36_2_2_2", "Nissan", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "trg29", "trg30", "INVALID" 
 
 custom trigger_type_e 4 bits,    U32,   @OFFSET@, [0:4], @@trigger_type_e_enum@@
-	trigger_type_e type;
+	trigger_type_e type;set_trigger_type X
 
 	bit customIsSynchronizationNeeded;
 	bit customNeedSecondTriggerInput;
@@ -611,7 +611,7 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 	int16_t acCutoffHighRpm;
 
 	int16_t acIdleRpmBump;
-	int16_t warningPeriod;
+	int16_t warningPeriod;set warningPeriod X
 
 	adc_channel_e vRefAdcChannel;
 
