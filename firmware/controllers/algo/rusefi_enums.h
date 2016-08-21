@@ -129,7 +129,9 @@ typedef enum {
 
 	TOYOTA_2JZ_GTE_VVTi = 44,
 
-	ET_UNUSED = 45,
+	TEST_ENGINE_VVT = 45,
+
+	ET_UNUSED = 46,
 
 	Force_4b_engine_type = ENUM_32_BITS,
 } engine_type_e;

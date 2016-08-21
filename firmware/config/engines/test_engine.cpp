@@ -2,6 +2,8 @@
  * @file	test_engine.cpp
  *
  * set_engine_type 26
+ * VVT
+ * set_engine_type 45
  *
  * @date Nov 14, 2014
  * @author Andrey Belomutskiy, (c) 2012-2016
@@ -9,6 +11,7 @@
 
 #include "engine.h"
 #include "test_engine.h"
+#include "engine_math.h"
 
 EXTERN_ENGINE;
 
@@ -19,9 +22,9 @@ void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
 
-	trigger_config_s *triggerConfig = &engineConfiguration->trigger;
-	triggerConfig->customTotalToothCount = 60;
-	triggerConfig->customSkippedToothCount = 0;
+//	trigger_config_s *triggerConfig = &engineConfiguration->trigger;
+//	triggerConfig->customTotalToothCount = 60;
+//	triggerConfig->customSkippedToothCount = 0;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
@@ -49,5 +52,17 @@ void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->hasCltSensor = false;
 	engineConfiguration->hasIatSensor = false;
+
+}
+
+void setTestVVTEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
+	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+	engineConfiguration->trigger.customTotalToothCount = 3;
+	engineConfiguration->trigger.customSkippedToothCount = 1;
+
+	// set_algorithm 3
+	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
 
 }

@@ -112,6 +112,8 @@ case SUBARU_2003_WRX:
   return "SUBARU_2003_WRX";
 case TEST_ENGINE:
   return "TEST_ENGINE";
+case TEST_ENGINE_VVT:
+  return "TEST_ENGINE_VVT";
 case VW_ABA:
   return "VW_ABA";
 case DODGE_STRATUS:
