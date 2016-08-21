@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Aug 11 20:02:56 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 20 18:52:45 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -33,6 +33,7 @@ typedef struct {
 	float baseFuel;
 	/**
 	 * Cranking mode threshold. Special cranking logic controls fuel and spark while RPM is below this threshold
+	 * set_cranking_rpm X
 	 * offset 4
 	 */
 	int16_t rpm;
@@ -217,6 +218,7 @@ typedef struct {
 */
 typedef struct {
 	/**
+	 * set_trigger_type X
 	 * offset 0
 	 */
 	trigger_type_e type;
@@ -765,11 +767,13 @@ typedef struct {
 typedef struct {
 	/**
 	 * http://rusefi.com/wiki/index.php?title=Manual:Engine_Type
+	 * set_engine_type X
 	 * offset 0
 	 */
 	engine_type_e engineType;
 	/**
 	 * Engine sniffer would be disabled above this rpm
+	 * set engineSnifferRpmThreshold X
 	 * offset 4
 	 */
 	int engineSnifferRpmThreshold;
@@ -901,6 +905,7 @@ typedef struct {
 	/**
 	 * While cranking (which causes battery voltage to drop) we can calculate dwell time in shaft
 	 * degrees, not in absolute time as in running mode.
+	 * set_cranking_charge_angle X
 	 * offset 108
 	 */
 	float crankingChargeAngle;
@@ -985,6 +990,7 @@ typedef struct {
 	angle_t injectionOffset;
 	/**
 	 * Timing advance while engine cranking
+	 * set_cranking_timing_angle X
 	 * offset 440
 	 */
 	angle_t crankingTimingAngle;
@@ -1011,6 +1017,7 @@ typedef struct {
 	/**
 	 * Angle between Top Dead Center (TDC) and the first trigger event.
 	 * Knowing this angle allows us to control timing and other angles in reference to TDC.
+	 * set_global_trigger_offset_angle X
 	 * offset 460
 	 */
 	angle_t globalTriggerAngleOffset;
@@ -1300,6 +1307,7 @@ typedef struct {
 	 */
 	int16_t acIdleRpmBump;
 	/**
+	 * set warningPeriod X
 	 * offset 1526
 	 */
 	int16_t warningPeriod;
@@ -1910,4 +1918,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Aug 11 20:02:56 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 20 18:52:45 EDT 2016
