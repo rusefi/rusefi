@@ -30,6 +30,8 @@ public:
 	void resetCounters();
 	TriggerState triggerState;
 	efitick_t nowNt;
+	angle_t vvtPosition;
+
 	volatile efitime_t previousShaftEventTimeNt;
 private:
 	IntListenerArray<15> triggerListeneres;

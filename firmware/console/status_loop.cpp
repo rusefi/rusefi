@@ -677,6 +677,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->cltCorrection = ENGINE(engineState.cltFuelCorrection);
 
 	tsOutputChannels->checkEngine = hasErrorCodes();
+
+	tsOutputChannels->vvtPosition = engine->triggerCentral.vvtPosition;
+
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	tsOutputChannels->internalMcuTemperature = getMCUInternalTemperature();
 	tsOutputChannels->idlePosition = getIdlePosition();
