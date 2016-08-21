@@ -154,6 +154,13 @@ static void scheduleReboot(void) {
 	unlockAnyContext();
 }
 
+/**
+ * Current engine configuration. On firmware start we assign empty configuration, then
+ * we copy actual configuration after reading settings.
+ * This is useful to compare old and new configurations in order to apply new settings.
+ *
+ * todo: place this field next to 'engineConfiguration'?
+ */
 engine_configuration_s activeConfiguration;
 
 static void rememberCurrentConfiguration(void) {
@@ -296,5 +303,5 @@ int getRusEfiVersion(void) {
 		return 123; // this is here to make the compiler happy about the unused array
 	if (UNUSED_CCM_SIZE[0] * 0 != 0)
 		return 3211; // this is here to make the compiler happy about the unused array
-	return 20160810;
+	return 20160819;
 }

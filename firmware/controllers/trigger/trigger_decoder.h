@@ -97,6 +97,7 @@ public:
 	void resetRunningCounters();
 
 	uint32_t runningRevolutionCounter;
+	efitick_t startOfCycleNt;
 private:
 	void resetCurrentCycleState();
 
@@ -106,7 +107,6 @@ private:
 	uint32_t totalRevolutionCounter;
 	bool isFirstEvent;
 	efitime_t prevCycleDuration;
-	efitick_t startOfCycleNt;
 };
 
 angle_t getEngineCycle(operation_mode_e operationMode);

@@ -73,6 +73,17 @@ uint32_t triggerMaxDuration = 0;
 
 extern bool isInsideTriggerHandler;
 
+void hwHandleVvtCamSignal(trigger_value_e front) {
+
+	// startOfCycleNt
+
+	if (ENGINE(isEngineChartEnabled)) {
+		// this is a performance optimization - array index is cheaper then invoking a method with 'switch'
+		addEngineSniffferEvent("VVT", front == TV_RISE ? WC_UP : WC_DOWN);
+	}
+
+}
+
 void hwHandleShaftSignal(trigger_event_e signal) {
 	triggerHanlderEntryTime = GET_TIMESTAMP();
 	isInsideTriggerHandler = true;
