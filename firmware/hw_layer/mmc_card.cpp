@@ -209,8 +209,8 @@ int
     {
 
            if (n != 0) {
-                    const u_char *us1 = (const u_char *)s1;
-                    const u_char *us2 = (const u_char *)s2;
+                    const char *us1 = (const char *)s1;
+                    const char *us2 = (const char *)s2;
 
                    do {
                             if (mytolower(*us1) != mytolower(*us2))
