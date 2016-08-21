@@ -170,8 +170,6 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "MX596";
 	case BMW_E34:
 		return "BMWe34";
-	case TEST_ENGINE:
-		return "Test";
 	case VW_ABA:
 		return "VW_ABA";
 	case DODGE_STRATUS:
@@ -411,7 +409,7 @@ static void printTPSInfo(void) {
 
 	scheduleMsg(&logger, "tps min (closed) %d/max (full) %d v=%f @%s%d", engineConfiguration->tpsMin, engineConfiguration->tpsMax,
 			getTPSVoltage(PASS_ENGINE_PARAMETER_F), portname(port), pin);
-#endif
+#endif /* EFI_PROD_CODE */
 	scheduleMsg(&logger, "current 10bit=%d value=%f rate=%f", getTPS12bitAdc() / TPS_TS_CONVERSION, getTPS(PASS_ENGINE_PARAMETER_F),
 			getTpsRateOfChange());
 }
@@ -436,7 +434,7 @@ static void printTemperatureInfo(void) {
 	scheduleMsg(&logger, "warmupPID=%d corr=%f", boardConfiguration->useWarmupPidAfr,
 			engine->engineState.cltFuelCorrection);
 
-#endif
+#endif /* EFI_ANALOG_SENSORS */
 }
 
 static void setCrankingRpm(int value) {
@@ -519,7 +517,7 @@ static void setTriggerType(int value) {
 	doPrintConfiguration(engine);
 }
 
-static void setToothedWheel(int total, int skipped) {
+static void setToothedWheel(int total, int skipped DECLARE_ENGINE_PARAMETER_S) {
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 	scheduleMsg(&logger, "toothed: total=%d/skipped=%d", total, skipped);
 	setToothedWheelConfiguration(&engine->triggerShape, total, skipped, engineConfiguration->operationMode);

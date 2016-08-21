@@ -921,6 +921,9 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	case TEST_ENGINE:
 		setTestEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;
+	case TEST_ENGINE_VVT:
+		setTestVVTEngineConfiguration(PASS_ENGINE_PARAMETER_F);
+		break;
 	case SACHS:
 		setSachs(PASS_ENGINE_PARAMETER_F);
 		break;
