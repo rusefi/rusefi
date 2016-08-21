@@ -54,7 +54,7 @@
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 #include "AdcConfiguration.h"
-#endif
+#endif /* HAL_USE_ADC */
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "pwm_generator.h"
@@ -65,7 +65,7 @@
 #include "lcd_controller.h"
 #include "pin_repository.h"
 #include "tachometer.h"
-#endif
+#endif /* EFI_PROD_CODE */
 
 extern bool hasFirmwareErrorFlag;
 
@@ -93,7 +93,7 @@ static LoggingWithStorage logger("Engine Controller");
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 static engine_configuration2_s ec2 CCM_OPTIONAL;
 engine_configuration2_s * engineConfiguration2 = &ec2;
-#endif
+#endif /* EFI_ENGINE_CONTROL */
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 
@@ -103,7 +103,7 @@ engine_configuration2_s * engineConfiguration2 = &ec2;
  */
 Engine _engine(&persistentState.persistentConfiguration);
 Engine * engine = &_engine;
-#endif
+#endif /* EFI_PROD_CODE */
 
 /**
  * I am not sure if this needs to be configurable.

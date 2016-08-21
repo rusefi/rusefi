@@ -16,12 +16,12 @@
 EXTERN_ENGINE;
 
 void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
-//	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
-//	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
 
+//	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+//	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 //	trigger_config_s *triggerConfig = &engineConfiguration->trigger;
 //	triggerConfig->customTotalToothCount = 60;
 //	triggerConfig->customSkippedToothCount = 0;
@@ -64,5 +64,11 @@ void setTestVVTEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	// set_algorithm 3
 	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
+
+	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->camInput = GPIOA_5;
+
+	// set_global_trigger_offset_angle
+	engineConfiguration->globalTriggerAngleOffset = 545;
 
 }

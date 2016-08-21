@@ -19,6 +19,7 @@
 #include "pwm_generator_logic.h"
 #include "efilib2.h"
 #include "settings.h"
+#include "engine_math.h"
 
 #include "rpm_calculator.h"
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -75,7 +76,16 @@ extern bool isInsideTriggerHandler;
 
 void hwHandleVvtCamSignal(trigger_value_e front) {
 
-	// startOfCycleNt
+	efitick_t offsetNt = getTimeNowNt() - engine->triggerCentral.triggerState.startOfCycleNt;
+
+	angle_t vvtPosition = NT2US(offsetNt) / engine->rpmCalculator.oneDegreeUs;
+
+	// convert engine cycle angle into trigger cycle angle
+	vvtPosition += tdcPosition();
+	fixAngle(vvtPosition);
+
+	engine->triggerCentral.vvtPosition = vvtPosition;
+
 
 	if (ENGINE(isEngineChartEnabled)) {
 		// this is a performance optimization - array index is cheaper then invoking a method with 'switch'
@@ -102,6 +112,7 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 
 TriggerCentral::TriggerCentral() {
 	nowNt = 0;
+	vvtPosition = 0;
 	// we need this initial to have not_running at first invocation
 	previousShaftEventTimeNt = (efitimems_t) -10 * US2NT(US_PER_SECOND_LL);
 

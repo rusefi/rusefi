@@ -28,10 +28,11 @@ EXTERN_ENGINE
 static Logging *logger;
 
 static void cam_icu_width_callback(ICUDriver *icup) {
+	hwHandleVvtCamSignal(TV_RISE);
 }
 
 static void cam_icu_period_callback(ICUDriver *icup) {
-
+	hwHandleVvtCamSignal(TV_FALL);
 }
 
 /**
@@ -85,6 +86,9 @@ cam_icu_width_callback, cam_icu_period_callback };
 
 
 static ICUDriver *turnOnTriggerInputPin(brain_pin_e hwPin, ICUConfig *icucfg) {
+	if (hwPin == GPIO_UNASSIGNED)
+		return NULL;
+
 	// configure pin
 	turnOnCapturePin("trigger", hwPin);
 	icucfg->channel = getInputCaptureChannel(hwPin);
@@ -128,11 +132,8 @@ static void rememberPrimaryChannel(void) {
 
 void turnOnTriggerInputPins(Logging *sharedLogger) {
 	logger = sharedLogger;
-	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
-		turnOnTriggerInputPin(boardConfiguration->triggerInputPins[i], &shaft_icucfg);
-	}
 
-	rememberPrimaryChannel();
+	applyNewTriggerInputPins();
 }
 
 extern engine_configuration_s activeConfiguration;
@@ -158,7 +159,9 @@ void applyNewTriggerInputPins(void) {
 		}
 	}
 
-	turnOnTriggerInputPin(engineConfiguration->camInput, &cam_icucfg);
+	if (engineConfiguration->camInput != activeConfiguration.camInput) {
+		turnOnTriggerInputPin(engineConfiguration->camInput, &cam_icucfg);
+	}
 
 	rememberPrimaryChannel();
 }
