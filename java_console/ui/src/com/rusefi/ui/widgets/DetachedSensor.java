@@ -40,11 +40,11 @@ public class DetachedSensor {
      */
     private static final int _5_VOLTS_WITH_DECIMAL = 50;
 
+    private final JPanel content = new JPanel(new BorderLayout());
+    private final JFrame frame;
+    private final JPanel mockControlPanel = new JPanel(new BorderLayout());
     private Sensor sensor;
     private int width;
-    JPanel content = new JPanel(new BorderLayout());
-    JFrame frame;
-    JPanel mockControlPanel = new JPanel(new BorderLayout());
 
     public DetachedSensor(Sensor sensor, int width) {
         this.sensor = sensor;
@@ -52,6 +52,19 @@ public class DetachedSensor {
         frame = new JFrame();
         frame.setAlwaysOnTop(true);
         onChange(sensor);
+    }
+
+    void create(Sensor sensor) {
+        SensorGauge.GaugeChangeListener listener = new SensorGauge.GaugeChangeListener() {
+            @Override
+            public void onSensorChange(Sensor sensor) {
+                onChange(sensor);
+            }
+        };
+        content.add(SensorGauge.createGauge(sensor, listener, null), BorderLayout.CENTER);
+        content.add(mockControlPanel, BorderLayout.SOUTH);
+
+        frame.add(content);
     }
 
     public void show(MouseEvent e) {
