@@ -12,4 +12,9 @@ public class GaugesGrid {
     public GaugesGrid(int rows, int cols) {
         panel = new JPanel(new GridLayout(rows, cols));
     }
+
+    public void setLayout(int rows, int columns) {
+        panel.setLayout(new GridLayout(rows, columns));
+        panel.removeAll();
+    }
 }

@@ -3,6 +3,8 @@ package com.rusefi.ui.widgets;
 import com.rusefi.core.Sensor;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
+import com.rusefi.ui.GaugesPanel;
+import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
@@ -10,6 +12,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.util.Arrays;
@@ -21,10 +25,14 @@ import java.util.Hashtable;
  * 11/2/14
  */
 public class DetachedSensor {
+    private static final String NAME = "name";
+    private static final String WIDTH = "width";
     private static final Collection<Sensor> MOCKABLE = Arrays.asList(Sensor.CLT, Sensor.AFR, Sensor.IAT, Sensor.MAF,
             Sensor.TPS);
 
     private final static Hashtable<Integer, JComponent> SLIDER_LABELS = new Hashtable<>();
+    public static final String XPOS = "xpos";
+    public static final String YPOS = "ypos";
 
     static {
         Format f = new DecimalFormat("0.0");
@@ -47,14 +55,24 @@ public class DetachedSensor {
     private int width;
 
     public DetachedSensor(Sensor sensor, int width) {
-        this.sensor = sensor;
         this.width = width;
         frame = new JFrame();
         frame.setAlwaysOnTop(true);
         onChange(sensor);
+
+        GaugesPanel.DetachedRepository.INSTANCE.add(this);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                GaugesPanel.DetachedRepository.INSTANCE.remove(DetachedSensor.this);
+                frame.dispose();
+            }
+        });
+        create();
     }
 
-    void create(Sensor sensor) {
+    void create() {
         SensorGauge.GaugeChangeListener listener = new SensorGauge.GaugeChangeListener() {
             @Override
             public void onSensorChange(Sensor sensor) {
@@ -114,5 +132,22 @@ public class DetachedSensor {
         });
 
         return slider;
+    }
+
+    public void saveConfig(Node child) {
+        child.setProperty(NAME, sensor.name());
+        child.setProperty(WIDTH, frame.getWidth());
+        child.setProperty(XPOS, frame.getLocation().x);
+        child.setProperty(YPOS, frame.getLocation().y);
+    }
+
+    public static void create(Node child) {
+        Sensor sensor = Sensor.lookup(child.getProperty(NAME, Sensor.RPM.name()), Sensor.RPM);
+        int width = child.getIntProperty(WIDTH, 256);
+        int xpos = child.getIntProperty(XPOS, 0);
+        int ypos = child.getIntProperty(YPOS, 0);
+        DetachedSensor ds = new DetachedSensor(sensor, width);
+        ds.frame.setLocation(xpos, ypos);
+        ds.frame.setVisible(true);
     }
 }

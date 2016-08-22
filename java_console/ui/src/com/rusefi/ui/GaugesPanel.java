@@ -5,6 +5,7 @@ import com.rusefi.core.Sensor;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.AnyCommand;
+import com.rusefi.ui.widgets.DetachedSensor;
 import com.rusefi.ui.widgets.PopupMenuButton;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,10 +15,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Date: 2/5/13
  * (c) Andrey Belomutskiy
+ *
  * @see GaugesGridElement
  */
 public class GaugesPanel {
@@ -58,7 +62,7 @@ public class GaugesPanel {
     }
 
     private final JPanel content = new JPanel(new BorderLayout());
-    private final GaugesGrid gauges = new GaugesGrid(3, 5);
+    private final GaugesGrid gauges;
     private final Node config;
 
     private boolean showRpmPanel = true;
@@ -71,6 +75,7 @@ public class GaugesPanel {
     private final JSplitPane middleSplitPanel;
 
     public GaugesPanel(final Node config) {
+        gauges = new GaugesGrid(3, 5);
         this.config = config;
         showRpmPanel = config.getBoolProperty(SHOW_RPM, true);
         showMessagesPanel = config.getBoolProperty(SHOW_MESSAGES, true);
@@ -224,8 +229,7 @@ public class GaugesPanel {
     }
 
     private void setSensorGridDimensions(int rows, int columns) {
-        gauges.panel.setLayout(new GridLayout(rows, columns));
-        gauges.panel.removeAll();
+        gauges.setLayout(rows, columns);
 
         for (int i = 0; i < rows * columns; i++) {
             Component element = GaugesGridElement.read(config.getChild("element_" + i), DEFAULT_LAYOUT[i]);
@@ -248,5 +252,43 @@ public class GaugesPanel {
 
     public JComponent getContent() {
         return content;
+    }
+
+    public enum DetachedRepository {
+        INSTANCE;
+
+        public static final String COUNT = "count";
+        public static final String DETACHED = "detached";
+        private List<DetachedSensor> list = new ArrayList<>();
+        private Node config;
+
+        public void add(DetachedSensor detachedSensor) {
+            list.add(detachedSensor);
+            saveConfig();
+        }
+
+        public void remove(DetachedSensor detachedSensor) {
+            list.remove(detachedSensor);
+            saveConfig();
+        }
+
+        public void load() {
+            int count = config.getIntProperty(COUNT, 0);
+            for (int i = 0; i < count; i++) {
+                DetachedSensor.create(config.getChild(DETACHED + i));
+            }
+        }
+
+        public void saveConfig() {
+            config.setProperty(COUNT, list.size());
+            int index = 0;
+            for (DetachedSensor sensor : list) {
+                sensor.saveConfig(config.getChild(DETACHED + index++));
+            }
+        }
+
+        public void init(Node config) {
+            this.config = config;
+        }
     }
 }
