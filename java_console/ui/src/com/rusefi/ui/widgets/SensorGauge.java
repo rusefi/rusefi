@@ -113,7 +113,6 @@ public class SensorGauge {
         int width = gauge.getSize().width;
         final DetachedSensor ds = new DetachedSensor(sensor, width);
 
-        ds.create(sensor);
         ds.show(e);
     }
 
