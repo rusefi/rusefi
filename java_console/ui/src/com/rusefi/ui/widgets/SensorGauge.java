@@ -15,6 +15,8 @@ import java.awt.event.*;
 /**
  * Round gauge
  *
+ * On double-click a {@link DetachedSensor} is created
+ *
  * Date: 7/9/14
  * (c) Andrey Belomutskiy 2012-2014
  * @see GaugesPanel
@@ -33,12 +35,6 @@ public class SensorGauge {
     }
 
     public interface GaugeChangeListener {
-        GaugeChangeListener VOID = new GaugeChangeListener() {
-            @Override
-            public void onSensorChange(Sensor sensor) {
-            }
-        };
-
         /**
          * This event happens when user decides to switch the kind of gauge
          * displayed by this control
@@ -117,16 +113,7 @@ public class SensorGauge {
         int width = gauge.getSize().width;
         final DetachedSensor ds = new DetachedSensor(sensor, width);
 
-        GaugeChangeListener listener = new GaugeChangeListener() {
-            @Override
-            public void onSensorChange(Sensor sensor) {
-                ds.onChange(sensor);
-            }
-        };
-        ds.content.add(createGauge(sensor, listener, null), BorderLayout.CENTER);
-        ds.content.add(ds.mockControlPanel, BorderLayout.SOUTH);
-
-        ds.frame.add(ds.content);
+        ds.create(sensor);
         ds.show(e);
     }
 
