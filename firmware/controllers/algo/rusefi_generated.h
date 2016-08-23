@@ -880,7 +880,8 @@
 #define auxPid4_iFactor_offset 2540
 #define auxPid4_dFactor_offset 2544
 #define auxPid4_offset_offset 2548
-#define unused_offset 2552
+#define vvtMode_offset 2552
+#define unused_offset 2556
 #define le_formulas1_offset 3048
 #define le_formulas2_offset 3248
 #define le_formulas3_offset 3448
