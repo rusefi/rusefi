@@ -97,6 +97,10 @@ public:
 	void resetRunningCounters();
 
 	uint32_t runningRevolutionCounter;
+	/**
+	 * this is start of real trigger cycle
+	 * for virtual double trigger see timeAtVirtualZeroNt
+	 */
 	efitick_t startOfCycleNt;
 private:
 	void resetCurrentCycleState();

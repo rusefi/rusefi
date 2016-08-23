@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Aug 01 21:44:40 EDT 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Aug 22 22:39:28 EDT 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -884,7 +884,8 @@ public class Fields {
 	public static final int auxPid4_iFactor_offset = 2540;
 	public static final int auxPid4_dFactor_offset = 2544;
 	public static final int auxPid4_offset_offset = 2548;
-	public static final int unused_offset = 2552;
+	public static final int vvtMode_offset = 2552;
+	public static final int unused_offset = 2556;
 	public static final int le_formulas1_offset = 3048;
 	public static final int le_formulas2_offset = 3248;
 	public static final int le_formulas3_offset = 3448;
@@ -1513,6 +1514,8 @@ public class Fields {
 	public static final Field AUXPID4_IFACTOR = Field.create("AUXPID4_IFACTOR", 2540, FieldType.FLOAT);
 	public static final Field AUXPID4_DFACTOR = Field.create("AUXPID4_DFACTOR", 2544, FieldType.FLOAT);
 	public static final Field AUXPID4_OFFSET = Field.create("AUXPID4_OFFSET", 2548, FieldType.FLOAT);
+	public static final String[] vvt_mode_e = {"First half", "Second half", "2GZ", "mode3"};
+	public static final Field VVTMODE = Field.create("VVTMODE", 2552, FieldType.INT, vvt_mode_e);
 	public static final Field LE_FORMULAS1 = Field.create("LE_FORMULAS1", 3048, FieldType.INT);
 	public static final Field LE_FORMULAS2 = Field.create("LE_FORMULAS2", 3248, FieldType.INT);
 	public static final Field LE_FORMULAS3 = Field.create("LE_FORMULAS3", 3448, FieldType.INT);

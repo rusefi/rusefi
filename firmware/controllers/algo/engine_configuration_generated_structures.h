@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 20 18:52:45 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Aug 22 22:39:28 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -970,6 +970,7 @@ typedef struct {
 	int rpmHardLimit;
 	/**
 	 * This setting controls which algorithm is used for ENGINE LOAD
+	 * set_algorithm X
 	 * offset 424
 	 */
 	engine_load_mode_e algorithm;
@@ -1703,7 +1704,11 @@ typedef struct {
 	/**
 	 * offset 2552
 	 */
-	int unused[124];
+	vvt_mode_e vvtMode;
+	/**
+	 * offset 2556
+	 */
+	int unused[123];
 	/** total size 3048*/
 } engine_configuration_s;
 
@@ -1918,4 +1923,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 20 18:52:45 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Aug 22 22:39:28 EDT 2016

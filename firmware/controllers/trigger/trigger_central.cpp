@@ -76,12 +76,12 @@ extern bool isInsideTriggerHandler;
 
 void hwHandleVvtCamSignal(trigger_value_e front) {
 
-	efitick_t offsetNt = getTimeNowNt() - engine->triggerCentral.triggerState.startOfCycleNt;
+	efitick_t offsetNt = getTimeNowNt() - engine->triggerCentral.timeAtVirtualZeroNt;
 
 	angle_t vvtPosition = NT2US(offsetNt) / engine->rpmCalculator.oneDegreeUs;
 
 	// convert engine cycle angle into trigger cycle angle
-	vvtPosition += tdcPosition();
+	vvtPosition -= tdcPosition();
 	fixAngle(vvtPosition);
 
 	engine->triggerCentral.vvtPosition = vvtPosition;
@@ -113,6 +113,7 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 TriggerCentral::TriggerCentral() {
 	nowNt = 0;
 	vvtPosition = 0;
+	timeAtVirtualZeroNt = 0;
 	// we need this initial to have not_running at first invocation
 	previousShaftEventTimeNt = (efitimems_t) -10 * US2NT(US_PER_SECOND_LL);
 
@@ -188,6 +189,9 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 		bool isEven = triggerState.getTotalRevolutionCounter() & 1;
 
 		triggerIndexForListeners = triggerState.getCurrentIndex() + (isEven ? 0 : TRIGGER_SHAPE(size));
+	}
+	if (triggerIndexForListeners == 0) {
+		timeAtVirtualZeroNt = nowNt;
 	}
 	reportEventToWaveChart(signal, triggerIndexForListeners PASS_ENGINE_PARAMETER);
 

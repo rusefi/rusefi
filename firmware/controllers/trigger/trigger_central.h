@@ -31,6 +31,10 @@ public:
 	TriggerState triggerState;
 	efitick_t nowNt;
 	angle_t vvtPosition;
+	/**
+	 * this is similar to TriggerState#startOfCycleNt but with the crank-only sensor magic
+	 */
+	efitick_t timeAtVirtualZeroNt;
 
 	volatile efitime_t previousShaftEventTimeNt;
 private:
