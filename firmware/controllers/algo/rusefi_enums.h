@@ -605,6 +605,14 @@ typedef enum {
 	TRIGGER_COUNT = 5,
 	FSIO_ADC = 6,
 	AUX_PID_1 = 7,
+	VVT = 8,
+	DM_9 = 9,
+	DM_10 = 10,
+	DM_11 = 11,
+	DM_12 = 12,
+	DM_13 = 13,
+	DM_14 = 14,
+	DM_15 = 15,
 
 	Force_4b_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;

@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Aug 22 22:39:28 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Aug 23 20:59:13 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -596,6 +596,10 @@ typedef struct {
 	/**
 	offset 376 bit 16 */
 	bool isCJ125Enabled : 1;
+	/**
+	 * Use rise or fall signal front
+	offset 376 bit 17 */
+	bool vvtCamSensorUseRise : 1;
 	/**
 	 * offset 380
 	 */
@@ -1923,4 +1927,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Aug 22 22:39:28 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Aug 23 20:59:13 EDT 2016

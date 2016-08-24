@@ -201,6 +201,15 @@ int TriggerState::getTotalRevolutionCounter() {
 	return totalRevolutionCounter;
 }
 
+
+void TriggerState::intTotalEventCounter() {
+	totalRevolutionCounter++;
+}
+
+bool TriggerState::isEvenRevolution() {
+	return totalRevolutionCounter & 1;
+}
+
 void TriggerState::resetCurrentCycleState() {
 	memset(currentCycle.eventCount, 0, sizeof(currentCycle.eventCount));
 	memset(currentCycle.timeOfPreviousEventNt, 0, sizeof(currentCycle.timeOfPreviousEventNt));

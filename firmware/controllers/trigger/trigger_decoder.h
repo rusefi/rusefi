@@ -49,6 +49,11 @@ public:
 	TriggerState();
 	int getCurrentIndex();
 	int getTotalRevolutionCounter();
+	/**
+	 * this is important for crank-based virtual trigger and VVT magic
+	 */
+	bool isEvenRevolution();
+	void intTotalEventCounter();
 	efitime_t getTotalEventCounter();
 	efitime_t getStartOfRevolutionIndex();
 	void decodeTriggerEvent(trigger_event_e const signal, efitime_t nowUs DECLARE_ENGINE_PARAMETER_S);

@@ -1440,6 +1440,7 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 	    field = "Secondary channel", 					triggerInputPins2
 	    field = "CAM input",							camInput
 	    field = "VVT mode",								vvtMode
+	    field = "VVT use rise front",					vvtCamSensorUseRise
 	    field = "Trigger error LED",					triggerErrorPin
 	    field = "Trigger error LED mode",				triggerErrorPinMode
 	dialog = triggerConfiguration
