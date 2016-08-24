@@ -25,7 +25,9 @@
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "rfiutil.h"
 #include "pin_repository.h"
-#endif
+#include "tunerstudio.h"
+extern TunerStudioOutputChannels tsOutputChannels;
+#endif /* EFI_PROD_CODE */
 
 #if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 #include "engine_sniffer.h"
@@ -75,8 +77,18 @@ uint32_t triggerMaxDuration = 0;
 extern bool isInsideTriggerHandler;
 
 void hwHandleVvtCamSignal(trigger_value_e front) {
+	if (ENGINE(isEngineChartEnabled)) {
+		// this is a performance optimization - array index is cheaper then invoking a method with 'switch'
+		addEngineSniffferEvent(VVT_NAME, front == TV_RISE ? WC_UP : WC_DOWN);
+	}
 
-	efitick_t offsetNt = getTimeNowNt() - engine->triggerCentral.timeAtVirtualZeroNt;
+	if (boardConfiguration->vvtCamSensorUseRise && front == TV_FALL) {
+		return;
+	}
+
+	TriggerCentral *tc = &engine->triggerCentral;
+
+	efitick_t offsetNt = getTimeNowNt() - tc->timeAtVirtualZeroNt;
 
 	angle_t vvtPosition = NT2US(offsetNt) / engine->rpmCalculator.oneDegreeUs;
 
@@ -84,12 +96,35 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 	vvtPosition -= tdcPosition();
 	fixAngle(vvtPosition);
 
-	engine->triggerCentral.vvtPosition = vvtPosition;
+	tc->vvtPosition = vvtPosition;
 
+	if (engineConfiguration->vvtMode == VVT_FIRST_HALF) {
+		bool isEven = tc->triggerState.isEvenRevolution();
+		if (!isEven) {
+			/**
+			 * we are here if we've detected the cam sensor within the wrong crank phase
+			 * let's increase the trigger event counter, that would adjust the state of
+			 * virtual crank-based trigger
+			 */
+			tc->triggerState.intTotalEventCounter();
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+			if (engineConfiguration->debugMode == VVT) {
+				tsOutputChannels.debugIntField1++;
+			}
+#endif /* EFI_PROD_CODE */
+		}
+	} else if (engineConfiguration->vvtMode == VVT_SECOND_HALF) {
+		bool isEven = tc->triggerState.isEvenRevolution();
+		if (isEven) {
+			// see above comment
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+			tc->triggerState.intTotalEventCounter();
+			if (engineConfiguration->debugMode == VVT) {
+				tsOutputChannels.debugIntField1++;
+			}
+#endif /* EFI_PROD_CODE */
+		}
 
-	if (ENGINE(isEngineChartEnabled)) {
-		// this is a performance optimization - array index is cheaper then invoking a method with 'switch'
-		addEngineSniffferEvent("VVT", front == TV_RISE ? WC_UP : WC_DOWN);
 	}
 
 }
@@ -186,7 +221,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 		// That's easy - trigger cycle matches engine cycle
 		triggerIndexForListeners = triggerState.getCurrentIndex();
 	} else {
-		bool isEven = triggerState.getTotalRevolutionCounter() & 1;
+		bool isEven = triggerState.isEvenRevolution();
 
 		triggerIndexForListeners = triggerState.getCurrentIndex() + (isEven ? 0 : TRIGGER_SHAPE(size));
 	}

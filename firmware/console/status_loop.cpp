@@ -30,7 +30,7 @@
 #include "adc_inputs.h"
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
 #include "wave_analyzer.h"
-#endif
+#endif /* EFI_WAVE_ANALYZER */
 
 // see RUS_EFI_VERSION_TAG in console source code
 #define RUS_EFI_VERSION_TAG "rusEfiVersion"
@@ -336,17 +336,18 @@ static void printInfo(systime_t nowSeconds) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	printOutPin(CRANK1, boardConfiguration->triggerInputPins[0]);
 	printOutPin(CRANK2, boardConfiguration->triggerInputPins[1]);
+	printOutPin(VVT_NAME, engineConfiguration->camInput);
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
 	printOutPin(WA_CHANNEL_1, boardConfiguration->logicAnalyzerPins[0]);
 	printOutPin(WA_CHANNEL_2, boardConfiguration->logicAnalyzerPins[1]);
-#endif
+#endif /* EFI_WAVE_ANALYZER */
 
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		printOutPin(enginePins.coils[i].name, boardConfiguration->ignitionPins[i]);
 
 		printOutPin(enginePins.injectors[i].name, boardConfiguration->injectionPins[i]);
 	}
-#endif
+#endif /* EFI_PROD_CODE */
 
 }
 

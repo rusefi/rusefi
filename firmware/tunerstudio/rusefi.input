@@ -848,6 +848,7 @@ fileVersion = { 20160702 }
       warningCounter = scalar,U32, 236, "count",            1,         0
       lastErrorCode = scalar,U32, 240, "error",            1,         0
       internalMcuTemperature = scalar,F32, 244, "C",            1,         0
+      vvtPosition = scalar,F32, 248, "deg",            1,         0
 
       egoCorrection   = { 100 }
       time            = { timeNow }
@@ -1140,6 +1141,7 @@ fileVersion = { 20160702 }
    warningCounterGauge = warningCounter, "warn", "",     0,   100,     0,    0,    100,  100,   0,   0
    lastErrorCodeGauge = lastErrorCode, "error", "",     0,   100,     0,    0,    100,  100,   0,   0
    internalMcuTemperatureGauge = internalMcuTemperature, "internal temperature", "C",     0,   100,     0,    0,    100,  100,   0,   0
+   vvtPositionGauge = vvtPosition, "VVT position", "deg",     0,   100,     0,    0,    720,  720,   0,   0
    
    
 [FrontPage]
@@ -1439,8 +1441,8 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		field = "Primary input channel", 				triggerInputPins1
 	    field = "Secondary channel", 					triggerInputPins2
 	    field = "CAM input",							camInput
-	    field = "VVT mode",								vvtMode
-	    field = "VVT use rise front",					vvtCamSensorUseRise
+	    field = "VVT mode",								vvtMode, {trigger_type != 80}
+	    field = "VVT use rise front",					vvtCamSensorUseRise, {trigger_type != 80}
 	    field = "Trigger error LED",					triggerErrorPin
 	    field = "Trigger error LED mode",				triggerErrorPinMode
 	dialog = triggerConfiguration

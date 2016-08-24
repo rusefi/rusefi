@@ -68,7 +68,10 @@ void setTestVVTEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->camInput = GPIOA_5;
 
-	// set_global_trigger_offset_angle
-	engineConfiguration->globalTriggerAngleOffset = 545;
+	// set_global_trigger_offset_angle 0
+	engineConfiguration->globalTriggerAngleOffset = 0;
+
+	engineConfiguration->vvtMode = VVT_SECOND_HALF;
+	engineConfiguration->debugMode = VVT;
 
 }
