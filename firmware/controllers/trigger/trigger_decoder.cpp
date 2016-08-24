@@ -111,7 +111,7 @@ static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_F
 	prevCycleDuration = nowNt - startOfCycleNt; \
 	startOfCycleNt = nowNt; \
 	resetCurrentCycleState(); \
-	totalRevolutionCounter++; \
+	intTotalEventCounter(); \
 	runningRevolutionCounter++; \
 	totalEventCountBase += TRIGGER_SHAPE(size); \
 }
