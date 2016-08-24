@@ -24,6 +24,8 @@
 #define CRANK2 "t2"
 #define CRANK3 "t3"
 
+#define VVT_NAME "VVT"
+
 #define NOISY_RPM -1
 #define UNREALISTIC_RPM 30000
 
