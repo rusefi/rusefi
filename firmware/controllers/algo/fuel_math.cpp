@@ -109,7 +109,7 @@ int getNumberOfInjections(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S) {
 }
 
 percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_S) {
-	floatms_t totalPerCycle = getFuelMs(rpm PASS_ENGINE_PARAMETER) * getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
+	floatms_t totalPerCycle = getInjectionDuration(rpm PASS_ENGINE_PARAMETER) * getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
 	floatms_t engineCycleDuration = getCrankshaftRevolutionTimeMs(rpm) * (engineConfiguration->operationMode == TWO_STROKE ? 1 : 2);
 	return 100 * totalPerCycle / engineCycleDuration;
 }
@@ -117,14 +117,14 @@ percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_S) {
 /**
  * @returns	Length of each individual fuel injection, in milliseconds
  */
-floatms_t getFuelMs(int rpm DECLARE_ENGINE_PARAMETER_S) {
+floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	float theoreticalInjectionLength;
 	if (isCrankingR(rpm)) {
 		theoreticalInjectionLength = getCrankingFuel(PASS_ENGINE_PARAMETER_F)
 				/ getNumberOfInjections(engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER);
 	} else {
-		float baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER);
-		float fuelPerCycle = getRunningFuel(baseFuel, rpm PASS_ENGINE_PARAMETER);
+		floatms_t baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER);
+		floatms_t fuelPerCycle = getRunningFuel(baseFuel, rpm PASS_ENGINE_PARAMETER);
 		theoreticalInjectionLength = fuelPerCycle
 				/ getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
 	}

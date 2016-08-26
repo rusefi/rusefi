@@ -83,7 +83,7 @@ static void testRusefiMethods(const int count) {
 
 //	start = currentTimeMillis();
 //	for (int i = 0; i < count; i++)
-//		tempi += getFuelMs(1200, NULL); // todo
+//		tempi += getInjectionDuration(1200, NULL); // todo
 //	time = currentTimeMillis() - start;
 //	if (tempi != 0)
 //		scheduleMsg(logger, "Finished %d iterations of getFuelMs in %dms", count, time);

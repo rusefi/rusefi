@@ -12,6 +12,7 @@
 #include "fuel_math.h"
 #include "accel_enrichment.h"
 #include "thermistors.h"
+#include "advance_map.h"
 
 extern int timeNow;
 
@@ -52,16 +53,21 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	initThermistors(NULL PASS_ENGINE_PARAMETER);
 	// this is needed to have valid CLT and IAT.
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_F);
+	prepareTimingMap(PASS_ENGINE_PARAMETER_F);
+}
+
+void EngineTestHelper::fireTriggerEvents2(int count, int duration) {
+	for (int i = 0; i < count; i++) {
+		timeNow += duration;
+		board_configuration_s * boardConfiguration = &engine.engineConfiguration->bc;
+		engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
+		timeNow += duration;
+		engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
+	}
 }
 
 void EngineTestHelper::fireTriggerEvents(int count) {
-	for (int i = 0; i < count; i++) {
-		timeNow += 5000; // 5ms
-		board_configuration_s * boardConfiguration = &engine.engineConfiguration->bc;
-		engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
-		timeNow += 5000;
-		engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
-	}
+	fireTriggerEvents2(count, 5000); // 5ms
 }
 
 void EngineTestHelper::initTriggerShapeAndRpmCalculator() {

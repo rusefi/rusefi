@@ -156,7 +156,9 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 	sparkDwell = getSparkDwell(rpm PASS_ENGINE_PARAMETER);
 	dwellAngle = sparkDwell / getOneDegreeTimeMs(rpm);
 
+	// todo: move this into slow callback, no reason for IAT corr to be here
 	iatFuelCorrection = getIatCorrection(iat PASS_ENGINE_PARAMETER);
+	// todo: move this into slow callback, no reason for CLT corr to be here
 	if (boardConfiguration->useWarmupPidAfr && clt < engineConfiguration->warmupAfrThreshold) {
 		if (rpm < 200) {
 			cltFuelCorrection = 1;
@@ -377,7 +379,7 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 
 	engine->m.beforeFuelCalc = GET_TIMESTAMP();
-	ENGINE(fuelMs) = getFuelMs(rpm PASS_ENGINE_PARAMETER) * engineConfiguration->globalFuelCorrection;
+	ENGINE(fuelMs) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER) * engineConfiguration->globalFuelCorrection;
 	engine->m.fuelCalcTime = GET_TIMESTAMP() - engine->m.beforeFuelCalc;
 
 	prepareFuelSchedule(PASS_ENGINE_PARAMETER_F);

@@ -10,9 +10,9 @@
 #include "efilib.h"
 #include "interpolation.h"
 
-void setTableBin2(float array[], int size, float l, float r, float precision) {
+void setTableBin2(float array[], int size, float from, float to, float precision) {
 	for (int i = 0; i < size; i++) {
-		float value = interpolateMsg("setTable", 0, l, size - 1, r, i);
+		float value = interpolateMsg("setTable", 0, from, size - 1, to, i);
 		/**
 		 * rounded values look nicer, also we want to avoid precision mismatch with Tuner Studio
 		 */

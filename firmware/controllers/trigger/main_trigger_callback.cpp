@@ -207,7 +207,7 @@ static ALWAYS_INLINE void handleFuel(bool limitedFuel, uint32_t eventIndex, int 
 	ENGINE(tpsAccelEnrichment.onNewValue(getTPS(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
 	ENGINE(engineLoadAccelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_F));
 
-	ENGINE(fuelMs) = getFuelMs(rpm PASS_ENGINE_PARAMETER) * CONFIG(globalFuelCorrection);
+	ENGINE(fuelMs) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER) * CONFIG(globalFuelCorrection);
 
 	for (int injEventIndex = 0; injEventIndex < injectionEvents->size; injEventIndex++) {
 		InjectionEvent *event = &injectionEvents->elements[injEventIndex];
@@ -542,7 +542,7 @@ static void showMainInfo(Engine *engine) {
 	int rpm = engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F);
 	float el = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
 	scheduleMsg(logger, "rpm %d engine_load %f", rpm, el);
-	scheduleMsg(logger, "fuel %fms timing %f", getFuelMs(rpm PASS_ENGINE_PARAMETER), engine->engineState.timingAdvance);
+	scheduleMsg(logger, "fuel %fms timing %f", getInjectionDuration(rpm PASS_ENGINE_PARAMETER), engine->engineState.timingAdvance);
 #endif
 }
 
