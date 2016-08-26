@@ -600,7 +600,12 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	initRpmCalculator(sharedLogger, engine);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
+#if (EFI_PROD_CODE && EFI_ENGINE_CONTROL) || defined(__DOXYGEN__)
+	initInjectorCentral(sharedLogger);
+#endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
+
 // multiple issues with this	initMapAdjusterThread();
+	// periodic events need to be initialized after fuel&spark pins to avoid a warning
 	initPeriodicEvents(PASS_ENGINE_PARAMETER_F);
 
 	if (hasFirmwareError()) {
@@ -610,13 +615,12 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	chThdCreateStatic(csThreadStack, sizeof(csThreadStack), LOWPRIO, (tfunc_t) csThread, NULL);
 
 #if (EFI_PROD_CODE && EFI_ENGINE_CONTROL) || defined(__DOXYGEN__)
-	initInjectorCentral(sharedLogger);
 	/**
 	 * This has to go after 'initInjectorCentral' and 'initInjectorCentral' in order to
 	 * properly detect un-assigned output pins
 	 */
 	prepareShapes(PASS_ENGINE_PARAMETER_F);
-#endif
+#endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
 
 #if EFI_PWM_TESTER || defined(__DOXYGEN__)
 	initPwmTester();
