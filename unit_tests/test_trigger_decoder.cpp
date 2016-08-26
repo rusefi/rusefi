@@ -9,7 +9,7 @@
 #include "test_trigger_decoder.h"
 #include "trigger_decoder.h"
 #include "engine_math.h"
-#include "thermistors.h"
+#include "allsensors.h"
 
 #include "ford_aspire.h"
 #include "dodge_neon.h"
@@ -28,8 +28,11 @@
 #include "advance_map.h"
 #include "engine_test_helper.h"
 #include "speed_density.h"
+#include "fuel_math.h"
 
 extern int timeNow;
+extern float unitTestValue;
+extern float testMafValue;
 
 extern bool printTriggerDebug;
 extern float actualSynchGap;
@@ -575,6 +578,8 @@ void testTriggerDecoder(void) {
 	testRpmCalculator();
 }
 
+extern fuel_Map3D_t fuelMap;
+
 void testFuelSchedulerBug299(void) {
 	printf("*************************************************** testFuelSchedulerBug299\r\n");
 	EngineTestHelper eth(TEST_ENGINE);
@@ -582,6 +587,11 @@ void testFuelSchedulerBug299(void) {
 
 	timeNow = 0;
 	schedulingQueue.clear();
+
+	setArrayValues(config->cltFuelCorrBins, CLT_CURVE_SIZE, 1);
+	setArrayValues(engineConfiguration->injector.battLagCorr, VBAT_INJECTOR_CURVE_SIZE, 0);
+	// this is needed to update injectorLag
+	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_F);
 
 	assertEqualsM("CLT", 70, engine->engineState.clt);
 
@@ -592,10 +602,38 @@ void testFuelSchedulerBug299(void) {
 
 	assertEqualsM("RPM=0", 0, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
 
-	eth.fireTriggerEvents2(2, MS2US(50));
+	eth.fireTriggerEvents2(2, MS2US(20));
 
-	assertEqualsM("RPM", 1200, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
+	assertEquals(LM_PLAIN_MAF, engineConfiguration->algorithm);
 
-	assertEqualsM("fuel", 4.07, engine->fuelMs);
+	testMafValue = 0;
+	assertEqualsM("maf", 0, getMaf(PASS_ENGINE_PARAMETER_F));
 
+	assertEqualsM("iatC", 1, engine->engineState.iatFuelCorrection);
+	assertEqualsM("cltC", 1, engine->engineState.cltFuelCorrection);
+	assertEqualsM("lag", 0, engine->engineState.injectorLag);
+
+	assertEqualsM("RPM", 3000, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
+
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	assertEqualsM("fuel#1", 3, engine->fuelMs);
+
+	assertEqualsM("duty for maf=0", 7.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
+
+	testMafValue = 3;
+	assertEqualsM("maf", 3, getMaf(PASS_ENGINE_PARAMETER_F));
+
+	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, testMafValue);
+	assertEquals(8, engineLoadIndex);
+	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
+	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);
+
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	assertEqualsM("fuel#2", 35, engine->fuelMs);
+	assertEqualsM("duty for maf=3", 87.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
+
+
+
+	unitTestValue = 0;
+	testMafValue = 0;
 }
