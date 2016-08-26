@@ -106,6 +106,7 @@ int getRevolutionCounter(void) {
 }
 
 int main(void) {
+	testFuelSchedulerBug299();
 	testLogicExpressions();
 	testOverflow64Counter();
 	testInterpolate3d();

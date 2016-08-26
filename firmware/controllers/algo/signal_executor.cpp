@@ -37,7 +37,7 @@ EXTERN_ENGINE;
 #if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 #include "engine_sniffer.h"
 extern WaveChart waveChart;
-#endif
+#endif /* EFI_ENGINE_SNIFFER */
 
 #include "efiGpio.h"
 
@@ -109,6 +109,42 @@ void turnPinLow(NamedOutputPin *output) {
 
 int getRevolutionCounter(void);
 
+#if FUEL_MATH_EXTREME_LOGGING
+extern LoggingWithStorage sharedLogger;
+#endif /* FUEL_MATH_EXTREME_LOGGING */
+
+// todo: make these macro? kind of a penny optimization if compiler is not smart to inline
+void seTurnPinHigh(NamedOutputPin *output) {
+#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
+	const char * w = output->currentLogicValue == true ? "err" : "";
+	scheduleMsg(&sharedLogger, "^ %spin=%s eventIndex %d", w, output->name,
+			getRevolutionCounter());
+#endif /* FUEL_MATH_EXTREME_LOGGING */
+
+
+	turnPinHigh(output);
+}
+
+void seTurnPinLow(NamedOutputPin *output) {
+#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
+	const char * w = output->currentLogicValue == false ? "err" : "";
+
+	scheduleMsg(&sharedLogger, "- %spin=%s eventIndex %d", w, output->name,
+			getRevolutionCounter());
+#endif /* FUEL_MATH_EXTREME_LOGGING */
+
+	turnPinLow(output);
+}
+
+void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, NamedOutputPin *param) {
+#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
+	scheduleMsg(&sharedLogger, "sch %s %x %d %s", prefix, scheduling,
+			time, param->name);
+#endif /* FUEL_MATH_EXTREME_LOGGING */
+	scheduleByTime(prefix, scheduling, time, callback, param);
+}
+
+
 /**
  *
  * @param	delay	the number of ticks before the output signal
@@ -135,7 +171,7 @@ void scheduleOutput(OutputSignal *signal, efitimeus_t nowUs, float delayUs, floa
 	printf("scheduling output %s\r\n", output->name);
 #endif
 
-	scheduleByTime("out up", sUp, nowUs + (int) delayUs, (schfunc_t) &turnPinHigh, output);
-	scheduleByTime("out down", sDown, nowUs + (int) (delayUs + durationUs), (schfunc_t) &turnPinLow, output);
+	seScheduleByTime("out up", sUp, nowUs + (int) delayUs, (schfunc_t) &seTurnPinHigh, output);
+	seScheduleByTime("out down", sDown, nowUs + (int) (delayUs + durationUs), (schfunc_t) &seTurnPinLow, output);
 #endif
 }

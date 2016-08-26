@@ -55,7 +55,6 @@ void testFuelMap(void) {
 
 	printf("*************************************************** initThermistors\r\n");
 
-	initThermistors(NULL PASS_ENGINE_PARAMETER);
 
 	printf("*** getInjectorLag\r\n");
 	assertEqualsM("lag", 1.04, getInjectorLag(12 PASS_ENGINE_PARAMETER));
