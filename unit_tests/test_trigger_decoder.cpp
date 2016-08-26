@@ -321,9 +321,6 @@ void testRpmCalculator(void) {
 	triggerCallbackInstance.init(&eth.engine);
 	eth.engine.triggerCentral.addEventListener(mainTriggerCallback, "main loop", &eth.engine);
 
-//	engine.rpmCalculator = &eth.rpmState;
-	prepareTimingMap(PASS_ENGINE_PARAMETER_F);
-
 	assertEqualsM("queue size/0", 0, schedulingQueue.size());
 
 	debugSignalExecutor = true;
@@ -588,5 +585,17 @@ void testFuelSchedulerBug299(void) {
 
 	assertEqualsM("CLT", 70, engine->engineState.clt);
 
+	engineConfiguration->trigger.type = TT_ONE;
+	incrementGlobalConfigurationVersion();
+
+	eth.initTriggerShapeAndRpmCalculator();
+
+	assertEqualsM("RPM=0", 0, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
+
+	eth.fireTriggerEvents2(2, MS2US(50));
+
+	assertEqualsM("RPM", 1200, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
+
+	assertEqualsM("fuel", 4.07, engine->fuelMs);
 
 }

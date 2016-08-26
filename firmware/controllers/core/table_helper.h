@@ -147,8 +147,8 @@ typedef Map3D<BARO_CORR_SIZE, BARO_CORR_SIZE, float> baroCorr_Map3D_t;
 
 void setRpmBin(float array[], int size, float idleRpm, float topRpm);
 
-void setTableBin(float array[], int size, float l, float r);
-void setTableBin2(float array[], int size, float l, float r, float precision);
+void setTableBin(float array[], int size, float from, float to);
+void setTableBin2(float array[], int size, float from, float to, float precision);
 void setRpmTableBin(float array[], int size);
 
 #endif /* TABLE_HELPER_H_ */
