@@ -24,8 +24,8 @@ public:
 	void init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE], float loadBins[LOAD_BIN_SIZE], float rpmBins[RPM_BIN_SIZE]);
 	float getValue(float xRpm, float y);
 	void setAll(vType value);
-private:
 	vType *pointers[LOAD_BIN_SIZE];
+private:
 	float *loadBins;
 	float *rpmBins;
 	bool initialized;
@@ -148,6 +148,9 @@ typedef Map3D<BARO_CORR_SIZE, BARO_CORR_SIZE, float> baroCorr_Map3D_t;
 void setRpmBin(float array[], int size, float idleRpm, float topRpm);
 
 void setTableBin(float array[], int size, float from, float to);
+
+#define setArrayValues(array, size, value) setTableBin(array, size, value, value)
+
 void setTableBin2(float array[], int size, float from, float to, float precision);
 void setRpmTableBin(float array[], int size);
 

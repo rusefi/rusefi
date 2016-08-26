@@ -279,14 +279,14 @@ static void showLine(lcd_line_e line, int screenY) {
 		return;
 	case LL_MAF_V:
 		if (hasMafSensor()) {
-			lcdPrintf("MAF: %fv", getMaf());
+			lcdPrintf("MAF: %fv", getMaf(PASS_ENGINE_PARAMETER_F));
 		} else {
 			lcdPrintf("MAF: none");
 		}
 		return;
 	case LL_MAF_KG_HR:
 		if (hasMafSensor()) {
-			lcdPrintf("MAF: %f kg/hr", getRealMaf());
+			lcdPrintf("MAF: %f kg/hr", getRealMaf(PASS_ENGINE_PARAMETER_F));
 		} else {
 			lcdPrintf("MAF: none");
 		}

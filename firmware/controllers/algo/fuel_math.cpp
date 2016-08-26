@@ -41,7 +41,7 @@
 EXTERN_ENGINE
 ;
 
-static fuel_Map3D_t fuelMap("fuel");
+fuel_Map3D_t fuelMap("fuel");
 static fuel_Map3D_t fuelPhaseMap("fl ph");
 extern fuel_Map3D_t ve2Map;
 extern afr_Map3D_t afrMap;
