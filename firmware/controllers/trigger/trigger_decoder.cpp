@@ -300,9 +300,12 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		toothed_previous_time = nowNt;
 	}
 	if (!isValidIndex(PASS_ENGINE_PARAMETER_F) && !isInitializingTrigger) {
-		warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentCycle.current_index, TRIGGER_SHAPE(size));
-		lastDecodingErrorTime = getTimeNowNt();
-		someSortOfTriggerError = true;
+		// let's not show a warning if we are just starting to spin
+		if (engine->rpmCalculator.rpmValue != 0) {
+			warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentCycle.current_index, TRIGGER_SHAPE(size));
+			lastDecodingErrorTime = getTimeNowNt();
+			someSortOfTriggerError = true;
+		}
 	}
 	if (someSortOfTriggerError) {
 		if (getTimeNowNt() - lastDecodingErrorTime > US2NT(US_PER_SECOND_LL)) {
