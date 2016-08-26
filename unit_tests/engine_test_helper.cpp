@@ -11,6 +11,7 @@
 #include "speed_density.h"
 #include "fuel_math.h"
 #include "accel_enrichment.h"
+#include "thermistors.h"
 
 extern int timeNow;
 
@@ -47,6 +48,10 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	resetConfigurationExt(NULL, engineType PASS_ENGINE_PARAMETER);
 	prepareShapes(PASS_ENGINE_PARAMETER_F);
 	engine->engineConfiguration->mafAdcChannel = (adc_channel_e)TEST_MAF_CHANNEL;
+
+	initThermistors(NULL PASS_ENGINE_PARAMETER);
+	// this is needed to have valid CLT and IAT.
+	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_F);
 }
 
 void EngineTestHelper::fireTriggerEvents(int count) {

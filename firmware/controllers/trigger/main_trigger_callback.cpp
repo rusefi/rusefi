@@ -128,8 +128,10 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, bool limitedF
 		return;
 	}
 
-	//	scheduleMsg(logger, "handleFuel totalPerCycle=%f", totalPerCycle);
-	//	scheduleMsg(logger, "handleFuel engineCycleDuration=%f", engineCycleDuration);
+#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
+	scheduleMsg(logger, "handleFuel totalPerCycle=%f", totalPerCycle);
+	scheduleMsg(logger, "handleFuel engineCycleDuration=%f", engineCycleDuration);
+#endif /* EFI_DEFAILED_LOGGING */
 
 	if (engine->isCylinderCleanupMode) {
 		return;
@@ -137,12 +139,14 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, bool limitedF
 
 	floatus_t injectionStartDelayUs = ENGINE(rpmCalculator.oneDegreeUs) * event->injectionStart.angleOffset;
 
-//	scheduleMsg(logger, "handleFuel pin=%s eventIndex %d duration=%fms %d", event->output->name,
-//			eventIndex,
-//			injectionDuration,
-//			getRevolutionCounter());
-//	scheduleMsg(logger, "handleFuel pin=%s delay=%f %d", event->output->name, injectionStartDelayUs,
-//			getRevolutionCounter());
+#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
+	scheduleMsg(logger, "handleFuel pin=%s eventIndex %d duration=%fms %d", event->output->name,
+			eventIndex,
+			injectionDuration,
+			getRevolutionCounter());
+	scheduleMsg(logger, "handleFuel pin=%s delay=%f %d", event->output->name, injectionStartDelayUs,
+			getRevolutionCounter());
+#endif /* EFI_DEFAILED_LOGGING */
 
 	OutputSignal *signal = &ENGINE(engineConfiguration2)->fuelActuators[eventIndex];
 
@@ -196,7 +200,9 @@ static ALWAYS_INLINE void handleFuel(bool limitedFuel, uint32_t eventIndex, int 
 	if (!fs->hasEvents[eventIndex])
 		return;
 
-//	scheduleMsg(logger, "handleFuel ind=%d %d", eventIndex, getRevolutionCounter());
+#if EFI_DEFAILED_LOGGING || defined(__DOXYGEN__)
+	scheduleMsg(logger, "handleFuel ind=%d %d", eventIndex, getRevolutionCounter());
+#endif /* EFI_DEFAILED_LOGGING */
 
 	ENGINE(tpsAccelEnrichment.onNewValue(getTPS(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
 	ENGINE(engineLoadAccelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_F));

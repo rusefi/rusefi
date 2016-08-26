@@ -123,7 +123,6 @@ void test1995FordInline6TriggerDecoder(void) {
 	assertEqualsM("triggerShapeSynchPointIndex", 0, shape->getTriggerShapeSynchPointIndex());
 
 	// this is needed to have valid CLT and IAT. todo: extract method
-	initThermistors(NULL PASS_ENGINE_PARAMETER);
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_F);
 
 	event_trigger_position_s position;
@@ -207,13 +206,6 @@ void testFordAspire(void) {
 	assertEqualsM("higher rpm dwell", 3.25, getSparkDwell(6000 PASS_ENGINE_PARAMETER));
 }
 
-void testMazda323(void) {
-	printf("*************************************************** testMazda323\r\n");
-
-	EngineTestHelper eth(MAZDA_323);
-	assertEquals(0, eth.engine.triggerShape.getTriggerShapeSynchPointIndex());
-}
-
 static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty) {
 	printf("*************************************************** %s\r\n", msg);
 
@@ -241,7 +233,7 @@ extern EventQueue schedulingQueue;
 
 extern int mockTps;
 
-static void testStartupFuelPumping(void) {
+void testStartupFuelPumping(void) {
 	printf("*************************************************** testStartupFuelPumping\r\n");
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 	EXPAND_EngineTestHelper;
@@ -307,16 +299,10 @@ void testRpmCalculator(void) {
 
 	efiAssertVoid(eth.engine.engineConfiguration!=NULL, "null config in engine");
 
-	// this is needed to have valid CLT and IAT. todo: extract method
-	initThermistors(NULL PASS_ENGINE_PARAMETER);
-	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_F);
-
 	engineConfiguration->trigger.customTotalToothCount = 8;
 	engineConfiguration->globalFuelCorrection = 3;
 	eth.initTriggerShapeAndRpmCalculator();
 
-	// this is a very dirty and sad hack.  todo: eliminate
-//	engine.engineConfiguration = eth.engine.engineConfiguration;
 	setInjectorLag(0 PASS_ENGINE_PARAMETER);
 
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_F);
@@ -423,7 +409,7 @@ void testRpmCalculator(void) {
 	{
 	scheduling_s *ev0 = schedulingQueue.getForUnitText(0);
 
-	assertREquals((void*)ev0->callback, (void*)turnPinHigh);
+	assertREqualsM("turnHigh", (void*)ev0->callback, (void*)seTurnPinHigh);
 	assertEqualsM("ev 0/2", st + 26666 - 1515, ev0->momentX);
 	assertEqualsLM("o 0/2", (long)&enginePins.injectors[2], (long)ev0->param);
 
@@ -556,11 +542,12 @@ void testTriggerDecoder(void) {
 //		assertEqualsM2("rpm#2", 16666.3750, eth.engine.triggerCentral.triggerState.instantRpmValue[1], 0.5);
 
 	}
-//	testTriggerDecoder2("miata 1990", MIATA_1990, 0, 0.6280, 0.0);
+	testTriggerDecoder2("miata 1990", MIATA_1990, 11, 0.2985, 0.3890);
 	testTriggerDecoder3("miata 1994", MIATA_1994_DEVIATOR, 11, 0.2985, 0.3890, MIATA_NA_GAP);
 	testTriggerDecoder3("citroen", CITROEN_TU3JP, 0, 0.4833, 0.0, 2.9994);
 
-//	testTriggerDecoder3("neon NGC4", DODGE_NEON_2003, 70, 0.5000, 0.4983, CHRYSLER_NGC4_GAP);
+	testTriggerDecoder2("MAZDA_323", MAZDA_323, 0, 0.4833, 0);
+
 	testTriggerDecoder3("neon NGC4", DODGE_NEON_2003, 6, 0.5000, 0.0, CHRYSLER_NGC4_GAP);
 
 	{
@@ -586,8 +573,20 @@ void testTriggerDecoder(void) {
 
 	testTriggerDecoder2("vw ABA", VW_ABA, 114, 0.5000, 0.0);
 
-	testMazda323();
 
 	testStartupFuelPumping();
 	testRpmCalculator();
+}
+
+void testFuelSchedulerBug299(void) {
+	printf("*************************************************** testFuelSchedulerBug299\r\n");
+	EngineTestHelper eth(TEST_ENGINE);
+	EXPAND_EngineTestHelper;
+
+	timeNow = 0;
+	schedulingQueue.clear();
+
+	assertEqualsM("CLT", 70, engine->engineState.clt);
+
+
 }
