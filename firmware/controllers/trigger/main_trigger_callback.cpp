@@ -211,7 +211,9 @@ static ALWAYS_INLINE void handleFuel(bool limitedFuel, uint32_t currentEventInde
 
 	for (int injEventIndex = 0; injEventIndex < injectionEvents->size; injEventIndex++) {
 		InjectionEvent *event = &injectionEvents->elements[injEventIndex];
-		if (event->injectionStart.eventIndex != currentEventIndex) {
+		uint32_t eventIndex = event->injectionStart.eventIndex;
+// todo fix bug & uncomment this		efiAssertVoid(eventIndex < ENGINE(triggerShape.getLength()), "handleFuel/event sch index");
+		if (eventIndex != currentEventIndex) {
 			continue;
 		}
 		handleFuelInjectionEvent(injEventIndex, limitedFuel, event, rpm PASS_ENGINE_PARAMETER);

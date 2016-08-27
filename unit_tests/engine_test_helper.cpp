@@ -87,6 +87,4 @@ void EngineTestHelper::applyTriggerShape() {
 	engine->triggerShape.initializeTriggerShape(NULL PASS_ENGINE_PARAMETER);
 
 	incrementGlobalConfigurationVersion();
-
-
 }

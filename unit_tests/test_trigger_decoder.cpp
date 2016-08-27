@@ -604,8 +604,14 @@ void testFuelSchedulerBug299(void) {
 
 	assertEqualsM("RPM=0", 0, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
 
+	eth.fireTriggerEvents2(1, MS2US(20));
+	assertEqualsM("RPM#1", 0, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
 
-	eth.fireTriggerEvents2(2, MS2US(20));
+	eth.fireTriggerEvents2(1, MS2US(20));
+
+	assertEqualsM("RPM#2", 3000, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
+//	// this is needed to apply new fuel schedule, we can only do that once we have RPM
+//	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 
 	schedulingQueue.executeAll(99999999); // this is needed to clear 'isScheduled' flag
 	engine->iHead = NULL; // let's drop whatever was scheduled just to start from a clean state
@@ -619,25 +625,25 @@ void testFuelSchedulerBug299(void) {
 		scheduling_s *ev = schedulingQueue.getForUnitText(0);
 
 		assertREqualsM("Call@0", (void*)ev->callback, (void*)seTurnPinHigh);
-		assertEqualsM("ev 0", start + MS2US(24), ev->momentX);
+		assertEqualsM("ev 0", start + MS2US(27), ev->momentX);
 		assertEqualsLM("in 0", (long)&enginePins.injectors[3], (long)ev->param);
 	}
 	{
 		scheduling_s *ev = schedulingQueue.getForUnitText(1);
 		assertREqualsM("Call@1", (void*)ev->callback, (void*)seTurnPinLow);
-		assertEqualsM("ev 1", start + MS2US(27), ev->momentX);
+		assertEqualsM("ev 1", start + MS2US(30), ev->momentX);
 		assertEqualsLM("in 1", (long)&enginePins.injectors[3], (long)ev->param);
 	}
 	{
 		scheduling_s *ev = schedulingQueue.getForUnitText(2);
 		assertREqualsM("Call@2", (void*)ev->callback, (void*)seTurnPinHigh);
-		assertEqualsM("ev 2", start + MS2US(34), ev->momentX);
+		assertEqualsM("ev 2", start + MS2US(37), ev->momentX);
 		assertEqualsLM("in 2", (long)&enginePins.injectors[1], (long)ev->param);
 	}
 	{
 		scheduling_s *ev = schedulingQueue.getForUnitText(3);
 		assertREqualsM("Call@3", (void*)ev->callback, (void*)seTurnPinLow);
-		assertEqualsM("ev 3", start + MS2US(37), ev->momentX);
+		assertEqualsM("ev 3", start + MS2US(40), ev->momentX);
 		assertEqualsLM("in 3", (long)&enginePins.injectors[1], (long)ev->param);
 	}
 
