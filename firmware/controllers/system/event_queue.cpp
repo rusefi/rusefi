@@ -117,6 +117,7 @@ int EventQueue::executeAll(efitime_t now) {
 	// we need safe iteration because we are removing elements inside the loop
 	LL_FOREACH_SAFE(head, current, tmp)
 	{
+		efiAssert(current->callback != NULL, "callback==null1", 0);
 		if (++listIterationCounter > QUEUE_LENGTH_LIMIT) {
 			firmwareError("Is this list looped?");
 			return false;
@@ -145,6 +146,7 @@ int EventQueue::executeAll(efitime_t now) {
 	 */
 	LL_FOREACH_SAFE(executionList, current, tmp)
 	{
+		efiAssert(current->callback != NULL, "callback==null2", 0);
 		uint32_t before = GET_TIMESTAMP();
 		current->isScheduled = false;
 		int howFarOff = now - current->momentX;

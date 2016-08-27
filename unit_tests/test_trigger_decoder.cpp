@@ -291,6 +291,7 @@ extern engine_pins_s enginePins;
 void testRpmCalculator(void) {
 	printf("*************************************************** testRpmCalculator\r\n");
 	timeNow = 0;
+	schedulingQueue.clear();
 
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 	EXPAND_EngineTestHelper;
@@ -321,7 +322,7 @@ void testRpmCalculator(void) {
 
 	eth.engine.triggerCentral.addEventListener(mainTriggerCallback, "main loop", &eth.engine);
 
-	schedulingQueue.clear();
+	schedulingQueue.executeAll(99999999); // this is needed to clear 'isScheduled' flag
 	assertEqualsM("queue size/0", 0, schedulingQueue.size());
 
 	debugSignalExecutor = true;
