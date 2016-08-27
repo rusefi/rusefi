@@ -71,6 +71,10 @@ bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_F) {
 			return false;
 		}
 	}
+	if (lastRpmEventTimeNt == 0) {
+		// here we assume 64 bit time does not overflow, zero value is the default meaning no events so far
+		return false;
+	}
 	/**
 	 * note that the result of this subtraction could be negative, that would happen if
 	 * we have a trigger event between the time we've invoked 'getTimeNow' and here

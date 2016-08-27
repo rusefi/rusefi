@@ -189,8 +189,6 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 		return;
 	}
 
-	efiAssertVoid(!cisnan(engine->rpmCalculator.oneDegreeUs), "NAN one deg");
-
 	/**
 	 * injection phase is scheduled by injection end, so we need to step the angle back
 	 * for the duration of the injection
