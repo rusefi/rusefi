@@ -183,11 +183,11 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, bool limitedF
 	}
 }
 
-static ALWAYS_INLINE void handleFuel(bool limitedFuel, uint32_t eventIndex, int rpm DECLARE_ENGINE_PARAMETER_S) {
+static ALWAYS_INLINE void handleFuel(bool limitedFuel, uint32_t currentEventIndex, int rpm DECLARE_ENGINE_PARAMETER_S) {
 	if (!isInjectionEnabled(engineConfiguration))
 		return;
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#3");
-	efiAssertVoid(eventIndex < ENGINE(triggerShape.getLength()), "handleFuel/event index");
+	efiAssertVoid(currentEventIndex < ENGINE(triggerShape.getLength()), "handleFuel/event index");
 
 	/**
 	 * Ignition events are defined by addFuelEvents() according to selected
@@ -197,7 +197,7 @@ static ALWAYS_INLINE void handleFuel(bool limitedFuel, uint32_t eventIndex, int 
 
 	InjectionEventList *injectionEvents = &fs->injectionEvents;
 
-	if (!fs->hasEvents[eventIndex])
+	if (!fs->hasEvents[currentEventIndex])
 		return;
 
 #if EFI_DEFAILED_LOGGING || defined(__DOXYGEN__)
@@ -211,7 +211,7 @@ static ALWAYS_INLINE void handleFuel(bool limitedFuel, uint32_t eventIndex, int 
 
 	for (int injEventIndex = 0; injEventIndex < injectionEvents->size; injEventIndex++) {
 		InjectionEvent *event = &injectionEvents->elements[injEventIndex];
-		if (event->injectionStart.eventIndex != eventIndex) {
+		if (event->injectionStart.eventIndex != currentEventIndex) {
 			continue;
 		}
 		handleFuelInjectionEvent(injEventIndex, limitedFuel, event, rpm PASS_ENGINE_PARAMETER);
