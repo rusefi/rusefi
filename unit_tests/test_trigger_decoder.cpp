@@ -625,17 +625,18 @@ void testFuelSchedulerBug299(void) {
 	uint32_t start = timeNow;
 	eth.fireTriggerEvents2(1, MS2US(20));
 
-	assertEqualsM("qs#0", 8, schedulingQueue.size());
 
+	// fuel schedule
+	// inj #0 |...#|....|...#|....|
+	// inj #1 |....|...#|....|...#|
+	assertEqualsM("qs#0", 8, schedulingQueue.size());
+	assertEqualsM("rev cnt", 3, engine->rpmCalculator.getRevolutionCounter());
 	assertEvent("@0", 0, (void*)seTurnPinHigh, start + MS2US(28.5),(long)&enginePins.injectors[0]);
 	assertEvent("@1", 1, (void*)seTurnPinLow, start + MS2US(30),(long)&enginePins.injectors[0]);
-
 	assertEvent("@2", 2, (void*)seTurnPinHigh, start + MS2US(38.5),(long)&enginePins.injectors[1]);
 	assertEvent("@3", 3, (void*)seTurnPinLow, start + MS2US(40),(long)&enginePins.injectors[1]);
-
 	assertEvent("@4", 4, (void*)seTurnPinHigh, start + MS2US(48.5),(long)&enginePins.injectors[0]);
 	assertEvent("@5", 5, (void*)seTurnPinLow, start + MS2US(50),(long)&enginePins.injectors[0]);
-
 	assertEvent("@6", 6, (void*)seTurnPinHigh, start + MS2US(58.5),(long)&enginePins.injectors[1]);
 	assertEvent("@7", 7, (void*)seTurnPinLow, start + MS2US(60),(long)&enginePins.injectors[1]);
 
@@ -661,9 +662,21 @@ void testFuelSchedulerBug299(void) {
 	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
 	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);
 
+	schedulingQueue.executeAll(99999999);
+
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 	assertEqualsM("fuel#2", 17.5, engine->fuelMs);
 	assertEqualsM("duty for maf=3", 87.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
+
+	assertEqualsM("qs#1", 0, schedulingQueue.size());
+	start = timeNow;
+	eth.fireTriggerEvents2(1, MS2US(20));
+
+	assertEqualsM("qs#2", 8, schedulingQueue.size());
+	assertEqualsM("rev cnt", 4, engine->rpmCalculator.getRevolutionCounter());
+
+	assertEvent("@0", 0, (void*)seTurnPinHigh, start + MS2US(28.5),(long)&enginePins.injectors[0]);
+
 
 	unitTestValue = 0;
 	testMafValue = 0;
