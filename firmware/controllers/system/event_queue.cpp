@@ -41,7 +41,7 @@ bool EventQueue::checkIfPending(scheduling_s *scheduling) {
 bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t callback, void *param) {
 #if EFI_UNIT_TEST
 	assertListIsSorted();
-#endif
+#endif /* EFI_UNIT_TEST */
 	efiAssert(callback != NULL, "NULL callback", false);
 
 	if (scheduling->isScheduled)
@@ -56,7 +56,7 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t
 		LL_PREPEND(head, scheduling);
 #if EFI_UNIT_TEST
 		assertListIsSorted();
-#endif
+#endif /* EFI_UNIT_TEST */
 		return true;
 	} else {
 		scheduling_s *insertPosition = head;
@@ -68,7 +68,7 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t
 		insertPosition->next = scheduling;
 #if EFI_UNIT_TEST
 		assertListIsSorted();
-#endif
+#endif /* EFI_UNIT_TEST */
 		return false;
 	}
 }
