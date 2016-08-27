@@ -212,7 +212,8 @@ static ALWAYS_INLINE void handleFuel(bool limitedFuel, uint32_t currentEventInde
 	for (int injEventIndex = 0; injEventIndex < injectionEvents->size; injEventIndex++) {
 		InjectionEvent *event = &injectionEvents->elements[injEventIndex];
 		uint32_t eventIndex = event->injectionStart.eventIndex;
-// todo fix bug & uncomment this		efiAssertVoid(eventIndex < ENGINE(triggerShape.getLength()), "handleFuel/event sch index");
+// right after trigger change we are still using old & invalid fuel schedule. good news is we do not change trigger on the fly in real life
+//		efiAssertVoid(eventIndex < ENGINE(triggerShape.getLength()), "handleFuel/event sch index");
 		if (eventIndex != currentEventIndex) {
 			continue;
 		}
@@ -478,7 +479,10 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 		engine->fuelScheduleForThisEngineCycle->usedAtEngineCycle = ENGINE(rpmCalculator).getRevolutionCounter();
 
 		if (triggerVersion.isOld()) {
+			// todo: move 'triggerIndexByAngle' change into trigger initialization, why is it invoked from here if it's only about trigger shape & optimization?
 			prepareOutputSignals(PASS_ENGINE_PARAMETER_F);
+			// we need this to apply new 'triggerIndexByAngle' values
+			engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 		}
 	}
 
