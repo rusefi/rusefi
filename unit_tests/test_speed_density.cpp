@@ -9,11 +9,15 @@
 #include "engine_test_helper.h"
 #include "speed_density.h"
 #include "test_speed_density.h"
+#include "event_queue.h"
+
+extern EventQueue schedulingQueue;
 
 void testSpeedDensity(void) {
 	printf("*************************************************** testSpeedDensity\r\n");
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 	EXPAND_EngineTestHelper;
+	schedulingQueue.clear(); // todo: there must be a better place for this
 
 	eth.ec->trigger.customTotalToothCount = 8;
 	eth.applyTriggerShape();

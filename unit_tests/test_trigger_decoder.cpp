@@ -583,6 +583,9 @@ void testFuelSchedulerBug299(void) {
 	EngineTestHelper eth(TEST_ENGINE);
 	EXPAND_EngineTestHelper;
 	assertEquals(LM_PLAIN_MAF, engineConfiguration->algorithm);
+	engineConfiguration->isIgnitionEnabled = false;
+	engineConfiguration->specs.cylindersCount = 4;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
 	timeNow = 0;
 	schedulingQueue.clear();
@@ -601,18 +604,42 @@ void testFuelSchedulerBug299(void) {
 
 	assertEqualsM("RPM=0", 0, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
 
+
 	eth.fireTriggerEvents2(2, MS2US(20));
 
 	schedulingQueue.executeAll(99999999); // this is needed to clear 'isScheduled' flag
 	engine->iHead = NULL; // let's drop whatever was scheduled just to start from a clean state
 
-	eth.fireTriggerEvents2(2, MS2US(20));
+	uint32_t start = timeNow;
+	eth.fireTriggerEvents2(1, MS2US(20));
 
-	assertEqualsM("qs#0", 20, schedulingQueue.size());
+	assertEqualsM("qs#0", 4, schedulingQueue.size());
 
-//	assertEqualsM("ev 3", st + 13333 - 1515, schedulingQueue.getForUnitText(0)->momentX);
-//	assertEqualsM("ev 4", st + 13333 - 1515, schedulingQueue.getForUnitText(1)->momentX);
-//	assertEqualsM2("ev 5", st + 14277, schedulingQueue.getForUnitText(2)->momentX, 2);
+	{
+		scheduling_s *ev = schedulingQueue.getForUnitText(0);
+
+		assertREqualsM("Call@0", (void*)ev->callback, (void*)seTurnPinHigh);
+		assertEqualsM("ev 0", start + MS2US(24), ev->momentX);
+		assertEqualsLM("in 0", (long)&enginePins.injectors[3], (long)ev->param);
+	}
+	{
+		scheduling_s *ev = schedulingQueue.getForUnitText(1);
+		assertREqualsM("Call@1", (void*)ev->callback, (void*)seTurnPinLow);
+		assertEqualsM("ev 1", start + MS2US(27), ev->momentX);
+		assertEqualsLM("in 1", (long)&enginePins.injectors[3], (long)ev->param);
+	}
+	{
+		scheduling_s *ev = schedulingQueue.getForUnitText(2);
+		assertREqualsM("Call@2", (void*)ev->callback, (void*)seTurnPinHigh);
+		assertEqualsM("ev 2", start + MS2US(34), ev->momentX);
+		assertEqualsLM("in 2", (long)&enginePins.injectors[1], (long)ev->param);
+	}
+	{
+		scheduling_s *ev = schedulingQueue.getForUnitText(3);
+		assertREqualsM("Call@3", (void*)ev->callback, (void*)seTurnPinLow);
+		assertEqualsM("ev 3", start + MS2US(37), ev->momentX);
+		assertEqualsLM("in 3", (long)&enginePins.injectors[1], (long)ev->param);
+	}
 
 	testMafValue = 0;
 	assertEqualsM("maf", 0, getMaf(PASS_ENGINE_PARAMETER_F));
