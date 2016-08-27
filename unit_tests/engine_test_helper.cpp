@@ -54,6 +54,13 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	// this is needed to have valid CLT and IAT.
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_F);
 	prepareTimingMap(PASS_ENGINE_PARAMETER_F);
+
+	triggerCallbackInstance.init(engine);
+
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+
+	engine->triggerShape.initializeTriggerShape(NULL PASS_ENGINE_PARAMETER);
+	engine->triggerCentral.addEventListener(rpmShaftPositionCallback, "rpm reporter", engine);
 }
 
 void EngineTestHelper::fireTriggerEvents2(int count, int duration) {
@@ -70,7 +77,7 @@ void EngineTestHelper::fireTriggerEvents(int count) {
 	fireTriggerEvents2(count, 5000); // 5ms
 }
 
-void EngineTestHelper::initTriggerShapeAndRpmCalculator() {
+void EngineTestHelper::applyTriggerShape() {
 	Engine *engine = &this->engine;
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 	persistent_config_s *config = engine->config;
@@ -80,6 +87,5 @@ void EngineTestHelper::initTriggerShapeAndRpmCalculator() {
 
 	incrementGlobalConfigurationVersion();
 
-	engine->triggerCentral.addEventListener(rpmShaftPositionCallback, "rpm reporter", engine);
 
 }
