@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Aug 23 20:59:13 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 27 10:09:22 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1132,6 +1132,7 @@ typedef struct {
 	 */
 	float maxKnockSubDeg;
 	/**
+	 * See hasMafSensor
 	 * offset 580
 	 */
 	adc_channel_e mafAdcChannel;
@@ -1198,6 +1199,7 @@ typedef struct {
 	offset 1488 bit 13 */
 	bool isAlternatorControlEnabled : 1;
 	/**
+	 * See mafAdcChannel
 	offset 1488 bit 14 */
 	bool hasMafSensor : 1;
 	/**
@@ -1927,4 +1929,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Aug 23 20:59:13 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 27 10:09:22 EDT 2016

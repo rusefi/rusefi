@@ -87,6 +87,21 @@ public class FormulasPane {
         String page;
         if (algo == engine_load_mode_e.LM_SPEED_DENSITY) {
             page = getSpeedDensity(ci, acceleration);
+        } else if (algo == engine_load_mode_e.LM_PLAIN_MAF) {
+            double rpm = SensorCentral.getInstance().getValue(Sensor.RPM);
+            double maf = SensorCentral.getInstance().getValue(Sensor.MAF);
+
+                    String baseFuelStr = oneDecimal(Sensor.FUEL_BASE);
+            String baseFuel = "$Base_Fuel (ms) = lookup (" +
+                    "(RPM = " + rpm + ", " +
+                    "MAF = " + maf + ") = " +
+                    baseFuelStr + "ms";
+
+            String actualLastInjection = oneDecimal(Sensor.actualLastInjection);
+            String injTime =  "$Fuel (ms) = " + baseFuel + getInjecctorLag() +
+                    " = " + actualLastInjection + "ms_per_injection$";
+
+            page = acceleration + injTime;
         } else {
             page = acceleration + "todo";
         }
@@ -147,7 +162,6 @@ public class FormulasPane {
         String TARGET_AFR = oneDecimal(Sensor.TARGET_AFR);
         String tpsStr = oneDecimal(Sensor.TPS);
         String chargeAirMass = String.format("%.3fgm", SensorCentral.getInstance().getValue(Sensor.CHARGE_AIR_MASS));
-        String vBatt = oneDecimal(Sensor.VBATT);
 
         double displacement = ConfigField.getFloatValue(ci, Fields.DISPLACEMENT);
         int cylinderCount = ConfigField.getIntValue(ci, Fields.CYLINDERSCOUNT);
@@ -180,12 +194,10 @@ public class FormulasPane {
 
         String tempCorrections = " * cltCorr(" + CLTcorr + ") * iatCorr(" + IATcorr + ")";
 
-        String injectorLag = "+ ( injectorLag(VBatt = " + vBatt + ") = " + oneDecimal(Sensor.injectorLagMs) + ")";
-
         String actualLastInjection = oneDecimal(Sensor.actualLastInjection);
         String injTime = "$Fuel (ms) = " +
                 "(Base_Fuel (" + baseFuelStr + "ms) + Tps_Accel_Corr = (" + tpsAccel + "ms))" +
-                tempCorrections + injectorLag +
+                tempCorrections + getInjecctorLag() +
                 " = " + actualLastInjection + "ms_per_injection$";
 
         return acceleration +
@@ -193,6 +205,12 @@ public class FormulasPane {
                 mCharge + newLine +
                 baseFuel + newLine +
                 injTime + newLine;
+    }
+
+    @NotNull
+    private String getInjecctorLag() {
+        String vBatt = oneDecimal(Sensor.VBATT);
+        return "+ ( injectorLag(VBatt = " + vBatt + ") = " + oneDecimal(Sensor.injectorLagMs) + ")";
     }
 
     private String oneDecimal(Sensor sensor) {

@@ -183,8 +183,11 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 
 	efiAssertVoid(engine!=NULL, "engine is NULL");
 
-	if (cisnan(engine->rpmCalculator.oneDegreeUs))
+	if (cisnan(engine->rpmCalculator.oneDegreeUs)) {
+		// in order to have fuel schedule we need to have current RPM
+		// wonder if this line slows engine startup?
 		return;
+	}
 
 	efiAssertVoid(!cisnan(engine->rpmCalculator.oneDegreeUs), "NAN one deg");
 

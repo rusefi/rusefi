@@ -355,7 +355,7 @@ float globalFuelCorrection;;"coef",    1,      0.0,       0,  1000.0,        2
 int16_t pedalPositionMin;
 int16_t pedalPositionMax;
 	float maxKnockSubDeg;maximum total number of degrees to subtract from ignition advance\nwhen knocking
-	adc_channel_e mafAdcChannel;	
+	adc_channel_e mafAdcChannel;See hasMafSensor	
 	
 struct afr_sensor_s
 	adc_channel_e hwChannel;
@@ -573,7 +573,7 @@ bit hasMapSensor;@see isMapAveragingEnabled
 	bit isJoystickEnabled
 	bit isGpsEnabled
 	bit isAlternatorControlEnabled
-	bit hasMafSensor
+	bit hasMafSensor;See mafAdcChannel
 	bit hasTpsSensor
 bit cutFuelOnHardLimit
 bit cutSparkOnHardLimit
