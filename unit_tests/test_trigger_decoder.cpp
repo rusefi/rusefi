@@ -139,7 +139,7 @@ void test1995FordInline6TriggerDecoder(void) {
 	findTriggerPosition(&position, 360 PASS_ENGINE_PARAMETER);
 	assertTriggerPosition(&position, 6, 0);
 
-	eth.initTriggerShapeAndRpmCalculator();
+	eth.applyTriggerShape();
 	eth.engine.triggerCentral.addEventListener(mainTriggerCallback, "main loop", &eth.engine);
 
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
@@ -291,7 +291,6 @@ extern engine_pins_s enginePins;
 void testRpmCalculator(void) {
 	printf("*************************************************** testRpmCalculator\r\n");
 	timeNow = 0;
-	schedulingQueue.clear();
 
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 	EXPAND_EngineTestHelper;
@@ -304,7 +303,7 @@ void testRpmCalculator(void) {
 
 	engineConfiguration->trigger.customTotalToothCount = 8;
 	engineConfiguration->globalFuelCorrection = 3;
-	eth.initTriggerShapeAndRpmCalculator();
+	eth.applyTriggerShape();
 
 	setInjectorLag(0 PASS_ENGINE_PARAMETER);
 
@@ -320,10 +319,9 @@ void testRpmCalculator(void) {
 	assertEqualsM("RPM", 1500, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
 	assertEqualsM("index #1", 15, eth.engine.triggerCentral.triggerState.getCurrentIndex());
 
-	static MainTriggerCallback triggerCallbackInstance;
-	triggerCallbackInstance.init(&eth.engine);
 	eth.engine.triggerCentral.addEventListener(mainTriggerCallback, "main loop", &eth.engine);
 
+	schedulingQueue.clear();
 	assertEqualsM("queue size/0", 0, schedulingQueue.size());
 
 	debugSignalExecutor = true;
@@ -584,6 +582,7 @@ void testFuelSchedulerBug299(void) {
 	printf("*************************************************** testFuelSchedulerBug299\r\n");
 	EngineTestHelper eth(TEST_ENGINE);
 	EXPAND_EngineTestHelper;
+	assertEquals(LM_PLAIN_MAF, engineConfiguration->algorithm);
 
 	timeNow = 0;
 	schedulingQueue.clear();
@@ -598,13 +597,20 @@ void testFuelSchedulerBug299(void) {
 	engineConfiguration->trigger.type = TT_ONE;
 	incrementGlobalConfigurationVersion();
 
-	eth.initTriggerShapeAndRpmCalculator();
+	eth.applyTriggerShape();
 
 	assertEqualsM("RPM=0", 0, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
 
 	eth.fireTriggerEvents2(2, MS2US(20));
 
-	assertEquals(LM_PLAIN_MAF, engineConfiguration->algorithm);
+	schedulingQueue.clear();
+	eth.fireTriggerEvents2(2, MS2US(20));
+
+//	assertEqualsM("queue size 3", 6, schedulingQueue.size());
+
+//	assertEqualsM("ev 3", st + 13333 - 1515, schedulingQueue.getForUnitText(0)->momentX);
+//	assertEqualsM("ev 4", st + 13333 - 1515, schedulingQueue.getForUnitText(1)->momentX);
+//	assertEqualsM2("ev 5", st + 14277, schedulingQueue.getForUnitText(2)->momentX, 2);
 
 	testMafValue = 0;
 	assertEqualsM("maf", 0, getMaf(PASS_ENGINE_PARAMETER_F));
@@ -631,8 +637,6 @@ void testFuelSchedulerBug299(void) {
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 	assertEqualsM("fuel#2", 35, engine->fuelMs);
 	assertEqualsM("duty for maf=3", 87.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
-
-
 
 	unitTestValue = 0;
 	testMafValue = 0;

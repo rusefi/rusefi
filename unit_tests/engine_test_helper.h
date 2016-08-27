@@ -10,17 +10,20 @@
 #include "engine.h"
 #include "trigger_central.h"
 #include "rpm_calculator.h"
+#include "main_trigger_callback.h"
 
 class EngineTestHelper {
 public:
 	EngineTestHelper(engine_type_e engineType);
-	void initTriggerShapeAndRpmCalculator();
+	void applyTriggerShape();
 	void fireTriggerEvents(int count);
 	void fireTriggerEvents2(int count, int duration);
 
 	persistent_config_s persistentConfig;
 	engine_configuration2_s ec2;
 	Engine engine;
+
+	MainTriggerCallback triggerCallbackInstance;
 
 	engine_configuration_s *ec;
 	engine_configuration_s *engineConfiguration;

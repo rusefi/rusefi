@@ -16,7 +16,7 @@ void testSpeedDensity(void) {
 	EXPAND_EngineTestHelper;
 
 	eth.ec->trigger.customTotalToothCount = 8;
-	eth.initTriggerShapeAndRpmCalculator();
+	eth.applyTriggerShape();
 
 	eth.fireTriggerEvents(36);
 	assertEqualsM("RPM", 1500, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
