@@ -64,13 +64,22 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	engine->triggerCentral.addEventListener(mainTriggerCallback, "main loop", engine);
 }
 
+void EngineTestHelper::firePrimaryTriggerRise() {
+	board_configuration_s * boardConfiguration = &engine.engineConfiguration->bc;
+	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
+}
+
+void EngineTestHelper::firePrimaryTriggerFall() {
+	board_configuration_s * boardConfiguration = &engine.engineConfiguration->bc;
+	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
+}
+
 void EngineTestHelper::fireTriggerEvents2(int count, int duration) {
 	for (int i = 0; i < count; i++) {
 		timeNow += duration;
-		board_configuration_s * boardConfiguration = &engine.engineConfiguration->bc;
-		engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
+		firePrimaryTriggerRise();
 		timeNow += duration;
-		engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
+		firePrimaryTriggerFall();
 	}
 }
 
