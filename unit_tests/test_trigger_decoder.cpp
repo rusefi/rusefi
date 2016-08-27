@@ -140,7 +140,6 @@ void test1995FordInline6TriggerDecoder(void) {
 	assertTriggerPosition(&position, 6, 0);
 
 	eth.applyTriggerShape();
-	eth.engine.triggerCentral.addEventListener(mainTriggerCallback, "main loop", &eth.engine);
 
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 	eth.fireTriggerEvents(48);
@@ -320,10 +319,10 @@ void testRpmCalculator(void) {
 	assertEqualsM("RPM", 1500, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
 	assertEqualsM("index #1", 15, eth.engine.triggerCentral.triggerState.getCurrentIndex());
 
-	eth.engine.triggerCentral.addEventListener(mainTriggerCallback, "main loop", &eth.engine);
 
 	schedulingQueue.executeAll(99999999); // this is needed to clear 'isScheduled' flag
 	assertEqualsM("queue size/0", 0, schedulingQueue.size());
+	engine->iHead = NULL; // let's drop whatever was scheduled just to start from a clean state
 
 	debugSignalExecutor = true;
 
@@ -604,10 +603,12 @@ void testFuelSchedulerBug299(void) {
 
 	eth.fireTriggerEvents2(2, MS2US(20));
 
-	schedulingQueue.clear();
+	schedulingQueue.executeAll(99999999); // this is needed to clear 'isScheduled' flag
+	engine->iHead = NULL; // let's drop whatever was scheduled just to start from a clean state
+
 	eth.fireTriggerEvents2(2, MS2US(20));
 
-//	assertEqualsM("queue size 3", 6, schedulingQueue.size());
+	assertEqualsM("qs#0", 20, schedulingQueue.size());
 
 //	assertEqualsM("ev 3", st + 13333 - 1515, schedulingQueue.getForUnitText(0)->momentX);
 //	assertEqualsM("ev 4", st + 13333 - 1515, schedulingQueue.getForUnitText(1)->momentX);
