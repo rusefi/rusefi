@@ -61,6 +61,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 
 	engine->triggerShape.initializeTriggerShape(NULL PASS_ENGINE_PARAMETER);
 	engine->triggerCentral.addEventListener(rpmShaftPositionCallback, "rpm reporter", engine);
+	engine->triggerCentral.addEventListener(mainTriggerCallback, "main loop", engine);
 }
 
 void EngineTestHelper::fireTriggerEvents2(int count, int duration) {
