@@ -16,6 +16,8 @@ class EngineTestHelper {
 public:
 	EngineTestHelper(engine_type_e engineType);
 	void applyTriggerShape();
+	void firePrimaryTriggerRise();
+	void firePrimaryTriggerFall();
 	void fireTriggerEvents(int count);
 	void fireTriggerEvents2(int count, int duration);
 
