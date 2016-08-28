@@ -191,10 +191,10 @@
 #define cylinderBore_offset 412
 #define sensorSnifferRpmThreshold_offset 416
 #define rpmHardLimit_offset 420
-#define algorithm_offset 424
+#define fuelAlgorithm_offset 424
 #define crankingInjectionMode_offset 428
 #define injectionMode_offset 432
-#define injectionOffset_offset 436
+#define extraInjectionOffset_offset 436
 #define crankingTimingAngle_offset 440
 #define ignitionMode_offset 444
 #define ignitionOffset_offset 448

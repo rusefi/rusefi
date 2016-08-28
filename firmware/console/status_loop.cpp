@@ -429,7 +429,7 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 	scheduleMsg(&logger, "inj flow %fcc/min displacement %fL", engineConfiguration->injector.flow,
 			engineConfiguration->specs.displacement);
 
-	scheduleMsg(&logger2, "algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->algorithm),
+	scheduleMsg(&logger2, "algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->fuelAlgorithm),
 			boolToString(enginePins.fuelPumpRelay.getLogicValue()));
 
 	scheduleMsg(&logger2, "injection phase=%f/global fuel correction=%f", getinjectionOffset(rpm), engineConfiguration->globalFuelCorrection);

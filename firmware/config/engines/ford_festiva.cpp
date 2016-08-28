@@ -78,9 +78,9 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->globalFuelCorrection = 0.75;
 	engineConfiguration->specs.displacement = 1.839;
-//	engineConfiguration->algorithm = LM_PLAIN_MAF;
+//	engineConfiguration->fuelAlgorithm = LM_PLAIN_MAF;
 	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
-//	engineConfiguration->algorithm = LM_REAL_MAF;
+//	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 
 	setFuelLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER);
 	setFuelRpmBin(800, 7000 PASS_ENGINE_PARAMETER);
@@ -139,7 +139,7 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	// set_ignition_offset 0
 	engineConfiguration->ignitionOffset = 0;
 	// set_injection_offset 0
-	engineConfiguration->injectionOffset = 0;
+	engineConfiguration->extraInjectionOffset = 0;
 
 	// todo: change to 15?
 	// set_cranking_timing_angle 3

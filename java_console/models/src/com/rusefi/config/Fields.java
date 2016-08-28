@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Aug 23 21:52:05 EDT 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Aug 28 15:53:30 EDT 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -195,10 +195,10 @@ public class Fields {
 	public static final int cylinderBore_offset = 412;
 	public static final int sensorSnifferRpmThreshold_offset = 416;
 	public static final int rpmHardLimit_offset = 420;
-	public static final int algorithm_offset = 424;
+	public static final int fuelAlgorithm_offset = 424;
 	public static final int crankingInjectionMode_offset = 428;
 	public static final int injectionMode_offset = 432;
-	public static final int injectionOffset_offset = 436;
+	public static final int extraInjectionOffset_offset = 436;
 	public static final int crankingTimingAngle_offset = 440;
 	public static final int ignitionMode_offset = 444;
 	public static final int ignitionOffset_offset = 448;
@@ -1038,10 +1038,10 @@ public class Fields {
 	public static final Field SENSORSNIFFERRPMTHRESHOLD = Field.create("SENSORSNIFFERRPMTHRESHOLD", 416, FieldType.INT);
 	public static final Field RPMHARDLIMIT = Field.create("RPMHARDLIMIT", 420, FieldType.INT);
 	public static final String[] engine_load_mode_e = {"MAF", "Alpha-N/TPS", "MAP", "SPEED DENSITY"};
-	public static final Field ALGORITHM = Field.create("ALGORITHM", 424, FieldType.INT, engine_load_mode_e);
+	public static final Field FUELALGORITHM = Field.create("FUELALGORITHM", 424, FieldType.INT, engine_load_mode_e);
 	public static final Field CRANKINGINJECTIONMODE = Field.create("CRANKINGINJECTIONMODE", 428, FieldType.INT);
 	public static final Field INJECTIONMODE = Field.create("INJECTIONMODE", 432, FieldType.INT);
-	public static final Field INJECTIONOFFSET = Field.create("INJECTIONOFFSET", 436, FieldType.FLOAT);
+	public static final Field EXTRAINJECTIONOFFSET = Field.create("EXTRAINJECTIONOFFSET", 436, FieldType.FLOAT);
 	public static final Field CRANKINGTIMINGANGLE = Field.create("CRANKINGTIMINGANGLE", 440, FieldType.FLOAT);
 	public static final Field IGNITIONMODE = Field.create("IGNITIONMODE", 444, FieldType.INT);
 	public static final Field IGNITIONOFFSET = Field.create("IGNITIONOFFSET", 448, FieldType.FLOAT);

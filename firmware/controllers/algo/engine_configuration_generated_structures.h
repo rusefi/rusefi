@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 27 10:09:22 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Aug 28 15:53:30 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -973,11 +973,11 @@ typedef struct {
 	 */
 	int rpmHardLimit;
 	/**
-	 * This setting controls which algorithm is used for ENGINE LOAD
+	 * This setting controls which fuel quantity control algorithm is used.
 	 * set_algorithm X
 	 * offset 424
 	 */
-	engine_load_mode_e algorithm;
+	engine_load_mode_e fuelAlgorithm;
 	/**
 	 * offset 428
 	 */
@@ -990,9 +990,10 @@ typedef struct {
 	/**
 	 * this is about deciding when the injector starts it's squirt
 	 * See also injectionPhase map
+	 * todo: do we need even need this since we have the map anyway?
 	 * offset 436
 	 */
-	angle_t injectionOffset;
+	angle_t extraInjectionOffset;
 	/**
 	 * Timing advance while engine cranking
 	 * set_cranking_timing_angle X
@@ -1929,4 +1930,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 27 10:09:22 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Aug 28 15:53:30 EDT 2016

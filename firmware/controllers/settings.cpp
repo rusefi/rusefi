@@ -200,7 +200,7 @@ void printConfiguration(engine_configuration_s *engineConfiguration) {
 
 	scheduleMsg(&logger, "Template %s/%d trigger %s/%s/%d", getConfigurationName(engineConfiguration->engineType),
 			engineConfiguration->engineType, getTrigger_type_e(engineConfiguration->trigger.type),
-			getEngine_load_mode_e(engineConfiguration->algorithm), engineConfiguration->algorithm);
+			getEngine_load_mode_e(engineConfiguration->fuelAlgorithm), engineConfiguration->fuelAlgorithm);
 
 
 	scheduleMsg(&logger, "configurationVersion=%d", getGlobalConfigurationVersion());
@@ -254,7 +254,7 @@ void printConfiguration(engine_configuration_s *engineConfiguration) {
 
 	scheduleMsg(&logger, "=== injection ===");
 	scheduleMsg(&logger, "injection %s offset=%f/enabled=%s", getInjection_mode_e(engineConfiguration->injectionMode),
-			(double) engineConfiguration->injectionOffset, boolToString(engineConfiguration->isInjectionEnabled));
+			(double) engineConfiguration->extraInjectionOffset, boolToString(engineConfiguration->isInjectionEnabled));
 
 	printOutputs(engineConfiguration);
 
@@ -342,7 +342,7 @@ static void setIdlePinMode(int value) {
 }
 
 static void setInjectionOffset(float value) {
-	engineConfiguration->injectionOffset = value;
+	engineConfiguration->extraInjectionOffset = value;
 	doPrintConfiguration(engine);
 	incrementGlobalConfigurationVersion();
 }
@@ -582,7 +582,7 @@ static void setWholeTimingMapCmd(float value) {
 
 static void setWholeVeCmd(float value) {
 	scheduleMsg(&logger, "Setting whole VE map to %f", value);
-	if (engineConfiguration->algorithm != LM_SPEED_DENSITY) {
+	if (engineConfiguration->fuelAlgorithm != LM_SPEED_DENSITY) {
 		scheduleMsg(&logger, "WARNING: setting VE map not in SD mode is pointless");
 	}
 	setMap(config->veTable, value);
@@ -590,7 +590,7 @@ static void setWholeVeCmd(float value) {
 
 static void setWholeFuelMapCmd(float value) {
 	scheduleMsg(&logger, "Setting whole fuel map to %f", value);
-	if (engineConfiguration->algorithm == LM_SPEED_DENSITY) {
+	if (engineConfiguration->fuelAlgorithm == LM_SPEED_DENSITY) {
 		scheduleMsg(&logger, "WARNING: setting fuel map in SD mode is pointless");
 	}
 	setWholeFuelMap(value PASS_ENGINE_PARAMETER);

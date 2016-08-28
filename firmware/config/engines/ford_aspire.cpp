@@ -104,7 +104,7 @@ void setFordAspireEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 	engineConfiguration->globalTriggerAngleOffset = 175;
 	engineConfiguration->ignitionOffset = 87;
-	engineConfiguration->injectionOffset = 54 + 360;
+	engineConfiguration->extraInjectionOffset = 54 + 360;
 
 	setDefaultAspireMaps(PASS_ENGINE_PARAMETER_F);
 	// set_cranking_rpm 550

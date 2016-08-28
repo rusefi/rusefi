@@ -50,7 +50,7 @@ floatms_t getCrankshaftRevolutionTimeMs(int rpm) {
 float getEngineLoadT(DECLARE_ENGINE_PARAMETER_F) {
 	efiAssert(engine!=NULL, "engine 2NULL", NAN);
 	efiAssert(engineConfiguration!=NULL, "engineConfiguration 2NULL", NAN);
-	switch (engineConfiguration->algorithm) {
+	switch (engineConfiguration->fuelAlgorithm) {
 	case LM_PLAIN_MAF:
 		if (!hasMafSensor(PASS_ENGINE_PARAMETER_F)) {
 			warning(CUSTOM_OBD_17, "MAF sensor needed for current fuel algorithm");
@@ -67,7 +67,7 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_F) {
 		return getRealMaf(PASS_ENGINE_PARAMETER_F);
 	}
 	default:
-		warning(CUSTOM_OBD_18, "Unexpected engine load parameter: %d", engineConfiguration->algorithm);
+		warning(CUSTOM_OBD_18, "Unexpected engine load parameter: %d", engineConfiguration->fuelAlgorithm);
 		return -1;
 	}
 }
@@ -138,7 +138,7 @@ void FuelSchedule::registerInjectionEvent(int injectorIndex, float angle,
 	NamedOutputPin *output = &enginePins.injectors[injectorIndex];
 
 	if (!isSimultanious && !isPinAssigned(output)) {
-		// todo: extact method for this index math
+		// todo: extract method for this index math
 		warning(CUSTOM_OBD_20, "no_pin_inj #%s", output->name);
 	}
 
@@ -192,9 +192,12 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 	/**
 	 * injection phase is scheduled by injection end, so we need to step the angle back
 	 * for the duration of the injection
+	 *
+	 * todo: since this method is not invoked within trigger event handler and
+	 * engineState.injectionOffset is calculated from the same utility timer should we more that logic here?
 	 */
 	angle_t baseAngle = ENGINE(engineState.injectionOffset)
-			+ CONFIG(injectionOffset) - MS2US(ENGINE(fuelMs)) / ENGINE(rpmCalculator.oneDegreeUs);
+			+ CONFIG(extraInjectionOffset) - MS2US(ENGINE(fuelMs)) / ENGINE(rpmCalculator.oneDegreeUs);
 
 	switch (mode) {
 	case IM_SEQUENTIAL:
@@ -448,7 +451,7 @@ int isInjectionEnabled(engine_configuration_s *engineConfiguration) {
  * this method sets algorithm and ignition table scale
  */
 void setAlgorithm(engine_load_mode_e algo DECLARE_ENGINE_PARAMETER_S) {
-	engineConfiguration->algorithm = algo;
+	engineConfiguration->fuelAlgorithm = algo;
 	if (algo == LM_ALPHA_N) {
 		setTimingLoadBin(20, 120 PASS_ENGINE_PARAMETER);
 	} else if (algo == LM_SPEED_DENSITY) {
@@ -458,7 +461,5 @@ void setAlgorithm(engine_load_mode_e algo DECLARE_ENGINE_PARAMETER_S) {
 }
 
 void setInjectorLag(float value DECLARE_ENGINE_PARAMETER_S) {
-	for (int i=0;i<VBAT_INJECTOR_CURVE_SIZE;i++) {
-		engineConfiguration->injector.battLagCorr[i] = value;
-	}
+	setArrayValues(engineConfiguration->injector.battLagCorr, VBAT_INJECTOR_CURVE_SIZE, value);
 }

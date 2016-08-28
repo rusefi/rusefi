@@ -230,7 +230,7 @@ static void showLine(lcd_line_e line, int screenY) {
 		lcdPrintf("Intake Air %f", getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F));
 		return;
 	case LL_ALGORITHM:
-		lcdPrintf(getEngine_load_mode_e(engineConfiguration->algorithm));
+		lcdPrintf(getEngine_load_mode_e(engineConfiguration->fuelAlgorithm));
 		return;
 	case LL_INJECTION:
 		lcdPrintf(getInjection_mode_e(engineConfiguration->injectionMode));

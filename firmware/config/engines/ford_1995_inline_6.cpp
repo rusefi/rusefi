@@ -51,7 +51,7 @@ void setFordInline6(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->globalTriggerAngleOffset = 0;
 	engineConfiguration->ignitionOffset = 13;
-	engineConfiguration->injectionOffset = 207.269999;
+	engineConfiguration->extraInjectionOffset = 207.269999;
 
 	setThermistorConfiguration(&engineConfiguration->clt, -10.0, 160310.0, 60.0, 7700.0, 120.0, 1180.0);
 	engineConfiguration->clt.config.bias_resistor = 2700;
