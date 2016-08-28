@@ -84,7 +84,7 @@ void setGy6139qmbDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->cranking.rpm = 1100;
 	engineConfiguration->targetIdleRpm = 2000;
 	engineConfiguration->analogInputDividerCoefficient = 1;
-	engineConfiguration->algorithm = LM_MAP;
+	engineConfiguration->fuelAlgorithm = LM_MAP;
 	engineConfiguration->globalTriggerAngleOffset = 45;
 	boardConfiguration->sensorChartMode = SC_MAP;
 	engineConfiguration->specs.displacement = 0.072; // 72cc

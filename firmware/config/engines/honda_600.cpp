@@ -61,7 +61,7 @@ static void setDefaultCustomMaps(DECLARE_ENGINE_PARAMETER_F) {
 
 void setHonda600(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->trigger.type = TT_HONDA_CBR_600_CUSTOM;
-	engineConfiguration->algorithm = LM_ALPHA_N;
+	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
 
 	// upside down wiring
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;
@@ -77,7 +77,7 @@ void setHonda600(DECLARE_ENGINE_PARAMETER_F) {
     engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
   engineConfiguration->specs.firingOrder = FO_1_3_4_2;
-  engineConfiguration->injectionOffset = 320;
+  engineConfiguration->extraInjectionOffset = 320;
   engineConfiguration->cranking.rpm = 800;
 //	engineConfiguration->ignitionMode = IM_WASTED_SPARK; //IM_INDIVIDUAL_COILS;
 

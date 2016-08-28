@@ -598,7 +598,7 @@ void testFuelSchedulerBug299(void) {
 	printf("*************************************************** testFuelSchedulerBug299\r\n");
 	EngineTestHelper eth(TEST_ENGINE);
 	EXPAND_EngineTestHelper;
-	assertEquals(LM_PLAIN_MAF, engineConfiguration->algorithm);
+	assertEquals(LM_PLAIN_MAF, engineConfiguration->fuelAlgorithm);
 	engineConfiguration->isIgnitionEnabled = false;
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->injectionMode = IM_BATCH;

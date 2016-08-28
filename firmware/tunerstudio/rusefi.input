@@ -852,7 +852,7 @@ fileVersion = { 20160702 }
 
       egoCorrection   = { 100 }
       time            = { timeNow }
-;      engineLoad      = { algorithm == 0 ? MAF : TPS }
+;      engineLoad      = { fuleAlgorithm == 0 ? MAF : TPS }
 
 [CurveEditor]
 ;	xAxis       =  leftValue, rightValue, step
@@ -1299,9 +1299,9 @@ fileVersion = { 20160702 }
 		subMenu = warmupTargetAfrCurve,		"Warmup fuel auto correction AFR target", 0, {useWarmupPidAfr == 1}
 		subMenu = cltIdleCurve,				"Warmup IAC position manual Multiplier"
 		subMenu = std_separator
-		subMenu = fuelTableTbl,				"Fuel Table", 0, {algorithm != 3}
-        subMenu = veTableTbl,           	"VE Table", 0, {algorithm == 3}
-        subMenu = afrTableTbl,          	"Targe AFR Table", 0, {algorithm == 3}
+		subMenu = fuelTableTbl,				"Fuel Table", 0, {fuelAlgorithm != 3}
+        subMenu = veTableTbl,           	"VE Table", 0, {fuelAlgorithm == 3}
+        subMenu = afrTableTbl,          	"Targe AFR Table", 0, {fuelAlgorithm == 3}
 		subMenu = AccelEnrich,				"Accel/Decel Enrichment/Enleanment"
 		subMenu = iatFuelCorrCurve,			"Intake air temperature fuel Multiplier"
         subMenu = injPhaseTableTbl,         "Injection Phase"           
@@ -1310,16 +1310,16 @@ fileVersion = { 20160702 }
 		subMenu = std_separator
 		subMenu = ignitionTableTbl,			"Ignition Table"
 		subMenu = ignitionIatCorrTableTbl,	"Ignition Intake Air Temp correction"
-		subMenu = baroCorrTbl,				"Baro Correction", 0, {algorithm == 3}
+		subMenu = baroCorrTbl,				"Baro Correction", 0, {fuelAlgorithm == 3}
 		subMenu = std_separator
 		subMenu = std_realtime,    "&Realtime Display",              0
 		
 	menu = "3D Map Tuning"
 ;		subMenu = std_realtime,				"Realtime Display"
 ;		subMenu = std_warmup,				"Warmup Wizard"
-		subMenu = fuelTableMap,				"Fuel Table", 0, {algorithm != 3}
-		subMenu = veTableMap,				"VE Table", 0, {algorithm == 3}
-		subMenu = afrTableMap,				"Targe AFR Table", 0, {algorithm == 3}
+		subMenu = fuelTableMap,				"Fuel Table", 0, {fuelAlgorithm != 3}
+		subMenu = veTableMap,				"VE Table", 0, {fuelAlgorithm == 3}
+		subMenu = afrTableMap,				"Targe AFR Table", 0, {fuelAlgorithm == 3}
 		subMenu = injPhaseTableMap,			"Injection Phase"
 		subMenu = ignitionTableMap,			"Ignition Table"
 		subMenu = ignitionIatCorrTableMap,	"Ignition Intake Air Temp correction"
@@ -1452,7 +1452,7 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 ;			Engine->Injection Settings
 	dialog = injChars, "Injector Settings",	yAxis
 		field = "Injector Flow",			injector_flow
-		field = "phase offset",				injectionOffset
+		field = "phase offset",				extraInjectionOffset
 		
 	dialog = injIO, "Injector Output",	yAxis
 		field = "!ECU reboot needed to apply these settings"
@@ -1819,7 +1819,7 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		field = "RPM Hard Limit",         	    		rpmHardLimit
 		field = "Boost Cut Pressure",					boostCutPressure
 		field = ""
-		field = "Fuel Algorithm",						algorithm
+		field = "Fuel Algorithm",						fuelAlgorithm
 		field = ""
 		field = "#System hack's"
 		field = "Global fuel correction", 				globalFuelCorrection

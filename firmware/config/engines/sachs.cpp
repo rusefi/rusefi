@@ -23,7 +23,7 @@ void setSachs(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->engineChartSize = 400;
 
 	 // set_injection_offset 0
-	engineConfiguration->injectionOffset = 0;
+	engineConfiguration->extraInjectionOffset = 0;
 
 	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER);
 

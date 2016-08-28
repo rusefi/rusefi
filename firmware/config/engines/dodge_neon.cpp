@@ -151,7 +151,7 @@ EXTERN_ENGINE;
 void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->trigger.type = TT_DODGE_NEON_1995;
 
-	engineConfiguration->algorithm = LM_ALPHA_N;
+	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
 
 //	engineConfiguration->spi2SckMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
 //	engineConfiguration->spi2MosiMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
@@ -200,7 +200,7 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	// set_ignition_offset 350
 	engineConfiguration->ignitionOffset = 350;
 	 // set_injection_offset 510
-	engineConfiguration->injectionOffset = 510 + 497;
+	engineConfiguration->extraInjectionOffset = 510 + 497;
 
 	/**
 	 * that's 1995 config
@@ -267,7 +267,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	// set_global_trigger_offset_angle 38
 	engineConfiguration->globalTriggerAngleOffset = 38;
 	// set_injection_offset 0
-	engineConfiguration->injectionOffset = 0;
+	engineConfiguration->extraInjectionOffset = 0;
 
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
@@ -314,7 +314,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	 */
 	engineConfiguration->injector.flow = 199;
 
-	//engineConfiguration->algorithm = LM_ALPHA_N; // I want to start with a simple Alpha-N
+	//engineConfiguration->fuelAlgorithm = LM_ALPHA_N; // I want to start with a simple Alpha-N
 
 	setFuelLoadBin(0, 100 PASS_ENGINE_PARAMETER);
 	setTableBin2(config->ignitionLoadBins, IGN_LOAD_COUNT, 20, 120, 1);

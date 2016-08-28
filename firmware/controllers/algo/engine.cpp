@@ -186,7 +186,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
 	timingAdvance = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER);
 
-	if (engineConfiguration->algorithm == LM_SPEED_DENSITY) {
+	if (engineConfiguration->fuelAlgorithm == LM_SPEED_DENSITY) {
 		float coolantC = ENGINE(engineState.clt);
 		float intakeC = ENGINE(engineState.iat);
 		float tps = getTPS(PASS_ENGINE_PARAMETER_F);

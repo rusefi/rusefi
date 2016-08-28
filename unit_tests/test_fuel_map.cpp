@@ -24,7 +24,7 @@ void testMafFuelMath(void) {
 	EngineTestHelper eth(FORD_ASPIRE_1996);
 	EXPAND_EngineTestHelper;
 
-	engineConfiguration->algorithm = LM_REAL_MAF;
+	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 	engineConfiguration->injector.flow = 200;
 
 	setAfrMap(config->afrTable, 13);

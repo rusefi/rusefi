@@ -74,9 +74,9 @@ float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_S) {
 floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	ENGINE(engineState.tpsAccelEnrich) = ENGINE(tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_F));
 
-	if (CONFIG(algorithm) == LM_SPEED_DENSITY) {
+	if (CONFIG(fuelAlgorithm) == LM_SPEED_DENSITY) {
 		engine->engineState.baseFuel = getSpeedDensityFuel(rpm PASS_ENGINE_PARAMETER);
-	} else if (engineConfiguration->algorithm == LM_REAL_MAF) {
+	} else if (engineConfiguration->fuelAlgorithm == LM_REAL_MAF) {
 		float maf = getRealMaf(PASS_ENGINE_PARAMETER_F) + engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_F);
 		engine->engineState.baseFuel = getRealMafFuel(maf, rpm PASS_ENGINE_PARAMETER);
 	} else {

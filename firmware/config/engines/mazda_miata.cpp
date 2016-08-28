@@ -358,7 +358,7 @@ void setMiata1994_s(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->malfunctionIndicatorPin = GPIOE_5;
 	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
 
-	engineConfiguration->algorithm = LM_REAL_MAF;
+	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 	setMazdaMiataNAMaf(config);
 	engineConfiguration->injector.flow = 230;
 }

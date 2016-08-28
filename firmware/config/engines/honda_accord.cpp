@@ -79,7 +79,7 @@ static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_F) {
 	// set_ignition_offset 350
 //	engineConfiguration->ignitionOffset = 350;
 	 // set_injection_offset 510
-//	engineConfiguration->injectionOffset = 510;
+//	engineConfiguration->extraInjectionOffset = 510;
 
 
 	/**
