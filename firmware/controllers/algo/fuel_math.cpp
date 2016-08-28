@@ -86,9 +86,11 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	return ENGINE(engineState.tpsAccelEnrich) + ENGINE(engineState.baseFuel);
 }
 
-float getinjectionOffset(float rpm DECLARE_ENGINE_PARAMETER_S) {
+angle_t getinjectionOffset(float rpm DECLARE_ENGINE_PARAMETER_S) {
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
-	return fuelPhaseMap.getValue(rpm, engineLoad);
+	angle_t result = fuelPhaseMap.getValue(rpm, engineLoad) + CONFIG(extraInjectionOffset);
+	fixAngle(result);
+	return result;
 }
 
 /**

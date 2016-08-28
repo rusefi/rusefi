@@ -76,7 +76,7 @@ public class FormulasPane {
         if (ci == null)
             return;
 
-        int algorithm = ConfigField.getIntValue(ci, Fields.ALGORITHM);
+        int algorithm = ConfigField.getIntValue(ci, Fields.FUELALGORITHM);
         engine_load_mode_e[] values = engine_load_mode_e.values();
         if (algorithm >= values.length)
             throw new IllegalStateException("Unexpected "+ algorithm);
