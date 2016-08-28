@@ -716,7 +716,6 @@ void testFuelSchedulerBug299(void) {
 
 	assertEqualsM("RPM", 3000, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
 
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 	assertEqualsM("fuel#1", 1.5, engine->fuelMs);
 
 	assertEqualsM("duty for maf=0", 7.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
@@ -729,7 +728,6 @@ void testFuelSchedulerBug299(void) {
 	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
 	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);
 
-
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 	assertEqualsM("fuel#2", 17.5, engine->fuelMs);
 	assertEqualsM("duty for maf=3", 87.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
@@ -738,16 +736,16 @@ void testFuelSchedulerBug299(void) {
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerRise();
 	// time...|0.......|10......|20......|30......|40......|50......|60......|
-	// inj #0 |.......#|########|####...#|########|##......|........|........|
-	// inj #1 |........|.......#|########|##.....#|########|##......|........|
-	assertInjectorUpEvent("04@0", 0, MS2US(8.5), 0);
-	assertInjectorUpEvent("04@1", 1, MS2US(18.5), 1);
-	assertInjectorDownEvent("04@2", 2, MS2US(26), 0);
-	assertInjectorUpEvent("04@3", 3, MS2US(28.5), 0);
-	assertInjectorDownEvent("04@4", 4, MS2US(36), 1);
-	assertInjectorUpEvent("04@5", 5, MS2US(38.5), 1);
-	assertInjectorDownEvent("04@6", 6, MS2US(46.0), 0);
-	assertInjectorDownEvent("04@7", 7, MS2US(56.0), 1);
+	// inj #0 |........|.#######|########|.#######|########|........|........|
+	// inj #1 |.#######|########|.#######|########|........|........|........|
+	assertInjectorUpEvent("04@0", 0, MS2US(2.5), 1);
+	assertInjectorUpEvent("04@1", 1, MS2US(12.5), 0);
+	assertInjectorDownEvent("04@2", 2, MS2US(20), 1);
+	assertInjectorUpEvent("04@3", 3, MS2US(22.5), 1);
+	assertInjectorDownEvent("04@4", 4, MS2US(30), 0);
+	assertInjectorUpEvent("04@5", 5, MS2US(32.5), 0);
+	assertInjectorDownEvent("04@6", 6, MS2US(40.0), 1);
+	assertInjectorDownEvent("04@7", 7, MS2US(50.0), 0);
 
 
 	assertEqualsM("qs#4", 8, schedulingQueue.size());
@@ -762,16 +760,16 @@ void testFuelSchedulerBug299(void) {
 	// time...|-20.....|-10.....|0.......|10......|20......|30......|40......|
 	// inj #0 |.......#|########|####...#|########|##......|........|........|
 	// inj #1 |........|.......#|########|##.....#|########|##......|........|
-	assertInjectorUpEvent("4@0", 0, MS2US(-11.5), 0);
-	assertInjectorUpEvent("4@1", 1, MS2US(-1.5), 1);
-	assertInjectorDownEvent("4@2", 2, MS2US(6), 0);
-	assertInjectorUpEvent("4@3", 3, MS2US(8.5), 0);
+	assertInjectorUpEvent("5@0", 0, MS2US(-17.5), 1);
+	assertInjectorUpEvent("5@1", 1, MS2US(-7.5), 0);
+	assertInjectorDownEvent("5@2", 2, MS2US(0), 1);
+	assertInjectorUpEvent("5@3", 3, MS2US(2.5), 1);
 
-	assertInjectorDownEvent("4@4", 4, MS2US(16), 1);
-	assertInjectorUpEvent("4@5", 5, MS2US(18.5), 1);
-	assertInjectorDownEvent("4@6", 6, MS2US(26.0), 0);
-	assertInjectorDownEvent("4@7", 7, MS2US(36.0), 1);
-	assertEqualsM("exec#5", 2, schedulingQueue.executeAll(timeNow));
+	assertInjectorDownEvent("5@4", 4, MS2US(10), 0);
+	assertInjectorUpEvent("5@5", 5, MS2US(12.5), 0);
+	assertInjectorDownEvent("5@6", 6, MS2US(20.0), 1);
+	assertInjectorDownEvent("5@7", 7, MS2US(30.0), 0);
+	assertEqualsM("exec#5", 3, schedulingQueue.executeAll(timeNow));
 
 	/**
 	 * one more revolution
@@ -783,9 +781,9 @@ void testFuelSchedulerBug299(void) {
 	eth.firePrimaryTriggerRise();
 	assertEqualsM("qs#2", 8, schedulingQueue.size());
 	assertEqualsM("rev cnt6", 6, engine->rpmCalculator.getRevolutionCounter());
-	assertInjectorDownEvent("3@0", 0, MS2US(-14.0), 0);
-	assertInjectorUpEvent("3@1", 1, MS2US(-11.5), 0);
-	assertInjectorDownEvent("3@2", 2, MS2US(-4), 1);
+	assertInjectorUpEvent("6@0", 0, MS2US(-17.5), 1);
+	assertInjectorDownEvent("6@1", 1, MS2US(-10.0), 0);
+	assertInjectorUpEvent("6@2", 2, MS2US(-7.5), 0);
 
 	assertEqualsM("exec#6", 4, schedulingQueue.executeAll(timeNow));
 
