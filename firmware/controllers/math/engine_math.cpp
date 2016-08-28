@@ -147,6 +147,7 @@ void FuelSchedule::registerInjectionEvent(int injectorIndex, float angle,
 		// error already reported
 		return;
 	}
+	//ev->
 
 	ev->injectorIndex = injectorIndex;
 	ev->output = output;
@@ -197,7 +198,7 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 	 * engineState.injectionOffset is calculated from the same utility timer should we more that logic here?
 	 */
 	angle_t baseAngle = ENGINE(engineState.injectionOffset)
-			+ CONFIG(extraInjectionOffset) - MS2US(ENGINE(fuelMs)) / ENGINE(rpmCalculator.oneDegreeUs);
+			 - MS2US(ENGINE(fuelMs)) / ENGINE(rpmCalculator.oneDegreeUs);
 
 	switch (mode) {
 	case IM_SEQUENTIAL:
