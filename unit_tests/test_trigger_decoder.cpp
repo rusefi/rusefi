@@ -781,15 +781,15 @@ void testFuelSchedulerBug299(void) {
 
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerRise();
-
 	assertEqualsM("qs#2", 8, schedulingQueue.size());
 	assertEqualsM("rev cnt6", 6, engine->rpmCalculator.getRevolutionCounter());
 	assertInjectorDownEvent("3@0", 0, MS2US(-14.0), 0);
 	assertInjectorUpEvent("3@1", 1, MS2US(-11.5), 0);
-
 	assertInjectorDownEvent("3@2", 2, MS2US(-4), 1);
 
-	schedulingQueue.executeAll(timeNow);
+	assertEqualsM("exec#6", 4, schedulingQueue.executeAll(timeNow));
+
+
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerFall();
 
