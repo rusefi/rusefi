@@ -174,6 +174,7 @@ FuelSchedule::FuelSchedule() {
 void FuelSchedule::clear() {
 	memset(hasEvents, 0, sizeof(hasEvents));
 	eventsCount = 0;
+	usedAtEngineCycle = 0;
 }
 
 void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S) {
