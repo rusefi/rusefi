@@ -141,6 +141,8 @@ INCDIR = . \
 	$(PROJECT_DIR)/controllers/system \
 	$(PROJECT_DIR)/controllers/trigger \
 	$(PROJECT_DIR)/ext_algo \
+	../firmware/chibios/os/kernel/include \
+	../firmware/chibios/os/various \
 	test_data_structures \
 	test_basic_math
 	
