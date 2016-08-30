@@ -57,7 +57,11 @@ public:
 	char *name;
 };
 
-#define MAX_INJECTION_OUTPUT_COUNT 45
+#define MAX_NUMBER_OF_CYLINDERS 12
+/**
+ * two wire batch mode would generate twice the number of cylinders events, that's the max
+ */
+#define MAX_INJECTION_OUTPUT_COUNT 2 * MAX_NUMBER_OF_CYLINDERS
 #define MAX_IGNITION_EVENT_COUNT 80
 
 typedef ArrayList<InjectionEvent, MAX_INJECTION_OUTPUT_COUNT> InjectionEventList;

@@ -758,8 +758,8 @@ void testFuelSchedulerBug299(void) {
 	assertEqualsM("rev cnt#5", 5, engine->rpmCalculator.getRevolutionCounter());
 	// using old fuel schedule - but already wider pulses
 	// time...|-20.....|-10.....|0.......|10......|20......|30......|40......|
-	// inj #0 |.......#|########|####...#|########|##......|........|........|
-	// inj #1 |........|.......#|########|##.....#|########|##......|........|
+	// inj #0 |........|..######|########|..######|########|........|........|
+	// inj #1 |..######|########|..######|########|........|........|........|
 	assertInjectorUpEvent("5@0", 0, MS2US(-17.5), 1);
 	assertInjectorUpEvent("5@1", 1, MS2US(-7.5), 0);
 	assertInjectorDownEvent("5@2", 2, MS2US(0), 1);
@@ -781,11 +781,19 @@ void testFuelSchedulerBug299(void) {
 	eth.firePrimaryTriggerRise();
 	assertEqualsM("qs#2", 8, schedulingQueue.size());
 	assertEqualsM("rev cnt6", 6, engine->rpmCalculator.getRevolutionCounter());
+	// time...|-20.....|-10.....|0.......|10......|20......|30......|40......|
+	// inj #0 |########|..######|########|..######|........|........|........|
+	// inj #1 |..######|########|..######|########|........|........|........|
 	assertInjectorUpEvent("6@0", 0, MS2US(-17.5), 1);
 	assertInjectorDownEvent("6@1", 1, MS2US(-10.0), 0);
 	assertInjectorUpEvent("6@2", 2, MS2US(-7.5), 0);
+	assertInjectorUpEvent("6@3", 3, MS2US(0), 1);
+	assertInjectorUpEvent("6@4", 4, MS2US(2.5), 1);
+	assertInjectorDownEvent("6@5", 5, MS2US(10.0), 0);
+	assertInjectorUpEvent("6@6", 6, MS2US(12.5), 0);
+	assertInjectorDownEvent("6@7", 7, MS2US(20.0), 1);
 
-	assertEqualsM("exec#6", 4, schedulingQueue.executeAll(timeNow));
+	assertEqualsM("exec#7", 4, schedulingQueue.executeAll(timeNow));
 
 
 	timeNow += MS2US(20);
@@ -793,6 +801,20 @@ void testFuelSchedulerBug299(void) {
 
 	assertEqualsM("qs#3", 4, schedulingQueue.size());
 	assertEqualsM("rev cnt6", 6, engine->rpmCalculator.getRevolutionCounter());
+	// time...|-20.....|-10.....|0.......|10......|20......|30......|40......|
+	// inj #0 |........|##......|........|........|........|........|........|
+	// inj #1 |..######|########|........|........|........|........|........|
+	assertInjectorUpEvent("7@0", 0, MS2US(-17.5), 1);
+	assertInjectorUpEvent("7@1", 1, MS2US(-10.0), 0);
+	assertInjectorDownEvent("7@2", 2, MS2US(-7.5), 0);
+	assertInjectorUpEvent("7@3", 3, MS2US(0), 1);
+	assertEqualsM("exec#6", 4, schedulingQueue.executeAll(timeNow));
+
+
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerRise();
+	assertEqualsM("qs#3", 8, schedulingQueue.size());
+
 
 
 	unitTestValue = 0;

@@ -147,7 +147,7 @@ void FuelSchedule::registerInjectionEvent(int injectorIndex, float angle,
 		// error already reported
 		return;
 	}
-	//ev->
+	ev->isOverlapping = angle < 0;
 
 	ev->injectorIndex = injectorIndex;
 	ev->output = output;
