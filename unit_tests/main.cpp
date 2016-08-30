@@ -34,9 +34,14 @@
 #include "test_engine_math.h"
 #include "test_trigger_decoder.h"
 
+typedef int32_t         msg_t;
+
+#include "chstreams.h"
+#include "memstreams.h"
+
+
 static engine_configuration_s ec;
 engine_configuration_s *engineConfiguration = &ec;
-extern bool printTriggerDebug;
 
 int timeNow = 0;
 
