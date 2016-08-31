@@ -89,8 +89,7 @@
 EXTERN_ENGINE
 ;
 
-// todo: eliminate this magic constant, read from some relevant offset
-#define LIVE_TUNING 6200
+extern persistent_config_container_s persistentState;
 
 extern short currentPageId;
 
@@ -242,10 +241,15 @@ void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 	tsSendResponse(tsChannel, mode, NULL, 0);
 }
 
-void yellowMagic(int currentPageId, int offset, int count) {
-	if (offset > LIVE_TUNING) {
+static void onlineTuneBytes(int currentPageId, int offset, int count) {
+	if (offset > sizeof(engine_configuration_s)) {
+		int maxSize = sizeof(engine_configuration_s) - offset;
+		if (count > maxSize) {
+			warning(CUSTOM_OBD_99, "TS overflow %d %d", offset, count);
+			return;
+		}
 		scheduleMsg(&tsLogger, "applying soft change from %d length %d", offset, count);
-		memcpy(((char*) engineConfiguration) + offset, ((char*) &configWorkingCopy.engineConfiguration) + offset,
+		memcpy(((char*) &persistentState.persistentConfiguration) + offset, ((char*) &configWorkingCopy) + offset,
 				count);
 	}
 }
@@ -283,7 +287,7 @@ void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 
 	uint8_t * addr = (uint8_t *) (getWorkingPageAddr(currentPageId) + offset);
 	memcpy(addr, content, count);
-	yellowMagic(currentPageId, offset, count);
+	onlineTuneBytes(currentPageId, offset, count);
 
 	tsSendResponse(tsChannel, mode, NULL, 0);
 }
@@ -339,7 +343,7 @@ void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 
 	getWorkingPageAddr(currentPageId)[offset] = value;
 
-	yellowMagic(currentPageId, offset, 1);
+	onlineTuneBytes(currentPageId, offset, 1);
 
 //	scheduleMsg(logger, "va=%d", configWorkingCopy.boardConfiguration.idleValvePin);
 }
