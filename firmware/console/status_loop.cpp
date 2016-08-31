@@ -192,7 +192,8 @@ static void printSensors(Logging *log, bool fileFormat) {
 		float vehicleSpeed = 0;
 #endif /* EFI_PROD_CODE */
 		reportSensorF(log, fileFormat, "vss", "kph", vehicleSpeed, 2);
-		reportSensorF(log, fileFormat, "sp2rpm", "x", vehicleSpeed / rpm, 2);
+		float sp2rpm = rpm == 0 ? 0 : vehicleSpeed / rpm;
+		reportSensorF(log, fileFormat, "sp2rpm", "x", sp2rpm, 2);
 	}
 
 	reportSensorI(log, fileFormat, "warn", "count", engine->engineState.warningCounter);

@@ -97,6 +97,7 @@ Engine::Engine(persistent_config_s *config) {
 	engineState.warmupAfrPid.init(&config->engineConfiguration.warmupAfrPid,  0.5, 1.5);
 	isEngineChartEnabled = false;
 	sensorChartMode = SC_OFF;
+	actualLastInjection = 0;
 	/**
 	 * it's important for fixAngle() that engineCycle field never has zero
 	 */

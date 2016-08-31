@@ -97,6 +97,7 @@ void LECalculator::reset() {
 	first = NULL;
 	stack.reset();
 	currentCalculationLogPosition = 0;
+	memset(calcLogAction, 0, sizeof(calcLogAction));
 }
 
 void LECalculator::reset(LEElement *element) {
