@@ -98,6 +98,9 @@ Engine::Engine(persistent_config_s *config) {
 	isEngineChartEnabled = false;
 	sensorChartMode = SC_OFF;
 	actualLastInjection = 0;
+	fuelScheduleForThisEngineCycle = NULL;
+	isAlternatorControlEnabled = false;
+	wallFuelCorrection = 0;
 	/**
 	 * it's important for fixAngle() that engineCycle field never has zero
 	 */

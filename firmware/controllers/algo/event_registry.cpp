@@ -28,6 +28,7 @@ InjectionEvent::InjectionEvent() {
 	isSimultanious = false;
 	isOverlapping = false;
 	injectorIndex = 0;
+	output = NULL;
 }
 
 event_trigger_position_s::event_trigger_position_s() {

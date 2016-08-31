@@ -40,6 +40,9 @@ extern engine_pins_s enginePins;
  * @return number of milliseconds in one crank shaft revolution
  */
 floatms_t getCrankshaftRevolutionTimeMs(int rpm) {
+	if (rpm == 0) {
+		return NAN;
+	}
 	return 360 * getOneDegreeTimeMs(rpm);
 }
 
