@@ -142,8 +142,14 @@ EngineState::EngineState() {
 	targetAFR = 0;
 	tpsAccelEnrich = 0;
 	tChargeK = 0;
-	currentVE = 0;
+	runningFuel = baseFuel = currentVE = 0;
 	timeOfPreviousWarning = -10;
+	baseTableFuel = iat = iatFuelCorrection = 0;
+	clt = cltFuelCorrection = 0;
+	warmupTargetAfr = airMass = 0;
+	baroCorrection = timingAdvance = fuelTankGauge = 0;
+	sparkDwell = mapAveragingDuration = 0;
+	injectionOffset = 0;
 }
 
 void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_F) {
