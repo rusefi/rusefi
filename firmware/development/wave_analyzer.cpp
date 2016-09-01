@@ -139,6 +139,17 @@ static void initWave(const char *name, int index) {
 WaveReader::WaveReader() {
 	hw = NULL;
 	last_wave_high_widthUs = 0;
+	name = NULL;
+	eventCounter = 0;
+	currentRevolutionCounter = 0;
+	prevTotalOnTimeUs = 0;
+	totalOnTimeAccumulatorUs = 0;
+	lastActivityTimeUs = 0;
+	periodEventTimeUs = 0;
+	widthEventTimeUs = 0;
+	signalPeriodUs = 0;
+	waveOffsetUs = 0;
+	last_wave_low_widthUs = 0;
 }
 
 static void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index DECLARE_ENGINE_PARAMETER_S) {
