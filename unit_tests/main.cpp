@@ -53,7 +53,10 @@ efitick_t getTimeNowNt(void) {
 	return getTimeNowUs() * US_TO_NT_MULTIPLIER;
 }
 
-void assertEqualsM2(const char *msg, float expected, float actual, float EPS) {
+void assertEqualsM3(const char *prefix, const char *message, float expected, float actual, float EPS) {
+	char msg[100];
+	strcpy(msg, prefix);
+	strcat(msg, message);
 	if (cisnan(actual) && !cisnan(expected)) {
 		printf("Assert failed: %s %.4f while expected %.4f\r\n", msg, actual, expected);
 		exit(-1);
@@ -66,6 +69,14 @@ void assertEqualsM2(const char *msg, float expected, float actual, float EPS) {
 		exit(-1);
 	}
 	printf("Validated %s: %f\r\n", msg, expected);
+}
+
+void assertEqualsM2(const char *msg, float expected, float actual, float eps) {
+	assertEqualsM3("", msg, expected, actual, eps);
+}
+
+void assertEqualsM4(const char *prefix, const char *msg, float expected, float actual) {
+	assertEqualsM3(prefix, msg, expected, actual, 0.00001);
 }
 
 void assertEqualsLM(const char *msg, long expected, long actual) {
