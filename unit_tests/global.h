@@ -44,10 +44,13 @@ class Engine;
 #define PASS_ENGINE_PARAMETER_F engine, engineConfiguration, config, boardConfiguration
 #define PASS_ENGINE_PARAMETER , engine, engineConfiguration, config, boardConfiguration
 
-#define EXPAND_EngineTestHelper Engine *engine = &eth.engine; \
-		engine_configuration_s *engineConfiguration = engine->engineConfiguration; \
+#define EXPAND_Engine engine_configuration_s *engineConfiguration = engine->engineConfiguration; \
 		persistent_config_s *config = engine->config; \
 		board_configuration_s *boardConfiguration = &engineConfiguration->bc;
+
+
+#define EXPAND_EngineTestHelper Engine *engine = &eth.engine; \
+		EXPAND_Engine
 
 #define CONFIG(x) engineConfiguration->x
 #define ENGINE(x) engine->x

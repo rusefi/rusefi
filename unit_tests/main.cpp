@@ -122,7 +122,8 @@ int getRevolutionCounter(void) {
 }
 
 int main(void) {
-	testFuelSchedulerBug299();
+	testFuelSchedulerBug299smallAndMedium();
+	testFuelSchedulerBug299smallAndLarge();
 	testLogicExpressions();
 	testOverflow64Counter();
 	testInterpolate3d();
