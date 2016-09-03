@@ -90,6 +90,8 @@ public:
 	OutputSignal fuelActuators[MAX_INJECTION_OUTPUT_COUNT];
 	OutputSignal overlappingFuelActuator[MAX_NUMBER_OF_CYLINDERS];
 
+	bool wasOverlapping[MAX_INJECTION_OUTPUT_COUNT];
+
 	float fsioLastValue[LE_COMMAND_COUNT];
 
 	/**
