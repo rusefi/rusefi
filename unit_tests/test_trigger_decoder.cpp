@@ -920,32 +920,33 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 void testFuelSchedulerBug299smallAndLarge(void) {
 	printf("*************************************************** testFuelSchedulerBug299 small to large\r\n");
 
-//	EngineTestHelper eth(TEST_ENGINE);
-//	EXPAND_EngineTestHelper
-//	setTestBug299(&eth);
+	EngineTestHelper eth(TEST_ENGINE);
+	EXPAND_EngineTestHelper
+	setTestBug299(&eth);
 
-//	FuelSchedule * t;
-//
-//
-//	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, testMafValue);
-//	assertEquals(8, engineLoadIndex);
-//	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
-//	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);
-//
-//	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
-//	assertEqualsM("Lfuel#2", 17.5, engine->fuelMs);
-//	assertEqualsM("Lduty for maf=3", 87.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
-//
-//	assertEqualsM("Lqs#1", 0, schedulingQueue.size());
-//	timeNow += MS2US(20);
-//	eth.firePrimaryTriggerRise();
-//	// time...|0.......|10......|20......|30......|40......|50......|60......|
-//	// inj #0 |########|##...###|########|.....###|########|........|........|
-//	// inj #1 |.....###|########|....####|########|........|........|........|
-//	assertEqualsM("Lqs#4", 10, schedulingQueue.size());
-//	assertInjectorUpEvent("L04@0", 0, MS2US(0), 0);
-//	assertInjectorUpEvent("L04@1", 1, MS2US(2.5), 1);
-//	assertInjectorUpEvent("L04@2", 2, MS2US(12.5), 0);
+	FuelSchedule * t;
+
+
+	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, testMafValue);
+	assertEquals(8, engineLoadIndex);
+	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
+	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);
+
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	assertEqualsM("Lfuel#2", 17.5, engine->fuelMs);
+	assertEqualsM("Lduty for maf=3", 87.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
+
+	assertEqualsM("Lqs#1", 0, schedulingQueue.size());
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerRise();
+	// time...|0.......|10......|20......|30......|40......|50......|60......|
+	// inj #0 |########|##...###|########|.....###|########|........|........|
+	// inj #1 |.....###|########|....####|########|........|........|........|
+	assertEqualsM("Lqs#4", 10, schedulingQueue.size());
+	assertInjectorUpEvent("L04@0", 0, MS2US(0), 0);
+	assertInjectorUpEvent("L04@1", 1, MS2US(2.5), 1);
+	// that does not look right, todo: fix this
+	assertInjectorUpEvent("L04@2", 2, MS2US(12.5), 0);
 
 //	assertInjectorUpEvent("L04@3", 3, MS2US(12.5), 0);
 //	assertInjectorDownEvent("L04@4", 4, MS2US(20), 1);
