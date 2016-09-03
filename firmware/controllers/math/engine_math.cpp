@@ -135,7 +135,7 @@ void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
 	}
 }
 
-void FuelSchedule::registerInjectionEvent(int injectorIndex, float angle,
+void FuelSchedule::registerInjectionEvent(int injectorIndex, float angle, angle_t injectionDuration,
 		bool isSimultanious DECLARE_ENGINE_PARAMETER_S) {
 
 	NamedOutputPin *output = &enginePins.injectors[injectorIndex];
@@ -150,7 +150,8 @@ void FuelSchedule::registerInjectionEvent(int injectorIndex, float angle,
 		// error already reported
 		return;
 	}
-	ev->isOverlapping = angle < 0;
+	fixAngle(angle);
+	ev->isOverlapping = angle < 720 && (angle + injectionDuration) > 720;
 
 	ev->injectorIndex = injectorIndex;
 	ev->output = output;
@@ -201,8 +202,8 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 	 * todo: since this method is not invoked within trigger event handler and
 	 * engineState.injectionOffset is calculated from the same utility timer should we more that logic here?
 	 */
-	angle_t baseAngle = ENGINE(engineState.injectionOffset)
-			 - MS2US(ENGINE(fuelMs)) / ENGINE(rpmCalculator.oneDegreeUs);
+	angle_t injectionDuration = MS2US(ENGINE(fuelMs)) / ENGINE(rpmCalculator.oneDegreeUs);
+	angle_t baseAngle = ENGINE(engineState.injectionOffset) - injectionDuration;
 
 	switch (mode) {
 	case IM_SEQUENTIAL:
@@ -210,7 +211,7 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 			int index = getCylinderId(engineConfiguration->specs.firingOrder, i) - 1;
 			float angle = baseAngle
 					+ ENGINE(engineCycle) * i / CONFIG(specs.cylindersCount);
-			registerInjectionEvent(index, angle, false PASS_ENGINE_PARAMETER);
+			registerInjectionEvent(index, angle, injectionDuration, false PASS_ENGINE_PARAMETER);
 		}
 		break;
 	case IM_SIMULTANEOUS:
@@ -222,7 +223,7 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 			 * We do not need injector pin here because we will control all injectors
 			 * simultaneously
 			 */
-			registerInjectionEvent(0, angle, true PASS_ENGINE_PARAMETER);
+			registerInjectionEvent(0, angle, injectionDuration, true PASS_ENGINE_PARAMETER);
 		}
 		break;
 	case IM_BATCH:
@@ -230,7 +231,7 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 			int index = i % (engineConfiguration->specs.cylindersCount / 2);
 			float angle = baseAngle
 					+ i * ENGINE(engineCycle) / CONFIG(specs.cylindersCount);
-			registerInjectionEvent(index, angle, false PASS_ENGINE_PARAMETER);
+			registerInjectionEvent(index, angle, injectionDuration, false PASS_ENGINE_PARAMETER);
 
 			if (CONFIG(twoWireBatchInjection)) {
 
@@ -238,7 +239,7 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 				 * also fire the 2nd half of the injectors so that we can implement a batch mode on individual wires
 				 */
 				index = index + (CONFIG(specs.cylindersCount) / 2);
-				registerInjectionEvent(index, angle, false PASS_ENGINE_PARAMETER);
+				registerInjectionEvent(index, angle, injectionDuration, false PASS_ENGINE_PARAMETER);
 			}
 		}
 		break;

@@ -594,10 +594,11 @@ static void assertInjectorDownEvent(const char *msg, int eventIndex, efitime_t m
 	assertEvent(msg, eventIndex, (void*)seTurnPinLow, timeNow, momentX, (long)&enginePins.injectors[injectorIndex]);
 }
 
-static void assertInjectionEvent(InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset) {
+static void assertInjectionEvent(InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset, bool isOverlapping) {
 	assertEqualsM("inj index", injectorIndex, ev->injectorIndex);
 	assertEqualsM("event index", eventIndex, ev->injectionStart.eventIndex);
 	assertEqualsM("event offset", angleOffset, ev->injectionStart.angleOffset);
+	assertTrueM("is overlapping", isOverlapping == ev->isOverlapping);
 }
 
 void testFuelSchedulerBug299(void) {
@@ -608,6 +609,7 @@ void testFuelSchedulerBug299(void) {
 	engineConfiguration->isIgnitionEnabled = false;
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->injectionMode = IM_BATCH;
+	FuelSchedule * t;
 
 	timeNow = 0;
 	schedulingQueue.clear();
@@ -654,6 +656,13 @@ void testFuelSchedulerBug299(void) {
 	assertInjectorUpEvent("1@6", 6, MS2US(38.5), 1);
 	assertInjectorDownEvent("@7", 7, MS2US(40), 1);
 	assertEqualsM("exec#0", 0, schedulingQueue.executeAll(timeNow));
+
+	t = ENGINE(engineConfiguration2)->injectionEvents;
+	assertEqualsM("t.s#0", 4, t->injectionEvents.size);
+	assertInjectionEvent(&t->injectionEvents.elements[0], 0, 0, 513, false);
+	assertInjectionEvent(&t->injectionEvents.elements[1], 1, 0, 693, false);
+	assertInjectionEvent(&t->injectionEvents.elements[2], 0, 0, 153, false);
+	assertInjectionEvent(&t->injectionEvents.elements[3], 1, 0, 153 + 180, false);
 
 	/**
 	 * Trigger down - no new events, executing some
@@ -783,12 +792,12 @@ void testFuelSchedulerBug299(void) {
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 
 
-	FuelSchedule * t = ENGINE(engineConfiguration2)->injectionEvents;
+	t = ENGINE(engineConfiguration2)->injectionEvents;
 	assertEqualsM("t.s", 4, t->injectionEvents.size);
-	assertInjectionEvent(&t->injectionEvents.elements[0], 0, 0, 225);
-	assertInjectionEvent(&t->injectionEvents.elements[1], 1, 0, 405);
-	assertInjectionEvent(&t->injectionEvents.elements[2], 0, 0, 585);
-	assertInjectionEvent(&t->injectionEvents.elements[3], 1, 0, 45);
+	assertInjectionEvent(&t->injectionEvents.elements[0], 0, 0, 225, false);
+	assertInjectionEvent(&t->injectionEvents.elements[1], 1, 0, 405, false);
+	assertInjectionEvent(&t->injectionEvents.elements[2], 0, 0, 585, true);
+	assertInjectionEvent(&t->injectionEvents.elements[3], 1, 0, 45, false);
 
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerRise();
@@ -828,6 +837,12 @@ void testFuelSchedulerBug299(void) {
 	eth.firePrimaryTriggerRise();
 	assertEqualsM("qs#3", 8, schedulingQueue.size());
 
+	t = ENGINE(engineConfiguration2)->injectionEvents;
+	assertEqualsM("t.s", 4, t->injectionEvents.size);
+	assertInjectionEvent(&t->injectionEvents.elements[0], 0, 0, 225, false);
+	assertInjectionEvent(&t->injectionEvents.elements[1], 1, 0, 405, false);
+	assertInjectionEvent(&t->injectionEvents.elements[2], 0, 0, 585, true);
+	assertInjectionEvent(&t->injectionEvents.elements[3], 1, 0, 45, false);
 
 
 	unitTestValue = 0;
