@@ -150,6 +150,8 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, bool limitedF
 
 	OutputSignal *signal = &ENGINE(engineConfiguration2)->fuelActuators[eventIndex];
 
+	engine->engineConfiguration2->wasOverlapping[eventIndex] = event->isOverlapping;
+
 	if (event->isSimultanious) {
 		/**
 		 * this is pretty much copy-paste of 'scheduleOutput'
@@ -171,6 +173,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, bool limitedF
 #endif
 
 		// we are in this branch of code only in case of NOT IM_SIMULTANEOUS injection
+		// we are ignoring low RPM in order not to handle "engine was stopped to engine now running" transition
 		if (rpm > 2 * engineConfiguration->cranking.rpm) {
 			const char *outputName = event->output->name;
 			if (prevOutputName == outputName) {
@@ -196,6 +199,26 @@ static ALWAYS_INLINE void handleFuel(bool limitedFuel, uint32_t currentEventInde
 	FuelSchedule *fs = engine->fuelScheduleForThisEngineCycle;
 
 	InjectionEventList *injectionEvents = &fs->injectionEvents;
+
+	if (currentEventIndex == 0) {
+		// here we need to avoid a fuel miss due to changes between previous and current fuel schedule
+		for (int injEventIndex = 0; injEventIndex < injectionEvents->size; injEventIndex++) {
+			InjectionEvent *event = &injectionEvents->elements[injEventIndex];
+			if (!engine->engineConfiguration2->wasOverlapping[injEventIndex] &&
+					event->isOverlapping) {
+				// we are here if new fuel schedule is crossing engine cycle boundary with this event
+
+				OutputSignal *specialSignal = &ENGINE(engineConfiguration2)->overlappingFuelActuator[injEventIndex];
+
+				NamedOutputPin *output = &enginePins.injectors[event->injectorIndex];
+
+				// todo: recalc fuel? account for wetting?
+				floatms_t injectionDuration = ENGINE(fuelMs);
+
+				scheduleOutput(specialSignal, getTimeNowUs(), 0, MS2US(injectionDuration), output);
+			}
+		}
+	}
 
 	if (!fs->hasEvents[currentEventIndex])
 		return;
