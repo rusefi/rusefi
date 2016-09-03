@@ -40,6 +40,7 @@ struct OutputSignal_struct {
 
 void scheduleOutput(OutputSignal *signal, efitimeus_t nowUs, float delayUs, float durationUs, NamedOutputPin *output);
 void initSignalExecutor(void);
+void initEnginePinsNames(void);
 
 void initSignalExecutorImpl(void);
 
