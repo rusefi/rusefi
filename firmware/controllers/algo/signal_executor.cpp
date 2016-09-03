@@ -49,14 +49,19 @@ static const char *sparkNames[IGNITION_PIN_COUNT] = { "c1", "c2", "c3", "c4", "c
 static const char *injectorNames[INJECTION_PIN_COUNT] = { "i1", "i2", "i3", "i4", "i5", "i6", "i7", "i8",
 		"j9", "iA", "iB", "iC"};
 
-void initSignalExecutor(void) {
-	initSignalExecutorImpl();
+void initEnginePinsNames(void) {
+	// todo: make engine_pins_s a class and move this to constructor?
 	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
 		enginePins.coils[i].name = sparkNames[i];
 	}
 	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
 		enginePins.injectors[i].name = injectorNames[i];
 	}
+}
+
+void initSignalExecutor(void) {
+	initSignalExecutorImpl();
+	initEnginePinsNames();
 }
 
 void turnPinHigh(NamedOutputPin *output) {

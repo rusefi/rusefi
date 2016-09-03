@@ -19,6 +19,8 @@ extern int timeNow;
 EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persistentConfig) {
 	ec = &persistentConfig.engineConfiguration;
 
+	initEnginePinsNames();
+
 	engineConfiguration = ec;
 	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 	persistent_config_s *config = &persistentConfig;
