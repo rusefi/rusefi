@@ -97,11 +97,8 @@ static void endSimultaniousInjection(Engine *engine) {
 	}
 }
 
-static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, bool limitedFuel, InjectionEvent *event,
+static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, InjectionEvent *event,
 		int rpm DECLARE_ENGINE_PARAMETER_S) {
-	if (limitedFuel) {
-		return; // todo: move this check up
-	}
 
 	/**
 	 * todo: this is a bit tricky with batched injection. is it? Does the same
@@ -186,11 +183,15 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, bool limitedF
 	}
 }
 
-static ALWAYS_INLINE void handleFuel(bool limitedFuel, uint32_t currentEventIndex, int rpm DECLARE_ENGINE_PARAMETER_S) {
+static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t currentEventIndex, int rpm DECLARE_ENGINE_PARAMETER_S) {
 	if (!isInjectionEnabled(engineConfiguration))
 		return;
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#3");
 	efiAssertVoid(currentEventIndex < ENGINE(triggerShape.getLength()), "handleFuel/event index");
+
+	if (limitedFuel) {
+		return;
+	}
 
 	/**
 	 * Ignition events are defined by addFuelEvents() according to selected
@@ -240,7 +241,7 @@ static ALWAYS_INLINE void handleFuel(bool limitedFuel, uint32_t currentEventInde
 		if (eventIndex != currentEventIndex) {
 			continue;
 		}
-		handleFuelInjectionEvent(injEventIndex, limitedFuel, event, rpm PASS_ENGINE_PARAMETER);
+		handleFuelInjectionEvent(injEventIndex, event, rpm PASS_ENGINE_PARAMETER);
 	}
 }
 
