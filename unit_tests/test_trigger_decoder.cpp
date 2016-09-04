@@ -923,6 +923,7 @@ void testFuelSchedulerBug299smallAndLarge(void) {
 	EngineTestHelper eth(TEST_ENGINE);
 	EXPAND_EngineTestHelper
 	setTestBug299(&eth);
+	assertEqualsM("Lqs#0", 0, schedulingQueue.size());
 
 	FuelSchedule * t;
 
@@ -936,25 +937,42 @@ void testFuelSchedulerBug299smallAndLarge(void) {
 	assertEqualsM("Lfuel#2", 17.5, engine->fuelMs);
 	assertEqualsM("Lduty for maf=3", 87.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
 
+
 	assertEqualsM("Lqs#1", 0, schedulingQueue.size());
 	timeNow += MS2US(20);
+
+	// injector #1 is low before the test
+	assertFalseM("injector@0", enginePins.injectors[0].currentLogicValue);
+
 	eth.firePrimaryTriggerRise();
+
 	// time...|0.......|10......|20......|30......|40......|50......|60......|
-	// inj #0 |########|##...###|########|.....###|########|........|........|
-	// inj #1 |.....###|########|....####|########|........|........|........|
-	assertEqualsM("Lqs#4", 10, schedulingQueue.size());
+	// inj #0 |########|########|########|.....###|########|........|........|
+	// inj #1 |..######|########|....####|########|........|........|........|
+	assertEqualsM("Lqs#4", 9, schedulingQueue.size());
 	assertInjectorUpEvent("L04@0", 0, MS2US(0), 0);
 	assertInjectorUpEvent("L04@1", 1, MS2US(2.5), 1);
-	// that does not look right, todo: fix this
-	assertInjectorUpEvent("L04@2", 2, MS2US(12.5), 0);
+	// special overlapping injection is merged with one of the scheduled injections
+	assertInjectorDownEvent("L04@2", 2, MS2US(17.5), 0);
 
-//	assertInjectorUpEvent("L04@3", 3, MS2US(12.5), 0);
-//	assertInjectorDownEvent("L04@4", 4, MS2US(20), 1);
-//	assertInjectorUpEvent("L04@5", 5, MS2US(22.5), 1);
-//	assertInjectorDownEvent("L04@6", 6, MS2US(30), 0);
-//	assertInjectorUpEvent("L04@7", 7, MS2US(32.5), 0);
-//	assertInjectorDownEvent("L04@8", 8, MS2US(40.0), 1);
-//	assertInjectorDownEvent("L04@9", 9, MS2US(50.0), 0);
+	assertInjectorDownEvent("L04@3", 3, MS2US(20), 1);
+	assertInjectorUpEvent("L04@4", 4, MS2US(22.5), 1);
+
+	assertInjectorDownEvent("L04@5", 5, MS2US(30), 0);
+	assertInjectorUpEvent("L04@6", 6, MS2US(32.5), 0);
+	assertInjectorDownEvent("L04@7", 7, MS2US(40.0), 1);
+	assertInjectorDownEvent("L04@8", 8, MS2US(50.0), 0);
 
 
+	schedulingQueue.executeAll(timeNow + 1);
+	// injector goes high...
+	assertTrueM("injector@1", enginePins.injectors[0].currentLogicValue);
+
+	schedulingQueue.executeAll(timeNow + MS2US(17.5) + 1);
+	// injector does not go low too soon!
+	assertTrueM("injector@2", enginePins.injectors[0].currentLogicValue);
+
+	schedulingQueue.executeAll(timeNow + MS2US(30) + 1);
+	// end of combined injection
+	assertFalseM("injector@3", enginePins.injectors[0].currentLogicValue);
 }

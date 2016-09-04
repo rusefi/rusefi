@@ -88,7 +88,8 @@ public:
 #endif
 
 	OutputSignal fuelActuators[MAX_INJECTION_OUTPUT_COUNT];
-	OutputSignal overlappingFuelActuator[MAX_NUMBER_OF_CYLINDERS];
+	scheduling_s overlappingFuelActuatorTimerUp[MAX_INJECTION_OUTPUT_COUNT];
+	scheduling_s overlappingFuelActuatorTimerDown[MAX_INJECTION_OUTPUT_COUNT];
 
 	bool wasOverlapping[MAX_INJECTION_OUTPUT_COUNT];
 
