@@ -1,0 +1,7 @@
+configurationVersion: 1
+
+triage:
+
+filters:
+    # suppress occurrences of any issue at a specified path of any type (implicit)
+    - filePath: /hw_layer/mass_storage/usb_msd.c
