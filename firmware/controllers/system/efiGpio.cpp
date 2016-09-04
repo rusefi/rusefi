@@ -26,6 +26,15 @@ NamedOutputPin::NamedOutputPin(const char *name) : OutputPin() {
 	this->name = name;
 }
 
+InjectorOutputPin::InjectorOutputPin() : NamedOutputPin() {
+	reset();
+}
+
+void InjectorOutputPin::reset() {
+	overlappingScheduleOffTime = 0;
+	cancelNextTurningInjectorOff = false;
+}
+
 OutputPin::OutputPin() {
 	modePtr = &OUTPUT_MODE_DEFAULT;
 #if EFI_PROD_CODE || defined(__DOXYGEN__)

@@ -37,7 +37,7 @@ public:
 	 * It's more efficient to handle all injectors together if that's the case
 	 */
 	bool isSimultanious;
-	NamedOutputPin *output;
+	InjectorOutputPin *output;
 	int injectorIndex;
 	bool isOverlapping;
 

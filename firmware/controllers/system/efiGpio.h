@@ -47,6 +47,14 @@ public:
 	const char *name;
 };
 
+class InjectorOutputPin : public NamedOutputPin {
+public:
+	InjectorOutputPin();
+	void reset();
+	efitimeus_t overlappingScheduleOffTime;
+	bool cancelNextTurningInjectorOff;
+};
+
 typedef struct {
 	OutputPin mainRelay;
 	OutputPin fanRelay;
@@ -56,7 +64,7 @@ typedef struct {
 //	OutputPin alternatorField;
 	OutputPin errorLedPin;
 
-	NamedOutputPin injectors[INJECTION_PIN_COUNT];
+	InjectorOutputPin injectors[INJECTION_PIN_COUNT];
 	NamedOutputPin coils[IGNITION_PIN_COUNT];
 	OutputPin dizzyOutput;
 } engine_pins_s;

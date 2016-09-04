@@ -70,12 +70,11 @@ void turnPinHigh(NamedOutputPin *output) {
 //	signal->hi_time = hTimeNow();
 #endif /* EFI_DEFAILED_LOGGING */
 
-#if EFI_GPIO || defined(__DOXYGEN__)
 	// turn the output level ACTIVE
 	// todo: this XOR should go inside the setOutputPinValue method
 	doSetOutputPinValue2(output, true);
+
 	// sleep for the needed duration
-#endif
 #if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 	// explicit check here is a performance optimization to speed up no-chart mode
 	if (ENGINE(isEngineChartEnabled)) {
@@ -91,10 +90,8 @@ void turnPinHigh(NamedOutputPin *output) {
 
 void turnPinLow(NamedOutputPin *output) {
 	efiAssertVoid(output!=NULL, "NULL turnPinLow");
-#if EFI_GPIO || defined(__DOXYGEN__)
 	// turn off the output
 	doSetOutputPinValue2(output, false);
-#endif /* EFI_GPIO */
 
 #if EFI_DEFAILED_LOGGING || defined(__DOXYGEN__)
 	systime_t after = hTimeNow();
