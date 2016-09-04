@@ -138,7 +138,7 @@ void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
 void FuelSchedule::registerInjectionEvent(int injectorIndex, float angle, angle_t injectionDuration,
 		bool isSimultanious DECLARE_ENGINE_PARAMETER_S) {
 
-	NamedOutputPin *output = &enginePins.injectors[injectorIndex];
+	InjectorOutputPin *output = &enginePins.injectors[injectorIndex];
 
 	if (!isSimultanious && !isPinAssigned(output)) {
 		// todo: extract method for this index math
