@@ -85,13 +85,13 @@ static void testSignalExecutor2(void) {
 
 }
 
-static int prevValue = 5;
+static long prevValue = -1;
 
 static void orderCallback(void *a) {
-	int value = (int)a;
+	long value = (long)a;
 
 	printf("value=%d prevValue=%d\r\n", value, prevValue);
-	assertTrueM("orderCallback", value < prevValue);
+	assertTrueM("orderCallback", value > prevValue);
 
 	prevValue = value;
 }
