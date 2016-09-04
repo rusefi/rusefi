@@ -38,7 +38,7 @@ struct OutputSignal_struct {
 	scheduling_s signalTimerDown[2];
 };
 
-void scheduleOutput(OutputSignal *signal, efitimeus_t nowUs, float delayUs, float durationUs, NamedOutputPin *output);
+void scheduleOutput2(scheduling_s * sUp, scheduling_s * sDown, efitimeus_t nowUs, float delayUs, float durationUs, InjectorOutputPin *output);
 void initSignalExecutor(void);
 void initEnginePinsNames(void);
 

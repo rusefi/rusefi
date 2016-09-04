@@ -109,8 +109,6 @@ void turnPinLow(NamedOutputPin *output) {
 #endif /* EFI_ENGINE_SNIFFER */
 }
 
-int getRevolutionCounter(void);
-
 #if FUEL_MATH_EXTREME_LOGGING
 extern LoggingWithStorage sharedLogger;
 #endif /* FUEL_MATH_EXTREME_LOGGING */
@@ -123,11 +121,23 @@ void seTurnPinHigh(NamedOutputPin *output) {
 			getRevolutionCounter());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-
 	turnPinHigh(output);
 }
 
-void seTurnPinLow(NamedOutputPin *output) {
+void seTurnPinLow(InjectorOutputPin *output) {
+	if (output->cancelNextTurningInjectorOff) {
+		/**
+		 * in case of fuel schedule overlap between engine cycles,
+		 * and if engine cycle is above say 75% for batch mode on 4 cylinders,
+		 * we will get a secondary overlap between the special injection and a normal injection on the same injector.
+		 * In such a case want to combine these two injection into one continues injection.
+		 * Unneeded turn of injector on is handle while scheduling that second injection, but cancellation
+		 * of special injection end has to be taken care of dynamically	
+		 *
+		 */
+		output->cancelNextTurningInjectorOff = false;
+		return;
+	}
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 	const char * w = output->currentLogicValue == false ? "err" : "";
 
@@ -143,9 +153,12 @@ void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t 
 	scheduleMsg(&sharedLogger, "sch %s %x %d %s", prefix, scheduling,
 			time, param->name);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
+
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+	printf("sch %s %d\r\n", param->name, time);
+#endif /* EFI_UNIT_TEST */
 	scheduleByTime(prefix, scheduling, time, callback, param);
 }
-
 
 /**
  *
@@ -154,26 +167,19 @@ void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t 
  * @param	dwell	the number of ticks of output duration
  *
  */
-void scheduleOutput(OutputSignal *signal, efitimeus_t nowUs, float delayUs, float durationUs, NamedOutputPin *output) {
+void scheduleOutput2(scheduling_s * sUp, scheduling_s * sDown, efitimeus_t nowUs, float delayUs, float durationUs, InjectorOutputPin *output) {
 #if EFI_GPIO || defined(__DOXYGEN__)
-	if (durationUs < 0) {
-		warning(CUSTOM_OBD_3, "duration cannot be negative: %d", durationUs);
-		return;
-	}
-	if (cisnan(durationUs)) {
-		warning(CUSTOM_OBD_4, "NaN in scheduleOutput", durationUs);
-		return;
-	}
 
-	efiAssertVoid(signal!=NULL, "signal is NULL");
-	int index = getRevolutionCounter() % 2;
-	scheduling_s * sUp = &signal->signalTimerUp[index];
-	scheduling_s * sDown = &signal->signalTimerDown[index];
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	printf("scheduling output %s\r\n", output->name);
-#endif
+#endif /* EFI_UNIT_TEST */
 
-	seScheduleByTime("out up", sUp, nowUs + (int) delayUs, (schfunc_t) &seTurnPinHigh, output);
-	seScheduleByTime("out down", sDown, nowUs + (int) (delayUs + durationUs), (schfunc_t) &seTurnPinLow, output);
-#endif
+	efitimeus_t turnOnTime = nowUs + (int) delayUs;
+
+	seScheduleByTime("out up", sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, output);
+	efitimeus_t turnOffTime = nowUs + (int) (delayUs + durationUs);
+
+	seScheduleByTime("out down", sDown, turnOffTime, (schfunc_t) &seTurnPinLow, output);
+#endif /* EFI_GPIO */
 }
+

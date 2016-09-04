@@ -49,6 +49,7 @@
 #include "histogram.h"
 #include "fuel_math.h"
 #include "histogram.h"
+#include "efiGpio.h"
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "rfiutil.h"
 #endif /* EFI_HISTOGRAMS */
@@ -97,6 +98,40 @@ static void endSimultaniousInjection(Engine *engine) {
 	}
 }
 
+static void scheduleFuelInjection(int eventIndex, OutputSignal *signal, efitimeus_t nowUs, float delayUs, float durationUs, InjectorOutputPin *output DECLARE_ENGINE_PARAMETER_S) {
+	if (durationUs < 0) {
+		warning(CUSTOM_OBD_3, "duration cannot be negative: %d", durationUs);
+		return;
+	}
+	if (cisnan(durationUs)) {
+		warning(CUSTOM_OBD_4, "NaN in scheduleFuelInjection", durationUs);
+		return;
+	}
+
+	efiAssertVoid(signal!=NULL, "signal is NULL");
+	int index = getRevolutionCounter() % 2;
+	scheduling_s * sUp = &signal->signalTimerUp[index];
+	scheduling_s * sDown = &signal->signalTimerDown[index];
+
+	efitimeus_t turnOnTime = nowUs + (int) delayUs;
+	bool isSecondaryOverlapping = turnOnTime < output->overlappingScheduleOffTime;
+
+#if EFI_UNIT_CODE
+	if (isOverlapping) {
+		printf("overlapping on %s %d < %d", output->name, turnOnTime, output->overlappingScheduleOffTime);
+	}
+#endif
+
+	// todo: point at 'seScheduleByTime'
+	if (isSecondaryOverlapping) {
+		output->cancelNextTurningInjectorOff = true;
+	} else {
+		scheduleByTime("out up", sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, output);
+	}
+	efitimeus_t turnOffTime = nowUs + (int) (delayUs + durationUs);
+	scheduleByTime("out down", sDown, turnOffTime, (schfunc_t) &seTurnPinLow, output);
+}
+
 static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, InjectionEvent *event,
 		int rpm DECLARE_ENGINE_PARAMETER_S) {
 
@@ -125,10 +160,10 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, InjectionEven
 		return;
 	}
 
-#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
+#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 	scheduleMsg(logger, "handleFuel totalPerCycle=%f", totalPerCycle);
 	scheduleMsg(logger, "handleFuel engineCycleDuration=%f", engineCycleDuration);
-#endif /* EFI_DEFAILED_LOGGING */
+#endif /* FUEL_MATH_EXTREME_LOGGING */
 
 	if (engine->isCylinderCleanupMode) {
 		return;
@@ -136,7 +171,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, InjectionEven
 
 	floatus_t injectionStartDelayUs = ENGINE(rpmCalculator.oneDegreeUs) * event->injectionStart.angleOffset;
 
-#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
+#if EFI_DEFAILED_LOGGING || defined(__DOXYGEN__)
 	scheduleMsg(logger, "handleFuel pin=%s eventIndex %d duration=%fms %d", event->output->name,
 			eventIndex,
 			injectionDuration,
@@ -179,17 +214,44 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, InjectionEven
 			prevOutputName = outputName;
 		}
 
-		scheduleOutput(signal, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration), event->output);
+		scheduleFuelInjection(eventIndex, signal, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration), event->output PASS_ENGINE_PARAMETER);
+	}
+}
+
+static void handleFuelScheduleOverlap(InjectionEventList *injectionEvents DECLARE_ENGINE_PARAMETER_S) {
+	/**
+	 * here we need to avoid a fuel miss due to changes between previous and current fuel schedule
+	 * see https://sourceforge.net/p/rusefi/tickets/299/
+	 * see testFuelSchedulerBug299smallAndLarge unit test
+	 */
+	//
+	for (int injEventIndex = 0; injEventIndex < injectionEvents->size; injEventIndex++) {
+		InjectionEvent *event = &injectionEvents->elements[injEventIndex];
+		if (!engine->engineConfiguration2->wasOverlapping[injEventIndex] && event->isOverlapping) {
+			// we are here if new fuel schedule is crossing engine cycle boundary with this event
+
+			InjectorOutputPin *output = &enginePins.injectors[event->injectorIndex];
+
+			// todo: recalc fuel? account for wetting?
+			floatms_t injectionDuration = ENGINE(fuelMs);
+
+			scheduling_s * sUp = &ENGINE(engineConfiguration2)->overlappingFuelActuatorTimerUp[injEventIndex];
+			scheduling_s * sDown = &ENGINE(engineConfiguration2)->overlappingFuelActuatorTimerDown[injEventIndex];
+
+			efitimeus_t nowUs = getTimeNowUs();
+
+			output->overlappingScheduleOffTime = nowUs + MS2US(injectionDuration);
+
+			scheduleOutput2(sUp, sDown, nowUs, 0, MS2US(injectionDuration), output);
+		}
 	}
 }
 
 static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t currentEventIndex, int rpm DECLARE_ENGINE_PARAMETER_S) {
-	if (!isInjectionEnabled(engineConfiguration))
-		return;
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#3");
 	efiAssertVoid(currentEventIndex < ENGINE(triggerShape.getLength()), "handleFuel/event index");
 
-	if (limitedFuel) {
+	if (!isInjectionEnabled(engineConfiguration) || limitedFuel) {
 		return;
 	}
 
@@ -198,35 +260,20 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t currentEve
 	 * fueling strategy
 	 */
 	FuelSchedule *fs = engine->fuelScheduleForThisEngineCycle;
-
 	InjectionEventList *injectionEvents = &fs->injectionEvents;
 
 	if (currentEventIndex == 0) {
-		// here we need to avoid a fuel miss due to changes between previous and current fuel schedule
-		for (int injEventIndex = 0; injEventIndex < injectionEvents->size; injEventIndex++) {
-			InjectionEvent *event = &injectionEvents->elements[injEventIndex];
-			if (!engine->engineConfiguration2->wasOverlapping[injEventIndex] &&
-					event->isOverlapping) {
-				// we are here if new fuel schedule is crossing engine cycle boundary with this event
-
-				OutputSignal *specialSignal = &ENGINE(engineConfiguration2)->overlappingFuelActuator[injEventIndex];
-
-				NamedOutputPin *output = &enginePins.injectors[event->injectorIndex];
-
-				// todo: recalc fuel? account for wetting?
-				floatms_t injectionDuration = ENGINE(fuelMs);
-
-				scheduleOutput(specialSignal, getTimeNowUs(), 0, MS2US(injectionDuration), output);
-			}
-		}
+		handleFuelScheduleOverlap(injectionEvents PASS_ENGINE_PARAMETER);
 	}
 
-	if (!fs->hasEvents[currentEventIndex])
+	if (!fs->hasEvents[currentEventIndex]) {
+		// that's a performance optimization
 		return;
+	}
 
-#if EFI_DEFAILED_LOGGING || defined(__DOXYGEN__)
+#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 	scheduleMsg(logger, "handleFuel ind=%d %d", eventIndex, getRevolutionCounter());
-#endif /* EFI_DEFAILED_LOGGING */
+#endif /* FUEL_MATH_EXTREME_LOGGING */
 
 	ENGINE(tpsAccelEnrichment.onNewValue(getTPS(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
 	ENGINE(engineLoadAccelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_F));
@@ -313,7 +360,6 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t eventInde
 	 * Spark event is often happening during a later trigger event timeframe
 	 * TODO: improve precision
 	 */
-
 	findTriggerPosition(&iEvent->sparkPosition, iEvent->advance PASS_ENGINE_PARAMETER);
 
 	if (iEvent->sparkPosition.eventIndex == eventIndex) {
@@ -326,7 +372,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t eventInde
 	printf("spark delay=%f angle=%f\r\n", timeTillIgnitionUs, iEvent->sparkPosition.angleOffset);
 #endif
 
-	scheduleTask("spark1 down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, iEvent->output);
+		scheduleTask("spark1 down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, iEvent->output);
 	} else {
 		/**
 		 * Spark should be scheduled in relation to some future trigger event, this way we get better firing precision
