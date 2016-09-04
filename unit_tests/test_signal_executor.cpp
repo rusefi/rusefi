@@ -85,9 +85,38 @@ static void testSignalExecutor2(void) {
 
 }
 
+static int prevValue = 5;
+
+static void orderCallback(void *a) {
+	int value = (int)a;
+
+	printf("value=%d prevValue=%d\r\n", value, prevValue);
+	assertTrueM("orderCallback", value < prevValue);
+
+	prevValue = value;
+}
+
+
+static void testSignalExecutor3(void) {
+	print("*************************************** testSignalExecutor3\r\n");
+	eq.clear();
+
+	scheduling_s s1;
+	scheduling_s s2;
+	scheduling_s s3;
+
+	eq.insertTask(&s1, 10, orderCallback, (void*)1);
+	eq.insertTask(&s2, 11, orderCallback, (void*)2);
+	eq.insertTask(&s3, 12, orderCallback, (void*)3);
+
+	eq.executeAll(100);
+}
+
 void testSignalExecutor(void) {
+	testSignalExecutor3();
 	print("*************************************** testSignalExecutor\r\n");
 
+	eq.clear();
 	assertEquals(EMPTY_QUEUE, eq.getNextEventTime(0));
 	scheduling_s s1;
 	scheduling_s s2;
