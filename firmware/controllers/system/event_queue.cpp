@@ -111,6 +111,7 @@ int EventQueue::executeAll(efitime_t now) {
 	scheduling_s * current, *tmp;
 
 	scheduling_s * executionList = NULL;
+	scheduling_s * lastInExecutionList = NULL;
 
 	int listIterationCounter = 0;
 	int executionCounter = 0;
@@ -127,7 +128,13 @@ int EventQueue::executeAll(efitime_t now) {
 			efiAssert(head == current, "removing from head", -1);
 			//LL_DELETE(head, current);
 			head = head->next;
-			LL_PREPEND(executionList, current);
+			if (executionList == NULL) {
+				lastInExecutionList = executionList = current;
+			} else {
+				lastInExecutionList->next = current;
+				lastInExecutionList = current;
+			}
+			current->next = NULL;
 		} else {
 			/**
 			 * The list is sorted. Once we find one action in the future, all the remaining ones
