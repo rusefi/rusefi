@@ -247,9 +247,9 @@ static void handleFuelScheduleOverlap(InjectionEventList *injectionEvents DECLAR
 	}
 }
 
-static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t currentEventIndex, int rpm DECLARE_ENGINE_PARAMETER_S) {
+static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm DECLARE_ENGINE_PARAMETER_S) {
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#3");
-	efiAssertVoid(currentEventIndex < ENGINE(triggerShape.getLength()), "handleFuel/event index");
+	efiAssertVoid(trgEventIndex < ENGINE(triggerShape.getLength()), "handleFuel/event index");
 
 	if (!isInjectionEnabled(engineConfiguration) || limitedFuel) {
 		return;
@@ -262,17 +262,17 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t currentEve
 	FuelSchedule *fs = engine->fuelScheduleForThisEngineCycle;
 	InjectionEventList *injectionEvents = &fs->injectionEvents;
 
-	if (currentEventIndex == 0) {
+	if (trgEventIndex == 0) {
 		handleFuelScheduleOverlap(injectionEvents PASS_ENGINE_PARAMETER);
 	}
 
-	if (!fs->hasEvents[currentEventIndex]) {
+	if (!fs->hasEvents[trgEventIndex]) {
 		// that's a performance optimization
 		return;
 	}
 
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
-	scheduleMsg(logger, "handleFuel ind=%d %d", eventIndex, getRevolutionCounter());
+	scheduleMsg(logger, "handleFuel ind=%d %d", trgEventIndex, getRevolutionCounter());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 	ENGINE(tpsAccelEnrichment.onNewValue(getTPS(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
@@ -285,7 +285,7 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t currentEve
 		uint32_t eventIndex = event->injectionStart.eventIndex;
 // right after trigger change we are still using old & invalid fuel schedule. good news is we do not change trigger on the fly in real life
 //		efiAssertVoid(eventIndex < ENGINE(triggerShape.getLength()), "handleFuel/event sch index");
-		if (eventIndex != currentEventIndex) {
+		if (eventIndex != trgEventIndex) {
 			continue;
 		}
 		handleFuelInjectionEvent(injEventIndex, event, rpm PASS_ENGINE_PARAMETER);
@@ -310,7 +310,7 @@ void turnSparkPinHigh(NamedOutputPin *output) {
 #endif
 }
 
-static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t eventIndex, IgnitionEvent *iEvent,
+static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, IgnitionEvent *iEvent,
 		int rpm DECLARE_ENGINE_PARAMETER_S) {
 
 	float dwellMs = ENGINE(engineState.sparkDwell);
@@ -362,7 +362,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t eventInde
 	 */
 	findTriggerPosition(&iEvent->sparkPosition, iEvent->advance PASS_ENGINE_PARAMETER);
 
-	if (iEvent->sparkPosition.eventIndex == eventIndex) {
+	if (iEvent->sparkPosition.eventIndex == trgEventIndex) {
 		/**
 		 * Spark should be fired before the next trigger event - time-based delay is best precision possible
 		 */
@@ -385,7 +385,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t eventInde
 	}
 }
 
-static ALWAYS_INLINE void handleSpark(bool limitedSpark, uint32_t eventIndex, int rpm,
+static ALWAYS_INLINE void handleSpark(bool limitedSpark, uint32_t trgEventIndex, int rpm,
 		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
 	if (!isValidRpm(rpm) || !CONFIG(isIgnitionEnabled)) {
 		 // this might happen for instance in case of a single trigger event after a pause
@@ -400,7 +400,7 @@ static ALWAYS_INLINE void handleSpark(bool limitedSpark, uint32_t eventIndex, in
 
 	LL_FOREACH_SAFE(ENGINE(iHead), current, tmp)
 	{
-		if (current->sparkPosition.eventIndex == eventIndex) {
+		if (current->sparkPosition.eventIndex == trgEventIndex) {
 			// time to fire a spark which was scheduled previously
 			LL_DELETE(ENGINE(iHead), current);
 
@@ -414,9 +414,9 @@ static ALWAYS_INLINE void handleSpark(bool limitedSpark, uint32_t eventIndex, in
 //	scheduleSimpleMsg(&logger, "eventId spark ", eventIndex);
 	for (int i = 0; i < list->size; i++) {
 		IgnitionEvent *event = &list->elements[i];
-		if (event->dwellPosition.eventIndex != eventIndex)
+		if (event->dwellPosition.eventIndex != trgEventIndex)
 			continue;
-		handleSparkEvent(limitedSpark, eventIndex, event, rpm PASS_ENGINE_PARAMETER);
+		handleSparkEvent(limitedSpark, trgEventIndex, event, rpm PASS_ENGINE_PARAMETER);
 	}
 }
 
@@ -489,7 +489,7 @@ static ALWAYS_INLINE void scheduleIgnitionAndFuelEvents(int rpm, int revolutionI
  * This is the main trigger event handler.
  * Both injection and ignition are controlled from this method.
  */
-void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECLARE_ENGINE_PARAMETER_S) {
+void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex DECLARE_ENGINE_PARAMETER_S) {
 	(void) ckpSignalType;
 
 	ENGINE(m.beforeMainTrigger) = GET_TIMESTAMP();
@@ -502,7 +502,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	}
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#2");
 
-	if (eventIndex >= ENGINE(triggerShape.getLength())) {
+	if (trgEventIndex >= ENGINE(triggerShape.getLength())) {
 		/**
 		 * this could happen in case of a trigger error, just exit silently since the trigger error is supposed to be handled already
 		 * todo: should this check be somewhere higher so that no trigger listeners are invoked with noise?
@@ -543,7 +543,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 
 	int revolutionIndex = ENGINE(rpmCalculator).getRevolutionCounter() % 2;
 
-	if (eventIndex == 0) {
+	if (trgEventIndex == 0) {
 		// these two statements should be atomic, but in reality we should be fine, right?
 		engine->fuelScheduleForThisEngineCycle = ENGINE(engineConfiguration2)->injectionEvents;
 		engine->fuelScheduleForThisEngineCycle->usedAtEngineCycle = ENGINE(rpmCalculator).getRevolutionCounter();
@@ -558,7 +558,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 
 	efiAssertVoid(!CONFIG(useOnlyRisingEdgeForTrigger) || CONFIG(ignMathCalculateAtIndex) % 2 == 0, "invalid ignMathCalculateAtIndex");
 
-	if (eventIndex == CONFIG(ignMathCalculateAtIndex)) {
+	if (trgEventIndex == CONFIG(ignMathCalculateAtIndex)) {
 		if (CONFIG(externalKnockSenseAdc) != EFI_ADC_NONE) {
 			float externalKnockValue = getVoltageDivided("knock", engineConfiguration->externalKnockSenseAdc);
 			engine->knockLogic(externalKnockValue);
@@ -569,7 +569,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 		ENGINE(m.ignitionMathTime) = GET_TIMESTAMP() - ENGINE(m.beforeIgnitionMath);
 	}
 
-	if (eventIndex == 0) {
+	if (trgEventIndex == 0) {
 		scheduleIgnitionAndFuelEvents(rpm, revolutionIndex PASS_ENGINE_PARAMETER);
 	}
 
@@ -579,11 +579,11 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	 * For fuel we schedule start of injection based on trigger angle, and then inject for
 	 * specified duration of time
 	 */
-	handleFuel(limitedFuel, eventIndex, rpm PASS_ENGINE_PARAMETER);
+	handleFuel(limitedFuel, trgEventIndex, rpm PASS_ENGINE_PARAMETER);
 	/**
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
 	 */
-	handleSpark(limitedSpark, eventIndex, rpm,
+	handleSpark(limitedSpark, trgEventIndex, rpm,
 			&engine->engineConfiguration2->ignitionEvents[revolutionIndex] PASS_ENGINE_PARAMETER);
 #if (EFI_HISTOGRAMS && EFI_PROD_CODE) || defined(__DOXYGEN__)
 	int diff = hal_lld_get_counter_value() - beforeCallback;
@@ -591,7 +591,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	hsAdd(&mainLoopHisto, diff);
 #endif /* EFI_HISTOGRAMS */
 
-	if (eventIndex == 0) {
+	if (trgEventIndex == 0) {
 		ENGINE(m.mainTriggerCallbackTime) = GET_TIMESTAMP() - ENGINE(m.beforeMainTrigger);
 	}
 }
