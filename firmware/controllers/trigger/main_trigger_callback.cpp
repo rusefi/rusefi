@@ -122,14 +122,13 @@ static void scheduleFuelInjection(int eventIndex, OutputSignal *signal, efitimeu
 	}
 #endif
 
-	// todo: point at 'seScheduleByTime'
 	if (isSecondaryOverlapping) {
 		output->cancelNextTurningInjectorOff = true;
 	} else {
-		scheduleByTime("out up", sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, output);
+		seScheduleByTime("out up", sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, output);
 	}
 	efitimeus_t turnOffTime = nowUs + (int) (delayUs + durationUs);
-	scheduleByTime("out down", sDown, turnOffTime, (schfunc_t) &seTurnPinLow, output);
+	seScheduleByTime("out down", sDown, turnOffTime, (schfunc_t) &seTurnPinLow, output);
 }
 
 static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, InjectionEvent *event,

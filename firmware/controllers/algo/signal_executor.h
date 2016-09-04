@@ -39,6 +39,7 @@ struct OutputSignal_struct {
 };
 
 void scheduleOutput2(scheduling_s * sUp, scheduling_s * sDown, efitimeus_t nowUs, float delayUs, float durationUs, InjectorOutputPin *output);
+void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, NamedOutputPin *param);
 void initSignalExecutor(void);
 void initEnginePinsNames(void);
 
