@@ -1054,10 +1054,63 @@ void testFuelSchedulerBug299smallAndLarge(void) {
 	assertTrueM("injector@1", enginePins.injectors[0].currentLogicValue);
 
 	schedulingQueue.executeAll(timeNow + MS2US(17.5) + 1);
-	// injector does not go low too soon!
+	// injector does not go low too soon, that's a feature :)
 	assertTrueM("injector@2", enginePins.injectors[0].currentLogicValue);
 
-	schedulingQueue.executeAll(timeNow + MS2US(30) + 1);
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerFall();
+
+	assertEqualsM("Lqs#04", 6, schedulingQueue.size());
+	assertInjectorDownEvent("L015@0", 0, MS2US(0), 1);
+	assertInjectorUpEvent("L015@1", 1, MS2US(2.5), 1);
+	assertInjectorDownEvent("L015@2", 2, MS2US(10), 0);
+	assertInjectorUpEvent("L015@3", 3, MS2US(12.5), 0);
+	assertInjectorDownEvent("L015@4", 4, MS2US(20), 1);
+	assertInjectorDownEvent("L015@5", 5, MS2US(30), 0);
+
+
+	schedulingQueue.executeAll(timeNow + MS2US(10) + 1);
 	// end of combined injection
 	assertFalseM("injector@3", enginePins.injectors[0].currentLogicValue);
+
+
+	timeNow += MS2US(20);
+	schedulingQueue.executeAll(timeNow);
+	assertEqualsM("Lqs#04", 1, schedulingQueue.size());
+	assertInjectorDownEvent("L010@2", 0, MS2US(10), 0);
+
+	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 4);
+	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 4);
+
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	assertEqualsM("Lfuel#4", 2, engine->fuelMs);
+	assertEqualsM("Lduty for maf=3", 10, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
+
+
+	eth.firePrimaryTriggerRise();
+
+	assertEqualsM("Lqs#05", 9, schedulingQueue.size());
+	assertInjectorUpEvent("L016@0", 0, MS2US(8), 0);
+	assertInjectorDownEvent("L016@1", 1, MS2US(10), 0);
+	// todo: WAT?
+	assertInjectorDownEvent("L016@2", 2, MS2US(10), 0);
+
+
+	timeNow += MS2US(20);
+	schedulingQueue.executeAll(timeNow); // issue here
+	eth.firePrimaryTriggerFall();
+
+
+	timeNow += MS2US(20);
+	schedulingQueue.executeAll(timeNow);
+	eth.firePrimaryTriggerRise();
+
+	assertEqualsM("Lqs#5", 8, schedulingQueue.size());
+	assertInjectorUpEvent("L05@0", 0, MS2US(8), 0);
+	assertInjectorDownEvent("L05@1", 1, MS2US(10), 0);
+	assertInjectorUpEvent("L05@2", 2, MS2US(18), 1);
+	assertInjectorDownEvent("L05@3", 3, MS2US(20), 1);
+
+	timeNow += MS2US(20);
+	schedulingQueue.executeAll(timeNow);
 }
