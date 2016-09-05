@@ -44,8 +44,13 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t
 #endif /* EFI_UNIT_TEST */
 	efiAssert(callback != NULL, "NULL callback", false);
 
-	if (scheduling->isScheduled)
+	if (scheduling->isScheduled) {
+#if EFI_UNIT_TEST
+		printf("Already scheduled was %d\r\n", scheduling->momentX);
+		printf("Already scheduled now %d\r\n", timeX);
+#endif
 		return false;
+	}
 
 	scheduling->momentX = timeX;
 	scheduling->callback = callback;
