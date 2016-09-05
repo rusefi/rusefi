@@ -117,9 +117,14 @@ extern LoggingWithStorage sharedLogger;
 void seTurnPinHigh(NamedOutputPin *output) {
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 	const char * w = output->currentLogicValue == true ? "err" : "";
-	scheduleMsg(&sharedLogger, "^ %spin=%s eventIndex %d", w, output->name,
-			getRevolutionCounter());
+	scheduleMsg(&sharedLogger, "^ %spin=%s eventIndex %d %d", w, output->name,
+			getRevolutionCounter(), getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
+
+#if EFI_UNIT_TEST
+//	if (output->currentLogicValue == 1)
+//		firmwareError("Already high");
+#endif
 
 	turnPinHigh(output);
 }
@@ -141,21 +146,26 @@ void seTurnPinLow(InjectorOutputPin *output) {
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 	const char * w = output->currentLogicValue == false ? "err" : "";
 
-	scheduleMsg(&sharedLogger, "- %spin=%s eventIndex %d", w, output->name,
-			getRevolutionCounter());
+	scheduleMsg(&sharedLogger, "- %spin=%s eventIndex %d %d", w, output->name,
+			getRevolutionCounter(), getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
+
+#if EFI_UNIT_TEST
+	if (output->currentLogicValue == 0)
+		firmwareError("Already low");
+#endif
 
 	turnPinLow(output);
 }
 
 void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, NamedOutputPin *param) {
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
-	scheduleMsg(&sharedLogger, "sch %s %x %d %s", prefix, scheduling,
-			time, param->name);
+	scheduleMsg(&sharedLogger, "schX %s %x %d", prefix, scheduling,	time);
+	scheduleMsg(&sharedLogger, "schX %s", param->name);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
-	printf("sch %s %d\r\n", param->name, time);
+	printf("schB %s %d\r\n", param->name, time);
 #endif /* EFI_UNIT_TEST */
 	scheduleByTime(prefix, scheduling, time, callback, param);
 }

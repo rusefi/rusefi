@@ -542,7 +542,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	initConfigActions();
 	initMockVoltage();
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
+#if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
 	initSignalExecutor();
 #endif
 
@@ -550,7 +550,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	initSensorChart();
 #endif /* EFI_SENSOR_CHART */
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
+#if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
 	// todo: this is a mess, remove code duplication with simulator
 	initSettings(engineConfiguration);
 #endif
