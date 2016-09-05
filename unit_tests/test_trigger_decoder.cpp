@@ -692,24 +692,31 @@ static void setTestBug299(EngineTestHelper *eth) {
 	 * Trigger up again
 	 */
 	timeNow += MS2US(20);
+	assertInjectorUpEvent("22@0", 0, MS2US(-11.5), 0);
+	assertInjectorDownEvent("22@1", 1, MS2US(-10), 0);
+	assertInjectorUpEvent("22@2", 2, MS2US(-1.5), 1);
+	assertInjectorDownEvent("22@3", 3, MS2US(0), 1);
+	assertEqualsM("exec#20", 4, schedulingQueue.executeAll(timeNow));
+
 	eth->firePrimaryTriggerRise();
 	assertEqualsM("qs#0-2", 8, schedulingQueue.size());
 	// fuel schedule - short pulses. and more realistic schedule this time
 	// time...|-20.....|-10.....|0.......|10......|20
 	// inj #0 |.......#|........|.......#|........|
 	// inj #1 |........|.......#|........|.......#|
-	assertInjectorUpEvent("2@0", 0, MS2US(-11.5), 0);
-	assertInjectorDownEvent("@1", 1, MS2US(-10), 0);
-	assertInjectorUpEvent("@2", 2, MS2US(-1.5), 1);
-	assertInjectorDownEvent("2@3", 3, MS2US(0), 1);
-	assertInjectorUpEvent("2@4", 4, MS2US(8.5), 0);
-	assertInjectorDownEvent("@5", 5, MS2US(10), 0);
-	assertInjectorUpEvent("2@6", 6, MS2US(18.5), 1);
-	assertInjectorDownEvent("@7", 7, MS2US(20), 1);
-	assertEqualsM("exec#2", 4, schedulingQueue.executeAll(timeNow));
+	assertInjectorUpEvent("2@0", 0, MS2US(8.5), 0);
+	assertInjectorDownEvent("@1", 1, MS2US(10), 0);
+	assertInjectorUpEvent("@2", 2, MS2US(18.5), 1);
+	assertInjectorDownEvent("2@3", 3, MS2US(20), 1);
+	assertInjectorUpEvent("2@4", 4, MS2US(28.5), 0);
+	assertInjectorDownEvent("@5", 5, MS2US(30), 0);
+	assertInjectorUpEvent("2@6", 6, MS2US(38.5), 1);
+	assertInjectorDownEvent("@7", 7, MS2US(40), 1);
+	assertEqualsM("exec#2", 0, schedulingQueue.executeAll(timeNow));
 
 
 	timeNow += MS2US(20);
+	schedulingQueue.executeAll(timeNow);
 	eth->firePrimaryTriggerFall();
 	// fuel schedule - short pulses. and more realistic schedule this time
 	// time...|-20.....|-10.....|0.......|10......|20
@@ -717,11 +724,11 @@ static void setTestBug299(EngineTestHelper *eth) {
 	// inj #1 |........|.......#|........|........|
 	assertEqualsM("qs#0-2", 4, schedulingQueue.size());
 	assertEqualsM("rev cnt#4", 4, engine->rpmCalculator.getRevolutionCounter());
-	assertInjectorUpEvent("0@0", 0, MS2US(-11.5), 0);
-	assertInjectorDownEvent("0@1", 1, MS2US(-10), 0);
-	assertInjectorUpEvent("0@2", 2, MS2US(-1.5), 1);
-	assertInjectorDownEvent("0@3", 3, MS2US(0), 1);
-	assertEqualsM("exec#3", 4, schedulingQueue.executeAll(timeNow));
+	assertInjectorUpEvent("0@0", 0, MS2US(8.5), 0);
+	assertInjectorDownEvent("0@1", 1, MS2US(10), 0);
+	assertInjectorUpEvent("0@2", 2, MS2US(18.5), 1);
+	assertInjectorDownEvent("0@3", 3, MS2US(20), 1);
+	assertEqualsM("exec#3", 0, schedulingQueue.executeAll(timeNow));
 
 
 	testMafValue = 0;
@@ -767,8 +774,9 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	assertEqualsM("fuel#2", 12.5, engine->fuelMs);
 	assertEqualsM("duty for maf=3", 62.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
 
-	assertEqualsM("qs#1", 0, schedulingQueue.size());
+	assertEqualsM("qs#1", 4, schedulingQueue.size());
 	timeNow += MS2US(20);
+	schedulingQueue.executeAll(timeNow);
 	eth.firePrimaryTriggerRise();
 	// time...|0.......|10......|20......|30......|40......|50......|60......|
 	// inj #0 |########|##...###|########|.....###|########|........|........|
@@ -832,6 +840,8 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 
 	// so placing this 'executeAll' changes much?
 	assertEqualsM("exec#07", 4, schedulingQueue.executeAll(timeNow));
+	assertEqualsM("qs#07", 1, schedulingQueue.size());
+	assertInjectorDownEvent("26@0", 0, MS2US(10.0), 0);
 
 	eth.firePrimaryTriggerRise();
 	assertEqualsM("qs#2", 8, schedulingQueue.size());
@@ -852,10 +862,15 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	// time...|-20.....|-10.....|0.......|10......|20......|30......|40......|
 	// inj #0 |########|.......#|........|........|........|........|........|
 	// inj #1 |....####|########|........|........|........|........|........|
+	assertEqualsM("qs#022", 8, schedulingQueue.size());
 	assertInjectorUpEvent("7@0", 0, MS2US(-12.5), 1);
 	assertInjectorDownEvent("7@1", 1, MS2US(-10.0), 0);
 	assertInjectorUpEvent("7@2", 2, MS2US(-2.5), 0);
 	assertInjectorDownEvent("7@3", 3, MS2US(0), 1);
+	assertInjectorUpEvent("7@4", 4, MS2US(7.5), 1);
+	assertInjectorDownEvent("7@5", 5, MS2US(10.0), 0);
+	assertInjectorUpEvent("7@6", 6, MS2US(17.5), 0);
+	assertInjectorDownEvent("7@7", 7, MS2US(20), 1);
 
 	assertEqualsM("executed #06", 4, schedulingQueue.executeAll(timeNow));
 	assertInjectors("#4", 1, 0);
@@ -873,7 +888,8 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 
 
 	timeNow += MS2US(20);
-	schedulingQueue.executeAll(timeNow);
+	assertEqualsM("executed #06", 4, schedulingQueue.executeAll(timeNow));
+	assertEqualsM("qs#06", 0, schedulingQueue.size());
 	assertInjectors("#2", 1, 0);
 
 	eth.firePrimaryTriggerRise();
@@ -975,7 +991,7 @@ void testFuelSchedulerBug299smallAndLarge(void) {
 	EngineTestHelper eth(TEST_ENGINE);
 	EXPAND_EngineTestHelper
 	setTestBug299(&eth);
-	assertEqualsM("Lqs#0", 0, schedulingQueue.size());
+	assertEqualsM("Lqs#0", 4, schedulingQueue.size());
 
 	FuelSchedule * t;
 
@@ -990,8 +1006,9 @@ void testFuelSchedulerBug299smallAndLarge(void) {
 	assertEqualsM("Lduty for maf=3", 87.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
 
 
-	assertEqualsM("Lqs#1", 0, schedulingQueue.size());
+	assertEqualsM("Lqs#1", 4, schedulingQueue.size());
 	timeNow += MS2US(20);
+	schedulingQueue.executeAll(timeNow);
 
 	// injector #1 is low before the test
 	assertFalseM("injector@0", enginePins.injectors[0].currentLogicValue);
