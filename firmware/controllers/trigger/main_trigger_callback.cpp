@@ -98,7 +98,7 @@ static void endSimultaniousInjection(Engine *engine) {
 	}
 }
 
-static void scheduleFuelInjection(int eventIndex, OutputSignal *signal, efitimeus_t nowUs, float delayUs, float durationUs, InjectorOutputPin *output DECLARE_ENGINE_PARAMETER_S) {
+static void scheduleFuelInjection(int injEventIndex, OutputSignal *signal, efitimeus_t nowUs, float delayUs, float durationUs, InjectorOutputPin *output DECLARE_ENGINE_PARAMETER_S) {
 	if (durationUs < 0) {
 		warning(CUSTOM_OBD_3, "duration cannot be negative: %d", durationUs);
 		return;
@@ -131,7 +131,7 @@ static void scheduleFuelInjection(int eventIndex, OutputSignal *signal, efitimeu
 	seScheduleByTime("out down", sDown, turnOffTime, (schfunc_t) &seTurnPinLow, output);
 }
 
-static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, InjectionEvent *event,
+static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
 		int rpm DECLARE_ENGINE_PARAMETER_S) {
 
 	/**
@@ -179,9 +179,9 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, InjectionEven
 			getRevolutionCounter());
 #endif /* EFI_DEFAILED_LOGGING */
 
-	OutputSignal *signal = &ENGINE(engineConfiguration2)->fuelActuators[eventIndex];
+	OutputSignal *signal = &ENGINE(engineConfiguration2)->fuelActuators[injEventIndex];
 
-	engine->engineConfiguration2->wasOverlapping[eventIndex] = event->isOverlapping;
+	engine->engineConfiguration2->wasOverlapping[injEventIndex] = event->isOverlapping;
 
 	if (event->isSimultanious) {
 		/**
@@ -213,7 +213,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int eventIndex, InjectionEven
 			prevOutputName = outputName;
 		}
 
-		scheduleFuelInjection(eventIndex, signal, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration), event->output PASS_ENGINE_PARAMETER);
+		scheduleFuelInjection(injEventIndex, signal, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration), event->output PASS_ENGINE_PARAMETER);
 	}
 }
 

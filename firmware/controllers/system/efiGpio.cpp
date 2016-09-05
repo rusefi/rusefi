@@ -33,6 +33,8 @@ InjectorOutputPin::InjectorOutputPin() : NamedOutputPin() {
 void InjectorOutputPin::reset() {
 	overlappingScheduleOffTime = 0;
 	cancelNextTurningInjectorOff = false;
+	// todo: this could be refactored by calling some super-reset method
+	currentLogicValue = INITIAL_PIN_STATE;
 }
 
 OutputPin::OutputPin() {

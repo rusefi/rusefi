@@ -44,6 +44,8 @@ extern bool hasFirmwareErrorFlag;
 
 static Logging * logger;
 
+int revolutionCounterSinceBootForUnitTest = 0;
+
 RpmCalculator::RpmCalculator() {
 #if !EFI_PROD_CODE
 	mockRpm = MOCK_UNDEFINED;
@@ -54,7 +56,7 @@ RpmCalculator::RpmCalculator() {
 	// we need this initial to have not_running at first invocation
 	lastRpmEventTimeNt = (efitime_t) -10 * US2NT(US_PER_SECOND_LL);
 	revolutionCounterSinceStart = 0;
-	revolutionCounterSinceBoot = 0;
+	revolutionCounterSinceBootForUnitTest = revolutionCounterSinceBoot = 0;
 
 	lastRpmEventTimeNt = 0;
 	oneDegreeUs = NAN;
@@ -113,6 +115,9 @@ void RpmCalculator::setRpmValue(int value DECLARE_ENGINE_PARAMETER_S) {
 void RpmCalculator::onNewEngineCycle() {
 	revolutionCounterSinceBoot++;
 	revolutionCounterSinceStart++;
+#if EFI_UNIT_TEST
+	revolutionCounterSinceBootForUnitTest = revolutionCounterSinceBoot;
+#endif
 }
 
 uint32_t RpmCalculator::getRevolutionCounter(void) {

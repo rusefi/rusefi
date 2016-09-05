@@ -117,8 +117,10 @@ void chDbgAssert(int c, char *msg, void *arg) {
 	}
 }
 
+extern int revolutionCounterSinceBootForUnitTest;
+
 int getRevolutionCounter(void) {
-	return 0;
+	return revolutionCounterSinceBootForUnitTest;
 }
 
 int main(void) {

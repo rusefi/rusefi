@@ -122,8 +122,8 @@ void seTurnPinHigh(NamedOutputPin *output) {
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 #if EFI_UNIT_TEST
-//	if (output->currentLogicValue == 1)
-//		firmwareError("Already high");
+	if (output->currentLogicValue == 1)
+		firmwareError("Already high");
 #endif
 
 	turnPinHigh(output);
