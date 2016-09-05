@@ -845,16 +845,24 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	assertInjectorDownEvent("7@1", 1, MS2US(-10.0), 0);
 	assertInjectorUpEvent("7@2", 2, MS2US(-2.5), 0);
 	assertInjectorDownEvent("7@3", 3, MS2US(0), 1);
-	assertEqualsM("exec#6", 4, schedulingQueue.executeAll(timeNow));
+	assertEqualsM("executed #6", 4, schedulingQueue.executeAll(timeNow));
 
 
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerRise();
-	assertEqualsM("qs#3", 8, schedulingQueue.size());
+	assertEqualsM("Queue.size#03", 8, schedulingQueue.size());
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	assertInjectorUpEvent("07@0", 0, MS2US(7.5), 1);
+	assertInjectorUpEvent("07@1", 1, MS2US(17.5), 0);
+	assertInjectorDownEvent("07@2", 2, MS2US(20), 1);
+	assertInjectorUpEvent("07@3", 3, MS2US(27.5), 1);
+	assertInjectorDownEvent("07@4", 4, MS2US(30), 0);
+	assertInjectorUpEvent("07@5", 5, MS2US(37.5), 0);
+	assertInjectorDownEvent("07@6", 6, MS2US(40), 1);
+	assertInjectorDownEvent("07@7", 7, MS2US(50), 0);
 
 	t = ENGINE(engineConfiguration2)->injectionEvents;
-	assertEqualsM("t.s", 4, t->injectionEvents.size);
+	assertEqualsM("injectionEvents.size", 4, t->injectionEvents.size);
 	assertInjectionEvent("#2", &t->injectionEvents.elements[0], 0, 0, 315, false);
 	assertInjectionEvent("#2", &t->injectionEvents.elements[1], 1, 0, 495, false);
 	assertInjectionEvent("#2", &t->injectionEvents.elements[2], 0, 0, 675, true);
