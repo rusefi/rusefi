@@ -295,18 +295,18 @@ void turnSparkPinLow(NamedOutputPin *output) {
 	turnPinLow(output);
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	if (CONFIG(dizzySparkOutputPin) != GPIO_UNASSIGNED) {
-		doSetOutputPinValue2(&enginePins.dizzyOutput, false);
+		turnPinLow(&enginePins.dizzyOutput);
 	}
-#endif
+#endif /* EFI_PROD_CODE */
 }
 
 void turnSparkPinHigh(NamedOutputPin *output) {
 	turnPinHigh(output);
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	if (CONFIG(dizzySparkOutputPin) != GPIO_UNASSIGNED) {
-		doSetOutputPinValue2(&enginePins.dizzyOutput, true);
+		turnPinHigh(&enginePins.dizzyOutput);
 	}
-#endif
+#endif /* EFI_PROD_CODE */
 }
 
 static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, IgnitionEvent *iEvent,

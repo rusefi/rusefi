@@ -41,6 +41,9 @@
 #define FAST_MAP_CHART_SKIP_FACTOR 16
 
 static Logging *logger;
+/**
+ * this instance does not have a real physical pin - it's only used for engine sniffer
+ */
 static NamedOutputPin mapAveragingPin("map");
 
 /**

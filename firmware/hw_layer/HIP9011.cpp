@@ -39,7 +39,7 @@
 
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 
-static NamedOutputPin intHold("HIP");
+static NamedOutputPin intHold(HIP_NAME);
 static OutputPin hipCs;
 
 extern uint32_t lastExecutionCount;

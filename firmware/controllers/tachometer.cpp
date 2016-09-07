@@ -15,11 +15,11 @@
 
 EXTERN_ENGINE;
 
-static OutputPin tachOut;
+static NamedOutputPin tachOut(TACH_NAME);
 static scheduling_s tachTurnSignalOff;
 
 static void turnTachPinLow(void) {
-	tachOut.setValue(false);
+	turnPinLow(&tachOut);
 }
 
 static void tachSignalCallback(trigger_event_e ckpSignalType,
@@ -27,7 +27,7 @@ static void tachSignalCallback(trigger_event_e ckpSignalType,
 	if (index != engineConfiguration->tachPulseTriggerIndex) {
 		return;
 	}
-	tachOut.setValue(true);
+	turnPinHigh(&tachOut);
 	scheduleTask("tach off", &tachTurnSignalOff, (int)MS2US(engineConfiguration->tachPulseDuractionMs), (schfunc_t) &turnTachPinLow, NULL);
 }
 

@@ -14,6 +14,9 @@
 #include "firing_order.h"
 #include "efifeatures.h"
 
+#define HIP_NAME "HIP"
+#define TACH_NAME "tach"
+#define DIZZY_NAME "dizzy"
 
 #define ENUM_16_BITS 20000
 
