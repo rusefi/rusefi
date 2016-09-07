@@ -30,6 +30,10 @@ InjectorOutputPin::InjectorOutputPin() : NamedOutputPin() {
 	reset();
 }
 
+engine_pins_s::engine_pins_s() {
+	dizzyOutput.name = DIZZY_NAME;
+}
+
 void InjectorOutputPin::reset() {
 	overlappingScheduleOffTime = 0;
 	cancelNextTurningInjectorOff = false;

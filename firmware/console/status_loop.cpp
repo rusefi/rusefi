@@ -316,7 +316,9 @@ static systime_t timeOfPreviousPrintVersion = (systime_t) -1;
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 static void printOutPin(const char *pinName, brain_pin_e hwPin) {
-	appendPrintf(&logger, "outpin%s%s@%s%s", DELIMETER, pinName, hwPortname(hwPin), DELIMETER);
+	if (hwPin != GPIO_UNASSIGNED) {
+		appendPrintf(&logger, "outpin%s%s@%s%s", DELIMETER, pinName, hwPortname(hwPin), DELIMETER);
+	}
 }
 #endif /* EFI_PROD_CODE */
 
@@ -338,6 +340,9 @@ static void printInfo(systime_t nowSeconds) {
 	printOutPin(CRANK1, boardConfiguration->triggerInputPins[0]);
 	printOutPin(CRANK2, boardConfiguration->triggerInputPins[1]);
 	printOutPin(VVT_NAME, engineConfiguration->camInput);
+	printOutPin(HIP_NAME, boardConfiguration->hip9011IntHoldPin);
+	printOutPin(TACH_NAME, boardConfiguration->tachOutputPin);
+	printOutPin(DIZZY_NAME, engineConfiguration->dizzySparkOutputPin);
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
 	printOutPin(WA_CHANNEL_1, boardConfiguration->logicAnalyzerPins[0]);
 	printOutPin(WA_CHANNEL_2, boardConfiguration->logicAnalyzerPins[1]);

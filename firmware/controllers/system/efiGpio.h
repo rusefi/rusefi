@@ -55,7 +55,9 @@ public:
 	bool cancelNextTurningInjectorOff;
 };
 
-typedef struct {
+class engine_pins_s {
+public:
+	engine_pins_s();
 	OutputPin mainRelay;
 	OutputPin fanRelay;
 	OutputPin acRelay;
@@ -66,8 +68,8 @@ typedef struct {
 
 	InjectorOutputPin injectors[INJECTION_PIN_COUNT];
 	NamedOutputPin coils[IGNITION_PIN_COUNT];
-	OutputPin dizzyOutput;
-} engine_pins_s;
+	NamedOutputPin dizzyOutput;
+};
 
 /**
  * it's a macro to be sure that stack is not used
