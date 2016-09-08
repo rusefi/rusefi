@@ -1652,6 +1652,7 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		field = "!ECU reboot needed to apply these settings"
 		field = "Check Engine Pin Mode",				         	malfunctionIndicatorPinMode	
 		field = "Check Engine Pin",         						malfunctionIndicatorPin
+		field = "Warning Period",									warningPeriod
 
 ;			Engine->hip9011 Settings
 	dialog = hipFunction, "HIP9011 Settings (knock decoder)"
