@@ -85,7 +85,7 @@ int warningEnabled = true;
 extern bool hasFirmwareErrorFlag;
 #define FULL_LOGGING_KEY "fl"
 
-static char LOGGING_BUFFER[1400];
+static char LOGGING_BUFFER[1400] CCM_OPTIONAL;
 static Logging logger("status loop", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 
 static void setWarningEnabled(int value) {
