@@ -300,7 +300,7 @@ void firmwareError(const char *errorMsg, ...) {
 	}
 }
 
-static char UNUSED_RAM_SIZE[700];
+static char UNUSED_RAM_SIZE[400];
 
 static char UNUSED_CCM_SIZE[8500] CCM_OPTIONAL;
 
@@ -309,5 +309,5 @@ int getRusEfiVersion(void) {
 		return 123; // this is here to make the compiler happy about the unused array
 	if (UNUSED_CCM_SIZE[0] * 0 != 0)
 		return 3211; // this is here to make the compiler happy about the unused array
-	return 20160906;
+	return 20160909;
 }

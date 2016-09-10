@@ -69,8 +69,7 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 #define ADC_FAST_DEVICE ADCD2
 
 static int slowAdcCounter = 0;
-static char LOGGING_BUFFER[500];
-static Logging logger("ADC", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
+static LoggingWithStorage logger("ADC");
 
 // todo: move this flag to Engine god object
 static int adcDebugReporting = false;
@@ -453,24 +452,24 @@ adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int index) {
 	return hardwareIndexByIndernalAdcIndex[index];
 }
 
-static void printFullAdcReport(void) {
-	scheduleMsg(&logger, "fast %d slow %d", fastAdc.conversionCount, slowAdc.conversionCount);
+static void printFullAdcReport(Logging *logger) {
+	scheduleMsg(logger, "fast %d slow %d", fastAdc.conversionCount, slowAdc.conversionCount);
 
 	for (int index = 0; index < slowAdc.size(); index++) {
-		appendMsgPrefix(&logger);
+		appendMsgPrefix(logger);
 
 		adc_channel_e hwIndex = slowAdc.getAdcHardwareIndexByInternalIndex(index);
 		ioportid_t port = getAdcChannelPort(hwIndex);
 		int pin = getAdcChannelPin(hwIndex);
 
 		int adcValue = slowAdc.getAdcValueByIndex(index);
-		appendPrintf(&logger, " ch%d %s%d", index, portname(port), pin);
-		appendPrintf(&logger, " ADC%d 12bit=%d", hwIndex, adcValue);
+		appendPrintf(logger, " ch%d %s%d", index, portname(port), pin);
+		appendPrintf(logger, " ADC%d 12bit=%d", hwIndex, adcValue);
 		float volts = adcToVolts(adcValue);
-		appendPrintf(&logger, " v=%f", volts);
+		appendPrintf(logger, " v=%f", volts);
 
-		appendMsgPostfix(&logger);
-		scheduleLogging(&logger);
+		appendMsgPostfix(logger);
+		scheduleLogging(logger);
 	}
 }
 
@@ -603,16 +602,15 @@ void initAdcInputs(bool boardTestMode) {
 	//if(slowAdcChannelCount > ADC_MAX_SLOW_CHANNELS_COUNT) // todo: do we need this logic? do we need this check
 
 	addConsoleActionI("adc", (VoidInt) printAdcValue);
-	addConsoleAction("fadc", printFullAdcReport);
 #else
 	printMsg(&logger, "ADC disabled");
 #endif
 }
 
-void printFullAdcReportIfNeeded(void) {
+void printFullAdcReportIfNeeded(Logging *logger) {
 	if (!adcDebugReporting)
 		return;
-	printFullAdcReport();
+	printFullAdcReport(logger);
 }
 
 #endif /* HAL_USE_ADC */

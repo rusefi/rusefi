@@ -16,26 +16,45 @@ public class SensorLogger {
 
     private static Sensor[] SENSORS = {Sensor.RPM,
             Sensor.INT_TEMP,
-            Sensor.CLT, Sensor.TPS, Sensor.VBATT,
-            Sensor.FUEL_BASE,
-            Sensor.T_CHARGE,
-            Sensor.DWELL,
-            Sensor.CURRENT_VE,
-            Sensor.deltaTps,
-            Sensor.engineLoadAccelDelta,
-            Sensor.tpsAccelFuel,
-            Sensor.Injector_duty,
-            Sensor.wallFuelAmount,
-            Sensor.iatCorrection,
-            Sensor.wallFuelCorrection,
+
+            Sensor.CLT,
+            Sensor.TPS,
+            Sensor.VBATT,
+            Sensor.IAT,
+            Sensor.MAF,
+            Sensor.MAP,
+            Sensor.AFR,
+
             Sensor.idlePosition,
+
             Sensor.TARGET_AFR,
-            Sensor.CHARGE_AIR_MASS,
+            Sensor.T_CHARGE,
+            Sensor.CURRENT_VE,
+            Sensor.ENGINE_LOAD,
+
+            Sensor.DWELL,
+            Sensor.TIMING,
+
+            Sensor.FUEL_BASE,
+
+            Sensor.deltaTps,
+            Sensor.tpsAccelFuel,
+            Sensor.engineLoadAccelDelta,
+            Sensor.Injector_duty,
+
+            Sensor.wallFuelAmount,
+            Sensor.wallFuelCorrection,
+
+            Sensor.iatCorrection,
             Sensor.cltCorrection,
+
+            Sensor.CHARGE_AIR_MASS,
             Sensor.runningFuel,
             Sensor.injectorLagMs,
+
             Sensor.VSS,
             Sensor.SPEED2RPM,
+
             Sensor.debugFloatField1,
             Sensor.debugFloatField2,
             Sensor.debugFloatField3,
@@ -44,12 +63,11 @@ public class SensorLogger {
             Sensor.debugIntField1,
             Sensor.debugIntField2,
             Sensor.debugIntField3,
+
             Sensor.warningCounter,
             Sensor.lastErrorCode,
 
-            Sensor.MAF,
-            Sensor.MAP,
-            Sensor.IAT};
+    };
     private static long fileStartTime;
 
     private SensorLogger() {

@@ -112,6 +112,10 @@ typedef struct {
 	float currentTargetAfr; // 176
 	float chargeAirMass; // 180
 	float cltCorrection; // 184
+	/**
+	 * @see actualLastInjection
+	 * without injector lag, see engine.h for details
+	 */
 	float runningFuel; // 188
 	int debugIntField1;	// 192
 	float injectorLagMs; // 196

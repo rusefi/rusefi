@@ -196,7 +196,7 @@ public:
 	 * Total fuel with CLT, IAT and TPS acceleration corrections per cycle,
 	 * as squirt duration.
 	 * Without injector lag.
-	 * @see baseFule
+	 * @see baseFuel
 	 * @see actualLastInjection
 	 */
 	floatms_t runningFuel;

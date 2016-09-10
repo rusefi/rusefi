@@ -58,6 +58,8 @@
 #include "settings.h"
 #include "rusefi_outputs.h"
 
+extern fuel_Map3D_t veMap;
+extern afr_Map3D_t afrMap;
 extern bool main_loop_started;
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -91,7 +93,8 @@ static void setWarningEnabled(int value) {
 }
 
 #if EFI_FILE_LOGGING || defined(__DOXYGEN__)
-static LoggingWithStorage fileLogger("file logger");
+static char FILE_LOGGER[1000] CCM_OPTIONAL;
+static Logging fileLogger("file logger", FILE_LOGGER, sizeof(FILE_LOGGER));
 #endif /* EFI_FILE_LOGGING */
 
 static int logFileLineIndex = 0;
@@ -150,40 +153,87 @@ static void printSensors(Logging *log, bool fileFormat) {
 	// current time, in milliseconds
 	int nowMs = currentTimeMillis();
 	float sec = ((float) nowMs) / 1000;
-	reportSensorF(log, fileFormat, "time", "", sec, 3);
+	reportSensorF(log, fileFormat, "time", "", sec, 3); // log column 1
 
 	int rpm = 0;
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	rpm = getRpmE(engine);
-	reportSensorI(log, fileFormat, "rpm", "RPM", rpm);
+	reportSensorI(log, fileFormat, "rpm", "RPM", rpm); // log column 2
 
 //	reportSensorF(log, fileFormat, "TRG_0_DUTY", "%", getTriggerDutyCycle(0), 2);
 //	reportSensorF(log, fileFormat, "TRG_1_DUTY", "%", getTriggerDutyCycle(1), 2);
 #endif
 
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	reportSensorF(log, fileFormat, "int_temp", "C", getMCUInternalTemperature(), 2); // log column #3
+#endif
+
+	if (engineConfiguration->hasCltSensor) {
+		reportSensorF(log, fileFormat, "CLT", "C", getCoolantTemperature(PASS_ENGINE_PARAMETER_F), 2); // log column #4
+	}
+	reportSensorF(log, fileFormat, "TPS", "%", getTPS(PASS_ENGINE_PARAMETER_F), 2); // log column #5
+
+	if (hasVBatt(PASS_ENGINE_PARAMETER_F)) {
+		reportSensorF(log, fileFormat, "vbatt", "V", getVBatt(PASS_ENGINE_PARAMETER_F), 2); // log column #6
+	}
+
+	reportSensorF(log, fileFormat, "IAT", "C", getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F), 2); // log column #7
+
+
 	if (hasMafSensor()) {
 		reportSensorF(log, fileFormat, "maf", "V", getMaf(PASS_ENGINE_PARAMETER_F), 2);
 		reportSensorF(log, fileFormat, "mafr", "kg/hr", getRealMaf(PASS_ENGINE_PARAMETER_F), 2);
 	}
-
-	reportSensorF(log, fileFormat, "ENGINE_LOAD", "x", getEngineLoadT(PASS_ENGINE_PARAMETER_F), 2);
-
-
-
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	if (engineConfiguration->hasMapSensor) {
 		reportSensorF(log, fileFormat, "MAP", "kPa", getMap(), 2);
 //		reportSensorF(log, fileFormat, "map_r", "V", getRawMap(), 2);
 	}
+#endif /* EFI_ANALOG_SENSORS */
+#if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	if (hasBaroSensor()) {
 		reportSensorF(log, fileFormat, "baro", "kPa", getBaroPressure(), 2);
 	}
+#endif /* EFI_ANALOG_SENSORS */
+
 	if (engineConfiguration->hasAfrSensor) {
 		reportSensorF(log, fileFormat, "afr", "AFR", getAfr(PASS_ENGINE_PARAMETER_F), 2);
 	}
-	reportSensorF(log, fileFormat, "target", "AFR", engine->engineState.targetAFR, 2);
 
-#endif
+	if (fileFormat) {
+		reportSensorF(log, fileFormat, "idle", "%", getIdlePosition(), 2);
+	}
+
+#if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
+	reportSensorF(log, fileFormat, "target", "AFR", engine->engineState.targetAFR, 2);
+#endif /* EFI_ANALOG_SENSORS */
+
+	if (fileFormat) {
+		reportSensorF(log, fileFormat, "tCharge", "K", engine->engineState.tChargeK, 2); // log column #8
+		reportSensorF(log, fileFormat, "curVE", "%", veMap.getValue(rpm, getMap()), 2);
+	}
+
+	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
+	reportSensorF(log, fileFormat, "ENGINE_LOAD", "x", engineLoad, 2);
+
+
+	reportSensorF(log, fileFormat, "dwell", "ms", ENGINE(engineState.sparkDwell), 2);
+	if (fileFormat) {
+		reportSensorF(log, fileFormat, "timing", "deg", engine->engineState.timingAdvance, 2);
+
+	}
+
+	if (fileFormat) {
+		floatms_t baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER);
+		reportSensorF(log, fileFormat, "f: base", "ms", baseFuel, 2);
+		reportSensorF(log, fileFormat, "f: actual", "ms", ENGINE(actualLastInjection), 2);
+		reportSensorF(log, fileFormat, "f: lag", "ms", engine->engineState.injectorLag, 2);
+		reportSensorF(log, fileFormat, "f: running", "ms", ENGINE(engineState.runningFuel), 2);
+
+		reportSensorF(log, fileFormat, "f: wall amt", "v", ENGINE(wallFuel).getWallFuel(0), 2);
+		reportSensorF(log, fileFormat, "f: wall crr", "v", ENGINE(wallFuelCorrection), 2);
+	}
+
 
 	if (engineConfiguration->hasVehicleSpeedSensor) {
 #if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
@@ -196,37 +246,21 @@ static void printSensors(Logging *log, bool fileFormat) {
 		reportSensorF(log, fileFormat, "sp2rpm", "x", sp2rpm, 2);
 	}
 
-	reportSensorI(log, fileFormat, "warn", "count", engine->engineState.warningCounter);
-	reportSensorI(log, fileFormat, "error", "code", engine->engineState.lastErrorCode);
-
 	reportSensorF(log, fileFormat, "knck_c", "count", engine->knockCount, 0);
 	reportSensorF(log, fileFormat, "knck_v", "v", engine->knockVolts, 2);
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-	reportSensorF(log, fileFormat, "int_temp", "C", getMCUInternalTemperature(), 2);
-#endif
-
 //	reportSensorF(log, fileFormat, "vref", "V", getVRef(engineConfiguration), 2);
-	if (hasVBatt(PASS_ENGINE_PARAMETER_F)) {
-		reportSensorF(log, fileFormat, "vbatt", "V", getVBatt(PASS_ENGINE_PARAMETER_F), 2);
-	}
-
-	reportSensorF(log, fileFormat, "TP", "%", getTPS(PASS_ENGINE_PARAMETER_F), 2);
 
 	if (fileFormat) {
-		reportSensorF(log, fileFormat, "tpsacc", "ms", engine->tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_F), 2);
-		reportSensorF(log, fileFormat, "advance", "deg", engine->engineState.timingAdvance, 2);
-		reportSensorF(log, fileFormat, "duty", "%", getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER), 2);
+		reportSensorF(log, fileFormat, "f: tps delta", "v", engine->tpsAccelEnrichment.getMaxDelta(), 2);
+		reportSensorF(log, fileFormat, "f: tps fuel", "ms", engine->engineState.tpsAccelEnrich, 2);
 
+		reportSensorF(log, fileFormat, "f: el delta", "v", engine->engineLoadAccelEnrichment.getMaxDelta(), 2);
+		reportSensorF(log, fileFormat, "f: el fuel", "v", engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_F) * 100 / getMap(), 2);
 
-		reportSensorF(log, fileFormat, "tCharge", "K", engine->engineState.tChargeK, 2);
+		reportSensorF(log, fileFormat, "f: duty", "%", getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER), 2);
 	}
 
-	if (engineConfiguration->hasCltSensor) {
-		reportSensorF(log, fileFormat, "CLT", "C", getCoolantTemperature(PASS_ENGINE_PARAMETER_F), 2);
-	}
-
-	reportSensorF(log, fileFormat, "MAT", "C", getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F), 2);
 
 //	debugFloat(&logger, "tch", getTCharge1(tps), 2);
 
@@ -237,6 +271,10 @@ static void printSensors(Logging *log, bool fileFormat) {
 			reportSensorF(log, fileFormat, buf, "", getVoltage("fsio", engineConfiguration->fsioAdc[i]), 2);
 		}
 	}
+
+	reportSensorI(log, fileFormat, "warn", "count", engine->engineState.warningCounter);
+	reportSensorI(log, fileFormat, "error", "code", engine->engineState.lastErrorCode);
+
 }
 
 
@@ -282,14 +320,6 @@ static void printState(void) {
 //	debugInt(&logger, "idl", getIdleSwitch());
 
 //	debugFloat(&logger, "table_spark", getAdvance(rpm, getMaf()), 2);
-
-	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
-	float baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER);
-	debugFloat(&logger, "fuel_base", baseFuel, 2);
-	debugFloat(&logger, "fuel_lag", engine->engineState.injectorLag, 2);
-	debugFloat(&logger, "fuel", ENGINE(actualLastInjection), 2);
-
-	debugFloat(&logger, "timing", engine->engineState.timingAdvance, 2);
 
 //		float map = getMap();
 
@@ -388,7 +418,7 @@ void updateDevConsoleState(Engine *engine) {
 #endif
 
 #if (EFI_PROD_CODE && HAL_USE_ADC) || defined(__DOXYGEN__)
-	printFullAdcReportIfNeeded();
+	printFullAdcReportIfNeeded(&logger);
 #endif
 
 	if (!fullLog) {
@@ -591,9 +621,6 @@ static void lcdThread(void *arg) {
 }
 
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
-
-extern fuel_Map3D_t veMap;
-extern afr_Map3D_t afrMap;
 
 void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_S) {
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
