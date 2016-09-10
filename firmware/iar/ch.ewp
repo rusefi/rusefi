@@ -2366,6 +2366,12 @@
     <group>
       <name>math</name>
       <file>
+        <name>$PROJ_DIR$\..\controllers\math\biquad.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\math\biquad.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\controllers\math\efitime.h</name>
       </file>
       <file>
