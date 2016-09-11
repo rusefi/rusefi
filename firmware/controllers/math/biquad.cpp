@@ -17,6 +17,11 @@ Biquad::Biquad() {
 	z1 = z2 = 0;
 }
 
+void Biquad::initValue(float input) {
+  z1 = input * (1 - a0);
+  z2 = input * (1 - a0 - a1 + b1);
+}
+
 float Biquad::getValue(float input) {
     float result = input * a0 + z1;
     z1 = input * a1 + z2 - b1 * result;
