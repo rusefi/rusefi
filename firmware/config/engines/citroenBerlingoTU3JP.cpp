@@ -114,7 +114,7 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	// Frankenstein lo-side output #5: PE4
 	// Frankenstein lo-side output #6: PE5
 	// Frankenstein lo-side output #7: PE2
-	// Frankenstein lo-side output #8: PE3
+	// Frankenstein lo-side output #8: PE3	Tachometer
 	// Frankenstein lo-side output #9: PE0	Fan
 	// Frankenstein lo-side output #10: PE1	MIL
 	// Frankenstein lo-side output #11: PB8	Main relay
@@ -133,6 +133,8 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	boardConfiguration->fanPin = GPIOE_0;
 	boardConfiguration->fanPinMode = OM_DEFAULT;
+	engineConfiguration->fanOffTemperature = 95;
+	engineConfiguration->fanOnTemperature = 99;
 
 	boardConfiguration->malfunctionIndicatorPin = GPIOE_1;
 	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
@@ -172,14 +174,14 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_1;
 	engineConfiguration->map.sensor.type = MT_CUSTOM;
 	engineConfiguration->map.sensor.lowValue = 10;
-	engineConfiguration->map.sensor.highValue = 110;
+	engineConfiguration->map.sensor.highValue = 105;
 	engineConfiguration->mapHighValueVoltage = 5;
 	/**
 	 * TPS <MAGNETI MARELLI>
 	 */
 	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
-	engineConfiguration->tpsMax = 108; // convert 12to10 bit (ADC/4)
-	engineConfiguration->tpsMin = 812; // convert 12to10 bit (ADC/4)
+	engineConfiguration->tpsMax = 102; // convert 12to10 bit (ADC/4)
+	engineConfiguration->tpsMin = 825; // convert 12to10 bit (ADC/4)
 	/**
 	 * IAT <OEM ECU>
 	 */
