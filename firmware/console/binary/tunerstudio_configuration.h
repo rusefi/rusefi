@@ -132,7 +132,8 @@ typedef struct {
 	int lastErrorCode; // 240
 	float internalMcuTemperature; // 244
 	float vvtPosition; // 248
-	int unused3[6];
+	int engineMode; // 252
+	int unused3[5];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */

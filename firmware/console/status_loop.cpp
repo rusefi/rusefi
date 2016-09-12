@@ -149,6 +149,16 @@ EXTERN_ENGINE
 
 static char buf[6];
 
+/**
+ * This is useful if we are changing engine mode dynamically
+ * For example http://rusefi.com/forum/viewtopic.php?f=5&t=1085
+ */
+static int packEngineMode(DECLARE_ENGINE_PARAMETER_F) {
+	return (engineConfiguration->fuelAlgorithm << 4) +
+			(engineConfiguration->injectionMode << 2) +
+			engineConfiguration->ignitionMode;
+}
+
 static void printSensors(Logging *log, bool fileFormat) {
 	// current time, in milliseconds
 	int nowMs = currentTimeMillis();
@@ -167,6 +177,8 @@ static void printSensors(Logging *log, bool fileFormat) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	reportSensorF(log, fileFormat, "int_temp", "C", getMCUInternalTemperature(), 2); // log column #3
 #endif
+
+	reportSensorI(log, fileFormat, "mode", "v", packEngineMode(PASS_ENGINE_PARAMETER_F)); // log column #3
 
 	if (engineConfiguration->hasCltSensor) {
 		reportSensorF(log, fileFormat, "CLT", "C", getCoolantTemperature(PASS_ENGINE_PARAMETER_F), 2); // log column #4
@@ -713,6 +725,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->checkEngine = hasErrorCodes();
 
 	tsOutputChannels->vvtPosition = engine->triggerCentral.vvtPosition;
+
+	tsOutputChannels->engineMode = packEngineMode(PASS_ENGINE_PARAMETER_F);
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	tsOutputChannels->internalMcuTemperature = getMCUInternalTemperature();
