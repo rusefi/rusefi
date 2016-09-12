@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Aug 28 15:53:30 EDT 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Sep 11 20:11:57 EDT 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -785,8 +785,8 @@ public class Fields {
 	public static final int tpsAccelLength_offset = 2184;
 	public static final int tpsAccelLength_offset_hex = 888;
 	public static final int tpsAccelEnrichmentThreshold_offset = 2188;
-	public static final int tpsAccelEnrichmentMultiplier_offset = 2192;
-	public static final int tpsAccelEnrichmentMultiplier_offset_hex = 890;
+	public static final int unused213_offset = 2192;
+	public static final int unused213_offset_hex = 890;
 	public static final int engineLoadAccelLength_offset = 2196;
 	public static final int engineLoadAccelLength_offset_hex = 894;
 	public static final int engineLoadDecelEnleanmentThreshold_offset = 2200;
@@ -1446,7 +1446,7 @@ public class Fields {
 	public static final Field ALTERNATORCONTROL_OFFSET = Field.create("ALTERNATORCONTROL_OFFSET", 2180, FieldType.FLOAT);
 	public static final Field TPSACCELLENGTH = Field.create("TPSACCELLENGTH", 2184, FieldType.INT);
 	public static final Field TPSACCELENRICHMENTTHRESHOLD = Field.create("TPSACCELENRICHMENTTHRESHOLD", 2188, FieldType.FLOAT);
-	public static final Field TPSACCELENRICHMENTMULTIPLIER = Field.create("TPSACCELENRICHMENTMULTIPLIER", 2192, FieldType.FLOAT);
+	public static final Field UNUSED213 = Field.create("UNUSED213", 2192, FieldType.FLOAT);
 	public static final Field ENGINELOADACCELLENGTH = Field.create("ENGINELOADACCELLENGTH", 2196, FieldType.INT);
 	public static final Field ENGINELOADDECELENLEANMENTTHRESHOLD = Field.create("ENGINELOADDECELENLEANMENTTHRESHOLD", 2200, FieldType.FLOAT);
 	public static final Field ENGINELOADDECELENLEANMENTMULTIPLIER = Field.create("ENGINELOADDECELENLEANMENTMULTIPLIER", 2204, FieldType.FLOAT);

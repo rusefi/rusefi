@@ -540,7 +540,6 @@ page = 1
 	alternatorControl_offset		= scalar, F32,	2180,	"value", 1, 0, 0, 1000, 3
 	tpsAccelLength					= scalar, S32,	2184,	"cycles", 1, 0, 1, 200, 0
 	tpsAccelEnrichmentThreshold		= scalar, F32,	2188,	"roc", 1, 0, 0, 200, 3
-	tpsAccelEnrichmentMultiplier		= scalar, F32,	2192,	"coeff", 1, 0, 0, 200, 3
 	engineLoadAccelLength			= scalar, S32,	2196,	"cycles", 1, 0, 1, 200, 0
 	engineLoadDecelEnleanmentThreshold		= scalar, F32,	2200,	"roc", 1, 0, 0, 200, 3
 	engineLoadDecelEnleanmentMultiplier		= scalar, F32,	2204,	"coeff", 1, 0, 0, 200, 3
@@ -1302,11 +1301,12 @@ fileVersion = { 20160702 }
 		subMenu = fuelTableTbl,				"Fuel Table", 0, {fuelAlgorithm != 3}
         subMenu = veTableTbl,           	"VE Table", 0, {fuelAlgorithm == 3}
         subMenu = afrTableTbl,          	"Targe AFR Table", 0, {fuelAlgorithm == 3}
-		subMenu = AccelEnrich,				"Accel/Decel Enrichment/Enleanment"
 		subMenu = iatFuelCorrCurve,			"Intake air temperature fuel Multiplier"
         subMenu = injPhaseTableTbl,         "Injection Phase"           
-        subMenu = tpsTpsAccelTbl, 			"TPS/TPS acceleration Multiplier"
         subMenu = mapAccelTaper,			"Engine Load Acceleration Enrichment Taper"
+		subMenu = std_separator
+		subMenu = AccelEnrich,				"Accel/Decel Enrichment/Enleanment"
+        subMenu = tpsTpsAccelTbl, 			"TPS/TPS acceleration Multiplier"
 		subMenu = std_separator
 		subMenu = ignitionTableTbl,			"Ignition Table"
 		subMenu = ignitionIatCorrTableTbl,	"Ignition Intake Air Temp correction"
@@ -1855,24 +1855,23 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		field = "enable Cylinder Cleanup",				isCylinderCleanupEnabled
 		
 		
-	dialog = EngineLoadAccel, "Engine Load"
+	dialog = EngineLoadAccelPanel, "Engine Load"
 		field = "Length",						engineLoadAccelLength
 		field = "Accel Threshold", 				engineLoadAccelEnrichmentThreshold
 		field = "Accel Multiplier",	 			engineLoadAccelEnrichmentMultiplier
 		field = "Decel Threshold", 				engineLoadDecelEnleanmentThreshold
 		field = "Decel Multiplier",	 			engineLoadDecelEnleanmentMultiplier
 
-	dialog = TpsAccel, "TPS"
+	dialog = TpsAccelPanel, "TPS"
    		field = "Length",						tpsAccelLength
 		field = "Accel Threshold", 				tpsAccelEnrichmentThreshold
-		field = "Accel Multiplier",	 			tpsAccelEnrichmentMultiplier
 		field = "Decel Threshold", 				tpsDecelEnleanmentThreshold
-		field = "Decel Multiplier",	 			tpsDecelEnleanmentMultiplier
+;		field = "Decel Multiplier",	 			tpsDecelEnleanmentMultiplier
 		
 ;			Tuning->AccelEnrichment
 	dialog = AccelEnrich,	"Accel/Decel Enrichment"
-		panel = EngineLoadAccel
-		panel = TpsAccel
+		panel = EngineLoadAccelPanel
+		panel = TpsAccelPanel
 		field = "sucked off wall coefficient",          suckedOffCoef
 		field = "added to wall coef",                   addedToWallCoef
 		

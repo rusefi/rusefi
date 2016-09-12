@@ -92,7 +92,6 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->tpsAccelLength = 12;
 	engineConfiguration->tpsAccelEnrichmentThreshold = 10;
-	engineConfiguration->tpsAccelEnrichmentMultiplier = 0.06;
 
 
 // todo	engineConfiguration->afr.hwChannel = EFI_ADC_3;
