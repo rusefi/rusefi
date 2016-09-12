@@ -281,7 +281,6 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 
 
 	engineConfiguration->tpsAccelEnrichmentThreshold = 40;
-	engineConfiguration->tpsAccelEnrichmentMultiplier = 0.0;
 
 	engineConfiguration->engineLoadAccelEnrichmentThreshold = 5.0;
 	engineConfiguration->engineLoadAccelEnrichmentMultiplier = 1;

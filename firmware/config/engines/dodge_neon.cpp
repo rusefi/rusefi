@@ -499,12 +499,10 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->tpsAccelLength = 12;
 	engineConfiguration->tpsAccelEnrichmentThreshold = 10;
-	engineConfiguration->tpsAccelEnrichmentMultiplier = 0.15;
 
 	engineConfiguration->suckedOffCoef = 0.05;
 	engineConfiguration->addedToWallCoef = 0.40;
 
-	engineConfiguration->tpsAccelEnrichmentMultiplier = 0;
 	engineConfiguration->suckedOffCoef = 0;
 	engineConfiguration->addedToWallCoef = 0;
 

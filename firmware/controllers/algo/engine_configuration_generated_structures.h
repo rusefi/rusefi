@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Aug 28 15:53:30 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Sep 11 20:11:57 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1532,7 +1532,7 @@ typedef struct {
 	/**
 	 * offset 2192
 	 */
-	float tpsAccelEnrichmentMultiplier;
+	float unused213;
 	/**
 	 * offset 2196
 	 */
@@ -1930,4 +1930,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Aug 28 15:53:30 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Sep 11 20:11:57 EDT 2016

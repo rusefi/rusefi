@@ -202,7 +202,7 @@ static void accelInfo() {
 	scheduleMsg(logger, "EL decel th=%f/mult=%f", engineConfiguration->engineLoadDecelEnleanmentThreshold, engineConfiguration->engineLoadDecelEnleanmentMultiplier);
 
 //	scheduleMsg(logger, "TPS accel length=%d", tpsInstance.cb.getSize());
-	scheduleMsg(logger, "TPS accel th=%f/mult=%f", engineConfiguration->tpsAccelEnrichmentThreshold, engineConfiguration->tpsAccelEnrichmentMultiplier);
+	scheduleMsg(logger, "TPS accel th=%f/mult=%f", engineConfiguration->tpsAccelEnrichmentThreshold, -1);
 
 	scheduleMsg(logger, "added to wall=%f/sucked=%f", engineConfiguration->addedToWallCoef, engineConfiguration->suckedOffCoef);
 }
@@ -219,11 +219,6 @@ void setEngineLoadAccelMult(float value) {
 
 static void setTpsAccelThr(float value) {
 	engineConfiguration->tpsAccelEnrichmentThreshold = value;
-	accelInfo();
-}
-
-static void setTpsAccelMult(float value) {
-	engineConfiguration->tpsAccelEnrichmentMultiplier = value;
 	accelInfo();
 }
 
@@ -280,7 +275,7 @@ void initAccelEnrichment(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 	addConsoleActionI("set_tps_accel_len", setTpsAccelLen);
 	addConsoleActionF("set_tps_accel_threshold", setTpsAccelThr);
-	addConsoleActionF("set_tps_accel_multiplier", setTpsAccelMult);
+	//addConsoleActionF("set_tps_accel_multiplier", setTpsAccelMult);
 	addConsoleActionF("set_tps_decel_threshold", setTpsDecelThr);
 	addConsoleActionF("set_tps_decel_multiplier", setTpsDecelMult);
 
