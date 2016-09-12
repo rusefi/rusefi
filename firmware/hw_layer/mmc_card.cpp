@@ -50,7 +50,7 @@ extern board_configuration_s *boardConfiguration;
 
 #define PUSHPULLDELAY 500
 
-static THD_WORKING_AREA(mmcThreadStack,UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
+static THD_WORKING_AREA(mmcThreadStack,3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
 
 /**
  * MMC driver instance.
