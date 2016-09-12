@@ -280,7 +280,9 @@ public class EngineSnifferPanel {
     private UpDownImage createImage(final String name) {
         Color signalBody = Color.lightGray;
         Color signalBorder = Color.blue;
-        if (name.startsWith("t")) {
+        if (name.startsWith("tach") || name.startsWith("dizzy")) {
+            signalBody = Color.yellow;
+        } else if (name.startsWith("t")) {
             // trigger
         } else if (name.startsWith("c")) {
             // coil
@@ -290,6 +292,8 @@ public class EngineSnifferPanel {
         } else if (name.startsWith("i")) {
             // injection
             signalBody = Color.green;
+        } else if (name.startsWith("map")) {
+            signalBody = Color.gray;
         } else {
             signalBody = Color.gray;
         }

@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Sep 11 20:11:57 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Sep 11 22:19:47 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1406,7 +1406,7 @@ typedef struct {
 	 */
 	float tachPulseDuractionMs;
 	/**
-	 * trigger cycle index at which we start tach pulse (performance consideration)
+	 * Trigger cycle index at which we start tach pulse (performance consideration)
 	 * offset 1820
 	 */
 	int tachPulseTriggerIndex;
@@ -1930,4 +1930,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Sep 11 20:11:57 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Sep 11 22:19:47 EDT 2016

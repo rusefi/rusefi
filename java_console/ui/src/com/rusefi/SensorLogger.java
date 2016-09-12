@@ -17,6 +17,7 @@ public class SensorLogger {
     private static Sensor[] SENSORS = {Sensor.RPM,
             Sensor.INT_TEMP,
 
+            Sensor.engineMode,
             Sensor.CLT,
             Sensor.TPS,
             Sensor.VBATT,
@@ -52,6 +53,7 @@ public class SensorLogger {
             Sensor.runningFuel,
             Sensor.injectorLagMs,
 
+            Sensor.vvtPosition,
             Sensor.VSS,
             Sensor.SPEED2RPM,
 

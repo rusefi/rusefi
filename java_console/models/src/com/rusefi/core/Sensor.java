@@ -127,6 +127,7 @@ public enum Sensor {
     SPEED2RPM(SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 232, BackgroundColor.MUD, 0, 5),
     INT_TEMP(SensorCategory.OPERATIONS, FieldType.FLOAT, 244, BackgroundColor.MUD, 0, 5),
     vvtPosition(SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 248, BackgroundColor.MUD, 0, 5),
+    engineMode(SensorCategory.OPERATIONS, FieldType.INT, 252, BackgroundColor.MUD, 0, 5),
 
     INJ_1_2_DELTA("inj 1-2 delta", SensorCategory.SNIFFING),
     INJ_3_4_DELTA("inj 3-4 delta", SensorCategory.SNIFFING),
