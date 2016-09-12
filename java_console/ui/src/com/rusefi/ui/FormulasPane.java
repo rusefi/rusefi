@@ -132,7 +132,7 @@ public class FormulasPane {
                 ") = " + tpsDelta +"$";
 
         double tpsAccelThreshold = ConfigField.getFloatValue(ci, Fields.TPSACCELENRICHMENTTHRESHOLD);
-        double tpsAccelMult = ConfigField.getFloatValue(ci, Fields.TPSACCELENRICHMENTMULTIPLIER);
+        String tpsAccelMult = "fixme";//ConfigField.getFloatValue(ci, Fields.TPSACCELENRICHMENTMULTIPLIER);
         String tpsAccelValue = oneDecimal(Sensor.tpsAccelFuel);
 
         double tpsDecelThreshold = ConfigField.getFloatValue(ci, Fields.TPSDECELENLEANMENTTHRESHOLD);
