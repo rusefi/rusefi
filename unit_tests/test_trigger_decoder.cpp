@@ -909,7 +909,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	assertEqualsM("Queue.size#03", 9, schedulingQueue.size());
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 	assertInjectorUpEvent("07@0", 0, MS2US(7.5), 1);
-	// todo index 1
+	assertInjectorDownEvent("07@1", 1, MS2US(10), 0);
 	assertInjectorUpEvent("07@2", 2, MS2US(17.5), 0);
 	assertInjectorDownEvent("07@3", 3, MS2US(20), 1);
 	assertInjectorUpEvent("07@4", 4, MS2US(27.5), 1);
@@ -982,7 +982,6 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	assertInjectionEvent("#4", &t->injectionEvents.elements[3], 1, 0, 45, false);
 
 	 // todo: what's what? a mix of new something and old something?
-
 	assertEqualsM("qs#5", 10, schedulingQueue.size());
 	assertInjectorDownEvent("8@0", 0, MS2US(5.0), 1);
 	assertInjectorUpEvent("8@1", 1, MS2US(7.5), 1);
@@ -992,8 +991,8 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	assertInjectorUpEvent("8@5", 5, MS2US(27.5), 1);
 	assertInjectorDownEvent("8@6", 6, MS2US(35), 0);
 	assertInjectorUpEvent("8@7", 7, MS2US(37.5), 0);
-	// todo index 8 9
-
+	assertInjectorDownEvent("8@8", 8, MS2US(45), 1);
+	assertInjectorDownEvent("8@9", 9, MS2US(55), 0);
 
 	schedulingQueue.executeAll(timeNow);
 
@@ -1008,9 +1007,6 @@ void testFuelSchedulerBug299smallAndLarge(void) {
 	EXPAND_EngineTestHelper
 	setTestBug299(&eth);
 	assertEqualsM("Lqs#0", 4, schedulingQueue.size());
-
-	FuelSchedule * t;
-
 
 	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, testMafValue);
 	assertEquals(8, engineLoadIndex);
