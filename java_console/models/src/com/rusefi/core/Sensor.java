@@ -19,11 +19,10 @@ public enum Sensor {
      * Please note that these enum names are used to make 'set_mock_XXX_voltage' commands
      */
     CLT("Coolant", SensorCategory.SENSOR_INPUTS, "temperature, C", -40, 300),
-    IAT("Intake Air", SensorCategory.SENSOR_INPUTS, "temperature, C", -40, 150),
     AFR("A/F ratio", SensorCategory.SENSOR_INPUTS, "", 0, 20),
     MAF("MAF", SensorCategory.SENSOR_INPUTS, "Volts", 4),
     MAFR("MAFR", SensorCategory.SENSOR_INPUTS, "kg/hr", 4),
-    TPS("throttle", SensorCategory.SENSOR_INPUTS, "%", 100),
+
     PPS("pedal", SensorCategory.SENSOR_INPUTS, "%", 100),
     knockCount("Knock", SensorCategory.SENSOR_INPUTS, "count", 30),
     KnockValue("Knock level", SensorCategory.SENSOR_INPUTS, "v", 6),
@@ -88,6 +87,9 @@ public enum Sensor {
     FUEL_IAT("F IAT", SensorCategory.FUEL, "", 0, 10),
     FUEL_CLT("F CLT", SensorCategory.FUEL, "", 0, 10),
     FUEL_LAG("F Lag", SensorCategory.FUEL, "", 0, 30),
+
+    IAT(SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 8, BackgroundColor.WHITE, -40, 150, "C"),
+    TPS(SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 12, BackgroundColor.MUD, 0, 100, "%"),
     FUEL_BASE(SensorCategory.FUEL, FieldType.FLOAT, 48, BackgroundColor.MUD, 0, 30, "ms"),
     T_CHARGE(SensorCategory.FUEL, FieldType.FLOAT, 52, BackgroundColor.MUD, 30, 140),
     DWELL(SensorCategory.OPERATIONS, FieldType.FLOAT, 60, BackgroundColor.MUD, 1, 10),
