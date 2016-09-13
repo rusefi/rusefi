@@ -1,6 +1,7 @@
 package com.rusefi.ui;
 
 import com.rusefi.ConfigurationImage;
+import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.Fields;
 import com.rusefi.core.Sensor;
@@ -32,6 +33,16 @@ public class FormulasPane {
 
         centerProxy.add(new JLabel("Waiting for data..."), BorderLayout.CENTER);
 
+        JButton saveImage = UiUtils.createSaveImageButton();
+        saveImage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String fileName = FileLog.getDate() + "_formulas.png";
+
+                UiUtils.saveImageWithPrompt(fileName, centerProxy, centerProxy);
+            }
+        });
+
         final JButton pauseButton = UiUtils.createPauseButton();
         pauseButton.addActionListener(new ActionListener() {
             @Override
@@ -41,6 +52,7 @@ public class FormulasPane {
             }
         });
         JPanel top = new JPanel(new FlowLayout());
+        top.add(saveImage);
         top.add(pauseButton);
         content.add(top, BorderLayout.NORTH);
 

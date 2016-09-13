@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Sep 11 22:19:47 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Sep 12 21:38:15 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1274,6 +1274,7 @@ typedef struct {
 	bool isManualSpinningMode : 1;
 	/**
 	 * This is needed if batched injection and individual injector wiring
+	 * enable two_wire_batch_injection
 	offset 1500 bit 13 */
 	bool twoWireBatchInjection : 1;
 	/**
@@ -1930,4 +1931,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Sep 11 22:19:47 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Sep 12 21:38:15 EDT 2016
