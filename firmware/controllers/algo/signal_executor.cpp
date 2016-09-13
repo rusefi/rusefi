@@ -115,18 +115,18 @@ extern LoggingWithStorage sharedLogger;
 
 // todo: make these macro? kind of a penny optimization if compiler is not smart to inline
 void seTurnPinHigh(InjectorOutputPin *output) {
-	if (output->currentLogicValue == 1) {
-		if (output->cancelNextTurningInjectorOff) {
-			// how comes AutoTest.testFordAspire ends up here?
-		} else {
-		/**
-		 * #299
-		 * this is another kind of overlap which happens in case of a small duty cycle after a large duty cycle
-		 */
-			output->cancelNextTurningInjectorOff = true;
-			return;
-		}
-	}
+//	if (output->currentLogicValue == 1) {
+//		if (output->cancelNextTurningInjectorOff) {
+//			// how comes AutoTest.testFordAspire ends up here?
+//		} else {
+//		/**
+//		 * #299
+//		 * this is another kind of overlap which happens in case of a small duty cycle after a large duty cycle
+//		 */
+//			output->cancelNextTurningInjectorOff = true;
+//			return;
+//		}
+//	}
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 	const char * w = output->currentLogicValue == true ? "err" : "";
 	scheduleMsg(&sharedLogger, "^ %spin=%s eventIndex %d %d", w, output->name,
@@ -134,8 +134,8 @@ void seTurnPinHigh(InjectorOutputPin *output) {
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 #if EFI_UNIT_TEST
-	if (output->currentLogicValue == 1)
-		firmwareError("Already high");
+//	if (output->currentLogicValue == 1)
+//		firmwareError("Already high");
 #endif
 
 	turnPinHigh(output);
@@ -163,8 +163,8 @@ void seTurnPinLow(InjectorOutputPin *output) {
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 #if EFI_UNIT_TEST
-	if (output->currentLogicValue == 0)
-		firmwareError("Already low");
+//	if (output->currentLogicValue == 0)
+//		firmwareError("Already low");
 #endif
 
 	turnPinLow(output);
