@@ -125,6 +125,9 @@ static void applyAlternatorPinState(PwmConfig *state, int stateIndex) {
 	efiAssertVoid(state->multiWave.waveCount == 1, "invalid idle waveCount");
 	OutputPin *output = state->outputPins[0];
 	int value = state->multiWave.waves[0].pinStates[stateIndex];
+	/**
+	 * 'engine->isAlternatorControlEnabled' would be false is RPM is too low
+	 */
 	if (!value || engine->isAlternatorControlEnabled)
 		output->setValue(value);
 }

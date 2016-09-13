@@ -139,7 +139,7 @@ public:
 
 void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brainPin, pin_output_mode_e *outputMode);
 
-void seTurnPinHigh(NamedOutputPin *output);
+void seTurnPinHigh(InjectorOutputPin *output);
 void seTurnPinLow(InjectorOutputPin *output);
 void turnPinHigh(NamedOutputPin *output);
 void turnPinLow(NamedOutputPin *output);
