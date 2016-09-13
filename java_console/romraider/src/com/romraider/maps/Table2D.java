@@ -111,16 +111,12 @@ public class Table2D extends TableWithData {
     }
 
     @Override
-    public void populateTable(byte[] input, int romRamOffset) throws ArrayIndexOutOfBoundsException, IndexOutOfBoundsException {
+    public void populateTable(byte[] input, int romRamOffset) throws IndexOutOfBoundsException {
         centerLayout.setRows(2);
         centerLayout.setColumns(this.getDataSize());
 
-        try {
-            axis.populateTable(input, romRamOffset);
-            super.populateTable(input, romRamOffset);
-        } catch (ArrayIndexOutOfBoundsException ex) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        axis.populateTable(input, romRamOffset);
+        super.populateTable(input, romRamOffset);
 
         // add to table
         for (int i = 0; i < this.getDataSize(); i++) {
