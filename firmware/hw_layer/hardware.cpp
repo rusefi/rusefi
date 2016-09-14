@@ -228,10 +228,13 @@ void applyNewHardwareSettings(void) {
         stopInjectionPins();
 	stopIgnitionPins();
 
+	if (engineConfiguration->bc.is_enabled_spi_1 != activeConfiguration.bc.is_enabled_spi_1)
+		stopSpi(SPI_DEVICE_1);
+
 	if (engineConfiguration->bc.is_enabled_spi_2 != activeConfiguration.bc.is_enabled_spi_2)
 		stopSpi(SPI_DEVICE_2);
 
-	if (engineConfiguration->bc.is_enabled_spi_2 != activeConfiguration.bc.is_enabled_spi_2)
+	if (engineConfiguration->bc.is_enabled_spi_3 != activeConfiguration.bc.is_enabled_spi_3)
 		stopSpi(SPI_DEVICE_3);
 
 
