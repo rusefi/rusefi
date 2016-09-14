@@ -51,6 +51,8 @@
 EXTERN_ENGINE
 ;
 extern bool hasFirmwareErrorFlag;
+extern engine_configuration_s activeConfiguration;
+extern engine_pins_s enginePins;
 
 static Mutex spiMtx;
 
@@ -201,12 +203,78 @@ void turnOnHardware(Logging *sharedLogger) {
 #endif /* EFI_SHAFT_POSITION_INPUT */
 }
 
+static void unregisterPin(brain_pin_e currentPin, brain_pin_e prevPin) {
+	if (currentPin != prevPin) {
+		unmarkPin(prevPin);
+	}
+}
+
+void stopSpi(spi_device_e device) {
+	if (!isSpiInitialized[device])
+		return; // not turned on
+	isSpiInitialized[device] = false;
+	unmarkPin(getSckPin(device));
+	unmarkPin(getMisoPin(device));
+	unmarkPin(getMosiPin(device));
+}
+
 void applyNewHardwareSettings(void) {
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	applyNewTriggerInputPins();
 #endif /* EFI_SHAFT_POSITION_INPUT */
-	stopInjectionPins();
+	
+        // all 'stop' methods need to go before we begin starting pins
+       
+        stopInjectionPins();
 	stopIgnitionPins();
+
+	if (engineConfiguration->bc.is_enabled_spi_2 != activeConfiguration.bc.is_enabled_spi_2)
+		stopSpi(SPI_DEVICE_2);
+
+	if (engineConfiguration->bc.is_enabled_spi_2 != activeConfiguration.bc.is_enabled_spi_2)
+		stopSpi(SPI_DEVICE_3);
+
+
+	{
+		brain_pin_e currentPin = activeConfiguration.bc.fuelPumpPin;
+		if (engineConfiguration->bc.fuelPumpPin != currentPin) {
+			unregister(currentPin, &enginePins.fuelPumpRelay);
+		}
+	}
+	unregisterPin(engineConfiguration->bc.HD44780_rs, activeConfiguration.bc.HD44780_rs);
+	unregisterPin(engineConfiguration->bc.HD44780_e, activeConfiguration.bc.HD44780_e);
+	unregisterPin(engineConfiguration->bc.HD44780_db4, activeConfiguration.bc.HD44780_db4);
+	unregisterPin(engineConfiguration->bc.HD44780_db5, activeConfiguration.bc.HD44780_db5);
+	unregisterPin(engineConfiguration->bc.HD44780_db6, activeConfiguration.bc.HD44780_db6);
+	unregisterPin(engineConfiguration->bc.HD44780_db7, activeConfiguration.bc.HD44780_db7);
+
+	unregisterPin(engineConfiguration->bc.clutchUpPin, activeConfiguration.bc.clutchUpPin);
+
+
+	{
+		brain_pin_e currentPin = activeConfiguration.bc.fanPin;
+		if (engineConfiguration->bc.fanPin != currentPin) {
+			unregister(currentPin, &enginePins.fanRelay);
+		}
+	}
+	{
+		brain_pin_e currentPin = activeConfiguration.bc.idle.solenoidPin;
+		if (engineConfiguration->bc.idle.solenoidPin != currentPin) {
+			unregister(currentPin, &enginePins.idleSolenoidPin);
+		}
+	}
+	{
+		brain_pin_e currentPin = activeConfiguration.bc.alternatorControlPin;
+		if (engineConfiguration->bc.alternatorControlPin != currentPin) {
+			unregister(currentPin, &enginePins.alternatorPin);
+		}
+	}
+	{
+		brain_pin_e currentPin = activeConfiguration.bc.mainRelayPin;
+		if (engineConfiguration->bc.mainRelayPin != currentPin) {
+			unregister(currentPin, &enginePins.mainRelay);
+		}
+	}
 
 	startInjectionPins();
 	startIgnitionPins();
