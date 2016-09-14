@@ -40,9 +40,9 @@
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 
 static NamedOutputPin intHold(HIP_NAME);
-static OutputPin hipCs;
 
 extern uint32_t lastExecutionCount;
+extern engine_pins_s enginePins;
 
 uint32_t hipLastExecutionCount;
 
@@ -388,11 +388,11 @@ static msg_t hipThread(void *arg) {
 	chRegSetThreadName("hip9011 init");
 
 	// some time to let the hardware start
-	hipCs.setValue(true);
+	enginePins.hipCs.setValue(true);
 	chThdSleepMilliseconds(100);
-	hipCs.setValue(false);
+	enginePins.hipCs.setValue(false);
 	chThdSleepMilliseconds(100);
-	hipCs.setValue(true);
+	enginePins.hipCs.setValue(true);
 
 	while (true) {
 		chThdSleepMilliseconds(100);
@@ -424,7 +424,7 @@ void initHip9011(Logging *sharedLogger) {
 
 	outputPinRegisterExt2("hip int/hold", &intHold, boardConfiguration->hip9011IntHoldPin,
 			&boardConfiguration->hip9011IntHoldPinMode);
-	outputPinRegisterExt2("hip CS", &hipCs, boardConfiguration->hip9011CsPin,
+	outputPinRegisterExt2("hip CS", &enginePins.hipCs, boardConfiguration->hip9011CsPin,
 			&boardConfiguration->hip9011CsPinMode);
 
 	scheduleMsg(logger, "Starting HIP9011/TPIC8101 driver");

@@ -59,7 +59,7 @@ static Mutex spiMtx;
 int maxNesting = 0;
 
 #if HAL_USE_SPI || defined(__DOXYGEN__)
-static bool isSpiInitialized[5] = { false, false, false, false, false };
+extern bool isSpiInitialized[5];
 
 // todo: use larger value if LSE is available, make this a boardConfiguration option
 int lseTimeout = 0;
@@ -238,12 +238,7 @@ void applyNewHardwareSettings(void) {
 		stopSpi(SPI_DEVICE_3);
 
 
-	{
-		brain_pin_e currentPin = activeConfiguration.bc.fuelPumpPin;
-		if (engineConfiguration->bc.fuelPumpPin != currentPin) {
-			unregister(currentPin, &enginePins.fuelPumpRelay);
-		}
-	}
+
 	unregisterPin(engineConfiguration->bc.HD44780_rs, activeConfiguration.bc.HD44780_rs);
 	unregisterPin(engineConfiguration->bc.HD44780_e, activeConfiguration.bc.HD44780_e);
 	unregisterPin(engineConfiguration->bc.HD44780_db4, activeConfiguration.bc.HD44780_db4);
@@ -254,48 +249,36 @@ void applyNewHardwareSettings(void) {
 	unregisterPin(engineConfiguration->bc.clutchUpPin, activeConfiguration.bc.clutchUpPin);
 
 
-	{
-		brain_pin_e currentPin = activeConfiguration.bc.fanPin;
-		if (engineConfiguration->bc.fanPin != currentPin) {
-			unregister(currentPin, &enginePins.fanRelay);
-		}
-	}
-	{
-		brain_pin_e currentPin = activeConfiguration.bc.malfunctionIndicatorPin;
-		if (engineConfiguration->bc.malfunctionIndicatorPin != currentPin) {
-			unregister(currentPin, &enginePins.checkEnginePin);
-		}
-	}
-	{
-		brain_pin_e currentPin = activeConfiguration.dizzySparkOutputPin;
-		if (engineConfiguration->dizzySparkOutputPin != currentPin) {
-			unregister(currentPin, &enginePins.dizzyOutput);
-		}
-	}
-	{
-		brain_pin_e currentPin = activeConfiguration.bc.tachOutputPin;
-		if (engineConfiguration->bc.tachOutputPin != currentPin) {
-			unregister(currentPin, &enginePins.tachOut);
-		}
-	}
-	{
-		brain_pin_e currentPin = activeConfiguration.bc.idle.solenoidPin;
-		if (engineConfiguration->bc.idle.solenoidPin != currentPin) {
-			unregister(currentPin, &enginePins.idleSolenoidPin);
-		}
-	}
-	{
-		brain_pin_e currentPin = activeConfiguration.bc.alternatorControlPin;
-		if (engineConfiguration->bc.alternatorControlPin != currentPin) {
-			unregister(currentPin, &enginePins.alternatorPin);
-		}
-	}
-	{
-		brain_pin_e currentPin = activeConfiguration.bc.mainRelayPin;
-		if (engineConfiguration->bc.mainRelayPin != currentPin) {
-			unregister(currentPin, &enginePins.mainRelay);
-		}
-	}
+	unregisterOutput(activeConfiguration.bc.fuelPumpPin, engineConfiguration->bc.fuelPumpPin,
+			&enginePins.fuelPumpRelay);
+	unregisterOutput(activeConfiguration.bc.fanPin, engineConfiguration->bc.fanPin, &enginePins.fanRelay);
+	unregisterOutput(activeConfiguration.bc.hip9011CsPin,
+			engineConfiguration->bc.hip9011CsPin, &enginePins.hipCs);
+	unregisterOutput(activeConfiguration.bc.triggerErrorPin,
+		engineConfiguration->bc.triggerErrorPin, &enginePins.triggerDecoderErrorPin);
+	unregisterOutput(activeConfiguration.bc.sdCardCsPin, engineConfiguration->bc.sdCardCsPin,
+			&enginePins.sdCsPin);
+	unregisterOutput(activeConfiguration.bc.etbDirectionPin1,
+			engineConfiguration->bc.etbDirectionPin1, &enginePins.etbOutput1);
+	unregisterOutput(activeConfiguration.bc.etbDirectionPin2,
+			engineConfiguration->bc.etbDirectionPin2, &enginePins.etbOutput2);
+	unregisterOutput(activeConfiguration.bc.malfunctionIndicatorPin,
+			engineConfiguration->bc.malfunctionIndicatorPin, &enginePins.checkEnginePin);
+	unregisterOutput(activeConfiguration.dizzySparkOutputPin,
+			engineConfiguration->dizzySparkOutputPin, &enginePins.dizzyOutput);
+	unregisterOutput(activeConfiguration.bc.tachOutputPin,
+			engineConfiguration->bc.tachOutputPin, &enginePins.tachOut);
+	unregisterOutput(activeConfiguration.bc.idle.solenoidPin,
+			engineConfiguration->bc.idle.solenoidPin, &enginePins.idleSolenoidPin);
+
+	for (int i = 0;i < LE_COMMAND_COUNT;i++)
+		unregisterOutput(activeConfiguration.bc.fsioPins[i],
+				engineConfiguration->bc.fsioPins[i], &enginePins.fsioOutputs[i]);
+
+	unregisterOutput(activeConfiguration.bc.alternatorControlPin,
+			engineConfiguration->bc.alternatorControlPin, &enginePins.alternatorPin);
+	unregisterOutput(activeConfiguration.bc.mainRelayPin,
+			engineConfiguration->bc.mainRelayPin, &enginePins.mainRelay);
 
 	startInjectionPins();
 	startIgnitionPins();

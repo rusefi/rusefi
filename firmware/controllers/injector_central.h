@@ -24,7 +24,7 @@ void assertCylinderId(int cylinderId, const char *msg);
 
 void stopInjectionPins(void);
 void startInjectionPins(void);
-void unregister(brain_pin_e currentPin, OutputPin *output);
+void unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin, OutputPin *output);
 
 void stopIgnitionPins(void);
 void startIgnitionPins(void);

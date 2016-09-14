@@ -46,10 +46,10 @@
 #include "sensor_chart.h"
 #endif
 
-static OutputPin triggerDecoderErrorPin;
 
 EXTERN_ENGINE
 ;
+extern engine_pins_s enginePins;
 
 static cyclic_buffer<int> errorDetection;
 static bool isInitializingTrigger = false; // #286 miata NA config - sync error on startup
@@ -258,7 +258,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 					|| currentCycle.eventCount[1] != TRIGGER_SHAPE(expectedEventCount[1])
 					|| currentCycle.eventCount[2] != TRIGGER_SHAPE(expectedEventCount[2]);
 
-			triggerDecoderErrorPin.setValue(isDecodingError);
+			enginePins.triggerDecoderErrorPin.setValue(isDecodingError);
 			if (isDecodingError) {
 				lastDecodingErrorTime = getTimeNowNt();
 				someSortOfTriggerError = true;
@@ -659,7 +659,7 @@ void initTriggerDecoderLogger(Logging *sharedLogger) {
 
 void initTriggerDecoder(void) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
-	outputPinRegisterExt2("trg_err", &triggerDecoderErrorPin, boardConfiguration->triggerErrorPin,
+	outputPinRegisterExt2("trg_err", &enginePins.triggerDecoderErrorPin, boardConfiguration->triggerErrorPin,
 			&boardConfiguration->triggerErrorPinMode);
 #endif
 }
