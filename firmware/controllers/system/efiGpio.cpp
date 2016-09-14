@@ -32,6 +32,7 @@ InjectorOutputPin::InjectorOutputPin() : NamedOutputPin() {
 
 engine_pins_s::engine_pins_s() {
 	dizzyOutput.name = DIZZY_NAME;
+	tachOut.name = TACH_NAME;
 }
 
 void InjectorOutputPin::reset() {

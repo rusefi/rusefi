@@ -519,12 +519,11 @@ static THD_WORKING_AREA(lcdThreadStack, UTILITY_THREAD_STACK_SIZE);
 static THD_WORKING_AREA(blinkingStack, 128);
 
 static OutputPin communicationPin;
-OutputPin checkEnginePin;
 OutputPin warningPin;
 OutputPin runningPin;
 extern engine_pins_s enginePins;
 
-static OutputPin *leds[] = { &warningPin, &runningPin, &enginePins.errorLedPin, &communicationPin, &checkEnginePin };
+static OutputPin *leds[] = { &warningPin, &runningPin, &enginePins.errorLedPin, &communicationPin, &enginePins.checkEnginePin };
 
 extern pin_output_mode_e DEFAULT_OUTPUT;
 

@@ -15,11 +15,11 @@
 
 EXTERN_ENGINE;
 
-static NamedOutputPin tachOut(TACH_NAME);
 static scheduling_s tachTurnSignalOff;
+extern engine_pins_s enginePins;
 
 static void turnTachPinLow(void) {
-	turnPinLow(&tachOut);
+	turnPinLow(&enginePins.tachOut);
 }
 
 static void tachSignalCallback(trigger_event_e ckpSignalType,
@@ -27,7 +27,7 @@ static void tachSignalCallback(trigger_event_e ckpSignalType,
 	if (index != engineConfiguration->tachPulseTriggerIndex) {
 		return;
 	}
-	turnPinHigh(&tachOut);
+	turnPinHigh(&enginePins.tachOut);
 	scheduleTask("tach off", &tachTurnSignalOff, (int)MS2US(engineConfiguration->tachPulseDuractionMs), (schfunc_t) &turnTachPinLow, NULL);
 }
 
@@ -36,7 +36,7 @@ void initTachometer(void) {
 		return;
 	}
 
-	outputPinRegisterExt2("analog tach output", &tachOut, boardConfiguration->tachOutputPin, &boardConfiguration->tachOutputPinMode);
+	outputPinRegisterExt2("analog tach output", &enginePins.tachOut, boardConfiguration->tachOutputPin, &boardConfiguration->tachOutputPinMode);
 
 	addTriggerEventListener(tachSignalCallback, "tach", engine);
 

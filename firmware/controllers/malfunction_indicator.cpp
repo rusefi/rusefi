@@ -38,15 +38,15 @@
 #define MFI_BLINK_SEPARATOR 400
 #define MFI_CHECKENGINE_LIGHT 10000
 
-static THD_WORKING_AREA(mfiThreadStack, UTILITY_THREAD_STACK_SIZE);	// declare thread
+extern engine_pins_s enginePins;
 
-extern OutputPin checkEnginePin;
+static THD_WORKING_AREA(mfiThreadStack, UTILITY_THREAD_STACK_SIZE);	// declare thread
 
 static void blink_digits(int digit, int duration) {
 	for (int iter = 0; iter < digit; iter++) {
-		checkEnginePin.setValue(0);
+		enginePins.checkEnginePin.setValue(0);
 		chThdSleepMilliseconds(duration);
-		checkEnginePin.setValue(1);
+		enginePins.checkEnginePin.setValue(1);
 		chThdSleepMilliseconds(MFI_BLINK_SEPARATOR);
 	}
 }

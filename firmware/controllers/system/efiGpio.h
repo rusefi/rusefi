@@ -67,6 +67,8 @@ public:
 	OutputPin errorLedPin;
 	OutputPin idleSolenoidPin;
 	OutputPin alternatorPin;
+	OutputPin checkEnginePin;
+	NamedOutputPin tachOut;
 
 
 	InjectorOutputPin injectors[INJECTION_PIN_COUNT];
