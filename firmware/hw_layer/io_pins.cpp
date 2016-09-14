@@ -25,7 +25,6 @@ extern board_configuration_s *boardConfiguration;
 
 static LoggingWithStorage logger("io_pins");
 
-static OutputPin sdCsPin;
 
 extern engine_pins_s enginePins;
 
@@ -119,7 +118,7 @@ void initOutputPins(void) {
 //	outputPinRegister("spi CS3", SPI_CS_3, SPI_CS3_PORT, SPI_CS3_PIN);
 //	outputPinRegister("spi CS4", SPI_CS_4, SPI_CS4_PORT, SPI_CS4_PIN);
 #if HAL_USE_SPI || defined(__DOXYGEN__)
-	outputPinRegisterExt2("spi CS5", &sdCsPin, boardConfiguration->sdCardCsPin, &DEFAULT_OUTPUT);
+	outputPinRegisterExt2("spi CS5", &enginePins.sdCsPin, boardConfiguration->sdCardCsPin, &DEFAULT_OUTPUT);
 #endif
 
 	// todo: should we move this code closer to the fuel pump logic?

@@ -69,6 +69,12 @@ public:
 	OutputPin alternatorPin;
 	OutputPin checkEnginePin;
 	NamedOutputPin tachOut;
+	OutputPin etbOutput1;
+	OutputPin etbOutput2;
+	OutputPin fsioOutputs[LE_COMMAND_COUNT];
+	OutputPin triggerDecoderErrorPin;
+	OutputPin hipCs;
+	OutputPin sdCsPin;
 
 
 	InjectorOutputPin injectors[INJECTION_PIN_COUNT];

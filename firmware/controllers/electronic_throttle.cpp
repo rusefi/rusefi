@@ -47,9 +47,7 @@ static THD_WORKING_AREA(etbTreadStack, UTILITY_THREAD_STACK_SIZE);
  * @brief Pulse-Width Modulation state
  */
 static SimplePwm etbPwmUp CCM_OPTIONAL;
-static OutputPin output1 CCM_OPTIONAL;
 static SimplePwm etbPwmDown CCM_OPTIONAL;
-static OutputPin output2 CCM_OPTIONAL;
 
 static OutputPin outputDirectionOpen CCM_OPTIONAL;
 static OutputPin outputDirectionClose CCM_OPTIONAL;
@@ -62,6 +60,8 @@ static float prevTps;
 static float currentEtbDuty;
 
 EXTERN_ENGINE;
+
+extern engine_pins_s enginePins;
 
 static bool wasEtbBraking = false;
 
@@ -156,13 +156,13 @@ void initElectronicThrottle(void) {
 	// this line used for PWM
 	startSimplePwmExt(&etbPwmUp, "etb1",
 			boardConfiguration->etbControlPin1,
-			&output1,
+			&enginePins.etbOutput1,
 			ETB_FREQ,
 			0.80,
 			applyPinState);
 	startSimplePwmExt(&etbPwmDown, "etb2",
 			boardConfiguration->etbControlPin2,
-			&output2,
+			&enginePins.etbOutput2,
 			ETB_FREQ,
 			0.80,
 			applyPinState);

@@ -225,8 +225,6 @@ static const char *getGpioPinName(int index) {
 	return NULL;
 }
 
-static OutputPin fsioOutputs[LE_COMMAND_COUNT];
-
 static void handleFsio(Engine *engine, int index) {
 	if (boardConfiguration->fsioPins[index] == GPIO_UNASSIGNED)
 		return;
@@ -240,9 +238,9 @@ static void handleFsio(Engine *engine, int index) {
 		fsioPwm[index].setSimplePwmDutyCycle(fvalue);
 	} else {
 		int value = (int) fvalue;
-		if (value != fsioOutputs[index].getLogicValue()) {
+		if (value != enginePins.fsioOutputs[index].getLogicValue()) {
 			//		scheduleMsg(logger, "setting %s %s", getIo_pin_e(pin), boolToString(value));
-			fsioOutputs[index].setValue(value);
+			enginePins.fsioOutputs[index].setValue(value);
 		}
 	}
 }
@@ -460,9 +458,9 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 		if (brainPin != GPIO_UNASSIGNED) {
 			int frequency = boardConfiguration->fsioFrequency[i];
 			if (frequency == 0) {
-				outputPinRegisterExt2(getGpioPinName(i), &fsioOutputs[i], boardConfiguration->fsioPins[i], &defa);
+				outputPinRegisterExt2(getGpioPinName(i), &enginePins.fsioOutputs[i], boardConfiguration->fsioPins[i], &defa);
 			} else {
-				startSimplePwmExt(&fsioPwm[i], "FSIOpwm", brainPin, &fsioOutputs[i], frequency, 0.5f, applyPinState);
+				startSimplePwmExt(&fsioPwm[i], "FSIOpwm", brainPin, &enginePins.fsioOutputs[i], frequency, 0.5f, applyPinState);
 			}
 		}
 	}
