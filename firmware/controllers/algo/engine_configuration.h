@@ -53,6 +53,7 @@ void setWholeTimingTable(angle_t value DECLARE_ENGINE_PARAMETER_S);
 void setConstantDwell(floatms_t dwellMs DECLARE_ENGINE_PARAMETER_S);
 void printFloatArray(const char *prefix, float array[], int size);
 
+void rememberCurrentConfiguration(void);
 void incrementGlobalConfigurationVersion(void);
 int getGlobalConfigurationVersion(void);
 

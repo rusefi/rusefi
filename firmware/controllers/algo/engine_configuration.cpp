@@ -33,7 +33,8 @@
 #include "electronic_throttle.h"
 #include "idle_thread.h"
 #include "alternatorController.h"
-#endif
+#include "hardware.h"
+#endif /* EFI_PROD_CODE */
 
 #include "hip9011_lookup.h"
 
@@ -111,6 +112,21 @@ static fuel_table_t alphaNfuel = {
 static volatile int globalConfigurationVersion = 0;
 
 /**
+ * Current engine configuration. On firmware start we assign empty configuration, then
+ * we copy actual configuration after reading settings.
+ * This is useful to compare old and new configurations in order to apply new settings.
+ *
+ * todo: place this field next to 'engineConfiguration'?
+ */
+engine_configuration_s activeConfiguration;
+
+extern engine_configuration_s *engineConfiguration;
+
+void rememberCurrentConfiguration(void) {
+	memcpy(&activeConfiguration, engineConfiguration, sizeof(engine_configuration_s));
+}
+
+/**
  * This counter is incremented every time user adjusts ECU parameters online (either via dev console or other
  * tuning software)
  */
@@ -118,8 +134,16 @@ int getGlobalConfigurationVersion(void) {
 	return globalConfigurationVersion;
 }
 
+/**
+ * this is the top-level method which should be called in case of any changes to engine configuration
+ * online tuning of most values in the maps does not count as configuration change, but 'Burn' command does
+ */
 void incrementGlobalConfigurationVersion(void) {
 	globalConfigurationVersion++;
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	applyNewHardwareSettings();
+#endif /* EFI_PROD_CODE */
+	rememberCurrentConfiguration();
 }
 
 /**
