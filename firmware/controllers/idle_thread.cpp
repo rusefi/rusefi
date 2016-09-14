@@ -40,11 +40,11 @@ static THD_WORKING_AREA(ivThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static Logging *logger;
 extern TunerStudioOutputChannels tsOutputChannels;
+extern engine_pins_s enginePins;
 EXTERN_ENGINE
 ;
 
 // todo: extract interface for idle valve hardware, with solenoid and stepper implementations?
-static OutputPin idleSolenoidPin;
 static SimplePwm idleSolenoid;
 
 static StepperMotor iacMotor;
@@ -290,7 +290,7 @@ static void initIdleHardware() {
 		/**
 		 * Start PWM for idleValvePin
 		 */
-		startSimplePwmExt(&idleSolenoid, "Idle Valve", boardConfiguration->idle.solenoidPin, &idleSolenoidPin,
+		startSimplePwmExt(&idleSolenoid, "Idle Valve", boardConfiguration->idle.solenoidPin, &enginePins.idleSolenoidPin,
 				boardConfiguration->idle.solenoidFrequency, boardConfiguration->manIdlePosition / 100,
 				applyIdleSolenoidPinState);
 	}

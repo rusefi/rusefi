@@ -65,6 +65,9 @@ public:
 	OutputPin o2heater;
 //	OutputPin alternatorField;
 	OutputPin errorLedPin;
+	OutputPin idleSolenoidPin;
+	OutputPin alternatorPin;
+
 
 	InjectorOutputPin injectors[INJECTION_PIN_COUNT];
 	NamedOutputPin coils[IGNITION_PIN_COUNT];

@@ -26,9 +26,9 @@ EXTERN_ENGINE
 static Logging *logger;
 
 extern pin_output_mode_e DEFAULT_OUTPUT;
+extern engine_pins_s enginePins;
 
 static SimplePwm alternatorControl;
-static OutputPin alternatorPin;
 static pid_s *altPidS = &persistentState.persistentConfiguration.engineConfiguration.alternatorControl;
 static Pid altPid(altPidS, 1, 90);
 
@@ -71,7 +71,7 @@ static msg_t AltCtrlThread(int param) {
 		if (boardConfiguration->onOffAlternatorLogic) {
 			float h = 0.1;
 			bool newState = (vBatt < targetVoltage - h) || (currentPlainOnOffState && vBatt < targetVoltage);
-			alternatorPin.setValue(newState);
+			enginePins.alternatorPin.setValue(newState);
 			currentPlainOnOffState = newState;
 			if (engineConfiguration->debugMode == ALTERNATOR) {
 				tsOutputChannels.debugIntField1 = newState;
@@ -151,12 +151,12 @@ void initAlternatorCtrl(Logging *sharedLogger) {
 		return;
 
 	if (boardConfiguration->onOffAlternatorLogic) {
-		outputPinRegisterExt2("on/off alternator", &alternatorPin, boardConfiguration->alternatorControlPin,
+		outputPinRegisterExt2("on/off alternator", &enginePins.alternatorPin, boardConfiguration->alternatorControlPin,
 				&DEFAULT_OUTPUT);
 
 	} else {
 		startSimplePwmExt(&alternatorControl, "Alternator control", boardConfiguration->alternatorControlPin,
-				&alternatorPin,
+				&enginePins.alternatorPin,
 				engineConfiguration->alternatorPwmFrequency, 0.1, applyAlternatorPinState);
 	}
 	chThdCreateStatic(alternatorControlThreadStack, sizeof(alternatorControlThreadStack), LOWPRIO,

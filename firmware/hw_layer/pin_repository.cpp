@@ -61,6 +61,7 @@ const char *portname(ioportid_t GPIOx) {
 }
 
 static int getPortIndex(ioportid_t port) {
+	efiAssert(port != NULL, "null port", -1);
 	if (port == GPIOA)
 		return 0;
 	if (port == GPIOB)
@@ -79,7 +80,7 @@ static int getPortIndex(ioportid_t port) {
 	if (port == GPIOH)
 		return 6;
 #endif /* defined(STM32F4XX) */
-	firmwareError("portindex");
+	firmwareError("unknown port");
 	return -1;
 }
 
