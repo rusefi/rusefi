@@ -9,6 +9,5 @@
 #define RUSEFI_H_
 
 void runRusEfi(void);
-void applyNewConfiguration(void);
 
 #endif /* RUSEFI_H_ */

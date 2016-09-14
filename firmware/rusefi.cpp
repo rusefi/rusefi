@@ -135,6 +135,8 @@ bool hasFirmwareErrorFlag = false;
 
 static virtual_timer_t resetTimer;
 
+extern engine_configuration_s activeConfiguration;
+
 EXTERN_ENGINE
 ;
 
@@ -156,24 +158,6 @@ static void scheduleReboot(void) {
 	lockAnyContext();
 	chVTSetI(&resetTimer, MS2ST(5000), (vtfunc_t) rebootNow, NULL);
 	unlockAnyContext();
-}
-
-/**
- * Current engine configuration. On firmware start we assign empty configuration, then
- * we copy actual configuration after reading settings.
- * This is useful to compare old and new configurations in order to apply new settings.
- *
- * todo: place this field next to 'engineConfiguration'?
- */
-engine_configuration_s activeConfiguration;
-
-static void rememberCurrentConfiguration(void) {
-	memcpy(&activeConfiguration, engineConfiguration, sizeof(engine_configuration_s));
-}
-
-void applyNewConfiguration(void) {
-	applyNewHardwareSettings();
-	rememberCurrentConfiguration();
 }
 
 void runRusEfi(void) {
