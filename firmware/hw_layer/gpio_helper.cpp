@@ -31,7 +31,7 @@
  * @brief Initialize the hardware output pin while also assigning it a logical name
  */
 void initOutputPinExt(const char *msg, OutputPin *outputPin, ioportid_t port, uint32_t pinNumber, iomode_t mode) {
-	if (outputPin->port != NULL) {
+	if (outputPin->port != NULL && (outputPin->port != port || outputPin->pin != pinNumber)) {
 		/**
 		 * here we check if another physical pin is already assigned to this logical output
 		 */
