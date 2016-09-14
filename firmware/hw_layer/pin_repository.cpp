@@ -225,6 +225,9 @@ void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t m
 }
 
 void unmarkPin(brain_pin_e brainPin) {
+	if (brainPin == GPIO_UNASSIGNED) {
+		return;
+	}
 	ioportid_t port = getHwPort(brainPin);
 	ioportmask_t pin = getHwPin(brainPin);
 

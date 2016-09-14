@@ -258,6 +258,24 @@ void applyNewHardwareSettings(void) {
 		}
 	}
 	{
+		brain_pin_e currentPin = activeConfiguration.bc.malfunctionIndicatorPin;
+		if (engineConfiguration->bc.malfunctionIndicatorPin != currentPin) {
+			unregister(currentPin, &enginePins.checkEnginePin);
+		}
+	}
+	{
+		brain_pin_e currentPin = activeConfiguration.dizzySparkOutputPin;
+		if (engineConfiguration->dizzySparkOutputPin != currentPin) {
+			unregister(currentPin, &enginePins.dizzyOutput);
+		}
+	}
+	{
+		brain_pin_e currentPin = activeConfiguration.bc.tachOutputPin;
+		if (engineConfiguration->bc.tachOutputPin != currentPin) {
+			unregister(currentPin, &enginePins.tachOut);
+		}
+	}
+	{
 		brain_pin_e currentPin = activeConfiguration.bc.idle.solenoidPin;
 		if (engineConfiguration->bc.idle.solenoidPin != currentPin) {
 			unregister(currentPin, &enginePins.idleSolenoidPin);
