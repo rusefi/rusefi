@@ -15,14 +15,6 @@
 #include "event_registry.h"
 #include "engine.h"
 
-class MainTriggerCallback {
-public:
-	void init(Engine *engine);
-
-	Engine *engine;
-
-};
-
 void initMainEventListener(Logging *sharedLogger, Engine *engine);
 void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECLARE_ENGINE_PARAMETER_S);
 
