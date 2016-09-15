@@ -19,8 +19,6 @@ void setAlgorithm(engine_load_mode_e algo DECLARE_ENGINE_PARAMETER_S);
 void findTriggerPosition(
 		event_trigger_position_s *position, angle_t angleOffset DECLARE_ENGINE_PARAMETER_S);
 
-int isInjectionEnabled(engine_configuration_s *engineConfiguration);
-
 void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
 		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S);
 
