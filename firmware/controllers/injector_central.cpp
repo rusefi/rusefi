@@ -39,7 +39,7 @@ EXTERN_ENGINE
 static Logging * logger;
 static bool isRunningBench = false;
 
-static int is_injector_enabled[MAX_INJECTOR_COUNT];
+static int is_injector_enabled[INJECTION_PIN_COUNT];
 
 extern engine_pins_s enginePins;
 
