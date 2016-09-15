@@ -54,7 +54,7 @@ void setConstantDwell(floatms_t dwellMs DECLARE_ENGINE_PARAMETER_S);
 void printFloatArray(const char *prefix, float array[], int size);
 
 void rememberCurrentConfiguration(void);
-void incrementGlobalConfigurationVersion(void);
+void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_F);
 int getGlobalConfigurationVersion(void);
 
 void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration);

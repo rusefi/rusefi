@@ -624,7 +624,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	assertEqualsM("CLT", 70, engine->engineState.clt);
 
 	engineConfiguration->trigger.type = TT_ONE;
-	incrementGlobalConfigurationVersion();
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
 
 	eth->applyTriggerShape();
 
