@@ -66,7 +66,6 @@ static LocalVersionHolder triggerVersion;
 static const char *prevOutputName = NULL;
 
 extern engine_pins_s enginePins;
-static MainTriggerCallback mainTriggerCallbackInstance;
 
 /**
  * In order to archive higher event precision, we are using a hybrid approach
@@ -607,11 +606,6 @@ static void showTriggerHistogram(void) {
 #endif
 }
 
-void MainTriggerCallback::init(Engine *engine) {
-	efiAssertVoid(engine!=NULL, "engine NULL");
-	this->engine = engine;
-}
-
 static void showMainInfo(Engine *engine) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	int rpm = engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F);
@@ -624,8 +618,6 @@ static void showMainInfo(Engine *engine) {
 void initMainEventListener(Logging *sharedLogger, Engine *engine) {
 	logger = sharedLogger;
 	efiAssertVoid(engine!=NULL, "null engine");
-
-	mainTriggerCallbackInstance.init(engine);
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	addConsoleAction("performanceinfo", showTriggerHistogram);
