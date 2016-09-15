@@ -25,8 +25,6 @@ public:
 	engine_configuration2_s ec2;
 	Engine engine;
 
-	MainTriggerCallback triggerCallbackInstance;
-
 	engine_configuration_s *ec;
 	engine_configuration_s *engineConfiguration;
 

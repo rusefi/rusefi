@@ -632,7 +632,7 @@ void initMainEventListener(Logging *sharedLogger, Engine *engine) {
 	addConsoleActionP("maininfo", (VoidPtr) showMainInfo, engine);
 
 	printMsg(logger, "initMainLoop: %d", currentTimeMillis());
-	if (!isInjectionEnabled(mainTriggerCallbackInstance.engine->engineConfiguration))
+	if (!isInjectionEnabled(engine->engineConfiguration))
 		printMsg(logger, "!!!!!!!!!!!!!!!!!!! injection disabled");
 #endif
 

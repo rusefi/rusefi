@@ -61,8 +61,6 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_F);
 	prepareTimingMap(PASS_ENGINE_PARAMETER_F);
 
-	triggerCallbackInstance.init(engine);
-
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 
 	engine->triggerShape.initializeTriggerShape(NULL PASS_ENGINE_PARAMETER);
