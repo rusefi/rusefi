@@ -84,12 +84,7 @@ void Engine::onTriggerEvent(efitick_t nowNt) {
 	lastTriggerEventTimeNt = nowNt;
 }
 
-static void invokeEnginePreCalculate(Engine *engine) {
-	engine->preCalculate();
-}
-
 void Engine::addConfigurationListener(configuration_callback_t callback) {
-	configurationListeners.registerCallback((VoidInt)invokeEnginePreCalculate, this);
 }
 
 Engine::Engine(persistent_config_s *config) {
@@ -130,7 +125,6 @@ Engine::Engine(persistent_config_s *config) {
 	clutchDownState = clutchUpState = false;
 	memset(&m, 0, sizeof(m));
 
-	addConfigurationListener(invokeEnginePreCalculate);
 }
 
 EngineState::EngineState() {

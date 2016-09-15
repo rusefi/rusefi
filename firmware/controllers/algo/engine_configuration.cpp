@@ -143,6 +143,7 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_F) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	applyNewHardwareSettings();
 #endif /* EFI_PROD_CODE */
+	engine->preCalculate();
 	rememberCurrentConfiguration();
 }
 
