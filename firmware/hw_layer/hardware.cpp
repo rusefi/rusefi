@@ -282,6 +282,7 @@ void applyNewHardwareSettings(void) {
 
 	startInjectionPins();
 	startIgnitionPins();
+	adcConfigListener(engine);
 }
 
 void initHardware(Logging *l) {
@@ -441,7 +442,6 @@ void initHardware(Logging *l) {
 #endif
 
 	calcFastAdcIndexes();
-	engine->addConfigurationListener(adcConfigListener);
 
 #if EFI_CJ125 || defined(__DOXYGEN__)
 	initCJ125(sharedLogger);
