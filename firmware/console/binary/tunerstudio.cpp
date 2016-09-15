@@ -387,7 +387,7 @@ void requestBurn(void) {
 #if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
 	setNeedToWriteConfiguration();
 #endif
-	incrementGlobalConfigurationVersion();
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
 }
 
 static void sendResponseCode(ts_response_format_e mode, ts_channel_s *tsChannel, const uint8_t responseCode) {

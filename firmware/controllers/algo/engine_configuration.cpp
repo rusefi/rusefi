@@ -138,7 +138,7 @@ int getGlobalConfigurationVersion(void) {
  * this is the top-level method which should be called in case of any changes to engine configuration
  * online tuning of most values in the maps does not count as configuration change, but 'Burn' command does
  */
-void incrementGlobalConfigurationVersion(void) {
+void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_F) {
 	globalConfigurationVersion++;
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	applyNewHardwareSettings();

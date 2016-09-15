@@ -390,7 +390,7 @@ static void setBit(const char *offsetStr, const char *bitStr, const char *valueS
 	 * this response is part of dev console API
 	 */
 	scheduleMsg(&logger, "bit @%d/%d is %d", offset, bit, value);
-	incrementGlobalConfigurationVersion();
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
 }
 
 static void setShort(const int offset, const int value) {
@@ -399,7 +399,7 @@ static void setShort(const int offset, const int value) {
 	uint16_t *ptr = (uint16_t *) (&((char *) engineConfiguration)[offset]);
 	*ptr = (uint16_t) value;
 	getShort(offset);
-	incrementGlobalConfigurationVersion();
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
 }
 
 static void getBit(int offset, int bit) {
@@ -430,7 +430,7 @@ static void setInt(const int offset, const int value) {
 	int *ptr = (int *) (&((char *) engineConfiguration)[offset]);
 	*ptr = value;
 	getInt(offset);
-	incrementGlobalConfigurationVersion();
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
 }
 
 static void getFloat(int offset) {
