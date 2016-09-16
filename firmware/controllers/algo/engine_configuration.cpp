@@ -140,10 +140,16 @@ int getGlobalConfigurationVersion(void) {
  */
 void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_F) {
 	globalConfigurationVersion++;
+/**
+ * All these callbacks could be implemented as listeners, but these days I am saving RAM
+ */
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	applyNewHardwareSettings();
 #endif /* EFI_PROD_CODE */
 	engine->preCalculate();
+#if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)
+	onConfigurationChangeAlternatorCallback(&activeConfiguration);
+#endif
 	rememberCurrentConfiguration();
 }
 

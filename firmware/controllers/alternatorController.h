@@ -16,4 +16,6 @@ void setAltPFactor(float p);
 void showAltInfo(void);
 void setDefaultAlternatorParameters(void);
 
+void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousConfiguration);
+
 #endif /* ALTERNATORCONTROLLER_H_ */

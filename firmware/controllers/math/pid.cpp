@@ -27,6 +27,11 @@ void Pid::init(pid_s *pid, float minResult, float maxResult) {
 	prevError = 0;
 }
 
+bool Pid::isSame(pid_s *pid) {
+	return this->pid->dFactor == pid->dFactor && this->pid->iFactor == pid->iFactor  &&
+			this->pid->offset == pid->offset && this->pid->pFactor == pid->pFactor;
+}
+
 float Pid::getValue(float target, float input, float dTime) {
 	float error = target - input;
 
