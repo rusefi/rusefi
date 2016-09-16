@@ -408,15 +408,8 @@ public:
 	float mafDecodingLookup[MAF_DECODING_CACHE_SIZE];
 
 	void preCalculate();
-	void addConfigurationListener(configuration_callback_t callback);
 
 	void watchdog();
-
-	/**
-	 * here we have all the listeners which should be notified about a configuration
-	 * change
-	 */
-	IntListenerArray<15> configurationListeners;
 
 	monitoring_timestamps_s m;
 

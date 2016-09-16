@@ -242,13 +242,6 @@ static void periodicSlowCallback(Engine *engine) {
 	}
 
 	if (versionForConfigurationListeners.isOld()) {
-		/**
-		 * version change could happen for multiple reason and on different threads
-		 * in order to be sure which thread (and which stack) invokes the potentially heavy
-		 * listeners we invoke them from here.
-		 */
-		engine->configurationListeners.invokeJustArgCallbacks();
-		// todo: convert to a callback?
 		updateAccelParameters();
 		engine->engineState.warmupAfrPid.reset();
 	}
