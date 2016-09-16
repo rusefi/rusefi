@@ -37,19 +37,21 @@ static THD_WORKING_AREA(alternatorControlThreadStack, UTILITY_THREAD_STACK_SIZE)
 static float currentAltDuty;
 
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
-static LocalVersionHolder parametersVersion;
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif
 
 static bool currentPlainOnOffState = false;
+static bool shouldResetPid = false;
 
 static msg_t AltCtrlThread(int param) {
 	UNUSED(param);
 	chRegSetThreadName("AlternatorController");
 	while (true) {
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
-		if (parametersVersion.isOld())
+		if (shouldResetPid) {
 			altPid.reset();
+		}
+		shouldResetPid = false;
 #endif
 
 		int dt = maxI(10, engineConfiguration->alternatorDT);
@@ -142,6 +144,10 @@ void setDefaultAlternatorParameters(void) {
 	engineConfiguration->alternatorControl.offset = 0;
 	engineConfiguration->alternatorControl.pFactor = 30;
 	engineConfiguration->alternatorDT = 100;
+}
+
+void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousConfiguration) {
+	shouldResetPid = !altPid.isSame(&previousConfiguration->alternatorControl);
 }
 
 void initAlternatorCtrl(Logging *sharedLogger) {

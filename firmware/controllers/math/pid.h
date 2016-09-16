@@ -20,6 +20,7 @@ public:
 	Pid();
 	Pid(pid_s *pid, float minResult, float maxResult);
 	void init(pid_s *pid, float minResult, float maxResult);
+	bool isSame(pid_s *pid);
 
 	float getValue(float target, float input, float dTime);
 	void updateFactors(float pFactor, float iFactor, float dFactor);
