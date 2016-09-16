@@ -84,9 +84,6 @@ void Engine::onTriggerEvent(efitick_t nowNt) {
 	lastTriggerEventTimeNt = nowNt;
 }
 
-void Engine::addConfigurationListener(configuration_callback_t callback) {
-}
-
 Engine::Engine(persistent_config_s *config) {
 	init(config);
 	engineState.warmupAfrPid.init(&config->engineConfiguration.warmupAfrPid,  0.5, 1.5);
