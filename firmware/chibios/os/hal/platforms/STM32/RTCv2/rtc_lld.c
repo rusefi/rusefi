@@ -52,7 +52,7 @@ RTCDriver RTCD1;
 /* Driver local functions.                                                   */
 /*===========================================================================*/
 
-extern int lseTimeout;
+extern bool rtcWorks;
 
 /**
  * @brief   Wait for synchronization of RTC registers with APB1 bus.
@@ -62,7 +62,9 @@ extern int lseTimeout;
  */
 #define rtc_lld_apb1_sync() {                                                \
     int counter = 0;                                                         \
-	while ((RTCD1.id_rtc->ISR & RTC_ISR_RSF) == 0 && ++counter <lseTimeout);\
+	while ((RTCD1.id_rtc->ISR & RTC_ISR_RSF) == 0 && ++counter <LSE_TIMEOUT) \
+       ;                                                                     \
+	if (counter==LSE_TIMEOUT) {rtcWorks = false; }                           \
 	}
 
 /**
@@ -75,6 +77,7 @@ extern int lseTimeout;
   int counter = 0;                                                          \
   while ((RTCD1.id_rtc->ISR & RTC_ISR_INITF) == 0 && ++counter <LSE_TIMEOUT)\
     ;                                                                       \
+  if (counter==LSE_TIMEOUT) {rtcWorks = false; }                          \
 }
 
 /**
@@ -132,6 +135,9 @@ void rtc_lld_init(void){
  */
 void rtc_lld_set_time(RTCDriver *rtcp, const RTCTime *timespec) {
   (void)rtcp;
+
+  if (!rtcWorks)
+	  return;
 
   rtc_lld_enter_init();
   if (timespec->h12)
@@ -305,7 +311,8 @@ uint32_t rtc_lld_get_time_fat(RTCDriver *rtcp) {
   uint32_t v;
 
   chSysLock();
-  rtcGetTimeI(rtcp, &timespec);
+  if (rtcWorks)
+	  rtcGetTimeI(rtcp, &timespec);
   chSysUnlock();
 
   tv_time = timespec.tv_time;

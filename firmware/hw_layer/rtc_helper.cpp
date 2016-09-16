@@ -125,9 +125,7 @@ void setDateTime(const char *strDate) {
 
 void initRtc(void) {
 #if EFI_RTC || defined(__DOXYGEN__)
+	rtcGetTimeUnixSec(&RTCD1); // this would test RTC, see 'rtcWorks' variable, see #311
 	printMsg(&logger, "initRtc()");
-
-	// yes, it's my begin time  and we always start from this one 1391894433 - 2014-02-08 21:20:03
-//	rtcSetTimeUnixSec(&RTCD1, 1391894433);
-#endif
+#endif /* EFI_RTC */
 }

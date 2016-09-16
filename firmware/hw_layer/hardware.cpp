@@ -61,8 +61,10 @@ int maxNesting = 0;
 #if HAL_USE_SPI || defined(__DOXYGEN__)
 extern bool isSpiInitialized[5];
 
-// todo: use larger value if LSE is available, make this a boardConfiguration option
-int lseTimeout = 0;
+/**
+ * #311 we want to test RTC before engine start so that we do not test it while engine is running
+ */
+bool rtcWorks = true;
 
 /**
  * Only one consumer can use SPI bus at a given time

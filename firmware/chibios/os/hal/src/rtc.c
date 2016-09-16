@@ -91,6 +91,8 @@ void rtcSetTime(RTCDriver *rtcp, const RTCTime *timespec) {
   chSysUnlock();
 }
 
+extern bool rtcWorks;
+
 /**
  * @brief   Get current time.
  *
@@ -103,6 +105,8 @@ void rtcGetTime(RTCDriver *rtcp, RTCTime *timespec) {
 
   chDbgCheck((rtcp != NULL) && (timespec != NULL), "rtcGetTime");
 
+  if (!rtcWorks)
+	  return;
   chSysLock();
   rtcGetTimeI(rtcp, timespec);
   chSysUnlock();
