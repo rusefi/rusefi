@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Sep 12 21:38:15 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Sep 17 14:41:13 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -193,6 +193,30 @@ typedef struct {
 	float battLagCorr[VBAT_INJECTOR_CURVE_SIZE];
 	/** total size 72*/
 } injector_s;
+
+typedef struct {
+	/**
+	 * offset 0
+	 */
+	float a0;
+	/**
+	 * offset 4
+	 */
+	float a1;
+	/**
+	 * offset 8
+	 */
+	float a2;
+	/**
+	 * offset 12
+	 */
+	float b1;
+	/**
+	 * offset 16
+	 */
+	float b2;
+	/** total size 20*/
+} bi_quard_s;
 
 typedef struct {
 	/**
@@ -816,7 +840,7 @@ typedef struct {
 	bool isVerboseAuxPid4 : 1;
 	/**
 	offset 80 bit 9 */
-	bool issue_294_9 : 1;
+	bool useBiQuadAnalogFiltering : 1;
 	/**
 	offset 80 bit 10 */
 	bool issue_294_10 : 1;
@@ -1716,7 +1740,11 @@ typedef struct {
 	/**
 	 * offset 2556
 	 */
-	int unused[123];
+	bi_quard_s biQuad;
+	/**
+	 * offset 2576
+	 */
+	int unused[118];
 	/** total size 3048*/
 } engine_configuration_s;
 
@@ -1931,4 +1959,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Sep 12 21:38:15 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Sep 17 14:41:13 EDT 2016

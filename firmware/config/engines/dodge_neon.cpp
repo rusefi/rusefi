@@ -286,6 +286,12 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	 */
 	engineConfiguration->cranking.baseFuel = 5;
 
+	engineConfiguration->biQuad.a0 = 0.0000024635293743901;
+	engineConfiguration->biQuad.a1 = 0.00000492705874878021;
+	engineConfiguration->biQuad.a2 = 0.0000024635293743901;
+	engineConfiguration->biQuad.b1 = -1.9968534854;
+	engineConfiguration->biQuad.b2 = 0.9968633396;
+
 	/**
 	 * 77C
 	 * 1200 rpm

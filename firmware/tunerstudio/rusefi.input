@@ -1755,7 +1755,13 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		field = "MAF ADC input", 						mafAdcChannel
 		field = "Baro ADC input", 						baroSensor_hwChannel
 		field = "Analog divider",						analogInputDividerCoefficient
-		field = "Smoothing factor",						slowAdcAlpha		
+		field = "Use BiQuad averaging",					useBiQuadAnalogFiltering		
+		field = "Smoothing factor",						slowAdcAlpha, {useBiQuadAnalogFiltering == 0}
+		field = "Bi_Q a0",								biQuad_a0, {useBiQuadAnalogFiltering == 1}
+		field = "Bi_Q a1",								biQuad_a1, {useBiQuadAnalogFiltering == 1}
+		field = "Bi_Q a2",								biQuad_a2, {useBiQuadAnalogFiltering == 1}
+		field = "Bi_Q b1",								biQuad_b1, {useBiQuadAnalogFiltering == 1}
+		field = "Bi_Q b2",								biQuad_b2, {useBiQuadAnalogFiltering == 1}
 
 	dialog = tachSettings, "Tachometer output"
 		field = "!See also dizzySparkOutputPin"

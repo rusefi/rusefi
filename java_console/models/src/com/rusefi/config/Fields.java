@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Sep 11 20:11:57 EDT 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Sep 17 14:41:13 EDT 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -66,8 +66,8 @@ public class Fields {
 	public static final int activateAuxPid4_offset_hex = 50;
 	public static final int isVerboseAuxPid4_offset = 80;
 	public static final int isVerboseAuxPid4_offset_hex = 50;
-	public static final int issue_294_9_offset = 80;
-	public static final int issue_294_9_offset_hex = 50;
+	public static final int useBiQuadAnalogFiltering_offset = 80;
+	public static final int useBiQuadAnalogFiltering_offset_hex = 50;
 	public static final int issue_294_10_offset = 80;
 	public static final int issue_294_10_offset_hex = 50;
 	public static final int issue_294_11_offset = 80;
@@ -886,7 +886,13 @@ public class Fields {
 	public static final int auxPid4_dFactor_offset = 2544;
 	public static final int auxPid4_offset_offset = 2548;
 	public static final int vvtMode_offset = 2552;
-	public static final int unused_offset = 2556;
+	public static final int biQuad_offset = 2556;
+	public static final int biQuad_a0_offset = 2556;
+	public static final int biQuad_a1_offset = 2560;
+	public static final int biQuad_a2_offset = 2564;
+	public static final int biQuad_b1_offset = 2568;
+	public static final int biQuad_b2_offset = 2572;
+	public static final int unused_offset = 2576;
 	public static final int le_formulas1_offset = 3048;
 	public static final int le_formulas2_offset = 3248;
 	public static final int le_formulas3_offset = 3448;
@@ -977,7 +983,7 @@ public class Fields {
 	public static final Field ISVERBOSEAUXPID3 = Field.create("ISVERBOSEAUXPID3", 80, FieldType.BIT, 6);
 	public static final Field ACTIVATEAUXPID4 = Field.create("ACTIVATEAUXPID4", 80, FieldType.BIT, 7);
 	public static final Field ISVERBOSEAUXPID4 = Field.create("ISVERBOSEAUXPID4", 80, FieldType.BIT, 8);
-	public static final Field ISSUE_294_9 = Field.create("ISSUE_294_9", 80, FieldType.BIT, 9);
+	public static final Field USEBIQUADANALOGFILTERING = Field.create("USEBIQUADANALOGFILTERING", 80, FieldType.BIT, 9);
 	public static final Field ISSUE_294_10 = Field.create("ISSUE_294_10", 80, FieldType.BIT, 10);
 	public static final Field ISSUE_294_11 = Field.create("ISSUE_294_11", 80, FieldType.BIT, 11);
 	public static final Field ISSUE_294_12 = Field.create("ISSUE_294_12", 80, FieldType.BIT, 12);
@@ -1518,6 +1524,11 @@ public class Fields {
 	public static final Field AUXPID4_OFFSET = Field.create("AUXPID4_OFFSET", 2548, FieldType.FLOAT);
 	public static final String[] vvt_mode_e = {"First half", "Second half", "2GZ", "mode3"};
 	public static final Field VVTMODE = Field.create("VVTMODE", 2552, FieldType.INT, vvt_mode_e);
+	public static final Field BIQUAD_A0 = Field.create("BIQUAD_A0", 2556, FieldType.FLOAT);
+	public static final Field BIQUAD_A1 = Field.create("BIQUAD_A1", 2560, FieldType.FLOAT);
+	public static final Field BIQUAD_A2 = Field.create("BIQUAD_A2", 2564, FieldType.FLOAT);
+	public static final Field BIQUAD_B1 = Field.create("BIQUAD_B1", 2568, FieldType.FLOAT);
+	public static final Field BIQUAD_B2 = Field.create("BIQUAD_B2", 2572, FieldType.FLOAT);
 	public static final Field LE_FORMULAS1 = Field.create("LE_FORMULAS1", 3048, FieldType.INT);
 	public static final Field LE_FORMULAS2 = Field.create("LE_FORMULAS2", 3248, FieldType.INT);
 	public static final Field LE_FORMULAS3 = Field.create("LE_FORMULAS3", 3448, FieldType.INT);
