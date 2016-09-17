@@ -27,11 +27,16 @@ EXTERN_ENGINE
 ;
 static Logging *logger;
 
+int vvtEventRiseCounter = 0;
+int vvtEventFallCounter = 0;
+
 static void cam_icu_width_callback(ICUDriver *icup) {
+	vvtEventRiseCounter++;
 	hwHandleVvtCamSignal(TV_RISE);
 }
 
 static void cam_icu_period_callback(ICUDriver *icup) {
+	vvtEventFallCounter++;
 	hwHandleVvtCamSignal(TV_FALL);
 }
 
