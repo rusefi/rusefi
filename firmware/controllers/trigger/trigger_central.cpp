@@ -108,7 +108,7 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 			 */
 			tc->triggerState.intTotalEventCounter();
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-			if (engineConfiguration->debugMode == VVT) {
+			if (engineConfiguration->debugMode == DBG_VVT) {
 				tsOutputChannels.debugIntField1++;
 			}
 #endif /* EFI_PROD_CODE */
@@ -119,7 +119,7 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 			// see above comment
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 			tc->triggerState.intTotalEventCounter();
-			if (engineConfiguration->debugMode == VVT) {
+			if (engineConfiguration->debugMode == DBG_VVT) {
 				tsOutputChannels.debugIntField1++;
 			}
 #endif /* EFI_PROD_CODE */

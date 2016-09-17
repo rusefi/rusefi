@@ -75,7 +75,7 @@ static msg_t AltCtrlThread(int param) {
 			bool newState = (vBatt < targetVoltage - h) || (currentPlainOnOffState && vBatt < targetVoltage);
 			enginePins.alternatorPin.setValue(newState);
 			currentPlainOnOffState = newState;
-			if (engineConfiguration->debugMode == ALTERNATOR) {
+			if (engineConfiguration->debugMode == ALTERNATOR_PID) {
 				tsOutputChannels.debugIntField1 = newState;
 
 			}
@@ -91,7 +91,7 @@ static msg_t AltCtrlThread(int param) {
 		}
 
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
-		if (engineConfiguration->debugMode == ALTERNATOR) {
+		if (engineConfiguration->debugMode == ALTERNATOR_PID) {
 			tsOutputChannels.debugFloatField1 = currentAltDuty;
 			altPid.postState(&tsOutputChannels);
 		}

@@ -600,7 +600,7 @@ typedef enum {
 } brain_pin_e;
 
 typedef enum {
-	ALTERNATOR = 0,
+	ALTERNATOR_PID = 0,
 	DBG_TPS_ACCEL = 1,
 	WARMUP_ENRICH = 2,
 	IDLE = 3,
@@ -608,7 +608,7 @@ typedef enum {
 	TRIGGER_COUNT = 5,
 	FSIO_ADC = 6,
 	AUX_PID_1 = 7,
-	VVT = 8,
+	DBG_VVT = 8,
 	DM_9 = 9,
 	DM_10 = 10,
 	DM_11 = 11,
