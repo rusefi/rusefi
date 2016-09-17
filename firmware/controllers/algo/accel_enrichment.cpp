@@ -109,11 +109,11 @@ floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_F) {
 	float tpsFrom = cb.get(index - 1);
 	float d = tpsTo - tpsFrom;
 
-	float deltaMult = tpsTpsMap.getValue(tpsFrom, tpsTo);
+	float valueFromTable = tpsTpsMap.getValue(tpsFrom, tpsTo);
 
 	floatms_t extraFuel;
 	if (d > engineConfiguration->tpsAccelEnrichmentThreshold) {
-		extraFuel = deltaMult;
+		extraFuel = valueFromTable;
 	} else if (d < -engineConfiguration->tpsDecelEnleanmentThreshold) {
 		extraFuel = d * engineConfiguration->tpsDecelEnleanmentMultiplier;
 	} else {
@@ -124,7 +124,7 @@ floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_F) {
 	if (engineConfiguration->debugMode == DBG_TPS_ACCEL) {
 		tsOutputChannels.debugFloatField1 = tpsFrom;
 		tsOutputChannels.debugFloatField2 = tpsTo;
-		tsOutputChannels.debugFloatField3 = deltaMult;
+		tsOutputChannels.debugFloatField3 = valueFromTable;
 		tsOutputChannels.debugFloatField4 = extraFuel;
 	}
 #endif

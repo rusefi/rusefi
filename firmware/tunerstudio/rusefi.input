@@ -1232,10 +1232,18 @@ fileVersion = { 20160702 }
 
    entry = sparkDwellValue,	"dwell", float,"%.3f"
 
-
+   entry = debugMode,   "debugMode",int,"%d"
+; Alternator_PID: alternator duty cycle
+; DBG_TPS_ACCEL: from TPS 
    entry = debugFloatField1,   "debug f1",float,"%.4f"
+
+; DBG_TPS_ACCEL: to TPS
    entry = debugFloatField2,   "debug f2",float,"%.4f"
+   
+; DBG_TPS_ACCEL: tps<>tps table value
    entry = debugFloatField3,   "debug f3",float,"%.4f"
+   
+; DBG_TPS_ACCEL: extra fuel   
    entry = debugFloatField4,   "debug f4",float,"%.4f"
    entry = debugFloatField5,   "debug f5",float,"%.4f"
    entry = debugIntField1,   "debug i1",int,"%d"
