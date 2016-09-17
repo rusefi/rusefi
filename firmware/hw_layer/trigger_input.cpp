@@ -150,6 +150,9 @@ void stopTriggerInputPins(void) {
 			turnOffTriggerInputPin(activeConfiguration.bc.triggerInputPins[i]);
 		}
 	}
+	if (engineConfiguration->camInput != activeConfiguration.camInput) {
+		turnOffTriggerInputPin(activeConfiguration.camInput);
+	}
 }
 
 void applyNewTriggerInputPins(void) {
