@@ -183,6 +183,15 @@ float[VBAT_INJECTOR_CURVE_SIZE] battLagCorr;;"ms/V",     1,     0,      0.0,    
 
 end_struct
 
+struct bi_quard_s
+	float a0;;"v",  1,     0,      -1000,   1000,   9
+	float a1;;"v",  1,     0,      -1000,   1000,   9
+	float a2;;"v",  1,     0,      -1000,   1000,   9
+	float b1;;"v",  1,     0,      -1000,   1000,   9
+	float b2;;"v",  1,     0,      -1000,   1000,   9
+
+end_struct
+
 injector_s injector
 
 
@@ -195,7 +204,7 @@ bit activateAuxPid3;
 bit isVerboseAuxPid3;
 bit activateAuxPid4;
 bit isVerboseAuxPid4;
-bit issue_294_9;
+bit useBiQuadAnalogFiltering;
 bit issue_294_10;
 bit issue_294_11;
 bit issue_294_12;
@@ -736,7 +745,8 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	pin_output_mode_e cj125CsPinMode;
 	pid_s[AUX_PID_COUNT iterate] auxPid;
 	vvt_mode_e vvtMode;
-	int[123] unused;
+	bi_quard_s biQuad;
+	int[118] unused;
 	
 
 end_struct

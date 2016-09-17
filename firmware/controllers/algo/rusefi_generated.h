@@ -62,8 +62,8 @@
 #define activateAuxPid4_offset_hex 50
 #define isVerboseAuxPid4_offset 80
 #define isVerboseAuxPid4_offset_hex 50
-#define issue_294_9_offset 80
-#define issue_294_9_offset_hex 50
+#define useBiQuadAnalogFiltering_offset 80
+#define useBiQuadAnalogFiltering_offset_hex 50
 #define issue_294_10_offset 80
 #define issue_294_10_offset_hex 50
 #define issue_294_11_offset 80
@@ -882,7 +882,13 @@
 #define auxPid4_dFactor_offset 2544
 #define auxPid4_offset_offset 2548
 #define vvtMode_offset 2552
-#define unused_offset 2556
+#define biQuad_offset 2556
+#define biQuad_a0_offset 2556
+#define biQuad_a1_offset 2560
+#define biQuad_a2_offset 2564
+#define biQuad_b1_offset 2568
+#define biQuad_b2_offset 2572
+#define unused_offset 2576
 #define le_formulas1_offset 3048
 #define le_formulas2_offset 3248
 #define le_formulas3_offset 3448

@@ -7,20 +7,22 @@
 
 #include "biquad.h"
 
+EXTERN_ENGINE;
+
 Biquad::Biquad() {
 	a0 = a1 = a2 = b1 = b2;
 	z1 = z2 = 0;
 }
 
 void Biquad::initValue(float input DECLARE_ENGINE_PARAMETER_S) {
-	a0 = 0.0000024635293743901;
-	a1 = 0.00000492705874878021;
-	a2 = 0.0000024635293743901;
-	b1 = -1.9968534854;
-	b2 = 0.9968633396;
+	a0 = engineConfiguration->biQuad.a0;
+	a1 = engineConfiguration->biQuad.a1;
+	a2 = engineConfiguration->biQuad.a2;
+	b1 = engineConfiguration->biQuad.b1;
+	b2 = engineConfiguration->biQuad.b2;
 
 	z1 = input * (1 - a0);
-  z2 = input * (1 - a0 - a1 + b1);
+	z2 = input * (1 - a0 - a1 + b1);
 }
 
 float Biquad::getValue(float input) {
