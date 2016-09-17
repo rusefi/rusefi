@@ -346,6 +346,9 @@ extern uint32_t hwSetTimerTime;
 extern int maxHowFarOff;
 extern uint32_t *cyccnt;
 
+extern int vvtEventRiseCounter;
+extern int vvtEventFallCounter;
+
 void triggerInfo(void) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 
@@ -391,10 +394,10 @@ void triggerInfo(void) {
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	if (engineConfiguration->camInput != GPIO_UNASSIGNED) {
-		scheduleMsg(logger, "CAM input: %s", hwPortname(engineConfiguration->camInput));
+		scheduleMsg(logger, "VVT input: %s", hwPortname(engineConfiguration->camInput));
+		scheduleMsg(logger, "VVT event counters: %d/%d", vvtEventRiseCounter, vvtEventFallCounter);
 
 	}
-
 
 	scheduleMsg(logger, "primary trigger input: %s", hwPortname(boardConfiguration->triggerInputPins[0]));
 	scheduleMsg(logger, "primary trigger simulator: %s %s freq=%d",
