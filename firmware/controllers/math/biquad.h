@@ -8,10 +8,12 @@
 #ifndef CONTROLLERS_MATH_BIQUAD_H_
 #define CONTROLLERS_MATH_BIQUAD_H_
 
+#include "engine.h"
+
 class Biquad {
 public:
     Biquad();
-    void initValue(float input);
+    void initValue(float input DECLARE_ENGINE_PARAMETER_S);
     float getValue(float input);
 
     float a0, a1, a2, b1, b2;
