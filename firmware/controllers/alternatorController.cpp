@@ -27,6 +27,7 @@ static Logging *logger;
 
 extern pin_output_mode_e DEFAULT_OUTPUT;
 extern engine_pins_s enginePins;
+int alternatorPidResetCounter = 0;
 
 static SimplePwm alternatorControl;
 static pid_s *altPidS = &persistentState.persistentConfiguration.engineConfiguration.alternatorControl;
@@ -49,6 +50,7 @@ static msg_t AltCtrlThread(int param) {
 	while (true) {
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 		if (shouldResetPid) {
+			alternatorPidResetCounter++;
 			altPid.reset();
 		}
 		shouldResetPid = false;
@@ -94,8 +96,9 @@ static msg_t AltCtrlThread(int param) {
 		if (engineConfiguration->debugMode == ALTERNATOR_PID) {
 			tsOutputChannels.debugFloatField1 = currentAltDuty;
 			altPid.postState(&tsOutputChannels);
+			tsOutputChannels.debugIntField3 = alternatorPidResetCounter;
 		}
-#endif
+#endif /* !EFI_UNIT_TEST */
 
 		alternatorControl.setSimplePwmDutyCycle(currentAltDuty / 100);
 	}
