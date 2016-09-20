@@ -492,11 +492,12 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
 
 //temp	boardConfiguration->alternatorControlPin = GPIOD_5;
-	engineConfiguration->targetVBatt = 14.5;
-	engineConfiguration->alternatorControl.offset = 10;
-	engineConfiguration->alternatorControl.pFactor = 5;
-	engineConfiguration->alternatorControl.iFactor = 0.1;
+	engineConfiguration->targetVBatt = 14.0;
+	engineConfiguration->alternatorControl.offset = 20;
+	engineConfiguration->alternatorControl.pFactor = 20;
+	engineConfiguration->alternatorControl.iFactor = 0.2;
 	engineConfiguration->alternatorControl.dFactor = 0.1;
+	engineConfiguration->alternatorDT = 10;
 
 //	enableFrankensoCan();
 	engineConfiguration->canWriteEnabled = true;
