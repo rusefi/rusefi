@@ -17,6 +17,12 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_F);
 
 void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F);
 
+/**
+ * testing or broken CAM sensor option
+ */
+void setDodgeNeonNGCEngineConfigurationCrankBased(DECLARE_ENGINE_PARAMETER_F);
+
+
 #endif /* EFI_SUPPORT_DODGE_NEON */
 
 #endif /* DODGE_NEON_H_ */

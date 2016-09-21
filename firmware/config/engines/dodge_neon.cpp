@@ -527,5 +527,9 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	// end of setDodgeNeonNGCEngineConfiguration
 }
 
+void setDodgeNeonNGCEngineConfigurationCrankBased(DECLARE_ENGINE_PARAMETER_F) {
+	setDodgeNeonNGCEngineConfiguration(PASS_ENGINE_PARAMETER_F);
+}
+
 #endif /* EFI_SUPPORT_DODGE_NEON */
 
