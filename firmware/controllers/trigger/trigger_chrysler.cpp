@@ -26,7 +26,99 @@ void initDodgeRam(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->useOnlyPrimaryForSync = true;
 }
 
-void configureNeon2003TriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
+void configureNeon2003TriggerShapeCrank(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
+	s->useRiseEdge = true;
+	s->gapBothDirections = false;
+
+//	s->addEvent(25, T_SECONDARY, TV_FALL);
+//	s->addEvent(30, T_SECONDARY, TV_RISE);
+//	s->addEvent(35, T_SECONDARY, TV_FALL);
+//	s->addEvent(40, T_SECONDARY, TV_RISE);
+//	s->addEvent(45, T_SECONDARY, TV_FALL);
+//	s->addEvent(50, T_SECONDARY, TV_RISE);
+//	s->addEvent(55, T_SECONDARY, TV_FALL);
+//	s->addEvent(60, T_SECONDARY, TV_RISE);
+//	s->addEvent(65, T_SECONDARY, TV_FALL);
+//	s->addEvent(70, T_SECONDARY, TV_RISE);
+//	s->addEvent(75, T_SECONDARY, TV_FALL);
+//	s->addEvent(80, T_SECONDARY, TV_RISE);
+//	s->addEvent(85, T_SECONDARY, TV_FALL);
+//	s->addEvent(90, T_SECONDARY, TV_RISE);
+//	s->addEvent(95, T_SECONDARY, TV_FALL);
+//	s->addEvent(100, T_SECONDARY, TV_RISE);
+//	s->addEvent(105, T_SECONDARY, TV_FALL);
+//	s->addEvent(110, T_SECONDARY, TV_RISE);
+//	s->addEvent(115, T_SECONDARY, TV_FALL);
+//	s->addEvent(120, T_SECONDARY, TV_RISE);
+//	s->addEvent(125, T_SECONDARY, TV_FALL);
+//	s->addEvent(130, T_SECONDARY, TV_RISE);
+//	s->addEvent(135, T_SECONDARY, TV_FALL);
+//	s->addEvent(140, T_SECONDARY, TV_RISE);
+
+	s->addEvent(144, T_PRIMARY, TV_RISE);
+
+//	s->addEvent(145,T_SECONDARY, TV_FALL);
+//	s->addEvent(150, T_SECONDARY, TV_RISE);
+//	s->addEvent(155, T_SECONDARY, TV_FALL);
+//	s->addEvent(160, T_SECONDARY, TV_RISE);
+//	s->addEvent(165, T_SECONDARY, TV_FALL);
+//	s->addEvent(170, T_SECONDARY, TV_RISE);
+//	s->addEvent(175, T_SECONDARY, TV_FALL);
+//	s->addEvent(180 - EPS_ANGLE, T_SECONDARY, TV_RISE);
+
+	s->addEvent(180, T_PRIMARY, TV_FALL);
+
+//	s->addEvent(185, T_SECONDARY, TV_FALL);
+//	s->addEvent(210, T_SECONDARY, TV_RISE);
+//	s->addEvent(215, T_SECONDARY, TV_FALL);
+
+	s->addEvent(216, T_PRIMARY, TV_RISE);
+
+//	s->addEvent(220, T_SECONDARY, TV_RISE);
+//	s->addEvent(225, T_SECONDARY, TV_FALL);
+//	s->addEvent(230, T_SECONDARY, TV_RISE);
+//	s->addEvent(235, T_SECONDARY, TV_FALL);
+//	s->addEvent(240, T_SECONDARY, TV_RISE);
+//	s->addEvent(245, T_SECONDARY, TV_FALL);
+//	s->addEvent(250, T_SECONDARY, TV_RISE);
+
+	s->addEvent(252, T_PRIMARY, TV_FALL);
+
+//	s->addEvent(255, T_SECONDARY, TV_FALL);
+//
+//	s->addEvent(260, T_SECONDARY, TV_RISE);
+//	s->addEvent(265, T_SECONDARY, TV_FALL);
+//	s->addEvent(270, T_SECONDARY, TV_RISE);
+//	s->addEvent(275, T_SECONDARY, TV_FALL);
+//	s->addEvent(280, T_SECONDARY, TV_RISE);
+//	s->addEvent(285, T_SECONDARY, TV_FALL);
+
+	s->addEvent(288, T_PRIMARY, TV_RISE);
+
+//	s->addEvent(290, T_SECONDARY, TV_RISE);
+//	s->addEvent(295, T_SECONDARY, TV_FALL);
+//	s->addEvent(300, T_SECONDARY, TV_RISE);
+//	s->addEvent(305, T_SECONDARY, TV_FALL);
+//	s->addEvent(310, T_SECONDARY, TV_RISE);
+//	s->addEvent(315, T_SECONDARY, TV_FALL);
+//	s->addEvent(320, T_SECONDARY, TV_RISE);
+
+	s->addEvent(324, T_PRIMARY, TV_FALL);
+
+//	s->addEvent(325, T_SECONDARY, TV_FALL);
+//	s->addEvent(330, T_SECONDARY, TV_RISE);
+//	s->addEvent(335, T_SECONDARY, TV_FALL);
+//	s->addEvent(340, T_SECONDARY, TV_RISE);
+//	s->addEvent(345, T_SECONDARY, TV_FALL);
+//	s->addEvent(350, T_SECONDARY, TV_RISE);
+//	s->addEvent(355, T_SECONDARY, TV_FALL);
+//	s->addEvent(360 - EPS_ANGLE, T_SECONDARY, TV_RISE);
+
+	s->addEvent(360, T_PRIMARY, TV_RISE);
+}
+
+void configureNeon2003TriggerShapeCam(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 // todo: move sync point so that two channel does not have false trigger issues
 	bool useOnlyPrimary = true;
 

@@ -484,8 +484,12 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_DODGE_NEON_2003_CAM:
+		configureNeon2003TriggerShapeCam(triggerShape PASS_ENGINE_PARAMETER);
+		break;
+
 	case TT_DODGE_NEON_2003_CRANK:
-		configureNeon2003TriggerShape(triggerShape PASS_ENGINE_PARAMETER);
+		configureNeon2003TriggerShapeCam(triggerShape PASS_ENGINE_PARAMETER);
+//		configureNeon2003TriggerShapeCrank(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_FORD_ASPIRE:
