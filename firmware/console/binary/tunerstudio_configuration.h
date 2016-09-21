@@ -133,7 +133,9 @@ typedef struct {
 	float internalMcuTemperature; // 244
 	float vvtPosition; // 248
 	int engineMode; // 252
-	int unused3[5];
+	float debugFloatField6; // 256
+	float debugFloatField7; // 260
+	int unused3[3];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */

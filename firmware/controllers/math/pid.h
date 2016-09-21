@@ -40,6 +40,7 @@ private:
 	float maxResult;
 
 	float iTerm;
+	float dTerm; // we are remembering this only for debugging purposes
 	float prevError;
 };
 

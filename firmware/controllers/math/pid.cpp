@@ -23,7 +23,7 @@ void Pid::init(pid_s *pid, float minResult, float maxResult) {
 	this->minResult = minResult;
 	this->maxResult = maxResult;
 
-	iTerm = 0;
+	dTerm = iTerm = 0;
 	prevError = 0;
 }
 
@@ -37,7 +37,7 @@ float Pid::getValue(float target, float input, float dTime) {
 
 	float pTerm = pid->pFactor * error;
 	iTerm += pid->iFactor * dTime * error;
-	float dTerm = pid->dFactor / dTime * (error - prevError);
+	dTerm = pid->dFactor / dTime * (error - prevError);
 
 	prevError = error;
 
@@ -90,11 +90,12 @@ float Pid::getOffset(void) {
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 void Pid::postState(TunerStudioOutputChannels *tsOutputChannels) {
-	tsOutputChannels->debugFloatField2 = getIntegration();
+	tsOutputChannels->debugFloatField2 = iTerm;
 	tsOutputChannels->debugFloatField3 = getPrevError();
 	tsOutputChannels->debugFloatField4 = getI();
 	tsOutputChannels->debugFloatField5 = getD();
 	tsOutputChannels->debugIntField1 = getP();
 	tsOutputChannels->debugIntField2 = getOffset();
+	tsOutputChannels->debugFloatField6 = dTerm;
 }
 #endif
