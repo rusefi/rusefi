@@ -110,7 +110,7 @@ Engine * engine = &_engine;
  *
  * Also technically the whole feature might be implemented as cranking fuel coefficient curve by TPS.
  */
-#define CLEANUP_MODE_TPS 95
+#define CLEANUP_MODE_TPS 90
 
 extern OutputPin runningPin;
 
@@ -186,7 +186,7 @@ static void cylinderCleanupControl(Engine *engine) {
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	bool newValue;
 	if (engineConfiguration->isCylinderCleanupEnabled) {
-		newValue = isCrankingE(engine) && getTPS(PASS_ENGINE_PARAMETER_F) > CLEANUP_MODE_TPS;
+		newValue = !engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_F) && getTPS(PASS_ENGINE_PARAMETER_F) > CLEANUP_MODE_TPS;
 	} else {
 		newValue = false;
 	}
