@@ -164,10 +164,6 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 	scheduleMsg(logger, "handleFuel engineCycleDuration=%f", engineCycleDuration);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-	if (engine->isCylinderCleanupMode) {
-		return;
-	}
-
 	floatus_t injectionStartDelayUs = ENGINE(rpmCalculator.oneDegreeUs) * event->injectionStart.angleOffset;
 
 #if EFI_DEFAILED_LOGGING || defined(__DOXYGEN__)
@@ -253,6 +249,10 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 	if (!isInjectionEnabled(engineConfiguration) || limitedFuel) {
 		return;
 	}
+	if (engine->isCylinderCleanupMode) {
+		return;
+	}
+
 
 	/**
 	 * Ignition events are defined by addFuelEvents() according to selected
