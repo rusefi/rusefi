@@ -848,6 +848,9 @@ fileVersion = { 20160702 }
       lastErrorCode = scalar,U32, 240, "error",            1,         0
       internalMcuTemperature = scalar,F32, 244, "C",            1,         0
       vvtPosition = scalar,F32, 248, "deg",            1,         0
+      engineMode    = scalar,  U32,   252, "em",          1,       0.0;
+      debugFloatField6  = scalar,  F32,  256,            "val",           1,       0.0;
+      debugFloatField7  = scalar,  F32,  260,            "val",           1,       0.0;
 
       egoCorrection   = { 100 }
       time            = { timeNow }
@@ -1254,6 +1257,12 @@ fileVersion = { 20160702 }
 ; Alternator_PID: D setting
    entry = debugFloatField5,   "debug f5",float,"%.4f"
 
+; Alternator_PID: dTerm
+   entry = debugFloatField6,   "debug f6",float,"%.4f"
+   
+   entry = debugFloatField7,   "debug f7",float,"%.4f"
+
+
 ; Alternator_PID: P setting
    entry = debugIntField1,   "debug i1",int,"%d"
 
@@ -1262,6 +1271,8 @@ fileVersion = { 20160702 }
    
 ; Alternator_PID: PID reset counter   
    entry = debugIntField3,   "debug i3",int,"%d"
+   
+   entry = engineMode,   "mode",int,"%d"
    entry = warningCounter,   "warn",int,"%d"
    entry = lastErrorCode,   "error",int,"%d"
    entry = internalMcuTemperature,   "int temp",float,"%.2f"
