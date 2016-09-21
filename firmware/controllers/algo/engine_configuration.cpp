@@ -839,7 +839,8 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	case DODGE_NEON_1995:
 		setDodgeNeon1995EngineConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;
-	case DODGE_NEON_2003:
+	case DODGE_NEON_2003_CAM:
+	case DODGE_NEON_2003_CRANK:
 		setDodgeNeonNGCEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;
 	case LADA_KALINA:

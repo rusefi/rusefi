@@ -62,8 +62,10 @@ case CUSTOM_ENGINE:
   return "CUSTOM_ENGINE";
 case DODGE_NEON_1995:
   return "DODGE_NEON_1995";
-case DODGE_NEON_2003:
-  return "DODGE_NEON_2003";
+case DODGE_NEON_2003_CAM:
+  return "NEON_2003_CAM";
+case DODGE_NEON_2003_CRANK:
+  return "NEON_2003_CRANK";
 case ET_UNUSED:
   return "ET_UNUSED";
 case FORD_ASPIRE_1996:
@@ -135,8 +137,10 @@ case TT_DODGE_NEON_1995:
   return "TT_DODGE_NEON_1995";
 case TT_GM_LS_24:
 	return "TT_GM_LS_24";
-case TT_DODGE_NEON_2003:
-  return "TT_DODGE_NEON_2003";
+case TT_DODGE_NEON_2003_CAM:
+  return "TT_NEON_2003_CAM";
+case TT_DODGE_NEON_2003_CRANK:
+  return "TT_NEON_2003_CRANK";
 case TT_FORD_ASPIRE:
   return "TT_FORD_ASPIRE";
 case TT_MAZDA_SOHC_4:
