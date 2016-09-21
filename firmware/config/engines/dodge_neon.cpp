@@ -258,7 +258,7 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
-	engineConfiguration->trigger.type = TT_DODGE_NEON_2003;
+	engineConfiguration->trigger.type = TT_DODGE_NEON_2003_CAM;
 	setFrankenso_01_LCD(boardConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
 

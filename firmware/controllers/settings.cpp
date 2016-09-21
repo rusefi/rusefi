@@ -119,8 +119,6 @@ const char* getConfigurationName(engine_type_e engineType) {
 #if EFI_SUPPORT_DODGE_NEON
 	case DODGE_NEON_1995:
 		return "Neon95";
-	case DODGE_NEON_2003:
-		return "Neon03";
 #endif /* EFI_SUPPORT_DODGE_NEON */
 #if EFI_SUPPORT_FORD_ASPIRE
 	case FORD_ASPIRE_1996:

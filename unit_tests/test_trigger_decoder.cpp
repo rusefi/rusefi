@@ -546,12 +546,12 @@ void testTriggerDecoder(void) {
 
 	testTriggerDecoder2("MAZDA_323", MAZDA_323, 0, 0.4833, 0);
 
-	testTriggerDecoder3("neon NGC4", DODGE_NEON_2003, 6, 0.5000, 0.0, CHRYSLER_NGC4_GAP);
+	testTriggerDecoder3("neon NGC4", DODGE_NEON_2003_CAM, 6, 0.5000, 0.0, CHRYSLER_NGC4_GAP);
 
 	{
 		printTriggerDebug = true;
 
-		EngineTestHelper eth(DODGE_NEON_2003);
+		EngineTestHelper eth(DODGE_NEON_2003_CAM);
 		EXPAND_EngineTestHelper;
 
 		printf("!!!!!!!!!!!!!!!!!! Now trying with only rising edges !!!!!!!!!!!!!!!!!\r\n");

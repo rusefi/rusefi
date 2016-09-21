@@ -88,7 +88,7 @@ typedef enum {
 
 	SUBARU_2003_WRX = 22,
 
-	DODGE_NEON_2003 = 23,
+	DODGE_NEON_2003_CAM = 23,
 	MIATA_1994_SPAGS = 24,
 
 	BMW_E34 = 25,
@@ -134,7 +134,9 @@ typedef enum {
 
 	TEST_ENGINE_VVT = 45,
 
-	ET_UNUSED = 46,
+	DODGE_NEON_2003_CRANK = 46,
+
+	ET_UNUSED = 47,
 
 	Force_4b_engine_type = ENUM_32_BITS,
 } engine_type_e;
@@ -161,7 +163,8 @@ typedef enum {
 
 	TT_HONDA_ACCORD_CD_DIP = 13,
 
-	TT_DODGE_NEON_2003 = 14,
+	// cam-based
+	TT_DODGE_NEON_2003_CAM = 14,
 
 	TT_MAZDA_DOHC_1_4 = 15,
 
@@ -195,8 +198,10 @@ typedef enum {
 	// skipped 3/1 with cam sensor for testing
 	TT_3_1_CAM = 31,
 
-	TT_UNUSED = 32, // this is used if we want to iterate over all trigger types
+	// crank-based in case your cam is broken
+	TT_DODGE_NEON_2003_CRANK = 32,
 
+	TT_UNUSED = 33, // this is used if we want to iterate over all trigger types
 
 	Force_4b_trigger_type = ENUM_32_BITS,
 } trigger_type_e;
