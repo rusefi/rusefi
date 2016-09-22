@@ -12,6 +12,8 @@
 #include <hal.h>
 #include <string.h>
 
+#define DEFAULT_ENGINE_TYPE CUSTOM_ENGINE
+
 // this is about MISRA not liking 'time.h'. todo: figure out something
 #if defined __GNUC__
 // GCC

@@ -309,42 +309,6 @@ static ALWAYS_INLINE void ignitionMathCalc(int rpm DECLARE_ENGINE_PARAMETER_S) {
 uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
 #endif
 
-static ALWAYS_INLINE void scheduleIgnitionAndFuelEvents(int rpm, int revolutionIndex DECLARE_ENGINE_PARAMETER_S) {
-
-	engine->m.beforeIgnitionSch = GET_TIMESTAMP();
-	/**
-	 * TODO: warning. there is a bit of a hack here, todo: improve.
-	 * currently output signals/times signalTimerUp from the previous revolutions could be
-	 * still used because they have crossed the revolution boundary
-	 * but we are already re-purposing the output signals, but everything works because we
-	 * are not affecting that space in memory. todo: use two instances of 'ignitionSignals'
-	 */
-	float maxAllowedDwellAngle = (int) (getEngineCycle(engineConfiguration->operationMode) / 2); // the cast is about making Coverity happy
-
-	if (engineConfiguration->ignitionMode == IM_ONE_COIL) {
-		maxAllowedDwellAngle = getEngineCycle(engineConfiguration->operationMode) / engineConfiguration->specs.cylindersCount / 1.1;
-	}
-
-	if (engine->engineState.dwellAngle == 0) {
-		warning(CUSTOM_OBD_32, "dwell is zero?");
-	}
-	if (engine->engineState.dwellAngle > maxAllowedDwellAngle) {
-		warning(CUSTOM_OBD_33, "dwell angle too long: %f", engine->engineState.dwellAngle);
-	}
-
-	// todo: add some check for dwell overflow? like 4 times 6 ms while engine cycle is less then that
-
-	IgnitionEventList *list = &engine->engineConfiguration2->ignitionEvents[revolutionIndex];
-
-	if (cisnan(ENGINE(engineState.timingAdvance))) {
-		// error should already be reported
-		list->reset(); // reset is needed to clear previous ignition schedule
-		return;
-	}
-	initializeIgnitionActions(ENGINE(engineState.timingAdvance), ENGINE(engineState.dwellAngle), list PASS_ENGINE_PARAMETER);
-	engine->m.ignitionSchTime = GET_TIMESTAMP() - engine->m.beforeIgnitionSch;
-}
-
 /**
  * This is the main trigger event handler.
  * Both injection and ignition are controlled from this method.
@@ -429,9 +393,6 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 		ENGINE(m.ignitionMathTime) = GET_TIMESTAMP() - ENGINE(m.beforeIgnitionMath);
 	}
 
-	if (trgEventIndex == 0) {
-		scheduleIgnitionAndFuelEvents(rpm, revolutionIndex PASS_ENGINE_PARAMETER);
-	}
 
 	/**
 	 * For fuel we schedule start of injection based on trigger angle, and then inject for
@@ -441,7 +402,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 	/**
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
 	 */
-	handleSpark(limitedSpark, trgEventIndex, rpm,
+	handleSpark(revolutionIndex, limitedSpark, trgEventIndex, rpm,
 			&engine->engineConfiguration2->ignitionEvents[revolutionIndex] PASS_ENGINE_PARAMETER);
 #if (EFI_HISTOGRAMS && EFI_PROD_CODE) || defined(__DOXYGEN__)
 	int diff = hal_lld_get_counter_value() - beforeCallback;
