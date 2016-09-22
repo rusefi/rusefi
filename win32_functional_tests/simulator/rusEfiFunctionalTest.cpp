@@ -38,21 +38,10 @@ extern engine_configuration2_s * engineConfiguration2;
 
 extern WaveChart waveChart;
 
-//persistent_config_container_s persistentState;
-//static engine_configuration2_s ec2;
-
 static LoggingWithStorage sharedLogger("simulator");
-
-//engine_configuration_s * engineConfiguration = &persistentState.persistentConfiguration.engineConfiguration;
-//board_configuration_s *boardConfiguration = &persistentState.persistentConfiguration.engineConfiguration.bc;
-//engine_configuration2_s *engineConfiguration2 = &ec2;
 
 void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
 }
-
-//int isInjectionEnabled(void) {
-//	return true;
-//}
 
 int getRemainingStack(thread_t *otp) {
 	return 99999;

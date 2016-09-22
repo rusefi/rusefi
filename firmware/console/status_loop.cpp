@@ -210,9 +210,11 @@ static void printSensors(Logging *log, bool fileFormat) {
 		reportSensorF(log, fileFormat, "afr", "AFR", getAfr(PASS_ENGINE_PARAMETER_F), 2);
 	}
 
+#if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
 	if (fileFormat) {
 		reportSensorF(log, fileFormat, "idle", "%", getIdlePosition(), 2);
 	}
+#endif /* EFI_IDLE_CONTROL */
 
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	reportSensorF(log, fileFormat, "target", "AFR", engine->engineState.targetAFR, 2);
