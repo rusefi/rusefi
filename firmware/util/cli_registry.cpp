@@ -536,6 +536,11 @@ void handleConsoleLine(char *line) {
 	sendOutConfirmation(confirmation, lineLength);
 #endif
 
+#if EFI_SIMULATOR || defined(__DOXYGEN__)
+	printf("handleConsoleLine [%s]\r\n", line);
+#endif /* EFI_SIMULATOR */
+
+
 	bool isKnownComman = handleConsoleLineInternal(line, lineLength);
 
 	if (!isKnownComman) {
