@@ -49,7 +49,6 @@
 
 EXTERN_ENGINE
 ;
-extern engine_pins_s enginePins;
 
 static cyclic_buffer<int> errorDetection;
 static bool isInitializingTrigger = false; // #286 miata NA config - sync error on startup

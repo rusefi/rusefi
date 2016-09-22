@@ -61,8 +61,6 @@ static float currentEtbDuty;
 
 EXTERN_ENGINE;
 
-extern engine_pins_s enginePins;
-
 static bool wasEtbBraking = false;
 
 static msg_t etbThread(void *arg) {

@@ -99,7 +99,8 @@ void applyNewConfiguration(void);
 		extern board_configuration_s *boardConfiguration; \
 		extern persistent_config_s *config; \
 		extern persistent_config_container_s persistentState; \
-		extern engine_configuration2_s * engineConfiguration2
+		extern engine_configuration2_s * engineConfiguration2; \
+		extern engine_pins_s enginePins
 
 #define DECLARE_ENGINE_PARAMETER_F void
 #define DECLARE_ENGINE_PARAMETER_S

@@ -11,5 +11,10 @@
 #include "engine.h"
 
 int isInjectionEnabled(engine_configuration_s *engineConfiguration);
+void handleSpark(bool limitedSpark, uint32_t trgEventIndex, int rpm,
+		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S);
+void initSparkLogic(Logging *sharedLogger);
+void turnSparkPinHigh(NamedOutputPin *output);
+void turnSparkPinLow(NamedOutputPin *output);
 
 #endif /* CONTROLLERS_TRIGGER_SPARK_LOGIC_H_ */

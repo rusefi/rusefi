@@ -29,6 +29,7 @@
 #include "engine_test_helper.h"
 #include "speed_density.h"
 #include "fuel_math.h"
+#include "spark_logic.h"
 
 extern int timeNow;
 extern float unitTestValue;
