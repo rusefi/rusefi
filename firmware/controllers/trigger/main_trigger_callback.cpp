@@ -66,17 +66,6 @@ extern bool hasFirmwareErrorFlag;
 static LocalVersionHolder triggerVersion;
 static const char *prevOutputName = NULL;
 
-extern engine_pins_s enginePins;
-
-/**
- * In order to archive higher event precision, we are using a hybrid approach
- * where we are scheduling events based on the closest trigger event with a time offset.
- *
- * This queue is using global trigger event index as 'time'
- */
-//static EventQueue triggerEventsQueue;
-static cyclic_buffer<int> ignitionErrorDetection;
-
 static Logging *logger;
 
 // todo: figure out if this even helps?
@@ -291,134 +280,6 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 	}
 }
 
-void turnSparkPinLow(NamedOutputPin *output) {
-	turnPinLow(output);
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-	if (CONFIG(dizzySparkOutputPin) != GPIO_UNASSIGNED) {
-		turnPinLow(&enginePins.dizzyOutput);
-	}
-#endif /* EFI_PROD_CODE */
-}
-
-void turnSparkPinHigh(NamedOutputPin *output) {
-	turnPinHigh(output);
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-	if (CONFIG(dizzySparkOutputPin) != GPIO_UNASSIGNED) {
-		turnPinHigh(&enginePins.dizzyOutput);
-	}
-#endif /* EFI_PROD_CODE */
-}
-
-static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, IgnitionEvent *iEvent,
-		int rpm DECLARE_ENGINE_PARAMETER_S) {
-
-	float dwellMs = ENGINE(engineState.sparkDwell);
-	if (cisnan(dwellMs) || dwellMs < 0) {
-		warning(CUSTOM_OBD_45, "invalid dwell: %f at %d", dwellMs, rpm);
-		return;
-	}
-
-	floatus_t chargeDelayUs = ENGINE(rpmCalculator.oneDegreeUs) * iEvent->dwellPosition.angleOffset;
-	int isIgnitionError = chargeDelayUs < 0;
-	ignitionErrorDetection.add(isIgnitionError);
-	if (isIgnitionError) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-		scheduleMsg(logger, "Negative spark delay=%f", chargeDelayUs);
-#endif
-		chargeDelayUs = 0;
-		return;
-	}
-
-	if (cisnan(dwellMs)) {
-		firmwareError("NaN in scheduleOutput", dwellMs);
-		return;
-	}
-
-	/**
-	 * We are alternating two event lists in order to avoid a potential issue around revolution boundary
-	 * when an event is scheduled within the next revolution.
-	 */
-	scheduling_s * sUp = &iEvent->signalTimerUp;
-	scheduling_s * sDown = &iEvent->signalTimerDown;
-
-	/**
-	 * The start of charge is always within the current trigger event range, so just plain time-based scheduling
-	 */
-	if (!limitedSpark) {
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
-	printf("spark charge delay=%f\r\n", chargeDelayUs);
-#endif
-		/**
-		 * Note how we do not check if spark is limited or not while scheduling 'spark down'
-		 * This way we make sure that coil dwell started while spark was enabled would fire and not burn
-		 * the coil.
-		 */
-		scheduleTask("spark up", sUp, chargeDelayUs, (schfunc_t) &turnSparkPinHigh, iEvent->output);
-	}
-	/**
-	 * Spark event is often happening during a later trigger event timeframe
-	 * TODO: improve precision
-	 */
-	findTriggerPosition(&iEvent->sparkPosition, iEvent->advance PASS_ENGINE_PARAMETER);
-
-	if (iEvent->sparkPosition.eventIndex == trgEventIndex) {
-		/**
-		 * Spark should be fired before the next trigger event - time-based delay is best precision possible
-		 */
-		float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * iEvent->sparkPosition.angleOffset;
-
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
-	printf("spark delay=%f angle=%f\r\n", timeTillIgnitionUs, iEvent->sparkPosition.angleOffset);
-#endif
-
-		scheduleTask("spark1 down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, iEvent->output);
-	} else {
-		/**
-		 * Spark should be scheduled in relation to some future trigger event, this way we get better firing precision
-		 */
-		bool isPending = assertNotInList<IgnitionEvent>(ENGINE(iHead), iEvent);
-		if (isPending)
-			return;
-
-		LL_APPEND(ENGINE(iHead), iEvent);
-	}
-}
-
-static ALWAYS_INLINE void handleSpark(bool limitedSpark, uint32_t trgEventIndex, int rpm,
-		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
-	if (!isValidRpm(rpm) || !CONFIG(isIgnitionEnabled)) {
-		 // this might happen for instance in case of a single trigger event after a pause
-		return;
-	}
-	/**
-	 * Ignition schedule is defined once per revolution
-	 * See initializeIgnitionActions()
-	 */
-
-	IgnitionEvent *current, *tmp;
-
-	LL_FOREACH_SAFE(ENGINE(iHead), current, tmp)
-	{
-		if (current->sparkPosition.eventIndex == trgEventIndex) {
-			// time to fire a spark which was scheduled previously
-			LL_DELETE(ENGINE(iHead), current);
-
-			scheduling_s * sDown = &current->signalTimerDown;
-
-			float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * current->sparkPosition.angleOffset;
-			scheduleTask("spark 2down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, current->output);
-		}
-	}
-
-//	scheduleSimpleMsg(&logger, "eventId spark ", eventIndex);
-	for (int i = 0; i < list->size; i++) {
-		IgnitionEvent *event = &list->elements[i];
-		if (event->dwellPosition.eventIndex != trgEventIndex)
-			continue;
-		handleSparkEvent(limitedSpark, trgEventIndex, event, rpm PASS_ENGINE_PARAMETER);
-	}
-}
-
 static histogram_s mainLoopHisto;
 
 void showMainHistogram(void) {
@@ -572,8 +433,6 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 		scheduleIgnitionAndFuelEvents(rpm, revolutionIndex PASS_ENGINE_PARAMETER);
 	}
 
-//	triggerEventsQueue.executeAll(getCrankEventCounter());
-
 	/**
 	 * For fuel we schedule start of injection based on trigger angle, and then inject for
 	 * specified duration of time
@@ -619,6 +478,7 @@ static void showMainInfo(Engine *engine) {
 void initMainEventListener(Logging *sharedLogger, Engine *engine) {
 	logger = sharedLogger;
 	efiAssertVoid(engine!=NULL, "null engine");
+	initSparkLogic(logger);
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	addConsoleAction("performanceinfo", showTriggerHistogram);
@@ -634,10 +494,6 @@ void initMainEventListener(Logging *sharedLogger, Engine *engine) {
 #endif /* EFI_HISTOGRAMS */
 
 	addTriggerEventListener(mainTriggerCallback, "main loop", engine);
-}
-
-int isIgnitionTimingError(void) {
-	return ignitionErrorDetection.sum(6) > 4;
 }
 
 #endif /* EFI_ENGINE_CONTROL */

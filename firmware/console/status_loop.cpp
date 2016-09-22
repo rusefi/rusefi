@@ -73,8 +73,6 @@ extern bool main_loop_started;
 #include "vehicle_speed.h"
 #endif
 
-extern engine_pins_s enginePins;
-
 static bool subscription[(int) RO_LAST_ELEMENT];
 
 // this 'true' value is needed for simulator
@@ -521,7 +519,6 @@ static THD_WORKING_AREA(blinkingStack, 128);
 static OutputPin communicationPin;
 OutputPin warningPin;
 OutputPin runningPin;
-extern engine_pins_s enginePins;
 
 static OutputPin *leds[] = { &warningPin, &runningPin, &enginePins.errorLedPin, &communicationPin, &enginePins.checkEnginePin };
 

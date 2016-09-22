@@ -26,7 +26,6 @@ EXTERN_ENGINE
 static Logging *logger;
 
 extern pin_output_mode_e DEFAULT_OUTPUT;
-extern engine_pins_s enginePins;
 int alternatorPidResetCounter = 0;
 
 static SimplePwm alternatorControl;

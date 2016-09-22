@@ -40,7 +40,6 @@ static THD_WORKING_AREA(ivThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static Logging *logger;
 extern TunerStudioOutputChannels tsOutputChannels;
-extern engine_pins_s enginePins;
 EXTERN_ENGINE
 ;
 

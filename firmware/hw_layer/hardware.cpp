@@ -52,7 +52,6 @@ EXTERN_ENGINE
 ;
 extern bool hasFirmwareErrorFlag;
 extern engine_configuration_s activeConfiguration;
-extern engine_pins_s enginePins;
 
 static Mutex spiMtx;
 

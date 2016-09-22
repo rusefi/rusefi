@@ -448,11 +448,6 @@ void setTimingLoadBin(float from, float to DECLARE_ENGINE_PARAMETER_S) {
 	setTableBin(config->ignitionLoadBins, IGN_LOAD_COUNT, from, to);
 }
 
-int isInjectionEnabled(engine_configuration_s *engineConfiguration) {
-	// todo: is this worth a method? should this be inlined?
-	return engineConfiguration->isInjectionEnabled;
-}
-
 /**
  * this method sets algorithm and ignition table scale
  */

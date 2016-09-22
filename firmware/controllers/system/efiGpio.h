@@ -154,7 +154,5 @@ void seTurnPinHigh(InjectorOutputPin *output);
 void seTurnPinLow(InjectorOutputPin *output);
 void turnPinHigh(NamedOutputPin *output);
 void turnPinLow(NamedOutputPin *output);
-void turnSparkPinHigh(NamedOutputPin *output);
-void turnSparkPinLow(NamedOutputPin *output);
 
 #endif /* EFIGPIO_H_ */

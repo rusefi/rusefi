@@ -105,6 +105,7 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(SYSTEMSRC_CPP) \
 	$(PROJECT_DIR)/controllers/trigger/trigger_central.cpp \
 	$(PROJECT_DIR)/controllers/trigger/rpm_calculator.cpp \
+	$(PROJECT_DIR)/controllers/trigger/spark_logic.cpp \
 	$(PROJECT_DIR)/controllers/trigger/main_trigger_callback.cpp \
 	main.cpp
 

@@ -33,7 +33,7 @@ typedef int bool_t;
 
 #define CCM_OPTIONAL
 
-#define EXTERN_ENGINE
+#define EXTERN_ENGINE extern engine_pins_s enginePins
 
 #ifdef __cplusplus
 class Engine;
