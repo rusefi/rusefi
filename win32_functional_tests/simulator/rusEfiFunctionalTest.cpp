@@ -31,7 +31,6 @@
 #include "map_averaging.h"
 
 #define DEFAULT_SIM_RPM 1200
-#define DEFAULT_ENGINE_TYPE FORD_ESCORT_GT
 #define DEFAULT_SNIFFER_THR 2500
 
 EXTERN_ENGINE;

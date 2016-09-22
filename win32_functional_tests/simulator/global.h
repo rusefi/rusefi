@@ -1,4 +1,6 @@
 
+#define DEFAULT_ENGINE_TYPE FORD_ESCORT_GT
+
 #include <ch.h>
 #include <hal.h>
 #include <time.h>

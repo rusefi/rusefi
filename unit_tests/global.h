@@ -8,6 +8,8 @@
 #ifndef GLOBAL_H_
 #define GLOBAL_H_
 
+#define DEFAULT_ENGINE_TYPE CUSTOM_ENGINE
+
 #include <time.h>
 #include <string.h>
 #include <stdbool.h>

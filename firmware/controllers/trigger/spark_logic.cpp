@@ -8,6 +8,7 @@
 #include "engine_math.h"
 #include "utlist.h"
 #include "event_queue.h"
+#include "efilib2.h"
 
 EXTERN_ENGINE;
 
@@ -116,8 +117,48 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	}
 }
 
-void handleSpark(bool limitedSpark, uint32_t trgEventIndex, int rpm,
+static ALWAYS_INLINE void prepareIgnitionSchedule(int rpm, int revolutionIndex DECLARE_ENGINE_PARAMETER_S) {
+
+	engine->m.beforeIgnitionSch = GET_TIMESTAMP();
+	/**
+	 * TODO: warning. there is a bit of a hack here, todo: improve.
+	 * currently output signals/times signalTimerUp from the previous revolutions could be
+	 * still used because they have crossed the revolution boundary
+	 * but we are already re-purposing the output signals, but everything works because we
+	 * are not affecting that space in memory. todo: use two instances of 'ignitionSignals'
+	 */
+	float maxAllowedDwellAngle = (int) (getEngineCycle(engineConfiguration->operationMode) / 2); // the cast is about making Coverity happy
+
+	if (engineConfiguration->ignitionMode == IM_ONE_COIL) {
+		maxAllowedDwellAngle = getEngineCycle(engineConfiguration->operationMode) / engineConfiguration->specs.cylindersCount / 1.1;
+	}
+
+	if (engine->engineState.dwellAngle == 0) {
+		warning(CUSTOM_OBD_32, "dwell is zero?");
+	}
+	if (engine->engineState.dwellAngle > maxAllowedDwellAngle) {
+		warning(CUSTOM_OBD_33, "dwell angle too long: %f", engine->engineState.dwellAngle);
+	}
+
+	// todo: add some check for dwell overflow? like 4 times 6 ms while engine cycle is less then that
+
+	IgnitionEventList *list = &engine->engineConfiguration2->ignitionEvents[revolutionIndex];
+
+	if (cisnan(ENGINE(engineState.timingAdvance))) {
+		// error should already be reported
+		list->reset(); // reset is needed to clear previous ignition schedule
+		return;
+	}
+	initializeIgnitionActions(ENGINE(engineState.timingAdvance), ENGINE(engineState.dwellAngle), list PASS_ENGINE_PARAMETER);
+	engine->m.ignitionSchTime = GET_TIMESTAMP() - engine->m.beforeIgnitionSch;
+}
+
+void handleSpark(int revolutionIndex, bool limitedSpark, uint32_t trgEventIndex, int rpm,
 		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
+	if (trgEventIndex == 0) {
+		prepareIgnitionSchedule(rpm, revolutionIndex PASS_ENGINE_PARAMETER);
+	}
+
 	if (!isValidRpm(rpm) || !CONFIG(isIgnitionEnabled)) {
 		 // this might happen for instance in case of a single trigger event after a pause
 		return;
