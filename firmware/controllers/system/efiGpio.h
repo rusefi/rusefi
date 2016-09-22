@@ -53,6 +53,7 @@ public:
 	void reset();
 	efitimeus_t overlappingScheduleOffTime;
 	bool cancelNextTurningInjectorOff;
+	int overlappingCounter;
 };
 
 class engine_pins_s {
