@@ -31,91 +31,74 @@ void configureNeon2003TriggerShapeCrank(TriggerShape *s DECLARE_ENGINE_PARAMETER
 	s->useRiseEdge = true;
 	s->gapBothDirections = false;
 
-//	s->addEvent(25, T_SECONDARY, TV_FALL);
-//	s->addEvent(30, T_SECONDARY, TV_RISE);
-//	s->addEvent(35, T_SECONDARY, TV_FALL);
-//	s->addEvent(40, T_SECONDARY, TV_RISE);
-//	s->addEvent(45, T_SECONDARY, TV_FALL);
-//	s->addEvent(50, T_SECONDARY, TV_RISE);
-//	s->addEvent(55, T_SECONDARY, TV_FALL);
-//	s->addEvent(60, T_SECONDARY, TV_RISE);
-//	s->addEvent(65, T_SECONDARY, TV_FALL);
-//	s->addEvent(70, T_SECONDARY, TV_RISE);
-//	s->addEvent(75, T_SECONDARY, TV_FALL);
-//	s->addEvent(80, T_SECONDARY, TV_RISE);
-//	s->addEvent(85, T_SECONDARY, TV_FALL);
-//	s->addEvent(90, T_SECONDARY, TV_RISE);
-//	s->addEvent(95, T_SECONDARY, TV_FALL);
-//	s->addEvent(100, T_SECONDARY, TV_RISE);
-//	s->addEvent(105, T_SECONDARY, TV_FALL);
-//	s->addEvent(110, T_SECONDARY, TV_RISE);
-//	s->addEvent(115, T_SECONDARY, TV_FALL);
-//	s->addEvent(120, T_SECONDARY, TV_RISE);
-//	s->addEvent(125, T_SECONDARY, TV_FALL);
-//	s->addEvent(130, T_SECONDARY, TV_RISE);
-//	s->addEvent(135, T_SECONDARY, TV_FALL);
-//	s->addEvent(140, T_SECONDARY, TV_RISE);
+	s->setTriggerSynchronizationGap(3);
+	int m = 2;
 
-	s->addEvent(144, T_PRIMARY, TV_RISE);
-
-//	s->addEvent(145,T_SECONDARY, TV_FALL);
-//	s->addEvent(150, T_SECONDARY, TV_RISE);
-//	s->addEvent(155, T_SECONDARY, TV_FALL);
-//	s->addEvent(160, T_SECONDARY, TV_RISE);
-//	s->addEvent(165, T_SECONDARY, TV_FALL);
-//	s->addEvent(170, T_SECONDARY, TV_RISE);
-//	s->addEvent(175, T_SECONDARY, TV_FALL);
-//	s->addEvent(180 - EPS_ANGLE, T_SECONDARY, TV_RISE);
-
-	s->addEvent(180, T_PRIMARY, TV_FALL);
-
-//	s->addEvent(185, T_SECONDARY, TV_FALL);
-//	s->addEvent(210, T_SECONDARY, TV_RISE);
-//	s->addEvent(215, T_SECONDARY, TV_FALL);
-
-	s->addEvent(216, T_PRIMARY, TV_RISE);
-
-//	s->addEvent(220, T_SECONDARY, TV_RISE);
-//	s->addEvent(225, T_SECONDARY, TV_FALL);
-//	s->addEvent(230, T_SECONDARY, TV_RISE);
-//	s->addEvent(235, T_SECONDARY, TV_FALL);
-//	s->addEvent(240, T_SECONDARY, TV_RISE);
-//	s->addEvent(245, T_SECONDARY, TV_FALL);
-//	s->addEvent(250, T_SECONDARY, TV_RISE);
-
-	s->addEvent(252, T_PRIMARY, TV_FALL);
-
-//	s->addEvent(255, T_SECONDARY, TV_FALL);
-//
-//	s->addEvent(260, T_SECONDARY, TV_RISE);
-//	s->addEvent(265, T_SECONDARY, TV_FALL);
-//	s->addEvent(270, T_SECONDARY, TV_RISE);
-//	s->addEvent(275, T_SECONDARY, TV_FALL);
-//	s->addEvent(280, T_SECONDARY, TV_RISE);
-//	s->addEvent(285, T_SECONDARY, TV_FALL);
-
-	s->addEvent(288, T_PRIMARY, TV_RISE);
-
-//	s->addEvent(290, T_SECONDARY, TV_RISE);
-//	s->addEvent(295, T_SECONDARY, TV_FALL);
-//	s->addEvent(300, T_SECONDARY, TV_RISE);
-//	s->addEvent(305, T_SECONDARY, TV_FALL);
-//	s->addEvent(310, T_SECONDARY, TV_RISE);
-//	s->addEvent(315, T_SECONDARY, TV_FALL);
-//	s->addEvent(320, T_SECONDARY, TV_RISE);
-
-	s->addEvent(324, T_PRIMARY, TV_FALL);
-
-//	s->addEvent(325, T_SECONDARY, TV_FALL);
-//	s->addEvent(330, T_SECONDARY, TV_RISE);
-//	s->addEvent(335, T_SECONDARY, TV_FALL);
-//	s->addEvent(340, T_SECONDARY, TV_RISE);
-//	s->addEvent(345, T_SECONDARY, TV_FALL);
-//	s->addEvent(350, T_SECONDARY, TV_RISE);
-//	s->addEvent(355, T_SECONDARY, TV_FALL);
-//	s->addEvent(360 - EPS_ANGLE, T_SECONDARY, TV_RISE);
-
-	s->addEvent(360, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 25, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 30, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 35, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 40, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 45, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 50, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 55, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 60, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 65, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 70, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 75, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 80, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 85, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 90, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 95, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 100, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 105, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 110, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 115, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 120, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 125, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 130, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 135, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 140, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 145,T_PRIMARY, TV_FALL);
+	s->addEvent(m * 150, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 155, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 160, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 165, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 170, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 175, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 180, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 185, T_PRIMARY, TV_FALL);
+	// gap 25
+	s->addEvent(m * 210, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 215, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 220, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 225, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 230, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 235, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 240, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 245, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 250, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 255, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 260, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 265, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 270, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 275, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 280, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 285, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 290, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 295, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 300, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 305, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 310, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 315, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 320, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 325, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 330, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 335, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 340, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 345, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 350, T_PRIMARY, TV_RISE);
+	s->addEvent(m * 355, T_PRIMARY, TV_FALL);
+	s->addEvent(m * 360, T_PRIMARY, TV_RISE);
 }
 
 void configureNeon2003TriggerShapeCam(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
