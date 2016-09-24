@@ -6,6 +6,7 @@
 #include <time.h>
 #include <math.h>
 
+#include "efifeatures.h"
 #include "rusefi_enums.h"
 #include "auto_generated_enums.h"
 #include "obd_error_codes.h"

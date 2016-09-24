@@ -44,8 +44,10 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t
 #endif /* EFI_UNIT_TEST */
 	efiAssert(callback != NULL, "NULL callback", false);
 
+// please note that simulator does not use this code at all - simulator uses signal_executor_sleep
+
 	if (scheduling->isScheduled) {
-#if EFI_UNIT_TEST || EFI_SIMULATOR || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
 		printf("Already scheduled was %d\r\n", (int)scheduling->momentX);
 		printf("Already scheduled now %d\r\n", (int)timeX);
 #endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
@@ -163,6 +165,9 @@ int EventQueue::executeAll(efitime_t now) {
 		current->isScheduled = false;
 		int howFarOff = now - current->momentX;
 		maxHowFarOff = maxI(maxHowFarOff, howFarOff);
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+		printf("execute %d %d\r\n", (int)current, (int)current->param);
+#endif
 		current->callback(current->param);
 		// even with overflow it's safe to subtract here
 		lastEventQueueTime = GET_TIMESTAMP() - before;
