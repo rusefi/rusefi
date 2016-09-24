@@ -45,10 +45,10 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t
 	efiAssert(callback != NULL, "NULL callback", false);
 
 	if (scheduling->isScheduled) {
-#if EFI_UNIT_TEST
-		printf("Already scheduled was %d\r\n", scheduling->momentX);
-		printf("Already scheduled now %d\r\n", timeX);
-#endif
+#if EFI_UNIT_TEST || EFI_SIMULATOR || defined(__DOXYGEN__)
+		printf("Already scheduled was %d\r\n", (int)scheduling->momentX);
+		printf("Already scheduled now %d\r\n", (int)timeX);
+#endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
 		return false;
 	}
 

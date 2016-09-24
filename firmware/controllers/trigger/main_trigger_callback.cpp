@@ -105,14 +105,11 @@ static void scheduleFuelInjection(int injEventIndex, OutputSignal *signal, efiti
 	efitimeus_t turnOnTime = nowUs + (int) delayUs;
 	bool isSecondaryOverlapping = turnOnTime < output->overlappingScheduleOffTime;
 
-#if EFI_UNIT_CODE
-	if (isOverlapping) {
-		printf("overlapping on %s %d < %d", output->name, turnOnTime, output->overlappingScheduleOffTime);
-	}
-#endif
-
 	if (isSecondaryOverlapping) {
 		output->cancelNextTurningInjectorOff = true;
+#if EFI_UNIT_TEST || EFI_SIMULATOR || defined(__DOXYGEN__)
+	printf("please cancel %s %d %d\r\n", output->name, (int)getTimeNowUs(), output->overlappingCounter);
+#endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
 	} else {
 		seScheduleByTime("out up", sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, output);
 	}
