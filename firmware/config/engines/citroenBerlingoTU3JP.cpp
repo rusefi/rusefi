@@ -216,4 +216,8 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	copyFuelTable(tps_fuel_table, config->fuelTable);
 	copyTimingTable(tps_advance_table, config->ignitionTable);
 
+	engineConfiguration->dizzySparkOutputPin = GPIOE_3;
+	engineConfiguration->dizzySparkOutputPinMode = OM_INVERTED;
+
+
 }
