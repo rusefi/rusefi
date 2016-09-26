@@ -90,6 +90,10 @@ floatms_t getSpeedDensityFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	float adjustedMap = map + engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_F);
 
 	engine->engineState.airMass = getAirMass(engineConfiguration, ENGINE(engineState.currentVE), adjustedMap, tChargeK);
+#if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
+	printf("map=%f adjustedMap=%f airMass=%f\t\n",
+			map, adjustedMap, engine->engineState.airMass);
+#endif /*EFI_PRINTF_FUEL_DETAILS */
 
 	return sdMath(engineConfiguration, engine->engineState.airMass, ENGINE(engineState.targetAFR)) * 1000;
 }
