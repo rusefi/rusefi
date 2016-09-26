@@ -26,10 +26,29 @@
 #include "scheduler.h"
 #include "signal_executor.h"
 
+#if EFI_SIMULATOR || defined(__DOXYGEN__)
+// this is about debugging
+#include "efiGpio.h"
+#endif /* EFI_SIMULATOR */
+
 #if EFI_SIGNAL_EXECUTOR_SLEEP || defined(__DOXYGEN__)
 
 void scheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param) {
 	scheduleTask(prefix, scheduling, time - getTimeNowUs(), callback, param);
+}
+
+static void timerCallback(scheduling_s *scheduling) {
+#if EFI_SIMULATOR || defined(__DOXYGEN__)
+	if (scheduling->callback == (schfunc_t)&seTurnPinLow) {
+		printf("executing cb=seTurnPinLow p=%d sch=%d now=%d\r\n", (int)scheduling->param, (int)scheduling,
+				(int)getTimeNowUs());
+	} else {
+//		printf("exec cb=%d p=%d\r\n", (int)scheduling->callback, (int)scheduling->param);
+	}
+
+#endif /* EFI_SIMULATOR */
+		scheduling->callback(scheduling->param);
+
 }
 
 void scheduleTask(const char *prefix, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
@@ -43,11 +62,25 @@ void scheduleTask(const char *prefix, scheduling_s *scheduling, int delayUs, sch
 	}
 
 	lockAnyContext();
+	scheduling->callback = callback;
+	scheduling->param = param;
 	int isArmed = chVTIsArmedI(&scheduling->timer);
-	if (isArmed)
+	if (isArmed) {
+#if EFI_SIMULATOR || defined(__DOXYGEN__)
+		printf("isArmed? why? sch=%d cb=%d p=%d\r\n", (int) scheduling, (int)callback, (int)param);
+#endif /* EFI_SIMULATOR */
 		chVTResetI(&scheduling->timer);
+	}
 
-	chVTSetI(&scheduling->timer, delaySt, (vtfunc_t)callback, param);
+#if EFI_SIMULATOR || defined(__DOXYGEN__)
+	if (callback == (schfunc_t)&seTurnPinLow) {
+		printf("setTime cb=seTurnPinLow p=%d\r\n", (int)param);
+	} else {
+//		printf("setTime cb=%d p=%d\r\n", (int)callback, (int)param);
+	}
+#endif /* EFI_SIMULATOR */
+
+	chVTSetI(&scheduling->timer, delaySt, (vtfunc_t)timerCallback, scheduling);
 	unlockAnyContext();
 }
 
