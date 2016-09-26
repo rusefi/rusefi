@@ -129,6 +129,10 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_S) {
 		floatms_t fuelPerCycle = getRunningFuel(baseFuel, rpm PASS_ENGINE_PARAMETER);
 		theoreticalInjectionLength = fuelPerCycle
 				/ getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
+#if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
+	printf("baseFuel=%f fuelPerCycle=%f theoreticalInjectionLength=%f\t\n",
+			baseFuel, fuelPerCycle, theoreticalInjectionLength);
+#endif /*EFI_PRINTF_FUEL_DETAILS */
 	}
 	return theoreticalInjectionLength + ENGINE(engineState.injectorLag);
 }

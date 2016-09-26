@@ -12,6 +12,8 @@
 
 #define EFI_ENABLE_MOCK_ADC TRUE
 
+#define EFI_PRINTF_FUEL_DETAILS TRUE
+
 #define EFI_GPIO TRUE
 
 #define EFI_FSIO TRUE

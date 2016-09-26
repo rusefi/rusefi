@@ -38,7 +38,7 @@ void scheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t ti
 }
 
 static void timerCallback(scheduling_s *scheduling) {
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
+#if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
 	if (scheduling->callback == (schfunc_t)&seTurnPinLow) {
 		printf("executing cb=seTurnPinLow p=%d sch=%d now=%d\r\n", (int)scheduling->param, (int)scheduling,
 				(int)getTimeNowUs());

@@ -87,7 +87,7 @@ static void endSimultaniousInjection(Engine *engine) {
 	}
 }
 
-static void scheduleFuelInjection(int injEventIndex, OutputSignal *signal, efitimeus_t nowUs, float delayUs, float durationUs, InjectorOutputPin *output DECLARE_ENGINE_PARAMETER_S) {
+static void scheduleFuelInjection(int rpm, int injEventIndex, OutputSignal *signal, efitimeus_t nowUs, floatus_t delayUs, floatus_t durationUs, InjectorOutputPin *output DECLARE_ENGINE_PARAMETER_S) {
 	if (durationUs < 0) {
 		warning(CUSTOM_OBD_3, "duration cannot be negative: %d", durationUs);
 		return;
@@ -96,6 +96,10 @@ static void scheduleFuelInjection(int injEventIndex, OutputSignal *signal, efiti
 		warning(CUSTOM_OBD_4, "NaN in scheduleFuelInjection", durationUs);
 		return;
 	}
+#if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
+	printf("fuelout %s duration %d total=%d\t\n", output->name, (int)durationUs,
+			(int)MS2US(getCrankshaftRevolutionTimeMs(rpm)));
+#endif /*EFI_PRINTF_FUEL_DETAILS */
 
 	efiAssertVoid(signal!=NULL, "signal is NULL");
 	int index = getRevolutionCounter() % 2;
@@ -126,6 +130,9 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 	 * x2 or /2?
 	 */
 	const floatms_t injectionDuration = ENGINE(wallFuel).adjust(event->injectorIndex, ENGINE(fuelMs) PASS_ENGINE_PARAMETER);
+#if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
+	printf("fuel fuelMs=%f adjusted=%f\t\n", ENGINE(fuelMs), injectionDuration);
+#endif /*EFI_PRINTF_FUEL_DETAILS */
 
 	// todo: pre-calculate 'numberOfInjections'
 	floatms_t totalPerCycle = injectionDuration * getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
@@ -195,7 +202,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 			prevOutputName = outputName;
 		}
 
-		scheduleFuelInjection(injEventIndex, signal, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration), event->output PASS_ENGINE_PARAMETER);
+		scheduleFuelInjection(rpm, injEventIndex, signal, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration), event->output PASS_ENGINE_PARAMETER);
 	}
 }
 

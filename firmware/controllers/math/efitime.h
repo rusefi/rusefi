@@ -18,8 +18,6 @@
 
 #define MS2US(MS_TIME) ((MS_TIME) * 1000)
 
-#define US_TO_TI_TEMP 10
-
 // todo: implement a function to work with times considering counter overflow
 #define overflowDiff(now, time) ((now) - (time))
 
