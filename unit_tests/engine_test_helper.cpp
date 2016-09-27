@@ -20,7 +20,6 @@ extern engine_pins_s enginePins;
 EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persistentConfig) {
 	ec = &persistentConfig.engineConfiguration;
 
-	initEnginePinsNames();
 	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
 		enginePins.injectors[i].reset();
 	}
