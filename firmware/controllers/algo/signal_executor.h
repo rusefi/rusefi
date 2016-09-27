@@ -55,7 +55,6 @@ struct OutputSignal_struct {
 };
 
 void initSignalExecutor(void);
-void initEnginePinsNames(void);
 
 void initSignalExecutorImpl(void);
 
