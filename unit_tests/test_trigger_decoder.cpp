@@ -802,7 +802,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	{
 		scheduling_s *ev = schedulingQueue.getForUnitText(9);
 		assertEqualsM("rev cnt#4#2", 5, engine->rpmCalculator.getRevolutionCounter());
-		assertTrueM("down 50", ev == &engine->engineConfiguration2->fuelActuators[2].signalTimerDown[1]);
+		assertTrueM("down 50", ev == &engine->engineConfiguration2->fuelActuators[2].signalPair[1].signalTimerDown);
 	}
 
 
