@@ -198,8 +198,8 @@ static void scheduleFuelInjection(int rpm, int injEventIndex, OutputSignal *sign
 
 	efiAssertVoid(signal!=NULL, "signal is NULL");
 	int index = getRevolutionCounter() % 2;
-	scheduling_s * sUp = &signal->signalTimerUp[index];
-	scheduling_s * sDown = &signal->signalTimerDown[index];
+	scheduling_s * sUp = &signal->signalPair[index].signalTimerUp;
+	scheduling_s * sDown = &signal->signalPair[index].signalTimerDown;
 
 	efitimeus_t turnOnTime = nowUs + (int) delayUs;
 	bool isSecondaryOverlapping = turnOnTime < output->overlappingScheduleOffTime;
@@ -279,8 +279,8 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		 */
 		efiAssertVoid(signal!=NULL, "signal is NULL");
 		int index = getRevolutionCounter() % 2;
-		scheduling_s * sUp = &signal->signalTimerUp[index];
-		scheduling_s * sDown = &signal->signalTimerDown[index];
+		scheduling_s * sUp = &signal->signalPair[index].signalTimerUp;
+		scheduling_s * sDown = &signal->signalPair[index].signalTimerDown;
 
 		scheduleTask("out up", sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, engine);
 		scheduleTask("out down", sDown, (int) injectionStartDelayUs + MS2US(injectionDuration),

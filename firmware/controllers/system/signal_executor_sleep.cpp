@@ -25,6 +25,7 @@
 #include "main.h"
 #include "scheduler.h"
 #include "signal_executor.h"
+#include "main_trigger_callback.h"
 
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
 // this is about debugging

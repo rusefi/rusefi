@@ -51,8 +51,7 @@ struct OutputSignal_struct {
 	 * We are alternating instances so that events which extend into next revolution are not reused while
 	 * scheduling next revolution events
 	 */
-	scheduling_s signalTimerUp[2];
-	scheduling_s signalTimerDown[2];
+	OutputSignalPair signalPair[2];
 };
 
 void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, NamedOutputPin *param);
