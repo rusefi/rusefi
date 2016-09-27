@@ -16,7 +16,6 @@
 EXTERN_ENGINE;
 
 static scheduling_s tachTurnSignalOff;
-extern engine_pins_s enginePins;
 
 static void turnTachPinLow(void) {
 	turnPinLow(&enginePins.tachOut);
