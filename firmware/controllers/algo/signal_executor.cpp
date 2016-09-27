@@ -115,7 +115,13 @@ extern LoggingWithStorage sharedLogger;
 
 // todo: make these macro? kind of a penny optimization if compiler is not smart to inline
 void seTurnPinHigh(InjectorOutputPin *output) {
-	if (output->currentLogicValue == 1) {
+//	output->overlappingCounter++;
+
+#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
+	printf("seTurnPinHigh %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
+#endif /* FUEL_MATH_EXTREME_LOGGING */
+
+	if (output->overlappingCounter > 1) {
 //		if (output->cancelNextTurningInjectorOff) {
 //			// how comes AutoTest.testFordAspire ends up here?
 //		} else {
@@ -123,9 +129,9 @@ void seTurnPinHigh(InjectorOutputPin *output) {
 //		 * #299
 //		 * this is another kind of overlap which happens in case of a small duty cycle after a large duty cycle
 //		 */
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
-		printf("cancelNextTurningInjectorOff %s %d\r\n", output->name, (int)getTimeNowUs());
-#endif /* EFI_SIMULATOR */
+#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
+		printf("overlapping, no need to touch pin %s %d\r\n", output->name, (int)getTimeNowUs());
+#endif /* FUEL_MATH_EXTREME_LOGGING */
 
 //			output->cancelNextTurningInjectorOff = true;
 //			return;
@@ -142,13 +148,14 @@ void seTurnPinHigh(InjectorOutputPin *output) {
 //		firmwareError("Already high");
 #endif
 
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
-	printf("seTurnPinHigh %s %d\r\n", output->name, (int)getTimeNowUs());
-#endif /* EFI_SIMULATOR */
 	turnPinHigh(output);
 }
 
 void seTurnPinLow(InjectorOutputPin *output) {
+#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
+	printf("seTurnPinLow %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
+#endif /* FUEL_MATH_EXTREME_LOGGING */
+
 	if (output->cancelNextTurningInjectorOff) {
 		/**
 		 * in case of fuel schedule overlap between engine cycles,
@@ -165,9 +172,6 @@ void seTurnPinLow(InjectorOutputPin *output) {
 #endif /* EFI_SIMULATOR */
 		return;
 	}
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
-	printf("seTurnPinLow %s %d\r\n", output->name, (int)getTimeNowUs());
-#endif /* EFI_SIMULATOR */
 
 	#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 	const char * w = output->currentLogicValue == false ? "err" : "";
@@ -180,7 +184,13 @@ void seTurnPinLow(InjectorOutputPin *output) {
 //	if (output->currentLogicValue == 0)
 //		firmwareError("Already low");
 #endif
-
+	output->overlappingCounter--;
+	if (output->overlappingCounter > 0) {
+#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
+		printf("was overlapping, no need to touch pin %s %d\r\n", output->name, (int)getTimeNowUs());
+#endif /* FUEL_MATH_EXTREME_LOGGING */
+//		return;
+	}
 	turnPinLow(output);
 }
 
@@ -190,9 +200,10 @@ void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t 
 	scheduleMsg(&sharedLogger, "schX %s", param->name);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-#if EFI_SIMULATOR || EFI_UNIT_TEST || defined(__DOXYGEN__)
-	printf("schB %s %d\r\n", param->name, (int)time);
-#endif /* EFI_SIMULATOR || EFI_UNIT_TEST */
+#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
+	const char *direction = callback == (schfunc_t) &seTurnPinHigh ? "up" : "down";
+	printf("seScheduleByTime %s %s %d sch=%d\r\n", direction, param->name, (int)time, (int)scheduling);
+#endif /* FUEL_MATH_EXTREME_LOGGING || EFI_UNIT_TEST */
 
 	scheduleByTime(prefix, scheduling, time, callback, param);
 }

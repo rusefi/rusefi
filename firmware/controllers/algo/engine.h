@@ -87,11 +87,11 @@ public:
 	FuelSchedule *processing;
 #endif
 
-	OutputSignal fuelActuators[MAX_INJECTION_OUTPUT_COUNT];
-	scheduling_s overlappingFuelActuatorTimerUp[MAX_INJECTION_OUTPUT_COUNT];
-	scheduling_s overlappingFuelActuatorTimerDown[MAX_INJECTION_OUTPUT_COUNT];
+	OutputSignal fuelActuators[INJECTION_PIN_COUNT];
+	scheduling_s overlappingFuelActuatorTimerUp[INJECTION_PIN_COUNT];
+	scheduling_s overlappingFuelActuatorTimerDown[INJECTION_PIN_COUNT];
 
-	bool wasOverlapping[MAX_INJECTION_OUTPUT_COUNT];
+	bool wasOverlapping[INJECTION_PIN_COUNT];
 
 	float fsioLastValue[LE_COMMAND_COUNT];
 

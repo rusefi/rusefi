@@ -74,7 +74,11 @@ bool isWarningNow(efitimesec_t now) {
 int warning(obd_code_e code, const char *fmt, ...) {
 	efiAssert(isWarningStreamInitialized, "warn stream not initialized", false);
 	UNUSED(code);
-  
+
+#if EFI_UNIT_TEST || EFI_SIMULATOR || defined(__DOXYGEN__)
+	printf("warning %s\r\n", fmt);
+#endif
+
 	efitimesec_t now = getTimeNowSeconds();
 	if (isWarningNow(now) || !warningEnabled)
 		return true; // we just had another warning, let's not spam
