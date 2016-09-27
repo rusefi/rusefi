@@ -45,7 +45,8 @@ static char LOGGING_BUFFER[1000];
 static Logging logger("settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 
 extern int maxNesting;
-extern engine_pins_s enginePins;
+EXTERN_ENGINE
+;
 
 /*
  static void printIntArray(int array[], int size) {
@@ -106,8 +107,6 @@ static void printOutputs(engine_configuration_s *engineConfiguration) {
 			hwPortname(boardConfiguration->alternatorControlPin));
 }
 
-EXTERN_ENGINE
-;
 
 /**
  * These should be not very long because these are displayed on the LCD as is
