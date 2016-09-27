@@ -24,6 +24,23 @@
 #include "signal_executor_sleep.h"
 #endif /* EFI_SIGNAL_EXECUTOR_SLEEP */
 
+class OutputSignalPair {
+public:
+	OutputSignalPair();
+	scheduling_s signalTimerUp;
+	scheduling_s signalTimerDown;
+
+	/**
+	 * we need atomic flag so that we do not schedule a new pair of up/down before previous down was executed.
+	 *
+	 * That's because we want to be sure that no 'down' side callback would be ignored since we are counting to see
+	 * overlaps so we need the end counter to always have zero.
+	 * TODO: make watchdog decrement relevant counter
+	 */
+	bool isScheduled;
+	InjectorOutputPin *output;
+};
+
 /**
  * @brief   Asynchronous output signal data structure
  */
@@ -38,7 +55,6 @@ struct OutputSignal_struct {
 	scheduling_s signalTimerDown[2];
 };
 
-void scheduleOutput2(scheduling_s * sUp, scheduling_s * sDown, efitimeus_t nowUs, float delayUs, float durationUs, InjectorOutputPin *output);
 void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, NamedOutputPin *param);
 void initSignalExecutor(void);
 void initEnginePinsNames(void);
