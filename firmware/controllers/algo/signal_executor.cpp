@@ -59,6 +59,11 @@ void initEnginePinsNames(void) {
 	}
 }
 
+OutputSignalPair::OutputSignalPair() {
+	isScheduled = false;
+	output = NULL;
+}
+
 void initSignalExecutor(void) {
 	initSignalExecutorImpl();
 	initEnginePinsNames();
@@ -113,121 +118,5 @@ void turnPinLow(NamedOutputPin *output) {
 extern LoggingWithStorage sharedLogger;
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-// todo: make these macro? kind of a penny optimization if compiler is not smart to inline
-void seTurnPinHigh(InjectorOutputPin *output) {
-//	output->overlappingCounter++;
 
-#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
-	printf("seTurnPinHigh %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
-#endif /* FUEL_MATH_EXTREME_LOGGING */
-
-	if (output->overlappingCounter > 1) {
-//		if (output->cancelNextTurningInjectorOff) {
-//			// how comes AutoTest.testFordAspire ends up here?
-//		} else {
-//		/**
-//		 * #299
-//		 * this is another kind of overlap which happens in case of a small duty cycle after a large duty cycle
-//		 */
-#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
-		printf("overlapping, no need to touch pin %s %d\r\n", output->name, (int)getTimeNowUs());
-#endif /* FUEL_MATH_EXTREME_LOGGING */
-
-//			output->cancelNextTurningInjectorOff = true;
-//			return;
-//		}
-	}
-#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
-	const char * w = output->currentLogicValue == true ? "err" : "";
-	scheduleMsg(&sharedLogger, "^ %spin=%s eventIndex %d %d", w, output->name,
-			getRevolutionCounter(), getTimeNowUs());
-#endif /* FUEL_MATH_EXTREME_LOGGING */
-
-#if EFI_UNIT_TEST
-//	if (output->currentLogicValue == 1)
-//		firmwareError("Already high");
-#endif
-
-	turnPinHigh(output);
-}
-
-void seTurnPinLow(InjectorOutputPin *output) {
-#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
-	printf("seTurnPinLow %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
-#endif /* FUEL_MATH_EXTREME_LOGGING */
-
-	if (output->cancelNextTurningInjectorOff) {
-		/**
-		 * in case of fuel schedule overlap between engine cycles,
-		 * and if engine cycle is above say 75% for batch mode on 4 cylinders,
-		 * we will get a secondary overlap between the special injection and a normal injection on the same injector.
-		 * In such a case want to combine these two injection into one continues injection.
-		 * Unneeded turn of injector on is handle while scheduling that second injection, but cancellation
-		 * of special injection end has to be taken care of dynamically	
-		 *
-		 */
-		output->cancelNextTurningInjectorOff = false;
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
-		printf("was cancelled %s %d\r\n", output->name, (int)getTimeNowUs());
-#endif /* EFI_SIMULATOR */
-		return;
-	}
-
-	#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
-	const char * w = output->currentLogicValue == false ? "err" : "";
-
-	scheduleMsg(&sharedLogger, "- %spin=%s eventIndex %d %d", w, output->name,
-			getRevolutionCounter(), getTimeNowUs());
-#endif /* FUEL_MATH_EXTREME_LOGGING */
-
-#if EFI_UNIT_TEST
-//	if (output->currentLogicValue == 0)
-//		firmwareError("Already low");
-#endif
-	output->overlappingCounter--;
-	if (output->overlappingCounter > 0) {
-#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
-		printf("was overlapping, no need to touch pin %s %d\r\n", output->name, (int)getTimeNowUs());
-#endif /* FUEL_MATH_EXTREME_LOGGING */
-//		return;
-	}
-	turnPinLow(output);
-}
-
-void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, NamedOutputPin *param) {
-#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
-	scheduleMsg(&sharedLogger, "schX %s %x %d", prefix, scheduling,	time);
-	scheduleMsg(&sharedLogger, "schX %s", param->name);
-#endif /* FUEL_MATH_EXTREME_LOGGING */
-
-#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
-	const char *direction = callback == (schfunc_t) &seTurnPinHigh ? "up" : "down";
-	printf("seScheduleByTime %s %s %d sch=%d\r\n", direction, param->name, (int)time, (int)scheduling);
-#endif /* FUEL_MATH_EXTREME_LOGGING || EFI_UNIT_TEST */
-
-	scheduleByTime(prefix, scheduling, time, callback, param);
-}
-
-/**
- *
- * @param	delay	the number of ticks before the output signal
- * 					immediate output if delay is zero
- * @param	dwell	the number of ticks of output duration
- *
- */
-void scheduleOutput2(scheduling_s * sUp, scheduling_s * sDown, efitimeus_t nowUs, float delayUs, float durationUs, InjectorOutputPin *output) {
-#if EFI_GPIO || defined(__DOXYGEN__)
-
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
-	printf("scheduling output %s\r\n", output->name);
-#endif /* EFI_UNIT_TEST */
-
-	efitimeus_t turnOnTime = nowUs + (int) delayUs;
-
-	seScheduleByTime("out up", sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, output);
-	efitimeus_t turnOffTime = nowUs + (int) (delayUs + durationUs);
-
-	seScheduleByTime("out down", sDown, turnOffTime, (schfunc_t) &seTurnPinLow, output);
-#endif /* EFI_GPIO */
-}
 

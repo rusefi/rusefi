@@ -88,8 +88,7 @@ public:
 #endif
 
 	OutputSignal fuelActuators[INJECTION_PIN_COUNT];
-	scheduling_s overlappingFuelActuatorTimerUp[INJECTION_PIN_COUNT];
-	scheduling_s overlappingFuelActuatorTimerDown[INJECTION_PIN_COUNT];
+	OutputSignalPair overlappingFuelActuator[INJECTION_PIN_COUNT];
 
 	bool wasOverlapping[INJECTION_PIN_COUNT];
 
