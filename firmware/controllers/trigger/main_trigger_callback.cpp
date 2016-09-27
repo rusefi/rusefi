@@ -312,7 +312,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
  * @param	dwell	the number of ticks of output duration
  *
  */
-void scheduleOutput2(scheduling_s * sUp, scheduling_s * sDown, efitimeus_t nowUs, float delayUs, float durationUs, InjectorOutputPin *output) {
+static void scheduleOutput2(OutputSignalPair *pair, efitimeus_t nowUs, float delayUs, float durationUs, InjectorOutputPin *output) {
 #if EFI_GPIO || defined(__DOXYGEN__)
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
@@ -320,6 +320,9 @@ void scheduleOutput2(scheduling_s * sUp, scheduling_s * sDown, efitimeus_t nowUs
 #endif /* EFI_UNIT_TEST */
 
 	efitimeus_t turnOnTime = nowUs + (int) delayUs;
+
+	scheduling_s *sUp = &pair->signalTimerUp;
+	scheduling_s *sDown = &pair->signalTimerDown;
 
 	seScheduleByTime("out up", sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, output);
 	efitimeus_t turnOffTime = nowUs + (int) (delayUs + durationUs);
@@ -345,14 +348,13 @@ static void handleFuelScheduleOverlap(InjectionEventList *injectionEvents DECLAR
 			// todo: recalc fuel? account for wetting?
 			floatms_t injectionDuration = ENGINE(fuelMs);
 
-			scheduling_s * sUp = &ENGINE(engineConfiguration2)->overlappingFuelActuator[injEventIndex].signalTimerUp;
-			scheduling_s * sDown = &ENGINE(engineConfiguration2)->overlappingFuelActuator[injEventIndex].signalTimerDown;
+			OutputSignalPair* pair = &ENGINE(engineConfiguration2)->overlappingFuelActuator[injEventIndex];
 
 			efitimeus_t nowUs = getTimeNowUs();
 
 			output->overlappingScheduleOffTime = nowUs + MS2US(injectionDuration);
 
-			scheduleOutput2(sUp, sDown, nowUs, 0, MS2US(injectionDuration), output);
+			scheduleOutput2(pair, nowUs, 0, MS2US(injectionDuration), output);
 		}
 	}
 }
