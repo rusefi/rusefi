@@ -134,6 +134,10 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 	printf("fuel fuelMs=%f adjusted=%f\t\n", ENGINE(fuelMs), injectionDuration);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
+	if (injectionDuration > getCrankshaftRevolutionTimeMs(rpm)) {
+		warning(CUSTOM_OBD_50, "Too long fuel injection");
+	}
+
 	// todo: pre-calculate 'numberOfInjections'
 	floatms_t totalPerCycle = injectionDuration * getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
 	floatus_t engineCycleDuration = engine->rpmCalculator.oneDegreeUs * engine->engineCycle;
