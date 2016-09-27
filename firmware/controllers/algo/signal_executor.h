@@ -54,7 +54,6 @@ struct OutputSignal_struct {
 	OutputSignalPair signalPair[2];
 };
 
-void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, NamedOutputPin *param);
 void initSignalExecutor(void);
 void initEnginePinsNames(void);
 
