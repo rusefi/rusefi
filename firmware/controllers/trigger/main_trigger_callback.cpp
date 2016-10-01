@@ -168,6 +168,7 @@ void seTurnPinLow(OutputSignalPair *pair) {
 //		return;
 	}
 	turnPinLow(output);
+	pair->isScheduled = false;
 }
 
 static void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, OutputSignalPair *pair) {
@@ -202,9 +203,13 @@ static void scheduleFuelInjection(int rpm, int injEventIndex, OutputSignal *sign
 	efiAssertVoid(signal!=NULL, "signal is NULL");
 	int index = getRevolutionCounter() % 2;
 	OutputSignalPair *pair = &signal->signalPair[index];
+	if (pair->isScheduled)
+		return; // this OutputSignalPair is still needed for an extremely long injection scheduled previously
 	pair->output = output;
 	scheduling_s * sUp = &pair->signalTimerUp;
 	scheduling_s * sDown = &pair->signalTimerDown;
+
+	pair->isScheduled = true;
 
 	efitimeus_t turnOnTime = nowUs + (int) delayUs;
 	bool isSecondaryOverlapping = turnOnTime < output->overlappingScheduleOffTime;
@@ -284,8 +289,10 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		 */
 		efiAssertVoid(signal!=NULL, "signal is NULL");
 		int index = getRevolutionCounter() % 2;
-		scheduling_s * sUp = &signal->signalPair[index].signalTimerUp;
-		scheduling_s * sDown = &signal->signalPair[index].signalTimerDown;
+		OutputSignalPair *pair = &signal->signalPair[index];
+		scheduling_s * sUp = &pair->signalTimerUp;
+// todo: sequential need this logic as well, just do not forget to clear flag		pair->isScheduled = true;
+		scheduling_s * sDown = &pair->signalTimerDown;
 
 		scheduleTask("out up", sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, engine);
 		scheduleTask("out down", sDown, (int) injectionStartDelayUs + MS2US(injectionDuration),
@@ -327,6 +334,7 @@ static void scheduleOutput2(OutputSignalPair *pair, efitimeus_t nowUs, float del
 	efitimeus_t turnOnTime = nowUs + (int) delayUs;
 
 	scheduling_s *sUp = &pair->signalTimerUp;
+	pair->isScheduled = true;
 	scheduling_s *sDown = &pair->signalTimerDown;
 
 	pair->output = output;
@@ -355,6 +363,8 @@ static void handleFuelScheduleOverlap(InjectionEventList *injectionEvents DECLAR
 			floatms_t injectionDuration = ENGINE(fuelMs);
 
 			OutputSignalPair* pair = &ENGINE(engineConfiguration2)->overlappingFuelActuator[injEventIndex];
+			if (pair->isScheduled)
+				continue; // this OutputSignalPair is still needed for an extremely long injection scheduled previously
 
 			efitimeus_t nowUs = getTimeNowUs();
 
