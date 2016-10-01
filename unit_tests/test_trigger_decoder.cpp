@@ -288,6 +288,11 @@ static void assertREqualsM(const char *msg, void *expected, void *actual) {
 extern bool_t debugSignalExecutor;
 extern engine_pins_s enginePins;
 
+// todo: move method body here after merge
+void assertEvent(const char *msg, int index, void *callback, efitime_t start, efitime_t momentX, long param);
+void assertInjectorUpEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex);
+void assertInjectorDownEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex);
+
 void testRpmCalculator(void) {
 	printf("*************************************************** testRpmCalculator\r\n");
 	timeNow = 0;
@@ -405,17 +410,9 @@ void testRpmCalculator(void) {
 	assertEqualsM("dwell", 4.5, eth.engine.engineState.dwellAngle);
 	assertEqualsM("fuel #3", 4.5450, eth.engine.fuelMs);
 	assertEquals(1500, eth.engine.rpmCalculator.rpmValue);
-	{
-	scheduling_s *ev0 = schedulingQueue.getForUnitText(0);
 
-	assertREqualsM("turnHigh", (void*)ev0->callback, (void*)seTurnPinHigh);
-	assertEqualsM("ev 0/2", st + 26666 - 1515, ev0->momentX);
-	assertEqualsLM("o 0/2", (long)&enginePins.injectors[2], (long)ev0->param);
-
-	scheduling_s *ev1 = schedulingQueue.getForUnitText(1);
-	assertEqualsM("ev 1/2", st + 26666 - 1515, ev1->momentX);
-	assertEqualsLM("o 1/2", (long)&enginePins.injectors[5], (long)ev1->param);
-	}
+	assertInjectorUpEvent("ev 0/2", 0, -4849, 2);
+	assertInjectorUpEvent("ev 1/2", 1, -4849, 5);
 
 	assertEqualsM("index #4", 6, eth.engine.triggerCentral.triggerState.getCurrentIndex());
 	assertEqualsM("queue size 4", 6, schedulingQueue.size());
@@ -579,19 +576,20 @@ void testTriggerDecoder(void) {
 
 extern fuel_Map3D_t fuelMap;
 
-static void assertEvent(const char *msg, int index, void *callback, efitime_t start, efitime_t momentX, long param) {
+void assertEvent(const char *msg, int index, void *callback, efitime_t start, efitime_t momentX, long param) {
 	assertTrueM(msg, schedulingQueue.size() > index);
 	scheduling_s *ev = schedulingQueue.getForUnitText(index);
 	assertEqualsM4(msg, "up/down", (void*)ev->callback == (void*) callback, 1);
 	assertEqualsM(msg, momentX, ev->momentX - start);
-	assertEqualsLM(msg, param, (long)ev->param);
+	OutputSignalPair *pair = (OutputSignalPair *)ev->param;
+	assertEqualsLM(msg, param, (long)pair->output);
 }
 
-static void assertInjectorUpEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex) {
+void assertInjectorUpEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex) {
 	assertEvent(msg, eventIndex, (void*)seTurnPinHigh, timeNow, momentX, (long)&enginePins.injectors[injectorIndex]);
 }
 
-static void assertInjectorDownEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex) {
+void assertInjectorDownEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex) {
 	assertEvent(msg, eventIndex, (void*)seTurnPinLow, timeNow, momentX, (long)&enginePins.injectors[injectorIndex]);
 }
 
