@@ -88,7 +88,8 @@ static void endSimultaniousInjection(Engine *engine) {
 }
 
 // todo: make these macro? kind of a penny optimization if compiler is not smart to inline
-void seTurnPinHigh(InjectorOutputPin *output) {
+void seTurnPinHigh(OutputSignalPair *pair) {
+	InjectorOutputPin *output = pair->output;
 //	output->overlappingCounter++;
 
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
@@ -125,7 +126,8 @@ void seTurnPinHigh(InjectorOutputPin *output) {
 	turnPinHigh(output);
 }
 
-void seTurnPinLow(InjectorOutputPin *output) {
+void seTurnPinLow(OutputSignalPair *pair) {
+	InjectorOutputPin *output = pair->output;
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 	printf("seTurnPinLow %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
@@ -168,7 +170,8 @@ void seTurnPinLow(InjectorOutputPin *output) {
 	turnPinLow(output);
 }
 
-void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, NamedOutputPin *param) {
+static void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, OutputSignalPair *pair) {
+	InjectorOutputPin *param = pair->output;
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 	scheduleMsg(&sharedLogger, "schX %s %x %d", prefix, scheduling,	time);
 	scheduleMsg(&sharedLogger, "schX %s", param->name);
@@ -179,7 +182,7 @@ void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t 
 	printf("seScheduleByTime %s %s %d sch=%d\r\n", direction, param->name, (int)time, (int)scheduling);
 #endif /* FUEL_MATH_EXTREME_LOGGING || EFI_UNIT_TEST */
 
-	scheduleByTime(prefix, scheduling, time, callback, param);
+	scheduleByTime(prefix, scheduling, time, callback, pair);
 }
 
 static void scheduleFuelInjection(int rpm, int injEventIndex, OutputSignal *signal, efitimeus_t nowUs, floatus_t delayUs, floatus_t durationUs, InjectorOutputPin *output DECLARE_ENGINE_PARAMETER_S) {
@@ -198,8 +201,10 @@ static void scheduleFuelInjection(int rpm, int injEventIndex, OutputSignal *sign
 
 	efiAssertVoid(signal!=NULL, "signal is NULL");
 	int index = getRevolutionCounter() % 2;
-	scheduling_s * sUp = &signal->signalPair[index].signalTimerUp;
-	scheduling_s * sDown = &signal->signalPair[index].signalTimerDown;
+	OutputSignalPair *pair = &signal->signalPair[index];
+	pair->output = output;
+	scheduling_s * sUp = &pair->signalTimerUp;
+	scheduling_s * sDown = &pair->signalTimerDown;
 
 	efitimeus_t turnOnTime = nowUs + (int) delayUs;
 	bool isSecondaryOverlapping = turnOnTime < output->overlappingScheduleOffTime;
@@ -210,10 +215,10 @@ static void scheduleFuelInjection(int rpm, int injEventIndex, OutputSignal *sign
 	printf("please cancel %s %d %d\r\n", output->name, (int)getTimeNowUs(), output->overlappingCounter);
 #endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
 	} else {
-		seScheduleByTime("out up", sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, output);
+		seScheduleByTime("out up", sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, pair);
 	}
 	efitimeus_t turnOffTime = nowUs + (int) (delayUs + durationUs);
-	seScheduleByTime("out down", sDown, turnOffTime, (schfunc_t) &seTurnPinLow, output);
+	seScheduleByTime("out down", sDown, turnOffTime, (schfunc_t) &seTurnPinLow, pair);
 }
 
 static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
@@ -324,10 +329,11 @@ static void scheduleOutput2(OutputSignalPair *pair, efitimeus_t nowUs, float del
 	scheduling_s *sUp = &pair->signalTimerUp;
 	scheduling_s *sDown = &pair->signalTimerDown;
 
-	seScheduleByTime("out up", sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, output);
+	pair->output = output;
+	seScheduleByTime("out up", sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, pair);
 	efitimeus_t turnOffTime = nowUs + (int) (delayUs + durationUs);
 
-	seScheduleByTime("out down", sDown, turnOffTime, (schfunc_t) &seTurnPinLow, output);
+	seScheduleByTime("out down", sDown, turnOffTime, (schfunc_t) &seTurnPinLow, pair);
 #endif /* EFI_GPIO */
 }
 
