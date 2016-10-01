@@ -95,6 +95,7 @@ public:
 	float getValue(float selfValue, Engine *engine);
 	float getValue2(float selfValue, LEElement *fistElementInList, Engine *engine);
 	void add(LEElement *element);
+	bool isEmpty();
 	void reset();
 	void reset(LEElement *element);
 	le_action_e calcLogAction[MAX_CALC_LOG];
