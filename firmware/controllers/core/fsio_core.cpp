@@ -300,9 +300,13 @@ float LECalculator::getValue2(float selfValue, LEElement *fistElementInList, Eng
 	return getValue(selfValue, engine);
 }
 
+bool LECalculator::isEmpty() {
+	return first == NULL;
+}
+
 float LECalculator::getValue(float selfValue, Engine *engine) {
-	if (first == NULL) {
-		warning(CUSTOM_OBD_7, "no FSIO code");
+	if (isEmpty()) {
+		warning(CUSTOM_NO_FSIO, "no FSIO code");
 		return NAN;
 	}
 	LEElement *element = first;
