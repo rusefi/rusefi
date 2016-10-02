@@ -15,7 +15,6 @@
 #define INJECTION_PIN_COUNT 12
 #define IGNITION_PIN_COUNT 12
 #define EGT_CHANNEL_COUNT 8
-#define JOYSTICK_PIN_COUNT 5
 #define DIGIPOT_COUNT 4
 #define HW_MAX_ADC_INDEX 17
 #define TRIGGER_SIMULATOR_PIN_COUNT 3
@@ -504,11 +503,7 @@
 #define gpioPinModes14_offset 1184
 #define gpioPinModes15_offset 1188
 #define gpioPinModes16_offset 1192
-#define joystickPins1_offset 1196
-#define joystickPins2_offset 1200
-#define joystickPins3_offset 1204
-#define joystickPins4_offset 1208
-#define joystickPins5_offset 1212
+#define unusedJoy_offset 1196
 #define triggerErrorPin_offset 1216
 #define triggerErrorPinMode_offset 1220
 #define acRelayPin_offset 1224

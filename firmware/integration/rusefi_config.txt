@@ -58,7 +58,6 @@ struct_no_prefix engine_configuration_s
 #define INJECTION_PIN_COUNT 12
 #define IGNITION_PIN_COUNT 12
 #define EGT_CHANNEL_COUNT 8
-#define JOYSTICK_PIN_COUNT 5
 #define DIGIPOT_COUNT 4
 #define HW_MAX_ADC_INDEX 17
 #define TRIGGER_SIMULATOR_PIN_COUNT 3
@@ -511,7 +510,7 @@ bit is_enabled_spi_2
 	brain_pin_e[LE_COMMAND_COUNT iterate] fsioPins;
 	pin_output_mode_e[LE_COMMAND_COUNT iterate] gpioPinModes;
 
-	brain_pin_e[JOYSTICK_PIN_COUNT iterate] joystickPins;
+	int[5] unusedJoy;
 
 	brain_pin_e triggerErrorPin;This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	

@@ -238,10 +238,6 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 
 	activeConfiguration->dizzySparkOutputPin = GPIO_UNASSIGNED;
 
-	for (int i = 0; i < JOYSTICK_PIN_COUNT; i++) {
-		boardConfiguration->joystickPins[i] = GPIO_UNASSIGNED;
-	}
-
 	boardConfiguration->acRelayPin = GPIO_UNASSIGNED;
 	boardConfiguration->acRelayPinMode = OM_DEFAULT;
 
