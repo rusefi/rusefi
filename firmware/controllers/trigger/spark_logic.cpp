@@ -86,7 +86,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		 * This way we make sure that coil dwell started while spark was enabled would fire and not burn
 		 * the coil.
 		 */
-		scheduleTask("spark up", sUp, chargeDelayUs, (schfunc_t) &turnSparkPinHigh, iEvent->output);
+		scheduleTask(true, "spark up", sUp, chargeDelayUs, (schfunc_t) &turnSparkPinHigh, iEvent->output);
 	}
 	/**
 	 * Spark event is often happening during a later trigger event timeframe
@@ -104,7 +104,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	printf("spark delay=%f angle=%f\r\n", timeTillIgnitionUs, iEvent->sparkPosition.angleOffset);
 #endif
 
-		scheduleTask("spark1 down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, iEvent->output);
+		scheduleTask(true, "spark1 down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, iEvent->output);
 	} else {
 		/**
 		 * Spark should be scheduled in relation to some future trigger event, this way we get better firing precision
@@ -179,7 +179,7 @@ void handleSpark(int revolutionIndex, bool limitedSpark, uint32_t trgEventIndex,
 			scheduling_s * sDown = &current->signalTimerDown;
 
 			float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * current->sparkPosition.angleOffset;
-			scheduleTask("spark 2down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, current->output);
+			scheduleTask(true, "spark 2down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, current->output);
 		}
 	}
 

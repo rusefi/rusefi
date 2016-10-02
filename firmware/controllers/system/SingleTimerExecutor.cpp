@@ -155,7 +155,7 @@ void Executor::scheduleTimerCallback() {
  * @param [in] delayUs the number of microseconds before the output signal immediate output if delay is zero.
  * @param [in] dwell the number of ticks of output duration.
  */
-void scheduleTask(const char *prefix, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
+void scheduleTask(const bool monitorReuse, const char *prefix, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
 //	scheduling->name = prefix;
 	instance.scheduleByTime(scheduling, getTimeNowUs() + delayUs, callback, param);
 }

@@ -35,7 +35,7 @@
 #if EFI_SIGNAL_EXECUTOR_SLEEP || defined(__DOXYGEN__)
 
 void scheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param) {
-	scheduleTask(prefix, scheduling, time - getTimeNowUs(), callback, param);
+	scheduleTask(true, prefix, scheduling, time - getTimeNowUs(), callback, param);
 }
 
 static void timerCallback(scheduling_s *scheduling) {
@@ -52,7 +52,7 @@ static void timerCallback(scheduling_s *scheduling) {
 
 }
 
-void scheduleTask(const char *prefix, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
+void scheduleTask(const bool monitorReuse, const char *prefix, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
 	int delaySt = MY_US2ST(delayUs);
 	if (delaySt <= 0) {
 		/**
@@ -66,9 +66,10 @@ void scheduleTask(const char *prefix, scheduling_s *scheduling, int delayUs, sch
 	scheduling->callback = callback;
 	scheduling->param = param;
 	int isArmed = chVTIsArmedI(&scheduling->timer);
-	if (isArmed) {
+	if (isArmed && monitorReuse) {
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
-		printf("isArmed? why? sch=%d cb=%d p=%d\r\n", (int) scheduling, (int)callback, (int)param);
+		printf("%s: isArmed? why? sch=%d cb=%d p=%d\r\n", prefix, (int) scheduling, (int)callback, (int)param);
+//		firmwareError("armored");
 #endif /* EFI_SIMULATOR */
 		chVTResetI(&scheduling->timer);
 	}
