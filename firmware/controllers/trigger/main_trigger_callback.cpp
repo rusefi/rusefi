@@ -118,11 +118,6 @@ void seTurnPinHigh(OutputSignalPair *pair) {
 //			getRevolutionCounter(), getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-#if EFI_UNIT_TEST
-//	if (output->currentLogicValue == 1)
-//		firmwareError("Already high");
-#endif
-
 	turnPinHigh(output);
 }
 
@@ -157,10 +152,6 @@ void seTurnPinLow(OutputSignalPair *pair) {
 //			getRevolutionCounter(), getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-#if EFI_UNIT_TEST
-//	if (output->currentLogicValue == 0)
-//		firmwareError("Already low");
-#endif
 	output->overlappingCounter--;
 	if (output->overlappingCounter > 0) {
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
