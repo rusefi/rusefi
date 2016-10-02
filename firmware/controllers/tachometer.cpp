@@ -27,7 +27,7 @@ static void tachSignalCallback(trigger_event_e ckpSignalType,
 		return;
 	}
 	turnPinHigh(&enginePins.tachOut);
-	scheduleTask("tach off", &tachTurnSignalOff, (int)MS2US(engineConfiguration->tachPulseDuractionMs), (schfunc_t) &turnTachPinLow, NULL);
+	scheduleTask(false, "tach off", &tachTurnSignalOff, (int)MS2US(engineConfiguration->tachPulseDuractionMs), (schfunc_t) &turnTachPinLow, NULL);
 }
 
 void initTachometer(void) {

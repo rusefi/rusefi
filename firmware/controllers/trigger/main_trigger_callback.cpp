@@ -289,8 +289,8 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 // todo: sequential need this logic as well, just do not forget to clear flag		pair->isScheduled = true;
 		scheduling_s * sDown = &pair->signalTimerDown;
 
-		scheduleTask("out up", sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, engine);
-		scheduleTask("out down", sDown, (int) injectionStartDelayUs + MS2US(injectionDuration),
+		scheduleTask(true, "out up", sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, engine);
+		scheduleTask(true, "out down", sDown, (int) injectionStartDelayUs + MS2US(injectionDuration),
 					(schfunc_t) &endSimultaniousInjection, engine);
 
 	} else {

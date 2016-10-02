@@ -18,7 +18,7 @@ EventQueue schedulingQueue;
 
 bool_t debugSignalExecutor = false;
 
-void scheduleTask(const char *msg, scheduling_s *scheduling, int delayUs,
+void scheduleTask(const bool monitorReuse, const char *msg, scheduling_s *scheduling, int delayUs,
 		schfunc_t callback, void *param) {
 	if (debugSignalExecutor) {
 		printf("scheduleTask %d\r\n", delayUs);
