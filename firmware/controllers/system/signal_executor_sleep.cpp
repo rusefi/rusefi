@@ -70,8 +70,8 @@ void scheduleTask(const bool monitorReuse, const char *prefix, scheduling_s *sch
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
 		if (monitorReuse) {
 //		for (int i = 0;i<100;i++)
-//		printf("%s: isArmed? why? sch=%d cb=%d p=%d\r\n", prefix, (int) scheduling, (int)callback, (int)param);
-//		firmwareError("armored\r\n");
+			printf("%s: isArmed? why? sch=%d cb=%d p=%d\r\n", prefix, (int) scheduling, (int)callback, (int)param);
+			firmwareError("armored\r\n");
 		}
 #endif /* EFI_SIMULATOR */
 		chVTResetI(&scheduling->timer);
