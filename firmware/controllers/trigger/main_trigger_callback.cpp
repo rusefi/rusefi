@@ -215,7 +215,7 @@ static void scheduleFuelInjection(int rpm, int injEventIndex, OutputSignal *sign
 	printf("please cancel %s %d %d\r\n", output->name, (int)getTimeNowUs(), output->overlappingCounter);
 #endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
 	} else {
-		seScheduleByTime("out up", sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, pair);
+		seScheduleByTime("out up1", sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, pair);
 	}
 	efitimeus_t turnOffTime = nowUs + (int) (delayUs + durationUs);
 	seScheduleByTime("out down", sDown, turnOffTime, (schfunc_t) &seTurnPinLow, pair);
@@ -289,7 +289,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 // todo: sequential need this logic as well, just do not forget to clear flag		pair->isScheduled = true;
 		scheduling_s * sDown = &pair->signalTimerDown;
 
-		scheduleTask(true, "out up", sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, engine);
+		scheduleTask(true, "out up s", sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, engine);
 		scheduleTask(true, "out down", sDown, (int) injectionStartDelayUs + MS2US(injectionDuration),
 					(schfunc_t) &endSimultaniousInjection, engine);
 
@@ -333,7 +333,7 @@ static void scheduleOutput2(OutputSignalPair *pair, efitimeus_t nowUs, float del
 	scheduling_s *sDown = &pair->signalTimerDown;
 
 	pair->output = output;
-	seScheduleByTime("out up", sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, pair);
+	seScheduleByTime("out up2", sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, pair);
 	efitimeus_t turnOffTime = nowUs + (int) (delayUs + durationUs);
 
 	seScheduleByTime("out down", sDown, turnOffTime, (schfunc_t) &seTurnPinLow, pair);
