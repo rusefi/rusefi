@@ -174,7 +174,7 @@ static void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efiti
 	printf("seScheduleByTime %s %s %d sch=%d\r\n", direction, param->name, (int)time, (int)scheduling);
 #endif /* FUEL_MATH_EXTREME_LOGGING || EFI_UNIT_TEST */
 
-	scheduleByTime(prefix, scheduling, time, callback, pair);
+	scheduleByTime(true, prefix, scheduling, time, callback, pair);
 }
 
 static void scheduleFuelInjection(int rpm, int injEventIndex, OutputSignal *signal, efitimeus_t nowUs, floatus_t delayUs, floatus_t durationUs, InjectorOutputPin *output DECLARE_ENGINE_PARAMETER_S) {

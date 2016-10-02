@@ -155,7 +155,7 @@ static void timerCallback(PwmConfig *state) {
 	efiAssertVoid(state->dbgNestingLevel < 25, "PWM nesting issue");
 
 	efitimeus_t switchTimeUs = togglePwmState(state);
-	scheduleByTime("pwm", &state->scheduling, switchTimeUs, (schfunc_t) timerCallback, state);
+	scheduleByTime(false, "pwm", &state->scheduling, switchTimeUs, (schfunc_t) timerCallback, state);
 	state->dbgNestingLevel--;
 }
 

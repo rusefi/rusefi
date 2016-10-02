@@ -23,15 +23,15 @@ void scheduleTask(const bool monitorReuse, const char *msg, scheduling_s *schedu
 	if (debugSignalExecutor) {
 		printf("scheduleTask %d\r\n", delayUs);
 	}
-	scheduleByTime(msg, scheduling, getTimeNowUs() + delayUs, callback, param);
+	scheduleByTime(monitorReuse, msg, scheduling, getTimeNowUs() + delayUs, callback, param);
 }
 
-void scheduleByTime(const char *prefix, scheduling_s *scheduling,
+void scheduleByTime(const bool monitorReuse, const char *prefix, scheduling_s *scheduling,
 		efitimeus_t time, schfunc_t callback, void *param) {
 	if (debugSignalExecutor) {
 		printf("scheduleByTime %d\r\n", time);
 	}
-	schedulingQueue.insertTask(scheduling, time, callback, param);
+	schedulingQueue.insertTask(monitorReuse, prefix, scheduling, time, callback, param);
 }
 
 void initSignalExecutorImpl(void) {

@@ -27,6 +27,6 @@ public:
 };
 
 void scheduleTask(const bool monitorReuse, const char *prefix, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param);
-void scheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param);
+void scheduleByTime(const bool monitorReuse, const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param);
 
 #endif /* SCHEDULER_H_ */
