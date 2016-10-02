@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Sep 17 14:41:13 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Oct 02 13:12:05 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -660,7 +660,7 @@ typedef struct {
 	/**
 	 * offset 572
 	 */
-	brain_pin_e joystickPins[JOYSTICK_PIN_COUNT];
+	int unusedJoy[5];
 	/**
 	 * This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	 * offset 592
@@ -1959,4 +1959,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Sep 17 14:41:13 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Oct 02 13:12:05 EDT 2016

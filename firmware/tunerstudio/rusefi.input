@@ -1369,6 +1369,7 @@ fileVersion = { 20160702 }
 		subMenu = fsioTable4Tbl,			"FSIO Table #4"
 		subMenu	= std_separator
 	 	subMenu = connection,            	"Connection"
+		subMenu = joystickPanel,		"Joystick"
 		subMenu = std_separator
 		subMenu = ioTest,					"I-O Test"
 		subMenu = ecuStimulator,			"ECU stimulator"
@@ -1847,6 +1848,13 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 	dialog = connection, "", 	border
 		panel = lcdScreen,		East
 		panel = connectRight,	West
+
+	dialog = joystickPanel, "Joystick"
+		field = "joustick center button",				joystickCenterPin
+		field = "joustick button A",					joystickAPin
+		field = "joustick button B",					joystickBPin
+		field = "joustick button C",					joystickCPin
+		field = "joustick button D",					joystickDPin
 				
 	dialog = monitoringSettings, "rusEfi Console Settings"			
 		field = "Sensor Sniffer",         	    		sensorChartMode
