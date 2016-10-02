@@ -90,7 +90,7 @@ static void endSimultaniousInjection(Engine *engine) {
 // todo: make these macro? kind of a penny optimization if compiler is not smart to inline
 void seTurnPinHigh(OutputSignalPair *pair) {
 	InjectorOutputPin *output = pair->output;
-//	output->overlappingCounter++;
+	output->overlappingCounter++;
 
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 	printf("seTurnPinHigh %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
@@ -109,13 +109,13 @@ void seTurnPinHigh(OutputSignalPair *pair) {
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 //			output->cancelNextTurningInjectorOff = true;
-//			return;
+			return;
 //		}
 	}
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 	const char * w = output->currentLogicValue == true ? "err" : "";
-	scheduleMsg(&sharedLogger, "^ %spin=%s eventIndex %d %d", w, output->name,
-			getRevolutionCounter(), getTimeNowUs());
+//	scheduleMsg(&sharedLogger, "^ %spin=%s eventIndex %d %d", w, output->name,
+//			getRevolutionCounter(), getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 #if EFI_UNIT_TEST
@@ -127,6 +127,7 @@ void seTurnPinHigh(OutputSignalPair *pair) {
 }
 
 void seTurnPinLow(OutputSignalPair *pair) {
+	pair->isScheduled = false;
 	InjectorOutputPin *output = pair->output;
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 	printf("seTurnPinLow %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
@@ -152,8 +153,8 @@ void seTurnPinLow(OutputSignalPair *pair) {
 	#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 	const char * w = output->currentLogicValue == false ? "err" : "";
 
-	scheduleMsg(&sharedLogger, "- %spin=%s eventIndex %d %d", w, output->name,
-			getRevolutionCounter(), getTimeNowUs());
+//	scheduleMsg(&sharedLogger, "- %spin=%s eventIndex %d %d", w, output->name,
+//			getRevolutionCounter(), getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 #if EFI_UNIT_TEST
@@ -165,17 +166,16 @@ void seTurnPinLow(OutputSignalPair *pair) {
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 		printf("was overlapping, no need to touch pin %s %d\r\n", output->name, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
-//		return;
+		return;
 	}
 	turnPinLow(output);
-	pair->isScheduled = false;
 }
 
 static void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, OutputSignalPair *pair) {
 	InjectorOutputPin *param = pair->output;
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
-	scheduleMsg(&sharedLogger, "schX %s %x %d", prefix, scheduling,	time);
-	scheduleMsg(&sharedLogger, "schX %s", param->name);
+//	scheduleMsg(&sharedLogger, "schX %s %x %d", prefix, scheduling,	time);
+//	scheduleMsg(&sharedLogger, "schX %s", param->name);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
@@ -203,8 +203,12 @@ static void scheduleFuelInjection(int rpm, int injEventIndex, OutputSignal *sign
 	efiAssertVoid(signal!=NULL, "signal is NULL");
 	int index = getRevolutionCounter() % 2;
 	OutputSignalPair *pair = &signal->signalPair[index];
-	if (pair->isScheduled)
+	if (pair->isScheduled) {
+#if EFI_UNIT_TEST || EFI_SIMULATOR || defined(__DOXYGEN__)
+	printf("still used1 %s %d\r\n", output->name, (int)getTimeNowUs());
+#endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
 		return; // this OutputSignalPair is still needed for an extremely long injection scheduled previously
+	}
 	pair->output = output;
 	scheduling_s * sUp = &pair->signalTimerUp;
 	scheduling_s * sDown = &pair->signalTimerDown;
@@ -363,8 +367,12 @@ static void handleFuelScheduleOverlap(InjectionEventList *injectionEvents DECLAR
 			floatms_t injectionDuration = ENGINE(fuelMs);
 
 			OutputSignalPair* pair = &ENGINE(engineConfiguration2)->overlappingFuelActuator[injEventIndex];
-			if (pair->isScheduled)
+			if (pair->isScheduled) {
+#if EFI_UNIT_TEST || EFI_SIMULATOR || defined(__DOXYGEN__)
+	printf("still used2 %s %d\r\n", output->name, (int)getTimeNowUs());
+#endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
 				continue; // this OutputSignalPair is still needed for an extremely long injection scheduled previously
+			}
 
 			efitimeus_t nowUs = getTimeNowUs();
 
