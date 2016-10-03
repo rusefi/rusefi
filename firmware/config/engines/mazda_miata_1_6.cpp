@@ -93,15 +93,19 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 
 	engineConfiguration->hasMapSensor = true;
-	// Frankenso analog #6 pin 3R, W56 top <> W45 bottom jumper, not OEM
+	// Frankenso analog #6 pin 3R, W56 (5th lower row pin from the end) top <> W45 bottom jumper, not OEM
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_7;
 	engineConfiguration->map.sensor.type = MT_CUSTOM;
 
+	// 66.677993 kPa drop = 2v drop
+	// see http://rusefi.com/forum/viewtopic.php?f=3&t=906&p=18976#p18976
+
+	float _100Kpa_value = 3.7;
 	engineConfiguration->map.sensor.lowValue = 33.322271;
-	engineConfiguration->mapLowValueVoltage = 0.95;
+	engineConfiguration->mapLowValueVoltage = _100Kpa_value - 2;
 
 	engineConfiguration->map.sensor.highValue = 100;
-	engineConfiguration->mapHighValueVoltage = 2.95;
+	engineConfiguration->mapHighValueVoltage = _100Kpa_value;
 
 
 
