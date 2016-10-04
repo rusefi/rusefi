@@ -114,6 +114,8 @@ case SUBARU_2003_WRX:
   return "SUBARU_2003_WRX";
 case TEST_ENGINE:
   return "TEST_ENGINE";
+case MAZDA_MIATA_2003:
+	return "miata 2003";
 case TEST_ENGINE_VVT:
   return "TEST_ENGINE_VVT";
 case VW_ABA:
@@ -132,7 +134,9 @@ case TT_HONDA_CBR_600:
 case TT_HONDA_CBR_600_CUSTOM:
 	return "TT_HONDA_CBR_600_CUSTOM";
 case TT_3_1_CAM:
-	return "TT_3_1_CAM";
+	return "3_1_CAM";
+case TT_MIATA_VVT:
+	return "MIATA_VVT";
 case TT_DODGE_NEON_1995:
   return "TT_DODGE_NEON_1995";
 case TT_GM_LS_24:

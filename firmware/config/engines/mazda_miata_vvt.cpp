@@ -8,5 +8,10 @@
 
 #include "mazda_miata_vvt.h"
 
+EXTERN_ENGINE;
+
+void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
+
+}
 
 

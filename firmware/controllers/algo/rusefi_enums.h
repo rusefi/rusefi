@@ -136,7 +136,9 @@ typedef enum {
 
 	DODGE_NEON_2003_CRANK = 46,
 
-	ET_UNUSED = 47,
+	MAZDA_MIATA_2003 = 47,
+
+	ET_UNUSED = 48,
 
 	Force_4b_engine_type = ENUM_32_BITS,
 } engine_type_e;
@@ -199,7 +201,9 @@ typedef enum {
 	// crank-based in case your cam is broken
 	TT_DODGE_NEON_2003_CRANK = 32,
 
-	TT_UNUSED = 33, // this is used if we want to iterate over all trigger types
+	TT_MIATA_VVT = 33,
+
+	TT_UNUSED = 34, // this is used if we want to iterate over all trigger types
 
 	Force_4b_trigger_type = ENUM_32_BITS,
 } trigger_type_e;
