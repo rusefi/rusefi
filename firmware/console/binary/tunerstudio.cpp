@@ -243,9 +243,9 @@ void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 
 static void onlineTuneBytes(int currentPageId, int offset, int count) {
 	if (offset > sizeof(engine_configuration_s)) {
-		int maxSize = sizeof(engine_configuration_s) - offset;
+		int maxSize = sizeof(persistent_config_s) - offset;
 		if (count > maxSize) {
-			warning(CUSTOM_OBD_99, "TS overflow %d %d", offset, count);
+			warning(CUSTOM_TS_OVERFLOW, "TS overflow %d %d", offset, count);
 			return;
 		}
 		scheduleMsg(&tsLogger, "applying soft change from %d length %d", offset, count);
