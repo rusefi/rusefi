@@ -1,7 +1,7 @@
 (export (version D)
   (design
-    (source C:\Users\Vista_64_D630\Desktop\Jared\code\Hardware\trunk\rusefi.com\1123038-2-connector\1123038-2.sch)
-    (date "10/2/2016 9:25:29 PM")
+    (source C:/Users/Vista_64_D630/Desktop/Jared/code/Hardware/trunk/rusefi.com/1123038-2-connector/1123038-2.sch)
+    (date "10/3/2016 6:31:57 PM")
     (tool "Eeschema 4.0.1-stable")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -253,10 +253,10 @@
         (pin (num 7) (name P7) (type passive))
         (pin (num 8) (name P8) (type passive)))))
   (libraries
-    (library (logical conn)
-      (uri "C:\\Program Files\\KiCad\\share\\kicad\\library\\conn.lib"))
     (library (logical 1123038-2)
-      (uri C:\Users\Vista_64_D630\Desktop\Jared\code\Hardware\trunk\rusefi.com\1123038-2-connector\..\rusefi_lib\1123038-2.lib)))
+      (uri ..\rusefi_lib\1123038-2.lib))
+    (library (logical conn)
+      (uri "C:\\Program Files\\KiCad\\share\\kicad\\library\\conn.lib")))
   (nets
     (net (code 1) (name "Net-(P10-Pad40)")
       (node (ref P10) (pin 40))
