@@ -43,20 +43,29 @@
 #include "acura_rsx.h"
 #include "audi_aan.h"
 #include "bmw_e34.h"
+
 #include "dodge_neon.h"
+#include "dodge_ram.h"
+#include "dodge_stratus.h"
+
 #include "ford_aspire.h"
 #include "ford_fiesta.h"
 #include "ford_1995_inline_6.h"
+
 #include "snow_blower.h"
 #include "nissan_primera.h"
 #include "honda_accord.h"
 #include "GY6_139QMB.h"
+
+#include "mazda_miata.h"
 #include "mazda_miata_nb.h"
+#include "mazda_miata_1_6.h"
+#include "mazda_miata_vvt.h"
 #include "mazda_323.h"
 #include "mazda_626.h"
+
 #include "saturn_ion.h"
 #include "MiniCooperR50.h"
-#include "mazda_miata.h"
 #include "citroenBerlingoTU3JP.h"
 #include "rover_v8.h"
 #include "mitsubishi.h"
@@ -64,9 +73,7 @@
 #include "test_engine.h"
 #include "sachs.h"
 #include "gm_2_2.h"
-#include "dodge_ram.h"
 #include "vw.h"
-#include "dodge_stratus.h"
 #include "daihatsu.h"
 #include "chevrolet_camaro_4.h"
 #include "suzuki_vitara.h"
@@ -75,7 +82,6 @@
 #include "ford_festiva.h"
 #include "lada_kalina.h"
 #include "geo_storm.h"
-#include "mazda_miata_1_6.h"
 #include "zil130.h"
 #include "honda_600.h"
 
@@ -951,6 +957,8 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setTestEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;
 	case MAZDA_MIATA_2003:
+		setMazdaMiata2003EngineConfiguration(PASS_ENGINE_PARAMETER_F);
+		break;
 	case TEST_ENGINE_VVT:
 		setTestVVTEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;
