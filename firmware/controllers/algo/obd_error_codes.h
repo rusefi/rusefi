@@ -1772,7 +1772,7 @@ typedef enum {
 	CUSTOM_OBD_96 = 6096,
 	CUSTOM_OBD_97 = 6097,
 	CUSTOM_OBD_98 = 6098,
-	CUSTOM_OBD_99 = 6099,
+	CUSTOM_TS_OVERFLOW = 6099,
 
 
 	// this is needed for proper enum size, this matters for malfunction_central
