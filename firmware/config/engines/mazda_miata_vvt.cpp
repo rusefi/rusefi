@@ -24,6 +24,9 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+
+	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 }
 
 
