@@ -62,8 +62,12 @@ static char warningBuffer[WARNING_BUFFER_SIZE];
 static bool isWarningStreamInitialized = false;
 static MemoryStream warningStream;
 
-bool isWarningNow(efitimesec_t now) {
-	return absI(now - engine->engineState.timeOfPreviousWarning) < engineConfiguration->warningPeriod;
+/**
+ * @param forIndicator if we want to retrieving value for TS indicator, this case a minimal period is applued
+ */
+bool isWarningNow(efitimesec_t now, bool forIndicator) {
+	int period = forIndicator ? maxI(3, engineConfiguration->warningPeriod) : engineConfiguration->warningPeriod;
+	return absI(now - engine->engineState.timeOfPreviousWarning) < period;
 }
 
 /**
@@ -80,7 +84,7 @@ int warning(obd_code_e code, const char *fmt, ...) {
 #endif
 
 	efitimesec_t now = getTimeNowSeconds();
-	if (isWarningNow(now) || !warningEnabled)
+	if (isWarningNow(now, false) || !warningEnabled)
 		return true; // we just had another warning, let's not spam
 	engine->engineState.timeOfPreviousWarning = now;
 

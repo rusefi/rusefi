@@ -45,9 +45,9 @@ void turnSparkPinHigh(NamedOutputPin *output) {
 static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, IgnitionEvent *iEvent,
 		int rpm DECLARE_ENGINE_PARAMETER_S) {
 
-	float dwellMs = ENGINE(engineState.sparkDwell);
-	if (cisnan(dwellMs) || dwellMs < 0) {
-		warning(CUSTOM_OBD_45, "invalid dwell: %f at %d", dwellMs, rpm);
+	const floatms_t dwellMs = ENGINE(engineState.sparkDwell);
+	if (cisnan(dwellMs) || dwellMs <= 0) {
+		warning(CUSTOM_DWELL, "invalid dwell: %f at %d", dwellMs, rpm);
 		return;
 	}
 
@@ -59,11 +59,6 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		scheduleMsg(logger, "Negative spark delay=%f", chargeDelayUs);
 #endif
 		chargeDelayUs = 0;
-		return;
-	}
-
-	if (cisnan(dwellMs)) {
-		firmwareError("NaN in scheduleOutput", dwellMs);
 		return;
 	}
 

@@ -688,7 +688,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	efitimesec_t now = getTimeNowSeconds();
 	tsOutputChannels->timeSeconds = now;
 
-	tsOutputChannels->isWarnNow = isWarningNow(now);
+	tsOutputChannels->isWarnNow = isWarningNow(now, true);
 
 	if (engineConfiguration->debugMode == DBG_TPS_ACCEL) {
 		tsOutputChannels->debugIntField1 = engine->tpsAccelEnrichment.cb.getSize();
