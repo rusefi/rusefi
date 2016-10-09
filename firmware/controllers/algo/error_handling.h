@@ -28,7 +28,7 @@ void assertVtList(void);
  *
  */
 int warning(obd_code_e code, const char *fmt, ...);
-bool isWarningNow(efitimesec_t now);
+bool isWarningNow(efitimesec_t now, bool forIndicator);
 /**
  * Something really bad had happened - firmware cannot function
  *
