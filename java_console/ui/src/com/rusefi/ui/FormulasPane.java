@@ -103,13 +103,13 @@ public class FormulasPane {
             double rpm = SensorCentral.getInstance().getValue(Sensor.RPM);
             double maf = SensorCentral.getInstance().getValue(Sensor.MAF);
 
-                    String baseFuelStr = oneDecimal(Sensor.FUEL_BASE);
+            String baseFuelStr = twoDecimals(Sensor.FUEL_BASE);
             String baseFuel = "$Base_Fuel (ms) = lookup (" +
                     "(RPM = " + rpm + ", " +
                     "MAF = " + maf + ") = " +
                     baseFuelStr + "ms";
 
-            String actualLastInjection = oneDecimal(Sensor.actualLastInjection);
+            String actualLastInjection = twoDecimals(Sensor.actualLastInjection);
             String injTime =  "$Fuel (ms) = " + baseFuel + getInjecctorLag() +
                     " = " + actualLastInjection + "ms_per_injection$";
 
@@ -134,8 +134,8 @@ public class FormulasPane {
 
     @NotNull
     private String getAccelerationVariables(ConfigurationImage ci) {
-        String tpsDelta = oneDecimal(Sensor.deltaTps);
-        String elDelta = oneDecimal(Sensor.engineLoadAccelDelta);
+        String tpsDelta = twoDecimals(Sensor.deltaTps);
+        String elDelta = twoDecimals(Sensor.engineLoadAccelDelta);
 
         int tpsEnrichLength = ConfigField.getIntValue(ci, Fields.TPSACCELLENGTH);
         int elEnrichLength = ConfigField.getIntValue(ci, Fields.ENGINELOADACCELLENGTH);
@@ -145,7 +145,7 @@ public class FormulasPane {
 
         double tpsAccelThreshold = ConfigField.getFloatValue(ci, Fields.TPSACCELENRICHMENTTHRESHOLD);
         String tpsAccelMult = "fixme";//ConfigField.getFloatValue(ci, Fields.TPSACCELENRICHMENTMULTIPLIER);
-        String tpsAccelValue = oneDecimal(Sensor.tpsAccelFuel);
+        String tpsAccelValue = twoDecimals(Sensor.tpsAccelFuel);
 
         double tpsDecelThreshold = ConfigField.getFloatValue(ci, Fields.TPSDECELENLEANMENTTHRESHOLD);
         double tpsDecelMult = ConfigField.getFloatValue(ci, Fields.TPSDECELENLEANMENTMULTIPLIER);
@@ -170,8 +170,8 @@ public class FormulasPane {
 
         double rpm = SensorCentral.getInstance().getValue(Sensor.RPM);
         String RPM = "" + (int) rpm;
-        String VE = oneDecimal(Sensor.CURRENT_VE);
-        String TARGET_AFR = oneDecimal(Sensor.TARGET_AFR);
+        String VE = twoDecimals(Sensor.CURRENT_VE);
+        String TARGET_AFR = twoDecimals(Sensor.TARGET_AFR);
         String tpsStr = oneDecimal(Sensor.TPS);
         String chargeAirMass = String.format("%.3fgm", SensorCentral.getInstance().getValue(Sensor.CHARGE_AIR_MASS));
 
@@ -192,7 +192,7 @@ public class FormulasPane {
                 chargeAirMass +
                 "$";
 
-        String baseFuelStr = oneDecimal(Sensor.FUEL_BASE);
+        String baseFuelStr = twoDecimals(Sensor.FUEL_BASE);
         String baseFuel = "$Base_Fuel (ms) = \\frac{" +
                 "($Airmass = " + chargeAirMass + ")" +
                 "}{" +
@@ -200,13 +200,13 @@ public class FormulasPane {
                 " * (injectorFlow = " + injectorFlow + " cc/min)" +
                 "} = " + baseFuelStr + "ms$";
 
-        String IATcorr = oneDecimal(Sensor.iatCorrection);
-        String CLTcorr = oneDecimal(Sensor.cltCorrection);
-        String tpsAccel = oneDecimal(Sensor.tpsAccelFuel);
+        String IATcorr = twoDecimals(Sensor.iatCorrection);
+        String CLTcorr = twoDecimals(Sensor.cltCorrection);
+        String tpsAccel = twoDecimals(Sensor.tpsAccelFuel);
 
         String tempCorrections = " * cltCorr(" + CLTcorr + ") * iatCorr(" + IATcorr + ")";
 
-        String actualLastInjection = oneDecimal(Sensor.actualLastInjection);
+        String actualLastInjection = twoDecimals(Sensor.actualLastInjection);
         String injTime = "$Fuel (ms) = " +
                 "(Base_Fuel (" + baseFuelStr + "ms) + Tps_Accel_Corr = (" + tpsAccel + "ms))" +
                 tempCorrections + getInjecctorLag() +
@@ -221,16 +221,24 @@ public class FormulasPane {
 
     @NotNull
     private String getInjecctorLag() {
-        String vBatt = oneDecimal(Sensor.VBATT);
-        return "+ ( injectorLag(VBatt = " + vBatt + ") = " + oneDecimal(Sensor.injectorLagMs) + ")";
+        String vBatt = twoDecimals(Sensor.VBATT);
+        return "+ ( injectorLag(VBatt = " + vBatt + ") = " + twoDecimals(Sensor.injectorLagMs) + ")";
     }
 
     private String oneDecimal(Sensor sensor) {
         return oneDecimal(SensorCentral.getInstance().getValue(sensor));
     }
 
+    private String twoDecimals(Sensor sensor) {
+        return twoDecimals(SensorCentral.getInstance().getValue(sensor));
+    }
+
     private String oneDecimal(double ve) {
         return String.format("%.1f", ve);
+    }
+
+    private String twoDecimals(double ve) {
+        return String.format("%.2f", ve);
     }
 
     public JPanel getContent() {
