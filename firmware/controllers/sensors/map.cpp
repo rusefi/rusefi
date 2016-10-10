@@ -88,7 +88,7 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DEC
 	case MT_MPX4100:
 		return mpx4100.getValue(voltage);
 	default:
-		firmwareError("Unknown MAP type: %d", mapConfig->type);
+		firmwareError(OBD_PCM_Processor_Fault, "Unknown MAP type: %d", mapConfig->type);
 		return NAN;
 	}
 }
@@ -159,7 +159,7 @@ static FastInterpolation *getDecoder(air_pressure_sensor_type_e type) {
 	case MT_GM_3_BAR:
 		return &gm3bar;
 	default:
-		firmwareError("Unknown MAP type: %d", type);
+		firmwareError(OBD_PCM_Processor_Fault, "Unknown MAP type: %d", type);
 		return &customMap;
 	}
 }

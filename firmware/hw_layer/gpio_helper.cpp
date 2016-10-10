@@ -36,7 +36,7 @@ void initOutputPinExt(const char *msg, OutputPin *outputPin, ioportid_t port, ui
 		 * here we check if another physical pin is already assigned to this logical output
 		 */
 // todo: need to clear '&outputs' in io_pins.c
-		firmwareError("outputPin [%s] already assigned to %x%d", msg, outputPin->port, outputPin->pin);
+		firmwareError(OBD_PCM_Processor_Fault, "outputPin [%s] already assigned to %x%d", msg, outputPin->port, outputPin->pin);
 		return;
 	}
 	outputPin->currentLogicValue = INITIAL_PIN_STATE;

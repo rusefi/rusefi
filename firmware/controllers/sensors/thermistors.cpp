@@ -82,7 +82,7 @@ float getResistance(ThermistorConf *config) {
 
 float getTemperatureC(ThermistorConf *config, ThermistorMath *tm) {
 	if (!initialized) {
-		firmwareError("thermstr not initialized");
+		firmwareError(OBD_PCM_Processor_Fault, "thermstr not initialized");
 		return NAN;
 	}
 	float resistance = getResistance(config);
@@ -137,7 +137,7 @@ static void prepareThermistorCurve(thermistor_conf_s *tc, thermistor_curve_s * c
 
 	float L1 = logf(tc->resistance_1);
 	if (L1 == tc->resistance_1) {
-		firmwareError("log is broken?");
+		firmwareError(OBD_PCM_Processor_Fault, "log is broken?");
 	}
 	float L2 = logf(tc->resistance_2);
 	float L3 = logf(tc->resistance_3);

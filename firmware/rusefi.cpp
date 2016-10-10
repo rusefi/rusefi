@@ -260,7 +260,7 @@ void chDbgStackOverflowPanic(Thread *otp) {
 }
 
 // todo: why is this method here and not in error_handling.cpp ?
-void firmwareError(const char *errorMsg, ...) {
+void firmwareError(obd_code_e code, const char *errorMsg, ...) {
 	if (hasFirmwareErrorFlag)
 		return;
 	ON_FATAL_ERROR()
@@ -293,5 +293,5 @@ int getRusEfiVersion(void) {
 		return 123; // this is here to make the compiler happy about the unused array
 	if (UNUSED_CCM_SIZE[0] * 0 != 0)
 		return 3211; // this is here to make the compiler happy about the unused array
-	return 20161009;
+	return 20161010;
 }

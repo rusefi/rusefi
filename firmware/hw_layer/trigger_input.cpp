@@ -114,7 +114,7 @@ static ICUDriver *turnOnTriggerInputPin(brain_pin_e hwPin, ICUConfig *icucfg) {
 			icuEnable(driver);
 		} else {
 			// we would be here for example if same pin is used for multiple input capture purposes
-			firmwareError("ICU unexpected state [%s]", hwPortname(hwPin));
+			firmwareError(OBD_PCM_Processor_Fault, "ICU unexpected state [%s]", hwPortname(hwPin));
 		}
 	}
 	return driver;

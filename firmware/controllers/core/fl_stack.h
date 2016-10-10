@@ -59,7 +59,7 @@ bool FLStack<T, MAXSIZE>::remove(T value) {
 template<typename T, int MAXSIZE>
 void FLStack<T, MAXSIZE>::push(T value) {
 	if (currentSize >= MAXSIZE) {
-		firmwareError("FLstack overflow");
+		firmwareError(OBD_PCM_Processor_Fault, "FLstack overflow");
 		return;
 		//warning()
 	}
@@ -69,7 +69,7 @@ void FLStack<T, MAXSIZE>::push(T value) {
 template<typename T, int MAXSIZE>
 T FLStack<T, MAXSIZE>::pop() {
 	if (currentSize == 0) {
-		firmwareError("FLStack is empty");
+		firmwareError(OBD_PCM_Processor_Fault, "FLStack is empty");
 	}
 	return values[--currentSize];
 }

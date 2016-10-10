@@ -193,7 +193,7 @@ static void mapAveragingCallback(trigger_event_e ckpEventType,
 
 		angle_t samplingDuration = ENGINE(engineState.mapAveragingDuration);
 		if (samplingDuration <= 0) {
-			firmwareError("map sampling angle should be positive");
+			firmwareError(OBD_PCM_Processor_Fault, "map sampling angle should be positive");
 			return;
 		}
 

@@ -134,7 +134,7 @@ int EventQueue::executeAll(efitime_t now) {
 	{
 		efiAssert(current->callback != NULL, "callback==null1", 0);
 		if (++listIterationCounter > QUEUE_LENGTH_LIMIT) {
-			firmwareError("Is this list looped?");
+			firmwareError(OBD_PCM_Processor_Fault, "Is this list looped?");
 			return false;
 		}
 		if (current->momentX <= now) {

@@ -56,7 +56,7 @@ static void initEgoSensor(afr_sensor_s *sensor, ego_sensor_e type) {
 		sensor->value2 = 14;
 		break;
 	default:
-		firmwareError("Unexpected EGO %d", type);
+		firmwareError(OBD_PCM_Processor_Fault, "Unexpected EGO %d", type);
 		break;
 	}
 }

@@ -303,7 +303,7 @@ void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const waveIndex, trig
 	efiAssertVoid(angle > 0, "angle should be positive");
 	if (size > 0) {
 		if (angle <= previousAngle) {
-			firmwareError("invalid angle order: %f and %f, size=%d", angle, previousAngle, size);
+			firmwareError(OBD_PCM_Processor_Fault, "invalid angle order: %f and %f, size=%d", angle, previousAngle, size);
 			return;
 		}
 	}
@@ -314,7 +314,7 @@ void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const waveIndex, trig
 			single_wave_s *wave = &this->wave.waves[i];
 
 			if (wave->pinStates == NULL) {
-				firmwareError("wave pinStates is NULL");
+				firmwareError(OBD_PCM_Processor_Fault, "wave pinStates is NULL");
 				return;
 			}
 			wave->pinStates[0] = initialState[i];
@@ -328,7 +328,7 @@ void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const waveIndex, trig
 
 	int exactMatch = wave.findAngleMatch(angle, size);
 	if (exactMatch != EFI_ERROR_CODE) {
-		firmwareError("same angle: not supported");
+		firmwareError(OBD_PCM_Processor_Fault, "same angle: not supported");
 		return;
 	}
 
@@ -346,7 +346,7 @@ void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const waveIndex, trig
 	isFrontEvent[index] = TV_RISE == stateParam;
 
 	if (index != size) {
-		firmwareError("are we ever here?");
+		firmwareError(OBD_PCM_Processor_Fault, "are we ever here?");
 	}
 
 //	int index = size;

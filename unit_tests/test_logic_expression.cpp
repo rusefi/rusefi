@@ -34,7 +34,7 @@ float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 	case LE_METHOD_FAN_OFF_SETTING:
 		return 0;
 	default:
-	firmwareError("No mock value for %d", action);
+	firmwareError(OBD_PCM_Processor_Fault, "No mock value for %d", action);
 		return NAN;
 	}
 }

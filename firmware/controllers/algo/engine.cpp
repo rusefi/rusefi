@@ -288,7 +288,7 @@ void Engine::watchdog() {
 		return;
 	if (!isSpinning) {
 		if (!isRunningBenchTest() && stopPins()) {
-			firmwareError("Some pins were turned off by 2nd pass watchdog");
+			firmwareError(OBD_PCM_Processor_Fault, "Some pins were turned off by 2nd pass watchdog");
 		}
 		return;
 	}

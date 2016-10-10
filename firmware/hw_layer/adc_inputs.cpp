@@ -161,7 +161,7 @@ void doSlowAdc(void) {
 	if (ADC_SLOW_DEVICE.state != ADC_READY &&
 	ADC_SLOW_DEVICE.state != ADC_COMPLETE &&
 	ADC_SLOW_DEVICE.state != ADC_ERROR) {
-		// todo: why and when does this happen? firmwareError("ADC slow not ready?");
+		// todo: why and when does this happen? firmwareError(OBD_PCM_Processor_Fault, "ADC slow not ready?");
 		slowAdc.errorsCount++;
 		chSysUnlockFromIsr()
 		;
@@ -194,7 +194,7 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 	ADC_FAST_DEVICE.state != ADC_COMPLETE &&
 	ADC_FAST_DEVICE.state != ADC_ERROR) {
 		fastAdc.errorsCount++;
-		// todo: when? why? firmwareError("ADC fast not ready?");
+		// todo: when? why? firmwareError(OBD_PCM_Processor_Fault, "ADC fast not ready?");
 		chSysUnlockFromIsr()
 		;
 		return;
@@ -333,7 +333,7 @@ ioportid_t getAdcChannelPort(adc_channel_e hwChannel) {
 	case ADC_CHANNEL_IN15:
 		return GPIOC;
 	default:
-		firmwareError("Unknown hw channel %d", hwChannel);
+		firmwareError(OBD_PCM_Processor_Fault, "Unknown hw channel %d", hwChannel);
 		return NULL;
 	}
 }
@@ -384,7 +384,7 @@ int getAdcChannelPin(adc_channel_e hwChannel) {
 	case ADC_CHANNEL_IN15:
 		return 5;
 	default:
-		firmwareError("Unknown hw channel %d", hwChannel);
+		firmwareError(OBD_PCM_Processor_Fault, "Unknown hw channel %d", hwChannel);
 		return -1;
 	}
 }
@@ -512,7 +512,7 @@ static void addChannel(const char *name, adc_channel_e setting, adc_channel_mode
 	}
 	if (adcHwChannelEnabled[setting] != ADC_OFF) {
 		getPinNameByAdcChannel(setting, errorMsgBuff);
-		firmwareError("ADC mapping error: input %s for %s already used by %s?", errorMsgBuff, name, adcHwChannelUsage[setting]);
+		firmwareError(OBD_PCM_Processor_Fault, "ADC mapping error: input %s for %s already used by %s?", errorMsgBuff, name, adcHwChannelUsage[setting]);
 	}
 
 	adcHwChannelUsage[setting] = name;
@@ -547,9 +547,9 @@ static void configureInputs(void) {
 void initAdcInputs(bool boardTestMode) {
 	printMsg(&logger, "initAdcInputs()");
 	if (ADC_BUF_DEPTH_FAST > MAX_ADC_GRP_BUF_DEPTH)
-		firmwareError("ADC_BUF_DEPTH_FAST too high");
+		firmwareError(OBD_PCM_Processor_Fault, "ADC_BUF_DEPTH_FAST too high");
 	if (ADC_BUF_DEPTH_SLOW > MAX_ADC_GRP_BUF_DEPTH)
-		firmwareError("ADC_BUF_DEPTH_SLOW too high");
+		firmwareError(OBD_PCM_Processor_Fault, "ADC_BUF_DEPTH_SLOW too high");
 
 	configureInputs();
 

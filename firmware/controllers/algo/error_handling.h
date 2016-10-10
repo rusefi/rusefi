@@ -34,7 +34,7 @@ bool isWarningNow(efitimesec_t now, bool forIndicator);
  *
  * todo: better method name?
  */
-void firmwareError(const char *fmt, ...);
+void firmwareError(obd_code_e code, const char *fmt, ...);
 
 #define hasFirmwareError() hasFirmwareErrorFlag
 
@@ -63,8 +63,8 @@ int getRusEfiVersion(void);
  * is stopped. Please use firmwareWarning() instead
  */
 #if EFI_ENABLE_ASSERTS
-  #define efiAssert(condition, message, result) { if (!(condition)) { firmwareError(message); return result; } }
-  #define efiAssertVoid(condition, message) { if (!(condition)) { firmwareError(message); return; } }
+  #define efiAssert(condition, message, result) { if (!(condition)) { firmwareError(OBD_PCM_Processor_Fault, message); return result; } }
+  #define efiAssertVoid(condition, message) { if (!(condition)) { firmwareError(OBD_PCM_Processor_Fault, message); return; } }
 #else /* EFI_ENABLE_ASSERTS */
   #define efiAssert(condition, message, result) { }
   #define efiAssertVoid(condition, message) { }

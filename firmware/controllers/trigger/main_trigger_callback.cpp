@@ -440,7 +440,7 @@ static ALWAYS_INLINE void ignitionMathCalc(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	float dwellMs = ENGINE(engineState.sparkDwell);
 
 	if (cisnan(dwellMs) || dwellMs < 0) {
-		firmwareError("invalid dwell: %f at %d", dwellMs, rpm);
+		firmwareError(OBD_PCM_Processor_Fault, "invalid dwell: %f at %d", dwellMs, rpm);
 		return;
 	}
 }

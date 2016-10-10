@@ -136,7 +136,7 @@ void logMsg(const char *format, ...) {
 //	fclose(fp);
 }
 
-void firmwareError(const char *fmt, ...) {
+void firmwareError(obd_code_e code, const char *fmt, ...) {
 	printf("firmwareError [%s]\r\n", fmt);
 
 	va_list ap;

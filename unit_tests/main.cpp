@@ -183,7 +183,7 @@ int warning(obd_code_e code, const char *fmt, ...) {
 
 bool hasFirmwareErrorFlag = false;
 
-void firmwareError(const char *fmt, ...) {
+void firmwareError(obd_code_e code, const char *fmt, ...) {
 	  printf(fmt);
 	  exit(-1);
 }
