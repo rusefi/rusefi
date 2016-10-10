@@ -26,7 +26,7 @@ bool assertNotInList(T *head, T*element) {
 	LL_FOREACH(head, current)
 	{
 		if (++counter > QUEUE_LENGTH_LIMIT) {
-			firmwareError(CUSTOM_ERR_6115, "Looped queue?");
+			firmwareError(CUSTOM_ERR_LOOPED_QUEUE, "Looped queue?");
 			return false;
 		}
 		if (current == element) {

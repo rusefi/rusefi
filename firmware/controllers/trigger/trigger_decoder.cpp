@@ -599,7 +599,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	default:
-		firmwareError(CUSTOM_ERR_6119, "initializeTriggerShape() not implemented: %d", triggerConfig->type);
+		firmwareError(CUSTOM_ERR_NO_SHAPE, "initializeTriggerShape() not implemented: %d", triggerConfig->type);
 		return;
 	}
 	wave.checkSwitchTimes(getSize());
