@@ -62,7 +62,7 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(uint32_t index, 
 		nextStep(state, shape, i, triggerConfig PASS_ENGINE_PARAMETER);
 	}
 	if (state->getTotalRevolutionCounter() != 3) {
-		firmwareError("sync failed/wrong gap parameters trigger=%s", getTrigger_type_e(engineConfiguration->trigger.type));
+		firmwareError(OBD_PCM_Processor_Fault, "sync failed/wrong gap parameters trigger=%s", getTrigger_type_e(engineConfiguration->trigger.type));
 		return;
 	}
 
@@ -79,6 +79,6 @@ uint32_t TriggerStimulatorHelper::doFindTrigger(TriggerShape * shape,
 		if (state->shaft_is_synchronized)
 			return i;
 	}
-	firmwareError("findTriggerZeroEventIndex() failed");
+	firmwareError(OBD_PCM_Processor_Fault, "findTriggerZeroEventIndex() failed");
 	return EFI_ERROR_CODE;
 }

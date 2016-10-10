@@ -51,7 +51,7 @@ static bool intermediateLoggingBufferInited = false;
  */
 static ALWAYS_INLINE bool validateBuffer(Logging *logging, uint32_t extraLen) {
 	if (logging->buffer == NULL) {
-		firmwareError("Logging not initialized: %s", logging->name);
+		firmwareError(OBD_PCM_Processor_Fault, "Logging not initialized: %s", logging->name);
 		return true;
 	}
 
@@ -116,7 +116,7 @@ static void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
 void vappendPrintf(Logging *logging, const char *fmt, va_list arg) {
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#5b");
 	if (!intermediateLoggingBufferInited) {
-		firmwareError("intermediateLoggingBufferInited not inited!");
+		firmwareError(OBD_PCM_Processor_Fault, "intermediateLoggingBufferInited not inited!");
 		return;
 	}
 	int wasLocked = lockAnyContext();
@@ -240,7 +240,7 @@ void appendMsgPostfix(Logging *logging) {
 void resetLogging(Logging *logging) {
 	char *buffer = logging->buffer;
 	if (buffer == NULL) {
-		firmwareError("Null buffer: %s", logging->name);
+		firmwareError(OBD_PCM_Processor_Fault, "Null buffer: %s", logging->name);
 		return;
 	}
 	logging->linePointer = buffer;

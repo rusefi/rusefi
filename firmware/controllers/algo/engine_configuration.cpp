@@ -990,7 +990,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER);
 	// todo: eliminate triggerShape.operationMode?
 	if (engineConfiguration->operationMode != engine->triggerShape.getOperationMode())
-		firmwareError("operationMode/trigger mismatch");
+		firmwareError(OBD_PCM_Processor_Fault, "operationMode/trigger mismatch");
 
 #if EFI_TUNER_STUDIO
 	syncTunerStudioCopy();
@@ -1015,11 +1015,11 @@ void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S
 	engine->triggerShape.initializeTriggerShape(logger PASS_ENGINE_PARAMETER);
 #endif
 	if (engine->triggerShape.getSize() == 0) {
-		firmwareError("triggerShape size is zero");
+		firmwareError(OBD_PCM_Processor_Fault, "triggerShape size is zero");
 		return;
 	}
 	if (engine->triggerShape.getSize() == 0) {
-		firmwareError("shaftPositionEventCount is zero");
+		firmwareError(OBD_PCM_Processor_Fault, "shaftPositionEventCount is zero");
 		return;
 	}
 	engine->engineCycleEventCount = engine->triggerShape.getLength();

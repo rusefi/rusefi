@@ -76,7 +76,7 @@ static void callback(GPTDriver *gptp) {
 	(void)gptp;
 	timerCallbackCounter++;
 	if (globalTimerCallback == NULL) {
-		firmwareError("NULL globalTimerCallback");
+		firmwareError(OBD_PCM_Processor_Fault, "NULL globalTimerCallback");
 		return;
 	}
 	isTimerPending = false;
@@ -97,7 +97,7 @@ static void usTimerWatchDog(void) {
 	if (getTimeNowNt() >= lastSetTimerTimeNt + 2 * CORE_CLOCK) {
 		strcpy(buff, "no_event");
 		itoa10(&buff[8], lastSetTimerValue);
-		firmwareError(buff);
+		firmwareError(OBD_PCM_Processor_Fault, buff);
 		return;
 	}
 

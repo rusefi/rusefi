@@ -82,7 +82,7 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 			;
 
 			if (flags & SD_OVERRUN_ERROR) {
-//				firmwareError("serial overrun");
+//				firmwareError(OBD_PCM_Processor_Fault, "serial overrun");
 			}
 
 		}
@@ -229,7 +229,7 @@ void consoleOutputBuffer(const uint8_t *buf, int size) {
 #if !EFI_UART_ECHO_TEST_MODE
 	lastWriteActual = chnWriteTimeout(getConsoleChannel(), buf, size, CONSOLE_WRITE_TIMEOUT);
 //	if (r != size)
-//		firmwareError("Partial console write");
+//		firmwareError(OBD_PCM_Processor_Fault, "Partial console write");
 #endif /* EFI_UART_ECHO_TEST_MODE */
 }
 

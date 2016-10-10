@@ -142,7 +142,7 @@ static const char* idleModeStr[] = { "I:A", "I:M" };
 //	case O2_HEATER:
 //		return "O2H";
 //	default:
-//		firmwareError("No short name for %d", (int) pin);
+//		firmwareError(OBD_PCM_Processor_Fault, "No short name for %d", (int) pin);
 //		return "";
 //	}
 //}

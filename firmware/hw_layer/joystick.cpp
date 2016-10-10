@@ -116,7 +116,7 @@ static uint32_t getExtMode(ioportid_t port) {
 	} else if (port == GPIOF) {
 		return EXT_MODE_GPIOF;
 	}
-	firmwareError("Unsupported %d", port);
+	firmwareError(OBD_PCM_Processor_Fault, "Unsupported %d", port);
 	return 0;
 }
 

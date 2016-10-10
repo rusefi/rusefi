@@ -80,7 +80,7 @@ static int getPortIndex(ioportid_t port) {
 	if (port == GPIOH)
 		return 6;
 #endif /* defined(STM32F4XX) */
-	firmwareError("unknown port");
+	firmwareError(OBD_PCM_Processor_Fault, "unknown port");
 	return -1;
 }
 
@@ -197,7 +197,7 @@ const char * getPinFunction(brain_input_pin_e brainPin) {
  */
 void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t mode) {
 	if (!initialized) {
-		firmwareError("repository not initialized");
+		firmwareError(OBD_PCM_Processor_Fault, "repository not initialized");
 		return;
 	}
 	if (port == GPIO_NULL)
@@ -216,7 +216,7 @@ void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t m
 		 * connected, so the warning is never displayed on the console and that's quite a problem!
 		 */
 //		warning(OBD_PCM_Processor_Fault, "%s%d req by %s used by %s", portname(port), pin, msg, PIN_USED[index]);
-		firmwareError("%s%d req by %s used by %s", portname(port), pin, msg, PIN_USED[index]);
+		firmwareError(OBD_PCM_Processor_Fault, "%s%d req by %s used by %s", portname(port), pin, msg, PIN_USED[index]);
 		return;
 	}
 	markUsed(index, msg);
@@ -250,7 +250,7 @@ void registedFundamentralIoPin(char *msg, ioportid_t port, ioportmask_t pin, iom
 	if (PIN_USED[index] != NULL) {
 		print("!!!!!!!!!!!!! Already used [%s] %d\r\n", msg, pin);
 		print("!!!!!!!!!!!!! Already used by [%s]\r\n", PIN_USED[index]);
-		firmwareError("pin already used");
+		firmwareError(OBD_PCM_Processor_Fault, "pin already used");
 		return;
 	}
 	markUsed(index, msg);

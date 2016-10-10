@@ -51,12 +51,12 @@ float multi_wave_s::getSwitchTime(int index) const {
 
 void checkSwitchTimes2(int size, float *switchTimes) {
 	if (switchTimes[size - 1] != 1) {
-		firmwareError("last switch time has to be 1 not %f", switchTimes[size - 1]);
+		firmwareError(OBD_PCM_Processor_Fault, "last switch time has to be 1 not %f", switchTimes[size - 1]);
 		return;
 	}
 	for (int i = 0; i < size - 1; i++) {
 		if (switchTimes[i] >= switchTimes[i + 1]) {
-			firmwareError("invalid switchTimes @%d: %f/%f", i, switchTimes[i], switchTimes[i + 1]);
+			firmwareError(OBD_PCM_Processor_Fault, "invalid switchTimes @%d: %f/%f", i, switchTimes[i], switchTimes[i + 1]);
 		}
 	}
 }

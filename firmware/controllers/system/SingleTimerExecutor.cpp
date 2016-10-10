@@ -62,7 +62,7 @@ Executor::Executor() {
 void Executor::scheduleByTime(const bool monitorReuse, scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback,
 		void *param) {
 //	if (delayUs < 0) {
-//		firmwareError("Negative delayUs %s: %d", prefix, delayUs);
+//		firmwareError(OBD_PCM_Processor_Fault, "Negative delayUs %s: %d", prefix, delayUs);
 //		return;
 //	}
 //	if (delayUs == 0) {
@@ -117,7 +117,7 @@ void Executor::doExecute() {
 	}
 	lastExecutionCount = totalExecuted;
 	if (!isLocked()) {
-		firmwareError("Someone has stolen my lock");
+		firmwareError(OBD_PCM_Processor_Fault, "Someone has stolen my lock");
 		return;
 	}
 	reentrantFlag = false;
