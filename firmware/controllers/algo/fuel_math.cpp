@@ -105,7 +105,7 @@ int getNumberOfInjections(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S) {
 	case IM_BATCH:
 		return 2;
 	default:
-		firmwareError(CUSTOM_ERR_6104, "Unexpected getFuelMultiplier %d", mode);
+		firmwareError(CUSTOM_ERR_INVALID_INJECTION_MODE, "Unexpected injection_mode_e %d", mode);
 		return 1;
 	}
 }

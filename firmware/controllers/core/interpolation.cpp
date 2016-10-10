@@ -81,7 +81,7 @@ FastInterpolation::FastInterpolation(float x1, float y1, float x2, float y2) {
 
 void FastInterpolation::init(float x1, float y1, float x2, float y2) {
 	if (x1 == x2) {
-		firmwareError(CUSTOM_ERR_6110, "init: Same x1 and x2 in interpolate: %f/%f", x1, x2);
+		firmwareError(CUSTOM_ERR_INTERPOLATE, "init: Same x1 and x2 in interpolate: %f/%f", x1, x2);
 		return;
 	}
 	a = INTERPOLATION_A(x1, y1, x2, y2);
