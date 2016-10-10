@@ -177,7 +177,7 @@ int main(void) {
 	return EXIT_SUCCESS;
 }
 
-int warning(obd_code_e code, const char *fmt, ...) {
+bool warning(obd_code_e code, const char *fmt, ...) {
 	printf("Warning: %s\r\n", fmt);
 }
 

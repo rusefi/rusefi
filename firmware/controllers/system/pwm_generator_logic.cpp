@@ -182,11 +182,11 @@ void PwmConfig::weComplexInit(const char *msg, int phaseCount, float *switchTime
 
 	efiAssertVoid(periodNt != 0, "period is not initialized");
 	if (phaseCount == 0) {
-		firmwareError(OBD_PCM_Processor_Fault, "signal length cannot be zero");
+		firmwareError(CUSTOM_ERR_6116, "signal length cannot be zero");
 		return;
 	}
 	if (phaseCount > PWM_PHASE_MAX_COUNT) {
-		firmwareError(OBD_PCM_Processor_Fault, "too many phases in PWM");
+		firmwareError(CUSTOM_ERR_6117, "too many phases in PWM");
 		return;
 	}
 	efiAssertVoid(waveCount > 0, "waveCount should be positive");

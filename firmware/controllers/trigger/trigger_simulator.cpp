@@ -79,6 +79,6 @@ uint32_t TriggerStimulatorHelper::doFindTrigger(TriggerShape * shape,
 		if (state->shaft_is_synchronized)
 			return i;
 	}
-	firmwareError(OBD_PCM_Processor_Fault, "findTriggerZeroEventIndex() failed");
+	firmwareError(CUSTOM_ERR_6120, "findTriggerZeroEventIndex() failed");
 	return EFI_ERROR_CODE;
 }

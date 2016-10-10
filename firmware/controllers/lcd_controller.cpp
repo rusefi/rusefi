@@ -339,7 +339,7 @@ void updateHD44780lcd(Engine *engine) {
 		fillWithSpaces();
 	}
 
-	memcpy(buffer, getWarninig(), engineConfiguration->HD44780width);
+	memcpy(buffer, getWarning(), engineConfiguration->HD44780width);
 	buffer[engineConfiguration->HD44780width] = 0;
 	lcd_HD44780_set_position(engineConfiguration->HD44780height - 1, 0);
 	lcd_HD44780_print_string(buffer);
@@ -375,7 +375,7 @@ void updateHD44780lcd(Engine *engine) {
 //
 //	lcd_HD44780_set_position(1, 0);
 //	memset(buffer, ' ', LCD_WIDTH);
-//	memcpy(buffer, getWarninig(), LCD_WIDTH);
+//	memcpy(buffer, getWarning(), LCD_WIDTH);
 //	buffer[LCD_WIDTH] = 0;
 //	lcd_HD44780_print_string(buffer);
 //
