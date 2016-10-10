@@ -263,6 +263,7 @@ void chDbgStackOverflowPanic(Thread *otp) {
 void firmwareError(obd_code_e code, const char *errorMsg, ...) {
 	if (hasFirmwareErrorFlag)
 		return;
+	setWarningCode(code, getTimeNowSeconds());
 	ON_FATAL_ERROR()
 	;
 	hasFirmwareErrorFlag = true;

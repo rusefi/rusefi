@@ -26,6 +26,7 @@ EXTERN_ENGINE;
 
 extern int warningEnabled;
 extern bool main_loop_started;
+extern bool hasFirmwareErrorFlag;
 
 const char *dbg_panic_file;
 int dbg_panic_line;
@@ -70,14 +71,22 @@ bool isWarningNow(efitimesec_t now, bool forIndicator) {
 	return absI(now - engine->engineState.timeOfPreviousWarning) < period;
 }
 
+void setWarningCode(obd_code_e code, efitimesec_t now) {
+	engine->engineState.timeOfPreviousWarning = now;
+
+	engine->engineState.warningCounter++;
+	engine->engineState.lastErrorCode = code;
+}
+
 /**
  * OBD_PCM_Processor_Fault is the general error code for now
  *
  * @returns TRUE in case there are too many warnings
  */
-int warning(obd_code_e code, const char *fmt, ...) {
+bool warning(obd_code_e code, const char *fmt, ...) {
+	if (hasFirmwareErrorFlag)
+		return true;
 	efiAssert(isWarningStreamInitialized, "warn stream not initialized", false);
-	UNUSED(code);
 
 #if EFI_UNIT_TEST || EFI_SIMULATOR || defined(__DOXYGEN__)
 	printf("warning %s\r\n", fmt);
@@ -86,10 +95,7 @@ int warning(obd_code_e code, const char *fmt, ...) {
 	efitimesec_t now = getTimeNowSeconds();
 	if (isWarningNow(now, false) || !warningEnabled)
 		return true; // we just had another warning, let's not spam
-	engine->engineState.timeOfPreviousWarning = now;
-
-	engine->engineState.warningCounter++;
-	engine->engineState.lastErrorCode = code;
+	setWarningCode(code, now);
 
 	resetLogging(&logger); // todo: is 'reset' really needed here?
 	appendMsgPrefix(&logger);
@@ -109,7 +115,7 @@ int warning(obd_code_e code, const char *fmt, ...) {
 	return FALSE;
 }
 
-char *getWarninig(void) {
+char *getWarning(void) {
 	return warningBuffer;
 }
 

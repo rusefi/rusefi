@@ -22,12 +22,13 @@ int getVtSizeEstimate(void);
 
 void assertVtList(void);
 
+void setWarningCode(obd_code_e code, efitimesec_t now);
 /**
  * Something is wrong, but we can live with it: some minor sensor is disconnected
  * or something like that
  *
  */
-int warning(obd_code_e code, const char *fmt, ...);
+bool warning(obd_code_e code, const char *fmt, ...);
 bool isWarningNow(efitimesec_t now, bool forIndicator);
 /**
  * Something really bad had happened - firmware cannot function
@@ -53,7 +54,7 @@ char *getFirmwareError(void);
 void chDbgPanic3(const char *msg, const char * file, int line);
 
 void initErrorHandling(void);
-char *getWarninig(void);
+char *getWarning(void);
 
 // todo: better place for this shared declaration?
 int getRusEfiVersion(void);
