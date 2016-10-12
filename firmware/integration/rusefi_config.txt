@@ -732,10 +732,10 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	brain_input_pin_e camInput;
 	pid_dt[AUX_PID_COUNT iterate] auxPidDT;
 	float crankingIdleAdjustment;Extra idle while cranking;"percent",      1,     0,   -100.0,    100,    
-	float tChargeMinRpmMinTps;
-	float tChargeMinRpmMaxTps;
-	float tChargeMaxRpmMinTps;
-	float tChargeMaxRpmMaxTps;    
+	float tChargeMinRpmMinTps;;"mult",        1,     0,  0,    3,  4
+	float tChargeMinRpmMaxTps;;"mult",        1,     0,  0,    3,  4
+	float tChargeMaxRpmMinTps;;"mult",        1,     0,  0,    3,  4
+	float tChargeMaxRpmMaxTps;;"mult",        1,     0,  0,    3,  4   
 	brain_pin_e[AUX_PID_COUNT iterate] auxPidPins;
 	fsio_pwm_freq_t[AUX_PID_COUNT iterate] auxPidFrequency;
 	int alternatorPwmFrequency;;"Hz",        1,     0,  0,    3000.0,  0

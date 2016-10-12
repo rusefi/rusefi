@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Oct 02 13:12:05 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Oct 11 20:15:08 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1798,7 +1798,7 @@ typedef struct {
 	 */
 	float crankingCycleBins[CRANKING_CURVE_SIZE];
 	/**
-	 * CLT-based adjustment for simple manual idle controller
+	 * CLT-based idle position multiplier for simple manual idle controller
 	 * offset 7032
 	 */
 	float cltIdleCorrBins[CLT_CURVE_SIZE];
@@ -1959,4 +1959,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Oct 02 13:12:05 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Oct 11 20:15:08 EDT 2016

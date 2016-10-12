@@ -14,13 +14,10 @@
 #include "engine_math.h"
 #include "engine_state.h"
 
-#define K_AT_MIN_RPM_MIN_TPS 0.25
-#define K_AT_MIN_RPM_MAX_TPS 0.25
-#define K_AT_MAX_RPM_MIN_TPS 0.25
-#define K_AT_MAX_RPM_MAX_TPS 0.9
-
 #define rpmMin 500
 #define rpmMax 8000
+
+EXTERN_ENGINE;
 
 fuel_Map3D_t veMap("VE");
 fuel_Map3D_t ve2Map("VE2");
@@ -30,11 +27,11 @@ baroCorr_Map3D_t baroCorrMap("baro");
 #define tpMin 0
 #define tpMax 100
 //  http://rusefi.com/math/t_charge.html
-float getTCharge(int rpm, float tps, float coolantTemp, float airTemp) {
-	float minRpmKcurrentTPS = interpolate(tpMin, K_AT_MIN_RPM_MIN_TPS, tpMax,
-	K_AT_MIN_RPM_MAX_TPS, tps);
-	float maxRpmKcurrentTPS = interpolate(tpMin, K_AT_MAX_RPM_MIN_TPS, tpMax,
-	K_AT_MAX_RPM_MAX_TPS, tps);
+float getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_ENGINE_PARAMETER_S) {
+	float minRpmKcurrentTPS = interpolate(tpMin, engineConfiguration->tChargeMinRpmMinTps, tpMax,
+			engineConfiguration->tChargeMinRpmMaxTps, tps);
+	float maxRpmKcurrentTPS = interpolate(tpMin, engineConfiguration->tChargeMaxRpmMinTps, tpMax,
+			engineConfiguration->tChargeMaxRpmMaxTps, tps);
 
 	float Tcharge_coff = interpolate(rpmMin, minRpmKcurrentTPS, rpmMax, maxRpmKcurrentTPS, rpm);
 
