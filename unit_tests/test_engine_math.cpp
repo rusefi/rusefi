@@ -30,8 +30,7 @@ void testEngineMath(void) {
 	printf("*************************************************** testEngineMath\r\n");
 
 	EngineTestHelper eth(FORD_ESCORT_GT);
-	Engine * engine = &eth.engine;
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+	EXPAND_EngineTestHelper;
 
 	engineConfiguration->operationMode = FOUR_STROKE_CAM_SENSOR;
 
@@ -39,14 +38,14 @@ void testEngineMath(void) {
 	assertEqualsM("6000 RPM", 5, getOneDegreeTimeMs(6000) * 180);
 
 
-	assertEquals(312.5, getTCharge(1000, 0, 300, 350));
-	assertEquals(313.5833, getTCharge(1000, 50, 300, 350));
-	assertEquals(314.6667, getTCharge(1000, 100, 300, 350));
+	assertEquals(312.5, getTCharge(1000, 0, 300, 350 PASS_ENGINE_PARAMETER));
+	assertEquals(313.5833, getTCharge(1000, 50, 300, 350 PASS_ENGINE_PARAMETER));
+	assertEquals(314.6667, getTCharge(1000, 100, 300, 350 PASS_ENGINE_PARAMETER));
 
 
-	assertEquals(312.5, getTCharge(4000, 0, 300, 350));
-	assertEquals(320.0833, getTCharge(4000, 50, 300, 350));
-	assertEquals(327.6667, getTCharge(4000, 100, 300, 350));
+	assertEquals(312.5, getTCharge(4000, 0, 300, 350 PASS_ENGINE_PARAMETER));
+	assertEquals(320.0833, getTCharge(4000, 50, 300, 350 PASS_ENGINE_PARAMETER));
+	assertEquals(327.6667, getTCharge(4000, 100, 300, 350 PASS_ENGINE_PARAMETER));
 }
 
 void testIgnitionMapGenerator(void) {

@@ -241,7 +241,7 @@ void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 	tsSendResponse(tsChannel, mode, NULL, 0);
 }
 
-static void onlineTuneBytes(int currentPageId, int offset, int count) {
+static void onlineTuneBytes(int currentPageId, uint32_t offset, int count) {
 	if (offset > sizeof(engine_configuration_s)) {
 		int maxSize = sizeof(persistent_config_s) - offset;
 		if (count > maxSize) {

@@ -9,7 +9,7 @@
 
 #include "engine.h"
 
-float getTCharge(int rpm, float tps, float coolantTemp, float airTemp);
+float getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_ENGINE_PARAMETER_S);
 void setDetaultVETable(persistent_config_s *config);
 float getAirMass(engine_configuration_s *engineConfiguration, float VE, float MAP, float tempK);
 float sdMath(engine_configuration_s *engineConfiguration, float airMass, float AFR);

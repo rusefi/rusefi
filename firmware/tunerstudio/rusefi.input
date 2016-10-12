@@ -1345,6 +1345,7 @@ fileVersion = { 20160702 }
 		subMenu = baroCorrTbl,				"Baro Correction", 0, {fuelAlgorithm == 3}
 		subMenu = std_separator
 		subMenu = std_realtime,    "&Realtime Display",              0
+		subMenu = tChargeSettings, "tCharge Settings"
 		
 	menu = "3D Map Tuning"
 ;		subMenu = std_realtime,				"Realtime Display"
@@ -1426,6 +1427,11 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		
 		
 [UserDefined]
+	dialog = tChargeSettings, "tChart Settings"
+		field = "MinRpm MinTps", tChargeMinRpmMinTps
+		field = "MinRpm MaxTps", tChargeMinRpmMaxTps
+		field = "MaxRpm MinTps", tChargeMaxRpmMinTps
+		field = "MaxRpm MaxTps", tChargeMaxRpmMaxTps
 
 	dialog = baseInjection, "Injection"
 		field = "Enabled",						isInjectionEnabled

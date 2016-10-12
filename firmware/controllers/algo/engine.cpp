@@ -190,7 +190,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 		float coolantC = ENGINE(engineState.clt);
 		float intakeC = ENGINE(engineState.iat);
 		float tps = getTPS(PASS_ENGINE_PARAMETER_F);
-		tChargeK = convertCelsiusToKelvin(getTCharge(rpm, tps, coolantC, intakeC));
+		tChargeK = convertCelsiusToKelvin(getTCharge(rpm, tps, coolantC, intakeC PASS_ENGINE_PARAMETER));
 		float map = getMap();
 
 		/**
