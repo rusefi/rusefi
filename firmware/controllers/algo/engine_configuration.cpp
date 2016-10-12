@@ -367,6 +367,9 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->tachPulseDuractionMs = 4;
 	engineConfiguration->tachPulseTriggerIndex = 4;
 
+	setTableBin2(engineConfiguration->cltTimingBins, CLT_TIMING_CURVE_SIZE, -40, 120, 1);
+	setTableBin2(engineConfiguration->cltTimingExtra, CLT_TIMING_CURVE_SIZE, 0, 0, 1);
+
 	initTemperatureCurve(CLT_CURVE_SIZE, config->cltIdleCorrBins, config->cltIdleCorr, PERCENT_MULT);
 	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -40, 150);
 	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -30, 150);
