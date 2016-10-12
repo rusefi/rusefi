@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Oct 02 13:12:05 EDT 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Oct 11 21:20:18 EDT 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -10,6 +10,7 @@ public class Fields {
 	public static final int MAP_WINDOW_SIZE = 8;
 	public static final int CLT_CURVE_SIZE = 16;
 	public static final int ENGINE_NOISE_CURVE_SIZE = 8;
+	public static final int CLT_TIMING_CURVE_SIZE = 8;
 	public static final int IAT_CURVE_SIZE = 16;
 	public static final int VBAT_INJECTOR_CURVE_SIZE = 8;
 	public static final int DWELL_CURVE_SIZE = 8;
@@ -887,7 +888,9 @@ public class Fields {
 	public static final int biQuad_a2_offset = 2564;
 	public static final int biQuad_b1_offset = 2568;
 	public static final int biQuad_b2_offset = 2572;
-	public static final int unused_offset = 2576;
+	public static final int cltTimingBins_offset = 2576;
+	public static final int cltTimingExtra_offset = 2608;
+	public static final int unused_offset = 2640;
 	public static final int le_formulas1_offset = 3048;
 	public static final int le_formulas2_offset = 3248;
 	public static final int le_formulas3_offset = 3448;

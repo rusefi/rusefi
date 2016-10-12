@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Oct 11 20:15:08 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Oct 11 21:20:18 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1742,9 +1742,18 @@ typedef struct {
 	 */
 	bi_quard_s biQuad;
 	/**
+	 * CLT-based timing correction
 	 * offset 2576
 	 */
-	int unused[118];
+	float cltTimingBins[CLT_TIMING_CURVE_SIZE];
+	/**
+	 * offset 2608
+	 */
+	float cltTimingExtra[CLT_TIMING_CURVE_SIZE];
+	/**
+	 * offset 2640
+	 */
+	int unused[102];
 	/** total size 3048*/
 } engine_configuration_s;
 
@@ -1959,4 +1968,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Oct 11 20:15:08 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Oct 11 21:20:18 EDT 2016

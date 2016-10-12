@@ -6,6 +6,7 @@
 #define MAP_WINDOW_SIZE 8
 #define CLT_CURVE_SIZE 16
 #define ENGINE_NOISE_CURVE_SIZE 8
+#define CLT_TIMING_CURVE_SIZE 8
 #define IAT_CURVE_SIZE 16
 #define VBAT_INJECTOR_CURVE_SIZE 8
 #define DWELL_CURVE_SIZE 8
@@ -883,7 +884,9 @@
 #define biQuad_a2_offset 2564
 #define biQuad_b1_offset 2568
 #define biQuad_b2_offset 2572
-#define unused_offset 2576
+#define cltTimingBins_offset 2576
+#define cltTimingExtra_offset 2608
+#define unused_offset 2640
 #define le_formulas1_offset 3048
 #define le_formulas2_offset 3248
 #define le_formulas3_offset 3448
