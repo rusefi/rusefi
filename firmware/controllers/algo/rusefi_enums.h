@@ -389,6 +389,17 @@ typedef enum {
 } cranking_ignition_mode_e;
 
 typedef enum {
+	UART_NONE = 0,
+	UART_DEVICE_1 = 1,
+	UART_DEVICE_2 = 2,
+	UART_DEVICE_3 = 3,
+	UART_DEVICE_4 = 4,
+
+	Force_4b_uart_device = ENUM_32_BITS,
+} uart_device_e;
+
+
+typedef enum {
 	SPI_NONE = 0,
 	SPI_DEVICE_1 = 1,
 	SPI_DEVICE_2 = 2,

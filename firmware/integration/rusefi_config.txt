@@ -511,7 +511,11 @@ bit is_enabled_spi_2
 	brain_pin_e[LE_COMMAND_COUNT iterate] fsioPins;
 	pin_output_mode_e[LE_COMMAND_COUNT iterate] gpioPinModes;
 
-	int[5] unusedJoy;
+custom uart_device_e 4 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UART3" 
+	uart_device_e consoleUartDevice;
+	brain_pin_e console_rx_pin;
+	brain_pin_e console_tx_pin;
+	int[2] unusedJoy;
 
 	brain_pin_e triggerErrorPin;This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	

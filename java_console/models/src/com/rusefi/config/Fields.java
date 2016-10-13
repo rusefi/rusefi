@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Oct 11 21:20:18 EDT 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Oct 13 14:12:25 EDT 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -508,7 +508,8 @@ public class Fields {
 	public static final int gpioPinModes14_offset = 1184;
 	public static final int gpioPinModes15_offset = 1188;
 	public static final int gpioPinModes16_offset = 1192;
-	public static final int unusedJoy_offset = 1196;
+	public static final int consoleUartDevice_offset = 1196;
+	public static final int unusedJoy_offset = 1200;
 	public static final int triggerErrorPin_offset = 1216;
 	public static final int triggerErrorPinMode_offset = 1220;
 	public static final int acRelayPin_offset = 1224;
@@ -1259,6 +1260,7 @@ public class Fields {
 	public static final Field GPIOPINMODES14 = Field.create("GPIOPINMODES14", 1184, FieldType.INT, pin_output_mode_e);
 	public static final Field GPIOPINMODES15 = Field.create("GPIOPINMODES15", 1188, FieldType.INT, pin_output_mode_e);
 	public static final Field GPIOPINMODES16 = Field.create("GPIOPINMODES16", 1192, FieldType.INT, pin_output_mode_e);
+	public static final Field CONSOLEUARTDEVICE = Field.create("CONSOLEUARTDEVICE", 1196, FieldType.INT);
 	public static final Field TRIGGERERRORPIN = Field.create("TRIGGERERRORPIN", 1216, FieldType.INT, brain_pin_e);
 	public static final Field TRIGGERERRORPINMODE = Field.create("TRIGGERERRORPINMODE", 1220, FieldType.INT, pin_output_mode_e);
 	public static final Field ACRELAYPIN = Field.create("ACRELAYPIN", 1224, FieldType.INT, brain_pin_e);
