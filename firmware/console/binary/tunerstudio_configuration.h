@@ -40,7 +40,7 @@ typedef struct {
 	short int alignment; // size 2, offset 34
 	float baroPressure; // size 4, offset 36
 	float manifoldAirPressure; // size 4, offset 40
-	float crankingFuelMs;
+	float crankingFuelMs; // offset 44
 	/**
 	 * This is the raw value we take from the fuel map or base fuel algorithm, before the corrections
 	 */
@@ -50,7 +50,7 @@ typedef struct {
 	float sparkDwell; // 60
 	/**
 	 * this one contains total resulting fuel squirt time, per event
-	 * With all corrections. See also baseFuel
+	 * With all corrections and injector lag. See also baseFuel
 	 */
 	float actualLastInjection; // 64
 	float debugFloatField1;	// 68

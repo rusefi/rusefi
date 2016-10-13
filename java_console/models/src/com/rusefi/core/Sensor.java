@@ -13,6 +13,7 @@ public enum Sensor {
     MAP("MAP", SensorCategory.SENSOR_INPUTS),
     MAP_RAW("MAP_RAW", SensorCategory.SENSOR_INPUTS),
     BARO("Baro", SensorCategory.SENSOR_INPUTS),
+    // todo: unify with ignitionAdvance
     TIMING("Timing Advance", SensorCategory.OPERATIONS, "deg", -180, 180),
 
     /**
@@ -92,6 +93,8 @@ public enum Sensor {
     TPS(SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 12, BackgroundColor.MUD, 0, 100, "%"),
     FUEL_BASE(SensorCategory.FUEL, FieldType.FLOAT, 48, BackgroundColor.MUD, 0, 30, "ms"),
     T_CHARGE(SensorCategory.FUEL, FieldType.FLOAT, 52, BackgroundColor.MUD, 30, 140),
+    // todo: unify with TIMING
+    ignitionAdvance(SensorCategory.OPERATIONS, FieldType.FLOAT, 56, BackgroundColor.MUD, 30, 140),
     DWELL(SensorCategory.OPERATIONS, FieldType.FLOAT, 60, BackgroundColor.MUD, 1, 10),
     actualLastInjection(SensorCategory.FUEL, FieldType.FLOAT, 64, BackgroundColor.MUD, 0, 30, "ms"),
     debugFloatField1(SensorCategory.OPERATIONS, FieldType.FLOAT, 68, BackgroundColor.MUD, 0, 5),
