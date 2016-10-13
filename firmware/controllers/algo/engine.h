@@ -309,7 +309,8 @@ public:
 	TriggerCentral triggerCentral;
 
 	/**
-	 * Fuel injection duration for current engine cycle, without wall wetting
+	 * Each individual fuel injection duration for current engine cycle, without wall wetting
+	 * including everything including injector lag, both cranking and running
 	 */
 	floatms_t fuelMs;
 	/**
