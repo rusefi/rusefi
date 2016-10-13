@@ -37,6 +37,7 @@ public class SensorLogger {
             Sensor.TIMING,
 
             Sensor.FUEL_BASE,
+            Sensor.actualLastInjection,
 
             Sensor.deltaTps,
             Sensor.tpsAccelFuel,
