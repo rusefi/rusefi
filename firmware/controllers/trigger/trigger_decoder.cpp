@@ -259,6 +259,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 			enginePins.triggerDecoderErrorPin.setValue(isDecodingError);
 			if (isDecodingError) {
+				warning(CUSTOM_SYNC_ERROR_2, "trigger not happy");
 				lastDecodingErrorTime = getTimeNowNt();
 				someSortOfTriggerError = true;
 
