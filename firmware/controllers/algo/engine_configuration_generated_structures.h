@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Oct 11 21:20:18 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Oct 13 14:12:25 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -660,7 +660,11 @@ typedef struct {
 	/**
 	 * offset 572
 	 */
-	int unusedJoy[5];
+	uart_device_e consoleUartDevice;
+	/**
+	 * offset 576
+	 */
+	int unusedJoy[4];
 	/**
 	 * This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	 * offset 592
@@ -1968,4 +1972,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Oct 11 21:20:18 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Oct 13 14:12:25 EDT 2016
