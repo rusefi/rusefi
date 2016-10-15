@@ -38,7 +38,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20161012;
+    public static final int CONSOLE_VERSION = 20161015;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -80,7 +80,7 @@ public class Launcher {
             g.drawString(text, (d.width - labelWidth) / 2, d.height / 2);
         }
     };
-    private static AtomicReference<String> firmwareVersion = new AtomicReference<>("N/A");
+    public static AtomicReference<String> firmwareVersion = new AtomicReference<>("N/A");
 
     private static Frame staticFrame;
     private final TableEditorPane tableEditor = new TableEditorPane();
@@ -117,7 +117,6 @@ public class Launcher {
         getConfig().getRoot().setProperty(SPEED_KEY, PortHolder.BAUD_RATE);
 
         LinkManager.start(port);
-        SensorLogger.init();
 
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override
@@ -221,6 +220,7 @@ public class Launcher {
             @Override
             public void onUpdate(String firmwareVersion) {
                 Launcher.firmwareVersion.set(firmwareVersion);
+                SensorLogger.init();
                 setTitle();
                 VersionChecker.getInstance().onFirmwareVersion(firmwareVersion);
             }
