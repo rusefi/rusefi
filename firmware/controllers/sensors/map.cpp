@@ -190,8 +190,8 @@ static void printMAPInfo(void) {
 				getAir_pressure_sensor_type_e(engineConfiguration->map.sensor.type),
 				getMap());
 
+		scheduleMsg(logger, "MAP %fv", getVoltage("mapinfo", engineConfiguration->map.sensor.hwChannel));
 		if (engineConfiguration->map.sensor.type == MT_CUSTOM) {
-			scheduleMsg(logger, "MAP %fv", getVoltage("mapinfo", engineConfiguration->map.sensor.hwChannel));
 			scheduleMsg(logger, "at %fv=%f at %fv=%f",
 					engineConfiguration->mapLowValueVoltage,
 					engineConfiguration->map.sensor.lowValue,
