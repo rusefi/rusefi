@@ -77,7 +77,13 @@ public class SensorLogger {
     private SensorLogger() {
     }
 
+    private static boolean isRunning;
+
     public static void init() {
+        if (isRunning)
+            return;
+        isRunning = true;
+
         startSensorLogFile();
 
         SensorCentral.getInstance().addListener(Sensor.TIME_SECONDS, new SensorCentral.SensorListener() {
@@ -115,7 +121,7 @@ public class SensorLogger {
         try {
             logFile = new FileWriter(fileName);
 
-            logFile.write("\"rusEfi console" + Launcher.CONSOLE_VERSION + "\"\r\n");
+            logFile.write("\"rusEfi console" + Launcher.CONSOLE_VERSION + " firmware " + Launcher.firmwareVersion.get() + "\"\r\n");
             logFile.write("Captured " + FileLog.getDate() + "\r\n");
 
             logFile.write("Time\t");
