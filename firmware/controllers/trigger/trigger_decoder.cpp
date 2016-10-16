@@ -555,6 +555,10 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		configureHondaAccordCD(triggerShape, true, false, T_PRIMARY, T_PRIMARY, 10);
 		break;
 
+	case TT_HONDA_ACCORD_1_24_SHIFTED:
+		configureHondaAccordShifter(triggerShape);
+		break;
+
 	case TT_HONDA_ACCORD_CD_DIP:
 		configureHondaAccordCDDip(triggerShape);
 		break;

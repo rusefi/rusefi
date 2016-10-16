@@ -138,7 +138,9 @@ typedef enum {
 
 	MAZDA_MIATA_2003 = 47,
 
-	ET_UNUSED = 48,
+	HONDA_ACCORD_1_24_SHIFTED = 48,
+
+	ET_UNUSED = 49,
 
 	Force_4b_engine_type = ENUM_32_BITS,
 } engine_type_e;
@@ -203,7 +205,13 @@ typedef enum {
 
 	TT_MIATA_VVT = 33,
 
-	TT_UNUSED = 34, // this is used if we want to iterate over all trigger types
+	/**
+	 * This is a different version of TT_HONDA_ACCORD_1_24
+	 * See https://sourceforge.net/p/rusefi/tickets/319/
+	 */
+	TT_HONDA_ACCORD_1_24_SHIFTED = 34,
+
+	TT_UNUSED = 35, // this is used if we want to iterate over all trigger types
 
 	Force_4b_trigger_type = ENUM_32_BITS,
 } trigger_type_e;
