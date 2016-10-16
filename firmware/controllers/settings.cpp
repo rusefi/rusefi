@@ -135,6 +135,8 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "Accord3";
 	case HONDA_ACCORD_CD_TWO_WIRES:
 		return "Accord2";
+	case HONDA_ACCORD_1_24_SHIFTED:
+		return "Accord24sh";
 	case HONDA_ACCORD_CD_DIP:
 		return "HondaD";
 	case FORD_INLINE_6_1995:

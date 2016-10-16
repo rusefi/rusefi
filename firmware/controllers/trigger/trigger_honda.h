@@ -11,6 +11,7 @@
 #include "trigger_structure.h"
 
 void configureHondaAccordCDDip(TriggerShape *s);
+void configureHondaAccordShifter(TriggerShape *s);
 void configureHondaAccordCD(TriggerShape *s, bool withOneEventSignal, bool withFourEventSignal,
 		trigger_wheel_e const oneEventWave,
 		trigger_wheel_e const fourEventWave,

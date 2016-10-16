@@ -14,6 +14,10 @@
  * set_engine_type 17
  *   1+24 signal, JM Predule
  *
+ *
+ * set_engine_type 48
+ *   debug configuration to reproduce https://sourceforge.net/p/rusefi/tickets/319/
+ *
  * @date Jan 12, 2014
  * @author Andrey Belomutskiy, (c) 2012-2016
  */
@@ -189,4 +193,14 @@ void setHondaAccordConfiguration1_24(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->engineType = HONDA_ACCORD_CD_DIP;
 	engineConfiguration->trigger.type = TT_HONDA_ACCORD_1_24;
 	setHondaAccordConfigurationCommon(PASS_ENGINE_PARAMETER_F);
+}
+
+void setHondaAccordConfiguration1_24_shifted(DECLARE_ENGINE_PARAMETER_F) {
+	engineConfiguration->engineType = HONDA_ACCORD_1_24_SHIFTED;
+	engineConfiguration->trigger.type = TT_HONDA_ACCORD_1_24_SHIFTED;
+	setHondaAccordConfigurationCommon(PASS_ENGINE_PARAMETER_F);
+
+	// set_global_trigger_offset_angle 0
+	engineConfiguration->globalTriggerAngleOffset = 0;
+
 }

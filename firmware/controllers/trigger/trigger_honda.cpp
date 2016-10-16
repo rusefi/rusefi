@@ -243,5 +243,29 @@ void configureHondaCbr600custom(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 
 }
 
+void configureHondaAccordShifter(TriggerShape *s) {
+	float w = 720 / 2 / 24;
+	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
+	float sb = S24;
+
+	s->addEvent(S24 + 0.001, T_PRIMARY, TV_RISE);
+
+
+	s->addEvent(S24 + 0.1, T_SECONDARY, TV_RISE);
+	sb += S24;
+	s->addEvent(sb, T_SECONDARY, TV_FALL);
+	sb += S24;
+
+	s->addEvent(S24 + 22, T_PRIMARY, TV_FALL);
+
+
+	for (int i = 0;i<23;i++)
+		sb = addAccordPair(s, sb, T_SECONDARY);
+
+
+
+	s->useOnlyPrimaryForSync = true;
+	s->isSynchronizationNeeded = false;
+}
 
