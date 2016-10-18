@@ -126,7 +126,7 @@
 #define GPIOE_PIN0                  0
 #define GPIOE_PIN1                  1
 #define GPIOE_PIN2                  2
-#define GPIOE_PIN3                3
+#define GPIOE_PIN3                	3
 #define GPIOE_PIN4                  4
 #define GPIOE_PIN5                  5
 #define GPIOE_PIN6                  6
@@ -721,7 +721,7 @@
 #define VAL_GPIOE_MODER             (PIN_MODE_INPUT(GPIOE_PIN0) |           \
                                      PIN_MODE_INPUT(GPIOE_PIN1) |           \
                                      PIN_MODE_INPUT(GPIOE_PIN2) |           \
-                                     PIN_MODE_INPUT(GPIOE_PIN3) |        \
+                                     PIN_MODE_OUTPUT(GPIOE_PIN3) |        \
                                      PIN_MODE_INPUT(GPIOE_PIN4) |           \
                                      PIN_MODE_INPUT(GPIOE_PIN5) |           \
                                      PIN_MODE_INPUT(GPIOE_PIN6) |           \
@@ -769,7 +769,7 @@
 #define VAL_GPIOE_PUPDR             (PIN_PUPDR_PULLDOWN(GPIOE_PIN0) |       \
                                      PIN_PUPDR_PULLDOWN(GPIOE_PIN1) |       \
                                      PIN_PUPDR_PULLDOWN(GPIOE_PIN2) |       \
-                                     PIN_PUPDR_PULLDOWN(GPIOE_PIN3) |       \
+                                     PIN_PUPDR_FLOATING(GPIOE_PIN3) |       \
                                      PIN_PUPDR_PULLDOWN(GPIOE_PIN4) |       \
                                      PIN_PUPDR_PULLDOWN(GPIOE_PIN5) |       \
                                      PIN_PUPDR_PULLDOWN(GPIOE_PIN6) |       \
