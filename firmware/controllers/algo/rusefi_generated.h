@@ -505,7 +505,9 @@
 #define gpioPinModes15_offset 1188
 #define gpioPinModes16_offset 1192
 #define consoleUartDevice_offset 1196
-#define unusedJoy_offset 1200
+#define console_rx_pin_offset 1200
+#define console_tx_pin_offset 1204
+#define unusedJoy_offset 1208
 #define triggerErrorPin_offset 1216
 #define triggerErrorPinMode_offset 1220
 #define acRelayPin_offset 1224

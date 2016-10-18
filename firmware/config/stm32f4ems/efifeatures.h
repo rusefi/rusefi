@@ -259,29 +259,14 @@
  *  PE5
  */
 
-//#define ETB_CONTROL_LINE_1_PORT GPIOE
-//#define ETB_CONTROL_LINE_1_PIN 0
-//
-//#define ETB_CONTROL_LINE_2_PORT GPIOB
-//#define ETB_CONTROL_LINE_2_PIN 8
 
-//#define CONSOLE_PORT GPIOB
-//#define CONSOLE_TX_PIN 10
-//#define CONSOLE_RX_PIN 11
-
-/**
- * Here we define the pinout for the human-readable protocol via UART, TunerStudio pinout is defined separately
- */
-//#define EFI_CONSOLE_TX_PORT GPIOD
-//#define EFI_CONSOLE_TX_PIN 8
-//#define EFI_CONSOLE_RX_PORT GPIOD
-//#define EFI_CONSOLE_RX_PIN 9
-//#define EFI_CONSOLE_AF 7
-
+// todo: start using consoleUartDevice
 #define EFI_CONSOLE_UART_DEVICE (&SD3)
 
+// todo: start using console_tx_pin
 #define EFI_CONSOLE_TX_PORT GPIOC
 #define EFI_CONSOLE_TX_PIN 10
+// todo: start using console_rx_pin
 #define EFI_CONSOLE_RX_PORT GPIOC
 #define EFI_CONSOLE_RX_PIN 11
 // todo: this should be detected automatically based on pin selection
