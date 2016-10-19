@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Oct 18 15:59:38 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Oct 19 10:36:24 EDT 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1020,6 +1020,7 @@ typedef struct {
 	injection_mode_e crankingInjectionMode;
 	/**
 	 * 'batched' means two injectors are wired together
+	 * set_injection_mode X
 	 * offset 432
 	 */
 	injection_mode_e injectionMode;
@@ -1038,6 +1039,7 @@ typedef struct {
 	angle_t crankingTimingAngle;
 	/**
 	 * 'wasted' means one coil is driving two spark plugs in two cylinders, with one of the aparks not doing anything since it's happening on the exhaust cycle
+	 * set_ignition_mode X
 	 * offset 444
 	 */
 	ignition_mode_e ignitionMode;
@@ -1980,4 +1982,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Oct 18 15:59:38 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Oct 19 10:36:24 EDT 2016
