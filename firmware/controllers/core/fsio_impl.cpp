@@ -39,6 +39,7 @@ static LENameOrdinalPair leFanOffSetting(LE_METHOD_FAN_OFF_SETTING, "fan_off_set
 static LENameOrdinalPair leTimeSinceBoot(LE_METHOD_TIME_SINCE_BOOT, "time_since_boot");
 static LENameOrdinalPair leFsioSetting(LE_METHOD_FSIO_SETTING, "fsio_setting");
 static LENameOrdinalPair leFsioTable(LE_METHOD_FSIO_TABLE, "fsio_table");
+static LENameOrdinalPair leFsioAnalogInput(LE_METHOD_FSIO_ANALOG_INPUT, "fsio_input");
 static LENameOrdinalPair leKnock(LE_METHOD_KNOCK, "knock");
 
 #define LE_EVAL_POOL_SIZE 32

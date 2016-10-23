@@ -19,6 +19,7 @@
 
 #include "fsio_core.h"
 #include "fsio_impl.h"
+#include "adc_inputs.h"
 
 extern fsio8_Map3D_f32t fsioTable1;
 extern fsio8_Map3D_u8t fsioTable2;
@@ -282,6 +283,9 @@ bool LECalculator::processElement(Engine *engine, LEElement *element) {
 			}
 		}
 	}
+		break;
+	case LE_METHOD_FSIO_ANALOG_INPUT:
+		push(element->action, getVoltage("fsio", engine->engineConfiguration->fsioAdc[0]));
 		break;
 	case LE_METHOD_KNOCK:
 		push(element->action, engine->knockCount);
