@@ -38,8 +38,8 @@ $Descr A 8500 11000 portrait
 encoding utf-8
 Sheet 1 1
 Title "ECU adapter"
-Date "2016-09-28"
-Rev "1"
+Date "2016-10-25"
+Rev "R0.2"
 Comp "DAECU for rusEFI"
 Comment1 ""
 Comment2 ""
@@ -113,7 +113,7 @@ L CONN_01X06 P5
 U 1 1 57F1BCB0
 P 3050 4225
 F 0 "P5" H 3050 4575 50  0000 C CNN
-F 1 "CONN_01X06" V 3150 4225 50  0000 C CNN
+F 1 "CONN_01X06" V 3150 4225 50  0001 C CNN
 F 2 "Molex_NanoFit_1x06x2.50mm_Straight" H 3050 4225 50  0001 C CNN
 F 3 "" H 3050 4225 50  0000 C CNN
 	1    3050 4225
@@ -122,12 +122,12 @@ $EndComp
 $Comp
 L CONN_01X06 P14
 U 1 1 57F1BF4F
-P 5350 4225
-F 0 "P14" H 5350 4575 50  0000 C CNN
-F 1 "CONN_01X06" V 5450 4225 50  0000 C CNN
-F 2 "Molex_NanoFit_1x06x2.50mm_Straight" H 5350 4225 50  0001 C CNN
-F 3 "" H 5350 4225 50  0000 C CNN
-	1    5350 4225
+P 5250 4225
+F 0 "P14" H 5250 4575 50  0000 C CNN
+F 1 "CONN_01X06" V 5350 4225 50  0001 C CNN
+F 2 "Molex_NanoFit_1x06x2.50mm_Straight" H 5250 4225 50  0001 C CNN
+F 3 "" H 5250 4225 50  0000 C CNN
+	1    5250 4225
 	0    -1   1    0   
 $EndComp
 $Comp
@@ -135,7 +135,7 @@ L CONN_01X05 P6
 U 1 1 57F1C00C
 P 3800 4325
 F 0 "P6" H 3800 4625 50  0000 C CNN
-F 1 "CONN_01X05" V 3900 4325 50  0000 C CNN
+F 1 "CONN_01X05" V 3900 4325 50  0001 C CNN
 F 2 "Molex_NanoFit_1x05x2.50mm_Straight" H 3800 4325 50  0001 C CNN
 F 3 "" H 3800 4325 50  0000 C CNN
 	1    3800 4325
@@ -146,14 +146,12 @@ L CONN_01X05 P9
 U 1 1 57F1C0D7
 P 4300 4325
 F 0 "P9" H 4300 4025 50  0000 C CNN
-F 1 "CONN_01X05" V 4400 4325 50  0000 C CNN
+F 1 "CONN_01X05" V 4400 4325 50  0001 C CNN
 F 2 "Molex_NanoFit_1x05x2.50mm_Straight" H 4300 4325 50  0001 C CNN
 F 3 "" H 4300 4325 50  0000 C CNN
 	1    4300 4325
 	0    -1   1    0   
 $EndComp
-Wire Wire Line
-	4200 4125 4200 4025
 Wire Wire Line
 	4100 4125 4100 4025
 Wire Wire Line
@@ -174,26 +172,12 @@ Wire Wire Line
 	3600 4100 3500 4100
 Wire Wire Line
 	3500 4100 3500 4025
-Wire Wire Line
-	5000 4025 5000 4125
-Wire Wire Line
-	4400 4125 4400 4075
-Wire Wire Line
-	4400 4075 4800 4075
-Wire Wire Line
-	4800 4075 4800 4025
-Wire Wire Line
-	4300 4125 4300 4025
-Wire Wire Line
-	4300 4025 4700 4025
-Wire Wire Line
-	5000 4125 4500 4125
 $Comp
 L CONN_01X06 P4
 U 1 1 57F1C476
 P 3050 2825
 F 0 "P4" H 3050 3175 50  0000 C CNN
-F 1 "CONN_01X06" V 3150 2825 50  0000 C CNN
+F 1 "CONN_01X06" V 3150 2825 50  0001 C CNN
 F 2 "Molex_NanoFit_1x06x2.50mm_Straight" H 3050 2825 50  0001 C CNN
 F 3 "" H 3050 2825 50  0000 C CNN
 	1    3050 2825
@@ -204,7 +188,7 @@ L CONN_01X08 P8
 U 1 1 57F1C534
 P 3850 2825
 F 0 "P8" H 3850 3275 50  0000 C CNN
-F 1 "CONN_01X08" V 3950 2825 50  0000 C CNN
+F 1 "CONN_01X08" V 3950 2825 50  0001 C CNN
 F 2 "Molex_NanoFit_1x08x2.50mm_Straight" H 3850 2825 50  0001 C CNN
 F 3 "" H 3850 2825 50  0000 C CNN
 	1    3850 2825
@@ -214,8 +198,8 @@ $Comp
 L CONN_01X08 P13
 U 1 1 57F1C6E2
 P 5250 2825
-F 0 "P13" H 5250 3275 50  0000 C CNN
-F 1 "CONN_01X08" V 5350 2825 50  0000 C CNN
+F 0 "P13" H 5250 2350 50  0000 C CNN
+F 1 "CONN_01X08" V 5350 2825 50  0001 C CNN
 F 2 "Molex_NanoFit_1x08x2.50mm_Straight" H 5250 2825 50  0001 C CNN
 F 3 "" H 5250 2825 50  0000 C CNN
 	1    5250 2825
@@ -226,7 +210,7 @@ L CONN_01X05 P11
 U 1 1 57F1C764
 P 4600 2975
 F 0 "P11" H 4600 3275 50  0000 C CNN
-F 1 "CONN_01X05" V 4700 2975 50  0000 C CNN
+F 1 "CONN_01X05" V 4700 2975 50  0001 C CNN
 F 2 "Molex_NanoFit_1x05x2.50mm_Straight" H 4600 2975 50  0001 C CNN
 F 3 "" H 4600 2975 50  0000 C CNN
 	1    4600 2975
@@ -249,7 +233,7 @@ L CONN_01X08 P7
 U 1 1 57F1CB2B
 P 3850 1800
 F 0 "P7" H 3850 2250 50  0000 C CNN
-F 1 "CONN_01X08" V 3950 1800 50  0000 C CNN
+F 1 "CONN_01X08" V 3950 1800 50  0001 C CNN
 F 2 "Molex_NanoFit_1x08x2.50mm_Straight" H 3850 1800 50  0001 C CNN
 F 3 "" H 3850 1800 50  0000 C CNN
 	1    3850 1800
@@ -260,7 +244,7 @@ L CONN_01X05 P12
 U 1 1 57F1CBAE
 P 4700 1800
 F 0 "P12" H 4700 2100 50  0000 C CNN
-F 1 "CONN_01X05" V 4800 1800 50  0000 C CNN
+F 1 "CONN_01X05" V 4800 1800 50  0001 C CNN
 F 2 "Molex_NanoFit_1x05x2.50mm_Straight" H 4700 1800 50  0001 C CNN
 F 3 "" H 4700 1800 50  0000 C CNN
 	1    4700 1800
@@ -297,7 +281,7 @@ L CONN_01X05 P15
 U 1 1 57F1CE3C
 P 5400 1800
 F 0 "P15" H 5400 2100 50  0000 C CNN
-F 1 "CONN_01X05" V 5500 1800 50  0000 C CNN
+F 1 "CONN_01X05" V 5500 1800 50  0001 C CNN
 F 2 "Molex_NanoFit_1x05x2.50mm_Straight" H 5400 1800 50  0001 C CNN
 F 3 "" H 5400 1800 50  0000 C CNN
 	1    5400 1800
@@ -324,7 +308,7 @@ L CONN_01X05 P3
 U 1 1 57F1D074
 P 3000 1800
 F 0 "P3" H 3000 2100 50  0000 C CNN
-F 1 "CONN_01X05" V 3100 1800 50  0000 C CNN
+F 1 "CONN_01X05" V 3100 1800 50  0001 C CNN
 F 2 "Molex_NanoFit_1x05x2.50mm_Straight" H 3000 1800 50  0001 C CNN
 F 3 "" H 3000 1800 50  0000 C CNN
 	1    3000 1800
@@ -367,4 +351,174 @@ F 3 "" H 3625 10375 60  0000 C CNN
 	1    3625 10375
 	1    0    0    -1  
 $EndComp
+Wire Wire Line
+	4100 4025 4200 4025
+Wire Wire Line
+	4200 4050 4200 4125
+Wire Wire Line
+	4400 4125 4400 4100
+Wire Wire Line
+	4300 4125 4300 4075
+Wire Wire Line
+	4300 4025 4300 4050
+Wire Wire Line
+	4300 4050 4200 4050
+Wire Wire Line
+	4500 4025 4500 4075
+Wire Wire Line
+	4500 4075 4300 4075
+Wire Wire Line
+	4600 4025 4600 4100
+Wire Wire Line
+	4600 4100 4400 4100
+Wire Wire Line
+	4900 4025 4900 4125
+Wire Wire Line
+	4900 4125 4500 4125
+Wire Wire Line
+	5500 4025 5600 4025
+Text Label 2800 1600 1    60   ~ 0
+2C
+Text Label 2900 1600 1    60   ~ 0
+2F
+Text Label 3000 1600 1    60   ~ 0
+2I
+Text Label 3100 1600 1    60   ~ 0
+20
+Text Label 3200 1600 1    60   ~ 0
+2R
+Text Label 3500 1600 1    60   ~ 0
+3C
+Text Label 3600 1600 1    60   ~ 0
+3F
+Text Label 3700 1600 1    60   ~ 0
+3I
+Text Label 3800 1600 1    60   ~ 0
+3L
+Text Label 3900 1600 1    60   ~ 0
+3O
+Text Label 4000 1600 1    60   ~ 0
+3T
+Text Label 4100 1600 1    60   ~ 0
+3W
+Text Label 4300 1575 1    60   ~ 0
+3Z
+Text Label 4500 1600 1    60   ~ 0
+4C
+Text Label 4600 1600 1    60   ~ 0
+4F
+Text Label 4700 1600 1    60   ~ 0
+4I
+Text Label 4800 1600 1    60   ~ 0
+4K
+Text Label 4900 1600 1    60   ~ 0
+4N
+Text Label 5100 1525 1    60   ~ 0
+4T
+Text Label 5300 1600 1    60   ~ 0
+4W
+Text Label 5400 1600 1    60   ~ 0
+4AB
+Text Label 5500 1600 1    60   ~ 0
+4AE
+Text Label 5600 1600 1    60   ~ 0
+4AH
+Text Label 2800 2625 1    60   ~ 0
+2B
+Text Label 2800 4025 1    60   ~ 0
+2A
+Text Label 2900 2625 1    60   ~ 0
+2E
+Text Label 3000 2625 1    60   ~ 0
+2H
+Text Label 3100 2625 1    60   ~ 0
+2K
+Text Label 3200 2625 1    60   ~ 0
+2N
+Text Label 3300 2625 1    60   ~ 0
+2Q
+Text Label 3500 2625 1    60   ~ 0
+3B
+Text Label 3600 2625 1    60   ~ 0
+3E
+Text Label 3700 2625 1    60   ~ 0
+3H
+Text Label 3800 2625 1    60   ~ 0
+3K
+Text Label 3900 2625 1    60   ~ 0
+3N
+Text Label 4000 2625 1    60   ~ 0
+3Q
+Text Label 4100 2625 1    60   ~ 0
+3S
+Text Label 4200 2625 1    60   ~ 0
+3V
+Text Label 4300 2625 1    60   ~ 0
+3Y
+Text Label 4500 2625 1    60   ~ 0
+4B
+Text Label 4600 2625 1    60   ~ 0
+4E
+Text Label 4700 2625 1    60   ~ 0
+4H
+Text Label 4800 2625 1    60   ~ 0
+4J
+Text Label 4900 2625 1    60   ~ 0
+4M
+Text Label 5000 2625 1    60   ~ 0
+4P
+Text Label 5100 2625 1    60   ~ 0
+4S
+Text Label 5200 2625 1    60   ~ 0
+4V
+Text Label 5300 2625 1    60   ~ 0
+4Y
+Text Label 5400 2625 1    60   ~ 0
+4AA
+Text Label 5500 2625 1    60   ~ 0
+4AD
+Text Label 5600 2625 1    60   ~ 0
+4AG
+Text Label 2900 4025 1    60   ~ 0
+2D
+Text Label 3000 4025 1    60   ~ 0
+2G
+Text Label 3100 4025 1    60   ~ 0
+2J
+Text Label 3200 4025 1    60   ~ 0
+2M
+Text Label 3300 4025 1    60   ~ 0
+2P
+Text Label 3500 4025 1    60   ~ 0
+3A
+Text Label 3600 4025 1    60   ~ 0
+3D
+Text Label 3800 4025 1    60   ~ 0
+3J
+Text Label 3900 4025 1    60   ~ 0
+3M
+Text Label 4000 4025 1    60   ~ 0
+3P
+Text Label 4200 4025 1    60   ~ 0
+3U
+Text Label 4300 4025 1    60   ~ 0
+3X
+Text Label 4500 4025 1    60   ~ 0
+4A
+Text Label 4600 4025 1    60   ~ 0
+4D
+Text Label 4900 4025 1    60   ~ 0
+4L
+Text Label 5000 4025 1    60   ~ 0
+4O
+Text Label 5100 4025 1    60   ~ 0
+4R
+Text Label 5200 4025 1    60   ~ 0
+4U
+Text Label 5300 4025 1    60   ~ 0
+4X
+Text Label 5400 4025 1    60   ~ 0
+4AC
+Text Label 5600 4025 1    60   ~ 0
+4AF
 $EndSCHEMATC
