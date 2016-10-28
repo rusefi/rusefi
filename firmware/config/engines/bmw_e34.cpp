@@ -78,6 +78,7 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->cranking.rpm = 600;
 	engineConfiguration->crankingInjectionMode = IM_BATCH;
 	engineConfiguration->cranking.baseFuel = 7;
+	// enable constant_dwell
 	engineConfiguration->useConstantDwellDuringCranking = true;
 	engineConfiguration->ignitionDwellForCrankingMs = 6;
 
