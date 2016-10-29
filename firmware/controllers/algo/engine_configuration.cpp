@@ -400,7 +400,9 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 70, 101);
 
 	setConstantDwell(4 PASS_ENGINE_PARAMETER); // 4ms is global default dwell
+	// disable constant_dwell
 	engineConfiguration->useConstantDwellDuringCranking = false;
+	engineConfiguration->ignitionDwellForCrankingMs = 6;
 
 	setFuelLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER);
 	setFuelRpmBin(800, 7000 PASS_ENGINE_PARAMETER);

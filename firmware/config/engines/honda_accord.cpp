@@ -37,7 +37,9 @@ static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 	boardConfiguration->isFastAdcEnabled = true;
 
+	// set_ignition_mode 0
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
+	// set_injection_mode
 	engineConfiguration->injectionMode = IM_BATCH;
 
 	engineConfiguration->idleMode = IM_MANUAL;

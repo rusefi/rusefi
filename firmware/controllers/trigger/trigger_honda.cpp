@@ -249,10 +249,15 @@ void configureHondaAccordShifter(TriggerShape *s) {
 
 	float sb = S24;
 
-	s->addEvent(S24 + 0.001, T_PRIMARY, TV_RISE);
+	// like this there is no issue
+//	s->addEvent(S24 + 0.001, T_PRIMARY, TV_RISE);
+//	s->addEvent(S24 + 0.1, T_SECONDARY, TV_RISE);
+
+	s->addEvent(S24 + 0.001, T_SECONDARY, TV_RISE);
+	s->addEvent(S24 + 0.1, T_PRIMARY, TV_RISE);
 
 
-	s->addEvent(S24 + 0.1, T_SECONDARY, TV_RISE);
+
 	sb += S24;
 	s->addEvent(sb, T_SECONDARY, TV_FALL);
 	sb += S24;
