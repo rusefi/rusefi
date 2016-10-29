@@ -76,7 +76,12 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	printf("spark charge delay=%f\r\n", chargeDelayUs);
 #endif
-		/**
+
+#if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
+	scheduleMsg(logger, "sparkUp ind=%d %d %s", trgEventIndex, getRevolutionCounter(), iEvent->output->name);
+#endif /* FUEL_MATH_EXTREME_LOGGING */
+
+	/**
 		 * Note how we do not check if spark is limited or not while scheduling 'spark down'
 		 * This way we make sure that coil dwell started while spark was enabled would fire and not burn
 		 * the coil.
@@ -99,8 +104,15 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	printf("spark delay=%f angle=%f\r\n", timeTillIgnitionUs, iEvent->sparkPosition.angleOffset);
 #endif
 
-		scheduleTask(true, "spark1 down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, iEvent->output);
+#if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
+	scheduleMsg(logger, "scheduling sparkDown ind=%d %d %s", trgEventIndex, getRevolutionCounter(), iEvent->output->name);
+#endif /* FUEL_MATH_EXTREME_LOGGING */
+
+	scheduleTask(true, "spark1 down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, iEvent->output);
 	} else {
+#if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
+	scheduleMsg(logger, "to queue sparkDown ind=%d %d %s", trgEventIndex, getRevolutionCounter(), iEvent->output->name);
+#endif /* FUEL_MATH_EXTREME_LOGGING */
 		/**
 		 * Spark should be scheduled in relation to some future trigger event, this way we get better firing precision
 		 */
@@ -172,6 +184,11 @@ void handleSpark(int revolutionIndex, bool limitedSpark, uint32_t trgEventIndex,
 			LL_DELETE(ENGINE(iHead), current);
 
 			scheduling_s * sDown = &current->signalTimerDown;
+
+#if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
+	scheduleMsg(logger, "time to sparkDown ind=%d %d %s", trgEventIndex, getRevolutionCounter(), current->output->name);
+#endif /* FUEL_MATH_EXTREME_LOGGING */
+
 
 			float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * current->sparkPosition.angleOffset;
 			scheduleTask(true, "spark 2down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, current->output);
