@@ -990,6 +990,8 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->suckedOffCoef = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "addedToWallCoef")) {
 		engineConfiguration->addedToWallCoef = valueF;
+	} else if (strEqualCaseInsensitive(paramStr, "cranking_dwell")) {
+		engineConfiguration->ignitionDwellForCrankingMs = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "targetvbatt")) {
 		engineConfiguration->targetVBatt = valueF;
 #if EFI_RTC || defined(__DOXYGEN__)
