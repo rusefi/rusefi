@@ -25,6 +25,9 @@ int isIgnitionTimingError(void) {
 }
 
 void turnSparkPinLow(NamedOutputPin *output) {
+#if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
+	scheduleMsg(logger, "spark goes low  %d %s %d", getRevolutionCounter(), output->name, (int)getTimeNowUs());
+#endif /* FUEL_MATH_EXTREME_LOGGING */
 	turnPinLow(output);
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	if (CONFIG(dizzySparkOutputPin) != GPIO_UNASSIGNED) {
@@ -34,6 +37,9 @@ void turnSparkPinLow(NamedOutputPin *output) {
 }
 
 void turnSparkPinHigh(NamedOutputPin *output) {
+#if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
+	scheduleMsg(logger, "spark goes high %d %s %d", getRevolutionCounter(), output->name, (int)getTimeNowUs());
+#endif /* FUEL_MATH_EXTREME_LOGGING */
 	turnPinHigh(output);
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	if (CONFIG(dizzySparkOutputPin) != GPIO_UNASSIGNED) {
@@ -78,7 +84,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 #endif
 
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
-	scheduleMsg(logger, "sparkUp ind=%d %d %s", trgEventIndex, getRevolutionCounter(), iEvent->output->name);
+	scheduleMsg(logger, "sparkUp ind=%d %d %s %d", trgEventIndex, getRevolutionCounter(), iEvent->output->name, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 	/**
@@ -105,20 +111,24 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 #endif
 
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
-	scheduleMsg(logger, "scheduling sparkDown ind=%d %d %s", trgEventIndex, getRevolutionCounter(), iEvent->output->name);
+	scheduleMsg(logger, "scheduling sparkDown ind=%d %d %s %d", trgEventIndex, getRevolutionCounter(), iEvent->output->name, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 	scheduleTask(true, "spark1 down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, iEvent->output);
 	} else {
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
-	scheduleMsg(logger, "to queue sparkDown ind=%d %d %s", trgEventIndex, getRevolutionCounter(), iEvent->output->name);
+	scheduleMsg(logger, "to queue sparkDown ind=%d %d %s %d", trgEventIndex, getRevolutionCounter(), iEvent->output->name, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 		/**
 		 * Spark should be scheduled in relation to some future trigger event, this way we get better firing precision
 		 */
 		bool isPending = assertNotInList<IgnitionEvent>(ENGINE(iHead), iEvent);
-		if (isPending)
+		if (isPending) {
+#if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
+	scheduleMsg(logger, "not adding to queue sparkDown ind=%d %d %s %d", trgEventIndex, getRevolutionCounter(), iEvent->output->name, (int)getTimeNowUs());
+#endif /* FUEL_MATH_EXTREME_LOGGING */
 			return;
+		}
 
 		LL_APPEND(ENGINE(iHead), iEvent);
 	}
@@ -186,7 +196,7 @@ void handleSpark(int revolutionIndex, bool limitedSpark, uint32_t trgEventIndex,
 			scheduling_s * sDown = &current->signalTimerDown;
 
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
-	scheduleMsg(logger, "time to sparkDown ind=%d %d %s", trgEventIndex, getRevolutionCounter(), current->output->name);
+	scheduleMsg(logger, "time to sparkDown ind=%d %d %s %d", trgEventIndex, getRevolutionCounter(), current->output->name, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 
