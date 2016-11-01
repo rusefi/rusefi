@@ -56,6 +56,13 @@ public:
 	int overlappingCounter;
 };
 
+class IgnitionOutputPin : public NamedOutputPin {
+public:
+	IgnitionOutputPin();
+	void reset();
+	int outOfOrderCounter; // https://sourceforge.net/p/rusefi/tickets/319/
+};
+
 class engine_pins_s {
 public:
 	engine_pins_s();
@@ -77,9 +84,8 @@ public:
 	OutputPin hipCs;
 	OutputPin sdCsPin;
 
-
 	InjectorOutputPin injectors[INJECTION_PIN_COUNT];
-	NamedOutputPin coils[IGNITION_PIN_COUNT];
+	IgnitionOutputPin coils[IGNITION_PIN_COUNT];
 	NamedOutputPin dizzyOutput;
 };
 

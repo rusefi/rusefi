@@ -133,8 +133,8 @@ public:
 	int size;
 
 	void addEvent2(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const state DECLARE_ENGINE_PARAMETER_S);
-	void addEvent(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const state);
-	void addEvent(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam, float filterLeft, float filterRight);
+
+	void addEvent2(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam, float filterLeft, float filterRight DECLARE_ENGINE_PARAMETER_S);
 	operation_mode_e getOperationMode();
 
 	void initialize(operation_mode_e operationMode, bool needSecondTriggerInput);
@@ -189,8 +189,8 @@ private:
 	void calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE_PARAMETER_S);
 };
 
-void setVwConfiguration(TriggerShape *s);
+void setVwConfiguration(TriggerShape *s DECLARE_ENGINE_PARAMETER_S);
 
-void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped, operation_mode_e operationMode);
+void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_S);
 
 #endif /* TRIGGER_STRUCTURE_H_ */

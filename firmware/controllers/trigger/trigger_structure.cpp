@@ -245,9 +245,9 @@ angle_t TriggerShape::getAngle(int index) const {
 	}
 }
 
-void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam, float filterLeft, float filterRight) {
+void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam, float filterLeft, float filterRight DECLARE_ENGINE_PARAMETER_S) {
 	if (angle > filterLeft && angle < filterRight)
-		addEvent(angle, waveIndex, stateParam);
+		addEvent2(angle, waveIndex, stateParam PASS_ENGINE_PARAMETER);
 }
 
 operation_mode_e TriggerShape::getOperationMode() {
@@ -259,11 +259,6 @@ extern bool printTriggerDebug;
 #endif
 
 void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam DECLARE_ENGINE_PARAMETER_S) {
-	addEvent(angle, waveIndex, stateParam);
-}
-
-// todo: probably replace all usages with 'addEvent2'?
-void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam) {
 	efiAssertVoid(operationMode != OM_NONE, "operationMode not set");
 
 	efiAssertVoid(waveIndex!= T_SECONDARY || needSecondTriggerInput, "secondary needed or not?");
@@ -294,11 +289,9 @@ void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const waveIndex, trig
 	 */
 	angle /= engineCycle;
 
-#if !EFI_UNIT_TEST || defined(__DOXYGEN__)
 	if (!engineConfiguration->useOnlyRisingEdgeForTrigger || stateParam == TV_RISE) {
 		expectedEventCount[waveIndex]++;
 	}
-#endif
 
 	efiAssertVoid(angle > 0, "angle should be positive");
 	if (size > 0) {
@@ -371,7 +364,7 @@ void multi_wave_s::checkSwitchTimes(int size) {
 	checkSwitchTimes2(size, switchTimes);
 }
 
-void setVwConfiguration(TriggerShape *s) {
+void setVwConfiguration(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	efiAssertVoid(s != NULL, "TriggerShape is NULL");
 	operation_mode_e operationMode = FOUR_STROKE_CRANK_SENSOR;
 
@@ -387,23 +380,23 @@ void setVwConfiguration(TriggerShape *s) {
 	float toothWidth = 0.5;
 
 	addSkippedToothTriggerEvents(T_PRIMARY, s, 60, 2, toothWidth, 0, engineCycle,
-			NO_LEFT_FILTER, 690);
+			NO_LEFT_FILTER, 690 PASS_ENGINE_PARAMETER);
 
 	float angleDown = engineCycle / totalTeethCount * (totalTeethCount - skippedCount - 1 + (1 - toothWidth) );
-	s->addEvent(0 + angleDown + 12, T_PRIMARY, TV_RISE, NO_LEFT_FILTER, NO_RIGHT_FILTER);
-	s->addEvent(0 + engineCycle, T_PRIMARY, TV_FALL, NO_LEFT_FILTER, NO_RIGHT_FILTER);
+	s->addEvent2(0 + angleDown + 12, T_PRIMARY, TV_RISE, NO_LEFT_FILTER, NO_RIGHT_FILTER PASS_ENGINE_PARAMETER);
+	s->addEvent2(0 + engineCycle, T_PRIMARY, TV_FALL, NO_LEFT_FILTER, NO_RIGHT_FILTER PASS_ENGINE_PARAMETER);
 
 	s->setTriggerSynchronizationGap2(1.6, 4);
 }
 
 void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped,
-		operation_mode_e operationMode) {
+		operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_S) {
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 
 	s->useRiseEdge = true;
 
 	initializeSkippedToothTriggerShapeExt(s, total, skipped,
-			operationMode);
+			operationMode PASS_ENGINE_PARAMETER);
 #endif
 }
 

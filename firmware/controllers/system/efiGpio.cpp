@@ -57,6 +57,14 @@ void InjectorOutputPin::reset() {
 	currentLogicValue = INITIAL_PIN_STATE;
 }
 
+IgnitionOutputPin::IgnitionOutputPin() {
+	reset();
+}
+
+void IgnitionOutputPin::reset() {
+	outOfOrderCounter = 0;
+}
+
 OutputPin::OutputPin() {
 	modePtr = &OUTPUT_MODE_DEFAULT;
 #if EFI_PROD_CODE || defined(__DOXYGEN__)

@@ -8,7 +8,7 @@
 
 #include "trigger_rover.h"
 
-void initializeRoverK(TriggerShape *s) {
+void initializeRoverK(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
 
 	float tooth = 20;

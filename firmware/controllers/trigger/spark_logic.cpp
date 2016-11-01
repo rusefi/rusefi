@@ -24,10 +24,16 @@ int isIgnitionTimingError(void) {
 	return ignitionErrorDetection.sum(6) > 4;
 }
 
-void turnSparkPinLow(NamedOutputPin *output) {
+void turnSparkPinLow(IgnitionOutputPin *output) {
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
 	scheduleMsg(logger, "spark goes low  %d %s %d", getRevolutionCounter(), output->name, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
+
+	if (!output->currentLogicValue) {
+		warning(CUSTOM_ERR_6149, "out-of-order coil off %s", output->name);
+		output->outOfOrderCounter++;
+	}
+
 	turnPinLow(output);
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	if (CONFIG(dizzySparkOutputPin) != GPIO_UNASSIGNED) {
@@ -36,10 +42,17 @@ void turnSparkPinLow(NamedOutputPin *output) {
 #endif /* EFI_PROD_CODE */
 }
 
-void turnSparkPinHigh(NamedOutputPin *output) {
+void turnSparkPinHigh(IgnitionOutputPin *output) {
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
 	scheduleMsg(logger, "spark goes high %d %s %d", getRevolutionCounter(), output->name, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
+
+	if (output->outOfOrderCounter > 0) {
+		// let's save this coil if things do not look right
+		output->outOfOrderCounter--;
+		return;
+	}
+
 	turnPinHigh(output);
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	if (CONFIG(dizzySparkOutputPin) != GPIO_UNASSIGNED) {

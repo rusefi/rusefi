@@ -460,12 +460,18 @@ void testRpmCalculator(void) {
 void testTriggerDecoder(void) {
 	printf("*************************************************** testTriggerDecoder\r\n");
 
-	persistent_config_s config;
-	Engine engine(&config);
-	TriggerShape * s = &engine.triggerShape;
+	persistent_config_s c;
+	Engine e(&c);
+	TriggerShape * s = &e.triggerShape;
 
 
-	initializeSkippedToothTriggerShapeExt(s, 2, 0, FOUR_STROKE_CAM_SENSOR);
+	persistent_config_s *config = &c;
+	Engine *engine = &e;
+
+	engine_configuration_s *engineConfiguration = &c.engineConfiguration;
+	board_configuration_s *boardConfiguration = &c.engineConfiguration.bc;
+
+	initializeSkippedToothTriggerShapeExt(s, 2, 0, FOUR_STROKE_CAM_SENSOR PASS_ENGINE_PARAMETER);
 	assertEqualsM("shape size", s->getSize(), 4);
 	assertEquals(s->wave.switchTimes[0], 0.25);
 	assertEquals(s->wave.switchTimes[1], 0.5);
@@ -604,13 +610,10 @@ static void setTestBug299(EngineTestHelper *eth) {
 	Engine *engine = &eth->engine;
 	EXPAND_Engine
 
-	FuelSchedule * t;
-
 	assertEquals(LM_PLAIN_MAF, engineConfiguration->fuelAlgorithm);
 	engineConfiguration->isIgnitionEnabled = false;
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->injectionMode = IM_BATCH;
-
 
 	timeNow = 0;
 	schedulingQueue.clear();
@@ -658,7 +661,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	assertInjectorDownEvent("@7", 7, MS2US(40), 1);
 	assertEqualsM("exec#0", 0, schedulingQueue.executeAll(timeNow));
 
-	t = ENGINE(engineConfiguration2)->injectionEvents;
+	FuelSchedule * t = ENGINE(engineConfiguration2)->injectionEvents;
 	assertEqualsM("t.s#0", 4, t->injectionEvents.size);
 	assertInjectionEvent("#0", &t->injectionEvents.elements[0], 0, 0, 513, false);
 	assertInjectionEvent("#0", &t->injectionEvents.elements[1], 1, 0, 693, false);
@@ -1116,11 +1119,23 @@ void testSparkReverseOrderBug319(void) {
 	EngineTestHelper eth(TEST_ENGINE);
 	EXPAND_EngineTestHelper
 
+	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 	engineConfiguration->isInjectionEnabled = false;
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
+	setConstantDwell(45 PASS_ENGINE_PARAMETER);
+
+	// this is needed to update injectorLag
+	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_F);
+
+	assertEqualsM("CLT", 70, engine->engineState.clt);
+
 	engineConfiguration->trigger.type = TT_ONE;
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+
+	eth.applyTriggerShape();
+	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 
 
 	timeNow = 0;
@@ -1140,9 +1155,27 @@ void testSparkReverseOrderBug319(void) {
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerFall();
 
+	assertEqualsM("RPM", 3000, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
+
+
 	assertEqualsM("queue size", 7, schedulingQueue.size());
+	schedulingQueue.executeAll(timeNow);
+	printf("***************************************************\r\n");
+
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerRise();
 	schedulingQueue.executeAll(timeNow);
 
 
+	timeNow += 100; // executing new signal too early
+	eth.firePrimaryTriggerFall();
+	schedulingQueue.executeAll(timeNow);
 
+	assertEqualsM("out-of-order #1", 1, enginePins.coils[3].outOfOrderCounter);
+
+
+	timeNow += MS2US(200); // moving time forward to execute all pending actions
+	schedulingQueue.executeAll(timeNow);
+
+	assertEqualsM("out-of-order #2", 0, enginePins.coils[3].outOfOrderCounter);
 }

@@ -347,24 +347,24 @@ angle_t getEngineCycle(operation_mode_e operationMode) {
 }
 
 void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerShape *s, int totalTeethCount, int skippedCount,
-		float toothWidth, float offset, float engineCycle, float filterLeft, float filterRight) {
+		float toothWidth, float offset, float engineCycle, float filterLeft, float filterRight DECLARE_ENGINE_PARAMETER_S) {
 	efiAssertVoid(totalTeethCount > 0, "total count");
 	efiAssertVoid(skippedCount >= 0, "skipped count");
 
 	for (int i = 0; i < totalTeethCount - skippedCount - 1; i++) {
 		float angleDown = engineCycle / totalTeethCount * (i + (1 - toothWidth));
 		float angleUp = engineCycle / totalTeethCount * (i + 1);
-		s->addEvent(offset + angleDown, wheel, TV_RISE, filterLeft, filterRight);
-		s->addEvent(offset + angleUp, wheel, TV_FALL, filterLeft, filterRight);
+		s->addEvent2(offset + angleDown, wheel, TV_RISE, filterLeft, filterRight PASS_ENGINE_PARAMETER);
+		s->addEvent2(offset + angleUp, wheel, TV_FALL, filterLeft, filterRight PASS_ENGINE_PARAMETER);
 	}
 
 	float angleDown = engineCycle / totalTeethCount * (totalTeethCount - skippedCount - 1 + (1 - toothWidth));
-	s->addEvent(offset + angleDown, wheel, TV_RISE, filterLeft, filterRight);
-	s->addEvent(offset + engineCycle, wheel, TV_FALL, filterLeft, filterRight);
+	s->addEvent2(offset + angleDown, wheel, TV_RISE, filterLeft, filterRight PASS_ENGINE_PARAMETER);
+	s->addEvent2(offset + engineCycle, wheel, TV_FALL, filterLeft, filterRight PASS_ENGINE_PARAMETER);
 }
 
 void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount, int skippedCount,
-		operation_mode_e operationMode) {
+		operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_S) {
 	efiAssertVoid(totalTeethCount > 0, "totalTeethCount is zero");
 	efiAssertVoid(s != NULL, "TriggerShape is NULL");
 	s->initialize(operationMode, false);
@@ -373,7 +373,7 @@ void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount,
 	s->isSynchronizationNeeded = (skippedCount != 0);
 
 	addSkippedToothTriggerEvents(T_PRIMARY, s, totalTeethCount, skippedCount, 0.5, 0, getEngineCycle(operationMode),
-	NO_LEFT_FILTER, NO_RIGHT_FILTER);
+	NO_LEFT_FILTER, NO_RIGHT_FILTER PASS_ENGINE_PARAMETER);
 }
 
 static void configure3_1_cam(TriggerShape *s, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_S) {
@@ -413,34 +413,34 @@ static void configure3_1_cam(TriggerShape *s, operation_mode_e operationMode DEC
 }
 
 
-static void configureOnePlusOne(TriggerShape *s, operation_mode_e operationMode) {
+static void configureOnePlusOne(TriggerShape *s, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_S) {
 	float engineCycle = getEngineCycle(operationMode);
 
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
-	s->addEvent(180, T_PRIMARY, TV_RISE);
-	s->addEvent(360, T_PRIMARY, TV_FALL);
+	s->addEvent2(180, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
+	s->addEvent2(360, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
 
-	s->addEvent(540, T_SECONDARY, TV_RISE);
-	s->addEvent(720, T_SECONDARY, TV_FALL);
+	s->addEvent2(540, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER);
+	s->addEvent2(720, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER);
 
 	s->isSynchronizationNeeded = false;
 	s->useOnlyPrimaryForSync = true;
 }
 
-static void configureOnePlus60_2(TriggerShape *s, operation_mode_e operationMode) {
+static void configureOnePlus60_2(TriggerShape *s, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_S) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 	int totalTeethCount = 60;
 	int skippedCount = 2;
 
-	s->addEvent(2, T_PRIMARY, TV_RISE);
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 2, 20);
-	s->addEvent(20, T_PRIMARY, TV_FALL);
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 20, NO_RIGHT_FILTER);
+	s->addEvent2(2, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
+	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 2, 20 PASS_ENGINE_PARAMETER);
+	s->addEvent2(20, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
+	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 20, NO_RIGHT_FILTER PASS_ENGINE_PARAMETER);
 
 	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 360, 360, NO_LEFT_FILTER,
-	NO_RIGHT_FILTER);
+	NO_RIGHT_FILTER PASS_ENGINE_PARAMETER);
 
 	s->isSynchronizationNeeded = false;
 	s->useOnlyPrimaryForSync = true;
@@ -464,7 +464,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 
 	case TT_TOOTHED_WHEEL:
 		initializeSkippedToothTriggerShapeExt(triggerShape, triggerConfig->customTotalToothCount,
-				triggerConfig->customSkippedToothCount, engineConfiguration->operationMode);
+				triggerConfig->customSkippedToothCount, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_MAZDA_MIATA_NA:
@@ -495,12 +495,12 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_FORD_ASPIRE:
-		configureFordAspireTriggerShape(triggerShape);
+		configureFordAspireTriggerShape(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_GM_7X:
 		// todo: fix this configureGmTriggerShape(triggerShape);
-		configureFordAspireTriggerShape(triggerShape);
+		configureFordAspireTriggerShape(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_MAZDA_DOHC_1_4:
@@ -508,7 +508,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_ONE_PLUS_ONE:
-		configureOnePlusOne(triggerShape, engineConfiguration->operationMode);
+		configureOnePlusOne(triggerShape, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_3_1_CAM:
@@ -516,11 +516,11 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_ONE_PLUS_TOOTHED_WHEEL_60_2:
-		configureOnePlus60_2(triggerShape, engineConfiguration->operationMode);
+		configureOnePlus60_2(triggerShape, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_ONE:
-		setToothedWheelConfiguration(triggerShape, 1, 0, engineConfiguration->operationMode);
+		setToothedWheelConfiguration(triggerShape, 1, 0, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_MAZDA_SOHC_4:
@@ -528,39 +528,39 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_MINI_COOPER_R50:
-		configureMiniCooperTriggerShape(triggerShape);
+		configureMiniCooperTriggerShape(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_TOOTHED_WHEEL_60_2:
-		setToothedWheelConfiguration(triggerShape, 60, 2, engineConfiguration->operationMode);
+		setToothedWheelConfiguration(triggerShape, 60, 2, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_60_2_VW:
-		setVwConfiguration(triggerShape);
+		setVwConfiguration(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_TOOTHED_WHEEL_36_1:
-		setToothedWheelConfiguration(triggerShape, 36, 1, engineConfiguration->operationMode);
+		setToothedWheelConfiguration(triggerShape, 36, 1, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_HONDA_ACCORD_CD_TWO_WIRES:
-		configureHondaAccordCD(triggerShape, false, true, T_CHANNEL_3, T_PRIMARY, 0);
+		configureHondaAccordCD(triggerShape, false, true, T_CHANNEL_3, T_PRIMARY, 0 PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_HONDA_ACCORD_CD:
-		configureHondaAccordCD(triggerShape, true, true, T_CHANNEL_3, T_PRIMARY, 0);
+		configureHondaAccordCD(triggerShape, true, true, T_CHANNEL_3, T_PRIMARY, 0 PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_HONDA_ACCORD_1_24:
-		configureHondaAccordCD(triggerShape, true, false, T_PRIMARY, T_PRIMARY, 10);
+		configureHondaAccordCD(triggerShape, true, false, T_PRIMARY, T_PRIMARY, 10 PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_HONDA_ACCORD_1_24_SHIFTED:
-		configureHondaAccordShifter(triggerShape);
+		configureHondaAccordShifter(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_HONDA_ACCORD_CD_DIP:
-		configureHondaAccordCDDip(triggerShape);
+		configureHondaAccordCDDip(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_HONDA_CBR_600:
@@ -572,7 +572,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_MITSU:
-		initializeMitsubishi4g18(triggerShape);
+		initializeMitsubishi4g18(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_DODGE_RAM:
@@ -580,27 +580,27 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_36_2_2_2:
-		initialize36_2_2_2(triggerShape);
+		initialize36_2_2_2(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_2JZ_3_34:
-		initialize2jzGE3_34(triggerShape);
+		initialize2jzGE3_34(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_2JZ_1_12:
-		initialize2jzGE1_12(triggerShape);
+		initialize2jzGE1_12(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_NISSAN:
-		initializeNissan(triggerShape);
+		initializeNissan(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_ROVER_K:
-		initializeRoverK(triggerShape);
+		initializeRoverK(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_GM_LS_24:
-		initGmLS24(triggerShape);
+		initGmLS24(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	default:

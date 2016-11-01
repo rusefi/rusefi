@@ -10,6 +10,6 @@
 
 #include "trigger_structure.h"
 
-void initializeNissan(TriggerShape *s);
+void initializeNissan(TriggerShape *s DECLARE_ENGINE_PARAMETER_S);
 
 #endif /* CONTROLLERS_TRIGGER_TRIGGER_NISSAN_H_ */
