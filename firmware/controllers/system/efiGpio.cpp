@@ -49,6 +49,15 @@ engine_pins_s::engine_pins_s() {
 	}
 }
 
+void engine_pins_s::reset() {
+	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
+		injectors[i].reset();
+	}
+	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
+		coils[i].reset();
+	}
+}
+
 void InjectorOutputPin::reset() {
 	overlappingScheduleOffTime = 0;
 	cancelNextTurningInjectorOff = false;

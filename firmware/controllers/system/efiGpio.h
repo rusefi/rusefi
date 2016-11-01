@@ -66,6 +66,7 @@ public:
 class engine_pins_s {
 public:
 	engine_pins_s();
+	void reset();
 	OutputPin mainRelay;
 	OutputPin fanRelay;
 	OutputPin acRelay;
