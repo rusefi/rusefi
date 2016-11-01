@@ -79,12 +79,8 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	 * The start of charge is always within the current trigger event range, so just plain time-based scheduling
 	 */
 	if (!limitedSpark) {
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
-	printf("spark charge delay=%f\r\n", chargeDelayUs);
-#endif
-
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
-	scheduleMsg(logger, "scheduling sparkUp ind=%d %d %s %d %d later", trgEventIndex, getRevolutionCounter(), iEvent->output->name, (int)getTimeNowUs(), (int)chargeDelayUs);
+	scheduleMsg(logger, "scheduling sparkUp ind=%d %d %s now=%d %d later", trgEventIndex, getRevolutionCounter(), iEvent->output->name, (int)getTimeNowUs(), (int)chargeDelayUs);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 	/**
@@ -111,7 +107,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 #endif
 
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
-		scheduleMsg(logger, "scheduling sparkDown ind=%d %d %s %d %d later", trgEventIndex, getRevolutionCounter(), iEvent->output->name, (int)getTimeNowUs(), (int)timeTillIgnitionUs);
+		scheduleMsg(logger, "scheduling sparkDown ind=%d %d %s now=%d %d later", trgEventIndex, getRevolutionCounter(), iEvent->output->name, (int)getTimeNowUs(), (int)timeTillIgnitionUs);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 		scheduleTask(true, "spark1 down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, iEvent->output);
