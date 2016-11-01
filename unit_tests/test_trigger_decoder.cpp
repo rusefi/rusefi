@@ -1109,3 +1109,40 @@ void testFuelSchedulerBug299smallAndLarge(void) {
 	timeNow += MS2US(20);
 	schedulingQueue.executeAll(timeNow);
 }
+
+void testSparkReverseOrderBug319(void) {
+	printf("*************************************************** testSparkReverseOrderBug319 small to medium\r\n");
+
+	EngineTestHelper eth(TEST_ENGINE);
+	EXPAND_EngineTestHelper
+
+	engineConfiguration->isInjectionEnabled = false;
+	engineConfiguration->specs.cylindersCount = 4;
+	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
+
+	engineConfiguration->trigger.type = TT_ONE;
+
+
+	timeNow = 0;
+	setWholeTimingTable(0 PASS_ENGINE_PARAMETER);
+
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerRise();
+
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerFall();
+
+	schedulingQueue.executeAll(timeNow);
+
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerRise();
+
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerFall();
+
+	assertEqualsM("queue size", 7, schedulingQueue.size());
+	schedulingQueue.executeAll(timeNow);
+
+
+
+}

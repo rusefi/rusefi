@@ -236,6 +236,10 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 	}
 
 	if (triggerState.isValidIndex(PASS_ENGINE_PARAMETER_F)) {
+#if TRIGGER_EXTREME_LOGGING || defined(__DOXYGEN__)
+	scheduleMsg(logger, "trigger %d %d %d", triggerIndexForListeners, getRevolutionCounter(), (int)getTimeNowUs());
+#endif /* FUEL_MATH_EXTREME_LOGGING */
+
 		/**
 		 * Here we invoke all the listeners - the main engine control logic is inside these listeners
 		 */
