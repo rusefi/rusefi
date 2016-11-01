@@ -133,7 +133,9 @@ static void prepareThermistorCurve(thermistor_conf_s *tc, thermistor_curve_s * c
 	float T1 = tc->tempC_1 + KELV;
 	float T2 = tc->tempC_2 + KELV;
 	float T3 = tc->tempC_3 + KELV;
+#if EXTREME_TERM_LOGGING || defined(__DOXYGEN__)
 	scheduleMsg(logger, "T1=%..100000f/T2=%..100000f/T3=%..100000f", T1, T2, T3);
+#endif
 
 	float L1 = logf(tc->resistance_1);
 	if (L1 == tc->resistance_1) {
@@ -141,27 +143,31 @@ static void prepareThermistorCurve(thermistor_conf_s *tc, thermistor_curve_s * c
 	}
 	float L2 = logf(tc->resistance_2);
 	float L3 = logf(tc->resistance_3);
+#if EXTREME_TERM_LOGGING || defined(__DOXYGEN__)
 	scheduleMsg(logger, "R1=%..100000f/R2=%..100000f/R3=%..100000f", tc->resistance_1, tc->resistance_2,
 			tc->resistance_3);
 	scheduleMsg(logger, "L1=%..100000f/L2=%..100000f/L3=%..100000f", L1, L2, L3);
+#endif
 
 	float Y1 = 1 / T1;
 	float Y2 = 1 / T2;
 	float Y3 = 1 / T3;
 
-	scheduleMsg(logger, "Y1=%..100000f/Y2=%..100000f/Y3=%..100000f", Y1, Y2, Y3);
 
 	float U2 = (Y2 - Y1) / (L2 - L1);
 	float U3 = (Y3 - Y1) / (L3 - L1);
 
-	scheduleMsg(logger, "U2=%..100000f/U3=%..100000f", U2, U3);
 
 	curve->s_h_c = (U3 - U2) / (L3 - L2) * pow(L1 + L2 + L3, -1);
 	curve->s_h_b = U2 - curve->s_h_c * (L1 * L1 + L1 * L2 + L2 * L2);
 	curve->s_h_a = Y1 - (curve->s_h_b + L1 * L1 * curve->s_h_c) * L1;
 
+#if EXTREME_TERM_LOGGING || defined(__DOXYGEN__)
+	scheduleMsg(logger, "Y1=%..100000f/Y2=%..100000f/Y3=%..100000f", Y1, Y2, Y3);
+	scheduleMsg(logger, "U2=%..100000f/U3=%..100000f", U2, U3);
 	scheduleMsg(logger, "s_h_c=%..100000f/s_h_b=%..100000f/s_h_a=%..100000f", curve->s_h_c, curve->s_h_b,
 			curve->s_h_a);
+#endif
 }
 
 /**
