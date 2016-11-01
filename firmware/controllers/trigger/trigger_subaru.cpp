@@ -10,7 +10,7 @@
 /**
  * This trigger is also used by Nissan and Mazda
  */
-void initialize36_2_2_2(TriggerShape *s) {
+void initialize36_2_2_2(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 	float wide = 30 * 2;
@@ -23,25 +23,25 @@ void initialize36_2_2_2(TriggerShape *s) {
 	float base = 0;
 
 	for (int i = 0; i < 12; i++) {
-		s->addEvent(base + narrow / 2, T_PRIMARY, TV_RISE);
-		s->addEvent(base + narrow, T_PRIMARY, TV_FALL);
+		s->addEvent2(base + narrow / 2, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
+		s->addEvent2(base + narrow, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
 		base += narrow;
 	}
 
-	s->addEvent(base + wide / 2, T_PRIMARY, TV_RISE);
-	s->addEvent(base + wide, T_PRIMARY, TV_FALL);
+	s->addEvent2(base + wide / 2, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
+	s->addEvent2(base + wide, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
 	base += wide;
 
 	for (int i = 0; i < 15; i++) {
-		s->addEvent(base + narrow / 2, T_PRIMARY, TV_RISE);
-		s->addEvent(base + narrow, T_PRIMARY, TV_FALL);
+		s->addEvent2(base + narrow / 2, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
+		s->addEvent2(base + narrow, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
 		base += narrow;
 	}
 
-	s->addEvent(720 - wide - wide / 2, T_PRIMARY, TV_RISE);
-	s->addEvent(720 - wide, T_PRIMARY, TV_FALL);
+	s->addEvent2(720 - wide - wide / 2, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
+	s->addEvent2(720 - wide, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
 
-	s->addEvent(720 - wide / 2, T_PRIMARY, TV_RISE);
-	s->addEvent(720, T_PRIMARY, TV_FALL);
+	s->addEvent2(720 - wide / 2, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
+	s->addEvent2(720, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
 	s->useOnlyPrimaryForSync = true;
 }

@@ -10,12 +10,12 @@
 
 #include "trigger_structure.h"
 
-void configureHondaAccordCDDip(TriggerShape *s);
-void configureHondaAccordShifter(TriggerShape *s);
+void configureHondaAccordCDDip(TriggerShape *s DECLARE_ENGINE_PARAMETER_S);
+void configureHondaAccordShifter(TriggerShape *s DECLARE_ENGINE_PARAMETER_S);
 void configureHondaAccordCD(TriggerShape *s, bool withOneEventSignal, bool withFourEventSignal,
 		trigger_wheel_e const oneEventWave,
 		trigger_wheel_e const fourEventWave,
-		float d);
+		float d DECLARE_ENGINE_PARAMETER_S);
 
 void configureHondaCbr600(TriggerShape *s DECLARE_ENGINE_PARAMETER_S);
 void configureHondaCbr600custom(TriggerShape *s DECLARE_ENGINE_PARAMETER_S);

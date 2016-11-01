@@ -7,7 +7,7 @@
 
 #include "trigger_nissan.h"
 
-void initializeNissan(TriggerShape *s) {
+void initializeNissan(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, false);
 	s->isSynchronizationNeeded = false;
 
@@ -24,7 +24,7 @@ void initializeNissan(TriggerShape *s) {
 	// todo
 	base += 180;
 
-	s->addEvent(base - w, T_PRIMARY, TV_RISE);
-	s->addEvent(base, T_PRIMARY, TV_FALL);
+	s->addEvent2(base - w, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
+	s->addEvent2(base, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
 
 }

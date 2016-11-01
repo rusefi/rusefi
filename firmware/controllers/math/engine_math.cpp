@@ -418,6 +418,10 @@ static int getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_S
 void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 	ENGINE(engineCycle) = getEngineCycle(CONFIG(operationMode));
 
+#if EFI_UNIT_TEST
+	printf("prepareOutputSignals %d onlyEdge=%s\r\n", engineConfiguration->trigger.type, boolToString(engineConfiguration->useOnlyRisingEdgeForTrigger));
+#endif
+
 	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 
 	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
