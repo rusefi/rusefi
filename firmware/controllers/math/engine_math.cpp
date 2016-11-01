@@ -105,6 +105,12 @@ static void addIgnitionEvent(angle_t localAdvance, angle_t dwellAngle, IgnitionE
 	event->advance = localAdvance;
 
 	findTriggerPosition(&event->dwellPosition, localAdvance - dwellAngle PASS_ENGINE_PARAMETER);
+
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+	printf("addIgnitionEvent %s ind=%d\n", output->name, event->dwellPosition.eventIndex);
+	//	scheduleMsg(logger, "addIgnitionEvent %s ind=%d", output->name, event->dwellPosition->eventIndex);
+#endif /* FUEL_MATH_EXTREME_LOGGING */
+
 }
 
 void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,

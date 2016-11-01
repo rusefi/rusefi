@@ -124,6 +124,7 @@ int getRevolutionCounter(void) {
 }
 
 int main(void) {
+	testSparkReverseOrderBug319();
 	testFuelSchedulerBug299smallAndLarge();
 	testFuelSchedulerBug299smallAndMedium();
 	testLogicExpressions();
@@ -172,13 +173,18 @@ int main(void) {
 	testTriggerDecoder();
 
 	//	resizeMap();
-	printf("Success 20150407\r\n");
+	printf("Success 20161031\r\n");
 	printAllTriggers();
 	return EXIT_SUCCESS;
 }
 
-bool warning(obd_code_e code, const char *fmt, ...) {
-	printf("Warning: %s\r\n", fmt);
+bool warning(obd_code_e code, const char *format, ...) {
+	printf("Warning: ");
+	va_list ap;
+	va_start(ap, format);
+	vprintf(format, ap);
+	va_end(ap);
+	printf("\r\n");
 }
 
 bool hasFirmwareErrorFlag = false;
@@ -195,16 +201,6 @@ void print(const char *format, ...) {
 	va_end(ap);
 }
 
-//void fatal3(char *msg, char *file, int line) {
-//  printf(msg);
-//  exit(-1);
-//}
-
-int warning(const char *fmt, ...) {
-	 printf(fmt);
-	 exit(-1);
-}
-
 bool isCranking(void) {
 	return 0;
 }
@@ -212,5 +208,10 @@ bool isCranking(void) {
 void initLogging(LoggingWithStorage *logging, const char *name) {
 }
 
-void scheduleMsg(Logging *logging, const char *fmt, ...) {
+void scheduleMsg(Logging *logging, const char *format, ...) {
+	va_list ap;
+	va_start(ap, format);
+	vprintf(format, ap);
+	va_end(ap);
+	printf("\r\n");
 }
