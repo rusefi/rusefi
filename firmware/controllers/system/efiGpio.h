@@ -60,6 +60,7 @@ class IgnitionOutputPin : public NamedOutputPin {
 public:
 	IgnitionOutputPin();
 	void reset();
+	int sparkId;
 	int outOfOrderCounter; // https://sourceforge.net/p/rusefi/tickets/319/
 };
 

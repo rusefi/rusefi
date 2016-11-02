@@ -47,13 +47,14 @@ public:
 class IgnitionEvent {
 public:
 	IgnitionEvent();
-	NamedOutputPin *output;
+	IgnitionOutputPin *output;
 	scheduling_s signalTimerUp;
 	scheduling_s signalTimerDown;
 	angle_t advance;
 	event_trigger_position_s dwellPosition;
 	event_trigger_position_s sparkPosition;
 	IgnitionEvent *next;
+	int sparkId;
 	char *name;
 };
 

@@ -365,12 +365,12 @@ void testRpmCalculator(void) {
 
 	assertREqualsM("Call@0", (void*)ev0->callback, (void*)turnSparkPinHigh);
 	assertEqualsM("ev 0", st + 944, ev0->momentX);
-	assertEqualsLM("o 0", (long)&enginePins.coils[0], (long)ev0->param);
+	assertEqualsLM("coil 0", (long)&enginePins.coils[0], (long)((IgnitionEvent*)ev0->param)->output);
 
 	scheduling_s *ev1 = schedulingQueue.getForUnitText(1);
 	assertREqualsM("Call@1", (void*)ev1->callback, (void*)turnSparkPinLow);
 	assertEqualsM("ev 1", st + 1444, ev1->momentX);
-	assertEqualsLM("o 1", (long)&enginePins.coils[0], (long)ev1->param);
+	assertEqualsLM("coil 1", (long)&enginePins.coils[0], (long)((IgnitionEvent*)ev1->param)->output);
 
 	}
 
@@ -1178,4 +1178,49 @@ void testSparkReverseOrderBug319(void) {
 	schedulingQueue.executeAll(timeNow);
 
 	assertEqualsM("out-of-order #2", 0, enginePins.coils[3].outOfOrderCounter);
+
+	printf("*************************************************** now let's have a good engine cycle and confirm things work\r\n");
+
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerRise();
+	schedulingQueue.executeAll(timeNow);
+
+	assertEqualsM("RPM#2", 545, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
+
+	assertEqualsM("out-of-order #3", 0, enginePins.coils[3].outOfOrderCounter);
+
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerFall();
+	schedulingQueue.executeAll(timeNow);
+	assertEqualsM("out-of-order #4", 1, enginePins.coils[3].outOfOrderCounter);
+
+	printf("*************************************************** (rpm is back) now let's have a good engine cycle and confirm things work\r\n");
+
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerRise();
+	schedulingQueue.executeAll(timeNow);
+
+	assertEqualsM("RPM#3", 3000, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
+
+	assertEqualsM("out-of-order #5", 1, enginePins.coils[3].outOfOrderCounter);
+
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerFall();
+	schedulingQueue.executeAll(timeNow);
+	assertEqualsM("out-of-order #6", 0, enginePins.coils[3].outOfOrderCounter);
+
+	printf("*************************************************** (rpm is back 2) now let's have a good engine cycle and confirm things work\r\n");
+
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerRise();
+	schedulingQueue.executeAll(timeNow);
+
+	assertEqualsM("RPM#4", 3000, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
+
+	assertEqualsM("out-of-order #7", 0, enginePins.coils[3].outOfOrderCounter);
+
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerFall();
+	schedulingQueue.executeAll(timeNow);
+	assertEqualsM("out-of-order #8", 0, enginePins.coils[3].outOfOrderCounter);
 }

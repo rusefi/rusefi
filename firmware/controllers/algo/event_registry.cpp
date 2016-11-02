@@ -42,6 +42,7 @@ IgnitionEvent::IgnitionEvent() {
 	next = NULL;
 	output = NULL;
 	advance = NAN;
+	sparkId = 0;
 }
 
 //void registerActuatorEventWhat(InjectionEventList *list, int eventIndex, OutputSignal *actuator, float angleOffset) {

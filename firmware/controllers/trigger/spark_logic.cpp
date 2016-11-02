@@ -24,10 +24,22 @@ int isIgnitionTimingError(void) {
 	return ignitionErrorDetection.sum(6) > 4;
 }
 
-void turnSparkPinLow(IgnitionOutputPin *output) {
+void turnSparkPinLow(IgnitionEvent *event) {
+	IgnitionOutputPin *output = event->output;
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
-	scheduleMsg(logger, "spark goes low  %d %s %d", getRevolutionCounter(), output->name, (int)getTimeNowUs());
+	scheduleMsg(logger, "spark goes low  %d %s %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->name, (int)getTimeNowUs(),
+			output->currentLogicValue, output->outOfOrderCounter, event->sparkId);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
+
+	/**
+	 * there are two kinds of 'out-of-order'
+	 * 1) low goes before high, everything is fine after words
+	 *
+	 * 2) we have an un-matched low followed by legit pairs
+	 *
+	 */
+
+	output->sparkId = event->sparkId;
 
 	if (!output->currentLogicValue) {
 		warning(CUSTOM_ERR_6149, "out-of-order coil off %s", output->name);
@@ -42,15 +54,19 @@ void turnSparkPinLow(IgnitionOutputPin *output) {
 #endif /* EFI_PROD_CODE */
 }
 
-void turnSparkPinHigh(IgnitionOutputPin *output) {
+void turnSparkPinHigh(IgnitionEvent *event) {
+	IgnitionOutputPin *output = event->output;
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
-	scheduleMsg(logger, "spark goes high %d %s %d", getRevolutionCounter(), output->name, (int)getTimeNowUs());
+	scheduleMsg(logger, "spark goes high %d %s %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->name, (int)getTimeNowUs(),
+			output->currentLogicValue, output->outOfOrderCounter, event->sparkId);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 	if (output->outOfOrderCounter > 0) {
-		// let's save this coil if things do not look right
 		output->outOfOrderCounter--;
-		return;
+		if (output->sparkId == event->sparkId) {
+			// let's save this coil if things do not look right
+			return;
+		}
 	}
 
 	turnPinHigh(output);
@@ -60,6 +76,8 @@ void turnSparkPinHigh(IgnitionOutputPin *output) {
 	}
 #endif /* EFI_PROD_CODE */
 }
+
+static int globalSparkIdCoutner = 0;
 
 static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, IgnitionEvent *iEvent,
 		int rpm DECLARE_ENGINE_PARAMETER_S) {
@@ -81,6 +99,8 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		return;
 	}
 
+	iEvent->sparkId = globalSparkIdCoutner++;
+
 	/**
 	 * We are alternating two event lists in order to avoid a potential issue around revolution boundary
 	 * when an event is scheduled within the next revolution.
@@ -88,12 +108,13 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	scheduling_s * sUp = &iEvent->signalTimerUp;
 	scheduling_s * sDown = &iEvent->signalTimerDown;
 
+
 	/**
 	 * The start of charge is always within the current trigger event range, so just plain time-based scheduling
 	 */
 	if (!limitedSpark) {
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
-	scheduleMsg(logger, "scheduling sparkUp ind=%d %d %s now=%d %d later", trgEventIndex, getRevolutionCounter(), iEvent->output->name, (int)getTimeNowUs(), (int)chargeDelayUs);
+		scheduleMsg(logger, "scheduling sparkUp ind=%d %d %s now=%d %d later", trgEventIndex, getRevolutionCounter(), iEvent->output->name, (int)getTimeNowUs(), (int)chargeDelayUs);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 	/**
@@ -101,7 +122,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		 * This way we make sure that coil dwell started while spark was enabled would fire and not burn
 		 * the coil.
 		 */
-		scheduleTask(true, "spark up", sUp, chargeDelayUs, (schfunc_t) &turnSparkPinHigh, iEvent->output);
+		scheduleTask(true, "spark up", sUp, chargeDelayUs, (schfunc_t) &turnSparkPinHigh, iEvent);
 	}
 	/**
 	 * Spark event is often happening during a later trigger event timeframe
@@ -123,7 +144,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		scheduleMsg(logger, "scheduling sparkDown ind=%d %d %s now=%d %d later", trgEventIndex, getRevolutionCounter(), iEvent->output->name, (int)getTimeNowUs(), (int)timeTillIgnitionUs);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-		scheduleTask(true, "spark1 down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, iEvent->output);
+		scheduleTask(true, "spark1 down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, iEvent);
 	} else {
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
 		scheduleMsg(logger, "to queue sparkDown ind=%d %d %s %d for %d", trgEventIndex, getRevolutionCounter(), iEvent->output->name, (int)getTimeNowUs(), iEvent->sparkPosition.eventIndex);
@@ -210,7 +231,7 @@ void handleSpark(int revolutionIndex, bool limitedSpark, uint32_t trgEventIndex,
 
 
 			float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * current->sparkPosition.angleOffset;
-			scheduleTask(true, "spark 2down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, current->output);
+			scheduleTask(true, "spark 2down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, current);
 		}
 	}
 

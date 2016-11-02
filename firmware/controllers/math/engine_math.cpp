@@ -93,8 +93,7 @@ void setSingleCoilDwell(engine_configuration_s *engineConfiguration) {
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 
-
-static void addIgnitionEvent(angle_t localAdvance, angle_t dwellAngle, IgnitionEventList *list, NamedOutputPin *output DECLARE_ENGINE_PARAMETER_S) {
+static void addIgnitionEvent(angle_t localAdvance, angle_t dwellAngle, IgnitionEventList *list, IgnitionOutputPin *output DECLARE_ENGINE_PARAMETER_S) {
 	IgnitionEvent *event = list->add();
 
 	if (!isPinAssigned(output)) {
@@ -126,7 +125,7 @@ void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
 		angle_t localAdvance = -advance + ENGINE(angleExtra[i]);
 		int index = ENGINE(ignitionPin[i]);
 		int cylinderIndex = ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), index));
-		NamedOutputPin *output = &enginePins.coils[cylinderIndex];
+		IgnitionOutputPin *output = &enginePins.coils[cylinderIndex];
 
 		addIgnitionEvent(localAdvance, dwellAngle, list, output PASS_ENGINE_PARAMETER);
 
