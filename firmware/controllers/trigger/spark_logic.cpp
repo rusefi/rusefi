@@ -28,7 +28,7 @@ void turnSparkPinLow(IgnitionEvent *event) {
 	IgnitionOutputPin *output = event->output;
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
 	scheduleMsg(logger, "spark goes low  %d %s %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->name, (int)getTimeNowUs(),
-			output->currentLogicValue, output->outOfOrderCounter, event->sparkId);
+			output->currentLogicValue, output->outOfOrder, event->sparkId);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 	/**
@@ -39,11 +39,11 @@ void turnSparkPinLow(IgnitionEvent *event) {
 	 *
 	 */
 
-	output->sparkId = event->sparkId;
+	output->signalFallSparkId = event->sparkId;
 
 	if (!output->currentLogicValue) {
 		warning(CUSTOM_ERR_6149, "out-of-order coil off %s", output->name);
-		output->outOfOrderCounter++;
+		output->outOfOrder = true;
 	}
 
 	turnPinLow(output);
@@ -58,12 +58,12 @@ void turnSparkPinHigh(IgnitionEvent *event) {
 	IgnitionOutputPin *output = event->output;
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
 	scheduleMsg(logger, "spark goes high %d %s %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->name, (int)getTimeNowUs(),
-			output->currentLogicValue, output->outOfOrderCounter, event->sparkId);
+			output->currentLogicValue, output->outOfOrder, event->sparkId);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-	if (output->outOfOrderCounter > 0) {
-		output->outOfOrderCounter--;
-		if (output->sparkId == event->sparkId) {
+	if (output->outOfOrder) {
+		output->outOfOrder = false;
+		if (output->signalFallSparkId == event->sparkId) {
 			// let's save this coil if things do not look right
 			return;
 		}
