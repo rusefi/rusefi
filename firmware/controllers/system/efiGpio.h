@@ -60,8 +60,8 @@ class IgnitionOutputPin : public NamedOutputPin {
 public:
 	IgnitionOutputPin();
 	void reset();
-	int sparkId;
-	int outOfOrderCounter; // https://sourceforge.net/p/rusefi/tickets/319/
+	int signalFallSparkId;
+	bool outOfOrder; // https://sourceforge.net/p/rusefi/tickets/319/
 };
 
 class engine_pins_s {

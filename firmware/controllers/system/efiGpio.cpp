@@ -71,8 +71,8 @@ IgnitionOutputPin::IgnitionOutputPin() {
 }
 
 void IgnitionOutputPin::reset() {
-	outOfOrderCounter = 0;
-	sparkId = 0;
+	outOfOrder = false;
+	signalFallSparkId = 0;
 }
 
 OutputPin::OutputPin() {
