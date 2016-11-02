@@ -14,7 +14,7 @@ int isInjectionEnabled(engine_configuration_s *engineConfiguration);
 void handleSpark(int revolutionIndex, bool limitedSpark, uint32_t trgEventIndex, int rpm,
 		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S);
 void initSparkLogic(Logging *sharedLogger);
-void turnSparkPinHigh(IgnitionOutputPin *output);
-void turnSparkPinLow(IgnitionOutputPin *output);
+void turnSparkPinHigh(IgnitionEvent *event);
+void turnSparkPinLow(IgnitionEvent *event);
 
 #endif /* CONTROLLERS_TRIGGER_SPARK_LOGIC_H_ */
