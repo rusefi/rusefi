@@ -58,7 +58,7 @@ typedef enum {
 	 */
 	GY6_139QMB = 8,
 
-	MAZDA_MIATA_NB = 9,
+	MAZDA_MIATA_NB1 = 9,
 
 	ROVER_V8 = 10,
 
@@ -150,7 +150,10 @@ typedef enum {
 	TT_FORD_ASPIRE = 1,
 	TT_DODGE_NEON_1995 = 2,
 	TT_MAZDA_MIATA_NA = 3,
-	TT_MAZDA_MIATA_NB = 4,
+	/**
+	 * NB1 means non-VVT NB, 99 and 00 1.8 engine
+	 */
+	TT_MAZDA_MIATA_NB1 = 4,
 	TT_GM_7X = 5,
 	TT_MINI_COOPER_R50 = 6,
 	TT_MAZDA_SOHC_4 = 7,

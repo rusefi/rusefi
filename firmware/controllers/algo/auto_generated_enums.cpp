@@ -92,8 +92,8 @@ case MAZDA_323:
   return "MAZDA_323";
 case MAZDA_626:
   return "MAZDA_626";
-case MAZDA_MIATA_NB:
-  return "MAZDA_MIATA_NB";
+case MAZDA_MIATA_NB1:
+  return "MAZDA_MIATA_NB1";
 case MIATA_1990:
   return "MIATA_1990";
 case MIATA_1994_DEVIATOR:
@@ -173,8 +173,8 @@ case TT_HONDA_ACCORD_CD_TWO_WIRES:
   return "TT_HONDA_ACCORD_CD_TWO_WIRES";
 case TT_MAZDA_MIATA_NA:
   return "TT_MAZDA_MIATA_NA";
-case TT_MAZDA_MIATA_NB:
-  return "TT_MAZDA_MIATA_NB";
+case TT_MAZDA_MIATA_NB1:
+  return "TT_MAZDA_MIATA_NB1";
 case TT_MINI_COOPER_R50:
   return "TT_MINI_COOPER_R50";
 case TT_MITSU:

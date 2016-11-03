@@ -5,11 +5,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2016
  */
 
-#ifndef MAZDA_MIATA_NB_H_
-#define MAZDA_MIATA_NB_H_
+#ifndef MAZDA_MIATA_NB1_H_
+#define MAZDA_MIATA_NB1_H_
 
 #include "engine.h"
 
-void setMazdaMiataNbEngineConfiguration(DECLARE_ENGINE_PARAMETER_F);
+void setMazdaMiataNb1EngineConfiguration(DECLARE_ENGINE_PARAMETER_F);
 
-#endif /* MAZDA_MIATA_NB_H_ */
+#endif /* MAZDA_MIATA_NB1_H_ */

@@ -823,6 +823,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_S) {
+	enginePins.reset(); // that's mostly important for functional tests
 	/**
 	 * Let's apply global defaults first
 	 */
@@ -904,8 +905,8 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	case HONDA_600:
 		setHonda600(PASS_ENGINE_PARAMETER_F);
 		break;
-	case MAZDA_MIATA_NB:
-		setMazdaMiataNbEngineConfiguration(PASS_ENGINE_PARAMETER_F);
+	case MAZDA_MIATA_NB1:
+		setMazdaMiataNb1EngineConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;
 	case MAZDA_323:
 		setMazda323EngineConfiguration(engineConfiguration);

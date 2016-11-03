@@ -471,8 +471,8 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		initializeMazdaMiataNaShape(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
-	case TT_MAZDA_MIATA_NB:
-		initializeMazdaMiataNbShape(triggerShape PASS_ENGINE_PARAMETER);
+	case TT_MAZDA_MIATA_NB1:
+		initializeMazdaMiataNb1Shape(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_MIATA_VVT:

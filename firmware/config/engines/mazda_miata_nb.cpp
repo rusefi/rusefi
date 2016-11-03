@@ -2,7 +2,7 @@
  * @file	mazda_miata_nb.cpp
  *
  *
- * MAZDA_MIATA_NB = 9
+ * MAZDA_MIATA_NB1 = 9
  * set_engine_type 9
  *
  * http://rusefi.com/forum/viewtopic.php?t=467
@@ -17,11 +17,11 @@
 
 EXTERN_ENGINE;
 
-void setMazdaMiataNbEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
+void setMazdaMiataNb1EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	// set_rpm_hard_limit 3000
 	engineConfiguration->rpmHardLimit = 3000; // yes, 3k. let's play it safe for now
 
-	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NB;
+	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NB1;
 
 	engineConfiguration->globalTriggerAngleOffset = 276;
 
