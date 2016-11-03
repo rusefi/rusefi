@@ -143,8 +143,8 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "Fordi6";
 	case GY6_139QMB:
 		return "Gy6139";
-	case MAZDA_MIATA_NB:
-		return "MiataNB";
+	case MAZDA_MIATA_NB1:
+		return "MiataNB1";
 	case MAZDA_323:
 		return "M323";
 	case SATURN_ION_2004:

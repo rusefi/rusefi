@@ -50,7 +50,7 @@ void initializeMazdaMiataNaShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->useOnlyPrimaryForSync = true;
 }
 
-void initializeMazdaMiataNbShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
+void initializeMazdaMiataNb1Shape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 	s->setTriggerSynchronizationGap(0.11f);
 	s->useRiseEdge = false;
