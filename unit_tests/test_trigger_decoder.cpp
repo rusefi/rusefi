@@ -490,7 +490,7 @@ void testTriggerDecoder(void) {
 	testTriggerDecoder2("bmw", BMW_E34, 0, 0.4833, 0.0);
 
 	test1995FordInline6TriggerDecoder();
-	testTriggerDecoder2("Miata NB", MAZDA_MIATA_NB, 12, 0.0833, 0.0444);
+	testTriggerDecoder2("Miata NB", MAZDA_MIATA_NB1, 12, 0.0833, 0.0444);
 
 	testTriggerDecoder2("test engine", TEST_ENGINE, 0, 0.7500, 0.2500);
 	testTriggerDecoder2("testGY6_139QMB", GY6_139QMB, 0, 0.4375, 0.0);
