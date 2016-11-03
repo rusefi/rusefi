@@ -15,6 +15,8 @@ EXTERN_ENGINE;
 static cyclic_buffer<int> ignitionErrorDetection;
 static Logging *logger;
 
+static const char *prevSparkName = NULL;
+
 int isInjectionEnabled(engine_configuration_s *engineConfiguration) {
 	// todo: is this worth a method? should this be inlined?
 	return engineConfiguration->isInjectionEnabled;
@@ -42,7 +44,7 @@ void turnSparkPinLow(IgnitionEvent *event) {
 	output->signalFallSparkId = event->sparkId;
 
 	if (!output->currentLogicValue) {
-		warning(CUSTOM_ERR_6149, "out-of-order coil off %s", output->name);
+		warning(CUSTOM_OUT_OF_ORDER_COIL, "out-of-order coil off %s", output->name);
 		output->outOfOrder = true;
 	}
 
@@ -116,6 +118,16 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
 		scheduleMsg(logger, "scheduling sparkUp ind=%d %d %s now=%d %d later", trgEventIndex, getRevolutionCounter(), iEvent->output->name, (int)getTimeNowUs(), (int)chargeDelayUs);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
+
+
+		if (rpm > 2 * engineConfiguration->cranking.rpm) {
+			const char *outputName = iEvent->output->name;
+			if (prevSparkName == outputName) {
+				warning(CUSTOM_OBD_SKIPPED_SPARK, "looks like skipped spark event %d %s", getRevolutionCounter(), outputName);
+			}
+			prevSparkName = outputName;
+		}
+
 
 	/**
 		 * Note how we do not check if spark is limited or not while scheduling 'spark down'

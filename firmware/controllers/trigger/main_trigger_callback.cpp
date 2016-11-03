@@ -183,7 +183,7 @@ static void scheduleFuelInjection(int rpm, int injEventIndex, OutputSignal *sign
 		return;
 	}
 	if (cisnan(durationUs)) {
-		warning(CUSTOM_OBD_4, "NaN in scheduleFuelInjection", durationUs);
+		warning(CUSTOM_NAN_DURACTION, "NaN in scheduleFuelInjection", durationUs);
 		return;
 	}
 #if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
