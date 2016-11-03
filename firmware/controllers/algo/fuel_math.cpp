@@ -191,7 +191,7 @@ float getIatCorrection(float iat DECLARE_ENGINE_PARAMETER_S) {
  */
 floatms_t getBaseTableFuel(engine_configuration_s *engineConfiguration, int rpm, float engineLoad) {
 	if (cisnan(engineLoad)) {
-		warning(CUSTOM_OBD_2, "NaN engine load");
+		warning(CUSTOM_NAN_ENGINE_LOAD_2, "NaN engine load");
 		return NAN;
 	}
 	return fuelMap.getValue(rpm, engineLoad);
