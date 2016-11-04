@@ -15,7 +15,7 @@
 #include "advance_map.h"
 
 extern int timeNow;
-extern engine_pins_s enginePins;
+extern EnginePins enginePins;
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persistentConfig) {
 	ec = &persistentConfig.engineConfiguration;

@@ -230,26 +230,6 @@ void Engine::init(persistent_config_s *config) {
 	memset(config, 0, sizeof(persistent_config_s));
 }
 
-static bool stopPin(NamedOutputPin *output) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-	if (output->isInitialized() && output->getLogicValue()) {
-		output->setValue(false);
-		scheduleMsg(&logger, "turning off %s", output->name);
-		return true;
-	}
-#endif
-	return false;
-}
-
-bool Engine::stopPins() {
-	bool result = false;
-	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-		result |= stopPin(&enginePins.coils[i]);
-		result |= stopPin(&enginePins.injectors[i]);
-	}
-	return result;
-}
-
 void Engine::printKnockState(void) {
 	scheduleMsg(&logger, "knock now=%s/ever=%s", boolToString(knockNow), boolToString(knockEver));
 }
@@ -287,7 +267,7 @@ void Engine::watchdog() {
 	if (isRunningPwmTest)
 		return;
 	if (!isSpinning) {
-		if (!isRunningBenchTest() && stopPins()) {
+		if (!isRunningBenchTest() && enginePins.stopPins()) {
 			firmwareError(CUSTOM_ERR_2ND_WATCHDOG, "Some pins were turned off by 2nd pass watchdog");
 		}
 		return;
@@ -318,7 +298,7 @@ void Engine::watchdog() {
 	triggerInfo();
 #endif
 
-	stopPins();
+	enginePins.stopPins();
 #endif
 }
 

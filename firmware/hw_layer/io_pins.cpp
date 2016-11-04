@@ -26,7 +26,7 @@ extern board_configuration_s *boardConfiguration;
 static LoggingWithStorage logger("io_pins");
 
 
-extern engine_pins_s enginePins;
+extern EnginePins enginePins;
 
 #if defined(STM32F4XX)
 static ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH };

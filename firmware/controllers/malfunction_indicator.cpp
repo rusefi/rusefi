@@ -38,7 +38,7 @@
 #define MFI_BLINK_SEPARATOR 400
 #define MFI_CHECKENGINE_LIGHT 10000
 
-extern engine_pins_s enginePins;
+extern EnginePins enginePins;
 
 static THD_WORKING_AREA(mfiThreadStack, UTILITY_THREAD_STACK_SIZE);	// declare thread
 

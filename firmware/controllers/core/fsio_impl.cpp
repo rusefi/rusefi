@@ -44,7 +44,7 @@ static LENameOrdinalPair leKnock(LE_METHOD_KNOCK, "knock");
 
 #define LE_EVAL_POOL_SIZE 32
 
-extern engine_pins_s enginePins;
+extern EnginePins enginePins;
 
 static LECalculator evalCalc;
 static LEElement evalPoolElements[LE_EVAL_POOL_SIZE];

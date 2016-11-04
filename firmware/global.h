@@ -93,7 +93,7 @@ typedef VirtualTimer virtual_timer_t;
 		extern Engine _engine; \
 		extern persistent_config_s *config; \
 		extern engine_configuration2_s * engineConfiguration2; \
-		extern engine_pins_s enginePins
+		extern EnginePins enginePins
 
 #define DECLARE_ENGINE_PARAMETER_F void
 #define DECLARE_ENGINE_PARAMETER_S

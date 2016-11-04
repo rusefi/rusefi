@@ -34,7 +34,7 @@
 EXTERN_ENGINE
 ;
 
-extern engine_pins_s enginePins;
+extern EnginePins enginePins;
 
 /**
  * @return number of milliseconds in one crank shaft revolution

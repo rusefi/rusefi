@@ -286,7 +286,7 @@ static void assertREqualsM(const char *msg, void *expected, void *actual) {
 }
 
 extern bool_t debugSignalExecutor;
-extern engine_pins_s enginePins;
+extern EnginePins enginePins;
 
 // todo: move method body here after merge
 void assertEvent(const char *msg, int index, void *callback, efitime_t start, efitime_t momentX, long param);

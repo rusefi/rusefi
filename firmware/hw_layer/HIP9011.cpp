@@ -42,7 +42,7 @@
 static NamedOutputPin intHold(HIP_NAME);
 
 extern uint32_t lastExecutionCount;
-extern engine_pins_s enginePins;
+extern EnginePins enginePins;
 
 uint32_t hipLastExecutionCount;
 
