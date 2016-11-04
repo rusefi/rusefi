@@ -306,7 +306,7 @@ static void setTimingMode(int value) {
 }
 
 void setEngineType(int value) {
-	enginePins.stopPins();
+	enginePins.stopPins(); // this is mostly needed by functional tests
 
 	engineConfiguration->engineType = (engine_type_e) value;
 	resetConfigurationExt(&logger, (engine_type_e) value PASS_ENGINE_PARAMETER);
