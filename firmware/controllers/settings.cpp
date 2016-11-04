@@ -306,6 +306,8 @@ static void setTimingMode(int value) {
 }
 
 void setEngineType(int value) {
+	enginePins.stopPins();
+
 	engineConfiguration->engineType = (engine_type_e) value;
 	resetConfigurationExt(&logger, (engine_type_e) value PASS_ENGINE_PARAMETER);
 #if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
