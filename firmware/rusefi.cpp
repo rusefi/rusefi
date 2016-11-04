@@ -119,11 +119,7 @@
 #include "engine_emulator.h"
 #endif /* EFI_ENGINE_EMULATOR */
 
-#if FUEL_MATH_EXTREME_LOGGING
 LoggingWithStorage sharedLogger("main");
-#else
-static LoggingWithStorage sharedLogger("main");
-#endif /* FUEL_MATH_EXTREME_LOGGING */
 
 bool main_loop_started = false;
 

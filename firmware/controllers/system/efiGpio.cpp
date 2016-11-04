@@ -16,7 +16,8 @@
 pin_output_mode_e OUTPUT_MODE_DEFAULT = OM_DEFAULT;
 
 // todo: clean this mess, this should become 'static'/private
-engine_pins_s enginePins;
+EnginePins enginePins;
+extern LoggingWithStorage sharedLogger;
 
 NamedOutputPin::NamedOutputPin() : OutputPin() {
 	name = NULL;
@@ -37,7 +38,7 @@ static const char *injectorNames[INJECTION_PIN_COUNT] = { "i1", "i2", "i3", "i4"
 		"j9", "iA", "iB", "iC"};
 
 
-engine_pins_s::engine_pins_s() {
+EnginePins::EnginePins() {
 	dizzyOutput.name = DIZZY_NAME;
 	tachOut.name = TACH_NAME;
 
@@ -49,13 +50,35 @@ engine_pins_s::engine_pins_s() {
 	}
 }
 
-void engine_pins_s::reset() {
+bool EnginePins::stopPins() {
+	bool result = false;
+	for (int i = 0; i < IGNITION_PIN_COUNT; i++) {
+		result |= coils[i].stop();
+	}
+	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
+		result |= injectors[i].stop();
+	}
+	return result;
+}
+
+void EnginePins::reset() {
 	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
 		injectors[i].reset();
 	}
 	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
 		coils[i].reset();
 	}
+}
+
+bool NamedOutputPin::stop() {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	if (isInitialized() && getLogicValue()) {
+		setValue(false);
+		scheduleMsg(&sharedLogger, "turning off %s", name);
+		return true;
+	}
+#endif
+	return false;
 }
 
 void InjectorOutputPin::reset() {

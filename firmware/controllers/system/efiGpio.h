@@ -44,6 +44,10 @@ class NamedOutputPin : public OutputPin {
 public:
 	NamedOutputPin();
 	NamedOutputPin(const char *name);
+	/**
+	 * @return true if pin was stopped
+	 */
+	bool stop();
 	const char *name;
 };
 
@@ -64,10 +68,11 @@ public:
 	bool outOfOrder; // https://sourceforge.net/p/rusefi/tickets/319/
 };
 
-class engine_pins_s {
+class EnginePins {
 public:
-	engine_pins_s();
+	EnginePins();
 	void reset();
+	bool stopPins();
 	OutputPin mainRelay;
 	OutputPin fanRelay;
 	OutputPin acRelay;

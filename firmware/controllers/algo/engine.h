@@ -424,7 +424,6 @@ private:
 	 * 'spinning' means the engine is not stopped
 	 */
 	bool isSpinning;
-	bool stopPins();
 };
 
 /**
