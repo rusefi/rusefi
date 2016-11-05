@@ -268,7 +268,8 @@ void Engine::watchdog() {
 		return;
 	if (!isSpinning) {
 		if (!isRunningBenchTest() && enginePins.stopPins()) {
-			firmwareError(CUSTOM_ERR_2ND_WATCHDOG, "Some pins were turned off by 2nd pass watchdog");
+			// todo: make this a firmwareError assuming functional tests would run
+			warning(CUSTOM_ERR_2ND_WATCHDOG, "Some pins were turned off by 2nd pass watchdog");
 		}
 		return;
 	}
