@@ -58,6 +58,18 @@ void turnSparkPinLow(IgnitionEvent *event) {
 
 void turnSparkPinHigh(IgnitionEvent *event) {
 	IgnitionOutputPin *output = event->output;
+
+#if ! EFI_UNIT_TEST
+	if (engine->rpmCalculator.rpmValue > 2 * engineConfiguration->cranking.rpm) {
+		const char *outputName = output->name;
+		if (prevSparkName == outputName) {
+			warning(CUSTOM_OBD_SKIPPED_SPARK, "looks like skipped spark event %d %s", getRevolutionCounter(), outputName);
+		}
+		prevSparkName = outputName;
+	}
+#endif /* EFI_UNIT_TEST */
+
+
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
 	scheduleMsg(logger, "spark goes high %d %s %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->name, (int)getTimeNowUs(),
 			output->currentLogicValue, output->outOfOrder, event->sparkId);
@@ -118,15 +130,6 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
 		scheduleMsg(logger, "scheduling sparkUp ind=%d %d %s now=%d %d later", trgEventIndex, getRevolutionCounter(), iEvent->output->name, (int)getTimeNowUs(), (int)chargeDelayUs);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
-
-
-		if (rpm > 2 * engineConfiguration->cranking.rpm) {
-			const char *outputName = iEvent->output->name;
-			if (prevSparkName == outputName) {
-				warning(CUSTOM_OBD_SKIPPED_SPARK, "looks like skipped spark event %d %s", getRevolutionCounter(), outputName);
-			}
-			prevSparkName = outputName;
-		}
 
 
 	/**

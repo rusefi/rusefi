@@ -124,6 +124,7 @@ int getRevolutionCounter(void) {
 }
 
 int main(void) {
+	testMissedSpark299();
 	testSparkReverseOrderBug319();
 	testFuelSchedulerBug299smallAndLarge();
 	testFuelSchedulerBug299smallAndMedium();
@@ -178,7 +179,10 @@ int main(void) {
 	return EXIT_SUCCESS;
 }
 
+int warningCounter = 0;
+
 bool warning(obd_code_e code, const char *format, ...) {
+	warningCounter++;
 	printf("Warning: ");
 	va_list ap;
 	va_start(ap, format);

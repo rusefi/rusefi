@@ -34,7 +34,7 @@
 extern int timeNow;
 extern float unitTestValue;
 extern float testMafValue;
-
+extern int warningCounter;
 extern bool printTriggerDebug;
 extern float actualSynchGap;
 
@@ -1223,4 +1223,54 @@ void testSparkReverseOrderBug319(void) {
 	eth.firePrimaryTriggerFall();
 	schedulingQueue.executeAll(timeNow);
 	assertEqualsM("out-of-order #8", 0, enginePins.coils[3].outOfOrder);
+}
+
+void testMissedSpark299(void) {
+	printf("*************************************************** testMissedSpark299\r\n");
+
+	EngineTestHelper eth(TEST_ENGINE);
+	EXPAND_EngineTestHelper
+	setTestBug299(&eth);
+	engineConfiguration->isIgnitionEnabled = true;
+	engineConfiguration->isInjectionEnabled = false;
+
+	assertEqualsM("warningCounter#0", 13, warningCounter);
+
+	printf("*************************************************** testMissedSpark299 start\r\n");
+
+	setWholeTimingTable(0 PASS_ENGINE_PARAMETER);
+	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+
+
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerRise();
+	schedulingQueue.executeAll(timeNow);
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerFall();
+	schedulingQueue.executeAll(timeNow);
+
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerRise();
+	schedulingQueue.executeAll(timeNow);
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerFall();
+	schedulingQueue.executeAll(timeNow);
+
+
+	setWholeTimingTable(40 PASS_ENGINE_PARAMETER);
+	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerRise();
+	schedulingQueue.executeAll(timeNow);
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerFall();
+	schedulingQueue.executeAll(timeNow);
+
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerRise();
+	schedulingQueue.executeAll(timeNow);
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerFall();
+	schedulingQueue.executeAll(timeNow);
 }
