@@ -606,9 +606,11 @@ static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int inject
 	assertTrueM("is overlapping", isOverlapping == ev->isOverlapping);
 }
 
-static void setTestBug299(EngineTestHelper *eth) {
+static void setTestBug299small(EngineTestHelper *eth) {
 	Engine *engine = &eth->engine;
 	EXPAND_Engine
+
+	engine->iHead = NULL; // let's drop whatever was scheduled just to start from a clean state
 
 	assertEquals(LM_PLAIN_MAF, engineConfiguration->fuelAlgorithm);
 	engineConfiguration->isIgnitionEnabled = false;
@@ -629,6 +631,14 @@ static void setTestBug299(EngineTestHelper *eth) {
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
 
 	eth->applyTriggerShape();
+
+}
+
+static void setTestBug299(EngineTestHelper *eth) {
+	setTestBug299small(eth);
+	Engine *engine = &eth->engine;
+	EXPAND_Engine
+
 
 	assertEqualsM("RPM=0", 0, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
 	eth->fireTriggerEvents2(1, MS2US(20));
@@ -1230,47 +1240,52 @@ void testMissedSpark299(void) {
 
 	EngineTestHelper eth(TEST_ENGINE);
 	EXPAND_EngineTestHelper
-	setTestBug299(&eth);
+	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
+	setTestBug299small(&eth);
 	engineConfiguration->isIgnitionEnabled = true;
 	engineConfiguration->isInjectionEnabled = false;
 
-	assertEqualsM("warningCounter#0", 13, warningCounter);
+	assertEqualsM("warningCounter#0", 7, warningCounter);
+
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerRise();
+	schedulingQueue.executeAll(timeNow);
+
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerRise();
+	schedulingQueue.executeAll(timeNow);
+
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerRise();
+	schedulingQueue.executeAll(timeNow);
 
 	printf("*************************************************** testMissedSpark299 start\r\n");
 
-	setWholeTimingTable(0 PASS_ENGINE_PARAMETER);
+	assertEquals(6000, eth.engine.rpmCalculator.rpmValue);
+
+	setWholeTimingTable(3 PASS_ENGINE_PARAMETER);
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 
 
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerRise();
 	schedulingQueue.executeAll(timeNow);
-	timeNow += MS2US(20);
-	eth.firePrimaryTriggerFall();
-	schedulingQueue.executeAll(timeNow);
 
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerRise();
 	schedulingQueue.executeAll(timeNow);
-	timeNow += MS2US(20);
-	eth.firePrimaryTriggerFall();
-	schedulingQueue.executeAll(timeNow);
 
-
-	setWholeTimingTable(40 PASS_ENGINE_PARAMETER);
+	setWholeTimingTable(-5 PASS_ENGINE_PARAMETER);
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerRise();
 	schedulingQueue.executeAll(timeNow);
-	timeNow += MS2US(20);
-	eth.firePrimaryTriggerFall();
-	schedulingQueue.executeAll(timeNow);
 
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerRise();
 	schedulingQueue.executeAll(timeNow);
-	timeNow += MS2US(20);
-	eth.firePrimaryTriggerFall();
-	schedulingQueue.executeAll(timeNow);
+
+	assertEqualsM("warningCounter#1", 8, warningCounter);
 }

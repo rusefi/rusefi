@@ -98,7 +98,7 @@ static void addIgnitionEvent(angle_t localAdvance, angle_t dwellAngle, IgnitionE
 
 	if (!isPinAssigned(output)) {
 		// todo: extact method for this index math
-		warning(CUSTOM_OBD_19, "no_pin_cl #%s", output->name);
+		warning(CUSTOM_OBD_PIN_NOT_ASSIGNED, "no_pin_cl #%s", output->name);
 	}
 	event->output = output;
 	event->advance = localAdvance;
@@ -418,7 +418,8 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 	ENGINE(engineCycle) = getEngineCycle(CONFIG(operationMode));
 
 #if EFI_UNIT_TEST
-	printf("prepareOutputSignals %d onlyEdge=%s\r\n", engineConfiguration->trigger.type, boolToString(engineConfiguration->useOnlyRisingEdgeForTrigger));
+	printf("prepareOutputSignals %d onlyEdge=%s %s\r\n", engineConfiguration->trigger.type, boolToString(engineConfiguration->useOnlyRisingEdgeForTrigger),
+			getIgnition_mode_e(engineConfiguration->ignitionMode));
 #endif
 
 	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
