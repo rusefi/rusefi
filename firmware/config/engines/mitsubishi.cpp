@@ -16,9 +16,9 @@
 EXTERN_ENGINE;
 
 void setMitsubishiConfiguration(DECLARE_ENGINE_PARAMETER_F) {
-	engineConfiguration->engineType = MITSU_4G93; // same trigger as 4G63?
+	engineConfiguration->engineType = MITSU_4G93;
 
-	engineConfiguration->trigger.type = TT_MITSU;
+	engineConfiguration->trigger.type = TT_MITSU; // same trigger as 4G63?
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.displacement = 1.800;
