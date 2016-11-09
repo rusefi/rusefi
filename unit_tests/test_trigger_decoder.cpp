@@ -1251,14 +1251,32 @@ void testMissedSpark299(void) {
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerRise();
 	schedulingQueue.executeAll(timeNow);
+	assertEqualsM("ci#0", 0, eth.engine.triggerCentral.triggerState.currentCycle.current_index);
+
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerFall();
+	schedulingQueue.executeAll(timeNow);
+	assertEqualsM("ci#1", 1, eth.engine.triggerCentral.triggerState.currentCycle.current_index);
+
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerRise();
+	schedulingQueue.executeAll(timeNow);
+	assertEqualsM("ci#2", 0, eth.engine.triggerCentral.triggerState.currentCycle.current_index);
+
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerFall();
+	schedulingQueue.executeAll(timeNow);
+	assertEqualsM("ci#3", 1, eth.engine.triggerCentral.triggerState.currentCycle.current_index);
 
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerRise();
 	schedulingQueue.executeAll(timeNow);
 
 	timeNow += MS2US(20);
-	eth.firePrimaryTriggerRise();
+	eth.firePrimaryTriggerFall();
 	schedulingQueue.executeAll(timeNow);
+	assertEqualsM("ci#5", 1, eth.engine.triggerCentral.triggerState.currentCycle.current_index);
+
 
 	printf("*************************************************** testMissedSpark299 start\r\n");
 
@@ -1271,9 +1289,15 @@ void testMissedSpark299(void) {
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerRise();
 	schedulingQueue.executeAll(timeNow);
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerFall();
+	schedulingQueue.executeAll(timeNow);
 
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerRise();
+	schedulingQueue.executeAll(timeNow);
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerFall();
 	schedulingQueue.executeAll(timeNow);
 
 	setWholeTimingTable(-5 PASS_ENGINE_PARAMETER);
@@ -1282,16 +1306,16 @@ void testMissedSpark299(void) {
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerRise();
 	schedulingQueue.executeAll(timeNow);
-//	timeNow += MS2US(20);
-//	eth.firePrimaryTriggerFall();
-//	schedulingQueue.executeAll(timeNow);
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerFall();
+	schedulingQueue.executeAll(timeNow);
 
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerRise();
 	schedulingQueue.executeAll(timeNow);
-//	timeNow += MS2US(20);
-//	eth.firePrimaryTriggerFall();
-//	schedulingQueue.executeAll(timeNow);
+	timeNow += MS2US(20);
+	eth.firePrimaryTriggerFall();
+	schedulingQueue.executeAll(timeNow);
 
 	assertEqualsM("warningCounter#1", 8, warningCounter);
 }
