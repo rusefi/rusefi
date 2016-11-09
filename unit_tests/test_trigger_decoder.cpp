@@ -1241,7 +1241,7 @@ void testMissedSpark299(void) {
 	EngineTestHelper eth(TEST_ENGINE);
 	EXPAND_EngineTestHelper
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
+	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 	setTestBug299small(&eth);
 	engineConfiguration->isIgnitionEnabled = true;
 	engineConfiguration->isInjectionEnabled = false;
@@ -1262,7 +1262,7 @@ void testMissedSpark299(void) {
 
 	printf("*************************************************** testMissedSpark299 start\r\n");
 
-	assertEquals(6000, eth.engine.rpmCalculator.rpmValue);
+	assertEquals(3000, eth.engine.rpmCalculator.rpmValue);
 
 	setWholeTimingTable(3 PASS_ENGINE_PARAMETER);
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
@@ -1282,10 +1282,16 @@ void testMissedSpark299(void) {
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerRise();
 	schedulingQueue.executeAll(timeNow);
+//	timeNow += MS2US(20);
+//	eth.firePrimaryTriggerFall();
+//	schedulingQueue.executeAll(timeNow);
 
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerRise();
 	schedulingQueue.executeAll(timeNow);
+//	timeNow += MS2US(20);
+//	eth.firePrimaryTriggerFall();
+//	schedulingQueue.executeAll(timeNow);
 
 	assertEqualsM("warningCounter#1", 8, warningCounter);
 }
