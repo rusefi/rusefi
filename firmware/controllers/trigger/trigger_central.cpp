@@ -76,6 +76,9 @@ uint32_t triggerMaxDuration = 0;
 
 extern bool isInsideTriggerHandler;
 
+efitick_t previousVvtCamTime = 0;
+efitick_t previousVvtCamDuration = 0;
+
 void hwHandleVvtCamSignal(trigger_value_e front) {
 	if (ENGINE(isEngineChartEnabled)) {
 		// this is a performance optimization - array index is cheaper then invoking a method with 'switch'
@@ -88,7 +91,27 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 
 	TriggerCentral *tc = &engine->triggerCentral;
 
-	efitick_t offsetNt = getTimeNowNt() - tc->timeAtVirtualZeroNt;
+	efitick_t nowNt = getTimeNowNt();
+
+
+	if (boardConfiguration->miataNb2) {
+		uint32_t currentDuration = nowNt - previousVvtCamTime;
+		float ratio = ((float) currentDuration) / previousVvtCamDuration;
+
+
+		previousVvtCamDuration = currentDuration;
+		previousVvtCamTime = nowNt;
+
+		if (engineConfiguration->isPrintTriggerSynchDetails) {
+			scheduleMsg(logger, "vvt ratio %f", ratio);
+		}
+		if (ratio < boardConfiguration->nb2ratioFrom || ratio > boardConfiguration->nb2ratioTo) {
+			return;
+		}
+	}
+
+
+	efitick_t offsetNt = nowNt - tc->timeAtVirtualZeroNt;
 
 	angle_t vvtPosition = NT2US(offsetNt) / engine->rpmCalculator.oneDegreeUs;
 
