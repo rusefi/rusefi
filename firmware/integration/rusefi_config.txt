@@ -502,6 +502,7 @@ bit is_enabled_spi_2
 	bit onOffAlternatorLogic;
 	bit isCJ125Enabled
 	bit vvtCamSensorUseRise;+Use rise or fall signal front
+	bit miataNb2;
 
 	brain_input_pin_e[LOGIC_ANALYZER_CHANNEL_COUNT iterate] logicAnalyzerPins;
 	uint8_t[LOGIC_ANALYZER_CHANNEL_COUNT] logicAnalyzerMode;default or inverted input
@@ -521,7 +522,8 @@ custom uart_device_e 4 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UA
 	uart_device_e consoleUartDevice;
 	brain_pin_e console_rx_pin;
 	brain_pin_e console_tx_pin;
-	int[2] unusedJoy;
+	float nb2ratioFrom;;"value",      1,      0,       0, 1000,      5
+	float nb2ratioTo;;"value",      1,      0,       0, 1000,      5
 
 	brain_pin_e triggerErrorPin;This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	
@@ -604,18 +606,18 @@ bit hasFrequencyReportingMapSensor;
 custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 	idle_mode_e idleMode;
 
-	bit isInjectionEnabled
-	bit isIgnitionEnabled
+	bit isInjectionEnabled;+enable injection
+	bit isIgnitionEnabled;+enable ignition
 	bit isCylinderCleanupEnabled;+If TPS above 95% no fuel would be injected during cranking 
 	bit secondTriggerChannelEnabled
 	bit needSecondTriggerInputDeprecated
 	bit isMapAveragingEnabled
-	bit isMilEnabled
+	bit isMilEnabled;+enable mil
 	bit isFuelPumpEnabled
 	bit isTunerStudioEnabled
 	bit isWaveAnalyzerEnabled
 	bit isIdleThreadEnabled
-	bit isPrintTriggerSynchDetails
+	bit isPrintTriggerSynchDetails;+enable trigger_details
 	bit isManualSpinningMode;Usually if we have no trigger events that means engine is stopped\nUnless we are troubleshooting and spinning the engine by hand - this case a longer\ndelay is needed
 	bit twoWireBatchInjection;+This is needed if batched injection and individual injector wiring\nenable two_wire_batch_injection
 	bit useOnlyRisingEdgeForTrigger;+VR sensors are only precise on rising front
