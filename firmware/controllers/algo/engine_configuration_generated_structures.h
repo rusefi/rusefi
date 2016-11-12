@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Oct 19 10:36:24 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Nov 11 21:53:11 EST 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -625,6 +625,9 @@ typedef struct {
 	offset 376 bit 17 */
 	bool vvtCamSensorUseRise : 1;
 	/**
+	offset 376 bit 18 */
+	bool miataNb2 : 1;
+	/**
 	 * offset 380
 	 */
 	brain_input_pin_e logicAnalyzerPins[LOGIC_ANALYZER_CHANNEL_COUNT];
@@ -672,7 +675,11 @@ typedef struct {
 	/**
 	 * offset 584
 	 */
-	int unusedJoy[2];
+	float nb2ratioFrom;
+	/**
+	 * offset 588
+	 */
+	float nb2ratioTo;
 	/**
 	 * This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	 * offset 592
@@ -1268,9 +1275,11 @@ typedef struct {
 	 */
 	idle_mode_e idleMode;
 	/**
+	 * enable injection
 	offset 1500 bit 0 */
 	bool isInjectionEnabled : 1;
 	/**
+	 * enable ignition
 	offset 1500 bit 1 */
 	bool isIgnitionEnabled : 1;
 	/**
@@ -1287,6 +1296,7 @@ typedef struct {
 	offset 1500 bit 5 */
 	bool isMapAveragingEnabled : 1;
 	/**
+	 * enable mil
 	offset 1500 bit 6 */
 	bool isMilEnabled : 1;
 	/**
@@ -1302,6 +1312,7 @@ typedef struct {
 	offset 1500 bit 10 */
 	bool isIdleThreadEnabled : 1;
 	/**
+	 * enable trigger_details
 	offset 1500 bit 11 */
 	bool isPrintTriggerSynchDetails : 1;
 	/**
@@ -1982,4 +1993,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Oct 19 10:36:24 EDT 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Nov 11 21:53:11 EST 2016

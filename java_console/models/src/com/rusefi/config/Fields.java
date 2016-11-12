@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Oct 18 15:59:38 EDT 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Nov 11 21:53:11 EST 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -430,6 +430,7 @@ public class Fields {
 	public static final int onOffAlternatorLogic_offset = 1000;
 	public static final int isCJ125Enabled_offset = 1000;
 	public static final int vvtCamSensorUseRise_offset = 1000;
+	public static final int miataNb2_offset = 1000;
 	public static final int logicAnalyzerPins1_offset = 1004;
 	public static final int logicAnalyzerPins2_offset = 1008;
 	public static final int logicAnalyzerPins3_offset = 1012;
@@ -511,7 +512,8 @@ public class Fields {
 	public static final int consoleUartDevice_offset = 1196;
 	public static final int console_rx_pin_offset = 1200;
 	public static final int console_tx_pin_offset = 1204;
-	public static final int unusedJoy_offset = 1208;
+	public static final int nb2ratioFrom_offset = 1208;
+	public static final int nb2ratioTo_offset = 1212;
 	public static final int triggerErrorPin_offset = 1216;
 	public static final int triggerErrorPinMode_offset = 1220;
 	public static final int acRelayPin_offset = 1224;
@@ -1215,6 +1217,7 @@ public class Fields {
 	public static final Field ONOFFALTERNATORLOGIC = Field.create("ONOFFALTERNATORLOGIC", 1000, FieldType.BIT, 15);
 	public static final Field ISCJ125ENABLED = Field.create("ISCJ125ENABLED", 1000, FieldType.BIT, 16);
 	public static final Field VVTCAMSENSORUSERISE = Field.create("VVTCAMSENSORUSERISE", 1000, FieldType.BIT, 17);
+	public static final Field MIATANB2 = Field.create("MIATANB2", 1000, FieldType.BIT, 18);
 	public static final Field LOGICANALYZERPINS1 = Field.create("LOGICANALYZERPINS1", 1004, FieldType.INT, brain_input_pin_e);
 	public static final Field LOGICANALYZERPINS2 = Field.create("LOGICANALYZERPINS2", 1008, FieldType.INT, brain_input_pin_e);
 	public static final Field LOGICANALYZERPINS3 = Field.create("LOGICANALYZERPINS3", 1012, FieldType.INT, brain_input_pin_e);
@@ -1265,6 +1268,8 @@ public class Fields {
 	public static final Field CONSOLEUARTDEVICE = Field.create("CONSOLEUARTDEVICE", 1196, FieldType.INT);
 	public static final Field CONSOLE_RX_PIN = Field.create("CONSOLE_RX_PIN", 1200, FieldType.INT, brain_pin_e);
 	public static final Field CONSOLE_TX_PIN = Field.create("CONSOLE_TX_PIN", 1204, FieldType.INT, brain_pin_e);
+	public static final Field NB2RATIOFROM = Field.create("NB2RATIOFROM", 1208, FieldType.FLOAT);
+	public static final Field NB2RATIOTO = Field.create("NB2RATIOTO", 1212, FieldType.FLOAT);
 	public static final Field TRIGGERERRORPIN = Field.create("TRIGGERERRORPIN", 1216, FieldType.INT, brain_pin_e);
 	public static final Field TRIGGERERRORPINMODE = Field.create("TRIGGERERRORPINMODE", 1220, FieldType.INT, pin_output_mode_e);
 	public static final Field ACRELAYPIN = Field.create("ACRELAYPIN", 1224, FieldType.INT, brain_pin_e);
