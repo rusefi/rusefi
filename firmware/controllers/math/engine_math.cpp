@@ -255,18 +255,22 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 
 #endif
 
+floatms_t getCrankingSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_S) {
+	if (engineConfiguration->useConstantDwellDuringCranking) {
+		return engineConfiguration->ignitionDwellForCrankingMs;
+	} else {
+		// technically this could be implemented via interpolate2d
+		float angle = engineConfiguration->crankingChargeAngle;
+		return getOneDegreeTimeMs(rpm) * angle;
+	}
+}
+
 /**
  * @return Spark dwell time, in milliseconds.
  */
 floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	if (isCrankingR(rpm)) {
-		if (engineConfiguration->useConstantDwellDuringCranking) {
-			return engineConfiguration->ignitionDwellForCrankingMs;
-		} else {
-			// technically this could be implemented via interpolate2d
-			float angle = engineConfiguration->crankingChargeAngle;
-			return getOneDegreeTimeMs(rpm) * angle;
-		}
+		return getCrankingSparkDwell(rpm PASS_ENGINE_PARAMETER);
 	}
 	efiAssert(!cisnan(rpm), "invalid rpm", NAN);
 
@@ -389,8 +393,7 @@ int getCylinderId(firing_order_e firingOrder, int index) {
 	return 1;
 }
 
-static int getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_S
-) {
+static int getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_S) {
 	switch (CONFIG(ignitionMode)) {
 	case IM_ONE_COIL:
 		return 0;
@@ -416,6 +419,34 @@ static int getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_S
  */
 void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 	ENGINE(engineCycle) = getEngineCycle(CONFIG(operationMode));
+
+	angle_t maxTimingCorrMap = -720.0f;
+	angle_t maxTimingMap = -720.0f;
+	for (int rpmIndex = 0;rpmIndex<IGN_RPM_COUNT;rpmIndex++) {
+		for (int l = 0;l<IGN_LOAD_COUNT;l++) {
+			maxTimingCorrMap = maxF(maxTimingCorrMap, config->ignitionIatCorrTable[l][rpmIndex]);
+			maxTimingMap = maxF(maxTimingMap, config->ignitionTable[l][rpmIndex]);
+		}
+	}
+
+#if EFI_UNIT_TEST
+	floatms_t crankingDwell = getCrankingSparkDwell(CONFIG(cranking.rpm) PASS_ENGINE_PARAMETER);
+
+	// dwell at cranking is constant angle or constant time, dwell at cranking threshold is the highest angle duration
+	// lower RPM angle duration goes up
+	angle_t maxCrankingDwellAngle = crankingDwell / getOneDegreeTimeMs(CONFIG(cranking.rpm));
+
+	printf("cranking angle %f\r\n", maxCrankingDwellAngle);
+
+	for (int i = 0;i<DWELL_CURVE_SIZE;i++) {
+		int rpm = (int)engineConfiguration->sparkDwellBins[i];
+		floatms_t dwell = engineConfiguration->sparkDwell[i];
+		angle_t dwellAngle = dwell / getOneDegreeTimeMs(rpm);
+		printf("dwell angle %f at %d\r\n", dwellAngle, rpm);
+	}
+
+#endif
+
 
 #if EFI_UNIT_TEST
 	printf("prepareOutputSignals %d onlyEdge=%s %s\r\n", engineConfiguration->trigger.type, boolToString(engineConfiguration->useOnlyRisingEdgeForTrigger),
