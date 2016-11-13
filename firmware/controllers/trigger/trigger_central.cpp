@@ -85,7 +85,7 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 		addEngineSniffferEvent(VVT_NAME, front == TV_RISE ? WC_UP : WC_DOWN);
 	}
 
-	if (boardConfiguration->vvtCamSensorUseRise && front == TV_FALL) {
+	if (boardConfiguration->vvtCamSensorUseRise ^ (front != TV_FALL)) {
 		return;
 	}
 
