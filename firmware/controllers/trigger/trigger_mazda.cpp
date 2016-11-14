@@ -51,7 +51,7 @@ void initializeMazdaMiataNaShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 }
 
 void initializeMazdaMiataNb2Crank(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
+	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, false);
 
 	float o = 160;
 
