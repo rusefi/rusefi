@@ -214,7 +214,12 @@ typedef enum {
 	 */
 	TT_HONDA_ACCORD_1_24_SHIFTED = 34,
 
-	TT_UNUSED = 35, // this is used if we want to iterate over all trigger types
+	/**
+	 * a version of NB1 with shifted CAM, useful for VVT testing & development
+	 */
+	TT_MAZDA_MIATA_VVT_TEST = 35,
+
+	TT_UNUSED = 36, // this is used if we want to iterate over all trigger types
 
 	Force_4b_trigger_type = ENUM_32_BITS,
 } trigger_type_e;
