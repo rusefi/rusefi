@@ -376,7 +376,7 @@ static void handleFuelScheduleOverlap(InjectionEventList *injectionEvents DECLAR
 
 static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm DECLARE_ENGINE_PARAMETER_S) {
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#3");
-	efiAssertVoid(trgEventIndex < ENGINE(triggerShape.getLength()), "handleFuel/event index");
+	efiAssertVoid(trgEventIndex < engine->engineCycleEventCount, "handleFuel/event index");
 
 	if (!isInjectionEnabled(engineConfiguration) || limitedFuel) {
 		return;
@@ -469,7 +469,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 	}
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#2");
 
-	if (trgEventIndex >= ENGINE(triggerShape.getLength())) {
+	if (trgEventIndex >= engine->engineCycleEventCount) {
 		/**
 		 * this could happen in case of a trigger error, just exit silently since the trigger error is supposed to be handled already
 		 * todo: should this check be somewhere higher so that no trigger listeners are invoked with noise?

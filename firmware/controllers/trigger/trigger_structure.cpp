@@ -226,19 +226,32 @@ void TriggerState::resetCurrentCycleState() {
 }
 
 /**
+ * physical primary trigger duration
+ */
+angle_t TriggerShape::getCycleDuration() const {
+	switch (operationMode) {
+	case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
+		return 180;
+	case FOUR_STROKE_CRANK_SENSOR:
+	case TWO_STROKE:
+		return 360;
+	default:
+		return 720;
+	}
+}
+
+/**
  * Trigger event count equals engine cycle event count if we have a cam sensor.
  * Two trigger cycles make one engine cycle in case of a four stroke engine If we only have a cranksensor.
  */
 uint32_t TriggerShape::getLength() const {
-	// todo: reduce magic constants, reuse getCycleDuration method
-	switch (operationMode) {
-	case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
-		return 4 * getSize();
-	case FOUR_STROKE_CRANK_SENSOR:
-		return 2 * getSize();
-	default:
-		return getSize();
-	}
+	/**
+	 * 4 for FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
+	 * 2 for FOUR_STROKE_CRANK_SENSOR
+	 * 1 otherwise
+	 */
+	int multiplier = getEngineCycle(operationMode) / getCycleDuration();
+	return multiplier * getSize();
 }
 
 angle_t TriggerShape::getAngle(int index) const {
@@ -364,18 +377,6 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 	}
 	wave.setSwitchTime(index, angle);
 	wave.waves[waveIndex].pinStates[index] = state;
-}
-
-angle_t TriggerShape::getCycleDuration() const {
-	switch (operationMode) {
-	case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
-		return 180;
-	case FOUR_STROKE_CRANK_SENSOR:
-	case TWO_STROKE:
-		return 360;
-	default:
-		return 720;
-	}
 }
 
 angle_t TriggerShape::getSwitchAngle(int index) const {
