@@ -988,6 +988,8 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->step1rpm = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "step1timing")) {
 		engineConfiguration->step1timing = valueI;
+	} else if (strEqualCaseInsensitive(paramStr, "operation_mode")) {
+		engineConfiguration->operationMode = (operation_mode_e)valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "suckedOffCoef")) {
 		engineConfiguration->suckedOffCoef = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "addedToWallCoef")) {

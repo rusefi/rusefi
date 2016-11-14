@@ -18,7 +18,8 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->hasMapSensor = true;
 
-	engineConfiguration->trigger.type = TT_ONE;
+	engineConfiguration->trigger.type = TT_MIATA_VVT;
+	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->specs.displacement = 1.8;
 
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;

@@ -395,6 +395,8 @@ case FOUR_STROKE_CRANK_SENSOR:
   return "FOUR_STROKE_CRANK_SENSOR";
 case TWO_STROKE:
   return "TWO_STROKE";
+case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
+  return "FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR";
 case Force_4b_operation_mode_e:
   return "Force_4b_operation_mode_e";
 case OM_NONE:
