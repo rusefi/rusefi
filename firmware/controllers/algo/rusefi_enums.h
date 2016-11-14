@@ -365,6 +365,11 @@ typedef enum {
 	 */
 	TWO_STROKE = 3,
 
+	/**
+	 * 720 degree engine cycle but trigger is defined using a 180 cycle which is when repeated three more times
+	 */
+	FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR = 4,
+
 	Force_4b_operation_mode_e = ENUM_32_BITS,
 } operation_mode_e;
 

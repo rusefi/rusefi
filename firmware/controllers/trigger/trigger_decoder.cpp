@@ -482,6 +482,8 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_MIATA_VVT:
+		initializeMazdaMiataNb2Crank(triggerShape PASS_ENGINE_PARAMETER);
+		break;
 
 	case TT_DODGE_NEON_1995:
 		configureNeon1995TriggerShape(triggerShape PASS_ENGINE_PARAMETER);

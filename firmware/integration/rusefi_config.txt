@@ -319,8 +319,8 @@ can_nbc_e canNbcType;
 int canSleepPeriod;CANbus thread period, ms;"ms",    1,      0,       0,  1000.0,        2
 
 
-custom operation_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "INVALID", "4 stroke without cam sensor", "4 stroke with cam sensor", "2 stroke"
-operation_mode_e operationMode;See engineCycle
+custom operation_mode_e 4 bits,    U32,    @OFFSET@, [0:2], "INVALID", "4 stroke without cam sensor", "4 stroke with cam sensor", "2 stroke", "4 stroke with symmetrical crank", "INVALID", "INVALID", "INVALID"
+operation_mode_e operationMode;See engineCycle\nset operation_mode X
 
 custom display_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "none", "hd44780", "hd44780 over pcf8574", "INVALID"
 display_mode_e displayMode;
@@ -340,9 +340,9 @@ struct trigger_config_s @brief Trigger wheel(s) configuration
 
 custom bool32_t 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 
-#define trigger_type_e_enum "custom toothed wheel", "ford aspire", "dodge neon", "Miata NA", "Miata NB", "GM_7X", "Cooper", "Mazda SOHC 4", "60/2", "36/1", "Accord CD", "MITSU", "ACCORD 2", "ACCORD DIP", "Neon 2003", "MAZDA D 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Accord 1+24", "DODGE STRATUS",  "36_2_2_2", "Nissan", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "trg29", "trg30", "INVALID" 
+#define trigger_type_e_enum "custom toothed wheel", "ford aspire", "dodge neon", "Miata NA", "Miata NB", "GM_7X", "Cooper", "Mazda SOHC 4", "60/2", "36/1", "Accord CD", "MITSU", "ACCORD 2", "ACCORD DIP", "Neon 2003", "MAZDA D 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Accord 1+24", "DODGE STRATUS",  "36_2_2_2", "Nissan", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "2003 neon crank", "Miata VVT", "INVALID", "INVALID", "INVALID", "INVALID"
 
-custom trigger_type_e 4 bits,    U32,   @OFFSET@, [0:4], @@trigger_type_e_enum@@
+custom trigger_type_e 4 bits,    U32,   @OFFSET@, [0:5], @@trigger_type_e_enum@@
 	trigger_type_e type;set_trigger_type X
 
 	bit customIsSynchronizationNeeded;

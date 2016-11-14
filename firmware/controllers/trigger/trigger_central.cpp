@@ -240,13 +240,16 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 	 * cycle into a four stroke, 720 degrees cycle.
 	 */
 	int triggerIndexForListeners;
-	if (engineConfiguration->operationMode != FOUR_STROKE_CRANK_SENSOR) {
+	if (engineConfiguration->operationMode == FOUR_STROKE_CAM_SENSOR ||
+			engineConfiguration->operationMode == TWO_STROKE) {
 		// That's easy - trigger cycle matches engine cycle
 		triggerIndexForListeners = triggerState.getCurrentIndex();
 	} else {
-		bool isEven = triggerState.isEvenRevolution();
+		int crankDivider = engineConfiguration->operationMode == FOUR_STROKE_CRANK_SENSOR ? 2 : 4;
 
-		triggerIndexForListeners = triggerState.getCurrentIndex() + (isEven ? 0 : TRIGGER_SHAPE(size));
+		int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
+
+		triggerIndexForListeners = triggerState.getCurrentIndex() + (crankInternalIndex * TRIGGER_SHAPE(size));
 	}
 	if (triggerIndexForListeners == 0) {
 		timeAtVirtualZeroNt = nowNt;
