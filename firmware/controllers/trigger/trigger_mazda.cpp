@@ -50,6 +50,18 @@ void initializeMazdaMiataNaShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->useOnlyPrimaryForSync = true;
 }
 
+void initializeMazdaMiataNb2Crank(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
+
+	float o = 160;
+
+	s->setTriggerSynchronizationGap(1.57f);
+	s->addEvent2(o + 4 * 66.0f, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
+	s->addEvent2(o + 4 * 70.0f, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
+	s->addEvent2(o + 4 * 136.0f, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
+	s->addEvent2(o + 4 * 140.0f, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
+}
+
 void initializeMazdaMiataNb1Shape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 	s->setTriggerSynchronizationGap(0.11f);
