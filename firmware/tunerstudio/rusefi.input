@@ -1482,9 +1482,8 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 	    field = "Cam Sync/VVT input",					camInput
 	    field = "VVT mode",								vvtMode, {trigger_type != 80}
 	    field = "VVT use rise front",					vvtCamSensorUseRise, {trigger_type != 80}
-	    field = "Is NB2 Miata?",						miataNb2
 	    field = "NB2 from temp",						nb2ratioFrom
-	    field = "NB2 to temp",						nb2ratioTo
+	    field = "NB2 to temp",							nb2ratioTo
 	    field = "Trigger error LED",					triggerErrorPin
 	    field = "Trigger error LED mode",				triggerErrorPinMode
 	dialog = triggerConfiguration

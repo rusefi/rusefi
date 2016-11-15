@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Nov 13 22:09:24 EST 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Nov 14 21:45:04 EST 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -430,7 +430,6 @@ public class Fields {
 	public static final int onOffAlternatorLogic_offset = 1000;
 	public static final int isCJ125Enabled_offset = 1000;
 	public static final int vvtCamSensorUseRise_offset = 1000;
-	public static final int miataNb2_offset = 1000;
 	public static final int logicAnalyzerPins1_offset = 1004;
 	public static final int logicAnalyzerPins2_offset = 1008;
 	public static final int logicAnalyzerPins3_offset = 1012;
@@ -1217,7 +1216,6 @@ public class Fields {
 	public static final Field ONOFFALTERNATORLOGIC = Field.create("ONOFFALTERNATORLOGIC", 1000, FieldType.BIT, 15);
 	public static final Field ISCJ125ENABLED = Field.create("ISCJ125ENABLED", 1000, FieldType.BIT, 16);
 	public static final Field VVTCAMSENSORUSERISE = Field.create("VVTCAMSENSORUSERISE", 1000, FieldType.BIT, 17);
-	public static final Field MIATANB2 = Field.create("MIATANB2", 1000, FieldType.BIT, 18);
 	public static final Field LOGICANALYZERPINS1 = Field.create("LOGICANALYZERPINS1", 1004, FieldType.INT, brain_input_pin_e);
 	public static final Field LOGICANALYZERPINS2 = Field.create("LOGICANALYZERPINS2", 1008, FieldType.INT, brain_input_pin_e);
 	public static final Field LOGICANALYZERPINS3 = Field.create("LOGICANALYZERPINS3", 1012, FieldType.INT, brain_input_pin_e);
@@ -1526,7 +1524,7 @@ public class Fields {
 	public static final Field AUXPID4_IFACTOR = Field.create("AUXPID4_IFACTOR", 2540, FieldType.FLOAT);
 	public static final Field AUXPID4_DFACTOR = Field.create("AUXPID4_DFACTOR", 2544, FieldType.FLOAT);
 	public static final Field AUXPID4_OFFSET = Field.create("AUXPID4_OFFSET", 2548, FieldType.FLOAT);
-	public static final String[] vvt_mode_e = {"First half", "Second half", "2GZ", "mode3"};
+	public static final String[] vvt_mode_e = {"First half", "Second half", "2GZ", "Miata NB2", "mode4", "mode5", "mode6", "mode7"};
 	public static final Field VVTMODE = Field.create("VVTMODE", 2552, FieldType.INT, vvt_mode_e);
 	public static final Field BIQUAD_A0 = Field.create("BIQUAD_A0", 2556, FieldType.FLOAT);
 	public static final Field BIQUAD_A1 = Field.create("BIQUAD_A1", 2560, FieldType.FLOAT);
