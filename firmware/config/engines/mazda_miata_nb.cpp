@@ -23,8 +23,6 @@ void setMazdaMiataNb1EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NB1;
 
-	engineConfiguration->globalTriggerAngleOffset = 276;
-
 	// set_cranking_injection_mode 0
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	// set_injection_mode 1

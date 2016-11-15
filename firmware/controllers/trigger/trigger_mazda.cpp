@@ -55,6 +55,8 @@ void initializeMazdaMiataNb2Crank(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 
 	float o = 160;
 
+	s->tdcPosition = 60;
+
 	s->setTriggerSynchronizationGap(1.57f);
 	s->addEvent2(o + 4 * 66.0f, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
 	s->addEvent2(o + 4 * 70.0f, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
@@ -68,6 +70,7 @@ static void initializeMazdaMiataNb1ShapeWithOffset(TriggerShape *s, float offset
 	s->useRiseEdge = false;
 
 	s->invertOnAdd = true;
+	s->tdcPosition = 276;
 
 	/**
 	 * cam sensor is primary, crank sensor is secondary
