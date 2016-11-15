@@ -254,6 +254,7 @@ typedef enum {
 	VVT_FIRST_HALF = 0,
 	VVT_SECOND_HALF = 1,
 	VVT_2GZ = 2,
+	MIATA_NB2 = 3,
 	Force_4b_vvt_mode = ENUM_32_BITS,
 } vvt_mode_e;
 
