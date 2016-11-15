@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Nov 13 22:09:24 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Nov 14 21:45:04 EST 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -624,9 +624,6 @@ typedef struct {
 	 * Use rise or fall signal front
 	offset 376 bit 17 */
 	bool vvtCamSensorUseRise : 1;
-	/**
-	offset 376 bit 18 */
-	bool miataNb2 : 1;
 	/**
 	 * offset 380
 	 */
@@ -1760,6 +1757,7 @@ typedef struct {
 	 */
 	pid_s auxPid[AUX_PID_COUNT];
 	/**
+	 * set vvt_mode X
 	 * offset 2552
 	 */
 	vvt_mode_e vvtMode;
@@ -1994,4 +1992,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Nov 13 22:09:24 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Nov 14 21:45:04 EST 2016
