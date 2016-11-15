@@ -110,7 +110,7 @@ void initializeMazdaMiataNb1Shape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 }
 
 void initializeMazdaMiataVVtTestShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
-	initializeMazdaMiataNb1ShapeWithOffset(s, -10 PASS_ENGINE_PARAMETER);
+	initializeMazdaMiataNb1ShapeWithOffset(s, -22 PASS_ENGINE_PARAMETER);
 }
 
 void configureMazdaProtegeSOHC(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {

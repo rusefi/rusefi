@@ -19,16 +19,20 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->hasMapSensor = true;
 
 	engineConfiguration->trigger.type = TT_MIATA_VVT;
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	setOperationMode(engineConfiguration, FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
 	engineConfiguration->specs.displacement = 1.8;
 
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->camInput = GPIOC_6;
 
-	boardConfiguration->miataNb2 = true;
+	// set vvt_mode 3
+	engineConfiguration->vvtMode = MIATA_NB2;
 	boardConfiguration->vvtCamSensorUseRise = true;
 
+
+	boardConfiguration->nb2ratioFrom = 0.75;
+	boardConfiguration->nb2ratioTo = 1.25;
 
 
 	engineConfiguration->specs.cylindersCount = 4;

@@ -426,7 +426,6 @@
 #define onOffAlternatorLogic_offset 1000
 #define isCJ125Enabled_offset 1000
 #define vvtCamSensorUseRise_offset 1000
-#define miataNb2_offset 1000
 #define logicAnalyzerPins1_offset 1004
 #define logicAnalyzerPins2_offset 1008
 #define logicAnalyzerPins3_offset 1012

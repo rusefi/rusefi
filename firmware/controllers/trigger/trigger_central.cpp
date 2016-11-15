@@ -94,7 +94,7 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 	efitick_t nowNt = getTimeNowNt();
 
 
-	if (boardConfiguration->miataNb2) {
+	if (engineConfiguration->vvtMode == MIATA_NB2) {
 		uint32_t currentDuration = nowNt - previousVvtCamTime;
 		float ratio = ((float) currentDuration) / previousVvtCamDuration;
 
@@ -107,6 +107,9 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 		}
 		if (ratio < boardConfiguration->nb2ratioFrom || ratio > boardConfiguration->nb2ratioTo) {
 			return;
+		}
+		if (engineConfiguration->isPrintTriggerSynchDetails) {
+			scheduleMsg(logger, "looks good: vvt ratio %f", ratio);
 		}
 	}
 
@@ -148,6 +151,13 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 #endif /* EFI_PROD_CODE */
 		}
 
+	} else if (engineConfiguration->vvtMode == MIATA_NB2) {
+		/**
+		 * NB2 is a symmetrical crank, there are four phases total
+		 */
+		while (tc->triggerState.getTotalRevolutionCounter() % 4 != 2) {
+			tc->triggerState.intTotalEventCounter();
+		}
 	}
 
 }
@@ -424,7 +434,8 @@ void triggerInfo(void) {
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	if (engineConfiguration->camInput != GPIO_UNASSIGNED) {
-		scheduleMsg(logger, "VVT input: %s", hwPortname(engineConfiguration->camInput));
+		scheduleMsg(logger, "VVT input: %s mode %d", hwPortname(engineConfiguration->camInput),
+				engineConfiguration->vvtMode);
 		scheduleMsg(logger, "VVT event counters: %d/%d", vvtEventRiseCounter, vvtEventFallCounter);
 
 	}
