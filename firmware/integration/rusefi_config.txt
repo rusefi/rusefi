@@ -705,7 +705,7 @@ baro_corr_table_t baroCorrTable;
 	
 	int tpsAccelLength;;"cycles",        1,     0,    1, 200,     0
 	float tpsAccelEnrichmentThreshold;;"roc",        1,     0,    0, 200,     3
-	float unused213;;"coeff",        1,     0,    0, 200,     3
+	float vvtOffset;;"value",      1,      0,       -720, 1000,      5
 	
 	int engineLoadAccelLength;;"cycles",        1,     0,    1, 200,     0
 	
