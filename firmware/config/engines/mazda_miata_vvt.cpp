@@ -29,6 +29,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	// set vvt_mode 3
 	engineConfiguration->vvtMode = MIATA_NB2;
 	boardConfiguration->vvtCamSensorUseRise = true;
+	engineConfiguration->vvtOffset = -385;
 
 
 	boardConfiguration->nb2ratioFrom = 0.75;
