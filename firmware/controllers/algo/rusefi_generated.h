@@ -781,8 +781,8 @@
 #define tpsAccelLength_offset 2184
 #define tpsAccelLength_offset_hex 888
 #define tpsAccelEnrichmentThreshold_offset 2188
-#define unused213_offset 2192
-#define unused213_offset_hex 890
+#define vvtOffset_offset 2192
+#define vvtOffset_offset_hex 890
 #define engineLoadAccelLength_offset 2196
 #define engineLoadAccelLength_offset_hex 894
 #define engineLoadDecelEnleanmentThreshold_offset 2200
