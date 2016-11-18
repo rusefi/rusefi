@@ -155,7 +155,7 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 		/**
 		 * NB2 is a symmetrical crank, there are four phases total
 		 */
-		while (tc->triggerState.getTotalRevolutionCounter() % 4 != 2) {
+		while (tc->triggerState.getTotalRevolutionCounter() % 4 != engineConfiguration->nbVvtIndex) {
 			tc->triggerState.intTotalEventCounter();
 		}
 	}

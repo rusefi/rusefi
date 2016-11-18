@@ -988,6 +988,8 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->engineSnifferRpmThreshold = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "step1rpm")) {
 		engineConfiguration->step1rpm = valueI;
+	} else if (strEqualCaseInsensitive(paramStr, "vvt_offset")) {
+		engineConfiguration->vvtOffset = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_mode")) {
 		engineConfiguration->vvtMode = (vvt_mode_e)valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "step1timing")) {

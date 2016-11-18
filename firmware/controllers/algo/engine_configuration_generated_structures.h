@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Nov 15 20:55:28 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 17 22:30:07 EST 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1578,6 +1578,7 @@ typedef struct {
 	 */
 	float tpsAccelEnrichmentThreshold;
 	/**
+	 * set vvt_offset X
 	 * offset 2192
 	 */
 	float vvtOffset;
@@ -1777,7 +1778,11 @@ typedef struct {
 	/**
 	 * offset 2640
 	 */
-	int unused[102];
+	int nbVvtIndex;
+	/**
+	 * offset 2644
+	 */
+	int unused[101];
 	/** total size 3048*/
 } engine_configuration_s;
 
@@ -1992,4 +1997,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Nov 15 20:55:28 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 17 22:30:07 EST 2016

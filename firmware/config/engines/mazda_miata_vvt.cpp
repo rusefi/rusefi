@@ -29,11 +29,19 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	// set vvt_mode 3
 	engineConfiguration->vvtMode = MIATA_NB2;
 	boardConfiguration->vvtCamSensorUseRise = true;
-	engineConfiguration->vvtOffset = -385;
+	engineConfiguration->vvtOffset = -70;
+
+	// enable trigger_details
+	engineConfiguration->isPrintTriggerSynchDetails = false;
 
 
-	boardConfiguration->nb2ratioFrom = 0.75;
-	boardConfiguration->nb2ratioTo = 1.25;
+//	0.0825
+//	0.1375
+//	6.375
+//	10.625
+	boardConfiguration->nb2ratioFrom = 8.50 * 0.75;
+	boardConfiguration->nb2ratioTo = 8.50 * 1.25;
+	engineConfiguration->nbVvtIndex = 0;
 
 
 	engineConfiguration->specs.cylindersCount = 4;
