@@ -890,7 +890,8 @@
 #define biQuad_b2_offset 2572
 #define cltTimingBins_offset 2576
 #define cltTimingExtra_offset 2608
-#define unused_offset 2640
+#define nbVvtIndex_offset 2640
+#define unused_offset 2644
 #define le_formulas1_offset 3048
 #define le_formulas2_offset 3248
 #define le_formulas3_offset 3448

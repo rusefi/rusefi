@@ -1485,6 +1485,7 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 	    field = "VVT position display offset",			vvtOffset
 	    field = "NB2 from temp",						nb2ratioFrom
 	    field = "NB2 to temp",							nb2ratioTo
+	    field = "nbVvtIndex",							nbVvtIndex
 	    field = "Trigger error LED",					triggerErrorPin
 	    field = "Trigger error LED mode",				triggerErrorPinMode
 	dialog = triggerConfiguration
