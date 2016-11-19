@@ -9,8 +9,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import static com.rusefi.ui.util.LocalizedMessages.CLEAR;
-
 /**
  * This panel displays plain-text 'msg' plain-text debug messages
  * <p/>
@@ -33,28 +31,32 @@ public class MessagesPanel {
         middlePanel.add(messagesView.messagesScroll, BorderLayout.CENTER);
 //        buttonPanel.setBorder(BorderFactory.createLineBorder(Color.cyan));
 
-        JButton resetButton = new JButton(CLEAR.getMessage());
-        resetButton.setMnemonic('c');
-        resetButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                messagesView.clear();
-            }
-        });
-
         final JButton pauseButton = UiUtils.createPauseButton();
         pauseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                messagesView.isPaused = !messagesView.isPaused;
-                UiUtils.setPauseButtonText(pauseButton, messagesView.isPaused);
+                setPaused(pauseButton, !messagesView.isPaused);
             }
         });
 
-        buttonPanel.add(resetButton);
+        JButton clearButton = UiUtils.createClearButton();
+        clearButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                messagesView.clear();
+                setPaused(pauseButton, false);
+            }
+        });
+
+        buttonPanel.add(clearButton);
         buttonPanel.add(pauseButton);
         if (extraButton != null)
             buttonPanel.add(extraButton);
+    }
+
+    private void setPaused(JButton pauseButton, boolean isPaused) {
+        messagesView.isPaused = isPaused;
+        UiUtils.setPauseButtonText(pauseButton, messagesView.isPaused);
     }
 
     public JPanel getButtonPanel() {

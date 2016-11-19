@@ -68,7 +68,7 @@ public enum FileLog {
     }
 
     public static String getDate() {
-        return new SimpleDateFormat("yyyy-MM-dd_HH_mm").format(new Date());
+        return new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss").format(new Date());
     }
 
     public synchronized void logLine(String fullLine) {

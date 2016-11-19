@@ -18,8 +18,6 @@ import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
 
-import static com.rusefi.ui.util.LocalizedMessages.CLEAR;
-
 /**
  * Date: 12/21/13
  * Andrey Belomutskiy (c) 2012-2013
@@ -58,14 +56,15 @@ public class SensorSnifferPane {
         });
 
         final JPanel upperPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        final JButton pauseButton = UiUtils.createPauseButton();
 
-        JButton clearButton = new JButton(CLEAR.getMessage());
-        clearButton.setMnemonic('c');
+        JButton clearButton = UiUtils.createClearButton();
         clearButton.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 clear();
                 UiUtils.trueRepaint(canvas);
+                setPaused(pauseButton, false);
             }
         });
         upperPanel.add(clearButton);
@@ -76,14 +75,13 @@ public class SensorSnifferPane {
                                           @Override
                                           public void actionPerformed(ActionEvent e) {
                                               int rpm = RpmModel.getInstance().getValue();
-                                              String fileName = FileLog.getDate() + "rpm_" + rpm + "_sensor" + ".png";
+                                              String fileName = FileLog.getDate() + "_rpm_" + rpm + "_sensor" + ".png";
 
                                               UiUtils.saveImageWithPrompt(fileName, upperPanel, canvas);
                                           }
                                       }
         );
 
-        final JButton pauseButton = UiUtils.createPauseButton();
         upperPanel.add(pauseButton);
         upperPanel.add(new RpmLabel(2).getContent());
 
@@ -94,8 +92,7 @@ public class SensorSnifferPane {
                                               ActionListener() {
                                                   @Override
                                                   public void actionPerformed(ActionEvent e) {
-                                                      paused = !paused;
-                                                      UiUtils.setPauseButtonText(pauseButton, paused);
+                                                      setPaused(pauseButton, !paused);
                                                   }
                                               }
         );
@@ -111,6 +108,11 @@ public class SensorSnifferPane {
 
         lowerPanel.add(new EnumConfigField(Fields.SENSORCHARTMODE, "Mode").getContent());
         lowerPanel.add(new ConfigField(Fields.SENSORCHARTFREQUENCY, "Every XXX engine cycles").getContent());
+    }
+
+    private void setPaused(JButton pauseButton, boolean isPaused) {
+        paused = isPaused;
+        UiUtils.setPauseButtonText(pauseButton, paused);
     }
 
     private void clear() {
