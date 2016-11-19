@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
+import static com.rusefi.ui.util.LocalizedMessages.CLEAR;
 import static com.rusefi.ui.util.LocalizedMessages.PAUSE;
 import static com.rusefi.ui.util.LocalizedMessages.RESUME;
 
@@ -139,5 +140,12 @@ public class UiUtils {
         final JButton pauseButton = new JButton(PAUSE.getMessage());
         pauseButton.setMnemonic('p');
         return pauseButton;
+    }
+
+    @NotNull
+    public static JButton createClearButton() {
+        JButton clearButton = new JButton(CLEAR.getMessage());
+        clearButton.setMnemonic('c');
+        return clearButton;
     }
 }
