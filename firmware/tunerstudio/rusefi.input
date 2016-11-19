@@ -1488,6 +1488,7 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 	    field = "nbVvtIndex",							nbVvtIndex
 	    field = "Trigger error LED",					triggerErrorPin
 	    field = "Trigger error LED mode",				triggerErrorPinMode
+	    field = "print sync details to console",		isPrintTriggerSynchDetails
 	dialog = triggerConfiguration
 		panel = triggerConfiguration_settings,	North
 		panel = triggerConfiguration_IO,		South
