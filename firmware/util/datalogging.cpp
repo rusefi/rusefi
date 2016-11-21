@@ -57,7 +57,7 @@ static ALWAYS_INLINE bool validateBuffer(Logging *logging, uint32_t extraLen) {
 
 	if (remainingSize(logging) < extraLen + 1) {
 #if EFI_PROD_CODE
-		warning(CUSTOM_OBD_44, "output overflow %s", logging->name);
+		warning(CUSTOM_LOGGING_BUFFER_OVERFLOW, "output overflow %s", logging->name);
 #endif
 		return true;
 	}
