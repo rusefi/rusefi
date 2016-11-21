@@ -235,7 +235,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
 	if (injectionDuration > getCrankshaftRevolutionTimeMs(rpm)) {
-		warning(CUSTOM_OBD_50, "Too long fuel injection");
+		warning(CUSTOM_TOO_LONG_FUEL_INJECTION, "Too long fuel injection");
 	}
 
 	// todo: pre-calculate 'numberOfInjections'
