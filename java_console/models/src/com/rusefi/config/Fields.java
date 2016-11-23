@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 17 22:30:07 EST 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Nov 23 15:13:21 EST 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -895,7 +895,10 @@ public class Fields {
 	public static final int cltTimingBins_offset = 2576;
 	public static final int cltTimingExtra_offset = 2608;
 	public static final int nbVvtIndex_offset = 2640;
-	public static final int unused_offset = 2644;
+	public static final int autoTuneCltThreshold_offset = 2644;
+	public static final int autoTuneTpsRocThreshold_offset = 2648;
+	public static final int autoTuneTpsQuietPeriod_offset = 2652;
+	public static final int unused_offset = 2656;
 	public static final int le_formulas1_offset = 3048;
 	public static final int le_formulas2_offset = 3248;
 	public static final int le_formulas3_offset = 3448;
@@ -1533,6 +1536,9 @@ public class Fields {
 	public static final Field BIQUAD_B1 = Field.create("BIQUAD_B1", 2568, FieldType.FLOAT);
 	public static final Field BIQUAD_B2 = Field.create("BIQUAD_B2", 2572, FieldType.FLOAT);
 	public static final Field NBVVTINDEX = Field.create("NBVVTINDEX", 2640, FieldType.INT);
+	public static final Field AUTOTUNECLTTHRESHOLD = Field.create("AUTOTUNECLTTHRESHOLD", 2644, FieldType.FLOAT);
+	public static final Field AUTOTUNETPSROCTHRESHOLD = Field.create("AUTOTUNETPSROCTHRESHOLD", 2648, FieldType.FLOAT);
+	public static final Field AUTOTUNETPSQUIETPERIOD = Field.create("AUTOTUNETPSQUIETPERIOD", 2652, FieldType.FLOAT);
 	public static final Field LE_FORMULAS1 = Field.create("LE_FORMULAS1", 3048, FieldType.INT);
 	public static final Field LE_FORMULAS2 = Field.create("LE_FORMULAS2", 3248, FieldType.INT);
 	public static final Field LE_FORMULAS3 = Field.create("LE_FORMULAS3", 3448, FieldType.INT);
