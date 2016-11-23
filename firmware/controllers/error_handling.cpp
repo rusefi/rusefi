@@ -71,9 +71,7 @@ bool isWarningNow(efitimesec_t now, bool forIndicator) {
 	return absI(now - engine->engineState.timeOfPreviousWarning) < period;
 }
 
-void setWarningCode(obd_code_e code, efitimesec_t now) {
-	engine->engineState.timeOfPreviousWarning = now;
-
+void addWarningCode(obd_code_e code) {
 	engine->engineState.warningCounter++;
 	engine->engineState.lastErrorCode = code;
 }
@@ -92,10 +90,12 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 	printf("warning %s\r\n", fmt);
 #endif
 
+	addWarningCode(code);
+
 	efitimesec_t now = getTimeNowSeconds();
 	if (isWarningNow(now, false) || !warningEnabled)
 		return true; // we just had another warning, let's not spam
-	setWarningCode(code, now);
+	engine->engineState.timeOfPreviousWarning = now;
 
 	resetLogging(&logger); // todo: is 'reset' really needed here?
 	appendMsgPrefix(&logger);

@@ -22,7 +22,8 @@ int getVtSizeEstimate(void);
 
 void assertVtList(void);
 
-void setWarningCode(obd_code_e code, efitimesec_t now);
+void addWarningCode(obd_code_e code);
+
 /**
  * Something is wrong, but we can live with it: some minor sensor is disconnected
  * or something like that
