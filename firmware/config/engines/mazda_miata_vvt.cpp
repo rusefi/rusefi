@@ -31,6 +31,9 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->vvtCamSensorUseRise = true;
 	engineConfiguration->vvtOffset = -70;
 
+//	boardConfiguration->fuelPumpPin = GPIOD_5; // todo: rewire my board to default E_4
+
+
 	// enable trigger_details
 	engineConfiguration->isPrintTriggerSynchDetails = false;
 
@@ -51,7 +54,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 //	6.375
 //	10.625
 	boardConfiguration->nb2ratioFrom = 8.50 * 0.75;
-	boardConfiguration->nb2ratioTo = 8.50 * 1.25;
+	boardConfiguration->nb2ratioTo = 14;
 	engineConfiguration->nbVvtIndex = 0;
 
 
