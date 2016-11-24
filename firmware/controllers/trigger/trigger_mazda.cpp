@@ -57,9 +57,9 @@ void initializeMazdaMiataNb2Crank(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 
 	s->tdcPosition = 60;
 
-	s->setTriggerSynchronizationGap(1.57f);
-	s->addEvent2(o + 4 * 66.0f, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
-	s->addEvent2(o + 4 * 70.0f, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
+	s->setTriggerSynchronizationGap2(0.75f, 0.98f);
+	s->addEvent2(o + 4 * 56.0f, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
+	s->addEvent2(o + 4 * 60.0f, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
 	s->addEvent2(o + 4 * 136.0f, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
 	s->addEvent2(o + 4 * 140.0f, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
 }

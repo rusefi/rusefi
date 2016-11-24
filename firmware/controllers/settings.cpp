@@ -948,6 +948,8 @@ static void printAllInfo(void) {
 static void getValue(const char *paramStr) {
 	if (strEqualCaseInsensitive(paramStr, "isCJ125Enabled")) {
 		scheduleMsg(&logger, "isCJ125Enabled=%d", boardConfiguration->isCJ125Enabled);
+	} else if (strEqualCaseInsensitive(paramStr, "nb_vvt_index")) {
+		scheduleMsg(&logger, "nb_vvt_index=%d", engineConfiguration->nbVvtIndex);
 	} else if (strEqualCaseInsensitive(paramStr, "global_trigger_offset_angle")) {
 		scheduleMsg(&logger, "global_trigger_offset=%f", engineConfiguration->globalTriggerAngleOffset);
 	} else if (strEqualCaseInsensitive(paramStr, "warningPeriod")) {
@@ -992,6 +994,8 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->vvtOffset = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_mode")) {
 		engineConfiguration->vvtMode = (vvt_mode_e)valueI;
+	} else if (strEqualCaseInsensitive(paramStr, "nb_vvt_index")) {
+		engineConfiguration->nbVvtIndex = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "step1timing")) {
 		engineConfiguration->step1timing = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "operation_mode")) {
