@@ -19,9 +19,6 @@ void setAlgorithm(engine_load_mode_e algo DECLARE_ENGINE_PARAMETER_S);
 void findTriggerPosition(
 		event_trigger_position_s *position, angle_t angleOffset DECLARE_ENGINE_PARAMETER_S);
 
-void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
-		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S);
-
 #if EFI_ENABLE_ASSERTS
 #define assertAngleRange(angle) if(angle > 10000000 || angle < -10000000) { firmwareError(OBD_PCM_Processor_Fault, "angle range");angle = 0;}
 #else
