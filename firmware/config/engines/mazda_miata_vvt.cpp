@@ -33,12 +33,14 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 //	boardConfiguration->fuelPumpPin = GPIOD_5; // todo: rewire my board to default E_4
 
+	// set_global_trigger_offset_angle 670
+	engineConfiguration->globalTriggerAngleOffset = 670;
 
 	// enable trigger_details
 	engineConfiguration->isPrintTriggerSynchDetails = false;
 
 	// todo: change to 15?
-	// set_cranking_timing_angle 3
+	// set_cranking_timing_angle 0
 	engineConfiguration->crankingTimingAngle = 3;
 	// set_cranking_fuel 9
 	engineConfiguration->cranking.baseFuel = 9;
