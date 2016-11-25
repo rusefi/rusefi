@@ -1,4 +1,4 @@
-update=11/20/2016 5:26:23 AM
+update=11/25/2016 9:48:48 AM
 version=1
 last_client=kicad
 [cvpcb]
@@ -27,16 +27,6 @@ SolderMaskMinWidth=0
 DrawSegmentWidth=0.381
 BoardOutlineThickness=0.381
 ModuleOutlineThickness=0.381
-[schematic_editor]
-version=1
-PageLayoutDescrFile=../rusefi_lib/Border.kicad_wks
-PlotDirectoryName=
-SubpartIdSeparator=0
-SubpartFirstId=65
-NetFmtName=Pcbnew
-SpiceForceRefPrefix=0
-SpiceUseNetNumbers=0
-LabSize=60
 [eeschema]
 version=1
 LibDir=
@@ -73,3 +63,13 @@ LibName29=valves
 LibName30=../rusefi_lib/logo
 LibName31=../rusefi_lib/logo_flipped
 LibName32=../rusefi_lib/mx7-c-35pl-c11
+[schematic_editor]
+version=1
+PageLayoutDescrFile=../rusefi_lib/Border.kicad_wks
+PlotDirectoryName=
+SubpartIdSeparator=0
+SubpartFirstId=65
+NetFmtName=Pcbnew
+SpiceForceRefPrefix=0
+SpiceUseNetNumbers=0
+LabSize=60

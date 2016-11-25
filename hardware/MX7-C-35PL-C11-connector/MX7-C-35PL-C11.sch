@@ -38,8 +38,8 @@ $Descr A 8500 11000 portrait
 encoding utf-8
 Sheet 1 1
 Title "ECU adapter"
-Date "2016-10-25"
-Rev "R0.2"
+Date "2016-11-25"
+Rev "R0.1"
 Comp "DAECU for rusEFI"
 Comment1 ""
 Comment2 ""
@@ -100,24 +100,24 @@ $EndComp
 $Comp
 L MX7-C-35PL-C11 P8
 U 1 1 57F1B83D
-P 5575 6850
-F 0 "P8" V 6150 7200 50  0000 C CNN
-F 1 "MX7-C-35PL-C11" V 6150 6675 50  0000 C CNN
-F 2 "MX7-C-35PL-C11" V 7325 5850 50  0001 C CNN
-F 3 "DOCUMENTATION" V 7325 7450 50  0001 C CNN
-	1    5575 6850
-	0    -1   -1   0   
+P 5275 6700
+F 0 "P8" V 5850 7050 50  0000 C CNN
+F 1 "MX7-C-35PL-C11" V 5850 6525 50  0000 C CNN
+F 2 "MX7-C-35PL-C11" V 7025 5700 50  0001 C CNN
+F 3 "DOCUMENTATION" V 7025 7300 50  0001 C CNN
+	1    5275 6700
+	1    0    0    -1  
 $EndComp
 $Comp
 L CONN_01X08 P11
 U 1 1 57F1CB2B
-P 5925 7050
-F 0 "P11" H 5925 6575 50  0000 C CNN
-F 1 "CONN_01X08" V 6025 7050 50  0001 C CNN
-F 2 "Molex_NanoFit_1x08x2.50mm_Straight" H 5925 7050 50  0001 C CNN
-F 3 "" H 5925 7050 50  0000 C CNN
-	1    5925 7050
-	0    -1   1    0   
+P 5075 7050
+F 0 "P11" H 5075 6575 50  0000 C CNN
+F 1 "CONN_01X08" V 5175 7050 50  0001 C CNN
+F 2 "Molex_NanoFit_1x08x2.50mm_Straight" H 5075 7050 50  0001 C CNN
+F 3 "" H 5075 7050 50  0000 C CNN
+	1    5075 7050
+	-1   0    0    -1  
 $EndComp
 $Comp
 L LOGO #G1
@@ -130,173 +130,173 @@ F 3 "" H 3625 10375 60  0000 C CNN
 	1    3625 10375
 	1    0    0    -1  
 $EndComp
-Text Label 4875 6850 1    60   ~ 0
-2B
-Text Label 4975 6850 1    60   ~ 0
-2E
-Text Label 5075 6850 1    60   ~ 0
-2H
-Text Label 5175 6850 1    60   ~ 0
-2K
-Text Label 5275 6850 1    60   ~ 0
-2N
-Text Label 5375 6850 1    60   ~ 0
-2Q
-Text Label 5475 6850 1    60   ~ 0
-3B
-Text Label 5575 6850 1    60   ~ 0
-3E
-Text Label 5675 6850 1    60   ~ 0
-3H
-Text Label 5775 6850 1    60   ~ 0
-3K
-Text Label 5875 6850 1    60   ~ 0
-3N
-Text Label 5975 6850 1    60   ~ 0
-3Q
-Text Label 6075 6850 1    60   ~ 0
-3S
-Text Label 6175 6850 1    60   ~ 0
-3V
-Text Label 6275 6850 1    60   ~ 0
-3Y
-Text Label 4875 7900 1    60   ~ 0
-4B
-Text Label 4975 7900 1    60   ~ 0
-4E
-Text Label 5175 7900 1    60   ~ 0
-4H
-Text Label 5275 7900 1    60   ~ 0
-4J
-Text Label 5375 7900 1    60   ~ 0
-4M
-Text Label 5475 7900 1    60   ~ 0
-4P
-Text Label 5675 7900 1    60   ~ 0
-4S
-Text Label 5775 7900 1    60   ~ 0
-4V
-Text Label 5875 7900 1    60   ~ 0
-4Y
-Text Label 5975 7900 1    60   ~ 0
-4AA
-Text Label 6175 7900 1    60   ~ 0
-4AD
-Text Label 6275 7900 1    60   ~ 0
-4AG
+Text Label 5275 6000 0    60   ~ 0
+AR
+Text Label 5275 6100 0    60   ~ 0
+AO
+Text Label 5275 6200 0    60   ~ 0
+AL
+Text Label 5275 6300 0    60   ~ 0
+12
+Text Label 5275 6400 0    60   ~ 0
+AF
+Text Label 5275 6500 0    60   ~ 0
+AC
+Text Label 5275 6600 0    60   ~ 0
+Z
+Text Label 5275 6700 0    60   ~ 0
+W
+Text Label 5275 6800 0    60   ~ 0
+T
+Text Label 5275 6900 0    60   ~ 0
+18
+Text Label 5275 7000 0    60   ~ 0
+19
+Text Label 5275 7100 0    60   ~ 0
+K
+Text Label 5275 7200 0    60   ~ 0
+21
+Text Label 5275 7300 0    60   ~ 0
+22
+Text Label 5275 7400 0    60   ~ 0
+C
+Text Label 4225 6000 0    60   ~ 0
+AS
+Text Label 4225 6100 0    60   ~ 0
+AP
+Text Label 4225 6300 0    60   ~ 0
+26
+Text Label 4225 6400 0    60   ~ 0
+AG
+Text Label 4225 6500 0    60   ~ 0
+28
+Text Label 4225 6600 0    60   ~ 0
+29
+Text Label 4225 6800 0    60   ~ 0
+U
+Text Label 4225 6900 0    60   ~ 0
+R
+Text Label 4225 7000 0    60   ~ 0
+O
+Text Label 4225 7100 0    60   ~ 0
+L
+Text Label 4225 7300 0    60   ~ 0
+A
+Text Label 4225 7400 0    60   ~ 0
+B
 $Comp
 L CONN_01X02 P3
 U 1 1 58320E27
-P 4925 6000
-F 0 "P3" H 5050 6000 50  0000 C CNN
-F 1 "CONN_01X02" V 5025 6000 50  0001 C CNN
-F 2 "Molex_NanoFit_1x02x2.50mm_Straight" H 4925 6000 50  0001 C CNN
-F 3 "" H 4925 6000 50  0001 C CNN
-	1    4925 6000
-	0    -1   1    0   
+P 6125 6050
+F 0 "P3" H 6250 6050 50  0000 C CNN
+F 1 "CONN_01X02" V 6225 6050 50  0001 C CNN
+F 2 "Molex_NanoFit_1x02x2.50mm_Straight" H 6125 6050 50  0001 C CNN
+F 3 "" H 6125 6050 50  0001 C CNN
+	1    6125 6050
+	-1   0    0    -1  
 $EndComp
 $Comp
 L CONN_01X02 P6
 U 1 1 58321F53
-P 5225 6000
-F 0 "P6" H 5350 6000 50  0000 C CNN
-F 1 "CONN_01X02" V 5325 6000 50  0001 C CNN
-F 2 "Molex_NanoFit_1x02x2.50mm_Straight" H 5225 6000 50  0001 C CNN
-F 3 "" H 5225 6000 50  0001 C CNN
-	1    5225 6000
-	0    -1   1    0   
+P 6125 6350
+F 0 "P6" H 6250 6350 50  0000 C CNN
+F 1 "CONN_01X02" V 6225 6350 50  0001 C CNN
+F 2 "Molex_NanoFit_1x02x2.50mm_Straight" H 6125 6350 50  0001 C CNN
+F 3 "" H 6125 6350 50  0001 C CNN
+	1    6125 6350
+	-1   0    0    -1  
 $EndComp
 $Comp
 L CONN_01X02 P10
 U 1 1 58321FB2
-P 5925 6000
-F 0 "P10" H 6050 6000 50  0000 C CNN
-F 1 "CONN_01X02" V 6025 6000 50  0001 C CNN
-F 2 "Molex_NanoFit_1x02x2.50mm_Straight" H 5925 6000 50  0001 C CNN
-F 3 "" H 5925 6000 50  0001 C CNN
-	1    5925 6000
-	0    -1   1    0   
+P 6125 7050
+F 0 "P10" H 6250 7050 50  0000 C CNN
+F 1 "CONN_01X02" V 6225 7050 50  0001 C CNN
+F 2 "Molex_NanoFit_1x02x2.50mm_Straight" H 6125 7050 50  0001 C CNN
+F 3 "" H 6125 7050 50  0001 C CNN
+	1    6125 7050
+	-1   0    0    -1  
 $EndComp
 $Comp
 L CONN_01X02 P12
 U 1 1 58322012
-P 6225 6000
-F 0 "P12" H 6350 6000 50  0000 C CNN
-F 1 "CONN_01X02" V 6325 6000 50  0001 C CNN
-F 2 "Molex_NanoFit_1x02x2.50mm_Straight" H 6225 6000 50  0001 C CNN
-F 3 "" H 6225 6000 50  0001 C CNN
-	1    6225 6000
-	0    -1   1    0   
+P 6125 7350
+F 0 "P12" H 6250 7350 50  0000 C CNN
+F 1 "CONN_01X02" V 6225 7350 50  0001 C CNN
+F 2 "Molex_NanoFit_1x02x2.50mm_Straight" H 6125 7350 50  0001 C CNN
+F 3 "" H 6125 7350 50  0001 C CNN
+	1    6125 7350
+	-1   0    0    -1  
 $EndComp
 $Comp
 L CONN_01X02 P4
 U 1 1 5832208E
-P 4925 8100
-F 0 "P4" H 5075 8100 50  0000 C CNN
-F 1 "CONN_01X02" V 5025 8100 50  0001 C CNN
-F 2 "Molex_NanoFit_1x02x2.50mm_Straight" H 4925 8100 50  0001 C CNN
-F 3 "" H 4925 8100 50  0001 C CNN
-	1    4925 8100
-	0    -1   1    0   
+P 4025 6050
+F 0 "P4" H 4175 6050 50  0000 C CNN
+F 1 "CONN_01X02" V 4125 6050 50  0001 C CNN
+F 2 "Molex_NanoFit_1x02x2.50mm_Straight" H 4025 6050 50  0001 C CNN
+F 3 "" H 4025 6050 50  0001 C CNN
+	1    4025 6050
+	-1   0    0    -1  
 $EndComp
 $Comp
 L CONN_01X02 P13
 U 1 1 5832215E
-P 6225 8100
-F 0 "P13" H 6375 8100 50  0000 C CNN
-F 1 "CONN_01X02" V 6325 8100 50  0001 C CNN
-F 2 "Molex_NanoFit_1x02x2.50mm_Straight" H 6225 8100 50  0001 C CNN
-F 3 "" H 6225 8100 50  0001 C CNN
-	1    6225 8100
-	0    -1   1    0   
+P 4025 7350
+F 0 "P13" H 4175 7350 50  0000 C CNN
+F 1 "CONN_01X02" V 4125 7350 50  0001 C CNN
+F 2 "Molex_NanoFit_1x02x2.50mm_Straight" H 4025 7350 50  0001 C CNN
+F 3 "" H 4025 7350 50  0001 C CNN
+	1    4025 7350
+	-1   0    0    -1  
 $EndComp
-Text Label 6275 5800 1    60   ~ 0
-4AH
-Text Label 6175 5800 1    60   ~ 0
-4AE
-Text Label 5975 5800 1    60   ~ 0
-4AB
-Text Label 5875 5800 1    60   ~ 0
-4W
-Text Label 5275 5800 1    60   ~ 0
-4T
-Text Label 5175 5800 1    60   ~ 0
-4N
-Text Label 4975 5800 1    60   ~ 0
-4K
-Text Label 4875 5800 1    60   ~ 0
-4I
+Text Label 6325 7400 0    60   ~ 0
+F
+Text Label 6325 7300 0    60   ~ 0
+D
+Text Label 6325 7100 0    60   ~ 0
+6
+Text Label 6325 7000 0    60   ~ 0
+5
+Text Label 6325 6400 0    60   ~ 0
+AE
+Text Label 6325 6300 0    60   ~ 0
+3
+Text Label 6325 6100 0    60   ~ 0
+AN
+Text Label 6325 6000 0    60   ~ 0
+AQ
 $Comp
 L CONN_01X07 P5
 U 1 1 5832438A
-P 5175 7050
-F 0 "P5" H 5175 7450 50  0000 C CNN
-F 1 "CONN_01X07" V 5275 7050 50  0001 C CNN
-F 2 "Molex_NanoFit_1x07x2.50mm_Straight" H 5175 7050 50  0001 C CNN
-F 3 "" H 5175 7050 50  0001 C CNN
-	1    5175 7050
-	0    -1   1    0   
+P 5075 6300
+F 0 "P5" H 5075 6700 50  0000 C CNN
+F 1 "CONN_01X07" V 5175 6300 50  0001 C CNN
+F 2 "Molex_NanoFit_1x07x2.50mm_Straight" H 5075 6300 50  0001 C CNN
+F 3 "" H 5075 6300 50  0001 C CNN
+	1    5075 6300
+	-1   0    0    -1  
 $EndComp
 $Comp
 L CONN_01X04 P7
 U 1 1 58324C2C
-P 5325 8100
-F 0 "P7" H 5475 8100 50  0000 C CNN
-F 1 "CONN_01X04" V 5425 8100 50  0001 C CNN
-F 2 "Molex_NanoFit_1x04x2.50mm_Straight" H 5325 8100 50  0001 C CNN
-F 3 "" H 5325 8100 50  0001 C CNN
-	1    5325 8100
-	0    -1   1    0   
+P 4025 6450
+F 0 "P7" H 4175 6450 50  0000 C CNN
+F 1 "CONN_01X04" V 4125 6450 50  0001 C CNN
+F 2 "Molex_NanoFit_1x04x2.50mm_Straight" H 4025 6450 50  0001 C CNN
+F 3 "" H 4025 6450 50  0001 C CNN
+	1    4025 6450
+	-1   0    0    -1  
 $EndComp
 $Comp
 L CONN_01X04 P9
 U 1 1 583255DA
-P 5825 8100
-F 0 "P9" H 5975 8100 50  0000 C CNN
-F 1 "CONN_01X04" V 5925 8100 50  0001 C CNN
-F 2 "Molex_NanoFit_1x04x2.50mm_Straight" H 5825 8100 50  0001 C CNN
-F 3 "" H 5825 8100 50  0001 C CNN
-	1    5825 8100
-	0    -1   1    0   
+P 4025 6950
+F 0 "P9" H 4175 6950 50  0000 C CNN
+F 1 "CONN_01X04" V 4125 6950 50  0001 C CNN
+F 2 "Molex_NanoFit_1x04x2.50mm_Straight" H 4025 6950 50  0001 C CNN
+F 3 "" H 4025 6950 50  0001 C CNN
+	1    4025 6950
+	-1   0    0    -1  
 $EndComp
 $EndSCHEMATC
