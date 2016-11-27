@@ -44,10 +44,12 @@ public:
 	event_trigger_position_s injectionStart;
 };
 
+#define MAX_OUTPUTS_FOR_IGNITION 2
+
 class IgnitionEvent {
 public:
 	IgnitionEvent();
-	IgnitionOutputPin *output;
+	IgnitionOutputPin *outputs[2];
 	scheduling_s signalTimerUp;
 	scheduling_s signalTimerDown;
 	angle_t advance;

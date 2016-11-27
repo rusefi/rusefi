@@ -40,7 +40,7 @@ event_trigger_position_s::event_trigger_position_s() {
 IgnitionEvent::IgnitionEvent() {
 	name = NULL;
 	next = NULL;
-	output = NULL;
+	memset(outputs, 0, sizeof(outputs));
 	advance = NAN;
 	sparkId = 0;
 }
