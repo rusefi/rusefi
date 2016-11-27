@@ -365,12 +365,12 @@ void testRpmCalculator(void) {
 
 	assertREqualsM("Call@0", (void*)ev0->callback, (void*)turnSparkPinHigh);
 	assertEqualsM("ev 0", st + 944, ev0->momentX);
-	assertEqualsLM("coil 0", (long)&enginePins.coils[0], (long)((IgnitionEvent*)ev0->param)->output);
+	assertEqualsLM("coil 0", (long)&enginePins.coils[0], (long)((IgnitionEvent*)ev0->param)->outputs[0]);
 
 	scheduling_s *ev1 = schedulingQueue.getForUnitText(1);
 	assertREqualsM("Call@1", (void*)ev1->callback, (void*)turnSparkPinLow);
 	assertEqualsM("ev 1", st + 1444, ev1->momentX);
-	assertEqualsLM("coil 1", (long)&enginePins.coils[0], (long)((IgnitionEvent*)ev1->param)->output);
+	assertEqualsLM("coil 1", (long)&enginePins.coils[0], (long)((IgnitionEvent*)ev1->param)->outputs[0]);
 
 	}
 
