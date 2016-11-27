@@ -387,16 +387,35 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 
 	// dwell at cranking is constant angle or constant time, dwell at cranking threshold is the highest angle duration
 	// lower RPM angle duration goes up
-	angle_t maxCrankingDwellAngle = crankingDwell / getOneDegreeTimeMs(CONFIG(cranking.rpm));
+	angle_t maxDwellAngle = crankingDwell / getOneDegreeTimeMs(CONFIG(cranking.rpm));
 
-	printf("cranking angle %f\r\n", maxCrankingDwellAngle);
+	printf("cranking angle %f\r\n", maxDwellAngle);
 
 	for (int i = 0;i<DWELL_CURVE_SIZE;i++) {
 		int rpm = (int)engineConfiguration->sparkDwellBins[i];
 		floatms_t dwell = engineConfiguration->sparkDwell[i];
 		angle_t dwellAngle = dwell / getOneDegreeTimeMs(rpm);
 		printf("dwell angle %f at %d\r\n", dwellAngle, rpm);
+		maxDwellAngle = maxF(maxDwellAngle, dwellAngle);
 	}
+
+	angle_t maxIatAdvanceCorr = -720;
+	for (int r = 0;r<IGN_RPM_COUNT;r++) {
+		for (int l = 0;l<IGN_LOAD_COUNT;l++) {
+			maxIatAdvanceCorr = maxF(maxIatAdvanceCorr, config->ignitionIatCorrTable[l][r]);
+		}
+	}
+
+	angle_t maxAdvance = -720;
+	for (int r = 0;r<IGN_RPM_COUNT;r++) {
+		for (int l = 0;l<IGN_LOAD_COUNT;l++) {
+			maxAdvance = maxF(maxAdvance, config->ignitionTable[l][r]);
+		}
+	}
+
+
+	printf("max dwell angle %f/%d/%d\r\n", maxDwellAngle, (int)maxAdvance, (int)maxIatAdvanceCorr);
+
 
 #endif
 
