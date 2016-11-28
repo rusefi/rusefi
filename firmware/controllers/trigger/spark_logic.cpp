@@ -222,29 +222,33 @@ static void addIgnitionEvent(int cylinderIndex, angle_t localAdvance, angle_t dw
 
 }
 
-static void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
-		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
+static void prepareIgnitionSchedule(int cylinderIndex, IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
+	// todo: clean up this implementation? does not look too nice as is.
+
+	// change of sign here from 'before TDC' to 'after TDC'
+	angle_t localAdvance = -ENGINE(engineState.timingAdvance) + ENGINE(angleExtra[cylinderIndex]);
+	const int index = ENGINE(ignitionPin[cylinderIndex]);
+	const int coilIndex = ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), index));
+	IgnitionOutputPin *output = &enginePins.coils[coilIndex];
+
+	IgnitionOutputPin *secondOutput;
+	if (CONFIG(ignitionMode) == IM_WASTED_SPARK && CONFIG(twoWireBatchIgnition)) {
+		int secondIndex = index + CONFIG(specs.cylindersCount) / 2;
+		int secondCoilIndex = ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), secondIndex));
+		secondOutput = &enginePins.coils[secondCoilIndex];
+	} else {
+		secondOutput = NULL;
+	}
+
+	addIgnitionEvent(cylinderIndex, localAdvance, ENGINE(engineState.dwellAngle), list, output, secondOutput PASS_ENGINE_PARAMETER);
+}
+
+static void initializeIgnitionActions(IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
 	efiAssertVoid(engineConfiguration->specs.cylindersCount > 0, "cylindersCount");
 
-	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
-		// todo: clean up this implementation? does not look too nice as is.
-
-		// change of sign here from 'before TDC' to 'after TDC'
-		angle_t localAdvance = -advance + ENGINE(angleExtra[i]);
-		const int index = ENGINE(ignitionPin[i]);
-		const int coilIndex = ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), index));
-		IgnitionOutputPin *output = &enginePins.coils[coilIndex];
-
-		IgnitionOutputPin *secondOutput;
-		if (CONFIG(ignitionMode) == IM_WASTED_SPARK && CONFIG(twoWireBatchIgnition)) {
-			int secondIndex = index + CONFIG(specs.cylindersCount) / 2;
-			int secondCoilIndex = ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), secondIndex));
-			secondOutput = &enginePins.coils[secondCoilIndex];
-		} else {
-			secondOutput = NULL;
-		}
-
-		addIgnitionEvent(i, localAdvance, dwellAngle, list, output, secondOutput PASS_ENGINE_PARAMETER);
+	for (int cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
+		list->elements[cylinderIndex].cylinderIndex = cylinderIndex;
+		prepareIgnitionSchedule(cylinderIndex, list PASS_ENGINE_PARAMETER);
 	}
 	list->isReady = true;
 }
@@ -282,7 +286,7 @@ static ALWAYS_INLINE void prepareIgnitionSchedule(int rpm, int revolutionIndex D
 		list->isReady = false;
 		return;
 	}
-	initializeIgnitionActions(ENGINE(engineState.timingAdvance), ENGINE(engineState.dwellAngle), list PASS_ENGINE_PARAMETER);
+	initializeIgnitionActions(list PASS_ENGINE_PARAMETER);
 	engine->m.ignitionSchTime = GET_TIMESTAMP() - engine->m.beforeIgnitionSch;
 }
 

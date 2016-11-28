@@ -56,7 +56,11 @@ public:
 	event_trigger_position_s dwellPosition;
 	event_trigger_position_s sparkPosition;
 	IgnitionEvent *next;
+	/**
+	 * @see globalSparkIdCoutner
+	 */
 	int sparkId;
+	int cylinderIndex;
 	char *name;
 	IgnitionOutputPin *getOutputForLoggins();
 };
