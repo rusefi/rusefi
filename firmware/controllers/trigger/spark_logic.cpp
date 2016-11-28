@@ -202,8 +202,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	}
 }
 
-static void addIgnitionEvent(int cylinderIndex, angle_t localAdvance, angle_t dwellAngle, IgnitionEventList *list, IgnitionOutputPin *output, IgnitionOutputPin *secondOutput DECLARE_ENGINE_PARAMETER_S) {
-	IgnitionEvent *event = &list->elements[cylinderIndex];
+static void addIgnitionEvent(angle_t localAdvance, angle_t dwellAngle, IgnitionEvent *event, IgnitionOutputPin *output, IgnitionOutputPin *secondOutput DECLARE_ENGINE_PARAMETER_S) {
 
 	if (!isPinAssigned(output)) {
 		// todo: extract method for this index math
@@ -222,12 +221,12 @@ static void addIgnitionEvent(int cylinderIndex, angle_t localAdvance, angle_t dw
 
 }
 
-static void prepareIgnitionSchedule(int cylinderIndex, IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
+static void prepareIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_S) {
 	// todo: clean up this implementation? does not look too nice as is.
 
 	// change of sign here from 'before TDC' to 'after TDC'
-	angle_t localAdvance = -ENGINE(engineState.timingAdvance) + ENGINE(angleExtra[cylinderIndex]);
-	const int index = ENGINE(ignitionPin[cylinderIndex]);
+	angle_t localAdvance = -ENGINE(engineState.timingAdvance) + ENGINE(angleExtra[event->cylinderIndex]);
+	const int index = ENGINE(ignitionPin[event->cylinderIndex]);
 	const int coilIndex = ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), index));
 	IgnitionOutputPin *output = &enginePins.coils[coilIndex];
 
@@ -240,7 +239,7 @@ static void prepareIgnitionSchedule(int cylinderIndex, IgnitionEventList *list D
 		secondOutput = NULL;
 	}
 
-	addIgnitionEvent(cylinderIndex, localAdvance, ENGINE(engineState.dwellAngle), list, output, secondOutput PASS_ENGINE_PARAMETER);
+	addIgnitionEvent(localAdvance, ENGINE(engineState.dwellAngle), event, output, secondOutput PASS_ENGINE_PARAMETER);
 }
 
 static void initializeIgnitionActions(IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
@@ -248,12 +247,12 @@ static void initializeIgnitionActions(IgnitionEventList *list DECLARE_ENGINE_PAR
 
 	for (int cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
 		list->elements[cylinderIndex].cylinderIndex = cylinderIndex;
-		prepareIgnitionSchedule(cylinderIndex, list PASS_ENGINE_PARAMETER);
+		prepareIgnitionSchedule(&list->elements[cylinderIndex] PASS_ENGINE_PARAMETER);
 	}
 	list->isReady = true;
 }
 
-static ALWAYS_INLINE void prepareIgnitionSchedule(int rpm, int revolutionIndex DECLARE_ENGINE_PARAMETER_S) {
+static ALWAYS_INLINE void prepareIgnitionSchedule(int rpm DECLARE_ENGINE_PARAMETER_S) {
 
 	engine->m.beforeIgnitionSch = GET_TIMESTAMP();
 	/**
@@ -278,7 +277,7 @@ static ALWAYS_INLINE void prepareIgnitionSchedule(int rpm, int revolutionIndex D
 
 	// todo: add some check for dwell overflow? like 4 times 6 ms while engine cycle is less then that
 
-	IgnitionEventList *list = &engine->engineConfiguration2->ignitionEvents[revolutionIndex];
+	IgnitionEventList *list = engine->ignitionList();
 
 	if (cisnan(ENGINE(engineState.timingAdvance))) {
 		// error should already be reported
@@ -290,16 +289,19 @@ static ALWAYS_INLINE void prepareIgnitionSchedule(int rpm, int revolutionIndex D
 	engine->m.ignitionSchTime = GET_TIMESTAMP() - engine->m.beforeIgnitionSch;
 }
 
-void handleSpark(int revolutionIndex, bool limitedSpark, uint32_t trgEventIndex, int rpm,
-		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
-	if (trgEventIndex == 0) {
-		prepareIgnitionSchedule(rpm, revolutionIndex PASS_ENGINE_PARAMETER);
-	}
+void handleSpark(bool limitedSpark, uint32_t trgEventIndex, int rpm
+		 DECLARE_ENGINE_PARAMETER_S) {
 
 	if (!isValidRpm(rpm) || !CONFIG(isIgnitionEnabled)) {
 		 // this might happen for instance in case of a single trigger event after a pause
 		return;
 	}
+
+	IgnitionEventList *list = engine->ignitionList();
+	if (trgEventIndex == 0) {
+		prepareIgnitionSchedule(rpm PASS_ENGINE_PARAMETER);
+	}
+
 	/**
 	 * Ignition schedule is defined once per revolution
 	 * See initializeIgnitionActions()

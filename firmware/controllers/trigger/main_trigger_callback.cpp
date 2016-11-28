@@ -545,8 +545,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 	/**
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
 	 */
-	handleSpark(revolutionIndex, limitedSpark, trgEventIndex, rpm,
-			&engine->engineConfiguration2->ignitionEvents[revolutionIndex] PASS_ENGINE_PARAMETER);
+	handleSpark(limitedSpark, trgEventIndex, rpm PASS_ENGINE_PARAMETER);
 #if (EFI_HISTOGRAMS && EFI_PROD_CODE) || defined(__DOXYGEN__)
 	int diff = hal_lld_get_counter_value() - beforeCallback;
 	if (diff > 0)
