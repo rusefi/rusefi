@@ -26,7 +26,7 @@ int isIgnitionTimingError(void) {
 	return ignitionErrorDetection.sum(6) > 4;
 }
 
-void turnSparkPinLow2(IgnitionEvent *event, IgnitionOutputPin *output) {
+static void turnSparkPinLow2(IgnitionEvent *event, IgnitionOutputPin *output) {
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
 	scheduleMsg(logger, "spark goes low  %d %s %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->name, (int)getTimeNowUs(),
 			output->currentLogicValue, output->outOfOrder, event->sparkId);
@@ -64,7 +64,7 @@ void turnSparkPinLow(IgnitionEvent *event) {
 	}
 }
 
-void turnSparkPinHigh2(IgnitionEvent *event, IgnitionOutputPin *output) {
+static void turnSparkPinHigh2(IgnitionEvent *event, IgnitionOutputPin *output) {
 
 #if ! EFI_UNIT_TEST
 	if (engine->rpmCalculator.rpmValue > 2 * engineConfiguration->cranking.rpm) {
@@ -228,16 +228,25 @@ static void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
 
 		// change of sign here from 'before TDC' to 'after TDC'
 		angle_t localAdvance = -advance + ENGINE(angleExtra[i]);
-		int index = ENGINE(ignitionPin[i]);
-		int cylinderIndex = ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), index));
+		const int index = ENGINE(ignitionPin[i]);
+		const int cylinderIndex = ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), index));
 		IgnitionOutputPin *output = &enginePins.coils[cylinderIndex];
+
+		IgnitionOutputPin *secondOutput;
+		if (CONFIG(ignitionMode) == IM_WASTED_SPARK && CONFIG(twoWireBatchIgnition)) {
+			int secondIndex = index + CONFIG(specs.cylindersCount) / 2;
+			int secondCylinderIndex = ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), secondIndex));
+			secondOutput = &enginePins.coils[secondCylinderIndex];
+		} else {
+			secondOutput = NULL;
+		}
 
 		addIgnitionEvent(localAdvance, dwellAngle, list, output PASS_ENGINE_PARAMETER);
 
 		if (CONFIG(ignitionMode) == IM_WASTED_SPARK && CONFIG(twoWireBatchIgnition)) {
-			index += CONFIG(specs.cylindersCount) / 2;
-			cylinderIndex = ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), index));
-			output = &enginePins.coils[cylinderIndex];
+			int secondIndex = index + CONFIG(specs.cylindersCount) / 2;
+			int secondCylinderIndex = ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), secondIndex));
+			output = &enginePins.coils[secondCylinderIndex];
 
 			addIgnitionEvent(localAdvance, dwellAngle, list, output PASS_ENGINE_PARAMETER);
 		}
