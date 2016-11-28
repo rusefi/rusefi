@@ -149,7 +149,7 @@ void test1995FordInline6TriggerDecoder(void) {
 	eth.fireTriggerEvents(48);
 
 	IgnitionEventList *ecl = &eth.ec2.ignitionEvents[0];
-	assertEqualsM("ford inline ignition events size", 6, ecl->size);
+	assertEqualsM("ford inline ignition events size", 1, ecl->isReady);
 	assertEqualsM("event index", 0, ecl->elements[0].dwellPosition.eventIndex);
 	assertEqualsM("angle offset#1", 7, ecl->elements[0].dwellPosition.angleOffset);
 
@@ -301,7 +301,7 @@ void testRpmCalculator(void) {
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 	EXPAND_EngineTestHelper;
 	IgnitionEventList *ilist = &eth.engine.engineConfiguration2->ignitionEvents[1];
-	assertEqualsM("size #1", 0, ilist->size);
+	assertEqualsM("size #1", 0, ilist->isReady);
 
 	assertEqualsM("engineCycle", 720, eth.engine.engineCycle);
 
@@ -354,7 +354,7 @@ void testRpmCalculator(void) {
 	assertEqualsM("dwell", 4.5, eth.engine.engineState.dwellAngle);
 	assertEqualsM("fuel #2", 4.5450, eth.engine.fuelMs);
 	assertEqualsM("one degree", 111.1111, eth.engine.rpmCalculator.oneDegreeUs);
-	assertEqualsM("size #2", 6, ilist->size);
+	assertEqualsM("size #2", 1, ilist->isReady);
 	assertEqualsM("dwell angle", 0, ilist->elements[0].dwellPosition.eventAngle);
 	assertEqualsM("dwell offset", 8.5, ilist->elements[0].dwellPosition.angleOffset);
 

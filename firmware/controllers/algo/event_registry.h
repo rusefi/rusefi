@@ -61,6 +61,7 @@ public:
 	IgnitionOutputPin *getOutputForLoggins();
 };
 
+
 /**
  * two wire batch mode would generate twice the number of cylinders events, that's the max
  */
@@ -69,6 +70,10 @@ public:
 
 typedef ArrayList<InjectionEvent, MAX_INJECTION_OUTPUT_COUNT> InjectionEventList;
 
-typedef ArrayList<IgnitionEvent, MAX_IGNITION_EVENT_COUNT> IgnitionEventList;
+class IgnitionEventList : public ArrayList<IgnitionEvent, MAX_IGNITION_EVENT_COUNT> {
+public:
+	IgnitionEventList();
+	bool isReady;
+};
 
 #endif /* EVENT_REGISTRY_H_ */

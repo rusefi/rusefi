@@ -17,6 +17,10 @@ static Logging *logger;
 
 static const char *prevSparkName = NULL;
 
+IgnitionEventList::IgnitionEventList() {
+	isReady = false;
+}
+
 int isInjectionEnabled(engine_configuration_s *engineConfiguration) {
 	// todo: is this worth a method? should this be inlined?
 	return engineConfiguration->isInjectionEnabled;
@@ -198,8 +202,8 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	}
 }
 
-static void addIgnitionEvent(angle_t localAdvance, angle_t dwellAngle, IgnitionEventList *list, IgnitionOutputPin *output, IgnitionOutputPin *secondOutput DECLARE_ENGINE_PARAMETER_S) {
-	IgnitionEvent *event = list->add();
+static void addIgnitionEvent(int cylinderIndex, angle_t localAdvance, angle_t dwellAngle, IgnitionEventList *list, IgnitionOutputPin *output, IgnitionOutputPin *secondOutput DECLARE_ENGINE_PARAMETER_S) {
+	IgnitionEvent *event = &list->elements[cylinderIndex];
 
 	if (!isPinAssigned(output)) {
 		// todo: extract method for this index math
@@ -222,28 +226,27 @@ static void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
 		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
 	efiAssertVoid(engineConfiguration->specs.cylindersCount > 0, "cylindersCount");
 
-	list->reset();
-
 	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 		// todo: clean up this implementation? does not look too nice as is.
 
 		// change of sign here from 'before TDC' to 'after TDC'
 		angle_t localAdvance = -advance + ENGINE(angleExtra[i]);
 		const int index = ENGINE(ignitionPin[i]);
-		const int cylinderIndex = ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), index));
-		IgnitionOutputPin *output = &enginePins.coils[cylinderIndex];
+		const int coilIndex = ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), index));
+		IgnitionOutputPin *output = &enginePins.coils[coilIndex];
 
 		IgnitionOutputPin *secondOutput;
 		if (CONFIG(ignitionMode) == IM_WASTED_SPARK && CONFIG(twoWireBatchIgnition)) {
 			int secondIndex = index + CONFIG(specs.cylindersCount) / 2;
-			int secondCylinderIndex = ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), secondIndex));
-			secondOutput = &enginePins.coils[secondCylinderIndex];
+			int secondCoilIndex = ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), secondIndex));
+			secondOutput = &enginePins.coils[secondCoilIndex];
 		} else {
 			secondOutput = NULL;
 		}
 
-		addIgnitionEvent(localAdvance, dwellAngle, list, output, secondOutput PASS_ENGINE_PARAMETER);
+		addIgnitionEvent(i, localAdvance, dwellAngle, list, output, secondOutput PASS_ENGINE_PARAMETER);
 	}
+	list->isReady = true;
 }
 
 static ALWAYS_INLINE void prepareIgnitionSchedule(int rpm, int revolutionIndex DECLARE_ENGINE_PARAMETER_S) {
@@ -275,7 +278,8 @@ static ALWAYS_INLINE void prepareIgnitionSchedule(int rpm, int revolutionIndex D
 
 	if (cisnan(ENGINE(engineState.timingAdvance))) {
 		// error should already be reported
-		list->reset(); // reset is needed to clear previous ignition schedule
+		// need to invalidate previous ignition schedule
+		list->isReady = false;
 		return;
 	}
 	initializeIgnitionActions(ENGINE(engineState.timingAdvance), ENGINE(engineState.dwellAngle), list PASS_ENGINE_PARAMETER);
@@ -318,11 +322,13 @@ void handleSpark(int revolutionIndex, bool limitedSpark, uint32_t trgEventIndex,
 	}
 
 //	scheduleSimpleMsg(&logger, "eventId spark ", eventIndex);
-	for (int i = 0; i < list->size; i++) {
-		IgnitionEvent *event = &list->elements[i];
-		if (event->dwellPosition.eventIndex != trgEventIndex)
-			continue;
-		handleSparkEvent(limitedSpark, trgEventIndex, event, rpm PASS_ENGINE_PARAMETER);
+	if (list->isReady) {
+		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
+			IgnitionEvent *event = &list->elements[i];
+			if (event->dwellPosition.eventIndex != trgEventIndex)
+				continue;
+			handleSparkEvent(limitedSpark, trgEventIndex, event, rpm PASS_ENGINE_PARAMETER);
+		}
 	}
 }
 
