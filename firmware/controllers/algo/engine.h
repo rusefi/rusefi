@@ -260,6 +260,7 @@ public:
 	Engine(persistent_config_s *config);
 	void init(persistent_config_s *config);
 	void prepareFuelSchedule(DECLARE_ENGINE_PARAMETER_F);
+	IgnitionEventList *ignitionList(); // todo: inline/rename/refactor
 
 	WallFuel wallFuel;
 

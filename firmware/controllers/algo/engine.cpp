@@ -289,6 +289,7 @@ void Engine::watchdog() {
 		return;
 	}
 	isSpinning = false;
+	ignitionList()->isReady = false;
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	scheduleMsg(&logger, "engine has STOPPED");
 	scheduleMsg(&logger, "templog engine has STOPPED [%x][%x] [%x][%x] %d",
@@ -301,6 +302,11 @@ void Engine::watchdog() {
 
 	enginePins.stopPins();
 #endif
+}
+
+IgnitionEventList * Engine::ignitionList() {
+	int revolutionIndex = rpmCalculator.getRevolutionCounter() % 2;
+	return &engineConfiguration2->ignitionEvents[revolutionIndex];
 }
 
 void Engine::prepareFuelSchedule(DECLARE_ENGINE_PARAMETER_F) {
