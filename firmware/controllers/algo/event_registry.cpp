@@ -45,6 +45,11 @@ IgnitionEvent::IgnitionEvent() {
 	sparkId = 0;
 }
 
+IgnitionOutputPin * IgnitionEvent::getOutputForLoggins() {
+	return outputs[0];
+}
+
+
 //void registerActuatorEventWhat(InjectionEventList *list, int eventIndex, OutputSignal *actuator, float angleOffset) {
 //	ActuatorEvent *e = list->getNextActuatorEvent();
 //	if (e == NULL)

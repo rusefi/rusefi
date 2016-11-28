@@ -49,7 +49,7 @@ public:
 class IgnitionEvent {
 public:
 	IgnitionEvent();
-	IgnitionOutputPin *outputs[2];
+	IgnitionOutputPin *outputs[MAX_OUTPUTS_FOR_IGNITION];
 	scheduling_s signalTimerUp;
 	scheduling_s signalTimerDown;
 	angle_t advance;
@@ -58,6 +58,7 @@ public:
 	IgnitionEvent *next;
 	int sparkId;
 	char *name;
+	IgnitionOutputPin *getOutputForLoggins();
 };
 
 /**
