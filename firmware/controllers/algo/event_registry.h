@@ -70,9 +70,10 @@ public:
 
 typedef ArrayList<InjectionEvent, MAX_INJECTION_OUTPUT_COUNT> InjectionEventList;
 
-class IgnitionEventList : public ArrayList<IgnitionEvent, MAX_IGNITION_EVENT_COUNT> {
+class IgnitionEventList {
 public:
 	IgnitionEventList();
+	IgnitionEvent elements[MAX_IGNITION_EVENT_COUNT];
 	bool isReady;
 };
 
