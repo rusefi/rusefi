@@ -46,6 +46,8 @@ public:
 
 #define MAX_OUTPUTS_FOR_IGNITION 2
 
+class Engine;
+
 class IgnitionEvent {
 public:
 	IgnitionEvent();
@@ -62,6 +64,9 @@ public:
 	int sparkId;
 	int cylinderIndex;
 	char *name;
+#if EFI_UNIT_TEST
+	Engine *engine;
+#endif
 	IgnitionOutputPin *getOutputForLoggins();
 };
 
