@@ -43,6 +43,7 @@ IgnitionEvent::IgnitionEvent() {
 	memset(outputs, 0, sizeof(outputs));
 	advance = NAN;
 	sparkId = 0;
+	cylinderIndex = 0;
 }
 
 IgnitionOutputPin * IgnitionEvent::getOutputForLoggins() {
