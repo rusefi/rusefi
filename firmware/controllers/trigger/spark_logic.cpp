@@ -198,7 +198,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	}
 }
 
-static void addIgnitionEvent(angle_t localAdvance, angle_t dwellAngle, IgnitionEventList *list, IgnitionOutputPin *output DECLARE_ENGINE_PARAMETER_S) {
+static void addIgnitionEvent(angle_t localAdvance, angle_t dwellAngle, IgnitionEventList *list, IgnitionOutputPin *output, IgnitionOutputPin *secondOutput DECLARE_ENGINE_PARAMETER_S) {
 	IgnitionEvent *event = list->add();
 
 	if (!isPinAssigned(output)) {
@@ -206,6 +206,7 @@ static void addIgnitionEvent(angle_t localAdvance, angle_t dwellAngle, IgnitionE
 		warning(CUSTOM_OBD_PIN_NOT_ASSIGNED, "no_pin_cl #%s", output->name);
 	}
 	event->outputs[0] = output;
+	event->outputs[1] = secondOutput;
 	event->advance = localAdvance;
 
 	findTriggerPosition(&event->dwellPosition, localAdvance - dwellAngle PASS_ENGINE_PARAMETER);
@@ -241,16 +242,7 @@ static void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
 			secondOutput = NULL;
 		}
 
-		addIgnitionEvent(localAdvance, dwellAngle, list, output PASS_ENGINE_PARAMETER);
-
-		if (CONFIG(ignitionMode) == IM_WASTED_SPARK && CONFIG(twoWireBatchIgnition)) {
-			int secondIndex = index + CONFIG(specs.cylindersCount) / 2;
-			int secondCylinderIndex = ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), secondIndex));
-			output = &enginePins.coils[secondCylinderIndex];
-
-			addIgnitionEvent(localAdvance, dwellAngle, list, output PASS_ENGINE_PARAMETER);
-		}
-
+		addIgnitionEvent(localAdvance, dwellAngle, list, output, secondOutput PASS_ENGINE_PARAMETER);
 	}
 }
 
