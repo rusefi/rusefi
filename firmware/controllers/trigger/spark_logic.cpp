@@ -56,8 +56,12 @@ void turnSparkPinLow2(IgnitionEvent *event, IgnitionOutputPin *output) {
 }
 
 void turnSparkPinLow(IgnitionEvent *event) {
-	IgnitionOutputPin *output = event->outputs[0];
-	turnSparkPinLow2(event, output);
+	for (int i = 0; i< MAX_OUTPUTS_FOR_IGNITION;i++) {
+		IgnitionOutputPin *output = event->outputs[i];
+		if (output != NULL) {
+			turnSparkPinLow2(event, output);
+		}
+	}
 }
 
 void turnSparkPinHigh2(IgnitionEvent *event, IgnitionOutputPin *output) {
@@ -95,8 +99,12 @@ void turnSparkPinHigh2(IgnitionEvent *event, IgnitionOutputPin *output) {
 }
 
 void turnSparkPinHigh(IgnitionEvent *event) {
-	IgnitionOutputPin *output = event->outputs[0];
-	turnSparkPinHigh2(event, output);
+	for (int i = 0; i< MAX_OUTPUTS_FOR_IGNITION;i++) {
+		IgnitionOutputPin *output = event->outputs[i];
+		if (output != NULL) {
+			turnSparkPinHigh2(event, output);
+		}
+	}
 }
 
 static int globalSparkIdCoutner = 0;
@@ -136,7 +144,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	 */
 	if (!limitedSpark) {
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
-		scheduleMsg(logger, "scheduling sparkUp ind=%d %d %s now=%d %d later id=%d", trgEventIndex, getRevolutionCounter(), iEvent->outputs[0]->name, (int)getTimeNowUs(), (int)chargeDelayUs,
+		scheduleMsg(logger, "scheduling sparkUp ind=%d %d %s now=%d %d later id=%d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs(), (int)chargeDelayUs,
 				iEvent->sparkId);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
@@ -167,13 +175,13 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * iEvent->sparkPosition.angleOffset;
 
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
-		scheduleMsg(logger, "scheduling sparkDown ind=%d %d %s now=%d %d later id=%d", trgEventIndex, getRevolutionCounter(), iEvent->outputs[0]->name, (int)getTimeNowUs(), (int)timeTillIgnitionUs, iEvent->sparkId);
+		scheduleMsg(logger, "scheduling sparkDown ind=%d %d %s now=%d %d later id=%d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs(), (int)timeTillIgnitionUs, iEvent->sparkId);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 		scheduleTask(true, "spark1 down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, iEvent);
 	} else {
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
-		scheduleMsg(logger, "to queue sparkDown ind=%d %d %s %d for %d", trgEventIndex, getRevolutionCounter(), iEvent->outputs[0]->name, (int)getTimeNowUs(), iEvent->sparkPosition.eventIndex);
+		scheduleMsg(logger, "to queue sparkDown ind=%d %d %s %d for %d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs(), iEvent->sparkPosition.eventIndex);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 		/**
 		 * Spark should be scheduled in relation to some future trigger event, this way we get better firing precision
@@ -181,7 +189,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		bool isPending = assertNotInList<IgnitionEvent>(ENGINE(iHead), iEvent);
 		if (isPending) {
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
-			scheduleMsg(logger, "not adding to queue sparkDown ind=%d %d %s %d", trgEventIndex, getRevolutionCounter(), iEvent->outputs[0]->name, (int)getTimeNowUs());
+			scheduleMsg(logger, "not adding to queue sparkDown ind=%d %d %s %d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 			return;
 		}
@@ -299,7 +307,7 @@ void handleSpark(int revolutionIndex, bool limitedSpark, uint32_t trgEventIndex,
 			scheduling_s * sDown = &current->signalTimerDown;
 
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
-	scheduleMsg(logger, "time to sparkDown ind=%d %d %s %d", trgEventIndex, getRevolutionCounter(), current->outputs[0]->name, (int)getTimeNowUs());
+	scheduleMsg(logger, "time to sparkDown ind=%d %d %s %d", trgEventIndex, getRevolutionCounter(), current->getOutputForLoggins()->name, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 
