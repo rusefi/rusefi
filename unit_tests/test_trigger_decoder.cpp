@@ -1204,12 +1204,12 @@ void testSparkReverseOrderBug319(void) {
 
 	assertEqualsM("RPM#3", 3000, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
 
-	assertEqualsM("out-of-order #5", 1, enginePins.coils[3].outOfOrder);
+	assertEqualsM("out-of-order #5 on c4", 1, enginePins.coils[3].outOfOrder);
 
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerFall();
 	schedulingQueue.executeAll(timeNow);
-	assertEqualsM("out-of-order #6", 0, enginePins.coils[3].outOfOrder);
+	assertEqualsM("out-of-order #6 on c4", 0, enginePins.coils[3].outOfOrder);
 
 	printf("*************************************************** (rpm is back 2) now let's have a good engine cycle and confirm things work\r\n");
 
