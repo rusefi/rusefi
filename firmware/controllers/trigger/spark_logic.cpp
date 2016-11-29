@@ -30,6 +30,8 @@ int isIgnitionTimingError(void) {
 	return ignitionErrorDetection.sum(6) > 4;
 }
 
+void prepareIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_S);
+
 static void turnSparkPinLow2(IgnitionEvent *event, IgnitionOutputPin *output) {
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
 	scheduleMsg(logger, "spark goes low  %d %s %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->name, (int)getTimeNowUs(),
@@ -221,7 +223,7 @@ static void addIgnitionEvent(angle_t localAdvance, angle_t dwellAngle, IgnitionE
 
 }
 
-static void prepareIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_S) {
+void prepareIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_S) {
 	// todo: clean up this implementation? does not look too nice as is.
 
 	// change of sign here from 'before TDC' to 'after TDC'
@@ -247,6 +249,9 @@ static void initializeIgnitionActions(IgnitionEventList *list DECLARE_ENGINE_PAR
 
 	for (int cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
 		list->elements[cylinderIndex].cylinderIndex = cylinderIndex;
+#if EFI_UNIT_TEST
+		list->elements[cylinderIndex].engine = engine;
+#endif
 		prepareIgnitionSchedule(&list->elements[cylinderIndex] PASS_ENGINE_PARAMETER);
 	}
 	list->isReady = true;
