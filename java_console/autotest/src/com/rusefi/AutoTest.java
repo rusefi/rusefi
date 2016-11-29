@@ -158,6 +158,16 @@ public class AutoTest {
         assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.29233, EngineReport.RATIO, 0.2, x + 180);
         assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.29233, 0.1, 0.2, x + 540);
         assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.29233, 0.1, 0.2, x);
+
+        sendCommand("set_whole_timing_map 520");
+        chart = nextChart();
+        x = 328;
+        assertWave(true, msg, chart, EngineChart.SPARK_1, 0.13299999999999998, EngineReport.RATIO, EngineReport.RATIO, x + 180, x + 540);
+
+        sendCommand("set_whole_timing_map 0");
+        chart = nextChart();
+        x = 128;
+        assertWave(true, msg, chart, EngineChart.SPARK_1, 0.13299999999999998, EngineReport.RATIO, EngineReport.RATIO, x + 180, x + 540);
     }
 
     private static void testMazdaProtege() {
