@@ -300,7 +300,7 @@ void testRpmCalculator(void) {
 
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 	EXPAND_EngineTestHelper;
-	IgnitionEventList *ilist = &eth.engine.engineConfiguration2->ignitionEvents[1];
+	IgnitionEventList *ilist = &eth.engine.engineConfiguration2->ignitionEvents[0];
 	assertEqualsM("size #1", 0, ilist->isReady);
 
 	assertEqualsM("engineCycle", 720, eth.engine.engineCycle);
@@ -1209,7 +1209,7 @@ void testSparkReverseOrderBug319(void) {
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerFall();
 	schedulingQueue.executeAll(timeNow);
-	assertEqualsM("out-of-order #6 on c4", 0, enginePins.coils[3].outOfOrder);
+	assertEqualsM("out-of-order #6 on c4", 1, enginePins.coils[3].outOfOrder);
 
 	printf("*************************************************** (rpm is back 2) now let's have a good engine cycle and confirm things work\r\n");
 
@@ -1219,7 +1219,7 @@ void testSparkReverseOrderBug319(void) {
 
 	assertEqualsM("RPM#4", 3000, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
 
-	assertEqualsM("out-of-order #7", 0, enginePins.coils[3].outOfOrder);
+	assertEqualsM("out-of-order #7", 1, enginePins.coils[3].outOfOrder);
 
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerFall();
