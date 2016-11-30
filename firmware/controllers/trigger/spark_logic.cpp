@@ -61,6 +61,8 @@ static void turnSparkPinLow2(IgnitionEvent *event, IgnitionOutputPin *output) {
 #endif /* EFI_PROD_CODE */
 }
 
+void prepareIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_S);
+
 void turnSparkPinLow(IgnitionEvent *event) {
 	for (int i = 0; i< MAX_OUTPUTS_FOR_IGNITION;i++) {
 		IgnitionOutputPin *output = event->outputs[i];
@@ -68,6 +70,12 @@ void turnSparkPinLow(IgnitionEvent *event) {
 			turnSparkPinLow2(event, output);
 		}
 	}
+#if EFI_UNIT_TEST
+	Engine *engine = event->engine;
+	EXPAND_Engine;
+#endif
+	// now that we've just fired a coil let's prepare the new schedule for the next engine revolution
+	prepareIgnitionSchedule(event PASS_ENGINE_PARAMETER);
 }
 
 static void turnSparkPinHigh2(IgnitionEvent *event, IgnitionOutputPin *output) {
@@ -160,7 +168,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		 * This way we make sure that coil dwell started while spark was enabled would fire and not burn
 		 * the coil.
 		 */
-		scheduleTask(true, "spark up", sUp, chargeDelayUs, (schfunc_t) &turnSparkPinHigh, iEvent);
+		scheduleTask(false, "spark up", sUp, chargeDelayUs, (schfunc_t) &turnSparkPinHigh, iEvent);
 	}
 	/**
 	 * Spark event is often happening during a later trigger event timeframe
@@ -184,7 +192,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		scheduleMsg(logger, "scheduling sparkDown ind=%d %d %s now=%d %d later id=%d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs(), (int)timeTillIgnitionUs, iEvent->sparkId);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-		scheduleTask(true, "spark1 down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, iEvent);
+		scheduleTask(false, "spark1 down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, iEvent);
 	} else {
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
 		scheduleMsg(logger, "to queue sparkDown ind=%d %d %s %d for %d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs(), iEvent->sparkPosition.eventIndex);
@@ -303,7 +311,7 @@ void handleSpark(bool limitedSpark, uint32_t trgEventIndex, int rpm
 	}
 
 	IgnitionEventList *list = engine->ignitionList();
-	if (trgEventIndex == 0) {
+	if (!list->isReady) {
 		prepareIgnitionSchedule(rpm PASS_ENGINE_PARAMETER);
 	}
 
@@ -328,7 +336,7 @@ void handleSpark(bool limitedSpark, uint32_t trgEventIndex, int rpm
 
 
 			float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * current->sparkPosition.angleOffset;
-			scheduleTask(true, "spark 2down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, current);
+			scheduleTask(false, "spark 2down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, current);
 		}
 	}
 
