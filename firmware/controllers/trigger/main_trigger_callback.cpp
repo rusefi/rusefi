@@ -87,9 +87,7 @@ static void endSimultaniousInjection(Engine *engine) {
 	}
 }
 
-// todo: make these macro? kind of a penny optimization if compiler is not smart to inline
-void seTurnPinHigh(OutputSignalPair *pair) {
-	InjectorOutputPin *output = pair->output;
+static void tempTurnPinHigh(InjectorOutputPin *output) {
 	output->overlappingCounter++;
 
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
@@ -121,9 +119,13 @@ void seTurnPinHigh(OutputSignalPair *pair) {
 	turnPinHigh(output);
 }
 
-void seTurnPinLow(OutputSignalPair *pair) {
-	pair->isScheduled = false;
-	InjectorOutputPin *output = pair->output;
+// todo: make these macro? kind of a penny optimization if compiler is not smart to inline
+void seTurnPinHigh(OutputSignalPair *pair) {
+	InjectorOutputPin *output = pair->outputs[0];
+	tempTurnPinHigh(output);
+}
+
+static void tempTurnPinLow(InjectorOutputPin *output) {
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 	printf("seTurnPinLow %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
@@ -162,8 +164,14 @@ void seTurnPinLow(OutputSignalPair *pair) {
 	turnPinLow(output);
 }
 
+void seTurnPinLow(OutputSignalPair *pair) {
+	pair->isScheduled = false;
+	InjectorOutputPin *output = pair->outputs[0];
+	tempTurnPinLow(output);
+}
+
 static void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, OutputSignalPair *pair) {
-	InjectorOutputPin *param = pair->output;
+	InjectorOutputPin *param = pair->outputs[0];
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 //	scheduleMsg(&sharedLogger, "schX %s %x %d", prefix, scheduling,	time);
 //	scheduleMsg(&sharedLogger, "schX %s", param->name);
@@ -200,7 +208,7 @@ static void scheduleFuelInjection(int rpm, OutputSignal *signal, efitimeus_t now
 #endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
 		return; // this OutputSignalPair is still needed for an extremely long injection scheduled previously
 	}
-	pair->output = output;
+	pair->outputs[0] = output;
 	scheduling_s * sUp = &pair->signalTimerUp;
 	scheduling_s * sDown = &pair->signalTimerDown;
 
@@ -229,7 +237,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 	 * wetting coefficient works the same way for any injection mode, or is something
 	 * x2 or /2?
 	 */
-	const floatms_t injectionDuration = ENGINE(wallFuel).adjust(event->injectorIndex, ENGINE(fuelMs) PASS_ENGINE_PARAMETER);
+	const floatms_t injectionDuration = ENGINE(wallFuel).adjust(event->output->injectorIndex, ENGINE(fuelMs) PASS_ENGINE_PARAMETER);
 #if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
 	printf("fuel fuelMs=%f adjusted=%f\t\n", ENGINE(fuelMs), injectionDuration);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
@@ -332,7 +340,7 @@ static void scheduleOutput2(OutputSignalPair *pair, efitimeus_t nowUs, float del
 	pair->isScheduled = true;
 	scheduling_s *sDown = &pair->signalTimerDown;
 
-	pair->output = output;
+	pair->outputs[0] = output;
 	seScheduleByTime("out up2", sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, pair);
 	efitimeus_t turnOffTime = nowUs + (int) (delayUs + durationUs);
 
@@ -352,7 +360,7 @@ static void handleFuelScheduleOverlap(InjectionEventList *injectionEvents DECLAR
 		if (!engine->engineConfiguration2->wasOverlapping[injEventIndex] && event->isOverlapping) {
 			// we are here if new fuel schedule is crossing engine cycle boundary with this event
 
-			InjectorOutputPin *output = &enginePins.injectors[event->injectorIndex];
+			InjectorOutputPin *output = event->output;
 
 			// todo: recalc fuel? account for wetting?
 			floatms_t injectionDuration = ENGINE(fuelMs);

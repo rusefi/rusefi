@@ -38,7 +38,6 @@ public:
 	 */
 	bool isSimultanious;
 	InjectorOutputPin *output;
-	int injectorIndex;
 	bool isOverlapping;
 
 	event_trigger_position_s injectionStart;

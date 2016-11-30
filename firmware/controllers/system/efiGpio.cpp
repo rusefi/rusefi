@@ -29,6 +29,7 @@ NamedOutputPin::NamedOutputPin(const char *name) : OutputPin() {
 
 InjectorOutputPin::InjectorOutputPin() : NamedOutputPin() {
 	reset();
+	injectorIndex = -1;
 }
 
 static const char *sparkNames[IGNITION_PIN_COUNT] = { "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8",
@@ -46,6 +47,7 @@ EnginePins::EnginePins() {
 		enginePins.coils[i].name = sparkNames[i];
 	}
 	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
+		enginePins.injectors[i].injectorIndex = i;
 		enginePins.injectors[i].name = injectorNames[i];
 	}
 }

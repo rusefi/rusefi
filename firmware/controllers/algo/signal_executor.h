@@ -24,6 +24,8 @@
 #include "signal_executor_sleep.h"
 #endif /* EFI_SIGNAL_EXECUTOR_SLEEP */
 
+#define MAX_WIRES_COUNT 2
+
 class OutputSignalPair {
 public:
 	OutputSignalPair();
@@ -38,7 +40,7 @@ public:
 	 * TODO: make watchdog decrement relevant counter
 	 */
 	bool isScheduled;
-	InjectorOutputPin *output;
+	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
 };
 
 /**
