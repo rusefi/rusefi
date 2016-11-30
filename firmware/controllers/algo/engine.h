@@ -94,11 +94,7 @@ public:
 
 	float fsioLastValue[LE_COMMAND_COUNT];
 
-	/**
-	 * We are alternating two event lists in order to avoid a potential issue around revolution boundary
-	 * when an event is scheduled within the next revolution.
-	 */
-	IgnitionEventList ignitionEvents[2];
+	IgnitionEventList ignitionEvents;
 };
 
 class ThermistorMath {

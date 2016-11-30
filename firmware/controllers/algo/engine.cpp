@@ -305,8 +305,7 @@ void Engine::watchdog() {
 }
 
 IgnitionEventList * Engine::ignitionList() {
-//	int revolutionIndex = rpmCalculator.getRevolutionCounter() % 2;
-	return &engineConfiguration2->ignitionEvents[0];
+	return &engineConfiguration2->ignitionEvents;
 }
 
 void Engine::prepareFuelSchedule(DECLARE_ENGINE_PARAMETER_F) {
