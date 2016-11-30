@@ -588,7 +588,7 @@ void assertEvent(const char *msg, int index, void *callback, efitime_t start, ef
 	assertEqualsM4(msg, "up/down", (void*)ev->callback == (void*) callback, 1);
 	assertEqualsM(msg, momentX, ev->momentX - start);
 	OutputSignalPair *pair = (OutputSignalPair *)ev->param;
-	assertEqualsLM(msg, param, (long)pair->output);
+	assertEqualsLM(msg, param, (long)pair->outputs[0]);
 }
 
 void assertInjectorUpEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex) {
@@ -600,7 +600,7 @@ void assertInjectorDownEvent(const char *msg, int eventIndex, efitime_t momentX,
 }
 
 static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset, bool isOverlapping) {
-	assertEqualsM4(msg, "inj index", injectorIndex, ev->injectorIndex);
+	assertEqualsM4(msg, "inj index", injectorIndex, ev->output->injectorIndex);
 	assertEqualsM4(msg, " event index", eventIndex, ev->injectionStart.eventIndex);
 	assertEqualsM4(msg, " event offset", angleOffset, ev->injectionStart.angleOffset);
 	assertTrueM("is overlapping", isOverlapping == ev->isOverlapping);

@@ -56,6 +56,7 @@ public:
 	InjectorOutputPin();
 	void reset();
 	efitimeus_t overlappingScheduleOffTime;
+	int injectorIndex;
 	bool cancelNextTurningInjectorOff;
 	int overlappingCounter;
 };

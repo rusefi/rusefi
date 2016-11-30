@@ -27,7 +27,6 @@
 InjectionEvent::InjectionEvent() {
 	isSimultanious = false;
 	isOverlapping = false;
-	injectorIndex = 0;
 	output = NULL;
 }
 

@@ -111,7 +111,6 @@ void FuelSchedule::registerInjectionEvent(int injectorIndex, float angle, angle_
 	fixAngle(angle);
 	ev->isOverlapping = angle < 720 && (angle + injectionDuration) > 720;
 
-	ev->injectorIndex = injectorIndex;
 	ev->output = output;
 
 	ev->isSimultanious = isSimultanious;
