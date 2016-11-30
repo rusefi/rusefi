@@ -516,6 +516,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 		engine->fuelScheduleForThisEngineCycle->usedAtEngineCycle = ENGINE(rpmCalculator).getRevolutionCounter();
 
 		if (triggerVersion.isOld()) {
+			engine->ignitionList()->isReady = false; // we need to rebuild ignition schedule
 			// todo: move 'triggerIndexByAngle' change into trigger initialization, why is it invoked from here if it's only about trigger shape & optimization?
 			prepareOutputSignals(PASS_ENGINE_PARAMETER_F);
 			// we need this to apply new 'triggerIndexByAngle' values
