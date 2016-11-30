@@ -177,7 +177,7 @@ static void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efiti
 	scheduleByTime(true, prefix, scheduling, time, callback, pair);
 }
 
-static void scheduleFuelInjection(int rpm, int injEventIndex, OutputSignal *signal, efitimeus_t nowUs, floatus_t delayUs, floatus_t durationUs, InjectorOutputPin *output DECLARE_ENGINE_PARAMETER_S) {
+static void scheduleFuelInjection(int rpm, OutputSignal *signal, efitimeus_t nowUs, floatus_t delayUs, floatus_t durationUs, InjectorOutputPin *output DECLARE_ENGINE_PARAMETER_S) {
 	if (durationUs < 0) {
 		warning(CUSTOM_OBD_3, "duration cannot be negative: %d", durationUs);
 		return;
@@ -308,7 +308,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 			prevOutputName = outputName;
 		}
 
-		scheduleFuelInjection(rpm, injEventIndex, signal, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration), event->output PASS_ENGINE_PARAMETER);
+		scheduleFuelInjection(rpm, signal, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration), event->output PASS_ENGINE_PARAMETER);
 	}
 }
 
@@ -431,20 +431,6 @@ void showMainHistogram(void) {
 #endif
 }
 
-// todo: the method name is not correct any more - no calc is done here anymore
-static ALWAYS_INLINE void ignitionMathCalc(int rpm DECLARE_ENGINE_PARAMETER_S) {
-	/**
-	 * Within one engine cycle all cylinders are fired with same timing advance.
-	 * todo: one day we can control cylinders individually?
-	 */
-	float dwellMs = ENGINE(engineState.sparkDwell);
-
-	if (cisnan(dwellMs) || dwellMs < 0) {
-		firmwareError(CUSTOM_ERR_DWELL_DURATION, "invalid dwell: %f at %d", dwellMs, rpm);
-		return;
-	}
-}
-
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 /**
  * this field is used as an Expression in IAR debugger
@@ -531,10 +517,6 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 			float externalKnockValue = getVoltageDivided("knock", engineConfiguration->externalKnockSenseAdc);
 			engine->knockLogic(externalKnockValue);
 		}
-
-		ENGINE(m.beforeIgnitionMath) = GET_TIMESTAMP();
-		ignitionMathCalc(rpm PASS_ENGINE_PARAMETER);
-		ENGINE(m.ignitionMathTime) = GET_TIMESTAMP() - ENGINE(m.beforeIgnitionMath);
 	}
 
 
