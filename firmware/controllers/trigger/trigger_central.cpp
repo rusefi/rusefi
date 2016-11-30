@@ -470,8 +470,8 @@ void triggerInfo(void) {
 			engine->m.fuelCalcTime);
 
 	scheduleMsg(logger,
-			"ignitionMathTime=%d ignitionSchTime=%d injectonSchTime=%d",
-			engine->m.ignitionMathTime, engine->m.ignitionSchTime,
+			"ignitionSchTime=%d injectonSchTime=%d",
+			engine->m.ignitionSchTime,
 			engine->m.injectonSchTime);
 
 	scheduleMsg(logger, "mapTime=%d/hipTime=%d/rpmTime=%d/mainTriggerCallbackTime=%d",

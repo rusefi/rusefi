@@ -222,12 +222,19 @@ floatms_t getCrankingSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_S) {
  * @return Spark dwell time, in milliseconds.
  */
 floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_S) {
+	float dwellMs;
 	if (isCrankingR(rpm)) {
-		return getCrankingSparkDwell(rpm PASS_ENGINE_PARAMETER);
-	}
-	efiAssert(!cisnan(rpm), "invalid rpm", NAN);
+		dwellMs = getCrankingSparkDwell(rpm PASS_ENGINE_PARAMETER);
+	} else {
+		efiAssert(!cisnan(rpm), "invalid rpm", NAN);
 
-	return interpolate2d(rpm, engineConfiguration->sparkDwellBins, engineConfiguration->sparkDwell, DWELL_CURVE_SIZE);
+		dwellMs = interpolate2d(rpm, engineConfiguration->sparkDwellBins, engineConfiguration->sparkDwell, DWELL_CURVE_SIZE);
+	}
+
+	if (cisnan(dwellMs) || dwellMs < 0) {
+		firmwareError(CUSTOM_ERR_DWELL_DURATION, "invalid dwell: %f at %d", dwellMs, rpm);
+	}
+	return dwellMs;
 }
 
 static int findAngleIndex(float target DECLARE_ENGINE_PARAMETER_S) {

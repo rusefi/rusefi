@@ -218,9 +218,6 @@ typedef struct {
 	uint32_t beforeMainTrigger;
 	uint32_t mainTriggerCallbackTime;
 
-	uint32_t beforeIgnitionMath;
-	uint32_t ignitionMathTime;
-
 	uint32_t beforeIgnitionSch;
 	uint32_t ignitionSchTime;
 
