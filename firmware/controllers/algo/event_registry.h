@@ -37,7 +37,7 @@ public:
 	 * It's more efficient to handle all injectors together if that's the case
 	 */
 	bool isSimultanious;
-	InjectorOutputPin *output;
+	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
 	bool isOverlapping;
 
 	event_trigger_position_s injectionStart;

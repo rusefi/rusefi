@@ -27,7 +27,7 @@
 InjectionEvent::InjectionEvent() {
 	isSimultanious = false;
 	isOverlapping = false;
-	output = NULL;
+	memset(outputs, 0, sizeof(outputs));
 }
 
 event_trigger_position_s::event_trigger_position_s() {
