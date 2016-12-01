@@ -76,7 +76,7 @@ static Logging *logger;
 //#endif
 
 static void startSimultaniousInjection(InjectionEvent *event) {
-#if EFI_UNIT_TEST
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	Engine *engine = event->engine;
 #endif
 	for (int i = 0; i < engine->engineConfiguration->specs.cylindersCount; i++) {
@@ -85,7 +85,7 @@ static void startSimultaniousInjection(InjectionEvent *event) {
 }
 
 static void endSimultaniousInjection(InjectionEvent *event) {
-#if EFI_UNIT_TEST
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	Engine *engine = event->engine;
 	EXPAND_Engine;
 	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
@@ -185,12 +185,13 @@ void seTurnPinLow(OutputSignalPair *pair) {
 			tempTurnPinLow(output);
 		}
 	}
-#if EFI_UNIT_TEST
-//	Engine *engine = pair->event->engine;
-//	EXPAND_Engine;
-//	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
+	efiAssertVoid(pair->event != NULL, "pair event");
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+	Engine *engine = pair->event->engine;
+	EXPAND_Engine;
+	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 #endif
-//	engineConfiguration2->injectionEvents->addFuelEventsForCylinder(pair->event->ownIndex PASS_ENGINE_PARAMETER);
+	engineConfiguration2->injectionEvents->addFuelEventsForCylinder(pair->event->ownIndex PASS_ENGINE_PARAMETER);
 }
 
 static void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, OutputSignalPair *pair) {
@@ -239,7 +240,6 @@ static void scheduleFuelInjection(int rpm, OutputSignal *signal, efitimeus_t now
 
 	pair->isScheduled = true;
 	pair->event = event;
-
 	efitimeus_t turnOnTime = nowUs + (int) delayUs;
 	bool isSecondaryOverlapping = turnOnTime < output->overlappingScheduleOffTime;
 
@@ -403,6 +403,7 @@ static void handleFuelScheduleOverlap(FuelSchedule *fs DECLARE_ENGINE_PARAMETER_
 
 			output->overlappingScheduleOffTime = nowUs + MS2US(injectionDuration);
 
+			pair->event = event;
 			scheduleOutput2(pair, nowUs, 0, MS2US(injectionDuration), output);
 		}
 	}

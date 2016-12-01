@@ -369,7 +369,7 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 	ENGINE(fuelMs) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER) * engineConfiguration->globalFuelCorrection;
 	engine->m.fuelCalcTime = GET_TIMESTAMP() - engine->m.beforeFuelCalc;
 
-	prepareFuelSchedule(PASS_ENGINE_PARAMETER_F);
+//	prepareFuelSchedule(PASS_ENGINE_PARAMETER_F);
 }
 
 StartupFuelPumping::StartupFuelPumping() {

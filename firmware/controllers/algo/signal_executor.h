@@ -43,6 +43,7 @@ public:
 	 */
 	bool isScheduled;
 	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
+
 	InjectionEvent *event;
 };
 

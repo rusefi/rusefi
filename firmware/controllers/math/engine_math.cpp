@@ -177,7 +177,7 @@ void FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_S) {
 
 	findTriggerPosition(&ev->injectionStart, angle PASS_ENGINE_PARAMETER);
 #if EFI_UNIT_TEST
-	printf("registerInjectionEvent angle=%f index=%d\r\n", angle, ev->injectionStart.eventIndex);
+	printf("registerInjectionEvent angle=%f trgIndex=%d inj %d\r\n", angle, ev->injectionStart.eventIndex, index);
 #endif
 }
 
