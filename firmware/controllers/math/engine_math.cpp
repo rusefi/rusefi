@@ -93,40 +93,6 @@ void setSingleCoilDwell(engine_configuration_s *engineConfiguration) {
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 
-void FuelSchedule::registerInjectionEvent(InjectorOutputPin *output, InjectorOutputPin *secondOutput, float angle, angle_t injectionDuration,
-		bool isSimultanious DECLARE_ENGINE_PARAMETER_S) {
-
-
-	if (!isSimultanious && !isPinAssigned(output)) {
-		// todo: extract method for this index math
-		warning(CUSTOM_OBD_20, "no_pin_inj #%s", output->name);
-	}
-
-	InjectionEvent *ev = injectionEvents.add();
-	if (ev == NULL) {
-		// error already reported
-		return;
-	}
-	fixAngle(angle);
-	ev->isOverlapping = angle < 720 && (angle + injectionDuration) > 720;
-
-	ev->outputs[0] = output;
-
-	ev->isSimultanious = isSimultanious;
-
-	efiAssertVoid(TRIGGER_SHAPE(getSize()) > 0, "uninitialized TriggerShape");
-
-	findTriggerPosition(&ev->injectionStart, angle PASS_ENGINE_PARAMETER);
-#if EFI_UNIT_TEST
-	printf("registerInjectionEvent angle=%f index=%d\r\n", angle, ev->injectionStart.eventIndex);
-#endif
-
-	if (!hasEvents[ev->injectionStart.eventIndex]) {
-		hasEvents[ev->injectionStart.eventIndex] = true;
-		eventsCount++;
-	}
-}
-
 FuelSchedule::FuelSchedule() {
 	clear();
 }
@@ -137,12 +103,7 @@ void FuelSchedule::clear() {
 	usedAtEngineCycle = 0;
 }
 
-void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S) {
-	clear(); // this method is relatively heavy
-//	sourceList->reset();
-
-	injectionEvents.reset();
-
+void FuelSchedule::addFuelEventsForCylinder(int i, injection_mode_e mode DECLARE_ENGINE_PARAMETER_S) {
 	efiAssertVoid(engine!=NULL, "engine is NULL");
 
 	if (cisnan(engine->rpmCalculator.oneDegreeUs)) {
@@ -161,46 +122,77 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 	angle_t injectionDuration = MS2US(ENGINE(fuelMs)) / ENGINE(rpmCalculator.oneDegreeUs);
 	angle_t baseAngle = ENGINE(engineState.injectionOffset) - injectionDuration;
 
-	switch (mode) {
-	case IM_SEQUENTIAL:
-		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
-			int index = getCylinderId(engineConfiguration->specs.firingOrder, i) - 1;
-			float angle = baseAngle
-					+ ENGINE(engineCycle) * i / CONFIG(specs.cylindersCount);
-			registerInjectionEvent(&enginePins.injectors[index], NULL, angle, injectionDuration, false PASS_ENGINE_PARAMETER);
-		}
-		break;
-	case IM_SIMULTANEOUS:
-		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
-			float angle = baseAngle
-					+ ENGINE(engineCycle) * i / CONFIG(specs.cylindersCount);
+	int index;
 
-			/**
-			 * We do not need injector pin here because we will control all injectors
-			 * simultaneously
-			 */
-			registerInjectionEvent(&enginePins.injectors[0], NULL, angle, injectionDuration, true PASS_ENGINE_PARAMETER);
-		}
-		break;
-	case IM_BATCH:
-		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
-			int index = i % (engineConfiguration->specs.cylindersCount / 2);
-			float angle = baseAngle
-					+ i * ENGINE(engineCycle) / CONFIG(specs.cylindersCount);
-			registerInjectionEvent(&enginePins.injectors[index], NULL, angle, injectionDuration, false PASS_ENGINE_PARAMETER);
-
-			if (CONFIG(twoWireBatchInjection)) {
-
-				/**
-				 * also fire the 2nd half of the injectors so that we can implement a batch mode on individual wires
-				 */
-				index = index + (CONFIG(specs.cylindersCount) / 2);
-				registerInjectionEvent(&enginePins.injectors[index], NULL, angle, injectionDuration, false PASS_ENGINE_PARAMETER);
-			}
-		}
-		break;
-	default:
+	if (mode == IM_SIMULTANEOUS) {
+		index = 0;
+	} else if (mode == IM_SEQUENTIAL) {
+		index = getCylinderId(engineConfiguration->specs.firingOrder, i) - 1;
+	} else if (mode == IM_BATCH) {
+		// does not look exactly right, not too consistent with IM_SEQUENTIAL
+		index = i % (engineConfiguration->specs.cylindersCount / 2);
+	} else {
 		warning(CUSTOM_OBD_21, "Unexpected injection mode %d", mode);
+		index = 0;
+	}
+
+	bool isSimultanious = mode == IM_SIMULTANEOUS;
+
+	float angle = baseAngle
+			+ i * ENGINE(engineCycle) / CONFIG(specs.cylindersCount);
+
+	InjectorOutputPin *secondOutput;
+	if (mode == IM_BATCH && CONFIG(twoWireBatchInjection)) {
+		/**
+		 * also fire the 2nd half of the injectors so that we can implement a batch mode on individual wires
+		 */
+		int secondIndex = index + (CONFIG(specs.cylindersCount) / 2);
+		secondOutput = &enginePins.injectors[secondIndex];
+	} else {
+		secondOutput = NULL;
+	}
+
+	InjectorOutputPin *output = &enginePins.injectors[index];
+
+	if (!isSimultanious && !isPinAssigned(output)) {
+		// todo: extract method for this index math
+		warning(CUSTOM_OBD_20, "no_pin_inj #%s", output->name);
+	}
+
+	InjectionEvent *ev = injectionEvents.add();
+	if (ev == NULL) {
+		// error already reported
+		return;
+	}
+	fixAngle(angle);
+	ev->isOverlapping = angle < 720 && (angle + injectionDuration) > 720;
+
+	ev->outputs[0] = output;
+	ev->outputs[1] = secondOutput;
+
+	ev->isSimultanious = isSimultanious;
+
+	efiAssertVoid(TRIGGER_SHAPE(getSize()) > 0, "uninitialized TriggerShape");
+
+	findTriggerPosition(&ev->injectionStart, angle PASS_ENGINE_PARAMETER);
+#if EFI_UNIT_TEST
+	printf("registerInjectionEvent angle=%f index=%d\r\n", angle, ev->injectionStart.eventIndex);
+#endif
+
+	if (!hasEvents[ev->injectionStart.eventIndex]) {
+		hasEvents[ev->injectionStart.eventIndex] = true;
+		eventsCount++;
+	}
+}
+
+void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S) {
+	clear(); // this method is relatively heavy
+//	sourceList->reset();
+
+	injectionEvents.reset();
+
+	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
+		addFuelEventsForCylinder(i, mode PASS_ENGINE_PARAMETER);
 	}
 }
 

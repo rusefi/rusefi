@@ -121,8 +121,11 @@ static void tempTurnPinHigh(InjectorOutputPin *output) {
 
 // todo: make these macro? kind of a penny optimization if compiler is not smart to inline
 void seTurnPinHigh(OutputSignalPair *pair) {
-	InjectorOutputPin *output = pair->outputs[0];
-	tempTurnPinHigh(output);
+	for (int i = 0;i<MAX_WIRES_COUNT;i++) {
+		InjectorOutputPin *output = pair->outputs[i];
+		if (output != NULL)
+			tempTurnPinHigh(output);
+	}
 }
 
 static void tempTurnPinLow(InjectorOutputPin *output) {
@@ -166,8 +169,11 @@ static void tempTurnPinLow(InjectorOutputPin *output) {
 
 void seTurnPinLow(OutputSignalPair *pair) {
 	pair->isScheduled = false;
-	InjectorOutputPin *output = pair->outputs[0];
-	tempTurnPinLow(output);
+	for (int i = 0;i<MAX_WIRES_COUNT;i++) {
+		InjectorOutputPin *output = pair->outputs[i];
+		if (output != NULL)
+		tempTurnPinLow(output);
+	}
 }
 
 static void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, OutputSignalPair *pair) {
@@ -185,7 +191,7 @@ static void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efiti
 	scheduleByTime(true, prefix, scheduling, time, callback, pair);
 }
 
-static void scheduleFuelInjection(int rpm, OutputSignal *signal, efitimeus_t nowUs, floatus_t delayUs, floatus_t durationUs, InjectorOutputPin *output DECLARE_ENGINE_PARAMETER_S) {
+static void scheduleFuelInjection(int rpm, OutputSignal *signal, efitimeus_t nowUs, floatus_t delayUs, floatus_t durationUs, InjectionEvent *event DECLARE_ENGINE_PARAMETER_S) {
 	if (durationUs < 0) {
 		warning(CUSTOM_OBD_3, "duration cannot be negative: %d", durationUs);
 		return;
@@ -194,6 +200,7 @@ static void scheduleFuelInjection(int rpm, OutputSignal *signal, efitimeus_t now
 		warning(CUSTOM_NAN_DURACTION, "NaN in scheduleFuelInjection", durationUs);
 		return;
 	}
+	InjectorOutputPin *output = event->outputs[0];
 #if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
 	printf("fuelout %s duration %d total=%d\t\n", output->name, (int)durationUs,
 			(int)MS2US(getCrankshaftRevolutionTimeMs(rpm)));
@@ -209,6 +216,7 @@ static void scheduleFuelInjection(int rpm, OutputSignal *signal, efitimeus_t now
 		return; // this OutputSignalPair is still needed for an extremely long injection scheduled previously
 	}
 	pair->outputs[0] = output;
+	pair->outputs[1] = event->outputs[1];
 	scheduling_s * sUp = &pair->signalTimerUp;
 	scheduling_s * sDown = &pair->signalTimerDown;
 
@@ -316,7 +324,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 			prevOutputName = outputName;
 		}
 
-		scheduleFuelInjection(rpm, signal, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration), event->outputs[0] PASS_ENGINE_PARAMETER);
+		scheduleFuelInjection(rpm, signal, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration), event PASS_ENGINE_PARAMETER);
 	}
 }
 

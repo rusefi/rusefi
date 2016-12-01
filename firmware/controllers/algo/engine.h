@@ -42,6 +42,7 @@ public:
 	 * this method schedules all fuel events for an engine cycle
 	 */
 	void addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S);
+	void addFuelEventsForCylinder(int i, injection_mode_e mode DECLARE_ENGINE_PARAMETER_S);
 
 	uint32_t usedAtEngineCycle;
 
@@ -58,7 +59,6 @@ public:
 	int eventsCount;
 private:
 	void clear();
-	void registerInjectionEvent(InjectorOutputPin *output, InjectorOutputPin *secondOutput, float angle, angle_t injectionDuration, bool isSimultanious DECLARE_ENGINE_PARAMETER_S);
 };
 
 /**

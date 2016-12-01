@@ -383,11 +383,10 @@ void testRpmCalculator(void) {
 	timeNow += 5000;
 	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER);
 	assertEqualsM("index #3", 3, eth.engine.triggerCentral.triggerState.getCurrentIndex());
-	assertEqualsM("queue size 3", 6, schedulingQueue.size());
+	assertEqualsM("queue size 3", 4, schedulingQueue.size());
 	assertEqualsM("ev 3", st + 13333 - 1515, schedulingQueue.getForUnitText(0)->momentX);
-	assertEqualsM("ev 4", st + 13333 - 1515, schedulingQueue.getForUnitText(1)->momentX);
-	assertEqualsM2("ev 5", st + 14277, schedulingQueue.getForUnitText(2)->momentX, 2);
-	assertEqualsM("3/3", st + 14777, schedulingQueue.getForUnitText(3)->momentX);
+	assertEqualsM2("ev 5", st + 14277, schedulingQueue.getForUnitText(1)->momentX, 2);
+	assertEqualsM("3/3", st + 14777, schedulingQueue.getForUnitText(2)->momentX);
 	schedulingQueue.clear();
 
 	assertEquals(5, engine->triggerShape.triggerIndexByAngle[240]);
@@ -401,26 +400,26 @@ void testRpmCalculator(void) {
 
 	timeNow += 5000; // 5ms
 	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER);
-	assertEqualsM("queue size 4.2", 6, schedulingQueue.size());
+	assertEqualsM("queue size 4.2", 4, schedulingQueue.size());
 
 	timeNow += 5000; // 5ms
 	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER);
-	assertEqualsM("queue size 4.3", 6, schedulingQueue.size());
+	assertEqualsM("queue size 4.3", 4, schedulingQueue.size());
 
 	assertEqualsM("dwell", 4.5, eth.engine.engineState.dwellAngle);
 	assertEqualsM("fuel #3", 4.5450, eth.engine.fuelMs);
 	assertEquals(1500, eth.engine.rpmCalculator.rpmValue);
 
 	assertInjectorUpEvent("ev 0/2", 0, -4849, 2);
-	assertInjectorUpEvent("ev 1/2", 1, -4849, 5);
+
 
 	assertEqualsM("index #4", 6, eth.engine.triggerCentral.triggerState.getCurrentIndex());
-	assertEqualsM("queue size 4", 6, schedulingQueue.size());
+	assertEqualsM("queue size 4", 4, schedulingQueue.size());
 	schedulingQueue.clear();
 
 	timeNow += 5000;
 	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER);
-	assertEqualsM("queue size 5", 4, schedulingQueue.size());
+	assertEqualsM("queue size 5", 2, schedulingQueue.size());
 // todo: assert queue elements
 	schedulingQueue.clear();
 
@@ -438,12 +437,11 @@ void testRpmCalculator(void) {
 
 	timeNow += 5000; // 5ms
 	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER);
-	assertEqualsM("queue size 8", 6, schedulingQueue.size());
+	assertEqualsM("queue size 8", 4, schedulingQueue.size());
 	// todo: assert queue elements completely
 	assertEqualsM("8/0", st + 53333 - 1515, schedulingQueue.getForUnitText(0)->momentX);
-	assertEqualsM("8/1", st + 53333 - 1515, schedulingQueue.getForUnitText(1)->momentX);
-	assertEqualsM2("8/2", st + 54277, schedulingQueue.getForUnitText(2)->momentX, 0);
-	assertEqualsM2("8/3", st + 54777, schedulingQueue.getForUnitText(3)->momentX, 0);
+	assertEqualsM2("8/1", st + 54277, schedulingQueue.getForUnitText(1)->momentX, 0);
+	assertEqualsM2("8/2", st + 54777, schedulingQueue.getForUnitText(2)->momentX, 0);
 	schedulingQueue.clear();
 
 	timeNow += 5000;
