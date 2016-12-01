@@ -393,8 +393,6 @@ void testRpmCalculator(void) {
 	assertEquals(5, engine->triggerShape.triggerIndexByAngle[241]);
 
 	timeNow += 5000;
-	assertEqualsM("Size 4.1", 6, engine->engineConfiguration2->injectionEvents->eventsCount);
-	assertFalseM("No squirts expected 4.1", engine->engineConfiguration2->injectionEvents->hasEvents[4]);
 	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER);
 	assertEqualsM("queue size 4.1", 0, schedulingQueue.size());
 
@@ -666,7 +664,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	assertEqualsM("exec#0", 0, schedulingQueue.executeAll(timeNow));
 
 	FuelSchedule * t = ENGINE(engineConfiguration2)->injectionEvents;
-	assertEqualsM("t.s#0", 4, t->injectionEvents.size);
+
 	assertInjectionEvent("#0", &t->injectionEvents.elements[0], 0, 1, 153, false);
 	assertInjectionEvent("#1", &t->injectionEvents.elements[1], 1, 1, 333, false);
 	assertInjectionEvent("#2", &t->injectionEvents.elements[2], 0, 0, 153, false);
@@ -837,7 +835,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 
 
 	t = ENGINE(engineConfiguration2)->injectionEvents;
-	assertEqualsM("t.s", 4, t->injectionEvents.size);
+
 	assertInjectionEvent("#0", &t->injectionEvents.elements[0], 0, 0, 315, false);
 	assertInjectionEvent("#1", &t->injectionEvents.elements[1], 1, 1, 135, false);
 	assertInjectionEvent("#2", &t->injectionEvents.elements[2], 0, 1, 315, true);
@@ -926,7 +924,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 
 
 	t = ENGINE(engineConfiguration2)->injectionEvents;
-	assertEqualsM("injectionEvents.size", 4, t->injectionEvents.size);
+
 	assertInjectionEvent("#0#", &t->injectionEvents.elements[0], 0, 0, 315, false);
 	assertInjectionEvent("#1#", &t->injectionEvents.elements[1], 1, 1, 135, false);
 	assertInjectionEvent("#2#", &t->injectionEvents.elements[2], 0, 1, 315, true);
@@ -977,7 +975,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 
 	t = ENGINE(engineConfiguration2)->injectionEvents;
-	assertEqualsM("t.s", 4, t->injectionEvents.size);
+
 	assertInjectionEvent("#00", &t->injectionEvents.elements[0], 0, 0, 225, false); // 87.5 duty cycle
 	assertInjectionEvent("#10", &t->injectionEvents.elements[1], 1, 1, 45, false);
 	assertInjectionEvent("#20", &t->injectionEvents.elements[2], 0, 1, 225, true);

@@ -21,6 +21,10 @@ IgnitionEventList::IgnitionEventList() {
 	isReady = false;
 }
 
+InjectionEventList::InjectionEventList() {
+	isReady = false;
+}
+
 int isInjectionEnabled(engine_configuration_s *engineConfiguration) {
 	// todo: is this worth a method? should this be inlined?
 	return engineConfiguration->isInjectionEnabled;

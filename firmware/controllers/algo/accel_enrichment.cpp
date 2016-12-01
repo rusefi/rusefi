@@ -97,7 +97,7 @@ float AccelEnrichmemnt::getMaxDelta(DECLARE_ENGINE_PARAMETER_F) {
 	int index = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_F);
 
 	FuelSchedule *fs = engine->engineConfiguration2->injectionEvents;
-	return (cb.get(index) - (cb.get(index - 1))) * fs->eventsCount;
+	return (cb.get(index) - (cb.get(index - 1))) * CONFIG(specs.cylindersCount);
 }
 
 // todo: eliminate code duplication between these two methods! Some pointer magic would help.
@@ -137,7 +137,7 @@ float AccelEnrichmemnt::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_F) {
 	int index = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_F);
 
 	FuelSchedule *fs = engine->engineConfiguration2->injectionEvents;
-	float d = (cb.get(index) - (cb.get(index - 1))) * fs->eventsCount;
+	float d = (cb.get(index) - (cb.get(index - 1))) * CONFIG(specs.cylindersCount);
 
 	float result = 0;
 	int distance = 0;

@@ -48,15 +48,6 @@ public:
 
 	InjectionEventList injectionEvents;
 
-	/**
-	 * This is a performance optimization for https://sourceforge.net/p/rusefi/tickets/64/
-	 * TODO: better data structure? better algorithm?
-	 */
-	uint8_t hasEvents[PWM_PHASE_MAX_COUNT];
-	/**
-	 * How many trigger events have injection? This depends on fuel strategy & trigger shape
-	 */
-	int eventsCount;
 private:
 	void clear();
 };
