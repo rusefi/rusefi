@@ -98,10 +98,11 @@ FuelSchedule::FuelSchedule() {
 }
 
 void FuelSchedule::clear() {
+	isReady = false;
 	usedAtEngineCycle = 0;
 }
 
-void FuelSchedule::addFuelEventsForCylinder(int i, injection_mode_e mode DECLARE_ENGINE_PARAMETER_S) {
+void FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_S) {
 	efiAssertVoid(engine!=NULL, "engine is NULL");
 
 	if (cisnan(engine->rpmCalculator.oneDegreeUs)) {
@@ -121,6 +122,8 @@ void FuelSchedule::addFuelEventsForCylinder(int i, injection_mode_e mode DECLARE
 	angle_t baseAngle = ENGINE(engineState.injectionOffset) - injectionDuration;
 
 	int index;
+
+	injection_mode_e mode = engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_F);
 
 	if (mode == IM_SIMULTANEOUS) {
 		index = 0;
@@ -157,7 +160,11 @@ void FuelSchedule::addFuelEventsForCylinder(int i, injection_mode_e mode DECLARE
 		warning(CUSTOM_OBD_20, "no_pin_inj #%s", output->name);
 	}
 
-	InjectionEvent *ev = &injectionEvents.elements[i];
+	InjectionEvent *ev = &elements[i];
+	ev->ownIndex = i;
+#if EFI_UNIT_TEST
+	ev->engine = engine;
+#endif
 	fixAngle(angle);
 	ev->isOverlapping = angle < 720 && (angle + injectionDuration) > 720;
 
@@ -174,12 +181,15 @@ void FuelSchedule::addFuelEventsForCylinder(int i, injection_mode_e mode DECLARE
 #endif
 }
 
-void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S) {
+void FuelSchedule::addFuelEvents(DECLARE_ENGINE_PARAMETER_F) {
 	clear();
 
 	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
-		addFuelEventsForCylinder(i, mode PASS_ENGINE_PARAMETER);
+		InjectionEvent *ev = &elements[i];
+		ev->ownIndex = i;
+		addFuelEventsForCylinder(i PASS_ENGINE_PARAMETER);
 	}
+	isReady = true;
 }
 
 #endif

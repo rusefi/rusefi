@@ -26,6 +26,8 @@
 
 #define MAX_WIRES_COUNT 2
 
+class InjectionEvent;
+
 class OutputSignalPair {
 public:
 	OutputSignalPair();
@@ -41,6 +43,7 @@ public:
 	 */
 	bool isScheduled;
 	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
+	InjectionEvent *event;
 };
 
 /**
