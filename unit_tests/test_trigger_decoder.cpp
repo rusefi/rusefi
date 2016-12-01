@@ -600,7 +600,7 @@ void assertInjectorDownEvent(const char *msg, int eventIndex, efitime_t momentX,
 }
 
 static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset, bool isOverlapping) {
-	assertEqualsM4(msg, "inj index", injectorIndex, ev->output->injectorIndex);
+	assertEqualsM4(msg, "inj index", injectorIndex, ev->outputs[0]->injectorIndex);
 	assertEqualsM4(msg, " event index", eventIndex, ev->injectionStart.eventIndex);
 	assertEqualsM4(msg, " event offset", angleOffset, ev->injectionStart.angleOffset);
 	assertTrueM("is overlapping", isOverlapping == ev->isOverlapping);

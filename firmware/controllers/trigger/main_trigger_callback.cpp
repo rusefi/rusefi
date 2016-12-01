@@ -237,7 +237,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 	 * wetting coefficient works the same way for any injection mode, or is something
 	 * x2 or /2?
 	 */
-	const floatms_t injectionDuration = ENGINE(wallFuel).adjust(event->output->injectorIndex, ENGINE(fuelMs) PASS_ENGINE_PARAMETER);
+	const floatms_t injectionDuration = ENGINE(wallFuel).adjust(event->outputs[0]->injectorIndex, ENGINE(fuelMs) PASS_ENGINE_PARAMETER);
 #if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
 	printf("fuel fuelMs=%f adjusted=%f\t\n", ENGINE(fuelMs), injectionDuration);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
@@ -309,14 +309,14 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		// we are in this branch of code only in case of NOT IM_SIMULTANEOUS injection
 		// we are ignoring low RPM in order not to handle "engine was stopped to engine now running" transition
 		if (rpm > 2 * engineConfiguration->cranking.rpm) {
-			const char *outputName = event->output->name;
+			const char *outputName = event->outputs[0]->name;
 			if (prevOutputName == outputName) {
 				warning(CUSTOM_OBD_SKIPPED_FUEL, "looks like skipped fuel event %d %s", getRevolutionCounter(), outputName);
 			}
 			prevOutputName = outputName;
 		}
 
-		scheduleFuelInjection(rpm, signal, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration), event->output PASS_ENGINE_PARAMETER);
+		scheduleFuelInjection(rpm, signal, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration), event->outputs[0] PASS_ENGINE_PARAMETER);
 	}
 }
 
@@ -360,7 +360,7 @@ static void handleFuelScheduleOverlap(InjectionEventList *injectionEvents DECLAR
 		if (!engine->engineConfiguration2->wasOverlapping[injEventIndex] && event->isOverlapping) {
 			// we are here if new fuel schedule is crossing engine cycle boundary with this event
 
-			InjectorOutputPin *output = event->output;
+			InjectorOutputPin *output = event->outputs[0];
 
 			// todo: recalc fuel? account for wetting?
 			floatms_t injectionDuration = ENGINE(fuelMs);
