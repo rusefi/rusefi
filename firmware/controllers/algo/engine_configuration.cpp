@@ -1041,8 +1041,7 @@ void prepareShapes(DECLARE_ENGINE_PARAMETER_F) {
 	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 	prepareOutputSignals(PASS_ENGINE_PARAMETER_F);
 
-	engineConfiguration2->injectionEvents->addFuelEvents(
-			engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER);
+	engineConfiguration2->injectionEvents->addFuelEvents(PASS_ENGINE_PARAMETER_F);
 }
 
 #endif

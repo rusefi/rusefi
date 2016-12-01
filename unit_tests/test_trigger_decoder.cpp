@@ -345,7 +345,7 @@ void testRpmCalculator(void) {
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 
 	assertEqualsM("fuel #1", 4.5450, eth.engine.fuelMs);
-	InjectionEvent *ie0 = &eth.engine.engineConfiguration2->injectionEvents->injectionEvents.elements[0];
+	InjectionEvent *ie0 = &eth.engine.engineConfiguration2->injectionEvents->elements[0];
 	assertEqualsM("injection angle", 31.365, ie0->injectionStart.angleOffset);
 
 	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER);
@@ -665,10 +665,10 @@ static void setTestBug299(EngineTestHelper *eth) {
 
 	FuelSchedule * t = ENGINE(engineConfiguration2)->injectionEvents;
 
-	assertInjectionEvent("#0", &t->injectionEvents.elements[0], 0, 1, 153, false);
-	assertInjectionEvent("#1", &t->injectionEvents.elements[1], 1, 1, 333, false);
-	assertInjectionEvent("#2", &t->injectionEvents.elements[2], 0, 0, 153, false);
-	assertInjectionEvent("#3", &t->injectionEvents.elements[3], 1, 0, 153 + 180, false);
+	assertInjectionEvent("#0", &t->elements[0], 0, 1, 153, false);
+	assertInjectionEvent("#1", &t->elements[1], 1, 1, 333, false);
+	assertInjectionEvent("#2", &t->elements[2], 0, 0, 153, false);
+	assertInjectionEvent("#3", &t->elements[3], 1, 0, 153 + 180, false);
 
 	/**
 	 * Trigger down - no new events, executing some
@@ -836,10 +836,10 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 
 	t = ENGINE(engineConfiguration2)->injectionEvents;
 
-	assertInjectionEvent("#0", &t->injectionEvents.elements[0], 0, 0, 315, false);
-	assertInjectionEvent("#1", &t->injectionEvents.elements[1], 1, 1, 135, false);
-	assertInjectionEvent("#2", &t->injectionEvents.elements[2], 0, 1, 315, true);
-	assertInjectionEvent("#3", &t->injectionEvents.elements[3], 1, 0, 45 + 90, false);
+	assertInjectionEvent("#0", &t->elements[0], 0, 0, 315, false);
+	assertInjectionEvent("#1", &t->elements[1], 1, 1, 135, false);
+	assertInjectionEvent("#2", &t->elements[2], 0, 1, 315, true);
+	assertInjectionEvent("#3", &t->elements[3], 1, 0, 45 + 90, false);
 
 	timeNow += MS2US(20);
 	assertEqualsM("qs#02", 5, schedulingQueue.size());
@@ -925,10 +925,10 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 
 	t = ENGINE(engineConfiguration2)->injectionEvents;
 
-	assertInjectionEvent("#0#", &t->injectionEvents.elements[0], 0, 0, 315, false);
-	assertInjectionEvent("#1#", &t->injectionEvents.elements[1], 1, 1, 135, false);
-	assertInjectionEvent("#2#", &t->injectionEvents.elements[2], 0, 1, 315, true);
-	assertInjectionEvent("#3#", &t->injectionEvents.elements[3], 1, 0, 45 + 90, false);
+	assertInjectionEvent("#0#", &t->elements[0], 0, 0, 315, false);
+	assertInjectionEvent("#1#", &t->elements[1], 1, 1, 135, false);
+	assertInjectionEvent("#2#", &t->elements[2], 0, 1, 315, true);
+	assertInjectionEvent("#3#", &t->elements[3], 1, 0, 45 + 90, false);
 
 
 	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
@@ -939,7 +939,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	assertEqualsM("duty for maf=3", 87.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
 
 
-	assertInjectionEvent("#03", &t->injectionEvents.elements[0], 0, 0, 315, false);
+	assertInjectionEvent("#03", &t->elements[0], 0, 0, 315, false);
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 
@@ -976,10 +976,10 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 
 	t = ENGINE(engineConfiguration2)->injectionEvents;
 
-	assertInjectionEvent("#00", &t->injectionEvents.elements[0], 0, 0, 225, false); // 87.5 duty cycle
-	assertInjectionEvent("#10", &t->injectionEvents.elements[1], 1, 1, 45, false);
-	assertInjectionEvent("#20", &t->injectionEvents.elements[2], 0, 1, 225, true);
-	assertInjectionEvent("#30", &t->injectionEvents.elements[3], 1, 0, 45, false);
+	assertInjectionEvent("#00", &t->elements[0], 0, 0, 225, false); // 87.5 duty cycle
+	assertInjectionEvent("#10", &t->elements[1], 1, 1, 45, false);
+	assertInjectionEvent("#20", &t->elements[2], 0, 1, 225, true);
+	assertInjectionEvent("#30", &t->elements[3], 1, 0, 45, false);
 
 	 // todo: what's what? a mix of new something and old something?
 	assertEqualsM("qs#5", 6, schedulingQueue.size());

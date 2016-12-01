@@ -44,6 +44,7 @@ extern WaveChart waveChart;
 OutputSignalPair::OutputSignalPair() {
 	isScheduled = false;
 	memset(outputs, 0, sizeof(outputs));
+	event = NULL;
 }
 
 void initSignalExecutor(void) {

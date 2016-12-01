@@ -21,10 +21,6 @@ IgnitionEventList::IgnitionEventList() {
 	isReady = false;
 }
 
-InjectionEventList::InjectionEventList() {
-	isReady = false;
-}
-
 int isInjectionEnabled(engine_configuration_s *engineConfiguration) {
 	// todo: is this worth a method? should this be inlined?
 	return engineConfiguration->isInjectionEnabled;
@@ -74,7 +70,7 @@ void turnSparkPinLow(IgnitionEvent *event) {
 			turnSparkPinLow2(event, output);
 		}
 	}
-#if EFI_UNIT_TEST
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	Engine *engine = event->engine;
 	EXPAND_Engine;
 #endif
@@ -84,7 +80,7 @@ void turnSparkPinLow(IgnitionEvent *event) {
 
 static void turnSparkPinHigh2(IgnitionEvent *event, IgnitionOutputPin *output) {
 
-#if ! EFI_UNIT_TEST
+#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 	if (engine->rpmCalculator.rpmValue > 2 * engineConfiguration->cranking.rpm) {
 		const char *outputName = output->name;
 		if (prevSparkName == outputName) {

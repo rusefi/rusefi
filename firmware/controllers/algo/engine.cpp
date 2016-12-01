@@ -308,13 +308,15 @@ IgnitionEventList * Engine::ignitionList() {
 	return &engineConfiguration2->ignitionEvents;
 }
 
-void Engine::prepareFuelSchedule(DECLARE_ENGINE_PARAMETER_F) {
+injection_mode_e Engine::getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_F) {
 	int rpm = rpmCalculator.rpmValue;
+	return isCrankingR(rpm) ? CONFIG(crankingInjectionMode) : CONFIG(injectionMode);
+}
+
+void Engine::prepareFuelSchedule(DECLARE_ENGINE_PARAMETER_F) {
 	efiAssertVoid(ENGINE(engineConfiguration2)->injectionEvents != ENGINE(engineConfiguration2)->processing, "fuel pointers");
 
 	ENGINE(m.beforeInjectonSch) = GET_TIMESTAMP();
-
-	injection_mode_e mode = isCrankingR(rpm) ? CONFIG(crankingInjectionMode) : CONFIG(injectionMode);
 
 	if (ENGINE(engineConfiguration2)->processing->usedAtEngineCycle != 0 &&
 			ENGINE(engineConfiguration2)->processing->usedAtEngineCycle == ENGINE(rpmCalculator).getRevolutionCounter()) {
@@ -323,8 +325,7 @@ void Engine::prepareFuelSchedule(DECLARE_ENGINE_PARAMETER_F) {
 		return;
 	}
 
-	ENGINE(engineConfiguration2)->processing->addFuelEvents(
-			mode PASS_ENGINE_PARAMETER);
+	ENGINE(engineConfiguration2)->processing->addFuelEvents(PASS_ENGINE_PARAMETER_F);
 	ENGINE(m.injectonSchTime) = GET_TIMESTAMP() - ENGINE(m.beforeInjectonSch);
 
 	/**

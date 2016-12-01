@@ -75,16 +75,25 @@ static Logging *logger;
 //#define RAM_METHOD_PREFIX
 //#endif
 
-static void startSimultaniousInjection(Engine *engine) {
+static void startSimultaniousInjection(InjectionEvent *event) {
+#if EFI_UNIT_TEST
+	Engine *engine = event->engine;
+#endif
 	for (int i = 0; i < engine->engineConfiguration->specs.cylindersCount; i++) {
 		turnPinHigh(&enginePins.injectors[i]);
 	}
 }
 
-static void endSimultaniousInjection(Engine *engine) {
+static void endSimultaniousInjection(InjectionEvent *event) {
+#if EFI_UNIT_TEST
+	Engine *engine = event->engine;
+	EXPAND_Engine;
+	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
+#endif
 	for (int i = 0; i < engine->engineConfiguration->specs.cylindersCount; i++) {
 		turnPinLow(&enginePins.injectors[i]);
 	}
+	engineConfiguration2->injectionEvents->addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER);
 }
 
 static void tempTurnPinHigh(InjectorOutputPin *output) {
@@ -123,8 +132,9 @@ static void tempTurnPinHigh(InjectorOutputPin *output) {
 void seTurnPinHigh(OutputSignalPair *pair) {
 	for (int i = 0;i<MAX_WIRES_COUNT;i++) {
 		InjectorOutputPin *output = pair->outputs[i];
-		if (output != NULL)
+		if (output != NULL) {
 			tempTurnPinHigh(output);
+		}
 	}
 }
 
@@ -171,9 +181,16 @@ void seTurnPinLow(OutputSignalPair *pair) {
 	pair->isScheduled = false;
 	for (int i = 0;i<MAX_WIRES_COUNT;i++) {
 		InjectorOutputPin *output = pair->outputs[i];
-		if (output != NULL)
-		tempTurnPinLow(output);
+		if (output != NULL) {
+			tempTurnPinLow(output);
+		}
 	}
+#if EFI_UNIT_TEST
+//	Engine *engine = pair->event->engine;
+//	EXPAND_Engine;
+//	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
+#endif
+//	engineConfiguration2->injectionEvents->addFuelEventsForCylinder(pair->event->ownIndex PASS_ENGINE_PARAMETER);
 }
 
 static void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, OutputSignalPair *pair) {
@@ -221,6 +238,7 @@ static void scheduleFuelInjection(int rpm, OutputSignal *signal, efitimeus_t now
 	scheduling_s * sDown = &pair->signalTimerDown;
 
 	pair->isScheduled = true;
+	pair->event = event;
 
 	efitimeus_t turnOnTime = nowUs + (int) delayUs;
 	bool isSecondaryOverlapping = turnOnTime < output->overlappingScheduleOffTime;
@@ -305,9 +323,9 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 // todo: sequential need this logic as well, just do not forget to clear flag		pair->isScheduled = true;
 		scheduling_s * sDown = &pair->signalTimerDown;
 
-		scheduleTask(true, "out up s", sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, engine);
+		scheduleTask(true, "out up s", sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, event);
 		scheduleTask(true, "out down", sDown, (int) injectionStartDelayUs + MS2US(injectionDuration),
-					(schfunc_t) &endSimultaniousInjection, engine);
+					(schfunc_t) &endSimultaniousInjection, event);
 
 	} else {
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
@@ -356,7 +374,7 @@ static void scheduleOutput2(OutputSignalPair *pair, efitimeus_t nowUs, float del
 #endif /* EFI_GPIO */
 }
 
-static void handleFuelScheduleOverlap(InjectionEventList *injectionEvents DECLARE_ENGINE_PARAMETER_S) {
+static void handleFuelScheduleOverlap(FuelSchedule *fs DECLARE_ENGINE_PARAMETER_S) {
 	/**
 	 * here we need to avoid a fuel miss due to changes between previous and current fuel schedule
 	 * see https://sourceforge.net/p/rusefi/tickets/299/
@@ -364,7 +382,7 @@ static void handleFuelScheduleOverlap(InjectionEventList *injectionEvents DECLAR
 	 */
 	//
 	for (int injEventIndex = 0; injEventIndex < CONFIG(specs.cylindersCount); injEventIndex++) {
-		InjectionEvent *event = &injectionEvents->elements[injEventIndex];
+		InjectionEvent *event = &fs->elements[injEventIndex];
 		if (!engine->engineConfiguration2->wasOverlapping[injEventIndex] && event->isOverlapping) {
 			// we are here if new fuel schedule is crossing engine cycle boundary with this event
 
@@ -407,10 +425,12 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 	 * fueling strategy
 	 */
 	FuelSchedule *fs = engine->fuelScheduleForThisEngineCycle;
-	InjectionEventList *injectionEvents = &fs->injectionEvents;
+	if (!fs->isReady) {
+		fs->addFuelEvents(PASS_ENGINE_PARAMETER_F);
+	}
 
 	if (trgEventIndex == 0) {
-		handleFuelScheduleOverlap(injectionEvents PASS_ENGINE_PARAMETER);
+		handleFuelScheduleOverlap(fs PASS_ENGINE_PARAMETER);
 	}
 
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
@@ -423,7 +443,7 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 	ENGINE(fuelMs) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER) * CONFIG(globalFuelCorrection);
 
 	for (int injEventIndex = 0; injEventIndex < CONFIG(specs.cylindersCount); injEventIndex++) {
-		InjectionEvent *event = &injectionEvents->elements[injEventIndex];
+		InjectionEvent *event = &fs->elements[injEventIndex];
 		uint32_t eventIndex = event->injectionStart.eventIndex;
 // right after trigger change we are still using old & invalid fuel schedule. good news is we do not change trigger on the fly in real life
 //		efiAssertVoid(eventIndex < ENGINE(triggerShape.getLength()), "handleFuel/event sch index");
@@ -514,6 +534,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 
 		if (triggerVersion.isOld()) {
 			engine->ignitionList()->isReady = false; // we need to rebuild ignition schedule
+			engine->fuelScheduleForThisEngineCycle->isReady = false;
 			// todo: move 'triggerIndexByAngle' change into trigger initialization, why is it invoked from here if it's only about trigger shape & optimization?
 			prepareOutputSignals(PASS_ENGINE_PARAMETER_F);
 			// we need this to apply new 'triggerIndexByAngle' values

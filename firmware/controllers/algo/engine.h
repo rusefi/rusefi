@@ -32,6 +32,8 @@ public:
 	int getMockAdcValue(int hwChannel);
 };
 
+#define MAX_INJECTION_OUTPUT_COUNT INJECTION_PIN_COUNT
+
 /**
  * This class knows about when to inject fuel
  */
@@ -41,12 +43,13 @@ public:
 	/**
 	 * this method schedules all fuel events for an engine cycle
 	 */
-	void addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S);
-	void addFuelEventsForCylinder(int i, injection_mode_e mode DECLARE_ENGINE_PARAMETER_S);
+	void addFuelEvents(DECLARE_ENGINE_PARAMETER_F);
+	void addFuelEventsForCylinder(int i DECLARE_ENGINE_PARAMETER_S);
 
 	uint32_t usedAtEngineCycle;
 
-	InjectionEventList injectionEvents;
+	InjectionEvent elements[MAX_INJECTION_OUTPUT_COUNT];
+	bool isReady;
 
 private:
 	void clear();
@@ -244,6 +247,7 @@ public:
 	Engine(persistent_config_s *config);
 	void init(persistent_config_s *config);
 	void prepareFuelSchedule(DECLARE_ENGINE_PARAMETER_F);
+	injection_mode_e getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_F);
 	IgnitionEventList *ignitionList(); // todo: inline/rename/refactor
 
 	WallFuel wallFuel;

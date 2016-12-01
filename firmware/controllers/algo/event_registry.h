@@ -29,6 +29,8 @@ public:
 	angle_t angleOffset;
 };
 
+class Engine;
+
 class InjectionEvent {
 public:
 	InjectionEvent();
@@ -39,7 +41,10 @@ public:
 	bool isSimultanious;
 	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
 	bool isOverlapping;
-
+	int ownIndex;
+#if EFI_UNIT_TEST
+	Engine *engine;
+#endif
 	event_trigger_position_s injectionStart;
 };
 
@@ -69,16 +74,7 @@ public:
 	IgnitionOutputPin *getOutputForLoggins();
 };
 
-
-#define MAX_INJECTION_OUTPUT_COUNT INJECTION_PIN_COUNT
 #define MAX_IGNITION_EVENT_COUNT IGNITION_PIN_COUNT
-
-class InjectionEventList {
-public:
-	InjectionEventList();
-	InjectionEvent elements[MAX_INJECTION_OUTPUT_COUNT];
-	bool isReady;
-};
 
 class IgnitionEventList {
 public:
