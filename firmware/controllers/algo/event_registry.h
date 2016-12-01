@@ -70,13 +70,15 @@ public:
 };
 
 
-/**
- * two wire batch mode would generate twice the number of cylinders events, that's the max
- */
-#define MAX_INJECTION_OUTPUT_COUNT 2 * INJECTION_PIN_COUNT
+#define MAX_INJECTION_OUTPUT_COUNT INJECTION_PIN_COUNT
 #define MAX_IGNITION_EVENT_COUNT IGNITION_PIN_COUNT
 
-typedef ArrayList<InjectionEvent, MAX_INJECTION_OUTPUT_COUNT> InjectionEventList;
+class InjectionEventList {
+public:
+	InjectionEventList();
+	InjectionEvent elements[MAX_INJECTION_OUTPUT_COUNT];
+	bool isReady;
+};
 
 class IgnitionEventList {
 public:

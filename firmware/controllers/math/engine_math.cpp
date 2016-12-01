@@ -98,8 +98,6 @@ FuelSchedule::FuelSchedule() {
 }
 
 void FuelSchedule::clear() {
-	memset(hasEvents, 0, sizeof(hasEvents));
-	eventsCount = 0;
 	usedAtEngineCycle = 0;
 }
 
@@ -159,11 +157,7 @@ void FuelSchedule::addFuelEventsForCylinder(int i, injection_mode_e mode DECLARE
 		warning(CUSTOM_OBD_20, "no_pin_inj #%s", output->name);
 	}
 
-	InjectionEvent *ev = injectionEvents.add();
-	if (ev == NULL) {
-		// error already reported
-		return;
-	}
+	InjectionEvent *ev = &injectionEvents.elements[i];
 	fixAngle(angle);
 	ev->isOverlapping = angle < 720 && (angle + injectionDuration) > 720;
 
@@ -178,18 +172,10 @@ void FuelSchedule::addFuelEventsForCylinder(int i, injection_mode_e mode DECLARE
 #if EFI_UNIT_TEST
 	printf("registerInjectionEvent angle=%f index=%d\r\n", angle, ev->injectionStart.eventIndex);
 #endif
-
-	if (!hasEvents[ev->injectionStart.eventIndex]) {
-		hasEvents[ev->injectionStart.eventIndex] = true;
-		eventsCount++;
-	}
 }
 
 void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S) {
-	clear(); // this method is relatively heavy
-//	sourceList->reset();
-
-	injectionEvents.reset();
+	clear();
 
 	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 		addFuelEventsForCylinder(i, mode PASS_ENGINE_PARAMETER);

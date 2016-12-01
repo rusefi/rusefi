@@ -21,8 +21,6 @@ void testAccelEnrichment(void) {
 	engine->rpmCalculator.setRpmValue(600 PASS_ENGINE_PARAMETER);
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 
-	assertEqualsM("eventsCount", 4, engine->engineConfiguration2->injectionEvents->eventsCount);
-
 	engine->tpsAccelEnrichment.setLength(4);
 
 	engine->tpsAccelEnrichment.onNewValue(0 PASS_ENGINE_PARAMETER);

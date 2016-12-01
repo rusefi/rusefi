@@ -363,7 +363,7 @@ static void handleFuelScheduleOverlap(InjectionEventList *injectionEvents DECLAR
 	 * see testFuelSchedulerBug299smallAndLarge unit test
 	 */
 	//
-	for (int injEventIndex = 0; injEventIndex < injectionEvents->size; injEventIndex++) {
+	for (int injEventIndex = 0; injEventIndex < CONFIG(specs.cylindersCount); injEventIndex++) {
 		InjectionEvent *event = &injectionEvents->elements[injEventIndex];
 		if (!engine->engineConfiguration2->wasOverlapping[injEventIndex] && event->isOverlapping) {
 			// we are here if new fuel schedule is crossing engine cycle boundary with this event
@@ -413,11 +413,6 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 		handleFuelScheduleOverlap(injectionEvents PASS_ENGINE_PARAMETER);
 	}
 
-	if (!fs->hasEvents[trgEventIndex]) {
-		// that's a performance optimization
-		return;
-	}
-
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 	scheduleMsg(logger, "handleFuel ind=%d %d", trgEventIndex, getRevolutionCounter());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
@@ -427,7 +422,7 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 
 	ENGINE(fuelMs) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER) * CONFIG(globalFuelCorrection);
 
-	for (int injEventIndex = 0; injEventIndex < injectionEvents->size; injEventIndex++) {
+	for (int injEventIndex = 0; injEventIndex < CONFIG(specs.cylindersCount); injEventIndex++) {
 		InjectionEvent *event = &injectionEvents->elements[injEventIndex];
 		uint32_t eventIndex = event->injectionStart.eventIndex;
 // right after trigger change we are still using old & invalid fuel schedule. good news is we do not change trigger on the fly in real life
