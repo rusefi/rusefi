@@ -47,19 +47,6 @@ public:
 	InjectionEvent *event;
 };
 
-/**
- * @brief   Asynchronous output signal data structure
- */
-typedef struct OutputSignal_struct OutputSignal;
-struct OutputSignal_struct {
-
-	/**
-	 * We are alternating instances so that events which extend into next revolution are not reused while
-	 * scheduling next revolution events
-	 */
-	OutputSignalPair signalPair[2];
-};
-
 void initSignalExecutor(void);
 
 void initSignalExecutorImpl(void);

@@ -209,7 +209,7 @@ static void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efiti
 	scheduleByTime(true, prefix, scheduling, time, callback, pair);
 }
 
-static void scheduleFuelInjection(int rpm, OutputSignal *signal, efitimeus_t nowUs, floatus_t delayUs, floatus_t durationUs, InjectionEvent *event DECLARE_ENGINE_PARAMETER_S) {
+static void scheduleFuelInjection(int rpm, OutputSignalPair *pair, efitimeus_t nowUs, floatus_t delayUs, floatus_t durationUs, InjectionEvent *event DECLARE_ENGINE_PARAMETER_S) {
 	if (durationUs < 0) {
 		warning(CUSTOM_OBD_3, "duration cannot be negative: %d", durationUs);
 		return;
@@ -224,8 +224,7 @@ static void scheduleFuelInjection(int rpm, OutputSignal *signal, efitimeus_t now
 			(int)MS2US(getCrankshaftRevolutionTimeMs(rpm)));
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
-	efiAssertVoid(signal!=NULL, "signal is NULL");
-	OutputSignalPair *pair = &signal->signalPair[0];
+
 	if (pair->isScheduled) {
 #if EFI_UNIT_TEST || EFI_SIMULATOR || defined(__DOXYGEN__)
 	printf("still used1 %s %d\r\n", output->name, (int)getTimeNowUs());
@@ -305,7 +304,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 			getRevolutionCounter());
 #endif /* EFI_DEFAILED_LOGGING */
 
-	OutputSignal *signal = &ENGINE(engineConfiguration2)->fuelActuators[injEventIndex];
+	OutputSignalPair *pair = &ENGINE(engineConfiguration2)->fuelActuators[injEventIndex];
 
 	engine->engineConfiguration2->wasOverlapping[injEventIndex] = event->isOverlapping;
 
@@ -315,8 +314,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		 * 'scheduleOutput' is currently only used for injection, so maybe it should be
 		 * changed into 'scheduleInjection' and unified? todo: think about it.
 		 */
-		efiAssertVoid(signal!=NULL, "signal is NULL");
-		OutputSignalPair *pair = &signal->signalPair[0];
+
 		scheduling_s * sUp = &pair->signalTimerUp;
 // todo: sequential need this logic as well, just do not forget to clear flag		pair->isScheduled = true;
 		scheduling_s * sDown = &pair->signalTimerDown;
@@ -340,7 +338,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 			prevOutputName = outputName;
 		}
 
-		scheduleFuelInjection(rpm, signal, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration), event PASS_ENGINE_PARAMETER);
+		scheduleFuelInjection(rpm, pair, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration), event PASS_ENGINE_PARAMETER);
 	}
 }
 
