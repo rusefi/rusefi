@@ -225,8 +225,7 @@ static void scheduleFuelInjection(int rpm, OutputSignal *signal, efitimeus_t now
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
 	efiAssertVoid(signal!=NULL, "signal is NULL");
-	int index = getRevolutionCounter() % 2;
-	OutputSignalPair *pair = &signal->signalPair[index];
+	OutputSignalPair *pair = &signal->signalPair[0];
 	if (pair->isScheduled) {
 #if EFI_UNIT_TEST || EFI_SIMULATOR || defined(__DOXYGEN__)
 	printf("still used1 %s %d\r\n", output->name, (int)getTimeNowUs());
@@ -317,8 +316,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		 * changed into 'scheduleInjection' and unified? todo: think about it.
 		 */
 		efiAssertVoid(signal!=NULL, "signal is NULL");
-		int index = getRevolutionCounter() % 2;
-		OutputSignalPair *pair = &signal->signalPair[index];
+		OutputSignalPair *pair = &signal->signalPair[0];
 		scheduling_s * sUp = &pair->signalTimerUp;
 // todo: sequential need this logic as well, just do not forget to clear flag		pair->isScheduled = true;
 		scheduling_s * sDown = &pair->signalTimerDown;

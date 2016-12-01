@@ -961,7 +961,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerRise();
-	assertEqualsM("Queue.size#05", 9, schedulingQueue.size());
+	assertEqualsM("Queue.size#05", 7, schedulingQueue.size());
 	schedulingQueue.executeAll(timeNow);
 
 	timeNow += MS2US(20);
@@ -982,7 +982,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	assertInjectionEvent("#30", &t->elements[3], 1, 0, 45, false);
 
 	 // todo: what's what? a mix of new something and old something?
-	assertEqualsM("qs#5", 6, schedulingQueue.size());
+	assertEqualsM("qs#5", 4, schedulingQueue.size());
 //	assertInjectorDownEvent("8@0", 0, MS2US(5.0), 1);
 //	assertInjectorUpEvent("8@1", 1, MS2US(7.5), 1);
 //	assertInjectorDownEvent("8@2", 2, MS2US(15.0), 0);
