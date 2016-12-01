@@ -42,7 +42,7 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t
  * @return true if inserted into the head of the list
  */
 bool EventQueue::insertTask(const bool monitorReuse, const char *prefix, scheduling_s *scheduling, efitime_t timeX, schfunc_t callback, void *param) {
-#if EFI_UNIT_TEST
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	assertListIsSorted();
 #endif /* EFI_UNIT_TEST */
 	efiAssert(callback != NULL, "NULL callback", false);
@@ -80,7 +80,7 @@ bool EventQueue::insertTask(const bool monitorReuse, const char *prefix, schedul
 
 		scheduling->next = insertPosition->next;
 		insertPosition->next = scheduling;
-#if EFI_UNIT_TEST
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
 		assertListIsSorted();
 #endif /* EFI_UNIT_TEST */
 		return false;
@@ -195,7 +195,7 @@ int EventQueue::size(void) {
 	return result;
 }
 
-#if EFI_UNIT_TEST
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
 void EventQueue::assertListIsSorted() {
 	scheduling_s *current = head;
 	while (current != NULL && current->next != NULL) {
