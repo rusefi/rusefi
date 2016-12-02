@@ -166,7 +166,6 @@ void FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_S) {
 	ev->engine = engine;
 #endif
 	fixAngle(angle);
-	ev->isOverlapping = angle < 720 && (angle + injectionDuration) > 720;
 
 	ev->outputs[0] = output;
 	ev->outputs[1] = secondOutput;

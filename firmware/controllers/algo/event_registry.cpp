@@ -26,7 +26,6 @@
 
 InjectionEvent::InjectionEvent() {
 	isSimultanious = false;
-	isOverlapping = false;
 	memset(outputs, 0, sizeof(outputs));
 }
 
