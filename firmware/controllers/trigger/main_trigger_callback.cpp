@@ -306,8 +306,6 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 
 	OutputSignalPair *pair = &ENGINE(engineConfiguration2)->fuelActuators[injEventIndex];
 
-	engine->engineConfiguration2->wasOverlapping[injEventIndex] = event->isOverlapping;
-
 	if (event->isSimultanious) {
 		/**
 		 * this is pretty much copy-paste of 'scheduleOutput'
@@ -370,41 +368,6 @@ static void scheduleOutput2(OutputSignalPair *pair, efitimeus_t nowUs, float del
 #endif /* EFI_GPIO */
 }
 
-static void handleFuelScheduleOverlap(FuelSchedule *fs DECLARE_ENGINE_PARAMETER_S) {
-	/**
-	 * here we need to avoid a fuel miss due to changes between previous and current fuel schedule
-	 * see https://sourceforge.net/p/rusefi/tickets/299/
-	 * see testFuelSchedulerBug299smallAndLarge unit test
-	 */
-	//
-	for (int injEventIndex = 0; injEventIndex < CONFIG(specs.cylindersCount); injEventIndex++) {
-		InjectionEvent *event = &fs->elements[injEventIndex];
-		if (!engine->engineConfiguration2->wasOverlapping[injEventIndex] && event->isOverlapping) {
-			// we are here if new fuel schedule is crossing engine cycle boundary with this event
-
-			InjectorOutputPin *output = event->outputs[0];
-
-			// todo: recalc fuel? account for wetting?
-			floatms_t injectionDuration = ENGINE(fuelMs);
-
-			OutputSignalPair* pair = &ENGINE(engineConfiguration2)->overlappingFuelActuator[injEventIndex];
-			if (pair->isScheduled) {
-#if EFI_UNIT_TEST || EFI_SIMULATOR || defined(__DOXYGEN__)
-	printf("still used2 %s %d\r\n", output->name, (int)getTimeNowUs());
-#endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
-				continue; // this OutputSignalPair is still needed for an extremely long injection scheduled previously
-			}
-
-			efitimeus_t nowUs = getTimeNowUs();
-
-			output->overlappingScheduleOffTime = nowUs + MS2US(injectionDuration);
-
-			pair->event = event;
-			scheduleOutput2(pair, nowUs, 0, MS2US(injectionDuration), output);
-		}
-	}
-}
-
 static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm DECLARE_ENGINE_PARAMETER_S) {
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#3");
 	efiAssertVoid(trgEventIndex < engine->engineCycleEventCount, "handleFuel/event index");
@@ -424,10 +387,6 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 	FuelSchedule *fs = engine->fuelScheduleForThisEngineCycle;
 	if (!fs->isReady) {
 		fs->addFuelEvents(PASS_ENGINE_PARAMETER_F);
-	}
-
-	if (trgEventIndex == 0) {
-		handleFuelScheduleOverlap(fs PASS_ENGINE_PARAMETER);
 	}
 
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
