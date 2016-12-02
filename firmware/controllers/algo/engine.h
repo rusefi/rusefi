@@ -82,9 +82,6 @@ public:
 #endif
 
 	OutputSignalPair fuelActuators[INJECTION_PIN_COUNT];
-	OutputSignalPair overlappingFuelActuator[INJECTION_PIN_COUNT];
-
-	bool wasOverlapping[INJECTION_PIN_COUNT];
 
 	float fsioLastValue[LE_COMMAND_COUNT];
 

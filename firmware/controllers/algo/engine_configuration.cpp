@@ -1011,7 +1011,6 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 engine_configuration2_s::engine_configuration2_s() {
     injectionEvents = &injectionEvents0;
     processing = &injectionEvents1;
-    memset(wasOverlapping, 0, sizeof(wasOverlapping));
 }
 
 void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S) {

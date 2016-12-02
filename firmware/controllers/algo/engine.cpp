@@ -313,29 +313,6 @@ injection_mode_e Engine::getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_F) {
 	return isCrankingR(rpm) ? CONFIG(crankingInjectionMode) : CONFIG(injectionMode);
 }
 
-void Engine::prepareFuelSchedule(DECLARE_ENGINE_PARAMETER_F) {
-	efiAssertVoid(ENGINE(engineConfiguration2)->injectionEvents != ENGINE(engineConfiguration2)->processing, "fuel pointers");
-
-	ENGINE(m.beforeInjectonSch) = GET_TIMESTAMP();
-
-	if (ENGINE(engineConfiguration2)->processing->usedAtEngineCycle != 0 &&
-			ENGINE(engineConfiguration2)->processing->usedAtEngineCycle == ENGINE(rpmCalculator).getRevolutionCounter()) {
-		// we are here if engine is still using this older fuel schedule, not yet time to override it
-//		scheduleMsg(&logger, "still need %d", ENGINE(rpmCalculator).getRevolutionCounter());
-		return;
-	}
-
-	ENGINE(engineConfiguration2)->processing->addFuelEvents(PASS_ENGINE_PARAMETER_F);
-	ENGINE(m.injectonSchTime) = GET_TIMESTAMP() - ENGINE(m.beforeInjectonSch);
-
-	/**
-	 * Swap pointers. This way we are always reading from one instance while adjusting scheduling of another instance.
-	 */
-	FuelSchedule * t = ENGINE(engineConfiguration2)->injectionEvents;
-	ENGINE(engineConfiguration2)->injectionEvents = ENGINE(engineConfiguration2)->processing;
-	ENGINE(engineConfiguration2)->processing = t;
-}
-
 /**
  * The idea of this method is to execute all heavy calculations in a lower-priority thread,
  * so that trigger event handler/IO scheduler tasks are faster.
@@ -369,7 +346,6 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 	ENGINE(fuelMs) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER) * engineConfiguration->globalFuelCorrection;
 	engine->m.fuelCalcTime = GET_TIMESTAMP() - engine->m.beforeFuelCalc;
 
-//	prepareFuelSchedule(PASS_ENGINE_PARAMETER_F);
 }
 
 StartupFuelPumping::StartupFuelPumping() {
