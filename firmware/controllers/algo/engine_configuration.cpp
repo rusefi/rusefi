@@ -1010,7 +1010,6 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 
 engine_configuration2_s::engine_configuration2_s() {
     injectionEvents = &injectionEvents0;
-    processing = &injectionEvents1;
 }
 
 void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S) {
