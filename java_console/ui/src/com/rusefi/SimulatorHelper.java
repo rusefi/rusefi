@@ -17,13 +17,28 @@ public class SimulatorHelper {
         return new File(BINARY).exists();
     }
 
+    /**
+     * this code start sumulator for UI console
+     * todo: unify with the code which starts simulator for auto tests?
+     */
     private static void startSimulator() {
         LinkManager.isStimulationMode = true;
-        try {
-            process = Runtime.getRuntime().exec(BINARY);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
+
+        FileLog.MAIN.logLine("Executing " + BINARY);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    FileLog.SIMULATOR_CONSOLE.start();
+                    process = Runtime.getRuntime().exec(BINARY);
+                    FileLog.MAIN.logLine("Executing " + BINARY + "=" + process);
+                    ExecHelper.dumpProcessOutput(process);
+                } catch (IOException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        }).start();
+
         // unfortunately at this point Windows might popup a dialog asking for a permission to listen to port
 
         boolean isPortOpened = false;
@@ -37,6 +52,7 @@ public class SimulatorHelper {
         }
         if (!isPortOpened)
             throw new IllegalStateException("Port not opened?");
+        FileLog.MAIN.logLine("Port " + TcpConnector.DEFAULT_PORT + " is alive");
 
         new Launcher("" + TcpConnector.DEFAULT_PORT);
 

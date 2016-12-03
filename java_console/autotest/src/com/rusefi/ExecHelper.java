@@ -1,5 +1,7 @@
 package com.rusefi;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +20,7 @@ public class ExecHelper {
      */
     private static void runSimulator() {
         Thread.currentThread().setName("Main simulation");
+        FileLog.MAIN.logLine("runSimulator...");
 
         try {
             FileLog.MAIN.logLine("Binary size: " + new File(SIMULATOR_COMMAND).length());
@@ -26,39 +29,43 @@ public class ExecHelper {
             ExecHelper.simulatorProcess = Runtime.getRuntime().exec(SIMULATOR_COMMAND);
             FileLog.MAIN.logLine("simulatorProcess: " + ExecHelper.simulatorProcess);
 
-            BufferedReader input =
-                    new BufferedReader(new InputStreamReader(ExecHelper.simulatorProcess.getInputStream()));
-            Thread thread = new Thread(createErrorStreamEcho());
-            thread.setDaemon(true);
-            thread.start();
-
-            String line;
-            while ((line = input.readLine()) != null) {
-                System.out.println("from console: " + line);
-                FileLog.SIMULATOR_CONSOLE.logLine(line);
-            }
+            dumpProcessOutput(ExecHelper.simulatorProcess);
 
             FileLog.MAIN.logLine("exitValue: " + simulatorProcess.exitValue());
 
             System.out.println("end of console");
-            input.close();
         } catch (Exception err) {
             throw new IllegalStateException(err);
         }
     }
 
-    private static Runnable createErrorStreamEcho() {
+    public static void dumpProcessOutput(Process process) throws IOException {
+        BufferedReader input =
+                new BufferedReader(new InputStreamReader(process.getInputStream()));
+        Thread thread = new Thread(createErrorStreamEcho(process));
+        thread.setDaemon(true);
+        thread.start();
+
+        readAndPrint("from console: ", input);
+        input.close();
+    }
+
+    private static void readAndPrint(String prefix, BufferedReader input) throws IOException {
+        String line;
+        while ((line = input.readLine()) != null) {
+            System.out.println(prefix + line);
+            FileLog.SIMULATOR_CONSOLE.logLine(line);
+        }
+    }
+
+    private static Runnable createErrorStreamEcho(final Process process) {
         return new Runnable() {
             @Override
             public void run() {
                 BufferedReader err =
-                        new BufferedReader(new InputStreamReader(ExecHelper.simulatorProcess.getErrorStream()));
-                String errLine;
+                        new BufferedReader(new InputStreamReader(process.getErrorStream()));
                 try {
-                    while ((errLine = err.readLine()) != null) {
-                        System.out.println("from err: " + errLine);
-                        FileLog.SIMULATOR_CONSOLE.logLine(errLine);
-                    }
+                    readAndPrint("from err: ", err);
                 } catch (IOException e) {
                     throw new IllegalStateException(e);
                 }
@@ -74,6 +81,7 @@ public class ExecHelper {
     }
 
     public static void startSimulator() {
+        FileLog.MAIN.logLine("startSimulator...");
         new Thread(new Runnable() {
             @Override
             public void run() {
