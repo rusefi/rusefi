@@ -70,7 +70,7 @@ public class LinkManager {
     public static boolean isStimulationMode;
 
     public static void start(String port) {
-        FileLog.MAIN.logLine("Starting " + port);
+        FileLog.MAIN.logLine("LinkManager: Starting " + port);
         if (isLogViewerMode(port)) {
             connector = LinkConnector.VOID;
         } else if (TcpConnector.isTcpPort(port)) {

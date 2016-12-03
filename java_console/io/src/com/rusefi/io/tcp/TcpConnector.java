@@ -81,7 +81,7 @@ public class TcpConnector implements LinkConnector {
      */
     @Override
     public void connect(LinkManager.LinkStateListener listener) {
-        FileLog.MAIN.logLine("Connecting to " + port);
+        FileLog.MAIN.logLine("Connecting to host=" + hostname + "/port=" + port);
         OutputStream os;
         BufferedInputStream stream;
         try {
@@ -90,7 +90,7 @@ public class TcpConnector implements LinkConnector {
             stream = new BufferedInputStream(socket.getInputStream());
 //            ioStream = new TcpIoStream(os, stream);
         } catch (IOException e) {
-            throw new IllegalStateException("Failed to connect to simulator", e);
+            throw new IllegalStateException("Failed to connect to simulator: " + hostname + "/" + port, e);
         }
 
         final ResponseBuffer rb = new ResponseBuffer(new ResponseBuffer.ResponseListener() {
