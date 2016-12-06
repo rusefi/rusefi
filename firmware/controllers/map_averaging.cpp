@@ -198,7 +198,7 @@ static void mapAveragingCallback(trigger_event_e ckpEventType,
 		}
 
 		angle_t samplingEnd = samplingStart + samplingDuration;
-		fixAngle(samplingEnd);
+		fixAngle(samplingEnd, "samplingEnd");
 		if (!cisnan(samplingEnd)) {
 			// only if value is already prepared
 			int structIndex = getRevolutionCounter() % 2;

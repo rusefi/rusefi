@@ -323,7 +323,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		angle_t currentAngle = TRIGGER_SHAPE(eventAngles[currentCycle.current_index]);
 		// todo: make this '90' depend on cylinder count?
 		angle_t prevAngle = currentAngle - 90;
-		fixAngle(prevAngle);
+		fixAngle(prevAngle, "prevAngle");
 		// todo: prevIndex should be pre-calculated
 		int prevIndex = TRIGGER_SHAPE(triggerIndexByAngle[(int)prevAngle]);
 		// now let's get precise angle for that event
@@ -332,7 +332,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 //		uint32_t time = nowNt - timeOfLastEvent[prevIndex];
 		angle_t angleDiff = currentAngle - prevAngle;
 		// todo: angle diff should be pre-calculated
-		fixAngle(angleDiff);
+		fixAngle(angleDiff, "angleDiff");
 
 //		float r = (60000000.0 / 360 * US_TO_NT_MULTIPLIER) * angleDiff / time;
 

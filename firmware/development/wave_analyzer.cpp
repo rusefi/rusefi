@@ -243,7 +243,7 @@ static void reportWave(Logging *logging, int index) {
 
 		appendPrintf(logging, "advance%d%s", index, DELIMETER);
 		float angle = (offsetUs / oneDegreeUs) - tdcPosition();
-		fixAngle(angle);
+		fixAngle(angle, "angle");
 		appendFloat(logging, angle, 3);
 		appendPrintf(logging, "%s", DELIMETER);
 	}

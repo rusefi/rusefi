@@ -20,9 +20,9 @@ void findTriggerPosition(
 		event_trigger_position_s *position, angle_t angleOffset DECLARE_ENGINE_PARAMETER_S);
 
 #if EFI_ENABLE_ASSERTS
-#define assertAngleRange(angle) if(angle > 10000000 || angle < -10000000) { firmwareError(OBD_PCM_Processor_Fault, "angle range");angle = 0;}
+#define assertAngleRange(angle, msg) if(angle > 10000000 || angle < -10000000) { firmwareError(OBD_PCM_Processor_Fault, "angle range %s %f", angle, msg);angle = 0;}
 #else
-#define assertAngleRange(angle) {}
+#define assertAngleRange(angle, msg) {}
 #endif
 
 void setInjectorLag(float value DECLARE_ENGINE_PARAMETER_S);
@@ -32,9 +32,9 @@ void setInjectorLag(float value DECLARE_ENGINE_PARAMETER_S);
  * @brief Shifts angle into the [0..720) range for four stroke and [0..360) for two stroke
  * I guess this implementation would be faster than 'angle % engineCycle'
  */
-#define fixAngle(angle)														\
+#define fixAngle(angle, msg)														\
 	{																		\
-		assertAngleRange(angle);											\
+		assertAngleRange(angle, msg);											\
 		float engineCycleDurationLocalCopy = ENGINE(engineCycle);	        \
 		/* todo: split this method into 'fixAngleUp' and 'fixAngleDown'*/   \
 		/*       as a performance optimization?*/                           \

@@ -329,7 +329,7 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 			angle_t cylinderOffset = getEngineCycle(engineConfiguration->operationMode) * i / engineConfiguration->specs.cylindersCount;
 			float cylinderStart = start + cylinderOffset - offsetAngle + tdcPosition();
-			fixAngle(cylinderStart);
+			fixAngle(cylinderStart, "cylinderStart");
 			engine->engineState.mapAveragingStart[i] = cylinderStart;
 		}
 		engine->engineState.mapAveragingDuration = interpolate2d(rpm, c->samplingWindowBins, c->samplingWindow, MAP_WINDOW_SIZE);
