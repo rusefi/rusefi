@@ -217,7 +217,7 @@ floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	}
 
 	if (cisnan(dwellMs) || dwellMs < 0) {
-		firmwareError(CUSTOM_ERR_DWELL_DURATION, "invalid dwell: %f at %d", dwellMs, rpm);
+		firmwareError(CUSTOM_ERR_DWELL_DURATION, "invalid dwell: %f at rpm=%d", dwellMs, rpm);
 	}
 	return dwellMs;
 }
