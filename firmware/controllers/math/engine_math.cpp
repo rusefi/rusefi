@@ -165,7 +165,7 @@ void FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_S) {
 #if EFI_UNIT_TEST
 	ev->engine = engine;
 #endif
-	fixAngle(angle);
+	fixAngle(angle, "addFuel#1");
 
 	ev->outputs[0] = output;
 	ev->outputs[1] = secondOutput;
@@ -257,7 +257,7 @@ static int findAngleIndex(float target DECLARE_ENGINE_PARAMETER_S) {
 void findTriggerPosition(event_trigger_position_s *position, angle_t angleOffset DECLARE_ENGINE_PARAMETER_S) {
 	// convert engine cycle angle into trigger cycle angle
 	angleOffset += tdcPosition();
-	fixAngle(angleOffset);
+	fixAngle(angleOffset, "addFuel#2");
 
 	int index = TRIGGER_SHAPE(triggerIndexByAngle[(int)angleOffset]);
 	angle_t eventAngle = TRIGGER_SHAPE(eventAngles[index]);
