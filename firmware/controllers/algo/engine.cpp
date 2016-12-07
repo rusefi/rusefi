@@ -129,13 +129,14 @@ EngineState::EngineState() {
 	injectorLag = 0;
 	warningCounter = 0;
 	lastErrorCode = 0;
+	crankingTime = 0;
 	targetAFR = 0;
 	tpsAccelEnrich = 0;
 	tChargeK = 0;
 	runningFuel = baseFuel = currentVE = 0;
 	timeOfPreviousWarning = -10;
 	baseTableFuel = iat = iatFuelCorrection = 0;
-	clt = cltFuelCorrection = 0;
+	clt = cltFuelCorrection = postCrankingFuelCorrection = 0;
 	warmupTargetAfr = airMass = 0;
 	baroCorrection = timingAdvance = fuelTankGauge = 0;
 	sparkDwell = mapAveragingDuration = 0;
@@ -152,6 +153,13 @@ void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_F) {
 
 void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 	int rpm = ENGINE(rpmCalculator.rpmValue);
+
+	efitick_t nowNt = getTimeNowNt();
+	if (isCrankingR(rpm)) {
+		crankingTime = nowNt;
+	} else {
+		timeSinceCranking = nowNt - crankingTime;
+	}
 
 	sparkDwell = getSparkDwell(rpm PASS_ENGINE_PARAMETER);
 	dwellAngle = sparkDwell / getOneDegreeTimeMs(rpm);

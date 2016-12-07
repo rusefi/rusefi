@@ -362,6 +362,9 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->acCutoffLowRpm = 700;
 	engineConfiguration->acCutoffHighRpm = 5000;
 
+	engineConfiguration->postCrankingTargetClt = 25;
+	engineConfiguration->postCrankingDurationSec = 2;
+
 	initTemperatureCurve(IAT_CURVE_SIZE, config->iatFuelCorrBins, config->iatFuelCorr, 1);
 
 	engineConfiguration->tachPulseDuractionMs = 4;

@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 06 21:51:50 EST 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 06 22:04:27 EST 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -1474,7 +1474,7 @@ public class Fields {
 	public static final Field TPSDECELENLEANMENTTHRESHOLD = Field.create("TPSDECELENLEANMENTTHRESHOLD", 2232, FieldType.FLOAT);
 	public static final Field TPSDECELENLEANMENTMULTIPLIER = Field.create("TPSDECELENLEANMENTMULTIPLIER", 2236, FieldType.FLOAT);
 	public static final Field SLOWADCALPHA = Field.create("SLOWADCALPHA", 2240, FieldType.FLOAT);
-	public static final String[] debug_mode_e = {"Alternator_PID", "TPS accel enrich", "Warmup PID", "IDLE", "EL accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT", "mode9", "mode10", "mode11", "mode12", "mode13", "mode14", "mode15"};
+	public static final String[] debug_mode_e = {"Alternator_PID", "TPS accel enrich", "Warmup PID", "IDLE", "EL accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT", "post-crank enrich", "mode10", "mode11", "mode12", "mode13", "mode14", "mode15"};
 	public static final Field DEBUGMODE = Field.create("DEBUGMODE", 2244, FieldType.INT, debug_mode_e);
 	public static final Field WARMUPAFRPID_PFACTOR = Field.create("WARMUPAFRPID_PFACTOR", 2248, FieldType.FLOAT);
 	public static final Field WARMUPAFRPID_IFACTOR = Field.create("WARMUPAFRPID_IFACTOR", 2252, FieldType.FLOAT);

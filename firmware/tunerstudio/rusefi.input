@@ -1910,6 +1910,9 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		field = ""
 		field = ""
 		field = "enable Cylinder Cleanup",				isCylinderCleanupEnabled
+		field = "Post-Cranking target (C)", 			postCrankingTargetClt
+		field = "Post-Cranking factor", 				postCrankingFactor
+		field = "Post-Cranking duraction", 				postCrankingDurationSec
 		
 		
 	dialog = EngineLoadAccelPanel, "Engine Load"
