@@ -891,7 +891,13 @@
 #define cltTimingBins_offset 2576
 #define cltTimingExtra_offset 2608
 #define nbVvtIndex_offset 2640
-#define unused_offset 2644
+#define autoTuneCltThreshold_offset 2644
+#define autoTuneTpsRocThreshold_offset 2648
+#define autoTuneTpsQuietPeriod_offset 2652
+#define postCrankingTargetClt_offset 2656
+#define postCrankingFactor_offset 2660
+#define postCrankingDurationSec_offset 2664
+#define unused_offset 2668
 #define le_formulas1_offset 3048
 #define le_formulas2_offset 3248
 #define le_formulas3_offset 3448

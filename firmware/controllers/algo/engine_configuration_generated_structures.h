@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 17 22:30:07 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 06 21:51:50 EST 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1782,7 +1782,31 @@ typedef struct {
 	/**
 	 * offset 2644
 	 */
-	int unused[101];
+	float autoTuneCltThreshold;
+	/**
+	 * offset 2648
+	 */
+	float autoTuneTpsRocThreshold;
+	/**
+	 * offset 2652
+	 */
+	float autoTuneTpsQuietPeriod;
+	/**
+	 * offset 2656
+	 */
+	float postCrankingTargetClt;
+	/**
+	 * offset 2660
+	 */
+	float postCrankingFactor;
+	/**
+	 * offset 2664
+	 */
+	float postCrankingDurationSec;
+	/**
+	 * offset 2668
+	 */
+	int unused[95];
 	/** total size 3048*/
 } engine_configuration_s;
 
@@ -1997,4 +2021,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 17 22:30:07 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 06 21:51:50 EST 2016
