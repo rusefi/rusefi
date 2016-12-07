@@ -109,6 +109,9 @@ public:
 	float iat;
 	float clt;
 
+	efitick_t crankingTime;
+	efitick_t timeSinceCranking;
+
 	int warningCounter;
 	int lastErrorCode;
 	efitimesec_t timeOfPreviousWarning;
@@ -143,6 +146,7 @@ public:
 	// fuel-related;
 	float iatFuelCorrection;
 	float cltFuelCorrection;
+	float postCrankingFuelCorrection;
 	/**
 	 * Global injector lag + injectorLag(VBatt)
 	 *

@@ -649,7 +649,7 @@ typedef enum {
 	FSIO_ADC = 6,
 	AUX_PID_1 = 7,
 	DBG_VVT = 8,
-	DM_9 = 9,
+	DBG_POST_CRANKING_ENRICH = 9,
 	DM_10 = 10,
 	DM_11 = 11,
 	DM_12 = 12,
