@@ -139,6 +139,8 @@ void FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_S) {
 
 	bool isSimultanious = mode == IM_SIMULTANEOUS;
 
+	assertAngleRange(baseAngle, "addFbaseAngle");
+
 	float angle = baseAngle
 			+ i * ENGINE(engineCycle) / CONFIG(specs.cylindersCount);
 

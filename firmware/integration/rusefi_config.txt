@@ -763,7 +763,10 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float autoTuneCltThreshold;
 	float autoTuneTpsRocThreshold;
 	float autoTuneTpsQuietPeriod;
-	int[98] unused;
+	float postCrankingTargetClt;;"degC",        1,     0,  0,    100,  0
+	float postCrankingFactor;;"mult",        1,     0,  0,    100,  4
+	float postCrankingDurationSec;;"seconds",        1,     0,  0,    100,  2
+	int[95] unused;
 	
 
 end_struct
