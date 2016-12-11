@@ -26,6 +26,9 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->camInput = GPIOC_6;
 
+	boardConfiguration->alternatorControlPin = GPIOE_10;
+	boardConfiguration->alternatorControlPinMode = OM_OPENDRAIN;
+
 	// set vvt_mode 3
 	engineConfiguration->vvtMode = MIATA_NB2;
 	boardConfiguration->vvtCamSensorUseRise = true;
