@@ -34,6 +34,10 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->vvtCamSensorUseRise = true;
 	engineConfiguration->vvtOffset = -70;
 
+	engineConfiguration->auxPidPins[0] = GPIOE_3; // VVT solenoid control
+
+	boardConfiguration->tachOutputPin = GPIOE_8;
+
 //	boardConfiguration->fuelPumpPin = GPIOD_5; // todo: rewire my board to default E_4
 
 	// set_global_trigger_offset_angle 670
