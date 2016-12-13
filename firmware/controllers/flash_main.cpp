@@ -110,6 +110,7 @@ persisted_configuration_state_e readConfiguration(Logging * logger) {
 	persisted_configuration_state_e result;
 	if (!isValidCrc(&persistentState)) {
 		result = CRC_FAILED;
+		warning(CUSTOM_ERR_FLASH_CRC_FAILED, "flash CRC failed");
 		resetConfigurationExt(logger, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER);
 	} else if (persistentState.version != FLASH_DATA_VERSION || persistentState.size != PERSISTENT_SIZE) {
 		result = INCOMPATIBLE_VERSION;

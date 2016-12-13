@@ -82,11 +82,11 @@ void TriggerShape::calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE
 	}
 
 	int totalExpected = 0;
-	for (int i = 0;i<PWM_PHASE_MAX_WAVE_PER_PWM;i++) {
+	for (int i = 0;i < PWM_PHASE_MAX_WAVE_PER_PWM;i++) {
 		totalExpected += expectedEventCount[i];
 	}
 	if (totalExpected < 2) {
-		firmwareError(CUSTOM_ERR_6140, "Too few trigger events");
+		firmwareError(CUSTOM_ERR_TOO_FEW_EVENTS, "Too few trigger events");
 	}
 }
 
