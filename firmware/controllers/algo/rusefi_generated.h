@@ -617,8 +617,8 @@
 #define frequencyReportingMapInputPin_offset 1484
 #define unusedBit__4_offset 1488
 #define unusedBit__1_offset 1488
-#define hasBaroSensor_offset 1488
-#define hasAfrSensor_offset 1488
+#define unusedBit__5_offset 1488
+#define unusedBit__6_offset 1488
 #define useConstantDwellDuringCranking_offset 1488
 #define isEngineChartEnabled_offset 1488
 #define isCanEnabled_offset 1488

@@ -329,10 +329,10 @@ static void printAnalogInfo(void) {
 	}
 
 	printAnalogChannelInfo("AFR", engineConfiguration->afr.hwChannel);
-	if (engineConfiguration->hasMapSensor) {
+	if (hasMapSensor(PASS_ENGINE_PARAMETER_F)) {
 		printAnalogChannelInfo("MAP", engineConfiguration->map.sensor.hwChannel);
 	}
-	if (hasBaroSensor()) {
+	if (hasBaroSensor(PASS_ENGINE_PARAMETER_F)) {
 		printAnalogChannelInfo("BARO", engineConfiguration->baroSensor.hwChannel);
 	}
 	if (engineConfiguration->externalKnockSenseAdc != EFI_ADC_NONE) {

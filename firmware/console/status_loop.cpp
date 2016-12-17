@@ -178,17 +178,20 @@ static void printSensors(Logging *log, bool fileFormat) {
 
 	reportSensorI(log, fileFormat, "mode", "v", packEngineMode(PASS_ENGINE_PARAMETER_F)); // log column #3
 
-	if (engineConfiguration->hasCltSensor) {
+	if (hasCltSensor()) {
 		reportSensorF(log, fileFormat, "CLT", "C", getCoolantTemperature(PASS_ENGINE_PARAMETER_F), 2); // log column #4
 	}
-	reportSensorF(log, fileFormat, "TPS", "%", getTPS(PASS_ENGINE_PARAMETER_F), 2); // log column #5
+	if (hasTpsSensor()) {
+		reportSensorF(log, fileFormat, "TPS", "%", getTPS(PASS_ENGINE_PARAMETER_F), 2); // log column #5
+	}
 
 	if (hasVBatt(PASS_ENGINE_PARAMETER_F)) {
 		reportSensorF(log, fileFormat, "vbatt", "V", getVBatt(PASS_ENGINE_PARAMETER_F), 2); // log column #6
 	}
 
-	reportSensorF(log, fileFormat, "IAT", "C", getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F), 2); // log column #7
-
+	if (hasIatSensor()) {
+		reportSensorF(log, fileFormat, "IAT", "C", getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F), 2); // log column #7
+	}
 
 	if (hasMafSensor()) {
 		reportSensorF(log, fileFormat, "maf", "V", getMaf(PASS_ENGINE_PARAMETER_F), 2);
@@ -206,7 +209,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 	}
 #endif /* EFI_ANALOG_SENSORS */
 
-	if (engineConfiguration->hasAfrSensor) {
+	if (hasAftSensor(PASS_ENGINE_PARAMETER_F)) {
 		reportSensorF(log, fileFormat, "afr", "AFR", getAfr(PASS_ENGINE_PARAMETER_F), 2);
 	}
 

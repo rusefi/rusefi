@@ -254,10 +254,10 @@ void testStartupFuelPumping(void) {
 
 	mockTps = TPS_TS_CONVERSION * 3;
 	sf.update(PASS_ENGINE_PARAMETER_F);
-	assertEqualsM("pc#2", 1, sf.pumpsCounter);
+	assertEqualsM("pumpsCounter#2", 2, sf.pumpsCounter);
 
 	sf.update(PASS_ENGINE_PARAMETER_F);
-	assertEqualsM("pc#3", 1, sf.pumpsCounter);
+	assertEqualsM("pc#3", 3, sf.pumpsCounter);
 
 	engine->rpmCalculator.mockRpm = 10;
 	sf.update(PASS_ENGINE_PARAMETER_F);
@@ -270,11 +270,11 @@ void testStartupFuelPumping(void) {
 
 	mockTps = TPS_TS_CONVERSION * 3;
 	sf.update(PASS_ENGINE_PARAMETER_F);
-	assertEqualsM("pc#6", 1, sf.pumpsCounter);
+	assertEqualsM("pc#6", 2, sf.pumpsCounter);
 
 	mockTps = TPS_TS_CONVERSION * 7;
 	sf.update(PASS_ENGINE_PARAMETER_F);
-	assertEqualsM("pc#7", 2, sf.pumpsCounter);
+	assertEqualsM("pc#7", 3, sf.pumpsCounter);
 }
 
 static void assertREquals(void *expected, void *actual) {
@@ -902,7 +902,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	timeNow += MS2US(20);
 	assertEqualsM("executed #06", 4, schedulingQueue.executeAll(timeNow));
 	assertEqualsM("qs#06", 1, schedulingQueue.size());
-	assertInjectors("#2", 1, 0);
+	assertInjectors("inj#2", 1, 0);
 
 	eth.firePrimaryTriggerRise();
 	assertEqualsM("Queue.size#03", 5, schedulingQueue.size());
@@ -1231,7 +1231,7 @@ void testMissedSpark299(void) {
 	engineConfiguration->isIgnitionEnabled = true;
 	engineConfiguration->isInjectionEnabled = false;
 
-	assertEqualsM("warningCounter#0", 2, warningCounter);
+	assertEqualsM("warningCounter#0", 4, warningCounter);
 
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerRise();
@@ -1302,5 +1302,5 @@ void testMissedSpark299(void) {
 	eth.firePrimaryTriggerFall();
 	schedulingQueue.executeAll(timeNow);
 
-	assertEqualsM("warningCounter#1", 3, warningCounter);
+	assertEqualsM("warningCounter#1", 5, warningCounter);
 }

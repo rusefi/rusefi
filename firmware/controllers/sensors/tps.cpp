@@ -117,6 +117,10 @@ percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_F) {
 	return maxF(0, minF(100, result));
 }
 
+bool hasTpsSensor(DECLARE_ENGINE_PARAMETER_F) {
+	return engineConfiguration->tpsAdcChannel != EFI_ADC_NONE;
+}
+
 percent_t getTPS(DECLARE_ENGINE_PARAMETER_F) {
 	if (!engineConfiguration->hasTpsSensor)
 		return NO_TPS_MAGIC_VALUE;
