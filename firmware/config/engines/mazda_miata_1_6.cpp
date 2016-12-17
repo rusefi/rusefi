@@ -92,7 +92,6 @@ static const fuel_table_t mafBased16FuelTable = {
 void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 
-	engineConfiguration->hasMapSensor = true;
 	// Frankenso analog #6 pin 3R, W56 (5th lower row pin from the end) top <> W45 bottom jumper, not OEM
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_7;
 	engineConfiguration->map.sensor.type = MT_CUSTOM;

@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 06 22:04:27 EST 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Dec 17 08:49:17 EST 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -619,21 +619,21 @@ public class Fields {
 	public static final int fsioDigitalInputs15_offset = 1476;
 	public static final int fsioDigitalInputs16_offset = 1480;
 	public static final int frequencyReportingMapInputPin_offset = 1484;
-	public static final int hasMapSensor_offset = 1488;
-	public static final int hasIatSensor_offset = 1488;
+	public static final int unusedBit__4_offset = 1488;
+	public static final int unusedBit__1_offset = 1488;
 	public static final int hasBaroSensor_offset = 1488;
 	public static final int hasAfrSensor_offset = 1488;
 	public static final int useConstantDwellDuringCranking_offset = 1488;
 	public static final int isEngineChartEnabled_offset = 1488;
 	public static final int isCanEnabled_offset = 1488;
-	public static final int hasCltSensor_offset = 1488;
+	public static final int unusedBit__2_offset = 1488;
 	public static final int canReadEnabled_offset = 1488;
 	public static final int canWriteEnabled_offset = 1488;
 	public static final int hasVehicleSpeedSensor_offset = 1488;
 	public static final int isJoystickEnabled_offset = 1488;
 	public static final int isGpsEnabled_offset = 1488;
 	public static final int isAlternatorControlEnabled_offset = 1488;
-	public static final int hasMafSensor_offset = 1488;
+	public static final int unusedBit__3_offset = 1488;
 	public static final int hasTpsSensor_offset = 1488;
 	public static final int cutFuelOnHardLimit_offset = 1488;
 	public static final int cutSparkOnHardLimit_offset = 1488;
@@ -1352,21 +1352,21 @@ public class Fields {
 	public static final Field FSIODIGITALINPUTS15 = Field.create("FSIODIGITALINPUTS15", 1476, FieldType.INT, brain_pin_e);
 	public static final Field FSIODIGITALINPUTS16 = Field.create("FSIODIGITALINPUTS16", 1480, FieldType.INT, brain_pin_e);
 	public static final Field FREQUENCYREPORTINGMAPINPUTPIN = Field.create("FREQUENCYREPORTINGMAPINPUTPIN", 1484, FieldType.INT, brain_input_pin_e);
-	public static final Field HASMAPSENSOR = Field.create("HASMAPSENSOR", 1488, FieldType.BIT, 0);
-	public static final Field HASIATSENSOR = Field.create("HASIATSENSOR", 1488, FieldType.BIT, 1);
+	public static final Field UNUSEDBIT__4 = Field.create("UNUSEDBIT__4", 1488, FieldType.BIT, 0);
+	public static final Field UNUSEDBIT__1 = Field.create("UNUSEDBIT__1", 1488, FieldType.BIT, 1);
 	public static final Field HASBAROSENSOR = Field.create("HASBAROSENSOR", 1488, FieldType.BIT, 2);
 	public static final Field HASAFRSENSOR = Field.create("HASAFRSENSOR", 1488, FieldType.BIT, 3);
 	public static final Field USECONSTANTDWELLDURINGCRANKING = Field.create("USECONSTANTDWELLDURINGCRANKING", 1488, FieldType.BIT, 4);
 	public static final Field ISENGINECHARTENABLED = Field.create("ISENGINECHARTENABLED", 1488, FieldType.BIT, 5);
 	public static final Field ISCANENABLED = Field.create("ISCANENABLED", 1488, FieldType.BIT, 6);
-	public static final Field HASCLTSENSOR = Field.create("HASCLTSENSOR", 1488, FieldType.BIT, 7);
+	public static final Field UNUSEDBIT__2 = Field.create("UNUSEDBIT__2", 1488, FieldType.BIT, 7);
 	public static final Field CANREADENABLED = Field.create("CANREADENABLED", 1488, FieldType.BIT, 8);
 	public static final Field CANWRITEENABLED = Field.create("CANWRITEENABLED", 1488, FieldType.BIT, 9);
 	public static final Field HASVEHICLESPEEDSENSOR = Field.create("HASVEHICLESPEEDSENSOR", 1488, FieldType.BIT, 10);
 	public static final Field ISJOYSTICKENABLED = Field.create("ISJOYSTICKENABLED", 1488, FieldType.BIT, 11);
 	public static final Field ISGPSENABLED = Field.create("ISGPSENABLED", 1488, FieldType.BIT, 12);
 	public static final Field ISALTERNATORCONTROLENABLED = Field.create("ISALTERNATORCONTROLENABLED", 1488, FieldType.BIT, 13);
-	public static final Field HASMAFSENSOR = Field.create("HASMAFSENSOR", 1488, FieldType.BIT, 14);
+	public static final Field UNUSEDBIT__3 = Field.create("UNUSEDBIT__3", 1488, FieldType.BIT, 14);
 	public static final Field HASTPSSENSOR = Field.create("HASTPSSENSOR", 1488, FieldType.BIT, 15);
 	public static final Field CUTFUELONHARDLIMIT = Field.create("CUTFUELONHARDLIMIT", 1488, FieldType.BIT, 16);
 	public static final Field CUTSPARKONHARDLIMIT = Field.create("CUTSPARKONHARDLIMIT", 1488, FieldType.BIT, 17);

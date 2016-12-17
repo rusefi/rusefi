@@ -281,7 +281,7 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element, En
 	if (element == NULL) {
 		warning(CUSTOM_OBD_11, "invalid expression for %s", msg);
 	} else {
-		int value = calc.getValue2(pin->getLogicValue(), element, engine);
+		int value = (int)calc.getValue2(pin->getLogicValue(), element, engine);
 		if (pin->isInitialized() && value != pin->getLogicValue()) {
 			if (isRunningBenchTest()) {
 				return; // let's not mess with bench testing
@@ -398,7 +398,7 @@ static void showFsioInfo(void) {
  */
 static void setFsioSetting(float indexF, float value) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	int index = indexF;
+	int index = (int)indexF;
 	if (index < 0 || index >= LE_COMMAND_COUNT) {
 		scheduleMsg(logger, "invalid FSIO index: %d", index);
 		return;

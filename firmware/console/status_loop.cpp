@@ -195,7 +195,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 		reportSensorF(log, fileFormat, "mafr", "kg/hr", getRealMaf(PASS_ENGINE_PARAMETER_F), 2);
 	}
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
-	if (engineConfiguration->hasMapSensor) {
+	if (engineConfiguration->map.sensor.hwChannel != EFI_ADC_NONE) {
 		reportSensorF(log, fileFormat, "MAP", "kPa", getMap(), 2);
 //		reportSensorF(log, fileFormat, "map_r", "V", getRawMap(), 2);
 	}

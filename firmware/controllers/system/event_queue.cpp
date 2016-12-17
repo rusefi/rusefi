@@ -94,8 +94,7 @@ bool EventQueue::insertTask(const bool monitorReuse, const char *prefix, schedul
  * @return Get the timestamp of the soonest pending action, skipping all the actions in the past
  */
 efitime_t EventQueue::getNextEventTime(efitime_t nowX) {
-	efitime_t nextTimeUs = EMPTY_QUEUE;
-
+	
 	if (head != NULL) {
 		if (head->momentX <= nowX) {
 			/**

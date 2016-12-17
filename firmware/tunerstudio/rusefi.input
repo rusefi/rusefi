@@ -1795,7 +1795,6 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		field = "!ECU reboot needed to apply these settings"
 		field = "TPS ADC input", 						tpsAdcChannel
 		field = "!todo: move MAF channel to maf curve dialog"
-		field = "MAF enabled",							hasMafSensor
 		field = "MAF ADC input", 						mafAdcChannel
 		field = "Baro ADC input", 						baroSensor_hwChannel
 		field = "Analog divider",						analogInputDividerCoefficient
