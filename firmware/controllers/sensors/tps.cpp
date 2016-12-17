@@ -63,6 +63,13 @@ percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_S) {
 		return NAN;
 	}
 	float result = interpolate(TPS_TS_CONVERSION * engineConfiguration->tpsMax, 100, TPS_TS_CONVERSION * engineConfiguration->tpsMin, 0, adc);
+	if (result < engineConfiguration->tpsErrorDetectionTooLow) {
+		warning(OBD_Throttle_Position_Sensor_Circuit_Malfunction, "TPS too low: %f", result);
+	}
+	if (result > engineConfiguration->tpsErrorDetectionTooHigh) {
+		warning(OBD_Throttle_Position_Sensor_Range_Performance_Problem, "TPS too high: %f", result);
+	}
+
 	// this would put the value into the 0-100 range
 	return maxF(0, minF(100, result));
 }

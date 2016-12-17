@@ -8,7 +8,7 @@
 
 EXTERN_ENGINE;
 
-bool hasAftSensor(DECLARE_ENGINE_PARAMETER_F) {
+bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_F) {
 	return engineConfiguration->afr.hwChannel != EFI_ADC_NONE;
 }
 

@@ -41,6 +41,8 @@ static LENameOrdinalPair leFsioSetting(LE_METHOD_FSIO_SETTING, "fsio_setting");
 static LENameOrdinalPair leFsioTable(LE_METHOD_FSIO_TABLE, "fsio_table");
 static LENameOrdinalPair leFsioAnalogInput(LE_METHOD_FSIO_ANALOG_INPUT, "fsio_input");
 static LENameOrdinalPair leKnock(LE_METHOD_KNOCK, "knock");
+static LENameOrdinalPair leIntakeVVT(LE_METHOD_INTAKE_VVT, "ivvt");
+static LENameOrdinalPair leExhaustVVT(LE_METHOD_EXHAUST_VVT, "evvt");
 
 #define LE_EVAL_POOL_SIZE 32
 
@@ -89,6 +91,9 @@ float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 		return getMaf(PASS_ENGINE_PARAMETER_F);
 	case LE_METHOD_MAP:
 		return getMap();
+	case LE_METHOD_INTAKE_VVT:
+	case LE_METHOD_EXHAUST_VVT:
+		return engine->triggerCentral.vvtPosition;
 	case LE_METHOD_TIME_SINCE_BOOT:
 		return getTimeNowSeconds();
 	case LE_METHOD_FAN_OFF_SETTING:
