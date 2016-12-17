@@ -2066,6 +2066,12 @@
         <name>$PROJ_DIR$\..\config\engines\mazda_miata_nb.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\config\engines\mazda_miata_vvt.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\mazda_miata_vvt.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\config\engines\MiniCooperR50.cpp</name>
       </file>
       <file>
@@ -2493,6 +2499,12 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\trigger\rpm_calculator.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\trigger\spark_logic.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\trigger\spark_logic.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\trigger\trigger_bmw.cpp</name>

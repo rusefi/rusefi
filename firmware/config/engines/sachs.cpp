@@ -34,11 +34,9 @@ void setSachs(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->trigger.customTotalToothCount = 50;
 	engineConfiguration->trigger.customSkippedToothCount = 2;
 
-	engineConfiguration->hasIatSensor = false;
 	engineConfiguration->hasMapSensor = false;
 	engineConfiguration->hasBaroSensor = false;
 	engineConfiguration->hasAfrSensor = false;
-	engineConfiguration->hasCltSensor = false;
 	boardConfiguration->useSerialPort = false;
 
 	// Frankenstein analog input #1: PA1 adc1 MAP

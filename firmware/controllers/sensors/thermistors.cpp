@@ -107,12 +107,13 @@ bool isValidIntakeAirTemperature(float temperature) {
  * @return coolant temperature, in Celsius
  */
 float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_F) {
-	float temperature = getTemperatureC(&engineConfiguration->clt, &engine->engineState.cltCurve);
+	if (engineConfiguration->clt.adcChannel == EFI_ADC_NONE) {
+		return NO_CLT_SENSOR_TEMPERATURE;
+	}
+ 	float temperature = getTemperatureC(&engineConfiguration->clt, &engine->engineState.cltCurve);
 	if (!isValidCoolantTemperature(temperature)) {
 		efiAssert(engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
-		if (engineConfiguration->hasCltSensor) {
-			warning(OBD_Engine_Coolant_Temperature_Circuit_Malfunction, "unrealistic CLT %f", temperature);
-		}
+		warning(OBD_Engine_Coolant_Temperature_Circuit_Malfunction, "unrealistic CLT %f", temperature);
 		return LIMPING_MODE_CLT_TEMPERATURE;
 	}
 	return temperature;

@@ -638,8 +638,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->hasMafSensor = true;
 	engineConfiguration->hasTpsSensor = true;
 	engineConfiguration->hasAfrSensor = true;
-	engineConfiguration->hasIatSensor = true;
-	engineConfiguration->hasCltSensor = true;
 	engineConfiguration->hasBaroSensor = false;
 	engineConfiguration->isEngineChartEnabled = true;
 
