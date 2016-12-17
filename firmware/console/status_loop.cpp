@@ -209,7 +209,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 	}
 #endif /* EFI_ANALOG_SENSORS */
 
-	if (hasAftSensor(PASS_ENGINE_PARAMETER_F)) {
+	if (hasAfrSensor(PASS_ENGINE_PARAMETER_F)) {
 		reportSensorF(log, fileFormat, "afr", "AFR", getAfr(PASS_ENGINE_PARAMETER_F), 2);
 	}
 
