@@ -17,8 +17,10 @@
 #include "engine_math.h"
 
 // Celsius
+#define NO_IAT_SENSOR_TEMPERATURE 32.0f
 #define LIMPING_MODE_IAT_TEMPERATURE 30.0f
 #define LIMPING_MODE_CLT_TEMPERATURE 70.0f
+#define NO_CLT_SENSOR_TEMPERATURE 72.0f
 
 EXTERN_ENGINE
 ;
@@ -174,6 +176,9 @@ static void prepareThermistorCurve(thermistor_conf_s *tc, thermistor_curve_s * c
  * @return Celsius value
  */
 float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_F) {
+	if (engineConfiguration->iat.adcChannel == EFI_ADC_NONE) {
+		return NO_IAT_SENSOR_TEMPERATURE;
+	}
 	float temperature = getTemperatureC(&engineConfiguration->iat, &engine->engineState.iatCurve);
 	if (!isValidIntakeAirTemperature(temperature)) {
 		efiAssert(engineConfiguration!=NULL, "NULL engineConfiguration", NAN);

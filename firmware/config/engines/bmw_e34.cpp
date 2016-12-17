@@ -150,8 +150,6 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->map.sensor.type = MT_MPX4250;
 
 	// thermistors
-	engineConfiguration->hasCltSensor = true;
-	engineConfiguration->hasIatSensor = true;
 	setThermistorConfiguration(&engineConfiguration->clt, -10, 9300, 20, 2500, 80, 335);
 	engineConfiguration->iat.config.bias_resistor = 2200;
 	setThermistorConfiguration(&engineConfiguration->iat, -10, 9300, 20, 2500, 80, 335);
