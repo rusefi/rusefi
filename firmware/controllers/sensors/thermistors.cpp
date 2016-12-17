@@ -103,11 +103,15 @@ bool isValidIntakeAirTemperature(float temperature) {
 	return !cisnan(temperature) && temperature > -50 && temperature < 100;
 }
 
+bool hasCltSensor(DECLARE_ENGINE_PARAMETER_F) {
+	return engineConfiguration->clt.adcChannel != EFI_ADC_NONE;
+}
+
 /**
  * @return coolant temperature, in Celsius
  */
 float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_F) {
-	if (engineConfiguration->clt.adcChannel == EFI_ADC_NONE) {
+	if (!hasCltSensor(PASS_ENGINE_PARAMETER_F)) {
 		return NO_CLT_SENSOR_TEMPERATURE;
 	}
  	float temperature = getTemperatureC(&engineConfiguration->clt, &engine->engineState.cltCurve);
@@ -173,11 +177,15 @@ static void prepareThermistorCurve(thermistor_conf_s *tc, thermistor_curve_s * c
 #endif
 }
 
+bool hasIatSensor(DECLARE_ENGINE_PARAMETER_F) {
+	return engineConfiguration->iat.adcChannel != EFI_ADC_NONE;
+}
+
 /**
  * @return Celsius value
  */
 float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_F) {
-	if (engineConfiguration->iat.adcChannel == EFI_ADC_NONE) {
+	if (!hasIatSensor(PASS_ENGINE_PARAMETER_F)) {
 		return NO_IAT_SENSOR_TEMPERATURE;
 	}
 	float temperature = getTemperatureC(&engineConfiguration->iat, &engine->engineState.iatCurve);

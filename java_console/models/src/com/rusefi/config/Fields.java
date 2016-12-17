@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Dec 17 08:49:17 EST 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Dec 17 10:16:55 EST 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -621,8 +621,8 @@ public class Fields {
 	public static final int frequencyReportingMapInputPin_offset = 1484;
 	public static final int unusedBit__4_offset = 1488;
 	public static final int unusedBit__1_offset = 1488;
-	public static final int hasBaroSensor_offset = 1488;
-	public static final int hasAfrSensor_offset = 1488;
+	public static final int unusedBit__5_offset = 1488;
+	public static final int unusedBit__6_offset = 1488;
 	public static final int useConstantDwellDuringCranking_offset = 1488;
 	public static final int isEngineChartEnabled_offset = 1488;
 	public static final int isCanEnabled_offset = 1488;
@@ -1354,8 +1354,8 @@ public class Fields {
 	public static final Field FREQUENCYREPORTINGMAPINPUTPIN = Field.create("FREQUENCYREPORTINGMAPINPUTPIN", 1484, FieldType.INT, brain_input_pin_e);
 	public static final Field UNUSEDBIT__4 = Field.create("UNUSEDBIT__4", 1488, FieldType.BIT, 0);
 	public static final Field UNUSEDBIT__1 = Field.create("UNUSEDBIT__1", 1488, FieldType.BIT, 1);
-	public static final Field HASBAROSENSOR = Field.create("HASBAROSENSOR", 1488, FieldType.BIT, 2);
-	public static final Field HASAFRSENSOR = Field.create("HASAFRSENSOR", 1488, FieldType.BIT, 3);
+	public static final Field UNUSEDBIT__5 = Field.create("UNUSEDBIT__5", 1488, FieldType.BIT, 2);
+	public static final Field UNUSEDBIT__6 = Field.create("UNUSEDBIT__6", 1488, FieldType.BIT, 3);
 	public static final Field USECONSTANTDWELLDURINGCRANKING = Field.create("USECONSTANTDWELLDURINGCRANKING", 1488, FieldType.BIT, 4);
 	public static final Field ISENGINECHARTENABLED = Field.create("ISENGINECHARTENABLED", 1488, FieldType.BIT, 5);
 	public static final Field ISCANENABLED = Field.create("ISCANENABLED", 1488, FieldType.BIT, 6);

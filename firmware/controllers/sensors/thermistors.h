@@ -38,6 +38,8 @@ float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_F);
 bool isValidCoolantTemperature(float temperature);
 float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_F);
 bool isValidIntakeAirTemperature(float temperature);
+bool hasIatSensor(DECLARE_ENGINE_PARAMETER_F);
+bool hasCltSensor(DECLARE_ENGINE_PARAMETER_F);
 
 void setThermistorConfiguration(ThermistorConf * tc, float temp1, float r1, float temp2, float r2, float temp3,
 		float r3);

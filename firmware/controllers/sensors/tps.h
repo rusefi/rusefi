@@ -24,6 +24,7 @@ percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_F);
  * @return Current TPS position, percent of WOT. 0 means idle and 100 means Wide Open Throttle
  */
 percent_t getTPS(DECLARE_ENGINE_PARAMETER_F);
+bool hasTpsSensor(DECLARE_ENGINE_PARAMETER_F);
 int convertVoltageTo10bitADC(float voltage);
 int getTPS12bitAdc(DECLARE_ENGINE_PARAMETER_F);
 float getTPSVoltage(DECLARE_ENGINE_PARAMETER_F);

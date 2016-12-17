@@ -8,6 +8,10 @@
 
 EXTERN_ENGINE;
 
+bool hasAftSensor(DECLARE_ENGINE_PARAMETER_F) {
+	return engineConfiguration->afr.hwChannel != EFI_ADC_NONE;
+}
+
 float getAfr(DECLARE_ENGINE_PARAMETER_F) {
 	afr_sensor_s * sensor = &engineConfiguration->afr;
 

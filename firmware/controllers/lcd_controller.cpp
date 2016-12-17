@@ -264,14 +264,14 @@ static void showLine(lcd_line_e line, int screenY) {
 		return;
 #endif
 	case LL_AFR:
-		if (engineConfiguration->hasAfrSensor) {
+		if (hasAfrSensor(PASS_ENGINE_PARAMETER_F)) {
 			lcdPrintf("AFR: %f", getAfr());
 		} else {
 			lcdPrintf("AFR: none");
 		}
 		return;
 	case LL_MAP:
-		if (engineConfiguration->hasMapSensor) {
+		if (hasMapSensor(PASS_ENGINE_PARAMETER_F)) {
 			lcdPrintf("MAP %f", getMap());
 		} else {
 			lcdPrintf("MAP: none");

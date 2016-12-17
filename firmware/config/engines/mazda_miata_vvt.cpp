@@ -70,8 +70,6 @@ static const ignition_table_t mapBased18vvtTimingTable = {
 void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 
-	engineConfiguration->hasMapSensor = true;
-
 	engineConfiguration->trigger.type = TT_MIATA_VVT;
 	setOperationMode(engineConfiguration, FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
 	engineConfiguration->specs.displacement = 1.8;

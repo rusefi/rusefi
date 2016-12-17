@@ -65,8 +65,9 @@ static percent_t setNewValue(IdleValveState *idle, int currentRpm, efitimems_t n
 
 bool isTpsLockout(DECLARE_ENGINE_PARAMETER_F) {
 	// if we have TPS sensor, then use it
-	if (engineConfiguration->hasTpsSensor)
+	if (hasTpsSensor(PASS_ENGINE_PARAMETER_F)) {
 		return getTPS(PASS_ENGINE_PARAMETER_F) > TPS_IDLE_LOCKOUT;
+	}
 	// TODO: if no TPS sensor then idle switch is our
 	return true;
 }

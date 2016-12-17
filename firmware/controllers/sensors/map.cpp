@@ -134,7 +134,11 @@ float getRawMap(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 bool hasBaroSensor(DECLARE_ENGINE_PARAMETER_F) {
-	return engineConfiguration->hasBaroSensor && engineConfiguration->baroSensor.hwChannel != EFI_ADC_NONE;
+	return engineConfiguration->baroSensor.hwChannel != EFI_ADC_NONE;
+}
+
+bool hasMapSensor(DECLARE_ENGINE_PARAMETER_F) {
+	return engineConfiguration->map.sensor.hwChannel != EFI_ADC_NONE;
 }
 
 float getBaroPressure(DECLARE_ENGINE_PARAMETER_F) {

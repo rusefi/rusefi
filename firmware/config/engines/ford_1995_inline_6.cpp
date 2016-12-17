@@ -98,7 +98,6 @@ void setFordInline6(DECLARE_ENGINE_PARAMETER_F) {
 
 	//	engineConfiguration->vbattAdcChannel = 0; //
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
-	engineConfiguration->hasMafSensor = true;
 
 	boardConfiguration->triggerInputPins[0] = GPIOA_8;
 	boardConfiguration->triggerInputPins[1] = GPIOA_5;

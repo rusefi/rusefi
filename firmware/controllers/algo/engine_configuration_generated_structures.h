@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 06 21:51:50 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Dec 17 10:16:55 EST 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1181,7 +1181,6 @@ typedef struct {
 	 */
 	adc_channel_e mafAdcChannel;
 	/**
-	 * @see hasAfrSensor
 	 * offset 584
 	 */
 	afr_sensor_s afr;
@@ -1199,18 +1198,17 @@ typedef struct {
 	 */
 	board_configuration_s bc;
 	/**
-	 * @see isMapAveragingEnabled
 	offset 1488 bit 0 */
-	bool hasMapSensor : 1;
+	bool unusedBit__4 : 1;
 	/**
 	offset 1488 bit 1 */
-	bool hasIatSensor : 1;
+	bool unusedBit__1 : 1;
 	/**
 	offset 1488 bit 2 */
-	bool hasBaroSensor : 1;
+	bool unusedBit__5 : 1;
 	/**
 	offset 1488 bit 3 */
-	bool hasAfrSensor : 1;
+	bool unusedBit__6 : 1;
 	/**
 	offset 1488 bit 4 */
 	bool useConstantDwellDuringCranking : 1;
@@ -1223,7 +1221,7 @@ typedef struct {
 	bool isCanEnabled : 1;
 	/**
 	offset 1488 bit 7 */
-	bool hasCltSensor : 1;
+	bool unusedBit__2 : 1;
 	/**
 	offset 1488 bit 8 */
 	bool canReadEnabled : 1;
@@ -1243,9 +1241,8 @@ typedef struct {
 	offset 1488 bit 13 */
 	bool isAlternatorControlEnabled : 1;
 	/**
-	 * See mafAdcChannel
 	offset 1488 bit 14 */
-	bool hasMafSensor : 1;
+	bool unusedBit__3 : 1;
 	/**
 	offset 1488 bit 15 */
 	bool hasTpsSensor : 1;
@@ -2021,4 +2018,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 06 21:51:50 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Dec 17 10:16:55 EST 2016

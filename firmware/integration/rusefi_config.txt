@@ -381,7 +381,7 @@ struct afr_sensor_s
 
 end_struct	
 	
-afr_sensor_s afr;@see hasAfrSensor
+afr_sensor_s afr
 
 adc_channel_e pedalPositionChannel;
 	
@@ -579,21 +579,21 @@ end_struct
 custom le_formula_t 200 array, U08, @OFFSET@, [200],"char", 1, 0, 0.0, 3.0, 2
 	
 board_configuration_s bc;
-bit hasMapSensor;@see isMapAveragingEnabled
-	bit hasIatSensor
-	bit hasBaroSensor
-	bit hasAfrSensor
+bit unusedBit__4
+	bit unusedBit__1
+	bit unusedBit__5
+	bit unusedBit__6
 	bit useConstantDwellDuringCranking 
 	bit isEngineChartEnabled;This options enables data for 'engine sniffer' tab in console, which comes at some CPU price 
 	bit isCanEnabled
-	bit hasCltSensor
+	bit unusedBit__2
 	bit canReadEnabled
 	bit canWriteEnabled
 	bit hasVehicleSpeedSensor
 	bit isJoystickEnabled
 	bit isGpsEnabled
 	bit isAlternatorControlEnabled
-	bit hasMafSensor;See mafAdcChannel
+	bit unusedBit__3
 	bit hasTpsSensor
 bit cutFuelOnHardLimit
 bit cutSparkOnHardLimit

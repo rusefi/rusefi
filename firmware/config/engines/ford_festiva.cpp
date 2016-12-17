@@ -118,8 +118,6 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	// Denso 195500-2180
 	engineConfiguration->injector.flow = 265;
 
-	engineConfiguration->hasBaroSensor = false;
-
 	boardConfiguration->isFastAdcEnabled = true;
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;

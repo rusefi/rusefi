@@ -634,10 +634,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->baroSensor.lowValue = 0;
 	engineConfiguration->baroSensor.highValue = 500;
 
-	engineConfiguration->hasMapSensor = true;
-	engineConfiguration->hasTpsSensor = true;
-	engineConfiguration->hasAfrSensor = true;
-	engineConfiguration->hasBaroSensor = false;
 	engineConfiguration->isEngineChartEnabled = true;
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
