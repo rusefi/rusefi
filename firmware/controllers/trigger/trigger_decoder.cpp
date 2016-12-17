@@ -258,7 +258,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 					|| currentCycle.eventCount[2] != TRIGGER_SHAPE(expectedEventCount[2]);
 
 			enginePins.triggerDecoderErrorPin.setValue(isDecodingError);
-			if (isDecodingError) {
+			if (isDecodingError && !isInitializingTrigger) {
 				warning(CUSTOM_SYNC_ERROR_2, "trigger not happy current %d/%d/%d expected %d/%d/%d",
 						currentCycle.eventCount[0],
 						currentCycle.eventCount[1],

@@ -50,8 +50,6 @@ void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->logicAnalyzerPins[2] = GPIO_UNASSIGNED;
 	boardConfiguration->logicAnalyzerPins[3] = GPIO_UNASSIGNED;
 
-	engineConfiguration->hasCltSensor = false;
-	engineConfiguration->hasIatSensor = false;
 
 }
 
