@@ -635,7 +635,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->baroSensor.highValue = 500;
 
 	engineConfiguration->hasMapSensor = true;
-	engineConfiguration->hasMafSensor = true;
 	engineConfiguration->hasTpsSensor = true;
 	engineConfiguration->hasAfrSensor = true;
 	engineConfiguration->hasBaroSensor = false;

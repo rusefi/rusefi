@@ -120,7 +120,6 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->hasBaroSensor = false;
 
-	engineConfiguration->hasMapSensor = true;
 	boardConfiguration->isFastAdcEnabled = true;
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;

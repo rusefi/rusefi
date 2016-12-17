@@ -86,7 +86,7 @@ static msg_t auxPidThread(int param) {
 			if (engineConfiguration->debugMode == AUX_PID_1) {
 				tsOutputChannels.debugFloatField1 = pwm;
 				auxPid.postState(&tsOutputChannels);
-				tsOutputChannels.debugIntField3 = 10 * targetValue;
+				tsOutputChannels.debugIntField3 = (int)(10 * targetValue);
 			}
 
 			auxPidPwm[0].setSimplePwmDutyCycle(pwm / 100);

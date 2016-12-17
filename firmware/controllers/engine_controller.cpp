@@ -312,8 +312,10 @@ static void printAnalogInfo(void) {
 	printAnalogChannelInfo("fuel gauge", engineConfiguration->fuelLevelSensor);
 	printAnalogChannelInfo("TPS", engineConfiguration->tpsAdcChannel);
 	printAnalogChannelInfo("pPS", engineConfiguration->pedalPositionChannel);
-	printAnalogChannelInfo("CLT", engineConfiguration->clt.adcChannel);
-	if (engineConfiguration->hasIatSensor) {
+	if (engineConfiguration->clt.adcChannel != EFI_ADC_NONE) {
+		printAnalogChannelInfo("CLT", engineConfiguration->clt.adcChannel);
+	}
+	if (engineConfiguration->iat.adcChannel != EFI_ADC_NONE) {
 		printAnalogChannelInfo("IAT", engineConfiguration->iat.adcChannel);
 	}
 	if (hasMafSensor()) {

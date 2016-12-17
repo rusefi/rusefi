@@ -143,7 +143,7 @@ typedef enum {
 	//P0117 Engine Coolant Temperature Circuit Low Input
 	//P0118 Engine Coolant Temperature Circuit High Input
 	//P0119 Engine Coolant Temperature Circuit Intermittent
-	//P0120 Throttle Position Sensor/Switch A Circuit Malfunction
+	OBD_Throttle_Position_Sensor_Circuit_Malfunction = 120,
 	//P0121 Throttle Position Sensor/Switch A Circuit Range/Performance Problem
 	//P0122 Throttle Position Sensor/Switch A Circuit Low Input
 	//P0123 Throttle Position Sensor/Switch A Circuit High Input

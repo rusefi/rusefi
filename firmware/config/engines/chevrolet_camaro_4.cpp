@@ -35,7 +35,7 @@ void setCamaro4(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_0; // PA0
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
-	engineConfiguration->hasMafSensor = false;
+
 
 	engineConfiguration->tpsAdcChannel = EFI_ADC_2;
 
@@ -51,7 +51,7 @@ void setCamaro4(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->vbattAdcChannel = EFI_ADC_14;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_13;
-	engineConfiguration->hasMafSensor = false;
+
 
 	boardConfiguration->injectionPins[0] = GPIOE_6;
 	boardConfiguration->injectionPins[1] = GPIOE_5;

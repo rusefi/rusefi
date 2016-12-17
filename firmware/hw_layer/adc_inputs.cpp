@@ -498,7 +498,7 @@ static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 //			}
 //			float result = biq[i].getValue(value);
 
-			slowAdc.values.adc_data[i] = result;
+			slowAdc.values.adc_data[i] = (int)result;
 		}
 		slowAdcCounter++;
 	}
