@@ -1231,7 +1231,7 @@ void testMissedSpark299(void) {
 	engineConfiguration->isIgnitionEnabled = true;
 	engineConfiguration->isInjectionEnabled = false;
 
-	assertEqualsM("warningCounter#0", 5, warningCounter);
+	assertEqualsM("warningCounter#0", 2, warningCounter);
 
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerRise();
@@ -1302,5 +1302,5 @@ void testMissedSpark299(void) {
 	eth.firePrimaryTriggerFall();
 	schedulingQueue.executeAll(timeNow);
 
-	assertEqualsM("warningCounter#1", 6, warningCounter);
+	assertEqualsM("warningCounter#1", 3, warningCounter);
 }
