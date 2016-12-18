@@ -116,7 +116,6 @@ void testFuelMap(void) {
 	assertEqualsM("getStartingFuel#3", 5.6000, getCrankingFuel3(70, 50 PASS_ENGINE_PARAMETER));
 }
 
-extern engine_configuration_s *engineConfiguration;
 
 static void confgiureFordAspireTriggerShape(TriggerShape * s DECLARE_ENGINE_PARAMETER_S) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
