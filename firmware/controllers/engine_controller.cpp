@@ -90,11 +90,6 @@ static virtual_timer_t periodicFastTimer;
 
 static LoggingWithStorage logger("Engine Controller");
 
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
-static engine_configuration2_s ec2 CCM_OPTIONAL;
-engine_configuration2_s * engineConfiguration2 = &ec2;
-#endif /* EFI_ENGINE_CONTROL */
-
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 
 /**

@@ -88,12 +88,11 @@ static void endSimultaniousInjection(InjectionEvent *event) {
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	Engine *engine = event->engine;
 	EXPAND_Engine;
-	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 #endif
 	for (int i = 0; i < engine->engineConfiguration->specs.cylindersCount; i++) {
 		turnPinLow(&enginePins.injectors[i]);
 	}
-	engineConfiguration2->injectionEvents->addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER);
+	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER);
 }
 
 static void tempTurnPinHigh(InjectorOutputPin *output) {
@@ -189,9 +188,8 @@ void seTurnPinLow(OutputSignalPair *pair) {
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	Engine *engine = pair->event->engine;
 	EXPAND_Engine;
-	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 #endif
-	engineConfiguration2->injectionEvents->addFuelEventsForCylinder(pair->event->ownIndex PASS_ENGINE_PARAMETER);
+	engine->injectionEvents.addFuelEventsForCylinder(pair->event->ownIndex PASS_ENGINE_PARAMETER);
 }
 
 static void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, OutputSignalPair *pair) {
@@ -384,7 +382,7 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 	 * Ignition events are defined by addFuelEvents() according to selected
 	 * fueling strategy
 	 */
-	FuelSchedule *fs = engine->fuelScheduleForThisEngineCycle;
+	FuelSchedule *fs = &engine->injectionEvents;
 	if (!fs->isReady) {
 		fs->addFuelEvents(PASS_ENGINE_PARAMETER_F);
 	}
@@ -484,13 +482,10 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 	int revolutionIndex = ENGINE(rpmCalculator).getRevolutionCounter() % 2;
 
 	if (trgEventIndex == 0) {
-		// these two statements should be atomic, but in reality we should be fine, right?
-		engine->fuelScheduleForThisEngineCycle = ENGINE(engineConfiguration2)->injectionEvents;
-		engine->fuelScheduleForThisEngineCycle->usedAtEngineCycle = ENGINE(rpmCalculator).getRevolutionCounter();
 
 		if (triggerVersion.isOld()) {
 			engine->ignitionEvents.isReady = false; // we need to rebuild ignition schedule
-			engine->fuelScheduleForThisEngineCycle->isReady = false;
+			engine->injectionEvents.isReady = false;
 			// todo: move 'triggerIndexByAngle' change into trigger initialization, why is it invoked from here if it's only about trigger shape & optimization?
 			prepareOutputSignals(PASS_ENGINE_PARAMETER_F);
 			// we need this to apply new 'triggerIndexByAngle' values

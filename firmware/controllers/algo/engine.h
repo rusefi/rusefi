@@ -46,39 +46,11 @@ public:
 	void addFuelEvents(DECLARE_ENGINE_PARAMETER_F);
 	void addFuelEventsForCylinder(int i DECLARE_ENGINE_PARAMETER_S);
 
-	uint32_t usedAtEngineCycle;
-
 	InjectionEvent elements[MAX_INJECTION_OUTPUT_COUNT];
 	bool isReady;
 
 private:
 	void clear();
-};
-
-/**
- * This structure is still separate from Engine simply because this goes into CCM memory and Engine is in main memory
- * todo: re-arrange global variables to put something else into CCM so that this can go into main
- * so that this could be mergeed into Engine
- * todo: move these fields into Engine class, eliminate this class
- */
-class engine_configuration2_s {
-public:
-	engine_configuration2_s();
-
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
-	/**
-	 * Lock-free multithreading: two instances, while one is being modified another one is used read-only
-	 */
-	FuelSchedule injectionEvents0;
-	/**
-	 * this points at an instance we use to run the engine
-	 */
-	FuelSchedule *injectionEvents;
-#endif
-
-
-	float fsioLastValue[LE_COMMAND_COUNT];
-
 };
 
 class ThermistorMath {
@@ -249,15 +221,13 @@ public:
 	IgnitionEventList ignitionEvents;
 
 
-	WallFuel wallFuel;
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+	FuelSchedule injectionEvents;
+#endif /* EFI_ENGINE_CONTROL */
 
-	/**
-	 * we have a background thread preparing new fuel schedule while engine is running using existing
-	 * copy of fuel schedule. This pointer allows us to use the same schedule for the whole duration of an
-	 * engine cycle.
-	 *
-	 */
-	FuelSchedule *fuelScheduleForThisEngineCycle;
+	float fsioLastValue[LE_COMMAND_COUNT];
+
+	WallFuel wallFuel;
 
 	/**
 	 * That's the list of pending spark firing events
@@ -279,7 +249,6 @@ public:
 	RpmCalculator rpmCalculator;
 	persistent_config_s *config;
 	engine_configuration_s *engineConfiguration;
-	engine_configuration2_s *engineConfiguration2;
 
 	/**
 	 * this is about 'stopengine' command

@@ -166,7 +166,7 @@ void testAngleResolver(void) {
 	EXPAND_EngineTestHelper;
 
 	engineConfiguration->globalTriggerAngleOffset = 175;
-	assertTrue(engine->engineConfiguration2!=NULL);
+
 	TriggerShape * ts = &engine->triggerShape;
 	ts->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER);
 

@@ -75,7 +75,6 @@ void printSpiState(Logging *logger, board_configuration_s *boardConfiguration) {
 extern board_configuration_s *boardConfiguration;
 
 static void printOutputs(engine_configuration_s *engineConfiguration) {
-	// engine_configuration2_s *engineConfiguration2
 	scheduleMsg(&logger, "injectionPins: mode %s", getPin_output_mode_e(boardConfiguration->injectionPinMode));
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		brain_pin_e brainPin = boardConfiguration->injectionPins[i];

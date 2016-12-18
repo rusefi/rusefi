@@ -245,9 +245,9 @@ static void handleFsio(Engine *engine, int index) {
 		warning(CUSTOM_NO_FSIO, "no FSIO for #%d %s", index + 1, hwPortname(boardConfiguration->fsioPins[index]));
 		fvalue = NAN;
 	} else {
-		fvalue = calc.getValue2(engine->engineConfiguration2->fsioLastValue[index], fsioLogics[index], engine);
+		fvalue = calc.getValue2(engine->fsioLastValue[index], fsioLogics[index], engine);
 	}
-	engine->engineConfiguration2->fsioLastValue[index] = fvalue;
+	engine->fsioLastValue[index] = fvalue;
 
 	if (isPwmMode) {
 		fsioPwm[index].setSimplePwmDutyCycle(fvalue);
@@ -378,7 +378,7 @@ static void showFsioInfo(void) {
 			 */
 			scheduleMsg(logger, "FSIO #%d [%s] at %s@%dHz value=%f", (i + 1), exp,
 					hwPortname(boardConfiguration->fsioPins[i]), boardConfiguration->fsioFrequency[i],
-					engineConfiguration2->fsioLastValue[i]);
+					engine->fsioLastValue[i]);
 //			scheduleMsg(logger, "user-defined #%d value=%f", i, engine->engineConfiguration2->fsioLastValue[i]);
 			showFsio(NULL, fsioLogics[i]);
 		}

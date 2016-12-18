@@ -26,8 +26,6 @@
 
 #include "engine_controller.h"
 
-extern engine_configuration2_s engineConfiguration2;
-
 static void configureShaftPositionEmulatorShapeWhat(PwmConfig *state) {
 	/**
 	 * One signal per cam shaft revolution

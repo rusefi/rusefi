@@ -96,7 +96,6 @@ void Engine::reset() {
 	isEngineChartEnabled = false;
 	sensorChartMode = SC_OFF;
 	actualLastInjection = 0;
-	fuelScheduleForThisEngineCycle = NULL;
 	isAlternatorControlEnabled = false;
 	wallFuelCorrection = 0;
 	/**
@@ -111,7 +110,6 @@ void Engine::reset() {
 	isTestMode = false;
 	isSpinning = false;
 	adcToVoltageInputDividerCoefficient = NAN;
-	engineConfiguration2 = NULL;
 	engineState.iat = engineState.clt = NAN;
 	memset(&ignitionPin, 0, sizeof(ignitionPin));
 

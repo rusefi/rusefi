@@ -1004,18 +1004,12 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 #endif
 }
 
-engine_configuration2_s::engine_configuration2_s() {
-    injectionEvents = &injectionEvents0;
-}
-
 void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "apply c");
 	scheduleMsg(logger, "applyNonPersistentConfiguration()");
 #endif
 
-// todo: this would require 'initThermistors() to re-establish a reference, todo: fix
-//	memset(engineConfiguration2, 0, sizeof(engine_configuration2_s));
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	engine->triggerShape.initializeTriggerShape(logger PASS_ENGINE_PARAMETER);
 #endif
@@ -1032,10 +1026,9 @@ void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 
 void prepareShapes(DECLARE_ENGINE_PARAMETER_F) {
-	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 	prepareOutputSignals(PASS_ENGINE_PARAMETER_F);
 
-	engineConfiguration2->injectionEvents->addFuelEvents(PASS_ENGINE_PARAMETER_F);
+	engine->injectionEvents.addFuelEvents(PASS_ENGINE_PARAMETER_F);
 }
 
 #endif
