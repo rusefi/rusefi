@@ -76,11 +76,9 @@ public:
 	FuelSchedule *injectionEvents;
 #endif
 
-	OutputSignalPair fuelActuators[INJECTION_PIN_COUNT];
 
 	float fsioLastValue[LE_COMMAND_COUNT];
 
-	IgnitionEventList ignitionEvents;
 };
 
 class ThermistorMath {
@@ -241,10 +239,15 @@ typedef void (*configuration_callback_t)(Engine*);
 class Engine {
 public:
 	Engine(persistent_config_s *config);
-	void init(persistent_config_s *config);
+	Engine();
+	void setConfig(persistent_config_s *config);
+	void reset();
 	void prepareFuelSchedule(DECLARE_ENGINE_PARAMETER_F);
 	injection_mode_e getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_F);
-	IgnitionEventList *ignitionList(); // todo: inline/rename/refactor
+
+	OutputSignalPair fuelActuators[INJECTION_PIN_COUNT];
+	IgnitionEventList ignitionEvents;
+
 
 	WallFuel wallFuel;
 

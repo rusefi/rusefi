@@ -148,7 +148,7 @@ void test1995FordInline6TriggerDecoder(void) {
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 	eth.fireTriggerEvents(48);
 
-	IgnitionEventList *ecl = &eth.ec2.ignitionEvents;
+	IgnitionEventList *ecl = &eth.engine.ignitionEvents;
 	assertEqualsM("ford inline ignition events size", 1, ecl->isReady);
 	assertEqualsM("event index", 0, ecl->elements[0].dwellPosition.eventIndex);
 	assertEqualsM("angle offset#1", 7, ecl->elements[0].dwellPosition.angleOffset);
@@ -300,7 +300,7 @@ void testRpmCalculator(void) {
 
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 	EXPAND_EngineTestHelper;
-	IgnitionEventList *ilist = &eth.engine.engineConfiguration2->ignitionEvents;
+	IgnitionEventList *ilist = &eth.engine.ignitionEvents;
 	assertEqualsM("size #1", 0, ilist->isReady);
 
 	assertEqualsM("engineCycle", 720, eth.engine.engineCycle);

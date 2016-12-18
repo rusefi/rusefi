@@ -83,9 +83,16 @@ void Engine::onTriggerEvent(efitick_t nowNt) {
 	lastTriggerEventTimeNt = nowNt;
 }
 
+Engine::Engine() {
+	reset();
+}
+
 Engine::Engine(persistent_config_s *config) {
-	init(config);
-	engineState.warmupAfrPid.init(&config->engineConfiguration.warmupAfrPid,  0.5, 1.5);
+	setConfig(config);
+	reset();
+}
+
+void Engine::reset() {
 	isEngineChartEnabled = false;
 	sensorChartMode = SC_OFF;
 	actualLastInjection = 0;
@@ -130,6 +137,7 @@ EngineState::EngineState() {
 	warningCounter = 0;
 	lastErrorCode = 0;
 	crankingTime = 0;
+	timeSinceCranking = 0;
 	targetAFR = 0;
 	tpsAccelEnrich = 0;
 	tChargeK = 0;
@@ -232,10 +240,11 @@ void Engine::preCalculate() {
 	}
 }
 
-void Engine::init(persistent_config_s *config) {
+void Engine::setConfig(persistent_config_s *config) {
 	this->config = config;
 	engineConfiguration = &config->engineConfiguration;
 	memset(config, 0, sizeof(persistent_config_s));
+	engineState.warmupAfrPid.init(&config->engineConfiguration.warmupAfrPid,  0.5, 1.5);
 }
 
 void Engine::printKnockState(void) {
@@ -297,7 +306,7 @@ void Engine::watchdog() {
 		return;
 	}
 	isSpinning = false;
-	ignitionList()->isReady = false;
+	ignitionEvents.isReady = false;
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	scheduleMsg(&logger, "engine has STOPPED");
 	scheduleMsg(&logger, "templog engine has STOPPED [%x][%x] [%x][%x] %d",
@@ -310,10 +319,6 @@ void Engine::watchdog() {
 
 	enginePins.stopPins();
 #endif
-}
-
-IgnitionEventList * Engine::ignitionList() {
-	return &engineConfiguration2->ignitionEvents;
 }
 
 injection_mode_e Engine::getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_F) {
