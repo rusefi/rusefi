@@ -99,7 +99,6 @@ FuelSchedule::FuelSchedule() {
 
 void FuelSchedule::clear() {
 	isReady = false;
-	usedAtEngineCycle = 0;
 }
 
 void FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_S) {
@@ -418,8 +417,6 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 	printf("prepareOutputSignals %d onlyEdge=%s %s\r\n", engineConfiguration->trigger.type, boolToString(engineConfiguration->useOnlyRisingEdgeForTrigger),
 			getIgnition_mode_e(engineConfiguration->ignitionMode));
 #endif
-
-	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 
 	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 		ENGINE(angleExtra[i])= ENGINE(engineCycle) * i / CONFIG(specs.cylindersCount);

@@ -222,7 +222,6 @@ static void testCltByR(float resistance) {
 void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	logger = sharedLogger;
 	efiAssertVoid(engine!=NULL, "e NULL initThermistors");
-	efiAssertVoid(engine->engineConfiguration2!=NULL, "e2 NULL initThermistors");
 
 #if EFI_PROD_CODE
 	addConsoleActionF("test_clt_by_r", testCltByR);

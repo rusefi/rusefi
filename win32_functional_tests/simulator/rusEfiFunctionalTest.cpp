@@ -34,7 +34,6 @@
 #define DEFAULT_SNIFFER_THR 2500
 
 EXTERN_ENGINE;
-extern engine_configuration2_s * engineConfiguration2;
 
 extern WaveChart waveChart;
 
@@ -66,7 +65,6 @@ void rusEfiFunctionalTest(void) {
 	initStatusLoop(engine);
 	initDataStructures(PASS_ENGINE_PARAMETER_F);
 
-	engine->engineConfiguration2 = engineConfiguration2;
 
 	// todo: reduce code duplication with initEngineContoller
 

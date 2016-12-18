@@ -183,11 +183,6 @@ void runRusEfi(void) {
 
 	msObjectInit(&firmwareErrorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
 
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
-	engine->engineConfiguration2 = engineConfiguration2;
-#endif
-
-
 	prepareVoidConfiguration(&activeConfiguration);
 
 	/**

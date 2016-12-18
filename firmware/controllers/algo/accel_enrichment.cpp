@@ -96,7 +96,6 @@ int AccelEnrichmemnt::getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_F) {
 float AccelEnrichmemnt::getMaxDelta(DECLARE_ENGINE_PARAMETER_F) {
 	int index = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_F);
 
-	FuelSchedule *fs = engine->engineConfiguration2->injectionEvents;
 	return (cb.get(index) - (cb.get(index - 1))) * CONFIG(specs.cylindersCount);
 }
 
@@ -136,7 +135,6 @@ floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_F) {
 float AccelEnrichmemnt::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_F) {
 	int index = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_F);
 
-	FuelSchedule *fs = engine->engineConfiguration2->injectionEvents;
 	float d = (cb.get(index) - (cb.get(index - 1))) * CONFIG(specs.cylindersCount);
 
 	float result = 0;

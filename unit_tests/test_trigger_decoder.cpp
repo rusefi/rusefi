@@ -345,7 +345,7 @@ void testRpmCalculator(void) {
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 
 	assertEqualsM("fuel #1", 4.5450, eth.engine.fuelMs);
-	InjectionEvent *ie0 = &eth.engine.engineConfiguration2->injectionEvents->elements[0];
+	InjectionEvent *ie0 = &eth.engine.injectionEvents.elements[0];
 	assertEqualsM("injection angle", 31.365, ie0->injectionStart.angleOffset);
 
 	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER);
@@ -662,7 +662,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	assertInjectorDownEvent("1@3", 3, MS2US(20), 1);
 	assertEqualsM("exec#0", 0, schedulingQueue.executeAll(timeNow));
 
-	FuelSchedule * t = ENGINE(engineConfiguration2)->injectionEvents;
+	FuelSchedule * t = &ENGINE(injectionEvents);
 
 	assertInjectionEvent("#0", &t->elements[0], 0, 1, 153, false);
 	assertInjectionEvent("#1_i_@", &t->elements[1], 1, 1, 333, false);
@@ -833,7 +833,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 
 
-	t = ENGINE(engineConfiguration2)->injectionEvents;
+	t = &ENGINE(injectionEvents);
 
 	assertInjectionEvent("#0", &t->elements[0], 0, 0, 315, false);
 	assertInjectionEvent("#1__", &t->elements[1], 1, 1, 135, false);
@@ -921,14 +921,12 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	timeNow += MS2US(20);
 	assertEqualsM("executeAll#4", 4, schedulingQueue.executeAll(timeNow));
 
-
-	t = ENGINE(engineConfiguration2)->injectionEvents;
+	t = &ENGINE(injectionEvents);
 
 	assertInjectionEvent("#0#", &t->elements[0], 0, 0, 315, false);
 	assertInjectionEvent("#1#", &t->elements[1], 1, 1, 135, false);
 	assertInjectionEvent("#2#", &t->elements[2], 0, 1, 315, true);
 	assertInjectionEvent("#3#", &t->elements[3], 1, 0, 45 + 90, false);
-
 
 	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
 	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);
@@ -973,7 +971,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 
-	t = ENGINE(engineConfiguration2)->injectionEvents;
+	t = &ENGINE(injectionEvents);
 
 	assertInjectionEvent("#00", &t->elements[0], 0, 0, 225, false); // 87.5 duty cycle
 	assertInjectionEvent("#10", &t->elements[1], 1, 1, 45, false);

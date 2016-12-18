@@ -44,9 +44,6 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 60, 1.03);
 	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 70, 1.01);
 
-
-	engine.engineConfiguration2 = &ec2;
-
 	Engine *engine = &this->engine;
 	prepareFuelMap(PASS_ENGINE_PARAMETER_F);
 

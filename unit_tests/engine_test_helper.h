@@ -22,12 +22,10 @@ public:
 	void fireTriggerEvents2(int count, int duration);
 
 	persistent_config_s persistentConfig;
-	engine_configuration2_s ec2;
 	Engine engine;
 
 	engine_configuration_s *ec;
 	engine_configuration_s *engineConfiguration;
-
 };
 
 #endif /* ENGINE_TEST_HELPER_H_ */
