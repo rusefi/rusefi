@@ -60,6 +60,8 @@ void rusEfiFunctionalTest(void) {
 	initIntermediateLoggingBuffer();
 	initErrorHandling();
 
+	engine->setConfig(config);
+
 	initializeConsole(&sharedLogger);
 
 	initStatusLoop(engine);
@@ -112,9 +114,7 @@ bool isConsoleReady(void) {
 }
 
 void applyNewConfiguration(void) {
-
 }
-
 
 bool hasFirmwareErrorFlag = false;
 
