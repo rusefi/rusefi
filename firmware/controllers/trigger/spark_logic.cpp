@@ -212,30 +212,18 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	}
 }
 
-static void addIgnitionEvent(angle_t localAdvance, angle_t dwellAngle, IgnitionEvent *event, IgnitionOutputPin *output, IgnitionOutputPin *secondOutput DECLARE_ENGINE_PARAMETER_S) {
-
-	if (!isPinAssigned(output)) {
-		// todo: extract method for this index math
-		warning(CUSTOM_OBD_PIN_NOT_ASSIGNED, "no_pin_cl #%s", output->name);
-	}
-	event->outputs[0] = output;
-	event->outputs[1] = secondOutput;
-	event->advance = localAdvance;
-
-	findTriggerPosition(&event->dwellPosition, localAdvance - dwellAngle PASS_ENGINE_PARAMETER);
-
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
-	printf("addIgnitionEvent %s ind=%d\n", output->name, event->dwellPosition.eventIndex);
-	//	scheduleMsg(logger, "addIgnitionEvent %s ind=%d", output->name, event->dwellPosition->eventIndex);
-#endif /* FUEL_MATH_EXTREME_LOGGING */
-
+#define assertPinAssigned(output) { \
+		if (!isPinAssigned(output)) { \
+			warning(CUSTOM_OBD_PIN_NOT_ASSIGNED, "no_pin_cl #%s", (output)->name); \
+		} \
 }
+
 
 void prepareIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_S) {
 	// todo: clean up this implementation? does not look too nice as is.
 
 	// change of sign here from 'before TDC' to 'after TDC'
-	angle_t localAdvance = -ENGINE(engineState.timingAdvance) + ENGINE(angleExtra[event->cylinderIndex]);
+	const angle_t localAdvance = -ENGINE(engineState.timingAdvance) + ENGINE(angleExtra[event->cylinderIndex]);
 	const int index = ENGINE(ignitionPin[event->cylinderIndex]);
 	const int coilIndex = ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), index));
 	IgnitionOutputPin *output = &enginePins.coils[coilIndex];
@@ -245,11 +233,24 @@ void prepareIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_S) {
 		int secondIndex = index + CONFIG(specs.cylindersCount) / 2;
 		int secondCoilIndex = ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), secondIndex));
 		secondOutput = &enginePins.coils[secondCoilIndex];
+		assertPinAssigned(secondOutput);
 	} else {
 		secondOutput = NULL;
 	}
+	angle_t dwellAngle = ENGINE(engineState.dwellAngle);
 
-	addIgnitionEvent(localAdvance, ENGINE(engineState.dwellAngle), event, output, secondOutput PASS_ENGINE_PARAMETER);
+	assertPinAssigned(output);
+
+	event->outputs[0] = output;
+	event->outputs[1] = secondOutput;
+	event->advance = localAdvance;
+
+	findTriggerPosition(&event->dwellPosition, localAdvance - dwellAngle PASS_ENGINE_PARAMETER);
+
+#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
+	printf("addIgnitionEvent %s ind=%d\n", output->name, event->dwellPosition.eventIndex);
+	//	scheduleMsg(logger, "addIgnitionEvent %s ind=%d", output->name, event->dwellPosition->eventIndex);
+#endif /* FUEL_MATH_EXTREME_LOGGING */
 }
 
 static void initializeIgnitionActions(IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
