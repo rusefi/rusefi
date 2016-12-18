@@ -254,6 +254,12 @@ void prepareIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_S) {
 }
 
 static void initializeIgnitionActions(IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
+	if (cisnan(ENGINE(engineState.timingAdvance))) {
+		// error should already be reported
+		// need to invalidate previous ignition schedule
+		list->isReady = false;
+		return;
+	}
 	efiAssertVoid(engineConfiguration->specs.cylindersCount > 0, "cylindersCount");
 
 	for (int cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
@@ -291,14 +297,8 @@ static ALWAYS_INLINE void prepareIgnitionSchedule(int rpm DECLARE_ENGINE_PARAMET
 
 	// todo: add some check for dwell overflow? like 4 times 6 ms while engine cycle is less then that
 
-	IgnitionEventList *list = engine->ignitionList();
+	IgnitionEventList *list = &engine->ignitionEvents;
 
-	if (cisnan(ENGINE(engineState.timingAdvance))) {
-		// error should already be reported
-		// need to invalidate previous ignition schedule
-		list->isReady = false;
-		return;
-	}
 	initializeIgnitionActions(list PASS_ENGINE_PARAMETER);
 	engine->m.ignitionSchTime = GET_TIMESTAMP() - engine->m.beforeIgnitionSch;
 }
@@ -311,8 +311,7 @@ void handleSpark(bool limitedSpark, uint32_t trgEventIndex, int rpm
 		return;
 	}
 
-	IgnitionEventList *list = engine->ignitionList();
-	if (!list->isReady) {
+	if (!engine->ignitionEvents.isReady) {
 		prepareIgnitionSchedule(rpm PASS_ENGINE_PARAMETER);
 	}
 
@@ -342,9 +341,9 @@ void handleSpark(bool limitedSpark, uint32_t trgEventIndex, int rpm
 	}
 
 //	scheduleSimpleMsg(&logger, "eventId spark ", eventIndex);
-	if (list->isReady) {
+	if (engine->ignitionEvents.isReady) {
 		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
-			IgnitionEvent *event = &list->elements[i];
+			IgnitionEvent *event = &engine->ignitionEvents.elements[i];
 			if (event->dwellPosition.eventIndex != trgEventIndex)
 				continue;
 			handleSparkEvent(limitedSpark, trgEventIndex, event, rpm PASS_ENGINE_PARAMETER);

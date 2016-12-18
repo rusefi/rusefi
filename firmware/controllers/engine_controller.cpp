@@ -101,7 +101,7 @@ engine_configuration2_s * engineConfiguration2 = &ec2;
  * todo: eliminate constructor parameter so that _engine could be moved to CCM_OPTIONAL
  * todo: this should probably become 'static', i.e. private, and propagated around explicitly?
  */
-Engine _engine(&persistentState.persistentConfiguration);
+Engine _engine CCM_OPTIONAL;
 Engine * engine = &_engine;
 #endif /* EFI_PROD_CODE */
 
@@ -135,16 +135,6 @@ static msg_t csThread(void) {
 	}
 #endif /* EFI_SHAFT_POSITION_INPUT */
 	return -1;
-}
-
-static void updateErrorCodes(void) {
-	/**
-	 * technically we can set error codes right inside the getMethods, but I a bit on a fence about it
-	 */
-	setError(!isValidIntakeAirTemperature(getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F)),
-			OBD_Intake_Air_Temperature_Circuit_Malfunction);
-	setError(!isValidCoolantTemperature(getCoolantTemperature(PASS_ENGINE_PARAMETER_F)),
-			OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
 }
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -252,8 +242,6 @@ static void periodicSlowCallback(Engine *engine) {
 #if (EFI_PROD_CODE && EFI_FSIO) || defined(__DOXYGEN__)
 	runFsio();
 #endif
-
-	updateErrorCodes();
 
 	cylinderCleanupControl(engine);
 

@@ -200,7 +200,7 @@ void runRusEfi(void) {
 	 */
 	initializeConsole(&sharedLogger);
 
-	engine->init(config);
+	engine->setConfig(config);
 
 	addConsoleAction("reboot", scheduleReboot);
 
@@ -281,9 +281,9 @@ void firmwareError(obd_code_e code, const char *errorMsg, ...) {
 	}
 }
 
-static char UNUSED_RAM_SIZE[1100];
+static char UNUSED_RAM_SIZE[11100];
 
-static char UNUSED_CCM_SIZE[26500] CCM_OPTIONAL;
+static char UNUSED_CCM_SIZE[16500] CCM_OPTIONAL;
 
 int getRusEfiVersion(void) {
 	if (UNUSED_RAM_SIZE[0] != 0)

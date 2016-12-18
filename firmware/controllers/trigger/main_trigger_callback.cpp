@@ -304,7 +304,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 			getRevolutionCounter());
 #endif /* EFI_DEFAILED_LOGGING */
 
-	OutputSignalPair *pair = &ENGINE(engineConfiguration2)->fuelActuators[injEventIndex];
+	OutputSignalPair *pair = &ENGINE(fuelActuators[injEventIndex]);
 
 	if (event->isSimultanious) {
 		/**
@@ -489,7 +489,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 		engine->fuelScheduleForThisEngineCycle->usedAtEngineCycle = ENGINE(rpmCalculator).getRevolutionCounter();
 
 		if (triggerVersion.isOld()) {
-			engine->ignitionList()->isReady = false; // we need to rebuild ignition schedule
+			engine->ignitionEvents.isReady = false; // we need to rebuild ignition schedule
 			engine->fuelScheduleForThisEngineCycle->isReady = false;
 			// todo: move 'triggerIndexByAngle' change into trigger initialization, why is it invoked from here if it's only about trigger shape & optimization?
 			prepareOutputSignals(PASS_ENGINE_PARAMETER_F);
