@@ -170,9 +170,11 @@ public:
 	int getSize() const;
 
 	int getTriggerShapeSynchPointIndex();
+	void prepareShape(DECLARE_ENGINE_PARAMETER_F);
 
 private:
 	trigger_shape_helper h;
+	int findAngleIndex(float target DECLARE_ENGINE_PARAMETER_S);
 
 	/**
 	 * index of synchronization event within TriggerShape

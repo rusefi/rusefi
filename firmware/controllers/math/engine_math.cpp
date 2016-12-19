@@ -223,11 +223,11 @@ floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	return dwellMs;
 }
 
-static int findAngleIndex(float target DECLARE_ENGINE_PARAMETER_S) {
-	/**
-	 * Here we rely on this to be pre-calculated, that's a performance optimization
-	 */
-	int engineCycleEventCount = engine->engineCycleEventCount;
+/**
+ * this method is only used on initialization
+ */
+int TriggerShape::findAngleIndex(float target DECLARE_ENGINE_PARAMETER_S) {
+	int engineCycleEventCount = engine->triggerShape.getLength();
 
 	efiAssert(engineCycleEventCount > 0, "engineCycleEventCount", 0);
 
@@ -252,7 +252,6 @@ static int findAngleIndex(float target DECLARE_ENGINE_PARAMETER_S) {
         }
     }
     return left - 1;
-
 }
 
 void TriggerShape::findTriggerPosition(event_trigger_position_s *position, angle_t angleOffset DECLARE_ENGINE_PARAMETER_S) {
@@ -358,6 +357,16 @@ static int getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_S) {
 	}
 }
 
+void TriggerShape::prepareShape(DECLARE_ENGINE_PARAMETER_F) {
+	int engineCycleInt = (int) getEngineCycle(CONFIG(operationMode));
+	for (int angle = 0; angle < engineCycleInt; angle++) {
+		int triggerShapeIndex = findAngleIndex(angle PASS_ENGINE_PARAMETER);
+		if (engineConfiguration->useOnlyRisingEdgeForTrigger)
+			triggerShapeIndex = triggerShapeIndex & 0xFFFFFFFE; // we need even index for front_only
+		triggerIndexByAngle[angle] = triggerShapeIndex;
+	}
+}
+
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 
 /**
@@ -406,12 +415,8 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 		}
 	}
 
-
 	printf("max dwell angle %f/%d/%d\r\n", maxDwellAngle, (int)maxAdvance, (int)maxIatAdvanceCorr);
-
-
 #endif
-
 
 #if EFI_UNIT_TEST
 	printf("prepareOutputSignals %d onlyEdge=%s %s\r\n", engineConfiguration->trigger.type, boolToString(engineConfiguration->useOnlyRisingEdgeForTrigger),
@@ -420,18 +425,10 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 
 	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 		ENGINE(angleExtra[i])= ENGINE(engineCycle) * i / CONFIG(specs.cylindersCount);
-
 		ENGINE(ignitionPin[i]) = getIgnitionPinForIndex(i PASS_ENGINE_PARAMETER);
 	}
 
-	int engineCycleInt = (int) ENGINE(engineCycle);
-	for (int angle = 0; angle < engineCycleInt; angle++) {
-		int triggerShapeIndex = findAngleIndex(angle PASS_ENGINE_PARAMETER);
-		if (engineConfiguration->useOnlyRisingEdgeForTrigger)
-			triggerShapeIndex = triggerShapeIndex & 0xFFFFFFFE; // we need even index for front_only
-		TRIGGER_SHAPE(triggerIndexByAngle[angle]) = triggerShapeIndex;
-	}
-
+	TRIGGER_SHAPE(prepareShape(PASS_ENGINE_PARAMETER_F));
 }
 
 #endif
