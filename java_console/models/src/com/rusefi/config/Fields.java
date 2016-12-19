@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Dec 17 10:16:55 EST 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 19 15:39:22 EST 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -625,7 +625,7 @@ public class Fields {
 	public static final int unusedBit__6_offset = 1488;
 	public static final int useConstantDwellDuringCranking_offset = 1488;
 	public static final int isEngineChartEnabled_offset = 1488;
-	public static final int isCanEnabled_offset = 1488;
+	public static final int unusedBit_7_offset = 1488;
 	public static final int unusedBit__2_offset = 1488;
 	public static final int canReadEnabled_offset = 1488;
 	public static final int canWriteEnabled_offset = 1488;
@@ -1358,7 +1358,7 @@ public class Fields {
 	public static final Field UNUSEDBIT__6 = Field.create("UNUSEDBIT__6", 1488, FieldType.BIT, 3);
 	public static final Field USECONSTANTDWELLDURINGCRANKING = Field.create("USECONSTANTDWELLDURINGCRANKING", 1488, FieldType.BIT, 4);
 	public static final Field ISENGINECHARTENABLED = Field.create("ISENGINECHARTENABLED", 1488, FieldType.BIT, 5);
-	public static final Field ISCANENABLED = Field.create("ISCANENABLED", 1488, FieldType.BIT, 6);
+	public static final Field UNUSEDBIT_7 = Field.create("UNUSEDBIT_7", 1488, FieldType.BIT, 6);
 	public static final Field UNUSEDBIT__2 = Field.create("UNUSEDBIT__2", 1488, FieldType.BIT, 7);
 	public static final Field CANREADENABLED = Field.create("CANREADENABLED", 1488, FieldType.BIT, 8);
 	public static final Field CANWRITEENABLED = Field.create("CANWRITEENABLED", 1488, FieldType.BIT, 9);

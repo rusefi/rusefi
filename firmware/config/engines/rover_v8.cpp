@@ -79,6 +79,5 @@ void setRoverv8(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->canRxPin = GPIOB_12;
 	engineConfiguration->canWriteEnabled = true;
 	engineConfiguration->canReadEnabled = false;
-	engineConfiguration->isCanEnabled = true;
 	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 }

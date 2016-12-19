@@ -621,7 +621,7 @@
 #define unusedBit__6_offset 1488
 #define useConstantDwellDuringCranking_offset 1488
 #define isEngineChartEnabled_offset 1488
-#define isCanEnabled_offset 1488
+#define unusedBit_7_offset 1488
 #define unusedBit__2_offset 1488
 #define canReadEnabled_offset 1488
 #define canWriteEnabled_offset 1488
