@@ -30,6 +30,7 @@ EXTERN_ENGINE
 static int canReadCounter = 0;
 static int canWriteOk = 0;
 static int canWriteNotOk = 0;
+static bool isCanEnabled = false;
 static LoggingWithStorage logger("CAN driver");
 static THD_WORKING_AREA(canTreadStack, UTILITY_THREAD_STACK_SIZE);
 
@@ -242,7 +243,7 @@ static msg_t canThread(void *arg) {
 }
 
 static void canInfo(void) {
-	if (!engineConfiguration->isCanEnabled) {
+	if (!isCanEnabled) {
 		scheduleMsg(&logger, "CAN is not enabled, please enable & restart");
 		return;
 	}
@@ -259,16 +260,18 @@ static void canInfo(void) {
 #endif /* EFI_PROD_CODE */
 
 void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_F) {
-	//	engineConfiguration->isCanEnabled = true;
 	boardConfiguration->canTxPin = GPIOB_6;
 	boardConfiguration->canRxPin = GPIOB_12;
 	engineConfiguration->canReadEnabled = false;
 }
 
 void initCan(void) {
+	isCanEnabled = (boardConfiguration->canTxPin != GPIO_UNASSIGNED) && (boardConfiguration->canRxPin != GPIO_UNASSIGNED);
+
+
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	addConsoleAction("caninfo", canInfo);
-	if (!engineConfiguration->isCanEnabled)
+	if (!isCanEnabled)
 		return;
 #endif /* EFI_PROD_CODE */
 

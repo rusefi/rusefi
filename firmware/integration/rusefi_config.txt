@@ -585,7 +585,7 @@ bit unusedBit__4
 	bit unusedBit__6
 	bit useConstantDwellDuringCranking 
 	bit isEngineChartEnabled;This options enables data for 'engine sniffer' tab in console, which comes at some CPU price 
-	bit isCanEnabled
+	bit unusedBit_7
 	bit unusedBit__2
 	bit canReadEnabled
 	bit canWriteEnabled
