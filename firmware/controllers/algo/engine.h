@@ -214,7 +214,6 @@ public:
 	Engine();
 	void setConfig(persistent_config_s *config);
 	void reset();
-	void prepareFuelSchedule(DECLARE_ENGINE_PARAMETER_F);
 	injection_mode_e getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_F);
 
 	OutputSignalPair fuelActuators[INJECTION_PIN_COUNT];

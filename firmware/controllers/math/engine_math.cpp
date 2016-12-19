@@ -132,7 +132,7 @@ void FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_S) {
 		// does not look exactly right, not too consistent with IM_SEQUENTIAL
 		index = i % (engineConfiguration->specs.cylindersCount / 2);
 	} else {
-		warning(CUSTOM_OBD_21, "Unexpected injection mode %d", mode);
+		warning(CUSTOM_OBD_UNEXPECTED_INJECTION_MODE, "Unexpected injection mode %d", mode);
 		index = 0;
 	}
 
@@ -158,7 +158,7 @@ void FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_S) {
 
 	if (!isSimultanious && !isPinAssigned(output)) {
 		// todo: extract method for this index math
-		warning(CUSTOM_OBD_20, "no_pin_inj #%s", output->name);
+		warning(CUSTOM_OBD_INJECTION_NO_PIN_ASSIGNED, "no_pin_inj #%s", output->name);
 	}
 
 	InjectionEvent *ev = &elements[i];
@@ -263,7 +263,7 @@ void findTriggerPosition(event_trigger_position_s *position, angle_t angleOffset
 	int index = TRIGGER_SHAPE(triggerIndexByAngle[(int)angleOffset]);
 	angle_t eventAngle = TRIGGER_SHAPE(eventAngles[index]);
 	if (angleOffset < eventAngle) {
-		warning(CUSTOM_OBD_22, "angle constraint violation in findTriggerPosition(): %f/%f", angleOffset, eventAngle);
+		warning(CUSTOM_OBD_ANGLE_CONSTRAINT_VIOLATION, "angle constraint violation in findTriggerPosition(): %f/%f", angleOffset, eventAngle);
 		return;
 	}
 
