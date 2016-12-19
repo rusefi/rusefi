@@ -14,6 +14,23 @@
 #include "EfiWave.h"
 #include "engine_configuration.h"
 
+/**
+ * This structure defines an angle position within the trigger
+ */
+class event_trigger_position_s {
+public:
+	event_trigger_position_s();
+	/**
+	 * That's trigger event index
+	 */
+	uint32_t eventIndex;
+	angle_t eventAngle;
+	/**
+	 * Angle offset from the trigger event
+	 */
+	angle_t angleOffset;
+};
+
 #define TRIGGER_CHANNEL_COUNT 3
 
 class trigger_shape_helper {
@@ -35,6 +52,8 @@ class TriggerShape {
 public:
 	TriggerShape();
 	void initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_S);
+	void findTriggerPosition(
+			event_trigger_position_s *position, angle_t angleOffset DECLARE_ENGINE_PARAMETER_S);
 
 	bool isSynchronizationNeeded;
 	bool needSecondTriggerInput;

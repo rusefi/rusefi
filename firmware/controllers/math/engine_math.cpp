@@ -175,7 +175,7 @@ void FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_S) {
 
 	efiAssertVoid(TRIGGER_SHAPE(getSize()) > 0, "uninitialized TriggerShape");
 
-	findTriggerPosition(&ev->injectionStart, angle PASS_ENGINE_PARAMETER);
+	TRIGGER_SHAPE(findTriggerPosition(&ev->injectionStart, angle PASS_ENGINE_PARAMETER));
 #if EFI_UNIT_TEST
 	printf("registerInjectionEvent angle=%f trgIndex=%d inj %d\r\n", angle, ev->injectionStart.eventIndex, index);
 #endif
@@ -255,13 +255,13 @@ static int findAngleIndex(float target DECLARE_ENGINE_PARAMETER_S) {
 
 }
 
-void findTriggerPosition(event_trigger_position_s *position, angle_t angleOffset DECLARE_ENGINE_PARAMETER_S) {
+void TriggerShape::findTriggerPosition(event_trigger_position_s *position, angle_t angleOffset DECLARE_ENGINE_PARAMETER_S) {
 	// convert engine cycle angle into trigger cycle angle
 	angleOffset += tdcPosition();
 	fixAngle(angleOffset, "addFuel#2");
 
-	int index = TRIGGER_SHAPE(triggerIndexByAngle[(int)angleOffset]);
-	angle_t eventAngle = TRIGGER_SHAPE(eventAngles[index]);
+	int index = triggerIndexByAngle[(int)angleOffset];
+	angle_t eventAngle = eventAngles[index];
 	if (angleOffset < eventAngle) {
 		warning(CUSTOM_OBD_ANGLE_CONSTRAINT_VIOLATION, "angle constraint violation in findTriggerPosition(): %f/%f", angleOffset, eventAngle);
 		return;

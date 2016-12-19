@@ -11,23 +11,7 @@
 #include "global.h"
 #include "signal_executor.h"
 #include "fl_stack.h"
-
-/**
- * This structure defines an angle position within the trigger
- */
-class event_trigger_position_s {
-public:
-	event_trigger_position_s();
-	/**
-	 * That's trigger event index
-	 */
-	uint32_t eventIndex;
-	angle_t eventAngle;
-	/**
-	 * Angle offset from the trigger event
-	 */
-	angle_t angleOffset;
-};
+#include "trigger_structure.h"
 
 class Engine;
 
