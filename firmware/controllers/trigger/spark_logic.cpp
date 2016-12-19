@@ -214,7 +214,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 
 #define assertPinAssigned(output) { \
 		if (!isPinAssigned(output)) { \
-			warning(CUSTOM_OBD_PIN_NOT_ASSIGNED, "no_pin_cl #%s", (output)->name); \
+			warning(CUSTOM_OBD_COIL_PIN_NOT_ASSIGNED, "no_pin_cl #%s", (output)->name); \
 		} \
 }
 
