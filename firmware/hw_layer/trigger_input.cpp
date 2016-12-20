@@ -141,8 +141,6 @@ void turnOnTriggerInputPins(Logging *sharedLogger) {
 	applyNewTriggerInputPins();
 }
 
-extern engine_configuration_s activeConfiguration;
-
 void stopTriggerInputPins(void) {
 	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
 		if (boardConfiguration->triggerInputPins[i]

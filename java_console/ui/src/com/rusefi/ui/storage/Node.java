@@ -1,5 +1,7 @@
 package com.rusefi.ui.storage;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -82,6 +84,7 @@ public class Node {
         return value == null ? defaultValue : value;
     }
 
+    @NotNull
     public String getProperty(String key) {
         return getProperty(key, "");
     }

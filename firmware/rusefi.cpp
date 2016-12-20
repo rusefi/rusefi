@@ -131,8 +131,6 @@ bool hasFirmwareErrorFlag = false;
 
 static virtual_timer_t resetTimer;
 
-extern engine_configuration_s activeConfiguration;
-
 EXTERN_ENGINE
 ;
 

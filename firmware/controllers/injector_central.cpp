@@ -216,8 +216,6 @@ static msg_t benchThread(int param) {
 #endif
 }
 
-extern engine_configuration_s activeConfiguration;
-
 static void unregister(brain_pin_e currentPin, OutputPin *output) {
 	if (currentPin == GPIO_UNASSIGNED)
 		return;
