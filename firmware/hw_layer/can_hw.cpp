@@ -265,6 +265,16 @@ void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->canReadEnabled = false;
 }
 
+void stopCanPins(DECLARE_ENGINE_PARAMETER_F) {
+	unmarkPin(activeConfiguration.bc.canTxPin);
+	unmarkPin(activeConfiguration.bc.canRxPin);
+}
+
+void startCanPins(DECLARE_ENGINE_PARAMETER_F) {
+	mySetPadMode2("CAN TX", boardConfiguration->canTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
+	mySetPadMode2("CAN RX", boardConfiguration->canRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
+}
+
 void initCan(void) {
 	isCanEnabled = (boardConfiguration->canTxPin != GPIO_UNASSIGNED) && (boardConfiguration->canRxPin != GPIO_UNASSIGNED);
 
@@ -288,8 +298,7 @@ void initCan(void) {
 
 	chThdCreateStatic(canTreadStack, sizeof(canTreadStack), NORMALPRIO, (tfunc_t) canThread, NULL);
 
-	mySetPadMode2("CAN TX", boardConfiguration->canTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
-	mySetPadMode2("CAN RX", boardConfiguration->canRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
+	startCanPins();
 
 #endif /* EFI_PROD_CODE */
 }

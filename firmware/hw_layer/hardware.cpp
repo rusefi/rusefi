@@ -51,7 +51,6 @@
 EXTERN_ENGINE
 ;
 extern bool hasFirmwareErrorFlag;
-extern engine_configuration_s activeConfiguration;
 
 static Mutex spiMtx;
 
@@ -226,8 +225,9 @@ void applyNewHardwareSettings(void) {
 	
         // all 'stop' methods need to go before we begin starting pins
        
-        stopInjectionPins();
+    stopInjectionPins();
 	stopIgnitionPins();
+	stopCanPins();
 
 	if (engineConfiguration->bc.is_enabled_spi_1 != activeConfiguration.bc.is_enabled_spi_1)
 		stopSpi(SPI_DEVICE_1);
@@ -283,6 +283,8 @@ void applyNewHardwareSettings(void) {
 
 	startInjectionPins();
 	startIgnitionPins();
+	startCanPins();
+
 	adcConfigListener(engine);
 }
 

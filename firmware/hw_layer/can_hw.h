@@ -27,6 +27,8 @@
 #define CAN_VAG_CLT 0x289
 
 void initCan(void);
+void stopCanPins(DECLARE_ENGINE_PARAMETER_F);
+void startCanPins(DECLARE_ENGINE_PARAMETER_F);
 void commonTxInit(int eid);
 void sendMessage();
 void setTxBit(int offset, int index);
