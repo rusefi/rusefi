@@ -113,6 +113,9 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->ignitionPins[2] = GPIOB_6; // #3
 	boardConfiguration->ignitionPins[4] = GPIOB_7; // #5
 
+	boardConfiguration->canRxPin = GPIO_UNASSIGNED;
+	boardConfiguration->canTxPin = GPIO_UNASSIGNED;
+
 	boardConfiguration->triggerErrorPin = GPIO_UNASSIGNED;
 
 	// clutch up
