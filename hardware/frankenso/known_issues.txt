@@ -116,6 +116,7 @@
 116)                  better part number for D703 to avoid leakage
 117) RESOLVED IN R0.5 Add pull down and series resistors to hi/low mosfet driver
 118)                  add silkscreen labels matching Frankenso analog inputs mapping on wiki - maybe closer to diodes?
+119) 		      "PB1 reset defaults" actually it's PD6
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
