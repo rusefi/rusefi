@@ -56,7 +56,7 @@ public class StartupFrame {
     @NotNull
     private List<String> currentlyDisplayedPorts = new ArrayList<>();
     private boolean isFirstTimeApplyingPorts = true;
-    JPanel leftPanel;
+    private JPanel leftPanel;
 
     /**
      * this flag tells us if we are closing the startup frame in order to proceed with console start or if we are
@@ -71,8 +71,10 @@ public class StartupFrame {
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent ev) {
-                if (!isProceeding)
+                if (!isProceeding) {
+                    getConfig().save();
                     System.exit(0);
+                }
             }
         });
         setAppIcon(frame);
