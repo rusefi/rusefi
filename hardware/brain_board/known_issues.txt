@@ -1,1 +1,3 @@
 1)                  PA9 <> USB VBUS trace is needed to get USB functional
+2)		    add vertical USB connector option (same as on Frankenso)
+3)                  use stlink 5x2 header
