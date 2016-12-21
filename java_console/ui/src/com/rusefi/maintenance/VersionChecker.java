@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.rusefi.Launcher.*;
+import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 /**
  * This class checks the recommended versions numbers and compares them with current versions
@@ -27,7 +28,6 @@ public class VersionChecker {
     private static final String VERSIONS_URL = "http://rusefi.com/console/versions.txt";
 
     private static final VersionChecker instance = new VersionChecker();
-
 
     private final Map<String, String> map = new HashMap<>();
     private int previousReportedVersion;
@@ -63,7 +63,6 @@ public class VersionChecker {
                 map.put(pair[0], pair[1]);
         }
 
-
         final Integer javaVersion = parseNotNull(map.get(JAVA_CONSOLE_TAG), "VC value");
         System.out.println("Server recommends java_console version " + javaVersion + " or newer");
         showUpdateWarningIfNeeded("dev console", javaVersion, CONSOLE_VERSION);
@@ -87,13 +86,21 @@ public class VersionChecker {
     private static void showUpdateWarningIfNeeded(final String componentName, final Integer latestVersion, final int currentVersion) {
         if (latestVersion == null || currentVersion >= latestVersion)
             return;
+        if (getConfig().getRoot().getProperty(componentName).equals(Integer.toString(latestVersion)))
+            return; // warning was suppressed
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                String message = "It's time to update " + componentName + "!\r\n" +
-                        "Your version: " + currentVersion + "\r\n" +
+                JPanel panel = new JPanel(new BorderLayout());
+                String message = "<html>It's time to update " + componentName + "!<br>" +
+                        "Your version: " + currentVersion + "<br>" +
                         "Latest version: " + latestVersion;
-                JOptionPane.showMessageDialog(getPaneParent(), message, "Update", JOptionPane.WARNING_MESSAGE);
+                panel.add(new JLabel(message), BorderLayout.NORTH);
+                JCheckBox doNotShowForThisVersion = new JCheckBox("Do not show for this version");
+                panel.add(doNotShowForThisVersion, BorderLayout.CENTER);
+                JOptionPane.showMessageDialog(getPaneParent(), panel, "Update", JOptionPane.WARNING_MESSAGE);
+                if (doNotShowForThisVersion.isSelected())
+                    getConfig().getRoot().setProperty(componentName, latestVersion);
             }
         });
     }

@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class PersistentConfiguration {
     private static final PersistentConfiguration INSTANCE = new PersistentConfiguration();
-    public static final String CONFIG_FILE_NAME = "rusefi_console_properties.xml";
+    private static final String CONFIG_FILE_NAME = "rusefi_console_properties.xml";
 
     private Map<String, Object> config = new HashMap<>();
 

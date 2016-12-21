@@ -38,7 +38,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20161202;
+    public static final int CONSOLE_VERSION = 20161220;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -88,7 +88,10 @@ public class Launcher {
     private final LogDownloader logsManager = new LogDownloader();
     private final FuelTunePane fuelTunePane;
 
-    FrameHelper frame = new FrameHelper() {
+    /**
+     * @see StartupFrame
+     */
+    private FrameHelper mainFrame = new FrameHelper() {
         @Override
         protected void onWindowOpened() {
             super.onWindowOpened();
@@ -110,7 +113,7 @@ public class Launcher {
 
     public Launcher(String port) {
         this.port = port;
-        staticFrame = frame.getFrame();
+        staticFrame = mainFrame.getFrame();
         FileLog.MAIN.logLine("Console " + CONSOLE_VERSION);
 
         getConfig().getRoot().setProperty(PORT_KEY, port);
@@ -181,8 +184,8 @@ public class Launcher {
                 tabbedPane.setSelectedIndex(selectedIndex);
         }
 
-        StartupFrame.setAppIcon(frame.getFrame());
-        frame.showFrame(tabbedPane);
+        StartupFrame.setAppIcon(mainFrame.getFrame());
+        mainFrame.showFrame(tabbedPane);
     }
 
     private void windowOpenedHandler() {
@@ -229,7 +232,7 @@ public class Launcher {
 
     private void setTitle() {
         String disconnected = ConnectionStatus.INSTANCE.isConnected() ? "" : "DISCONNECTED ";
-        frame.getFrame().setTitle(disconnected + "Console " + CONSOLE_VERSION + "; firmware=" + Launcher.firmwareVersion.get() + "@" + port);
+        mainFrame.getFrame().setTitle(disconnected + "Console " + CONSOLE_VERSION + "; firmware=" + Launcher.firmwareVersion.get() + "@" + port);
     }
 
     private void windowClosedHandler() {
