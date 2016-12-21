@@ -766,7 +766,9 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float postCrankingTargetClt;;"degC",        1,     0,  0,    100,  0
 	float postCrankingFactor;;"mult",        1,     0,  0,    100,  4
 	float postCrankingDurationSec;;"seconds",        1,     0,  0,    100,  2
-	int[95] unused;
+	ThermistorConf auxTempSensor1;
+	ThermistorConf auxTempSensor2;
+	int[79] unused;
 	
 
 end_struct

@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 19 15:39:22 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Dec 21 11:35:20 EST 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1803,7 +1803,15 @@ typedef struct {
 	/**
 	 * offset 2668
 	 */
-	int unused[95];
+	ThermistorConf auxTempSensor1;
+	/**
+	 * offset 2700
+	 */
+	ThermistorConf auxTempSensor2;
+	/**
+	 * offset 2732
+	 */
+	int unused[79];
 	/** total size 3048*/
 } engine_configuration_s;
 
@@ -2018,4 +2026,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 19 15:39:22 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Dec 21 11:35:20 EST 2016
