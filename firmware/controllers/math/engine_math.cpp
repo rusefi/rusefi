@@ -141,6 +141,9 @@ void FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_S) {
 	assertAngleRange(baseAngle, "addFbaseAngle");
 
 	int cylindersCount = CONFIG(specs.cylindersCount);
+	if (cylindersCount < 1) {
+		firmwareError(OBD_PCM_Processor_Fault, "temp cylindersCount %d", cylindersCount);
+	}
 	efiAssertVoid(cylindersCount > 0, "cylindersCount");
 
 	float angle = baseAngle
