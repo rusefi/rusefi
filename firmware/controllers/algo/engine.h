@@ -57,7 +57,7 @@ class ThermistorMath {
 public:
 	ThermistorMath();
 	thermistor_curve_s curve;
-	void init(thermistor_conf_s *config);
+	void setConfig(thermistor_conf_s *config);
 private:
 	thermistor_conf_s currentConfig;
 };

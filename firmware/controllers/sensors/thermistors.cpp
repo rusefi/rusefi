@@ -16,6 +16,8 @@
 #include "engine_configuration.h"
 #include "engine_math.h"
 
+#define _5_VOLTS 5.0
+
 // Celsius
 #define NO_IAT_SENSOR_TEMPERATURE 32.0f
 #define LIMPING_MODE_IAT_TEMPERATURE 30.0f
@@ -48,7 +50,7 @@ float getVoutInVoltageDividor(float Vin, float r1, float r2) {
 }
 
 float getKelvinTemperature(ThermistorConf *config, float resistance, ThermistorMath *tm) {
-	tm->init(&config->config); // implementation checks if config has changed or not
+	tm->setConfig(&config->config); // implementation checks if config has changed or not
 	thermistor_curve_s * curve = &tm->curve;
 	efiAssert(curve != NULL, "thermistor pointer is NULL", NAN);
 
@@ -223,7 +225,7 @@ void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	logger = sharedLogger;
 	efiAssertVoid(engine!=NULL, "e NULL initThermistors");
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	addConsoleActionF("test_clt_by_r", testCltByR);
 #endif
 
@@ -235,7 +237,7 @@ ThermistorMath::ThermistorMath() {
 	memset(&curve, 0, sizeof(curve));
 }
 
-void ThermistorMath::init(thermistor_conf_s *config) {
+void ThermistorMath::setConfig(thermistor_conf_s *config) {
 	bool isSameConfig = memcmp(config, &currentConfig, sizeof(currentConfig)) == 0;
 	if (isSameConfig) {
 		return;

@@ -452,12 +452,14 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 // todo: this value is way off! I am pretty sure temp coeffs are off also
 	engineConfiguration->iat.config.bias_resistor = 2700;
 
+	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_NONE;
+	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	engineConfiguration->warningPeriod = 10;
 #else
 	engineConfiguration->warningPeriod = 0;
-#endif
+#endif /* EFI_PROD_CODE */
 
 	engineConfiguration->step1rpm = 3000;
  	engineConfiguration->step1timing = 10;
