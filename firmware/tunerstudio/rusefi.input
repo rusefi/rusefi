@@ -427,7 +427,7 @@ page = 1
 	useConstantDwellDuringCranking= bits,    U32,   	1488, [4:4], "false", "true"
 	isEngineChartEnabled	= bits,    U32,   	1488, [5:5], "false", "true"
 	isCanEnabled			= bits,    U32,   	1488, [6:6], "false", "true"
-	hasCltSensor			= bits,    U32,   	1488, [7:7], "false", "true"
+	ltSensor			= bits,    U32,   	1488, [7:7], "false", "true"
 	canReadEnabled			= bits,    U32,   	1488, [8:8], "false", "true"
 	canWriteEnabled			= bits,    U32,   	1488, [9:9], "false", "true"
 	hasVehicleSpeedSensor	= bits,    U32,   	1488, [10:10], "false", "true"
@@ -1299,6 +1299,8 @@ fileVersion = { 20160702 }
 		subMenu = analogInputs,				"Analog inputs"
 		subMenu = cltSensor,				"CLT Sensor Settings"
 		subMenu = iatSensor,				"IAT Sensor Settings"
+		subMenu = auxTempSensor1Sensor,		"AuxTemp1 Sensor Settings"
+		subMenu = auxTempSensor2Sensor,		"AuxTemp2 Sensor Settings"
 		subMenu = mapSettings,				"MAP Sensor Settings"
 		subMenu = mafDecodingCurve,			"MAF Sensor Settings"
 		subMenu = egoSettings,				"EGO Sensor Settings"
@@ -1545,6 +1547,46 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		panel = ignitionOutputs,	West
 		panel = dwellCorrection,	Center
 		
+;			Engine->Aux1 Thermistor Settings
+	dialog = auxTempSensor1_thermistor, "aux1 Thermistor Settings"
+		field = "!Here is three pairs of thermistor temperature and his resistance."
+		field = "!Typical temperatures is -40°C, 0°C and 100°C"
+		field = ""
+		field = "Lowest temperature",  					auxTempSensor1_tempC_1		
+		field = "Resistance @ LT",         	   			auxTempSensor1_resistance_1
+		field = ""
+		field = "Middle temperature",    		  	    auxTempSensor1_tempC_2
+		field = "Resistance @ MT",         	    		auxTempSensor1_resistance_2
+		field = ""
+		field = "Highest temperature",				 	auxTempSensor1_tempC_3
+		field = "Resistance @ HT",         	    		auxTempSensor1_resistance_3
+	dialog = auxTempSensor1Sensor_IO,	"auxTempSensor1 Sensor I/O"
+		field = "auxTempSensor1 ADC input",				auxTempSensor1_adcChannel
+		field = "Bias Resistor Value",    	    		auxTempSensor1_bias_resistor
+	dialog = auxTempSensor1Sensor, "", yAxis
+		panel = auxTempSensor1_thermistor,		North
+		panel = auxTempSensor1Sensor_IO,		South
+
+;			Engine->Aux2 Thermistor Settings
+	dialog = auxTempSensor2_thermistor, "aux1 Thermistor Settings"
+		field = "!Here is three pairs of thermistor temperature and his resistance."
+		field = "!Typical temperatures is -40°C, 0°C and 100°C"
+		field = ""
+		field = "Lowest temperature",  					auxTempSensor2_tempC_1		
+		field = "Resistance @ LT",         	   			auxTempSensor2_resistance_1
+		field = ""
+		field = "Middle temperature",    		  	    auxTempSensor2_tempC_2
+		field = "Resistance @ MT",         	    		auxTempSensor2_resistance_2
+		field = ""
+		field = "Highest temperature",				 	auxTempSensor2_tempC_3
+		field = "Resistance @ HT",         	    		auxTempSensor2_resistance_3
+	dialog = auxTempSensor2Sensor_IO,	"auxTempSensor2 Sensor I/O"
+		field = "auxTempSensor2 ADC input",				auxTempSensor2_adcChannel
+		field = "Bias Resistor Value",    	    		auxTempSensor2_bias_resistor
+	dialog = auxTempSensor2Sensor, "", yAxis
+		panel = auxTempSensor2_thermistor,		North
+		panel = auxTempSensor2Sensor_IO,		South
+
 ;			Engine->CLT Thermistor Settings
 	dialog = clt_thermistor, "CLT Thermistor Settings"
 		field = "!Here is three pairs of thermistor temperature and his resistance."

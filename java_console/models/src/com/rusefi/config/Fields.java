@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 19 15:39:22 EST 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Dec 21 11:35:20 EST 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -901,7 +901,27 @@ public class Fields {
 	public static final int postCrankingTargetClt_offset = 2656;
 	public static final int postCrankingFactor_offset = 2660;
 	public static final int postCrankingDurationSec_offset = 2664;
-	public static final int unused_offset = 2668;
+	public static final int auxTempSensor1_offset = 2668;
+	public static final int auxTempSensor1_config_offset = 2668;
+	public static final int auxTempSensor1_tempC_1_offset = 2668;
+	public static final int auxTempSensor1_tempC_2_offset = 2672;
+	public static final int auxTempSensor1_tempC_3_offset = 2676;
+	public static final int auxTempSensor1_resistance_1_offset = 2680;
+	public static final int auxTempSensor1_resistance_2_offset = 2684;
+	public static final int auxTempSensor1_resistance_3_offset = 2688;
+	public static final int auxTempSensor1_bias_resistor_offset = 2692;
+	public static final int auxTempSensor1_adcChannel_offset = 2696;
+	public static final int auxTempSensor2_offset = 2700;
+	public static final int auxTempSensor2_config_offset = 2700;
+	public static final int auxTempSensor2_tempC_1_offset = 2700;
+	public static final int auxTempSensor2_tempC_2_offset = 2704;
+	public static final int auxTempSensor2_tempC_3_offset = 2708;
+	public static final int auxTempSensor2_resistance_1_offset = 2712;
+	public static final int auxTempSensor2_resistance_2_offset = 2716;
+	public static final int auxTempSensor2_resistance_3_offset = 2720;
+	public static final int auxTempSensor2_bias_resistor_offset = 2724;
+	public static final int auxTempSensor2_adcChannel_offset = 2728;
+	public static final int unused_offset = 2732;
 	public static final int le_formulas1_offset = 3048;
 	public static final int le_formulas2_offset = 3248;
 	public static final int le_formulas3_offset = 3448;
@@ -1545,6 +1565,22 @@ public class Fields {
 	public static final Field POSTCRANKINGTARGETCLT = Field.create("POSTCRANKINGTARGETCLT", 2656, FieldType.FLOAT);
 	public static final Field POSTCRANKINGFACTOR = Field.create("POSTCRANKINGFACTOR", 2660, FieldType.FLOAT);
 	public static final Field POSTCRANKINGDURATIONSEC = Field.create("POSTCRANKINGDURATIONSEC", 2664, FieldType.FLOAT);
+	public static final Field AUXTEMPSENSOR1_TEMPC_1 = Field.create("AUXTEMPSENSOR1_TEMPC_1", 2668, FieldType.FLOAT);
+	public static final Field AUXTEMPSENSOR1_TEMPC_2 = Field.create("AUXTEMPSENSOR1_TEMPC_2", 2672, FieldType.FLOAT);
+	public static final Field AUXTEMPSENSOR1_TEMPC_3 = Field.create("AUXTEMPSENSOR1_TEMPC_3", 2676, FieldType.FLOAT);
+	public static final Field AUXTEMPSENSOR1_RESISTANCE_1 = Field.create("AUXTEMPSENSOR1_RESISTANCE_1", 2680, FieldType.FLOAT);
+	public static final Field AUXTEMPSENSOR1_RESISTANCE_2 = Field.create("AUXTEMPSENSOR1_RESISTANCE_2", 2684, FieldType.FLOAT);
+	public static final Field AUXTEMPSENSOR1_RESISTANCE_3 = Field.create("AUXTEMPSENSOR1_RESISTANCE_3", 2688, FieldType.FLOAT);
+	public static final Field AUXTEMPSENSOR1_BIAS_RESISTOR = Field.create("AUXTEMPSENSOR1_BIAS_RESISTOR", 2692, FieldType.FLOAT);
+	public static final Field AUXTEMPSENSOR1_ADCCHANNEL = Field.create("AUXTEMPSENSOR1_ADCCHANNEL", 2696, FieldType.INT, adc_channel_e);
+	public static final Field AUXTEMPSENSOR2_TEMPC_1 = Field.create("AUXTEMPSENSOR2_TEMPC_1", 2700, FieldType.FLOAT);
+	public static final Field AUXTEMPSENSOR2_TEMPC_2 = Field.create("AUXTEMPSENSOR2_TEMPC_2", 2704, FieldType.FLOAT);
+	public static final Field AUXTEMPSENSOR2_TEMPC_3 = Field.create("AUXTEMPSENSOR2_TEMPC_3", 2708, FieldType.FLOAT);
+	public static final Field AUXTEMPSENSOR2_RESISTANCE_1 = Field.create("AUXTEMPSENSOR2_RESISTANCE_1", 2712, FieldType.FLOAT);
+	public static final Field AUXTEMPSENSOR2_RESISTANCE_2 = Field.create("AUXTEMPSENSOR2_RESISTANCE_2", 2716, FieldType.FLOAT);
+	public static final Field AUXTEMPSENSOR2_RESISTANCE_3 = Field.create("AUXTEMPSENSOR2_RESISTANCE_3", 2720, FieldType.FLOAT);
+	public static final Field AUXTEMPSENSOR2_BIAS_RESISTOR = Field.create("AUXTEMPSENSOR2_BIAS_RESISTOR", 2724, FieldType.FLOAT);
+	public static final Field AUXTEMPSENSOR2_ADCCHANNEL = Field.create("AUXTEMPSENSOR2_ADCCHANNEL", 2728, FieldType.INT, adc_channel_e);
 	public static final Field LE_FORMULAS1 = Field.create("LE_FORMULAS1", 3048, FieldType.INT);
 	public static final Field LE_FORMULAS2 = Field.create("LE_FORMULAS2", 3248, FieldType.INT);
 	public static final Field LE_FORMULAS3 = Field.create("LE_FORMULAS3", 3448, FieldType.INT);
