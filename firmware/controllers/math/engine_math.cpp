@@ -140,8 +140,11 @@ void FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_S) {
 
 	assertAngleRange(baseAngle, "addFbaseAngle");
 
+	int cylindersCount = CONFIG(specs.cylindersCount);
+	efiAssertVoid(cylindersCount > 0, "cylindersCount");
+
 	float angle = baseAngle
-			+ i * ENGINE(engineCycle) / CONFIG(specs.cylindersCount);
+			+ i * ENGINE(engineCycle) / cylindersCount;
 
 	InjectorOutputPin *secondOutput;
 	if (mode == IM_BATCH && CONFIG(twoWireBatchInjection)) {
