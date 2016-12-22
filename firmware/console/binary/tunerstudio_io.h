@@ -47,24 +47,24 @@ typedef struct {
 	char crcReadBuffer[350];
 } ts_channel_s;
 
-#define TS_HELLO_COMMAND_DEPRECATED 'H'
-#define TS_HELLO_COMMAND 'S'
-#define TS_TEST_COMMAND 't'
-#define TS_LEGACY_HELLO_COMMAND 'Q'
-#define TS_OUTPUT_COMMAND 'O'
-#define TS_READ_COMMAND 'R'
-#define TS_PAGE_COMMAND 'P'
-#define TS_COMMAND_F 'F'
-#define TS_EXECUTE 'E'
-#define TS_GET_TEXT 'G'
+#define TS_HELLO_COMMAND_DEPRECATED 'H' // 0x48
+#define TS_HELLO_COMMAND 'S' // 0x53
+#define TS_TEST_COMMAND 't' // 0x74
+#define TS_LEGACY_HELLO_COMMAND 'Q' // 0x51
+#define TS_OUTPUT_COMMAND 'O' // 0x4F
+#define TS_READ_COMMAND 'R' // 0x52
+#define TS_PAGE_COMMAND 'P' // 0x50
+#define TS_COMMAND_F 'F' // 0x46
+#define TS_EXECUTE 'E' // 0x45
+#define TS_GET_TEXT 'G' // 0x47
 #define TS_GET_FILE_RANGE '2'
 
-#define TS_SINGLE_WRITE_COMMAND 'W'
-#define TS_CHUNK_WRITE_COMMAND 'C'
-#define TS_BURN_COMMAND 'B'
-#define TS_IO_TEST_COMMAND 'w'
+#define TS_SINGLE_WRITE_COMMAND 'W' // 0x57
+#define TS_CHUNK_WRITE_COMMAND 'C' // 0x43
+#define TS_BURN_COMMAND 'B' // 0x42
+#define TS_IO_TEST_COMMAND 'w' // 0x77
 
-#define TS_CRC_CHECK_COMMAND 'k'
+#define TS_CRC_CHECK_COMMAND 'k' // 0x6B
 
 #define CRC_VALUE_SIZE 4
 // todo: double-check this

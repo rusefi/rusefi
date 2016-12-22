@@ -56,8 +56,11 @@ private:
 class ThermistorMath {
 public:
 	ThermistorMath();
-	thermistor_curve_s curve;
 	void setConfig(thermistor_conf_s *config);
+	void prepareThermistorCurve(thermistor_conf_s *tc);
+	float s_h_a;
+	float s_h_b;
+	float s_h_c;
 private:
 	thermistor_conf_s currentConfig;
 };

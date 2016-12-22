@@ -376,10 +376,9 @@ static void setOM(int value) {
 static char pinNameBuffer[16];
 
 static void printThermistor(const char *msg, ThermistorConf *config, ThermistorMath *tm) {
-	thermistor_curve_s * curve = &tm->curve;
 	adc_channel_e adcChannel = config->adcChannel;
 	float voltage = getVoltageDivided("term", adcChannel);
-	float r = getResistance(config);
+	float r = getResistance(config, voltage);
 
 	float t = getTemperatureC(config, tm);
 
@@ -393,7 +392,7 @@ static void printThermistor(const char *msg, ThermistorConf *config, ThermistorM
 			tc->tempC_3, tc->resistance_3);
 
 	scheduleMsg(&logger, "bias resistor=%fK A=%..100000f B=%..100000f C=%..100000f", tc->bias_resistor / 1000,
-			curve->s_h_a, curve->s_h_b, curve->s_h_c);
+			tm->s_h_a, tm->s_h_b, tm->s_h_c);
 	scheduleMsg(&logger, "==============================");
 }
 

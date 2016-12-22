@@ -51,15 +51,13 @@ float getVoutInVoltageDividor(float Vin, float r1, float r2) {
 
 float getKelvinTemperature(ThermistorConf *config, float resistance, ThermistorMath *tm) {
 	tm->setConfig(&config->config); // implementation checks if config has changed or not
-	thermistor_curve_s * curve = &tm->curve;
-	efiAssert(curve != NULL, "thermistor pointer is NULL", NAN);
 
 	if (resistance <= 0) {
 		//warning("Invalid resistance in getKelvinTemperature=", resistance);
 		return 0.0f;
 	}
 	float logR = logf(resistance);
-	return 1 / (curve->s_h_a + curve->s_h_b * logR + curve->s_h_c * logR * logR * logR);
+	return 1 / (tm->s_h_a + tm->s_h_b * logR + tm->s_h_c * logR * logR * logR);
 }
 
 float convertCelsiustoF(float tempC) {
@@ -75,8 +73,7 @@ float convertKelvinToFahrenheit(float kelvin) {
 	return convertCelsiustoF(tempC);
 }
 
-float getResistance(ThermistorConf *config) {
-	float voltage = getVoltageDivided("term", config->adcChannel);
+float getResistance(ThermistorConf *config, float voltage) {
 	efiAssert(config != NULL, "thermistor config is null", NAN);
 	thermistor_conf_s *tc = &config->config;
 
@@ -89,7 +86,8 @@ float getTemperatureC(ThermistorConf *config, ThermistorMath *tm) {
 		firmwareError(CUSTOM_ERR_THERM, "thermstr not initialized");
 		return NAN;
 	}
-	float resistance = getResistance(config);
+	float voltage = getVoltageDivided("term", config->adcChannel);
+	float resistance = getResistance(config, voltage);
 
 	float kelvinTemperature = getKelvinTemperature(config, resistance, tm);
 	return convertKelvinToCelcius(kelvinTemperature);
@@ -138,7 +136,7 @@ void setThermistorConfiguration(ThermistorConf * thermistor, float tempC1, float
 	tc->resistance_3 = r3;
 }
 
-static void prepareThermistorCurve(thermistor_conf_s *tc, thermistor_curve_s * curve) {
+void ThermistorMath::prepareThermistorCurve(thermistor_conf_s *tc) {
 	float T1 = tc->tempC_1 + KELV;
 	float T2 = tc->tempC_2 + KELV;
 	float T3 = tc->tempC_3 + KELV;
@@ -167,9 +165,9 @@ static void prepareThermistorCurve(thermistor_conf_s *tc, thermistor_curve_s * c
 	float U3 = (Y3 - Y1) / (L3 - L1);
 
 
-	curve->s_h_c = (U3 - U2) / (L3 - L2) * pow(L1 + L2 + L3, -1);
-	curve->s_h_b = U2 - curve->s_h_c * (L1 * L1 + L1 * L2 + L2 * L2);
-	curve->s_h_a = Y1 - (curve->s_h_b + L1 * L1 * curve->s_h_c) * L1;
+	s_h_c = (U3 - U2) / (L3 - L2) * pow(L1 + L2 + L3, -1);
+	s_h_b = U2 - s_h_c * (L1 * L1 + L1 * L2 + L2 * L2);
+	s_h_a = Y1 - (s_h_b + L1 * L1 * s_h_c) * L1;
 
 #if EXTREME_TERM_LOGGING || defined(__DOXYGEN__)
 	scheduleMsg(logger, "Y1=%..100000f/Y2=%..100000f/Y3=%..100000f", Y1, Y2, Y3);
@@ -234,7 +232,7 @@ void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 
 ThermistorMath::ThermistorMath() {
 	memset(&currentConfig, 0, sizeof(currentConfig));
-	memset(&curve, 0, sizeof(curve));
+	s_h_a = s_h_b = s_h_c = 0;
 }
 
 void ThermistorMath::setConfig(thermistor_conf_s *config) {
@@ -243,5 +241,5 @@ void ThermistorMath::setConfig(thermistor_conf_s *config) {
 		return;
 	}
 	memcpy(&currentConfig, config, sizeof(currentConfig));
-	prepareThermistorCurve(config, &curve);
+	prepareThermistorCurve(config);
 }

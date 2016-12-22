@@ -89,15 +89,14 @@ void testSensors(void) {
 	testHip9011lookup();
 
 	ThermistorMath tm;
-	thermistor_curve_s *curve = &tm.curve;
 	{
 		setThermistorConfiguration(&tc, 32, 9500, 75, 2100, 120, 1000);
 		float t = getKelvinTemperature(&tc, 2100, &tm);
 		assertEquals(75 + KELV, t);
 
-		assertEquals(-0.003, curve->s_h_a);
-		assertEquals(0.001, curve->s_h_b);
-		assertEquals(0.0, curve->s_h_c);
+		assertEquals(-0.003, tm.s_h_a);
+		assertEquals(0.001, tm.s_h_b);
+		assertEquals(0.0, tm.s_h_c);
 
 	}
 
@@ -108,9 +107,9 @@ void testSensors(void) {
 		float t = getKelvinTemperature(&tc, 38000, &tm);
 		assertEquals(-2.7983, t - KELV);
 
-		assertEqualsM("A", 0.0009, curve->s_h_a);
-		assertEqualsM("B", 0.0003, curve->s_h_b);
-		assertEquals(0.0, curve->s_h_c);
+		assertEqualsM("A", 0.0009, tm.s_h_a);
+		assertEqualsM("B", 0.0003, tm.s_h_b);
+		assertEquals(0.0, tm.s_h_c);
 	}
 }
 
