@@ -158,12 +158,6 @@ float resistance_3;;"Ohm",      1,     0,    0, 200000,     1
 	float bias_resistor;;"Ohm",      1,     0,    0, 200000,     1
 end_struct
 
-struct_no_prefix thermistor_curve_s @brief Thermistor curve parameters
-	float s_h_a;
-	float s_h_b;
-	float s_h_c;
-end_struct
-
 struct ThermistorConf @brief Thermistor curve parameters
 	thermistor_conf_s config;
 	adc_channel_e adcChannel;

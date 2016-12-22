@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Dec 21 11:35:20 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Dec 22 13:03:39 EST 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -133,26 +133,6 @@ typedef struct {
 	float bias_resistor;
 	/** total size 28*/
 } thermistor_conf_s;
-
-/**
- * @brief Thermistor curve parameters
-
-*/
-typedef struct {
-	/**
-	 * offset 0
-	 */
-	float s_h_a;
-	/**
-	 * offset 4
-	 */
-	float s_h_b;
-	/**
-	 * offset 8
-	 */
-	float s_h_c;
-	/** total size 12*/
-} thermistor_curve_s;
 
 /**
  * @brief Thermistor curve parameters
@@ -2026,4 +2006,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Dec 21 11:35:20 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Dec 22 13:03:39 EST 2016

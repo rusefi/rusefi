@@ -31,7 +31,7 @@ float convertCelciustoF(float tempC);
 float convertFtoCelcius(float tempF);
 
 float getKelvinTemperature(ThermistorConf *config, float resistance, ThermistorMath *tm);
-float getResistance(ThermistorConf *config);
+float getResistance(ThermistorConf *config, float voltage);
 float getTemperatureC(ThermistorConf *config, ThermistorMath *tm);
 float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_F);
 bool isValidCoolantTemperature(float temperature);
