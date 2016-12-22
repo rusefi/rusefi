@@ -1,0 +1,234 @@
+EESchema Schematic File Version 2
+LIBS:KICAD_Older_Version
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:176122-6
+LIBS:art-electro-conn
+LIBS:art-electro-conn_2
+LIBS:art-electro-ic
+LIBS:art-electro-max
+LIBS:art-electro-power
+LIBS:LMV324IDR
+LIBS:logo
+LIBS:logo_flipped
+LIBS:MAX9926-9927
+LIBS:max9939
+LIBS:max31855
+LIBS:stm32
+LIBS:tc4427
+LIBS:lm2596
+LIBS:mos_p_numbered-pins
+LIBS:rn-41
+LIBS:skqucaa010_joystick
+LIBS:itead_hc-0X_bluetooth
+LIBS:joystick_SKRHAAE010
+LIBS:STM32F407IGT6
+LIBS:slc_oem
+LIBS:mos_n_numbered-pins
+LIBS:frankenso_manhattan_io-cache
+EELAYER 25 0
+EELAYER END
+$Descr B 17000 11000
+encoding utf-8
+Sheet 1 1
+Title "Frankenso"
+Date "3 dec 2015"
+Rev ".05"
+Comp "rusEFI.com"
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L MICRO-SDCARD-CONNECTOR-3300060P1 P?
+U 1 1 5860621F
+P 9500 4950
+F 0 "P?" H 9350 5450 60  0000 C CNN
+F 1 "MICRO-SDCARD-CONNECTOR-3300060P1" H 9500 4450 60  0001 C CNN
+F 2 "MICRO-SDCARD-CONNECTOR-3300060P1" H 9500 4950 60  0001 C CNN
+F 3 "" H 9500 4950 60  0000 C CNN
+F 4 "seeed,3300060P1" H 9500 4950 60  0001 C CNN "VEND2,VEND2#"
+	1    9500 4950
+	-1   0    0    -1  
+$EndComp
+NoConn ~ 9900 4550
+NoConn ~ 9900 5250
+NoConn ~ 9900 5350
+$Comp
+L GND #PWR?
+U 1 1 58606229
+P 9900 5050
+F 0 "#PWR?" H 9900 5050 30  0001 C CNN
+F 1 "GND" H 9900 4980 30  0001 C CNN
+F 2 "" H 9900 5050 60  0001 C CNN
+F 3 "" H 9900 5050 60  0001 C CNN
+	1    9900 5050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	10075 4950 9900 4950
+Wire Wire Line
+	9900 5150 10075 5150
+Wire Wire Line
+	10075 4850 9900 4850
+Wire Wire Line
+	10075 4750 9900 4750
+Wire Wire Line
+	10075 4650 9900 4650
+$Comp
+L CP1 C?
+U 1 1 58606237
+P 7950 5225
+F 0 "C?" H 8000 5325 50  0000 L CNN
+F 1 "4.7uF" H 8000 5125 50  0000 L CNN
+F 2 "SM0805" V 2180 2100 60  0001 C CNN
+F 3 "" H 7950 5225 60  0001 C CNN
+F 4 "TDK,CGA4J3X5R1H475K125AB" V 2180 2100 60  0001 C CNN "MFG,MFG#"
+F 5 "DIGI,445-7882-6-ND" V 2180 2100 60  0001 C CNN "VEND1,VEND1#"
+	1    7950 5225
+	-1   0    0    -1  
+$EndComp
+$Comp
+L C C?
+U 1 1 58606240
+P 7950 4675
+F 0 "C?" H 8000 4775 50  0000 L CNN
+F 1 "0.1uF" H 8000 4575 50  0000 L CNN
+F 2 "SM0805" V 2180 2100 60  0001 C CNN
+F 3 "" H 7950 4675 60  0001 C CNN
+F 4 "AVX,08055C104KAT2A" V 2180 2100 60  0001 C CNN "MFG,MFG#"
+F 5 "DIGI,478-1395-1-ND" V 2180 2100 60  0001 C CNN "VEND1,VEND1#"
+	1    7950 4675
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7950 4875 7950 5025
+Wire Wire Line
+	7650 4975 7950 4975
+Connection ~ 7950 4975
+$Comp
+L GND #PWR?
+U 1 1 5860624A
+P 7950 5425
+F 0 "#PWR?" H 7950 5425 30  0001 C CNN
+F 1 "GND" H 7950 5355 30  0001 C CNN
+F 2 "" H 7950 5425 60  0001 C CNN
+F 3 "" H 7950 5425 60  0001 C CNN
+	1    7950 5425
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 58606250
+P 7950 4475
+F 0 "#PWR?" H 7950 4475 30  0001 C CNN
+F 1 "GND" H 7950 4405 30  0001 C CNN
+F 2 "" H 7950 4475 60  0001 C CNN
+F 3 "" H 7950 4475 60  0001 C CNN
+	1    7950 4475
+	-1   0    0    1   
+$EndComp
+Text Label 7650 4975 2    60   ~ 0
+3.3V
+$Comp
+L GND #PWR?
+U 1 1 58606257
+P 8900 5150
+F 0 "#PWR?" H 8900 5150 30  0001 C CNN
+F 1 "GND" H 8900 5080 30  0001 C CNN
+F 2 "" H 8900 5150 60  0001 C CNN
+F 3 "" H 8900 5150 60  0001 C CNN
+	1    8900 5150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8900 4800 8900 5150
+Connection ~ 8900 4900
+Connection ~ 8900 5000
+Connection ~ 8900 5100
+Text HLabel 10100 5050 2    60   Input ~ 0
+GND
+Text HLabel 10075 4650 2    60   Input ~ 0
+CS_SD_MODULE
+Text HLabel 10075 4750 2    60   Input ~ 0
+SPI_MOSI
+Text HLabel 10075 4850 2    60   Input ~ 0
+3.3V
+Text HLabel 10075 4950 2    60   Input ~ 0
+SPI_SCK
+Text HLabel 10075 5150 2    60   Input ~ 0
+SPI_MISO
+Wire Wire Line
+	9900 5050 10100 5050
+$Comp
+L MINI-USB-5P-3400020P1 J?
+U 1 1 5860626B
+P 8750 1575
+F 0 "J?" H 8475 1925 60  0000 C CNN
+F 1 "MINI-USB-5P-3400020P1V" H 8750 2025 60  0001 C CNN
+F 2 "MINI-USB_RCTP_V-T_B" V 7830 2875 60  0001 C CNN
+F 3 "" H 8750 1575 60  0001 C CNN
+F 4 "TE,1734753-1" V 7830 2875 60  0001 C CNN "MFG,MFG#"
+F 5 "DIGI,A107790-ND" V 7830 2875 60  0001 C CNN "VEND1,VEND1#"
+	1    8750 1575
+	1    0    0    -1  
+$EndComp
+Text Label 8950 1425 0    60   ~ 0
+D-
+Text Label 8950 1525 0    60   ~ 0
+D+
+$Comp
+L GND #PWR?
+U 1 1 58606274
+P 8950 1725
+F 0 "#PWR?" H 8950 1725 30  0001 C CNN
+F 1 "GND" H 8950 1655 30  0001 C CNN
+F 2 "" H 8950 1725 60  0001 C CNN
+F 3 "" H 8950 1725 60  0001 C CNN
+	1    8950 1725
+	0    -1   -1   0   
+$EndComp
+Text Label 8950 1825 0    60   ~ 0
+shield
+Text Label 8950 1325 0    60   ~ 0
+Vbus
+$Comp
+L PWR_FLAG #FLG?
+U 1 1 586062BD
+P 8950 1625
+F 0 "#FLG?" H 8950 1720 30  0001 C CNN
+F 1 "PWR_FLAG" H 8950 1805 30  0000 C CNN
+F 2 "" H 8950 1625 60  0000 C CNN
+F 3 "" H 8950 1625 60  0000 C CNN
+	1    8950 1625
+	0    1    1    0   
+$EndComp
+$EndSCHEMATC
