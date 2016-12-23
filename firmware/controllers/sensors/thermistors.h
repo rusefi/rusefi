@@ -30,7 +30,7 @@ float getTempK(float resistance);
 float convertCelciustoF(float tempC);
 float convertFtoCelcius(float tempF);
 
-float getKelvinTemperature(ThermistorConf *config, float resistance, ThermistorMath *tm);
+float getKelvinTemperature(float resistance, ThermistorMath *tm);
 float getResistance(ThermistorConf *config, float voltage);
 float getTemperatureC(ThermistorConf *config, ThermistorMath *tm);
 float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_F);
