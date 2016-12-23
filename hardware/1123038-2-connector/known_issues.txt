@@ -1,0 +1,3 @@
+1)                  what we have as 4Y is actually 4X (MAF in case of Miata)
+2)		    what we have as 4X is actually 4Z (TCM in case of Miata)
+3)                  
