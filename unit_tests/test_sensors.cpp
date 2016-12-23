@@ -91,7 +91,8 @@ void testSensors(void) {
 	ThermistorMath tm;
 	{
 		setThermistorConfiguration(&tc, 32, 9500, 75, 2100, 120, 1000);
-		float t = getKelvinTemperature(&tc, 2100, &tm);
+		tm.setConfig(&tc.config);
+		float t = getKelvinTemperature(2100, &tm);
 		assertEquals(75 + KELV, t);
 
 		assertEquals(-0.003, tm.s_h_a);
@@ -103,8 +104,9 @@ void testSensors(void) {
 	{
 		// 2003 Neon sensor
 		setThermistorConfiguration(&tc, 0, 32500, 30, 7550, 100, 700);
+		tm.setConfig(&tc.config);
 
-		float t = getKelvinTemperature(&tc, 38000, &tm);
+		float t = getKelvinTemperature(38000, &tm);
 		assertEquals(-2.7983, t - KELV);
 
 		assertEqualsM("A", 0.0009, tm.s_h_a);

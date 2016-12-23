@@ -58,6 +58,7 @@ public:
 	ThermistorMath();
 	void setConfig(thermistor_conf_s *config);
 	void prepareThermistorCurve(thermistor_conf_s *tc);
+	bool isLinearSensor();
 	float s_h_a;
 	float s_h_b;
 	float s_h_c;
