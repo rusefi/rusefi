@@ -1,3 +1,3 @@
-1)                  what we have as 4Y is actually 4X (MAF in case of Miata)
-2)		    what we have as 4X is actually 4Z (TCM in case of Miata)
-3)                  
+1) RESOLVED IN R0.2.1 Solder Mask was 0.010 inch, is now 0.003 inch          
+2) RESOLVED IN R0.3 what we have as 4Y is actually 4X (MAF in case of Miata)
+3) RESOLVED IN R0.3 what we have as 4X is actually 4Z (TCM in case of Miata)
