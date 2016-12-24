@@ -38,8 +38,8 @@ $Descr A 8500 11000 portrait
 encoding utf-8
 Sheet 1 1
 Title "ECU adapter"
-Date "2016-10-25"
-Rev "R0.2"
+Date "2016-12-23"
+Rev "R0.3"
 Comp "DAECU for rusEFI"
 Comment1 ""
 Comment2 ""
@@ -472,7 +472,7 @@ Text Label 5100 2625 1    60   ~ 0
 Text Label 5200 2625 1    60   ~ 0
 4V
 Text Label 5300 2625 1    60   ~ 0
-4Y
+4X
 Text Label 5400 2625 1    60   ~ 0
 4AA
 Text Label 5500 2625 1    60   ~ 0
@@ -516,7 +516,7 @@ Text Label 5100 4025 1    60   ~ 0
 Text Label 5200 4025 1    60   ~ 0
 4U
 Text Label 5300 4025 1    60   ~ 0
-4X
+4Z
 Text Label 5400 4025 1    60   ~ 0
 4AC
 Text Label 5600 4025 1    60   ~ 0
