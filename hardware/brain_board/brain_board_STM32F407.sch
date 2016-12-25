@@ -2364,7 +2364,7 @@ F 1 "CONN_02X05" H 12775 6350 50  0001 C CNN
 F 2 "Connect:IDC_Header_Straight_10pins" H 12775 5450 50  0001 C CNN
 F 3 "" H 12775 5450 50  0000 C CNN
 	1    12775 6650
-	1    0    0    -1  
+	1    0    0    1   
 $EndComp
 $Comp
 L GND #PWR059

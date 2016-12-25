@@ -4,4 +4,7 @@
 4) RESOLVED IN R0.2 renamed sm32f407_Board to STM32F407_Brain_Board
 5)                  change LED to use SM0806_Jumpers
 6) RESOLVED IN R0.2 Change Fuse to match frankenso
-7) RESOLVED IN R0.2 Updated XTAL X2 to match frankenso
+
+
+SD card vias
+SD card PCB
