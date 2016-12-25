@@ -213,8 +213,8 @@
 #define operationMode_offset 500
 #define displayMode_offset 504
 #define logFormat_offset 508
-#define firmwareVersion_offset 512
-#define firmwareVersion_offset_hex 200
+#define byFirmwareVersion_offset 512
+#define byFirmwareVersion_offset_hex 200
 #define HD44780width_offset 516
 #define HD44780width_offset_hex 204
 #define HD44780height_offset 520

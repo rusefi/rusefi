@@ -123,7 +123,7 @@ persisted_configuration_state_e readConfiguration(Logging * logger) {
 		applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER);
 	}
 	// we can only change the state after the CRC check
-	engineConfiguration->firmwareVersion = getRusEfiVersion();
+	engineConfiguration->byFirmwareVersion = getRusEfiVersion();
 	return result;
 }
 
