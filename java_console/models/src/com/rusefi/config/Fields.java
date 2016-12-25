@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Dec 21 11:35:20 EST 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Dec 25 10:37:45 EST 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -217,8 +217,8 @@ public class Fields {
 	public static final int operationMode_offset = 500;
 	public static final int displayMode_offset = 504;
 	public static final int logFormat_offset = 508;
-	public static final int firmwareVersion_offset = 512;
-	public static final int firmwareVersion_offset_hex = 200;
+	public static final int byFirmwareVersion_offset = 512;
+	public static final int byFirmwareVersion_offset_hex = 200;
 	public static final int HD44780width_offset = 516;
 	public static final int HD44780width_offset_hex = 204;
 	public static final int HD44780height_offset = 520;
@@ -1095,7 +1095,7 @@ public class Fields {
 	public static final Field OPERATIONMODE = Field.create("OPERATIONMODE", 500, FieldType.INT);
 	public static final Field DISPLAYMODE = Field.create("DISPLAYMODE", 504, FieldType.INT);
 	public static final Field LOGFORMAT = Field.create("LOGFORMAT", 508, FieldType.INT);
-	public static final Field FIRMWAREVERSION = Field.create("FIRMWAREVERSION", 512, FieldType.INT);
+	public static final Field BYFIRMWAREVERSION = Field.create("BYFIRMWAREVERSION", 512, FieldType.INT);
 	public static final Field HD44780WIDTH = Field.create("HD44780WIDTH", 516, FieldType.INT);
 	public static final Field HD44780HEIGHT = Field.create("HD44780HEIGHT", 520, FieldType.INT);
 	public static final Field TPSADCCHANNEL = Field.create("TPSADCCHANNEL", 524, FieldType.INT, adc_channel_e);

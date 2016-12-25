@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Dec 22 13:03:39 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Dec 25 10:23:53 EST 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1108,7 +1108,7 @@ typedef struct {
 	/**
 	 * offset 512
 	 */
-	int firmwareVersion;
+	int byFirmwareVersion;
 	/**
 	 * offset 516
 	 */
@@ -2006,4 +2006,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Dec 22 13:03:39 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Dec 25 10:23:53 EST 2016

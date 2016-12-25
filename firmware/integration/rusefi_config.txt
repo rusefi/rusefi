@@ -321,7 +321,7 @@ display_mode_e displayMode;
 
 custom log_format_e 4 bits,    U32,    @OFFSET@, [0:0], "native", "Mega Log Viewer"
 log_format_e logFormat;
-	int firmwareVersion;;"index",      1,      0,       0, 300,      0
+	int byFirmwareVersion;;"index",      1,      0,       0, 300,      0
 	int HD44780width;;"index",      1,      0,       0, 300,      0
 	int HD44780height;;"index",      1,      0,       0, 300,      0
 	
