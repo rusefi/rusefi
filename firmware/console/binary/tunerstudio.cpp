@@ -86,6 +86,8 @@
 
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 
+#define TS_OUTPUT_SIZE 356
+
 EXTERN_ENGINE
 ;
 

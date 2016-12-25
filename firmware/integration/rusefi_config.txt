@@ -34,7 +34,7 @@ struct_no_prefix engine_configuration_s
 !
 ! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
 ! so not forget to change fileVersion in rusefi.ini
-#define TS_FILE_VERSION 20160702
+#define TS_FILE_VERSION 20161225
 
 #define WARMUP_TARGET_AFR_SIZE 4
 
