@@ -1,10 +1,10 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Dec 25 10:37:45 EST 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Dec 25 12:28:24 EST 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
-	public static final int TS_FILE_VERSION = 20160702;
+	public static final int TS_FILE_VERSION = 20161225;
 	public static final int WARMUP_TARGET_AFR_SIZE = 4;
 	public static final int MAP_ANGLE_SIZE = 8;
 	public static final int MAP_WINDOW_SIZE = 8;

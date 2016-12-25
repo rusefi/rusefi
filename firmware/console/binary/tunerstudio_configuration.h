@@ -15,10 +15,6 @@
 
 #define PAGE_COUNT 1
 
-//#define PAGE_1_SIZE 1152
-
-#define TS_OUTPUT_SIZE 276
-
 typedef struct {
 	uint16_t values[EGT_CHANNEL_COUNT];
 } egt_values_s;
@@ -135,7 +131,8 @@ typedef struct {
 	int engineMode; // 252
 	float debugFloatField6; // 256
 	float debugFloatField7; // 260
-	int unused3[3];
+	int firmwareVersion; // 264
+	int unused3[22];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */

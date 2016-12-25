@@ -33,7 +33,7 @@ enable2ndByteCanID = false
    interWriteDelay = 10
    blockReadTimeout    = 3000; Milliseconds general timeout
    
-   blockingFactor = 320 ; max chunk size
+   blockingFactor = 400 ; max chunk size
 ;end communication settings
 
    ;  name      			= bits,   type, offset,  bits
@@ -745,12 +745,12 @@ page = 1
 [OutputChannels]
 
 ; see TS_FILE_VERSION in firmware code
-fileVersion = { 20160702 }
+fileVersion = { 20161225 }
 
    ochGetCommand    = "O"
 
-; see OUTPUT_CHANNELS_SIZE in console source code
-   ochBlockSize     = 276
+; see TS_OUTPUT_SIZE in console source code
+   ochBlockSize     = 356
 
       rpm             = scalar,  U32,      0,             "RPM",            1,   0.00000
 #if CELSIUS
@@ -807,7 +807,7 @@ fileVersion = { 20160702 }
       ind_isTriggerError = bits, U32,     80, [5:5], "true", "false";
       ind_hasFatalError=bits,    U32,     80, [6:6], "true", "false";
       ind_isWarnNow    =bits,    U32,     80, [7:7], "true", "false";
-      firmwareTsVersion = scalar,U32,     84, "version",           1,         0
+      firmwareTsVersion = scalar,U32,     84, "version_p",           1,         0
       egt1            = scalar,  S16,     88, "°C",           1,         0
       egt2            = scalar,  S16,     90, "°C",           1,         0
       egt3            = scalar,  S16,     92, "°C",           1,         0
@@ -851,6 +851,7 @@ fileVersion = { 20160702 }
       engineMode    = scalar,  U32,   252, "em",          1,       0.0;
       debugFloatField6  = scalar,  F32,  256,            "val",           1,       0.0;
       debugFloatField7  = scalar,  F32,  260,            "val",           1,       0.0;
+      firmwareVersion = scalar,U32,     264, "version_f",           1,         0
 
       egoCorrection   = { 100 }
       time            = { timeNow }
@@ -1198,6 +1199,7 @@ fileVersion = { 20160702 }
    ;       Channel          Label          Type    Format
    entry = time,            "Time",        float,  "%.3f"
    entry = rpm,             "RPM",         int,    "%d"
+   entry = firmwareVersion, "version",     int,    "%d"
    entry = coolant,         "CLT",         float,  "%.2f"
    entry = intake,          "IAT",         float,  "%.2f"
    entry = TPS,             "TPS",         float,  "%.2f"

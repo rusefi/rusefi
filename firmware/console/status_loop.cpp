@@ -247,6 +247,8 @@ static void printSensors(Logging *log, bool fileFormat) {
 
 		reportSensorF(log, fileFormat, "f: wall amt", "v", ENGINE(wallFuel).getWallFuel(0), 2);
 		reportSensorF(log, fileFormat, "f: wall crr", "v", ENGINE(wallFuelCorrection), 2);
+
+		reportSensorI(log, fileFormat, "version", "#", getRusEfiVersion());
 	}
 
 
@@ -690,6 +692,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	efitimesec_t now = getTimeNowSeconds();
 	tsOutputChannels->timeSeconds = now;
+	tsOutputChannels->firmwareVersion = getRusEfiVersion();
 
 	tsOutputChannels->isWarnNow = isWarningNow(now, true);
 
