@@ -212,7 +212,6 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->iat.config.bias_resistor = 2700;
 
 	// we have a 1999 Auto Miata TB mounted on this car
-	engineConfiguration->hasTpsSensor = true;
 	engineConfiguration->tpsMin = 630; // convert 12to10 bit (ADC/4)
 	engineConfiguration->tpsMax = 115; // convert 12to10 bit (ADC/4)
 
