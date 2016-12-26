@@ -31,10 +31,10 @@ void testIdleController(void) {
 	assertEqualsM("#1", 60.0, is.getIdle(900, time PASS_ENGINE_PARAMETER));
 
 	time += 2000;
-	assertEqualsM("idle#2", 60.0, is.getIdle(900, time PASS_ENGINE_PARAMETER));
+	assertEqualsM("idle#2", 60.5, is.getIdle(900, time PASS_ENGINE_PARAMETER));
 
 	time += 2000;
-	assertEqualsM("idke#3", 60.0, is.getIdle(1050, time PASS_ENGINE_PARAMETER));
+	assertEqualsM("idke#3", 60.6, is.getIdle(1050, time PASS_ENGINE_PARAMETER));
 }
 
 void testPidController(void) {
