@@ -35,6 +35,7 @@ public class RecentCommands {
     private static final String TRIGGERINFO = "triggerinfo";
     private static final String IDLEINFO = "idleinfo";
     private static final String ALTINFO = "altinfo";
+    private static final String TPSINFO = "tpsinfo";
     private static final String ACCELINFO = "accelinfo";
     private static final String CANINFO = "caninfo";
     private static final String TSINFO = "tsinfo";
@@ -60,6 +61,7 @@ public class RecentCommands {
         COMMAND_ICONS.put(ALTINFO, UiUtils.loadIcon("alternator.jpg"));
         COMMAND_ICONS.put(ACCELINFO, infoIcon);
         COMMAND_ICONS.put(TSINFO, infoIcon);
+        COMMAND_ICONS.put(TPSINFO, infoIcon);
         COMMAND_ICONS.put(joystickINFO, UiUtils.loadIcon("joystick.png"));
         COMMAND_ICONS.put(CANINFO, infoIcon);
         COMMAND_ICONS.put(FUELINFO, infoIcon);
@@ -135,6 +137,7 @@ public class RecentCommands {
         add("fuelbench 5 400 2");
         add(IDLEINFO);
         add(ALTINFO);
+        add(TPSINFO);
         add(ACCELINFO);
         add(FUELINFO);
         add(TEMPINFO);

@@ -588,7 +588,7 @@ bit unusedBit__4
 	bit isGpsEnabled
 	bit isAlternatorControlEnabled
 	bit unusedBit__3
-	bit hasTpsSensor
+	bit unusedbit_8
 bit cutFuelOnHardLimit
 bit cutSparkOnHardLimit
 bit step1fuelCutEnable

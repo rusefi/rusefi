@@ -630,7 +630,7 @@
 #define isGpsEnabled_offset 1488
 #define isAlternatorControlEnabled_offset 1488
 #define unusedBit__3_offset 1488
-#define hasTpsSensor_offset 1488
+#define unusedbit_8_offset 1488
 #define cutFuelOnHardLimit_offset 1488
 #define cutSparkOnHardLimit_offset 1488
 #define step1fuelCutEnable_offset 1488

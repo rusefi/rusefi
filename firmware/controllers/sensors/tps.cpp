@@ -129,7 +129,7 @@ bool hasTpsSensor(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 percent_t getTPS(DECLARE_ENGINE_PARAMETER_F) {
-	if (!engineConfiguration->hasTpsSensor)
+	if (!hasTpsSensor(PASS_ENGINE_PARAMETER_F))
 		return NO_TPS_MAGIC_VALUE;
 	// todo: if (config->isDualTps)
 	// todo: blah blah

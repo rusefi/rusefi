@@ -398,7 +398,7 @@ static void printThermistor(const char *msg, ThermistorConf *config, ThermistorM
 
 static void printTPSInfo(void) {
 #if (EFI_PROD_CODE && HAL_USE_ADC) || defined(__DOXYGEN__)
-	if (!engineConfiguration->hasTpsSensor) {
+	if (!hasTpsSensor()) {
 		scheduleMsg(&logger, "NO TPS SENSOR");
 		return;
 	}

@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Dec 25 12:28:24 EST 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 26 13:28:23 EST 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -634,7 +634,7 @@ public class Fields {
 	public static final int isGpsEnabled_offset = 1488;
 	public static final int isAlternatorControlEnabled_offset = 1488;
 	public static final int unusedBit__3_offset = 1488;
-	public static final int hasTpsSensor_offset = 1488;
+	public static final int unusedbit_8_offset = 1488;
 	public static final int cutFuelOnHardLimit_offset = 1488;
 	public static final int cutSparkOnHardLimit_offset = 1488;
 	public static final int step1fuelCutEnable_offset = 1488;
@@ -1387,7 +1387,7 @@ public class Fields {
 	public static final Field ISGPSENABLED = Field.create("ISGPSENABLED", 1488, FieldType.BIT, 12);
 	public static final Field ISALTERNATORCONTROLENABLED = Field.create("ISALTERNATORCONTROLENABLED", 1488, FieldType.BIT, 13);
 	public static final Field UNUSEDBIT__3 = Field.create("UNUSEDBIT__3", 1488, FieldType.BIT, 14);
-	public static final Field HASTPSSENSOR = Field.create("HASTPSSENSOR", 1488, FieldType.BIT, 15);
+	public static final Field UNUSEDBIT_8 = Field.create("UNUSEDBIT_8", 1488, FieldType.BIT, 15);
 	public static final Field CUTFUELONHARDLIMIT = Field.create("CUTFUELONHARDLIMIT", 1488, FieldType.BIT, 16);
 	public static final Field CUTSPARKONHARDLIMIT = Field.create("CUTSPARKONHARDLIMIT", 1488, FieldType.BIT, 17);
 	public static final Field STEP1FUELCUTENABLE = Field.create("STEP1FUELCUTENABLE", 1488, FieldType.BIT, 18);

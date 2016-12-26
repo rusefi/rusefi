@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Dec 25 10:23:53 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 26 13:28:23 EST 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1225,7 +1225,7 @@ typedef struct {
 	bool unusedBit__3 : 1;
 	/**
 	offset 1488 bit 15 */
-	bool hasTpsSensor : 1;
+	bool unusedbit_8 : 1;
 	/**
 	offset 1488 bit 16 */
 	bool cutFuelOnHardLimit : 1;
@@ -2006,4 +2006,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Dec 25 10:23:53 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 26 13:28:23 EST 2016
