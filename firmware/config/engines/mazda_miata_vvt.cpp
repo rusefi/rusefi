@@ -88,7 +88,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->auxPidPins[0] = GPIOE_3; // VVT solenoid control
 
-	boardConfiguration->tachOutputPin = GPIOE_8;
+	engineConfiguration->dizzySparkOutputPin = GPIOE_8;
 
 	// set_global_trigger_offset_angle 670
 	engineConfiguration->globalTriggerAngleOffset = 670;
