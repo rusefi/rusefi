@@ -4,6 +4,7 @@ import com.rusefi.io.CommandQueue;
 import com.rusefi.ui.MessagesView;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
+import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +27,7 @@ public class BenchTestPane {
     }
 
     private Component createMILTest() {
-        BenchTestPanel panel = new BenchTestPanel("check_engine.jpg", "MIL") {
+        BenchTestPanel panel = new BenchTestPanel("MIL", UiUtils.loadIcon("check_engine.jpg")) {
             @NotNull
             protected String getCommand() {
                 return "milbench";
@@ -36,7 +37,7 @@ public class BenchTestPane {
     }
 
     private Component createIdleTest() {
-        BenchTestPanel panel = new BenchTestPanel("idle_valve.png", "Idle Valve") {
+        BenchTestPanel panel = new BenchTestPanel("Idle Valve", UiUtils.loadIcon("idle_valve.png")) {
             @NotNull
             protected String getCommand() {
                 return "idlebench";
@@ -46,7 +47,7 @@ public class BenchTestPane {
     }
 
     private Component createFanTest() {
-        BenchTestPanel panel = new BenchTestPanel("radiator_fan.jpg", "Radiator Fan") {
+        BenchTestPanel panel = new BenchTestPanel("Radiator Fan", UiUtils.loadIcon("radiator_fan.jpg")) {
             @NotNull
             protected String getCommand() {
                 return "fanbench";
@@ -56,7 +57,7 @@ public class BenchTestPane {
     }
 
     private Component createFuelPumpTest() {
-        BenchTestPanel panel = new BenchTestPanel("fuel_pump.jpg", "Fuel Pump") {
+        BenchTestPanel panel = new BenchTestPanel("Fuel Pump", UiUtils.loadIcon("fuel_pump.jpg")) {
             @NotNull
             protected String getCommand() {
                 return "fuelpumpbench";
@@ -67,8 +68,8 @@ public class BenchTestPane {
 
     private Component createSparkTest() {
         final JComboBox<Integer> indexes = createIndexCombo();
-        JLabel label = new JLabel("Spark #", UiUtils.loadIcon("spark.jpg"), SwingConstants.LEFT);
-        BenchTestPanel panel = new BenchTestPanel(label, indexes) {
+        ImageIcon icon = UiUtils.loadIcon("spark.jpg");
+        BenchTestPanel panel = new BenchTestPanel("Spark #", icon, indexes) {
             @Override
             protected String getCommand() {
                 return "sparkbench2 1000 " + indexes.getSelectedItem() + " 5 333 3";
@@ -79,8 +80,8 @@ public class BenchTestPane {
 
     private Component createInjectorTest() {
         final JComboBox<Integer> indexes = createIndexCombo();
-        JLabel label = new JLabel("Injector #", UiUtils.loadIcon("injector.png"), SwingConstants.LEFT);
-        BenchTestPanel panel = new BenchTestPanel(label, indexes) {
+        ImageIcon icon = UiUtils.loadIcon("injector.png");
+        BenchTestPanel panel = new BenchTestPanel("Injector #", icon, indexes) {
             @Override
             protected String getCommand() {
                 return "fuelbench2 1000 " + indexes.getSelectedItem() + " 5 333 3";
@@ -106,20 +107,20 @@ public class BenchTestPane {
         final JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
         final JButton test = new JButton("Test");
 
-        public BenchTestPanel(String imageFileName, String label) {
-            this(new JLabel(label, UiUtils.loadIcon(imageFileName), SwingConstants.LEFT));
-        }
-
-        public BenchTestPanel(String label) {
-            this(new JLabel(label));
-        }
-
-        public BenchTestPanel(JComponent... components) {
+        public BenchTestPanel(String text, ImageIcon icon, JComponent... components) {
+            JPanel rightVerticalPanel = new JPanel(new VerticalFlowLayout());
+            rightVerticalPanel.add(new JLabel(text));
             for (JComponent component : components)
-                panel.add(component);
-            panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+                rightVerticalPanel.add(component);
+            rightVerticalPanel.add(test);
 
-            panel.add(test);
+            panel.add(new JLabel(icon));
+            panel.add(rightVerticalPanel);
+
+            int GAP = 3;
+
+            panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(GAP, GAP, GAP, GAP)));
+
             test.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
