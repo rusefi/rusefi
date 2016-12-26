@@ -254,10 +254,10 @@ void testStartupFuelPumping(void) {
 
 	mockTps = TPS_TS_CONVERSION * 3;
 	sf.update(PASS_ENGINE_PARAMETER_F);
-	assertEqualsM("pumpsCounter#2", 2, sf.pumpsCounter);
+	assertEqualsM("pumpsCounter#2", 1, sf.pumpsCounter);
 
 	sf.update(PASS_ENGINE_PARAMETER_F);
-	assertEqualsM("pc#3", 3, sf.pumpsCounter);
+	assertEqualsM("pc#3", 1, sf.pumpsCounter);
 
 	engine->rpmCalculator.mockRpm = 10;
 	sf.update(PASS_ENGINE_PARAMETER_F);
@@ -270,11 +270,11 @@ void testStartupFuelPumping(void) {
 
 	mockTps = TPS_TS_CONVERSION * 3;
 	sf.update(PASS_ENGINE_PARAMETER_F);
-	assertEqualsM("pc#6", 2, sf.pumpsCounter);
+	assertEqualsM("pc#6", 1, sf.pumpsCounter);
 
 	mockTps = TPS_TS_CONVERSION * 7;
 	sf.update(PASS_ENGINE_PARAMETER_F);
-	assertEqualsM("pc#7", 3, sf.pumpsCounter);
+	assertEqualsM("pc#7", 2, sf.pumpsCounter);
 }
 
 static void assertREquals(void *expected, void *actual) {
