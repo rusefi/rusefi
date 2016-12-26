@@ -101,13 +101,13 @@ void FuelSchedule::clear() {
 	isReady = false;
 }
 
-void FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_S) {
-	efiAssertVoid(engine!=NULL, "engine is NULL");
+bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_S) {
+	efiAssert(engine!=NULL, "engine is NULL", false);
 
 	if (cisnan(engine->rpmCalculator.oneDegreeUs)) {
 		// in order to have fuel schedule we need to have current RPM
 		// wonder if this line slows engine startup?
-		return;
+		return false;
 	}
 
 	/**
@@ -142,9 +142,9 @@ void FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_S) {
 
 	int cylindersCount = CONFIG(specs.cylindersCount);
 	if (cylindersCount < 1) {
-		firmwareError(OBD_PCM_Processor_Fault, "temp cylindersCount %d", cylindersCount);
+		warning(CUSTOM_OBD_ZERO_CYLINDER_COUNT, "temp cylindersCount %d", cylindersCount);
+		return false;
 	}
-	efiAssertVoid(cylindersCount > 0, "cylindersCount");
 
 	float angle = baseAngle
 			+ i * ENGINE(engineCycle) / cylindersCount;
@@ -179,12 +179,13 @@ void FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_S) {
 
 	ev->isSimultanious = isSimultanious;
 
-	efiAssertVoid(TRIGGER_SHAPE(getSize()) > 0, "uninitialized TriggerShape");
+	efiAssert(TRIGGER_SHAPE(getSize()) > 0, "uninitialized TriggerShape", false);
 
 	TRIGGER_SHAPE(findTriggerPosition(&ev->injectionStart, angle PASS_ENGINE_PARAMETER));
 #if EFI_UNIT_TEST
 	printf("registerInjectionEvent angle=%f trgIndex=%d inj %d\r\n", angle, ev->injectionStart.eventIndex, index);
 #endif
+	return true;
 }
 
 void FuelSchedule::addFuelEvents(DECLARE_ENGINE_PARAMETER_F) {
@@ -193,7 +194,9 @@ void FuelSchedule::addFuelEvents(DECLARE_ENGINE_PARAMETER_F) {
 	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 		InjectionEvent *ev = &elements[i];
 		ev->ownIndex = i;
-		addFuelEventsForCylinder(i PASS_ENGINE_PARAMETER);
+		bool result = addFuelEventsForCylinder(i PASS_ENGINE_PARAMETER);
+		if (!result)
+			return;
 	}
 	isReady = true;
 }
