@@ -27,7 +27,7 @@ public class BenchTestPane {
     }
 
     private Component createMILTest() {
-        BenchTestPanel panel = new BenchTestPanel("MIL", UiUtils.loadIcon("check_engine.jpg")) {
+        BenchTestPanel panel = new BenchTestPanel("MIL", "check_engine.jpg") {
             @NotNull
             protected String getCommand() {
                 return "milbench";
@@ -37,7 +37,7 @@ public class BenchTestPane {
     }
 
     private Component createIdleTest() {
-        BenchTestPanel panel = new BenchTestPanel("Idle Valve", UiUtils.loadIcon("idle_valve.png")) {
+        BenchTestPanel panel = new BenchTestPanel("Idle Valve", ("idle_valve.png")) {
             @NotNull
             protected String getCommand() {
                 return "idlebench";
@@ -47,7 +47,7 @@ public class BenchTestPane {
     }
 
     private Component createFanTest() {
-        BenchTestPanel panel = new BenchTestPanel("Radiator Fan", UiUtils.loadIcon("radiator_fan.jpg")) {
+        BenchTestPanel panel = new BenchTestPanel("Radiator Fan", "radiator_fan.jpg") {
             @NotNull
             protected String getCommand() {
                 return "fanbench";
@@ -57,7 +57,7 @@ public class BenchTestPane {
     }
 
     private Component createFuelPumpTest() {
-        BenchTestPanel panel = new BenchTestPanel("Fuel Pump", UiUtils.loadIcon("fuel_pump.jpg")) {
+        BenchTestPanel panel = new BenchTestPanel("Fuel Pump", "fuel_pump.jpg") {
             @NotNull
             protected String getCommand() {
                 return "fuelpumpbench";
@@ -68,8 +68,7 @@ public class BenchTestPane {
 
     private Component createSparkTest() {
         final JComboBox<Integer> indexes = createIndexCombo();
-        ImageIcon icon = UiUtils.loadIcon("spark.jpg");
-        BenchTestPanel panel = new BenchTestPanel("Spark #", icon, indexes) {
+        BenchTestPanel panel = new BenchTestPanel("Spark #", "spark.jpg", indexes) {
             @Override
             protected String getCommand() {
                 return "sparkbench2 1000 " + indexes.getSelectedItem() + " 5 333 3";
@@ -80,8 +79,7 @@ public class BenchTestPane {
 
     private Component createInjectorTest() {
         final JComboBox<Integer> indexes = createIndexCombo();
-        ImageIcon icon = UiUtils.loadIcon("injector.png");
-        BenchTestPanel panel = new BenchTestPanel("Injector #", icon, indexes) {
+        BenchTestPanel panel = new BenchTestPanel("Injector #", "injector.png", indexes) {
             @Override
             protected String getCommand() {
                 return "fuelbench2 1000 " + indexes.getSelectedItem() + " 5 333 3";
@@ -107,7 +105,8 @@ public class BenchTestPane {
         final JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
         final JButton test = new JButton("Test");
 
-        public BenchTestPanel(String text, ImageIcon icon, JComponent... components) {
+        public BenchTestPanel(String text, String iconFileName, JComponent... components) {
+            ImageIcon icon = UiUtils.loadIcon(iconFileName);
             JPanel rightVerticalPanel = new JPanel(new VerticalFlowLayout());
             rightVerticalPanel.add(new JLabel(text));
             for (JComponent component : components)
