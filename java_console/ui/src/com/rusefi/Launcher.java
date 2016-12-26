@@ -38,7 +38,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20161220;
+    public static final int CONSOLE_VERSION = 20161225;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -254,6 +254,7 @@ public class Launcher {
     public static void main(final String[] args) throws Exception {
         FileLog.MAIN.start();
         getConfig().load();
+        FileLog.suspendLogging = getConfig().getRoot().getBoolProperty(GaugesPanel.DISABLE_LOGS);
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
         VersionChecker.start();
         SwingUtilities.invokeAndWait(new Runnable() {

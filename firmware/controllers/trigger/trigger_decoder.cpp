@@ -283,7 +283,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			errorDetection.add(isDecodingError);
 
 			if (isTriggerDecoderError()) {
-				warning(CUSTOM_OBD_35, "trigger decoding issue. expected %d/%d/%d got %d/%d/%d",
+				warning(CUSTOM_OBD_TRG_DECODING, "trigger decoding issue. expected %d/%d/%d got %d/%d/%d",
 						TRIGGER_SHAPE(expectedEventCount[0]), TRIGGER_SHAPE(expectedEventCount[1]),
 						TRIGGER_SHAPE(expectedEventCount[2]), currentCycle.eventCount[0], currentCycle.eventCount[1],
 						currentCycle.eventCount[2]);

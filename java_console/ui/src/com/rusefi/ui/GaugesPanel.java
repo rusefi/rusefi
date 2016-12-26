@@ -18,6 +18,8 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
+
 /**
  * Date: 2/5/13
  * (c) Andrey Belomutskiy
@@ -54,6 +56,7 @@ public class GaugesPanel {
     private static final String SHOW_MESSAGES = "show_messages";
     private static final String SHOW_RPM = "show_rpm";
     private static final String SPLIT_LOCATION = "SPLIT_LOCATION";
+    public static final String DISABLE_LOGS = "DISABLE_LOGS";
     public static boolean IS_PAUSED; // dirty but works for not
 
     static {
@@ -159,6 +162,16 @@ public class GaugesPanel {
     @NotNull
     private JPopupMenu createMenu(final Node config) {
         JPopupMenu menu = new JPopupMenu();
+        final JCheckBoxMenuItem saveDetailedLogs = new JCheckBoxMenuItem("Save detailed logs");
+        saveDetailedLogs.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                FileLog.suspendLogging = !saveDetailedLogs.isSelected();
+                getConfig().getRoot().setBoolProperty(DISABLE_LOGS, FileLog.suspendLogging);
+            }
+        });
+        saveDetailedLogs.setSelected(!FileLog.suspendLogging);
+
         final JCheckBoxMenuItem showRpmItem = new JCheckBoxMenuItem("Show RPM");
         final JCheckBoxMenuItem showCommandsItem = new JCheckBoxMenuItem("Show Commands");
         showRpmItem.setSelected(showRpmPanel);
@@ -181,7 +194,8 @@ public class GaugesPanel {
         showCommandsItem.setSelected(showMessagesPanel);
         menu.add(showCommandsItem);
         menu.add(new JPopupMenu.Separator());
-        menu.add(new JPopupMenu("Reset Config"));
+        menu.add(saveDetailedLogs);
+        menu.add(new JPopupMenu("Reset Config")); // todo looks like not working
         return menu;
     }
 

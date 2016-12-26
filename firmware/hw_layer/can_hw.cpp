@@ -231,7 +231,7 @@ static msg_t canThread(void *arg) {
 			canRead(); // todo: since this is a blocking operation, do we need a separate thread for 'write'?
 
 		if (engineConfiguration->canSleepPeriod < 10) {
-			warning(CUSTOM_OBD_40, "%d too low CAN", engineConfiguration->canSleepPeriod);
+			warning(CUSTOM_OBD_LOW_CAN_PERIOD, "%d too low CAN", engineConfiguration->canSleepPeriod);
 			engineConfiguration->canSleepPeriod = 50;
 		}
 
