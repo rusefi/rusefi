@@ -81,11 +81,16 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->alternatorControlPin = GPIOE_10;
 	boardConfiguration->alternatorControlPinMode = OM_OPENDRAIN;
 
-	engineConfiguration->alternatorControl.offset = 35;
-	engineConfiguration->alternatorControl.pFactor = 60;
-	engineConfiguration->alternatorControl.iFactor = 10;
+	// enable altdebug
+	engineConfiguration->targetVBatt = 14.5;
+	engineConfiguration->alternatorControl.offset = 40;
+	engineConfiguration->alternatorControl.pFactor = 14;
+	engineConfiguration->alternatorControl.iFactor = 0.1;
 	engineConfiguration->alternatorControl.dFactor = 0;
 	engineConfiguration->alternatorDT = 10;
+
+	// set_idle_position 50
+	boardConfiguration->manIdlePosition = 50;
 
 
 	// set vvt_mode 3
@@ -122,6 +127,13 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	memcpy(config->ignitionRpmBins, ve18vvtRpmBins, sizeof(ve18vvtRpmBins));
 	memcpy(config->ignitionLoadBins, ve18vvtLoadBins, sizeof(ve18vvtLoadBins));
 	copyTimingTable(mapBased18vvtTimingTable, config->ignitionTable);
+
+	engineConfiguration->tpsMin = 100; // convert 12to10 bit (ADC/4)
+	engineConfiguration->tpsMax = 650; // convert 12to10 bit (ADC/4)
+
+	// enable cylinder_cleanup
+	engineConfiguration->isCylinderCleanupEnabled = true;
+
 
 
 //	0.0825
