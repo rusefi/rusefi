@@ -248,10 +248,14 @@ void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_F) {
 	periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 }
 
-char * getPinNameByAdcChannel(adc_channel_e hwChannel, char *buffer) {
+char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer) {
 #if HAL_USE_ADC || defined(__DOXYGEN__)
-	strcpy((char*) buffer, portname(getAdcChannelPort(hwChannel)));
-	itoa10(&buffer[2], getAdcChannelPin(hwChannel));
+	if (hwChannel == EFI_ADC_NONE) {
+		strcpy(buffer, "NONE");
+	} else {
+		strcpy((char*) buffer, portname(getAdcChannelPort(msg, hwChannel)));
+		itoa10(&buffer[2], getAdcChannelPin(hwChannel));
+	}
 #else
 	strcpy(buffer, "NONE");
 #endif
@@ -278,7 +282,7 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 
 	float voltage = adcVoltage * dividerCoeff;
 	scheduleMsg(&logger, "%s ADC%d %s %s adc=%f/input=%fv/divider=%f", name, hwChannel, getAdcMode(hwChannel),
-			getPinNameByAdcChannel(hwChannel, pinNameBuffer), adcVoltage, voltage, dividerCoeff);
+			getPinNameByAdcChannel(name, hwChannel, pinNameBuffer), adcVoltage, voltage, dividerCoeff);
 #endif
 }
 
@@ -510,7 +514,7 @@ static void initConfigActions(void) {
 // todo: move this logic somewhere else?
 static void getKnockInfo(void) {
 	adc_channel_e hwChannel = engineConfiguration->externalKnockSenseAdc;
-	scheduleMsg(&logger, "externalKnockSenseAdc on ADC", getPinNameByAdcChannel(hwChannel, pinNameBuffer));
+	scheduleMsg(&logger, "externalKnockSenseAdc on ADC", getPinNameByAdcChannel("knock", hwChannel, pinNameBuffer));
 
 	engine->printKnockState();
 }

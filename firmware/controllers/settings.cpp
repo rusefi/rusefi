@@ -385,7 +385,7 @@ static void printThermistor(const char *msg, ThermistorConf *config, ThermistorM
 	thermistor_conf_s *tc = &config->config;
 
 	scheduleMsg(&logger, "%s volts=%f Celsius=%f sensorR=%f on channel %d", msg, voltage, t, r, adcChannel);
-	scheduleMsg(&logger, "@%s", getPinNameByAdcChannel(adcChannel, pinNameBuffer));
+	scheduleMsg(&logger, "@%s", getPinNameByAdcChannel(msg, adcChannel, pinNameBuffer));
 	scheduleMsg(&logger, "C=%f/R=%f C=%f/R=%f C=%f/R=%f",
 			tc->tempC_1, tc->resistance_1,
 			tc->tempC_2, tc->resistance_2,
@@ -403,7 +403,7 @@ static void printTPSInfo(void) {
 		return;
 	}
 
-	ioportid_t port = getAdcChannelPort(engineConfiguration->tpsAdcChannel);
+	ioportid_t port = getAdcChannelPort("tps", engineConfiguration->tpsAdcChannel);
 	int pin = getAdcChannelPin(engineConfiguration->tpsAdcChannel);
 
 	scheduleMsg(&logger, "tps min (closed) %d/max (full) %d v=%f @%s%d", engineConfiguration->tpsMin, engineConfiguration->tpsMax,
