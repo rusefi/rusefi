@@ -106,7 +106,7 @@ static void showEthInfo(void) {
 	static char pinNameBuffer[16];
 
 	scheduleMsg(&logger, "pedal=%f %d/%d @", getPedalPosition(), engineConfiguration->pedalPositionMin, engineConfiguration->pedalPositionMax,
-			getPinNameByAdcChannel(engineConfiguration->pedalPositionChannel, pinNameBuffer));
+			getPinNameByAdcChannel("etb", engineConfiguration->pedalPositionChannel, pinNameBuffer));
 
 	scheduleMsg(&logger, "TPS=%f", getTPS());
 

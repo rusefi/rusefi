@@ -42,7 +42,7 @@ extern AdcDevice fastAdc;
 
 static void processAdcPin(AdcDevice *adc, int index) {
 	adc_channel_e hwIndex = adc->getAdcHardwareIndexByInternalIndex(index);
-	ioportid_t port = getAdcChannelPort(hwIndex);
+	ioportid_t port = getAdcChannelPort("test", hwIndex);
 	int pin = getAdcChannelPin(hwIndex);
 
 	int copy = stepCoutner;

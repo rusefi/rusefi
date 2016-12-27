@@ -286,6 +286,9 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 	boardConfiguration->clutchUpPin = GPIO_UNASSIGNED;
 	boardConfiguration->clutchUpPinMode = PI_PULLUP;
 
+	boardConfiguration->gps_rx_pin = GPIO_UNASSIGNED;
+	boardConfiguration->gps_tx_pin = GPIO_UNASSIGNED;
+
 	for (int i = 0;i < INJECTION_PIN_COUNT;i++) {
 		boardConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
 	}
@@ -743,8 +746,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->isAlternatorControlEnabled = true;
 
-	boardConfiguration->gps_rx_pin = GPIOB_7;
-	boardConfiguration->gps_tx_pin = GPIOB_6;
+//	boardConfiguration->gps_rx_pin = GPIOB_7;
+//	boardConfiguration->gps_tx_pin = GPIOB_6;
 
 	boardConfiguration->triggerInputPins[0] = GPIOC_6;
 	boardConfiguration->triggerInputPins[1] = GPIOA_5;

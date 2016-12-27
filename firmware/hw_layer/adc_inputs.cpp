@@ -297,7 +297,7 @@ adc_channel_e getAdcChannel(brain_pin_e pin) {
 	}
 }
 
-ioportid_t getAdcChannelPort(adc_channel_e hwChannel) {
+ioportid_t getAdcChannelPort(const char *msg, adc_channel_e hwChannel) {
 	// todo: replace this with an array :)
 	switch (hwChannel) {
 	case ADC_CHANNEL_IN0:
@@ -333,7 +333,7 @@ ioportid_t getAdcChannelPort(adc_channel_e hwChannel) {
 	case ADC_CHANNEL_IN15:
 		return GPIOC;
 	default:
-		firmwareError(OBD_PCM_Processor_Fault, "Unknown hw channel %d", hwChannel);
+		firmwareError(OBD_PCM_Processor_Fault, "Unknown hw channel %d [%s]", hwChannel, msg);
 		return NULL;
 	}
 }
@@ -390,7 +390,7 @@ int getAdcChannelPin(adc_channel_e hwChannel) {
 }
 
 static void initAdcHwChannel(adc_channel_e hwChannel) {
-	ioportid_t port = getAdcChannelPort(hwChannel);
+	ioportid_t port = getAdcChannelPort("adc", hwChannel);
 	int pin = getAdcChannelPin(hwChannel);
 
 	initAdcPin(port, pin, "hw");
@@ -461,7 +461,7 @@ static void printFullAdcReport(Logging *logger) {
 		appendMsgPrefix(logger);
 
 		adc_channel_e hwIndex = slowAdc.getAdcHardwareIndexByInternalIndex(index);
-		ioportid_t port = getAdcChannelPort(hwIndex);
+		ioportid_t port = getAdcChannelPort("print", hwIndex);
 		int pin = getAdcChannelPin(hwIndex);
 
 		int adcValue = slowAdc.getAdcValueByIndex(index);
@@ -511,7 +511,7 @@ static void addChannel(const char *name, adc_channel_e setting, adc_channel_mode
 		return;
 	}
 	if (adcHwChannelEnabled[setting] != ADC_OFF) {
-		getPinNameByAdcChannel(setting, errorMsgBuff);
+		getPinNameByAdcChannel(name, setting, errorMsgBuff);
 		firmwareError(OBD_PCM_Processor_Fault, "ADC mapping error: input %s for %s already used by %s?", errorMsgBuff, name, adcHwChannelUsage[setting]);
 	}
 

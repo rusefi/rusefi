@@ -149,7 +149,7 @@ static void showHipInfo(void) {
 	scheduleMsg(logger, "hip %fv/last=%f@%s/max=%f spiCount=%d adv=%d",
 			engine->knockVolts,
 			getVoltage("hipinfo", engineConfiguration->hipOutputChannel),
-			getPinNameByAdcChannel(engineConfiguration->hipOutputChannel, pinNameBuffer),
+			getPinNameByAdcChannel("hip", engineConfiguration->hipOutputChannel, pinNameBuffer),
 			hipValueMax,
 			spiCount, boardConfiguration->useTpicAdvancedMode);
 	scheduleMsg(logger, "mosi=%s", hwPortname(getMosiPin(hipSpiDevice)));

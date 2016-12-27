@@ -244,7 +244,7 @@ static void showLine(lcd_line_e line, int screenY) {
 		lcdPrintf(getIgnition_mode_e(engineConfiguration->ignitionMode));
 		return;
 	case LL_TPS:
-		getPinNameByAdcChannel(engineConfiguration->tpsAdcChannel, buffer);
+		getPinNameByAdcChannel("tps", engineConfiguration->tpsAdcChannel, buffer);
 
 		lcdPrintf("Throttle %s %f%%", buffer, getTPS());
 		return;
@@ -252,7 +252,7 @@ static void showLine(lcd_line_e line, int screenY) {
 		lcdPrintf("Battery %fv", getVBatt(PASS_ENGINE_PARAMETER_F));
 		return;
 	case LL_KNOCK:
-		getPinNameByAdcChannel(engineConfiguration->hipOutputChannel, buffer);
+		getPinNameByAdcChannel("hip", engineConfiguration->hipOutputChannel, buffer);
 		lcdPrintf("Knock %s %fv", buffer, engine->knockVolts);
 		return;
 
