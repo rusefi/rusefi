@@ -90,12 +90,12 @@ static ICUConfig cam_icucfg = { ICU_INPUT_ACTIVE_LOW, 100000, /* 100kHz ICU cloc
 cam_icu_width_callback, cam_icu_period_callback };
 
 
-static ICUDriver *turnOnTriggerInputPin(brain_pin_e hwPin, ICUConfig *icucfg) {
+static ICUDriver *turnOnTriggerInputPin(const char *msg, brain_pin_e hwPin, ICUConfig *icucfg) {
 	if (hwPin == GPIO_UNASSIGNED)
 		return NULL;
 
 	// configure pin
-	turnOnCapturePin("trigger", hwPin);
+	turnOnCapturePin(msg, hwPin);
 	icucfg->channel = getInputCaptureChannel(hwPin);
 
 	ICUDriver *driver = getInputCaptureDriver(hwPin);
@@ -161,12 +161,13 @@ void applyNewTriggerInputPins(void) {
 	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
 		if (boardConfiguration->triggerInputPins[i]
 				!= activeConfiguration.bc.triggerInputPins[i]) {
-			turnOnTriggerInputPin(boardConfiguration->triggerInputPins[i], &shaft_icucfg);
+			const char * msg = (i == 0 ? "trigger#1" : (i == 1 ? "trigger#2" : "trigger#3"));
+			turnOnTriggerInputPin(msg, boardConfiguration->triggerInputPins[i], &shaft_icucfg);
 		}
 	}
 
 	if (engineConfiguration->camInput != activeConfiguration.camInput) {
-		turnOnTriggerInputPin(engineConfiguration->camInput, &cam_icucfg);
+		turnOnTriggerInputPin("cam", engineConfiguration->camInput, &cam_icucfg);
 	}
 
 	rememberPrimaryChannel();
