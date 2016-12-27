@@ -533,14 +533,14 @@ extern pin_output_mode_e DEFAULT_OUTPUT;
 
 static void initStatisLeds() {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	outputPinRegisterExt2("communication status 1", &communicationPin,
+	outputPinRegisterExt2("led: comm status", &communicationPin,
 			engineConfiguration->communicationPin, &DEFAULT_OUTPUT);
 #endif
 
 #if EFI_WARNING_LED || defined(__DOXYGEN__)
-	outputPinRegister("warning", &warningPin, LED_WARNING_PORT,
+	outputPinRegister("led: warning status", &warningPin, LED_WARNING_PORT,
 	LED_WARNING_PIN);
-	outputPinRegisterExt2("is running status", &runningPin, engineConfiguration->runningPin,
+	outputPinRegisterExt2("led: running status", &runningPin, engineConfiguration->runningPin,
 			&DEFAULT_OUTPUT);
 #endif /* EFI_WARNING_LED */
 }
