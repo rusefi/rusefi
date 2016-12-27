@@ -81,6 +81,13 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->alternatorControlPin = GPIOE_10;
 	boardConfiguration->alternatorControlPinMode = OM_OPENDRAIN;
 
+	engineConfiguration->alternatorControl.offset = 35;
+	engineConfiguration->alternatorControl.pFactor = 60;
+	engineConfiguration->alternatorControl.iFactor = 10;
+	engineConfiguration->alternatorControl.dFactor = 0;
+	engineConfiguration->alternatorDT = 10;
+
+
 	// set vvt_mode 3
 	engineConfiguration->vvtMode = MIATA_NB2;
 	boardConfiguration->vvtCamSensorUseRise = true;
