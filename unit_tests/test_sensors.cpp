@@ -92,7 +92,7 @@ void testSensors(void) {
 	{
 		setThermistorConfiguration(&tc, 32, 9500, 75, 2100, 120, 1000);
 		tm.setConfig(&tc.config);
-		float t = getKelvinTemperature(2100, &tm);
+		float t = tm.getKelvinTemperatureByResistance(2100);
 		assertEquals(75 + KELV, t);
 
 		assertEquals(-0.003, tm.s_h_a);
@@ -106,7 +106,7 @@ void testSensors(void) {
 		setThermistorConfiguration(&tc, 0, 32500, 30, 7550, 100, 700);
 		tm.setConfig(&tc.config);
 
-		float t = getKelvinTemperature(38000, &tm);
+		float t = tm.getKelvinTemperatureByResistance(38000);
 		assertEquals(-2.7983, t - KELV);
 
 		assertEqualsM("A", 0.0009, tm.s_h_a);

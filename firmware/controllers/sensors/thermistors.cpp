@@ -49,14 +49,13 @@ float getVoutInVoltageDividor(float Vin, float r1, float r2) {
 	return r2 * Vin / (r1 + r2);
 }
 
-float getKelvinTemperature(float resistance, ThermistorMath *tm) {
-
+float ThermistorMath::getKelvinTemperatureByResistance(float resistance) {
 	if (resistance <= 0) {
 		//warning("Invalid resistance in getKelvinTemperature=", resistance);
 		return 0.0f;
 	}
 	float logR = logf(resistance);
-	return 1 / (tm->s_h_a + tm->s_h_b * logR + tm->s_h_c * logR * logR * logR);
+	return 1 / (s_h_a + s_h_b * logR + s_h_c * logR * logR * logR);
 }
 
 float convertCelsiustoF(float tempC) {
@@ -90,7 +89,7 @@ float getTemperatureC(ThermistorConf *config, ThermistorMath *tm) {
 	float voltage = getVoltageDivided("term", config->adcChannel);
 	float resistance = getResistance(config, voltage);
 
-	float kelvinTemperature = getKelvinTemperature(resistance, tm);
+	float kelvinTemperature = tm->getKelvinTemperatureByResistance(resistance);
 	return convertKelvinToCelcius(kelvinTemperature);
 }
 
@@ -216,7 +215,7 @@ void setCommonNTCSensor(ThermistorConf *thermistorConf) {
 #if EFI_PROD_CODE
 static void testCltByR(float resistance) {
 	// we expect slowPeriodicCallback to already update configuration in the curve helper class see setConfig
-	float kTemp = getKelvinTemperature(resistance, &engine->engineState.cltCurve);
+	float kTemp = engine->engineState.cltCurve.getKelvinTemperatureByResistance(resistance);
 	scheduleMsg(logger, "for R=%f we have %f", resistance, (kTemp - KELV));
 }
 #endif
