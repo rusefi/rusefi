@@ -255,7 +255,7 @@ static void setIdleDT(int value) {
 	showIdleInfo();
 }
 
-static void startIdleBench(void) {
+void startIdleBench(void) {
 	timeToStopIdleTest = getTimeNowUs() + MS2US(3000); // 3 seconds
 	scheduleMsg(logger, "idle valve bench test");
 	showIdleInfo();

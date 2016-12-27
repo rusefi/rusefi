@@ -24,6 +24,7 @@
 #include "injector_central.h"
 #include "engine_controller.h"
 #include "mmc_card.h"
+#include "idle_thread.h"
 
 #if EFI_HD44780_LCD || defined(__DOXYGEN__)
 
@@ -60,6 +61,7 @@ static MenuItem miStopEngine(&miBench, "stop engine", stopEngine);
 static MenuItem miTestFan(&miBench, "test fan", fanBench);
 static MenuItem miTestFuelPump(&miBench, "test pump", fuelPumpBench);
 static MenuItem miTestMIL(&miBench, "test MIL", milBench);
+static MenuItem miTestIAC(&miBench, "test IAC", startIdleBench);
 // todo: looks like these are not finished yet?
 static MenuItem miTestSpark1(&miBench, "test spark1");
 static MenuItem miTestSpark2(&miBench, "test spark2");
