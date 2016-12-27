@@ -584,8 +584,8 @@ bit unusedBit__4
 	bit canReadEnabled
 	bit canWriteEnabled
 	bit hasVehicleSpeedSensor
-	bit isJoystickEnabled
-	bit isGpsEnabled
+	bit unusedbit_9
+	bit unusedbit_10
 	bit isAlternatorControlEnabled
 	bit unusedBit__3
 	bit unusedbit_8

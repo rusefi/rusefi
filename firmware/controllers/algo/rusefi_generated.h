@@ -626,8 +626,8 @@
 #define canReadEnabled_offset 1488
 #define canWriteEnabled_offset 1488
 #define hasVehicleSpeedSensor_offset 1488
-#define isJoystickEnabled_offset 1488
-#define isGpsEnabled_offset 1488
+#define unusedbit_9_offset 1488
+#define unusedbit_10_offset 1488
 #define isAlternatorControlEnabled_offset 1488
 #define unusedBit__3_offset 1488
 #define unusedbit_8_offset 1488

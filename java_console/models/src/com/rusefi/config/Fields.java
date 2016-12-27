@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 26 13:28:23 EST 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 27 12:09:43 EST 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -630,8 +630,8 @@ public class Fields {
 	public static final int canReadEnabled_offset = 1488;
 	public static final int canWriteEnabled_offset = 1488;
 	public static final int hasVehicleSpeedSensor_offset = 1488;
-	public static final int isJoystickEnabled_offset = 1488;
-	public static final int isGpsEnabled_offset = 1488;
+	public static final int unusedbit_9_offset = 1488;
+	public static final int unusedbit_10_offset = 1488;
 	public static final int isAlternatorControlEnabled_offset = 1488;
 	public static final int unusedBit__3_offset = 1488;
 	public static final int unusedbit_8_offset = 1488;
@@ -1383,8 +1383,8 @@ public class Fields {
 	public static final Field CANREADENABLED = Field.create("CANREADENABLED", 1488, FieldType.BIT, 8);
 	public static final Field CANWRITEENABLED = Field.create("CANWRITEENABLED", 1488, FieldType.BIT, 9);
 	public static final Field HASVEHICLESPEEDSENSOR = Field.create("HASVEHICLESPEEDSENSOR", 1488, FieldType.BIT, 10);
-	public static final Field ISJOYSTICKENABLED = Field.create("ISJOYSTICKENABLED", 1488, FieldType.BIT, 11);
-	public static final Field ISGPSENABLED = Field.create("ISGPSENABLED", 1488, FieldType.BIT, 12);
+	public static final Field UNUSEDBIT_9 = Field.create("UNUSEDBIT_9", 1488, FieldType.BIT, 11);
+	public static final Field UNUSEDBIT_10 = Field.create("UNUSEDBIT_10", 1488, FieldType.BIT, 12);
 	public static final Field ISALTERNATORCONTROLENABLED = Field.create("ISALTERNATORCONTROLENABLED", 1488, FieldType.BIT, 13);
 	public static final Field UNUSEDBIT__3 = Field.create("UNUSEDBIT__3", 1488, FieldType.BIT, 14);
 	public static final Field UNUSEDBIT_8 = Field.create("UNUSEDBIT_8", 1488, FieldType.BIT, 15);

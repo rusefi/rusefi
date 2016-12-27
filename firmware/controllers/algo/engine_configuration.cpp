@@ -743,7 +743,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->isAlternatorControlEnabled = true;
 
-	engineConfiguration->isGpsEnabled = false;
 	boardConfiguration->gps_rx_pin = GPIOB_7;
 	boardConfiguration->gps_tx_pin = GPIOB_6;
 
@@ -1060,7 +1059,6 @@ void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration) {
 }
 
 void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {
-	engineConfiguration->isJoystickEnabled = true;
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	boardConfiguration->joystickCenterPin = GPIOC_8;
 	boardConfiguration->joystickAPin = GPIOD_10;

@@ -131,8 +131,16 @@ static void applyPin(brain_pin_e pin) {
 	extcfg.channels[index].cb = extCallback;
 }
 
+static bool isJoystickEnabled() {
+	return boardConfiguration->joystickCenterPin != GPIO_UNASSIGNED ||
+			boardConfiguration->joystickAPin != GPIO_UNASSIGNED ||
+			boardConfiguration->joystickBPin != GPIO_UNASSIGNED ||
+			boardConfiguration->joystickCPin != GPIO_UNASSIGNED ||
+			boardConfiguration->joystickDPin != GPIO_UNASSIGNED;
+}
+
 void initJoystick(Logging *shared) {
-	if (!engineConfiguration->isJoystickEnabled)
+	if (!isJoystickEnabled())
 		return;
 	sharedLogger = shared;
 
