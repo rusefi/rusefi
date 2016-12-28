@@ -151,6 +151,13 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
+
+	/**
+	 * http://miataturbo.wikidot.com/fuel-injectors
+	 * 01-05 (purple) - #195500-4060
+	 */
+	engineConfiguration->injector.flow = 265;
+
 }
 
 
