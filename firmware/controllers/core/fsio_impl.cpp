@@ -132,6 +132,22 @@ static void setFsioInputPin(const char *indexStr, const char *pinName) {
 	scheduleMsg(logger, "FSIO input pin #%d [%s]", (index + 1), hwPortname(pin));
 }
 
+static void setFsioPidOutputPin(const char *indexStr, const char *pinName) {
+	int index = atoi(indexStr) - 1;
+	if (index < 0 || index >= AUX_PID_COUNT) {
+		scheduleMsg(logger, "invalid AUX index: %d", index);
+		return;
+	}
+	brain_pin_e pin = parseBrainPin(pinName);
+	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
+	if (pin == GPIO_INVALID) {
+		scheduleMsg(logger, "invalid pin name [%s]", pinName);
+		return;
+	}
+	engineConfiguration->auxPidPins[index] = pin;
+	scheduleMsg(logger, "FSIO aux pin #%d [%s]", (index + 1), hwPortname(pin));
+}
+
 static void setFsioOutputPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= LE_COMMAND_COUNT) {
@@ -318,7 +334,7 @@ void runFsio(void) {
 	}
 
 #if EFI_FUEL_PUMP || defined(__DOXYGEN__)
-	if (boardConfiguration->fuelPumpPin != GPIO_UNASSIGNED && engineConfiguration->isFuelPumpEnabled) {
+	if (boardConfiguration->fuelPumpPin != GPIO_UNASSIGNED) {
 		setPinState("pump", &enginePins.fuelPumpRelay, fuelPumpLogic, engine);
 	}
 #endif /* EFI_FUEL_PUMP */
@@ -368,6 +384,17 @@ static void showFsioInfo(void) {
 	showFsio("fuel", fuelPumpLogic);
 	showFsio("fan", radiatorFanLogic);
 	showFsio("alt", alternatorLogic);
+
+	for (int i = 0; i < AUX_PID_COUNT ; i++) {
+		brain_pin_e pin = engineConfiguration->auxPidPins[i];
+		if (pin != GPIO_UNASSIGNED) {
+			scheduleMsg(logger, "FSIO aux #%d [%s]", (i + 1),
+					hwPortname(pin));
+
+		}
+	}
+
+
 
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		char * exp = config->le_formulas[i];
@@ -488,6 +515,7 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 		}
 	}
 
+	addConsoleActionSS("set_fsio_pid_output_pin", (VoidCharPtrCharPtr) setFsioPidOutputPin);
 	addConsoleActionSS("set_fsio_output_pin", (VoidCharPtrCharPtr) setFsioOutputPin);
 	addConsoleActionII("set_fsio_output_frequency", (VoidIntInt) setFsioFrequency);
 	addConsoleActionSS("set_fsio_input_pin", (VoidCharPtrCharPtr) setFsioInputPin);

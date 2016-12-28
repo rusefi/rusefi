@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 27 12:09:43 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 27 23:08:47 EST 2016
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1259,6 +1259,7 @@ typedef struct {
 	bool isIgnitionEnabled : 1;
 	/**
 	 * If TPS above 95% no fuel would be injected during cranking
+	 * enable cylinder_cleanup
 	offset 1500 bit 2 */
 	bool isCylinderCleanupEnabled : 1;
 	/**
@@ -1271,12 +1272,11 @@ typedef struct {
 	offset 1500 bit 5 */
 	bool isMapAveragingEnabled : 1;
 	/**
-	 * enable mil
 	offset 1500 bit 6 */
-	bool isMilEnabled : 1;
+	bool anotherUnusedBit1 : 1;
 	/**
 	offset 1500 bit 7 */
-	bool isFuelPumpEnabled : 1;
+	bool anotherUnusedBit2 : 1;
 	/**
 	offset 1500 bit 8 */
 	bool isTunerStudioEnabled : 1;
@@ -2006,4 +2006,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 27 12:09:43 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 27 23:08:47 EST 2016

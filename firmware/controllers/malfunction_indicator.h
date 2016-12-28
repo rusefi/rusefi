@@ -16,6 +16,7 @@
 
 #if EFI_MALFUNCTION_INDICATOR || defined(__DOXYGEN__)
 
+bool isMilEnabled();
 void initMalfunctionIndicator(void);
 
 #endif /* EFI_MALFUNCTION_INDICATOR */

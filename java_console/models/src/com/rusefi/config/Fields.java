@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 27 12:09:43 EST 2016
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 27 23:08:47 EST 2016
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -648,8 +648,8 @@ public class Fields {
 	public static final int secondTriggerChannelEnabled_offset = 1500;
 	public static final int needSecondTriggerInputDeprecated_offset = 1500;
 	public static final int isMapAveragingEnabled_offset = 1500;
-	public static final int isMilEnabled_offset = 1500;
-	public static final int isFuelPumpEnabled_offset = 1500;
+	public static final int anotherUnusedBit1_offset = 1500;
+	public static final int anotherUnusedBit2_offset = 1500;
 	public static final int isTunerStudioEnabled_offset = 1500;
 	public static final int isWaveAnalyzerEnabled_offset = 1500;
 	public static final int isIdleThreadEnabled_offset = 1500;
@@ -1401,8 +1401,8 @@ public class Fields {
 	public static final Field SECONDTRIGGERCHANNELENABLED = Field.create("SECONDTRIGGERCHANNELENABLED", 1500, FieldType.BIT, 3);
 	public static final Field NEEDSECONDTRIGGERINPUTDEPRECATED = Field.create("NEEDSECONDTRIGGERINPUTDEPRECATED", 1500, FieldType.BIT, 4);
 	public static final Field ISMAPAVERAGINGENABLED = Field.create("ISMAPAVERAGINGENABLED", 1500, FieldType.BIT, 5);
-	public static final Field ISMILENABLED = Field.create("ISMILENABLED", 1500, FieldType.BIT, 6);
-	public static final Field ISFUELPUMPENABLED = Field.create("ISFUELPUMPENABLED", 1500, FieldType.BIT, 7);
+	public static final Field ANOTHERUNUSEDBIT1 = Field.create("ANOTHERUNUSEDBIT1", 1500, FieldType.BIT, 6);
+	public static final Field ANOTHERUNUSEDBIT2 = Field.create("ANOTHERUNUSEDBIT2", 1500, FieldType.BIT, 7);
 	public static final Field ISTUNERSTUDIOENABLED = Field.create("ISTUNERSTUDIOENABLED", 1500, FieldType.BIT, 8);
 	public static final Field ISWAVEANALYZERENABLED = Field.create("ISWAVEANALYZERENABLED", 1500, FieldType.BIT, 9);
 	public static final Field ISIDLETHREADENABLED = Field.create("ISIDLETHREADENABLED", 1500, FieldType.BIT, 10);
