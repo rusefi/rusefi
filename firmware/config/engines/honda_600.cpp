@@ -72,7 +72,6 @@ void setHonda600(DECLARE_ENGINE_PARAMETER_F) {
 	// set_global_trigger_offset_angle 540
 	engineConfiguration->globalTriggerAngleOffset = 540;
 
-    engineConfiguration->isFuelPumpEnabled = true;
     engineConfiguration->specs.cylindersCount = 4;
     engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;

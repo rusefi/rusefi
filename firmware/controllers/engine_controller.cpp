@@ -623,9 +623,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
 #if EFI_MALFUNCTION_INDICATOR || defined(__DOXYGEN__)
-	if (engineConfiguration->isMilEnabled) {
-		initMalfunctionIndicator();
-	}
+	initMalfunctionIndicator();
 #endif /* EFI_MALFUNCTION_INDICATOR */
 
 #if EFI_MAP_AVERAGING || defined(__DOXYGEN__)

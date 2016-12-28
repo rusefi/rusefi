@@ -33,12 +33,12 @@
 
 #if EFI_MALFUNCTION_INDICATOR || defined(__DOXYGEN__)
 
+EXTERN_ENGINE;
+
 #define MFI_LONG_BLINK	1500
 #define MFI_SHORT_BLINK	400
 #define MFI_BLINK_SEPARATOR 400
 #define MFI_CHECKENGINE_LIGHT 10000
-
-extern EnginePins enginePins;
 
 static THD_WORKING_AREA(mfiThreadStack, UTILITY_THREAD_STACK_SIZE);	// declare thread
 
@@ -88,7 +88,7 @@ __attribute__((noreturn))    static msg_t mfiThread(void)
 	chRegSetThreadName("MFIndicator");
 	error_codes_set_s localErrorCopy;
 
-	while (TRUE) {
+	while (true) {
 		chThdSleepSeconds(10);
 
 		getErrorCodes(&localErrorCopy);
@@ -105,7 +105,14 @@ static void testMil(void) {
 	addError(OBD_Intake_Air_Temperature_Circuit_Malfunction);
 }
 
+bool isMilEnabled() {
+	return boardConfiguration->malfunctionIndicatorPin != GPIO_UNASSIGNED;
+}
+
 void initMalfunctionIndicator(void) {
+	if (!isMilEnabled()) {
+		return;
+	}
 	// create static thread
 	chThdCreateStatic(mfiThreadStack, sizeof(mfiThreadStack), LOWPRIO, (tfunc_t) mfiThread, NULL);
 

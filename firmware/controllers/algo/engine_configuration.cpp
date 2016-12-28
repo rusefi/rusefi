@@ -678,8 +678,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->secondTriggerChannelEnabled = true;
 
 	engineConfiguration->isMapAveragingEnabled = true;
-	engineConfiguration->isMilEnabled = true;
-	engineConfiguration->isFuelPumpEnabled = true;
 	engineConfiguration->isTunerStudioEnabled = true;
 	engineConfiguration->isWaveAnalyzerEnabled = true;
 	engineConfiguration->isIdleThreadEnabled = true;

@@ -601,12 +601,12 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 
 	bit isInjectionEnabled;+enable injection
 	bit isIgnitionEnabled;+enable ignition
-	bit isCylinderCleanupEnabled;+If TPS above 95% no fuel would be injected during cranking 
+	bit isCylinderCleanupEnabled;+If TPS above 95% no fuel would be injected during cranking\nenable cylinder_cleanup 
 	bit secondTriggerChannelEnabled
 	bit needSecondTriggerInputDeprecated
 	bit isMapAveragingEnabled
-	bit isMilEnabled;+enable mil
-	bit isFuelPumpEnabled
+	bit anotherUnusedBit1
+	bit anotherUnusedBit2
 	bit isTunerStudioEnabled
 	bit isWaveAnalyzerEnabled
 	bit isIdleThreadEnabled

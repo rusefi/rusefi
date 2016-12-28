@@ -256,9 +256,8 @@ void printConfiguration(engine_configuration_s *engineConfiguration) {
 
 	printOutputs(engineConfiguration);
 
-	scheduleMsg(&logger, "map_avg=%s/mil=%s/fp=%s/ts=%s/wa=%s/it=%s/fastAdc=%s",
-			boolToString(engineConfiguration->isMapAveragingEnabled), boolToString(engineConfiguration->isMilEnabled),
-			boolToString(engineConfiguration->isFuelPumpEnabled),
+	scheduleMsg(&logger, "map_avg=%s/ts=%s/wa=%s/it=%s/fastAdc=%s",
+			boolToString(engineConfiguration->isMapAveragingEnabled),
 			boolToString(engineConfiguration->isTunerStudioEnabled),
 			boolToString(engineConfiguration->isWaveAnalyzerEnabled),
 			boolToString(engineConfiguration->isIdleThreadEnabled), boolToString(boardConfiguration->isFastAdcEnabled));
@@ -889,10 +888,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		boardConfiguration->isEngineControlEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "map_avg")) {
 		engineConfiguration->isMapAveragingEnabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "mil")) {
-		engineConfiguration->isMilEnabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "fuel_pump")) {
-		engineConfiguration->isFuelPumpEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "tunerstudio")) {
 		engineConfiguration->isTunerStudioEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "wave_analyzer")) {
