@@ -10,6 +10,8 @@
 
 #include "mazda_miata_vvt.h"
 #include "custom_engine.h"
+#include "fsio_impl.h"
+
 
 EXTERN_ENGINE;
 
@@ -89,8 +91,8 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->alternatorControl.dFactor = 0;
 	engineConfiguration->alternatorDT = 10;
 
-	// set_idle_position 50
-	boardConfiguration->manIdlePosition = 50;
+	// set_idle_position 35
+	boardConfiguration->manIdlePosition = 35;
 
 
 	// set vvt_mode 3
@@ -98,7 +100,14 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->vvtCamSensorUseRise = true;
 	engineConfiguration->vvtOffset = -70;
 
-	engineConfiguration->auxPidPins[0] = GPIOE_3; // VVT solenoid control
+//	engineConfiguration->auxPidPins[0] = GPIOE_3; // VVT solenoid control
+	//	/**
+	//	 * set_fsio_setting 0 0.55
+	//	 */
+	boardConfiguration->fsio_setting[0] = 0.0;
+	setFsioExt(0, GPIOE_3, "0 fsio_setting", 400 PASS_ENGINE_PARAMETER);
+
+
 
 	engineConfiguration->dizzySparkOutputPin = GPIOE_8;
 
@@ -119,6 +128,8 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->ignitionPins[2] = GPIOC_9;
 	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
+
+	// set_whole_ve_map 80
 
 	memcpy(config->veRpmBins, ve18vvtRpmBins, sizeof(ve18vvtRpmBins));
 	memcpy(config->veLoadBins, ve18vvtLoadBins, sizeof(ve18vvtLoadBins));
@@ -157,6 +168,8 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	 * 01-05 (purple) - #195500-4060
 	 */
 	engineConfiguration->injector.flow = 265;
+
+	boardConfiguration->malfunctionIndicatorPin = GPIOD_9;
 
 }
 
