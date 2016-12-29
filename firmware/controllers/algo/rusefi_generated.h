@@ -644,8 +644,8 @@
 #define secondTriggerChannelEnabled_offset 1500
 #define needSecondTriggerInputDeprecated_offset 1500
 #define isMapAveragingEnabled_offset 1500
-#define isMilEnabled_offset 1500
-#define isFuelPumpEnabled_offset 1500
+#define anotherUnusedBit1_offset 1500
+#define anotherUnusedBit2_offset 1500
 #define isTunerStudioEnabled_offset 1500
 #define isWaveAnalyzerEnabled_offset 1500
 #define isIdleThreadEnabled_offset 1500
