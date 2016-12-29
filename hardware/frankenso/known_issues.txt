@@ -119,6 +119,7 @@
 119) RESOLVED IN R0.5 change the injector mosfet to VNS14NV04P-E
 120) RESOLVED IN R0.5 "PB1 reset defaults" actually it's PD6
 121)		      XTAL x2 pinout should be #1 and #4
+122)                  need a jumper between W2 and D12-D23 - NB2 miata fly-back should be wired into main relay 12v not ignition on 12v
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
