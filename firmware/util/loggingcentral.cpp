@@ -69,7 +69,9 @@ void scheduleLogging(Logging *logging) {
  * this method should always be invoked from the same thread!
  */
 char * swapOutputBuffers(int *actualOutputBufferSize) {
+#if EFI_ENABLE_ASSERTS || defined(__DOXYGEN__)
 	int expectedOutputSize;
+#endif /* EFI_ENABLE_ASSERTS */
 	{ // start of critical section
 		lockOutputBuffer();
 		/**
@@ -77,7 +79,7 @@ char * swapOutputBuffers(int *actualOutputBufferSize) {
 		 */
 		char *temp = outputBuffer;
 
-#if EFI_ENABLE_ASSERTS
+#if EFI_ENABLE_ASSERTS || defined(__DOXYGEN__)
 		expectedOutputSize = accumulatedSize;
 #endif /* EFI_ENABLE_ASSERTS */
 		outputBuffer = accumulationBuffer;
@@ -90,7 +92,12 @@ char * swapOutputBuffers(int *actualOutputBufferSize) {
 	} // end of critical section
 
 	*actualOutputBufferSize = efiStrlen(outputBuffer);
-	efiAssert(*actualOutputBufferSize == expectedOutputSize, "out constr", NULL);
+#if EFI_ENABLE_ASSERTS || defined(__DOXYGEN__)
+	if (*actualOutputBufferSize != expectedOutputSize) {
+		firmwareError(OBD_PCM_Processor_Fault, "out constr %d/%d", *actualOutputBufferSize, expectedOutputSize);
+		return NULL;
+	}
+#endif /* EFI_ENABLE_ASSERTS */
 	return outputBuffer;
 }
 
