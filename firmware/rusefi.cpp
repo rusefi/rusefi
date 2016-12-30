@@ -126,6 +126,7 @@ bool main_loop_started = false;
 static MemoryStream firmwareErrorMessageStream;
 static char panicMessage[200];
 
+// todo: define custom type and fix 'extern char errorMessageBuffer[200];' horror
 uint8_t errorMessageBuffer[200];
 bool hasFirmwareErrorFlag = false;
 

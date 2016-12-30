@@ -30,6 +30,8 @@
 
 EXTERN_ENGINE
 ;
+extern bool hasFirmwareErrorFlag;
+extern char errorMessageBuffer[200];
 
 static MenuItem ROOT(NULL, NULL);
 
@@ -341,7 +343,9 @@ void updateHD44780lcd(Engine *engine) {
 		fillWithSpaces();
 	}
 
-	memcpy(buffer, getWarning(), engineConfiguration->HD44780width);
+
+	const char * message = hasFirmwareErrorFlag ? (char *)&errorMessageBuffer : getWarning();
+	memcpy(buffer, message, engineConfiguration->HD44780width);
 	buffer[engineConfiguration->HD44780width] = 0;
 	lcd_HD44780_set_position(engineConfiguration->HD44780height - 1, 0);
 	lcd_HD44780_print_string(buffer);

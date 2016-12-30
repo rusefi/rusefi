@@ -76,6 +76,13 @@ void addWarningCode(obd_code_e code) {
 	engine->engineState.lastErrorCode = code;
 }
 
+// todo: move to some util file & reuse for 'firmwareError' method
+void printToStream(MemoryStream *stream, const char *fmt, va_list ap) {
+	stream->eos = 0; // reset
+	chvprintf((BaseSequentialStream *) stream, fmt, ap);
+	stream->buffer[stream->eos] = 0;
+}
+
 /**
  * OBD_PCM_Processor_Fault is the general error code for now
  *
@@ -100,12 +107,11 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 	resetLogging(&logger); // todo: is 'reset' really needed here?
 	appendMsgPrefix(&logger);
 
+	append(&logger, WARNING_PREFIX);
+
 	va_list ap;
 	va_start(ap, fmt);
-	append(&logger, WARNING_PREFIX);
-	warningStream.eos = 0; // reset
-	chvprintf((BaseSequentialStream *) &warningStream, fmt, ap);
-	warningStream.buffer[warningStream.eos] = 0;
+	printToStream(&warningStream, fmt, ap);
 	va_end(ap);
 
 	append(&logger, warningBuffer);
