@@ -206,9 +206,4 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
 
 	engineConfiguration->injectionMode = IM_BATCH;
-	engineConfiguration->warningPeriod = 0;
-
-
 }
-
-
