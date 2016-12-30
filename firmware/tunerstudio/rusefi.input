@@ -750,7 +750,7 @@ fileVersion = { 20161225 }
    ochGetCommand    = "O"
 
 ; see TS_OUTPUT_SIZE in console source code
-   ochBlockSize     = 356
+   ochBlockSize     = 276
 
       rpm             = scalar,  U32,      0,             "RPM",            1,   0.00000
 #if CELSIUS
