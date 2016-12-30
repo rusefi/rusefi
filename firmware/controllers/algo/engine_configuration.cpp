@@ -242,6 +242,12 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 
+	boardConfiguration->joystickCenterPin = GPIO_UNASSIGNED;
+	boardConfiguration->joystickAPin = GPIO_UNASSIGNED;
+	boardConfiguration->joystickBPin = GPIO_UNASSIGNED;
+	boardConfiguration->joystickCPin = GPIO_UNASSIGNED;
+	boardConfiguration->joystickDPin = GPIO_UNASSIGNED;
+
 	activeConfiguration->dizzySparkOutputPin = GPIO_UNASSIGNED;
 
 	boardConfiguration->acRelayPin = GPIO_UNASSIGNED;
