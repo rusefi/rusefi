@@ -132,7 +132,7 @@ typedef struct {
 	float debugFloatField6; // 256
 	float debugFloatField7; // 260
 	int firmwareVersion; // 264
-	int unused3[22];
+	int unused3[2];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */
