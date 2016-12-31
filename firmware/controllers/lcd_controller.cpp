@@ -31,7 +31,7 @@
 EXTERN_ENGINE
 ;
 extern bool hasFirmwareErrorFlag;
-extern char errorMessageBuffer[200];
+extern fatal_msg_t errorMessageBuffer;
 
 static MenuItem ROOT(NULL, NULL);
 

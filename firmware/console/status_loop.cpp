@@ -406,7 +406,7 @@ static void printInfo(systime_t nowSeconds) {
 
 static systime_t timeOfPreviousReport = (systime_t) -1;
 
-extern char errorMessageBuffer[200];
+extern fatal_msg_t errorMessageBuffer;
 
 /**
  * @brief Sends all pending data to dev console

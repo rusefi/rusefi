@@ -31,6 +31,8 @@ void addWarningCode(obd_code_e code);
  */
 bool warning(obd_code_e code, const char *fmt, ...);
 bool isWarningNow(efitimesec_t now, bool forIndicator);
+
+typedef uint8_t fatal_msg_t[200];
 /**
  * Something really bad had happened - firmware cannot function
  *
