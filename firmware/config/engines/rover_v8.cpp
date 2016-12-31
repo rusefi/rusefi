@@ -15,6 +15,7 @@
 
 #include "main.h"
 #include "rover_v8.h"
+#include "engine_math.h"
 
 void setFrankenstein_01_LCD(board_configuration_s *boardConfiguration) {
 	boardConfiguration->HD44780_rs = GPIOE_9;
@@ -80,4 +81,15 @@ void setRoverv8(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->canWriteEnabled = true;
 	engineConfiguration->canReadEnabled = false;
 	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
+
+
+	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
+
+	// todo: make this official Frankenstein joystick?
+	boardConfiguration->joystickCenterPin = GPIOD_8;
+	boardConfiguration->joystickAPin = GPIOD_10;
+	boardConfiguration->joystickBPin = GPIO_UNASSIGNED;
+	boardConfiguration->joystickCPin = GPIO_UNASSIGNED;
+	boardConfiguration->joystickDPin = GPIOD_11;
+
 }
