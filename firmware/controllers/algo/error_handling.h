@@ -18,8 +18,6 @@ extern "C"
 #include "stdbool.h"
 #include "rusefi_types.h"
 
-void assertVtList(void);
-
 void addWarningCode(obd_code_e code);
 
 /**

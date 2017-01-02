@@ -201,6 +201,7 @@ $(PORTINC) $(KERNINC) $(TESTINC) \
 	$(PROJECT_DIR)/controllers/sensors \
 	$(PROJECT_DIR)/controllers/system \
 	$(PROJECT_DIR)/controllers/trigger \
+	$(PROJECT_DIR)/controllers/trigger/decoders \
         ${CHIBIOS}/os/various \
 	simulator
 	

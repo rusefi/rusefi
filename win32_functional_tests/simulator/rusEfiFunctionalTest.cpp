@@ -116,8 +116,6 @@ bool isConsoleReady(void) {
 void applyNewConfiguration(void) {
 }
 
-bool hasFirmwareErrorFlag = false;
-
 void onFatalError(const char *msg, const char * file, int line) {
 	printf("onFatalError %s %s%d", msg, file, line);
 	exit(-1);
@@ -132,18 +130,6 @@ void logMsg(const char *format, ...) {
 //	vfprintf(fp, format, args);
 //
 //	fclose(fp);
-}
-
-void firmwareError(obd_code_e code, const char *fmt, ...) {
-	printf("firmwareError [%s]\r\n", fmt);
-
-	va_list ap;
-	va_start(ap, fmt);
-	vprintf(fmt, ap);
-	va_end(ap);
-
-
-	exit(-1);
 }
 
 SerialDriver * getConsoleChannel(void) {

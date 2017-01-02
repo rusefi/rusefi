@@ -123,20 +123,15 @@ LoggingWithStorage sharedLogger("main");
 
 bool main_loop_started = false;
 
-static MemoryStream firmwareErrorMessageStream;
 static char panicMessage[200];
 
-fatal_msg_t errorMessageBuffer;
-bool hasFirmwareErrorFlag = false;
+extern bool hasFirmwareErrorFlag;
+extern fatal_msg_t errorMessageBuffer;
 
 static virtual_timer_t resetTimer;
 
 EXTERN_ENGINE
 ;
-
-char *getFirmwareError(void) {
-	return (char*) errorMessageBuffer;
-}
 
 // todo: move this into a hw-specific file
 static void rebootNow(void) {
@@ -178,9 +173,6 @@ void runRusEfi(void) {
 	 * In order to have complete flexibility configuration has to go before anything else.
 	 */
 	readConfiguration(&sharedLogger);
-
-	msObjectInit(&firmwareErrorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
-
 	prepareVoidConfiguration(&activeConfiguration);
 
 	/**
@@ -246,32 +238,6 @@ void chDbgStackOverflowPanic(Thread *otp) {
 		strcat(panicMessage, otp->p_name);
 #endif
 	chDbgPanic3(panicMessage, __FILE__, __LINE__);
-}
-
-// todo: why is this method here and not in error_handling.cpp ?
-void firmwareError(obd_code_e code, const char *errorMsg, ...) {
-	if (hasFirmwareErrorFlag)
-		return;
-	addWarningCode(code);
-	ON_FATAL_ERROR()
-	;
-	hasFirmwareErrorFlag = true;
-	if (indexOf(errorMsg, '%') == -1) {
-		/**
-		 * in case of simple error message let's reduce stack usage
-		 * because chvprintf might be causing an error
-		 */
-		strncpy((char*) errorMessageBuffer, errorMsg, sizeof(errorMessageBuffer) - 1);
-		errorMessageBuffer[sizeof(errorMessageBuffer) - 1] = 0; // just to be sure
-	} else {
-		firmwareErrorMessageStream.eos = 0; // reset
-		va_list ap;
-		va_start(ap, errorMsg);
-		chvprintf((BaseSequentialStream *) &firmwareErrorMessageStream, errorMsg, ap);
-		va_end(ap);
-
-		firmwareErrorMessageStream.buffer[firmwareErrorMessageStream.eos] = 0; // need to terminate explicitly
-	}
 }
 
 static char UNUSED_RAM_SIZE[11100];
