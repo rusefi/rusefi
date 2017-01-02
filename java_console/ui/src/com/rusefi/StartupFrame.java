@@ -207,7 +207,7 @@ public class StartupFrame {
     private static JComboBox<String> createSpeedCombo() {
         JComboBox<String> combo = new JComboBox<>();
         String defaultSpeed = getConfig().getRoot().getProperty(Launcher.SPEED_KEY, "115200");
-        for (int speed : new int[]{9600, 14400, 19200, 38400, 115200, 460800, 921600})
+        for (int speed : new int[]{9600, 14400, 19200, 38400, 57600, 115200, 460800, 921600})
             combo.addItem(Integer.toString(speed));
         combo.setSelectedItem(defaultSpeed);
         return combo;
