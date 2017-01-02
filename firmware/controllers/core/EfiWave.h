@@ -9,9 +9,6 @@
 
 #include "engine_configuration.h"
 
-/**
- * this value should be dividable by four, see FuelSchedule.hasEvents
- */
 #define PWM_PHASE_MAX_COUNT 252
 #define PWM_PHASE_MAX_WAVE_PER_PWM 3
 
@@ -19,8 +16,8 @@
  * int8_t is probably less efficient then int32_t but we need
  * to reduce memory footprint
  *
- * todo: migrate to bit-array to same memory? but this would
- * this would some CPU cycles. see std::vector<bool>
+ * todo: migrate to bit-array to save memory?
+ * this would cost some CPU cycles. see std::vector<bool>
  */
 typedef int8_t pin_state_t;
 

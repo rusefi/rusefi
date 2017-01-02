@@ -10,15 +10,15 @@
 #include "main.h"
 #include "engine.h"
 #include "rpm_calculator.h"
-#include "pwm_generator.h"
 #include "alternatorController.h"
-#include "pin_repository.h"
 #include "voltage.h"
 #include "pid.h"
 #include "LocalVersionHolder.h"
-#include "tunerstudio_configuration.h"
 
 #if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)
+#include "pwm_generator.h"
+#include "pin_repository.h"
+#include "tunerstudio_configuration.h"
 
 EXTERN_ENGINE
 ;

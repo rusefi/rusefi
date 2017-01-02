@@ -23,17 +23,17 @@
 
 #include "main.h"
 #include "electronic_throttle.h"
-#include "pin_repository.h"
 #include "idle_controller.h"
 #include "tps.h"
 #include "io_pins.h"
 #include "engine_configuration.h"
-#include "pwm_generator.h"
 #include "pwm_generator_logic.h"
 #include "pid.h"
 #include "engine_controller.h"
 
 #if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
+#include "pin_repository.h"
+#include "pwm_generator.h"
 
 #define ETB_FREQ 400
 extern pin_output_mode_e DEFAULT_OUTPUT;
