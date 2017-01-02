@@ -137,12 +137,10 @@ CSRC = $(PORTSRC) \
 	$(CONTROLLERSSRC) \
 	$(CONTROLLERS_ALGO_SRC) \
 	$(CONTROLLERS_CORE_SRC) \
-	$(CONTROLLERS_MATH_SRC) \
 	$(CONTROLLERS_SENSORS_SRC) \
 	$(PLATFORMSRC) \
 	$(BOARDSRC) \
 	$(FATFSSRC) \
-	$(TRIGGER_SRC) \
 	$(SYSTEMSRC)
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
