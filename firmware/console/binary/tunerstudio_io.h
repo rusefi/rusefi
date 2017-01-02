@@ -77,7 +77,7 @@ void startTsPort(void);
 #define BINARY_IO_TIMEOUT MS2ST(3000)
 
 void tunerStudioWriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size);
-void tunerStudioWriteCrcPacket(ts_channel_s *tsChannel, const uint8_t command, const void *buf, const uint16_t size);
+void tunerStudioWriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, const void *buf, const uint16_t size);
 void tsSendResponse(ts_channel_s *tsChannel, ts_response_format_e mode, const uint8_t * buffer, int size);
 
 #endif /* CONSOLE_TUNERSTUDIO_TUNERSTUDIO_IO_H_ */

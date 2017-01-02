@@ -87,11 +87,11 @@ void tunerStudioWriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int s
 /**
  * Adds size to the beginning of a packet and a crc32 at the end. Then send the packet.
  */
-void tunerStudioWriteCrcPacket(ts_channel_s *tsChannel, const uint8_t command, const void *buf, const uint16_t size) {
+void tunerStudioWriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, const void *buf, const uint16_t size) {
 	uint8_t *writeBuffer = tsChannel->writeBuffer;
 
 	*(uint16_t *) writeBuffer = SWAP_UINT16(size + 1);   // packet size including command
-	*(uint8_t *) (writeBuffer + 2) = command;
+	*(uint8_t *) (writeBuffer + 2) = responseCode;
 	tunerStudioWriteData(tsChannel, writeBuffer, 3);      // header
 
 	// CRC on whole packet
