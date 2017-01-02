@@ -74,7 +74,8 @@ int maxTriggerReentraint = 0;
 uint32_t triggerDuration;
 uint32_t triggerMaxDuration = 0;
 
-extern bool isInsideTriggerHandler;
+static bool isInsideTriggerHandler = false;
+
 
 efitick_t previousVvtCamTime = 0;
 efitick_t previousVvtCamDuration = 0;

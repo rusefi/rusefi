@@ -219,6 +219,7 @@ INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
 	controllers/algo \
 	controllers/core \
 	controllers/math \
+	controllers/trigger/decoders \
 	controllers/trigger
 
 #

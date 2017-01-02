@@ -119,6 +119,7 @@
 									<listOptionValue builtIn="false" value="&quot;../controllers/algo&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers/core&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers/trigger&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../controllers/trigger/decoders&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers/sensors&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers/system&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers/math&quot;"/>

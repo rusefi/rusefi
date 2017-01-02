@@ -8,11 +8,24 @@
 #include "main.h"
 #include "error_handling.h"
 #include "io_pins.h"
-#include "memstreams.h"
 #include "efilib2.h"
 #include "engine.h"
+
+#if EFI_SIMULATOR || EFI_PROD_CODE
 //todo: move into simulator global
+#include "memstreams.h"
 #include <chprintf.h>
+static MemoryStream warningStream;
+static MemoryStream firmwareErrorMessageStream;
+#endif
+
+
+#define WARNING_BUFFER_SIZE 80
+static char warningBuffer[WARNING_BUFFER_SIZE];
+static bool isWarningStreamInitialized = false;
+
+
+
 
 #if EFI_HD44780_LCD || defined(__DOXYGEN__)
 #include "lcd_HD44780.h"
@@ -26,10 +39,18 @@ EXTERN_ENGINE;
 
 extern int warningEnabled;
 extern bool main_loop_started;
-extern bool hasFirmwareErrorFlag;
+
+fatal_msg_t errorMessageBuffer;
+bool hasFirmwareErrorFlag = false;
 
 const char *dbg_panic_file;
 int dbg_panic_line;
+
+char *getFirmwareError(void) {
+	return (char*) errorMessageBuffer;
+}
+
+#if EFI_SIMULATOR || EFI_PROD_CODE
 
 void chDbgPanic3(const char *msg, const char * file, int line) {
 	if (hasFatalError())
@@ -58,10 +79,6 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	}
 }
 
-#define WARNING_BUFFER_SIZE 80
-static char warningBuffer[WARNING_BUFFER_SIZE];
-static bool isWarningStreamInitialized = false;
-static MemoryStream warningStream;
 
 /**
  * @param forIndicator if we want to retrieving value for TS indicator, this case a minimal period is applued
@@ -82,6 +99,9 @@ void printToStream(MemoryStream *stream, const char *fmt, va_list ap) {
 	chvprintf((BaseSequentialStream *) stream, fmt, ap);
 	stream->buffer[stream->eos] = 0;
 }
+#endif
+
+int warningCounter = 0;
 
 /**
  * OBD_PCM_Processor_Fault is the general error code for now
@@ -91,12 +111,13 @@ void printToStream(MemoryStream *stream, const char *fmt, va_list ap) {
 bool warning(obd_code_e code, const char *fmt, ...) {
 	if (hasFirmwareErrorFlag)
 		return true;
-	efiAssert(isWarningStreamInitialized, "warn stream not initialized", false);
 
 #if EFI_UNIT_TEST || EFI_SIMULATOR || defined(__DOXYGEN__)
 	printf("warning %s\r\n", fmt);
 #endif
 
+#if EFI_SIMULATOR || EFI_PROD_CODE
+	efiAssert(isWarningStreamInitialized, "warn stream not initialized", false);
 	addWarningCode(code);
 
 	efitimesec_t now = getTimeNowSeconds();
@@ -117,8 +138,17 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 	append(&logger, warningBuffer);
 	append(&logger, DELIMETER);
 	scheduleLogging(&logger);
+#else
+	warningCounter++;
+	printf("Warning: ");
+	va_list ap;
+	va_start(ap, fmt);
+	vprintf(fmt, ap);
+	va_end(ap);
+	printf("\r\n");
 
-	return FALSE;
+#endif
+	return false;
 }
 
 char *getWarning(void) {
@@ -127,9 +157,6 @@ char *getWarning(void) {
 
 uint32_t lastLockTime;
 uint32_t maxLockTime = 0;
-
-// todo: move this field to trigger_central?
-bool isInsideTriggerHandler = false;
 
 void onLockHook(void) {
 	lastLockTime = GET_TIMESTAMP();
@@ -147,35 +174,48 @@ void onUnlockHook(void) {
 }
 
 void initErrorHandling(void) {
+#if EFI_SIMULATOR || EFI_PROD_CODE
 	msObjectInit(&warningStream, (uint8_t *) warningBuffer, WARNING_BUFFER_SIZE, 0);
+	msObjectInit(&firmwareErrorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
+#endif
 	isWarningStreamInitialized = true;
 }
 
-//todo: move into simulator global
-typedef VTList virtual_timers_list_t;
-
-extern virtual_timers_list_t vtlist;
-extern bool main_loop_started;
-
-int getVtSizeEstimate(void) {
-	virtual_timer_t *first = vtlist.vt_next;
-	virtual_timer_t *cur = first->vt_next;
-	int c = 0;
-	while (c++ < 20 && cur != first) {
-		cur = cur->vt_next;
-	}
-	return c;
-}
-
-int globalVt;
-
-int allReady = 0;
-void assertVtList(void) {
-	if (!main_loop_started)
+void firmwareError(obd_code_e code, const char *fmt, ...) {
+#if EFI_PROD_CODE
+	if (hasFirmwareErrorFlag)
 		return;
-	globalVt = getVtSizeEstimate();
-	//efiAssertVoid(globalVt > 3, "VT list?");
-	if(globalVt <=3 ) {
-		allReady++;
+	addWarningCode(code);
+	ON_FATAL_ERROR()
+	;
+	hasFirmwareErrorFlag = true;
+	if (indexOf(fmt, '%') == -1) {
+		/**
+		 * in case of simple error message let's reduce stack usage
+		 * because chvprintf might be causing an error
+		 */
+		strncpy((char*) errorMessageBuffer, fmt, sizeof(errorMessageBuffer) - 1);
+		errorMessageBuffer[sizeof(errorMessageBuffer) - 1] = 0; // just to be sure
+	} else {
+		firmwareErrorMessageStream.eos = 0; // reset
+		va_list ap;
+		va_start(ap, fmt);
+		chvprintf((BaseSequentialStream *) &firmwareErrorMessageStream, fmt, ap);
+		va_end(ap);
+		// todo: reuse warning buffer helper method
+		firmwareErrorMessageStream.buffer[firmwareErrorMessageStream.eos] = 0; // need to terminate explicitly
 	}
+#else
+	printf("firmwareError [%s]\r\n", fmt);
+
+	va_list ap;
+	va_start(ap, fmt);
+	vprintf(fmt, ap);
+	va_end(ap);
+
+#if EFI_SIMULATOR
+	exit(-1);
+#endif /* EFI_SIMULATOR */
+#endif
 }
+

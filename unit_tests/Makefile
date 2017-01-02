@@ -103,6 +103,7 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(CONTROLLERS_SENSORS_SRC_CPP) \
 	$(TEST_SRC_CPP) \
 	$(SYSTEMSRC_CPP) \
+	$(PROJECT_DIR)/controllers/error_handling.cpp \
 	$(PROJECT_DIR)/controllers/trigger/trigger_central.cpp \
 	$(PROJECT_DIR)/controllers/trigger/rpm_calculator.cpp \
 	$(PROJECT_DIR)/controllers/trigger/spark_logic.cpp \
@@ -141,6 +142,7 @@ INCDIR = . \
 	$(PROJECT_DIR)/controllers/math \
 	$(PROJECT_DIR)/controllers/system \
 	$(PROJECT_DIR)/controllers/trigger \
+	$(PROJECT_DIR)/controllers/trigger/decoders \
 	$(PROJECT_DIR)/ext_algo \
 	../firmware/chibios/os/kernel/include \
 	../firmware/chibios/os/various \

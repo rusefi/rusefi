@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <stdarg.h>
+
 
 #include "main.h"
 #include "error_handling.h"
@@ -177,25 +177,6 @@ int main(void) {
 	printf("Success 20161031\r\n");
 	printAllTriggers();
 	return EXIT_SUCCESS;
-}
-
-int warningCounter = 0;
-
-bool warning(obd_code_e code, const char *format, ...) {
-	warningCounter++;
-	printf("Warning: ");
-	va_list ap;
-	va_start(ap, format);
-	vprintf(format, ap);
-	va_end(ap);
-	printf("\r\n");
-}
-
-bool hasFirmwareErrorFlag = false;
-
-void firmwareError(obd_code_e code, const char *fmt, ...) {
-	  printf(fmt);
-	  exit(-1);
 }
 
 void print(const char *format, ...) {
