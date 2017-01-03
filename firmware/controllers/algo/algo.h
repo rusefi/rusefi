@@ -2,7 +2,7 @@
  * @file	algo.h
  *
  * @date Mar 2, 2014
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef ALGO_H_

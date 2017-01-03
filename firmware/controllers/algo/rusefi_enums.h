@@ -5,7 +5,7 @@
  * @note this file should probably not include any other files
  *
  * @date Jan 14, 2014
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef RUSEFI_ENUMS_H_

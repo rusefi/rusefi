@@ -2,7 +2,7 @@
  * @file	nissan_primera.h
  *
  * @date Oct 14, 2013
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #include "efifeatures.h"

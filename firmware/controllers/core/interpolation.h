@@ -2,7 +2,7 @@
  * @file    interpolation.h
  *
  * @date Oct 17, 2013
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef INTERPOLATION_3D_H_

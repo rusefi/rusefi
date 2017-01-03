@@ -3,7 +3,7 @@
  * @brief This class knows how to produce synthetic shaft signals based on triggerShape
  *
  * @date Sep 23, 2015
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef CONTROLLERS_TRIGGER_TRIGGER_SIMULATOR_H_

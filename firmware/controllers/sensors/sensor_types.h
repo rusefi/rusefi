@@ -2,7 +2,7 @@
  * @file	sensor_types.h
  *
  * @date Dec 24, 2013
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef THERMISTOR_TYPES_H_

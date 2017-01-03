@@ -3,7 +3,7 @@
  * @brief   Position sensor(s) emulation header
  *
  * @date Dec 9, 2012
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef DIST_EMULATOR_H_

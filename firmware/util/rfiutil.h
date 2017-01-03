@@ -3,7 +3,7 @@
  * @brief   Number to string conversion header
  *
  * @date Nov 15, 2012
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef RFIUTIL_H_

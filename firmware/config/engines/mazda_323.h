@@ -7,7 +7,7 @@
  * http://rusefi.com/forum/viewtopic.php?f=3&t=498
  *
  * @date Mar 8, 2014
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef MAZDA_323_H_

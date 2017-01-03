@@ -6,7 +6,7 @@
  * 7x GM DIS trigger
  *
  * @date Mar 28, 2014
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #include "saturn_ion.h"

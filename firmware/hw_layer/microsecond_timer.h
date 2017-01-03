@@ -2,7 +2,7 @@
  * @file	microsecond_timer.h
  *
  * @date Apr 14, 2014
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef SIGNAL_TEMP_H_

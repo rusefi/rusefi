@@ -2,7 +2,7 @@
  * @file	tunerstudio_io.h
  *
  * @date Mar 8, 2015
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 #ifndef CONSOLE_TUNERSTUDIO_TUNERSTUDIO_IO_H_
 #define CONSOLE_TUNERSTUDIO_TUNERSTUDIO_IO_H_

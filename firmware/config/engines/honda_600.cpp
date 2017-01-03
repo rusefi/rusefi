@@ -4,7 +4,7 @@
  * set_engine_type 43
  *
  * @date Jul 9, 2016
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #include "engine_template.h"

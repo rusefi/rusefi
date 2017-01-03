@@ -2,7 +2,7 @@
  * @file biquad.h
  *
  * @date Sep 10, 2016
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef CONTROLLERS_MATH_BIQUAD_H_

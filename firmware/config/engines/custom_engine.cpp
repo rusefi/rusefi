@@ -2,7 +2,7 @@
  * @file	custom_engine.cpp
  *
  * @date Jan 18, 2015
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 #ifndef CONFIG_ENGINES_CUSTOM_ENGINE_CPP_
 #define CONFIG_ENGINES_CUSTOM_ENGINE_CPP_

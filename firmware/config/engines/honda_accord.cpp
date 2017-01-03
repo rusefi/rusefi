@@ -19,7 +19,7 @@
  *   debug configuration to reproduce https://sourceforge.net/p/rusefi/tickets/319/
  *
  * @date Jan 12, 2014
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #include "main.h"

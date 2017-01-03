@@ -2,7 +2,7 @@
  * @file thermistors.cpp
  *
  * @date Feb 17, 2013
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 /**

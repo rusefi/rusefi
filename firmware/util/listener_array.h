@@ -2,7 +2,7 @@
  * listener_array.h
  *
  * @date Jan 1, 2013
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef LISTENER_ARRAY_H_

@@ -10,7 +10,7 @@
  * ROVER_V8 = 10
  *
  * @date Jun 27, 2014
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #include "main.h"

@@ -3,7 +3,7 @@
  * @brief This file is about configuring engine via the human-readable protocol
  *
  * @date Dec 30, 2012
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef INJECTOR_CONTROL_H_

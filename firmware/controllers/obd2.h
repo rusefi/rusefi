@@ -2,7 +2,7 @@
  * @file obd2.h
  *
  * @date Jun 9, 2015
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef CONTROLLERS_OBD2_H_

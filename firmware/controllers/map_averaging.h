@@ -2,7 +2,7 @@
  * @file	map_averaging.h
  *
  * @date Dec 11, 2013
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef ADC_AVERAGING_H_

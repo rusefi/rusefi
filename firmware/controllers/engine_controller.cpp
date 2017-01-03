@@ -5,7 +5,7 @@
  *
  *
  * @date Feb 7, 2013
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  *
  * This file is part of rusEfi - see http://rusefi.com
  *

@@ -3,7 +3,7 @@
  * @brief
  *
  * @date Sep 19, 2013
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef FLASH_MAIN_H_

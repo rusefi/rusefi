@@ -2,7 +2,7 @@
  * @file tachometer.h
  *
  * @date Aug 18, 2015
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef CONTROLLERS_TACHOMETER_H_

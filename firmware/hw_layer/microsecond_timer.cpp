@@ -8,7 +8,7 @@
  * If only it was a better multiplier of 2 (84000000 = 328125 * 256)
  *
  * @date Apr 14, 2014
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #include "main.h"

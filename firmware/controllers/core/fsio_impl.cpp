@@ -3,7 +3,7 @@
  * @brief FSIO as it's used for GPIO
  *
  * @date Oct 5, 2014
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #include "main.h"
