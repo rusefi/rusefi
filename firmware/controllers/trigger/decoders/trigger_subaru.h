@@ -11,5 +11,6 @@
 #include "engine.h"
 
 void initialize36_2_2_2(TriggerShape *s DECLARE_ENGINE_PARAMETER_S);
+void initializeSubaru7_6(TriggerShape *s DECLARE_ENGINE_PARAMETER_S);
 
 #endif /* CONTROLLERS_TRIGGER_TRIGGER_SUBARU_H_ */
