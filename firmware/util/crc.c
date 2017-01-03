@@ -1,7 +1,7 @@
 /**
  * @file    crc.c
  * @date Sep 20, 2013
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #include "crc.h"
