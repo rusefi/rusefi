@@ -23,6 +23,7 @@
 #include "error_handling.h"
 #include "trigger_decoder.h"
 #include "engine_math.h"
+#include "trigger_universal.h"
 
 EXTERN_ENGINE;
 

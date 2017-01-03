@@ -119,10 +119,6 @@ private:
 };
 
 angle_t getEngineCycle(operation_mode_e operationMode);
-void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerShape *s,
-		int totalTeethCount, int skippedCount,
-		float toothWidth,
-		float offset, float engineCycle, float filterLeft, float filterRight DECLARE_ENGINE_PARAMETER_S);
 void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount, int skippedCount, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_S);
 uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S);
 
