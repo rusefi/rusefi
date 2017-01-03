@@ -2,7 +2,7 @@
  * @file	test_cyclic_buffer.h
  *
  * @date Dec 8, 2013
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef TEST_CYCLIC_BUFFER_H_
