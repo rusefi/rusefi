@@ -8,7 +8,7 @@
  * Both external events (see wave_analyzer.c) and internal (see signal executors) are supported
  *
  * @date Jun 23, 2013
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  *
  * This file is part of rusEfi - see http://rusefi.com
  *

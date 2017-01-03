@@ -2,7 +2,7 @@
  * @file	scheduler.h
  *
  * @date May 18, 2014
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 #ifndef SCHEDULER_H_
 #define SCHEDULER_H_

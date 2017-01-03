@@ -3,7 +3,7 @@
  * @brief	Linear interpolation algorithms
  *
  * @date Oct 17, 2013
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  * @author Dmitry Sidin, (c) 2015
  */
 

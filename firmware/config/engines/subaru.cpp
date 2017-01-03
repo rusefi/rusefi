@@ -5,7 +5,7 @@
  * set_engine_type 22
  *
  * @date Sep 14, 2014
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #include "subaru.h"

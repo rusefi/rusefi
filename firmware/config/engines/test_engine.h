@@ -2,7 +2,7 @@
  * @file	test_engine.h
  *
  * @date Nov 14, 2014
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 #ifndef TEST_ENGINE_H_
 #define TEST_ENGINE_H_

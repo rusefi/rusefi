@@ -5,7 +5,7 @@
  * todo: rename this file
  *
  * @date Sep 8, 2013
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef INJECTOR_CENTRAL_H_

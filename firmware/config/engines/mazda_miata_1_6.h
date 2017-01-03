@@ -2,7 +2,7 @@
  * @file mazda_miata_1_6.h
  *
  * @date Apr 16, 2016
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef CONFIG_ENGINES_MAZDA_MIATA_1_6_H_

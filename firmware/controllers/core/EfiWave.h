@@ -2,7 +2,7 @@
  * @file	EfiWave.h
  *
  * @date May 18, 2014
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 #ifndef EFI_WAVE_H_
 #define EFI_WAVE_H_

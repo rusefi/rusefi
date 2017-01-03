@@ -5,7 +5,7 @@
  *
  * @date Dec 20, 2013
  * @author Konstantin Nikonenko
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef MALFUNCTION_INDICATOR_H_

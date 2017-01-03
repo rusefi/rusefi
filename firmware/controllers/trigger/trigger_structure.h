@@ -2,7 +2,7 @@
  * @file	trigger_structure.h
  *
  * @date Dec 22, 2013
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef TRIGGER_STRUCTURE_H_

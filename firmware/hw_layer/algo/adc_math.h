@@ -2,7 +2,7 @@
  * @file	adc_math.h
  *
  * @date Mar 18, 2014
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef ADC_MATH_H_

@@ -2,7 +2,7 @@
  * @file	AdcConfiguration.h
  *
  * @date May 3, 2014
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 #ifndef ADCCONFIGURATION_H_
 #define ADCCONFIGURATION_H_

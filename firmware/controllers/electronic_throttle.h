@@ -2,7 +2,7 @@
  * @file	electronic_throttle.h
  *
  * @date Dec 7, 2013
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef ELECTRONIC_THROTTLE_H_

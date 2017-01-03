@@ -4,7 +4,7 @@
  * @brief In this header we can configure which firmware modules are used.
  *
  * @date Aug 29, 2013
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef EFIFEATURES_H_

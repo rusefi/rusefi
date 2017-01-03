@@ -2,7 +2,7 @@
  * @file	ford_fiesta.h
  *
  * @date Nov 22, 2013
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef FORD_FIESTA_H_

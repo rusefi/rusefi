@@ -2,7 +2,7 @@
  * @file	hip9011_lookup.h
  *
  * @date Jan 4, 2015
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 #ifndef CONTROLLERS_SENSORS_HIP9011_LOOKUP_H_
 #define CONTROLLERS_SENSORS_HIP9011_LOOKUP_H_

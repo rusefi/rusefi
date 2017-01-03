@@ -2,7 +2,7 @@
  * @file hardware.h
  *
  * @date May 27, 2013
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef HARDWARE_H_

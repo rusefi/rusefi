@@ -3,7 +3,7 @@
  * @brief   Buffered console output stream header
  *
  * @date Feb 25, 2013
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef DATALOGGING_H_

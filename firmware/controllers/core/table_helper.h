@@ -2,7 +2,7 @@
  * @file	table_helper.h
  *
  * @date Jul 6, 2014
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 #ifndef TABLE_HELPER_H_
 #define TABLE_HELPER_H_

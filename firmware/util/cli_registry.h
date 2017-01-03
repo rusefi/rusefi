@@ -3,7 +3,7 @@
  * @brief   Command-line interface commands registry
  *
  * @date Nov 15, 2012
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef RFICONSOLE_LOGIC_H_

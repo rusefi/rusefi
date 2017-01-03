@@ -2,7 +2,7 @@
  * @file	citroenBerlingoTU3JP.h
  *
  * @date Apr 15, 2014
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef CITROENBERLINGOTU3JP_H_

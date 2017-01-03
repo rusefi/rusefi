@@ -2,7 +2,7 @@
  * @file MiniCooperR50.h
  *
  * @date Apr 9, 2014
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef MINICOOPERR50_H_

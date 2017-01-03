@@ -2,7 +2,7 @@
  * @file	mazda_miata_vvt.h
  *
  * @date Oct 4, 2016
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  *
  * http://rusefi.com/forum/viewtopic.php?f=3&t=1095
  */

@@ -8,7 +8,7 @@
  * this data structure is NOT thread safe
  *
  * @date Apr 17, 2014
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #include "main.h"

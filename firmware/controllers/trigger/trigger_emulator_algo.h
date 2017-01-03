@@ -2,7 +2,7 @@
  * @file trigger_emulator_algo.h
  *
  * @date Mar 3, 2014
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef TRIGGER_EMULATOR_ALGO_H_

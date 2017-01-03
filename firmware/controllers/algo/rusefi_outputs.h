@@ -4,7 +4,7 @@
  * rusEfi output channels enum is needed for subscription/un-subscription
  *
  * @date Jan 17, 2015
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 #ifndef CONTROLLERS_ALGO_RUSEFI_OUTPUTS_H_
 #define CONTROLLERS_ALGO_RUSEFI_OUTPUTS_H_

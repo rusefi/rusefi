@@ -2,7 +2,7 @@
  * @file	fuel_math.h
  *
  * @date May 27, 2013
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef FUEL_MAP_H_

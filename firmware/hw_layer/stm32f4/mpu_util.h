@@ -2,7 +2,7 @@
  * @file	mpu_util.h
  *
  * @date Jul 27, 2014
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 #ifndef MPU_UTIL_H_
 #define MPU_UTIL_H_

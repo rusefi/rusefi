@@ -2,7 +2,7 @@
  * @file	trigger_honda.h
  *
  * @date May 27, 2016
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef CONTROLLERS_TRIGGER_TRIGGER_HONDA_H_

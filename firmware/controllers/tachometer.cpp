@@ -7,7 +7,7 @@
  * todo: these is a bit of duplication with dizzySparkOutputPin
  *
  * @date Aug 18, 2015
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #include "tachometer.h"

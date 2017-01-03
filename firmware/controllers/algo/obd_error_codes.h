@@ -5,7 +5,7 @@
  * More info at http://www.obd-codes.com/faq/obd2-codes-explained.php
  *
  * @date Dec 20, 2013
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef OBD_ERROR_CODES_H_

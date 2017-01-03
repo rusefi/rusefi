@@ -9,7 +9,7 @@
  * Read-only communication over 5MHz SPI
  *
  * @date Sep 17, 2014
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #include "main.h"

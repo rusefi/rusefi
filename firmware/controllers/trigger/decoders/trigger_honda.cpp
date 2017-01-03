@@ -2,7 +2,7 @@
  * @file	trigger_honda.cpp
  *
  * @date May 27, 2016
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #include "trigger_honda.h"

@@ -2,7 +2,7 @@
  * @file	trigger_subaru.cpp
  *
  * @date Sep 10, 2015
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #include "trigger_subaru.h"
