@@ -12,9 +12,6 @@
 #include "trigger_structure.h"
 #include "engine_configuration.h"
 
-#define NO_LEFT_FILTER -1
-#define NO_RIGHT_FILTER 1000
-
 class TriggerState;
 
 typedef void (*TriggerStateCallback)(TriggerState *);
@@ -119,7 +116,6 @@ private:
 };
 
 angle_t getEngineCycle(operation_mode_e operationMode);
-void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount, int skippedCount, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_S);
 uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S);
 
 class Engine;
