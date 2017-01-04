@@ -3,7 +3,7 @@ package com.rusefi.autotune;
 import com.rusefi.config.Fields;
 
 /**
- * (c) Andrey Belomutskiy 2013-2016
+ * (c) Andrey Belomutskiy 2013-2017
  * 2/23/2016.
  */
 public class stDataOnline {

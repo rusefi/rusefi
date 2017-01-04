@@ -4,7 +4,7 @@ import static com.rusefi.AutoTest.*;
 
 /**
  * this test connects to real hardware via serial port
- * (c) Andrey Belomutskiy 2013-2016
+ * (c) Andrey Belomutskiy 2013-2017
  * 2/22/2015
  */
 public class RealHwTest {

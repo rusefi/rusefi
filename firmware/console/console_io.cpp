@@ -129,15 +129,10 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 	}
 }
 
-// todo: this is ugly as hell!
-static char consoleInput[] = "                                                                              ";
-
 CommandHandler console_line_callback;
 
-static bool is_serial_over_uart;
-
 bool isSerialOverUart(void) {
-	return is_serial_over_uart;
+	return false;
 }
 
 #if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR ) || defined(__DOXYGEN__)
@@ -145,6 +140,37 @@ static SerialConfig serialConfig = { SERIAL_SPEED, 0, USART_CR2_STOP1_BITS | USA
 #endif
 
 #if EFI_PROD_CODE || EFI_EGT || defined(__DOXYGEN__)
+
+bool consoleInBinaryMode = false;
+
+void runConsoleLoop(ts_channel_s *console) {
+	if (boardConfiguration->startConsoleInBinaryMode) {
+		// switch to binary protocol
+		consoleInBinaryMode = true;
+		runBinaryProtocolLoop(console, true);
+	}
+
+	while (true) {
+		efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#9e");
+		bool end = getConsoleLine((BaseSequentialStream*) console->channel, console->crcReadBuffer, sizeof(console->crcReadBuffer) - 3);
+		if (end) {
+			// firmware simulator is the only case when this happens
+			continue;
+		}
+
+		char *trimmed = efiTrim(console->crcReadBuffer);
+
+		(console_line_callback)(trimmed);
+
+		if (consoleInBinaryMode) {
+#if EFI_SIMULATOR || defined(__DOXYGEN__)
+			logMsg("Switching to binary mode\r\n");
+#endif
+			// switch to binary protocol
+			runBinaryProtocolLoop(console, true);
+		}
+	}
+}
 
 SerialDriver * getConsoleChannel(void) {
 #if defined(EFI_CONSOLE_UART_DEVICE) || defined(__DOXYGEN__)
@@ -169,8 +195,6 @@ bool isConsoleReady(void) {
 }
 #endif /* EFI_PROD_CODE || EFI_EGT */
 
-bool consoleInBinaryMode = false;
-
 ts_channel_s binaryConsole;
 
 static THD_WORKING_AREA(consoleThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);
@@ -187,34 +211,10 @@ static THD_FUNCTION(consoleThreadThreadEntryPoint, arg) {
 	}
 #endif /* EFI_PROD_CODE */
 
+
 	binaryConsole.channel = (BaseChannel *) getConsoleChannel();
+	runConsoleLoop(&binaryConsole);
 
-	if (boardConfiguration->startConsoleInBinaryMode) {
-		// switch to binary protocol
-		consoleInBinaryMode = true;
-		runBinaryProtocolLoop(&binaryConsole, true);
-	}
-
-	while (true) {
-		efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#9e");
-		bool end = getConsoleLine((BaseSequentialStream*) getConsoleChannel(), consoleInput, sizeof(consoleInput));
-		if (end) {
-			// firmware simulator is the only case when this happens
-			continue;
-		}
-
-		char *trimmed = efiTrim(consoleInput);
-
-		(console_line_callback)(trimmed);
-
-		if (consoleInBinaryMode) {
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
-			logMsg("Switching to binary mode\r\n");
-#endif
-			// switch to binary protocol
-			runBinaryProtocolLoop(&binaryConsole, true);
-		}
-	}
 }
 
 // 10 seconds
@@ -245,10 +245,6 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 	console_line_callback = console_line_callback_p;
 
 #if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR) || defined(__DOXYGEN__)
-
-	palSetPadMode(CONSOLE_MODE_SWITCH_PORT, CONSOLE_MODE_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
-
-	is_serial_over_uart = GET_CONSOLE_MODE_VALUE() == EFI_USE_UART_FOR_CONSOLE;
 
 	if (isSerialOverUart()) {
 		/*

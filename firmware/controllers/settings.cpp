@@ -931,9 +931,6 @@ static void printAllInfo(void) {
 #if EFI_ENGINE_SNIFFER
 	scheduleMsg(&logger, "waveChartUsedSize=%d", waveChartUsedSize);
 #endif
-#if EFI_PROD_CODE
-	scheduleMsg(&logger, "console mode jumper: %s", boolToString(!GET_CONSOLE_MODE_VALUE()));
-#endif
 }
 
 static void getValue(const char *paramStr) {

@@ -5,7 +5,7 @@ import com.rusefi.config.Fields;
 import java.util.Collection;
 
 /**
- * (c) Andrey Belomutskiy 2013-2016
+ * (c) Andrey Belomutskiy 2013-2017
  * 2/18/2016.
  */
 public enum FuelAutoTune2 implements FuelAutoLogic {

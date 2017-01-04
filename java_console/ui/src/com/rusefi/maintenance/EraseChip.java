@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**
- * (c) Andrey Belomutskiy 2013-2016
+ * (c) Andrey Belomutskiy 2013-2017
  */
 public class EraseChip extends ProcessStatusWindow {
     private final JButton button = new JButton("Erase Chip");
