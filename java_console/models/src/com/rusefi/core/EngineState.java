@@ -95,6 +95,11 @@ public class EngineState {
                     }
                 });
 
+        registerStringValueAction("IAT", NOTHING);
+        registerStringValueAction("int_temp", NOTHING);
+        registerStringValueAction("mode", NOTHING);
+        registerStringValueAction("TPS", NOTHING);
+
         registerStringValueAction("adcfast_co", NOTHING);
         registerStringValueAction("adcfast_max", NOTHING);
         registerStringValueAction("adcfast_min", NOTHING);
