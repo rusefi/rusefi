@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
- * (c) Andrey Belomutskiy 2013-2016
+ * (c) Andrey Belomutskiy 2013-2017
  */
 public class ProcessStatusWindow {
     public static boolean isWindows() {

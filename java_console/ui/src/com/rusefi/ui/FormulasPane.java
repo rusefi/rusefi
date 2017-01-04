@@ -20,7 +20,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 /**
- * (c) Andrey Belomutskiy 2013-2016
+ * (c) Andrey Belomutskiy 2013-2017
  */
 public class FormulasPane {
     private final JPanel content = new JPanel(new BorderLayout());

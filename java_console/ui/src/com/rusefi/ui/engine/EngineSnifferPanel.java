@@ -30,7 +30,7 @@ import java.util.List;
  * <p/>
  * <p/>
  * Date: 6/23/13
- * Andrey Belomutskiy (c) 2012-2013
+ * (c) Andrey Belomutskiy 2013-2017
  *
  * @see EngineSnifferStatusPanel status bar
  * @see com.rusefi.ui.test.WavePanelSandbox

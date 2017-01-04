@@ -11,7 +11,7 @@ import java.awt.event.KeyEvent;
 
 /**
  * 7/7/13
- * (c) Andrey Belomutskiy
+ * (c) Andrey Belomutskiy 2013-2017
  */
 class ZoomControl extends JPanel {
 //    private final JLabel currentValue = new JLabel();
