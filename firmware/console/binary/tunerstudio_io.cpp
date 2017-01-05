@@ -30,7 +30,7 @@ static SerialConfig tsSerialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LI
 
 void startTsPort(void) {
 #if EFI_USB_SERIAL || defined(__DOXYGEN__)
-	if (isSerialOverUart()) {
+	if (isCommandLineConsoleOverTTL()) {
 		print("TunerStudio over USB serial");
 		/**
 		 * This method contains a long delay, that's the reason why this is not done on the main thread
@@ -56,7 +56,7 @@ void startTsPort(void) {
 
 BaseChannel * getTsSerialDevice(void) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	if (isSerialOverUart()) {
+	if (isCommandLineConsoleOverTTL()) {
 		// if console uses UART then TS uses USB
 		return (BaseChannel *) &SDU1;
 	} else {
