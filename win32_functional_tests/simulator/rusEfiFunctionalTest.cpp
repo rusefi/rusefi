@@ -109,7 +109,7 @@ int isSerialOverTcpReady;
 
 int maxNesting = 0;
 
-bool isConsoleReady(void) {
+bool isCommandLineConsoleReady(void) {
 	return isSerialOverTcpReady;
 }
 

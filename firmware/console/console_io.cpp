@@ -25,7 +25,7 @@
 
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
 #include "rusEfiFunctionalTest.h"
-#endif
+#endif /*EFI_SIMULATOR */
 
 EXTERN_ENGINE;
 
@@ -33,7 +33,7 @@ EXTERN_ENGINE;
 #include "usbcfg.h"
 #include "usbconsole.h"
 extern SerialUSBDriver SDU1;
-#endif
+#endif /* HAL_USE_SERIAL_USB */
 
 int lastWriteSize;
 int lastWriteActual;
@@ -63,7 +63,7 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 	char *p = line;
 
 	while (true) {
-		if (!isConsoleReady()) {
+		if (!isCommandLineConsoleReady()) {
 			// we better do not read from USB serial before it is ready
 			chThdSleepMilliseconds(10);
 			continue;
@@ -131,17 +131,15 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 
 CommandHandler console_line_callback;
 
-static bool is_serial_over_uart;
+static bool isCommandLineConsoleOverTTL;
 
 bool isSerialOverUart(void) {
-	return is_serial_over_uart;
+	return isCommandLineConsoleOverTTL;
 }
 
 #if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR ) || defined(__DOXYGEN__)
 static SerialConfig serialConfig = { SERIAL_SPEED, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
 #endif
-
-#if EFI_PROD_CODE || EFI_EGT || defined(__DOXYGEN__)
 
 bool consoleInBinaryMode = false;
 
@@ -174,6 +172,10 @@ void runConsoleLoop(ts_channel_s *console) {
 	}
 }
 
+
+#if EFI_PROD_CODE || EFI_EGT || defined(__DOXYGEN__)
+
+
 SerialDriver * getConsoleChannel(void) {
 #if defined(EFI_CONSOLE_UART_DEVICE) || defined(__DOXYGEN__)
 	if (isSerialOverUart()) {
@@ -185,10 +187,10 @@ SerialDriver * getConsoleChannel(void) {
 	return (SerialDriver *) &SDU1;
 #else
 	return NULL;
-#endif
+#endif /* HAL_USE_SERIAL_USB */
 }
 
-bool isConsoleReady(void) {
+bool isCommandLineConsoleReady(void) {
 	if (isSerialOverUart()) {
 		return isSerialConsoleStarted;
 	} else {
@@ -250,7 +252,7 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 
 	palSetPadMode(CONSOLE_MODE_SWITCH_PORT, CONSOLE_MODE_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
 
-	is_serial_over_uart = GET_CONSOLE_MODE_VALUE() == EFI_USE_UART_FOR_CONSOLE;
+	isCommandLineConsoleOverTTL = GET_CONSOLE_MODE_VALUE() == EFI_USE_UART_FOR_CONSOLE;
 
 	if (isSerialOverUart()) {
 		/*
@@ -268,7 +270,7 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 		chEvtRegisterMask((event_source_t *) chnGetEventSource(EFI_CONSOLE_UART_DEVICE), &consoleEventListener, 1);
 	}
 #else
-	is_serial_over_uart = false;
+	isCommandLineConsoleOverTTL = false;
 #endif /* EFI_PROD_CODE */
 
 	chThdCreateStatic(consoleThreadStack, sizeof(consoleThreadStack), NORMALPRIO, (tfunc_t)consoleThreadThreadEntryPoint, NULL);

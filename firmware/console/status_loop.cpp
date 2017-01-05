@@ -412,7 +412,7 @@ extern fatal_msg_t errorMessageBuffer;
  * @brief Sends all pending data to dev console
  */
 void updateDevConsoleState(Engine *engine) {
-	if (!isConsoleReady()) {
+	if (!isCommandLineConsoleReady()) {
 		return;
 	}
 // looks like this is not needed anymore
@@ -596,7 +596,7 @@ static void blinkingThread(void *arg) {
 	initialLedsBlink();
 
 	while (true) {
-		int delayMs = isConsoleReady() ? 3 * blinkingPeriod : blinkingPeriod;
+		int delayMs = is_usb_serial_ready() ? 3 * blinkingPeriod : blinkingPeriod;
 
 #if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
 		if (getNeedToWriteConfiguration()) {

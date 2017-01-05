@@ -142,7 +142,7 @@ static void cmd_threads(void) {
  */
 void print(const char *format, ...) {
 #if !EFI_UART_ECHO_TEST_MODE
-	if (!isConsoleReady()) {
+	if (!isCommandLineConsoleReady()) {
 		return;
 	}
 	va_list ap;

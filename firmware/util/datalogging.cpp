@@ -218,7 +218,7 @@ void printWithLength(char *line) {
 	*p++ = '\r';
 	*p++ = '\n';
 
-	if (!isConsoleReady())
+	if (!isCommandLineConsoleReady())
 		return;
 	consoleOutputBuffer((const uint8_t *) header, strlen(header));
 	consoleOutputBuffer((const uint8_t *) line, p - line);
