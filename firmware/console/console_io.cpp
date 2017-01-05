@@ -131,8 +131,10 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 
 CommandHandler console_line_callback;
 
+static bool is_serial_over_uart;
+
 bool isSerialOverUart(void) {
-	return false;
+	return is_serial_over_uart;
 }
 
 #if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR ) || defined(__DOXYGEN__)
@@ -245,6 +247,10 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 	console_line_callback = console_line_callback_p;
 
 #if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR) || defined(__DOXYGEN__)
+
+	palSetPadMode(CONSOLE_MODE_SWITCH_PORT, CONSOLE_MODE_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
+
+	is_serial_over_uart = GET_CONSOLE_MODE_VALUE() == EFI_USE_UART_FOR_CONSOLE;
 
 	if (isSerialOverUart()) {
 		/*
