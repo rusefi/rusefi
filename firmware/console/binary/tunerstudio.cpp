@@ -118,7 +118,7 @@ ts_channel_s tsChannel;
 
 static int ts_serial_ready(bool isConsoleRedirect) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	if (isSerialOverUart() ^ isConsoleRedirect) {
+	if (isCommandLineConsoleOverTTL() ^ isConsoleRedirect) {
 		// TS uses USB when console uses serial
 		return is_usb_serial_ready();
 	} else {
@@ -154,7 +154,7 @@ static void printErrorCounters(void) {
 
 void printTsStats(void) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	if (!isSerialOverUart()) {
+	if (!isCommandLineConsoleOverTTL()) {
 		scheduleMsg(&tsLogger, "TS RX on %s", hwPortname(engineConfiguration->binarySerialRxPin));
 
 		scheduleMsg(&tsLogger, "TS TX on %s @%d", hwPortname(engineConfiguration->binarySerialTxPin),

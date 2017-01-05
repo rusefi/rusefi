@@ -72,7 +72,7 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 		short c = (short) chSequentialStreamGet(chp);
 		onDataArrived();
 
-		if (isSerialOverUart()) {
+		if (isCommandLineConsoleOverTTL()) {
 			uint32_t flags;
 			chSysLock()
 			;
@@ -131,10 +131,10 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 
 CommandHandler console_line_callback;
 
-static bool isCommandLineConsoleOverTTL;
+static bool b_isCommandLineConsoleOverTTL;
 
-bool isSerialOverUart(void) {
-	return isCommandLineConsoleOverTTL;
+bool isCommandLineConsoleOverTTL(void) {
+	return b_isCommandLineConsoleOverTTL;
 }
 
 #if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR ) || defined(__DOXYGEN__)
@@ -178,7 +178,7 @@ void runConsoleLoop(ts_channel_s *console) {
 
 SerialDriver * getConsoleChannel(void) {
 #if defined(EFI_CONSOLE_UART_DEVICE) || defined(__DOXYGEN__)
-	if (isSerialOverUart()) {
+	if (isCommandLineConsoleOverTTL()) {
 		return (SerialDriver *) EFI_CONSOLE_UART_DEVICE;
 	}
 #endif /* EFI_CONSOLE_UART_DEVICE */
@@ -191,7 +191,7 @@ SerialDriver * getConsoleChannel(void) {
 }
 
 bool isCommandLineConsoleReady(void) {
-	if (isSerialOverUart()) {
+	if (isCommandLineConsoleOverTTL()) {
 		return isSerialConsoleStarted;
 	} else {
 		return is_usb_serial_ready();
@@ -207,7 +207,7 @@ static THD_FUNCTION(consoleThreadThreadEntryPoint, arg) {
 	chRegSetThreadName("console thread");
 
 #if (EFI_PROD_CODE && EFI_USB_SERIAL) || defined(__DOXYGEN__)
-	if (!isSerialOverUart()) {
+	if (!isCommandLineConsoleOverTTL()) {
 		/**
 		 * This method contains a long delay, that's the reason why this is not done on the main thread
 		 */
@@ -252,9 +252,9 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 
 	palSetPadMode(CONSOLE_MODE_SWITCH_PORT, CONSOLE_MODE_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
 
-	isCommandLineConsoleOverTTL = GET_CONSOLE_MODE_VALUE() == EFI_USE_UART_FOR_CONSOLE;
+	b_isCommandLineConsoleOverTTL = GET_CONSOLE_MODE_VALUE() == EFI_USE_UART_FOR_CONSOLE;
 
-	if (isSerialOverUart()) {
+	if (isCommandLineConsoleOverTTL()) {
 		/*
 		 * Activates the serial using the driver default configuration (that's 38400)
 		 * it is important to set 'NONE' as flow control! in terminal application on the PC
@@ -270,7 +270,7 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 		chEvtRegisterMask((event_source_t *) chnGetEventSource(EFI_CONSOLE_UART_DEVICE), &consoleEventListener, 1);
 	}
 #else
-	isCommandLineConsoleOverTTL = false;
+	b_isCommandLineConsoleOverTTL = false;
 #endif /* EFI_PROD_CODE */
 
 	chThdCreateStatic(consoleThreadStack, sizeof(consoleThreadStack), NORMALPRIO, (tfunc_t)consoleThreadThreadEntryPoint, NULL);
