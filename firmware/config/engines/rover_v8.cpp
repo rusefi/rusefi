@@ -81,7 +81,7 @@ void setRoverv8(DECLARE_ENGINE_PARAMETER_F) {
     boardConfiguration->injectionPins[6] = GPIOE_2; // Frankenstein: low side - out #7
     boardConfiguration->injectionPins[7] = GPIOE_3; // Frankenstein: low side - out #8
 
-// PC0?	boardConfiguration->fuelPumpPin = GPIOC_0; // Frankenstein: low side - out #9
+    boardConfiguration->fuelPumpPin = GPIOE_0; // Frankenstein: low side - out #9
     boardConfiguration->malfunctionIndicatorPin = GPIOE_1; // Frankenstein: low side - out #10
 	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
