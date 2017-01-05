@@ -29,9 +29,9 @@ bool isSerialOverUart(void);
 void onDataArrived(void);
 
 #if EFI_PROD_CODE || EFI_SIMULATOR || EFI_EGT
-bool isConsoleReady(void);
+bool isCommandLineConsoleReady(void);
 #else
-#define isConsoleReady() true
+#define isCommandLineConsoleReady() true
 #endif
 
 #endif /* CONSOLE_IO_H_ */
