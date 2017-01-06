@@ -27,9 +27,7 @@
 EXTERN_ENGINE
 ;
 
-static Logging *logger;
-
-static bool initialized = false;
+static Logging *logger = NULL;
 
 /**
  * http://en.wikipedia.org/wiki/Voltage_divider
@@ -80,10 +78,6 @@ float getResistance(ThermistorConf *config, float voltage) {
 }
 
 float getTemperatureC(ThermistorConf *config, ThermistorMath *tm) {
-	if (!initialized) {
-		firmwareError(CUSTOM_ERR_THERM, "thermstr not initialized");
-		return NAN;
-	}
 	tm->setConfig(&config->config); // implementation checks if configuration has changed or not
 
 	float voltage = getVoltageDivided("term", config->adcChannel);
@@ -212,8 +206,13 @@ void setCommonNTCSensor(ThermistorConf *thermistorConf) {
 	setThermistorConfiguration(thermistorConf, -20, 18000, 23.8889, 2100, 120.0, 100.0);
 }
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 static void testCltByR(float resistance) {
+	if (logger == NULL) {
+		firmwareError(CUSTOM_ERR_THERM, "thermstr not initialized");
+		return;
+	}
+
 	// we expect slowPeriodicCallback to already update configuration in the curve helper class see setConfig
 	float kTemp = engine->engineState.cltCurve.getKelvinTemperatureByResistance(resistance);
 	scheduleMsg(logger, "for R=%f we have %f", resistance, (kTemp - KELV));
@@ -227,8 +226,6 @@ void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	addConsoleActionF("test_clt_by_r", testCltByR);
 #endif
-
-	initialized = true;
 }
 
 ThermistorMath::ThermistorMath() {
