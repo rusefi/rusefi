@@ -110,7 +110,6 @@ void initOutputPins(void) {
 //	outputPinRegister("ext led 2", LED_EXT_2, EXTRA_LED_2_PORT, EXTRA_LED_2_PIN);
 //	outputPinRegister("ext led 3", LED_EXT_3, EXTRA_LED_2_PORT, EXTRA_LED_3_PIN);
 //	outputPinRegister("alive1", LED_DEBUG, GPIOD, 6);
-	outputPinRegisterExt2("MalfunctionIndicator", &enginePins.checkEnginePin, boardConfiguration->malfunctionIndicatorPin, &DEFAULT_OUTPUT);
 
 // todo: are these needed here? todo: make configurable
 //	outputPinRegister("spi CS1", SPI_CS_1, SPI_CS1_PORT, SPI_CS1_PIN);
