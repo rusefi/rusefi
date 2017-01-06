@@ -5,9 +5,9 @@ package com.rusefi.waves;
  * (c) Andrey Belomutskiy
  */
 public interface TimeAxisTranslator {
-    int timeToScreen(int time, int width, ZoomProvider zoomProvider);
+    int timeToScreen(int time, int width);
 
-    double screenToTime(int screenX, int screenWidth, ZoomProvider zoomProvider);
+    double screenToTime(int screenX, int screenWidth);
 
     int getMaxTime();
 

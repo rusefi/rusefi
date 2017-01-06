@@ -35,7 +35,6 @@ public class UpDownImage extends JPanel {
     public static final Color ENGINE_CYCLE_COLOR = Color.green;
 
     private long lastUpdateTime;
-    private ZoomProvider zoomProvider = ZoomProvider.DEFAULT;
     private EngineReport wr;
     private StringBuilder revolutions;
     private final String name;
@@ -80,7 +79,6 @@ public class UpDownImage extends JPanel {
     }
 
     public void setZoomProvider(ZoomProvider zoomProvider) {
-        this.zoomProvider = zoomProvider;
     }
 
     public UpDownImage(EngineReport wr, String name) {
@@ -113,13 +111,13 @@ public class UpDownImage extends JPanel {
     public TimeAxisTranslator createTranslator() {
         return new TimeAxisTranslator() {
             @Override
-            public int timeToScreen(int time, int width, ZoomProvider zoomProvider) {
-                return UpDownImage.this.wr.timeToScreen(time, width, zoomProvider);
+            public int timeToScreen(int time, int width) {
+                return UpDownImage.this.wr.timeToScreen(time, width);
             }
 
             @Override
-            public double screenToTime(int screen, int width, ZoomProvider zoomProvider) {
-                return UpDownImage.this.wr.screenToTime(screen, width, zoomProvider);
+            public double screenToTime(int screen, int width) {
+                return UpDownImage.this.wr.screenToTime(screen, width);
             }
 
             @Override
@@ -134,7 +132,7 @@ public class UpDownImage extends JPanel {
 
             @Override
             public String toString() {
-                return "TimeAxisTranslator " + zoomProvider;
+                return "TimeAxisTranslator";
             }
         };
     }
@@ -212,7 +210,7 @@ public class UpDownImage extends JPanel {
 
         g2.setStroke(new BasicStroke());
         for (int time : time2rpm.keySet()) {
-            int x = translator.timeToScreen(time, d.width, zoomProvider);
+            int x = translator.timeToScreen(time, d.width);
             g2.setColor(ENGINE_CYCLE_COLOR);
             g2.drawLine(x, 0, x, d.height);
 
@@ -252,14 +250,14 @@ public class UpDownImage extends JPanel {
 
         for (int ms = fromMs; ms <= toMs; ms++) {
             int tick = ms * EngineReport.mult;
-            int x = translator.timeToScreen(tick, d.width, zoomProvider);
+            int x = translator.timeToScreen(tick, d.width);
             g2.drawLine(x, 0, x, d.height);
         }
     }
 
     private void paintUpDown(Dimension d, EngineReport.UpDown upDown, Graphics g) {
-        int x1 = translator.timeToScreen(upDown.upTime, d.width, zoomProvider);
-        int x2 = translator.timeToScreen(upDown.downTime, d.width, zoomProvider);
+        int x1 = translator.timeToScreen(upDown.upTime, d.width);
+        int x2 = translator.timeToScreen(upDown.downTime, d.width);
 
         int y = (int) (0.2 * d.height);
 
@@ -321,7 +319,6 @@ public class UpDownImage extends JPanel {
     @Override
     public String toString() {
         return "UpDownImage{" +
-                "zoomProvider=" + zoomProvider +
                 "} " + super.toString();
     }
 }
