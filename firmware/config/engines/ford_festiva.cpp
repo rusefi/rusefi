@@ -139,10 +139,10 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->extraInjectionOffset = 0;
 
 	// todo: change to 15?
-	// set_cranking_timing_angle 3
+	// set cranking_timing_angle 3
 	engineConfiguration->crankingTimingAngle = 3;
 	engineConfiguration->crankingChargeAngle = 70;
-	// set_cranking_fuel 9
+	// set cranking_fuel 9
 	engineConfiguration->cranking.baseFuel = 9;
 
 	setTableBin2(config->ignitionLoadBins, IGN_LOAD_COUNT, 20, 105, 5);

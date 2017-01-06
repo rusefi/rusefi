@@ -23,7 +23,7 @@ void setMitsubishiConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.displacement = 1.800;
 
-	// set_ignition_mode 2
+	// set ignition_mode 2
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 
@@ -32,15 +32,15 @@ void setMitsubishiConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	// set_cranking_rpm 550
 	engineConfiguration->cranking.rpm = 550;
-	// set_cranking_charge_angle 70
+	// set cranking_charge_angle 70
 	engineConfiguration->crankingChargeAngle = 70;
-	// set_cranking_timing_angle 715
+	// set cranking_timing_angle 715
 	engineConfiguration->crankingTimingAngle = -715;
 
 	// set_whole_fuel_map 3
 	setWholeFuelMap(3 PASS_ENGINE_PARAMETER);
 
-	// set_cranking_fuel 4
+	// set cranking_fuel 4
 	engineConfiguration->cranking.baseFuel = 4;
 
 //	/**

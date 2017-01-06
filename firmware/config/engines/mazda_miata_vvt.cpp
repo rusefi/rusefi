@@ -118,9 +118,9 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->isPrintTriggerSynchDetails = false;
 
 	// todo: change to 15?
-	// set_cranking_timing_angle 0
+	// set cranking_timing_angle 0
 	engineConfiguration->crankingTimingAngle = 3;
-	// set_cranking_fuel 9
+	// set cranking_fuel 9
 	engineConfiguration->cranking.baseFuel = 9;
 
 	boardConfiguration->ignitionPins[0] = GPIOE_14;

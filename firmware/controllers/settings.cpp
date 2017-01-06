@@ -953,9 +953,37 @@ static void getValue(const char *paramStr) {
 #endif
 }
 
+typedef struct {
+	const char *token;
+	VoidInt callback;
+} command_i_s;
+
+command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
+		{"cranking_rpm", setCrankingRpm},
+		{"cranking_injection_mode", setCrankingInjectionMode},
+		{"injection_mode", setInjectionMode},
+//		{"", },
+//		{"", },
+//		{"", },
+//		{"", },
+//		{"", },
+//		{"", },
+//		{"", },
+};
+
 static void setValue(const char *paramStr, const char *valueStr) {
 	float valueF = atoff(valueStr);
 	int valueI = atoi(valueStr);
+
+	command_i_s *current = &commandsI[0];
+	while (current < commandsI + sizeof(commandsI)/sizeof(commandsI[0])) {
+		if (strEqualCaseInsensitive(paramStr, current->token)) {
+			current->callback(valueI);
+			return;
+		}
+		current++;
+	}
+
 
 	if (strEqualCaseInsensitive(paramStr, "vsscoeff")) {
 		engineConfiguration->vehicleSpeedCoef = valueF;
@@ -970,8 +998,20 @@ static void setValue(const char *paramStr, const char *valueStr) {
 	} else if (strEqualCaseInsensitive(paramStr, "alt_p")) {
 		setAltPFactor(valueF);
 #endif
+//	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {
+//	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {
+//	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {
+//	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {
+//	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {
+//	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {
 	} else if (strEqualCaseInsensitive(paramStr, "warningPeriod")) {
 		engineConfiguration->warningPeriod = valueI;
+	} else if (strEqualCaseInsensitive(paramStr, "cranking_fuel")) {
+		setCrankingFuel(valueF);
+	} else if (strEqualCaseInsensitive(paramStr, "cranking_timing_angle")) {
+		setCrankingTimingAngle(valueF);
+	} else if (strEqualCaseInsensitive(paramStr, "cranking_charge_angle")) {
+		setCrankingChargeAngle(valueF);
 	} else if (strEqualCaseInsensitive(paramStr, "dwell")) {
 		setConstantDwell(valueF PASS_ENGINE_PARAMETER);
 	} else if (strEqualCaseInsensitive(paramStr, "engineSnifferRpmThreshold")) {
@@ -1027,18 +1067,15 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 
 	addConsoleActionF("set_global_fuel_correction", setGlobalFuelCorrection);
 
-	addConsoleActionF("set_cranking_fuel", setCrankingFuel);
-	addConsoleActionI("set_cranking_rpm", setCrankingRpm);
-	addConsoleActionF("set_cranking_timing_angle", setCrankingTimingAngle);
+	addConsoleActionF("set_cranking_fuel", setCrankingFuel); // todo: remove
+	addConsoleActionF("set_cranking_timing_angle", setCrankingTimingAngle);// todo: remove
 	addConsoleActionF("set_cranking_charge_angle", setCrankingChargeAngle);
 
 	addConsoleAction("set_one_coil_ignition", setOneCoilIgnition);
 	addConsoleAction("set_wasted_spark_ignition", setWastedIgnition);
 	addConsoleAction("set_individual_coils_ignition", setIndividualCoilsIgnition);
 
-	addConsoleActionI("set_ignition_mode", setIgnitionMode);
 
-	addConsoleActionI("set_cranking_injection_mode", setCrankingInjectionMode);
 	addConsoleActionI("set_injection_mode", setInjectionMode);
 
 	addConsoleActionF("set_whole_phase_map", setWholePhaseMapCmd);

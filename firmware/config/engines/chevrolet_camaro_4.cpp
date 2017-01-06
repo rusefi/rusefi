@@ -26,7 +26,7 @@ void setCamaro4(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->injectionMode = IM_BATCH;
 	engineConfiguration->twoWireBatchInjection = true;
-	// set_ignition_mode 2
+	// set ignition_mode 2
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);

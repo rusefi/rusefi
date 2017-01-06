@@ -127,13 +127,13 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->injector.flow = 230;
 
 
-	// set_cranking_timing_angle 10
+	// set cranking_timing_angle 10
 	engineConfiguration->crankingTimingAngle = 10;
 
 	// chartsize 200
 	engineConfiguration->engineChartSize = 200;
 
-	// set_cranking_fuel 5
+	// set cranking_fuel 5
 	engineConfiguration->cranking.baseFuel = 5;
 
 	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;

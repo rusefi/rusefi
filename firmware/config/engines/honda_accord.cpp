@@ -37,9 +37,9 @@ static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 	boardConfiguration->isFastAdcEnabled = true;
 
-	// set_ignition_mode 0
+	// set ignition_mode 0
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
-	// set_injection_mode
+	// set injection_mode
 	engineConfiguration->injectionMode = IM_BATCH;
 
 	engineConfiguration->idleMode = IM_MANUAL;
@@ -68,9 +68,9 @@ static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_F) {
 	setCommonNTCSensor(&engineConfiguration->iat);
 	engineConfiguration->iat.config.bias_resistor = 1500; // same as OEM ECU
 
-	// set_cranking_charge_angle 35
+	// set cranking_charge_angle 35
 	engineConfiguration->crankingChargeAngle = 70;
-	// set_cranking_timing_angle 0
+	// set cranking_timing_angle 0
 	engineConfiguration->crankingTimingAngle = -45;
 
 	// set_global_trigger_offset_angle 34

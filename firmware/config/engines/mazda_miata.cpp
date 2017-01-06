@@ -121,7 +121,7 @@ static const ignition_table_t miata_maf_advance_table = { {/*0  engineLoad=1.200
 static void setDefaultCrankingFuel(engine_configuration_s *engineConfiguration) {
 	// todo: set cranking parameters method based on injectors and displacement?
 
-	// set_cranking_fuel 5
+	// set cranking_fuel 5
 	engineConfiguration->cranking.baseFuel = 5;
 }
 
@@ -174,9 +174,9 @@ void common079721_2351(engine_configuration_s *engineConfiguration, board_config
 
 	boardConfiguration->fuelPumpPin = GPIO_UNASSIGNED; // fuel pump is not controlled by ECU on this engine
 
-	// set_cranking_injection_mode 0
+	// set cranking_injection_mode 0
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
-	// set_injection_mode 2
+	// set injection_mode 2
 	engineConfiguration->injectionMode = IM_BATCH;
 
 	// Frankenstein analog input #1: adc1
@@ -235,7 +235,7 @@ static void setMiata1994_common(DECLARE_ENGINE_PARAMETER_F) {
 	commonMiataNa(PASS_ENGINE_PARAMETER_F);
 	engineConfiguration->specs.displacement = 1.839;
 
-	// set_cranking_timing_angle 0
+	// set cranking_timing_angle 0
 	engineConfiguration->crankingTimingAngle = 0;
 
 	engineConfiguration->crankingChargeAngle = 70;
