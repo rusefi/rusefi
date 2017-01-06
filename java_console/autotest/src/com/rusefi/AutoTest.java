@@ -223,7 +223,7 @@ public class AutoTest {
 
         // switching to Speed Density
         sendCommand("set mock_map_voltage 1");
-        sendComplexCommand("set_algorithm 3");
+        sendComplexCommand("set algorithm 3");
         IoUtil.changeRpm(2600);
         IoUtil.changeRpm(2000);
         chart = nextChart();
