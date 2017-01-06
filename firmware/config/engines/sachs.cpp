@@ -1,7 +1,7 @@
 /**
  * @file	sachs.cpp
  *
- * set_engine_type 29
+ * set engine_type 29
  * http://rusefi.com/forum/viewtopic.php?f=3&t=396
  *
  * @date Jan 26, 2015
@@ -22,7 +22,7 @@ void setSachs(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->specs.firingOrder = FO_1;
 	engineConfiguration->engineChartSize = 400;
 
-	 // set_injection_offset 0
+	 // set injection_offset 0
 	engineConfiguration->extraInjectionOffset = 0;
 
 	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER);

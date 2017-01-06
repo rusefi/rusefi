@@ -3,7 +3,7 @@
  *
  * http://rusefi.com/forum/viewtopic.php?f=15&t=644
  *
- * set_engine_type 42
+ * set engine_type 42
  *
  * @date May 4, 2016
  * @author Andrey Belomutskiy, (c) 2012-2017

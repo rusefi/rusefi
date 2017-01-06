@@ -1,7 +1,7 @@
 /*
  * @file suzuki_vitara.cpp
  *
- * set_engine_type 36
+ * set engine_type 36
  *
  * @author Andrey Belomutskiy, (c) 2012-2017
  * @date Oct 17, 2015

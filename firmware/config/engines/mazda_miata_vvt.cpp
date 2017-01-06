@@ -1,7 +1,7 @@
 /*
  * @file	mazda_miata_vvt.cpp
  *
- * set_engine_type 47
+ * set engine_type 47
  *
  * @date Oct 4, 2016
  * @author Andrey Belomutskiy, (c) 2012-2017
@@ -111,7 +111,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->dizzySparkOutputPin = GPIOE_8;
 
-	// set_global_trigger_offset_angle 670
+	// set global_trigger_offset_angle 670
 	engineConfiguration->globalTriggerAngleOffset = 670;
 
 	// enable trigger_details

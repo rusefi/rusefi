@@ -215,32 +215,32 @@ void setEngineLoadAccelMult(float value) {
 	accelInfo();
 }
 
-static void setTpsAccelThr(float value) {
+void setTpsAccelThr(float value) {
 	engineConfiguration->tpsAccelEnrichmentThreshold = value;
 	accelInfo();
 }
 
-static void setTpsDecelThr(float value) {
+void setTpsDecelThr(float value) {
 	engineConfiguration->tpsDecelEnleanmentThreshold = value;
 	accelInfo();
 }
 
-static void setTpsDecelMult(float value) {
+void setTpsDecelMult(float value) {
 	engineConfiguration->tpsDecelEnleanmentMultiplier = value;
 	accelInfo();
 }
 
-static void setDecelThr(float value) {
+void setDecelThr(float value) {
 	engineConfiguration->engineLoadDecelEnleanmentThreshold = value;
 	accelInfo();
 }
 
-static void setDecelMult(float value) {
+void setDecelMult(float value) {
 	engineConfiguration->engineLoadDecelEnleanmentMultiplier = value;
 	accelInfo();
 }
 
-static void setTpsAccelLen(int length) {
+void setTpsAccelLen(int length) {
 	if (length < 1) {
 		scheduleMsg(logger, "Length should be positive");
 		return;

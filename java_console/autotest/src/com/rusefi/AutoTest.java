@@ -108,8 +108,8 @@ public class AutoTest {
         setEngineType(23);
         sendCommand("set suckedOffCoef 0");
         sendCommand("set addedToWallCoef 0");
-        sendCommand("set_mock_map_voltage 1");
-        sendCommand("set_mock_vbatt_voltage 1.20");
+        sendCommand("set mock_map_voltage 1");
+        sendCommand("set mock_vbatt_voltage 1.20");
         sendCommand("disable cylinder_cleanup");
         EngineChart chart;
         String msg = "2003 Neon cranking ";
@@ -173,7 +173,7 @@ public class AutoTest {
     private static void testMazdaProtege() {
         setEngineType(14);
         EngineChart chart;
-        sendCommand("set_mock_vbatt_voltage 1.395");
+        sendCommand("set mock_vbatt_voltage 1.395");
         IoUtil.changeRpm(200);
         IoUtil.changeRpm(260);
         IoUtil.changeRpm(200);
@@ -222,7 +222,7 @@ public class AutoTest {
         assertWave(msg, chart, EngineChart.SPARK_3, 0.13333, x + 360);
 
         // switching to Speed Density
-        sendCommand("set_mock_map_voltage 1");
+        sendCommand("set mock_map_voltage 1");
         sendComplexCommand("set_algorithm 3");
         IoUtil.changeRpm(2600);
         IoUtil.changeRpm(2000);
@@ -257,7 +257,7 @@ public class AutoTest {
         assertWave(msg, chart, EngineChart.SPARK_1, 0.01666, x, x + 120, x + 240, x + 360, x + 480, x + 600);
 
         assertWaveNull(msg, chart, EngineChart.TRIGGER_2);
-        sendComplexCommand("set_trigger_type 1"); // TT_FORD_ASPIRE
+        sendComplexCommand("set trigger_type 1"); // TT_FORD_ASPIRE
         chart = nextChart();
         assertTrue(msg, chart.get(EngineChart.TRIGGER_2) != null);
     }
@@ -265,8 +265,8 @@ public class AutoTest {
     private static void testFordAspire() {
         setEngineType(3);
         sendCommand("disable cylinder_cleanup");
-        sendCommand("set_mock_map_voltage 1");
-        sendCommand("set_mock_vbatt_voltage 2.2");
+        sendCommand("set mock_map_voltage 1");
+        sendCommand("set mock_vbatt_voltage 2.2");
         String msg;
         EngineChart chart;
         // todo: interesting changeRpm(100);
@@ -334,8 +334,8 @@ public class AutoTest {
         sendCommand("set_fuel_map 2200 4.2 15.66");
         sendCommand("set_fuel_map 2000 4.2 15.66");
         // mock 2 means 4 on the gauge because of the divider. should we simplify this?
-        sendCommand("set_mock_maf_voltage 2");
-        sendComplexCommand("set_global_trigger_offset_angle 175");
+        sendCommand("set mock_maf_voltage 2");
+        sendComplexCommand("set global_trigger_offset_angle 175");
         chart = nextChart();
 
         assertWaveFall(msg + " fuel", chart, EngineChart.INJECTOR_1, 0.763, 238.75);
@@ -347,8 +347,8 @@ public class AutoTest {
         assertWave(chart, EngineChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
         assertWaveNull(chart, EngineChart.SPARK_2);
 
-        sendComplexCommand("set_global_trigger_offset_angle 130");
-        sendComplexCommand("set_injection_offset 369");
+        sendComplexCommand("set global_trigger_offset_angle 130");
+        sendComplexCommand("set injection_offset 369");
         chart = nextChart();
         x = 33;
         assertWave(chart, EngineChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
@@ -365,8 +365,8 @@ public class AutoTest {
         assertWave(chart, EngineChart.SPARK_2, 0.133, x);
 
         // switching to Speed Density
-        sendCommand("set_mock_maf_voltage 2");
-        sendComplexCommand("set_algorithm 3");
+        sendCommand("set mock_maf_voltage 2");
+        sendComplexCommand("set algorithm 3");
         IoUtil.changeRpm(2400);
         IoUtil.changeRpm(2000);
         nextChart();

@@ -450,31 +450,31 @@ static void setMockVoltage(int hwChannel, float voltage) {
 	engine->engineState.mockAdcState.setMockVoltage(hwChannel, voltage);
 }
 
-static void setCltVoltage(float voltage) {
+void setCltVoltage(float voltage) {
 	setMockVoltage(engineConfiguration->clt.adcChannel, voltage);
 }
 
-static void setIatVoltage(float voltage) {
+void setIatVoltage(float voltage) {
 	setMockVoltage(engineConfiguration->iat.adcChannel, voltage);
 }
 
-static void setMafVoltage(float voltage) {
+void setMafVoltage(float voltage) {
 	setMockVoltage(engineConfiguration->mafAdcChannel, voltage);
 }
 
-static void setAfrVoltage(float voltage) {
+void setAfrVoltage(float voltage) {
 	setMockVoltage(engineConfiguration->afr.hwChannel, voltage);
 }
 
-static void setTpsVoltage(float voltage) {
+void setTpsVoltage(float voltage) {
 	setMockVoltage(engineConfiguration->tpsAdcChannel, voltage);
 }
 
-static void setMapVoltage(float voltage) {
+void setMapVoltage(float voltage) {
 	setMockVoltage(engineConfiguration->map.sensor.hwChannel, voltage);
 }
 
-static void setVBattVoltage(float voltage) {
+void setVBattVoltage(float voltage) {
 	setMockVoltage(engineConfiguration->vbattAdcChannel, voltage);
 }
 
@@ -489,13 +489,6 @@ static void initMockVoltage(void) {
 	setIatVoltage(2);
 #endif /* EFI_SIMULATOR */
 
-	addConsoleActionF("set_mock_iat_voltage", setIatVoltage);
-
-	addConsoleActionF("set_mock_maf_voltage", setMafVoltage);
-	addConsoleActionF("set_mock_afr_voltage", setAfrVoltage);
-	addConsoleActionF("set_mock_tps_voltage", setTpsVoltage);
-	addConsoleActionF("set_mock_map_voltage", setMapVoltage);
-	addConsoleActionF("set_mock_vbatt_voltage", setVBattVoltage);
 }
 
 #endif /* EFI_ENABLE_MOCK_ADC */

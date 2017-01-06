@@ -3,7 +3,7 @@
  * @brief	1996 Ford Aspire default engine configuration
  *
  * FORD_ASPIRE_1996 = 3
- * set_engine_type 3
+ * set engine_type 3
  *
  * @date Sep 9, 2013
  * @author Andrey Belomutskiy, (c) 2012-2017

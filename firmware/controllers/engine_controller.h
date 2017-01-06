@@ -19,4 +19,12 @@ void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_F);
 void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S);
 void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S);
 
+void setVBattVoltage(float voltage);
+void setMapVoltage(float voltage);
+void setTpsVoltage(float voltage);
+void setAfrVoltage(float voltage);
+void setMafVoltage(float voltage);
+void setIatVoltage(float voltage);
+void setCltVoltage(float voltage);
+
 #endif /* ENGINE_STATUS_H_ */

@@ -1,9 +1,9 @@
 /**
  * @file	test_engine.cpp
  *
- * set_engine_type 26
+ * set engine_type 26
  * VVT
- * set_engine_type 45
+ * set engine_type 45
  *
  * @date Nov 14, 2014
  * @author Andrey Belomutskiy, (c) 2012-2017
@@ -60,13 +60,13 @@ void setTestVVTEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->trigger.customTotalToothCount = 3;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
 
-	// set_algorithm 3
+	// set algorithm 3
 	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
 
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->camInput = GPIOA_5;
 
-	// set_global_trigger_offset_angle 0
+	// set global_trigger_offset_angle 0
 	engineConfiguration->globalTriggerAngleOffset = 0;
 
 	engineConfiguration->vvtMode = VVT_SECOND_HALF;

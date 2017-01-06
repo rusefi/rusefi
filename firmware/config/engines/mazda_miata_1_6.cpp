@@ -2,7 +2,7 @@
  * @file mazda_miata_1_6.cpp
  *
  * Frankenso board
- * set_engine_type 41
+ * set engine_type 41
  *
  * @date Apr 16, 2016
  * @author Andrey Belomutskiy, (c) 2012-2017

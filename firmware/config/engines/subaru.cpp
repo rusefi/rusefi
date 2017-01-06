@@ -2,7 +2,7 @@
  * @file	subaru.cpp
  *
  * SUBARU_2003_WRX
- * set_engine_type 22
+ * set engine_type 22
  *
  * @date Sep 14, 2014
  * @author Andrey Belomutskiy, (c) 2012-2017

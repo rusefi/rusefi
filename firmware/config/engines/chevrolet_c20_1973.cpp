@@ -6,7 +6,7 @@
  * 4 wire IAC
  * 8 pin HEI module
  *
- * set_engine_type 37
+ * set engine_type 37
  *
  *
  * @date Dec 20, 2015

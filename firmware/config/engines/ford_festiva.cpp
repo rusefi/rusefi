@@ -1,7 +1,7 @@
 /*
  * @file ford_festiva.cpp
  *
- * set_engine_type 14
+ * set engine_type 14
  *
  * http://rusefi.com/wiki/index.php?title=Vehicle:Mazda_Protege_1993
  * http://rusefi.com/forum/viewtopic.php?f=3&t=537
@@ -64,7 +64,7 @@ EXTERN_ENGINE;
 
 /**
  * pin 1I/W9 - extra +5v
- * set_engine_type 14
+ * set engine_type 14
  */
 void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;
@@ -131,11 +131,11 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	setWholeIatCorrTimingTable(0 PASS_ENGINE_PARAMETER);
 
 
-	// set_global_trigger_offset_angle -37
+	// set global_trigger_offset_angle -37
 	engineConfiguration->globalTriggerAngleOffset = -37;
-	// set_ignition_offset 0
+	// set ignition_offset 0
 	engineConfiguration->ignitionOffset = 0;
-	// set_injection_offset 0
+	// set injection_offset 0
 	engineConfiguration->extraInjectionOffset = 0;
 
 	// todo: change to 15?

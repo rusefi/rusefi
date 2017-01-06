@@ -1,7 +1,7 @@
 /*
  * @file honda_600.cpp
  *
- * set_engine_type 43
+ * set engine_type 43
  *
  * @date Jul 9, 2016
  * @author Andrey Belomutskiy, (c) 2012-2017
@@ -68,8 +68,8 @@ void setHonda600(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->triggerInputPins[1] = GPIOC_6;
 
 
-	// set_global_trigger_offset_angle 180
-	// set_global_trigger_offset_angle 540
+	// set global_trigger_offset_angle 180
+	// set global_trigger_offset_angle 540
 	engineConfiguration->globalTriggerAngleOffset = 540;
 
     engineConfiguration->specs.cylindersCount = 4;

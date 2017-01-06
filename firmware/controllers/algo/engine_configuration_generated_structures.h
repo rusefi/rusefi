@@ -791,7 +791,7 @@ typedef struct {
 typedef struct {
 	/**
 	 * http://rusefi.com/wiki/index.php?title=Manual:Engine_Type
-	 * set_engine_type X
+	 * set engine_type X
 	 * offset 0
 	 */
 	engine_type_e engineType;

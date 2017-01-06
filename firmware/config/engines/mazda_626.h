@@ -1,7 +1,7 @@
 /**
  * @file	mazda_626.h
  *
- * set_engine_type 28
+ * set engine_type 28
  *
  * @date Jan 16, 2015
  * @author Andrey Belomutskiy, (c) 2012-2017

@@ -2,7 +2,7 @@
  * @file	citroenBerlingoTU3JP.cpp
  *
  * CITROEN_TU3JP
- * set_engine_type 15
+ * set engine_type 15
  * Board pin out for Frankenstein
  *
  * This config overrides some values of the default configuration which is set by setDefaultConfiguration() method

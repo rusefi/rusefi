@@ -958,30 +958,85 @@ typedef struct {
 	VoidInt callback;
 } command_i_s;
 
+typedef struct {
+	const char *token;
+	VoidFloat callback;
+} command_f_s;
+
+command_f_s commandsF[] = {{"mock_iat_voltage", setIatVoltage},
+		{"mock_maf_voltage", setMafVoltage},
+		{"mock_afr_voltage", setAfrVoltage},
+		{"mock_tps_voltage", setTpsVoltage},
+		{"mock_map_voltage", setMapVoltage},
+		{"mock_vbatt_voltage", setVBattVoltage},
+		{"ignition_offset", setIgnitionOffset},
+		{"injection_offset", setInjectionOffset},
+		{"global_trigger_offset_angle", setGlobalTriggerAngleOffset},
+		{"cranking_fuel", setCrankingFuel},
+		{"cranking_timing_angle", setCrankingTimingAngle},
+		{"cranking_charge_angle", setCrankingChargeAngle},
+		{"vbatt_divider", setVBattDivider},
+		{"clt_bias", setCltBias},
+		{"iat_bias", setIatBias},
+//		{"", },
+//		{"", },
+//		{"", },
+		//		{"", },
+		//		{"", },
+		//		{"", },
+};
+
 command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"cranking_rpm", setCrankingRpm},
 		{"cranking_injection_mode", setCrankingInjectionMode},
 		{"injection_mode", setInjectionMode},
-//		{"", },
-//		{"", },
-//		{"", },
-//		{"", },
-//		{"", },
-//		{"", },
-//		{"", },
+		{"sensor_chart_mode", setSensorChartMode},
+		{"fixed_mode_timing", setFixedModeTiming},
+		{"timing_mode", setTimingMode},
+		{"engine_type", setEngineType},
+		{"rpm_hard_limit", setRpmHardLimit},
+		{"firing_order", setFiringOrder},
+		{"algorithm", setAlgorithmInt},
+		{"injection_pin_mode", setInjectionPinMode},
+		{"ignition_pin_mode", setIgnitionPinMode},
+		{"idle_pin_mode", setIdlePinMode},
+		{"fuel_pump_pin_mode", setFuelPumpPinMode},
+		{"malfunction_indicator_pin_mode", setMalfunctionIndicatorPinMode},
+		{"operation_mode", setOM},
+		{"trigger_type", setTriggerType},
+		{"idle_solenoid_freq", setIdleSolenoidFrequency},
+		//		{"", },
+		//		{"", },
+		//		{"", },
+		//		{"", },
+		//		{"", },
+		//		{"", },
+		//		{"", },
+		//		{"", },
+		//		{"", },
+		//		{"", },
 };
 
 static void setValue(const char *paramStr, const char *valueStr) {
 	float valueF = atoff(valueStr);
 	int valueI = atoi(valueStr);
 
-	command_i_s *current = &commandsI[0];
-	while (current < commandsI + sizeof(commandsI)/sizeof(commandsI[0])) {
-		if (strEqualCaseInsensitive(paramStr, current->token)) {
-			current->callback(valueI);
+	command_f_s *currentF = &commandsF[0];
+	while (currentF < commandsF + sizeof(commandsF)/sizeof(commandsF[0])) {
+		if (strEqualCaseInsensitive(paramStr, currentF->token)) {
+			currentF->callback(valueF);
 			return;
 		}
-		current++;
+		currentF++;
+	}
+
+	command_i_s *currentI = &commandsI[0];
+	while (currentI < commandsI + sizeof(commandsI)/sizeof(commandsI[0])) {
+		if (strEqualCaseInsensitive(paramStr, currentI->token)) {
+			currentI->callback(valueI);
+			return;
+		}
+		currentI++;
 	}
 
 
@@ -1006,12 +1061,6 @@ static void setValue(const char *paramStr, const char *valueStr) {
 //	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {
 	} else if (strEqualCaseInsensitive(paramStr, "warningPeriod")) {
 		engineConfiguration->warningPeriod = valueI;
-	} else if (strEqualCaseInsensitive(paramStr, "cranking_fuel")) {
-		setCrankingFuel(valueF);
-	} else if (strEqualCaseInsensitive(paramStr, "cranking_timing_angle")) {
-		setCrankingTimingAngle(valueF);
-	} else if (strEqualCaseInsensitive(paramStr, "cranking_charge_angle")) {
-		setCrankingChargeAngle(valueF);
 	} else if (strEqualCaseInsensitive(paramStr, "dwell")) {
 		setConstantDwell(valueF PASS_ENGINE_PARAMETER);
 	} else if (strEqualCaseInsensitive(paramStr, "engineSnifferRpmThreshold")) {
@@ -1044,6 +1093,8 @@ static void setValue(const char *paramStr, const char *valueStr) {
 }
 
 void initSettings(engine_configuration_s *engineConfiguration) {
+	// todo: start saving values into flash right away?
+
 	addConsoleActionP("showconfig", (VoidPtr) doPrintConfiguration, &engine);
 	addConsoleAction("tempinfo", printTemperatureInfo);
 	addConsoleAction("tpsinfo", printTPSInfo);
@@ -1057,26 +1108,12 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionI("set_timing_mode", setTimingMode);
 	addConsoleActionI("set_engine_type", setEngineType);
 
-	addConsoleActionI("set_injection_pin_mode", setInjectionPinMode);
-	addConsoleActionI("set_ignition_pin_mode", setIgnitionPinMode);
-	addConsoleActionI("set_idle_pin_mode", setIdlePinMode);
-	addConsoleActionI("set_fuel_pump_pin_mode", setFuelPumpPinMode);
-	addConsoleActionI("set_malfunction_indicator_pin_mode", setMalfunctionIndicatorPinMode);
-	addConsoleActionI("set_operation_mode", setOM);
-	// todo: start saving values into flash right away?
 
 	addConsoleActionF("set_global_fuel_correction", setGlobalFuelCorrection);
-
-	addConsoleActionF("set_cranking_fuel", setCrankingFuel); // todo: remove
-	addConsoleActionF("set_cranking_timing_angle", setCrankingTimingAngle);// todo: remove
-	addConsoleActionF("set_cranking_charge_angle", setCrankingChargeAngle);
 
 	addConsoleAction("set_one_coil_ignition", setOneCoilIgnition);
 	addConsoleAction("set_wasted_spark_ignition", setWastedIgnition);
 	addConsoleAction("set_individual_coils_ignition", setIndividualCoilsIgnition);
-
-
-	addConsoleActionI("set_injection_mode", setInjectionMode);
 
 	addConsoleActionF("set_whole_phase_map", setWholePhaseMapCmd);
 	addConsoleActionF("set_whole_timing_map", setWholeTimingMapCmd);
@@ -1088,9 +1125,6 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionF("set_whole_timing_map", setWholeTimingMap);
 	addConsoleActionSSS("set_timing_map", setTimingMap);
 
-	addConsoleActionI("set_rpm_hard_limit", setRpmHardLimit);
-	addConsoleActionI("set_firing_order", setFiringOrder);
-	addConsoleActionI("set_algorithm", setAlgorithmInt);
 	addConsoleAction("stopengine", (Void) stopEngine);
 
 	// todo: refactor this - looks like all boolean flags should be controlled with less code duplication
@@ -1101,15 +1135,9 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionS("disable", disable);
 
 	addConsoleActionII("set_toothed_wheel", setToothedWheel);
-	addConsoleActionI("set_trigger_type", setTriggerType);
 
-	addConsoleActionF("set_vbatt_divider", setVBattDivider);
 
 	addConsoleActionF("set_injector_lag", setInjectorLag);
-
-	addConsoleActionF("set_clt_bias", setCltBias);
-	addConsoleActionF("set_iat_bias", setIatBias);
-	addConsoleActionI("set_idle_solenoid_freq", setIdleSolenoidFrequency);
 
 	addConsoleActionFF("set_fan", setFanSetting);
 
