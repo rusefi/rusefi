@@ -27,7 +27,9 @@
 
 EXTERN_ENGINE;
 
+#if !EFI_UNIT_TEST || defined(__DOXYGEN__)
 extern TunerStudioOutputChannels tsOutputChannels;
+#endif
 
 static ign_Map3D_t advanceMap("advance");
 static ign_Map3D_t iatAdvanceCorrectionMap("iat corr");
@@ -83,8 +85,10 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 		iatCorrection = iatAdvanceCorrectionMap.getValue((float) rpm, engine->engineState.iat);
 	}
 	if (engineConfiguration->debugMode == DBG_TIMING) {
+#if !EFI_UNIT_TEST || defined(__DOXYGEN__)
 		tsOutputChannels.debugFloatField1 = iatCorrection;
 		tsOutputChannels.debugFloatField2 = engine->engineState.cltTimingCorrection;
+#endif
 	}
 
 	float result = advanceMap.getValue((float) rpm, engineLoad)

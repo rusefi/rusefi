@@ -35,7 +35,7 @@
 static Logging * logging;
 
 static int consoleActionCount = 0;
-static TokenCallback consoleActions[CONSOLE_MAX_ACTIONS];
+static TokenCallback consoleActions[CONSOLE_MAX_ACTIONS] CCM_OPTIONAL;
 
 #define SECURE_LINE_PREFIX "sec!"
 #define SECURE_LINE_PREFIX_LENGTH 4
@@ -152,7 +152,7 @@ static int getParameterCount(action_type_e parameterType) {
  * @brief This function prints out a list of all available commands
  */
 void helpCommand(void) {
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	if (isBoardTestMode()) {
 		printBoardTestState();
 		return;

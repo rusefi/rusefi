@@ -84,9 +84,9 @@ static single_wave_s waves[PWM_PHASE_MAX_WAVE_PER_PWM] = { single_wave_s(pinStat
 		single_wave_s(pinStates3) };
 static single_wave_s sr[PWM_PHASE_MAX_WAVE_PER_PWM] = { waves[0], waves[1], waves[2] };
 
-static float swtchTms[PWM_PHASE_MAX_COUNT];
+static float switchTimesBuffer[PWM_PHASE_MAX_COUNT];
 
-PwmConfig triggerSignal(swtchTms, sr);
+PwmConfig triggerSignal(switchTimesBuffer, sr);
 
 #define DO_NOT_STOP 999999999
 
