@@ -925,6 +925,14 @@ fileVersion = { 20161225 }
       yBins       = iatFuelCorr
       gauge       = IATGauge
 	
+	curve = cltTimingCorrCurve, "Warmup timing correction"
+      columnLabel = "Coolant", "Extra"
+      xAxis       =  -40, 120, 10
+      yAxis       =  0,  50, 100
+      xBins       = cltTimingBins, coolant
+      yBins       = cltTimingExtra
+      gauge       = CLTGauge
+
 	curve = cltFuelCorrCurve, "Warmup fuel manual Multiplier"
       columnLabel = "Coolant", "Multiplier"
       xAxis       =  -40, 120, 10
@@ -1333,6 +1341,7 @@ fileVersion = { 20161225 }
 		subMenu = cltFuelCorrCurve,			"Warmup fuel manual Multiplier", 0, {useWarmupPidAfr == 0}
 		subMenu = warmupTargetAfrCurve,		"Warmup fuel auto correction AFR target", 0, {useWarmupPidAfr == 1}
 		subMenu = cltIdleCurve,				"Warmup IAC position manual Multiplier"
+		subMenu = cltTimingCorrCurve,		"Warmup timing correction"
 		subMenu = std_separator
 		subMenu = fuelTableTbl,				"Fuel Table", 0, {fuelAlgorithm != 3}
         subMenu = veTableTbl,           	"VE Table", 0, {fuelAlgorithm == 3}

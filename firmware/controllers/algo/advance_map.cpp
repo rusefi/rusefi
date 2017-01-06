@@ -27,6 +27,8 @@
 
 EXTERN_ENGINE;
 
+extern TunerStudioOutputChannels tsOutputChannels;
+
 static ign_Map3D_t advanceMap("advance");
 static ign_Map3D_t iatAdvanceCorrectionMap("iat corr");
 
@@ -80,8 +82,14 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 	} else {
 		iatCorrection = iatAdvanceCorrectionMap.getValue((float) rpm, engine->engineState.iat);
 	}
+	if (engineConfiguration->debugMode == DBG_TIMING) {
+		tsOutputChannels.debugFloatField1 = iatCorrection;
+		tsOutputChannels.debugFloatField2 = engine->engineState.cltTimingCorrection;
+	}
 
-	float result = advanceMap.getValue((float) rpm, engineLoad) + iatCorrection
+	float result = advanceMap.getValue((float) rpm, engineLoad)
+			+ iatCorrection
+			+ engine->engineState.cltTimingCorrection
 			// todo: uncomment once we get useable knock   - engine->knockCount
 			;
 	engine->m.advanceLookupTime = GET_TIMESTAMP() - engine->m.beforeAdvance;

@@ -139,6 +139,7 @@ EngineState::EngineState() {
 	targetAFR = 0;
 	tpsAccelEnrich = 0;
 	tChargeK = 0;
+	cltTimingCorrection = 0;
 	runningFuel = baseFuel = currentVE = 0;
 	timeOfPreviousWarning = -10;
 	baseTableFuel = iat = iatFuelCorrection = 0;
@@ -188,8 +189,10 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 #endif
 
 	} else {
-		cltFuelCorrection = getCltCorrection(clt PASS_ENGINE_PARAMETER);
+		cltFuelCorrection = getCltFuelCorrection(clt PASS_ENGINE_PARAMETER);
 	}
+
+	cltTimingCorrection = getCltTimingCorrection(clt PASS_ENGINE_PARAMETER);
 
 	engineNoiseHipLevel = interpolate2d(rpm, engineConfiguration->knockNoiseRpmBins,
 					engineConfiguration->knockNoise, ENGINE_NOISE_CURVE_SIZE);

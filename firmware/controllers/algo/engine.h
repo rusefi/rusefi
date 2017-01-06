@@ -91,6 +91,9 @@ public:
 	int lastErrorCode;
 	efitimesec_t timeOfPreviousWarning;
 
+	/**
+	 * speed-density logic, calculated air mass in gramms
+	 */
 	float airMass;
 
 	float engineNoiseHipLevel;
@@ -117,6 +120,8 @@ public:
 	 * ignition dwell duration as crankshaft angle
 	 */
 	angle_t dwellAngle;
+
+	angle_t cltTimingCorrection;
 
 	// fuel-related;
 	float iatFuelCorrection;

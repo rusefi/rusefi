@@ -174,11 +174,18 @@ void prepareFuelMap(DECLARE_ENGINE_PARAMETER_F) {
 /**
  * @brief Engine warm-up fuel correction.
  */
-float getCltCorrection(float clt DECLARE_ENGINE_PARAMETER_S) {
+float getCltFuelCorrection(float clt DECLARE_ENGINE_PARAMETER_S) {
 	if (cisnan(clt))
 		return 1; // this error should be already reported somewhere else, let's just handle it
 	return interpolate2d(clt, config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE) / PERCENT_MULT;
 }
+
+angle_t getCltTimingCorrection(float clt DECLARE_ENGINE_PARAMETER_S) {
+	if (cisnan(clt))
+		return 0; // this error should be already reported somewhere else, let's just handle it
+	return interpolate2d(clt, engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra, CLT_TIMING_CURVE_SIZE);
+}
+
 
 float getIatCorrection(float iat DECLARE_ENGINE_PARAMETER_S) {
 	if (cisnan(iat))

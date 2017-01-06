@@ -527,14 +527,17 @@ static OutputPin communicationPin;
 OutputPin warningPin;
 OutputPin runningPin;
 
-static OutputPin *leds[] = { &warningPin, &runningPin, &enginePins.errorLedPin, &communicationPin, &enginePins.checkEnginePin };
+static OutputPin *leds[] = { &warningPin, &runningPin, &enginePins.checkEnginePin,
+		&enginePins.errorLedPin, &communicationPin, &enginePins.checkEnginePin };
 
 extern pin_output_mode_e DEFAULT_OUTPUT;
 
-static void initStatisLeds() {
+static void initStatusLeds(void) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	outputPinRegisterExt2("led: comm status", &communicationPin,
 			engineConfiguration->communicationPin, &DEFAULT_OUTPUT);
+	// we initialize this here so that we can blink it on start-up
+	outputPinRegisterExt2("MalfunctionIndicator", &enginePins.checkEnginePin, boardConfiguration->malfunctionIndicatorPin, &DEFAULT_OUTPUT);
 #endif
 
 #if EFI_WARNING_LED || defined(__DOXYGEN__)
@@ -829,7 +832,7 @@ void startStatusThreads(Engine *engine) {
 	// todo: refactoring needed, this file should probably be split into pieces
 	chThdCreateStatic(lcdThreadStack, sizeof(lcdThreadStack), NORMALPRIO, (tfunc_t) lcdThread, engine);
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	initStatisLeds();
+	initStatusLeds();
 	chThdCreateStatic(blinkingStack, sizeof(blinkingStack), NORMALPRIO, (tfunc_t) blinkingThread, NULL);
 #endif /* EFI_PROD_CODE */
 }
