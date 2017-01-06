@@ -25,7 +25,7 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->map.sensor.type = MT_DODGE_NEON_2003;
 	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
 
-	// set_cranking_charge_angle 30
+	// set cranking_charge_angle 30
 	engineConfiguration->crankingChargeAngle = 30;
 
 	// set_whole_fuel_map 6
@@ -60,7 +60,7 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->engineChartSize = 450;
 
-	// set_cranking_fuel 7
+	// set cranking_fuel 7
 	engineConfiguration->cranking.baseFuel = 7;
 
 	// set_global_trigger_offset_angle -50

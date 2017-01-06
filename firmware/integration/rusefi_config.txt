@@ -106,7 +106,7 @@ end_struct
 
 struct cranking_parameters_s
 float baseFuel;+Fuel squirt duration while cranking\nA number of curves adjust this value according to CLT/IAT/TPS etc;"ms",       1,     0,    0, 200,     1
-int16_t rpm;+Cranking mode threshold. Special cranking logic controls fuel and spark while RPM is below this threshold\nset_cranking_rpm X;"RPM",      1,     0,    0, 3000,      0
+int16_t rpm;+Cranking mode threshold. Special cranking logic controls fuel and spark while RPM is below this threshold\nset cranking_rpm X;"RPM",      1,     0,    0, 3000,      0
 end_struct
 
 #define debug_mode_e_enum "Alternator_PID", "TPS accel enrich", "Warmup PID", "IDLE", "EL accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT", "post-crank enrich", "mode10", "mode11", "mode12", "mode13", "mode14", "mode15"
@@ -229,7 +229,7 @@ int16_t tpsErrorDetectionTooHigh;;"%",       1,     0,    -40, 200,     0
 cranking_parameters_s cranking
 float primingSquirtDurationMs;;"*C",       1,     0,    -40, 200,     1
 	float ignitionDwellForCrankingMs;;"ms",        1,     0,    0, 200,     1
-float crankingChargeAngle;+While cranking (which causes battery voltage to drop) we can calculate dwell time in shaft\ndegrees, not in absolute time as in running mode.\nset_cranking_charge_angle X;"deg",    1,      0,       0,  3000.0,      0
+float crankingChargeAngle;+While cranking (which causes battery voltage to drop) we can calculate dwell time in shaft\ndegrees, not in absolute time as in running mode.\nset cranking_charge_angle X;"deg",    1,      0,       0,  3000.0,      0
 
 
 MAP_sensor_config_s map;@see hasMapSensor\n@see isMapAveragingEnabled
@@ -280,7 +280,7 @@ custom injection_mode_e 4 bits, U32, @OFFSET@, [0:1], "Simultaneous", "Sequentia
 injection_mode_e crankingInjectionMode;
 injection_mode_e injectionMode;+'batched' means two injectors are wired together\nset_injection_mode X
 angle_t extraInjectionOffset;+this is about deciding when the injector starts it's squirt\nSee also injectionPhase map\ntodo: do we need even need this since we have the map anyway?;"deg",    1,      0.0,       -720,     720,        2
-angle_t crankingTimingAngle;+Timing advance while engine cranking\nset_cranking_timing_angle X;     "deg",    1,      0.0,    -360,     360,        2
+angle_t crankingTimingAngle;+Timing advance while engine cranking\nset cranking_timing_angle X;     "deg",    1,      0.0,    -360,     360,        2
 
 custom ignition_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "One coil", "Individual Coils", "Wasted", "INVALID"
 ignition_mode_e ignitionMode;+'wasted' means one coil is driving two spark plugs in two cylinders, with one of the aparks not doing anything since it's happening on the exhaust cycle\nset_ignition_mode X

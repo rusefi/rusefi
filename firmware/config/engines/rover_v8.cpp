@@ -45,12 +45,12 @@ void setRoverv8(DECLARE_ENGINE_PARAMETER_F) {
 	// set_whole_fuel_map 3
 	setWholeFuelMap(3 PASS_ENGINE_PARAMETER);
 
-	// set_cranking_injection_mode 0
+	// set cranking_injection_mode 0
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
-	// set_injection_mode 1
+	// set injection_mode 1
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
-	// set_ignition_mode 2
+	// set ignition_mode 2
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
     // set_ignition_channels

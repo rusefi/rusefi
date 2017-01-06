@@ -270,7 +270,7 @@ public class AutoTest {
         String msg;
         EngineChart chart;
         // todo: interesting changeRpm(100);
-        sendComplexCommand("set_cranking_rpm 500");
+        sendComplexCommand("set cranking_rpm 500");
         IoUtil.changeRpm(200);
 
         double x;
@@ -287,27 +287,27 @@ public class AutoTest {
 
         IoUtil.changeRpm(200);
 
-        sendCommand("set_cranking_charge_angle 65");
-        sendCommand("set_cranking_timing_angle -31");
+        sendCommand("set cranking_charge_angle 65");
+        sendCommand("set cranking_timing_angle -31");
 
         chart = nextChart();
         x = 55;
         assertWave("aspire cranking", chart, EngineChart.SPARK_1, 0.18, x, x + 180, x + 360, x + 540);
 
-        sendCommand("set_cranking_timing_angle -40");
+        sendCommand("set cranking_timing_angle -40");
         chart = nextChart();
         x = 64;
         assertWave("aspire", chart, EngineChart.SPARK_1, 0.18, x, x + 180, x + 360, x + 540);
-        sendCommand("set_cranking_timing_angle 149");
+        sendCommand("set cranking_timing_angle 149");
 
-        sendCommand("set_cranking_charge_angle 40");
+        sendCommand("set cranking_charge_angle 40");
         chart = nextChart();
         x = 80;
         assertWave("aspire", chart, EngineChart.SPARK_1, 40.0 / 360, x, x + 180, x + 360, x + 540);
-        sendCommand("set_cranking_charge_angle 65");
+        sendCommand("set cranking_charge_angle 65");
 
         IoUtil.changeRpm(600);
-        sendComplexCommand("set_cranking_rpm 700");
+        sendComplexCommand("set cranking_rpm 700");
         chart = nextChart();
         x = 55;
         assertWave("cranking@600", chart, EngineChart.SPARK_1, 0.18, x, x + 180, x + 360, x + 540);

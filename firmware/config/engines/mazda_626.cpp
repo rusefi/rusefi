@@ -47,14 +47,14 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	// set_global_trigger_offset_angle 106
 	engineConfiguration->globalTriggerAngleOffset = 106;
-	// set_ignition_mode 2
+	// set ignition_mode 2
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
-	// set_cranking_timing_angle 15
+	// set cranking_timing_angle 15
 	engineConfiguration->crankingTimingAngle = 8;
 	engineConfiguration->crankingChargeAngle = 70;
 
-	// set_cranking_fuel 9
+	// set cranking_fuel 9
 	engineConfiguration->cranking.baseFuel = 2.5;
 
 	engineConfiguration->rpmHardLimit = 7400;

@@ -170,7 +170,7 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	// set_cranking_rpm 550
 	engineConfiguration->cranking.rpm = 550;
 
-	// set_cranking_fuel 5
+	// set cranking_fuel 5
 	engineConfiguration->cranking.baseFuel = 5;
 
 //	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
@@ -183,16 +183,16 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setWholeFuelMap(9 PASS_ENGINE_PARAMETER);
 	setWholeTimingTable(12 PASS_ENGINE_PARAMETER);
 
-	// set_cranking_injection_mode 0
+	// set cranking_injection_mode 0
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
-	// set_injection_mode 1
+	// set injection_mode 1
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
 	// this is needed for injector lag auto-tune research if switching to batch
 	// enable two_wire_batch_injection
 	engineConfiguration->twoWireBatchInjection = true;
 
-	// set_ignition_mode 2
+	// set ignition_mode 2
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	// set_firing_order 2
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
@@ -208,9 +208,9 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	 * that's 1995 config
 	 */
 
-	// set_cranking_charge_angle 70
+	// set cranking_charge_angle 70
 	engineConfiguration->crankingChargeAngle = 70;
-	// set_cranking_timing_angle 0
+	// set cranking_timing_angle 0
 	engineConfiguration->crankingTimingAngle = 0;
 
 	// Frankenstein: low side - out #1: PC14
@@ -310,9 +310,9 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	copyFuelTable(veDodgeNeon2003Table, config->veTable);
 	//setMap(config->veTable, 50);
 
-	// set_cranking_charge_angle 70
+	// set cranking_charge_angle 70
 	engineConfiguration->crankingChargeAngle = 70;
-	// set_cranking_timing_angle 710
+	// set cranking_timing_angle 710
 	engineConfiguration->crankingTimingAngle = -710;
 
 	/**
