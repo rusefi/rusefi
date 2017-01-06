@@ -22,7 +22,8 @@ static int joyB = 0;
 static int joyC = 0;
 static int joyD = 0;
 
-#define NT_EVENT_GAP US2NT(1000)
+// 50ms
+#define NT_EVENT_GAP US2NT(50 *1000)
 
 static Logging *sharedLogger;
 static efitick_t lastEventTime = 0;
