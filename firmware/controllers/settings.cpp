@@ -23,6 +23,7 @@
 #include "efiGpio.h"
 #include "engine_math.h"
 #include "alternatorController.h"
+#include "idle_thread.h"
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "rtc_helper.h"
@@ -978,6 +979,18 @@ command_f_s commandsF[] = {{"mock_iat_voltage", setIatVoltage},
 		{"vbatt_divider", setVBattDivider},
 		{"clt_bias", setCltBias},
 		{"iat_bias", setIatBias},
+		{"tps_accel_threshold", setTpsAccelThr},
+		{"tps_decel_threshold", setTpsDecelThr},
+		{"tps_decel_multiplier", setTpsDecelMult},
+		{"engine_load_accel_threshold", setEngineLoadAccelThr},
+		{"engine_load_accel_multiplier", setEngineLoadAccelMult},
+		{"engine_decel_threshold", setDecelThr},
+		{"engine_decel_multiplier", setDecelMult},
+		{"idle_p", setIdlePFactor},
+		{"idle_i", setIdleIFactor},
+		{"idle_d", setIdleDFactor},
+		//		{"", },
+		//		{"", },
 //		{"", },
 //		{"", },
 //		{"", },
@@ -1005,8 +1018,8 @@ command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"operation_mode", setOM},
 		{"trigger_type", setTriggerType},
 		{"idle_solenoid_freq", setIdleSolenoidFrequency},
-		//		{"", },
-		//		{"", },
+		{"tps_accel_len", setTpsAccelLen},
+		{"engine_load_accel_len", setEngineLoadAccelLen},
 		//		{"", },
 		//		{"", },
 		//		{"", },

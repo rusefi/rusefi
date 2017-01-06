@@ -271,17 +271,7 @@ void initAccelEnrichment(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	tpsTpsMap.init(config->tpsTpsAccelTable, config->tpsTpsAccelFromRpmBins, config->tpsTpsAccelToRpmBins);
 
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
-	addConsoleActionI("set_tps_accel_len", setTpsAccelLen);
-	addConsoleActionF("set_tps_accel_threshold", setTpsAccelThr);
-	//addConsoleActionF("set_tps_accel_multiplier", setTpsAccelMult);
-	addConsoleActionF("set_tps_decel_threshold", setTpsDecelThr);
-	addConsoleActionF("set_tps_decel_multiplier", setTpsDecelMult);
 
-	addConsoleActionI("set_engine_load_accel_len", setEngineLoadAccelLen);
-	addConsoleActionF("set_engine_load_accel_threshold", setEngineLoadAccelThr);
-	addConsoleActionF("set_engine_load_accel_multiplier", setEngineLoadAccelMult);
-	addConsoleActionF("set_engine_decel_threshold", setDecelThr);
-	addConsoleActionF("set_engine_decel_multiplier", setDecelMult);
 	addConsoleAction("accelinfo", accelInfo);
 
 	updateAccelParameters();

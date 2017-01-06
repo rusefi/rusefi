@@ -231,25 +231,25 @@ static void apply(void) {
 //	idleMath.updateFactors(engineConfiguration->idlePFactor, engineConfiguration->idleIFactor, engineConfiguration->idleDFactor, engineConfiguration->idleDT);
 }
 
-static void setIdlePFactor(float value) {
+void setIdlePFactor(float value) {
 	engineConfiguration->idleRpmPid.pFactor = value;
 	apply();
 	showIdleInfo();
 }
 
-static void setIdleIFactor(float value) {
+void setIdleIFactor(float value) {
 	engineConfiguration->idleRpmPid.iFactor = value;
 	apply();
 	showIdleInfo();
 }
 
-static void setIdleDFactor(float value) {
+void setIdleDFactor(float value) {
 	engineConfiguration->idleRpmPid.dFactor = value;
 	apply();
 	showIdleInfo();
 }
 
-static void setIdleDT(int value) {
+void setIdleDT(int value) {
 	engineConfiguration->idleDT = value;
 	apply();
 	showIdleInfo();
@@ -327,9 +327,6 @@ void startIdleThread(Logging*sharedLogger, Engine *engine) {
 	// split this whole file into manual controller and auto controller? move these commands into the file
 	// which would be dedicated to just auto-controller?
 	addConsoleActionI("set_idle_rpm", setTargetRpm);
-	addConsoleActionF("set_idle_p", setIdlePFactor);
-	addConsoleActionF("set_idle_i", setIdleIFactor);
-	addConsoleActionF("set_idle_d", setIdleDFactor);
 	addConsoleActionI("set_idle_dt", setIdleDT);
 
 	addConsoleAction("idlebench", startIdleBench);

@@ -15,5 +15,9 @@ percent_t getIdlePosition(void);
 void startIdleThread(Logging*sharedLogger, Engine *engine);
 void setDefaultIdleParameters(void);
 void startIdleBench(void);
+void setIdleDT(int value);
+void setIdlePFactor(float value);
+void setIdleIFactor(float value);
+void setIdleDFactor(float value);
 
 #endif /* IDLE_THREAD_H_ */
