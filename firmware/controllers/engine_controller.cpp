@@ -483,8 +483,6 @@ static void initMockVoltage(void) {
 	setCltVoltage(2);
 #endif /* EFI_SIMULATOR */
 
-	addConsoleActionF("set_mock_clt_voltage", setCltVoltage);
-
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
 	setIatVoltage(2);
 #endif /* EFI_SIMULATOR */

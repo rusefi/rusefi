@@ -56,5 +56,10 @@ typedef enum {
 void initHip9011(Logging *sharedLogger);
 void setHip9011FrankensoPinout(void);
 void hipAdcCallback(adcsample_t value);
+void setHipGain(float value);
+void setHipBand(float value);
+void setPrescalerAndSDO(int value);
+void setKnockThresh(float value);
+void setMaxKnockSubDeg(int value);
 
 #endif /* HIP9011_H_ */

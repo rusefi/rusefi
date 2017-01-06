@@ -26,6 +26,7 @@
 #include "idle_thread.h"
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
+#include "electronic_throttle.h"
 #include "rtc_helper.h"
 #include "rusefi.h"
 #include "pin_repository.h"
@@ -970,6 +971,7 @@ command_f_s commandsF[] = {{"mock_iat_voltage", setIatVoltage},
 		{"mock_tps_voltage", setTpsVoltage},
 		{"mock_map_voltage", setMapVoltage},
 		{"mock_vbatt_voltage", setVBattVoltage},
+		{"mock_clt_voltage", setCltVoltage},
 		{"ignition_offset", setIgnitionOffset},
 		{"injection_offset", setInjectionOffset},
 		{"global_trigger_offset_angle", setGlobalTriggerAngleOffset},
@@ -989,9 +991,12 @@ command_f_s commandsF[] = {{"mock_iat_voltage", setIatVoltage},
 		{"idle_p", setIdlePFactor},
 		{"idle_i", setIdleIFactor},
 		{"idle_d", setIdleDFactor},
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+		{"etb_p", setEtbPFactor},
+		{"etb_i", setEtbIFactor},
+#endif /* EFI_PROD_CODE */
+
 		//		{"", },
-		//		{"", },
-//		{"", },
 //		{"", },
 //		{"", },
 		//		{"", },
@@ -1020,9 +1025,9 @@ command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"idle_solenoid_freq", setIdleSolenoidFrequency},
 		{"tps_accel_len", setTpsAccelLen},
 		{"engine_load_accel_len", setEngineLoadAccelLen},
-		//		{"", },
-		//		{"", },
-		//		{"", },
+		{"idle_position", setIdleValvePosition},
+		{"idle_rpm", setTargetIdleRpm},
+		{"idle_dt", setIdleDT},
 		//		{"", },
 		//		{"", },
 		//		{"", },
@@ -1112,15 +1117,6 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleAction("tempinfo", printTemperatureInfo);
 	addConsoleAction("tpsinfo", printTPSInfo);
 	addConsoleAction("info", printAllInfo);
-
-	addConsoleActionF("set_ignition_offset", setIgnitionOffset);
-	addConsoleActionF("set_injection_offset", setInjectionOffset);
-	addConsoleActionF("set_global_trigger_offset_angle", setGlobalTriggerAngleOffset);
-	addConsoleActionI("set_sensor_chart_mode", setSensorChartMode);
-	addConsoleActionI("set_fixed_mode_timing", setFixedModeTiming);
-	addConsoleActionI("set_timing_mode", setTimingMode);
-	addConsoleActionI("set_engine_type", setEngineType);
-
 
 	addConsoleActionF("set_global_fuel_correction", setGlobalFuelCorrection);
 

@@ -237,26 +237,26 @@ static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE
 	engine->m.hipCbTime = GET_TIMESTAMP() - engine->m.beforeHipCb;
 }
 
-static void setMaxKnockSubDeg(int value){
+void setMaxKnockSubDeg(int value) {
     engineConfiguration->maxKnockSubDeg = value;
     showHipInfo();
 }
 
-static void setKnockThresh(float value){
+void setKnockThresh(float value) {
     engineConfiguration->knockVThreshold = value;
     showHipInfo();
 }
 
-static void setPrescalerAndSDO(int value) {
+void setPrescalerAndSDO(int value) {
 	engineConfiguration->hip9011PrescalerAndSDO = value;
 }
 
-static void setBand(float value) {
+void setHipBand(float value) {
 	engineConfiguration->knockBandCustom = value;
 	showHipInfo();
 }
 
-static void setGain(float value) {
+void setHipGain(float value) {
 	boardConfiguration->hip9011Gain = value;
 	showHipInfo();
 }
@@ -442,8 +442,8 @@ void initHip9011(Logging *sharedLogger) {
 	// MOSI PB15
 //	palSetPadMode(GPIOB, 15, PAL_MODE_ALTERNATE(EFI_SPI2_AF) | PAL_STM32_OTYPE_OPENDRAIN);
 
-	addConsoleActionF("set_gain", setGain);
-	addConsoleActionF("set_band", setBand);
+	addConsoleActionF("set_gain", setHipGain);
+	addConsoleActionF("set_band", setHipBand);
 	addConsoleActionI("set_hip_prescalerandsdo", setPrescalerAndSDO);
     addConsoleActionF("set_knock_threshold", setKnockThresh);
     addConsoleActionI("set_max_knock_sub_deg", setMaxKnockSubDeg);
