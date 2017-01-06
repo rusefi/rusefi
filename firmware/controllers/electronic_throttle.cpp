@@ -123,13 +123,13 @@ static void apply(void) {
 	pid.updateFactors(engineConfiguration->etb.pFactor, engineConfiguration->etb.iFactor, 0);
 }
 
-static void setEtbPFactor(float value) {
+void setEtbPFactor(float value) {
 	engineConfiguration->etb.pFactor = value;
 	apply();
 	showEthInfo();
 }
 
-static void setEtbIFactor(float value) {
+void setEtbIFactor(float value) {
 	engineConfiguration->etb.iFactor = value;
 	apply();
 	showEthInfo();
@@ -171,9 +171,6 @@ void initElectronicThrottle(void) {
 	addConsoleActionI("e", setThrottleConsole);
 
 	addConsoleAction("ethinfo", showEthInfo);
-
-	addConsoleActionF("set_etb_p", setEtbPFactor);
-	addConsoleActionF("set_etb_i", setEtbIFactor);
 
 	apply();
 

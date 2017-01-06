@@ -83,7 +83,7 @@ static void showIdleInfo(void) {
 			engineConfiguration->idleDT);
 }
 
-static void setIdleControlEnabled(int value) {
+void setIdleControlEnabled(int value) {
 	engineConfiguration->idleMode = value ? IM_AUTO : IM_MANUAL;
 	showIdleInfo();
 }
@@ -128,7 +128,7 @@ static void manualIdleController(int positionPercent) {
 	}
 }
 
-static void setIdleValvePosition(int positionPercent) {
+void setIdleValvePosition(int positionPercent) {
 	if (positionPercent < 1 || positionPercent > 99)
 		return;
 	scheduleMsg(logger, "setting idle valve position %d", positionPercent);
@@ -222,7 +222,7 @@ static msg_t ivThread(int param) {
 #endif
 }
 
-static void setTargetRpm(int value) {
+void setTargetIdleRpm(int value) {
 	idlePositionController.setTargetRpm(value);
 	scheduleMsg(logger, "target idle RPM %d", value);
 }
@@ -318,7 +318,6 @@ void startIdleThread(Logging*sharedLogger, Engine *engine) {
 
 	addConsoleAction("idleinfo", showIdleInfo);
 
-	addConsoleActionI("set_idle_position", setIdleValvePosition);
 
 	addConsoleActionI("set_idle_enabled", (VoidInt) setIdleControlEnabled);
 
@@ -326,8 +325,6 @@ void startIdleThread(Logging*sharedLogger, Engine *engine) {
 
 	// split this whole file into manual controller and auto controller? move these commands into the file
 	// which would be dedicated to just auto-controller?
-	addConsoleActionI("set_idle_rpm", setTargetRpm);
-	addConsoleActionI("set_idle_dt", setIdleDT);
 
 	addConsoleAction("idlebench", startIdleBench);
 	apply();
