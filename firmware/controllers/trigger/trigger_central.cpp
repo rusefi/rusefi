@@ -36,7 +36,9 @@ WaveChart waveChart;
 
 EXTERN_ENGINE;
 
-static histogram_s triggerCallback;
+#if EFI_HISTOGRAMS || defined(__DOXYGEN__)
+static histogram_s triggerCallbackHistogram;
+#endif /* EFI_HISTOGRAMS */
 
 static Logging *logger;
 
@@ -286,19 +288,19 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 		}
 
 	}
-#if EFI_HISTOGRAMS && EFI_PROD_CODE
+#if EFI_HISTOGRAMS || defined(__DOXYGEN__)
 	int afterCallback = hal_lld_get_counter_value();
 	int diff = afterCallback - beforeCallback;
 	// this counter is only 32 bits so it overflows every minute, let's ignore the value in case of the overflow for simplicity
 	if (diff > 0) {
-		hsAdd(&triggerCallback, diff);
+		hsAdd(&triggerCallbackHistogram, diff);
 	}
 #endif /* EFI_HISTOGRAMS */
 }
 
 void printAllCallbacksHistogram(void) {
-#if EFI_PROD_CODE
-	printHistogram(logger, &triggerCallback);
+#if EFI_HISTOGRAMS || defined(__DOXYGEN__)
+	printHistogram(logger, &triggerCallbackHistogram);
 #endif
 }
 
@@ -501,7 +503,7 @@ float getTriggerDutyCycle(int index) {
 #endif
 
 static void resetRunningTriggerCounters() {
-#if !EFI_UNIT_TEST
+#if !EFI_UNIT_TEST || defined(__DOXYGEN__)
 	engine->triggerCentral.resetCounters();
 	triggerInfo();
 #endif
@@ -511,18 +513,18 @@ void initTriggerCentral(Logging *sharedLogger, Engine *engine) {
 	logger = sharedLogger;
 	strcpy((char*) shaft_signal_msg_index, "x_");
 
-#if EFI_ENGINE_SNIFFER
+#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 	initWaveChart(&waveChart);
 #endif /* EFI_ENGINE_SNIFFER */
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
+#if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
 	addConsoleAction("triggerinfo", triggerInfo);
 	addConsoleAction("trigger_shape_info", triggerShapeInfo);
 	addConsoleAction("reset_trigger", resetRunningTriggerCounters);
 #endif
 
-#if EFI_HISTOGRAMS
-	initHistogram(&triggerCallback, "all callbacks");
+#if EFI_HISTOGRAMS || defined(__DOXYGEN__)
+	initHistogram(&triggerCallbackHistogram, "all callbacks");
 #endif /* EFI_HISTOGRAMS */
 }
 

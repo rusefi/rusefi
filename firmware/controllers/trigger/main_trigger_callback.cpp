@@ -408,12 +408,14 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 	}
 }
 
-static histogram_s mainLoopHisto;
+#if EFI_HISTOGRAMS || defined(__DOXYGEN__)
+static histogram_s mainLoopHistogram;
+#endif /* EFI_HISTOGRAMS */
 
 void showMainHistogram(void) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-	printHistogram(logger, &mainLoopHisto);
-#endif
+#if EFI_HISTOGRAMS || defined(__DOXYGEN__)
+	printHistogram(logger, &mainLoopHistogram);
+#endif /* EFI_HISTOGRAMS */
 }
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -512,10 +514,10 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
 	 */
 	handleSpark(limitedSpark, trgEventIndex, rpm PASS_ENGINE_PARAMETER);
-#if (EFI_HISTOGRAMS && EFI_PROD_CODE) || defined(__DOXYGEN__)
+#if EFI_HISTOGRAMS || defined(__DOXYGEN__)
 	int diff = hal_lld_get_counter_value() - beforeCallback;
 	if (diff > 0)
-	hsAdd(&mainLoopHisto, diff);
+	hsAdd(&mainLoopHistogram, diff);
 #endif /* EFI_HISTOGRAMS */
 
 	if (trgEventIndex == 0) {
@@ -559,7 +561,7 @@ void initMainEventListener(Logging *sharedLogger, Engine *engine) {
 #endif
 
 #if EFI_HISTOGRAMS || defined(__DOXYGEN__)
-	initHistogram(&mainLoopHisto, "main callback");
+	initHistogram(&mainLoopHistogram, "main callback");
 #endif /* EFI_HISTOGRAMS */
 
 	addTriggerEventListener(mainTriggerCallback, "main loop", engine);

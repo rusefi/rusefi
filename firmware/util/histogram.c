@@ -13,7 +13,7 @@
 #include "histogram.h"
 #include "main.h"
 
-#if EFI_HISTOGRAMS
+#if EFI_HISTOGRAMS || EFI_UNIT_TEST
 
 #define H_ACCURACY 0.05
 #define H_CONFIDENCE 0.8

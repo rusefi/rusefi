@@ -30,14 +30,15 @@ public:
 	void unregister();
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	ioportid_t port;
-	int pin;
+	uint8_t pin;
 #endif /* EFI_PROD_CODE */
+	int8_t currentLogicValue;
+	// 4 byte pointer is a bit of a memory waste here
 	pin_output_mode_e *modePtr;
 	/**
 	 * we track current pin status so that we do not touch the actual hardware if we want to write new pin bit
 	 * which is same as current pin value. This maybe helps in case of status leds, but maybe it's a total over-engineering
 	 */
-	int currentLogicValue;
 };
 
 class NamedOutputPin : public OutputPin {
@@ -48,6 +49,7 @@ public:
 	 * @return true if pin was stopped
 	 */
 	bool stop();
+	// todo: char pointer is a bit of a memory waste here, we can reduce RAM usage by software-based getName() method
 	const char *name;
 };
 
@@ -56,9 +58,10 @@ public:
 	InjectorOutputPin();
 	void reset();
 	efitimeus_t overlappingScheduleOffTime;
-	int injectorIndex;
+	// todo: implement this via address manipulation to reduce memory usage
+	int8_t injectorIndex;
 	bool cancelNextTurningInjectorOff;
-	int overlappingCounter;
+	int8_t overlappingCounter;
 };
 
 class IgnitionOutputPin : public NamedOutputPin {

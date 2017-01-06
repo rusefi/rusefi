@@ -55,10 +55,10 @@ static LEElementPool evalPool(evalPoolElements, LE_EVAL_POOL_SIZE);
 #define SYS_ELEMENT_POOL_SIZE 128
 #define UD_ELEMENT_POOL_SIZE 128
 
-static LEElement sysElements[SYS_ELEMENT_POOL_SIZE];
+static LEElement sysElements[SYS_ELEMENT_POOL_SIZE] CCM_OPTIONAL;
 LEElementPool sysPool(sysElements, SYS_ELEMENT_POOL_SIZE);
 
-static LEElement userElements[UD_ELEMENT_POOL_SIZE];
+static LEElement userElements[UD_ELEMENT_POOL_SIZE] CCM_OPTIONAL;
 LEElementPool userPool(userElements, UD_ELEMENT_POOL_SIZE);
 static LEElement * fsioLogics[LE_COMMAND_COUNT] CCM_OPTIONAL;
 
