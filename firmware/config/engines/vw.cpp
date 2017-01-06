@@ -1,7 +1,7 @@
 /*
  * @file vw.cpp
  *
- * set_engine_type 32
+ * set engine_type 32
  *
  * @date May 24, 2015
  * @author Andrey Belomutskiy, (c) 2012-2017
@@ -28,7 +28,7 @@ void setVwAba(DECLARE_ENGINE_PARAMETER_F) {
 	// set_whole_fuel_map 12
 	setWholeFuelMap(12 PASS_ENGINE_PARAMETER);
 
-	// set_global_trigger_offset_angle 93
+	// set global_trigger_offset_angle 93
 	engineConfiguration->globalTriggerAngleOffset = 93;
 
 
@@ -43,7 +43,7 @@ void setVwAba(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.displacement = 2.0;
 	engineConfiguration->injector.flow = 320; // 30lb/h
-	// set_algorithm 3
+	// set algorithm 3
 	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
 	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
 

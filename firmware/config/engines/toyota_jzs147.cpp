@@ -8,10 +8,10 @@
  * http://wilbo666.pbworks.com/w/page/37134472/2JZ-GTE%20JZS147%20Aristo%20Engine%20Wiring
  *
  * NON VVTi
- * set_engine_type 38
+ * set engine_type 38
  *
  * VVTi
- * set_engine_type 44
+ * set engine_type 44
  *
  * @date Dec 30, 2015
  * @author Andrey Belomutskiy, (c) 2012-2017
@@ -75,7 +75,7 @@ void setToyota_jzs147EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 //// temporary while I am fixing trigger bug
 //	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
-//	//set_trigger_type 16
+//	//set trigger_type 16
 //	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 //	engineConfiguration->trigger.customTotalToothCount = 36;
 //	engineConfiguration->trigger.customSkippedToothCount = 2;
@@ -109,7 +109,7 @@ void setToyota_2jz_vics(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->camInput = GPIOC_6;
 	engineConfiguration->vvtMode = VVT_2GZ;
 
-	// set_global_trigger_offset_angle 155
+	// set global_trigger_offset_angle 155
 	engineConfiguration->globalTriggerAngleOffset = 155; // todo
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK; // just for now

@@ -164,7 +164,7 @@ struct ThermistorConf @brief Thermistor curve parameters
 end_struct
 
 custom engine_type_e 4 bits, S32, @OFFSET@,   [0:2], "AUDI_AAN", "DODGE_NEON_1995", "FORD_ASPIRE_1996", "FORD_FIESTA", "NISSAN_PRIMERA", "HONDA_ACCORD", "FORD_INLINE_6_1995", "GY6_139QMB"
-engine_type_e engineType;http://rusefi.com/wiki/index.php?title=Manual:Engine_Type\nset_engine_type X
+engine_type_e engineType;http://rusefi.com/wiki/index.php?title=Manual:Engine_Type\nset engine_type X
 
 int engineSnifferRpmThreshold;Engine sniffer would be disabled above this rpm\nset engineSnifferRpmThreshold X;"RPM",      1,     0,    0,30000,      0
 
@@ -273,17 +273,17 @@ int sensorSnifferRpmThreshold;+Disable sensor sniffer above this rpm;"RPM",     
 
 
 custom engine_load_mode_e 4 bits, U32, @OFFSET@, [0:1], @@engine_load_mode_e_enum@@
-engine_load_mode_e fuelAlgorithm;+This setting controls which fuel quantity control algorithm is used.\nset_algorithm X
+engine_load_mode_e fuelAlgorithm;+This setting controls which fuel quantity control algorithm is used.\nset algorithm X
 
 
 custom injection_mode_e 4 bits, U32, @OFFSET@, [0:1], "Simultaneous", "Sequential", "Batch", "INVALID"
 injection_mode_e crankingInjectionMode;
-injection_mode_e injectionMode;+'batched' means two injectors are wired together\nset_injection_mode X
+injection_mode_e injectionMode;+'batched' means two injectors are wired together\nset injection_mode X
 angle_t extraInjectionOffset;+this is about deciding when the injector starts it's squirt\nSee also injectionPhase map\ntodo: do we need even need this since we have the map anyway?;"deg",    1,      0.0,       -720,     720,        2
 angle_t crankingTimingAngle;+Timing advance while engine cranking\nset cranking_timing_angle X;     "deg",    1,      0.0,    -360,     360,        2
 
 custom ignition_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "One coil", "Individual Coils", "Wasted", "INVALID"
-ignition_mode_e ignitionMode;+'wasted' means one coil is driving two spark plugs in two cylinders, with one of the aparks not doing anything since it's happening on the exhaust cycle\nset_ignition_mode X
+ignition_mode_e ignitionMode;+'wasted' means one coil is driving two spark plugs in two cylinders, with one of the aparks not doing anything since it's happening on the exhaust cycle\nset ignition_mode X
 
 angle_t ignitionOffset;+this value could be used to offset the whole ignition timing table by a constant;"RPM",    1,      0,       0,  3000.0,      0
 
@@ -292,7 +292,7 @@ timing_mode_e timingMode;
 
 angle_t fixedModeTiming;+This value is used in 'fixed timing' mode, i.e. constant timing\nThis mode is useful for instance while adjusting distributor location;"RPM",    1,      0,       0,  3000.0,      0
 
-angle_t globalTriggerAngleOffset;+Angle between Top Dead Center (TDC) and the first trigger event.\nKnowing this angle allows us to control timing and other angles in reference to TDC.\nset_global_trigger_offset_angle X;"deg",    1,      0,       -720,  720, 0
+angle_t globalTriggerAngleOffset;+Angle between Top Dead Center (TDC) and the first trigger event.\nKnowing this angle allows us to control timing and other angles in reference to TDC.\nset global_trigger_offset_angle X;"deg",    1,      0,       -720,  720, 0
 
 
 
@@ -337,7 +337,7 @@ custom bool32_t 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 #define trigger_type_e_enum "custom toothed wheel", "ford aspire", "dodge neon", "Miata NA", "Miata NB", "GM_7X", "Cooper", "Mazda SOHC 4", "60/2", "36/1", "Accord CD", "MITSU", "ACCORD 2", "ACCORD DIP", "Neon 2003", "MAZDA D 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Accord 1+24", "DODGE STRATUS",  "36_2_2_2", "Nissan", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "2003 neon crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "INVALID", "INVALID", "INVALID", "INVALID"
 
 custom trigger_type_e 4 bits,    U32,   @OFFSET@, [0:5], @@trigger_type_e_enum@@
-	trigger_type_e type;set_trigger_type X
+	trigger_type_e type;set trigger_type X
 
 	bit customIsSynchronizationNeeded;
 	bit customNeedSecondTriggerInput;

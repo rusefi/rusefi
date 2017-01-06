@@ -3,7 +3,7 @@
  *
  * MITSU_4G93 16
  *
- * set_engine_type 16
+ * set engine_type 16
  *
  * @date Aug 5, 2014
  * @author Andrey Belomutskiy, (c) 2012-2017
@@ -27,7 +27,7 @@ void setMitsubishiConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 
-	// set_global_trigger_offset_angle 671
+	// set global_trigger_offset_angle 671
 	engineConfiguration->globalTriggerAngleOffset = 671;
 
 	// set_cranking_rpm 550

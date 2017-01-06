@@ -2,10 +2,10 @@
  * @file	dodge_neon.cpp
  *
  * DODGE_NEON_1995 = 2
- * set_engine_type 2
+ * set engine_type 2
  *
  * DODGE_NEON_2003 = 23
- * set_engine_type 23
+ * set engine_type 23
  * http://rusefi.com/wiki/index.php?title=Vehicle:Dodge_Neon_2003
  *
  * This config overrides some values of the default configuration which is set by setDefaultConfiguration() method
@@ -197,11 +197,11 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	// set_firing_order 2
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 
-	// set_global_trigger_offset_angle 497
+	// set global_trigger_offset_angle 497
 	engineConfiguration->globalTriggerAngleOffset = 497;
-	// set_ignition_offset 350
+	// set ignition_offset 350
 	engineConfiguration->ignitionOffset = 350;
-	 // set_injection_offset 510
+	 // set injection_offset 510
 	engineConfiguration->extraInjectionOffset = 510 + 497;
 
 	/**
@@ -236,7 +236,7 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->mapErrorDetectionTooHigh = 120;
 
-	// set_injection_pin_mode 0
+	// set injection_pin_mode 0
 	boardConfiguration->injectionPinMode = OM_DEFAULT;
 
 	// Frankenstein: high side #1: PE8
@@ -246,7 +246,7 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[2] = GPIOE_10; // // Frankenstein: high side #2
 
-	// set_ignition_pin_mode 0
+	// set ignition_pin_mode 0
 	boardConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	setThermistorConfiguration(&engineConfiguration->clt, 0, 32500, 30, 7550, 100, 700);
@@ -266,9 +266,9 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 //	engineConfiguration->warmupAfrPid.dFactor = -0.02;
 	engineConfiguration->debugMode = WARMUP_ENRICH;
 
-	// set_global_trigger_offset_angle 38
+	// set global_trigger_offset_angle 38
 	engineConfiguration->globalTriggerAngleOffset = 38;
-	// set_injection_offset 0
+	// set injection_offset 0
 	engineConfiguration->extraInjectionOffset = 0;
 
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;

@@ -1,7 +1,7 @@
 /*
  * @file dodge_ram.cpp
  *
- * set_engine_type 31
+ * set engine_type 31
  *
  * @date Apr 22, 2015
  * @author Andrey Belomutskiy, (c) 2012-2017
@@ -63,7 +63,7 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_F) {
 	// set cranking_fuel 7
 	engineConfiguration->cranking.baseFuel = 7;
 
-	// set_global_trigger_offset_angle -50
+	// set global_trigger_offset_angle -50
 	engineConfiguration->globalTriggerAngleOffset = -50;
 
 	// set_global_fuel_correction 1

@@ -1,7 +1,7 @@
 /**
  * @file	acura_rsx.cpp
  *
- * set_engine_type 27
+ * set engine_type 27
  *
  * @date Jan 16, 2015
  * @author Andrey Belomutskiy, (c) 2012-2017

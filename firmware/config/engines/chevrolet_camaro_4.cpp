@@ -2,7 +2,7 @@
  * @file chevrolet_camaro_4.cpp
  *
  *
- * set_engine_type 35
+ * set engine_type 35
  *
  * @date Oct 16, 2015
  * @author Andrey Belomutskiy, (c) 2012-2017
@@ -40,7 +40,7 @@ void setCamaro4(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->tpsAdcChannel = EFI_ADC_2;
 
 	// todo: move this into trigger definition
-	// set_global_trigger_offset_angle 230
+	// set global_trigger_offset_angle 230
 	engineConfiguration->globalTriggerAngleOffset = 230;
 
 	engineConfiguration->iat.adcChannel = EFI_ADC_11;

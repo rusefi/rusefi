@@ -3,7 +3,7 @@
  *
  *
  * MAZDA_MIATA_NB1 = 9
- * set_engine_type 9
+ * set engine_type 9
  *
  * http://rusefi.com/forum/viewtopic.php?t=467
  * http://rusefi.com/forum/viewtopic.php?t=987

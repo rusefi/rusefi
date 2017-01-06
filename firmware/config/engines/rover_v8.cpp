@@ -5,7 +5,7 @@
  *
  * This config overrides some values of the default configuration which is set by setDefaultConfiguration() method
  *
- * set_engine_type 10
+ * set engine_type 10
  *
  * ROVER_V8 = 10
  *
@@ -119,7 +119,7 @@ void setRoverv8(DECLARE_ENGINE_PARAMETER_F) {
     */
     boardConfiguration->useStepperIdle = true;
 
-	// set_injection_pin_mode 0
+	// set injection_pin_mode 0
 	boardConfiguration->injectionPinMode = OM_DEFAULT;
 
 	boardConfiguration->canTxPin = GPIOB_6;

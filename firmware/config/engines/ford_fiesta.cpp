@@ -3,7 +3,7 @@
  * @brief	European 1990 Ford Fiesta
  *
  * FORD_FIESTA = 4
- * set_engine_type 4
+ * set engine_type 4
  *
  * @date Nov 22, 2013
  * @author Andrey Belomutskiy, (c) 2012-2017

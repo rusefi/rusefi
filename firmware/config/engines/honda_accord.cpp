@@ -9,13 +9,13 @@
  * http://rusefi.com/wiki/index.php?title=Vehicle:Honda_Accord_1995
  * http://rusefi.com/forum/viewtopic.php?f=3&t=621
  *
- * set_engine_type 6
+ * set engine_type 6
  *
- * set_engine_type 17
+ * set engine_type 17
  *   1+24 signal, JM Predule
  *
  *
- * set_engine_type 48
+ * set engine_type 48
  *   debug configuration to reproduce https://sourceforge.net/p/rusefi/tickets/319/
  *
  * @date Jan 12, 2014
@@ -73,7 +73,7 @@ static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_F) {
 	// set cranking_timing_angle 0
 	engineConfiguration->crankingTimingAngle = -45;
 
-	// set_global_trigger_offset_angle 34
+	// set global_trigger_offset_angle 34
 	engineConfiguration->globalTriggerAngleOffset = 34;
 
 	// set_rpm_hard_limit 4000
@@ -82,9 +82,9 @@ static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->cranking.rpm = 500;
 
 
-	// set_ignition_offset 350
+	// set ignition_offset 350
 //	engineConfiguration->ignitionOffset = 350;
-	 // set_injection_offset 510
+	 // set injection_offset 510
 //	engineConfiguration->extraInjectionOffset = 510;
 
 
@@ -202,7 +202,7 @@ void setHondaAccordConfiguration1_24_shifted(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->trigger.type = TT_HONDA_ACCORD_1_24_SHIFTED;
 	setHondaAccordConfigurationCommon(PASS_ENGINE_PARAMETER_F);
 
-	// set_global_trigger_offset_angle 0
+	// set global_trigger_offset_angle 0
 	engineConfiguration->globalTriggerAngleOffset = 0;
 
 }

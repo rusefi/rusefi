@@ -2,7 +2,7 @@
  * @file daihatsu.cpp
  *
  * Daihatsu 3-Cylinder KF-VE
- * set_engine_type 34
+ * set engine_type 34
  *
  * @date Sep 10, 2015
  * @author Andrey Belomutskiy, (c) 2012-2017

@@ -1,7 +1,7 @@
 /**
  * @file bmw_e34.cpp
  *
- * set_engine_type 25
+ * set engine_type 25
  *
  * Coil pairs: 1-6, 2-5, 3-4
  *
@@ -43,7 +43,7 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	// Trigger configuration
 //	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
-	// set_global_trigger_offset_angle 84
+	// set global_trigger_offset_angle 84
 	engineConfiguration->globalTriggerAngleOffset = 84;
 
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;

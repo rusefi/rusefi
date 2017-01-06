@@ -1,7 +1,7 @@
 /**
  * @file	mazda_626.cpp
  * MAZDA_626
- * set_engine_type 28
+ * set engine_type 28
  *
  * @date Jan 16, 2015
  * @author Andrey Belomutskiy, (c) 2012-2017
@@ -45,7 +45,7 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->injector.flow = 330;
 	engineConfiguration->specs.displacement = 2.0;
 
-	// set_global_trigger_offset_angle 106
+	// set global_trigger_offset_angle 106
 	engineConfiguration->globalTriggerAngleOffset = 106;
 	// set ignition_mode 2
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;

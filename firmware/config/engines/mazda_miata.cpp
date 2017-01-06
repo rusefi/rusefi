@@ -2,14 +2,14 @@
  * @file	mazda_miata.cpp
  *
  * FORD_ESCORT_GT = 14
- * set_engine_type 14
+ * set engine_type 14
  * http://rusefi.com/wiki/index.php?title=Vehicle:Mazda_Protege_1993
  *
  * MIATA_1990 = 19 (Frankenstein board)
  * MIATA_1994_DEVIATOR = 20
  * MIATA_1996 = 21
  * MIATA_1994_SPAGS = 24
- * set_engine_type 24
+ * set engine_type 24
  *
  * @date Apr 11, 2014
  * @author Andrey Belomutskiy, (c) 2012-2017
@@ -303,7 +303,7 @@ static void setMiata1994_common(DECLARE_ENGINE_PARAMETER_F) {
 
 /**
  * Frankenso board
- * set_engine_type 20
+ * set engine_type 20
  */
 void setMiata1994_d(DECLARE_ENGINE_PARAMETER_F) {
 	setMiata1994_common(PASS_ENGINE_PARAMETER_F);

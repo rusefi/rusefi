@@ -66,6 +66,10 @@ void initAccelEnrichment(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S);
 void setEngineLoadAccelLen(int len);
 void setEngineLoadAccelThr(float value);
 void setEngineLoadAccelMult(float value);
+void setTpsAccelThr(float value);
+void setTpsDecelThr(float value);
+void setTpsDecelMult(float value);
+
 void updateAccelParameters();
 
 #endif /* ACC_ENRICHMENT_H_ */
