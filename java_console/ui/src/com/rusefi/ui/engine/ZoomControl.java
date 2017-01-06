@@ -14,12 +14,11 @@ import java.awt.event.KeyEvent;
  * (c) Andrey Belomutskiy 2013-2017
  */
 class ZoomControl extends JPanel {
-//    private final JLabel currentValue = new JLabel();
     private double value;
     public ZoomControlListener listener = null;
     private final JButton resetZoom = new JButton("*");
 
-    ZoomProvider zoomProvider = new ZoomProvider() {
+    private ZoomProvider zoomProvider = new ZoomProvider() {
         @Override
         public double getZoomValue() {
             return value;
@@ -33,16 +32,6 @@ class ZoomControl extends JPanel {
     public ZoomControl() {
         super(new FlowLayout());
         setValue(1);
-
-//        final JTextField text = new JTextField() {
-//            @Override
-//            public Dimension getPreferredSize() {
-//                Dimension size = super.getPreferredSize();
-//                return new Dimension(200, size.height);
-//            }
-//        };
-
-//        add(currentValue);
 
         JButton plus = new JButton("+");
         plus.setMnemonic('z');
@@ -108,7 +97,7 @@ class ZoomControl extends JPanel {
     private void setValue(double value) {
         System.out.println("Zoom setValue " + value);
         this.value = value;
-        //currentValue.setText(String.format(" %.4fms", value));
+
         resetZoom.setEnabled(Math.abs(1 - value) > 0.01);
         if (listener != null)
             listener.onZoomChange();
