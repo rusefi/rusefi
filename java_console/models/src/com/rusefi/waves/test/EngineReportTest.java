@@ -1,7 +1,6 @@
 package com.rusefi.waves.test;
 
 import com.rusefi.waves.EngineReport;
-import com.rusefi.waves.ZoomProvider;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
@@ -21,6 +20,6 @@ public class EngineReportTest {
         assertEquals(14679, wr.getMinTime());
         assertEquals(43849, wr.getMaxTime());
 
-        assertEquals(59, wr.timeToScreen(18134, 500, ZoomProvider.DEFAULT));
+        assertEquals(59, wr.timeToScreen(18134, 500));
     }
 }

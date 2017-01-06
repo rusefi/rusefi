@@ -121,16 +121,16 @@ public class EngineReport implements TimeAxisTranslator {
     }
 
     @Override
-    public int timeToScreen(int time, int width, ZoomProvider zoomProvider) {
-        double translated = (time - minTime) * zoomProvider.getZoomValue() / getDuration();
+    public int timeToScreen(int time, int width) {
+        double translated = (time - minTime) * 1.0 / getDuration();
         return (int) (width * translated);
     }
 
     @Override
-    public double screenToTime(int screenX, int screenWidth, ZoomProvider zoomProvider) {
+    public double screenToTime(int screenX, int screenWidth) {
         //  / SYS_TICKS_PER_MS / 1000
-        double time = 1.0 * screenX * getDuration() / screenWidth / zoomProvider.getZoomValue() + minTime;
-        int x2 = timeToScreen((int) time, screenWidth, zoomProvider);
+        double time = 1.0 * screenX * getDuration() / screenWidth + minTime;
+//        int x2 = timeToScreen((int) time, screenWidth, zoomProvider);
 //        FileLog.rlog("screenToTime " + (screen - x2));
         return (int) time;
     }
