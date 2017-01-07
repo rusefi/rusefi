@@ -988,10 +988,10 @@ command_f_s commandsF[] = {{"mock_iat_voltage", setIatVoltage},
 		{"engine_load_accel_multiplier", setEngineLoadAccelMult},
 		{"engine_decel_threshold", setDecelThr},
 		{"engine_decel_multiplier", setDecelMult},
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 		{"idle_p", setIdlePFactor},
 		{"idle_i", setIdleIFactor},
 		{"idle_d", setIdleDFactor},
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
 		{"etb_p", setEtbPFactor},
 		{"etb_i", setEtbIFactor},
 #endif /* EFI_PROD_CODE */
@@ -1025,9 +1025,11 @@ command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"idle_solenoid_freq", setIdleSolenoidFrequency},
 		{"tps_accel_len", setTpsAccelLen},
 		{"engine_load_accel_len", setEngineLoadAccelLen},
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 		{"idle_position", setIdleValvePosition},
 		{"idle_rpm", setTargetIdleRpm},
 		{"idle_dt", setIdleDT},
+#endif /* EFI_PROD_CODE */
 		//		{"", },
 		//		{"", },
 		//		{"", },
