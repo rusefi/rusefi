@@ -88,7 +88,7 @@ public class AutoTest {
 
     static void setEngineType(int type) {
         currentEngineType = type;
-        sendCommand("set_engine_type " + type, COMPLEX_COMMAND_RETRY, 30);
+        sendCommand("set engine_type " + type, COMPLEX_COMMAND_RETRY, 30);
         sleep(10);
         sendCommand("enable self_stimulation");
     }
@@ -116,7 +116,7 @@ public class AutoTest {
         IoUtil.changeRpm(200);
         IoUtil.changeRpm(250); // another approach to artificial delay
         IoUtil.changeRpm(200);
-        assertEquals(12, SensorCentral.getInstance().getValue(Sensor.VBATT));
+        assertEquals("VBatt",12, SensorCentral.getInstance().getValue(Sensor.VBATT));
 
         chart = nextChart();
         double x = 100;
