@@ -45,7 +45,7 @@ public class SettingsTab {
                 Component c = (Component) e.getSource();
 
                 final JPopupMenu menu = new JPopupMenu();
-
+                menu.setLayout(new GridLayout(dialogs.keySet().size() / 2 + 1, 2));
                 for (final String name : dialogs.keySet()) {
                     JMenuItem item = new JMenuItem(name);
                     item.addActionListener(new ActionListener() {
