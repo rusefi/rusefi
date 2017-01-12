@@ -257,6 +257,11 @@ static void canInfo(void) {
 	scheduleMsg(&logger, "CAN rx count %d/tx ok %d/tx not ok %d", canReadCounter, canWriteOk, canWriteNotOk);
 }
 
+void setCanType(int type) {
+	engineConfiguration->canNbcType = (can_nbc_e)type;
+	canInfo();
+}
+
 #endif /* EFI_PROD_CODE */
 
 void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_F) {
