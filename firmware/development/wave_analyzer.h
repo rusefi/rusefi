@@ -30,7 +30,8 @@ public:
 
 	digital_input_s *hw;
 	const char *name;
-	volatile int eventCounter;
+	volatile int fallEventCounter;
+	volatile int riseEventCounter;
 
 	int currentRevolutionCounter;
 
@@ -60,6 +61,7 @@ public:
 
 void initWaveAnalyzer(Logging *sharedLogger);
 void printWave(Logging *logging);
+void showWaveInfo(void);
 
 #endif
 

@@ -57,7 +57,7 @@ static void ensureInitialized(WaveReader *reader) {
 
 static void waAnaWidthCallback(WaveReader *reader) {
 	efitick_t nowUs = getTimeNowUs();
-	reader->eventCounter++;
+	reader->riseEventCounter++;
 	reader->lastActivityTimeUs = nowUs;
 	addEngineSniffferEvent(reader->name, WC_UP);
 
@@ -70,7 +70,7 @@ static void waAnaWidthCallback(WaveReader *reader) {
 
 void WaveReader::onFallEvent() {
 	efitick_t nowUs = getTimeNowUs();
-	eventCounter++;
+	fallEventCounter++;
 	lastActivityTimeUs = nowUs;
 	addEngineSniffferEvent(name, WC_DOWN);
 
@@ -140,7 +140,7 @@ WaveReader::WaveReader() {
 	hw = NULL;
 	last_wave_high_widthUs = 0;
 	name = NULL;
-	eventCounter = 0;
+	fallEventCounter = riseEventCounter = 0;
 	currentRevolutionCounter = 0;
 	prevTotalOnTimeUs = 0;
 	totalOnTimeAccumulatorUs = 0;
@@ -254,6 +254,10 @@ void printWave(Logging *logging) {
 	reportWave(logging, 1);
 }
 
+void showWaveInfo(void) {
+	scheduleMsg(logger, "logic input #1: %d/%d", readers[0].fallEventCounter, readers[0].riseEventCounter);
+}
+
 void initWaveAnalyzer(Logging *sharedLogger) {
 	logger = sharedLogger;
 	if (hasFirmwareError()) {
@@ -264,6 +268,8 @@ void initWaveAnalyzer(Logging *sharedLogger) {
 	initWave(WA_CHANNEL_2, 1);
 
 	addTriggerEventListener(waTriggerEventListener, "wave analyzer", engine);
+
+	addConsoleAction("waveinfo", showWaveInfo);
 
 	addConsoleActionII("set_logic_input_mode", setWaveModeSilent);
 
