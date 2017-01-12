@@ -31,6 +31,7 @@ void stopCanPins(DECLARE_ENGINE_PARAMETER_F);
 void startCanPins(DECLARE_ENGINE_PARAMETER_F);
 void commonTxInit(int eid);
 void sendMessage();
+void setCanType(int type);
 void setTxBit(int offset, int index);
 void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_F);
 

@@ -28,6 +28,7 @@
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "electronic_throttle.h"
 #include "rtc_helper.h"
+#include "can_hw.h"
 #include "rusefi.h"
 #include "pin_repository.h"
 #include "hardware.h"
@@ -1026,6 +1027,7 @@ command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"tps_accel_len", setTpsAccelLen},
 		{"engine_load_accel_len", setEngineLoadAccelLen},
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
+		{"can_mode", setCanType},
 		{"idle_position", setIdleValvePosition},
 		{"idle_rpm", setTargetIdleRpm},
 		{"idle_dt", setIdleDT},
