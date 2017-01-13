@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 27 23:08:47 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 12 23:31:45 EST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -33,7 +33,7 @@ typedef struct {
 	float baseFuel;
 	/**
 	 * Cranking mode threshold. Special cranking logic controls fuel and spark while RPM is below this threshold
-	 * set_cranking_rpm X
+	 * set cranking_rpm X
 	 * offset 4
 	 */
 	int16_t rpm;
@@ -222,7 +222,7 @@ typedef struct {
 */
 typedef struct {
 	/**
-	 * set_trigger_type X
+	 * set trigger_type X
 	 * offset 0
 	 */
 	trigger_type_e type;
@@ -929,7 +929,7 @@ typedef struct {
 	/**
 	 * While cranking (which causes battery voltage to drop) we can calculate dwell time in shaft
 	 * degrees, not in absolute time as in running mode.
-	 * set_cranking_charge_angle X
+	 * set cranking_charge_angle X
 	 * offset 108
 	 */
 	float crankingChargeAngle;
@@ -994,7 +994,7 @@ typedef struct {
 	int rpmHardLimit;
 	/**
 	 * This setting controls which fuel quantity control algorithm is used.
-	 * set_algorithm X
+	 * set algorithm X
 	 * offset 424
 	 */
 	engine_load_mode_e fuelAlgorithm;
@@ -1004,7 +1004,7 @@ typedef struct {
 	injection_mode_e crankingInjectionMode;
 	/**
 	 * 'batched' means two injectors are wired together
-	 * set_injection_mode X
+	 * set injection_mode X
 	 * offset 432
 	 */
 	injection_mode_e injectionMode;
@@ -1017,13 +1017,13 @@ typedef struct {
 	angle_t extraInjectionOffset;
 	/**
 	 * Timing advance while engine cranking
-	 * set_cranking_timing_angle X
+	 * set cranking_timing_angle X
 	 * offset 440
 	 */
 	angle_t crankingTimingAngle;
 	/**
 	 * 'wasted' means one coil is driving two spark plugs in two cylinders, with one of the aparks not doing anything since it's happening on the exhaust cycle
-	 * set_ignition_mode X
+	 * set ignition_mode X
 	 * offset 444
 	 */
 	ignition_mode_e ignitionMode;
@@ -1045,7 +1045,7 @@ typedef struct {
 	/**
 	 * Angle between Top Dead Center (TDC) and the first trigger event.
 	 * Knowing this angle allows us to control timing and other angles in reference to TDC.
-	 * set_global_trigger_offset_angle X
+	 * set global_trigger_offset_angle X
 	 * offset 460
 	 */
 	angle_t globalTriggerAngleOffset;
@@ -2006,4 +2006,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 27 23:08:47 EST 2016
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 12 23:31:45 EST 2017

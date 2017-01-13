@@ -36,6 +36,7 @@ typedef enum {
 	FO_1_5_3_6_2_4 = 4,
 	FO_1_4_2_5_3_6 = 7,
 	FO_1_2_3_4_5_6 = 9,
+	FO_1_6_3_2_5_4 = 13, // EG33
 
 	Force_4b_firing_order = ENUM_32_BITS,
 } firing_order_e;

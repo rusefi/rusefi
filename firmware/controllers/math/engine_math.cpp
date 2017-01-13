@@ -289,6 +289,7 @@ static int order_1_2_4_5_3[] = {1, 2, 4, 5, 3};
 static int order_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4[] = { 1, 5, 3, 6, 2, 4 };
 static int order_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6[] = { 1, 4, 2, 5, 3, 6 };
 static int order_1_THEN_2_THEN_3_THEN_4_THEN_5_THEN_6[] = { 1, 2, 3, 4, 5, 6 };
+static int order_1_6_3_2_5_4[] = {1, 6, 3, 2, 5, 4};
 
 static int order_1_8_4_3_6_5_7_2[] = { 1, 8, 4, 3, 6, 5, 7, 2 };
 
@@ -332,6 +333,8 @@ int getCylinderId(firing_order_e firingOrder, int index) {
 		return order_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6[index];
 	case FO_1_2_3_4_5_6:
 		return order_1_THEN_2_THEN_3_THEN_4_THEN_5_THEN_6[index];
+	case FO_1_6_3_2_5_4:
+		return order_1_6_3_2_5_4[index];
 
 // 8 cylinder
 	case FO_1_8_4_3_6_5_7_2:
