@@ -1953,18 +1953,21 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
         field = "Fixed Dwell",           			ignitionDwellForCrankingMs, {useConstantDwellDuringCranking == 1}
 		field = "Charge Angle", 						crankingChargeAngle, {useConstantDwellDuringCranking == 0}
 	
+		dialog = postCrankingEnrichment, "Post-cranking short-time fuel enrichment"
+		field = "Target temperature", 			postCrankingTargetClt
+		field = "Post-Cranking factor", 				postCrankingFactor
+		field = "Duraction", 				postCrankingDurationSec
+		
 		
 ;			Tuning->Cranking
 	dialog = crankingDialog, "Cranking"				
 		field = "Cranking RPM limit",                	cranking_rpm
 		panel = crankingFuel
 		panel = crankingIgnition
+		panel = postCrankingEnrichment
 		field = ""
 		field = ""
 		field = "enable Cylinder Cleanup",				isCylinderCleanupEnabled
-		field = "Post-Cranking target (C)", 			postCrankingTargetClt
-		field = "Post-Cranking factor", 				postCrankingFactor
-		field = "Post-Cranking duraction", 				postCrankingDurationSec
 		
 		
 	dialog = EngineLoadAccelPanel, "Engine Load"
