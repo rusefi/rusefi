@@ -380,6 +380,8 @@ case FO_1_2_3_4_5_6:
 	return "FO_1_THEN_2_THEN_3_THEN_4_THEN_5_THEN_6";
 case FO_1:
   return "FO_ONE_CYLINDER";
+case FO_1_6_3_2_5_4:
+	return "FO_1_6_3_2_5_4";
 case FO_1_2_3:
 	return "FO_1_2_3";
 case FO_1_8_7_2_6_5_4_3:
