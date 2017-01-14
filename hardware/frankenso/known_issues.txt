@@ -117,9 +117,10 @@
 117) RESOLVED IN R0.5 Add pull down and series resistors to hi/low mosfet driver
 118)                  add silkscreen labels matching Frankenso analog inputs mapping on wiki - maybe closer to diodes?
 119) RESOLVED IN R0.5 change the injector mosfet to VNS14NV04P-E
-120) RESOLVED IN R0.5 "PB1 reset defaults" actually it's PD6
-121)		      XTAL x2 pinout should be #1 and #4
+120) RESOLVED IN R0.4.2 "PB1 reset defaults" actually it's PD6
+121) RESOLVED IN R0.5 Fix pinout of X2, it should be connected to pad 4 not pad 2. 
 122)                  need a jumper between W2 and D12-D23 - NB2 miata fly-back should be wired into main relay 12v not ignition on 12v
+123) RESOLVED IN R0.4.2 Change C302 from 0.01uF to 0.1uF, which removes loweres the filter cut off frequency, and decreases the noise seen by the ECU. 
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
