@@ -8,6 +8,9 @@
 
 #include "trigger_rover.h"
 
+/**
+ * https://en.wikipedia.org/wiki/Rover_K-series_engine
+ */
 void initializeRoverK(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
 
