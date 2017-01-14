@@ -155,7 +155,7 @@ void fanBench(void) {
 }
 
 void milBench(void) {
-	pinbench("0", "3000", "100", "1", &enginePins.checkEnginePin, boardConfiguration->malfunctionIndicatorPin);
+	pinbench("0", "500", "500", "16", &enginePins.checkEnginePin, boardConfiguration->malfunctionIndicatorPin);
 }
 
 void fuelPumpBenchExt(const char *durationMs) {
