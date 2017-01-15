@@ -128,7 +128,7 @@ typedef enum {
 	//P0102 Mass or Volume Air Flow Circuit Low Input
 	//P0103 Mass or Volume Air Flow Circuit High Input
 	//P0104 Mass or Volume Air Flow Circuit Intermittent
-	//P0105 Manifold Absolute Pressure/Barometric Pressure Circuit Malfunction
+	OBD_Manifold_Absolute_Pressure_Circuit_Malfunction = 105,
 	//P0106 Manifold Absolute Pressure/Barometric Pressure Circuit Range/Performance Problem
 	//P0107 Manifold Absolute Pressure/Barometric Pressure Circuit Low Input
 	//P0108 Manifold Absolute Pressure/Barometric Pressure Circuit High Input
@@ -1691,7 +1691,7 @@ typedef enum {
 	CUSTOM_OBD_ANGLE_CONSTRAINT_VIOLATION = 6022,
 	CUSTOM_OBD_23 = 6023,
 	CUSTOM_OBD_24 = 6024,
-	CUSTOM_OBD_MAP_VALUE = 6025,
+	CUSTOM_OBD_25 = 6025,
 	CUSTOM_OBD_26 = 6026,
 	CUSTOM_OBD_27 = 6027,
 	CUSTOM_OBD_28 = 6028,
@@ -1703,8 +1703,9 @@ typedef enum {
 	CUSTOM_OBD_33 = 6033,
 	CUSTOM_OBD_34 = 6034,
 	CUSTOM_OBD_TRG_DECODING = 6035,
+	// todo: looks like following two errors always happen together, it's just timing affects which one is published?
 	CUSTOM_SYNC_ERROR = 6036,
-	CUSTOM_SYNC_ERROR_2 = 6037,
+	CUSTOM_SYNC_COUNT_MISMATCH = 6037,
 	CUSTOM_OBD_38 = 6038,
 	CUSTOM_OBD_39 = 6039,
 
