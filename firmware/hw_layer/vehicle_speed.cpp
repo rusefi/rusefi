@@ -22,10 +22,19 @@ static efitick_t lastSignalTimeNt = 0;
 static efitick_t vssDiff = 0;
 static int vssCounter = 0;
 
+#define DEFAULT_MOCK_SPEED -1
+static float mockVehicleSpeed = DEFAULT_MOCK_SPEED; // in kilometers per hour
+
+void setMockVehicleSpeed(float speedKPH) {
+	mockVehicleSpeed = speedKPH;
+}
+
 /**
  * @return vehicle speed, in kilometers per hour
  */
 float getVehicleSpeed(void) {
+	if (mockVehicleSpeed != DEFAULT_MOCK_SPEED)
+		return mockVehicleSpeed;
 	if (!engineConfiguration->hasVehicleSpeedSensor)
 		return 0;
 	efitick_t nowNt = getTimeNowNt();

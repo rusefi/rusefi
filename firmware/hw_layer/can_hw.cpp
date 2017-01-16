@@ -53,12 +53,6 @@ CAN_BTR_SJW(0) | CAN_BTR_TS2(1) | CAN_BTR_TS1(8) | CAN_BTR_BRP(6) };
 static CANRxFrame rxBuffer;
 CANTxFrame txmsg;
 
-// todo: we would need a data structure here
-static int engine_rpm = 0;
-static float engine_clt = 0;
-
-static int rand = 1212321311;
-
 //static CANDriver *getCanDevice() {
 //	if(board)
 //}
@@ -98,7 +92,8 @@ void commonTxInit(int eid) {
 
 void sendMessage2(int size) {
 	txmsg.DLC = size;
-	msg_t result = canTransmit(&EFI_CAN_DEVICE, CAN_ANY_MAILBOX, &txmsg, TIME_INFINITE);
+	// 1 second timeout
+	msg_t result = canTransmit(&EFI_CAN_DEVICE, CAN_ANY_MAILBOX, &txmsg, MS2ST(1000));
 	if (result == RDY_OK) {
 		canWriteOk++;
 	} else {
@@ -119,17 +114,15 @@ static void canDashboardBMW(void) {
 	sendMessage();
 
 	commonTxInit(CAN_BMW_E46_RPM);
-	setShortValue(&txmsg, (int) (engine_rpm * 6.4), 2);
+	setShortValue(&txmsg, (int) (getRpmE(engine) * 6.4), 2);
 	sendMessage();
 
 	commonTxInit(CAN_BMW_E46_DME2);
-	setShortValue(&txmsg, (int) ((engine_clt + 48.373) / 0.75), 1);
+	setShortValue(&txmsg, (int) ((engine->engineState.clt + 48.373) / 0.75), 1);
 	sendMessage();
 }
 
 static void canMazdaRX8(void) {
-	rand = rand * 17;
-
 //	commonTxInit(0x300);
 //	sendMessage2(0);
 
@@ -138,7 +131,7 @@ static void canMazdaRX8(void) {
 #if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
 	float kph = getVehicleSpeed();
 
-	setShortValue(&txmsg, SWAP_UINT16(engine_rpm * 4), 0);
+	setShortValue(&txmsg, SWAP_UINT16(getRpmE(engine) * 4), 0);
 	setShortValue(&txmsg, 0xFFFF, 2);
 	setShortValue(&txmsg, SWAP_UINT16((int )(100 * kph + 10000)), 4);
 	setShortValue(&txmsg, 0, 6);
@@ -170,19 +163,19 @@ static void canMazdaRX8(void) {
 static void canDashboardFiat(void) {
 	//Fiat Dashboard
 	commonTxInit(CAN_FIAT_MOTOR_INFO);
-	setShortValue(&txmsg, (int) (engine_clt - 40), 3); //Coolant Temp
-	setShortValue(&txmsg, engine_rpm / 32, 6); //RPM
+	setShortValue(&txmsg, (int) (engine->engineState.clt - 40), 3); //Coolant Temp
+	setShortValue(&txmsg, getRpmE(engine) / 32, 6); //RPM
 	sendMessage();
 }
 
 static void canDashboardVAG(void) {
 	//VAG Dashboard
 	commonTxInit(CAN_VAG_RPM);
-	setShortValue(&txmsg, engine_rpm * 4, 2); //RPM
+	setShortValue(&txmsg, getRpmE(engine) * 4, 2); //RPM
 	sendMessage();
 
 	commonTxInit(CAN_VAG_CLT);
-	setShortValue(&txmsg, (int) ((engine_clt + 48.373) / 0.75), 1); //Coolant Temp
+	setShortValue(&txmsg, (int) ((engine->engineState.clt + 48.373) / 0.75), 1); //Coolant Temp
 	sendMessage();
 }
 
@@ -206,18 +199,19 @@ static void canInfoNBCBroadcast(can_nbc_e typeOfNBC) {
 }
 
 static void canRead(void) {
-	scheduleMsg(&logger, "waiting for CAN");
-	canReceive(&EFI_CAN_DEVICE, CAN_ANY_MAILBOX, &rxBuffer, TIME_INFINITE);
+	scheduleMsg(&logger, "Waiting for CAN");
+	msg_t result = canReceive(&EFI_CAN_DEVICE, CAN_ANY_MAILBOX, &rxBuffer, MS2ST(1000));
+	if (result == RDY_TIMEOUT) {
+		return;
+	}
 
+	scheduleMsg(&logger, "Got CAN message");
 	canReadCounter++;
 	printPacket(&rxBuffer);
 	obdOnCanPacketRx(&rxBuffer);
 }
 
 static void writeStateToCan(void) {
-	engine_rpm = getRpmE(engine);
-	engine_clt = 123; //getCoolantTemperature(engine);
-
 	canInfoNBCBroadcast(engineConfiguration->canNbcType);
 }
 
@@ -280,8 +274,18 @@ void startCanPins(DECLARE_ENGINE_PARAMETER_F) {
 	mySetPadMode2("CAN RX", boardConfiguration->canRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 }
 
+static bool isValidCanPin(brain_pin_e pin) {
+	return pin == GPIOB_6 || pin == GPIOB_12;
+}
+
 void initCan(void) {
 	isCanEnabled = (boardConfiguration->canTxPin != GPIO_UNASSIGNED) && (boardConfiguration->canRxPin != GPIO_UNASSIGNED);
+	if (isCanEnabled) {
+		if (!isValidCanPin(boardConfiguration->canTxPin))
+			firmwareError(CUSTOM_OBD_70, "invalid CAN %s", hwPortname(boardConfiguration->canTxPin));
+		if (!isValidCanPin(boardConfiguration->canRxPin))
+			firmwareError(CUSTOM_OBD_70, "invalid CAN %s", hwPortname(boardConfiguration->canRxPin));
+	}
 
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
