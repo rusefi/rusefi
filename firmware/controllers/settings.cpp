@@ -26,6 +26,7 @@
 #include "idle_thread.h"
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
+#include "vehicle_speed.h"
 #include "electronic_throttle.h"
 #include "rtc_helper.h"
 #include "can_hw.h"
@@ -990,6 +991,7 @@ command_f_s commandsF[] = {{"mock_iat_voltage", setIatVoltage},
 		{"engine_decel_threshold", setDecelThr},
 		{"engine_decel_multiplier", setDecelMult},
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
+		{"mock_vehicle_speed", setMockVehicleSpeed},
 		{"idle_p", setIdlePFactor},
 		{"idle_i", setIdleIFactor},
 		{"idle_d", setIdleDFactor},
