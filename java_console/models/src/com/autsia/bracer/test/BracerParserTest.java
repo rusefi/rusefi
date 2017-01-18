@@ -56,6 +56,8 @@ public class BracerParserTest {
 
     @Test
     public void testBooleanConversion() throws ParseException {
+        assertParse("1 2 + 3 -", "1 + 2 - 3");
+        assertParse("1 2 | 3 |", "1 | 2 | 3");
         assertParse("2 1 >", "2 > 1");
         assertParse("rpm 0 >", "rpm > false");
         assertParse("rpm 0 >", "(rpm > false)");

@@ -12,6 +12,7 @@ import java.util.*;
  * @see <a href="../../../license.html">License information</a>
  */
 public abstract class AbstractEvaluator<T> {
+	private static final boolean DETAILED_LOGGER = false;
 	private final Tokenizer tokenizer;
 	private final Map<String, Function> functions;
 	private final Map<String, List<Operator>> operators;
@@ -23,7 +24,6 @@ public abstract class AbstractEvaluator<T> {
 	public final Stack<String> stackRPN = new Stack<String>() {
 		@Override
 		public String push(String t) {
-			System.out.println("RPN push " + t);
 			return super.push(t);
 		}
 
@@ -137,7 +137,7 @@ public abstract class AbstractEvaluator<T> {
 			values.push(value!=null ? value : toValue(literal, evaluationContext));
 		} else if (token.isOperator()) {
 			Operator operator = token.getOperator();
-			stackRPN.push(operator.getRpnSymbol());
+			rpnPush("deq", operator.getRpnSymbol());
 			values.push(evaluate(operator, getArguments(values, operator.getOperandCount()), evaluationContext));
 		} else {
 			throw new IllegalArgumentException();
@@ -236,14 +236,16 @@ public abstract class AbstractEvaluator<T> {
 		final Deque<T> values = new ArrayDeque<T>() {
 			@Override
 			public void push(T t) {
-				System.out.println("v push " + t);
+				if (DETAILED_LOGGER)
+					System.out.println("v push " + t);
 				super.push(t);
 			}
 		}; // values stack
 		final Deque<Token> stack = new ArrayDeque<Token>() {
 			@Override
 			public void push(Token t) {
-				System.out.println("fun push " + t);
+				if (DETAILED_LOGGER)
+					System.out.println("fun push " + t);
 				super.push(t);
 			}
 
@@ -268,7 +270,8 @@ public abstract class AbstractEvaluator<T> {
 					}
 				}
 			} else if (token.isCloseBracket()) {
-				System.out.println("isCloseBracket");
+				if (DETAILED_LOGGER)
+					System.out.println("isCloseBracket");
 				if (previous==null) {
 					throw new IllegalArgumentException("expression can't start with a close bracket");
 				}
@@ -284,7 +287,8 @@ public abstract class AbstractEvaluator<T> {
 					Token sc = stack.pop();
 					if (sc.isOpenBracket()) {
 						if (sc.getBrackets().equals(brackets)) {
-							System.out.println("close>isOpenBracket");
+							if (DETAILED_LOGGER)
+								System.out.println("close>isOpenBracket");
 							openBracketFound = true;
 							break;
 						} else {
@@ -300,7 +304,7 @@ public abstract class AbstractEvaluator<T> {
 					throw new IllegalArgumentException("Parentheses mismatched");
 				}
 				if (!stack.isEmpty() && stack.peek().isFunction()) {
-					stackRPN.push(stack.peek().getLiteral());
+					rpnPush("function", stack.peek().getLiteral());
 					// If the token at the top of the stack is a function token, pop it
 					// onto the output queue.
 					int argCount = values.size()-previousValuesSize.pop();
@@ -351,7 +355,7 @@ public abstract class AbstractEvaluator<T> {
 					if (sc.isOperator()
 							&& ((token.getAssociativity().equals(Operator.Associativity.LEFT) && (token.getPrecedence() <= sc.getPrecedence())) ||
 									(token.getPrecedence() < sc.getPrecedence()))) {
-						stackRPN.push(sc.getOperator().getRpnSymbol());
+//						rpnPush("op1", sc.getOperator().getRpnSymbol());
 						// Pop o2 off the stack, onto the output queue;
 						output(values, stack.pop(), evaluationContext);
 					} else {
@@ -365,7 +369,7 @@ public abstract class AbstractEvaluator<T> {
 				if ((previous!=null) && previous.isLiteral()) {
 					throw new IllegalArgumentException("A literal can't follow another literal");
 				}
-				stackRPN.push(token.getBooleanHackedLiteral());
+				rpnPush("boolean", token.getBooleanHackedLiteral());
 				output(values, token, evaluationContext);
 			}
 			previous = token;
@@ -388,6 +392,12 @@ public abstract class AbstractEvaluator<T> {
 		Collections.reverse(stackRPN);
 
 		return values.pop();
+	}
+
+	private void rpnPush(String msg, String s) {
+		if (DETAILED_LOGGER)
+			System.out.println("RPN push " + msg + ": " + s);
+		stackRPN.push(s);
 	}
 
 	public String getRusEfi() {
