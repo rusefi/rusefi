@@ -113,6 +113,9 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 	/** The negate unary operator in the Excel like operator precedence.*/
 	public static final Operator NEGATE_HIGH = new Operator("-", 1, Operator.Associativity.RIGHT, 5);
 
+	/** The negate unary operator in the standard operator precedence.*/
+	public static final Operator NOT = new Operator("!", 1, Operator.Associativity.RIGHT, 3);
+	public static final Operator NOT2 = new Operator("not", 1, Operator.Associativity.RIGHT, 3, "!");
 
 	public static final Operator MORE = new Operator(">", 2, Operator.Associativity.LEFT, 6);
 	public static final Operator MORE_EQ = new Operator(">=", 2, Operator.Associativity.LEFT, 6);
@@ -140,7 +143,7 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 	public static final Operator MODULO = new Operator("%", 2, Operator.Associativity.LEFT, 2);
 
 	/** The standard whole set of predefined operators */
-	private static final Operator[] OPERATORS = new Operator[]{NEGATE, MORE, MORE_EQ, AND, AND2, OR, OR2, LESS, LESS_EQ, MINUS, PLUS, MULTIPLY, DIVIDE, EXPONENT, MODULO};
+	private static final Operator[] OPERATORS = new Operator[]{NEGATE, NOT, NOT2, MORE, MORE_EQ, AND, AND2, OR, OR2, LESS, LESS_EQ, MINUS, PLUS, MULTIPLY, DIVIDE, EXPONENT, MODULO};
 
 	/** The whole set of predefined functions */
 	private static final Function[] FUNCTIONS = new Function[]{SINE, COSINE, TANGENT, ASINE, ACOSINE, ATAN, SINEH, COSINEH, TANGENTH, MIN, MAX, SUM, AVERAGE, LN, LOG, ROUND, CEIL, FLOOR, ABS, RANDOM};
@@ -235,6 +238,8 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 	protected Double evaluate(Operator operator, Iterator<Double> operands, Object evaluationContext) {
 		if (NEGATE.equals(operator) || NEGATE_HIGH.equals(operator)) {
 			return -operands.next();
+		} else if (NOT.equals(operator) || NOT2.equals(operator)) {
+			return boolean2double(operands.next() != 1.0);
 		} else if (AND.equals(operator) || AND2.equals(operator)) {
 			return boolean2double((operands.next() == 1.0 ) && (operands.next() == 1.0));
 		} else if (OR.equals(operator) || OR2.equals(operator)) {

@@ -31,7 +31,11 @@ public class ParserTest {
 
     @Test
     public void testBooleanNot2() throws Exception {
-//        assertValue("0 !", "! false", 0);
+        assertValue("0 !", "! 0", 1);
+        assertValue("0 !", "not 0", 1);
+        assertValue("1 !", "not(1)", 0);
+        assertValue("0 !", "not(0)", 1);
+//        assertValue("1 0 | not 0 & 1 0 | |", "(((true | false) & not(false)) | (true | false))", 1);
     }
 
     private void assertValue(String expectedRpn, String expression, double expectedValue) {

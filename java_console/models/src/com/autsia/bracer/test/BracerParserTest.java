@@ -141,8 +141,7 @@ public class BracerParserTest {
 //        assertEquals("1", bracerParser.evaluate());
 //        assertEquals("1 0 | not 0 & 1 0 | |", bracerParser.getRusEfi());
 
-        bracerParser.parse("(((true | false) & not(false)) | (true | false))");
-        assertEquals("1", bracerParser.evaluate());
-        assertEquals("1 0 | not 0 & 1 0 | |", bracerParser.getRusEfi());
+//        assertValue("0 not", "not(0)", 1);
+        assertValue("1 0 | not 0 & 1 0 | |", "(((true | false) & not(false)) | (true | false))", 1);
     }
 }
