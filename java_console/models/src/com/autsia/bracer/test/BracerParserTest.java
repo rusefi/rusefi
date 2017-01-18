@@ -59,6 +59,7 @@ public class BracerParserTest {
         assertParse("2 1 >", "2 > 1");
         assertParse("rpm 0 >", "rpm > false");
         assertParse("rpm 0 >", "(rpm > false)");
+        assertParse("rpm user0 > clt user2 > |", "(rpm > user0) or (clt > user2)");
         assertParse("rpm user0 > clt user2 > | vbatt user1 > |", "(rpm > user0) or (clt > user2) or (vbatt > user1)");
     }
 

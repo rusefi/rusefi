@@ -351,7 +351,7 @@ public abstract class AbstractEvaluator<T> {
 					if (sc.isOperator()
 							&& ((token.getAssociativity().equals(Operator.Associativity.LEFT) && (token.getPrecedence() <= sc.getPrecedence())) ||
 									(token.getPrecedence() < sc.getPrecedence()))) {
-						stackRPN.push(sc.getLiteral());
+						stackRPN.push(sc.getOperator().getRpnSymbol());
 						// Pop o2 off the stack, onto the output queue;
 						output(values, stack.pop(), evaluationContext);
 					} else {
