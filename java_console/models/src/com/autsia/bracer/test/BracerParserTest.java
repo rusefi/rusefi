@@ -58,14 +58,18 @@ public class BracerParserTest {
 
     @Test
     public void testBooleanConversion() throws ParseException {
-        bracerParser.parse("rpm > false");
-        assertEquals("rpm 0 >", bracerParser.getRusEfi());
+        assertParse("rpm 0 >", "rpm > false");
+        assertParse("rpm 0 >", "(rpm > false)");
+        assertParse("rpm user0 > clt user2 > | vbatt user1 > |", "(rpm > user0) or (clt > user2) or (vbatt > user1)");
+    }
 
-        bracerParser.parse("(rpm > false)");
-        assertEquals("rpm 0 >", bracerParser.getRusEfi());
-
-        bracerParser.parse("(rpm > user0) or (clt > user2) or (vbatt > user1)");
-        assertEquals("rpm user0 > clt user2 > | vbatt user1 > |", bracerParser.getRusEfi());
+    private void assertParse(String expectedRpn, String expression) {
+        try {
+            bracerParser.parse(expression);
+        } catch (ParseException e) {
+            throw new IllegalStateException(e);
+        }
+        assertEquals(expectedRpn, bracerParser.getRusEfi());
     }
 
     @Test
