@@ -109,6 +109,13 @@ public class BracerParserTest {
 
     @Test
     public void testBooleanNot2() throws Exception {
+        assertEquals("0", bracerParser.parse("! false").evaluate());
+        assertEquals("0", bracerParser.parse("! 0").evaluate());
+        assertEquals("0", bracerParser.parse("1 & not(false)").evaluate());
+        assertEquals("0", bracerParser.parse("1 & (!(false))").evaluate());
+//        assertEquals("0", bracerParser.parse("1 &  !(0)").evaluate());
+//        assertEquals("0", bracerParser.parse("1 &  !(false)").evaluate());
+
         bracerParser.parse("1 & not(false)");
         assertEquals("0", bracerParser.evaluate());// todo: this does not seem right
         assertEquals("1 not 0 &", bracerParser.getRusEfi()); // todo: this does not seem right

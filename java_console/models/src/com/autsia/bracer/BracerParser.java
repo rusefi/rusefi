@@ -60,7 +60,7 @@ public class BracerParser {
      *                                     correct
      * @since 3.0
      */
-    public void parse(String expression) throws ParseException {
+    public BracerParser parse(String expression) throws ParseException {
         /* cleaning stacks */
         stackOperations.clear();
         stackRPN.clear();
@@ -140,6 +140,7 @@ public class BracerParser {
 
 		/* reverse stack */
         Collections.reverse(stackRPN);
+        return this;
     }
 
     /**
@@ -170,8 +171,16 @@ public class BracerParser {
                 stackAnswer.push(token);
             } else if (isOperator(token)) {
                 Double a = Double.valueOf(stackAnswer.pop());
-                Double b = Double.valueOf(stackAnswer.pop());
                 boolean aBoolean = a.doubleValue() == 1.0;
+
+                if (token.equals("!")) {
+                    stackAnswer.push(String.valueOf(aBoolean ? "1" : "0"));
+                    continue;
+                }
+
+                if (stackAnswer.isEmpty())
+                    throw new IllegalStateException("While " + token + " and " + a);
+                Double b = Double.valueOf(stackAnswer.pop());
                 boolean bBoolean = b.doubleValue() == 1.0;
                 switch (token) {
                     case "+":
