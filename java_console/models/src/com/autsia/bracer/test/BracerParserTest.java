@@ -16,15 +16,13 @@
 
 package com.autsia.bracer.test;
 
-import java.text.ParseException;
-import java.util.Collection;
-
-import org.junit.Assert;
+import com.autsia.bracer.BracerParser;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.autsia.bracer.BracerParser;
+import java.text.ParseException;
+import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
 
@@ -58,6 +56,7 @@ public class BracerParserTest {
 
     @Test
     public void testBooleanConversion() throws ParseException {
+        assertParse("2 1 >", "2 > 1");
         assertParse("rpm 0 >", "rpm > false");
         assertParse("rpm 0 >", "(rpm > false)");
         assertParse("rpm user0 > clt user2 > | vbatt user1 > |", "(rpm > user0) or (clt > user2) or (vbatt > user1)");
@@ -92,27 +91,41 @@ public class BracerParserTest {
 
     @Test
     public void testRusEfi() throws ParseException {
-        bracerParser.parse("(time_since_boot < 4) | (rpm > 0)");
-        assertEquals("time_since_boot 4 < rpm 0 > |", bracerParser.getRusEfi());
+        assertParse("time_since_boot 4 <", "(time_since_boot < 4)");
+        assertParse("1 4 |", "1 | 4");
+        assertParse("time_since_boot 4 < rpm 0 > |", "(time_since_boot < 4) | (rpm > 0)");
 
-        bracerParser.parse("(fan and (coolant > fan_off_setting)) OR (coolant > fan_on_setting)");
-        assertEquals("fan coolant fan_off_setting > & coolant fan_on_setting > OR", bracerParser.getRusEfi());
+        assertParse("1 4 |", "1 or 4");
 
-        bracerParser.parse("(time_since_boot <= 4) | (rpm > 0)");
-        assertEquals("time_since_boot 4 <= rpm 0 > |", bracerParser.getRusEfi());
+        assertParse("1 4 &", "1 & 4");
 
-        bracerParser.parse("(time_since_boot <= 4) | (rpm > 0)");
-        assertEquals("time_since_boot 4 <= rpm 0 > |", bracerParser.getRusEfi());
+        assertParse("coolant fan_off_setting >", "(coolant > fan_off_setting)");
+        assertParse("1 3 |", "(1) or (3)");
+        assertParse("1 3 &", "1 and 3");
+        assertParse("1 coolant fan_on_setting > |", "1 | (coolant > fan_on_setting)");
+        assertParse("fan coolant fan_off_setting > & coolant fan_on_setting > OR", "(fan and (coolant > fan_off_setting)) OR (coolant > fan_on_setting)");
 
-        bracerParser.parse("(time_since_boot <= 4) OR (rpm > 0)");
-        assertEquals("time_since_boot 4 <= rpm 0 > OR", bracerParser.getRusEfi());
+        assertParse("time_since_boot 4 <= rpm 0 > |", "(time_since_boot <= 4) | (rpm > 0)");
 
-        bracerParser.parse("(self and (rpm > 4800)) OR (rpm > 5000)");
-        assertEquals("self rpm 4800 > & rpm 5000 > OR", bracerParser.getRusEfi());
+        assertParse("time_since_boot 4 <= rpm 0 > |", "(time_since_boot <= 4) | (rpm > 0)");
+
+        assertParse("time_since_boot 4 <= rpm 0 > OR", "(time_since_boot <= 4) OR (rpm > 0)");
+
+        assertParse("self rpm 4800 > & rpm 5000 > OR", "(self and (rpm > 4800)) OR (rpm > 5000)");
+    }
+
+    private void assertValue(String expectedRpn, String expression, double expectedValue) {
+        try {
+            assertEquals(Integer.toString((int) expectedValue), bracerParser.parse(expression).evaluate());
+        } catch (ParseException e) {
+            throw new IllegalStateException(e);
+        }
+        assertEquals("RPN", expectedRpn, bracerParser.getRusEfi());
     }
 
     @Test
     public void testBooleanNot2() throws Exception {
+        assertValue("0 !", "! false", 0);
         assertEquals("0", bracerParser.parse("! false").evaluate());
         assertEquals("0", bracerParser.parse("! 0").evaluate());
         assertEquals("0", bracerParser.parse("1 & not(false)").evaluate());
