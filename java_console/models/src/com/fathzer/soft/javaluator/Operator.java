@@ -135,4 +135,15 @@ public class Operator {
 		}
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "Operator{" +
+				"rpnSymbol='" + rpnSymbol + '\'' +
+				", symbol='" + symbol + '\'' +
+				", precedence=" + precedence +
+				", operandCount=" + operandCount +
+				", associativity=" + associativity +
+				'}';
+	}
 }
