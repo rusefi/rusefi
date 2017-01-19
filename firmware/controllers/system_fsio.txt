@@ -1,5 +1,5 @@
 #
-# in this file we define system FSIO expression
+# in this file we define system FSIO expressions
 #
 # see http://rusefi.com/wiki/index.php?title=Manual:Flexible_Logic
 #
@@ -9,9 +9,10 @@
 
 
 
-FAN_CONTROL_LOGIC=(fan and (coolant > fan_off_setting)) OR (coolant > fan_on_setting)
+FAN_CONTROL_LOGIC=(fan and (coolant > fan_off_setting)) | (coolant > fan_on_setting)
 
-FUEL_PUMP_LOGIC=(time_since_boot < 4) OR (rpm > 0)
+# todo: start-up fuel pump priming time should probably be configurable?
+FUEL_PUMP_LOGIC=(time_since_boot < 4) | (rpm > 0)
 
 ALTERNATOR_LOGIC=vbatt < 14.5
 

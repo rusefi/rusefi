@@ -12,26 +12,11 @@
 #include "fsio_core.h"
 #include "engine.h"
 #include "table_helper.h"
+#include "system_fsio.h"
 
 typedef Map3D<FSIO_TABLE_8, FSIO_TABLE_8, float> fsio8_Map3D_f32t;
 typedef Map3D<FSIO_TABLE_8, FSIO_TABLE_8, uint8_t> fsio8_Map3D_u8t;
 
-/**
- * In human language that's
- * (time_since_boot < 4) OR (rpm > 0)
- */
-// todo: the delay should probably be configurable?
-#define FUEL_PUMP_LOGIC "time_since_boot 4 < rpm 0 > OR"
-
-#define AC_RELAY_LOGIC "ac_on_switch"
-
-#define ALTERNATOR_LOGIC "vbatt 14.5 <"
-
-/**
- * In human language that's
- * (fan and (coolant > fan_off_setting)) OR (coolant > fan_on_setting)
- */
-#define FAN_CONTROL_LOGIC "fan coolant fan_off_setting > & coolant fan_on_setting > OR"
 
 float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action);
 void setFsio(int index, brain_pin_e pin, const char * exp DECLARE_ENGINE_PARAMETER_S);
