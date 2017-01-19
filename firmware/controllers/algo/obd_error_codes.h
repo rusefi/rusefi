@@ -133,6 +133,9 @@ typedef enum {
 	//P0107 Manifold Absolute Pressure/Barometric Pressure Circuit Low Input
 	//P0108 Manifold Absolute Pressure/Barometric Pressure Circuit High Input
 	//P0109 Manifold Absolute Pressure/Barometric Pressure Circuit Intermittent
+	/**
+	 * We raise intake error code if IAT is calculated below -50C or above +100C
+	 */
 	OBD_Intake_Air_Temperature_Circuit_Malfunction = 110,
 	//P0111 Intake Air Temperature Circuit Range/Performance Problem
 	//P0112 Intake Air Temperature Circuit Low Input
