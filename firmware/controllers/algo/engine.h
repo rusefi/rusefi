@@ -153,7 +153,7 @@ public:
 	 */
 	floatms_t baseTableFuel;
 	/**
-	 * fuel injection duration regardless of fuel logic mode
+	 * Raw fuel injection duration produced by current fuel algorithm, without any correction
 	 */
 	floatms_t baseFuel;
 
