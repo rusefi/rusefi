@@ -1,7 +1,5 @@
 package com.fathzer.soft.javaluator;
 
-import sun.security.provider.certpath.CollectionCertStore;
-
 import java.util.*;
 
 /** An abstract evaluator, able to evaluate infix expressions.

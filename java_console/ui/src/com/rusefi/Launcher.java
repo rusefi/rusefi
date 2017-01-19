@@ -39,7 +39,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20170118;
+    public static final int CONSOLE_VERSION = 20170119;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -255,7 +255,7 @@ public class Launcher {
     public static void main(final String[] args) throws Exception {
         String toolName = args.length == 0 ? null : args[0];
         if ("compile_fsio_file".equalsIgnoreCase(toolName)) {
-            CompileTool.run(Arrays.asList(args).subList(1, args.length - 1));
+            CompileTool.run(Arrays.asList(args).subList(1, args.length));
             return;
         }
 
