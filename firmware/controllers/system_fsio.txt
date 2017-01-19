@@ -1,0 +1,18 @@
+#
+# in this file we define system FSIO expression
+#
+# see http://rusefi.com/wiki/index.php?title=Manual:Flexible_Logic
+#
+# Jan 19, 2017
+# Andrey Belomutskiy, (c) 2012-2017
+#
+
+
+
+FAN_CONTROL_LOGIC=(fan and (coolant > fan_off_setting)) OR (coolant > fan_on_setting)
+
+FUEL_PUMP_LOGIC=(time_since_boot < 4) OR (rpm > 0)
+
+ALTERNATOR_LOGIC=vbatt < 14.5
+
+AC_RELAY_LOGIC=ac_on_switch
