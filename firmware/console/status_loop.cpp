@@ -239,8 +239,8 @@ static void printSensors(Logging *log, bool fileFormat) {
 	}
 
 	if (fileFormat) {
-		floatms_t baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER);
-		reportSensorF(log, fileFormat, "f: base", "ms", baseFuel, 2);
+		floatms_t fuelBase = getBaseFuel(rpm PASS_ENGINE_PARAMETER);
+		reportSensorF(log, fileFormat, "f: base", "ms", fuelBase, 2);
 		reportSensorF(log, fileFormat, "f: actual", "ms", ENGINE(actualLastInjection), 2);
 		reportSensorF(log, fileFormat, "f: lag", "ms", engine->engineState.injectorLag, 2);
 		reportSensorF(log, fileFormat, "f: running", "ms", ENGINE(engineState.runningFuel), 2);
@@ -688,9 +688,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->totalTriggerErrorCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 
 	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER);
-	tsOutputChannels->runningFuel = ENGINE(engineState.runningFuel);
+	tsOutputChannels->fuelRunning = ENGINE(engineState.runningFuel);
 	tsOutputChannels->injectorLagMs = ENGINE(engineState.injectorLag);
-	tsOutputChannels->baseFuel = engine->engineState.baseFuel;
+	tsOutputChannels->fuelBase = engine->engineState.baseFuel;
 	tsOutputChannels->actualLastInjection = ENGINE(actualLastInjection);
 
 	efitimesec_t now = getTimeNowSeconds();

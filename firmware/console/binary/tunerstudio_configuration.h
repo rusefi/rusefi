@@ -25,6 +25,9 @@ typedef struct {
 typedef struct {
 	// primary instrument cluster gauges
 	int rpm; // size 4, offset 0
+	/**
+	 * This value is in Celcius - UI would convert into F if needed
+	 */
 	float coolantTemperature; // size 4, offset 4
 	float intakeAirTemperature; // size 4, offset 8
 	float throttlePositon; // size 4, offset 12
@@ -40,7 +43,7 @@ typedef struct {
 	/**
 	 * This is the raw value we take from the fuel map or base fuel algorithm, before the corrections
 	 */
-	float baseFuel; // 48
+	float fuelBase; // 48
 	float tCharge; // 52
 	float ignitionAdvance; // 56
 	float sparkDwell; // 60
@@ -82,7 +85,10 @@ typedef struct {
 	egt_values_s egtValues;
 	float rpmAcceleration;
 	float massAirFlow;
-	float veValue; // current volumetric efficiency, offset 112
+	/**
+	 * Current volumetric efficiency
+	 */
+	float veValue; // offset 112
 	/**
 	 * TPS value delta within specified number of cycles
 	 * See tpsAccelFuel
@@ -102,17 +108,25 @@ typedef struct {
 	float knockLevel; // 152
 	int totalTriggerErrorCounter; // 156
 	float wallFuelAmount; // 160
+	/**
+	 * multiplier, 1 means no correction, 1.20 means 20% extra
+	 */
 	float iatCorrection; // 164
 	floatms_t wallFuelCorrection; // 168
 	float idlePosition; // 172
 	float currentTargetAfr; // 176
 	float chargeAirMass; // 180
+	/**
+	 * multiplier, 1 means no correction, 1.20 means 20% extra
+	 */
 	float cltCorrection; // 184
 	/**
+	 * Total fuel with CLT, IAT and TPS acceleration without injector lag corrections per cycle,
+	 * as squirt duration.
+	 *
 	 * @see actualLastInjection
-	 * without injector lag, see engine.h for details
 	 */
-	float runningFuel; // 188
+	float fuelRunning; // 188
 	int debugIntField1;	// 192
 	float injectorLagMs; // 196
 	float debugFloatField2; // 200
@@ -126,6 +140,9 @@ typedef struct {
 	float speedToRpmRatio; // 232
 	int warningCounter; // 236
 	int lastErrorCode; // 240
+	/**
+	 * Microcontroller own internal temperature, C
+	 */
 	float internalMcuTemperature; // 244
 	float vvtPosition; // 248
 	int engineMode; // 252
