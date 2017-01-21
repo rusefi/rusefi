@@ -120,12 +120,13 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->vvtCamSensorUseRise = true;
 	engineConfiguration->vvtOffset = -70;
 
-//	engineConfiguration->auxPidPins[0] = GPIOE_3; // VVT solenoid control
+	engineConfiguration->activateAuxPid1 = true; // todo: remove this field?
+	engineConfiguration->auxPidPins[0] = GPIOE_3; // VVT solenoid control
 	//	/**
 	//	 * set_fsio_setting 0 0.55
 	//	 */
 	boardConfiguration->fsio_setting[0] = 0.0;
-	setFsioExt(0, GPIOE_3, "0 fsio_setting", 400 PASS_ENGINE_PARAMETER);
+//	setFsioExt(0, GPIOE_3, "0 fsio_setting", 400 PASS_ENGINE_PARAMETER);
 
 
 
@@ -199,6 +200,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->injector.flow = 265;
 
 	boardConfiguration->malfunctionIndicatorPin = GPIOD_9;
+//	boardConfiguration->malfunctionIndicatorPinMode = OM_INVERTED;
 
 }
 
