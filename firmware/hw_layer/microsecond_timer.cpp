@@ -57,7 +57,10 @@ void setHardwareUsTimer(int32_t timeUs) {
 	if (timeUs < 2)
 		timeUs = 2; // for some reason '1' does not really work
 	efiAssertVoid(timeUs > 0, "not positive timeUs");
-	efiAssertVoid(timeUs < 10 * US_PER_SECOND, "setHardwareUsTimer() too large");
+	if (timeUs >= 10 * US_PER_SECOND) {
+		firmwareError(OBD_PCM_Processor_Fault, "setHardwareUsTimer() too long: %d", timeUs);
+		return;
+	}
 
 	if (GPTDEVICE.state == GPT_ONESHOT)
 		gptStopTimerI(&GPTDEVICE);
