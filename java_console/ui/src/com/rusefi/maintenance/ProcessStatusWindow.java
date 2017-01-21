@@ -2,10 +2,7 @@ package com.rusefi.maintenance;
 
 import com.rusefi.ui.StatusWindow;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
 /**
  * (c) Andrey Belomutskiy 2013-2017
@@ -57,7 +54,8 @@ public class ProcessStatusWindow {
         StringBuffer output = new StringBuffer();
         StringBuffer error = new StringBuffer();
         try {
-            Process p = Runtime.getRuntime().exec(command);
+            File workingDir = new File("openocd");
+            Process p = Runtime.getRuntime().exec(command, null, workingDir);
             startStreamThread(p, p.getInputStream(), output);
             startStreamThread(p, p.getErrorStream(), error);
             p.waitFor();
@@ -66,6 +64,7 @@ public class ProcessStatusWindow {
         } catch (InterruptedException e) {
             wnd.appendMsg("WaitError: " + e);
         }
+        wnd.appendMsg("Done!");
         return error;
     }
 
