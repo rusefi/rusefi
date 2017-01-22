@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 22 15:18:35 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 22 17:18:49 EST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1803,7 +1803,7 @@ typedef struct {
 	/**
 	 * offset 2738
 	 */
-	int16_t unusedShort;
+	int16_t fuelClosedLoopAfrLowThreshold;
 	/**
 	 * offset 2740
 	 */
@@ -1811,7 +1811,15 @@ typedef struct {
 	/**
 	 * offset 2756
 	 */
-	int unused[73];
+	int16_t fuelClosedLoopAfrHighThreshold;
+	/**
+	 * offset 2758
+	 */
+	int16_t unusedShort;
+	/**
+	 * offset 2760
+	 */
+	int unused[72];
 	/** total size 3048*/
 } engine_configuration_s;
 
@@ -2026,4 +2034,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 22 15:18:35 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 22 17:18:49 EST 2017

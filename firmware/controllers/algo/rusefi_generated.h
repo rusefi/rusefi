@@ -920,13 +920,15 @@
 #define fuelClosedLoopCltThreshold_offset 2732
 #define fuelClosedLoopTpsThreshold_offset 2734
 #define fuelClosedLoopRpmThreshold_offset 2736
-#define unusedShort_offset 2738
+#define fuelClosedLoopAfrLowThreshold_offset 2738
 #define fuelClosedLoopPid_offset 2740
 #define fuelClosedLoopPid_pFactor_offset 2740
 #define fuelClosedLoopPid_iFactor_offset 2744
 #define fuelClosedLoopPid_dFactor_offset 2748
 #define fuelClosedLoopPid_offset_offset 2752
-#define unused_offset 2756
+#define fuelClosedLoopAfrHighThreshold_offset 2756
+#define unusedShort_offset 2758
+#define unused_offset 2760
 #define le_formulas1_offset 3048
 #define le_formulas2_offset 3248
 #define le_formulas3_offset 3448
