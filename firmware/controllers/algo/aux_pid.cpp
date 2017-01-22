@@ -34,7 +34,7 @@ static SimplePwm auxPidPwm[AUX_PID_COUNT];
 static OutputPin auxPidPin[AUX_PID_COUNT];
 
 static pid_s *auxPidS = &persistentState.persistentConfiguration.engineConfiguration.auxPid[0];
-static Pid auxPid(auxPidS, 1, 90);
+static Pid auxPid(auxPidS, 0, 90);
 static Logging *logger;
 
 static bool isEnabled(int index) {
@@ -73,7 +73,7 @@ static msg_t auxPidThread(int param) {
 			}
 
 
-			float value = getVBatt(PASS_ENGINE_PARAMETER_F); // that's temporary
+			float value = engine->triggerCentral.vvtPosition; // getVBatt(PASS_ENGINE_PARAMETER_F); // that's temporary
 			float targetValue = fsioTable1.getValue(rpm, getEngineLoadT(PASS_ENGINE_PARAMETER_F));
 
 			float pwm = auxPid.getValue(targetValue, value, 1);
