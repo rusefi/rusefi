@@ -70,6 +70,7 @@ static Logging *logger;
 #if ! EFI_UNIT_TEST
 static pid_s *fuelPidS = &persistentState.persistentConfiguration.engineConfiguration.fuelClosedLoopPid;
 static Pid fuelPid(fuelPidS, -100, 100);
+extern TunerStudioOutputChannels tsOutputChannels;
 #endif
 
 // todo: figure out if this even helps?
@@ -381,6 +382,14 @@ static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_F) {
 		return;
 	}
 
+#if ! EFI_UNIT_TEST
+	engine->engineState.fuelPidCorrection = fuelPid.getValue(ENGINE(engineState.targetAFR), ENGINE(engineState.currentAfr), 1);
+	if (engineConfiguration->debugMode == DBG_FUEL_PID_CORRECTION) {
+		tsOutputChannels.debugFloatField1 = engine->engineState.fuelPidCorrection;
+		fuelPid.postState(&tsOutputChannels);
+	}
+
+#endif
 }
 
 
@@ -513,9 +522,6 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 		if (CONFIG(fuelClosedLoopCorrectionEnabled)) {
 			fuelClosedLoopCorrection(PASS_ENGINE_PARAMETER_F);
 		}
-
-
-
 	}
 
 	efiAssertVoid(!CONFIG(useOnlyRisingEdgeForTrigger) || CONFIG(ignMathCalculateAtIndex) % 2 == 0, "invalid ignMathCalculateAtIndex");

@@ -69,7 +69,7 @@ static msg_t etbThread(void *arg) {
 		percent_t pedal = getPedalPosition(PASS_ENGINE_PARAMETER_F);
 		percent_t tps = getTPS();
 
-		currentEtbDuty = pid.getValue(pedal, getTPS(), 1);
+		currentEtbDuty = pid.getValue(pedal, getTPS());
 
 		etbPwmUp.setSimplePwmDutyCycle(currentEtbDuty / 100);
 

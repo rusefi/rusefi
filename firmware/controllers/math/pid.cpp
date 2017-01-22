@@ -32,6 +32,10 @@ bool Pid::isSame(pid_s *pid) {
 			this->pid->offset == pid->offset && this->pid->pFactor == pid->pFactor;
 }
 
+float Pid::getValue(float target, float input) {
+	return getValue(target, input, 1);
+}
+
 float Pid::getValue(float target, float input, float dTime) {
 	float error = target - input;
 

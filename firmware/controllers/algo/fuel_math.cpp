@@ -141,7 +141,7 @@ floatms_t getRunningFuel(floatms_t baseFuel, int rpm DECLARE_ENGINE_PARAMETER_S)
 	float iatCorrection = ENGINE(engineState.iatFuelCorrection);
 	float cltCorrection = ENGINE(engineState.cltFuelCorrection);
 
-	ENGINE(engineState.runningFuel) = baseFuel * iatCorrection * cltCorrection;
+	ENGINE(engineState.runningFuel) = baseFuel * iatCorrection * cltCorrection + ENGINE(engineState.fuelPidCorrection);
 
 	return ENGINE(engineState.runningFuel);
 }
