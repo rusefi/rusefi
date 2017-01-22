@@ -1246,6 +1246,7 @@ fileVersion = { 20161225 }
    entry = cltCorrection,	"cltCorrection", float,"%.3f"
 
    entry = sparkDwellValue,	"dwell", float,"%.3f"
+   entry = vvtPosition, "VVT", float,"%.2f"
 
 ; is there a way to log parameter?   entry = debugMode,   "debugMode",int,"%d"
 ; Alternator_PID: alternator duty cycle
