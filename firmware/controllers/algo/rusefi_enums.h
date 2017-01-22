@@ -653,7 +653,7 @@ typedef enum {
 	DBG_VVT = 8,
 	DBG_POST_CRANKING_ENRICH = 9,
 	DBG_TIMING = 10,
-	DM_11 = 11,
+	DBG_FUEL_PID_CORRECTION = 11,
 	DM_12 = 12,
 	DM_13 = 13,
 	DM_14 = 14,

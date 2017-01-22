@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 22 11:23:24 EST 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 22 15:18:35 EST 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -620,7 +620,7 @@ public class Fields {
 	public static final int fsioDigitalInputs16_offset = 1480;
 	public static final int frequencyReportingMapInputPin_offset = 1484;
 	public static final int vvtDisplayInverted_offset = 1488;
-	public static final int unusedBit__1_offset = 1488;
+	public static final int fuelClosedLoopCorrectionEnabled_offset = 1488;
 	public static final int unusedBit__5_offset = 1488;
 	public static final int unusedBit__6_offset = 1488;
 	public static final int useConstantDwellDuringCranking_offset = 1488;
@@ -921,7 +921,16 @@ public class Fields {
 	public static final int auxTempSensor2_resistance_3_offset = 2720;
 	public static final int auxTempSensor2_bias_resistor_offset = 2724;
 	public static final int auxTempSensor2_adcChannel_offset = 2728;
-	public static final int unused_offset = 2732;
+	public static final int fuelClosedLoopCltThreshold_offset = 2732;
+	public static final int fuelClosedLoopTpsThreshold_offset = 2734;
+	public static final int fuelClosedLoopRpmThreshold_offset = 2736;
+	public static final int unusedShort_offset = 2738;
+	public static final int fuelClosedLoopPid_offset = 2740;
+	public static final int fuelClosedLoopPid_pFactor_offset = 2740;
+	public static final int fuelClosedLoopPid_iFactor_offset = 2744;
+	public static final int fuelClosedLoopPid_dFactor_offset = 2748;
+	public static final int fuelClosedLoopPid_offset_offset = 2752;
+	public static final int unused_offset = 2756;
 	public static final int le_formulas1_offset = 3048;
 	public static final int le_formulas2_offset = 3248;
 	public static final int le_formulas3_offset = 3448;
@@ -1373,7 +1382,7 @@ public class Fields {
 	public static final Field FSIODIGITALINPUTS16 = Field.create("FSIODIGITALINPUTS16", 1480, FieldType.INT, brain_pin_e);
 	public static final Field FREQUENCYREPORTINGMAPINPUTPIN = Field.create("FREQUENCYREPORTINGMAPINPUTPIN", 1484, FieldType.INT, brain_input_pin_e);
 	public static final Field VVTDISPLAYINVERTED = Field.create("VVTDISPLAYINVERTED", 1488, FieldType.BIT, 0);
-	public static final Field UNUSEDBIT__1 = Field.create("UNUSEDBIT__1", 1488, FieldType.BIT, 1);
+	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1488, FieldType.BIT, 1);
 	public static final Field UNUSEDBIT__5 = Field.create("UNUSEDBIT__5", 1488, FieldType.BIT, 2);
 	public static final Field UNUSEDBIT__6 = Field.create("UNUSEDBIT__6", 1488, FieldType.BIT, 3);
 	public static final Field USECONSTANTDWELLDURINGCRANKING = Field.create("USECONSTANTDWELLDURINGCRANKING", 1488, FieldType.BIT, 4);
@@ -1494,7 +1503,7 @@ public class Fields {
 	public static final Field TPSDECELENLEANMENTTHRESHOLD = Field.create("TPSDECELENLEANMENTTHRESHOLD", 2232, FieldType.FLOAT);
 	public static final Field TPSDECELENLEANMENTMULTIPLIER = Field.create("TPSDECELENLEANMENTMULTIPLIER", 2236, FieldType.FLOAT);
 	public static final Field SLOWADCALPHA = Field.create("SLOWADCALPHA", 2240, FieldType.FLOAT);
-	public static final String[] debug_mode_e = {"Alternator_PID", "TPS accel enrich", "Warmup PID", "IDLE", "EL accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT", "post-crank enrich", "mode10", "mode11", "mode12", "mode13", "mode14", "mode15"};
+	public static final String[] debug_mode_e = {"Alternator_PID", "TPS accel enrich", "Warmup PID", "IDLE", "EL accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT", "Post-crank enrich", "Timing", "Closed-loop fuel corr", "mode12", "mode13", "mode14", "mode15"};
 	public static final Field DEBUGMODE = Field.create("DEBUGMODE", 2244, FieldType.INT, debug_mode_e);
 	public static final Field WARMUPAFRPID_PFACTOR = Field.create("WARMUPAFRPID_PFACTOR", 2248, FieldType.FLOAT);
 	public static final Field WARMUPAFRPID_IFACTOR = Field.create("WARMUPAFRPID_IFACTOR", 2252, FieldType.FLOAT);
@@ -1581,6 +1590,14 @@ public class Fields {
 	public static final Field AUXTEMPSENSOR2_RESISTANCE_3 = Field.create("AUXTEMPSENSOR2_RESISTANCE_3", 2720, FieldType.FLOAT);
 	public static final Field AUXTEMPSENSOR2_BIAS_RESISTOR = Field.create("AUXTEMPSENSOR2_BIAS_RESISTOR", 2724, FieldType.FLOAT);
 	public static final Field AUXTEMPSENSOR2_ADCCHANNEL = Field.create("AUXTEMPSENSOR2_ADCCHANNEL", 2728, FieldType.INT, adc_channel_e);
+	public static final Field FUELCLOSEDLOOPCLTTHRESHOLD = Field.create("FUELCLOSEDLOOPCLTTHRESHOLD", 2732, FieldType.INT);
+	public static final Field FUELCLOSEDLOOPTPSTHRESHOLD = Field.create("FUELCLOSEDLOOPTPSTHRESHOLD", 2734, FieldType.INT);
+	public static final Field FUELCLOSEDLOOPRPMTHRESHOLD = Field.create("FUELCLOSEDLOOPRPMTHRESHOLD", 2736, FieldType.INT);
+	public static final Field UNUSEDSHORT = Field.create("UNUSEDSHORT", 2738, FieldType.INT);
+	public static final Field FUELCLOSEDLOOPPID_PFACTOR = Field.create("FUELCLOSEDLOOPPID_PFACTOR", 2740, FieldType.FLOAT);
+	public static final Field FUELCLOSEDLOOPPID_IFACTOR = Field.create("FUELCLOSEDLOOPPID_IFACTOR", 2744, FieldType.FLOAT);
+	public static final Field FUELCLOSEDLOOPPID_DFACTOR = Field.create("FUELCLOSEDLOOPPID_DFACTOR", 2748, FieldType.FLOAT);
+	public static final Field FUELCLOSEDLOOPPID_OFFSET = Field.create("FUELCLOSEDLOOPPID_OFFSET", 2752, FieldType.FLOAT);
 	public static final Field LE_FORMULAS1 = Field.create("LE_FORMULAS1", 3048, FieldType.INT);
 	public static final Field LE_FORMULAS2 = Field.create("LE_FORMULAS2", 3248, FieldType.INT);
 	public static final Field LE_FORMULAS3 = Field.create("LE_FORMULAS3", 3448, FieldType.INT);

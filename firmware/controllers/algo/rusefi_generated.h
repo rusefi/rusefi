@@ -616,7 +616,7 @@
 #define fsioDigitalInputs16_offset 1480
 #define frequencyReportingMapInputPin_offset 1484
 #define vvtDisplayInverted_offset 1488
-#define unusedBit__1_offset 1488
+#define fuelClosedLoopCorrectionEnabled_offset 1488
 #define unusedBit__5_offset 1488
 #define unusedBit__6_offset 1488
 #define useConstantDwellDuringCranking_offset 1488
@@ -917,7 +917,16 @@
 #define auxTempSensor2_resistance_3_offset 2720
 #define auxTempSensor2_bias_resistor_offset 2724
 #define auxTempSensor2_adcChannel_offset 2728
-#define unused_offset 2732
+#define fuelClosedLoopCltThreshold_offset 2732
+#define fuelClosedLoopTpsThreshold_offset 2734
+#define fuelClosedLoopRpmThreshold_offset 2736
+#define unusedShort_offset 2738
+#define fuelClosedLoopPid_offset 2740
+#define fuelClosedLoopPid_pFactor_offset 2740
+#define fuelClosedLoopPid_iFactor_offset 2744
+#define fuelClosedLoopPid_dFactor_offset 2748
+#define fuelClosedLoopPid_offset_offset 2752
+#define unused_offset 2756
 #define le_formulas1_offset 3048
 #define le_formulas2_offset 3248
 #define le_formulas3_offset 3448

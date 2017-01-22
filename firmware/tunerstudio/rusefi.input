@@ -1351,6 +1351,7 @@ fileVersion = { 20161225 }
         subMenu = injPhaseTableTbl,         "Injection Phase"           
         subMenu = mapAccelTaper,			"Engine Load Acceleration Enrichment Taper"
 		subMenu = std_separator
+		subMenu = fuelClosedLoopDialog, 	"Fuel closed-loop correction"
 		subMenu = AccelEnrich,				"Accel/Decel Enrichment/Enleanment"
         subMenu = tpsTpsAccelTbl, 			"TPS/TPS acceleration Multiplier"
 		subMenu = std_separator
@@ -1786,6 +1787,16 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		field = "SPI3 MOSI",							spi3mosiPin
 		field = "SPI3 MISO",							spi3misoPin
 		field = "SPI3 SCK",								spi3sckPin
+
+	dialog = fuelClosedLoopDialog, "Fuel closed-loop correction"
+		field = "Enabled",								fuelClosedLoopCorrectionEnabled
+		field = "CLT - low threshod", 					fuelClosedLoopCltThreshold, {fuelClosedLoopCorrectionEnabled == 1}
+		field = "RPM - low threshod", 					fuelClosedLoopRpmThreshold, {fuelClosedLoopCorrectionEnabled == 1}
+		field = "TPS - high threshod", 					fuelClosedLoopTpsThreshold, {fuelClosedLoopCorrectionEnabled == 1}
+		field = "P factor",								fuelClosedLoopPid_pFactor, {fuelClosedLoopCorrectionEnabled == 1}
+		field = "I factor",								fuelClosedLoopPid_iFactor, {fuelClosedLoopCorrectionEnabled == 1}
+		field = "D factor",								fuelClosedLoopPid_dFactor, {fuelClosedLoopCorrectionEnabled == 1}
+
 
 	dialog = auxPidDialog, "Aux PID"
 		field = "Enabled",								activateAuxPid1

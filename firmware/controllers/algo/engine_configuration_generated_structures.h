@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 22 11:23:24 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 22 15:18:35 EST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1182,7 +1182,7 @@ typedef struct {
 	bool vvtDisplayInverted : 1;
 	/**
 	offset 1488 bit 1 */
-	bool unusedBit__1 : 1;
+	bool fuelClosedLoopCorrectionEnabled : 1;
 	/**
 	offset 1488 bit 2 */
 	bool unusedBit__5 : 1;
@@ -1791,7 +1791,27 @@ typedef struct {
 	/**
 	 * offset 2732
 	 */
-	int unused[79];
+	int16_t fuelClosedLoopCltThreshold;
+	/**
+	 * offset 2734
+	 */
+	int16_t fuelClosedLoopTpsThreshold;
+	/**
+	 * offset 2736
+	 */
+	int16_t fuelClosedLoopRpmThreshold;
+	/**
+	 * offset 2738
+	 */
+	int16_t unusedShort;
+	/**
+	 * offset 2740
+	 */
+	pid_s fuelClosedLoopPid;
+	/**
+	 * offset 2756
+	 */
+	int unused[73];
 	/** total size 3048*/
 } engine_configuration_s;
 
@@ -2006,4 +2026,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 22 11:23:24 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 22 15:18:35 EST 2017

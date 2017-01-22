@@ -67,6 +67,10 @@ static LocalVersionHolder triggerVersion;
 static const char *prevOutputName = NULL;
 
 static Logging *logger;
+#if ! EFI_UNIT_TEST
+static pid_s *fuelPidS = &persistentState.persistentConfiguration.engineConfiguration.fuelClosedLoopPid;
+static Pid fuelPid(fuelPidS, -100, 100);
+#endif
 
 // todo: figure out if this even helps?
 //#if defined __GNUC__
@@ -366,6 +370,20 @@ static void scheduleOutput2(OutputSignalPair *pair, efitimeus_t nowUs, float del
 #endif /* EFI_GPIO */
 }
 
+static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_F) {
+	if (ENGINE(rpmCalculator.rpmValue) < CONFIG(fuelClosedLoopRpmThreshold)) {
+		return;
+	}
+	if (ENGINE(engineState.clt) < CONFIG(fuelClosedLoopCltThreshold)) {
+		return;
+	}
+	if (getTPS(PASS_ENGINE_PARAMETER_F) > CONFIG(fuelClosedLoopTpsThreshold)) {
+		return;
+	}
+
+}
+
+
 static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm DECLARE_ENGINE_PARAMETER_S) {
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#3");
 	efiAssertVoid(trgEventIndex < engine->engineCycleEventCount, "handleFuel/event index");
@@ -481,8 +499,6 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 	int beforeCallback = hal_lld_get_counter_value();
 #endif
 
-	int revolutionIndex = ENGINE(rpmCalculator).getRevolutionCounter() % 2;
-
 	if (trgEventIndex == 0) {
 
 		if (triggerVersion.isOld()) {
@@ -493,6 +509,13 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 			// we need this to apply new 'triggerIndexByAngle' values
 			engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 		}
+
+		if (CONFIG(fuelClosedLoopCorrectionEnabled)) {
+			fuelClosedLoopCorrection(PASS_ENGINE_PARAMETER_F);
+		}
+
+
+
 	}
 
 	efiAssertVoid(!CONFIG(useOnlyRisingEdgeForTrigger) || CONFIG(ignMathCalculateAtIndex) % 2 == 0, "invalid ignMathCalculateAtIndex");
