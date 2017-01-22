@@ -125,7 +125,7 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 	vvtPosition -= tdcPosition();
 	fixAngle(vvtPosition, "vvtPosition");
 
-	tc->vvtPosition = vvtPosition + engineConfiguration->vvtOffset;
+	tc->vvtPosition = (engineConfiguration->vvtDisplayInverted ? -vvtPosition : vvtPosition) + engineConfiguration->vvtOffset;
 
 	if (engineConfiguration->vvtMode == VVT_FIRST_HALF) {
 		bool isEven = tc->triggerState.isEvenRevolution();

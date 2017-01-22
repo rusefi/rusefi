@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 12 23:31:45 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 22 11:23:24 EST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1179,7 +1179,7 @@ typedef struct {
 	board_configuration_s bc;
 	/**
 	offset 1488 bit 0 */
-	bool unusedBit__4 : 1;
+	bool vvtDisplayInverted : 1;
 	/**
 	offset 1488 bit 1 */
 	bool unusedBit__1 : 1;
@@ -2006,4 +2006,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 12 23:31:45 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 22 11:23:24 EST 2017

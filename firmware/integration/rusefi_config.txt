@@ -573,7 +573,7 @@ end_struct
 custom le_formula_t 200 array, U08, @OFFSET@, [200],"char", 1, 0, 0.0, 3.0, 2
 	
 board_configuration_s bc;
-bit unusedBit__4
+bit vvtDisplayInverted
 	bit unusedBit__1
 	bit unusedBit__5
 	bit unusedBit__6

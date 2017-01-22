@@ -615,7 +615,7 @@
 #define fsioDigitalInputs15_offset 1476
 #define fsioDigitalInputs16_offset 1480
 #define frequencyReportingMapInputPin_offset 1484
-#define unusedBit__4_offset 1488
+#define vvtDisplayInverted_offset 1488
 #define unusedBit__1_offset 1488
 #define unusedBit__5_offset 1488
 #define unusedBit__6_offset 1488

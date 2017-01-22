@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jan 02 18:37:17 EST 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 22 11:23:24 EST 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -619,7 +619,7 @@ public class Fields {
 	public static final int fsioDigitalInputs15_offset = 1476;
 	public static final int fsioDigitalInputs16_offset = 1480;
 	public static final int frequencyReportingMapInputPin_offset = 1484;
-	public static final int unusedBit__4_offset = 1488;
+	public static final int vvtDisplayInverted_offset = 1488;
 	public static final int unusedBit__1_offset = 1488;
 	public static final int unusedBit__5_offset = 1488;
 	public static final int unusedBit__6_offset = 1488;
@@ -1372,7 +1372,7 @@ public class Fields {
 	public static final Field FSIODIGITALINPUTS15 = Field.create("FSIODIGITALINPUTS15", 1476, FieldType.INT, brain_pin_e);
 	public static final Field FSIODIGITALINPUTS16 = Field.create("FSIODIGITALINPUTS16", 1480, FieldType.INT, brain_pin_e);
 	public static final Field FREQUENCYREPORTINGMAPINPUTPIN = Field.create("FREQUENCYREPORTINGMAPINPUTPIN", 1484, FieldType.INT, brain_input_pin_e);
-	public static final Field UNUSEDBIT__4 = Field.create("UNUSEDBIT__4", 1488, FieldType.BIT, 0);
+	public static final Field VVTDISPLAYINVERTED = Field.create("VVTDISPLAYINVERTED", 1488, FieldType.BIT, 0);
 	public static final Field UNUSEDBIT__1 = Field.create("UNUSEDBIT__1", 1488, FieldType.BIT, 1);
 	public static final Field UNUSEDBIT__5 = Field.create("UNUSEDBIT__5", 1488, FieldType.BIT, 2);
 	public static final Field UNUSEDBIT__6 = Field.create("UNUSEDBIT__6", 1488, FieldType.BIT, 3);

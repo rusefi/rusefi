@@ -118,7 +118,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	// set vvt_mode 3
 	engineConfiguration->vvtMode = MIATA_NB2;
 	boardConfiguration->vvtCamSensorUseRise = true;
-	engineConfiguration->vvtOffset = -70;
+	engineConfiguration->vvtOffset = 83;
 
 	engineConfiguration->activateAuxPid1 = true; // todo: remove this field?
 	engineConfiguration->auxPidFrequency[0] = 300;

@@ -1496,6 +1496,7 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 	    field = "VVT mode",								vvtMode, {trigger_type != 80}
 	    field = "VVT use rise front",					vvtCamSensorUseRise, {trigger_type != 80}
 	    field = "VVT position display offset",			vvtOffset
+	    field = "VVT display inverted",					vvtDisplayInverted
 	    field = "NB2 from temp",						nb2ratioFrom
 	    field = "NB2 to temp",							nb2ratioTo
 	    field = "nbVvtIndex",							nbVvtIndex
