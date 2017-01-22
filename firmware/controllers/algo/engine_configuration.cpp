@@ -558,6 +558,12 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 100, 1000);
 	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 110, 1100);
 
+
+	engineConfiguration->fuelClosedLoopCorrectionEnabled = false;
+	engineConfiguration->fuelClosedLoopCltThreshold = 70;
+	engineConfiguration->fuelClosedLoopRpmThreshold = 900;
+	engineConfiguration->fuelClosedLoopTpsThreshold = 80;
+
 	engineConfiguration->cranking.baseFuel = 5;
 
 	engineConfiguration->analogInputDividerCoefficient = 2;
