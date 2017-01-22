@@ -59,7 +59,7 @@ float getTpsRateOfChange(void) {
  * */
 percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_S) {
 	if (engineConfiguration->tpsMin == engineConfiguration->tpsMax) {
-		warning(CUSTOM_OBD_28, "Invalid TPS configuration: same value %d", engineConfiguration->tpsMin);
+		warning(CUSTOM_INVALID_TPS_SETTING, "Invalid TPS configuration: same value %d", engineConfiguration->tpsMin);
 		return NAN;
 	}
 	float result = interpolate(TPS_TS_CONVERSION * engineConfiguration->tpsMax, 100, TPS_TS_CONVERSION * engineConfiguration->tpsMin, 0, adc);
