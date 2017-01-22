@@ -245,6 +245,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 		reportSensorF(log, fileFormat, "f: actual", "ms", ENGINE(actualLastInjection), 2);
 		reportSensorF(log, fileFormat, "f: lag", "ms", engine->engineState.injectorLag, 2);
 		reportSensorF(log, fileFormat, "f: running", "ms", ENGINE(engineState.runningFuel), 2);
+		reportSensorF(log, fileFormat, "f: pid", "ms", ENGINE(engineState.fuelPidCorrection), 2);
 
 		reportSensorF(log, fileFormat, "f: wall amt", "v", ENGINE(wallFuel).getWallFuel(0), 2);
 		reportSensorF(log, fileFormat, "f: wall crr", "v", ENGINE(wallFuelCorrection), 2);
@@ -690,6 +691,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER);
 	tsOutputChannels->fuelRunning = ENGINE(engineState.runningFuel);
+	tsOutputChannels->fuelPidCorrection = ENGINE(engineState.fuelPidCorrection);
 	tsOutputChannels->injectorLagMs = ENGINE(engineState.injectorLag);
 	tsOutputChannels->fuelBase = engine->engineState.baseFuel;
 	tsOutputChannels->actualLastInjection = ENGINE(actualLastInjection);

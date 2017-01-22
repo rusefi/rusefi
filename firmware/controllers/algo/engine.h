@@ -148,6 +148,8 @@ public:
 	float currentVE;
 	float targetAFR;
 
+	float currentAfr;
+
 	/**
 	 * pre-calculated value from simple fuel lookup
 	 */
@@ -156,6 +158,11 @@ public:
 	 * Raw fuel injection duration produced by current fuel algorithm, without any correction
 	 */
 	floatms_t baseFuel;
+
+	/**
+	 * closed-loop fuel correction
+	 */
+	floatms_t fuelPidCorrection;
 
 	/**
 	 * Total fuel with CLT, IAT and TPS acceleration corrections per cycle,

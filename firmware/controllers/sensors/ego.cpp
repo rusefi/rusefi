@@ -13,7 +13,7 @@ bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 float getAfr(DECLARE_ENGINE_PARAMETER_F) {
-	afr_sensor_s * sensor = &engineConfiguration->afr;
+	afr_sensor_s * sensor = &CONFIG(afr);
 
 	float volts = getVoltageDivided("ego", sensor->hwChannel);
 

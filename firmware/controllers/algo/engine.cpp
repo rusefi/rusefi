@@ -170,6 +170,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 
 	sparkDwell = getSparkDwell(rpm PASS_ENGINE_PARAMETER);
 	dwellAngle = sparkDwell / getOneDegreeTimeMs(rpm);
+	currentAfr = getAfr(PASS_ENGINE_PARAMETER_F);
 
 	// todo: move this into slow callback, no reason for IAT corr to be here
 	iatFuelCorrection = getIatCorrection(iat PASS_ENGINE_PARAMETER);
@@ -179,7 +180,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 			cltFuelCorrection = 1;
 			warmupAfrPid.reset();
 		} else {
-			cltFuelCorrection = warmupAfrPid.getValue(warmupTargetAfr, getAfr(PASS_ENGINE_PARAMETER_F), 1);
+			cltFuelCorrection = warmupAfrPid.getValue(warmupTargetAfr, currentAfr, 1);
 		}
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 		if (engineConfiguration->debugMode == WARMUP_ENRICH) {
