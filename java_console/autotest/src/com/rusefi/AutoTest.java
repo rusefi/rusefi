@@ -26,6 +26,7 @@ public class AutoTest {
 
     static void mainTestBody() {
         sendCommand("fl 1"); // just in case it was disabled
+        testMazdaMiata2003();
         test2003DodgeNeon();
         testFordAspire();
         test1995DodgeNeon();
@@ -37,6 +38,10 @@ public class AutoTest {
         testMazda626();
         testFord6();
         testFordFiesta();
+    }
+
+    private static void testMazdaMiata2003() {
+        setEngineType(47);
     }
 
     private static void testSachs() {

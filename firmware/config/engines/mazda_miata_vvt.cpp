@@ -121,6 +121,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->vvtOffset = -70;
 
 	engineConfiguration->activateAuxPid1 = true; // todo: remove this field?
+	engineConfiguration->auxPidFrequency = 300;
 	engineConfiguration->auxPidPins[0] = GPIOE_3; // VVT solenoid control
 	//	/**
 	//	 * set_fsio_setting 0 0.55

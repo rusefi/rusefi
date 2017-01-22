@@ -209,7 +209,7 @@ static void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efiti
 
 static void scheduleFuelInjection(int rpm, OutputSignalPair *pair, efitimeus_t nowUs, floatus_t delayUs, floatus_t durationUs, InjectionEvent *event DECLARE_ENGINE_PARAMETER_S) {
 	if (durationUs < 0) {
-		warning(CUSTOM_OBD_3, "duration cannot be negative: %d", durationUs);
+		warning(CUSTOM_NEGATIVE_DURATION, "duration cannot be negative: %d", durationUs);
 		return;
 	}
 	if (cisnan(durationUs)) {

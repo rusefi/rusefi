@@ -70,7 +70,7 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_F) {
 		return getRealMaf(PASS_ENGINE_PARAMETER_F);
 	}
 	default:
-		warning(CUSTOM_OBD_18, "Unexpected engine load parameter: %d", engineConfiguration->fuelAlgorithm);
+		warning(CUSTOM_UNKNOWN_ALGORITHM, "Unexpected engine load parameter: %d", engineConfiguration->fuelAlgorithm);
 		return -1;
 	}
 }

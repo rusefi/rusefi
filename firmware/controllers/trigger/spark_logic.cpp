@@ -289,7 +289,7 @@ static ALWAYS_INLINE void prepareIgnitionSchedule(int rpm DECLARE_ENGINE_PARAMET
 	}
 
 	if (engine->engineState.dwellAngle == 0) {
-		warning(CUSTOM_OBD_32, "dwell is zero?");
+		warning(CUSTOM_ZERO_DWELL, "dwell is zero?");
 	}
 	if (engine->engineState.dwellAngle > maxAllowedDwellAngle) {
 		warning(CUSTOM_OBD_33, "dwell angle too long: %f", engine->engineState.dwellAngle);
