@@ -226,6 +226,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 	if (fileFormat) {
 		reportSensorF(log, fileFormat, "tCharge", "K", engine->engineState.tChargeK, 2); // log column #8
 		reportSensorF(log, fileFormat, "curVE", "%", veMap.getValue(rpm, getMap()), 2);
+		reportSensorF(log, fileFormat, "VVT", "deg", engine->triggerCentral.vvtPosition, 1);
 	}
 
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
