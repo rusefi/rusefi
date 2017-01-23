@@ -563,6 +563,9 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->fuelClosedLoopCltThreshold = 70;
 	engineConfiguration->fuelClosedLoopRpmThreshold = 900;
 	engineConfiguration->fuelClosedLoopTpsThreshold = 80;
+	engineConfiguration->fuelClosedLoopAfrLowThreshold = 10.3;
+	engineConfiguration->fuelClosedLoopAfrHighThreshold = 19.8;
+	engineConfiguration->fuelClosedLoopPid.pFactor = -0.1;
 
 	engineConfiguration->cranking.baseFuel = 5;
 

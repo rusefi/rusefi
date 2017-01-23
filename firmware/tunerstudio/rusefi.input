@@ -1127,7 +1127,7 @@ fileVersion = { 20161225 }
    
    pulseWidthGauge   = pulseWidth,     "fuel final squirt, per injection", "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
    baseFuelGauge     = baseFuel,       "fuel: base duration, before corr",      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
-   fuelPidCorrectionGauge = fuelPidCorrection,       "fuel: closed loop correction",      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
+   fuelPidCorrectionGauge = fuelPidCorrection,       "fuel: closed loop correction",      "mSec",        -11,   11,     1.0,    1.2,      20,    25,   3, 1
 
    crankingFuelGauge = crankingFuel,   "fuel: crank Width",      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
    iatCorrectionGauge = iatCorrection, "fuel: IAT correction", "mult",     0,   3,     0,    0,    3,  3,   2,   2
@@ -1797,6 +1797,8 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		field = "CLT - low threshod", 					fuelClosedLoopCltThreshold, {fuelClosedLoopCorrectionEnabled == 1}
 		field = "RPM - low threshod", 					fuelClosedLoopRpmThreshold, {fuelClosedLoopCorrectionEnabled == 1}
 		field = "TPS - high threshod", 					fuelClosedLoopTpsThreshold, {fuelClosedLoopCorrectionEnabled == 1}
+		field = "EGO - low threshod", 					fuelClosedLoopAfrLowThreshold, {fuelClosedLoopCorrectionEnabled == 1}
+		field = "EGO - high threshod", 					fuelClosedLoopAfrHighThreshold, {fuelClosedLoopCorrectionEnabled == 1}
 		field = "P factor",								fuelClosedLoopPid_pFactor, {fuelClosedLoopCorrectionEnabled == 1}
 		field = "I factor",								fuelClosedLoopPid_iFactor, {fuelClosedLoopCorrectionEnabled == 1}
 		field = "D factor",								fuelClosedLoopPid_dFactor, {fuelClosedLoopCorrectionEnabled == 1}
