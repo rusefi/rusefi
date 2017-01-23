@@ -179,6 +179,8 @@ case TT_MAZDA_MIATA_VVT_TEST:
 	return "TT_MAZDA_MIATA_VVT_TEST";
 case TT_SUBARU_7_6:
 	return "TT_SUBARU_7_6";
+case TT_JEEP_18_2_2_2_SIX_CYLINDER:
+	return "TT_18_2_2_2 6cyl";
 case TT_MINI_COOPER_R50:
   return "TT_MINI_COOPER_R50";
 case TT_MITSU:
