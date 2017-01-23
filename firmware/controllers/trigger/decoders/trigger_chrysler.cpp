@@ -451,3 +451,23 @@ void configureNeon1995TriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->useOnlyPrimaryForSync = true;
 }
 
+void initJeep18_6cyl(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->isSynchronizationNeeded = false;
+
+	float off = 212;
+
+	s->addEvent2(54 + off, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER);
+	s->addEvent2(56 + off, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER);
+	s->addEvent2(74 + off, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER);
+	s->addEvent2(76 + off, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER);
+	s->addEvent2(94 + off, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER);
+	s->addEvent2(96 + off, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER);
+	s->addEvent2(114 + off, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER);
+	s->addEvent2(116 + off, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER);
+
+	s->addEvent2(148 + off, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER); // 360
+
+
+	s->addEvent2(508 + off, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER); // 720
+}
