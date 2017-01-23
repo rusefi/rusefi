@@ -143,6 +143,7 @@ EngineState::EngineState() {
 	runningFuel = baseFuel = currentVE = 0;
 	timeOfPreviousWarning = -10;
 	baseTableFuel = iat = iatFuelCorrection = 0;
+	fuelPidCorrection = 0;
 	clt = cltFuelCorrection = postCrankingFuelCorrection = 0;
 	warmupTargetAfr = airMass = 0;
 	baroCorrection = timingAdvance = fuelTankGauge = 0;

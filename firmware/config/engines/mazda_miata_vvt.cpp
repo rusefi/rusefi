@@ -11,7 +11,7 @@
 #include "mazda_miata_vvt.h"
 #include "custom_engine.h"
 #include "fsio_impl.h"
-
+#include "ego.h"
 
 EXTERN_ENGINE;
 
@@ -203,6 +203,15 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	boardConfiguration->malfunctionIndicatorPin = GPIOD_9;
 //	boardConfiguration->malfunctionIndicatorPinMode = OM_INVERTED;
+
+
+	/**
+	 * PA4 Wideband O2 Sensor
+	 */
+	// todo: re-wire the board to use default input channel!
+	engineConfiguration->afr.hwChannel = EFI_ADC_4;
+
+	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER);
 
 }
 
