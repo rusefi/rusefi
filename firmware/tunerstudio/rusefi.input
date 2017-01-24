@@ -1794,11 +1794,14 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 
 	dialog = fuelClosedLoopDialog, "Fuel closed-loop correction"
 		field = "Enabled",								fuelClosedLoopCorrectionEnabled
+		field = "!No correction below these value"
 		field = "CLT - low threshod", 					fuelClosedLoopCltThreshold, {fuelClosedLoopCorrectionEnabled == 1}
 		field = "RPM - low threshod", 					fuelClosedLoopRpmThreshold, {fuelClosedLoopCorrectionEnabled == 1}
-		field = "TPS - high threshod", 					fuelClosedLoopTpsThreshold, {fuelClosedLoopCorrectionEnabled == 1}
 		field = "EGO - low threshod", 					fuelClosedLoopAfrLowThreshold, {fuelClosedLoopCorrectionEnabled == 1}
+		field = "!No correction above these value"
+		field = "TPS - high threshod", 					fuelClosedLoopTpsThreshold, {fuelClosedLoopCorrectionEnabled == 1}
 		field = "EGO - high threshod", 					fuelClosedLoopAfrHighThreshold, {fuelClosedLoopCorrectionEnabled == 1}
+		field = "!PID settings"
 		field = "P factor",								fuelClosedLoopPid_pFactor, {fuelClosedLoopCorrectionEnabled == 1}
 		field = "I factor",								fuelClosedLoopPid_iFactor, {fuelClosedLoopCorrectionEnabled == 1}
 		field = "D factor",								fuelClosedLoopPid_dFactor, {fuelClosedLoopCorrectionEnabled == 1}
