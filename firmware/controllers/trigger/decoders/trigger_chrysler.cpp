@@ -453,7 +453,10 @@ void configureNeon1995TriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 
 void initJeep18_2_2_2(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
-	s->isSynchronizationNeeded = false;
+	s->isSynchronizationNeeded = true;
+	s->setTriggerSynchronizationGap(1);
+	s->useOnlyPrimaryForSync = true;
+	s->tdcPosition = 581;
 
 	float off = 212;
 
