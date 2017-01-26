@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 22 23:36:11 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 26 12:50:23 EST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1408,15 +1408,15 @@ typedef struct {
 	/**
 	 * offset 1740
 	 */
-	int spi2SckMode;
+	pin_mode_e spi2SckMode;
 	/**
 	 * offset 1744
 	 */
-	int spi2MosiMode;
+	pin_mode_e spi2MosiMode;
 	/**
 	 * offset 1748
 	 */
-	int spi2MisoMode;
+	pin_mode_e spi2MisoMode;
 	/**
 	 * Cranking fuel correction coefficient based on TPS
 	 * offset 1752
@@ -2034,4 +2034,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 22 23:36:11 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 26 12:50:23 EST 2017

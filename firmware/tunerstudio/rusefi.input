@@ -1770,6 +1770,9 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		field = "prescaler & SDO",						hip9011PrescalerAndSDO
 		field = "Band Freq override",					knockBandCustom
 		field = "SPI device",							hip9011SpiDevice
+		field = "SPI2sck",								spi2SckMode
+		field = "SPI2mosi",								spi2MosiMode
+		field = "SPI2miso",								spi2MisoMode
 		panel = knockThresholdCurve
 		
 ;			Engine->cj125 Settings

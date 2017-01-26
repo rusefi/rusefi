@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jan 23 20:02:38 EST 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 26 13:13:15 EST 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -1457,9 +1457,10 @@ public class Fields {
 	public static final Field NOACCELAFTERHARDLIMITPERIODSECS = Field.create("NOACCELAFTERHARDLIMITPERIODSECS", 1636, FieldType.FLOAT);
 	public static final Field MAPAVERAGINGSCHEDULINGATINDEX = Field.create("MAPAVERAGINGSCHEDULINGATINDEX", 1640, FieldType.INT);
 	public static final Field BAROCORRTABLE = Field.create("BAROCORRTABLE", 1676, FieldType.INT);
-	public static final Field SPI2SCKMODE = Field.create("SPI2SCKMODE", 1740, FieldType.INT);
-	public static final Field SPI2MOSIMODE = Field.create("SPI2MOSIMODE", 1744, FieldType.INT);
-	public static final Field SPI2MISOMODE = Field.create("SPI2MISOMODE", 1748, FieldType.INT);
+	public static final String[] pin_mode_e = {"default", "INVALID", "INVALID", "INVALID", "mode4", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "mode12", "mode13", "mode14", "mode15", "mode16", "mode17", "mode18", "mode19", "mode20", "mode21", "mode22", "mode23", "mode24", "mode25", "mode26", "mode27", "mode28", "mode29", "mode30", "mode31", "mode32", "mode33", "mode34", "mode35"};
+	public static final Field SPI2SCKMODE = Field.create("SPI2SCKMODE", 1740, FieldType.INT, pin_mode_e);
+	public static final Field SPI2MOSIMODE = Field.create("SPI2MOSIMODE", 1744, FieldType.INT, pin_mode_e);
+	public static final Field SPI2MISOMODE = Field.create("SPI2MISOMODE", 1748, FieldType.INT, pin_mode_e);
 	public static final Field TACHPULSEDURACTIONMS = Field.create("TACHPULSEDURACTIONMS", 1816, FieldType.FLOAT);
 	public static final Field TACHPULSETRIGGERINDEX = Field.create("TACHPULSETRIGGERINDEX", 1820, FieldType.INT);
 	public static final Field SUCKEDOFFCOEF = Field.create("SUCKEDOFFCOEF", 1824, FieldType.FLOAT);
