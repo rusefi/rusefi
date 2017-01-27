@@ -2,14 +2,19 @@
  * @file	HIP9011.cpp
  * @brief	HIP9011/TPIC8101 driver
  *
+ * Jan 2017 status:
+ *  1) seems to be kind of working - reacts to parameter changes and does produce variable output
+ *  2) only one (first) channel is currently used
+ *  3) engine control does not yet react to knock since very little actual testing - no engine runs with proven knock yet
+ *
+ *
  *	pin1	VDD
  *	pin2	GND
  *
  *	pin8	Chip Select - CS
- *	pin11	Slave Data Out - MISO-
+ *	pin11	Slave Data Out - MISO
  *	pin12	Slave Data In - MOSI
  *	pin13	SPI clock - SCLK
- *
  *
  *
  * http://www.ti.com/lit/ds/symlink/tpic8101.pdf
