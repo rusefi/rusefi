@@ -24,9 +24,6 @@
 #include "engine_math.h"
 #include "fsio_impl.h"
 #include "allsensors.h"
-#if EFI_PROD_CODE
-#include "HIP9011.h"
-#endif
 
 #include "custom_engine.h"
 
@@ -434,9 +431,6 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->isFastAdcEnabled = true;
 	engineConfiguration->map.sensor.type = MT_DODGE_NEON_2003;
 
-#if EFI_HIP_9011 || defined(__DOXYGEN__)
-	setHip9011FrankensoPinout();
-#endif
 	boardConfiguration->hip9011Gain = 0.3;
 
 	float t = 0.5;

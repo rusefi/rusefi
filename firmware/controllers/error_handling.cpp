@@ -17,6 +17,8 @@
 #include <chprintf.h>
 static MemoryStream warningStream;
 static MemoryStream firmwareErrorMessageStream;
+extern OutputPin communicationPin;
+
 #endif
 
 

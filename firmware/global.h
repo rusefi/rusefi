@@ -118,7 +118,8 @@ typedef VirtualTimer virtual_timer_t;
  */
 #define ON_FATAL_ERROR() \
 		palWritePad(LED_ERROR_PORT, LED_ERROR_PIN, 1); \
-		turnAllPinsOff();
+		turnAllPinsOff(); \
+		communicationPin.setValue(1);
 
 
 #endif /* GLOBAL_H_ */

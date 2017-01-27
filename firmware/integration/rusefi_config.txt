@@ -658,8 +658,8 @@ float[BARO_CORR_SIZE] baroCorrRpmBins;;"RPM",      1,     0,   0.0,    18000,   
 
 baro_corr_table_t baroCorrTable;
 	
-	#define pin_mode_e_enum "default", "INVALID", "INVALID", "INVALID", "mode4", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "mode12", "mode13", "mode14", "mode15", "mode16", "mode17", "mode18", "mode19", "mode20", "mode21", "mode22", "mode23", "mode24", "mode25", "mode26", "mode27", "mode28", "mode29", "mode30", "mode31", "mode32", "mode33", "mode34", "mode35"
-custom pin_mode_e 4 bits,    U32,   @OFFSET@, [0:3], @@pin_mode_e_enum@@
+	#define pin_mode_e_enum "default", "INVALID", "INVALID", "INVALID", "opendrain", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "mode12", "mode13", "mode14", "mode15", "mode16", "mode17", "mode18", "mode19", "mode20", "mode21", "mode22", "mode23", "mode24", "mode25", "mode26", "mode27", "mode28", "mode29", "mode30", "mode31", "PULLUP", "mode33", "mode34", "mode35"
+custom pin_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@pin_mode_e_enum@@
 	
 	pin_mode_e spi2SckMode;
 	pin_mode_e spi2MosiMode;
