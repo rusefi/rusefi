@@ -56,7 +56,6 @@ static int settingUpdateCount = 0;
 static int totalKnockEventsCount = 0;
 static int currentPrescaler;
 static float hipValueMax = 0;
-static int spiCount = 0;
 
 static unsigned char tx_buff[1];
 static unsigned char rx_buff[1];
@@ -140,19 +139,20 @@ static void showHipInfo(void) {
 	            currentIntergratorIndex, engineConfiguration->knockVThreshold,
 	            engine->knockCount, engineConfiguration->maxKnockSubDeg);
 
-	scheduleMsg(logger, "spi=%s IntHold@%s response count=%d incorrect response=%d",
+	const char * msg = invalidResponse > 0 ? "NOT GOOD" : "ok";
+	scheduleMsg(logger, "spi=%s IntHold@%s response count=%d incorrect response=%d %s",
 			getSpi_device_e(hipSpiDevice),
 			hwPortname(boardConfiguration->hip9011IntHoldPin),
-			correctResponse, invalidResponse);
+			correctResponse, invalidResponse,
+			msg);
 	scheduleMsg(logger, "CS@%s updateCount=%d", hwPortname(boardConfiguration->hip9011CsPin), settingUpdateCount);
 
-	const char * msg = spiCount == 0 ? "NOT GOOD" : "ok";
-	scheduleMsg(logger, "hip %fv/last=%f@%s/max=%f spiCount=%d (%s) adv=%d",
+	scheduleMsg(logger, "hip %fv/last=%f@%s/max=%f adv=%d",
 			engine->knockVolts,
 			getVoltage("hipinfo", engineConfiguration->hipOutputChannel),
 			getPinNameByAdcChannel("hip", engineConfiguration->hipOutputChannel, pinNameBuffer),
 			hipValueMax,
-			spiCount, msg, boardConfiguration->useTpicAdvancedMode);
+			boardConfiguration->useTpicAdvancedMode);
 	scheduleMsg(logger, "mosi=%s", hwPortname(getMosiPin(hipSpiDevice)));
 	scheduleMsg(logger, "miso=%s", hwPortname(getMisoPin(hipSpiDevice)));
 	scheduleMsg(logger, "sck=%s", hwPortname(getSckPin(hipSpiDevice)));
