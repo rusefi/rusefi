@@ -38,6 +38,10 @@
 
 #include "hip9011_lookup.h"
 
+#if EFI_PROD_CODE
+#include "HIP9011.h"
+#endif
+
 #include "custom_engine.h"
 #include "engine_template.h"
 #include "acura_rsx.h"
@@ -813,6 +817,9 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->spi3sckPin = GPIOB_3;
 
 	boardConfiguration->hip9011Gain = 1;
+#if EFI_HIP_9011 || defined(__DOXYGEN__)
+	setHip9011FrankensoPinout();
+#endif
 
 	boardConfiguration->sdCardCsPin = GPIOD_4;
 	boardConfiguration->isSdCardEnabled = true;

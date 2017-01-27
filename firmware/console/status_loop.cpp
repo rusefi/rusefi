@@ -525,7 +525,8 @@ static THD_WORKING_AREA(lcdThreadStack, UTILITY_THREAD_STACK_SIZE);
  */
 static THD_WORKING_AREA(blinkingStack, 128);
 
-static OutputPin communicationPin;
+// move this into EnginePins?
+OutputPin communicationPin;
 OutputPin warningPin;
 OutputPin runningPin;
 
@@ -609,7 +610,9 @@ static void blinkingThread(void *arg) {
 		}
 #endif
 
-		communicationPin.setValue(0);
+		if (!hasFirmwareError() && !hasFirmwareErrorFlag) {
+			communicationPin.setValue(0);
+		}
 		warningPin.setValue(0);
 		chThdSleepMilliseconds(delayMs);
 
