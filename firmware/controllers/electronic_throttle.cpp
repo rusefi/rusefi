@@ -4,6 +4,13 @@
  *
  * todo: make this more universal if/when we get other hardware options
  *
+ * Jan 2017 status:
+ *  PID implementation tested on a bench only
+ *  it is believed that more than just PID would be needed, as is this is probably
+ *  not usable on a real vehicle. Needs to be tested :)
+ *
+ * http://rusefi.com/forum/viewtopic.php?f=5&t=592
+ *
  * @date Dec 7, 2013
  * @author Andrey Belomutskiy, (c) 2012-2017
  *
