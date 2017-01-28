@@ -36,6 +36,8 @@ void disableLCD(board_configuration_s *boardConfiguration) {
 	boardConfiguration->HD44780_db7 = GPIO_UNASSIGNED;
 }
 
+// todo: should this be renamed to 'setFrankensoConfiguration'?
+// todo: should this be part of more default configurations?
 void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
 

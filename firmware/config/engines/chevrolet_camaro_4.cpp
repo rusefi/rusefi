@@ -10,11 +10,16 @@
 
 #include "chevrolet_camaro_4.h"
 #include "engine_math.h"
+#include "custom_engine.h"
+
 
 EXTERN_ENGINE
 ;
 
 void setCamaro4(DECLARE_ENGINE_PARAMETER_F) {
+	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
+
+
 	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
 
 	engineConfiguration->specs.displacement = 5.7;
@@ -52,6 +57,9 @@ void setCamaro4(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_13;
 
+
+	boardConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
+	boardConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
 
 	boardConfiguration->injectionPins[0] = GPIOE_6;
 	boardConfiguration->injectionPins[1] = GPIOE_5;
