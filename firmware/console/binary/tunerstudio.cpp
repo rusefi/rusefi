@@ -432,7 +432,8 @@ static bool isKnownCommand(char command) {
 			|| command == TS_LEGACY_HELLO_COMMAND || command == TS_CHUNK_WRITE_COMMAND || command == TS_EXECUTE
 			|| command == TS_IO_TEST_COMMAND
 			|| command == TS_GET_FILE_RANGE
-			|| command == TS_GET_TEXT || command == TS_CRC_CHECK_COMMAND;
+			|| command == TS_GET_TEXT || command == TS_CRC_CHECK_COMMAND
+			|| command == TS_GET_FIRMWARE_VERSION;
 }
 
 static uint8_t firstByte;
@@ -614,6 +615,10 @@ void handleTestCommand(ts_channel_s *tsChannel) {
 
 extern CommandHandler console_line_callback;
 
+static void handleGetVersion(ts_channel_s *tsChannel) {
+
+}
+
 static void handleGetText(ts_channel_s *tsChannel) {
 	int outputSize;
 	char *output = swapOutputBuffers(&outputSize);
@@ -721,6 +726,8 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 	if (command == TS_HELLO_COMMAND || command == TS_HELLO_COMMAND_DEPRECATED) {
 		tunerStudioDebug("got Query command");
 		handleQueryCommand(tsChannel, TS_CRC);
+	} else if (command == TS_GET_FIRMWARE_VERSION) {
+		handleGetVersion(tsChannel);
 	} else if (command == TS_GET_TEXT) {
 		handleGetText(tsChannel);
 	} else if (command == TS_EXECUTE) {
