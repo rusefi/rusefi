@@ -1764,6 +1764,7 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		field = "Threshold",							knockVThreshold
 		field = "!ECU reboot needed to apply these settings"
 		field = "IntHold pin (hip9011 input)",      	hip9011IntHoldPin
+		field = "IntHold pin (hip9011 input) mode",		hip9011IntHoldPinMode
 		field = "ChipSelect pin",						hip9011CsPin
 		field = "ChipSelect mode",						hip9011CsPinMode
 		field = "hip Output/stm input",					hipOutputChannel
