@@ -8,6 +8,9 @@
  *  3) engine control does not yet react to knock since very little actual testing - no engine runs with proven knock yet
  *
  *
+ * http://rusefi.com/forum/viewtopic.php?f=4&t=400
+ * http://rusefi.com/forum/viewtopic.php?f=5&t=778
+ *
  *	pin1	VDD
  *	pin2	GND
  *
