@@ -241,6 +241,8 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 		activeConfiguration->fsioAdc[i] = EFI_ADC_NONE;
 	}
 
+	disableLCD(boardConfiguration);
+
 	activeConfiguration->camInput = GPIO_UNASSIGNED;
 	boardConfiguration->triggerInputPins[0] = GPIO_UNASSIGNED;
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
@@ -753,7 +755,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;
 	boardConfiguration->triggerSimulatorPinModes[2] = OM_DEFAULT;
 
-	setFrankenstein_01_LCD(boardConfiguration);
 
 	strcpy(config->timingMultiplier, "1");
 	strcpy(config->timingAdditive, "0");

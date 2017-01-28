@@ -34,6 +34,7 @@ public class AutoTest {
         testBmwE34();
         testSachs();
         testMitsu();
+        testCamaro();
         testCitroenBerlingo();
         testMazda626();
         testFord6();
@@ -42,6 +43,10 @@ public class AutoTest {
 
     private static void testMazdaMiata2003() {
         setEngineType(47);
+    }
+
+    private static void testCamaro() {
+        setEngineType(35);
     }
 
     private static void testSachs() {

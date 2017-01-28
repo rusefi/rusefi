@@ -33,6 +33,8 @@ void setRoverv8(DECLARE_ENGINE_PARAMETER_F) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_36_1;
 
+	setFrankenstein_01_LCD(boardConfiguration);
+
 	engineConfiguration->specs.displacement = 3.528;
 	engineConfiguration->specs.cylindersCount = 8;
 	engineConfiguration->specs.firingOrder = FO_1_8_4_3_6_5_7_2;
