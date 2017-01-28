@@ -58,6 +58,7 @@ typedef struct {
 #define TS_EXECUTE 'E' // 0x45
 #define TS_GET_TEXT 'G' // 0x47
 #define TS_GET_FILE_RANGE '2'
+#define TS_GET_FIRMWARE_VERSION 'V'
 
 #define TS_SINGLE_WRITE_COMMAND 'W' // 0x57
 #define TS_CHUNK_WRITE_COMMAND 'C' // 0x43
