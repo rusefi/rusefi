@@ -34,6 +34,7 @@ public class SensorSnifferPane {
     private double maxY;
 
     private final JPanel content = new JPanel(new BorderLayout());
+    private final AnyCommand command;
 
     private boolean paused = false;
 
@@ -85,7 +86,8 @@ public class SensorSnifferPane {
         upperPanel.add(pauseButton);
         upperPanel.add(new RpmLabel(2).getContent());
 
-        upperPanel.add(AnyCommand.createField(config, true, false).getContent());
+        command = AnyCommand.createField(config, true, false);
+        upperPanel.add(command.getContent());
 
         upperPanel.add(new URLLabel(EngineSnifferPanel.HELP_TEXT, HELP_URL));
         pauseButton.addActionListener(new
@@ -136,6 +138,15 @@ public class SensorSnifferPane {
 
     public JComponent getPanel() {
         return content;
+    }
+
+    public ActionListener getTabSelectedListener() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                command.requestFocus();
+            }
+        };
     }
 
     private class SensorSnifferCanvas extends JComponent {

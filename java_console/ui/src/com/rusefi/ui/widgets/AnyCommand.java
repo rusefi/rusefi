@@ -29,6 +29,7 @@ public class AnyCommand {
 
     private AnyCommand(final JTextComponent text, final Node config, String defaultCommand, final boolean listenToCommands, boolean withCommandCaption) {
         this.text = text;
+        installCtrlEnterAction();
         text.setText(defaultCommand);
         content.setBorder(BorderFactory.createLineBorder(Color.PINK));
         if (withCommandCaption) {
@@ -61,7 +62,6 @@ public class AnyCommand {
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-
             }
 
             @Override
@@ -81,6 +81,19 @@ public class AnyCommand {
 //            }
 //        });
         // todo: limit the length of text in the text field
+    }
+
+    private void installCtrlEnterAction() {
+        text.setToolTipText("Ctrl-Enter to send");
+        text.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,
+                java.awt.event.InputEvent.CTRL_DOWN_MASK),
+                "sendKey");
+        text.getActionMap().put("sendKey", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                send();
+            }
+        });
     }
 
     private void send() {
@@ -121,6 +134,10 @@ public class AnyCommand {
 
     public void setContent(JPanel content) {
         this.content = content;
+    }
+
+    public void requestFocus() {
+        text.requestFocus();
     }
 
     interface Listener {
