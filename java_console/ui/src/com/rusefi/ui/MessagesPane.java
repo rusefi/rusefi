@@ -24,11 +24,12 @@ public class MessagesPane {
         }
     };
     private final JButton fontButton = new JButton("Font");
+    private final AnyCommand command;
 
     public MessagesPane(final Node config) {
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
-        AnyCommand command = AnyCommand.createArea(config, config.getProperty(AnyCommand.KEY), true, false);
+        command = AnyCommand.createArea(config, config.getProperty(AnyCommand.KEY), true, false);
         final MessagesPanel upperPanel = new MessagesPanel(command.getContent());
         upperPanel.loadFont(config);
 
@@ -66,5 +67,14 @@ public class MessagesPane {
 
     public JComponent getContent() {
         return content;
+    }
+
+    public ActionListener getTabSelectedListener() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                command.requestFocus();
+            }
+        };
     }
 }

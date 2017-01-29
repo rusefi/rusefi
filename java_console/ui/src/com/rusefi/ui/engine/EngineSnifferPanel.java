@@ -72,6 +72,7 @@ public class EngineSnifferPanel {
     private final ChartScrollControl scrollControl;
     // todo: move it some sort of a singleton?
     public final HashMap<String, String> channelName2PhysicalPin = new HashMap<>();
+    private AnyCommand command;
 
     private boolean isPaused;
 
@@ -112,8 +113,8 @@ public class EngineSnifferPanel {
         upperPanel.add(new RpmLabel(2).getContent());
 
         if (!LinkManager.isLogViewer()) {
-            JComponent command = AnyCommand.createField(config, "chartsize " + EFI_DEFAULT_CHART_SIZE, true, true).getContent();
-            upperPanel.add(command);
+            command = AnyCommand.createField(config, "chartsize " + EFI_DEFAULT_CHART_SIZE, true, true);
+            upperPanel.add(command.getContent());
         }
 
         upperPanel.add(zoomControl);
@@ -318,6 +319,16 @@ public class EngineSnifferPanel {
     public void reloadFile() {
         displayChart(ChartRepository.getInstance().getChart(0));
         scrollControl.reset();
+    }
+
+    public ActionListener getTabSelectedListener() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (command != null)
+                    command.requestFocus();
+            }
+        };
     }
 
     /**

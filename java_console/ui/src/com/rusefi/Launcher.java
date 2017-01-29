@@ -21,8 +21,13 @@ import com.rusefi.ui.util.UiUtils;
 import jssc.SerialPortList;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -39,7 +44,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20170120;
+    public static final int CONSOLE_VERSION = 20170129;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -111,6 +116,7 @@ public class Launcher {
             super.onWindowClosed();
         }
     };
+    private final Map<JComponent, ActionListener> tabSelectedListeners = new HashMap<JComponent, ActionListener>();
 
     public Launcher(String port) {
         this.port = port;
@@ -148,11 +154,12 @@ public class Launcher {
         if (!LinkManager.isLogViewer())
             tabbedPane.addTab("Formulas", new FormulasPane().getContent());
 
-        tabbedPane.addTab("Engine Sniffer", engineSnifferPanel.getPanel());
+        tabbedPaneAdd("Engine Sniffer", engineSnifferPanel.getPanel(), engineSnifferPanel.getTabSelectedListener());
 
-        if (!LinkManager.isLogViewer())
-            tabbedPane.addTab("Sensor Sniffer", new SensorSnifferPane(getConfig().getRoot().getChild("sensor_sniffer")).getPanel());
-
+        if (!LinkManager.isLogViewer()) {
+            SensorSnifferPane sensorSniffer = new SensorSnifferPane(getConfig().getRoot().getChild("sensor_sniffer"));
+            tabbedPaneAdd("Sensor Sniffer", sensorSniffer.getPanel(), sensorSniffer.getTabSelectedListener());
+        }
 
 //        tabbedPane.addTab("LE controls", new FlexibleControls().getPanel());
 
@@ -163,8 +170,10 @@ public class Launcher {
             tabbedPane.add("ECU stimulation", stimulator.getPanel());
         }
 //        tabbedPane.addTab("live map adjustment", new Live3DReport().getControl());
-        if (!LinkManager.isLogViewer())
-            tabbedPane.add("Messages", new MessagesPane(getConfig().getRoot().getChild("messages")).getContent());
+        if (!LinkManager.isLogViewer()) {
+            MessagesPane messagesPane = new MessagesPane(getConfig().getRoot().getChild("messages"));
+            tabbedPaneAdd("Messages", messagesPane.getContent(), messagesPane.getTabSelectedListener());
+        }
         if (!LinkManager.isLogViewer())
             tabbedPane.addTab("Table Editor", tableEditor);
 //        tabbedPane.add("Wizards", new Wizard().createPane());
@@ -185,8 +194,27 @@ public class Launcher {
                 tabbedPane.setSelectedIndex(selectedIndex);
         }
 
+        tabbedPane.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                if (e.getSource() instanceof JTabbedPane) {
+                    JTabbedPane pane = (JTabbedPane) e.getSource();
+                    int selectedIndex = pane.getSelectedIndex();
+                    System.out.println("Selected paneNo: " + selectedIndex);
+                    ActionListener actionListener = tabSelectedListeners.get(pane.getComponentAt(selectedIndex));
+                    if (actionListener != null)
+                        actionListener.actionPerformed(null);
+                }
+            }
+        });
+
         StartupFrame.setAppIcon(mainFrame.getFrame());
         mainFrame.showFrame(tabbedPane);
+    }
+
+    private void tabbedPaneAdd(String title, JComponent component, ActionListener tabSelectedListener) {
+        tabSelectedListeners.put(component, tabSelectedListener);
+        tabbedPane.add(title, component);
     }
 
     private void windowOpenedHandler() {
