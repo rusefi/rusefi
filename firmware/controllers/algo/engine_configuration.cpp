@@ -254,6 +254,15 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 	boardConfiguration->joystickCPin = GPIO_UNASSIGNED;
 	boardConfiguration->joystickDPin = GPIO_UNASSIGNED;
 
+	boardConfiguration->idle.stepperDirectionPin = GPIO_UNASSIGNED;
+	boardConfiguration->idle.stepperStepPin = GPIO_UNASSIGNED;
+	engineConfiguration->stepperEnablePin = GPIO_UNASSIGNED;
+
+	boardConfiguration->idle.stepperDirectionPin = GPIO_UNASSIGNED;
+	boardConfiguration->idle.stepperStepPin = GPIO_UNASSIGNED;
+	engineConfiguration->stepperEnablePin = GPIO_UNASSIGNED;
+	engineConfiguration->stepperEnablePinMode = OM_DEFAULT;
+
 	activeConfiguration->dizzySparkOutputPin = GPIO_UNASSIGNED;
 
 	boardConfiguration->acRelayPin = GPIO_UNASSIGNED;
@@ -665,7 +674,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 
 	boardConfiguration->idle.solenoidFrequency = 200;
-	// set_idle_position 50
+	// set idle_position 50
 	boardConfiguration->manIdlePosition = 50;
 	engineConfiguration->targetIdleRpm = 1200;
 //	engineConfiguration->idleMode = IM_AUTO;

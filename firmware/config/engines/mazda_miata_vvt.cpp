@@ -111,7 +111,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->alternatorControl.dFactor = 0;
 	engineConfiguration->alternatorDT = 10;
 
-	// set_idle_position 35
+	// set idle_position 35
 	boardConfiguration->manIdlePosition = 35;
 
 

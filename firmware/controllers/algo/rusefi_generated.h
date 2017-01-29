@@ -928,7 +928,8 @@
 #define fuelClosedLoopPid_offset_offset 2752
 #define fuelClosedLoopAfrLowThreshold_offset 2756
 #define fuelClosedLoopAfrHighThreshold_offset 2760
-#define unused_offset 2764
+#define stepperEnablePinMode_offset 2764
+#define unused_offset 2768
 #define le_formulas1_offset 3048
 #define le_formulas2_offset 3248
 #define le_formulas3_offset 3448
