@@ -64,23 +64,27 @@ void idleDebug(const char *msg, percent_t value) {
 }
 
 static void showIdleInfo(void) {
-	scheduleMsg(logger, "idleMode=%s position=%f isStepper=%s", getIdle_mode_e(engineConfiguration->idleMode),
+	const char * idleModeStr = getIdle_mode_e(engineConfiguration->idleMode);
+	scheduleMsg(logger, "idleMode=%s position=%f isStepper=%s", idleModeStr,
 			getIdlePosition(), boolToString(boardConfiguration->useStepperIdle));
 	if (boardConfiguration->useStepperIdle) {
-		scheduleMsg(logger, "direction=%s reactionTime=%f", hwPortname(boardConfiguration->idle.stepperDirectionPin),
+		scheduleMsg(logger, "directionPin=%s reactionTime=%f", hwPortname(boardConfiguration->idle.stepperDirectionPin),
 				engineConfiguration->idleStepperReactionTime);
-		scheduleMsg(logger, "step=%s steps=%d", hwPortname(boardConfiguration->idle.stepperStepPin),
+		scheduleMsg(logger, "stepPin=%s steps=%d", hwPortname(boardConfiguration->idle.stepperStepPin),
 				engineConfiguration->idleStepperTotalSteps);
-		scheduleMsg(logger, "enable=%s", hwPortname(engineConfiguration->stepperEnablePin));
+		scheduleMsg(logger, "enablePin=%s/%d", hwPortname(engineConfiguration->stepperEnablePin),
+				engineConfiguration->stepperEnablePinMode);
 	} else {
 		scheduleMsg(logger, "idle valve freq=%d on %s", boardConfiguration->idle.solenoidFrequency,
 				hwPortname(boardConfiguration->idle.solenoidPin));
 	}
-	scheduleMsg(logger, "idleControl=%s", getIdle_control_e(engineConfiguration->idleControl));
-	scheduleMsg(logger, "idle P=%f I=%f D=%f dT=%d", engineConfiguration->idleRpmPid.pFactor,
-			engineConfiguration->idleRpmPid.iFactor,
-			engineConfiguration->idleRpmPid.dFactor,
-			engineConfiguration->idleDT);
+	scheduleMsg(logger, "mode=%s", getIdle_control_e(engineConfiguration->idleControl));
+	if (engineConfiguration->idleControl == IC_PID) {
+		scheduleMsg(logger, "idle P=%f I=%f D=%f dT=%d", engineConfiguration->idleRpmPid.pFactor,
+				engineConfiguration->idleRpmPid.iFactor,
+				engineConfiguration->idleRpmPid.dFactor,
+				engineConfiguration->idleDT);
+	}
 }
 
 void setIdleControlEnabled(int value) {

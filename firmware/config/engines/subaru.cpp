@@ -22,4 +22,16 @@ void setSubaru2003Wrx(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->trigger.customSkippedToothCount = 1;
 
 	engineConfiguration->sensorChartFrequency = 2;
+
+	boardConfiguration->useStepperIdle = true;
+
+	// todo: url
+	boardConfiguration->idle.stepperDirectionPin = GPIOD_1; // top stepper drive pin, white wire recommended
+	boardConfiguration->idle.stepperStepPin = GPIOD_6; // yellow wire recommended
+	engineConfiguration->stepperEnablePin = GPIOB_1; // bottom stepper driver board pin, blue wire recommended
+
+	boardConfiguration->triggerSimulatorPins[0] = GPIO_UNASSIGNED;
+	boardConfiguration->triggerSimulatorPins[1] = GPIO_UNASSIGNED;
+	boardConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
+
 }
