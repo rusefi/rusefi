@@ -129,6 +129,8 @@ static float getBand(void) {
 			BAND(engineConfiguration->cylinderBore) : engineConfiguration->knockBandCustom;
 }
 
+static char hipPinNameBuffer[16];
+
 static void showHipInfo(void) {
 	if (!boardConfiguration->isHip9011Enabled) {
 		scheduleMsg(logger, "hip9011 driver not active");
@@ -142,15 +144,19 @@ static void showHipInfo(void) {
 			engineConfiguration->cylinderBore, getBand(),
 			engineConfiguration->hip9011PrescalerAndSDO);
 
-	scheduleMsg(logger, "band_index=%d gain %f/index=%d", currentBandIndex, boardConfiguration->hip9011Gain, currentGainIndex);
+	char *outputName = getPinNameByAdcChannel("hip", engineConfiguration->hipOutputChannel, hipPinNameBuffer);
+
+	scheduleMsg(logger, "band_index=%d gain %f/index=%d output=%s", currentBandIndex, boardConfiguration->hip9011Gain, currentGainIndex,
+			outputName);
 	scheduleMsg(logger, "integrator index=%d knockVThreshold=%f knockCount=%d maxKnockSubDeg=%f",
 	            currentIntergratorIndex, engineConfiguration->knockVThreshold,
 	            engine->knockCount, engineConfiguration->maxKnockSubDeg);
 
 	const char * msg = invalidResponse > 0 ? "NOT GOOD" : "ok";
-	scheduleMsg(logger, "spi=%s IntHold@%s response count=%d incorrect response=%d %s",
+	scheduleMsg(logger, "spi=%s IntHold@%s/%d response count=%d incorrect response=%d %s",
 			getSpi_device_e(hipSpiDevice),
 			hwPortname(boardConfiguration->hip9011IntHoldPin),
+			boardConfiguration->hip9011IntHoldPinMode,
 			correctResponse, invalidResponse,
 			msg);
 	scheduleMsg(logger, "CS@%s updateCount=%d", hwPortname(boardConfiguration->hip9011CsPin), settingUpdateCount);
