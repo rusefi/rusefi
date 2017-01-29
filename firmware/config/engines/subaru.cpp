@@ -25,12 +25,12 @@ void setSubaru2003Wrx(DECLARE_ENGINE_PARAMETER_F) {
 
 	boardConfiguration->useStepperIdle = true;
 
-	// todo: url
+	// See http://rusefi.com/forum/viewtopic.php?f=4&t=1161
 	boardConfiguration->idle.stepperDirectionPin = GPIOD_1; // top stepper drive pin, white wire recommended
 	boardConfiguration->idle.stepperStepPin = GPIOD_6; // yellow wire recommended
 	engineConfiguration->stepperEnablePin = GPIOB_1; // bottom stepper driver board pin, blue wire recommended
 
-	boardConfiguration->triggerSimulatorPins[0] = GPIO_UNASSIGNED;
+	boardConfiguration->triggerSimulatorPins[0] = GPIO_UNASSIGNED; // we want to avoid PD1 conflict
 	boardConfiguration->triggerSimulatorPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
 
