@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 26 12:50:23 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jan 28 19:06:26 EST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1819,7 +1819,11 @@ typedef struct {
 	/**
 	 * offset 2764
 	 */
-	int unused[71];
+	pin_mode_e stepperEnablePinMode;
+	/**
+	 * offset 2768
+	 */
+	int unused[70];
 	/** total size 3048*/
 } engine_configuration_s;
 
@@ -2034,4 +2038,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 26 12:50:23 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jan 28 19:06:26 EST 2017

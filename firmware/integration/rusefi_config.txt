@@ -773,7 +773,8 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	pid_s fuelClosedLoopPid;
 	float fuelClosedLoopAfrLowThreshold;;"ratio",        1,     0,  0,    100,  1
 	float fuelClosedLoopAfrHighThreshold;;"ratio",        1,     0,  0,    100,  1
-	int[71] unused;
+	pin_mode_e stepperEnablePinMode;
+	int[70] unused;
 	
 
 end_struct

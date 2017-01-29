@@ -1714,6 +1714,7 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		field = "Idle Stepper Step",					idle_stepperStepPin, useStepperIdle
 		field = "Idle Stepper Dir",						idle_stepperDirectionPin, useStepperIdle
 		field = "Idle Stepper Enable",					stepperEnablePin, useStepperIdle
+		field = "Idle Stepper Enable mode",				stepperEnablePinMode, useStepperIdle
 		field = "Stepper reaction time",				idleStepperReactionTime, useStepperIdle
 		field = "Stepper total steps",					idleStepperTotalSteps, useStepperIdle
 		
@@ -1786,15 +1787,18 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		
 	dialog = spiFunction, "SPI settings"
 		field = "!ECU reboot needed to apply these settings"
-		field = "SPI1 MOSI",							spi1mosiPin
-		field = "SPI1 MISO",							spi1misoPin
-		field = "SPI1 SCK",								spi1sckPin
-		field = "SPI2 MOSI",							spi2mosiPin
-		field = "SPI2 MISO",							spi2misoPin
-		field = "SPI2 SCK",								spi2sckPin
-		field = "SPI3 MOSI",							spi3mosiPin
-		field = "SPI3 MISO",							spi3misoPin
-		field = "SPI3 SCK",								spi3sckPin
+		field = "SPI1 enable",							is_enabled_spi_1
+		field = "SPI1 MOSI",							spi1mosiPin, {is_enabled_spi_1 == 1}
+		field = "SPI1 MISO",							spi1misoPin, {is_enabled_spi_1 == 1}
+		field = "SPI1 SCK",								spi1sckPin, {is_enabled_spi_1 == 1}
+		field = "SPI2 enable",							is_enabled_spi_2
+		field = "SPI2 MOSI",							spi2mosiPin, {is_enabled_spi_2 == 1}
+		field = "SPI2 MISO",							spi2misoPin, {is_enabled_spi_2 == 1}
+		field = "SPI2 SCK",								spi2sckPin, {is_enabled_spi_2 == 1}
+		field = "SPI3 enable",							is_enabled_spi_3
+		field = "SPI3 MOSI",							spi3mosiPin, {is_enabled_spi_3 == 1}
+		field = "SPI3 MISO",							spi3misoPin, {is_enabled_spi_3 == 1}
+		field = "SPI3 SCK",								spi3sckPin, {is_enabled_spi_3 == 1}
 
 	dialog = fuelClosedLoopDialog, "Fuel closed-loop correction"
 		field = "Enabled",								fuelClosedLoopCorrectionEnabled
