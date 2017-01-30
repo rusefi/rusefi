@@ -126,6 +126,8 @@
 126)                  Add a note about optional D12-D23 for solenoids
 127)                  Add vias to button traces: PC8 PD11 PD10 (PD0 & PD2 already have those)
 128)                  Add vias to most or all HL traces: PC7 PC9 PD8 PD9 PE8 PE10 PE12 PE14
+129)                  silkscreen not under but next to component: R1001 R1002 D1001 etc?
+
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
