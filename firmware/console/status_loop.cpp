@@ -526,9 +526,9 @@ static THD_WORKING_AREA(lcdThreadStack, UTILITY_THREAD_STACK_SIZE);
 static THD_WORKING_AREA(blinkingStack, 128);
 
 // move this into EnginePins?
-OutputPin communicationPin;
+OutputPin communicationPin; // blue LED on brain board by default
 OutputPin warningPin;
-OutputPin runningPin;
+OutputPin runningPin; // green LED on brain board by default
 
 static OutputPin *leds[] = { &warningPin, &runningPin, &enginePins.checkEnginePin,
 		&enginePins.errorLedPin, &communicationPin, &enginePins.checkEnginePin };

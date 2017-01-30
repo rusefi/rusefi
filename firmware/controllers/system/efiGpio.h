@@ -83,9 +83,15 @@ public:
 	OutputPin fuelPumpRelay;
 	OutputPin o2heater;
 //	OutputPin alternatorField;
-	OutputPin errorLedPin;
+	/**
+	 * brain board RED LED by default
+	 */
+	OutputPin errorLedPin; //
 	OutputPin idleSolenoidPin;
 	OutputPin alternatorPin;
+	/**
+	 * this one is usually on the gauge cluster, not on the ECU
+	 */
 	OutputPin checkEnginePin;
 	NamedOutputPin tachOut;
 	OutputPin etbOutput1;
