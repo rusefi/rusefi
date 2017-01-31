@@ -3,3 +3,4 @@
  3)                   DIAHD silkscreen on pad #6 should be DIAHG   
  4)                   add a note describing UR (R8) and UA (R15)  low pass filter / slew rate limiter
  5)                   add a note explaining different C2 and C9 values
+ 6)                   R12 is not routed right
