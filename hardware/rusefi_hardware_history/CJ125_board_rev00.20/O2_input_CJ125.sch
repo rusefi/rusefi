@@ -37,8 +37,8 @@ $Descr A 11000 8500
 encoding utf-8
 Sheet 1 1
 Title "CJ125 Wide O2 "
-Date "2017-01-30"
-Rev "R0.3"
+Date "2016-07-23"
+Rev "R0.2"
 Comp "rusEFI.com"
 Comment1 ""
 Comment2 ""
@@ -50,14 +50,14 @@ Text Notes 5125 6700 0    60   ~ 0
 $Comp
 L C C7
 U 1 1 4E39E9D3
-P 6725 4975
-F 0 "C7" V 6765 5030 50  0000 L CNN
-F 1 "0.1uF" V 6575 4900 50  0000 L CNN
-F 2 "SM0805" V 1230 2500 60  0001 C CNN
-F 3 "" H 6725 4975 60  0001 C CNN
-F 4 "avx,08055C104KAT2A" V 1230 2500 60  0001 C CNN "mfg,mfg#"
-F 5 "DIGI,478-1395-1-ND" V 1230 2500 60  0001 C CNN "vend1,vend1#"
-	1    6725 4975
+P 6625 5075
+F 0 "C7" V 6665 5130 50  0000 L CNN
+F 1 "0.1uF" V 6665 4810 50  0000 L CNN
+F 2 "SM0805" V 1130 2600 60  0001 C CNN
+F 3 "" H 6625 5075 60  0001 C CNN
+F 4 "avx,08055C104KAT2A" V 1130 2600 60  0001 C CNN "mfg,mfg#"
+F 5 "DIGI,478-1395-1-ND" V 1130 2600 60  0001 C CNN "vend1,vend1#"
+	1    6625 5075
 	0    1    1    0   
 $EndComp
 Text HLabel 8300 5250 2    60   Input ~ 0
@@ -89,11 +89,24 @@ F 5 "DIGI,541-100KCCT-ND" V 1130 2600 60  0001 C CNN "vend1,vend1#"
 	0    1    1    0   
 $EndComp
 $Comp
+L C C9
+U 1 1 4E39E9D0
+P 8300 5450
+F 0 "C9" H 8375 5550 50  0000 L CNN
+F 1 "0.01uF" H 8000 5550 50  0000 L CNN
+F 2 "SM0805" V 1130 2600 60  0001 C CNN
+F 3 "" H 8300 5450 60  0001 C CNN
+F 4 "avx,08055C103JAT2A" V 1130 2600 60  0001 C CNN "mfg,mfg#"
+F 5 "DIGI,478-3745-6-ND" V 1130 2600 60  0001 C CNN "vend1,vend1#"
+	1    8300 5450
+	1    0    0    1   
+$EndComp
+$Comp
 L C C6
 U 1 1 4E39E9CF
 P 5350 4575
 F 0 "C6" V 5305 4635 50  0000 L CNN
-F 1 "0.033uF" V 5300 4200 50  0000 L CNN
+F 1 "0.033uF" V 5305 4265 50  0000 L CNN
 F 2 "SM0805" V 1130 2600 60  0001 C CNN
 F 3 "" H 5350 4575 60  0001 C CNN
 F 4 "tdk,CGA4J2C0G1H333J125AA" V 1130 2600 60  0001 C CNN "mfg,mfg#"
@@ -706,8 +719,9 @@ $EndComp
 Connection ~ 4025 5175
 Wire Wire Line
 	3275 5175 4800 5175
+Connection ~ 6825 4975
 Wire Wire Line
-	5900 5075 6500 5075
+	5900 5075 6425 5075
 Wire Wire Line
 	7725 5175 5900 5175
 Wire Wire Line
@@ -804,6 +818,8 @@ Wire Wire Line
 Wire Wire Line
 	5900 4975 6000 4975
 Wire Wire Line
+	6825 4975 6825 5075
+Wire Wire Line
 	8300 5175 8225 5175
 Wire Wire Line
 	2500 5575 2175 5575
@@ -854,6 +870,8 @@ Wire Notes Line
 Wire Notes Line
 	3500 6050 3250 6175
 Wire Wire Line
+	6500 4975 6925 4975
+Wire Wire Line
 	4275 4975 4275 4900
 Wire Wire Line
 	3775 4900 3200 4900
@@ -880,30 +898,5 @@ F 4 "BOURNS,CR0805-FX-1002ELF" V -670 2150 60  0001 C CNN "mfg,mfg#"
 F 5 "DIGI,CR0805-FX-1002ELFCT-ND" V -670 2150 60  0001 C CNN "vend1,vend1#"
 	1    2500 4825
 	-1   0    0    -1  
-$EndComp
-Wire Wire Line
-	6500 4975 6525 4975
-Wire Wire Line
-	6500 5075 6500 4975
-Text Notes 3100 7025 0    60   ~ 0
-1kHz low pass filter / slew rate limiter.
-Wire Notes Line
-	4600 6900 4425 6325
-Text Notes 7775 4725 0    60   ~ 0
-1kHz low pass filter / slew rate limiter.
-Wire Notes Line
-	8175 5050 8300 4775
-$Comp
-L C C9
-U 1 1 58908DB7
-P 8300 5450
-F 0 "C9" H 8325 5350 50  0000 L CNN
-F 1 "0.033uF" H 7950 5350 50  0000 L CNN
-F 2 "SM0805" V 5180 1675 60  0001 C CNN
-F 3 "" H 8300 5450 60  0001 C CNN
-F 4 "tdk,CGA4J2C0G1H333J125AA" V 5180 1675 60  0001 C CNN "mfg,mfg#"
-F 5 "DIGI,445-6950-1-ND" V 5180 1675 60  0001 C CNN "vend1,vend1#"
-	1    8300 5450
-	-1   0    0    1   
 $EndComp
 $EndSCHEMATC
