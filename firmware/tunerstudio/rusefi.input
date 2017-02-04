@@ -1393,6 +1393,7 @@ fileVersion = { 20161225 }
 		subMenu = std_separator
 		subMenu = ioTest,					"I-O Test"
 		subMenu = ecuStimulator,			"ECU stimulator"
+		subMenu = allPins,					"Full pinout"
 
 [ControllerCommands]
 ; commandName    = command1, command2, commandn...
@@ -1604,6 +1605,45 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 	dialog = auxTempSensor2Sensor, "", yAxis
 		panel = auxTempSensor2_thermistor,		North
 		panel = auxTempSensor2Sensor_IO,		South
+
+
+	dialog = allPins1
+		field = "MAP ADC input", 						map_sensor_hwChannel
+		field = "frequencyReportingMapInputPin",		frequencyReportingMapInputPin
+		field = "CLT ADC input", 						clt_adcChannel
+		field = "IAT ADC input", 						iat_adcChannel
+		field = "vBatt ADC input", 						vbattAdcChannel
+		field = "TPS ADC input", 						tpsAdcChannel
+		field = "MAF ADC input", 						mafAdcChannel
+		field = "AFR ADC input", 						afr_hwChannel
+		field = "fuelLevelSensor", 						fuelLevelSensor
+		field = "Baro ADC input", 						baroSensor_hwChannel
+		field = "pedalPositionChannel", 				pedalPositionChannel
+		field = "Primary input channel", 				triggerInputPins1
+		field = "Secondary channel", 					triggerInputPins2
+		field = "Cam Sync/VVT input",					camInput
+		field = "VVT Input pin",						vehicleSpeedSensorInputPin
+		field = "clutchDownPin",						clutchDownPin
+		field = "clutchUpPin",							clutchUpPin
+
+	dialog = allPins2
+		field = "Tachometer output Pin",						tachOutputPin
+		field = "O2 heater pin",						o2heaterPin
+		field = "Idle Solenoid Pin",					idle_solenoidPin
+		field = "Idle Stepper Dir",						idle_stepperDirectionPin
+		field = "Idle Stepper Step",					idle_stepperStepPin
+		field = "Idle Stepper Enable",					stepperEnablePin
+
+		field = "Fuel Pump Pin",						fuelPumpPin
+
+
+	dialog = allPins1_2, "", xAxis
+		panel = allPins1
+		panel = allPins2
+
+	dialog = allPins, "All Pins", xAxis
+		panel = allPins1_2
+
 
 ;			Engine->CLT Thermistor Settings
 	dialog = clt_thermistor, "CLT Thermistor Settings"
