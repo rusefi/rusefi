@@ -128,6 +128,7 @@
 128)                  Add vias to most or all HL traces: PC7 PC9 PD8 PD9 PE8 PE10 PE12 PE14
 129)                  silkscreen not under but next to component: R1001 R1002 D1001 etc?
 130)                  C472, C354 and C358 are electrolytic in the schematic
+131)                  between items #111, #127 and #128 we should keep stepper motor in mind and ideally have a space to mount it with minimal wiring
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
