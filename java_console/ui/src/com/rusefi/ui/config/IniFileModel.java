@@ -58,7 +58,7 @@ public class IniFileModel {
         if (fields.isEmpty())
             return;
         if (dialogUiName == null)
-            throw new NullPointerException("dialogUiName for" + fields);
+            dialogUiName = dialogId;
         dialogs.put(dialogUiName, new DialogModel(dialogId, dialogUiName, fields));
 
         dialogId = null;

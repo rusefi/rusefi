@@ -12,7 +12,9 @@ import java.io.*;
 public class FirmwareFlasher extends ProcessStatusWindow {
     public static final String IMAGE_DEBUG_FILE = "rusefi_debug.bin";
     public static final String IMAGE_RELEASE_FILE = "rusefi_release.bin";
-    static final String OPENOCD_BIN = "openocd.exe -f stm32f429disc1.cfg";
+    static final String OPENOCD_EXE = "openocd.exe";
+    static final String BINARY_LOCATION = "openocd";
+    static final String OPENOCD_CMD = BINARY_LOCATION + File.separator +  OPENOCD_EXE + " -f stm32f429disc1.cfg";
     private static final String SUCCESS_MESSAGE_TAG = "shutdown command invoked";
     private static final String FAILED_MESSAGE_TAG = "failed";
     private static final String NO_DRIVER_MESSAGE_TAG = "failed with LIBUSB_ERROR_NOT_SUPPORTED";
@@ -50,7 +52,7 @@ public class FirmwareFlasher extends ProcessStatusWindow {
             wnd.appendMsg(fileName + " not found, cannot proceed !!!");
             return;
         }
-        StringBuffer error = executeCommand(OPENOCD_BIN + " -c \"program ../" +
+        StringBuffer error = executeCommand(OPENOCD_CMD + " -c \"program ../" +
                 fileName +
                 " verify reset exit 0x08000000\"");
         if (error.toString().contains(NO_DRIVER_MESSAGE_TAG)) {

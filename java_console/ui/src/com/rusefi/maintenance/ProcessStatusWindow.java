@@ -8,6 +8,7 @@ import java.io.*;
  * (c) Andrey Belomutskiy 2013-2017
  */
 public class ProcessStatusWindow {
+
     public static boolean isWindows() {
         return System.getProperty("os.name").toLowerCase().contains("win");
     }
@@ -50,11 +51,17 @@ public class ProcessStatusWindow {
     }
 
     protected StringBuffer executeCommand(String command) {
+        StringBuffer error = new StringBuffer();
+        String binaryFullName = FirmwareFlasher.BINARY_LOCATION + File.separator + FirmwareFlasher.OPENOCD_EXE;
+        if (!new File(binaryFullName).exists()) {
+            wnd.appendMsg(binaryFullName + " not found :(");
+            return error;
+        }
+
         wnd.appendMsg("Executing " + command);
         StringBuffer output = new StringBuffer();
-        StringBuffer error = new StringBuffer();
         try {
-            File workingDir = new File("openocd");
+            File workingDir = new File(FirmwareFlasher.BINARY_LOCATION);
             Process p = Runtime.getRuntime().exec(command, null, workingDir);
             startStreamThread(p, p.getInputStream(), output);
             startStreamThread(p, p.getErrorStream(), error);
