@@ -920,7 +920,7 @@
 #define fuelClosedLoopCltThreshold_offset 2732
 #define fuelClosedLoopTpsThreshold_offset 2734
 #define fuelClosedLoopRpmThreshold_offset 2736
-#define unusedShort_offset 2738
+#define etbFreq_offset 2738
 #define fuelClosedLoopPid_offset 2740
 #define fuelClosedLoopPid_pFactor_offset 2740
 #define fuelClosedLoopPid_iFactor_offset 2744

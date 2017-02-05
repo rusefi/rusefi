@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jan 28 19:06:26 EST 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 05 11:39:34 EST 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -924,7 +924,7 @@ public class Fields {
 	public static final int fuelClosedLoopCltThreshold_offset = 2732;
 	public static final int fuelClosedLoopTpsThreshold_offset = 2734;
 	public static final int fuelClosedLoopRpmThreshold_offset = 2736;
-	public static final int unusedShort_offset = 2738;
+	public static final int etbFreq_offset = 2738;
 	public static final int fuelClosedLoopPid_offset = 2740;
 	public static final int fuelClosedLoopPid_pFactor_offset = 2740;
 	public static final int fuelClosedLoopPid_iFactor_offset = 2744;
@@ -1597,7 +1597,7 @@ public class Fields {
 	public static final Field FUELCLOSEDLOOPCLTTHRESHOLD = Field.create("FUELCLOSEDLOOPCLTTHRESHOLD", 2732, FieldType.INT);
 	public static final Field FUELCLOSEDLOOPTPSTHRESHOLD = Field.create("FUELCLOSEDLOOPTPSTHRESHOLD", 2734, FieldType.INT);
 	public static final Field FUELCLOSEDLOOPRPMTHRESHOLD = Field.create("FUELCLOSEDLOOPRPMTHRESHOLD", 2736, FieldType.INT);
-	public static final Field UNUSEDSHORT = Field.create("UNUSEDSHORT", 2738, FieldType.INT);
+	public static final Field ETBFREQ = Field.create("ETBFREQ", 2738, FieldType.INT);
 	public static final Field FUELCLOSEDLOOPPID_PFACTOR = Field.create("FUELCLOSEDLOOPPID_PFACTOR", 2740, FieldType.FLOAT);
 	public static final Field FUELCLOSEDLOOPPID_IFACTOR = Field.create("FUELCLOSEDLOOPPID_IFACTOR", 2744, FieldType.FLOAT);
 	public static final Field FUELCLOSEDLOOPPID_DFACTOR = Field.create("FUELCLOSEDLOOPPID_DFACTOR", 2748, FieldType.FLOAT);
