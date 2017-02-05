@@ -108,7 +108,7 @@
 108) RESOLVED IN R0.5 Q1001 was Alpha,AO3401A and changed to Vishay SQ2301ES-T1-GE3 which is automotive AEC-Q101 qualified. 
 109)                  Move D12-D23 schematics from the main page to the inj12ch page
 110)                  Part number for D19 (PB9-INJ09/PB9) as Miata Idle Valve Solenoid
-111)                  GND and +12v rails? at least some 1.1mm holes in the prototyping area. Make holes larger for larger wires.
+111)                  GND and +12v rails? at least some 1.1mm holes in the prototyping area. Make holes larger for larger wires. 47mil/1.2mm best
 112)                  reduce high-side schematics confusion where H_IN1 is HL2, H_IN3 is HL1 etc.see http://rusefi.com/forum/viewtopic.php?f=4&t=569&start=240
 113) RESOLVED IN R0.5 "Normal + Insert" attributes for all SIL-2 and SOD-123 footprints to fix position file generation
 114)                  PC0 - hip9011 vs USB OTG current limiting chip STMPS2141STR conflict

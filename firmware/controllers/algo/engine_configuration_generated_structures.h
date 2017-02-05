@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Feb 03 21:52:01 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 05 11:39:34 EST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1804,7 +1804,7 @@ typedef struct {
 	/**
 	 * offset 2738
 	 */
-	int16_t unusedShort;
+	int16_t etbFreq;
 	/**
 	 * offset 2740
 	 */
@@ -2039,4 +2039,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Feb 03 21:52:01 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 05 11:39:34 EST 2017
