@@ -16,5 +16,6 @@
 float getVehicleSpeed(void);
 void initVehicleSpeed(Logging *logger);
 void setMockVehicleSpeed(float speedKPH);
+bool hasVehicleSpeedSensor();
 
 #endif /* HW_LAYER_VEHICLE_SPEED_H_ */

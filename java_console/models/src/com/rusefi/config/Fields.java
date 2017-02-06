@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 05 11:39:34 EST 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 05 22:20:28 EST 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -629,7 +629,7 @@ public class Fields {
 	public static final int unusedBit__2_offset = 1488;
 	public static final int canReadEnabled_offset = 1488;
 	public static final int canWriteEnabled_offset = 1488;
-	public static final int hasVehicleSpeedSensor_offset = 1488;
+	public static final int unusedBit_123_offset = 1488;
 	public static final int unusedbit_9_offset = 1488;
 	public static final int unusedbit_10_offset = 1488;
 	public static final int isAlternatorControlEnabled_offset = 1488;
@@ -1394,7 +1394,7 @@ public class Fields {
 	public static final Field UNUSEDBIT__2 = Field.create("UNUSEDBIT__2", 1488, FieldType.BIT, 7);
 	public static final Field CANREADENABLED = Field.create("CANREADENABLED", 1488, FieldType.BIT, 8);
 	public static final Field CANWRITEENABLED = Field.create("CANWRITEENABLED", 1488, FieldType.BIT, 9);
-	public static final Field HASVEHICLESPEEDSENSOR = Field.create("HASVEHICLESPEEDSENSOR", 1488, FieldType.BIT, 10);
+	public static final Field UNUSEDBIT_123 = Field.create("UNUSEDBIT_123", 1488, FieldType.BIT, 10);
 	public static final Field UNUSEDBIT_9 = Field.create("UNUSEDBIT_9", 1488, FieldType.BIT, 11);
 	public static final Field UNUSEDBIT_10 = Field.create("UNUSEDBIT_10", 1488, FieldType.BIT, 12);
 	public static final Field ISALTERNATORCONTROLENABLED = Field.create("ISALTERNATORCONTROLENABLED", 1488, FieldType.BIT, 13);

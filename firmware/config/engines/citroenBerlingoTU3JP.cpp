@@ -207,7 +207,6 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	* Speed Sensor
 	*/
 	boardConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
-	engineConfiguration->hasVehicleSpeedSensor = true;
 	/**
 	* Other
 	*/
@@ -218,6 +217,4 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->dizzySparkOutputPin = GPIOE_3;
 	engineConfiguration->dizzySparkOutputPinMode = OM_INVERTED;
-
-
 }
