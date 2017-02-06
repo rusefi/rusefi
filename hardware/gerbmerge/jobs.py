@@ -91,6 +91,18 @@ xtool_pat = re.compile(r'^(T\d+)$')           # Tool selection
 xydraw_pat = re.compile(r'^X([+-]?\d+)Y([+-]?\d+)$')    # Plunge command
 xdraw_pat = re.compile(r'^X([+-]?\d+)$')    # Plunge command, repeat last Y value
 ydraw_pat = re.compile(r'^Y([+-]?\d+)$')    # Plunge command, repeat last X value
+
+# slot milling commands - up to four coordinates per line!
+xyG85xy_pat = re.compile(r'^X([+-]?\d+)Y([+-]?\d+)G85X([+-]?\d+)Y([+-]?\d+)$') # XY G85 XY
+xyG85x_pat = re.compile(r'^X([+-]?\d+)Y([+-]?\d+)G85X([+-]?\d+)$') # XY G85 X
+xyG85y_pat = re.compile(r'^X([+-]?\d+)Y([+-]?\d+)G85Y([+-]?\d+)$') # XY G85 Y
+xG85xy_pat = re.compile(r'^X([+-]?\d+)G85X([+-]?\d+)Y([+-]?\d+)$') # X G85 XY
+yG85xy_pat = re.compile(r'^Y([+-]?\d+)G85X([+-]?\d+)Y([+-]?\d+)$') # Y G85 XY
+xG85x_pat = re.compile(r'^X([+-]?\d+)G85X([+-]?\d+)$') # X G85 X
+yG85y_pat = re.compile(r'^Y([+-]?\d+)G85Y([+-]?\d+)$') # Y G85 Y
+xG85y_pat = re.compile(r'^X([+-]?\d+)G85Y([+-]?\d+)$') # X G85 Y
+yG85x_pat = re.compile(r'^Y([+-]?\d+)G85X([+-]?\d+)$') # Y G85 X
+
 xtdef_pat = re.compile(r'^(T\d+)(?:F\d+)?(?:S\d+)?C([0-9.]+)$') # Tool+diameter definition with optional
                                                                 # feed/speed (for Protel)
 xtdef2_pat = re.compile(r'^(T\d+)C([0-9.]+)(?:F\d+)?(?:S\d+)?$') # Tool+diameter definition with optional
@@ -102,8 +114,10 @@ XIgnoreList = ( \
   re.compile(r'^M30$'),   # End of job
   re.compile(r'^M48$'),   # Program header to first %
   re.compile(r'^M72$'),   # Inches
+  re.compile(r'^FMAT,2$'),
   re.compile(r'^G05$'),   # Drill Mode
-  re.compile(r'^G90$')    # Absolute Mode
+  re.compile(r'^G90$'),    # Absolute Mode
+  re.compile(r'^$')
   )
 
 # A Job is a single input board. It is expected to have:
@@ -174,6 +188,8 @@ class Job:
     # The key to this dictionary is the full tool name, e.g., T03
     # as a string. Each command is an (X,Y) integer tuple.
     self.xcommands = {}
+    # Same as above but for unplated holes.
+    self.ucommands = {}
 
     # This is a dictionary mapping LOCAL tool names (e.g., T03) to diameters
     # in inches for THIS JOB. This dictionary will be initially empty
@@ -181,9 +197,12 @@ class Job:
     # main program will construct this dictionary from the global tool
     # table in this case, once all jobs have been read in.
     self.xdiam = {}
+    # Same as above but for unplated holes.
+    self.udiam = {}
 
     # This is a mapping from tool name to diameter for THIS JOB
     self.ToolList = None
+    self.uToolList = None
 
     # How many times to replicate this job if using auto-placement
     self.Repeat = 1
@@ -211,8 +230,19 @@ class Job:
     else:
       return float(self.maxy-self.miny)*0.001
 
+  def width_mm(self):
+    "Return width in mm"
+    return float(self.maxx-self.minx)*0.00001*25.4
+
+  def height_mm(self):
+    "Return height in mm"
+    return float(self.maxy-self.miny)*0.00001*25.4
+
   def jobarea(self):
     return self.width_in()*self.height_in()
+
+  def jobarea_mm(self):
+    return self.width_mm()*self.height_mm()
 
   def maxdimension(self):
     return max(self.width_in(),self.height_in())
@@ -251,6 +281,31 @@ class Job:
      
     # Shift all excellon commands
     for tool, command in self.xcommands.iteritems():
+     
+      # Loop through each command in each layer
+      for index in range( len(command) ):
+        c = command[index]
+
+        # Shift X and Y coordinate of command
+        command_list = list(c)                              ## convert tuple to list
+        if len(command_list) == 2:
+          if ( type( command_list[0] ) == types.IntType ) \
+          and ( type( command_list[1] ) == types.IntType ):  ## ensure that first two elemenst are integers
+            command_list[0] += x_shift / 10
+            command_list[1] += y_shift / 10
+        elif len(command_list) == 4:
+            command_list[0] += x_shift / 10
+            command_list[1] += y_shift / 10
+            command_list[2] += x_shift / 10
+            command_list[3] += y_shift / 10
+        else:
+          raise RuntimeError, 'Unknown Command in fixcoordinates'
+        
+        command[index] = tuple(command_list)                ## convert list back to tuple
+        
+      self.xcommands[tool] = command                        ## set modified command
+
+    for tool, command in self.ucommands.iteritems():
     
       # Loop through each command in each layer
       for index in range( len(command) ):
@@ -264,8 +319,8 @@ class Job:
           command_list[1] += y_shift / 10
         command[index] = tuple(command_list)                ## convert list back to tuple
         
-      self.xcommands[tool] = command                        ## set modified command
-
+      self.ucommands[tool] = command                        ## set modified command
+      
   def parseGerber(self, fullname, layername, updateExtents = 0):
     """Do the dirty work. Read the Gerber file given the
        global aperture table GAT and global aperture macro table GAMT"""
@@ -322,6 +377,9 @@ class Job:
     # to manually insert the point X000000Y00000 into the command stream.
     firstFlash = True
 
+    #THIS IS A KICAD WORKAROUND
+    # KICAD doesnt add LPD at the beginning of a gerber file
+    self.commands[layername].append("%LPD*%\x0A")
     for line in fid:
       # Get rid of CR characters (0x0D) and leading/trailing blanks
       line = string.replace(line, '\x0D', '').strip()
@@ -621,7 +679,7 @@ class Job:
       print layername
       print self.commands[layername]
 
-  def parseExcellon(self, fullname):
+  def parseExcellon(self, fullname, plated):
     #print 'Reading data from %s ...' % fullname
 
     fid = file(fullname, 'rt')
@@ -699,10 +757,14 @@ class Job:
         # Canonicalize tool number because Protel (of course) sometimes specifies it
         # as T01 and sometimes as T1. We canonicalize to T01.
         currtool = 'T%02d' % int(currtool[1:])
-
-        if self.xdiam.has_key(currtool):
-          raise RuntimeError, "File %s defines tool %s more than once" % (fullname, currtool)
-        self.xdiam[currtool] = diam
+        if plated:
+          if self.xdiam.has_key(currtool):
+            raise RuntimeError, "File %s defines tool %s more than once" % (fullname, currtool)
+          self.xdiam[currtool] = diam
+        else:
+          if self.udiam.has_key(currtool):
+            raise RuntimeError, "File %s defines tool %s more than once" % (fullname, currtool)
+          self.udiam[currtool] = diam
         continue
 
       # Didn't match TxxxCyyy. It could be a tool change command 'Tdd'.
@@ -714,25 +776,43 @@ class Job:
         # as T01 and sometimes as T1. We canonicalize to T01.
         currtool = 'T%02d' % int(currtool[1:])
 
+        if currtool == 'T00':
+          continue
+
         # Diameter will be obtained from embedded tool definition, local tool list or if not found, the global tool list
-        try:
-          diam = self.xdiam[currtool]
-        except:
-          if self.ToolList:
+        if plated:
+	  try:
+	    diam = self.xdiam[currtool]
+	  except:
+	    if self.ToolList:
+	      try:
+		diam = self.ToolList[currtool]
+	      except:
+		raise RuntimeError, "File %s uses tool code %s that is not defined in the job's tool list" % (fullname, currtool)
+	    else:
+	      try:
+		diam = config.DefaultToolList[currtool]
+	      except:
+		#print config.DefaultToolList
+		raise RuntimeError, "File %s uses tool code %s that is not defined in default tool list" % (fullname, currtool)
+          self.xdiam[currtool] = diam
+        else:
             try:
-              diam = self.ToolList[currtool]
+              diam = self.udiam[currtool]
             except:
-              raise RuntimeError, "File %s uses tool code %s that is not defined in the job's tool list" % (fullname, currtool)
-          else:
-            try:
-              diam = config.DefaultToolList[currtool]
-            except:
-              #print config.DefaultToolList
-              raise RuntimeError, "File %s uses tool code %s that is not defined in default tool list" % (fullname, currtool)
-
-        self.xdiam[currtool] = diam
-        continue
-
+              if self.uToolList:
+                try:
+                  diam = self.uToolList[currtool]
+                except:
+                  raise RuntimeError, "File %s uses tool code %s that is not defined in the job's tool list" % (fullname, currtool)
+              else:
+                try:
+                  diam = config.DefaultToolList[currtool]
+                except:
+                  #print config.DefaultToolList
+                  raise RuntimeError, "File %s uses tool code %s that is not defined in default tool list" % (fullname, currtool)
+            self.udiam[currtool] = diam
+	continue
       # Plunge command?
       match = xydraw_pat.match(line)
       if match:
@@ -747,19 +827,97 @@ class Job:
           if match:
             y = xln2tenthou(match.groups())[0]
             x = last_x
-          
+
+      # no tool defined!
       if match:
         if currtool is None:
           raise RuntimeError, 'File %s has plunge command without previous tool selection' % fullname
-
-        try:
-          self.xcommands[currtool].append((x,y))
-        except KeyError:
-          self.xcommands[currtool] = [(x,y)]
+        if plated:
+            try:
+              self.xcommands[currtool].append((x,y))
+            except KeyError:
+              self.xcommands[currtool] = [(x,y)]
+        else:
+            try:
+              self.ucommands[currtool].append((x,y))
+            except KeyError:
+              self.ucommands[currtool] = [(x,y)]
 
         last_x = x
         last_y = y
         continue
+      
+        #print ("bohren Zeile "+ str(self.xcommands[currtool]))
+
+      # Slot milling command
+      matchG85 = xyG85xy_pat.match(line)
+      if matchG85:
+        x1, y1, x2, y2 = xln2tenthou(matchG85.groups())
+      else:
+        matchG85 = xyG85x_pat.match(line)
+        if matchG85:
+         x1 = xln2tenthou(matchG85.groups())[0]
+         y1 = xln2tenthou(matchG85.groups())[1]
+         x2 = xln2tenthou(matchG85.groups())[2]
+         y2 = y1;
+        else:
+          matchG85 = xyG85y_pat.match(line)
+          if matchG85:
+            x1 = xln2tenthou(matchG85.groups())[0]
+            y1 = xln2tenthou(matchG85.groups())[1]
+            x2 = x1
+            y2 = xln2tenthou(matchG85.groups())[2]
+          else:
+            matchG85 = xG85xy_pat.match(line)
+            if matchG85:
+              x1 = xln2tenthou(matchG85.groups())[0]
+              y1 = last_y
+              x2 = xln2tenthou(matchG85.groups())[1]
+              y2 = xln2tenthou(matchG85.groups())[2]
+            else:
+              matchG85 = yG85xy_pat.match(line)
+              if matchG85:
+                x1 = last_x
+                y1 = xln2tenthou(matchG85.groups())[0]
+                x2 = xln2tenthou(matchG85.groups())[1]
+                y2 = xln2tenthou(matchG85.groups())[2]
+              else:
+                matchG85 = xG85x_pat.match(line)
+                if matchG85:
+                  raise RuntimeError, 'nur zwei Koordinaten x,x gegeben %s line: %s\n' % (fullname, line)
+                else:
+                  matchG85 = xG85y_pat.match(line)
+                  if matchG85:
+                    raise RuntimeError, 'nur zwei Koordinaten x,y gegeben %s line: %s\n' % (fullname, line)
+                  else:
+                    matchG85 = yG85x_pat.match(line)
+                    if matchG85:
+                      raise RuntimeError, 'nur zwei Koordinaten y,x gegeben %s line: %s\n' % (fullname, line)
+                    else:
+                      matchG85 = yG85y_pat.match(line)
+                      if matchG85:
+                        raise RuntimeError, 'nur zwei Koordinaten y,y gegeben %s line: %s\n' % (fullname, line)
+      
+      # no tool defined!
+      if matchG85:
+        if currtool is None:
+          raise RuntimeError, 'File %s has mill command without previous tool selection' % fullname
+        #print("match positive, slotdata: " + str(line))
+        try:
+          self.xcommands[currtool].append((x1,y1,x2,y2))
+        except KeyError:
+          self.xcommands[currtool] = [(x1,y1,x2,y2)]
+
+        last_x = x2
+        last_y = y2
+        cmd = (x1,y1,x2,y2)
+        #print ("Slotkoordinaten beim Einlesen: X" + str(cmd[0]) + " Y" + str(cmd[1]) + " G85 X" + str(cmd[2]) + " Y" + str(cmd[3]))
+        
+        cmd = self.xcommands[currtool]
+        #print(str(cmd))
+
+        continue
+      
 
       # It had better be an ignorable
       for pat in XIgnoreList:
@@ -820,17 +978,18 @@ class Job:
       if diam==diameter:
         L.append(tool)
     return L
+  
+  def findUTools(self, diameter):
+    "Find the tools, if any, with the given diameter in inches. There may be more than one!"
+    L = []
+    for tool, diam in self.udiam.items():
+      if diam==diameter:
+        L.append(tool)
+    return L
 
-  def writeExcellon(self, fid, diameter, Xoff, Yoff):
-    """Write out the data such that the lower-left corner of this job is at the given (X,Y) position, in inches
-
-    args:
-      fid - output file
-      diameter
-      Xoff - offset of this board instance in full units (float)
-      Yoff - offset of this board instance in full units (float)
-    """
-
+  def writeExcellon(self, fid, diameter, Xoff, Yoff, plated):
+    "Write out the data such that the lower-left corner of this job is at the given (X,Y) position, in inches"
+    
     # First convert given inches to 2.4 co-ordinates. Note that Gerber is 2.5 (as of GerbMerge 1.2)
     # and our internal Excellon representation is 2.4 as of GerbMerge
     # version 0.91. We use X,Y to calculate DX,DY in 2.4 units (i.e., with a
@@ -848,30 +1007,37 @@ class Job:
 
     # Now round down to 2.4 format
     DX = int(round(DX/10.0))
-    DY = int(round(DY/10.0))
-
-    ltools = self.findTools(diameter)
-
-    def formatForXln(num):
-      """
-      helper to convert from our 2.4 internal format to config's excellon format
-      returns string
-      """
-      divisor = 10.0**(4 - config.Config['excellondecimals'])
-      if config.Config['excellonleadingzeros']:
-        fmtstr = '%06d'
-      else:
-        fmtstr = '%d'
-      return fmtstr % (num / divisor)
+    DY = int(round(DY/10.0)) 
+    
+    if config.Config['excellonleadingzeros']:
+      fmtstr = 'X%06dY%06d\n'
+      fmtG85str = 'X%06dY%06dG85X%06dY%06d\n'
+    else:
+      fmtstr = 'X%dY%d\n'
+      fmtG85str = 'X%dY%dG85X%dY%d\n'
 
     # Boogie
-    for ltool in ltools:
-      if self.xcommands.has_key(ltool):
-        for cmd in self.xcommands[ltool]:
-          x, y = cmd
-          new_x = x+DX
-          new_y = y+DY
-          fid.write('X%sY%s\n' % (formatForXln(new_x), formatForXln(new_y)))
+    ltools = self.findTools(diameter)
+    if plated:
+      for ltool in ltools:
+	if self.xcommands.has_key(ltool):
+	  for cmd in self.xcommands[ltool]:
+	    if len(cmd) == 2:
+	      x, y = cmd
+	      fid.write(fmtstr % (x+DX, y+DY))
+	    elif len(cmd) == 4:
+	      x1, y1, x2, y2 = cmd
+	      fid.write(fmtG85str % (x1+DX, y1+DY, x2 + DX, y2 + DY))
+	      fid.write('G05\n')
+	    else:
+	      raise RuntimeError, 'Count of Excellon X/Y wrong %s line: %s\n' % (fullname, line)
+    else:
+      for ltool in self.findUTools(diameter):
+          if self.ucommands.has_key(ltool):
+            for cmd in self.ucommands[ltool]:
+              x, y = cmd
+              fid.write(fmtstr % (x+DX, y+DY))
+
 
   def writeDrillHits(self, fid, diameter, toolNum, Xoff, Yoff):
     """Write a drill hit pattern. diameter is tool diameter in inches, while toolNum is
@@ -894,11 +1060,18 @@ class Job:
     # Do NOT round down to 2.4 format. These drill hits are in Gerber 2.5 format, not
     # Excellon plunge commands.
 
-    ltools = self.findTools(diameter)
+    ltools = self.findTools(diameter) + self.findUTools(diameter)
 
     for ltool in ltools:
       if self.xcommands.has_key(ltool):
         for cmd in self.xcommands[ltool]:
+          if len(cmd) == 2:
+            x, y = cmd
+            makestroke.drawDrillHit(fid, 10*x+DX, 10*y+DY, toolNum)
+          else:
+            raise RuntimeError, 'G85 command in Gerber %s line: %s\n' % (fullname, line)
+      if self.ucommands.has_key(ltool):
+        for cmd in self.ucommands[ltool]:
           x, y = cmd
           # add metric support (1/1000 mm vs. 1/100,000 inch)
 # TODO - verify metric scaling is correct???
@@ -988,14 +1161,9 @@ class Job:
                 newX, newY = geometry.rectCenter(newRect)
 
                 # We arbitrarily remove all flashes that lead to rectangles
-                # with a width or length less than 1 mil (10 Gerber units). - sdd s.b. 0.1mil???
+                # with a width or length less than 1 mil (10 Gerber units).
                 # Should we make this configurable?
-# add metric support (1/1000 mm vs. 1/100,000 inch)
-#                if config.Config['measurementunits'] == 'inch':
-#                  minFlash = 10;
-#                else
-#                  minFlash = 
-                if min(newRectWidth, newRectHeight) >= 10: # sdd - change for metric case at some point
+                if min(newRectWidth, newRectHeight) >= 10:
                   # Construct an Aperture that is a Rectangle of dimensions (newRectWidth,newRectHeight)
                   newAP = aptable.Aperture(aptable.Rectangle, 'D??', \
                             util.gerb2in(newRectWidth), util.gerb2in(newRectHeight))
@@ -1115,16 +1283,35 @@ class Job:
 
   def trimExcellon(self):
     "Remove plunge commands that are outside job dimensions"
+    # TO DO: trimExcellon sollte auch SLOTs trimmen koennen.
     keys = self.xcommands.keys()
     for toolname in keys:
       # Remember Excellon is 2.4 format while Gerber data is 2.5 format
-      validList = [(x,y) for x,y in self.xcommands[toolname] if self.inBorders(10*x,10*y)]
+      validList = []
+      for cmd in self.xcommands[toolname]:
+        if self.inBorders(10*cmd[0],10*cmd[1]) and len(cmd) == 2:
+          validList.append((cmd[0],cmd[1]))
+          
+        elif self.inBorders(10*cmd[0],10*cmd[1]) and len(cmd) == 4:
+          validList.append((cmd[0], cmd[1], cmd[2], cmd[3]))
+          #print ("Slotkoordinaten nach trimExcellon: X" + str(cmd[0]) + " Y" + str(cmd[1]) + " G85 X" + str(cmd[2]) + " Y" + str(cmd[3]))
 
       if validList:
         self.xcommands[toolname] = validList
       else:
         del self.xcommands[toolname]
         del self.xdiam[toolname]
+    
+    keys = self.ucommands.keys()
+    for toolname in keys:
+      # Remember Excellon is 2.4 format while Gerber data is 2.5 format
+      validList = [(x,y) for x,y in self.ucommands[toolname] if self.inBorders(10*x,10*y)]
+
+      if validList:
+        self.ucommands[toolname] = validList
+      else:
+        del self.ucommands[toolname]
+        del self.udiam[toolname]
 
 # This class encapsulates a Job object, providing absolute
 # positioning information.
@@ -1144,9 +1331,9 @@ class JobLayout:
   def aperturesAndMacros(self, layername):
     return self.job.aperturesAndMacros(layername)
 
-  def writeExcellon(self, fid, diameter):
+  def writeExcellon(self, fid, diameter, plated):
     assert self.x is not None
-    self.job.writeExcellon(fid, diameter, self.x, self.y)
+    self.job.writeExcellon(fid, diameter, self.x, self.y, plated)
 
   def writeDrillHits(self, fid, diameter, toolNum):
     assert self.x is not None
@@ -1157,90 +1344,68 @@ class JobLayout:
     def notEdge(x, X):
       return round(abs(1000*(x-X)))
 
-    #assert self.x and self.y
+    assert self.x and self.y
 
-#if job has a boardoutline layer, write it, else calculate one
-    outline_layer = 'boardoutline';
-    if self.job.hasLayer(outline_layer):     
-      # somewhat of a hack here; making use of code in gerbmerge, around line 516,
-      # we are going to replace the used of the existing draw code in the boardoutline
-      # file with the one passed in (which was created from layout.cfg ('CutLineWidth')
-      # It is a hack in that we are assuming there is only one draw code in the
-      # boardoutline file. We are just going to ignore that definition and change
-      # all usages of that code to our new one. As a side effect, it will make
-      # the merged boardoutline file invalid, but we aren't using it with this method.
-      temp = []
-      for x in self.job.commands[outline_layer]:
-        if x[0] == 'D':
-          temp.append(drawing_code) ## replace old aperture with new one
-        else:
-          temp.append(x)        ## keep old command
-      self.job.commands[outline_layer] = temp
+    radius = config.GAT[drawing_code].dimx/2.0
+    
+    # Start at lower-left, proceed clockwise
+    x = self.x - radius
+    y = self.y - radius
 
-      #self.job.writeGerber(fid, outline_layer, X1, Y1)      
-      self.writeGerber(fid, outline_layer)
-      
-    else:
-      radius = config.GAT[drawing_code].dimx/2.0
-      
-      # Start at lower-left, proceed clockwise
-      x = self.x - radius
-      y = self.y - radius
+    left = notEdge(self.x, X1)
+    right = notEdge(self.x+self.width_in(), X2)
+    bot = notEdge(self.y, Y1)
+    top = notEdge(self.y+self.height_in(), Y2)
 
-      left = notEdge(self.x, X1)
-      right = notEdge(self.x+self.width_in(), X2)
-      bot = notEdge(self.y, Y1)
-      top = notEdge(self.y+self.height_in(), Y2)
+    BL = ((x), (y))
+    TL = ((x), (y+self.height_in()+2*radius))
+    TR = ((x+self.width_in()+2*radius), (y+self.height_in()+2*radius))
+    BR = ((x+self.width_in()+2*radius), (y))
 
-      BL = ((x), (y))
-      TL = ((x), (y+self.height_in()+2*radius))
-      TR = ((x+self.width_in()+2*radius), (y+self.height_in()+2*radius))
-      BR = ((x+self.width_in()+2*radius), (y))
+    if not left:
+      BL = (BL[0]+2*radius, BL[1])
+      TL = (TL[0]+2*radius, TL[1])
 
-      if not left:
-        BL = (BL[0]+2*radius, BL[1])
-        TL = (TL[0]+2*radius, TL[1])
+    if not top:
+      TL = (TL[0], TL[1]-2*radius)
+      TR = (TR[0], TR[1]-2*radius)
 
-      if not top:
-        TL = (TL[0], TL[1]-2*radius)
-        TR = (TR[0], TR[1]-2*radius)
+    if not right:
+      TR = (TR[0]-2*radius, TR[1])
+      BR = (BR[0]-2*radius, BR[1])
 
-      if not right:
-        TR = (TR[0]-2*radius, TR[1])
-        BR = (BR[0]-2*radius, BR[1])
+    if not bot:
+      BL = (BL[0], BL[1]+2*radius)
+      BR = (BR[0], BR[1]+2*radius)
 
-      if not bot:
-        BL = (BL[0], BL[1]+2*radius)
-        BR = (BR[0], BR[1]+2*radius)
+    BL = (util.in2gerb(BL[0]), util.in2gerb(BL[1]))
+    TL = (util.in2gerb(TL[0]), util.in2gerb(TL[1]))
+    TR = (util.in2gerb(TR[0]), util.in2gerb(TR[1]))
+    BR = (util.in2gerb(BR[0]), util.in2gerb(BR[1]))
 
-      BL = (util.in2gerb(BL[0]), util.in2gerb(BL[1]))
-      TL = (util.in2gerb(TL[0]), util.in2gerb(TL[1]))
-      TR = (util.in2gerb(TR[0]), util.in2gerb(TR[1]))
-      BR = (util.in2gerb(BR[0]), util.in2gerb(BR[1]))
+    # The "if 1 or ..." construct draws all four sides of the job. By
+    # removing the 1 from the expression, only the sides that do not
+    # correspond to panel edges are drawn. The former is probably better
+    # since panels tend to have a little slop from the cutting operation
+    # and it's easier to just cut it smaller when there's a cut line.
+    # The way it is now with "if 1 or....", much of this function is
+    # unnecessary. Heck, we could even just use the boardoutline layer
+    # directly.
+    if 1 or left:
+      fid.write('X%07dY%07dD02*\n' % BL)
+      fid.write('X%07dY%07dD01*\n' % TL)
 
-      # The "if 1 or ..." construct draws all four sides of the job. By
-      # removing the 1 from the expression, only the sides that do not
-      # correspond to panel edges are drawn. The former is probably better
-      # since panels tend to have a little slop from the cutting operation
-      # and it's easier to just cut it smaller when there's a cut line.
-      # The way it is now with "if 1 or....", much of this function is
-      # unnecessary. Heck, we could even just use the boardoutline layer
-      # directly.
-      if 1 or left:
-        fid.write('X%07dY%07dD02*\n' % BL)
-        fid.write('X%07dY%07dD01*\n' % TL)
+    if 1 or top:
+      if not left: fid.write('X%07dY%07dD02*\n' % TL)
+      fid.write('X%07dY%07dD01*\n' % TR)
 
-      if 1 or top:
-        if not left: fid.write('X%07dY%07dD02*\n' % TL)
-        fid.write('X%07dY%07dD01*\n' % TR)
+    if 1 or right:
+      if not top: fid.write('X%07dY%07dD02*\n' % TR)
+      fid.write('X%07dY%07dD01*\n' % BR)
 
-      if 1 or right:
-        if not top: fid.write('X%07dY%07dD02*\n' % TR)
-        fid.write('X%07dY%07dD01*\n' % BR)
-
-      if 1 or bot:
-        if not right: fid.write('X%07dY%07dD02*\n' % BR)
-        fid.write('X%07dY%07dD01*\n' % BL)
+    if 1 or bot:
+      if not right: fid.write('X%07dY%07dD02*\n' % BR)
+      fid.write('X%07dY%07dD01*\n' % BL)
 
   def setPosition(self, x, y):
     self.x=x
@@ -1258,6 +1423,17 @@ class JobLayout:
     for tool in tools:
       try:
         total += len(self.job.xcommands[tool])
+      except:
+        pass
+
+    return total
+  
+  def holehits(self, diameter):
+    tools = self.job.findUTools(diameter)
+    total = 0
+    for tool in tools:
+      try:
+        total += len(self.job.ucommands[tool])
       except:
         pass
 
@@ -1292,7 +1468,9 @@ def rotateJob(job, degrees = 90, firstpass = True):
 
   # Keep list of tool diameters and default tool list
   J.xdiam = job.xdiam
+  J.udiam = job.udiam
   J.ToolList = job.ToolList
+  J.uToolList = job.uToolList
   J.Repeat = job.Repeat
 
   # D-code translation table is the same, except we have to rotate
@@ -1404,18 +1582,49 @@ def rotateJob(job, degrees = 90, firstpass = True):
   for tool in job.xcommands.keys():
     J.xcommands[tool] = []
 
-    for x,y in job.xcommands[tool]:
-# add metric support (1/1000 mm vs. 1/100,000 inch)
-# NOTE: There don't appear to be any need for a change. The usual x10 factor seems to apply
+    for cmd in job.xcommands[tool]:
+      if len(cmd) == 2:
+        x,y = cmd
+        newx = -(10*y - job.miny) + job.minx + offset
+        newy =  (10*x - job.minx) + job.miny
 
+        newx = int(round(newx/10.0))
+        newy = int(round(newy/10.0))
+
+        J.xcommands[tool].append((newx,newy))
+
+      elif len(cmd) == 4:
+        x1, y1, x2, y2 = cmd
+        newx1 = -(10*y1 - job.miny) + job.minx + offset
+        newy1 =  (10*x1 - job.minx) + job.miny
+
+        newx1 = int(round(newx1/10.0))
+        newy1 = int(round(newy1/10.0))
+        
+        newx2 = -(10*y2 - job.miny) + job.minx + offset
+        newy2 =  (10*x2 - job.minx) + job.miny
+
+        newx2 = int(round(newx2/10.0))
+        newy2 = int(round(newy2/10.0))
+        
+        J.xcommands[tool].append((newx1, newy1, newx2, newy2))
+        
+        #print ("Slotkoordinaten nach Drehen: X" + str(newx1) + " Y" + str(newy1) + " G85 X" + str(newx2) + " Y" + str(newy2))
+        
+      else:
+        raise RuntimeError, 'rotate job, subsection rotate excellon: wrong tuple length'
+
+  for tool in job.ucommands.keys():
+    J.ucommands[tool] = []
+
+    for x,y in job.ucommands[tool]:
       newx = -(10*y - job.miny) + job.minx + offset
       newy =  (10*x - job.minx) + job.miny
 
       newx = int(round(newx/10.0))
       newy = int(round(newy/10.0))
 
-
-      J.xcommands[tool].append((newx,newy))
+      J.ucommands[tool].append((newx,newy))
 
   # Rotate some more if required
   degrees -= 90
