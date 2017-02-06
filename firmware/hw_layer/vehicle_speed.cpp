@@ -35,7 +35,7 @@ void setMockVehicleSpeed(float speedKPH) {
 float getVehicleSpeed(void) {
 	if (mockVehicleSpeed != DEFAULT_MOCK_SPEED)
 		return mockVehicleSpeed;
-	if (!engineConfiguration->hasVehicleSpeedSensor)
+	if (!hasVehicleSpeedSensor())
 		return 0;
 	efitick_t nowNt = getTimeNowNt();
 	if (nowNt - lastSignalTimeNt > US2NT(US_PER_SECOND_LL))
@@ -52,7 +52,7 @@ static void vsAnaWidthCallback(void) {
 }
 
 static void speedInfo(void) {
-	scheduleMsg(logger, "VSS %s at %s", boolToString(engineConfiguration->hasVehicleSpeedSensor),
+	scheduleMsg(logger, "VSS at %s",
 			hwPortname(boardConfiguration->vehicleSpeedSensorInputPin));
 
 	scheduleMsg(logger, "c=%f eventCounter=%d speed=%f",
@@ -63,10 +63,14 @@ static void speedInfo(void) {
 
 }
 
+bool hasVehicleSpeedSensor() {
+	return boardConfiguration->vehicleSpeedSensorInputPin != GPIO_UNASSIGNED;
+}
+
 void initVehicleSpeed(Logging *l) {
 	logger = l;
 	addConsoleAction("speedinfo", speedInfo);
-	if (boardConfiguration->vehicleSpeedSensorInputPin == GPIO_UNASSIGNED)
+	if (!hasVehicleSpeedSensor())
 		return;
 	digital_input_s* vehicleSpeedInput = initWaveAnalyzerDriver("VSS", boardConfiguration->vehicleSpeedSensorInputPin);
 	startInputDriver(vehicleSpeedInput, true);

@@ -472,7 +472,6 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 #endif
 
 	boardConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
-	engineConfiguration->hasVehicleSpeedSensor = true;
 
 	engineConfiguration->fanOnTemperature = 92;
 	engineConfiguration->fanOffTemperature = 89;

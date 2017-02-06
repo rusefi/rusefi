@@ -583,7 +583,7 @@ bit vvtDisplayInverted
 	bit unusedBit__2
 	bit canReadEnabled
 	bit canWriteEnabled
-	bit hasVehicleSpeedSensor
+	bit unusedBit_123
 	bit unusedbit_9
 	bit unusedbit_10
 	bit isAlternatorControlEnabled

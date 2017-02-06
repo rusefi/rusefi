@@ -1623,7 +1623,7 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		field = "Primary input channel", 				triggerInputPins1
 		field = "Secondary channel", 					triggerInputPins2
 		field = "Cam Sync/VVT input",					camInput
-		field = "VVT Input pin",						vehicleSpeedSensorInputPin
+		field = "Vehicle Speed Input pin",				vehicleSpeedSensorInputPin
 		field = "clutchDownPin",						clutchDownPin
 		field = "clutchUpPin",							clutchUpPin
 
@@ -1636,6 +1636,10 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		field = "Idle Stepper Step",					idle_stepperStepPin
 		field = "Idle Stepper Enable",					stepperEnablePin
 		field = "Fuel Pump Pin",						fuelPumpPin
+		field = "ETB Dir #1",							etbDirectionPin1
+		field = "ETB Dir #2",							etbDirectionPin2
+		field = "ETB Control #1",						etbControlPin1	
+		field = "ETB Control #2",						etbControlPin2	
 
 	dialog = allPins3
 		field = "Injection Pin 1",						injectionPins1
@@ -1664,14 +1668,30 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		field = "Ignition Pin 11",                      ignitionPins11
 		field = "Ignition Pin 12",                      ignitionPins12
 
+	dialog = allPins4
+		field = "FSIO dig inp #1",						fsioDigitalInputs1
+		field = "FSIO dig inp #2",						fsioDigitalInputs2
+		field = "FSIO dig inp #3",						fsioDigitalInputs3
+		field = "FSIO dig inp #4",						fsioDigitalInputs4
+		field = "FSIO dig inp #5",						fsioDigitalInputs5
+		field = "FSIO dig inp #6",						fsioDigitalInputs6
+		field = "FSIO dig inp #7",						fsioDigitalInputs7
+		field = "FSIO dig inp #8",						fsioDigitalInputs8
+		field = "FSIO dig inp #9",						fsioDigitalInputs9
+
+
 
 	dialog = allPins1_2, "", xAxis
 		panel = allPins1
 		panel = allPins2
 
+	dialog = allPins3_4, "", xAxis
+		panel = allPins3
+		panel = allPins4
+
 	dialog = allPins, "All Pins", xAxis
 		panel = allPins1_2
-		panel = allPins3
+		panel = allPins3_4
 
 
 ;			Engine->CLT Thermistor Settings
@@ -1938,9 +1958,8 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 
 ;		Engine->Speed Sensor
 	dialog = speedSensor,				"Speed Sensor Settings"
-		field = "Enabled",								hasVehicleSpeedSensor
-		field = "Input pin",							vehicleSpeedSensorInputPin, {hasVehicleSpeedSensor == 1}
-		field = "revolution to speed mult",				vehicleSpeedCoef, {hasVehicleSpeedSensor == 1}
+		field = "Input pin",							vehicleSpeedSensorInputPin
+		field = "revolution to speed mult",				vehicleSpeedCoef
 
 ;			Engine->Other inputs	
 	dialog = analogInputs, "Analog inputs"
