@@ -96,6 +96,7 @@ icuchannel_t getInputCaptureChannel(brain_pin_e hwPin) {
 	switch (hwPin) {
 	case GPIOA_2:
 	case GPIOA_5:
+	case GPIOA_6:
 	case GPIOA_8:
 	case GPIOC_6:
 	case GPIOE_5:
@@ -103,11 +104,12 @@ icuchannel_t getInputCaptureChannel(brain_pin_e hwPin) {
 		return ICU_CHANNEL_1;
 
 	case GPIOA_3:
+	case GPIOA_7:
 	case GPIOE_6:
 	case GPIOE_11:
 		return ICU_CHANNEL_2;
 	default:
-		firmwareError(OBD_PCM_Processor_Fault, "Unexpected hw pin in getInputCaptureChannel %d", hwPin);
+		firmwareError(OBD_PCM_Processor_Fault, "Unexpected hw pin in getInputCaptureChannel %s", hwPortname(hwPin));
 		return ICU_CHANNEL_1;
 	}
 }
@@ -119,7 +121,7 @@ icuchannel_t getInputCaptureChannel(brain_pin_e hwPin) {
  *
  * TODO: migrate slow ADC to software timer so that TIM8 is also available for input capture
  */
-ICUDriver * getInputCaptureDriver(brain_pin_e hwPin) {
+ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin) {
 #if STM32_ICU_USE_TIM1
 	if (hwPin == GPIOA_8 ||
 		hwPin == GPIOE_9 ||
@@ -135,7 +137,8 @@ ICUDriver * getInputCaptureDriver(brain_pin_e hwPin) {
 	}
 #endif
 #if STM32_ICU_USE_TIM3
-	if (hwPin == GPIOA_7 ||
+	if (hwPin == GPIOA_6 ||
+		hwPin == GPIOA_7 ||
 		hwPin == GPIOC_6 ||
 		hwPin == GPIOC_7) {
 		return &ICUD3;
@@ -154,6 +157,7 @@ ICUDriver * getInputCaptureDriver(brain_pin_e hwPin) {
 		return &ICUD9;
 	}
 #endif
+	firmwareError(CUSTOM_ERR_NOT_INPUT_PIN, "%s: Not input pin %s", msg, hwPortname(hwPin));
 	return (ICUDriver *) NULL;
 }
 
@@ -161,7 +165,7 @@ void turnOnCapturePin(const char *msg, brain_pin_e brainPin) {
 	ioportid_t port = getHwPort(brainPin);
 	ioportmask_t pin = getHwPin(brainPin);
 
-	ICUDriver *driver = getInputCaptureDriver(brainPin);
+	ICUDriver *driver = getInputCaptureDriver(msg, brainPin);
 	if (driver != NULL) {
 		iomode_t mode = (iomode_t) PAL_MODE_ALTERNATE(getAlternateFunctions(driver));
 		mySetPadMode(msg, port, pin, mode);
@@ -169,7 +173,7 @@ void turnOnCapturePin(const char *msg, brain_pin_e brainPin) {
 }
 
 digital_input_s * initWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) {
-	ICUDriver *driver = getInputCaptureDriver(brainPin);
+	ICUDriver *driver = getInputCaptureDriver(msg, brainPin);
 
 	digital_input_s *hw = registeredIcus.add();
 

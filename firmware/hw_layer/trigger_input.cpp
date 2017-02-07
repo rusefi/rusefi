@@ -98,7 +98,7 @@ static ICUDriver *turnOnTriggerInputPin(const char *msg, brain_pin_e hwPin, ICUC
 	turnOnCapturePin(msg, hwPin);
 	icucfg->channel = getInputCaptureChannel(hwPin);
 
-	ICUDriver *driver = getInputCaptureDriver(hwPin);
+	ICUDriver *driver = getInputCaptureDriver(msg, hwPin);
 	scheduleMsg(logger, "turnOnTriggerInputPin %s", hwPortname(hwPin));
 	// todo: reuse 'setWaveReaderMode' method here?
 	if (driver != NULL) {
@@ -121,7 +121,7 @@ static ICUDriver *turnOnTriggerInputPin(const char *msg, brain_pin_e hwPin, ICUC
 }
 
 static void turnOffTriggerInputPin(brain_pin_e hwPin) {
-	ICUDriver *driver = getInputCaptureDriver(hwPin);
+	ICUDriver *driver = getInputCaptureDriver("trigger_off", hwPin);
 	if (driver != NULL) {
 		icuDisable(driver);
 		icuStop(driver);
@@ -131,7 +131,7 @@ static void turnOffTriggerInputPin(brain_pin_e hwPin) {
 }
 
 static void rememberPrimaryChannel(void) {
-	primaryCrankDriver = getInputCaptureDriver(
+	primaryCrankDriver = getInputCaptureDriver("primary",
 			boardConfiguration->triggerInputPins[0]);
 }
 
