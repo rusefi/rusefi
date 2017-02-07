@@ -345,7 +345,7 @@ const char * getAdcMode(adc_channel_e hwChannel) {
 	if (fastAdc.isHwUsed(hwChannel)) {
 		return "fast";
 	}
-	return "INACTIVE";
+	return "INACTIVE - need restart";
 }
 
 int getAdcChannelPin(adc_channel_e hwChannel) {
