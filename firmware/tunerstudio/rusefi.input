@@ -1496,7 +1496,7 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		field = "use Rise Edge?",						trigger_customUseRiseEdge, {trigger_type == 0}
 		field = "needed Second Trigger Input?",			trigger_customNeedSecondTriggerInput, {trigger_type == 0}
 	dialog = triggerConfiguration_IO,	"Settings I/O"
-		field = "!ECU reboot needed to apply these settings"
+		field = "!ECU reboot needed to apply pin assignment"
 		field = "#Cam is primary if you have cam sensor"
 		field = "Primary input channel", 				triggerInputPins1
 	    field = "Secondary channel", 					triggerInputPins2, { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
@@ -1760,6 +1760,7 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		panel = mapSensorFDlg,		South
 	
 	dialog = mapSwitchAndSettings, "Switch and Settings"
+		field = "!ECU reboot needed to apply pin assignment"
 		panel = mapSwitch, 		North
 		panel = mapVandF,		South
 		
