@@ -122,6 +122,9 @@ icuchannel_t getInputCaptureChannel(brain_pin_e hwPin) {
  * TODO: migrate slow ADC to software timer so that TIM8 is also available for input capture
  */
 ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin) {
+	if (hwPin == GPIO_UNASSIGNED || hwPin == GPIO_INVALID) {
+		return NULL;
+	}
 #if STM32_ICU_USE_TIM1
 	if (hwPin == GPIOA_8 ||
 		hwPin == GPIOE_9 ||
@@ -153,7 +156,8 @@ ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin) {
 #if STM32_ICU_USE_TIM9
 	if (hwPin == GPIOA_2 ||
 		hwPin == GPIOA_3 ||
-		hwPin == GPIOE_5) {
+		hwPin == GPIOE_5 ||
+		hwPin == GPIOE_6) {
 		return &ICUD9;
 	}
 #endif
@@ -176,7 +180,7 @@ digital_input_s * initWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) 
 	ICUDriver *driver = getInputCaptureDriver(msg, brainPin);
 
 	digital_input_s *hw = registeredIcus.add();
-
+	hw->brainPin = brainPin;
 	hw->driver = driver;
 	turnOnCapturePin(msg, brainPin);
 	return hw;
@@ -196,6 +200,7 @@ void startInputDriver(digital_input_s *hw, bool isActiveHigh) {
 			icuDisable(driver);
 			icuStop(driver);
 		}
+		wave_icucfg.channel = getInputCaptureChannel(hw->brainPin);
 		efiIcuStart(driver, &wave_icucfg);
 		icuEnable(driver);
 	}

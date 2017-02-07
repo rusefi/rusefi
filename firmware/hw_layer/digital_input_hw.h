@@ -18,7 +18,7 @@ typedef struct {
 	ICUDriver *driver;
 	bool isActiveHigh; // false for ICU_INPUT_ACTIVE_LOW, true for ICU_INPUT_ACTIVE_HIGH
 	volatile bool started;
-
+	brain_pin_e brainPin;
 	IntListenerArray<1> widthListeners;
 	IntListenerArray<1> periodListeners;
 } digital_input_s;
