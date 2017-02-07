@@ -377,7 +377,7 @@ static void hipStartupCode(void) {
 	chThdSleepMilliseconds(10);
 
 	if (correctResponse == 0) {
-		warning(CUSTOM_OBD_41, "TPIC/HIP does not respond");
+		warning(CUSTOM_OBD_KNOCK_PROCESSOR, "TPIC/HIP does not respond");
 	}
 
 	if (boardConfiguration->useTpicAdvancedMode) {
