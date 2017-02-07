@@ -52,7 +52,7 @@ static void vsAnaWidthCallback(void) {
 }
 
 static void speedInfo(void) {
-	scheduleMsg(logger, "VSS at %s",
+	scheduleMsg(logger, "VSS input at %s",
 			hwPortname(boardConfiguration->vehicleSpeedSensorInputPin));
 
 	scheduleMsg(logger, "c=%f eventCounter=%d speed=%f",
