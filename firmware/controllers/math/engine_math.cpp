@@ -280,25 +280,35 @@ void TriggerShape::findTriggerPosition(event_trigger_position_s *position, angle
 	position->angleOffset = angleOffset - eventAngle;
 }
 
+static int order_1_2[] = {1, 2};
+
+static int order_1_2_3[] = {1, 2, 3};
+// 4 cylinder
+
 static int order_1_THEN_3_THEN_4_THEN2[] = { 1, 3, 4, 2 };
 static int order_1_THEN_2_THEN_4_THEN3[] = { 1, 2, 4, 3 };
 static int order_1_THEN_3_THEN_2_THEN4[] = { 1, 3, 2, 4 };
 
+// 5 cylinder
 static int order_1_2_4_5_3[] = {1, 2, 4, 5, 3};
 
+// 6 cylinder
 static int order_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4[] = { 1, 5, 3, 6, 2, 4 };
 static int order_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6[] = { 1, 4, 2, 5, 3, 6 };
 static int order_1_THEN_2_THEN_3_THEN_4_THEN_5_THEN_6[] = { 1, 2, 3, 4, 5, 6 };
 static int order_1_6_3_2_5_4[] = {1, 6, 3, 2, 5, 4};
 
+// 8 cylinder
 static int order_1_8_4_3_6_5_7_2[] = { 1, 8, 4, 3, 6, 5, 7, 2 };
 
 static int order_1_8_7_2_6_5_4_3[] = { 1, 8, 7, 2, 6, 5, 4, 3 };
 static int order_1_5_4_2_6_3_7_8[] = { 1, 5, 4, 2, 6, 3, 7, 8 };
 
-static int order_1_2[] = {1, 2};
+// 10 cylinder
+static int order_1_10_9_4_3_6_5_8_7_2[] = {1, 10, 9, 4, 3, 6, 5, 8, 7, 2};
 
-static int order_1_2_3[] = {1, 2, 3};
+// 12 cyliner
+static int order_1_7_5_11_3_9_6_12_2_8_4_10[] = {1, 7, 5, 11, 3, 9, 6, 12, 2, 8, 4, 10};
 
 /**
  * @param index from zero to cylindersCount - 1
@@ -343,6 +353,14 @@ int getCylinderId(firing_order_e firingOrder, int index) {
 		return order_1_8_7_2_6_5_4_3[index];
 	case FO_1_5_4_2_6_3_7_8:
 		return order_1_5_4_2_6_3_7_8[index];
+
+// 10 cylinder
+	case FO_1_10_9_4_3_6_5_8_7_2:
+		return order_1_10_9_4_3_6_5_8_7_2[index];
+
+// 12 cylinder
+	case FO_1_7_5_11_3_9_6_12_2_8_4_10:
+		return order_1_7_5_11_3_9_6_12_2_8_4_10[index];
 
 	default:
 		warning(CUSTOM_OBD_23, "getCylinderId not supported for %d", firingOrder);
