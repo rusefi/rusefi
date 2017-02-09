@@ -29,6 +29,18 @@
 
 #include "rtc_helper.h"
 
+#define SD_STATE_INIT "init"
+#define SD_STATE_MOUNTED "MOUNTED"
+#define SD_STATE_MOUNT_FAILED "MOUNT_FAILED"
+#define SD_STATE_OPEN_FAILED "OPEN_FAILED"
+#define SD_STATE_SEEK_FAILED "SEEK_FAILED"
+#define SD_STATE_NOT_INSERTED "NOT_INSERTED"
+#define SD_STATE_CONNECTING "CONNECTING"
+#define SD_STATE_NOT_CONNECTED "NOT_CONNECTED"
+
+static const char *sdStatus = SD_STATE_INIT;
+static bool fs_ready = false;
+
 EXTERN_ENGINE;
 
 #define LOG_INDEX_FILENAME "index.txt"
@@ -66,8 +78,6 @@ SPI_BaudRatePrescaler_256 };
 // don't forget check if STM32_SPI_USE_SPI2 defined and spi has init with correct GPIO in hardware.cpp
 static MMCConfig mmccfg = { &MMC_CARD_SPI, &ls_spicfg, &hs_spicfg };
 
-static bool fs_ready = false;
-
 #define FILE_LOG_DELAY 200
 
 /**
@@ -99,9 +109,11 @@ static void printMmcPinout(void) {
 
 static void sdStatistics(void) {
 	printMmcPinout();
-	scheduleMsg(&logger, "SD enabled: %s [%s]", boolToString(boardConfiguration->isSdCardEnabled),
-			logName);
-	scheduleMsg(&logger, "fs_ready=%s totalLoggedBytes=%d", boolToString(fs_ready), totalLoggedBytes);
+	scheduleMsg(&logger, "SD enabled=%s status=%s", boolToString(boardConfiguration->isSdCardEnabled),
+			sdStatus);
+	if (fs_ready) {
+		scheduleMsg(&logger, "filename=%s size=%d", logName, totalLoggedBytes);
+	}
 }
 
 static void incLogFileName(void) {
@@ -167,6 +179,8 @@ static void createLogFile(void) {
 	FRESULT err = f_open(&FDLogFile, logName, FA_OPEN_ALWAYS | FA_WRITE);				// Create new file
 	if (err != FR_OK && err != FR_EXIST) {
 		unlockSpi();
+		sdStatus = SD_STATE_OPEN_FAILED;
+		warning(CUSTOM_ERR_6145, "SD: mount failed");
 		printError("FS mount failed", err);	// else - show error
 		return;
 	}
@@ -174,6 +188,8 @@ static void createLogFile(void) {
 	err = f_lseek(&FDLogFile, f_size(&FDLogFile)); // Move to end of the file to append data
 	if (err) {
 		unlockSpi();
+		sdStatus = SD_STATE_SEEK_FAILED;
+		warning(CUSTOM_ERR_6146, "SD: seek failed");
 		printError("Seek error", err);
 		return;
 	}
@@ -335,11 +351,12 @@ static void MMCmount(void) {
 
 	// Performs the initialization procedure on the inserted card.
 	lockSpi(SPI_NONE);
+	sdStatus = SD_STATE_CONNECTING;
 	if (mmcConnect(&MMCD1) != CH_SUCCESS) {
+		sdStatus = SD_STATE_NOT_CONNECTED;
 		warning(CUSTOM_OBD_MMC_ERROR, "Can't connect or mount MMC/SD");
 		unlockSpi();
 		return;
-
 	}
 
 	if (engineConfiguration->storageMode == MS_ALWAYS) {
@@ -365,9 +382,12 @@ static void MMCmount(void) {
 	// if Ok - mount FS now
 	memset(&MMC_FS, 0, sizeof(FATFS));
 	if (f_mount(0, &MMC_FS) == FR_OK) {
+		sdStatus = SD_STATE_MOUNTED;
 		incLogFileName();
 		createLogFile();
 		scheduleMsg(&logger, "MMC/SD mounted!");
+	} else {
+		sdStatus = SD_STATE_MOUNT_FAILED;
 	}
 }
 
@@ -381,6 +401,8 @@ static THD_FUNCTION(MMCmonThread, arg) {
 			if (!fs_ready) {
 				MMCmount();
 			}
+		} else {
+			sdStatus = SD_STATE_NOT_INSERTED;
 		}
 
 		if (isSdCardAlive())
