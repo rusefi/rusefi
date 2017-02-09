@@ -31,6 +31,10 @@ struct_no_prefix engine_configuration_s
 #define LE_COMMAND_LENGTH 200
 
 #define FSIO_ADC_COUNT 4
+
+! this is here so that rusEfi console can access it, too
+#define TS_OUTPUT_SIZE 356
+
 !
 ! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
 ! so not forget to change fileVersion in rusefi.ini
