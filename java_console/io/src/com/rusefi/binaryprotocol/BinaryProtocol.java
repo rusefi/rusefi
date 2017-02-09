@@ -2,6 +2,7 @@ package com.rusefi.binaryprotocol;
 
 import com.rusefi.*;
 import com.rusefi.config.FieldType;
+import com.rusefi.config.Fields;
 import com.rusefi.core.Pair;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -28,9 +29,6 @@ import static com.rusefi.binaryprotocol.IoHelper.*;
  * 3/6/2015
  */
 public class BinaryProtocol {
-    // todo: is this auto-synched with rusefi.ini?
-    public static final int OUTPUT_CHANNELS_SIZE = 276;
-
     // see BLOCKING_FACTOR in firmware code
     private static final int BLOCKING_FACTOR = 400;
     private static final byte RESPONSE_OK = 0;
@@ -266,7 +264,7 @@ public class BinaryProtocol {
             logger.trace("Got packet size " + packetSize);
             if (packetSize < 0)
                 return null;
-            if (!allowLongResponse && packetSize > Math.max(BLOCKING_FACTOR, OUTPUT_CHANNELS_SIZE) + 10)
+            if (!allowLongResponse && packetSize > Math.max(BLOCKING_FACTOR, Fields.TS_OUTPUT_SIZE) + 10)
                 return null;
 
             isTimeout = incomingData.waitForBytes(packetSize + 4, start, msg + " body");
@@ -481,7 +479,7 @@ public class BinaryProtocol {
         if (isClosed)
             return;
         byte[] response = executeCommand(new byte[]{COMMAND_OUTPUTS}, "output channels", false);
-        if (response == null || response.length != (OUTPUT_CHANNELS_SIZE + 1) || response[0] != RESPONSE_OK)
+        if (response == null || response.length != (Fields.TS_OUTPUT_SIZE + 1) || response[0] != RESPONSE_OK)
             return;
 
         currentOutputs = response;

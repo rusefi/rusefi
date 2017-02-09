@@ -3,6 +3,7 @@ package com.rusefi.io.tcp;
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IoHelper;
+import com.rusefi.config.Fields;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -122,11 +123,11 @@ public class BinaryProtocolServer {
                 }
             } else if (command == BinaryProtocol.COMMAND_OUTPUTS) {
 
-                byte[] response = new byte[1 + BinaryProtocol.OUTPUT_CHANNELS_SIZE];
+                byte[] response = new byte[1 + Fields.TS_OUTPUT_SIZE];
                 response[0] = (byte) TS_OK.charAt(0);
                 byte[] currentOutputs = BinaryProtocol.currentOutputs;
                 if (currentOutputs != null)
-                    System.arraycopy(currentOutputs, 1, response, 1, BinaryProtocol.OUTPUT_CHANNELS_SIZE);
+                    System.arraycopy(currentOutputs, 1, response, 1, Fields.TS_OUTPUT_SIZE);
                 BinaryProtocol.sendCrcPacket(response, FileLog.LOGGER, stream);
             } else {
                 FileLog.MAIN.logLine("Error: unknown command " + command);
