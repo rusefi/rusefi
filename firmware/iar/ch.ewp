@@ -324,6 +324,7 @@
           <state>$PROJ_DIR$\..\controllers\sensors</state>
           <state>$PROJ_DIR$\..\controllers\math</state>
           <state>$PROJ_DIR$\..\controllers\trigger</state>
+          <state>$PROJ_DIR$\..\controllers\trigger\decoders</state>
           <state>$PROJ_DIR$\..\console</state>
           <state>$PROJ_DIR$\..\config</state>
           <state>$PROJ_DIR$\..\config\engines</state>
@@ -2507,10 +2508,10 @@
         <name>$PROJ_DIR$\..\controllers\trigger\spark_logic.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\trigger\trigger_bmw.cpp</name>
+        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_bmw.cpp</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\trigger\trigger_bmw.h</name>
+        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_bmw.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\trigger\trigger_central.cpp</name>
@@ -2519,10 +2520,10 @@
         <name>$PROJ_DIR$\..\controllers\trigger\trigger_central.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\trigger\trigger_chrysler.cpp</name>
+        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_chrysler.cpp</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\trigger\trigger_chrysler.h</name>
+        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_chrysler.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\trigger\trigger_decoder.cpp</name>
@@ -2537,40 +2538,40 @@
         <name>$PROJ_DIR$\..\controllers\trigger\trigger_emulator_algo.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\trigger\trigger_gm.cpp</name>
+        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_gm.cpp</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\trigger\trigger_gm.h</name>
+        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_gm.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\trigger\trigger_honda.cpp</name>
+        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_honda.cpp</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\trigger\trigger_honda.h</name>
+        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_honda.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\trigger\trigger_mazda.cpp</name>
+        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_mazda.cpp</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\trigger\trigger_mazda.h</name>
+        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_mazda.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\trigger\trigger_mitsubishi.cpp</name>
+        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_mitsubishi.cpp</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\trigger\trigger_mitsubishi.h</name>
+        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_mitsubishi.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\trigger\trigger_nissan.cpp</name>
+        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_nissan.cpp</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\trigger\trigger_nissan.h</name>
+        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_nissan.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\trigger\trigger_rover.cpp</name>
+        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_rover.cpp</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\trigger\trigger_rover.h</name>
+        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_rover.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\trigger\trigger_simulator.cpp</name>
@@ -2585,16 +2586,22 @@
         <name>$PROJ_DIR$\..\controllers\trigger\trigger_structure.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\trigger\trigger_subaru.cpp</name>
+        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_universal.cpp</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\trigger\trigger_subaru.h</name>
+        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_universal.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\trigger\trigger_toyota.cpp</name>
+        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_subaru.cpp</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\trigger\trigger_toyota.h</name>
+        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_subaru.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_toyota.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_toyota.h</name>
       </file>
     </group>
     <file>
