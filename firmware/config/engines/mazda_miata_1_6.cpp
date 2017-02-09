@@ -114,7 +114,7 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
 	copyFuelTable(mapBased16VeTable, config->veTable);
 
 	// Frankenso analog #7 pin 3J, W48 top <>W48 bottom jumper, not OEM
-	engineConfiguration->afr.hwChannel = EFI_ADC_3;
+	engineConfiguration->afr.hwChannel = EFI_ADC_3; // PA3
 
 	setWholeFuelMap(6 PASS_ENGINE_PARAMETER);
 
