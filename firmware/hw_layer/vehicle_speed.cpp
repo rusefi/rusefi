@@ -20,7 +20,6 @@ static Logging *logger;
 
 static efitick_t lastSignalTimeNt = 0;
 static efitick_t vssDiff = 0;
-static int vssCounter = 0;
 
 #define DEFAULT_MOCK_SPEED -1
 static float mockVehicleSpeed = DEFAULT_MOCK_SPEED; // in kilometers per hour
@@ -45,7 +44,7 @@ float getVehicleSpeed(void) {
 }
 
 static void vsAnaWidthCallback(void) {
-	vssCounter++;
+	engine->engineState.vssCounter++;
 	efitick_t nowNt = getTimeNowNt();
 	vssDiff = nowNt - lastSignalTimeNt;
 	lastSignalTimeNt = nowNt;
@@ -57,7 +56,7 @@ static void speedInfo(void) {
 
 	scheduleMsg(logger, "c=%f eventCounter=%d speed=%f",
 			engineConfiguration->vehicleSpeedCoef,
-			vssCounter,
+			engine->engineState.vssCounter,
 			getVehicleSpeed());
 	scheduleMsg(logger, "vss diff %d", vssDiff);
 

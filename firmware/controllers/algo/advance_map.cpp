@@ -84,7 +84,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 	} else {
 		iatCorrection = iatAdvanceCorrectionMap.getValue((float) rpm, engine->engineState.iat);
 	}
-	if (engineConfiguration->debugMode == DBG_TIMING) {
+	if (engineConfiguration->debugMode == DBG_IGNITION_TIMING) {
 #if !EFI_UNIT_TEST || defined(__DOXYGEN__)
 		tsOutputChannels.debugFloatField1 = iatCorrection;
 		tsOutputChannels.debugFloatField2 = engine->engineState.cltTimingCorrection;
