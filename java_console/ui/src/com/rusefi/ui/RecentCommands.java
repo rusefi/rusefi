@@ -36,6 +36,7 @@ public class RecentCommands {
     private static final String IDLEINFO = "idleinfo";
     private static final String ALTINFO = "altinfo";
     private static final String TPSINFO = "tpsinfo";
+    private static final String MAPINFO = "mapinfo";
     private static final String ACCELINFO = "accelinfo";
     private static final String CANINFO = "caninfo";
     private static final String TSINFO = "tsinfo";
@@ -62,6 +63,7 @@ public class RecentCommands {
         COMMAND_ICONS.put(ACCELINFO, infoIcon);
         COMMAND_ICONS.put(TSINFO, infoIcon);
         COMMAND_ICONS.put(TPSINFO, infoIcon);
+        COMMAND_ICONS.put(MAPINFO, infoIcon);
         COMMAND_ICONS.put(joystickINFO, UiUtils.loadIcon("joystick.png"));
         COMMAND_ICONS.put(CANINFO, infoIcon);
         COMMAND_ICONS.put(FUELINFO, infoIcon);
@@ -138,6 +140,7 @@ public class RecentCommands {
         add(IDLEINFO);
         add(ALTINFO);
         add(TPSINFO);
+        add(MAPINFO);
         add(ACCELINFO);
         add(FUELINFO);
         add(TEMPINFO);
