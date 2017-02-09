@@ -405,12 +405,10 @@ static void printTPSInfo(void) {
 		scheduleMsg(&logger, "NO TPS SENSOR");
 		return;
 	}
+	static char pinNameBuffer[16];
 
-	ioportid_t port = getAdcChannelPort("tps", engineConfiguration->tpsAdcChannel);
-	int pin = getAdcChannelPin(engineConfiguration->tpsAdcChannel);
-
-	scheduleMsg(&logger, "tps min (closed) %d/max (full) %d v=%f @%s%d", engineConfiguration->tpsMin, engineConfiguration->tpsMax,
-			getTPSVoltage(PASS_ENGINE_PARAMETER_F), portname(port), pin);
+	scheduleMsg(&logger, "tps min (closed) %d/max (full) %d v=%f @%s", engineConfiguration->tpsMin, engineConfiguration->tpsMax,
+			getTPSVoltage(PASS_ENGINE_PARAMETER_F), getPinNameByAdcChannel("tps", engineConfiguration->tpsAdcChannel, pinNameBuffer));
 #endif /* EFI_PROD_CODE */
 	scheduleMsg(&logger, "current 10bit=%d value=%f rate=%f", getTPS12bitAdc() / TPS_TS_CONVERSION, getTPS(PASS_ENGINE_PARAMETER_F),
 			getTpsRateOfChange());

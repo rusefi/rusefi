@@ -8,6 +8,7 @@
 #include "interpolation.h"
 #include "error_handling.h"
 #include "map.h"
+#include "engine_controller.h"
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "digital_input_hw.h"
@@ -187,6 +188,7 @@ static void printMAPInfo(void) {
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	scheduleMsg(logger, "instant value=%fkPa", getRawMap());
 
+
 	if (engineConfiguration->hasFrequencyReportingMapSensor) {
 		scheduleMsg(logger, "instant value=%fHz @ %s", mapFreq, hwPortname(boardConfiguration->frequencyReportingMapInputPin));
 	} else {
@@ -194,7 +196,11 @@ static void printMAPInfo(void) {
 				getAir_pressure_sensor_type_e(engineConfiguration->map.sensor.type),
 				getMap());
 
-		scheduleMsg(logger, "MAP %fv", getVoltage("mapinfo", engineConfiguration->map.sensor.hwChannel));
+		adc_channel_e mapAdc = engineConfiguration->map.sensor.hwChannel;
+		static char pinNameBuffer[16];
+
+		scheduleMsg(logger, "MAP %fv @%s", getVoltage("mapinfo", mapAdc),
+				getPinNameByAdcChannel("map", mapAdc, pinNameBuffer));
 		if (engineConfiguration->map.sensor.type == MT_CUSTOM) {
 			scheduleMsg(logger, "at %fv=%f at %fv=%f",
 					engineConfiguration->mapLowValueVoltage,
