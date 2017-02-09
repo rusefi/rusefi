@@ -706,7 +706,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugIntField1 = engine->tpsAccelEnrichment.cb.getSize();
 	}
 
-	if (engineConfiguration->debugMode == TRIGGER_COUNT) {
+	if (engineConfiguration->debugMode == DBG_TRIGGER_INPUT) {
 		tsOutputChannels->debugIntField1 = engine->triggerCentral.getHwEventCounter(0);
 		tsOutputChannels->debugIntField2 = engine->triggerCentral.getHwEventCounter(1);
 		tsOutputChannels->debugIntField3 = engine->triggerCentral.getHwEventCounter(2);
@@ -716,7 +716,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 			strcpy(buf, "adcX");
 			tsOutputChannels->debugFloatField1 = getVoltage("fsio", engineConfiguration->fsioAdc[0]);
 		}
-
+	} else if (engineConfiguration->debugMode == DBG_VEHICLE_SPEED_SENSOR) {
+		tsOutputChannels->debugIntField1 = engine->engineState.vssCounter;
 	}
 
 	tsOutputChannels->wallFuelAmount = ENGINE(wallFuel).getWallFuel(0);

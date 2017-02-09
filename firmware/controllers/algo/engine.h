@@ -150,6 +150,9 @@ public:
 
 	float currentAfr;
 
+	int vssCounter;
+
+
 	/**
 	 * pre-calculated value from simple fuel lookup
 	 */

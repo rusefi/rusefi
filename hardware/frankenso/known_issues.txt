@@ -129,6 +129,7 @@
 129)                  silkscreen not under but next to component: R1001 R1002 D1001 etc?
 130)                  C472, C354 and C358 are electrolytic in the schematic
 131)                  between items #111, #127 and #128 we should keep stepper motor in mind and ideally have a space to mount it with minimal wiring
+132)                  Add vias to PE5 & PE6 traces (these are input capture options on TIM9)
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol

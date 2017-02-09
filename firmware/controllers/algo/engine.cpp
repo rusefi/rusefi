@@ -136,6 +136,7 @@ EngineState::EngineState() {
 	lastErrorCode = 0;
 	crankingTime = 0;
 	timeSinceCranking = 0;
+	vssCounter = 0;
 	targetAFR = 0;
 	tpsAccelEnrich = 0;
 	tChargeK = 0;
