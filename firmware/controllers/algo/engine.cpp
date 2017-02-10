@@ -149,7 +149,7 @@ EngineState::EngineState() {
 	warmupTargetAfr = airMass = 0;
 	baroCorrection = timingAdvance = fuelTankGauge = 0;
 	sparkDwell = mapAveragingDuration = 0;
-	injectionOffset = 0;
+	totalLoggedBytes = injectionOffset = 0;
 }
 
 void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_F) {

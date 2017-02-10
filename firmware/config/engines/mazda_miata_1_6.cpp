@@ -143,7 +143,7 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->vbattDividerCoeff = 9.75;// ((float) (8.2 + 33)) / 8.2 * 2;
 
 	boardConfiguration->idle.solenoidFrequency = 160;
-	boardConfiguration->idle.solenoidPin = GPIOB_9;
+	boardConfiguration->idle.solenoidPin = GPIOB_9; // this W61 <> W61 jumper
 
 	setCommonNTCSensor(&engineConfiguration->clt);
 	engineConfiguration->clt.config.bias_resistor = 2700;

@@ -97,8 +97,6 @@ static FIL FDCurrFile;
 static int logFileIndex = 1;
 static char logName[_MAX_FILLER + 20];
 
-static int totalLoggedBytes = 0;
-
 static void printMmcPinout(void) {
 	scheduleMsg(&logger, "MMC CS %s", hwPortname(boardConfiguration->sdCardCsPin));
 	// todo: we need to figure out the right SPI pinout, not just SPI2
@@ -112,7 +110,7 @@ static void sdStatistics(void) {
 	scheduleMsg(&logger, "SD enabled=%s status=%s", boolToString(boardConfiguration->isSdCardEnabled),
 			sdStatus);
 	if (fs_ready) {
-		scheduleMsg(&logger, "filename=%s size=%d", logName, totalLoggedBytes);
+		scheduleMsg(&logger, "filename=%s size=%d", logName, engine->engineState.totalLoggedBytes);
 	}
 }
 
@@ -308,7 +306,7 @@ void appendToLog(const char *line) {
 		return;
 	}
 	UINT lineLength = strlen(line);
-	totalLoggedBytes += lineLength;
+	engine->engineState.totalLoggedBytes += lineLength;
 	lockSpi(SPI_NONE);
 	FRESULT err = f_write(&FDLogFile, line, lineLength, &bytesWrited);
 	if (bytesWrited < lineLength) {
