@@ -657,9 +657,13 @@ typedef enum {
 	DBG_IGNITION_TIMING = 10,
 	DBG_FUEL_PID_CORRECTION = 11,
 	DBG_VEHICLE_SPEED_SENSOR = 12,
-	DM_13 = 13,
+	DBG_SD_CARD = 13,
 	DM_14 = 14,
 	DM_15 = 15,
+	DM_16 = 16,
+	DM_17 = 17,
+	DM_18 = 18,
+	DM_19 = 19,
 
 	Force_4b_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;

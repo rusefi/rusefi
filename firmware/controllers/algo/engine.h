@@ -151,6 +151,7 @@ public:
 	float currentAfr;
 
 	int vssCounter;
+	int totalLoggedBytes;
 
 
 	/**

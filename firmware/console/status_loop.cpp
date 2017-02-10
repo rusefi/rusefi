@@ -718,6 +718,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		}
 	} else if (engineConfiguration->debugMode == DBG_VEHICLE_SPEED_SENSOR) {
 		tsOutputChannels->debugIntField1 = engine->engineState.vssCounter;
+	} else if (engineConfiguration->debugMode == DBG_SD_CARD) {
+		tsOutputChannels->debugIntField1 = engine->engineState.totalLoggedBytes;
 	}
 
 	tsOutputChannels->wallFuelAmount = ENGINE(wallFuel).getWallFuel(0);
