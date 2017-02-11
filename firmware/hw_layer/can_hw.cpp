@@ -273,17 +273,21 @@ void startCanPins(DECLARE_ENGINE_PARAMETER_F) {
 	mySetPadMode2("CAN RX", boardConfiguration->canRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 }
 
-static bool isValidCanPin(brain_pin_e pin) {
-	return pin == GPIOB_6 || pin == GPIOB_12;
+static bool isValidCanTxPin(brain_pin_e pin) {
+	return pin == GPIOB_6 || pin == GPIOD_1;
+}
+
+static bool isValidCanRxPin(brain_pin_e pin) {
+	return pin == GPIOB_12 || pin == GPIOD_0;
 }
 
 void initCan(void) {
 	isCanEnabled = (boardConfiguration->canTxPin != GPIO_UNASSIGNED) && (boardConfiguration->canRxPin != GPIO_UNASSIGNED);
 	if (isCanEnabled) {
-		if (!isValidCanPin(boardConfiguration->canTxPin))
-			firmwareError(CUSTOM_OBD_70, "invalid CAN %s", hwPortname(boardConfiguration->canTxPin));
-		if (!isValidCanPin(boardConfiguration->canRxPin))
-			firmwareError(CUSTOM_OBD_70, "invalid CAN %s", hwPortname(boardConfiguration->canRxPin));
+		if (!isValidCanTxPin(boardConfiguration->canTxPin))
+			firmwareError(CUSTOM_OBD_70, "invalid CAN TX %s", hwPortname(boardConfiguration->canTxPin));
+		if (!isValidCanRxPin(boardConfiguration->canRxPin))
+			firmwareError(CUSTOM_OBD_70, "invalid CAN RX %s", hwPortname(boardConfiguration->canRxPin));
 	}
 
 
