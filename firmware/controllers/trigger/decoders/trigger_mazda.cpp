@@ -50,12 +50,13 @@ void initializeMazdaMiataNaShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->useOnlyPrimaryForSync = true;
 }
 
+// TT_MIATA_VVT
 void initializeMazdaMiataNb2Crank(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, false);
 
 	float o = 160;
 
-	s->tdcPosition = 60;
+	s->tdcPosition = 60 + 655;
 
 	s->setTriggerSynchronizationGap2(0.35f, 0.98f);
 	s->addEvent2(o + 4 * 56.0f, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
