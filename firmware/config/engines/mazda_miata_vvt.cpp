@@ -134,8 +134,8 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->dizzySparkOutputPin = GPIOE_8;
 
-	// set global_trigger_offset_angle 670
-	engineConfiguration->globalTriggerAngleOffset = 670;
+	// set global_trigger_offset_angle 0
+	engineConfiguration->globalTriggerAngleOffset = 0;
 
 	// enable trigger_details
 	engineConfiguration->isPrintTriggerSynchDetails = false;
