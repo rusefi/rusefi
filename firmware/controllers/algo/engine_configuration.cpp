@@ -527,14 +527,14 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	config->crankingFuelBins[4] = 35;
 	config->crankingFuelCoef[5] = 1.8;
 	config->crankingFuelBins[5] = 50;
-	config->crankingFuelCoef[6] = 1.5;
+	config->crankingFuelCoef[6] = 1.1;
 	config->crankingFuelBins[6] = 65;
 	config->crankingFuelCoef[7] = 1;
 	config->crankingFuelBins[7] = 90;
 
-	config->crankingCycleCoef[0] = 2;
+	config->crankingCycleCoef[0] = 1.5;
 	config->crankingCycleBins[0] = 10;
-	config->crankingCycleCoef[1] = 1;
+	config->crankingCycleCoef[1] = 1.2;
 	config->crankingCycleBins[1] = 31;
 	config->crankingCycleCoef[2] = 1;
 	config->crankingCycleBins[2] = 52;
