@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Feb 09 21:42:21 EST 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 12 01:30:52 EST 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -934,7 +934,9 @@ public class Fields {
 	public static final int fuelClosedLoopAfrLowThreshold_offset = 2756;
 	public static final int fuelClosedLoopAfrHighThreshold_offset = 2760;
 	public static final int stepperEnablePinMode_offset = 2764;
-	public static final int unused_offset = 2768;
+	public static final int cj125ua_offset = 2768;
+	public static final int cj125ur_offset = 2772;
+	public static final int unused_offset = 2776;
 	public static final int le_formulas1_offset = 3048;
 	public static final int le_formulas2_offset = 3248;
 	public static final int le_formulas3_offset = 3448;
@@ -1606,6 +1608,8 @@ public class Fields {
 	public static final Field FUELCLOSEDLOOPAFRLOWTHRESHOLD = Field.create("FUELCLOSEDLOOPAFRLOWTHRESHOLD", 2756, FieldType.FLOAT);
 	public static final Field FUELCLOSEDLOOPAFRHIGHTHRESHOLD = Field.create("FUELCLOSEDLOOPAFRHIGHTHRESHOLD", 2760, FieldType.FLOAT);
 	public static final Field STEPPERENABLEPINMODE = Field.create("STEPPERENABLEPINMODE", 2764, FieldType.INT, pin_mode_e);
+	public static final Field CJ125UA = Field.create("CJ125UA", 2768, FieldType.INT, adc_channel_e);
+	public static final Field CJ125UR = Field.create("CJ125UR", 2772, FieldType.INT, adc_channel_e);
 	public static final Field LE_FORMULAS1 = Field.create("LE_FORMULAS1", 3048, FieldType.INT);
 	public static final Field LE_FORMULAS2 = Field.create("LE_FORMULAS2", 3248, FieldType.INT);
 	public static final Field LE_FORMULAS3 = Field.create("LE_FORMULAS3", 3448, FieldType.INT);

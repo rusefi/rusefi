@@ -197,6 +197,12 @@ static msg_t ivThread(int param) {
 	(void) param;
 	chRegSetThreadName("IdleValve");
 
+	/*
+	 * Here we have idle logic thread - actual stepper movement is implemented in a separate
+	 * working thread,
+	 * @see stepper.cpp
+	 */
+
 	while (true) {
 		chThdSleepMilliseconds(boardConfiguration->idleThreadPeriod);
 

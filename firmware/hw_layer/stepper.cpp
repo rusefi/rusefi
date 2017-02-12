@@ -17,7 +17,12 @@ static msg_t stThread(StepperMotor *motor) {
 
 	palWritePad(motor->directionPort, motor->directionPin, false);
 
-	// let's park the motor in a known position to begin with
+	/**
+	 * let's park the motor in a known position to begin with
+	 *
+	 * I believe it's safer to retract the valve for parking - at least on a bench I've seen valves
+	 * disassembling themselves while pushing too far out.
+	 */
 	for (int i = 0; i < motor->totalSteps; i++) {
 		motor->pulse();
 	}

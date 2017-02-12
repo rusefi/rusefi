@@ -778,7 +778,9 @@ int16_t etbFreq;;"Hz",      1,     0,    0, 500,      10
 	float fuelClosedLoopAfrLowThreshold;;"ratio",        1,     0,  0,    100,  1
 	float fuelClosedLoopAfrHighThreshold;;"ratio",        1,     0,  0,    100,  1
 	pin_mode_e stepperEnablePinMode;
-	int[70] unused;
+	adc_channel_e cj125ua;lampda input
+	adc_channel_e cj125ur;heater input
+	int[68] unused;
 	
 
 end_struct

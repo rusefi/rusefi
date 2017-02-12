@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 05 22:20:28 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 12 01:30:52 EST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1822,9 +1822,19 @@ typedef struct {
 	 */
 	pin_mode_e stepperEnablePinMode;
 	/**
+	 * lampda input
 	 * offset 2768
 	 */
-	int unused[70];
+	adc_channel_e cj125ua;
+	/**
+	 * heater input
+	 * offset 2772
+	 */
+	adc_channel_e cj125ur;
+	/**
+	 * offset 2776
+	 */
+	int unused[68];
 	/** total size 3048*/
 } engine_configuration_s;
 
@@ -2039,4 +2049,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 05 22:20:28 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 12 01:30:52 EST 2017
