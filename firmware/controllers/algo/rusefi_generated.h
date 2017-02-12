@@ -930,7 +930,9 @@
 #define fuelClosedLoopAfrLowThreshold_offset 2756
 #define fuelClosedLoopAfrHighThreshold_offset 2760
 #define stepperEnablePinMode_offset 2764
-#define unused_offset 2768
+#define cj125ua_offset 2768
+#define cj125ur_offset 2772
+#define unused_offset 2776
 #define le_formulas1_offset 3048
 #define le_formulas2_offset 3248
 #define le_formulas3_offset 3448

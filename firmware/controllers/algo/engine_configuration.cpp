@@ -254,6 +254,9 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 	boardConfiguration->joystickCPin = GPIO_UNASSIGNED;
 	boardConfiguration->joystickDPin = GPIO_UNASSIGNED;
 
+	engineConfiguration->cj125ua = EFI_ADC_NONE;
+	engineConfiguration->cj125ur = EFI_ADC_NONE;
+
 	boardConfiguration->idle.stepperDirectionPin = GPIO_UNASSIGNED;
 	boardConfiguration->idle.stepperStepPin = GPIO_UNASSIGNED;
 	engineConfiguration->stepperEnablePin = GPIO_UNASSIGNED;
