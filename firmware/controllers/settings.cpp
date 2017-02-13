@@ -260,11 +260,11 @@ void printConfiguration(engine_configuration_s *engineConfiguration) {
 
 	printOutputs(engineConfiguration);
 
-	scheduleMsg(&logger, "map_avg=%s/ts=%s/wa=%s/it=%s/fastAdc=%s",
+	scheduleMsg(&logger, "map_avg=%s/ts=%s/wa=%s/fastAdc=%s",
 			boolToString(engineConfiguration->isMapAveragingEnabled),
 			boolToString(engineConfiguration->isTunerStudioEnabled),
 			boolToString(engineConfiguration->isWaveAnalyzerEnabled),
-			boolToString(engineConfiguration->isIdleThreadEnabled), boolToString(boardConfiguration->isFastAdcEnabled));
+			boolToString(boardConfiguration->isFastAdcEnabled));
 
 	scheduleMsg(&logger, "isManualSpinningMode=%s/isCylinderCleanupEnabled=%s",
 			boolToString(engineConfiguration->isManualSpinningMode),
@@ -894,8 +894,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->isTunerStudioEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "wave_analyzer")) {
 		engineConfiguration->isWaveAnalyzerEnabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "idle_thread")) {
-		engineConfiguration->isIdleThreadEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "manual_spinning")) {
 		engineConfiguration->isManualSpinningMode = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cylinder_cleanup")) {

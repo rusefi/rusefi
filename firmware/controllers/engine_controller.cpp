@@ -633,9 +633,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 #endif /* EFI_ENGINE_CONTROL */
 
 #if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
-	if (engineConfiguration->isIdleThreadEnabled) {
-		startIdleThread(sharedLogger, engine);
-	}
+	startIdleThread(sharedLogger, engine);
 #endif
 
 	if (engineConfiguration->externalKnockSenseAdc != EFI_ADC_NONE) {

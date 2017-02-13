@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 12 20:28:45 EST 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Feb 13 17:43:53 EST 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -653,7 +653,7 @@ public class Fields {
 	public static final int anotherUnusedBit2_offset = 1500;
 	public static final int isTunerStudioEnabled_offset = 1500;
 	public static final int isWaveAnalyzerEnabled_offset = 1500;
-	public static final int isIdleThreadEnabled_offset = 1500;
+	public static final int anotherUnusedBit212_offset = 1500;
 	public static final int isPrintTriggerSynchDetails_offset = 1500;
 	public static final int isManualSpinningMode_offset = 1500;
 	public static final int twoWireBatchInjection_offset = 1500;
@@ -1420,7 +1420,7 @@ public class Fields {
 	public static final Field ANOTHERUNUSEDBIT2 = Field.create("ANOTHERUNUSEDBIT2", 1500, FieldType.BIT, 7);
 	public static final Field ISTUNERSTUDIOENABLED = Field.create("ISTUNERSTUDIOENABLED", 1500, FieldType.BIT, 8);
 	public static final Field ISWAVEANALYZERENABLED = Field.create("ISWAVEANALYZERENABLED", 1500, FieldType.BIT, 9);
-	public static final Field ISIDLETHREADENABLED = Field.create("ISIDLETHREADENABLED", 1500, FieldType.BIT, 10);
+	public static final Field ANOTHERUNUSEDBIT212 = Field.create("ANOTHERUNUSEDBIT212", 1500, FieldType.BIT, 10);
 	public static final Field ISPRINTTRIGGERSYNCHDETAILS = Field.create("ISPRINTTRIGGERSYNCHDETAILS", 1500, FieldType.BIT, 11);
 	public static final Field ISMANUALSPINNINGMODE = Field.create("ISMANUALSPINNINGMODE", 1500, FieldType.BIT, 12);
 	public static final Field TWOWIREBATCHINJECTION = Field.create("TWOWIREBATCHINJECTION", 1500, FieldType.BIT, 13);
