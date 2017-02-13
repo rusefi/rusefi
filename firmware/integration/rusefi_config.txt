@@ -613,7 +613,7 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 	bit anotherUnusedBit2
 	bit isTunerStudioEnabled
 	bit isWaveAnalyzerEnabled
-	bit isIdleThreadEnabled
+	bit anotherUnusedBit212
 	bit isPrintTriggerSynchDetails;+enable trigger_details
 	bit isManualSpinningMode;Usually if we have no trigger events that means engine is stopped\nUnless we are troubleshooting and spinning the engine by hand - this case a longer\ndelay is needed
 	bit twoWireBatchInjection;+This is needed if batched injection and individual injector wiring\nenable two_wire_batch_injection

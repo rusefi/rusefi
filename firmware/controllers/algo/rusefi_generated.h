@@ -649,7 +649,7 @@
 #define anotherUnusedBit2_offset 1500
 #define isTunerStudioEnabled_offset 1500
 #define isWaveAnalyzerEnabled_offset 1500
-#define isIdleThreadEnabled_offset 1500
+#define anotherUnusedBit212_offset 1500
 #define isPrintTriggerSynchDetails_offset 1500
 #define isManualSpinningMode_offset 1500
 #define twoWireBatchInjection_offset 1500

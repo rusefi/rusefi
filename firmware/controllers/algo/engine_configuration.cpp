@@ -713,7 +713,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->isMapAveragingEnabled = true;
 	engineConfiguration->isTunerStudioEnabled = true;
 	engineConfiguration->isWaveAnalyzerEnabled = true;
-	engineConfiguration->isIdleThreadEnabled = true;
 
 	engineConfiguration->debugMode = DBG_ALTERNATOR_PID;
 

@@ -1818,6 +1818,10 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		field = "Manual mode",							idleMode
 		field = "Cranking Extra",						crankingIdleAdjustment
 		field = "Auto target",							targetIdleRpm, { idleMode == 0}
+		field = "idle P",								idleRpmPid_pFactor
+		field = "idle I",								idleRpmPid_iFactor
+		field = "idle D",								idleRpmPid_dFactor
+		field = "idle offset",							idleRpmPid_offset
 		slider = "Manual Idle Position",				manIdlePosition, horizontal
 		field = ""
 		field = "use stepper",							useStepperIdle

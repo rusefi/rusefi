@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 12 01:30:52 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Feb 13 17:43:53 EST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1286,7 +1286,7 @@ typedef struct {
 	bool isWaveAnalyzerEnabled : 1;
 	/**
 	offset 1500 bit 10 */
-	bool isIdleThreadEnabled : 1;
+	bool anotherUnusedBit212 : 1;
 	/**
 	 * enable trigger_details
 	offset 1500 bit 11 */
@@ -2049,4 +2049,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 12 01:30:52 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Feb 13 17:43:53 EST 2017
