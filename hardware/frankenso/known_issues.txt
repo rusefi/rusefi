@@ -129,7 +129,7 @@
 129) RESOLVED IN R0.5 silkscreen not under but next to component: R1001 R1002 D1001 etc?
 130) RESOLVED IN R0.4.3 C472, C354 and C358 are electrolytic in the schematic, change to non polarity dependant symbols to match real world. RESOLVED IN R0.4.2
 131)                  Fix 3D view
-132)                  Add vias to PE5 & PE6 traces (these are input capture options on TIM9)
+132) RESOLVED IN R0.5 Add vias to PE5 & PE6 traces (these are input capture options on TIM9)
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol

@@ -715,7 +715,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->isWaveAnalyzerEnabled = true;
 	engineConfiguration->isIdleThreadEnabled = true;
 
-	engineConfiguration->debugMode = ALTERNATOR_PID;
+	engineConfiguration->debugMode = DBG_ALTERNATOR_PID;
 
 	engineConfiguration->acIdleRpmBump = 200;
 	engineConfiguration->knockDetectionWindowStart = 35;
