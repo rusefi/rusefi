@@ -45,12 +45,20 @@ float Pid::getValue(float target, float input, float dTime) {
 
 	prevError = error;
 
+	/**
+	 * If we have exceeded the ability of the controlled device to hit target, the I factor will keep accumulating and approach infinity.
+	 * Here we limit the I-term #353
+	 */
+	if (iTerm > maxResult - (pTerm + dTerm + pid->offset))
+		iTerm = maxResult - (pTerm + dTerm + pid->offset);
+
+	if (iTerm < minResult - (pTerm + dTerm + pid->offset))
+		iTerm = minResult - (pTerm + dTerm + pid->offset);
+
 	float result = pTerm + iTerm + dTerm + pid->offset;
 	if (result > maxResult) {
-//		iTerm -= result - maxResult;
 		result = maxResult;
 	} else if (result < minResult) {
-//		iTerm += minResult - result;
 		result = minResult;
 	}
 	return result;
