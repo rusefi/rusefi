@@ -115,7 +115,7 @@ static void manualIdleController(int positionPercent) {
 	cltCorrectedPosition = maxF(cltCorrectedPosition, 0.01);
 	cltCorrectedPosition = minF(cltCorrectedPosition, 99.9);
 
-	if (engineConfiguration->debugMode == IDLE) {
+	if (engineConfiguration->debugMode == DBG_IDLE) {
 		tsOutputChannels.debugFloatField1 = actualIdlePosition;
 	}
 

@@ -185,7 +185,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 			cltFuelCorrection = warmupAfrPid.getValue(warmupTargetAfr, currentAfr, 1);
 		}
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
-		if (engineConfiguration->debugMode == WARMUP_ENRICH) {
+		if (engineConfiguration->debugMode == DBG_WARMUP_ENRICH) {
 			tsOutputChannels.debugFloatField1 = warmupTargetAfr;
 			warmupAfrPid.postState(&tsOutputChannels);
 		}

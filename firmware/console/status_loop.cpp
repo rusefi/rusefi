@@ -707,9 +707,14 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	}
 
 	if (engineConfiguration->debugMode == DBG_TRIGGER_INPUT) {
-		tsOutputChannels->debugIntField1 = engine->triggerCentral.getHwEventCounter(0);
-		tsOutputChannels->debugIntField2 = engine->triggerCentral.getHwEventCounter(1);
-		tsOutputChannels->debugIntField3 = engine->triggerCentral.getHwEventCounter(2);
+		tsOutputChannels->debugIntField1 = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_FALLING);
+		tsOutputChannels->debugIntField2 = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_FALLING);
+		tsOutputChannels->debugIntField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_FALLING);
+
+		tsOutputChannels->debugFloatField1 = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_RISING);
+		tsOutputChannels->debugFloatField2 = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_RISING);
+		tsOutputChannels->debugFloatField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_RISING);
+
 	} else if (engineConfiguration->debugMode == FSIO_ADC) {
 		// todo: implement a proper loop
 		if (engineConfiguration->fsioAdc[0] != EFI_ADC_NONE) {
@@ -720,7 +725,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugIntField1 = engine->engineState.vssCounter;
 	} else if (engineConfiguration->debugMode == DBG_SD_CARD) {
 		tsOutputChannels->debugIntField1 = engine->engineState.totalLoggedBytes;
+	} else if (engineConfiguration->debugMode == DBG_CRANKING_DETAILS) {
+		tsOutputChannels->debugIntField1 = engine->rpmCalculator.getRevolutionCounterSinceStart();
 	}
+
 
 	tsOutputChannels->wallFuelAmount = ENGINE(wallFuel).getWallFuel(0);
 	tsOutputChannels->wallFuelCorrection = ENGINE(wallFuelCorrection);

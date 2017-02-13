@@ -261,7 +261,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->warmupAfrPid.pFactor = -0.2;
 	engineConfiguration->warmupAfrPid.iFactor = -0.0005;
 //	engineConfiguration->warmupAfrPid.dFactor = -0.02;
-	engineConfiguration->debugMode = WARMUP_ENRICH;
+	engineConfiguration->debugMode = DBG_WARMUP_ENRICH;
 
 	// set global_trigger_offset_angle 38
 	engineConfiguration->globalTriggerAngleOffset = 38;

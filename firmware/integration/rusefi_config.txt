@@ -113,7 +113,7 @@ float baseFuel;+Fuel squirt duration while cranking\nA number of curves adjust t
 int16_t rpm;+Cranking mode threshold. Special cranking logic controls fuel and spark while RPM is below this threshold\nset cranking_rpm X;"RPM",      1,     0,    0, 3000,      0
 end_struct
 
-#define debug_mode_e_enum "Alternator_PID", "TPS accel enrich", "Warmup PID", "IDLE", "EL accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT", "Post-crank enrich", "Timing", "Closed-loop fuel corr", "VSS", "SD card", "mode14", "mode15"
+#define debug_mode_e_enum "Alternator_PID", "TPS accel enrich", "Warmup PID", "IDLE", "EL accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT PID", "Cranking", "Timing", "Closed-loop fuel corr", "VSS", "SD card", "mode14", "mode15"
 custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:3], @@debug_mode_e_enum@@
 
 #define vvt_mode_e_enum "First half", "Second half", "2GZ", "Miata NB2", "mode4", "mode5", "mode6", "mode7"

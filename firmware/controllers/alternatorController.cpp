@@ -59,7 +59,7 @@ static msg_t AltCtrlThread(int param) {
 		chThdSleepMilliseconds(dt);
 
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
-		if (engineConfiguration->debugMode == ALTERNATOR_PID) {
+		if (engineConfiguration->debugMode == DBG_ALTERNATOR_PID) {
 			// this block could be executed even in on/off alternator control mode
 			// but at least we would reflect latest state
 			tsOutputChannels.debugFloatField1 = currentAltDuty;
@@ -88,7 +88,7 @@ static msg_t AltCtrlThread(int param) {
 			bool newState = (vBatt < targetVoltage - h) || (currentPlainOnOffState && vBatt < targetVoltage);
 			enginePins.alternatorPin.setValue(newState);
 			currentPlainOnOffState = newState;
-			if (engineConfiguration->debugMode == ALTERNATOR_PID) {
+			if (engineConfiguration->debugMode == DBG_ALTERNATOR_PID) {
 				tsOutputChannels.debugIntField1 = newState;
 
 			}
