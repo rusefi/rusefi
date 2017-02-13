@@ -4,3 +4,4 @@ This is a copy of https://code.google.com/p/daecu/source/browse/#svn%2FHardware%
 R0.1 first spin
 R0.3 adjusted to be easier to MFG with an iron.
 R0.4 Added MOSFET that allows 150V surge protection
+R0.5 Corrected Q2 MOSFET pins. 

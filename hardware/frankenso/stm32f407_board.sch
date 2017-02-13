@@ -52,6 +52,9 @@ LIBS:joystick_SKRHAAE010
 LIBS:STM32F407IGT6
 LIBS:slc_oem
 LIBS:mos_n_numbered-pins
+LIBS:crystal(mc306)
+LIBS:pololu_a4988
+LIBS:Pololu_DRV8880
 LIBS:frankenso-cache
 EELAYER 25 0
 EELAYER END
@@ -2043,7 +2046,7 @@ shield
 Text Label 13650 6900 0    60   ~ 0
 shield
 $Comp
-L CRYSTAL X2
+L CRYSTAL(MC306) X2
 U 1 1 53BF6CBE
 P 12000 7500
 F 0 "X2" H 12000 7650 60  0000 C CNN

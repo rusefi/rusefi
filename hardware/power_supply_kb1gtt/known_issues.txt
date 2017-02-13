@@ -9,3 +9,4 @@ As of 06/14/14, validation is still being done.
 V0.4 added high voltage mostfet which allows 150V surges with out damageing the down stream components. 
 V0.4 Made KICAD 4.01 compatable
 V0.4 Added L3 RF choke.
+V0.5 corrects the Q2 MOSFET pinout. 

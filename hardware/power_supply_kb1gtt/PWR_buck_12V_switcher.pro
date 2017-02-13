@@ -1,4 +1,4 @@
-update=1/21/2016 5:23:21 AM
+update=2/12/2017 6:46:09 PM
 last_client=kicad
 [common]
 NetDir=
@@ -68,7 +68,7 @@ PageLayoutDescrFile=../rusefi_lib/Border.kicad_wks
 PlotDirectoryName=
 SubpartIdSeparator=0
 SubpartFirstId=65
-NetFmtName=
+NetFmtName=Pcbnew
 SpiceForceRefPrefix=0
 SpiceUseNetNumbers=0
 LabSize=60

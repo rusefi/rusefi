@@ -52,6 +52,9 @@ LIBS:joystick_SKRHAAE010
 LIBS:STM32F407IGT6
 LIBS:slc_oem
 LIBS:mos_n_numbered-pins
+LIBS:crystal(mc306)
+LIBS:pololu_a4988
+LIBS:Pololu_DRV8880
 LIBS:frankenso-cache
 EELAYER 25 0
 EELAYER END
@@ -59,8 +62,8 @@ $Descr A 11000 8500
 encoding utf-8
 Sheet 9 15
 Title "Frankenso"
-Date "3 dec 2015"
-Rev ".05"
+Date "2017-02-12"
+Rev "0.5"
 Comp "rusEFI.com"
 Comment1 ""
 Comment2 ""
@@ -281,7 +284,7 @@ F 5 "dnp,dnp" H 5650 6250 60  0001 C CNN "Field5"
 	0    -1   -1   0   
 $EndComp
 $Comp
-L MOS_Nro Q1002
+L Q_NMOS_GDS Q1002
 U 1 1 56093CF9
 P 4800 6500
 F 0 "Q1002" H 4800 6350 60  0000 R CNN
@@ -419,7 +422,7 @@ Wire Wire Line
 	4700 6600 4600 6600
 Connection ~ 4600 6600
 Text Notes 850  5350 0    60   ~ 0
-Brief overview\n-- Q1002, R1003, D1002 preform an active transient protection. It will suppress voltages up to 200V down to 19V.\n-- Q1001, R1001, D1001 preform a reverse polarity protection. If the input signal is the wrong polarity, the gate will not conduct which will prevent current from flowing. \n-- D1003 is a second transient suppressor, it would catch faster transients allowing a brief amount of time for Q1002 to preform it's duty. \n-- L1003 is a choke, it simple prevents switching noise from going up the power wire where it can get into other circuits. \n-- C1001 is a bulk cap, it simply stores energy locally such that the regulator can draw large currents in short periods of time. \n-- U1001 and the components to the right, are a buck style switching regulator, that will pull the 5V line up to 5V. It will now pull it down from 5V if there is an external voltage. \nThe U101 circuit has been designed for 1A output and up to 20V input, but typically 14.4V or 12.4V input. L1001 wants to be about 68uH to 100uH with less than 0.3 ohms resistance. 
+Brief overview\n-- Q1002, R1003, D1002 preform an active transient protection. It will suppress voltages up to 200V down to 19V.\n-- Q1001, R1001, D1001 preform a reverse polarity protection. If the input signal is the wrong polarity, the gate will not conduct which will prevent current from flowing. \n-- D1003 is a second transient suppressor, it would catch faster transients allowing a brief amount of time for Q1002 to preform it's duty. \n-- L1003 is a choke, it simple prevents switching noise from going up the power wire where it can get into other circuits. \n-- C1001 is a bulk cap, it simply stores energy locally such that the regulator can draw large currents in short periods of time. \n-- U1001 and the components to the right, are a buck style switching regulator, that will pull the 5V line up to 5V. It will not pull it down from 5V if there is an external voltage. \nThe U1001 circuit has been designed for 3A output and up to 20V input, but typically 14.4V or 12.4V input. L1001 wants to be about 68uH to 100uH with less than 0.3 ohms resistance. 
 Text Notes 9750 6100 0    60   ~ 0
 5V  5mVp-p 1A\nSuggested \nexternal wires\n18awg min
 Text Notes 3400 6000 0    60   ~ 0
@@ -466,4 +469,6 @@ F 6 "sky-macau.com,2258345334" V 9350 6450 60  0001 C CNN "VEND2,VEND2#"
 	1    9350 6450
 	0    -1   -1   0   
 $EndComp
+Wire Bus Line
+	4710 6470 4890 6470
 $EndSCHEMATC

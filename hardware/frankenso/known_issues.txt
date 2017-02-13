@@ -71,7 +71,7 @@
 71) RESOLVED IN R0.4  Some USB connectors are wider and hit the PCB making it hard to insert. MOVED PCB EDGE TO BE CLOSER TO USB CONNECTOR.
 72) RESOLVED IN R0.4  TI TPIC8101 part number instead of HIP9011
 73) RESOLVED IN R0.4  more holes for proto
-74)                   one of LCD holes the traces are too close on the back FIXED BUT NEED TO VERIFY FOR REAL WITH BOARD SPIN.
+74)                   one of LCD holes the traces are too close on the back FIXED IN R0.5 BUT NEED TO VERIFY FOR REAL WITH BOARD SPIN.
 75) RESOLVED IN R0.4  order new joystick for paper test
 76) RESOLVED IN R0.4  HIP9011 / TPIC8101 chip has a problem with starting, RESOLVED BY ADDING CAP BETWEEN CS AND XIN TO CREATE STARTING PING. 
 77) RESOLVED IN R0.4  AN inputs are limited to operation between 0V and 4V.RESOLVED BY CHANGING OP-AMP TO A BETTER RAIL TO RAIL THAT IS MUCH CLOSER TO THE RAIL.
@@ -90,14 +90,14 @@
 90) RESOLVED IN R0.4.1 C103 should be 0805 current part calls for 1206 CORRECTED TO 0805
 91) RESOLVED IN R0.4.1 Can we use 1oz internal layers ADDED MIN NOTE TO THE PCB FILE WHICH ALLOWS THICKER CU. 
 92) RESOLVED IN R0.4.1 L1001 and L1002 "ref" part is confusing ADDED SOME NOTES TO CLARIFY TO USE THE SKYMACAU PART
-93)                    added pololu stepper driver Perhaps should be an add-on board. 
+93) RESOLVED IN R0.5 added pololu DRV8880 and A4988 stepper driver Perhaps should be an add-on board. 
 94) RESOLVED IN R0.4.2 C701, LD601, LD602, LD605, LD606 silk screen mangled. 
 95) RESOLVED IN R0.4.2 D1001 doesn't have a polarity indicator in the silk screen
 96)                   route unused stm32 pins (PD3 PC13 etc) to unused connector pins
 97)                   cheaper battery holder - through-hole (need to find out footprint)
 98)                   idle valve SMD diode?
 99)                   silkscreen for analog inputs - PA1/PC1/etc?
-100)                   Swap brain board for 176 pin brain board. 
+100)                  Swap brain board for 176 pin brain board. 
 101) RESOLVED IN R0.5 update TPIC chip for 39k's, 3.3nF, and DNP 1M. 
 102)                  connector middle mounting holes - need a 5.5mm diameter area for screw head on the back
 103) RESOLVED IN R0.5 TPIC/HIP knock SPI was not working properly, R170 changed to 5k and R172 to R174 removed to correct the SPI bus. 
@@ -108,7 +108,7 @@
 108) RESOLVED IN R0.5 Q1001 was Alpha,AO3401A and changed to Vishay SQ2301ES-T1-GE3 which is automotive AEC-Q101 qualified. 
 109)                  Move D12-D23 schematics from the main page to the inj12ch page
 110)                  Part number for D19 (PB9-INJ09/PB9) as Miata Idle Valve Solenoid
-111)                  GND and +12v rails? at least some 1.1mm holes in the prototyping area. Make holes larger for larger wires. 47mil/1.2mm best
+111) RESOLVED IN R0.5 JP09 (12V), JP07 (GND), and JP08 (5V) now have via's that are at lest 1.1mm for larger wires.
 112)                  reduce high-side schematics confusion where H_IN1 is HL2, H_IN3 is HL1 etc.see http://rusefi.com/forum/viewtopic.php?f=4&t=569&start=240
 113) RESOLVED IN R0.5 "Normal + Insert" attributes for all SIL-2 and SOD-123 footprints to fix position file generation
 114)                  PC0 - hip9011 vs USB OTG current limiting chip STMPS2141STR conflict
@@ -122,13 +122,13 @@
 122)                  need a jumper between W2 and D12-D23 - NB2 miata fly-back should be wired into main relay 12v not ignition on 12v
 123) RESOLVED IN R0.4.2 Change C302 from 0.01uF to 0.1uF, which removes loweres the filter cut off frequency, and decreases the noise seen by the ECU. 
 124) RESOLVED IN R0.4.2 Change C210, C220, C240 from 0.01uF to 1uF, which removes loweres the filter cut off frequency, and decreases the noise seen by the ECU. 
-125)                  W701 is referred to as jumper WJ01 in the notes
-126)                  Add a note about optional D12-D23 for solenoids
-127)                  Add vias to button traces: PC8 PD11 PD10 (PD0 & PD2 already have those)
-128)                  Add vias to most or all HL traces: PC7 PC9 PD8 PD9 PE8 PE10 PE12 PE14
-129)                  silkscreen not under but next to component: R1001 R1002 D1001 etc?
-130)                  C472, C354 and C358 are electrolytic in the schematic
-131)                  between items #111, #127 and #128 we should keep stepper motor in mind and ideally have a space to mount it with minimal wiring
+125) RESOLVED IN R0.4.3 W701 is referred to as jumper WJ01 in the notes
+126) RESOLVED IN R0.4.3 Add a note about optional D12-D23 for solenoids
+127) RESOLVED IN R0.5 Add vias to button traces: PC8 PD11 PD10 (PD0 & PD2 already have those)
+128) RESOLVED IN R0.5 Add vias to most or all HL traces: PC7 PC9 PD8 PD9 PE8 PE10 PE12 PE14
+129) RESOLVED IN R0.5 silkscreen not under but next to component: R1001 R1002 D1001 etc?
+130) RESOLVED IN R0.4.3 C472, C354 and C358 are electrolytic in the schematic, change to non polarity dependant symbols to match real world. RESOLVED IN R0.4.2
+131)                  Fix 3D view
 132)                  Add vias to PE5 & PE6 traces (these are input capture options on TIM9)
 
 For honda add-on / rewiring board

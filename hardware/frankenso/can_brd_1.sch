@@ -52,6 +52,9 @@ LIBS:joystick_SKRHAAE010
 LIBS:STM32F407IGT6
 LIBS:slc_oem
 LIBS:mos_n_numbered-pins
+LIBS:crystal(mc306)
+LIBS:pololu_a4988
+LIBS:Pololu_DRV8880
 LIBS:frankenso-cache
 EELAYER 25 0
 EELAYER END
@@ -79,7 +82,7 @@ F 3 "" H 3375 3000 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L CP1 C472
+L C C472
 U 1 1 52CAD8F6
 P 3550 3250
 F 0 "C472" H 3600 3350 50  0000 L CNN

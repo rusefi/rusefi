@@ -110,10 +110,10 @@ void testFuelMap(void) {
 	printf("*************************************************** getStartingFuel\r\n");
 	// NAN in case we have issues with the CLT sensor
 	assertEqualsM("getStartingFuel nan", 4, getCrankingFuel3(NAN, 0 PASS_ENGINE_PARAMETER));
-	assertEqualsM("getStartingFuel#1", 23.7333, getCrankingFuel3(0, 4 PASS_ENGINE_PARAMETER));
-	assertEqualsM("getStartingFuel#2", 18.0419, getCrankingFuel3(8, 15 PASS_ENGINE_PARAMETER));
-	assertEqualsM("getStartingFuel#3", 11.2000, getCrankingFuel3(70, 0 PASS_ENGINE_PARAMETER));
-	assertEqualsM("getStartingFuel#3", 5.6000, getCrankingFuel3(70, 50 PASS_ENGINE_PARAMETER));
+	assertEqualsM("getStartingFuel#1", 17.8, getCrankingFuel3(0, 4 PASS_ENGINE_PARAMETER));
+	assertEqualsM("getStartingFuel#2", 14.6286, getCrankingFuel3(8, 15 PASS_ENGINE_PARAMETER));
+	assertEqualsM("getStartingFuel#3", 6.48, getCrankingFuel3(70, 0 PASS_ENGINE_PARAMETER));
+	assertEqualsM("getStartingFuel#4", 4.4023, getCrankingFuel3(70, 50 PASS_ENGINE_PARAMETER));
 }
 
 

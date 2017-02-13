@@ -52,6 +52,9 @@ LIBS:joystick_SKRHAAE010
 LIBS:STM32F407IGT6
 LIBS:slc_oem
 LIBS:mos_n_numbered-pins
+LIBS:crystal(mc306)
+LIBS:pololu_a4988
+LIBS:Pololu_DRV8880
 LIBS:frankenso-cache
 EELAYER 25 0
 EELAYER END
