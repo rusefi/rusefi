@@ -328,4 +328,14 @@ void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
 	mySetPadMode2("chip select", csPin, PAL_STM32_MODE_OUTPUT);
 }
 
+BOR_Level_t BOR_Get(void) {
+	FLASH_OBProgramInitTypeDef FLASH_Handle;
+
+	/* Read option bytes */
+	HAL_FLASHEx_OBGetConfig(&FLASH_Handle);
+
+	/* Return BOR value */
+	return (BOR_Level_t) FLASH_Handle.BORLevel;
+}
+
 #endif

@@ -7,6 +7,22 @@
 #ifndef MPU_UTIL_H_
 #define MPU_UTIL_H_
 
+#include "stm32f4xx_hal_flash_ex.h"
+
+typedef enum {
+	BOR_Level_None = OB_BOR_OFF,
+	BOR_Level_1 = OB_BOR_LEVEL1,
+	BOR_Level_2 = OB_BOR_LEVEL2,
+	BOR_Level_3 = OB_BOR_LEVEL3
+} BOR_Level_t;
+
+typedef enum {
+	BOR_Result_Ok = 0x00,
+	BOR_Result_Error
+} BOR_Result_t;
+
+BOR_Level_t BOR_Get(void);
+
 #ifndef GPIO_AF_TIM1
 #define GPIO_AF_TIM1 1
 #endif

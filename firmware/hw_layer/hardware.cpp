@@ -21,6 +21,7 @@
 #include "trigger_input.h"
 #include "eficonsole.h"
 #include "max31855.h"
+#include "mpu_util.h"
 
 #if EFI_PROD_CODE
 #include "AdcConfiguration.h"
@@ -386,6 +387,8 @@ void initHardware(Logging *l) {
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
 	turnOnHardware(sharedLogger);
+
+//	BOR_Get();
 
 #if HAL_USE_SPI || defined(__DOXYGEN__)
 	initSpiModules(boardConfiguration);
