@@ -522,20 +522,20 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		setToothedWheelConfiguration(triggerShape, 36, 1, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
 		break;
 
-	case TT_HONDA_ACCORD_CD_TWO_WIRES:
-		configureHondaAccordCD(triggerShape, false, true, T_CHANNEL_3, T_PRIMARY, 0 PASS_ENGINE_PARAMETER);
-		break;
-
 	case TT_HONDA_ACCORD_CD:
-		configureHondaAccordCD(triggerShape, true, true, T_CHANNEL_3, T_PRIMARY, 0 PASS_ENGINE_PARAMETER);
+		configureHonda_1_24(triggerShape, true, true, T_CHANNEL_3, T_PRIMARY, 0 PASS_ENGINE_PARAMETER);
 		break;
 
-	case TT_HONDA_ACCORD_1_24:
-		configureHondaAccordCD(triggerShape, true, false, T_PRIMARY, T_PRIMARY, 10 PASS_ENGINE_PARAMETER);
+	case TT_HONDA_ACCORD_CD_TWO_WIRES:
+		configureHonda_1_24(triggerShape, false, true, T_CHANNEL_3, T_PRIMARY, 0 PASS_ENGINE_PARAMETER);
+		break;
+
+	case TT_HONDA_1_24:
+		configureHonda_1_24(triggerShape, true, false, T_PRIMARY, T_PRIMARY, 10 PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_HONDA_ACCORD_1_24_SHIFTED:
-		configureHondaAccordShifter(triggerShape PASS_ENGINE_PARAMETER);
+		configureHondaAccordShifted(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_HONDA_ACCORD_CD_DIP:
