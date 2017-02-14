@@ -40,6 +40,14 @@ extern engine_configuration_s *engineConfiguration;
 
 #define PERSISTENT_SIZE sizeof(persistent_config_container_s)
 
+/**
+ * https://sourceforge.net/p/rusefi/tickets/335/
+ *
+ * Address of second cofig copy, rounded to 4K. 4K is the page size is it?
+ *
+ */
+#define FLASH_ADDR_SECOND_COPY (FLASH_ADDR + ((PERSISTENT_SIZE + 4095) & 0xFFFFF000))
+
 crc_t flashStateCrc(persistent_config_container_s *state) {
 	return calc_crc((const crc_t*) &state->persistentConfiguration, sizeof(persistent_config_s));
 }
@@ -77,6 +85,7 @@ void writeToFlashNow(void) {
 	scheduleMsg(logger, "Flashing with CRC=%d", crcResult);
 	efitimems_t nowMs = currentTimeMillis();
 	int result = flashWrite(FLASH_ADDR, (const char *) &persistentState, PERSISTENT_SIZE);
+	flashWrite(FLASH_ADDR_SECOND_COPY, (const char *) &persistentState, PERSISTENT_SIZE);
 	scheduleMsg(logger, "Flash programmed in %dms", currentTimeMillis() - nowMs);
 	bool isSuccess = result == FLASH_RETURN_SUCCESS;
 	if (isSuccess) {
@@ -99,27 +108,41 @@ static void doResetConfiguration(void) {
 
 persisted_configuration_state_e flashState;
 
+static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, Logging * logger) {
+	printMsg(logger, "readFromFlash %x", address);
+	flashRead(address, (char *) &persistentState, PERSISTENT_SIZE);
+
+	if (!isValidCrc(&persistentState)) {
+		return CRC_FAILED;
+	} else if (persistentState.version != FLASH_DATA_VERSION || persistentState.size != PERSISTENT_SIZE) {
+		return INCOMPATIBLE_VERSION;
+	} else {
+		return PC_OK;
+	}
+}
+
 /**
  * this method could and should be executed before we have any
  * connectivity so no console output here
  */
 persisted_configuration_state_e readConfiguration(Logging * logger) {
 	efiAssert(getRemainingStack(chThdSelf()) > 256, "read f", PC_ERROR);
-	flashRead(FLASH_ADDR, (char *) &persistentState, PERSISTENT_SIZE);
 
-	persisted_configuration_state_e result;
-	if (!isValidCrc(&persistentState)) {
-		result = CRC_FAILED;
+	persisted_configuration_state_e result = doReadConfiguration(FLASH_ADDR, logger);
+	if (result != PC_OK) {
+		printMsg(logger, "Reading second configuration copy");
+		result = doReadConfiguration(FLASH_ADDR_SECOND_COPY, logger);
+	}
+
+	if (result == CRC_FAILED) {
 		warning(CUSTOM_ERR_FLASH_CRC_FAILED, "flash CRC failed");
 		resetConfigurationExt(logger, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER);
-	} else if (persistentState.version != FLASH_DATA_VERSION || persistentState.size != PERSISTENT_SIZE) {
-		result = INCOMPATIBLE_VERSION;
+	} else if (result == INCOMPATIBLE_VERSION) {
 		resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER);
 	} else {
 		/**
 		 * At this point we know that CRC and version number is what we expect. Safe to assume it's a valid configuration.
 		 */
-		result = OK;
 		applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER);
 	}
 	// we can only change the state after the CRC check
@@ -128,7 +151,6 @@ persisted_configuration_state_e readConfiguration(Logging * logger) {
 }
 
 void readFromFlash(void) {
-	printMsg(logger, "readFromFlash()");
 	persisted_configuration_state_e result = readConfiguration(logger);
 
 	if (result == CRC_FAILED) {

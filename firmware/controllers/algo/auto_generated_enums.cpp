@@ -167,8 +167,8 @@ case TT_DODGE_STRATUS:
 	return "TT_DODGE_STRATUS";
 case TT_36_2_2_2:
 	return "TT_36_2_2_2";
-case TT_HONDA_ACCORD_CD_DIP:
-  return "TT_HONDA_ACCORD_CD_DIP";
+case TT_HONDA_1_4_24:
+  return "TT_HONDA_1_4_24";
 case TT_HONDA_4_24:
   return "TT_HONDA_4_24";
 case TT_MAZDA_MIATA_NA:
