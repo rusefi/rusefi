@@ -25,9 +25,8 @@ public class TriggerImage {
     private static final String TRIGGERTYPE = "TRIGGERTYPE";
     private static final String OUTPUT_FOLDER = "triggers";
     private static final String INPUT_FILE_NAME = "triggers.txt";
-    private static final String TOP_MESSAGE = "(c) rusEfi 2016";
+    private static final String TOP_MESSAGE = "(c) rusEfi 2013-2017";
     private static final String DEFAULT_WORK_FOLDER = ".." + File.separator + "unit_tests";
-    private static int WIDTH = 320;
     /**
      * number of extra frames
      */
@@ -99,6 +98,7 @@ public class TriggerImage {
         EngineReport re0 = new EngineReport(waves.get(0).list, 720, 720 * (1 + EXTRA_COUNT));
         System.out.println(re0);
         EngineReport re1 = new EngineReport(waves.get(1).list, 720, 720 * (1 + EXTRA_COUNT));
+        EngineReport re2 = new EngineReport(waves.get(2).list, 720, 720 * (1 + EXTRA_COUNT));
 
         triggerPanel.removeAll();
         UpDownImage upDownImage0 = new UpDownImage(re0, "trigger");
@@ -107,12 +107,28 @@ public class TriggerImage {
 
         UpDownImage upDownImage1 = new UpDownImage(re1, "trigger");
         upDownImage1.showMouseOverText = false;
-        boolean isSingleSenssor = re1.getList().isEmpty();
 
-        triggerPanel.setLayout(new GridLayout(isSingleSenssor ? 1 : 2, 1));
+        UpDownImage upDownImage2 = new UpDownImage(re2, "trigger");
+        upDownImage2.showMouseOverText = false;
 
-        if (!isSingleSenssor)
+        boolean isSingleSensor = re1.getList().isEmpty();
+        boolean isThirdVisible = !re2.getList().isEmpty();
+
+        int height;
+        if (isSingleSensor) {
+            height = 1;
+        } else if (isThirdVisible) {
+            height = 3;
+        } else {
+            height = 2;
+        }
+
+        triggerPanel.setLayout(new GridLayout(height, 1));
+
+        if (!isSingleSensor)
             triggerPanel.add(upDownImage1);
+        if (isThirdVisible)
+            triggerPanel.add(upDownImage2);
 
         triggerPanel.name = triggerName;
         triggerPanel.id = id;
@@ -155,16 +171,11 @@ public class TriggerImage {
         List<WaveState> waves = new ArrayList<>();
         waves.add(new WaveState());
         waves.add(new WaveState());
+        waves.add(new WaveState());
 
         for (Signal s : toShow) {
             int waveIndex = s.signal / 1000;
-            WaveState.trigger_value_e signal = (s.signal % 1000 == 0) ?WaveState.trigger_value_e.TV_LOW : WaveState.trigger_value_e.TV_HIGH;
-
-            if (waveIndex > 1) {
-                // TT_HONDA_ACCORD_CD
-                continue;
-//                throw new IllegalStateException(s.signal + " in " + name);
-            }
+            WaveState.trigger_value_e signal = (s.signal % 1000 == 0) ? WaveState.trigger_value_e.TV_LOW : WaveState.trigger_value_e.TV_HIGH;
 
             WaveState waveState = waves.get(waveIndex);
             waveState.handle(signal, s.angle);

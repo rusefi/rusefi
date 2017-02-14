@@ -6,6 +6,7 @@
  */
 
 #include "trigger_honda.h"
+#include "trigger_universal.h"
 
 #define S24 (720.0f / 24 / 2)
 
@@ -96,11 +97,17 @@ void configureHondaAccordCDDip(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->useOnlyPrimaryForSync = true;
 }
 
-void configureHonda_1_24(TriggerShape *s, bool withOneEventSignal, bool withFourEventSignal,
+/**
+ * '1' is conditional
+ * '4' is conditional
+ * '24' is always secondary channel
+ */
+void configureHonda_1_4_24(TriggerShape *s, bool withOneEventSignal, bool withFourEventSignal,
 		trigger_wheel_e const oneEventWave,
 		trigger_wheel_e const fourEventWave,
 		float prefix DECLARE_ENGINE_PARAMETER_S) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+
 
 	float sb = 5.0f + prefix;
 
@@ -270,4 +277,23 @@ void configureHondaAccordShifted(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->useOnlyPrimaryForSync = true;
 	s->isSynchronizationNeeded = false;
 }
+
+void configureOnePlus16(TriggerShape *s, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_S) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+
+	int totalTeethCount = 16;
+	int skippedCount = 0;
+
+	s->addEvent2(2, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
+	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 2, 20 PASS_ENGINE_PARAMETER);
+	s->addEvent2(20, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
+	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 20, NO_RIGHT_FILTER PASS_ENGINE_PARAMETER);
+
+	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 360, 360, NO_LEFT_FILTER,
+	NO_RIGHT_FILTER PASS_ENGINE_PARAMETER);
+
+	s->isSynchronizationNeeded = false;
+	s->useOnlyPrimaryForSync = true;
+}
+
 

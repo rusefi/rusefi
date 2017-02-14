@@ -181,7 +181,7 @@ void setHondaAccordConfigurationTwoWires(DECLARE_ENGINE_PARAMETER_F) {
 
 void setHondaAccordConfigurationThreeWires(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->engineType = HONDA_ACCORD_CD;
-	engineConfiguration->trigger.type = TT_HONDA_ACCORD_CD;
+	engineConfiguration->trigger.type = TT_HONDA_4_24_1;
 	setHondaAccordConfigurationCommon(PASS_ENGINE_PARAMETER_F);
 }
 
