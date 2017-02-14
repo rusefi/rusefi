@@ -96,15 +96,11 @@ void configureHondaAccordCDDip(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->useOnlyPrimaryForSync = true;
 }
 
-void configureHondaAccordCD(TriggerShape *s, bool withOneEventSignal, bool withFourEventSignal,
+void configureHonda_1_24(TriggerShape *s, bool withOneEventSignal, bool withFourEventSignal,
 		trigger_wheel_e const oneEventWave,
 		trigger_wheel_e const fourEventWave,
 		float prefix DECLARE_ENGINE_PARAMETER_S) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
-
-//	trigger_wheel_e const oneEventWave = T_CHANNEL_3;
-//	bool withFourEventSignal = true;
-//	trigger_wheel_e const fourEventWave = T_PRIMARY;
 
 	float sb = 5.0f + prefix;
 
@@ -243,7 +239,7 @@ void configureHondaCbr600custom(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 
 }
 
-void configureHondaAccordShifter(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
+void configureHondaAccordShifted(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	float w = 720 / 2 / 24;
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 

@@ -180,7 +180,7 @@ typedef enum {
 	TT_DODGE_RAM = 19,
 	TT_60_2_VW = 20,
 
-	TT_HONDA_ACCORD_1_24 = 21,
+	TT_HONDA_1_24 = 21,
 
 	TT_DODGE_STRATUS = 22,
 
@@ -242,7 +242,8 @@ typedef enum {
 typedef enum {
 	T_PRIMARY = 0, T_SECONDARY = 1,
 	// todo: I really do not want to call this 'tertiary'. maybe we should rename all of these?
-	T_CHANNEL_3 = 2
+	T_CHANNEL_3 = 2,
+	T_NONE = 15
 } trigger_wheel_e;
 
 typedef enum {

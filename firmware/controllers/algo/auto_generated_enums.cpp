@@ -159,8 +159,8 @@ case TT_GM_7X:
   return "TT_GM_7X";
 case TT_HONDA_ACCORD_CD:
   return "TT_HONDA_ACCORD_CD";
-case TT_HONDA_ACCORD_1_24:
-	return "TT_HONDA_ACCORD_1_24";
+case TT_HONDA_1_24:
+	return "TT_HONDA_1_24";
 case TT_HONDA_ACCORD_1_24_SHIFTED:
 	return "ACCORD_1_24_SHIFTED";
 case TT_DODGE_STRATUS:
@@ -242,6 +242,8 @@ case T_PRIMARY:
   return "T_PRIMARY";
 case T_SECONDARY:
   return "T_SECONDARY";
+case T_NONE:
+	return "T_NONE";
   }
  return NULL;
 }
