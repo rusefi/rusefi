@@ -13,10 +13,12 @@
 void configureHondaAccordCDDip(TriggerShape *s DECLARE_ENGINE_PARAMETER_S);
 void configureHondaAccordShifted(TriggerShape *s DECLARE_ENGINE_PARAMETER_S);
 
-void configureHonda_1_24(TriggerShape *s, bool withOneEventSignal, bool withFourEventSignal,
+void configureHonda_1_4_24(TriggerShape *s, bool withOneEventSignal, bool withFourEventSignal,
 		trigger_wheel_e const oneEventWave,
 		trigger_wheel_e const fourEventWave,
 		float d DECLARE_ENGINE_PARAMETER_S);
+
+void configureOnePlus16(TriggerShape *s, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_S);
 
 void configureHondaCbr600(TriggerShape *s DECLARE_ENGINE_PARAMETER_S);
 void configureHondaCbr600custom(TriggerShape *s DECLARE_ENGINE_PARAMETER_S);

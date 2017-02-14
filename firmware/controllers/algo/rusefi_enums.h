@@ -160,11 +160,12 @@ typedef enum {
 	TT_TOOTHED_WHEEL_60_2 = 8,
 	TT_TOOTHED_WHEEL_36_1 = 9,
 
-	TT_HONDA_ACCORD_CD = 10,
+	TT_HONDA_4_24_1 = 10,
 
 	TT_MITSU = 11,
 
-	TT_HONDA_ACCORD_CD_TWO_WIRES = 12,
+	// this makes sense because mechanical spark distribution does not require synchronization
+	TT_HONDA_4_24 = 12,
 
 	TT_HONDA_ACCORD_CD_DIP = 13,
 

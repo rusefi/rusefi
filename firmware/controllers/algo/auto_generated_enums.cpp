@@ -157,8 +157,8 @@ case TT_ONE_PLUS_ONE:
   return "TT_ONE_PLUS_ONE";
 case TT_GM_7X:
   return "TT_GM_7X";
-case TT_HONDA_ACCORD_CD:
-  return "TT_HONDA_ACCORD_CD";
+case TT_HONDA_4_24_1:
+  return "TT_HONDA_4_24_1";
 case TT_HONDA_1_24:
 	return "TT_HONDA_1_24";
 case TT_HONDA_ACCORD_1_24_SHIFTED:
@@ -169,8 +169,8 @@ case TT_36_2_2_2:
 	return "TT_36_2_2_2";
 case TT_HONDA_ACCORD_CD_DIP:
   return "TT_HONDA_ACCORD_CD_DIP";
-case TT_HONDA_ACCORD_CD_TWO_WIRES:
-  return "TT_HONDA_ACCORD_CD_TWO_WIRES";
+case TT_HONDA_4_24:
+  return "TT_HONDA_4_24";
 case TT_MAZDA_MIATA_NA:
   return "TT_MAZDA_MIATA_NA";
 case TT_MAZDA_MIATA_NB1:

@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Feb 13 21:22:31 EST 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Feb 13 23:36:28 EST 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -1116,7 +1116,7 @@ public class Fields {
 	public static final Field TPSADCCHANNEL = Field.create("TPSADCCHANNEL", 524, FieldType.INT, adc_channel_e);
 	public static final Field OVERRIDECRANKINGIGNITION = Field.create("OVERRIDECRANKINGIGNITION", 528, FieldType.INT);
 	public static final Field SENSORCHARTFREQUENCY = Field.create("SENSORCHARTFREQUENCY", 532, FieldType.INT);
-	public static final String[] trigger_type_e = {"custom toothed wheel", "ford aspire", "dodge neon", "Miata NA", "Miata NB", "GM_7X", "Cooper", "Mazda SOHC 4", "60/2", "36/1", "Accord CD", "MITSU", "ACCORD 2", "ACCORD DIP", "Neon 2003", "MAZDA D 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Accord 1+24", "DODGE STRATUS", "36_2_2_2", "Nissan", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "2003 neon crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "trg38", "trg39", "INVALID"};
+	public static final String[] trigger_type_e = {"custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "trg38", "trg39", "INVALID"};
 	public static final Field TRIGGER_TYPE = Field.create("TRIGGER_TYPE", 536, FieldType.INT, trigger_type_e);
 	public static final Field TRIGGER_UNUSEDCUSTOMISSYNCHRONIZATIONNEEDED = Field.create("TRIGGER_UNUSEDCUSTOMISSYNCHRONIZATIONNEEDED", 540, FieldType.BIT, 0);
 	public static final Field TRIGGER_UNUSEDCUSTOMNEEDSECONDTRIGGERINPUT = Field.create("TRIGGER_UNUSEDCUSTOMNEEDSECONDTRIGGERINPUT", 540, FieldType.BIT, 1);
