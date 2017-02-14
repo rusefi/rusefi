@@ -229,8 +229,8 @@
 #define trigger_offset_hex 218
 #define trigger_type_offset 536
 #define trigger_type_offset_hex 218
-#define trigger_customIsSynchronizationNeeded_offset 540
-#define trigger_customNeedSecondTriggerInput_offset 540
+#define trigger_unusedCustomIsSynchronizationNeeded_offset 540
+#define trigger_unusedCustomNeedSecondTriggerInput_offset 540
 #define trigger_useOnlyFirstChannel_offset 540
 #define trigger_customTotalToothCount_offset 544
 #define trigger_customTotalToothCount_offset_hex 220
