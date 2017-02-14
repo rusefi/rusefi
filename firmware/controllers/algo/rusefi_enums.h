@@ -167,7 +167,7 @@ typedef enum {
 	// this makes sense because mechanical spark distribution does not require synchronization
 	TT_HONDA_4_24 = 12,
 
-	TT_HONDA_ACCORD_CD_DIP = 13,
+	TT_HONDA_1_4_24 = 13,
 
 	// cam-based
 	TT_DODGE_NEON_2003_CAM = 14,

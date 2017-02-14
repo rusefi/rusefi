@@ -14,7 +14,7 @@
 #define FLASH_DATA_VERSION 10000
 
 typedef enum {
-	OK = 0,
+	PC_OK = 0,
 	CRC_FAILED = 1,
 	INCOMPATIBLE_VERSION = 2,
 	RESET_REQUESTED = 3,

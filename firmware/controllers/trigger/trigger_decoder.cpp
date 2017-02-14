@@ -538,7 +538,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		configureHondaAccordShifted(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
-	case TT_HONDA_ACCORD_CD_DIP:
+	case TT_HONDA_1_4_24:
 		configureHondaAccordCDDip(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
