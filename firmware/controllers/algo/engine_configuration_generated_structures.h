@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Feb 13 17:43:53 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Feb 13 21:22:31 EST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -228,10 +228,10 @@ typedef struct {
 	trigger_type_e type;
 	/**
 	offset 4 bit 0 */
-	bool customIsSynchronizationNeeded : 1;
+	bool unusedCustomIsSynchronizationNeeded : 1;
 	/**
 	offset 4 bit 1 */
-	bool customNeedSecondTriggerInput : 1;
+	bool unusedCustomNeedSecondTriggerInput : 1;
 	/**
 	 * This option could be used if your second trigger channel is broken
 	offset 4 bit 2 */
@@ -2049,4 +2049,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Feb 13 17:43:53 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Feb 13 21:22:31 EST 2017
