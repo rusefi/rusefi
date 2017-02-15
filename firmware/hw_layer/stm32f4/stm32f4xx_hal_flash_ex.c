@@ -80,8 +80,16 @@
 
 /* Includes ------------------------------------------------------------------*/
 
+#define STM32F407xx
 #define STM32F40_41xxx
+#define assert_param(expr) ((void)0)
+
+#define HAL_FLASH_MODULE_ENABLED
+#define POSITION_VAL(VAL)     (__CLZ(__RBIT(VAL)))
+
+
 #include "stm32f4xx_hal_flash_ex.h"
+#include "stm32f4xx_hal_flash.h"
 
 /** @addtogroup STM32F4xx_HAL_Driver
   * @{
