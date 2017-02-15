@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Feb 13 21:22:31 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Feb 15 10:33:44 EST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -644,11 +644,11 @@ typedef struct {
 	/**
 	 * offset 576
 	 */
-	brain_pin_e console_rx_pin;
+	int unused77;
 	/**
 	 * offset 580
 	 */
-	brain_pin_e console_tx_pin;
+	int unused78;
 	/**
 	 * offset 584
 	 */
@@ -1500,10 +1500,12 @@ typedef struct {
 	 */
 	brain_pin_e binarySerialRxPin;
 	/**
+	 *  todo: finish pin migration from hard-coded to configurable?
 	 * offset 1940
 	 */
 	brain_pin_e consoleSerialTxPin;
 	/**
+	 * todo: finish pin migration from hard-coded to configurable?
 	 * offset 1944
 	 */
 	brain_pin_e consoleSerialRxPin;
@@ -2049,4 +2051,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Feb 13 21:22:31 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Feb 15 10:33:44 EST 2017

@@ -267,10 +267,10 @@
 // todo: start using consoleUartDevice
 #define EFI_CONSOLE_UART_DEVICE (&SD3)
 
-// todo: start using console_tx_pin
+// todo: start using consoleSerialTxPin
 #define EFI_CONSOLE_TX_PORT GPIOC
 #define EFI_CONSOLE_TX_PIN 10
-// todo: start using console_rx_pin
+// todo: start using consoleSerialRxPin
 #define EFI_CONSOLE_RX_PORT GPIOC
 #define EFI_CONSOLE_RX_PIN 11
 // todo: this should be detected automatically based on pin selection
