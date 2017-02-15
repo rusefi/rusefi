@@ -936,8 +936,10 @@ static void printAllInfo(void) {
 static void getValue(const char *paramStr) {
 	if (strEqualCaseInsensitive(paramStr, "isCJ125Enabled")) {
 		scheduleMsg(&logger, "isCJ125Enabled=%d", boardConfiguration->isCJ125Enabled);
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	} else if (strEqualCaseInsensitive(paramStr, "bor")) {
 		showBor();
+#endif
 	} else if (strEqualCaseInsensitive(paramStr, "nb_vvt_index")) {
 		scheduleMsg(&logger, "nb_vvt_index=%d", engineConfiguration->nbVvtIndex);
 	} else if (strEqualCaseInsensitive(paramStr, "global_trigger_offset_angle")) {
