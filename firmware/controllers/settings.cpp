@@ -936,6 +936,8 @@ static void printAllInfo(void) {
 static void getValue(const char *paramStr) {
 	if (strEqualCaseInsensitive(paramStr, "isCJ125Enabled")) {
 		scheduleMsg(&logger, "isCJ125Enabled=%d", boardConfiguration->isCJ125Enabled);
+	} else if (strEqualCaseInsensitive(paramStr, "bor")) {
+		showBor();
 	} else if (strEqualCaseInsensitive(paramStr, "nb_vvt_index")) {
 		scheduleMsg(&logger, "nb_vvt_index=%d", engineConfiguration->nbVvtIndex);
 	} else if (strEqualCaseInsensitive(paramStr, "global_trigger_offset_angle")) {
@@ -1025,6 +1027,7 @@ command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"tps_accel_len", setTpsAccelLen},
 		{"engine_load_accel_len", setEngineLoadAccelLen},
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
+		{"bor", setBor},
 		{"can_mode", setCanType},
 		{"idle_position", setIdleValvePosition},
 		{"idle_rpm", setTargetIdleRpm},

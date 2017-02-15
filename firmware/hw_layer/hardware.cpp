@@ -289,6 +289,16 @@ void applyNewHardwareSettings(void) {
 	adcConfigListener(engine);
 }
 
+void setBor(int borValue) {
+	scheduleMsg(sharedLogger, "setting BOR to %d", borValue);
+	BOR_Set((BOR_Level_t)borValue);
+	showBor();
+}
+
+void showBor(void) {
+	scheduleMsg(sharedLogger, "BOR=%d", (int)BOR_Get());
+}
+
 void initHardware(Logging *l) {
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "init h");
 	sharedLogger = l;
@@ -388,7 +398,6 @@ void initHardware(Logging *l) {
 
 	turnOnHardware(sharedLogger);
 
-//	BOR_Get();
 
 #if HAL_USE_SPI || defined(__DOXYGEN__)
 	initSpiModules(boardConfiguration);
