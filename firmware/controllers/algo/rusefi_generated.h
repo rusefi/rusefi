@@ -506,8 +506,8 @@
 #define gpioPinModes15_offset 1188
 #define gpioPinModes16_offset 1192
 #define consoleUartDevice_offset 1196
-#define console_rx_pin_offset 1200
-#define console_tx_pin_offset 1204
+#define unused77_offset 1200
+#define unused78_offset 1204
 #define nb2ratioFrom_offset 1208
 #define nb2ratioTo_offset 1212
 #define triggerErrorPin_offset 1216

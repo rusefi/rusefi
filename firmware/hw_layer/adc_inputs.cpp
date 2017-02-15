@@ -533,7 +533,7 @@ static void configureInputs(void) {
 	addChannel("fuel", engineConfiguration->fuelLevelSensor, ADC_SLOW);
 	addChannel("pPS", engineConfiguration->pedalPositionChannel, ADC_SLOW);
 	addChannel("VBatt", engineConfiguration->vbattAdcChannel, ADC_SLOW);
-	addChannel("Vref", engineConfiguration->vRefAdcChannel, ADC_SLOW);
+	// not currently used	addChannel("Vref", engineConfiguration->vRefAdcChannel, ADC_SLOW);
 	addChannel("CLT", engineConfiguration->clt.adcChannel, ADC_SLOW);
 	addChannel("IAT", engineConfiguration->iat.adcChannel, ADC_SLOW);
 	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);

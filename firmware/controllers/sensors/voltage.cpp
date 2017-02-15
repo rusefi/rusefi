@@ -15,7 +15,8 @@
 EXTERN_ENGINE;
 
 float getVRef(DECLARE_ENGINE_PARAMETER_F) {
-	return getVoltageDivided("vref", engineConfiguration->vRefAdcChannel);
+// not currently used	return getVoltageDivided("vref", engineConfiguration->vRefAdcChannel);
+	return NAN;
 }
 
 bool hasVBatt(DECLARE_ENGINE_PARAMETER_F) {

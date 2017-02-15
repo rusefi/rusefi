@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Feb 13 23:36:28 EST 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Feb 15 10:33:44 EST 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -510,8 +510,8 @@ public class Fields {
 	public static final int gpioPinModes15_offset = 1188;
 	public static final int gpioPinModes16_offset = 1192;
 	public static final int consoleUartDevice_offset = 1196;
-	public static final int console_rx_pin_offset = 1200;
-	public static final int console_tx_pin_offset = 1204;
+	public static final int unused77_offset = 1200;
+	public static final int unused78_offset = 1204;
 	public static final int nb2ratioFrom_offset = 1208;
 	public static final int nb2ratioTo_offset = 1212;
 	public static final int triggerErrorPin_offset = 1216;
@@ -1306,8 +1306,8 @@ public class Fields {
 	public static final Field GPIOPINMODES15 = Field.create("GPIOPINMODES15", 1188, FieldType.INT, pin_output_mode_e);
 	public static final Field GPIOPINMODES16 = Field.create("GPIOPINMODES16", 1192, FieldType.INT, pin_output_mode_e);
 	public static final Field CONSOLEUARTDEVICE = Field.create("CONSOLEUARTDEVICE", 1196, FieldType.INT);
-	public static final Field CONSOLE_RX_PIN = Field.create("CONSOLE_RX_PIN", 1200, FieldType.INT, brain_pin_e);
-	public static final Field CONSOLE_TX_PIN = Field.create("CONSOLE_TX_PIN", 1204, FieldType.INT, brain_pin_e);
+	public static final Field UNUSED77 = Field.create("UNUSED77", 1200, FieldType.INT);
+	public static final Field UNUSED78 = Field.create("UNUSED78", 1204, FieldType.INT);
 	public static final Field NB2RATIOFROM = Field.create("NB2RATIOFROM", 1208, FieldType.FLOAT);
 	public static final Field NB2RATIOTO = Field.create("NB2RATIOTO", 1212, FieldType.FLOAT);
 	public static final Field TRIGGERERRORPIN = Field.create("TRIGGERERRORPIN", 1216, FieldType.INT, brain_pin_e);
