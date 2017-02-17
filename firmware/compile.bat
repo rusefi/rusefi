@@ -41,9 +41,7 @@ arm-none-eabi-size  --format=berkeley "build\rusefi.elf"
 arm-none-eabi-gcc -v
 
 rem file, let's program the board right away
-cd build
-call ../flash_openocd
-cd ..
+call flash_openocd
 goto end_of_file
 
 :error
