@@ -14,6 +14,8 @@ void configureFordAspireTriggerShape(TriggerShape * s DECLARE_ENGINE_PARAMETER_S
 	float x = 121.90;
 	float y = 110.86;
 
+	failstes
+
 	s->addEvent2(x + y - 180, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER);
 	s->addEvent2(x, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER);
 	s->addEvent2(x + y, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER);
