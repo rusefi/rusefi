@@ -9,6 +9,7 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpConnector;
 import jssc.SerialPortList;
 
+import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -160,6 +161,7 @@ public class IoUtil {
         }
         String port = ports[ports.length - 1];
         System.out.println("Using last of " + ports.length + " port(s)");
+        System.out.println("All ports: " + Arrays.toString(ports));
         return port;
     }
 
