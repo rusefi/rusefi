@@ -8,7 +8,11 @@ import static com.rusefi.AutoTest.*;
  * 2/22/2015
  */
 public class RealHwTest {
-    public static void main(String[] args) {
+    private static final long SECOND = 1000L;
+
+    public static void main(String[] args) throws InterruptedException {
+        System.out.println("Sleeping to give OS time to connect VCP driver");
+        Thread.sleep(45 * SECOND);
         long start = System.currentTimeMillis();
         String port = startRealHardwareTest(args);
 

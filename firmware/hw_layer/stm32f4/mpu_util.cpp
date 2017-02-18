@@ -76,7 +76,7 @@ void baseHardwareInit(void) {
 	// looks like this holds a random value on start? Let's set a nice clean zero
 	DWT_CYCCNT = 0;
 
-// todo: need to decide what value we want	BOR_Set(BOR_Level_3);
+	BOR_Set(BOR_Level_1); // one step above default value
 }
 
 void DebugMonitorVector(void) {
