@@ -64,7 +64,7 @@ public class UploadChanges {
             logger.error("failed to open " + port);
         }
         PortHolder.setupPort(serialPort, 38400);
-        logger.info("Looks good");
+        logger.info("Configuration looks good!");
 
         final ConfigurationImage ci1 = ConfigurationImageFile.readFromFile("rus_saved.bin");
 

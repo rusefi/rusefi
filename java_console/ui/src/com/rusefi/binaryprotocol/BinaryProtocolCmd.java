@@ -34,7 +34,7 @@ public class BinaryProtocolCmd {
         bp = new BinaryProtocol(logger, serialPort);
 
         PortHolder.setupPort(serialPort, 38400);
-        logger.info("Looks good");
+        logger.info("Binary looks good!");
         bp.switchToBinaryProtocol();
 
         bp.readImage(TsPageSize.IMAGE_SIZE);
