@@ -176,7 +176,7 @@ void onUnlockHook(void) {
 }
 
 void initErrorHandling(void) {
-#if EFI_SIMULATOR || EFI_PROD_CODE
+#if EFI_SIMULATOR || EFI_PROD_CODE || defined(__DOXYGEN__)
 	msObjectInit(&warningStream, (uint8_t *) warningBuffer, WARNING_BUFFER_SIZE, 0);
 	msObjectInit(&firmwareErrorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
 #endif
@@ -184,7 +184,7 @@ void initErrorHandling(void) {
 }
 
 void firmwareError(obd_code_e code, const char *fmt, ...) {
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	if (hasFirmwareErrorFlag)
 		return;
 	addWarningCode(code);
@@ -215,7 +215,7 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 	vprintf(fmt, ap);
 	va_end(ap);
 
-#if EFI_SIMULATOR
+#if EFI_SIMULATOR || defined(__DOXYGEN__)
 	exit(-1);
 #endif /* EFI_SIMULATOR */
 #endif

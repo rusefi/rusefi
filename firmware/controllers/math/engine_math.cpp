@@ -77,18 +77,18 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_F) {
 
 void setSingleCoilDwell(engine_configuration_s *engineConfiguration) {
 	for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
-		engineConfiguration->sparkDwellBins[i] = i + 1;
-		engineConfiguration->sparkDwell[i] = 4;
+		engineConfiguration->sparkDwellRpmBins[i] = i + 1;
+		engineConfiguration->sparkDwellValues[i] = 4;
 	}
 
-	engineConfiguration->sparkDwellBins[5] = 10;
-	engineConfiguration->sparkDwell[5] = 4;
+	engineConfiguration->sparkDwellRpmBins[5] = 10;
+	engineConfiguration->sparkDwellValues[5] = 4;
 
-	engineConfiguration->sparkDwellBins[6] = 4500;
-	engineConfiguration->sparkDwell[6] = 4;
+	engineConfiguration->sparkDwellRpmBins[6] = 4500;
+	engineConfiguration->sparkDwellValues[6] = 4;
 
-	engineConfiguration->sparkDwellBins[7] = 12500;
-	engineConfiguration->sparkDwell[7] = 0;
+	engineConfiguration->sparkDwellRpmBins[7] = 12500;
+	engineConfiguration->sparkDwellValues[7] = 0;
 }
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
@@ -223,7 +223,7 @@ floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	} else {
 		efiAssert(!cisnan(rpm), "invalid rpm", NAN);
 
-		dwellMs = interpolate2d(rpm, engineConfiguration->sparkDwellBins, engineConfiguration->sparkDwell, DWELL_CURVE_SIZE);
+		dwellMs = interpolate2d(rpm, engineConfiguration->sparkDwellRpmBins, engineConfiguration->sparkDwellValues, DWELL_CURVE_SIZE);
 	}
 
 	if (cisnan(dwellMs) || dwellMs < 0) {
@@ -424,8 +424,8 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 	printf("cranking angle %f\r\n", maxDwellAngle);
 
 	for (int i = 0;i<DWELL_CURVE_SIZE;i++) {
-		int rpm = (int)engineConfiguration->sparkDwellBins[i];
-		floatms_t dwell = engineConfiguration->sparkDwell[i];
+		int rpm = (int)engineConfiguration->sparkDwellRpmBins[i];
+		floatms_t dwell = engineConfiguration->sparkDwellValues[i];
 		angle_t dwellAngle = dwell / getOneDegreeTimeMs(rpm);
 		printf("dwell angle %f at %d\r\n", dwellAngle, rpm);
 		maxDwellAngle = maxF(maxDwellAngle, dwellAngle);

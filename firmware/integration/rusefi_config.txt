@@ -248,8 +248,8 @@ ThermistorConf iat;
 	float knockBandCustom;+kHz knock band override;"kHz", 1, 0.0, 0.0, 10.0, 2
 
 
-float[DWELL_CURVE_SIZE] sparkDwellBins;;"RPM",     1,   0.0,      0.0,  18000,   2
-	float[DWELL_CURVE_SIZE] sparkDwell;;"ms",	   1,   0.0,      0.0,  30.0,    2
+float[DWELL_CURVE_SIZE] sparkDwellRpmBins;;"RPM",     1,   0.0,      0.0,  18000,   2
+	float[DWELL_CURVE_SIZE] sparkDwellValues;;"ms",	   1,   0.0,      0.0,  30.0,    2
 
 struct_no_prefix specs_s
 float displacement;Engine displacement, in liters\nsee also cylindersCount;"L",    1,      0,       0,  1000.0,        2

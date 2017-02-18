@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Feb 15 10:33:44 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Feb 18 13:57:17 EST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -970,11 +970,11 @@ typedef struct {
 	/**
 	 * offset 336
 	 */
-	float sparkDwellBins[DWELL_CURVE_SIZE];
+	float sparkDwellRpmBins[DWELL_CURVE_SIZE];
 	/**
 	 * offset 368
 	 */
-	float sparkDwell[DWELL_CURVE_SIZE];
+	float sparkDwellValues[DWELL_CURVE_SIZE];
 	/**
 	 * offset 400
 	 */
@@ -2051,4 +2051,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Feb 15 10:33:44 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Feb 18 13:57:17 EST 2017

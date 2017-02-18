@@ -177,10 +177,10 @@
 #define hip9011PrescalerAndSDO_offset 328
 #define hip9011PrescalerAndSDO_offset_hex 148
 #define knockBandCustom_offset 332
-#define sparkDwellBins_offset 336
-#define sparkDwellBins_offset_hex 150
-#define sparkDwell_offset 368
-#define sparkDwell_offset_hex 170
+#define sparkDwellRpmBins_offset 336
+#define sparkDwellRpmBins_offset_hex 150
+#define sparkDwellValues_offset 368
+#define sparkDwellValues_offset_hex 170
 #define specs_offset 400
 #define specs_offset_hex 190
 #define displacement_offset 400
