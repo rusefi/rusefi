@@ -1,10 +1,3 @@
-rusefi
-======
-
-for now this is just a backup of rusefi@SF
-
-
-rusEfi is an open source DIY engine control unit (ECU) for gasoline engines. See http://rusefi.com/
 current binaries are always available at http://rusefi.com/build_server/
 
 
@@ -12,6 +5,8 @@ current binaries are always available at http://rusefi.com/build_server/
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
+| 12/09/2016    | r10991    | bugfixes, bugfixes, bugfixes & releave 1.0
+| 02/15/2016	| r9600     | automatic warm-up fuel correction, performance improvements
 | 08/31/2015	| r8725     | acceleration fuel correction, console improvements
 | 07/06/2015	| r8554     | more CAN, better console, bugfixes, performance
 | 04/26/2015	| r7938	    | vehicle speed sensor, stepper idle valve, lots of improvements
@@ -31,3 +26,14 @@ current binaries are always available at http://rusefi.com/build_server/
 | 08/03/2013	| r13	    | wideband O2 input, better idling algorithm, serial-over-USB
 | 07/05/2013	| r10	    | Second CKP, sequential injection.
 | 06/19/2013	| r9	    | Initial version - batch injection & ignition with advance table lookup.
+	
+
+
+Wiki http://rusefi.com
+Forum rusefi.com/forum
+Doxygen documentation is availble at http://rusefi.com/docs/html
+General source code Q&A is at http://rusefi.com/forum/viewtopic.php?f=5&t=10
+
+
+Facebook https://www.facebook.com/rusEfiECU
+youtube https://www.youtube.com/user/rusefi
