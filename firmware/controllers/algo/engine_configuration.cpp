@@ -168,8 +168,8 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_F) {
  */
 void setConstantDwell(floatms_t dwellMs DECLARE_ENGINE_PARAMETER_S) {
 	for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
-		engineConfiguration->sparkDwellBins[i] = 1000 * i;
-		engineConfiguration->sparkDwell[i] = dwellMs;
+		engineConfiguration->sparkDwellRpmBins[i] = 1000 * i;
+		engineConfiguration->sparkDwellValues[i] = dwellMs;
 	}
 }
 

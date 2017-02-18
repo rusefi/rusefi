@@ -230,8 +230,8 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
  * so that we can prepare some helper structures
  */
 void Engine::preCalculate() {
-	sparkTable.preCalc(engineConfiguration->sparkDwellBins,
-			engineConfiguration->sparkDwell);
+	sparkTable.preCalc(engineConfiguration->sparkDwellRpmBins,
+			engineConfiguration->sparkDwellValues);
 
 	/**
 	 * Here we prepare a fast, index-based MAF lookup from a slower curve description

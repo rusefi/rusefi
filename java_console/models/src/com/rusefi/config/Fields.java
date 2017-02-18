@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Feb 15 10:33:44 EST 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Feb 18 13:57:17 EST 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -181,10 +181,10 @@ public class Fields {
 	public static final int hip9011PrescalerAndSDO_offset = 328;
 	public static final int hip9011PrescalerAndSDO_offset_hex = 148;
 	public static final int knockBandCustom_offset = 332;
-	public static final int sparkDwellBins_offset = 336;
-	public static final int sparkDwellBins_offset_hex = 150;
-	public static final int sparkDwell_offset = 368;
-	public static final int sparkDwell_offset_hex = 170;
+	public static final int sparkDwellRpmBins_offset = 336;
+	public static final int sparkDwellRpmBins_offset_hex = 150;
+	public static final int sparkDwellValues_offset = 368;
+	public static final int sparkDwellValues_offset_hex = 170;
 	public static final int specs_offset = 400;
 	public static final int specs_offset_hex = 190;
 	public static final int displacement_offset = 400;
