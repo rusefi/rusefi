@@ -9,7 +9,7 @@ import java.util.List;
 public class ModuleNode extends PcbNode {
     final List<PadNode> pads;
     public final PointNode at;
-    public final String name;
+    private final String reference;
 
     public ModuleNode(String nodeName, int i, List<Object> children) {
         super(nodeName, i, children);
@@ -17,13 +17,17 @@ public class ModuleNode extends PcbNode {
         pads = (List<PadNode>) o;
         at = (PointNode) find("at");
 
-        name = iterate("fp_text").get(0).getChild(1);
+        reference = iterate("fp_text").get(0).getChild(1);
+    }
+
+    public String getReference() {
+        return reference;
     }
 
     @Override
     public String toString() {
         return "ModuleNode{" +
-                "name=" + name +
+                "reference=" + reference +
                 ", pads.size=" + pads.size() +
                 '}';
     }

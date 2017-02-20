@@ -78,7 +78,7 @@ public class PcbNodeTest {
                 "      (rotate (xyz 0 0 0))\n" +
                 "    )\n" +
                 "  )");
-        assertEquals("R351", module.name);
+        assertEquals("R351", module.getReference());
     }
 
 

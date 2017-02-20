@@ -39,6 +39,13 @@ public class PcbMergeTool {
 
         PcbNode destNode = PcbNode.readFromFile(sourcePcb);
 
+
+        for (PcbNode net : destNode.iterate("net")) {
+            String netName = net.getChild(1); // todo: nicer method?
+            if (!Networks.isLocalNetwork(netName))
+                networks.registerNetworkIfPcbSpecific(netName);
+        }
+
         log("Running ADD commands");
         for (NameAndOffset addRequest : ChangesModel.getInstance().ADD_REQUESTS) {
             PcbNode node = PcbMoveTool.readAndMove(addRequest.getName(), addRequest.x, addRequest.y);
@@ -69,19 +76,25 @@ public class PcbMergeTool {
     private static ModuleNode findModuleByName(PcbNode destNode, String moduleName) {
         for (PcbNode node : destNode.iterate("module")) {
             ModuleNode mn = (ModuleNode) node;
-            if (moduleName.toLowerCase().equals(mn.name.toLowerCase()))
+            if (moduleName.toLowerCase().equals(mn.getReference().toLowerCase()))
                 return mn;
         }
         return null;
     }
 
     private static void mergePcb(PcbNode destNode, PcbNode source) throws IOException {
-        Map<String, String> netNameMapping = new HashMap<String, String>();
-        Map<String, Integer> netIdMapping = new HashMap<String, Integer>();
+        /**
+         * original local net name > new net name in combined PCB
+         */
+        Map<String, String> netNameMapping = new HashMap<>();
+        /**
+         * original local net ID (as string) > new net ID
+         */
+        Map<String, Integer> netIdMapping = new HashMap<>();
 
         for (PcbNode net : source.iterate("net")) {
             String netId = net.getChild(0);
-            String netName = net.getChild(1);
+            String netName = net.getChild(1); // todo: nicer method?
             String newName = networks.registerNetworkIfPcbSpecific(netName);
             netNameMapping.put(netName, newName);
             netIdMapping.put(netId, networks.getId(newName));
@@ -122,10 +135,11 @@ public class PcbMergeTool {
             for (PcbNode pad : module.iterate("pad")) {
                 if (!pad.hasChild("net"))
                     continue;
-                PcbNode net = pad.find("net");
-                String localName = netNameMapping.get(net.getChild(1));
-                net.setString(1, localName);
-                net.setInt(0, networks.getId(localName));
+                fixNetId(netIdMapping, netNameMapping, pad);
+//                PcbNode net = pad.find("net");
+//                String localName = netNameMapping.get(net.getChild(1));
+//                net.setString(1, localName);
+//                net.setInt(0, networks.getId(localName));
             }
             destNode.addChild(module);
         }
@@ -135,7 +149,7 @@ public class PcbMergeTool {
         for (PcbNode segment : segments) {
 //            if (!segment.hasChild("net"))
 //                continue;
-            fixNetId(netIdMapping, segment);
+            fixNetId(netIdMapping, netNameMapping, segment);
 
             destNode.addChild(segment);
         }
@@ -143,7 +157,7 @@ public class PcbMergeTool {
         List<PcbNode> vias = source.iterate("via");
         log("Processing " + vias.size() + " vias");
         for (PcbNode via : vias) {
-            fixNetId(netIdMapping, via);
+            fixNetId(netIdMapping, netNameMapping, via);
 
             destNode.addChild(via);
         }
@@ -172,21 +186,44 @@ public class PcbMergeTool {
         return false;
     }
 
-    private static void fixNetId(Map<String, Integer> netIdMapping, PcbNode via) {
-        PcbNode net = via.find("net");
-        String originalId = net.getChild(0);
-        net.setInt(0, netIdMapping.get(originalId));
+    private static void fixNetId(Map<String, Integer> netIdMapping, Map<String, String> netNameMapping, PcbNode node) {
+        NetNode net = (NetNode) node.find("net");
+        String originalId = net.id;
+        Integer currentNetId = netIdMapping.get(originalId);
+        String globalName = networks.nameById.get(currentNetId);
+//        String newName = netNameMapping.get(originalName);
+//        if (newName == null)
+//            throw new NullPointerException("?");
+
+        if (ChangesModel.getInstance().NET_MERGE_REQUESTS.containsKey(globalName)) {
+            String newName = ChangesModel.getInstance().NET_MERGE_REQUESTS.get(globalName);
+            log("Will merge " + globalName + " into " + newName + ". ID was " + currentNetId);
+            currentNetId = networks.networks.get(newName);
+            if (currentNetId == null)
+                throw new NullPointerException("Cannot find net: " + newName);
+            log("New ID: " + currentNetId);
+            globalName = newName;
+        }
+        net.setInt(0, currentNetId);
+        if (net.name != null)
+            net.setString(1, globalName);
     }
 
     private static class Networks {
-        private Map<String, Integer> networks = new HashMap<String, Integer>();
+        /**
+         * Net name > Net Id
+         */
+        private Map<String, Integer> networks = new HashMap<>();
+        private Map<Integer, String> nameById = new HashMap<>();
 
         public String registerNetworkIfPcbSpecific(String name) {
-            if (name.startsWith("N-00")) {
+            if (isLocalNetwork(name)) {
                 String newName = "F-0000" + networks.size();
                 log("Board-specific net: " + name + " would be " + newName);
 
-                networks.put(newName, networks.size());
+                registerNet(newName);
+                int newId = networks.get(newName);
+                log(newName + " is " + newId);
                 return newName;
             } else {
                 if (networks.containsKey(name)) {
@@ -195,9 +232,18 @@ public class PcbMergeTool {
                 }
 
                 log("New global net: " + name);
-                networks.put(name, networks.size());
+                registerNet(name);
                 return name;
             }
+        }
+
+        private static boolean isLocalNetwork(String name) {
+            return name.startsWith("N-00");
+        }
+
+        private void registerNet(String name) {
+            networks.put(name, networks.size());
+            nameById.put(networks.get(name), name);
         }
 
         public int getId(String localName) {

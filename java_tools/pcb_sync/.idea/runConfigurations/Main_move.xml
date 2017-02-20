@@ -1,8 +1,9 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Main move" type="Application" factoryName="Application">
+    <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
     <option name="MAIN_CLASS_NAME" value="com.rusefi.Main" />
     <option name="VM_PARAMETERS" value="" />
-    <option name="PROGRAM_PARAMETERS" value="pcb_move can_brd_1.kicad_pcb -43.18 58.928" />
+    <option name="PROGRAM_PARAMETERS" value="pcb_move frankenso_foundation.kicad_pcb frankenso_foundation.kicad_pcb 0 25.4" />
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" value="" />
@@ -16,7 +17,9 @@
       <option name="TRANSPORT" value="0" />
       <option name="LOCAL" value="true" />
     </RunnerSettings>
+    <RunnerSettings RunnerId="Run" />
     <ConfigurationWrapper RunnerId="Debug" />
+    <ConfigurationWrapper RunnerId="Run" />
     <method />
   </configuration>
 </component>

@@ -16,7 +16,7 @@ public class NetNode extends PcbNode {
         id = getChild(0);
         name = children.size() > 1 ? getChild(1) : null;
         if (name != null)
-            System.out.println(name + " network: " + id);
+            System.out.println("NetNode(" + name + " network: " + id + ")");
 
         if ("GND".equalsIgnoreCase(name))
             GND_NET_ID = Integer.parseInt(id);

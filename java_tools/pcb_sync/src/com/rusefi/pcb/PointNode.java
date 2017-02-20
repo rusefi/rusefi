@@ -30,10 +30,14 @@ public class PointNode extends PcbNode {
     }
 
     public PointNode(double x, double y) {
+        this(x, y, 0);
+    }
+
+    public PointNode(double x, double y, double angle) {
         super("", 0, Collections.emptyList());
         this.x = x;
         this.y = y;
-        angle = 0;
+        this.angle = angle;
     }
 
     public boolean isConnected(PointNode at, SizeNode size) {
@@ -51,22 +55,19 @@ public class PointNode extends PcbNode {
                 '}';
     }
 
-    public boolean isSameLocation(PointNode point) {
-        return x == point.x && y == point.y;
-    }
+//    public boolean isSameLocation(PointNode point) {
+//        return x == point.x && y == point.y;
+//    }
 
     public PointNode translate(PointNode at) {
         double nx = at.x - x;
         double ny = at.y - y;
-        if (angle == 0)
-            return new PointNode(nx, ny);
-        if (angle == 270)
-            return new PointNode(ny, -nx);
-        if (angle == 90)
-            return new PointNode(-ny, nx);
-        if (angle == 180)
-            return new PointNode(-nx, -ny);
-        throw new IllegalStateException("Angle not supported: " + angle);
+
+        double radian = angle / 180 * Math.PI;
+        double rx = Math.cos(radian) * nx - Math.sin(radian) * ny;
+        double ry = Math.sin(radian) * nx + Math.cos(radian) * ny;
+
+        return new PointNode(rx, ry);
     }
 
     public void setLocation(double x, double y) {
