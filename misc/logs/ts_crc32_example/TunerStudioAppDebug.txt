@@ -1,0 +1,232 @@
+TunerStudio 2.6.14 started on Wed Mar 11 10:59:38 EDT 2015
+JRE 1.8.0_25, Windows 8.1 6.3, x86
+java.library.path=./lib
+TunerStudioMS.jar
+Look:Metal, ClassName:'javax.swing.plaf.metal.MetalLookAndFeel'
+Look:Nimbus, ClassName:'javax.swing.plaf.nimbus.NimbusLookAndFeel'
+Look:CDE/Motif, ClassName:'com.sun.java.swing.plaf.motif.MotifLookAndFeel'
+Look:Windows, ClassName:'com.sun.java.swing.plaf.windows.WindowsLookAndFeel'
+Look:Windows Classic, ClassName:'com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel'
+Setting Look & Feel to:javax.swing.plaf.metal.MetalLookAndFeel
+3/11/15 10:59:40 AM :Debug: Running speed test
+3/11/15 10:59:42 AM :Debug: Speed test timed out, exiting after:905
+7 completed out of expected 8
+3/11/15 10:59:42 AM :Debug: Processor Score:240701
+3/11/15 10:59:44 AM :Debug: Command Non-VolatileBytes for F resolved to: x46                                                                   F
+3/11/15 10:59:44 AM :Debug: Command Non-VolatileBytes for I resolved to: x49                                                                   I
+3/11/15 10:59:44 AM :Debug: Command Non-VolatileBytes for f resolved to: x66                                                                   f
+3/11/15 10:59:44 AM :Debug: Loading Plugin from Brian`s plugin.jar
+3/11/15 10:59:44 AM :Debug: Loading Plugin from ExampleTunerStudioPlugin.jar
+3/11/15 10:59:44 AM :Debug: App Name:TunerStudio, appEdition:MS
+3/11/15 10:59:44 AM :Warning: Unable to set Main cluster for title:
+3/11/15 10:59:47 AM :Debug: Time to retreive font name list: 58 ms.
+WARNING:  RXTX Version mismatch
+	Jar version = RXTX-2.2pre1
+	native lib Version = RXTX-2.1-7
+3/11/15 10:59:47 AM :Info: Initialized RXTX driver: 33ms.
+No check, last update check=Mon Mar 09 11:11:43 EDT 2015
+MSmain: No check, last update check=Fri Mar 06 11:44:50 EST 2015
+3/11/15 10:59:50 AM :Debug: Opening project: C:\Users\Brian Holzbach\Documents\TunerStudioProjects\ms3 refrence
+3/11/15 10:59:50 AM :Debug: Reading translation file as plain text because: fast binary headers not found. probably not a fast binary file
+3/11/15 10:59:50 AM :Debug: Filtered ConfigurationOptionGroup in 92ms.
+3/11/15 10:59:50 AM :Info: Read file canPcVariables.ini: 0.0ms
+3/11/15 10:59:50 AM :Info: Filtered ini: 0.0ms
+3/11/15 10:59:50 AM :Info: Loading Trigger Wheels
+3/11/15 10:59:50 AM :Info: Loaded All known ini sections
+3/11/15 10:59:50 AM :Info: Parsed and validated ini "canPcVariables.ini" in : 44ms.
+3/11/15 10:59:50 AM :Info: Read file mainController.ini: 31.0ms
+3/11/15 10:59:50 AM :Info: Filtered ini: 118.0ms
+3/11/15 10:59:50 AM :Debug: ini signature: MS3 Format 0435.14 
+3/11/15 10:59:51 AM :Info: Loading Trigger Wheels
+3/11/15 10:59:51 AM :Info: Loaded All known ini sections
+3/11/15 10:59:51 AM :Info: Parsed and validated ini "mainController.ini" in : 592ms.
+3/11/15 10:59:51 AM :Info: Read file ms3Supplement.ecu: 23.0ms
+3/11/15 10:59:51 AM :Info: Filtered ini: 0.0ms
+3/11/15 10:59:51 AM :Info: Loading Trigger Wheels
+3/11/15 10:59:51 AM :Info: Loaded All known ini sections
+3/11/15 10:59:51 AM :Info: Parsed and validated ini "ms3Supplement.ecu" in : 59ms.
+3/11/15 10:59:51 AM :Info: Read file ms3DefaultTools.ini: 0.0ms
+3/11/15 10:59:51 AM :Info: Filtered ini: 0.0ms
+3/11/15 10:59:51 AM :Info: Loading Trigger Wheels
+3/11/15 10:59:51 AM :Info: Loaded All known ini sections
+3/11/15 10:59:51 AM :Info: Parsed and validated ini "ms3DefaultTools.ini" in : 12ms.
+3/11/15 10:59:51 AM :Info: Read file ms3_1.2_WueAnalyzeMap.ecu: 0.0ms
+3/11/15 10:59:51 AM :Info: Filtered ini: 0.0ms
+3/11/15 10:59:51 AM :Info: Loading Trigger Wheels
+3/11/15 10:59:51 AM :Info: Loaded All known ini sections
+3/11/15 10:59:51 AM :Info: Parsed and validated ini "ms3_1.2_WueAnalyzeMap.ecu" in : 15ms.
+3/11/15 10:59:51 AM :Debug: Adding Configuration: ms3 refrence
+3/11/15 10:59:52 AM :Info: Tune opened, 15102 bytes updated. File:C:\Users\Brian Holzbach\Documents\TunerStudioProjects\ms3 refrence\CurrentTune.msq
+3/11/15 10:59:52 AM :Debug: Flush lasted: 0ms.
+3/11/15 10:59:52 AM :Info: !!! Loaded config in 1661
+MSad: No check, last update check=Fri Mar 06 11:44:53 EST 2015
+3/11/15 10:59:52 AM :Info: Opening port: COM7
+3/11/15 10:59:52 AM :Info: Com Thread created: COMM Thread94718.35919580358
+3/11/15 10:59:52 AM :Info: !!! Activated Project 2329
+3/11/15 10:59:52 AM :Info: Comm Manager for ms3 refrence Started, thread ID: COMM Thread94718.35919580358
+3/11/15 10:59:52 AM :Info: Comm Read Thread Change! Old Thread:null, new Thread:COMM Thread94718.35919580358
+3/11/15 10:59:53 AM :Warning: Failed to subscribe DashComp to OutputChannel SyncedOC
+Not found in current configuration.
+3/11/15 10:59:53 AM :Warning: Failed to subscribe DashComp to OutputChannel Rev LimOC
+Not found in current configuration.
+3/11/15 10:59:53 AM :Warning: Failed to subscribe DashComp to OutputChannel Full_syncOC
+Not found in current configuration.
+3/11/15 10:59:53 AM :Info: Local on CAN ID:0, blockingFactor: 2048, tableBlockingFactor: 2048
+3/11/15 10:59:53 AM :Info: Target device is local, using localBlockingFactors
+3/11/15 10:59:53 AM :Debug: High Speed Paint: true
+3/11/15 10:59:53 AM :Debug: !!! Opened Dash 3148
+3/11/15 10:59:53 AM :Info: Read file ms3VeAnalyzeMaps.ini: 0.0ms
+3/11/15 10:59:53 AM :Info: Filtered ini: 0.0ms
+3/11/15 10:59:53 AM :Info: Loading Trigger Wheels
+3/11/15 10:59:53 AM :Info: Loaded All known ini sections
+3/11/15 10:59:53 AM :Info: Parsed and validated ini "ms3VeAnalyzeMaps.ini" in : 26ms.
+3/11/15 10:59:54 AM :Info: Communicating with MS3 1.3.3 release     20141112 13:54GMT (c) JSM/KC ********
+3/11/15 10:59:54 AM :Debug: Reading ECU Data, 0.0 complete
+3/11/15 10:59:54 AM :Warning: CRC Mismatch!!!! 
+3/11/15 10:59:54 AM :Info:    CRC from controller page 1:x05 xE4 x83 x55                                                       ...U
+3/11/15 10:59:54 AM :Info:    Local Data CRC for page 1: x4A x64 x03 xDE                                                       Jd..
+3/11/15 10:59:54 AM :Debug: Read page time: 106ms.
+3/11/15 10:59:54 AM :Info: Checksum page 1 data read: x05 xE4 x83 x55                                                       ...U
+3/11/15 10:59:54 AM :Debug: Reading ECU Data, 0.05555555555555555 complete
+3/11/15 10:59:54 AM :Warning: CRC Mismatch!!!! 
+3/11/15 10:59:54 AM :Info:    CRC from controller page 2:xCD xBA x57 x48                                                       ..WH
+3/11/15 10:59:54 AM :Info:    Local Data CRC for page 2: xC0 x03 x59 x66                                                       ..Yf
+3/11/15 10:59:55 AM :Debug: Read page time: 109ms.
+3/11/15 10:59:55 AM :Info: Checksum page 2 data read: xCD xBA x57 x48                                                       ..WH
+3/11/15 10:59:55 AM :Debug: Reading ECU Data, 0.1111111111111111 complete
+3/11/15 10:59:55 AM :Debug: CRC matches for page 3:xBC x82 xF8 x81                                                       ....
+3/11/15 10:59:55 AM :Info: CrC matched skipped controller read on page:2
+3/11/15 10:59:55 AM :Debug: Reading ECU Data, 0.16666666666666666 complete
+3/11/15 10:59:55 AM :Debug: CRC matches for page 4:xFB x0E x33 x8D                                                       ..3.
+3/11/15 10:59:55 AM :Info: CrC matched skipped controller read on page:3
+3/11/15 10:59:55 AM :Debug: Reading ECU Data, 0.2222222222222222 complete
+3/11/15 10:59:55 AM :Debug: CRC matches for page 5:x2D xA6 x04 x88                                                       -...
+3/11/15 10:59:55 AM :Info: CrC matched skipped controller read on page:4
+3/11/15 10:59:55 AM :Debug: Reading ECU Data, 0.2777777777777778 complete
+3/11/15 10:59:55 AM :Debug: CRC matches for page 6:x3E x90 x32 x31                                                       >.21
+3/11/15 10:59:55 AM :Info: CrC matched skipped controller read on page:5
+3/11/15 10:59:55 AM :Debug: Reading ECU Data, 0.3333333333333333 complete
+3/11/15 10:59:55 AM :Debug: CRC matches for page 7:xF8 x23 xC7 x25                                                       .#.%
+3/11/15 10:59:55 AM :Info: CrC matched skipped controller read on page:6
+3/11/15 10:59:55 AM :Debug: Reading ECU Data, 0.3888888888888889 complete
+3/11/15 10:59:55 AM :Debug: CRC matches for page 8:x4A x27 x29 x47                                                       J')G
+3/11/15 10:59:55 AM :Info: CrC matched skipped controller read on page:7
+3/11/15 10:59:55 AM :Debug: Reading ECU Data, 0.4444444444444444 complete
+3/11/15 10:59:55 AM :Debug: CRC matches for page 9:x12 xA7 xB6 x9F                                                       ....
+3/11/15 10:59:55 AM :Info: CrC matched skipped controller read on page:8
+3/11/15 10:59:55 AM :Debug: Reading ECU Data, 0.5 complete
+3/11/15 10:59:55 AM :Debug: CRC matches for page 10:x76 x62 x85 x41                                                       vb.A
+3/11/15 10:59:55 AM :Info: CrC matched skipped controller read on page:9
+3/11/15 10:59:55 AM :Debug: Reading ECU Data, 0.5555555555555556 complete
+3/11/15 10:59:55 AM :Debug: CRC matches for page 11:x5B xDD xC9 xF5                                                       [...
+3/11/15 10:59:55 AM :Info: CrC matched skipped controller read on page:10
+3/11/15 10:59:55 AM :Debug: Reading ECU Data, 0.6111111111111112 complete
+3/11/15 10:59:55 AM :Debug: CRC matches for page 12:x2E x46 xC6 xD7                                                       .F..
+3/11/15 10:59:55 AM :Info: CrC matched skipped controller read on page:11
+3/11/15 10:59:55 AM :Debug: Reading ECU Data, 0.6666666666666666 complete
+3/11/15 10:59:55 AM :Debug: CRC matches for page 13:xF3 x9A xD4 x6C                                                       ...l
+3/11/15 10:59:55 AM :Info: CrC matched skipped controller read on page:12
+3/11/15 10:59:55 AM :Debug: Reading ECU Data, 0.7222222222222222 complete
+3/11/15 10:59:55 AM :Debug: CRC matches for page 14:xCA x62 xFE xAD                                                       .b..
+3/11/15 10:59:55 AM :Info: CrC matched skipped controller read on page:13
+3/11/15 10:59:55 AM :Debug: Reading ECU Data, 0.7777777777777778 complete
+3/11/15 10:59:55 AM :Debug: CRC matches for page 15:x0F x19 x98 xB9                                                       ....
+3/11/15 10:59:55 AM :Info: CrC matched skipped controller read on page:14
+3/11/15 10:59:55 AM :Debug: Reading ECU Data, 0.8333333333333334 complete
+3/11/15 10:59:55 AM :Warning: CRC Mismatch!!!! 
+3/11/15 10:59:55 AM :Info:    CRC from controller page 16:xF6 x90 xD1 xCD                                                       ....
+3/11/15 10:59:55 AM :Info:    Local Data CRC for page 16: xEF xB5 xAF x2E                                                       ....
+3/11/15 10:59:55 AM :Debug: Read page time: 107ms.
+3/11/15 10:59:55 AM :Info: Checksum page 16 data read: xF6 x90 xD1 xCD                                                       ....
+3/11/15 10:59:55 AM :Debug: Reading ECU Data, 0.8888888888888888 complete
+3/11/15 10:59:55 AM :Debug: CRC matches for page 17:x4C x60 xA3 xEE                                                       L`..
+3/11/15 10:59:55 AM :Info: CrC matched skipped controller read on page:16
+3/11/15 10:59:55 AM :Debug: Reading ECU Data, 0.9444444444444444 complete
+3/11/15 10:59:55 AM :Debug: CRC matches for page 18:x9C xC2 x9D x36                                                       ...6
+3/11/15 10:59:55 AM :Info: CrC matched skipped controller read on page:17
+3/11/15 10:59:55 AM :Debug: Reading ECU Data, 1.0 complete
+3/11/15 10:59:55 AM :Debug: Read All Data
+3/11/15 10:59:55 AM :Debug: isBlank Time: 0 ms.
+3/11/15 10:59:55 AM :Debug: DiffTime: 28 ms.
+3/11/15 10:59:55 AM :Info: dr: 0:87
+3/11/15 10:59:55 AM :Info: dr: 252:252
+3/11/15 10:59:55 AM :Debug: Range Sort Time: 1
+3/11/15 10:59:55 AM :Debug: Flush lasted: 45ms.
+3/11/15 10:59:55 AM :Info: Queueing burn to page:16
+3/11/15 10:59:55 AM :Info: Burn Command empty for page 16, bypassing burn and verification.
+3/11/15 11:00:02 AM :Info: dr: 0:87
+3/11/15 11:00:02 AM :Info: dr: 252:252
+3/11/15 11:00:02 AM :Debug: Range Sort Time: 1
+3/11/15 11:00:02 AM :Debug: Flush lasted: 55ms.
+3/11/15 11:00:02 AM :Info: Queueing burn to page:16
+3/11/15 11:00:02 AM :Info: Burn Command empty for page 16, bypassing burn and verification.
+3/11/15 11:00:02 AM :Info: Initiating read page 2
+3/11/15 11:00:02 AM :Info: Initiating read page 1
+3/11/15 11:00:02 AM :Debug: CRC matches for page 2:xCD xBA x57 x48                                                       ..WH
+3/11/15 11:00:02 AM :Info: Initiating read page 5
+3/11/15 11:00:02 AM :Info: CrC matched skipped controller read on page:1
+3/11/15 11:00:02 AM :Debug: CRC matches for page 1:x05 xE4 x83 x55                                                       ...U
+3/11/15 11:00:02 AM :Info: CrC matched skipped controller read on page:0
+3/11/15 11:00:02 AM :Debug: CRC matches for page 5:x2D xA6 x04 x88                                                       -...
+3/11/15 11:00:02 AM :Info: CrC matched skipped controller read on page:4
+3/11/15 11:00:04 AM :Info: dr: 0:87
+3/11/15 11:00:04 AM :Info: dr: 252:252
+3/11/15 11:00:04 AM :Debug: Range Sort Time: 1
+3/11/15 11:00:04 AM :Debug: Flush lasted: 36ms.
+3/11/15 11:00:04 AM :Info: Queueing burn to page:16
+3/11/15 11:00:04 AM :Info: dr: 0:87
+3/11/15 11:00:04 AM :Info: dr: 252:252
+3/11/15 11:00:04 AM :Debug: Range Sort Time: 0
+3/11/15 11:00:04 AM :Debug: removed expired instruction
+3/11/15 11:00:04 AM :Info: Burn Command empty for page 16, bypassing burn and verification.
+3/11/15 11:00:04 AM :Debug: Flush lasted: 56ms.
+3/11/15 11:00:04 AM :Info: Queueing burn to page:16
+3/11/15 11:00:04 AM :Info: Burn Command empty for page 16, bypassing burn and verification.
+3/11/15 11:00:04 AM :Debug: Flush lasted: 0ms.
+3/11/15 11:00:04 AM :Info: dr: 0:87
+3/11/15 11:00:04 AM :Info: dr: 252:252
+3/11/15 11:00:04 AM :Debug: Range Sort Time: 1
+3/11/15 11:00:04 AM :Debug: Flush lasted: 56ms.
+3/11/15 11:00:04 AM :Info: Queueing burn to page:16
+3/11/15 11:00:04 AM :Info: Burn Command empty for page 16, bypassing burn and verification.
+3/11/15 11:00:08 AM :Info: Initiating read page 1
+3/11/15 11:00:08 AM :Info: Initiating read page 2
+3/11/15 11:00:08 AM :Debug: CRC matches for page 1:x05 xE4 x83 x55                                                       ...U
+3/11/15 11:00:08 AM :Info: CrC matched skipped controller read on page:0
+3/11/15 11:00:08 AM :Debug: CRC matches for page 2:xCD xBA x57 x48                                                       ..WH
+3/11/15 11:00:08 AM :Info: CrC matched skipped controller read on page:1
+3/11/15 11:00:11 AM :Debug: Flush lasted: 0ms.
+3/11/15 11:00:14 AM :Info: Initiating read page 1
+3/11/15 11:00:14 AM :Debug: CRC matches for page 1:x05 xE4 x83 x55                                                       ...U
+3/11/15 11:00:14 AM :Info: CrC matched skipped controller read on page:0
+3/11/15 11:00:16 AM :Debug: Flush lasted: 0ms.
+3/11/15 11:00:18 AM :Info: closeApp Called
+3/11/15 11:00:18 AM :Debug: TuneLog Editor set text
+3/11/15 11:00:18 AM :Info: Skip Restore Point for 'ms3 refrence' because nothing changed since: ms3 refrence_2015-03-03_11.15.01.msq
+3/11/15 11:00:18 AM :Info: dr: 0:7
+3/11/15 11:00:18 AM :Info: dr: 78:78
+3/11/15 11:00:18 AM :Debug: Range Sort Time: 0
+3/11/15 11:00:18 AM :Debug: Flush lasted: 59ms.
+3/11/15 11:00:18 AM :Info: Queueing burn to page:16
+3/11/15 11:00:18 AM :Debug: goOffline Starting, Time:0
+3/11/15 11:00:18 AM :Info: Deactivated Turbo Baud, goOffline
+3/11/15 11:00:18 AM :Info: skip burn to page:16, lastWritePage = -2
+3/11/15 11:00:18 AM :Info: Burn Command empty for page 16, bypassing burn and verification.
+3/11/15 11:00:18 AM :Info: Burn Command empty for page 16, bypassing burn and verification.
+3/11/15 11:00:18 AM :Debug: goOffline about to stopProcessing, Time:256
+3/11/15 11:00:18 AM :Debug: goOffline Notified offline, Time:257
+3/11/15 11:00:18 AM :Debug: goOffline closed port, Time:257
+3/11/15 11:00:18 AM :Debug: JSSC ControllerInterface Close Connection currentPort == null:false
+3/11/15 11:00:18 AM :Info: Closing Port
+3/11/15 11:00:18 AM :Info: Successfully Closed Port
+3/11/15 11:00:18 AM :Info: ms3 refrence ComThread stopped COMM Thread94718.35919580358
+3/11/15 11:00:18 AM :Debug: goOffline comm thread stopped, Time:560
+3/11/15 11:00:18 AM :Debug: No Remaining Queue Write instructions
+3/11/15 11:00:18 AM :Debug: removing Configuration: ms3 refrence
+3/11/15 11:00:19 AM :Info: Finalizing Sensors
+3/11/15 11:00:19 AM :Info: closed Called
+TunerStudio shutdown: Wed Mar 11 11:00:19 EDT 2015
+##############################################################
+
+
+

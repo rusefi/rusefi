@@ -1,0 +1,653 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<msq xmlns="http://www.msefi.com/:msq">
+<bibliography author="TunerStudio MS(Beta) 2.6.08 - EFI Analytics, Inc." tuneComment="" writeDate="Sat Dec 20 15:18:34 EST 2014"/>
+<versionInfo fileFormat="4.0" firmwareInfo="Bowling &amp; Grippo MS1 Base Code MShift v0.01" nPages="1" signature="MShift v0.01"/>
+<page>
+<pcVariable name="tsCanId">"0"</pcVariable>
+</page>
+<page number="0" size="10008">
+<constant name="engineType">"GY6_139QMB"</constant>
+<constant cols="1" digits="2" name="battInjectorLagCorrBins" rows="8" units="V">
+         8.0 
+         9.0 
+         10.0 
+         11.0 
+         12.0 
+         13.0 
+         14.0 
+         15.0 
+      </constant>
+<constant cols="1" digits="2" name="battInjectorLagCorr" rows="8" units="ms/V">
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+         0.0 
+      </constant>
+<constant cols="1" digits="2" name="cltFuelCorrBins" rows="16" units="C">
+         -40.0 
+         -30.0 
+         -20.0 
+         -10.0 
+         0.0 
+         10.0 
+         20.0 
+         30.0 
+         40.0 
+         50.0 
+         60.0 
+         70.0 
+         80.0 
+         90.0 
+         100.0 
+         110.0 
+      </constant>
+<constant cols="1" digits="2" name="cltFuelCorr" rows="16" units="%">
+         150.0 
+         150.0 
+         141.9998169 
+         136.000061 
+         127.9998779 
+         119.0002441 
+         112.0002747 
+         109.9998474 
+         105.9997559 
+         105.9997559 
+         102.9998779 
+         101.0002136 
+         100.0 
+         100.0 
+         100.0 
+         100.0 
+      </constant>
+<constant cols="1" digits="2" name="iatFuelCorrBins" rows="16" units="C">
+         -40.0 
+         -30.0 
+         -20.0 
+         -10.0 
+         0.0 
+         10.0 
+         20.0 
+         30.0 
+         40.0 
+         50.0 
+         60.0 
+         70.0 
+         80.0 
+         90.0 
+         100.0 
+         110.0 
+      </constant>
+<constant cols="1" digits="2" name="iatFuelCorr" rows="16" units="%">
+         100.0 
+         100.0 
+         100.0 
+         100.0 
+         100.0 
+         100.0 
+         100.0 
+         100.0 
+         100.0 
+         100.0 
+         100.0 
+         100.0 
+         100.0 
+         100.0 
+         100.0 
+         100.0 
+      </constant>
+<constant digits="0" name="tpsMin" units="ADC">125.0</constant>
+<constant digits="0" name="tpsMax" units="ADC">625.0</constant>
+<constant name="analogChartMode">"MAP"</constant>
+<constant digits="1" name="tpsErrorLowValue" units="°C">31.0</constant>
+<constant digits="1" name="tpsErrorHighValue" units="°C">930.0</constant>
+<constant digits="1" name="primingSquirtDurationMs" units="°C">5.0</constant>
+<constant digits="0" name="engineCycle" units="engine cycle">720.0</constant>
+<constant digits="1" name="baseCrankingFuelPW" units="ms">5.0</constant>
+<constant digits="0" name="crankingRpm" units="RPM">550.0</constant>
+<constant cols="1" digits="2" name="mapSamplingAngleBins" rows="8" units="RPM">
+         800.0 
+         1685.0 
+         2571.0 
+         3457.0 
+         4342.0 
+         5228.0 
+         6114.0 
+         7000.0 
+      </constant>
+<constant cols="1" digits="2" name="mapSamplingAngle" rows="8" units="deg">
+         100.0 
+         104.0 
+         108.0 
+         112.0 
+         117.0 
+         121.0 
+         125.0 
+         130.0 
+      </constant>
+<constant cols="1" digits="2" name="mapSamplingWindowBins" rows="8" units="RPM">
+         800.0 
+         1685.0 
+         2571.0 
+         3457.0 
+         4342.0 
+         5228.0 
+         6114.0 
+         7000.0 
+      </constant>
+<constant cols="1" digits="2" name="mapSamplingWindow" rows="8" units="deg">
+         50.0 
+         50.0 
+         50.0 
+         50.0 
+         50.0 
+         50.0 
+         50.0 
+         50.0 
+      </constant>
+<constant digits="2" name="mapMin" units="kpa">0.0</constant>
+<constant digits="2" name="mapMax" units="kpa">0.0</constant>
+<constant name="mapSensorType">"Custom"</constant>
+<constant name="mapAdcInput">"PA6"</constant>
+<constant digits="1" name="clt_t1" units="°C">0.0</constant>
+<constant digits="1" name="clt_t2" units="°C">30.0</constant>
+<constant digits="1" name="clt_t3" units="°C">100.0</constant>
+<constant digits="1" name="clt_r1" units="Ohm">32500.0</constant>
+<constant digits="1" name="clt_r2" units="Ohm">7550.0</constant>
+<constant digits="1" name="clt_r3" units="Ohm">700.0</constant>
+<constant digits="1" name="clt_bias" units="Ohm">10000.0</constant>
+<constant digits="1" name="iat_t1" units="°C">0.0</constant>
+<constant digits="1" name="iat_t2" units="°C">30.0</constant>
+<constant digits="1" name="iat_t3" units="°C">100.0</constant>
+<constant digits="1" name="iat_r1" units="Ohm">32500.0</constant>
+<constant digits="1" name="iat_r2" units="Ohm">7550.0</constant>
+<constant digits="1" name="iat_r3" units="Ohm">700.0</constant>
+<constant digits="1" name="iat_bias" units="Ohm">10000.0</constant>
+<constant cols="1" digits="2" name="sparkDwellBins" rows="8" units="RPM">
+         0.0 
+         1000.0 
+         2000.0 
+         3000.0 
+         4000.0 
+         5000.0 
+         6000.0 
+         7000.0 
+      </constant>
+<constant cols="1" digits="2" name="sparkDwell" rows="8" units="ms">
+         4.0 
+         4.0 
+         4.0 
+         4.0 
+         4.0 
+         4.0 
+         4.0 
+         4.0 
+      </constant>
+<constant cols="1" digits="2" name="ignitionKeyBins" rows="16" units="Load">
+         0.0 
+         6.6599731 
+         13.3299561 
+         20.0 
+         26.6599121 
+         33.3300781 
+         40.0 
+         46.6601563 
+         53.3300781 
+         60.0 
+         66.6601563 
+         73.3300781 
+         80.0 
+         86.6601563 
+         93.3300781 
+         100.0 
+      </constant>
+<constant cols="1" digits="2" name="ignitionRpmBins" rows="16" units="RPM">
+         800.0 
+         1213.328125 
+         1626.65625 
+         2040.0 
+         2453.34375 
+         2866.65625 
+         3280.0 
+         3693.34375 
+         4106.6875 
+         4520.0 
+         4933.3125 
+         5346.6875 
+         5760.0 
+         6173.3125 
+         6586.6875 
+         7000.0 
+      </constant>
+<constant digits="0" name="ignitonOffset" units="RPM">0.0</constant>
+<constant digits="0" name="crankingChargeAngle" units="deg">70.0</constant>
+<constant name="timingMode">"dynamic"</constant>
+<constant digits="0" name="fixedModeTiming" units="RPM">1.112014848E9</constant>
+<constant digits="2" name="injectorLag" units="msec">1.0</constant>
+<constant cols="1" digits="2" name="fuelKeyBins" rows="16" units="V">
+         0.0 
+         6.6599731 
+         13.3299561 
+         20.0 
+         26.6599121 
+         33.3300781 
+         40.0 
+         46.6601563 
+         53.3300781 
+         60.0 
+         66.6601563 
+         73.3300781 
+         80.0 
+         86.6601563 
+         93.3300781 
+         100.0 
+      </constant>
+<constant cols="1" digits="2" name="fuelRpmBins" rows="16" units="RPM">
+         800.0 
+         1213.328125 
+         1626.65625 
+         2040.0 
+         2453.34375 
+         2866.65625 
+         3280.0 
+         3693.34375 
+         4106.6875 
+         4520.0 
+         4933.3125 
+         5346.6875 
+         5760.0 
+         6173.3125 
+         6586.6875 
+         7000.0 
+      </constant>
+<constant digits="2" name="displacement" units="L">1.9960022</constant>
+<constant digits="2" name="rpmHardLimit" units="rpm">7000.0</constant>
+<constant digits="2" name="crankingInjectionMode" units="enum">0.0</constant>
+<constant digits="2" name="injectionMode" units="enum">1.0</constant>
+<constant digits="0" name="globalTriggerOffsetAngle" units="deg">46.0</constant>
+<constant digits="2" name="analogInputDividerCoefficient" units="coef">2.0</constant>
+<constant name="fuelAlgorithm">"SPEED DENSITY"</constant>
+<constant digits="2" name="VBattDividerCoefficient" units="coef">10.0488281</constant>
+<constant digits="2" name="FanONTemperature" units="°C">85.0</constant>
+<constant digits="2" name="FanOffTemperature" units="°C">80.0</constant>
+<constant name="CanReadEnabled">"true"</constant>
+<constant name="CanWriteEnabled">"false"</constant>
+<constant digits="2" name="CanSleepPeriod" units="RPM">0.0</constant>
+<constant name="nCylinders">4</constant>
+<constant name="IgnitionMode">"Wasted"</constant>
+<constant name="FiringOrder">"1-3-4-2"</constant>
+<constant digits="2" name="rpmMultiplier" units="RPM">0.5</constant>
+<constant name="displayMode">"hd44780"</constant>
+<constant name="logFormat">"native"</constant>
+<constant digits="0" name="firmwareVersion" units="index">2.0141219E7</constant>
+<constant digits="0" name="HD44780width" units="index">20.0</constant>
+<constant digits="0" name="HD44780height" units="index">4.0</constant>
+<constant name="tpsAdcInput">"PC5"</constant>
+<constant digits="2" name="overrideCrankingIgnition" units="RPM">0.0</constant>
+<constant digits="0" name="analogChartFrequency" units="index">20.0</constant>
+<constant name="isSynchronizationNeeded">"false"</constant>
+<constant digits="2" name="totalToothCount" units="RPM">0.0</constant>
+<constant digits="2" name="skippedToothCount" units="RPM">0.0</constant>
+<constant digits="2" name="syncRatioFrom" units="RPM">0.0</constant>
+<constant digits="2" name="syncRatioTo" units="RPM">0.0</constant>
+<constant name="useRiseEdge">"false"</constant>
+<constant name="needSecondTriggerInput">"false"</constant>
+<constant name="vbattAdcInput">"PC4"</constant>
+<constant digits="2" name="globalFuelCorrection" units="RPM">1.0</constant>
+<constant name="cltAdcInput">"PC2"</constant>
+<constant name="iatAdcInput">"PC1"</constant>
+<constant name="mafAdcInput">"PA0"</constant>
+<constant name="afrAdcInput">"PA4"</constant>
+<constant digits="2" name="afr_v1" units="volts">0.0</constant>
+<constant digits="2" name="afr_value1" units="AFR">9.0</constant>
+<constant digits="2" name="afr_v2" units="volts">5.0</constant>
+<constant digits="2" name="afr_value2" units="AFR">19.0</constant>
+<constant digits="2" name="injectionOffset" units="RPM">0.0</constant>
+<constant digits="2" name="crankingTimingAngle" units="deg">710.0</constant>
+<constant name="baroSensorType">"Custom"</constant>
+<constant digits="2" name="baroMin" units="kpa">0.0</constant>
+<constant digits="2" name="baroMax" units="kpa">500.0</constant>
+<constant name="baroAdcInput">"PA4"</constant>
+<constant cols="1" digits="2" name="veKeyBins" rows="16" units="Load">
+         10.0 
+         29.0 
+         48.0 
+         68.0 
+         87.0 
+         106.0 
+         126.0 
+         145.0 
+         164.0 
+         184.0 
+         203.0 
+         222.0 
+         242.0 
+         261.0 
+         280.0 
+         300.0 
+      </constant>
+<constant cols="1" digits="2" name="veRpmBins" rows="16" units="RPM">
+         800.0 
+         1213.0 
+         1626.0 
+         2040.0 
+         2453.0 
+         2866.0 
+         3280.0 
+         3693.0 
+         4106.0 
+         4520.0 
+         4933.0 
+         5346.0 
+         5760.0 
+         6173.0 
+         6586.0 
+         7000.0 
+      </constant>
+<constant cols="1" digits="2" name="afrKeyBins" rows="16" units="Load">
+         10.0 
+         29.0 
+         48.0 
+         68.0 
+         87.0 
+         106.0 
+         126.0 
+         145.0 
+         164.0 
+         184.0 
+         203.0 
+         222.0 
+         242.0 
+         261.0 
+         280.0 
+         300.0 
+      </constant>
+<constant cols="1" digits="2" name="afrRpmBins" rows="16" units="RPM">
+         800.0 
+         1213.0 
+         1626.0 
+         2040.0 
+         2453.0 
+         2866.0 
+         3280.0 
+         3693.0 
+         4106.0 
+         4520.0 
+         4933.0 
+         5346.0 
+         5760.0 
+         6173.0 
+         6586.0 
+         7000.0 
+      </constant>
+<constant cols="16" digits="2" name="fuelTable" rows="16" units="ms">
+         3.7000122 3.6000061 3.6000061 4.0 4.0 4.0 6.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 
+         4.0 4.0 4.0 5.0 4.5 4.5 5.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 
+         5.0 5.0 6.0 7.0 4.5 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 
+         6.0 7.0 7.0 7.0 5.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 
+         7.0 8.0 8.0 8.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 
+         12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 
+         12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 
+         12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 
+         12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 
+         12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 
+         12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 
+         12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 
+         12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 
+         12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 
+         12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 
+         12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 12.0 
+      </constant>
+<constant cols="16" digits="2" name="ignitionTable" rows="16" units="deg">
+         12.0 12.0 12.0 26.0 29.0 31.0 31.0 38.0 40.0 40.0 40.0 42.0 42.0 42.0 42.0 42.0 
+         12.0 12.0 12.0 26.0 29.0 31.0 31.0 38.0 40.0 40.0 40.0 42.0 42.0 42.0 42.0 42.0 
+         12.0 12.0 12.0 26.0 29.0 31.0 31.0 38.0 40.0 40.0 40.0 42.0 42.0 42.0 42.0 42.0 
+         12.0 12.0 12.0 26.0 29.0 31.0 31.0 38.0 40.0 40.0 40.0 42.0 42.0 42.0 42.0 42.0 
+         12.0 12.0 12.0 26.0 29.0 31.0 31.0 38.0 40.0 40.0 40.0 360.0 42.0 42.0 42.0 42.0 
+         12.0 12.0 12.0 26.0 29.0 31.0 31.0 38.0 40.0 40.0 40.0 42.0 42.0 42.0 42.0 42.0 
+         12.0 12.0 12.0 26.0 29.0 31.0 31.0 38.0 40.0 40.0 40.0 42.0 42.0 42.0 42.0 42.0 
+         12.0 12.0 12.0 26.0 29.0 31.0 31.0 38.0 40.0 40.0 40.0 42.0 42.0 42.0 42.0 42.0 
+         12.0 12.0 12.0 26.0 29.0 31.0 31.0 38.0 40.0 40.0 40.0 42.0 42.0 42.0 42.0 42.0 
+         12.0 12.0 12.0 26.0 29.0 31.0 31.0 38.0 40.0 40.0 40.0 42.0 42.0 42.0 42.0 42.0 
+         12.0 12.0 12.0 26.0 29.0 31.0 31.0 38.0 40.0 40.0 40.0 42.0 42.0 42.0 42.0 42.0 
+         12.0 12.0 12.0 26.0 29.0 31.0 31.0 38.0 40.0 40.0 40.0 42.0 42.0 42.0 42.0 42.0 
+         12.0 12.0 12.0 26.0 29.0 31.0 31.0 38.0 40.0 40.0 40.0 42.0 42.0 42.0 42.0 42.0 
+         12.0 12.0 12.0 26.0 29.0 31.0 31.0 38.0 40.0 40.0 40.0 42.0 42.0 42.0 42.0 42.0 
+         12.0 12.0 12.0 26.0 29.0 31.0 31.0 38.0 40.0 40.0 40.0 42.0 42.0 42.0 42.0 42.0 
+         12.0 12.0 12.0 26.0 29.0 31.0 31.0 38.0 40.0 40.0 40.0 42.0 42.0 42.0 42.0 42.0 
+      </constant>
+<constant cols="16" digits="2" name="veTable" rows="16" units="deg">
+         0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.7000008 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 
+         0.8000031 0.5 0.6500015 0.7000008 0.7000008 0.7000008 0.7000008 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 
+         0.8000031 0.5999985 0.7000008 0.7000008 0.8000031 0.8000031 0.7000008 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 
+         0.8000031 0.6500015 0.7000008 0.7000008 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 
+         0.8000031 0.6500015 0.7000008 0.7000008 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 
+         0.8000031 0.7000008 0.8000031 0.7000008 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 
+         0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 
+         0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 
+         0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 
+         0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 
+         0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 
+         0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 
+         0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 
+         0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 
+         0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 
+         0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 0.8000031 
+      </constant>
+<constant cols="16" digits="2" name="afrTable" rows="16" units="deg">
+         14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 
+         14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 
+         14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 
+         14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 
+         14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 
+         14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 
+         14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 
+         14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 
+         14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 
+         14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 
+         14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 
+         14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 
+         14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 
+         14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 
+         14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 
+         14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 14.6999512 
+      </constant>
+<constant name="idleValvePin">"GPIOC_13"</constant>
+<constant name="idleValvePinMode">"default"</constant>
+<constant name="fuelPumpPin">"GPIOE_3"</constant>
+<constant name="fuelPumpPinMode">"default"</constant>
+<constant name="injectionPin1">"GPIOB_8"</constant>
+<constant name="injectionPin2">"GPIOB_9"</constant>
+<constant name="injectionPin3">"GPIOE_2"</constant>
+<constant name="injectionPin4">"GPIOB_7"</constant>
+<constant name="injectionPin5">"GPIOE_6"</constant>
+<constant name="injectionPin6">"GPIOC_12"</constant>
+<constant name="injectionPin7">"NONE"</constant>
+<constant name="injectionPin8">"NONE"</constant>
+<constant name="injectionPin9">"NONE"</constant>
+<constant name="injectionPin10">"NONE"</constant>
+<constant name="injectionPin11">"NONE"</constant>
+<constant name="injectionPin12">"NONE"</constant>
+<constant name="injectionPinMode">"default"</constant>
+<constant name="ignitionPin1">"GPIOC_9"</constant>
+<constant name="ignitionPin2">"NONE"</constant>
+<constant name="ignitionPin3">"GPIOE_8"</constant>
+<constant name="ignitionPin4">"NONE"</constant>
+<constant name="ignitionPin5">"NONE"</constant>
+<constant name="ignitionPin6">"NONE"</constant>
+<constant name="ignitionPin7">"NONE"</constant>
+<constant name="ignitionPin8">"NONE"</constant>
+<constant name="ignitionPin9">"NONE"</constant>
+<constant name="ignitionPin10">"NONE"</constant>
+<constant name="ignitionPin11">"NONE"</constant>
+<constant name="ignitionPin12">"NONE"</constant>
+<constant name="ignitionPinMode">"default"</constant>
+<constant name="malfunctionIndicatorPin">"NONE"</constant>
+<constant name="malfunctionIndicatorPinMode">"default"</constant>
+<constant name="fanPin">"GPIOD_7"</constant>
+<constant name="fanPinMode">"default"</constant>
+<constant name="electronicThrottlePin1">"GPIOC_9"</constant>
+<constant name="electronicThrottlePin1Mode">"default"</constant>
+<constant name="idleSwitchPin">"GPIOC_8"</constant>
+<constant name="alternatorControlPin">"NONE"</constant>
+<constant name="HD44780_rs">"GPIOE_7"</constant>
+<constant name="HD44780_e">"GPIOE_9"</constant>
+<constant name="HD44780_db4">"GPIOE_11"</constant>
+<constant name="HD44780_db5">"GPIOE_13"</constant>
+<constant name="HD44780_db6">"GPIOE_15"</constant>
+<constant name="HD44780_db7">"GPIOB_10"</constant>
+<constant name="gps_rx_pin">"NONE"</constant>
+<constant name="gps_tx_pin">"NONE"</constant>
+<constant digits="0" name="idleSolenoidFrequency" units="Hz">300.0</constant>
+<constant digits="0" name="triggerSimulatorFrequency" units="Rpm">1200.0</constant>
+<constant name="digitalPotentiometerSpiDevice">"Off"</constant>
+<constant name="digitalPotentiometerChipSelect0">"GPIOD_7"</constant>
+<constant name="digitalPotentiometerChipSelect1">"NONE"</constant>
+<constant name="digitalPotentiometerChipSelect2">"GPIOD_5"</constant>
+<constant name="digitalPotentiometerChipSelect3">"NONE"</constant>
+<constant name="adcModePA0">"Slow"</constant>
+<constant name="adcModePA1">"Slow"</constant>
+<constant name="adcModePA2">"Slow"</constant>
+<constant name="adcModePA3">"Slow"</constant>
+<constant name="adcModePA4">"Slow"</constant>
+<constant name="adcModePA5">"Off"</constant>
+<constant name="adcModePA6">"Fast"</constant>
+<constant name="adcModePA7">"Slow"</constant>
+<constant name="adcModePB0">"Off"</constant>
+<constant name="adcModePB1">"Off"</constant>
+<constant name="adcModePC0">"Off"</constant>
+<constant name="adcModePC1">"Slow"</constant>
+<constant name="adcModePC2">"Slow"</constant>
+<constant name="adcModePC3">"Slow"</constant>
+<constant name="adcModePC4">"Slow"</constant>
+<constant name="adcModePC5">"Slow"</constant>
+<constant name="triggerInputPin0">"GPIOA_5"</constant>
+<constant name="triggerInputPin1">"GPIOC_6"</constant>
+<constant digits="0" name="tunerStudioSerialSpeed" units="BPs">9600.0</constant>
+<constant name="triggerSimulatorPin0">"GPIOD_1"</constant>
+<constant name="triggerSimulatorPin1">"GPIOD_2"</constant>
+<constant name="triggerSimulatorPin2">"GPIOD_3"</constant>
+<constant name="o2heaterPin">"NONE"</constant>
+<constant name="is_enabled_spi_1">"false"</constant>
+<constant name="is_enabled_spi_2">"false"</constant>
+<constant name="is_enabled_spi_3">"true"</constant>
+<constant name="isSdCardEnabled">"false"</constant>
+<constant name="logicAnalyzerPin0">"GPIOA_8"</constant>
+<constant name="logicAnalyzerPin1">"NONE"</constant>
+<constant name="logicAnalyzerPin2">"NONE"</constant>
+<constant name="logicAnalyzerPin3">"NONE"</constant>
+<constant name="mainRelayPinMode">"default"</constant>
+<constant name="max31855_cs0">"NONE"</constant>
+<constant name="max31855_cs1">"NONE"</constant>
+<constant name="max31855_cs2">"NONE"</constant>
+<constant name="max31855_cs3">"NONE"</constant>
+<constant name="max31855_cs4">"NONE"</constant>
+<constant name="max31855_cs5">"NONE"</constant>
+<constant name="max31855_cs6">"NONE"</constant>
+<constant name="max31855_cs7">"NONE"</constant>
+<constant name="max31855spiDevice">"Off"</constant>
+<constant name="fsioPin0">"GPIOE_10"</constant>
+<constant name="fsioPin1">"NONE"</constant>
+<constant name="fsioPin2">"NONE"</constant>
+<constant name="fsioPin3">"NONE"</constant>
+<constant name="fsioPin4">"NONE"</constant>
+<constant name="fsioPin5">"NONE"</constant>
+<constant name="fsioPin6">"NONE"</constant>
+<constant name="fsioPin7">"NONE"</constant>
+<constant name="fsioPin8">"NONE"</constant>
+<constant name="fsioPin9">"NONE"</constant>
+<constant name="fsioPin10">"NONE"</constant>
+<constant name="fsioPin11">"NONE"</constant>
+<constant name="fsioPin12">"NONE"</constant>
+<constant name="fsioPin13">"NONE"</constant>
+<constant name="fsioPin14">"NONE"</constant>
+<constant name="fsioPin15">"NONE"</constant>
+<constant digits="0" name="fsioFrequency0" units="Hz">400.0</constant>
+<constant digits="0" name="fsioFrequency1" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency2" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency3" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency4" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency5" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency6" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency7" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency8" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency9" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency10" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency11" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency12" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency13" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency14" units="Hz">0.0</constant>
+<constant digits="0" name="fsioFrequency15" units="Hz">0.0</constant>
+<constant digits="0" name="fsio_setting0" units="Val">0.55</constant>
+<constant digits="0" name="fsio_setting1" units="Val">0.0</constant>
+<constant digits="0" name="fsio_setting2" units="Val">0.0</constant>
+<constant digits="0" name="fsio_setting3" units="Val">0.0</constant>
+<constant digits="0" name="fsio_setting4" units="Val">0.0</constant>
+<constant digits="0" name="fsio_setting5" units="Val">0.0</constant>
+<constant digits="0" name="fsio_setting6" units="Val">0.0</constant>
+<constant digits="0" name="fsio_setting7" units="Val">0.0</constant>
+<constant digits="0" name="fsio_setting8" units="Val">0.0</constant>
+<constant digits="0" name="fsio_setting9" units="Val">0.0</constant>
+<constant digits="0" name="fsio_setting10" units="Val">0.0</constant>
+<constant digits="0" name="fsio_setting11" units="Val">0.0</constant>
+<constant digits="0" name="fsio_setting12" units="Val">0.0</constant>
+<constant digits="0" name="fsio_setting13" units="Val">0.0</constant>
+<constant digits="0" name="fsio_setting14" units="Val">0.0</constant>
+<constant digits="0" name="fsio_setting15" units="Val">0.0</constant>
+<constant name="useConstantDwellDuringCranking">"false"</constant>
+<constant name="isInjectionEnabled">"false"</constant>
+<constant name="isIgnitionEnabled">"true"</constant>
+<constant name="isCylinderCleanupEnabled">"true"</constant>
+<constant name="secondTriggerChannelEnabled">"true"</constant>
+<constant digits="0" name="digitalChartSize" units="count">0.0</constant>
+<constant digits="2" name="injectorFlow" units="cm3/min">0.0</constant>
+<constant cols="1" digits="2" name="crankingFuelCoef" rows="8" units="%">
+         500.0 
+         370.0012207 
+         260.0006104 
+         239.9993896 
+         210.0006104 
+         180.0003052 
+         150.0 
+         100.0 
+      </constant>
+<constant cols="1" digits="2" name="crankingFuelBins" rows="8" units="C">
+         -20.0 
+         -10.0 
+         5.0 
+         20.0 
+         35.0 
+         50.0 
+         65.0 
+         90.0 
+      </constant>
+<constant cols="1" digits="2" name="crankingCycleCoef" rows="8" units="%">
+         200.0 
+         100.0 
+         100.0 
+         50.0 
+         50.0 
+         50.0 
+         50.0 
+         50.0 
+      </constant>
+<constant cols="1" digits="2" name="crankingCycleBins" rows="8" units="C">
+         10.0 
+         31.0 
+         52.0 
+         73.0 
+         74.0 
+         75.0 
+         76.0 
+         77.0 
+      </constant>
+<constant digits="1" name="ignitionDwellForCrankingMs" units="ms">0.0</constant>
+</page>
+<settings Comment="These setting are only used if this msq is opened without a project.">
+<setting name="CELSIUS" value="CELSIUS"/>
+</settings>
+<userComments Comment="These are user comments that can be related to a particular setting or dialog."/>
+</msq>

@@ -1,0 +1,648 @@
+Mon Nov 03 15:26:41 EST 2014: Console 20141102
+Mon Nov 03 15:26:44 EST 2014: postMessage CommandQueue: SerialIO started
+Mon Nov 03 15:26:46 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:26:46 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:26:46 EST 2014: rusEfiVersion,20141103@5014 Neon 2003,outpin,c1@PA5,outpin,c2@PC6,outpin,input1@PA8,outpin,input2@NONE,outpin,spa1@PC9,outpin,inj1@PB8,outpin,spa2@NONE,outpin,inj2@PB9,outpin,spa3@PE8,outpin,inj3@PE5,outpin,spa4@NONE,outpin,inj4@PB7,time,123.182,rpm,0,maf,5.04,MAP,262.25,map_r,262.25,baro,0.00,afr,17.52,vref,2.54,vbatt,12.80,TRG_0_DUTY,49.09,TRG_1_DUTY,0.00,TP,0.00,CLT,21.26,MAT,30.00,ckp_c,557,fuel_base,3.00,fuel_lag,0.00,fuel,3.00,timing,0.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:46 EST 2014: EngineState: unexpected header: test while looking for line:
+Mon Nov 03 15:26:46 EST 2014: msg,confirmation_test:4,
+Mon Nov 03 15:26:46 EST 2014: postMessage EngineState: confirmation_test:4
+Mon Nov 03 15:26:47 EST 2014: postMessage CommandQueue: got valid conf! test
+Mon Nov 03 15:26:47 EST 2014: time,124.184,rpm,0,maf,5.04,MAP,262.25,map_r,262.25,baro,0.00,afr,17.52,vref,2.54,vbatt,12.79,TRG_0_DUTY,49.09,TRG_1_DUTY,0.00,TP,0.00,CLT,21.28,MAT,30.00,ckp_c,557,fuel_base,3.00,fuel_lag,0.00,fuel,3.00,timing,0.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:48 EST 2014: time,125.185,rpm,0,maf,5.04,MAP,262.25,map_r,262.25,baro,0.00,afr,17.52,vref,2.54,vbatt,12.80,TRG_0_DUTY,49.09,TRG_1_DUTY,0.00,TP,0.00,CLT,21.31,MAT,30.00,ckp_c,557,fuel_base,3.00,fuel_lag,0.00,fuel,3.00,timing,0.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:49 EST 2014: time,126.186,rpm,0,maf,5.04,MAP,262.25,map_r,262.25,baro,0.00,afr,17.52,vref,2.54,vbatt,12.80,TRG_0_DUTY,49.09,TRG_1_DUTY,0.00,TP,0.00,CLT,21.33,MAT,30.00,ckp_c,557,fuel_base,3.00,fuel_lag,0.00,fuel,3.00,timing,0.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:50 EST 2014: rusEfiVersion,20141103@5014 Neon 2003,outpin,c1@PA5,outpin,c2@PC6,outpin,input1@PA8,outpin,input2@NONE,outpin,spa1@PC9,outpin,inj1@PB8,outpin,spa2@NONE,outpin,inj2@PB9,outpin,spa3@PE8,outpin,inj3@PE5,outpin,spa4@NONE,outpin,inj4@PB7,time,127.188,rpm,0,maf,5.04,MAP,262.17,map_r,262.17,baro,0.00,afr,17.52,vref,2.54,vbatt,12.80,TRG_0_DUTY,49.09,TRG_1_DUTY,0.00,TP,0.00,CLT,21.38,MAT,30.00,ckp_c,557,fuel_base,3.00,fuel_lag,0.00,fuel,3.00,timing,0.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:50 EST 2014: msg,gap=535.27044,
+Mon Nov 03 15:26:50 EST 2014: postMessage EngineState: gap=535.27044
+Mon Nov 03 15:26:50 EST 2014: time,127.589,rpm,0,maf,5.03,MAP,261.73,map_r,261.73,baro,0.00,afr,17.50,vref,2.03,vbatt,10.24,TRG_0_DUTY,49.09,TRG_1_DUTY,0.00,TP,0.00,CLT,21.44,MAT,30.00,ckp_c,559,fuel_base,3.00,fuel_lag,0.00,fuel,3.00,timing,0.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:51 EST 2014: msg,gap=0.82785,msg,gap=0.28719,
+Mon Nov 03 15:26:51 EST 2014: postMessage EngineState: gap=0.82785
+Mon Nov 03 15:26:51 EST 2014: postMessage EngineState: gap=0.28719
+Mon Nov 03 15:26:51 EST 2014: time,127.791,rpm,0,maf,5.03,MAP,261.88,map_r,261.88,baro,0.00,afr,17.50,vref,2.20,vbatt,11.08,TRG_0_DUTY,49.09,TRG_1_DUTY,0.00,TP,0.00,CLT,21.36,MAT,30.00,ckp_c,563,fuel_base,3.00,fuel_lag,0.00,fuel,3.00,timing,0.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:51 EST 2014: msg,gap=0.74864,msg,gap=1.10472,msg,gap=2.90636,msg,setting FUEL_PUMP_RELAY Yes,
+Mon Nov 03 15:26:51 EST 2014: postMessage EngineState: gap=0.74864
+Mon Nov 03 15:26:51 EST 2014: postMessage EngineState: gap=1.10472
+Mon Nov 03 15:26:51 EST 2014: postMessage EngineState: gap=2.90636
+Mon Nov 03 15:26:51 EST 2014: postMessage EngineState: setting FUEL_PUMP_RELAY Yes
+Mon Nov 03 15:26:51 EST 2014: time,127.994,rpm,237,maf,5.03,MAP,NaN,map_r,261.95,baro,0.00,afr,17.51,vref,2.27,vbatt,11.41,TRG_0_DUTY,98.96,TRG_1_DUTY,0.00,TP,0.00,CLT,21.38,MAT,30.00,ckp_c,560,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:51 EST 2014: msg,gap=0.68906,msg,gap=0.85633,msg,gap=1.00803,msg,gap=0.20626,
+Mon Nov 03 15:26:51 EST 2014: postMessage EngineState: gap=0.68906
+Mon Nov 03 15:26:51 EST 2014: postMessage EngineState: gap=0.85633
+Mon Nov 03 15:26:51 EST 2014: postMessage EngineState: gap=1.00803
+Mon Nov 03 15:26:51 EST 2014: postMessage EngineState: gap=0.20626
+Mon Nov 03 15:26:51 EST 2014: time,128.195,rpm,237,maf,5.03,MAP,NaN,map_r,261.95,baro,0.00,afr,17.51,vref,2.07,vbatt,10.43,TRG_0_DUTY,98.96,TRG_1_DUTY,0.00,TP,2.60,CLT,21.51,MAT,30.00,ckp_c,568,fuel_base,3.00,fuel_lag,0.00,fuel,5.92,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:51 EST 2014: msg,gap=0.92346,msg,gap=0.93291,msg,gap=4.06058,msg,WARNING: unexpected eventIndex=14,msg,gap=0.83602,msg,gap=0.85173,
+Mon Nov 03 15:26:51 EST 2014: postMessage EngineState: gap=0.92346
+Mon Nov 03 15:26:51 EST 2014: postMessage EngineState: gap=0.93291
+Mon Nov 03 15:26:51 EST 2014: postMessage EngineState: gap=4.06058
+Mon Nov 03 15:26:51 EST 2014: postMessage EngineState: WARNING: unexpected eventIndex=14
+Mon Nov 03 15:26:51 EST 2014: postMessage EngineState: gap=0.83602
+Mon Nov 03 15:26:51 EST 2014: postMessage EngineState: gap=0.85173
+Mon Nov 03 15:26:51 EST 2014: time,128.397,rpm,237,maf,5.04,MAP,NaN,map_r,262.10,baro,0.00,afr,17.52,vref,2.12,vbatt,10.67,TRG_0_DUTY,98.96,TRG_1_DUTY,0.00,TP,3.60,CLT,21.49,MAT,30.00,ckp_c,579,fuel_base,3.00,fuel_lag,0.00,fuel,5.92,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:51 EST 2014: msg,gap=1.31685,msg,gap=0.34064,msg,gap=0.83380,msg,gap=1.08916,
+Mon Nov 03 15:26:51 EST 2014: postMessage EngineState: gap=1.31685
+Mon Nov 03 15:26:51 EST 2014: postMessage EngineState: gap=0.34064
+Mon Nov 03 15:26:51 EST 2014: postMessage EngineState: gap=0.83380
+Mon Nov 03 15:26:51 EST 2014: postMessage EngineState: gap=1.08916
+Mon Nov 03 15:26:51 EST 2014: time,128.600,rpm,237,maf,5.04,MAP,NaN,map_r,262.17,baro,0.00,afr,17.51,vref,2.27,vbatt,11.45,TRG_0_DUTY,98.96,TRG_1_DUTY,0.00,TP,25.20,CLT,21.44,MAT,30.00,ckp_c,586,fuel_base,3.00,fuel_lag,0.00,fuel,5.92,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:52 EST 2014: msg,gap=3.10330,analog_chart,0.00000|0.00000|46.83925|1.00000|79.18122|1002.00000|110.51499|3.00000|137.41354|1004.00000|177.18261|5.00000|217.34558|1006.00000|296.56802|7.00000|312.95657|1008.00000|328.33694|9.00000|342.61523|1010.00000|357.18362|11.00000|370.84478|1012.00000|387.73101|13.00000|,msg,gap=0.68964,msg,gap=0.85116,
+Mon Nov 03 15:26:52 EST 2014: postMessage EngineState: gap=3.10330
+Mon Nov 03 15:26:52 EST 2014: postMessage EngineState: gap=0.68964
+Mon Nov 03 15:26:52 EST 2014: postMessage EngineState: gap=0.85116
+Mon Nov 03 15:26:52 EST 2014: time,128.802,rpm,165,maf,5.04,MAP,NaN,map_r,262.17,baro,0.00,afr,17.51,vref,2.25,vbatt,11.31,TRG_0_DUTY,48.66,TRG_1_DUTY,0.00,TP,25.00,CLT,21.84,MAT,30.00,ckp_c,578,fuel_base,3.00,fuel_lag,0.00,fuel,5.90,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:52 EST 2014: msg,gap=1.03701,msg,gap=0.33046,
+Mon Nov 03 15:26:52 EST 2014: postMessage EngineState: gap=1.03701
+Mon Nov 03 15:26:52 EST 2014: postMessage EngineState: gap=0.33046
+Mon Nov 03 15:26:52 EST 2014: time,129.003,rpm,165,maf,5.04,MAP,NaN,map_r,262.10,baro,0.00,afr,17.52,vref,2.26,vbatt,11.38,TRG_0_DUTY,48.66,TRG_1_DUTY,0.00,TP,25.40,CLT,21.46,MAT,30.00,ckp_c,583,fuel_base,3.00,fuel_lag,0.00,fuel,5.92,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:52 EST 2014: msg,gap=0.80285,msg,gap=1.11516,msg,gap=2.09826,msg,gap=0.81606,msg,gap=0.83227,
+Mon Nov 03 15:26:52 EST 2014: postMessage EngineState: gap=0.80285
+Mon Nov 03 15:26:52 EST 2014: postMessage EngineState: gap=1.11516
+Mon Nov 03 15:26:52 EST 2014: postMessage EngineState: gap=2.09826
+Mon Nov 03 15:26:52 EST 2014: postMessage EngineState: gap=0.81606
+Mon Nov 03 15:26:52 EST 2014: postMessage EngineState: gap=0.83227
+Mon Nov 03 15:26:52 EST 2014: time,129.205,rpm,165,maf,5.04,MAP,NaN,map_r,262.10,baro,0.00,afr,17.51,vref,2.21,vbatt,11.12,TRG_0_DUTY,48.66,TRG_1_DUTY,0.00,TP,28.00,CLT,21.31,MAT,30.00,ckp_c,593,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:52 EST 2014: msg,gap=1.09163,msg,gap=0.35350,msg,gap=0.87301,msg,gap=1.02513,
+Mon Nov 03 15:26:52 EST 2014: postMessage EngineState: gap=1.09163
+Mon Nov 03 15:26:52 EST 2014: postMessage EngineState: gap=0.35350
+Mon Nov 03 15:26:52 EST 2014: postMessage EngineState: gap=0.87301
+Mon Nov 03 15:26:52 EST 2014: postMessage EngineState: gap=1.02513
+Mon Nov 03 15:26:52 EST 2014: time,129.406,rpm,165,maf,5.04,MAP,NaN,map_r,262.03,baro,0.00,afr,17.51,vref,2.14,vbatt,10.77,TRG_0_DUTY,48.66,TRG_1_DUTY,0.00,TP,19.00,CLT,21.36,MAT,30.00,ckp_c,601,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:53 EST 2014: msg,gap=3.11776,msg,gap=0.69136,msg,gap=0.85614,msg,gap=1.05080,
+Mon Nov 03 15:26:53 EST 2014: postMessage EngineState: gap=3.11776
+Mon Nov 03 15:26:53 EST 2014: postMessage EngineState: gap=0.69136
+Mon Nov 03 15:26:53 EST 2014: postMessage EngineState: gap=0.85614
+Mon Nov 03 15:26:53 EST 2014: postMessage EngineState: gap=1.05080
+Mon Nov 03 15:26:53 EST 2014: time,129.608,rpm,159,maf,5.04,MAP,NaN,map_r,262.17,baro,0.00,afr,17.51,vref,2.28,vbatt,11.48,TRG_0_DUTY,47.92,TRG_1_DUTY,0.00,TP,33.20,CLT,21.38,MAT,30.00,ckp_c,594,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:53 EST 2014: msg,gap=0.33234,msg,gap=0.80900,msg,gap=1.12475,
+Mon Nov 03 15:26:53 EST 2014: postMessage EngineState: gap=0.33234
+Mon Nov 03 15:26:53 EST 2014: postMessage EngineState: gap=0.80900
+Mon Nov 03 15:26:53 EST 2014: postMessage EngineState: gap=1.12475
+Mon Nov 03 15:26:53 EST 2014: time,129.811,rpm,159,maf,5.04,MAP,NaN,map_r,262.17,baro,0.00,afr,17.51,vref,2.24,vbatt,11.25,TRG_0_DUTY,47.92,TRG_1_DUTY,0.00,TP,33.40,CLT,21.38,MAT,30.00,ckp_c,600,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:53 EST 2014: msg,gap=2.93394,msg,gap=0.66400,msg,gap=0.84579,
+Mon Nov 03 15:26:53 EST 2014: postMessage EngineState: gap=2.93394
+Mon Nov 03 15:26:53 EST 2014: postMessage EngineState: gap=0.66400
+Mon Nov 03 15:26:53 EST 2014: postMessage EngineState: gap=0.84579
+Mon Nov 03 15:26:53 EST 2014: time,130.013,rpm,265,maf,5.03,MAP,NaN,map_r,261.88,baro,0.00,afr,17.51,vref,2.09,vbatt,10.52,TRG_0_DUTY,48.27,TRG_1_DUTY,0.00,TP,21.00,CLT,21.46,MAT,30.00,ckp_c,606,fuel_base,3.00,fuel_lag,0.00,fuel,5.92,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:53 EST 2014: msg,gap=1.06662,msg,gap=0.20267,msg,gap=0.88222,msg,gap=0.84969,msg,gap=3.85815,msg,gap=0.82649,
+Mon Nov 03 15:26:53 EST 2014: postMessage EngineState: gap=1.06662
+Mon Nov 03 15:26:53 EST 2014: postMessage EngineState: gap=0.20267
+Mon Nov 03 15:26:53 EST 2014: postMessage EngineState: gap=0.88222
+Mon Nov 03 15:26:53 EST 2014: postMessage EngineState: gap=0.84969
+Mon Nov 03 15:26:53 EST 2014: postMessage EngineState: gap=3.85815
+Mon Nov 03 15:26:53 EST 2014: postMessage EngineState: gap=0.82649
+Mon Nov 03 15:26:53 EST 2014: time,130.214,rpm,265,maf,5.04,MAP,NaN,map_r,262.40,baro,0.00,afr,17.51,vref,2.08,vbatt,10.49,TRG_0_DUTY,48.27,TRG_1_DUTY,0.00,TP,18.40,CLT,21.54,MAT,30.00,ckp_c,618,fuel_base,3.00,fuel_lag,0.00,fuel,5.92,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:53 EST 2014: msg,gap=0.84293,msg,gap=1.03773,msg,gap=0.30203,msg,gap=0.93505,msg,gap=0.96202,
+Mon Nov 03 15:26:53 EST 2014: postMessage EngineState: gap=0.84293
+Mon Nov 03 15:26:53 EST 2014: postMessage EngineState: gap=1.03773
+Mon Nov 03 15:26:53 EST 2014: postMessage EngineState: gap=0.30203
+Mon Nov 03 15:26:53 EST 2014: postMessage EngineState: gap=0.93505
+Mon Nov 03 15:26:53 EST 2014: postMessage EngineState: gap=0.96202
+Mon Nov 03 15:26:53 EST 2014: time,130.417,rpm,265,maf,5.04,MAP,NaN,map_r,262.17,baro,0.00,afr,17.52,vref,2.33,vbatt,11.71,TRG_0_DUTY,48.27,TRG_1_DUTY,0.00,TP,37.40,CLT,21.31,MAT,30.00,ckp_c,629,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:54 EST 2014: msg,gap=3.79295,msg,gap=0.82837,msg,gap=0.84694,msg,gap=1.22884,
+Mon Nov 03 15:26:54 EST 2014: postMessage EngineState: gap=3.79295
+Mon Nov 03 15:26:54 EST 2014: postMessage EngineState: gap=0.82837
+Mon Nov 03 15:26:54 EST 2014: postMessage EngineState: gap=0.84694
+Mon Nov 03 15:26:54 EST 2014: postMessage EngineState: gap=1.22884
+Mon Nov 03 15:26:54 EST 2014: time,130.619,rpm,265,maf,5.04,MAP,NaN,map_r,262.25,baro,0.00,afr,17.51,vref,2.28,vbatt,11.49,TRG_0_DUTY,48.27,TRG_1_DUTY,0.00,TP,37.20,CLT,21.46,MAT,30.00,ckp_c,637,fuel_base,3.00,fuel_lag,0.00,fuel,5.92,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:54 EST 2014: msg,gap=0.35668,msg,gap=0.82527,msg,gap=1.11613,
+Mon Nov 03 15:26:54 EST 2014: postMessage EngineState: gap=0.35668
+Mon Nov 03 15:26:54 EST 2014: postMessage EngineState: gap=0.82527
+Mon Nov 03 15:26:54 EST 2014: postMessage EngineState: gap=1.11613
+Mon Nov 03 15:26:54 EST 2014: time,130.820,rpm,265,maf,5.04,MAP,NaN,map_r,262.17,baro,0.00,afr,17.51,vref,2.26,vbatt,11.40,TRG_0_DUTY,48.27,TRG_1_DUTY,0.00,TP,42.80,CLT,21.36,MAT,30.00,ckp_c,643,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:54 EST 2014: msg,gap=2.98566,msg,gap=0.68091,msg,gap=0.84100,msg,gap=1.08246,
+Mon Nov 03 15:26:54 EST 2014: postMessage EngineState: gap=2.98566
+Mon Nov 03 15:26:54 EST 2014: postMessage EngineState: gap=0.68091
+Mon Nov 03 15:26:54 EST 2014: postMessage EngineState: gap=0.84100
+Mon Nov 03 15:26:54 EST 2014: postMessage EngineState: gap=1.08246
+Mon Nov 03 15:26:54 EST 2014: rusEfiVersion,20141103@5014 Neon 2003,outpin,c1@PA5,outpin,c2@PC6,outpin,input1@PA8,outpin,input2@NONE,outpin,spa1@PC9,outpin,inj1@PB8,outpin,spa2@NONE,outpin,inj2@PB9,outpin,spa3@PE8,outpin,inj3@PE5,outpin,spa4@NONE,outpin,inj4@PB7,time,131.022,rpm,130,maf,5.04,MAP,NaN,map_r,262.32,baro,0.00,afr,17.52,vref,2.26,vbatt,11.37,TRG_0_DUTY,48.52,TRG_1_DUTY,0.00,TP,49.59,CLT,21.59,MAT,30.00,ckp_c,622,fuel_base,3.00,fuel_lag,0.00,fuel,5.92,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:54 EST 2014: msg,gap=0.33672,msg,gap=0.81560,msg,gap=1.13856,wave_chart,c1!u!0_0!c1!d!3294_1!c1!u!5569_2!inj1!u!6982!inj2!u!6985!inj3!u!6988!inj4!u!6992!inj1!d!7576!inj2!d!7579!inj3!d!7583!inj4!d!7587!c1!d!7772_3!c1!u!9664_4!spa3!u!9810!c1!d!12461_5!c1!u!15285_6!spa3!d!15304!inj1!u!19230!inj2!u!19233!inj3!u!19236!inj4!u!19240!inj1!d!19823!inj2!d!19826!inj3!d!19830!inj4!d!19833!c1!d!20856_7!c1!u!22009_8!spa1!d!22014!spa1!u!23043!c1!d!23090_9!c1!u!24094_10!inj1!u!24503!inj2!u!24506!inj3!u!24510!inj4!u!24513!inj1!d!25096!inj2!d!25100!inj3!d!25103!inj4!d!25107!c1!d!25119_11!spa3!u!25265!c1!u!26080_12!c1!d!27267_13!spa3!d!28632!spa3!d!28634!c1!u!32102_14!inj1!u!32556!inj2!u!32561!inj3!u!32564!inj4!u!32568!inj1!d!33151!inj2!d!33156!inj3!d!33159!inj4!d!33163!c1!d!33979_15!c1!u!35552_16!spa1!u!36370!c1!d!37192_17!c1!u!38594_18!c1!d!40393_19!c1!u!42770_20!c1!d!50776_21!c1!u!53507_22!c1!d!55636_23!c1!u!57416_24!c1!d!59295_25!c1!u!61347_26!c1!d!64084_27!c1!u!72590_0!c1!d!75751_1!spa1!d!75754!r!165!75828!c1!u!77938_2!inj1!u!79963!inj2!u!79966!inj3!u!79969!inj4!u!79973!c1!d!80041_3!inj1!d!80554!inj2!d!80558!inj3!d!80561!inj4!d!80565!c1!u!81838_4!spa3!u!82044!c1!d!84511_5!c1!u!87290_6!spa3!d!87307!inj1!u!92951!inj2!u!92954!inj3!u!92958!inj4!u!92961!inj1!d!93545!inj2!d!93548!inj3!d!93552!inj4!d!93555!c1!d!96194_7!spa1!u!98421!c1!u!99140_8!spa1!d!99143!c1!d!101421_9!c1!u!103258_10!inj1!u!103446!inj2!u!103449!inj3!u!103453!inj4!u!103456!inj1!d!104039!inj2!d!104043!inj3!d!104046!inj4!d!104050!c1!d!105205_11!spa3!u!105411!c1!u!107383_12!c1!d!110270_13!spa3!d!111038!c1!u!116337_14!inj1!u!116680!inj2!u!116685!inj3!u!116688!inj4!u!116692!inj1!d!117273!inj2!d!117278!inj3!d!117281!inj4!d!117285!c1!d!117693_15!c1!u!118805_16!c1!d!120047_17!c1!u!121087_18!spa1!u!122150!c1!d!122372_19!c1!u!123780_20!c1!d!129310_21!c1!u!131268_22!c1!d!133041_23!c1!u!134594_24!c1!d!136179_25!c1!u!137809_26!c1!d!140253_27!c1!u!147886_0!c1!d!150934_1!spa1!d!150937!r!159!152535!c1!u!153045_2!c1!d!155081_3!inj1!u!155146!inj2!u!155149!inj3!u!155155!inj4!u!155158!inj1!d!155740!inj2!d!155744!inj3!d!155749!inj4!d!155753!c1!u!156828_4!spa3!u!157041!c1!d!159382_5!c1!u!162072_6!spa3!d!162090!inj1!u!167947!inj2!u!167950!inj3!u!167953!inj4!u!167957!inj1!d!168541!inj2!d!168544!inj3!d!168547!inj4!d!168551!c1!d!170769_7!spa1!u!173625!c1!u!173663_8!spa1!d!173666!c1!d!175910_9!c1!u!177732_10!inj1!u!178011!inj2!u!178014!inj3!u!178017!inj4!u!178021!inj1!d!178604!inj2!d!178608!inj3!d!178611!inj4!d!178615!c1!d!179638_11!spa3!u!179851!c1!u!181789_12!c1!d!184655_13!spa3!d!185580!inj1!u!191437!inj2!u!191440!inj3!u!191444!inj4!u!191447!inj1!d!192031!inj2!d!192034!inj3!d!192038!inj4!d!192041!c1!u!193075_0!c1!d!196353_1!spa1!d!196356!spa1!u!197111!r!265!197900!c1!u!198535_2!inj1!u!199797!inj2!u!199801!inj3!u!199804!inj4!u!199808!inj1!d!200391!inj2!d!200395!inj3!d!200398!inj4!d!200402!c1!d!200633_3!c1!u!202412_4!spa3!u!202541!c1!d!205037_5!c1!u!207843_6!spa3!d!207860!inj1!u!211370!inj2!u!211373!inj3!u!211376!inj4!u!211380!inj1!d!211963!inj2!d!211966!inj3!d!211970!inj4!d!211973!c1!d!213291_7!c1!u!214398_8!spa1!d!214401!spa1!u!214781!c1!d!215443_9!c1!u!216371_10!inj1!u!216706!inj2!u!216709!inj3!u!216712!inj4!u!216716!c1!d!217212_11!inj1!d!217299!inj2!d!217303!inj3!d!217306!inj4!d!217310!spa3!u!217341!c1!u!217932_12!c1!d!218791_13!spa3!d!220214!c1!u!222118_14!c1!d!223175_15!inj1!u!223723!inj2!u!223726!inj3!u!223730!inj4!u!223733!c1!u!224054_16!inj1!d!224317!inj2!d!224320!inj3!d!224323!inj4!d!224327!c1!d!225039_17!c1!u!225874_18!c1!d!226866_19!spa1!u!227133!c1!u!227900_20!c1!d!232077_21!c1!u!233342_22!c1!d!234502_23!c1!u!235592_24!c1!d!236701_25!c1!u!237773_26!c1!d!239177_27!c1!u!244518_28!c1!d!246571_29!c1!u!248276_30!c1!d!250010_31!c1!u!251484_32!c1!d!253430_33!c1!u!255828_34!c1!d!263552_35!c1!u!266311_36!c1!d!268472_37!c1!u!270261_38!c1!d!272117_39!c1!u!274195_40!c1!d!276906_41!c1!u!285013_0!r!130!287909!c1!d!288204_1!spa1!d!288207!c1!u!290381_2!c1!d!292454_3!inj1!u!292950!inj2!u!292953!inj3!u!292957!inj4!u!292961!inj1!d!293544!inj2!d!293547!inj3!d!293551!inj4!d!293555!c1!u!294202_4!spa3!u!294462!c1!d!296770_5!c1!u!299558_6!spa3!d!299575!inj1!u!306742!inj2!u!306745!inj3!u!306748!inj4!u!306752!inj1!d!307335!inj2!d!307338!,
+Mon Nov 03 15:26:54 EST 2014: postMessage EngineState: gap=0.33672
+Mon Nov 03 15:26:54 EST 2014: postMessage EngineState: gap=0.81560
+Mon Nov 03 15:26:54 EST 2014: postMessage EngineState: gap=1.13856
+Mon Nov 03 15:26:54 EST 2014: Registering inj2@-1
+Mon Nov 03 15:26:54 EST 2014: Registering inj1@1
+Mon Nov 03 15:26:54 EST 2014: Registering inj4@-1
+Mon Nov 03 15:26:54 EST 2014: Registering inj3@3
+Mon Nov 03 15:26:54 EST 2014: Registering spa1@1
+Mon Nov 03 15:26:54 EST 2014: Registering spa3@2
+Mon Nov 03 15:26:54 EST 2014: time,131.229,rpm,130,maf,5.03,MAP,NaN,map_r,261.95,baro,0.00,afr,17.50,vref,2.04,vbatt,10.25,TRG_0_DUTY,48.52,TRG_1_DUTY,0.00,TP,39.59,CLT,21.46,MAT,30.00,ckp_c,629,fuel_base,3.00,fuel_lag,0.00,fuel,5.92,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:54 EST 2014: msg,gap=2.95168,msg,gap=0.65821,msg,gap=0.70432,msg,gap=1.07768,
+Mon Nov 03 15:26:54 EST 2014: postMessage EngineState: gap=2.95168
+Mon Nov 03 15:26:54 EST 2014: postMessage EngineState: gap=0.65821
+Mon Nov 03 15:26:54 EST 2014: postMessage EngineState: gap=0.70432
+Mon Nov 03 15:26:54 EST 2014: postMessage EngineState: gap=1.07768
+Mon Nov 03 15:26:54 EST 2014: time,131.432,rpm,262,maf,5.03,MAP,NaN,map_r,261.95,baro,0.00,afr,17.50,vref,2.07,vbatt,10.40,TRG_0_DUTY,48.38,TRG_1_DUTY,0.00,TP,40.00,CLT,21.46,MAT,30.00,ckp_c,636,fuel_base,3.00,fuel_lag,0.00,fuel,5.92,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:55 EST 2014: msg,gap=0.28238,msg,gap=0.83827,msg,gap=0.86172,msg,gap=3.88105,msg,gap=0.83779,msg,gap=0.83688,msg,gap=1.08277,
+Mon Nov 03 15:26:55 EST 2014: postMessage EngineState: gap=0.28238
+Mon Nov 03 15:26:55 EST 2014: postMessage EngineState: gap=0.83827
+Mon Nov 03 15:26:55 EST 2014: postMessage EngineState: gap=0.86172
+Mon Nov 03 15:26:55 EST 2014: postMessage EngineState: gap=3.88105
+Mon Nov 03 15:26:55 EST 2014: postMessage EngineState: gap=0.83779
+Mon Nov 03 15:26:55 EST 2014: postMessage EngineState: gap=0.83688
+Mon Nov 03 15:26:55 EST 2014: postMessage EngineState: gap=1.08277
+Mon Nov 03 15:26:55 EST 2014: time,131.634,rpm,262,maf,5.04,MAP,NaN,map_r,262.03,baro,0.00,afr,17.50,vref,2.13,vbatt,10.70,TRG_0_DUTY,48.38,TRG_1_DUTY,0.00,TP,40.00,CLT,21.41,MAT,30.00,ckp_c,650,fuel_base,3.00,fuel_lag,0.00,fuel,5.92,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:55 EST 2014: msg,gap=0.42845,msg,gap=0.66580,msg,gap=0.87320,msg,gap=3.86124,msg,gap=0.82264,msg,gap=0.83375,
+Mon Nov 03 15:26:55 EST 2014: postMessage EngineState: gap=0.42845
+Mon Nov 03 15:26:55 EST 2014: postMessage EngineState: gap=0.66580
+Mon Nov 03 15:26:55 EST 2014: postMessage EngineState: gap=0.87320
+Mon Nov 03 15:26:55 EST 2014: postMessage EngineState: gap=3.86124
+Mon Nov 03 15:26:55 EST 2014: postMessage EngineState: gap=0.82264
+Mon Nov 03 15:26:55 EST 2014: postMessage EngineState: gap=0.83375
+Mon Nov 03 15:26:55 EST 2014: time,131.837,rpm,262,maf,5.04,MAP,NaN,map_r,262.10,baro,0.00,afr,17.51,vref,2.31,vbatt,11.64,TRG_0_DUTY,48.38,TRG_1_DUTY,0.00,TP,50.20,CLT,21.56,MAT,30.00,ckp_c,663,fuel_base,3.00,fuel_lag,0.00,fuel,5.92,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:55 EST 2014: msg,gap=1.07719,msg,gap=0.32909,msg,gap=0.89732,msg,gap=1.00451,
+Mon Nov 03 15:26:55 EST 2014: postMessage EngineState: gap=1.07719
+Mon Nov 03 15:26:55 EST 2014: postMessage EngineState: gap=0.32909
+Mon Nov 03 15:26:55 EST 2014: postMessage EngineState: gap=0.89732
+Mon Nov 03 15:26:55 EST 2014: postMessage EngineState: gap=1.00451
+Mon Nov 03 15:26:55 EST 2014: time,132.039,rpm,262,maf,5.04,MAP,NaN,map_r,262.10,baro,0.00,afr,17.51,vref,2.34,vbatt,11.78,TRG_0_DUTY,48.38,TRG_1_DUTY,0.00,TP,49.40,CLT,21.49,MAT,30.00,ckp_c,671,fuel_base,3.00,fuel_lag,0.00,fuel,5.92,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:55 EST 2014: msg,gap=3.58195,msg,gap=0.71099,msg,gap=0.85845,msg,gap=1.08432,
+Mon Nov 03 15:26:55 EST 2014: postMessage EngineState: gap=3.58195
+Mon Nov 03 15:26:55 EST 2014: postMessage EngineState: gap=0.71099
+Mon Nov 03 15:26:55 EST 2014: postMessage EngineState: gap=0.85845
+Mon Nov 03 15:26:55 EST 2014: postMessage EngineState: gap=1.08432
+Mon Nov 03 15:26:55 EST 2014: time,132.240,rpm,151,maf,5.04,MAP,NaN,map_r,262.03,baro,0.00,afr,17.51,vref,2.26,vbatt,11.37,TRG_0_DUTY,48.70,TRG_1_DUTY,0.00,TP,50.00,CLT,21.44,MAT,30.00,ckp_c,650,fuel_base,3.00,fuel_lag,0.00,fuel,5.92,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:55 EST 2014: msg,gap=0.33569,msg,gap=0.81436,msg,gap=1.11039,
+Mon Nov 03 15:26:55 EST 2014: postMessage EngineState: gap=0.33569
+Mon Nov 03 15:26:55 EST 2014: postMessage EngineState: gap=0.81436
+Mon Nov 03 15:26:55 EST 2014: postMessage EngineState: gap=1.11039
+Mon Nov 03 15:26:55 EST 2014: time,132.442,rpm,151,maf,5.03,MAP,NaN,map_r,261.95,baro,0.00,afr,17.50,vref,2.05,vbatt,10.33,TRG_0_DUTY,48.70,TRG_1_DUTY,0.00,TP,39.40,CLT,21.38,MAT,30.00,ckp_c,657,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:56 EST 2014: msg,gap=2.94883,msg,gap=0.57927,msg,gap=0.71094,msg,gap=1.00998,
+Mon Nov 03 15:26:56 EST 2014: postMessage EngineState: gap=2.94883
+Mon Nov 03 15:26:56 EST 2014: postMessage EngineState: gap=0.57927
+Mon Nov 03 15:26:56 EST 2014: postMessage EngineState: gap=0.71094
+Mon Nov 03 15:26:56 EST 2014: postMessage EngineState: gap=1.00998
+Mon Nov 03 15:26:56 EST 2014: time,132.645,rpm,274,maf,5.04,MAP,NaN,map_r,262.03,baro,0.00,afr,17.50,vref,2.08,vbatt,10.49,TRG_0_DUTY,48.62,TRG_1_DUTY,0.00,TP,40.20,CLT,21.41,MAT,30.00,ckp_c,665,fuel_base,3.00,fuel_lag,0.00,fuel,5.92,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:56 EST 2014: msg,gap=0.28610,msg,gap=0.90652,msg,gap=0.90700,msg,gap=3.84469,msg,gap=0.82303,msg,gap=0.84589,msg,gap=1.16226,
+Mon Nov 03 15:26:56 EST 2014: postMessage EngineState: gap=0.28610
+Mon Nov 03 15:26:56 EST 2014: postMessage EngineState: gap=0.90652
+Mon Nov 03 15:26:56 EST 2014: postMessage EngineState: gap=0.90700
+Mon Nov 03 15:26:56 EST 2014: postMessage EngineState: gap=3.84469
+Mon Nov 03 15:26:56 EST 2014: postMessage EngineState: gap=0.82303
+Mon Nov 03 15:26:56 EST 2014: postMessage EngineState: gap=0.84589
+Mon Nov 03 15:26:56 EST 2014: postMessage EngineState: gap=1.16226
+Mon Nov 03 15:26:56 EST 2014: time,132.847,rpm,274,maf,5.04,MAP,NaN,map_r,262.03,baro,0.00,afr,17.51,vref,2.16,vbatt,10.87,TRG_0_DUTY,48.62,TRG_1_DUTY,0.00,TP,40.59,CLT,21.38,MAT,30.00,ckp_c,678,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:56 EST 2014: msg,gap=0.84320,msg,gap=0.53285,msg,gap=0.89221,
+Mon Nov 03 15:26:56 EST 2014: postMessage EngineState: gap=0.84320
+Mon Nov 03 15:26:56 EST 2014: postMessage EngineState: gap=0.53285
+Mon Nov 03 15:26:56 EST 2014: postMessage EngineState: gap=0.89221
+Mon Nov 03 15:26:56 EST 2014: time,133.048,rpm,274,maf,5.03,MAP,NaN,map_r,261.95,baro,0.00,afr,17.50,vref,2.04,vbatt,10.25,TRG_0_DUTY,48.62,TRG_1_DUTY,0.00,TP,49.59,CLT,21.51,MAT,30.00,ckp_c,684,fuel_base,3.00,fuel_lag,0.00,fuel,5.92,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:56 EST 2014: msg,gap=3.62304,msg,gap=0.81846,msg,gap=0.84157,msg,gap=1.08241,
+Mon Nov 03 15:26:56 EST 2014: postMessage EngineState: gap=3.62304
+Mon Nov 03 15:26:56 EST 2014: postMessage EngineState: gap=0.81846
+Mon Nov 03 15:26:56 EST 2014: postMessage EngineState: gap=0.84157
+Mon Nov 03 15:26:56 EST 2014: postMessage EngineState: gap=1.08241
+Mon Nov 03 15:26:56 EST 2014: time,133.251,rpm,198,maf,5.03,MAP,NaN,map_r,261.88,baro,0.00,afr,17.50,vref,2.09,vbatt,10.51,TRG_0_DUTY,50.01,TRG_1_DUTY,0.00,TP,39.00,CLT,21.31,MAT,30.00,ckp_c,678,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:56 EST 2014: msg,gap=0.33347,msg,gap=0.59130,msg,gap=0.85165,
+Mon Nov 03 15:26:56 EST 2014: postMessage EngineState: gap=0.33347
+Mon Nov 03 15:26:56 EST 2014: postMessage EngineState: gap=0.59130
+Mon Nov 03 15:26:56 EST 2014: postMessage EngineState: gap=0.85165
+Mon Nov 03 15:26:56 EST 2014: time,133.453,rpm,198,maf,5.04,MAP,NaN,map_r,262.03,baro,0.00,afr,17.51,vref,2.20,vbatt,11.06,TRG_0_DUTY,50.01,TRG_1_DUTY,0.00,TP,47.80,CLT,21.41,MAT,30.00,ckp_c,685,fuel_base,3.00,fuel_lag,0.00,fuel,5.92,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:57 EST 2014: msg,gap=3.82355,msg,gap=0.81901,msg,gap=0.83867,msg,gap=1.13062,msg,gap=0.35554,
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=3.82355
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=0.81901
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=0.83867
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=1.13062
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=0.35554
+Mon Nov 03 15:26:57 EST 2014: time,133.654,rpm,198,maf,5.04,MAP,NaN,map_r,262.10,baro,0.00,afr,17.51,vref,2.11,vbatt,10.62,TRG_0_DUTY,50.01,TRG_1_DUTY,0.00,TP,39.00,CLT,21.49,MAT,30.00,ckp_c,695,fuel_base,3.00,fuel_lag,0.00,fuel,5.92,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:57 EST 2014: msg,gap=0.87179,msg,gap=1.06159,msg,gap=3.26722,
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=0.87179
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=1.06159
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=3.26722
+Mon Nov 03 15:26:57 EST 2014: time,133.856,rpm,175,maf,5.03,MAP,NaN,map_r,261.95,baro,0.00,afr,17.50,vref,2.02,vbatt,10.18,TRG_0_DUTY,47.84,TRG_1_DUTY,0.00,TP,39.59,CLT,21.36,MAT,30.00,ckp_c,687,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:57 EST 2014: msg,gap=0.37576,msg,gap=0.70288,msg,gap=1.03812,msg,gap=0.32861,msg,gap=0.87326,
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=0.37576
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=0.70288
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=1.03812
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=0.32861
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=0.87326
+Mon Nov 03 15:26:57 EST 2014: time,134.059,rpm,175,maf,5.04,MAP,NaN,map_r,262.03,baro,0.00,afr,17.51,vref,2.19,vbatt,11.04,TRG_0_DUTY,47.84,TRG_1_DUTY,0.00,TP,49.80,CLT,21.36,MAT,30.00,ckp_c,697,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:57 EST 2014: msg,gap=1.01325,msg,gap=3.14051,wave_chart,c1!d!0_13!spa3!d!1768!c1!u!8463_0!inj1!u!8934!inj2!u!8938!inj3!u!8941!inj4!u!8945!inj1!d!9528!inj2!d!9531!inj3!d!9535!inj4!d!9538!c1!d!11741_1!spa1!d!11745!c1!u!13904_2!r!262!14366!inj1!u!15180!inj2!u!15184!inj3!u!15188!inj4!u!15191!c1!d!15723_3!inj1!d!15774!inj2!d!15777!inj3!d!15781!inj4!d!15785!spa1!u!15871!c1!u!17010_4!spa3!u!17140!c1!d!18473_5!c1!u!20056_6!spa3!d!20073!inj1!u!23623!inj2!u!23626!inj3!u!23629!inj4!u!23633!inj1!d!24216!inj2!d!24219!inj3!d!24222!inj4!d!24226!c1!d!25097_7!c1!u!26524_8!spa1!d!26527!spa1!u!27073!c1!d!27826_9!c1!u!28922_10!inj1!u!29102!inj2!u!29106!inj3!u!29109!inj4!u!29112!inj1!d!29696!inj2!d!29699!inj3!d!29703!inj4!d!29706!c1!d!29870_11!spa3!u!30000!c1!u!30691_12!c1!d!31670_13!spa3!d!32999!c1!u!35480_14!inj1!u!36548!inj2!u!36552!inj3!u!36555!inj4!u!36558!c1!d!36736_15!inj1!d!37142!inj2!d!37145!inj3!d!37149!inj4!d!37152!c1!u!37794_16!c1!d!38945_17!c1!u!39913_18!spa1!u!39997!c1!d!41091_19!c1!u!42372_20!c1!d!47459_21!c1!u!49642_22!c1!d!51065_23!c1!u!52016_24!c1!d!52912_25!c1!u!53699_26!c1!d!54678_27!c1!u!58471_28!c1!d!59735_29!c1!u!60779_30!c1!d!61928_31!c1!u!62891_32!c1!d!64065_33!c1!u!65336_34!c1!d!70388_35!c1!u!72055_36!c1!d!73562_37!c1!u!74921_38!c1!d!76314_39!c1!u!77720_40!c1!d!79844_41!c1!u!87467_0!c1!d!90294_1!spa1!d!90297!r!151!90395!c1!u!92310_2!c1!d!94270_3!inj1!u!94522!inj2!u!94526!inj3!u!94529!inj4!u!94533!inj1!d!95116!inj2!d!95120!inj3!d!95123!inj4!d!95127!c1!u!95958_4!spa3!u!96182!c1!d!98353_5!c1!u!100956_6!spa3!d!100975!inj1!u!107142!inj2!u!107145!inj3!u!107150!inj4!u!107154!inj1!d!107736!inj2!d!107739!inj3!d!107744!inj4!d!107748!c1!d!109348_7!c1!u!112169_8!spa1!d!112172!spa1!u!113119!c1!d!114366_9!c1!u!116161_10!inj1!u!116578!inj2!u!116582!inj3!u!116585!inj4!u!116589!inj1!d!117172!inj2!d!117175!inj3!d!117179!inj4!d!117182!c1!d!118031_11!spa3!u!118255!c1!u!120114_12!c1!d!122918_13!spa3!d!124105!inj1!u!130273!inj2!u!130277!inj3!u!130280!inj4!u!130283!inj1!d!130867!inj2!d!130870!inj3!d!130873!inj4!d!130877!c1!u!131198_0!c1!d!134418_1!spa1!d!134421!spa1!u!136250!r!274!136277!c1!u!136288_2!inj1!u!137509!inj2!u!137512!inj3!u!137518!inj4!u!137521!c1!d!137557_3!inj1!d!138104!inj2!d!138108!inj3!d!138113!inj4!d!138117!c1!u!138463_4!spa3!u!138590!c1!d!139512_5!c1!u!140577_6!spa3!d!140594!inj1!u!143988!inj2!u!143991!inj3!u!143995!inj4!u!143998!inj1!d!144583!inj2!d!144586!inj3!d!144590!inj4!d!144593!c1!d!144769_7!c1!u!145971_8!spa1!d!145974!c1!d!147088_9!spa1!u!147289!c1!u!148105_10!inj1!u!148309!inj2!u!148312!inj3!u!148315!inj4!u!148319!inj1!d!148902!inj2!d!148906!inj3!d!148909!inj4!d!148913!c1!d!149120_11!spa3!u!149245!c1!u!150047_12!c1!d!151189_13!spa3!d!152254!c1!u!155596_14!inj1!u!155647!inj2!u!155651!inj3!u!155654!inj4!u!155657!inj1!d!156241!inj2!d!156244!inj3!d!156248!inj4!d!156251!c1!d!157129_15!c1!u!158395_16!spa1!u!158946!c1!d!159750_17!c1!u!160901_18!c1!d!162326_19!c1!u!163989_20!c1!d!171368_21!c1!u!177595_22!c1!d!180073_23!c1!u!181398_24!c1!d!182709_25!c1!u!183883_26!c1!d!185549_27!c1!u!191595_0!c1!d!194197_1!spa1!d!194200!r!198!194396!c1!u!196333_2!inj1!u!198021!inj2!u!198024!inj3!u!198028!inj4!u!198031!c1!d!198396_3!inj1!d!198614!inj2!d!198617!inj3!d!198621!inj4!d!198625!c1!u!200139_4!spa3!u!200311!c1!d!202646_5!c1!u!205365_6!spa3!d!205382!inj1!u!210083!inj2!u!210086!inj3!u!210090!inj4!u!210093!inj1!d!210677!inj2!d!210680!inj3!d!210684!inj4!d!210687!c1!d!214026_7!spa1!u!214644!c1!u!216918_8!spa1!d!216921!c1!d!219048_9!c1!u!220311_10!inj1!u!220736!inj2!u!220739!inj3!u!220742!inj4!u!220746!inj1!d!221329!inj2!d!221336!inj3!d!221337!c1!d!221348_11!inj4!d!221349!spa3!u!221522!c1!u!222236_12!c1!d!223316_13!spa3!d!225283!c1!u!227457_14!c1!d!228849_15!inj1!u!229985!inj2!u!229988!inj3!u!229991!inj4!u!229996!c1!u!229998_16!inj1!d!230578!inj2!d!230582!inj3!d!230585!inj4!d!230589!c1!d!231244_17!c1!u!232300_18!c1!d!233597_19!spa1!u!234544!c1!u!235072_20!c1!d!240857_21!c1!u!242917_22!c1!d!244758_23!c1!u!246368_24!c1!d!247997_25!c1!u!249732_26!c1!d!252168_27!c1!u!260138_0!r!175!264012!c1!d!266105_1!spa1!d!266108!c1!u!268352_2!c1!d!269815_3!inj1!u!270261!inj2!u!270264!inj3!u!270268!inj4!u!270271!c1!u!270848_4!inj1!d!270855!inj2!d!270859!,msg,gap=0.60638,msg,gap=0.71973,msg,gap=0.99285,
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=1.01325
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=3.14051
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=0.60638
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=0.71973
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=0.99285
+Mon Nov 03 15:26:57 EST 2014: time,134.266,rpm,326,maf,5.03,MAP,NaN,map_r,261.95,baro,0.00,afr,17.51,vref,2.08,vbatt,10.48,TRG_0_DUTY,46.45,TRG_1_DUTY,0.00,TP,40.40,CLT,21.54,MAT,30.00,ckp_c,706,fuel_base,3.00,fuel_lag,0.00,fuel,5.78,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:57 EST 2014: msg,gap=0.25677,msg,gap=0.93143,msg,gap=0.86954,msg,gap=3.89012,msg,gap=0.83046,msg,gap=0.83949,msg,gap=1.02861,
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=0.25677
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=0.93143
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=0.86954
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=3.89012
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=0.83046
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=0.83949
+Mon Nov 03 15:26:57 EST 2014: postMessage EngineState: gap=1.02861
+Mon Nov 03 15:26:57 EST 2014: time,134.468,rpm,326,maf,5.04,MAP,NaN,map_r,262.03,baro,0.00,afr,17.50,vref,2.13,vbatt,10.74,TRG_0_DUTY,46.45,TRG_1_DUTY,0.00,TP,39.40,CLT,21.54,MAT,30.00,ckp_c,721,fuel_base,3.00,fuel_lag,0.00,fuel,5.78,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:58 EST 2014: msg,gap=0.29550,msg,gap=0.94117,msg,gap=0.96005,msg,gap=3.82542,msg,gap=0.82866,msg,gap=0.85161,
+Mon Nov 03 15:26:58 EST 2014: postMessage EngineState: gap=0.29550
+Mon Nov 03 15:26:58 EST 2014: postMessage EngineState: gap=0.94117
+Mon Nov 03 15:26:58 EST 2014: postMessage EngineState: gap=0.96005
+Mon Nov 03 15:26:58 EST 2014: postMessage EngineState: gap=3.82542
+Mon Nov 03 15:26:58 EST 2014: postMessage EngineState: gap=0.82866
+Mon Nov 03 15:26:58 EST 2014: postMessage EngineState: gap=0.85161
+Mon Nov 03 15:26:58 EST 2014: time,134.671,rpm,326,maf,5.04,MAP,NaN,map_r,262.17,baro,0.00,afr,17.51,vref,2.32,vbatt,11.70,TRG_0_DUTY,46.45,TRG_1_DUTY,0.00,TP,48.80,CLT,21.46,MAT,30.00,ckp_c,733,fuel_base,3.00,fuel_lag,0.00,fuel,5.78,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:58 EST 2014: msg,gap=1.29322,msg,gap=0.34063,msg,gap=0.82868,msg,gap=1.09337,
+Mon Nov 03 15:26:58 EST 2014: postMessage EngineState: gap=1.29322
+Mon Nov 03 15:26:58 EST 2014: postMessage EngineState: gap=0.34063
+Mon Nov 03 15:26:58 EST 2014: postMessage EngineState: gap=0.82868
+Mon Nov 03 15:26:58 EST 2014: postMessage EngineState: gap=1.09337
+Mon Nov 03 15:26:58 EST 2014: time,134.873,rpm,326,maf,5.04,MAP,NaN,map_r,262.17,baro,0.00,afr,17.51,vref,2.26,vbatt,11.38,TRG_0_DUTY,46.45,TRG_1_DUTY,0.00,TP,41.40,CLT,21.51,MAT,30.00,ckp_c,740,fuel_base,3.00,fuel_lag,0.00,fuel,5.78,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:58 EST 2014: msg,gap=3.08377,
+Mon Nov 03 15:26:58 EST 2014: postMessage EngineState: gap=3.08377
+Mon Nov 03 15:26:58 EST 2014: rusEfiVersion,20141103@5014 Neon 2003,outpin,c1@PA5,outpin,c2@PC6,outpin,input1@PA8,outpin,input2@NONE,outpin,spa1@PC9,outpin,inj1@PB8,outpin,spa2@NONE,outpin,inj2@PB9,outpin,spa3@PE8,outpin,inj3@PE5,outpin,spa4@NONE,outpin,inj4@PB7,time,135.074,rpm,151,maf,5.04,MAP,NaN,map_r,262.25,baro,0.00,afr,17.52,vref,2.44,vbatt,12.27,TRG_0_DUTY,49.25,TRG_1_DUTY,0.00,TP,0.00,CLT,21.38,MAT,30.00,ckp_c,715,fuel_base,3.00,fuel_lag,0.00,fuel,5.64,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:26:58 EST 2014: msg,engine has STOPPED,
+Mon Nov 03 15:26:58 EST 2014: postMessage EngineState: engine has STOPPED
+Mon Nov 03 15:26:59 EST 2014: msg,setting FUEL_PUMP_RELAY No,
+Mon Nov 03 15:26:59 EST 2014: postMessage EngineState: setting FUEL_PUMP_RELAY No
+Mon Nov 03 15:26:59 EST 2014: time,136.076,rpm,0,maf,5.04,MAP,262.17,map_r,262.17,baro,0.00,afr,17.51,vref,2.50,vbatt,12.56,TRG_0_DUTY,49.25,TRG_1_DUTY,0.00,TP,0.00,CLT,21.38,MAT,30.00,ckp_c,715,fuel_base,3.00,fuel_lag,0.00,fuel,3.00,timing,0.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:00 EST 2014: msg,gap=21.96259,msg,gap=0.56759,msg,gap=0.88046,
+Mon Nov 03 15:27:00 EST 2014: postMessage EngineState: gap=21.96259
+Mon Nov 03 15:27:00 EST 2014: postMessage EngineState: gap=0.56759
+Mon Nov 03 15:27:00 EST 2014: postMessage EngineState: gap=0.88046
+Mon Nov 03 15:27:00 EST 2014: time,137.078,rpm,0,maf,5.03,MAP,261.80,map_r,261.80,baro,0.00,afr,17.50,vref,2.13,vbatt,10.71,TRG_0_DUTY,49.25,TRG_1_DUTY,0.00,TP,0.00,CLT,21.18,MAT,30.00,ckp_c,720,fuel_base,3.00,fuel_lag,0.00,fuel,3.00,timing,0.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:00 EST 2014: msg,gap=0.96930,msg,gap=0.31278,
+Mon Nov 03 15:27:00 EST 2014: postMessage EngineState: gap=0.96930
+Mon Nov 03 15:27:00 EST 2014: postMessage EngineState: gap=0.31278
+Mon Nov 03 15:27:00 EST 2014: time,137.281,rpm,0,maf,5.03,MAP,261.95,map_r,261.95,baro,0.00,afr,17.51,vref,2.27,vbatt,11.45,TRG_0_DUTY,49.25,TRG_1_DUTY,0.00,TP,0.00,CLT,21.46,MAT,30.00,ckp_c,725,fuel_base,3.00,fuel_lag,0.00,fuel,3.00,timing,0.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:00 EST 2014: msg,gap=0.81279,msg,gap=1.12476,msg,gap=3.14626,
+Mon Nov 03 15:27:00 EST 2014: postMessage EngineState: gap=0.81279
+Mon Nov 03 15:27:00 EST 2014: postMessage EngineState: gap=1.12476
+Mon Nov 03 15:27:00 EST 2014: postMessage EngineState: gap=3.14626
+Mon Nov 03 15:27:00 EST 2014: time,137.483,rpm,151,maf,5.03,MAP,NaN,map_r,261.95,baro,0.00,afr,17.51,vref,2.26,vbatt,11.37,TRG_0_DUTY,85.20,TRG_1_DUTY,0.00,TP,0.00,CLT,21.33,MAT,30.00,ckp_c,728,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:01 EST 2014: msg,setting FUEL_PUMP_RELAY Yes,msg,gap=0.70474,msg,gap=0.87214,msg,gap=0.99302,
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: setting FUEL_PUMP_RELAY Yes
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=0.70474
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=0.87214
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=0.99302
+Mon Nov 03 15:27:01 EST 2014: time,137.684,rpm,151,maf,5.04,MAP,NaN,map_r,262.17,baro,0.00,afr,17.51,vref,2.21,vbatt,11.15,TRG_0_DUTY,85.20,TRG_1_DUTY,0.00,TP,0.00,CLT,21.59,MAT,30.00,ckp_c,734,fuel_base,3.00,fuel_lag,0.00,fuel,5.92,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:01 EST 2014: msg,gap=0.30940,msg,gap=0.86359,msg,gap=1.12089,
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=0.30940
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=0.86359
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=1.12089
+Mon Nov 03 15:27:01 EST 2014: time,137.886,rpm,151,maf,5.04,MAP,NaN,map_r,262.17,baro,0.00,afr,17.50,vref,2.06,vbatt,10.35,TRG_0_DUTY,85.20,TRG_1_DUTY,0.00,TP,0.00,CLT,21.49,MAT,30.00,ckp_c,741,fuel_base,3.00,fuel_lag,0.00,fuel,5.92,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:01 EST 2014: msg,gap=2.54948,msg,gap=0.80945,msg,gap=0.69565,msg,gap=0.98410,msg,gap=0.25446,msg,gap=0.92882,msg,gap=0.85651,msg,gap=3.90628,msg,WARNING: unexpected eventIndex=14,
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=2.54948
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=0.80945
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=0.69565
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=0.98410
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=0.25446
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=0.92882
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=0.85651
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=3.90628
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: WARNING: unexpected eventIndex=14
+Mon Nov 03 15:27:01 EST 2014: time,138.089,rpm,265,maf,5.04,MAP,NaN,map_r,262.03,baro,0.00,afr,17.51,vref,2.13,vbatt,10.73,TRG_0_DUTY,46.27,TRG_1_DUTY,0.00,TP,0.00,CLT,21.28,MAT,30.00,ckp_c,756,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:01 EST 2014: msg,gap=0.82401,msg,gap=0.85081,msg,gap=1.00366,msg,gap=0.28570,msg,gap=0.97353,msg,gap=0.93751,msg,gap=3.94117,
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=0.82401
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=0.85081
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=1.00366
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=0.28570
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=0.97353
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=0.93751
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=3.94117
+Mon Nov 03 15:27:01 EST 2014: time,138.291,rpm,265,maf,5.04,MAP,NaN,map_r,262.10,baro,0.00,afr,17.51,vref,2.13,vbatt,10.72,TRG_0_DUTY,46.27,TRG_1_DUTY,0.00,TP,0.00,CLT,21.38,MAT,30.00,ckp_c,771,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:01 EST 2014: msg,gap=0.81533,msg,gap=0.85283,msg,gap=1.10507,msg,gap=0.36526,msg,gap=0.88130,
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=0.81533
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=0.85283
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=1.10507
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=0.36526
+Mon Nov 03 15:27:01 EST 2014: postMessage EngineState: gap=0.88130
+Mon Nov 03 15:27:01 EST 2014: time,138.492,rpm,265,maf,5.04,MAP,NaN,map_r,262.25,baro,0.00,afr,17.51,vref,2.33,vbatt,11.71,TRG_0_DUTY,46.27,TRG_1_DUTY,0.00,TP,3.60,CLT,21.28,MAT,30.00,ckp_c,781,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:02 EST 2014: msg,gap=1.07725,msg,gap=3.30582,msg,gap=0.72788,msg,gap=0.86784,
+Mon Nov 03 15:27:02 EST 2014: postMessage EngineState: gap=1.07725
+Mon Nov 03 15:27:02 EST 2014: postMessage EngineState: gap=3.30582
+Mon Nov 03 15:27:02 EST 2014: postMessage EngineState: gap=0.72788
+Mon Nov 03 15:27:02 EST 2014: postMessage EngineState: gap=0.86784
+Mon Nov 03 15:27:02 EST 2014: time,138.695,rpm,172,maf,5.04,MAP,NaN,map_r,262.10,baro,0.00,afr,17.51,vref,2.28,vbatt,11.47,TRG_0_DUTY,50.16,TRG_1_DUTY,0.00,TP,0.00,CLT,21.28,MAT,30.00,ckp_c,760,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:02 EST 2014: msg,gap=0.99075,msg,gap=0.31112,msg,gap=0.76069,
+Mon Nov 03 15:27:02 EST 2014: postMessage EngineState: gap=0.99075
+Mon Nov 03 15:27:02 EST 2014: postMessage EngineState: gap=0.31112
+Mon Nov 03 15:27:02 EST 2014: postMessage EngineState: gap=0.76069
+Mon Nov 03 15:27:02 EST 2014: time,138.897,rpm,172,maf,5.04,MAP,NaN,map_r,262.03,baro,0.00,afr,17.51,vref,2.26,vbatt,11.39,TRG_0_DUTY,50.16,TRG_1_DUTY,0.00,TP,0.00,CLT,21.36,MAT,30.00,ckp_c,766,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:02 EST 2014: msg,gap=0.85175,msg,gap=3.93348,msg,gap=0.84194,msg,gap=0.88303,
+Mon Nov 03 15:27:02 EST 2014: postMessage EngineState: gap=0.85175
+Mon Nov 03 15:27:02 EST 2014: postMessage EngineState: gap=3.93348
+Mon Nov 03 15:27:02 EST 2014: postMessage EngineState: gap=0.84194
+Mon Nov 03 15:27:02 EST 2014: postMessage EngineState: gap=0.88303
+Mon Nov 03 15:27:02 EST 2014: rusEfiVersion,20141103@5014 Neon 2003,outpin,c1@PA5,outpin,c2@PC6,outpin,input1@PA8,outpin,input2@NONE,outpin,spa1@PC9,outpin,inj1@PB8,outpin,spa2@NONE,outpin,inj2@PB9,outpin,spa3@PE8,outpin,inj3@PE5,outpin,spa4@NONE,outpin,inj4@PB7,time,139.098,rpm,172,maf,5.05,MAP,NaN,map_r,262.76,baro,0.00,afr,17.49,vref,2.28,vbatt,11.48,TRG_0_DUTY,50.16,TRG_1_DUTY,0.00,TP,0.00,CLT,21.44,MAT,30.00,ckp_c,774,fuel_base,3.00,fuel_lag,0.00,fuel,5.92,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:02 EST 2014: msg,gap=0.98040,msg,gap=0.31126,msg,gap=0.72151,
+Mon Nov 03 15:27:02 EST 2014: postMessage EngineState: gap=0.98040
+Mon Nov 03 15:27:02 EST 2014: postMessage EngineState: gap=0.31126
+Mon Nov 03 15:27:02 EST 2014: postMessage EngineState: gap=0.72151
+Mon Nov 03 15:27:02 EST 2014: time,139.300,rpm,172,maf,5.03,MAP,NaN,map_r,261.95,baro,0.00,afr,17.50,vref,2.09,vbatt,10.51,TRG_0_DUTY,50.16,TRG_1_DUTY,0.00,TP,3.80,CLT,21.23,MAT,30.00,ckp_c,780,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:02 EST 2014: msg,gap=0.84829,msg,gap=3.81288,msg,gap=0.82653,msg,gap=0.84828,msg,gap=1.28403,
+Mon Nov 03 15:27:02 EST 2014: postMessage EngineState: gap=0.84829
+Mon Nov 03 15:27:02 EST 2014: postMessage EngineState: gap=3.81288
+Mon Nov 03 15:27:02 EST 2014: postMessage EngineState: gap=0.82653
+Mon Nov 03 15:27:02 EST 2014: postMessage EngineState: gap=0.84828
+Mon Nov 03 15:27:02 EST 2014: postMessage EngineState: gap=1.28403
+Mon Nov 03 15:27:02 EST 2014: time,139.501,rpm,172,maf,5.04,MAP,NaN,map_r,262.17,baro,0.00,afr,17.51,vref,2.29,vbatt,11.50,TRG_0_DUTY,50.16,TRG_1_DUTY,0.00,TP,18.20,CLT,21.31,MAT,30.00,ckp_c,790,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:03 EST 2014: msg,gap=0.35435,msg,gap=0.82621,msg,setting FUEL_PUMP_RELAY No,msg,gap=1.09829,
+Mon Nov 03 15:27:03 EST 2014: postMessage EngineState: gap=0.35435
+Mon Nov 03 15:27:03 EST 2014: postMessage EngineState: gap=0.82621
+Mon Nov 03 15:27:03 EST 2014: postMessage EngineState: setting FUEL_PUMP_RELAY No
+Mon Nov 03 15:27:03 EST 2014: postMessage EngineState: gap=1.09829
+Mon Nov 03 15:27:03 EST 2014: time,139.703,rpm,0,maf,5.04,MAP,262.17,map_r,262.17,baro,0.00,afr,17.51,vref,2.28,vbatt,11.48,TRG_0_DUTY,50.16,TRG_1_DUTY,0.00,TP,18.20,CLT,21.33,MAT,30.00,ckp_c,797,fuel_base,3.00,fuel_lag,0.00,fuel,3.00,timing,0.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:03 EST 2014: msg,gap=3.05856,msg,setting FUEL_PUMP_RELAY Yes,msg,gap=0.67918,msg,gap=0.84278,
+Mon Nov 03 15:27:03 EST 2014: postMessage EngineState: gap=3.05856
+Mon Nov 03 15:27:03 EST 2014: postMessage EngineState: setting FUEL_PUMP_RELAY Yes
+Mon Nov 03 15:27:03 EST 2014: postMessage EngineState: gap=0.67918
+Mon Nov 03 15:27:03 EST 2014: postMessage EngineState: gap=0.84278
+Mon Nov 03 15:27:03 EST 2014: time,139.904,rpm,172,maf,5.04,MAP,NaN,map_r,262.17,baro,0.00,afr,17.51,vref,2.23,vbatt,11.24,TRG_0_DUTY,47.07,TRG_1_DUTY,0.00,TP,17.60,CLT,21.44,MAT,30.00,ckp_c,775,fuel_base,3.00,fuel_lag,0.00,fuel,5.92,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:03 EST 2014: msg,gap=1.06409,msg,gap=0.33088,msg,gap=0.80614,msg,gap=1.09905,
+Mon Nov 03 15:27:03 EST 2014: postMessage EngineState: gap=1.06409
+Mon Nov 03 15:27:03 EST 2014: postMessage EngineState: gap=0.33088
+Mon Nov 03 15:27:03 EST 2014: postMessage EngineState: gap=0.80614
+Mon Nov 03 15:27:03 EST 2014: postMessage EngineState: gap=1.09905
+Mon Nov 03 15:27:03 EST 2014: time,140.106,rpm,172,maf,5.04,MAP,NaN,map_r,262.10,baro,0.00,afr,17.51,vref,2.22,vbatt,11.18,TRG_0_DUTY,47.07,TRG_1_DUTY,0.00,TP,2.80,CLT,21.26,MAT,30.00,ckp_c,782,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:03 EST 2014: wave_chart,c1!d!0_1!spa1!d!3!spa1!u!619!r!326!1325!c1!u!1881_2!inj1!u!2908!inj2!u!2912!inj3!u!2915!inj4!u!2919!c1!d!2960_3!inj1!d!3487!inj2!d!3491!inj3!d!3495!inj4!d!3498!c1!u!3779_4!spa3!u!3885!c1!d!4665_5!c1!u!5592_6!spa3!d!5609!inj1!u!8460!inj2!u!8463!inj3!u!8466!inj4!u!8470!inj1!d!9039!inj2!d!9042!c1!d!9041_7!inj3!d!9046!inj4!d!9049!c1!u!9936_8!spa1!d!9939!c1!d!10782_9!spa1!u!11237!c1!u!11575_10!inj1!u!11809!inj2!u!11813!inj3!u!11816!inj4!u!11820!c1!d!12362_11!inj1!d!12388!inj2!d!12392!inj3!d!12395!inj4!d!12399!spa3!u!12467!c1!u!13050_12!c1!d!13868_13!spa3!d!14908!c1!u!17065_14!inj1!u!17758!inj2!u!17762!inj3!u!17765!inj4!u!17769!c1!d!18073_15!inj1!d!18338!inj2!d!18341!inj3!d!18345!inj4!d!18348!c1!u!18915_16!c1!d!19862_17!spa1!u!20533!c1!u!20663_18!c1!d!21614_19!c1!u!22598_20!c1!d!26539_21!c1!u!27707_22!c1!d!28789_23!c1!u!29813_24!c1!d!30847_25!c1!u!31844_26!c1!d!33118_27!c1!u!38005_28!c1!d!39778_29!c1!u!41252_30!c1!d!42780_31!c1!u!44086_32!c1!d!45766_33!c1!u!47944_34!c1!d!55478_35!c1!u!58048_36!c1!d!60127_37!c1!u!61854_38!c1!d!63636_39!c1!u!65591_40!c1!d!68220_41!c1!u!76339_0!r!151!78694!c1!d!84899_1!spa1!d!84902!c1!u!326193_0!c1!d!329333_1!c1!u!331551_2!c1!d!333736_3!inj1!u!333764!inj2!u!333767!inj3!u!333770!inj4!u!333774!inj1!d!334358!inj2!d!334361!inj3!d!334364!inj4!d!334368!c1!u!335647_4!spa3!u!335871!c1!d!338395_5!c1!u!341130_6!spa3!d!341147!inj1!u!347315!inj2!u!347319!inj3!u!347322!inj4!u!347326!inj1!d!347909!inj2!d!347913!inj3!d!347916!inj4!d!347920!c1!d!350251_7!c1!u!353076_8!spa1!d!353079!spa1!u!353292!c1!d!355319_9!c1!u!357261_10!inj1!u!357531!inj2!u!357534!inj3!u!357538!inj4!u!357543!inj1!d!358126!inj2!d!358129!inj3!d!358132!inj4!d!358138!c1!d!359339_11!spa3!u!359563!c1!u!361673_12!c1!d!364392_13!spa3!d!365664!c1!u!371334_0!inj1!u!371832!inj2!u!371836!inj3!u!371839!inj4!u!371842!inj1!d!372427!inj2!d!372430!inj3!d!372434!inj4!d!372437!c1!d!373070_1!spa1!d!373073!c1!u!374482_2!c1!d!375644_3!inj1!u!375745!inj2!u!375748!inj3!u!375752!inj4!u!375756!inj1!d!376339!inj2!d!376342!inj3!d!376346!inj4!d!376350!r!265!376414!c1!u!376456_4!spa3!u!376585!c1!d!377372_5!spa1!u!377807!c1!u!378279_6!spa3!d!378296!c1!d!381725_7!inj1!u!381806!inj2!u!381809!inj3!u!381812!inj4!u!381816!inj1!d!382399!inj2!d!382403!inj3!d!382406!inj4!d!382410!c1!u!382605_8!spa1!d!382608!c1!d!383434_9!c1!u!384209_10!inj1!u!384696!inj2!u!384699!inj3!u!384703!inj4!u!384706!c1!d!384939_11!spa3!u!385069!spa1!u!385218!inj1!d!385291!inj2!d!385294!inj3!d!385297!inj4!d!385301!c1!u!385571_12!c1!d!386307_13!spa3!d!387852!c1!u!389199_14!c1!d!390099_15!c1!u!390846_16!inj1!u!391361!inj2!u!391364!inj3!u!391368!inj4!u!391371!c1!d!391697_17!inj1!d!391956!inj2!d!391959!inj3!d!391962!inj4!d!391966!c1!u!392426_18!c1!d!393270_19!c1!u!394122_20!spa1!u!394771!c1!d!397611_21!c1!u!398611_22!c1!d!399537_23!c1!u!400445_24!c1!d!401359_25!c1!u!402222_26!c1!d!403268_27!c1!u!407404_28!c1!d!408794_29!c1!u!409932_30!c1!d!411213_31!c1!u!412309_32!c1!d!413651_33!c1!u!415140_34!c1!d!421095_35!c1!u!423274_36!c1!d!425215_37!c1!u!426931_38!c1!d!428704_39!c1!u!430620_40!c1!d!432987_41!c1!u!440825_0!c1!d!443688_1!spa1!d!443691!r!172!443721!c1!u!445776_2!inj1!u!447719!inj2!u!447722!inj3!u!447726!inj4!u!447729!c1!d!447848_3!inj1!d!448313!inj2!d!448317!inj3!d!448320!inj4!d!448324!c1!u!449651_4!spa3!u!449848!c1!d!452210_5!c1!u!454752_6!spa3!d!454769!inj1!u!460183!inj2!u!460186!inj3!u!460189!inj4!u!460193!inj1!d!460777!inj2!d!460780!inj3!d!460784!inj4!d!460787!c1!d!463510_7!spa1!u!465431!c1!u!466238_8!spa1!d!466241!c1!d!468450_9!c1!u!470137_10!inj1!u!470392!inj2!u!470396!inj3!u!470399!inj4!u!470402!inj1!d!470986!inj2!d!470990!inj3!d!470993!inj4!d!470996!c1!d!471556_11!spa3!u!471753!c1!u!472770_12!c1!d!474340_13!spa3!d!476275!c1!u!480528_14!inj1!u!481689!inj2!u!481692!inj3!u!481696!inj4!u!481699!inj1!d!482283!inj2!d!482286!inj3!d!482289!inj4!d!482293!c1!d!482990_15!c1!u!485067_16!spa1!u!486935!c1!d!487223_17!c1!u!489132_18!c1!d!491641_19!c1!u!494105_20!c1!d!503030_21!c1!u!505811_22!c1!d!508033_23!c1!u!509640_24!c1!d!510878_25!c1!u!511933_26!c1!d!513263_27!c1!u!518348_28!c1!d!520218_29!c1!u!521768_30!c1!d!523373_31!c1!u!524740_32!c1!d!526537_33!c1!u!528851_34!c1!d!536274_35!,msg,gap=2.94071,msg,gap=0.68161,msg,gap=0.85598,
+Mon Nov 03 15:27:03 EST 2014: postMessage EngineState: gap=2.94071
+Mon Nov 03 15:27:03 EST 2014: postMessage EngineState: gap=0.68161
+Mon Nov 03 15:27:03 EST 2014: postMessage EngineState: gap=0.85598
+Mon Nov 03 15:27:03 EST 2014: time,140.311,rpm,269,maf,5.04,MAP,NaN,map_r,262.47,baro,0.00,afr,17.51,vref,2.26,vbatt,10.52,TRG_0_DUTY,48.07,TRG_1_DUTY,0.00,TP,0.00,CLT,21.13,MAT,30.00,ckp_c,788,fuel_base,3.00,fuel_lag,0.00,fuel,5.94,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:03 EST 2014: msg,gap=1.00841,msg,gap=0.20451,msg,gap=0.85045,msg,gap=0.85923,msg,gap=3.89260,msg,gap=0.81855,
+Mon Nov 03 15:27:03 EST 2014: postMessage EngineState: gap=1.00841
+Mon Nov 03 15:27:03 EST 2014: postMessage EngineState: gap=0.20451
+Mon Nov 03 15:27:03 EST 2014: postMessage EngineState: gap=0.85045
+Mon Nov 03 15:27:03 EST 2014: postMessage EngineState: gap=0.85923
+Mon Nov 03 15:27:03 EST 2014: postMessage EngineState: gap=3.89260
+Mon Nov 03 15:27:03 EST 2014: postMessage EngineState: gap=0.81855
+Mon Nov 03 15:27:03 EST 2014: time,140.514,rpm,269,maf,5.04,MAP,NaN,map_r,262.32,baro,0.00,afr,17.51,vref,2.10,vbatt,10.57,TRG_0_DUTY,48.07,TRG_1_DUTY,0.00,TP,0.00,CLT,21.28,MAT,30.00,ckp_c,800,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:04 EST 2014: msg,gap=0.84634,msg,gap=1.01166,msg,gap=0.29421,msg,gap=0.94319,msg,gap=0.93980,msg,gap=3.83865,
+Mon Nov 03 15:27:04 EST 2014: postMessage EngineState: gap=0.84634
+Mon Nov 03 15:27:04 EST 2014: postMessage EngineState: gap=1.01166
+Mon Nov 03 15:27:04 EST 2014: postMessage EngineState: gap=0.29421
+Mon Nov 03 15:27:04 EST 2014: postMessage EngineState: gap=0.94319
+Mon Nov 03 15:27:04 EST 2014: postMessage EngineState: gap=0.93980
+Mon Nov 03 15:27:04 EST 2014: postMessage EngineState: gap=3.83865
+Mon Nov 03 15:27:04 EST 2014: time,140.716,rpm,269,maf,5.04,MAP,NaN,map_r,262.17,baro,0.00,afr,17.52,vref,2.32,vbatt,11.69,TRG_0_DUTY,48.07,TRG_1_DUTY,0.00,TP,11.60,CLT,21.18,MAT,30.00,ckp_c,813,fuel_base,3.00,fuel_lag,0.00,fuel,5.94,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:04 EST 2014: msg,gap=0.82992,msg,gap=0.83985,msg,gap=1.24412,msg,gap=0.32686,
+Mon Nov 03 15:27:04 EST 2014: postMessage EngineState: gap=0.82992
+Mon Nov 03 15:27:04 EST 2014: postMessage EngineState: gap=0.83985
+Mon Nov 03 15:27:04 EST 2014: postMessage EngineState: gap=1.24412
+Mon Nov 03 15:27:04 EST 2014: postMessage EngineState: gap=0.32686
+Mon Nov 03 15:27:04 EST 2014: time,140.917,rpm,269,maf,5.04,MAP,NaN,map_r,262.10,baro,0.00,afr,17.51,vref,2.29,vbatt,11.50,TRG_0_DUTY,48.07,TRG_1_DUTY,0.00,TP,11.79,CLT,21.23,MAT,30.00,ckp_c,821,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:04 EST 2014: msg,gap=0.84013,msg,gap=1.08138,msg,gap=3.10392,
+Mon Nov 03 15:27:04 EST 2014: postMessage EngineState: gap=0.84013
+Mon Nov 03 15:27:04 EST 2014: postMessage EngineState: gap=1.08138
+Mon Nov 03 15:27:04 EST 2014: postMessage EngineState: gap=3.10392
+Mon Nov 03 15:27:04 EST 2014: time,141.117,rpm,139,maf,5.04,MAP,NaN,map_r,262.17,baro,0.00,afr,17.51,vref,2.21,vbatt,11.13,TRG_0_DUTY,48.12,TRG_1_DUTY,0.00,TP,16.00,CLT,21.21,MAT,30.00,ckp_c,799,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:04 EST 2014: msg,gap=0.68884,msg,gap=0.84310,msg,gap=1.04765,
+Mon Nov 03 15:27:04 EST 2014: postMessage EngineState: gap=0.68884
+Mon Nov 03 15:27:04 EST 2014: postMessage EngineState: gap=0.84310
+Mon Nov 03 15:27:04 EST 2014: postMessage EngineState: gap=1.04765
+Mon Nov 03 15:27:04 EST 2014: time,141.319,rpm,139,maf,5.04,MAP,NaN,map_r,262.17,baro,0.00,afr,17.51,vref,2.22,vbatt,11.17,TRG_0_DUTY,48.12,TRG_1_DUTY,0.00,TP,7.00,CLT,21.13,MAT,30.00,ckp_c,805,fuel_base,3.00,fuel_lag,0.00,fuel,5.94,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:04 EST 2014: msg,gap=0.32943,msg,gap=0.82325,msg,gap=1.11128,msg,gap=2.96639,
+Mon Nov 03 15:27:04 EST 2014: postMessage EngineState: gap=0.32943
+Mon Nov 03 15:27:04 EST 2014: postMessage EngineState: gap=0.82325
+Mon Nov 03 15:27:04 EST 2014: postMessage EngineState: gap=1.11128
+Mon Nov 03 15:27:04 EST 2014: postMessage EngineState: gap=2.96639
+Mon Nov 03 15:27:04 EST 2014: time,141.520,rpm,271,maf,5.03,MAP,NaN,map_r,261.95,baro,0.00,afr,17.50,vref,2.07,vbatt,10.41,TRG_0_DUTY,48.18,TRG_1_DUTY,0.00,TP,3.80,CLT,21.28,MAT,30.00,ckp_c,812,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:05 EST 2014: msg,gap=0.66617,msg,gap=0.65190,msg,gap=1.03523,msg,gap=0.26071,msg,gap=0.88171,msg,gap=0.84761,
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=0.66617
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=0.65190
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=1.03523
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=0.26071
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=0.88171
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=0.84761
+Mon Nov 03 15:27:05 EST 2014: time,141.722,rpm,271,maf,5.03,MAP,NaN,map_r,261.95,baro,0.00,afr,17.50,vref,2.12,vbatt,10.66,TRG_0_DUTY,48.18,TRG_1_DUTY,0.00,TP,11.20,CLT,21.23,MAT,30.00,ckp_c,824,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:05 EST 2014: msg,gap=3.89630,msg,gap=0.82764,msg,gap=0.83548,msg,gap=1.07133,msg,gap=0.32847,msg,gap=0.70554,
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=3.89630
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=0.82764
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=0.83548
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=1.07133
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=0.32847
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=0.70554
+Mon Nov 03 15:27:05 EST 2014: time,141.923,rpm,271,maf,5.04,MAP,NaN,map_r,262.25,baro,0.00,afr,17.51,vref,2.30,vbatt,11.60,TRG_0_DUTY,48.18,TRG_1_DUTY,0.00,TP,17.79,CLT,21.23,MAT,30.00,ckp_c,836,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:05 EST 2014: msg,gap=0.88408,msg,gap=3.87525,msg,gap=0.83234,msg,gap=0.84362,msg,gap=1.02129,msg,gap=0.29881,msg,gap=0.94055,
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=0.88408
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=3.87525
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=0.83234
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=0.84362
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=1.02129
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=0.29881
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=0.94055
+Mon Nov 03 15:27:05 EST 2014: time,142.123,rpm,271,maf,5.04,MAP,NaN,map_r,262.25,baro,0.00,afr,17.51,vref,2.33,vbatt,11.71,TRG_0_DUTY,48.18,TRG_1_DUTY,0.00,TP,0.00,CLT,21.23,MAT,30.00,ckp_c,850,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:05 EST 2014: msg,gap=0.94614,msg,gap=3.94695,msg,gap=0.84583,msg,gap=0.87395,
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=0.94614
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=3.94695
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=0.84583
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=0.87395
+Mon Nov 03 15:27:05 EST 2014: time,142.324,rpm,271,maf,5.04,MAP,NaN,map_r,262.25,baro,0.00,afr,17.52,vref,2.31,vbatt,11.63,TRG_0_DUTY,48.18,TRG_1_DUTY,0.00,TP,0.00,CLT,21.18,MAT,30.00,ckp_c,859,fuel_base,3.00,fuel_lag,0.00,fuel,5.94,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:05 EST 2014: msg,gap=0.98542,msg,gap=0.29926,msg,gap=0.89756,
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=0.98542
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=0.29926
+Mon Nov 03 15:27:05 EST 2014: postMessage EngineState: gap=0.89756
+Mon Nov 03 15:27:05 EST 2014: time,142.526,rpm,0,maf,5.04,MAP,262.17,map_r,262.17,baro,0.00,afr,17.51,vref,2.28,vbatt,11.48,TRG_0_DUTY,48.18,TRG_1_DUTY,0.00,TP,0.00,CLT,21.15,MAT,30.00,ckp_c,865,fuel_base,3.00,fuel_lag,0.00,fuel,3.00,timing,0.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:06 EST 2014: msg,gap=1.01434,msg,setting FUEL_PUMP_RELAY No,msg,gap=3.54515,msg,setting FUEL_PUMP_RELAY Yes,msg,gap=0.71728,
+Mon Nov 03 15:27:06 EST 2014: postMessage EngineState: gap=1.01434
+Mon Nov 03 15:27:06 EST 2014: postMessage EngineState: setting FUEL_PUMP_RELAY No
+Mon Nov 03 15:27:06 EST 2014: postMessage EngineState: gap=3.54515
+Mon Nov 03 15:27:06 EST 2014: postMessage EngineState: setting FUEL_PUMP_RELAY Yes
+Mon Nov 03 15:27:06 EST 2014: postMessage EngineState: gap=0.71728
+Mon Nov 03 15:27:06 EST 2014: time,142.727,rpm,271,maf,5.04,MAP,NaN,map_r,262.40,baro,0.00,afr,17.52,vref,2.20,vbatt,11.08,TRG_0_DUTY,48.45,TRG_1_DUTY,0.00,TP,0.00,CLT,21.23,MAT,30.00,ckp_c,829,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:06 EST 2014: msg,gap=0.89428,msg,gap=0.96460,msg,gap=0.22148,msg,gap=0.83402,msg,gap=0.86887,
+Mon Nov 03 15:27:06 EST 2014: postMessage EngineState: gap=0.89428
+Mon Nov 03 15:27:06 EST 2014: postMessage EngineState: gap=0.96460
+Mon Nov 03 15:27:06 EST 2014: postMessage EngineState: gap=0.22148
+Mon Nov 03 15:27:06 EST 2014: postMessage EngineState: gap=0.83402
+Mon Nov 03 15:27:06 EST 2014: postMessage EngineState: gap=0.86887
+Mon Nov 03 15:27:06 EST 2014: time,142.927,rpm,271,maf,5.03,MAP,NaN,map_r,261.95,baro,0.00,afr,17.52,vref,2.14,vbatt,10.75,TRG_0_DUTY,48.45,TRG_1_DUTY,0.00,TP,0.00,CLT,20.95,MAT,30.00,ckp_c,839,fuel_base,3.00,fuel_lag,0.00,fuel,5.95,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:06 EST 2014: msg,gap=3.94290,msg,gap=0.82573,msg,gap=0.84858,msg,gap=1.03395,msg,gap=0.32144,
+Mon Nov 03 15:27:06 EST 2014: postMessage EngineState: gap=3.94290
+Mon Nov 03 15:27:06 EST 2014: postMessage EngineState: gap=0.82573
+Mon Nov 03 15:27:06 EST 2014: postMessage EngineState: gap=0.84858
+Mon Nov 03 15:27:06 EST 2014: postMessage EngineState: gap=1.03395
+Mon Nov 03 15:27:06 EST 2014: postMessage EngineState: gap=0.32144
+Mon Nov 03 15:27:06 EST 2014: rusEfiVersion,20141103@5014 Neon 2003,outpin,c1@PA5,outpin,c2@PC6,outpin,input1@PA8,outpin,input2@NONE,outpin,spa1@PC9,outpin,inj1@PB8,outpin,spa2@NONE,outpin,inj2@PB9,outpin,spa3@PE8,outpin,inj3@PE5,outpin,spa4@NONE,outpin,inj4@PB7,time,143.128,rpm,271,maf,5.04,MAP,NaN,map_r,262.03,baro,0.00,afr,17.51,vref,2.14,vbatt,10.79,TRG_0_DUTY,48.45,TRG_1_DUTY,0.00,TP,0.00,CLT,21.15,MAT,30.00,ckp_c,849,fuel_base,3.00,fuel_lag,0.00,fuel,5.94,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:06 EST 2014: msg,gap=0.94484,msg,gap=1.01244,wave_chart,inj1!u!0!inj2!u!4!inj3!u!7!inj4!u!10!inj1!d!595!inj2!d!598!inj3!d!602!inj4!d!605!c1!u!2093_0!c1!d!5239_1!spa1!d!5242!spa1!u!5247!r!269!6553!c1!u!7426_2!inj1!u!8669!inj2!u!8673!inj3!u!8676!inj4!u!8680!inj1!d!9264!inj2!d!9267!inj3!d!9271!inj4!d!9274!c1!d!9517_3!c1!u!11354_4!spa3!u!11481!c1!d!13967_5!c1!u!16630_6!spa3!d!16646!inj1!u!20104!inj2!u!20107!inj3!u!20110!inj4!u!20114!inj1!d!20699!inj2!d!20702!inj3!d!20706!inj4!d!20709!c1!d!21915_7!c1!u!22999_8!spa1!d!23002!spa1!u!23465!c1!d!24014_9!c1!u!24881_10!inj1!u!25257!inj2!u!25260!inj3!u!25264!inj4!u!25267!c1!d!25663_11!spa3!u!25790!inj1!d!25852!inj2!d!25855!inj3!d!25858!inj4!d!25862!c1!u!26340_12!c1!d!27138_13!spa3!d!28587!c1!u!30258_14!c1!d!31234_15!c1!u!32036_16!inj1!u!32044!inj2!u!32047!inj3!u!32051!inj4!u!32054!inj1!d!32638!inj2!d!32642!inj3!d!32645!inj4!d!32649!c1!d!32955_17!c1!u!33738_18!c1!d!34661_19!spa1!u!35404!c1!u!35601_20!c1!d!39412_21!c1!u!40536_22!c1!d!41585_23!c1!u!42579_24!c1!d!43591_25!c1!u!44548_26!c1!d!45767_27!c1!u!50459_28!c1!d!52131_29!c1!u!53524_30!c1!d!55014_31!c1!u!56271_32!c1!d!57876_33!c1!u!59879_34!c1!d!67530_35!c1!u!70034_36!c1!d!72070_37!c1!u!73786_38!c1!d!75577_39!c1!u!77520_40!c1!d!80058_41!c1!u!87946_0!r!139!90799!c1!d!90963_1!spa1!d!90966!c1!u!93046_2!c1!d!95076_3!inj1!u!95449!inj2!u!95452!inj3!u!95456!inj4!u!95459!inj1!d!96044!inj2!d!96047!inj3!d!96051!inj4!d!96055!c1!u!96793_4!spa3!u!97036!c1!d!99300_5!c1!u!101932_6!spa3!d!101949!inj1!u!108651!inj2!u!108654!inj3!u!108658!inj4!u!108661!inj1!d!109246!inj2!d!109249!inj3!d!109253!inj4!d!109256!c1!d!110437_7!c1!u!113243_8!spa1!d!113246!spa1!u!115142!c1!d!115431_9!c1!u!117237_10!inj1!u!117834!inj2!u!117837!inj3!u!117840!inj4!u!117844!inj1!d!118429!inj2!d!118432!inj3!d!118436!inj4!d!118439!c1!d!119143_11!spa3!u!119386!c1!u!121269_12!c1!d!124017_13!spa3!d!125603!c1!u!132186_0!inj1!u!132305!inj2!u!132308!inj3!u!132311!inj4!u!132315!inj1!d!132900!inj2!d!132903!inj3!d!132907!inj4!d!132910!c1!d!135341_1!spa1!d!135344!c1!u!137447_2!r!271!137705!inj1!u!138681!inj2!u!138685!inj3!u!138688!inj4!u!138692!spa1!u!138793!c1!d!139056_3!inj1!d!139276!inj2!d!139279!inj3!d!139283!inj4!d!139287!c1!u!140110_4!spa3!u!140236!c1!d!141316_5!c1!u!142570_6!spa3!d!142587!inj1!u!146019!inj2!u!146022!inj3!u!146025!inj4!u!146029!inj1!d!146614!inj2!d!146617!inj3!d!146620!inj4!d!146624!c1!d!147189_7!c1!u!148396_8!spa1!d!148401!spa1!u!149355!c1!d!149523_9!c1!u!150522_10!inj1!u!150758!inj2!u!150761!inj3!u!150764!inj4!u!150768!inj1!d!151352!inj2!d!151356!inj3!d!151359!inj4!d!151363!c1!d!151453_11!spa3!u!151580!c1!u!152249_12!c1!d!153211_13!spa3!d!154480!c1!u!156975_14!inj1!u!157911!inj2!u!157914!inj3!u!157918!inj4!u!157921!c1!d!158214_15!inj1!d!158506!inj2!d!158509!inj3!d!158512!inj4!d!158516!c1!u!159244_16!c1!d!160387_17!spa1!u!161246!c1!u!161347_18!c1!d!162508_19!c1!u!163757_20!c1!d!168731_21!c1!u!170368_22!c1!d!171586_23!c1!u!172451_24!c1!d!173272_25!c1!u!174003_26!c1!d!174881_27!c1!u!178298_28!c1!d!179392_29!c1!u!180308_30!c1!d!181330_31!c1!u!182198_32!c1!d!183228_33!c1!u!184287_34!c1!d!188593_35!c1!u!189884_36!c1!d!191092_37!c1!u!192236_38!c1!d!193405_39!c1!u!194518_40!c1!d!195965_41!c1!u!201690_42!c1!d!203857_43!c1!u!205695_44!c1!d!207659_45!c1!u!209380_46!c1!d!211696_47!c1!u!213984_48!c1!d!222590_49!c1!u!225169_50!c1!d!227362_51!c1!u!229336_52!c1!d!231501_53!c1!u!233703_54!c1!d!236294_55!c1!u!245490_0!c1!d!248514_1!spa1!d!248517!c1!u!250688_2!inj1!u!251922!inj2!u!251925!inj3!u!251929!inj4!u!251933!inj1!d!252518!inj2!d!252521!inj3!d!252525!inj4!d!252528!c1!d!253008_3!c1!u!255088_4!spa3!u!255214!c1!d!257843_5!c1!u!260506_6!spa3!d!260523!inj1!u!263955!inj2!u!263958!inj3!u!263961!inj4!u!263965!inj1!d!264549!inj2!d!264553!inj3!d!264556!inj4!d!264560!c1!d!266644_7!spa1!u!267291!c1!u!268007_8!spa1!d!268010!c1!d!269283_9!c1!u!270353_10!inj1!u!270518!inj2!u!270521!inj3!u!270524!inj4!u!270528!inj1!d!271112!inj2!d!271116!inj3!d!271119!inj4!d!271123!c1!d!271314_11!spa3!u!271440!c1!u!272154_12!c1!d!273148_13!spa3!d!274386!c1!u!277080_14!inj1!u!277818!inj2!u!277821!inj3!u!277824!inj4!u!277828!c1!d!278310_15!inj1!d!278413!inj2!d!278417!inj3!d!278420!inj4!d!278424!c1!u!279330_16!,msg,gap=3.46121,msg,gap=0.71515,
+Mon Nov 03 15:27:06 EST 2014: postMessage EngineState: gap=0.94484
+Mon Nov 03 15:27:06 EST 2014: postMessage EngineState: gap=1.01244
+Mon Nov 03 15:27:06 EST 2014: postMessage EngineState: gap=3.46121
+Mon Nov 03 15:27:06 EST 2014: postMessage EngineState: gap=0.71515
+Mon Nov 03 15:27:06 EST 2014: time,143.337,rpm,194,maf,5.05,MAP,NaN,map_r,262.91,baro,0.00,afr,17.51,vref,2.24,vbatt,11.29,TRG_0_DUTY,48.56,TRG_1_DUTY,0.00,TP,6.60,CLT,21.15,MAT,30.00,ckp_c,843,fuel_base,3.00,fuel_lag,0.00,fuel,5.94,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:06 EST 2014: msg,gap=0.86137,msg,gap=0.98797,msg,gap=0.24155,msg,gap=0.89761,msg,gap=0.98934,
+Mon Nov 03 15:27:06 EST 2014: postMessage EngineState: gap=0.86137
+Mon Nov 03 15:27:06 EST 2014: postMessage EngineState: gap=0.98797
+Mon Nov 03 15:27:06 EST 2014: postMessage EngineState: gap=0.24155
+Mon Nov 03 15:27:06 EST 2014: postMessage EngineState: gap=0.89761
+Mon Nov 03 15:27:06 EST 2014: postMessage EngineState: gap=0.98934
+Mon Nov 03 15:27:06 EST 2014: time,143.539,rpm,194,maf,5.03,MAP,NaN,map_r,261.95,baro,0.00,afr,17.51,vref,2.09,vbatt,10.53,TRG_0_DUTY,48.56,TRG_1_DUTY,0.00,TP,5.39,CLT,21.00,MAT,30.00,ckp_c,852,fuel_base,3.00,fuel_lag,0.00,fuel,5.94,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:07 EST 2014: msg,gap=3.71391,msg,gap=0.72137,msg,gap=0.84805,
+Mon Nov 03 15:27:07 EST 2014: postMessage EngineState: gap=3.71391
+Mon Nov 03 15:27:07 EST 2014: postMessage EngineState: gap=0.72137
+Mon Nov 03 15:27:07 EST 2014: postMessage EngineState: gap=0.84805
+Mon Nov 03 15:27:07 EST 2014: time,143.740,rpm,194,maf,5.04,MAP,NaN,map_r,262.10,baro,0.00,afr,17.51,vref,2.29,vbatt,11.54,TRG_0_DUTY,48.56,TRG_1_DUTY,0.00,TP,18.40,CLT,21.18,MAT,30.00,ckp_c,859,fuel_base,3.00,fuel_lag,0.00,fuel,5.94,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:07 EST 2014: msg,gap=1.06313,msg,gap=0.32610,msg,gap=0.82248,
+Mon Nov 03 15:27:07 EST 2014: postMessage EngineState: gap=1.06313
+Mon Nov 03 15:27:07 EST 2014: postMessage EngineState: gap=0.32610
+Mon Nov 03 15:27:07 EST 2014: postMessage EngineState: gap=0.82248
+Mon Nov 03 15:27:07 EST 2014: time,143.940,rpm,194,maf,5.04,MAP,NaN,map_r,262.03,baro,0.00,afr,17.51,vref,2.24,vbatt,11.29,TRG_0_DUTY,48.56,TRG_1_DUTY,0.00,TP,17.40,CLT,21.36,MAT,30.00,ckp_c,865,fuel_base,3.00,fuel_lag,0.00,fuel,5.93,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:07 EST 2014: msg,gap=1.09172,msg,gap=2.97244,analog_chart,0.00000|0.00000|32.21486|1.00000|55.76723|1002.00000|79.57569|3.00000|100.36357|1004.00000|130.13519|5.00000|159.61000|1006.00000|235.07560|7.00000|253.34342|1008.00000|270.29592|9.00000|285.57574|1010.00000|301.17218|11.00000|316.66851|1012.00000|338.93118|13.00000|,msg,gap=0.68302,
+Mon Nov 03 15:27:07 EST 2014: postMessage EngineState: gap=1.09172
+Mon Nov 03 15:27:07 EST 2014: postMessage EngineState: gap=2.97244
+Mon Nov 03 15:27:07 EST 2014: postMessage EngineState: gap=0.68302
+Mon Nov 03 15:27:07 EST 2014: time,144.141,rpm,151,maf,5.04,MAP,NaN,map_r,262.03,baro,0.00,afr,17.51,vref,2.23,vbatt,11.22,TRG_0_DUTY,48.47,TRG_1_DUTY,0.00,TP,18.60,CLT,21.00,MAT,30.00,ckp_c,857,fuel_base,3.00,fuel_lag,0.00,fuel,5.94,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:07 EST 2014: msg,gap=0.84327,msg,gap=1.04498,msg,gap=0.33400,
+Mon Nov 03 15:27:07 EST 2014: postMessage EngineState: gap=0.84327
+Mon Nov 03 15:27:07 EST 2014: postMessage EngineState: gap=1.04498
+Mon Nov 03 15:27:07 EST 2014: postMessage EngineState: gap=0.33400
+Mon Nov 03 15:27:07 EST 2014: time,144.343,rpm,151,maf,5.04,MAP,NaN,map_r,262.10,baro,0.00,afr,17.50,vref,2.20,vbatt,11.10,TRG_0_DUTY,48.47,TRG_1_DUTY,0.00,TP,18.20,CLT,21.18,MAT,30.00,ckp_c,863,fuel_base,3.00,fuel_lag,0.00,fuel,5.94,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:07 EST 2014: msg,gap=0.79808,msg,gap=1.01722,msg,gap=3.38343,
+Mon Nov 03 15:27:07 EST 2014: postMessage EngineState: gap=0.79808
+Mon Nov 03 15:27:07 EST 2014: postMessage EngineState: gap=1.01722
+Mon Nov 03 15:27:07 EST 2014: postMessage EngineState: gap=3.38343
+Mon Nov 03 15:27:07 EST 2014: time,144.544,rpm,266,maf,5.03,MAP,NaN,map_r,261.95,baro,0.00,afr,17.50,vref,2.07,vbatt,10.40,TRG_0_DUTY,48.94,TRG_1_DUTY,0.00,TP,4.39,CLT,21.08,MAT,30.00,ckp_c,869,fuel_base,3.00,fuel_lag,0.00,fuel,5.94,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:08 EST 2014: msg,gap=0.54894,msg,gap=0.72288,msg,gap=0.99020,msg,gap=0.24915,msg,gap=0.93281,msg,gap=0.88180,msg,gap=3.88073,msg,gap=0.82251,
+Mon Nov 03 15:27:08 EST 2014: postMessage EngineState: gap=0.54894
+Mon Nov 03 15:27:08 EST 2014: postMessage EngineState: gap=0.72288
+Mon Nov 03 15:27:08 EST 2014: postMessage EngineState: gap=0.99020
+Mon Nov 03 15:27:08 EST 2014: postMessage EngineState: gap=0.24915
+Mon Nov 03 15:27:08 EST 2014: postMessage EngineState: gap=0.93281
+Mon Nov 03 15:27:08 EST 2014: postMessage EngineState: gap=0.88180
+Mon Nov 03 15:27:08 EST 2014: postMessage EngineState: gap=3.88073
+Mon Nov 03 15:27:08 EST 2014: postMessage EngineState: gap=0.82251
+Mon Nov 03 15:27:08 EST 2014: time,144.744,rpm,266,maf,5.03,MAP,NaN,map_r,261.95,baro,0.00,afr,17.51,vref,2.10,vbatt,10.60,TRG_0_DUTY,48.94,TRG_1_DUTY,0.00,TP,0.00,CLT,20.98,MAT,30.00,ckp_c,884,fuel_base,3.00,fuel_lag,0.00,fuel,5.95,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:08 EST 2014: msg,gap=0.84541,msg,gap=1.02962,msg,gap=0.29976,msg,gap=0.95023,msg,gap=0.93449,
+Mon Nov 03 15:27:08 EST 2014: postMessage EngineState: gap=0.84541
+Mon Nov 03 15:27:08 EST 2014: postMessage EngineState: gap=1.02962
+Mon Nov 03 15:27:08 EST 2014: postMessage EngineState: gap=0.29976
+Mon Nov 03 15:27:08 EST 2014: postMessage EngineState: gap=0.95023
+Mon Nov 03 15:27:08 EST 2014: postMessage EngineState: gap=0.93449
+Mon Nov 03 15:27:08 EST 2014: time,144.945,rpm,266,maf,5.04,MAP,NaN,map_r,262.25,baro,0.00,afr,17.52,vref,2.42,vbatt,12.19,TRG_0_DUTY,48.94,TRG_1_DUTY,0.00,TP,0.00,CLT,20.90,MAT,30.00,ckp_c,895,fuel_base,3.00,fuel_lag,0.00,fuel,5.95,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:08 EST 2014: msg,gap=3.91143,msg,gap=0.84381,msg,gap=0.87327,msg,gap=1.37965,
+Mon Nov 03 15:27:08 EST 2014: postMessage EngineState: gap=3.91143
+Mon Nov 03 15:27:08 EST 2014: postMessage EngineState: gap=0.84381
+Mon Nov 03 15:27:08 EST 2014: postMessage EngineState: gap=0.87327
+Mon Nov 03 15:27:08 EST 2014: postMessage EngineState: gap=1.37965
+Mon Nov 03 15:27:08 EST 2014: time,145.147,rpm,266,maf,5.04,MAP,NaN,map_r,262.17,baro,0.00,afr,17.51,vref,2.41,vbatt,12.13,TRG_0_DUTY,48.94,TRG_1_DUTY,0.00,TP,0.00,CLT,20.98,MAT,30.00,ckp_c,902,fuel_base,3.00,fuel_lag,0.00,fuel,5.95,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:08 EST 2014: msg,gap=0.38864,
+Mon Nov 03 15:27:08 EST 2014: postMessage EngineState: gap=0.38864
+Mon Nov 03 15:27:08 EST 2014: time,145.348,rpm,266,maf,5.04,MAP,NaN,map_r,262.25,baro,0.00,afr,17.52,vref,2.45,vbatt,12.32,TRG_0_DUTY,48.94,TRG_1_DUTY,0.00,TP,0.00,CLT,20.98,MAT,30.00,ckp_c,904,fuel_base,3.00,fuel_lag,0.00,fuel,5.95,timing,710.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:08 EST 2014: msg,engine has STOPPED,msg,turning off spa1,msg,setting FUEL_PUMP_RELAY No,
+Mon Nov 03 15:27:08 EST 2014: postMessage EngineState: engine has STOPPED
+Mon Nov 03 15:27:08 EST 2014: postMessage EngineState: turning off spa1
+Mon Nov 03 15:27:08 EST 2014: postMessage EngineState: setting FUEL_PUMP_RELAY No
+Mon Nov 03 15:27:09 EST 2014: time,146.149,rpm,0,maf,5.04,MAP,262.17,map_r,262.17,baro,0.00,afr,17.51,vref,2.50,vbatt,12.57,TRG_0_DUTY,48.94,TRG_1_DUTY,0.00,TP,0.00,CLT,21.00,MAT,30.00,ckp_c,904,fuel_base,3.00,fuel_lag,0.00,fuel,3.00,timing,0.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:10 EST 2014: rusEfiVersion,20141103@5014 Neon 2003,outpin,c1@PA5,outpin,c2@PC6,outpin,input1@PA8,outpin,input2@NONE,outpin,spa1@PC9,outpin,inj1@PB8,outpin,spa2@NONE,outpin,inj2@PB9,outpin,spa3@PE8,outpin,inj3@PE5,outpin,spa4@NONE,outpin,inj4@PB7,time,147.149,rpm,0,maf,5.04,MAP,262.17,map_r,262.17,baro,0.00,afr,17.51,vref,2.50,vbatt,12.61,TRG_0_DUTY,48.94,TRG_1_DUTY,0.00,TP,0.00,CLT,20.90,MAT,30.00,ckp_c,904,fuel_base,3.00,fuel_lag,0.00,fuel,3.00,timing,0.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:11 EST 2014: time,148.151,rpm,0,maf,5.04,MAP,262.17,map_r,262.17,baro,0.00,afr,17.51,vref,2.48,vbatt,12.46,TRG_0_DUTY,48.94,TRG_1_DUTY,0.00,TP,0.00,CLT,20.77,MAT,30.00,ckp_c,904,fuel_base,3.00,fuel_lag,0.00,fuel,3.00,timing,0.00,duty0,0.00,dwell0,0.00,total_dwell0,0.00,period0,0.04,advance0,674.000,duty1,NaN,dwell1,0.00,total_dwell1,0.00,period1,0.00,advance1,674.000,
+Mon Nov 03 15:27:21 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:27:21 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:27:21 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:27:31 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:27:31 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:27:31 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:27:41 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:27:41 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:27:41 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:27:51 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:27:51 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:27:51 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:28:01 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:28:01 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:28:01 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:28:11 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:28:11 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:28:11 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:28:21 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:28:21 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:28:21 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:28:31 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:28:31 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:28:31 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:28:41 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:28:41 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:28:41 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:28:51 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:28:51 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:28:51 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:29:01 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:29:01 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:29:01 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:29:11 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:29:11 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:29:11 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:29:21 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:29:21 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:29:21 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:29:31 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:29:31 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:29:31 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:29:41 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:29:41 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:29:41 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:29:51 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:29:51 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:29:51 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:30:01 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:30:01 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:30:01 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:30:11 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:30:11 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:30:11 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:30:21 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:30:21 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:30:21 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:30:31 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:30:31 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:30:31 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:30:41 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:30:41 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:30:41 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:30:51 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:30:51 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:30:51 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:31:01 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:31:01 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:31:01 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:31:11 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:31:11 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:31:11 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:31:21 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:31:21 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:31:21 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:31:31 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:31:31 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:31:31 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:31:41 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:31:41 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:31:41 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:31:51 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:31:51 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:31:51 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:32:01 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:32:01 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:32:01 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:32:11 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:32:11 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:32:11 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:32:21 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:32:21 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:32:21 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:32:31 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:32:31 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:32:31 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:32:41 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:32:41 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:32:41 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:32:51 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:32:51 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:32:51 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:33:01 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:33:01 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:33:01 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:33:11 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:33:11 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:33:11 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:33:21 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:33:21 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:33:21 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:33:31 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:33:31 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:33:31 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:33:41 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:33:41 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:33:41 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:33:51 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:33:51 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:33:51 EST 2014: Opening COM15 @ 115200
+Mon Nov 03 15:34:01 EST 2014: postMessage SerialManager: Restarting serial IO
+Mon Nov 03 15:34:01 EST 2014: postMessage SerialManager: Opening port: COM15
+Mon Nov 03 15:34:01 EST 2014: Opening COM15 @ 115200
