@@ -1,0 +1,426 @@
+TunerStudio 2.6.01 started on Fri Jul 04 17:05:33 EDT 2014
+JRE 1.7.0_60, Windows 7 6.1, x86
+java.library.path=lib
+TunerStudioMS.jar
+Look:Metal, ClassName:'javax.swing.plaf.metal.MetalLookAndFeel'
+Look:Nimbus, ClassName:'javax.swing.plaf.nimbus.NimbusLookAndFeel'
+Look:CDE/Motif, ClassName:'com.sun.java.swing.plaf.motif.MotifLookAndFeel'
+Look:Windows, ClassName:'com.sun.java.swing.plaf.windows.WindowsLookAndFeel'
+Look:Windows Classic, ClassName:'com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel'
+Setting Look & Feel to:javax.swing.plaf.metal.MetalLookAndFeel
+7/4/14 5:05:34 PM :Debug: Command Non-VolatileBytes for F resolved to: x46                                                                   F
+7/4/14 5:05:34 PM :Debug: Command Non-VolatileBytes for I resolved to: x49                                                                   I
+7/4/14 5:05:34 PM :Debug: Command Non-VolatileBytes for f resolved to: x66                                                                   f
+7/4/14 5:05:34 PM :Debug: App Name:TunerStudio, appEdition:MS Lite!
+7/4/14 5:05:36 PM :Debug: Time to retreive font name list: 42 ms.
+WARNING:  RXTX Version mismatch
+	Jar version = RXTX-2.2pre1
+	native lib Version = RXTX-2.1-7
+7/4/14 5:05:36 PM :Info: Initialized RXTX driver: 11ms.
+No check, last update check=Fri Jul 04 15:49:57 EDT 2014
+MSmain: No check, last update check=Fri Jul 04 15:49:54 EDT 2014
+MSad: No check, last update check=Fri Jul 04 15:49:57 EDT 2014
+7/4/14 5:05:47 PM :Debug: Opening project: C:\Users\pc\Documents\TunerStudioProjects\MyCar
+7/4/14 5:05:47 PM :Debug: Reading translation file as plain text because: fast binary headers not found. probably not a fast binary file
+7/4/14 5:05:47 PM :Debug: Filtered ConfigurationOptionGroup in 34ms.
+7/4/14 5:05:47 PM :Info: Read file canPcVariables.ini: 0.0ms
+7/4/14 5:05:47 PM :Info: Filtered ini: 0.0ms
+7/4/14 5:05:47 PM :Info: Loading Trigger Wheels
+7/4/14 5:05:47 PM :Info: Loaded All known ini sections
+7/4/14 5:05:47 PM :Info: Parsed and validated ini "canPcVariables.ini" in : 22ms.
+7/4/14 5:05:47 PM :Info: Read file mainController.ini: 1.0ms
+7/4/14 5:05:47 PM :Info: Filtered ini: 0.0ms
+7/4/14 5:05:47 PM :Debug: ini signature: MShift v0.01
+7/4/14 5:05:47 PM :Info: Set Write Blocks on = true
+7/4/14 5:05:47 PM :Info: Loading Trigger Wheels
+7/4/14 5:05:47 PM :Info: Loaded All known ini sections
+7/4/14 5:05:47 PM :Info: Parsed and validated ini "mainController.ini" in : 25ms.
+7/4/14 5:05:47 PM :Info: Not Loading default Tools because non are defined for signature: MShift v0.01
+7/4/14 5:05:48 PM :Debug: Adding Configuration: MyCar
+7/4/14 5:05:48 PM :Info: Tune opened, 2256 bytes updated. File:C:\Users\pc\Documents\TunerStudioProjects\MyCar\CurrentTune.msq
+7/4/14 5:05:48 PM :Debug: Flush lasted: 0ms.
+7/4/14 5:05:48 PM :Info: !!! Loaded config in 321
+7/4/14 5:05:48 PM :Info: Opening port: COM18
+7/4/14 5:05:48 PM :Debug: 0ms. - added Port
+7/4/14 5:05:48 PM :Debug: 15ms. - 1st got port
+7/4/14 5:05:48 PM :Debug: 15ms. - got port
+7/4/14 5:05:48 PM :Debug: 25ms. - setParameters
+7/4/14 5:05:48 PM :Debug: Monitoring COM18 @ 115200 baud for controllers.
+7/4/14 5:05:48 PM :Debug: Started new CommThread for MyCar
+7/4/14 5:05:48 PM :Info: Comm Manager for MyCar Started
+7/4/14 5:05:48 PM :Debug: commThreadExpectedReturnTime set to ms from now: 1220
+7/4/14 5:05:48 PM :Debug: Comm Read Thread Change! Old Thread:null, new Thread:COMM Thread767.0493304470116
+7/4/14 5:05:48 PM :Info: Started Comms Watchdog
+7/4/14 5:05:48 PM :Info: !!! Activated Project 445
+7/4/14 5:05:48 PM :Time: 0:00.283: SENT, 1 bytes
+x46                                                                   F
+
+7/4/14 5:05:48 PM :Debug: High Speed Paint: true
+7/4/14 5:05:48 PM :Debug: !!! Opened Dash 477
+7/4/14 5:05:48 PM :Debug: commThreadExpectedReturnTime set to ms from now: 20140
+7/4/14 5:05:48 PM :Time: 0:00.883: Received, 3 bytes
+x30 x30 x31                                                           001
+
+7/4/14 5:05:48 PM :Time: 0:00.883: SENT, 7 bytes
+x00 x01 x48 xAA x05 x26 x2F                                           ..H..&/
+
+7/4/14 5:05:49 PM :Info: Communicating with Bowling & Grippo MS1 Base Code MShift v0.01
+7/4/14 5:05:49 PM :Time: 0:01.684: Received, 3 bytes
+x00 x0E x00                                                           ...
+
+7/4/14 5:05:49 PM :Time: 0:01.684: Received, 17 bytes
+x4D x53 x68 x69 x66 x74 x20 x76 x30 x2E x30 x31 x00 xB1 x45 x6A       MShift.v0.01..Ej
+x84                                                                   .
+
+Time: 0:01.687: Received Instruction: 
+Time: 0:01.696: Processing Instruction: 
+7/4/14 5:05:49 PM :Debug: Reading ECU Data, 0.0 complete
+7/4/14 5:05:49 PM :Debug: commThreadExpectedReturnTime set to ms from now: 20180
+7/4/14 5:05:49 PM :Time: 0:01.717: SENT, 9 bytes
+x00 x03 x50 x00 x00 x93 xFD xF7 xA2                                   ..P......
+
+7/4/14 5:05:49 PM :Debug: commThreadExpectedReturnTime set to ms from now: 20260
+7/4/14 5:05:49 PM :Time: 0:01.766: Received, 3 bytes
+x00 x01 x00                                                           ...
+
+7/4/14 5:05:49 PM :Time: 0:01.767: Received, 4 bytes
+xD2 x02 xEF x8D                                                       ....
+
+7/4/14 5:05:49 PM :Time: 0:01.767: SENT, 13 bytes
+x00 x07 x52 x00 x00 x00 x00 x64 x05 x58 xDD x7D xCC                   ..R....d.X.}.
+
+7/4/14 5:05:49 PM :Debug: Read page time: 51ms.
+7/4/14 5:05:49 PM :Time: 0:01.817: Received, 3 bytes
+x05 x65 x00                                                           .e.
+
+7/4/14 5:05:49 PM :Debug: Reading ECU Data, 0.25 complete
+7/4/14 5:05:49 PM :Time: 0:01.818: Received, 1384 bytes
+x00 x00 x00 x00 x9A x99 xEF x42 x00 x00 x00 x41 x00 x00 x10 x41       .......B...A...A
+x00 x00 x20 x41 x00 x00 x30 x41 x00 x00 x40 x41 x00 x00 x50 x41       ...A..0A..@A..PA
+x00 x00 x60 x41 x00 x00 x70 x41 x00 x00 x00 x00 x00 x00 x00 x00       ..`A..pA........
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x20 xC2 x00 x00 xF0 xC1       ................
+x00 x00 xA0 xC1 x00 x00 x20 xC1 x00 x00 x00 x00 x00 x00 x20 x41       ...............A
+x00 x00 xA0 x41 x00 x00 xF0 x41 x00 x00 x20 x42 x00 x00 x48 x42       ...A...A...B..HB
+x00 x00 x70 x42 x00 x00 x8C x42 x00 x00 xA0 x42 x00 x00 xB4 x42       ..pB...B...B...B
+x00 x00 xC8 x42 x00 x00 xDC x42 x00 x00 x80 x3F x00 x00 x80 x3F       ...B...B...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x20 xC2 x00 x00 xF0 xC1       ...?...?........
+x00 x00 xA0 xC1 x00 x00 x20 xC1 x00 x00 x00 x00 x00 x00 x20 x41       ...............A
+x00 x00 xA0 x41 x00 x00 xF0 x41 x00 x00 x20 x42 x00 x00 x48 x42       ...A...A...B..HB
+x00 x00 x70 x42 x00 x00 x8C x42 x00 x00 xA0 x42 x00 x00 xB4 x42       ..pB...B...B...B
+x00 x00 xC8 x42 x00 x00 xDC x42 x00 x00 x80 x3F x00 x00 x80 x3F       ...B...B...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x64 x00 xEE x02 x01 x00       ...?...?..d.....
+x00 x00 x00 x00 x00 x00 x82 x42 x00 x00 x70 x41 x00 x00 x00 x41       .......B..pA...A
+x26 x02 x00 x00 x00 x00 x48 x44 xB8 xB6 xD2 x44 xB8 xB6 x20 x45       &.....HD...D...E
+x3D x12 x58 x45 xCD xB6 x87 x45 x8F x64 xA3 x45 x3D x12 xBF x45       =.XE...E.d.E=..E
+x00 xC0 xDA x45 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ...E............
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x48 x44 xB8 xB6 xD2 x44 xB8 xB6 x20 x45       ......HD...D...E
+x3D x12 x58 x45 xCD xB6 x87 x45 x8F x64 xA3 x45 x3D x12 xBF x45       =.XE...E.d.E=..E
+x00 xC0 xDA x45 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ...E............
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x01 x00 x00 x00       ................
+x04 x00 x00 x00 x00 x00 xA0 xC1 x78 x1C xBF x41 x3C x8E x43 x42       ........x..A<.CB
+x00 xA0 x8C x46 x00 x40 x03 x45 x00 x00 x7A x44 x00 x40 x4E x45       ...F.@.E..zD.@NE
+x80 xB4 x5A xB9 xF2 x12 x0C x3A x54 xA2 x99 xB5 x00 x00 x00 x42       ..Z....:T......B
+x00 x00 x96 x42 x00 x00 xF0 x42 x00 x70 x14 x46 x00 x40 x03 x45       ...B...B.p.F.@.E
+x00 x00 x7A x44 x00 xC0 x28 x45 x76 x1A x47 xBB xB4 xCE x7C x3A       ..zD..(Ev.G...|:
+x0C xE7 x5B xB6 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ..[.............
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x80 x3F x00 xA0 x8C x45       ...........?...E
+x00 x50 x43 x46 x00 x00 x80 xBF x00 x00 x80 xBF x00 x00 x80 xBF       .PCF............
+x00 x00 x80 xBF x00 x00 x80 xBF x00 x00 x80 x40 x00 x00 x80 x40       ...........@...@
+x00 x00 x00 x00 x99 x99 x99 x3F xE1 x7A xB4 x3F x29 x5C xCF x3F       .......?.z.?)\.?
+x1E x85 xEB x3F x33 x33 x03 x40 xD7 xA3 x10 x40 x52 xB8 x1E x40       ...?33.@...@R..@
+xF6 x28 x2C x40 x99 x99 x39 x40 x14 xAE x47 x40 xB8 x1E x55 x40       .(,@..9@..G@..U@
+x5C x8F x62 x40 xD7 xA3 x70 x40 x7B x14 x7E x40 x8F xC2 x85 x40       \.b@..p@{.~@...@
+xCD xCC x8C x40 x00 x00 x48 x44 x8F xAA x97 x44 x1E x55 xCB x44       ...@..HD...D.U.D
+x00 x00 xFF x44 x47 x55 x19 x45 x8F x2A x33 x45 x00 x00 x4D x45       ...DGU.E.*3E..ME
+x47 xD5 x66 x45 x47 x55 x80 x45 x00 x40 x8D x45 xA4 x2A x9A x45       G.fEGU.E.@.E.*.E
+x47 x15 xA7 x45 x00 x00 xB4 x45 xA4 xEA xC0 x45 x47 xD5 xCD x45       G..E...E...EG..E
+x00 xC0 xDA x45 x00 x00 xAE x42 x00 x00 x8C x42 x00 x00 x00 x00       ...E...B...B....
+x00 x00 x48 x42 x03 x00 x00 x00 x99 x99 x99 x3F xE1 x7A xB4 x3F       ..HB.......?.z.?
+x29 x5C xCF x3F x1E x85 xEB x3F x33 x33 x03 x40 xD7 xA3 x10 x40       )\.?...?33.@...@
+x52 xB8 x1E x40 xF6 x28 x2C x40 x99 x99 x39 x40 x14 xAE x47 x40       R..@.(,@..9@..G@
+xB8 x1E x55 x40 x5C x8F x62 x40 xD7 xA3 x70 x40 x7B x14 x7E x40       ..U@\.b@..p@{.~@
+x8F xC2 x85 x40 xCD xCC x8C x40 x00 x00 x48 x44 x8F xAA x97 x44       ...@...@..HD...D
+x1E x55 xCB x44 x00 x00 xFF x44 x47 x55 x19 x45 x8F x2A x33 x45       .U.D...DGU.E.*3E
+x00 x00 x4D x45 x47 xD5 x66 x45 x47 x55 x80 x45 x00 x40 x8D x45       ..MEG.fEGU.E.@.E
+xA4 x2A x9A x45 x47 x15 xA7 x45 x00 x00 xB4 x45 xA4 xEA xC0 x45       .*.EG..E...E...E
+x47 xD5 xCD x45 x00 xC0 xDA x45 x66 x66 xA6 x3F x58 x1B x00 x00       G..E...Eff.?X...
+x00 x00 x00 x00 x01 x00 x00 x00 x00 x00 x2F x43 x00 x00 x00 x40       ........../C...@
+x00 x00 x00 x00 xAB xAA xAA x40 x00 x00 x96 x42 x00 x00 x8C x42       .......@...B...B
+x01 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x32 x00 x00 x00       ............2...
+x04 x00 x00 x00 x00 x00 x00 x00 x01 x00 x00 x00 x00 x00 x00 x3F       ...............?
+x01 x00 x00 x00 x00 x00 x00 x00 xA0 x52 x33 x01 x14 x00 x00 x00       .........R3.....
+x04 x00 x00 x00 x03 x00 x00 x00 x01 x00 x00 x00 x14 x00 x00 x00       ................
+x01 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 xC0 x3F x00 x00 x20 x40 x01 x00 x00 x00 x01 x00 x00 x00       ...?...@........
+x00 x00 x00 x00 x00 x00 x80 x3F x0B x00 x00 x00 x07 x00 x00 x00       .......?........
+x01 x00 x00 x00 x0E x00 x00 x00 x00 x00 x00 x00 x00 x00 x10 x41       ...............A
+x00 x00 xA0 x40 x00 x00 x98 x41 x00 x00 x6C x42 x00 x00 x14 x42       ...@...A..lB...B
+x00 x00 x80 x3F x00 x00 x00 x00 x00 x00 xFA x43 x00 x00 x00 x00       ...?.......C....
+x04 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 xB2 xF2 xA1 xBB                                       ........
+
+7/4/14 5:05:49 PM :Debug: commThreadExpectedReturnTime set to ms from now: 20180
+7/4/14 5:05:49 PM :Time: 0:01.828: SENT, 9 bytes
+x00 x03 x50 x00 x00 x93 xFD xF7 xA2                                   ..P......
+
+7/4/14 5:05:49 PM :Time: 0:01.877: Received, 3 bytes
+x00 x01 x00                                                           ...
+
+7/4/14 5:05:49 PM :Time: 0:01.878: Received, 4 bytes
+xD2 x02 xEF x8D                                                       ....
+
+7/4/14 5:05:49 PM :Debug: commThreadExpectedReturnTime set to ms from now: 20260
+7/4/14 5:05:49 PM :Time: 0:01.878: SENT, 13 bytes
+x00 x07 x52 x00 x00 x00 x00 x44 x01 xCA x34 x9D x77                   ..R....D..4.w
+
+7/4/14 5:05:49 PM :Debug: Read page time: 51ms.
+7/4/14 5:05:49 PM :Time: 0:01.929: Received, 3 bytes
+x01 x45 x00                                                           .E.
+
+7/4/14 5:05:49 PM :Debug: Reading ECU Data, 0.5 complete
+7/4/14 5:05:49 PM :Time: 0:01.929: Received, 328 bytes
+x00 x00 x00 x00 x9A x99 xEF x42 x00 x00 x00 x41 x00 x00 x10 x41       .......B...A...A
+x00 x00 x20 x41 x00 x00 x30 x41 x00 x00 x40 x41 x00 x00 x50 x41       ...A..0A..@A..PA
+x00 x00 x60 x41 x00 x00 x70 x41 x00 x00 x00 x00 x00 x00 x00 x00       ..`A..pA........
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x20 xC2 x00 x00 xF0 xC1       ................
+x00 x00 xA0 xC1 x00 x00 x20 xC1 x00 x00 x00 x00 x00 x00 x20 x41       ...............A
+x00 x00 xA0 x41 x00 x00 xF0 x41 x00 x00 x20 x42 x00 x00 x48 x42       ...A...A...B..HB
+x00 x00 x70 x42 x00 x00 x8C x42 x00 x00 xA0 x42 x00 x00 xB4 x42       ..pB...B...B...B
+x00 x00 xC8 x42 x00 x00 xDC x42 x00 x00 x80 x3F x00 x00 x80 x3F       ...B...B...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x20 xC2 x00 x00 xF0 xC1       ...?...?........
+x00 x00 xA0 xC1 x00 x00 x20 xC1 x00 x00 x00 x00 x00 x00 x20 x41       ...............A
+x00 x00 xA0 x41 x00 x00 xF0 x41 x00 x00 x20 x42 x00 x00 x48 x42       ...A...A...B..HB
+x00 x00 x70 x42 x00 x00 x8C x42 x00 x00 xA0 x42 x00 x00 xB4 x42       ..pB...B...B...B
+x00 x00 xC8 x42 x00 x00 xDC x42 x00 x00 x80 x3F x00 x00 x80 x3F       ...B...B...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x9E xB1 xC9 x0D                                       ...?....
+
+7/4/14 5:05:49 PM :Debug: commThreadExpectedReturnTime set to ms from now: 20180
+7/4/14 5:05:49 PM :Time: 0:01.939: SENT, 9 bytes
+x00 x03 x50 x00 x00 x93 xFD xF7 xA2                                   ..P......
+
+7/4/14 5:05:49 PM :Debug: commThreadExpectedReturnTime set to ms from now: 20260
+7/4/14 5:05:49 PM :Time: 0:01.989: Received, 3 bytes
+x00 x01 x00                                                           ...
+
+7/4/14 5:05:49 PM :Time: 0:01.989: Received, 4 bytes
+xD2 x02 xEF x8D                                                       ....
+
+7/4/14 5:05:49 PM :Time: 0:01.990: SENT, 13 bytes
+x00 x07 x52 x00 x00 x00 x00 x00 x04 x2E x4B xE3 xF9                   ..R.......K..
+
+7/4/14 5:05:50 PM :Time: 0:02.039: Received, 3 bytes
+x04 x01 x00                                                           ...
+
+7/4/14 5:05:50 PM :Debug: Read page time: 51ms.
+7/4/14 5:05:50 PM :Debug: Reading ECU Data, 0.75 complete
+7/4/14 5:05:50 PM :Time: 0:02.040: Received, 1028 bytes
+x00 x00 x00 x00 x9A x99 xEF x42 x00 x00 x00 x41 x00 x00 x10 x41       .......B...A...A
+x00 x00 x20 x41 x00 x00 x30 x41 x00 x00 x40 x41 x00 x00 x50 x41       ...A..0A..@A..PA
+x00 x00 x60 x41 x00 x00 x70 x41 x00 x00 x00 x00 x00 x00 x00 x00       ..`A..pA........
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x20 xC2 x00 x00 xF0 xC1       ................
+x00 x00 xA0 xC1 x00 x00 x20 xC1 x00 x00 x00 x00 x00 x00 x20 x41       ...............A
+x00 x00 xA0 x41 x00 x00 xF0 x41 x00 x00 x20 x42 x00 x00 x48 x42       ...A...A...B..HB
+x00 x00 x70 x42 x00 x00 x8C x42 x00 x00 xA0 x42 x00 x00 xB4 x42       ..pB...B...B...B
+x00 x00 xC8 x42 x00 x00 xDC x42 x00 x00 x80 x3F x00 x00 x80 x3F       ...B...B...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x20 xC2 x00 x00 xF0 xC1       ...?...?........
+x00 x00 xA0 xC1 x00 x00 x20 xC1 x00 x00 x00 x00 x00 x00 x20 x41       ...............A
+x00 x00 xA0 x41 x00 x00 xF0 x41 x00 x00 x20 x42 x00 x00 x48 x42       ...A...A...B..HB
+x00 x00 x70 x42 x00 x00 x8C x42 x00 x00 xA0 x42 x00 x00 xB4 x42       ..pB...B...B...B
+x00 x00 xC8 x42 x00 x00 xDC x42 x00 x00 x80 x3F x00 x00 x80 x3F       ...B...B...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x64 x00 xEE x02 x01 x00       ...?...?..d.....
+x00 x00 x00 x00 x00 x00 x82 x42 x00 x00 x70 x41 x00 x00 x00 x41       .......B..pA...A
+x26 x02 x00 x00 x00 x00 x48 x44 xB8 xB6 xD2 x44 xB8 xB6 x20 x45       &.....HD...D...E
+x3D x12 x58 x45 xCD xB6 x87 x45 x8F x64 xA3 x45 x3D x12 xBF x45       =.XE...E.d.E=..E
+x00 xC0 xDA x45 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ...E............
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x48 x44 xB8 xB6 xD2 x44 xB8 xB6 x20 x45       ......HD...D...E
+x3D x12 x58 x45 xCD xB6 x87 x45 x8F x64 xA3 x45 x3D x12 xBF x45       =.XE...E.d.E=..E
+x00 xC0 xDA x45 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ...E............
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x01 x00 x00 x00       ................
+x04 x00 x00 x00 x00 x00 xA0 xC1 x78 x1C xBF x41 x3C x8E x43 x42       ........x..A<.CB
+x00 xA0 x8C x46 x00 x40 x03 x45 x00 x00 x7A x44 x00 x40 x4E x45       ...F.@.E..zD.@NE
+x80 xB4 x5A xB9 xF2 x12 x0C x3A x54 xA2 x99 xB5 x00 x00 x00 x42       ..Z....:T......B
+x00 x00 x96 x42 x00 x00 xF0 x42 x00 x70 x14 x46 x00 x40 x03 x45       ...B...B.p.F.@.E
+x00 x00 x7A x44 x00 xC0 x28 x45 x76 x1A x47 xBB xB4 xCE x7C x3A       ..zD..(Ev.G...|:
+x0C xE7 x5B xB6 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ..[.............
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x80 x3F x00 xA0 x8C x45       ...........?...E
+x00 x50 x43 x46 x00 x00 x80 xBF x00 x00 x80 xBF x00 x00 x80 xBF       .PCF............
+x00 x00 x80 xBF x00 x00 x80 xBF x00 x00 x80 x40 x00 x00 x80 x40       ...........@...@
+x00 x00 x00 x00 x99 x99 x99 x3F xE1 x7A xB4 x3F x29 x5C xCF x3F       .......?.z.?)\.?
+x1E x85 xEB x3F x33 x33 x03 x40 xD7 xA3 x10 x40 x52 xB8 x1E x40       ...?33.@...@R..@
+xF6 x28 x2C x40 x99 x99 x39 x40 x14 xAE x47 x40 xB8 x1E x55 x40       .(,@..9@..G@..U@
+x5C x8F x62 x40 xD7 xA3 x70 x40 x7B x14 x7E x40 x8F xC2 x85 x40       \.b@..p@{.~@...@
+xCD xCC x8C x40 x00 x00 x48 x44 x8F xAA x97 x44 x1E x55 xCB x44       ...@..HD...D.U.D
+x00 x00 xFF x44 x47 x55 x19 x45 x8F x2A x33 x45 x00 x00 x4D x45       ...DGU.E.*3E..ME
+x47 xD5 x66 x45 x47 x55 x80 x45 x00 x40 x8D x45 xA4 x2A x9A x45       G.fEGU.E.@.E.*.E
+x47 x15 xA7 x45 x00 x00 xB4 x45 xA4 xEA xC0 x45 x47 xD5 xCD x45       G..E...E...EG..E
+x00 xC0 xDA x45 x00 x00 xAE x42 x00 x00 x8C x42 x00 x00 x00 x00       ...E...B...B....
+x00 x00 x48 x42 x03 x00 x00 x00 x99 x99 x99 x3F xE1 x7A xB4 x3F       ..HB.......?.z.?
+x29 x5C xCF x3F x1E x85 xEB x3F x33 x33 x03 x40 xD7 xA3 x10 x40       )\.?...?33.@...@
+x52 xB8 x1E x40 xF6 x28 x2C x40 x99 x99 x39 x40 x14 xAE x47 x40       R..@.(,@..9@..G@
+xB8 x1E x55 x40 x5C x8F x62 x40 xD7 xA3 x70 x40 x7B x14 x7E x40       ..U@\.b@..p@{.~@
+x8F xC2 x85 x40 xCD xCC x8C x40 x00 x00 x48 x44 x8F xAA x97 x44       ...@...@..HD...D
+x1E x55 xCB x44 x00 x00 xFF x44 x47 x55 x19 x45 x8F x2A x33 x45       .U.D...DGU.E.*3E
+x00 x00 x4D x45 x47 xD5 x66 x45 x47 x55 x80 x45 x00 x40 x8D x45       ..MEG.fEGU.E.@.E
+xA4 x2A x9A x45 x47 x15 xA7 x45 x00 x00 xB4 x45 xA4 xEA xC0 x45       .*.EG..E...E...E
+x47 xD5 xCD x45 x00 xC0 xDA x45 x66 x66 xA6 x3F x58 x1B x00 x00       G..E...Eff.?X...
+x00 x00 x00 x00 x01 x00 x00 x00 x00 x00 x2F x43 x00 x00 x00 x40       ........../C...@
+x00 x00 x00 x00 xAB xAA xAA x40 x00 x00 x96 x42 x00 x00 x8C x42       .......@...B...B
+x01 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x32 x00 x00 x00       ............2...
+x04 x00 x00 x00 x00 x00 x00 x00 x01 x00 x00 x00 x00 x00 x00 x3F       ...............?
+x01 x00 x00 x00 x00 x00 x00 x00 xA0 x52 x33 x01 x14 x00 x00 x00       .........R3.....
+x04 x00 x00 x00 x03 x00 x00 x00 x01 x00 x00 x00 x14 x00 x00 x00       ................
+x15 x1F x50 x47                                                       ..PG
+
+7/4/14 5:05:50 PM :Debug: commThreadExpectedReturnTime set to ms from now: 20180
+7/4/14 5:05:50 PM :Time: 0:02.051: SENT, 9 bytes
+x00 x03 x50 x00 x00 x93 xFD xF7 xA2                                   ..P......
+
+7/4/14 5:05:50 PM :Debug: commThreadExpectedReturnTime set to ms from now: 20260
+7/4/14 5:05:50 PM :Time: 0:02.101: Received, 3 bytes
+x00 x01 x00                                                           ...
+
+7/4/14 5:05:50 PM :Time: 0:02.101: Received, 4 bytes
+xD2 x02 xEF x8D                                                       ....
+
+7/4/14 5:05:50 PM :Time: 0:02.101: SENT, 13 bytes
+x00 x07 x52 x00 x00 x00 x00 x00 x04 x2E x4B xE3 xF9                   ..R.......K..
+
+7/4/14 5:05:50 PM :Time: 0:02.152: Received, 3 bytes
+x04 x01 x00                                                           ...
+
+7/4/14 5:05:50 PM :Debug: Read page time: 51ms.
+7/4/14 5:05:50 PM :Debug: Reading ECU Data, 1.0 complete
+7/4/14 5:05:50 PM :Time: 0:02.152: Received, 1028 bytes
+x00 x00 x00 x00 x9A x99 xEF x42 x00 x00 x00 x41 x00 x00 x10 x41       .......B...A...A
+x00 x00 x20 x41 x00 x00 x30 x41 x00 x00 x40 x41 x00 x00 x50 x41       ...A..0A..@A..PA
+x00 x00 x60 x41 x00 x00 x70 x41 x00 x00 x00 x00 x00 x00 x00 x00       ..`A..pA........
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x20 xC2 x00 x00 xF0 xC1       ................
+x00 x00 xA0 xC1 x00 x00 x20 xC1 x00 x00 x00 x00 x00 x00 x20 x41       ...............A
+x00 x00 xA0 x41 x00 x00 xF0 x41 x00 x00 x20 x42 x00 x00 x48 x42       ...A...A...B..HB
+x00 x00 x70 x42 x00 x00 x8C x42 x00 x00 xA0 x42 x00 x00 xB4 x42       ..pB...B...B...B
+x00 x00 xC8 x42 x00 x00 xDC x42 x00 x00 x80 x3F x00 x00 x80 x3F       ...B...B...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x20 xC2 x00 x00 xF0 xC1       ...?...?........
+x00 x00 xA0 xC1 x00 x00 x20 xC1 x00 x00 x00 x00 x00 x00 x20 x41       ...............A
+x00 x00 xA0 x41 x00 x00 xF0 x41 x00 x00 x20 x42 x00 x00 x48 x42       ...A...A...B..HB
+x00 x00 x70 x42 x00 x00 x8C x42 x00 x00 xA0 x42 x00 x00 xB4 x42       ..pB...B...B...B
+x00 x00 xC8 x42 x00 x00 xDC x42 x00 x00 x80 x3F x00 x00 x80 x3F       ...B...B...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x64 x00 xEE x02 x01 x00       ...?...?..d.....
+x00 x00 x00 x00 x00 x00 x82 x42 x00 x00 x70 x41 x00 x00 x00 x41       .......B..pA...A
+x26 x02 x00 x00 x00 x00 x48 x44 xB8 xB6 xD2 x44 xB8 xB6 x20 x45       &.....HD...D...E
+x3D x12 x58 x45 xCD xB6 x87 x45 x8F x64 xA3 x45 x3D x12 xBF x45       =.XE...E.d.E=..E
+x00 xC0 xDA x45 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ...E............
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x48 x44 xB8 xB6 xD2 x44 xB8 xB6 x20 x45       ......HD...D...E
+x3D x12 x58 x45 xCD xB6 x87 x45 x8F x64 xA3 x45 x3D x12 xBF x45       =.XE...E.d.E=..E
+x00 xC0 xDA x45 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ...E............
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x01 x00 x00 x00       ................
+x04 x00 x00 x00 x00 x00 xA0 xC1 x78 x1C xBF x41 x3C x8E x43 x42       ........x..A<.CB
+x00 xA0 x8C x46 x00 x40 x03 x45 x00 x00 x7A x44 x00 x40 x4E x45       ...F.@.E..zD.@NE
+x80 xB4 x5A xB9 xF2 x12 x0C x3A x54 xA2 x99 xB5 x00 x00 x00 x42       ..Z....:T......B
+x00 x00 x96 x42 x00 x00 xF0 x42 x00 x70 x14 x46 x00 x40 x03 x45       ...B...B.p.F.@.E
+x00 x00 x7A x44 x00 xC0 x28 x45 x76 x1A x47 xBB xB4 xCE x7C x3A       ..zD..(Ev.G...|:
+x0C xE7 x5B xB6 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ..[.............
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x80 x3F x00 xA0 x8C x45       ...........?...E
+x00 x50 x43 x46 x00 x00 x80 xBF x00 x00 x80 xBF x00 x00 x80 xBF       .PCF............
+x00 x00 x80 xBF x00 x00 x80 xBF x00 x00 x80 x40 x00 x00 x80 x40       ...........@...@
+x00 x00 x00 x00 x99 x99 x99 x3F xE1 x7A xB4 x3F x29 x5C xCF x3F       .......?.z.?)\.?
+x1E x85 xEB x3F x33 x33 x03 x40 xD7 xA3 x10 x40 x52 xB8 x1E x40       ...?33.@...@R..@
+xF6 x28 x2C x40 x99 x99 x39 x40 x14 xAE x47 x40 xB8 x1E x55 x40       .(,@..9@..G@..U@
+x5C x8F x62 x40 xD7 xA3 x70 x40 x7B x14 x7E x40 x8F xC2 x85 x40       \.b@..p@{.~@...@
+xCD xCC x8C x40 x00 x00 x48 x44 x8F xAA x97 x44 x1E x55 xCB x44       ...@..HD...D.U.D
+x00 x00 xFF x44 x47 x55 x19 x45 x8F x2A x33 x45 x00 x00 x4D x45       ...DGU.E.*3E..ME
+x47 xD5 x66 x45 x47 x55 x80 x45 x00 x40 x8D x45 xA4 x2A x9A x45       G.fEGU.E.@.E.*.E
+x47 x15 xA7 x45 x00 x00 xB4 x45 xA4 xEA xC0 x45 x47 xD5 xCD x45       G..E...E...EG..E
+x00 xC0 xDA x45 x00 x00 xAE x42 x00 x00 x8C x42 x00 x00 x00 x00       ...E...B...B....
+x00 x00 x48 x42 x03 x00 x00 x00 x99 x99 x99 x3F xE1 x7A xB4 x3F       ..HB.......?.z.?
+x29 x5C xCF x3F x1E x85 xEB x3F x33 x33 x03 x40 xD7 xA3 x10 x40       )\.?...?33.@...@
+x52 xB8 x1E x40 xF6 x28 x2C x40 x99 x99 x39 x40 x14 xAE x47 x40       R..@.(,@..9@..G@
+xB8 x1E x55 x40 x5C x8F x62 x40 xD7 xA3 x70 x40 x7B x14 x7E x40       ..U@\.b@..p@{.~@
+x8F xC2 x85 x40 xCD xCC x8C x40 x00 x00 x48 x44 x8F xAA x97 x44       ...@...@..HD...D
+x1E x55 xCB x44 x00 x00 xFF x44 x47 x55 x19 x45 x8F x2A x33 x45       .U.D...DGU.E.*3E
+x00 x00 x4D x45 x47 xD5 x66 x45 x47 x55 x80 x45 x00 x40 x8D x45       ..MEG.fEGU.E.@.E
+xA4 x2A x9A x45 x47 x15 xA7 x45 x00 x00 xB4 x45 xA4 xEA xC0 x45       .*.EG..E...E...E
+x47 xD5 xCD x45 x00 xC0 xDA x45 x66 x66 xA6 x3F x58 x1B x00 x00       G..E...Eff.?X...
+x00 x00 x00 x00 x01 x00 x00 x00 x00 x00 x2F x43 x00 x00 x00 x40       ........../C...@
+x00 x00 x00 x00 xAB xAA xAA x40 x00 x00 x96 x42 x00 x00 x8C x42       .......@...B...B
+x01 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x32 x00 x00 x00       ............2...
+x04 x00 x00 x00 x00 x00 x00 x00 x01 x00 x00 x00 x00 x00 x00 x3F       ...............?
+x01 x00 x00 x00 x00 x00 x00 x00 xA0 x52 x33 x01 x14 x00 x00 x00       .........R3.....
+x04 x00 x00 x00 x03 x00 x00 x00 x01 x00 x00 x00 x14 x00 x00 x00       ................
+x15 x1F x50 x47                                                       ..PG
+
+7/4/14 5:05:50 PM :Debug: Read All Data
+7/4/14 5:05:50 PM :Debug: isBlank Time: 0 ms.
+7/4/14 5:05:50 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/4/14 5:05:50 PM :Debug: commThreadExpectedReturnTime set to ms from now: 20140
+Time: 0:02.153: Processing Complete: 
+7/4/14 5:05:50 PM :Time: 0:02.154: SENT, 7 bytes
+x00 x01 x4F x34 x61 xB3 x8C                                           ..O4a..
+
+7/4/14 5:05:50 PM :Debug: DiffTime: 6 ms.
+7/4/14 5:05:50 PM :Debug: Time to get Panels = 0ms.
+7/4/14 5:05:50 PM :Debug: old style time to read outpc: 49 ms.
+7/4/14 5:05:50 PM :Time: 0:02.204: Received, 3 bytes
+x00 x35 x00                                                           .5.
+
+7/4/14 5:05:50 PM :Time: 0:02.204: Received, 56 bytes
+xF0 x00 x00 x00 x76 x30 x19 x42 x8F x86 x89 x42 xE0 x89 x9D x3E       ....v0.B...B...>
+x75 x4A x27 x3F x08 x84 x10 x41 x00 x00 x00 x00 x02 x0B x30 x3D       uJ'?...A......0=
+x66 x00 x00 x00 xB9 x8B x3B x42 x00 x00 xC0 x7F x01 x00 x00 x00       f.....;B.......
+xA0 xA7 x37 x42 x59 x00 x00 xCC                                       ..7BY...
+
+7/4/14 5:05:50 PM :Info: dr: 0:47
+7/4/14 5:05:50 PM :Debug: Range Sort Time: 0
+7/4/14 5:05:50 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/4/14 5:05:50 PM :Debug: commThreadExpectedReturnTime set to ms from now: 20140
+7/4/14 5:05:50 PM :Time: 0:02.215: SENT, 7 bytes
+x00 x01 x4F x34 x61 xB3 x8C                                           ..O4a..
+

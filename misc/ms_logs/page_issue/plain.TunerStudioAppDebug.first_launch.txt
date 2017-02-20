@@ -1,0 +1,2531 @@
+TunerStudio 2.6.01 started on Sat Jul 05 20:55:36 EDT 2014
+JRE 1.7.0_60, Windows 7 6.1, x86
+java.library.path=lib
+TunerStudioMS.jar
+Look:Metal, ClassName:'javax.swing.plaf.metal.MetalLookAndFeel'
+Look:Nimbus, ClassName:'javax.swing.plaf.nimbus.NimbusLookAndFeel'
+Look:CDE/Motif, ClassName:'com.sun.java.swing.plaf.motif.MotifLookAndFeel'
+Look:Windows, ClassName:'com.sun.java.swing.plaf.windows.WindowsLookAndFeel'
+Look:Windows Classic, ClassName:'com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel'
+Setting Look & Feel to:javax.swing.plaf.metal.MetalLookAndFeel
+7/5/14 8:55:37 PM :Debug: Command Non-VolatileBytes for F resolved to: x46                                                                   F
+7/5/14 8:55:37 PM :Debug: Command Non-VolatileBytes for I resolved to: x49                                                                   I
+7/5/14 8:55:37 PM :Debug: Command Non-VolatileBytes for f resolved to: x66                                                                   f
+7/5/14 8:55:37 PM :Debug: App Name:TunerStudio, appEdition:MS Lite!
+7/5/14 8:55:39 PM :Debug: Time to retreive font name list: 32 ms.
+WARNING:  RXTX Version mismatch
+	Jar version = RXTX-2.2pre1
+	native lib Version = RXTX-2.1-7
+7/5/14 8:55:39 PM :Info: Initialized RXTX driver: 10ms.
+No check, last update check=Fri Jul 04 15:49:57 EDT 2014
+MSmain: No check, last update check=Fri Jul 04 15:49:54 EDT 2014
+MSad: No check, last update check=Fri Jul 04 15:49:57 EDT 2014
+7/5/14 8:55:51 PM :Debug: Time to load ini list: 10ms.
+7/5/14 8:55:59 PM :Debug: Filtered ConfigurationOptionGroup in 2ms.
+7/5/14 8:56:00 PM :Info: Read file canPcVariables.ini: 0.0ms
+7/5/14 8:56:00 PM :Info: Filtered ini: 0.0ms
+7/5/14 8:56:00 PM :Info: Loading Trigger Wheels
+7/5/14 8:56:00 PM :Info: Loaded All known ini sections
+7/5/14 8:56:00 PM :Info: Parsed and validated ini "canPcVariables.ini" in : 33ms.
+7/5/14 8:56:00 PM :Info: Read file rusefi.ini: 1.0ms
+7/5/14 8:56:00 PM :Info: Filtered ini: 0.0ms
+7/5/14 8:56:00 PM :Debug: ini signature: MShift v0.01
+7/5/14 8:56:00 PM :Info: Set Write Blocks on = true
+7/5/14 8:56:00 PM :Info: Loading Trigger Wheels
+7/5/14 8:56:00 PM :Info: Loaded All known ini sections
+7/5/14 8:56:00 PM :Info: Parsed and validated ini "rusefi.ini" in : 25ms.
+7/5/14 8:56:00 PM :Debug: Adding Configuration: MyCar
+7/5/14 8:56:00 PM :Info: No secl OutputChannel, och sync monitor disabled.
+7/5/14 8:56:02 PM :Debug: goOffline Starting, Time:0
+7/5/14 8:56:02 PM :Info: Deactivated Turbo Baud, goOffline
+7/5/14 8:56:02 PM :Debug: goOffline about to stopProcessing, Time:1
+7/5/14 8:56:02 PM :Debug: currentPort == null:true
+7/5/14 8:56:02 PM :Debug: goOffline closed port, Time:1
+7/5/14 8:56:02 PM :Debug: goOffline comm thread stopped, Time:1
+7/5/14 8:56:02 PM :Debug: No Remaining Queue Write instructions
+7/5/14 8:56:02 PM :Debug: removing Configuration: MyCar
+7/5/14 8:56:02 PM :Info: No Persistor set, not saving active triggers.
+7/5/14 8:56:02 PM :Debug: Cancel Wizard
+7/5/14 8:56:14 PM :Debug: Time to load ini list: 12ms.
+7/5/14 8:56:22 PM :Debug: Filtered ConfigurationOptionGroup in 1ms.
+7/5/14 8:56:23 PM :Info: Read file canPcVariables.ini: 0.0ms
+7/5/14 8:56:23 PM :Info: Filtered ini: 0.0ms
+7/5/14 8:56:23 PM :Info: Loading Trigger Wheels
+7/5/14 8:56:23 PM :Info: Loaded All known ini sections
+7/5/14 8:56:23 PM :Info: Parsed and validated ini "canPcVariables.ini" in : 2ms.
+7/5/14 8:56:23 PM :Info: Read file rusefi.ini: 26.0ms
+7/5/14 8:56:23 PM :Info: Filtered ini: 0.0ms
+7/5/14 8:56:23 PM :Debug: ini signature: MShift v0.01
+7/5/14 8:56:23 PM :Info: Set Write Blocks on = true
+7/5/14 8:56:23 PM :Info: Loading Trigger Wheels
+7/5/14 8:56:23 PM :Info: Loaded All known ini sections
+7/5/14 8:56:23 PM :Info: Parsed and validated ini "rusefi.ini" in : 39ms.
+7/5/14 8:56:23 PM :Debug: Adding Configuration: MyCar
+7/5/14 8:56:23 PM :Info: No secl OutputChannel, och sync monitor disabled.
+7/5/14 8:56:27 PM :Debug: Time to save Dash: 55 ms.
+7/5/14 8:56:27 PM :Debug: High Speed Paint: true
+7/5/14 8:56:27 PM :Debug: High Speed Paint: true
+7/5/14 8:56:28 PM :Warning: Could not get Firmware signature
+7/5/14 8:56:28 PM :Debug: Time to save Dash: 15 ms.
+7/5/14 8:56:28 PM :Debug: goOffline Starting, Time:0
+7/5/14 8:56:28 PM :Info: Deactivated Turbo Baud, goOffline
+7/5/14 8:56:28 PM :Debug: goOffline about to stopProcessing, Time:0
+7/5/14 8:56:28 PM :Debug: currentPort == null:true
+7/5/14 8:56:28 PM :Debug: goOffline closed port, Time:0
+7/5/14 8:56:28 PM :Debug: goOffline comm thread stopped, Time:0
+7/5/14 8:56:28 PM :Debug: No Remaining Queue Write instructions
+7/5/14 8:56:28 PM :Debug: goOffline Starting, Time:0
+7/5/14 8:56:28 PM :Info: Deactivated Turbo Baud, goOffline
+7/5/14 8:56:28 PM :Debug: goOffline about to stopProcessing, Time:0
+7/5/14 8:56:28 PM :Debug: currentPort == null:true
+7/5/14 8:56:28 PM :Debug: goOffline closed port, Time:0
+7/5/14 8:56:28 PM :Debug: goOffline comm thread stopped, Time:0
+7/5/14 8:56:28 PM :Debug: No Remaining Queue Write instructions
+7/5/14 8:56:28 PM :Debug: removing Configuration: MyCar
+7/5/14 8:56:28 PM :Info: No Persistor set, not saving active triggers.
+7/5/14 8:56:28 PM :Debug: Opening project: C:\Users\pc\Documents\TunerStudioProjects\MyCar
+7/5/14 8:56:28 PM :Debug: Reading translation file as plain text because: fast binary headers not found. probably not a fast binary file
+7/5/14 8:56:28 PM :Debug: Filtered ConfigurationOptionGroup in 1ms.
+7/5/14 8:56:28 PM :Info: Read file canPcVariables.ini: 0.0ms
+7/5/14 8:56:28 PM :Info: Filtered ini: 0.0ms
+7/5/14 8:56:28 PM :Info: Loading Trigger Wheels
+7/5/14 8:56:28 PM :Info: Loaded All known ini sections
+7/5/14 8:56:28 PM :Info: Parsed and validated ini "canPcVariables.ini" in : 3ms.
+7/5/14 8:56:28 PM :Info: Read file mainController.ini: 1.0ms
+7/5/14 8:56:28 PM :Info: Filtered ini: 0.0ms
+7/5/14 8:56:28 PM :Debug: ini signature: MShift v0.01
+7/5/14 8:56:28 PM :Info: Set Write Blocks on = true
+7/5/14 8:56:28 PM :Info: Loading Trigger Wheels
+7/5/14 8:56:28 PM :Info: Loaded All known ini sections
+7/5/14 8:56:28 PM :Info: Parsed and validated ini "mainController.ini" in : 9ms.
+7/5/14 8:56:28 PM :Info: Not Loading default Tools because non are defined for signature: MShift v0.01
+7/5/14 8:56:28 PM :Debug: Adding Configuration: MyCar
+7/5/14 8:56:28 PM :Info: No secl OutputChannel, och sync monitor disabled.
+7/5/14 8:56:28 PM :Info: !!! Loaded config in 71
+7/5/14 8:56:28 PM :Info: Opening port: COM18
+7/5/14 8:56:28 PM :Debug: 0ms. - added Port
+7/5/14 8:56:28 PM :Debug: 28ms. - 1st got port
+7/5/14 8:56:28 PM :Debug: 28ms. - got port
+7/5/14 8:56:28 PM :Debug: 35ms. - setParameters
+7/5/14 8:56:28 PM :Debug: Monitoring COM18 @ 115200 baud for controllers.
+7/5/14 8:56:28 PM :Debug: Started new CommThread for MyCar
+7/5/14 8:56:28 PM :Info: Comm Manager for MyCar Started
+7/5/14 8:56:28 PM :Debug: commThreadExpectedReturnTime set to ms from now: 1220
+7/5/14 8:56:28 PM :Debug: Comm Read Thread Change! Old Thread:null, new Thread:COMM Thread13625.093399768062
+7/5/14 8:56:28 PM :Info: Started Comms Watchdog
+7/5/14 8:56:28 PM :Info: !!! Activated Project 145
+7/5/14 8:56:28 PM :Time: 0:00.091: SENT, 1 bytes
+x46                                                                   F
+
+7/5/14 8:56:28 PM :Debug: High Speed Paint: true
+7/5/14 8:56:28 PM :Debug: !!! Opened Dash 236
+7/5/14 8:56:29 PM :Debug: commThreadExpectedReturnTime set to ms from now: 1620
+7/5/14 8:56:29 PM :Time: 0:00.691: Received, 3 bytes
+x30 x30 x31                                                           001
+
+7/5/14 8:56:29 PM :Time: 0:00.691: SENT, 1 bytes
+x48                                                                   H
+
+7/5/14 8:56:29 PM :Info: Communicating with Bowling & Grippo MS1 Base Code MShift v0.01
+7/5/14 8:56:29 PM :Time: 0:01.492: Received, 13 bytes
+x4D x53 x68 x69 x66 x74 x20 x76 x30 x2E x30 x31 x00                   MShift.v0.01.
+
+Time: 0:01.493: Received Instruction: 
+Time: 0:01.537: Processing Instruction: 
+7/5/14 8:56:29 PM :Debug: Reading ECU Data, 0.0 complete
+7/5/14 8:56:29 PM :Debug: commThreadExpectedReturnTime set to ms from now: 860
+7/5/14 8:56:29 PM :Time: 0:01.595: SENT, 3 bytes
+x50 x00 x00                                                           P..
+
+7/5/14 8:56:30 PM :Debug: commThreadExpectedReturnTime set to ms from now: 20140
+7/5/14 8:56:30 PM :Time: 0:01.705: SENT, 7 bytes
+x52 x00 x00 x00 x00 x64 x05                                           R....d.
+
+7/5/14 8:56:30 PM :Debug: Read page time: 210ms.
+7/5/14 8:56:30 PM :Debug: Reading ECU Data, 0.25 complete
+7/5/14 8:56:30 PM :Time: 0:01.856: Received, 1380 bytes
+x00 x00 x00 x00 x9A x99 xEF x42 x00 x00 x00 x41 x00 x00 x10 x41       .......B...A...A
+x00 x00 x20 x41 x00 x00 x30 x41 x00 x00 x40 x41 x00 x00 x50 x41       ...A..0A..@A..PA
+x00 x00 x60 x41 x00 x00 x70 x41 x00 x00 x00 x00 x00 x00 x00 x00       ..`A..pA........
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x20 xC2 x00 x00 xF0 xC1       ................
+x00 x00 xA0 xC1 x00 x00 x20 xC1 x00 x00 x00 x00 x00 x00 x20 x41       ...............A
+x00 x00 xA0 x41 x00 x00 xF0 x41 x00 x00 x20 x42 x00 x00 x48 x42       ...A...A...B..HB
+x00 x00 x70 x42 x00 x00 x8C x42 x00 x00 xA0 x42 x00 x00 xB4 x42       ..pB...B...B...B
+x00 x00 xC8 x42 x00 x00 xDC x42 x00 x00 x80 x3F x00 x00 x80 x3F       ...B...B...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x20 xC2 x00 x00 xF0 xC1       ...?...?........
+x00 x00 xA0 xC1 x00 x00 x20 xC1 x00 x00 x00 x00 x00 x00 x20 x41       ...............A
+x00 x00 xA0 x41 x00 x00 xF0 x41 x00 x00 x20 x42 x00 x00 x48 x42       ...A...A...B..HB
+x00 x00 x70 x42 x00 x00 x8C x42 x00 x00 xA0 x42 x00 x00 xB4 x42       ..pB...B...B...B
+x00 x00 xC8 x42 x00 x00 xDC x42 x00 x00 x80 x3F x00 x00 x80 x3F       ...B...B...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x64 x00 xEE x02 x01 x00       ...?...?..d.....
+x00 x00 x00 x00 x00 x00 x82 x42 x00 x00 x70 x41 x00 x00 x00 x41       .......B..pA...A
+x26 x02 x00 x00 x00 x00 x48 x44 xB8 xB6 xD2 x44 xB8 xB6 x20 x45       &.....HD...D...E
+x3D x12 x58 x45 xCD xB6 x87 x45 x8F x64 xA3 x45 x3D x12 xBF x45       =.XE...E.d.E=..E
+x00 xC0 xDA x45 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ...E............
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x48 x44 xB8 xB6 xD2 x44 xB8 xB6 x20 x45       ......HD...D...E
+x3D x12 x58 x45 xCD xB6 x87 x45 x8F x64 xA3 x45 x3D x12 xBF x45       =.XE...E.d.E=..E
+x00 xC0 xDA x45 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ...E............
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x01 x00 x00 x00       ................
+x04 x00 x00 x00 x00 x00 xA0 xC1 x78 x1C xBF x41 x3C x8E x43 x42       ........x..A<.CB
+x00 xA0 x8C x46 x00 x40 x03 x45 x00 x00 x7A x44 x00 x40 x4E x45       ...F.@.E..zD.@NE
+x40 xB6 x5A xB9 x08 x13 x0C x3A x8C xA2 x99 xB5 x00 x00 x00 x42       @.Z....:.......B
+x00 x00 x96 x42 x00 x00 xF0 x42 x00 x70 x14 x46 x00 x40 x03 x45       ...B...B.p.F.@.E
+x00 x00 x7A x44 x00 xC0 x28 x45 x76 x1A x47 xBB xB4 xCE x7C x3A       ..zD..(Ev.G...|:
+x0C xE7 x5B xB6 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ..[.............
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x80 x3F x00 xA0 x8C x45       ...........?...E
+x00 x50 x43 x46 x00 x00 x80 xBF x00 x00 x80 xBF x00 x00 x80 xBF       .PCF............
+x00 x00 x80 xBF x00 x00 x80 xBF x00 x00 x80 x40 x00 x00 x80 x40       ...........@...@
+x00 x00 x00 x00 x99 x99 x99 x3F xE1 x7A xB4 x3F x29 x5C xCF x3F       .......?.z.?)\.?
+x1E x85 xEB x3F x33 x33 x03 x40 xD7 xA3 x10 x40 x52 xB8 x1E x40       ...?33.@...@R..@
+xF6 x28 x2C x40 x99 x99 x39 x40 x14 xAE x47 x40 xB8 x1E x55 x40       .(,@..9@..G@..U@
+x5C x8F x62 x40 xD7 xA3 x70 x40 x7B x14 x7E x40 x8F xC2 x85 x40       \.b@..p@{.~@...@
+xCD xCC x8C x40 x00 x00 x48 x44 x8F xAA x97 x44 x1E x55 xCB x44       ...@..HD...D.U.D
+x00 x00 xFF x44 x47 x55 x19 x45 x8F x2A x33 x45 x00 x00 x4D x45       ...DGU.E.*3E..ME
+x47 xD5 x66 x45 x47 x55 x80 x45 x00 x40 x8D x45 xA4 x2A x9A x45       G.fEGU.E.@.E.*.E
+x47 x15 xA7 x45 x00 x00 xB4 x45 xA4 xEA xC0 x45 x47 xD5 xCD x45       G..E...E...EG..E
+x00 xC0 xDA x45 x00 x00 xAE x42 x00 x00 x8C x42 x00 x00 x00 x00       ...E...B...B....
+x00 x00 x48 x42 x03 x00 x00 x00 x99 x99 x99 x3F xE1 x7A xB4 x3F       ..HB.......?.z.?
+x29 x5C xCF x3F x1E x85 xEB x3F x33 x33 x03 x40 xD7 xA3 x10 x40       )\.?...?33.@...@
+x52 xB8 x1E x40 xF6 x28 x2C x40 x99 x99 x39 x40 x14 xAE x47 x40       R..@.(,@..9@..G@
+xB8 x1E x55 x40 x5C x8F x62 x40 xD7 xA3 x70 x40 x7B x14 x7E x40       ..U@\.b@..p@{.~@
+x8F xC2 x85 x40 xCD xCC x8C x40 x00 x00 x48 x44 x8F xAA x97 x44       ...@...@..HD...D
+x1E x55 xCB x44 x00 x00 xFF x44 x47 x55 x19 x45 x8F x2A x33 x45       .U.D...DGU.E.*3E
+x00 x00 x4D x45 x47 xD5 x66 x45 x47 x55 x80 x45 x00 x40 x8D x45       ..MEG.fEGU.E.@.E
+xA4 x2A x9A x45 x47 x15 xA7 x45 x00 x00 xB4 x45 xA4 xEA xC0 x45       .*.EG..E...E...E
+x47 xD5 xCD x45 x00 xC0 xDA x45 x66 x66 xA6 x3F x58 x1B x00 x00       G..E...Eff.?X...
+x00 x00 x00 x00 x01 x00 x00 x00 x00 x00 x2F x43 x00 x00 x00 x40       ........../C...@
+x00 x00 x00 x00 xAB xAA xAA x40 x00 x00 x96 x42 x00 x00 x8C x42       .......@...B...B
+x01 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x32 x00 x00 x00       ............2...
+x04 x00 x00 x00 x00 x00 x00 x00 x01 x00 x00 x00 x00 x00 x00 x3F       ...............?
+x01 x00 x00 x00 x00 x00 x00 x00 xA1 x52 x33 x01 x14 x00 x00 x00       .........R3.....
+x04 x00 x00 x00 x03 x00 x00 x00 x01 x00 x00 x00 x14 x00 x00 x00       ................
+x01 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 xC0 x3F x00 x00 x20 x40 x01 x00 x00 x00 x01 x00 x00 x00       ...?...@........
+x00 x00 x00 x00 x00 x00 x80 x3F x0B x00 x00 x00 x07 x00 x00 x00       .......?........
+x01 x00 x00 x00 x0E x00 x00 x00 x00 x00 x00 x00 x00 x00 x10 x41       ...............A
+x00 x00 xA0 x40 x00 x00 x98 x41 x00 x00 x6C x42 x00 x00 x14 x42       ...@...A..lB...B
+x00 x00 x80 x3F x00 x00 x00 x00 x00 x00 xFA x43 x00 x00 x00 x00       ...?.......C....
+x04 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00                                                       ....
+
+7/5/14 8:56:30 PM :Debug: commThreadExpectedReturnTime set to ms from now: 860
+7/5/14 8:56:30 PM :Time: 0:01.894: SENT, 3 bytes
+x50 x01 x00                                                           P..
+
+7/5/14 8:56:30 PM :Debug: commThreadExpectedReturnTime set to ms from now: 20140
+7/5/14 8:56:30 PM :Time: 0:02.005: SENT, 7 bytes
+x52 x01 x00 x00 x00 x44 x01                                           R....D.
+
+7/5/14 8:56:30 PM :Debug: Read page time: 210ms.
+7/5/14 8:56:30 PM :Debug: Reading ECU Data, 0.5 complete
+7/5/14 8:56:30 PM :Time: 0:02.154: Received, 324 bytes
+x42 x00 x00 x00 x00 x00 x00 x00 x2D x00 x00 x00 x00 x00 x00 x00       B.......-.......
+x19 x00 x00 x00 x18 x00 x00 x00 x43 x00 x00 x00 x45 x00 x00 x00       ........C...E...
+x50 x00 x00 x00 x50 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       P...P...........
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x27 x00 x00 x00 x44 x00 x00 x00 x40 x00 x00 x00       ....'...D...@...
+x41 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       A...............
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x29 x00 x00 x00 x00 x00 x00 x00       ........).......
+x2F x00 x00 x00 x00 x00 x00 x00 x29 x00 x00 x00 x00 x00 x00 x00       /.......).......
+x28 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       (...............
+x49 x00 x00 x00 x4B x00 x00 x00 x4D x00 x00 x00 x4F x00 x00 x00       I...K...M...O...
+x1B x00 x00 x00 x1D x00 x00 x00 x31 x00 x00 x00 x32 x00 x00 x00       ........1...2...
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x01 x00 x00 x00       ................
+x01 x00 x00 x00 x01 x00 x00 x00 x01 x00 x00 x00 x02 x00 x00 x00       ................
+x00 x00 x00 x00 x01 x00 x00 x00 x01 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x01 x00 x00 x00 x01 x00 x00 x00       ................
+x01 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x26 x00 x00 x00       ............&...
+x05 x00 x00 x00 x08 x00 x00 x00 x47 x00 x00 x00 x64 x00 x00 x00       ........G...d...
+xC8 x00 x00 x00 x2C x01 x00 x00 x2C x01 x00 x00 xC8 x00 x00 x00       ....,...,.......
+x00 x96 x00 x00                                                       ....
+
+7/5/14 8:56:30 PM :Debug: commThreadExpectedReturnTime set to ms from now: 860
+7/5/14 8:56:30 PM :Time: 0:02.197: SENT, 3 bytes
+x50 x02 x00                                                           P..
+
+7/5/14 8:56:30 PM :Debug: commThreadExpectedReturnTime set to ms from now: 20140
+7/5/14 8:56:30 PM :Time: 0:02.307: SENT, 7 bytes
+x52 x02 x00 x00 x00 x00 x04                                           R......
+
+7/5/14 8:56:30 PM :Debug: Read page time: 210ms.
+7/5/14 8:56:30 PM :Debug: Reading ECU Data, 0.75 complete
+7/5/14 8:56:30 PM :Time: 0:02.456: Received, 1024 bytes
+x42 x60 xC5 x3F xC2 x17 xC6 x3F x94 xA3 xC6 x3F xC3 xF5 xC8 x3F       B`.?...?...?...?
+x66 x66 xC6 x3F x56 x9E x68 x3F x03 x78 x4B x3F x82 x73 x46 x3F       ff.?V.h?.xK?.sF?
+x04 xAF x4A x3F xCD xCC x4C x3F x71 x75 x4C x3F x85 x44 x4E x3F       ..J?..L?quL?.DN?
+x29 x5C x4F x3F x29 x5C x4F x3F x29 x5C x4F x3F x29 x5C x4F x3F       )\O?)\O?)\O?)\O?
+xEF x1C xC4 x3F x92 x5C xC8 x3F x2A x8F xC6 x3F x44 xC1 xC6 x3F       ...?.\.?*..?D..?
+xEB xE3 xC5 x3F xB4 x55 x4D x3F x29 x5C x4F x3F x98 xDB x49 x3F       ...?.UM?)\O?..I?
+xF0 x13 x4F x3F x78 xB7 x3E x3F x82 x8D x33 x3F x93 x1E x36 x3F       ..O?x.>?..3?..6?
+x7F xA2 x3E x3F x29 x5C x4F x3F x29 x5C x4F x3F x29 x5C x4F x3F       .>?)\O?)\O?)\O?
+xAF x94 xC5 x3F x56 xD5 xC5 x3F x91 x29 xC7 x3F x71 xE2 xC5 x3F       ...?V..?.).?q..?
+xA2 x29 xB5 x3F x1D x1C xEC x3D x00 x00 x00 x00 x00 x00 x00 x00       .).?...=........
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x66 xF7 xC4 x3F x5A xF6 xDE x3F x81 x7A xC7 x3F x4E xB4 xCB x3F       f..?Z..?.z.?N..?
+x6F x48 x9D x3F x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       oH.?............
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+xEF xAA x14 x40 xC8 x27 x5C x40 xAE x62 x34 x40 x49 x81 x0F x40       ...@.'\@.b4@I..@
+xBF x0D x08 x40 x56 xD6 x98 x3F xD6 x58 xFA x3E x00 x00 x00 x00       ...@V..?.X.>....
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x19 x4B xF6 x40 xEC xA3 xBE x40 x69 x6E x96 x40 xD0 x44 x78 x40       .K.@...@in.@.Dx@
+xD9 x5F x46 x40 x92 xCC x19 x40 xC9 x5A x1D x40 xCD x3E xE5 x3F       ._F@...@.Z.@.>.?
+xB1 x31 x0C x40 x58 xC7 x04 x40 xB0 x37 xAF x3F xA3 xCE xA4 x3F       .1.@X..@.7.?...?
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+xAF x47 x65 x41 x54 x5F x0B x41 x3C xDC xD1 x40 x88 xBA xAF x40       .GeAT_.A<..@...@
+x83 xC2 xA3 x40 xAC xE1 x89 x40 x93 xDF x4B x40 xB2 xBA x55 x40       ...@...@..K@..U@
+x59 x86 x38 x40 x19 xC9 x35 x40 x62 x2C x29 x40 x6D x53 x20 x40       Y.8@..5@b,)@mS.@
+x26 xFC x12 x40 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       &..@............
+x00 xD5 xAA x41 xDC xA7 x76 x41 x02 x41 x2F x41 xEA x78 x0C x41       ...A..vA.A/A.x.A
+x36 xBA xBB x40 x06 x3C xA1 x40 xC7 x9F xA3 x40 x78 xA8 x8C x40       6..@.<.@...@x..@
+xBE x30 x91 x40 xFB xCC x63 x40 x25 x08 x75 x40 x11 x6F x49 x40       .0.@..c@%.u@.oI@
+x56 x2C x58 x40 x85 xEB x31 x40 x85 xEB x31 x40 x85 xEB x31 x40       V,X@..1@..1@..1@
+xC8 x29 xA0 x41 x57 x7D x82 x41 x06 xAE x89 x41 x93 x9B x79 x41       .).AW}.A...A..yA
+xF3 x33 x2F x41 x3A xC0 xF8 x40 xB8 xC8 xC7 x40 xD2 xD1 xEC x40       .3/A:..@...@...@
+x62 x81 xD5 x40 x49 x49 xC4 x40 xC0 xF5 xB0 x40 x77 x9F x98 x40       b..@II.@...@w..@
+x79 xE6 x90 x40 xEC x51 x80 x40 xEC x51 x80 x40 xEC x51 x80 x40       y..@.Q.@.Q.@.Q.@
+xAC x1C x92 x41 x18 x6D x77 x41 x0D x86 x79 x41 x08 x55 x76 x41       ...A.mwA..yA.UvA
+xED xCA x4F x41 x5C x6D x55 x41 xE4 x5C x0E x41 x5B xD6 x0E x41       ..OA\mUA.\.A[..A
+xAD x86 x00 x41 xFA x9B xD8 x40 xC3 x58 xBA x40 x7E x38 xCD x40       ...A...@.X.@~8.@
+x64 xDB xC2 x40 x29 x5C xB7 x40 x29 x5C xB7 x40 x29 x5C xB7 x40       d..@)\.@)\.@)\.@
+x3D x51 x8B x41 xC7 xDC x75 x41 x80 xFF x72 x41 x17 x6A x75 x41       =Q.A..uA..rA.juA
+xEE xE7 x74 x41 xB3 x30 x76 x41 x66 x88 x67 x41 x57 x11 x3F x41       ..tA.0vAf.gAW.?A
+xD7 xC4 x2F x41 x6A x4D x1F x41 x47 x4E x10 x41 x9C x10 x07 x41       ../AjM.AGN.A...A
+x83 x7C xF0 x40 xCD xCC xDC x40 xCD xCC xDC x40 xCD xCC xDC x40       .|.@...@...@...@
+xEC x0A x88 x41 xF3 xF4 x75 x41 xB4 x02 x73 x41 xC9 x73 x74 x41       ...A..uA..sA.stA
+xCA x36 x75 x41 x7F xFC x78 x41 xF5 x38 x7A x41 xA5 xA5 x76 x41       .6uA.xA.8zA..vA
+x17 x16 x5A x41 x4C xB3 x2E x41 x0E x22 x38 x41 x67 x8F x2A x41       ..ZAL..A."8Ag.*A
+x3D xD4 x18 x41 x14 xAE x13 x41 x14 xAE x13 x41 x14 xAE x13 x41       =..A...A...A...A
+x95 xD4 x87 x41 xFA xC3 x75 x41 xB9 xBA x72 x41 xAE xD3 x74 x41       ...A..uA..rA..tA
+xE8 x4D x75 x41 x4E xF3 x7A x41 xBA xF7 x7C x41 x40 x3D x7B x41       .MuAN.zA..|A@={A
+xED x3F x7D x41 xE4 xD6 x71 x41 xF1 xA7 x6A x41 xA3 x8A x3E x41       .?}A..qA..jA..>A
+x61 xBF x40 x41 x14 xAE x13 x41 x14 xAE x13 x41 x14 xAE x13 x41       a.@A...A...A...A
+x07 xCE x87 x41 x46 x7D x75 x41 x35 xE4 x74 x41 x42 x98 x74 x41       ...AF}uA5.tAB.tA
+xEE x9E x74 x41 xD4 xBE x77 x41 x96 xDC x7E x41 x61 x7C x7C x41       ..tA..wA..~Aa||A
+x64 xB4 x7A x41 x18 x63 x7D x41 x97 xFC x80 x41 xF2 xDF x70 x41       d.zA.c}A...A..pA
+xB7 x8F x6F x41 x8F xC2 x69 x41 x8F xC2 x69 x41 x8F xC2 x69 x41       ..oA..iA..iA..iA
+xE8 xB1 x87 x41 xEE xE4 x75 x41 x96 x5D x73 x41 x77 xA6 x74 x41       ...A..uA.]sAw.tA
+x25 x38 x74 x41 xBF xC5 x77 x41 xC2 x3C x7D x41 xC6 xD6 x7C x41       %8tA..wA.<}A..|A
+x9E xD8 x7A x41 xE2 x3B x7D x41 x59 xF4 x7F x41 x41 x38 x80 x41       ..zA.;}AY.AA8.A
+xDB xA7 x77 x41 x3D x0A x73 x41 x3D x0A x73 x41 x3D x0A x73 x41       ..wA=.sA=.sA=.sA
+x7B x14 x88 x41 x00 x00 x74 x41 x48 xE1 x7A x41 x3D x0A x77 x41       {..A..tAH.zA=.wA
+xEC x51 x74 x41 x1F x85 x77 x41 xCD xCC x7C x41 x14 xAE x7B x41       .QtA..wA..|A..{A
+x9A x99 x79 x41 xD7 xA3 x7C x41 xC3 xF5 x80 x41 x48 xE1 x80 x41       ..yA..|A...AH..A
+x7B x14 x7A x41 x66 x66 x72 x41 x66 x66 x72 x41 x66 x66 x72 x41       {.zAffrAffrAffrA
+
+7/5/14 8:56:30 PM :Debug: commThreadExpectedReturnTime set to ms from now: 860
+7/5/14 8:56:30 PM :Time: 0:02.487: SENT, 3 bytes
+x50 x03 x00                                                           P..
+
+7/5/14 8:56:30 PM :Debug: commThreadExpectedReturnTime set to ms from now: 20140
+7/5/14 8:56:30 PM :Time: 0:02.597: SENT, 7 bytes
+x52 x03 x00 x00 x00 x00 x04                                           R......
+
+7/5/14 8:56:31 PM :Debug: Read page time: 210ms.
+7/5/14 8:56:31 PM :Debug: Reading ECU Data, 1.0 complete
+7/5/14 8:56:31 PM :Debug: Read All Data
+7/5/14 8:56:31 PM :Time: 0:02.746: Received, 1024 bytes
+xD5 x78 x29 x3F x29 x5C xF7 xC0 xA8 xC6 x85 xC1 xB8 x1E xB9 xC1       .x)?)\..........
+x1B x2F xEB xC1 xDD x24 xFA xC1 x98 x6E x00 xC2 xEE x7C xF3 xC1       ./...$...n...|..
+x02 x2B xF7 xC1 x7D x3F xD5 xC1 xCB xA1 xC5 xC1 x2F xDD xC8 xC1       .+..}?....../...
+x56 x0E xC9 xC1 x14 xAE xCB xC1 x14 xAE xCB xC1 x14 xAE xCB xC1       V...............
+xA8 xC6 x0B x3F x1B x2F xF5 xC0 x56 x0E x87 xC1 x23 xDB xBB xC1       ...?./..V...#...
+xF6 x28 xEC xC1 x8D x97 xFA xC1 x98 x6E x00 xC2 x7D x3F xF5 xC1       .(.......n..}?..
+x77 xBE xF3 xC1 x3D x0A xD7 xC1 xCF xF7 xC5 xC1 x9E xEF xC5 xC1       w...=...........
+x89 x41 xE8 xC1 xFA x7E xCC xC1 xFA x7E xCC xC1 xFA x7E xCC xC1       .A...~...~...~..
+x06 x81 x15 x3F x0A xD7 xFB xC0 x46 xB6 x85 xC1 x3F x35 xB8 xC1       ...?....F...?5..
+x04 x56 xEC xC1 xF8 x53 xF9 xC1 x39 xB4 x00 xC2 xEC x51 xF4 xC1       .V...S..9....Q..
+xDD x24 xF2 xC1 xF8 x53 xD3 xC1 x6F x12 xC1 xC1 x62 x10 xC8 xC1       .$...S..o...b...
+x81 x95 xC5 xC1 x10 x58 xD1 xC1 x10 x58 xD1 xC1 x10 x58 xD1 xC1       .....X...X...X..
+x06 x81 x15 x3F x56 x0E xF5 xC0 x46 xB6 x85 xC1 x31 x08 xBA xC1       ...?V...F...1...
+xE5 xD0 xEA xC1 xF2 xD2 xF7 xC1 x68 x91 x00 xC2 xF4 xFD xF6 xC1       ........h.......
+x02 x2B xF7 xC1 x62 x10 xD4 xC1 xC9 x76 xC4 xC1 xB8 x1E xC3 xC1       .+..b....v......
+x93 x18 xCE xC1 xCF xF7 x0D xC2 xCF xF7 x0D xC2 xCF xF7 x0D xC2       ................
+x06 x81 x15 x3F x81 x95 xFB xC0 xD3 x4D x84 xC1 x31 x08 xBA xC1       ...?.....M..1...
+x23 xDB xE9 xC1 x35 x5E xFA xC1 x7B x14 x02 xC2 xD1 x22 xF1 xC1       #...5^..{...."..
+xA0 x1A xF3 xC1 x64 x3B xCF xC1 xC3 xF5 xC2 xC1 xF0 xA7 xC0 xC1       ....d;..........
+x04 x56 xC6 xC1 xE5 xD0 xC2 xC1 xE5 xD0 xC2 xC1 xE5 xD0 xC2 xC1       .V..............
+x8D x97 xAE xBF x64 x3B xF7 xC0 xB0 x72 x86 xC1 x31 x08 xBA xC1       ....d;...r..1...
+xB8 x1E xED xC1 x4A x0C xF8 xC1 x27 x31 x01 xC2 xC7 x4B xF7 xC1       ....J...'1...K..
+x56 x0E xEF xC1 xD1 x22 xD3 xC1 xDF x4F xC5 xC1 x3B xDF xD9 xC1       V...."...O..;...
+xF4 xFD xCA xC1 x10 x58 xCB xC1 x10 x58 xCB xC1 x10 x58 xCB xC1       .....X...X...X..
+x8D x97 xAE x3F x0A xD7 x27 xC1 xE3 xA5 x85 xC1 x37 x89 xB3 xC1       ...?..'.....7...
+xE5 xD0 xE0 xC1 x6D xE7 xF1 xC1 xBC x74 x01 xC2 x8F xC2 xF5 xC1       ....m....t......
+x02 x2B xF7 xC1 x2F xDD xD4 xC1 xDF x4F xC5 xC1 xBC x74 xC3 xC1       .+../....O...t..
+x00 x00 xC4 xC1 x7B x14 xCC xC1 x7B x14 xCC xC1 x7B x14 xCC xC1       ....{...{...{...
+xF2 xD2 x1D x41 xF0 xA7 x26 xC1 x48 xE1 x3A xC1 x33 x33 x99 xC1       ...A..&.H.:.33..
+x31 x08 xCE xC1 xEE x7C xDF xC1 x4C x37 x02 xC2 x7D x3F xF5 xC1       1....|..L7..}?..
+x64 x3B xF1 xC1 xD5 x78 xD9 xC1 x19 x04 xCA xC1 xFA x7E xB6 xC1       d;...x.......~..
+xB2 x9D xC3 xC1 x8F xC2 xC9 xC1 x8F xC2 xC9 xC1 x8F xC2 xC9 xC1       ................
+x23 xDB x1D x41 xC9 x76 xAE x40 xF0 xA7 x36 x40 x2D xB2 x89 xC1       #..A.v.@..6@-...
+x7F x6A x8C xC1 x06 x81 xA5 xC1 xAE x47 xCD xC1 xE1 x7A xDE xC1       j.......G...z..
+x37 x89 xDD xC1 xC1 xCA xD9 xC1 x56 x0E xCF xC1 x48 xE1 xCA xC1       7.......V...H...
+xCD xCC xD0 xC1 x9E xEF xDF xC1 x9E xEF xDF xC1 x9E xEF xDF xC1       ................
+xF2 xD2 x1D x41 xC9 x76 xAE x40 xF0 xA7 x36 x40 xA0 x1A xAF xBE       ...A.v.@..6@....
+x7F x6A x48 xC1 x77 xBE x81 xC1 x79 xE9 xAA xC1 x52 xB8 xDC xC1       jH.w...y...R...
+x71 x3D xCE xC1 x29 x5C xC1 xC1 xDF x4F xC5 xC1 x08 xAC xCC xC1       q=..)\...O......
+x85 xEB xD3 xC1 x77 xBE xFF xC1 x77 xBE xFF xC1 x77 xBE xFF xC1       ....w...w...w...
+xF2 xD2 x1D x41 x12 x83 xB0 x40 xF0 xA7 x36 x40 x8B x6C x67 xBE       ...A...@..6@.lg.
+x64 x3B x2F xC0 x58 x39 x74 xC0 xB4 xC8 x3E xC1 xC9 x76 x96 xC1       d;/.X9t...>..v..
+xD3 x4D xA8 xC1 xD3 x4D xAC xC1 x14 xAE xA9 xC1 xF2 xD2 xB1 xC1       .M...M..........
+x35 x5E xC8 xC1 x7D x3F xC9 xC1 x7D x3F xC9 xC1 x7D x3F xC9 xC1       5^..}?..}?..}?..
+x23 xDB x1D x41 x75 x93 xB0 x40 xF0 xA7 x36 x40 x00 x00 x00 x00       #..Au..@..6@....
+x73 x68 x41 xC0 x58 x39 x74 xC0 x2D xB2 xCD xC0 x4C x37 xF9 xC0       shA.X9t.-...L7..
+x73 x68 x9B xC1 x48 xE1 xA6 xC1 x5E xBA x9F xC1 x71 x3D xA8 xC1       sh..H...^...q=..
+x02 x2B xAB xC1 x5C x8F xAC xC1 x5C x8F xAC xC1 x5C x8F xAC xC1       .+..\...\...\...
+xF2 xD2 x1D x41 x12 x83 xB0 x40 x73 x68 x31 x40 x8B x6C x67 xBE       ...A...@sh1@.lg.
+x17 xD9 x2E xC0 x00 x00 x60 xC0 x37 x89 xD9 xC0 xCB xA1 x01 xC1       ......`.7.......
+x5C x8F x0A xC1 x00 x00 x18 xC1 xA6 x9B x3C xC1 x56 x0E xA1 xC1       \.........<.V...
+x75 x93 xA0 xC1 x7B x14 xA4 xC1 x7B x14 xA4 xC1 x7B x14 xA4 xC1       u...{...{...{...
+xF2 xD2 x1D x41 x75 x93 xB0 x40 xF0 xA7 x36 x40 x00 x00 x00 x00       ...Au..@..6@....
+xEC x51 x38 xC0 x58 x39 x74 xC0 xA4 x70 xCD xC0 xB8 x1E x05 xC1       .Q8.X9t..p......
+xE5 xD0 x06 xC1 x12 x83 x08 xC1 x1F x85 x37 xC1 x6F x12 x37 xC1       ..........7.o.7.
+x8F xC2 x59 xC1 x1D x5A x40 xC1 x1D x5A x40 xC1 x1D x5A x40 xC1       ..Y..Z@..Z@..Z@.
+x00 x00 x1C x41 x75 x93 xB0 x40 xF0 xA7 x26 x40 x00 x00 x00 x00       ...Au..@..&@....
+xEC x51 x38 xC0 x23 xDB x69 xC0 x9A x99 xC1 xC0 x7F x6A xDC xC0       .Q8.#.i.....j..
+xB6 xF3 x05 xC1 xF2 xD2 x15 xC1 x58 x39 x3C xC1 x46 xB6 x3B xC1       ........X9<.F.;.
+xF2 xD2 x3D xC1 x19 x04 x46 xC1 x19 x04 x46 xC1 x19 x04 x46 xC1       ..=...F...F...F.
+x33 x33 xB3 x3E x48 xE1 xB2 x40 x12 x83 x00 x3F xC3 xF5 x68 x3F       33.>H..@...?..h?
+x1B x2F x5D x3F x58 x39 x74 x3F xD5 x78 xA9 x3F xB6 xF3 xED xC0       ./]?X9t?.x.?....
+x8F xC2 x95 x3F x79 xE9 x86 x3F x46 xB6 x03 x40 xA2 x45 x06 x40       ...?y..?F..@.E.@
+x39 xB4 x28 x40 xCB xA1 x45 xC1 xCB xA1 x45 xC1 xCB xA1 x45 xC1       9.(@..E...E...E.
+
+Time: 0:02.748: Processing Complete: 
+7/5/14 8:56:31 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:31 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:31 PM :Time: 0:02.800: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:31 PM :Time: 0:02.849: Received, 52 bytes
+xB0 x04 x00 x00 xE8 xFD x18 x42 xD0 xA9 x7C x42 x00 x00 x00 x00       .......B..|B....
+x57 x6A x25 x3F x03 x30 x10 x41 x00 x00 x00 x00 x01 x08 x80 x3C       Wj%?.0.A.......<
+x5F x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       _.....8B.......
+xE2 xE8 x31 x42                                                       ..1B
+
+7/5/14 8:56:31 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:31 PM :Info: dr: 0:47
+7/5/14 8:56:31 PM :Debug: Range Sort Time: 0
+7/5/14 8:56:31 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:31 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:31 PM :Time: 0:02.859: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:31 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:31 PM :Time: 0:02.908: Received, 52 bytes
+xB0 x04 x00 x00 xE8 xFD x18 x42 xD0 xA9 x7C x42 x00 x00 x00 x00       .......B..|B....
+x57 x6A x25 x3F x03 x30 x10 x41 x00 x00 x00 x00 x01 x08 x80 x3C       Wj%?.0.A.......<
+x5F x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       _.....8B.......
+xE2 xE8 x31 x42                                                       ..1B
+
+7/5/14 8:56:31 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:31 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:31 PM :Time: 0:02.918: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:31 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:31 PM :Time: 0:02.967: Received, 52 bytes
+xB0 x04 x00 x00 xE8 xFD x18 x42 xD0 xA9 x7C x42 x00 x00 x00 x00       .......B..|B....
+x57 x6A x25 x3F x03 x30 x10 x41 x00 x00 x00 x00 x01 x08 x80 x3C       Wj%?.0.A.......<
+x5F x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       _.....8B.......
+xE2 xE8 x31 x42                                                       ..1B
+
+7/5/14 8:56:31 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:31 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:31 PM :Time: 0:02.981: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:31 PM :Time: 0:03.031: Received, 52 bytes
+xAF x04 x00 x00 xE8 x51 x14 x42 xE4 x5F x80 x42 x00 x00 x00 x00       .....Q.B._.B....
+x5D xCA x25 x3F x03 x30 x10 x41 x00 x00 x00 x00 x01 x08 x80 x3C       ].%?.0.A.......<
+x5F x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       _.....8B.......
+x60 x6D x2F x42                                                       `m/B
+
+7/5/14 8:56:31 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:31 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:31 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:31 PM :Time: 0:03.045: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:31 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:31 PM :Time: 0:03.094: Received, 52 bytes
+xAF x04 x00 x00 xE8 x51 x14 x42 xE4 x5F x80 x42 x00 x00 x00 x00       .....Q.B._.B....
+x5D xCA x25 x3F x03 x30 x10 x41 x00 x00 x00 x00 x01 x08 x80 x3C       ].%?.0.A.......<
+x5F x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       _.....8B.......
+x60 x6D x2F x42                                                       `m/B
+
+7/5/14 8:56:31 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:31 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:31 PM :Time: 0:03.109: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:31 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:31 PM :Time: 0:03.159: Received, 52 bytes
+xAF x04 x00 x00 xE8 x51 x14 x42 xE4 x5F x80 x42 x00 x00 x00 x00       .....Q.B._.B....
+x5D xCA x25 x3F x03 x30 x10 x41 x00 x00 x00 x00 x01 x08 x80 x3C       ].%?.0.A.......<
+x5F x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       _.....8B.......
+x60 x6D x2F x42                                                       `m/B
+
+7/5/14 8:56:31 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:31 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:31 PM :Time: 0:03.175: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:31 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:31 PM :Time: 0:03.224: Received, 52 bytes
+xAF x04 x00 x00 xE8 x51 x14 x42 xE4 x5F x80 x42 x00 x00 x00 x00       .....Q.B._.B....
+x5D xCA x25 x3F x03 x30 x10 x41 x00 x00 x00 x00 x01 x08 x80 x3C       ].%?.0.A.......<
+x5F x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       _.....8B.......
+x60 x6D x2F x42                                                       `m/B
+
+7/5/14 8:56:31 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:31 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:31 PM :Time: 0:03.241: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:31 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:31 PM :Time: 0:03.290: Received, 52 bytes
+xB0 x04 x00 x00 x00 x99 x18 x42 xB0 xBE x7B x42 x00 x00 x00 x00       .......B..{B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x4B x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       K....39B.......
+x6C x62 x31 x42                                                       lb1B
+
+7/5/14 8:56:31 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:31 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:31 PM :Time: 0:03.307: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:31 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:31 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:31 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:31 PM :Time: 0:03.356: Received, 52 bytes
+xB0 x04 x00 x00 x00 x99 x18 x42 xB0 xBE x7B x42 x00 x00 x00 x00       .......B..{B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x4B x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       K....39B.......
+x6C x62 x31 x42                                                       lb1B
+
+7/5/14 8:56:31 PM :Time: 0:03.373: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:31 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:31 PM :Time: 0:03.423: Received, 52 bytes
+xB0 x04 x00 x00 x00 x99 x18 x42 xB0 xBE x7B x42 x00 x00 x00 x00       .......B..{B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x4B x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       K....39B.......
+x6C x62 x31 x42                                                       lb1B
+
+7/5/14 8:56:31 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:31 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:31 PM :Time: 0:03.445: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:31 PM :Debug: old style time to read outpc: 51 ms.
+7/5/14 8:56:31 PM :Time: 0:03.495: Received, 52 bytes
+xB0 x04 x00 x00 x00 x99 x18 x42 xB0 xBE x7B x42 x00 x00 x00 x00       .......B..{B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x4B x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       K....39B.......
+x6C x62 x31 x42                                                       lb1B
+
+7/5/14 8:56:31 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:31 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:31 PM :Time: 0:03.523: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:31 PM :Time: 0:03.572: Received, 52 bytes
+xB0 x04 x00 x00 x00 x99 x18 x42 xB0 xBE x7B x42 x00 x00 x00 x00       .......B..{B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x4B x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       K....39B.......
+x6C x62 x31 x42                                                       lb1B
+
+7/5/14 8:56:31 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:31 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:31 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:31 PM :Time: 0:03.587: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:32 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:32 PM :Time: 0:03.636: Received, 52 bytes
+xAF x04 x00 x00 x50 xC8 x19 x42 xA8 xF4 x7D x42 x00 x00 x00 x00       ....P..B..}B....
+x63 x2A x26 x3F x05 x48 x10 x41 x00 x00 x00 x00 x02 x0C xC0 x3C       c*&?.H.A.......<
+x4D x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       M....39B.......
+x66 xD3 x32 x42                                                       f.2B
+
+7/5/14 8:56:32 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:32 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:32 PM :Time: 0:03.652: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:32 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:32 PM :Time: 0:03.701: Received, 52 bytes
+xAF x04 x00 x00 x50 xC8 x19 x42 xA8 xF4 x7D x42 x00 x00 x00 x00       ....P..B..}B....
+x63 x2A x26 x3F x05 x48 x10 x41 x00 x00 x00 x00 x02 x0C xC0 x3C       c*&?.H.A.......<
+x4D x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       M....39B.......
+x66 xD3 x32 x42                                                       f.2B
+
+7/5/14 8:56:32 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:32 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:32 PM :Time: 0:03.718: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:32 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:32 PM :Time: 0:03.768: Received, 52 bytes
+xAF x04 x00 x00 x50 xC8 x19 x42 xA8 xF4 x7D x42 x00 x00 x00 x00       ....P..B..}B....
+x63 x2A x26 x3F x05 x48 x10 x41 x00 x00 x00 x00 x02 x0C xC0 x3C       c*&?.H.A.......<
+x4D x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       M....39B.......
+x66 xD3 x32 x42                                                       f.2B
+
+7/5/14 8:56:32 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:32 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:32 PM :Time: 0:03.785: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:32 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:32 PM :Time: 0:03.834: Received, 52 bytes
+xAF x04 x00 x00 x50 xC8 x19 x42 xA8 xF4 x7D x42 x00 x00 x00 x00       ....P..B..}B....
+x63 x2A x26 x3F x05 x48 x10 x41 x00 x00 x00 x00 x02 x0C xC0 x3C       c*&?.H.A.......<
+x4D x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       M....39B.......
+x66 xD3 x32 x42                                                       f.2B
+
+7/5/14 8:56:32 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:32 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:32 PM :Time: 0:03.856: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:32 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:32 PM :Time: 0:03.906: Received, 52 bytes
+xB0 x04 x00 x00 x18 x02 x18 x42 xD0 xA9 x7C x42 x00 x00 x00 x00       .......B..|B....
+x51 x0A x25 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       Q.%?.T.A.......<
+x5D x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       ].....8B.......
+x06 x2C x31 x42                                                       .,1B
+
+7/5/14 8:56:32 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:32 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:32 PM :Time: 0:03.923: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:32 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:32 PM :Time: 0:03.972: Received, 52 bytes
+xB0 x04 x00 x00 x18 x02 x18 x42 xD0 xA9 x7C x42 x00 x00 x00 x00       .......B..|B....
+x51 x0A x25 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       Q.%?.T.A.......<
+x5D x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       ].....8B.......
+x06 x2C x31 x42                                                       .,1B
+
+7/5/14 8:56:32 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:32 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:32 PM :Time: 0:03.994: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:32 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:32 PM :Time: 0:04.043: Received, 52 bytes
+xB0 x04 x00 x00 x18 x02 x18 x42 xD0 xA9 x7C x42 x00 x00 x00 x00       .......B..|B....
+x51 x0A x25 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       Q.%?.T.A.......<
+x5D x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       ].....8B.......
+x06 x2C x31 x42                                                       .,1B
+
+7/5/14 8:56:32 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:32 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:32 PM :Time: 0:04.060: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:32 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:32 PM :Time: 0:04.109: Received, 52 bytes
+xB0 x04 x00 x00 x18 x02 x18 x42 xD0 xA9 x7C x42 x00 x00 x00 x00       .......B..|B....
+x51 x0A x25 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       Q.%?.T.A.......<
+x5D x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       ].....8B.......
+x06 x2C x31 x42                                                       .,1B
+
+7/5/14 8:56:32 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:32 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:32 PM :Time: 0:04.126: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:32 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:32 PM :Time: 0:04.175: Received, 52 bytes
+xB0 x04 x00 x00 x18 x02 x18 x42 xD0 xA9 x7C x42 x00 x00 x00 x00       .......B..|B....
+x51 x0A x25 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       Q.%?.T.A.......<
+x5D x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       ].....8B.......
+x06 x2C x31 x42                                                       .,1B
+
+7/5/14 8:56:32 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:32 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:32 PM :Time: 0:04.192: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:32 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:32 PM :Time: 0:04.241: Received, 52 bytes
+xB0 x04 x00 x00 x18 x76 x11 x42 x70 xD0 x7F x42 x00 x00 x00 x00       .....v.Bp.B....
+x45 x4A x24 x3F x04 x3C x10 x41 x00 x00 x00 x00 x01 x0A xA0 x3C       EJ$?.<.A.......<
+x59 x00 x00 x00 x52 x19 x35 x42 x00 x00 xC0 x7F x01 x00 x00 x00       Y...R.5B.......
+xAE x0C x2D x42                                                       ..-B
+
+7/5/14 8:56:32 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:32 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:32 PM :Time: 0:04.264: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:32 PM :Debug: old style time to read outpc: 56 ms.
+7/5/14 8:56:32 PM :Time: 0:04.314: Received, 52 bytes
+xB0 x04 x00 x00 x18 x76 x11 x42 x70 xD0 x7F x42 x00 x00 x00 x00       .....v.Bp.B....
+x45 x4A x24 x3F x04 x3C x10 x41 x00 x00 x00 x00 x01 x0A xA0 x3C       EJ$?.<.A.......<
+x59 x00 x00 x00 x52 x19 x35 x42 x00 x00 xC0 x7F x01 x00 x00 x00       Y...R.5B.......
+xAE x0C x2D x42                                                       ..-B
+
+7/5/14 8:56:32 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:32 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:32 PM :Time: 0:04.329: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:32 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:32 PM :Time: 0:04.378: Received, 52 bytes
+xB0 x04 x00 x00 x18 x76 x11 x42 x70 xD0 x7F x42 x00 x00 x00 x00       .....v.Bp.B....
+x45 x4A x24 x3F x04 x3C x10 x41 x00 x00 x00 x00 x01 x0A xA0 x3C       EJ$?.<.A.......<
+x59 x00 x00 x00 x52 x19 x35 x42 x00 x00 xC0 x7F x01 x00 x00 x00       Y...R.5B.......
+xAE x0C x2D x42                                                       ..-B
+
+7/5/14 8:56:32 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:32 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:32 PM :Time: 0:04.394: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:32 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:32 PM :Time: 0:04.444: Received, 52 bytes
+xB0 x04 x00 x00 x18 x76 x11 x42 x70 xD0 x7F x42 x00 x00 x00 x00       .....v.Bp.B....
+x45 x4A x24 x3F x04 x3C x10 x41 x00 x00 x00 x00 x01 x0A xA0 x3C       EJ$?.<.A.......<
+x59 x00 x00 x00 x52 x19 x35 x42 x00 x00 xC0 x7F x01 x00 x00 x00       Y...R.5B.......
+xAE x0C x2D x42                                                       ..-B
+
+7/5/14 8:56:32 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:32 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:32 PM :Time: 0:04.466: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:32 PM :Time: 0:04.516: Received, 52 bytes
+xB0 x04 x00 x00 xD8 x2C x1B x42 xA8 x66 x7D x42 x00 x00 x00 x00       .....,.B.f}B....
+x1B xAA x21 x3F x08 x78 x10 x41 x00 x00 x00 x00 x01 x0A x20 x3D       ...?.x.A.......=
+x56 x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       V.....8B.......
+x4C xBB x33 x42                                                       L.3B
+
+7/5/14 8:56:32 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:32 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:32 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:32 PM :Time: 0:04.531: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:32 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:32 PM :Time: 0:04.580: Received, 52 bytes
+xB0 x04 x00 x00 xD8 x2C x1B x42 xA8 x66 x7D x42 x00 x00 x00 x00       .....,.B.f}B....
+x1B xAA x21 x3F x08 x78 x10 x41 x00 x00 x00 x00 x01 x0A x20 x3D       ...?.x.A.......=
+x56 x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       V.....8B.......
+x4C xBB x33 x42                                                       L.3B
+
+7/5/14 8:56:32 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:32 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:32 PM :Time: 0:04.597: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:33 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:33 PM :Time: 0:04.647: Received, 52 bytes
+xB0 x04 x00 x00 xD8 x2C x1B x42 xA8 x66 x7D x42 x00 x00 x00 x00       .....,.B.f}B....
+x1B xAA x21 x3F x08 x78 x10 x41 x00 x00 x00 x00 x01 x0A x20 x3D       ...?.x.A.......=
+x56 x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       V.....8B.......
+x4C xBB x33 x42                                                       L.3B
+
+7/5/14 8:56:33 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:33 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:33 PM :Time: 0:04.663: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:33 PM :Time: 0:04.713: Received, 52 bytes
+xB0 x04 x00 x00 xD8 x2C x1B x42 xA8 x66 x7D x42 x00 x00 x00 x00       .....,.B.f}B....
+x1B xAA x21 x3F x08 x78 x10 x41 x00 x00 x00 x00 x01 x0A x20 x3D       ...?.x.A.......=
+x56 x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       V.....8B.......
+x4C xBB x33 x42                                                       L.3B
+
+7/5/14 8:56:33 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:33 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:33 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:33 PM :Time: 0:04.729: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:33 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:33 PM :Time: 0:04.780: Received, 52 bytes
+xB0 x04 x00 x00 xD8 x2C x1B x42 xA8 x66 x7D x42 x00 x00 x00 x00       .....,.B.f}B....
+x1B xAA x21 x3F x08 x78 x10 x41 x00 x00 x00 x00 x01 x0A x20 x3D       ...?.x.A.......=
+x56 x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       V.....8B.......
+x4C xBB x33 x42                                                       L.3B
+
+7/5/14 8:56:33 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:33 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:33 PM :Time: 0:04.797: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:33 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:33 PM :Time: 0:04.848: Received, 52 bytes
+xB0 x04 x00 x00 x30 x76 x0E x42 x08 x71 x7F x42 x00 x00 x00 x00       ....0v.B.qB....
+x1B xAA x21 x3F x08 x78 x10 x41 x00 x00 x00 x00 x01 x0A x20 x3D       ...?.x.A.......=
+x5E x00 x00 x00 x77 x71 x37 x42 x00 x00 xC0 x7F x01 x00 x00 x00       ^...wq7B.......
+xE6 xB4 x2A x42                                                       ..*B
+
+7/5/14 8:56:33 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:33 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:33 PM :Time: 0:04.866: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:33 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:33 PM :Time: 0:04.916: Received, 52 bytes
+xB0 x04 x00 x00 x30 x76 x0E x42 x08 x71 x7F x42 x00 x00 x00 x00       ....0v.B.qB....
+x1B xAA x21 x3F x08 x78 x10 x41 x00 x00 x00 x00 x01 x0A x20 x3D       ...?.x.A.......=
+x5E x00 x00 x00 x77 x71 x37 x42 x00 x00 xC0 x7F x01 x00 x00 x00       ^...wq7B.......
+xE6 xB4 x2A x42                                                       ..*B
+
+7/5/14 8:56:33 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:33 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:33 PM :Time: 0:04.932: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:33 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:33 PM :Time: 0:04.981: Received, 52 bytes
+xB0 x04 x00 x00 x30 x76 x0E x42 x08 x71 x7F x42 x00 x00 x00 x00       ....0v.B.qB....
+x1B xAA x21 x3F x08 x78 x10 x41 x00 x00 x00 x00 x01 x0A x20 x3D       ...?.x.A.......=
+x5E x00 x00 x00 x77 x71 x37 x42 x00 x00 xC0 x7F x01 x00 x00 x00       ^...wq7B.......
+xE6 xB4 x2A x42                                                       ..*B
+
+7/5/14 8:56:33 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:33 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:33 PM :Time: 0:04.998: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:33 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:33 PM :Time: 0:05.048: Received, 52 bytes
+xB0 x04 x00 x00 x30 x76 x0E x42 x08 x71 x7F x42 x00 x00 x00 x00       ....0v.B.qB....
+x1B xAA x21 x3F x08 x78 x10 x41 x00 x00 x00 x00 x01 x0A x20 x3D       ...?.x.A.......=
+x5E x00 x00 x00 x77 x71 x37 x42 x00 x00 xC0 x7F x01 x00 x00 x00       ^...wq7B.......
+xE6 xB4 x2A x42                                                       ..*B
+
+7/5/14 8:56:33 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:33 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:33 PM :Time: 0:05.065: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:33 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:33 PM :Time: 0:05.115: Received, 52 bytes
+xB0 x04 x00 x00 xB0 x93 x1A x42 x60 x37 x7D x42 x00 x00 x00 x00       .......B`7}B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x61 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       a....39B.......
+x9C x3C x33 x42                                                       .<3B
+
+7/5/14 8:56:33 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:33 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:33 PM :Time: 0:05.133: SENT, 1 bytes
+x4F                                                                   O
+
+Time: 0:05.141: Received Instruction: 
+7/5/14 8:56:33 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:33 PM :Time: 0:05.183: Received, 52 bytes
+xB0 x04 x00 x00 xB0 x93 x1A x42 x60 x37 x7D x42 x00 x00 x00 x00       .......B`7}B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x61 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       a....39B.......
+x9C x3C x33 x42                                                       .<3B
+
+7/5/14 8:56:33 PM :Info: Initiating read page 1
+7/5/14 8:56:33 PM :Info: Initiating read page 3
+Time: 0:05.183: Received Instruction: 
+7/5/14 8:56:33 PM :Debug: commThreadExpectedReturnTime set to ms from now: 860
+Time: 0:05.207: Processing Instruction: 
+7/5/14 8:56:33 PM :Time: 0:05.228: SENT, 3 bytes
+x50 x00 x00                                                           P..
+
+7/5/14 8:56:33 PM :Debug: commThreadExpectedReturnTime set to ms from now: 20140
+7/5/14 8:56:33 PM :Time: 0:05.338: SENT, 7 bytes
+x52 x00 x00 x00 x00 x64 x05                                           R....d.
+
+7/5/14 8:56:33 PM :Debug: Read page time: 210ms.
+7/5/14 8:56:33 PM :Time: 0:05.488: Received, 1380 bytes
+x00 x00 x00 x00 x9A x99 xEF x42 x00 x00 x00 x41 x00 x00 x10 x41       .......B...A...A
+x00 x00 x20 x41 x00 x00 x30 x41 x00 x00 x40 x41 x00 x00 x50 x41       ...A..0A..@A..PA
+x00 x00 x60 x41 x00 x00 x70 x41 x00 x00 x00 x00 x00 x00 x00 x00       ..`A..pA........
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x20 xC2 x00 x00 xF0 xC1       ................
+x00 x00 xA0 xC1 x00 x00 x20 xC1 x00 x00 x00 x00 x00 x00 x20 x41       ...............A
+x00 x00 xA0 x41 x00 x00 xF0 x41 x00 x00 x20 x42 x00 x00 x48 x42       ...A...A...B..HB
+x00 x00 x70 x42 x00 x00 x8C x42 x00 x00 xA0 x42 x00 x00 xB4 x42       ..pB...B...B...B
+x00 x00 xC8 x42 x00 x00 xDC x42 x00 x00 x80 x3F x00 x00 x80 x3F       ...B...B...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x20 xC2 x00 x00 xF0 xC1       ...?...?........
+x00 x00 xA0 xC1 x00 x00 x20 xC1 x00 x00 x00 x00 x00 x00 x20 x41       ...............A
+x00 x00 xA0 x41 x00 x00 xF0 x41 x00 x00 x20 x42 x00 x00 x48 x42       ...A...A...B..HB
+x00 x00 x70 x42 x00 x00 x8C x42 x00 x00 xA0 x42 x00 x00 xB4 x42       ..pB...B...B...B
+x00 x00 xC8 x42 x00 x00 xDC x42 x00 x00 x80 x3F x00 x00 x80 x3F       ...B...B...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x64 x00 xEE x02 x01 x00       ...?...?..d.....
+x00 x00 x00 x00 x00 x00 x82 x42 x00 x00 x70 x41 x00 x00 x00 x41       .......B..pA...A
+x26 x02 x00 x00 x00 x00 x48 x44 xB8 xB6 xD2 x44 xB8 xB6 x20 x45       &.....HD...D...E
+x3D x12 x58 x45 xCD xB6 x87 x45 x8F x64 xA3 x45 x3D x12 xBF x45       =.XE...E.d.E=..E
+x00 xC0 xDA x45 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ...E............
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x48 x44 xB8 xB6 xD2 x44 xB8 xB6 x20 x45       ......HD...D...E
+x3D x12 x58 x45 xCD xB6 x87 x45 x8F x64 xA3 x45 x3D x12 xBF x45       =.XE...E.d.E=..E
+x00 xC0 xDA x45 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ...E............
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x01 x00 x00 x00       ................
+x04 x00 x00 x00 x00 x00 xA0 xC1 x78 x1C xBF x41 x3C x8E x43 x42       ........x..A<.CB
+x00 xA0 x8C x46 x00 x40 x03 x45 x00 x00 x7A x44 x00 x40 x4E x45       ...F.@.E..zD.@NE
+x40 xB6 x5A xB9 x08 x13 x0C x3A x8C xA2 x99 xB5 x00 x00 x00 x42       @.Z....:.......B
+x00 x00 x96 x42 x00 x00 xF0 x42 x00 x70 x14 x46 x00 x40 x03 x45       ...B...B.p.F.@.E
+x00 x00 x7A x44 x00 xC0 x28 x45 x76 x1A x47 xBB xB4 xCE x7C x3A       ..zD..(Ev.G...|:
+x0C xE7 x5B xB6 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ..[.............
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x80 x3F x00 xA0 x8C x45       ...........?...E
+x00 x50 x43 x46 x00 x00 x80 xBF x00 x00 x80 xBF x00 x00 x80 xBF       .PCF............
+x00 x00 x80 xBF x00 x00 x80 xBF x00 x00 x80 x40 x00 x00 x80 x40       ...........@...@
+x00 x00 x00 x00 x99 x99 x99 x3F xE1 x7A xB4 x3F x29 x5C xCF x3F       .......?.z.?)\.?
+x1E x85 xEB x3F x33 x33 x03 x40 xD7 xA3 x10 x40 x52 xB8 x1E x40       ...?33.@...@R..@
+xF6 x28 x2C x40 x99 x99 x39 x40 x14 xAE x47 x40 xB8 x1E x55 x40       .(,@..9@..G@..U@
+x5C x8F x62 x40 xD7 xA3 x70 x40 x7B x14 x7E x40 x8F xC2 x85 x40       \.b@..p@{.~@...@
+xCD xCC x8C x40 x00 x00 x48 x44 x8F xAA x97 x44 x1E x55 xCB x44       ...@..HD...D.U.D
+x00 x00 xFF x44 x47 x55 x19 x45 x8F x2A x33 x45 x00 x00 x4D x45       ...DGU.E.*3E..ME
+x47 xD5 x66 x45 x47 x55 x80 x45 x00 x40 x8D x45 xA4 x2A x9A x45       G.fEGU.E.@.E.*.E
+x47 x15 xA7 x45 x00 x00 xB4 x45 xA4 xEA xC0 x45 x47 xD5 xCD x45       G..E...E...EG..E
+x00 xC0 xDA x45 x00 x00 xAE x42 x00 x00 x8C x42 x00 x00 x00 x00       ...E...B...B....
+x00 x00 x48 x42 x03 x00 x00 x00 x99 x99 x99 x3F xE1 x7A xB4 x3F       ..HB.......?.z.?
+x29 x5C xCF x3F x1E x85 xEB x3F x33 x33 x03 x40 xD7 xA3 x10 x40       )\.?...?33.@...@
+x52 xB8 x1E x40 xF6 x28 x2C x40 x99 x99 x39 x40 x14 xAE x47 x40       R..@.(,@..9@..G@
+xB8 x1E x55 x40 x5C x8F x62 x40 xD7 xA3 x70 x40 x7B x14 x7E x40       ..U@\.b@..p@{.~@
+x8F xC2 x85 x40 xCD xCC x8C x40 x00 x00 x48 x44 x8F xAA x97 x44       ...@...@..HD...D
+x1E x55 xCB x44 x00 x00 xFF x44 x47 x55 x19 x45 x8F x2A x33 x45       .U.D...DGU.E.*3E
+x00 x00 x4D x45 x47 xD5 x66 x45 x47 x55 x80 x45 x00 x40 x8D x45       ..MEG.fEGU.E.@.E
+xA4 x2A x9A x45 x47 x15 xA7 x45 x00 x00 xB4 x45 xA4 xEA xC0 x45       .*.EG..E...E...E
+x47 xD5 xCD x45 x00 xC0 xDA x45 x66 x66 xA6 x3F x58 x1B x00 x00       G..E...Eff.?X...
+x00 x00 x00 x00 x01 x00 x00 x00 x00 x00 x2F x43 x00 x00 x00 x40       ........../C...@
+x00 x00 x00 x00 xAB xAA xAA x40 x00 x00 x96 x42 x00 x00 x8C x42       .......@...B...B
+x01 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x32 x00 x00 x00       ............2...
+x04 x00 x00 x00 x00 x00 x00 x00 x01 x00 x00 x00 x00 x00 x00 x3F       ...............?
+x01 x00 x00 x00 x00 x00 x00 x00 xA1 x52 x33 x01 x14 x00 x00 x00       .........R3.....
+x04 x00 x00 x00 x03 x00 x00 x00 x01 x00 x00 x00 x14 x00 x00 x00       ................
+x01 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 xC0 x3F x00 x00 x20 x40 x01 x00 x00 x00 x01 x00 x00 x00       ...?...@........
+x00 x00 x00 x00 x00 x00 x80 x3F x0B x00 x00 x00 x07 x00 x00 x00       .......?........
+x01 x00 x00 x00 x0E x00 x00 x00 x00 x00 x00 x00 x00 x00 x10 x41       ...............A
+x00 x00 xA0 x40 x00 x00 x98 x41 x00 x00 x6C x42 x00 x00 x14 x42       ...@...A..lB...B
+x00 x00 x80 x3F x00 x00 x00 x00 x00 x00 xFA x43 x00 x00 x00 x00       ...?.......C....
+x04 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00                                                       ....
+
+Time: 0:05.489: Processing Complete: 
+7/5/14 8:56:33 PM :Debug: commThreadExpectedReturnTime set to ms from now: 860
+Time: 0:05.514: Processing Instruction: 
+7/5/14 8:56:33 PM :Time: 0:05.535: SENT, 3 bytes
+x50 x02 x00                                                           P..
+
+7/5/14 8:56:33 PM :Debug: commThreadExpectedReturnTime set to ms from now: 20140
+7/5/14 8:56:34 PM :Time: 0:05.645: SENT, 7 bytes
+x52 x02 x00 x00 x00 x00 x04                                           R......
+
+7/5/14 8:56:34 PM :Debug: Read page time: 210ms.
+7/5/14 8:56:34 PM :Time: 0:05.795: Received, 1024 bytes
+x42 x60 xC5 x3F xC2 x17 xC6 x3F x94 xA3 xC6 x3F xC3 xF5 xC8 x3F       B`.?...?...?...?
+x66 x66 xC6 x3F x56 x9E x68 x3F x03 x78 x4B x3F x82 x73 x46 x3F       ff.?V.h?.xK?.sF?
+x04 xAF x4A x3F xCD xCC x4C x3F x71 x75 x4C x3F x85 x44 x4E x3F       ..J?..L?quL?.DN?
+x29 x5C x4F x3F x29 x5C x4F x3F x29 x5C x4F x3F x29 x5C x4F x3F       )\O?)\O?)\O?)\O?
+xEF x1C xC4 x3F x92 x5C xC8 x3F x2A x8F xC6 x3F x44 xC1 xC6 x3F       ...?.\.?*..?D..?
+xEB xE3 xC5 x3F xB4 x55 x4D x3F x29 x5C x4F x3F x98 xDB x49 x3F       ...?.UM?)\O?..I?
+xF0 x13 x4F x3F x78 xB7 x3E x3F x82 x8D x33 x3F x93 x1E x36 x3F       ..O?x.>?..3?..6?
+x7F xA2 x3E x3F x29 x5C x4F x3F x29 x5C x4F x3F x29 x5C x4F x3F       .>?)\O?)\O?)\O?
+xAF x94 xC5 x3F x56 xD5 xC5 x3F x91 x29 xC7 x3F x71 xE2 xC5 x3F       ...?V..?.).?q..?
+xA2 x29 xB5 x3F x1D x1C xEC x3D x00 x00 x00 x00 x00 x00 x00 x00       .).?...=........
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x66 xF7 xC4 x3F x5A xF6 xDE x3F x81 x7A xC7 x3F x4E xB4 xCB x3F       f..?Z..?.z.?N..?
+x6F x48 x9D x3F x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       oH.?............
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+xEF xAA x14 x40 xC8 x27 x5C x40 xAE x62 x34 x40 x49 x81 x0F x40       ...@.'\@.b4@I..@
+xBF x0D x08 x40 x56 xD6 x98 x3F xD6 x58 xFA x3E x00 x00 x00 x00       ...@V..?.X.>....
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x19 x4B xF6 x40 xEC xA3 xBE x40 x69 x6E x96 x40 xD0 x44 x78 x40       .K.@...@in.@.Dx@
+xD9 x5F x46 x40 x92 xCC x19 x40 xC9 x5A x1D x40 xCD x3E xE5 x3F       ._F@...@.Z.@.>.?
+xB1 x31 x0C x40 x58 xC7 x04 x40 xB0 x37 xAF x3F xA3 xCE xA4 x3F       .1.@X..@.7.?...?
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+xAF x47 x65 x41 x54 x5F x0B x41 x3C xDC xD1 x40 x88 xBA xAF x40       .GeAT_.A<..@...@
+x83 xC2 xA3 x40 xAC xE1 x89 x40 x93 xDF x4B x40 xB2 xBA x55 x40       ...@...@..K@..U@
+x59 x86 x38 x40 x19 xC9 x35 x40 x62 x2C x29 x40 x6D x53 x20 x40       Y.8@..5@b,)@mS.@
+x26 xFC x12 x40 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       &..@............
+x00 xD5 xAA x41 xDC xA7 x76 x41 x02 x41 x2F x41 xEA x78 x0C x41       ...A..vA.A/A.x.A
+x36 xBA xBB x40 x06 x3C xA1 x40 xC7 x9F xA3 x40 x78 xA8 x8C x40       6..@.<.@...@x..@
+xBE x30 x91 x40 xFB xCC x63 x40 x25 x08 x75 x40 x11 x6F x49 x40       .0.@..c@%.u@.oI@
+x56 x2C x58 x40 x85 xEB x31 x40 x85 xEB x31 x40 x85 xEB x31 x40       V,X@..1@..1@..1@
+xC8 x29 xA0 x41 x57 x7D x82 x41 x06 xAE x89 x41 x93 x9B x79 x41       .).AW}.A...A..yA
+xF3 x33 x2F x41 x3A xC0 xF8 x40 xB8 xC8 xC7 x40 xD2 xD1 xEC x40       .3/A:..@...@...@
+x62 x81 xD5 x40 x49 x49 xC4 x40 xC0 xF5 xB0 x40 x77 x9F x98 x40       b..@II.@...@w..@
+x79 xE6 x90 x40 xEC x51 x80 x40 xEC x51 x80 x40 xEC x51 x80 x40       y..@.Q.@.Q.@.Q.@
+xAC x1C x92 x41 x18 x6D x77 x41 x0D x86 x79 x41 x08 x55 x76 x41       ...A.mwA..yA.UvA
+xED xCA x4F x41 x5C x6D x55 x41 xE4 x5C x0E x41 x5B xD6 x0E x41       ..OA\mUA.\.A[..A
+xAD x86 x00 x41 xFA x9B xD8 x40 xC3 x58 xBA x40 x7E x38 xCD x40       ...A...@.X.@~8.@
+x64 xDB xC2 x40 x29 x5C xB7 x40 x29 x5C xB7 x40 x29 x5C xB7 x40       d..@)\.@)\.@)\.@
+x3D x51 x8B x41 xC7 xDC x75 x41 x80 xFF x72 x41 x17 x6A x75 x41       =Q.A..uA..rA.juA
+xEE xE7 x74 x41 xB3 x30 x76 x41 x66 x88 x67 x41 x57 x11 x3F x41       ..tA.0vAf.gAW.?A
+xD7 xC4 x2F x41 x6A x4D x1F x41 x47 x4E x10 x41 x9C x10 x07 x41       ../AjM.AGN.A...A
+x83 x7C xF0 x40 xCD xCC xDC x40 xCD xCC xDC x40 xCD xCC xDC x40       .|.@...@...@...@
+xEC x0A x88 x41 xF3 xF4 x75 x41 xB4 x02 x73 x41 xC9 x73 x74 x41       ...A..uA..sA.stA
+xCA x36 x75 x41 x7F xFC x78 x41 xF5 x38 x7A x41 xA5 xA5 x76 x41       .6uA.xA.8zA..vA
+x17 x16 x5A x41 x4C xB3 x2E x41 x0E x22 x38 x41 x67 x8F x2A x41       ..ZAL..A."8Ag.*A
+x3D xD4 x18 x41 x14 xAE x13 x41 x14 xAE x13 x41 x14 xAE x13 x41       =..A...A...A...A
+x95 xD4 x87 x41 xFA xC3 x75 x41 xB9 xBA x72 x41 xAE xD3 x74 x41       ...A..uA..rA..tA
+xE8 x4D x75 x41 x4E xF3 x7A x41 xBA xF7 x7C x41 x40 x3D x7B x41       .MuAN.zA..|A@={A
+xED x3F x7D x41 xE4 xD6 x71 x41 xF1 xA7 x6A x41 xA3 x8A x3E x41       .?}A..qA..jA..>A
+x61 xBF x40 x41 x14 xAE x13 x41 x14 xAE x13 x41 x14 xAE x13 x41       a.@A...A...A...A
+x07 xCE x87 x41 x46 x7D x75 x41 x35 xE4 x74 x41 x42 x98 x74 x41       ...AF}uA5.tAB.tA
+xEE x9E x74 x41 xD4 xBE x77 x41 x96 xDC x7E x41 x61 x7C x7C x41       ..tA..wA..~Aa||A
+x64 xB4 x7A x41 x18 x63 x7D x41 x97 xFC x80 x41 xF2 xDF x70 x41       d.zA.c}A...A..pA
+xB7 x8F x6F x41 x8F xC2 x69 x41 x8F xC2 x69 x41 x8F xC2 x69 x41       ..oA..iA..iA..iA
+xE8 xB1 x87 x41 xEE xE4 x75 x41 x96 x5D x73 x41 x77 xA6 x74 x41       ...A..uA.]sAw.tA
+x25 x38 x74 x41 xBF xC5 x77 x41 xC2 x3C x7D x41 xC6 xD6 x7C x41       %8tA..wA.<}A..|A
+x9E xD8 x7A x41 xE2 x3B x7D x41 x59 xF4 x7F x41 x41 x38 x80 x41       ..zA.;}AY.AA8.A
+xDB xA7 x77 x41 x3D x0A x73 x41 x3D x0A x73 x41 x3D x0A x73 x41       ..wA=.sA=.sA=.sA
+x7B x14 x88 x41 x00 x00 x74 x41 x48 xE1 x7A x41 x3D x0A x77 x41       {..A..tAH.zA=.wA
+xEC x51 x74 x41 x1F x85 x77 x41 xCD xCC x7C x41 x14 xAE x7B x41       .QtA..wA..|A..{A
+x9A x99 x79 x41 xD7 xA3 x7C x41 xC3 xF5 x80 x41 x48 xE1 x80 x41       ..yA..|A...AH..A
+x7B x14 x7A x41 x66 x66 x72 x41 x66 x66 x72 x41 x66 x66 x72 x41       {.zAffrAffrAffrA
+
+Time: 0:05.796: Processing Complete: 
+7/5/14 8:56:34 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:34 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:34 PM :Time: 0:05.846: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:34 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:34 PM :Time: 0:05.896: Received, 52 bytes
+xB0 x04 x00 x00 xB0 x93 x1A x42 x60 x37 x7D x42 x00 x00 x00 x00       .......B`7}B....
+x81 x0A x28 x3F x05 x48 x10 x41 x00 x00 x00 x00 x02 x0C xC0 x3C       ..(?.H.A.......<
+x4B x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       K....39B.......
+x9C x3C x33 x42                                                       .<3B
+
+7/5/14 8:56:34 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:34 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:34 PM :Time: 0:05.912: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:34 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:34 PM :Time: 0:05.962: Received, 52 bytes
+xB0 x04 x00 x00 xB0 x93 x1A x42 x60 x37 x7D x42 x00 x00 x00 x00       .......B`7}B....
+x81 x0A x28 x3F x05 x48 x10 x41 x00 x00 x00 x00 x02 x0C xC0 x3C       ..(?.H.A.......<
+x4B x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       K....39B.......
+x9C x3C x33 x42                                                       .<3B
+
+7/5/14 8:56:34 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:34 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:34 PM :Time: 0:05.982: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:34 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:34 PM :Time: 0:06.032: Received, 52 bytes
+xB0 x04 x00 x00 xA0 x54 x10 x42 xF8 x95 x7D x42 x00 x00 x00 x00       .....T.B..}B....
+x87 x6A x28 x3F x05 x48 x10 x41 x00 x00 x00 x00 x02 x0C xC0 x3C       .j(?.H.A.......<
+x4E x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       N.....8B.......
+xF6 xA4 x2B x42                                                       ..+B
+
+7/5/14 8:56:34 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:34 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:34 PM :Time: 0:06.048: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:34 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:34 PM :Time: 0:06.098: Received, 52 bytes
+xB0 x04 x00 x00 xA0 x54 x10 x42 xF8 x95 x7D x42 x00 x00 x00 x00       .....T.B..}B....
+x87 x6A x28 x3F x05 x48 x10 x41 x00 x00 x00 x00 x02 x0C xC0 x3C       .j(?.H.A.......<
+x4E x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       N.....8B.......
+xF6 xA4 x2B x42                                                       ..+B
+
+7/5/14 8:56:34 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:34 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:34 PM :Time: 0:06.114: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:34 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:34 PM :Time: 0:06.164: Received, 52 bytes
+xB0 x04 x00 x00 xA0 x54 x10 x42 xF8 x95 x7D x42 x00 x00 x00 x00       .....T.B..}B....
+x87 x6A x28 x3F x05 x48 x10 x41 x00 x00 x00 x00 x02 x0C xC0 x3C       .j(?.H.A.......<
+x4E x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       N.....8B.......
+xF6 xA4 x2B x42                                                       ..+B
+
+7/5/14 8:56:34 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:34 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:34 PM :Time: 0:06.180: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:34 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:34 PM :Time: 0:06.230: Received, 52 bytes
+xB0 x04 x00 x00 xA0 x54 x10 x42 xF8 x95 x7D x42 x00 x00 x00 x00       .....T.B..}B....
+x87 x6A x28 x3F x05 x48 x10 x41 x00 x00 x00 x00 x02 x0C xC0 x3C       .j(?.H.A.......<
+x4E x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       N.....8B.......
+xF6 xA4 x2B x42                                                       ..+B
+
+7/5/14 8:56:34 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:34 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:34 PM :Time: 0:06.246: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:34 PM :Time: 0:06.296: Received, 52 bytes
+xB0 x04 x00 x00 xA0 x54 x10 x42 xF8 x95 x7D x42 x00 x00 x00 x00       .....T.B..}B....
+x0F xEA x20 x3F x06 x60 x10 x41 x00 x00 x00 x00 x01 x08 x00 x3D       ...?.`.A.......=
+x60 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       `....39B.......
+xF6 xA4 x2B x42                                                       ..+B
+
+7/5/14 8:56:34 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:34 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:34 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:34 PM :Time: 0:06.312: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:34 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:34 PM :Time: 0:06.362: Received, 52 bytes
+xB0 x04 x00 x00 xA0 x54 x10 x42 xF8 x95 x7D x42 x00 x00 x00 x00       .....T.B..}B....
+x0F xEA x20 x3F x06 x60 x10 x41 x00 x00 x00 x00 x01 x08 x00 x3D       ...?.`.A.......=
+x60 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       `....39B.......
+xF6 xA4 x2B x42                                                       ..+B
+
+7/5/14 8:56:34 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:34 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:34 PM :Time: 0:06.378: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:34 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:34 PM :Time: 0:06.428: Received, 52 bytes
+xB0 x04 x00 x00 xA0 x54 x10 x42 xF8 x95 x7D x42 x00 x00 x00 x00       .....T.B..}B....
+x0F xEA x20 x3F x06 x60 x10 x41 x00 x00 x00 x00 x01 x08 x00 x3D       ...?.`.A.......=
+x60 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       `....39B.......
+xF6 xA4 x2B x42                                                       ..+B
+
+7/5/14 8:56:34 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:34 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:34 PM :Time: 0:06.444: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:34 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:34 PM :Time: 0:06.494: Received, 52 bytes
+xB0 x04 x00 x00 xA0 x54 x10 x42 xF8 x95 x7D x42 x00 x00 x00 x00       .....T.B..}B....
+x0F xEA x20 x3F x06 x60 x10 x41 x00 x00 x00 x00 x01 x08 x00 x3D       ...?.`.A.......=
+x60 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       `....39B.......
+xF6 xA4 x2B x42                                                       ..+B
+
+7/5/14 8:56:34 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:34 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:34 PM :Time: 0:06.510: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:34 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:34 PM :Time: 0:06.560: Received, 52 bytes
+xB0 x04 x00 x00 xA0 x54 x10 x42 xF8 x95 x7D x42 x00 x00 x00 x00       .....T.B..}B....
+x0F xEA x20 x3F x06 x60 x10 x41 x00 x00 x00 x00 x01 x08 x00 x3D       ...?.`.A.......=
+x60 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       `....39B.......
+xF6 xA4 x2B x42                                                       ..+B
+
+7/5/14 8:56:34 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:34 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:34 PM :Time: 0:06.576: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:35 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:35 PM :Time: 0:06.626: Received, 52 bytes
+xAF x04 x00 x00 xB8 x45 x11 x42 x18 xE2 x7E x42 x00 x00 x00 x00       .....E.B..~B....
+x45 x4A x24 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       EJ$?.T.A.......<
+x55 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       U....39B.......
+xD0 xAC x2C x42                                                       ..,B
+
+7/5/14 8:56:35 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:35 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:35 PM :Time: 0:06.642: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:35 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:35 PM :Time: 0:06.692: Received, 52 bytes
+xAF x04 x00 x00 xB8 x45 x11 x42 x18 xE2 x7E x42 x00 x00 x00 x00       .....E.B..~B....
+x45 x4A x24 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       EJ$?.T.A.......<
+x55 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       U....39B.......
+xD0 xAC x2C x42                                                       ..,B
+
+7/5/14 8:56:35 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:35 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:35 PM :Time: 0:06.708: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:35 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:35 PM :Time: 0:06.758: Received, 52 bytes
+xAF x04 x00 x00 xB8 x45 x11 x42 x18 xE2 x7E x42 x00 x00 x00 x00       .....E.B..~B....
+x45 x4A x24 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       EJ$?.T.A.......<
+x55 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       U....39B.......
+xD0 xAC x2C x42                                                       ..,B
+
+7/5/14 8:56:35 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:35 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:35 PM :Time: 0:06.774: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:35 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:35 PM :Time: 0:06.824: Received, 52 bytes
+xAF x04 x00 x00 xB8 x45 x11 x42 x18 xE2 x7E x42 x00 x00 x00 x00       .....E.B..~B....
+x45 x4A x24 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       EJ$?.T.A.......<
+x55 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       U....39B.......
+xD0 xAC x2C x42                                                       ..,B
+
+7/5/14 8:56:35 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:35 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:35 PM :Time: 0:06.841: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:35 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:35 PM :Time: 0:06.891: Received, 52 bytes
+xB0 x04 x00 x00 x88 xF4 x0F x42 x88 xB2 x7E x42 x00 x00 x00 x00       .......B..~B....
+x2D xCA x22 x3F x00 x00 x10 x41 x00 x00 x00 x00 x00 x00 x00 x00       -."?...A........
+x4D x00 x00 x00 x29 x94 x42 x42 x00 x00 xC0 x7F x01 x00 x00 x00       M...).BB.......
+x08 xA4 x2B x42                                                       ..+B
+
+7/5/14 8:56:35 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:35 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:35 PM :Time: 0:06.908: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:35 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:35 PM :Time: 0:06.958: Received, 52 bytes
+xB0 x04 x00 x00 x88 xF4 x0F x42 x88 xB2 x7E x42 x00 x00 x00 x00       .......B..~B....
+x2D xCA x22 x3F x00 x00 x10 x41 x00 x00 x00 x00 x00 x00 x00 x00       -."?...A........
+x4D x00 x00 x00 x29 x94 x42 x42 x00 x00 xC0 x7F x01 x00 x00 x00       M...).BB.......
+x08 xA4 x2B x42                                                       ..+B
+
+7/5/14 8:56:35 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:35 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:35 PM :Time: 0:06.974: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:35 PM :Time: 0:07.024: Received, 52 bytes
+xB0 x04 x00 x00 x88 xF4 x0F x42 x88 xB2 x7E x42 x00 x00 x00 x00       .......B..~B....
+x2D xCA x22 x3F x00 x00 x10 x41 x00 x00 x00 x00 x00 x00 x00 x00       -."?...A........
+x4D x00 x00 x00 x29 x94 x42 x42 x00 x00 xC0 x7F x01 x00 x00 x00       M...).BB.......
+x08 xA4 x2B x42                                                       ..+B
+
+7/5/14 8:56:35 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:35 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:35 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:35 PM :Time: 0:07.040: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:35 PM :Time: 0:07.091: Received, 52 bytes
+xB0 x04 x00 x00 x88 xF4 x0F x42 x88 xB2 x7E x42 x00 x00 x00 x00       .......B..~B....
+x2D xCA x22 x3F x00 x00 x10 x41 x00 x00 x00 x00 x00 x00 x00 x00       -."?...A........
+x4D x00 x00 x00 x29 x94 x42 x42 x00 x00 xC0 x7F x01 x00 x00 x00       M...).BB.......
+x08 xA4 x2B x42                                                       ..+B
+
+7/5/14 8:56:35 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:35 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:35 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:35 PM :Time: 0:07.107: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:35 PM :Time: 0:07.157: Received, 52 bytes
+xB0 x04 x00 x00 x88 xF4 x0F x42 x88 xB2 x7E x42 x00 x00 x00 x00       .......B..~B....
+x2D xCA x22 x3F x00 x00 x10 x41 x00 x00 x00 x00 x00 x00 x00 x00       -."?...A........
+x4D x00 x00 x00 x29 x94 x42 x42 x00 x00 xC0 x7F x01 x00 x00 x00       M...).BB.......
+x08 xA4 x2B x42                                                       ..+B
+
+7/5/14 8:56:35 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:35 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:35 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:35 PM :Time: 0:07.173: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:35 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:35 PM :Time: 0:07.223: Received, 52 bytes
+xB0 x04 x00 x00 x30 x93 x1B x42 x90 x53 x7E x42 x00 x00 x00 x00       ....0..B.S~B....
+x09 x8A x20 x3F x03 x30 x10 x41 x00 x00 x00 x00 x01 x08 x80 x3C       ...?.0.A.......<
+x57 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       W....39B.......
+x48 x43 x34 x42                                                       HC4B
+
+7/5/14 8:56:35 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:35 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:35 PM :Time: 0:07.239: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:35 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:35 PM :Time: 0:07.289: Received, 52 bytes
+xB0 x04 x00 x00 x30 x93 x1B x42 x90 x53 x7E x42 x00 x00 x00 x00       ....0..B.S~B....
+x09 x8A x20 x3F x03 x30 x10 x41 x00 x00 x00 x00 x01 x08 x80 x3C       ...?.0.A.......<
+x57 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       W....39B.......
+x48 x43 x34 x42                                                       HC4B
+
+7/5/14 8:56:35 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:35 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:35 PM :Time: 0:07.305: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:35 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:35 PM :Time: 0:07.355: Received, 52 bytes
+xB0 x04 x00 x00 x30 x93 x1B x42 x90 x53 x7E x42 x00 x00 x00 x00       ....0..B.S~B....
+x09 x8A x20 x3F x03 x30 x10 x41 x00 x00 x00 x00 x01 x08 x80 x3C       ...?.0.A.......<
+x57 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       W....39B.......
+x48 x43 x34 x42                                                       HC4B
+
+7/5/14 8:56:35 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:35 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:35 PM :Time: 0:07.371: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:35 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:35 PM :Time: 0:07.421: Received, 52 bytes
+xB0 x04 x00 x00 x30 x93 x1B x42 x90 x53 x7E x42 x00 x00 x00 x00       ....0..B.S~B....
+x09 x8A x20 x3F x03 x30 x10 x41 x00 x00 x00 x00 x01 x08 x80 x3C       ...?.0.A.......<
+x57 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       W....39B.......
+x48 x43 x34 x42                                                       HC4B
+
+7/5/14 8:56:35 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:35 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:35 PM :Time: 0:07.437: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:35 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:35 PM :Time: 0:07.487: Received, 52 bytes
+xB0 x04 x00 x00 x70 xC6 x1B x42 xF8 x95 x7D x42 x00 x00 x00 x00       ....p..B..}B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x5B x00 x00 x00 x36 x57 x33 x42 x00 x00 xC0 x7F x01 x00 x00 x00       [...6W3B.......
+x52 x3A x34 x42                                                       R:4B
+
+7/5/14 8:56:35 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:35 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:35 PM :Time: 0:07.503: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:35 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:35 PM :Time: 0:07.553: Received, 52 bytes
+xB0 x04 x00 x00 x70 xC6 x1B x42 xF8 x95 x7D x42 x00 x00 x00 x00       ....p..B..}B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x5B x00 x00 x00 x36 x57 x33 x42 x00 x00 xC0 x7F x01 x00 x00 x00       [...6W3B.......
+x52 x3A x34 x42                                                       R:4B
+
+7/5/14 8:56:35 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:35 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:35 PM :Time: 0:07.569: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:35 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:35 PM :Time: 0:07.619: Received, 52 bytes
+xB0 x04 x00 x00 x70 xC6 x1B x42 xF8 x95 x7D x42 x00 x00 x00 x00       ....p..B..}B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x5B x00 x00 x00 x36 x57 x33 x42 x00 x00 xC0 x7F x01 x00 x00 x00       [...6W3B.......
+x52 x3A x34 x42                                                       R:4B
+
+7/5/14 8:56:36 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:36 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:36 PM :Time: 0:07.636: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:36 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:36 PM :Time: 0:07.686: Received, 52 bytes
+xB0 x04 x00 x00 x70 xC6 x1B x42 xF8 x95 x7D x42 x00 x00 x00 x00       ....p..B..}B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x5B x00 x00 x00 x36 x57 x33 x42 x00 x00 xC0 x7F x01 x00 x00 x00       [...6W3B.......
+x52 x3A x34 x42                                                       R:4B
+
+7/5/14 8:56:36 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:36 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:36 PM :Time: 0:07.703: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:36 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:36 PM :Time: 0:07.753: Received, 52 bytes
+xB0 x04 x00 x00 x70 xC6 x1B x42 xF8 x95 x7D x42 x00 x00 x00 x00       ....p..B..}B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x5B x00 x00 x00 x36 x57 x33 x42 x00 x00 xC0 x7F x01 x00 x00 x00       [...6W3B.......
+x52 x3A x34 x42                                                       R:4B
+
+7/5/14 8:56:36 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:36 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:36 PM :Time: 0:07.770: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:36 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:36 PM :Time: 0:07.820: Received, 52 bytes
+xB0 x04 x00 x00 x78 xD5 x0E x42 x88 xB2 x7E x42 x00 x00 x00 x00       ....x..B..~B....
+x0F xEA x20 x3F x06 x60 x10 x41 x00 x00 x00 x00 x01 x08 x00 x3D       ...?.`.A.......=
+x5E x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       ^.....8B.......
+xBC xCC x2A x42                                                       ..*B
+
+7/5/14 8:56:36 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:36 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:36 PM :Time: 0:07.837: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:36 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:36 PM :Time: 0:07.887: Received, 52 bytes
+xB0 x04 x00 x00 x78 xD5 x0E x42 x88 xB2 x7E x42 x00 x00 x00 x00       ....x..B..~B....
+x0F xEA x20 x3F x06 x60 x10 x41 x00 x00 x00 x00 x01 x08 x00 x3D       ...?.`.A.......=
+x5E x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       ^.....8B.......
+xBC xCC x2A x42                                                       ..*B
+
+7/5/14 8:56:36 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:36 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:36 PM :Time: 0:07.904: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:36 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:36 PM :Time: 0:07.954: Received, 52 bytes
+xB0 x04 x00 x00 x78 xD5 x0E x42 x88 xB2 x7E x42 x00 x00 x00 x00       ....x..B..~B....
+x0F xEA x20 x3F x06 x60 x10 x41 x00 x00 x00 x00 x01 x08 x00 x3D       ...?.`.A.......=
+x5E x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       ^.....8B.......
+xBC xCC x2A x42                                                       ..*B
+
+7/5/14 8:56:36 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:36 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:36 PM :Time: 0:07.971: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:36 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:36 PM :Time: 0:08.021: Received, 52 bytes
+xB0 x04 x00 x00 x78 xD5 x0E x42 x88 xB2 x7E x42 x00 x00 x00 x00       ....x..B..~B....
+x0F xEA x20 x3F x06 x60 x10 x41 x00 x00 x00 x00 x01 x08 x00 x3D       ...?.`.A.......=
+x5E x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       ^.....8B.......
+xBC xCC x2A x42                                                       ..*B
+
+7/5/14 8:56:36 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:36 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:36 PM :Time: 0:08.038: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:36 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:36 PM :Time: 0:08.088: Received, 52 bytes
+xB0 x04 x00 x00 x00 x99 x18 x42 xA8 xF4 x7D x42 x00 x00 x00 x00       .......B..}B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x61 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       a....39B.......
+xEA xEF x31 x42                                                       ..1B
+
+7/5/14 8:56:36 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:36 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:36 PM :Time: 0:08.104: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:36 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:36 PM :Time: 0:08.154: Received, 52 bytes
+xB0 x04 x00 x00 x00 x99 x18 x42 xA8 xF4 x7D x42 x00 x00 x00 x00       .......B..}B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x61 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       a....39B.......
+xEA xEF x31 x42                                                       ..1B
+
+7/5/14 8:56:36 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:36 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:36 PM :Time: 0:08.171: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:36 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:36 PM :Time: 0:08.221: Received, 52 bytes
+xB0 x04 x00 x00 x00 x99 x18 x42 xA8 xF4 x7D x42 x00 x00 x00 x00       .......B..}B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x61 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       a....39B.......
+xEA xEF x31 x42                                                       ..1B
+
+7/5/14 8:56:36 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:36 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:36 PM :Time: 0:08.237: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:36 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:36 PM :Time: 0:08.287: Received, 52 bytes
+xB0 x04 x00 x00 x00 x99 x18 x42 xA8 xF4 x7D x42 x00 x00 x00 x00       .......B..}B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x61 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       a....39B.......
+xEA xEF x31 x42                                                       ..1B
+
+7/5/14 8:56:36 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:36 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:36 PM :Time: 0:08.305: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:36 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:36 PM :Time: 0:08.355: Received, 52 bytes
+xB0 x04 x00 x00 x00 x99 x18 x42 xA8 xF4 x7D x42 x00 x00 x00 x00       .......B..}B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x61 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       a....39B.......
+xEA xEF x31 x42                                                       ..1B
+
+7/5/14 8:56:36 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:36 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:36 PM :Time: 0:08.371: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:36 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:36 PM :Time: 0:08.421: Received, 52 bytes
+xB0 x04 x00 x00 xB8 x07 x17 x42 xA8 xF4 x7D x42 x00 x00 x00 x00       .......B..}B....
+x0F xEA x20 x3F x06 x60 x10 x41 x00 x00 x00 x00 x01 x08 x00 x3D       ...?.`.A.......=
+x60 x00 x00 x00 x04 x3C x40 x42 x00 x00 xC0 x7F x01 x00 x00 x00       `....<@B.......
+xF4 xC2 x30 x42                                                       ..0B
+
+7/5/14 8:56:36 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:36 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:36 PM :Time: 0:08.437: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:36 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:36 PM :Time: 0:08.487: Received, 52 bytes
+xB0 x04 x00 x00 xB8 x07 x17 x42 xA8 xF4 x7D x42 x00 x00 x00 x00       .......B..}B....
+x0F xEA x20 x3F x06 x60 x10 x41 x00 x00 x00 x00 x01 x08 x00 x3D       ...?.`.A.......=
+x60 x00 x00 x00 x04 x3C x40 x42 x00 x00 xC0 x7F x01 x00 x00 x00       `....<@B.......
+xF4 xC2 x30 x42                                                       ..0B
+
+7/5/14 8:56:36 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:36 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:36 PM :Time: 0:08.503: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:36 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:36 PM :Time: 0:08.553: Received, 52 bytes
+xB0 x04 x00 x00 xB8 x07 x17 x42 xA8 xF4 x7D x42 x00 x00 x00 x00       .......B..}B....
+x0F xEA x20 x3F x06 x60 x10 x41 x00 x00 x00 x00 x01 x08 x00 x3D       ...?.`.A.......=
+x60 x00 x00 x00 x04 x3C x40 x42 x00 x00 xC0 x7F x01 x00 x00 x00       `....<@B.......
+xF4 xC2 x30 x42                                                       ..0B
+
+7/5/14 8:56:36 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:36 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:36 PM :Time: 0:08.569: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:37 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:37 PM :Time: 0:08.619: Received, 52 bytes
+xB0 x04 x00 x00 xB8 x07 x17 x42 xA8 xF4 x7D x42 x00 x00 x00 x00       .......B..}B....
+x0F xEA x20 x3F x06 x60 x10 x41 x00 x00 x00 x00 x01 x08 x00 x3D       ...?.`.A.......=
+x60 x00 x00 x00 x04 x3C x40 x42 x00 x00 xC0 x7F x01 x00 x00 x00       `....<@B.......
+xF4 xC2 x30 x42                                                       ..0B
+
+7/5/14 8:56:37 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:37 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:37 PM :Time: 0:08.640: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:37 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:37 PM :Time: 0:08.690: Received, 52 bytes
+xAF x04 x00 x00 x30 x93 x1B x42 x08 x71 x7F x42 x00 x00 x00 x00       ....0..B.qB....
+x21 x0A x22 x3F x08 x78 x10 x41 x00 x00 x00 x00 x01 x0A x20 x3D       .."?.x.A.......=
+x42 x00 x00 x00 xC2 x21 x3C x42 x00 x00 xC0 x7F x01 x00 x00 x00       B.....<B.......
+xA6 x8A x34 x42                                                       ..4B
+
+7/5/14 8:56:37 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:37 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:37 PM :Time: 0:08.706: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:37 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:37 PM :Time: 0:08.756: Received, 52 bytes
+xAF x04 x00 x00 x30 x93 x1B x42 x08 x71 x7F x42 x00 x00 x00 x00       ....0..B.qB....
+x21 x0A x22 x3F x08 x78 x10 x41 x00 x00 x00 x00 x01 x0A x20 x3D       .."?.x.A.......=
+x42 x00 x00 x00 xC2 x21 x3C x42 x00 x00 xC0 x7F x01 x00 x00 x00       B.....<B.......
+xA6 x8A x34 x42                                                       ..4B
+
+7/5/14 8:56:37 PM :Info: dr: 0:47
+7/5/14 8:56:37 PM :Debug: Range Sort Time: 0
+7/5/14 8:56:37 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:37 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:37 PM :Time: 0:08.772: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:37 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:37 PM :Time: 0:08.822: Received, 52 bytes
+xAF x04 x00 x00 x30 x93 x1B x42 x08 x71 x7F x42 x00 x00 x00 x00       ....0..B.qB....
+x21 x0A x22 x3F x08 x78 x10 x41 x00 x00 x00 x00 x01 x0A x20 x3D       .."?.x.A.......=
+x42 x00 x00 x00 xC2 x21 x3C x42 x00 x00 xC0 x7F x01 x00 x00 x00       B.....<B.......
+xA6 x8A x34 x42                                                       ..4B
+
+7/5/14 8:56:37 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:37 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:37 PM :Time: 0:08.838: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:37 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:37 PM :Time: 0:08.888: Received, 52 bytes
+xAF x04 x00 x00 x30 x93 x1B x42 x08 x71 x7F x42 x00 x00 x00 x00       ....0..B.qB....
+x21 x0A x22 x3F x08 x78 x10 x41 x00 x00 x00 x00 x01 x0A x20 x3D       .."?.x.A.......=
+x42 x00 x00 x00 xC2 x21 x3C x42 x00 x00 xC0 x7F x01 x00 x00 x00       B.....<B.......
+xA6 x8A x34 x42                                                       ..4B
+
+7/5/14 8:56:37 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:37 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:37 PM :Time: 0:08.907: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:37 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:37 PM :Time: 0:08.957: Received, 52 bytes
+xAF x04 x00 x00 x30 x93 x1B x42 x08 x71 x7F x42 x00 x00 x00 x00       ....0..B.qB....
+x21 x0A x22 x3F x08 x78 x10 x41 x00 x00 x00 x00 x01 x0A x20 x3D       .."?.x.A.......=
+x42 x00 x00 x00 xC2 x21 x3C x42 x00 x00 xC0 x7F x01 x00 x00 x00       B.....<B.......
+xA6 x8A x34 x42                                                       ..4B
+
+7/5/14 8:56:37 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:37 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:37 PM :Time: 0:08.974: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:37 PM :Debug: Flush lasted: 0ms.
+7/5/14 8:56:37 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:37 PM :Time: 0:09.024: Received, 52 bytes
+xB0 x04 x00 x00 xE8 xB4 x10 x42 xF4 xBF x80 x42 x00 x00 x00 x00       .......B...B....
+x45 x4A x24 x3F x04 x3C x10 x41 x00 x00 x00 x00 x01 x0A xA0 x3C       EJ$?.<.A.......<
+x55 x00 x00 x00 x5B xAF x35 x42 x00 x00 xC0 x7F x01 x00 x00 x00       U...[.5B.......
+xA8 xE7 x2C x42                                                       ..,B
+
+7/5/14 8:56:37 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:37 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:37 PM :Time: 0:09.040: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:37 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:37 PM :Time: 0:09.090: Received, 52 bytes
+xB0 x04 x00 x00 xE8 xB4 x10 x42 xF4 xBF x80 x42 x00 x00 x00 x00       .......B...B....
+x45 x4A x24 x3F x04 x3C x10 x41 x00 x00 x00 x00 x01 x0A xA0 x3C       EJ$?.<.A.......<
+x55 x00 x00 x00 x5B xAF x35 x42 x00 x00 xC0 x7F x01 x00 x00 x00       U...[.5B.......
+xA8 xE7 x2C x42                                                       ..,B
+
+7/5/14 8:56:37 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:37 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:37 PM :Time: 0:09.106: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:37 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:37 PM :Time: 0:09.156: Received, 52 bytes
+xB0 x04 x00 x00 xE8 xB4 x10 x42 xF4 xBF x80 x42 x00 x00 x00 x00       .......B...B....
+x45 x4A x24 x3F x04 x3C x10 x41 x00 x00 x00 x00 x01 x0A xA0 x3C       EJ$?.<.A.......<
+x55 x00 x00 x00 x5B xAF x35 x42 x00 x00 xC0 x7F x01 x00 x00 x00       U...[.5B.......
+xA8 xE7 x2C x42                                                       ..,B
+
+7/5/14 8:56:37 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:37 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:37 PM :Time: 0:09.174: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:37 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:37 PM :Time: 0:09.224: Received, 52 bytes
+xB0 x04 x00 x00 xE8 xB4 x10 x42 xF4 xBF x80 x42 x00 x00 x00 x00       .......B...B....
+x45 x4A x24 x3F x04 x3C x10 x41 x00 x00 x00 x00 x01 x0A xA0 x3C       EJ$?.<.A.......<
+x55 x00 x00 x00 x5B xAF x35 x42 x00 x00 xC0 x7F x01 x00 x00 x00       U...[.5B.......
+xA8 xE7 x2C x42                                                       ..,B
+
+7/5/14 8:56:37 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:37 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:37 PM :Time: 0:09.240: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:37 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:37 PM :Time: 0:09.290: Received, 52 bytes
+xB0 x04 x00 x00 xA0 x54 x10 x42 xF8 x95 x7D x42 x00 x00 x00 x00       .....T.B..}B....
+x45 x4A x24 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       EJ$?.T.A.......<
+x55 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       U....39B.......
+xF6 xA4 x2B x42                                                       ..+B
+
+7/5/14 8:56:37 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:37 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:37 PM :Time: 0:09.306: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:37 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:37 PM :Time: 0:09.356: Received, 52 bytes
+xB0 x04 x00 x00 xA0 x54 x10 x42 xF8 x95 x7D x42 x00 x00 x00 x00       .....T.B..}B....
+x45 x4A x24 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       EJ$?.T.A.......<
+x55 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       U....39B.......
+xF6 xA4 x2B x42                                                       ..+B
+
+7/5/14 8:56:37 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:37 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:37 PM :Time: 0:09.372: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:37 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:37 PM :Time: 0:09.422: Received, 52 bytes
+xB0 x04 x00 x00 xA0 x54 x10 x42 xF8 x95 x7D x42 x00 x00 x00 x00       .....T.B..}B....
+x45 x4A x24 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       EJ$?.T.A.......<
+x55 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       U....39B.......
+xF6 xA4 x2B x42                                                       ..+B
+
+7/5/14 8:56:37 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:37 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:37 PM :Time: 0:09.441: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:37 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:37 PM :Time: 0:09.491: Received, 52 bytes
+xB0 x04 x00 x00 xA0 x54 x10 x42 xF8 x95 x7D x42 x00 x00 x00 x00       .....T.B..}B....
+x45 x4A x24 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       EJ$?.T.A.......<
+x55 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       U....39B.......
+xF6 xA4 x2B x42                                                       ..+B
+
+7/5/14 8:56:37 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:37 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:37 PM :Time: 0:09.507: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:37 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:37 PM :Time: 0:09.557: Received, 52 bytes
+xB0 x04 x00 x00 xA0 x54 x10 x42 xF8 x95 x7D x42 x00 x00 x00 x00       .....T.B..}B....
+x45 x4A x24 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       EJ$?.T.A.......<
+x55 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       U....39B.......
+xF6 xA4 x2B x42                                                       ..+B
+
+7/5/14 8:56:37 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:37 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:37 PM :Time: 0:09.574: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:38 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:38 PM :Time: 0:09.624: Received, 52 bytes
+xB0 x04 x00 x00 x20 xFB x19 x42 x10 x24 x7E x42 x00 x00 x00 x00       .......B.$~B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x4B x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       K....39B.......
+x5C x05 x33 x42                                                       \.3B
+
+7/5/14 8:56:38 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:38 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:38 PM :Time: 0:09.640: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:38 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:38 PM :Time: 0:09.690: Received, 52 bytes
+xB0 x04 x00 x00 x20 xFB x19 x42 x10 x24 x7E x42 x00 x00 x00 x00       .......B.$~B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x4B x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       K....39B.......
+x5C x05 x33 x42                                                       \.3B
+
+7/5/14 8:56:38 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:38 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:38 PM :Time: 0:09.706: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:38 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:38 PM :Time: 0:09.756: Received, 52 bytes
+xB0 x04 x00 x00 x20 xFB x19 x42 x10 x24 x7E x42 x00 x00 x00 x00       .......B.$~B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x4B x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       K....39B.......
+x5C x05 x33 x42                                                       \.3B
+
+7/5/14 8:56:38 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:38 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:38 PM :Time: 0:09.772: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:38 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:38 PM :Time: 0:09.822: Received, 52 bytes
+xB0 x04 x00 x00 x20 xFB x19 x42 x10 x24 x7E x42 x00 x00 x00 x00       .......B.$~B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x4B x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       K....39B.......
+x5C x05 x33 x42                                                       \.3B
+
+7/5/14 8:56:38 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:38 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:38 PM :Time: 0:09.839: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:38 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:38 PM :Time: 0:09.888: Received, 52 bytes
+xB0 x04 x00 x00 x00 x99 x18 x42 x10 x24 x7E x42 x00 x00 x00 x00       .......B.$~B....
+x87 x6A x28 x3F x05 x48 x10 x41 x00 x00 x00 x00 x02 x0C xC0 x3C       .j(?.H.A.......<
+x55 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       U....39B.......
+xC4 xFB x31 x42                                                       ..1B
+
+7/5/14 8:56:38 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:38 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:38 PM :Time: 0:09.904: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:38 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:38 PM :Time: 0:09.954: Received, 52 bytes
+xB0 x04 x00 x00 x00 x99 x18 x42 x10 x24 x7E x42 x00 x00 x00 x00       .......B.$~B....
+x87 x6A x28 x3F x05 x48 x10 x41 x00 x00 x00 x00 x02 x0C xC0 x3C       .j(?.H.A.......<
+x55 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       U....39B.......
+xC4 xFB x31 x42                                                       ..1B
+
+7/5/14 8:56:38 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:38 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:38 PM :Time: 0:09.970: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:38 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:38 PM :Time: 0:10.020: Received, 52 bytes
+xB0 x04 x00 x00 x00 x99 x18 x42 x10 x24 x7E x42 x00 x00 x00 x00       .......B.$~B....
+x87 x6A x28 x3F x05 x48 x10 x41 x00 x00 x00 x00 x02 x0C xC0 x3C       .j(?.H.A.......<
+x55 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       U....39B.......
+xC4 xFB x31 x42                                                       ..1B
+
+7/5/14 8:56:38 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:38 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:38 PM :Time: 0:10.039: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:38 PM :Time: 0:10.089: Received, 52 bytes
+xB0 x04 x00 x00 x00 x99 x18 x42 x10 x24 x7E x42 x00 x00 x00 x00       .......B.$~B....
+x87 x6A x28 x3F x05 x48 x10 x41 x00 x00 x00 x00 x02 x0C xC0 x3C       .j(?.H.A.......<
+x55 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       U....39B.......
+xC4 xFB x31 x42                                                       ..1B
+
+7/5/14 8:56:38 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:38 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:38 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:38 PM :Time: 0:10.104: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:38 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:38 PM :Time: 0:10.154: Received, 52 bytes
+xB0 x04 x00 x00 x00 x99 x18 x42 x10 x24 x7E x42 x00 x00 x00 x00       .......B.$~B....
+x87 x6A x28 x3F x05 x48 x10 x41 x00 x00 x00 x00 x02 x0C xC0 x3C       .j(?.H.A.......<
+x55 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       U....39B.......
+xC4 xFB x31 x42                                                       ..1B
+
+7/5/14 8:56:38 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:38 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:38 PM :Time: 0:10.170: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:38 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:38 PM :Time: 0:10.220: Received, 52 bytes
+xAF x04 x00 x00 xB8 x07 x17 x42 xA8 xF4 x7D x42 x00 x00 x00 x00       .......B..}B....
+x51 x0A x25 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       Q.%?.T.A.......<
+x5A x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       Z....39B.......
+xF4 xC2 x30 x42                                                       ..0B
+
+7/5/14 8:56:38 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:38 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:38 PM :Time: 0:10.236: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:38 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:38 PM :Time: 0:10.286: Received, 52 bytes
+xAF x04 x00 x00 xB8 x07 x17 x42 xA8 xF4 x7D x42 x00 x00 x00 x00       .......B..}B....
+x51 x0A x25 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       Q.%?.T.A.......<
+x5A x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       Z....39B.......
+xF4 xC2 x30 x42                                                       ..0B
+
+7/5/14 8:56:38 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:38 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:38 PM :Time: 0:10.302: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:38 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:38 PM :Time: 0:10.352: Received, 52 bytes
+xAF x04 x00 x00 xB8 x07 x17 x42 xA8 xF4 x7D x42 x00 x00 x00 x00       .......B..}B....
+x51 x0A x25 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       Q.%?.T.A.......<
+x5A x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       Z....39B.......
+xF4 xC2 x30 x42                                                       ..0B
+
+7/5/14 8:56:38 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:38 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:38 PM :Time: 0:10.369: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:38 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:38 PM :Info: Initiating read page 1
+7/5/14 8:56:38 PM :Info: Initiating read page 4
+7/5/14 8:56:38 PM :Time: 0:10.418: Received, 52 bytes
+xAF x04 x00 x00 xB8 x07 x17 x42 xA8 xF4 x7D x42 x00 x00 x00 x00       .......B..}B....
+x51 x0A x25 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       Q.%?.T.A.......<
+x5A x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       Z....39B.......
+xF4 xC2 x30 x42                                                       ..0B
+
+Time: 0:10.425: Received Instruction: 
+Time: 0:10.425: Received Instruction: 
+7/5/14 8:56:38 PM :Debug: commThreadExpectedReturnTime set to ms from now: 860
+Time: 0:10.450: Processing Instruction: 
+7/5/14 8:56:38 PM :Time: 0:10.470: SENT, 3 bytes
+x50 x00 x00                                                           P..
+
+7/5/14 8:56:38 PM :Debug: commThreadExpectedReturnTime set to ms from now: 20140
+7/5/14 8:56:38 PM :Time: 0:10.580: SENT, 7 bytes
+x52 x00 x00 x00 x00 x64 x05                                           R....d.
+
+7/5/14 8:56:39 PM :Debug: Read page time: 210ms.
+7/5/14 8:56:39 PM :Time: 0:10.730: Received, 1380 bytes
+x00 x00 x00 x00 x9A x99 xEF x42 x00 x00 x00 x41 x00 x00 x10 x41       .......B...A...A
+x00 x00 x20 x41 x00 x00 x30 x41 x00 x00 x40 x41 x00 x00 x50 x41       ...A..0A..@A..PA
+x00 x00 x60 x41 x00 x00 x70 x41 x00 x00 x00 x00 x00 x00 x00 x00       ..`A..pA........
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x20 xC2 x00 x00 xF0 xC1       ................
+x00 x00 xA0 xC1 x00 x00 x20 xC1 x00 x00 x00 x00 x00 x00 x20 x41       ...............A
+x00 x00 xA0 x41 x00 x00 xF0 x41 x00 x00 x20 x42 x00 x00 x48 x42       ...A...A...B..HB
+x00 x00 x70 x42 x00 x00 x8C x42 x00 x00 xA0 x42 x00 x00 xB4 x42       ..pB...B...B...B
+x00 x00 xC8 x42 x00 x00 xDC x42 x00 x00 x80 x3F x00 x00 x80 x3F       ...B...B...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x20 xC2 x00 x00 xF0 xC1       ...?...?........
+x00 x00 xA0 xC1 x00 x00 x20 xC1 x00 x00 x00 x00 x00 x00 x20 x41       ...............A
+x00 x00 xA0 x41 x00 x00 xF0 x41 x00 x00 x20 x42 x00 x00 x48 x42       ...A...A...B..HB
+x00 x00 x70 x42 x00 x00 x8C x42 x00 x00 xA0 x42 x00 x00 xB4 x42       ..pB...B...B...B
+x00 x00 xC8 x42 x00 x00 xDC x42 x00 x00 x80 x3F x00 x00 x80 x3F       ...B...B...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x80 x3F       ...?...?...?...?
+x00 x00 x80 x3F x00 x00 x80 x3F x00 x00 x64 x00 xEE x02 x01 x00       ...?...?..d.....
+x00 x00 x00 x00 x00 x00 x82 x42 x00 x00 x70 x41 x00 x00 x00 x41       .......B..pA...A
+x26 x02 x00 x00 x00 x00 x48 x44 xB8 xB6 xD2 x44 xB8 xB6 x20 x45       &.....HD...D...E
+x3D x12 x58 x45 xCD xB6 x87 x45 x8F x64 xA3 x45 x3D x12 xBF x45       =.XE...E.d.E=..E
+x00 xC0 xDA x45 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ...E............
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x48 x44 xB8 xB6 xD2 x44 xB8 xB6 x20 x45       ......HD...D...E
+x3D x12 x58 x45 xCD xB6 x87 x45 x8F x64 xA3 x45 x3D x12 xBF x45       =.XE...E.d.E=..E
+x00 xC0 xDA x45 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ...E............
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x01 x00 x00 x00       ................
+x04 x00 x00 x00 x00 x00 xA0 xC1 x78 x1C xBF x41 x3C x8E x43 x42       ........x..A<.CB
+x00 xA0 x8C x46 x00 x40 x03 x45 x00 x00 x7A x44 x00 x40 x4E x45       ...F.@.E..zD.@NE
+x40 xB6 x5A xB9 x08 x13 x0C x3A x8C xA2 x99 xB5 x00 x00 x00 x42       @.Z....:.......B
+x00 x00 x96 x42 x00 x00 xF0 x42 x00 x70 x14 x46 x00 x40 x03 x45       ...B...B.p.F.@.E
+x00 x00 x7A x44 x00 xC0 x28 x45 x76 x1A x47 xBB xB4 xCE x7C x3A       ..zD..(Ev.G...|:
+x0C xE7 x5B xB6 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ..[.............
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x80 x3F x00 xA0 x8C x45       ...........?...E
+x00 x50 x43 x46 x00 x00 x80 xBF x00 x00 x80 xBF x00 x00 x80 xBF       .PCF............
+x00 x00 x80 xBF x00 x00 x80 xBF x00 x00 x80 x40 x00 x00 x80 x40       ...........@...@
+x00 x00 x00 x00 x99 x99 x99 x3F xE1 x7A xB4 x3F x29 x5C xCF x3F       .......?.z.?)\.?
+x1E x85 xEB x3F x33 x33 x03 x40 xD7 xA3 x10 x40 x52 xB8 x1E x40       ...?33.@...@R..@
+xF6 x28 x2C x40 x99 x99 x39 x40 x14 xAE x47 x40 xB8 x1E x55 x40       .(,@..9@..G@..U@
+x5C x8F x62 x40 xD7 xA3 x70 x40 x7B x14 x7E x40 x8F xC2 x85 x40       \.b@..p@{.~@...@
+xCD xCC x8C x40 x00 x00 x48 x44 x8F xAA x97 x44 x1E x55 xCB x44       ...@..HD...D.U.D
+x00 x00 xFF x44 x47 x55 x19 x45 x8F x2A x33 x45 x00 x00 x4D x45       ...DGU.E.*3E..ME
+x47 xD5 x66 x45 x47 x55 x80 x45 x00 x40 x8D x45 xA4 x2A x9A x45       G.fEGU.E.@.E.*.E
+x47 x15 xA7 x45 x00 x00 xB4 x45 xA4 xEA xC0 x45 x47 xD5 xCD x45       G..E...E...EG..E
+x00 xC0 xDA x45 x00 x00 xAE x42 x00 x00 x8C x42 x00 x00 x00 x00       ...E...B...B....
+x00 x00 x48 x42 x03 x00 x00 x00 x99 x99 x99 x3F xE1 x7A xB4 x3F       ..HB.......?.z.?
+x29 x5C xCF x3F x1E x85 xEB x3F x33 x33 x03 x40 xD7 xA3 x10 x40       )\.?...?33.@...@
+x52 xB8 x1E x40 xF6 x28 x2C x40 x99 x99 x39 x40 x14 xAE x47 x40       R..@.(,@..9@..G@
+xB8 x1E x55 x40 x5C x8F x62 x40 xD7 xA3 x70 x40 x7B x14 x7E x40       ..U@\.b@..p@{.~@
+x8F xC2 x85 x40 xCD xCC x8C x40 x00 x00 x48 x44 x8F xAA x97 x44       ...@...@..HD...D
+x1E x55 xCB x44 x00 x00 xFF x44 x47 x55 x19 x45 x8F x2A x33 x45       .U.D...DGU.E.*3E
+x00 x00 x4D x45 x47 xD5 x66 x45 x47 x55 x80 x45 x00 x40 x8D x45       ..MEG.fEGU.E.@.E
+xA4 x2A x9A x45 x47 x15 xA7 x45 x00 x00 xB4 x45 xA4 xEA xC0 x45       .*.EG..E...E...E
+x47 xD5 xCD x45 x00 xC0 xDA x45 x66 x66 xA6 x3F x58 x1B x00 x00       G..E...Eff.?X...
+x00 x00 x00 x00 x01 x00 x00 x00 x00 x00 x2F x43 x00 x00 x00 x40       ........../C...@
+x00 x00 x00 x00 xAB xAA xAA x40 x00 x00 x96 x42 x00 x00 x8C x42       .......@...B...B
+x01 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x32 x00 x00 x00       ............2...
+x04 x00 x00 x00 x00 x00 x00 x00 x01 x00 x00 x00 x00 x00 x00 x3F       ...............?
+x01 x00 x00 x00 x00 x00 x00 x00 xA1 x52 x33 x01 x14 x00 x00 x00       .........R3.....
+x04 x00 x00 x00 x03 x00 x00 x00 x01 x00 x00 x00 x14 x00 x00 x00       ................
+x01 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 xC0 x3F x00 x00 x20 x40 x01 x00 x00 x00 x01 x00 x00 x00       ...?...@........
+x00 x00 x00 x00 x00 x00 x80 x3F x0B x00 x00 x00 x07 x00 x00 x00       .......?........
+x01 x00 x00 x00 x0E x00 x00 x00 x00 x00 x00 x00 x00 x00 x10 x41       ...............A
+x00 x00 xA0 x40 x00 x00 x98 x41 x00 x00 x6C x42 x00 x00 x14 x42       ...@...A..lB...B
+x00 x00 x80 x3F x00 x00 x00 x00 x00 x00 xFA x43 x00 x00 x00 x00       ...?.......C....
+x04 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00 x00       ................
+x00 x00 x00 x00                                                       ....
+
+Time: 0:10.732: Processing Complete: 
+Time: 0:10.758: Processing Instruction: 
+7/5/14 8:56:39 PM :Debug: commThreadExpectedReturnTime set to ms from now: 860
+7/5/14 8:56:39 PM :Time: 0:10.778: SENT, 3 bytes
+x50 x03 x00                                                           P..
+
+7/5/14 8:56:39 PM :Debug: commThreadExpectedReturnTime set to ms from now: 20140
+7/5/14 8:56:39 PM :Time: 0:10.888: SENT, 7 bytes
+x52 x03 x00 x00 x00 x00 x04                                           R......
+
+7/5/14 8:56:39 PM :Debug: Read page time: 210ms.
+7/5/14 8:56:39 PM :Time: 0:11.038: Received, 1024 bytes
+xD5 x78 x29 x3F x29 x5C xF7 xC0 xA8 xC6 x85 xC1 xB8 x1E xB9 xC1       .x)?)\..........
+x1B x2F xEB xC1 xDD x24 xFA xC1 x98 x6E x00 xC2 xEE x7C xF3 xC1       ./...$...n...|..
+x02 x2B xF7 xC1 x7D x3F xD5 xC1 xCB xA1 xC5 xC1 x2F xDD xC8 xC1       .+..}?....../...
+x56 x0E xC9 xC1 x14 xAE xCB xC1 x14 xAE xCB xC1 x14 xAE xCB xC1       V...............
+xA8 xC6 x0B x3F x1B x2F xF5 xC0 x56 x0E x87 xC1 x23 xDB xBB xC1       ...?./..V...#...
+xF6 x28 xEC xC1 x8D x97 xFA xC1 x98 x6E x00 xC2 x7D x3F xF5 xC1       .(.......n..}?..
+x77 xBE xF3 xC1 x3D x0A xD7 xC1 xCF xF7 xC5 xC1 x9E xEF xC5 xC1       w...=...........
+x89 x41 xE8 xC1 xFA x7E xCC xC1 xFA x7E xCC xC1 xFA x7E xCC xC1       .A...~...~...~..
+x06 x81 x15 x3F x0A xD7 xFB xC0 x46 xB6 x85 xC1 x3F x35 xB8 xC1       ...?....F...?5..
+x04 x56 xEC xC1 xF8 x53 xF9 xC1 x39 xB4 x00 xC2 xEC x51 xF4 xC1       .V...S..9....Q..
+xDD x24 xF2 xC1 xF8 x53 xD3 xC1 x6F x12 xC1 xC1 x62 x10 xC8 xC1       .$...S..o...b...
+x81 x95 xC5 xC1 x10 x58 xD1 xC1 x10 x58 xD1 xC1 x10 x58 xD1 xC1       .....X...X...X..
+x06 x81 x15 x3F x56 x0E xF5 xC0 x46 xB6 x85 xC1 x31 x08 xBA xC1       ...?V...F...1...
+xE5 xD0 xEA xC1 xF2 xD2 xF7 xC1 x68 x91 x00 xC2 xF4 xFD xF6 xC1       ........h.......
+x02 x2B xF7 xC1 x62 x10 xD4 xC1 xC9 x76 xC4 xC1 xB8 x1E xC3 xC1       .+..b....v......
+x93 x18 xCE xC1 xCF xF7 x0D xC2 xCF xF7 x0D xC2 xCF xF7 x0D xC2       ................
+x06 x81 x15 x3F x81 x95 xFB xC0 xD3 x4D x84 xC1 x31 x08 xBA xC1       ...?.....M..1...
+x23 xDB xE9 xC1 x35 x5E xFA xC1 x7B x14 x02 xC2 xD1 x22 xF1 xC1       #...5^..{...."..
+xA0 x1A xF3 xC1 x64 x3B xCF xC1 xC3 xF5 xC2 xC1 xF0 xA7 xC0 xC1       ....d;..........
+x04 x56 xC6 xC1 xE5 xD0 xC2 xC1 xE5 xD0 xC2 xC1 xE5 xD0 xC2 xC1       .V..............
+x8D x97 xAE xBF x64 x3B xF7 xC0 xB0 x72 x86 xC1 x31 x08 xBA xC1       ....d;...r..1...
+xB8 x1E xED xC1 x4A x0C xF8 xC1 x27 x31 x01 xC2 xC7 x4B xF7 xC1       ....J...'1...K..
+x56 x0E xEF xC1 xD1 x22 xD3 xC1 xDF x4F xC5 xC1 x3B xDF xD9 xC1       V...."...O..;...
+xF4 xFD xCA xC1 x10 x58 xCB xC1 x10 x58 xCB xC1 x10 x58 xCB xC1       .....X...X...X..
+x8D x97 xAE x3F x0A xD7 x27 xC1 xE3 xA5 x85 xC1 x37 x89 xB3 xC1       ...?..'.....7...
+xE5 xD0 xE0 xC1 x6D xE7 xF1 xC1 xBC x74 x01 xC2 x8F xC2 xF5 xC1       ....m....t......
+x02 x2B xF7 xC1 x2F xDD xD4 xC1 xDF x4F xC5 xC1 xBC x74 xC3 xC1       .+../....O...t..
+x00 x00 xC4 xC1 x7B x14 xCC xC1 x7B x14 xCC xC1 x7B x14 xCC xC1       ....{...{...{...
+xF2 xD2 x1D x41 xF0 xA7 x26 xC1 x48 xE1 x3A xC1 x33 x33 x99 xC1       ...A..&.H.:.33..
+x31 x08 xCE xC1 xEE x7C xDF xC1 x4C x37 x02 xC2 x7D x3F xF5 xC1       1....|..L7..}?..
+x64 x3B xF1 xC1 xD5 x78 xD9 xC1 x19 x04 xCA xC1 xFA x7E xB6 xC1       d;...x.......~..
+xB2 x9D xC3 xC1 x8F xC2 xC9 xC1 x8F xC2 xC9 xC1 x8F xC2 xC9 xC1       ................
+x23 xDB x1D x41 xC9 x76 xAE x40 xF0 xA7 x36 x40 x2D xB2 x89 xC1       #..A.v.@..6@-...
+x7F x6A x8C xC1 x06 x81 xA5 xC1 xAE x47 xCD xC1 xE1 x7A xDE xC1       j.......G...z..
+x37 x89 xDD xC1 xC1 xCA xD9 xC1 x56 x0E xCF xC1 x48 xE1 xCA xC1       7.......V...H...
+xCD xCC xD0 xC1 x9E xEF xDF xC1 x9E xEF xDF xC1 x9E xEF xDF xC1       ................
+xF2 xD2 x1D x41 xC9 x76 xAE x40 xF0 xA7 x36 x40 xA0 x1A xAF xBE       ...A.v.@..6@....
+x7F x6A x48 xC1 x77 xBE x81 xC1 x79 xE9 xAA xC1 x52 xB8 xDC xC1       jH.w...y...R...
+x71 x3D xCE xC1 x29 x5C xC1 xC1 xDF x4F xC5 xC1 x08 xAC xCC xC1       q=..)\...O......
+x85 xEB xD3 xC1 x77 xBE xFF xC1 x77 xBE xFF xC1 x77 xBE xFF xC1       ....w...w...w...
+xF2 xD2 x1D x41 x12 x83 xB0 x40 xF0 xA7 x36 x40 x8B x6C x67 xBE       ...A...@..6@.lg.
+x64 x3B x2F xC0 x58 x39 x74 xC0 xB4 xC8 x3E xC1 xC9 x76 x96 xC1       d;/.X9t...>..v..
+xD3 x4D xA8 xC1 xD3 x4D xAC xC1 x14 xAE xA9 xC1 xF2 xD2 xB1 xC1       .M...M..........
+x35 x5E xC8 xC1 x7D x3F xC9 xC1 x7D x3F xC9 xC1 x7D x3F xC9 xC1       5^..}?..}?..}?..
+x23 xDB x1D x41 x75 x93 xB0 x40 xF0 xA7 x36 x40 x00 x00 x00 x00       #..Au..@..6@....
+x73 x68 x41 xC0 x58 x39 x74 xC0 x2D xB2 xCD xC0 x4C x37 xF9 xC0       shA.X9t.-...L7..
+x73 x68 x9B xC1 x48 xE1 xA6 xC1 x5E xBA x9F xC1 x71 x3D xA8 xC1       sh..H...^...q=..
+x02 x2B xAB xC1 x5C x8F xAC xC1 x5C x8F xAC xC1 x5C x8F xAC xC1       .+..\...\...\...
+xF2 xD2 x1D x41 x12 x83 xB0 x40 x73 x68 x31 x40 x8B x6C x67 xBE       ...A...@sh1@.lg.
+x17 xD9 x2E xC0 x00 x00 x60 xC0 x37 x89 xD9 xC0 xCB xA1 x01 xC1       ......`.7.......
+x5C x8F x0A xC1 x00 x00 x18 xC1 xA6 x9B x3C xC1 x56 x0E xA1 xC1       \.........<.V...
+x75 x93 xA0 xC1 x7B x14 xA4 xC1 x7B x14 xA4 xC1 x7B x14 xA4 xC1       u...{...{...{...
+xF2 xD2 x1D x41 x75 x93 xB0 x40 xF0 xA7 x36 x40 x00 x00 x00 x00       ...Au..@..6@....
+xEC x51 x38 xC0 x58 x39 x74 xC0 xA4 x70 xCD xC0 xB8 x1E x05 xC1       .Q8.X9t..p......
+xE5 xD0 x06 xC1 x12 x83 x08 xC1 x1F x85 x37 xC1 x6F x12 x37 xC1       ..........7.o.7.
+x8F xC2 x59 xC1 x1D x5A x40 xC1 x1D x5A x40 xC1 x1D x5A x40 xC1       ..Y..Z@..Z@..Z@.
+x00 x00 x1C x41 x75 x93 xB0 x40 xF0 xA7 x26 x40 x00 x00 x00 x00       ...Au..@..&@....
+xEC x51 x38 xC0 x23 xDB x69 xC0 x9A x99 xC1 xC0 x7F x6A xDC xC0       .Q8.#.i.....j..
+xB6 xF3 x05 xC1 xF2 xD2 x15 xC1 x58 x39 x3C xC1 x46 xB6 x3B xC1       ........X9<.F.;.
+xF2 xD2 x3D xC1 x19 x04 x46 xC1 x19 x04 x46 xC1 x19 x04 x46 xC1       ..=...F...F...F.
+x33 x33 xB3 x3E x48 xE1 xB2 x40 x12 x83 x00 x3F xC3 xF5 x68 x3F       33.>H..@...?..h?
+x1B x2F x5D x3F x58 x39 x74 x3F xD5 x78 xA9 x3F xB6 xF3 xED xC0       ./]?X9t?.x.?....
+x8F xC2 x95 x3F x79 xE9 x86 x3F x46 xB6 x03 x40 xA2 x45 x06 x40       ...?y..?F..@.E.@
+x39 xB4 x28 x40 xCB xA1 x45 xC1 xCB xA1 x45 xC1 xCB xA1 x45 xC1       9.(@..E...E...E.
+
+Time: 0:11.038: Processing Complete: 
+7/5/14 8:56:39 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:39 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:39 PM :Time: 0:11.090: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:39 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:39 PM :Time: 0:11.140: Received, 52 bytes
+xB0 x04 x00 x00 x50 xC8 x19 x42 xB0 xBE x7B x42 x00 x00 x00 x00       ....P..B..{B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x4B x00 x00 x00 xD5 x4D x3D x42 x00 x00 xC0 x7F x01 x00 x00 x00       K....M=B.......
+xE8 x45 x32 x42                                                       .E2B
+
+7/5/14 8:56:39 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:39 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:39 PM :Time: 0:11.165: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:39 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:39 PM :Time: 0:11.215: Received, 52 bytes
+xB0 x04 x00 x00 x50 xC8 x19 x42 xB0 xBE x7B x42 x00 x00 x00 x00       ....P..B..{B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x4B x00 x00 x00 xD5 x4D x3D x42 x00 x00 xC0 x7F x01 x00 x00 x00       K....M=B.......
+xE8 x45 x32 x42                                                       .E2B
+
+7/5/14 8:56:39 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:39 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:39 PM :Time: 0:11.231: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:39 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:39 PM :Time: 0:11.281: Received, 52 bytes
+xB0 x04 x00 x00 x50 xC8 x19 x42 xB0 xBE x7B x42 x00 x00 x00 x00       ....P..B..{B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x4B x00 x00 x00 xD5 x4D x3D x42 x00 x00 xC0 x7F x01 x00 x00 x00       K....M=B.......
+xE8 x45 x32 x42                                                       .E2B
+
+7/5/14 8:56:39 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:39 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:39 PM :Time: 0:11.298: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:39 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:39 PM :Time: 0:11.347: Received, 52 bytes
+xB0 x04 x00 x00 x50 xC8 x19 x42 xB0 xBE x7B x42 x00 x00 x00 x00       ....P..B..{B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x4B x00 x00 x00 xD5 x4D x3D x42 x00 x00 xC0 x7F x01 x00 x00 x00       K....M=B.......
+xE8 x45 x32 x42                                                       .E2B
+
+7/5/14 8:56:39 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:39 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:39 PM :Time: 0:11.364: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:39 PM :Time: 0:11.413: Received, 52 bytes
+xAF x04 x00 x00 x50 xC8 x19 x42 x10 x24 x7E x42 x00 x00 x00 x00       ....P..B.$~B....
+x45 x4A x24 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       EJ$?.T.A.......<
+x53 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       S....39B.......
+x40 xDF x32 x42                                                       @.2B
+
+7/5/14 8:56:39 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:39 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:39 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:39 PM :Time: 0:11.429: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:39 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:39 PM :Time: 0:11.479: Received, 52 bytes
+xAF x04 x00 x00 x50 xC8 x19 x42 x10 x24 x7E x42 x00 x00 x00 x00       ....P..B.$~B....
+x45 x4A x24 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       EJ$?.T.A.......<
+x53 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       S....39B.......
+x40 xDF x32 x42                                                       @.2B
+
+7/5/14 8:56:39 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:39 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:39 PM :Time: 0:11.495: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:39 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:39 PM :Time: 0:11.545: Received, 52 bytes
+xAF x04 x00 x00 x50 xC8 x19 x42 x10 x24 x7E x42 x00 x00 x00 x00       ....P..B.$~B....
+x45 x4A x24 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       EJ$?.T.A.......<
+x53 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       S....39B.......
+x40 xDF x32 x42                                                       @.2B
+
+7/5/14 8:56:39 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:39 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:39 PM :Time: 0:11.562: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:39 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:39 PM :Time: 0:11.612: Received, 52 bytes
+xAF x04 x00 x00 x50 xC8 x19 x42 x10 x24 x7E x42 x00 x00 x00 x00       ....P..B.$~B....
+x45 x4A x24 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       EJ$?.T.A.......<
+x53 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       S....39B.......
+x40 xDF x32 x42                                                       @.2B
+
+7/5/14 8:56:40 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:40 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:40 PM :Time: 0:11.630: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:40 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:40 PM :Time: 0:11.680: Received, 52 bytes
+xAF x04 x00 x00 x50 xC8 x19 x42 x10 x24 x7E x42 x00 x00 x00 x00       ....P..B.$~B....
+x45 x4A x24 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       EJ$?.T.A.......<
+x53 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       S....39B.......
+x40 xDF x32 x42                                                       @.2B
+
+7/5/14 8:56:40 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:40 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:40 PM :Time: 0:11.697: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:40 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:40 PM :Time: 0:11.747: Received, 52 bytes
+xB0 x04 x00 x00 xB8 xF9 x1A x42 xA0 x4B x7C x42 x00 x00 x00 x00       .......B.K|B....
+x15 x4A x21 x3F x06 x60 x10 x41 x00 x00 x00 x00 x01 x08 x00 x3D       .J.?.`.A.......=
+x60 x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       `.....8B.......
+x32 x4E x33 x42                                                       2N3B
+
+7/5/14 8:56:40 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:40 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:40 PM :Time: 0:11.763: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:40 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:40 PM :Time: 0:11.813: Received, 52 bytes
+xB0 x04 x00 x00 xB8 xF9 x1A x42 xA0 x4B x7C x42 x00 x00 x00 x00       .......B.K|B....
+x15 x4A x21 x3F x06 x60 x10 x41 x00 x00 x00 x00 x01 x08 x00 x3D       .J.?.`.A.......=
+x60 x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       `.....8B.......
+x32 x4E x33 x42                                                       2N3B
+
+7/5/14 8:56:40 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:40 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:40 PM :Time: 0:11.829: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:40 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:40 PM :Time: 0:11.879: Received, 52 bytes
+xB0 x04 x00 x00 xB8 xF9 x1A x42 xA0 x4B x7C x42 x00 x00 x00 x00       .......B.K|B....
+x15 x4A x21 x3F x06 x60 x10 x41 x00 x00 x00 x00 x01 x08 x00 x3D       .J.?.`.A.......=
+x60 x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       `.....8B.......
+x32 x4E x33 x42                                                       2N3B
+
+7/5/14 8:56:40 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:40 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:40 PM :Time: 0:11.901: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:40 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:40 PM :Time: 0:11.951: Received, 52 bytes
+xB0 x04 x00 x00 xB8 xF9 x1A x42 xA0 x4B x7C x42 x00 x00 x00 x00       .......B.K|B....
+x15 x4A x21 x3F x06 x60 x10 x41 x00 x00 x00 x00 x01 x08 x00 x3D       .J.?.`.A.......=
+x60 x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       `.....8B.......
+x32 x4E x33 x42                                                       2N3B
+
+7/5/14 8:56:40 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:40 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:40 PM :Time: 0:11.971: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:40 PM :Time: 0:12.021: Received, 52 bytes
+xB0 x04 x00 x00 xF8 x5F x1B x42 x90 x53 x7E x42 x00 x00 x00 x00       ....._.B.S~B....
+x8D xCA x28 x3F x05 x48 x10 x41 x00 x00 x00 x00 x02 x0C xC0 x3C       ..(?.H.A.......<
+x53 x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       S.....8B.......
+xDE x1C x34 x42                                                       ..4B
+
+7/5/14 8:56:40 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:40 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:40 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:40 PM :Time: 0:12.037: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:40 PM :Time: 0:12.087: Received, 52 bytes
+xB0 x04 x00 x00 xF8 x5F x1B x42 x90 x53 x7E x42 x00 x00 x00 x00       ....._.B.S~B....
+x8D xCA x28 x3F x05 x48 x10 x41 x00 x00 x00 x00 x02 x0C xC0 x3C       ..(?.H.A.......<
+x53 x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       S.....8B.......
+xDE x1C x34 x42                                                       ..4B
+
+7/5/14 8:56:40 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:40 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:40 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:40 PM :Time: 0:12.103: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:40 PM :Time: 0:12.153: Received, 52 bytes
+xB0 x04 x00 x00 xF8 x5F x1B x42 x90 x53 x7E x42 x00 x00 x00 x00       ....._.B.S~B....
+x8D xCA x28 x3F x05 x48 x10 x41 x00 x00 x00 x00 x02 x0C xC0 x3C       ..(?.H.A.......<
+x53 x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       S.....8B.......
+xDE x1C x34 x42                                                       ..4B
+
+7/5/14 8:56:40 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:40 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:40 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:40 PM :Time: 0:12.169: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:40 PM :Time: 0:12.219: Received, 52 bytes
+xB0 x04 x00 x00 xF8 x5F x1B x42 x90 x53 x7E x42 x00 x00 x00 x00       ....._.B.S~B....
+x8D xCA x28 x3F x05 x48 x10 x41 x00 x00 x00 x00 x02 x0C xC0 x3C       ..(?.H.A.......<
+x53 x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       S.....8B.......
+xDE x1C x34 x42                                                       ..4B
+
+7/5/14 8:56:40 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:40 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:40 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:40 PM :Time: 0:12.235: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:40 PM :Time: 0:12.285: Received, 52 bytes
+xB0 x04 x00 x00 xF8 x5F x1B x42 x90 x53 x7E x42 x00 x00 x00 x00       ....._.B.S~B....
+x8D xCA x28 x3F x05 x48 x10 x41 x00 x00 x00 x00 x02 x0C xC0 x3C       ..(?.H.A.......<
+x53 x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       S.....8B.......
+xDE x1C x34 x42                                                       ..4B
+
+7/5/14 8:56:40 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:40 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:40 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:40 PM :Time: 0:12.301: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:40 PM :Time: 0:12.351: Received, 52 bytes
+xB0 x04 x00 x00 x68 x30 x19 x42 xF8 xD8 x7C x42 x00 x00 x00 x00       ....h0.B..|B....
+x51 x0A x25 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       Q.%?.T.A.......<
+x5A x00 x00 x00 x64 x45 x36 x42 x00 x00 xC0 x7F x01 x00 x00 x00       Z...dE6B.......
+x8C x1A x32 x42                                                       ..2B
+
+7/5/14 8:56:40 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:40 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:40 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:40 PM :Time: 0:12.367: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:40 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:40 PM :Time: 0:12.417: Received, 52 bytes
+xB0 x04 x00 x00 x68 x30 x19 x42 xF8 xD8 x7C x42 x00 x00 x00 x00       ....h0.B..|B....
+x51 x0A x25 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       Q.%?.T.A.......<
+x5A x00 x00 x00 x64 x45 x36 x42 x00 x00 xC0 x7F x01 x00 x00 x00       Z...dE6B.......
+x8C x1A x32 x42                                                       ..2B
+
+7/5/14 8:56:40 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:40 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:40 PM :Time: 0:12.433: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:40 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:40 PM :Info: dr: 0:47
+7/5/14 8:56:40 PM :Debug: Range Sort Time: 0
+7/5/14 8:56:40 PM :Time: 0:12.483: Received, 52 bytes
+xB0 x04 x00 x00 x68 x30 x19 x42 xF8 xD8 x7C x42 x00 x00 x00 x00       ....h0.B..|B....
+x51 x0A x25 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       Q.%?.T.A.......<
+x5A x00 x00 x00 x64 x45 x36 x42 x00 x00 xC0 x7F x01 x00 x00 x00       Z...dE6B.......
+x8C x1A x32 x42                                                       ..2B
+
+7/5/14 8:56:40 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:40 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:40 PM :Time: 0:12.499: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:40 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:40 PM :Time: 0:12.549: Received, 52 bytes
+xB0 x04 x00 x00 x68 x30 x19 x42 xF8 xD8 x7C x42 x00 x00 x00 x00       ....h0.B..|B....
+x51 x0A x25 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       Q.%?.T.A.......<
+x5A x00 x00 x00 x64 x45 x36 x42 x00 x00 xC0 x7F x01 x00 x00 x00       Z...dE6B.......
+x8C x1A x32 x42                                                       ..2B
+
+7/5/14 8:56:40 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:40 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:40 PM :Time: 0:12.565: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:40 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:40 PM :Time: 0:12.615: Received, 52 bytes
+xAF x04 x00 x00 xB8 x45 x11 x42 xF0 x47 x80 x42 x00 x00 x00 x00       .....E.B.G.B....
+x15 x4A x21 x3F x06 x60 x10 x41 x00 x00 x00 x00 x01 x08 x00 x3D       .J.?.`.A.......=
+x5F x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       _....39B.......
+x42 x18 x2D x42                                                       B.-B
+
+7/5/14 8:56:41 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:41 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:41 PM :Time: 0:12.632: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:41 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:41 PM :Time: 0:12.681: Received, 52 bytes
+xAF x04 x00 x00 xB8 x45 x11 x42 xF0 x47 x80 x42 x00 x00 x00 x00       .....E.B.G.B....
+x15 x4A x21 x3F x06 x60 x10 x41 x00 x00 x00 x00 x01 x08 x00 x3D       .J.?.`.A.......=
+x5F x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       _....39B.......
+x42 x18 x2D x42                                                       B.-B
+
+7/5/14 8:56:41 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:41 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:41 PM :Time: 0:12.697: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:41 PM :Debug: Flush lasted: 0ms.
+7/5/14 8:56:41 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:41 PM :Time: 0:12.747: Received, 52 bytes
+xAF x04 x00 x00 xB8 x45 x11 x42 xF0 x47 x80 x42 x00 x00 x00 x00       .....E.B.G.B....
+x15 x4A x21 x3F x06 x60 x10 x41 x00 x00 x00 x00 x01 x08 x00 x3D       .J.?.`.A.......=
+x5F x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       _....39B.......
+x42 x18 x2D x42                                                       B.-B
+
+7/5/14 8:56:41 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:41 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:41 PM :Time: 0:12.764: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:41 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:41 PM :Time: 0:12.813: Received, 52 bytes
+xAF x04 x00 x00 xB8 x45 x11 x42 xF0 x47 x80 x42 x00 x00 x00 x00       .....E.B.G.B....
+x15 x4A x21 x3F x06 x60 x10 x41 x00 x00 x00 x00 x01 x08 x00 x3D       .J.?.`.A.......=
+x5F x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       _....39B.......
+x42 x18 x2D x42                                                       B.-B
+
+7/5/14 8:56:41 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:41 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:41 PM :Time: 0:12.830: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:41 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:41 PM :Time: 0:12.880: Received, 52 bytes
+xAF x04 x00 x00 xB8 x45 x11 x42 xF0 x47 x80 x42 x00 x00 x00 x00       .....E.B.G.B....
+x15 x4A x21 x3F x06 x60 x10 x41 x00 x00 x00 x00 x01 x08 x00 x3D       .J.?.`.A.......=
+x5F x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       _....39B.......
+x42 x18 x2D x42                                                       B.-B
+
+7/5/14 8:56:41 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:41 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:41 PM :Time: 0:12.897: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:41 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:41 PM :Time: 0:12.947: Received, 52 bytes
+xB0 x04 x00 x00 x70 xC6 x1B x42 xA8 x66 x7D x42 x00 x00 x00 x00       ....p..B.f}B....
+x15 x4A x21 x3F x08 x78 x10 x41 x00 x00 x00 x00 x01 x0A x20 x3D       .J.?.x.A.......=
+x60 x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       `.....8B.......
+x7E x2E x34 x42                                                       ~.4B
+
+7/5/14 8:56:41 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:41 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:41 PM :Time: 0:12.965: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:41 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:41 PM :Time: 0:13.014: Received, 52 bytes
+xB0 x04 x00 x00 x70 xC6 x1B x42 xA8 x66 x7D x42 x00 x00 x00 x00       ....p..B.f}B....
+x15 x4A x21 x3F x08 x78 x10 x41 x00 x00 x00 x00 x01 x0A x20 x3D       .J.?.x.A.......=
+x60 x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       `.....8B.......
+x7E x2E x34 x42                                                       ~.4B
+
+7/5/14 8:56:41 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:41 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:41 PM :Time: 0:13.030: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:41 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:41 PM :Time: 0:13.080: Received, 52 bytes
+xB0 x04 x00 x00 x70 xC6 x1B x42 xA8 x66 x7D x42 x00 x00 x00 x00       ....p..B.f}B....
+x15 x4A x21 x3F x08 x78 x10 x41 x00 x00 x00 x00 x01 x0A x20 x3D       .J.?.x.A.......=
+x60 x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       `.....8B.......
+x7E x2E x34 x42                                                       ~.4B
+
+7/5/14 8:56:41 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:41 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:41 PM :Time: 0:13.096: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:41 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:41 PM :Time: 0:13.146: Received, 52 bytes
+xB0 x04 x00 x00 x70 xC6 x1B x42 xA8 x66 x7D x42 x00 x00 x00 x00       ....p..B.f}B....
+x15 x4A x21 x3F x08 x78 x10 x41 x00 x00 x00 x00 x01 x0A x20 x3D       .J.?.x.A.......=
+x60 x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       `.....8B.......
+x7E x2E x34 x42                                                       ~.4B
+
+7/5/14 8:56:41 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:41 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:41 PM :Time: 0:13.163: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:41 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:41 PM :Time: 0:13.213: Received, 52 bytes
+xB0 x04 x00 x00 x68 x99 x12 x42 x0C x18 x80 x42 xD0 x89 x1D x3F       ....h..B...B...?
+x7B xAA x27 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       {.'?.T.A.......<
+x68 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       h....39B.......
+x14 xFF x2D x42                                                       ..-B
+
+7/5/14 8:56:41 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:41 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:41 PM :Time: 0:13.231: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:41 PM :Info: file:CurrentTune.msq is not Monitored, cannot pause Monitoring of it.
+7/5/14 8:56:41 PM :Debug: old style time to read outpc: 143 ms.
+7/5/14 8:56:41 PM :Debug: File does not exist, creating new:
+C:\Users\pc\Documents\TunerStudioProjects\MyCar\CurrentTune.msq
+7/5/14 8:56:41 PM :Time: 0:13.375: Received, 52 bytes
+xB0 x04 x00 x00 x68 x99 x12 x42 x0C x18 x80 x42 xD0 x89 x1D x3F       ....h..B...B...?
+x7B xAA x27 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       {.'?.T.A.......<
+x68 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       h....39B.......
+x14 xFF x2D x42                                                       ..-B
+
+7/5/14 8:56:41 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:41 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:41 PM :Time: 0:13.380: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:41 PM :Info: file:CurrentTune.msq is not Monitored, cannot unpause Monitoring of it.
+7/5/14 8:56:41 PM :Info: closeApp Called
+7/5/14 8:56:41 PM :Info: file:CurrentTune.msq is not Monitored, cannot pause Monitoring of it.
+7/5/14 8:56:41 PM :Info: file:CurrentTune.msq is not Monitored, cannot unpause Monitoring of it.
+7/5/14 8:56:41 PM :Debug: goOffline Starting, Time:0
+7/5/14 8:56:41 PM :Info: Deactivated Turbo Baud, goOffline
+7/5/14 8:56:41 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:41 PM :Time: 0:13.430: Received, 52 bytes
+xB0 x04 x00 x00 x68 x99 x12 x42 x0C x18 x80 x42 xD0 x89 x1D x3F       ....h..B...B...?
+x7B xAA x27 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       {.'?.T.A.......<
+x68 x00 x00 x00 x93 x33 x39 x42 x00 x00 xC0 x7F x01 x00 x00 x00       h....39B.......
+x14 xFF x2D x42                                                       ..-B
+
+7/5/14 8:56:41 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:41 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:41 PM :Time: 0:13.439: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:41 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:41 PM :Time: 0:13.489: Received, 52 bytes
+xB0 x04 x00 x00 xD8 x2C x1B x42 x90 x53 x7E x42 x00 x00 x00 x00       .....,.B.S~B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x5F x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       _.....8B.......
+x86 xF6 x33 x42                                                       ..3B
+
+7/5/14 8:56:41 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:41 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:41 PM :Time: 0:13.501: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:41 PM :Debug: old style time to read outpc: 50 ms.
+7/5/14 8:56:41 PM :Time: 0:13.551: Received, 52 bytes
+xB0 x04 x00 x00 xD8 x2C x1B x42 x90 x53 x7E x42 x00 x00 x00 x00       .....,.B.S~B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x5F x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       _.....8B.......
+x86 xF6 x33 x42                                                       ..3B
+
+7/5/14 8:56:41 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:41 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:41 PM :Time: 0:13.566: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:41 PM :Debug: old style time to read outpc: 49 ms.
+7/5/14 8:56:41 PM :Time: 0:13.615: Received, 52 bytes
+xB0 x04 x00 x00 xD8 x2C x1B x42 x90 x53 x7E x42 x00 x00 x00 x00       .....,.B.S~B....
+x3F xEA x23 x3F x05 x54 x10 x41 x00 x00 x00 x00 x02 x0E xE0 x3C       ?.#?.T.A.......<
+x5F x00 x00 x00 x8A x9D x38 x42 x00 x00 xC0 x7F x01 x00 x00 x00       _.....8B.......
+x86 xF6 x33 x42                                                       ..3B
+
+7/5/14 8:56:42 PM :Debug: Real OchDelay for MyCar: 50, timeout=300
+7/5/14 8:56:42 PM :Debug: commThreadExpectedReturnTime set to ms from now: 620
+7/5/14 8:56:42 PM :Time: 0:13.631: SENT, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:42 PM :Debug: goOffline about to stopProcessing, Time:250
+7/5/14 8:56:42 PM :Debug: goOffline Notified offline, Time:251
+7/5/14 8:56:42 PM :Debug: currentPort == null:false
+7/5/14 8:56:42 PM :Info: Removed Port from cache
+7/5/14 8:56:42 PM :Info: Successfully Closed Port
+7/5/14 8:56:42 PM :Debug: goOffline closed port, Time:352
+7/5/14 8:56:42 PM :Time: 0:13.981: Timed out on read, 1 bytes
+x4F                                                                   O
+
+7/5/14 8:56:42 PM :Debug: Exception Caught during comms, type:t.b, message: Read timeout for send command: x4F                                                                   O
+Expected 52 bytes, still no response after 351ms.
+7/5/14 8:56:47 PM :Debug: goOffline comm thread stopped, Time:5352
+7/5/14 8:56:47 PM :Debug: No Remaining Queue Write instructions
+7/5/14 8:56:47 PM :Info: Stopped Comms Watchdog
+7/5/14 8:56:47 PM :Debug: removing Configuration: MyCar
+7/5/14 8:56:47 PM :Info: Finalizing Sensors
+7/5/14 8:56:47 PM :Info: closed Called
+TunerStudio shutdown: Sat Jul 05 20:56:47 EDT 2014
+##############################################################
+
+
+
