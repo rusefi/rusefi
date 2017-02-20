@@ -217,7 +217,7 @@ float getMCUInternalTemperature(void) {
 
 int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 	if (hwChannel == EFI_ADC_NONE) {
-		warning(CUSTOM_OBD_38, "ADC: %s input is not configured", msg);
+		warning(CUSTOM_OBD_ANALOG_INPUT_ERROR, "ADC: %s input is not configured", msg);
 		return -1;
 	}
 #if EFI_ENABLE_MOCK_ADC || EFI_SIMULATOR
