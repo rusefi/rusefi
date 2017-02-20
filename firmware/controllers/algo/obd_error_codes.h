@@ -1715,7 +1715,10 @@ typedef enum {
 	// todo: looks like following two errors always happen together, it's just timing affects which one is published?
 	CUSTOM_SYNC_ERROR = 6036,
 	CUSTOM_SYNC_COUNT_MISMATCH = 6037,
-	CUSTOM_OBD_38 = 6038,
+	/**
+	 * This error happens if some pinout configuration changes were applied but ECU was not reset afterwards.
+	 */
+	CUSTOM_OBD_ANALOG_INPUT_ERROR = 6038,
 	CUSTOM_OBD_39 = 6039,
 
 	CUSTOM_OBD_LOW_CAN_PERIOD = 6040,
@@ -1729,6 +1732,9 @@ typedef enum {
 	CUSTOM_OBD_48 = 6048,
 	CUSTOM_OBD_LOW_FREQUENCY = 6049,
 
+	/**
+	 * Commanded fuel exceeds your fuel injector flow
+	 */
 	CUSTOM_TOO_LONG_FUEL_INJECTION = 6050,
 	CUSTOM_OBD_ZERO_CYLINDER_COUNT = 6051,
 	CUSTOM_OBD_52 = 6052,
