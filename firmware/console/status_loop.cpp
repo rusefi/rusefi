@@ -80,6 +80,10 @@ static volatile bool fullLog = true;
 int warningEnabled = true;
 //int warningEnabled = FALSE;
 
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+extern TunerStudioOutputChannels tsOutputChannels;
+#endif
+
 extern bool hasFirmwareErrorFlag;
 #define FULL_LOGGING_KEY "fl"
 
@@ -224,6 +228,21 @@ static void printSensors(Logging *log, bool fileFormat) {
 #endif /* EFI_ANALOG_SENSORS */
 
 	if (fileFormat) {
+
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+		reportSensorF(log, fileFormat, "debugF1", "v", tsOutputChannels.debugFloatField1, 4);
+		reportSensorF(log, fileFormat, "debugF2", "v", tsOutputChannels.debugFloatField2, 4);
+		reportSensorF(log, fileFormat, "debugF3", "v", tsOutputChannels.debugFloatField3, 4);
+		reportSensorF(log, fileFormat, "debugF4", "v", tsOutputChannels.debugFloatField4, 4);
+		reportSensorF(log, fileFormat, "debugF5", "v", tsOutputChannels.debugFloatField5, 4);
+		reportSensorF(log, fileFormat, "debugF6", "v", tsOutputChannels.debugFloatField6, 4);
+		reportSensorF(log, fileFormat, "debugF7", "v", tsOutputChannels.debugFloatField7, 4);
+
+		reportSensorI(log, fileFormat, "debugInt1", "v", tsOutputChannels.debugIntField1);
+		reportSensorI(log, fileFormat, "debugInt2", "v", tsOutputChannels.debugIntField2);
+		reportSensorI(log, fileFormat, "debugInt3", "v", tsOutputChannels.debugIntField3);
+#endif /* EFI_TUNER_STUDIO */
+
 		reportSensorF(log, fileFormat, "tCharge", "K", engine->engineState.tChargeK, 2); // log column #8
 		reportSensorF(log, fileFormat, "curVE", "%", veMap.getValue(rpm, getMap()), 2);
 		reportSensorF(log, fileFormat, "VVT", "deg", engine->triggerCentral.vvtPosition, 1);
