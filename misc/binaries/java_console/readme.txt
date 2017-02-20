@@ -1,1 +1,0 @@
-Most recent jar is now available at http://rusefi.com/build_server/

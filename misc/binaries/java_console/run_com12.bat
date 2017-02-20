@@ -1,1 +1,0 @@
-java -jar rusefi_console.jar COM12
