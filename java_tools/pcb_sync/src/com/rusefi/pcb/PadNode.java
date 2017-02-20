@@ -29,7 +29,9 @@ public abstract class PadNode extends PcbNode {
             return new RectPadNode(nodeName, i, children);
         if ("circle".equals(shape))
             return new CirclePadNode(nodeName, i, children);
-        throw new IllegalStateException(shape.toString());
+        if ("oval".equals(shape))
+            return new CirclePadNode(nodeName, i, children); // yes, let's treat oval as circle. good enough
+        throw new IllegalStateException("Unknown pad shape: " + shape.toString());
     }
 
     @Override

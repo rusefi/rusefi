@@ -50,6 +50,16 @@ public class PcbMoveTool {
         for (PcbNode gr_line : gr_lines)
             moveStartEnd(dx, dy, gr_line);
 
+        List<PcbNode> gr_arcs = pcbNode.iterate("gr_arc");
+        System.out.println("Moving " + gr_arcs.size() + " gr_arcs");
+        for (PcbNode gr_arc : gr_arcs) {
+            PcbNode start = gr_arc.find("start");
+            moveCoordinatesInFirstChildren(dx, dy, start);
+
+            PcbNode end = gr_arc.find("end");
+            moveCoordinatesInFirstChildren(dx, dy, end);
+        }
+
         List<PcbNode> gr_circles = pcbNode.iterate("gr_circle");
         System.out.println("Moving " + gr_circles.size() + " gr_circles");
         for (PcbNode gr_circle : gr_circles) {

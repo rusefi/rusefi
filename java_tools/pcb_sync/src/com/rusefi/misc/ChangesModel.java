@@ -4,10 +4,7 @@ import com.rusefi.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import static com.rusefi.pcb.PcbMergeTool.log;
 
@@ -22,6 +19,7 @@ public class ChangesModel {
     private static final String MOVE = "move_module";
     private static final String OPTIMIZE = "optimize";
     private static final String COPY = "copy";
+    private static final String MERGE_NET = "merge_net";
 
     public final Set<String> DEL_REQUESTS = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
     public final List<NameAndOffset> ADD_REQUESTS = new ArrayList<NameAndOffset>();
@@ -29,6 +27,10 @@ public class ChangesModel {
 
     public final List<TwoFileRequest> OPTIMIZE_REQUESTS = new ArrayList<TwoFileRequest>();
     public final List<TwoFileRequest> COPY_REQUESTS = new ArrayList<TwoFileRequest>();
+    /**
+     * Old net name > New net name
+     */
+    public final Map<String, String> NET_MERGE_REQUESTS = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
 
     public static ChangesModel getInstance() {
         return instance;
@@ -70,6 +72,11 @@ public class ChangesModel {
             } else if (line.toLowerCase().startsWith(COPY)) {
                 COPY_REQUESTS.add(TwoFileRequest.parseTwoFile(line.substring(COPY.length()).trim(), lineIndex));
                 continue;
+            } else if (line.toLowerCase().startsWith(MERGE_NET)) {
+                TwoFileRequest req = TwoFileRequest.parseTwoFile(line.substring(MERGE_NET.length()).trim(), lineIndex);
+                NET_MERGE_REQUESTS.put(req.input, req.output);
+                log("Net " + req.input + " to be merged into " + req.output);
+                continue;
             }
 
             System.err.println("ChangesModel: Ignoring invalid line: " + line);
@@ -78,6 +85,7 @@ public class ChangesModel {
         log("Got " + DEL_REQUESTS.size() + " remove request(s)");
         log("Got " + ADD_REQUESTS.size() + " add request(s)");
         log("Got " + OPTIMIZE_REQUESTS.size() + " optimize request(s)");
+        log("Got " + NET_MERGE_REQUESTS.size() + " merge net request(s)");
     }
 
     private void addMoveRequest(String request) {

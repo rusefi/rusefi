@@ -1,5 +1,7 @@
 package com.rusefi.bom;
 
+import com.rusefi.pcb.ModuleNode;
+import com.rusefi.pcb.PcbNode;
 import com.rusefi.util.FileUtils;
 
 import java.io.BufferedWriter;
@@ -21,14 +23,37 @@ public class BomBuilder {
     private static Map<String, BomRecord> bomDictionary;
     private static Set<String> ignoreList = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
 
+    private static boolean printQtyInFull = true;
+    private static boolean printPadCount = false;
+    private static boolean printReference = false;
+    private static boolean printUserComment = false;
+    private static PcbNode pcb;
+
     public static void main(String[] args) throws IOException {
-        if (args.length != 3) {
-            System.out.println("bom_builder [FILE_NAME.CMP] COMPONENTS_DICTIONARY.CSV OUTPUT_FILE.CSV");
+        if (args.length < 3) {
+            System.out.println("bom_builder FILE_NAME.CMP PCB.kicad_pcb COMPONENTS_DICTIONARY.CSV OUTPUT_FILE.CSV");
             return;
         }
         cmpFileName = args[0];
-        bomDictionaryName = args[1];
-        String outputFileName = args[2];
+        String pcbFileName = args[1];
+        bomDictionaryName = args[2];
+        String outputFileName = args[3];
+
+        pcb = PcbNode.readFromFile(pcbFileName);
+
+        for (int i = 4; i < args.length; i++) {
+            String option = args[i].trim();
+            if (option.equalsIgnoreCase("printUserComment")) {
+                printUserComment = true;
+            } else if (option.equalsIgnoreCase("printreference")) {
+                printReference = true;
+            } else if (option.equalsIgnoreCase("printpadcount")) {
+                printPadCount = true;
+            } else if (option.equalsIgnoreCase("skipqtyinfull")) {
+                printQtyInFull = false;
+            }
+        }
+
 
         allComponents.readCmpFile(FileUtils.readFileToList(cmpFileName));
 
@@ -64,21 +89,44 @@ public class BomBuilder {
         writeCommonHeader(bw);
         writeMissingElements(bomDictionary, bw, componentsByKey);
 
+        StringBuilder notMounted = new StringBuilder();
+
         for (Map.Entry<String, List<BomComponent>> e : componentsByKey.entrySet()) {
-            String key = e.getKey();
+            // for instance, SM0805_47pF
+            String componentName = e.getKey();
+
             List<BomComponent> list = e.getValue();
 
-            if (ignoreList.contains(key))
+            if (ignoreList.contains(componentName))
                 continue;
 
-            BomRecord bomRecord = bomDictionary.get(key);
+            BomRecord bomRecord = bomDictionary.get(componentName);
             if (bomRecord == null)
                 throw new NullPointerException();
 
-            for (BomComponent c : list)
-                writeLine(bw, bomRecord, 1, c.getReference() + ": ");
+
+
+
+            for (BomComponent c : list) {
+                if (!findModule(c.getReference())) {
+                    bw.write("Not mounted: " + c.getReference() + "\r\n");
+                    continue;
+                }
+                writeLine(bw, bomRecord, 1, c.getReference() + ": ", c.getReference());
+            }
         }
         bw.close();
+    }
+
+    private static boolean findModule(String reference) {
+        for (PcbNode node : pcb.iterate("module")) {
+            if (node instanceof ModuleNode) {
+                ModuleNode mn = (ModuleNode) node;
+                if (mn.getReference().equalsIgnoreCase(reference))
+                    return true;
+            }
+        }
+        return false;
     }
 
     private static void writeCompactPartList(String outputFileName, Map<String, BomRecord> bomDictionary) throws IOException {
@@ -90,18 +138,19 @@ public class BomBuilder {
         writeMissingElements(bomDictionary, bw, componentsByKey);
 
         for (Map.Entry<String, List<BomComponent>> e : componentsByKey.entrySet()) {
-            String key = e.getKey();
+            // for instance, SM0805_47pF
+            String componentName = e.getKey();
 
-            if (ignoreList.contains(key))
+            if (ignoreList.contains(componentName))
                 continue;
 
             List<BomComponent> list = e.getValue();
-            log(list.size() + " items of " + key);
+            log(list.size() + " items of " + componentName);
 
-            BomRecord bomRecord = bomDictionary.get(key);
+            BomRecord bomRecord = bomDictionary.get(componentName);
             if (bomRecord == null)
                 throw new NullPointerException();
-            writeLine(bw, bomRecord, list.size(), "");
+            writeLine(bw, bomRecord, list.size(), "", "");
         }
         bw.close();
     }
@@ -114,10 +163,15 @@ public class BomBuilder {
         bw.write("### " + ignoreList.size() + " entries in ignore list\r\n");
     }
 
-    private static void writeLine(BufferedWriter bw, BomRecord bomRecord, int quantity, String prefix) throws IOException {
+    private static void writeLine(BufferedWriter bw, BomRecord bomRecord, int quantity, String prefix, String reference) throws IOException {
         bw.write(quantity + DELIMITER +
-                bomRecord.getStorePart() + DELIMITER +
-                prefix + bomRecord.getCustomerRef() + "\r\n");
+                        bomRecord.getStorePart() + DELIMITER +
+                        prefix + bomRecord.getCustomerRef() + DELIMITER +
+                        (printReference ? reference + DELIMITER : "") +
+                        (printUserComment ? bomRecord.getUserComment() + DELIMITER : "") +
+                        (printPadCount ? bomRecord.getPadCount() + DELIMITER : "") +
+                        "\r\n"
+        );
     }
 
     private static Map<String, BomRecord> readBomDictionary(List<String> strings) {
@@ -134,23 +188,31 @@ public class BomBuilder {
 
             String[] tokens = line.split(",");
 
-            if (tokens.length != 4) {
-                log("Unexpected line: " + line + " Expected 4 tokens but " + tokens.length);
+            if (tokens.length < 2) {
+                log("Unexpected line: " + line + " Expected at least two tokens but " + tokens.length);
                 System.exit(-1);
             }
 
             String ref = tokens[0];
             String mfgPart = tokens[1];
-            String storePart = tokens[2];
-            String customerRef = tokens[3];
 
-            if (storePart.equalsIgnoreCase(IGNORE_TAG)) {
-                log("Ignore entry: " + ref);
+            if (mfgPart.equalsIgnoreCase(IGNORE_TAG)) {
+                log("Ignoring entry: " + ref);
                 ignoreList.add(ref);
                 continue;
             }
 
-            result.put(ref, new BomRecord(mfgPart, storePart, customerRef));
+            if (tokens.length != 6) {
+                log("Unexpected line: [" + line + "] Expected 6 tokens but " + tokens.length);
+                System.exit(-1);
+            }
+
+            String storePart = tokens[2];
+            String componentName = tokens[3];
+            int padCount = Integer.parseInt(tokens[4]);
+            String customerRef = tokens[5];
+
+            result.put(ref, new BomRecord(mfgPart, storePart, customerRef, padCount, componentName));
 
             log("BOM key: " + ref);
             log("mfgPartNo: " + mfgPart);
