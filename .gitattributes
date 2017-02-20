@@ -8,7 +8,9 @@
 # Explicitly declare text files you want to always be normalized and converted
 # to native line endings on checkout.
 *.c text
+*.cpp text
 *.h text
+*.xml text
 
 # Denote all files that are truly binary and should not be modified.
 *.png binary
