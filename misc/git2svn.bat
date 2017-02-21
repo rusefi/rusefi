@@ -41,5 +41,6 @@ rem git add *
 rem git commit -a -m "auto-sync"
 rem git push --repo https://rusefi:PASSWORD@github.com/rusefi/rusefi
 
+svn ci  --no-auth-cache --non-interactive --username rusefi --password %RUSEFI_SVN_PASSWORD% -m "auto-merge from github"
 
-svn ci -m "auto-merge from github"
+
