@@ -4,39 +4,39 @@ echo This script should be executed from the root of rusEfi master GITHUB local 
 pwd 
 
 echo Updating from SVN
-call svn update
+call git pull
 
-set RUSEFI_GIT_PATH=../rusefi.github/rusefi
+set RUSEFI_SVN_PATH=../../rusefi.svn/
 
 
 
-ls -l %RUSEFI_GIT_PATH%
+ls -l %RUSEFI_SVN_PATH%
 rd /s /q %RUSEFI_GIT_PATH%\firmware
-rd /s /q %RUSEFI_GIT_PATH%\hardware
-rd /s /q %RUSEFI_GIT_PATH%\java_console
-rd /s /q %RUSEFI_GIT_PATH%\unit_tests
-rd /s /q %RUSEFI_GIT_PATH%\win32_functional_tests
+rem rd /s /q %RUSEFI_GIT_PATH%\hardware
+rem rd /s /q %RUSEFI_GIT_PATH%\java_console
+rem rd /s /q %RUSEFI_GIT_PATH%\unit_tests
+rem rd /s /q %RUSEFI_GIT_PATH%\win32_functional_tests
 
-cp -r firmware %RUSEFI_GIT_PATH%
-cp -r hardware %RUSEFI_GIT_PATH%
-cp -r java_console %RUSEFI_GIT_PATH%
-cp -r unit_tests %RUSEFI_GIT_PATH%
-cp -r win32_functional_tests %RUSEFI_GIT_PATH%
-rm -f %RUSEFI_GIT_PATH%/readme.*
-rm -f %RUSEFI_GIT_PATH%/README.*
-cp -r README.* %RUSEFI_GIT_PATH%
-cp -r readme.* %RUSEFI_GIT_PATH%
-
-
-echo Going to git copy location
+cp -r firmware %RUSEFI_SVN_PATH%
+cp -r hardware %RUSEFI_SVN_PATH%
+rem cp -r java_console %RUSEFI_GIT_PATH%
+rem cp -r unit_tests %RUSEFI_GIT_PATH%
+rem cp -r win32_functional_tests %RUSEFI_GIT_PATH%
+rem rm -f %RUSEFI_GIT_PATH%/readme.*
+rem rm -f %RUSEFI_GIT_PATH%/README.*
+rem cp -r README.* %RUSEFI_GIT_PATH%
+rem cp -r readme.* %RUSEFI_GIT_PATH%
 
 
-cd %RUSEFI_GIT_PATH%
+rem echo Going to git copy location
 
-git config --global user.email "russianefi@gmail.com"
-git config --global user.name "rusEfi"
 
-git pull
-git add *
-git commit -a -m "auto-sync"
-git push --repo https://rusefi:PASSWORD@github.com/rusefi/rusefi
+rem cd %RUSEFI_GIT_PATH%
+
+rem git config --global user.email "russianefi@gmail.com"
+rem git config --global user.name "rusEfi"
+
+rem git pull
+rem git add *
+rem git commit -a -m "auto-sync"
+rem git push --repo https://rusefi:PASSWORD@github.com/rusefi/rusefi
