@@ -28,7 +28,7 @@
 								<option id="gnu.cpp.compiler.cygwin.exe.debug.option.debugging.level.2019038432" name="Debug Level" superClass="gnu.cpp.compiler.cygwin.exe.debug.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.other.other.1220149077" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" useByScannerDiscovery="false" value="-c -fmessage-length=0" valueType="string"/>
 								<option id="gnu.cpp.compiler.option.include.paths.1280999160" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;/cygdrive/c/stuff/rusefi_sourceforge/unit_tests/&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;..&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;/cygdrive/c/stuff/rusefi_sourceforge/firmware/chibios/os/kernel/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;/cygdrive/c/stuff/rusefi_sourceforge/firmware/chibios/os/various&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;/cygdrive/c/stuff/rusefi_sourceforge/unit_tests/test_basic_math&quot;"/>
@@ -36,8 +36,8 @@
 									<listOptionValue builtIn="false" value="&quot;/cygdrive/c/stuff/rusefi_sourceforge/unit_tests/engines&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;/cygdrive/c/stuff/rusefi_sourceforge/unit_tests/ext_algo/nmea&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;/cygdrive/c/stuff/rusefi_sourceforge/unit_tests/ext_algo&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;/cygdrive/c/stuff/rusefi_sourceforge/unit_tests/controllers/math&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;/cygdrive/c/stuff/rusefi_sourceforge/unit_tests/controllers&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../controllers/math&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;/cygdrive/c/stuff/rusefi_sourceforge/unit_tests/controllers/sensors&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;/cygdrive/c/stuff/rusefi_sourceforge/unit_tests/controllers/algo&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;/cygdrive/c/stuff/rusefi_sourceforge/unit_tests/controllers/trigger&quot;"/>
@@ -53,7 +53,7 @@
 								<option id="gnu.c.compiler.cygwin.exe.debug.option.debugging.level.600286923" name="Debug Level" superClass="gnu.c.compiler.cygwin.exe.debug.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.misc.other.1016166105" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -std=gnu99 -fgnu89-inline -Werror-implicit-function-declaration" valueType="string"/>
 								<option id="gnu.c.compiler.option.include.paths.811604738" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;/cygdrive/c/stuff/rusefi_sourceforge/unit_tests/&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;..&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;/cygdrive/c/stuff/rusefi_sourceforge/unit_tests/test_basic_math&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;/cygdrive/c/stuff/rusefi_sourceforge/unit_tests/test_data_structures&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;/cygdrive/c/stuff/rusefi_sourceforge/unit_tests/engines&quot;"/>
@@ -68,6 +68,7 @@
 									<listOptionValue builtIn="false" value="&quot;/cygdrive/c/stuff/rusefi_sourceforge/unit_tests/controllers/system&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;/cygdrive/c/stuff/rusefi_sourceforge/unit_tests/util&quot;"/>
 								</option>
+								<option id="gnu.c.compiler.option.dialect.std.1158018789" name="Language standard" superClass="gnu.c.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.c.compiler.dialect.default" valueType="enumerated"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.cygwin.1693315995" superClass="cdt.managedbuild.tool.gnu.c.compiler.input.cygwin"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.cygwin.exe.debug.1531611540" name="Cygwin C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.cygwin.exe.debug"/>
