@@ -25,7 +25,7 @@ ls -l build
 if not exist build/rusefi_test.exe echo FAILED TO COMPILE UNIT TESTS
 if not exist build/rusefi_test.exe exit -1
 
-echo Looks good, now executing
+echo Unit tests build looks good, now executing unit tests
 
 cd build
 call rusefi_test.exe
