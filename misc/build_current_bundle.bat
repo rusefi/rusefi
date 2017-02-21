@@ -3,7 +3,10 @@ rem This script would compile firmware, dev console and win32 simulator into a s
 rem This script depends on Cygwin tools: zip
 rem
 
-echo Hello rusEfi
+echo Hello rusEfi build full bundle
+
+java -version
+
 echo %date% %time%
 
 echo Building win32 functional tests
@@ -115,5 +118,18 @@ pwd
 zip -j rusefi_simulator.zip win32_functional_tests/build/rusefi_simulator.exe firmware/tunerstudio/rusefi.ini java_console_binary/rusefi_console.jar
 
 
+echo open ftp://u71977750-build:%RUSEFI_BUILD_FTP_PASS%@rusefi.com/ > ftp_commands.txt
+echo binary >> ftp_commands.txt
+echo put rusefi_bundle.zip >> ftp_commands.txt
+
+echo cd separate_files >> ftp_commands.txt
+echo put rusefi_simulator.zip >> ftp_commands.txt
+echo put rusefi_console.zip >> ftp_commands.txt
+echo exit >> ftp_commands.txt
+
+
 echo %date% %time%
 echo "DONE here"
+
+
+
