@@ -1,6 +1,6 @@
 
 
-echo This script should be executed from the root of rusEfi trunk SVN local copy
+echo This script should be executed from the root of rusEfi master GITHUB local copy
 pwd 
 
 echo Updating from SVN
