@@ -15,10 +15,6 @@ cd ..
 echo We are in root folder
 pwd
 
-echo Preparing firmware-only fast upload
-zip -j firmware/build/rusefi_firmware.zip firmware/svnversion.h firmware/build/rusefi.hex firmware/build/rusefi.bin  firmware/build/rusefi.elf firmware/tunerstudio/rusefi.ini
-
-ncftpput -u u71977750-build -p %RUSEFI_BUILD_FTP_PASS% rusefi.com separate_files firmware/build/rusefi_firmware.zip
 
 
 cd unit_tests
@@ -33,6 +29,9 @@ echo Unit tests build looks good, now executing unit tests
 
 cd build
 call rusefi_test.exe
+IF NOT ERRORLEVEL echo UNIT TEST FAILED
+IF NOT ERRORLEVEL 0 EXIT /B 1
+
 cd ..
 cd ..
 
@@ -40,3 +39,10 @@ echo Back to root folder
 pwd
 
 
+
+echo Preparing firmware-only fast upload
+zip -j firmware/build/rusefi_firmware.zip firmware/svnversion.h firmware/build/rusefi.hex firmware/build/rusefi.bin  firmware/build/rusefi.elf firmware/tunerstudio/rusefi.ini
+
+echo Now uploading only firmware
+
+ncftpput -u u71977750-build -p %RUSEFI_BUILD_FTP_PASS% rusefi.com separate_files firmware/build/rusefi_firmware.zip
