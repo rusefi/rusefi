@@ -37,7 +37,7 @@ public class LogViewer extends JPanel {
             return pathname.getName().contains("MAIN_rfi_report");
         }
     };
-    public static final String DEFAULT_LOG_LOCATION = "out";
+    public static final String DEFAULT_LOG_LOCATION = FileLog.DIR;
     private final JLabel folderLabel = new JLabel();
     private final JLabel fileLabel = new JLabel();
     private final DefaultListModel<FileItem> fileListModel = new DefaultListModel<FileItem>();
