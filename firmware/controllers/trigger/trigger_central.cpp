@@ -357,7 +357,7 @@ void printAllTriggers() {
 		TriggerShape *s = &engine->triggerShape;
 		s->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER);
 
-		fprintf(fp, "TRIGGERTYPE %d %d %s\r\n", triggerId, s->getLength(), getTrigger_type_e(tt));
+		fprintf(fp, "TRIGGERTYPE %d %d %s %f\r\n", triggerId, s->getLength(), getTrigger_type_e(tt), s->tdcPosition);
 
 		fprintf(fp, "# duty %f %f\r\n", s->dutyCycle[0], s->dutyCycle[1]);
 

@@ -85,6 +85,7 @@ public class TriggerImage {
         String idStr = tokens[1];
         String eventCountStr = tokens[2];
         String triggerName = tokens[3];
+        triggerPanel.tdcPosition = Double.parseDouble(tokens[4]);
         int eventCount = Integer.parseInt(eventCountStr);
         int id = Integer.parseInt(idStr);
 
@@ -211,6 +212,7 @@ public class TriggerImage {
     private static class TriggerPanel extends JPanel {
         public String name = "";
         public int id;
+        public double tdcPosition;
 
         @Override
         public void paint(Graphics g) {
@@ -234,6 +236,20 @@ public class TriggerImage {
 
             g.drawString(name, 0, (int) (h * 0.75));
             g.drawString("#" + id, 0, (int) (h * 0.9));
+
+            g.setColor(Color.green);
+            int tdcFontSize = (int) (f.getSize() * 1.5);
+            g.setFont(new Font(f.getName(), Font.BOLD, tdcFontSize));
+            g.drawString("tdcPosition " + formatTdcPosition(), 0, tdcFontSize);
+
+            int tdcX = (int) (w / 720.0 * tdcPosition);
+            g.drawLine(tdcX, 0, tdcX, h);
+        }
+
+        private String formatTdcPosition() {
+            if ((int) tdcPosition == tdcPosition)
+                return Integer.toString((int) tdcPosition);
+            return Double.toString(tdcPosition);
         }
     }
 }
