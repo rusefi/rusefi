@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.rusefi.FileLog;
 import com.rusefi.Launcher;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.ui.util.UiUtils;
@@ -13,7 +14,7 @@ public class WarningPanel {
 
     private static final String WARNING = "WARNING";
     private static final String ERROR = "firmware error";
-    private final JPanel panel = new JPanel(new BorderLayout());
+    private final JPanel panel = new JPanel(new FlowLayout());
 
     private final JLabel label = new JLabel();
     private final JButton reset = new JButton("clear warning");
@@ -27,7 +28,7 @@ public class WarningPanel {
 
     public WarningPanel() {
         label.setForeground(Color.red);
-        panel.add(label, BorderLayout.WEST);
+        panel.add(label);
 
         Font currentFont = label.getFont();
         label.setFont(currentFont.deriveFont((float) (currentFont.getSize() * 1.5)));
@@ -61,7 +62,9 @@ public class WarningPanel {
                 }
             }
         });
-        panel.add(reset, BorderLayout.EAST);
+        panel.add(reset);
+        // todo: only display label if logs are being recorded
+        panel.add(new JLabel(FileLog.LOG_INFO_TEXT));
     }
 
     private void clear() {
