@@ -7,7 +7,7 @@ import java.util.Date;
  * Andrey Belomutskiy (c) 2014
  */
 public class Version2Header {
-    private static final String NL = System.getProperty("line.separator");
+    private static final String NL = "\n";//System.getProperty("line.separator");
 
     private static final String COMMAND = "svn info";
     private static final String VERSION_MARKER = "Last Changed Rev: ";
@@ -15,6 +15,7 @@ public class Version2Header {
 
     public static void main(String[] args) throws IOException {
         System.out.println("Hi, it's " + new Date());
+        System.out.println("Working with " + NL.length() + " line ends");
         Process simulatorProcess = null;
         try {
             System.out.println("Executing [" + COMMAND + "]");
