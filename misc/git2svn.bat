@@ -5,6 +5,9 @@ pwd
 
 echo Updating from SVN
 call git pull
+IF NOT ERRORLEVEL echo ERROR git pull-ing
+IF NOT ERRORLEVEL 0 EXIT /B 1
+
 
 set RUSEFI_SVN_PATH=../../rusefi.svn/
 
