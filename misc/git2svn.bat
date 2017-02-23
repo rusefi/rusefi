@@ -10,16 +10,16 @@ IF NOT ERRORLEVEL 0 EXIT /B 1
 
 
 set RUSEFI_SVN_PATH=../../rusefi.svn/
-
+set RUSEFI_SVN_W_PATH=..\..\rusefi.svn
 
 
 ls -l %RUSEFI_SVN_PATH%
-rd /s /q %RUSEFI_SVN_PATH%\firmware
-rd /s /q %RUSEFI_SVN_PATH%\hardware
-rd /s /q %RUSEFI_SVN_PATH%\java_console
-rd /s /q %RUSEFI_SVN_PATH%\unit_tests
-rd /s /q %RUSEFI_SVN_PATH%\misc
-rd /s /q %RUSEFI_SVN_PATH%\win32_functional_tests
+rd /s /q %RUSEFI_SVN_W_PATH%\firmware
+rd /s /q %RUSEFI_SVN_W_PATH%\hardware
+rd /s /q %RUSEFI_SVN_W_PATH%\java_console
+rd /s /q %RUSEFI_SVN_W_PATH%\unit_tests
+rd /s /q %RUSEFI_SVN_W_PATH%\misc
+rd /s /q %RUSEFI_SVN_W_PATH%\win32_functional_tests
 
 cp -r firmware               %RUSEFI_SVN_PATH%
 cp -r hardware               %RUSEFI_SVN_PATH%
