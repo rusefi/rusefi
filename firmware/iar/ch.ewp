@@ -2837,6 +2837,24 @@
       <file>
         <name>$PROJ_DIR$\..\hw_layer\stm32f4\mpu_util.h</name>
       </file>
+      <file>
+        <name>$PROJ_DIR$\..\hw_layer\stm32f4\stm32f4xx_hal_def.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\hw_layer\stm32f4\stm32f4xx_hal_flash.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\hw_layer\stm32f4\stm32f4xx_hal_flash.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\hw_layer\stm32f4\stm32f4xx_hal_flash_ex.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\hw_layer\stm32f4\stm32f4xx_hal_flash_ex.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\hw_layer\stm32f4\stm32f4xx_hal_flash_ramfunc.h</name>
+      </file>
     </group>
     <file>
       <name>$PROJ_DIR$\..\hw_layer\adc_external.h</name>
