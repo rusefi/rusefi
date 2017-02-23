@@ -29,22 +29,11 @@ cp -r misc                   %RUSEFI_SVN_PATH%
 cp -r win32_functional_tests %RUSEFI_SVN_PATH%
 rem rm -f %RUSEFI_GIT_PATH%/readme.*
 rem rm -f %RUSEFI_GIT_PATH%/README.*
-rem cp -r README.* %RUSEFI_GIT_PATH%
-rem cp -r readme.* %RUSEFI_GIT_PATH%
-
-
-rem echo Going to git copy location
+cp -r README.*               %RUSEFI_SVN_PATH%
+cp -r readme.*               %RUSEFI_SVN_PATH%
 
 
 cd %RUSEFI_SVN_PATH%
-
-rem git config --global user.email "russianefi@gmail.com"
-rem git config --global user.name "rusEfi"
-
-rem git pull
-rem git add *
-rem git commit -a -m "auto-sync"
-rem git push --repo https://rusefi:PASSWORD@github.com/rusefi/rusefi
 
 svn ci  --no-auth-cache --non-interactive --username rusefi --password %RUSEFI_SVN_PASSWORD% -m "auto-merge from github"
 
