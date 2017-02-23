@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Feb 18 13:57:17 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Feb 22 21:26:04 EST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -255,7 +255,7 @@ typedef struct {
 	/**
 	 * offset 24
 	 */
-	bool32_t customUseRiseEdge;
+	bool32_t unusedcustomUseRiseEdge;
 	/** total size 28*/
 } trigger_config_s;
 
@@ -2051,4 +2051,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Feb 18 13:57:17 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Feb 22 21:26:04 EST 2017
