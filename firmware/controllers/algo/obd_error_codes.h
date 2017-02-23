@@ -1726,7 +1726,15 @@ typedef enum {
 	CUSTOM_OBD_42 = 6042,
 	CUSTOM_OBD_MMC_ERROR = 6043,
 	CUSTOM_LOGGING_BUFFER_OVERFLOW = 6044,
+	/**
+	 * This is not engine miss detection - this is only internal scheduler state validation
+	 * Should not happen
+	 */
 	CUSTOM_OBD_SKIPPED_SPARK = 6045,
+	/**
+	 * This is not engine miss detection - this is only internal scheduler state validation
+	 * Should not happen
+	 */
 	CUSTOM_OBD_SKIPPED_FUEL = 6046,
 	CUSTOM_OBD_SCH_REUSE = 6047,
 	CUSTOM_OBD_48 = 6048,
