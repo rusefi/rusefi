@@ -45,6 +45,7 @@ public class AutoTest {
     private static void testCustomEngine() {
         setEngineType(0);
         sendCommand("set_toothed_wheel 4 0");
+//        sendCommand("enable trigger_only_front");
     }
 
     private static void testMazdaMiata2003() {

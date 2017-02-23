@@ -64,6 +64,8 @@ public:
 	 */
 	bool shaft_is_synchronized;
 
+	bool triggerDefinitionError;
+
 	uint32_t toothed_previous_duration; // todo: unify Camel_notation, what a mess :(
 	uint32_t durationBeforePrevious; // this one is before 'toothed_previous_duration'
 	uint32_t thirdPreviousDuration; // this one is before durationBeforePrevious, todo: better field names?
