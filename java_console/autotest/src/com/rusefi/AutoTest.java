@@ -6,6 +6,7 @@ import com.rusefi.core.SensorCentral;
 import com.rusefi.waves.EngineChart;
 import com.rusefi.waves.EngineReport;
 
+import static com.rusefi.IoUtil.changeRpm;
 import static com.rusefi.TestingUtils.nextChart;
 import static com.rusefi.IoUtil.sendCommand;
 import static com.rusefi.IoUtil.sleep;
@@ -45,7 +46,12 @@ public class AutoTest {
     private static void testCustomEngine() {
         setEngineType(0);
         sendCommand("set_toothed_wheel 4 0");
-//        sendCommand("enable trigger_only_front");
+        sendCommand("enable trigger_only_front");
+        changeRpm(100);
+        changeRpm(1500);
+        sendCommand("disable trigger_only_front");
+        changeRpm(100);
+        changeRpm(1500);
     }
 
     private static void testMazdaMiata2003() {
