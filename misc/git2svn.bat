@@ -18,12 +18,14 @@ rd /s /q %RUSEFI_SVN_PATH%\firmware
 rd /s /q %RUSEFI_SVN_PATH%\hardware
 rd /s /q %RUSEFI_SVN_PATH%\java_console
 rd /s /q %RUSEFI_SVN_PATH%\unit_tests
+rd /s /q %RUSEFI_SVN_PATH%\misc
 rd /s /q %RUSEFI_SVN_PATH%\win32_functional_tests
 
 cp -r firmware               %RUSEFI_SVN_PATH%
 cp -r hardware               %RUSEFI_SVN_PATH%
 cp -r java_console           %RUSEFI_SVN_PATH%
 cp -r unit_tests             %RUSEFI_SVN_PATH%
+cp -r misc                   %RUSEFI_SVN_PATH%
 cp -r win32_functional_tests %RUSEFI_SVN_PATH%
 rem rm -f %RUSEFI_GIT_PATH%/readme.*
 rem rm -f %RUSEFI_GIT_PATH%/README.*
