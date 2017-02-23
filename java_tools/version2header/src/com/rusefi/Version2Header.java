@@ -14,8 +14,13 @@ public class Version2Header {
     private static final String HEADER_TAG = "VCS_VERSION";
 
     public static void main(String[] args) throws IOException {
+        if (args.length!=1) {
+            System.out.println("Version offset value is now a mandatory parameter!");
+            System.exit(-1);
+        }
+        int versionOffsetValue = Integer.parseInt(args[0]);
         System.out.println("Hi, it's " + new Date());
-        System.out.println("Working with " + NL.length() + " line ends");
+        System.out.println("Working with " + NL.length() + " line ends, offset " + versionOffsetValue);
         Process simulatorProcess = null;
         try {
             System.out.println("Executing [" + COMMAND + "]");
@@ -34,7 +39,7 @@ public class Version2Header {
                     String ver = line.substring(VERSION_MARKER.length());
                     System.out.println("Version [" + ver + "]");
                     int version = Integer.parseInt(ver);
-                    writeFile(version);
+                    writeFile(versionOffsetValue + version);
                 }
             }
             System.out.println("Got " + counter + " lines of stdout");
