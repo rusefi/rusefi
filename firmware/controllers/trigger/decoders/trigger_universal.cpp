@@ -30,7 +30,10 @@ void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerShape *s, int to
 
 void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount, int skippedCount,
 		operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_S) {
-	efiAssertVoid(totalTeethCount > 0, "totalTeethCount is zero");
+	if (totalTeethCount <= 0) {
+		firmwareError(CUSTOM_ERR_6143, "totalTeethCount is zero or less: %d", totalTeethCount);
+		return;
+	}
 	efiAssertVoid(s != NULL, "TriggerShape is NULL");
 	s->initialize(operationMode, false);
 

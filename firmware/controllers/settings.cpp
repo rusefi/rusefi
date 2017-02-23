@@ -518,7 +518,14 @@ static void setTriggerType(int value) {
 }
 
 static void setToothedWheel(int total, int skipped DECLARE_ENGINE_PARAMETER_S) {
+	if (total < 1 || skipped >= total) {
+		scheduleMsg(&logger, "invalid parameters %d %d", total, skipped);
+		return;
+	}
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+	engineConfiguration->trigger.customTotalToothCount = total;
+	engineConfiguration->trigger.customSkippedToothCount = skipped;
+
 	scheduleMsg(&logger, "toothed: total=%d/skipped=%d", total, skipped);
 	setToothedWheelConfiguration(&engine->triggerShape, total, skipped, engineConfiguration->operationMode);
 //	initializeTriggerShape(&logger, engineConfiguration, engineConfiguration2);
