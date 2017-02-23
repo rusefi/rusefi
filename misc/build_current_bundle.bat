@@ -127,6 +127,8 @@ echo put rusefi_simulator.zip >> ftp_commands.txt
 echo put rusefi_console.zip >> ftp_commands.txt
 echo exit >> ftp_commands.txt
 
+cd temp
+winscp.com /script=../ftp_commands.txt
 
 echo %date% %time%
 echo "DONE here"
