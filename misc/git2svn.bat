@@ -15,10 +15,10 @@ set RUSEFI_SVN_PATH=../../rusefi.svn/
 
 ls -l %RUSEFI_SVN_PATH%
 rd /s /q %RUSEFI_GIT_PATH%\firmware
-rem rd /s /q %RUSEFI_GIT_PATH%\hardware
-rem rd /s /q %RUSEFI_GIT_PATH%\java_console
-rem rd /s /q %RUSEFI_GIT_PATH%\unit_tests
-rem rd /s /q %RUSEFI_GIT_PATH%\win32_functional_tests
+rd /s /q %RUSEFI_GIT_PATH%\hardware
+rd /s /q %RUSEFI_GIT_PATH%\java_console
+rd /s /q %RUSEFI_GIT_PATH%\unit_tests
+rd /s /q %RUSEFI_GIT_PATH%\win32_functional_tests
 
 cp -r firmware               %RUSEFI_SVN_PATH%
 cp -r hardware               %RUSEFI_SVN_PATH%
