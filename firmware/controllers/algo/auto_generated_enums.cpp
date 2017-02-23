@@ -183,8 +183,8 @@ case TT_JEEP_18_2_2_2:
 	return "TT_18_2_2_2";
 case TT_MINI_COOPER_R50:
   return "TT_MINI_COOPER_R50";
-case TT_MITSU:
-  return "TT_MITSU";
+case TT_MITSUBISHI:
+  return "TT_MITSUBISHI";
 case TT_TOOTHED_WHEEL:
   return "TT_TOOTHED_WHEEL";
 case TT_TOOTHED_WHEEL_36_1:

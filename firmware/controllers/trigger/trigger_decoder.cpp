@@ -550,7 +550,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		configureHondaCbr600custom(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
-	case TT_MITSU:
+	case TT_MITSUBISHI:
 		initializeMitsubishi4g18(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 

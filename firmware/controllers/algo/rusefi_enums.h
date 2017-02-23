@@ -162,7 +162,7 @@ typedef enum {
 
 	TT_HONDA_4_24_1 = 10,
 
-	TT_MITSU = 11,
+	TT_MITSUBISHI = 11,
 
 	// this makes sense because mechanical spark distribution does not require synchronization
 	TT_HONDA_4_24 = 12,
