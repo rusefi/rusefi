@@ -627,6 +627,11 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 
 	state->reset();
 
+	if (shape->shapeDefinitionError) {
+		state->triggerDefinitionError = true;
+		return 0;
+	}
+
 	// todo: should this variable be declared 'static' to reduce stack usage?
 	TriggerStimulatorHelper helper;
 
