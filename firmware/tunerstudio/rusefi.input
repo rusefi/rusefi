@@ -1638,6 +1638,7 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		field = "ETB Dir #2",							etbDirectionPin2
 		field = "ETB Control #1",						etbControlPin1	
 		field = "ETB Control #2",						etbControlPin2	
+		field = "SD CS Pin",							sdCardCsPin
 
 	dialog = allPins3
 		field = "Injection Pin 1",						injectionPins1
@@ -2009,6 +2010,7 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 	
 	dialog = sdCard, "SD Card Logger"
 		field = "SdCard", 								isSdCardEnabled
+		field = "CS Pin",								sdCardCsPin
 		field = "log format",							logFormat
 		field = "Mass Storage",							storageMode
 	
