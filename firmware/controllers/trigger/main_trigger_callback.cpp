@@ -333,7 +333,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		// we are ignoring low RPM in order not to handle "engine was stopped to engine now running" transition
 		if (rpm > 2 * engineConfiguration->cranking.rpm) {
 			const char *outputName = event->outputs[0]->name;
-			if (prevOutputName == outputName) {
+			if (prevOutputName == outputName && engineConfiguration->injectionMode != IM_SIMULTANEOUS) {
 				warning(CUSTOM_OBD_SKIPPED_FUEL, "looks like skipped fuel event %d %s", getRevolutionCounter(), outputName);
 			}
 			prevOutputName = outputName;
