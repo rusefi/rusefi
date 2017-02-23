@@ -5,9 +5,10 @@ current binaries are always available at http://rusefi.com/build_server/
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
-| 02/22/2017    | r2973     | unused property 'custom Use Rise Edge' removed |
-| 02/22/2017    | r2972     | protocol signature changed to 'v0.02' (this would happen from time to time to ensure version match between console and TS project | 
-| 02/20/2017    | r2939     | https://github.com/rusefi/rusefi is now the official primary repository |
+| 02/22/2017    | r12980    | bugfix: false error message in case of single coin or simultaneous injection | 
+| 02/22/2017    | r12973    | unused property 'custom Use Rise Edge' removed |
+| 02/22/2017    | r12972    | protocol signature changed to 'v0.02' (this would happen from time to time to ensure version match between console and TS project | 
+| 02/20/2017    | r12939    | https://github.com/rusefi/rusefi is now the official primary repository |
 | 02/18/2017    | r11565    | improvement: level1 default brown out https://sourceforge.net/p/rusefi/tickets/354/ |
 | 02/18/2017    | r11554    | bugfix: rusEfi console program/erase buttons fixed with ST-LINK 2.1 |
 | 12/09/2016    | r10991    | bugfixes, bugfixes, bugfixes & releave 1.0
