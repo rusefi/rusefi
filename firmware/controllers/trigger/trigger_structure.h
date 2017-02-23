@@ -57,6 +57,7 @@ public:
 
 	bool isSynchronizationNeeded;
 	bool needSecondTriggerInput;
+	bool shapeDefinitionError;
 
 	/**
 	 * duty cycle for each individual trigger channel
