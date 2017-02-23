@@ -1492,9 +1492,7 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		field = "#Custom Trigger"
 		field = "total Tooth Count",					trigger_customTotalToothCount, {trigger_type == 0}
 		field = "skipped Tooth Count",					trigger_customSkippedToothCount, {trigger_type == 0}
-;		field = "sync Ratio From",						trigger_customSyncRatioFrom, {trigger_type == 0}
-;		field = "sync Ratio To",						trigger_customSyncRatioTo, {trigger_type == 0}
-		field = "use Rise Edge?",						trigger_customUseRiseEdge, {trigger_type == 0}
+
 	dialog = triggerConfiguration_IO,	"Settings I/O"
 		field = "!ECU reboot needed to apply pin assignment"
 		field = "#Cam is primary if you have cam sensor"

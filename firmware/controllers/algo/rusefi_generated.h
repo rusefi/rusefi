@@ -239,8 +239,8 @@
 #define trigger_unusedcustomSyncRatioFrom_offset 552
 #define trigger_unusedcustomSyncRatioFrom_offset_hex 228
 #define trigger_unusedcustomSyncRatioTo_offset 556
-#define trigger_customUseRiseEdge_offset 560
-#define trigger_customUseRiseEdge_offset_hex 230
+#define trigger_unusedcustomUseRiseEdge_offset 560
+#define trigger_unusedcustomUseRiseEdge_offset_hex 230
 #define hip9011SpiDevice_offset 564
 #define hip9011SpiDevice_offset_hex 234
 #define globalFuelCorrection_offset 568

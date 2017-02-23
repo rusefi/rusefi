@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Feb 18 13:57:17 EST 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Feb 22 21:26:04 EST 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -243,8 +243,8 @@ public class Fields {
 	public static final int trigger_unusedcustomSyncRatioFrom_offset = 552;
 	public static final int trigger_unusedcustomSyncRatioFrom_offset_hex = 228;
 	public static final int trigger_unusedcustomSyncRatioTo_offset = 556;
-	public static final int trigger_customUseRiseEdge_offset = 560;
-	public static final int trigger_customUseRiseEdge_offset_hex = 230;
+	public static final int trigger_unusedcustomUseRiseEdge_offset = 560;
+	public static final int trigger_unusedcustomUseRiseEdge_offset_hex = 230;
 	public static final int hip9011SpiDevice_offset = 564;
 	public static final int hip9011SpiDevice_offset_hex = 234;
 	public static final int globalFuelCorrection_offset = 568;
@@ -1125,7 +1125,7 @@ public class Fields {
 	public static final Field TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT = Field.create("TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT", 548, FieldType.INT);
 	public static final Field TRIGGER_UNUSEDCUSTOMSYNCRATIOFROM = Field.create("TRIGGER_UNUSEDCUSTOMSYNCRATIOFROM", 552, FieldType.FLOAT);
 	public static final Field TRIGGER_UNUSEDCUSTOMSYNCRATIOTO = Field.create("TRIGGER_UNUSEDCUSTOMSYNCRATIOTO", 556, FieldType.FLOAT);
-	public static final Field TRIGGER_CUSTOMUSERISEEDGE = Field.create("TRIGGER_CUSTOMUSERISEEDGE", 560, FieldType.INT);
+	public static final Field TRIGGER_UNUSEDCUSTOMUSERISEEDGE = Field.create("TRIGGER_UNUSEDCUSTOMUSERISEEDGE", 560, FieldType.INT);
 	public static final Field HIP9011SPIDEVICE = Field.create("HIP9011SPIDEVICE", 564, FieldType.INT);
 	public static final Field GLOBALFUELCORRECTION = Field.create("GLOBALFUELCORRECTION", 568, FieldType.FLOAT);
 	public static final Field PEDALPOSITIONMIN = Field.create("PEDALPOSITIONMIN", 572, FieldType.INT);
