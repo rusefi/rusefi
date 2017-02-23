@@ -7,7 +7,7 @@ enable2ndByteCanID = false
 
 [TunerStudio]
    queryCommand   = "S"
-   signature    = "MShift v0.01" ; signature is expected to be 7 or more characters.
+   signature    = "MShift v0.02" ; signature is expected to be 7 or more characters.
 
 [Constants]
 ; new packet serial format with CRC
