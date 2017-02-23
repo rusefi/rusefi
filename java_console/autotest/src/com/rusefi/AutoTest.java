@@ -26,6 +26,7 @@ public class AutoTest {
 
     static void mainTestBody() {
         sendCommand("fl 1"); // just in case it was disabled
+        testCustomEngine();
         testMazdaMiata2003();
         test2003DodgeNeon();
         testFordAspire();
@@ -39,6 +40,11 @@ public class AutoTest {
         testMazda626();
         testFord6();
         testFordFiesta();
+    }
+
+    private static void testCustomEngine() {
+        setEngineType(0);
+        sendCommand("set_toothed_wheel 4 0");
     }
 
     private static void testMazdaMiata2003() {
@@ -438,7 +444,7 @@ public class AutoTest {
 
         boolean failed = false;
         try {
-            IoUtil.launchSimulator(true);
+            IoUtil.launchSimulator(false);
             mainTestBody();
         } catch (Throwable e) {
             e.printStackTrace();
