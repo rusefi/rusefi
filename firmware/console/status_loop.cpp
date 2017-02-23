@@ -202,7 +202,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 		reportSensorF(log, fileFormat, "mafr", "kg/hr", getRealMaf(PASS_ENGINE_PARAMETER_F), 2);
 	}
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
-	if (engineConfiguration->map.sensor.hwChannel != EFI_ADC_NONE) {
+	if (hasMapSensor(PASS_ENGINE_PARAMETER_F)) {
 		reportSensorF(log, fileFormat, "MAP", "kPa", getMap(), 2);
 //		reportSensorF(log, fileFormat, "map_r", "V", getRawMap(), 2);
 	}
@@ -244,7 +244,9 @@ static void printSensors(Logging *log, bool fileFormat) {
 #endif /* EFI_TUNER_STUDIO */
 
 		reportSensorF(log, fileFormat, "tCharge", "K", engine->engineState.tChargeK, 2); // log column #8
-		reportSensorF(log, fileFormat, "curVE", "%", veMap.getValue(rpm, getMap()), 2);
+		if (hasMapSensor(PASS_ENGINE_PARAMETER_F)) {
+			reportSensorF(log, fileFormat, "curVE", "%", veMap.getValue(rpm, getMap()), 2);
+		}
 		reportSensorF(log, fileFormat, "VVT", "deg", engine->triggerCentral.vvtPosition, 1);
 	}
 
@@ -291,7 +293,9 @@ static void printSensors(Logging *log, bool fileFormat) {
 		reportSensorF(log, fileFormat, "f: tps fuel", "ms", engine->engineState.tpsAccelEnrich, 2);
 
 		reportSensorF(log, fileFormat, "f: el delta", "v", engine->engineLoadAccelEnrichment.getMaxDelta(), 2);
-		reportSensorF(log, fileFormat, "f: el fuel", "v", engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_F) * 100 / getMap(), 2);
+		if (hasMapSensor(PASS_ENGINE_PARAMETER_F)) {
+			reportSensorF(log, fileFormat, "f: el fuel", "v", engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_F) * 100 / getMap(), 2);
+		}
 
 		reportSensorF(log, fileFormat, "f: duty", "%", getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER), 2);
 	}
@@ -685,8 +689,13 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMaf(PASS_ENGINE_PARAMETER_F) : 0;
     tsOutputChannels->massAirFlow = hasMafSensor() ? getRealMaf(PASS_ENGINE_PARAMETER_F) : 0;
           
-	tsOutputChannels->veValue = veMap.getValue(rpm, getMap());
-	tsOutputChannels->currentTargetAfr = afrMap.getValue(rpm, getMap());
+	if (hasMapSensor(PASS_ENGINE_PARAMETER_F)) {
+		float mapValue = getMap();
+		tsOutputChannels->veValue = veMap.getValue(rpm, mapValue);
+		// todo: bug here? target afr could work based on real MAF?
+		tsOutputChannels->currentTargetAfr = afrMap.getValue(rpm, mapValue);
+		tsOutputChannels->manifoldAirPressure = mapValue;
+	}
 	tsOutputChannels->airFuelRatio = getAfr(PASS_ENGINE_PARAMETER_F);
 	if (hasVBatt(PASS_ENGINE_PARAMETER_F)) {
 		tsOutputChannels->vBatt = getVBatt(PASS_ENGINE_PARAMETER_F);
@@ -695,7 +704,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	tsOutputChannels->baroPressure = hasBaroSensor() ? getBaroPressure() : 0;
 #endif /* EFI_ANALOG_SENSORS */
-	tsOutputChannels->manifoldAirPressure = getMap();
 	tsOutputChannels->engineLoad = engineLoad;
 	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
 	tsOutputChannels->triggerErrorsCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
@@ -755,7 +763,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getMaxDelta();
 	tsOutputChannels->tpsAccelFuel = engine->engineState.tpsAccelEnrich;
 	// engine load acceleration
-	tsOutputChannels->engineLoadAccelExtra = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_F) * 100 / getMap();
+	if (hasMapSensor(PASS_ENGINE_PARAMETER_F)) {
+		tsOutputChannels->engineLoadAccelExtra = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_F) * 100 / getMap();
+	}
 	tsOutputChannels->engineLoadDelta = engine->engineLoadAccelEnrichment.getMaxDelta();
 
 
