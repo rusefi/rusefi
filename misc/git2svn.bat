@@ -34,6 +34,7 @@ cp -r readme.*               %RUSEFI_SVN_PATH%
 
 
 cd %RUSEFI_SVN_PATH%
+pwd
 
 svn ci  --no-auth-cache --non-interactive --username rusefi --password %RUSEFI_SVN_PASSWORD% -m "auto-merge from github"
 
