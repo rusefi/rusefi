@@ -11,6 +11,12 @@ IF NOT ERRORLEVEL 0 EXIT /B 1
 
 set RUSEFI_SVN_PATH=../../svn/
 set RUSEFI_SVN_W_PATH=..\..\svn
+set RUSEFI_GIT_PATH=../git/rusefi
+
+
+cd %RUSEFI_SVN_PATH%
+svn up
+cd %RUSEFI_GIT_PATH%
 
 
 ls -l %RUSEFI_SVN_PATH%
