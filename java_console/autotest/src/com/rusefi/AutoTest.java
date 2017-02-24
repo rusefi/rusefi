@@ -46,9 +46,9 @@ public class AutoTest {
     private static void testCustomEngine() {
         setEngineType(0);
         sendCommand("set_toothed_wheel 4 0");
-        sendCommand("enable trigger_only_front");
-        changeRpm(100);
-        changeRpm(1500);
+//        sendCommand("enable trigger_only_front");
+//        changeRpm(100);
+//        changeRpm(1500);
         sendCommand("disable trigger_only_front");
         changeRpm(100);
         changeRpm(1500);
