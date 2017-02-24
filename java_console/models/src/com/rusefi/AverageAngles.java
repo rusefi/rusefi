@@ -107,14 +107,20 @@ public class AverageAngles {
         double delta = 720 - lastValue;
         stream.append("And the " + angles.size() + " angles are:\r\n");
         for (AngleEvent v : angles) {
-            stream.append((delta + v.angle) + "\r\n");
+            stream.append(range720(delta + v.angle) + "\r\n");
         }
 
         stream.append("And the " + angles.size() + " lines of code are:\r\n");
         for (AngleEvent v : angles) {
             String signal = (v.signal / 1000) % 2 == 0 ? "TV_FALL" : "TV_RISE";
-            stream.append("s->addEvent(" + (delta + v.angle) + ", ch, " + signal + ");\r\n");
+            stream.append("s->addEvent(" + range720(delta + v.angle) + ", ch, " + signal + ");\r\n");
         }
+    }
+
+    private double range720(double v) {
+        while (v > 720)
+            v -= 702;
+        return v;
     }
 
     private static class AngleEvent {
