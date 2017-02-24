@@ -1,6 +1,9 @@
 /**
  * @file	custom_engine.cpp
  *
+ *
+ * set engine_type 49 Frankenso QA 12 cylinder engine
+ *
  * @date Jan 18, 2015
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
@@ -141,5 +144,43 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	enableFrankensoCan();
 #endif
 }
+
+void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_F) {
+	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
+
+	engineConfiguration->specs.cylindersCount = 12;
+
+	boardConfiguration->injectionPins[0] = GPIOB_7; // #1
+	boardConfiguration->injectionPins[1] = GPIOB_8; // #2
+	boardConfiguration->injectionPins[2] = GPIOB_9; // #3
+	boardConfiguration->injectionPins[3] = GPIOC_13; // #4
+
+	boardConfiguration->injectionPins[4] = GPIOD_3;
+	boardConfiguration->injectionPins[5] = GPIOD_5;
+	boardConfiguration->injectionPins[6] = GPIOD_7;
+	boardConfiguration->injectionPins[7] = GPIOE_2;
+	boardConfiguration->injectionPins[8] = GPIOE_3;
+	boardConfiguration->injectionPins[9] = GPIOE_4;
+	boardConfiguration->injectionPins[10] = GPIOE_5;
+	boardConfiguration->injectionPins[11] = GPIOE_6;
+
+	boardConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
+	boardConfiguration->mainRelayPin = GPIO_UNASSIGNED;
+	boardConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
+	boardConfiguration->fanPin = GPIO_UNASSIGNED;
+
+
+	boardConfiguration->ignitionPins[0] = GPIOC_9;
+	boardConfiguration->ignitionPins[1] = GPIOC_7;
+	boardConfiguration->ignitionPins[2] = GPIOE_10;
+	boardConfiguration->ignitionPins[3] = GPIOE_8;
+
+	boardConfiguration->ignitionPins[4] = GPIOE_14;
+	boardConfiguration->ignitionPins[5] = GPIOE_12;
+	boardConfiguration->ignitionPins[6] = GPIOD_8;
+	boardConfiguration->ignitionPins[7] = GPIOD_9;
+
+}
+
 
 #endif /* CONFIG_ENGINES_CUSTOM_ENGINE_CPP_ */
