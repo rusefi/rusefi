@@ -9,8 +9,8 @@ IF NOT ERRORLEVEL echo ERROR git pull-ing
 IF NOT ERRORLEVEL 0 EXIT /B 1
 
 
-set RUSEFI_SVN_PATH=../../rusefi.svn/
-set RUSEFI_SVN_W_PATH=..\..\rusefi.svn
+set RUSEFI_SVN_PATH=../../svn/
+set RUSEFI_SVN_W_PATH=..\..\svn
 
 
 ls -l %RUSEFI_SVN_PATH%
