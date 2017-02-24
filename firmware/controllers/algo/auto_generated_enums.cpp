@@ -90,6 +90,8 @@ case HONDA_ACCORD_1_24_SHIFTED:
   return "HONDA_ACCORD_1_24_SHIFTED";
 case MAZDA_323:
   return "MAZDA_323";
+case FRANKENSO_QA_ENGINE:
+	return "QA";
 case MAZDA_626:
   return "MAZDA_626";
 case MAZDA_MIATA_NB1:

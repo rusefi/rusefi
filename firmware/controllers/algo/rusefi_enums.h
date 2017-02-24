@@ -140,7 +140,9 @@ typedef enum {
 
 	HONDA_ACCORD_1_24_SHIFTED = 48,
 
-	ET_UNUSED = 49,
+	FRANKENSO_QA_ENGINE = 49,
+
+	ET_UNUSED = 50,
 
 	Force_4b_engine_type = ENUM_32_BITS,
 } engine_type_e;
