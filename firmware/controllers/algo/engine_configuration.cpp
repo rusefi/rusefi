@@ -920,6 +920,9 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	case HONDA_ACCORD_1_24_SHIFTED:
 		setHondaAccordConfiguration1_24_shifted(PASS_ENGINE_PARAMETER_F);
 		break;
+	case FRANKENSO_QA_ENGINE:
+		setFrankensoBoardTestConfiguration(PASS_ENGINE_PARAMETER_F);
+		break;
 	case HONDA_ACCORD_CD_DIP:
 		setHondaAccordConfigurationDip(PASS_ENGINE_PARAMETER_F);
 		break;
