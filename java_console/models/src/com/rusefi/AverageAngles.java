@@ -15,6 +15,24 @@ import java.util.TreeMap;
  * 2/15/2015
  */
 public class AverageAngles {
+    static String PRIMARY = "T_PRIMARY";
+    static String SECONDARY = "T_SECONDARY";
+    static String T_CHANNEL_3 = "T_CHANNEL_3";
+
+    enum trigger_event_e {
+        SHAFT_PRIMARY_FALLING(PRIMARY),
+        SHAFT_PRIMARY_RISING(PRIMARY),
+        SHAFT_SECONDARY_FALLING(SECONDARY),
+        SHAFT_SECONDARY_RISING(SECONDARY),
+        SHAFT_3RD_FALLING(T_CHANNEL_3),
+        SHAFT_3RD_RISING(T_CHANNEL_3);
+
+        private String channel;
+
+        trigger_event_e(String channel) {
+            this.channel = channel;
+        }
+    }
 
     private static final int MAX_RPM_CHANGE = 20;
     private int rpmAtPrevChart;
@@ -54,7 +72,7 @@ public class AverageAngles {
 
         for (int i = 0; i < v.length / 2; i++) {
             Double angle = Double.parseDouble(v[2 * i]);
-            int signal = (int)Double.parseDouble(v[2 * i + 1]);
+            int signal = (int) Double.parseDouble(v[2 * i + 1]);
             if (Double.isNaN(angle)) {
                 System.out.println("Skipping due to NaN");
                 return;
@@ -112,8 +130,12 @@ public class AverageAngles {
 
         stream.append("And the " + angles.size() + " lines of code are:\r\n");
         for (AngleEvent v : angles) {
-            String signal = (v.signal / 1000) % 2 == 0 ? "TV_FALL" : "TV_RISE";
-            stream.append("s->addEvent(" + range720(delta + v.angle) + ", ch, " + signal + ");\r\n");
+            int ckpSignalType = v.signal / 1000;
+            trigger_event_e event = trigger_event_e.values()[ckpSignalType];
+            String signal = ckpSignalType % 2 == 0 ? "TV_FALL" : "TV_RISE";
+            stream.append("s->addEvent2(" + range720(delta + v.angle) + ", " +
+                    event.channel +
+                    ", " + signal + " PASS_ENGINE_PARAMETER);\r\n");
         }
     }
 
