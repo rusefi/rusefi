@@ -114,8 +114,9 @@ cd ..
 cd ..                                                             
 pwd
 
-
-zip -j rusefi_simulator.zip win32_functional_tests/build/rusefi_simulator.exe firmware/tunerstudio/rusefi.ini java_console_binary/rusefi_console.jar
+echo "Making rusefi_simulator.zip"
+pwd
+zip -j temp/rusefi_simulator.zip win32_functional_tests/build/rusefi_simulator.exe firmware/tunerstudio/rusefi.ini java_console_binary/rusefi_console.jar
 
 
 echo open ftp://u71977750-build:%RUSEFI_BUILD_FTP_PASS%@rusefi.com/ > ftp_commands.txt
