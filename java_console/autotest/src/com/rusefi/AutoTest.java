@@ -49,9 +49,9 @@ public class AutoTest {
 //        sendCommand("enable trigger_only_front");
 //        changeRpm(100);
 //        changeRpm(1500);
-        sendCommand("disable trigger_only_front");
-        changeRpm(100);
-        changeRpm(1500);
+//        sendCommand("disable trigger_only_front");
+//        changeRpm(100);
+//        changeRpm(1500);
     }
 
     private static void testMazdaMiata2003() {
