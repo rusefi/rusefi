@@ -1,7 +1,7 @@
 set GIT2SVN_ROOT=c:\stuff\rusefi.git2svn
 
-set RUSEFI_SVN_PATH=%GIT2SVN_ROOT\svn
-set RUSEFI_GIT_PATH=%GIT2SVN_ROOT\git
+set RUSEFI_SVN_PATH=%GIT2SVN_ROOT%\svn
+set RUSEFI_GIT_PATH=%GIT2SVN_ROOT%\git
 
 rd /s /q  %GIT2SVN_ROOT%
 
