@@ -1,4 +1,5 @@
-svn up
+
+
 doxygen
 IF NOT ERRORLEVEL echo doxygen run FAILED
 IF NOT ERRORLEVEL 0 EXIT /B 1
