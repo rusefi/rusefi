@@ -347,22 +347,22 @@ BOR_Result_t BOR_Set(BOR_Level_t BORValue) {
 	}
 
 
-	FLASH_OBProgramInitTypeDef FLASH_Handle;
-
-	FLASH_Handle.BORLevel = (uint32_t)BORValue;
-	FLASH_Handle.OptionType = OPTIONBYTE_BOR;
-
-	HAL_FLASH_OB_Unlock();
-
-	HAL_FLASHEx_OBProgram(&FLASH_Handle);
-
-	HAL_StatusTypeDef status = HAL_FLASH_OB_Launch();
-
-	HAL_FLASH_OB_Lock();
-
-	if (status != HAL_OK) {
-		return BOR_Result_Error;
-	}
+//	FLASH_OBProgramInitTypeDef FLASH_Handle;
+//
+//	FLASH_Handle.BORLevel = (uint32_t)BORValue;
+//	FLASH_Handle.OptionType = OPTIONBYTE_BOR;
+//
+//	HAL_FLASH_OB_Unlock();
+//
+//	HAL_FLASHEx_OBProgram(&FLASH_Handle);
+//
+//	HAL_StatusTypeDef status = HAL_FLASH_OB_Launch();
+//
+//	HAL_FLASH_OB_Lock();
+//
+//	if (status != HAL_OK) {
+//		return BOR_Result_Error;
+//	}
 
 	return BOR_Result_Ok;
 }
