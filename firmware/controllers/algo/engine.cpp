@@ -93,7 +93,7 @@ Engine::Engine(persistent_config_s *config) {
 }
 
 void Engine::reset() {
-	isEngineChartEnabled = false;
+	withError = isEngineChartEnabled = false;
 	sensorChartMode = SC_OFF;
 	actualLastInjection = 0;
 	isAlternatorControlEnabled = false;

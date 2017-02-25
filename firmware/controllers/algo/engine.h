@@ -266,6 +266,12 @@ public:
 	 */
 	bool isAlternatorControlEnabled;
 
+	/**
+	 * This flag indicated a big enough problem that engine control would be
+	 * prohibited if this flag is set to true.
+	 */
+	bool withError;
+
 	RpmCalculator rpmCalculator;
 	persistent_config_s *config;
 	engine_configuration_s *engineConfiguration;
