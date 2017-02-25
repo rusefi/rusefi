@@ -26,6 +26,9 @@
 
 #include "pin_repository.h"
 #include "gpio_helper.h"
+#include "engine.h"
+
+EXTERN_ENGINE;
 
 /**
  * @brief Initialize the hardware output pin while also assigning it a logical name
@@ -36,7 +39,8 @@ void initOutputPinExt(const char *msg, OutputPin *outputPin, ioportid_t port, ui
 		 * here we check if another physical pin is already assigned to this logical output
 		 */
 // todo: need to clear '&outputs' in io_pins.c
-		firmwareError(OBD_PCM_Processor_Fault, "outputPin [%s] already assigned to %x%d", msg, outputPin->port, outputPin->pin);
+		warning(CUSTOM_OBD_PIN_CONFLICT, "outputPin [%s] already assigned to %x%d", msg, outputPin->port, outputPin->pin);
+		engine->withError = true;
 		return;
 	}
 	outputPin->currentLogicValue = INITIAL_PIN_STATE;
