@@ -325,17 +325,6 @@ void initHardware(Logging *l) {
 	 */
 	initPrimaryPins();
 
-#if EFI_HD44780_LCD
-//	initI2Cmodule();
-	lcd_HD44780_init(sharedLogger);
-	if (hasFirmwareError())
-		return;
-
-	lcd_HD44780_print_string(VCS_VERSION);
-
-#endif /* EFI_HD44780_LCD */
-
-
 	if (hasFirmwareError()) {
 		return;
 	}
@@ -360,6 +349,16 @@ void initHardware(Logging *l) {
 	engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
 	resetConfigurationExt(sharedLogger, engineConfiguration->engineType PASS_ENGINE_PARAMETER);
 #endif /* EFI_INTERNAL_FLASH */
+
+#if EFI_HD44780_LCD
+//	initI2Cmodule();
+	lcd_HD44780_init(sharedLogger);
+	if (hasFirmwareError())
+		return;
+
+	lcd_HD44780_print_string(VCS_VERSION);
+
+#endif /* EFI_HD44780_LCD */
 
 	if (hasFirmwareError()) {
 		return;
