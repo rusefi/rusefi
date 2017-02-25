@@ -325,6 +325,17 @@ void initHardware(Logging *l) {
 	 */
 	initPrimaryPins();
 
+#if EFI_HD44780_LCD
+//	initI2Cmodule();
+	lcd_HD44780_init(sharedLogger);
+	if (hasFirmwareError())
+		return;
+
+	lcd_HD44780_print_string(VCS_VERSION);
+
+#endif /* EFI_HD44780_LCD */
+
+
 	if (hasFirmwareError()) {
 		return;
 	}
@@ -422,16 +433,6 @@ void initHardware(Logging *l) {
 #if ADC_SNIFFER
 	initAdcDriver();
 #endif
-
-#if EFI_HD44780_LCD
-//	initI2Cmodule();
-	lcd_HD44780_init(sharedLogger);
-	if (hasFirmwareError())
-		return;
-
-	lcd_HD44780_print_string(VCS_VERSION);
-
-#endif /* EFI_HD44780_LCD */
 
 #if HAL_USE_I2C || defined(__DOXYGEN__)
 	addConsoleActionII("i2c", sendI2Cbyte);
