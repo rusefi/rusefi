@@ -68,6 +68,7 @@
 #endif /* EFI_PROD_CODE */
 
 extern bool hasFirmwareErrorFlag;
+extern EnginePins enginePins;
 
 persistent_config_container_s persistentState CCM_OPTIONAL;
 
@@ -118,13 +119,13 @@ static msg_t csThread(void) {
 		int is_running = rpm > 0 && !is_cranking;
 		if (is_running) {
 			// blinking while running
-			runningPin.setValue(0);
+			enginePins.runningPin.setValue(0);
 			chThdSleepMilliseconds(50);
-			runningPin.setValue(1);
+			enginePins.runningPin.setValue(1);
 			chThdSleepMilliseconds(50);
 		} else {
 			// constant on while cranking and off if engine is stopped
-			runningPin.setValue(is_cranking);
+			enginePins.runningPin.setValue(is_cranking);
 			chThdSleepMilliseconds(100);
 		}
 	}

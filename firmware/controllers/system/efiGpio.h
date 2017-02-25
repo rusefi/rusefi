@@ -86,7 +86,11 @@ public:
 	/**
 	 * brain board RED LED by default
 	 */
-	OutputPin errorLedPin; //
+	OutputPin errorLedPin;
+	OutputPin communicationPin; // blue LED on brain board by default
+	OutputPin warningPin; // orange LED on brain board by default
+	OutputPin runningPin; // green LED on brain board by default
+
 	OutputPin idleSolenoidPin;
 	OutputPin alternatorPin;
 	/**
