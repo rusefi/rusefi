@@ -27,11 +27,6 @@ public interface LinkConnector extends LinkDecoder {
         public String unpack(String packet) {
             return LinkDecoder.TEXT_PROTOCOL_DECODER.unpack(packet);
         }
-
-        @Override
-        public String unpackConfirmation(String message) {
-            return message;
-        }
     };
 
     void connect(ConnectionStateListener listener);
@@ -41,6 +36,4 @@ public interface LinkConnector extends LinkDecoder {
     void restart();
 
     boolean hasError();
-
-    String unpackConfirmation(String message);
 }
