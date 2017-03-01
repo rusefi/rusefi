@@ -30,10 +30,14 @@ public class ConfigurationImageFile {
 
         byte[] header = new byte[ConfigurationImage.BIN_HEADER.length()];
         int result = fis.read(header);
-        if (result != header.length)
+        if (result != header.length) {
+            System.err.println("Error reading header bytes, got " + result);
             return null;
-        if (!Arrays.equals(header, ConfigurationImage.BIN_HEADER.getBytes()))
+        }
+        if (!Arrays.equals(header, ConfigurationImage.BIN_HEADER.getBytes())) {
+            System.err.println("Header mismatch");
             return null;
+        }
         ConfigurationImage image = new ConfigurationImage(contentSize);
         result = fis.read(image.getContent());
         return result == image.getContent().length ? image : null;
