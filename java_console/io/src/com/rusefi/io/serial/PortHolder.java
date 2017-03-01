@@ -4,7 +4,7 @@ import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.CommunicationLoggingHolder;
 import com.rusefi.io.ConnectionStateListener;
-import com.rusefi.io.DataListener;
+import com.opensr5.io.DataListener;
 import jssc.SerialPort;
 import jssc.SerialPortException;
 import org.jetbrains.annotations.Nullable;

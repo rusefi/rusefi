@@ -1,7 +1,7 @@
 package com.rusefi.io.tcp;
 
 import com.rusefi.FileLog;
-import com.rusefi.io.DataListener;
+import com.opensr5.io.DataListener;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 

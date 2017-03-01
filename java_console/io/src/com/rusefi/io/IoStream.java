@@ -1,5 +1,7 @@
 package com.rusefi.io;
 
+import com.opensr5.io.DataListener;
+
 import java.io.IOException;
 
 /**

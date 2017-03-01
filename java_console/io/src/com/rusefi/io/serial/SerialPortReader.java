@@ -1,7 +1,7 @@
 package com.rusefi.io.serial;
 
 import com.rusefi.FileLog;
-import com.rusefi.io.DataListener;
+import com.opensr5.io.DataListener;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;

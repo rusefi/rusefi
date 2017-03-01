@@ -1,5 +1,6 @@
 package com.rusefi.io.tcp;
 
+import com.opensr5.io.DataListener;
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.ResponseBuffer;
