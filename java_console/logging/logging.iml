@@ -8,5 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="annotations" level="project" />
+    <orderEntry type="module" module-name="opensr5" exported="" />
   </component>
 </module>
