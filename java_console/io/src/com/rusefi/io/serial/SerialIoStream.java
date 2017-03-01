@@ -62,7 +62,7 @@ public class SerialIoStream implements IoStream {
     public void setDataListener(DataListener listener) {
         try {
             SerialPortReader reader = new SerialPortReader(serialPort, listener);
-            serialPort.addEventListener(reader);
+            serialPort.addEventListener(reader.getSerialPortEventListener());
             reader.readInitial();
         } catch (SerialPortException e) {
             throw new IllegalStateException(e);

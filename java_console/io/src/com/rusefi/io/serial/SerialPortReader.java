@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
  * Date: 12/25/12
  * (c) Andrey Belomutskiy
  */
-public class SerialPortReader implements SerialPortEventListener {
+public class SerialPortReader {
     private static final int[] SLEEP_DURATIONS = {2, 20, 50, 100};
     private final SerialPort serialPort;
     private DataListener listener;
@@ -61,6 +61,9 @@ public class SerialPortReader implements SerialPortEventListener {
         return null;
     }
 
+    private SerialPortEventListener serialPortEventListener = new SerialPortEventListener() {
+
+
     public void serialEvent(SerialPortEvent spe) {
         if (spe.isRXCHAR() || spe.isRXFLAG()) {
 // event-based serial read implementation does not work well on Windows 10 for some reason
@@ -74,6 +77,7 @@ public class SerialPortReader implements SerialPortEventListener {
             FileLog.MAIN.logLine("less expected SerialPortReader serialEvent " + spe.getEventType());
         }
     }
+    };
 
 //    private void handleRx(SerialPortEvent spe) throws SerialPortException {
 //        if (spe.getEventValue() > 0) {
@@ -91,5 +95,9 @@ public class SerialPortReader implements SerialPortEventListener {
             if (data != null)
                 listener.onDataArrived(data);
         }
+    }
+
+    public SerialPortEventListener getSerialPortEventListener() {
+        return serialPortEventListener;
     }
 }
