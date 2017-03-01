@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.opensr5.ConfigurationImage;
 import com.rusefi.core.Pair;
 
 /**

@@ -1,6 +1,6 @@
 package com.rusefi.ui.config;
 
-import com.rusefi.ConfigurationImage;
+import com.opensr5.ConfigurationImage;
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.Field;

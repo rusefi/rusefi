@@ -6,7 +6,7 @@ import com.romraider.maps.Table;
 import com.romraider.maps.Table3D;
 import com.romraider.xml.RomAttributeParser;
 import com.rusefi.BinarySearch;
-import com.rusefi.ConfigurationImage;
+import com.opensr5.ConfigurationImage;
 import com.rusefi.FileLog;
 import com.rusefi.UploadChanges;
 import com.rusefi.autotune.FuelAutoTune;

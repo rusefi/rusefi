@@ -35,7 +35,7 @@ import com.romraider.editor.ecu.ECUEditor;
 import com.romraider.editor.ecu.ECUEditorManager;
 import com.romraider.maps.Rom;
 import com.romraider.util.SettingsManager;
-import com.rusefi.ConfigurationImage;
+import com.opensr5.ConfigurationImage;
 import com.rusefi.binaryprotocol.BinaryProtocolCmd;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.ui.SettingsTab;
