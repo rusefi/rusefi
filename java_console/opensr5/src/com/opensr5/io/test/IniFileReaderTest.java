@@ -61,6 +61,8 @@ public class IniFileReaderTest {
     @Test
     public void testTotalPagesSize() {
         String string = "   nPages              = 3\n" +
+                "  signature      = \"unit test\"\n" +
+                "    pageReadCommand     = \"X\",       \"X\",     \"X\"\n\n\n\n" +
                 "   pageSize            = 288,   64,     288\n";
 
 
@@ -71,5 +73,9 @@ public class IniFileReaderTest {
         assertEquals(3, meta.getnPages());
         assertEquals(IniFileMetaInfo.DEFAULT_BLOCKING_FACTOR, meta.getBlockingFactor());
         assertEquals(640, meta.getTotalSize());
+        assertEquals("unit test", meta.getSignature());
+
+        assertEquals(64, meta.getPageSize(1));
+        assertEquals("X", meta.getPageReadCommand(1));
     }
 }

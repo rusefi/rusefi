@@ -63,6 +63,11 @@ public class RawIniFile {
         return getSimpleIntegerProperty(key);
     }
 
+    public List<String> getValues(String key) {
+        RawIniFile.Line line = getMandatoryLine(key);
+        return Arrays.asList(line.getTokens()).subList(1, line.getTokens().length);
+    }
+
     /**
      * Immutable representation of since ini file line
      */

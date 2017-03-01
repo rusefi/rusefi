@@ -1,7 +1,6 @@
 package com.opensr5.io;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -11,6 +10,8 @@ import java.util.List;
 public class IniFileMetaInfo {
     public static final int DEFAULT_BLOCKING_FACTOR = 16000;
     private final int nPages;
+    private final String signature;
+    private final List<String> pageReadCommands;
 
     private int totalSize;
     private final List<Integer> pageSizes = new ArrayList<>();
@@ -26,10 +27,9 @@ public class IniFileMetaInfo {
 
         blockingFactor = file.getSimpleIntegerProperty("blockingFactor", DEFAULT_BLOCKING_FACTOR);
 
+        signature = file.getValues("signature").get(0);
 
-        RawIniFile.Line pageSize = file.getMandatoryLine("pageSize");
-
-        List<String> individualPageSizes = Arrays.asList(pageSize.getTokens()).subList(1, pageSize.getTokens().length);
+        List<String> individualPageSizes = file.getValues("pageSize");
 
         if (individualPageSizes.size() != nPages)
             throw new IllegalStateException("Unexpected individual sizes: " + individualPageSizes);
@@ -39,6 +39,8 @@ public class IniFileMetaInfo {
             pageSizes.add(size);
             totalSize += size;
         }
+
+        pageReadCommands = file.getValues("pageReadCommand");
     }
 
     public int getnPages() {
@@ -51,5 +53,17 @@ public class IniFileMetaInfo {
 
     public int getTotalSize() {
         return totalSize;
+    }
+
+    public String getSignature() {
+        return signature;
+    }
+
+    public String getPageReadCommand(int pageIndex) {
+        return pageReadCommands.get(pageIndex);
+    }
+
+    public int getPageSize(int pageIndex) {
+        return pageSizes.get(pageIndex);
     }
 }
