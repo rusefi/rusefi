@@ -35,6 +35,7 @@
                 <fileset dir="models/src" includes="**/test/**/*Test.java"/>
                 <fileset dir="ui/src" includes="**/test/**/*Test.java"/>
                 <fileset dir="romraider/src" includes="**/test/**/*Test.java"/>
+                <fileset dir="opensr5/src" includes="**/test/**/*Test.java"/>
                 <fileset dir="logging/src" includes="**/test/**/*Test.java"/>
             </batchtest>
         </junit>
