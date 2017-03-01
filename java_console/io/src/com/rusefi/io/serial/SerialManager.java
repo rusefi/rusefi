@@ -1,7 +1,7 @@
 package com.rusefi.io.serial;
 
 import com.rusefi.io.ConnectionStateListener;
-import com.rusefi.io.DataListener;
+import com.opensr5.io.DataListener;
 import com.rusefi.io.LinkManager;
 
 /**
