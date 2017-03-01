@@ -147,14 +147,7 @@ public class TcpConnector implements LinkConnector {
 //            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
 //        }
     }
-
-    @Override
-    public String unpackConfirmation(String message) {
-        if (message.startsWith(CommandQueue.CONFIRMATION_PREFIX))
-            return message.substring(CommandQueue.CONFIRMATION_PREFIX.length());
-        return null;
-    }
-
+    
     public static Collection<String> getAvailablePorts() {
         return isTcpPortOpened() ? Collections.singletonList("" + DEFAULT_PORT) : Collections.<String>emptyList();
     }

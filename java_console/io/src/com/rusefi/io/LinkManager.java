@@ -122,7 +122,8 @@ public class LinkManager {
     }
 
     public static String unpackConfirmation(String message) {
-        return connector.unpackConfirmation(message);
+        if (message.startsWith(CommandQueue.CONFIRMATION_PREFIX))
+            return message.substring(CommandQueue.CONFIRMATION_PREFIX.length());
+        return null;
     }
-
 }
