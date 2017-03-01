@@ -4,6 +4,7 @@ import com.rusefi.core.EngineState;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.CommandQueue;
+import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.InvocationConfirmationListener;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpConnector;
@@ -168,7 +169,7 @@ public class IoUtil {
     static void realHardwareConnect(String port) {
         LinkManager.start(port);
         final CountDownLatch connected = new CountDownLatch(1);
-        LinkManager.open(new LinkManager.LinkStateListener() {
+        LinkManager.open(new ConnectionStateListener() {
             @Override
             public void onConnectionFailed() {
                 System.out.println("CONNECTION FAILED, did you specify the right port name?");

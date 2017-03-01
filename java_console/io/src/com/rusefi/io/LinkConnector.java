@@ -7,7 +7,7 @@ package com.rusefi.io;
 public interface LinkConnector extends LinkDecoder {
     LinkConnector VOID = new LinkConnector() {
         @Override
-        public void connect(LinkManager.LinkStateListener listener) {
+        public void connect(ConnectionStateListener listener) {
         }
 
         @Override
@@ -34,7 +34,7 @@ public interface LinkConnector extends LinkDecoder {
         }
     };
 
-    void connect(LinkManager.LinkStateListener listener);
+    void connect(ConnectionStateListener listener);
 
     void send(String command, boolean fireEvent) throws InterruptedException;
 

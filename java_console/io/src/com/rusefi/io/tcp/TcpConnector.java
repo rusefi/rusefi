@@ -80,7 +80,7 @@ public class TcpConnector implements LinkConnector {
      * this implementation is blocking
      */
     @Override
-    public void connect(LinkManager.LinkStateListener listener) {
+    public void connect(ConnectionStateListener listener) {
         FileLog.MAIN.logLine("Connecting to host=" + hostname + "/port=" + port);
         OutputStream os;
         BufferedInputStream stream;
