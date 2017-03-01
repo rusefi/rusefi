@@ -233,7 +233,7 @@ public class Launcher {
             }
         });
 
-        LinkManager.open(new LinkManager.LinkStateListener() {
+        LinkManager.open(new ConnectionStateListener() {
             @Override
             public void onConnectionFailed() {
             }

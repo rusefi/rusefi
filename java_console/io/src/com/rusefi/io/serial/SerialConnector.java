@@ -3,6 +3,7 @@ package com.rusefi.io.serial;
 import com.rusefi.FileLog;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
+import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
 
@@ -16,7 +17,7 @@ public class SerialConnector implements LinkConnector {
     }
 
     @Override
-    public void connect(LinkManager.LinkStateListener listener) {
+    public void connect(ConnectionStateListener listener) {
         FileLog.MAIN.logLine("SerialConnector: connecting");
         SerialManager.listener = listener;
         FileLog.MAIN.logLine("scheduleOpening");
