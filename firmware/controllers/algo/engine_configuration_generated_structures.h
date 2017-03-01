@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Feb 22 21:26:04 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Feb 28 17:46:37 EST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1304,6 +1304,7 @@ typedef struct {
 	bool twoWireBatchInjection : 1;
 	/**
 	 * VR sensors are only precise on rising front
+	 * enable trigger_only_front
 	offset 1500 bit 14 */
 	bool useOnlyRisingEdgeForTrigger : 1;
 	/**
@@ -2051,4 +2052,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Feb 22 21:26:04 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Feb 28 17:46:37 EST 2017
