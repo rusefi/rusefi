@@ -1,6 +1,6 @@
-package com.rusefi.io;
+package com.opensr5.io;
 
-import com.rusefi.ConfigurationImage;
+import com.opensr5.ConfigurationImage;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;

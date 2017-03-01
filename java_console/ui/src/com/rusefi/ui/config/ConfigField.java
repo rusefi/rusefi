@@ -1,6 +1,6 @@
 package com.rusefi.ui.config;
 
-import com.rusefi.ConfigurationImage;
+import com.opensr5.ConfigurationImage;
 import com.rusefi.config.Field;
 import com.rusefi.config.FieldType;
 import com.rusefi.core.MessagesCentral;

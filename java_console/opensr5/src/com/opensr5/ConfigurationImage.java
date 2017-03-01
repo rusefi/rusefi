@@ -1,4 +1,4 @@
-package com.rusefi;
+package com.opensr5;
 
 /**
  * (c) Andrey Belomutskiy

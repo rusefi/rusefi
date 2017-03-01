@@ -1,7 +1,8 @@
 package com.rusefi;
 
+import com.opensr5.ConfigurationImage;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.io.ConfigurationImageFile;
+import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.PortHolder;
 import com.rusefi.ui.RecentCommands;

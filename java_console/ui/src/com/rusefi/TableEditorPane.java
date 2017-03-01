@@ -1,9 +1,10 @@
 package com.rusefi;
 
+import com.opensr5.ConfigurationImage;
 import com.romraider.editor.ecu.ECUEditor;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolCmd;
-import com.rusefi.io.ConfigurationImageFile;
+import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;

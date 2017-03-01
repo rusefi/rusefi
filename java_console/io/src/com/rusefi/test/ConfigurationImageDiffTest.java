@@ -1,6 +1,6 @@
 package com.rusefi.test;
 
-import com.rusefi.ConfigurationImage;
+import com.opensr5.ConfigurationImage;
 import com.rusefi.core.Pair;
 import org.junit.Test;
 

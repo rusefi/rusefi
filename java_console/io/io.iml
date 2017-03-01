@@ -13,5 +13,7 @@
     <orderEntry type="module" module-name="models" />
     <orderEntry type="module" module-name="logging" exported="" />
     <orderEntry type="library" name="jcip-annotations" level="project" />
+    <orderEntry type="module" module-name="opensr5" />
+    <orderEntry type="module" module-name="opensr5" />
   </component>
 </module>

@@ -1,8 +1,9 @@
 package com.rusefi.binaryprotocol;
 
+import com.opensr5.ConfigurationImage;
 import com.romraider.editor.ecu.ECUEditor;
 import com.rusefi.*;
-import com.rusefi.io.ConfigurationImageFile;
+import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.io.serial.PortHolder;
 import jssc.SerialPort;
 
