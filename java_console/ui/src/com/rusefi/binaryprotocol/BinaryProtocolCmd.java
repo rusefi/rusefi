@@ -2,6 +2,7 @@ package com.rusefi.binaryprotocol;
 
 import com.romraider.editor.ecu.ECUEditor;
 import com.rusefi.*;
+import com.rusefi.io.ConfigurationImageFile;
 import com.rusefi.io.serial.PortHolder;
 import jssc.SerialPort;
 
@@ -48,7 +49,7 @@ public class BinaryProtocolCmd {
         if (!checkForDefinitionFile())
             return;
         RomRaiderWrapper.startRomRaider();
-        ECUEditor.openImage(image.getFileContent());
+        ECUEditor.openImage(ConfigurationImageFile.getFileContent(image));
     }
 
     public static boolean checkForDefinitionFile() {
