@@ -1,6 +1,8 @@
 package com.opensr5.io;
 
+import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * (c) Andrey Belomutskiy
@@ -26,7 +28,7 @@ public class IniFileReader {
      *
      * </pre>
      */
-    public static String[] split(String str) {
+    public static String[] splitTokens(String str) {
         ArrayList<String> strings = new ArrayList<>();
         boolean inQuote = false;
         StringBuilder sb = new StringBuilder();
@@ -50,5 +52,33 @@ public class IniFileReader {
 
     private static boolean isTokenSeparator(int c) {
         return c == ' ' || c == '\t' || c == '=' || c == ',';
+    }
+
+    public static RawIniFile read(InputStream in) {
+        List<RawIniFile.Line> lines = new ArrayList<>();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+        try {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty() || RawIniFile.Line.isCommentLine(line)) {
+                    // let's skip comments right here
+                    continue;
+                }
+                lines.add(new RawIniFile.Line(line));
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+        return new RawIniFile(lines);
+    }
+
+    public static RawIniFile read(File input) {
+        try {
+            InputStream in = new FileInputStream(input);
+            return read(in);
+        } catch (FileNotFoundException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }

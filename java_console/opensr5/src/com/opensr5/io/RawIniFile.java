@@ -1,0 +1,90 @@
+package com.opensr5.io;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
+
+/**
+ * (c) Andrey Belomutskiy
+ * 3/1/2017
+ */
+public class RawIniFile {
+    /**
+     * A list of lines. Lines which are only a comment were filtered out already.
+     */
+    private final List<Line> lines;
+
+    /**
+     * Often we want to look-up line by first token.
+     * Each line in this map has at least two tokens
+     */
+    private final Map<String, Line> asSet = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+
+    public RawIniFile(List<Line> lines) {
+        this.lines = lines;
+
+        for (Line line : lines) {
+            if (line.tokens.length > 1)
+                asSet.put(line.tokens[0], line);
+        }
+    }
+
+
+    @NotNull
+    public Line getMandatoryLine(String key) {
+        Line result = getByKey(key);
+        if (result == null)
+            throw new IllegalStateException("Line not found: " + key);
+        assert result.tokens.length > 1;
+        return result;
+    }
+
+    @Nullable
+    public Line getByKey(String key) {
+        return asSet.get(key);
+    }
+
+    public List<Line> getLines() {
+        return lines;
+    }
+
+    public int getSimpleIntegerProperty(String key) {
+        Line line = asSet.get(key);
+        if (line == null)
+            throw new IllegalStateException("Line not found: " + key);
+        String value = line.getTokens()[1];
+        return Integer.parseInt(value);
+    }
+
+    public int getSimpleIntegerProperty(String key, int defaultValue) {
+        if (!asSet.containsKey(key))
+            return defaultValue;
+        return getSimpleIntegerProperty(key);
+    }
+
+    /**
+     * Immutable representation of since ini file line
+     */
+    public static class Line {
+        private String rawText;
+        private String[] tokens;
+
+        public Line(String rawText) {
+            this.rawText = rawText;
+            tokens = IniFileReader.splitTokens(rawText);
+        }
+
+        public String[] getTokens() {
+            return tokens;
+        }
+
+        public static boolean isCommentLine(String rawText) {
+            return rawText.trim().startsWith(";");
+        }
+
+        public String getRawText() {
+            return rawText;
+        }
+    }
+}
