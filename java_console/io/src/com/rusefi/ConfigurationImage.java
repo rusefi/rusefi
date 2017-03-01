@@ -1,8 +1,5 @@
 package com.rusefi;
 
-import java.io.*;
-import java.util.Arrays;
-
 /**
  * (c) Andrey Belomutskiy
  * 3/6/2015
@@ -13,7 +10,7 @@ public class ConfigurationImage {
      * 1) as a header while saving configuration to a binary file
      * 2) as RomRaider RomID#internalIdString
      */
-    public final static String BIN_HEADER = "RUSEFI0.1";
+    public final static String BIN_HEADER = "OPEN_SR5_0.1";
     private byte content[];
 
     public ConfigurationImage(int size) {
@@ -26,28 +23,6 @@ public class ConfigurationImage {
 
     public int getSize() {
         return content.length;
-    }
-
-    public byte[] getFileContent() {
-        try {
-            try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-                byte[] bytes = BIN_HEADER.getBytes();
-                if (bytes.length != BIN_HEADER.length())
-                    throw new IllegalStateException("Encoding issue");
-                baos.write(bytes);
-                baos.write(content);
-                return baos.toByteArray();
-            }
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    public void saveToFile(String fileName) throws IOException {
-        FileOutputStream fos = new FileOutputStream(fileName);
-        fos.write(getFileContent());
-        fos.close();
-        System.out.println("Saved to " + fileName);
     }
 
     public static byte[] extractContent(byte[] rom) {
@@ -69,9 +44,9 @@ public class ConfigurationImage {
         return new ConfigurationImage(copy);
     }
 
-    public byte[] getRange(Integer first, int size) {
+    public byte[] getRange(int offset, int size) {
         byte[] r = new byte[size];
-        System.arraycopy(content, first, r, 0, size);
+        System.arraycopy(content, offset, r, 0, size);
         return r;
     }
 }
