@@ -42,6 +42,9 @@ cp -r readme.*               %RUSEFI_SVN_PATH%
 cd %RUSEFI_SVN_PATH%
 pwd
 
+rem http://stackoverflow.com/questions/2120844/how-do-i-add-all-new-files-to-svn
+svn add --force .
+
 svn ci  --no-auth-cache --non-interactive --username rusefi --password %RUSEFI_SVN_PASSWORD% -m "auto-merge from github"
 
 
