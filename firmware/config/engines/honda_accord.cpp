@@ -207,11 +207,20 @@ void setHondaAccordConfiguration1_24_shifted(DECLARE_ENGINE_PARAMETER_F) {
 
 }
 
-
 void setHondaCivic4_0_both(DECLARE_ENGINE_PARAMETER_F) {
 	setHondaAccordConfiguration1_24_shifted(PASS_ENGINE_PARAMETER_F);
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
+	engineConfiguration->trigger.customTotalToothCount = 4;
+	engineConfiguration->trigger.customSkippedToothCount = 0;
+
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+}
+
+void setHondaCivic4_0_rise(DECLARE_ENGINE_PARAMETER_F) {
+	setHondaAccordConfiguration1_24_shifted(PASS_ENGINE_PARAMETER_F);
+
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->trigger.customTotalToothCount = 4;
 	engineConfiguration->trigger.customSkippedToothCount = 0;
 
