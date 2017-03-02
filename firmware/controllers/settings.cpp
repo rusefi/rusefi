@@ -527,7 +527,7 @@ static void setToothedWheel(int total, int skipped DECLARE_ENGINE_PARAMETER_S) {
 	engineConfiguration->trigger.customSkippedToothCount = skipped;
 
 	scheduleMsg(&logger, "toothed: total=%d/skipped=%d", total, skipped);
-	setToothedWheelConfiguration(&engine->triggerShape, total, skipped, engineConfiguration->operationMode);
+	setToothedWheelConfiguration(&engine->triggerCentral.triggerShape, total, skipped, engineConfiguration->operationMode);
 //	initializeTriggerShape(&logger, engineConfiguration, engineConfiguration2);
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
 	doPrintConfiguration(engine);

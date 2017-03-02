@@ -36,6 +36,8 @@ public:
 	 */
 	efitick_t timeAtVirtualZeroNt;
 
+	TriggerShape triggerShape;
+
 	volatile efitime_t previousShaftEventTimeNt;
 private:
 	IntListenerArray<15> triggerListeneres;

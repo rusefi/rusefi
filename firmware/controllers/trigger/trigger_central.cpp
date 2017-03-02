@@ -96,7 +96,6 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 
 	efitick_t nowNt = getTimeNowNt();
 
-
 	if (engineConfiguration->vvtMode == MIATA_NB2) {
 		uint32_t currentDuration = nowNt - previousVvtCamTime;
 		float ratio = ((float) currentDuration) / previousVvtCamDuration;
@@ -315,7 +314,7 @@ EXTERN_ENGINE
 
 static void triggerShapeInfo(void) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
-	TriggerShape *s = &engine->triggerShape;
+	TriggerShape *s = &engine->triggerCentral.triggerShape;
 	scheduleMsg(logger, "useRise=%s", boolToString(s->useRiseEdge));
 	scheduleMsg(logger, "gap from %f to %f", s->syncRatioFrom, s->syncRatioTo);
 
@@ -360,7 +359,7 @@ void printAllTriggers() {
 		engineConfiguration->trigger.type = tt;
 		engineConfiguration->operationMode = FOUR_STROKE_CAM_SENSOR;
 
-		TriggerShape *s = &engine->triggerShape;
+		TriggerShape *s = &engine->triggerCentral.triggerShape;
 		s->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER);
 
 		fprintf(fp, "TRIGGERTYPE %d %d %s %f\r\n", triggerId, s->getLength(), getTrigger_type_e(tt), s->tdcPosition);
@@ -401,14 +400,14 @@ extern int vvtEventFallCounter;
 void triggerInfo(void) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 
-	TriggerShape *ts = &engine->triggerShape;
+	TriggerShape *ts = &engine->triggerCentral.triggerShape;
 
 	scheduleMsg(logger, "Template %s (%d) trigger %s (%d) useRiseEdge=%s onlyFront=%s gapBothDirections=%s useOnlyFirstChannel=%s tdcOffset=%d",
 			getConfigurationName(engineConfiguration->engineType), engineConfiguration->engineType,
 			getTrigger_type_e(engineConfiguration->trigger.type), engineConfiguration->trigger.type,
 			boolToString(TRIGGER_SHAPE(useRiseEdge)), boolToString(engineConfiguration->useOnlyRisingEdgeForTrigger),
 			boolToString(TRIGGER_SHAPE(gapBothDirections)),
-			boolToString(engineConfiguration->trigger.useOnlyFirstChannel), ENGINE(triggerShape.tdcPosition));
+			boolToString(engineConfiguration->trigger.useOnlyFirstChannel), TRIGGER_SHAPE(tdcPosition));
 
 	if (engineConfiguration->trigger.type == TT_TOOTHED_WHEEL) {
 		scheduleMsg(logger, "total %d/skipped %d", engineConfiguration->trigger.customTotalToothCount,
@@ -418,16 +417,16 @@ void triggerInfo(void) {
 	scheduleMsg(logger, "trigger#1 event counters up=%d/down=%d", engine->triggerCentral.getHwEventCounter(0),
 			engine->triggerCentral.getHwEventCounter(1));
 
-	if (engine->triggerShape.needSecondTriggerInput) {
+	if (ts->needSecondTriggerInput) {
 		scheduleMsg(logger, "trigger#2 event counters up=%d/down=%d", engine->triggerCentral.getHwEventCounter(2),
 				engine->triggerCentral.getHwEventCounter(3));
 	}
-	scheduleMsg(logger, "expected cycle events %d/%d/%d", ts->expectedEventCount[0],
-			engine->triggerShape.expectedEventCount[1], ts->expectedEventCount[2]);
+	scheduleMsg(logger, "expected cycle events %d/%d/%d", TRIGGER_SHAPE(expectedEventCount[0]),
+			TRIGGER_SHAPE(expectedEventCount[1]), TRIGGER_SHAPE(expectedEventCount[2]));
 
 	scheduleMsg(logger, "trigger type=%d/need2ndChannel=%s", engineConfiguration->trigger.type,
-			boolToString(engine->triggerShape.needSecondTriggerInput));
-	scheduleMsg(logger, "expected duty #0=%f/#1=%f", ts->dutyCycle[0], ts->dutyCycle[1]);
+			boolToString(TRIGGER_SHAPE(needSecondTriggerInput)));
+	scheduleMsg(logger, "expected duty #0=%f/#1=%f", TRIGGER_SHAPE(dutyCycle[0]), TRIGGER_SHAPE(dutyCycle[1]));
 
 	scheduleMsg(logger, "synchronizationNeeded=%s/isError=%s/total errors=%d ord_err=%d/total revolutions=%d/self=%s",
 			boolToString(ts->isSynchronizationNeeded),
@@ -435,7 +434,7 @@ void triggerInfo(void) {
 			engine->triggerCentral.triggerState.orderingErrorCounter, engine->triggerCentral.triggerState.getTotalRevolutionCounter(),
 			boolToString(engineConfiguration->directSelfStimulation));
 
-	if (ts->isSynchronizationNeeded) {
+	if (TRIGGER_SHAPE(isSynchronizationNeeded)) {
 		scheduleMsg(logger, "gap from %f to %f", ts->syncRatioFrom, ts->syncRatioTo);
 	}
 
@@ -455,7 +454,7 @@ void triggerInfo(void) {
 			getPin_output_mode_e(boardConfiguration->triggerSimulatorPinModes[0]),
 			boardConfiguration->triggerSimulatorFrequency);
 
-	if (engine->triggerShape.needSecondTriggerInput) {
+	if (ts->needSecondTriggerInput) {
 		scheduleMsg(logger, "secondary trigger input: %s", hwPortname(boardConfiguration->triggerInputPins[1]));
 #if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
 		scheduleMsg(logger, "secondary trigger simulator: %s %s phase=%d",

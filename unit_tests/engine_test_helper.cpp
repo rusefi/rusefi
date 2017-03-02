@@ -62,7 +62,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 
-	engine->triggerShape.initializeTriggerShape(NULL PASS_ENGINE_PARAMETER);
+	engine->triggerCentral.triggerShape.initializeTriggerShape(NULL PASS_ENGINE_PARAMETER);
 	engine->triggerCentral.addEventListener(rpmShaftPositionCallback, "rpm reporter", engine);
 	engine->triggerCentral.addEventListener(mainTriggerCallback, "main loop", engine);
 }
@@ -96,7 +96,7 @@ void EngineTestHelper::applyTriggerShape() {
 	persistent_config_s *config = engine->config;
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
-	engine->triggerShape.initializeTriggerShape(NULL PASS_ENGINE_PARAMETER);
+	engine->triggerCentral.triggerShape.initializeTriggerShape(NULL PASS_ENGINE_PARAMETER);
 
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
 }
