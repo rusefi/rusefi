@@ -130,6 +130,10 @@ echo exit >> ftp_commands.txt
 
 cd temp
 winscp.com /script=../ftp_commands.txt
+IF NOT ERRORLEVEL 0 echo winscp error DETECTED
+IF NOT ERRORLEVEL 0 EXIT /B 1
+
+
 cd ..
 echo %date% %time%
 echo "build_current_bundle: DONE here"
