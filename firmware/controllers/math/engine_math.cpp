@@ -236,7 +236,7 @@ floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_S) {
  * this method is only used on initialization
  */
 int TriggerShape::findAngleIndex(float target DECLARE_ENGINE_PARAMETER_S) {
-	int engineCycleEventCount = engine->triggerShape.getLength();
+	int engineCycleEventCount = TRIGGER_SHAPE(getLength());
 
 	efiAssert(engineCycleEventCount > 0, "engineCycleEventCount", 0);
 
