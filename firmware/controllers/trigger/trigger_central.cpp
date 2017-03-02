@@ -225,7 +225,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 
 	if (triggerState.triggerDefinitionError) {
 		// trigger is broken, we cannot do anything here
-		warning(CUSTOM_ERR_6144, "Sgaft event while trigger is mis-configured");
+		warning(CUSTOM_ERR_6144, "Shaft event while trigger is mis-configured");
 		return;
 	}
 
