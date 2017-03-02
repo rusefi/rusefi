@@ -63,10 +63,10 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(uint32_t index, 
 	}
 	if (state->getTotalRevolutionCounter() != 3) {
 		warning(CUSTOM_OBD_TRIGGER_SHAPE, "sync failed/wrong gap parameters trigger=%s", getTrigger_type_e(engineConfiguration->trigger.type));
-		state->triggerDefinitionError = true;
+		shape->shapeDefinitionError = true;
 		return;
 	}
-	state->triggerDefinitionError = false;
+	shape->shapeDefinitionError = false;
 
 	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 		shape->dutyCycle[i] = 1.0 * state->expectedTotalTime[i] / SIMULATION_CYCLE_PERIOD;
