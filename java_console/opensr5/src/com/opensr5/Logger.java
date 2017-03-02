@@ -1,4 +1,4 @@
-package com.rusefi;
+package com.opensr5;
 
 /**
  * (c) Andrey Belomutskiy
@@ -18,7 +18,7 @@ public interface Logger {
 
         @Override
         public void error(String msg) {
-            System.out.println(msg);
+            System.err.println(msg);
         }
     };
 
