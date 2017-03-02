@@ -111,4 +111,4 @@ void applyNewConfiguration(void);
 
 #define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
 #define ENGINE(x) engine->x
-#define TRIGGER_SHAPE(x) engine->triggerShape.x
+#define TRIGGER_SHAPE(x) engine->triggerCentral.triggerShape.x
