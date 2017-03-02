@@ -1,6 +1,6 @@
 package com.rusefi.binaryprotocol;
 
-import com.rusefi.Logger;
+import com.opensr5.Logger;
 import com.rusefi.Timeouts;
 import etch.util.CircularByteBuffer;
 import net.jcip.annotations.ThreadSafe;

@@ -1,6 +1,7 @@
 package com.rusefi.binaryprotocol;
 
 import com.opensr5.ConfigurationImage;
+import com.opensr5.Logger;
 import com.romraider.editor.ecu.ECUEditor;
 import com.rusefi.*;
 import com.opensr5.io.ConfigurationImageFile;

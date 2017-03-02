@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.opensr5.ConfigurationImage;
+import com.opensr5.Logger;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.io.LinkManager;
