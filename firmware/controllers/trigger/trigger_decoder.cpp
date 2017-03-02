@@ -419,7 +419,7 @@ void configureOnePlus60_2(TriggerShape *s, operation_mode_e operationMode DECLAR
 	s->useOnlyPrimaryForSync = true;
 }
 
-static TriggerState state CCM_OPTIONAL;
+static TriggerState initState CCM_OPTIONAL;
 
 /**
  * External logger is needed because at this point our logger is not yet initialized
@@ -445,23 +445,23 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_MAZDA_MIATA_NB1:
-		initializeMazdaMiataNb1Shape(triggerShape PASS_ENGINE_PARAMETER);
+		initializeMazdaMiataNb1Shape(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_MAZDA_MIATA_VVT_TEST:
-		initializeMazdaMiataVVtTestShape(triggerShape PASS_ENGINE_PARAMETER);
+		initializeMazdaMiataVVtTestShape(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_MIATA_VVT:
-		initializeMazdaMiataNb2Crank(triggerShape PASS_ENGINE_PARAMETER);
+		initializeMazdaMiataNb2Crank(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_DODGE_NEON_1995:
-		configureNeon1995TriggerShape(triggerShape PASS_ENGINE_PARAMETER);
+		configureNeon1995TriggerShape(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_DODGE_STRATUS:
-		configureDodgeStratusTriggerShape(triggerShape PASS_ENGINE_PARAMETER);
+		configureDodgeStratusTriggerShape(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_DODGE_NEON_2003_CAM:
@@ -479,23 +479,23 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 
 	case TT_GM_7X:
 		// todo: fix this configureGmTriggerShape(triggerShape);
-		configureFordAspireTriggerShape(triggerShape PASS_ENGINE_PARAMETER);
+		configureFordAspireTriggerShape(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_MAZDA_DOHC_1_4:
-		configureMazdaProtegeLx(triggerShape PASS_ENGINE_PARAMETER);
+		configureMazdaProtegeLx(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_ONE_PLUS_ONE:
-		configureOnePlusOne(triggerShape, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
+		configureOnePlusOne(this, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_3_1_CAM:
-		configure3_1_cam(triggerShape, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
+		configure3_1_cam(this, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_ONE_PLUS_TOOTHED_WHEEL_60_2:
-		configureOnePlus60_2(triggerShape, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
+		configureOnePlus60_2(this, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_ONE:
@@ -599,8 +599,8 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 	 * this instance is used only to initialize 'this' TriggerShape instance
 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
 	 */
-	state.reset();
-	calculateTriggerSynchPoint(&state PASS_ENGINE_PARAMETER);
+	initState.reset();
+	calculateTriggerSynchPoint(&initState PASS_ENGINE_PARAMETER);
 }
 
 static void onFindIndex(TriggerState *state) {
