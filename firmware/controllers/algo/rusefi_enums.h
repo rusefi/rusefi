@@ -142,7 +142,17 @@ typedef enum {
 
 	FRANKENSO_QA_ENGINE = 49,
 
-	ET_UNUSED = 50,
+	/**
+	 * this is about unit-testing skipped wheel trigger
+	 */
+	TEST_CIVIC_4_0_BOTH = 50,
+
+	/**
+	 * this is about unit-testing skipped wheel trigger
+	 */
+	TEST_CIVIC_4_0_RISE = 51,
+
+	ET_UNUSED = 52,
 
 	Force_4b_engine_type = ENUM_32_BITS,
 } engine_type_e;

@@ -126,6 +126,9 @@ case VW_ABA:
   return "VW_ABA";
 case DODGE_STRATUS:
 	return "DODGE_STRATUS";
+case TEST_CIVIC_4_0_BOTH:
+case TEST_CIVIC_4_0_RISE:
+	return "civictest";
   }
  return NULL;
 }
