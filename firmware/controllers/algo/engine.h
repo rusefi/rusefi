@@ -340,7 +340,6 @@ public:
 	 */
 	bool isTestMode;
 
-	TriggerShape triggerShape;
 
 	/**
 	 * pre-calculated offset for given sequence index within engine cycle

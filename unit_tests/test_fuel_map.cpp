@@ -167,7 +167,7 @@ void testAngleResolver(void) {
 
 	engineConfiguration->globalTriggerAngleOffset = 175;
 
-	TriggerShape * ts = &engine->triggerShape;
+	TriggerShape * ts = &engine->triggerCentral.triggerShape;
 	ts->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER);
 
 	assertEqualsM("index 2", 52.76, ts->eventAngles[3]); // this angle is relation to synch point

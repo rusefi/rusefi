@@ -1039,10 +1039,10 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	}
 	applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER);
 	// todo: eliminate triggerShape.operationMode?
-	if (engineConfiguration->operationMode != engine->triggerShape.getOperationMode())
+	if (engineConfiguration->operationMode != TRIGGER_SHAPE(getOperationMode()))
 		firmwareError(CUSTOM_ERR_OP_MODE, "operationMode %d/trigger mismatch %d",
 				engineConfiguration->operationMode,
-				engine->triggerShape.getOperationMode());
+				TRIGGER_SHAPE(getOperationMode()));
 
 #if EFI_TUNER_STUDIO
 	syncTunerStudioCopy();
@@ -1056,13 +1056,13 @@ void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S
 #endif
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
-	engine->triggerShape.initializeTriggerShape(logger PASS_ENGINE_PARAMETER);
+	engine->triggerCentral.triggerShape.initializeTriggerShape(logger PASS_ENGINE_PARAMETER);
 #endif
-	if (engine->triggerShape.getSize() == 0) {
+	if (engine->triggerCentral.triggerShape.getSize() == 0) {
 		firmwareError(CUSTOM_ERR_TRIGGER_ZERO, "triggerShape size is zero");
 		return;
 	}
-	engine->engineCycleEventCount = engine->triggerShape.getLength();
+	engine->engineCycleEventCount = engine->triggerCentral.triggerShape.getLength();
 #if EFI_FSIO || defined(__DOXYGEN__)
 	applyFsioConfiguration(PASS_ENGINE_PARAMETER_F);
 #endif

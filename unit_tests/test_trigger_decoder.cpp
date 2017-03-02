@@ -53,7 +53,7 @@ int getTheAngle(engine_type_e engineType) {
 
 	initDataStructures(PASS_ENGINE_PARAMETER_F);
 
-	TriggerShape * shape = &eth.engine.triggerShape;
+	TriggerShape * shape = &eth.engine.triggerCentral.triggerShape;
 	return findTriggerZeroEventIndex(&eth.engine.triggerCentral.triggerState, shape, &engineConfiguration->trigger PASS_ENGINE_PARAMETER);
 }
 
@@ -66,7 +66,7 @@ static void testDodgeNeonDecoder(void) {
 	EngineTestHelper eth(DODGE_NEON_1995);
 	EXPAND_EngineTestHelper;
 
-	TriggerShape * shape = &eth.engine.triggerShape;
+	TriggerShape * shape = &eth.engine.triggerCentral.triggerShape;
 	assertEquals(8, shape->getTriggerShapeSynchPointIndex());
 
 	TriggerState state;
@@ -123,7 +123,7 @@ void test1995FordInline6TriggerDecoder(void) {
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 	EXPAND_EngineTestHelper;
 
-	TriggerShape * shape = &eth.engine.triggerShape;
+	TriggerShape * shape = &eth.engine.triggerCentral.triggerShape;
 
 	assertEqualsM("triggerShapeSynchPointIndex", 0, shape->getTriggerShapeSynchPointIndex());
 
@@ -196,7 +196,7 @@ void testFordAspire(void) {
 	EngineTestHelper eth(FORD_ASPIRE_1996);
 	EXPAND_EngineTestHelper;
 
-	assertEquals(4, eth.engine.triggerShape.getTriggerShapeSynchPointIndex());
+	assertEquals(4, TRIGGER_SHAPE(getTriggerShapeSynchPointIndex()));
 
 	assertEquals(800, config->fuelRpmBins[0]);
 	assertEquals(7000, config->fuelRpmBins[15]);
@@ -218,7 +218,7 @@ static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPo
 
 	initSpeedDensity(PASS_ENGINE_PARAMETER_F);
 
-	TriggerShape *t = &eth.engine.triggerShape;
+	TriggerShape *t = &eth.engine.triggerCentral.triggerShape;
 
 	assertEqualsM("synchPointIndex", synchPointIndex, t->getTriggerShapeSynchPointIndex());
 
@@ -318,8 +318,8 @@ void testRpmCalculator(void) {
 	timeNow = 0;
 	assertEquals(0, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
 
-	assertEquals(4, engine->triggerShape.triggerIndexByAngle[240]);
-	assertEquals(4, engine->triggerShape.triggerIndexByAngle[241]);
+	assertEquals(4, TRIGGER_SHAPE(triggerIndexByAngle[240]));
+	assertEquals(4, TRIGGER_SHAPE(triggerIndexByAngle[241]));
 
 	eth.fireTriggerEvents(48);
 
@@ -390,8 +390,8 @@ void testRpmCalculator(void) {
 	assertEqualsM("3/3", st + 14777, schedulingQueue.getForUnitText(2)->momentX);
 	schedulingQueue.clear();
 
-	assertEquals(5, engine->triggerShape.triggerIndexByAngle[240]);
-	assertEquals(5, engine->triggerShape.triggerIndexByAngle[241]);
+	assertEquals(5, TRIGGER_SHAPE(triggerIndexByAngle[240]));
+	assertEquals(5, TRIGGER_SHAPE(triggerIndexByAngle[241]));
 
 	timeNow += 5000;
 	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER);
@@ -459,7 +459,7 @@ void testTriggerDecoder(void) {
 
 	persistent_config_s c;
 	Engine e(&c);
-	TriggerShape * s = &e.triggerShape;
+	TriggerShape * s = &e.triggerCentral.triggerShape;
 
 
 	persistent_config_s *config = &c;
@@ -516,7 +516,7 @@ void testTriggerDecoder(void) {
 
 		initSpeedDensity(PASS_ENGINE_PARAMETER_F);
 
-		TriggerShape *t = &eth.engine.triggerShape;
+//		TriggerShape *t = &eth.engine.triggerShape;
 //		assertEquals(1, t->eventAngles[1]);
 //		assertEqualsM("index at 0", 0, t->triggerIndexByAngle[56]);
 //		assertEqualsM("index at 1", 1, t->triggerIndexByAngle[57]);
