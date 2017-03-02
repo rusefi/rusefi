@@ -132,7 +132,7 @@ cd temp
 winscp.com /script=../ftp_commands.txt
 cd ..
 echo %date% %time%
-echo "DONE here"
+echo "build_current_bundle: DONE here"
 pwd
 
 

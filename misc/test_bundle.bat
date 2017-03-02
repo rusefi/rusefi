@@ -1,3 +1,4 @@
+echo Statding test_bundle.bat
 
 cd java_console
 rem call ant autotest
@@ -19,4 +20,4 @@ cd ..
 pwd
 
 echo %date% %time%
-echo TOTALLY DONE
+echo test_bundle.bat: done
