@@ -47,7 +47,7 @@ void sendOutConfirmation(char *value, int i) {
 	// test implementation
 }
 
-int getTheAngle(engine_type_e engineType) {
+static int getTriggerZeroEventIndex(engine_type_e engineType) {
 	EngineTestHelper eth(engineType);
 	EXPAND_EngineTestHelper;
 
@@ -61,7 +61,7 @@ static void testDodgeNeonDecoder(void) {
 	printf("*************************************************** testDodgeNeonDecoder\r\n");
 	initTriggerDecoder();
 
-	assertEqualsM("trigger zero index", 8, getTheAngle(DODGE_NEON_1995));
+	assertEqualsM("trigger zero index", 8, getTriggerZeroEventIndex(DODGE_NEON_1995));
 
 	EngineTestHelper eth(DODGE_NEON_1995);
 	EXPAND_EngineTestHelper;
@@ -116,7 +116,7 @@ static void assertTriggerPosition(event_trigger_position_s *position, int eventI
 void test1995FordInline6TriggerDecoder(void) {
 	printf("*************************************************** test1995FordInline6TriggerDecoder\r\n");
 
-	assertEqualsM("triggerIndex ", 0, getTheAngle(FORD_INLINE_6_1995));
+	assertEqualsM("triggerIndex ", 0, getTriggerZeroEventIndex(FORD_INLINE_6_1995));
 
 	initTriggerDecoder();
 
@@ -191,7 +191,7 @@ void test1995FordInline6TriggerDecoder(void) {
 void testFordAspire(void) {
 	printf("*************************************************** testFordAspire\r\n");
 
-	assertEquals(4, getTheAngle(FORD_ASPIRE_1996));
+	assertEquals(4, getTriggerZeroEventIndex(FORD_ASPIRE_1996));
 
 	EngineTestHelper eth(FORD_ASPIRE_1996);
 	EXPAND_EngineTestHelper;
