@@ -129,7 +129,7 @@ echo put rusefi_console.zip >> ftp_commands.txt
 echo exit >> ftp_commands.txt
 
 cd temp
-winscp.com /script=../ftp_commands.txt
+call winscp.com /script=../ftp_commands.txt
 IF NOT ERRORLEVEL 0 echo winscp error DETECTED
 IF NOT ERRORLEVEL 0 EXIT /B 1
 
