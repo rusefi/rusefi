@@ -9,5 +9,3 @@
 #include "test_event_registry.h"
 #include "main.h"
 
-void testEventRegistry(void) {
-}
