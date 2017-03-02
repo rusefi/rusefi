@@ -436,12 +436,12 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 	switch (triggerConfig->type) {
 
 	case TT_TOOTHED_WHEEL:
-		initializeSkippedToothTriggerShapeExt(triggerShape, triggerConfig->customTotalToothCount,
+		initializeSkippedToothTriggerShapeExt(this, triggerConfig->customTotalToothCount,
 				triggerConfig->customSkippedToothCount, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_MAZDA_MIATA_NA:
-		initializeMazdaMiataNaShape(triggerShape PASS_ENGINE_PARAMETER);
+		initializeMazdaMiataNaShape(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_MAZDA_MIATA_NB1:
@@ -469,12 +469,12 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_DODGE_NEON_2003_CRANK:
-		configureNeon2003TriggerShapeCam(triggerShape PASS_ENGINE_PARAMETER);
+		configureNeon2003TriggerShapeCam(this PASS_ENGINE_PARAMETER);
 //		configureNeon2003TriggerShapeCrank(triggerShape PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_FORD_ASPIRE:
-		configureFordAspireTriggerShape(triggerShape PASS_ENGINE_PARAMETER);
+		configureFordAspireTriggerShape(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_GM_7X:
@@ -527,7 +527,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_HONDA_4_24:
-		configureHonda_1_4_24(triggerShape, false, true, T_NONE, T_PRIMARY, 0 PASS_ENGINE_PARAMETER);
+		configureHonda_1_4_24(this, false, true, T_NONE, T_PRIMARY, 0 PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_HONDA_1_24:
@@ -579,15 +579,15 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_NISSAN:
-		initializeNissan(triggerShape PASS_ENGINE_PARAMETER);
+		initializeNissan(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_ROVER_K:
-		initializeRoverK(triggerShape PASS_ENGINE_PARAMETER);
+		initializeRoverK(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_GM_LS_24:
-		initGmLS24(triggerShape PASS_ENGINE_PARAMETER);
+		initGmLS24(this PASS_ENGINE_PARAMETER);
 		break;
 
 	default:
