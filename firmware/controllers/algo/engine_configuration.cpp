@@ -914,6 +914,8 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	case MIATA_NA_1_6:
 		setMiataNA_1_6_Configuration(PASS_ENGINE_PARAMETER_F);
 		break;
+	case TEST_CIVIC_4_0_RISE:
+	case TEST_CIVIC_4_0_BOTH:
 	case HONDA_ACCORD_CD_TWO_WIRES:
 		setHondaAccordConfiguration1_24(PASS_ENGINE_PARAMETER_F);
 		break;
