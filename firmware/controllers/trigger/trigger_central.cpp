@@ -222,7 +222,7 @@ static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, 
 void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_S) {
 	efiAssertVoid(engine!=NULL, "configuration");
 
-	if (triggerState.triggerDefinitionError) {
+	if (triggerShape.shapeDefinitionError) {
 		// trigger is broken, we cannot do anything here
 		warning(CUSTOM_ERR_6144, "Shaft event while trigger is mis-configured");
 		return;

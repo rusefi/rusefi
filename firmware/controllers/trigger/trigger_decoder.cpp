@@ -628,7 +628,6 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 	state->reset();
 
 	if (shape->shapeDefinitionError) {
-		state->triggerDefinitionError = true;
 		return 0;
 	}
 

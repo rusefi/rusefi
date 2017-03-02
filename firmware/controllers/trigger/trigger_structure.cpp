@@ -165,7 +165,7 @@ TriggerState::TriggerState() {
 
 void TriggerState::reset() {
 	cycleCallback = NULL;
-	triggerDefinitionError = shaft_is_synchronized = false;
+	shaft_is_synchronized = false;
 	toothed_previous_time = 0;
 	toothed_previous_duration = 0;
 	durationBeforePrevious = 0;
