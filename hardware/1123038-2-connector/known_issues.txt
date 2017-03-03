@@ -2,3 +2,4 @@
 2) RESOLVED IN R0.3 what we have as 4Y is actually 4X (MAF in case of Miata)
 3) RESOLVED IN R0.3 what we have as 4X is actually 4Z (TCM in case of Miata)
 4) RESOLVED IN R0.3 wiring silkscreen is needed on both sides, not only top
+5) RESOLVED IN R0.3 traces are to OSHPark 6 mill mininium, increased to 8 mill
