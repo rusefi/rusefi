@@ -38,8 +38,12 @@ static bool isRisingEdge[6] = { false, true, false, true, false, true };
 EXTERN_ENGINE
 ;
 
+bool isUsefulSignal(trigger_event_e signal, engine_configuration_s *engineConfiguration) {
+	return !engineConfiguration->useOnlyRisingEdgeForTrigger || isRisingEdge[(int) signal];
+}
+
 static void fireShaftSignal(trigger_event_e signal) {
-	if (!engineConfiguration->useOnlyRisingEdgeForTrigger || isRisingEdge[(int) signal])
+	if (isUsefulSignal(signal, engineConfiguration))
 		hwHandleShaftSignal(signal);
 }
 

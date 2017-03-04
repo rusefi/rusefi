@@ -22,5 +22,6 @@ public:
 };
 
 void initTriggerEmulatorLogic(Logging *sharedLogger, Engine *engine);
+bool isUsefulSignal(trigger_event_e signal, engine_configuration_s *engineConfiguration);
 
 #endif /* TRIGGER_EMULATOR_ALGO_H_ */
