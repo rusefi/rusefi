@@ -209,12 +209,13 @@ public class ECUEditor {
         Rom rom;
         try {
             rom = new DOMRomUnmarshaller().unmarshallXMLDefinition(doc.getDocumentElement(), romContent, editor.getStatusPanel());
+        } catch (RomNotFoundException e) {
+            throw new IllegalStateException("While reading " + romDefinitionFile.getName(), e);
         } finally {
             // Release mem after unmarshall.
             parser.reset();
             doc.removeChild(doc.getDocumentElement());
             fileStream.close();
-            System.gc();
         }
         return rom;
     }
