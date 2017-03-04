@@ -114,8 +114,8 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 	if (hasFirmwareErrorFlag)
 		return true;
 
-#if EFI_UNIT_TEST || EFI_SIMULATOR || defined(__DOXYGEN__)
-	printf("warning %s\r\n", fmt);
+#if EFI_SIMULATOR || defined(__DOXYGEN__)
+	printf("sim_warning %s\r\n", fmt);
 #endif
 
 #if EFI_SIMULATOR || EFI_PROD_CODE
@@ -142,7 +142,7 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 	scheduleLogging(&logger);
 #else
 	warningCounter++;
-	printf("Warning: ");
+	printf("unit_test_warning: ");
 	va_list ap;
 	va_start(ap, fmt);
 	vprintf(fmt, ap);
