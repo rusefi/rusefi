@@ -90,10 +90,10 @@ public class BinaryProtocolServer {
 
             TcpIoStream stream = new TcpIoStream(clientSocket.getInputStream(), clientSocket.getOutputStream());
             if (command == BinaryProtocol.COMMAND_HELLO) {
-                BinaryProtocol.sendCrcPacket((TS_OK + TS_SIGNATURE).getBytes(), FileLog.LOGGER, stream);
+                BinaryProtocol.sendPacket((TS_OK + TS_SIGNATURE).getBytes(), FileLog.LOGGER, stream);
             } else if (command == BinaryProtocol.COMMAND_PROTOCOL) {
 //                System.out.println("Ignoring crc F command");
-                BinaryProtocol.sendCrcPacket((TS_OK + TS_PROTOCOL).getBytes(), FileLog.LOGGER, stream);
+                BinaryProtocol.sendPacket((TS_OK + TS_PROTOCOL).getBytes(), FileLog.LOGGER, stream);
             } else if (command == BinaryProtocol.COMMAND_CRC_CHECK_COMMAND) {
                 short page = dis.readShort();
                 short offset = dis.readShort();
@@ -104,9 +104,9 @@ public class BinaryProtocolServer {
                 ByteArrayOutputStream response = new ByteArrayOutputStream();
                 response.write(TS_OK.charAt(0));
                 new DataOutputStream(response).write(result);
-                BinaryProtocol.sendCrcPacket(response.toByteArray(), FileLog.LOGGER, stream);
+                BinaryProtocol.sendPacket(response.toByteArray(), FileLog.LOGGER, stream);
             } else if (command == BinaryProtocol.COMMAND_PAGE) {
-                BinaryProtocol.sendCrcPacket(TS_OK.getBytes(), FileLog.LOGGER, stream);
+                BinaryProtocol.sendPacket(TS_OK.getBytes(), FileLog.LOGGER, stream);
             } else if (command == BinaryProtocol.COMMAND_READ) {
                 short page = dis.readShort();
                 short offset = swap16(dis.readShort());
@@ -119,7 +119,7 @@ public class BinaryProtocolServer {
                     byte[] response = new byte[1 + count];
                     response[0] = (byte) TS_OK.charAt(0);
                     System.arraycopy(bp.getController().getContent(), offset, response, 1, count);
-                    BinaryProtocol.sendCrcPacket(response, FileLog.LOGGER, stream);
+                    BinaryProtocol.sendPacket(response, FileLog.LOGGER, stream);
                 }
             } else if (command == BinaryProtocol.COMMAND_OUTPUTS) {
 
@@ -128,7 +128,7 @@ public class BinaryProtocolServer {
                 byte[] currentOutputs = BinaryProtocol.currentOutputs;
                 if (currentOutputs != null)
                     System.arraycopy(currentOutputs, 1, response, 1, Fields.TS_OUTPUT_SIZE);
-                BinaryProtocol.sendCrcPacket(response, FileLog.LOGGER, stream);
+                BinaryProtocol.sendPacket(response, FileLog.LOGGER, stream);
             } else {
                 FileLog.MAIN.logLine("Error: unknown command " + command);
             }

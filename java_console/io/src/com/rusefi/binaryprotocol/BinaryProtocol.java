@@ -32,6 +32,17 @@ import static com.rusefi.binaryprotocol.IoHelper.*;
  * 3/6/2015
  */
 public class BinaryProtocol {
+
+    private static final String PROTOCOL_PLAIN = "protocol.plain";
+    /**
+     * This properly allows to switch to non-CRC32 mode
+     * todo: finish this feature, assuming we even need it.
+     */
+    private static boolean PLAIN_PROTOCOL = Boolean.getBoolean(PROTOCOL_PLAIN);
+    static {
+        FileLog.MAIN.logLine(PROTOCOL_PLAIN + ": " + PLAIN_PROTOCOL);
+    }
+
     // see BLOCKING_FACTOR in firmware code
     private static final int BLOCKING_FACTOR = 400;
     private static final byte RESPONSE_OK = 0;
@@ -50,7 +61,7 @@ public class BinaryProtocol {
     public static final char COMMAND_PROTOCOL = 'F';
     public static final char COMMAND_CRC_CHECK_COMMAND = 'k';
     public static final char COMMAND_PAGE = 'P';
-    public static final char COMMAND_READ = 'R';
+    public static final char COMMAND_READ = 'R'; // 082 decimal
     public static final char COMMAND_CHUNK_WRITE = 'C';
     public static final char COMMAND_BURN = 'B';
 
@@ -341,7 +352,7 @@ public class BinaryProtocol {
         try {
             dropPending();
 
-            sendCrcPacket(packet);
+            sendPacket(packet);
             return receivePacket(msg, allowLongResponse);
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
@@ -419,13 +430,18 @@ public class BinaryProtocol {
         }
     }
 
-    private void sendCrcPacket(byte[] command) throws IOException {
-        sendCrcPacket(command, logger, stream);
+    private void sendPacket(byte[] command) throws IOException {
+        sendPacket(command, logger, stream);
     }
 
-    public static void sendCrcPacket(byte[] command, Logger logger, IoStream stream) throws IOException {
-        byte[] packet = IoHelper.makeCrc32Packet(command);
-        logger.info("Sending packet " + printHexBinary(command));
+    public static void sendPacket(byte[] plainPacket, Logger logger, IoStream stream) throws IOException {
+        byte[] packet;
+        if (PLAIN_PROTOCOL) {
+            packet = plainPacket;
+        } else {
+            packet = IoHelper.makeCrc32Packet(plainPacket);
+        }
+        logger.info("Sending packet " + printHexBinary(plainPacket));
         stream.write(packet);
     }
 
