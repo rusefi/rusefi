@@ -685,7 +685,7 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	if (printTriggerDebug) {
-		printf("syncIndex located %d\r\n", syncIndex);
+		printf("findTriggerZeroEventIndex: syncIndex located %d!\r\n", syncIndex);
 	}
 #endif /* EFI_UNIT_TEST */
 
