@@ -185,7 +185,7 @@ float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_F) {
 	float temperature = getTemperatureC(&engineConfiguration->iat, &engine->engineState.iatCurve);
 	if (!isValidIntakeAirTemperature(temperature)) {
 		efiAssert(engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE || EFI_UNIT_TEST || defined(__DOXYGEN__)
 		warning(OBD_Intake_Air_Temperature_Circuit_Malfunction, "unrealistic IAT %f", temperature);
 #endif /* EFI_PROD_CODE */
 		return LIMPING_MODE_IAT_TEMPERATURE;
