@@ -189,9 +189,9 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 //	scheduleMsg(&logger, "from %f to %f %d %d", triggerConfig->syncRatioFrom, triggerConfig->syncRatioTo, currentDuration, shaftPositionState->toothed_previous_duration);
 //	scheduleMsg(&logger, "ratio %f", 1.0 * currentDuration/ shaftPositionState->toothed_previous_duration);
 #else
-		if (toothed_previous_duration != 0) {
-//		printf("ratio %f: cur=%d pref=%d\r\n", 1.0 * currentDuration / shaftPositionState->toothed_previous_duration,
-//				currentDuration, shaftPositionState->toothed_previous_duration);
+		if (printTriggerDebug) {
+			printf("ratio %f: current=%d previous=%d\r\n", 1.0 * currentDuration / toothed_previous_duration,
+				currentDuration, toothed_previous_duration);
 		}
 #endif
 
@@ -237,6 +237,16 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			 * in case of noise the counter could be above the expected number of events
 			 */
 			int d = engineConfiguration->useOnlyRisingEdgeForTrigger ? 2 : 1;
+
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+		if (printTriggerDebug) {
+			printf("sync=%d index=%d size=%d\r\n",
+					shaft_is_synchronized,
+					currentCycle.current_index,
+					TRIGGER_SHAPE(size));
+		}
+#endif
+
 			isSynchronizationPoint = !shaft_is_synchronized || (currentCycle.current_index >= TRIGGER_SHAPE(size) - d);
 
 		}
