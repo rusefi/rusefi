@@ -391,8 +391,10 @@ void TriggerShape::prepareShape(DECLARE_ENGINE_PARAMETER_F) {
 	int engineCycleInt = (int) getEngineCycle(CONFIG(operationMode));
 	for (int angle = 0; angle < engineCycleInt; angle++) {
 		int triggerShapeIndex = findAngleIndex(angle PASS_ENGINE_PARAMETER);
-		if (engineConfiguration->useOnlyRisingEdgeForTrigger)
-			triggerShapeIndex = triggerShapeIndex & 0xFFFFFFFE; // we need even index for front_only
+		if (engineConfiguration->useOnlyRisingEdgeForTrigger) {
+			// we need even index for front_only mode - so if odd indexes are rounded down
+			triggerShapeIndex = triggerShapeIndex & 0xFFFFFFFE;
+		}
 		triggerIndexByAngle[angle] = triggerShapeIndex;
 	}
 }
