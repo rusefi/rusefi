@@ -122,8 +122,11 @@ extern int revolutionCounterSinceBootForUnitTest;
 int getRevolutionCounter(void) {
 	return revolutionCounterSinceBootForUnitTest;
 }
+extern bool printTriggerDebug;
 
 int main(void) {
+//	printTriggerDebug = true;
+
 	testMissedSpark299();
 	testSparkReverseOrderBug319();
 	testFuelSchedulerBug299smallAndLarge();
