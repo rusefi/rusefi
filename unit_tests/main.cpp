@@ -53,7 +53,7 @@ efitick_t getTimeNowNt(void) {
 	return getTimeNowUs() * US_TO_NT_MULTIPLIER;
 }
 
-void assertEqualsM3(const char *prefix, const char *message, float expected, float actual, float EPS) {
+void assertEqualsM5(const char *prefix, const char *message, float expected, float actual, float EPS) {
 	char msg[100];
 	strcpy(msg, prefix);
 	strcat(msg, message);
@@ -72,11 +72,11 @@ void assertEqualsM3(const char *prefix, const char *message, float expected, flo
 }
 
 void assertEqualsM2(const char *msg, float expected, float actual, float eps) {
-	assertEqualsM3("", msg, expected, actual, eps);
+	assertEqualsM5("", msg, expected, actual, eps);
 }
 
 void assertEqualsM4(const char *prefix, const char *msg, float expected, float actual) {
-	assertEqualsM3(prefix, msg, expected, actual, 0.00001);
+	assertEqualsM5(prefix, msg, expected, actual, 0.00001);
 }
 
 void assertEqualsLM(const char *msg, long expected, long actual) {
