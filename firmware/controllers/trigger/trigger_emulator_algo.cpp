@@ -55,6 +55,8 @@ void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIn
 	bool thirdWheelState = state->multiWave.waves[2].pinStates[prevIndex];
 	int new3rdWheelState = state->multiWave.waves[2].pinStates[stateIndex];
 
+	// todo: code duplication with TriggerStimulatorHelper::nextStep?
+
 	if (primaryWheelState != newPrimaryWheelState) {
 		primaryWheelState = newPrimaryWheelState;
 		fireShaftSignal(primaryWheelState ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING);

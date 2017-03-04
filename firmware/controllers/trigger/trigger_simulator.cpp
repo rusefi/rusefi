@@ -35,6 +35,8 @@ void TriggerStimulatorHelper::nextStep(TriggerState *state, TriggerShape * shape
 	bool thirdWheelState = shape->wave.getChannelState(2, prevIndex);
 	bool new3rdWheelState = shape->wave.getChannelState(2, stateIndex);
 
+	// todo: code duplication with TriggerEmulatorHelper::handleEmulatorCallback?
+
 	if (primaryWheelState != newPrimaryWheelState) {
 		primaryWheelState = newPrimaryWheelState;
 		trigger_event_e s = primaryWheelState ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING;
