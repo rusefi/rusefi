@@ -191,12 +191,12 @@ void test1995FordInline6TriggerDecoder(void) {
 void testFordAspire(void) {
 	printf("*************************************************** testFordAspire\r\n");
 
-	assertEquals(4, getTriggerZeroEventIndex(FORD_ASPIRE_1996));
+	assertEqualsM("getTriggerZeroEventIndex", 0, getTriggerZeroEventIndex(FORD_ASPIRE_1996));
 
 	EngineTestHelper eth(FORD_ASPIRE_1996);
 	EXPAND_EngineTestHelper;
 
-	assertEquals(4, TRIGGER_SHAPE(getTriggerShapeSynchPointIndex()));
+	assertEqualsM("getTriggerShapeSynchPointIndex", 4, TRIGGER_SHAPE(getTriggerShapeSynchPointIndex()));
 
 	assertEquals(800, config->fuelRpmBins[0]);
 	assertEquals(7000, config->fuelRpmBins[15]);
@@ -224,8 +224,8 @@ void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointInde
 
 	assertEqualsM("synchPointIndex", synchPointIndex, t->getTriggerShapeSynchPointIndex());
 
-	assertEqualsM("channel1duty", channel1duty, t->dutyCycle[0]);
-	assertEqualsM("channel2duty", channel2duty, t->dutyCycle[1]);
+	assertEqualsM4(msg, " channel1duty", channel1duty, t->dutyCycle[0]);
+	assertEqualsM4(msg, " channel2duty", channel2duty, t->dutyCycle[1]);
 }
 
 static void testTriggerDecoder3(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty, float expectedGap) {
