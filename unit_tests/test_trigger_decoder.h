@@ -16,5 +16,7 @@ void testMissedSpark299(void);
 void testRpmCalculator(void);
 void testStartupFuelPumping(void);
 void test1995FordInline6TriggerDecoder(void);
+void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty);
+
 
 #endif /* TEST_TRIGGER_DECODER_H_ */
