@@ -24,5 +24,6 @@ public:
 			trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S);
 };
 
+bool isUsefulSignal(trigger_event_e signal, engine_configuration_s *engineConfiguration);
 
 #endif /* CONTROLLERS_TRIGGER_TRIGGER_SIMULATOR_H_ */

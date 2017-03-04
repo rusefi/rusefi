@@ -8,12 +8,20 @@
 #include "main.h"
 #include "engine.h"
 #include "trigger_simulator.h"
+#include "trigger_emulator_algo.h"
 
 #define SIMULATION_CYCLE_PERIOD 720000
 
 EXTERN_ENGINE;
 
 TriggerStimulatorHelper::TriggerStimulatorHelper() {
+}
+
+// this is not the only place where we have 'isUpEvent'. todo: reuse
+static bool isRisingEdge[6] = { false, true, false, true, false, true };
+
+bool isUsefulSignal(trigger_event_e signal, engine_configuration_s *engineConfiguration) {
+	return !engineConfiguration->useOnlyRisingEdgeForTrigger || isRisingEdge[(int) signal];
 }
 
 void TriggerStimulatorHelper::nextStep(TriggerState *state, TriggerShape * shape, int i,

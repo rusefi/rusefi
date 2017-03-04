@@ -21,6 +21,7 @@
 #include "engine_configuration.h"
 #include "LocalVersionHolder.h"
 #include "trigger_central.h"
+#include "trigger_simulator.h"
 
 #if EFI_PROD_CODE
 #include "pwm_generator.h"
@@ -32,15 +33,8 @@ TriggerEmulatorHelper::TriggerEmulatorHelper() {
 	thirdWheelState = false;
 }
 
-// this is not the only place where we have 'isUpEvent'. todo: reuse
-static bool isRisingEdge[6] = { false, true, false, true, false, true };
-
 EXTERN_ENGINE
 ;
-
-bool isUsefulSignal(trigger_event_e signal, engine_configuration_s *engineConfiguration) {
-	return !engineConfiguration->useOnlyRisingEdgeForTrigger || isRisingEdge[(int) signal];
-}
 
 static void fireShaftSignal(trigger_event_e signal) {
 	if (isUsefulSignal(signal, engineConfiguration))
