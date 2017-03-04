@@ -191,7 +191,7 @@ void test1995FordInline6TriggerDecoder(void) {
 void testFordAspire(void) {
 	printf("*************************************************** testFordAspire\r\n");
 
-	assertEqualsM("getTriggerZeroEventIndex", 0, getTriggerZeroEventIndex(FORD_ASPIRE_1996));
+	assertEqualsM("getTriggerZeroEventIndex", 4, getTriggerZeroEventIndex(FORD_ASPIRE_1996));
 
 	EngineTestHelper eth(FORD_ASPIRE_1996);
 	EXPAND_EngineTestHelper;
