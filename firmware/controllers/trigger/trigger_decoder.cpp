@@ -234,9 +234,11 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 		} else {
 			/**
-			 * in case of noise the counter could be above the expected number of events
+			 * We are here in case of a wheel without synchronization - we just need to count events,
+			 * synchronization point simply happens once we have the right number of events
+			 *
+			 * in case of noise the counter could be above the expected number of events, that's why 'more or equals' and not just 'equals'
 			 */
-			int d = engineConfiguration->useOnlyRisingEdgeForTrigger ? 2 : 1;
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 		if (printTriggerDebug) {
@@ -246,8 +248,10 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 					TRIGGER_SHAPE(size));
 		}
 #endif
+			int endOfCycleIndex = TRIGGER_SHAPE(size) - (delta);
 
-			isSynchronizationPoint = !shaft_is_synchronized || (currentCycle.current_index >= TRIGGER_SHAPE(size) - d);
+
+			isSynchronizationPoint = !shaft_is_synchronized || (currentCycle.current_index >= endOfCycleIndex;
 
 		}
 
