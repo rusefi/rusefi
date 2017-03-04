@@ -67,16 +67,9 @@ void scheduleTask(const bool monitorReuse, const char *prefix, scheduling_s *sch
 	scheduling->param = param;
 	int isArmed = chVTIsArmedI(&scheduling->timer);
 	if (isArmed) {
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
-		if (monitorReuse) {
-			/**
-			 * timer reuse is normal for example in case of sudden RPM increase
-			 */
-//		for (int i = 0;i<100;i++)
-			printf("%s: isArmed? why? sch=%d cb=%d p=%d\r\n", prefix, (int) scheduling, (int)callback, (int)param);
-			firmwareError(OBD_PCM_Processor_Fault, "armored\r\n");
-		}
-#endif /* EFI_SIMULATOR */
+		/**
+		 * timer reuse is normal for example in case of sudden RPM increase
+		 */
 		chVTResetI(&scheduling->timer);
 	}
 
