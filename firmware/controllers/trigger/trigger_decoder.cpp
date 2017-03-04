@@ -263,6 +263,16 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 			isSynchronizationPoint = !shaft_is_synchronized || (currentCycle.current_index >= endOfCycleIndex);
 
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+		if (printTriggerDebug) {
+			printf("isSynchronizationPoint=%d index=%d size=%d\r\n",
+					isSynchronizationPoint,
+					currentCycle.current_index,
+					TRIGGER_SHAPE(size));
+		}
+#endif
+
+
 		}
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
@@ -321,6 +331,13 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			;
 
 			nextRevolution();
+
+			if (printTriggerDebug) {
+				printf("index=%d %d\r\n",
+						currentCycle.current_index,
+						runningRevolutionCounter);
+			}
+
 		} else {
 			nextTriggerEvent()
 			;
