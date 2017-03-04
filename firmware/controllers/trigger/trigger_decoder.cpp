@@ -332,12 +332,13 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 			nextRevolution();
 
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
 			if (printTriggerDebug) {
 				printf("index=%d %d\r\n",
 						currentCycle.current_index,
 						runningRevolutionCounter);
 			}
-
+#endif /* EFI_UNIT_TEST */
 		} else {
 			nextTriggerEvent()
 			;
