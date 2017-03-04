@@ -24,6 +24,10 @@ bool isUsefulSignal(trigger_event_e signal, engine_configuration_s *engineConfig
 	return !engineConfiguration->useOnlyRisingEdgeForTrigger || isRisingEdge[(int) signal];
 }
 
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+extern bool printTriggerDebug;
+#endif /* ! EFI_UNIT_TEST */
+
 void TriggerStimulatorHelper::nextStep(TriggerState *state, TriggerShape * shape, int i,
 		trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S) {
 	int stateIndex = i % shape->getSize();
@@ -42,6 +46,14 @@ void TriggerStimulatorHelper::nextStep(TriggerState *state, TriggerShape * shape
 
 	bool thirdWheelState = shape->wave.getChannelState(2, prevIndex);
 	bool new3rdWheelState = shape->wave.getChannelState(2, stateIndex);
+
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+	if (printTriggerDebug) {
+		printf("nextStep: %d>%d primary %d>%d secondary %d>%d\r\n", prevIndex, stateIndex, primaryWheelState, newPrimaryWheelState,
+				secondaryWheelState, newSecondaryWheelState );
+	}
+#endif /* EFI_UNIT_TEST */
+
 
 	// todo: code duplication with TriggerEmulatorHelper::handleEmulatorCallback?
 
@@ -64,11 +76,11 @@ void TriggerStimulatorHelper::nextStep(TriggerState *state, TriggerShape * shape
 	}
 }
 
-void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(uint32_t index, TriggerState *state, TriggerShape * shape,
+void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(const uint32_t syncIndex, TriggerState *state, TriggerShape * shape,
 		trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S) {
-	int startIndex = engineConfiguration->useOnlyRisingEdgeForTrigger ? index + 2 : index + 1;
+	int startIndex = engineConfiguration->useOnlyRisingEdgeForTrigger ? syncIndex + 2 : syncIndex + 1;
 
-	for (uint32_t i = startIndex; i <= index + 2 * shape->getSize(); i++) {
+	for (uint32_t i = startIndex; i <= syncIndex + 2 * shape->getSize(); i++) {
 		nextStep(state, shape, i, triggerConfig PASS_ENGINE_PARAMETER);
 	}
 	int revolutionCounter = state->getTotalRevolutionCounter();
@@ -84,6 +96,9 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(uint32_t index, 
 	}
 }
 
+/**
+ * @return trigger synchronization point index, or error code if not found
+ */
 uint32_t TriggerStimulatorHelper::doFindTrigger(TriggerShape * shape,
 		trigger_config_s const*triggerConfig, TriggerState *state DECLARE_ENGINE_PARAMETER_S) {
 	for (int i = 0; i < 4 * PWM_PHASE_MAX_COUNT; i++) {

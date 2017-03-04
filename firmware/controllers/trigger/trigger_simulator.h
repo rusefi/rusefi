@@ -20,7 +20,7 @@ public:
 
 	void nextStep(TriggerState *state, TriggerShape * shape, int i, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S);
 
-	void assertSyncPositionAndSetDutyCycle(uint32_t index, TriggerState *state, TriggerShape * shape,
+	void assertSyncPositionAndSetDutyCycle(const uint32_t index, TriggerState *state, TriggerShape * shape,
 			trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S);
 };
 
