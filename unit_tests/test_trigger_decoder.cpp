@@ -210,7 +210,7 @@ void testFordAspire(void) {
 	assertEqualsM("higher rpm dwell", 3.25, getSparkDwell(6000 PASS_ENGINE_PARAMETER));
 }
 
-static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty) {
+void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty) {
 	printf("*************************************************** %s\r\n", msg);
 
 	EngineTestHelper eth(type);
