@@ -1014,11 +1014,21 @@ command_f_s commandsF[] = {{"mock_iat_voltage", setIatVoltage},
 		//		{"", },
 };
 
+static void setTpsErrorDetectionTooLow(int v) {
+	engineConfiguration->tpsErrorDetectionTooLow = v;
+}
+
+static void setTpsErrorDetectionTooHigh(int v) {
+	engineConfiguration->tpsErrorDetectionTooHigh = v;
+}
+
 command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"cranking_rpm", setCrankingRpm},
 		{"cranking_injection_mode", setCrankingInjectionMode},
 		{"injection_mode", setInjectionMode},
 		{"sensor_chart_mode", setSensorChartMode},
+		{"tpsErrorDetectionTooLow", setTpsErrorDetectionTooLow},
+		{"tpsErrorDetectionTooHigh", setTpsErrorDetectionTooHigh},
 		{"fixed_mode_timing", setFixedModeTiming},
 		{"timing_mode", setTimingMode},
 		{"engine_type", setEngineType},
