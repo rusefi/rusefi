@@ -293,7 +293,7 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	if (printTriggerDebug) {
-		printf("addEvent %f\r\n", angle);
+		printf("addEvent2 %f i=%d r/f=%d\r\n", angle, waveIndex, stateParam);
 	}
 #endif
 
