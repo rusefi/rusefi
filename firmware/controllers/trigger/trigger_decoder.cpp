@@ -248,10 +248,10 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 					TRIGGER_SHAPE(size));
 		}
 #endif
-			int endOfCycleIndex = TRIGGER_SHAPE(size) - (delta);
+			int endOfCycleIndex = TRIGGER_SHAPE(size) - (engineConfiguration->useOnlyRisingEdgeForTrigger ? 2 : 1);
 
 
-			isSynchronizationPoint = !shaft_is_synchronized || (currentCycle.current_index >= endOfCycleIndex;
+			isSynchronizationPoint = !shaft_is_synchronized || (currentCycle.current_index >= endOfCycleIndex);
 
 		}
 
