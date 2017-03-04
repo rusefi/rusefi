@@ -88,6 +88,14 @@ static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_F
 #define getCurrentGapDuration(nowNt) \
 	(isFirstEvent ? 0 : (nowNt) - toothed_previous_time)
 
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#define PRINT_INC_INDEX 		if (printTriggerDebug) {\
+		printf("nextTriggerEvent index=%d\r\n", currentCycle.current_index); \
+		}
+#else
+#define PRINT_INC_INDEX {}
+#endif /* EFI_UNIT_TEST */
+
 #define nextTriggerEvent() \
  { \
 	uint32_t prevTime = currentCycle.timeOfPreviousEventNt[triggerWheel]; \
@@ -101,6 +109,7 @@ static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_F
 	} \
 	if (engineConfiguration->useOnlyRisingEdgeForTrigger) {currentCycle.current_index++;} \
 	currentCycle.current_index++; \
+	PRINT_INC_INDEX; \
 }
 
 #define nextRevolution() { \
@@ -152,10 +161,11 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	if (isLessImportant(type)) {
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 		if (printTriggerDebug) {
-			printf("%s isLessImportant %s %d\r\n",
+			printf("%s isLessImportant %s now=%d index=%d\r\n",
 					getTrigger_type_e(engineConfiguration->trigger.type),
 					getTrigger_event_e(signal),
-					nowNt);
+					nowNt,
+					currentCycle.current_index);
 		}
 #endif
 
