@@ -71,8 +71,9 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(uint32_t index, 
 	for (uint32_t i = startIndex; i <= index + 2 * shape->getSize(); i++) {
 		nextStep(state, shape, i, triggerConfig PASS_ENGINE_PARAMETER);
 	}
-	if (state->getTotalRevolutionCounter() != 3) {
-		warning(CUSTOM_OBD_TRIGGER_SHAPE, "sync failed/wrong gap parameters trigger=%s", getTrigger_type_e(engineConfiguration->trigger.type));
+	int revolutionCounter = state->getTotalRevolutionCounter();
+	if (revolutionCounter != 3) {
+		warning(CUSTOM_OBD_TRIGGER_SHAPE, "sync failed/wrong gap parameters trigger=%s rc=%d", getTrigger_type_e(engineConfiguration->trigger.type), revolutionCounter);
 		shape->shapeDefinitionError = true;
 		return;
 	}
