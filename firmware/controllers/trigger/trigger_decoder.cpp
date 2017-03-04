@@ -676,12 +676,18 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 	// todo: should this variable be declared 'static' to reduce stack usage?
 	TriggerStimulatorHelper helper;
 
-	uint32_t index = helper.doFindTrigger(shape, triggerConfig, state PASS_ENGINE_PARAMETER);
-	if (index == EFI_ERROR_CODE) {
+	uint32_t syncIndex = helper.doFindTrigger(shape, triggerConfig, state PASS_ENGINE_PARAMETER);
+	if (syncIndex == EFI_ERROR_CODE) {
 		isInitializingTrigger = false;
-		return index;
+		return syncIndex;
 	}
 	efiAssert(state->getTotalRevolutionCounter() == 1, "totalRevolutionCounter", EFI_ERROR_CODE);
+
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+	if (printTriggerDebug) {
+		printf("syncIndex located %d\r\n", syncIndex);
+	}
+#endif /* EFI_UNIT_TEST */
 
 	/**
 	 * Now that we have just located the synch point, we can simulate the whole cycle
@@ -691,10 +697,10 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 	 */
 	state->cycleCallback = onFindIndex;
 
-	helper.assertSyncPositionAndSetDutyCycle(index, state, shape, triggerConfig PASS_ENGINE_PARAMETER);
+	helper.assertSyncPositionAndSetDutyCycle(syncIndex, state, shape, triggerConfig PASS_ENGINE_PARAMETER);
 
 	isInitializingTrigger = false;
-	return index % shape->getSize();
+	return syncIndex % shape->getSize();
 }
 
 void initTriggerDecoderLogger(Logging *sharedLogger) {
