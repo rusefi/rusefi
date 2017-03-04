@@ -32,6 +32,7 @@ import javax.management.modelmbean.XMLParseException;
 import javax.naming.NameNotFoundException;
 import javax.swing.JOptionPane;
 
+import com.rusefi.FileLog;
 import com.rusefi.Launcher;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Node;
@@ -69,6 +70,7 @@ public final class DOMRomUnmarshaller {
         this.progress = progress;
         Node n;
         NodeList nodes = rootNode.getChildNodes();
+        String romIdString = "(none)";
 
         // unmarshall scales first
         for (int i = 0; i < nodes.getLength(); i++) {
@@ -96,6 +98,10 @@ public final class DOMRomUnmarshaller {
 
                         RomID romID = unmarshallRomID(n2, new RomID());
 
+                        romIdString = romID.getInternalIdString();
+                        FileLog.MAIN.logLine("Looking for " + romIdString);
+
+
                         if (romID.getInternalIdString().length() > 0
                                 && foundMatch(romID, romContent)) {
                             Rom output = unmarshallRom(n, new Rom());
@@ -110,7 +116,7 @@ public final class DOMRomUnmarshaller {
                 }
             }
         }
-        throw new RomNotFoundException();
+        throw new RomNotFoundException("Match not found for " + romIdString);
     }
 
     public static boolean foundMatch(RomID romID, byte[] file) {
@@ -278,7 +284,7 @@ public final class DOMRomUnmarshaller {
                 }
             }
         }
-        throw new RomNotFoundException();
+        throw new RomNotFoundException("xmlID=" + xmlID);
     }
 
     public RomID unmarshallRomID(Node romIDNode, RomID romID) {
