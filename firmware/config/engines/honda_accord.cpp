@@ -18,6 +18,11 @@
  * set engine_type 48
  *   debug configuration to reproduce https://sourceforge.net/p/rusefi/tickets/319/
  *
+ *
+ * set engine_type 50
+ * set engine_type 51
+ *   debug configurations to reproduce https://github.com/rusefi/rusefi/issues/363
+ *
  * @date Jan 12, 2014
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
