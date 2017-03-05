@@ -87,6 +87,7 @@ void TriggerShape::calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE
 		totalExpected += expectedEventCount[i];
 	}
 	if (totalExpected < 2) {
+		// todo: there is a good chance this is not an issue at all and we should allow a 2/1 skipped wheel
 		firmwareError(CUSTOM_ERR_TOO_FEW_EVENTS, "Too few trigger events");
 	}
 }
@@ -428,6 +429,11 @@ void TriggerShape::setTriggerSynchronizationGap2(float syncRatioFrom, float sync
 	isSynchronizationNeeded = true;
 	this->syncRatioFrom = syncRatioFrom;
 	this->syncRatioTo = syncRatioTo;
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+	if (printTriggerDebug) {
+		printf("setTriggerSynchronizationGap2 %f %f\r\n", syncRatioFrom, syncRatioTo);
+	}
+#endif /* EFI_UNIT_TEST */
 }
 
 void TriggerShape::setTriggerSynchronizationGap(float syncRatio) {
