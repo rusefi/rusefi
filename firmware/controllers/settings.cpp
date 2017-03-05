@@ -467,7 +467,7 @@ static void setCrankingFuel(float timeMs) {
 
 static void setGlobalTriggerAngleOffset(float value) {
 	if (cisnan(value)) {
-		warning(CUSTOM_ERR_6121, "Invalid argument");
+		warning(CUSTOM_ERR_SGTP_ARGUMENT, "Invalid argument");
 		return;
 	}
 	engineConfiguration->globalTriggerAngleOffset = value;
