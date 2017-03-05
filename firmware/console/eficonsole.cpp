@@ -36,7 +36,7 @@ static void myfatal(void) {
 }
 
 static void myerror(void) {
-	firmwareError(CUSTOM_ERR_6107, "firmwareError: %d", getRusEfiVersion());
+	firmwareError(CUSTOM_ERR_TEST_ERROR, "firmwareError: %d", getRusEfiVersion());
 }
 
 static void sayNothing(void) {

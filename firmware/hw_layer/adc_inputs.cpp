@@ -512,7 +512,7 @@ static void addChannel(const char *name, adc_channel_e setting, adc_channel_mode
 	}
 	if (adcHwChannelEnabled[setting] != ADC_OFF) {
 		getPinNameByAdcChannel(name, setting, errorMsgBuff);
-		firmwareError(CUSTOM_ERR_6517, "ADC mapping error: input %s for %s already used by %s?", errorMsgBuff, name, adcHwChannelUsage[setting]);
+		firmwareError(CUSTOM_ERR_ADC_USED, "ADC mapping error: input %s for %s already used by %s?", errorMsgBuff, name, adcHwChannelUsage[setting]);
 	}
 
 	adcHwChannelUsage[setting] = name;
@@ -549,7 +549,7 @@ void initAdcInputs(bool boardTestMode) {
 	if (ADC_BUF_DEPTH_FAST > MAX_ADC_GRP_BUF_DEPTH)
 		firmwareError(CUSTOM_ERR_6519, "ADC_BUF_DEPTH_FAST too high");
 	if (ADC_BUF_DEPTH_SLOW > MAX_ADC_GRP_BUF_DEPTH)
-		firmwareError(CUSTOM_ERR_6518, "ADC_BUF_DEPTH_SLOW too high");
+		firmwareError(CUSTOM_ERR_ADC_DEPTH, "ADC_BUF_DEPTH_SLOW too high");
 
 	configureInputs();
 

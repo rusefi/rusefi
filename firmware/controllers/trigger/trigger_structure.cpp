@@ -316,7 +316,7 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 	efiAssertVoid(angle > 0, "angle should be positive");
 	if (size > 0) {
 		if (angle <= previousAngle) {
-			firmwareError(CUSTOM_ERR_6510, "invalid angle order: %f and %f, size=%d", angle, previousAngle, size);
+			firmwareError(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order: %f and %f, size=%d", angle, previousAngle, size);
 			return;
 		}
 	}
@@ -327,7 +327,7 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 			single_wave_s *wave = &this->wave.waves[i];
 
 			if (wave->pinStates == NULL) {
-				firmwareError(CUSTOM_ERR_6511, "wave pinStates is NULL");
+				firmwareError(CUSTOM_ERR_STATE_NULL, "wave pinStates is NULL");
 				return;
 			}
 			wave->pinStates[0] = initialState[i];

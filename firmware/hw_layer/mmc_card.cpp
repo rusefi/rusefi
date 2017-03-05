@@ -178,7 +178,7 @@ static void createLogFile(void) {
 	if (err != FR_OK && err != FR_EXIST) {
 		unlockSpi();
 		sdStatus = SD_STATE_OPEN_FAILED;
-		warning(CUSTOM_ERR_6145, "SD: mount failed");
+		warning(CUSTOM_ERR_SD_MOUNT_FAILED, "SD: mount failed");
 		printError("FS mount failed", err);	// else - show error
 		return;
 	}
@@ -187,7 +187,7 @@ static void createLogFile(void) {
 	if (err) {
 		unlockSpi();
 		sdStatus = SD_STATE_SEEK_FAILED;
-		warning(CUSTOM_ERR_6146, "SD: seek failed");
+		warning(CUSTOM_ERR_SD_SEEK_FAILED, "SD: seek failed");
 		printError("Seek error", err);
 		return;
 	}

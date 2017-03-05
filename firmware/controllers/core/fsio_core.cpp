@@ -357,7 +357,7 @@ int LEElementPool::getSize() {
 LEElement *LEElementPool::next() {
 	if (index >= size) {
 		// todo: this should not be a fatal error, just an error
-		firmwareError(CUSTOM_ERR_6503, "LE_ELEMENT_POOL_SIZE overflow");
+		firmwareError(CUSTOM_ERR_FSIO_POOL, "LE_ELEMENT_POOL_SIZE overflow");
 		return NULL;
 	}
 	LEElement *result = &pool[index++];

@@ -597,18 +597,22 @@ void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e m
 	tsSendResponse(tsChannel, mode, (const uint8_t *) &tsOutputChannels, sizeof(TunerStudioOutputChannels));
 }
 
+#define TEST_RESPONSE_TAG " ts_p_alive\r\n"
+
 void handleTestCommand(ts_channel_s *tsChannel) {
+//	static char warningCodeBuff[7];
 	/**
 	 * this is NOT a standard TunerStudio command, this is my own
 	 * extension of the protocol to simplify troubleshooting
 	 */
 	tunerStudioDebug("got T (Test)");
 	tunerStudioWriteData(tsChannel, (const uint8_t *) VCS_VERSION, sizeof(VCS_VERSION));
+//	itoa10(warningCodeBuff, engine->engineState.lastErrorCode);
 	/**
 	 * Please note that this response is a magic constant used by dev console for protocol detection
 	 * @see EngineState#TS_PROTOCOL_TAG
 	 */
-	tunerStudioWriteData(tsChannel, (const uint8_t *) " ts_p_alive\r\n", 8);
+	tunerStudioWriteData(tsChannel, (const uint8_t *) TEST_RESPONSE_TAG, sizeof(TEST_RESPONSE_TAG));
 }
 
 extern CommandHandler console_line_callback;
@@ -795,10 +799,10 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 
 void startTunerStudioConnectivity(void) {
 	if (sizeof(persistent_config_s) != getTunerStudioPageSize(0))
-		firmwareError(CUSTOM_OBD_52, "TS page size mismatch: %d/%d", sizeof(persistent_config_s), getTunerStudioPageSize(0));
+		firmwareError(CUSTOM_OBD_TS_PAGE_MISMATCH, "TS page size mismatch: %d/%d", sizeof(persistent_config_s), getTunerStudioPageSize(0));
 
 	if (sizeof(TunerStudioOutputChannels) != TS_OUTPUT_SIZE)
-		firmwareError(CUSTOM_OBD_53, "TS outputs size mismatch: %d/%d", sizeof(TunerStudioOutputChannels), TS_OUTPUT_SIZE);
+		firmwareError(CUSTOM_OBD_TS_OUTPUT_MISMATCH, "TS outputs size mismatch: %d/%d", sizeof(TunerStudioOutputChannels), TS_OUTPUT_SIZE);
 
 	memset(&tsState, 0, sizeof(tsState));
 	syncTunerStudioCopy();
