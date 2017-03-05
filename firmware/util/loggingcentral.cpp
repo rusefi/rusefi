@@ -94,7 +94,7 @@ char * swapOutputBuffers(int *actualOutputBufferSize) {
 	*actualOutputBufferSize = efiStrlen(outputBuffer);
 #if EFI_ENABLE_ASSERTS || defined(__DOXYGEN__)
 	if (*actualOutputBufferSize != expectedOutputSize) {
-		firmwareError(OBD_PCM_Processor_Fault, "out constr %d/%d", *actualOutputBufferSize, expectedOutputSize);
+		firmwareError(CUSTOM_ERR_6534, "out constr %d/%d", *actualOutputBufferSize, expectedOutputSize);
 		return NULL;
 	}
 #endif /* EFI_ENABLE_ASSERTS */

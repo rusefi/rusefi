@@ -34,7 +34,7 @@ static digital_input_s * finddigital_input_s(ICUDriver *driver) {
 			return &registeredIcus.elements[i];
 		}
 	}
-	firmwareError(OBD_PCM_Processor_Fault, "reader not found");
+	firmwareError(CUSTOM_ERR_6520, "reader not found");
 	return (digital_input_s *) NULL;
 }
 
@@ -60,7 +60,7 @@ static void icuPeriordCallBack(ICUDriver *driver) {
 
 static uint32_t getAlternateFunctions(ICUDriver *driver) {
 	if (driver == NULL) {
-		firmwareError(OBD_PCM_Processor_Fault, "getAlternateFunctions(NULL)");
+		firmwareError(CUSTOM_ERR_6521, "getAlternateFunctions(NULL)");
 		return 0xffffffff;
 	}
 #if STM32_ICU_USE_TIM1
@@ -88,7 +88,7 @@ static uint32_t getAlternateFunctions(ICUDriver *driver) {
 		return GPIO_AF_TIM9;
 	}
 #endif
-	firmwareError(OBD_PCM_Processor_Fault, "No such driver");
+	firmwareError(CUSTOM_ERR_6522, "No such driver");
 	return 0xffffffff;
 }
 
@@ -109,7 +109,7 @@ icuchannel_t getInputCaptureChannel(brain_pin_e hwPin) {
 	case GPIOE_11:
 		return ICU_CHANNEL_2;
 	default:
-		firmwareError(OBD_PCM_Processor_Fault, "Unexpected hw pin in getInputCaptureChannel %s", hwPortname(hwPin));
+		firmwareError(CUSTOM_ERR_6523, "Unexpected hw pin in getInputCaptureChannel %s", hwPortname(hwPin));
 		return ICU_CHANNEL_1;
 	}
 }

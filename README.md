@@ -5,6 +5,7 @@ current binaries are always available at http://rusefi.com/build_server/
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
+| 03/05/2017    | r13108    | bugfix #363: trigger front only processing |
 | 02/22/2017    | r12980    | bugfix: false error message in case of single coin or simultaneous injection | 
 | 02/22/2017    | r12973    | unused property 'custom Use Rise Edge' removed |
 | 02/22/2017    | r12972    | protocol signature changed to 'v0.02' (this would happen from time to time to ensure version match between console and TS project | 
