@@ -140,6 +140,9 @@ static char *ltoa_internal(char *p, long num, unsigned radix) {
 	return p;
 }
 
+/**
+ * @return pointer at the end zero symbol after the digits
+ */
 static char* itoa_signed(char *p, int num, unsigned radix) {
 	if (num < 0) {
 		*p++ = '-';
@@ -154,6 +157,8 @@ static char* itoa_signed(char *p, int num, unsigned radix) {
 
 /**
  * Integer to string
+ *
+ * @return pointer at the end zero symbol after the digits
  */
 char* itoa10(char *p, int num) {
 // todo: unit test
