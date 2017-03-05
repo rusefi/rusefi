@@ -100,9 +100,9 @@ void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTri
 //	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
 	setTriggerSynchronizationGap(2);
 
-	secondSyncRatioFrom = 0.000001;
+	secondSyncRatioFrom = NAN; // NaN means do not use this ratio
 	secondSyncRatioTo = 100000;
-	thirdSyncRatioFrom = 0.000001;
+	thirdSyncRatioFrom = NAN; // NaN means do not use this ratio
 	thirdSyncRatioTo = 100000;
 
 
