@@ -68,7 +68,7 @@ bool EventQueue::insertTask(const bool monitorReuse, const char *prefix, schedul
 
 	if (head == NULL || timeX < head->momentX) {
 		LL_PREPEND(head, scheduling);
-#if EFI_UNIT_TEST
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
 		assertListIsSorted();
 #endif /* EFI_UNIT_TEST */
 		return true;
@@ -156,7 +156,7 @@ int EventQueue::executeAll(efitime_t now) {
 			break;
 		}
 	}
-#if EFI_UNIT_TEST
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	assertListIsSorted();
 #endif
 

@@ -12,4 +12,6 @@
 void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_F);
 void setTestVVTEngineConfiguration(DECLARE_ENGINE_PARAMETER_F);
 
+void setTestEngineIssue366(DECLARE_ENGINE_PARAMETER_F);
+
 #endif /* TEST_ENGINE_H_ */
