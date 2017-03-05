@@ -36,7 +36,7 @@ static void myfatal(void) {
 }
 
 static void myerror(void) {
-	firmwareError(OBD_PCM_Processor_Fault, "firmwareError: %d", getRusEfiVersion());
+	firmwareError(CUSTOM_ERR_6107, "firmwareError: %d", getRusEfiVersion());
 }
 
 static void sayNothing(void) {
