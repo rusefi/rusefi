@@ -58,10 +58,10 @@ static int getTriggerZeroEventIndex(engine_type_e engineType) {
 }
 
 static void testDodgeNeonDecoder(void) {
-	printf("*************************************************** testDodgeNeonDecoder\r\n");
+	printf("*************************************************** testDodgeNeonDecoder95\r\n");
 	initTriggerDecoder();
 
-	assertEqualsM("trigger zero index", 8, getTriggerZeroEventIndex(DODGE_NEON_1995));
+	assertEqualsM("DODGE_NEON_1995: trigger zero index", 8, getTriggerZeroEventIndex(DODGE_NEON_1995));
 
 	EngineTestHelper eth(DODGE_NEON_1995);
 	EXPAND_EngineTestHelper;
@@ -478,21 +478,21 @@ void testTriggerDecoder(void) {
 	assertEquals(s->wave.switchTimes[3], 1);
 
 	testDodgeNeonDecoder();
-	testTriggerDecoder2("dodge neon", DODGE_NEON_1995, 8, 0.4931, 0.2070);
+	testTriggerDecoder2("Dodge Neon 1995", DODGE_NEON_1995, 8, 0.4931, 0.2070);
 
 	testFordAspire();
-	testTriggerDecoder2("ford aspire", FORD_ASPIRE_1996, 4, 0.5000, 0.3841);
+	testTriggerDecoder2("ford aspire", FORD_ASPIRE_1996, 4, 0.0000, 0.5);
 
 	testTriggerDecoder2("dodge ram", DODGE_RAM, 16, 0.5000, 0.06);
 
 	//testTriggerDecoder2("bmw", BMW_E34, 0, 0.9750, 0.5167);
-	testTriggerDecoder2("bmw", BMW_E34, 0, 0.4833, 0.0);
+	testTriggerDecoder2("bmw", BMW_E34, 0, 0.4667, 0.0);
 
 	test1995FordInline6TriggerDecoder();
 	testTriggerDecoder2("Miata NB", MAZDA_MIATA_NB1, 12, 0.0833, 0.0444);
 
 	testTriggerDecoder2("Civic 4/0 both", TEST_CIVIC_4_0_BOTH, 0, 0.5000, 0.0);
-//	testTriggerDecoder2("Civic 4/0 rise", TEST_CIVIC_4_0_RISE, 0, 0.0000, 0.0);
+	testTriggerDecoder2("Civic 4/0 rise", TEST_CIVIC_4_0_RISE, 0, 0.5000, 0.0);
 
 	testTriggerDecoder2("test engine", TEST_ENGINE, 0, 0.7500, 0.2500);
 	testTriggerDecoder2("testGY6_139QMB", GY6_139QMB, 0, 0.4375, 0.0);
