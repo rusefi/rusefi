@@ -395,7 +395,7 @@ void configureDodgeStratusTriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_
 void configureNeon1995TriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
-	s->setTriggerSynchronizationGap(0.72);
+	s->setTriggerSynchronizationGap(0.8227);
 
 	s->useRiseEdge = false;
 
