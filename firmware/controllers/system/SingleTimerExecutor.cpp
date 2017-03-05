@@ -117,7 +117,7 @@ void Executor::doExecute() {
 	}
 	lastExecutionCount = totalExecuted;
 	if (!isLocked()) {
-		firmwareError(OBD_PCM_Processor_Fault, "Someone has stolen my lock");
+		firmwareError(CUSTOM_ERR_6508, "Someone has stolen my lock");
 		return;
 	}
 	reentrantFlag = false;

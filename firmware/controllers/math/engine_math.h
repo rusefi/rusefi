@@ -18,7 +18,7 @@ void setAlgorithm(engine_load_mode_e algo DECLARE_ENGINE_PARAMETER_S);
 
 
 #if EFI_ENABLE_ASSERTS
-#define assertAngleRange(angle, msg) if(angle > 10000000 || angle < -10000000) { firmwareError(OBD_PCM_Processor_Fault, "angle range %s %f", msg, angle);angle = 0;}
+#define assertAngleRange(angle, msg) if(angle > 10000000 || angle < -10000000) { firmwareError(CUSTOM_ERR_6505, "angle range %s %f", msg, angle);angle = 0;}
 #else
 #define assertAngleRange(angle, msg) {}
 #endif

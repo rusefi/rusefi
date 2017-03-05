@@ -333,7 +333,7 @@ ioportid_t getAdcChannelPort(const char *msg, adc_channel_e hwChannel) {
 	case ADC_CHANNEL_IN15:
 		return GPIOC;
 	default:
-		firmwareError(OBD_PCM_Processor_Fault, "Unknown hw channel %d [%s]", hwChannel, msg);
+		firmwareError(CUSTOM_ERR_6516, "Unknown hw channel %d [%s]", hwChannel, msg);
 		return NULL;
 	}
 }
@@ -384,7 +384,7 @@ int getAdcChannelPin(adc_channel_e hwChannel) {
 	case ADC_CHANNEL_IN15:
 		return 5;
 	default:
-		firmwareError(OBD_PCM_Processor_Fault, "Unknown hw channel %d", hwChannel);
+		firmwareError(CUSTOM_ERR_6535, "Unknown hw channel %d", hwChannel);
 		return -1;
 	}
 }
@@ -512,7 +512,7 @@ static void addChannel(const char *name, adc_channel_e setting, adc_channel_mode
 	}
 	if (adcHwChannelEnabled[setting] != ADC_OFF) {
 		getPinNameByAdcChannel(name, setting, errorMsgBuff);
-		firmwareError(OBD_PCM_Processor_Fault, "ADC mapping error: input %s for %s already used by %s?", errorMsgBuff, name, adcHwChannelUsage[setting]);
+		firmwareError(CUSTOM_ERR_6517, "ADC mapping error: input %s for %s already used by %s?", errorMsgBuff, name, adcHwChannelUsage[setting]);
 	}
 
 	adcHwChannelUsage[setting] = name;
@@ -547,9 +547,9 @@ static void configureInputs(void) {
 void initAdcInputs(bool boardTestMode) {
 	printMsg(&logger, "initAdcInputs()");
 	if (ADC_BUF_DEPTH_FAST > MAX_ADC_GRP_BUF_DEPTH)
-		firmwareError(OBD_PCM_Processor_Fault, "ADC_BUF_DEPTH_FAST too high");
+		firmwareError(CUSTOM_ERR_6519, "ADC_BUF_DEPTH_FAST too high");
 	if (ADC_BUF_DEPTH_SLOW > MAX_ADC_GRP_BUF_DEPTH)
-		firmwareError(OBD_PCM_Processor_Fault, "ADC_BUF_DEPTH_SLOW too high");
+		firmwareError(CUSTOM_ERR_6518, "ADC_BUF_DEPTH_SLOW too high");
 
 	configureInputs();
 
