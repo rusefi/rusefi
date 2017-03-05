@@ -106,7 +106,7 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 		return &SPID3;
 	}
 #endif
-	firmwareError(OBD_PCM_Processor_Fault, "Unexpected SPI device: %d", spiDevice);
+	firmwareError(CUSTOM_ERR_6524, "Unexpected SPI device: %d", spiDevice);
 	return NULL;
 }
 #endif

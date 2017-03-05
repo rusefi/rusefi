@@ -180,7 +180,7 @@ void lcd_HD44780_init(Logging *sharedLogger) {
 	addConsoleAction("lcdinfo", lcdInfo);
 
 	if (engineConfiguration->displayMode > DM_HD44780_OVER_PCF8574) {
-		firmwareError(OBD_PCM_Processor_Fault, "Unexpected displayMode %d", engineConfiguration->displayMode);
+		firmwareError(CUSTOM_ERR_6515, "Unexpected displayMode %d", engineConfiguration->displayMode);
 		return;
 	}
 

@@ -58,7 +58,7 @@ void setHardwareUsTimer(int32_t timeUs) {
 		timeUs = 2; // for some reason '1' does not really work
 	efiAssertVoid(timeUs > 0, "not positive timeUs");
 	if (timeUs >= 10 * US_PER_SECOND) {
-		firmwareError(OBD_PCM_Processor_Fault, "setHardwareUsTimer() too long: %d", timeUs);
+		firmwareError(CUSTOM_ERR_6526, "setHardwareUsTimer() too long: %d", timeUs);
 		return;
 	}
 
@@ -79,7 +79,7 @@ static void callback(GPTDriver *gptp) {
 	(void)gptp;
 	timerCallbackCounter++;
 	if (globalTimerCallback == NULL) {
-		firmwareError(OBD_PCM_Processor_Fault, "NULL globalTimerCallback");
+		firmwareError(CUSTOM_ERR_6527, "NULL globalTimerCallback");
 		return;
 	}
 	isTimerPending = false;
@@ -100,7 +100,7 @@ static void usTimerWatchDog(void) {
 	if (getTimeNowNt() >= lastSetTimerTimeNt + 2 * CORE_CLOCK) {
 		strcpy(buff, "no_event");
 		itoa10(&buff[8], lastSetTimerValue);
-		firmwareError(OBD_PCM_Processor_Fault, buff);
+		firmwareError(CUSTOM_ERR_6528, buff);
 		return;
 	}
 
