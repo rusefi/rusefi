@@ -208,18 +208,23 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		bool isSynchronizationPoint;
 
 		if (TRIGGER_SHAPE(isSynchronizationNeeded)) {
+			// this is getting a little out of hand, any ideas?
+
+			bool primaryGap = currentDuration > toothed_previous_duration * TRIGGER_SHAPE(syncRatioFrom)
+				&& currentDuration < toothed_previous_duration * TRIGGER_SHAPE(syncRatioTo);
+
+			bool secondaryGap = cisnan(TRIGGER_SHAPE(secondSyncRatioFrom)) || (toothed_previous_duration > durationBeforePrevious * TRIGGER_SHAPE(secondSyncRatioFrom)
+			&& toothed_previous_duration < durationBeforePrevious * TRIGGER_SHAPE(secondSyncRatioTo));
+
+			bool thirdGap = cisnan(TRIGGER_SHAPE(thirdSyncRatioFrom)) || (durationBeforePrevious > thirdPreviousDuration * TRIGGER_SHAPE(thirdSyncRatioFrom)
+			&& durationBeforePrevious < thirdPreviousDuration * TRIGGER_SHAPE(thirdSyncRatioTo));
+
 			/**
 			 * Here I prefer to have two multiplications instead of one division, that's a micro-optimization
 			 */
-			isSynchronizationPoint =
-					   currentDuration > toothed_previous_duration * TRIGGER_SHAPE(syncRatioFrom)
-					&& currentDuration < toothed_previous_duration * TRIGGER_SHAPE(syncRatioTo)
-					&& toothed_previous_duration > durationBeforePrevious * TRIGGER_SHAPE(secondSyncRatioFrom)
-					&& toothed_previous_duration < durationBeforePrevious * TRIGGER_SHAPE(secondSyncRatioTo)
-// this is getting a little out of hand, any ideas?
-					&& durationBeforePrevious > thirdPreviousDuration * TRIGGER_SHAPE(thirdSyncRatioFrom)
-					&& durationBeforePrevious < thirdPreviousDuration * TRIGGER_SHAPE(thirdSyncRatioTo)
-;
+			isSynchronizationPoint = primaryGap
+					&& secondaryGap
+					&& thirdGap;
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 			if (engineConfiguration->isPrintTriggerSynchDetails || someSortOfTriggerError) {
