@@ -795,10 +795,10 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 
 void startTunerStudioConnectivity(void) {
 	if (sizeof(persistent_config_s) != getTunerStudioPageSize(0))
-		firmwareError(OBD_PCM_Processor_Fault, "TS page size mismatch: %d/%d", sizeof(persistent_config_s), getTunerStudioPageSize(0));
+		firmwareError(CUSTOM_OBD_52, "TS page size mismatch: %d/%d", sizeof(persistent_config_s), getTunerStudioPageSize(0));
 
 	if (sizeof(TunerStudioOutputChannels) != TS_OUTPUT_SIZE)
-		firmwareError(OBD_PCM_Processor_Fault, "TS outputs size mismatch: %d/%d", sizeof(TunerStudioOutputChannels), TS_OUTPUT_SIZE);
+		firmwareError(CUSTOM_OBD_53, "TS outputs size mismatch: %d/%d", sizeof(TunerStudioOutputChannels), TS_OUTPUT_SIZE);
 
 	memset(&tsState, 0, sizeof(tsState));
 	syncTunerStudioCopy();

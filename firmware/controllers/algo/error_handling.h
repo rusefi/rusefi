@@ -63,8 +63,8 @@ int getRusEfiVersion(void);
  * is stopped. Please use firmwareWarning() instead
  */
 #if EFI_ENABLE_ASSERTS
-  #define efiAssert(condition, message, result) { if (!(condition)) { firmwareError(OBD_PCM_Processor_Fault, message); return result; } }
-  #define efiAssertVoid(condition, message) { if (!(condition)) { firmwareError(OBD_PCM_Processor_Fault, message); return; } }
+  #define efiAssert(condition, message, result) { if (!(condition)) { firmwareError(CUSTOM_ERR_6500, message); return result; } }
+  #define efiAssertVoid(condition, message) { if (!(condition)) { firmwareError(CUSTOM_ERR_6501, message); return; } }
 #else /* EFI_ENABLE_ASSERTS */
   #define efiAssert(condition, message, result) { }
   #define efiAssertVoid(condition, message) { }
