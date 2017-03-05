@@ -81,15 +81,6 @@ void TriggerShape::calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE
 			frontOnlyIndexes[eventIndex] = frontOnlyIndex;
 		}
 	}
-
-	int totalExpected = 0;
-	for (int i = 0;i < PWM_PHASE_MAX_WAVE_PER_PWM;i++) {
-		totalExpected += expectedEventCount[i];
-	}
-	if (totalExpected < 2) {
-		// todo: there is a good chance this is not an issue at all and we should allow a 2/1 skipped wheel
-		firmwareError(CUSTOM_ERR_TOO_FEW_EVENTS, "Too few trigger events");
-	}
 }
 
 void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTriggerInput) {
