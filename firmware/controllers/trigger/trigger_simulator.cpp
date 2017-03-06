@@ -110,6 +110,7 @@ uint32_t TriggerStimulatorHelper::doFindTrigger(TriggerShape * shape,
 		if (state->shaft_is_synchronized)
 			return i;
 	}
-	firmwareError(CUSTOM_ERR_TRIGGER_SYNC, "findTriggerZeroEventIndex() failed");
+	engine->triggerCentral.triggerShape.shapeDefinitionError = 1;
+	warning(CUSTOM_ERR_TRIGGER_SYNC, "findTriggerZeroEventIndex() failed");
 	return EFI_ERROR_CODE;
 }
