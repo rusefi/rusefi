@@ -152,7 +152,10 @@ typedef enum {
 	 */
 	TEST_CIVIC_4_0_RISE = 51,
 
-	ET_UNUSED = 52,
+
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+	TEST_ISSUE_366 = 52,
+#endif
 
 	Force_4b_engine_type = ENUM_32_BITS,
 } engine_type_e;
