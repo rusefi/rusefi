@@ -127,10 +127,8 @@ case DODGE_STRATUS:
 case TEST_CIVIC_4_0_BOTH:
 case TEST_CIVIC_4_0_RISE:
 	return "civictest";
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
 case TEST_ISSUE_366:
 	return "unittest";
-#endif
   }
  return NULL;
 }
