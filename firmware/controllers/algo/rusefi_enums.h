@@ -154,7 +154,8 @@ typedef enum {
 
 
 //todo: why does this not work?#if EFI_UNIT_TEST || defined(__DOXYGEN__)
-	TEST_ISSUE_366 = 52,
+	TEST_ISSUE_366_BOTH = 52,
+	TEST_ISSUE_366_RISE = 53,
 //todo:#endif
 
 	Force_4b_engine_type = ENUM_32_BITS,

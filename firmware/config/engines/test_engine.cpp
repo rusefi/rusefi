@@ -72,7 +72,22 @@ void setTestVVTEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
-void setTestEngineIssue366(DECLARE_ENGINE_PARAMETER_F) {
+void setTestEngineIssue366both(DECLARE_ENGINE_PARAMETER_F) {
+	setTestEngineConfiguration(PASS_ENGINE_PARAMETER_F);
+
+
+	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
+	engineConfiguration->trigger.customTotalToothCount = 2;
+	engineConfiguration->trigger.customSkippedToothCount = 1;
+
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 
 }
-#endif
+
+void setTestEngineIssue366rise(DECLARE_ENGINE_PARAMETER_F) {
+	setTestEngineIssue366both(PASS_ENGINE_PARAMETER_F);
+
+
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
+}
+#endif /* EFI_UNIT_TEST */
