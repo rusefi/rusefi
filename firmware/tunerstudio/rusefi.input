@@ -778,7 +778,7 @@ fileVersion = { 20161225 }
       baseFuel        = scalar,  F32,     48,              "ms",           1,         0
       tCharge         = scalar,  F32,     52,              "T",             1,       0.0;
       ign_adv         = scalar,  F32,     56,              "deg",           1,       0.0;
-      sparkDwellValue = scalar,  F32,     60,              "MAP",           1,       0.0;
+      sparkDwellValue = scalar,  F32,     60,              "ms",           1,       0.0;
       ; actual total Ms time per engine cycle with all corrections
       pulseWidth      = scalar,  F32,     64,              "ms",           1,       0.0;
       debugFloatField1    = scalar,  F32,  68,            "val",           1,       0.0;
