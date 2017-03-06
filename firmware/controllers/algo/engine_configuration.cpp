@@ -1003,6 +1003,14 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	case VW_ABA:
 		setVwAba(PASS_ENGINE_PARAMETER_F);
 		break;
+#if EFI_UNIT_TEST
+	case TEST_ISSUE_366:
+		setTestEngineIssue366(PASS_ENGINE_PARAMETER_F);
+		break;
+#else
+	case TEST_ISSUE_366:
+#endif
+
 	case TEST_ENGINE:
 		setTestEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;
