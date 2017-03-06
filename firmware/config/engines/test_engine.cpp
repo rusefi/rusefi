@@ -49,8 +49,6 @@ void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->logicAnalyzerPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->logicAnalyzerPins[2] = GPIO_UNASSIGNED;
 	boardConfiguration->logicAnalyzerPins[3] = GPIO_UNASSIGNED;
-
-
 }
 
 void setTestVVTEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
@@ -71,5 +69,10 @@ void setTestVVTEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->vvtMode = VVT_SECOND_HALF;
 	engineConfiguration->debugMode = DBG_VVT;
+}
+
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+void setTestEngineIssue366(DECLARE_ENGINE_PARAMETER_F) {
 
 }
+#endif
