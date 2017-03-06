@@ -1004,11 +1004,15 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setVwAba(PASS_ENGINE_PARAMETER_F);
 		break;
 #if EFI_UNIT_TEST
-	case TEST_ISSUE_366:
-		setTestEngineIssue366(PASS_ENGINE_PARAMETER_F);
+	case TEST_ISSUE_366_BOTH:
+		setTestEngineIssue366both(PASS_ENGINE_PARAMETER_F);
+		break;
+	case TEST_ISSUE_366_RISE:
+		setTestEngineIssue366rise(PASS_ENGINE_PARAMETER_F);
 		break;
 #else
-	case TEST_ISSUE_366:
+	case TEST_ISSUE_366_BOTH:
+	case TEST_ISSUE_366_RISE:
 #endif
 
 	case TEST_ENGINE:

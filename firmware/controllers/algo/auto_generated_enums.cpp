@@ -127,7 +127,8 @@ case DODGE_STRATUS:
 case TEST_CIVIC_4_0_BOTH:
 case TEST_CIVIC_4_0_RISE:
 	return "civictest";
-case TEST_ISSUE_366:
+case TEST_ISSUE_366_BOTH:
+case TEST_ISSUE_366_RISE:
 	return "unittest";
   }
  return NULL;

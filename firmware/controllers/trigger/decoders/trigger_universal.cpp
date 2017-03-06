@@ -40,7 +40,7 @@ void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount,
 	s->initialize(operationMode, false);
 
 	s->setTriggerSynchronizationGap(skippedCount + 1);
-	s->isSynchronizationNeeded = (skippedCount != 0);
+	s->isSynchronizationNeeded = (totalTeethCount > 2) && (skippedCount != 0);
 
 	addSkippedToothTriggerEvents(T_PRIMARY, s, totalTeethCount, skippedCount, 0.5, 0, getEngineCycle(operationMode),
 	NO_LEFT_FILTER, NO_RIGHT_FILTER PASS_ENGINE_PARAMETER);
