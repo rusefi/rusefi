@@ -2,7 +2,7 @@
  * @file	global.h
  *
  * @date Nov 28, 2013
- * @author pc
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef GLOBAL_H_

@@ -1,8 +1,8 @@
 /**
  * @file efifeatures.h
  *
- *  Created on: Mar 7, 2014
- *      Author: Andrey
+ * @date Mar 7, 2014
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef EFIFEATURES_H_
