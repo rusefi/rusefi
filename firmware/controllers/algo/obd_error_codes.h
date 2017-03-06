@@ -1851,6 +1851,9 @@ typedef enum {
 	CUSTOM_ERR_SD_SEEK_FAILED = 6146,
 	CUSTOM_ERR_6147 = 6147,
 	CUSTOM_ERR_6148 = 6148,
+	/**
+	 * This indicates an issue with coil control
+	 */
 	CUSTOM_OUT_OF_ORDER_COIL = 6149,
 
 	CUSTOM_ERR_ASSERT = 6500,
