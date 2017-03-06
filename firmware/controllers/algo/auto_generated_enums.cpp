@@ -66,8 +66,6 @@ case DODGE_NEON_2003_CAM:
   return "NEON_2003_CAM";
 case DODGE_NEON_2003_CRANK:
   return "NEON_2003_CRANK";
-case ET_UNUSED:
-  return "ET_UNUSED";
 case FORD_ASPIRE_1996:
   return "FORD_ASPIRE_1996";
 case FORD_ESCORT_GT:
@@ -129,6 +127,10 @@ case DODGE_STRATUS:
 case TEST_CIVIC_4_0_BOTH:
 case TEST_CIVIC_4_0_RISE:
 	return "civictest";
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+case TEST_ISSUE_366:
+	return "unittest";
+#endif
   }
  return NULL;
 }
