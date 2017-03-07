@@ -629,7 +629,7 @@ static void setTestBug299small(EngineTestHelper *eth) {
 	// this is needed to update injectorLag
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_F);
 
-	assertEqualsM("CLT", 70, engine->engineState.clt);
+	assertEqualsM("CLT", 70, engine->sensors.clt);
 
 	engineConfiguration->trigger.type = TT_ONE;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
@@ -1131,7 +1131,7 @@ void testSparkReverseOrderBug319(void) {
 	// this is needed to update injectorLag
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_F);
 
-	assertEqualsM("CLT", 70, engine->engineState.clt);
+	assertEqualsM("CLT", 70, engine->sensors.clt);
 
 	engineConfiguration->trigger.type = TT_ONE;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);

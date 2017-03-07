@@ -67,12 +67,9 @@ private:
 	thermistor_conf_s currentConfig;
 };
 
-class EngineState {
+class SensorsState {
 public:
-	EngineState();
-	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_F);
-	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_F);
-
+	SensorsState();
 	/**
 	 * Performance optimization:
 	 * log() function needed for thermistor logic is relatively heavy, to avoid it we have these
@@ -85,6 +82,21 @@ public:
 	float clt;
 
 	float vBatt;
+	float currentAfr;
+	/**
+	 * that's fuel in tank - just a gauge
+	 */
+	percent_t fuelTankGauge;
+
+	void reset();
+};
+
+class EngineState {
+public:
+	EngineState();
+	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_F);
+	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_F);
+
 
 	efitick_t crankingTime;
 	efitick_t timeSinceCranking;
@@ -100,10 +112,6 @@ public:
 
 	float engineNoiseHipLevel;
 
-	/**
-	 * that's fuel in tank - just a gauge
-	 */
-	percent_t fuelTankGauge;
 
 	ThermistorMath iatCurve;
 	ThermistorMath cltCurve;
@@ -149,8 +157,6 @@ public:
 	float tChargeK;
 	float currentVE;
 	float targetAFR;
-
-	float currentAfr;
 
 	int vssCounter;
 	int totalLoggedBytes;
@@ -358,6 +364,7 @@ public:
 
 	void onTriggerEvent(efitick_t nowNt);
 	EngineState engineState;
+	SensorsState sensors;
 	efitick_t lastTriggerEventTimeNt;
 
 

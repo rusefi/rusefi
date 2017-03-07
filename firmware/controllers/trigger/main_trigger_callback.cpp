@@ -374,16 +374,16 @@ static void scheduleOutput2(OutputSignalPair *pair, efitimeus_t nowUs, float del
 static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_F) {
 #if ! EFI_UNIT_TEST
 	if (ENGINE(rpmCalculator.rpmValue) < CONFIG(fuelClosedLoopRpmThreshold) ||
-			ENGINE(engineState.clt) < CONFIG(fuelClosedLoopCltThreshold) ||
+			ENGINE(sensors.clt) < CONFIG(fuelClosedLoopCltThreshold) ||
 			getTPS(PASS_ENGINE_PARAMETER_F) > CONFIG(fuelClosedLoopTpsThreshold) ||
-			ENGINE(engineState.currentAfr) < engineConfiguration->fuelClosedLoopAfrLowThreshold ||
-			ENGINE(engineState.currentAfr) > engineConfiguration->fuelClosedLoopAfrHighThreshold) {
+			ENGINE(sensors.currentAfr) < engineConfiguration->fuelClosedLoopAfrLowThreshold ||
+			ENGINE(sensors.currentAfr) > engineConfiguration->fuelClosedLoopAfrHighThreshold) {
 		engine->engineState.fuelPidCorrection = 0;
 		fuelPid.reset();
 		return;
 	}
 
-	engine->engineState.fuelPidCorrection = fuelPid.getValue(ENGINE(engineState.targetAFR), ENGINE(engineState.currentAfr), 1);
+	engine->engineState.fuelPidCorrection = fuelPid.getValue(ENGINE(engineState.targetAFR), ENGINE(sensors.currentAfr), 1);
 	if (engineConfiguration->debugMode == DBG_FUEL_PID_CORRECTION) {
 		tsOutputChannels.debugFloatField1 = engine->engineState.fuelPidCorrection;
 		fuelPid.postState(&tsOutputChannels);

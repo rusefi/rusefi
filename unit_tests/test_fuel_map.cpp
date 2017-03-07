@@ -57,6 +57,7 @@ void testFuelMap(void) {
 
 
 	printf("*** getInjectorLag\r\n");
+//	engine->engineState.vb
 	assertEqualsM("lag", 1.04, getInjectorLag(12 PASS_ENGINE_PARAMETER));
 
 	for (int i = 0; i < VBAT_INJECTOR_CURVE_SIZE; i++) {
@@ -90,7 +91,7 @@ void testFuelMap(void) {
 	assertEquals(NAN, getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F));
 	float iatCorrection = getIatFuelCorrection(-KELV PASS_ENGINE_PARAMETER);
 	assertEqualsM("IAT", 2, iatCorrection);
-	engine->engineState.clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_F);
+	engine->sensors.clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_F);
 	float cltCorrection = getCltFuelCorrection(PASS_ENGINE_PARAMETER_F);
 	assertEqualsM("CLT", 1, cltCorrection);
 	float injectorLag = getInjectorLag(getVBatt(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER);

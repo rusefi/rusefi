@@ -25,6 +25,7 @@
 #include "engine_controller.h"
 #include "mmc_card.h"
 #include "idle_thread.h"
+#include "fuel_math.h"
 
 #if EFI_HD44780_LCD || defined(__DOXYGEN__)
 
@@ -254,7 +255,7 @@ static void showLine(lcd_line_e line, int screenY) {
 		lcdPrintf("Throttle %s %f%%", buffer, getTPS());
 		return;
 	case LL_FUEL_CLT_CORRECTION:
-		//lcdPrintf("CLT corr %fv", getVBatt(PASS_ENGINE_PARAMETER_F));
+		lcdPrintf("CLT corr %fv", getCltFuelCorrection(PASS_ENGINE_PARAMETER_F));
 		return;
 
 	case LL_VBATT:

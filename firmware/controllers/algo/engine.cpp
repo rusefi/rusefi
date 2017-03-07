@@ -69,13 +69,13 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_F) {
 
 	if (engineConfiguration->fuelLevelSensor != EFI_ADC_NONE) {
 		float fuelLevelVoltage = getVoltageDivided("fuel", engineConfiguration->fuelLevelSensor);
-		engineState.fuelTankGauge = interpolate(boardConfiguration->fuelLevelEmptyTankVoltage, 0,
+		sensors.fuelTankGauge = interpolate(boardConfiguration->fuelLevelEmptyTankVoltage, 0,
 				boardConfiguration->fuelLevelFullTankVoltage, 100,
 				fuelLevelVoltage);
 	}
-	engineState.vBatt = hasVBatt(PASS_ENGINE_PARAMETER_F) ? getVBatt(PASS_ENGINE_PARAMETER_F) : 12;
+	sensors.vBatt = hasVBatt(PASS_ENGINE_PARAMETER_F) ? getVBatt(PASS_ENGINE_PARAMETER_F) : 12;
 
-	engineState.injectorLag = getInjectorLag(engineState.vBatt PASS_ENGINE_PARAMETER);
+	engineState.injectorLag = getInjectorLag(sensors.vBatt PASS_ENGINE_PARAMETER);
 }
 
 void Engine::onTriggerEvent(efitick_t nowNt) {
@@ -90,6 +90,15 @@ Engine::Engine() {
 Engine::Engine(persistent_config_s *config) {
 	setConfig(config);
 	reset();
+}
+
+SensorsState::SensorsState() {
+	reset();
+}
+
+void SensorsState::reset() {
+	fuelTankGauge = vBatt = 0;
+	iat = clt = NAN;
 }
 
 void Engine::reset() {
@@ -110,7 +119,7 @@ void Engine::reset() {
 	isTestMode = false;
 	isSpinning = false;
 	adcToVoltageInputDividerCoefficient = NAN;
-	engineState.iat = engineState.clt = NAN;
+	sensors.reset();
 	memset(&ignitionPin, 0, sizeof(ignitionPin));
 
 	knockNow = false;
@@ -143,20 +152,20 @@ EngineState::EngineState() {
 	cltTimingCorrection = 0;
 	runningFuel = baseFuel = currentVE = 0;
 	timeOfPreviousWarning = -10;
-	baseTableFuel = iat = iatFuelCorrection = 0;
+	baseTableFuel = iatFuelCorrection = 0;
 	fuelPidCorrection = 0;
-	vBatt = clt = cltFuelCorrection = postCrankingFuelCorrection = 0;
+	cltFuelCorrection = postCrankingFuelCorrection = 0;
 	warmupTargetAfr = airMass = 0;
-	baroCorrection = timingAdvance = fuelTankGauge = 0;
+	baroCorrection = timingAdvance = 0;
 	sparkDwell = mapAveragingDuration = 0;
 	totalLoggedBytes = injectionOffset = 0;
 }
 
 void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_F) {
-	iat = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F);
-	clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_F);
+	engine->sensors.iat = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F);
+	engine->sensors.clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_F);
 
-	warmupTargetAfr = interpolate2d(clt, engineConfiguration->warmupTargetAfrBins,
+	warmupTargetAfr = interpolate2d(engine->sensors.clt, engineConfiguration->warmupTargetAfrBins,
 			engineConfiguration->warmupTargetAfr, WARMUP_TARGET_AFR_SIZE);
 }
 
@@ -172,17 +181,17 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 
 	sparkDwell = getSparkDwell(rpm PASS_ENGINE_PARAMETER);
 	dwellAngle = sparkDwell / getOneDegreeTimeMs(rpm);
-	currentAfr = getAfr(PASS_ENGINE_PARAMETER_F);
+	engine->sensors.currentAfr = getAfr(PASS_ENGINE_PARAMETER_F);
 
 	// todo: move this into slow callback, no reason for IAT corr to be here
-	iatFuelCorrection = getIatFuelCorrection(iat PASS_ENGINE_PARAMETER);
+	iatFuelCorrection = getIatFuelCorrection(engine->sensors.iat PASS_ENGINE_PARAMETER);
 	// todo: move this into slow callback, no reason for CLT corr to be here
-	if (boardConfiguration->useWarmupPidAfr && clt < engineConfiguration->warmupAfrThreshold) {
+	if (boardConfiguration->useWarmupPidAfr && engine->sensors.clt < engineConfiguration->warmupAfrThreshold) {
 		if (rpm < 200) {
 			cltFuelCorrection = 1;
 			warmupAfrPid.reset();
 		} else {
-			cltFuelCorrection = warmupAfrPid.getValue(warmupTargetAfr, currentAfr, 1);
+			cltFuelCorrection = warmupAfrPid.getValue(warmupTargetAfr, engine->sensors.currentAfr, 1);
 		}
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 		if (engineConfiguration->debugMode == DBG_WARMUP_ENRICH) {
@@ -207,8 +216,8 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 	timingAdvance = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER);
 
 	if (engineConfiguration->fuelAlgorithm == LM_SPEED_DENSITY) {
-		float coolantC = ENGINE(engineState.clt);
-		float intakeC = ENGINE(engineState.iat);
+		float coolantC = ENGINE(sensors.clt);
+		float intakeC = ENGINE(sensors.iat);
 		float tps = getTPS(PASS_ENGINE_PARAMETER_F);
 		tChargeK = convertCelsiusToKelvin(getTCharge(rpm, tps, coolantC, intakeC PASS_ENGINE_PARAMETER));
 		float map = getMap();

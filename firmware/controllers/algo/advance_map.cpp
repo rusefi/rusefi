@@ -79,10 +79,10 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 	}
 
 	float iatCorrection;
-	if (cisnan(engine->engineState.iat)) {
+	if (cisnan(engine->sensors.iat)) {
 		iatCorrection = 0;
 	} else {
-		iatCorrection = iatAdvanceCorrectionMap.getValue((float) rpm, engine->engineState.iat);
+		iatCorrection = iatAdvanceCorrectionMap.getValue((float) rpm, engine->sensors.iat);
 	}
 	if (engineConfiguration->debugMode == DBG_IGNITION_TIMING) {
 #if !EFI_UNIT_TEST || defined(__DOXYGEN__)
