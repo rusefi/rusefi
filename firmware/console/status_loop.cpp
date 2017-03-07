@@ -49,6 +49,7 @@
 #include "fuel_math.h"
 #include "main_trigger_callback.h"
 #include "engine_math.h"
+#include "spark_logic.h"
 #include "idle_thread.h"
 #include "engine_configuration.h"
 #include "rfiutil.h"
@@ -717,6 +718,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->injectorLagMs = ENGINE(engineState.injectorLag);
 	tsOutputChannels->fuelBase = engine->engineState.baseFuel;
 	tsOutputChannels->actualLastInjection = ENGINE(actualLastInjection);
+
+	tsOutputChannels->coilDutyCycle = getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER);
 
 	efitimesec_t now = getTimeNowSeconds();
 	tsOutputChannels->timeSeconds = now;
