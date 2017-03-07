@@ -73,9 +73,9 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_F) {
 				boardConfiguration->fuelLevelFullTankVoltage, 100,
 				fuelLevelVoltage);
 	}
-	float vBatt = hasVBatt(PASS_ENGINE_PARAMETER_F) ? getVBatt(PASS_ENGINE_PARAMETER_F) : 12;
+	engineState.vBatt = hasVBatt(PASS_ENGINE_PARAMETER_F) ? getVBatt(PASS_ENGINE_PARAMETER_F) : 12;
 
-	engineState.injectorLag = getInjectorLag(vBatt PASS_ENGINE_PARAMETER);
+	engineState.injectorLag = getInjectorLag(engineState.vBatt PASS_ENGINE_PARAMETER);
 }
 
 void Engine::onTriggerEvent(efitick_t nowNt) {
@@ -145,7 +145,7 @@ EngineState::EngineState() {
 	timeOfPreviousWarning = -10;
 	baseTableFuel = iat = iatFuelCorrection = 0;
 	fuelPidCorrection = 0;
-	clt = cltFuelCorrection = postCrankingFuelCorrection = 0;
+	vBatt = clt = cltFuelCorrection = postCrankingFuelCorrection = 0;
 	warmupTargetAfr = airMass = 0;
 	baroCorrection = timingAdvance = fuelTankGauge = 0;
 	sparkDwell = mapAveragingDuration = 0;
