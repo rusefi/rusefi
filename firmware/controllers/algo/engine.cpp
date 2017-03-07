@@ -175,7 +175,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 	currentAfr = getAfr(PASS_ENGINE_PARAMETER_F);
 
 	// todo: move this into slow callback, no reason for IAT corr to be here
-	iatFuelCorrection = getIatCorrection(iat PASS_ENGINE_PARAMETER);
+	iatFuelCorrection = getIatFuelCorrection(iat PASS_ENGINE_PARAMETER);
 	// todo: move this into slow callback, no reason for CLT corr to be here
 	if (boardConfiguration->useWarmupPidAfr && clt < engineConfiguration->warmupAfrThreshold) {
 		if (rpm < 200) {
@@ -192,10 +192,10 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 #endif
 
 	} else {
-		cltFuelCorrection = getCltFuelCorrection(clt PASS_ENGINE_PARAMETER);
+		cltFuelCorrection = getCltFuelCorrection(PASS_ENGINE_PARAMETER_F);
 	}
 
-	cltTimingCorrection = getCltTimingCorrection(clt PASS_ENGINE_PARAMETER);
+	cltTimingCorrection = getCltTimingCorrection(PASS_ENGINE_PARAMETER_F);
 
 	engineNoiseHipLevel = interpolate2d(rpm, engineConfiguration->knockNoiseRpmBins,
 					engineConfiguration->knockNoise, ENGINE_NOISE_CURVE_SIZE);

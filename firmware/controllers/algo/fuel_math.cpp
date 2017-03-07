@@ -178,20 +178,19 @@ void prepareFuelMap(DECLARE_ENGINE_PARAMETER_F) {
 /**
  * @brief Engine warm-up fuel correction.
  */
-float getCltFuelCorrection(float clt DECLARE_ENGINE_PARAMETER_S) {
-	if (cisnan(clt))
+float getCltFuelCorrection(DECLARE_ENGINE_PARAMETER_F) {
+	if (cisnan(engine->engineState.clt))
 		return 1; // this error should be already reported somewhere else, let's just handle it
-	return interpolate2d(clt, config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE) / PERCENT_MULT;
+	return interpolate2d(engine->engineState.clt, config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE) / PERCENT_MULT;
 }
 
-angle_t getCltTimingCorrection(float clt DECLARE_ENGINE_PARAMETER_S) {
-	if (cisnan(clt))
+angle_t getCltTimingCorrection(DECLARE_ENGINE_PARAMETER_F) {
+	if (cisnan(engine->engineState.clt))
 		return 0; // this error should be already reported somewhere else, let's just handle it
-	return interpolate2d(clt, engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra, CLT_TIMING_CURVE_SIZE);
+	return interpolate2d(engine->engineState.clt, engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra, CLT_TIMING_CURVE_SIZE);
 }
 
-
-float getIatCorrection(float iat DECLARE_ENGINE_PARAMETER_S) {
+float getIatFuelCorrection(float iat DECLARE_ENGINE_PARAMETER_S) {
 	if (cisnan(iat))
 		return 1; // this error should be already reported somewhere else, let's just handle it
 	return interpolate2d(iat, config->iatFuelCorrBins, config->iatFuelCorr, IAT_CURVE_SIZE);
