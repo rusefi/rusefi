@@ -33,10 +33,10 @@ typedef enum {
 	LL_BARO,
 	LL_KNOCK,
 
-	LL_BASE_FUEL,
-	LL_TOTAL_FUEL,
-	LL_CLT_FUEL_CORR,
-	LL_IAT_FUEL_CORR,
+	LL_FUEL_BASE,
+	LL_FUEL_TOTAL,
+	LL_FUEL_CLT_CORRECTION,
+	LL_FUEL_IAT_CORRECTION,
 } lcd_line_e;
 
 typedef void (*VoidCallback)(void);

@@ -42,11 +42,14 @@ static MenuTree tree(&ROOT);
  */
 static MenuItem miRpm(tree.root, LL_RPM);
 static MenuItem miSensors(tree.root, "sensors");
+static MenuItem miFuelControl(tree.root, "fuel");
 static MenuItem miBench(tree.root, "bench test");
 static MenuItem miAbout(tree.root, "about");
 
 static MenuItem miTriggerErrors(&miRpm, LL_TRIGGER_ERRORS);
 static MenuItem miTriggerDuty(&miRpm, LL_TRIGGER_DUTY);
+
+static MenuItem miFuelCltCorr(&miFuelControl, LL_FUEL_CLT_CORRECTION);
 
 static MenuItem miClt(&miSensors, LL_CLT_TEMPERATURE);
 static MenuItem miIat(&miSensors, LL_IAT_TEMPERATURE);
@@ -250,6 +253,10 @@ static void showLine(lcd_line_e line, int screenY) {
 
 		lcdPrintf("Throttle %s %f%%", buffer, getTPS());
 		return;
+	case LL_FUEL_CLT_CORRECTION:
+		//lcdPrintf("CLT corr %fv", getVBatt(PASS_ENGINE_PARAMETER_F));
+		return;
+
 	case LL_VBATT:
 		lcdPrintf("Battery %fv", getVBatt(PASS_ENGINE_PARAMETER_F));
 		return;

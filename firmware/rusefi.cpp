@@ -240,7 +240,7 @@ void chDbgStackOverflowPanic(Thread *otp) {
 	chDbgPanic3(panicMessage, __FILE__, __LINE__);
 }
 
-static char UNUSED_RAM_SIZE[25100];
+static char UNUSED_RAM_SIZE[24100];
 
 static char UNUSED_CCM_SIZE[9500] CCM_OPTIONAL;
 
