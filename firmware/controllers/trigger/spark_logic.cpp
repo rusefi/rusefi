@@ -354,3 +354,30 @@ void handleSpark(bool limitedSpark, uint32_t trgEventIndex, int rpm
 void initSparkLogic(Logging *sharedLogger) {
 	logger = sharedLogger;
 }
+
+/**
+ * Number of sparks per physical coil
+ * @see getNumberOfInjections
+ */
+int getNumberOfSparks(ignition_mode_e mode DECLARE_ENGINE_PARAMETER_S) {
+	switch (mode) {
+	case IM_ONE_COIL:
+		return engineConfiguration->specs.cylindersCount;
+	case IM_INDIVIDUAL_COILS:
+		return 1;
+	case IM_WASTED_SPARK:
+		return 2;
+	default:
+		firmwareError(CUSTOM_ERR_6108, "Unexpected ignition_mode_e %d", mode);
+		return 1;
+	}
+}
+
+/**
+ * @see getInjectorDutyCycle
+ */
+percent_t getCoilDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_S) {
+	floatms_t totalPerCycle = 1/**getInjectionDuration(rpm PASS_ENGINE_PARAMETER)*/ * getNumberOfSparks(engineConfiguration->ignitionMode PASS_ENGINE_PARAMETER);
+	floatms_t engineCycleDuration = getCrankshaftRevolutionTimeMs(rpm) * (engineConfiguration->operationMode == TWO_STROKE ? 1 : 2);
+	return 100 * totalPerCycle / engineCycleDuration;
+}

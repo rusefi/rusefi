@@ -15,5 +15,7 @@ void handleSpark(bool limitedSpark, uint32_t trgEventIndex, int rpm DECLARE_ENGI
 void initSparkLogic(Logging *sharedLogger);
 void turnSparkPinHigh(IgnitionEvent *event);
 void turnSparkPinLow(IgnitionEvent *event);
+int getNumberOfSparks(ignition_mode_e mode DECLARE_ENGINE_PARAMETER_S);
+percent_t getCoilDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_S);
 
 #endif /* CONTROLLERS_TRIGGER_SPARK_LOGIC_H_ */
