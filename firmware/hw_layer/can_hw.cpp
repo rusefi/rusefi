@@ -118,7 +118,7 @@ static void canDashboardBMW(void) {
 	sendMessage();
 
 	commonTxInit(CAN_BMW_E46_DME2);
-	setShortValue(&txmsg, (int) ((engine->engineState.clt + 48.373) / 0.75), 1);
+	setShortValue(&txmsg, (int) ((engine->sensors.clt + 48.373) / 0.75), 1);
 	sendMessage();
 }
 
@@ -163,7 +163,7 @@ static void canMazdaRX8(void) {
 static void canDashboardFiat(void) {
 	//Fiat Dashboard
 	commonTxInit(CAN_FIAT_MOTOR_INFO);
-	setShortValue(&txmsg, (int) (engine->engineState.clt - 40), 3); //Coolant Temp
+	setShortValue(&txmsg, (int) (engine->sensors.clt - 40), 3); //Coolant Temp
 	setShortValue(&txmsg, getRpmE(engine) / 32, 6); //RPM
 	sendMessage();
 }
@@ -175,7 +175,7 @@ static void canDashboardVAG(void) {
 	sendMessage();
 
 	commonTxInit(CAN_VAG_CLT);
-	setShortValue(&txmsg, (int) ((engine->engineState.clt + 48.373) / 0.75), 1); //Coolant Temp
+	setShortValue(&txmsg, (int) ((engine->sensors.clt + 48.373) / 0.75), 1); //Coolant Temp
 	sendMessage();
 }
 

@@ -108,7 +108,7 @@ static void manualIdleController(int positionPercent) {
 		positionPercent += engineConfiguration->crankingIdleAdjustment;
 	}
 
-	percent_t cltCorrectedPosition = interpolate2d(engine->engineState.clt, config->cltIdleCorrBins, config->cltIdleCorr,
+	percent_t cltCorrectedPosition = interpolate2d(engine->sensors.clt, config->cltIdleCorrBins, config->cltIdleCorr,
 	CLT_CURVE_SIZE) / PERCENT_MULT * positionPercent;
 
 	// let's put the value into the right range
