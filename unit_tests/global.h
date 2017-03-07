@@ -41,6 +41,9 @@ typedef int bool_t;
 class Engine;
 #endif
 
+/**
+ * @see firmware/global.h for explanation
+ */
 #define DECLARE_ENGINE_PARAMETER_F Engine *engine, engine_configuration_s *engineConfiguration, persistent_config_s *config, board_configuration_s *boardConfiguration
 #define DECLARE_ENGINE_PARAMETER_S , Engine *engine, engine_configuration_s *engineConfiguration, persistent_config_s *config, board_configuration_s *boardConfiguration
 #define PASS_ENGINE_PARAMETER_F engine, engineConfiguration, config, boardConfiguration
