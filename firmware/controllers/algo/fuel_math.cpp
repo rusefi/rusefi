@@ -5,7 +5,7 @@
  * While engine running, fuel amount is an interpolated value from the fuel map by getRpm() and getEngineLoad()
  * On top of the value from the fuel map we also apply
  * <BR>1) getInjectorLag() correction to account for fuel injector lag
- * <BR>2) getCltCorrection() for warm-up
+ * <BR>2) getCltFuelCorrection() for warm-up
  * <BR>3) getIatCorrection() to account for cold weather
  *
  * getCrankingFuel() depents only on getCoolantTemperature()

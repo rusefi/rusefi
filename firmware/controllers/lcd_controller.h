@@ -12,8 +12,6 @@
 
 #define MAX_LCD_WIDTH 20
 
-#define TOTAL_OPTIONS 6
-
 void initLcdController(void);
 void updateHD44780lcd(Engine *engine);
 
