@@ -84,6 +84,8 @@ public:
 	float iat;
 	float clt;
 
+	float vBatt;
+
 	efitick_t crankingTime;
 	efitick_t timeSinceCranking;
 
