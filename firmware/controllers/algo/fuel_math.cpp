@@ -95,6 +95,7 @@ angle_t getinjectionOffset(float rpm DECLARE_ENGINE_PARAMETER_S) {
 
 /**
  * Number of injections into each cylinder per engine cycle
+ * @see getNumberOfSparks
  */
 int getNumberOfInjections(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S) {
 	switch (mode) {
@@ -110,6 +111,9 @@ int getNumberOfInjections(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S) {
 	}
 }
 
+/**
+ * @see getCoilDutyCycle
+ */
 percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	floatms_t totalPerCycle = getInjectionDuration(rpm PASS_ENGINE_PARAMETER) * getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
 	floatms_t engineCycleDuration = getCrankshaftRevolutionTimeMs(rpm) * (engineConfiguration->operationMode == TWO_STROKE ? 1 : 2);

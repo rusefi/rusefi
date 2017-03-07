@@ -853,6 +853,7 @@ fileVersion = { 20161225 }
       debugFloatField7  = scalar,  F32,  260,            "val",           1,       0.0;
       firmwareVersion = scalar,U32,     264, "version_f",           1,         0
       fuelPidCorrection        = scalar,  F32,     268,              "ms",           1,         0
+      coilDutyCycle        = scalar,  F32,     272,              "perc",           1,         0
 
       egoCorrection   = { 100 }
       time            = { timeNow }
@@ -1128,6 +1129,7 @@ fileVersion = { 20161225 }
    pulseWidthGauge   = pulseWidth,     "fuel final squirt, per injection", "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
    baseFuelGauge     = baseFuel,       "fuel: base duration, before corr",      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
    fuelPidCorrectionGauge = fuelPidCorrection,       "fuel: closed loop correction",      "mSec",        -11,   11,     1.0,    1.2,      20,    25,   3, 1
+   coilDutyCycleGauge = coilDutyCycle,       "dwell: duty cycle",      "perc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
 
    crankingFuelGauge = crankingFuel,   "fuel: crank Width",      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
    iatCorrectionGauge = iatCorrection, "fuel: IAT correction", "mult",     0,   3,     0,    0,    3,  3,   2,   2
@@ -1237,6 +1239,7 @@ fileVersion = { 20161225 }
    entry = fuelPidCorrection,"fuel: pid",  float,  "%.2f"
    entry = veValue,         "fuel: VE",    float,  "%.3f"
    entry = injectorDutyCycle,"fuel: duty cyc",float,"%.3f"
+   entry = coilDutyCycle,	"dwell: duty",	float,"%.3f"
 
    entry = engineLoadAccelExtra, "fuel: load extra",float,  "%.3f"
    entry = engineLoadDelta, "fuel: load change",float,  "%.3f"
