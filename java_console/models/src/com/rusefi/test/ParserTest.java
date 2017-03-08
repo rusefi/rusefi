@@ -1,19 +1,23 @@
 package com.rusefi.test;
 
 import com.fathzer.soft.javaluator.DoubleEvaluator;
+import com.fathzer.soft.javaluator.Operator;
 import org.junit.Test;
 
 import java.text.ParseException;
+import java.util.Stack;
 
 import static org.junit.Assert.assertEquals;
 
 public class ParserTest {
     @Test
     public void testBooleanConversion() throws ParseException {
-        assertParse("1 2 + 3 -", "1 + 2 - 3");
-        assertParse("1 2 | 3 |", "1 | 2 | 3");
+        assertParseB("1 2 + 3 -", "1 + 2 - 3");
+        assertParseB("1 2 | 3 |", "1 | 2 | 3");
 
-        assertParse("2 1 >", "2 > 1");
+        assertParseB("1 2 + 3 4 5 + / +", "1 + 2 + 3 / (4 +5 )");
+
+        assertParseB("2 1 >", "2 > 1");
         assertParse("rpm 0 >", "rpm > false");
         assertParse("rpm 0 >", "(rpm > false)");
         assertParse("rpm user0 > clt user2 > |", "(rpm > user0) or (clt > user2)");
@@ -21,11 +25,48 @@ public class ParserTest {
         assertParse("rpm user0 > clt user2 > | vbatt user1 > |", "(rpm > user0) or (clt > user2) or (vbatt > user1)");
     }
 
+    private void assertParseB(String rpn, String expression) {
+        assertParse(rpn, expression);
+        String h = getInfix(rpn);
+        System.out.println(h);
+
+        assertEquals(getReplace(expression), getReplace(h));
+    }
+
+    private String getReplace(String h) {
+        return h.replaceAll("[\\(\\)]", "").replace(" ", "");
+    }
+
     private void assertParse(String rpn, String expression) {
         DoubleEvaluator evaluator = new DoubleEvaluator();
         evaluator.evaluate(expression.toLowerCase());
 
         assertEquals(rpn, evaluator.getRusEfi());
+    }
+
+    private String getInfix(String rpn) {
+        String tokens[] = rpn.split(" ");
+        Stack<String> stack = new Stack<>();
+
+        for (String token : tokens) {
+
+            if (takesTwoParams(token)) {
+                if (stack.size() < 2)
+                    throw new IllegalStateException("Not enough " + token);
+                String a = stack.pop();
+                String b = stack.pop();
+                stack.push("(" + b + " " + token + " " + a + ")");
+            } else {
+                stack.push(token);
+            }
+        }
+        if (stack.size() != 1)
+            throw new IllegalStateException("Unexpected: " + stack);
+        return stack.pop();
+    }
+
+    private boolean takesTwoParams(String token) {
+        return Operator._2_OPERATORS.contains(token);
     }
 
 
