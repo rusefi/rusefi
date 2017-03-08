@@ -1,11 +1,15 @@
 package com.fathzer.soft.javaluator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /** An <a href="http://en.wikipedia.org/wiki/Operator_(mathematics)">operator</a>.
  * @author Jean-Marc Astesana
  * @see <a href="../../../license.html">License information</a>
  */
 public class Operator {
 	public final String rpnSymbol;
+	public static final List<String> _2_OPERATORS = new ArrayList<>();
 
 	/** An Operator's <a href="http://en.wikipedia.org/wiki/Operator_associativity">associativity</a>.
 	 */
@@ -54,6 +58,9 @@ public class Operator {
 		this.operandCount = operandCount;
 		this.associativity = associativity;
 		this.precedence = precedence;
+		if (operandCount == 2) {
+			_2_OPERATORS.add(getRpnSymbol());
+		}
 	}
 
 	/** Gets the operator's symbol.
