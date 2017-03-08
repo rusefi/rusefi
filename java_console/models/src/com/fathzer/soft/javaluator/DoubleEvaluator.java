@@ -1,5 +1,7 @@
 package com.fathzer.soft.javaluator;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.util.Arrays;
@@ -46,6 +48,13 @@ import java.util.Locale;
  * @see <a href="../../../license.html">License information</a>
  */
 public class DoubleEvaluator extends AbstractEvaluator<Double> {
+	@NotNull
+	public static DoubleEvaluator process(String expression) {
+        DoubleEvaluator evaluator = new DoubleEvaluator();
+        evaluator.evaluate(expression.toLowerCase());
+        return evaluator;
+    }
+
 	/** The order or operations (operator precedence) is not clearly defined, especially between the unary minus operator and exponentiation
 	 * operator (see <a href="http://en.wikipedia.org/wiki/Order_of_operations#Exceptions_to_the_standard">http://en.wikipedia.org/wiki/Order_of_operations</a>).
 	 * These constants define the operator precedence styles.

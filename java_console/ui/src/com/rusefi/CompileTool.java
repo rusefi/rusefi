@@ -65,12 +65,10 @@ public class CompileTool {
 
         String expression = line.substring(indexOfEquals + 1).trim();
 
-        DoubleEvaluator evaluator = new DoubleEvaluator();
-        evaluator.evaluate(expression.toLowerCase());
-
-        String rpn = evaluator.getRusEfi();
+        String rpn = DoubleEvaluator.process(expression).getRusEfi();
 
         bw.write("\n// Human-readable: " + expression + "\r\n");
         bw.write("#define " + name + " \"" + rpn + "\"\r\n");
     }
+
 }
