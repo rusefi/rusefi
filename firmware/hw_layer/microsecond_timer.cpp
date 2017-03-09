@@ -52,13 +52,13 @@ void setHardwareUsTimer(int32_t timeUs) {
 	 */
 	if (timeUs <= 0) {
 		timerFreezeCounter++;
-		warning(CUSTOM_OBD_42, "local freeze cnt=%d", timerFreezeCounter);
+		warning(CUSTOM_OBD_LOCAL_FREEZE, "local freeze cnt=%d", timerFreezeCounter);
 	}
 	if (timeUs < 2)
 		timeUs = 2; // for some reason '1' does not really work
 	efiAssertVoid(timeUs > 0, "not positive timeUs");
 	if (timeUs >= 10 * US_PER_SECOND) {
-		firmwareError(CUSTOM_ERR_6526, "setHardwareUsTimer() too long: %d", timeUs);
+		firmwareError(CUSTOM_ERR_TIMER_OVERFLOW, "setHardwareUsTimer() too long: %d", timeUs);
 		return;
 	}
 
