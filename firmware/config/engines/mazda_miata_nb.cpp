@@ -87,6 +87,6 @@ void setMazdaMiataNb1EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	 */
 	boardConfiguration->fsio_setting[0] = 5000;
 	// (self and (rpm > 4800)) OR (rpm > 5000)
-	// set_fsio_expression 1 "self rpm 4800 > & rpm 5000 > OR"
+	// set_rpn_expression 1 "self rpm 4800 > & rpm 5000 > OR"
 //	setFsioExt(0, GPIOE_3, "self rpm 4800 > & rpm 5000 > OR", 150 PASS_ENGINE_PARAMETER);
 }

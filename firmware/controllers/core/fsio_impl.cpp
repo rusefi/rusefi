@@ -461,7 +461,7 @@ static void setFsioExpression(const char *indexStr, const char *quotedLine, Engi
 #endif
 }
 
-static void eval(char *line, Engine *engine) {
+static void rpnEval(char *line, Engine *engine) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	line = unquote(line);
 	scheduleMsg(logger, "Parsing [%s]", line);
@@ -471,7 +471,7 @@ static void eval(char *line, Engine *engine) {
 		scheduleMsg(logger, "parsing failed");
 	} else {
 		float result = evalCalc.getValue2(0, e, engine);
-		scheduleMsg(logger, "Eval result: %f", result);
+		scheduleMsg(logger, "Evaluate result: %f", result);
 	}
 #endif
 }
@@ -523,10 +523,10 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 #endif /* EFI_PROD_CODE */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	addConsoleActionSSP("set_fsio_expression", (VoidCharPtrCharPtrVoidPtr) setFsioExpression, engine);
+	addConsoleActionSSP("set_rpn_expression", (VoidCharPtrCharPtrVoidPtr) setFsioExpression, engine);
 	addConsoleActionFF("set_fsio_setting", setFsioSetting);
 	addConsoleAction("fsioinfo", showFsioInfo);
-	addConsoleActionSP("eval", (VoidCharPtrVoidPtr) eval, engine);
+	addConsoleActionSP("rpn_eval", (VoidCharPtrVoidPtr) rpnEval, engine);
 #endif
 
 	fsioTable1.init(config->fsioTable1, config->fsioTable1LoadBins,

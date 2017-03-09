@@ -230,7 +230,7 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	 * set_fsio_setting 0 5000
 	 */
 	boardConfiguration->fsio_setting[0] = 5000;
-	// set_fsio_expression 1 "rpm 0 fsio_setting >"
+	// set_rpn_expression 1 "rpm 0 fsio_setting >"
 	setFsioExt(0, GPIOE_3, "rpm 0 fsio_setting >", 150 PASS_ENGINE_PARAMETER);
 
 
@@ -241,7 +241,7 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	 * set_fsio_setting 2 95
 	 * set_fsio_setting 3 14
 	 *
-	 * set_fsio_expression 1 "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
+	 * set_rpn_expression 1 "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
 	 * eval "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
 	 */
 	boardConfiguration->fsio_setting[1] = 6200; // RPM threshold
