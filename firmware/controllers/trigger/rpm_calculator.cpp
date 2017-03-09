@@ -163,9 +163,6 @@ bool isCrankingE(Engine *engine) {
 	return isCrankingR(rpm);
 }
 
-/**
- * WARNING: this is a heavy method because 'getRpm()' is relatively heavy
- */
 bool isCranking(void) {
 	return isCrankingE(engine);
 }
