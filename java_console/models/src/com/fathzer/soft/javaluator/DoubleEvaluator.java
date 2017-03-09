@@ -118,7 +118,7 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 	public static final Function RANDOM = new Function("random", 0);
 
 	/** The negate unary operator in the standard operator precedence.*/
-	public static final Operator NEGATE = new Operator("-", 1, Operator.Associativity.RIGHT, 3, "negate");
+	public static final Operator NEGATE = new Operator("negate", 1, Operator.Associativity.RIGHT, 3, "negate");
 	/** The negate unary operator in the Excel like operator precedence.*/
 	public static final Operator NEGATE_HIGH = new Operator("-", 1, Operator.Associativity.RIGHT, 5);
 
@@ -219,9 +219,9 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 	protected Double toValue(String literal, Object evaluationContext) {
 		ParsePosition p = new ParsePosition(0);
 		Number result = FORMATTER.get().parse(literal, p);
-		if (p.getIndex()==0 || p.getIndex()!=literal.length()) {
-			return 666.0;
-//			throw new IllegalArgumentException(literal+" is not a number");
+		if (p.getIndex() == 0 || p.getIndex() != literal.length()) {
+			return 6666666.0; // let's return this magic in case of any function call
+//			throw new IllegalArgumentException(literal + " is not a number");
 		}
 		return result.doubleValue();
 	}

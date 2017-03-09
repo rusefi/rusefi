@@ -7,8 +7,9 @@ import java.util.List;
  * @author Jean-Marc Astesana
  * @see <a href="../../../license.html">License information</a>
  */
+@SuppressWarnings("WeakerAccess")
 public class Operator {
-	public final String rpnSymbol;
+	private final String rpnSymbol;
 	public static final List<String> _2_OPERATORS = new ArrayList<>();
 
 	/** An Operator's <a href="http://en.wikipedia.org/wiki/Operator_associativity">associativity</a>.
@@ -36,11 +37,11 @@ public class Operator {
 	 * @throws IllegalArgumentException if operandCount if not 1 or 2 or if associativity is none
 	 * @throws NullPointerException if symbol or associativity are null
 	 */
-	public Operator(String symbol, int operandCount, Associativity associativity, int precedence) {
+	Operator(String symbol, int operandCount, Associativity associativity, int precedence) {
 		this(symbol, operandCount, associativity, precedence, null);
 	}
 
-	public Operator(String symbol, int operandCount, Associativity associativity, int precedence, String rpnSymbol) {
+	Operator(String symbol, int operandCount, Associativity associativity, int precedence, String rpnSymbol) {
 		this.rpnSymbol = rpnSymbol;
 		if (symbol==null || associativity==null) {
 			throw new NullPointerException();
@@ -59,7 +60,7 @@ public class Operator {
 		this.associativity = associativity;
 		this.precedence = precedence;
 		if (operandCount == 2) {
-			_2_OPERATORS.add(getRpnSymbol());
+			_2_OPERATORS.add(symbol);
 		}
 	}
 
@@ -69,14 +70,6 @@ public class Operator {
 	public String getSymbol() {
 		return this.symbol;
 	}
-
-
-	public String getRpnSymbol() {
-		if (rpnSymbol != null)
-			return rpnSymbol;
-		return symbol;
-	}
-
 
 	/** Gets the operator's operand count. 
 	 * @return an integer
@@ -146,7 +139,6 @@ public class Operator {
 	@Override
 	public String toString() {
 		return "Operator{" +
-				"rpnSymbol='" + rpnSymbol + '\'' +
 				", symbol='" + symbol + '\'' +
 				", precedence=" + precedence +
 				", operandCount=" + operandCount +
