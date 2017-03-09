@@ -398,7 +398,7 @@ public abstract class AbstractEvaluator<T> {
 		stackRPN.push(s);
 	}
 
-	public String getRusEfi() {
+	public String getPosftfixExpression() {
 		List<String> list = new ArrayList<>(stackRPN);
 		ListIterator<String> li = list.listIterator(list.size());
 //		List<String> reverse = new ArrayList<>();

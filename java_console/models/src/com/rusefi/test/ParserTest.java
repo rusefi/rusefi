@@ -11,6 +11,12 @@ import static org.junit.Assert.assertEquals;
 
 public class ParserTest {
     @Test
+    public void testFunctionParameters() {
+        // todo: parameter order needs to be in postfix form
+     //   assertParseB("fsio_setting 0", "fsio_setting 0");
+    }
+
+    @Test
     public void testBooleanConversion() throws ParseException {
         assertParseB("2 1 >", "2 > 1");
         assertParseB("1 2 + 3 -", "1 + 2 - 3");
@@ -41,7 +47,7 @@ public class ParserTest {
         DoubleEvaluator evaluator = new DoubleEvaluator();
         evaluator.evaluate(expression.toLowerCase());
 
-        assertEquals(rpn, evaluator.getRusEfi());
+        assertEquals(rpn, evaluator.getPosftfixExpression());
     }
 
     private String getInfix(String rpn) {

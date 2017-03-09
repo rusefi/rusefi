@@ -40,7 +40,7 @@ public class FlexibleControls {
     }
 
     private void process(String text) {
-        rpnForm.setText(DoubleEvaluator.process(text).getRusEfi());
+        rpnForm.setText(DoubleEvaluator.process(text).getPosftfixExpression());
     }
 
     public JPanel getPanel() {
