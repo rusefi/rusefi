@@ -36,6 +36,11 @@ EXTERN_ENGINE
 
 extern EnginePins enginePins;
 
+floatms_t getEngineCycleDuration(int rpm DECLARE_ENGINE_PARAMETER_S) {
+	return getCrankshaftRevolutionTimeMs(rpm) * (engineConfiguration->operationMode == TWO_STROKE ? 1 : 2);
+}
+
+
 /**
  * @return number of milliseconds in one crank shaft revolution
  */

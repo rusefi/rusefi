@@ -116,7 +116,7 @@ int getNumberOfInjections(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S) {
  */
 percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	floatms_t totalPerCycle = getInjectionDuration(rpm PASS_ENGINE_PARAMETER) * getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
-	floatms_t engineCycleDuration = getCrankshaftRevolutionTimeMs(rpm) * (engineConfiguration->operationMode == TWO_STROKE ? 1 : 2);
+	floatms_t engineCycleDuration = getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER);
 	return 100 * totalPerCycle / engineCycleDuration;
 }
 
