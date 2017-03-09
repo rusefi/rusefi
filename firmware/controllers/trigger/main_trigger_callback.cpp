@@ -269,16 +269,14 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 	printf("fuel fuelMs=%f adjusted=%f\t\n", ENGINE(fuelMs), injectionDuration);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
-	if (injectionDuration > getCrankshaftRevolutionTimeMs(rpm)) {
-		warning(CUSTOM_TOO_LONG_FUEL_INJECTION, "Too long fuel injection");
-	}
-
-	// todo: pre-calculate 'numberOfInjections'
-	floatms_t totalPerCycle = injectionDuration * getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
-	floatus_t engineCycleDuration = engine->rpmCalculator.oneDegreeUs * engine->engineCycle;
-	if (MS2US(totalPerCycle) > engineCycleDuration) {
-		warning(CUSTOM_OBD_26, "injector duty cycle too high %fms @ %d", totalPerCycle,
-				getRevolutionCounter());
+	/**
+	 * todo: pre-calculate 'numberOfInjections'
+	 * see also injectorDutyCycle
+	 */
+	if (!isCrankingR(rpm) && injectionDuration * getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER) > getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER)) {
+		warning(CUSTOM_TOO_LONG_FUEL_INJECTION, "Too long fuel injection %fms", injectionDuration);
+	} else if (isCrankingR(rpm) && injectionDuration * getNumberOfInjections(engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER) > getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER)) {
+		warning(CUSTOM_TOO_LONG_CRANKING_FUEL_INJECTION, "Too long cranking fuel injection %fms", injectionDuration);
 	}
 
 	ENGINE(actualLastInjection) = injectionDuration;
