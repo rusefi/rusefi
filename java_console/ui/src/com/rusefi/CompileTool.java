@@ -65,7 +65,7 @@ public class CompileTool {
 
         String expression = line.substring(indexOfEquals + 1).trim();
 
-        String rpn = DoubleEvaluator.process(expression).getRusEfi();
+        String rpn = DoubleEvaluator.process(expression).getPosftfixExpression();
 
         bw.write("\n// Human-readable: " + expression + "\r\n");
         bw.write("#define " + name + " \"" + rpn + "\"\r\n");
