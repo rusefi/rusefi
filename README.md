@@ -8,7 +8,7 @@ current binaries are always available at http://rusefi.com/build_server/
 | 03/09/2017    | r13146    | bugfix #370: duty cycle vs error code 6050 |
 | 03/06/2017    | r13123    | bugfix #363: 2/1 skipped wheel is a corner-case |
 | 03/05/2017    | r13108    | bugfix #363: trigger front only processing |
-| 02/22/2017    | r12980    | bugfix: false error message in case of single coin or simultaneous injection | 
+| 02/22/2017    | r12980    | bugfix: false error message in case of single coil or simultaneous injection | 
 | 02/22/2017    | r12973    | unused property 'custom Use Rise Edge' removed |
 | 02/22/2017    | r12972    | protocol signature changed to 'v0.02' (this would happen from time to time to ensure version match between console and TS project | 
 | 02/20/2017    | r12939    | https://github.com/rusefi/rusefi is now the official primary repository |
