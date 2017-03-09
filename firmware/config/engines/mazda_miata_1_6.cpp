@@ -171,8 +171,8 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
 	 * set_fsio_setting 1 95
 	 * set_fsio_setting 3 14
 	 *
-	 * set_fsio_expression 1 "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
-	 * eval "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
+	 * set_rpn_expression 1 "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
+	 * rpn_eval "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
 	 */
 	boardConfiguration->fsio_setting[0] = 6400; // RPM threshold
 	boardConfiguration->fsio_setting[1] = 100; // CLT threshold
@@ -183,11 +183,11 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
 	// set_fsio_setting 4 0.52
 	boardConfiguration->fsio_setting[4] = 0.52; // oil pressure threshold
 
-//	 * set_fsio_expression 1 "rpm 3 fsio_setting >"
-	// eval "rpm 3 fsio_setting >"
-	// eval "fsio_input"
+//	 * set_rpn_expression 1 "rpm 3 fsio_setting >"
+	// rpn_eval "rpm 3 fsio_setting >"
+	// rpn_eval "fsio_input"
 
-	// set_fsio_expression 0 "rpm 3 fsio_setting > fsio_input 4 fsio_setting < & rpm 0 fsio_setting | > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
+	// set_rpn_expression 0 "rpm 3 fsio_setting > fsio_input 4 fsio_setting < & rpm 0 fsio_setting | > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
 
 	setFsio(0, GPIOC_13, "rpm 3 fsio_setting > fsio_input 4 fsio_setting < & rpm 0 fsio_setting | > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |" PASS_ENGINE_PARAMETER);
 
