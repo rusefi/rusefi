@@ -95,14 +95,14 @@ public class ParserTest {
         assertParse("1 4 |", "1 or 4");
         assertParse("1 4 |", "1 OR 4");
 
-        assertParse("time_since_boot 4 <", "(time_since_boot < 4)");
-        assertParse("1 4 |", "1 | 4");
+        assertParseB("time_since_boot 4 <", "(time_since_boot < 4)");
+        assertParseB("1 4 |", "1 | 4");
         assertParse("time_since_boot 4 < rpm 0 > |", "(time_since_boot < 4) | (rpm > 0)");
 
-        assertParse("1 4 |", "1 or 4");
-        assertParse("1 4 |", "1 OR 4");
+        assertParse("1 4 &", "1 and 4");
+        assertParse("1 4 &", "1 AND 4");
 
-        assertParse("1 4 &", "1 & 4");
+        assertParseB("1 4 &", "1 & 4");
 
         assertParse("coolant fan_off_setting >", "(coolant > fan_off_setting)");
         assertParse("1 3 |", "1 OR 3");
