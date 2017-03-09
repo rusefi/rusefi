@@ -61,6 +61,7 @@ void setInjectorLag(float value DECLARE_ENGINE_PARAMETER_S);
 #define getOneDegreeTimeNt(rpm) (US2NT(1000000) * 60.0f / 360 / (rpm))
 
 floatms_t getCrankshaftRevolutionTimeMs(int rpm);
+floatms_t getEngineCycleDuration(int rpm DECLARE_ENGINE_PARAMETER_S);
 
 #define isCrankingR(rpm) ((rpm) > 0 && (rpm) < CONFIG(cranking.rpm))
 
