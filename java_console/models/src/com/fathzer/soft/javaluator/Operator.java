@@ -2,6 +2,8 @@ package com.fathzer.soft.javaluator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /** An <a href="http://en.wikipedia.org/wiki/Operator_(mathematics)">operator</a>.
  * @author Jean-Marc Astesana
@@ -10,7 +12,10 @@ import java.util.List;
 @SuppressWarnings("WeakerAccess")
 public class Operator {
 	private final String rpnSymbol;
+	public static final List<String> _1_OPERATORS = new ArrayList<>();
 	public static final List<String> _2_OPERATORS = new ArrayList<>();
+
+	private static Set<String> symbols = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
 	/** An Operator's <a href="http://en.wikipedia.org/wiki/Operator_associativity">associativity</a>.
 	 */
@@ -59,9 +64,17 @@ public class Operator {
 		this.operandCount = operandCount;
 		this.associativity = associativity;
 		this.precedence = precedence;
-		if (operandCount == 2) {
+		if (operandCount == 1) {
+			_1_OPERATORS.add(symbol);
+		} else if (operandCount == 2) {
 			_2_OPERATORS.add(symbol);
+		} else {
+			throw new IllegalStateException("Unexpected operand count: " + symbol);
 		}
+
+		if (symbols.contains(symbol))
+			throw new IllegalStateException("Not unique symbol " + symbol);
+		symbols.add(symbol);
 	}
 
 	/** Gets the operator's symbol.

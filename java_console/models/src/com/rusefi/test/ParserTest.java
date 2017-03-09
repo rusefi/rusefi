@@ -12,12 +12,12 @@ import static org.junit.Assert.assertEquals;
 public class ParserTest {
     @Test
     public void testBooleanConversion() throws ParseException {
+        assertParseB("2 1 >", "2 > 1");
         assertParseB("1 2 + 3 -", "1 + 2 - 3");
         assertParseB("1 2 | 3 |", "1 | 2 | 3");
 
         assertParseB("1 2 + 3 4 5 + / +", "1 + 2 + 3 / (4 +5 )");
 
-        assertParseB("2 1 >", "2 > 1");
         assertParse("rpm 0 >", "rpm > false");
         assertParse("rpm 0 >", "(rpm > false)");
         assertParse("rpm user0 > clt user2 > or", "(rpm > user0) or (clt > user2)");
@@ -49,8 +49,12 @@ public class ParserTest {
         Stack<String> stack = new Stack<>();
 
         for (String token : tokens) {
+            if (Operator._1_OPERATORS.contains(token)) {
+                String a = stack.pop();
 
-            if (takesTwoParams(token)) {
+                stack.push("(" + token + " " + a + ")");
+
+            } else if (takesTwoParameters(token)) {
                 if (stack.size() < 2)
                     throw new IllegalStateException("Not enough " + token);
                 String a = stack.pop();
@@ -61,11 +65,11 @@ public class ParserTest {
             }
         }
         if (stack.size() != 1)
-            throw new IllegalStateException("Unexpected: " + stack);
+            throw new IllegalStateException("Unexpected stack content: " + stack);
         return stack.pop();
     }
 
-    private boolean takesTwoParams(String token) {
+    private boolean takesTwoParameters(String token) {
         return Operator._2_OPERATORS.contains(token);
     }
 
@@ -93,7 +97,7 @@ public class ParserTest {
     private void assertValue(String expectedRpn, String expression, double expectedValue) {
         DoubleEvaluator evaluator = new DoubleEvaluator();
         assertEquals(expectedValue, evaluator.evaluate(expression), 0.001);
-        assertParse(expectedRpn, expression);
+        assertParseB(expectedRpn, expression);
     }
 
     @Test
