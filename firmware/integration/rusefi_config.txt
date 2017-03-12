@@ -780,7 +780,11 @@ int16_t etbFreq;;"Hz",      1,     0,    0, 500,      10
 	pin_mode_e stepperEnablePinMode;
 	adc_channel_e cj125ua;lampda input
 	adc_channel_e cj125ur;heater input
-	int[68] unused;
+	
+	custom float_t 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       0, 18000,	  4
+	float_t[IGNITION_PIN_COUNT iterate] timing_offset_cylinder;
+	
+	int[56] unused;
 	
 
 end_struct

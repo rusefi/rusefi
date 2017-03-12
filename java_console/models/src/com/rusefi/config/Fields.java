@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Feb 22 21:26:04 EST 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 11 19:47:37 EST 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -936,7 +936,19 @@ public class Fields {
 	public static final int stepperEnablePinMode_offset = 2764;
 	public static final int cj125ua_offset = 2768;
 	public static final int cj125ur_offset = 2772;
-	public static final int unused_offset = 2776;
+	public static final int timing_offset_cylinder1_offset = 2776;
+	public static final int timing_offset_cylinder2_offset = 2780;
+	public static final int timing_offset_cylinder3_offset = 2784;
+	public static final int timing_offset_cylinder4_offset = 2788;
+	public static final int timing_offset_cylinder5_offset = 2792;
+	public static final int timing_offset_cylinder6_offset = 2796;
+	public static final int timing_offset_cylinder7_offset = 2800;
+	public static final int timing_offset_cylinder8_offset = 2804;
+	public static final int timing_offset_cylinder9_offset = 2808;
+	public static final int timing_offset_cylinder10_offset = 2812;
+	public static final int timing_offset_cylinder11_offset = 2816;
+	public static final int timing_offset_cylinder12_offset = 2820;
+	public static final int unused_offset = 2824;
 	public static final int le_formulas1_offset = 3048;
 	public static final int le_formulas2_offset = 3248;
 	public static final int le_formulas3_offset = 3448;
@@ -1610,6 +1622,18 @@ public class Fields {
 	public static final Field STEPPERENABLEPINMODE = Field.create("STEPPERENABLEPINMODE", 2764, FieldType.INT, pin_mode_e);
 	public static final Field CJ125UA = Field.create("CJ125UA", 2768, FieldType.INT, adc_channel_e);
 	public static final Field CJ125UR = Field.create("CJ125UR", 2772, FieldType.INT, adc_channel_e);
+	public static final Field TIMING_OFFSET_CYLINDER1 = Field.create("TIMING_OFFSET_CYLINDER1", 2776, FieldType.INT);
+	public static final Field TIMING_OFFSET_CYLINDER2 = Field.create("TIMING_OFFSET_CYLINDER2", 2780, FieldType.INT);
+	public static final Field TIMING_OFFSET_CYLINDER3 = Field.create("TIMING_OFFSET_CYLINDER3", 2784, FieldType.INT);
+	public static final Field TIMING_OFFSET_CYLINDER4 = Field.create("TIMING_OFFSET_CYLINDER4", 2788, FieldType.INT);
+	public static final Field TIMING_OFFSET_CYLINDER5 = Field.create("TIMING_OFFSET_CYLINDER5", 2792, FieldType.INT);
+	public static final Field TIMING_OFFSET_CYLINDER6 = Field.create("TIMING_OFFSET_CYLINDER6", 2796, FieldType.INT);
+	public static final Field TIMING_OFFSET_CYLINDER7 = Field.create("TIMING_OFFSET_CYLINDER7", 2800, FieldType.INT);
+	public static final Field TIMING_OFFSET_CYLINDER8 = Field.create("TIMING_OFFSET_CYLINDER8", 2804, FieldType.INT);
+	public static final Field TIMING_OFFSET_CYLINDER9 = Field.create("TIMING_OFFSET_CYLINDER9", 2808, FieldType.INT);
+	public static final Field TIMING_OFFSET_CYLINDER10 = Field.create("TIMING_OFFSET_CYLINDER10", 2812, FieldType.INT);
+	public static final Field TIMING_OFFSET_CYLINDER11 = Field.create("TIMING_OFFSET_CYLINDER11", 2816, FieldType.INT);
+	public static final Field TIMING_OFFSET_CYLINDER12 = Field.create("TIMING_OFFSET_CYLINDER12", 2820, FieldType.INT);
 	public static final Field LE_FORMULAS1 = Field.create("LE_FORMULAS1", 3048, FieldType.INT);
 	public static final Field LE_FORMULAS2 = Field.create("LE_FORMULAS2", 3248, FieldType.INT);
 	public static final Field LE_FORMULAS3 = Field.create("LE_FORMULAS3", 3448, FieldType.INT);
