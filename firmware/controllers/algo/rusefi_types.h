@@ -90,7 +90,7 @@ typedef int32_t bool32_t;
 typedef int16_t fsio_pwm_freq_t;
 
 typedef float fsio_setting_t;
-typedef float cfg_float_t;
+typedef float cfg_float_t_1f;
 
 typedef brain_pin_e brain_input_pin_e;
 

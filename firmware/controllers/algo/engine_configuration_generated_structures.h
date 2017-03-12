@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 11 20:01:02 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 11 20:14:23 EST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1837,7 +1837,7 @@ typedef struct {
 	/**
 	 * offset 2776
 	 */
-	cfg_float_t timing_offset_cylinder[IGNITION_PIN_COUNT];
+	cfg_float_t_1f timing_offset_cylinder[IGNITION_PIN_COUNT];
 	/**
 	 * offset 2824
 	 */
@@ -2056,4 +2056,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 11 20:01:02 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 11 20:14:23 EST 2017
