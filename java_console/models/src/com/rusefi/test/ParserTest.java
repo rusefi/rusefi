@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.util.Stack;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * @see DoubleEvaluator
@@ -17,7 +18,15 @@ public class ParserTest {
     @Test
     public void testFunctionParameters() {
         assertParseB("3 log", "log(3)");
-        assertParse("1 2 3 if", "if(1, 2, 3)");
+        assertParseB("1 2 3 if", "if(1, 2, 3)");
+
+        assertParseB("1 3 max", "max(1, 3)");
+        try {
+            assertParse("3 1 max", "max(1 3)");
+            fail("Error expected");
+        } catch (Throwable ignored) {
+            // expected
+        }
 
         assertParse("log 3", "log 3 "); // todo: better handling?
         assertParseB("0 fsio_setting", "fsio_setting(0)");
@@ -42,10 +51,10 @@ public class ParserTest {
 
     private void assertParseB(String rpn, String expression) {
         assertParse(rpn, expression);
-        String h = getInfix(rpn);
-        System.out.println(h);
+        String infix = getInfix(rpn);
+        System.out.println(infix);
 
-        assertEquals(getReplace(expression).toLowerCase(), getReplace(h).toLowerCase());
+        assertEquals("infix recovery", getReplace(expression).toLowerCase(), getReplace(infix).toLowerCase());
     }
 
     private String getReplace(String h) {
@@ -70,8 +79,10 @@ public class ParserTest {
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < pCount; i++) {
                     if (i != 0)
-                        sb.append(", ");
-                    sb.append(stack.pop());
+                        sb.insert(0, ", ");
+                    if (stack.isEmpty())
+                        throw new IllegalStateException("While getting " + pCount + "parameters for " + token);
+                    sb.insert(0, stack.pop());
                 }
 
                 stack.push(token + "(" + sb + ")");
@@ -108,7 +119,7 @@ public class ParserTest {
          * do we even need to and/or should to support unary minus?
          *
          * http://stackoverflow.com/questions/20246787/handling-unary-minus-for-shunting-yard-algorithm
-          */
+         */
         assertValue("3 negate", "negate3", -3);
         assertValue("2 3 6 ^ negate +", "2+negate 3^6", -727.0);
     }

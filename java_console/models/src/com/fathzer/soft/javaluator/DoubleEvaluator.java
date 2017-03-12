@@ -101,13 +101,13 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 	public static final Function TANGENTH = new Function("tanh", 1);
 
 	/** Returns the minimum of n numbers (n>=1) */
-	public static final Function MIN = new Function("min", 1, Integer.MAX_VALUE);
+	public static final Function MIN = new Function("min", 2);
 	/** Returns the maximum of n numbers (n>=1) */
-	public static final Function MAX = new Function("max", 1, Integer.MAX_VALUE);
+	public static final Function MAX = new Function("max", 2);
 	/** Returns the sum of n numbers (n>=1) */
-	public static final Function SUM = new Function("sum", 1, Integer.MAX_VALUE);
+//	public static final Function SUM = new Function("sum", 2);
 	/** Returns the average of n numbers (n>=1) */
-	public static final Function AVERAGE = new Function("avg", 1, Integer.MAX_VALUE);
+//	public static final Function AVERAGE = new Function("avg", 2);
 
 	/** Returns the natural logarithm of a number */
 	public static final Function LN = new Function("ln", 1);
@@ -159,7 +159,7 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 	private static final Operator[] OPERATORS = new Operator[]{NEGATE, NOT, NOT2, MORE, MORE_EQ, AND, AND2, OR, OR2, LESS, LESS_EQ, MINUS, PLUS, MULTIPLY, DIVIDE, EXPONENT, MODULO};
 
 	/** The whole set of predefined functions */
-	private static final Function[] FUNCTIONS = new Function[]{SINE, COSINE, TANGENT, ASINE, ACOSINE, ATAN, SINEH, COSINEH, TANGENTH, MIN, MAX, SUM, AVERAGE, LN, LOG, ROUND, CEIL, FLOOR, ABS, RANDOM,
+	private static final Function[] FUNCTIONS = new Function[]{SINE, COSINE, TANGENT, ASINE, ACOSINE, ATAN, SINEH, COSINEH, TANGENTH, MIN, MAX, LN, LOG, ROUND, CEIL, FLOOR, ABS, RANDOM,
 			if_function, fsio_setting};
 	/** The whole set of predefined constants */
 	private static final Constant[] CONSTANTS = new Constant[]{TRUE, FALSE};
@@ -343,19 +343,19 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 			while (arguments.hasNext()) {
 				result = Math.max(result, arguments.next());
 			}
-		} else if (SUM.equals(function)) {
-			result = 0.;
-			while (arguments.hasNext()) {
-				result = result + arguments.next();
-			}
-		} else if (AVERAGE.equals(function)) {
-			result = 0.;
-			int nb = 0;
-			while (arguments.hasNext()) {
-				result = result + arguments.next();
-				nb++;
-			}
-			result = result/nb;
+//		} else if (SUM.equals(function)) {
+//			result = 0.;
+//			while (arguments.hasNext()) {
+//				result = result + arguments.next();
+//			}
+//		} else if (AVERAGE.equals(function)) {
+//			result = 0.;
+//			int nb = 0;
+//			while (arguments.hasNext()) {
+//				result = result + arguments.next();
+//				nb++;
+//			}
+//			result = result/nb;
 		} else if (LN.equals(function)) {
 			result = Math.log(arguments.next());
 		} else if (LOG.equals(function)) {
