@@ -105,6 +105,9 @@ void FuelSchedule::clear() {
 	isReady = false;
 }
 
+/**
+ * @returns false in case of error, true if success
+ */
 bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_S) {
 	efiAssert(engine!=NULL, "engine is NULL", false);
 
@@ -183,7 +186,10 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_S) {
 
 	ev->isSimultanious = isSimultanious;
 
-	efiAssert(TRIGGER_SHAPE(getSize()) > 0, "uninitialized TriggerShape", false);
+	if (TRIGGER_SHAPE(getSize()) < 1) {
+		warning(CUSTOM_ERR_6111, "uninitialized TriggerShape");
+		return false;
+	}
 
 	TRIGGER_SHAPE(findTriggerPosition(&ev->injectionStart, angle PASS_ENGINE_PARAMETER));
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
