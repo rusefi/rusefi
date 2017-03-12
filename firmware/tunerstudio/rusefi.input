@@ -1658,6 +1658,7 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		field = "ETB Control #1",						etbControlPin1	
 		field = "ETB Control #2",						etbControlPin2	
 		field = "SD CS Pin",							sdCardCsPin
+		field = "Check Engine Pin",						malfunctionIndicatorPin
 
 	dialog = allPins3
 		field = "Injection Pin 1",						injectionPins1
