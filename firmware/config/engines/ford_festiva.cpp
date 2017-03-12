@@ -250,6 +250,9 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 
 	setFsio(1, GPIOC_13, "rpm 2 fsio_setting > coolant 3 fsio_setting > | vbatt 4 fsio_setting < |" PASS_ENGINE_PARAMETER);
 
+	// gear switch light
+//GPIOD_7
+
 
 	config->ignitionRpmBins[0] = 800;
 	config->ignitionRpmBins[1] = 1200;
