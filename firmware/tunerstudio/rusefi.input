@@ -1547,17 +1547,17 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 
 	dialog = ignitionCylExtra, "Ignition Cyliner Extra"
 		field = "Extra cyl #1",                       timing_offset_cylinder1
-		field = "Extra cyl #2",                       timing_offset_cylinder2
-		field = "Extra cyl #3",                       timing_offset_cylinder3
-		field = "Extra cyl #4",                       timing_offset_cylinder4
-		field = "Extra cyl #5",                       timing_offset_cylinder5
-		field = "Extra cyl #6",                       timing_offset_cylinder6
-		field = "Extra cyl #7",                       timing_offset_cylinder7
-		field = "Extra cyl #8",                       timing_offset_cylinder8
-		field = "Extra cyl #9",                       timing_offset_cylinder9
-		field = "Extra cyl #10",                       timing_offset_cylinder10
-		field = "Extra cyl #11",                       timing_offset_cylinder11 
-		field = "Extra cyl #12",                       timing_offset_cylinder12
+		field = "Extra cyl #2",                       timing_offset_cylinder2, {cylindersCount > 1}
+		field = "Extra cyl #3",                       timing_offset_cylinder3, {cylindersCount > 2}
+		field = "Extra cyl #4",                       timing_offset_cylinder4, {cylindersCount > 3}
+		field = "Extra cyl #5",                       timing_offset_cylinder5, {cylindersCount > 4}
+		field = "Extra cyl #6",                       timing_offset_cylinder6, {cylindersCount > 5}
+		field = "Extra cyl #7",                       timing_offset_cylinder7, {cylindersCount > 6}
+		field = "Extra cyl #8",                       timing_offset_cylinder8, {cylindersCount > 7}
+		field = "Extra cyl #9",                       timing_offset_cylinder9, {cylindersCount > 8}
+		field = "Extra cyl #10",                       timing_offset_cylinder10, {cylindersCount > 9}
+		field = "Extra cyl #11",                       timing_offset_cylinder11, {cylindersCount > 10} 
+		field = "Extra cyl #12",                       timing_offset_cylinder12, {cylindersCount > 11}
 
 
 ;			Engine->Ignition Settings
