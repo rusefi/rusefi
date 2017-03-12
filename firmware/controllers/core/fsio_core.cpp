@@ -255,8 +255,8 @@ bool LECalculator::processElement(Engine *engine, LEElement *element) {
 	}
 		break;
 	case LE_METHOD_FSIO_SETTING: {
-		float i = pop(LE_METHOD_FSIO_SETTING);
-		int index = (int) i;
+		float humanIndex = pop(LE_METHOD_FSIO_SETTING);
+		int index = (int) humanIndex - 1;
 		if (index >= 0 && index < LE_COMMAND_COUNT) {
 			push(element->action, engine->engineConfiguration->bc.fsio_setting[index]);
 		} else {

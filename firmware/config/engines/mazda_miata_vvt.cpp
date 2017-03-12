@@ -129,7 +129,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->auxPidFrequency[0] = 300;
 	engineConfiguration->auxPidPins[0] = GPIOE_3; // VVT solenoid control
 	//	/**
-	//	 * set_fsio_setting 0 0.55
+	//	 * set_fsio_setting 1 0.55
 	//	 */
 	boardConfiguration->fsio_setting[0] = 0.0;
 //	setFsioExt(0, GPIOE_3, "0 fsio_setting", 400 PASS_ENGINE_PARAMETER);

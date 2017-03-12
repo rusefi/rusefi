@@ -465,7 +465,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	
 #if EFI_FSIO || defined(__DOXYGEN__)
 //	/**
-//	 * set_fsio_setting 0 0.55
+//	 * set_fsio_setting 1 0.55
 //	 */
 //	boardConfiguration->fsio_setting[0] = 0.55;
 //	setFsioExt(0, GPIOE_5, "0 fsio_setting", 400 PASS_ENGINE_PARAMETER);
