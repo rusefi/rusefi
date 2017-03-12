@@ -50,6 +50,9 @@ public:
 	 * @see globalSparkIdCoutner
 	 */
 	int sparkId;
+	/**
+	 * [0, specs.cylindersCount)
+	 */
 	int cylinderIndex;
 	char *name;
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
