@@ -1545,6 +1545,21 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		panel = injectorSetting,		West
 		panel = injectorsDeadTime,		East
 
+	dialog = ignitionCylExtra, "Ignition Cyliner Extra"
+		field = "Extra cyl #1",                       timing_offset_cylinder1
+		field = "Extra cyl #2",                       timing_offset_cylinder2
+		field = "Extra cyl #3",                       timing_offset_cylinder3
+		field = "Extra cyl #4",                       timing_offset_cylinder4
+		field = "Extra cyl #5",                       timing_offset_cylinder5
+		field = "Extra cyl #6",                       timing_offset_cylinder6
+		field = "Extra cyl #7",                       timing_offset_cylinder7
+		field = "Extra cyl #8",                       timing_offset_cylinder8
+		field = "Extra cyl #9",                       timing_offset_cylinder9
+		field = "Extra cyl #10",                       timing_offset_cylinder10
+		field = "Extra cyl #11",                       timing_offset_cylinder11 
+		field = "Extra cyl #12",                       timing_offset_cylinder12
+
+
 ;			Engine->Ignition Settings
 	dialog = ignitionOutputs, "Ignition Outputs"
 		field = "Ignition Pin Mode",         	        ignitionPinMode
@@ -1567,6 +1582,7 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 	dialog = ignitionSettings, "", xAxis
 		panel = ignitionOutputs,	West
 		panel = dwellCorrection,	Center
+		panel = ignitionCylExtra,	East
 		
 ;			Engine->Aux1 Thermistor Settings
 	dialog = auxTempSensor1_thermistor, "aux1 Thermistor Settings"
