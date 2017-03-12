@@ -193,7 +193,7 @@ public abstract class AbstractEvaluator<T> {
 		// Be aware that arguments are in reverse order on the values stack.
 		// Don't forget to reorder them in the original order (the one they appear in the evaluated formula)
 		if (values.size()<nb) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Expected " + nb + " got " + values.size());
 		}
 		LinkedList<T> result = new LinkedList<T>();
 		for (int i = 0; i <nb ; i++) {
