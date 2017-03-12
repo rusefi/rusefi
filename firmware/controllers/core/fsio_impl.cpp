@@ -325,7 +325,11 @@ static void setFsioFrequency(int index, int frequency) {
 		return;
 	}
 	boardConfiguration->fsioFrequency[index] = frequency;
-	scheduleMsg(logger, "Setting FSIO frequency %d on #%d", frequency, index + 1);
+	if (frequency == 0) {
+		scheduleMsg(logger, "FSIO output #%d@%s set to on/off mode", index + 1, hwPortname(boardConfiguration->fsioPins[index]));
+	} else {
+		scheduleMsg(logger, "Setting FSIO frequency %dHz on #%d@%s", frequency, index + 1, hwPortname(boardConfiguration->fsioPins[index]));
+	}
 }
 
 void runFsio(void) {
@@ -426,16 +430,16 @@ static void showFsioInfo(void) {
 }
 
 /**
- * set_fsio_setting 0 0.11
+ * set_fsio_setting 1 0.11
  */
 static void setFsioSetting(float indexF, float value) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	int index = (int)indexF;
-	if (index < 0 || index >= LE_COMMAND_COUNT) {
-		scheduleMsg(logger, "invalid FSIO index: %d", index);
+	int humanIndex = (int)indexF;
+	if (humanIndex < 1 || humanIndex > LE_COMMAND_COUNT) {
+		scheduleMsg(logger, "invalid FSIO index: %d", humanIndex);
 		return;
 	}
-	engineConfiguration->bc.fsio_setting[index] = value;
+	engineConfiguration->bc.fsio_setting[humanIndex] = value;
 	showFsioInfo();
 #endif
 }

@@ -83,7 +83,7 @@ void setMazdaMiataNb1EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	// VICS solenoid
 	/**
 	 * to test
-	 * set_fsio_setting 0 5000
+	 * set_fsio_setting 1 5000
 	 */
 	boardConfiguration->fsio_setting[0] = 5000;
 	// (self and (rpm > 4800)) OR (rpm > 5000)

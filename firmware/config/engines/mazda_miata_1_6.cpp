@@ -167,28 +167,29 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
 	// warning light
 	/**
 	 * to test
-	 * set_fsio_setting 0 1800
-	 * set_fsio_setting 1 95
-	 * set_fsio_setting 3 14
+	 * set_fsio_setting 1 1800
+	 * set_fsio_setting 2 95
+	 * set_fsio_setting 4 14
 	 *
 	 * set_rpn_expression 1 "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
-	 * rpn_eval "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
+	 * rpn_eval "rpm 1 fsio_setting > coolant 2 fsio_setting > | vbatt 4 fsio_setting < |"
 	 */
 	boardConfiguration->fsio_setting[0] = 6400; // RPM threshold
-	boardConfiguration->fsio_setting[1] = 100; // CLT threshold
-	boardConfiguration->fsio_setting[2] = 13.0; // voltage threshold
+	boardConfiguration->fsio_setting[1] = 100; // CLT threshold, fsio_setting #2
+	boardConfiguration->fsio_setting[2] = 13.0; // voltage threshold, fsio_setting #3
 
-	//	set_fsio_setting 3 3000
-	boardConfiguration->fsio_setting[3] = 3000; // oil pressure RPM
-	// set_fsio_setting 4 0.52
-	boardConfiguration->fsio_setting[4] = 0.52; // oil pressure threshold
+	//	set_fsio_setting 4 3000
+	boardConfiguration->fsio_setting[3] = 3000; // oil pressure RPM, fsio_setting #4
+	// set_fsio_setting 5 0.52
+	boardConfiguration->fsio_setting[4] = 0.52; // oil pressure threshold, fsio_setting #5
 
 //	 * set_rpn_expression 1 "rpm 3 fsio_setting >"
-	// rpn_eval "rpm 3 fsio_setting >"
+	// rpn_eval "rpm 1 fsio_setting >"
 	// rpn_eval "fsio_input"
 
-	// set_rpn_expression 0 "rpm 3 fsio_setting > fsio_input 4 fsio_setting < & rpm 0 fsio_setting | > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
+	// set_fsio_expression 0 "((rpm > fsio_setting(4) & (fsio_input < fsio_setting(5)) | rpm > fsio_setting(1) | (coolant > fsio_setting(2)  > | (vbatt < fsio_setting(3)"
 
+	// todo: convert
 	setFsio(0, GPIOC_13, "rpm 3 fsio_setting > fsio_input 4 fsio_setting < & rpm 0 fsio_setting | > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |" PASS_ENGINE_PARAMETER);
 
 	boardConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G

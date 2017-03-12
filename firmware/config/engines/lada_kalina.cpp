@@ -52,10 +52,10 @@ void setLadaKalina(DECLARE_ENGINE_PARAMETER_F) {
 	// starter relay solenoid
 	/**
 	 * to test
-	 * set_fsio_setting 0 5000
+	 * set_fsio_setting 1 5000
 	 */
 	engineConfiguration->bc.fsio_setting[0] = 500;
 	// set_rpn_expression 1 "rpm 0 fsio_setting <"
-	setFsioExt(0, GPIOE_3, "rpm 0 fsio_setting <", 0 PASS_ENGINE_PARAMETER);
+	setFsioExt(0, GPIOE_3, "rpm 1 fsio_setting <", 0 PASS_ENGINE_PARAMETER);
 
 }
