@@ -1,6 +1,7 @@
 package com.rusefi.ui.widgets;
 
 import com.fathzer.soft.javaluator.DoubleEvaluator;
+import com.rusefi.FileLog;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.ui.RecentCommands;
 import com.rusefi.ui.storage.Node;
@@ -117,11 +118,16 @@ public class AnyCommand {
     }
 
     public static String prepareCommand(String rawCommand) {
-        if (rawCommand.startsWith("eval ")) {
-            return prepareEvalCommand(rawCommand);
-        } else if (rawCommand.startsWith("set_fsio_expression ")) {
-            return prepareSetFsioCommand(rawCommand);
-        } else {
+        try {
+            if (rawCommand.startsWith("eval ")) {
+                return prepareEvalCommand(rawCommand);
+            } else if (rawCommand.startsWith("set_fsio_expression ")) {
+                return prepareSetFsioCommand(rawCommand);
+            } else {
+                return rawCommand;
+            }
+        } catch (Throwable e) {
+            FileLog.MAIN.log(e);
             return rawCommand;
         }
     }
