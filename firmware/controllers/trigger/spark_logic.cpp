@@ -61,8 +61,6 @@ static void turnSparkPinLow2(IgnitionEvent *event, IgnitionOutputPin *output) {
 #endif /* EFI_PROD_CODE */
 }
 
-void prepareIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_S);
-
 void turnSparkPinLow(IgnitionEvent *event) {
 	for (int i = 0; i< MAX_OUTPUTS_FOR_IGNITION;i++) {
 		IgnitionOutputPin *output = event->outputs[i];
