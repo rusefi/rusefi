@@ -302,7 +302,7 @@ public abstract class AbstractEvaluator<T> {
 					throw new IllegalArgumentException("Parentheses mismatched");
 				}
 				if (!stack.isEmpty() && stack.peek().isFunction()) {
-					rpnPush("function", stack.peek().getLiteral());
+					rpnPush("function", stack.peek().getFunction().getName());
 					// If the token at the top of the stack is a function token, pop it
 					// onto the output queue.
 					int argCount = values.size()-previousValuesSize.pop();
