@@ -6,7 +6,13 @@ echo I am flash_erase.bat
 rem weird, it used to be much nicer with openocd 0.8.0, file location was not broken?
 rem maybe https://sourceforge.net/p/openocd/tickets/105/ ?
 
+pwd
 cp -r ../misc/install/openocd .
+ls -l
+
+if not exist openocd/openocd.exe echo openocd/openocd.exe NOT FOUND
+if not exist openocd/openocd.exe exit -1
+
 
 openocd/openocd           -f openocd/stm32f429disc1.cfg                                    -c init -c targets -c "halt" -c "flash erase_address 0x08000000 0x080000" -c shutdown
 
