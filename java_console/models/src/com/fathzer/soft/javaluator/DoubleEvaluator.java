@@ -113,7 +113,10 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 	public static final Function LN = new Function("ln", 1);
 	/** Returns the decimal logarithm of a number */
 	public static final Function LOG = new Function("log", 1);
-	
+
+	public static final Function fsio_setting = new Function("fsio_setting", 1);
+
+
 	/** Returns a pseudo random number */
 	public static final Function RANDOM = new Function("random", 0);
 
@@ -155,7 +158,8 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 	private static final Operator[] OPERATORS = new Operator[]{NEGATE, NOT, NOT2, MORE, MORE_EQ, AND, AND2, OR, OR2, LESS, LESS_EQ, MINUS, PLUS, MULTIPLY, DIVIDE, EXPONENT, MODULO};
 
 	/** The whole set of predefined functions */
-	private static final Function[] FUNCTIONS = new Function[]{SINE, COSINE, TANGENT, ASINE, ACOSINE, ATAN, SINEH, COSINEH, TANGENTH, MIN, MAX, SUM, AVERAGE, LN, LOG, ROUND, CEIL, FLOOR, ABS, RANDOM};
+	private static final Function[] FUNCTIONS = new Function[]{SINE, COSINE, TANGENT, ASINE, ACOSINE, ATAN, SINEH, COSINEH, TANGENTH, MIN, MAX, SUM, AVERAGE, LN, LOG, ROUND, CEIL, FLOOR, ABS, RANDOM,
+			fsio_setting};
 	/** The whole set of predefined constants */
 	private static final Constant[] CONSTANTS = new Constant[]{TRUE, FALSE};
 	
@@ -348,6 +352,8 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 			result = Math.log10(arguments.next());
 		} else if (RANDOM.equals(function)) {
 			result = Math.random();
+		} else if (fsio_setting.equals(function)) {
+			result = 333333.0;
 		} else {
 			result = super.evaluate(function, arguments, evaluationContext);
 		}

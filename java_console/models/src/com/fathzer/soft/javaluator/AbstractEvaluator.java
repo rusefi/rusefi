@@ -384,8 +384,8 @@ public abstract class AbstractEvaluator<T> {
 			}
 			output(values, sc, evaluationContext);
 		}
-		if (values.size()!=1) {
-			throw new IllegalArgumentException();
+		if (values.size() != 1) {
+			throw new IllegalArgumentException("Only one element expected "+ values);
 		}
 		Collections.reverse(stackRPN);
 
