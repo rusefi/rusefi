@@ -230,7 +230,7 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	 * set_fsio_setting 1 5000
 	 */
 	boardConfiguration->fsio_setting[0] = 5000;
-	// set_rpn_expression 1 "rpm 0 fsio_setting >"
+	// set_fsio_expression 1 "rpm > fsio_setting(1)"
 	setFsioExt(0, GPIOE_3, "rpm 1 fsio_setting >", 150 PASS_ENGINE_PARAMETER);
 
 
@@ -241,6 +241,7 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	 * set_fsio_setting 3 95
 	 * set_fsio_setting 4 14
 	 *
+	 * set_fsio_expression 2 "rpm > fsio_setting(2)"
 	 * set_rpn_expression 1 "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
 	 * eval "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
 	 */
@@ -248,10 +249,8 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->fsio_setting[2] = 90; // CLT threshold
 	boardConfiguration->fsio_setting[3] = 13.5; // voltage threshold
 
-	setFsio(1, GPIOC_13, "rpm 2 fsio_setting > coolant 3 fsio_setting > | vbatt 4 fsio_setting < |" PASS_ENGINE_PARAMETER);
-
-	// gear switch light
-//GPIOD_7
+//	setFsio(1, GPIOC_13, "rpm 2 fsio_setting > coolant 3 fsio_setting > | vbatt 4 fsio_setting < |" PASS_ENGINE_PARAMETER);
+	setFsio(1, GPIOD_7, "rpm 2 fsio_setting >" PASS_ENGINE_PARAMETER);
 
 
 	config->ignitionRpmBins[0] = 800;
