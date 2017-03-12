@@ -4,7 +4,8 @@ echo This script should be executed from the root of rusEfi master GITHUB local 
 pwd 
 
 echo Updating from SVN
-call git pull
+call git fetch --all
+call git reset --hard origin/master
 IF NOT ERRORLEVEL echo ERROR git pull-ing
 IF NOT ERRORLEVEL 0 EXIT /B 1
 
