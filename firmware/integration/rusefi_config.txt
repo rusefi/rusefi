@@ -781,7 +781,7 @@ int16_t etbFreq;;"Hz",      1,     0,    0, 500,      10
 	adc_channel_e cj125ua;lampda input
 	adc_channel_e cj125ur;heater input
 	
-	custom cfg_float_t_1f 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       0, 18000,	  1
+	custom cfg_float_t_1f 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       -20000000, 20000000,	  1
 	cfg_float_t_1f[IGNITION_PIN_COUNT iterate] timing_offset_cylinder;
 	
 	int[56] unused;
