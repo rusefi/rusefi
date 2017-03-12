@@ -9,9 +9,13 @@ import java.util.Stack;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * @see DoubleEvaluator
+ */
 public class ParserTest {
     @Test
     public void testFunctionParameters() {
+        assertParse("3 log", "log(3)");
         // todo: parameter order needs to be in postfix form
      //   assertParseB("fsio_setting 0", "fsio_setting 0");
     }
