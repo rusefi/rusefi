@@ -11,13 +11,16 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * @see DoubleEvaluator
+ * @see Operator
  */
 public class ParserTest {
     @Test
     public void testFunctionParameters() {
         assertParse("3 log", "log(3)");
-        // todo: parameter order needs to be in postfix form
-     //   assertParseB("fsio_setting 0", "fsio_setting 0");
+        assertParse("log 3", "log 3 "); // todo: better handling?
+        assertParse("0 fsio_setting", "fsio_setting(0)");
+
+        assertParse("rpm 2 fsio_setting >", "rpm > fsio_setting(2)");
     }
 
     @Test
