@@ -184,7 +184,7 @@ public abstract class AbstractEvaluator<T> {
 		System.out.println("doFunction " + function + " " + argCount);
 
 		if (function.getMinimumArgumentCount()>argCount || function.getMaximumArgumentCount()<argCount) {
-			throw new IllegalArgumentException("Invalid argument count for "+function.getName());
+			throw new IllegalArgumentException("Invalid argument count for "+function.getName() + " while " + argCount);
 		}
 		values.push(evaluate(function, getArguments(values, argCount), evaluationContext));
 	}
@@ -306,7 +306,7 @@ public abstract class AbstractEvaluator<T> {
 					// If the token at the top of the stack is a function token, pop it
 					// onto the output queue.
 					int argCount = values.size()-previousValuesSize.pop();
-					doFunction(values, (Function)stack.pop().getFunction(), argCount, evaluationContext);
+					doFunction(values, stack.pop().getFunction(), argCount, evaluationContext);
 				}
 			} else if (token.isFunctionArgumentSeparator()) {
 				if (previous==null) {
