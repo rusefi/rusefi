@@ -432,14 +432,14 @@ static void showFsioInfo(void) {
 /**
  * set_fsio_setting 1 0.11
  */
-static void setFsioSetting(float indexF, float value) {
+static void setFsioSetting(float humanIndexF, float value) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	int humanIndex = (int)indexF;
-	if (humanIndex < 1 || humanIndex > LE_COMMAND_COUNT) {
-		scheduleMsg(logger, "invalid FSIO index: %d", humanIndex);
+	int index = (int)humanIndexF - 1;
+	if (index < 0 || index >= LE_COMMAND_COUNT) {
+		scheduleMsg(logger, "invalid FSIO index: %d", (int)humanIndexF);
 		return;
 	}
-	engineConfiguration->bc.fsio_setting[humanIndex] = value;
+	engineConfiguration->bc.fsio_setting[index] = value;
 	showFsioInfo();
 #endif
 }
