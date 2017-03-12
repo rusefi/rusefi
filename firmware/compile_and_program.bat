@@ -14,7 +14,8 @@ rem cd build
 rem if not exist rusefi.hex echo "compilation failed"
 rem if not exist rusefi.hex exit -1
 rem cd ..
-if errorlevel 1 goto error
+if errorlevel 1 echo make compilation failed
+if errorlevel 1 exit -1
  
 echo Build complete success.
 
@@ -37,14 +38,13 @@ rem Generate human-readable version of the .map memory usage report
 java -jar ../../java_tools/gcc_map_reader.jar > ../rusefi_ram_report.txt
 cd ..
 
+echo Looking at size
 arm-none-eabi-size  --format=berkeley "build\rusefi.elf"
+echo Compiler version
 arm-none-eabi-gcc -v
 
-rem file, let's program the board right away
+echo Have the file, let's program the board right away
 call flash_openocd
-goto end_of_file
 
-:error
-echo Compilation failed
+echo Done flashing                       
 
-:end_of_file
