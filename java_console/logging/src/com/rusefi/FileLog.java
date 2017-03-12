@@ -105,7 +105,7 @@ public enum FileLog {
         System.out.println("rlog " + msg);
     }
 
-    public void log(IllegalStateException exception) {
+    public void log(Throwable exception) {
         if (fileLog == null)
             throw new NullPointerException("fileLog");
         OutputStreamWriter os = new OutputStreamWriter(fileLog);
