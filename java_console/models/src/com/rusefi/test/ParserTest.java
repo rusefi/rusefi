@@ -16,11 +16,13 @@ import static org.junit.Assert.assertEquals;
 public class ParserTest {
     @Test
     public void testFunctionParameters() {
-        assertParse("3 log", "log(3)");
-        assertParse("log 3", "log 3 "); // todo: better handling?
-        assertParse("0 fsio_setting", "fsio_setting(0)");
+        assertParseB("3 log", "log(3)");
+        assertParse("1 2 3 if", "if(1, 2, 3)");
 
-        assertParse("rpm 2 fsio_setting >", "rpm > fsio_setting(2)");
+        assertParse("log 3", "log 3 "); // todo: better handling?
+        assertParseB("0 fsio_setting", "fsio_setting(0)");
+
+        assertParseB("rpm 2 fsio_setting >", "rpm > fsio_setting(2)");
     }
 
     @Test
@@ -62,7 +64,20 @@ public class ParserTest {
         Stack<String> stack = new Stack<>();
 
         for (String token : tokens) {
-            if (Operator._1_OPERATORS.contains(token)) {
+            if (DoubleEvaluator.getFunction(token) != null) {
+                int pCount = DoubleEvaluator.getFunction(token).getMaximumArgumentCount();
+
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < pCount; i++) {
+                    if (i != 0)
+                        sb.append(", ");
+                    sb.append(stack.pop());
+                }
+
+                stack.push(token + "(" + sb + ")");
+
+
+            } else if (Operator._1_OPERATORS.contains(token)) {
                 String a = stack.pop();
 
                 stack.push("(" + token + " " + a + ")");

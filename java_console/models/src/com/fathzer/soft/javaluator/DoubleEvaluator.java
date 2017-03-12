@@ -115,6 +115,7 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 	public static final Function LOG = new Function("log", 1);
 
 	public static final Function fsio_setting = new Function("fsio_setting", 1);
+	public static final Function if_function = new Function("if", 3);
 
 
 	/** Returns a pseudo random number */
@@ -159,7 +160,7 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 
 	/** The whole set of predefined functions */
 	private static final Function[] FUNCTIONS = new Function[]{SINE, COSINE, TANGENT, ASINE, ACOSINE, ATAN, SINEH, COSINEH, TANGENTH, MIN, MAX, SUM, AVERAGE, LN, LOG, ROUND, CEIL, FLOOR, ABS, RANDOM,
-			fsio_setting};
+			if_function, fsio_setting};
 	/** The whole set of predefined constants */
 	private static final Constant[] CONSTANTS = new Constant[]{TRUE, FALSE};
 	
@@ -194,6 +195,15 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 		result.addFunctionBracket(BracketPair.PARENTHESES);
 		result.addExpressionBracket(BracketPair.PARENTHESES);
 		return result;
+	}
+
+	public static Function getFunction(String token) {
+		for (Function function : FUNCTIONS) {
+			if (function.getName().equalsIgnoreCase(token)) {
+				return function;
+			}
+		}
+		return null;
 	}
 
 	private static Parameters getParameters() {
@@ -352,7 +362,7 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 			result = Math.log10(arguments.next());
 		} else if (RANDOM.equals(function)) {
 			result = Math.random();
-		} else if (fsio_setting.equals(function)) {
+		} else if (fsio_setting.equals(function) || if_function.equals(function)) {
 			result = 333333.0;
 		} else {
 			result = super.evaluate(function, arguments, evaluationContext);
