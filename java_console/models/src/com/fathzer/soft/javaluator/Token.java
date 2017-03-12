@@ -119,7 +119,7 @@ public class Token {
 
 	String getLiteral() {
 		if (!this.kind.equals(Kind.LITERAL)) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Literal expected but " + kind);
 		}
 		return (String)this.content;
 	}
