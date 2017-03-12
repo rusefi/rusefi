@@ -223,7 +223,7 @@ void prepareIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_S) {
 	// todo: clean up this implementation? does not look too nice as is.
 
 	// change of sign here from 'before TDC' to 'after TDC'
-	const angle_t localAdvance = -ENGINE(engineState.timingAdvance) + ENGINE(angleExtra[event->cylinderIndex]);
+	const angle_t localAdvance = -ENGINE(engineState.timingAdvance) + ENGINE(angleExtra[event->cylinderIndex]) + CONFIG(timing_offset_cylinder[event->cylinderIndex]);
 	const int index = ENGINE(ignitionPin[event->cylinderIndex]);
 	const int coilIndex = ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), index));
 	IgnitionOutputPin *output = &enginePins.coils[coilIndex];
