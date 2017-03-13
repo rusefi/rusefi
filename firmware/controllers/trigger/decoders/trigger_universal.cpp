@@ -35,7 +35,6 @@ void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount,
 		s->shapeDefinitionError = true;
 		return;
 	}
-	s->shapeDefinitionError = false;
 	efiAssertVoid(s != NULL, "TriggerShape is NULL");
 	s->initialize(operationMode, false);
 
