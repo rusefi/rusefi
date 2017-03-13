@@ -1051,10 +1051,11 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	}
 	applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER);
 	// todo: eliminate triggerShape.operationMode?
-	if (engineConfiguration->operationMode != TRIGGER_SHAPE(getOperationMode()))
-		firmwareError(CUSTOM_ERR_OP_MODE, "operationMode %d/trigger mismatch %d",
+	if (engineConfiguration->operationMode != TRIGGER_SHAPE(getOperationMode())) {
+		warning(CUSTOM_ERR_OP_MODE, "operationMode %d/trigger mismatch %d",
 				engineConfiguration->operationMode,
 				TRIGGER_SHAPE(getOperationMode()));
+	}
 
 #if EFI_TUNER_STUDIO
 	syncTunerStudioCopy();
