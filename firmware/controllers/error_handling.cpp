@@ -214,6 +214,7 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 	va_start(ap, fmt);
 	vprintf(fmt, ap);
 	va_end(ap);
+	printf("\r\n");
 
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
 	exit(-1);

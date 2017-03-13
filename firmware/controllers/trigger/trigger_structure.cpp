@@ -316,7 +316,8 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 	efiAssertVoid(angle > 0, "angle should be positive");
 	if (size > 0) {
 		if (angle <= previousAngle) {
-			firmwareError(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order: %f and %f, size=%d", angle, previousAngle, size);
+			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order: %f and %f, size=%d", angle, previousAngle, size);
+			shapeDefinitionError = true;
 			return;
 		}
 	}
@@ -327,7 +328,8 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 			single_wave_s *wave = &this->wave.waves[i];
 
 			if (wave->pinStates == NULL) {
-				firmwareError(CUSTOM_ERR_STATE_NULL, "wave pinStates is NULL");
+				warning(CUSTOM_ERR_STATE_NULL, "wave pinStates is NULL");
+				shapeDefinitionError = true;
 				return;
 			}
 			wave->pinStates[0] = initialState[i];
@@ -341,7 +343,8 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 
 	int exactMatch = wave.findAngleMatch(angle, size);
 	if (exactMatch != EFI_ERROR_CODE) {
-		firmwareError(CUSTOM_ERR_6512, "same angle: not supported");
+		warning(CUSTOM_ERR_6512, "same angle: not supported");
+		shapeDefinitionError = true;
 		return;
 	}
 
