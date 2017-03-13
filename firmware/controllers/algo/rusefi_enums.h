@@ -161,6 +161,10 @@ typedef enum {
 	Force_4b_engine_type = ENUM_32_BITS,
 } engine_type_e;
 
+
+/**
+ * @see http://rusefi.com/wiki/index.php?title=Manual:Software:Trigger
+ */
 typedef enum {
 	TT_TOOTHED_WHEEL = 0,
 	TT_FORD_ASPIRE = 1,
