@@ -479,6 +479,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 #endif
 	TriggerShape *triggerShape = this;
 
+	shapeDefinitionError = false;
 
 	switch (triggerConfig->type) {
 
@@ -525,8 +526,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_GM_7X:
-		// todo: fix this configureGmTriggerShape(triggerShape);
-		configureFordAspireTriggerShape(this PASS_ENGINE_PARAMETER);
+		configureGmTriggerShape(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_MAZDA_DOHC_1_4:
@@ -546,19 +546,19 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_ONE:
-		setToothedWheelConfiguration(triggerShape, 1, 0, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
+		setToothedWheelConfiguration(this, 1, 0, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_MAZDA_SOHC_4:
-		configureMazdaProtegeSOHC(triggerShape PASS_ENGINE_PARAMETER);
+		configureMazdaProtegeSOHC(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_MINI_COOPER_R50:
-		configureMiniCooperTriggerShape(triggerShape PASS_ENGINE_PARAMETER);
+		configureMiniCooperTriggerShape(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_TOOTHED_WHEEL_60_2:
-		setToothedWheelConfiguration(triggerShape, 60, 2, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
+		setToothedWheelConfiguration(this, 60, 2, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_60_2_VW:
@@ -602,27 +602,27 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_DODGE_RAM:
-		initDodgeRam(triggerShape PASS_ENGINE_PARAMETER);
+		initDodgeRam(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_JEEP_18_2_2_2:
-		initJeep18_2_2_2(triggerShape PASS_ENGINE_PARAMETER);
+		initJeep18_2_2_2(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_SUBARU_7_6:
-		initializeSubaru7_6(triggerShape PASS_ENGINE_PARAMETER);
+		initializeSubaru7_6(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_36_2_2_2:
-		initialize36_2_2_2(triggerShape PASS_ENGINE_PARAMETER);
+		initialize36_2_2_2(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_2JZ_3_34:
-		initialize2jzGE3_34(triggerShape PASS_ENGINE_PARAMETER);
+		initialize2jzGE3_34(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_2JZ_1_12:
-		initialize2jzGE1_12(triggerShape PASS_ENGINE_PARAMETER);
+		initialize2jzGE1_12(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_NISSAN:
