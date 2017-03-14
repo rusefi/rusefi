@@ -43,7 +43,8 @@ public class SensorLogger {
             Sensor.deltaTps,
             Sensor.tpsAccelFuel,
             Sensor.engineLoadAccelDelta,
-            Sensor.Injector_duty,
+            Sensor.injectorDutyCycle,
+            Sensor.coilDutyCycle,
 
             Sensor.wallFuelAmount,
             Sensor.wallFuelCorrection,
@@ -64,6 +65,8 @@ public class SensorLogger {
             Sensor.debugFloatField3,
             Sensor.debugFloatField4,
             Sensor.debugFloatField5,
+            Sensor.debugFloatField6,
+            Sensor.debugFloatField7,
             Sensor.debugIntField1,
             Sensor.debugIntField2,
             Sensor.debugIntField3,
