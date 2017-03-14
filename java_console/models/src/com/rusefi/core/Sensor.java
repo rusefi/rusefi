@@ -105,7 +105,7 @@ public enum Sensor {
     deltaTps(SensorCategory.FUEL, FieldType.FLOAT, 116, BackgroundColor.MUD),
     engineLoadAccelDelta(SensorCategory.FUEL, FieldType.FLOAT, 124, BackgroundColor.MUD),
     tpsAccelFuel(SensorCategory.FUEL, FieldType.FLOAT, 128, BackgroundColor.MUD),
-    Injector_duty(SensorCategory.OPERATIONS, FieldType.FLOAT, 140, BackgroundColor.MUD),
+    injectorDutyCycle(SensorCategory.OPERATIONS, FieldType.FLOAT, 140, BackgroundColor.MUD),
     wallFuelAmount(SensorCategory.FUEL, FieldType.FLOAT, 160, BackgroundColor.MUD),
     iatCorrection(SensorCategory.FUEL, FieldType.FLOAT, 164, BackgroundColor.MUD, 0, 5),
     wallFuelCorrection(SensorCategory.FUEL, FieldType.FLOAT, 168, BackgroundColor.MUD),
@@ -133,6 +133,10 @@ public enum Sensor {
     INT_TEMP(SensorCategory.OPERATIONS, FieldType.FLOAT, 244, BackgroundColor.MUD, 0, 5),
     vvtPosition(SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 248, BackgroundColor.MUD, 0, 5),
     engineMode(SensorCategory.OPERATIONS, FieldType.INT, 252, BackgroundColor.MUD, 0, 5),
+
+    debugFloatField6(SensorCategory.OPERATIONS, FieldType.FLOAT, 256, BackgroundColor.MUD, 0, 5),
+    debugFloatField7(SensorCategory.OPERATIONS, FieldType.FLOAT, 260, BackgroundColor.MUD, 0, 5),
+    coilDutyCycle(SensorCategory.OPERATIONS, FieldType.FLOAT, 272, BackgroundColor.MUD),
 
     INJ_1_2_DELTA("inj 1-2 delta", SensorCategory.SNIFFING),
     INJ_3_4_DELTA("inj 3-4 delta", SensorCategory.SNIFFING),

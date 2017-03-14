@@ -102,6 +102,9 @@ typedef struct {
 	float tpsAccelFuel; // offset 128
 	float baroCorrection; // 132
 	float pedalPosition; // 138
+	/**
+	 * @see coilDutyCycle
+	 */
 	float injectorDutyCycle; // 140
 	int knockCount; // 144
 	float fuelTankGauge; // 148
@@ -150,6 +153,9 @@ typedef struct {
 	float debugFloatField7; // 260
 	int firmwareVersion; // 264
 	float fuelPidCorrection; // 268
+	/**
+	 * @see injectorDutyCycle
+	 */
 	float coilDutyCycle; // 272
 	int unused3[20];
 } TunerStudioOutputChannels;

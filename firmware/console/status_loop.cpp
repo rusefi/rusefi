@@ -299,6 +299,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 		}
 
 		reportSensorF(log, fileFormat, "f: duty", "%", getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER), 2);
+		reportSensorF(log, fileFormat, "dwell: duty", "%", getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER), 2);
 	}
 
 
