@@ -113,6 +113,7 @@
 									<listOptionValue builtIn="false" value="&quot;../util&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../console&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../console/binary&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../console/fl_binary&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config/engines&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../controllers&quot;"/>
