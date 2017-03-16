@@ -434,11 +434,12 @@ static bool isKnownCommand(char command) {
 			|| command == TS_GET_FIRMWARE_VERSION;
 }
 
-static uint8_t firstByte;
-static uint8_t secondByte;
 
 void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 	int wasReady = false;
+
+	bool isFirstByte = true;
+
 	while (true) {
 		int isReady = ts_serial_ready(isConsoleRedirect);
 		if (!isReady) {
@@ -454,6 +455,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 
 		tsState.tsCounter++;
 
+		uint8_t firstByte;
 		int recieved = chnReadTimeout(tsChannel->channel, &firstByte, 1, TS_READ_TIMEOUT);
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
 			logMsg("recieved %d\r\n", recieved);
@@ -465,10 +467,17 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 			continue;
 		}
 		onDataArrived();
+
+		if (isFirstByte) {
+
+		}
+		isFirstByte = false;
+
 //		scheduleMsg(logger, "Got first=%x=[%c]", firstByte, firstByte);
 		if (handlePlainCommand(tsChannel, firstByte))
 			continue;
 
+		uint8_t secondByte;
 		recieved = chnReadTimeout(tsChannel->channel, &secondByte, 1, TS_READ_TIMEOUT);
 		if (recieved != 1) {
 			tunerStudioError("TS: ERROR: no second byte");
