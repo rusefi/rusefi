@@ -4,4 +4,4 @@ rd /s /q .dep
 rd /s /q build
 
 # that's 'make' with some extra utilities
-compile.bat
+compile_and_program.bat
