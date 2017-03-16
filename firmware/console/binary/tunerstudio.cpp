@@ -72,6 +72,7 @@
 #include "malfunction_central.h"
 #include "console_io.h"
 #include "crc.h"
+#include "fl_protocol.h"
 
 #include <string.h>
 #include "engine_configuration.h"
@@ -469,6 +470,9 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 		onDataArrived();
 
 		if (isFirstByte) {
+			if (isStartOfFLProtocol(firstByte)) {
+
+			}
 
 		}
 		isFirstByte = false;
