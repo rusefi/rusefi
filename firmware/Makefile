@@ -201,8 +201,9 @@ INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
 	util \
 	console_util \
 	console \
-	console/binary \
-	hw_layer \
+	$(PROJECT_DIR)/console/binary \
+	$(PROJECT_DIR)/console/fl_binary \
+	$(PROJECT_DIR)/hw_layer \
 	$(PROJECT_DIR)/mass_storage \
 	hw_layer/serial_over_usb \
 	hw_layer/algo \
