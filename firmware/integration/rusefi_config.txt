@@ -312,7 +312,7 @@ adc_channel_e fuelLevelSensor;
 float vehicleSpeedCoef;+This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed, km/h;"coef",    1,      0,    0.01,  2000.0,        2
 
 custom can_nbc_e 4 bits, U32, @OFFSET@, [0:1], "BMW", "FIAT", "VAG" , "MAZDA RX8"
-can_nbc_e canNbcType;
+can_nbc_e canNbcType;set can_mode X
 
 int canSleepPeriod;CANbus thread period, ms;"ms",    1,      0,       0,  1000.0,        2
 
