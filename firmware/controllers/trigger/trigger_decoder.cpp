@@ -174,13 +174,13 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		 */
 		nextTriggerEvent()
 		;
-		if (TRIGGER_SHAPE(gapBothDirections) && considerEventForGap()) {
-			isFirstEvent = false;
-			thirdPreviousDuration = durationBeforePrevious;
-			durationBeforePrevious = toothed_previous_duration;
-			toothed_previous_duration = currentDuration;
-			toothed_previous_time = nowNt;
-		}
+//		if (TRIGGER_SHAPE(gapBothDirections) && considerEventForGap()) {
+//			isFirstEvent = false;
+//			thirdPreviousDuration = durationBeforePrevious;
+//			durationBeforePrevious = toothed_previous_duration;
+//			toothed_previous_duration = currentDuration;
+//			toothed_previous_time = nowNt;
+//		}
 	} else {
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
