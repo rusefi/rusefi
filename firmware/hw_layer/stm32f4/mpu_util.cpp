@@ -342,9 +342,9 @@ BOR_Level_t BOR_Get(void) {
 }
 
 BOR_Result_t BOR_Set(BOR_Level_t BORValue) {
-	if (BOR_Get() == BORValue) {
-		return BOR_Result_Ok;
-	}
+//	if (BOR_Get() == BORValue) {
+//		return BOR_Result_Ok;
+//	}
 
 
 //	FLASH_OBProgramInitTypeDef FLASH_Handle;
