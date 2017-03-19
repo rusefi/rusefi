@@ -36,14 +36,19 @@ extern persistent_config_container_s persistentState;
 
 extern engine_configuration_s *engineConfiguration;
 
-#define FLASH_ADDR 0x08060000
+/**
+ * this address needs to be above 'flash' region available for firmware
+ * todo: an ideal solution would be to define this address in the .ld / .icf mapping file
+ */
+
+#define FLASH_ADDR 0x080E0000
 
 #define PERSISTENT_SIZE sizeof(persistent_config_container_s)
 
 /**
  * https://sourceforge.net/p/rusefi/tickets/335/
  *
- * Address of second cofig copy, rounded to 4K. 4K is the page size is it?
+ * Address of second config copy, rounded to 4K. 4K is the page size is it?
  *
  */
 #define FLASH_ADDR_SECOND_COPY (FLASH_ADDR + ((PERSISTENT_SIZE + 4095) & 0xFFFFF000))
