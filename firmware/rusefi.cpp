@@ -151,6 +151,7 @@ static void scheduleReboot(void) {
 
 void runRusEfi(void) {
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 512, "init s");
+	assertEngineReference(PASS_ENGINE_PARAMETER_F);
 	initIntermediateLoggingBuffer();
 	initErrorHandling();
 
@@ -161,7 +162,7 @@ void runRusEfi(void) {
 	 * while reading configuration
 	 */
 	initTriggerDecoderLogger(&sharedLogger);
-#endif
+#endif /* EFI_SHAFT_POSITION_INPUT */
 
 	/**
 	 * we need to initialize table objects before default configuration can set values
