@@ -207,8 +207,8 @@ case TT_DODGE_RAM:
 	return "TT_DODGE_RAM";
 case TT_UNUSED:
 	return "TT_UNUSED";
-case TT_NISSAN:
-	return "TT_NISSAN";
+case TT_NISSAN_SR20VE:
+	return "TT_NISSAN_SR20VE";
 case TT_2JZ_1_12:
 	return "TT_2JZ_1_12";
 case TT_2JZ_3_34:

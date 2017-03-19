@@ -625,8 +625,8 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		initialize2jzGE1_12(this PASS_ENGINE_PARAMETER);
 		break;
 
-	case TT_NISSAN:
-		initializeNissan(this PASS_ENGINE_PARAMETER);
+	case TT_NISSAN_SR20VE:
+		initializeNissanSR20VE(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_ROVER_K:
