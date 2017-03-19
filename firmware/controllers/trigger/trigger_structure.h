@@ -106,7 +106,6 @@ public:
 	bool useOnlyPrimaryForSync;
 	/**
 	 * Should we use falls or rises for gap ratio detection?
-	 * todo: combine this flag with gapBothDirections?
 	 */
 	bool useRiseEdge;
 	/**
@@ -114,7 +113,7 @@ public:
 	 * Should we measure gaps with both fall and rise signal edges?
 	 * See also useOnlyPrimaryForSync
 	 */
-//	bool gapBothDirections;
+	bool gapBothDirections;
 
 	/**
 	 * This is used for signal validation
