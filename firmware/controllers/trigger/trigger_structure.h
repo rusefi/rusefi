@@ -114,7 +114,7 @@ public:
 	 * Should we measure gaps with both fall and rise signal edges?
 	 * See also useOnlyPrimaryForSync
 	 */
-	bool gapBothDirections;
+//	bool gapBothDirections;
 
 	/**
 	 * This is used for signal validation
