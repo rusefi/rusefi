@@ -5,6 +5,8 @@
  * VVT
  * set engine_type 45
  *
+ * See also custom_engine.cpp
+ *
  * @date Nov 14, 2014
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
