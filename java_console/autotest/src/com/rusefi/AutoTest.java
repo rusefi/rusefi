@@ -33,6 +33,8 @@ public class AutoTest {
         testFordAspire();
         test1995DodgeNeon();
         testMazdaProtege();
+        sendCommand("reboot"); // this would cause firmware in 5 seconds
+        sleep(10); // time to reboot
         testBmwE34();
         testSachs();
         testMitsu();
