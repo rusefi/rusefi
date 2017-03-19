@@ -436,5 +436,6 @@ void prepareShapes(DECLARE_ENGINE_PARAMETER_F);
 void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_S);
 void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S);
 void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F);
+void assertEngineReference(DECLARE_ENGINE_PARAMETER_F);
 
 #endif /* H_ENGINE_H_ */

@@ -507,3 +507,7 @@ void setAlgorithm(engine_load_mode_e algo DECLARE_ENGINE_PARAMETER_S) {
 void setInjectorLag(float value DECLARE_ENGINE_PARAMETER_S) {
 	setArrayValues(engineConfiguration->injector.battLagCorr, VBAT_INJECTOR_CURVE_SIZE, value);
 }
+
+void assertEngineReference(DECLARE_ENGINE_PARAMETER_F) {
+	efiAssertVoid(engine != NULL, "engine is NULL");
+}
