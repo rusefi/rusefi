@@ -595,7 +595,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 
 #if EFI_PWM_TESTER || defined(__DOXYGEN__)
 	initPwmTester();
-#endif
+#endif /* EFI_PWM_TESTER */
 
 	initMalfunctionCentral();
 
@@ -632,7 +632,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 
 #if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
 	startIdleThread(sharedLogger, engine);
-#endif
+#endif /* EFI_IDLE_CONTROL */
 
 	if (engineConfiguration->externalKnockSenseAdc != EFI_ADC_NONE) {
 		addConsoleAction("knockinfo", getKnockInfo);
@@ -640,13 +640,13 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 
 #if EFI_PROD_CODE
 	addConsoleAction("reset_accel", resetAccel);
-#endif
+#endif /* EFI_PROD_CODE */
 
 #if EFI_HD44780_LCD || defined(__DOXYGEN__)
 	initLcdController();
-#endif
+#endif /* EFI_HD44780_LCD */
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	initTachometer();
-#endif
+#endif /* EFI_PROD_CODE */
 }
