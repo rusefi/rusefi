@@ -7,17 +7,22 @@
 
 #include "trigger_nissan.h"
 
+/**
+ * Nissan Primera p11 year 1995-2002
+ */
+
 void initializeNissanSR20VE(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, false);
-	s->isSynchronizationNeeded = false;
+	s->isSynchronizationNeeded = true;
+	s->gapBothDirections = true;
 
 	float w = 5;
+	s->setTriggerSynchronizationGap(11.6);
 
 	float base = 180;
-	s->addEvent2(base - w, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
+	s->addEvent2(base - 15, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
 	s->addEvent2(base, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
 
-	// todo: what was this about? :) what Nissan? Need to dig the forum around Sep 19, 2015
 	// was is the the one with 360 opto sensor?
 
 	base += 180;
@@ -31,5 +36,4 @@ void initializeNissanSR20VE(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	base += 180;
 	s->addEvent2(base - w, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
 	s->addEvent2(base, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
-
 }

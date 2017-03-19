@@ -13,7 +13,7 @@
 #include "nissan_primera.h"
 
 void setNissanPrimeraEngineConfiguration(engine_configuration_s *engineConfiguration) {
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
+	engineConfiguration->trigger.type = TT_NISSAN_SR20VE;
 }
 
 #endif /* EFI_SUPPORT_NISSAN_PRIMERA */

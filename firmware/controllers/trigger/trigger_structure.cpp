@@ -100,6 +100,7 @@ void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTri
 	tdcPosition = 0;
 	shapeDefinitionError = useOnlyPrimaryForSync = false;
 	useRiseEdge = true;
+	gapBothDirections = false;
 
 	invertOnAdd = false;
 
