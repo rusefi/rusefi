@@ -35,7 +35,7 @@ rem cd ../firmware
 
 cd build
 rem Generate human-readable version of the .map memory usage report
-java -jar ../../java_tools/gcc_map_reader.jar > ../rusefi_ram_report.txt
+java -jar ../../java_tools/gcc_map_reader.jar rusefi.map > ../rusefi_ram_report.txt
 cd ..
 
 echo Looking at size
