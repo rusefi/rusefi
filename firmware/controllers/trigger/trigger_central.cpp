@@ -402,11 +402,10 @@ void triggerInfo(void) {
 
 	TriggerShape *ts = &engine->triggerCentral.triggerShape;
 
-	scheduleMsg(logger, "Template %s (%d) trigger %s (%d) useRiseEdge=%s onlyFront=%s gapBothDirections=%s useOnlyFirstChannel=%s tdcOffset=%d",
+	scheduleMsg(logger, "Template %s (%d) trigger %s (%d) useRiseEdge=%s onlyFront=%s useOnlyFirstChannel=%s tdcOffset=%d",
 			getConfigurationName(engineConfiguration->engineType), engineConfiguration->engineType,
 			getTrigger_type_e(engineConfiguration->trigger.type), engineConfiguration->trigger.type,
 			boolToString(TRIGGER_SHAPE(useRiseEdge)), boolToString(engineConfiguration->useOnlyRisingEdgeForTrigger),
-			boolToString(TRIGGER_SHAPE(gapBothDirections)),
 			boolToString(engineConfiguration->trigger.useOnlyFirstChannel), TRIGGER_SHAPE(tdcPosition));
 
 	if (engineConfiguration->trigger.type == TT_TOOTHED_WHEEL) {
