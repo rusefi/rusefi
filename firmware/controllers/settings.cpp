@@ -78,7 +78,7 @@ void printSpiState(Logging *logger, board_configuration_s *boardConfiguration) {
 
 extern board_configuration_s *boardConfiguration;
 
-static void printOutputs(engine_configuration_s *engineConfiguration) {
+static void printOutputs(const engine_configuration_s *engineConfiguration) {
 	scheduleMsg(&logger, "injectionPins: mode %s", getPin_output_mode_e(boardConfiguration->injectionPinMode));
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		brain_pin_e brainPin = boardConfiguration->injectionPins[i];
@@ -198,7 +198,7 @@ const char* getConfigurationName(engine_type_e engineType) {
 /**
  * @brief	Prints current engine configuration to human-readable console.
  */
-void printConfiguration(engine_configuration_s *engineConfiguration) {
+void printConfiguration(const engine_configuration_s *engineConfiguration) {
 
 	scheduleMsg(&logger, "Template %s/%d trigger %s/%s/%d", getConfigurationName(engineConfiguration->engineType),
 			engineConfiguration->engineType, getTrigger_type_e(engineConfiguration->trigger.type),
@@ -1134,7 +1134,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 	}
 }
 
-void initSettings(engine_configuration_s *engineConfiguration) {
+void initSettings(const engine_configuration_s *engineConfiguration) {
 	// todo: start saving values into flash right away?
 
 	addConsoleActionP("showconfig", (VoidPtr) doPrintConfiguration, &engine);
