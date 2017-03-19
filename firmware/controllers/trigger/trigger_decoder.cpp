@@ -477,7 +477,6 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "init t");
 	scheduleMsg(logger, "initializeTriggerShape(%s/%d)", getTrigger_type_e(triggerConfig->type), (int) triggerConfig->type);
 #endif
-	TriggerShape *triggerShape = this;
 
 	shapeDefinitionError = false;
 
@@ -513,7 +512,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_DODGE_NEON_2003_CAM:
-		configureNeon2003TriggerShapeCam(triggerShape PASS_ENGINE_PARAMETER);
+		configureNeon2003TriggerShapeCam(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_DODGE_NEON_2003_CRANK:
@@ -562,15 +561,15 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_60_2_VW:
-		setVwConfiguration(triggerShape PASS_ENGINE_PARAMETER);
+		setVwConfiguration(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_TOOTHED_WHEEL_36_1:
-		setToothedWheelConfiguration(triggerShape, 36, 1, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
+		setToothedWheelConfiguration(this, 36, 1, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_HONDA_4_24_1:
-		configureHonda_1_4_24(triggerShape, true, true, T_CHANNEL_3, T_PRIMARY, 0 PASS_ENGINE_PARAMETER);
+		configureHonda_1_4_24(this, true, true, T_CHANNEL_3, T_PRIMARY, 0 PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_HONDA_4_24:
@@ -578,27 +577,27 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_HONDA_1_24:
-		configureHonda_1_4_24(triggerShape, true, false, T_PRIMARY, T_NONE, 10 PASS_ENGINE_PARAMETER);
+		configureHonda_1_4_24(this, true, false, T_PRIMARY, T_NONE, 10 PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_HONDA_ACCORD_1_24_SHIFTED:
-		configureHondaAccordShifted(triggerShape PASS_ENGINE_PARAMETER);
+		configureHondaAccordShifted(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_HONDA_1_4_24:
-		configureHondaAccordCDDip(triggerShape PASS_ENGINE_PARAMETER);
+		configureHondaAccordCDDip(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_HONDA_CBR_600:
-		configureHondaCbr600(triggerShape PASS_ENGINE_PARAMETER);
+		configureHondaCbr600(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_HONDA_CBR_600_CUSTOM:
-		configureHondaCbr600custom(triggerShape PASS_ENGINE_PARAMETER);
+		configureHondaCbr600custom(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_MITSUBISHI:
-		initializeMitsubishi4g18(triggerShape PASS_ENGINE_PARAMETER);
+		initializeMitsubishi4g18(this PASS_ENGINE_PARAMETER);
 		break;
 
 	case TT_DODGE_RAM:
