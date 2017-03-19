@@ -207,7 +207,7 @@ typedef enum {
 
 	TT_36_2_2_2 = 23,
 
-	TT_NISSAN = 24,
+	TT_NISSAN_SR20VE = 24,
 
 	TT_2JZ_3_34 = 25,
 
