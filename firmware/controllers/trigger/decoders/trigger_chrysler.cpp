@@ -30,7 +30,6 @@ void initDodgeRam(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 void configureNeon2003TriggerShapeCrank(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
 	s->useRiseEdge = true;
-	s->gapBothDirections = false;
 
 	s->setTriggerSynchronizationGap(3);
 	int m = 2;
@@ -108,7 +107,6 @@ void configureNeon2003TriggerShapeCam(TriggerShape *s DECLARE_ENGINE_PARAMETER_S
 
 	s->initialize(FOUR_STROKE_CAM_SENSOR, !useOnlyPrimary);
 	s->useRiseEdge = true;
-	s->gapBothDirections = false;
 
 	s->tdcPosition = 496;
 
