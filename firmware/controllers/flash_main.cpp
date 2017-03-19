@@ -93,6 +93,7 @@ void writeToFlashNow(void) {
 	} else {
 		scheduleMsg(logger, "Flashing failed");
 	}
+	assertEngineReference(PASS_ENGINE_PARAMETER_F);
 	maxLockTime = 0;
 }
 
@@ -127,7 +128,7 @@ static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, 
  */
 persisted_configuration_state_e readConfiguration(Logging * logger) {
 	efiAssert(getRemainingStack(chThdSelf()) > 256, "read f", PC_ERROR);
-
+	assertEngineReference(PASS_ENGINE_PARAMETER_F);
 	persisted_configuration_state_e result = doReadConfiguration(FLASH_ADDR, logger);
 	if (result != PC_OK) {
 		printMsg(logger, "Reading second configuration copy");
