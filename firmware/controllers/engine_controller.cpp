@@ -94,7 +94,6 @@ static LoggingWithStorage logger("Engine Controller");
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 
 /**
- * todo: eliminate constructor parameter so that _engine could be moved to CCM_OPTIONAL
  * todo: this should probably become 'static', i.e. private, and propagated around explicitly?
  */
 Engine _engine CCM_OPTIONAL;
@@ -107,8 +106,6 @@ Engine * engine = &_engine;
  * Also technically the whole feature might be implemented as cranking fuel coefficient curve by TPS.
  */
 #define CLEANUP_MODE_TPS 90
-
-extern OutputPin runningPin;
 
 static msg_t csThread(void) {
 	chRegSetThreadName("status");
