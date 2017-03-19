@@ -125,6 +125,15 @@ static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_F
 	totalEventCountBase += TRIGGER_SHAPE(size); \
 }
 
+
+#define considerEventForGap() (!TRIGGER_SHAPE(useOnlyPrimaryForSync) || isPrimary)
+
+#define needToSkipRise(type) (!TRIGGER_SHAPE(gapBothDirections)) && ((!TRIGGER_SHAPE(useRiseEdge)) && (type != TV_FALL))
+#define needToSkipFall(type) (!TRIGGER_SHAPE(gapBothDirections)) && (  TRIGGER_SHAPE(useRiseEdge)  && (type != TV_RISE))
+
+#define isLessImportant(type) (needToSkipFall(type) || needToSkipRise(type) || (!considerEventForGap()) )
+
+
 /**
  * @brief Trigger decoding happens here
  * This method is invoked every time we have a fall or rise on one of the trigger sensors.
