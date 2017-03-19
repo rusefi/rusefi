@@ -102,7 +102,6 @@ void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTri
 	useRiseEdge = true;
 
 	invertOnAdd = false;
-	gapBothDirections = false;
 
 	this->operationMode = operationMode;
 	size = 0;
