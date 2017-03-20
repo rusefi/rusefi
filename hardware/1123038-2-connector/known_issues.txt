@@ -3,5 +3,4 @@
 3) RESOLVED IN R0.3 what we have as 4X is actually 4Z (TCM in case of Miata)
 4) RESOLVED IN R0.3 wiring silkscreen is needed on both sides, not only top
 5) RESOLVED IN R0.3 traces are to OSHPark 6 mill mininium, increased to 8 mill
-6)                  silkscreen, connector side: 4AC instead of 4AG
-
+6) RESOLVED IN R0.4 silkscreen, connector side: 4AC instead of 4AG

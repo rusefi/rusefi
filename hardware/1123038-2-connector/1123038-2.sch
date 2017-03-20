@@ -38,8 +38,8 @@ $Descr A 8500 11000 portrait
 encoding utf-8
 Sheet 1 1
 Title "ECU adapter"
-Date "2016-12-23"
-Rev "R0.3"
+Date "2017-03-19"
+Rev "R0.4"
 Comp "DAECU for rusEFI"
 Comment1 ""
 Comment2 ""

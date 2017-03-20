@@ -15,8 +15,8 @@
   (page A portrait)
   (title_block
     (title "1123038-2 Connector breakout")
-    (date 2016-12-23)
-    (rev R0.3)
+    (date 2017-03-19)
+    (rev R0.4)
     (company rusEFI)
   )
 
@@ -1686,7 +1686,7 @@
   (gr_text 4T (at 155.575 49.022) (layer F.SilkS) (tstamp 58B64A3E)
     (effects (font (size 1.016 1.016) (thickness 0.127)))
   )
-  (gr_text 4AC (at 169.037 52.832) (layer F.SilkS) (tstamp 58B64A3D)
+  (gr_text 4AG (at 169.037 52.832) (layer F.SilkS) (tstamp 58B64A3D)
     (effects (font (size 1.016 1.016) (thickness 0.127)))
   )
   (gr_text 4AD (at 166.116 52.832) (layer F.SilkS) (tstamp 58B64A3C)
@@ -1845,7 +1845,7 @@
   (gr_text 4AD (at 166.116 52.832) (layer B.SilkS) (tstamp 581084AB)
     (effects (font (size 1.016 1.016) (thickness 0.127)) (justify mirror))
   )
-  (gr_text 4AC (at 169.164 52.832) (layer B.SilkS) (tstamp 581084AA)
+  (gr_text 4AG (at 169.164 52.832) (layer B.SilkS) (tstamp 581084AA)
     (effects (font (size 1.016 1.016) (thickness 0.127)) (justify mirror))
   )
   (gr_text 4T (at 155.702 49.022) (layer B.SilkS) (tstamp 581084A2)
