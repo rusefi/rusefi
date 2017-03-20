@@ -12,5 +12,7 @@ void initElectronicThrottle(void);
 void setDefaultEtbParameters(void);
 void setEtbPFactor(float value);
 void setEtbIFactor(float value);
+void stopETBPins(void);
+void startETBPins(void);
 
 #endif /* ELECTRONIC_THROTTLE_H_ */
