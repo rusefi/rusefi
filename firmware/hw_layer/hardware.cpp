@@ -25,6 +25,7 @@
 
 #if EFI_PROD_CODE
 #include "AdcConfiguration.h"
+#include "electronic_throttle.h"
 #include "board_test.h"
 #include "mcp3208.h"
 #include "HIP9011.h"
@@ -229,6 +230,7 @@ void applyNewHardwareSettings(void) {
     stopInjectionPins();
 	stopIgnitionPins();
 	stopCanPins();
+	stopETBPins();
 
 	if (engineConfiguration->bc.is_enabled_spi_1 != activeConfiguration.bc.is_enabled_spi_1)
 		stopSpi(SPI_DEVICE_1);
@@ -285,6 +287,7 @@ void applyNewHardwareSettings(void) {
 	startInjectionPins();
 	startIgnitionPins();
 	startCanPins();
+	startETBPins();
 
 	adcConfigListener(engine);
 }

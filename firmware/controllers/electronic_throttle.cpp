@@ -149,15 +149,14 @@ void setDefaultEtbParameters(void) {
 	boardConfiguration->etbDT = 100;
 }
 
-void initElectronicThrottle(void) {
-	// these two lines are controlling direction
-//	outputPinRegister("etb1", ELECTRONIC_THROTTLE_CONTROL_1, ETB_CONTROL_LINE_1_PORT, ETB_CONTROL_LINE_1_PIN);
-//	outputPinRegister("etb2", ELECTRONIC_THROTTLE_CONTROL_2, ETB_CONTROL_LINE_2_PORT, ETB_CONTROL_LINE_2_PIN);
+void stopETBPins(void) {
+	unmarkPin(boardConfiguration->etbControlPin1);
+	unmarkPin(boardConfiguration->etbControlPin2);
+	unmarkPin(boardConfiguration->etbDirectionPin1);
+	unmarkPin(boardConfiguration->etbDirectionPin2);
+}
 
-	if (!hasPedalPositionSensor()) {
-		return;
-	}
-
+void startETBPins(void) {
 	// this line used for PWM
 	startSimplePwmExt(&etbPwmUp, "etb1",
 			boardConfiguration->etbControlPin1,
@@ -174,6 +173,18 @@ void initElectronicThrottle(void) {
 
 	outputPinRegisterExt2("etb dir open", &outputDirectionOpen, boardConfiguration->etbDirectionPin1, &DEFAULT_OUTPUT);
 	outputPinRegisterExt2("etb dir close", &outputDirectionClose, boardConfiguration->etbDirectionPin2, &DEFAULT_OUTPUT);
+}
+
+void initElectronicThrottle(void) {
+	// these two lines are controlling direction
+//	outputPinRegister("etb1", ELECTRONIC_THROTTLE_CONTROL_1, ETB_CONTROL_LINE_1_PORT, ETB_CONTROL_LINE_1_PIN);
+//	outputPinRegister("etb2", ELECTRONIC_THROTTLE_CONTROL_2, ETB_CONTROL_LINE_2_PORT, ETB_CONTROL_LINE_2_PIN);
+
+	if (!hasPedalPositionSensor()) {
+		return;
+	}
+
+	startETBPins();
 
 	addConsoleActionI("e", setThrottleConsole);
 
