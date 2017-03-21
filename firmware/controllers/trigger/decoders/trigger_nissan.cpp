@@ -17,7 +17,7 @@ void initializeNissanSR20VE(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->gapBothDirections = true;
 
 	float w = 5;
-	s->setTriggerSynchronizationGap(11.6);
+	s->setTriggerSynchronizationGap2(9.67 * 0.75, 14.50);
 
 	float base = 180;
 	s->addEvent2(base - 15, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
