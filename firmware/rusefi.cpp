@@ -241,7 +241,7 @@ void chDbgStackOverflowPanic(Thread *otp) {
 	chDbgPanic3(panicMessage, __FILE__, __LINE__);
 }
 
-static char UNUSED_RAM_SIZE[24100];
+static char UNUSED_RAM_SIZE[22100];
 
 static char UNUSED_CCM_SIZE[9500] CCM_OPTIONAL;
 
@@ -250,5 +250,5 @@ int getRusEfiVersion(void) {
 		return 123; // this is here to make the compiler happy about the unused array
 	if (UNUSED_CCM_SIZE[0] * 0 != 0)
 		return 3211; // this is here to make the compiler happy about the unused array
-	return 20170318;
+	return 20170320;
 }
