@@ -15,6 +15,8 @@
 
 #include "histogram.h"
 
+extern cnt_t dbg_lock_cnt;
+extern cnt_t dbg_isr_cnt;
 #define isLocked() (dbg_lock_cnt > 0)
 
 	/**

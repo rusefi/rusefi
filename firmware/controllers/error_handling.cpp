@@ -60,7 +60,7 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	dbg_panic_file = file;
 	dbg_panic_line = line;
 #if CH_DBG_SYSTEM_STATE_CHECK || defined(__DOXYGEN__)
-	dbg_panic_msg = msg;
+	ch.dbg.panic_msg = msg;
 #endif /* CH_DBG_SYSTEM_STATE_CHECK */
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -77,7 +77,7 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	if (!main_loop_started) {
 		print("fatal %s %s:%d\r\n", msg, file, line);
 		chThdSleepSeconds(1);
-		chSysHalt();
+		chSysHalt("Main loop did not start");
 	}
 }
 

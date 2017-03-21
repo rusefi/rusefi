@@ -132,7 +132,7 @@ static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, 
  * connectivity so no console output here
  */
 persisted_configuration_state_e readConfiguration(Logging * logger) {
-	efiAssert(getRemainingStack(chThdSelf()) > 256, "read f", PC_ERROR);
+	efiAssert(getRemainingStack(chThdGetSelfX()) > 256, "read f", PC_ERROR);
 	assertEngineReference(PASS_ENGINE_PARAMETER_F);
 	persisted_configuration_state_e result = doReadConfiguration(FLASH_ADDR, logger);
 	if (result != PC_OK) {

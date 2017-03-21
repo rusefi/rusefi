@@ -104,7 +104,7 @@ void appendFast(Logging *logging, const char *text) {
 
 static void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
 	intermediateLoggingBuffer.eos = 0; // reset
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#1b");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#1b");
 	chvprintf((BaseSequentialStream *) &intermediateLoggingBuffer, fmt, arg);
 	intermediateLoggingBuffer.buffer[intermediateLoggingBuffer.eos] = 0; // need to terminate explicitly
 	append(logging, (char *) intermediateLoggingBufferData);
@@ -114,7 +114,7 @@ static void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
  * this method acquires system lock to guard the shared intermediateLoggingBuffer memory stream
  */
 void vappendPrintf(Logging *logging, const char *fmt, va_list arg) {
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#5b");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#5b");
 	if (!intermediateLoggingBufferInited) {
 		firmwareError(CUSTOM_ERR_6532, "intermediateLoggingBufferInited not inited!");
 		return;
@@ -127,7 +127,7 @@ void vappendPrintf(Logging *logging, const char *fmt, va_list arg) {
 }
 
 void appendPrintf(Logging *logging, const char *fmt, ...) {
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#4");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#4");
 	va_list ap;
 	va_start(ap, fmt);
 	vappendPrintf(logging, fmt, ap);
@@ -252,7 +252,7 @@ void resetLogging(Logging *logging) {
  * This method should only be invoked on main thread because only the main thread can write to the console
  */
 void printMsg(Logging *logger, const char *fmt, ...) {
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#5o");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#5o");
 //	resetLogging(logging); // I guess 'reset' is not needed here?
 	appendMsgPrefix(logger);
 

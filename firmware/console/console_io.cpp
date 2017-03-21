@@ -151,7 +151,7 @@ void runConsoleLoop(ts_channel_s *console) {
 	}
 
 	while (true) {
-		efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#9e");
+		efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 256, "lowstck#9e");
 		bool end = getConsoleLine((BaseSequentialStream*) console->channel, console->crcReadBuffer, sizeof(console->crcReadBuffer) - 3);
 		if (end) {
 			// firmware simulator is the only case when this happens
@@ -285,7 +285,7 @@ bool lockAnyContext(void) {
 	if (alreadyLocked)
 		return true;
 	if (isIsrContext()) {
-		chSysLockFromIsr()
+		chSysLockFromISR()
 		;
 	} else {
 		chSysLock()
@@ -300,7 +300,7 @@ bool lockOutputBuffer(void) {
 
 void unlockAnyContext(void) {
 	if (isIsrContext()) {
-		chSysUnlockFromIsr()
+		chSysUnlockFromISR()
 		;
 	} else {
 		chSysUnlock()

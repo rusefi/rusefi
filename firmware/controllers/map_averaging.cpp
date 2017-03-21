@@ -91,7 +91,7 @@ static bool isAveraging = false;
 
 static void startAveraging(void *arg) {
 	(void) arg;
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#9");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#9");
 	bool wasLocked = lockAnyContext();
 	;
 	// with locking we would have a consistent state
@@ -99,7 +99,7 @@ static void startAveraging(void *arg) {
 	mapMeasurementsCounter = 0;
 	isAveraging = true;
 	if (!wasLocked)
-		chSysUnlockFromIsr()
+		chSysUnlockFromISR()
 	;
 	turnPinHigh(&mapAveragingPin);
 }
@@ -117,7 +117,7 @@ void mapAveragingCallback(adcsample_t adcValue) {
 
 	/* Calculates the average values from the ADC samples.*/
 	measurementsPerRevolutionCounter++;
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#9a");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#9a");
 
 #if (EFI_SENSOR_CHART && EFI_ANALOG_SENSORS) || defined(__DOXYGEN__)
 	if (ENGINE(sensorChartMode) == SC_MAP) {
@@ -144,13 +144,13 @@ void mapAveragingCallback(adcsample_t adcValue) {
 	readIndex = writeIndex;
 
 	// todo: migrate to the lock-free implementation
-	chSysLockFromIsr()
+	chSysLockFromISR()
 	;
 	// with locking we would have a consistent state
 
 	mapAccumulator += adcValue;
 	mapMeasurementsCounter++;
-	chSysUnlockFromIsr()
+	chSysUnlockFromISR()
 	;
 }
 #endif
@@ -165,7 +165,7 @@ static void endAveraging(void *arg) {
 			mapAccumulator / mapMeasurementsCounter);
 #endif
 	if (!wasLocked)
-		chSysUnlockFromIsr()
+		chSysUnlockFromISR()
 	;
 	turnPinLow(&mapAveragingPin);
 }

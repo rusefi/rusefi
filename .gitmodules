@@ -1,0 +1,4 @@
+[submodule "firmware/ChibiOS"]
+	path = firmware/ChibiOS
+	url = https://github.com/ChibiOS/ChibiOS.git
+	branch = stable_16.1.x

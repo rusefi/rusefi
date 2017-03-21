@@ -32,7 +32,7 @@
 static LoggingWithStorage logger("console");
 
 static void myfatal(void) {
-	chDbgCheck(0, "my fatal");
+	chDbgCheck(0);
 }
 
 static void myerror(void) {
