@@ -30,6 +30,17 @@
 
 #if HAL_USE_MASS_STORAGE_USB || defined(__DOXYGEN__)
 
+#ifndef PACK_STRUCT_BEGIN
+#define PACK_STRUCT_BEGIN
+#endif
+
+#ifndef PACK_STRUCT_STRUCT
+#define PACK_STRUCT_STRUCT
+#endif
+
+#ifndef PACK_STRUCT_END
+#define PACK_STRUCT_END
+#endif
 
 #if 0
 #define MSD_RW_LED_ON()   palSetPad(GPIOI, GPIOI_TRI_LED_BLUE)
@@ -216,29 +227,29 @@ struct USBMassStorageDriver {
     /* Driver Setup Data */
 	USBDriver                 *usbp;
 	BaseBlockDevice *bbdp;
-	EventSource evt_connected;
-	EventSource evt_ejected;
+	event_source_t evt_connected;
+	event_source_t evt_ejected;
 	BlockDeviceInfo block_dev_info;
 	bool block_dev_info_valid_flag;
 	usb_msd_driver_state_t driver_state;
     usbep_t  ms_ep_number;
     uint16_t msd_interface_number;
-    bool_t (*enable_msd_callback)(void);
-    bool_t (*suspend_threads_callback)(void);
+    bool (*enable_msd_callback)(void);
+    bool (*suspend_threads_callback)(void);
 
     /* Externally modifiable settings */
-    bool_t enable_media_removial;
-    bool_t disable_usb_bus_disconnect_on_eject;
+    bool enable_media_removial;
+    bool disable_usb_bus_disconnect_on_eject;
     BaseSequentialStream *chp; /*For debug logging*/
 
     /*Internal data for operation of the driver */
-    BinarySemaphore bsem;
-    BinarySemaphore usb_transfer_thread_bsem;
-    BinarySemaphore mass_sorage_thd_bsem;
+    binary_semaphore_t bsem;
+    binary_semaphore_t usb_transfer_thread_bsem;
+    binary_semaphore_t mass_sorage_thd_bsem;
     volatile uint32_t trigger_transfer_index;
 
-    volatile bool_t bulk_in_interupt_flag;
-    volatile bool_t bulk_out_interupt_flag;
+    volatile bool bulk_in_interupt_flag;
+    volatile bool bulk_out_interupt_flag;
 
     struct {
       scsi_read_format_capacity_response_t format_capacity_response;
@@ -253,11 +264,11 @@ struct USBMassStorageDriver {
     msd_csw_t csw;
     scsi_sense_response_t sense;
 
-    volatile bool_t reconfigured_or_reset_event;
+    volatile bool reconfigured_or_reset_event;
 
-    bool_t command_succeeded_flag;
-    bool_t stall_in_endpoint;
-    bool_t stall_out_endpoint;
+    bool command_succeeded_flag;
+    bool stall_in_endpoint;
+    bool stall_out_endpoint;
 
 
     /*Debugging Information*/
@@ -271,11 +282,11 @@ struct USBMassStorageDriver {
     volatile uint8_t last_bad_scsi_command;
 
     /* Externally readable values */
-    volatile bool_t debug_enable_msd;
+    volatile bool debug_enable_msd;
     volatile msd_wait_mode_t debug_wait_for_isr;
 
-    WORKING_AREA(waMassStorage, MSD_THREAD_STACK_SIZE);
-    WORKING_AREA(waMassStorageUSBTransfer, MSD_THREAD_STACK_SIZE);
+    THD_WORKING_AREA(waMassStorage, MSD_THREAD_STACK_SIZE);
+    THD_WORKING_AREA(waMassStorageUSBTransfer, MSD_THREAD_STACK_SIZE);
 };
 
 
@@ -287,8 +298,8 @@ usb_msd_driver_state_t msdStart(USBMassStorageDriver *msdp);
 usb_msd_driver_state_t msdStop(USBMassStorageDriver *msdp);
 void msdBulkInCallbackComplete(USBDriver *usbp, usbep_t ep);
 void msdBulkOutCallbackComplete(USBDriver *usbp, usbep_t ep);
-bool_t msdRequestsHook(USBDriver *usbp);
-bool_t msdRequestsHook2(USBDriver *usbp, USBMassStorageDriver *msdp);
+bool msdRequestsHook(USBDriver *usbp);
+bool msdRequestsHook2(USBDriver *usbp, USBMassStorageDriver *msdp);
 const char* usb_msd_driver_state_t_to_str(const usb_msd_driver_state_t driver_state);
 #ifdef __cplusplus
 }

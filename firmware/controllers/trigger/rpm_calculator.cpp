@@ -181,7 +181,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	efitick_t nowNt = getTimeNowNt();
 	engine->m.beforeRpmCb = GET_TIMESTAMP();
 #if EFI_PROD_CODE
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#2z");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 256, "lowstck#2z");
 #endif
 
 #if EFI_SENSOR_CHART || defined(__DOXYGEN__)
