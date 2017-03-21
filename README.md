@@ -5,7 +5,8 @@ current binaries are always available at http://rusefi.com/build_server/
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
-| 03/09/2017    | r13223    | bugfix #374: persistent configuration starts to touch firmware - settings would need to be reloaded |
+| 03/20/2017    | r13233    | improvements #375 & #376: hard FPU mode & migrating to fresh version of arm gcc |
+| 03/19/2017    | r13223    | bugfix #374: persistent configuration starts to touch firmware - settings would need to be reloaded |
 | 03/09/2017    | r13146    | bugfix #370: duty cycle vs error code 6050 |
 | 03/06/2017    | r13123    | bugfix #363: 2/1 skipped wheel is a corner-case |
 | 03/05/2017    | r13108    | bugfix #363: trigger front only processing |
