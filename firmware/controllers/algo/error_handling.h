@@ -45,7 +45,7 @@ char *getFirmwareError(void);
  * so that it would not crash the error handler in case of stack issues
  */
 #if CH_DBG_SYSTEM_STATE_CHECK
-#define hasFatalError() (dbg_panic_msg != NULL)
+#define hasFatalError() (ch.dbg.panic_msg != NULL)
 #else
 #define hasFatalError() (FALSE)
 #endif

@@ -76,3 +76,5 @@ void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par
 
 #endif
 
+cnt_t dbg_lock_cnt;
+cnt_t dbg_isr_cnt;

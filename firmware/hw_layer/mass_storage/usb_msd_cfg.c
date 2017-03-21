@@ -201,7 +201,7 @@ static void usb_event(USBDriver *usbp, usbevent_t event) {
   case USB_EVENT_ADDRESS:
     return;
   case USB_EVENT_CONFIGURED:
-    chSysLockFromIsr();
+    chSysLockFromISR();
     msdp->reconfigured_or_reset_event = TRUE;
     usbInitEndpointI(usbp, msdp->ms_ep_number, &epDataConfig);
     /* Kick-start the thread */
@@ -209,7 +209,7 @@ static void usb_event(USBDriver *usbp, usbevent_t event) {
 
     /* signal that the device is connected */
     chEvtBroadcastI(&msdp->evt_connected);
-    chSysUnlockFromIsr();
+    chSysUnlockFromISR();
 
     return;
   case USB_EVENT_SUSPEND:
