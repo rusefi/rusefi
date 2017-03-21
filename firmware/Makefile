@@ -59,7 +59,7 @@ endif
 # Architecture or project specific options
 #
 
-USE_FPU = softfp
+USE_FPU = hard
 
 # Enables the use of FPU on Cortex-M4 (no, softfp, hard).
 ifeq ($(USE_FPU),)
