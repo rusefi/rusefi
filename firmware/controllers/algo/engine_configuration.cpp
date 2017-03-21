@@ -159,7 +159,7 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_F) {
 	engine->preCalculate();
 #if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)
 	onConfigurationChangeAlternatorCallback(&activeConfiguration);
-#endif
+#endif /* EFI_ALTERNATOR_CONTROL */
 	rememberCurrentConfiguration();
 }
 
