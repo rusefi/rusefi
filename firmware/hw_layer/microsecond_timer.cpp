@@ -127,7 +127,7 @@ static msg_t mwThread(int param) {
 
 static const GPTConfig gpt5cfg = { 1000000, /* 1 MHz timer clock.*/
 callback, /* Timer callback.*/
-0 };
+0, 0 };
 
 void initMicrosecondTimer(void) {
 
