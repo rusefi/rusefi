@@ -16,6 +16,8 @@ void initializeNissanSR20VE(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	s->isSynchronizationNeeded = true;
 	s->gapBothDirections = true;
 
+	s->tdcPosition = 630;
+
 	float w = 5;
 	s->setTriggerSynchronizationGap2(9.67 * 0.75, 16);
 
