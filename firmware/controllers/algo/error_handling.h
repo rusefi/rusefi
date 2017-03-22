@@ -40,18 +40,6 @@ void firmwareError(obd_code_e code, const char *fmt, ...);
 
 char *getFirmwareError(void);
 
-/**
- * declared as a macro so that this code does not use stack
- * so that it would not crash the error handler in case of stack issues
- */
-#if CH_DBG_SYSTEM_STATE_CHECK
-#define hasFatalError() (ch.dbg.panic_msg != NULL)
-#else
-#define hasFatalError() (FALSE)
-#endif
-
-void chDbgPanic3(const char *msg, const char * file, int line);
-
 void initErrorHandling(void);
 char *getWarning(void);
 

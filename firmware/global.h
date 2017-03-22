@@ -16,10 +16,6 @@ extern "C"
 #include <ch.h>
 #include <hal.h>
     
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
 #include <string.h>
 
 #define DEFAULT_ENGINE_TYPE CUSTOM_ENGINE
@@ -124,5 +120,9 @@ typedef unsigned int time_t;
  * Stack debugging
  */
 int getRemainingStack(thread_t *otp);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* GLOBAL_H_ */
