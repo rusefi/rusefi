@@ -76,7 +76,7 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 
 	if (!main_loop_started) {
 		print("fatal %s %s:%d\r\n", msg, file, line);
-		chThdSleepSeconds(1);
+//		chThdSleepSeconds(1);
 		chSysHalt("Main loop did not start");
 	}
 }

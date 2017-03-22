@@ -1,5 +1,5 @@
 /*
-    ChibiOS/RT - Copyright (C) 2006-2013 Giovanni Di Sirio
+    ChibiOS - Copyright (C) 2006..2015 Giovanni Di Sirio
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -14,9 +14,10 @@
     limitations under the License.
 */
 
-#include "main.h"
+#include "hal.h"
 
-#if HAL_USE_SERIAL_USB || defined(__DOXYGEN__)
+/* Virtual serial port over USB.*/
+SerialUSBDriver SDU1;
 
 /*
  * Endpoints to be used for USBD1.
@@ -287,6 +288,12 @@ static void usb_event(USBDriver *usbp, usbevent_t event) {
   case USB_EVENT_UNCONFIGURED:
     return;
   case USB_EVENT_SUSPEND:
+    chSysLockFromISR();
+
+    /* Disconnection event on suspend.*/
+    sduDisconnectI(&SDU1);
+
+    chSysUnlockFromISR();
     return;
   case USB_EVENT_WAKEUP:
     return;
@@ -297,13 +304,25 @@ static void usb_event(USBDriver *usbp, usbevent_t event) {
 }
 
 /*
+ * Handles the USB driver global events.
+ */
+static void sof_handler(USBDriver *usbp) {
+
+  (void)usbp;
+
+  osalSysLockFromISR();
+  sduSOFHookI(&SDU1);
+  osalSysUnlockFromISR();
+}
+
+/*
  * USB driver configuration.
  */
 const USBConfig usbcfg = {
   usb_event,
   get_descriptor,
   sduRequestsHook,
-  NULL
+  sof_handler
 };
 
 /*
@@ -315,7 +334,3 @@ const SerialUSBConfig serusbcfg = {
   USBD1_DATA_AVAILABLE_EP,
   USBD1_INTERRUPT_REQUEST_EP
 };
-
-/* Virtual serial port over USB.*/
-SerialUSBDriver SDU1;
-#endif
