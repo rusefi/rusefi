@@ -111,7 +111,7 @@ static ICUDriver *turnOnTriggerInputPin(const char *msg, brain_pin_e hwPin, ICUC
 
 		efiIcuStart(driver, icucfg);
 		if (driver->state == ICU_READY) {
-			icuEnableNotifications(driver);
+            icuStartCapture(driver);
 		} else {
 			// we would be here for example if same pin is used for multiple input capture purposes
 			firmwareError(CUSTOM_ERR_ICU_STATE, "ICU unexpected state [%s]", hwPortname(hwPin));
@@ -123,7 +123,7 @@ static ICUDriver *turnOnTriggerInputPin(const char *msg, brain_pin_e hwPin, ICUC
 static void turnOffTriggerInputPin(brain_pin_e hwPin) {
 	ICUDriver *driver = getInputCaptureDriver("trigger_off", hwPin);
 	if (driver != NULL) {
-		icuDisableNotificationsI(driver);
+        icuStopCapture(driver);
 		icuStop(driver);
 		scheduleMsg(logger, "turnOffTriggerInputPin %s", hwPortname(hwPin));
 		unmarkPin(hwPin);
