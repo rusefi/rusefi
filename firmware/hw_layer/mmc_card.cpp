@@ -24,7 +24,7 @@
 #include "hardware.h"
 #include "engine_configuration.h"
 #include "status_loop.h"
-#include "usb_msd.h"
+#include "hal_usb_msd.h"
 #include "usb_msd_cfg.h"
 
 #include "rtc_helper.h"
@@ -56,7 +56,7 @@ extern board_configuration_s *boardConfiguration;
 
 //static USBDriver *ms_usb_driver = &USBD1;
 //static USBMassStorageDriver UMSD1;
-//extern const USBConfig msd_usb_config;
+extern const USBConfig msdusbcfg;
 
 
 
