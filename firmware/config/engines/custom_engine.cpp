@@ -134,6 +134,7 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->ignitionPins[0] = GPIOE_14;
 	boardConfiguration->ignitionPins[1] = GPIOC_7;
 	boardConfiguration->ignitionPins[2] = GPIOC_9;
+	// set_ignition_pin 4 PE10
 	boardConfiguration->ignitionPins[3] = GPIOE_10;
 #endif
 
@@ -149,6 +150,9 @@ void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 
 	engineConfiguration->specs.cylindersCount = 12;
+
+	// set ignition_mode 1
+	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
 	boardConfiguration->injectionPins[0] = GPIOB_7; // #1
 	boardConfiguration->injectionPins[1] = GPIOB_8; // #2
