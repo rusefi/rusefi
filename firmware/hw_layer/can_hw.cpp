@@ -304,8 +304,8 @@ void initCan(void) {
 #else
 	canStart(&CAND1, &canConfig);
 #endif
-
-	canStart(&EFI_CAN_DEVICE, &canConfig);
+    // FIXME: Can't start a driver twice.
+    //canStart(&EFI_CAN_DEVICE, &canConfig);
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 
 	chThdCreateStatic(canTreadStack, sizeof(canTreadStack), NORMALPRIO, (tfunc_t) canThread, NULL);

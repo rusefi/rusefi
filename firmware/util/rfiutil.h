@@ -15,16 +15,14 @@
 
 #include "histogram.h"
 
-extern cnt_t dbg_lock_cnt;
-extern cnt_t dbg_isr_cnt;
-#define isLocked() (dbg_lock_cnt > 0)
+#define isLocked() (ch.dbg.lock_cnt > 0)
 
 	/**
 	 * Unfortunately ChibiOS has two versions of methods for different
 	 * contexts.
 	 */
 
-#define isIsrContext() (dbg_isr_cnt > 0)
+#define isIsrContext() (ch.dbg.isr_cnt > 0)
 
 #ifdef __cplusplus
 extern "C"
