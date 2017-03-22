@@ -21,7 +21,6 @@
 #include "rusefi_enums.h"
 
 #define SCHEDULING_TIMER_PRIORITY 4
-
 #define ICU_PRIORITY 3
 
 /*
@@ -47,7 +46,7 @@
 #define STM32_HSI_ENABLED                   TRUE
 #define STM32_LSI_ENABLED                   TRUE
 #define STM32_HSE_ENABLED                   TRUE
-#define STM32_LSE_ENABLED                   FALSE
+#define STM32_LSE_ENABLED                   TRUE
 #define STM32_CLOCK48_REQUIRED              TRUE
 #define STM32_SW                            STM32_SW_PLL
 #define STM32_PLLSRC                        STM32_PLLSRC_HSE
@@ -58,7 +57,11 @@
 #define STM32_HPRE                          STM32_HPRE_DIV1
 #define STM32_PPRE1                         STM32_PPRE1_DIV4
 #define STM32_PPRE2                         STM32_PPRE2_DIV2
-#define STM32_RTCSEL                        STM32_RTCSEL_LSI
+#if STM32_LSE_ENABLED
+ #define STM32_RTCSEL                        STM32_RTCSEL_LSE
+#else
+ #define STM32_RTCSEL                        STM32_RTCSEL_LSI
+#endif
 #define STM32_RTCPRE_VALUE                  8
 #define STM32_MCO1SEL                       STM32_MCO1SEL_HSI
 #define STM32_MCO1PRE                       STM32_MCO1PRE_DIV1
@@ -147,7 +150,7 @@
 #define STM32_GPT_TIM2_IRQ_PRIORITY         7
 #define STM32_GPT_TIM3_IRQ_PRIORITY         7
 #define STM32_GPT_TIM4_IRQ_PRIORITY         7
-#define STM32_GPT_TIM5_IRQ_PRIORITY         7
+#define STM32_GPT_TIM5_IRQ_PRIORITY         SCHEDULING_TIMER_PRIORITY
 #define STM32_GPT_TIM6_IRQ_PRIORITY         7
 #define STM32_GPT_TIM7_IRQ_PRIORITY         7
 #define STM32_GPT_TIM8_IRQ_PRIORITY         7
@@ -202,13 +205,13 @@
 #define STM32_ICU_USE_TIM5                  FALSE
 #define STM32_ICU_USE_TIM8                  FALSE
 #define STM32_ICU_USE_TIM9                  TRUE
-#define STM32_ICU_TIM1_IRQ_PRIORITY         7
-#define STM32_ICU_TIM2_IRQ_PRIORITY         7
-#define STM32_ICU_TIM3_IRQ_PRIORITY         7
-#define STM32_ICU_TIM4_IRQ_PRIORITY         7
-#define STM32_ICU_TIM5_IRQ_PRIORITY         7
-#define STM32_ICU_TIM8_IRQ_PRIORITY         7
-#define STM32_ICU_TIM9_IRQ_PRIORITY         7
+#define STM32_ICU_TIM1_IRQ_PRIORITY         ICU_PRIORITY
+#define STM32_ICU_TIM2_IRQ_PRIORITY         ICU_PRIORITY
+#define STM32_ICU_TIM3_IRQ_PRIORITY         ICU_PRIORITY
+#define STM32_ICU_TIM4_IRQ_PRIORITY         ICU_PRIORITY
+#define STM32_ICU_TIM5_IRQ_PRIORITY         ICU_PRIORITY
+#define STM32_ICU_TIM8_IRQ_PRIORITY         ICU_PRIORITY
+#define STM32_ICU_TIM9_IRQ_PRIORITY         ICU_PRIORITY
 
 /*
  * MAC driver system settings.
@@ -285,7 +288,7 @@
 #define STM32_SPI_SPI1_IRQ_PRIORITY         10
 #define STM32_SPI_SPI2_IRQ_PRIORITY         10
 #define STM32_SPI_SPI3_IRQ_PRIORITY         10
-#define STM32_SPI_DMA_ERROR_HOOK(spip)      osalSysHalt("DMA failure")
+#define STM32_SPI_DMA_ERROR_HOOK(spip)      osalSysHalt("STM32_SPI_DMA_ERROR_HOOK")
 
 /*
  * ST driver system settings.
@@ -326,7 +329,7 @@
 #define STM32_UART_UART4_DMA_PRIORITY       0
 #define STM32_UART_UART5_DMA_PRIORITY       0
 #define STM32_UART_USART6_DMA_PRIORITY      0
-#define STM32_UART_DMA_ERROR_HOOK(uartp)    osalSysHalt("DMA failure")
+#define STM32_UART_DMA_ERROR_HOOK(uartp)    osalSysHalt("STM32_UART_DMA_ERROR_HOOK")
 
 /*
  * USB driver system settings.
@@ -338,7 +341,7 @@
 #define STM32_USB_OTG1_RX_FIFO_SIZE         512
 #define STM32_USB_OTG2_RX_FIFO_SIZE         1024
 #define STM32_USB_OTG_THREAD_PRIO           LOWPRIO
-#define STM32_USB_OTG_THREAD_STACK_SIZE     128
+#define STM32_USB_OTG_THREAD_STACK_SIZE     1024
 #define STM32_USB_OTGFIFO_FILL_BASEPRI      0
 
 /*
