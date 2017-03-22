@@ -2,3 +2,6 @@
 	path = firmware/ChibiOS
 	url = https://github.com/rusefi/ChibiOS.git
 	branch = stable_rusefi
+[submodule "firmware/ChibiOS-Contrib"]
+	path = firmware/ChibiOS-Contrib
+	url = https://github.com/ChibiOS/ChibiOS-Contrib.git
