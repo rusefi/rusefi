@@ -804,6 +804,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->canDeviceMode = CD_USE_CAN2;
 	boardConfiguration->canTxPin = GPIOB_6;
 	boardConfiguration->canRxPin = GPIOB_12;
+	engineConfiguration->canWriteEnabled = true;
+	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 
 	// set this to SPI_DEVICE_3 to enable stimulation
 	boardConfiguration->digitalPotentiometerSpiDevice = SPI_NONE;
