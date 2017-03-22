@@ -83,13 +83,12 @@ CHIBIOS = chibios
 
 #PROJECT_BOARD = OLIMEX_STM32_E407
 ifneq ($(PROJECT_BOARD),OLIMEX_STM32_E407)
-  PROJECT_BOARD = ST_STM32F4_DISCOVERY
+  PROJECT_BOARD = ST_STM32F4
 endif
 DDEFS += -D$(PROJECT_BOARD)
 
 
 # Imported source files and paths
-include $(CHIBIOS)/boards/$(PROJECT_BOARD)/board.mk
 include $(CHIBIOS)/os/hal/platforms/STM32F4xx/platform.mk
 include $(CHIBIOS)/os/hal/hal.mk
 include $(CHIBIOS)/os/ports/GCC/ARMCMx/STM32F4xx/port.mk
@@ -106,6 +105,7 @@ include development/development.mk
 include controllers/controllers.mk
 
 include $(PROJECT_DIR)/util/util.mk
+include $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/board.mk
 include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/controllers/algo/algo.mk
 include $(PROJECT_DIR)/controllers/core/core.mk
