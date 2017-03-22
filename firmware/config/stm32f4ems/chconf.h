@@ -28,6 +28,29 @@
 #ifndef _CHCONF_H_
 #define _CHCONF_H_
 
+#define COMMON_IRQ_PRIORITY 6
+#define CORTEX_PRIORITY_SYSTICK COMMON_IRQ_PRIORITY
+#define PORT_IDLE_THREAD_STACK_SIZE     1024
+#define PORT_INT_REQUIRED_STACK 	768
+#define CHPRINTF_USE_FLOAT          	TRUE
+
+#if EFI_CLOCK_LOCKS
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+  void onLockHook(void);
+  void onUnlockHook(void);
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+  #define ON_LOCK_HOOK onLockHook()
+  #define ON_UNLOCK_HOOK onUnlockHook()
+#else /* EFI_CLOCK_LOCKS */
+  #define ON_LOCK_HOOK
+  #define ON_UNLOCK_HOOK
+#endif /* EFI_CLOCK_LOCKS */
+
 /*===========================================================================*/
 /**
  * @name System timers settings
@@ -79,7 +102,7 @@
  * @note    The round robin preemption is not supported in tickless mode and
  *          must be set to zero in that case.
  */
-#define CH_CFG_TIME_QUANTUM                 0
+#define CH_CFG_TIME_QUANTUM                 20
 
 /**
  * @brief   Managed RAM size.
@@ -92,7 +115,7 @@
  *          provide the @p __heap_base__ and @p __heap_end__ symbols.
  * @note    Requires @p CH_CFG_USE_MEMCORE.
  */
-#define CH_CFG_MEMCORE_SIZE                 0
+#define CH_CFG_MEMCORE_SIZE                 2048
 
 /**
  * @brief   Idle thread automatic spawn suppression.
@@ -309,7 +332,7 @@
  * @note    Requires @p CH_CFG_USE_WAITEXIT.
  * @note    Requires @p CH_CFG_USE_HEAP and/or @p CH_CFG_USE_MEMPOOLS.
  */
-#define CH_CFG_USE_DYNAMIC                  TRUE
+#define CH_CFG_USE_DYNAMIC                  FALSE
 
 /** @} */
 
@@ -488,6 +511,7 @@
  */
 #define CH_CFG_SYSTEM_HALT_HOOK(reason) {                                   \
   /* System halt code here.*/                                               \
+  chDbgPanic3(reason, __FILE__, __LINE__); \
 }
 
 /** @} */
@@ -496,10 +520,24 @@
 /* Port-specific settings (override port settings defaulted in chcore.h).    */
 /*===========================================================================*/
 
+#ifndef __ASSEMBLER__
 #if !CH_DBG_SYSTEM_STATE_CHECK
 extern cnt_t dbg_lock_cnt;
 #define dbg_enter_lock() {dbg_lock_cnt = 1;ON_LOCK_HOOK;}
 #define dbg_leave_lock() {ON_UNLOCK_HOOK;dbg_lock_cnt = 0;}
+#endif
+
+void chDbgPanic3(const char *msg, const char * file, int line);
+#endif
+
+/**
+ * declared as a macro so that this code does not use stack
+ * so that it would not crash the error handler in case of stack issues
+ */
+#if CH_DBG_SYSTEM_STATE_CHECK
+#define hasFatalError() (ch.dbg.panic_msg != NULL)
+#else
+#define hasFatalError() (FALSE)
 #endif
 
 #endif  /* _CHCONF_H_ */

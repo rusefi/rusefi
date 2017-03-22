@@ -99,7 +99,6 @@ include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/startup_stm32f4xx.mk
 # HAL-OSAL files (optional).
 include $(CHIBIOS)/os/hal/hal.mk
 include $(CHIBIOS)/os/hal/ports/STM32/STM32F4xx/platform.mk
-include $(CHIBIOS)/os/hal/boards/$(PROJECT_BOARD)/board.mk
 include $(CHIBIOS)/os/hal/osal/rt/osal.mk
 # RTOS files (optional).
 include $(CHIBIOS)/os/rt/rt.mk
@@ -110,6 +109,7 @@ include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 
 include console/binary/tunerstudio.mk
 include ext/ext.mk
+include $(PROJECT_DIR)/boards/$(PROJECT_BOARD)/board.mk
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
 include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
 include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
