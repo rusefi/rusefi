@@ -150,10 +150,10 @@ void setDefaultEtbParameters(void) {
 }
 
 void stopETBPins(void) {
-	unmarkPin(boardConfiguration->etbControlPin1);
-	unmarkPin(boardConfiguration->etbControlPin2);
-	unmarkPin(boardConfiguration->etbDirectionPin1);
-	unmarkPin(boardConfiguration->etbDirectionPin2);
+	unmarkPin(activeConfiguration.bc.etbControlPin1);
+	unmarkPin(activeConfiguration.bc.etbControlPin2);
+	unmarkPin(activeConfiguration.bc.etbDirectionPin1);
+	unmarkPin(activeConfiguration.bc.etbDirectionPin2);
 }
 
 void startETBPins(void) {
