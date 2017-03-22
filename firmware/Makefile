@@ -88,6 +88,7 @@ PROJECT_DIR = .
 
 # Imported source files and paths
 CHIBIOS = ChibiOS
+CHIBIOS_CONTRIB = ChibiOS-Contrib
 
 ifneq ($(PROJECT_BOARD),OLIMEX_STM32_E407)
   PROJECT_BOARD = ST_STM32F4_DISCOVERY
@@ -97,8 +98,8 @@ DDEFS += -D$(PROJECT_BOARD)
 # Startup files.
 include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/startup_stm32f4xx.mk
 # HAL-OSAL files (optional).
-include $(CHIBIOS)/os/hal/hal.mk
-include $(CHIBIOS)/os/hal/ports/STM32/STM32F4xx/platform.mk
+include $(CHIBIOS_CONTRIB)/os/hal/hal.mk
+include $(CHIBIOS_CONTRIB)/os/hal/ports/STM32/STM32F4xx/platform.mk
 include $(CHIBIOS)/os/hal/osal/rt/osal.mk
 # RTOS files (optional).
 include $(CHIBIOS)/os/rt/rt.mk
@@ -212,6 +213,7 @@ INCDIR = $(PORTINC) \
 	$(CHIBIOS)/os/hal/lib/streams \
 	$(CHIBIOS)/os/various \
 	$(CHIBIOS)/os/various/devices_lib/accel \
+    $(CHIBIOS_CONTRIB)/os/various \
 	config/stm32f4ems \
 	config/engines \
 	config \

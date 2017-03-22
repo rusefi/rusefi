@@ -1,43 +1,41 @@
 /*
-    ChibiOS/RT - Copyright (C) 2006,2007,2008,2009,2010,
-                 2011,2012,2013 Giovanni Di Sirio.
+    ChibiOS - Copyright (C) 2006..2016 Giovanni Di Sirio
 
-    This file is part of ChibiOS/RT.
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
 
-    ChibiOS/RT is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 3 of the License, or
-    (at your option) any later version.
+        http://www.apache.org/licenses/LICENSE-2.0
 
-    ChibiOS/RT is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
 */
 
-#include "ch.h"
 #include "hal.h"
+
+#include "hal_usb_msd.h"
 #include "usb_msd_cfg.h"
-#include "usb_msd.h"
 
-
-
+/*
+ * must be 64 for full speed and 512 for high speed
+ */
+#define USB_MSD_EP_SIZE                 64U
 
 /*
  * USB Device Descriptor.
  */
 static const uint8_t msd_device_descriptor_data[18] = {
   USB_DESC_DEVICE       (0x0200,        /* bcdUSB (2.0).                    */
-                         0x00,          /* bDeviceClass (None).             */
+                         0x02,          /* bDeviceClass (CDC).              */
                          0x00,          /* bDeviceSubClass.                 */
                          0x00,          /* bDeviceProtocol.                 */
-                         0x40,          /* Control Endpoint Size.           */
+                         0x40,          /* bMaxPacketSize.                  */
                          0x0483,        /* idVendor (ST).                   */
                          0x5742,        /* idProduct.                       */
-                         0x0100,        /* bcdDevice.                       */
+                         0x0200,        /* bcdDevice.                       */
                          1,             /* iManufacturer.                   */
                          2,             /* iProduct.                        */
                          3,             /* iSerialNumber.                   */
@@ -52,34 +50,34 @@ static const USBDescriptor msd_device_descriptor = {
   msd_device_descriptor_data
 };
 
-/* Configuration Descriptor tree*/
-static const uint8_t msd_configuration_descriptor_data[] = {
-  /* Configuration Descriptor.*/
-  USB_DESC_CONFIGURATION(0x0020,        /* wTotalLength.                    */
-                         0x01,          /* bNumInterfaces.                  */
-                         0x01,          /* bConfigurationValue.             */
-                         0,             /* iConfiguration.                  */
-                         0xC0,          /* bmAttributes (self powered).     */
-                         0x32),         /* bMaxPower (100mA).               */
-  /* Interface Descriptor.*/
-  USB_DESC_INTERFACE    (USB_MSD_INTERFACE_NUMBER,          /* bInterfaceNumber.                */
-                         0x00,          /* bAlternateSetting.               */
-                         0x02,          /* bNumEndpoints.                   */
-                         0x08,          /* bInterfaceClass (Mass Storage)   */
-                         0x06,          /* bInterfaceSubClass (SCSI
-                                           Transparent storage class)       */
-                         0x50,          /* bInterfaceProtocol (Bulk Only)   */
-                         0),            /* iInterface. (none)               */
-  /* Mass Storage Data In Endpoint Descriptor.*/
-  USB_DESC_ENDPOINT     (USB_MS_DATA_EP|0x80,
-                         0x02,          /* bmAttributes (Bulk).             */
-                         USB_MS_EP_SIZE,/* wMaxPacketSize.                  */
-                         0x05),         /* bInterval. 1ms                   */
-  /* Mass Storage Data In Endpoint Descriptor.*/
-  USB_DESC_ENDPOINT     (USB_MS_DATA_EP,
-                         0x02,          /* bmAttributes (Bulk).             */
-                         USB_MS_EP_SIZE,/* wMaxPacketSize.                  */
-                         0x05)          /* bInterval. 1ms                   */
+/* Configuration Descriptor tree for a CDC.*/
+static const uint8_t msd_configuration_descriptor_data[67] = {
+    /* Configuration Descriptor.*/
+    USB_DESC_CONFIGURATION(0x0020,        /* wTotalLength.                    */
+                           0x01,          /* bNumInterfaces.                  */
+                           0x01,          /* bConfigurationValue.             */
+                           0,             /* iConfiguration.                  */
+                           0xC0,          /* bmAttributes (self powered).     */
+                           0x32),         /* bMaxPower (100mA).               */
+    /* Interface Descriptor.*/
+    USB_DESC_INTERFACE    (0x00,          /* bInterfaceNumber.                */
+                           0x00,          /* bAlternateSetting.               */
+                           0x02,          /* bNumEndpoints.                   */
+                           0x08,          /* bInterfaceClass (Mass Storage)   */
+                           0x06,          /* bInterfaceSubClass (SCSI
+                                             Transparent storage class)       */
+                           0x50,          /* bInterfaceProtocol (Bulk Only)   */
+                           0),            /* iInterface. (none)               */
+    /* Mass Storage Data In Endpoint Descriptor.*/
+    USB_DESC_ENDPOINT     (USB_MSD_DATA_EP | 0x80,
+                           0x02,          /* bmAttributes (Bulk).             */
+                           USB_MSD_EP_SIZE,            /* wMaxPacketSize.                  */
+                           0x00),         /* bInterval. 1ms                   */
+    /* Mass Storage Data Out Endpoint Descriptor.*/
+    USB_DESC_ENDPOINT     (USB_MSD_DATA_EP,
+                           0x02,          /* bmAttributes (Bulk).             */
+                           USB_MSD_EP_SIZE,            /* wMaxPacketSize.                  */
+                           0x00)          /* bInterval. 1ms                   */
 };
 
 /*
@@ -114,17 +112,17 @@ static const uint8_t msd_string1[] = {
  * Device Description string.
  */
 static const uint8_t msd_string2[] = {
-  USB_DESC_BYTE(58),                    /* bLength.                         */
+  USB_DESC_BYTE(62),                    /* bLength.                         */
   USB_DESC_BYTE(USB_DESCRIPTOR_STRING), /* bDescriptorType.                 */
-  'r', 0, 'u', 0, 's', 0, 'E', 0, 'f', 0, 'i', 0, 
-  ' ', 0, 'M', 0, 'a', 0, 's', 0, 's', 0, ' ', 0,
+  'C', 0, 'h', 0, 'i', 0, 'b', 0, 'i', 0, 'O', 0, 'S', 0, '/', 0,
+  'R', 0, 'T', 0, ' ', 0, 'M', 0, 'a', 0, 's', 0, 's', 0, ' ', 0,
   'S', 0, 't', 0, 'o', 0, 'r', 0, 'a', 0, 'g', 0, 'e', 0, ' ', 0,
   'D', 0, 'e', 0, 'v', 0, 'i', 0, 'c', 0, 'e', 0
 };
 
 static const uint8_t msd_string3[] = {
-  USB_DESC_BYTE(26),                     /* bLength.                         */
-  USB_DESC_BYTE(USB_DESCRIPTOR_STRING), /* bDescriptorType.                 */
+  USB_DESC_BYTE(26),                      /* bLength.                       */
+  USB_DESC_BYTE(USB_DESCRIPTOR_STRING),   /* bDescriptorType.               */
   'A', 0, 'E', 0, 'C', 0, 'C', 0, 'E', 0, 'C', 0, 'C', 0, 'C', 0, 'C', 0,
   '0' + CH_KERNEL_MAJOR, 0,
   '0' + CH_KERNEL_MINOR, 0,
@@ -164,53 +162,51 @@ static const USBDescriptor *get_descriptor(USBDriver *usbp,
   return NULL;
 }
 
-
-
 /**
  * @brief   IN EP1 state.
  */
-static USBInEndpointState ep1InState;
-static USBOutEndpointState ep1OutState;
+static USBInEndpointState ep1instate;
 
 /**
- * @brief   EP1 initialization structure (IN only).
+ * @brief   OUT EP1 state.
  */
-static const USBEndpointConfig epDataConfig = {
+static USBOutEndpointState ep1outstate;
+
+/**
+ * @brief   EP1 initialization structure (both IN and OUT).
+ */
+static const USBEndpointConfig ep1config = {
   USB_EP_MODE_TYPE_BULK,
   NULL,
-  msdBulkInCallbackComplete,
-  msdBulkOutCallbackComplete,
-  USB_MS_EP_SIZE,
-  USB_MS_EP_SIZE,
-  &ep1InState,
-  &ep1OutState,
-  1,
+  NULL,
+  NULL,
+  USB_MSD_EP_SIZE,
+  USB_MSD_EP_SIZE,
+  &ep1instate,
+  &ep1outstate,
+  4,
   NULL
 };
-
 
 /*
  * Handles the USB driver global events.
  */
 static void usb_event(USBDriver *usbp, usbevent_t event) {
-    USBMassStorageDriver *msdp = (USBMassStorageDriver *)usbp->in_params[USB_MS_DATA_EP - 1];
+
   switch (event) {
   case USB_EVENT_RESET:
-    msdp->reconfigured_or_reset_event = TRUE;
     return;
   case USB_EVENT_ADDRESS:
     return;
   case USB_EVENT_CONFIGURED:
     chSysLockFromISR();
-    msdp->reconfigured_or_reset_event = TRUE;
-    usbInitEndpointI(usbp, msdp->ms_ep_number, &epDataConfig);
-    /* Kick-start the thread */
-    chBSemSignalI(&msdp->bsem);
-
-    /* signal that the device is connected */
-    chEvtBroadcastI(&msdp->evt_connected);
+    /* Enables the endpoints specified into the configuration.
+       Note, this callback is invoked from an ISR so I-Class functions
+       must be used.*/
+    usbInitEndpointI(usbp, USBD1_DATA_REQUEST_EP, &ep1config);
     chSysUnlockFromISR();
-
+    return;
+  case USB_EVENT_UNCONFIGURED:
     return;
   case USB_EVENT_SUSPEND:
     return;
@@ -222,10 +218,13 @@ static void usb_event(USBDriver *usbp, usbevent_t event) {
   return;
 }
 
-const USBConfig msd_usb_config = {
-    usb_event,
-    get_descriptor,
-    msdRequestsHook,
-    NULL
+/*
+ * USB driver configuration.
+ */
+const USBConfig msdusbcfg = {
+  usb_event,
+  get_descriptor,
+  msd_request_hook,
+  NULL
 };
 
