@@ -10,6 +10,7 @@
 
 #include "trigger_structure.h"
 
-void initializeNissanSR20VE(TriggerShape *s DECLARE_ENGINE_PARAMETER_S);
+void initializeNissanSR20VE_4(TriggerShape *s DECLARE_ENGINE_PARAMETER_S);
+void initializeNissanSR20VE_4_360(TriggerShape *s DECLARE_ENGINE_PARAMETER_S);
 
 #endif /* CONTROLLERS_TRIGGER_TRIGGER_NISSAN_H_ */
