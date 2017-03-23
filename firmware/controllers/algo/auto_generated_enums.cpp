@@ -215,6 +215,8 @@ case TT_2JZ_3_34:
 	return "TT_2JZ_3_34";
 case TT_ROVER_K:
 	return "TT_ROVER_K";
+case TT_TEMP_WIP:
+	return "TT_TEMP_WIP";
   }
  return NULL;
 }
