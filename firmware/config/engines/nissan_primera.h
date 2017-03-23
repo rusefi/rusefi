@@ -16,6 +16,7 @@
 
 void setNissanPrimeraEngineConfiguration(engine_configuration_s *engineConfiguration);
 
+void setNissanPrimera360_4EngineConfiguration(engine_configuration_s *engineConfiguration);
 #endif /* EFI_SUPPORT_NISSAN_PRIMERA */
 
 #endif /* NISSAN_PRIMERA_H_ */
