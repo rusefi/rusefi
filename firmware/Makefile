@@ -109,7 +109,7 @@ include $(CHIBIOS)/os/various/fatfs_bindings/fatfs.mk
 include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 
 include console/binary/tunerstudio.mk
-include ext/ext.mk
+include $(PROJECT_DIR)/ext/fatfs.mk
 
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
 include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
