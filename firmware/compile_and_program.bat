@@ -4,6 +4,11 @@ rm -rf .dep/
 rm -rf build\rusefi.hex
 rm -rf build\rusefi.bin
 
+
+rem todo add 
+rem git submodule update --init
+rem magic once needed
+
 call update_version.bat
 
 echo Starting compilation
