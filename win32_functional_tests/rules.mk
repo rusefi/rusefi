@@ -1,72 +1,84 @@
 # ARM Cortex-Mx common makefile scripts and rules.
 
-# Output directory and files
-ifeq ($(BUILDDIR),)
-  BUILDDIR = build
-endif
-ifeq ($(BUILDDIR),.)
-  BUILDDIR = build
-endif
-OUTFILES = $(BUILDDIR)/$(PROJECT)
+##############################################################################
+# Processing options coming from the upper Makefile.
+#
 
-# Automatic compiler options
-OPT = $(USE_OPT)
-COPT = $(USE_COPT)
-CPPOPT = $(USE_CPPOPT)
+# Compiler options
+OPT    := $(USE_OPT)
+COPT   := $(USE_COPT)
+CPPOPT := $(USE_CPPOPT)
+
+# Garbage collection
 ifeq ($(USE_LINK_GC),yes)
-  OPT += -ffunction-sections -fdata-sections -fno-common
+  OPT   += -ffunction-sections -fdata-sections -fno-common
+  LDOPT := ,--gc-sections
+else
+  LDOPT :=
 endif
 
-# Source files groups and paths
-ifeq ($(USE_THUMB),yes)
-  TCSRC += $(CSRC)
-  TCPPSRC += $(CPPSRC)
-else
-  ACSRC += $(CSRC)
-  ACPPSRC += $(CPPSRC)
+# Linker extra options
+ifneq ($(USE_LDOPT),)
+  LDOPT := $(LDOPT),$(USE_LDOPT)
 endif
-ASRC	  = $(ACSRC)$(ACPPSRC)
-TSRC	  = $(TCSRC)$(TCPPSRC)
-SRCPATHS  = $(sort $(dir $(ASMXSRC)) $(dir $(ASMSRC)) $(dir $(ASRC)) $(dir $(TSRC)))
+
+# Link time optimizations
+ifeq ($(USE_LTO),yes)
+  OPT += -flto
+endif
+
+# Process stack size
+ifeq ($(USE_PROCESS_STACKSIZE),)
+  LDOPT := $(LDOPT),--defsym=__process_stack_size__=0x400
+else
+  LDOPT := $(LDOPT),--defsym=__process_stack_size__=$(USE_PROCESS_STACKSIZE)
+endif
+
+# Exceptions stack size
+ifeq ($(USE_EXCEPTIONS_STACKSIZE),)
+  LDOPT := $(LDOPT),--defsym=__main_stack_size__=0x400
+else
+  LDOPT := $(LDOPT),--defsym=__main_stack_size__=$(USE_EXCEPTIONS_STACKSIZE)
+endif
+
+BUILDDIR = build
+OUTFILES := $(BUILDDIR)/$(PROJECT).exe
+SRCPATHS  := $(sort $(dir $(ASMXSRC)) $(dir $(ASMSRC)) $(dir $(CSRC)) $(dir $(CPPSRC)))
 
 # Various directories
-OBJDIR    = $(BUILDDIR)/obj
-LSTDIR    = $(BUILDDIR)/lst
+OBJDIR    := $(BUILDDIR)/obj
+LSTDIR    := $(BUILDDIR)/lst
 
 # Object files groups
-ACOBJS    = $(addprefix $(OBJDIR)/, $(notdir $(ACSRC:.c=.o)))
-ACPPOBJS  = $(addprefix $(OBJDIR)/, $(notdir $(ACPPSRC:.cpp=.o)))
-TCOBJS    = $(addprefix $(OBJDIR)/, $(notdir $(TCSRC:.c=.o)))
-TCPPOBJS  = $(addprefix $(OBJDIR)/, $(notdir $(TCPPSRC:.cpp=.o)))
-ASMOBJS   = $(addprefix $(OBJDIR)/, $(notdir $(ASMSRC:.s=.o)))
-ASMXOBJS  = $(addprefix $(OBJDIR)/, $(notdir $(ASMXSRC:.S=.o)))
-OBJS	  = $(ASMXOBJS) $(ASMOBJS) $(ACOBJS) $(TCOBJS) $(ACPPOBJS) $(TCPPOBJS)
+COBJS    := $(addprefix $(OBJDIR)/, $(notdir $(CSRC:.c=.o)))
+CPPOBJS  := $(addprefix $(OBJDIR)/, $(notdir $(CPPSRC:.cpp=.o)))
+ASMOBJS   := $(addprefix $(OBJDIR)/, $(notdir $(ASMSRC:.s=.o)))
+ASMXOBJS  := $(addprefix $(OBJDIR)/, $(notdir $(ASMXSRC:.S=.o)))
+OBJS      := $(ASMXOBJS) $(ASMOBJS) $(COBJS) $(CPPOBJS)
 
 # Paths
-IINCDIR   = $(patsubst %,-I%,$(INCDIR) $(DINCDIR) $(UINCDIR))
-LLIBDIR   = $(patsubst %,-L%,$(DLIBDIR) $(ULIBDIR))
+IINCDIR   := $(patsubst %,-I%,$(INCDIR) $(DINCDIR) $(UINCDIR))
+LLIBDIR   := $(patsubst %,-L%,$(DLIBDIR) $(ULIBDIR))
 
 # Macros
-DEFS      = $(DDEFS) $(UDEFS)
-ADEFS 	  = $(DADEFS) $(UADEFS)
+DEFS      := $(DDEFS) $(UDEFS)
+ADEFS 	  := $(DADEFS) $(UADEFS)
 
 # Libs
-LIBS      = $(DLIBS) $(ULIBS)
+LIBS      := $(DLIBS) $(ULIBS)
 
 # Various settings
-#MCFLAGS   = -mcpu=$(MCU)
+MCFLAGS   =
 ODFLAGS	  = -x --syms
 ASFLAGS   = $(MCFLAGS) -Wa,-amhls=$(LSTDIR)/$(notdir $(<:.s=.lst)) $(ADEFS)
 ASXFLAGS  = $(MCFLAGS) -Wa,-amhls=$(LSTDIR)/$(notdir $(<:.S=.lst)) $(ADEFS)
 CFLAGS    = $(MCFLAGS) $(OPT) $(COPT) $(CWARN) -Wa,-alms=$(LSTDIR)/$(notdir $(<:.c=.lst)) $(DEFS)
 CPPFLAGS  = $(MCFLAGS) $(OPT) $(CPPOPT) $(CPPWARN) -Wa,-alms=$(LSTDIR)/$(notdir $(<:.cpp=.lst)) $(DEFS)
-ifeq ($(USE_LINK_GC),yes)
-  LDFLAGS = $(MCFLAGS) -Wl,-Map=$(BUILDDIR)/$(PROJECT).map,--cref,--no-warn-mismatch,--gc-sections $(LLIBDIR)
-else
-  LDFLAGS = $(MCFLAGS) -Wl,-Map=$(BUILDDIR)/$(PROJECT).map,--cref,--no-warn-mismatch $(LLIBDIR)
-endif
+LDFLAGS   = $(MCFLAGS) $(OPT) $(LLIBDIR) -Wl,-Map=$(BUILDDIR)/$(PROJECT).map,--cref,--no-warn-mismatch,--library-path=$(RULESPATH),$(LDOPT)
 
 # Generate dependency information
+ASFLAGS  += -MD -MP -MF .dep/$(@F).d
+ASXFLAGS += -MD -MP -MF .dep/$(@F).d
 CFLAGS   += -MD -MP -MF .dep/$(@F).d
 CPPFLAGS += -MD -MP -MF .dep/$(@F).d
 
@@ -77,55 +89,40 @@ VPATH     = $(SRCPATHS)
 # Makefile rules
 #
 
-all: $(OBJS) $(OUTFILES) MAKE_ALL_RULE_HOOK
+all: $(OBJS) $(OUTFILES)
 
-MAKE_ALL_RULE_HOOK:
+$(OBJS): $(BUILDDIR) $(OBJDIR) $(LSTDIR)
 
-$(OBJS): | $(BUILDDIR)
-
-$(BUILDDIR) $(OBJDIR) $(LSTDIR):
+$(BUILDDIR):
 ifneq ($(USE_VERBOSE_COMPILE),yes)
 	@echo Compiler Options
-	@echo $(CPPC) -c $(CPPFLAGS) -I. $(IINCDIR) main.cpp -o main.o
+	@echo $(CC) -c $(CFLAGS) -I. $(IINCDIR) main.c -o main.o
 	@echo
 endif
-	mkdir -p $(OBJDIR)
-	mkdir -p $(LSTDIR)
+	@mkdir -p $(BUILDDIR)
 
-$(ACPPOBJS) : $(OBJDIR)/%.o : %.cpp Makefile
+$(OBJDIR):
+	@mkdir -p $(OBJDIR)
+
+$(LSTDIR):
+	@mkdir -p $(LSTDIR)
+
+$(CPPOBJS) : $(OBJDIR)/%.o : %.cpp Makefile
 ifeq ($(USE_VERBOSE_COMPILE),yes)
 	@echo
-	$(CPPC) -c $(CPPFLAGS) $(AOPT) -I. $(IINCDIR) $< -o $@
+	$(CPPC) -c $(CPPFLAGS) $(OPT) -I. $(IINCDIR) $< -o $@
 else
 	@echo Compiling $(<F)
-	@$(CPPC) -c $(CPPFLAGS) $(AOPT) -I. $(IINCDIR) $< -o $@
+	@$(CPPC) -c $(CPPFLAGS) $(OPT) -I. $(IINCDIR) $< -o $@
 endif
 
-$(TCPPOBJS) : $(OBJDIR)/%.o : %.cpp Makefile
+$(COBJS) : $(OBJDIR)/%.o : %.c Makefile
 ifeq ($(USE_VERBOSE_COMPILE),yes)
 	@echo
-	$(CPPC) -c $(CPPFLAGS) $(TOPT) -I. $(IINCDIR) $< -o $@
+	$(CC) -c $(CFLAGS) $(OPT) -I. $(IINCDIR) $< -o $@
 else
 	@echo Compiling $(<F)
-	@$(CPPC) -c $(CPPFLAGS) $(TOPT) -I. $(IINCDIR) $< -o $@
-endif
-
-$(ACOBJS) : $(OBJDIR)/%.o : %.c Makefile
-ifeq ($(USE_VERBOSE_COMPILE),yes)
-	@echo
-	$(CC) -c $(CFLAGS) $(AOPT) -I. $(IINCDIR) $< -o $@
-else
-	@echo Compiling $(<F)
-	@$(CC) -c $(CFLAGS) $(AOPT) -I. $(IINCDIR) $< -o $@
-endif
-
-$(TCOBJS) : $(OBJDIR)/%.o : %.c Makefile
-ifeq ($(USE_VERBOSE_COMPILE),yes)
-	@echo
-	$(CC) -c $(CFLAGS) $(TOPT) -I. $(IINCDIR) $< -o $@
-else
-	@echo Compiling $(<F)
-	@$(CC) -c $(CFLAGS) $(TOPT) -I. $(IINCDIR) $< -o $@
+	@$(CC) -c $(CFLAGS) $(OPT) -I. $(IINCDIR) $< -o $@
 endif
 
 $(ASMOBJS) : $(OBJDIR)/%.o : %.s Makefile
@@ -139,14 +136,14 @@ endif
 
 $(ASMXOBJS) : $(OBJDIR)/%.o : %.S Makefile
 ifeq ($(USE_VERBOSE_COMPILE),yes)
-	@echo 
+	@echo
 	$(CC) -c $(ASXFLAGS) $(TOPT) -I. $(IINCDIR) $< -o $@
 else
 	@echo Compiling $(<F)
 	@$(CC) -c $(ASXFLAGS) $(TOPT) -I. $(IINCDIR) $< -o $@
 endif
 
-$(BUILDDIR)/$(PROJECT): $(OBJS)
+$(BUILDDIR)/$(PROJECT).exe: $(OBJS) $(LDSCRIPT)
 ifeq ($(USE_VERBOSE_COMPILE),yes)
 	@echo
 	$(LD) $(OBJS) $(LDFLAGS) $(LIBS) -o $@
@@ -158,6 +155,7 @@ endif
 clean:
 	@echo Cleaning
 	-rm -fR .dep $(BUILDDIR)
+	@echo
 	@echo Done
 
 #
