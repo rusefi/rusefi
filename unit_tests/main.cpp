@@ -165,8 +165,6 @@ int main(void) {
 
 	testFLStack();
 
-	testIdleController();
-
 	testMenuTree();
 	testMafLookup();
 	testIgnitionMapGenerator();

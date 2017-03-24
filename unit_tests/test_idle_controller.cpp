@@ -15,28 +15,6 @@ void idleDebug(const char *msg, percent_t value) {
 	printf("%s\r\n", msg);
 }
 
-static IdleValveState is;
-
-void testIdleController(void) {
-	print("******************************************* testIdleController\r\n");
-	EngineTestHelper eth(FORD_INLINE_6_1995);
-	EXPAND_EngineTestHelper;
-
-	engineConfiguration->targetIdleRpm = 1200;
-
-	is.init(PASS_ENGINE_PARAMETER_F);
-
-	efitimems_t time = 0;
-
-	assertEqualsM("#1", 60.0, is.getIdle(900, time PASS_ENGINE_PARAMETER));
-
-	time += 2000;
-	assertEqualsM("idle#2", 60.5, is.getIdle(900, time PASS_ENGINE_PARAMETER));
-
-	time += 2000;
-	assertEqualsM("idke#3", 60.6, is.getIdle(1050, time PASS_ENGINE_PARAMETER));
-}
-
 void testPidController(void) {
 	print("******************************************* testPidController\r\n");
 	pid_s pidS;
