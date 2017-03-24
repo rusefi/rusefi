@@ -1,0 +1,2 @@
+The files here are responsible for GPIO pin configuration on OS startup. rusEfi would later re-configure all the pins for specific
+application so these files only matter for the first half a second of firmware startup.
