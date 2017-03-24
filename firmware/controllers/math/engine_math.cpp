@@ -134,7 +134,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_S) {
 	if (mode == IM_SIMULTANEOUS) {
 		index = 0;
 	} else if (mode == IM_SEQUENTIAL) {
-		index = getCylinderId(engineConfiguration->specs.firingOrder, i) - 1;
+		index = getCylinderId(i PASS_ENGINE_PARAMETER) - 1;
 	} else if (mode == IM_BATCH) {
 		// does not look exactly right, not too consistent with IM_SEQUENTIAL
 		index = i % (engineConfiguration->specs.cylindersCount / 2);
@@ -320,13 +320,67 @@ static int order_1_10_9_4_3_6_5_8_7_2[] = {1, 10, 9, 4, 3, 6, 5, 8, 7, 2};
 // 12 cyliner
 static int order_1_7_5_11_3_9_6_12_2_8_4_10[] = {1, 7, 5, 11, 3, 9, 6, 12, 2, 8, 4, 10};
 
+static int getFiringOrderLength(DECLARE_ENGINE_PARAMETER_F) {
+
+	switch (CONFIG(specs.firingOrder)) {
+	case FO_1:
+		return 1;
+// 2 cylinder
+	case FO_1_2:
+		return 2;
+// 3 cylinder
+	case FO_1_2_3:
+		return 3;
+// 4 cylinder
+	case FO_1_3_4_2:
+	case FO_1_2_4_3:
+	case FO_1_3_2_4:
+		return 4;
+// 5 cylinder
+	case FO_1_2_4_5_3:
+		return 5;
+
+// 6 cylinder
+	case FO_1_5_3_6_2_4:
+	case FO_1_4_2_5_3_6:
+	case FO_1_2_3_4_5_6:
+	case FO_1_6_3_2_5_4:
+		return 6;
+
+// 8 cylinder
+	case FO_1_8_4_3_6_5_7_2:
+	case FO_1_8_7_2_6_5_4_3:
+	case FO_1_5_4_2_6_3_7_8:
+		return 8;
+
+// 10 cylinder
+	case FO_1_10_9_4_3_6_5_8_7_2:
+		return 10;
+
+// 12 cylinder
+	case FO_1_7_5_11_3_9_6_12_2_8_4_10:
+		return 12;
+
+	default:
+		warning(CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "getCylinderId not supported for %d", CONFIG(specs.firingOrder));
+	}
+	return 1;
+}
+
+
 /**
  * @param index from zero to cylindersCount - 1
  * @return cylinderId from one to cylindersCount
  */
-int getCylinderId(firing_order_e firingOrder, int index) {
+int getCylinderId(int index DECLARE_ENGINE_PARAMETER_S) {
 
-	switch (firingOrder) {
+	const int foLength = getFiringOrderLength(PASS_ENGINE_PARAMETER);
+	if (engineConfiguration->specs.cylindersCount != foLength) {
+		warning(CUSTOM_OBD_WRONG_FIRING_ORDER, "Wrong firing order %d/%d", engineConfiguration->specs.cylindersCount, foLength);
+		return 1;
+	}
+
+	switch (CONFIG(specs.firingOrder)) {
 	case FO_1:
 		return 1;
 // 2 cylinder
@@ -373,7 +427,7 @@ int getCylinderId(firing_order_e firingOrder, int index) {
 		return order_1_7_5_11_3_9_6_12_2_8_4_10[index];
 
 	default:
-		warning(CUSTOM_OBD_23, "getCylinderId not supported for %d", firingOrder);
+		warning(CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "getCylinderId not supported for %d", CONFIG(specs.firingOrder));
 	}
 	return 1;
 }
@@ -392,7 +446,7 @@ static int getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_S) {
 		break;
 
 	default:
-		warning(CUSTOM_OBD_24, "unsupported ignitionMode %d in initializeIgnitionActions()", engineConfiguration->ignitionMode);
+		warning(CUSTOM_OBD_25, "unsupported ignitionMode %d in initializeIgnitionActions()", engineConfiguration->ignitionMode);
 		return 0;
 	}
 }

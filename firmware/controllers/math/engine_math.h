@@ -69,7 +69,7 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_F);
 
 floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_S);
 
-int getCylinderId(firing_order_e firingOrder, int index);
+int getCylinderId(int index DECLARE_ENGINE_PARAMETER_S);
 
 void setFuelRpmBin(float from, float to DECLARE_ENGINE_PARAMETER_S);
 void setFuelLoadBin(float from, float to DECLARE_ENGINE_PARAMETER_S);
