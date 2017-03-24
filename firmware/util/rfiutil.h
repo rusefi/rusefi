@@ -15,14 +15,17 @@
 
 #include "histogram.h"
 
+/**
+ * Unfortunately ChibiOS has two versions of methods for different
+ * contexts.
+ */
+#ifndef SIMULATOR
 #define isLocked() (ch.dbg.lock_cnt > 0)
-
-	/**
-	 * Unfortunately ChibiOS has two versions of methods for different
-	 * contexts.
-	 */
-
 #define isIsrContext() (ch.dbg.isr_cnt > 0)
+#else
+#define isLocked() (0)
+#define isIsrContext() (0)
+#endif
 
 #ifdef __cplusplus
 extern "C"
