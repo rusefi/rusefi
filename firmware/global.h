@@ -95,9 +95,13 @@ typedef VirtualTimer virtual_timer_t;
 		extern engine_configuration_s activeConfiguration; \
 		extern EnginePins enginePins
 
+// Use this macro to declare a function which only takes magic references
 #define DECLARE_ENGINE_PARAMETER_F void
+// Use this version of the macro as the suffix if method has other parameters
 #define DECLARE_ENGINE_PARAMETER_S
+// Pass this if only magic reference are needed
 #define PASS_ENGINE_PARAMETER_F
+// Pass this after some other parameters are passed
 #define PASS_ENGINE_PARAMETER
 
 /**
