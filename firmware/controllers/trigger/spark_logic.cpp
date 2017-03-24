@@ -223,13 +223,13 @@ void prepareIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_S) {
 	// change of sign here from 'before TDC' to 'after TDC'
 	const angle_t localAdvance = -ENGINE(engineState.timingAdvance) + ENGINE(angleExtra[event->cylinderIndex]) + CONFIG(timing_offset_cylinder[event->cylinderIndex]);
 	const int index = ENGINE(ignitionPin[event->cylinderIndex]);
-	const int coilIndex = ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), index));
+	const int coilIndex = ID2INDEX(getCylinderId(index PASS_ENGINE_PARAMETER));
 	IgnitionOutputPin *output = &enginePins.coils[coilIndex];
 
 	IgnitionOutputPin *secondOutput;
 	if (CONFIG(ignitionMode) == IM_WASTED_SPARK && CONFIG(twoWireBatchIgnition)) {
 		int secondIndex = index + CONFIG(specs.cylindersCount) / 2;
-		int secondCoilIndex = ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), secondIndex));
+		int secondCoilIndex = ID2INDEX(getCylinderId(secondIndex PASS_ENGINE_PARAMETER));
 		secondOutput = &enginePins.coils[secondCoilIndex];
 		assertPinAssigned(secondOutput);
 	} else {
