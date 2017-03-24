@@ -374,7 +374,7 @@ static int getFiringOrderLength(DECLARE_ENGINE_PARAMETER_F) {
  */
 int getCylinderId(int index DECLARE_ENGINE_PARAMETER_S) {
 
-	const int foLength = getFiringOrderLength(PASS_ENGINE_PARAMETER_F);
+	const int foLength = getFiringOrderLength(PASS_ENGINE_PARAMETER);
 	if (engineConfiguration->specs.cylindersCount != foLength) {
 		warning(CUSTOM_OBD_WRONG_FIRING_ORDER, "Wrong firing order %d/%d", engineConfiguration->specs.cylindersCount, foLength);
 		return 1;
