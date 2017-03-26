@@ -29,7 +29,7 @@
 #if !EFI_UNIT_TEST || defined(__DOXYGEN__)
 #include "tunerstudio_configuration.h"
 extern TunerStudioOutputChannels tsOutputChannels;
-#endif
+#endif /* EFI_UNIT_TEST */
 
 EXTERN_ENGINE
 ;
