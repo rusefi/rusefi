@@ -11,6 +11,7 @@
 #include "engine.h"
 #include "pin_repository.h"
 #include "stm32f4xx_hal_flash.h"
+#include "rfiutil.h"
 
 EXTERN_ENGINE;
 
@@ -26,16 +27,18 @@ extern uint32_t __main_stack_base__;
 #if defined __GNUC__
 // GCC version
 
+typedef struct port_intctx intctx_t;
+
 int getRemainingStack(thread_t *otp) {
 
 #if CH_DBG_ENABLE_STACK_CHECK
 	// this would dismiss coverity warning - see http://rusefi.com/forum/viewtopic.php?f=5&t=655
 	// coverity[uninit_use]
-	register struct intctx *r13 asm ("r13");
+	register intctx_t *r13 asm ("r13");
 	otp->activeStack = r13;
 
 	int remainingStack;
-	if (dbg_isr_cnt > 0) {
+    if (ch.dbg.isr_cnt > 0) {
 		// ISR context
 		remainingStack = (int)(r13 - 1) - (int)&__main_stack_base__;
 	} else {
@@ -57,9 +60,9 @@ int getRemainingStack(Thread *otp) {
 #if CH_DBG_ENABLE_STACK_CHECK || defined(__DOXYGEN__)
 	int remainingStack;
 	if (dbg_isr_cnt > 0) {
-		remainingStack = (__get_SP() - sizeof(struct intctx)) - (int)&IRQSTACK$$Base;
+		remainingStack = (__get_SP() - sizeof(intctx_t)) - (int)&IRQSTACK$$Base;
 	} else {
-		remainingStack = (__get_SP() - sizeof(struct intctx)) - (int)otp->p_stklimit;
+		remainingStack = (__get_SP() - sizeof(intctx_t)) - (int)otp->p_stklimit;
 	}
 	otp->remainingStack = remainingStack;
 	return remainingStack;
@@ -74,7 +77,7 @@ int getRemainingStack(Thread *otp) {
 
 void baseHardwareInit(void) {
 	// looks like this holds a random value on start? Let's set a nice clean zero
-	DWT_CYCCNT = 0;
+        DWT->CYCCNT = 0;
 
 	BOR_Set(BOR_Level_1); // one step above default value
 }

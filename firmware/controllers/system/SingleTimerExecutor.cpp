@@ -41,7 +41,7 @@ uint32_t lastExecutionCount;
 
 static void executorCallback(void *arg) {
 	(void)arg;
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#2y");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 256, "lowstck#2y");
 
 //	callbackTime = getTimeNowNt();
 //	if((callbackTime > nextEventTimeNt) && (callbackTime - nextEventTimeNt > US2NT(5000))) {

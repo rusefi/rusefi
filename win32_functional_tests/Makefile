@@ -3,60 +3,47 @@
 # NOTE: Can be overridden externally.
 #
 
-PROJECT_DIR = ../firmware
-#CHIBIOS = $(PROJECT_DIR)/chibios
-
 # Compiler options here.
 ifeq ($(USE_OPT),)
 # this config if debugging is needed, but the binary is about 50M
 # USE_OPT = -c -Wall -O0 -ggdb -g3 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings
 # this config producec a smaller binary file
-  USE_OPT = -c -Wall -O2           -Werror-implicit-function-declaration  -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings -Wno-error=strict-aliasing
+USE_OPT = -Os 
+endif
 
-	ifeq ($(OS),Windows_NT)
-	else
- 	 USE_OPT +=  -m32
-	endif
-
+ifeq ($(OS),Windows_NT)
+else
+USE_OPT +=  -m32
 endif
 
 # C specific options here (added to USE_OPT).
 ifeq ($(USE_COPT),)
-  USE_COPT = -std=gnu99 -fgnu89-inline
+USE_COPT = -std=gnu99 -fgnu89-inline
+endif
 
-	ifeq ($(OS),Windows_NT)
-	else
-	  USE_COPT += -Wno-error=attributes -Wno-error=implicit-function-declaration -include stdio.h
-	endif
-
+ifeq ($(OS),Windows_NT)
+else
+USE_COPT += -Wno-error=attributes -Wno-error=implicit-function-declaration -include stdio.h
 endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  USE_CPPOPT = -std=c++11 -fno-rtti -fpermissive -fno-exceptions -fno-use-cxa-atexit
-
-
-	ifeq ($(OS),Windows_NT)
-	else
-	  USE_CPPOPT += -include cstring -include cstdio -include cstdlib
-	endif
-
+USE_CPPOPT = -std=c++11 -fno-rtti -fpermissive -fno-exceptions -fno-use-cxa-atexit
 endif
 
+ifeq ($(OS),Windows_NT)
+else
+USE_CPPOPT += -include cstring -include cstdio -include cstdlib
+endif
 
 # Enable this if you want the linker to remove unused code and data
 ifeq ($(USE_LINK_GC),)
   USE_LINK_GC = yes
 endif
 
-# If enabled, this option allows to compile the application in THUMB mode.
-ifeq ($(USE_THUMB),)
-  USE_THUMB = no
-endif
-
 # Enable this if you want to see the full log while compiling.
 ifeq ($(USE_VERBOSE_COMPILE),)
-  USE_VERBOSE_COMPILE = no
+  USE_VERBOSE_COMPILE = yes
 endif
 
 #
@@ -78,18 +65,24 @@ DDEFS =
 ##############################################################################
 # Project, sources and paths
 #
-
-                            # Define project name here
+# Define project name here
 PROJECT = rusefi_simulator
+PROJECT_DIR = ../firmware
+CHIBIOS = ../firmware/ChibiOS
 
-#PROJECT_BOARD = OLIMEX_STM32_E407
-#ifneq ($(PROJECT_BOARD),OLIMEX_STM32_E407)
-#  PROJECT_BOARD = ST_STM32F4_DISCOVERY
-#endif
-#DDEFS += -D$(PROJECT_BOARD)
-
-CHIBIOS = ../firmware/chibios
 # Imported source files and paths
+include $(CHIBIOS)/os/hal/boards/simulator/board.mk
+include $(CHIBIOS)/os/hal/hal.mk
+include $(CHIBIOS)/os/hal/osal/rt/osal.mk
+include $(CHIBIOS)/os/rt/ports/SIMIA32/compilers/GCC/port.mk
+include $(CHIBIOS)/os/rt/rt.mk
+
+ifeq ($(OS),Windows_NT)
+  include ${CHIBIOS}/os/hal/ports/simulator/win32/platform.mk
+else
+  include ${CHIBIOS}/os/hal/ports/simulator/Posix/platform.mk
+endif
+
 include $(PROJECT_DIR)/util/util.mk
 include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/controllers/algo/algo.mk
@@ -102,48 +95,36 @@ include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/console/binary/tunerstudio.mk
 include $(PROJECT_DIR)/development/development.mk
 
-include $(CHIBIOS)/boards/simulator/board.mk
-include ${CHIBIOS}/os/hal/hal.mk
-
-ifeq ($(OS),Windows_NT)
-  include ${CHIBIOS}/os/hal/platforms/Win32/platform.mk
-else
-  include ${CHIBIOS}/os/hal/platforms/Posix/platform.mk
-endif
-
-include ${CHIBIOS}/os/ports/GCC/SIMIA32/port.mk
-include ${CHIBIOS}/os/kernel/kernel.mk
-
 # Define linker script file here
 #LDSCRIPT= config/system/STM32F407xG.ld
 #LDSCRIPT= $(PORTLD)/STM32F407xG_CCM.ld
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CSRC =	${PORTSRC} \
-       ${KERNSRC} \
-       ${TESTSRC} \
-       ${HALSRC} \
-       ${PLATFORMSRC} \
-	$(SYSTEMSRC) \
-	$(CONSOLESRC) \
-	$(CONTROLLERS_ALGO_SRC) \
-	$(CONTROLLERS_CORE_SRC) \
-	$(CONTROLLERS_SENSORS_SRC) \
-	$(ENGINES_SRC) \
-       $(BOARDSRC) \
-       ${CHIBIOS}/os/various/chprintf.c \
-       ${CHIBIOS}/os/various/memstreams.c \
-	$(UTILSRC) \
-	main.c
+CSRC =  ${PORTSRC} \
+        ${KERNSRC} \
+        ${HALSRC} \
+        ${PLATFORMSRC} \
+        $(SYSTEMSRC) \
+        $(CONSOLESRC) \
+        $(CONTROLLERS_ALGO_SRC) \
+        $(CONTROLLERS_CORE_SRC) \
+        $(CONTROLLERS_SENSORS_SRC) \
+        $(ENGINES_SRC) \
+        $(BOARDSRC) \
+        $(CHIBIOS)/os/hal/lib/streams/memstreams.c \
+        $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
+        $(CHIBIOS)/os/various/shell.c \
+        $(UTILSRC) \
+        main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = $(UTILSRC_CPP) \
 	$(CONTROLLERS_ALGO_SRC_CPP) \
 	$(PROJECT_DIR)/controllers/settings.cpp \
- 	$(PROJECT_DIR)/controllers/engine_controller.cpp \
- 	$(PROJECT_DIR)/controllers/error_handling.cpp \
+	$(PROJECT_DIR)/controllers/engine_controller.cpp \
+	$(PROJECT_DIR)/controllers/error_handling.cpp \
 	$(PROJECT_DIR)/development/sensor_chart.cpp \
 	$(TRIGGER_SRC_CPP) \
 	$(TRIGGER_DECODERS_SRC_CPP) \
@@ -155,57 +136,43 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(CONTROLLERS_MATH_SRC_CPP) \
 	$(DEV_SIMULATOR_SRC_CPP) \
 	$(ENGINES_SRC_CPP) \
-	$(PROJECT_DIR)/simulator/rusEfiFunctionalTest.cpp \
-	$(PROJECT_DIR)/simulator/framework.cpp \
+	simulator/rusEfiFunctionalTest.cpp \
+	simulator/framework.cpp \
+	simulator/boards.cpp \
 	$(PROJECT_DIR)/controllers/map_averaging.cpp \
 	$(PROJECT_DIR)/development/trigger_emulator.cpp \
-       simulator/boards.cpp \
 	$(TEST_SRC_CPP)
-# C sources to be compiled in ARM mode regardless of the global setting.
-# NOTE: Mixing ARM and THUMB mode enables the -mthumb-interwork compiler
-#       option that results in lower performance and larger code size.
-ACSRC =
 
-# C++ sources to be compiled in ARM mode regardless of the global setting.
-# NOTE: Mixing ARM and THUMB mode enables the -mthumb-interwork compiler
-#       option that results in lower performance and larger code size.
-ACPPSRC =
-
-# C sources to be compiled in THUMB mode regardless of the global setting.
-# NOTE: Mixing ARM and THUMB mode enables the -mthumb-interwork compiler
-#       option that results in lower performance and larger code size.
-TCSRC =
-
-# C sources to be compiled in THUMB mode regardless of the global setting.
-# NOTE: Mixing ARM and THUMB mode enables the -mthumb-interwork compiler
-#       option that results in lower performance and larger code size.
-TCPPSRC =
 
 # List ASM source files here
 ASMSRC = $(PORTASM)
 
 INCDIR = . \
-$(PORTINC) $(KERNINC) $(TESTINC) \
-          $(HALINC) $(PLATFORMINC) $(BOARDINC) \
-	$(PROJECT_DIR)/util \
-	$(PROJECT_DIR)/console \
-	$(PROJECT_DIR)/console/binary \
-	$(PROJECT_DIR)/console/fl_binary \
-	$(PROJECT_DIR)/config/engines \
-	$(PROJECT_DIR)/ext_algo \
-	$(PROJECT_DIR)/controllers \
-	$(PROJECT_DIR)/hw_layer/algo \
-	$(PROJECT_DIR)/development \
-	$(PROJECT_DIR)/controllers/algo \
-	$(PROJECT_DIR)/controllers/core \
-	$(PROJECT_DIR)/controllers/math \
-	$(PROJECT_DIR)/controllers/sensors \
-	$(PROJECT_DIR)/controllers/system \
-	$(PROJECT_DIR)/controllers/trigger \
-	$(PROJECT_DIR)/controllers/trigger/decoders \
-        ${CHIBIOS}/os/various \
-	simulator
-	
+          $(PORTINC) \
+          $(KERNINC) \
+          $(OSALINC) \
+          $(HALINC) \
+          $(PLATFORMINC) \
+          $(BOARDINC) \
+          $(PROJECT_DIR)/util \
+          $(PROJECT_DIR)/console \
+          $(PROJECT_DIR)/console/binary \
+          $(PROJECT_DIR)/console/fl_binary \
+          $(PROJECT_DIR)/config/engines \
+          $(PROJECT_DIR)/ext_algo \
+          $(PROJECT_DIR)/controllers \
+          $(PROJECT_DIR)/hw_layer/algo \
+          $(PROJECT_DIR)/development \
+          $(PROJECT_DIR)/controllers/algo \
+          $(PROJECT_DIR)/controllers/core \
+          $(PROJECT_DIR)/controllers/math \
+          $(PROJECT_DIR)/controllers/sensors \
+          $(PROJECT_DIR)/controllers/system \
+          $(PROJECT_DIR)/controllers/trigger \
+          $(PROJECT_DIR)/controllers/trigger/decoders \
+          ${CHIBIOS}/os/various \
+          $(CHIBIOS)/os/hal/lib/streams \
+          simulator
 
 #
 # Project, sources and paths
@@ -221,6 +188,7 @@ $(PORTINC) $(KERNINC) $(TESTINC) \
 ifeq ($(OS),Windows_NT)
   #Cygwin64 is used with mingw64 32-bit version
 
+  #TRGT = i686-w64-mingw32-
   TRGT = i686-w64-mingw32-
 else
   TRGT = 
@@ -238,12 +206,6 @@ AS   = $(TRGT)gcc -x assembler-with-cpp
 OD   = $(TRGT)objdump
 HEX  = $(CP) -O ihex
 BIN  = $(CP) -O binary
-
-# ARM-specific options here
-AOPT =
-
-# THUMB-specific options here
-TOPT = -mthumb -DTHUMB
 
 # Define C warning options here
 CWARN = -Wall -Wextra -Wstrict-prototypes
@@ -285,7 +247,7 @@ endif
 #
 
 # List all user C define here, like -D_DEBUG=1
-UDEFS =
+UDEFS = -DSIMULATOR
 
 # Define ASM defines here
 UADEFS =

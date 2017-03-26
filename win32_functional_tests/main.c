@@ -19,13 +19,13 @@
 #include "rusEfiFunctionalTest.h"
 #include "framework.h"
 
-#define CONSOLE_WA_SIZE     THD_WA_SIZE(4096)
+#define CONSOLE_WA_SIZE     THD_WORKING_AREA_SIZE(4096)
 
 bool main_loop_started = false;
 
 static thread_t *cdtp;
-//static Thread *shelltp1;
-//static Thread *shelltp2;
+//static thread_t *shelltp1;
+//static thread_t *shelltp2;
 
 #define cputs(msg) chMsgSend(cdtp, (msg_t)msg)
 
@@ -40,16 +40,15 @@ TestStream testStream;
  * to the C printf() thread safe and the print operation atomic among threads.
  * In this example the message is the zero terminated string itself.
  */
-static msg_t console_thread(void *arg) {
+THD_FUNCTION(console_thread, arg) {
 
 	(void) arg;
-	while (!chThdShouldTerminate()) {
+	while (!chThdShouldTerminateX()) {
 		thread_t *tp = chMsgWait();
 		puts((char *) chMsgGet(tp));
 		fflush(stdout);
 		chMsgRelease(tp, MSG_OK);
 	}
-	return 0;
 }
 
 extern int isSerialOverTcpReady;
@@ -172,7 +171,7 @@ int main(void) {
 	/*
 	 * Events servicing loop.
 	 */
-	while (!chThdShouldTerminate()) {
+	while (!chThdShouldTerminateX()) {
 		chEvtDispatch(fhandlers, chEvtWaitOne(ALL_EVENTS));
 		printPendingMessages();
 		chThdSleepMilliseconds(100);

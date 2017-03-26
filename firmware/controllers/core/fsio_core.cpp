@@ -144,7 +144,7 @@ void LECalculator::push(le_action_e action, float value) {
  */
 bool LECalculator::processElement(Engine *engine, LEElement *element) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	efiAssert(getRemainingStack(chThdSelf()) > 64, "FSIO logic", false);
+	efiAssert(getRemainingStack(chThdGetSelfX()) > 64, "FSIO logic", false);
 #endif
 	switch (element->action) {
 

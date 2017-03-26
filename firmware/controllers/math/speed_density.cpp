@@ -75,9 +75,7 @@ EXTERN_ENGINE;
 /**
  * @return per cylinder injection time, in Milliseconds
  */
-floatms_t getSpeedDensityFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
-	//int rpm = engine->rpmCalculator->rpm();
-
+floatms_t getSpeedDensityFuel(DECLARE_ENGINE_PARAMETER_F) {
 	/**
 	 * most of the values are pre-calculated for performance reasons
 	 */

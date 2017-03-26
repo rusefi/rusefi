@@ -16,19 +16,13 @@
 #include "efilib.h"
 #include "efitime.h"
 
-// this stuff is about ChibiOS 2.6 > Migration
-typedef VirtualTimer virtual_timer_t;
-typedef EventListener event_listener_t;
-typedef Thread thread_t;
-#define THD_WORKING_AREA WORKING_AREA
-#define THD_FUNCTION(tname, arg) void tname(void *arg)
-#define MSG_OK RDY_OK
-#define eventflags_t flagsmask_t
+#define EFI_UNIT_TEST FALSE
 
+#define hasFatalError() (FALSE)
 
 #define US_TO_NT_MULTIPLIER 100
 
-#define ALWAYS_INLINE INLINE
+#define ALWAYS_INLINE
 
 #define US2NT(x) (US_TO_NT_MULTIPLIER * (x))
 

@@ -24,7 +24,7 @@
 #include "hardware.h"
 #include "engine_configuration.h"
 #include "status_loop.h"
-#include "usb_msd.h"
+#include "hal_usb_msd.h"
 #include "usb_msd_cfg.h"
 
 #include "rtc_helper.h"
@@ -56,7 +56,7 @@ extern board_configuration_s *boardConfiguration;
 
 //static USBDriver *ms_usb_driver = &USBD1;
 //static USBMassStorageDriver UMSD1;
-//extern const USBConfig msd_usb_config;
+extern const USBConfig msdusbcfg;
 
 
 
@@ -328,7 +328,7 @@ static void MMCumount(void) {
 	f_sync(&FDLogFile);							// sync ALL
 	mmcDisconnect(&MMCD1);						// Brings the driver in a state safe for card removal.
 	mmcStop(&MMCD1);							// Disables the MMC peripheral.
-	f_mount(0, NULL);							// FATFS: Unregister work area prior to discard it
+	f_mount(NULL, 0, 0);							// FATFS: Unregister work area prior to discard it
 	memset(&FDLogFile, 0, sizeof(FIL));			// clear FDLogFile
 	fs_ready = false;							// status = false
 	scheduleMsg(&logger, "MMC/SD card removed");
@@ -350,7 +350,7 @@ static void MMCmount(void) {
 	// Performs the initialization procedure on the inserted card.
 	lockSpi(SPI_NONE);
 	sdStatus = SD_STATE_CONNECTING;
-	if (mmcConnect(&MMCD1) != CH_SUCCESS) {
+	if (mmcConnect(&MMCD1) != HAL_SUCCESS) {
 		sdStatus = SD_STATE_NOT_CONNECTED;
 		warning(CUSTOM_OBD_MMC_ERROR, "Can't connect or mount MMC/SD");
 		unlockSpi();
@@ -379,7 +379,7 @@ static void MMCmount(void) {
 	unlockSpi();
 	// if Ok - mount FS now
 	memset(&MMC_FS, 0, sizeof(FATFS));
-	if (f_mount(0, &MMC_FS) == FR_OK) {
+	if (f_mount(&MMC_FS, 0, 0) == FR_OK) {
 		sdStatus = SD_STATE_MOUNTED;
 		incLogFileName();
 		createLogFile();

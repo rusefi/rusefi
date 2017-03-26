@@ -3,9 +3,16 @@
 # NOTE: Can be overridden externally.
 #
 
+PROJECT_DIR = .
+
+# by default EXTRA_PARAMS is empty and we create 'debug' version of the firmware with additional assertions and statistics
+# for 'release' options see 'clean_compile_two_versions.bat' file
+
+
 # Compiler options here.
 ifeq ($(USE_OPT),)
-  USE_OPT = $(EXTRA_PARAMS) $(RFLAGS) -Os -ggdb -fomit-frame-pointer -falign-functions=16
+  #USE_OPT = $(EXTRA_PARAMS) $(RFLAGS) -Os -fomit-frame-pointer -falign-functions=16 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Werror=type-limits -Wno-error=strict-aliasing -Wno-error=attributes
+  USE_OPT = -Os -ggdb -fomit-frame-pointer -falign-functions=16
 endif
 
 # C specific options here (added to USE_OPT).
@@ -25,12 +32,12 @@ endif
 
 # Linker extra options here.
 ifeq ($(USE_LDOPT),)
-  USE_LDOPT =
+  USE_LDOPT = -Os -flto=5
 endif
 
 # Enable this if you want link time optimizations (LTO)
 ifeq ($(USE_LTO),)
-  USE_LTO = no
+  USE_LTO = yes
 endif
 
 # If enabled, this option allows to compile the application in THUMB mode.
@@ -46,7 +53,7 @@ endif
 # If enabled, this option makes the build process faster by not compiling
 # modules not used in the current configuration.
 ifeq ($(USE_SMART_BUILD),)
-  USE_SMART_BUILD = no
+  USE_SMART_BUILD = yes
 endif
 
 #
@@ -84,12 +91,11 @@ endif
 
 # Define project name here
 PROJECT = rusefi
-PROJECT_DIR = .
 
 # Imported source files and paths
 CHIBIOS = ChibiOS
-CHIBIOS_CONTRIB = ChibiOS-Contrib
 
+#PROJECT_BOARD = OLIMEX_STM32_E407
 ifneq ($(PROJECT_BOARD),OLIMEX_STM32_E407)
   PROJECT_BOARD = ST_STM32F4_DISCOVERY
 endif
@@ -98,19 +104,17 @@ DDEFS += -D$(PROJECT_BOARD)
 # Startup files.
 include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/startup_stm32f4xx.mk
 # HAL-OSAL files (optional).
-include $(CHIBIOS_CONTRIB)/os/hal/hal.mk
-include $(CHIBIOS_CONTRIB)/os/hal/ports/STM32/STM32F4xx/platform.mk
+include $(CHIBIOS)/os/hal/hal.mk
+include $(CHIBIOS)/os/hal/ports/STM32/STM32F4xx/platform.mk
+include $(CHIBIOS)/os/hal/boards/$(PROJECT_BOARD)/board.mk
 include $(CHIBIOS)/os/hal/osal/rt/osal.mk
 # RTOS files (optional).
 include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/rt/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 
 include $(CHIBIOS)/os/various/fatfs_bindings/fatfs.mk
-include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
-
 include console/binary/tunerstudio.mk
-include $(PROJECT_DIR)/ext/fatfs.mk
-
+include ext/ext.mk
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
 include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
 include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
@@ -118,7 +122,6 @@ include development/development.mk
 include controllers/controllers.mk
 
 include $(PROJECT_DIR)/util/util.mk
-include $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/board.mk
 include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/controllers/algo/algo.mk
 include $(PROJECT_DIR)/controllers/core/core.mk
@@ -127,6 +130,7 @@ include $(PROJECT_DIR)/controllers/sensors/sensors.mk
 include $(PROJECT_DIR)/controllers/system/system.mk
 include $(PROJECT_DIR)/controllers/trigger/trigger.mk
 include $(PROJECT_DIR)/console/console.mk
+
 
 # Define linker script file here
 LDSCRIPT= config/stm32f4ems/STM32F407xG_CCM.ld
@@ -199,7 +203,6 @@ TCSRC =
 TCPPSRC =
 
 # List ASM source files here
-# List ASM source files here
 ASMSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
 INCDIR = $(PORTINC) \
@@ -214,7 +217,6 @@ INCDIR = $(PORTINC) \
 	$(CHIBIOS)/os/hal/lib/streams \
 	$(CHIBIOS)/os/various \
 	$(CHIBIOS)/os/various/devices_lib/accel \
-    $(CHIBIOS_CONTRIB)/os/various \
 	config/stm32f4ems \
 	config/engines \
 	config \
@@ -267,7 +269,6 @@ LD   = $(TRGT)gcc
 #LD   = $(TRGT)g++
 CP   = $(TRGT)objcopy
 AS   = $(TRGT)gcc -x assembler-with-cpp
-AR   = $(TRGT)ar
 OD   = $(TRGT)objdump
 SZ   = $(TRGT)size
 HEX  = $(CP) -O ihex
@@ -287,6 +288,29 @@ CPPWARN = -Wall -Wextra
 
 #
 # Compiler settings
+##############################################################################
+
+##############################################################################
+# Start of default section
+#
+
+# List all default C defines here, like -D_DEBUG=1
+DDEFS =
+
+# List all default ASM defines here, like -D_DEBUG=1
+DADEFS =
+
+# List all default directories to look for include files here
+DINCDIR =
+
+# List the default directory to look for the libraries here
+DLIBDIR =
+
+# List all default libraries here
+DLIBS =
+
+#
+# End of default section
 ##############################################################################
 
 ##############################################################################

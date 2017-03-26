@@ -28,7 +28,7 @@
 
 #if (!EFI_PROD_CODE && !EFI_SIMULATOR) || defined(__DOXYGEN__)
 
-#define chThdSelf() 0
+#define chThdGetSelfX() 0
 #define getRemainingStack(x) (999999)
 
 #endif
@@ -392,7 +392,7 @@ static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_F) {
 
 
 static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm DECLARE_ENGINE_PARAMETER_S) {
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#3");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#3");
 	efiAssertVoid(trgEventIndex < engine->engineCycleEventCount, "handleFuel/event index");
 
 	if (!isInjectionEnabled(engineConfiguration) || limitedFuel) {
@@ -465,7 +465,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 		 */
 		return;
 	}
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#2");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#2");
 
 	if (trgEventIndex >= engine->engineCycleEventCount) {
 		/**

@@ -13,23 +13,50 @@
 #include "rtc_helper.h"
 
 #if EFI_RTC || defined(__DOXYGEN__)
-#include "chrtclib.h"
+#include "rtc.h"
 static LoggingWithStorage logger("RTC");
+static RTCDateTime timespec;
 
 #endif /* EFI_RTC */
 
 void date_set_tm(struct tm *timp) {
 	(void)timp;
 #if EFI_RTC || defined(__DOXYGEN__)
-	rtcSetTimeTm(&RTCD1, timp);
+        rtcConvertStructTmToDateTime(timp, 0, &timespec);
+	rtcSetTime(&RTCD1, &timespec);
 #endif /* EFI_RTC */
 }
 
 void date_get_tm(struct tm *timp) {
-	(void)timp;
 #if EFI_RTC || defined(__DOXYGEN__)
-	rtcGetTimeTm(&RTCD1, timp);
+	rtcGetTime(&RTCD1, &timespec);
+        rtcConvertDateTimeToStructTm(&timespec, timp, NULL);
 #endif /* EFI_RTC */
+}
+
+static time_t GetTimeUnixSec(void) {
+#if EFI_RTC || defined(__DOXYGEN__)
+  struct tm tim;
+
+  rtcGetTime(&RTCD1, &timespec);
+  rtcConvertDateTimeToStructTm(&timespec, &tim, NULL);
+  return mktime(&tim);
+#endif
+}
+
+static void SetTimeUnixSec(time_t unix_time) {
+#if EFI_RTC || defined(__DOXYGEN__)
+  struct tm tim;
+  struct tm *canary;
+
+  /* If the conversion is successful the function returns a pointer
+     to the object the result was written into.*/
+  canary = localtime_r(&unix_time, &tim);
+  osalDbgCheck(&tim == canary);
+
+  rtcConvertStructTmToDateTime(&tim, 0, &timespec);
+  rtcSetTime(&RTCD1, &timespec);
+#endif
 }
 
 static void put2(int offset, char *lcd_str, int value) {
@@ -49,7 +76,7 @@ bool dateToStringShort(char *lcd_str) {
 #if EFI_RTC || defined(__DOXYGEN__)
 	strcpy(lcd_str, "0000_000000\0");
 	struct tm timp;
-	rtcGetTimeTm(&RTCD1, &timp);
+	date_get_tm(&timp);
 	if (timp.tm_year < 116 || timp.tm_year > 130) {
 		// 2016 to 2030 is the valid range
 		lcd_str[0] = 0;
@@ -77,7 +104,7 @@ void dateToString(char *lcd_str) {
 
 	strcpy(lcd_str, "00/00 00:00:00\0");
 	struct tm timp;
-	rtcGetTimeTm(&RTCD1, &timp);			// get RTC date/time
+	date_get_tm(&timp);			// get RTC date/time
 	
 	put2(0, lcd_str, timp.tm_mon + 1);
 	put2(3, lcd_str, timp.tm_mday);
@@ -95,12 +122,12 @@ void printDateTime(void) {
 	static time_t unix_time;
 	struct tm timp;
 	
-	unix_time = rtcGetTimeUnixSec(&RTCD1);
+	unix_time = GetTimeUnixSec();
 	if (unix_time == -1) {
 		scheduleMsg(&logger, "incorrect time in RTC cell");
 	} else {
 		scheduleMsg(&logger, "%D - unix time", unix_time);
-		rtcGetTimeTm(&RTCD1, &timp);
+		date_get_tm(&timp);
 
 		appendMsgPrefix(&logger);
 		appendPrintf(&logger, "Current RTC time in GMT is: %04u-%02u-%02u %02u:%02u:%02u", timp.tm_year + 1900, timp.tm_mon + 1, timp.tm_mday, timp.tm_hour,
@@ -114,7 +141,7 @@ void setDateTime(const char *strDate) {
 	if (strlen(strDate) > 0) {
 		time_t unix_time = atoi(strDate);
 		if (unix_time > 0) {
-			rtcSetTimeUnixSec(&RTCD1, unix_time);
+			SetTimeUnixSec(unix_time);
 			printDateTime();
 			return;
 		}
@@ -125,7 +152,7 @@ void setDateTime(const char *strDate) {
 
 void initRtc(void) {
 #if EFI_RTC || defined(__DOXYGEN__)
-	rtcGetTimeUnixSec(&RTCD1); // this would test RTC, see 'rtcWorks' variable, see #311
+	GetTimeUnixSec(); // this would test RTC, see 'rtcWorks' variable, see #311
 	printMsg(&logger, "initRtc()");
 #endif /* EFI_RTC */
 }

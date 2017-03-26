@@ -44,7 +44,7 @@ TriggerShape::TriggerShape() :
 
 void TriggerShape::calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE_PARAMETER_S) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "calc s");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 256, "calc s");
 #endif
 	trigger_config_s const*triggerConfig = &engineConfiguration->trigger;
 

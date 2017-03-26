@@ -8,8 +8,17 @@
 #ifndef CONSOLE_IO_H_
 #define CONSOLE_IO_H_
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+
 #include <ch.h>
 #include <hal.h>
+    
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 typedef void (*CommandHandler)(char *);
 
