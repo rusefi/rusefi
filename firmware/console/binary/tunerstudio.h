@@ -27,7 +27,8 @@ typedef struct {
 	int crc32CheckCommandCounter;
 	int writeChunkCommandCounter;
 	int errorCounter;
-	int tsCounter;
+	int totalCounter;
+	int textCommandCounter;
 } tunerstudio_counters_s;
 
 bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command);

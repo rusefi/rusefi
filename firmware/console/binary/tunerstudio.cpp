@@ -144,7 +144,7 @@ static void resetTs(void) {
 
 static void printErrorCounters(void) {
 	scheduleMsg(&tsLogger, "TunerStudio size=%d / total=%d / errors=%d / H=%d / O=%d / P=%d / B=%d",
-			sizeof(tsOutputChannels), tsState.tsCounter, tsState.errorCounter, tsState.queryCommandCounter,
+			sizeof(tsOutputChannels), tsState.totalCounter, tsState.errorCounter, tsState.queryCommandCounter,
 			tsState.outputChannelsCommandCounter, tsState.readPageCommandsCounter, tsState.burnCommandCounter);
 	scheduleMsg(&tsLogger, "TunerStudio W=%d / C=%d / P=%d / page=%d", tsState.writeValueCommandCounter,
 			tsState.writeChunkCommandCounter, tsState.pageCommandCounter, currentPageId);
@@ -454,7 +454,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 //			scheduleSimpleMsg(&logger, "ts channel is now ready ", hTimeNow());
 		}
 
-		tsState.tsCounter++;
+		tsState.totalCounter++;
 
 		uint8_t firstByte;
 		int recieved = chnReadTimeout(tsChannel->channel, &firstByte, 1, TS_READ_TIMEOUT);
@@ -637,6 +637,8 @@ static void handleGetVersion(ts_channel_s *tsChannel) {
 }
 
 static void handleGetText(ts_channel_s *tsChannel) {
+	tsState.textCommandCounter++;
+
 	int outputSize;
 	char *output = swapOutputBuffers(&outputSize);
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
