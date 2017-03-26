@@ -292,15 +292,15 @@ static void printSensors(Logging *log, bool fileFormat) {
 
 	if (fileFormat) {
 		reportSensorF(log, fileFormat, "f: tps delta", "v", engine->tpsAccelEnrichment.getMaxDelta(), 2);
-		reportSensorF(log, fileFormat, "f: tps fuel", "ms", engine->engineState.tpsAccelEnrich, 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_TPS_EXTRA, "ms", engine->engineState.tpsAccelEnrich, 2);
 
 		reportSensorF(log, fileFormat, "f: el delta", "v", engine->engineLoadAccelEnrichment.getMaxDelta(), 2);
 		if (hasMapSensor(PASS_ENGINE_PARAMETER_F)) {
 			reportSensorF(log, fileFormat, "f: el fuel", "v", engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_F) * 100 / getMap(), 2);
 		}
 
-		reportSensorF(log, fileFormat, "f: duty", "%", getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER), 2);
-		reportSensorF(log, fileFormat, "dwell: duty", "%", getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER), 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_INJ_DUTY, "%", getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER), 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_DWELL_DUTY, "%", getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER), 2);
 	}
 
 
