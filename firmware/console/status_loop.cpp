@@ -86,6 +86,7 @@ extern TunerStudioOutputChannels tsOutputChannels;
 #endif
 
 extern bool hasFirmwareErrorFlag;
+extern tunerstudio_counters_s tsState;
 #define FULL_LOGGING_KEY "fl"
 
 static char LOGGING_BUFFER[1400] CCM_OPTIONAL;
@@ -730,6 +731,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	if (engineConfiguration->debugMode == DBG_TPS_ACCEL) {
 		tsOutputChannels->debugIntField1 = engine->tpsAccelEnrichment.cb.getSize();
+	} else if (engineConfiguration->debugMode == DBG_SR5_PROTOCOL) {
+		tsOutputChannels->debugIntField1 = tsState.textCommandCounter * 1000000 + tsState.burnCommandCounter + tsState.totalCounter;
+		tsOutputChannels->debugIntField2 = tsState.outputChannelsCommandCounter * 100000 + tsState.readPageCommandsCounter * 1000 + tsState.writeValueCommandCounter;
 	}
 
 	if (engineConfiguration->debugMode == DBG_TRIGGER_INPUT) {
