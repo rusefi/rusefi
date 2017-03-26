@@ -20,6 +20,6 @@ float sdMath(engine_configuration_s *engineConfiguration, float airMass, float A
 
 void setDefaultVETable(DECLARE_ENGINE_PARAMETER_F);
 void initSpeedDensity(DECLARE_ENGINE_PARAMETER_F);
-floatms_t getSpeedDensityFuel(int rpm DECLARE_ENGINE_PARAMETER_S);
+floatms_t getSpeedDensityFuel(DECLARE_ENGINE_PARAMETER_F);
 
 #endif /* SPEED_DENSITY_H_ */
