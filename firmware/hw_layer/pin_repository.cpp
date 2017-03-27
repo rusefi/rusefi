@@ -202,11 +202,8 @@ void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t m
 	}
 	if (port == GPIO_NULL)
 		return;
-	print("%s on %s:%d\r\n", msg, portname(port), pin);
 
-	appendPrintf(&logger, "msg,%s", msg);
-	appendPrintf(&logger, " on %s%d%s", portname(port), pin, DELIMETER);
-	printLine(&logger);
+	scheduleMsg(&logger, "%s on %s%d", msg, portname(port), pin);
 
 	int index = getIndex(port, pin);
 
