@@ -5,6 +5,7 @@ current binaries are always available at http://rusefi.com/build_server/
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
+| 03/26/2017    | r13330    | super annoying bug #336 fixed |
 | 03/20/2017    | r13233    | improvements #375 & #376: hard FPU mode & migrating to fresh version of arm gcc |
 | 03/19/2017    | r13223    | bugfix #374: persistent configuration starts to touch firmware - settings would need to be reloaded |
 | 03/09/2017    | r13146    | bugfix #370: duty cycle vs error code 6050 |
