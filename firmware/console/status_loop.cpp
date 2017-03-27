@@ -732,8 +732,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	if (engineConfiguration->debugMode == DBG_TPS_ACCEL) {
 		tsOutputChannels->debugIntField1 = engine->tpsAccelEnrichment.cb.getSize();
 	} else if (engineConfiguration->debugMode == DBG_SR5_PROTOCOL) {
-		tsOutputChannels->debugIntField1 = tsState.textCommandCounter * 1000000 + tsState.burnCommandCounter + tsState.totalCounter;
-		tsOutputChannels->debugIntField2 = tsState.outputChannelsCommandCounter * 100000 + tsState.readPageCommandsCounter * 1000 + tsState.writeValueCommandCounter;
+		int _10_6 = 100000;
+		tsOutputChannels->debugIntField1 = tsState.textCommandCounter * _10_6 +  tsState.totalCounter;
+		tsOutputChannels->debugIntField2 = tsState.outputChannelsCommandCounter * _10_6 + tsState.writeValueCommandCounter;
+		tsOutputChannels->debugIntField3 = tsState.readPageCommandsCounter * _10_6 + tsState.burnCommandCounter;
 	}
 
 	if (engineConfiguration->debugMode == DBG_TRIGGER_INPUT) {
