@@ -60,9 +60,9 @@ public class ConfigStructure {
      */
     public void headerWrite(Writer cHeader) throws IOException {
         if (comment != null) {
-            cHeader.write("/**\r\n" + ConfigDefinition.packComment(comment, "") + "\r\n*/\r\n");
+            cHeader.write("/**" + ConfigDefinition.EOL + ConfigDefinition.packComment(comment, "")  + ConfigDefinition.EOL + "*/" + ConfigDefinition.EOL);
         }
-        cHeader.write("typedef struct {\r\n");
+        cHeader.write("typedef struct {" + ConfigDefinition.EOL);
 
         bitState.reset();
         for (int i = 0; i < cFields.size(); i++) {
@@ -74,8 +74,8 @@ public class ConfigStructure {
             currentOffset += cf.getSize(next);
         }
 
-        cHeader.write("\t/** total size " + currentOffset + "*/\r\n");
-        cHeader.write("} " + name + ";\r\n\r\n");
+        cHeader.write("\t/** total size " + currentOffset + "*/" + ConfigDefinition.EOL);
+        cHeader.write("} " + name + ";" + ConfigDefinition.EOL + ConfigDefinition.EOL);
     }
 
     public int writeTunerStudio(String prefix, Writer tsHeader, int tsPosition) throws IOException {
