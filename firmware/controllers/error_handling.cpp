@@ -95,6 +95,7 @@ void addWarningCode(obd_code_e code) {
 	engine->engineState.lastErrorCode = code;
 }
 
+// todo: look into chsnprintf
 // todo: move to some util file & reuse for 'firmwareError' method
 void printToStream(MemoryStream *stream, const char *fmt, va_list ap) {
 	stream->eos = 0; // reset
@@ -199,6 +200,7 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 		strncpy((char*) errorMessageBuffer, fmt, sizeof(errorMessageBuffer) - 1);
 		errorMessageBuffer[sizeof(errorMessageBuffer) - 1] = 0; // just to be sure
 	} else {
+		// todo: look into chsnprintf once on Chibios 3
 		firmwareErrorMessageStream.eos = 0; // reset
 		va_list ap;
 		va_start(ap, fmt);
