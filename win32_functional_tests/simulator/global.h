@@ -24,6 +24,7 @@ typedef Thread thread_t;
 #define THD_FUNCTION(tname, arg) void tname(void *arg)
 #define MSG_OK RDY_OK
 #define eventflags_t flagsmask_t
+#define chThdGetSelfX chThdSelf
 
 
 #define US_TO_NT_MULTIPLIER 100
