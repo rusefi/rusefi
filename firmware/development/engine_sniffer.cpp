@@ -171,7 +171,7 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 	}
 
 #if EFI_PROD_CODE
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 32, "lowstck#2c");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 32, "lowstck#2c");
 #endif
 
 	efiAssertVoid(isInitialized, "chart not initialized");
