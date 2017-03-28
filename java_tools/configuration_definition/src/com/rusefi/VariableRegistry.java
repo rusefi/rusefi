@@ -59,7 +59,7 @@ public class VariableRegistry extends TreeMap<String, String> {
             if (intValues.containsKey(var))
                 throw new IllegalStateException("Not allowed to redefine: " + var);
             intValues.put(var, intValue);
-            javaNumbericDefinitions.append("\tpublic static final int " + var + " = " + intValue + ";\r\n");
+            javaNumbericDefinitions.append("\tpublic static final int " + var + " = " + intValue + ";" + ConfigDefinition.EOL);
         } catch (NumberFormatException e) {
             System.out.println("Not an integer: " + value);
         }

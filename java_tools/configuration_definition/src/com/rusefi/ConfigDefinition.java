@@ -12,6 +12,7 @@ import java.util.Stack;
  */
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class ConfigDefinition {
+    public static final String EOL = "\n";
     private static final String INPUT_FILE_NAME = "rusefi_config.txt";
     private static final String MESSAGE = "was generated automatically by ConfigDefinition.jar based on " + INPUT_FILE_NAME + " " + new Date();
     private static final String TS_FILE_INPUT_NAME = "rusefi.input";
@@ -62,9 +63,9 @@ public class ConfigDefinition {
         processFile(br, cHeader, tsWriter, javaFieldsWriter);
 
         BufferedWriter javaFields = new BufferedWriter(new FileWriter(javaConsolePath + File.separator + FIELDS_JAVA));
-        javaFields.write("package com.rusefi.config;\r\n\r\n");
-        javaFields.write("// this file " + MESSAGE + "\r\n");
-        javaFields.write("public class Fields {\r\n");
+        javaFields.write("package com.rusefi.config;" + EOL + EOL);
+        javaFields.write("// this file " + MESSAGE + EOL);
+        javaFields.write("public class Fields {" + EOL);
         javaFields.write(VariableRegistry.INSTANCE.getJavaConstants());
         javaFields.write(javaFieldsWriter.toString());
         javaFields.write("}\r\n");
@@ -183,9 +184,9 @@ public class ConfigDefinition {
         String message = "// this section " + MESSAGE + "\r\n";
         cHeader.write(message);
         cHeader.write("// begin\r\n");
-        cHeader.write("#ifndef ENGINE_CONFIGURATION_GENERATED_H_\r\n");
-        cHeader.write("#define ENGINE_CONFIGURATION_GENERATED_H_\r\n");
-        cHeader.write("#include \"rusefi_types.h\"\n");
+        cHeader.write("#ifndef ENGINE_CONFIGURATION_GENERATED_H_" + EOL);
+        cHeader.write("#define ENGINE_CONFIGURATION_GENERATED_H_" + EOL);
+        cHeader.write("#include \"rusefi_types.h\"" + EOL);
 
         while ((line = br.readLine()) != null) {
             line = line.trim();
