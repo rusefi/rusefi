@@ -16,9 +16,9 @@ public class ConfigDefinitionTest {
     @Test
     public void testComment() {
         assertEquals("", ConfigDefinition.packComment("", "\t"));
-        assertEquals("\t * abc\r\n", ConfigDefinition.packComment("abc", "\t"));
-        assertEquals("\t * abc\r\n" +
-                "\t * vbn\r\n", ConfigDefinition.packComment("abc\\nvbn", "\t"));
+        assertEquals("\t * abc\n", ConfigDefinition.packComment("abc", "\t"));
+        assertEquals("\t * abc\n" +
+                "\t * vbn\n", ConfigDefinition.packComment("abc\\nvbn", "\t"));
     }
 
     @Test
