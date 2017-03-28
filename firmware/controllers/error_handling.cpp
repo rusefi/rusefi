@@ -102,9 +102,11 @@ void printToStream(MemoryStream *stream, const char *fmt, va_list ap) {
 	chvprintf((BaseSequentialStream *) stream, fmt, ap);
 	stream->buffer[stream->eos] = 0;
 }
-#endif
+#else
+int unitTestWarningCounter = 0;
 
-int warningCounter = 0;
+#endif /* EFI_SIMULATOR || EFI_PROD_CODE */
+
 
 /**
  * OBD_PCM_Processor_Fault is the general error code for now
@@ -142,7 +144,7 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 	append(&logger, DELIMETER);
 	scheduleLogging(&logger);
 #else
-	warningCounter++;
+	unitTestWarningCounter++;
 	printf("unit_test_warning: ");
 	va_list ap;
 	va_start(ap, fmt);

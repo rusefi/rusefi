@@ -35,7 +35,7 @@
 extern int timeNow;
 extern float unitTestValue;
 extern float testMafValue;
-extern int warningCounter;
+extern int unitTestWarningCounter;
 extern bool printTriggerDebug;
 extern float actualSynchGap;
 
@@ -1240,7 +1240,7 @@ void testMissedSpark299(void) {
 	engineConfiguration->isIgnitionEnabled = true;
 	engineConfiguration->isInjectionEnabled = false;
 
-	assertEqualsM("warningCounter#0", 4, warningCounter);
+	assertEqualsM("warningCounter#0", 4, unitTestWarningCounter);
 
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerRise();
@@ -1311,5 +1311,5 @@ void testMissedSpark299(void) {
 	eth.firePrimaryTriggerFall();
 	schedulingQueue.executeAll(timeNow);
 
-	assertEqualsM("warningCounter#1", 5, warningCounter);
+	assertEqualsM("warningCounter#1", 5, unitTestWarningCounter);
 }
