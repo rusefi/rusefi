@@ -18,11 +18,11 @@
 extern int timeNow;
 extern EnginePins enginePins;
 extern EventQueue schedulingQueue;
-extern int warningCounter;
+extern int unitTestWarningCounter;
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persistentConfig) {
 	ec = &persistentConfig.engineConfiguration;
-	warningCounter = 0;
+	unitTestWarningCounter = 0;
 
 	schedulingQueue.clear();
 	enginePins.reset();
