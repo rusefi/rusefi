@@ -1066,7 +1066,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 
 void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "apply c");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 256, "apply c");
 	scheduleMsg(logger, "applyNonPersistentConfiguration()");
 #endif
 
