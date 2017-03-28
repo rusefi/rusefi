@@ -17,17 +17,11 @@
 #include <chprintf.h>
 static MemoryStream warningStream;
 static MemoryStream firmwareErrorMessageStream;
-extern OutputPin communicationPin;
-
-#endif
-
+#endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 
 #define WARNING_BUFFER_SIZE 80
 static char warningBuffer[WARNING_BUFFER_SIZE];
 static bool isWarningStreamInitialized = false;
-
-
-
 
 #if EFI_HD44780_LCD || defined(__DOXYGEN__)
 #include "lcd_HD44780.h"
