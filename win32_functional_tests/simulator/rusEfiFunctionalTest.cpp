@@ -29,6 +29,8 @@
 #include "trigger_emulator.h"
 #include "engine_controller.h"
 #include "map_averaging.h"
+#include "memstreams.h"
+#include <chprintf.h>
 
 #define DEFAULT_SIM_RPM 1200
 #define DEFAULT_SNIFFER_THR 2500
@@ -51,6 +53,23 @@ void idleDebug(const char *msg, percent_t value) {
 
 float getMap(void) {
 	return getRawMap();
+}
+
+static void runChprintfTess() {
+	static MemoryStream testStream;
+	static char testBuffer[200];
+	msObjectInit(&testStream, (uint8_t *) testBuffer, sizeof(testBuffer), 0);
+
+
+// it's a very, very long and mostly forgotten story how this became our %f precision format
+	testStream.eos = 0; // reset
+	chprintf((BaseSequentialStream*)&testStream, "%f/%..10000f/%..10000f", 0.239f, 239.932, 0.1234);
+	testStream.buffer[testStream.eos] = 0;
+
+#define FLOAT_STRING_EXPECTED "0.23/239.9320/0.1234"
+	if (strcmp(FLOAT_STRING_EXPECTED, testBuffer) != 0) {
+		firmwareError(0, "got %s while %s", testBuffer, FLOAT_STRING_EXPECTED);
+	}
 }
 
 void rusEfiFunctionalTest(void) {
@@ -93,6 +112,8 @@ void rusEfiFunctionalTest(void) {
 	initMainEventListener(&sharedLogger, engine);
 
 	startStatusThreads(engine);
+
+	runChprintfTess();
 
 	initPeriodicEvents(PASS_ENGINE_PARAMETER_F);
 
