@@ -24,6 +24,8 @@ typedef Thread thread_t;
 #define THD_FUNCTION(tname, arg) void tname(void *arg)
 #define MSG_OK RDY_OK
 #define eventflags_t flagsmask_t
+#define chSysLockFromISR chSysLockFromIsr
+#define chSysUnlockFromISR chSysUnlockFromIsr
 #define chThdGetSelfX chThdSelf
 
 
