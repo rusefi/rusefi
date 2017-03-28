@@ -102,6 +102,7 @@ void appendFast(Logging *logging, const char *text) {
 	logging->linePointer += extraLen;
 }
 
+// todo: look into chsnprintf once on Chibios 3
 static void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
 	intermediateLoggingBuffer.eos = 0; // reset
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#1b");
