@@ -14,6 +14,10 @@
 #include "obd_error_codes.h"
 #include "error_handling.h"
 
+#ifndef DEBUG_INTERPOLATION
+#define DEBUG_INTERPOLATION 0
+#endif
+
 #define INTERPOLATION_A(x1, y1, x2, y2) ((y1 - y2) / (x1 - x2))
 
 int findIndex(const float array[], int size, float value);
