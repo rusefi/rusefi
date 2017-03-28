@@ -14,10 +14,6 @@
 #include "usbcfg.h"
 #include "efifeatures.h"
 
-extern SerialUSBDriver SDU1;
-extern const SerialUSBConfig serusbcfg;
-extern const USBConfig usbcfg;
-
 void usb_serial_start(void) {
 	/*
 	 * Initializes a serial-over-USB CDC driver.
