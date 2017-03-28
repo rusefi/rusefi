@@ -68,7 +68,7 @@ public class ConfigDefinition {
         javaFields.write("public class Fields {" + EOL);
         javaFields.write(VariableRegistry.INSTANCE.getJavaConstants());
         javaFields.write(javaFieldsWriter.toString());
-        javaFields.write("}\r\n");
+        javaFields.write("}" + EOL);
         javaFields.close();
 
 
@@ -181,9 +181,9 @@ public class ConfigDefinition {
     private static void processFile(BufferedReader br, BufferedWriter cHeader, Writer tsHeader, CharArrayWriter javaFieldsWriter) throws IOException {
         String line;
 
-        String message = "// this section " + MESSAGE + "\r\n";
+        String message = "// this section " + MESSAGE + EOL;
         cHeader.write(message);
-        cHeader.write("// begin\r\n");
+        cHeader.write("// begin" + EOL);
         cHeader.write("#ifndef ENGINE_CONFIGURATION_GENERATED_H_" + EOL);
         cHeader.write("#define ENGINE_CONFIGURATION_GENERATED_H_" + EOL);
         cHeader.write("#include \"rusefi_types.h\"" + EOL);
@@ -243,8 +243,8 @@ public class ConfigDefinition {
                 processLine(line);
             }
         }
-        cHeader.write("#endif\r\n");
-        cHeader.write("// end\r\n");
+        cHeader.write("#endif" + EOL);
+        cHeader.write("// end" + EOL);
         cHeader.write(message);
     }
 
@@ -281,7 +281,7 @@ public class ConfigDefinition {
 
         if (stack.isEmpty()) {
             totalTsSize = structure.writeTunerStudio("", tsHeader, 0);
-            tsHeader.write("; total TS size = " + totalTsSize + "\r\n");
+            tsHeader.write("; total TS size = " + totalTsSize + EOL);
             VariableRegistry.INSTANCE.register("TOTAL_CONFIG_SIZE", totalTsSize);
 
             structure.writeJavaFields("", javaFieldsWriter, 0);
@@ -319,7 +319,7 @@ public class ConfigDefinition {
     }
 
     public static String getComment(String comment, int currentOffset) {
-        return "\t/**\r\n" + packComment(comment, "\t") + "\t * offset " + currentOffset + "\r\n\t */\r\n";
+        return "\t/**" + EOL + packComment(comment, "\t") + "\t * offset " + currentOffset + EOL + "\t */" + EOL;
     }
 
     public static String packComment(String comment, String linePrefix) {
@@ -329,7 +329,7 @@ public class ConfigDefinition {
             return "";
         String result = "";
         for (String line : comment.split("\\\\n")) {
-            result += linePrefix + " * " + line + "\r\n";
+            result += linePrefix + " * " + line + EOL;
         }
         return result;
     }

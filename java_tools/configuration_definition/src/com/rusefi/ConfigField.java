@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.rusefi.ConfigDefinition.EOL;
+
 /**
  * This is an immutable model of an individual field
  * (c) Andrey Belomutskiy
@@ -105,17 +107,17 @@ public class ConfigField {
 
     String getHeaderText(int currentOffset, int bitIndex) {
         if (isBit) {
-            String comment = "\t/**\r\n" + ConfigDefinition.packComment(getCommentContent(), "\t") + "\toffset " + currentOffset + " bit " + bitIndex + " */\r\n";
-            return comment + "\t" + BOOLEAN_TYPE + " " + name + " : 1;\r\n";
+            String comment = "\t/**" + EOL + ConfigDefinition.packComment(getCommentContent(), "\t") + "\toffset " + currentOffset + " bit " + bitIndex + " */" + EOL;
+            return comment + "\t" + BOOLEAN_TYPE + " " + name + " : 1;" + EOL;
         }
 
         String cEntry = ConfigDefinition.getComment(getCommentContent(), currentOffset);
 
         if (arraySize == 1) {
             // not an array
-            cEntry += "\t" + type + " " + name + ";\r\n";
+            cEntry += "\t" + type + " " + name + ";" + EOL;
         } else {
-            cEntry += "\t" + type + " " + name + "[" + arraySizeAsText + "];\n";
+            cEntry += "\t" + type + " " + name + "[" + arraySizeAsText + "];" + EOL;
         }
         return cEntry;
     }
@@ -147,7 +149,7 @@ public class ConfigField {
             tsHeader.write("\t" + tsPosition + ", [");
             tsHeader.write(bitIndex + ":" + bitIndex);
             tsHeader.write("], \"false\", \"true\"");
-            tsHeader.write("\r\n");
+            tsHeader.write(EOL);
 
             tsPosition += getSize(next);
             return tsPosition;
@@ -181,7 +183,7 @@ public class ConfigField {
             tsHeader.write("\t" + tsInfo);
             tsPosition += arraySize * elementSize;
         }
-        tsHeader.write("\r\n");
+        tsHeader.write(EOL);
         return tsPosition;
     }
 
@@ -205,12 +207,12 @@ public class ConfigField {
         String nameWithPrefix = prefix + name;
 
         if (comment != null && comment.startsWith(TS_COMMENT_TAG + "")) {
-            ConfigDefinition.settingContextHelp.append("\t" + nameWithPrefix + " = \"" + getCommentContent() + "\"\r\n");
+            ConfigDefinition.settingContextHelp.append("\t" + nameWithPrefix + " = \"" + getCommentContent() + "\"" + EOL);
         }
 
         if (isBit) {
             writeJavaFieldName(javaFieldsWriter, nameWithPrefix, tsPosition);
-            javaFieldsWriter.append("FieldType.BIT, " + bitIndex + ");\r\n");
+            javaFieldsWriter.append("FieldType.BIT, " + bitIndex + ");" + EOL);
             tsPosition += getSize(next);
             return tsPosition;
         }
@@ -220,13 +222,13 @@ public class ConfigField {
             // todo: array support
         } else if (TypesHelper.isFloat(type)) {
             writeJavaFieldName(javaFieldsWriter, nameWithPrefix, tsPosition);
-            javaFieldsWriter.write("FieldType.FLOAT);\r\n");
+            javaFieldsWriter.write("FieldType.FLOAT);" + EOL);
         } else {
             String enumOptions = VariableRegistry.INSTANCE.get(type + "_enum");
 
             if (enumOptions != null && !javaEnums.contains(type)) {
                 javaEnums.add(type);
-                javaFieldsWriter.write("\tpublic static final String[] " + type + " = {" + enumOptions + "};\r\n");
+                javaFieldsWriter.write("\tpublic static final String[] " + type + " = {" + enumOptions + "};" + EOL);
             }
 
             writeJavaFieldName(javaFieldsWriter, nameWithPrefix, tsPosition);
@@ -234,7 +236,7 @@ public class ConfigField {
             if (enumOptions != null) {
                 javaFieldsWriter.write(", " + type);
             }
-            javaFieldsWriter.write(");\r\n");
+            javaFieldsWriter.write(");" + EOL);
         }
 
         tsPosition += arraySize * elementSize;

@@ -10,6 +10,8 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.rusefi.ConfigDefinition.EOL;
+
 /**
  * 3/30/2015
  */
@@ -47,7 +49,7 @@ public class VariableRegistry extends TreeMap<String, String> {
         System.out.println("Registering " + var + " as " + value);
         put(var, value);
 
-        cAllDefinitions.append("#define " + var + " " + value + "\r\n");
+        cAllDefinitions.append("#define " + var + " " + value + EOL);
         tryToRegisterAsInteger(var, value);
     }
 
@@ -59,7 +61,7 @@ public class VariableRegistry extends TreeMap<String, String> {
             if (intValues.containsKey(var))
                 throw new IllegalStateException("Not allowed to redefine: " + var);
             intValues.put(var, intValue);
-            javaNumbericDefinitions.append("\tpublic static final int " + var + " = " + intValue + ";" + ConfigDefinition.EOL);
+            javaNumbericDefinitions.append("\tpublic static final int " + var + " = " + intValue + ";" + EOL);
         } catch (NumberFormatException e) {
             System.out.println("Not an integer: " + value);
         }
