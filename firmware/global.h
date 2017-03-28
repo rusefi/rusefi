@@ -63,6 +63,9 @@ typedef EventListener event_listener_t;
 typedef EventSource event_source_t;
 typedef VTList virtual_timers_list_t;
 typedef VirtualTimer virtual_timer_t;
+#define chSysLockFromISR chSysLockFromIsr
+#define chSysUnlockFromISR chSysUnlockFromIsr
+#define chThdGetSelfX chThdSelf
 
 #define HAL_SUCCESS CH_SUCCESS
 #define HAL_FAILED CH_FAILED
