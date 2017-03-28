@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Mar 27 21:52:35 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Mar 27 22:15:45 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
