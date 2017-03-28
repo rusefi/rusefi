@@ -93,16 +93,16 @@ public class ConfigDefinition {
         BufferedWriter tsHeader = new BufferedWriter(new FileWriter(tsPath + File.separator + TS_FILE_OUTPUT_NAME));
         tsHeader.write(tsContent.getPrefix());
 
-        tsHeader.write("; " + CONFIG_DEFINITION_START + "\r\n");
-        tsHeader.write("; this section " + MESSAGE + "\r\n\r\n");
-        tsHeader.write("pageSize            = " + totalTsSize + "\r\n");
-        tsHeader.write("page = 1\r\n");
+        tsHeader.write("; " + CONFIG_DEFINITION_START + ConfigDefinition.EOL);
+        tsHeader.write("; this section " + MESSAGE + ConfigDefinition.EOL + ConfigDefinition.EOL);
+        tsHeader.write("pageSize            = " + totalTsSize + ConfigDefinition.EOL);
+        tsHeader.write("page = 1" + ConfigDefinition.EOL);
         tsHeader.write(fieldsSection);
         if (settingContextHelp.length() > 0) {
-            tsHeader.write("[SettingContextHelp]\r\n");
-            tsHeader.write(settingContextHelp.toString() + "\r\n\r\n");
+            tsHeader.write("[SettingContextHelp]" + ConfigDefinition.EOL);
+            tsHeader.write(settingContextHelp.toString() + ConfigDefinition.EOL + ConfigDefinition.EOL);
         }
-        tsHeader.write("; " + CONFIG_DEFINITION_END + "\r\n");
+        tsHeader.write("; " + CONFIG_DEFINITION_END + ConfigDefinition.EOL);
         tsHeader.write(tsContent.getPostfix());
         return tsHeader;
     }
@@ -122,7 +122,7 @@ public class ConfigDefinition {
         String line;
         while ((line = fr.readLine()) != null) {
             line = VariableRegistry.INSTANCE.processLine(line);
-            fw.write(line + "\r\n");
+            fw.write(line + ConfigDefinition.EOL);
         }
         fw.close();
     }
@@ -141,10 +141,10 @@ public class ConfigDefinition {
 
         FileWriter fw = new FileWriter(f);
 
-        fw.write("package com.rusefi;\r\n\r\n");
-        fw.write("public interface TsPageSize {\r\n");
-        fw.write("    int IMAGE_SIZE = " + totalTsSize + ";\n");
-        fw.write("}\n");
+        fw.write("package com.rusefi;" + ConfigDefinition.EOL + ConfigDefinition.EOL);
+        fw.write("public interface TsPageSize {" + ConfigDefinition.EOL);
+        fw.write("    int IMAGE_SIZE = " + totalTsSize + ";" + ConfigDefinition.EOL);
+        fw.write("}" + ConfigDefinition.EOL);
 
         fw.close();
     }
@@ -169,10 +169,10 @@ public class ConfigDefinition {
             }
 
             if (isBeforeStartTag)
-                prefix.append(line + "\r\n");
+                prefix.append(line + ConfigDefinition.EOL);
 
             if (isAfterEndTag)
-                postfix.append(VariableRegistry.INSTANCE.processLine(line) + "\r\n");
+                postfix.append(VariableRegistry.INSTANCE.processLine(line) + ConfigDefinition.EOL);
         }
         r.close();
         return new TsFileContent(prefix.toString(), postfix.toString());
