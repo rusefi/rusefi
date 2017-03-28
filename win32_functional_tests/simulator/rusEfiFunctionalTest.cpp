@@ -68,7 +68,7 @@ static void runChprintfTess() {
 
 #define FLOAT_STRING_EXPECTED "0.23/239.9320/0.1234"
 	if (strcmp(FLOAT_STRING_EXPECTED, testBuffer) != 0) {
-		firmwareError(0, "got %s while %s", testBuffer, FLOAT_STRING_EXPECTED);
+		firmwareError(0, "chprintf test: got %s while %s", testBuffer, FLOAT_STRING_EXPECTED);
 	}
 }
 
