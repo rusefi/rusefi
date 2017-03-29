@@ -7,6 +7,8 @@ rm -rf build\rusefi.bin
 
 rem todo add 
 rem git submodule update --init
+rem PS:
+rem git submodule update --recursive --remote
 rem magic once needed
 
 call update_version.bat
