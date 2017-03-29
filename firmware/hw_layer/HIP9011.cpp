@@ -194,7 +194,7 @@ void setHip9011FrankensoPinout(void) {
 	// todo: convert this to rusEfi, hardware-independent enum
 	engineConfiguration->spi2SckMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
 	engineConfiguration->spi2MosiMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
-	engineConfiguration->spi2MisoMode = PAL_STM32_PUDR_PULLUP; // 32
+	engineConfiguration->spi2MisoMode = PAL_STM32_PUPDR_PULLUP; // 32
 
 	boardConfiguration->hip9011Gain = 1;
 	engineConfiguration->knockVThreshold = 4;

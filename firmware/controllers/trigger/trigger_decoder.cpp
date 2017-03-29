@@ -483,7 +483,7 @@ static TriggerState initState CCM_OPTIONAL;
 void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_S) {
 	const trigger_config_s *triggerConfig = &engineConfiguration->trigger;
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "init t");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 256, "init t");
 	scheduleMsg(logger, "initializeTriggerShape(%s/%d)", getTrigger_type_e(triggerConfig->type), (int) triggerConfig->type);
 #endif
 
@@ -676,7 +676,7 @@ static void onFindIndex(TriggerState *state) {
 uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 		trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	efiAssert(getRemainingStack(chThdSelf()) > 128, "findPos", -1);
+	efiAssert(getRemainingStack(chThdGetSelfX()) > 128, "findPos", -1);
 #endif
 	isInitializingTrigger = true;
 	errorDetection.clear();

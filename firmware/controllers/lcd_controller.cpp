@@ -117,13 +117,7 @@ void initLcdController(void) {
 }
 
 static char * prepareVBattMapLine(engine_configuration_s *engineConfiguration, char *buffer) {
-	char *ptr = buffer;
-	*ptr++ = 'V';
-	ptr = ftoa(ptr, getVBatt(PASS_ENGINE_PARAMETER_F), 10.0f);
-
-	ptr = appendStr(ptr, " M");
-	ptr = ftoa(ptr, getRawMap(), 10.0f);
-	return ptr;
+        return buffer + chsnprintf(buffer, 23,"V%10.0f M%10.0f", getVBatt(PASS_ENGINE_PARAMETER_F), getRawMap());
 }
 
 static char * prepareCltIatTpsLine(Engine *engine, char *buffer) {

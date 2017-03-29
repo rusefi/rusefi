@@ -94,7 +94,7 @@ void sendMessage2(int size) {
 	txmsg.DLC = size;
 	// 1 second timeout
 	msg_t result = canTransmit(&EFI_CAN_DEVICE, CAN_ANY_MAILBOX, &txmsg, MS2ST(1000));
-	if (result == RDY_OK) {
+	if (result == MSG_OK) {
 		canWriteOk++;
 	} else {
 		canWriteNotOk++;
@@ -201,7 +201,7 @@ static void canInfoNBCBroadcast(can_nbc_e typeOfNBC) {
 static void canRead(void) {
 //	scheduleMsg(&logger, "Waiting for CAN");
 	msg_t result = canReceive(&EFI_CAN_DEVICE, CAN_ANY_MAILBOX, &rxBuffer, MS2ST(1000));
-	if (result == RDY_TIMEOUT) {
+	if (result == MSG_TIMEOUT) {
 		return;
 	}
 
@@ -304,8 +304,8 @@ void initCan(void) {
 #else
 	canStart(&CAND1, &canConfig);
 #endif
-
-	canStart(&EFI_CAN_DEVICE, &canConfig);
+    // FIXME: Can't start a driver twice.
+    //canStart(&EFI_CAN_DEVICE, &canConfig);
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 
 	chThdCreateStatic(canTreadStack, sizeof(canTreadStack), NORMALPRIO, (tfunc_t) canThread, NULL);

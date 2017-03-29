@@ -22,8 +22,9 @@
 #define USB_MSD_CFG_H_
 
 
-#define USB_MS_DATA_EP                1
-#define USB_MSD_INTERFACE_NUMBER   0x00
+#define USBD1_DATA_REQUEST_EP           1
+#define USBD1_DATA_AVAILABLE_EP         1
+#define USBD1_INTERRUPT_REQUEST_EP      2
 
 
 #endif /* USB_MSD_CFG_H_ */

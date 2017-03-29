@@ -197,12 +197,12 @@ void startInputDriver(digital_input_s *hw, bool isActiveHigh) {
 
 	if (driver != NULL) {
 		if (hw->started) {
-			icuDisable(driver);
+			icuDisableNotificationsI(driver);
 			icuStop(driver);
 		}
 		wave_icucfg.channel = getInputCaptureChannel(hw->brainPin);
 		efiIcuStart(driver, &wave_icucfg);
-		icuEnable(driver);
+		icuEnableNotifications(driver);
 	}
 	hw->started = true;
 }
