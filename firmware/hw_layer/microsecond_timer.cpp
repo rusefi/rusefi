@@ -87,10 +87,10 @@ static void callback(GPTDriver *gptp) {
 //	// test code
 //	setOutputPinValue(LED_CRANKING, timerCallbackCounter % 2);
 //	int mod = timerCallbackCounter % 400;
-//	chSysLockFromIsr()
+//	chSysLockFromISR()
 //	;
 //	setHardwareUsTimer(400 - mod);
-//	chSysUnlockFromIsr()
+//	chSysUnlockFromISR()
 //	;
 
 	globalTimerCallback(NULL);
