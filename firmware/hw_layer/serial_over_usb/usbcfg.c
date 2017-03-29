@@ -14,7 +14,9 @@
     limitations under the License.
 */
 
-#include "hal.h"
+#include "main.h"
+
+#if HAL_USE_SERIAL_USB || defined(__DOXYGEN__)
 
 /* Virtual serial port over USB.*/
 SerialUSBDriver SDU1;
@@ -334,3 +336,5 @@ const SerialUSBConfig serusbcfg = {
   USBD1_DATA_AVAILABLE_EP,
   USBD1_INTERRUPT_REQUEST_EP
 };
+
+#endif /* EFI_USB_SERIAL */
