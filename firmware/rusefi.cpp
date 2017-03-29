@@ -150,7 +150,7 @@ static void scheduleReboot(void) {
 }
 
 void runRusEfi(void) {
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 512, "init s");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 512, "init s");
 	assertEngineReference(PASS_ENGINE_PARAMETER_F);
 	initIntermediateLoggingBuffer();
 	initErrorHandling();
@@ -220,7 +220,7 @@ void runRusEfi(void) {
 	 * control is around main_trigger_callback
 	 */
 	while (true) {
-		efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "stack#1");
+		efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "stack#1");
 
 #if (EFI_CLI_SUPPORT && !EFI_UART_ECHO_TEST_MODE) || defined(__DOXYGEN__)
 		// sensor state + all pending messages for our own dev console
@@ -231,7 +231,7 @@ void runRusEfi(void) {
 	}
 }
 
-void chDbgStackOverflowPanic(Thread *otp) {
+void chDbgStackOverflowPanic(thread_t *otp) {
 	strcpy(panicMessage, "stack overflow: ");
 #if defined(CH_USE_REGISTRY) || defined(__DOXYGEN__)
 	int p_name_len = strlen(otp->p_name);
