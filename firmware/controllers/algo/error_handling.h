@@ -13,6 +13,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
+#include "global.h"
 #include "obd_error_codes.h"
 #include "efifeatures.h"
 #include "stdbool.h"
