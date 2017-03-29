@@ -68,7 +68,7 @@ BaseChannel * getTsSerialDevice(void) {
 }
 
 void tunerStudioWriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
-        efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "tunerStudioWriteData");
+        efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 64, "tunerStudioWriteData");
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
 			logMsg("chSequentialStreamWrite [%d]\r\n", size);
 #endif
