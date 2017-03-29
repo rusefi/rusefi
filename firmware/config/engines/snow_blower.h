@@ -9,6 +9,8 @@
 #ifndef SNOW_BLOWER_H_
 #define SNOW_BLOWER_H_
 
+#include "global.h"
+
 #if EFI_ENGINE_SNOW_BLOWER
 
 #endif /* EFI_ENGINE_SNOW_BLOWER */
