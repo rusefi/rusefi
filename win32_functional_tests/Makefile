@@ -5,45 +5,43 @@
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-# this config if debugging is needed, but the binary is about 50M
-# USE_OPT = -c -Wall -O0 -ggdb -g3 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings
-# this config producec a smaller binary file
-USE_OPT = -Os 
-endif
-
-ifeq ($(OS),Windows_NT)
-else
-USE_OPT +=  -m32
+  USE_OPT = -O2 -ggdb
 endif
 
 # C specific options here (added to USE_OPT).
 ifeq ($(USE_COPT),)
-USE_COPT = -std=gnu99 -fgnu89-inline
-endif
-
-ifeq ($(OS),Windows_NT)
-else
-USE_COPT += -Wno-error=attributes -Wno-error=implicit-function-declaration -include stdio.h
+  USE_COPT = 
 endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-USE_CPPOPT = -std=c++11 -fno-rtti -fpermissive -fno-exceptions -fno-use-cxa-atexit
+  USE_CPPOPT = -fno-rtti
 endif
 
-ifeq ($(OS),Windows_NT)
-else
-USE_CPPOPT += -include cstring -include cstdio -include cstdlib
-endif
-
-# Enable this if you want the linker to remove unused code and data
+# Enable this if you want the linker to remove unused code and data.
 ifeq ($(USE_LINK_GC),)
   USE_LINK_GC = yes
 endif
 
+# Linker extra options here.
+ifeq ($(USE_LDOPT),)
+  USE_LDOPT = 
+endif
+
+# Enable this if you want link time optimizations (LTO)
+ifeq ($(USE_LTO),)
+  USE_LTO = no
+endif
+
 # Enable this if you want to see the full log while compiling.
 ifeq ($(USE_VERBOSE_COMPILE),)
-  USE_VERBOSE_COMPILE = yes
+  USE_VERBOSE_COMPILE = no
+endif
+
+# If enabled, this option makes the build process faster by not compiling
+# modules not used in the current configuration.
+ifeq ($(USE_SMART_BUILD),)
+  USE_SMART_BUILD = yes
 endif
 
 #
@@ -54,10 +52,6 @@ endif
 # Architecture or project specific options
 #
 
-
-# List all default C defines here, like -D_DEBUG=1
-DDEFS =
-
 #
 # Architecture or project specific options
 ##############################################################################
@@ -65,17 +59,27 @@ DDEFS =
 ##############################################################################
 # Project, sources and paths
 #
+
 # Define project name here
 PROJECT = rusefi_simulator
 PROJECT_DIR = ../firmware
 CHIBIOS = ../firmware/ChibiOS
 
+
 # Imported source files and paths
-include $(CHIBIOS)/os/hal/boards/simulator/board.mk
+CHIBIOS = ../firmware/ChibiOS
+
+# Startup files.
+# HAL-OSAL files (optional).
 include $(CHIBIOS)/os/hal/hal.mk
+include $(CHIBIOS)/os/hal/boards/simulator/board.mk
 include $(CHIBIOS)/os/hal/osal/rt/osal.mk
-include $(CHIBIOS)/os/rt/ports/SIMIA32/compilers/GCC/port.mk
+# RTOS files (optional).
 include $(CHIBIOS)/os/rt/rt.mk
+include $(CHIBIOS)/os/rt/ports/SIMIA32/compilers/GCC/port.mk
+# Other files (optional).
+include $(CHIBIOS)/os/hal/lib/streams/streams.mk
+include $(CHIBIOS)/os/various/shell/shell.mk
 
 ifeq ($(OS),Windows_NT)
   include ${CHIBIOS}/os/hal/ports/simulator/win32/platform.mk
@@ -95,9 +99,6 @@ include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/console/binary/tunerstudio.mk
 include $(PROJECT_DIR)/development/development.mk
 
-# Define linker script file here
-#LDSCRIPT= config/system/STM32F407xG.ld
-#LDSCRIPT= $(PORTLD)/STM32F407xG_CCM.ld
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -174,6 +175,10 @@ INCDIR = . \
           $(CHIBIOS)/os/hal/lib/streams \
           simulator
 
+# List ASM source files here
+ASMSRC =
+ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
+
 #
 # Project, sources and paths
 ##############################################################################
@@ -181,9 +186,6 @@ INCDIR = . \
 ##############################################################################
 # Compiler settings
 #
-
-#MCU  = cortex-m4
-
 
 ifeq ($(OS),Windows_NT)
   #Cygwin64 is used with mingw64 32-bit version
@@ -199,47 +201,24 @@ CPPC = $(TRGT)g++
 # Enable loading with g++ only if you need C++ runtime support.
 # NOTE: You can use C++ even without C++ support if you are careful. C++
 #       runtime support makes code size explode.
-#LD   = $(TRGT)gcc
-LD   = $(TRGT)g++
+LD   = $(TRGT)gcc
+#LD   = $(TRGT)g++
 CP   = $(TRGT)objcopy
 AS   = $(TRGT)gcc -x assembler-with-cpp
+AR   = $(TRGT)ar
 OD   = $(TRGT)objdump
-HEX  = $(CP) -O ihex
+SZ   = $(TRGT)size
 BIN  = $(CP) -O binary
+COV  = gcov
 
 # Define C warning options here
-CWARN = -Wall -Wextra -Wstrict-prototypes
+CWARN = -Wall -Wextra -Wundef -Wstrict-prototypes
 
 # Define C++ warning options here
-CPPWARN = -Wall -Wextra
+CPPWARN = -Wall -Wextra -Wundef
 
 #
 # Compiler settings
-##############################################################################
-
-##############################################################################
-# Start of default section
-#
-
-# List all default ASM defines here, like -D_DEBUG=1
-DADEFS =
-
-# List all default directories to look for include files here
-DINCDIR =
-
-# List the default directory to look for the libraries here
-DLIBDIR =
-
-# List all default libraries here
-ifeq ($(OS),Windows_NT)
-  DLIBS = -static-libgcc -static-libstdc++ -lws2_32
-else
-  DLIBS = -static-libgcc -lgcc -static-libstdc++ -m32
-endif
-
-
-#
-# End of default section
 ##############################################################################
 
 ##############################################################################
@@ -259,10 +238,11 @@ UINCDIR =
 ULIBDIR =
 
 # List all user libraries here
-ULIBS = -lm
+ULIBS = -lws2_32
 
 #
 # End of user defines
 ##############################################################################
 
-include rules.mk
+RULESPATH = $(CHIBIOS)/os/common/startup/SIMIA32/compilers/GCC
+include $(RULESPATH)/rules.mk
