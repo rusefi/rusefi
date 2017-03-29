@@ -5,6 +5,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
-#include "listener_array.h"
 #include "main.h"
+#include "listener_array.h"
 
