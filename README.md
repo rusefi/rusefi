@@ -1,6 +1,7 @@
 current binaries are always available at http://rusefi.com/build_server/
 
 
+
 #Releases
 
 | Release date  | Revision  | Details |
@@ -53,3 +54,10 @@ General source code Q&A is at http://rusefi.com/forum/viewtopic.php?f=5&t=10
 Facebook https://www.facebook.com/rusEfiECU
 
 youtube https://www.youtube.com/user/rusefi
+
+
+= How to build the code? =
+
+We now use submodules:
+
+git submodule update --init
