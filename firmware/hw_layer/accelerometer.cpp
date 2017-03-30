@@ -6,7 +6,7 @@
  */
 
 #include "main.h"
-#include "lis302dl.h"
+//#include "lis302dl.h"
 
 void initAccelerometer(DECLARE_ENGINE_PARAMETER_F) {
 
