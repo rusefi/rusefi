@@ -148,7 +148,7 @@ AdcDevice fastAdc(&adcgrpcfg_fast);
 
 void doSlowAdc(void) {
 
-	efiAssertVoid(getRemainingStack(chThdSelf())> 32, "lwStAdcSlow");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX())> 32, "lwStAdcSlow");
 
 #if EFI_INTERNAL_ADC
 
@@ -156,19 +156,19 @@ void doSlowAdc(void) {
 	 will be executed in parallel to the current PWM cycle and will
 	 terminate before the next PWM cycle.*/
 	slowAdc.conversionCount++;
-	chSysLockFromIsr()
+	chSysLockFromISR()
 	;
 	if (ADC_SLOW_DEVICE.state != ADC_READY &&
 	ADC_SLOW_DEVICE.state != ADC_COMPLETE &&
 	ADC_SLOW_DEVICE.state != ADC_ERROR) {
 		// todo: why and when does this happen? firmwareError(OBD_PCM_Processor_Fault, "ADC slow not ready?");
 		slowAdc.errorsCount++;
-		chSysUnlockFromIsr()
+		chSysUnlockFromISR()
 		;
 		return;
 	}
 	adcStartConversionI(&ADC_SLOW_DEVICE, &adcgrpcfgSlow, slowAdc.samples, ADC_BUF_DEPTH_SLOW);
-	chSysUnlockFromIsr()
+	chSysUnlockFromISR()
 	;
 #endif
 }
@@ -179,7 +179,7 @@ static void pwmpcb_slow(PWMDriver *pwmp) {
 }
 
 static void pwmpcb_fast(PWMDriver *pwmp) {
-	efiAssertVoid(getRemainingStack(chThdSelf())> 32, "lwStAdcFast");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX())> 32, "lwStAdcFast");
 #if EFI_INTERNAL_ADC
 	(void) pwmp;
 
@@ -188,19 +188,19 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 	 * will be executed in parallel to the current PWM cycle and will
 	 * terminate before the next PWM cycle.
 	 */
-	chSysLockFromIsr()
+	chSysLockFromISR()
 	;
 	if (ADC_FAST_DEVICE.state != ADC_READY &&
 	ADC_FAST_DEVICE.state != ADC_COMPLETE &&
 	ADC_FAST_DEVICE.state != ADC_ERROR) {
 		fastAdc.errorsCount++;
 		// todo: when? why? firmwareError(OBD_PCM_Processor_Fault, "ADC fast not ready?");
-		chSysUnlockFromIsr()
+		chSysUnlockFromISR()
 		;
 		return;
 	}
 	adcStartConversionI(&ADC_FAST_DEVICE, &adcgrpcfg_fast, fastAdc.samples, ADC_BUF_DEPTH_FAST);
-	chSysUnlockFromIsr()
+	chSysUnlockFromISR()
 	;
 	fastAdc.conversionCount++;
 #endif
@@ -483,7 +483,7 @@ static void setAdcDebugReporting(int value) {
 static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	(void) buffer;
 	(void) n;
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#9c");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#9c");
 	/* Note, only in the ADC_COMPLETE state because the ADC driver fires
 	 * an intermediate callback when the buffer is half full. */
 	if (adcp->state == ADC_COMPLETE) {
