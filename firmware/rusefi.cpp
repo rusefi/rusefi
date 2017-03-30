@@ -231,7 +231,7 @@ void runRusEfi(void) {
 	}
 }
 
-void chDbgStackOverflowPanic(Thread *otp) {
+void chDbgStackOverflowPanic(thread_t *otp) {
 	strcpy(panicMessage, "stack overflow: ");
 #if defined(CH_USE_REGISTRY) || defined(__DOXYGEN__)
 	int p_name_len = strlen(otp->p_name);
