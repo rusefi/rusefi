@@ -298,6 +298,8 @@
         <option>
           <name>CCIncludePath2</name>
           <state>$PROJ_DIR$\..\</state>
+          <state>$PROJ_DIR$\..\ChibiOS-Contrib\os\hal\include</state>
+          <state>$PROJ_DIR$\..\ChibiOS-Contrib\os\various</state>
           <state>$PROJ_DIR$\..\ChibiOS\os</state>
           <state>$PROJ_DIR$\..\ChibiOS\os\common</state>
           <state>$PROJ_DIR$\..\ChibiOS\os\common\ports</state>
@@ -326,7 +328,6 @@
           <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\ADCv2</state>
           <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\CANv1</state>
           <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\DACv1</state>
-          <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\DMAv1</state>
           <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\DMAv2</state>
           <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\EXTIv1</state>
           <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\GPIOv2</state>
@@ -1958,24 +1959,6 @@
             <group>
               <name>compilers</name>
               <group>
-                <name>GCC</name>
-                <group>
-                  <name>ld</name>
-                </group>
-                <group>
-                  <name>mk</name>
-                </group>
-                <file>
-                  <name>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\compilers\GCC\crt1.c</name>
-                </file>
-                <file>
-                  <name>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\compilers\GCC\vectors.c</name>
-                </file>
-                <file>
-                  <name>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\compilers\GCC\vectors.h</name>
-                </file>
-              </group>
-              <group>
                 <name>IAR</name>
               </group>
             </group>
@@ -1996,9 +1979,6 @@
             <name>SIMIA32</name>
             <group>
               <name>compilers</name>
-              <group>
-                <name>GCC</name>
-              </group>
             </group>
           </group>
         </group>
@@ -2623,15 +2603,6 @@
             </group>
             <group>
               <name>compilers</name>
-              <group>
-                <name>GCC</name>
-                <group>
-                  <name>mk</name>
-                </group>
-                <file>
-                  <name>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\compilers\GCC\chtypes.h</name>
-                </file>
-              </group>
               <group>
                 <name>IAR</name>
                 <file>
