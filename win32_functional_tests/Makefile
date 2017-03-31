@@ -248,7 +248,7 @@ ULIBDIR =
 
 # List all user libraries here
 ifeq ($(OS),Windows_NT)
-ULIBS = -lws2_32
+ULIBS = -lws2_32 -static
 else
 ULIBS =
 endif
