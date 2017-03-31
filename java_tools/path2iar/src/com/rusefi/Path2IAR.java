@@ -1,6 +1,9 @@
 package com.rusefi;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * (c) Andrey Belomutskiy
@@ -11,18 +14,20 @@ public class Path2IAR {
     private static final String RELATIVE = "..\\..\\firmware/ChibiOS/os";
     private static String includes = "";
 
-    public static void main(String[] args) {
-        String result = process("", new File(RELATIVE));
+    public static void main(String[] args) throws IOException {
+        String result = process("  ", new File(RELATIVE));
 
 
         System.out.println("Result:" + EOL + EOL + EOL + EOL + EOL + EOL);
-        System.out.println(result);
+        System.out.println(result.length());
+
+        new FileOutputStream("group.txt", false).write(result.getBytes());
 
         System.out.println("Headers:" + EOL + EOL + EOL + EOL + EOL + EOL);
         System.out.println(includes);
     }
 
-    private static String process(String s, File folder) {
+    private static String process(String offset, File folder) {
         System.out.println("Folder " + folder);
         if (!folder.isDirectory())
             throw new IllegalStateException("Not a directory: " + folder);
@@ -31,8 +36,8 @@ public class Path2IAR {
         includes += "<state>$PROJ_DIR$\\..\\ChibiOS\\os" + folder.getPath().substring(RELATIVE.length()) + "</state>" + EOL;
 
 
-        String group = "<group>\n" +
-                "    <name>" + folder.getName() + "</name>";
+        String group = offset + "<group>\n" +
+                offset + "    <name>" + folder.getName() + "</name>\n";
 
 
         for (String fileName : folder.list()) {
@@ -40,7 +45,7 @@ public class Path2IAR {
             System.out.println(file);
 
             if (file.isDirectory()) {
-                group += process("", file);
+                group += process(offset + "  ", file);
                 continue;
             }
 
@@ -50,15 +55,16 @@ public class Path2IAR {
 
             String name = file.getPath().substring(RELATIVE.length());
 
-            group += "<file>\n<name>$PROJ_DIR$\\..\\ChibiOS" + name + "</name>\n" +
-                    "    </file>\n";
+            group += offset + "<file>\n" +
+                    offset + "  <name>$PROJ_DIR$\\..\\ChibiOS\\os" + name + "</name>\n" +
+                    offset + "</file>\n";
 
         }
 
 
 
 
-        return group + "</group>";
+        return group + offset + "</group>" + EOL;
 
     }
 }
