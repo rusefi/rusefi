@@ -17,6 +17,13 @@
 *.iml text eol=lf
 *.txt text eol=lf
 
+# KiCad files
+*.dsn text eol=lf
+*.kicad_pcb text eol=lf
+*.net text eol=lf
+*.pro text eol=lf
+*.sch text eol=lf
+
 # Denote all files that are truly binary and should not be modified.
 *.png binary
 *.jpg binary
