@@ -7,6 +7,13 @@
 #include <math.h>
 
 #include "efifeatures.h"
+
+#if EFI_SIMULATOR
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#endif
+
 #include "rusefi_enums.h"
 #include "auto_generated_enums.h"
 #include "obd_error_codes.h"
