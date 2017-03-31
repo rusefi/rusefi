@@ -22,6 +22,7 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+
 /*
  * Setup for STMicroelectronics STM32F4-Discovery board.
  */
@@ -52,6 +53,9 @@
 
 /*
  * MCU type as defined in the ST header.
+ * this declaration would cause stm32_registry.h to define STM32F40_41xxx and STM32F4XX automatically
+ *
+ * See also STM32F4xx_MCUCONF is defined in mcuconf.h
  */
 #define STM32F407xx
 
