@@ -298,25 +298,137 @@
         <option>
           <name>CCIncludePath2</name>
           <state>$PROJ_DIR$\..\</state>
-          <state>$PROJ_DIR$\..\chibios\os\kernel\include</state>
-          <state>$PROJ_DIR$\..\chibios\os\ports\common\ARMCMx</state>
-          <state>$PROJ_DIR$\..\chibios\os\ports\common\ARMCMx\CMSIS\include</state>
-          <state>$PROJ_DIR$\..\chibios\os\ports\IAR\ARMCMx</state>
-          <state>$PROJ_DIR$\..\chibios\os\ports\IAR\ARMCMx\STM32F4xx</state>
-          <state>$PROJ_DIR$\..\chibios\os\hal\include</state>
-          <state>$PROJ_DIR$\..\chibios\os\hal\platforms\STM32</state>
-          <state>$PROJ_DIR$\..\chibios\os\hal\platforms\STM32\DMAv1</state>
-          <state>$PROJ_DIR$\..\chibios\os\hal\platforms\STM32\GPIOv2</state>
-          <state>$PROJ_DIR$\..\chibios\os\hal\platforms\STM32\I2Cv1</state>
-          <state>$PROJ_DIR$\..\chibios\os\hal\platforms\STM32\SPIv1</state>
-          <state>$PROJ_DIR$\..\chibios\os\hal\platforms\STM32\TIMv1</state>
-          <state>$PROJ_DIR$\..\chibios\os\hal\platforms\STM32\RTCv2</state>
-          <state>$PROJ_DIR$\..\chibios\os\hal\platforms\STM32\USARTv1</state>
-          <state>$PROJ_DIR$\..\chibios\os\hal\platforms\STM32\OTGv1</state>
-          <state>$PROJ_DIR$\..\chibios\os\hal\platforms\STM32F4xx</state>
-          <state>$PROJ_DIR$\..\chibios\os\various</state>
-          <state>$PROJ_DIR$\..\chibios\os\various\devices_lib\accel</state>
-          <state>$PROJ_DIR$\..\chibios\boards\ST_STM32F4_DISCOVERY</state>
+<state>$PROJ_DIR$\..\ChibiOS\os</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\common</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\common\ports</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\compilers</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\compilers\GCC</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\compilers\GCC\ld</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\compilers\GCC\mk</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\compilers\IAR</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices\K20x</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices\KL2x</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices\STM32F0xx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices\STM32F1xx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices\STM32F2xx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices\STM32F3xx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices\STM32F4xx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices\STM32F7xx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices\STM32L0xx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices\STM32L1xx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices\STM32L4xx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\common\startup</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\common\startup\SIMIA32</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\common\startup\SIMIA32\compilers</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\common\startup\SIMIA32\compilers\GCC</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\ext</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\include</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F0xx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F1xx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F4xx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F7xx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ARDUINO_MEGA</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ARDUINO_UNO</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\dox</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\include</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\lib</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\lib\streams</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\osal</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\osal\os-less</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\osal\os-less\ARMCMx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\osal\rt</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\AVR</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\common</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\common\ARMCMx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\KINETIS</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\KINETIS\K20x</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\KINETIS\KL2x</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\KINETIS\LLD</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\LPC</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\LPC\LPC214x</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\simulator</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\simulator\posix</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\simulator\win32</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\ADCv1</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\ADCv2</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\ADCv3</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\CANv1</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\DACv1</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\DMAv1</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\DMAv2</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\EXTIv1</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\GPIOv1</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\GPIOv2</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\GPIOv3</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\I2Cv1</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\I2Cv2</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\MACv1</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\OTGv1</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\RTCv1</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\RTCv2</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\SDIOv1</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\SDMMCv1</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\SPIv1</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\SPIv2</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\TIMv1</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\USARTv1</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\USARTv2</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\USBv1</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\xWDGv1</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32F0xx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32F1xx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32F37x</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32F3xx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32F4xx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32F7xx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32L0xx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32L1xx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32L4xx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\src</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\templates</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\templates\osal</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\rt</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\rt\dox</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\rt\include</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARM</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARM\compilers</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARM\compilers\GCC</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARM\compilers\GCC\mk</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\cmsis_os</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\compilers</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\compilers\GCC</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\compilers\GCC\mk</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\compilers\IAR</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\AVR</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\AVR\compilers</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\AVR\compilers\GCC</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\AVR\compilers\GCC\mk</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\SIMIA32</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\SIMIA32\compilers</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\SIMIA32\compilers\GCC</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\rt\src</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\rt\templates</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\rt\templates\meta</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\various</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\various\cpp_wrappers</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\various\devices_lib</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\various\devices_lib\accel</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\various\devices_lib\lcd</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\various\fatfs_bindings</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\various\lwip_bindings</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\various\lwip_bindings\arch</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\various\shell</state>
           <state>$PROJ_DIR$\..\controllers</state>
           <state>$PROJ_DIR$\..\controllers\algo</state>
           <state>$PROJ_DIR$\..\controllers\core</state>
@@ -1264,22 +1376,107 @@
         <option>
           <name>CCIncludePath2</name>
           <state>$PROJ_DIR$\..\</state>
-          <state>$PROJ_DIR$\..\chibios\os\kernel\include</state>
-          <state>$PROJ_DIR$\..\chibios\os\ports\common\ARMCMx</state>
-          <state>$PROJ_DIR$\..\chibios\os\ports\common\ARMCMx\CMSIS\include</state>
-          <state>$PROJ_DIR$\..\chibios\os\ports\IAR\ARMCMx</state>
-          <state>$PROJ_DIR$\..\chibios\os\ports\IAR\ARMCMx\STM32F4xx</state>
-          <state>$PROJ_DIR$\..\chibios\os\hal\include</state>
-          <state>$PROJ_DIR$\..\chibios\os\hal\platforms\STM32</state>
-          <state>$PROJ_DIR$\..\chibios\os\hal\platforms\STM32\DMAv1</state>
-          <state>$PROJ_DIR$\..\chibios\os\hal\platforms\STM32\GPIOv2</state>
-          <state>$PROJ_DIR$\..\chibios\os\hal\platforms\STM32\SPIv1</state>
-          <state>$PROJ_DIR$\..\chibios\os\hal\platforms\STM32\TIMv1</state>
-          <state>$PROJ_DIR$\..\chibios\os\hal\platforms\STM32\USARTv1</state>
-          <state>$PROJ_DIR$\..\chibios\os\hal\platforms\STM32F4xx</state>
-          <state>$PROJ_DIR$\..\chibios\os\various</state>
-          <state>$PROJ_DIR$\..\chibios\os\various\devices_lib\accel</state>
-          <state>$PROJ_DIR$\..\chibios\boards\ST_STM32F4_DISCOVERY</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\EA_LPCXPRESSO_11C24</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\EA_LPCXPRESSO_BB_1114</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\EA_LPCXPRESSO_BB_11U14</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\EA_LPCXPRESSO_BB_1343</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\EA_LPCXPRESSO_LPC812</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\FREESCALE_FREEDOM_K20D50M</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\FREESCALE_FREEDOM_KL25Z</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\MAPLEMINI_STM32_F103</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\MCHCK_K20</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\NGX_BB_LPC11U14</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\NONSTANDARD_STM32F4_BARTHESS1</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_AVR_CAN</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_AVR_MT_128</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_LPC_P1227</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_LPC_P1343</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_LPC_P2148</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_MSP430_P1611</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_SAM7_EX256</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_SAM7_P256</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_STM32_103STK</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_STM32_E407</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_STM32_E407\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_STM32_E407_REV_D</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_STM32_E407_REV_D\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_STM32_H103</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_STM32_H407</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_STM32_H407\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_STM32_LCD</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_STM32_P103</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_STM32_P107</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_STM32_P407</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\PJRC_TEENSY_3</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\RAISONANCE_REVA_STM8S</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\simulator</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\STM32F103C8_MINIMAL</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\STUDIEL_AT91SAM7A3_EK</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_EVALKITST7580_1</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_EVB_SPC560B</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_EVB_SPC560BC</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_EVB_SPC560D</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_EVB_SPC560P</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_EVB_SPC563M</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_EVB_SPC564A</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_EVB_SPC56EC</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_EVB_SPC56EL</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_INEMO_M1_DISCOVERY</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO32_F031K6</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO32_F031K6\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO32_F042K6</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO32_F042K6\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO32_F303K8</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO32_F303K8\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F030R8</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F030R8\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F072RB</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F072RB\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F091RC</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F091RC\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F103RB</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F302R8</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F302R8\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F334R8</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F334R8\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F401RE</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F401RE\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F411RE</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F411RE\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_L053R8</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_L053R8\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_L152RE</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_L152RE\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_L476RG</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_L476RG\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM3210C_EVAL</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM3210E_EVAL</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM3220G_EVAL</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32373C_EVAL</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32373C_EVAL\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F072B_DISCOVERY</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F072B_DISCOVERY\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F0_DISCOVERY</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F0_DISCOVERY\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F2_DISCOVERY</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F2_DISCOVERY\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F3_DISCOVERY</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F3_DISCOVERY\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F401C_DISCOVERY</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F401C_DISCOVERY\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F429I_DISCOVERY</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F429I_DISCOVERY\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F4_DISCOVERY</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F4_DISCOVERY\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F746G_DISCOVERY</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F746G_DISCOVERY\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32L476_DISCOVERY</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32L476_DISCOVERY\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32L_DISCOVERY</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32L_DISCOVERY\cfg</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32VL_DISCOVERY</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM8L_DISCOVERY</state>
+<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM8S_DISCOVERY</state>
           <state>$PROJ_DIR$\..\..\..\test</state>
         </option>
         <option>
