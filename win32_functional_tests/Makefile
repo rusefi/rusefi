@@ -197,9 +197,9 @@ ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 #
 
 ifeq ($(OS),Windows_NT)
-  #Cygwin64 is used with mingw64 32-bit version
+  #base 32-bit Cygwin is needed with mingw64 32-bit version 
+  # Cygwin64 would not debug if used with mingw64 32-bit version
 
-  #TRGT = i686-w64-mingw32-
   TRGT = i686-w64-mingw32-
 else
   TRGT = 
