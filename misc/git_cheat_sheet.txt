@@ -1,0 +1,23 @@
+=========================================
+New remote tag:
+
+git tag -a TAGNAME -m "tag TAGNAME"
+git push origin TAGNAME
+
+
+=========================================
+New remote branch:
+
+git checkout -b BRANCHNAME
+git push -u origin BRANCHNAME
+
+
+=========================================
+Download submodules:
+
+git submodule update --init
+
+=========================================
+Refresh submodules:
+
+git submodule update --recursive --remote
