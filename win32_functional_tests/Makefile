@@ -93,7 +93,7 @@ include $(CHIBIOS)/os/various/shell/shell.mk
 ifeq ($(OS),Windows_NT)
   include ${CHIBIOS}/os/hal/ports/simulator/win32/platform.mk
 else
-  include ${CHIBIOS}/os/hal/ports/simulator/Posix/platform.mk
+  include ${CHIBIOS}/os/hal/ports/simulator/posix/platform.mk
 endif
 
 include $(PROJECT_DIR)/util/util.mk
@@ -247,7 +247,11 @@ UINCDIR =
 ULIBDIR =
 
 # List all user libraries here
+ifeq ($(OS),Windows_NT)
 ULIBS = -lws2_32
+else
+ULIBS =
+endif
 
 #
 # End of user defines
