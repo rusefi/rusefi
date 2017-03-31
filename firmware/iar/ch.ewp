@@ -298,137 +298,63 @@
         <option>
           <name>CCIncludePath2</name>
           <state>$PROJ_DIR$\..\</state>
-<state>$PROJ_DIR$\..\ChibiOS\os</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\common</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\common\ports</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\compilers</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\compilers\GCC</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\compilers\GCC\ld</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\compilers\GCC\mk</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\compilers\IAR</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices\K20x</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices\KL2x</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices\STM32F0xx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices\STM32F1xx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices\STM32F2xx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices\STM32F3xx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices\STM32F4xx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices\STM32F7xx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices\STM32L0xx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices\STM32L1xx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices\STM32L4xx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\common\startup</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\common\startup\SIMIA32</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\common\startup\SIMIA32\compilers</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\common\startup\SIMIA32\compilers\GCC</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\ext</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\include</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F0xx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F1xx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F4xx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F7xx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ARDUINO_MEGA</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ARDUINO_UNO</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\dox</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\include</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\lib</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\lib\streams</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\osal</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\osal\os-less</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\osal\os-less\ARMCMx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\osal\rt</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\AVR</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\common</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\common\ARMCMx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\KINETIS</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\KINETIS\K20x</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\KINETIS\KL2x</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\KINETIS\LLD</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\LPC</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\LPC\LPC214x</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\simulator</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\simulator\posix</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\simulator\win32</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\ADCv1</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\ADCv2</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\ADCv3</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\CANv1</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\DACv1</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\DMAv1</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\DMAv2</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\EXTIv1</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\GPIOv1</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\GPIOv2</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\GPIOv3</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\I2Cv1</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\I2Cv2</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\MACv1</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\OTGv1</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\RTCv1</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\RTCv2</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\SDIOv1</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\SDMMCv1</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\SPIv1</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\SPIv2</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\TIMv1</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\USARTv1</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\USARTv2</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\USBv1</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\xWDGv1</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32F0xx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32F1xx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32F37x</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32F3xx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32F4xx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32F7xx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32L0xx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32L1xx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32L4xx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\src</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\templates</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\templates\osal</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\rt</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\rt\dox</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\rt\include</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARM</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARM\compilers</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARM\compilers\GCC</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARM\compilers\GCC\mk</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\cmsis_os</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\compilers</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\compilers\GCC</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\compilers\GCC\mk</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\compilers\IAR</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\AVR</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\AVR\compilers</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\AVR\compilers\GCC</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\AVR\compilers\GCC\mk</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\SIMIA32</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\SIMIA32\compilers</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\SIMIA32\compilers\GCC</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\rt\src</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\rt\templates</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\rt\templates\meta</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\various</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\various\cpp_wrappers</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\various\devices_lib</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\various\devices_lib\accel</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\various\devices_lib\lcd</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\various\fatfs_bindings</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\various\lwip_bindings</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\various\lwip_bindings\arch</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\various\shell</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\common</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\common\ports</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\compilers</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\compilers\IAR</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices\STM32F4xx</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\common\startup</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\ext</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\include</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F4xx</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\include</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\lib</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\lib\streams</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\osal</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\osal\rt</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\common</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\common\ARMCMx</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\ADCv2</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\CANv1</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\DACv1</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\DMAv1</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\DMAv2</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\EXTIv1</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\GPIOv2</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\I2Cv1</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\OTGv1</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\RTCv2</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\SDIOv1</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\SPIv1</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\TIMv1</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\USARTv1</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\USARTv2</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32F4xx</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\src</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\rt</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\rt\dox</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\rt\include</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\rt\ports</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\cmsis_os</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\compilers</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\compilers\IAR</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\rt\src</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\various</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\various\cpp_wrappers</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\various\devices_lib</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\various\devices_lib\accel</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\various\fatfs_bindings</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\various\shell</state>
           <state>$PROJ_DIR$\..\controllers</state>
           <state>$PROJ_DIR$\..\controllers\algo</state>
           <state>$PROJ_DIR$\..\controllers\core</state>
@@ -439,6 +365,7 @@
           <state>$PROJ_DIR$\..\controllers\trigger\decoders</state>
           <state>$PROJ_DIR$\..\console</state>
           <state>$PROJ_DIR$\..\config</state>
+          <state>$PROJ_DIR$\..\config\boards\ST_STM32F4</state>
           <state>$PROJ_DIR$\..\config\engines</state>
           <state>$PROJ_DIR$\..\config\stm32f4ems</state>
           <state>$PROJ_DIR$\..\console\binary</state>
@@ -1376,107 +1303,25 @@
         <option>
           <name>CCIncludePath2</name>
           <state>$PROJ_DIR$\..\</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\EA_LPCXPRESSO_11C24</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\EA_LPCXPRESSO_BB_1114</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\EA_LPCXPRESSO_BB_11U14</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\EA_LPCXPRESSO_BB_1343</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\EA_LPCXPRESSO_LPC812</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\FREESCALE_FREEDOM_K20D50M</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\FREESCALE_FREEDOM_KL25Z</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\MAPLEMINI_STM32_F103</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\MCHCK_K20</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\NGX_BB_LPC11U14</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\NONSTANDARD_STM32F4_BARTHESS1</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_AVR_CAN</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_AVR_MT_128</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_LPC_P1227</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_LPC_P1343</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_LPC_P2148</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_MSP430_P1611</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_SAM7_EX256</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_SAM7_P256</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_STM32_103STK</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_STM32_E407</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_STM32_E407\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_STM32_E407_REV_D</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_STM32_E407_REV_D\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_STM32_H103</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_STM32_H407</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_STM32_H407\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_STM32_LCD</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_STM32_P103</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_STM32_P107</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\OLIMEX_STM32_P407</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\PJRC_TEENSY_3</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\RAISONANCE_REVA_STM8S</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\simulator</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\STM32F103C8_MINIMAL</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\STUDIEL_AT91SAM7A3_EK</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_EVALKITST7580_1</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_EVB_SPC560B</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_EVB_SPC560BC</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_EVB_SPC560D</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_EVB_SPC560P</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_EVB_SPC563M</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_EVB_SPC564A</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_EVB_SPC56EC</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_EVB_SPC56EL</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_INEMO_M1_DISCOVERY</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO32_F031K6</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO32_F031K6\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO32_F042K6</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO32_F042K6\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO32_F303K8</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO32_F303K8\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F030R8</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F030R8\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F072RB</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F072RB\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F091RC</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F091RC\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F103RB</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F302R8</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F302R8\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F334R8</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F334R8\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F401RE</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F401RE\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F411RE</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_F411RE\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_L053R8</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_L053R8\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_L152RE</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_L152RE\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_L476RG</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_NUCLEO_L476RG\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM3210C_EVAL</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM3210E_EVAL</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM3220G_EVAL</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32373C_EVAL</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32373C_EVAL\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F072B_DISCOVERY</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F072B_DISCOVERY\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F0_DISCOVERY</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F0_DISCOVERY\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F2_DISCOVERY</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F2_DISCOVERY\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F3_DISCOVERY</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F3_DISCOVERY\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F401C_DISCOVERY</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F401C_DISCOVERY\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F429I_DISCOVERY</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F429I_DISCOVERY\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F4_DISCOVERY</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F4_DISCOVERY\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F746G_DISCOVERY</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F746G_DISCOVERY\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32L476_DISCOVERY</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32L476_DISCOVERY\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32L_DISCOVERY</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32L_DISCOVERY\cfg</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32VL_DISCOVERY</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM8L_DISCOVERY</state>
-<state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM8S_DISCOVERY</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F2_DISCOVERY\cfg</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F3_DISCOVERY</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F3_DISCOVERY\cfg</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F401C_DISCOVERY</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F401C_DISCOVERY\cfg</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F429I_DISCOVERY</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F429I_DISCOVERY\cfg</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F4_DISCOVERY</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F4_DISCOVERY\cfg</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F746G_DISCOVERY</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32F746G_DISCOVERY\cfg</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32L476_DISCOVERY</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32L476_DISCOVERY\cfg</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32L_DISCOVERY</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32L_DISCOVERY\cfg</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM32VL_DISCOVERY</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM8L_DISCOVERY</state>
+          <state>$PROJ_DIR$\..\ChibiOS\os\hal\boards\ST_STM8S_DISCOVERY</state>
+          <state>$PROJ_DIR$\..\config\stm32f4ems</state>
           <state>$PROJ_DIR$\..\..\..\test</state>
         </option>
         <option>
@@ -2100,6 +1945,870 @@
       <data/>
     </settings>
   </configuration>
+  <group>
+    <name>ChibiOS</name>
+    <group>
+      <name>os</name>
+      <group>
+        <name>common</name>
+        <group>
+          <name>ports</name>
+          <group>
+            <name>ARMCMx</name>
+            <group>
+              <name>compilers</name>
+              <group>
+                <name>GCC</name>
+                <group>
+                  <name>ld</name>
+                </group>
+                <group>
+                  <name>mk</name>
+                </group>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\compilers\GCC\crt1.c</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\compilers\GCC\vectors.c</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\compilers\GCC\vectors.h</name>
+                </file>
+              </group>
+              <group>
+                <name>IAR</name>
+              </group>
+            </group>
+            <group>
+              <name>devices</name>
+              <group>
+                <name>STM32F4xx</name>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\common\ports\ARMCMx\devices\STM32F4xx\cmparams.h</name>
+                </file>
+              </group>
+            </group>
+          </group>
+        </group>
+        <group>
+          <name>startup</name>
+          <group>
+            <name>SIMIA32</name>
+            <group>
+              <name>compilers</name>
+              <group>
+                <name>GCC</name>
+              </group>
+            </group>
+          </group>
+        </group>
+      </group>
+      <group>
+        <name>ext</name>
+        <group>
+          <name>CMSIS</name>
+          <group>
+            <name>include</name>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\include\arm_common_tables.h</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\include\arm_const_structs.h</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\include\arm_math.h</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\include\core_cm0.h</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\include\core_cm0plus.h</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\include\core_cm3.h</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\include\core_cm4.h</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\include\core_cm7.h</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\include\core_cmFunc.h</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\include\core_cmInstr.h</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\include\core_cmSimd.h</name>
+            </file>
+          </group>
+          <group>
+            <name>ST</name>
+            <group>
+              <name>STM32F4xx</name>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F4xx\stm32f401xc.h</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F4xx\stm32f401xe.h</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F4xx\stm32f405xx.h</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F4xx\stm32f407xx.h</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F4xx\stm32f410cx.h</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F4xx\stm32f410rx.h</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F4xx\stm32f410tx.h</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F4xx\stm32f411xe.h</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F4xx\stm32f415xx.h</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F4xx\stm32f417xx.h</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F4xx\stm32f427xx.h</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F4xx\stm32f429xx.h</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F4xx\stm32f437xx.h</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F4xx\stm32f439xx.h</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F4xx\stm32f446xx.h</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F4xx\stm32f469xx.h</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F4xx\stm32f479xx.h</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F4xx\stm32f4xx.h</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\ext\CMSIS\ST\STM32F4xx\system_stm32f4xx.h</name>
+              </file>
+            </group>
+          </group>
+        </group>
+      </group>
+      <group>
+        <name>hal</name>
+        <group>
+          <name>dox</name>
+        </group>
+        <group>
+          <name>include</name>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\adc.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\can.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\dac.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\ext.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\gpt.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\hal.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\hal_buffers.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\hal_channels.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\hal_files.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\hal_ioblock.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\hal_mmcsd.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\hal_queues.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\hal_streams.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\i2c.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\i2s.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\icu.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\mac.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\mii.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\mmc_spi.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\pal.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\pwm.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\rtc.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\sdc.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\serial.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\serial_usb.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\spi.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\st.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\uart.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\usb.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\usb_cdc.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\include\wdg.h</name>
+          </file>
+        </group>
+        <group>
+          <name>lib</name>
+          <group>
+            <name>streams</name>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\hal\lib\streams\chprintf.c</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\hal\lib\streams\chprintf.h</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\hal\lib\streams\memstreams.c</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\hal\lib\streams\memstreams.h</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\hal\lib\streams\nullstreams.c</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\hal\lib\streams\nullstreams.h</name>
+            </file>
+          </group>
+        </group>
+        <group>
+          <name>osal</name>
+          <group>
+            <name>rt</name>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\hal\osal\rt\osal.c</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\hal\osal\rt\osal.h</name>
+            </file>
+          </group>
+        </group>
+        <group>
+          <name>ports</name>
+          <group>
+            <name>common</name>
+            <group>
+              <name>ARMCMx</name>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\common\ARMCMx\mpu.h</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\common\ARMCMx\nvic.c</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\common\ARMCMx\nvic.h</name>
+              </file>
+            </group>
+          </group>
+          <group>
+            <name>STM32</name>
+            <group>
+              <name>LLD</name>
+              <group>
+                <name>ADCv2</name>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\ADCv2\adc_lld.c</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\ADCv2\adc_lld.h</name>
+                </file>
+              </group>
+              <group>
+                <name>CANv1</name>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\CANv1\can_lld.c</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\CANv1\can_lld.h</name>
+                </file>
+              </group>
+              <group>
+                <name>DACv1</name>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\DACv1\dac_lld.c</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\DACv1\dac_lld.h</name>
+                </file>
+              </group>
+              <group>
+                <name>DMAv2</name>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\DMAv2\stm32_dma.c</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\DMAv2\stm32_dma.h</name>
+                </file>
+              </group>
+              <group>
+                <name>EXTIv1</name>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\EXTIv1\ext_lld.c</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\EXTIv1\ext_lld.h</name>
+                </file>
+              </group>
+              <group>
+                <name>GPIOv2</name>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\GPIOv2\pal_lld.c</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\GPIOv2\pal_lld.h</name>
+                </file>
+              </group>
+              <group>
+                <name>I2Cv1</name>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\I2Cv1\i2c_lld.c</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\I2Cv1\i2c_lld.h</name>
+                </file>
+              </group>
+              <group>
+                <name>OTGv1</name>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\OTGv1\stm32_otg.h</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\OTGv1\usb_lld.c</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\OTGv1\usb_lld.h</name>
+                </file>
+              </group>
+              <group>
+                <name>RTCv2</name>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\RTCv2\rtc_lld.c</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\RTCv2\rtc_lld.h</name>
+                </file>
+              </group>
+              <group>
+                <name>SDIOv1</name>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\SDIOv1\sdc_lld.c</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\SDIOv1\sdc_lld.h</name>
+                </file>
+              </group>
+              <group>
+                <name>SPIv1</name>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\SPIv1\i2s_lld.c</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\SPIv1\i2s_lld.h</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\SPIv1\spi_lld.c</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\SPIv1\spi_lld.h</name>
+                </file>
+              </group>
+              <group>
+                <name>TIMv1</name>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\TIMv1\gpt_lld.c</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\TIMv1\gpt_lld.h</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\TIMv1\icu_lld.c</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\TIMv1\icu_lld.h</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\TIMv1\pwm_lld.c</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\TIMv1\pwm_lld.h</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\TIMv1\st_lld.c</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\TIMv1\st_lld.h</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\TIMv1\stm32_tim.h</name>
+                </file>
+              </group>
+              <group>
+                <name>USARTv1</name>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\USARTv1\serial_lld.c</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\USARTv1\serial_lld.h</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\USARTv1\uart_lld.c</name>
+                </file>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\LLD\USARTv1\uart_lld.h</name>
+                </file>
+              </group>
+            </group>
+            <group>
+              <name>STM32F4xx</name>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32F4xx\ext_lld_isr.c</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32F4xx\ext_lld_isr.h</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32F4xx\hal_lld.c</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32F4xx\hal_lld.h</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32F4xx\stm32_isr.h</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32F4xx\stm32_rcc.h</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\hal\ports\STM32\STM32F4xx\stm32_registry.h</name>
+              </file>
+            </group>
+          </group>
+        </group>
+        <group>
+          <name>src</name>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\adc.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\can.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\dac.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\ext.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\gpt.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\hal.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\hal_buffers.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\hal_mmcsd.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\hal_queues.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\i2c.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\i2s.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\icu.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\mac.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\mmc_spi.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\pal.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\pwm.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\rtc.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\sdc.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\serial.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\serial_usb.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\spi.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\st.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\uart.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\usb.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\hal\src\wdg.c</name>
+          </file>
+        </group>
+      </group>
+      <group>
+        <name>rt</name>
+        <group>
+          <name>dox</name>
+        </group>
+        <group>
+          <name>include</name>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\ch.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\chbsem.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\chcond.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\chcustomer.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\chdebug.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\chdynamic.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\chevents.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\chheap.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\chlicense.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\chmboxes.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\chmemcore.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\chmempools.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\chmsg.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\chmtx.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\chqueues.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\chregistry.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\chschd.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\chsem.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\chstats.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\chstreams.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\chsys.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\chsystypes.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\chthreads.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\chtm.h</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\include\chvt.h</name>
+          </file>
+        </group>
+        <group>
+          <name>ports</name>
+          <group>
+            <name>ARMCMx</name>
+            <group>
+              <name>cmsis_os</name>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\cmsis_os\cmsis_os.c</name>
+              </file>
+              <file>
+                <name>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\cmsis_os\cmsis_os.h</name>
+              </file>
+            </group>
+            <group>
+              <name>compilers</name>
+              <group>
+                <name>GCC</name>
+                <group>
+                  <name>mk</name>
+                </group>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\compilers\GCC\chtypes.h</name>
+                </file>
+              </group>
+              <group>
+                <name>IAR</name>
+                <file>
+                  <name>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\compilers\IAR\chtypes.h</name>
+                </file>
+              </group>
+            </group>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\chcore.c</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\chcore.h</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\chcore_timer.h</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\chcore_v6m.c</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\chcore_v6m.h</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\chcore_v7m.c</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\rt\ports\ARMCMx\chcore_v7m.h</name>
+            </file>
+          </group>
+        </group>
+        <group>
+          <name>src</name>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\src\chcond.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\src\chdebug.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\src\chdynamic.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\src\chevents.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\src\chheap.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\src\chmboxes.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\src\chmemcore.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\src\chmempools.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\src\chmsg.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\src\chmtx.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\src\chqueues.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\src\chregistry.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\src\chschd.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\src\chsem.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\src\chstats.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\src\chsys.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\src\chthreads.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\src\chtm.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\rt\src\chvt.c</name>
+          </file>
+        </group>
+      </group>
+      <group>
+        <name>various</name>
+        <group>
+          <name>cpp_wrappers</name>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\various\cpp_wrappers\ch.cpp</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\various\cpp_wrappers\syscalls_cpp.cpp</name>
+          </file>
+        </group>
+        <group>
+          <name>devices_lib</name>
+          <group>
+            <name>accel</name>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\various\devices_lib\accel\lis302dl.c</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\various\devices_lib\accel\lis302dl.h</name>
+            </file>
+          </group>
+          <group>
+            <name>lcd</name>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\various\devices_lib\lcd\lcd3310.c</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\various\devices_lib\lcd\lcd3310.h</name>
+            </file>
+          </group>
+        </group>
+        <group>
+          <name>fatfs_bindings</name>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\various\fatfs_bindings\fatfs_diskio.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\various\fatfs_bindings\fatfs_syscall.c</name>
+          </file>
+        </group>
+        <group>
+          <name>lwip_bindings</name>
+          <group>
+            <name>arch</name>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\various\lwip_bindings\arch\cc.h</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\various\lwip_bindings\arch\perf.h</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\various\lwip_bindings\arch\sys_arch.c</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\ChibiOS\os\various\lwip_bindings\arch\sys_arch.h</name>
+            </file>
+          </group>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\various\lwip_bindings\lwipthread.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\ChibiOS\os\various\lwip_bindings\lwipthread.h</name>
+          </file>
+        </group>
+        <group>
+          <name>shell</name>
+        </group>
+        <file>
+          <name>$PROJ_DIR$\..\ChibiOS\os\various\evtimer.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\ChibiOS\os\various\evtimer.h</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\ChibiOS\os\various\shell.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\ChibiOS\os\various\shell.h</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\ChibiOS\os\various\syscalls.c</name>
+        </file>
+      </group>
+    </group>
+  </group>
   <group>
     <name>config</name>
     <group>
@@ -2783,12 +3492,6 @@
         <name>$PROJ_DIR$\..\controllers\trigger\trigger_structure.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_universal.cpp</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_universal.h</name>
-      </file>
-      <file>
         <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_subaru.cpp</name>
       </file>
       <file>
@@ -2799,6 +3502,12 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_toyota.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_universal.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\trigger\decoders\trigger_universal.h</name>
       </file>
     </group>
     <file>
@@ -2973,6 +3682,18 @@
       </file>
     </group>
     <group>
+      <name>boards</name>
+      <group>
+        <name>ST_STM32F4</name>
+        <file>
+          <name>$PROJ_DIR$\..\config\boards\ST_STM32F4\board.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\config\boards\ST_STM32F4\board.h</name>
+        </file>
+      </group>
+    </group>
+    <group>
       <name>lcd</name>
       <file>
         <name>$PROJ_DIR$\..\hw_layer\lcd\lcd_HD44780.cpp</name>
@@ -2983,9 +3704,6 @@
     </group>
     <group>
       <name>mass_storage</name>
-      <file>
-        <name>$PROJ_DIR$\..\hw_layer\mass_storage\usb_msd.c</name>
-      </file>
       <file>
         <name>$PROJ_DIR$\..\hw_layer\mass_storage\usb_msd.h</name>
       </file>
@@ -3181,13 +3899,6 @@
     </file>
   </group>
   <group>
-    <name>ChibiOS</name>
-
-
-
-
-  </group>
-  <group>
     <name>util</name>
     <file>
       <name>$PROJ_DIR$\..\util\cli_registry.cpp</name>
@@ -3263,22 +3974,13 @@
     </file>
   </group>
   <file>
-    <name>$PROJ_DIR$\..\chconf.h</name>
-  </file>
-  <file>
     <name>$PROJ_DIR$\..\global.h</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\..\halconf.h</name>
   </file>
   <file>
     <name>$PROJ_DIR$\..\main.cpp</name>
   </file>
   <file>
     <name>$PROJ_DIR$\..\main.h</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\..\mcuconf.h</name>
   </file>
   <file>
     <name>$PROJ_DIR$\..\rusefi.cpp</name>
