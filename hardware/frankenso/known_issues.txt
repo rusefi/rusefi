@@ -135,6 +135,7 @@
 135)                  CANH silkscreen position is wrong
 136)                  D1003 & D1006 one of pads needs larger drill, same as other
 137)                  D1001 needs polarity silkscreen
+138)                  D1006 "alt diode for D1004" note back to power supply
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
