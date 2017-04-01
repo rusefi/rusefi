@@ -140,7 +140,7 @@ void ThermistorMath::prepareThermistorCurve(thermistor_conf_s *tc) {
 
 	float L1 = logf(tc->resistance_1);
 	if (L1 == tc->resistance_1) {
-		firmwareError(CUSTOM_ERR_LOG_ERROR, "log is broken?");
+		firmwareError(CUSTOM_ERR_NATURAL_LOGARITHM_ERROR, "Natural logarithm logf() is broken: %f", tc->resistance_1);
 	}
 	float L2 = logf(tc->resistance_2);
 	float L3 = logf(tc->resistance_3);
