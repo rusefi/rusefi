@@ -370,6 +370,7 @@
           <state>$PROJ_DIR$\..\config\engines</state>
           <state>$PROJ_DIR$\..\config\stm32f4ems</state>
           <state>$PROJ_DIR$\..\console\binary</state>
+          <state>$PROJ_DIR$\..\console\fl_binary</state>
           <state>$PROJ_DIR$\..\console_util</state>
           <state>$PROJ_DIR$\..\development</state>
           <state>$PROJ_DIR$\..\development\test</state>
@@ -2593,15 +2594,6 @@
           <group>
             <name>ARMCMx</name>
             <group>
-              <name>cmsis_os</name>
-              <file>
-                <name>$PROJ_DIR$\..\ChibiOS3\os\rt\ports\ARMCMx\cmsis_os\cmsis_os.c</name>
-              </file>
-              <file>
-                <name>$PROJ_DIR$\..\ChibiOS3\os\rt\ports\ARMCMx\cmsis_os\cmsis_os.h</name>
-              </file>
-            </group>
-            <group>
               <name>compilers</name>
               <group>
                 <name>IAR</name>
@@ -2618,12 +2610,6 @@
             </file>
             <file>
               <name>$PROJ_DIR$\..\ChibiOS3\os\rt\ports\ARMCMx\chcore_timer.h</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\ChibiOS3\os\rt\ports\ARMCMx\chcore_v6m.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\ChibiOS3\os\rt\ports\ARMCMx\chcore_v6m.h</name>
             </file>
             <file>
               <name>$PROJ_DIR$\..\ChibiOS3\os\rt\ports\ARMCMx\chcore_v7m.c</name>
@@ -2707,24 +2693,6 @@
         </group>
         <group>
           <name>devices_lib</name>
-          <group>
-            <name>accel</name>
-            <file>
-              <name>$PROJ_DIR$\..\ChibiOS3\os\various\devices_lib\accel\lis302dl.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\ChibiOS3\os\various\devices_lib\accel\lis302dl.h</name>
-            </file>
-          </group>
-          <group>
-            <name>lcd</name>
-            <file>
-              <name>$PROJ_DIR$\..\ChibiOS3\os\various\devices_lib\lcd\lcd3310.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\ChibiOS3\os\various\devices_lib\lcd\lcd3310.h</name>
-            </file>
-          </group>
         </group>
         <group>
           <name>fatfs_bindings</name>
@@ -2733,30 +2701,6 @@
           </file>
           <file>
             <name>$PROJ_DIR$\..\ChibiOS3\os\various\fatfs_bindings\fatfs_syscall.c</name>
-          </file>
-        </group>
-        <group>
-          <name>lwip_bindings</name>
-          <group>
-            <name>arch</name>
-            <file>
-              <name>$PROJ_DIR$\..\ChibiOS3\os\various\lwip_bindings\arch\cc.h</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\ChibiOS3\os\various\lwip_bindings\arch\perf.h</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\ChibiOS3\os\various\lwip_bindings\arch\sys_arch.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\ChibiOS3\os\various\lwip_bindings\arch\sys_arch.h</name>
-            </file>
-          </group>
-          <file>
-            <name>$PROJ_DIR$\..\ChibiOS3\os\various\lwip_bindings\lwipthread.c</name>
-          </file>
-          <file>
-            <name>$PROJ_DIR$\..\ChibiOS3\os\various\lwip_bindings\lwipthread.h</name>
           </file>
         </group>
         <group>
@@ -3062,6 +3006,15 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\console\binary\tunerstudio_io.h</name>
+      </file>
+    </group>
+    <group>
+      <name>fl_binary</name>
+      <file>
+        <name>$PROJ_DIR$\..\console\fl_binary\fl_protocol.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\console\fl_binary\fl_protocol.h</name>
       </file>
     </group>
     <file>
