@@ -72,11 +72,9 @@ endif
 # Define project name here
 PROJECT = rusefi_simulator
 PROJECT_DIR = ../firmware
-CHIBIOS = ../firmware/ChibiOS
-
 
 # Imported source files and paths
-CHIBIOS = ../firmware/ChibiOS
+CHIBIOS = ../firmware/ChibiOS3
 
 # Startup files.
 # HAL-OSAL files (optional).

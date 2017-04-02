@@ -87,7 +87,7 @@ PROJECT = rusefi
 PROJECT_DIR = .
 
 # Imported source files and paths
-CHIBIOS = ChibiOS
+CHIBIOS = ChibiOS3
 CHIBIOS_CONTRIB = ChibiOS-Contrib
 
 ifneq ($(PROJECT_BOARD),OLIMEX_STM32_E407)
