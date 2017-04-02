@@ -244,7 +244,7 @@ typedef enum {
 
 	TT_JEEP_18_2_2_2 = 37,
 
-	TT_TEMP_WIP = 38,
+	TT_NISSAN_SR20VE_360 = 38,
 
 	TT_UNUSED = 39, // this is used if we want to iterate over all trigger types
 
