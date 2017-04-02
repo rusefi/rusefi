@@ -49,7 +49,7 @@ bool dateToStringShort(char *lcd_str) {
 #if EFI_RTC || defined(__DOXYGEN__)
 	strcpy(lcd_str, "0000_000000\0");
 	struct tm timp;
-	rtcGetTimeTm(&RTCD1, &timp);
+	date_get_tm(&timp);
 	if (timp.tm_year < 116 || timp.tm_year > 130) {
 		// 2016 to 2030 is the valid range
 		lcd_str[0] = 0;
@@ -77,7 +77,7 @@ void dateToString(char *lcd_str) {
 
 	strcpy(lcd_str, "00/00 00:00:00\0");
 	struct tm timp;
-	rtcGetTimeTm(&RTCD1, &timp);			// get RTC date/time
+	date_get_tm(&timp);			// get RTC date/time
 	
 	put2(0, lcd_str, timp.tm_mon + 1);
 	put2(3, lcd_str, timp.tm_mday);
@@ -100,7 +100,7 @@ void printDateTime(void) {
 		scheduleMsg(&logger, "incorrect time in RTC cell");
 	} else {
 		scheduleMsg(&logger, "%D - unix time", unix_time);
-		rtcGetTimeTm(&RTCD1, &timp);
+		date_get_tm(&timp);
 
 		appendMsgPrefix(&logger);
 		appendPrintf(&logger, "Current RTC time in GMT is: %04u-%02u-%02u %02u:%02u:%02u", timp.tm_year + 1900, timp.tm_mon + 1, timp.tm_mday, timp.tm_hour,
