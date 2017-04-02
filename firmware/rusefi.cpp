@@ -150,7 +150,7 @@ static void scheduleReboot(void) {
 }
 
 void runRusEfi(void) {
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 512, "init s");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 512, "init s");
 	assertEngineReference(PASS_ENGINE_PARAMETER_F);
 	initIntermediateLoggingBuffer();
 	initErrorHandling();
@@ -220,7 +220,7 @@ void runRusEfi(void) {
 	 * control is around main_trigger_callback
 	 */
 	while (true) {
-		efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "stack#1");
+		efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "stack#1");
 
 #if (EFI_CLI_SUPPORT && !EFI_UART_ECHO_TEST_MODE) || defined(__DOXYGEN__)
 		// sensor state + all pending messages for our own dev console
@@ -241,7 +241,7 @@ void chDbgStackOverflowPanic(thread_t *otp) {
 	chDbgPanic3(panicMessage, __FILE__, __LINE__);
 }
 
-static char UNUSED_RAM_SIZE[21100];
+static char UNUSED_RAM_SIZE[20100];
 
 static char UNUSED_CCM_SIZE[9500] CCM_OPTIONAL;
 
@@ -250,5 +250,5 @@ int getRusEfiVersion(void) {
 		return 123; // this is here to make the compiler happy about the unused array
 	if (UNUSED_CCM_SIZE[0] * 0 != 0)
 		return 3211; // this is here to make the compiler happy about the unused array
-	return 20170326;
+	return 20170401;
 }
