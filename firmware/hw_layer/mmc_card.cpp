@@ -344,6 +344,10 @@ static void MMCmount(void) {
 		scheduleMsg(&logger, "Error: Already mounted. \"umountsd\" first");
 		return;
 	}
+	if ((MMCD1.state != BLK_STOP) && (MMCD1.state != BLK_ACTIVE)) {
+		firmwareError(CUSTOM_OBD_MMC_START1, "mmc_state1 %d", MMCD1.state);
+		return;
+	}
 	// start to initialize MMC/SD
 	mmcStart(&MMCD1, &mmccfg);					// Configures and activates the MMC peripheral.
 
@@ -430,6 +434,11 @@ void initMmcCard(void) {
 
 	// start to initialize MMC/SD
 	mmcObjectInit(&MMCD1); 						// Initializes an instance.
+	if ((MMCD1.state != BLK_STOP) && (MMCD1.state != BLK_ACTIVE)) {
+		firmwareError(CUSTOM_OBD_MMC_START2, "mmc_state2 %d", MMCD1.state);
+		return;
+	}
+
 	mmcStart(&MMCD1, &mmccfg);
 
 	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), LOWPRIO, (tfunc_t) MMCmonThread, NULL);
