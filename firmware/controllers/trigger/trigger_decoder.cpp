@@ -637,7 +637,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		initializeNissanSR20VE_4(this PASS_ENGINE_PARAMETER);
 		break;
 
-	case TT_TEMP_WIP:
+	case TT_NISSAN_SR20VE_360:
 		initializeNissanSR20VE_4_360(this PASS_ENGINE_PARAMETER);
 		break;
 
