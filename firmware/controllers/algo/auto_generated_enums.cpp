@@ -215,8 +215,8 @@ case TT_2JZ_3_34:
 	return "TT_2JZ_3_34";
 case TT_ROVER_K:
 	return "TT_ROVER_K";
-case TT_TEMP_WIP:
-	return "TT_TEMP_WIP";
+case TT_NISSAN_SR20VE_360:
+	return "TT_NISSAN_SR20VE_360";
   }
  return NULL;
 }
