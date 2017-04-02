@@ -8,6 +8,11 @@
 #ifndef GLOBAL_H_
 #define GLOBAL_H_
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+
 #include <ch.h>
 #include <hal.h>
 #include <string.h>
@@ -128,5 +133,9 @@ typedef VirtualTimer virtual_timer_t;
 		turnAllPinsOff(); \
 		enginePins.communicationPin.setValue(1);
 
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* GLOBAL_H_ */
