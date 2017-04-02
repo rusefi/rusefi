@@ -47,12 +47,17 @@ static time_t GetTimeUnixSec(void) {
 static void SetTimeUnixSec(time_t unix_time) {
 #if EFI_RTC || defined(__DOXYGEN__)
   struct tm tim;
-  struct tm *canary;
 
+#if defined __GNUC__
+  struct tm *canary;
   /* If the conversion is successful the function returns a pointer
      to the object the result was written into.*/
   canary = localtime_r(&unix_time, &tim);
   osalDbgCheck(&tim == canary);
+#else
+  struct tm *t = localtime(&tv_sec);
+  memcpy(&timp, t, sizeof(struct tm));
+#endif
 
   rtcConvertStructTmToDateTime(&tim, 0, &timespec);
   rtcSetTime(&RTCD1, &timespec);
