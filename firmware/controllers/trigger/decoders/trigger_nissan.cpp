@@ -28,30 +28,65 @@ static void initializeNissanSR20VE_4_optional_360(TriggerShape *s, bool with2nd 
 	right = base - 15;
 
 	if (with2nd) {
-		addSkippedToothTriggerEvents(T_PRIMARY, s, total, 0, 0.5, 0, 720,
+		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
 				left, right PASS_ENGINE_PARAMETER);
 	}
 
 	s->addEvent2(right, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
 
+	left = right;
 	right = base;
-
+	if (with2nd) {
+//		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
+//				left, right PASS_ENGINE_PARAMETER);
+	}
 	s->addEvent2(right, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
 
 	// was is the the one with 360 opto sensor?
 
 	base += 180;
-	s->addEvent2(base - w, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
-	s->addEvent2(base, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
+
+	left = right;
+	right = base - w;
+	if (with2nd) {
+//		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
+//				left, right PASS_ENGINE_PARAMETER);
+	}
+	s->addEvent2(right, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
+
+	left = right;
+	right = base;
+	if (with2nd) {
+//		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
+//				left, right PASS_ENGINE_PARAMETER);
+	}
+	s->addEvent2(right, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
 
 	base += 180;
-	s->addEvent2(base - w, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
-	s->addEvent2(base, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
+	left = right;
+	right = base - w;
+	if (with2nd) {
+//		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
+//				left, right PASS_ENGINE_PARAMETER);
+	}
+	s->addEvent2(right, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
+
+	left = right;
+	right = base;
+	if (with2nd) {
+//		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
+//				left, right PASS_ENGINE_PARAMETER);
+	}
+	s->addEvent2(right, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
 
 	base += 180;
-	s->addEvent2(base - w, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
-	s->addEvent2(base, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
+	left = right;
+	right = base - w;
 
+	s->addEvent2(right, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
+	left = right;
+	right = base;
+	s->addEvent2(right, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
 }
 
 
