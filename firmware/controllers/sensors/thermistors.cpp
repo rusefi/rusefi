@@ -140,6 +140,10 @@ void ThermistorMath::prepareThermistorCurve(thermistor_conf_s *tc) {
 
 	float L1 = logf(tc->resistance_1);
 	if (L1 == tc->resistance_1) {
+		/**
+		 * See https://github.com/rusefi/rusefi/issues/375
+		 * See https://sourceforge.net/p/rusefi/tickets/149/
+		 */
 		firmwareError(CUSTOM_ERR_NATURAL_LOGARITHM_ERROR, "Natural logarithm logf() is broken: %f", tc->resistance_1);
 	}
 	float L2 = logf(tc->resistance_2);
