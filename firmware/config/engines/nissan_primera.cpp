@@ -16,4 +16,8 @@ void setNissanPrimeraEngineConfiguration(engine_configuration_s *engineConfigura
 	engineConfiguration->trigger.type = TT_NISSAN_SR20VE;
 }
 
+void setNissanPrimeraEngineConfiguration_360(engine_configuration_s *engineConfiguration) {
+	engineConfiguration->trigger.type = TT_NISSAN_SR20VE_360;
+}
+
 #endif /* EFI_SUPPORT_NISSAN_PRIMERA */
