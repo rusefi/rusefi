@@ -46,4 +46,4 @@ bool is_usb_serial_ready(void) {
 	return false;
 }
 
-#endif
+#endif /* EFI_USB_SERIAL */
