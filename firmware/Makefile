@@ -3,9 +3,18 @@
 # NOTE: Can be overridden externally.
 #
 
+# by default EXTRA_PARAMS is empty and we create 'debug' version of the firmware with additional assertions and statistics
+# for 'release' options see 'clean_compile_two_versions.bat' file
+
+ifeq ($(DEBUG_LEVEL_OPT),)
+  # this value would be used by default. For 'release' configuration override with '-O2' or something along these lines
+  DEBUG_LEVEL_OPT = -O0 -ggdb -g3 
+endif
+
+
 # Compiler options here.
 ifeq ($(USE_OPT),)
-  USE_OPT = $(EXTRA_PARAMS) $(RFLAGS) -Os -ggdb -fomit-frame-pointer -falign-functions=16
+  USE_OPT = $(EXTRA_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -fomit-frame-pointer -falign-functions=16 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Werror=type-limits -Wno-error=strict-aliasing -Wno-error=attributes
 endif
 
 # C specific options here (added to USE_OPT).
