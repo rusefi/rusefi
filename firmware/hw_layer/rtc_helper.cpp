@@ -55,8 +55,8 @@ static void SetTimeUnixSec(time_t unix_time) {
   canary = localtime_r(&unix_time, &tim);
   osalDbgCheck(&tim == canary);
 #else
-  struct tm *t = localtime(&tv_sec);
-  memcpy(&timp, t, sizeof(struct tm));
+  struct tm *t = localtime(&unix_time);
+  memcpy(&tim, t, sizeof(struct tm));
 #endif
 
   rtcConvertStructTmToDateTime(&tim, 0, &timespec);
