@@ -125,8 +125,4 @@ int getRemainingStack(thread_t *otp);
 }
 #endif /* __cplusplus */
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
 #endif /* GLOBAL_H_ */
