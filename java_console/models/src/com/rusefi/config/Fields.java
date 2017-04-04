@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Mar 27 22:26:05 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Apr 03 21:25:16 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -1026,6 +1026,11 @@ public class Fields {
 	public static final int fsioTable4LoadBins_offset = 16312;
 	public static final int fsioTable4RpmBins_offset = 16344;
 	public static final int TOTAL_CONFIG_SIZE = 16376;
+	public static final String GAUGE_NAME_FUEL_TPS_EXTRA = "fuel: TPS acceleration extra fuel";
+	public static final String GAUGE_NAME_FUEL_EL_EXTRA = "fuel: engine load acceleration extra fuel";
+	public static final String GAUGE_NAME_FUEL_INJ_DUTY = "fuel: injector duty cycle";
+	public static final String GAUGE_NAME_DWELL_DUTY = "dwell: coil duty cycle";
+	public static final String GAUGE_COIL_DWELL_TIME = "dwell: coil charge time";
 	public static final Field ENGINETYPE = Field.create("ENGINETYPE", 0, FieldType.INT);
 	public static final Field ENGINESNIFFERRPMTHRESHOLD = Field.create("ENGINESNIFFERRPMTHRESHOLD", 4, FieldType.INT);
 	public static final Field INJECTOR_FLOW = Field.create("INJECTOR_FLOW", 8, FieldType.FLOAT);
