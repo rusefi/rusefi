@@ -1,6 +1,7 @@
 package com.rusefi.core;
 
 import com.rusefi.config.FieldType;
+import com.rusefi.config.Fields;
 import eu.hansolo.steelseries.tools.BackgroundColor;
 
 import java.util.ArrayList;
@@ -95,7 +96,7 @@ public enum Sensor {
     T_CHARGE(SensorCategory.FUEL, FieldType.FLOAT, 52, BackgroundColor.MUD, 30, 140),
     // todo: unify with TIMING
     ignitionAdvance(SensorCategory.OPERATIONS, FieldType.FLOAT, 56, BackgroundColor.MUD, 30, 140),
-    DWELL(SensorCategory.OPERATIONS, FieldType.FLOAT, 60, BackgroundColor.MUD, 1, 10),
+    DWELL(Fields.GAUGE_COIL_DWELL_TIME, SensorCategory.OPERATIONS, FieldType.FLOAT, 60, BackgroundColor.MUD, 1, 10),
     actualLastInjection(SensorCategory.FUEL, FieldType.FLOAT, 64, BackgroundColor.MUD, 0, 30, "ms"),
     debugFloatField1(SensorCategory.OPERATIONS, FieldType.FLOAT, 68, BackgroundColor.MUD, 0, 5),
     VSS(SensorCategory.OPERATIONS, FieldType.FLOAT, 76, BackgroundColor.BLUE),
@@ -104,8 +105,8 @@ public enum Sensor {
 
     deltaTps(SensorCategory.FUEL, FieldType.FLOAT, 116, BackgroundColor.MUD),
     engineLoadAccelDelta(SensorCategory.FUEL, FieldType.FLOAT, 124, BackgroundColor.MUD),
-    tpsAccelFuel(SensorCategory.FUEL, FieldType.FLOAT, 128, BackgroundColor.MUD),
-    injectorDutyCycle(SensorCategory.OPERATIONS, FieldType.FLOAT, 140, BackgroundColor.MUD),
+    tpsAccelFuel(Fields.GAUGE_NAME_FUEL_TPS_EXTRA, SensorCategory.FUEL, FieldType.FLOAT, 128, BackgroundColor.MUD),
+    injectorDutyCycle(Fields.GAUGE_NAME_FUEL_INJ_DUTY, SensorCategory.OPERATIONS, FieldType.FLOAT, 140, BackgroundColor.MUD),
     wallFuelAmount(SensorCategory.FUEL, FieldType.FLOAT, 160, BackgroundColor.MUD),
     iatCorrection(SensorCategory.FUEL, FieldType.FLOAT, 164, BackgroundColor.MUD, 0, 5),
     wallFuelCorrection(SensorCategory.FUEL, FieldType.FLOAT, 168, BackgroundColor.MUD),
@@ -136,7 +137,7 @@ public enum Sensor {
 
     debugFloatField6(SensorCategory.OPERATIONS, FieldType.FLOAT, 256, BackgroundColor.MUD, 0, 5),
     debugFloatField7(SensorCategory.OPERATIONS, FieldType.FLOAT, 260, BackgroundColor.MUD, 0, 5),
-    coilDutyCycle(SensorCategory.OPERATIONS, FieldType.FLOAT, 272, BackgroundColor.MUD),
+    coilDutyCycle(Fields.GAUGE_NAME_DWELL_DUTY, SensorCategory.OPERATIONS, FieldType.FLOAT, 272, BackgroundColor.MUD),
 
     INJ_1_2_DELTA("inj 1-2 delta", SensorCategory.SNIFFING),
     INJ_3_4_DELTA("inj 3-4 delta", SensorCategory.SNIFFING),
@@ -151,8 +152,8 @@ public enum Sensor {
     private final FieldType type;
     private final int offset;
 
-    Sensor(SensorCategory category, FieldType type, int offset, BackgroundColor color, double minValue, double maxValue, String units) {
-        name = name();
+    Sensor(String name, SensorCategory category, FieldType type, int offset, BackgroundColor color, double minValue, double maxValue, String units) {
+        this.name = name == null ? name() : name;
         this.type = type;
         this.offset = offset;
         this.category = category;
@@ -162,12 +163,24 @@ public enum Sensor {
         this.maxValue = maxValue;
     }
 
+    Sensor(SensorCategory category, FieldType type, int offset, BackgroundColor color, double minValue, double maxValue, String units) {
+        this(null, category, type, offset, color, minValue, maxValue, units);
+    }
+
+    Sensor(String name, SensorCategory category, FieldType type, int offset, BackgroundColor color, double minValue, double maxValue) {
+        this(name, category, type, offset, color, minValue, maxValue, "n/a");
+    }
+
     Sensor(SensorCategory category, FieldType type, int offset, BackgroundColor color, double minValue, double maxValue) {
-        this(category, type, offset, color, minValue, maxValue, "n/a");
+        this(null, category, type, offset, color, minValue, maxValue);
     }
 
     Sensor(SensorCategory category, FieldType type, int offset, BackgroundColor color) {
-        this(category, type, offset, color, 0, 100);
+        this(null, category, type, offset, color);
+    }
+
+    Sensor(String name, SensorCategory category, FieldType type, int offset, BackgroundColor color) {
+        this(name, category, type, offset, color, 0, 100);
     }
 
     Sensor(String name, SensorCategory category) {

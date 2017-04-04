@@ -29,6 +29,7 @@ public class ConfigField {
 
     public static final int LENGTH = 24;
     private static final char TS_COMMENT_TAG = '+';
+    public static final String ENUM_SUFFIX = "_enum";
 
     /**
      * field name without structure name
@@ -224,7 +225,7 @@ public class ConfigField {
             writeJavaFieldName(javaFieldsWriter, nameWithPrefix, tsPosition);
             javaFieldsWriter.write("FieldType.FLOAT);" + EOL);
         } else {
-            String enumOptions = VariableRegistry.INSTANCE.get(type + "_enum");
+            String enumOptions = VariableRegistry.INSTANCE.get(type + ENUM_SUFFIX);
 
             if (enumOptions != null && !javaEnums.contains(type)) {
                 javaEnums.add(type);
