@@ -591,14 +591,14 @@ fileVersion = { 20161225 }
    entry = baseFuel,	    "fuel: base",  float,  "%.2f"
    entry = fuelPidCorrection,"fuel: pid",  float,  "%.2f"
    entry = veValue,         "fuel: VE",    float,  "%.3f"
-   entry = injectorDutyCycle,"fuel: duty cyc",float,"%.3f"
-   entry = coilDutyCycle,	"dwell: duty",	float,"%.3f"
+   entry = injectorDutyCycle,@@GAUGE_NAME_FUEL_INJ_DUTY@@,float,"%.3f"
+   entry = coilDutyCycle,	@@GAUGE_NAME_DWELL_DUTY@@,	float,"%.3f"
 
-   entry = engineLoadAccelExtra, "fuel: load extra",float,  "%.3f"
+   entry = engineLoadAccelExtra, @@GAUGE_NAME_FUEL_EL_EXTRA@@,float,  "%.3f"
    entry = engineLoadDelta, "fuel: load change",float,  "%.3f"
 
    entry = deltaTps,		"fuel: TPS change",float,  "%.3f"
-   entry = tpsAccelFuel,    "fuel: TOS enrich",    float,  "%.3f"
+   entry = tpsAccelFuel,    @@GAUGE_NAME_FUEL_TPS_EXTRA@@,    float,  "%.3f"
 
    entry = wallFuelCorrection,"fuel: wall corr ms",	float,   "%.3f"
    entry = wallFuelAmount, "fuel: wall amount",	float,   "%.3f"
