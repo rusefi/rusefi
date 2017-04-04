@@ -96,7 +96,7 @@ public enum Sensor {
     T_CHARGE(SensorCategory.FUEL, FieldType.FLOAT, 52, BackgroundColor.MUD, 30, 140),
     // todo: unify with TIMING
     ignitionAdvance(SensorCategory.OPERATIONS, FieldType.FLOAT, 56, BackgroundColor.MUD, 30, 140),
-    DWELL(SensorCategory.OPERATIONS, FieldType.FLOAT, 60, BackgroundColor.MUD, 1, 10),
+    DWELL(Fields.GAUGE_COIL_DWELL_TIME, SensorCategory.OPERATIONS, FieldType.FLOAT, 60, BackgroundColor.MUD, 1, 10),
     actualLastInjection(SensorCategory.FUEL, FieldType.FLOAT, 64, BackgroundColor.MUD, 0, 30, "ms"),
     debugFloatField1(SensorCategory.OPERATIONS, FieldType.FLOAT, 68, BackgroundColor.MUD, 0, 5),
     VSS(SensorCategory.OPERATIONS, FieldType.FLOAT, 76, BackgroundColor.BLUE),

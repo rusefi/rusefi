@@ -607,7 +607,7 @@ fileVersion = { 20161225 }
    entry = iatCorrection,   "fuel: IAT corr",	float,   "%.3f"
    entry = cltCorrection,	"cltCorrection", float,"%.3f"
 
-   entry = sparkDwellValue,	"dwell", float,"%.3f"
+   entry = sparkDwellValue,	@@GAUGE_COIL_DWELL_TIME@@, float,"%.3f"
    entry = vvtPosition, "VVT", float,"%.2f"
 
 ; is there a way to log parameter?   entry = debugMode,   "debugMode",int,"%d"
