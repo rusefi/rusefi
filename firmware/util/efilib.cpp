@@ -250,6 +250,13 @@ bool strEqualCaseInsensitive(const char *str1, const char *str2) {
 	return true;
 }
 
+/*
+** return lower-case of c if upper-case, else c
+*/
+int mytolower(const char c) {
+  return TO_LOWER(c);
+}
+
 bool strEqual(const char *str1, const char *str2) {
 	// todo: there must be a standard function?!
 	int len1 = strlen(str1);
