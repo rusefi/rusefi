@@ -554,7 +554,7 @@ void initAdcInputs(bool boardTestMode) {
 	configureInputs();
 
 	// migrate to 'enable adcdebug'
-	addConsoleActionI("adcDebug", &setAdcDebugReporting);
+	addConsoleActionI("adcdebug", &setAdcDebugReporting);
 
 #if EFI_INTERNAL_ADC
 	/*

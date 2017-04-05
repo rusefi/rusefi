@@ -9,22 +9,30 @@ import java.util.Date;
 public class Version2Header {
     private static final String NL = "\n";//System.getProperty("line.separator");
 
-    private static final String COMMAND = "svn info";
+    private static final String COMMAND = "svn info ";
     private static final String VERSION_MARKER = "Last Changed Rev: ";
     private static final String HEADER_TAG = "VCS_VERSION";
 
     public static void main(String[] args) throws IOException {
-        if (args.length!=1) {
+        if (args.length != 1 && args.length != 2) {
             System.out.println("Version offset value is now a mandatory parameter!");
             System.exit(-1);
         }
         int versionOffsetValue = Integer.parseInt(args[0]);
+        String url = args.length == 2 ? args[1] : "";
         System.out.println("Hi, it's " + new Date());
+        if (url.isEmpty()) {
+            System.out.println("Looking for local version");
+        } else {
+            System.out.println("Looking for remove version: " + url);
+        }
+        String command = COMMAND + url;
+
         System.out.println("Working with " + NL.length() + " line ends, offset " + versionOffsetValue);
         Process simulatorProcess = null;
         try {
-            System.out.println("Executing [" + COMMAND + "]");
-            simulatorProcess = Runtime.getRuntime().exec(COMMAND);
+            System.out.println("Executing [" + command + "]");
+            simulatorProcess = Runtime.getRuntime().exec(command);
 
             BufferedReader stdout =
                     new BufferedReader(new InputStreamReader(simulatorProcess.getInputStream()));
@@ -32,7 +40,7 @@ public class Version2Header {
             int counter = 0;
             String line;
             while ((line = stdout.readLine()) != null) {
-                System.out.println("from " + COMMAND + ": " + line);
+                System.out.println("from " + command + ": " + line);
                 counter++;
 
                 if (line.startsWith(VERSION_MARKER)) {
