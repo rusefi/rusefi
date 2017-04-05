@@ -38,6 +38,7 @@ extern "C"
 const char * boolToString(bool value);
 
 char * efiTrim(char *param);
+int mytolower(const char c);
 uint32_t efiStrlen(const char *param);
 int efiPow10(int param);
 bool startsWith(const char *line, const char *prefix);
