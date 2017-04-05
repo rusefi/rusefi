@@ -44,12 +44,11 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20170314;
+    public static final int CONSOLE_VERSION = 20170324;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
     protected static final String SPEED_KEY = "speed";
-    public static final String FATAL_ERROR_PREFIX = "FATAL";
     private final String port;
     // todo: the logic around 'fatalError' could be implemented nicer
     private String fatalError;
@@ -131,7 +130,7 @@ public class Launcher {
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override
             public void onMessage(Class clazz, String message) {
-                if (message.startsWith(FATAL_ERROR_PREFIX))
+                if (message.startsWith(ConnectionStatus.FATAL_MESSAGE_PREFIX))
                     fatalError = message;
             }
         });
