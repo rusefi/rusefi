@@ -207,17 +207,6 @@ static void removeFile(const char *pathx) {
 	unlockSpi();
 }
 
-/*
-** return lower-case of c if upper-case, else c
-*/
-int mytolower(const char c)  {
-
-  if(c<='Z' &&  c>='A') return (c+32);
-  return (c);
-
-}
-
-
 int
     mystrncasecmp(const char *s1, const char *s2, size_t n)
     {
