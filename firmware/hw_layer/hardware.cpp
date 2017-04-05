@@ -231,6 +231,7 @@ void applyNewHardwareSettings(void) {
 	stopIgnitionPins();
 	stopCanPins();
 	stopETBPins();
+	stopVSSPins();
 
 	if (engineConfiguration->bc.is_enabled_spi_1 != activeConfiguration.bc.is_enabled_spi_1)
 		stopSpi(SPI_DEVICE_1);
@@ -288,6 +289,7 @@ void applyNewHardwareSettings(void) {
 	startIgnitionPins();
 	startCanPins();
 	startETBPins();
+	startVSSPins();
 
 	adcConfigListener(engine);
 }
