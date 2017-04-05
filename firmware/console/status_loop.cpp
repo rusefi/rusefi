@@ -256,7 +256,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 	reportSensorF(log, fileFormat, "ENGINE_LOAD", "x", engineLoad, 2);
 
 
-	reportSensorF(log, fileFormat, "dwell", "ms", ENGINE(engineState.sparkDwell), 2);
+	reportSensorF(log, fileFormat, GAUGE_COIL_DWELL_TIME, "ms", ENGINE(engineState.sparkDwell), 2);
 	if (fileFormat) {
 		reportSensorF(log, fileFormat, "timing", "deg", engine->engineState.timingAdvance, 2);
 
