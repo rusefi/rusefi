@@ -433,7 +433,7 @@ void initMmcCard(void) {
 	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), LOWPRIO, (tfunc_t) MMCmonThread, NULL);
 
 	addConsoleAction("mountsd", MMCmount);
-	addConsoleActionS("appendToLog", appendToLog);
+	addConsoleActionS("appendtolog", appendToLog);
 	addConsoleAction("umountsd", MMCumount);
 	addConsoleActionS("ls", listDirectory);
 	addConsoleActionS("del", removeFile);
