@@ -1,8 +1,8 @@
 package com.rusefi.ui;
 
 import com.rusefi.FileLog;
-import com.rusefi.Launcher;
 import com.rusefi.core.MessagesCentral;
+import com.rusefi.io.ConnectionStatus;
 import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
@@ -50,7 +50,7 @@ public class WarningPanel {
                 if (haveFatalError)
                     return;
 
-                if (message.startsWith(Launcher.FATAL_ERROR_PREFIX)) {
+                if (message.startsWith(ConnectionStatus.FATAL_MESSAGE_PREFIX)) {
                     haveFatalError = true;
                     fatalBlinking.start();
                     label.setText(message);
