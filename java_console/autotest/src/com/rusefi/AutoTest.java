@@ -1,14 +1,15 @@
 package com.rusefi;
 
 
+import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.io.CommandQueue;
+import com.rusefi.io.ConnectionStatus;
 import com.rusefi.waves.EngineChart;
 import com.rusefi.waves.EngineReport;
 
-import static com.rusefi.IoUtil.changeRpm;
 import static com.rusefi.TestingUtils.nextChart;
-import static com.rusefi.IoUtil.sendCommand;
 import static com.rusefi.IoUtil.sleep;
 import static com.rusefi.TestingUtils.*;
 import static com.rusefi.waves.EngineReport.isCloseEnough;
@@ -24,8 +25,17 @@ import static com.rusefi.waves.EngineReport.isCloseEnough;
 public class AutoTest {
     public static final int COMPLEX_COMMAND_RETRY = 10000;
     static int currentEngineType;
+    private static String fatalError;
 
     static void mainTestBody() {
+        MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
+            @Override
+            public void onMessage(Class clazz, String message) {
+                if (message.startsWith(ConnectionStatus.FATAL_MESSAGE_PREFIX))
+                    fatalError = message;
+            }
+        });
+
         sendCommand("fl 1"); // just in case it was disabled
         testCustomEngine();
         testMazdaMiata2003();
@@ -408,6 +418,15 @@ public class AutoTest {
         IoUtil.changeRpm(10000);
         chart = nextChart();
         assertWaveNull("hard limit check", chart, EngineChart.INJECTOR_1);
+    }
+
+    private static void sendCommand(String command) {
+        sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, Timeouts.CMD_TIMEOUT);
+    }
+
+    private static void sendCommand(String command, int retryTimeoutMs, int totalTimeoutSeconds) {
+        assertNull("Fatal not expected", fatalError);
+        IoUtil.sendCommand(command, retryTimeoutMs, totalTimeoutSeconds);
     }
 
     private static void assertEquals(double expected, double actual) {
