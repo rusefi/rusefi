@@ -871,3 +871,5 @@ end_struct
 
 
 #define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
+
+#define GAUGE_COIL_DWELL_TIME "dwell: coil charge time"
