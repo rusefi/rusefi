@@ -66,6 +66,15 @@ bool hasVehicleSpeedSensor() {
 	return boardConfiguration->vehicleSpeedSensorInputPin != GPIO_UNASSIGNED;
 }
 
+void stopVSSPins(void) {
+	unmarkPin(activeConfiguration.bc.vehicleSpeedSensorInputPin);
+	// todo: remove driver from registeredIcus
+}
+
+void startVSSPins(void) {
+	// todo
+}
+
 void initVehicleSpeed(Logging *l) {
 	logger = l;
 	addConsoleAction("speedinfo", speedInfo);

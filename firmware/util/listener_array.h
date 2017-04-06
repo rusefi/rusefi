@@ -24,6 +24,7 @@ template<int MAX_INT_LISTENER_COUNT>
 class IntListenerArray {
 public:
 	IntListenerArray();
+	void clear();
 	void registerCallback(VoidInt handler, void *arg);
 	void registerCallback(Void listener);
 	void invokeJustArgCallbacks();
@@ -52,6 +53,11 @@ public:
 
 template<int MAX_INT_LISTENER_COUNT>
 IntListenerArray<MAX_INT_LISTENER_COUNT>::IntListenerArray() {
+	clear();
+}
+
+template<int MAX_INT_LISTENER_COUNT>
+void IntListenerArray<MAX_INT_LISTENER_COUNT>::clear() {
 	currentListenersCount = 0;
 	memset(&args, 0, sizeof(args));
 	memset(&callbacks, 0, sizeof(callbacks));
