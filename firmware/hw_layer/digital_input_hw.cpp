@@ -180,6 +180,8 @@ digital_input_s * initWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) 
 	ICUDriver *driver = getInputCaptureDriver(msg, brainPin);
 
 	digital_input_s *hw = registeredIcus.add();
+	hw->widthListeners.clear();
+	hw->periodListeners.clear();
 	hw->brainPin = brainPin;
 	hw->driver = driver;
 	turnOnCapturePin(msg, brainPin);

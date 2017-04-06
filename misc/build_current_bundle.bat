@@ -19,7 +19,12 @@ cd ..
 
 cd firmware
 echo %date% %time%
-echo "CD to ${PWD}"
+
+
+echo Erasing chip
+call flash_erase
+
+
 echo Building firmware
 rm -fR .dep
 rm -fR build
