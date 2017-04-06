@@ -582,12 +582,15 @@ void initAdcInputs(bool boardTestMode) {
 
 	slowAdc.init();
 	pwmStart(EFI_INTERNAL_SLOW_ADC_PWM, &pwmcfg_slow);
+	pwmEnablePeriodicNotification(EFI_INTERNAL_SLOW_ADC_PWM);
+
 	if (boardConfiguration->isFastAdcEnabled) {
 		fastAdc.init();
 		/*
 		 * Initializes the PWM driver.
 		 */
 		pwmStart(EFI_INTERNAL_FAST_ADC_PWM, &pwmcfg_fast);
+		pwmEnablePeriodicNotification(EFI_INTERNAL_FAST_ADC_PWM);
 	}
 
 	// ADC_CHANNEL_IN0 // PA0
