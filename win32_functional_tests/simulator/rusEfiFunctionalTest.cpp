@@ -63,7 +63,7 @@ static void runChprintfTest() {
 
 // it's a very, very long and mostly forgotten story how this became our %f precision format
 	testStream.eos = 0; // reset
-	chprintf((BaseSequentialStream*)&testStream, "%f/%..10000f/%..10000f", 0.239f, 239.932, 0.1234);
+	chprintf((BaseSequentialStream*)&testStream, "%f/%.4f/%.4f", 0.239f, 239.932, 0.1234);
 	testStream.buffer[testStream.eos] = 0;
 
 #define FLOAT_STRING_EXPECTED "0.23/239.9320/0.1234"
