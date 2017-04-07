@@ -13,17 +13,17 @@ efitick_t getTimeNowNt(void) {
 }
 
 efitimeus_t getTimeNowUs(void) {
-	return chTimeNow() * (1000000 / CH_FREQUENCY);
+	return chVTGetSystemTimeX() * (1000000 / CH_CFG_ST_FREQUENCY);
 }
 
 // todo; reduce code duplication with prod code?
 efitimems_t currentTimeMillis(void) {
-	return getTimeNowUs() / 1000;
+	return chVTGetSystemTimeX() / 1000;
 }
 
 // todo; reduce code duplication with prod code?
 efitimesec_t getTimeNowSeconds(void) {
-	return chTimeNow() / CH_FREQUENCY;
+	return currentTimeMillis() / CH_CFG_ST_FREQUENCY;
 }
 
 int getRusEfiVersion(void) {

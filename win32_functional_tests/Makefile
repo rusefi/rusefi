@@ -3,60 +3,54 @@
 # NOTE: Can be overridden externally.
 #
 
-PROJECT_DIR = ../firmware
-#CHIBIOS = $(PROJECT_DIR)/chibios
-
 # Compiler options here.
 ifeq ($(USE_OPT),)
 # this config if debugging is needed, but the binary is about 50M
-# USE_OPT = -c -Wall -O0 -ggdb -g3 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings
+#  USE_OPT = -Wall     -ggdb     -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings -Wno-error=strict-aliasing
+#  USE_OPT = -Wall -O0 -ggdb -g3 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings
 # this config producec a smaller binary file
-  USE_OPT = -c -Wall -O2           -Werror-implicit-function-declaration  -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings -Wno-error=strict-aliasing
+  USE_OPT = -Wall -O2           -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings -Wno-error=strict-aliasing
 
 	ifeq ($(OS),Windows_NT)
 	else
  	 USE_OPT +=  -m32
 	endif
-
 endif
 
 # C specific options here (added to USE_OPT).
 ifeq ($(USE_COPT),)
-  USE_COPT = -std=gnu99 -fgnu89-inline
-
-	ifeq ($(OS),Windows_NT)
-	else
-	  USE_COPT += -Wno-error=attributes -Wno-error=implicit-function-declaration -include stdio.h
-	endif
-
+  USE_COPT = 
 endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  USE_CPPOPT = -std=c++11 -fno-rtti -fpermissive -fno-exceptions -fno-use-cxa-atexit
-
-
-	ifeq ($(OS),Windows_NT)
-	else
-	  USE_CPPOPT += -include cstring -include cstdio -include cstdlib
-	endif
-
+  USE_CPPOPT = -fno-rtti
 endif
 
-
-# Enable this if you want the linker to remove unused code and data
+# Enable this if you want the linker to remove unused code and data.
 ifeq ($(USE_LINK_GC),)
   USE_LINK_GC = yes
 endif
 
-# If enabled, this option allows to compile the application in THUMB mode.
-ifeq ($(USE_THUMB),)
-  USE_THUMB = no
+# Linker extra options here.
+ifeq ($(USE_LDOPT),)
+  USE_LDOPT = 
+endif
+
+# Enable this if you want link time optimizations (LTO)
+ifeq ($(USE_LTO),)
+  USE_LTO = no
 endif
 
 # Enable this if you want to see the full log while compiling.
 ifeq ($(USE_VERBOSE_COMPILE),)
   USE_VERBOSE_COMPILE = no
+endif
+
+# If enabled, this option makes the build process faster by not compiling
+# modules not used in the current configuration.
+ifeq ($(USE_SMART_BUILD),)
+  USE_SMART_BUILD = yes
 endif
 
 #
@@ -67,10 +61,6 @@ endif
 # Architecture or project specific options
 #
 
-
-# List all default C defines here, like -D_DEBUG=1
-DDEFS =
-
 #
 # Architecture or project specific options
 ##############################################################################
@@ -79,17 +69,31 @@ DDEFS =
 # Project, sources and paths
 #
 
-                            # Define project name here
+# Define project name here
 PROJECT = rusefi_simulator
+PROJECT_DIR = ../firmware
 
-#PROJECT_BOARD = OLIMEX_STM32_E407
-#ifneq ($(PROJECT_BOARD),OLIMEX_STM32_E407)
-#  PROJECT_BOARD = ST_STM32F4_DISCOVERY
-#endif
-#DDEFS += -D$(PROJECT_BOARD)
-
-CHIBIOS = ../firmware/chibios
 # Imported source files and paths
+CHIBIOS = ../firmware/ChibiOS3
+
+# Startup files.
+# HAL-OSAL files (optional).
+include $(CHIBIOS)/os/hal/hal.mk
+include $(CHIBIOS)/os/hal/boards/simulator/board.mk
+include $(CHIBIOS)/os/hal/osal/rt/osal.mk
+# RTOS files (optional).
+include $(CHIBIOS)/os/rt/rt.mk
+include $(CHIBIOS)/os/rt/ports/SIMIA32/compilers/GCC/port.mk
+# Other files (optional).
+include $(CHIBIOS)/os/hal/lib/streams/streams.mk
+include $(CHIBIOS)/os/various/shell/shell.mk
+
+ifeq ($(OS),Windows_NT)
+  include ${CHIBIOS}/os/hal/ports/simulator/win32/platform.mk
+else
+  include ${CHIBIOS}/os/hal/ports/simulator/posix/platform.mk
+endif
+
 include $(PROJECT_DIR)/util/util.mk
 include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/controllers/algo/algo.mk
@@ -102,48 +106,33 @@ include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/console/binary/tunerstudio.mk
 include $(PROJECT_DIR)/development/development.mk
 
-include $(CHIBIOS)/boards/simulator/board.mk
-include ${CHIBIOS}/os/hal/hal.mk
-
-ifeq ($(OS),Windows_NT)
-  include ${CHIBIOS}/os/hal/platforms/Win32/platform.mk
-else
-  include ${CHIBIOS}/os/hal/platforms/Posix/platform.mk
-endif
-
-include ${CHIBIOS}/os/ports/GCC/SIMIA32/port.mk
-include ${CHIBIOS}/os/kernel/kernel.mk
-
-# Define linker script file here
-#LDSCRIPT= config/system/STM32F407xG.ld
-#LDSCRIPT= $(PORTLD)/STM32F407xG_CCM.ld
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CSRC =	${PORTSRC} \
-       ${KERNSRC} \
-       ${TESTSRC} \
-       ${HALSRC} \
-       ${PLATFORMSRC} \
-	$(SYSTEMSRC) \
-	$(CONSOLESRC) \
-	$(CONTROLLERS_ALGO_SRC) \
-	$(CONTROLLERS_CORE_SRC) \
-	$(CONTROLLERS_SENSORS_SRC) \
-	$(ENGINES_SRC) \
-       $(BOARDSRC) \
-       ${CHIBIOS}/os/various/chprintf.c \
-       ${CHIBIOS}/os/various/memstreams.c \
-	$(UTILSRC) \
-	main.c
+CSRC =  ${PORTSRC} \
+        ${KERNSRC} \
+        ${HALSRC} \
+        ${PLATFORMSRC} \
+        $(SYSTEMSRC) \
+        $(CONSOLESRC) \
+        $(CONTROLLERS_ALGO_SRC) \
+        $(CONTROLLERS_CORE_SRC) \
+        $(CONTROLLERS_SENSORS_SRC) \
+        $(ENGINES_SRC) \
+        $(BOARDSRC) \
+        $(CHIBIOS)/os/hal/lib/streams/memstreams.c \
+        $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
+        $(CHIBIOS)/os/various/shell.c \
+        $(UTILSRC) \
+        main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = $(UTILSRC_CPP) \
 	$(CONTROLLERS_ALGO_SRC_CPP) \
 	$(PROJECT_DIR)/controllers/settings.cpp \
- 	$(PROJECT_DIR)/controllers/engine_controller.cpp \
- 	$(PROJECT_DIR)/controllers/error_handling.cpp \
+	$(PROJECT_DIR)/controllers/engine_controller.cpp \
+	$(PROJECT_DIR)/controllers/error_handling.cpp \
 	$(PROJECT_DIR)/development/sensor_chart.cpp \
 	$(TRIGGER_SRC_CPP) \
 	$(TRIGGER_DECODERS_SRC_CPP) \
@@ -155,57 +144,47 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(CONTROLLERS_MATH_SRC_CPP) \
 	$(DEV_SIMULATOR_SRC_CPP) \
 	$(ENGINES_SRC_CPP) \
-	$(PROJECT_DIR)/simulator/rusEfiFunctionalTest.cpp \
-	$(PROJECT_DIR)/simulator/framework.cpp \
+	simulator/rusEfiFunctionalTest.cpp \
+	simulator/framework.cpp \
+	simulator/boards.cpp \
 	$(PROJECT_DIR)/controllers/map_averaging.cpp \
 	$(PROJECT_DIR)/development/trigger_emulator.cpp \
-       simulator/boards.cpp \
 	$(TEST_SRC_CPP)
-# C sources to be compiled in ARM mode regardless of the global setting.
-# NOTE: Mixing ARM and THUMB mode enables the -mthumb-interwork compiler
-#       option that results in lower performance and larger code size.
-ACSRC =
 
-# C++ sources to be compiled in ARM mode regardless of the global setting.
-# NOTE: Mixing ARM and THUMB mode enables the -mthumb-interwork compiler
-#       option that results in lower performance and larger code size.
-ACPPSRC =
-
-# C sources to be compiled in THUMB mode regardless of the global setting.
-# NOTE: Mixing ARM and THUMB mode enables the -mthumb-interwork compiler
-#       option that results in lower performance and larger code size.
-TCSRC =
-
-# C sources to be compiled in THUMB mode regardless of the global setting.
-# NOTE: Mixing ARM and THUMB mode enables the -mthumb-interwork compiler
-#       option that results in lower performance and larger code size.
-TCPPSRC =
 
 # List ASM source files here
 ASMSRC = $(PORTASM)
 
 INCDIR = . \
-$(PORTINC) $(KERNINC) $(TESTINC) \
-          $(HALINC) $(PLATFORMINC) $(BOARDINC) \
-	$(PROJECT_DIR)/util \
-	$(PROJECT_DIR)/console \
-	$(PROJECT_DIR)/console/binary \
-	$(PROJECT_DIR)/console/fl_binary \
-	$(PROJECT_DIR)/config/engines \
-	$(PROJECT_DIR)/ext_algo \
-	$(PROJECT_DIR)/controllers \
-	$(PROJECT_DIR)/hw_layer/algo \
-	$(PROJECT_DIR)/development \
-	$(PROJECT_DIR)/controllers/algo \
-	$(PROJECT_DIR)/controllers/core \
-	$(PROJECT_DIR)/controllers/math \
-	$(PROJECT_DIR)/controllers/sensors \
-	$(PROJECT_DIR)/controllers/system \
-	$(PROJECT_DIR)/controllers/trigger \
-	$(PROJECT_DIR)/controllers/trigger/decoders \
-        ${CHIBIOS}/os/various \
-	simulator
-	
+          $(PORTINC) \
+          $(KERNINC) \
+          $(OSALINC) \
+          $(HALINC) \
+          $(PLATFORMINC) \
+          $(BOARDINC) \
+          $(PROJECT_DIR)/util \
+          $(PROJECT_DIR)/console \
+          $(PROJECT_DIR)/console/binary \
+          $(PROJECT_DIR)/console/fl_binary \
+          $(PROJECT_DIR)/config/engines \
+          $(PROJECT_DIR)/ext_algo \
+          $(PROJECT_DIR)/controllers \
+          $(PROJECT_DIR)/hw_layer/algo \
+          $(PROJECT_DIR)/development \
+          $(PROJECT_DIR)/controllers/algo \
+          $(PROJECT_DIR)/controllers/core \
+          $(PROJECT_DIR)/controllers/math \
+          $(PROJECT_DIR)/controllers/sensors \
+          $(PROJECT_DIR)/controllers/system \
+          $(PROJECT_DIR)/controllers/trigger \
+          $(PROJECT_DIR)/controllers/trigger/decoders \
+          ${CHIBIOS}/os/various \
+          $(CHIBIOS)/os/hal/lib/streams \
+          simulator
+
+# List ASM source files here
+ASMSRC =
+ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
 #
 # Project, sources and paths
@@ -215,11 +194,9 @@ $(PORTINC) $(KERNINC) $(TESTINC) \
 # Compiler settings
 #
 
-#MCU  = cortex-m4
-
-
 ifeq ($(OS),Windows_NT)
-  #Cygwin64 is used with mingw64 32-bit version
+  # base 32-bit Cygwin is needed with mingw64 32-bit version 
+  # Cygwin64 would not debug if used with mingw64 32-bit version
 
   TRGT = i686-w64-mingw32-
 else
@@ -235,49 +212,20 @@ CPPC = $(TRGT)g++
 LD   = $(TRGT)g++
 CP   = $(TRGT)objcopy
 AS   = $(TRGT)gcc -x assembler-with-cpp
+AR   = $(TRGT)ar
 OD   = $(TRGT)objdump
-HEX  = $(CP) -O ihex
+SZ   = $(TRGT)size
 BIN  = $(CP) -O binary
-
-# ARM-specific options here
-AOPT =
-
-# THUMB-specific options here
-TOPT = -mthumb -DTHUMB
+COV  = gcov
 
 # Define C warning options here
-CWARN = -Wall -Wextra -Wstrict-prototypes
+CWARN = -Wall -Wextra -Wundef -Wstrict-prototypes
 
 # Define C++ warning options here
-CPPWARN = -Wall -Wextra
+CPPWARN = -Wall -Wextra -Wundef
 
 #
 # Compiler settings
-##############################################################################
-
-##############################################################################
-# Start of default section
-#
-
-# List all default ASM defines here, like -D_DEBUG=1
-DADEFS =
-
-# List all default directories to look for include files here
-DINCDIR =
-
-# List the default directory to look for the libraries here
-DLIBDIR =
-
-# List all default libraries here
-ifeq ($(OS),Windows_NT)
-  DLIBS = -static-libgcc -static-libstdc++ -lws2_32
-else
-  DLIBS = -static-libgcc -lgcc -static-libstdc++ -m32
-endif
-
-
-#
-# End of default section
 ##############################################################################
 
 ##############################################################################
@@ -285,7 +233,7 @@ endif
 #
 
 # List all user C define here, like -D_DEBUG=1
-UDEFS =
+UDEFS = -DSIMULATOR
 
 # Define ASM defines here
 UADEFS =
@@ -297,10 +245,15 @@ UINCDIR =
 ULIBDIR =
 
 # List all user libraries here
-ULIBS = -lm
+ifeq ($(OS),Windows_NT)
+ULIBS = -lws2_32 -static
+else
+ULIBS =
+endif
 
 #
 # End of user defines
 ##############################################################################
 
-include rules.mk
+RULESPATH = $(CHIBIOS)/os/common/startup/SIMIA32/compilers/GCC
+include $(RULESPATH)/rules.mk

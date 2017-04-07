@@ -24,7 +24,7 @@
 #include "hardware.h"
 #include "engine_configuration.h"
 #include "status_loop.h"
-#include "usb_msd.h"
+#include "hal_usb_msd.h"
 #include "usb_msd_cfg.h"
 
 #include "rtc_helper.h"
@@ -56,7 +56,7 @@ extern board_configuration_s *boardConfiguration;
 
 //static USBDriver *ms_usb_driver = &USBD1;
 //static USBMassStorageDriver UMSD1;
-//extern const USBConfig msd_usb_config;
+extern const USBConfig msdusbcfg;
 
 
 
@@ -317,7 +317,7 @@ static void MMCumount(void) {
 	f_sync(&FDLogFile);							// sync ALL
 	mmcDisconnect(&MMCD1);						// Brings the driver in a state safe for card removal.
 	mmcStop(&MMCD1);							// Disables the MMC peripheral.
-	f_mount(0, NULL);							// FATFS: Unregister work area prior to discard it
+	f_mount(NULL, 0, 0);						// FATFS: Unregister work area prior to discard it
 	memset(&FDLogFile, 0, sizeof(FIL));			// clear FDLogFile
 	fs_ready = false;							// status = false
 	scheduleMsg(&logger, "MMC/SD card removed");
@@ -333,17 +333,17 @@ static void MMCmount(void) {
 		scheduleMsg(&logger, "Error: Already mounted. \"umountsd\" first");
 		return;
 	}
-	if ((MMCD1.state != BLK_STOP) && (MMCD1.state != BLK_ACTIVE)) {
-		firmwareError(CUSTOM_OBD_MMC_START1, "mmc_state1 %d", MMCD1.state);
-		return;
+	if ((MMCD1.state == BLK_STOP) || (MMCD1.state == BLK_ACTIVE)) {
+		// looks like we would only get here after manual unmount with mmcStop? Do we really need to ever mmcStop?
+		// not sure if this code is needed
+		// start to initialize MMC/SD
+		mmcStart(&MMCD1, &mmccfg);					// Configures and activates the MMC peripheral.
 	}
-	// start to initialize MMC/SD
-	mmcStart(&MMCD1, &mmccfg);					// Configures and activates the MMC peripheral.
 
 	// Performs the initialization procedure on the inserted card.
 	lockSpi(SPI_NONE);
 	sdStatus = SD_STATE_CONNECTING;
-	if (mmcConnect(&MMCD1) != CH_SUCCESS) {
+	if (mmcConnect(&MMCD1) != HAL_SUCCESS) {
 		sdStatus = SD_STATE_NOT_CONNECTED;
 		warning(CUSTOM_OBD_MMC_ERROR, "Can't connect or mount MMC/SD");
 		unlockSpi();
@@ -372,7 +372,7 @@ static void MMCmount(void) {
 	unlockSpi();
 	// if Ok - mount FS now
 	memset(&MMC_FS, 0, sizeof(FATFS));
-	if (f_mount(0, &MMC_FS) == FR_OK) {
+	if (f_mount(&MMC_FS, "/", 1) == FR_OK) {
 		sdStatus = SD_STATE_MOUNTED;
 		incLogFileName();
 		createLogFile();
@@ -423,11 +423,6 @@ void initMmcCard(void) {
 
 	// start to initialize MMC/SD
 	mmcObjectInit(&MMCD1); 						// Initializes an instance.
-	if ((MMCD1.state != BLK_STOP) && (MMCD1.state != BLK_ACTIVE)) {
-		firmwareError(CUSTOM_OBD_MMC_START2, "mmc_state2 %d", MMCD1.state);
-		return;
-	}
-
 	mmcStart(&MMCD1, &mmccfg);
 
 	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), LOWPRIO, (tfunc_t) MMCmonThread, NULL);

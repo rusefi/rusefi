@@ -30,12 +30,12 @@
 
 #define ERROR_CODE 311223344
 
-const char * boolToString(bool value);
-
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
+
+const char * boolToString(bool value);
 
 char * efiTrim(char *param);
 int mytolower(const char c);
