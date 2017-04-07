@@ -55,7 +55,7 @@ float getMap(void) {
 	return getRawMap();
 }
 
-static void runChprintfTess() {
+static void runChprintfTest() {
 	static MemoryStream testStream;
 	static char testBuffer[200];
 	msObjectInit(&testStream, (uint8_t *) testBuffer, sizeof(testBuffer), 0);
@@ -70,6 +70,19 @@ static void runChprintfTess() {
 	if (strcmp(FLOAT_STRING_EXPECTED, testBuffer) != 0) {
 		firmwareError(OBD_PCM_Processor_Fault, "chprintf test: got %s while %s", testBuffer, FLOAT_STRING_EXPECTED);
 	}
+
+	{
+		LoggingWithStorage testLogging("test");
+		appendFloat(&testLogging, 1.23, 5);
+		appendFloat(&testLogging, 1.234, 2);
+
+#define FLOAT_STRING_EXPECTED2 "1.230001.23"
+		if (strcmp(FLOAT_STRING_EXPECTED2, testLogging.buffer) != 0) {
+			firmwareError(OBD_PCM_Processor_Fault, "chprintf test2: got %s while %s", testLogging.buffer, FLOAT_STRING_EXPECTED2);
+		}
+
+	}
+
 }
 
 void rusEfiFunctionalTest(void) {
@@ -113,7 +126,7 @@ void rusEfiFunctionalTest(void) {
 
 	startStatusThreads(engine);
 
-	runChprintfTess();
+	runChprintfTest();
 
 	initPeriodicEvents(PASS_ENGINE_PARAMETER_F);
 
