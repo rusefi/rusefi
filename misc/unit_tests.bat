@@ -15,6 +15,9 @@ cd ..
 echo We are in root folder
 pwd
 
+cd firmware
+git submodule update --init
+cd ..
 
 
 cd unit_tests
