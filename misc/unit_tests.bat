@@ -1,11 +1,13 @@
 echo I am unit_tests.bat
 
 cd firmware
-echo "CD to ${PWD}"
+
+git submodule update --init
+
 
 rm -fR .dep
 rm -fR build
-java -jar ../java_tools/version2header.jar
+call update_version.bat
 
 make
 if not exist build/rusefi.hex echo FAILED TO COMPILE FIRMWARE
@@ -15,9 +17,6 @@ cd ..
 echo We are in root folder
 pwd
 
-cd firmware
-git submodule update --init
-cd ..
 
 
 cd unit_tests
