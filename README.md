@@ -6,6 +6,7 @@ current binaries are always available at http://rusefi.com/build_server/
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
+| 04/06/2017    | r13759    | major improvement #72: ChibiOS 3.1 |
 | 03/26/2017    | r13330    | super annoying bug #336 fixed |
 | 03/20/2017    | r13233    | improvements #375 & #376: hard FPU mode & migrating to fresh version of arm gcc |
 | 03/19/2017    | r13223    | bugfix #374: persistent configuration starts to touch firmware - settings would need to be reloaded |
