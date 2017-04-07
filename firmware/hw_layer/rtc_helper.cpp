@@ -13,23 +13,55 @@
 #include "rtc_helper.h"
 
 #if EFI_RTC || defined(__DOXYGEN__)
-#include "chrtclib.h"
+#include "rtc.h"
 static LoggingWithStorage logger("RTC");
+static RTCDateTime timespec;
 
 #endif /* EFI_RTC */
 
 void date_set_tm(struct tm *timp) {
 	(void)timp;
 #if EFI_RTC || defined(__DOXYGEN__)
-	rtcSetTimeTm(&RTCD1, timp);
+        rtcConvertStructTmToDateTime(timp, 0, &timespec);
+	rtcSetTime(&RTCD1, &timespec);
 #endif /* EFI_RTC */
 }
 
 void date_get_tm(struct tm *timp) {
-	(void)timp;
 #if EFI_RTC || defined(__DOXYGEN__)
-	rtcGetTimeTm(&RTCD1, timp);
+	rtcGetTime(&RTCD1, &timespec);
+        rtcConvertDateTimeToStructTm(&timespec, timp, NULL);
 #endif /* EFI_RTC */
+}
+
+static time_t GetTimeUnixSec(void) {
+#if EFI_RTC || defined(__DOXYGEN__)
+  struct tm tim;
+
+  rtcGetTime(&RTCD1, &timespec);
+  rtcConvertDateTimeToStructTm(&timespec, &tim, NULL);
+  return mktime(&tim);
+#endif
+}
+
+static void SetTimeUnixSec(time_t unix_time) {
+#if EFI_RTC || defined(__DOXYGEN__)
+  struct tm tim;
+
+#if defined __GNUC__
+  struct tm *canary;
+  /* If the conversion is successful the function returns a pointer
+     to the object the result was written into.*/
+  canary = localtime_r(&unix_time, &tim);
+  osalDbgCheck(&tim == canary);
+#else
+  struct tm *t = localtime(&unix_time);
+  memcpy(&tim, t, sizeof(struct tm));
+#endif
+
+  rtcConvertStructTmToDateTime(&tim, 0, &timespec);
+  rtcSetTime(&RTCD1, &timespec);
+#endif
 }
 
 static void put2(int offset, char *lcd_str, int value) {
@@ -95,7 +127,7 @@ void printDateTime(void) {
 	static time_t unix_time;
 	struct tm timp;
 	
-	unix_time = rtcGetTimeUnixSec(&RTCD1);
+	unix_time = GetTimeUnixSec();
 	if (unix_time == -1) {
 		scheduleMsg(&logger, "incorrect time in RTC cell");
 	} else {
@@ -114,7 +146,7 @@ void setDateTime(const char *strDate) {
 	if (strlen(strDate) > 0) {
 		time_t unix_time = atoi(strDate);
 		if (unix_time > 0) {
-			rtcSetTimeUnixSec(&RTCD1, unix_time);
+			SetTimeUnixSec(unix_time);
 			printDateTime();
 			return;
 		}
@@ -125,7 +157,7 @@ void setDateTime(const char *strDate) {
 
 void initRtc(void) {
 #if EFI_RTC || defined(__DOXYGEN__)
-	rtcGetTimeUnixSec(&RTCD1); // this would test RTC, see 'rtcWorks' variable, see #311
+	GetTimeUnixSec(); // this would test RTC, see 'rtcWorks' variable, see #311
 	printMsg(&logger, "initRtc()");
 #endif /* EFI_RTC */
 }

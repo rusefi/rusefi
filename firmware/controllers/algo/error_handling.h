@@ -13,6 +13,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
+#include "global.h"
 #include "obd_error_codes.h"
 #include "efifeatures.h"
 #include "stdbool.h"
@@ -39,18 +40,6 @@ void firmwareError(obd_code_e code, const char *fmt, ...);
 #define hasFirmwareError() hasFirmwareErrorFlag
 
 char *getFirmwareError(void);
-
-/**
- * declared as a macro so that this code does not use stack
- * so that it would not crash the error handler in case of stack issues
- */
-#if CH_DBG_SYSTEM_STATE_CHECK
-#define hasFatalError() (dbg_panic_msg != NULL)
-#else
-#define hasFatalError() (FALSE)
-#endif
-
-void chDbgPanic3(const char *msg, const char * file, int line);
 
 void initErrorHandling(void);
 char *getWarning(void);

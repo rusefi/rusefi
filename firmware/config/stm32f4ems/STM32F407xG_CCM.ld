@@ -1,186 +1,51 @@
 /*
-    ChibiOS/RT - Copyright (C) 2006,2007,2008,2009,2010,
-                 2011,2012,2013 Giovanni Di Sirio.
+    ChibiOS - Copyright (C) 2006..2015 Giovanni Di Sirio
 
-    This file is part of ChibiOS/RT.
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
 
-    ChibiOS/RT is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 3 of the License, or
-    (at your option) any later version.
+        http://www.apache.org/licenses/LICENSE-2.0
 
-    ChibiOS/RT is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-                                      ---
-
-    A special exception to the GPL can be applied should you wish to distribute
-    a combined work that includes ChibiOS/RT, without being obliged to provide
-    the source code for any proprietary components. See the file exception.txt
-    for full details of how and when the exception can be applied.
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
 */
 
 /*
- * ST32F407xG memory setup.
+ * STM32F407xG memory setup.
+ * Note: Use of ram1 and ram2 is mutually exclusive with use of ram0.
  */
-__main_stack_size__     = 0x1000;
-__process_stack_size__  = 0x0600;
-
 MEMORY
 {
     flash : org = 0x08000000, len = 896k
-    ram : org = 0x20000000, len = 112k
-    ethram : org = 0x2001C000, len = 16k
-    ccmram : org = 0x10000000, len = 64k
+    ram0  : org = 0x20000000, len = 128k    /* SRAM1 + SRAM2 */
+    ram1  : org = 0x20000000, len = 112k    /* SRAM1 */
+    ram2  : org = 0x2001C000, len = 16k     /* SRAM2 */
+    ram3  : org = 0x00000000, len = 0
+    ram4  : org = 0x10000000, len = 64k     /* CCM SRAM */
+    ram5  : org = 0x40024000, len = 4k      /* BCKP SRAM */
+    ram6  : org = 0x00000000, len = 0
+    ram7  : org = 0x00000000, len = 0
 }
 
-__ram_start__           = ORIGIN(ram);
-__ram_size__            = LENGTH(ram);
-__ram_end__             = __ram_start__ + __ram_size__;
+/* RAM region to be used for Main stack. This stack accommodates the processing
+   of all exceptions and interrupts*/
+REGION_ALIAS("MAIN_STACK_RAM", ram0);
 
-ENTRY(ResetHandler)
+/* RAM region to be used for the process stack. This is the stack used by
+   the main() function.*/
+REGION_ALIAS("PROCESS_STACK_RAM", ram0);
 
-SECTIONS
-{
-    . = 0;
-    _text = .;
+/* RAM region to be used for data segment.*/
+REGION_ALIAS("DATA_RAM", ram0);
 
-    startup : ALIGN(16) SUBALIGN(16)
-    {
-        KEEP(*(vectors))
-    } > flash
+/* RAM region to be used for BSS segment.*/
+REGION_ALIAS("BSS_RAM", ram0);
 
-    constructors : ALIGN(4) SUBALIGN(4)
-    {
-        PROVIDE(__init_array_start = .);
-        KEEP(*(SORT(.init_array.*)))
-        KEEP(*(.init_array))
-        PROVIDE(__init_array_end = .);
-    } > flash
+/* RAM region to be used for the default heap.*/
+REGION_ALIAS("HEAP_RAM", ram0);
 
-    destructors : ALIGN(4) SUBALIGN(4)
-    {
-        PROVIDE(__fini_array_start = .);
-        KEEP(*(.fini_array))
-        KEEP(*(SORT(.fini_array.*)))
-        PROVIDE(__fini_array_end = .);
-    } > flash
-
-    .text : ALIGN(16) SUBALIGN(16)
-    {
-        *(.text.startup.*)
-        *(.text)
-        *(.text.*)
-        *(.rodata)
-        *(.rodata.*)
-        *(.glue_7t)
-        *(.glue_7)
-        *(.gcc*)
-    } > flash
-
-    .ARM.extab :
-    {
-        *(.ARM.extab* .gnu.linkonce.armextab.*)
-    } > flash
-
-    .ARM.exidx : {
-        PROVIDE(__exidx_start = .);
-        *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-        PROVIDE(__exidx_end = .);
-     } > flash
-
-    .eh_frame_hdr :
-    {
-        *(.eh_frame_hdr)
-    } > flash
-
-    .eh_frame : ONLY_IF_RO
-    {
-        *(.eh_frame)
-    } > flash
-    
-    .textalign : ONLY_IF_RO
-    {
-        . = ALIGN(8);
-    } > flash
-
-    _etext = .;
-    _textdata = _etext;
-
-    .stacks :
-    {
-        . = ALIGN(8);
-        __main_stack_base__ = .;
-        . += __main_stack_size__;
-        . = ALIGN(8);
-        __main_stack_end__ = .;
-        __process_stack_base__ = .;
-        __main_thread_stack_base__ = .;
-        . += __process_stack_size__;
-        . = ALIGN(8);
-        __process_stack_end__ = .;
-        __main_thread_stack_end__ = .;
-    } > ram
-
-    .ccm (NOLOAD) :
-    {
-        PROVIDE(_cmm_start = .);
-        . = ALIGN(4);
-        *(.bss.mainthread.*)
-        . = ALIGN(4);
-        *(.bss._idle_thread_wa)
-        . = ALIGN(4);
-        *(.bss.rlist)
-        . = ALIGN(4);
-        *(.bss.vtlist)
-        . = ALIGN(4);
-        *(.bss.endmem)
-        . = ALIGN(4);
-        *(.bss.nextmem)
-        . = ALIGN(4);
-        *(.bss.default_heap)
-        . = ALIGN(4);
-		*(.ccm)
-		. = ALIGN(4);
-		*(.ccm.*)
-		. = ALIGN(4);
-        PROVIDE(_cmm_end = .);
-    } > ccmram
-
-    .data :
-    {
-        . = ALIGN(4);
-        PROVIDE(_data = .);
-        *(.data)
-        . = ALIGN(4);
-        *(.data.*)
-        . = ALIGN(4);
-        *(.ramtext)
-        . = ALIGN(4);
-        PROVIDE(_edata = .);
-    } > ram AT > flash
-
-    .bss :
-    {
-        . = ALIGN(4);
-        PROVIDE(_bss_start = .);
-        *(.bss)
-        . = ALIGN(4);
-        *(.bss.*)
-        . = ALIGN(4);
-        *(COMMON)
-        . = ALIGN(4);
-        PROVIDE(_bss_end = .);
-    } > ram    
-}
-
-PROVIDE(end = .);
-_end            = .;
-
-__heap_base__   = _end;
-__heap_end__    = __ram_end__;
+INCLUDE rules.ld

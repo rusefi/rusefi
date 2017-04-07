@@ -15,6 +15,7 @@ extern "C"
 
 #include <ch.h>
 #include <hal.h>
+    
 #include <string.h>
 
 #define DEFAULT_ENGINE_TYPE CUSTOM_ENGINE
@@ -53,30 +54,12 @@ typedef unsigned int time_t;
 #define EFI_ERROR_CODE 0xffffffff
 
 #if EFI_USE_CCM && defined __GNUC__
-#define CCM_OPTIONAL __attribute__((section(".ccm")))
+#define CCM_OPTIONAL __attribute__((section(".ram4")))
 #elif defined __GNUC__
 #define CCM_OPTIONAL
 #else
-#define CCM_OPTIONAL @ ".ccm"
+#define CCM_OPTIONAL @ ".ram4"
 #endif
-
-// this stuff is about ChibiOS 2.6 > Migration
-typedef VirtualTimer virtual_timer_t;
-typedef EventListener event_listener_t;
-typedef Thread thread_t;
-typedef EventListener event_listener_t;
-typedef EventSource event_source_t;
-typedef VTList virtual_timers_list_t;
-typedef VirtualTimer virtual_timer_t;
-#define chSysLockFromISR chSysLockFromIsr
-#define chSysUnlockFromISR chSysUnlockFromIsr
-#define chThdGetSelfX chThdSelf
-
-#define HAL_SUCCESS CH_SUCCESS
-#define HAL_FAILED CH_FAILED
-
-#define THD_WORKING_AREA WORKING_AREA
-#define THD_FUNCTION(tname, arg) void tname(void *arg)
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 
@@ -133,6 +116,10 @@ typedef VirtualTimer virtual_timer_t;
 		turnAllPinsOff(); \
 		enginePins.communicationPin.setValue(1);
 
+/*
+ * Stack debugging
+ */
+int getRemainingStack(thread_t *otp);
 
 #ifdef __cplusplus
 }

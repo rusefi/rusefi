@@ -32,7 +32,7 @@
 static LoggingWithStorage logger("console");
 
 static void myfatal(void) {
-	chDbgCheck(0, "my fatal");
+	chDbgCheck(0);
 }
 
 static void myerror(void) {
@@ -121,8 +121,8 @@ static void sayHello(void) {
  */
 static void cmd_threads(void) {
 #if CH_DBG_THREADS_PROFILING || defined(__DOXYGEN__)
-  static const char *states[] = { THD_STATE_NAMES };
-  Thread *tp;
+  static const char *states[] = { CH_STATE_NAMES };
+  thread_t *tp;
   
   scheduleMsg(&logger, "    addr    stack prio refs     state time");
   tp = chRegFirstThread();

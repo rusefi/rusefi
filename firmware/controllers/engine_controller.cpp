@@ -149,13 +149,13 @@ efitick_t getTimeNowNt(void) {
 /**
  * number of SysClock ticks in one ms
  */
-#define TICKS_IN_MS  (CH_FREQUENCY / 1000)
+#define TICKS_IN_MS  (CH_CFG_ST_FREQUENCY / 1000)
 
 
 // todo: this overflows pretty fast!
 efitimems_t currentTimeMillis(void) {
 	// todo: migrate to getTimeNowUs? or not?
-	return chTimeNow() / TICKS_IN_MS;
+	return chVTGetSystemTimeX() / TICKS_IN_MS;
 }
 
 // todo: this overflows pretty fast!
@@ -205,13 +205,13 @@ static void resetAccel(void) {
 }
 
 static void periodicSlowCallback(Engine *engine) {
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "lowStckOnEv");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
 	/**
 	 * We need to push current value into the 64 bit counter often enough so that we do not miss an overflow
 	 */
 	bool alreadyLocked = lockAnyContext();
-	updateAndSet(&halTime.state, hal_lld_get_counter_value());
+	updateAndSet(&halTime.state, port_rt_get_counter_value());
 	if (!alreadyLocked) {
 		unlockAnyContext();
 	}

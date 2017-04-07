@@ -87,10 +87,10 @@ static void callback(GPTDriver *gptp) {
 //	// test code
 //	setOutputPinValue(LED_CRANKING, timerCallbackCounter % 2);
 //	int mod = timerCallbackCounter % 400;
-//	chSysLockFromIsr()
+//	chSysLockFromISR()
 //	;
 //	setHardwareUsTimer(400 - mod);
-//	chSysUnlockFromIsr()
+//	chSysUnlockFromISR()
 //	;
 
 	globalTimerCallback(NULL);
@@ -127,7 +127,7 @@ static msg_t mwThread(int param) {
 
 static const GPTConfig gpt5cfg = { 1000000, /* 1 MHz timer clock.*/
 callback, /* Timer callback.*/
-0 };
+0, 0 };
 
 void initMicrosecondTimer(void) {
 
