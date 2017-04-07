@@ -145,8 +145,9 @@ INCDIR = . \
 	$(PROJECT_DIR)/controllers/trigger \
 	$(PROJECT_DIR)/controllers/trigger/decoders \
 	$(PROJECT_DIR)/ext_algo \
-	../firmware/chibios/os/kernel/include \
-	../firmware/chibios/os/various \
+	$(PROJECT_DIR)/ChibiOS3/os/rt/include \
+	$(PROJECT_DIR)/ChibiOS3/os/hal/lib/streams \
+	$(PROJECT_DIR)/ChibiOS3/os/rt/various \
 	test_data_structures \
 	test_basic_math
 	
