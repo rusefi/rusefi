@@ -395,7 +395,7 @@ static void printThermistor(const char *msg, ThermistorConf *config, ThermistorM
 			tc->tempC_3, tc->resistance_3);
 
 	// %.5f
-	scheduleMsg(&logger, "bias resistor=%fK A=%..100000f B=%..100000f C=%..100000f", tc->bias_resistor / 1000,
+	scheduleMsg(&logger, "bias resistor=%fK A=%.5f B=%.5f C=%.5f", tc->bias_resistor / 1000,
 			tm->s_h_a, tm->s_h_b, tm->s_h_c);
 	scheduleMsg(&logger, "==============================");
 }
