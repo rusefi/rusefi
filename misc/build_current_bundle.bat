@@ -3,13 +3,13 @@ rem This script would compile firmware, dev console and win32 simulator into a s
 rem This script depends on Cygwin tools: zip
 rem
 
-echo Hello rusEfi build full bundle
+echo build_current_bundle.bat: Hello rusEfi build full bundle
 
 java -version
 
 echo %date% %time%
 
-echo Building win32 functional tests
+echo build_current_bundle.bat: Building win32 functional tests
 cd win32_functional_tests
 gcc -v
 make -v
@@ -25,10 +25,12 @@ echo Erasing chip
 call flash_erase
 
 
-echo Building firmware
+echo build_current_bundle.bat: Building firmware
 rm -fR .dep
 rm -fR build
-java -jar ../java_tools/version2header.jar
+git submodule update --init
+
+call update_version.bat
 
 call clean_compile_two_versions.bat
 if not exist deliver/rusefi_release.hex echo FAILED RELEASE
