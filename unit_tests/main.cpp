@@ -29,7 +29,6 @@
 #include "trigger_central.h"
 #include "test_util.h"
 #include "map_resize.h"
-#include "test_event_registry.h"
 #include "engine_math.h"
 #include "test_engine_math.h"
 #include "test_trigger_decoder.h"
