@@ -135,6 +135,7 @@ void ThermistorMath::prepareThermistorCurve(thermistor_conf_s *tc) {
 	float T2 = tc->tempC_2 + KELV;
 	float T3 = tc->tempC_3 + KELV;
 #if EXTREME_TERM_LOGGING || defined(__DOXYGEN__)
+	// %.5f
 	scheduleMsg(logger, "T1=%..100000f/T2=%..100000f/T3=%..100000f", T1, T2, T3);
 #endif
 
@@ -149,6 +150,7 @@ void ThermistorMath::prepareThermistorCurve(thermistor_conf_s *tc) {
 	float L2 = logf(tc->resistance_2);
 	float L3 = logf(tc->resistance_3);
 #if EXTREME_TERM_LOGGING || defined(__DOXYGEN__)
+	// %.5f
 	scheduleMsg(logger, "R1=%..100000f/R2=%..100000f/R3=%..100000f", tc->resistance_1, tc->resistance_2,
 			tc->resistance_3);
 	scheduleMsg(logger, "L1=%..100000f/L2=%..100000f/L3=%..100000f", L1, L2, L3);

@@ -170,10 +170,10 @@ void appendFloat(Logging *logging, float value, int precision) {
 		appendPrintf(logging, "%..1000f", value);
 		break;
 	case 4:
-		appendPrintf(logging, "%..10000f", value);
+		appendPrintf(logging, "%..10000f", value); // %.4f
 		break;
 	case 5:
-		appendPrintf(logging, "%..100000f", value);
+		appendPrintf(logging, "%..100000f", value); // %.5f
 		break;
 	case 6:
 		appendPrintf(logging, "%..1000000f", value);
