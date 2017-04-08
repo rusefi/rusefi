@@ -16,6 +16,7 @@
 *.bat text eol=lf
 *.iml text eol=lf
 *.txt text eol=lf
+*.ini text eol=lf
 
 # KiCad files
 *.dsn text eol=lf
