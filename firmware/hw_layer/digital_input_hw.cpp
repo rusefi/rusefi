@@ -94,19 +94,25 @@ static uint32_t getAlternateFunctions(ICUDriver *driver) {
 
 icuchannel_t getInputCaptureChannel(brain_pin_e hwPin) {
 	switch (hwPin) {
-	case GPIOA_2:
+	case GPIOA_2: // TIM9
 	case GPIOA_5:
 	case GPIOA_6:
 	case GPIOA_8:
+	case GPIOA_15: // TIM2
 	case GPIOC_6:
 	case GPIOE_5:
-	case GPIOE_9:
+	case GPIOE_9: // TIM1
 		return ICU_CHANNEL_1;
 
-	case GPIOA_3:
+	case GPIOA_1: // TIM2
+	case GPIOA_3: // TIM9
 	case GPIOA_7:
+	case GPIOA_9: // TIM1
+	case GPIOB_3: // TIM2
+	case GPIOB_5: // TIM2
+	case GPIOC_7: // TIM3
 	case GPIOE_6:
-	case GPIOE_11:
+	case GPIOE_11: // TIM1
 		return ICU_CHANNEL_2;
 	default:
 		firmwareError(CUSTOM_ERR_6523, "Unexpected hw pin in getInputCaptureChannel %s", hwPortname(hwPin));
@@ -127,6 +133,7 @@ ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin) {
 	}
 #if STM32_ICU_USE_TIM1
 	if (hwPin == GPIOA_8 ||
+	    hwPin == GPIOA_9 ||
 		hwPin == GPIOE_9 ||
 		hwPin == GPIOE_11) {
 		return &ICUD1;
@@ -135,6 +142,7 @@ ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin) {
 #if STM32_ICU_USE_TIM2
 	if (hwPin == GPIOA_1 ||
 		hwPin == GPIOA_5 ||
+		hwPin == GPIOA_15 ||
 		hwPin == GPIOB_3) {
 		return &ICUD2;
 	}
@@ -142,6 +150,8 @@ ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin) {
 #if STM32_ICU_USE_TIM3
 	if (hwPin == GPIOA_6 ||
 		hwPin == GPIOA_7 ||
+		hwPin == GPIOB_4 ||
+		hwPin == GPIOB_5 ||
 		hwPin == GPIOC_6 ||
 		hwPin == GPIOC_7) {
 		return &ICUD3;
