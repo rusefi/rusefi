@@ -125,6 +125,7 @@ custom mass_storage_e 4 bits, U32, @OFFSET@, [0:1], @@mass_storage_e_enum@@
 
 ! At the moment TIM1, TIM2, TIM3 and TIM9 are configured as ICU
 ! todo: as of ChibiOS3, only channels 1 & 2 are allowed to capture input, that's a ChibiOS driver limitation
+! https://github.com/ChibiOS/ChibiOS-Drivers/blob/master/inc/timcap_driver.h is an alternative driver if channels 3 & 4 really become an issue
 ! todo: only one channel per timer is allowed for capture similtaniously, that's an STM32 limitation
 ! todo: convert slow ADC to software scheduler and make TIM8 available
 ! todo: maybe convert fast ADC to software scheduler as well? less sure about that
