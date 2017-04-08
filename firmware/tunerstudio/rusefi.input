@@ -1368,7 +1368,6 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 
 ;			Board->Connection
 	dialog = tsPort, "TunerStudio Port"
-		field = "startConsoleInBinaryMode", startConsoleInBinaryMode
 		field = "tunerStudioSerialSpeed", tunerStudioSerialSpeed
 		field = "Use PC10/PC11 serial?", useSerialPort
 		field = "startConsoleInBinaryMode", startConsoleInBinaryMode
