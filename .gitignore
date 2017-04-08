@@ -6,3 +6,4 @@ build/
 Debug_EMS/
 Release_EMS/
 Debug/
+.settings/
