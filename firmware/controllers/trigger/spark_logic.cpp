@@ -126,7 +126,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 
 	const floatms_t dwellMs = ENGINE(engineState.sparkDwell);
 	if (cisnan(dwellMs) || dwellMs <= 0) {
-		warning(CUSTOM_DWELL, "invalid dwell: %f at %d", dwellMs, rpm);
+		warning(CUSTOM_DWELL, "invalid dwell to handle: %f at %d", dwellMs, rpm);
 		return;
 	}
 
