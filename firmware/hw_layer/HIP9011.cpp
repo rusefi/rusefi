@@ -67,8 +67,8 @@ static float hipValueMax = 0;
 
 static unsigned char tx_buff[1];
 static unsigned char rx_buff[1];
-static int correctResponse = 0;
-static int invalidResponse = 0;
+int correctResponsesCount = 0;
+int invalidResponsesCount = 0;
 static char pinNameBuffer[16];
 static float currentAngleWindowWidth;
 
@@ -102,9 +102,9 @@ SPI_CR1_MSTR |
 
 static void checkResponse(void) {
 	if (tx_buff[0] == rx_buff[0]) {
-		correctResponse++;
+		correctResponsesCount++;
 	} else {
-		invalidResponse++;
+		invalidResponsesCount++;
 	}
 }
 
@@ -152,12 +152,12 @@ static void showHipInfo(void) {
 	            currentIntergratorIndex, engineConfiguration->knockVThreshold,
 	            engine->knockCount, engineConfiguration->maxKnockSubDeg);
 
-	const char * msg = invalidResponse > 0 ? "NOT GOOD" : "ok";
+	const char * msg = invalidResponsesCount > 0 ? "NOT GOOD" : "ok";
 	scheduleMsg(logger, "spi=%s IntHold@%s/%d response count=%d incorrect response=%d %s",
 			getSpi_device_e(hipSpiDevice),
 			hwPortname(boardConfiguration->hip9011IntHoldPin),
 			boardConfiguration->hip9011IntHoldPinMode,
-			correctResponse, invalidResponse,
+			correctResponsesCount, invalidResponsesCount,
 			msg);
 	scheduleMsg(logger, "CS@%s updateCount=%d", hwPortname(boardConfiguration->hip9011CsPin), settingUpdateCount);
 
@@ -376,7 +376,7 @@ static void hipStartupCode(void) {
 
 	chThdSleepMilliseconds(10);
 
-	if (correctResponse == 0) {
+	if (correctResponsesCount == 0) {
 		warning(CUSTOM_OBD_KNOCK_PROCESSOR, "TPIC/HIP does not respond");
 	}
 
@@ -465,4 +465,4 @@ void initHip9011(Logging *sharedLogger) {
 	chThdCreateStatic(hipTreadStack, sizeof(hipTreadStack), NORMALPRIO, (tfunc_t) hipThread, NULL);
 }
 
-#endif
+#endif /* EFI_HIP_9011 */

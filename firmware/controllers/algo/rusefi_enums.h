@@ -676,6 +676,9 @@ typedef enum {
 	DBG_TRIGGER_INPUT = 5,
 	FSIO_ADC = 6,
 	AUX_PID_1 = 7,
+	/**
+	 * VVT position debugging - not VVT valve control
+	 */
 	DBG_VVT = 8,
 	DBG_CRANKING_DETAILS = 9,
 	DBG_IGNITION_TIMING = 10,
@@ -683,7 +686,7 @@ typedef enum {
 	DBG_VEHICLE_SPEED_SENSOR = 12,
 	DBG_SD_CARD = 13,
 	DBG_SR5_PROTOCOL = 14,
-	DM_15 = 15,
+	DBG_KNOCK = 15,
 	DM_16 = 16,
 	DM_17 = 17,
 	DM_18 = 18,

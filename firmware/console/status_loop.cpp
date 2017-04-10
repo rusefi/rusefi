@@ -661,6 +661,11 @@ static void lcdThread(void *arg) {
 	}
 }
 
+#if EFI_HIP_9011 || defined(__DOXYGEN__)
+extern int correctResponsesCount;
+extern int invalidResponsesCount;
+#endif /* EFI_HIP_9011 */
+
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 
 void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_S) {
@@ -760,6 +765,13 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	} else if (engineConfiguration->debugMode == DBG_CRANKING_DETAILS) {
 		tsOutputChannels->debugIntField1 = engine->rpmCalculator.getRevolutionCounterSinceStart();
 	}
+
+#if EFI_HIP_9011 || defined(__DOXYGEN__)
+	if (engineConfiguration->debugMode == DBG_KNOCK) {
+		tsOutputChannels->debugIntField1 = correctResponsesCount;
+		tsOutputChannels->debugIntField2 = invalidResponsesCount;
+	}
+#endif /* EFI_HIP_9011 */
 
 
 	tsOutputChannels->wallFuelAmount = ENGINE(wallFuel).getWallFuel(0);
