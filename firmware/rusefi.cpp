@@ -195,7 +195,7 @@ void runRusEfi(void) {
 	 */
 	initHardware(&sharedLogger);
 
-	initStatusLoop(engine);
+	initStatusLoop();
 	/**
 	 * Now let's initialize actual engine control logic
 	 * todo: should we initialize some? most? controllers before hardware?
@@ -209,7 +209,7 @@ void runRusEfi(void) {
 #if EFI_ENGINE_EMULATOR || defined(__DOXYGEN__)
 	initEngineEmulator(&sharedLogger, engine);
 #endif
-	startStatusThreads(engine);
+	startStatusThreads();
 
 	rememberCurrentConfiguration();
 
@@ -224,7 +224,7 @@ void runRusEfi(void) {
 
 #if (EFI_CLI_SUPPORT && !EFI_UART_ECHO_TEST_MODE) || defined(__DOXYGEN__)
 		// sensor state + all pending messages for our own dev console
-		updateDevConsoleState(engine);
+		updateDevConsoleState();
 #endif /* EFI_CLI_SUPPORT */
 
 		chThdSleepMilliseconds(boardConfiguration->consoleLoopPeriod);
@@ -250,5 +250,5 @@ int getRusEfiVersion(void) {
 		return 123; // this is here to make the compiler happy about the unused array
 	if (UNUSED_CCM_SIZE[0] * 0 != 0)
 		return 3211; // this is here to make the compiler happy about the unused array
-	return 20170408;
+	return 20170409;
 }

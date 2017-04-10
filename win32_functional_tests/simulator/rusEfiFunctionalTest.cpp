@@ -96,7 +96,7 @@ void rusEfiFunctionalTest(void) {
 
 	initializeConsole(&sharedLogger);
 
-	initStatusLoop(engine);
+	initStatusLoop();
 	initDataStructures(PASS_ENGINE_PARAMETER_F);
 
 
@@ -124,7 +124,7 @@ void rusEfiFunctionalTest(void) {
 
 	initMainEventListener(&sharedLogger, engine);
 
-	startStatusThreads(engine);
+	startStatusThreads();
 
 	runChprintfTest();
 
@@ -135,7 +135,7 @@ void rusEfiFunctionalTest(void) {
 }
 
 void printPendingMessages(void) {
-	updateDevConsoleState(engine);
+	updateDevConsoleState();
 	waveChart.publishIfFull();
 }
 

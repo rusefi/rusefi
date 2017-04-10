@@ -436,7 +436,7 @@ extern fatal_msg_t errorMessageBuffer;
 /**
  * @brief Sends all pending data to dev console
  */
-void updateDevConsoleState(Engine *engine) {
+void updateDevConsoleState(void) {
 	if (!isCommandLineConsoleReady()) {
 		return;
 	}
@@ -862,7 +862,7 @@ static void unsubscribe(int outputOrdinal) {
 	subscription[outputOrdinal] = false;
 }
 
-void initStatusLoop(Engine *engine) {
+void initStatusLoop(void) {
 	setFullLog(INITIAL_FULL_LOG);
 	addConsoleActionI(FULL_LOGGING_KEY, setFullLog);
 	addConsoleActionI("warn", setWarningEnabled);
@@ -888,9 +888,9 @@ void initStatusLoop(Engine *engine) {
 #endif /* EFI_PROD_CODE */
 }
 
-void startStatusThreads(Engine *engine) {
+void startStatusThreads(void) {
 	// todo: refactoring needed, this file should probably be split into pieces
-	chThdCreateStatic(lcdThreadStack, sizeof(lcdThreadStack), NORMALPRIO, (tfunc_t) lcdThread, engine);
+	chThdCreateStatic(lcdThreadStack, sizeof(lcdThreadStack), NORMALPRIO, (tfunc_t) lcdThread, NULL);
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	initStatusLeds();
 	chThdCreateStatic(blinkingStack, sizeof(blinkingStack), NORMALPRIO, (tfunc_t) blinkingThread, NULL);
