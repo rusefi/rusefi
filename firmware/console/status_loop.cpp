@@ -344,7 +344,6 @@ static void printState(void) {
 //		ITM_SendChar(msg[i]);
 //	}
 
-	int rpm = getRpmE(engine);
 	if (subscription[(int) RO_TOTAL_REVOLUTION_COUNTER])
 		debugInt(&logger, "ckp_c", getCrankEventCounter());
 	if (subscription[(int) RO_RUNNING_REVOLUTION_COUNTER])
@@ -360,10 +359,6 @@ static void printState(void) {
 		debugInt(&logger, "wave_chart_current", 0);
 
 //	debugInt(&logger, "idl", getIdleSwitch());
-
-//	debugFloat(&logger, "table_spark", getAdvance(rpm, getMaf()), 2);
-
-//		float map = getMap();
 
 #endif /* EFI_SHAFT_POSITION_INPUT */
 }
