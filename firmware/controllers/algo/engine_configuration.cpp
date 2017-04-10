@@ -397,6 +397,12 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->tachPulseDuractionMs = 4;
 	engineConfiguration->tachPulseTriggerIndex = 4;
 
+	engineConfiguration->aux1PidMin = 10;
+	engineConfiguration->aux1PidMax = 90;
+
+	boardConfiguration->alternatorPidMin = 10;
+	boardConfiguration->alternatorPidMax = 90;
+
 	setTableBin2(engineConfiguration->cltTimingBins, CLT_TIMING_CURVE_SIZE, -40, 120, 1);
 	setTableBin2(engineConfiguration->cltTimingExtra, CLT_TIMING_CURVE_SIZE, 0, 0, 1);
 
