@@ -10,7 +10,7 @@ java -version
 echo %date% %time%
 
 echo build_current_bundle.bat: Building win32 functional tests
-cd win32_functional_tests
+cd simulator
 gcc -v
 make -v
 cd ..
@@ -52,7 +52,7 @@ if not exist java_console_binary/rusefi_console.jar echo CONSOLE COMPILATION FAI
 if not exist java_console_binary/rusefi_console.jar exit -1
 
 echo Building rusefi simulator
-cd win32_functional_tests
+cd simulator
 
 mkdir out
 rm -rf build
@@ -78,7 +78,7 @@ echo %folder%
 mkdir %folder%
 
 cp java_console_binary/rusefi_console.jar %folder%
-cp win32_functional_tests/build/rusefi_simulator.exe %folder%
+cp simulator/build/rusefi_simulator.exe %folder%
 cp firmware/tunerstudio/rusefi.ini %folder%
 
 cp firmware/svnversion.h %folder%
@@ -123,7 +123,7 @@ pwd
 
 echo "Making rusefi_simulator.zip"
 pwd
-zip -j temp/rusefi_simulator.zip win32_functional_tests/build/rusefi_simulator.exe firmware/tunerstudio/rusefi.ini java_console_binary/rusefi_console.jar
+zip -j temp/rusefi_simulator.zip simulator/build/rusefi_simulator.exe firmware/tunerstudio/rusefi.ini java_console_binary/rusefi_console.jar
 
 
 echo open ftp://u71977750-build:%RUSEFI_BUILD_FTP_PASS%@rusefi.com/ > ftp_commands.txt
