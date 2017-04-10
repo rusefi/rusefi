@@ -58,8 +58,11 @@ static msg_t auxPidThread(int param) {
 			int dt = maxI(10, engineConfiguration->auxPidDT[0]);
 			chThdSleepMilliseconds(dt);
 
-			if (parametersVersion.isOld())
+			if (parametersVersion.isOld()) {
 				auxPid.reset();
+				auxPid.minResult = engineConfiguration->aux1PidMin;
+				auxPid.maxResult = engineConfiguration->aux1PidMax;
+			}
 
 			float rpm = engine->rpmCalculator.rpmValue;
 
