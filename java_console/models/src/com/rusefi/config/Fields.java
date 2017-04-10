@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Apr 09 21:59:09 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Apr 10 14:24:47 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -510,8 +510,8 @@ public class Fields {
 	public static final int gpioPinModes15_offset = 1188;
 	public static final int gpioPinModes16_offset = 1192;
 	public static final int consoleUartDevice_offset = 1196;
-	public static final int unused77_offset = 1200;
-	public static final int unused78_offset = 1204;
+	public static final int alternatorPidMin_offset = 1200;
+	public static final int alternatorPidMax_offset = 1204;
 	public static final int nb2ratioFrom_offset = 1208;
 	public static final int nb2ratioTo_offset = 1212;
 	public static final int triggerErrorPin_offset = 1216;
@@ -948,7 +948,9 @@ public class Fields {
 	public static final int timing_offset_cylinder10_offset = 2812;
 	public static final int timing_offset_cylinder11_offset = 2816;
 	public static final int timing_offset_cylinder12_offset = 2820;
-	public static final int unused_offset = 2824;
+	public static final int aux1PidMin_offset = 2824;
+	public static final int aux1PidMax_offset = 2828;
+	public static final int unused_offset = 2832;
 	public static final int le_formulas1_offset = 3048;
 	public static final int le_formulas2_offset = 3248;
 	public static final int le_formulas3_offset = 3448;
@@ -1323,8 +1325,8 @@ public class Fields {
 	public static final Field GPIOPINMODES15 = Field.create("GPIOPINMODES15", 1188, FieldType.INT, pin_output_mode_e);
 	public static final Field GPIOPINMODES16 = Field.create("GPIOPINMODES16", 1192, FieldType.INT, pin_output_mode_e);
 	public static final Field CONSOLEUARTDEVICE = Field.create("CONSOLEUARTDEVICE", 1196, FieldType.INT);
-	public static final Field UNUSED77 = Field.create("UNUSED77", 1200, FieldType.INT);
-	public static final Field UNUSED78 = Field.create("UNUSED78", 1204, FieldType.INT);
+	public static final Field ALTERNATORPIDMIN = Field.create("ALTERNATORPIDMIN", 1200, FieldType.FLOAT);
+	public static final Field ALTERNATORPIDMAX = Field.create("ALTERNATORPIDMAX", 1204, FieldType.FLOAT);
 	public static final Field NB2RATIOFROM = Field.create("NB2RATIOFROM", 1208, FieldType.FLOAT);
 	public static final Field NB2RATIOTO = Field.create("NB2RATIOTO", 1212, FieldType.FLOAT);
 	public static final Field TRIGGERERRORPIN = Field.create("TRIGGERERRORPIN", 1216, FieldType.INT, brain_pin_e);
@@ -1639,6 +1641,8 @@ public class Fields {
 	public static final Field TIMING_OFFSET_CYLINDER10 = Field.create("TIMING_OFFSET_CYLINDER10", 2812, FieldType.INT);
 	public static final Field TIMING_OFFSET_CYLINDER11 = Field.create("TIMING_OFFSET_CYLINDER11", 2816, FieldType.INT);
 	public static final Field TIMING_OFFSET_CYLINDER12 = Field.create("TIMING_OFFSET_CYLINDER12", 2820, FieldType.INT);
+	public static final Field AUX1PIDMIN = Field.create("AUX1PIDMIN", 2824, FieldType.FLOAT);
+	public static final Field AUX1PIDMAX = Field.create("AUX1PIDMAX", 2828, FieldType.FLOAT);
 	public static final Field LE_FORMULAS1 = Field.create("LE_FORMULAS1", 3048, FieldType.INT);
 	public static final Field LE_FORMULAS2 = Field.create("LE_FORMULAS2", 3248, FieldType.INT);
 	public static final Field LE_FORMULAS3 = Field.create("LE_FORMULAS3", 3448, FieldType.INT);

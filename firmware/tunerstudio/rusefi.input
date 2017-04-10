@@ -1295,6 +1295,8 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		field = "P factor",								auxPid1_pFactor, {activateAuxPid1 == 1}
 		field = "I factor",								auxPid1_iFactor, {activateAuxPid1 == 1}
 		field = "D factor",								auxPid1_dFactor, {activateAuxPid1 == 1}
+		field = "Min",									aux1PidMin
+		field = "Max",									aux1PidMax
 		field = "FSIO pin #2",							auxPidPins2
 		field = "FSIO pin #3",							auxPidPins3
 		field = "FSIO pin #4",							auxPidPins4
@@ -1318,6 +1320,8 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		field = "P factor",								alternatorControl_pFactor, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
 		field = "I factor",								alternatorControl_iFactor, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
 		field = "D factor",								alternatorControl_dFactor, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
+		field = "Min",									alternatorPidMin
+		field = "Max",									alternatorPidMax
 		field = "#% duty = Pterm + Iterm + Dterm + offset%"
 
 
