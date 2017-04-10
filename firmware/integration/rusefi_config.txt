@@ -524,8 +524,8 @@ bit is_enabled_spi_2
 
 custom uart_device_e 4 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UART3" 
 	uart_device_e consoleUartDevice;
-	int unused77;
-	int unused78;
+	float alternatorPidMin;;"v",        1,     0,  0,    3000.0,  3
+	float alternatorPidMax;;"v",        1,     0,  0,    3000.0,  3
 	float nb2ratioFrom;;"value",      1,      0,       0, 1000,      5
 	float nb2ratioTo;;"value",      1,      0,       0, 1000,      5
 
@@ -791,7 +791,10 @@ int16_t etbFreq;;"Hz",      1,     0,    0, 500,      10
 	custom cfg_float_t_1f 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       -20000000, 20000000,	  1
 	cfg_float_t_1f[IGNITION_PIN_COUNT iterate] timing_offset_cylinder;
 	
-	int[56] unused;
+	float aux1PidMin;;"v",        1,     0,  0,    3000.0,  3
+	float aux1PidMax;;"v",        1,     0,  0,    3000.0,  3
+
+	int[54] unused;
 	
 
 end_struct
