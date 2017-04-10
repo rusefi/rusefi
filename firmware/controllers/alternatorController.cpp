@@ -51,6 +51,8 @@ static msg_t AltCtrlThread(int param) {
 		if (shouldResetPid) {
 			alternatorPidResetCounter++;
 			altPid.reset();
+			altPid.minResult = engineConfiguration->bc.alternatorPidMin;
+			altPid.maxResult = engineConfiguration->bc.alternatorPidMax;
 			shouldResetPid = false;
 		}
 #endif
@@ -154,7 +156,9 @@ void setDefaultAlternatorParameters(void) {
 }
 
 void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousConfiguration) {
-	shouldResetPid = !altPid.isSame(&previousConfiguration->alternatorControl);
+	shouldResetPid = !altPid.isSame(&previousConfiguration->alternatorControl) ||
+			engineConfiguration->bc.alternatorPidMin != previousConfiguration->bc.alternatorPidMin ||
+			engineConfiguration->bc.alternatorPidMax != previousConfiguration->bc.alternatorPidMax;
 }
 
 void initAlternatorCtrl(Logging *sharedLogger) {

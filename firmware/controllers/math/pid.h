@@ -35,10 +35,10 @@ public:
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	void postState(TunerStudioOutputChannels *tsOutputChannels);
 #endif
-private:
-	pid_s *pid;
 	float minResult;
 	float maxResult;
+private:
+	pid_s *pid;
 
 	float iTerm;
 	float dTerm; // we are remembering this only for debugging purposes
