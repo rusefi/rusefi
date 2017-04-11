@@ -205,33 +205,16 @@
 //#define EFI_CAN_RX_AF 9
 //#define EFI_CAN_TX_AF 9
 
-/**
- * This section is for bottom-left corner SPI
- */
-//#define SPI_CS1_PORT GPIOE
-//#define SPI_CS1_PIN 13
-//#define SPI_CS2_PORT GPIOE
-//#define SPI_CS2_PIN 14
-//#define SPI_CS3_PORT GPIOE
-//#define SPI_CS3_PIN 15
-//#define SPI_CS4_PORT GPIOD
-//#define SPI_CS4_PIN 10
-
 #define EFI_SPI1_AF 5
 
 #define EFI_SPI2_AF 5
 
-
 /**
  * This section is for right-side center SPI
  */
-// this is pointing into the sky for now - conflict with I2C
-#define SPI_CS2_PORT GPIOH
-// this is pointing into the sky for now - conflict with I2C
-#define SPI_CS2_PIN 0
-#define SPI_CS4_PORT GPIOD
-#define SPI_CS4_PIN 3
+
 #define EFI_SPI3_AF 6
+// todo: finish migration to sdCardSpiDevice one day
 #define MMC_CARD_SPI SPID3
 
 #define EFI_I2C_SCL_PORT GPIOB

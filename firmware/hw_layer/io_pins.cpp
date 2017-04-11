@@ -111,11 +111,6 @@ void initOutputPins(void) {
 //	outputPinRegister("ext led 3", LED_EXT_3, EXTRA_LED_2_PORT, EXTRA_LED_3_PIN);
 //	outputPinRegister("alive1", LED_DEBUG, GPIOD, 6);
 
-// todo: are these needed here? todo: make configurable
-//	outputPinRegister("spi CS1", SPI_CS_1, SPI_CS1_PORT, SPI_CS1_PIN);
-//	outputPinRegister("spi CS2", SPI_CS_2, SPI_CS2_PORT, SPI_CS2_PIN);
-//	outputPinRegister("spi CS3", SPI_CS_3, SPI_CS3_PORT, SPI_CS3_PIN);
-//	outputPinRegister("spi CS4", SPI_CS_4, SPI_CS4_PORT, SPI_CS4_PIN);
 #if HAL_USE_SPI || defined(__DOXYGEN__)
 	outputPinRegisterExt2("spi CS5", &enginePins.sdCsPin, boardConfiguration->sdCardCsPin, &DEFAULT_OUTPUT);
 #endif

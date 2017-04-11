@@ -416,6 +416,9 @@ void initMmcCard(void) {
 
 	hs_spicfg.ssport = ls_spicfg.ssport = getHwPort(boardConfiguration->sdCardCsPin);
 	hs_spicfg.sspad = ls_spicfg.sspad = getHwPin(boardConfiguration->sdCardCsPin);
+/* todo: un-comment this one day. incompatible configuration change for existing users :(
+	mmccfg.spip = getSpiDevice(engineConfiguration->sdCardSpiDevice);
+*/
 
 	/**
 	 * FYI: SPI does not work with CCM memory, be sure to have main() stack in RAM, not in CCMRAM
