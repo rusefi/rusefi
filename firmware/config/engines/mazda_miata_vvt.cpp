@@ -108,12 +108,16 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->alternatorControlPinMode = OM_OPENDRAIN;
 
 	// enable altdebug
-	engineConfiguration->targetVBatt = 14.5;
+	engineConfiguration->targetVBatt = 13.8;
 	engineConfiguration->alternatorControl.offset = 40;
 	engineConfiguration->alternatorControl.pFactor = 14;
 	engineConfiguration->alternatorControl.iFactor = 0.1;
 	engineConfiguration->alternatorControl.dFactor = 0;
 	engineConfiguration->alternatorDT = 10;
+
+	engineConfiguration->auxPid[0].pFactor = 2;
+	engineConfiguration->auxPid[0].iFactor = 0.005;
+	engineConfiguration->auxPid[0].offset = 20;
 
 	// set idle_position 35
 	boardConfiguration->manIdlePosition = 35;
