@@ -51,6 +51,12 @@ static bool isEnabled(int index) {
 	}
 }
 
+static void pidReset(void) {
+	auxPid.reset();
+	auxPid.minResult = engineConfiguration->aux1PidMin;
+	auxPid.maxResult = engineConfiguration->aux1PidMax;
+}
+
 static msg_t auxPidThread(int param) {
 	UNUSED(param);
 		chRegSetThreadName("AuxPidController");
@@ -59,9 +65,7 @@ static msg_t auxPidThread(int param) {
 			chThdSleepMilliseconds(dt);
 
 			if (parametersVersion.isOld()) {
-				auxPid.reset();
-				auxPid.minResult = engineConfiguration->aux1PidMin;
-				auxPid.maxResult = engineConfiguration->aux1PidMax;
+				pidReset();
 			}
 
 			float rpm = engine->rpmCalculator.rpmValue;
@@ -71,7 +75,7 @@ static msg_t auxPidThread(int param) {
 
 			if (!enabledAtCurrentRpm) {
 				// we need to avoid accumulating iTerm while engine is not running
-				auxPid.reset();
+				pidReset();
 				continue;
 			}
 
