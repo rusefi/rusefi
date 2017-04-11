@@ -1387,6 +1387,7 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 	dialog = sdCard, "SD Card Logger"
 		field = "SdCard", 								isSdCardEnabled
 		field = "CS Pin",								sdCardCsPin
+		field = "SPI",									sdCardSpiDevice
 		field = "log format",							logFormat
 		field = "Mass Storage",							storageMode
 	
