@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Apr 10 14:24:47 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Apr 11 19:08:53 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1850,7 +1850,11 @@ typedef struct {
 	/**
 	 * offset 2832
 	 */
-	int unused[54];
+	spi_device_e sdCardSpiDevice;
+	/**
+	 * offset 2836
+	 */
+	int unused[53];
 	/** total size 3048*/
 } engine_configuration_s;
 
@@ -2065,4 +2069,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Apr 10 14:24:47 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Apr 11 19:08:53 EDT 2017

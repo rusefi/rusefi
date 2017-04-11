@@ -1365,8 +1365,10 @@
 #define aux1PidMin_offset_hex b08
 #define aux1PidMax_offset 2828
 #define aux1PidMax_offset_hex b0c
-#define unused_offset 2832
-#define unused_offset_hex b10
+#define sdCardSpiDevice_offset 2832
+#define sdCardSpiDevice_offset_hex b10
+#define unused_offset 2836
+#define unused_offset_hex b14
 #define le_formulas1_offset 3048
 #define le_formulas1_offset_hex be8
 #define le_formulas2_offset 3248

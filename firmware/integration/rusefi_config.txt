@@ -794,7 +794,8 @@ int16_t etbFreq;;"Hz",      1,     0,    0, 500,      10
 	float aux1PidMin;;"v",        1,     0,  0,    3000.0,  3
 	float aux1PidMax;;"v",        1,     0,  0,    3000.0,  3
 
-	int[54] unused;
+spi_device_e sdCardSpiDevice;
+	int[53] unused;
 	
 
 end_struct

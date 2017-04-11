@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Apr 10 14:24:47 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Apr 11 19:08:53 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -950,7 +950,8 @@ public class Fields {
 	public static final int timing_offset_cylinder12_offset = 2820;
 	public static final int aux1PidMin_offset = 2824;
 	public static final int aux1PidMax_offset = 2828;
-	public static final int unused_offset = 2832;
+	public static final int sdCardSpiDevice_offset = 2832;
+	public static final int unused_offset = 2836;
 	public static final int le_formulas1_offset = 3048;
 	public static final int le_formulas2_offset = 3248;
 	public static final int le_formulas3_offset = 3448;
@@ -1643,6 +1644,7 @@ public class Fields {
 	public static final Field TIMING_OFFSET_CYLINDER12 = Field.create("TIMING_OFFSET_CYLINDER12", 2820, FieldType.INT);
 	public static final Field AUX1PIDMIN = Field.create("AUX1PIDMIN", 2824, FieldType.FLOAT);
 	public static final Field AUX1PIDMAX = Field.create("AUX1PIDMAX", 2828, FieldType.FLOAT);
+	public static final Field SDCARDSPIDEVICE = Field.create("SDCARDSPIDEVICE", 2832, FieldType.INT);
 	public static final Field LE_FORMULAS1 = Field.create("LE_FORMULAS1", 3048, FieldType.INT);
 	public static final Field LE_FORMULAS2 = Field.create("LE_FORMULAS2", 3248, FieldType.INT);
 	public static final Field LE_FORMULAS3 = Field.create("LE_FORMULAS3", 3448, FieldType.INT);
