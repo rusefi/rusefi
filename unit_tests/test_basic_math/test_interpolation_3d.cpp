@@ -34,32 +34,34 @@ static void newTestToComfirmInterpolation() {
 // here's how the table loos like:
 //
 //__RPM_
-//__300_|__4|300|
+//__300_|_10|200|
 //__200_|__3|__4|
 //______|__2|__3|_LOAD
+
+	map2[1] = 10;
 
 
 	// let's start by testing corners
 	assertEquals(3, getValue(/*rpm*/200, 2));
-	assertEquals(4, getValue(/*rpm*/200, 3));
+	assertEqualsM("low rpm high load", 4, getValue(/*rpm*/200, 3));
 
-	assertEquals(4, getValue(/*rpm*/300, 2));
+	assertEquals(10, getValue(/*rpm*/300, 2));
 	assertEquals(200, getValue(/*rpm*/300, 3));
 
 	// now testing middles of cell sides
+	assertEqualsM("low rpm middle", 3.5, getValue(/*rpm*/200, 2.5));
+	assertEqualsM("high rpm      ", 105, getValue(/*rpm*/300, 2.5));
 
-	assertEquals(3.5, getValue(/*rpm*/200, 2.5));
-	assertEquals(102, getValue(/*rpm*/300, 2.5)); // WAT?
+	assertEqualsM("low load middle", 6.5, getValue(/*rpm*/250, 2));
+	assertEqualsM("               ", 102, getValue(/*rpm*/250, 3));
 
+	// slowly go from middle side towards center
+	assertEqualsM("middle @ 2.1  ",16.05, getValue(/*rpm*/250, 2.1));
+	assertEqualsM("middle @ 2.2   ",25.6, getValue(/*rpm*/250, 2.2));
+	assertEqualsM("middle @ 2.3  ",35.15, getValue(/*rpm*/250, 2.3));
 
-	assertEquals(3.5, getValue(/*rpm*/250, 2));
-	assertEquals(102, getValue(/*rpm*/250, 3)); // WAT?
-
-	assertEquals(52.75, getValue(/*rpm*/250, 2.5));
-
-
+	assertEqualsM("middle cell    ", 54.25, getValue(/*rpm*/250, 2.5));
 }
-
 
 void testInterpolate3d(void) {
 	printf("*************************************************** testInterpolate3d\r\n");
