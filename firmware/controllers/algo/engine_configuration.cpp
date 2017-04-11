@@ -841,6 +841,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setHip9011FrankensoPinout();
 #endif
 
+	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
 	boardConfiguration->sdCardCsPin = GPIOD_4;
 	boardConfiguration->isSdCardEnabled = true;
 	boardConfiguration->isFastAdcEnabled = true;
