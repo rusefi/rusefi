@@ -106,6 +106,8 @@ void Pid::postState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->debugFloatField3 = getPrevError();
 	tsOutputChannels->debugFloatField4 = getI();
 	tsOutputChannels->debugFloatField5 = getD();
+	tsOutputChannels->debugFloatField6 = minResult;
+	tsOutputChannels->debugFloatField7 = maxResult;
 	tsOutputChannels->debugIntField1 = getP();
 	tsOutputChannels->debugIntField2 = getOffset();
 	tsOutputChannels->debugFloatField6 = dTerm;

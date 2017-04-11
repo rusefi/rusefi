@@ -43,16 +43,20 @@ extern TunerStudioOutputChannels tsOutputChannels;
 static bool currentPlainOnOffState = false;
 static bool shouldResetPid = false;
 
+static void pidReset(void) {
+	altPid.reset();
+	altPid.minResult = engineConfiguration->bc.alternatorPidMin;
+	altPid.maxResult = engineConfiguration->bc.alternatorPidMax;
+}
+
 static msg_t AltCtrlThread(int param) {
 	UNUSED(param);
 	chRegSetThreadName("AlternatorController");
 	while (true) {
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 		if (shouldResetPid) {
+			pidReset();
 			alternatorPidResetCounter++;
-			altPid.reset();
-			altPid.minResult = engineConfiguration->bc.alternatorPidMin;
-			altPid.maxResult = engineConfiguration->bc.alternatorPidMax;
 			shouldResetPid = false;
 		}
 #endif
@@ -78,7 +82,7 @@ static msg_t AltCtrlThread(int param) {
 
 		if (!engine->isAlternatorControlEnabled) {
 			// we need to avoid accumulating iTerm while engine is not running
-			altPid.reset();
+			pidReset();
 			continue;
 		}
 
@@ -127,7 +131,7 @@ void showAltInfo(void) {
 void setAltPFactor(float p) {
 	engineConfiguration->alternatorControl.pFactor = p;
 	scheduleMsg(logger, "setAltPid: %f", p);
-	altPid.reset();
+	pidReset();
 	showAltInfo();
 }
 
