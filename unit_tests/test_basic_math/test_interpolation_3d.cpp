@@ -30,6 +30,37 @@ static float getValue(float rpm, float maf) {
 	return interpolate3d(rpm, rpmBins, 5, maf, mafBins, 4, map);
 }
 
+static void newTestToComfirmInterpolation() {
+// here's how the table loos like:
+//
+//__RPM_
+//__300_|__4|300|
+//__200_|__3|__4|
+//______|__2|__3|_LOAD
+
+
+	// let's start by testing corners
+	assertEquals(3, getValue(/*rpm*/200, 2));
+	assertEquals(4, getValue(/*rpm*/200, 3));
+
+	assertEquals(4, getValue(/*rpm*/300, 2));
+	assertEquals(200, getValue(/*rpm*/300, 3));
+
+	// now testing middles of cell sides
+
+	assertEquals(3.5, getValue(/*rpm*/200, 2.5));
+	assertEquals(102, getValue(/*rpm*/300, 2.5)); // WAT?
+
+
+	assertEquals(3.5, getValue(/*rpm*/250, 2));
+	assertEquals(102, getValue(/*rpm*/250, 3)); // WAT?
+
+	assertEquals(52.75, getValue(/*rpm*/250, 2.5));
+
+
+}
+
+
 void testInterpolate3d(void) {
 	printf("*************************************************** testInterpolate3d\r\n");
 	float dwell;
@@ -67,4 +98,7 @@ void testInterpolate3d(void) {
 
 	dwell = getValue(-1, -1);
 	assertEquals(1, dwell);
+
+	newTestToComfirmInterpolation();
+
 }
