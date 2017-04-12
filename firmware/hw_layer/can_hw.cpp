@@ -17,6 +17,7 @@
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 
 #include "pin_repository.h"
+#include "mpu_util.h"
 #include "engine_state.h"
 #include "engine_configuration.h"
 #include "vehicle_speed.h"
@@ -53,10 +54,6 @@ CAN_BTR_SJW(0) | CAN_BTR_TS2(1) | CAN_BTR_TS1(8) | CAN_BTR_BRP(6) };
 static CANRxFrame rxBuffer;
 CANTxFrame txmsg;
 
-//static CANDriver *getCanDevice() {
-//	if(board)
-//}
-
 static void printPacket(CANRxFrame *rx) {
 //	scheduleMsg(&logger, "CAN FMI %x", rx->FMI);
 //	scheduleMsg(&logger, "TIME %x", rx->TIME);
@@ -91,6 +88,12 @@ void commonTxInit(int eid) {
 }
 
 void sendMessage2(int size) {
+	CANDriver *device = detectCanDevice(boardConfiguration->canRxPin,
+			boardConfiguration->canTxPin);
+	if (device == NULL) {
+		warning(CUSTOM_ERR_6109, "CAN configuration issue");
+		return;
+	}
 	txmsg.DLC = size;
 	// 1 second timeout
 	msg_t result = canTransmit(&EFI_CAN_DEVICE, CAN_ANY_MAILBOX, &txmsg, MS2ST(1000));
@@ -199,6 +202,12 @@ static void canInfoNBCBroadcast(can_nbc_e typeOfNBC) {
 }
 
 static void canRead(void) {
+	CANDriver *device = detectCanDevice(boardConfiguration->canRxPin,
+			boardConfiguration->canTxPin);
+	if (device == NULL) {
+		warning(CUSTOM_ERR_6109, "CAN configuration issue");
+		return;
+	}
 //	scheduleMsg(&logger, "Waiting for CAN");
 	msg_t result = canReceive(&EFI_CAN_DEVICE, CAN_ANY_MAILBOX, &rxBuffer, MS2ST(1000));
 	if (result == MSG_TIMEOUT) {
@@ -273,14 +282,6 @@ void startCanPins(DECLARE_ENGINE_PARAMETER_F) {
 	mySetPadMode2("CAN RX", boardConfiguration->canRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 }
 
-static bool isValidCanTxPin(brain_pin_e pin) {
-	return pin == GPIOB_6 || pin == GPIOD_1;
-}
-
-static bool isValidCanRxPin(brain_pin_e pin) {
-	return pin == GPIOB_12 || pin == GPIOD_0;
-}
-
 void initCan(void) {
 	isCanEnabled = (boardConfiguration->canTxPin != GPIO_UNASSIGNED) && (boardConfiguration->canRxPin != GPIO_UNASSIGNED);
 	if (isCanEnabled) {
@@ -303,9 +304,8 @@ void initCan(void) {
 	canStart(&CAND2, &canConfig);
 #else
 	canStart(&CAND1, &canConfig);
-#endif
-    // FIXME: Can't start a driver twice.
-    //canStart(&EFI_CAN_DEVICE, &canConfig);
+#endif /* STM32_CAN_USE_CAN2 */
+
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 
 	chThdCreateStatic(canTreadStack, sizeof(canTreadStack), NORMALPRIO, (tfunc_t) canThread, NULL);

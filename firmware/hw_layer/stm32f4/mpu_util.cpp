@@ -16,7 +16,6 @@
 EXTERN_ENGINE;
 
 extern "C" {
-int getRemainingStack(thread_t *otp);
 void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress);
 }
 
@@ -73,7 +72,7 @@ int getRemainingStack(thread_t *otp) {
 
 // IAR version
 
-#endif
+#endif /* GNU / IAR */
 
 void baseHardwareInit(void) {
 	// looks like this holds a random value on start? Let's set a nice clean zero
@@ -83,25 +82,19 @@ void baseHardwareInit(void) {
 }
 
 void DebugMonitorVector(void) {
-
 	chDbgPanic3("DebugMonitorVector", __FILE__, __LINE__);
-
 	while (TRUE)
 		;
 }
 
 void UsageFaultVector(void) {
-
 	chDbgPanic3("UsageFaultVector", __FILE__, __LINE__);
-
 	while (TRUE)
 		;
 }
 
 void BusFaultVector(void) {
-
 	chDbgPanic3("BusFaultVector", __FILE__, __LINE__);
-
 	while (TRUE) {
 	}
 }
@@ -192,7 +185,7 @@ void HardFaultVector(void) {
 	);
 
 #else
-#endif        
+#endif /* 0 && defined __GNUC__ */
 
 	int cfsr = GET_CFSR();
 	if (cfsr & 0x1) {
@@ -334,6 +327,8 @@ void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
 	mySetPadMode2("chip select", csPin, PAL_STM32_MODE_OUTPUT);
 }
 
+#endif /* HAL_USE_SPI */
+
 BOR_Level_t BOR_Get(void) {
 	FLASH_OBProgramInitTypeDef FLASH_Handle;
 
@@ -370,5 +365,39 @@ BOR_Result_t BOR_Set(BOR_Level_t BORValue) {
 	return BOR_Result_Ok;
 }
 
+#if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
 
-#endif
+static bool isValidCan1RxPin(brain_pin_e pin) {
+	return pin == GPIOA_11 || pin == GPIOB_8 || pin == GPIOD_0;
+}
+
+static bool isValidCan1TxPin(brain_pin_e pin) {
+	return pin == GPIOA_12 || pin == GPIOB_9 || GPIOD_1;
+}
+
+static bool isValidCan2RxPin(brain_pin_e pin) {
+	return pin == GPIOB_5 || pin == GPIOB_12;
+}
+
+static bool isValidCan2TxPin(brain_pin_e pin) {
+	return pin == GPIOB_6 || pin == GPIOB_13;
+}
+
+bool isValidCanTxPin(brain_pin_e pin) {
+   return isValidCan1TxPin(pin) || isValidCan2TxPin(pin);
+}
+
+bool isValidCanRxPin(brain_pin_e pin) {
+   return isValidCan1RxPin(pin) || isValidCan2RxPin(pin);
+}
+
+CANDriver * detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
+   if (isValidCan1RxPin(pinRx) && isValidCan1TxPin(pinTx))
+      return &CAND1;
+   if (isValidCan2RxPin(pinRx) && isValidCan2TxPin(pinTx))
+      return &CAND2;
+   return NULL;
+}
+
+#endif /* EFI_CAN_SUPPORT */
+
