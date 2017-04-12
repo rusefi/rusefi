@@ -187,7 +187,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_S) {
 	ev->isSimultanious = isSimultanious;
 
 	if (TRIGGER_SHAPE(getSize()) < 1) {
-		warning(CUSTOM_ERR_6111, "uninitialized TriggerShape");
+		warning(CUSTOM_ERR_NOT_INITIALIZED_TRIGGER, "uninitialized TriggerShape");
 		return false;
 	}
 
