@@ -197,14 +197,6 @@
 // todo: switch to continues ADC conversion for fast ADC?
 #define EFI_INTERNAL_FAST_ADC_PWM	&PWMD4
 
-//#define EFI_CAN_DEVICE CAND2
-#define EFI_CAN_RX_AF 9
-#define EFI_CAN_TX_AF 9
-
-//#define EFI_CAN_DEVICE CAND1
-//#define EFI_CAN_RX_AF 9
-//#define EFI_CAN_TX_AF 9
-
 #define EFI_SPI1_AF 5
 
 #define EFI_SPI2_AF 5
