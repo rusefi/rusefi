@@ -117,6 +117,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->auxPid[0].pFactor = 2;
 	engineConfiguration->auxPid[0].iFactor = 0.005;
+	engineConfiguration->auxPid[0].dFactor = 1;
 	engineConfiguration->auxPid[0].offset = 20;
 
 	// set idle_position 35
