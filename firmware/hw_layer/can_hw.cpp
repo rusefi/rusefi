@@ -278,7 +278,6 @@ void stopCanPins(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 void startCanPins(DECLARE_ENGINE_PARAMETER_F) {
-	// todo: confirm that same AF works for all pins on all devices?
 	mySetPadMode2("CAN TX", boardConfiguration->canTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
 	mySetPadMode2("CAN RX", boardConfiguration->canRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 }
