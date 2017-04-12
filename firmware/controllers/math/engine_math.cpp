@@ -126,7 +126,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_S) {
 	 * engineState.injectionOffset is calculated from the same utility timer should we more that logic here?
 	 */
 	angle_t injectionDuration = MS2US(ENGINE(fuelMs)) / oneDegreeUs;
-	const angle_t baseAngle = ENGINE(engineState.injectionOffset) - injectionDuration;
+	angle_t baseAngle = ENGINE(engineState.injectionOffset) - injectionDuration;
 	efiAssert(!cisnan(baseAngle), "NaN baseAngle", false);
 
 	int index;
