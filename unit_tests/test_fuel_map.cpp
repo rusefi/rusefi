@@ -71,7 +71,7 @@ void testFuelMap(void) {
 	printf("*************************************************** getRunningFuel 1\r\n");
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 	float baseFuel = getBaseTableFuel(eth.engine.engineConfiguration, 5, getEngineLoadT(PASS_ENGINE_PARAMETER_F));
-	assertEqualsM("base fuel", 5.05, getRunningFuel(baseFuel, 5 PASS_ENGINE_PARAMETER));
+	assertEqualsM("base fuel", 5.05, getRunningFuel(baseFuel PASS_ENGINE_PARAMETER));
 
 	printf("*************************************************** setting IAT table\r\n");
 	for (int i = 0; i < IAT_CURVE_SIZE; i++) {
@@ -103,7 +103,7 @@ void testFuelMap(void) {
 	printf("*************************************************** getRunningFuel 2\r\n");
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 	baseFuel = getBaseTableFuel(eth.engine.engineConfiguration, 5, getEngineLoadT(PASS_ENGINE_PARAMETER_F));
-	assertEqualsM("v1", 30150, getRunningFuel(baseFuel, 5 PASS_ENGINE_PARAMETER));
+	assertEqualsM("v1", 30150, getRunningFuel(baseFuel PASS_ENGINE_PARAMETER));
 
 	testMafValue = 0;
 

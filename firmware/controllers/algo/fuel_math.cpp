@@ -127,16 +127,18 @@ percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_S) {
  */
 floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	float theoreticalInjectionLength;
-	if (isCrankingR(rpm)) {
-		int numberOfCylinders = getNumberOfInjections(engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER);
-		efiAssert(numberOfCylinders > 0, "cranking numberOfCylinders", 0);
-		theoreticalInjectionLength = getCrankingFuel(PASS_ENGINE_PARAMETER_F)
-				/ numberOfCylinders;
+	bool isCranking = isCrankingR(rpm);
+	int numberOfCylinders = getNumberOfInjections(isCranking ?
+			engineConfiguration->crankingInjectionMode :
+			engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
+	if (numberOfCylinders == 0) {
+		return 0; // we can end up here during configuration reset
+	}
+	if (isCranking) {
+		theoreticalInjectionLength = getCrankingFuel(PASS_ENGINE_PARAMETER_F) / numberOfCylinders;
 	} else {
 		floatms_t baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER);
-		floatms_t fuelPerCycle = getRunningFuel(baseFuel, rpm PASS_ENGINE_PARAMETER);
-		int numberOfCylinders = getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
-		efiAssert(numberOfCylinders > 0, "running numberOfCylinders", 0);
+		floatms_t fuelPerCycle = getRunningFuel(baseFuel PASS_ENGINE_PARAMETER);
 		theoreticalInjectionLength = fuelPerCycle / numberOfCylinders;
 #if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
 	printf("baseFuel=%f fuelPerCycle=%f theoreticalInjectionLength=%f\t\n",
@@ -146,7 +148,7 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	return theoreticalInjectionLength + ENGINE(engineState.injectorLag);
 }
 
-floatms_t getRunningFuel(floatms_t baseFuel, int rpm DECLARE_ENGINE_PARAMETER_S) {
+floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_S) {
 	float iatCorrection = ENGINE(engineState.iatFuelCorrection);
 	float cltCorrection = ENGINE(engineState.cltFuelCorrection);
 

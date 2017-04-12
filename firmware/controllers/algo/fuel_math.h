@@ -20,7 +20,7 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S);
 /**
  * @return baseFuel with CLT and IAT corrections
  */
-floatms_t getRunningFuel(floatms_t baseFuel, int rpm DECLARE_ENGINE_PARAMETER_S);
+floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_S);
 
 floatms_t getRealMafFuel(float airMass, int rpm DECLARE_ENGINE_PARAMETER_S);
 
