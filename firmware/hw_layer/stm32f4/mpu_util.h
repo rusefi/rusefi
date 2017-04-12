@@ -87,3 +87,7 @@ void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
 		int mosiMode,
 		int misoMode);
 void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin);
+
+bool isValidCanTxPin(brain_pin_e pin);
+bool isValidCanRxPin(brain_pin_e pin);
+CANDriver * detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx);
