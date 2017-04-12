@@ -111,7 +111,8 @@ void FuelSchedule::clear() {
 bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_S) {
 	efiAssert(engine!=NULL, "engine is NULL", false);
 
-	if (cisnan(engine->rpmCalculator.oneDegreeUs)) {
+	float oneDegreeUs = ENGINE(rpmCalculator.oneDegreeUs); // local copy
+	if (cisnan(oneDegreeUs)) {
 		// in order to have fuel schedule we need to have current RPM
 		// wonder if this line slows engine startup?
 		return false;
@@ -124,8 +125,9 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_S) {
 	 * todo: since this method is not invoked within trigger event handler and
 	 * engineState.injectionOffset is calculated from the same utility timer should we more that logic here?
 	 */
-	angle_t injectionDuration = MS2US(ENGINE(fuelMs)) / ENGINE(rpmCalculator.oneDegreeUs);
-	angle_t baseAngle = ENGINE(engineState.injectionOffset) - injectionDuration;
+	angle_t injectionDuration = MS2US(ENGINE(fuelMs)) / oneDegreeUs;
+	const angle_t baseAngle = ENGINE(engineState.injectionOffset) - injectionDuration;
+	efiAssert(!cisnan(baseAngle), "NaN baseAngle", false);
 
 	int index;
 
