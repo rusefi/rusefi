@@ -224,6 +224,7 @@ static void writeStateToCan(void) {
 }
 
 static msg_t canThread(void *arg) {
+	(void)arg;
 	chRegSetThreadName("CAN");
 	while (true) {
 		if (engineConfiguration->canWriteEnabled)
