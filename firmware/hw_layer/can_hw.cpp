@@ -96,7 +96,7 @@ void sendMessage2(int size) {
 	}
 	txmsg.DLC = size;
 	// 1 second timeout
-	msg_t result = canTransmit(&EFI_CAN_DEVICE, CAN_ANY_MAILBOX, &txmsg, MS2ST(1000));
+	msg_t result = canTransmit(device, CAN_ANY_MAILBOX, &txmsg, MS2ST(1000));
 	if (result == MSG_OK) {
 		canWriteOk++;
 	} else {
@@ -209,7 +209,7 @@ static void canRead(void) {
 		return;
 	}
 //	scheduleMsg(&logger, "Waiting for CAN");
-	msg_t result = canReceive(&EFI_CAN_DEVICE, CAN_ANY_MAILBOX, &rxBuffer, MS2ST(1000));
+	msg_t result = canReceive(device, CAN_ANY_MAILBOX, &rxBuffer, MS2ST(1000));
 	if (result == MSG_TIMEOUT) {
 		return;
 	}
@@ -278,6 +278,7 @@ void stopCanPins(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 void startCanPins(DECLARE_ENGINE_PARAMETER_F) {
+	// todo: confirm that same AF works for all pins on all devices?
 	mySetPadMode2("CAN TX", boardConfiguration->canTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
 	mySetPadMode2("CAN RX", boardConfiguration->canRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 }
