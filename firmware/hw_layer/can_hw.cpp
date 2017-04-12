@@ -91,7 +91,7 @@ void sendMessage2(int size) {
 	CANDriver *device = detectCanDevice(boardConfiguration->canRxPin,
 			boardConfiguration->canTxPin);
 	if (device == NULL) {
-		warning(CUSTOM_ERR_6109, "CAN configuration issue");
+		warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
 		return;
 	}
 	txmsg.DLC = size;
@@ -205,7 +205,7 @@ static void canRead(void) {
 	CANDriver *device = detectCanDevice(boardConfiguration->canRxPin,
 			boardConfiguration->canTxPin);
 	if (device == NULL) {
-		warning(CUSTOM_ERR_6109, "CAN configuration issue");
+		warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
 		return;
 	}
 //	scheduleMsg(&logger, "Waiting for CAN");

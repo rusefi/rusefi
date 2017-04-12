@@ -366,7 +366,7 @@ int getNumberOfSparks(ignition_mode_e mode DECLARE_ENGINE_PARAMETER_S) {
 	case IM_WASTED_SPARK:
 		return 2;
 	default:
-		firmwareError(CUSTOM_ERR_6108, "Unexpected ignition_mode_e %d", mode);
+		firmwareError(CUSTOM_ERR_IGNITION_MODE, "Unexpected ignition_mode_e %d", mode);
 		return 1;
 	}
 }
