@@ -72,7 +72,9 @@ float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_S) {
 
 // todo: rename this method since it's now base+TPSaccel
 floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
-	ENGINE(engineState.tpsAccelEnrich) = ENGINE(tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_F));
+	floatms_t tpsAccelEnrich = ENGINE(tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_F));
+	efiAssert(!cisnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
+	ENGINE(engineState.tpsAccelEnrich) = tpsAccelEnrich;
 
 	if (CONFIG(fuelAlgorithm) == LM_SPEED_DENSITY) {
 		engine->engineState.baseFuel = getSpeedDensityFuel(PASS_ENGINE_PARAMETER_F);
@@ -83,7 +85,7 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 		engine->engineState.baseFuel = engine->engineState.baseTableFuel;
 	}
 
-	return ENGINE(engineState.tpsAccelEnrich) + ENGINE(engineState.baseFuel);
+	return tpsAccelEnrich + ENGINE(engineState.baseFuel);
 }
 
 angle_t getinjectionOffset(float rpm DECLARE_ENGINE_PARAMETER_S) {
@@ -126,13 +128,16 @@ percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_S) {
 floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	float theoreticalInjectionLength;
 	if (isCrankingR(rpm)) {
+		int numberOfCylinders = getNumberOfInjections(engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER);
+		efiAssert(numberOfCylinders > 0, "cranking numberOfCylinders", 0);
 		theoreticalInjectionLength = getCrankingFuel(PASS_ENGINE_PARAMETER_F)
-				/ getNumberOfInjections(engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER);
+				/ numberOfCylinders;
 	} else {
 		floatms_t baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER);
 		floatms_t fuelPerCycle = getRunningFuel(baseFuel, rpm PASS_ENGINE_PARAMETER);
-		theoreticalInjectionLength = fuelPerCycle
-				/ getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
+		int numberOfCylinders = getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
+		efiAssert(numberOfCylinders > 0, "running numberOfCylinders", 0);
+		theoreticalInjectionLength = fuelPerCycle / numberOfCylinders;
 #if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
 	printf("baseFuel=%f fuelPerCycle=%f theoreticalInjectionLength=%f\t\n",
 			baseFuel, fuelPerCycle, theoreticalInjectionLength);
