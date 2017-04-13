@@ -494,7 +494,7 @@ void updateDevConsoleState(void) {
 
 static void showFuelInfo2(float rpm, float engineLoad) {
 
-	float baseFuelMs = getBaseTableFuel(engineConfiguration, (int) rpm, engineLoad);
+	float baseFuelMs = getBaseTableFuel((int) rpm, engineLoad);
 
 	float magicAir = getAirMass(engineConfiguration, 1, 100, convertCelsiusToKelvin(20));
 

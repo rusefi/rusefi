@@ -80,17 +80,22 @@ floatms_t getSpeedDensityFuel(DECLARE_ENGINE_PARAMETER_F) {
 	 * most of the values are pre-calculated for performance reasons
 	 */
 	float tChargeK = ENGINE(engineState.tChargeK);
+	efiAssert(!cisnan(tChargeK), "NaN tChargeK", 0);
 	float map = getMap();
+	efiAssert(!cisnan(map), "NaN map", 0);
 
 	float adjustedMap = map + engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_F);
+	efiAssert(!cisnan(adjustedMap), "NaN adjustedMap", 0);
 
-	engine->engineState.airMass = getAirMass(engineConfiguration, ENGINE(engineState.currentVE), adjustedMap, tChargeK);
+	float airMass = getAirMass(engineConfiguration, ENGINE(engineState.currentVE), adjustedMap, tChargeK);
+	efiAssert(!cisnan(airMass), "NaN airMass", 0);
 #if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
 	printf("map=%f adjustedMap=%f airMass=%f\t\n",
 			map, adjustedMap, engine->engineState.airMass);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
-	return sdMath(engineConfiguration, engine->engineState.airMass, ENGINE(engineState.targetAFR)) * 1000;
+	engine->engineState.airMass = airMass;
+	return sdMath(engineConfiguration, airMass, ENGINE(engineState.targetAFR)) * 1000;
 }
 
 static const baro_corr_table_t default_baro_corr = {
