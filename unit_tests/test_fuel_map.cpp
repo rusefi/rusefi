@@ -51,7 +51,7 @@ void testFuelMap(void) {
 	for (int i = 0; i < FUEL_RPM_COUNT; i++)
 		eth.engine.config->fuelRpmBins[i] = i;
 
-	assertEqualsM("base fuel table", 1005, getBaseTableFuel(eth.engine.engineConfiguration, 5, 5));
+	assertEqualsM("base fuel table", 1005, getBaseTableFuel(5, 5));
 
 	printf("*************************************************** initThermistors\r\n");
 
@@ -70,7 +70,7 @@ void testFuelMap(void) {
 	// because all the correction tables are zero
 	printf("*************************************************** getRunningFuel 1\r\n");
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
-	float baseFuel = getBaseTableFuel(eth.engine.engineConfiguration, 5, getEngineLoadT(PASS_ENGINE_PARAMETER_F));
+	float baseFuel = getBaseTableFuel(5, getEngineLoadT(PASS_ENGINE_PARAMETER_F));
 	assertEqualsM("base fuel", 5.05, getRunningFuel(baseFuel PASS_ENGINE_PARAMETER));
 
 	printf("*************************************************** setting IAT table\r\n");
@@ -102,7 +102,7 @@ void testFuelMap(void) {
 	// 1005 * 2 for IAT correction
 	printf("*************************************************** getRunningFuel 2\r\n");
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
-	baseFuel = getBaseTableFuel(eth.engine.engineConfiguration, 5, getEngineLoadT(PASS_ENGINE_PARAMETER_F));
+	baseFuel = getBaseTableFuel(5, getEngineLoadT(PASS_ENGINE_PARAMETER_F));
 	assertEqualsM("v1", 30150, getRunningFuel(baseFuel PASS_ENGINE_PARAMETER));
 
 	testMafValue = 0;

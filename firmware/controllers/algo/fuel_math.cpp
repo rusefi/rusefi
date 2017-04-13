@@ -79,13 +79,15 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	floatms_t baseFuel;
 	if (CONFIG(fuelAlgorithm) == LM_SPEED_DENSITY) {
 		baseFuel = getSpeedDensityFuel(PASS_ENGINE_PARAMETER_F);
+		efiAssert(!cisnan(baseFuel), "NaN sd baseFuel", 0);
 	} else if (engineConfiguration->fuelAlgorithm == LM_REAL_MAF) {
 		float maf = getRealMaf(PASS_ENGINE_PARAMETER_F) + engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_F);
 		baseFuel = getRealMafFuel(maf, rpm PASS_ENGINE_PARAMETER);
+		efiAssert(!cisnan(baseFuel), "NaN rm baseFuel", 0);
 	} else {
 		baseFuel = engine->engineState.baseTableFuel;
+		efiAssert(!cisnan(baseFuel), "NaN bt baseFuel", 0);
 	}
-	efiAssert(!cisnan(baseFuel), "NaN baseFuel", 0);
 	engine->engineState.baseFuel = baseFuel;
 
 	return tpsAccelEnrich + baseFuel;
@@ -215,7 +217,7 @@ float getIatFuelCorrection(float iat DECLARE_ENGINE_PARAMETER_S) {
 /**
  * @return Fuel injection duration injection as specified in the fuel map, in milliseconds
  */
-floatms_t getBaseTableFuel(engine_configuration_s *engineConfiguration, int rpm, float engineLoad) {
+floatms_t getBaseTableFuel(int rpm, float engineLoad) {
 	if (cisnan(engineLoad)) {
 		warning(CUSTOM_NAN_ENGINE_LOAD_2, "NaN engine load");
 		return NAN;

@@ -24,7 +24,7 @@ floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_S);
 
 floatms_t getRealMafFuel(float airMass, int rpm DECLARE_ENGINE_PARAMETER_S);
 
-floatms_t getBaseTableFuel(engine_configuration_s *engineConfiguration, int rpm, float engineLoad);
+floatms_t getBaseTableFuel(int rpm, float engineLoad);
 float getBaroCorrection(DECLARE_ENGINE_PARAMETER_F);
 int getNumberOfInjections(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S);
 angle_t getinjectionOffset(float rpm DECLARE_ENGINE_PARAMETER_S);

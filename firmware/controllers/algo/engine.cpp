@@ -230,9 +230,8 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 		currentVE = baroCorrection * veMap.getValue(rpm, map) * 0.01;
 		targetAFR = afrMap.getValue(rpm, map);
 	} else {
-		baseTableFuel = getBaseTableFuel(engineConfiguration, rpm, engineLoad);
+		baseTableFuel = getBaseTableFuel(rpm, engineLoad);
 	}
-
 }
 
 
