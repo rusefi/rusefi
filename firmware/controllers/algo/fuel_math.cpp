@@ -136,11 +136,11 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	}
 	if (isCranking) {
 		theoreticalInjectionLength = getCrankingFuel(PASS_ENGINE_PARAMETER_F) / numberOfCylinders;
-		efiAssert(!cisnan(theoreticalInjectionLength), "NaN cranking theoreticalInjectionLength");
+		efiAssert(!cisnan(theoreticalInjectionLength), "NaN cranking theoreticalInjectionLength", 0);
 	} else {
 		floatms_t baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER);
 		floatms_t fuelPerCycle = getRunningFuel(baseFuel PASS_ENGINE_PARAMETER);
-		efiAssert(!cisnan(theoreticalInjectionLength), "NaN fuelPerCycle");
+		efiAssert(!cisnan(theoreticalInjectionLength), "NaN fuelPerCycle", 0);
 		theoreticalInjectionLength = fuelPerCycle / numberOfCylinders;
 #if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
 	printf("baseFuel=%f fuelPerCycle=%f theoreticalInjectionLength=%f\t\n",
@@ -155,7 +155,7 @@ floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_S) {
 	float cltCorrection = ENGINE(engineState.cltFuelCorrection);
 
 	floatms_t runningFuel = baseFuel * iatCorrection * cltCorrection + ENGINE(engineState.fuelPidCorrection);
-	efiAssert(!cisnan(runningFuel), "NaN runningFuel");
+	efiAssert(!cisnan(runningFuel), "NaN runningFuel", 0);
 	ENGINE(engineState.runningFuel) = runningFuel;
 
 	return runningFuel;
