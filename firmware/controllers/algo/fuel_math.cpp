@@ -76,16 +76,19 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	efiAssert(!cisnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
 	ENGINE(engineState.tpsAccelEnrich) = tpsAccelEnrich;
 
+	floatms_t baseFuel;
 	if (CONFIG(fuelAlgorithm) == LM_SPEED_DENSITY) {
-		engine->engineState.baseFuel = getSpeedDensityFuel(PASS_ENGINE_PARAMETER_F);
+		baseFuel = getSpeedDensityFuel(PASS_ENGINE_PARAMETER_F);
 	} else if (engineConfiguration->fuelAlgorithm == LM_REAL_MAF) {
 		float maf = getRealMaf(PASS_ENGINE_PARAMETER_F) + engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_F);
-		engine->engineState.baseFuel = getRealMafFuel(maf, rpm PASS_ENGINE_PARAMETER);
+		baseFuel = getRealMafFuel(maf, rpm PASS_ENGINE_PARAMETER);
 	} else {
-		engine->engineState.baseFuel = engine->engineState.baseTableFuel;
+		baseFuel = engine->engineState.baseTableFuel;
 	}
+	efiAssert(!cisnan(baseFuel), "NaN baseFuel", 0);
+	engine->engineState.baseFuel = baseFuel;
 
-	return tpsAccelEnrich + ENGINE(engineState.baseFuel);
+	return tpsAccelEnrich + baseFuel;
 }
 
 angle_t getinjectionOffset(float rpm DECLARE_ENGINE_PARAMETER_S) {
@@ -153,6 +156,8 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_S) {
 floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_S) {
 	float iatCorrection = ENGINE(engineState.iatFuelCorrection);
 	float cltCorrection = ENGINE(engineState.cltFuelCorrection);
+	efiAssert(!cisnan(iatCorrection), "NaN iatCorrection", 0);
+	efiAssert(!cisnan(cltCorrection), "NaN cltCorrection", 0);
 
 	floatms_t runningFuel = baseFuel * iatCorrection * cltCorrection + ENGINE(engineState.fuelPidCorrection);
 	efiAssert(!cisnan(runningFuel), "NaN runningFuel", 0);
