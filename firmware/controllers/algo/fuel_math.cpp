@@ -140,8 +140,8 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	} else {
 		floatms_t baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER);
 		floatms_t fuelPerCycle = getRunningFuel(baseFuel PASS_ENGINE_PARAMETER);
-		efiAssert(!cisnan(theoreticalInjectionLength), "NaN fuelPerCycle", 0);
 		theoreticalInjectionLength = fuelPerCycle / numberOfCylinders;
+		efiAssert(!cisnan(theoreticalInjectionLength), "NaN fuelPerCycle", 0);
 #if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
 	printf("baseFuel=%f fuelPerCycle=%f theoreticalInjectionLength=%f\t\n",
 			baseFuel, fuelPerCycle, theoreticalInjectionLength);
