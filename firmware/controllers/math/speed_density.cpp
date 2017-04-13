@@ -39,7 +39,7 @@ float getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_EN
 
 	if (cisnan(Tcharge)) {
 		// we can probably end up here while resetting engine state - interpolation would fail
-		warning(CUSTOM_ERR_6136, "getTCharge NaN");
+		warning(CUSTOM_ERR_TCHARGE_NOT_READY, "getTCharge NaN");
 		return coolantTemp;
 	}
 
@@ -87,7 +87,7 @@ floatms_t getSpeedDensityFuel(DECLARE_ENGINE_PARAMETER_F) {
 	 */
 	float tChargeK = ENGINE(engineState.tChargeK);
 	if (cisnan(tChargeK)) {
-		warning(CUSTOM_ERR_6139, "tChargeK not ready"); // this would happen before we have CLT reading for example
+		warning(CUSTOM_ERR_TCHARGE_NOT_READY2, "tChargeK not ready"); // this would happen before we have CLT reading for example
 		return 0;
 	}
 	float map = getMap();
