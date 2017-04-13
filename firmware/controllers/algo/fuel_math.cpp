@@ -222,7 +222,13 @@ floatms_t getBaseTableFuel(int rpm, float engineLoad) {
 		warning(CUSTOM_NAN_ENGINE_LOAD_2, "NaN engine load");
 		return NAN;
 	}
-	return fuelMap.getValue(rpm, engineLoad);
+	floatms_t result = fuelMap.getValue(rpm, engineLoad);
+	if (cisnan(result)) {
+		// result could be NaN in case of invalid table, like during initialization
+		result = 0;
+		warning(CUSTOM_ERR_6138, "baseFuel table not ready");
+	}
+	return result;
 }
 
 float getBaroCorrection(DECLARE_ENGINE_PARAMETER_F) {
