@@ -37,6 +37,12 @@ float getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_EN
 
 	float Tcharge = coolantTemp * (1 - Tcharge_coff) + airTemp * Tcharge_coff;
 
+	if (cisnan(Tcharge)) {
+		// we can probably end up here while resetting engine state - interpolation would fail
+		warning(CUSTOM_ERR_6136, "getTCharge NaN");
+		return coolantTemp;
+	}
+
 	return Tcharge;
 }
 
