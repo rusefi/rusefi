@@ -86,7 +86,10 @@ floatms_t getSpeedDensityFuel(DECLARE_ENGINE_PARAMETER_F) {
 	 * most of the values are pre-calculated for performance reasons
 	 */
 	float tChargeK = ENGINE(engineState.tChargeK);
-	efiAssert(!cisnan(tChargeK), "NaN tChargeK", 0);
+	if (cisnan(tChargeK)) {
+		warning(CUSTOM_ERR_6139, "tChargeK not ready"); // this would happen before we have CLT reading for example
+		return 0;
+	}
 	float map = getMap();
 	efiAssert(!cisnan(map), "NaN map", 0);
 
