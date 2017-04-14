@@ -179,7 +179,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 #endif
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	reportSensorF(log, fileFormat, "int_temp", "C", getMCUInternalTemperature(), 2); // log column #3
+	reportSensorF(log, fileFormat, GAUGE_NAME_CPU_TEMP, "C", getMCUInternalTemperature(), 2); // log column #3
 #endif
 
 	reportSensorI(log, fileFormat, "mode", "v", packEngineMode(PASS_ENGINE_PARAMETER_F)); // log column #3
@@ -192,7 +192,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 	}
 
 	if (hasVBatt(PASS_ENGINE_PARAMETER_F)) {
-		reportSensorF(log, fileFormat, "vbatt", "V", getVBatt(PASS_ENGINE_PARAMETER_F), 2); // log column #6
+		reportSensorF(log, fileFormat, GAUGE_NAME_VBAT, "V", getVBatt(PASS_ENGINE_PARAMETER_F), 2); // log column #6
 	}
 
 	if (hasIatSensor()) {
@@ -247,13 +247,13 @@ static void printSensors(Logging *log, bool fileFormat) {
 
 		reportSensorF(log, fileFormat, GAUGE_NAME_TCHARGE, "K", engine->engineState.tChargeK, 2); // log column #8
 		if (hasMapSensor(PASS_ENGINE_PARAMETER_F)) {
-			reportSensorF(log, fileFormat, "curVE", "%", veMap.getValue(rpm, getMap()), 2);
+			reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_VR, "%", veMap.getValue(rpm, getMap()), 2);
 		}
 		reportSensorF(log, fileFormat, GAUGE_NAME_VVT, "deg", engine->triggerCentral.vvtPosition, 1);
 	}
 
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
-	reportSensorF(log, fileFormat, "ENGINE_LOAD", "x", engineLoad, 2);
+	reportSensorF(log, fileFormat, GAUGE_NAME_ENGINE_LOAD, "x", engineLoad, 2);
 
 
 	reportSensorF(log, fileFormat, GAUGE_COIL_DWELL_TIME, "ms", ENGINE(engineState.sparkDwell), 2);
@@ -314,8 +314,8 @@ static void printSensors(Logging *log, bool fileFormat) {
 		}
 	}
 
-	reportSensorI(log, fileFormat, "warn", "count", engine->engineState.warningCounter);
-	reportSensorI(log, fileFormat, "error", "code", engine->engineState.lastErrorCode);
+	reportSensorI(log, fileFormat, GAUGE_NAME_WARNING_COUNTER, "count", engine->engineState.warningCounter);
+	reportSensorI(log, fileFormat, GAUGE_NAME_WARNING_LAST, "code", engine->engineState.lastErrorCode);
 
 }
 
