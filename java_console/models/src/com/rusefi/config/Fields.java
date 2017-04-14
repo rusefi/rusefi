@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 13 23:17:21 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 13 23:29:50 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -1033,10 +1033,18 @@ public class Fields {
 	public static final String GAUGE_NAME_VVT = "VVT postion";
 	public static final String GAUGE_NAME_TIMING_ADVANCE = "timing";
 	public static final String GAUGE_NAME_VVS = "Vehicle Speed";
+	public static final String GAUGE_NAME_VBAT = "VBatt";
+	public static final String GAUGE_NAME_ENGINE_LOAD = "Engine Load";
+	public static final String GAUGE_NAME_CPU_TEMP = "CPU Temperature";
+	public static final String GAUGE_NAME_WARNING_LAST = "warning: last";
+	public static final String GAUGE_NAME_WARNING_COUNTER = "warning: counter";
 	public static final String GAUGE_NAME_KNOCK_LEVEL = "knock: current level";
 	public static final String GAUGE_NAME_INJECTOR_LAG = "fuel: injector lag";
 	public static final String GAUGE_NAME_FUEL_TPS_EXTRA = "fuel: TPS acceleration extra fuel";
 	public static final String GAUGE_NAME_FUEL_EL_EXTRA = "fuel: engine load acceleration extra fuel";
+	public static final String GAUGE_NAME_FUEL_CLT_CORR = "fuel: CLT correction";
+	public static final String GAUGE_NAME_FUEL_IAT_CORR = "fuel: IAT correction";
+	public static final String GAUGE_NAME_FUEL_VR = "fuel: VE";
 	public static final String GAUGE_NAME_FUEL_INJ_DUTY = "fuel: injector duty cycle";
 	public static final String GAUGE_NAME_TCHARGE = "fuel: SD tCharge";
 	public static final String GAUGE_NAME_DWELL_DUTY = "dwell: coil duty cycle";
