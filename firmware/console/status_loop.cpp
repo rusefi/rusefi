@@ -245,11 +245,11 @@ static void printSensors(Logging *log, bool fileFormat) {
 		reportSensorI(log, fileFormat, "debugInt3", "v", tsOutputChannels.debugIntField3);
 #endif /* EFI_TUNER_STUDIO */
 
-		reportSensorF(log, fileFormat, "tCharge", "K", engine->engineState.tChargeK, 2); // log column #8
+		reportSensorF(log, fileFormat, GAUGE_NAME_TCHARGE, "K", engine->engineState.tChargeK, 2); // log column #8
 		if (hasMapSensor(PASS_ENGINE_PARAMETER_F)) {
 			reportSensorF(log, fileFormat, "curVE", "%", veMap.getValue(rpm, getMap()), 2);
 		}
-		reportSensorF(log, fileFormat, "VVT", "deg", engine->triggerCentral.vvtPosition, 1);
+		reportSensorF(log, fileFormat, GAUGE_NAME_VVT, "deg", engine->triggerCentral.vvtPosition, 1);
 	}
 
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
@@ -258,7 +258,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 
 	reportSensorF(log, fileFormat, GAUGE_COIL_DWELL_TIME, "ms", ENGINE(engineState.sparkDwell), 2);
 	if (fileFormat) {
-		reportSensorF(log, fileFormat, "timing", "deg", engine->engineState.timingAdvance, 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_TIMING_ADVANCE, "deg", engine->engineState.timingAdvance, 2);
 
 	}
 
@@ -266,27 +266,27 @@ static void printSensors(Logging *log, bool fileFormat) {
 		floatms_t fuelBase = getBaseFuel(rpm PASS_ENGINE_PARAMETER);
 		reportSensorF(log, fileFormat, "f: base", "ms", fuelBase, 2);
 		reportSensorF(log, fileFormat, "f: actual", "ms", ENGINE(actualLastInjection), 2);
-		reportSensorF(log, fileFormat, "f: lag", "ms", engine->engineState.injectorLag, 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_INJECTOR_LAG, "ms", engine->engineState.injectorLag, 2);
 		reportSensorF(log, fileFormat, "f: running", "ms", ENGINE(engineState.runningFuel), 2);
 		reportSensorF(log, fileFormat, "f: pid", "ms", ENGINE(engineState.fuelPidCorrection), 2);
 
 		reportSensorF(log, fileFormat, "f: wall amt", "v", ENGINE(wallFuel).getWallFuel(0), 2);
 		reportSensorF(log, fileFormat, "f: wall crr", "v", ENGINE(wallFuelCorrection), 2);
 
-		reportSensorI(log, fileFormat, "version", "#", getRusEfiVersion());
+		reportSensorI(log, fileFormat, GAUGE_NAME_VERSION, "#", getRusEfiVersion());
 	}
 
 #if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
 	if (hasVehicleSpeedSensor()) {
 		float vehicleSpeed = getVehicleSpeed();
-		reportSensorF(log, fileFormat, "vss", "kph", vehicleSpeed, 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_VVS, "kph", vehicleSpeed, 2);
 		float sp2rpm = rpm == 0 ? 0 : vehicleSpeed / rpm;
 		reportSensorF(log, fileFormat, "sp2rpm", "x", sp2rpm, 2);
 	}
 #endif /* EFI_PROD_CODE */
 
 	reportSensorF(log, fileFormat, "knck_c", "count", engine->knockCount, 0);
-	reportSensorF(log, fileFormat, "knck_v", "v", engine->knockVolts, 2);
+	reportSensorF(log, fileFormat, GAUGE_NAME_KNOCK_LEVEL, "v", engine->knockVolts, 2);
 
 //	reportSensorF(log, fileFormat, "vref", "V", getVRef(engineConfiguration), 2);
 

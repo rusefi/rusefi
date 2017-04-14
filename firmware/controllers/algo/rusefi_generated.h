@@ -1497,8 +1497,15 @@
 #define fsioTable4RpmBins_offset_hex 3fd8
 #define TOTAL_CONFIG_SIZE 16376
 #define TOTAL_CONFIG_SIZE_hex 3ff8
+#define GAUGE_NAME_VERSION "firmware"
+#define GAUGE_NAME_VVT "VVT postion"
+#define GAUGE_NAME_TIMING_ADVANCE "timing"
+#define GAUGE_NAME_VVS "Vehicle Speed"
+#define GAUGE_NAME_KNOCK_LEVEL "knock: current level"
+#define GAUGE_NAME_INJECTOR_LAG "fuel: injector lag"
 #define GAUGE_NAME_FUEL_TPS_EXTRA "fuel: TPS acceleration extra fuel"
 #define GAUGE_NAME_FUEL_EL_EXTRA "fuel: engine load acceleration extra fuel"
 #define GAUGE_NAME_FUEL_INJ_DUTY "fuel: injector duty cycle"
+#define GAUGE_NAME_TCHARGE "fuel: SD tCharge"
 #define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
 #define GAUGE_COIL_DWELL_TIME "dwell: coil charge time"
