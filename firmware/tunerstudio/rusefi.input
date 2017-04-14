@@ -130,7 +130,7 @@ fileVersion = { 20161225 }
 	  crankingFuel    = scalar,  F32,     44,              "ms",            1,       0.0;
       baseFuel        = scalar,  F32,     48,              "ms",           1,         0
       tCharge         = scalar,  F32,     52,              "T",             1,       0.0;
-      ign_adv         = scalar,  F32,     56,              "deg",           1,       0.0;
+      ignitionAdvance = scalar,  F32,     56,              "deg",           1,       0.0;
       sparkDwellValue = scalar,  F32,     60,              "ms",           1,       0.0;
       ; actual total Ms time per engine cycle with all corrections
       pulseWidth      = scalar,  F32,     64,              "ms",           1,       0.0;
@@ -456,7 +456,7 @@ fileVersion = { 20161225 }
    tpsADCGauge       = tpsADC,             "tps ADC",       "ADC",        0,   1024,       0,      0,       0,     0,   0,   0	
    atmPresCGauge     = baroPressure,          "Baro",       "kPa",        0,   1024,       0,      0,       0,     0,   0,   0	
    mapGaugeValue     = MAPValue,               "MAP",       "kPa",        0,    300,      10,     10,     200,   200,   0,   0	
-   ignadvGauge = ign_adv,       "Ignition Advance 1",   "degrees",     -100,    100,    -999,   -999,     999,   999,   1, 1
+   ignadvGauge = ignitionAdvance,       "Ignition Advance 1",   "degrees",     -100,    100,    -999,   -999,     999,   999,   1, 1
 ;   warmupEnrichGauge = warmupEnrich, "Warmup Enrichment",    "%",      100,    150,      -1,     -1,     101,   105,   0, 0
 ;   accelEnrichGauge  = accDecEnrich, "Accel Enrich",         "%",       50,    150,      -1,     -1,     999,   999,   0, 0
    dwellGauge        = sparkDwellValue,           "Dwell",      "mSec",        0,     10,     0.5,    1.0,     6.0,   8.0,   1, 1
@@ -567,18 +567,18 @@ fileVersion = { 20161225 }
    ;       Channel          Label          Type    Format
    entry = time,            "Time",        float,  "%.3f"
    entry = rpm,             "RPM",         int,    "%d"
-   entry = firmwareVersion, "version",     int,    "%d"
+   entry = firmwareVersion, @@GAUGE_NAME_VERSION@@,     int,    "%d"
    entry = coolant,         "CLT",         float,  "%.2f"
    entry = intake,          "IAT",         float,  "%.2f"
    entry = TPS,             "TPS",         float,  "%.2f"
    entry = MAF,             "MAF",         float,  "%.2f"
    entry = MAPValue,        "MAP",         float,  "%.1f"
    entry = AFRactual,       "AFR",         float,  "%.2f"
-   entry = VBatt,           "vBatt",       float,  "%.2f"
-   entry = engineLoad,	    "Load", 	   float,  "%.1f"
-   entry = ign_adv,	    	"ignAdv",	   float,  "%.2f"
-   entry = knockLevel,	    "Knock", 	   float,  "%.2f"
-   entry = vehicleSpeedKph,	"speed",	   float,  "%.2f"
+   entry = VBatt,           @@GAUGE_NAME_VBAT@@,       float,  "%.2f"
+   entry = engineLoad,	    @@GAUGE_NAME_ENGINE_LOAD@@, 	   float,  "%.1f"
+   entry = ignitionAdvance,	@@GAUGE_NAME_TIMING_ADVANCE@@,	   float,  "%.2f"
+   entry = knockLevel,	    @@GAUGE_NAME_KNOCK_LEVEL@@, 	   float,  "%.2f"
+   entry = vehicleSpeedKph,	@@GAUGE_NAME_VVS@@,	   float,  "%.2f"
    entry = speedToRpmRatio, "s2rpm",	   float,  "%.3f"
    entry = rpmAcceleration, "dRPM",        float,  "%.3f"
    entry = massAirFlowValue,"airMass",     float,  "%.3f"
@@ -590,7 +590,7 @@ fileVersion = { 20161225 }
    entry = pulseWidth,      "fuel: pulse", float,  "%.3f"
    entry = baseFuel,	    "fuel: base",  float,  "%.2f"
    entry = fuelPidCorrection,"fuel: pid",  float,  "%.2f"
-   entry = veValue,         "fuel: VE",    float,  "%.3f"
+   entry = veValue,         @@GAUGE_NAME_FUEL_VR@@,    float,  "%.3f"
    entry = injectorDutyCycle,@@GAUGE_NAME_FUEL_INJ_DUTY@@,float,"%.3f"
    entry = coilDutyCycle,	@@GAUGE_NAME_DWELL_DUTY@@,	float,"%.3f"
 
@@ -604,11 +604,11 @@ fileVersion = { 20161225 }
    entry = wallFuelAmount, "fuel: wall amount",	float,   "%.3f"
    
    entry = baroCorrection,   "baroCorrection",float,"%.3f"
-   entry = iatCorrection,   "fuel: IAT corr",	float,   "%.3f"
-   entry = cltCorrection,	"cltCorrection", float,"%.3f"
+   entry = iatCorrection,   @@GAUGE_NAME_FUEL_IAT_CORR@@,	float,   "%.3f"
+   entry = cltCorrection,	@@GAUGE_NAME_FUEL_CLT_CORR@@, float,"%.3f"
 
    entry = sparkDwellValue,	@@GAUGE_COIL_DWELL_TIME@@, float,"%.3f"
-   entry = vvtPosition, "VVT", float,"%.2f"
+   entry = vvtPosition, @@GAUGE_NAME_VVT@@, float,"%.2f"
 
 ; is there a way to log parameter?   entry = debugMode,   "debugMode",int,"%d"
 ; Alternator_PID: alternator duty cycle
@@ -646,9 +646,9 @@ fileVersion = { 20161225 }
    entry = debugIntField3,   "debug i3",int,"%d"
    
    entry = engineMode,   "mode",int,"%d"
-   entry = warningCounter,   "err: count",int,"%d"
+   entry = warningCounter,   @@GAUGE_NAME_WARNING_LAST@@,int,"%d"
    entry = lastErrorCode,   "err: last",int,"%d"
-   entry = internalMcuTemperature,   "int temp",float,"%.2f"
+   entry = internalMcuTemperature,   @@GAUGE_NAME_CPU_TEMP@@,float,"%.2f"
    
    entry = tCharge, "tCharge",float,"%.3f"
    
