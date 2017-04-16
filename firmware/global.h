@@ -18,7 +18,9 @@ extern "C"
     
 #include <string.h>
 
+#ifndef DEFAULT_ENGINE_TYPE
 #define DEFAULT_ENGINE_TYPE CUSTOM_ENGINE
+#endif
 
 // this is about MISRA not liking 'time.h'. todo: figure out something
 #if defined __GNUC__
