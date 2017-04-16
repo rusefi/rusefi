@@ -59,7 +59,7 @@ Executor::Executor() {
 	queue.setLateDelay(US2NT(100));
 }
 
-void Executor::scheduleByTime(const bool monitorReuse, scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback,
+void Executor::scheduleByTime(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback,
 		void *param) {
 //	if (delayUs < 0) {
 //		firmwareError(OBD_PCM_Processor_Fault, "Negative delayUs %s: %d", prefix, delayUs);
@@ -152,12 +152,12 @@ void Executor::scheduleTimerCallback() {
  */
 void scheduleTask(const bool monitorReuse, const char *prefix, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
 //	scheduling->name = prefix;
-	instance.scheduleByTime(monitorReuse, scheduling, getTimeNowUs() + delayUs, callback, param);
+	instance.scheduleByTime(scheduling, getTimeNowUs() + delayUs, callback, param);
 }
 
 void scheduleByTime(const bool monitorReuse, const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param) {
 //	scheduling->name = prefix;
-	instance.scheduleByTime(monitorReuse, scheduling, time, callback, param);
+	instance.scheduleByTime(scheduling, time, callback, param);
 }
 
 void initSignalExecutorImpl(void) {
