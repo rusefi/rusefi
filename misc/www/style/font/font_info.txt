@@ -3,3 +3,6 @@ Lucida Fax
 
 rusEfi orange color
 fe6700
+
+
+circle diameter = x3.05 times lower case test height
