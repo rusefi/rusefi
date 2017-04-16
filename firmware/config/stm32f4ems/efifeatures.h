@@ -239,15 +239,25 @@
  */
 
 
-// todo: start using consoleUartDevice
+// todo: start using consoleUartDevice? Not sure
+#ifndef EFI_CONSOLE_UART_DEVICE
 #define EFI_CONSOLE_UART_DEVICE (&SD3)
+#endif
 
-// todo: start using consoleSerialTxPin
+// todo: start using consoleSerialTxPin? Not sure
+#ifndef EFI_CONSOLE_TX_PORT
 #define EFI_CONSOLE_TX_PORT GPIOC
+#endif
+#ifndef EFI_CONSOLE_TX_PIN
 #define EFI_CONSOLE_TX_PIN 10
-// todo: start using consoleSerialRxPin
+#endif
+// todo: start using consoleSerialRxPin? Not sure
+#ifndef EFI_CONSOLE_RX_PORT
 #define EFI_CONSOLE_RX_PORT GPIOC
+#endif
+#ifndef EFI_CONSOLE_RX_PIN
 #define EFI_CONSOLE_RX_PIN 11
+#endif
 // todo: this should be detected automatically based on pin selection
 #define EFI_CONSOLE_AF 7
 
