@@ -99,7 +99,7 @@ PROJECT_DIR = .
 CHIBIOS = ChibiOS3
 CHIBIOS_CONTRIB = ChibiOS-Contrib
 
-ifneq ($(PROJECT_BOARD),OLIMEX_STM32_E407)
+ifeq ($(PROJECT_BOARD),)
   PROJECT_BOARD = ST_STM32F4
 endif
 DDEFS += -D$(PROJECT_BOARD)
@@ -138,7 +138,9 @@ include $(PROJECT_DIR)/controllers/trigger/trigger.mk
 include $(PROJECT_DIR)/console/console.mk
 
 # Define linker script file here
-LDSCRIPT= config/stm32f4ems/STM32F407xG_CCM.ld
+ifeq ($(LDSCRIPT),)
+  LDSCRIPT= config/stm32f4ems/STM32F407xG_CCM.ld
+endif
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
