@@ -233,7 +233,7 @@ floatms_t getCrankingSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_S) {
 }
 
 /**
- * @return Spark dwell time, in milliseconds.
+ * @return Spark dwell time, in milliseconds. 0 if tables are not ready.
  */
 floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	float dwellMs;
@@ -245,8 +245,10 @@ floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_S) {
 		dwellMs = interpolate2d(rpm, engineConfiguration->sparkDwellRpmBins, engineConfiguration->sparkDwellValues, DWELL_CURVE_SIZE);
 	}
 
-	if (cisnan(dwellMs) || dwellMs < 0) {
-		firmwareError(CUSTOM_ERR_DWELL_DURATION, "invalid dwell: %f at rpm=%d", dwellMs, rpm);
+	if (cisnan(dwellMs) || dwellMs <= 0) {
+		// this could happen during engine configuration reset
+		warning(CUSTOM_ERR_DWELL_DURATION, "invalid dwell: %f at rpm=%d", dwellMs, rpm);
+		return 0;
 	}
 	return dwellMs;
 }
