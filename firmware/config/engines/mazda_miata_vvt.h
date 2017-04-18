@@ -13,5 +13,6 @@
 #include "engine.h"
 
 void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F);
+void setMazdaMiata2003EngineConfigurationNewBoard(DECLARE_ENGINE_PARAMETER_F);
 
 #endif /* CONFIG_ENGINES_MAZDA_MIATA_VVT_H_ */
