@@ -9,6 +9,19 @@
  *
  * todo: try ZM-DE 2000 protege 36/1 trigger wheel
  *
+ *
+ * Based on http://rusefi.com/wiki/index.php?title=Manual:Hardware_Frankenso_board#Default_Pinout
+ *
+ * Crank   primary trigger      PA5 (3E in Miata board)       white
+ * Cam     vvt input            PC6 (3G in Miata board)       blue
+ *
+ * coil1      +5 VP             PE14
+ *
+ * tachometer +5 VP             PE8
+ * alternator +5 VP             PE10
+ *
+ * VVT solenoid on aux PID#1    PE3
+ *
  */
 
 #include "mazda_miata_vvt.h"
@@ -224,4 +237,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 }
 
+void setMazdaMiata2003EngineConfigurationNewBoard(DECLARE_ENGINE_PARAMETER_F) {
+	setMazdaMiata2003EngineConfiguration(PASS_ENGINE_PARAMETER_F);
 
+}
