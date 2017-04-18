@@ -12,10 +12,14 @@
  *
  * Based on http://rusefi.com/wiki/index.php?title=Manual:Hardware_Frankenso_board#Default_Pinout
  *
+ * Better board pinout
+ * set engine_type 54
+ *
  * Crank   primary trigger      PA5 (3E in Miata board)       white
  * Cam     vvt input            PC6 (3G in Miata board)       blue
  *
- * coil1      +5 VP             PE14
+ * coil1/4    +5 VP             PE14
+ * coil2/2    +5 VP             PC7
  *
  * tachometer +5 VP             PE8
  * alternator +5 VP             PE10
@@ -242,4 +246,5 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 void setMazdaMiata2003EngineConfigurationNewBoard(DECLARE_ENGINE_PARAMETER_F) {
 	setMazdaMiata2003EngineConfiguration(PASS_ENGINE_PARAMETER_F);
 
+	boardConfiguration->ignitionPins[2] = GPIOC_7;
 }
