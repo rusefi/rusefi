@@ -19,6 +19,7 @@
  *
  * tachometer +5 VP             PE8
  * alternator +5 VP             PE10
+ * MIL check engine             PD9
  *
  * VVT solenoid on aux PID#1    PE3
  *
@@ -226,6 +227,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->malfunctionIndicatorPin = GPIOD_9;
 //	boardConfiguration->malfunctionIndicatorPinMode = OM_INVERTED;
 
+	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
 
 	/**
 	 * PA4 Wideband O2 Sensor

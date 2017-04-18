@@ -1033,6 +1033,9 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	case MAZDA_MIATA_2003:
 		setMazdaMiata2003EngineConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;
+	case MAZDA_MIATA_2003_BETTER:
+		setMazdaMiata2003EngineConfigurationNewBoard(PASS_ENGINE_PARAMETER_F);
+		break;
 	case TEST_ENGINE_VVT:
 		setTestVVTEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;

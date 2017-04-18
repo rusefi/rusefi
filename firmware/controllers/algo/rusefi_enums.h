@@ -153,10 +153,10 @@ typedef enum {
 	TEST_CIVIC_4_0_RISE = 51,
 
 
-//todo: why does this not work?#if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	TEST_ISSUE_366_BOTH = 52,
 	TEST_ISSUE_366_RISE = 53,
-//todo:#endif
+
+	MAZDA_MIATA_2003_BETTER = 54,
 
 	Force_4b_engine_type = ENUM_32_BITS,
 } engine_type_e;
