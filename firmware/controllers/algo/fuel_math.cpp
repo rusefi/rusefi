@@ -137,6 +137,7 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_S) {
 			engineConfiguration->crankingInjectionMode :
 			engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
 	if (numberOfCylinders == 0) {
+		warning(CUSTOM_ERR_6509, "config not ready");
 		return 0; // we can end up here during configuration reset
 	}
 	if (isCranking) {
@@ -152,7 +153,12 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_S) {
 			baseFuel, fuelPerCycle, theoreticalInjectionLength);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 	}
-	return theoreticalInjectionLength + ENGINE(engineState.injectorLag);
+	floatms_t injectorLag = ENGINE(engineState.injectorLag);
+	if (cisnan(injectorLag)) {
+		warning(CUSTOM_ERR_6539, "injectorLah not ready");
+		return 0; // we can end up here during configuration reset
+	}
+	return theoreticalInjectionLength + injectorLag;
 }
 
 floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_S) {
