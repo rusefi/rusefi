@@ -75,9 +75,7 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_F) {
 	}
 	sensors.vBatt = hasVBatt(PASS_ENGINE_PARAMETER_F) ? getVBatt(PASS_ENGINE_PARAMETER_F) : 12;
 
-	floatms_t injectorLag = getInjectorLag(sensors.vBatt PASS_ENGINE_PARAMETER);
-	efiAssertVoid(!cisnan(injectorLag), "NaN injectorLag");
-	engineState.injectorLag = injectorLag;
+	engineState.injectorLag = getInjectorLag(sensors.vBatt PASS_ENGINE_PARAMETER);
 }
 
 void Engine::onTriggerEvent(efitick_t nowNt) {
