@@ -349,8 +349,6 @@ void setMiata1994_s(DECLARE_ENGINE_PARAMETER_F) {
 	//engineConfiguration->idleMode != IM_AUTO;
 	engineConfiguration->targetIdleRpm = 800;
 
-	engineConfiguration->fanOffTemperature = 90;
-	engineConfiguration->fanOnTemperature = 95;
 
 	engineConfiguration->tpsMax = 86;
 	engineConfiguration->tpsMin = 596;
