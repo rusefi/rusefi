@@ -13,6 +13,7 @@
 #include "engine.h"
 
 void setMazdaMiataNbInjectorLag(DECLARE_ENGINE_PARAMETER_F);
+void setMazdaMiataNbTpsTps(DECLARE_ENGINE_PARAMETER_F);
 
 void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F);
 void setMazdaMiata2003EngineConfigurationNewBoard(DECLARE_ENGINE_PARAMETER_F);
