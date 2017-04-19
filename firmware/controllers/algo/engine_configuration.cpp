@@ -254,6 +254,8 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 	boardConfiguration->joystickCPin = GPIO_UNASSIGNED;
 	boardConfiguration->joystickDPin = GPIO_UNASSIGNED;
 
+	boardConfiguration->frequencyReportingMapInputPin = GPIO_UNASSIGNED;
+
 	engineConfiguration->sdCardSpiDevice = SPI_NONE;
 	boardConfiguration->sdCardCsPin = GPIO_UNASSIGNED;
 
@@ -627,8 +629,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->vbattDividerCoeff = ((float) (15 + 65)) / 15;
 
-	engineConfiguration->fanOnTemperature = 75;
-	engineConfiguration->fanOffTemperature = 70;
+	engineConfiguration->fanOnTemperature = 95;
+	engineConfiguration->fanOffTemperature = 90;
 
 	engineConfiguration->tpsMin = convertVoltageTo10bitADC(1.250);
 	engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);
