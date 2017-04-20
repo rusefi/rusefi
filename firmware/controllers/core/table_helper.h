@@ -89,7 +89,7 @@ template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
 float Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::getValue(float xRpm, float y) {
 	efiAssert(initialized, "map not initialized", NAN);
 	if (cisnan(y)) {
-		warning(CUSTOM_OBD_16, "%s: y is NaN", name);
+		warning(CUSTOM_PARAM_RANGE, "%s: y is NaN", name);
 		return NAN;
 	}
 	// todo: we have a bit of a mess: in TunerStudio, RPM is X-axis

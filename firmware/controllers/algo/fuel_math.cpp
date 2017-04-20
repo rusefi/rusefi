@@ -137,7 +137,7 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_S) {
 			engineConfiguration->crankingInjectionMode :
 			engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
 	if (numberOfCylinders == 0) {
-		warning(CUSTOM_ERR_6509, "config not ready");
+		warning(CUSTOM_CONFIG_NOT_READY, "config not ready");
 		return 0; // we can end up here during configuration reset
 	}
 	if (isCranking) {

@@ -290,7 +290,7 @@ static ALWAYS_INLINE void prepareIgnitionSchedule(int rpm DECLARE_ENGINE_PARAMET
 		warning(CUSTOM_ZERO_DWELL, "dwell is zero?");
 	}
 	if (engine->engineState.dwellAngle > maxAllowedDwellAngle) {
-		warning(CUSTOM_OBD_33, "dwell angle too long: %f", engine->engineState.dwellAngle);
+		warning(CUSTOM_DWELL_TOO_LONG, "dwell angle too long: %f", engine->engineState.dwellAngle);
 	}
 
 	// todo: add some check for dwell overflow? like 4 times 6 ms while engine cycle is less then that

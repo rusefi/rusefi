@@ -124,7 +124,7 @@ static bool float2bool(float v) {
 
 float LECalculator::pop(le_action_e action) {
 	if (stack.size() == 0) {
-		warning(CUSTOM_OBD_5, "empty stack for action=%d", action);
+		warning(CUSTOM_EMPTY_FSIO_STACK, "empty stack for action=%d", action);
 		return NAN;
 	}
 	return stack.pop();
@@ -291,7 +291,7 @@ bool LECalculator::processElement(Engine *engine, LEElement *element) {
 		push(element->action, engine->knockCount);
 		break;
 	case LE_UNDEFINED:
-		warning(CUSTOM_OBD_6, "FSIO undefined action");
+		warning(CUSTOM_UNKNOWN_FSIO, "FSIO undefined action");
 		return true;
 	default:
 		push(element->action, getLEValue(engine, &stack, element->action));
@@ -334,7 +334,7 @@ float LECalculator::getValue(float selfValue, Engine *engine) {
 		counter++;
 	}
 	if (stack.size() != 1) {
-		warning(CUSTOM_OBD_8, "unexpected FSIO stack size: %d", stack.size());
+		warning(CUSTOM_FSIO_STACK_SIZE, "unexpected FSIO stack size: %d", stack.size());
 		return NAN;
 	}
 	return stack.pop();

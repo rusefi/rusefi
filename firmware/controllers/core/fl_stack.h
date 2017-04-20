@@ -69,7 +69,7 @@ void FLStack<T, MAXSIZE>::push(T value) {
 template<typename T, int MAXSIZE>
 T FLStack<T, MAXSIZE>::pop() {
 	if (currentSize == 0) {
-		firmwareError(CUSTOM_ERR_6504, "FLStack is empty");
+		firmwareError(CUSTOM_FLSTACK, "FLStack is empty");
 	}
 	return values[--currentSize];
 }

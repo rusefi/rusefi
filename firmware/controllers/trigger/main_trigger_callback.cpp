@@ -499,7 +499,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 
 	if (limitedSpark || limitedFuel) {
 		// todo: this is not really a warning
-		warning(CUSTOM_OBD_34, "skipping stroke due to rpm=%d", rpm);
+		warning(CUSTOM_SKIPPING_STROKE, "skipping stroke due to rpm=%d", rpm);
 	}
 
 #if (EFI_HISTOGRAMS && EFI_PROD_CODE) || defined(__DOXYGEN__)
