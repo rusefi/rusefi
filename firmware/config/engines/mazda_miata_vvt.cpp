@@ -309,4 +309,8 @@ void setMazdaMiata2003EngineConfigurationNewBoard(DECLARE_ENGINE_PARAMETER_F) {
 	setMazdaMiata2003EngineConfiguration(PASS_ENGINE_PARAMETER_F);
 
 	boardConfiguration->ignitionPins[2] = GPIOC_7;
+
+	// Frankenso analog #7 pin 3J, W48 top <>W48 bottom jumper, not OEM
+	engineConfiguration->afr.hwChannel = EFI_ADC_3; // PA3
+
 }
