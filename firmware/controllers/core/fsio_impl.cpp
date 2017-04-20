@@ -103,7 +103,7 @@ float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 	case LE_METHOD_VBATT:
 		return getVBatt(PASS_ENGINE_PARAMETER_F);
 	default:
-		warning(CUSTOM_OBD_9, "FSIO unexpected %d", action);
+		warning(CUSTOM_FSIO_UNEXPECTED, "FSIO unexpected %d", action);
 		return NAN;
 	}
 }
@@ -193,7 +193,7 @@ void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 			const char *formula = config->le_formulas[i];
 			LEElement *logic = userPool.parseExpression(formula);
 			if (logic == NULL) {
-				warning(CUSTOM_OBD_10, "parsing [%s]", formula);
+				warning(CUSTOM_FSIO_PARSING, "parsing [%s]", formula);
 			}
 
 			fsioLogics[i] = logic;

@@ -60,7 +60,7 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_F) {
 	switch (engineConfiguration->fuelAlgorithm) {
 	case LM_PLAIN_MAF:
 		if (!hasMafSensor(PASS_ENGINE_PARAMETER_F)) {
-			warning(CUSTOM_OBD_17, "MAF sensor needed for current fuel algorithm");
+			warning(CUSTOM_MAF_NEEDED, "MAF sensor needed for current fuel algorithm");
 			return NAN;
 		}
 		return getMafT(engineConfiguration);
@@ -457,7 +457,7 @@ static int getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_S) {
 		break;
 
 	default:
-		warning(CUSTOM_OBD_25, "unsupported ignitionMode %d in initializeIgnitionActions()", engineConfiguration->ignitionMode);
+		warning(CUSTOM_OBD_IGNITION_MODE, "unsupported ignitionMode %d in initializeIgnitionActions()", engineConfiguration->ignitionMode);
 		return 0;
 	}
 }
