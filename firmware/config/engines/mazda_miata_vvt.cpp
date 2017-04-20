@@ -15,17 +15,17 @@
  * Better board pinout
  * set engine_type 54
  *
- * Crank   primary trigger      PA5 (3E in Miata board)       white
- * Cam     vvt input            PC6 (3G in Miata board)       blue
+ * Crank   primary trigger        PA5 (3E in Miata board)       white
+ * Cam     vvt input              PC6 (3G in Miata board)       blue
  *
- * coil1/4    +5 VP             PE14
- * coil2/2    +5 VP             PC7
+ * coil1/4          (p1 +5 VP)    PE14
+ * coil2/2          (p1 +5 VP)    PC7
  *
- * tachometer +5 VP             PE8
- * alternator +5 VP             PE10
- * MIL check engine             PD9
+ * tachometer +5 VP (p3 +5 VP)    PE8
+ * alternator +5 VP (p3 +5 VP)    PE10
+ * MIL check engine (p4 no VP)    PD9
  *
- * VVT solenoid on aux PID#1    PE3
+ * VVT solenoid on aux PID#1      PE3
  *
  */
 
