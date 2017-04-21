@@ -17,6 +17,7 @@
  *
  * Crank   primary trigger        PA5 (3E in Miata board)       white
  * Cam     vvt input              PC6 (3G in Miata board)       blue
+ * Wideband input                 PA3 (3J in Miata board)
  *
  * coil1/4          (p1 +5 VP)    PE14
  * coil2/2          (p1 +5 VP)    PC7
@@ -26,6 +27,7 @@
  * MIL check engine (p4 no VP)    PD9
  *
  * VVT solenoid on aux PID#1      PE3
+ *
  *
  */
 
