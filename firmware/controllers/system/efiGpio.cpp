@@ -6,12 +6,9 @@
  */
 
 #include "main.h"
-#if EFI_GPIO
+#if EFI_GPIO || defined(__DOXYGEN__)
 #include "efiGpio.h"
 #include "io_pins.h"
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-#include "gpio_helper.h"
-#endif
 
 pin_output_mode_e OUTPUT_MODE_DEFAULT = OM_DEFAULT;
 
@@ -132,11 +129,9 @@ void OutputPin::unregister() {
 }
 
 void OutputPin::setDefaultPinState(pin_output_mode_e *outputMode) {
-#if EFI_GPIO || defined(__DOXYGEN__)
 	pin_output_mode_e mode = *outputMode;
 	assertOMode(mode);
 	this->modePtr = outputMode;
-#endif
 	setValue(false); // initial state
 }
 

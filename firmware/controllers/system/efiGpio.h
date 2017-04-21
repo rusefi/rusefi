@@ -171,7 +171,7 @@ public:
 #else /* EFI_PROD_CODE */
 		#define doSetOutputPinValue2(output, logicValue) {                              \
 				pin_output_mode_e mode = OM_DEFAULT;                                    \
-				int eValue = getElectricalValue(logicValue, mode);                      \
+			/* 	int eValue = getElectricalValue(logicValue, mode); */                   \
 				setPinValue(output, eValue, logicValue);                                \
 		}
 #endif /* EFI_PROD_CODE */
