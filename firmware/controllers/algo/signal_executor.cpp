@@ -58,8 +58,7 @@ void turnPinHigh(NamedOutputPin *output) {
 #endif /* EFI_DEFAILED_LOGGING */
 
 	// turn the output level ACTIVE
-	// todo: this XOR should go inside the setOutputPinValue method
-	doSetOutputPinValue2(output, true);
+	output->setValue(true);
 
 	// sleep for the needed duration
 #if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
@@ -78,7 +77,7 @@ void turnPinHigh(NamedOutputPin *output) {
 void turnPinLow(NamedOutputPin *output) {
 	efiAssertVoid(output!=NULL, "NULL turnPinLow");
 	// turn off the output
-	doSetOutputPinValue2(output, false);
+	output->setValue(false);
 
 #if EFI_DEFAILED_LOGGING || defined(__DOXYGEN__)
 	systime_t after = hTimeNow();
