@@ -727,7 +727,7 @@ void initTriggerDecoderLogger(Logging *sharedLogger) {
 
 void initTriggerDecoder(void) {
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
-	outputPinRegisterExt2("trg_err", &enginePins.triggerDecoderErrorPin, boardConfiguration->triggerErrorPin,
+	enginePins.triggerDecoderErrorPin.initPin("trg_err", boardConfiguration->triggerErrorPin,
 			&boardConfiguration->triggerErrorPinMode);
 #endif /* EFI_GPIO_HARDWARE */
 }

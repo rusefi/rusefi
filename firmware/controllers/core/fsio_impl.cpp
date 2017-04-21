@@ -504,7 +504,7 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 		if (brainPin != GPIO_UNASSIGNED) {
 			int frequency = boardConfiguration->fsioFrequency[i];
 			if (frequency == 0) {
-				outputPinRegisterExt2(getGpioPinName(i), &enginePins.fsioOutputs[i], boardConfiguration->fsioPins[i], &defa);
+				enginePins.fsioOutputs[i].initPin(getGpioPinName(i), boardConfiguration->fsioPins[i], &defa);
 			} else {
 				startSimplePwmExt(&fsioPwm[i], "FSIOpwm", brainPin, &enginePins.fsioOutputs[i], frequency, 0.5f, applyPinState);
 			}

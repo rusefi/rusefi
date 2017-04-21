@@ -43,7 +43,6 @@
 #include "pwm_generator.h"
 
 #define ETB_FREQ 400
-extern pin_output_mode_e DEFAULT_OUTPUT;
 
 static LoggingWithStorage logger("ETB");
 /**
@@ -171,8 +170,8 @@ void startETBPins(void) {
 			0.80,
 			applyPinState);
 
-	outputPinRegisterExt2("etb dir open", &outputDirectionOpen, boardConfiguration->etbDirectionPin1, &DEFAULT_OUTPUT);
-	outputPinRegisterExt2("etb dir close", &outputDirectionClose, boardConfiguration->etbDirectionPin2, &DEFAULT_OUTPUT);
+	outputDirectionOpen.initPin("etb dir open", boardConfiguration->etbDirectionPin1);
+	outputDirectionClose.initPin("etb dir close", boardConfiguration->etbDirectionPin2);
 }
 
 void initElectronicThrottle(void) {

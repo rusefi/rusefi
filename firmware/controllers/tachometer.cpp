@@ -35,7 +35,7 @@ void initTachometer(void) {
 		return;
 	}
 
-	outputPinRegisterExt2("analog tach output", &enginePins.tachOut, boardConfiguration->tachOutputPin, &boardConfiguration->tachOutputPinMode);
+	enginePins.tachOut.initPin("analog tach output", boardConfiguration->tachOutputPin, &boardConfiguration->tachOutputPinMode);
 
 	addTriggerEventListener(tachSignalCallback, "tach", engine);
 }

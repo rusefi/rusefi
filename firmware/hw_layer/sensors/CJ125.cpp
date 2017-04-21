@@ -110,7 +110,7 @@ void initCJ125(Logging *sharedLogger) {
 
 	driver = getSpiDevice(engineConfiguration->cj125SpiDevice);
 
-	outputPinRegisterExt2("cj125 CS", &cj125Cs, boardConfiguration->cj125CsPin,
+	cj125Cs.initPin("cj125 CS", boardConfiguration->cj125CsPin,
 			&engineConfiguration->cj125CsPinMode);
 
 	if (boardConfiguration->wboHeaterPin != GPIO_UNASSIGNED) {
