@@ -129,8 +129,8 @@ void boardInit(void) {
 }
 
 /**
- * @brief   Board-specific configuration code.
+ * @brief   Board-specific configuration code overrides.
  * @todo    Add your board-specific code, if any.
  */
-void setBoardConfiguration(void) {
+void setBoardConfigurationOverrides(void) {
 }
