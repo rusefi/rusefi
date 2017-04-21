@@ -34,7 +34,9 @@ void setDiag(int value) {
 
 #define PERIOD 3000
 
-void emulate(Engine *engine) {
+EXTERN_ENGINE;
+
+static void emulate(void) {
 	print("Emulating...\r\n");
 	setDiag(1);
 	chThdSleep(1);
@@ -43,11 +45,11 @@ void emulate(Engine *engine) {
 	for (int i = 400; i <= 1300; i++) {
 		if (i % 50 != 0)
 			continue;
-		setTriggerEmulatorRPM(i, engine);
+		setTriggerEmulatorRPM(i PASS_ENGINE_PARAMETER);
 		chThdSleepMilliseconds(PERIOD);
 	}
 
-	setTriggerEmulatorRPM(0, engine);
+	setTriggerEmulatorRPM(0 PASS_ENGINE_PARAMETER);
 
 	setFullLog(0);
 	setDiag(0);
@@ -57,14 +59,15 @@ void emulate(Engine *engine) {
 
 static int flag = FALSE;
 
-static msg_t eeThread(Engine *engine) {
+static msg_t eeThread(void *arg) {
+	(void)arg;
 	chRegSetThreadName("Engine");
 
 	while (TRUE) {
 		while (!flag)
 			chThdSleepMilliseconds(200);
 		flag = FALSE;
-		emulate(engine);
+		emulate();
 	}
 #if defined __GNUC__
 	return (msg_t)NULL;
@@ -102,5 +105,5 @@ void initEngineEmulator(Logging *sharedLogger, Engine *engine) {
 #endif /* EFI_POTENTIOMETER */
 
 	//initECUstimulator();
-	initTriggerEmulator(sharedLogger, engine);
+	initTriggerEmulator(sharedLogger PASS_ENGINE_PARAMETER);
 }

@@ -27,10 +27,10 @@ extern PwmConfig triggerSignal;
 
 static OutputPin emulatorOutputs[3];
 
-void initTriggerEmulator(Logging *sharedLogger, Engine *engine) {
+EXTERN_ENGINE;
 
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
+void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
+
 
 #if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
 	print("Emulating %s\r\n", getConfigurationName(engineConfiguration->engineType));

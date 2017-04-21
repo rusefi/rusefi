@@ -116,7 +116,7 @@ void rusEfiFunctionalTest(void) {
 
 	initTriggerCentral(&sharedLogger, engine);
 
-	initTriggerEmulator(&sharedLogger, engine);
+	initTriggerEmulator(&sharedLogger PASS_ENGINE_PARAMETER);
 
 #if EFI_MAP_AVERAGING || defined(__DOXYGEN__)
 	initMapAveraging(&sharedLogger, engine);
@@ -130,7 +130,7 @@ void rusEfiFunctionalTest(void) {
 
 	initPeriodicEvents(PASS_ENGINE_PARAMETER_F);
 
-	setTriggerEmulatorRPM(DEFAULT_SIM_RPM, engine);
+	setTriggerEmulatorRPM(DEFAULT_SIM_RPM PASS_ENGINE_PARAMETER);
 	engineConfiguration->engineSnifferRpmThreshold = DEFAULT_SNIFFER_THR;
 }
 
