@@ -12,11 +12,13 @@
 
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 #include "io_pins.h"
-// todo: maybe remove this from here? pin_repository.h has a lot of stuff it should not have
-#include "pin_repository.h"
 #endif /* EFI_GPIO_HARDWARE */
 
 EXTERN_ENGINE;
+
+// todo: clean this mess, this should become 'static'/private
+EnginePins enginePins;
+extern LoggingWithStorage sharedLogger;
 
 static pin_output_mode_e OUTPUT_MODE_DEFAULT = OM_DEFAULT;
 
@@ -25,7 +27,6 @@ static const char *sparkNames[IGNITION_PIN_COUNT] = { "c1", "c2", "c3", "c4", "c
 
 static const char *injectorNames[INJECTION_PIN_COUNT] = { "i1", "i2", "i3", "i4", "i5", "i6", "i7", "i8",
 		"j9", "iA", "iB", "iC"};
-
 
 EnginePins::EnginePins() {
 	dizzyOutput.name = DIZZY_NAME;
@@ -60,12 +61,6 @@ void EnginePins::reset() {
 	}
 }
 
-
-
-// todo: clean this mess, this should become 'static'/private
-EnginePins enginePins;
-extern LoggingWithStorage sharedLogger;
-
 NamedOutputPin::NamedOutputPin() : OutputPin() {
 	name = NULL;
 }
@@ -79,15 +74,14 @@ InjectorOutputPin::InjectorOutputPin() : NamedOutputPin() {
 	injectorIndex = -1;
 }
 
-
 bool NamedOutputPin::stop() {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 	if (isInitialized() && getLogicValue()) {
 		setValue(false);
 		scheduleMsg(&sharedLogger, "turning off %s", name);
 		return true;
 	}
-#endif /* EFI_PROD_CODE */
+#endif /* EFI_GPIO_HARDWARE */
 	return false;
 }
 
