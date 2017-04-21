@@ -231,12 +231,19 @@ void initOutputPins(void) {
 
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 
-/**
- * This method is used for digital GPIO pins only, for peripheral pins see mySetPadMode
- */
-static void outputPinRegisterExt(const char *msg, OutputPin *output, ioportid_t port, uint32_t pin,
-		pin_output_mode_e *outputMode) {
-#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
+void initPrimaryPins(void) {
+	outputPinRegisterExt2("led: ERROR status", &enginePins.errorLedPin, LED_ERROR_BRAIN_PIN, &DEFAULT_OUTPUT);
+}
+
+void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
+	if (brainPin == GPIO_UNASSIGNED)
+		return;
+	ioportid_t port = getHwPort(brainPin);
+	int pin = getHwPin(brainPin);
+
+	/**
+	 * This method is used for digital GPIO pins only, for peripheral pins see mySetPadMode
+	 */
 	if (port == GPIO_NULL) {
 		// that's for GRIO_NONE
 		output->port = port;
@@ -245,25 +252,11 @@ static void outputPinRegisterExt(const char *msg, OutputPin *output, ioportid_t 
 
 	assertOMode(*outputMode);
 	iomode_t mode = (*outputMode == OM_DEFAULT || *outputMode == OM_INVERTED) ?
-			PAL_MODE_OUTPUT_PUSHPULL : PAL_MODE_OUTPUT_OPENDRAIN;
+		PAL_MODE_OUTPUT_PUSHPULL : PAL_MODE_OUTPUT_OPENDRAIN;
 
 	initOutputPinExt(msg, output, port, pin, mode);
 
 	output->setDefaultPinState(outputMode);
-#endif /* EFI_GPIO_HARDWARE */
-}
-
-void initPrimaryPins(void) {
-	outputPinRegisterExt2("led: ERROR status", &enginePins.errorLedPin, LED_ERROR_BRAIN_PIN, &DEFAULT_OUTPUT);
-}
-
-void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
-	if (brainPin == GPIO_UNASSIGNED)
-		return;
-	ioportid_t hwPort = getHwPort(brainPin);
-	int hwPin = getHwPin(brainPin);
-
-	outputPinRegisterExt(msg, output, hwPort, hwPin, outputMode);
 }
 
 /**
