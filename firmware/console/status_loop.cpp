@@ -557,8 +557,7 @@ static void initStatusLeds(void) {
 #endif
 
 #if EFI_WARNING_LED || defined(__DOXYGEN__)
-	outputPinRegister("led: warning status", &enginePins.warningPin, LED_WARNING_PORT,
-	LED_WARNING_PIN);
+	outputPinRegisterExt2("led: warning status", &enginePins.warningPin, LED_WARNING_BRAIN_PIN, &DEFAULT_OUTPUT);
 	outputPinRegisterExt2("led: running status", &enginePins.runningPin, engineConfiguration->runningPin,
 			&DEFAULT_OUTPUT);
 #endif /* EFI_WARNING_LED */

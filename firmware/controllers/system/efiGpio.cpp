@@ -184,10 +184,6 @@ void initOutputPins(void) {
 // todo: it's too late to clear now? this breaks default status LEDs
 // todo: fix this?
 //	memset(&outputs, 0, sizeof(outputs));
-//	outputPinRegister("ext led 1", LED_EXT_1, EXTRA_LED_1_PORT, EXTRA_LED_1_PIN);
-//	outputPinRegister("ext led 2", LED_EXT_2, EXTRA_LED_2_PORT, EXTRA_LED_2_PIN);
-//	outputPinRegister("ext led 3", LED_EXT_3, EXTRA_LED_2_PORT, EXTRA_LED_3_PIN);
-//	outputPinRegister("alive1", LED_DEBUG, GPIOD, 6);
 
 #if HAL_USE_SPI || defined(__DOXYGEN__)
 	outputPinRegisterExt2("spi CS5", &enginePins.sdCsPin, boardConfiguration->sdCardCsPin, &DEFAULT_OUTPUT);
@@ -262,7 +258,7 @@ void outputPinRegister(const char *msg, OutputPin *output, ioportid_t port, uint
 }
 
 void initPrimaryPins(void) {
-	outputPinRegister("led: ERROR status", &enginePins.errorLedPin, LED_ERROR_PORT, LED_ERROR_PIN);
+	outputPinRegisterExt2("led: ERROR status", &enginePins.errorLedPin, LED_ERROR_BRAIN_PIN, &DEFAULT_OUTPUT);
 }
 
 void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
