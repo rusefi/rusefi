@@ -349,7 +349,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
  *
  */
 static void scheduleOutput2(OutputSignalPair *pair, efitimeus_t nowUs, float delayUs, float durationUs, InjectorOutputPin *output) {
-#if EFI_GPIO || defined(__DOXYGEN__)
+#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	printf("scheduling output %s\r\n", output->name);
@@ -366,7 +366,7 @@ static void scheduleOutput2(OutputSignalPair *pair, efitimeus_t nowUs, float del
 	efitimeus_t turnOffTime = nowUs + (int) (delayUs + durationUs);
 
 	seScheduleByTime("out down", sDown, turnOffTime, (schfunc_t) &seTurnPinLow, pair);
-#endif /* EFI_GPIO */
+#endif /* EFI_GPIO_HARDWARE */
 }
 
 static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_F) {

@@ -10,7 +10,7 @@
 #ifndef EFIFEATURES_H_
 #define EFIFEATURES_H_
 
-#define EFI_GPIO TRUE
+#define EFI_GPIO_HARDWARE TRUE
 
 #define EFI_FSIO TRUE
 
