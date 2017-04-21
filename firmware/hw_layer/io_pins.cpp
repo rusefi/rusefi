@@ -53,7 +53,6 @@ ioportmask_t getHwPin(brain_pin_e brainPin) {
 	return brainPin % PORT_SIZE;
 }
 
-
 /**
  * @brief Initialize the hardware output pin while also assigning it a logical name
  */
