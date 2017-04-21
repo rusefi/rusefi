@@ -1,10 +1,8 @@
 #ifndef _A_H_HEADER_
 #define _A_H_HEADER_
-// auto-generated from../../firmware/controllers/algo/io_pins.h
 
 
-#include "io_pins.h"
-// auto-generated from../../firmware/controllers/algo/rusefi_enums.h
+// supposed to be auto-generated from../../firmware/controllers/algo/rusefi_enums.h but not really
 
 
 #include "rusefi_enums.h"

@@ -2,7 +2,7 @@
 // by enum2string.jar tool
 
 #include "main.h"
-#include "io_pins.h"
+
 // auto-generated from../../firmware/\controllers/algo/rusefi_enums.h
 // by enum2string.jar tool
 
