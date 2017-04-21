@@ -31,7 +31,7 @@
  * Board identifier.
  */
 #define BOARD_ST_STM32F4_DISCOVERY
-#define BOARD_NAME                  "STM32F4-Discovery for RusEFI"
+#define BOARD_NAME                  "STM32F407 for RusEFI"
 
 /*
  * Board oscillators-related settings.
@@ -280,6 +280,9 @@
 #define PIN_PUPDR_PULLDOWN(n)       (2U << ((n) * 2U))
 #define PIN_AFIO_AF(n, v)           ((v) << (((n) % 8U) * 4U))
 
+// See https://github.com/rusefi/rusefi/issues/397
+#define DEFAULT_GPIO_SPEED PIN_OSPEED_HIGH
+
 /*
  * GPIOA setup:
  *
@@ -332,22 +335,22 @@
                                      PIN_OTYPE_PUSHPULL(GPIOA_SWDIO) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOA_SWCLK) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOA_PIN15))
-#define VAL_GPIOA_OSPEEDR           (PIN_OSPEED_HIGH(GPIOA_BUTTON) |        \
-                                     PIN_OSPEED_HIGH(GPIOA_PIN1) |          \
-                                     PIN_OSPEED_HIGH(GPIOA_PIN2) |          \
-                                     PIN_OSPEED_HIGH(GPIOA_PIN3) |          \
-                                     PIN_OSPEED_HIGH(GPIOA_LRCK) |          \
+#define VAL_GPIOA_OSPEEDR           (DEFAULT_GPIO_SPEED(GPIOA_BUTTON) |        \
+                                     DEFAULT_GPIO_SPEED(GPIOA_PIN1) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOA_PIN2) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOA_PIN3) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOA_LRCK) |          \
                                      PIN_OSPEED_MEDIUM(GPIOA_SPC) |         \
                                      PIN_OSPEED_MEDIUM(GPIOA_SDO) |         \
                                      PIN_OSPEED_MEDIUM(GPIOA_SDI) |         \
-                                     PIN_OSPEED_HIGH(GPIOA_PIN8) |          \
-                                     PIN_OSPEED_HIGH(GPIOA_VBUS_FS) |       \
-                                     PIN_OSPEED_HIGH(GPIOA_OTG_FS_ID) |     \
-                                     PIN_OSPEED_HIGH(GPIOA_OTG_FS_DM) |     \
-                                     PIN_OSPEED_HIGH(GPIOA_OTG_FS_DP) |     \
-                                     PIN_OSPEED_HIGH(GPIOA_SWDIO) |         \
-                                     PIN_OSPEED_HIGH(GPIOA_SWCLK) |         \
-                                     PIN_OSPEED_HIGH(GPIOA_PIN15))
+                                     DEFAULT_GPIO_SPEED(GPIOA_PIN8) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOA_VBUS_FS) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOA_OTG_FS_ID) |     \
+                                     DEFAULT_GPIO_SPEED(GPIOA_OTG_FS_DM) |     \
+                                     DEFAULT_GPIO_SPEED(GPIOA_OTG_FS_DP) |     \
+                                     DEFAULT_GPIO_SPEED(GPIOA_SWDIO) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOA_SWCLK) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOA_PIN15))
 #define VAL_GPIOA_PUPDR             (PIN_PUPDR_FLOATING(GPIOA_BUTTON) |     \
                                      PIN_PUPDR_PULLUP(GPIOA_PIN1) |         \
                                      PIN_PUPDR_PULLUP(GPIOA_PIN2) |         \
@@ -449,22 +452,22 @@
                                      PIN_OTYPE_PUSHPULL(GPIOB_PIN13) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOB_PIN14) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOB_PIN15))
-#define VAL_GPIOB_OSPEEDR           (PIN_OSPEED_HIGH(GPIOB_PIN0) |          \
-                                     PIN_OSPEED_HIGH(GPIOB_PIN1) |          \
-                                     PIN_OSPEED_HIGH(GPIOB_PIN2) |          \
-                                     PIN_OSPEED_HIGH(GPIOB_SWO) |           \
-                                     PIN_OSPEED_HIGH(GPIOB_PIN4) |          \
-                                     PIN_OSPEED_HIGH(GPIOB_PIN5) |          \
-                                     PIN_OSPEED_HIGH(GPIOB_SCL) |           \
-                                     PIN_OSPEED_HIGH(GPIOB_PIN7) |          \
-                                     PIN_OSPEED_HIGH(GPIOB_PIN8) |          \
-                                     PIN_OSPEED_HIGH(GPIOB_PIN9) |           \
-                                     PIN_OSPEED_HIGH(GPIOB_PIN10) |        \
-                                     PIN_OSPEED_HIGH(GPIOB_PIN11) |         \
-                                     PIN_OSPEED_HIGH(GPIOB_PIN12) |         \
-                                     PIN_OSPEED_HIGH(GPIOB_PIN13) |         \
-                                     PIN_OSPEED_HIGH(GPIOB_PIN14) |         \
-                                     PIN_OSPEED_HIGH(GPIOB_PIN15))
+#define VAL_GPIOB_OSPEEDR           (DEFAULT_GPIO_SPEED(GPIOB_PIN0) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOB_PIN1) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOB_PIN2) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOB_SWO) |           \
+                                     DEFAULT_GPIO_SPEED(GPIOB_PIN4) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOB_PIN5) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOB_SCL) |           \
+                                     DEFAULT_GPIO_SPEED(GPIOB_PIN7) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOB_PIN8) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOB_PIN9) |           \
+                                     DEFAULT_GPIO_SPEED(GPIOB_PIN10) |        \
+                                     DEFAULT_GPIO_SPEED(GPIOB_PIN11) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOB_PIN12) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOB_PIN13) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOB_PIN14) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOB_PIN15))
 #define VAL_GPIOB_PUPDR             (PIN_PUPDR_PULLUP(GPIOB_PIN0) |         \
                                      PIN_PUPDR_PULLUP(GPIOB_PIN1) |         \
                                      PIN_PUPDR_PULLUP(GPIOB_PIN2) |         \
@@ -566,22 +569,22 @@
                                      PIN_OTYPE_PUSHPULL(GPIOC_PIN13) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOC_PIN14) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOC_PIN15))
-#define VAL_GPIOC_OSPEEDR           (PIN_OSPEED_HIGH(GPIOC_OTG_FS_POWER_ON) |\
-                                     PIN_OSPEED_HIGH(GPIOC_PIN1) |          \
-                                     PIN_OSPEED_HIGH(GPIOC_PIN2) |          \
-                                     PIN_OSPEED_HIGH(GPIOC_PIN3) |       \
-                                     PIN_OSPEED_HIGH(GPIOC_PIN4) |          \
-                                     PIN_OSPEED_HIGH(GPIOC_PIN5) |          \
-                                     PIN_OSPEED_HIGH(GPIOC_PIN6) |          \
-                                     PIN_OSPEED_HIGH(GPIOC_PIN7) |          \
-                                     PIN_OSPEED_HIGH(GPIOC_PIN8) |          \
-                                     PIN_OSPEED_HIGH(GPIOC_PIN9) |          \
-                                     PIN_OSPEED_HIGH(GPIOC_PIN10) |          \
-                                     PIN_OSPEED_HIGH(GPIOC_PIN11) |         \
-                                     PIN_OSPEED_HIGH(GPIOC_PIN12) |          \
-                                     PIN_OSPEED_HIGH(GPIOC_PIN13) |         \
-                                     PIN_OSPEED_HIGH(GPIOC_PIN14) |         \
-                                     PIN_OSPEED_HIGH(GPIOC_PIN15))
+#define VAL_GPIOC_OSPEEDR           (DEFAULT_GPIO_SPEED(GPIOC_OTG_FS_POWER_ON) |\
+                                     DEFAULT_GPIO_SPEED(GPIOC_PIN1) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOC_PIN2) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOC_PIN3) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOC_PIN4) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOC_PIN5) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOC_PIN6) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOC_PIN7) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOC_PIN8) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOC_PIN9) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOC_PIN10) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOC_PIN11) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOC_PIN12) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOC_PIN13) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOC_PIN14) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOC_PIN15))
 #define VAL_GPIOC_PUPDR             (PIN_PUPDR_FLOATING(GPIOC_OTG_FS_POWER_ON) |\
                                      PIN_PUPDR_PULLDOWN(GPIOC_PIN1) |         \
                                      PIN_PUPDR_PULLDOWN(GPIOC_PIN2) |         \
@@ -683,22 +686,22 @@
                                      PIN_OTYPE_PUSHPULL(GPIOD_LED3) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOD_LED5) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOD_LED6))
-#define VAL_GPIOD_OSPEEDR           (PIN_OSPEED_HIGH(GPIOD_PIN0) |          \
-                                     PIN_OSPEED_HIGH(GPIOD_PIN1) |          \
-                                     PIN_OSPEED_HIGH(GPIOD_PIN2) |          \
-                                     PIN_OSPEED_HIGH(GPIOD_PIN3) |          \
-                                     PIN_OSPEED_HIGH(GPIOD_RESET) |         \
-                                     PIN_OSPEED_HIGH(GPIOD_OVER_CURRENT) |  \
-                                     PIN_OSPEED_HIGH(GPIOD_PIN6) |          \
-                                     PIN_OSPEED_HIGH(GPIOD_PIN7) |          \
-                                     PIN_OSPEED_HIGH(GPIOD_PIN8) |          \
-                                     PIN_OSPEED_HIGH(GPIOD_PIN9) |          \
-                                     PIN_OSPEED_HIGH(GPIOD_PIN10) |         \
-                                     PIN_OSPEED_HIGH(GPIOD_PIN11) |         \
-                                     PIN_OSPEED_HIGH(GPIOD_LED4) |          \
-                                     PIN_OSPEED_HIGH(GPIOD_LED3) |          \
-                                     PIN_OSPEED_HIGH(GPIOD_LED5) |          \
-                                     PIN_OSPEED_HIGH(GPIOD_LED6))
+#define VAL_GPIOD_OSPEEDR           (DEFAULT_GPIO_SPEED(GPIOD_PIN0) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOD_PIN1) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOD_PIN2) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOD_PIN3) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOD_RESET) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOD_OVER_CURRENT) |  \
+                                     DEFAULT_GPIO_SPEED(GPIOD_PIN6) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOD_PIN7) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOD_PIN8) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOD_PIN9) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOD_PIN10) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOD_PIN11) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOD_LED4) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOD_LED3) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOD_LED5) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOD_LED6))
 #define VAL_GPIOD_PUPDR             (PIN_PUPDR_PULLUP(GPIOD_PIN0) |         \
                                      PIN_PUPDR_PULLUP(GPIOD_PIN1) |         \
                                      PIN_PUPDR_PULLUP(GPIOD_PIN2) |         \
@@ -800,22 +803,22 @@
                                      PIN_OTYPE_PUSHPULL(GPIOE_PIN13) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOE_PIN14) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOE_PIN15))
-#define VAL_GPIOE_OSPEEDR           (PIN_OSPEED_HIGH(GPIOE_PIN0) |          \
-                                     PIN_OSPEED_HIGH(GPIOE_PIN1) |          \
-                                     PIN_OSPEED_HIGH(GPIOE_PIN2) |          \
-                                     PIN_OSPEED_HIGH(GPIOE_PIN3) |        \
-                                     PIN_OSPEED_HIGH(GPIOE_PIN4) |          \
-                                     PIN_OSPEED_HIGH(GPIOE_PIN5) |          \
-                                     PIN_OSPEED_HIGH(GPIOE_PIN6) |          \
-                                     PIN_OSPEED_HIGH(GPIOE_PIN7) |          \
-                                     PIN_OSPEED_HIGH(GPIOE_PIN8) |          \
-                                     PIN_OSPEED_HIGH(GPIOE_PIN9) |          \
-                                     PIN_OSPEED_HIGH(GPIOE_PIN10) |         \
-                                     PIN_OSPEED_HIGH(GPIOE_PIN11) |         \
-                                     PIN_OSPEED_HIGH(GPIOE_PIN12) |         \
-                                     PIN_OSPEED_HIGH(GPIOE_PIN13) |         \
-                                     PIN_OSPEED_HIGH(GPIOE_PIN14) |         \
-                                     PIN_OSPEED_HIGH(GPIOE_PIN15))
+#define VAL_GPIOE_OSPEEDR           (DEFAULT_GPIO_SPEED(GPIOE_PIN0) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOE_PIN1) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOE_PIN2) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOE_PIN3) |        \
+                                     DEFAULT_GPIO_SPEED(GPIOE_PIN4) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOE_PIN5) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOE_PIN6) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOE_PIN7) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOE_PIN8) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOE_PIN9) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOE_PIN10) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOE_PIN11) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOE_PIN12) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOE_PIN13) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOE_PIN14) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOE_PIN15))
 #define VAL_GPIOE_PUPDR             (PIN_PUPDR_FLOATING(GPIOE_PIN0) |       \
                                      PIN_PUPDR_FLOATING(GPIOE_PIN1) |       \
                                      PIN_PUPDR_FLOATING(GPIOE_PIN2) |       \
@@ -917,22 +920,22 @@
                                      PIN_OTYPE_PUSHPULL(GPIOF_PIN13) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOF_PIN14) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOF_PIN15))
-#define VAL_GPIOF_OSPEEDR           (PIN_OSPEED_HIGH(GPIOF_PIN0) |          \
-                                     PIN_OSPEED_HIGH(GPIOF_PIN1) |          \
-                                     PIN_OSPEED_HIGH(GPIOF_PIN2) |          \
-                                     PIN_OSPEED_HIGH(GPIOF_PIN3) |          \
-                                     PIN_OSPEED_HIGH(GPIOF_PIN4) |          \
-                                     PIN_OSPEED_HIGH(GPIOF_PIN5) |          \
-                                     PIN_OSPEED_HIGH(GPIOF_PIN6) |          \
-                                     PIN_OSPEED_HIGH(GPIOF_PIN7) |          \
-                                     PIN_OSPEED_HIGH(GPIOF_PIN8) |          \
-                                     PIN_OSPEED_HIGH(GPIOF_PIN9) |          \
-                                     PIN_OSPEED_HIGH(GPIOF_PIN10) |         \
-                                     PIN_OSPEED_HIGH(GPIOF_PIN11) |         \
-                                     PIN_OSPEED_HIGH(GPIOF_PIN12) |         \
-                                     PIN_OSPEED_HIGH(GPIOF_PIN13) |         \
-                                     PIN_OSPEED_HIGH(GPIOF_PIN14) |         \
-                                     PIN_OSPEED_HIGH(GPIOF_PIN15))
+#define VAL_GPIOF_OSPEEDR           (DEFAULT_GPIO_SPEED(GPIOF_PIN0) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOF_PIN1) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOF_PIN2) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOF_PIN3) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOF_PIN4) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOF_PIN5) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOF_PIN6) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOF_PIN7) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOF_PIN8) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOF_PIN9) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOF_PIN10) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOF_PIN11) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOF_PIN12) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOF_PIN13) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOF_PIN14) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOF_PIN15))
 #define VAL_GPIOF_PUPDR             (PIN_PUPDR_FLOATING(GPIOF_PIN0) |       \
                                      PIN_PUPDR_FLOATING(GPIOF_PIN1) |       \
                                      PIN_PUPDR_FLOATING(GPIOF_PIN2) |       \
@@ -1034,22 +1037,22 @@
                                      PIN_OTYPE_PUSHPULL(GPIOG_PIN13) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOG_PIN14) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOG_PIN15))
-#define VAL_GPIOG_OSPEEDR           (PIN_OSPEED_HIGH(GPIOG_PIN0) |          \
-                                     PIN_OSPEED_HIGH(GPIOG_PIN1) |          \
-                                     PIN_OSPEED_HIGH(GPIOG_PIN2) |          \
-                                     PIN_OSPEED_HIGH(GPIOG_PIN3) |          \
-                                     PIN_OSPEED_HIGH(GPIOG_PIN4) |          \
-                                     PIN_OSPEED_HIGH(GPIOG_PIN5) |          \
-                                     PIN_OSPEED_HIGH(GPIOG_PIN6) |          \
-                                     PIN_OSPEED_HIGH(GPIOG_PIN7) |          \
-                                     PIN_OSPEED_HIGH(GPIOG_PIN8) |          \
-                                     PIN_OSPEED_HIGH(GPIOG_PIN9) |          \
-                                     PIN_OSPEED_HIGH(GPIOG_PIN10) |         \
-                                     PIN_OSPEED_HIGH(GPIOG_PIN11) |         \
-                                     PIN_OSPEED_HIGH(GPIOG_PIN12) |         \
-                                     PIN_OSPEED_HIGH(GPIOG_PIN13) |         \
-                                     PIN_OSPEED_HIGH(GPIOG_PIN14) |         \
-                                     PIN_OSPEED_HIGH(GPIOG_PIN15))
+#define VAL_GPIOG_OSPEEDR           (DEFAULT_GPIO_SPEED(GPIOG_PIN0) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOG_PIN1) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOG_PIN2) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOG_PIN3) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOG_PIN4) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOG_PIN5) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOG_PIN6) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOG_PIN7) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOG_PIN8) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOG_PIN9) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOG_PIN10) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOG_PIN11) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOG_PIN12) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOG_PIN13) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOG_PIN14) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOG_PIN15))
 #define VAL_GPIOG_PUPDR             (PIN_PUPDR_FLOATING(GPIOG_PIN0) |       \
                                      PIN_PUPDR_FLOATING(GPIOG_PIN1) |       \
                                      PIN_PUPDR_FLOATING(GPIOG_PIN2) |       \
@@ -1151,22 +1154,22 @@
                                      PIN_OTYPE_PUSHPULL(GPIOH_PIN13) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOH_PIN14) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOH_PIN15))
-#define VAL_GPIOH_OSPEEDR           (PIN_OSPEED_HIGH(GPIOH_OSC_IN) |        \
-                                     PIN_OSPEED_HIGH(GPIOH_OSC_OUT) |       \
-                                     PIN_OSPEED_HIGH(GPIOH_PIN2) |          \
-                                     PIN_OSPEED_HIGH(GPIOH_PIN3) |          \
-                                     PIN_OSPEED_HIGH(GPIOH_PIN4) |          \
-                                     PIN_OSPEED_HIGH(GPIOH_PIN5) |          \
-                                     PIN_OSPEED_HIGH(GPIOH_PIN6) |          \
-                                     PIN_OSPEED_HIGH(GPIOH_PIN7) |          \
-                                     PIN_OSPEED_HIGH(GPIOH_PIN8) |          \
-                                     PIN_OSPEED_HIGH(GPIOH_PIN9) |          \
-                                     PIN_OSPEED_HIGH(GPIOH_PIN10) |         \
-                                     PIN_OSPEED_HIGH(GPIOH_PIN11) |         \
-                                     PIN_OSPEED_HIGH(GPIOH_PIN12) |         \
-                                     PIN_OSPEED_HIGH(GPIOH_PIN13) |         \
-                                     PIN_OSPEED_HIGH(GPIOH_PIN14) |         \
-                                     PIN_OSPEED_HIGH(GPIOH_PIN15))
+#define VAL_GPIOH_OSPEEDR           (DEFAULT_GPIO_SPEED(GPIOH_OSC_IN) |        \
+                                     DEFAULT_GPIO_SPEED(GPIOH_OSC_OUT) |       \
+                                     DEFAULT_GPIO_SPEED(GPIOH_PIN2) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOH_PIN3) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOH_PIN4) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOH_PIN5) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOH_PIN6) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOH_PIN7) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOH_PIN8) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOH_PIN9) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOH_PIN10) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOH_PIN11) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOH_PIN12) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOH_PIN13) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOH_PIN14) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOH_PIN15))
 #define VAL_GPIOH_PUPDR             (PIN_PUPDR_FLOATING(GPIOH_OSC_IN) |     \
                                      PIN_PUPDR_FLOATING(GPIOH_OSC_OUT) |    \
                                      PIN_PUPDR_FLOATING(GPIOH_PIN2) |       \
@@ -1268,22 +1271,22 @@
                                      PIN_OTYPE_PUSHPULL(GPIOI_PIN13) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOI_PIN14) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOI_PIN15))
-#define VAL_GPIOI_OSPEEDR           (PIN_OSPEED_HIGH(GPIOI_PIN0) |          \
-                                     PIN_OSPEED_HIGH(GPIOI_PIN1) |          \
-                                     PIN_OSPEED_HIGH(GPIOI_PIN2) |          \
-                                     PIN_OSPEED_HIGH(GPIOI_PIN3) |          \
-                                     PIN_OSPEED_HIGH(GPIOI_PIN4) |          \
-                                     PIN_OSPEED_HIGH(GPIOI_PIN5) |          \
-                                     PIN_OSPEED_HIGH(GPIOI_PIN6) |          \
-                                     PIN_OSPEED_HIGH(GPIOI_PIN7) |          \
-                                     PIN_OSPEED_HIGH(GPIOI_PIN8) |          \
-                                     PIN_OSPEED_HIGH(GPIOI_PIN9) |          \
-                                     PIN_OSPEED_HIGH(GPIOI_PIN10) |         \
-                                     PIN_OSPEED_HIGH(GPIOI_PIN11) |         \
-                                     PIN_OSPEED_HIGH(GPIOI_PIN12) |         \
-                                     PIN_OSPEED_HIGH(GPIOI_PIN13) |         \
-                                     PIN_OSPEED_HIGH(GPIOI_PIN14) |         \
-                                     PIN_OSPEED_HIGH(GPIOI_PIN15))
+#define VAL_GPIOI_OSPEEDR           (DEFAULT_GPIO_SPEED(GPIOI_PIN0) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOI_PIN1) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOI_PIN2) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOI_PIN3) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOI_PIN4) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOI_PIN5) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOI_PIN6) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOI_PIN7) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOI_PIN8) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOI_PIN9) |          \
+                                     DEFAULT_GPIO_SPEED(GPIOI_PIN10) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOI_PIN11) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOI_PIN12) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOI_PIN13) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOI_PIN14) |         \
+                                     DEFAULT_GPIO_SPEED(GPIOI_PIN15))
 #define VAL_GPIOI_PUPDR             (PIN_PUPDR_FLOATING(GPIOI_PIN0) |       \
                                      PIN_PUPDR_FLOATING(GPIOI_PIN1) |       \
                                      PIN_PUPDR_FLOATING(GPIOI_PIN2) |       \

@@ -93,7 +93,6 @@ void outputPinRegister(const char *msg, OutputPin *output, ioportid_t port, uint
 	outputPinRegisterExt(msg, output, port, pin, &DEFAULT_OUTPUT);
 }
 
-extern OutputPin checkEnginePin;
 
 void initPrimaryPins(void) {
 	outputPinRegister("led: ERROR status", &enginePins.errorLedPin, LED_ERROR_PORT, LED_ERROR_PIN);
