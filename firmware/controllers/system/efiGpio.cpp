@@ -253,10 +253,6 @@ static void outputPinRegisterExt(const char *msg, OutputPin *output, ioportid_t 
 #endif /* EFI_GPIO_HARDWARE */
 }
 
-void outputPinRegister(const char *msg, OutputPin *output, ioportid_t port, uint32_t pin) {
-	outputPinRegisterExt(msg, output, port, pin, &DEFAULT_OUTPUT);
-}
-
 void initPrimaryPins(void) {
 	outputPinRegisterExt2("led: ERROR status", &enginePins.errorLedPin, LED_ERROR_BRAIN_PIN, &DEFAULT_OUTPUT);
 }

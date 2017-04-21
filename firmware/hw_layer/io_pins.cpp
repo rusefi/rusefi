@@ -74,10 +74,6 @@ void initOutputPinExt(const char *msg, OutputPin *outputPin, ioportid_t port, ui
 	mySetPadMode(msg, port, pinNumber, mode);
 }
 
-void initOutputPin(const char *msg, OutputPin *outputPin, ioportid_t port, uint32_t pinNumber) {
-	initOutputPinExt(msg, outputPin, port, pinNumber, PAL_MODE_OUTPUT_PUSHPULL);
-}
-
 /**
  * This method would set an error condition if pin is already used
  */
