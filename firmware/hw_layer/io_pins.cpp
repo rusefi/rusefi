@@ -78,3 +78,44 @@ void initOutputPin(const char *msg, OutputPin *outputPin, ioportid_t port, uint3
 	initOutputPinExt(msg, outputPin, port, pinNumber, PAL_MODE_OUTPUT_PUSHPULL);
 }
 
+/**
+ * This method would set an error condition if pin is already used
+ */
+void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t mode) {
+	if (port == GPIO_NULL) {
+		return;
+	}
+
+	scheduleMsg(&logger, "%s on %s%d", msg, portname(port), pin);
+
+	bool wasUsed = markUsed(port, pin, msg);
+	if (wasUsed) {
+		return;
+	}
+
+	palSetPadMode(port, pin, mode);
+}
+
+void mySetPadMode2(const char *msg, brain_pin_e pin, iomode_t mode) {
+	mySetPadMode(msg, getHwPort(pin), getHwPin(pin), mode);
+}
+
+iomode_t getInputMode(pin_input_mode_e mode) {
+	switch (mode) {
+	case PI_PULLUP:
+		return PAL_MODE_INPUT_PULLUP;
+	case PI_PULLDOWN:
+		return PAL_MODE_INPUT_PULLDOWN;
+	case PI_DEFAULT:
+	default:
+		return PAL_MODE_INPUT;
+	}
+}
+
+void efiIcuStart(ICUDriver *icup, const ICUConfig *config) {
+	  efiAssertVoid((icup->state == ICU_STOP) || (icup->state == ICU_READY),
+	              "input already used?");
+
+	icuStart(icup, config);
+}
+
