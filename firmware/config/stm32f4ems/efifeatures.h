@@ -264,9 +264,10 @@
 // todo: this should be detected automatically based on pin selection
 #define TS_SERIAL_AF 7
 
-#define LED_WARNING_PORT GPIOD
-#define LED_WARNING_PIN 13
+#define LED_WARNING_BRAIN_PIN GPIOD_13
 
+// LED_ERROR_BRAIN_PIN should match LED_ERROR_PORT/LED_ERROR_PIN
+#define LED_ERROR_BRAIN_PIN GPIOD_14
 #define LED_ERROR_PORT GPIOD
 #define LED_ERROR_PIN 14
 
