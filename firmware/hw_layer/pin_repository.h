@@ -17,8 +17,6 @@
 
 #ifdef __cplusplus
 #include "efiGpio.h"
-// does not exactly belong here, but that works better for tests
-void outputPinRegister(const char *msg, OutputPin *output, ioportid_t port, uint32_t pin);
 
 class PinRepository {
 	public:
@@ -31,17 +29,8 @@ class PinRepository {
 #define PORT_SIZE 16
 
 void initPinRepository(void);
-brain_pin_e parseBrainPin(const char *str);
-void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t mode);
-const char *hwPortname(brain_pin_e brainPin);
+void markUsed(int index, const char *msg);
 const char * getPinFunction(brain_input_pin_e brainPin);
-void mySetPadMode2(const char *msg, brain_pin_e pin, iomode_t mode);
-const char *portname(ioportid_t GPIOx);
 void unmarkPin(brain_pin_e brainPin);
-
-iomode_t getInputMode(pin_input_mode_e mode);
-void efiIcuStart(ICUDriver *icup, const ICUConfig *config);
-ioportmask_t getHwPin(brain_pin_e brainPin);
-ioportid_t getHwPort(brain_pin_e brainPin);
 
 #endif /* PIN_REPOSITORY_H_ */
