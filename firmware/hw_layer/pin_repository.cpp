@@ -154,12 +154,30 @@ void initPinRepository(void) {
 	addConsoleAction("pins", reportPins);
 }
 
+static int getIndex(ioportid_t port, ioportmask_t pin) {
+	int portIndex = getPortIndex(port);
+	return portIndex * PORT_SIZE + pin;
+}
+
 /**
  * See also unmarkPin()
+ * @return true if this pin was already used, false otherwise
  */
-static inline void markUsed(int index, const char *msg) {
+bool markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
+	int index = getIndex(port, pin);
+
+	if (PIN_USED[index] != NULL) {
+		/**
+		 * todo: the problem is that this warning happens before the console is even
+		 * connected, so the warning is never displayed on the console and that's quite a problem!
+		 */
+//		warning(OBD_PCM_Processor_Fault, "%s%d req by %s used by %s", portname(port), pin, msg, PIN_USED[index]);
+		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_1, "%s%d req by %s used by %s", portname(port), pin, msg, PIN_USED[index]);
+		return true;
+	}
 	PIN_USED[index] = msg;
 	totalPinsUsed++;
+	return false;
 }
 
 void mySetPadMode2(const char *msg, brain_pin_e pin, iomode_t mode) {
@@ -178,11 +196,6 @@ iomode_t getInputMode(pin_input_mode_e mode) {
 	}
 }
 
-static int getIndex(ioportid_t port, ioportmask_t pin) {
-	int portIndex = getPortIndex(port);
-	return portIndex * PORT_SIZE + pin;
-}
-
 const char * getPinFunction(brain_input_pin_e brainPin) {
 	ioportid_t port = getHwPort(brainPin);
 	ioportmask_t pin = getHwPin(brainPin);
@@ -199,23 +212,16 @@ void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t m
 		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
 		return;
 	}
-	if (port == GPIO_NULL)
+	if (port == GPIO_NULL) {
 		return;
+	}
 
 	scheduleMsg(&logger, "%s on %s%d", msg, portname(port), pin);
 
-	int index = getIndex(port, pin);
-
-	if (PIN_USED[index] != NULL) {
-		/**
-		 * todo: the problem is that this warning happens before the console is even
-		 * connected, so the warning is never displayed on the console and that's quite a problem!
-		 */
-//		warning(OBD_PCM_Processor_Fault, "%s%d req by %s used by %s", portname(port), pin, msg, PIN_USED[index]);
-		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_1, "%s%d req by %s used by %s", portname(port), pin, msg, PIN_USED[index]);
+	bool wasUsed = markUsed(port, pin, msg);
+	if (wasUsed) {
 		return;
 	}
-	markUsed(index, msg);
 
 	palSetPadMode(port, pin, mode);
 }
@@ -241,15 +247,10 @@ void unmarkPin(brain_pin_e brainPin) {
 void registedFundamentralIoPin(char *msg, ioportid_t port, ioportmask_t pin, iomode_t mode) {
 	efiAssertVoid(initialized, "repo not initialized");
 
-	int index = getIndex(port, pin);
-
-	if (PIN_USED[index] != NULL) {
-		print("!!!!!!!!!!!!! Already used [%s] %d\r\n", msg, pin);
-		print("!!!!!!!!!!!!! Already used by [%s]\r\n", PIN_USED[index]);
-		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_2, "pin already used");
+	bool wasUsed = markUsed(port, pin, msg);
+	if (wasUsed) {
 		return;
 	}
-	markUsed(index, msg);
 	palSetPadMode(port, pin, mode);
 }
 

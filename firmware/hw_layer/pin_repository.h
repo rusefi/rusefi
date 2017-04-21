@@ -29,7 +29,7 @@ class PinRepository {
 #define PORT_SIZE 16
 
 void initPinRepository(void);
-void markUsed(int index, const char *msg);
+bool markUsed(ioportid_t port, ioportmask_t pin, const char *msg);
 const char * getPinFunction(brain_input_pin_e brainPin);
 void unmarkPin(brain_pin_e brainPin);
 
