@@ -869,6 +869,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->tpsAccelLength = 12;
 	engineConfiguration->tpsAccelEnrichmentThreshold = 40; // TPS % change, per engine cycle
 	
+	// call overrided board-specific configuration setup, if needed (for custom boards only)
 	setBoardConfiguration();
 }
 
