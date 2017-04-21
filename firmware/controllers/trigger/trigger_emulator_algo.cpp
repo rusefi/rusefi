@@ -101,7 +101,7 @@ static LocalVersionHolder emulatorConfigVersion;
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
-void setTriggerEmulatorRPM(int rpm, Engine *engine) {
+void setTriggerEmulatorRPM(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	engineConfiguration->bc.triggerSimulatorFrequency = rpm;
 	/**
 	 * All we need to do here is to change the periodMs
@@ -170,7 +170,7 @@ void initTriggerEmulatorLogic(Logging *sharedLogger, Engine *engine) {
 	logger = sharedLogger;
 
 	TriggerShape *s = &engine->triggerCentral.triggerShape;
-	setTriggerEmulatorRPM(engineConfiguration->bc.triggerSimulatorFrequency, engine);
+	setTriggerEmulatorRPM(engineConfiguration->bc.triggerSimulatorFrequency PASS_ENGINE_PARAMETER);
 	pin_state_t *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = { s->wave.waves[0].pinStates, s->wave.waves[1].pinStates,
 			s->wave.waves[2].pinStates };
 	triggerSignal.weComplexInit("position sensor", s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM,
