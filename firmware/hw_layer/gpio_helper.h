@@ -11,7 +11,5 @@
 
 #include "efiGpio.h"
 
-void initOutputPin(const char *msg, OutputPin *outputPin, ioportid_t port, uint32_t pinNumber);
-void initOutputPinExt(const char *msg, OutputPin *outputPin, ioportid_t port, uint32_t pinNumber, iomode_t mode);
 
 #endif /* GPIO_HELPER_H_ */

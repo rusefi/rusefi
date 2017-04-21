@@ -176,9 +176,13 @@ public:
 		}
 #endif
 
-void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brainPin, pin_output_mode_e *outputMode);
 
 void turnPinHigh(NamedOutputPin *output);
 void turnPinLow(NamedOutputPin *output);
+
+void initOutputPin(const char *msg, OutputPin *outputPin, ioportid_t port, uint32_t pinNumber);
+void initOutputPinExt(const char *msg, OutputPin *outputPin, ioportid_t port, uint32_t pinNumber, iomode_t mode);
+
+void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brainPin, pin_output_mode_e *outputMode);
 
 #endif /* EFIGPIO_H_ */

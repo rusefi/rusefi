@@ -12,7 +12,6 @@
 #include "efiGpio.h"
 
 #include "pin_repository.h"
-#include "gpio_helper.h"
 #include "status_loop.h"
 #include "engine_configuration.h"
 #include "console_io.h"
