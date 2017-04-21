@@ -41,9 +41,6 @@ extern WaveChart waveChart;
 
 static LoggingWithStorage sharedLogger("simulator");
 
-void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
-}
-
 int getRemainingStack(thread_t *otp) {
 	return 99999;
 }

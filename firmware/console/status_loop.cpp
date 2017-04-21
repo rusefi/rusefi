@@ -549,12 +549,10 @@ static OutputPin *leds[] = { &enginePins.warningPin, &enginePins.runningPin, &en
 extern pin_output_mode_e DEFAULT_OUTPUT;
 
 static void initStatusLeds(void) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	outputPinRegisterExt2("led: comm status", &enginePins.communicationPin,
 			engineConfiguration->communicationPin, &DEFAULT_OUTPUT);
 	// we initialize this here so that we can blink it on start-up
 	outputPinRegisterExt2("MalfunctionIndicator", &enginePins.checkEnginePin, boardConfiguration->malfunctionIndicatorPin, &DEFAULT_OUTPUT);
-#endif
 
 #if EFI_WARNING_LED || defined(__DOXYGEN__)
 	outputPinRegisterExt2("led: warning status", &enginePins.warningPin, LED_WARNING_BRAIN_PIN, &DEFAULT_OUTPUT);

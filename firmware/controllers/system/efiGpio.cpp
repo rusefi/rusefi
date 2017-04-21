@@ -229,13 +229,8 @@ void initOutputPins(void) {
 #endif /* EFI_GPIO_HARDWARE */
 }
 
-#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
-
-void initPrimaryPins(void) {
-	outputPinRegisterExt2("led: ERROR status", &enginePins.errorLedPin, LED_ERROR_BRAIN_PIN, &DEFAULT_OUTPUT);
-}
-
 void outputPinRegisterExt2(const char *msg, OutputPin *outputPin, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
+#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 	if (brainPin == GPIO_UNASSIGNED)
 		return;
 	ioportid_t port = getHwPort(brainPin);
@@ -273,6 +268,13 @@ void outputPinRegisterExt2(const char *msg, OutputPin *outputPin, brain_pin_e br
 	mySetPadMode(msg, port, pin, mode);
 
 	outputPin->setDefaultPinState(outputMode);
+#endif /* EFI_GPIO_HARDWARE */
+}
+
+#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
+
+void initPrimaryPins(void) {
+	outputPinRegisterExt2("led: ERROR status", &enginePins.errorLedPin, LED_ERROR_BRAIN_PIN, &DEFAULT_OUTPUT);
 }
 
 /**
