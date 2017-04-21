@@ -260,9 +260,36 @@ void turnAllPinsOff(void) {
 		enginePins.coils[i].setValue(false);
 	}
 }
+
+
+/**
+ * @deprecated - use hwPortname() instead
+ */
+const char *portname(ioportid_t GPIOx) {
+	if (GPIOx == GPIOA)
+		return "PA";
+	if (GPIOx == GPIOB)
+		return "PB";
+	if (GPIOx == GPIOC)
+		return "PC";
+	if (GPIOx == GPIOD)
+		return "PD";
+#if defined(STM32F4XX)
+	if (GPIOx == GPIOE)
+		return "PE";
+	if (GPIOx == GPIOH)
+		return "PH";
+#endif
+	if (GPIOx == GPIOF)
+		return "PF";
+	return "unknown";
+}
+
 #else /* EFI_GPIO_HARDWARE */
 const char *hwPortname(brain_pin_e brainPin) {
 	(void)brainPin;
 	return "N/A";
 }
 #endif /* EFI_GPIO_HARDWARE */
+
+
