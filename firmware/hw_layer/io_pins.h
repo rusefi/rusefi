@@ -12,6 +12,7 @@
 #include "rusefi_enums.h"
 #include "main.h"
 
+#define INITIAL_PIN_STATE -1
 #define GPIO_NULL NULL
 
 // mode >= 0  is always true since that's an unsigned
@@ -51,5 +52,31 @@
 //	LED_HUGE_19,
 //	LED_HUGE_20,
 
+#ifdef __cplusplus
+
+/**
+ * @brief   Single output pin reference and state
+ */
+class OutputPin {
+public:
+	OutputPin();
+	bool isInitialized();
+	void setValue(int logicValue);
+	void setDefaultPinState(pin_output_mode_e *defaultState);
+	bool getLogicValue();
+	void unregister();
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	ioportid_t port;
+	uint8_t pin;
+#endif /* EFI_PROD_CODE */
+	int8_t currentLogicValue;
+	// 4 byte pointer is a bit of a memory waste here
+	pin_output_mode_e *modePtr;
+	/**
+	 * we track current pin status so that we do not touch the actual hardware if we want to write new pin bit
+	 * which is same as current pin value. This maybe helps in case of status leds, but maybe it's a total over-engineering
+	 */
+};
+#endif /* __cplusplus */
 
 #endif /* IO_PINS_H_ */
