@@ -22,7 +22,6 @@
 #include "advance_map.h"
 #include "interpolation.h"
 #include "efilib2.h"
-#include "engine_configuration.h"
 #include "engine_math.h"
 
 EXTERN_ENGINE;
