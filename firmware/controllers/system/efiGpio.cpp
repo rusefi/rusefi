@@ -229,6 +229,10 @@ void initOutputPins(void) {
 #endif /* EFI_GPIO_HARDWARE */
 }
 
+void OutputPin::initPin(const char *msg, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
+	outputPinRegisterExt2(msg, this, brainPin, outputMode);
+}
+
 void outputPinRegisterExt2(const char *msg, OutputPin *outputPin, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 	if (brainPin == GPIO_UNASSIGNED)

@@ -33,6 +33,8 @@ public:
 	bool getLogicValue();
 	void unregister();
 	bool isPinAssigned();
+	void initPin(const char *msg, brain_pin_e brainPin, pin_output_mode_e *outputMode);
+
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 	ioportid_t port;
 	uint8_t pin;
@@ -123,13 +125,11 @@ public:
 
 #define getElectricalValue0(mode) ((mode) == OM_INVERTED || (mode) == OM_OPENDRAIN_INVERTED)
 
-
 /**
  * it's a macro to be sure that stack is not used
  * @return 1 for OM_DEFAULT and OM_OPENDRAIN
  */
 #define getElectricalValue1(mode) ((mode) == OM_DEFAULT || (mode) == OM_OPENDRAIN)
-
 
 #define getElectricalValue(logicalValue, mode) \
 	(logicalValue ? getElectricalValue1(mode) : getElectricalValue0(mode))
