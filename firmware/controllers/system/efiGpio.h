@@ -54,6 +54,8 @@ class NamedOutputPin : public OutputPin {
 public:
 	NamedOutputPin();
 	NamedOutputPin(const char *name);
+	void setHigh();
+	void setLow();
 	/**
 	 * @return true if pin was stopped
 	 */
@@ -140,9 +142,6 @@ public:
 #else /* EFI_PROD_CODE */
  #define isPinAssigned(output) (true)
 #endif /* EFI_PROD_CODE */
-
-void turnPinHigh(NamedOutputPin *output);
-void turnPinLow(NamedOutputPin *output);
 
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 

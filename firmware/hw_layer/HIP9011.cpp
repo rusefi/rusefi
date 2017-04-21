@@ -213,7 +213,7 @@ static void startIntegration(void) {
 		 * until we are done integrating
 		 */
 		state = IS_INTEGRATING;
-		turnPinHigh(&intHold);
+		intHold.setHigh();
 	}
 }
 
@@ -223,7 +223,7 @@ static void endIntegration(void) {
 	 * engine cycle
 	 */
 	if (state == IS_INTEGRATING) {
-		turnPinLow(&intHold);
+		intHold.setLow();
 		state = WAITING_FOR_ADC_TO_SKIP;
 	}
 }

@@ -101,7 +101,7 @@ static void startAveraging(void *arg) {
 	if (!wasLocked)
 		chSysUnlockFromISR()
 	;
-	turnPinHigh(&mapAveragingPin);
+	mapAveragingPin.setHigh();
 }
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -167,7 +167,7 @@ static void endAveraging(void *arg) {
 	if (!wasLocked)
 		chSysUnlockFromISR()
 	;
-	turnPinLow(&mapAveragingPin);
+	mapAveragingPin.setLow();
 }
 
 /**

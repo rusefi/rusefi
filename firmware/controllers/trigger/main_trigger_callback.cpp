@@ -85,7 +85,7 @@ static void startSimultaniousInjection(InjectionEvent *event) {
 	Engine *engine = event->engine;
 #endif
 	for (int i = 0; i < engine->engineConfiguration->specs.cylindersCount; i++) {
-		turnPinHigh(&enginePins.injectors[i]);
+		enginePins.injectors[i].setHigh();
 	}
 }
 
@@ -95,7 +95,7 @@ static void endSimultaniousInjection(InjectionEvent *event) {
 	EXPAND_Engine;
 #endif
 	for (int i = 0; i < engine->engineConfiguration->specs.cylindersCount; i++) {
-		turnPinLow(&enginePins.injectors[i]);
+		enginePins.injectors[i].setLow();
 	}
 	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER);
 }
@@ -129,7 +129,7 @@ static void tempTurnPinHigh(InjectorOutputPin *output) {
 //			getRevolutionCounter(), getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-	turnPinHigh(output);
+	output->setHigh();
 }
 
 // todo: make these macro? kind of a penny optimization if compiler is not smart to inline
@@ -178,7 +178,7 @@ static void tempTurnPinLow(InjectorOutputPin *output) {
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 		return;
 	}
-	turnPinLow(output);
+	output->setLow();
 }
 
 void seTurnPinLow(OutputSignalPair *pair) {
