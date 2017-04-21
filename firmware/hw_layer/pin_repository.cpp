@@ -36,29 +36,6 @@ static ioportid_t ports[7] = {GPIOA,
 PinRepository::PinRepository() {
 }
 
-/**
- * @deprecated - use hwPortname() instead
- */
-const char *portname(ioportid_t GPIOx) {
-	if (GPIOx == GPIOA)
-		return "PA";
-	if (GPIOx == GPIOB)
-		return "PB";
-	if (GPIOx == GPIOC)
-		return "PC";
-	if (GPIOx == GPIOD)
-		return "PD";
-#if defined(STM32F4XX)
-	if (GPIOx == GPIOE)
-		return "PE";
-	if (GPIOx == GPIOH)
-		return "PH";
-#endif
-	if (GPIOx == GPIOF)
-		return "PF";
-	return "unknown";
-}
-
 static int getPortIndex(ioportid_t port) {
 	efiAssert(port != NULL, "null port", -1);
 	if (port == GPIOA)
@@ -206,18 +183,5 @@ void unmarkPin(brain_pin_e brainPin) {
 		PIN_USED[index] = NULL;
 		totalPinsUsed--;
 	}
-}
-
-/**
- * This method would crash the program if pin is already in use
- */
-void registedFundamentralIoPin(char *msg, ioportid_t port, ioportmask_t pin, iomode_t mode) {
-	efiAssertVoid(initialized, "repo not initialized");
-
-	bool wasUsed = markUsed(port, pin, msg);
-	if (wasUsed) {
-		return;
-	}
-	palSetPadMode(port, pin, mode);
 }
 
