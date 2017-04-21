@@ -32,6 +32,7 @@ public:
 	void setDefaultPinState(pin_output_mode_e *defaultState);
 	bool getLogicValue();
 	void unregister();
+	bool isPinAssigned();
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 	ioportid_t port;
 	uint8_t pin;
@@ -142,8 +143,9 @@ public:
 void turnPinHigh(NamedOutputPin *output);
 void turnPinLow(NamedOutputPin *output);
 
-#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brainPin, pin_output_mode_e *outputMode);
+
+#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 
 ioportmask_t getHwPin(brain_pin_e brainPin);
 ioportid_t getHwPort(brain_pin_e brainPin);
