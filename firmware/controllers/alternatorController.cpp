@@ -25,7 +25,6 @@ EXTERN_ENGINE
 
 static Logging *logger;
 
-extern pin_output_mode_e DEFAULT_OUTPUT;
 int alternatorPidResetCounter = 0;
 
 static SimplePwm alternatorControl;
@@ -172,8 +171,7 @@ void initAlternatorCtrl(Logging *sharedLogger) {
 		return;
 
 	if (boardConfiguration->onOffAlternatorLogic) {
-		outputPinRegisterExt2("on/off alternator", &enginePins.alternatorPin, boardConfiguration->alternatorControlPin,
-				&DEFAULT_OUTPUT);
+		enginePins.alternatorPin.initPin("on/off alternator", boardConfiguration->alternatorControlPin);
 
 	} else {
 		startSimplePwmExt(&alternatorControl, "Alternator control", boardConfiguration->alternatorControlPin,

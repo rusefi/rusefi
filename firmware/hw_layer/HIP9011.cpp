@@ -437,9 +437,9 @@ void initHip9011(Logging *sharedLogger) {
 	hipSpiCfg.ssport = getHwPort(boardConfiguration->hip9011CsPin);
 	hipSpiCfg.sspad = getHwPin(boardConfiguration->hip9011CsPin);
 
-	outputPinRegisterExt2("hip int/hold", &intHold, boardConfiguration->hip9011IntHoldPin,
+	intHold.initPin("hip int/hold", boardConfiguration->hip9011IntHoldPin,
 			&boardConfiguration->hip9011IntHoldPinMode);
-	outputPinRegisterExt2("hip CS", &enginePins.hipCs, boardConfiguration->hip9011CsPin,
+	enginePins.hipCs.initPin("hip CS", boardConfiguration->hip9011CsPin,
 			&boardConfiguration->hip9011CsPinMode);
 
 	scheduleMsg(logger, "Starting HIP9011/TPIC8101 driver");

@@ -546,17 +546,15 @@ static THD_WORKING_AREA(blinkingStack, 128);
 static OutputPin *leds[] = { &enginePins.warningPin, &enginePins.runningPin, &enginePins.checkEnginePin,
 		&enginePins.errorLedPin, &enginePins.communicationPin, &enginePins.checkEnginePin };
 
-extern pin_output_mode_e DEFAULT_OUTPUT;
-
 static void initStatusLeds(void) {
-	enginePins.communicationPin.initPin("led: comm status", engineConfiguration->communicationPin, &DEFAULT_OUTPUT);
+	enginePins.communicationPin.initPin("led: comm status", engineConfiguration->communicationPin);
 	// we initialize this here so that we can blink it on start-up
-	enginePins.checkEnginePin.initPin("MalfunctionIndicator", boardConfiguration->malfunctionIndicatorPin, &DEFAULT_OUTPUT);
+	enginePins.checkEnginePin.initPin("MalfunctionIndicator", boardConfiguration->malfunctionIndicatorPin);
 
 
 #if EFI_WARNING_LED || defined(__DOXYGEN__)
-	enginePins.warningPin.initPin("led: warning status", LED_WARNING_BRAIN_PIN, &DEFAULT_OUTPUT);
-	enginePins.runningPin.initPin("led: running status", engineConfiguration->runningPin, &DEFAULT_OUTPUT);
+	enginePins.warningPin.initPin("led: warning status", LED_WARNING_BRAIN_PIN);
+	enginePins.runningPin.initPin("led: running status", engineConfiguration->runningPin);
 #endif /* EFI_WARNING_LED */
 }
 

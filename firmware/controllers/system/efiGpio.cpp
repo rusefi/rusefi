@@ -20,7 +20,7 @@ EXTERN_ENGINE;
 EnginePins enginePins;
 extern LoggingWithStorage sharedLogger;
 
-static pin_output_mode_e OUTPUT_MODE_DEFAULT = OM_DEFAULT;
+static pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
 
 static const char *sparkNames[IGNITION_PIN_COUNT] = { "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8",
 		"c9", "cA", "cB", "cD"};
@@ -125,7 +125,7 @@ void IgnitionOutputPin::reset() {
 }
 
 OutputPin::OutputPin() {
-	modePtr = &OUTPUT_MODE_DEFAULT;
+	modePtr = &DEFAULT_OUTPUT;
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 	port = NULL;
 	pin = 0;
@@ -173,9 +173,6 @@ void OutputPin::setDefaultPinState(pin_output_mode_e *outputMode) {
 	setValue(false); // initial state
 }
 
-pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
-pin_output_mode_e OPENDRAIN_OUTPUT = OM_OPENDRAIN;
-
 void initOutputPins(void) {
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 	/**
@@ -186,17 +183,17 @@ void initOutputPins(void) {
 //	memset(&outputs, 0, sizeof(outputs));
 
 #if HAL_USE_SPI || defined(__DOXYGEN__)
-	outputPinRegisterExt2("spi CS5", &enginePins.sdCsPin, boardConfiguration->sdCardCsPin, &DEFAULT_OUTPUT);
+	enginePins.sdCsPin.initPin("spi CS5", boardConfiguration->sdCardCsPin);
 #endif /* HAL_USE_SPI */
 
 	// todo: should we move this code closer to the fuel pump logic?
-	outputPinRegisterExt2("fuel pump relay", &enginePins.fuelPumpRelay, boardConfiguration->fuelPumpPin, &DEFAULT_OUTPUT);
+	enginePins.fuelPumpRelay.initPin("fuel pump relay", boardConfiguration->fuelPumpPin);
 
-	outputPinRegisterExt2("main relay", &enginePins.mainRelay, boardConfiguration->mainRelayPin, &boardConfiguration->mainRelayPinMode);
+	enginePins.mainRelay.initPin("main relay", boardConfiguration->mainRelayPin, &boardConfiguration->mainRelayPinMode);
 
-	outputPinRegisterExt2("fan relay", &enginePins.fanRelay, boardConfiguration->fanPin, &DEFAULT_OUTPUT);
-	outputPinRegisterExt2("o2 heater", &enginePins.o2heater, boardConfiguration->o2heaterPin, &DEFAULT_OUTPUT);
-	outputPinRegisterExt2("A/C relay", &enginePins.acRelay, boardConfiguration->acRelayPin, &boardConfiguration->acRelayPinMode);
+	enginePins.fanRelay.initPin("fan relay", boardConfiguration->fanPin);
+	enginePins.o2heater.initPin("o2 heater", boardConfiguration->o2heaterPin);
+	enginePins.acRelay.initPin("A/C relay", boardConfiguration->acRelayPin, &boardConfiguration->acRelayPinMode);
 
 	// digit 1
 	/*
@@ -229,11 +226,11 @@ void initOutputPins(void) {
 #endif /* EFI_GPIO_HARDWARE */
 }
 
-void OutputPin::initPin(const char *msg, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
-	outputPinRegisterExt2(msg, this, brainPin, outputMode);
+void OutputPin::initPin(const char *msg, brain_pin_e brainPin) {
+	initPin(msg, brainPin, &DEFAULT_OUTPUT);
 }
 
-void outputPinRegisterExt2(const char *msg, OutputPin *outputPin, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
+void OutputPin::initPin(const char *msg, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 	if (brainPin == GPIO_UNASSIGNED)
 		return;
@@ -245,7 +242,7 @@ void outputPinRegisterExt2(const char *msg, OutputPin *outputPin, brain_pin_e br
 	 */
 	if (port == GPIO_NULL) {
 		// that's for GRIO_NONE
-		outputPin->port = port;
+		this->port = port;
 		return;
 	}
 
@@ -256,29 +253,29 @@ void outputPinRegisterExt2(const char *msg, OutputPin *outputPin, brain_pin_e br
 	/**
 	 * @brief Initialize the hardware output pin while also assigning it a logical name
 	 */
-	if (outputPin->port != NULL && (outputPin->port != port || outputPin->pin != pin)) {
+	if (this->port != NULL && (this->port != port || this->pin != pin)) {
 		/**
 		 * here we check if another physical pin is already assigned to this logical output
 		 */
 	// todo: need to clear '&outputs' in io_pins.c
-		warning(CUSTOM_OBD_PIN_CONFLICT, "outputPin [%s] already assigned to %x%d", msg, outputPin->port, outputPin->pin);
+		warning(CUSTOM_OBD_PIN_CONFLICT, "outputPin [%s] already assigned to %x%d", msg, this->port, this->pin);
 		engine->withError = true;
 		return;
 	}
-	outputPin->currentLogicValue = INITIAL_PIN_STATE;
-	outputPin->port = port;
-	outputPin->pin = pin;
+	this->currentLogicValue = INITIAL_PIN_STATE;
+	this->port = port;
+	this->pin = pin;
 
 	mySetPadMode(msg, port, pin, mode);
 
-	outputPin->setDefaultPinState(outputMode);
+	setDefaultPinState(outputMode);
 #endif /* EFI_GPIO_HARDWARE */
 }
 
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 
 void initPrimaryPins(void) {
-	outputPinRegisterExt2("led: ERROR status", &enginePins.errorLedPin, LED_ERROR_BRAIN_PIN, &DEFAULT_OUTPUT);
+	enginePins.errorLedPin.initPin("led: ERROR status", LED_ERROR_BRAIN_PIN);
 }
 
 /**

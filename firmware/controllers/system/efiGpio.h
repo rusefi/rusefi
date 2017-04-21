@@ -33,6 +33,7 @@ public:
 	bool getLogicValue();
 	void unregister();
 	bool isPinAssigned();
+	void initPin(const char *msg, brain_pin_e brainPin);
 	void initPin(const char *msg, brain_pin_e brainPin, pin_output_mode_e *outputMode);
 
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
@@ -142,8 +143,6 @@ public:
 
 void turnPinHigh(NamedOutputPin *output);
 void turnPinLow(NamedOutputPin *output);
-
-void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brainPin, pin_output_mode_e *outputMode);
 
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 
