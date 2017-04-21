@@ -1,6 +1,7 @@
 /**
  * @file	io_pins.cpp
- * @brief	It could be that the main purpose of this file is the status LED blinking
+ * @brief	his file is about general input/output utility methods, not much EFI-specifics
+ *
  *
  * @date Jan 24, 2013
  * @author Andrey Belomutskiy, (c) 2012-2017
