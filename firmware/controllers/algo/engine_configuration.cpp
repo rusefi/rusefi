@@ -34,6 +34,7 @@
 #include "idle_thread.h"
 #include "alternatorController.h"
 #include "hardware.h"
+#include "board.h"
 #endif /* EFI_PROD_CODE */
 
 #include "hip9011_lookup.h"
@@ -88,8 +89,6 @@
 #include "geo_storm.h"
 #include "zil130.h"
 #include "honda_600.h"
-
-#include "board.h"
 
 EXTERN_ENGINE;
 
@@ -868,9 +867,11 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->tpsAccelLength = 12;
 	engineConfiguration->tpsAccelEnrichmentThreshold = 40; // TPS % change, per engine cycle
-	
+
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	// call overrided board-specific configuration setup, if needed (for custom boards only)
-	setBoardConfiguration();
+	setBoardConfigurationOverrides();
+#endif
 }
 
 void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_S) {
