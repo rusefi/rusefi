@@ -1342,6 +1342,7 @@
 extern "C" {
 #endif
   void boardInit(void);
+  void setBoardConfiguration(void);
 #ifdef __cplusplus
 }
 #endif

@@ -127,3 +127,10 @@ bool mmc_lld_is_write_protected(MMCDriver *mmcp) {
  */
 void boardInit(void) {
 }
+
+/**
+ * @brief   Board-specific configuration code.
+ * @todo    Add your board-specific code, if any.
+ */
+void setBoardConfiguration(void) {
+}
