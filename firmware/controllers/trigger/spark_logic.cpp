@@ -53,10 +53,10 @@ static void turnSparkPinLow2(IgnitionEvent *event, IgnitionOutputPin *output) {
 		output->outOfOrder = true;
 	}
 
-	turnPinLow(output);
+	output->setLow();
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	if (CONFIG(dizzySparkOutputPin) != GPIO_UNASSIGNED) {
-		turnPinLow(&enginePins.dizzyOutput);
+		enginePins.dizzyOutput.setLow();
 	}
 #endif /* EFI_PROD_CODE */
 }
@@ -102,10 +102,10 @@ static void turnSparkPinHigh2(IgnitionEvent *event, IgnitionOutputPin *output) {
 		}
 	}
 
-	turnPinHigh(output);
+	output->setHigh();
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	if (CONFIG(dizzySparkOutputPin) != GPIO_UNASSIGNED) {
-		turnPinHigh(&enginePins.dizzyOutput);
+		enginePins.dizzyOutput.setHigh();
 	}
 #endif /* EFI_PROD_CODE */
 }
