@@ -23,10 +23,7 @@ EXTERN_ENGINE;
 #include "main_trigger_callback.h"
 #endif /* EFI_ENGINE_CONTROL */
 
-extern board_configuration_s *boardConfiguration;
-
 static LoggingWithStorage logger("io_pins");
-
 
 extern EnginePins enginePins;
 
@@ -35,8 +32,6 @@ static ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, G
 #else
 static ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOF};
 #endif
-
-
 
 ioportid_t getHwPort(brain_pin_e brainPin) {
 	if (brainPin == GPIO_UNASSIGNED)
@@ -83,20 +78,3 @@ void initOutputPin(const char *msg, OutputPin *outputPin, ioportid_t port, uint3
 	initOutputPinExt(msg, outputPin, port, pinNumber, PAL_MODE_OUTPUT_PUSHPULL);
 }
 
-
-#if EFI_GPIO_HARDWARE
-
-/**
- * This method is part of fatal error handling.
- * Please note that worst case scenario the pins might get re-enabled by some other code :(
- * The whole method is pretty naive, but that's at least something.
- */
-void turnAllPinsOff(void) {
-	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
-		enginePins.injectors[i].setValue(false);
-	}
-	for (int i = 0; i < IGNITION_PIN_COUNT; i++) {
-		enginePins.coils[i].setValue(false);
-	}
-}
-#endif

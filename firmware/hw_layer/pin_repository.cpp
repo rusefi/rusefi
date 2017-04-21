@@ -34,7 +34,6 @@ static ioportid_t ports[7] = {GPIOA,
 };
 
 PinRepository::PinRepository() {
-
 }
 
 /**
