@@ -28,30 +28,5 @@
 #include "gpio_helper.h"
 #include "engine.h"
 
-EXTERN_ENGINE;
-
-/**
- * @brief Initialize the hardware output pin while also assigning it a logical name
- */
-void initOutputPinExt(const char *msg, OutputPin *outputPin, ioportid_t port, uint32_t pinNumber, iomode_t mode) {
-	if (outputPin->port != NULL && (outputPin->port != port || outputPin->pin != pinNumber)) {
-		/**
-		 * here we check if another physical pin is already assigned to this logical output
-		 */
-// todo: need to clear '&outputs' in io_pins.c
-		warning(CUSTOM_OBD_PIN_CONFLICT, "outputPin [%s] already assigned to %x%d", msg, outputPin->port, outputPin->pin);
-		engine->withError = true;
-		return;
-	}
-	outputPin->currentLogicValue = INITIAL_PIN_STATE;
-	outputPin->port = port;
-	outputPin->pin = pinNumber;
-
-	mySetPadMode(msg, port, pinNumber, mode);
-}
-
-void initOutputPin(const char *msg, OutputPin *outputPin, ioportid_t port, uint32_t pinNumber) {
-	initOutputPinExt(msg, outputPin, port, pinNumber, PAL_MODE_OUTPUT_PUSHPULL);
-}
 
 #endif /* GPIO_HELPER_C_ */
