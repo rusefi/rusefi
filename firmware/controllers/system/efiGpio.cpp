@@ -41,6 +41,28 @@ EnginePins::EnginePins() {
 	}
 }
 
+/**
+ * Sets the value of the pin. On this layer the value is assigned as is, without any conversion.
+ */
+
+#if EFI_PROD_CODE                                                                  \
+
+#define setPinValue(outputPin, electricalValue, logicValue)                        \
+  {                                                                                \
+    if ((outputPin)->currentLogicValue != (logicValue)) {                          \
+	  palWritePad((outputPin)->port, (outputPin)->pin, (electricalValue));         \
+	  (outputPin)->currentLogicValue = (logicValue);                               \
+    }                                                                              \
+  }
+#else /* EFI_PROD_CODE */
+#define setPinValue(outputPin, electricalValue, logicValue)                        \
+  {                                                                                \
+    if ((outputPin)->currentLogicValue != (logicValue)) {                          \
+	  (outputPin)->currentLogicValue = (logicValue);                               \
+    }                                                                              \
+  }
+#endif /* EFI_PROD_CODE */
+
 bool EnginePins::stopPins() {
 	bool result = false;
 	for (int i = 0; i < IGNITION_PIN_COUNT; i++) {
@@ -120,7 +142,18 @@ bool OutputPin::isInitialized() {
 }
 
 void OutputPin::setValue(int logicValue) {
-	doSetOutputPinValue2(this, logicValue);
+#if EFI_PROD_CODE
+	if (port != GPIO_NULL) {
+		efiAssertVoid(modePtr!=NULL, "pin mode not initialized");
+		pin_output_mode_e mode = *modePtr;
+		efiAssertVoid(mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e");
+		int eValue = getElectricalValue(logicValue, mode);
+		setPinValue(this, eValue, logicValue);
+	}
+
+#else /* EFI_PROD_CODE */
+	setPinValue(this, eValue, logicValue);
+#endif /* EFI_PROD_CODE */
 }
 
 bool OutputPin::getLogicValue() {
