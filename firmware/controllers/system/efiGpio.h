@@ -143,7 +143,6 @@ void turnPinHigh(NamedOutputPin *output);
 void turnPinLow(NamedOutputPin *output);
 
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
-void initOutputPinExt(const char *msg, OutputPin *outputPin, ioportid_t port, uint32_t pinNumber, iomode_t mode);
 void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brainPin, pin_output_mode_e *outputMode);
 
 ioportmask_t getHwPin(brain_pin_e brainPin);
