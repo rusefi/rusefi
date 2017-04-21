@@ -1,5 +1,6 @@
 /**
  * @file	io_pins.h
+ * @brief	his file is about general input/output utility methods, not much EFI-specifics
  *
  * @date Jan 24, 2013
  * @author Andrey Belomutskiy, (c) 2012-2017
@@ -9,25 +10,14 @@
 #define IO_PINS_H_
 
 #include "rusefi_enums.h"
+#include "main.h"
 
 #define GPIO_NULL NULL
 
-typedef enum {
-	INJECTOR_1,
-	INJECTOR_2,
-	INJECTOR_3,
-	INJECTOR_4,
-	INJECTOR_5,
-	INJECTOR_6,
-	INJECTOR_7,
-	INJECTOR_8,
-	INJECTOR_9_,
-	INJECTOR_10,
-	INJECTOR_11,
-	INJECTOR_12,
-
-	INJECTOR_NONE,
-} injector_channel_e;
+// mode >= 0  is always true since that's an unsigned
+#define assertOMode(mode) { \
+	efiAssertVoid(mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e"); \
+ }
 
 
 /**
@@ -61,13 +51,5 @@ typedef enum {
 //	LED_HUGE_19,
 //	LED_HUGE_20,
 
-void initPrimaryPins(void);
-void initOutputPins(void);
-
-#if EFI_GPIO
-void turnAllPinsOff(void);
-#else
-#define turnAllPinsOff() {}
-#endif
 
 #endif /* IO_PINS_H_ */

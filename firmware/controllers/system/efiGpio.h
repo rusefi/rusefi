@@ -1,5 +1,7 @@
 /**
  * @file	efiGpio.h
+ * @brief	EFI-related GPIO code
+ *
  *
  * @date Sep 26, 2014
  * @author Andrey Belomutskiy, (c) 2012-2017
@@ -7,15 +9,20 @@
 #ifndef EFIGPIO_H_
 #define EFIGPIO_H_
 
-#include "main.h"
 #include "io_pins.h"
+#include "main.h"
 
 #define INITIAL_PIN_STATE -1
 
-// mode >= 0  is always true since that's an unsigned
-#define assertOMode(mode) { \
-	efiAssertVoid(mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e"); \
- }
+void initPrimaryPins(void);
+void initOutputPins(void);
+
+#if EFI_GPIO || defined(__DOXYGEN__)
+void turnAllPinsOff(void);
+#else /* EFI_GPIO */
+#define turnAllPinsOff() {}
+#endif /* EFI_GPIO */
+
 
 /**
  * @brief   Single output pin reference and state
