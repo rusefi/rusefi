@@ -28,7 +28,6 @@ HW_LAYER_EMS_CPP = $(HW_LAYER_EGT_CPP) \
 	$(PROJECT_DIR)/hw_layer/stepper.cpp \
 	$(PROJECT_DIR)/hw_layer/servo.cpp \
 	$(PROJECT_DIR)/hw_layer/io_pins.cpp \
-	$(PROJECT_DIR)/hw_layer/gpio_helper.cpp \
 	$(PROJECT_DIR)/hw_layer/stm32f4/mpu_util.cpp \
 	$(PROJECT_DIR)/hw_layer/rtc_helper.cpp \
 	$(PROJECT_DIR)/hw_layer/accelerometer.cpp

@@ -17,6 +17,8 @@
 #include "engine_configuration.h"
 #include "console_io.h"
 
+EXTERN_ENGINE;
+
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 #include "main_trigger_callback.h"
 #endif /* EFI_ENGINE_CONTROL */
@@ -152,6 +154,31 @@ void initOutputPins(void) {
 	 ledRegister(LED_HUGE_20, GPIOE, 1);
 	 */
 }
+
+/**
+ * @brief Initialize the hardware output pin while also assigning it a logical name
+ */
+void initOutputPinExt(const char *msg, OutputPin *outputPin, ioportid_t port, uint32_t pinNumber, iomode_t mode) {
+	if (outputPin->port != NULL && (outputPin->port != port || outputPin->pin != pinNumber)) {
+		/**
+		 * here we check if another physical pin is already assigned to this logical output
+		 */
+// todo: need to clear '&outputs' in io_pins.c
+		warning(CUSTOM_OBD_PIN_CONFLICT, "outputPin [%s] already assigned to %x%d", msg, outputPin->port, outputPin->pin);
+		engine->withError = true;
+		return;
+	}
+	outputPin->currentLogicValue = INITIAL_PIN_STATE;
+	outputPin->port = port;
+	outputPin->pin = pinNumber;
+
+	mySetPadMode(msg, port, pinNumber, mode);
+}
+
+void initOutputPin(const char *msg, OutputPin *outputPin, ioportid_t port, uint32_t pinNumber) {
+	initOutputPinExt(msg, outputPin, port, pinNumber, PAL_MODE_OUTPUT_PUSHPULL);
+}
+
 
 #if EFI_GPIO
 
