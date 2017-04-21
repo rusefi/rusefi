@@ -260,4 +260,9 @@ void turnAllPinsOff(void) {
 		enginePins.coils[i].setValue(false);
 	}
 }
+#else /* EFI_GPIO_HARDWARE */
+const char *hwPortname(brain_pin_e brainPin) {
+	(void)brainPin;
+	return "N/A";
+}
 #endif /* EFI_GPIO_HARDWARE */

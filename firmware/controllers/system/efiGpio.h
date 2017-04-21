@@ -185,12 +185,19 @@ public:
 void turnPinHigh(NamedOutputPin *output);
 void turnPinLow(NamedOutputPin *output);
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 void initOutputPin(const char *msg, OutputPin *outputPin, ioportid_t port, uint32_t pinNumber);
 void initOutputPinExt(const char *msg, OutputPin *outputPin, ioportid_t port, uint32_t pinNumber, iomode_t mode);
-
-#endif /* EFI_PROD_CODE */
-
+void outputPinRegister(const char *msg, OutputPin *output, ioportid_t port, uint32_t pin);
 void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brainPin, pin_output_mode_e *outputMode);
+
+ioportmask_t getHwPin(brain_pin_e brainPin);
+ioportid_t getHwPort(brain_pin_e brainPin);
+const char *portname(ioportid_t GPIOx);
+
+#endif /* EFI_GPIO_HARDWARE */
+
+brain_pin_e parseBrainPin(const char *str);
+const char *hwPortname(brain_pin_e brainPin);
 
 #endif /* EFIGPIO_H_ */
