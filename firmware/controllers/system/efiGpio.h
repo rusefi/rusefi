@@ -151,9 +151,9 @@ public:
 
 #if EFI_PROD_CODE
  #define isPinAssigned(output) ((output)->port != GPIO_NULL)
-#else
+#else /* EFI_PROD_CODE */
  #define isPinAssigned(output) (true)
-#endif
+#endif /* EFI_PROD_CODE */
 
 #define doSetOutputPinValue(pin, logicValue) doSetOutputPinValue2((&outputs[pin]), logicValue)
 
@@ -168,20 +168,23 @@ public:
 			setPinValue(output, eValue, logicValue);                                    \
 		}                                                                               \
     }
-#else
+#else /* EFI_PROD_CODE */
 		#define doSetOutputPinValue2(output, logicValue) {                              \
 				pin_output_mode_e mode = OM_DEFAULT;                                    \
 				int eValue = getElectricalValue(logicValue, mode);                      \
 				setPinValue(output, eValue, logicValue);                                \
 		}
-#endif
+#endif /* EFI_PROD_CODE */
 
 
 void turnPinHigh(NamedOutputPin *output);
 void turnPinLow(NamedOutputPin *output);
 
+#if EFI_PROD_CODE
 void initOutputPin(const char *msg, OutputPin *outputPin, ioportid_t port, uint32_t pinNumber);
 void initOutputPinExt(const char *msg, OutputPin *outputPin, ioportid_t port, uint32_t pinNumber, iomode_t mode);
+
+#endif /* EFI_PROD_CODE */
 
 void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brainPin, pin_output_mode_e *outputMode);
 
