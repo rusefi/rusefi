@@ -235,28 +235,7 @@ void initPrimaryPins(void) {
 	outputPinRegisterExt2("led: ERROR status", &enginePins.errorLedPin, LED_ERROR_BRAIN_PIN, &DEFAULT_OUTPUT);
 }
 
-/**
- * @brief Initialize the hardware output pin while also assigning it a logical name
- */
-static void initOutputPinExt(const char *msg, OutputPin *outputPin, ioportid_t port, uint32_t pinNumber, iomode_t mode) {
-	if (outputPin->port != NULL && (outputPin->port != port || outputPin->pin != pinNumber)) {
-		/**
-		 * here we check if another physical pin is already assigned to this logical output
-		 */
-// todo: need to clear '&outputs' in io_pins.c
-		warning(CUSTOM_OBD_PIN_CONFLICT, "outputPin [%s] already assigned to %x%d", msg, outputPin->port, outputPin->pin);
-		engine->withError = true;
-		return;
-	}
-	outputPin->currentLogicValue = INITIAL_PIN_STATE;
-	outputPin->port = port;
-	outputPin->pin = pinNumber;
-
-	mySetPadMode(msg, port, pinNumber, mode);
-}
-
-
-void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
+void outputPinRegisterExt2(const char *msg, OutputPin *outputPin, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
 	if (brainPin == GPIO_UNASSIGNED)
 		return;
 	ioportid_t port = getHwPort(brainPin);
@@ -267,7 +246,7 @@ void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brain
 	 */
 	if (port == GPIO_NULL) {
 		// that's for GRIO_NONE
-		output->port = port;
+		outputPin->port = port;
 		return;
 	}
 
@@ -275,9 +254,25 @@ void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brain
 	iomode_t mode = (*outputMode == OM_DEFAULT || *outputMode == OM_INVERTED) ?
 		PAL_MODE_OUTPUT_PUSHPULL : PAL_MODE_OUTPUT_OPENDRAIN;
 
-	initOutputPinExt(msg, output, port, pin, mode);
+	/**
+	 * @brief Initialize the hardware output pin while also assigning it a logical name
+	 */
+	if (outputPin->port != NULL && (outputPin->port != port || outputPin->pin != pin)) {
+		/**
+		 * here we check if another physical pin is already assigned to this logical output
+		 */
+	// todo: need to clear '&outputs' in io_pins.c
+		warning(CUSTOM_OBD_PIN_CONFLICT, "outputPin [%s] already assigned to %x%d", msg, outputPin->port, outputPin->pin);
+		engine->withError = true;
+		return;
+	}
+	outputPin->currentLogicValue = INITIAL_PIN_STATE;
+	outputPin->port = port;
+	outputPin->pin = pin;
 
-	output->setDefaultPinState(outputMode);
+	mySetPadMode(msg, port, pin, mode);
+
+	outputPin->setDefaultPinState(outputMode);
 }
 
 /**
