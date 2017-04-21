@@ -164,6 +164,10 @@ static int getIndex(ioportid_t port, ioportmask_t pin) {
  * @return true if this pin was already used, false otherwise
  */
 bool markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
+	if (!initialized) {
+		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
+		return false;
+	}
 	int index = getIndex(port, pin);
 
 	if (PIN_USED[index] != NULL) {
@@ -180,22 +184,6 @@ bool markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
 	return false;
 }
 
-void mySetPadMode2(const char *msg, brain_pin_e pin, iomode_t mode) {
-	mySetPadMode(msg, getHwPort(pin), getHwPin(pin), mode);
-}
-
-iomode_t getInputMode(pin_input_mode_e mode) {
-	switch (mode) {
-	case PI_PULLUP:
-		return PAL_MODE_INPUT_PULLUP;
-	case PI_PULLDOWN:
-		return PAL_MODE_INPUT_PULLDOWN;
-	case PI_DEFAULT:
-	default:
-		return PAL_MODE_INPUT;
-	}
-}
-
 const char * getPinFunction(brain_input_pin_e brainPin) {
 	ioportid_t port = getHwPort(brainPin);
 	ioportmask_t pin = getHwPin(brainPin);
@@ -204,27 +192,6 @@ const char * getPinFunction(brain_input_pin_e brainPin) {
 	return PIN_USED[index];
 }
 
-/**
- * This method would set an error condition if pin is already used
- */
-void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t mode) {
-	if (!initialized) {
-		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
-		return;
-	}
-	if (port == GPIO_NULL) {
-		return;
-	}
-
-	scheduleMsg(&logger, "%s on %s%d", msg, portname(port), pin);
-
-	bool wasUsed = markUsed(port, pin, msg);
-	if (wasUsed) {
-		return;
-	}
-
-	palSetPadMode(port, pin, mode);
-}
 
 void unmarkPin(brain_pin_e brainPin) {
 	if (brainPin == GPIO_UNASSIGNED) {
@@ -254,9 +221,3 @@ void registedFundamentralIoPin(char *msg, ioportid_t port, ioportmask_t pin, iom
 	palSetPadMode(port, pin, mode);
 }
 
-void efiIcuStart(ICUDriver *icup, const ICUConfig *config) {
-	  efiAssertVoid((icup->state == ICU_STOP) || (icup->state == ICU_READY),
-	              "input already used?");
-
-	icuStart(icup, config);
-}
