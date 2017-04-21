@@ -32,10 +32,10 @@ public:
 	void setDefaultPinState(pin_output_mode_e *defaultState);
 	bool getLogicValue();
 	void unregister();
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 	ioportid_t port;
 	uint8_t pin;
-#endif /* EFI_PROD_CODE */
+#endif /* EFI_GPIO_HARDWARE */
 	int8_t currentLogicValue;
 	// 4 byte pointer is a bit of a memory waste here
 	pin_output_mode_e *modePtr;
@@ -129,27 +129,6 @@ public:
  */
 #define getElectricalValue1(mode) ((mode) == OM_DEFAULT || (mode) == OM_OPENDRAIN)
 
-/**
- * Sets the value of the pin. On this layer the value is assigned as is, without any conversion.
- */
-
-#if EFI_PROD_CODE                                                                  \
-
-#define setPinValue(outputPin, electricalValue, logicValue)                        \
-  {                                                                                \
-    if ((outputPin)->currentLogicValue != (logicValue)) {                          \
-	  palWritePad((outputPin)->port, (outputPin)->pin, (electricalValue));         \
-	  (outputPin)->currentLogicValue = (logicValue);                               \
-    }                                                                              \
-  }
-#else /* EFI_PROD_CODE */
-#define setPinValue(outputPin, electricalValue, logicValue)                        \
-  {                                                                                \
-    if ((outputPin)->currentLogicValue != (logicValue)) {                          \
-	  (outputPin)->currentLogicValue = (logicValue);                               \
-    }                                                                              \
-  }
-#endif /* EFI_PROD_CODE */
 
 #define getElectricalValue(logicalValue, mode) \
 	(logicalValue ? getElectricalValue1(mode) : getElectricalValue0(mode))
@@ -159,28 +138,6 @@ public:
 #else /* EFI_PROD_CODE */
  #define isPinAssigned(output) (true)
 #endif /* EFI_PROD_CODE */
-
-#define doSetOutputPinValue(pin, logicValue) doSetOutputPinValue2((&outputs[pin]), logicValue)
-
-
-#if EFI_PROD_CODE
-#define doSetOutputPinValue2(output, logicValue) {                                      \
-		if ((output)->port != GPIO_NULL) {                                                \
-			efiAssertVoid((output)->modePtr!=NULL, "pin mode not initialized");           \
-			pin_output_mode_e mode = *(output)->modePtr;                                  \
-			efiAssertVoid(mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e");  \
-			int eValue = getElectricalValue(logicValue, mode);                          \
-			setPinValue(output, eValue, logicValue);                                    \
-		}                                                                               \
-    }
-#else /* EFI_PROD_CODE */
-		#define doSetOutputPinValue2(output, logicValue) {                              \
-				pin_output_mode_e mode = OM_DEFAULT;                                    \
-			/* 	int eValue = getElectricalValue(logicValue, mode); */                   \
-				setPinValue(output, eValue, logicValue);                                \
-		}
-#endif /* EFI_PROD_CODE */
-
 
 void turnPinHigh(NamedOutputPin *output);
 void turnPinLow(NamedOutputPin *output);
