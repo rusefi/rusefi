@@ -176,13 +176,10 @@ ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin) {
 }
 
 void turnOnCapturePin(const char *msg, brain_pin_e brainPin) {
-	ioportid_t port = getHwPort(brainPin);
-	ioportmask_t pin = getHwPin(brainPin);
-
 	ICUDriver *driver = getInputCaptureDriver(msg, brainPin);
 	if (driver != NULL) {
 		iomode_t mode = (iomode_t) PAL_MODE_ALTERNATE(getAlternateFunctions(driver));
-		mySetPadMode(msg, port, pin, mode);
+		mySetPadMode2(msg, brainPin, mode);
 	}
 }
 

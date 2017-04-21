@@ -54,6 +54,7 @@ ioportmask_t getHwPin(brain_pin_e brainPin) {
 }
 
 /**
+ * @deprecated: todo finish migration to 'mySetPadMode2' with 'brain_pin_e' parameter
  * This method would set an error condition if pin is already used
  */
 void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t mode) {

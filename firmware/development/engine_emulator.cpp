@@ -24,12 +24,11 @@ extern bool hasFirmwareErrorFlag;
 
 static THD_WORKING_AREA(eeThreadStack, UTILITY_THREAD_STACK_SIZE);
 
-#define DIAG_PORT GPIOD
-#define DIAG_PIN 0
+#define DIAG_PIN GPIOD_0
 
 void setDiag(int value) {
 	print("Setting diag: %d\r\n", value);
-	palWritePad(DIAG_PORT, DIAG_PIN, value);
+// todo: convert to new api	palWritePad(DIAG_PORT, DIAG_PIN, value);
 }
 
 #define PERIOD 3000
@@ -84,8 +83,7 @@ void startEmulator(void) {
 //}
 
 static void initECUstimulator(Engine *engine) {
-	mySetPadMode("TEN", DIAG_PORT, DIAG_PIN,
-	PAL_MODE_OUTPUT_PUSHPULL);
+	mySetPadMode2("TEN", DIAG_PIN, PAL_MODE_OUTPUT_PUSHPULL);
 
 	addConsoleActionI("diag", setDiag);
 	addConsoleAction("emu", startEmulator);
