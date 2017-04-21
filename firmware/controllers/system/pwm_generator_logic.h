@@ -10,7 +10,6 @@
 
 #include "global.h"
 #include "EfiWave.h"
-#include "io_pins.h"
 #include "scheduler.h"
 #include "efiGpio.h"
 
