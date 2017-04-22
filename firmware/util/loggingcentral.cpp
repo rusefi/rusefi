@@ -94,7 +94,10 @@ char * swapOutputBuffers(int *actualOutputBufferSize) {
 	*actualOutputBufferSize = efiStrlen(outputBuffer);
 #if EFI_ENABLE_ASSERTS || defined(__DOXYGEN__)
 	if (*actualOutputBufferSize != expectedOutputSize) {
-		firmwareError(CUSTOM_ERR_6534, "lsize mismatch %d/%d", *actualOutputBufferSize, expectedOutputSize);
+		int sizeToShow = minI(10, *actualOutputBufferSize);
+		int offsetToShow = *actualOutputBufferSize - sizeToShow;
+		firmwareError(CUSTOM_ERR_6534, "lsize mismatch %d/%d [%s]", *actualOutputBufferSize, expectedOutputSize,
+				&outputBuffer[offsetToShow]);
 		return NULL;
 	}
 #endif /* EFI_ENABLE_ASSERTS */
