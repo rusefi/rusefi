@@ -65,7 +65,7 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 #endif
 
 #if EFI_HD44780_LCD || defined(__DOXYGEN__)
-	lcdShowFatalMessage((char *) msg);
+	lcdShowPanicMessage((char *) msg);
 #endif /* EFI_HD44780_LCD */
 
 	if (!main_loop_started) {
