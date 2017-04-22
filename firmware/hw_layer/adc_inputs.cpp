@@ -436,7 +436,7 @@ int getAdcChannelPin(adc_channel_e hwChannel) {
 static void initAdcHwChannel(adc_channel_e hwChannel) {
 	brain_pin_e pin = getAdcChannelBrainPin("adc", hwChannel);
 
-	initAdcPin(port, pin, "hw");
+	initAdcPin(pin, "hw");
 }
 
 int AdcDevice::size() {
