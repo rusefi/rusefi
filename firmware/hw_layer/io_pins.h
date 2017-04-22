@@ -53,7 +53,6 @@
 //	LED_HUGE_20,
 
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
-void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t mode);
 void mySetPadMode2(const char *msg, brain_pin_e pin, iomode_t mode);
 
 iomode_t getInputMode(pin_input_mode_e mode);
