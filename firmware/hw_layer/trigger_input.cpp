@@ -123,7 +123,7 @@ static ICUDriver *turnOnTriggerInputPin(const char *msg, brain_pin_e hwPin, ICUC
 
 		efiIcuStart(driver, icucfg);
 		if (driver->state == ICU_READY) {
-            icuStartCapture(driver);
+            icuStartCapture(driver); // this would change state from READY to WAITING
             icuEnableNotifications(driver);
 		} else {
 			// we would be here for example if same pin is used for multiple input capture purposes

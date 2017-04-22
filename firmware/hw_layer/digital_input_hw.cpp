@@ -211,6 +211,7 @@ void startInputDriver(digital_input_s *hw, bool isActiveHigh) {
 		}
 		wave_icucfg.channel = getInputCaptureChannel(hw->brainPin);
 		efiIcuStart(driver, &wave_icucfg);
+        icuStartCapture(driver); // this would change state from READY to WAITING
 		icuEnableNotifications(driver);
 	}
 	hw->started = true;
