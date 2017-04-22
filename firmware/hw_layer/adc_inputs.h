@@ -15,11 +15,17 @@
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 
 const char * getAdcMode(adc_channel_e hwChannel);
-int getAdcChannelPin(adc_channel_e hwChannel);
 void initAdcInputs(bool boardTestMode);
 void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n);
+
+// deprecated - migrate to 'getAdcChannelBrainPin'
+int getAdcChannelPin(adc_channel_e hwChannel);
+
+// deprecated - migrate to 'getAdcChannelBrainPin'
 ioportid_t getAdcChannelPort(const char *msg, adc_channel_e hwChannel);
+
 adc_channel_e getAdcChannel(brain_pin_e pin);
+brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel);
 void doSlowAdc(void);
 
 int getAdcHardwareIndexByInternalIndex(int index);

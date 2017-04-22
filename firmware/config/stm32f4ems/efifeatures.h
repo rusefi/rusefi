@@ -209,10 +209,9 @@
 // todo: finish migration to sdCardSpiDevice one day
 #define MMC_CARD_SPI SPID3
 
-#define EFI_I2C_SCL_PORT GPIOB
-#define EFI_I2C_SCL_PIN 6
-#define EFI_I2C_SDA_PORT GPIOB
-#define EFI_I2C_SDA_PIN 7
+#define EFI_I2C_SCL_BRAIN_PIN GPIOB_6
+
+#define EFI_I2C_SDA_BRAIN_PIN GPIOB_7
 #define EFI_I2C_AF 4
 
 /**
