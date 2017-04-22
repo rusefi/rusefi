@@ -61,9 +61,9 @@ EELAYER END
 $Descr B 17000 11000
 encoding utf-8
 Sheet 15 15
-Title "Frankenso"
-Date "3 dec 2015"
-Rev ".05"
+Title "frankenso"
+Date "2017-04-22"
+Rev "0.5"
 Comp "rusEFI.com"
 Comment1 ""
 Comment2 ""
@@ -1084,4 +1084,6 @@ F 3 "" H 12425 5175 60  0000 C CNN
 $EndComp
 Text Label 12425 5075 2    60   ~ 0
 5V
+Text Notes 3800 10400 0    60   ~ 0
+See below links about barriers in GND planes. The current loops in the layout do not appear to need barriers. \n\nhttp://rusefi.com/wiki/index.php?title=Manual:Hardware:PCB_design_rules\nhttp://www.maximintegrated.com/en/app-notes/index.mvp/id/5450
 $EndSCHEMATC

@@ -132,16 +132,14 @@
 132) RESOLVED IN R0.5 Add vias to PE5 & PE6 traces (these are input capture options on TIM9)
 133) RESOLVED IN R0.5 Added more robust surge suppression to power supply, also added an RF choke to help prevent potentail RF issues. 
 134) RESOLVED IN R0.5 Add zone cut out such that boards can have engraved serial numbers. 
-135)                  CANH silkscreen is pointing at the wrong pin, should be moved to the next pin
+135) RESOLVED IN R0.5 CANH silkscreen is pointing at the wrong pin, should be moved to the next pin http://rusefi.com/forum/viewtopic.php?f=4&t=569&start=330#p24404
 136) RESOLVED IN R0.5 D1003 & D1006 one of pads needs larger drill, same as other
 137) RESOLVED IN R0.5 D1001 needs polarity silkscreen
 138) RESOLVED IN R0.5 Verified diode polarities, new KICAD libs flipped pin 1
 139) RESOLVED IN R0.5 Change D1004 from VS-50WQ04FNPBF to VS-50WQ04FN-M3
-140)                  D1006 "alt diode for D1004" app note needs to get back to power supply page
-141)                  add an app note regarding not having separate injector/analog/else GND on Frankenso
+140) RESOLVED IN R0.5 D1006 "alt diode for D1004" app note needs to get back to power supply page
+141) RESOLVED IN R0.5 add an app note regarding not having separate injector/analog/else GND on Frankenso (NOTE ADDED TO PAGE 15)
 142)                  Some fab shops do not like soldering 0R 0805 on JUMPER footprint. Need to convert JPO1, JPO4 JPO5 "SM0805_jumper"
-
-
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol

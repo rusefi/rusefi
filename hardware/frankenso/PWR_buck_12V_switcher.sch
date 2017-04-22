@@ -61,9 +61,9 @@ EELAYER END
 $Descr A 11000 8500
 encoding utf-8
 Sheet 9 15
-Title "frankenso-PWR-Supply"
-Date "2017-04-01"
-Rev "0.2"
+Title "frankenso"
+Date "2017-04-22"
+Rev "0.5"
 Comp "rusEFI.com"
 Comment1 ""
 Comment2 ""

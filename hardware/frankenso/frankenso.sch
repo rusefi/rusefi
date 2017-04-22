@@ -61,9 +61,9 @@ EELAYER END
 $Descr B 17000 11000
 encoding utf-8
 Sheet 1 15
-Title "Frankenso"
-Date "3 dec 2015"
-Rev ".05"
+Title "frankenso"
+Date "2017-04-22"
+Rev "0.5"
 Comp "rusEFI.com"
 Comment1 ""
 Comment2 ""
