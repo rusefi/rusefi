@@ -315,4 +315,6 @@ void setMazdaMiata2003EngineConfigurationNewBoard(DECLARE_ENGINE_PARAMETER_F) {
 	// Frankenso analog #7 pin 3J, W48 top <>W48 bottom jumper, not OEM
 	engineConfiguration->afr.hwChannel = EFI_ADC_3; // PA3
 
+	engineConfiguration->mafAdcChannel = EFI_ADC_4; // PA4
+
 }
