@@ -253,9 +253,51 @@ PWM_OUTPUT_DISABLED, NULL }, { PWM_OUTPUT_DISABLED, NULL } },
 /* HW dependent part.*/
 0, 0 };
 
-static void initAdcPin(ioportid_t port, int pin, const char *msg) {
-	print("adc %s\r\n", msg);
-	mySetPadMode("adc input", port, pin, PAL_MODE_INPUT_ANALOG);
+static void initAdcPin(brain_pin_e pin, const char *msg) {
+	// todo: migrate to scheduleMsg if we want this back print("adc %s\r\n", msg);
+
+	mySetPadMode2("adc input", pin, PAL_MODE_INPUT_ANALOG);
+}
+
+brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel) {
+	// todo: replace this with an array :)
+	switch (hwChannel) {
+	case ADC_CHANNEL_IN0:
+		return GPIOA_0;
+	case ADC_CHANNEL_IN1:
+		return GPIOA_1;
+	case ADC_CHANNEL_IN2:
+		return GPIOA_2;
+	case ADC_CHANNEL_IN3:
+		return GPIOA_3;
+	case ADC_CHANNEL_IN4:
+		return GPIOA_4;
+	case ADC_CHANNEL_IN5:
+		return GPIOA_5;
+	case ADC_CHANNEL_IN6:
+		return GPIOA_6;
+	case ADC_CHANNEL_IN7:
+		return GPIOA_7;
+	case ADC_CHANNEL_IN8:
+		return GPIOB_0;
+	case ADC_CHANNEL_IN9:
+		return GPIOB_1;
+	case ADC_CHANNEL_IN10:
+		return GPIOC_0;
+	case ADC_CHANNEL_IN11:
+		return GPIOC_1;
+	case ADC_CHANNEL_IN12:
+		return GPIOC_2;
+	case ADC_CHANNEL_IN13:
+		return GPIOC_3;
+	case ADC_CHANNEL_IN14:
+		return GPIOC_4;
+	case ADC_CHANNEL_IN15:
+		return GPIOC_5;
+	default:
+		firmwareError(CUSTOM_ERR_6516, "Unknown hw channel %d [%s]", hwChannel, msg);
+		return GPIO_INVALID;
+	}
 }
 
 adc_channel_e getAdcChannel(brain_pin_e pin) {
@@ -297,6 +339,7 @@ adc_channel_e getAdcChannel(brain_pin_e pin) {
 	}
 }
 
+// deprecated - migrate to 'getAdcChannelBrainPin'
 ioportid_t getAdcChannelPort(const char *msg, adc_channel_e hwChannel) {
 	// todo: replace this with an array :)
 	switch (hwChannel) {
@@ -348,6 +391,7 @@ const char * getAdcMode(adc_channel_e hwChannel) {
 	return "INACTIVE - need restart";
 }
 
+// deprecated - migrate to 'getAdcChannelBrainPin'
 int getAdcChannelPin(adc_channel_e hwChannel) {
 	// todo: replace this with an array :)
 	switch (hwChannel) {
@@ -390,8 +434,7 @@ int getAdcChannelPin(adc_channel_e hwChannel) {
 }
 
 static void initAdcHwChannel(adc_channel_e hwChannel) {
-	ioportid_t port = getAdcChannelPort("adc", hwChannel);
-	int pin = getAdcChannelPin(hwChannel);
+	brain_pin_e pin = getAdcChannelBrainPin("adc", hwChannel);
 
 	initAdcPin(port, pin, "hw");
 }
