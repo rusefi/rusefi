@@ -2787,7 +2787,6 @@ Connection ~ 12100 1750
 Wire Wire Line
 	12000 1750 12050 1750
 Connection ~ 12000 1750
-Connection ~ 9150 7400
 Wire Wire Line
 	11450 9850 11750 9850
 Wire Wire Line
