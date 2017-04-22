@@ -231,10 +231,10 @@ void lcd_HD44780_init(Logging *sharedLogger) {
 	printMsg(logger, "lcd_HD44780_init() done");
 }
 
-void lcdShowFatalMessage(char *message) {
+void lcdShowPanicMessage(char *message) {
 	BUSY_WAIT_DELAY = TRUE;
 	lcd_HD44780_set_position(0, 0);
-	lcd_HD44780_print_string("fatal\n");
+	lcd_HD44780_print_string("PANIC\n");
 	lcd_HD44780_print_string(message);
 }
 
