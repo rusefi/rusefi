@@ -139,6 +139,7 @@
 139) RESOLVED IN R0.5 Change D1004 from VS-50WQ04FNPBF to VS-50WQ04FN-M3
 140)                  D1006 "alt diode for D1004" app note needs to get back to power supply page
 141)                  add an app note regarding not having separate injector/analog/else GND on Frankenso
+142)                  Some fab shops do not like soldering 0R 0805 on JUMPER footprint. Need to convert JPO1, JPO4 JPO5 "SM0805_jumper"
 
 
 

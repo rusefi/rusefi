@@ -7,5 +7,7 @@
 7)  RESOLVED IN R0.2 set solder mask to 0.003 inches, per OSHPark suggestion. 
 8)  RESOLVED IN R0.3 Check if there is a chance to match discovery board reset button location
 9)  RESOLVED IN R0.3 Move push buttons to match the STM32F407 Discovery board's locations. 
-10) RESOLVED IN R0.3 Changed diodes to 0805 diodes. 
+10) RESOLVED IN R0.3 Changed diodes to 0805 diodes.
+11)                  Some fab shops do not like soldering 0R 0805 on JUMPER footprint. Need to convert JP1, JP2, JP3 & JP4 to "SM0805_jumper"
+ 
 
