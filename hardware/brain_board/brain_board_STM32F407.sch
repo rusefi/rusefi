@@ -18,8 +18,8 @@ $Descr A3 16535 11693
 encoding utf-8
 Sheet 1 1
 Title ""
-Date "2017-01-20"
-Rev "R0.3"
+Date "2017-02-18"
+Rev "R0.4"
 Comp "rusEFI by Art_Electro"
 Comment1 ""
 Comment2 ""
