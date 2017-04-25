@@ -512,7 +512,13 @@ typedef enum {
 	 * same as innovate LC2
 	 * 0v->7.35afr, 5v->22.39
 	 */
-	ES_Innovate_MTX_L = 1, ES_14Point7_Free = 2,
+	ES_Innovate_MTX_L = 1,
+	/**
+	 * Same as AEM
+	 * 0v->10.0afr
+	 * 5v->20.0afr
+	 */
+	ES_14Point7_Free = 2,
 
 	ES_NarrowBand = 3,
 
