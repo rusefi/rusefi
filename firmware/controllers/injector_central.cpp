@@ -198,6 +198,12 @@ static void sparkbench(const char * onTimeStr, const char *offTimeStr, const cha
 	sparkbench2("0", "1", onTimeStr, offTimeStr, countStr);
 }
 
+
+void dizzyBench(void) {
+	pinbench("300", "5", "400", "3", &enginePins.dizzyOutput, engineConfiguration->dizzySparkOutputPin);
+}
+
+
 static THD_WORKING_AREA(benchThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static msg_t benchThread(int param) {
@@ -310,6 +316,7 @@ void initInjectorCentral(Logging *sharedLogger) {
 	addConsoleAction("fuelpumpbench", fuelPumpBench);
 	addConsoleActionS("fuelpumpbench2", fuelPumpBenchExt);
 	addConsoleAction("fanbench", fanBench);
+	addConsoleAction("dizzybench", dizzyBench);
 
 	addConsoleAction("milbench", milBench);
 	addConsoleActionSSS("fuelbench", fuelbench);
