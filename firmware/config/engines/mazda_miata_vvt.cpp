@@ -317,4 +317,6 @@ void setMazdaMiata2003EngineConfigurationNewBoard(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_4; // PA4
 
+	setEgoSensor(ES_14Point7_Free PASS_ENGINE_PARAMETER);
+
 }
