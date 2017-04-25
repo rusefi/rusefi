@@ -180,7 +180,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->alternatorControlPin = GPIOE_10;
 	boardConfiguration->alternatorControlPinMode = OM_OPENDRAIN;
 
-	boardConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
+//	boardConfiguration->vehicleSpeedSensorInputPin = GPIOA_8; // https://github.com/rusefi/rusefi/issues/401
 
 	// enable altdebug
 	engineConfiguration->targetVBatt = 13.8;
