@@ -316,7 +316,7 @@ void initInjectorCentral(Logging *sharedLogger) {
 	addConsoleAction("fuelpumpbench", fuelPumpBench);
 	addConsoleActionS("fuelpumpbench2", fuelPumpBenchExt);
 	addConsoleAction("fanbench", fanBench);
-	addConsoleAction("dizzybench", dizzyBench);
+	addConsoleAction("dizzybench", dizzyBench); // this is useful for tach output testing
 
 	addConsoleAction("milbench", milBench);
 	addConsoleActionSSS("fuelbench", fuelbench);
