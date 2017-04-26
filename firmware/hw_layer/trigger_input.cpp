@@ -123,8 +123,8 @@ static ICUDriver *turnOnTriggerInputPin(const char *msg, brain_pin_e hwPin, ICUC
 
 		efiIcuStart(driver, icucfg);
 		if (driver->state == ICU_READY) {
-			efiAssertVoid(driver != NULL, "ti: driver is NULL");
-			efiAssertVoid(driver->state == ICU_READY, "ti: driver not ready");
+			efiAssert(driver != NULL, "ti: driver is NULL", NULL);
+			efiAssert(driver->state == ICU_READY, "ti: driver not ready", NULL);
             icuStartCapture(driver); // this would change state from READY to WAITING
             icuEnableNotifications(driver);
 		} else {
