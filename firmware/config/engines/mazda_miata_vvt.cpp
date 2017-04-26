@@ -22,11 +22,11 @@
  * coil1/4          (p1 +5 VP)    PE14
  * coil2/2          (p1 +5 VP)    PC7
  *
- * tachometer +5 VP (p3 +5 VP)    PE8
- * alternator +5 VP (p3 +5 VP)    PE10
- * MIL check engine (p4 no VP)    PD9
+ * tachometer +5 VP (p3 +12 VP)   PE8
+ * alternator +5 VP (p3 +12 VP)   PE10
  *
  * VVT solenoid on aux PID#1      PE3
+ * warning light                  PE6
  *
  *
  */
@@ -285,6 +285,8 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
+
+	boardConfiguration->malfunctionIndicatorPin = GPIOE_6; // just for a test
 
 	/**
 	 * http://miataturbo.wikidot.com/fuel-injectors
