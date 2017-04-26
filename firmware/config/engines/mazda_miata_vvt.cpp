@@ -218,7 +218,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 
 
-	engineConfiguration->dizzySparkOutputPin = GPIOE_8;
+	engineConfiguration->dizzySparkOutputPin = GPIOE_8; // tachometer
 
 	// set global_trigger_offset_angle 0
 	engineConfiguration->globalTriggerAngleOffset = 0;
@@ -229,7 +229,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	// set cranking_timing_angle 10
 	engineConfiguration->crankingTimingAngle = 10;
 	// set cranking_fuel 4
-	engineConfiguration->cranking.baseFuel = 4;
+	engineConfiguration->cranking.baseFuel = 4; // this value for return-less NB miata fuel system, higher pressure
 
 	boardConfiguration->ignitionPins[0] = GPIOE_14;
 	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
@@ -320,5 +320,9 @@ void setMazdaMiata2003EngineConfigurationNewBoard(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->mafAdcChannel = EFI_ADC_4; // PA4
 
 	setEgoSensor(ES_14Point7_Free PASS_ENGINE_PARAMETER);
+
+
+	// set cranking_fuel 8
+	engineConfiguration->cranking.baseFuel = 8; // higher value for return system NA conversion since lower fuel pressure
 
 }
