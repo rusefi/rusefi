@@ -16,5 +16,5 @@ ALTERNATOR_LOGIC=vbatt < 14.5
 
 AC_RELAY_LOGIC=ac_on_switch
 
-
+# Combined RPM, CLT and VBATT warning light
 COMBINED_WARNING_LIGHT=(rpm > fsio_setting(2)) | ((coolant > fsio_setting(3)) | (vbatt < fsio_setting(4)))
