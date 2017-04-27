@@ -19,7 +19,9 @@ extern "C"
 #include <string.h>
 
 #ifndef DEFAULT_ENGINE_TYPE
-#define DEFAULT_ENGINE_TYPE CUSTOM_ENGINE
+//#define DEFAULT_ENGINE_TYPE CUSTOM_ENGINE
+// temporary measure until NJMP race
+#define DEFAULT_ENGINE_TYPE MAZDA_MIATA_2003_BETTER
 #endif
 
 // this is about MISRA not liking 'time.h'. todo: figure out something
