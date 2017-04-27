@@ -547,6 +547,16 @@ void chDbgPanic3(const char *msg, const char * file, int line);
 #define hasFatalError() (FALSE)
 #endif
 
+
+#define chDbgAssert(c, remark) do {                                              \
+  if (CH_DBG_ENABLE_ASSERTS != FALSE) {                                     \
+    if (!(c)) {                                                             \
+  /*lint -restore*/                                                         \
+      chSysHalt(remark);                                                    \
+    }                                                                       \
+  }                                                                         \
+} while (false)
+
 #endif  /* _CHCONF_H_ */
 
 /** @} */
