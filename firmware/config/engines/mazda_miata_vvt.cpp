@@ -307,6 +307,22 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER);
 
+	//
+	/**
+	 * Combined RPM, CLT and VBATT warning light
+	 *
+	 * to test
+	 * set_fsio_setting 2 1800
+	 * set_fsio_setting 3 95
+	 * set_fsio_setting 4 14
+	 */
+	boardConfiguration->fsio_setting[1] = 6200; // #2 RPM threshold
+	boardConfiguration->fsio_setting[2] = 90; // #3 CLT threshold
+	boardConfiguration->fsio_setting[3] = 13.5; // #4 voltage threshold
+
+	setFsio(1, GPIOE_6, COMBINED_WARNING_LIGHT PASS_ENGINE_PARAMETER);
+
+
 }
 
 void setMazdaMiata2003EngineConfigurationNewBoard(DECLARE_ENGINE_PARAMETER_F) {
