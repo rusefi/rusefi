@@ -1,6 +1,6 @@
 // this https://en.wikipedia.org/wiki/Reverse_Polish_notation is generated automatically
 // from controllers/system_fsio.txt
-// on 2017-04-25_08_26_37
+// on 2017-04-25_15_33_33
 //
 //
 // in this file we define system FSIO expressions
@@ -24,6 +24,5 @@
 // Human-readable: ac_on_switch
 #define AC_RELAY_LOGIC "ac_on_switch"
 
-// Human-readable: rpm > fsio_setting(2)
-#define SIMPLE_WARNING_LIGHT "rpm 2 fsio_setting >"
-//COMBINED_WARNING_LIGHT=rpm > fsio_setting(2) | coolant fsio_setting(3) | vbatt < fsio_setting(4)
+// Human-readable: (rpm > fsio_setting(2)) | ((coolant > fsio_setting(3)) | (vbatt < fsio_setting(4)))
+#define COMBINED_WARNING_LIGHT "rpm 2 fsio_setting > coolant 3 fsio_setting > vbatt 4 fsio_setting < | |"
