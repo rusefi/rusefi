@@ -709,7 +709,7 @@ fileVersion = { 20161225 }
 		subMenu = std_separator
 		subMenu = fuelTableTbl,				"Fuel Table", 0, {fuelAlgorithm != 3}
         subMenu = veTableTbl,           	"VE Table", 0, {fuelAlgorithm == 3}
-        subMenu = afrTableTbl,          	"Targe AFR Table", 0, {fuelAlgorithm == 3}
+        subMenu = afrTableTbl,          	"Target AFR Table", 0, {fuelAlgorithm == 3}
 		subMenu = iatFuelCorrCurve,			"Intake air temperature fuel Multiplier"
         subMenu = injPhaseTableTbl,         "Injection Phase"           
         subMenu = mapAccelTaper,			"Engine Load Acceleration Enrichment Taper"
@@ -730,7 +730,7 @@ fileVersion = { 20161225 }
 ;		subMenu = std_warmup,				"Warmup Wizard"
 		subMenu = fuelTableMap,				"Fuel Table", 0, {fuelAlgorithm != 3}
 		subMenu = veTableMap,				"VE Table", 0, {fuelAlgorithm == 3}
-		subMenu = afrTableMap,				"Targe AFR Table", 0, {fuelAlgorithm == 3}
+		subMenu = afrTableMap,				"Target AFR Table", 0, {fuelAlgorithm == 3}
 		subMenu = injPhaseTableMap,			"Injection Phase"
 		subMenu = ignitionTableMap,			"Ignition Table"
 		subMenu = ignitionIatCorrTableMap,	"Ignition Intake Air Temp correction"
