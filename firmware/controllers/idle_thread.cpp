@@ -100,9 +100,9 @@ static void setIdleValvePwm(percent_t value) {
 	idleSolenoid.setSimplePwmDutyCycle(value / 100);
 }
 
-static void manualIdleController(int positionPercent) {
-	// todo: this is not great that we have to write into configuration here
-	boardConfiguration->manIdlePosition = positionPercent;
+static void manualIdleController() {
+
+	int positionPercent = boardConfiguration->manIdlePosition;
 
 	if (isCranking()) {
 		positionPercent += engineConfiguration->crankingIdleAdjustment;
@@ -137,7 +137,9 @@ void setIdleValvePosition(int positionPercent) {
 		return;
 	scheduleMsg(logger, "setting idle valve position %d", positionPercent);
 	showIdleInfo();
-	manualIdleController(positionPercent);
+	// todo: this is not great that we have to write into configuration here
+	boardConfiguration->manIdlePosition = positionPercent;
+	manualIdleController();
 }
 
 static int idlePositionBeforeBlip;
@@ -221,7 +223,7 @@ static msg_t ivThread(int param) {
 
 		if (engineConfiguration->idleMode == IM_MANUAL) {
 			// let's re-apply CLT correction
-			manualIdleController(boardConfiguration->manIdlePosition);
+			manualIdleController();
 		} else {
 			autoIdle();
 		}
