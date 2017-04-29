@@ -138,9 +138,11 @@
 138) RESOLVED IN R0.5 Verified diode polarities, new KICAD libs flipped pin 1
 139) RESOLVED IN R0.5 Change D1004 from VS-50WQ04FNPBF to VS-50WQ04FN-M3
 140) RESOLVED IN R0.5 D1006 "alt diode for D1004" app note needs to get back to power supply page
-
 141) RESOLVED IN R0.5 add an app note regarding not having separate injector/analog/else GND on Frankenso (NOTE ADDED TO PAGE 15)
 142) RESOLVED IN R0.5 Some fab shops do not like soldering 0R 0805 on JUMPER footprint. Need to convert JPO1, JPO4 JPO5 "SM0805_jumper"
+143)                  cars like 2003 miata have separate ignition key +12 and main relay +12. We need to separate +12 trace for flyback D15 etc 
+                      routed into a separate pin, with an option for jumper into ignition +12  
+
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
