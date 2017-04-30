@@ -347,6 +347,9 @@ void setMazdaMiata2003EngineConfigurationNewBoard(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->vvtOffset = 97;
 
+
 	engineConfiguration->rpmHardLimit = 6700; // we want to survive the race
 
+	// set idle_position 30
+	boardConfiguration->manIdlePosition = 30;
 }
