@@ -1469,6 +1469,7 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		field = "Cranking RPM limit",                	cranking_rpm
 		panel = crankingFuel
 		panel = crankingIgnition
+		field = "Cranking IAC Extra",					crankingIdleAdjustment
 		panel = postCrankingEnrichment
 		field = ""
 		field = ""
