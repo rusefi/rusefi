@@ -65,8 +65,10 @@ void TriggerShape::calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE
 			frontOnlyIndexes[0] = 0;
 		} else {
 			int triggerDefinitionCoordinate = (triggerShapeSynchPointIndex + eventIndex) % engine->engineCycleEventCount;
+			efiAssertVoid(engine->engineCycleEventCount != 0, "zero engineCycleEventCount");
 			int triggerDefinitionIndex = triggerDefinitionCoordinate >= size ? triggerDefinitionCoordinate - size : triggerDefinitionCoordinate;
 			float angle = getAngle(triggerDefinitionCoordinate) - firstAngle;
+			efiAssertVoid(!cisnan(angle), "trgSyncNaN");
 			fixAngle(angle, "trgSync");
 			if (engineConfiguration->useOnlyRisingEdgeForTrigger) {
 				if (isFrontEvent[triggerDefinitionIndex]) {
