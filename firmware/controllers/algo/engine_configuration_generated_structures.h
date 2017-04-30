@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Apr 11 19:08:53 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Apr 29 21:15:49 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -990,6 +990,7 @@ typedef struct {
 	 */
 	int sensorSnifferRpmThreshold;
 	/**
+	 * set rpm_hard_limit X
 	 * offset 420
 	 */
 	int rpmHardLimit;
@@ -2069,4 +2070,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Apr 11 19:08:53 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Apr 29 21:15:49 EDT 2017
