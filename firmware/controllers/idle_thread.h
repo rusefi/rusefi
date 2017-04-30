@@ -13,7 +13,7 @@
 
 percent_t getIdlePosition(void);
 void setIdleValvePosition(int positionPercent);
-void startIdleThread(Logging*sharedLogger, Engine *engine);
+void startIdleThread(Logging*sharedLogger);
 void setDefaultIdleParameters(void);
 void startIdleBench(void);
 void setIdleDT(int value);

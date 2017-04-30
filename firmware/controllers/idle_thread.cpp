@@ -51,7 +51,7 @@ static StepperMotor iacMotor;
 /**
  * that's the position with CLT and IAT corrections
  */
-static float actualIdlePosition = -100.0f;
+static percent_t actualIdlePosition = -100.0f;
 
 /**
  * Idle level calculation algorithm lives in idle_controller.cpp
@@ -307,7 +307,7 @@ static void initIdleHardware() {
 	}
 }
 
-void startIdleThread(Logging*sharedLogger, Engine *engine) {
+void startIdleThread(Logging*sharedLogger) {
 	logger = sharedLogger;
 
 	// todo: re-initialize idle pins on the fly
