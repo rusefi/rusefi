@@ -120,6 +120,8 @@
 120) RESOLVED IN R0.4.2 "PB1 reset defaults" actually it's PD6
 121) RESOLVED IN R0.5 Fix pinout of X2, it should be connected to pad 4 not pad 2. 
 122)                  need a jumper between W2 and D12-D23 - NB2 miata fly-back should be wired into main relay 12v not ignition on 12v
+                      cars like 2003 miata have separate ignition key +12 and main relay +12. We need to separate +12 trace for flyback D15 etc
+                      routed into a separate pin, with an option for jumper into ignition +12
 123) RESOLVED IN R0.4.2 Change C302 from 0.01uF to 0.1uF, which removes loweres the filter cut off frequency, and decreases the noise seen by the ECU. 
 124) RESOLVED IN R0.4.2 Change C210, C220, C240 from 0.01uF to 1uF, which removes loweres the filter cut off frequency, and decreases the noise seen by the ECU. 
 125) RESOLVED IN R0.4.3 W701 is referred to as jumper WJ01 in the notes
@@ -140,9 +142,7 @@
 140) RESOLVED IN R0.5 D1006 "alt diode for D1004" app note needs to get back to power supply page
 141) RESOLVED IN R0.5 add an app note regarding not having separate injector/analog/else GND on Frankenso (NOTE ADDED TO PAGE 15)
 142) RESOLVED IN R0.5 Some fab shops do not like soldering 0R 0805 on JUMPER footprint. Need to convert JPO1, JPO4 JPO5 "SM0805_jumper"
-143)                  cars like 2003 miata have separate ignition key +12 and main relay +12. We need to separate +12 trace for flyback D15 etc 
-                      routed into a separate pin, with an option for jumper into ignition +12  
-
+143)                  move D12-D23 schematics to outputs page, add note mentioning that needed for IAC/VVT but not for injectors
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
