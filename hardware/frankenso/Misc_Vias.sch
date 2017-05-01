@@ -271,69 +271,67 @@ NoConn ~ 3100 4650
 Text Notes 4950 6750 0    60   ~ 0
 PROTO AREA
 Wire Notes Line
-	3500 8700 500  8700
+	4050 8700 475  8700
 $Comp
 L TEST JPO6
 U 1 1 5446F00B
-P 2300 9200
-F 0 "JPO6" V 2300 9200 40  0000 C CNN
-F 1 "TEST-gnd" H 2300 9130 40  0001 C CNN
-F 2 "SIL-2" H 2300 9200 60  0001 C CNN
-F 3 "" H 2300 9200 60  0000 C CNN
-F 4 "dnp,dnp" V 2300 9200 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" V 2300 9200 60  0001 C CNN "Field5"
-	1    2300 9200
+P 2325 9200
+F 0 "JPO6" V 2325 9200 40  0000 C CNN
+F 1 "TEST-gnd" H 2325 9130 40  0001 C CNN
+F 2 "rusEFI_LIB:SM0805_jumper" H 2325 9200 60  0001 C CNN
+F 3 "" H 2325 9200 60  0000 C CNN
+F 4 "dnp,dnp" V 2325 9200 60  0001 C CNN "Field4"
+F 5 "dnp,dnp" V 2325 9200 60  0001 C CNN "Field5"
+	1    2325 9200
 	-1   0    0    1   
 $EndComp
 $Comp
 L TEST JPO7
 U 1 1 5446F013
-P 2300 9350
-F 0 "JPO7" V 2300 9350 40  0000 C CNN
-F 1 "TEST-gnd" H 2300 9280 40  0001 C CNN
-F 2 "SIL-2" H 2300 9350 60  0001 C CNN
-F 3 "" H 2300 9350 60  0000 C CNN
-F 4 "dnp,dnp" V 2300 9350 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" V 2300 9350 60  0001 C CNN "Field5"
-	1    2300 9350
+P 2325 9350
+F 0 "JPO7" V 2325 9350 40  0000 C CNN
+F 1 "TEST-gnd" H 2325 9280 40  0001 C CNN
+F 2 "SIL-2" H 2325 9350 60  0001 C CNN
+F 3 "" H 2325 9350 60  0000 C CNN
+F 4 "dnp,dnp" V 2325 9350 60  0001 C CNN "Field4"
+F 5 "dnp,dnp" V 2325 9350 60  0001 C CNN "Field5"
+	1    2325 9350
 	-1   0    0    1   
 $EndComp
 $Comp
 L TEST JPO8
 U 1 1 5446F01B
-P 3100 9200
-F 0 "JPO8" V 3100 9200 40  0000 C CNN
-F 1 "TEST-gnd" H 3100 9130 40  0001 C CNN
-F 2 "SIL-2" H 3100 9200 60  0001 C CNN
-F 3 "" H 3100 9200 60  0000 C CNN
-F 4 "dnp,dnp" V 3100 9200 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" V 3100 9200 60  0001 C CNN "Field5"
-	1    3100 9200
+P 3650 9200
+F 0 "JPO8" V 3650 9200 40  0000 C CNN
+F 1 "TEST-gnd" H 3650 9130 40  0001 C CNN
+F 2 "SIL-2" H 3650 9200 60  0001 C CNN
+F 3 "" H 3650 9200 60  0000 C CNN
+F 4 "dnp,dnp" V 3650 9200 60  0001 C CNN "Field4"
+F 5 "dnp,dnp" V 3650 9200 60  0001 C CNN "Field5"
+	1    3650 9200
 	-1   0    0    1   
 $EndComp
-Text Label 2500 9350 0    60   ~ 0
+Text Label 2525 9350 0    60   ~ 0
 GND
 $Comp
 L TEST JPO9
 U 1 1 5446F519
-P 3100 9350
-F 0 "JPO9" V 3100 9350 40  0000 C CNN
-F 1 "TEST-gnd" H 3100 9280 40  0001 C CNN
-F 2 "SIL-2" H 3100 9350 60  0001 C CNN
-F 3 "" H 3100 9350 60  0000 C CNN
-F 4 "dnp,dnp" V 3100 9350 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" V 3100 9350 60  0001 C CNN "Field5"
-	1    3100 9350
+P 3650 9350
+F 0 "JPO9" V 3650 9350 40  0000 C CNN
+F 1 "TEST-gnd" H 3650 9280 40  0001 C CNN
+F 2 "SIL-2" H 3650 9350 60  0001 C CNN
+F 3 "" H 3650 9350 60  0000 C CNN
+F 4 "dnp,dnp" V 3650 9350 60  0001 C CNN "Field4"
+F 5 "dnp,dnp" V 3650 9350 60  0001 C CNN "Field5"
+	1    3650 9350
 	-1   0    0    1   
 $EndComp
-Text Label 3300 9200 0    60   ~ 0
+Text Label 3850 9200 0    60   ~ 0
 5V
-Wire Wire Line
-	2100 9200 2500 9200
-Text Notes 2325 9000 0    60   ~ 0
+Text Notes 3150 9000 0    60   ~ 0
 These four jumpers \nare test points
 Wire Notes Line
-	3500 9500 500  9500
+	4050 9500 475  9500
 Text Label 850  1250 2    60   ~ 0
 5V
 Text Label 850  1050 2    60   ~ 0
@@ -352,15 +350,15 @@ NoConn ~ 850  2550
 NoConn ~ 850  4250
 NoConn ~ 850  4050
 NoConn ~ 850  3950
-Text HLabel 2100 9200 0    60   Input ~ 0
+Text HLabel 2125 9200 0    60   Input ~ 0
 12V-SWITCH
-Text HLabel 2900 9200 0    60   Input ~ 0
+Text HLabel 3450 9200 0    60   Input ~ 0
 5V
-Text Label 3300 9350 0    60   ~ 0
+Text Label 3850 9350 0    60   ~ 0
 3.3V
-Text HLabel 2900 9350 0    60   Input ~ 0
+Text HLabel 3450 9350 0    60   Input ~ 0
 3.3V
-Text HLabel 2100 9350 0    60   Input ~ 0
+Text HLabel 2125 9350 0    60   Input ~ 0
 GND
 Text HLabel 900  10400 0    60   Input ~ 0
 CRANK
@@ -938,7 +936,7 @@ NoConn ~ 3100 2850
 NoConn ~ 3100 2650
 NoConn ~ 3100 2550
 Wire Notes Line
-	3500 8700 3500 10500
+	4050 8700 4050 10500
 Wire Notes Line
 	550  7700 8900 7700
 Wire Notes Line
@@ -1084,6 +1082,8 @@ F 3 "" H 12425 5175 60  0000 C CNN
 $EndComp
 Text Label 12425 5075 2    60   ~ 0
 5V
-Text Notes 3800 10400 0    60   ~ 0
+Text Notes 4300 10400 0    60   ~ 0
 See below links about barriers in GND planes. The current loops in the layout do not appear to need barriers. \n\nhttp://rusefi.com/wiki/index.php?title=Manual:Hardware:PCB_design_rules\nhttp://www.maximintegrated.com/en/app-notes/index.mvp/id/5450
+Text GLabel 2525 9200 2    60   Input ~ 0
+12V-SNUB
 $EndSCHEMATC

@@ -644,7 +644,7 @@ F 5 "DIGI,P0.0ADKR-ND" V 1030 3150 60  0001 C CNN "VEND1,VEND1#"
 	0    -1   -1   0   
 $EndComp
 Text Label 8500 2150 3    60   ~ 0
-2J
+12V-SNUB
 Text Label 8400 2150 3    60   ~ 0
 2I
 Text Label 8100 2150 3    60   ~ 0
@@ -1395,7 +1395,6 @@ KNOCK-INPUT-1
 NoConn ~ 8000 2150
 NoConn ~ 8100 2150
 NoConn ~ 8400 2150
-NoConn ~ 8500 2150
 $Sheet
 S 7750 3550 1250 6850
 U 53A0541A
@@ -2750,8 +2749,6 @@ Connection ~ 9000 1550
 Connection ~ 8900 1450
 Wire Wire Line
 	8800 1050 8800 1750
-Wire Wire Line
-	4900 550  12100 550 
 Connection ~ 11700 550 
 Connection ~ 11900 550 
 Connection ~ 11500 550 
@@ -2775,10 +2772,6 @@ Connection ~ 11800 550
 Wire Wire Line
 	12000 650  12000 550 
 Connection ~ 12000 550 
-Wire Wire Line
-	4950 2050 4900 2050
-Wire Wire Line
-	4900 2050 4900 550 
 Wire Wire Line
 	4950 1450 4950 1650
 Wire Wire Line
@@ -3073,4 +3066,8 @@ $EndComp
 Wire Wire Line
 	9100 3800 9100 3850
 Connection ~ 9100 3850
+Wire Wire Line
+	8700 550  12100 550 
+Text GLabel 8700 550  0    60   Input ~ 0
+12V-SNUB
 $EndSCHEMATC
