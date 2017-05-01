@@ -57,7 +57,9 @@
  *
  * See also STM32F4xx_MCUCONF is defined in mcuconf.h
  */
+#ifndef STM32F407xx
 #define STM32F407xx
+#endif
 
 /*
  * IO pins assignments.
