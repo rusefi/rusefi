@@ -80,6 +80,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 
+#ifdef STM32F407xx
+#define STM32F40_41xxx
+#endif
 #define assert_param(expr) ((void)0)
 
 #define HAL_FLASH_MODULE_ENABLED
