@@ -93,8 +93,9 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
-#define STM32F407xx
+#ifdef STM32F407xx
 #define STM32F40_41xxx
+#endif
 #define assert_param(expr) ((void)0)
 
 //#include "stm32f4xx_hal.h"
