@@ -13,8 +13,8 @@ rem magic once needed
 call update_version.bat
 
 echo Starting compilation
-rem the important piece
-make
+rem the important piece (pass external args if needed)
+make %1 %2 %3
 
 rem cd build
 rem if not exist rusefi.hex echo "compilation failed"
