@@ -266,10 +266,6 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 	boardConfiguration->idle.stepperDirectionPin = GPIO_UNASSIGNED;
 	boardConfiguration->idle.stepperStepPin = GPIO_UNASSIGNED;
 	engineConfiguration->stepperEnablePin = GPIO_UNASSIGNED;
-
-	boardConfiguration->idle.stepperDirectionPin = GPIO_UNASSIGNED;
-	boardConfiguration->idle.stepperStepPin = GPIO_UNASSIGNED;
-	engineConfiguration->stepperEnablePin = GPIO_UNASSIGNED;
 	engineConfiguration->stepperEnablePinMode = OM_DEFAULT;
 
 	activeConfiguration->dizzySparkOutputPin = GPIO_UNASSIGNED;
