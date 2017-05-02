@@ -21,10 +21,13 @@ extern LoggingWithStorage tsLogger;
 #include "pin_repository.h"
 #include "usbconsole.h"
 #include "map_averaging.h"
+
+#if HAL_USE_SERIAL_USB || defined(__DOXYGEN__)
 extern SerialUSBDriver SDU1;
 #define CONSOLE_DEVICE &SDU1
-
-#define TS_SERIAL_UART_DEVICE &SD3
+#else
+#define CONSOLE_DEVICE TS_SERIAL_UART_DEVICE
+#endif
 
 static SerialConfig tsSerialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
 
@@ -56,10 +59,13 @@ void startTsPort(void) {
 
 BaseChannel * getTsSerialDevice(void) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_USB_SERIAL || defined(__DOXYGEN__)
 	if (isCommandLineConsoleOverTTL()) {
 		// if console uses UART then TS uses USB
-		return (BaseChannel *) &SDU1;
-	} else {
+		return (BaseChannel *) CONSOLE_DEVICE;
+	} else
+#endif
+	{
 		return (BaseChannel *) TS_SERIAL_UART_DEVICE;
 	}
 #else
