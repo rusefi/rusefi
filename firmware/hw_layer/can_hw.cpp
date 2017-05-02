@@ -157,8 +157,12 @@ static void canMazdaRX8(void) {
 	txmsg.data8[4] = 0x01; //Oil Pressure (not really a gauge)
 	txmsg.data8[5] = 0x00; //check engine light
 	txmsg.data8[6] = 0x00; //Coolant, oil and battery
-	if ((getRpmE(engine)>0) && (engine->sensors.vBatt<13))  setTxBit(6, 6);
-	if (txmsg.data8[0]>165)  setTxBit(6, 1);
+	if ((getRpmE(engine)>0) && (engine->sensors.vBatt<13)) {
+		setTxBit(6, 6); // battery light
+	}
+	if (engine->sensors.clt > 98) {
+		setTxBit(6, 1); // coolant light
+	}
 	//oil pressure warning lamp bit is 7
 	txmsg.data8[7] = 0x00; //unused
 	sendMessage();
