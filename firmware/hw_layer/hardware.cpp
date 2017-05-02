@@ -40,7 +40,8 @@
 #include "svnversion.h"
 #include "engine_configuration.h"
 #include "CJ125.h"
-#endif
+#include "aux_pid.h"
+#endif /* EFI_PROD_CODE */
 
 #if EFI_SPEED_DENSITY
 #include "map_averaging.h"
@@ -230,6 +231,7 @@ void applyNewHardwareSettings(void) {
 	stopCanPins();
 	stopETBPins();
 	stopVSSPins();
+	stopAuxPins();
 
 	if (engineConfiguration->bc.is_enabled_spi_1 != activeConfiguration.bc.is_enabled_spi_1)
 		stopSpi(SPI_DEVICE_1);
@@ -288,6 +290,7 @@ void applyNewHardwareSettings(void) {
 	startCanPins();
 	startETBPins();
 	startVSSPins();
+	startAuxPins();
 
 	adcConfigListener(engine);
 }
