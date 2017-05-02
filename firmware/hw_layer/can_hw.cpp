@@ -131,7 +131,6 @@ static void canMazdaRX8(void) {
 
 	commonTxInit(CAN_MAZDA_RX_RPM_SPEED);
 
-#if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
 	float kph = getVehicleSpeed();
 
 	setShortValue(&txmsg, SWAP_UINT16(getRpmE(engine) * 4), 0);
@@ -139,7 +138,6 @@ static void canMazdaRX8(void) {
 	setShortValue(&txmsg, SWAP_UINT16((int )(100 * kph + 10000)), 4);
 	setShortValue(&txmsg, 0, 6);
 	sendMessage();
-#endif /* EFI_VEHICLE_SPEED */
 
 	commonTxInit(CAN_MAZDA_RX_STATUS_2);
 	txmsg.data8[0] = 0xFE; //Unknown

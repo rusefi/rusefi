@@ -85,5 +85,10 @@ void initVehicleSpeed(Logging *l) {
 
 	vehicleSpeedInput->widthListeners.registerCallback((VoidInt) vsAnaWidthCallback, NULL);
 }
+#else  /* EFI_VEHICLE_SPEED */
 
+float getVehicleSpeed(void) {
+	// no VSS support
+	return 0;
+}
 #endif /* EFI_VEHICLE_SPEED */
