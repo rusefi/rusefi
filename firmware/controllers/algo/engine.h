@@ -274,6 +274,14 @@ public:
 	 */
 	bool isAlternatorControlEnabled;
 
+
+//	floatms_t callToPitEndTime;
+
+	/**
+	 * remote telemetry: if not zero, time to stop flashing 'CALL FROM PIT' light
+	 */
+	floatms_t callFromPitEndTime;
+
 	/**
 	 * This flag indicated a big enough problem that engine control would be
 	 * prohibited if this flag is set to true.
