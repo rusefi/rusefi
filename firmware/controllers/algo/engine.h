@@ -158,7 +158,7 @@ public:
 	float currentVE;
 	float targetAFR;
 
-	int vssCounter;
+	int vssDebugEventCounter;
 	int totalLoggedBytes;
 
 
