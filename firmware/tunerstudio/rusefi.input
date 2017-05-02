@@ -764,6 +764,10 @@ fileVersion = { 20161225 }
 ; and may create error messages.
 ; It is expected that these commands would not typically alter any ram mapped to a Constant.
 
+;
+; see TS_IO_TEST_COMMAND in firmware code
+;
+
 cmd_test_spk1  = "w\x00\x12\x00\x01"
 cmd_test_spk2  = "w\x00\x12\x00\x02"
 cmd_test_spk3  = "w\x00\x12\x00\x03"
@@ -803,6 +807,7 @@ cmd_test_fuel_pump           = "w\x00\x14\x00\x01"
 cmd_test_radiator_fan        = "w\x00\x15\x00\x01"
 cmd_test_check_engine_light  = "w\x00\x16\x00\x01"
 cmd_test_idle_valve          = "w\x00\x17\x00\x01"
+cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		
 		
 [UserDefined]
@@ -1601,11 +1606,13 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 		commandButton = "Injector #8", cmd_test_inj8
 		
 	dialog = testMisc, "Misc"
+		commandButton = "Come To Pit", cmd_call_from_pit
 		commandButton = "Fuel Pump", cmd_test_fuel_pump
 		commandButton = "Radiator Fan", cmd_test_radiator_fan
 		commandButton = "Check Engine", cmd_test_check_engine_light
 		commandButton = "Idle Air Valve", cmd_test_idle_valve          
 		
+	; bench test	
 	dialog = ioTest, "I-O Test", border
 		panel = testSpark,		West
 		panel = testInjectors,	Center
