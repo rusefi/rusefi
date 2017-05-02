@@ -11,5 +11,7 @@
 #include "engine.h"
 
 void initAuxPid(Logging *sharedLogger);
+void startAuxPins(void);
+void stopAuxPins(void);
 
 #endif /* CONTROLLERS_ALGO_AUX_PID_H_ */
