@@ -47,6 +47,7 @@ public class AutoTest {
 // todo?        sleep(10); // time to reboot
         testBmwE34();
         testSachs();
+        testRoverV8();
         testMitsu();
         testCamaro();
         testCitroenBerlingo();
@@ -264,6 +265,10 @@ public class AutoTest {
         chart = nextChart();
         x = -70;
         assertWaveFall(msg, chart, EngineChart.INJECTOR_4, 0.493, x + 540);
+    }
+
+    private static void testRoverV8() {
+        setEngineType(10);
     }
 
     private static void testFordFiesta() {

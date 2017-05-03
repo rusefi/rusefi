@@ -130,8 +130,6 @@
 #define EEPROM_USE_EE25XX TRUE
 
 
-#define rccEnableCRC(lp) rccEnableAHB(RCC_AHBENR_CRCEN, lp)
-#define rccDisableCRC(lp) rccDisableAHB(RCC_AHBENR_CRCEN, lp)
 
 /*===========================================================================*/
 /* CRC driver settings.                                                      */
