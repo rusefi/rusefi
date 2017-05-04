@@ -97,7 +97,8 @@ static void setWarningEnabled(int value) {
 }
 
 #if EFI_FILE_LOGGING || defined(__DOXYGEN__)
-static char FILE_LOGGER[1000] CCM_OPTIONAL;
+// this one needs to be in main ram so that SD card SPI DMA works fine
+static char FILE_LOGGER[1000] MAIN_RAM;
 static Logging fileLogger("file logger", FILE_LOGGER, sizeof(FILE_LOGGER));
 #endif /* EFI_FILE_LOGGING */
 

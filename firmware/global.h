@@ -58,6 +58,15 @@ typedef unsigned int time_t;
 #define EFI_ERROR_CODE 0xffffffff
 
 #if EFI_USE_CCM && defined __GNUC__
+#define MAIN_RAM __attribute__((section(".ram0")))
+#elif defined __GNUC__
+#define MAIN_RAM
+#else
+#define MAIN_RAM @ ".ram0"
+#endif
+
+
+#if EFI_USE_CCM && defined __GNUC__
 #define CCM_OPTIONAL __attribute__((section(".ram4")))
 #elif defined __GNUC__
 #define CCM_OPTIONAL
