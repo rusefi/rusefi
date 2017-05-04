@@ -2269,8 +2269,8 @@ F 5 "DO NOT POPULATE,DNP" V 2680 4150 60  0001 C CNN "VEND1,VEND1#"
 	1    9150 10350
 	1    0    0    -1  
 $EndComp
-Text Notes 9425 925  0    60   ~ 0
-optional D12-D23 for solenoids\nonly used in rare cases where the  \ntopology requires this fly back diode
+Text Notes 9425 1000 0    60   ~ 0
+optional D12-D23 for solenoids\nonly used in rare cases where the  \ntopology (IAC, VVT, ALT, ect) requires \nthis fly back diode
 $Comp
 L CONN_1 P15
 U 1 1 58A78AE5
