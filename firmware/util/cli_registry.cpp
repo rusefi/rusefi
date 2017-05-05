@@ -50,7 +50,7 @@ static void doAddAction(const char *token, action_type_e type, Void callback, vo
 	for (int i = 0; i< efiStrlen(token);i++) {
 		char ch = token[i];
 		if (ch != mytolower(ch)) {
-			firmwareError(CUSTOM_ERR_6140, "lowerCase expected [%s]", token);
+			firmwareError(CUSTOM_ERR_COMMAND_LOWER_CASE_EXPECTED, "lowerCase expected [%s]", token);
 		}
 	}
 	current->token = token;
