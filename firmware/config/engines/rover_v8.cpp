@@ -31,6 +31,7 @@ EXTERN_ENGINE;
 
 void setRoverv8(DECLARE_ENGINE_PARAMETER_F) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	// set trigger_type 9
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_36_1;
 
 	boardConfiguration->is_enabled_spi_2 = false;

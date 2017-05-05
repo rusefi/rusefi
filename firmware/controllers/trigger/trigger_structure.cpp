@@ -51,6 +51,7 @@ void TriggerShape::calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE
 	triggerShapeSynchPointIndex = findTriggerZeroEventIndex(state, this, triggerConfig PASS_ENGINE_PARAMETER);
 
 	engine->engineCycleEventCount = getLength();
+	efiAssertVoid(engine->engineCycleEventCount > 0, "shapeLength=0");
 
 	float firstAngle = getAngle(triggerShapeSynchPointIndex);
 	assertAngleRange(triggerShapeSynchPointIndex, "firstAngle");
@@ -262,7 +263,7 @@ angle_t TriggerShape::getAngle(int index) const {
 	 * See also trigger_central.cpp
 	 * See also getEngineCycleEventCount()
 	 */
-
+	efiAssert(size != 0, "shapeSize=0", NAN);
 	int crankCycle = index / size;
 	int remainder = index % size;
 
