@@ -6,6 +6,7 @@ current binaries are always available at http://rusefi.com/build_server/
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
+| 05/05/2017    | r13974    | bugfix #404: 36/1 FATAL error: angle range trgSync |
 | 05/03/2017    | r13967    | improvement: ChibiOS 3.2 |
 | 04/06/2017    | r13759    | major improvement #72: ChibiOS 3.1 |
 | 03/26/2017    | r13330    | super annoying bug #336 fixed |
