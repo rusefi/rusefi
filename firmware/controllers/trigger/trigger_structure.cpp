@@ -50,15 +50,21 @@ void TriggerShape::calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE
 
 	triggerShapeSynchPointIndex = findTriggerZeroEventIndex(state, this, triggerConfig PASS_ENGINE_PARAMETER);
 
-	engine->engineCycleEventCount = getLength();
-	efiAssertVoid(engine->engineCycleEventCount > 0, "shapeLength=0");
+	int length = getLength();
+	engine->engineCycleEventCount = length;
+	efiAssertVoid(length > 0, "shapeLength=0");
+	if (length >= PWM_PHASE_MAX_COUNT) {
+		warning(CUSTOM_ERR_TRIGGER_SHAPE_TOO_LONG, "Count above %d", length);
+		shapeDefinitionError = true;
+		return;
+	}
 
 	float firstAngle = getAngle(triggerShapeSynchPointIndex);
 	assertAngleRange(triggerShapeSynchPointIndex, "firstAngle");
 
 	int frontOnlyIndex = 0;
 
-	for (int eventIndex = 0; eventIndex < engine->engineCycleEventCount; eventIndex++) {
+	for (int eventIndex = 0; eventIndex < length; eventIndex++) {
 		if (eventIndex == 0) {
 			// explicit check for zero to avoid issues where logical zero is not exactly zero due to float nature
 			eventAngles[0] = 0;
