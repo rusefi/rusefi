@@ -120,6 +120,8 @@ case MAZDA_MIATA_2003:
 	return "miata 2003 OLD";
 case MAZDA_MIATA_2003_BETTER:
 	return "miata 2003";
+case PROMETHEUS_DEFAULTS:
+	return "PROMETHEUS";
 case TEST_ENGINE_VVT:
   return "TEST_ENGINE_VVT";
 case VW_ABA:
