@@ -28,6 +28,7 @@ digital_input_s *initWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin);
 void startInputDriver(digital_input_s *hw, bool isActiveHigh);
 ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin);
 icuchannel_t getInputCaptureChannel(brain_pin_e hwPin);
+void stopWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin);
 
 #endif
 
