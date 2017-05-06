@@ -213,6 +213,8 @@ void stopWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) {
 			memcpy(&registeredIcus.elements[i], &registeredIcus.elements[regSize - 1],
 				sizeof(digital_input_s));
 			registeredIcus.size--;
+			icuDisableNotificationsI(driver);
+			icuStop(driver);
 			return;
 		}
 	}
