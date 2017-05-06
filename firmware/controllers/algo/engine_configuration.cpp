@@ -74,6 +74,7 @@
 #include "citroenBerlingoTU3JP.h"
 #include "rover_v8.h"
 #include "mitsubishi.h"
+#include "prometheus.h"
 #include "subaru.h"
 #include "test_engine.h"
 #include "sachs.h"
@@ -1043,6 +1044,9 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		break;
 	case MAZDA_MIATA_2003_BETTER:
 		setMazdaMiata2003EngineConfigurationNewBoard(PASS_ENGINE_PARAMETER_F);
+		break;
+	case PROMETHEUS_DEFAULTS:
+		setPrometheusDefaults(PASS_ENGINE_PARAMETER_F);
 		break;
 	case TEST_ENGINE_VVT:
 		setTestVVTEngineConfiguration(PASS_ENGINE_PARAMETER_F);
