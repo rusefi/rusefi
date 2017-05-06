@@ -374,14 +374,17 @@ void initHardware(Logging *l) {
 	initTriggerDecoder();
 #endif
 
-	mySetPadMode2("board test", boardConfiguration->boardTestModeJumperPin,
-	PAL_MODE_INPUT_PULLUP);
-	bool isBoardTestMode_b = (!palReadPad(getHwPort(boardConfiguration->boardTestModeJumperPin), getHwPin(boardConfiguration->boardTestModeJumperPin)));
+	bool isBoardTestMode_b;
+	if (boardConfiguration->boardTestModeJumperPin != GPIO_UNASSIGNED) {
+		mySetPadMode2("board test", boardConfiguration->boardTestModeJumperPin,
+		PAL_MODE_INPUT_PULLUP);
+		isBoardTestMode_b = (!palReadPad(getHwPort(boardConfiguration->boardTestModeJumperPin), getHwPin(boardConfiguration->boardTestModeJumperPin)));
 
-	// we can now relese this pin, it is actually used as output sometimes
-	unmarkPin(boardConfiguration->boardTestModeJumperPin);
-
-
+		// we can now relese this pin, it is actually used as output sometimes
+		unmarkPin(boardConfiguration->boardTestModeJumperPin);
+	} else {
+		isBoardTestMode_b = false;
+	}
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 	initAdcInputs(isBoardTestMode_b);
