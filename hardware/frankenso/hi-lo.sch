@@ -545,17 +545,17 @@ $EndComp
 Text Notes 4350 5400 0    60   ~ 0
 JUMPER SELECTED VP VOLTAGE
 Text HLabel 5300 6550 0    60   Input ~ 0
-H_IN2
+DOHL3
 Text HLabel 5300 6750 0    60   Input ~ 0
-H_IN4
+DOHL4
 Text HLabel 5300 5850 0    60   Input ~ 0
-H_IN1
+DOHL2
 Text HLabel 5300 5650 0    60   Input ~ 0
-H_IN3
+DOHL1
 Text HLabel 5300 7450 0    60   Input ~ 0
-H_IN6
+DOHL5
 Text HLabel 5300 7650 0    60   Input ~ 0
-H_IN5
+DOHL6
 Text HLabel 8050 5450 2    60   Input ~ 0
 HL1
 Text HLabel 8050 6050 2    60   Input ~ 0
@@ -769,9 +769,9 @@ F 3 "" H 6650 8700 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Text HLabel 5300 8350 0    60   Input ~ 0
-H_IN8
+DOHL7
 Text HLabel 5300 8550 0    60   Input ~ 0
-H_IN7
+DOHL8
 Text Label 6400 8050 2    60   ~ 0
 VP4
 Text HLabel 6250 8150 2    60   Input ~ 0

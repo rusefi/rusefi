@@ -296,6 +296,7 @@ void runIoTest(int subsystem, int index) {
 	} else if (subsystem == 0x16) {
 		milBench();
 	} else if (subsystem == 0x17) {
+	} else if (subsystem == 0x20 && index == 0x3456) {
 	}
 }
 

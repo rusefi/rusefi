@@ -143,6 +143,7 @@
 141) RESOLVED IN R0.5 add an app note regarding not having separate injector/analog/else GND on Frankenso (NOTE ADDED TO PAGE 15)
 142) RESOLVED IN R0.5 Some fab shops do not like soldering 0R 0805 on JUMPER footprint. Need to convert JPO1, JPO4 JPO5 "SM0805_jumper"
 143)                  move D12-D23 schematics to outputs page, add note mentioning that needed for IAC/VVT but not for injectors
+144)                  HL7 & HL8 silkscreen is missing, HL2 silkscreen position wrong
  
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol

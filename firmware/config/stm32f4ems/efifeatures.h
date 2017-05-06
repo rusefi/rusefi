@@ -243,6 +243,10 @@
 #define EFI_CONSOLE_UART_DEVICE (&SD3)
 #endif
 
+#ifndef TS_SERIAL_UART_DEVICE
+#define TS_SERIAL_UART_DEVICE (&SD3)
+#endif
+
 // todo: start using consoleSerialTxPin? Not sure
 #ifndef EFI_CONSOLE_TX_PORT
 #define EFI_CONSOLE_TX_PORT GPIOC

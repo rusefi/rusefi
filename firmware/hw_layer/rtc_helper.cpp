@@ -41,6 +41,8 @@ static time_t GetTimeUnixSec(void) {
   rtcGetTime(&RTCD1, &timespec);
   rtcConvertDateTimeToStructTm(&timespec, &tim, NULL);
   return mktime(&tim);
+#else
+  return (time_t)0;
 #endif
 }
 

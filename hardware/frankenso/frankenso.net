@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source C:/Users/Vista_64_D630/Desktop/Jared/code/Hardware/trunk/rusefi.com/frankenso/frankenso.sch)
-    (date "5/1/2017 6:14:14 AM")
+    (date "5/1/2017 8:14:17 PM")
     (tool "Eeschema 4.0.5")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -4387,7 +4387,7 @@
       (tstamp 58F64B8B))
     (comp (ref FB901)
       (value CONN_1)
-      (footprint rusEFI_LIB:KS_3557)
+      (footprint rusEFI_LIB:KeyStone_3557)
       (fields
         (field (name Field4) dnp,dnp)
         (field (name Field5) dnp,dnp))
@@ -4396,7 +4396,7 @@
       (tstamp 590520C8))
     (comp (ref FB902)
       (value CONN_1)
-      (footprint rusEFI_LIB:KS_3557)
+      (footprint rusEFI_LIB:KeyStone_3557)
       (fields
         (field (name Field4) dnp,dnp)
         (field (name Field5) dnp,dnp))
@@ -6569,12 +6569,12 @@
         (pin (num 1) (name 1) (type passive))
         (pin (num 2) (name 2) (type passive)))))
   (libraries
-    (library (logical conn)
-      (uri "C:\\Program Files\\KiCad\\share\\kicad\\library\\conn.lib"))
     (library (logical KICAD_Older_Version)
       (uri C:\Users\Vista_64_D630\Desktop\Jared\code\Hardware\trunk\rusefi.com\rusefi_lib\KICAD_Older_Version.lib))
     (library (logical device)
       (uri "C:\\Program Files\\KiCad\\share\\kicad\\library\\device.lib"))
+    (library (logical conn)
+      (uri "C:\\Program Files\\KiCad\\share\\kicad\\library\\conn.lib"))
     (library (logical "crystal(mc306)")
       (uri "C:\\Users\\Vista_64_D630\\Desktop\\Jared\\code\\Hardware\\trunk\\rusefi.com\\rusefi_lib\\crystal(mc306).lib"))
     (library (logical Pololu_DRV8880)

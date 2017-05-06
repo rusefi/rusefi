@@ -1,11 +1,16 @@
 current binaries are always available at http://rusefi.com/build_server/
 
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6YSSN35GWYS3A)
 
+
+[![Tindie](http://rusefi.com/wiki/images/1/1c/Tindie-smalls.png)](https://www.tindie.com/stores/russian/)
 
 #Releases
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
+| 05/05/2017    | r13974    | bugfix #404: 36/1 FATAL error: angle range trgSync |
+| 05/03/2017    | r13967    | improvement: ChibiOS 3.2 |
 | 04/06/2017    | r13759    | major improvement #72: ChibiOS 3.1 |
 | 03/26/2017    | r13330    | super annoying bug #336 fixed |
 | 03/20/2017    | r13233    | improvements #375 & #376: hard FPU mode & migrating to fresh version of arm gcc |
