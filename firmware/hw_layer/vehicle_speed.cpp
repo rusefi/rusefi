@@ -67,8 +67,7 @@ bool hasVehicleSpeedSensor() {
 }
 
 void stopVSSPins(void) {
-	unmarkPin(activeConfiguration.bc.vehicleSpeedSensorInputPin);
-	// todo: remove driver from registeredIcus
+	stopWaveAnalyzerDriver("VSS", activeConfiguration.bc.vehicleSpeedSensorInputPin);
 }
 
 void startVSSPins(void) {
