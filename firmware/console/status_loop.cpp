@@ -97,7 +97,8 @@ static void setWarningEnabled(int value) {
 }
 
 #if EFI_FILE_LOGGING || defined(__DOXYGEN__)
-static char FILE_LOGGER[1000] CCM_OPTIONAL;
+// this one needs to be in main ram so that SD card SPI DMA works fine
+static char FILE_LOGGER[1000] MAIN_RAM;
 static Logging fileLogger("file logger", FILE_LOGGER, sizeof(FILE_LOGGER));
 #endif /* EFI_FILE_LOGGING */
 
@@ -748,7 +749,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 			tsOutputChannels->debugFloatField1 = getVoltage("fsio", engineConfiguration->fsioAdc[0]);
 		}
 	} else if (engineConfiguration->debugMode == DBG_VEHICLE_SPEED_SENSOR) {
-		tsOutputChannels->debugIntField1 = engine->engineState.vssCounter;
+		tsOutputChannels->debugIntField1 = engine->engineState.vssDebugEventCounter;
 	} else if (engineConfiguration->debugMode == DBG_SD_CARD) {
 		tsOutputChannels->debugIntField1 = engine->engineState.totalLoggedBytes;
 	} else if (engineConfiguration->debugMode == DBG_CRANKING_DETAILS) {

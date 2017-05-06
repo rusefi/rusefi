@@ -58,6 +58,8 @@ static void extCallback(EXTDriver *extp, expchannel_t channel) {
 	}
 #if EFI_HD44780_LCD || defined(__DOXYGEN__)
 	onJoystick(button);
+#else
+	UNUSED(button);
 #endif
 }
 

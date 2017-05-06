@@ -13,7 +13,7 @@
 #if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 #include "status_loop.h"
 
-static char LOGGING_BUFFER[5000];
+static char LOGGING_BUFFER[5000] CCM_OPTIONAL;
 static Logging logging("analog chart", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 
 static int pendingData = false;

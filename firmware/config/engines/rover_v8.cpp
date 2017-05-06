@@ -31,8 +31,11 @@ EXTERN_ENGINE;
 
 void setRoverv8(DECLARE_ENGINE_PARAMETER_F) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	// set trigger_type 9
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_36_1;
 
+	boardConfiguration->is_enabled_spi_2 = false;
+	boardConfiguration->isHip9011Enabled = false;
 	setFrankenstein_01_LCD(boardConfiguration);
 
 	engineConfiguration->specs.displacement = 3.528;
@@ -114,12 +117,12 @@ void setRoverv8(DECLARE_ENGINE_PARAMETER_F) {
 
     /* Stepper logic:
     boardConfiguration->idle.stepperDirectionPin = GPIOE_10;
-    boardConfiguration->idle.stepperStepPin = GPIOE_12;
-    engineConfiguration->stepperEnablePin = GPIOE_14;
+    boardConfiguration->idle.stepperStepPin = GPIOE_12; // todo: set pin which would not conflict with coils
+    engineConfiguration->stepperEnablePin = GPIOE_14; // todo: set pin which would not conflict with coils
     engineConfiguration->idleStepperReactionTime = 10;
     engineConfiguration->idleStepperTotalSteps = 150;
     */
-    boardConfiguration->useStepperIdle = true;
+    boardConfiguration->useStepperIdle = false;
 
 	// set injection_pin_mode 0
 	boardConfiguration->injectionPinMode = OM_DEFAULT;

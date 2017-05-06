@@ -158,7 +158,7 @@ public:
 	float currentVE;
 	float targetAFR;
 
-	int vssCounter;
+	int vssDebugEventCounter;
 	int totalLoggedBytes;
 
 
@@ -273,6 +273,14 @@ public:
 	 * based on current RPM and isAlternatorControlEnabled setting
 	 */
 	bool isAlternatorControlEnabled;
+
+
+//	floatms_t callToPitEndTime;
+
+	/**
+	 * remote telemetry: if not zero, time to stop flashing 'CALL FROM PIT STOP' light
+	 */
+	floatms_t callFromPitStopEndTime;
 
 	/**
 	 * This flag indicated a big enough problem that engine control would be

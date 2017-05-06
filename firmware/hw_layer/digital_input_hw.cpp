@@ -189,10 +189,35 @@ digital_input_s * initWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) 
 	digital_input_s *hw = registeredIcus.add();
 	hw->widthListeners.clear();
 	hw->periodListeners.clear();
+	hw->started = false;
 	hw->brainPin = brainPin;
 	hw->driver = driver;
 	turnOnCapturePin(msg, brainPin);
 	return hw;
+}
+
+void stopWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) {
+	if (brainPin == GPIO_UNASSIGNED) {
+		return;
+	}
+	unmarkPin(brainPin);
+
+	ICUDriver *driver = getInputCaptureDriver(msg, brainPin);
+	if (driver == NULL) {
+		return;
+	}
+	int regSize = registeredIcus.size;
+	for (int i = 0; i < regSize; i++) {
+		if (registeredIcus.elements[i].driver == driver) {
+			// removing from driver from the list of used drivers
+			memcpy(&registeredIcus.elements[i], &registeredIcus.elements[regSize - 1],
+				sizeof(digital_input_s));
+			registeredIcus.size--;
+			icuDisableNotificationsI(driver);
+			icuStop(driver);
+			return;
+		}
+	}
 }
 
 void startInputDriver(digital_input_s *hw, bool isActiveHigh) {

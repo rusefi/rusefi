@@ -16,6 +16,7 @@
 #include "tunerstudio_configuration.h"
 #include "fsio_impl.h"
 #include "engine_math.h"
+#include "pin_repository.h"
 
 EXTERN_ENGINE
 ;
@@ -119,15 +120,25 @@ static void turnAuxPidOn(int index) {
 			engineConfiguration->auxPidFrequency[index], 0.1, applyPinState);
 }
 
+void startAuxPins(void) {
+	for (int i = 0;i <AUX_PID_COUNT;i++) {
+		turnAuxPidOn(i);
+	}
+}
+
+void stopAuxPins(void) {
+	for (int i = 0;i < AUX_PID_COUNT;i++) {
+		unmarkPin(activeConfiguration.auxPidPins[i]);
+	}
+}
+
 void initAuxPid(Logging *sharedLogger) {
 	chThdCreateStatic(auxPidThreadStack, sizeof(auxPidThreadStack), LOWPRIO,
 			(tfunc_t) auxPidThread, NULL);
 
 	logger = sharedLogger;
 
-	for (int i = 0;i< AUX_PID_COUNT;i++) {
-		turnAuxPidOn(i);
-	}
+	startAuxPins();
 }
 
 #endif
