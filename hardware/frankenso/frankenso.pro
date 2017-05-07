@@ -1,4 +1,4 @@
-update=2/11/2017 8:04:59 PM
+update=5/6/2017 8:11:09 PM
 version=1
 last_client=kicad
 [cvpcb]
@@ -27,16 +27,6 @@ SolderMaskMinWidth=0
 DrawSegmentWidth=0.127
 BoardOutlineThickness=0.127
 ModuleOutlineThickness=0.254
-[schematic_editor]
-version=1
-PageLayoutDescrFile=../rusefi_lib/Border.kicad_wks
-PlotDirectoryName=
-SubpartIdSeparator=0
-SubpartFirstId=65
-NetFmtName=
-SpiceForceRefPrefix=0
-SpiceUseNetNumbers=0
-LabSize=60
 [eeschema]
 version=1
 LibDir=../rusefi_lib
@@ -97,3 +87,13 @@ LibName53=mos_n_numbered-pins
 LibName54=crystal(mc306)
 LibName55=pololu_a4988
 LibName56=Pololu_DRV8880
+[schematic_editor]
+version=1
+PageLayoutDescrFile=../rusefi_lib/Border.kicad_wks
+PlotDirectoryName=
+SubpartIdSeparator=0
+SubpartFirstId=65
+NetFmtName=
+SpiceForceRefPrefix=0
+SpiceUseNetNumbers=0
+LabSize=60

@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source C:/Users/Vista_64_D630/Desktop/Jared/code/Hardware/trunk/rusefi.com/frankenso/frankenso.sch)
-    (date "5/6/2017 8:43:38 AM")
+    (date "5/6/2017 9:58:39 AM")
     (tool "Eeschema 4.0.5")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -6612,16 +6612,16 @@
         (pin (num 1) (name 1) (type passive))
         (pin (num 2) (name 2) (type passive)))))
   (libraries
+    (library (logical conn)
+      (uri "C:\\Program Files\\KiCad\\share\\kicad\\library\\conn.lib"))
     (library (logical "crystal(mc306)")
       (uri "C:\\Users\\Vista_64_D630\\Desktop\\Jared\\code\\Hardware\\trunk\\rusefi.com\\rusefi_lib\\crystal(mc306).lib"))
     (library (logical Pololu_DRV8880)
       (uri C:\Users\Vista_64_D630\Desktop\Jared\code\Hardware\trunk\rusefi.com\rusefi_lib\Pololu_DRV8880.lib))
-    (library (logical KICAD_Older_Version)
-      (uri C:\Users\Vista_64_D630\Desktop\Jared\code\Hardware\trunk\rusefi.com\rusefi_lib\KICAD_Older_Version.lib))
     (library (logical device)
       (uri "C:\\Program Files\\KiCad\\share\\kicad\\library\\device.lib"))
-    (library (logical conn)
-      (uri "C:\\Program Files\\KiCad\\share\\kicad\\library\\conn.lib")))
+    (library (logical KICAD_Older_Version)
+      (uri C:\Users\Vista_64_D630\Desktop\Jared\code\Hardware\trunk\rusefi.com\rusefi_lib\KICAD_Older_Version.lib)))
   (nets
     (net (code 1) (name "Net-(U4-Pad16)")
       (node (ref U4) (pin 16)))
