@@ -632,8 +632,8 @@ void handleTestCommand(ts_channel_s *tsChannel) {
 
 extern CommandHandler console_line_callback;
 
-static void handleGetVersion(ts_channel_s *tsChannel) {
-
+static void handleGetVersion(ts_channel_s *tsChannel, ts_response_format_e mode) {
+//	tsSendResponse(tsChannel, mode, (const uint8_t *) "rusEfi v", 8 + 1);
 }
 
 static void handleGetText(ts_channel_s *tsChannel) {
@@ -746,7 +746,7 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		tunerStudioDebug("got Query command");
 		handleQueryCommand(tsChannel, TS_CRC);
 	} else if (command == TS_GET_FIRMWARE_VERSION) {
-		handleGetVersion(tsChannel);
+		handleGetVersion(tsChannel, TS_CRC);
 	} else if (command == TS_GET_TEXT) {
 		handleGetText(tsChannel);
 	} else if (command == TS_EXECUTE) {
