@@ -465,8 +465,16 @@ static void setRpmHardLimit(int value) {
 	doPrintConfiguration(engine);
 }
 
+static void setCrankingIACExtra(float percent) {
+	engineConfiguration->crankingIdleAdjustment = percent;
+	scheduleMsg(&logger, "cranking_iac %f", percent);
+
+}
+
 static void setCrankingFuel(float timeMs) {
 	engineConfiguration->cranking.baseFuel = timeMs;
+	scheduleMsg(&logger, "cranking_fuel %f", timeMs);
+
 	printTemperatureInfo();
 }
 
@@ -990,6 +998,7 @@ command_f_s commandsF[] = {{"mock_iat_voltage", setIatVoltage},
 		{"injection_offset", setInjectionOffset},
 		{"global_trigger_offset_angle", setGlobalTriggerAngleOffset},
 		{"cranking_fuel", setCrankingFuel},
+		{"cranking_iac", setCrankingIACExtra},
 		{"cranking_timing_angle", setCrankingTimingAngle},
 		{"cranking_charge_angle", setCrankingChargeAngle},
 		{"vbatt_divider", setVBattDivider},
