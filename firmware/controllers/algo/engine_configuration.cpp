@@ -1149,7 +1149,17 @@ void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {
 	boardConfiguration->joystickDPin = GPIOD_11;
 }
 
+void copyTargetAfrTable(fuel_table_t const source, afr_table_t destination) {
+	// todo: extract a template!
+	for (int loadIndex = 0; loadIndex < FUEL_LOAD_COUNT; loadIndex++) {
+		for (int rpmIndex = 0; rpmIndex < FUEL_RPM_COUNT; rpmIndex++) {
+			destination[loadIndex][rpmIndex] = AFR_STORAGE_MULT * source[loadIndex][rpmIndex];
+		}
+	}
+}
+
 void copyFuelTable(fuel_table_t const source, fuel_table_t destination) {
+	// todo: extract a template!
 	for (int loadIndex = 0; loadIndex < FUEL_LOAD_COUNT; loadIndex++) {
 		for (int rpmIndex = 0; rpmIndex < FUEL_RPM_COUNT; rpmIndex++) {
 			destination[loadIndex][rpmIndex] = source[loadIndex][rpmIndex];
@@ -1158,6 +1168,7 @@ void copyFuelTable(fuel_table_t const source, fuel_table_t destination) {
 }
 
 void copyTimingTable(ignition_table_t const source, ignition_table_t destination) {
+	// todo: extract a template!
 	for (int k = 0; k < IGN_LOAD_COUNT; k++) {
 		for (int rpmIndex = 0; rpmIndex < IGN_RPM_COUNT; rpmIndex++) {
 			destination[k][rpmIndex] = source[k][rpmIndex];
