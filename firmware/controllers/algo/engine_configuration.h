@@ -60,6 +60,7 @@ int getGlobalConfigurationVersion(void);
 void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration);
 void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration);
 
+void copyTargetAfrTable(fuel_table_t const source, afr_table_t destination);
 void copyFuelTable(fuel_table_t const source, fuel_table_t destination);
 void copyTimingTable(ignition_table_t const source, ignition_table_t destination);
 
