@@ -633,7 +633,9 @@ void handleTestCommand(ts_channel_s *tsChannel) {
 extern CommandHandler console_line_callback;
 
 static void handleGetVersion(ts_channel_s *tsChannel, ts_response_format_e mode) {
-//	tsSendResponse(tsChannel, mode, (const uint8_t *) "rusEfi v", 8 + 1);
+	static char versionBuffer[32];
+	chsnprintf(versionBuffer, sizeof(versionBuffer), "rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
+	tsSendResponse(tsChannel, mode, (const uint8_t *) versionBuffer, strlen(versionBuffer) + 1);
 }
 
 static void handleGetText(ts_channel_s *tsChannel) {
