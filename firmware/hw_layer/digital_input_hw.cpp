@@ -214,6 +214,7 @@ void stopWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) {
 				sizeof(digital_input_s));
 			registeredIcus.size--;
 			icuDisableNotificationsI(driver);
+			icuStopCapture(driver);
 			icuStop(driver);
 			return;
 		}
@@ -232,6 +233,7 @@ void startInputDriver(digital_input_s *hw, bool isActiveHigh) {
 	if (driver != NULL) {
 		if (hw->started) {
 			icuDisableNotificationsI(driver);
+			icuStopCapture(driver);
 			icuStop(driver);
 		}
 		wave_icucfg.channel = getInputCaptureChannel(hw->brainPin);
