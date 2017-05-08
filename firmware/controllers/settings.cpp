@@ -1149,7 +1149,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 	}
 }
 
-void initSettings(const engine_configuration_s *engineConfiguration) {
+void initSettings(void) {
 	// todo: start saving values into flash right away?
 
 	addConsoleActionP("showconfig", (VoidPtr) doPrintConfiguration, &engine);

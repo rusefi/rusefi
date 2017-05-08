@@ -523,7 +523,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 
 #if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
 	// todo: this is a mess, remove code duplication with simulator
-	initSettings(engineConfiguration);
+	initSettings();
 #endif
 
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
@@ -555,7 +555,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	initPwmGenerator();
 #endif
 
-	initAlgo(sharedLogger, engineConfiguration);
+	initAlgo(sharedLogger);
 
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
 	if (engineConfiguration->isWaveAnalyzerEnabled) {
