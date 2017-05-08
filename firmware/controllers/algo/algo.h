@@ -11,6 +11,6 @@
 #include "main.h"
 #include "engine_configuration.h"
 void initDataStructures(DECLARE_ENGINE_PARAMETER_F);
-void initAlgo(Logging *sharedLogger, const engine_configuration_s *engineConfiguration);
+void initAlgo(Logging *sharedLogger);
 
 #endif /* ALGO_H_ */
