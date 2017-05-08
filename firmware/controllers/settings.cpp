@@ -715,7 +715,7 @@ static void setTriggerSimulatorMode(const char *indexStr, const char *modeCode) 
 	boardConfiguration->triggerSimulatorPinModes[index] = (pin_output_mode_e) mode;
 }
 
-static void setEgtCSPin(const char *indexStr, const char *pinName, board_configuration_s * board_configuration_s) {
+static void setEgtCSPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr);
 	if (index < 0 || index >= EGT_CHANNEL_COUNT || absI(index) == ERROR_CODE)
 		return;
@@ -1199,7 +1199,7 @@ void initSettings(void) {
 	addConsoleActionSS("set_trigger_input_pin", setTriggerInputPin);
 	addConsoleActionSS("set_trigger_simulator_pin", setTriggerSimulatorPin);
 
-	addConsoleActionSSP("set_egt_cs_pin", (VoidCharPtrCharPtrVoidPtr) setEgtCSPin, boardConfiguration);
+	addConsoleActionSS("set_egt_cs_pin", (VoidCharPtrCharPtr) setEgtCSPin);
 	addConsoleActionI("set_egt_spi", setEgtSpi);
 
 	addConsoleActionSS("set_trigger_simulator_mode", setTriggerSimulatorMode);
