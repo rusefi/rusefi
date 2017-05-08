@@ -644,7 +644,7 @@ static void lcdThread(void *arg) {
 	while (true) {
 		if (engineConfiguration->bc.useLcdScreen) {
 #if EFI_HD44780_LCD
-			updateHD44780lcd(engine);
+			updateHD44780lcd();
 #endif
 		}
 		chThdSleepMilliseconds(engineConfiguration->bc.lcdThreadPeriod);
