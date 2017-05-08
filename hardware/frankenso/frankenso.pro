@@ -1,4 +1,4 @@
-update=5/6/2017 8:11:09 PM
+update=5/7/2017 11:59:23 AM
 version=1
 last_client=kicad
 [cvpcb]
@@ -93,7 +93,7 @@ PageLayoutDescrFile=../rusefi_lib/Border.kicad_wks
 PlotDirectoryName=
 SubpartIdSeparator=0
 SubpartFirstId=65
-NetFmtName=
+NetFmtName=Pcbnew
 SpiceForceRefPrefix=0
 SpiceUseNetNumbers=0
 LabSize=60

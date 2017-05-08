@@ -147,6 +147,9 @@
 144) RESOLVED IN R0.5 HL7 & HL8 silkscreen is missing
 145) RESOLVED IN R0.4.3 HI/LO net names are confusing, and jumbled. 
 146) RESOLVED IN R0.5 HI/LO 2 silk screen is on wrong harness pin. 
+147) RESOLVED IN R0.5 Add 232 TX and RX connection points for external MAX232 or equiv chip SEE P701
+
+
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol

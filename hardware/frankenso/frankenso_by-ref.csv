@@ -420,6 +420,7 @@ Reference, Value, Footprint, Datasheet, MFG,MFG#, VEND1,VEND1#, Field4, Field5, 
 "W701","TEST","SM0805_jumper","","DNP,DNP","DNP,DNP","","","","","","","","","","","","",""
 "W702","TEST","SM0805","","DNP,DNP","DNP,DNP","","","","","","","","","","","","",""
 "W703","TEST","SM0805","","DNP,DNP","DNP,DNP","","","","","","","","","","","","",""
+"P701","CONN_01X04","Pin_Headers:Pin_Header_Straight_1x05_Pitch1.27mm",""
 "C104","0.1uF","SM0805","","AVX,08055C104KAT2A","DIGI,478-1395-1-ND","","","","","","","","","","","","",""
 "R107","5k","SM0805","","STACKPOLE,RNCP0805FTD4K99","DIGI,RNCP0805FTD4K99CT-ND","","","","","","","","","","","","",""
 "R102","5k","SM0805","","STACKPOLE,RNCP0805FTD4K99","DIGI,RNCP0805FTD4K99CT-ND","","","","","","","","","","","","",""
