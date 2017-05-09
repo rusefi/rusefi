@@ -1,0 +1,76 @@
+EESchema-LIBRARY Version 2.3  Date: 1/14/2015 1:24:31 PM
+#encoding utf-8
+#
+#  CY8CLED04D01-56LTXI
+#
+DEF  CY8CLED04D01-56LTXI U 0 40 Y Y 1 F N
+F0 "U" -2000 3200 50 H V C CNN
+F1 " CY8CLED04D01-56LTXI" -1650 -3200 50 H V C CNN
+F2 "MODULE" 0 -300 50 H I C CNN
+F3 "DOCUMENTATION" 0 -300 50 H I C CNN
+$FPLIST
+ cypress-QFN-56
+$ENDFPLIST
+DRAW
+S -2100 3100 2350 -3100 0 1 0 N
+X P1[0]/GPIO/I2C-SDA-(Secondary)/ISSP-SDATA 1 -2400 -800 300 R 50 50 1 1 P
+X P2[2]/GPIO/Direct-Switch-Cap-connection 2 -2400 -1300 300 R 50 50 1 1 P
+X P0[3]/GPIO/Analog-Input-(Column-0)/Analog-Output-(Column-0) 3 -2400 -1400 300 R 50 50 1 1 P
+X P0[5]/GPIO/Analog-Input-(Column-0)/Analog-Output-(Column-1)/Capsense-Ref-Cap 4 -2400 -1900 300 R 50 50 1 1 P
+X P0[7]/GPIO/Analog-Input-(Column-0)/Capsense-Ref-Cap 5 -2400 -1500 300 R 50 50 1 1 P
+X P1[1]/GPIO/I2C-SCL-(Secondary)/ISSPSCLK 6 -2400 -900 300 R 50 50 1 1 P
+X P1[5]/GPIO/I2C-SDA-(Primary) 7 -2400 -2000 300 R 50 50 1 1 P
+X P1[7]/GPIO/I2C-SCL-(Primary) 8 -2400 -1600 300 R 50 50 1 1 P
+X VSS1/Digital-Ground 9 -2400 -2200 300 R 50 50 1 1 W
+X NC/No-Connect 10 -2400 -700 300 R 50 50 1 1 P
+X CSP2/Current-Sense-Positive-Input-and-Power-Supply-CSA2 20 2650 -400 300 L 50 50 1 1 P
+X GDVSS/Gate-Driver-Ground 30 -2400 -2900 300 R 50 50 1 1 W
+X SW0/Power-Switch-0 40 2650 2900 300 L 50 50 1 1 P
+X CSP0/Current-Sense-Positive-Input-and-Power-Supply-CSA0 50 2650 2600 300 L 50 50 1 1 P
+X NC/No-Connect 11 -2400 -600 300 R 50 50 1 1 P
+X CSP3/Current-Sense-Positive-Input-and-Power-Supply-CSA3 21 2650 -1900 300 L 50 50 1 1 P
+X PGND3/Power-FET-Ground-3 31 2650 -2500 300 L 50 50 1 1 W
+X GD0/External-Low-Side-Gate-Driver-0 41 2650 2300 300 L 50 50 1 1 P
+X CSP1/Current-Sense-Positive-Input-and-Power-Supply-CSA1 51 2650 1100 300 L 50 50 1 1 P
+X NC/No-Connect 12 -2400 -500 300 R 50 50 1 1 P
+X CSN3/Current-Sense-Negative-Input-3 22 2650 -1800 300 L 50 50 1 1 P
+X GD3/External-Low-Side-Gate-Driver-3 32 2650 -2200 300 L 50 50 1 1 P
+X PGND0/Power-FETGround-0 42 2650 2000 300 L 50 50 1 1 W
+X CSN1/Current-Sense-Negative-Input-1 52 2650 1200 300 L 50 50 1 1 P
+X NC/No-Connect 13 -2400 -400 300 R 50 50 1 1 P
+X SREGCOMP/Voltage-Regulator-Error-Amp-Comp 23 -2400 800 300 R 50 50 1 1 P
+X SW3/Power-Switch-3 33 2650 -1600 300 L 50 50 1 1 P
+X GDVSS/Gate-Driver-Ground 43 -2400 -3000 300 R 50 50 1 1 W
+X P0[4]/GPIO/Analog-Input-(Column-1)/Bandgap-Output 53 -2400 -1100 300 R 50 50 1 1 P
+X XRES/External-Reset 14 -2400 -300 300 R 50 50 1 1 P
+X SREGFB/Regulator-Voltage-Mode-Feedback-Node 24 -2400 400 300 R 50 50 1 1 P
+X PGND2/Power-FET-Ground-2 34 2650 -1000 300 L 50 50 1 1 W
+X GDVDD2/Gate-Driver-Power-Supply 44 -2400 2400 300 R 50 50 1 1 W
+X VDD2/Digital-Power-Supply 54 -2400 2900 300 R 50 50 1 1 W
+X VDD1/Digital-Power-Supply 15 -2400 3000 300 R 50 50 1 1 W
+X SREGCSN/Current-Mode-Feedback-Negative 25 -2400 1100 300 R 50 50 1 1 P
+X GD2/External-Low-Side-Gate-Driver-2 35 2650 -700 300 L 50 50 1 1 P
+X FN0[0]/Function-I/O 45 -2400 200 300 R 50 50 1 1 P
+X VSS3/Digital-Ground 55 -2400 -2400 300 R 50 50 1 1 W
+X VSS2/Digital-Ground 16 -2400 -2300 300 R 50 50 1 1 W
+X SREGCSP/Current-Mode-Feedback-Positive 26 -2400 1000 300 R 50 50 1 1 P
+X SW2/Power-Switch-2 36 2650 -100 300 L 50 50 1 1 P
+X FN0[1]/Function-I/O 46 -2400 100 300 R 50 50 1 1 P
+X P1[4]/GPIO/External-Clock-Input 56 -2400 -1700 300 R 50 50 1 1 P
+X AVSS/Analog-Ground 17 -2400 -2650 300 R 50 50 1 1 W
+X SREGSW/Switch-Mode-Regulator-OUT 27 -2400 2000 300 R 50 50 1 1 O
+X SW1/Power-Switch-1 37 2650 1400 300 L 50 50 1 1 P
+X FN0[2]/Function-I/O 47 -2400 0 300 R 50 50 1 1 P
+X TH_PAD 57 2650 -3000 300 L 50 50 1 1 P
+X AVDD/Analog-Power-Supply 18 -2400 2700 300 R 50 50 1 1 W
+X SREGHVIN/Switch-Mode-Regulator-IN 28 -2400 2200 300 R 50 50 1 1 P
+X GD1/External-Low-Side-Gate-Driver-1 38 2650 800 300 L 50 50 1 1 P
+X FN0[3]/Function-I/O 48 -2400 -100 300 R 50 50 1 1 P
+X CSN2/Current-Sense-Negative-Input-CSA2 19 2650 -300 300 L 50 50 1 1 P
+X GDVDD1/Gate-Driver-Power-Supply-Pin 29 -2400 2500 300 R 50 50 1 1 W
+X PGND1/Power-FET-Ground-1 39 2650 500 300 L 50 50 1 1 W
+X CSN0/Current-Sense-Negative-Input-0 49 2650 2700 300 L 50 50 1 1 P
+ENDDRAW
+ENDDEF
+#
+#End Library
