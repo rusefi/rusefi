@@ -197,6 +197,7 @@ static char dateBuffer[30];
 static void lcdPrintf(const char *fmt, ...) {
 	va_list ap;
 	va_start(ap, fmt);
+	// todo: migrate to chsnprintf
 	lcdLineStream.eos = 0; // reset
 	chvprintf((BaseSequentialStream *) &lcdLineStream, fmt, ap);
 	lcdLineStream.buffer[lcdLineStream.eos] = 0; // terminator
