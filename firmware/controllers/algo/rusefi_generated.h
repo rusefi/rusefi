@@ -1373,8 +1373,14 @@
 #define spi3MosiMode_offset_hex b18
 #define spi3MisoMode_offset 2844
 #define spi3MisoMode_offset_hex b1c
-#define unused_offset 2848
-#define unused_offset_hex b20
+#define spi1SckMode_offset 2848
+#define spi1SckMode_offset_hex b20
+#define spi1MosiMode_offset 2852
+#define spi1MosiMode_offset_hex b24
+#define spi1MisoMode_offset 2856
+#define spi1MisoMode_offset_hex b28
+#define unused_offset 2860
+#define unused_offset_hex b2c
 #define le_formulas1_offset 3048
 #define le_formulas1_offset_hex be8
 #define le_formulas2_offset 3248

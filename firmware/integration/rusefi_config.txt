@@ -798,7 +798,10 @@ spi_device_e sdCardSpiDevice;
 	pin_mode_e spi3SckMode;
 	pin_mode_e spi3MosiMode;
 	pin_mode_e spi3MisoMode;
-	int[50] unused;
+	pin_mode_e spi1SckMode;
+	pin_mode_e spi1MosiMode;
+	pin_mode_e spi1MisoMode;
+	int[47] unused;
 	
 
 end_struct
