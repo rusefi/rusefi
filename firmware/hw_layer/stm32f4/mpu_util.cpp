@@ -277,9 +277,9 @@ void turnOnSpi(spi_device_e device) {
 		initSpiModule(&SPID1, getSckPin(device),
 				getMisoPin(device),
 				getMosiPin(device),
-				0,
-				0,
-				0);
+				engineConfiguration->spi1SckMode,
+				engineConfiguration->spi1MosiMode,
+				engineConfiguration->spi1MisoMode);
 #endif /* STM32_SPI_USE_SPI1 */
 	}
 	if (device == SPI_DEVICE_2) {
@@ -299,9 +299,9 @@ void turnOnSpi(spi_device_e device) {
 		initSpiModule(&SPID3, getSckPin(device),
 				getMisoPin(device),
 				getMosiPin(device),
-				0,
-				0,
-				0);
+				engineConfiguration->spi3SckMode,
+				engineConfiguration->spi3MosiMode,
+				engineConfiguration->spi3MisoMode);
 #endif /* STM32_SPI_USE_SPI3 */
 	}
 }

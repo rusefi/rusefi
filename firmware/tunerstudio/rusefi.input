@@ -1245,6 +1245,9 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		field = "prescaler & SDO",						hip9011PrescalerAndSDO, {isHip9011Enabled == 1}
 		field = "Band Freq override",					knockBandCustom, {isHip9011Enabled == 1}
 		field = "SPI device",							hip9011SpiDevice, {isHip9011Enabled == 1}
+		field = "SPI1sck",								spi1SckMode, {isHip9011Enabled == 1}
+		field = "SPI1mosi",								spi1MosiMode, {isHip9011Enabled == 1}
+		field = "SPI1miso",								spi1MisoMode, {isHip9011Enabled == 1}
 		field = "SPI2sck",								spi2SckMode, {isHip9011Enabled == 1}
 		field = "SPI2mosi",								spi2MosiMode, {isHip9011Enabled == 1}
 		field = "SPI2miso",								spi2MisoMode, {isHip9011Enabled == 1}

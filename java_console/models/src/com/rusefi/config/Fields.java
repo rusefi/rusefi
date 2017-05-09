@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue May 09 18:57:46 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue May 09 19:04:57 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -954,7 +954,10 @@ public class Fields {
 	public static final int spi3SckMode_offset = 2836;
 	public static final int spi3MosiMode_offset = 2840;
 	public static final int spi3MisoMode_offset = 2844;
-	public static final int unused_offset = 2848;
+	public static final int spi1SckMode_offset = 2848;
+	public static final int spi1MosiMode_offset = 2852;
+	public static final int spi1MisoMode_offset = 2856;
+	public static final int unused_offset = 2860;
 	public static final int le_formulas1_offset = 3048;
 	public static final int le_formulas2_offset = 3248;
 	public static final int le_formulas3_offset = 3448;
@@ -1666,6 +1669,9 @@ public class Fields {
 	public static final Field SPI3SCKMODE = Field.create("SPI3SCKMODE", 2836, FieldType.INT, pin_mode_e);
 	public static final Field SPI3MOSIMODE = Field.create("SPI3MOSIMODE", 2840, FieldType.INT, pin_mode_e);
 	public static final Field SPI3MISOMODE = Field.create("SPI3MISOMODE", 2844, FieldType.INT, pin_mode_e);
+	public static final Field SPI1SCKMODE = Field.create("SPI1SCKMODE", 2848, FieldType.INT, pin_mode_e);
+	public static final Field SPI1MOSIMODE = Field.create("SPI1MOSIMODE", 2852, FieldType.INT, pin_mode_e);
+	public static final Field SPI1MISOMODE = Field.create("SPI1MISOMODE", 2856, FieldType.INT, pin_mode_e);
 	public static final Field LE_FORMULAS1 = Field.create("LE_FORMULAS1", 3048, FieldType.INT);
 	public static final Field LE_FORMULAS2 = Field.create("LE_FORMULAS2", 3248, FieldType.INT);
 	public static final Field LE_FORMULAS3 = Field.create("LE_FORMULAS3", 3448, FieldType.INT);
