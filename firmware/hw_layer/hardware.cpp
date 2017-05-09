@@ -81,6 +81,9 @@ void unlockSpi(void) {
 }
 
 static void initSpiModules(board_configuration_s *boardConfiguration) {
+	if (boardConfiguration->is_enabled_spi_1) {
+		 turnOnSpi(SPI_DEVICE_1);
+	}
 	if (boardConfiguration->is_enabled_spi_2) {
 		turnOnSpi(SPI_DEVICE_2);
 	}
